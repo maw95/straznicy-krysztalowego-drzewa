@@ -17,21 +17,26 @@ const TABS: Array<[Tab, string]> = [
 
 const RULES: Array<[string, string[]]> = [
   ['Cel gry', [
-    'Przymierze Świtu wygrywa, gdy dostarczy do Kryształowego Drzewa wszystkie wymagane kryształy.',
+    'Przymierze Świtu wygrywa, gdy dostarczy do Kryształowego Drzewa wszystkie wymagane kryształy albo gdy polegną wszyscy bohaterowie Hordy.',
     'Mroczna Horda wygrywa, gdy upłynie limit rund, polegną wszyscy bohaterowie Przymierza albo jej żyjący bohaterowie ukończą rytuał przy Drzewie (staną na nim na koniec dwóch kolejnych rund).',
   ]],
   ['Mapa przygody', [
-    'Każdy bohater ma 2 punkty ruchu na turę. Teren łatwy kosztuje 1, trudny 2, góry są nieprzechodnie. Niewykorzystane punkty przepadają.',
+    'Lewa połowa mapy to ziemie Przymierza, prawa — Hordy. Każdy bohater ma 2 punkty ruchu na turę. Teren łatwy kosztuje 1, trudny 2 (Rzeka, Wzgórza, Mroczne Bagno, Mroczna Jaskinia, Ponure Ruiny). Góry, Przepaść, Martwy Gąszcz i Trujące Ciernie są nieprzechodnie. Niewykorzystane punkty przepadają.',
     'Wejście na pole odkrywa sąsiednie zakryte pola. Skarb trafia do wspólnego ekwipunku frakcji.',
     'Kryształów pilnują neutralni strażnicy — wejście na ich pole rozpoczyna walkę. Wejście na pole wrogiego bohatera rozpoczyna bitwę.',
     'Kryształ oddaje się, wchodząc z nim na pole Drzewa. Jeśli stoi tam zły bohater, najpierw trzeba go pokonać.',
   ]],
   ['Bitwa', [
     'Na arenie każda strona wystawia bohatera i dwóch pomocników (3 na 3); strażnik walczy sam. W wariancie „na planszy głównej” walczą tylko bohaterowie — pojedynek 1 na 1 bez ruchu.',
+    'Przed walką każda strona ustawia swoje jednostki na polach własnej skrajnej kolumny; pierwszeństwo ma atakujący.',
     'Co rundę każda jednostka ma jedną aktywację, od najwyższej Szybkości: ruch o tyle pól, ile wynosi Szybkość, i opcjonalnie jeden atak.',
     'Atak zadaje obrażenia równe Atakowi. Nie ma kontrataków. Strzelec strzela przez całą arenę, jeśli przeszkoda nie zasłania celu; z wrogiem obok może atakować tylko jego. Latający przelatują nad przeszkodami.',
-    'Zdolności (gdy są włączone) działają raz na bitwę. Skarby używa się przed akcją własnej jednostki; Tarcza Strażnika działa jako reakcja.',
-    'Bitwa trwa do śmierci wszystkich jednostek jednej strony. Ocalali odzyskują pełne Życie, polegli pomocnicy giną na stałe, a poległego bohatera przywraca tylko Eliksir Odrodzenia.',
+    'Zdolności bohaterów i pomocników działają raz na bitwę (Szarża Światła zawsze). Zdolności strażników działają przy każdym ataku: Cyklop odpycha trafionego o 1 pole, Gryf może po ataku odlecieć, Hydra może trafić dwóch sąsiadów. Skarby używa się przed akcją własnej jednostki; Tarcza Strażnika działa jako reakcja.',
+    'Do obrażeń dolicza się rzut kością −1/0/+1 (chyba że gra toczy się bez kości).',
+    'Bitwa trwa do śmierci wszystkich jednostek jednej strony. Ocalali odzyskują pełne Życie, polegli pomocnicy giną na stałe, a poległego bohatera przywraca tylko Eliksir Odrodzenia wypity przez żyjącego bohatera tej frakcji.',
+  ]],
+  ['Ułatwienia', [
+    'Pełna gra to bitwy 3 na 3 na arenie, zdolności, skarby, rzut kością i brak zastępowania poległego bohatera. Przy zakładaniu partii można dowolnie łączyć ułatwienia: bez zdolności (także strażników), bez skarbów, bez kości, rezerwowy bohater po śmierci, pojedynki 1 na 1 na planszy głównej.',
   ]],
 ];
 

@@ -21,7 +21,7 @@ const TIPS: Tip[] = [
   {
     id: 'move',
     title: 'Ruch po mapie',
-    text: 'Pola podświetlone na niebiesko są w zasięgu — liczba to koszt dojścia. Kliknij pole, by tam pójść. Las, rzeka i wzgórza kosztują 2 punkty, góry są nieprzechodnie. Najechanie na pole pokazuje szczegóły.',
+    text: 'Pola podświetlone na niebiesko są w zasięgu — liczba to koszt dojścia. Kliknij pole, by tam pójść. Trudny teren (rzeka, wzgórza, bagno, jaskinia, ruiny) kosztuje 2 punkty, przeszkody są nieprzechodnie. Najechanie na pole pokazuje szczegóły.',
     when: (s) => s.phase === 'adventure',
   },
   {
@@ -43,6 +43,12 @@ const TIPS: Tip[] = [
     when: (s) => s.phase === 'adventure' && s.factions.dawn.inventory.length + s.factions.horde.inventory.length > 0,
   },
   {
+    id: 'deploy',
+    title: 'Ustawienie wojsk',
+    text: 'Przed walką możesz ustawić swoje jednostki na złotych polach swojej skrajnej kolumny: kliknij jednostkę, potem pole (zajęte pole zamieni je miejscami). Atakujący ustawia się pierwszy.',
+    when: (s) => s.phase === 'battle' && s.battle?.stage === 'deploy',
+  },
+  {
     id: 'battle',
     title: 'Bitwa',
     text: 'Jednostki działają po kolei od najszybszej. Aktywna ma niebieską poświatę: kliknij podświetlone pole, by się ruszyć, a wroga z czerwoną obwódką, by zaatakować. Najechanie na wroga pokaże przewidywane obrażenia. Klawisz T pokazuje, gdzie dosięgną Cię wrogowie.',
@@ -51,8 +57,8 @@ const TIPS: Tip[] = [
   {
     id: 'abilities',
     title: 'Zdolności',
-    text: 'Każda jednostka ma zdolność działającą raz na bitwę. Przycisk z jej ikoną (lub klawisz Z) włącza ją przed atakiem albo używa od razu.',
-    when: (s) => s.phase === 'battle' && s.battle?.stage === 'fight' && s.setup.difficulty === 'advanced',
+    text: 'Każda jednostka ma zdolność — większość działa raz na bitwę, zdolności strażników przy każdym ataku. Przycisk z ikoną (lub klawisz Z) włącza ją przed atakiem albo używa od razu.',
+    when: (s) => s.phase === 'battle' && s.battle?.stage === 'fight' && s.rules.abilities,
   },
   {
     id: 'crystal',

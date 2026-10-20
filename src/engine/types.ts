@@ -1,26 +1,33 @@
 import type { HexKey } from './hex';
-import type { FactionId, ItemKind, MapSize, Side, Terrain } from './data';
+import type { FactionId, ItemKind, MapSize, Side, Terrain, TileSide } from './data';
 
 export type Mode = 'coop' | 'pvp';
-export type Difficulty = 'basic' | 'advanced';
 export type BattleMode = 'arena' | 'board';
 export type Controller = 'human' | 'bot';
 export type InitiativeTieMode = 'rotating' | 'defender';
 
-/** Rule switches and TEST parameters. Everything here can change without touching engine code. */
+/**
+ * Rule switches and TEST parameters. Everything here can change without touching engine code.
+ * The default game is the full one; switching off abilities, treasures or the die, or
+ * switching on hero replacement, are optional simplifications that mix freely.
+ */
 export interface RulesConfig {
   heroMovePoints: number;
-  /** Optional damage die −1/0/+1. */
+  /** Unit abilities, including the guardians'. */
+  abilities: boolean;
+  /** Treasures on the map (Eliksiry Odrodzenia included). */
+  treasures: boolean;
+  /** Damage die −1/0/+1. */
   useDice: boolean;
   initiativeTie: InitiativeTieMode;
-  /** Easier variant: a dead hero's player may take another unused hero of the faction. */
+  /** Harder coop: the automaton fields one Horde hero more than there are Przymierze players. */
+  extraEvilHero: boolean;
+  /** Simplification: a dead hero's player takes over another unused hero of the faction. */
   heroReplacement: boolean;
   /** Evil heroes standing on the Tree stay there instead of chasing (spec 7: DO USTALENIA). */
   ritualHold: boolean;
   /** Rounds that all living evil heroes must spend on the Tree to complete the ritual. */
   ritualRounds: number;
-  /** Neutral guardians use their ability also in the basic variant. */
-  neutralAbilitiesAlways: boolean;
   /** Walking units may pass through hexes occupied by allies (never through enemies). */
   passThroughAllies: boolean;
   /** Units standing in the way do not block ranged line of sight (only obstacles do). */
@@ -34,12 +41,14 @@ export interface RulesConfig {
 
 export const DEFAULT_RULES: RulesConfig = {
   heroMovePoints: 2,
-  useDice: false,
-  initiativeTie: 'rotating',
+  abilities: true,
+  treasures: true,
+  useDice: true,
+  extraEvilHero: false,
+  initiativeTie: 'defender',
   heroReplacement: false,
   ritualHold: true,
   ritualRounds: 2,
-  neutralAbilitiesAlways: true,
   passThroughAllies: true,
   unitsBlockSight: false,
   battleRoundLimit: 40,
@@ -54,7 +63,6 @@ export interface SeatSetup {
 
 export interface SetupOptions {
   mode: Mode;
-  difficulty: Difficulty;
   mapSize: MapSize;
   battleMode: BattleMode;
   seed: number;
@@ -94,6 +102,10 @@ export interface Tile {
   row: number;
   col: number;
   terrain: Terrain;
+  /** Which deck the tile comes from (back colour shown while hidden). */
+  side: TileSide;
+  /** Art variant, 1-based. */
+  variant: number;
   revealed: boolean;
   crystalId: string | null;
   treasureId: string | null;
@@ -162,12 +174,18 @@ export interface BattleState {
    */
   duel: boolean;
   mapHex: HexKey;
+  /** Which painted arena is used: the half of the map where the fight broke out. */
+  arena: TileSide;
   attacker: Side;
   defender: Side;
   attackerHero: string;
+  /** Hex the attacker came from (it steps back there if other enemies still hold the battle hex). */
+  attackerFrom: HexKey;
   defenderHero: string | null;
   neutralId: string | null;
-  stage: 'select' | 'fight' | 'over';
+  stage: 'select' | 'deploy' | 'fight' | 'over';
+  /** Factions still to place their units (attacker first); neutral guardians stay where put. */
+  needsDeploy: FactionId[];
   needsSelection: FactionId[];
   obstacles: HexKey[];
   units: Record<string, BattleUnit>;
@@ -255,6 +273,7 @@ export type Action =
   | { type: 'endTurn' }
   | { type: 'useMapItem'; itemId: string; targets?: HexKey[]; unitId?: string }
   | { type: 'selectSupports'; faction: FactionId; supportIds: string[] }
+  | { type: 'deployUnits'; faction: FactionId; positions: Record<string, HexKey> }
   | { type: 'battleMove'; to: HexKey }
   | { type: 'battleAttack'; targetId: string; secondTargetId?: string; useAbility?: boolean }
   | { type: 'battleAbility'; targetId?: string }

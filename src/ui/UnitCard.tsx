@@ -1,4 +1,4 @@
-// Unit card composed at runtime from separate pieces (docs/assets/images, cut by
+// Unit card composed at runtime from separate pieces (docs/grafika, cut by
 // scripts/assets/extract.py): frame for the faction and role, portrait, type glyph,
 // ability medallion, stat icons, and the text from the unit data.
 // Coordinates are in frame pixels (551×713), measured on each frame.

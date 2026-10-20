@@ -1,4 +1,4 @@
-"""Cut the sprite sheets in docs/assets/images into single files for the game.
+"""Cut the sprite sheets in docs/grafika (portrety, ikony, karty) into single files for the game.
 
 Usage: python3 scripts/assets/extract.py   (writes public/assets/cards/...)
 """
@@ -6,7 +6,7 @@ import os
 from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-SRC = os.path.join(ROOT, 'docs', 'assets', 'images')
+SRC = os.path.join(ROOT, 'docs', 'grafika')
 OUT = os.path.join(ROOT, 'public', 'assets', 'cards')
 
 
@@ -55,7 +55,7 @@ def portraits():
         ],
     }
     for sheet_name, cells in sheets.items():
-        sheet = Image.open(os.path.join(SRC, sheet_name)).convert('RGBA')
+        sheet = Image.open(os.path.join(SRC, 'portrety', sheet_name)).convert('RGBA')
         for unit, box in cells:
             art = art_rect(sheet, box)
             save(art, 'art', f'{unit}.jpg')
@@ -86,7 +86,7 @@ ABILITIES = [
 
 
 def abilities():
-    sheet = Image.open(os.path.join(SRC, 'ikony_umiejetnosci.png')).convert('RGBA')
+    sheet = Image.open(os.path.join(SRC, 'ikony', 'ikony_umiejetnosci.png')).convert('RGBA')
     xs = [12, 276, 544, 812, 1080]
     ys = [52, 372, 692]
     for r, row in enumerate(ABILITIES):
@@ -162,7 +162,7 @@ def drop_rim_bits(piece):
 
 
 def icons():
-    sheet = Image.open(os.path.join(SRC, 'ikony_statow_typu_i_frakcji.png')).convert('RGBA')
+    sheet = Image.open(os.path.join(SRC, 'ikony', 'ikony_statow_typu_i_frakcji.png')).convert('RGBA')
     for name, box in [('dawn', (168, 40, 640, 470)), ('horde', (676, 40, 1124, 470)), ('neutral', (1156, 40, 1672, 470))]:
         crest = sheet.crop(box)
         crest = crest.crop(crest.split()[3].point(lambda v: 255 if v > 60 else 0).getbbox())
@@ -187,7 +187,7 @@ def frames():
         'neutralny_bohater': 'neutral_hero',
     }
     for src, dst in names.items():
-        im = Image.open(os.path.join(SRC, f'wzor_karty_{src}_bez_tekstu.png')).convert('RGBA')
+        im = Image.open(os.path.join(SRC, 'karty', f'wzor_karty_{src}_bez_tekstu.png')).convert('RGBA')
         im = im.resize((im.width // 2, im.height // 2), Image.LANCZOS)
         save(im, 'frames', f'{dst}.png')
 
@@ -200,13 +200,13 @@ TREASURES = [
 
 
 def treasures():
-    sheet = Image.open(os.path.join(SRC, 'portrety_skarby.png')).convert('RGBA')
+    sheet = Image.open(os.path.join(SRC, 'portrety', 'portrety_skarby.png')).convert('RGBA')
     rows = [(80, 410), (410, 715), (715, 1010)]
     for r, row in enumerate(TREASURES):
         for c, kind in enumerate(row):
             art = art_rect(sheet, (c * 290, rows[r][0], (c + 1) * 290 - 2, rows[r][1]))
             save(art.resize((400, 400), Image.LANCZOS), 'treasures', f'{kind}.jpg')
-    frame = Image.open(os.path.join(SRC, 'wzor_karty_skarbu_bez_tekstu.png')).convert('RGBA')
+    frame = Image.open(os.path.join(SRC, 'karty', 'wzor_karty_skarbu_bez_tekstu.png')).convert('RGBA')
     frame = frame.crop(frame.split()[3].point(lambda v: 255 if v > 60 else 0).getbbox())
     frame = frame.resize((551, round(frame.height * 551 / frame.width)), Image.LANCZOS)
     save(frame, 'frames', 'treasure.png')

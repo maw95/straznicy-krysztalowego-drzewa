@@ -6,11 +6,11 @@ export PATH := $(HOME)/.local/node/bin:$(PATH)
 GAMES ?= 1000
 SIZE ?= short
 MODE ?= coop
-DIFFICULTY ?= basic
+OPTIONS ?= full
 BATTLE ?= arena
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview test test-engine test-ui test-watch typecheck check sim sim-all clean
+.PHONY: help install dev build preview test test-engine test-ui test-watch typecheck check sim sim-all sim-matrix sim-battles report clean
 
 help: ## Lista komend
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -47,13 +47,22 @@ typecheck: node_modules ## Sprawdzenie typów TypeScript
 
 check: typecheck test ## Typy + testy (przed commitem)
 
-sim: node_modules ## Symulacje botów, np. make sim GAMES=500 SIZE=medium MODE=pvp DIFFICULTY=advanced BATTLE=board
-	npx tsx scripts/simulate.ts $(GAMES) $(SIZE) $(MODE) $(DIFFICULTY) $(BATTLE)
+sim: node_modules ## Symulacje botów, np. make sim GAMES=500 SIZE=medium MODE=pvp OPTIONS=noabilities,nodice BATTLE=board
+	npx tsx scripts/simulate.ts $(GAMES) $(SIZE) $(MODE) $(OPTIONS) $(BATTLE)
 
-sim-all: node_modules ## Symulacje wszystkich map i wariantów kooperacji
-	@for size in short medium long; do for diff in basic advanced; do \
+sim-all: node_modules ## Symulacje wszystkich map w kooperacji: pełna gra i bez zdolności
+	@for size in short medium long; do for diff in full noabilities; do \
 		npx tsx scripts/simulate.ts $(GAMES) $$size coop $$diff; \
 	done; done
+
+sim-matrix: node_modules ## Wszystkie 72 warianty z diagnostyką botów, np. make sim-matrix GAMES=1000
+	node --import tsx scripts/sim/matrix.ts $(GAMES) matrix
+
+sim-battles: node_modules ## Turniej jednostek w równych warunkach (balans bohaterów, pomocników, strażników)
+	node --import tsx scripts/sim/battles.ts 300
+
+report: node_modules ## Odtworzenie zgłoszeń błędów z bug-reports/ (albo FILE=ścieżka.json)
+	npx tsx scripts/report.ts $(FILE)
 
 clean: ## Usunięcie dist/ i plików tymczasowych
 	rm -rf dist .tmp

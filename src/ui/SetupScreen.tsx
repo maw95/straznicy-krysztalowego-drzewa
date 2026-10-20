@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type FactionId, type MapSize } from '../engine/data';
-import { DEFAULT_RULES, type BattleMode, type Controller, type Difficulty, type Mode, type SeatSetup, type SetupOptions } from '../engine/types';
+import { DEFAULT_RULES, type BattleMode, type Controller, type Mode, type RulesConfig, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
 import { describeSave, parseSave, type SaveFile } from './saves';
@@ -26,14 +26,13 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules }: { onStart: (
   const [count, setCount] = useState(1);
   const [seats, setSeats] = useState<SeatSetup[]>(defaultSeats('coop', 1));
   const [mapSize, setMapSize] = useState<MapSize>('short');
-  const [difficulty, setDifficulty] = useState<Difficulty>('advanced');
   const [battleMode, setBattleMode] = useState<BattleMode>('arena');
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e6));
   const [rules, setRules] = useState({ ...DEFAULT_RULES });
   const [preview, setPreview] = useState<string>('goldDragon');
 
   const changeMode = (m: Mode) => {
-    const c = m === 'pvp' ? Math.max(2, count) : count;
+    const c = m === 'pvp' ? Math.max(2, count) : Math.min(2, count);
     setMode(m);
     setCount(c);
     setSeats(defaultSeats(m, c));
@@ -55,7 +54,8 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules }: { onStart: (
   return (
     <div className="screen slate screen-enter" style={{ alignItems: 'center', paddingTop: 16, gap: 18 }}>
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-        <img className="ken-burns" src={asset('ui/landscape.jpg')} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35 }} />
+        {/* The box cover: the Tree in the middle, Przymierze on the left, the Horde on the right. */}
+        <img className="ken-burns" src={asset('ui/cover.jpg')} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 38%', opacity: 0.42 }} />
         {Array.from({ length: 22 }, (_, i) => (
           <span
             key={i}
@@ -65,8 +65,9 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules }: { onStart: (
         ))}
       </div>
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <img className="crest-glint" src={asset('ui/orn_crystals.png')} alt="" style={{ width: 64, marginBottom: -10 }} />
-        <h1 style={{ margin: 0, fontWeight: 800, fontSize: 'clamp(28px, 6vw, 44px)', textAlign: 'center', color: '#F3D27A', textShadow: '0 2px 0 #1E1204, 0 0 24px rgba(0,0,0,0.7)' }}>Strażnicy Kryształowego Drzewa</h1>
+        <h1 style={{ margin: 0, lineHeight: 0 }}>
+          <img className="crest-glint" src={asset('ui/logo.png')} alt="Strażnicy Kryształowego Drzewa" style={{ height: 'clamp(90px, 15vh, 150px)', filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.7))' }} />
+        </h1>
         <div style={{ fontSize: 18, color: 'var(--muted)' }}>Nowa partia · prototyp do testów</div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: 6 }}>
           {autosave && (
@@ -107,7 +108,8 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules }: { onStart: (
             <button className={choice(mode === 'pvp')} style={chip} onClick={() => changeMode('pvp')}>Rywalizacja (dobro kontra zło)</button>
           </Row>
           <Row label="Gracze">
-            {(mode === 'coop' ? [1, 2, 3, 4] : [2, 3, 4]).map((n) => (
+            {/* At most 2 players per faction: coop (all Przymierze) takes 1–2, PvP 2–4. */}
+            {(mode === 'coop' ? [1, 2] : [2, 3, 4]).map((n) => (
               <button key={n} className={choice(count === n)} style={chip} onClick={() => changeCount(n)}>{n}</button>
             ))}
           </Row>
@@ -116,14 +118,25 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules }: { onStart: (
               <button key={m} className={choice(mapSize === m)} style={chip} onClick={() => setMapSize(m)}>{MAP_SIZE_NAMES[m]}</button>
             ))}
           </Row>
-          <Row label="Zdolności">
-            <button className={choice(difficulty === 'advanced')} style={chip} onClick={() => setDifficulty('advanced')}>Włączone</button>
-            <button className={choice(difficulty === 'basic')} style={chip} onClick={() => setDifficulty('basic')}>Wyłączone</button>
-          </Row>
           <Row label="Bitwy">
-            <button className={choice(battleMode === 'arena')} style={chip} onClick={() => setBattleMode('arena')}>Osobna arena 9×11 (3 na 3)</button>
+            <button className={choice(battleMode === 'arena')} style={chip} onClick={() => setBattleMode('arena')}>Osobna arena (3 na 3)</button>
             <button className={choice(battleMode === 'board')} style={chip} onClick={() => setBattleMode('board')}>Na planszy głównej (pojedynek 1 na 1)</button>
           </Row>
+          <Row label="Ułatwienia">
+            {EASES.map(([label, on, patch]) => (
+              <button key={label} className={choice(on(rules))} style={chip} aria-pressed={on(rules)} onClick={() => setRules({ ...rules, ...patch(!on(rules)) })}>
+                {label}
+              </button>
+            ))}
+          </Row>
+          <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>Pełna gra to wszystko wyłączone. Ułatwienia można dowolnie łączyć.</div>
+          {mode === 'coop' && (
+            <Row label="Utrudnienia">
+              <button className={choice(rules.extraEvilHero)} style={chip} aria-pressed={rules.extraEvilHero} onClick={() => setRules({ ...rules, extraEvilHero: !rules.extraEvilHero })}>
+                Dodatkowy bohater Hordy
+              </button>
+            </Row>
+          )}
           <div className="lbl" style={{ marginTop: 6 }}>Miejsca przy stole</div>
           {seats.map((s, i) => (
             <div key={i} className="well" style={{ padding: '6px 12px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', background: SEAT_TINT[s.faction], transition: 'background 0.35s' }}>
@@ -149,11 +162,9 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules }: { onStart: (
               <div style={{ fontWeight: 700, color: '#F3D27A' }}>{UNITS[s.heroId].name}</div>
             </div>
           ))}
-          {mode === 'coop' && <div style={{ fontSize: 15, color: 'var(--muted)' }}>Zło prowadzi automat: tylu bohaterów Hordy, ilu bohaterów Przymierza.</div>}
+          {mode === 'coop' && <div style={{ fontSize: 15, color: 'var(--muted)' }}>Zło prowadzi automat: tylu bohaterów Hordy, ilu bohaterów Przymierza{rules.extraEvilHero ? ' — i jeszcze jeden' : ''}.</div>}
           <div className="lbl" style={{ marginTop: 6 }}>Zasady testowe</div>
           <div style={{ display: 'flex', gap: '12px 22px', flexWrap: 'wrap', alignItems: 'center', fontSize: 16 }}>
-            <label><input type="checkbox" checked={rules.useDice} onChange={(e) => setRules({ ...rules, useDice: e.target.checked })} /> Kość −1/0/+1</label>
-            <label><input type="checkbox" checked={rules.heroReplacement} onChange={(e) => setRules({ ...rules, heroReplacement: e.target.checked })} /> Przejęcie innego bohatera po śmierci</label>
             <label>
               Remis inicjatywy{' '}
               <select value={rules.initiativeTie} onChange={(e) => setRules({ ...rules, initiativeTie: e.target.value as typeof rules.initiativeTie })}>
@@ -177,7 +188,7 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules }: { onStart: (
             </label>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: 8 }}>
-            <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => onStart({ mode, difficulty, mapSize, battleMode, seed, seats, rules })}>
+            <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => onStart({ mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero } })}>
               Rozpocznij grę
             </button>
           </div>
@@ -193,6 +204,14 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules }: { onStart: (
     </div>
   );
 }
+
+/** Optional simplifications of the full game: label, whether it is on, how to switch it. */
+const EASES: Array<[string, (r: RulesConfig) => boolean, (on: boolean) => Partial<RulesConfig>]> = [
+  ['Bez zdolności', (r) => !r.abilities, (on) => ({ abilities: !on })],
+  ['Bez skarbów', (r) => !r.treasures, (on) => ({ treasures: !on })],
+  ['Bez rzutu kością', (r) => !r.useDice, (on) => ({ useDice: !on })],
+  ['Rezerwowy bohater po śmierci', (r) => r.heroReplacement, (on) => ({ heroReplacement: on })],
+];
 
 /** Seat background tinted by faction: green for Przymierze Świtu, burgundy for Mroczna Horda. */
 const SEAT_TINT: Record<FactionId, string> = {

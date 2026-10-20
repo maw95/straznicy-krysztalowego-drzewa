@@ -1,6 +1,7 @@
 // Game content: units, guardians, treasures and terrain.
-// All numbers come from docs/Straznicy_Krysztalowego_Drzewa_Specyfikacja_dla_AI.md
-// (tables in sections 2–4). They are TEST values meant to be tuned, so the
+// Numbers started from docs/zrodla_zasad/Straznicy_Krysztalowego_Drzewa_Specyfikacja_dla_AI.md
+// and were tuned with simulations (docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md, section 7).
+// They are TEST values meant to be tuned, so the
 // engine never hard-codes them — it always reads from these tables.
 
 export type FactionId = 'dawn' | 'horde';
@@ -41,25 +42,46 @@ export interface UnitDef {
   abilityText: string;
 }
 
+/**
+ * Numbers used by abilities. TEST values like the stats: the engine and the card texts
+ * read them from here.
+ */
+export const ABILITY = {
+  sunburstBonus: 1,
+  lightChargeBonus: 1,
+  lightChargeMinMove: 3,
+  /** Opiekun Gaju in a duel on the board (no ally to protect): damage blocked once. */
+  guardianDuelBlock: 2,
+  rootsSlow: 2,
+  giftOfLifeHeal: 3,
+  airDashRange: 3,
+  bloodCallBonus: 2,
+  hardHeadIgnore: 2,
+  curseMinus: 1,
+  webRange: 4,
+  nightAmbushBonus: 3,
+  nestLeapRange: 4,
+};
+
 const u = (d: UnitDef): UnitDef => d;
 
 export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   [
-    u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', hp: 9, attack: 5, speed: 3, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: 'Raz na bitwę: każda żyjąca własna jednostka, w tym Smok, dostaje +1 A do następnego ataku.' }),
-    u({ id: 'unicornKing', name: 'Król Jednorożców', side: 'dawn', kind: 'hero', hp: 7, attack: 4, speed: 7, movement: 'walk', attackType: 'melee', ability: 'lightCharge', abilityName: 'Szarża Światła', abilityText: '+1 A do ataku wykonanego po ruchu o co najmniej 3 heksy.' }),
-    u({ id: 'ancientBear', name: 'Prastary Niedźwiedź', side: 'dawn', kind: 'hero', hp: 11, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'guardian', abilityName: 'Opiekun Gaju', abilityText: 'Raz na bitwę przejmuje atak wymierzony w sąsiedniego sojusznika.' }),
-    u({ id: 'elfDruid', name: 'Elf Druid', side: 'dawn', kind: 'support', hp: 3, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Splątane Korzenie', abilityText: 'Raz na bitwę: trafiony wróg ma −2 S w swojej następnej aktywacji.' }),
-    u({ id: 'nymph', name: 'Nimfa', side: 'dawn', kind: 'support', hp: 6, attack: 1, speed: 4, movement: 'walk', attackType: 'melee', ability: 'giftOfLife', abilityName: 'Dar Życia', abilityText: 'Raz na bitwę: +3 Ż sojusznikowi, do maksimum.' }),
-    u({ id: 'pegasus', name: 'Pegaz', side: 'dawn', kind: 'support', hp: 3, attack: 2, speed: 5, movement: 'fly', attackType: 'melee', ability: 'airDash', abilityName: 'Powietrzny Zryw', abilityText: 'Raz na bitwę: po ataku odskok do 3 heksów.' }),
-    u({ id: 'blackDragon', name: 'Czarny Smok', side: 'horde', kind: 'hero', hp: 8, attack: 6, speed: 3, movement: 'fly', attackType: 'melee', ability: 'fireBreath', abilityName: 'Ognisty Oddech', abilityText: 'Raz na bitwę: pełny atak w dwóch wrogów stojących w jednej linii.' }),
-    u({ id: 'werewolfLord', name: 'Władca Wilkołaków', side: 'horde', kind: 'hero', hp: 7, attack: 5, speed: 6, movement: 'walk', attackType: 'melee', ability: 'bloodCall', abilityName: 'Zew Krwi', abilityText: 'Raz na bitwę: +2 A przeciw już rannemu celowi.' }),
-    u({ id: 'ironFistOgre', name: 'Ogr Żelazna Pięść', side: 'horde', kind: 'hero', hp: 11, attack: 5, speed: 2, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Twardogłowy', abilityText: 'Raz na bitwę ignoruje do 4 obrażeń z jednego trafienia.' }),
-    u({ id: 'goblinShaman', name: 'Goblin Szaman', side: 'horde', kind: 'support', hp: 4, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'curse', abilityName: 'Złowroga Klątwa', abilityText: 'Raz na bitwę: trafiony cel ma −1 A przy następnym ataku.' }),
-    u({ id: 'caveSpider', name: 'Pająk Jaskiniowy', side: 'horde', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'web', abilityName: 'Pajęcze Sidła', abilityText: 'Raz na bitwę: wróg w zasięgu 4 heksów nie może się ruszyć w następnej aktywacji.' }),
-    u({ id: 'shadowBat', name: 'Nietoperz Cienia', side: 'horde', kind: 'support', hp: 3, attack: 1, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nightAmbush', abilityName: 'Nocna Zasadzka', abilityText: 'Raz na bitwę: atak zadaje +2 obrażenia.' }),
-    u({ id: 'cyclops', name: 'Cyklop Błyskotek', side: 'neutral', kind: 'neutral', hp: 13, attack: 3, speed: 2, movement: 'walk', attackType: 'melee', ability: 'boulder', abilityName: 'Miażdżący Głaz', abilityText: 'Raz na bitwę trafia dwóch sąsiadujących przeciwników.' }),
-    u({ id: 'griffin', name: 'Gryf Złodziej Skarbów', side: 'neutral', kind: 'neutral', hp: 11, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nestLeap', abilityName: 'Łupieżczy Nalot', abilityText: 'Raz na bitwę: po ataku odlatuje o maks. 4 pola.' }),
-    u({ id: 'hydra', name: 'Hydra z Zatopionych Ruin', side: 'neutral', kind: 'neutral', hp: 15, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Paszcze Otchłani', abilityText: 'Raz na bitwę atakuje dwóch sąsiadujących przeciwników.' }),
+    u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', hp: 9, attack: 5, speed: 3, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: każda żyjąca własna jednostka, w tym Smok, dostaje +${ABILITY.sunburstBonus} A do następnego ataku.` }),
+    u({ id: 'unicornKing', name: 'Król Jednorożców', side: 'dawn', kind: 'hero', hp: 8, attack: 5, speed: 5, movement: 'walk', attackType: 'melee', ability: 'lightCharge', abilityName: 'Szarża Światła', abilityText: `+${ABILITY.lightChargeBonus} A do ataku wykonanego po ruchu o co najmniej ${ABILITY.lightChargeMinMove} heksy. W pojedynku na planszy: do pierwszego ataku.` }),
+    u({ id: 'ancientBear', name: 'Prastary Niedźwiedź', side: 'dawn', kind: 'hero', hp: 11, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'guardian', abilityName: 'Opiekun Gaju', abilityText: `Raz na bitwę przejmuje atak wymierzony w sąsiedniego sojusznika. W pojedynku na planszy: raz na bitwę −${ABILITY.guardianDuelBlock} obrażeń z jednego ataku.` }),
+    u({ id: 'elfDruid', name: 'Elf Druid', side: 'dawn', kind: 'support', hp: 4, attack: 1, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Splątane Korzenie', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
+    u({ id: 'nymph', name: 'Nimfa', side: 'dawn', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'giftOfLife', abilityName: 'Dar Życia', abilityText: `Raz na bitwę: +${ABILITY.giftOfLifeHeal} Ż sojusznikowi, do maksimum.` }),
+    u({ id: 'pegasus', name: 'Pegaz', side: 'dawn', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'fly', attackType: 'melee', ability: 'airDash', abilityName: 'Powietrzny Zryw', abilityText: `Raz na bitwę: po ataku odskok do ${ABILITY.airDashRange} heksów.` }),
+    u({ id: 'blackDragon', name: 'Czarny Smok', side: 'horde', kind: 'hero', hp: 9, attack: 5, speed: 3, movement: 'fly', attackType: 'melee', ability: 'fireBreath', abilityName: 'Ognisty Oddech', abilityText: 'Raz na bitwę: pełny atak w dwóch wrogów stojących w jednej linii.' }),
+    u({ id: 'werewolfLord', name: 'Władca Wilkołaków', side: 'horde', kind: 'hero', hp: 8, attack: 5, speed: 5, movement: 'walk', attackType: 'melee', ability: 'bloodCall', abilityName: 'Zew Krwi', abilityText: `Raz na bitwę: +${ABILITY.bloodCallBonus} A przeciw już rannemu celowi.` }),
+    u({ id: 'ironFistOgre', name: 'Ogr Żelazna Pięść', side: 'horde', kind: 'hero', hp: 11, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Twardogłowy', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
+    u({ id: 'goblinShaman', name: 'Goblin Szaman', side: 'horde', kind: 'support', hp: 5, attack: 1, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'curse', abilityName: 'Złowroga Klątwa', abilityText: `Raz na bitwę: trafiony cel ma −${ABILITY.curseMinus} A przy następnym ataku.` }),
+    u({ id: 'caveSpider', name: 'Pająk Jaskiniowy', side: 'horde', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'web', abilityName: 'Pajęcze Sidła', abilityText: `Raz na bitwę: wróg w zasięgu ${ABILITY.webRange} heksów nie może się ruszyć w następnej aktywacji.` }),
+    u({ id: 'shadowBat', name: 'Nietoperz Cienia', side: 'horde', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'fly', attackType: 'melee', ability: 'nightAmbush', abilityName: 'Nocna Zasadzka', abilityText: `Raz na bitwę: atak zadaje +${ABILITY.nightAmbushBonus} obrażenia.` }),
+    u({ id: 'cyclops', name: 'Cyklop Błyskotek', side: 'neutral', kind: 'neutral', hp: 16, attack: 2, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'boulder', abilityName: 'Miażdżący Głaz', abilityText: 'Po każdym ataku odpycha trafionego przeciwnika o 1 pole, jeśli to możliwe.' }),
+    u({ id: 'griffin', name: 'Gryf Złodziej Skarbów', side: 'neutral', kind: 'neutral', hp: 10, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nestLeap', abilityName: 'Łupieżczy Nalot', abilityText: `Po każdym ataku może odlecieć o maks. ${ABILITY.nestLeapRange} pola.` }),
+    u({ id: 'hydra', name: 'Hydra z Zatopionych Ruin', side: 'neutral', kind: 'neutral', hp: 14, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Paszcze Otchłani', abilityText: 'Każdym atakiem może trafić dwóch sąsiadujących przeciwników.' }),
   ].map((d) => [d.id, d]),
 );
 
@@ -108,7 +130,7 @@ export interface ItemDef {
 
 export const ITEMS: Record<ItemKind, ItemDef> = {
   resurrection: { kind: 'resurrection', name: 'Eliksir Odrodzenia', text: 'Wskrzesza 1 poległą jednostkę. Także poza bitwą.', usableIn: ['map', 'battle'] },
-  heal: { kind: 'heal', name: 'Wielki Eliksir Uzdrowienia', text: '+6 Ż jednej żyjącej jednostce, do maksimum.', usableIn: ['battle'] },
+  heal: { kind: 'heal', name: 'Wielki Eliksir Uzdrowienia', text: 'Usuwa z wybranej jednostki do 6 punktów obrażeń.', usableIn: ['battle'] },
   seed: { kind: 'seed', name: 'Nasiono Drzewa', text: '+2 Ż każdej żyjącej własnej jednostce na arenie.', usableIn: ['battle'] },
   damage_scroll: { kind: 'damage_scroll', name: 'Zwój Magicznej Strzały', text: '3 obrażenia wybranemu celowi.', usableIn: ['battle'] },
   sword: { kind: 'sword', name: 'Miecz Bohatera', text: '+2 A jednej jednostce do końca bitwy.', usableIn: ['battle'] },
@@ -126,51 +148,112 @@ export const ITEMS: Record<ItemKind, ItemDef> = {
 
 export const NON_RESURRECTION_ITEMS: ItemKind[] = (Object.keys(ITEMS) as ItemKind[]).filter((k) => k !== 'resurrection');
 
+// Map tiles. The left half of the triangle is built from Przymierze tiles (green back),
+// the right half from Horda tiles (red back). Costs follow the designer's table.
 export type Terrain =
+  // Przymierze
   | 'meadow'
-  | 'bridge'
   | 'forest'
   | 'river'
+  | 'bridge'
   | 'hill'
-  | 'swamp'
-  | 'cave'
   | 'mountain'
+  | 'chasm'
+  // Horda
+  | 'scorched'
+  | 'swamp'
+  | 'barren'
+  | 'darkCave'
+  | 'ruins'
+  | 'deadThicket'
+  | 'thorns'
+  // Special tiles
   | 'tree'
   | 'baseDawn'
-  | 'baseHorde';
+  | 'baseHorde'
+  | 'lairCyclops'
+  | 'lairGriffin'
+  | 'lairHydra'
+  | 'treasureDawn'
+  | 'treasureHorde';
+
+export type TileSide = 'dawn' | 'horde';
 
 export const TERRAIN_NAMES: Record<Terrain, string> = {
-  meadow: 'Polana',
-  bridge: 'Most',
-  forest: 'Las',
+  meadow: 'Polana Przymierza',
+  forest: 'Las Przymierza',
   river: 'Rzeka',
-  hill: 'Wzgórze',
-  swamp: 'Mroczne Bagno',
-  cave: 'Kryształowa Grota',
+  bridge: 'Most',
+  hill: 'Wzgórza',
   mountain: 'Góry',
+  chasm: 'Przepaść',
+  scorched: 'Spalona Ziemia',
+  swamp: 'Mroczne Bagno',
+  barren: 'Jałowa Równina',
+  darkCave: 'Mroczna Jaskinia',
+  ruins: 'Ponure Ruiny',
+  deadThicket: 'Martwy Gąszcz',
+  thorns: 'Trujące Ciernie',
   tree: 'Kryształowe Drzewo',
-  baseDawn: 'Obóz Przymierza',
-  baseHorde: 'Obóz Hordy',
+  baseDawn: 'Baza Przymierza Świtu',
+  baseHorde: 'Baza Mrocznej Hordy',
+  lairCyclops: 'Jaskinia Cyklopa',
+  lairGriffin: 'Gryfie Gniazdo',
+  lairHydra: 'Hydrzy Staw',
+  treasureDawn: 'Skarbiec Przymierza',
+  treasureHorde: 'Skarbiec Hordy',
 };
 
 /** null = impassable. */
 export const TERRAIN_COST: Record<Terrain, number | null> = {
   meadow: 1,
+  forest: 1,
   bridge: 1,
+  scorched: 1,
+  barren: 1,
   tree: 1,
   baseDawn: 1,
   baseHorde: 1,
-  forest: 2,
+  lairCyclops: 1,
+  lairGriffin: 1,
+  lairHydra: 1,
+  treasureDawn: 1,
+  treasureHorde: 1,
   river: 2,
   hill: 2,
   swamp: 2,
-  cave: 2,
+  darkCave: 2,
+  ruins: 2,
   mountain: null,
+  chasm: null,
+  deadThicket: null,
+  thorns: null,
 };
 
-export const EASY_TERRAINS: Terrain[] = ['meadow', 'meadow', 'meadow', 'bridge'];
-/** 'cave' is reserved for crystal hexes so its icon never misleads players. */
-export const HARD_TERRAINS: Terrain[] = ['forest', 'river', 'hill', 'swamp'];
+/** Number of art variants per terrain (public/assets/tiles/<terrain>_<n>.jpg). */
+export const TERRAIN_VARIANTS: Record<Terrain, number> = {
+  meadow: 4, forest: 4, river: 4, bridge: 4, hill: 4, mountain: 4, chasm: 4,
+  scorched: 4, swamp: 4, barren: 4, darkCave: 4, ruins: 4, deadThicket: 4, thorns: 4,
+  tree: 1, baseDawn: 1, baseHorde: 1, lairCyclops: 1, lairGriffin: 1, lairHydra: 1,
+  treasureDawn: 4, treasureHorde: 4,
+};
+
+/**
+ * Tile decks per half of the map: 5 ordinary terrain types and 2 obstacles each, every type
+ * equally likely. The share of difficult ground is not fixed — it follows from the types
+ * (2 difficult types on the Przymierze side, 3 on the Horda side).
+ */
+export const TILE_POOLS: Record<TileSide, Terrain[]> = {
+  dawn: ['meadow', 'forest', 'river', 'bridge', 'hill', 'mountain', 'chasm'],
+  horde: ['scorched', 'barren', 'swamp', 'darkCave', 'ruins', 'deadThicket', 'thorns'],
+};
+
+/** Guardian lairs and the half of the map each guardian lives on. */
+export const GUARDIAN_LAIRS: Record<string, { terrain: Terrain; side: TileSide }> = {
+  cyclops: { terrain: 'lairCyclops', side: 'horde' },
+  griffin: { terrain: 'lairGriffin', side: 'dawn' },
+  hydra: { terrain: 'lairHydra', side: 'horde' },
+};
 
 export interface MapVariant {
   rows: number;
@@ -178,16 +261,14 @@ export interface MapVariant {
   resurrections: number;
   otherTreasures: number;
   roundLimit: number;
-  /** Fixed mountain cells for map type A, as [row, col]. */
-  mountains: Array<[number, number]>;
 }
 
 export type MapSize = 'short' | 'medium' | 'long';
 
 export const MAP_VARIANTS: Record<MapSize, MapVariant> = {
-  short: { rows: 6, crystals: 2, resurrections: 1, otherTreasures: 1, roundLimit: 12, mountains: [[3, 2], [4, 1]] },
-  medium: { rows: 8, crystals: 3, resurrections: 2, otherTreasures: 2, roundLimit: 20, mountains: [[3, 1], [4, 3], [5, 2], [6, 4]] },
-  long: { rows: 11, crystals: 3, resurrections: 2, otherTreasures: 4, roundLimit: 30, mountains: [[3, 2], [5, 1], [5, 4], [6, 3], [7, 5], [8, 2], [9, 6]] },
+  short: { rows: 6, crystals: 2, resurrections: 1, otherTreasures: 1, roundLimit: 12 },
+  medium: { rows: 8, crystals: 3, resurrections: 1, otherTreasures: 3, roundLimit: 20 },
+  long: { rows: 11, crystals: 3, resurrections: 2, otherTreasures: 4, roundLimit: 30 },
 };
 
 export const MAP_SIZE_NAMES: Record<MapSize, string> = { short: 'Krótka', medium: 'Średnia', long: 'Długa' };

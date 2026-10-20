@@ -1,5 +1,6 @@
 // Mass simulations: bots play every seat, results go to stdout as CSV + summary.
-// Usage: npm run sim -- [games=200] [size=short|medium|long] [mode=coop|pvp] [difficulty=basic|advanced]
+// Usage: npm run sim -- [games=200] [size=short|medium|long] [mode=coop|pvp] [options=full] [battle=arena|board]
+// options: 'full' (default game) or a comma list of simplifications: noabilities,notreasures,nodice,replacement
 
 import { createGame, applyAction } from '../src/engine/game';
 import { chooseAction } from '../src/engine/ai';
@@ -10,7 +11,14 @@ const [gamesArg, sizeArg, modeArg, diffArg, battleArg] = process.argv.slice(2);
 const games = Number(gamesArg ?? 200);
 const size = (sizeArg ?? 'short') as MapSize;
 const mode = (modeArg ?? 'coop') as 'coop' | 'pvp';
-const difficulty = (diffArg ?? 'basic') as 'basic' | 'advanced';
+const options = (diffArg ?? 'full').split(',');
+const rules = {
+  ...DEFAULT_RULES,
+  abilities: !options.includes('noabilities'),
+  treasures: !options.includes('notreasures'),
+  useDice: !options.includes('nodice'),
+  heroReplacement: options.includes('replacement'),
+};
 const battleMode = (battleArg ?? 'arena') as 'arena' | 'board';
 
 export function setupFor(seed: number): SetupOptions {
@@ -24,7 +32,7 @@ export function setupFor(seed: number): SetupOptions {
           { name: 'Bot Świt', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'ancientBear' },
           { name: 'Bot Horda', faction: 'horde' as const, controller: 'bot' as const, heroId: 'werewolfLord' },
         ];
-  return { mode, difficulty, mapSize: size, battleMode, seed, seats, rules: { ...DEFAULT_RULES } };
+  return { mode, mapSize: size, battleMode, seed, seats, rules };
 }
 
 export function playOut(seed: number, maxActions = 20000): GameState {
@@ -51,7 +59,7 @@ for (let g = 1; g <= games; g++) {
   rows.push([g, w, JSON.stringify(s.endReason ?? ''), s.round, st.battles, st.heroDeaths.dawn, st.heroDeaths.horde, st.supportDeaths.dawn, st.supportDeaths.horde, st.neutralBattles, st.neutralWipes, st.neutralSupportLosses, s.factions.dawn.delivered, s.actionCount].join(','));
 }
 if (process.env.CSV) console.log(rows.join('\n'));
-console.log(`\n${games} gier · ${size} · ${mode} · ${difficulty} · ${battleMode === 'board' ? 'pojedynki na mapie' : 'arena'}`);
+console.log(`\n${games} gier · ${size} · ${mode} · ${options.join(',')} · ${battleMode === 'board' ? 'pojedynki na mapie' : 'arena'}`);
 for (const [k, v] of Object.entries(tally)) console.log(`  ${k}: ${((v / games) * 100).toFixed(1)}%`);
 console.log(`  średnio rund: ${(rounds / games).toFixed(1)} · niedokończone: ${stuck}`);
 const reasons: Record<string, number> = {};

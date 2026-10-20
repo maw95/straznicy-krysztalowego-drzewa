@@ -5,7 +5,7 @@ import type { HexKey } from '../engine/hex';
 import { mapNeighbors, tileCost } from '../engine/map';
 import type { Action, GameState, Tile } from '../engine/types';
 import { hoverCard } from './hover';
-import { asset, Frame, HpBar, Medal, Pips, Portrait, Ribbon, SIDE_RING, terrainIcon, tileImage } from './common';
+import { asset, Frame, HpBar, Medal, Pips, Portrait, Ribbon, SIDE_RING, tileImage } from './common';
 
 interface Props {
   state: GameState;
@@ -142,7 +142,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 const onPath = preview?.includes(t.key);
                 const crystal = t.revealed ? Object.values(state.crystals).find((c) => c.at === t.key) : undefined;
                 const picked = mapPicks?.picks.includes(t.key);
-                const rim = picked || isSel ? 'linear-gradient(135deg,#F2FCFF,#9EE4FF 40%,#2A6FB0)' : t.revealed ? 'linear-gradient(135deg,#FFF0B0 0%,#E2B04A 30%,#9A6A18 62%,#F0CF78 100%)' : 'linear-gradient(135deg,#7E8A86,#2E3836)';
+                const rim = picked || isSel ? 'linear-gradient(135deg,#F2FCFF,#9EE4FF 40%,#2A6FB0)' : 'linear-gradient(135deg,#FFF0B0 0%,#E2B04A 30%,#9A6A18 62%,#F0CF78 100%)';
                 return (
                   <button
                     key={t.key}
@@ -160,16 +160,10 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     <div className="hex-clip" style={{ position: 'absolute', inset: 2, background: rim }} />
                     <div className="hex-clip" style={{ position: 'absolute', inset: W * 0.055, background: '#1E1204' }} />
                     <div key={t.revealed ? 'r' : 'h'} className={`hex-clip ${freshlyRevealed.has(t.key) ? 'flip-in' : ''}`} style={{ position: 'absolute', inset: W * 0.065, overflow: 'hidden', background: '#10201F' }}>
-                      {t.revealed ? (
-                        <img src={tileImage(t.terrain)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                      ) : (
-                        <div style={{ width: '100%', height: '100%', background: 'radial-gradient(circle at 50% 38%, #2E4C52 0%, #0E1C20 78%)' }}>
-                          <div className="fog" style={{ animationDelay: `${-((t.row * 7 + t.col * 13) % 60)}s` }} />
-                        </div>
-                      )}
+                      <img src={tileImage(t)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transform: 'scale(1.08)' }} />
+                      {!t.revealed && <div className="fog" style={{ opacity: 0.18, animationDelay: `${-((t.row * 7 + t.col * 13) % 60)}s` }} />}
                       {(r || onPath) && <div style={{ position: 'absolute', inset: 0, background: onPath ? 'rgba(158,228,255,0.35)' : 'rgba(158,228,255,0.18)', boxShadow: 'inset 0 0 18px rgba(158,228,255,0.7)' }} />}
                     </div>
-                    {!t.revealed && <img src={asset('ui/orn_tree.png')} alt="" style={{ position: 'absolute', left: '30%', top: '33%', width: '40%', opacity: 0.3 }} />}
                     {t.tree && (
                       <>
                         <div className="tree-glow" style={{ ['--glow' as string]: 0.35 + (0.65 * state.factions.dawn.delivered) / state.crystalsNeeded } as React.CSSProperties} />
@@ -178,7 +172,6 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         ))}
                       </>
                     )}
-                    {t.revealed && <img src={terrainIcon(t.terrain)} alt="" style={{ position: 'absolute', left: W * 0.11, top: H * 0.6, width: W * 0.27, filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.6))' }} />}
                     {t.revealed && t.treasureId && (
                       <div className="glint" style={{ position: 'absolute', right: W * 0.12, top: H * 0.24 }} title="Skarb">
                         <Medal fill="mBrown" glyph="gChest" size={W * 0.3} />
@@ -298,9 +291,9 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
 
           {sel && (
             <div className="plate parch" style={{ padding: '9px 12px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-              <img src={sel.revealed ? terrainIcon(sel.terrain) : asset('ui/ico_krysztal.png')} alt="" style={{ width: 44, height: 44, flex: 'none', opacity: sel.revealed ? 1 : 0.35 }} />
+              <img className="hex-clip" src={tileImage(sel)} alt="" style={{ width: 48, height: 55, flex: 'none', objectFit: 'cover' }} />
               <div>
-                <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{sel.revealed ? TERRAIN_NAMES[sel.terrain] : 'Nieodkryte pole'}</div>
+                <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{sel.revealed ? TERRAIN_NAMES[sel.terrain] : `Nieodkryte pole (${sel.side === 'dawn' ? 'kraina Przymierza' : 'kraina Hordy'})`}</div>
                 <div style={{ fontWeight: 600, fontSize: 15, marginTop: 2 }}>
                   {sel.revealed ? (TERRAIN_COST[sel.terrain] === null ? 'Nieprzechodnie' : `Koszt ruchu: ${TERRAIN_COST[sel.terrain]}`) : 'Teren i zawartość są ukryte.'}
                 </div>
@@ -384,7 +377,7 @@ function HexTooltip({ state, k, reach, heroName, x, y, W, H, boardW }: { state: 
     if (t.tree) lines.push(`Oddaj tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded})`);
     for (const h of heroesAt(state, k)) lines.push(`${UNITS[h.id].name}${h.crystals.length ? ' · niesie kryształ' : ''}`);
     if (reach) lines.push(reach.hostile ? `${heroName}: wejście rozpocznie walkę` : `${heroName} dojdzie tu za ${reach.cost} pkt`);
-  } else lines.push('Teren i zawartość nieznane');
+  } else lines.push(t.side === 'dawn' ? 'Kraina Przymierza — teren nieznany' : 'Kraina Hordy — teren nieznany');
   const width = 220;
   const left = Math.max(-40, Math.min(boardW - width + 40, x + W / 2 - width / 2));
   const above = y > 120;

@@ -1,22 +1,20 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { FACTION_NAMES, ITEMS, UNITS, type FactionId, type ItemKind, type Side } from '../engine/data';
+import { ABILITY, FACTION_NAMES, ITEMS, UNITS, type FactionId, type ItemKind, type Side } from '../engine/data';
 import {
   abilityActive,
   abilityOf,
   alliesOf,
-  ARENA_OBSTACLES,
   ATTACK_ABILITIES,
-  arenaCell,
   arenaCells,
   attackDamage,
   attackTargets,
   breathSecondTarget,
   hasLineOfSight,
   canUseBattleItem,
+  deployCells,
   FREE_ABILITIES,
   hopCells,
   livingUnits,
-  offsetOf,
   reachableCells,
   unitAt,
   unitSpeed,
@@ -25,55 +23,16 @@ import { distance, parseKey, type HexKey } from '../engine/hex';
 import type { Action, BattleUnit, GameState } from '../engine/types';
 import { hoverCard } from './hover';
 import { asset, Frame, HpBar, Medal, Portrait, Ribbon, SIDE_RING } from './common';
+import { ART_SIZE, CANVAS_H, CANVAS_W, cellCenter, hexPoints } from './arenaGeometry';
 
+/** Box a unit token is laid out in, centred on its cell. */
 const W = 66;
 const H = 76;
-const STEP = 57;
-const GX = 38;
-const GY = 150;
-const CANVAS_W = 836;
-const CANVAS_H = GY + H + 8 * STEP + 12;
 
 function cellPos(k: HexKey) {
-  const { row, col } = offsetOf(k);
-  return { x: GX + col * W + (row % 2) * (W / 2), y: GY + row * STEP };
+  const c = cellCenter(k);
+  return { x: c.x - W / 2, y: c.y - H / 2 };
 }
-const hexPoints = (x: number, y: number, ins = 0) =>
-  [
-    [x + W / 2, y + ins],
-    [x + W - ins, y + H * 0.25 + ins * 0.5],
-    [x + W - ins, y + H * 0.75 - ins * 0.5],
-    [x + W / 2, y + H - ins],
-    [x + ins, y + H * 0.75 - ins * 0.5],
-    [x + ins, y + H * 0.25 + ins * 0.5],
-  ]
-    .map((p) => p.join(','))
-    .join(' ');
-
-/** Battlefield mood follows the terrain of the map hex where the fight started. */
-const MOOD: Partial<Record<string, string>> = {
-  swamp: 'swamp',
-  cave: 'cave',
-  forest: 'forest',
-  river: 'river',
-  bridge: 'river',
-  hill: 'hill',
-  tree: 'tree',
-  baseHorde: 'camp',
-};
-
-const SPRITES: Record<string, { file: string; w: number; h: number; up: number }> = {
-  grove: { file: 'grove', w: 81, h: 99, up: 81 },
-  grove2: { file: 'grove2', w: 84, h: 101, up: 83 },
-  deadoak: { file: 'deadoak', w: 69, h: 115, up: 97 },
-  tree1: { file: 'tree1', w: 68, h: 116, up: 98 },
-  tree2: { file: 'tree2', w: 66, h: 113, up: 95 },
-  tree3: { file: 'tree3', w: 67, h: 109, up: 91 },
-  rock: { file: 'rock', w: 70, h: 72, up: 50 },
-  deadtree: { file: 'deadtree', w: 64, h: 113, up: 95 },
-  log: { file: 'log', w: 146, h: 70, up: 42 },
-  pond: { file: 'pond', w: 146, h: 82, up: 42 },
-};
 
 type ItemTargeting =
   | { kind: 'ownLiving' | 'ownDead' | 'enemy'; itemId: string }
@@ -274,13 +233,43 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     let dmg = attackDamage(state, active, t, useAbility && attackAbility, act?.movedDistance ?? 0);
     dmg = Math.max(0, dmg - t.status.damageReduction);
     const hard = abilityOf(t) === 'hardHead' && !t.abilityUsed && abilityActive(state, t) && dmg >= 2;
-    if (hard) dmg = Math.max(0, dmg - 4);
+    if (hard) dmg = Math.max(0, dmg - ABILITY.hardHeadIgnore);
     const left = Math.max(0, t.hp - dmg);
     const note = hard ? ' (Twardogłowy)' : '';
     return left === 0 ? { text: `−${dmg} · pokona${note}`, lethal: true } : { text: `−${dmg} → ${left} Ż${note}`, lethal: false };
   }
 
+  // ---------------------------------------------------------------- deployment
+  const deploySide: FactionId | null = b.stage === 'deploy' && canAct ? b.needsDeploy[0] ?? null : null;
+  const [placing, setPlacing] = useState<Record<string, HexKey>>({});
+  const [picked, setPicked] = useState<string | null>(null);
+  useEffect(() => {
+    // Start from the current (default) placement each time a faction gets to deploy.
+    if (!deploySide) return;
+    const init: Record<string, HexKey> = {};
+    for (const u of Object.values(b.units)) if (u.side === deploySide && u.pos) init[u.id] = u.pos;
+    setPlacing(init);
+    setPicked(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deploySide, b.needsDeploy.length]);
+  const deployable = new Set(deploySide ? deployCells(b, deploySide) : []);
+  const posOf = (u: BattleUnit): HexKey | null => (deploySide && u.side === deploySide ? placing[u.id] ?? u.pos : u.pos);
+
+  function placeAt(k: HexKey) {
+    if (!picked || !deployable.has(k)) return;
+    const occupant = Object.keys(placing).find((id) => placing[id] === k);
+    const next = { ...placing, [picked]: k };
+    if (occupant && occupant !== picked) next[occupant] = placing[picked];
+    setPlacing(next);
+    setPicked(null);
+  }
+
   function clickUnit(u: BattleUnit) {
+    if (deploySide) {
+      if (u.side === deploySide) setPicked(picked === u.id ? null : u.id);
+      else onShowCard(u.defId);
+      return;
+    }
     if (!myTurn || !active) {
       onShowCard(u.defId);
       return;
@@ -300,6 +289,12 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   }
 
   function clickCell(k: HexKey) {
+    if (deploySide) {
+      const own = Object.values(b.units).find((u) => u.side === deploySide && posOf(u) === k);
+      if (own && !picked) setPicked(own.id);
+      else placeAt(k);
+      return;
+    }
     const u = unitAt(b, k);
     if (u) return clickUnit(u);
     if (!myTurn) return;
@@ -392,30 +387,26 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
       <div className="battle-curtain" />
       <div className="main-row battle-row">
         {sidePanel(sides[0])}
-        <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#3F5A26' }}>
+        <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#14100A' }}>
           <div ref={wrapRef} className="scroll" style={{ position: 'absolute', inset: 0, overflow: 'auto', display: 'flex' }}>
             <div style={{ position: 'relative', flex: 'none', margin: 'auto', width: CANVAS_W * scale, height: CANVAS_H * scale, overflow: 'hidden' }}>
             <div style={{ position: 'absolute', left: 0, top: 0, width: CANVAS_W, height: CANVAS_H, transform: `scale(${scale})`, transformOrigin: '0 0' }}>
-              <img src={asset('ui/grass.jpg')} alt="" style={{ position: 'absolute', left: -200, top: 120, width: CANVAS_W + 400, height: CANVAS_H - 120 + 200, objectFit: 'cover' }} />
-              <img src={asset('ui/landscape.jpg')} alt="" style={{ position: 'absolute', left: -200, top: -60, width: CANVAS_W + 400, height: 240, objectFit: 'cover', objectPosition: 'center 62%', WebkitMaskImage: 'linear-gradient(180deg,#000 55%,transparent 100%)', maskImage: 'linear-gradient(180deg,#000 55%,transparent 100%)' }} />
-              <div className={`arena-mood mood-${MOOD[state.tiles[b.mapHex]?.terrain] ?? 'none'}`} />
+              {/* The painted board of the half of the map where the fight broke out. */}
+              <img src={asset(`arena/${b.arena}.jpg`)} alt="" style={{ position: 'absolute', left: 0, top: 0, width: ART_SIZE.w, height: ART_SIZE.h }} />
               <svg width={CANVAS_W} height={CANVAS_H} style={{ position: 'absolute', left: 0, top: 0 }}>
                 {arenaCells().map((k) => {
-                  const { x, y } = cellPos(k);
-                  const { col } = offsetOf(k);
                   let fill = 'transparent';
-                  if (moves.has(k)) fill = hoverPreview === k ? 'rgba(158,228,255,0.35)' : 'rgba(6,12,2,0.32)';
+                  if (deployable.has(k)) fill = picked ? (hover === k ? 'rgba(243,210,122,0.5)' : 'rgba(243,210,122,0.28)') : 'rgba(243,210,122,0.18)';
+                  else if (moves.has(k)) fill = hoverPreview === k ? 'rgba(158,228,255,0.45)' : 'rgba(158,228,255,0.2)';
                   else if (hops.includes(k)) fill = 'rgba(158,228,255,0.28)';
                   else if (targeting?.kind === 'teleport' && targeting.unitId && !unitAt(b, k) && !b.obstacles.includes(k)) fill = 'rgba(200,160,255,0.25)';
-                  else if (col === 0) fill = 'rgba(70,160,90,0.14)';
-                  else if (col === 10) fill = 'rgba(70,120,190,0.14)';
                   return (
                     <polygon
                       key={k}
-                      points={hexPoints(x, y)}
+                      points={hexPoints(k)}
                       fill={fill}
-                      stroke="rgba(20,32,10,0.55)"
-                      strokeWidth="1.6"
+                      stroke={moves.has(k) || hops.includes(k) ? 'rgba(190,240,255,0.75)' : 'none'}
+                      strokeWidth="1.5"
                       onClick={() => clickCell(k)}
                       onMouseEnter={() => setHover(k)}
                       onMouseLeave={() => setHover(null)}
@@ -423,27 +414,23 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                     />
                   );
                 })}
-                {active?.pos && <polygon points={hexPoints(cellPos(active.pos).x, cellPos(active.pos).y, 2)} fill="rgba(158,228,255,0.15)" stroke="#9EE4FF" strokeWidth="3" pointerEvents="none" />}
+                {active?.pos && <polygon points={hexPoints(active.pos, 2)} fill="rgba(158,228,255,0.15)" stroke="#9EE4FF" strokeWidth="3" pointerEvents="none" />}
+                {[...deployable].map((k) => (
+                  <polygon key={`dp${k}`} points={hexPoints(k, 3)} fill="none" stroke="#F3D27A" strokeWidth={hover === k && picked ? 3.5 : 2} strokeDasharray={picked ? undefined : '5 4'} pointerEvents="none" />
+                ))}
                 {[...threat].map((k) => (
-                  <polygon key={`th${k}`} points={hexPoints(cellPos(k).x, cellPos(k).y, 3)} fill="rgba(224,60,40,0.16)" stroke="rgba(224,80,60,0.55)" strokeWidth="1.5" strokeDasharray="4 3" pointerEvents="none" />
+                  <polygon key={`th${k}`} points={hexPoints(k, 3)} fill="rgba(224,60,40,0.16)" stroke="rgba(224,80,60,0.55)" strokeWidth="1.5" strokeDasharray="4 3" pointerEvents="none" />
                 ))}
                 {targets.map((t) => (
-                  <polygon key={t.id} points={hexPoints(cellPos(t.pos!).x, cellPos(t.pos!).y, 2)} fill="rgba(224,80,60,0.16)" stroke="#E0503C" strokeWidth="3" pointerEvents="none" />
+                  <polygon key={t.id} points={hexPoints(t.pos!, 2)} fill="rgba(224,80,60,0.16)" stroke="#E0503C" strokeWidth="3" pointerEvents="none" />
                 ))}
                 {breathPreview.map((t) => (
-                  <polygon key={`b${t!.id}`} points={hexPoints(cellPos(t!.pos!).x, cellPos(t!.pos!).y, 6)} fill="none" stroke="#FF9A3A" strokeWidth="2" strokeDasharray="5 4" pointerEvents="none" />
+                  <polygon key={`b${t!.id}`} points={hexPoints(t!.pos!, 6)} fill="none" stroke="#FF9A3A" strokeWidth="2" strokeDasharray="5 4" pointerEvents="none" />
                 ))}
               </svg>
-              {ARENA_OBSTACLES.map((o, i) => {
-                const sp = SPRITES[o.sprite];
-                const cells = o.cells.map(([r, c]) => cellPos(arenaCell(r, c)));
-                const cx = cells.reduce((a, p) => a + p.x, 0) / cells.length + W / 2;
-                const cy = cells[0].y + H / 2;
-                return <img key={i} src={asset(`obstacles/${sp.file}.png`)} alt="" style={{ position: 'absolute', left: cx - sp.w / 2, top: cy - sp.up, width: sp.w, height: sp.h, pointerEvents: 'none' }} />;
-              })}
               {livingUnits(b).map((u) => {
-                const { x, y } = cellPos(u.pos!);
-                const isActive = active?.id === u.id;
+                const { x, y } = cellPos(posOf(u)!);
+                const isActive = deploySide ? picked === u.id : active?.id === u.id;
                 const isTarget = targets.some((t) => t.id === u.id);
                 const strike = strikes.find((st) => st.attacker === u.id && !st.ranged);
                 const lunge = strike ? (() => {
@@ -543,7 +530,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                 Zasięg wrogów
               </button>
               <div style={{ position: 'absolute', left: '50%', top: 14, transform: 'translateX(-50%)' }}>
-                <Ribbon style={{ width: 340 }}>{`${b.kind === 'neutral' ? 'Bitwa o kryształ' : 'Starcie bohaterów'} · runda ${b.round}`}</Ribbon>
+                <Ribbon style={{ width: 340 }}>{`${b.kind === 'neutral' ? 'Bitwa o kryształ' : 'Starcie bohaterów'} · ${b.stage === 'deploy' ? 'ustawienie' : `runda ${b.round}`}`}</Ribbon>
               </div>
             </div>
             </div>
@@ -556,9 +543,15 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           {active && <span className="hide-mobile"><Portrait unitId={active.defId} size={56} ring={SIDE_RING[active.side]} glow="0 0 0 2.5px #9EE4FF" /></span>}
           <div className="act-info" style={{ width: 170 }}>
-            <div style={{ fontWeight: 800, fontSize: 18, color: '#F3D27A', lineHeight: 1.1 }}>{active ? UNITS[active.defId].name : '—'}</div>
+            <div style={{ fontWeight: 800, fontSize: 18, color: '#F3D27A', lineHeight: 1.1 }}>{b.stage === 'deploy' ? 'Ustawienie wojsk' : active ? UNITS[active.defId].name : '—'}</div>
             <div style={{ fontSize: 14, color: 'var(--muted)' }}>
-              {!myTurn
+              {b.stage === 'deploy'
+                ? deploySide
+                  ? picked
+                    ? 'Wskaż złote pole w swojej kolumnie'
+                    : 'Kliknij jednostkę, potem pole'
+                  : `${FACTION_NAMES[b.needsDeploy[0]]} ustawia jednostki…`
+                : !myTurn
                 ? 'Ruch przeciwnika…'
                 : act!.hop
                   ? 'Wybierz pole odskoku'
@@ -580,6 +573,16 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
             </div>
           </div>
         </div>
+        {deploySide && (
+          <button
+            className="btn prim"
+            style={{ height: 60, padding: '0 22px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 19 }}
+            onClick={() => onAction({ type: 'deployUnits', faction: deploySide, positions: placing })}
+          >
+            <Medal fill="mRed" glyph="gSwords" size={32} />
+            Gotowe — do bitwy
+          </button>
+        )}
         {myTurn && active && (
           <div style={{ display: 'flex', gap: 8 }}>
             {attackAbility && (

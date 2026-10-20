@@ -1,27 +1,14 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
-import type { Side, Terrain } from '../engine/data';
+import type { Side } from '../engine/data';
+import type { Tile } from '../engine/types';
 import { SVG_DEFS } from './svgDefs';
 import { hoverCard } from './hover';
 
 const BASE = import.meta.env?.BASE_URL ?? '/';
 export const asset = (path: string) => `${BASE}assets/${path}`;
 export const portrait = (unitId: string) => asset(`cards/portraits/${unitId}.jpg`);
-export const tileImage = (t: Terrain) => asset(`tiles/${t}.jpg`);
-
-export const TERRAIN_ICON: Record<Terrain, string> = {
-  meadow: 'ico_polana',
-  bridge: 'ico_most',
-  forest: 'ico_las',
-  river: 'ico_woda',
-  hill: 'ico_gory',
-  swamp: 'ico_bagno',
-  cave: 'ico_krysztal',
-  mountain: 'ico_gory',
-  tree: 'ico_drzewo',
-  baseDawn: 'ico_drzewo',
-  baseHorde: 'ico_oboz',
-};
-export const terrainIcon = (t: Terrain) => asset(`ui/${TERRAIN_ICON[t]}.png`);
+/** Face of a map tile (one of the art variants), or its green/red back while hidden. */
+export const tileImage = (t: Tile) => asset(t.revealed ? `tiles/${t.terrain}_${t.variant}.jpg` : `tiles/back_${t.side}.jpg`);
 
 export const SIDE_RING: Record<Side, string> = { dawn: '#2C7048', horde: '#9A2226', neutral: '#2A5E9A' };
 export const SIDE_RIBBON: Record<Side, 'g' | 'r' | 'b'> = { dawn: 'g', horde: 'r', neutral: 'b' };

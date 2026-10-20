@@ -4,8 +4,104 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89252fbb-bb1d-425f-a087-9550b0de05f0" name="Changes" comment="initial commit">
+    <list default="true" id="89252fbb-bb1d-425f-a087-9550b0de05f0" name="Changes" comment="UI improvements">
+      <change afterPath="$PROJECT_DIR$/docs/grafika/areny/arena_walki_horda.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/grafika/areny/arena_walki_przymierze.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/grafika/ikony/znaczniki.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/grafika/kafelki_mapy/bazy_i_siedliska_straznikow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/grafika/kafelki_mapy/krysztalowe_drzewo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/grafika/kafelki_mapy/rewers_kafelka_horda.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/grafika/kafelki_mapy/rewers_kafelka_przymierze.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/grafika/kafelki_mapy/wzgorza_jalowe_rowniny.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/grafika/okladka/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/grafika/okladka/okladka.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/grafika/okladka/okladka.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/zrodla_zasad/KONTEKST_DO_NOWEGO_CZATU.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Straznicy_Krysztalowego_Drzewa_Instrukcja_ilustrowana_v3.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/docs/zrodla_zasad/Straznicy_Krysztalowego_Drzewa_Instrukcja_ilustrowana_v3.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Straznicy_Krysztalowego_Drzewa_Specyfikacja_dla_AI.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/zrodla_zasad/Straznicy_Krysztalowego_Drzewa_Specyfikacja_dla_AI.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/ikony_statow_typu_i_frakcji.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/ikony/ikony_statow_typu_i_frakcji.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/ikony_umiejetnosci.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/ikony/ikony_umiejetnosci.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/gory_szczeliny.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/kafelki_mapy/gory_szczeliny.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/jaskinie_ruiny.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/kafelki_mapy/jaskinie_ruiny.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/las_bagno.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/kafelki_mapy/las_bagno.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/martwy_gaszcz_trujace_ciernie.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/kafelki_mapy/martwy_gaszcz_trujace_ciernie.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/polana_spalona_ziemia.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/kafelki_mapy/polana_spalona_ziemia.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/rzeki_mosty.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/kafelki_mapy/rzeki_mosty.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/skarby.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/kafelki_mapy/skarby.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/portrety_mroczna_horda.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/portrety/portrety_mroczna_horda.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/portrety_przymierze_switu.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/portrety/portrety_przymierze_switu.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/portrety_skarby.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/portrety/portrety_skarby.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/portrety_straznicy_krysztalu.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/portrety/portrety_straznicy_krysztalu.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_bohater_hordy.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_bohater_hordy.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_bohater_hordy_bez_tekstu.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_bohater_hordy_bez_tekstu.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_bohater_przymierza.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_bohater_przymierza.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_bohater_przymierza_bez_tekstu.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_bohater_przymierza_bez_tekstu.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_neutralny_bohater.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_neutralny_bohater.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_neutralny_bohater_bez_tekstu.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_neutralny_bohater_bez_tekstu.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_neutralny_pomocnik.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_neutralny_pomocnik.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_neutralny_pomocnik_bez_tekstu.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_neutralny_pomocnik_bez_tekstu.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_pomocnik_hordy.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_pomocnik_hordy.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_pomocnik_hordy_bez_tekstu.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_pomocnik_hordy_bez_tekstu.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_pomocnik_przymierza.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_pomocnik_przymierza.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_pomocnik_przymierza_bez_tekstu.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_pomocnik_przymierza_bez_tekstu.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_skarbu.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_skarbu.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/images/wzor_karty_skarbu_bez_tekstu.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/karty/wzor_karty_skarbu_bez_tekstu.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/soundtrack/01_mapa_przygody.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/docs/muzyka/01_mapa_przygody.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/soundtrack/02_bitwa.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/docs/muzyka/02_bitwa.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/soundtrack/03_walka_ze_straznikiem.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/docs/muzyka/03_walka_ze_straznikiem.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/soundtrack/04_menu_glowne.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/docs/muzyka/04_menu_glowne.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/soundtrack/05_rytual_przy_drzewie.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/docs/muzyka/05_rytual_przy_drzewie.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/soundtrack/06_wygrana_przymierza.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/docs/muzyka/06_wygrana_przymierza.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/assets/soundtrack/07_wygrana_hordy.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/docs/muzyka/07_wygrana_hordy.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/obstacles/deadoak.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/obstacles/deadtree.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/obstacles/grove.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/obstacles/grove2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/obstacles/log.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/obstacles/pond.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/obstacles/rock.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/obstacles/tree1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/obstacles/tree2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/obstacles/tree3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/tiles/baseDawn.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/tiles/baseHorde.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/tiles/bridge.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/tiles/cave.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/tiles/forest.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/tiles/hill.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/tiles/meadow.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/tiles/mountain.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/tiles/river.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/tiles/swamp.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/tiles/tree.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/ui/grass.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/assets/extract.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/assets/extract.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/simulate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/simulate.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/ai/adventureAi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/ai/adventureAi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/ai/battleAi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/ai/battleAi.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/battle.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/battle.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/data.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/game.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/map.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/map.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/engine/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/AdventureView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/AdventureView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/BattleView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/BattleView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/RulesDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/RulesDialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/SetupScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/SetupScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/Tutorial.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/Tutorial.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/UnitCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UnitCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/common.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/common.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/saves.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/saves.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/engine.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tests/engine.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ui-battle.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ui-battle.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/ui.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ui.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,23 +117,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.027791635349533" />
-      <entry key="MS500" value="1.830358589090263" />
-      <entry key="S2" value="3.1049051092064484" />
-      <entry key="S5" value="3.5961649473069115" />
-      <entry key="S10" value="3.789457929790027" />
-      <entry key="S30" value="3.9277997334000516" />
-      <entry key="S60" value="3.9636406781284124" />
-      <entry key="M2" value="3.9817550247267186" />
-      <entry key="M5" value="3.9928320004926636" />
-      <entry key="M10" value="4.008938223461586" />
-      <entry key="M15" value="4.059234573992667" />
-      <entry key="M30" value="4.4496091784793155" />
-      <entry key="H1" value="6.609860885082339" />
-      <entry key="H2" value="13.862865929837008" />
-      <entry key="H4" value="26.41522802124643" />
-      <entry key="D1" value="54.76653156803452" />
-      <entry key="W1" value="63.392623782671684" />
+      <entry key="MS100" value="1.0223425271189384" />
+      <entry key="MS500" value="1.726806897154161" />
+      <entry key="S2" value="2.931261078361802" />
+      <entry key="S5" value="3.491160838034493" />
+      <entry key="S10" value="3.7290963882262593" />
+      <entry key="S30" value="3.905708341601551" />
+      <entry key="S60" value="3.952489578301439" />
+      <entry key="M2" value="4.001038866796636" />
+      <entry key="M5" value="4.515741054386098" />
+      <entry key="M10" value="5.449361621967172" />
+      <entry key="M15" value="6.061389051461776" />
+      <entry key="M30" value="7.171742268785244" />
+      <entry key="H1" value="9.581202265323771" />
+      <entry key="H2" value="16.73908685215261" />
+      <entry key="H4" value="29.322139857811774" />
+      <entry key="D1" value="58.38217218981982" />
+      <entry key="W1" value="67.32887563648538" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -59,23 +155,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9998492534386328" />
-      <entry key="MS500" value="1.8197465738272454" />
-      <entry key="S2" value="3.100124573684783" />
-      <entry key="S5" value="3.593931135019386" />
-      <entry key="S10" value="3.788278282431669" />
-      <entry key="S30" value="3.927391607709659" />
-      <entry key="S60" value="3.9634346877641464" />
-      <entry key="M2" value="3.9816515427511403" />
-      <entry key="M5" value="3.9927904892271937" />
-      <entry key="M10" value="4.008917404749535" />
-      <entry key="M15" value="4.059220574091965" />
-      <entry key="M30" value="4.449601647207975" />
-      <entry key="H1" value="6.609854891049417" />
-      <entry key="H2" value="13.86285779043095" />
-      <entry key="H4" value="26.415217818214025" />
-      <entry key="D1" value="54.76652668402208" />
-      <entry key="W1" value="63.39262292413699" />
+      <entry key="MS100" value="1.001303022023345" />
+      <entry key="MS500" value="1.719601151396166" />
+      <entry key="S2" value="2.928072967112548" />
+      <entry key="S5" value="3.4896121883142257" />
+      <entry key="S10" value="3.7282630387655122" />
+      <entry key="S30" value="3.905415857290252" />
+      <entry key="S60" value="3.9523413811970514" />
+      <entry key="M2" value="4.0009636271639035" />
+      <entry key="M5" value="4.515705636606355" />
+      <entry key="M10" value="5.449339072275197" />
+      <entry key="M15" value="6.061371927688868" />
+      <entry key="M30" value="7.171731893850396" />
+      <entry key="H1" value="9.581194700911533" />
+      <entry key="H2" value="16.739078120947667" />
+      <entry key="H4" value="29.32212945119047" />
+      <entry key="D1" value="58.38216723578908" />
+      <entry key="W1" value="67.32887476391501" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -103,7 +199,7 @@
     "git-widget-placeholder": "master",
     "javascript.preferred.runtime.type.id": "node",
     "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/home/maciek/WebstormProjects/straznicy-krysztalowego-drzewa/docs/assets/images/kafelki_mapy",
+    "last_opened_file_path": "/home/maciek/WebstormProjects/straznicy-krysztalowego-drzewa/docs/grafika/areny",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.jshint": "true",
     "node.js.detected.package.tslint": "true",
@@ -119,11 +215,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/docs/assets/images/kafelki_mapy" />
-      <recent name="$PROJECT_DIR$/docs/assets/images" />
-      <recent name="$PROJECT_DIR$/docs/assets/soundtrack" />
+      <recent name="$PROJECT_DIR$/docs/grafika/areny" />
+      <recent name="$PROJECT_DIR$/docs/grafika/ikony" />
       <recent name="$PROJECT_DIR$/docs/assets" />
-      <recent name="$PROJECT_DIR$/docs" />
+      <recent name="$PROJECT_DIR$/docs/assets/images" />
+      <recent name="$PROJECT_DIR$/docs/assets/images/kafelki_mapy" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docs/assets/images" />
@@ -144,7 +240,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1792446544535</updated>
-      <workItem from="1792446545535" duration="40198000" />
+      <workItem from="1792446545535" duration="56525000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -154,7 +250,15 @@
       <option name="project" value="LOCAL" />
       <updated>1792505011748</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="UI improvements">
+      <option name="closed" value="true" />
+      <created>1792505887118</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1792505887118</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -162,6 +266,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="initial commit" />
+    <MESSAGE value="UI improvements" />
+    <option name="LAST_COMMIT_MESSAGE" value="UI improvements" />
   </component>
 </project>

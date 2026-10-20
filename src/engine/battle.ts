@@ -1,39 +1,59 @@
 // Battle engine: arena 9×11, initiative, movement, attacks, abilities and items.
 // Functions mutate the (already cloned) GameState passed in.
 
-import { ITEMS, UNITS, type AbilityId, type FactionId, type Side } from './data';
-import { distance, directionBetween, add, key, line, neighbors, offsetToHex, parseKey, hexToOffset, type HexKey } from './hex';
+import { ABILITY, ITEMS, UNITS, type AbilityId, type FactionId, type Side } from './data';
+import { distance, directionBetween, add, key, line, neighbors, parseKey, type HexKey } from './hex';
 import { Rng } from './rng';
 import type { Activation, BattleState, BattleUnit, GameState, UnitStatus } from './types';
 
-export const ARENA_ROWS = 9;
-export const ARENA_COLS = 11;
-
-export interface ObstacleDef {
-  cells: Array<[number, number]>;
-  sprite: string;
-}
-
-/** Fixed obstacle layout ("stałe przeszkody na polu bitwy"); start columns stay free. */
-export const ARENA_OBSTACLES: ObstacleDef[] = [
-  { cells: [[1, 2]], sprite: 'grove' },
-  { cells: [[1, 3]], sprite: 'grove2' },
-  { cells: [[0, 5]], sprite: 'deadoak' },
-  { cells: [[1, 8]], sprite: 'tree1' },
-  { cells: [[3, 4]], sprite: 'tree2' },
-  { cells: [[5, 4]], sprite: 'rock' },
-  { cells: [[6, 5], [6, 6]], sprite: 'log' },
-  { cells: [[7, 1]], sprite: 'tree3' },
-  { cells: [[7, 7], [7, 8]], sprite: 'pond' },
-  { cells: [[8, 9]], sprite: 'deadtree' },
+/**
+ * The arena drawn by the designer (docs/grafika/areny/arena_walki_*.png): 13 columns of
+ * flat-topped hexes. A cell is (col, half-row): `half` counts half-hex steps down the board,
+ * so one column holds every second value and neighbouring columns are offset by one.
+ * Columns hold 5–7 hexes; the start columns 0 and 12 hold 5 (85 cells in all).
+ */
+export const ARENA_COLUMNS = 13;
+/** First and last half-row of each column. */
+export const COLUMN_SPAN: ReadonlyArray<readonly [number, number]> = [
+  [4, 12], [3, 13], [2, 14], [3, 15], [2, 14], [3, 15], [2, 14], [3, 15], [2, 14], [3, 15], [2, 14], [3, 13], [4, 12],
 ];
+/** Half-row of the middle of a start column. */
+export const MIDDLE_HALF = 8;
 
-export const arenaCell = (row: number, col: number): HexKey => key(offsetToHex(row, col));
+export type ArenaId = 'dawn' | 'horde';
+
+/** Obstacles painted on each arena, as [col, half]. Start columns stay free. */
+export const ARENA_OBSTACLES: Record<ArenaId, Array<[number, number]>> = {
+  dawn: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [8, 14], [9, 13]],
+  horde: [[3, 3], [9, 3], [3, 7], [2, 8], [6, 8], [9, 9], [10, 10], [3, 13], [8, 14], [9, 13]],
+};
+
+export const arenaCell = (col: number, half: number): HexKey => key({ q: col, r: (half - col) / 2 });
+
+/** Column and half-row of an arena cell. */
+export function cellOf(k: HexKey): { col: number; half: number } {
+  const h = parseKey(k);
+  return { col: h.q, half: 2 * h.r + h.q };
+}
 
 export function arenaCells(): HexKey[] {
   const out: HexKey[] = [];
-  for (let row = 0; row < ARENA_ROWS; row++) for (let col = 0; col < ARENA_COLS; col++) out.push(arenaCell(row, col));
+  COLUMN_SPAN.forEach(([from, to], col) => {
+    for (let half = from; half <= to; half += 2) out.push(arenaCell(col, half));
+  });
   return out;
+}
+
+/** Cells of one column, from the middle outwards. */
+export function columnCells(col: number): HexKey[] {
+  const [from, to] = COLUMN_SPAN[col];
+  const halves: number[] = [];
+  for (let half = from; half <= to; half += 2) halves.push(half);
+  return halves.sort((a, b) => Math.abs(a - MIDDLE_HALF) - Math.abs(b - MIDDLE_HALF) || a - b).map((half) => arenaCell(col, half));
+}
+
+export function arenaObstacles(arena: ArenaId): HexKey[] {
+  return ARENA_OBSTACLES[arena].map(([c, h]) => arenaCell(c, h));
 }
 
 const ARENA_SET = new Set(arenaCells());
@@ -58,9 +78,8 @@ const unitName = (u: BattleUnit) => UNITS[u.defId].name;
 
 // ---------------------------------------------------------------- queries
 
-export function abilityActive(state: GameState, u: BattleUnit): boolean {
-  if (u.side === 'neutral') return state.setup.difficulty === 'advanced' || state.rules.neutralAbilitiesAlways;
-  return state.setup.difficulty === 'advanced';
+export function abilityActive(state: GameState, _u?: BattleUnit): boolean {
+  return state.rules.abilities;
 }
 
 export function abilityOf(u: BattleUnit): AbilityId {
@@ -175,43 +194,104 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
   let dmg = unitAttackBase(att) + att.status.nextAttackBonus - att.status.cursedNext;
   if (abilityActive(state, att)) {
     const ab = abilityOf(att);
-    if (ab === 'lightCharge' && movedDistance >= 3) dmg += 1;
+    // In a duel nobody moves, so the charge counts for the first attack of the battle instead.
+    const duelCharge = state.battle?.duel && !att.abilityUsed;
+    if (ab === 'lightCharge' && (movedDistance >= ABILITY.lightChargeMinMove || duelCharge)) dmg += ABILITY.lightChargeBonus;
     if (useAbility && !att.abilityUsed) {
-      if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += 2;
-      if (ab === 'nightAmbush') dmg += 2;
+      if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += ABILITY.bloodCallBonus;
+      if (ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus;
     }
   }
   return Math.max(0, dmg);
 }
 
 /** Abilities that are switched on for a single attack. */
-export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'bloodCall', 'curse', 'nightAmbush', 'boulder', 'manyHeads'];
+export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'bloodCall', 'curse', 'nightAmbush'];
+/** Guardian abilities work on every attack, with no once-per-battle limit. */
+export const UNLIMITED_ABILITIES: AbilityId[] = ['boulder', 'nestLeap', 'manyHeads'];
+
+/** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
+export function canHitTwo(state: GameState, u: BattleUnit): boolean {
+  return abilityOf(u) === 'manyHeads' && abilityActive(state, u);
+}
+
+/**
+ * Miażdżący Głaz: the cell the target is pushed to — the next hex on the line from the
+ * attacker through the target — or null when it is off the arena, an obstacle or taken.
+ */
+export function pushCell(state: GameState, from: HexKey, target: HexKey): HexKey | null {
+  const b = state.battle!;
+  const a = parseKey(from);
+  const t = parseKey(target);
+  const path = line(a, { q: 2 * t.q - a.q, r: 2 * t.r - a.r });
+  const cell = path[distance(a, t) + 1];
+  if (!cell) return null;
+  const k = key(cell);
+  if (!inArena(k) || b.obstacles.includes(k) || unitAt(b, k)) return null;
+  return k;
+}
 /** Abilities used as a free action during the unit's activation. */
 export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web'];
 
 // ---------------------------------------------------------------- lifecycle
 
+/** After support selection: default placement, then each faction may rearrange (attacker first). */
 export function startBattleFight(state: GameState) {
   const b = state.battle!;
-  b.stage = 'fight';
   deploy(b);
+  b.needsDeploy = b.duel ? [] : ([b.attacker, b.defender].filter((s) => s !== 'neutral') as FactionId[]);
+  if (b.needsDeploy.length) {
+    b.stage = 'deploy';
+    return;
+  }
+  beginFight(state);
+}
+
+function beginFight(state: GameState) {
+  const b = state.battle!;
+  b.stage = 'fight';
   blog(state, 'Bitwa się rozpoczyna.');
   beginRound(state, 1);
+}
+
+/** Cells a side may deploy on: its edge column, minus obstacles. */
+export function deployCells(b: BattleState, side: Side): HexKey[] {
+  return columnCells(side === b.attacker ? 0 : ARENA_COLUMNS - 1).filter((k) => !b.obstacles.includes(k));
+}
+
+/** Duel spots: the two leaders on neighbouring cells in the middle. */
+const duelSpot = (b: BattleState, side: Side) => (side === b.attacker ? arenaCell(5, 9) : arenaCell(6, 10));
+
+export function deployUnits(state: GameState, faction: FactionId, positions: Record<string, HexKey>) {
+  const b = state.battle!;
+  if (b.stage !== 'deploy' || b.needsDeploy[0] !== faction) throw new Error('Teraz nie ustawia ta frakcja.');
+  const own = Object.values(b.units).filter((u) => u.side === faction);
+  const allowed = new Set(deployCells(b, faction));
+  const used = new Set<HexKey>();
+  for (const u of own) {
+    const k = positions[u.id] ?? u.pos;
+    if (!k || !allowed.has(k)) throw new Error('Jednostki można ustawić tylko w swojej skrajnej kolumnie.');
+    if (used.has(k)) throw new Error('Dwie jednostki nie mogą stać na jednym polu.');
+    used.add(k);
+  }
+  for (const u of own) u.pos = positions[u.id] ?? u.pos;
+  b.needsDeploy.shift();
+  blog(state, `${faction === 'dawn' ? 'Przymierze Świtu' : 'Mroczna Horda'} ustawia swoje jednostki.`);
+  if (!b.needsDeploy.length) beginFight(state);
 }
 
 function deploy(b: BattleState) {
   if (b.duel) {
     // Duel: the two leaders face each other on neighbouring cells.
-    for (const u of Object.values(b.units)) u.pos = arenaCell(4, u.side === b.attacker ? 4 : 5);
+    for (const u of Object.values(b.units)) u.pos = duelSpot(b, u.side);
     return;
   }
-  const rowsFor = [4, 2, 6, 3, 5, 1, 7];
   for (const side of [b.attacker, b.defender]) {
-    const col = side === b.attacker ? 0 : ARENA_COLS - 1;
+    const cells = deployCells(b, side);
     const units = Object.values(b.units).filter((u) => u.side === side);
     // Hero (or guardian) in the middle, supports above and below.
     units.sort((x, y) => (UNITS[x.defId].kind === 'support' ? 1 : 0) - (UNITS[y.defId].kind === 'support' ? 1 : 0));
-    units.forEach((u, i) => (u.pos = arenaCell(rowsFor[i], col)));
+    units.forEach((u, i) => (u.pos = cells[i]));
   }
 }
 
@@ -326,6 +406,13 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
     victim = bear;
     blog(state, `${unitName(bear)} przejmuje atak (Opiekun Gaju).`, 'ability');
   }
+  // Opiekun Gaju in a duel: no ally to cover, so the bear shrugs off part of one blow.
+  if (b.duel && abilityOf(victim) === 'guardian' && !victim.abilityUsed && abilityActive(state, victim) && dmg >= 1) {
+    victim.abilityUsed = true;
+    const blocked = Math.min(ABILITY.guardianDuelBlock, dmg);
+    dmg -= blocked;
+    blog(state, `${unitName(victim)} osłania się (Opiekun Gaju): −${blocked} obrażeń.`, 'ability');
+  }
   if (victim.status.shieldArmed) {
     victim.status.shieldArmed = false;
     blog(state, `Tarcza Strażnika chroni: ${unitName(victim)}.`, 'item');
@@ -333,7 +420,7 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   }
   if (abilityOf(victim) === 'hardHead' && !victim.abilityUsed && abilityActive(state, victim) && dmg >= 2) {
     victim.abilityUsed = true;
-    const ignored = Math.min(4, dmg);
+    const ignored = Math.min(ABILITY.hardHeadIgnore, dmg);
     dmg -= ignored;
     blog(state, `${unitName(victim)} ignoruje ${ignored} obrażeń (Twardogłowy).`, 'ability');
   }
@@ -377,12 +464,14 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     const second = breathSecondTarget(state, u, target);
     if (second) targets.push(second);
   }
-  if (canUse && (ab === 'boulder' || ab === 'manyHeads')) {
-    const second = secondTargetId ? b.units[secondTargetId] : undefined;
-    if (second) {
-      if (second.id === target.id || !attackTargets(state, u).some((t) => t.id === second.id)) throw new Error('Nieprawidłowy drugi cel.');
-      targets.push(second);
+  if (secondTargetId && !(canUse && ab === 'fireBreath')) {
+    const second = b.units[secondTargetId];
+    if (!canHitTwo(state, u)) throw new Error('Ta jednostka atakuje jeden cel.');
+    if (!second || second.id === target.id || !adjacent(u.pos!, target.pos!) || !adjacent(u.pos!, second.pos!) || !attackTargets(state, u).some((t) => t.id === second.id)) {
+      throw new Error('Drugi cel musi sąsiadować z atakującym.');
     }
+    targets.push(second);
+    blog(state, `${unitName(u)}: ${UNITS[u.defId].abilityName}.`, 'ability');
   }
   if (canUse) {
     u.abilityUsed = true;
@@ -394,14 +483,26 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     resolveAttack(state, u, t, canUse, act.movedDistance);
     if (canUse && t.alive) {
       if (ab === 'entanglingRoots') {
-        t.status.slowNext += 2;
-        blog(state, `${unitName(t)}: −2 S w następnej aktywacji.`, 'ability');
+        t.status.slowNext += ABILITY.rootsSlow;
+        blog(state, `${unitName(t)}: −${ABILITY.rootsSlow} S w następnej aktywacji.`, 'ability');
       }
       if (ab === 'curse') {
-        t.status.cursedNext += 1;
-        blog(state, `${unitName(t)}: −1 A przy następnym ataku.`, 'ability');
+        t.status.cursedNext += ABILITY.curseMinus;
+        blog(state, `${unitName(t)}: −${ABILITY.curseMinus} A przy następnym ataku.`, 'ability');
       }
     }
+    // No pushing in a duel: nobody moves there, so the two leaders would never meet again.
+    if (ab === 'boulder' && t.alive && !b.duel && abilityActive(state, u)) {
+      const to = pushCell(state, u.pos!, t.pos!);
+      if (to) {
+        t.pos = to;
+        blog(state, `${unitName(t)} zostaje odepchnięty o 1 pole (${UNITS[u.defId].abilityName}).`, 'ability');
+      }
+    }
+  }
+  if (b.duel && ab === 'lightCharge' && !u.abilityUsed && abilityActive(state, u)) {
+    u.abilityUsed = true;
+    blog(state, `${unitName(u)}: ${UNITS[u.defId].abilityName} (pierwszy atak pojedynku).`, 'ability');
   }
   u.status.nextAttackBonus = 0;
   u.status.cursedNext = 0;
@@ -409,8 +510,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   act.acted = true;
   if (checkBattleEnd(state)) return;
   const hopAbility = ab === 'airDash' || ab === 'nestLeap';
-  if (hopAbility && !b.duel && !u.abilityUsed && abilityActive(state, u) && u.alive) {
-    act.hop = ab === 'airDash' ? 3 : 4;
+  if (hopAbility && !b.duel && (!u.abilityUsed || ab === 'nestLeap') && abilityActive(state, u) && u.alive) {
+    act.hop = ab === 'airDash' ? ABILITY.airDashRange : ABILITY.nestLeapRange;
     return;
   }
   endActivation(state);
@@ -429,7 +530,7 @@ export function battleHop(state: GameState, to: HexKey) {
   if (!act.hop) throw new Error('Odskok jest niedostępny.');
   if (!hopCells(state, u, act.hop).includes(to)) throw new Error('Pole poza zasięgiem odskoku.');
   u.pos = to;
-  u.abilityUsed = true;
+  if (!UNLIMITED_ABILITIES.includes(abilityOf(u))) u.abilityUsed = true;
   act.hop = 0;
   blog(state, `${unitName(u)} odskakuje (${UNITS[u.defId].abilityName}).`, 'ability');
   endActivation(state);
@@ -441,14 +542,14 @@ export function battleAbility(state: GameState, targetId?: string) {
   const ab = abilityOf(u);
   if (u.abilityUsed || !abilityActive(state, u) || !FREE_ABILITIES.includes(ab)) throw new Error('Zdolność jest niedostępna.');
   if (ab === 'sunburst') {
-    for (const ally of livingUnits(b, u.side)) ally.status.nextAttackBonus += 1;
+    for (const ally of livingUnits(b, u.side)) ally.status.nextAttackBonus += ABILITY.sunburstBonus;
   } else if (ab === 'giftOfLife') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side !== u.side) throw new Error('Wybierz żyjącego sojusznika.');
-    t.hp = Math.min(t.maxHp, t.hp + 3);
+    t.hp = Math.min(t.maxHp, t.hp + ABILITY.giftOfLifeHeal);
   } else if (ab === 'web') {
     const t = targetId ? b.units[targetId] : undefined;
-    if (!t || !t.alive || t.side === u.side || distance(parseKey(u.pos!), parseKey(t.pos!)) > 4) throw new Error('Wybierz wroga w zasięgu 4 pól.');
+    if (!t || !t.alive || t.side === u.side || distance(parseKey(u.pos!), parseKey(t.pos!)) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);
     t.status.rootedNext = true;
     blog(state, `${unitName(t)} zostaje unieruchomiony do swojej następnej aktywacji.`, 'ability');
   }
@@ -467,16 +568,10 @@ export function canUseBattleItem(state: GameState, faction: FactionId): boolean 
 
 function freeCellNear(b: BattleState, side: Side): HexKey | null {
   if (b.duel) {
-    const spot = arenaCell(4, side === b.attacker ? 4 : 5);
+    const spot = duelSpot(b, side);
     return unitAt(b, spot) ? null : spot;
   }
-  const col = side === b.attacker ? 0 : ARENA_COLS - 1;
-  const obstacles = new Set(b.obstacles);
-  for (const row of [4, 3, 5, 2, 6, 1, 7, 0, 8]) {
-    const k = arenaCell(row, col);
-    if (!obstacles.has(k) && !unitAt(b, k)) return k;
-  }
-  return null;
+  return deployCells(b, side).find((k) => !unitAt(b, k)) ?? null;
 }
 
 export function battleItem(
@@ -619,8 +714,4 @@ export function consumeItem(state: GameState, itemId: string) {
   const inv = state.factions[item.owner].inventory;
   inv.splice(inv.indexOf(itemId), 1);
   item.owner = null;
-}
-
-export function offsetOf(k: HexKey) {
-  return hexToOffset(parseKey(k));
 }

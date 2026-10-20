@@ -6,7 +6,6 @@ import {
   FACTION_HEROES,
   FACTION_NAMES,
   FACTION_SUPPORTS,
-  GUARDIANS,
   ITEMS,
   MAP_VARIANTS,
   NON_RESURRECTION_ITEMS,
@@ -24,12 +23,12 @@ import {
   battleItem,
   battleMove,
   checkBattleEnd,
+  deployUnits,
   consumeItem,
   endActivation,
   makeBattleUnit,
   startBattleFight,
-  ARENA_OBSTACLES,
-  arenaCell,
+  arenaObstacles,
 } from './battle';
 import type { HexKey } from './hex';
 import { generateMap, homeKey, mapNeighbors, revealAround, tileCost, treeKey } from './map';
@@ -53,8 +52,9 @@ export function createGame(setup: SetupOptions): GameState {
 
   // Treasure pool: all Eliksiry Odrodzenia are set aside, then exactly the required
   // number goes back together with random other treasures (spec section 4).
+  // Without treasures the map simply has no treasure tiles.
   const others = rng.shuffle(NON_RESURRECTION_ITEMS).slice(0, variant.otherTreasures);
-  const pool: ItemKind[] = rng.shuffle([...Array(variant.resurrections).fill('resurrection'), ...others]);
+  const pool: ItemKind[] = setup.rules.treasures ? rng.shuffle([...Array(variant.resurrections).fill('resurrection'), ...others]) : [];
   const map = generateMap(setup.mapSize, rng, pool.length);
 
   const state: GameState = {
@@ -103,12 +103,12 @@ export function createGame(setup: SetupOptions): GameState {
     state.items[id] = { id, kind, owner: null, foundBy: null };
     state.tiles[map.treasureHexes[i]].treasureId = id;
   });
-  const guardians = rng.shuffle(GUARDIANS);
-  map.crystalHexes.forEach((k, i) => {
+  map.crystals.forEach((c, i) => {
     const id = `c${i + 1}`;
-    state.crystals[id] = { id, guardian: guardians[i % guardians.length], at: k };
-    state.tiles[k].crystalId = id;
+    state.crystals[id] = { id, guardian: c.guardian, at: c.hex };
+    state.tiles[c.hex].crystalId = id;
   });
+
 
   setup.seats.forEach((seat, i) => {
     const player: Player = { id: `p${i + 1}`, name: seat.name, faction: seat.faction, controller: seat.controller };
@@ -118,7 +118,9 @@ export function createGame(setup: SetupOptions): GameState {
   if (setup.mode === 'coop') {
     // As many evil heroes as good heroes at the start (spec section 1).
     const goodCount = setup.seats.filter((s) => s.faction === 'dawn').length;
-    const evil = rng.shuffle(FACTION_HEROES.horde).slice(0, goodCount);
+    // Optionally one more, to make the coop game harder (there are 3 Horde heroes at most).
+    const evilCount = Math.min(FACTION_HEROES.horde.length, goodCount + (setup.rules.extraEvilHero ? 1 : 0));
+    const evil = rng.shuffle(FACTION_HEROES.horde).slice(0, evilCount);
     for (const id of evil) addHero(state, id, 'horde', null);
   }
 
@@ -225,6 +227,10 @@ export function currentActor(state: GameState): Actor {
       const f = b.needsSelection[0];
       return actorForFaction(state, f, battleHeroOf(b, f));
     }
+    if (b.stage === 'deploy') {
+      const f = b.needsDeploy[0];
+      return actorForFaction(state, f, battleHeroOf(b, f));
+    }
     if (b.stage === 'fight' && b.activation) {
       const u = b.units[b.activation.unitId];
       if (u.side === 'neutral') return { kind: 'automaton', side: 'neutral' };
@@ -247,17 +253,19 @@ function moveHero(state: GameState, to: HexKey) {
   if (move.kind === 'attackHero') {
     const defender = heroesAt(state, to).find((h) => h.faction !== hero.faction)!;
     log(state, 'battle', `${name} atakuje: ${UNITS[defender.id].name}.`);
+    const from = hero.pos;
     hero.pos = to;
     revealAround(state, to);
-    startBattle(state, { kind: 'heroes', attackerHero: hero.id, defenderHero: defender.id, mapHex: to });
+    startBattle(state, { kind: 'heroes', attackerHero: hero.id, defenderHero: defender.id, mapHex: to, from });
     return;
   }
   if (move.kind === 'attackGuardian') {
     const crystal = state.crystals[state.tiles[to].crystalId!];
     log(state, 'battle', `${name} wyzywa strażnika kryształu: ${UNITS[crystal.guardian!].name}.`);
+    const from = hero.pos;
     hero.pos = to;
     revealAround(state, to);
-    startBattle(state, { kind: 'neutral', attackerHero: hero.id, neutralId: crystal.guardian!, mapHex: to });
+    startBattle(state, { kind: 'neutral', attackerHero: hero.id, neutralId: crystal.guardian!, mapHex: to, from });
     return;
   }
   state.movePoints -= move.cost;
@@ -308,6 +316,8 @@ function endTurn(state: GameState) {
 }
 
 function advanceTurn(state: GameState) {
+  checkVictory(state);
+  if (isOver(state)) return;
   for (;;) {
     state.turnIndex += 1;
     if (state.turnIndex >= state.turnOrder.length) {
@@ -364,26 +374,26 @@ function checkVictory(state: GameState) {
     finish(state, 'dawn', 'Wszystkie kryształy wróciły do Drzewa.');
     return;
   }
-  for (const f of ['dawn', 'horde'] as FactionId[]) {
+  // A faction whose heroes are all dead loses. An Eliksir Odrodzenia needs a living hero
+  // to drink it, so it cannot help any more.
+  const allDead = (f: FactionId) => {
     const heroes = Object.values(state.heroes).filter((h) => h.faction === f);
-    if (!heroes.length || heroes.some((h) => h.alive)) continue;
-    const elixir = state.factions[f].inventory.find((id) => state.items[id].kind === 'resurrection');
-    if (elixir) {
-      // TEST rule: nobody is left to drink it, so the elixir works automatically at the base.
-      const hero = heroes[0];
-      consumeItem(state, elixir);
-      hero.alive = true;
-      hero.pos = homeKey(state.rows, f);
-      log(state, 'item', `Eliksir Odrodzenia wskrzesza: ${UNITS[hero.id].name} (w bazie).`);
-      continue;
-    }
-    if (f === 'dawn') finish(state, 'horde', 'Wszyscy bohaterowie Przymierza polegli.');
-  }
+    return heroes.length > 0 && heroes.every((h) => !h.alive);
+  };
+  const dawnOut = allDead('dawn');
+  const hordeOut = allDead('horde');
+  // Both lose their last heroes in the same battle: the side that won the battle wins
+  // (its supports were still standing). A drawn battle counts for the Horde.
+  if (dawnOut && hordeOut) {
+    const w = state.lastBattle?.winner === 'dawn' ? 'dawn' : 'horde';
+    finish(state, w, 'Ostatni bohaterowie obu frakcji polegli w jednej bitwie — wygrywa strona, która ją wygrała.');
+  } else if (dawnOut) finish(state, 'horde', 'Wszyscy bohaterowie Przymierza polegli.');
+  else if (hordeOut) finish(state, 'dawn', 'Wszyscy bohaterowie Mrocznej Hordy polegli.');
 }
 
 function useMapItem(state: GameState, itemId: string, targets: HexKey[] | undefined, unitId: string | undefined) {
   const hero = activeHero(state);
-  if (!hero || state.phase !== 'adventure') throw new Error('Skarbów na mapie używa się w swojej turze.');
+  if (!hero || !hero.alive || state.phase !== 'adventure') throw new Error('Skarbów na mapie używa się w swojej turze.');
   const item = state.items[itemId];
   if (!item || item.owner !== hero.faction) throw new Error('Nie masz tego skarbu.');
   if (item.kind === 'map') {
@@ -416,6 +426,7 @@ interface BattleStart {
   defenderHero?: string;
   neutralId?: string;
   mapHex: HexKey;
+  from: HexKey;
 }
 
 function startBattle(state: GameState, s: BattleStart) {
@@ -424,15 +435,18 @@ function startBattle(state: GameState, s: BattleStart) {
   const b: BattleState = {
     kind: s.kind,
     mapHex: s.mapHex,
+    arena: state.tiles[s.mapHex].side,
     attacker: attacker.faction,
     defender: defenderHero ? defenderHero.faction : 'neutral',
     attackerHero: attacker.id,
+    attackerFrom: s.from,
     defenderHero: defenderHero?.id ?? null,
     neutralId: s.neutralId ?? null,
     duel: state.setup.battleMode === 'board',
     stage: 'select',
+    needsDeploy: [],
     needsSelection: [],
-    obstacles: state.setup.battleMode === 'board' ? [] : ARENA_OBSTACLES.flatMap((o) => o.cells.map(([r, c]) => arenaCell(r, c))),
+    obstacles: state.setup.battleMode === 'board' ? [] : arenaObstacles(state.tiles[s.mapHex].side),
     units: {},
     round: 0,
     order: [],
@@ -523,6 +537,12 @@ function finalizeBattle(state: GameState) {
   state.battle = null;
   state.phase = 'adventure';
   const attacker = state.heroes[b.attackerHero];
+  // Several enemy heroes may share a hex but a battle is fought against one of them:
+  // if any still stands there, the winner steps back instead of sharing the hex.
+  if (attacker.alive && heroesAt(state, b.mapHex).some((h) => h.faction !== attacker.faction)) {
+    attacker.pos = b.attackerFrom;
+    log(state, 'move', `${UNITS[attacker.id].name} wraca na poprzednie pole — na polu bitwy stoją jeszcze wrogowie.`);
+  }
   if (attacker.alive) arriveAt(state, attacker);
   checkVictory(state);
   if (isOver(state)) return;
@@ -542,12 +562,15 @@ function killHero(state: GameState, heroId: string, at: HexKey) {
   }
   hero.crystals = [];
   const f = state.factions[hero.faction];
-  if (state.rules.heroReplacement && hero.playerId && f.unusedHeroes.length) {
+  // The coop automaton keeps as many heroes as there are good players (spec 10), so in the
+  // replacement variant it brings in a reserve hero just like the players do.
+  const automaton = state.setup.mode === 'coop' && hero.faction === 'horde';
+  if (state.rules.heroReplacement && (hero.playerId || automaton) && f.unusedHeroes.length) {
     const next = f.unusedHeroes[0];
     addHero(state, next, hero.faction, hero.playerId);
     hero.playerId = null;
     state.turnOrder = state.turnOrder.map((id) => (id === heroId ? next : id));
-    log(state, 'info', `Gracz przejmuje bohatera: ${UNITS[next].name}.`);
+    log(state, 'info', automaton ? `Automat zła wprowadza bohatera: ${UNITS[next].name}.` : `Gracz przejmuje bohatera: ${UNITS[next].name}.`);
   }
 }
 
@@ -568,6 +591,10 @@ export function applyAction(prev: GameState, action: Action): GameState {
       break;
     case 'selectSupports':
       selectSupports(state, action.faction, action.supportIds);
+      break;
+    case 'deployUnits':
+      if (!state.battle) throw new Error('Nie trwa żadna bitwa.');
+      deployUnits(state, action.faction, action.positions);
       break;
     default:
       applyBattleAction(state, action);

@@ -2,14 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { FACTION_HEROES, FACTION_SUPPORTS, MAP_VARIANTS, UNITS } from '../src/engine/data';
 import { distance, key, line, offsetToHex, parseKey, triToHex } from '../src/engine/hex';
 import { applyAction, createGame, legalHeroMoves, activeHero } from '../src/engine/game';
-import { arenaCell, attackTargets, hasLineOfSight, reachableCells } from '../src/engine/battle';
+import { ARENA_COLUMNS, ARENA_OBSTACLES, arenaCell, arenaCells, attackTargets, columnCells, hasLineOfSight, reachableCells } from '../src/engine/battle';
 import { reachableFrom, homeKey, treeKey } from '../src/engine/map';
 import { chooseAction } from '../src/engine/ai';
 import { DEFAULT_RULES, type GameState, type SetupOptions } from '../src/engine/types';
 
 const setup = (over: Partial<SetupOptions> = {}): SetupOptions => ({
   mode: 'coop',
-  difficulty: 'basic',
   mapSize: 'short',
   battleMode: 'arena',
   seed: 7,
@@ -55,11 +54,8 @@ describe('map generation', () => {
     }
   });
 
-  it.each([
-    ['short', 1, 1],
-    ['medium', 2, 2],
-    ['long', 2, 4],
-  ] as const)('%s treasure pool has exactly %i Odrodzenia + %i others', (size, res, others) => {
+  // Counts come from MAP_VARIANTS (tuned for balance; medium has 1 Odrodzenia + 3 others).
+  it.each((['short', 'medium', 'long'] as const).map((size) => [size, MAP_VARIANTS[size].resurrections, MAP_VARIANTS[size].otherTreasures] as const))('%s treasure pool has exactly %i Odrodzenia + %i others', (size, res, others) => {
     for (let seed = 1; seed <= 30; seed++) {
       const s = createGame(setup({ mapSize: size, seed }));
       const kinds = Object.values(s.items).map((i) => i.kind);
@@ -110,13 +106,21 @@ function battleState(): GameState {
   throw new Error('no battle found');
 }
 
+describe('painted arena', () => {
+  it('has 85 cells in 13 columns, start columns of 5, and every painted obstacle inside', () => {
+    expect(arenaCells()).toHaveLength(85);
+    expect(columnCells(0)).toHaveLength(5);
+    expect(columnCells(ARENA_COLUMNS - 1)).toHaveLength(5);
+    for (const side of ['dawn', 'horde'] as const) {
+      for (const [c, h] of ARENA_OBSTACLES[side]) expect(arenaCells()).toContain(arenaCell(c, h));
+    }
+  });
+});
+
 describe('battle rules', () => {
   it('keeps start columns free of obstacles', () => {
     const s = battleState();
-    for (let row = 0; row < 9; row++) {
-      expect(s.battle!.obstacles).not.toContain(arenaCell(row, 0));
-      expect(s.battle!.obstacles).not.toContain(arenaCell(row, 10));
-    }
+    for (const k of [...columnCells(0), ...columnCells(ARENA_COLUMNS - 1)]) expect(s.battle!.obstacles).not.toContain(k);
   });
 
   it('never lets a unit end its move on an obstacle or another unit', () => {
@@ -134,30 +138,30 @@ describe('battle rules', () => {
     const s = battleState();
     const b = s.battle!;
     const unit = Object.values(b.units).find((u) => u.alive)!;
-    b.obstacles = [arenaCell(4, 1)];
-    unit.pos = arenaCell(4, 0);
+    b.obstacles = [arenaCell(1, 9)];
+    unit.pos = arenaCell(0, 8);
     for (const o of Object.values(b.units)) if (o !== unit) o.pos = null;
     const cells = reachableCells(s, unit);
-    const beyond = arenaCell(4, 2);
+    const beyond = arenaCell(2, 10);
     if (UNITS[unit.defId].movement === 'fly') expect(cells.get(beyond)).toBe(2);
     else expect(cells.get(beyond) ?? 99).toBeGreaterThanOrEqual(2);
   });
 
   it('blocks line of sight with obstacles', () => {
     const s = battleState();
-    s.battle!.obstacles = [arenaCell(4, 5)];
-    expect(hasLineOfSight(s, arenaCell(4, 2), arenaCell(4, 8))).toBe(false);
-    expect(hasLineOfSight(s, arenaCell(2, 2), arenaCell(2, 8))).toBe(true);
+    s.battle!.obstacles = [arenaCell(5, 9)];
+    expect(hasLineOfSight(s, arenaCell(2, 6), arenaCell(8, 12))).toBe(false);
+    expect(hasLineOfSight(s, arenaCell(2, 4), arenaCell(8, 10))).toBe(true);
   });
 
   it('forces a ranged unit next to an enemy to shoot only that neighbour', () => {
     const s = battleState();
     const b = s.battle!;
-    const shooter = { ...Object.values(b.units)[0], id: 'elfDruid', defId: 'elfDruid', side: 'dawn' as const, pos: arenaCell(4, 4), alive: true };
+    const shooter = { ...Object.values(b.units)[0], id: 'elfDruid', defId: 'elfDruid', side: 'dawn' as const, pos: arenaCell(5, 9), alive: true };
     b.units.elfDruid = shooter;
     const enemies = Object.values(b.units).filter((u) => u.side !== 'dawn' && u.alive);
-    enemies[0].pos = arenaCell(4, 5);
-    if (enemies[1]) enemies[1].pos = arenaCell(0, 9);
+    enemies[0].pos = arenaCell(6, 10);
+    if (enemies[1]) enemies[1].pos = arenaCell(11, 5);
     const targets = attackTargets(s, shooter);
     expect(targets.map((t) => t.id)).toEqual([enemies[0].id]);
   });
@@ -256,5 +260,45 @@ describe('board battles (1-on-1 duels)', () => {
       }
     }
     expect(found).toBeGreaterThan(0);
+  });
+});
+
+describe('deployment', () => {
+  it('lets the attacker deploy first, only on its edge column', () => {
+    for (let seed = 1; seed < 80; seed++) {
+      let s = createGame(setup({ seed, seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }] }));
+      for (let i = 0; i < 600 && s.phase !== 'over'; i++) {
+        if (s.battle?.stage === 'deploy') {
+          const b = s.battle;
+          expect(b.needsDeploy[0]).toBe(b.attacker);
+          const own = Object.values(b.units).filter((u) => u.side === b.attacker);
+          const bad = { ...Object.fromEntries(own.map((u) => [u.id, u.pos!])), [own[0].id]: arenaCell(4, 6) };
+          expect(() => applyAction(s, { type: 'deployUnits', faction: b.attacker as 'dawn' | 'horde', positions: bad })).toThrow();
+          const swapped = Object.fromEntries(own.map((u, j) => [u.id, own[(j + 1) % own.length].pos!]));
+          const next = applyAction(s, { type: 'deployUnits', faction: b.attacker as 'dawn' | 'horde', positions: swapped });
+          for (const u of own) expect(next.battle!.units[u.id].pos).toBe(swapped[u.id]);
+          return;
+        }
+        s = applyAction(s, chooseAction(s)!);
+      }
+    }
+    throw new Error('no deployment found');
+  });
+});
+
+describe('tile halves', () => {
+  it('builds the left half from Przymierze tiles and the right from Horda tiles, with guardians on their side', () => {
+    for (let seed = 1; seed <= 30; seed++) {
+      const s = createGame(setup({ seed, mapSize: 'medium' }));
+      for (const t of Object.values(s.tiles)) {
+        const x = t.col - t.row / 2;
+        if (x < 0) expect(t.side).toBe('dawn');
+        if (x > 0) expect(t.side).toBe('horde');
+      }
+      for (const c of Object.values(s.crystals)) {
+        const side = s.tiles[c.at].side;
+        expect(side).toBe(c.guardian === 'griffin' ? 'dawn' : 'horde');
+      }
+    }
   });
 });

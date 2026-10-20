@@ -1,7 +1,7 @@
 // Heuristic battle AI. It is greedy and deterministic: equal scores are broken
 // by stable ordering, so simulations replay exactly from a seed.
 
-import { UNITS, type FactionId } from '../data';
+import { ABILITY, UNITS, type FactionId } from '../data';
 import {
   abilityActive,
   abilityOf,
@@ -9,10 +9,14 @@ import {
   attackTargets,
   ATTACK_ABILITIES,
   breathSecondTarget,
+  canHitTwo,
   canUseBattleItem,
+  deployCells,
+  cellOf,
   enemiesOf,
   hopCells,
   livingUnits,
+  MIDDLE_HALF,
   reachableCells,
   unitAttackBase,
   unitSpeed,
@@ -91,10 +95,9 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
           if (!second) continue;
           score += scoreHit(second, dmg);
         }
-        if (useAbility && (abilityOf(u) === 'boulder' || abilityOf(u) === 'manyHeads')) {
-          second = targets.filter((x) => x.id !== t.id).sort((x, y) => scoreHit(y, dmg) - scoreHit(x, dmg))[0] ?? null;
-          if (!second) continue;
-          score += scoreHit(second, dmg);
+        if (canHitTwo(state, u)) {
+          second = targets.filter((x) => x.id !== t.id && dist(x.pos!, cell) === 1).sort((x, y) => scoreHit(y, dmg) - scoreHit(x, dmg))[0] ?? null;
+          if (second) score += scoreHit(second, dmg);
         }
         if (useAbility && ['entanglingRoots', 'curse'].includes(abilityOf(u))) score += 1.5;
         score -= risk * (ranged ? 3 : 1.5);
@@ -137,7 +140,7 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
   }
   if (ab === 'web') {
     const t = enemiesOf(b, u)
-      .filter((e) => dist(e.pos!, u.pos!) <= 4)
+      .filter((e) => dist(e.pos!, u.pos!) <= ABILITY.webRange)
       .sort((x, y) => unitAttackBase(y) - unitAttackBase(x))[0];
     if (t) return { type: 'battleAbility', targetId: t.id };
   }
@@ -191,9 +194,28 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
   return null;
 }
 
+/** Bots keep heroes central, put shooters on the rows farthest from the enemy's strongest unit. */
+function chooseDeployment(state: GameState, faction: FactionId): Action {
+  const b = state.battle!;
+  const own = Object.values(b.units).filter((u) => u.side === faction);
+  const cells = deployCells(b, faction).sort((x, y) => Math.abs(cellOf(x).half - MIDDLE_HALF) - Math.abs(cellOf(y).half - MIDDLE_HALF));
+  const order = own.slice().sort((x, y) => rank(x) - rank(y));
+  const positions: Record<string, HexKey> = {};
+  // Melee first takes central cells, shooters the outer ones.
+  order.forEach((u, i) => (positions[u.id] = cells[i]));
+  return { type: 'deployUnits', faction, positions };
+}
+
+function rank(u: BattleUnit): number {
+  const d = UNITS[u.defId];
+  if (d.attackType === 'ranged') return 3;
+  return d.kind === 'hero' ? 0 : d.movement === 'fly' ? 2 : 1;
+}
+
 export function chooseBattleAction(state: GameState): Action {
   const b = state.battle!;
   if (b.stage === 'select') return chooseSupports(state, b.needsSelection[0]);
+  if (b.stage === 'deploy') return chooseDeployment(state, b.needsDeploy[0]);
   const act = b.activation!;
   const u = b.units[act.unitId];
   if (act.hop) {

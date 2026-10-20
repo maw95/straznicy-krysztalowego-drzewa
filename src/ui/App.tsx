@@ -12,7 +12,8 @@ import { SetupScreen } from './SetupScreen';
 import { music, type Theme } from './music';
 import { UnitCard } from './UnitCard';
 import { TreasureCard } from './TreasureCard';
-import { readAutosave, replay, writeAutosave, type SaveFile } from './saves';
+import { readAutosave, replay, writeAutosave, type BugReport, type SaveFile } from './saves';
+import { BugReportDialog } from './BugReportDialog';
 import { RulesDialog } from './RulesDialog';
 import { BattleSummary } from './BattleSummary';
 import { HoverCardLayer } from './hover';
@@ -34,6 +35,10 @@ export function App() {
   const [confirmedFaction, setConfirmedFaction] = useState<FactionId | null>(null);
   const history = useRef<Action[]>([]);
   const [showRules, setShowRules] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  /** Bug reports written in this game; saved and exported with it. */
+  const reports = useRef<BugReport[]>([]);
+  const saveFile = (g: GameState): SaveFile => ({ setup: g.setup, actions: [...history.current], reports: reports.current });
   const [confirm, setConfirm] = useState<{ text: string; yes: string; onYes: () => void } | null>(null);
   const [summary, setSummary] = useState<number | null>(null);
   /** States before each undoable hero step in the current turn. */
@@ -58,7 +63,7 @@ export function App() {
       ? game.winner === 'dawn'
         ? 'dawnVictory'
         : 'hordeVictory'
-      : game.phase === 'battle' && game.battle?.stage === 'fight'
+      : game.phase === 'battle' && (game.battle?.stage === 'fight' || game.battle?.stage === 'deploy')
         ? game.battle.kind === 'neutral'
           ? 'guardian'
           : 'battle'
@@ -71,15 +76,17 @@ export function App() {
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
     if (!q.has('steps')) return;
+    // Effects run twice in development: start the log afresh each time.
+    history.current = [];
     const mode = q.get('mode') === 'pvp' ? 'pvp' : 'coop';
     const human = q.get('human') !== '0';
     let s = createGame({
       mode,
-      difficulty: q.get('difficulty') === 'advanced' ? 'advanced' : 'basic',
       mapSize: (q.get('size') as SetupOptions['mapSize']) ?? 'short',
       battleMode: q.get('battle') === 'board' ? 'board' : 'arena',
       seed: Number(q.get('seed') ?? 1),
-      rules: { ...DEFAULT_RULES },
+      // ?abilities=0&treasures=0&dice=0 switch the simplifications on.
+      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') !== '0' },
       seats:
         mode === 'coop'
           ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))
@@ -89,6 +96,7 @@ export function App() {
       const a = chooseAction(s);
       if (!a) break;
       s = applyAction(s, a);
+      history.current.push(a);
       if (q.get('until') === 'battle' && s.phase === 'battle' && s.battle?.stage === 'fight') break;
     }
     setGame(s);
@@ -161,6 +169,7 @@ export function App() {
 
   const start = (setup: SetupOptions) => {
     history.current = [];
+    reports.current = [];
     undoStack.current = [];
     setConfirmedFaction(null);
     setGame(createGame(setup));
@@ -170,6 +179,7 @@ export function App() {
     try {
       const g = replay(save);
       history.current = [...save.actions];
+      reports.current = [...(save.reports ?? [])];
       undoStack.current = [];
       setConfirmedFaction(null);
       setGame(g);
@@ -181,7 +191,7 @@ export function App() {
   // Autosave after every action; a finished game clears the slot.
   useEffect(() => {
     if (!game) return;
-    writeAutosave(game.phase === 'over' ? null : { setup: game.setup, actions: history.current });
+    writeAutosave(game.phase === 'over' ? null : saveFile(game));
   }, [game]);
 
   const undo = useCallback(() => {
@@ -271,14 +281,16 @@ export function App() {
         else if (showLog) setShowLog(false);
         else if (showDebug) setShowDebug(false);
         else if (showRules) setShowRules(false);
+        else if (showReport) setShowReport(false);
         else if (summary) setSummary(null);
         return;
       }
-      if (confirm || card || showLog || showDebug || showRules || summary) return;
+      if (confirm || card || showLog || showDebug || showRules || showReport || summary) return;
       const k = e.key.toLowerCase();
       if (k === 'd') setShowLog(true);
       else if (k === 'o') setShowDebug(true);
       else if (k === 'r' || k === '?') setShowRules(true);
+      else if (k === 'b' && gameRef.current) setShowReport(true);
       else if ((k === 'z' && (e.ctrlKey || e.metaKey)) || k === 'u') undo();
       else if (k === 'f') fastForward();
       else if ((k === ' ' || k === 'e') && gameRef.current?.phase === 'adventure' && humanTurnRef.current) {
@@ -288,7 +300,7 @@ export function App() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [confirm, card, showLog, showDebug, showRules, summary, undo, fastForward, humanAction]);
+  }, [confirm, card, showLog, showDebug, showRules, showReport, summary, undo, fastForward, humanAction]);
 
   const visibleLog = useMemo(() => (game ? game.log.filter((l) => !l.privateTo || l.privateTo === viewer) : []), [game, viewer]);
 
@@ -358,6 +370,7 @@ export function App() {
       <button className="btn plate parch" title="Dziennik (D)" style={{ padding: '6px 12px', fontSize: 15 }} onClick={() => setShowLog(true)}>Dziennik</button>
       <button className="btn plate parch hide-mobile" title="Zasady i karty (R)" style={{ padding: '6px 12px', fontSize: 15 }} onClick={() => setShowRules(true)}>Zasady</button>
       <button className="btn plate parch" title="Opcje (O)" style={{ padding: '6px 12px', fontSize: 15 }} onClick={() => setShowDebug(true)}>Opcje</button>
+      <button className="btn plate parch" title="Opisz błąd — zapisze się razem z partią (B)" style={{ padding: '6px 12px', fontSize: 15 }} onClick={() => setShowReport(true)}>Zgłoś błąd</button>
     </div>
   );
 
@@ -510,6 +523,21 @@ export function App() {
         )}
       </Modal>
 
+      <Modal open={showReport} onClose={() => setShowReport(false)}>
+        {showReport && (
+          <BugReportDialog
+            game={game}
+            save={saveFile(game)}
+            onSaved={(r) => {
+              reports.current = [...reports.current, r];
+              writeAutosave(game.phase === 'over' ? null : saveFile(game));
+            }}
+            onClose={() => setShowReport(false)}
+            download={download}
+          />
+        )}
+      </Modal>
+
       <Modal open={showDebug} onClose={() => setShowDebug(false)}>
         <div>
           <Frame crest style={{ width: 'min(560px, 94vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12, fontSize: 17 }}>
@@ -532,7 +560,7 @@ export function App() {
             <div style={{ fontSize: 14, color: 'var(--muted)' }}>Skróty: Spacja — koniec tury/aktywacji · U — cofnij · F — przewiń boty · D — dziennik · R — zasady · Z — zdolność · S — skarby · T — zasięg wrogów · Esc — zamknij</div>
             <button className="btn plate parch" style={{ padding: '6px 14px', alignSelf: 'flex-start' }} onClick={() => { setShowDebug(false); setShowRules(true); }}>Zasady i karty</button>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              <button className="btn prim" style={{ padding: '6px 14px' }} onClick={() => download(`partia-${game.setup.seed}.json`, JSON.stringify({ setup: game.setup, actions: history.current }, null, 1))}>Eksport partii (JSON)</button>
+              <button className="btn prim" style={{ padding: '6px 14px' }} onClick={() => download(`partia-${game.setup.seed}.json`, JSON.stringify(saveFile(game), null, 1))}>Eksport partii (JSON)</button>
               <button className="btn prim" style={{ padding: '6px 14px' }} onClick={() => download(`dziennik-${game.setup.seed}.txt`, game.log.map((l) => `[${l.round}] ${l.text}`).join('\n'))}>Eksport dziennika</button>
               <button className="btn prim r" style={{ padding: '6px 14px' }} onClick={() => { setShowDebug(false); setGame(null); }}>Nowa gra</button>
             </div>

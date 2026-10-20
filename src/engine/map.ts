@@ -1,6 +1,6 @@
 // Adventure map: triangle generation (variant A), costs and path finding.
 
-import { EASY_TERRAINS, HARD_TERRAINS, MAP_VARIANTS, TERRAIN_COST, type MapSize, type Terrain } from './data';
+import { GUARDIAN_LAIRS, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type MapSize, type Terrain, type TileSide } from './data';
 import { distance, key, neighbors, parseKey, triToHex, type HexKey } from './hex';
 import { Rng } from './rng';
 import type { GameState, Tile } from './types';
@@ -86,56 +86,89 @@ export function revealAround(state: GameState, k: HexKey): HexKey[] {
 export interface GeneratedMap {
   rows: number;
   tiles: Record<HexKey, Tile>;
-  crystalHexes: HexKey[];
+  crystals: Array<{ hex: HexKey; guardian: string }>;
   treasureHexes: HexKey[];
+}
+
+/**
+ * Left half of the triangle is Przymierze land, right half Horda land. Rows with an odd
+ * number of hexes have one on the axis: those alternate between the halves (a fixed zigzag
+ * border, never random), so the halves differ by at most one hex.
+ */
+export function sideOf(row: number, col: number): TileSide {
+  const x = col - row / 2;
+  if (x < 0) return 'dawn';
+  if (x > 0) return 'horde';
+  return (row / 2) % 2 === 1 ? 'dawn' : 'horde';
+}
+
+function setTerrain(tile: Tile, terrain: Terrain, rng: Rng) {
+  tile.terrain = terrain;
+  tile.variant = 1 + rng.int(TERRAIN_VARIANTS[terrain]);
 }
 
 export function generateMap(size: MapSize, rng: Rng, treasureCount: number): GeneratedMap {
   const variant = MAP_VARIANTS[size];
   const rows = variant.rows;
-  for (let attempt = 0; attempt < 200; attempt++) {
+  for (let attempt = 0; attempt < 400; attempt++) {
     const tiles: Record<HexKey, Tile> = {};
-    const mountains = new Set(variant.mountains.map(([r, c]) => `${r}:${c}`));
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col <= row; col++) {
         const k = key(triToHex(row, col));
-        let terrain: Terrain;
-        if (mountains.has(`${row}:${col}`)) terrain = 'mountain';
-        else terrain = rng.next() < 1 / 3 ? rng.pick(HARD_TERRAINS) : rng.pick(EASY_TERRAINS);
-        tiles[k] = { key: k, row, col, terrain, revealed: false, crystalId: null, treasureId: null, home: null, tree: false };
+        const side = sideOf(row, col);
+        const tile: Tile = { key: k, row, col, terrain: 'meadow', side, variant: 1, revealed: false, crystalId: null, treasureId: null, home: null, tree: false };
+        setTerrain(tile, rng.pick(TILE_POOLS[side]), rng);
+        tiles[k] = tile;
       }
     }
     const tree = treeKey();
     const dawn = homeKey(rows, 'dawn');
     const horde = homeKey(rows, 'horde');
-    tiles[tree].terrain = 'tree';
+    setTerrain(tiles[tree], 'tree', rng);
     tiles[tree].tree = true;
-    tiles[dawn].terrain = 'baseDawn';
+    setTerrain(tiles[dawn], 'baseDawn', rng);
     tiles[dawn].home = 'dawn';
-    tiles[horde].terrain = 'baseHorde';
+    tiles[dawn].side = 'dawn';
+    setTerrain(tiles[horde], 'baseHorde', rng);
     tiles[horde].home = 'horde';
+    tiles[horde].side = 'horde';
+    // Starting neighbourhoods stay passable so nobody is walled in on turn one.
+    for (const base of [dawn, horde]) {
+      for (const n of mapNeighbors(tiles, base)) if (tileCost(tiles[n]) === null) setTerrain(tiles[n], tiles[n].side === 'dawn' ? 'meadow' : 'scorched', rng);
+    }
 
     const reach = reachableFrom(tiles, dawn);
     if (!reach.has(tree) || !reach.has(horde)) continue;
 
+    // Guardians: Cyclops and Hydra live on Horda land, the Griffin on Przymierze land.
+    const guardians = rng.shuffle(Object.keys(GUARDIAN_LAIRS)).slice(0, variant.crystals);
     const reserved = new Set<HexKey>([tree, dawn, horde, ...mapNeighbors(tiles, dawn), ...mapNeighbors(tiles, horde)]);
-    const candidates = [...reach].filter((k) => !reserved.has(k));
-    const crystalHexes = pickSpread(candidates, variant.crystals, rng, tiles);
-    if (crystalHexes.length < variant.crystals) continue;
-    // A guarded crystal must not cut the map in two: evil cannot enter guarded hexes.
-    const guarded = new Set(crystalHexes);
+    const crystals: Array<{ hex: HexKey; guardian: string }> = [];
+    for (const g of guardians) {
+      const lair = GUARDIAN_LAIRS[g];
+      const options = [...reach].filter((k) => !reserved.has(k) && tiles[k].side === lair.side && tileCost(tiles[k]) !== null);
+      const spot = pickSpread(options, 1, rng, tiles, crystals.map((c) => c.hex))[0];
+      if (!spot) break;
+      crystals.push({ hex: spot, guardian: g });
+      reserved.add(spot);
+    }
+    if (crystals.length < variant.crystals) continue;
+    for (const c of crystals) setTerrain(tiles[c.hex], GUARDIAN_LAIRS[c.guardian].terrain, rng);
+    // Evil cannot cross guarded hexes, so the Tree must stay reachable around them.
+    const guarded = new Set(crystals.map((c) => c.hex));
     const hordeReach = reachableFrom(tiles, horde, (k) => guarded.has(k));
     if (!hordeReach.has(tree)) continue;
-    const rest = rng.shuffle(candidates.filter((k) => !guarded.has(k)));
+    const rest = rng.shuffle([...reach].filter((k) => !reserved.has(k) && tileCost(tiles[k]) !== null));
     if (rest.length < treasureCount) continue;
-    for (const k of crystalHexes) tiles[k].terrain = 'cave';
-    return { rows, tiles, crystalHexes, treasureHexes: rest.slice(0, treasureCount) };
+    const treasureHexes = rest.slice(0, treasureCount);
+    for (const k of treasureHexes) setTerrain(tiles[k], tiles[k].side === 'dawn' ? 'treasureDawn' : 'treasureHorde', rng);
+    return { rows, tiles, crystals, treasureHexes };
   }
   throw new Error('Nie udało się wygenerować poprawnej mapy');
 }
 
-/** Picks hexes far from each other so crystals spread over the map. */
-function pickSpread(candidates: HexKey[], count: number, rng: Rng, tiles: Record<HexKey, Tile>): HexKey[] {
+/** Picks hexes far from already chosen ones so crystals spread over the map. */
+function pickSpread(candidates: HexKey[], count: number, rng: Rng, tiles: Record<HexKey, Tile>, taken: HexKey[] = []): HexKey[] {
   const rows = Math.max(...Object.values(tiles).map((t) => t.row)) + 1;
   const pool = rng.shuffle(candidates);
   const chosen: HexKey[] = [];
@@ -145,7 +178,7 @@ function pickSpread(candidates: HexKey[], count: number, rng: Rng, tiles: Record
       if (chosen.includes(k)) continue;
       // Keep crystals off the two bottom rows (unless nothing else fits) so the race is not trivial.
       if (minGap > 1 && tiles[k].row >= rows - 2) continue;
-      if (!chosen.some((c) => distance(parseKey(c), parseKey(k)) < minGap)) chosen.push(k);
+      if (![...taken, ...chosen].some((c) => distance(parseKey(c), parseKey(k)) < minGap)) chosen.push(k);
     }
     if (chosen.length >= count) break;
   }
