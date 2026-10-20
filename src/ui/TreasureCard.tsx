@@ -30,7 +30,7 @@ export function TreasureCard({ kind, width = 300 }: { kind: ItemKind; width?: nu
   const scale = width / FRAME_W;
   const nameSize = Math.min(38, ((NAME.x1 - NAME.x0 - 40) / Math.max(10, def.name.length)) * 1.95);
   return (
-    <div style={{ position: 'relative', width, height: CARD_H * scale, flex: 'none', filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.6))' }}>
+    <div className="card-sheen" style={{ position: 'relative', width, height: CARD_H * scale, flex: 'none', filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.6))' }}>
       <div style={{ position: 'absolute', left: 0, top: 0, width: FRAME_W, height: CARD_H, transform: `scale(${scale})`, transformOrigin: '0 0', fontFamily: "'Crimson Pro', Georgia, serif" }}>
         <img src={asset('cards/frames/treasure.png')} alt="" style={{ position: 'absolute', inset: 0, width: FRAME_W, height: CARD_H }} />
         <img

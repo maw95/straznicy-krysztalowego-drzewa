@@ -50,6 +50,18 @@ const hexPoints = (x: number, y: number, ins = 0) =>
     .map((p) => p.join(','))
     .join(' ');
 
+/** Battlefield mood follows the terrain of the map hex where the fight started. */
+const MOOD: Partial<Record<string, string>> = {
+  swamp: 'swamp',
+  cave: 'cave',
+  forest: 'forest',
+  river: 'river',
+  bridge: 'river',
+  hill: 'hill',
+  tree: 'tree',
+  baseHorde: 'camp',
+};
+
 const SPRITES: Record<string, { file: string; w: number; h: number; up: number }> = {
   grove: { file: 'grove', w: 81, h: 99, up: 81 },
   grove2: { file: 'grove2', w: 84, h: 101, up: 83 },
@@ -121,6 +133,9 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   const [hitIds, setHitIds] = useState<string[]>([]);
   const [strikes, setStrikes] = useState<Array<{ key: number; from: HexKey; to: HexKey; ranged: boolean; attacker: string }>>([]);
   const [ghosts, setGhosts] = useState<Array<{ key: number; defId: string; side: Side; pos: HexKey }>>([]);
+  const [seals, setSeals] = useState<Array<{ key: number; ability: string; pos: HexKey; color: string }>>([]);
+  const [shards, setShards] = useState<Array<{ key: number; pos: HexKey; gold: boolean }>>([]);
+  const abilitySeen = useRef<Record<string, boolean>>({});
   useEffect(() => {
     const fresh: Array<{ key: number; amount: number; x: number; y: number }> = [];
     const hit: string[] = [];
@@ -144,6 +159,26 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
       lastSeen.current[u.id] = { hp: u.hp, pos: u.pos ?? prev?.pos ?? null, alive: u.alive };
     }
     prevActive.current = b.activation?.unitId ?? null;
+    // Ability seals: a unit's ability flag flipped since the last render.
+    const newSeals: typeof seals = [];
+    for (const u of Object.values(b.units)) {
+      if (u.abilityUsed && abilitySeen.current[u.id] === false && (u.pos ?? lastSeen.current[u.id]?.pos)) {
+        newSeals.push({ key: Math.random(), ability: UNITS[u.defId].ability, pos: (u.pos ?? lastSeen.current[u.id].pos)!, color: u.side === 'dawn' ? '#9BE88A' : u.side === 'horde' ? '#FF7A5A' : '#9EE4FF' });
+      }
+      abilitySeen.current[u.id] = u.abilityUsed;
+    }
+    const newShards = hit.map((id) => {
+      const u = b.units[id];
+      return { key: Math.random(), pos: (u.pos ?? lastSeen.current[id]?.pos)!, gold: !u.alive };
+    }).filter((x) => x.pos);
+    if (newSeals.length) {
+      setSeals((x) => [...x, ...newSeals]);
+      window.setTimeout(() => setSeals((x) => x.filter((s) => !newSeals.includes(s))), 1400);
+    }
+    if (newShards.length) {
+      setShards((x) => [...x, ...newShards]);
+      window.setTimeout(() => setShards((x) => x.filter((s) => !newShards.includes(s))), 700);
+    }
     if (!fresh.length && !newGhosts.length) return;
     setFloaters((f) => [...f, ...fresh]);
     setHitIds(hit);
@@ -354,6 +389,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
 
   return (
     <div className="screen slate screen-enter">
+      <div className="battle-curtain" />
       <div className="main-row battle-row">
         {sidePanel(sides[0])}
         <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#3F5A26' }}>
@@ -362,6 +398,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
             <div style={{ position: 'absolute', left: 0, top: 0, width: CANVAS_W, height: CANVAS_H, transform: `scale(${scale})`, transformOrigin: '0 0' }}>
               <img src={asset('ui/grass.jpg')} alt="" style={{ position: 'absolute', left: -200, top: 120, width: CANVAS_W + 400, height: CANVAS_H - 120 + 200, objectFit: 'cover' }} />
               <img src={asset('ui/landscape.jpg')} alt="" style={{ position: 'absolute', left: -200, top: -60, width: CANVAS_W + 400, height: 240, objectFit: 'cover', objectPosition: 'center 62%', WebkitMaskImage: 'linear-gradient(180deg,#000 55%,transparent 100%)', maskImage: 'linear-gradient(180deg,#000 55%,transparent 100%)' }} />
+              <div className={`arena-mood mood-${MOOD[state.tiles[b.mapHex]?.terrain] ?? 'none'}`} />
               <svg width={CANVAS_W} height={CANVAS_H} style={{ position: 'absolute', left: 0, top: 0 }}>
                 {arenaCells().map((k) => {
                   const { x, y } = cellPos(k);
@@ -418,7 +455,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                 return (
                   <button
                     key={u.id}
-                    className={`hexbtn token ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''}`}
+                    className={`hexbtn token ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''} ${isTarget ? 'attackable' : ''}`}
                     onClick={() => clickUnit(u)}
                     onMouseEnter={() => setHover(u.pos)}
                     onMouseLeave={() => setHover(null)}
@@ -453,6 +490,23 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                     )}
                   </button>
                 );
+              })}
+              {seals.map((se) => {
+                const { x, y } = cellPos(se.pos);
+                return (
+                  <div key={se.key}>
+                    <div className="ring-wave" style={{ left: x + W / 2, top: y + H / 2 - 8, ['--rc' as string]: se.color } as React.CSSProperties} />
+                    <img className="seal" src={asset(`cards/abilities/${se.ability}.png`)} alt="" style={{ left: x + W / 2, top: y + H / 2 - 40 }} />
+                  </div>
+                );
+              })}
+              {shards.map((sh) => {
+                const { x, y } = cellPos(sh.pos);
+                return Array.from({ length: sh.gold ? 14 : 8 }, (_, i) => {
+                  const a = (i / (sh.gold ? 14 : 8)) * Math.PI * 2 + (i % 3) * 0.3;
+                  const d = 28 + (i % 4) * 10;
+                  return <span key={`${sh.key}${i}`} className={`shard ${sh.gold ? 'gold' : ''}`} style={{ left: x + W / 2, top: y + H / 2 - 8, ['--hx' as string]: `${Math.cos(a) * d}px`, ['--hy' as string]: `${Math.sin(a) * d}px` } as React.CSSProperties} />;
+                });
               })}
               {ghosts.map((g) => {
                 const { x, y } = cellPos(g.pos);

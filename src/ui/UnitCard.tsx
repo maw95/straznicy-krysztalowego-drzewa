@@ -148,7 +148,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed }: { unitId: s
   const values = [hp ?? def.hp, attack ?? def.attack, speed ?? def.speed];
   const descSize = def.abilityText.length > 85 ? 14.5 : def.abilityText.length > 60 ? 15.5 : 16.5;
   return (
-    <div style={{ position: 'relative', width, height: CARD_H * scale, flex: 'none', filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.6))' }}>
+    <div className="card-sheen" style={{ position: 'relative', width, height: CARD_H * scale, flex: 'none', filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.6))' }}>
       <div style={{ position: 'absolute', left: 0, top: 0, width: FRAME_W, height: CARD_H, overflow: 'hidden', transform: `scale(${scale})`, transformOrigin: '0 0', fontFamily: "'Crimson Pro', Georgia, serif" }}>
         <img src={asset(`cards/art/${unitId}.jpg`)} alt={def.name} style={{ ...at(L.art), objectFit: 'cover', objectPosition: 'center 35%' }} />
         <img src={asset(`cards/frames/${L.file}.png`)} alt="" style={{ position: 'absolute', left: X(0), top: Y(0), width: FRAME_W * kx, height: SRC_H * ky }} />

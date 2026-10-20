@@ -54,9 +54,18 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules }: { onStart: (
 
   return (
     <div className="screen slate screen-enter" style={{ alignItems: 'center', paddingTop: 16, gap: 18 }}>
-      <img src={asset('ui/landscape.jpg')} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35 }} />
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        <img className="ken-burns" src={asset('ui/landscape.jpg')} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.35 }} />
+        {Array.from({ length: 22 }, (_, i) => (
+          <span
+            key={i}
+            className="firefly"
+            style={{ left: `${(i * 47) % 100}%`, top: `${20 + ((i * 31) % 75)}%`, ['--fx' as string]: `${((i * 13) % 80) - 40}px`, ['--fy' as string]: `${((i * 29) % 60) - 40}px`, ['--fd' as string]: `${7 + (i % 5) * 1.6}s`, ['--fdl' as string]: `${-(i * 0.9)}s` } as React.CSSProperties}
+          />
+        ))}
+      </div>
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <img src={asset('ui/orn_crystals.png')} alt="" style={{ width: 64, marginBottom: -10 }} />
+        <img className="crest-glint" src={asset('ui/orn_crystals.png')} alt="" style={{ width: 64, marginBottom: -10 }} />
         <h1 style={{ margin: 0, fontWeight: 800, fontSize: 'clamp(28px, 6vw, 44px)', textAlign: 'center', color: '#F3D27A', textShadow: '0 2px 0 #1E1204, 0 0 24px rgba(0,0,0,0.7)' }}>Strażnicy Kryształowego Drzewa</h1>
         <div style={{ fontSize: 18, color: 'var(--muted)' }}>Nowa partia · prototyp do testów</div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: 6 }}>

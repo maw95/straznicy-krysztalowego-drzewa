@@ -69,6 +69,14 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
 
   const hero = activeHero(state);
   const rows = state.rows;
+  // Path the active hero walked this turn (drawn as a flowing dotted line).
+  const trail = useRef<{ turn: string; hexes: HexKey[] }>({ turn: '', hexes: [] });
+  if (hero) {
+    const turn = `${state.round}:${state.turnIndex}:${hero.id}`;
+    if (trail.current.turn !== turn) trail.current = { turn, hexes: [hero.pos] };
+    else if (trail.current.hexes[trail.current.hexes.length - 1] !== hero.pos) trail.current.hexes.push(hero.pos);
+  }
+
   // Only hexes revealed since the previous render turn over (not the whole map on remount).
   const seenRevealed = useRef<Set<HexKey> | null>(null);
   const freshlyRevealed = new Set<HexKey>();
@@ -155,21 +163,31 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                       {t.revealed ? (
                         <img src={tileImage(t.terrain)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                       ) : (
-                        <div style={{ width: '100%', height: '100%', background: 'radial-gradient(circle at 50% 38%, #2E4C52 0%, #0E1C20 78%)' }} />
+                        <div style={{ width: '100%', height: '100%', background: 'radial-gradient(circle at 50% 38%, #2E4C52 0%, #0E1C20 78%)' }}>
+                          <div className="fog" style={{ animationDelay: `${-((t.row * 7 + t.col * 13) % 60)}s` }} />
+                        </div>
                       )}
                       {(r || onPath) && <div style={{ position: 'absolute', inset: 0, background: onPath ? 'rgba(158,228,255,0.35)' : 'rgba(158,228,255,0.18)', boxShadow: 'inset 0 0 18px rgba(158,228,255,0.7)' }} />}
                     </div>
                     {!t.revealed && <img src={asset('ui/orn_tree.png')} alt="" style={{ position: 'absolute', left: '30%', top: '33%', width: '40%', opacity: 0.3 }} />}
+                    {t.tree && (
+                      <>
+                        <div className="tree-glow" style={{ ['--glow' as string]: 0.35 + (0.65 * state.factions.dawn.delivered) / state.crystalsNeeded } as React.CSSProperties} />
+                        {Array.from({ length: 4 + state.factions.dawn.delivered * 3 }, (_, i) => (
+                          <span key={i} className="spark" style={{ left: `${25 + ((i * 37) % 50)}%`, top: `${45 + ((i * 23) % 30)}%`, ['--sx' as string]: `${((i * 17) % 21) - 10}px`, ['--sd' as string]: `${2.4 + (i % 4) * 0.6}s`, ['--sdl' as string]: `${-(i * 0.7)}s` } as React.CSSProperties} />
+                        ))}
+                      </>
+                    )}
                     {t.revealed && <img src={terrainIcon(t.terrain)} alt="" style={{ position: 'absolute', left: W * 0.11, top: H * 0.6, width: W * 0.27, filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.6))' }} />}
                     {t.revealed && t.treasureId && (
-                      <div style={{ position: 'absolute', right: W * 0.12, top: H * 0.24 }} title="Skarb">
+                      <div className="glint" style={{ position: 'absolute', right: W * 0.12, top: H * 0.24 }} title="Skarb">
                         <Medal fill="mBrown" glyph="gChest" size={W * 0.3} />
                       </div>
                     )}
                     {crystal && (
                       <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', display: 'flex', alignItems: 'center' }}>
                         {crystal.guardian && <Portrait unitId={crystal.guardian} size={W * 0.5} ring={SIDE_RING.neutral} title={UNITS[crystal.guardian].name} />}
-                        <div style={{ marginLeft: crystal.guardian ? -W * 0.12 : 0 }} title="Kryształ">
+                        <div className="twinkle" style={{ marginLeft: crystal.guardian ? -W * 0.12 : 0 }} title="Kryształ">
                           <Medal fill="mBlue" glyph="gCrystal" size={W * 0.28} />
                         </div>
                       </div>
@@ -183,6 +201,29 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                   </button>
                 );
               })}
+              {trail.current.hexes.length > 1 && (
+                <svg aria-hidden="true" width={boardW} height={boardH} style={{ position: 'absolute', left: 0, top: 0, pointerEvents: 'none', zIndex: 6 }}>
+                  <polyline
+                    points={trail.current.hexes.map((k) => `${pos(state.tiles[k]).x + W / 2},${pos(state.tiles[k]).y + H / 2}`).join(' ')}
+                    fill="none"
+                    stroke="#1E1204"
+                    strokeWidth={W * 0.08}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    opacity="0.5"
+                  />
+                  <polyline
+                    className="trail"
+                    points={trail.current.hexes.map((k) => `${pos(state.tiles[k]).x + W / 2},${pos(state.tiles[k]).y + H / 2}`).join(' ')}
+                    fill="none"
+                    stroke="#F3D27A"
+                    strokeWidth={W * 0.04}
+                    strokeDasharray="2 12"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
               {/* Hero tokens live in their own layer so they glide between hexes. */}
               {Object.values(state.heroes)
                 .filter((h) => h.alive)

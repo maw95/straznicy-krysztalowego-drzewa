@@ -342,3 +342,147 @@ input[type='checkbox']:checked::after { transform: translateY(-2px) rotate(-45de
 input[type='checkbox']:focus-visible { outline: 3px solid #9ee4ff; outline-offset: 2px; }
 label { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
 input[type='range'] { accent-color: #c99a3c; }
+
+/* ================================================================ polish */
+
+/* Drifting fog over unrevealed hexes */
+@keyframes fog-drift { from { background-position: 0 0, 0 0; } to { background-position: 512px 128px, -512px 64px; } }
+.fog {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url('/assets/ui/fog.png'), url('/assets/ui/fog.png');
+  background-size: 260px 260px, 380px 380px;
+  opacity: 0.32;
+  animation: fog-drift 60s linear infinite;
+  mix-blend-mode: screen;
+}
+
+/* Crystal Tree: glow that grows with delivered crystals, rising sparks */
+@keyframes tree-pulse { 0%, 100% { opacity: calc(var(--glow) * 0.75); transform: scale(0.95); } 50% { opacity: var(--glow); transform: scale(1.05); } }
+.tree-glow {
+  position: absolute;
+  inset: -18%;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(170, 235, 255, 0.85) 0%, rgba(120, 200, 255, 0.35) 40%, rgba(120, 200, 255, 0) 70%);
+  animation: tree-pulse 3.2s ease-in-out infinite;
+}
+@keyframes spark-rise { 0% { transform: translate(0, 0) scale(0.6); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(var(--sx), -60px) scale(1); opacity: 0; } }
+.spark {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, #fff 0%, #bdebff 45%, rgba(189, 235, 255, 0) 70%);
+  box-shadow: 0 0 6px 2px rgba(158, 228, 255, 0.7);
+  animation: spark-rise var(--sd, 3s) ease-out infinite;
+  animation-delay: var(--sdl, 0s);
+}
+.spark.gold { background: radial-gradient(circle, #fff 0%, #ffe9a0 45%, rgba(255, 233, 160, 0) 70%); box-shadow: 0 0 6px 2px rgba(243, 210, 122, 0.8); }
+
+/* Crystals and treasures twinkle on the map */
+@keyframes twinkle { 0%, 100% { filter: drop-shadow(0 0 2px rgba(158, 228, 255, 0.4)); } 50% { filter: drop-shadow(0 0 9px rgba(158, 228, 255, 1)) brightness(1.25); } }
+.twinkle { animation: twinkle 2.2s ease-in-out infinite; }
+@keyframes glint { 0%, 70%, 100% { filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5)); } 80% { filter: drop-shadow(0 0 10px rgba(255, 220, 120, 1)) brightness(1.35); } }
+.glint { animation: glint 3.4s ease-in-out infinite; }
+
+/* Walked path this turn */
+@keyframes trail-flow { to { stroke-dashoffset: -28; } }
+.trail { animation: trail-flow 1.2s linear infinite; }
+
+/* Ability seal bursting over a unit */
+@keyframes seal-burst { 0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; } 25% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; } 70% { opacity: 1; } 100% { transform: translate(-50%, -70%) scale(1.5); opacity: 0; } }
+@keyframes ring-wave { 0% { transform: translate(-50%, -50%) scale(0.4); opacity: 0.9; } 100% { transform: translate(-50%, -50%) scale(2.6); opacity: 0; } }
+.seal { position: absolute; width: 74px; height: 74px; pointer-events: none; z-index: 8; animation: seal-burst 1.3s ease-out both; filter: drop-shadow(0 0 12px rgba(255, 230, 150, 0.9)); }
+.ring-wave { position: absolute; width: 70px; height: 70px; border-radius: 50%; pointer-events: none; z-index: 7; border: 3px solid var(--rc, #f3d27a); box-shadow: 0 0 18px var(--rc, #f3d27a); animation: ring-wave 0.9s ease-out both; }
+
+/* Hits: red flash and flying shards; lethal blows throw gold sparks */
+@keyframes hit-flash { 0% { filter: none; } 30% { filter: brightness(1.6) sepia(1) saturate(6) hue-rotate(-30deg); } 100% { filter: none; } }
+.token.hit .medal-ring { animation: hit-shake 0.3s ease-in-out, hit-flash 0.45s ease-out; }
+@keyframes shard { 0% { transform: translate(0, 0) rotate(0); opacity: 1; } 100% { transform: translate(var(--hx), var(--hy)) rotate(220deg); opacity: 0; } }
+.shard { position: absolute; width: 6px; height: 3px; border-radius: 1px; pointer-events: none; z-index: 7; background: #ffd0a0; box-shadow: 0 0 4px #ff8a50; animation: shard 0.6s ease-out both; }
+.shard.gold { background: #fff1b8; box-shadow: 0 0 6px #f3d27a; height: 4px; }
+
+/* Arena mood per terrain */
+.arena-mood { position: absolute; inset: 0; pointer-events: none; }
+.mood-swamp { background: radial-gradient(ellipse at 50% 120%, rgba(40, 60, 40, 0.15), rgba(30, 45, 35, 0.45)); }
+.mood-swamp::after { content: ''; position: absolute; inset: 0; background-image: url('/assets/ui/fog.png'); background-size: 420px 420px; opacity: 0.45; animation: fog-drift 80s linear infinite; mix-blend-mode: screen; }
+.mood-cave { background: radial-gradient(ellipse at 50% 40%, rgba(60, 120, 200, 0.05), rgba(8, 18, 40, 0.55)); }
+.mood-forest { background: radial-gradient(ellipse at 50% 30%, rgba(255, 240, 180, 0.08), rgba(10, 40, 12, 0.4)); }
+.mood-river { background: linear-gradient(180deg, rgba(120, 190, 255, 0.12), rgba(20, 60, 90, 0.25)); }
+.mood-hill { background: linear-gradient(180deg, rgba(255, 210, 140, 0.12), rgba(90, 60, 20, 0.2)); }
+.mood-tree { background: radial-gradient(ellipse at 50% 20%, rgba(190, 240, 255, 0.25), rgba(20, 50, 70, 0.25)); }
+.mood-camp { background: radial-gradient(ellipse at 50% 100%, rgba(255, 90, 40, 0.18), rgba(40, 8, 8, 0.4)); }
+
+/* Title screen: slow Ken Burns, fireflies, glinting crest */
+@keyframes ken-burns { 0% { transform: scale(1.02) translate(0, 0); } 50% { transform: scale(1.1) translate(-2%, 1%); } 100% { transform: scale(1.02) translate(0, 0); } }
+.ken-burns { animation: ken-burns 60s ease-in-out infinite; }
+@keyframes firefly { 0% { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(var(--fx), var(--fy)); opacity: 0.6; } 80% { opacity: 1; } 100% { transform: translate(calc(var(--fx) * -0.6), calc(var(--fy) * 1.4)); opacity: 0; } }
+.firefly { position: absolute; width: 4px; height: 4px; border-radius: 50%; pointer-events: none; background: #fff6c8; box-shadow: 0 0 8px 3px rgba(255, 230, 140, 0.7); animation: firefly var(--fd, 9s) ease-in-out infinite; animation-delay: var(--fdl, 0s); }
+@keyframes crest-glint { 0%, 80%, 100% { filter: drop-shadow(0 0 4px rgba(158, 228, 255, 0.4)); } 88% { filter: drop-shadow(0 0 18px rgba(200, 245, 255, 1)) brightness(1.4); } }
+.crest-glint { animation: crest-glint 5s ease-in-out infinite; }
+
+/* Cards: sheen sweeping across on hover, flip from the back */
+.card-sheen { position: relative; }
+.card-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  pointer-events: none;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0) 30%, rgba(255, 250, 220, 0.45) 45%, rgba(255, 255, 255, 0) 60%);
+  background-size: 250% 100%;
+  background-position: 120% 0;
+  mix-blend-mode: overlay;
+  transition: background-position 0.9s ease;
+}
+.card-sheen:hover::after { background-position: -40% 0; }
+@keyframes card-flip { 0% { transform: perspective(900px) rotateY(0deg); } 50% { transform: perspective(900px) rotateY(90deg); } 100% { transform: perspective(900px) rotateY(0deg); } }
+.card-flip { animation: card-flip 0.9s ease-in-out both; }
+@keyframes rise-in { from { transform: translateY(40px) scale(0.8); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Victory screens */
+@keyframes rays-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+.victory-rays {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 180vmax;
+  height: 180vmax;
+  pointer-events: none;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 225, 140, 0.16) 0deg 6deg, rgba(255, 225, 140, 0) 6deg 18deg);
+  mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.6) 30%, transparent 60%);
+  -webkit-mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.6) 30%, transparent 60%);
+  animation: rays-spin 60s linear infinite;
+  transform: translate(-50%, -50%);
+}
+@keyframes petal-fall { 0% { transform: translate(0, -10vh) rotate(0); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate(var(--px), 110vh) rotate(var(--pr)); opacity: 0.8; } }
+.petal { position: fixed; top: 0; width: 10px; height: 7px; border-radius: 60% 0 60% 0; pointer-events: none; background: linear-gradient(135deg, #fff6d0, #f3d27a); animation: petal-fall var(--pd, 8s) linear infinite; animation-delay: var(--pdl, 0s); }
+@keyframes red-fog { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.85; } }
+.defeat-fog { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 60%, rgba(0, 0, 0, 0) 20%, rgba(90, 0, 0, 0.55) 70%, rgba(30, 0, 0, 0.85)); animation: red-fog 4s ease-in-out infinite; }
+.defeat-fog::after { content: ''; position: absolute; inset: 0; background-image: url('/assets/ui/fog.png'); background-size: 500px 500px; opacity: 0.35; filter: sepia(1) saturate(5) hue-rotate(-40deg); animation: fog-drift 50s linear infinite; }
+@keyframes quake { 0%, 100% { transform: none; } 20% { transform: translate(-6px, 3px); } 40% { transform: translate(5px, -4px); } 60% { transform: translate(-4px, 2px); } 80% { transform: translate(3px, -1px); } }
+.quake { animation: quake 0.6s ease-in-out 2; }
+
+/* Entering a battle: dark vignette closing and opening */
+@keyframes battle-curtain { 0% { opacity: 1; background-size: 100% 100%; } 100% { opacity: 0; background-size: 400% 400%; } }
+.battle-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0) 0%, rgba(5, 8, 10, 0.92) 35%, #050809 60%) center / 100% 100% no-repeat;
+  animation: battle-curtain 0.9s ease-in both;
+}
+
+/* Themed cursors */
+html, body { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='30' viewBox='0 0 26 30'%3E%3Cpath d='M3 2l18 11-8 2 5 10-4 2-5-10-6 6z' fill='%23E8C46A' stroke='%232A1804' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M5 6l11 7-5 1' fill='none' stroke='%23FFF4C4' stroke-width='1' opacity='0.8'/%3E%3C/svg%3E") 3 2, auto; }
+button:not(:disabled), .hex-clip[style*='pointer'], label { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='30' viewBox='0 0 26 30'%3E%3Cpath d='M3 2l18 11-8 2 5 10-4 2-5-10-6 6z' fill='%23FFF0B0' stroke='%232A1804' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 3 2, pointer; }
+.attackable, .attackable * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M4 4l16 16' stroke='%232A1804' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M4 4l16 16' stroke='%23E4E8EE' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpath d='M16 24l8-8' stroke='%232A1804' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M16 24l8-8' stroke='%23D9A540' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M22 22l6 6' stroke='%235A3A1A' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") 4 4, crosshair !important; }
+
+/* Parchment scrollbars */
+.scroll::-webkit-scrollbar { width: 10px; }
+.scroll::-webkit-scrollbar-track { background: rgba(6, 16, 18, 0.5); border-radius: 5px; }
+.scroll::-webkit-scrollbar-thumb { background: linear-gradient(90deg, #c99a3c, #8e6214); border-radius: 5px; border: 2px solid #1e1204; }

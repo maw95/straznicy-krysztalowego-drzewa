@@ -17,6 +17,7 @@ import { RulesDialog } from './RulesDialog';
 import { BattleSummary } from './BattleSummary';
 import { HoverCardLayer } from './hover';
 import { Tutorial } from './Tutorial';
+import { TreasureReveal } from './CardBack';
 
 const SPEEDS = { wolno: 900, normalnie: 450, szybko: 120 } as const;
 type Speed = keyof typeof SPEEDS;
@@ -235,6 +236,20 @@ export function App() {
     setConfirm({ text, yes: 'Do walki!', onYes: () => setSteps(path) });
   }, []);
 
+  // A freshly found treasure of the viewing faction turns over in front of the player.
+  const [found, setFound] = useState<ItemKind | null>(null);
+  const knownItems = useRef<Set<string> | null>(null);
+  useEffect(() => {
+    if (!game) return;
+    const humanSides = new Set(game.players.filter((p) => p.controller === 'human').map((p) => p.faction));
+    const owned = Object.values(game.items).filter((it) => it.owner && humanSides.has(it.owner));
+    if (knownItems.current) {
+      const fresh = owned.find((it) => !knownItems.current!.has(it.id));
+      if (fresh && game.phase === 'adventure') setFound(fresh.kind);
+    }
+    knownItems.current = new Set(owned.map((it) => it.id));
+  }, [game]);
+
   // After-battle summary for battles a human faction fought in.
   const lastBattleId = game?.lastBattle?.id ?? null;
   useEffect(() => {
@@ -392,6 +407,27 @@ export function App() {
       {needsHandoff && actor.kind === 'human' && (
         <Handoff state={game} playerId={actor.playerId} onConfirm={() => setConfirmedFaction(actor.faction)} />
       )}
+
+      {game.phase === 'over' && game.winner === 'dawn' && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 49, pointerEvents: 'none', overflow: 'hidden' }}>
+          <div className="victory-rays" />
+          {Array.from({ length: 26 }, (_, i) => (
+            <span key={i} className="petal" style={{ left: `${(i * 37) % 100}%`, ['--px' as string]: `${((i * 23) % 120) - 60}px`, ['--pr' as string]: `${200 + i * 30}deg`, ['--pd' as string]: `${6 + (i % 5)}s`, ['--pdl' as string]: `${-(i * 0.6)}s` } as React.CSSProperties} />
+          ))}
+        </div>
+      )}
+      {game.phase === 'over' && game.winner === 'horde' && <div className="defeat-fog" style={{ zIndex: 49 }} />}
+      <Modal open={Boolean(found) && !digest && !summary}>
+        {found && (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }} onClick={() => setFound(null)}>
+            <Ribbon style={{ width: 'min(360px, 90vw)' }}>Znaleziono skarb!</Ribbon>
+            <TreasureReveal kind={found} width={Math.min(300, window.innerWidth - 60)} />
+            <button className="btn prim" autoFocus style={{ padding: '6px 26px', fontSize: 18 }} onClick={() => setFound(null)}>
+              Do ekwipunku
+            </button>
+          </div>
+        )}
+      </Modal>
 
       <Modal open={game.phase === 'over'}>
         <GameOver state={game} onNew={() => setGame(null)} onLog={() => setShowLog(true)} />
@@ -578,7 +614,7 @@ function Handoff({ state, playerId, onConfirm }: { state: GameState; playerId: s
 function GameOver({ state, onNew, onLog }: { state: GameState; onNew: () => void; onLog: () => void }) {
   const s = state.stats;
   return (
-    <div>
+    <div className={state.winner === 'horde' ? 'quake' : undefined}>
       <Frame crest style={{ width: 'min(620px, 94vw)' }} innerStyle={{ padding: 26, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center' }}>
         <Ribbon side={state.winner ?? 'dawn'} style={{ width: 460, height: 50 }}>Wygrywa: {state.winner ? FACTION_NAMES[state.winner] : '—'}</Ribbon>
         <div style={{ fontSize: 20 }}>{state.endReason}</div>
@@ -599,6 +635,19 @@ function GameOver({ state, onNew, onLog }: { state: GameState; onNew: () => void
   );
 }
 
+const LOG_ICON: Record<LogEntry['kind'], [string, string]> = {
+  info: ['mBrown', 'gScroll'],
+  move: ['mBrown', 'gBoot'],
+  battle: ['mRed', 'gSwords'],
+  damage: ['mRed', 'gSwords'],
+  death: ['mPurple', 'gHelm'],
+  item: ['mBrown', 'gChest'],
+  crystal: ['mBlue', 'gCrystal'],
+  round: ['mGreen', 'gHourglass'],
+  victory: ['mGreen', 'gFlag'],
+  ability: ['mPurple', 'gStar'],
+};
+
 function LogDialog({ entries }: { entries: LogEntry[] }) {
   const end = useRef<HTMLDivElement>(null);
   useEffect(() => end.current?.scrollIntoView(), []);
@@ -608,9 +657,10 @@ function LogDialog({ entries }: { entries: LogEntry[] }) {
         <Ribbon>Dziennik zdarzeń</Ribbon>
         <div className="scroll" style={{ flex: 1 }}>
           {entries.map((l, i) => (
-            <div key={i} className={`log-line ${l.kind}`}>
-              <span style={{ color: '#9FB8BC', marginRight: 6 }}>[{l.round}]</span>
-              {l.text}
+            <div key={i} className={`log-line ${l.kind}`} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '2px 0' }}>
+              <Medal fill={LOG_ICON[l.kind][0]} glyph={LOG_ICON[l.kind][1]} size={20} />
+              <span style={{ color: '#9FB8BC', flex: 'none' }}>[{l.round}]</span>
+              <span>{l.text}</span>
             </div>
           ))}
           <div ref={end} />

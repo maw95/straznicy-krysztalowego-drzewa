@@ -15,7 +15,7 @@ beforeEach(() => {
 /** Accepts confirmation dialogs and dismisses summaries so the scripted player keeps going. */
 async function clearDialogs(c: HTMLElement) {
   for (let i = 0; i < 3; i++) {
-    const btn = [...c.querySelectorAll('.overlay button.prim')].find((b) => /Zakończ turę|Do walki|Dalej/.test(b.textContent ?? '')) as HTMLButtonElement | undefined;
+    const btn = [...c.querySelectorAll('.overlay button.prim')].find((b) => /Zakończ turę|Do walki|Dalej|Do ekwipunku/.test(b.textContent ?? '')) as HTMLButtonElement | undefined;
     if (!btn) return;
     await act(async () => fireEvent.click(btn));
   }
