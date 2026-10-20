@@ -1,0 +1,708 @@
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { FACTION_NAMES, ITEMS, UNITS, type FactionId, type ItemKind, type Side } from '../engine/data';
+import {
+  abilityActive,
+  abilityOf,
+  alliesOf,
+  ARENA_OBSTACLES,
+  ATTACK_ABILITIES,
+  arenaCell,
+  arenaCells,
+  attackDamage,
+  attackTargets,
+  breathSecondTarget,
+  hasLineOfSight,
+  canUseBattleItem,
+  FREE_ABILITIES,
+  hopCells,
+  livingUnits,
+  offsetOf,
+  reachableCells,
+  unitAt,
+  unitSpeed,
+} from '../engine/battle';
+import { distance, parseKey, type HexKey } from '../engine/hex';
+import type { Action, BattleUnit, GameState } from '../engine/types';
+import { hoverCard } from './hover';
+import { asset, Frame, HpBar, Medal, Portrait, Ribbon, SIDE_RING } from './common';
+
+const W = 66;
+const H = 76;
+const STEP = 57;
+const GX = 38;
+const GY = 150;
+const CANVAS_W = 836;
+const CANVAS_H = GY + H + 8 * STEP + 12;
+
+function cellPos(k: HexKey) {
+  const { row, col } = offsetOf(k);
+  return { x: GX + col * W + (row % 2) * (W / 2), y: GY + row * STEP };
+}
+const hexPoints = (x: number, y: number, ins = 0) =>
+  [
+    [x + W / 2, y + ins],
+    [x + W - ins, y + H * 0.25 + ins * 0.5],
+    [x + W - ins, y + H * 0.75 - ins * 0.5],
+    [x + W / 2, y + H - ins],
+    [x + ins, y + H * 0.75 - ins * 0.5],
+    [x + ins, y + H * 0.25 + ins * 0.5],
+  ]
+    .map((p) => p.join(','))
+    .join(' ');
+
+const SPRITES: Record<string, { file: string; w: number; h: number; up: number }> = {
+  grove: { file: 'grove', w: 81, h: 99, up: 81 },
+  grove2: { file: 'grove2', w: 84, h: 101, up: 83 },
+  deadoak: { file: 'deadoak', w: 69, h: 115, up: 97 },
+  tree1: { file: 'tree1', w: 68, h: 116, up: 98 },
+  tree2: { file: 'tree2', w: 66, h: 113, up: 95 },
+  tree3: { file: 'tree3', w: 67, h: 109, up: 91 },
+  rock: { file: 'rock', w: 70, h: 72, up: 50 },
+  deadtree: { file: 'deadtree', w: 64, h: 113, up: 95 },
+  log: { file: 'log', w: 146, h: 70, up: 42 },
+  pond: { file: 'pond', w: 146, h: 82, up: 42 },
+};
+
+type ItemTargeting =
+  | { kind: 'ownLiving' | 'ownDead' | 'enemy'; itemId: string }
+  | { kind: 'lightning'; itemId: string; picks: string[] }
+  | { kind: 'courage'; itemId: string; picks: string[] }
+  | { kind: 'teleport'; itemId: string; unitId: string | null }
+  | { kind: 'horn'; itemId: string; mode: 'swap' | 'extra' | null; unitId: string | null };
+
+const ITEM_TARGET: Partial<Record<ItemKind, ItemTargeting['kind']>> = {
+  heal: 'ownLiving',
+  sword: 'ownLiving',
+  shield: 'ownLiving',
+  vitality: 'ownLiving',
+  boots: 'ownLiving',
+  stone: 'ownLiving',
+  hourglass: 'ownLiving',
+  resurrection: 'ownDead',
+  damage_scroll: 'enemy',
+  lightning: 'lightning',
+  courage_horn: 'courage',
+  teleport: 'teleport',
+  horn: 'horn',
+};
+
+interface Props {
+  state: GameState;
+  canAct: boolean;
+  onAction: (a: Action) => void;
+  onShowCard: (unitId: string) => void;
+  footer: React.ReactNode;
+}
+
+export function BattleView({ state, canAct, onAction, onShowCard, footer }: Props) {
+  const b = state.battle!;
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  const [useAbility, setUseAbility] = useState(false);
+  const [freeAbility, setFreeAbility] = useState(false);
+  const [targeting, setTargeting] = useState<ItemTargeting | null>(null);
+  const [showItems, setShowItems] = useState(false);
+  const [hover, setHover] = useState<HexKey | null>(null);
+
+  // Keep the active unit in view when the arena is scrollable (phones).
+  useEffect(() => {
+    const el = wrapRef.current;
+    const pos = b.activation ? b.units[b.activation.unitId]?.pos : null;
+    if (!el || !pos || el.scrollWidth <= el.clientWidth + 2) return;
+    const { x } = cellPos(pos);
+    el.scrollTo({ left: Math.max(0, (x + W / 2) * scale - el.clientWidth / 2), behavior: 'smooth' });
+  }, [b.activation?.unitId, b, scale]);
+
+  // Floating damage / healing numbers: diff unit HP between renders.
+  // Also drives the attack animations: who struck whom, and fading-out fallen units.
+  const lastSeen = useRef<Record<string, { hp: number; pos: HexKey | null; alive: boolean }>>({});
+  const prevActive = useRef<string | null>(null);
+  const [floaters, setFloaters] = useState<Array<{ key: number; amount: number; x: number; y: number }>>([]);
+  const [hitIds, setHitIds] = useState<string[]>([]);
+  const [strikes, setStrikes] = useState<Array<{ key: number; from: HexKey; to: HexKey; ranged: boolean; attacker: string }>>([]);
+  const [ghosts, setGhosts] = useState<Array<{ key: number; defId: string; side: Side; pos: HexKey }>>([]);
+  useEffect(() => {
+    const fresh: Array<{ key: number; amount: number; x: number; y: number }> = [];
+    const hit: string[] = [];
+    const newStrikes: typeof strikes = [];
+    const newGhosts: typeof ghosts = [];
+    const attacker = prevActive.current ? b.units[prevActive.current] : undefined;
+    for (const u of Object.values(b.units)) {
+      const prev = lastSeen.current[u.id];
+      if (prev && prev.hp !== u.hp) {
+        const where = u.pos ?? prev.pos;
+        if (where) {
+          const { x, y } = cellPos(where);
+          fresh.push({ key: Math.random(), amount: u.hp - prev.hp, x: x + W / 2, y: y + H / 2 - 40 });
+          if (u.hp < prev.hp && attacker && attacker.id !== u.id && attacker.side !== u.side && attacker.pos) {
+            newStrikes.push({ key: Math.random(), from: attacker.pos, to: where, ranged: UNITS[attacker.defId].attackType === 'ranged', attacker: attacker.id });
+          }
+        }
+        if (u.hp < prev.hp) hit.push(u.id);
+      }
+      if (prev?.alive && !u.alive && !u.swappedOut && prev.pos) newGhosts.push({ key: Math.random(), defId: u.defId, side: u.side, pos: prev.pos });
+      lastSeen.current[u.id] = { hp: u.hp, pos: u.pos ?? prev?.pos ?? null, alive: u.alive };
+    }
+    prevActive.current = b.activation?.unitId ?? null;
+    if (!fresh.length && !newGhosts.length) return;
+    setFloaters((f) => [...f, ...fresh]);
+    setHitIds(hit);
+    setStrikes((x) => [...x, ...newStrikes.filter((st, i, all) => all.findIndex((o) => o.attacker === st.attacker) === i || st.ranged)]);
+    setGhosts((g) => [...g, ...newGhosts]);
+    const t = window.setTimeout(() => {
+      setFloaters((f) => f.filter((x) => !fresh.includes(x)));
+      setStrikes((x) => x.filter((st) => !newStrikes.includes(st)));
+      setGhosts((g) => g.filter((x) => !newGhosts.includes(x)));
+      setHitIds([]);
+    }, 1150);
+    return () => window.clearTimeout(t);
+  }, [b]);
+  const [showThreat, setShowThreat] = useState(false);
+
+  useLayoutEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    // On phones keep hexes finger-sized and let the arena scroll instead of shrinking further.
+    const fit = () => setScale(Math.max(Math.min(el.clientWidth / CANVAS_W, el.clientHeight / CANVAS_H), el.clientWidth < 600 ? 0.68 : 0));
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    fit();
+    return () => ro.disconnect();
+  }, []);
+
+  const act = b.activation;
+  const active = act ? b.units[act.unitId] : null;
+  const myTurn = canAct && b.stage === 'fight' && Boolean(active);
+  const side: FactionId | undefined = active && active.side !== 'neutral' ? active.side : undefined;
+  const moves = useMemo(() => (myTurn && active && !act!.moved && !act!.attacked && !targeting ? reachableCells(state, active) : new Map<HexKey, number>()), [state, myTurn, active, act, targeting]);
+  const targets = useMemo(() => (myTurn && active && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility ? attackTargets(state, active) : []), [state, myTurn, active, act, targeting, freeAbility]);
+  const hops = myTurn && active && act!.hop ? hopCells(state, active, act!.hop) : [];
+  const ab = active ? abilityOf(active) : null;
+  const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state, active));
+  const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab);
+  const freeAbilityReady = abilityReady && ab !== null && FREE_ABILITIES.includes(ab);
+  const itemsAllowed = myTurn && side ? canUseBattleItem(state, side) : false;
+
+  function reset() {
+    setTargeting(null);
+    setFreeAbility(false);
+  }
+
+  // Battle shortcuts: Space ends the activation, Z ability, S treasures, T enemy reach.
+  const keyState = useRef({ myTurn, attackAbility, freeAbilityReady, ab });
+  keyState.current = { myTurn, attackAbility, freeAbilityReady, ab };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'SELECT' || document.querySelector('.overlay:not(.leaving)')) return;
+      const k = e.key.toLowerCase();
+      const ks = keyState.current;
+      if (k === 't') setShowThreat((v) => !v);
+      if (!ks.myTurn) return;
+      if (k === ' ') {
+        e.preventDefault();
+        reset();
+        onAction({ type: 'endActivation' });
+      } else if (k === 'z') {
+        if (ks.attackAbility) setUseAbility((v) => !v);
+        else if (ks.freeAbilityReady) {
+          if (ks.ab === 'sunburst') onAction({ type: 'battleAbility' });
+          else setFreeAbility((v) => !v);
+        }
+      } else if (k === 's') setShowItems((v) => !v);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onAction]);
+
+  /** Cells enemies of the active unit's side can hit next round (move + melee reach, or line of sight for shooters). */
+  const threat = useMemo(() => {
+    const out = new Set<HexKey>();
+    if (!showThreat || !active) return out;
+    const foes = livingUnits(b).filter((u) => u.side !== active.side);
+    for (const f of foes) {
+      const stand = [f.pos!, ...reachableCells(state, f).keys()];
+      if (UNITS[f.defId].attackType === 'ranged') {
+        for (const c of arenaCells()) if (!b.obstacles.includes(c) && stand.some((p) => hasLineOfSight(state, p, c))) out.add(c);
+      } else {
+        for (const p of stand) for (const c of arenaCells()) if (distanceBetween(p, c) <= 1 && !b.obstacles.includes(c)) out.add(c);
+      }
+    }
+    return out;
+  }, [showThreat, active, b, state]);
+
+  /** Predicted result of attacking `t` now (shown on hover). */
+  function attackPreview(t: BattleUnit): { text: string; lethal: boolean } {
+    if (!active) return { text: '', lethal: false };
+    if (t.status.shieldArmed) return { text: 'Tarcza zablokuje', lethal: false };
+    let dmg = attackDamage(state, active, t, useAbility && attackAbility, act?.movedDistance ?? 0);
+    dmg = Math.max(0, dmg - t.status.damageReduction);
+    const hard = abilityOf(t) === 'hardHead' && !t.abilityUsed && abilityActive(state, t) && dmg >= 2;
+    if (hard) dmg = Math.max(0, dmg - 4);
+    const left = Math.max(0, t.hp - dmg);
+    const note = hard ? ' (Twardogłowy)' : '';
+    return left === 0 ? { text: `−${dmg} · pokona${note}`, lethal: true } : { text: `−${dmg} → ${left} Ż${note}`, lethal: false };
+  }
+
+  function clickUnit(u: BattleUnit) {
+    if (!myTurn || !active) {
+      onShowCard(u.defId);
+      return;
+    }
+    if (targeting) return pickForItem(u);
+    if (freeAbility) {
+      onAction({ type: 'battleAbility', targetId: u.id });
+      reset();
+      return;
+    }
+    if (targets.some((t) => t.id === u.id)) {
+      onAction({ type: 'battleAttack', targetId: u.id, useAbility: useAbility && attackAbility });
+      setUseAbility(false);
+      return;
+    }
+    onShowCard(u.defId);
+  }
+
+  function clickCell(k: HexKey) {
+    const u = unitAt(b, k);
+    if (u) return clickUnit(u);
+    if (!myTurn) return;
+    if (targeting?.kind === 'teleport' && targeting.unitId) {
+      onAction({ type: 'battleItem', itemId: targeting.itemId, targetId: targeting.unitId, to: k });
+      reset();
+      return;
+    }
+    if (hops.includes(k)) return onAction({ type: 'battleHop', to: k });
+    if (moves.has(k)) onAction({ type: 'battleMove', to: k });
+  }
+
+  function pickForItem(u: BattleUnit) {
+    const t = targeting!;
+    const fire = (extra: Partial<Extract<Action, { type: 'battleItem' }>>) => {
+      onAction({ type: 'battleItem', itemId: t.itemId, ...extra });
+      reset();
+    };
+    if (t.kind === 'ownLiving' && u.side === side && u.alive) fire({ targetId: u.id });
+    else if (t.kind === 'enemy' && u.side !== side) fire({ targetId: u.id });
+    else if (t.kind === 'lightning' && u.side !== side) {
+      const picks = t.picks.includes(u.id) ? t.picks : [...t.picks, u.id];
+      if (picks.length >= 2) fire({ targetIds: picks });
+      else setTargeting({ ...t, picks });
+    } else if (t.kind === 'courage' && u.side === side) {
+      const picks = [...t.picks, u.id];
+      if (picks.length >= 2) fire({ targetIds: picks });
+      else setTargeting({ ...t, picks });
+    } else if (t.kind === 'teleport' && u.side === side) setTargeting({ ...t, unitId: u.id });
+    else if (t.kind === 'horn' && u.side === side && UNITS[u.defId].kind === 'support') {
+      if (t.mode === 'extra') fire({ targetId: u.id, hornMode: 'extra' });
+      else setTargeting({ ...t, unitId: u.id });
+    }
+  }
+
+  function startItem(itemId: string) {
+    const kind = state.items[itemId].kind;
+    const tk = ITEM_TARGET[kind];
+    if (!tk) return onAction({ type: 'battleItem', itemId });
+    if (tk === 'lightning' || tk === 'courage') setTargeting({ kind: tk, itemId, picks: [] });
+    else if (tk === 'teleport') setTargeting({ kind: 'teleport', itemId, unitId: null });
+    else if (tk === 'horn') setTargeting({ kind: 'horn', itemId, mode: null, unitId: null });
+    else setTargeting({ kind: tk, itemId });
+  }
+
+  const sides: Side[] = [b.attacker, b.defender];
+  const deadOwn = side ? Object.values(b.units).filter((u) => u.side === side && !u.alive && !u.swappedOut) : [];
+  const reserve = side ? state.factions[side].supportsAlive.filter((id) => !b.units[id]) : [];
+  // Initiative order of the round (fastest first); units that already acted are dimmed.
+  const queue = b.order.map((id, i) => ({ id, done: i < b.index, current: id === act?.unitId })).filter((q) => b.units[q.id]?.alive);
+  /** Next round's initiative (living units by Speed). */
+  const nextRound = livingUnits(b).sort((x, y) => unitSpeed(y) - unitSpeed(x)).map((u) => u.id);
+  const hoverPreview = hover && active && moves.has(hover) ? hover : null;
+  const breathPreview = useAbility && ab === 'fireBreath' && active ? targets.map((t) => breathSecondTarget(state, active, t)).filter(Boolean) : [];
+
+  const sidePanel = (s: Side) => {
+    const units = Object.values(b.units).filter((u) => u.side === s && !u.swappedOut);
+    return (
+      <Frame className="side side-battle" innerStyle={{ padding: '16px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <Ribbon side={s}>{FACTION_NAMES[s]}</Ribbon>
+        {units.map((u) => {
+          const isActive = active?.id === u.id;
+          return (
+            <button key={u.id} className="btn" onClick={() => clickUnit(u)} style={{ display: 'flex', gap: 10, alignItems: 'center', background: 'none', border: 0, padding: 0, textAlign: 'left', color: 'inherit', opacity: u.alive ? 1 : 0.5 }}>
+              <Portrait unitId={u.defId} size={50} ring={SIDE_RING[s]} dim={!u.alive} glow={isActive ? '0 0 0 2.5px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: 16, color: '#F7EDD2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{UNITS[u.defId].name}</div>
+                <HpBar hp={u.hp} max={u.maxHp} />
+                <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 2 }}>
+                  Ż {u.hp}/{u.maxHp} · A {UNITS[u.defId].attack + u.status.battleAttackBonus} · S {unitSpeed(u)}
+                  {u.abilityUsed ? ' · zdolność zużyta' : ''}
+                </div>
+                <StatusChips u={u} />
+              </div>
+            </button>
+          );
+        })}
+        <div style={{ flex: 1 }} />
+        {s !== 'neutral' && (
+          <div style={{ fontSize: 14, color: 'var(--muted)', padding: '0 0 10px 8px' }}>
+            Rezerwa: {state.factions[s].supportsAlive.filter((id) => !b.units[id]).map((id) => UNITS[id].name).join(', ') || '—'}
+          </div>
+        )}
+      </Frame>
+    );
+  };
+
+  return (
+    <div className="screen slate screen-enter">
+      <div className="main-row battle-row">
+        {sidePanel(sides[0])}
+        <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#3F5A26' }}>
+          <div ref={wrapRef} className="scroll" style={{ position: 'absolute', inset: 0, overflow: 'auto', display: 'flex' }}>
+            <div style={{ position: 'relative', flex: 'none', margin: 'auto', width: CANVAS_W * scale, height: CANVAS_H * scale, overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', left: 0, top: 0, width: CANVAS_W, height: CANVAS_H, transform: `scale(${scale})`, transformOrigin: '0 0' }}>
+              <img src={asset('ui/grass.jpg')} alt="" style={{ position: 'absolute', left: -200, top: 120, width: CANVAS_W + 400, height: CANVAS_H - 120 + 200, objectFit: 'cover' }} />
+              <img src={asset('ui/landscape.jpg')} alt="" style={{ position: 'absolute', left: -200, top: -60, width: CANVAS_W + 400, height: 240, objectFit: 'cover', objectPosition: 'center 62%', WebkitMaskImage: 'linear-gradient(180deg,#000 55%,transparent 100%)', maskImage: 'linear-gradient(180deg,#000 55%,transparent 100%)' }} />
+              <svg width={CANVAS_W} height={CANVAS_H} style={{ position: 'absolute', left: 0, top: 0 }}>
+                {arenaCells().map((k) => {
+                  const { x, y } = cellPos(k);
+                  const { col } = offsetOf(k);
+                  let fill = 'transparent';
+                  if (moves.has(k)) fill = hoverPreview === k ? 'rgba(158,228,255,0.35)' : 'rgba(6,12,2,0.32)';
+                  else if (hops.includes(k)) fill = 'rgba(158,228,255,0.28)';
+                  else if (targeting?.kind === 'teleport' && targeting.unitId && !unitAt(b, k) && !b.obstacles.includes(k)) fill = 'rgba(200,160,255,0.25)';
+                  else if (col === 0) fill = 'rgba(70,160,90,0.14)';
+                  else if (col === 10) fill = 'rgba(70,120,190,0.14)';
+                  return (
+                    <polygon
+                      key={k}
+                      points={hexPoints(x, y)}
+                      fill={fill}
+                      stroke="rgba(20,32,10,0.55)"
+                      strokeWidth="1.6"
+                      onClick={() => clickCell(k)}
+                      onMouseEnter={() => setHover(k)}
+                      onMouseLeave={() => setHover(null)}
+                      style={{ cursor: moves.has(k) || hops.includes(k) ? 'pointer' : 'default' }}
+                    />
+                  );
+                })}
+                {active?.pos && <polygon points={hexPoints(cellPos(active.pos).x, cellPos(active.pos).y, 2)} fill="rgba(158,228,255,0.15)" stroke="#9EE4FF" strokeWidth="3" pointerEvents="none" />}
+                {[...threat].map((k) => (
+                  <polygon key={`th${k}`} points={hexPoints(cellPos(k).x, cellPos(k).y, 3)} fill="rgba(224,60,40,0.16)" stroke="rgba(224,80,60,0.55)" strokeWidth="1.5" strokeDasharray="4 3" pointerEvents="none" />
+                ))}
+                {targets.map((t) => (
+                  <polygon key={t.id} points={hexPoints(cellPos(t.pos!).x, cellPos(t.pos!).y, 2)} fill="rgba(224,80,60,0.16)" stroke="#E0503C" strokeWidth="3" pointerEvents="none" />
+                ))}
+                {breathPreview.map((t) => (
+                  <polygon key={`b${t!.id}`} points={hexPoints(cellPos(t!.pos!).x, cellPos(t!.pos!).y, 6)} fill="none" stroke="#FF9A3A" strokeWidth="2" strokeDasharray="5 4" pointerEvents="none" />
+                ))}
+              </svg>
+              {ARENA_OBSTACLES.map((o, i) => {
+                const sp = SPRITES[o.sprite];
+                const cells = o.cells.map(([r, c]) => cellPos(arenaCell(r, c)));
+                const cx = cells.reduce((a, p) => a + p.x, 0) / cells.length + W / 2;
+                const cy = cells[0].y + H / 2;
+                return <img key={i} src={asset(`obstacles/${sp.file}.png`)} alt="" style={{ position: 'absolute', left: cx - sp.w / 2, top: cy - sp.up, width: sp.w, height: sp.h, pointerEvents: 'none' }} />;
+              })}
+              {livingUnits(b).map((u) => {
+                const { x, y } = cellPos(u.pos!);
+                const isActive = active?.id === u.id;
+                const isTarget = targets.some((t) => t.id === u.id);
+                const strike = strikes.find((st) => st.attacker === u.id && !st.ranged);
+                const lunge = strike ? (() => {
+                  const a = cellPos(strike.from);
+                  const t = cellPos(strike.to);
+                  return { dx: (t.x - a.x) * 0.35, dy: (t.y - a.y) * 0.35 };
+                })() : null;
+                const preview = isTarget && hover === u.pos ? attackPreview(u) : null;
+                return (
+                  <button
+                    key={u.id}
+                    className={`hexbtn token ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''}`}
+                    onClick={() => clickUnit(u)}
+                    onMouseEnter={() => setHover(u.pos)}
+                    onMouseLeave={() => setHover(null)}
+                    style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - 38, width: 54, height: 60, zIndex: lunge ? 4 : 2, cursor: 'pointer', ...(lunge ? ({ '--lx': `${lunge.dx}px`, '--ly': `${lunge.dy}px` } as React.CSSProperties) : {}) }}
+                  >
+                    <div style={{ position: 'absolute', left: 4, right: 4, bottom: -4, height: 16, borderRadius: '50%', background: 'rgba(6,10,2,0.55)', pointerEvents: 'none' }} />
+                    <Portrait
+                      unitId={u.defId}
+                      size={54}
+                      preview={!isTarget}
+                      ring={SIDE_RING[u.side]}
+                      glow={isActive ? '0 0 0 3px #9EE4FF, 0 0 20px 6px rgba(158,228,255,0.75)' : isTarget ? '0 0 0 3px #E0503C, 0 0 18px 5px rgba(224,80,60,0.7)' : '0 0 0 1.5px #1E1204, 0 8px 12px rgba(0,0,0,0.55)'}
+                    />
+                    {statusList(u).length > 0 && (
+                      <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', pointerEvents: 'none', display: 'flex', gap: 1, zIndex: 3 }}>
+                        {statusList(u).map((st) => (
+                          <StatusBadge key={st.label} st={st} />
+                        ))}
+                      </div>
+                    )}
+                    <div className="plate parch" style={{ position: 'absolute', right: -16, bottom: 0, height: 22, padding: '0 6px 0 4px', display: 'flex', alignItems: 'center', gap: 3, fontWeight: 800, fontSize: 16, pointerEvents: 'none' }}>
+                      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 64 64"><use href="#iHeart" /></svg>
+                      {u.hp}
+                    </div>
+                    {preview && (
+                      <div
+                        className="plate parch"
+                        style={{ position: 'absolute', left: '50%', top: -34, transform: 'translateX(-50%)', padding: '1px 8px', whiteSpace: 'nowrap', fontWeight: 800, fontSize: 15, color: preview.lethal ? '#8A1A1A' : '#2B1D10', boxShadow: preview.lethal ? '0 0 0 2px #E0503C, 0 0 10px rgba(224,80,60,0.6)' : undefined, pointerEvents: 'none', zIndex: 5 }}
+                      >
+                        {preview.text}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+              {ghosts.map((g) => {
+                const { x, y } = cellPos(g.pos);
+                return (
+                  <div key={g.key} className="ghost" style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - 38, pointerEvents: 'none', zIndex: 3 }}>
+                    <Portrait unitId={g.defId} size={54} ring={SIDE_RING[g.side]} preview={false} />
+                  </div>
+                );
+              })}
+              {strikes
+                .filter((st) => st.ranged)
+                .map((st) => {
+                  const a = cellPos(st.from);
+                  const t = cellPos(st.to);
+                  return (
+                    <div
+                      key={st.key}
+                      className="projectile"
+                      style={{ left: a.x + W / 2 - 7, top: a.y + H / 2 - 20, ['--px' as string]: `${t.x - a.x}px`, ['--py' as string]: `${t.y - a.y}px` } as React.CSSProperties}
+                    />
+                  );
+                })}
+              {floaters.map((f) => (
+                <div key={f.key} className={`dmg ${f.amount > 0 ? 'heal' : ''}`} style={{ left: f.x, top: f.y }}>
+                  {f.amount > 0 ? `+${f.amount}` : f.amount}
+                </div>
+              ))}
+              <button
+                className={`btn plate parch ${showThreat ? 'on' : ''}`}
+                title="Pokaż, gdzie dosięgną Cię wrogowie (T)"
+                onClick={() => setShowThreat((v) => !v)}
+                style={{ position: 'absolute', right: 14, top: 18, padding: '4px 10px', fontSize: 14, zIndex: 6 }}
+              >
+                Zasięg wrogów
+              </button>
+              <div style={{ position: 'absolute', left: '50%', top: 14, transform: 'translateX(-50%)' }}>
+                <Ribbon style={{ width: 340 }}>{`${b.kind === 'neutral' ? 'Bitwa o kryształ' : 'Starcie bohaterów'} · runda ${b.round}`}</Ribbon>
+              </div>
+            </div>
+            </div>
+          </div>
+        </Frame>
+        {sidePanel(sides[1])}
+      </div>
+
+      <Frame className="bar sticky-mobile" style={{ height: 112 }} innerStyle={{ display: 'flex', alignItems: 'center', gap: 16, padding: '0 18px' }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          {active && <span className="hide-mobile"><Portrait unitId={active.defId} size={56} ring={SIDE_RING[active.side]} glow="0 0 0 2.5px #9EE4FF" /></span>}
+          <div className="act-info" style={{ width: 170 }}>
+            <div style={{ fontWeight: 800, fontSize: 18, color: '#F3D27A', lineHeight: 1.1 }}>{active ? UNITS[active.defId].name : '—'}</div>
+            <div style={{ fontSize: 14, color: 'var(--muted)' }}>
+              {!myTurn
+                ? 'Ruch przeciwnika…'
+                : act!.hop
+                  ? 'Wybierz pole odskoku'
+                  : !act!.acted && active!.status.rootedNext
+                    ? targets.length
+                      ? 'Unieruchomiony — może tylko atakować'
+                      : 'Unieruchomiony (Pajęcze Sidła) — zakończ'
+                  : !act!.acted && moves.size === 0 && targets.length === 0
+                    ? 'Brak ruchu i celu — zakończ'
+                    : act!.moveOnly
+                      ? 'Dodatkowy ruch'
+                      : act!.attacked
+                        ? 'Atak wykonany'
+                        : act!.moved
+                          ? targets.length
+                            ? 'Wybierz cel ataku'
+                            : 'Brak celu — zakończ'
+                          : 'Ruch, potem atak'}
+            </div>
+          </div>
+        </div>
+        {myTurn && active && (
+          <div style={{ display: 'flex', gap: 8 }}>
+            {attackAbility && (
+              <button className={`btn plate parch act-btn ${useAbility ? 'on' : ''}`} style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }} onClick={() => setUseAbility(!useAbility)} title={UNITS[active.defId].abilityText}>
+                <img src={asset(`cards/abilities/${abilityOf(active)}.png`)} alt="" style={{ width: 34, height: 34 }} />
+                <span style={{ fontSize: 13, lineHeight: 1.05, textAlign: 'center' }}>{UNITS[active.defId].abilityName}{useAbility ? ' ✓' : ''}</span>
+              </button>
+            )}
+            {freeAbilityReady && (
+              <button
+                className={`btn plate parch act-btn ${freeAbility ? 'on' : ''}`}
+                style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}
+                title={UNITS[active.defId].abilityText}
+                onClick={() => (ab === 'sunburst' ? onAction({ type: 'battleAbility' }) : setFreeAbility(!freeAbility))}
+              >
+                <img src={asset(`cards/abilities/${abilityOf(active)}.png`)} alt="" style={{ width: 34, height: 34 }} />
+                <span style={{ fontSize: 13, lineHeight: 1.05, textAlign: 'center' }}>{UNITS[active.defId].abilityName}</span>
+              </button>
+            )}
+            <button className="btn prim act-btn" style={{ width: 96, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, fontSize: 15 }} onClick={() => { reset(); onAction({ type: 'endActivation' }); }}>
+              <Medal fill="mGreen" glyph="gHourglass" size={30} />
+              {act!.hop ? 'Pomiń' : 'Koniec'}
+            </button>
+          </div>
+        )}
+        <div className="well hide-mobile" style={{ height: 76, padding: '0 12px', display: 'flex', alignItems: 'center', gap: 7, overflow: 'hidden', maxWidth: 520 }}>
+          <div className="lbl" style={{ marginRight: 2 }}>Kolejka</div>
+          {queue
+            .filter((q) => !q.done || q.current)
+            .map((q) => (
+              <div key={q.id} style={{ position: 'relative', flex: 'none' }} title={UNITS[b.units[q.id].defId].name}>
+                <Portrait unitId={b.units[q.id].defId} size={q.current ? 48 : 38} ring={SIDE_RING[b.units[q.id].side]} glow={q.current ? '0 0 0 2.5px #9EE4FF' : undefined} />
+                <div className="plate parch" style={{ position: 'absolute', right: -6, bottom: -6, width: 20, height: 18, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 12 }}>{unitSpeed(b.units[q.id])}</div>
+              </div>
+            ))}
+          <div title="Następna runda" style={{ flex: 'none', alignSelf: 'stretch', display: 'flex', alignItems: 'center', gap: 4, margin: '0 2px', color: '#E7CF8F', fontWeight: 800, fontSize: 13 }}>
+            <div style={{ width: 2, height: '60%', background: 'linear-gradient(#0000, #B88A35, #0000)' }} />R{b.round + 1}
+          </div>
+          {nextRound.map((id) => (
+            <div key={`n${id}`} style={{ flex: 'none', opacity: 0.6 }} title={`${UNITS[b.units[id].defId].name} — następna runda`}>
+              <Portrait unitId={b.units[id].defId} size={30} ring={SIDE_RING[b.units[id].side]} />
+            </div>
+          ))}
+        </div>
+        <div className="footer-slot" style={{ flex: 1, minWidth: 0 }}>{footer}</div>
+      </Frame>
+
+      {myTurn && side && (
+        <div className="items-float" style={{ position: 'absolute', right: 300, bottom: 150, zIndex: 20, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: 'calc(100vw - 24px)' }}>
+          {targeting && (
+            <div className="plate parch" style={{ padding: '6px 12px', display: 'flex', gap: 10, alignItems: 'center', fontSize: 15 }}>
+              <b>{ITEMS[state.items[targeting.itemId].kind].name}:</b>
+              {targeting.kind === 'horn' && !targeting.mode ? (
+                <>
+                  <button className="btn prim" style={{ padding: '2px 10px' }} onClick={() => setTargeting({ ...targeting, mode: 'swap' })}>Wymiana</button>
+                  <button className="btn prim" style={{ padding: '2px 10px' }} onClick={() => setTargeting({ ...targeting, mode: 'extra' })}>Dodatkowa aktywacja</button>
+                </>
+              ) : targeting.kind === 'horn' && targeting.mode === 'swap' && targeting.unitId ? (
+                reserve.map((id) => (
+                  <button key={id} className="btn prim" style={{ padding: '2px 10px' }} onClick={() => { onAction({ type: 'battleItem', itemId: targeting.itemId, targetId: targeting.unitId!, hornMode: 'swap', reserveId: id }); reset(); }}>{UNITS[id].name}</button>
+                ))
+              ) : targeting.kind === 'ownDead' ? (
+                deadOwn.map((u) => (
+                  <button key={u.id} className="btn prim" style={{ padding: '2px 10px' }} onClick={() => { onAction({ type: 'battleItem', itemId: targeting.itemId, targetId: u.id }); reset(); }}>{UNITS[u.defId].name}</button>
+                ))
+              ) : (
+                <span>{targetHint(targeting)}</span>
+              )}
+              {(targeting.kind === 'lightning' || targeting.kind === 'courage') && targeting.picks.length > 0 && (
+                <button className="btn prim" style={{ padding: '2px 10px' }} onClick={() => { onAction({ type: 'battleItem', itemId: targeting.itemId, targetIds: targeting.picks }); reset(); }}>Gotowe</button>
+              )}
+              <button className="btn plate parch" style={{ padding: '2px 8px' }} onClick={reset}>Anuluj</button>
+            </div>
+          )}
+          {freeAbility && <div className="plate parch" style={{ padding: '6px 12px', fontSize: 15 }}>{ab === 'giftOfLife' ? 'Wybierz sojusznika do uleczenia.' : 'Wybierz wroga w zasięgu 4 pól.'}</div>}
+          <button className="btn plate parch" style={{ padding: '4px 12px', fontSize: 15 }} onClick={() => setShowItems(!showItems)}>
+            {showItems ? 'Ukryj skarby' : `Skarby (${state.factions[side].inventory.length})`}
+          </button>
+          {showItems &&
+            state.factions[side].inventory.map((id) => {
+              const def = ITEMS[state.items[id].kind];
+              const ok = itemsAllowed && def.usableIn.includes('battle') && !(def.kind === 'resurrection' && !deadOwn.length) && !(def.kind === 'horn' && !alliesOf(b, active!).concat(active!).some((x) => UNITS[x.defId].kind === 'support'));
+              return (
+                <div key={id} className="plate parch" style={{ width: 'min(330px, calc(100vw - 24px))', padding: '5px 9px', display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <button className="btn" title="Pokaż kartę skarbu" onClick={() => onShowCard(`item:${def.kind}`)} style={{ background: 'none', border: 0, padding: 0, flex: 'none' }}>
+                    <img {...hoverCard(`item:${def.kind}`)} src={asset(`cards/treasures/${def.kind}.jpg`)} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
+                  </button>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 800, fontSize: 15 }}>{def.name}</div>
+                    <div style={{ fontSize: 13, lineHeight: 1.15 }}>{def.text}</div>
+                  </div>
+                  <button className="btn prim" disabled={!ok} style={{ padding: '3px 10px', fontSize: 14 }} onClick={() => startItem(id)}>Użyj</button>
+                </div>
+              );
+            })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface StatusInfo {
+  label: string;
+  glyph: string;
+  buff: boolean;
+  /** Small value shown on the badge (e.g. −2, +1). */
+  value?: string;
+}
+
+/** Visible effects on a unit, so rules like Pajęcze Sidła never look like a frozen turn. */
+function statusList(u: BattleUnit): StatusInfo[] {
+  const s = u.status;
+  const out: StatusInfo[] = [];
+  if (s.rootedNext) out.push({ label: 'Unieruchomiony w następnej aktywacji (Pajęcze Sidła)', glyph: 'sWeb', buff: false });
+  if (s.slowNext) out.push({ label: `−${s.slowNext} S w następnej aktywacji (Splątane Korzenie)`, glyph: 'sRoot', buff: false, value: `−${s.slowNext}` });
+  if (s.cursedNext) out.push({ label: `−${s.cursedNext} A przy następnym ataku (Złowroga Klątwa)`, glyph: 'sSkull', buff: false, value: `−${s.cursedNext}` });
+  if (s.nextAttackBonus) out.push({ label: `+${s.nextAttackBonus} A przy następnym ataku`, glyph: 'sBlade', buff: true, value: `+${s.nextAttackBonus}` });
+  if (s.shieldArmed) out.push({ label: 'Tarcza Strażnika: neguje następny atak', glyph: 'sGuard', buff: true });
+  if (s.battleAttackBonus) out.push({ label: `+${s.battleAttackBonus} A do końca bitwy`, glyph: 'sBlade', buff: true, value: `+${s.battleAttackBonus}` });
+  if (s.battleSpeedBonus) out.push({ label: `+${s.battleSpeedBonus} S do końca bitwy`, glyph: 'sBoltG', buff: true, value: `+${s.battleSpeedBonus}` });
+  if (s.damageReduction) out.push({ label: `−${s.damageReduction} otrzymanych obrażeń`, glyph: 'sStone', buff: true, value: `−${s.damageReduction}` });
+  return out;
+}
+
+/** Small gilded medallion: green for buffs, crimson for debuffs, value on a parchment tab. */
+function StatusBadge({ st, size = 22 }: { st: StatusInfo; size?: number }) {
+  return (
+    <span title={st.label} style={{ position: 'relative', width: size, height: size, flex: 'none', display: 'inline-block', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.55))', animation: 'pop-in 0.3s ease-out both' }}>
+      <svg aria-hidden="true" width={size} height={size} viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r="19" fill="url(#mRing)" stroke="#1E1204" strokeWidth="1.4" />
+        <circle cx="20" cy="20" r="15.4" fill={st.buff ? 'url(#stBuff)' : 'url(#stDebuff)'} stroke="#1E1204" strokeWidth="1" />
+        <use href={`#${st.glyph}`} />
+      </svg>
+      {st.value && (
+        <span
+          className="parch"
+          style={{ position: 'absolute', left: '50%', bottom: -7, transform: 'translateX(-50%)', padding: '0 3px', borderRadius: 3, border: '1px solid #B88A35', fontSize: 10, fontWeight: 800, lineHeight: '11px', color: st.buff ? '#1D5233' : '#7A1418', whiteSpace: 'nowrap' }}
+        >
+          {st.value}
+        </span>
+      )}
+    </span>
+  );
+}
+
+function StatusChips({ u }: { u: BattleUnit }) {
+  const list = statusList(u);
+  if (!list.length) return null;
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 6 }}>
+      {list.map((x) => (
+        <div key={x.label} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, lineHeight: 1.15, color: x.buff ? '#BFE6B0' : '#F2B6AA' }}>
+          <StatusBadge st={{ ...x, value: undefined }} size={18} />
+          {x.label}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function targetHint(t: ItemTargeting): string {
+  switch (t.kind) {
+    case 'ownLiving':
+      return 'wybierz własną jednostkę';
+    case 'enemy':
+      return 'wybierz wroga';
+    case 'lightning':
+      return `wybierz do 2 wrogów (${t.picks.length}/2)`;
+    case 'courage':
+      return t.picks.length ? 'wybierz sąsiedniego sojusznika lub „Gotowe”' : 'wybierz jednostkę';
+    case 'teleport':
+      return t.unitId ? 'wybierz wolne pole obok sojusznika' : 'wybierz jednostkę do teleportu';
+    case 'horn':
+      return t.mode === 'extra' ? 'wybierz pomocnika' : 'wybierz pomocnika do wymiany';
+    default:
+      return '';
+  }
+}
+
+export const distanceBetween = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));

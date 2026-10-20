@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="89252fbb-bb1d-425f-a087-9550b0de05f0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/straznicy-krysztalowego-drzewa.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/Straznicy_Krysztalowego_Drzewa_Instrukcja_ilustrowana_v3.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/Straznicy_Krysztalowego_Drzewa_Specyfikacja_dla_AI.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/ikony_statow_typu_i_frakcji.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/ikony_umiejetnosci.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/gory_szczeliny.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/jaskinie_ruiny.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/las_bagno.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/martwy_gaszcz_trujace_ciernie.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/polana_spalona_ziemia.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/rzeki_mosty.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/kafelki_mapy/skarby.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/portrety_mroczna_horda.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/portrety_przymierze_switu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/portrety_skarby.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/portrety_straznicy_krysztalu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_bohater_hordy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_bohater_hordy_bez_tekstu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_bohater_przymierza.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_bohater_przymierza_bez_tekstu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_neutralny_bohater.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_neutralny_bohater_bez_tekstu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_neutralny_pomocnik.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_neutralny_pomocnik_bez_tekstu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_pomocnik_hordy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_pomocnik_hordy_bez_tekstu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_pomocnik_przymierza.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_pomocnik_przymierza_bez_tekstu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_skarbu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/images/wzor_karty_skarbu_bez_tekstu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/soundtrack/01_mapa_przygody.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/soundtrack/02_bitwa.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/soundtrack/03_walka_ze_straznikiem.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/soundtrack/04_menu_glowne.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/soundtrack/05_rytual_przy_drzewie.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/soundtrack/06_wygrana_przymierza.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/assets/soundtrack/07_wygrana_hordy.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/obstacles/deadoak.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/obstacles/deadtree.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/obstacles/grove.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/obstacles/grove2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/obstacles/log.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/obstacles/pond.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/obstacles/rock.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/obstacles/tree1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/obstacles/tree2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/obstacles/tree3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/tiles/baseDawn.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/tiles/baseHorde.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/tiles/bridge.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/tiles/cave.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/tiles/forest.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/tiles/hill.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/tiles/meadow.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/tiles/mountain.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/tiles/river.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/tiles/swamp.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/tiles/tree.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/cloth_b.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/cloth_g.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/cloth_r.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/grass.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/ico_bagno.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/ico_drzewo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/ico_gory.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/ico_jama.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/ico_krysztal.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/ico_las.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/ico_most.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/ico_oboz.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/ico_polana.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/ico_woda.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/landscape.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/orn_corner.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/orn_crystals.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/orn_tree.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/parchment.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/pen_horde.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/ui/slate.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/simulate.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/engine/ai/adventureAi.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/engine/ai/battleAi.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/engine/ai/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/engine/battle.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/engine/data.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/engine/game.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/engine/hex.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/engine/map.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/engine/rng.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/engine/types.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/AdventureView.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/App.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/BattleView.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/SetupScreen.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/UnitCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/common.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/svgDefs.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/engine.test.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/ui-battle.test.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/ui.test.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vite.config.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.0" />
+      <entry key="S60" value="1.0" />
+      <entry key="M2" value="1.000000008305559" />
+      <entry key="M5" value="1.0008908758473758" />
+      <entry key="M10" value="1.0440142069355762" />
+      <entry key="M15" value="1.172332762970452" />
+      <entry key="M30" value="1.9655491830299452" />
+      <entry key="H1" value="5.45072974216649" />
+      <entry key="H2" value="14.252283118492231" />
+      <entry key="H4" value="26.945115815268117" />
+      <entry key="D1" value="52.34799271552654" />
+      <entry key="W1" value="59.653472155580204" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.9794202975869268" />
+      <entry key="MS500" value="0.9958497530944581" />
+      <entry key="S2" value="0.998960819551523" />
+      <entry key="S5" value="0.9995841981612189" />
+      <entry key="S10" value="0.9997920774647191" />
+      <entry key="S30" value="0.9999306876841536" />
+      <entry key="S60" value="0.9999653432415313" />
+      <entry key="M2" value="0.999982679776018" />
+      <entry key="M5" value="1.000883937201054" />
+      <entry key="M10" value="1.0440105643354338" />
+      <entry key="M15" value="1.1723299935464466" />
+      <entry key="M30" value="1.9655465584674399" />
+      <entry key="H1" value="5.4507244618776625" />
+      <entry key="H2" value="14.252273860846708" />
+      <entry key="H4" value="26.94510459187421" />
+      <entry key="D1" value="52.347987828274654" />
+      <entry key="W1" value="59.65347131399489" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3KvmiXXawYpqXVx0OX293qmgsFx" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "master",
+    "javascript.preferred.runtime.type.id": "node",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/home/maciek/WebstormProjects/straznicy-krysztalowego-drzewa/docs/assets/images/kafelki_mapy",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "/home/maciek/.config/JetBrains/WebStorm2026.2/node/versions/24.22.0/bin/node",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/home/maciek/WebstormProjects/straznicy-krysztalowego-drzewa/node_modules/typescript/lib"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs/assets/images/kafelki_mapy" />
+      <recent name="$PROJECT_DIR$/docs/assets/images" />
+      <recent name="$PROJECT_DIR$/docs/assets/soundtrack" />
+      <recent name="$PROJECT_DIR$/docs/assets" />
+      <recent name="$PROJECT_DIR$/docs" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs/assets/images" />
+      <recent name="$PROJECT_DIR$/docs/assets" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-WS-262.10968.77" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="89252fbb-bb1d-425f-a087-9550b0de05f0" name="Changes" comment="" />
+      <created>1792446544535</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1792446544535</updated>
+      <workItem from="1792446545535" duration="39724000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

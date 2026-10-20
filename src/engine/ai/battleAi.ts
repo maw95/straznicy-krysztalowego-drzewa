@@ -1,0 +1,215 @@
+// Heuristic battle AI. It is greedy and deterministic: equal scores are broken
+// by stable ordering, so simulations replay exactly from a seed.
+
+import { UNITS, type FactionId } from '../data';
+import {
+  abilityActive,
+  abilityOf,
+  attackDamage,
+  attackTargets,
+  ATTACK_ABILITIES,
+  breathSecondTarget,
+  canUseBattleItem,
+  enemiesOf,
+  hopCells,
+  livingUnits,
+  reachableCells,
+  unitAttackBase,
+  unitSpeed,
+} from '../battle';
+import { distance, parseKey, type HexKey } from '../hex';
+import type { Action, BattleUnit, GameState } from '../types';
+
+const dist = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));
+
+export function chooseSupports(state: GameState, faction: FactionId): Action {
+  const pool = [...state.factions[faction].supportsAlive];
+  const automaton = state.setup.mode === 'coop' && faction === 'horde';
+  let picked: string[];
+  if (automaton) {
+    // Spec: coop evil supports are chosen at random among the living.
+    picked = pool.slice().sort((a, b) => hashPick(state, a) - hashPick(state, b)).slice(0, 2);
+  } else {
+    picked = pool.slice().sort((a, b) => supportValue(b) - supportValue(a)).slice(0, 2);
+  }
+  return { type: 'selectSupports', faction, supportIds: picked };
+}
+
+function hashPick(state: GameState, id: string): number {
+  let h = state.rng ^ state.actionCount;
+  for (const ch of id) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return h >>> 0;
+}
+
+function supportValue(id: string): number {
+  const d = UNITS[id];
+  return d.hp + d.attack * 1.5 + (d.attackType === 'ranged' ? 2 : 0);
+}
+
+/** Danger of standing on `cell`: how much damage enemies could deal there next round. */
+function danger(state: GameState, u: BattleUnit, cell: HexKey): number {
+  let total = 0;
+  for (const e of enemiesOf(state.battle!, u)) {
+    const reach = unitSpeed(e) + (UNITS[e.defId].attackType === 'ranged' ? 99 : 1);
+    if (dist(e.pos!, cell) <= reach) total += unitAttackBase(e);
+  }
+  return total;
+}
+
+interface Plan {
+  moveTo: HexKey | null;
+  target: BattleUnit | null;
+  second: BattleUnit | null;
+  useAbility: boolean;
+  score: number;
+}
+
+function planActivation(state: GameState, u: BattleUnit): Plan {
+  const b = state.battle!;
+  const act = b.activation!;
+  const options: Array<[HexKey, number]> = [[u.pos!, 0]];
+  if (!act.moved && !act.attacked) for (const [k, d] of reachableCells(state, u)) options.push([k, d]);
+  const enemies = enemiesOf(b, u);
+  const ranged = UNITS[u.defId].attackType === 'ranged';
+  let best: Plan = { moveTo: null, target: null, second: null, useAbility: false, score: -Infinity };
+  for (const [cell, steps] of options) {
+    const moved = act.movedDistance + steps;
+    // Caution fades as the battle drags on, so nobody kites forever.
+    const caution = Math.max(0, 1 - (b.round - 1) / 6);
+    const risk = (danger(state, u, cell) / Math.max(1, u.hp)) * caution;
+    const targets = act.attacked || act.moveOnly ? [] : attackTargets(state, u, cell);
+    for (const t of targets) {
+      for (const useAbility of abilityChoices(state, u, t)) {
+        const dmg = attackDamage(state, u, t, useAbility, moved);
+        let score = scoreHit(t, dmg);
+        let second: BattleUnit | null = null;
+        if (useAbility && abilityOf(u) === 'fireBreath') {
+          const saved = u.pos;
+          u.pos = cell;
+          second = breathSecondTarget(state, u, t);
+          u.pos = saved;
+          if (!second) continue;
+          score += scoreHit(second, dmg);
+        }
+        if (useAbility && (abilityOf(u) === 'boulder' || abilityOf(u) === 'manyHeads')) {
+          second = targets.filter((x) => x.id !== t.id).sort((x, y) => scoreHit(y, dmg) - scoreHit(x, dmg))[0] ?? null;
+          if (!second) continue;
+          score += scoreHit(second, dmg);
+        }
+        if (useAbility && ['entanglingRoots', 'curse'].includes(abilityOf(u))) score += 1.5;
+        score -= risk * (ranged ? 3 : 1.5);
+        if (ranged && targets.some((x) => dist(x.pos!, cell) === 1)) score -= 2;
+        if (score > best.score) best = { moveTo: cell === u.pos ? null : cell, target: t, second, useAbility, score };
+      }
+    }
+    // Positional value when not attacking from this cell.
+    const nearest = Math.min(...enemies.map((e) => dist(e.pos!, cell)));
+    let pos = ranged ? -Math.abs(nearest - 4) * 0.4 : -nearest * 0.6;
+    pos -= risk * (ranged ? 2.5 : 1);
+    if (pos > best.score) best = { moveTo: cell === u.pos ? null : cell, target: null, second: null, useAbility: false, score: pos };
+  }
+  return best;
+}
+
+function abilityChoices(state: GameState, u: BattleUnit, t: BattleUnit): boolean[] {
+  const ab = abilityOf(u);
+  if (u.abilityUsed || !abilityActive(state, u) || !ATTACK_ABILITIES.includes(ab)) return [false];
+  if (ab === 'bloodCall' && t.hp >= t.maxHp) return [false];
+  return [true, false];
+}
+
+function scoreHit(t: BattleUnit, dmg: number): number {
+  const isLeader = UNITS[t.defId].kind !== 'support';
+  if (dmg >= t.hp) return 12 + (isLeader ? 8 : 0) + UNITS[t.defId].attack;
+  return dmg * (isLeader ? 1.3 : 1) + (t.maxHp - t.hp) * 0.15;
+}
+
+function freeAbility(state: GameState, u: BattleUnit): Action | null {
+  if (u.abilityUsed || !abilityActive(state, u)) return null;
+  const b = state.battle!;
+  const ab = abilityOf(u);
+  if (ab === 'sunburst' && livingUnits(b, u.side).length >= 2) return { type: 'battleAbility' };
+  if (ab === 'giftOfLife') {
+    const hurt = livingUnits(b, u.side)
+      .filter((x) => x.maxHp - x.hp >= 3)
+      .sort((x, y) => (UNITS[y.defId].kind === 'support' ? 0 : 1) - (UNITS[x.defId].kind === 'support' ? 0 : 1))[0];
+    if (hurt) return { type: 'battleAbility', targetId: hurt.id };
+  }
+  if (ab === 'web') {
+    const t = enemiesOf(b, u)
+      .filter((e) => dist(e.pos!, u.pos!) <= 4)
+      .sort((x, y) => unitAttackBase(y) - unitAttackBase(x))[0];
+    if (t) return { type: 'battleAbility', targetId: t.id };
+  }
+  return null;
+}
+
+function itemToUse(state: GameState, u: BattleUnit): Action | null {
+  const faction = u.side as FactionId;
+  if (!canUseBattleItem(state, faction)) return null;
+  const b = state.battle!;
+  const inv = state.factions[faction].inventory.map((id) => state.items[id]);
+  const own = livingUnits(b, faction);
+  const enemies = enemiesOf(b, u);
+  for (const item of inv) {
+    switch (item.kind) {
+      case 'resurrection': {
+        const deadLeader = Object.values(b.units).find((x) => x.side === faction && !x.alive && !x.swappedOut && UNITS[x.defId].kind === 'hero');
+        if (deadLeader) return { type: 'battleItem', itemId: item.id, targetId: deadLeader.id };
+        break;
+      }
+      case 'heal': {
+        const t = own.find((x) => x.maxHp - x.hp >= 4 && x.hp <= x.maxHp / 2);
+        if (t) return { type: 'battleItem', itemId: item.id, targetId: t.id };
+        break;
+      }
+      case 'seed':
+        if (own.filter((x) => x.maxHp - x.hp >= 2).length >= 2) return { type: 'battleItem', itemId: item.id };
+        break;
+      case 'damage_scroll': {
+        const t = enemies.find((e) => e.hp <= 3);
+        if (t) return { type: 'battleItem', itemId: item.id, targetId: t.id };
+        break;
+      }
+      case 'lightning': {
+        const ts = enemies.filter((e) => e.hp <= 2);
+        if (ts.length || enemies.length >= 2) return { type: 'battleItem', itemId: item.id, targetIds: (ts.length ? ts : enemies).slice(0, 2).map((e) => e.id) };
+        break;
+      }
+      case 'sword':
+      case 'vitality':
+      case 'stone':
+        if (UNITS[u.defId].kind === 'hero' && b.round === 1) return { type: 'battleItem', itemId: item.id, targetId: u.id };
+        break;
+      case 'shield':
+        if (UNITS[u.defId].kind === 'hero' && u.hp <= 5) return { type: 'battleItem', itemId: item.id, targetId: u.id };
+        break;
+      default:
+        break;
+    }
+  }
+  return null;
+}
+
+export function chooseBattleAction(state: GameState): Action {
+  const b = state.battle!;
+  if (b.stage === 'select') return chooseSupports(state, b.needsSelection[0]);
+  const act = b.activation!;
+  const u = b.units[act.unitId];
+  if (act.hop) {
+    const cells = hopCells(state, u, act.hop).sort((x, y) => danger(state, u, x) - danger(state, u, y) || (x < y ? -1 : 1));
+    return cells.length ? { type: 'battleHop', to: cells[0] } : { type: 'endActivation' };
+  }
+  if (u.side !== 'neutral' && !act.acted) {
+    const item = itemToUse(state, u);
+    if (item) return item;
+  }
+  const free = freeAbility(state, u);
+  if (free) return free;
+  const plan = planActivation(state, u);
+  if (plan.moveTo && !act.moved && !act.attacked) return { type: 'battleMove', to: plan.moveTo };
+  if (plan.target && !act.attacked && !act.moveOnly) {
+    return { type: 'battleAttack', targetId: plan.target.id, useAbility: plan.useAbility, secondTargetId: plan.second?.id };
+  }
+  return { type: 'endActivation' };
+}

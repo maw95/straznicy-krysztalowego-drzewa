@@ -1,0 +1,84 @@
+// Hex geometry on axial coordinates (pointy-top hexes).
+// Both the triangular adventure map and the 9×11 arena use axial {q, r};
+// helpers below convert from the row/column layouts used by each board.
+
+export interface Hex {
+  q: number;
+  r: number;
+}
+
+export type HexKey = string;
+
+export const key = (h: Hex): HexKey => `${h.q},${h.r}`;
+
+export function parseKey(k: HexKey): Hex {
+  const [q, r] = k.split(',').map(Number);
+  return { q, r };
+}
+
+export const DIRECTIONS: readonly Hex[] = [
+  { q: 1, r: 0 },
+  { q: 1, r: -1 },
+  { q: 0, r: -1 },
+  { q: -1, r: 0 },
+  { q: -1, r: 1 },
+  { q: 0, r: 1 },
+];
+
+export const add = (a: Hex, b: Hex): Hex => ({ q: a.q + b.q, r: a.r + b.r });
+
+export function neighbors(h: Hex): Hex[] {
+  return DIRECTIONS.map((d) => add(h, d));
+}
+
+export function distance(a: Hex, b: Hex): number {
+  const dq = a.q - b.q;
+  const dr = a.r - b.r;
+  return (Math.abs(dq) + Math.abs(dr) + Math.abs(dq + dr)) / 2;
+}
+
+export function directionBetween(from: Hex, to: Hex): Hex | null {
+  const d = { q: to.q - from.q, r: to.r - from.r };
+  return DIRECTIONS.find((x) => x.q === d.q && x.r === d.r) ?? null;
+}
+
+/** Triangular map: row `row` (0 = top) has row + 1 hexes, `col` in [0, row]. */
+export const triToHex = (row: number, col: number): Hex => ({ q: col - row, r: row });
+export const hexToTri = (h: Hex): { row: number; col: number } => ({ row: h.r, col: h.q + h.r });
+
+/** Arena: "odd-r" offset rows (odd rows shifted right by half a hex). */
+export const offsetToHex = (row: number, col: number): Hex => ({ q: col - (row - (row & 1)) / 2, r: row });
+export function hexToOffset(h: Hex): { row: number; col: number } {
+  return { row: h.r, col: h.q + (h.r - (h.r & 1)) / 2 };
+}
+
+function cubeRound(x: number, y: number, z: number): Hex {
+  let rx = Math.round(x);
+  let ry = Math.round(y);
+  let rz = Math.round(z);
+  const dx = Math.abs(rx - x);
+  const dy = Math.abs(ry - y);
+  const dz = Math.abs(rz - z);
+  if (dx > dy && dx > dz) rx = -ry - rz;
+  else if (dy > dz) ry = -rx - rz;
+  else rz = -rx - ry;
+  return { q: rx, r: rz };
+}
+
+/**
+ * Hexes crossed by a straight segment between two hex centres (both ends included).
+ * Ambiguous edge cases are resolved with a fixed tiny nudge toward +q/+r, so the
+ * result is deterministic and symmetric enough for line-of-sight checks.
+ */
+export function line(a: Hex, b: Hex): Hex[] {
+  const n = distance(a, b);
+  if (n === 0) return [a];
+  const ax = a.q + 1e-6, az = a.r + 2e-6, ay = -ax - az;
+  const bx = b.q + 1e-6, bz = b.r + 2e-6, by = -bx - bz;
+  const out: Hex[] = [];
+  for (let i = 0; i <= n; i++) {
+    const t = i / n;
+    out.push(cubeRound(ax + (bx - ax) * t, ay + (by - ay) * t, az + (bz - az) * t));
+  }
+  return out;
+}
