@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Connect, Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
@@ -35,8 +35,12 @@ function bugReports(): Plugin {
   };
 }
 
+const { version } = JSON.parse(readFileSync('package.json', 'utf8')) as { version: string };
+
 export default defineConfig({
   base: './',
+  // The game version (package.json), shown in the main menu.
+  define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [react(), bugReports()],
   test: {
     include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],

@@ -2,10 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { chooseAction } from '../engine/ai';
 import { FACTION_NAMES, UNITS, type FactionId, type ItemKind } from '../engine/data';
 import { applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
+import { movePath } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import { DEFAULT_RULES, type Action, type GameState, type LogEntry, type SetupOptions } from '../engine/types';
 import { AdventureView } from './AdventureView';
-import { BattleView } from './BattleView';
+import { BattleView, WALK_STEP_MS } from './BattleView';
 import { DuelView } from './DuelView';
 import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, SvgDefs, asset } from './common';
 import { SetupScreen } from './SetupScreen';
@@ -120,6 +121,7 @@ export function App() {
   // (state updater functions may run twice in React's development mode).
   const gameRef = useRef<GameState | null>(game);
   gameRef.current = game;
+  const walkUntil = useRef(0);
   const dispatch = useCallback((a: Action) => {
     const g = gameRef.current;
     if (!g) return;
@@ -135,6 +137,9 @@ export function App() {
       else undoStack.current = [];
       setUndoTick((t) => t + 1);
       history.current.push(a);
+      // A unit walking along its path on the arena: let the next machine action wait for it.
+      const mover = a.type === 'battleMove' && g.battle?.activation ? g.battle.units[g.battle.activation.unitId] : null;
+      walkUntil.current = mover && a.type === 'battleMove' ? Date.now() + (movePath(g, mover, a.to).length - 1) * WALK_STEP_MS : 0;
       gameRef.current = next;
       setGame(next);
       setError(null);
@@ -152,7 +157,7 @@ export function App() {
     const t = window.setTimeout(() => {
       const a = chooseAction(game);
       if (a) dispatch(a);
-    }, SPEEDS[speed]);
+    }, SPEEDS[speed] + Math.max(0, walkUntil.current - Date.now()));
     return () => window.clearTimeout(t);
   }, [game, actor.kind, autoplay, speed, dispatch, needsHandoff]);
 

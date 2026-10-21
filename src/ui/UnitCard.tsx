@@ -5,6 +5,7 @@
 
 import { guardianDuelHp, UNITS } from '../engine/data';
 import { asset } from './common';
+import { StatText } from './markers';
 
 interface Box {
   x0: number;
@@ -214,7 +215,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed }: { unitId: s
           style={{ ...circle(L.ability.cx, L.ability.cy, L.ability.r), borderRadius: '50%' }}
         />
         <div style={{ ...at(L.band), ...centered, fontWeight: 800, fontSize: def.abilityName.length > 15 ? 17 : 20, letterSpacing: def.abilityName.length > 15 ? '0.05em' : '0.1em', textTransform: 'uppercase', lineHeight: 1, paddingTop: 1, boxSizing: 'border-box', color: '#F7EDD2', textShadow: '0 2px 0 rgba(0,0,0,0.6)', whiteSpace: 'nowrap' }}>{def.abilityName}</div>
-        <div style={{ ...at(desc), ...centered, padding: '0 8px', boxSizing: 'border-box', fontWeight: 600, fontSize: descSize, lineHeight: 1.12, color: '#1A1209' }}>{def.abilityText}</div>
+        <div style={{ ...at(desc), ...centered, padding: '0 8px', boxSizing: 'border-box', fontWeight: 600, fontSize: descSize, lineHeight: 1.12, color: '#1A1209' }}><StatText text={def.abilityText} /></div>
       </div>
     </div>
   );

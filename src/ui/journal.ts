@@ -38,12 +38,13 @@ export interface TesterExport {
 export function levelOf(setup: SetupOptions): LevelName {
   const r = setup.rules;
   const base = r.treasures && !r.heroReplacement && r.initiativeTie === DEFAULT_RULES.initiativeTie;
-  if (base && setup.battleMode === 'board' && !r.abilities && !r.useDice && !r.extraEvilHero) return 'kids';
+  const easy = r.treasures && r.heroReplacement && r.ritual === false && r.initiativeTie === DEFAULT_RULES.initiativeTie;
+  if (easy && setup.battleMode === 'board' && !r.abilities && !r.useDice && !r.extraEvilHero) return 'kids';
   if (base && setup.battleMode === 'arena' && r.abilities && !r.useDice) return r.extraEvilHero ? (setup.mode === 'coop' ? 'hard' : 'custom') : 'normal';
   return 'custom';
 }
 
-export const LEVEL_NAMES: Record<LevelName, string> = { kids: 'Dla dzieci', normal: 'Normalny', hard: 'Trudny', custom: 'Własny' };
+export const LEVEL_NAMES: Record<LevelName, string> = { kids: 'Łatwy', normal: 'Normalny', hard: 'Trudny', custom: 'Własny' };
 
 const gameId = (setup: SetupOptions) => `${setup.seed}:${setup.mode}:${setup.mapSize}:${setup.seats.map((s) => `${s.faction}/${s.heroId}/${s.controller}`).join(',')}`;
 

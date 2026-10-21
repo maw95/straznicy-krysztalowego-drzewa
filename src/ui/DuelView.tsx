@@ -6,7 +6,7 @@ import { FACTION_NAMES, ITEMS, UNITS, type FactionId, type ItemKind } from '../e
 import { abilityActive, abilityOf, attackTargets, ATTACK_ABILITIES, canUseBattleItem, FREE_ABILITIES, unitSpeed } from '../engine/battle';
 import type { Action, BattleUnit, GameState } from '../engine/types';
 import { asset, Frame, HpBar, Medal, Ribbon } from './common';
-import { DamageDrop, DieFace, LastAttack, Marker } from './markers';
+import { DamageDrop, DieFace, LastAttack, Marker, StatIcon } from './markers';
 import { UnitCard } from './UnitCard';
 
 /** Treasures that make sense with only two units on the field, and who they target. */
@@ -97,7 +97,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
           <HpBar hp={u.hp} max={u.maxHp} />
         </div>
         <div style={{ fontSize: 15, color: 'var(--muted)', textAlign: 'center' }}>
-          Ż {u.hp}/{u.maxHp}
+          <StatIcon stat="Ż" /> {u.hp}/{u.maxHp}
           {u.abilityUsed && (
             <>
               {' · '}

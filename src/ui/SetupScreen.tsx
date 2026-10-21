@@ -228,8 +228,9 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters }: {
               Rozpocznij grę
             </button>
           </div>
-          {/* The tester's record in this browser, in the bottom-right corner of the panel. */}
-          <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end' }}>
+          {/* The game version bottom-left, the tester's record in this browser bottom-right. */}
+          <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <div className="app-version">Wersja {__APP_VERSION__}</div>
             <div className="stats-box" aria-label="Twoje partie">
               <div className="stats-title">Twoje partie</div>
               <div className="stats-grid">
@@ -266,16 +267,16 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters }: {
 }
 
 const LEVELS: Array<[Level | 'custom', string]> = [
-  ['kids', 'Dla dzieci'],
+  ['kids', 'Łatwy'],
   ['normal', 'Normalny'],
   ['hard', 'Trudny'],
   ['custom', 'Własny'],
 ];
 
 const LEVEL_HINT: Record<Level | 'custom', string> = {
-  kids: 'Krótkie pojedynki na planszy, bez zdolności i bez kości — zasady do ogarnięcia w kilka minut.',
+  kids: 'Krótkie pojedynki na planszy, bez zdolności, bez kości i bez rytuału, a poległego bohatera zastępuje rezerwowy — zasady do ogarnięcia w kilka minut.',
   normal: 'Pełna gra: bitwy 3 na 3 na arenie, zdolności i skarby.',
-  hard: 'Pełna gra, a automat zła ma o jednego bohatera więcej niż gracze. Wyzwanie dla dorosłych.',
+  hard: 'Pełna gra, a automat zła ma o jednego bohatera więcej i 2 losowe skarby na start. Wyzwanie dla dorosłych.',
   custom: 'Wybierz sam: rodzaj bitew, ułatwienia i utrudnienia, które można dowolnie łączyć.',
 };
 
@@ -297,9 +298,9 @@ const TIPS = {
 };
 
 const LEVEL_TIPS: Record<Level | 'custom', string> = {
-  kids: 'Dla najmłodszych (od 5 lat): bitwy to szybkie pojedynki bohaterów na planszy, bez zdolności i bez kości — wystarczy porównać liczby na kartach.',
+  kids: 'Dla najmłodszych (od 5 lat): bitwy to szybkie pojedynki bohaterów na planszy, bez zdolności i bez kości — wystarczy porównać liczby na kartach. Nie ma rytuału, a gdy bohater polegnie, gracz bierze rezerwowego.',
   normal: 'Pełna gra: bitwy 3 na 3 na osobnej arenie, zdolności jednostek i skarby. Obrażenia zawsze równe Atakowi.',
-  hard: 'Pełna gra, a automat zła dostaje jednego bohatera więcej niż gracze. Wyzwanie dla dorosłych (tylko kooperacja).',
+  hard: 'Pełna gra, a automat zła dostaje jednego bohatera więcej i 2 losowe skarby na start. Wyzwanie dla dorosłych (tylko kooperacja).',
   custom: 'Sami składacie zasady: rodzaj bitew, ułatwienia i utrudnienia — wszystko można łączyć.',
 };
 
@@ -308,7 +309,9 @@ const MAP_TIME: Record<MapSize, string> = { short: '20–45', medium: '25–55',
 
 function mapTip(m: MapSize): string {
   const v = MAP_VARIANTS[m];
-  return `${v.rows} rzędów heksów (${(v.rows * (v.rows + 1)) / 2} pól) · ${v.crystals} kryształy do zebrania · skarby: ${v.resurrections} × Eliksir Odrodzenia + ${v.otherTreasures} inne · limit ${v.roundLimit} rund · ok. ${MAP_TIME[m]} minut przy stole.`;
+  const st = v.startTreasures;
+  const start = st ? ` · Przymierze zaczyna z ${st.resurrections + st.others} ${st.resurrections + st.others === 1 ? 'skarbem' : 'skarbami'}` : '';
+  return `${v.rows} rzędów (${(v.rows * (v.rows + 1)) / 2} pól) · kryształy do zebrania: 2 przy jednym bohaterze Przymierza, 3 przy dwóch · skarby: ${v.resurrections} × Eliksir Odrodzenia + ${v.otherTreasures} inne${start} · limit ${v.roundLimit} rund · ok. ${MAP_TIME[m]} minut przy stole.`;
 }
 
 /** A button with an explanation that appears on hover (or keyboard focus). */

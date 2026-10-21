@@ -67,3 +67,32 @@ export function LastAttack({ roll, units, size = 22 }: { roll: AttackRoll; units
     </span>
   );
 }
+
+const STAT_ICONS = { Ż: 'hp', A: 'attack', S: 'speed' } as const;
+const STAT_NAMES = { Ż: 'Życie', A: 'Atak', S: 'Szybkość' } as const;
+type StatLetter = keyof typeof STAT_ICONS;
+
+/** The stat symbol used on the cards (heart, swords, bolt), sized to the surrounding text. */
+export function StatIcon({ stat, size = '1.05em' }: { stat: StatLetter; size?: string | number }) {
+  return <img src={asset(`cards/stats/${STAT_ICONS[stat]}.png`)} alt={STAT_NAMES[stat]} title={STAT_NAMES[stat]} style={{ width: size, height: size, objectFit: 'contain', verticalAlign: '-0.18em', margin: '0 0.06em' }} />;
+}
+
+/** Text with "+1 A", "−2 S", "Ż 9"… written with the stat symbols instead of the letters. */
+export function StatText({ text }: { text: string }) {
+  // "+1 A" (number, symbol) or "Ż 9" (symbol, number); each pair stays on one line.
+  const re = /([+−-]?\d+) ?(Ż|A|S)(?=[\s.,;:)/]|$)|(?<![\p{L}\d])(Ż|A|S) (\d+)/gu;
+  const out: React.ReactNode[] = [];
+  let last = 0;
+  for (const m of text.matchAll(re)) {
+    out.push(text.slice(last, m.index));
+    out.push(
+      <span key={m.index} style={{ whiteSpace: 'nowrap' }}>
+        {m[1] ? <>{m[1]}<StatIcon stat={m[2] as StatLetter} /></> : <><StatIcon stat={m[3] as StatLetter} /> {m[4]}</>}
+      </span>,
+    );
+    last = m.index! + m[0].length;
+  }
+  out.push(text.slice(last));
+  // One inline box, so flex containers (card descriptions) do not split it into columns.
+  return <span>{out}</span>;
+}

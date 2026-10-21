@@ -15,6 +15,7 @@ import {
   FREE_ABILITIES,
   hopCells,
   livingUnits,
+  movePath,
   reachableCells,
   unitAt,
   unitSpeed,
@@ -24,7 +25,7 @@ import type { Action, AttackRoll, BattleUnit, GameState } from '../engine/types'
 import { hoverCard } from './hover';
 import { asset, Frame, HpBar, Medal, Portrait, Ribbon, SIDE_RING } from './common';
 import { ART_SIZE, CANVAS_H, CANVAS_W, cellCenter, hexPoints } from './arenaGeometry';
-import { DamageDrop, DieFace, LastAttack, Marker, type MarkerName } from './markers';
+import { DamageDrop, DieFace, LastAttack, Marker, StatIcon, StatText, type MarkerName } from './markers';
 
 /** Box a unit token is laid out in, centred on its cell. */
 const W = 66;
@@ -58,6 +59,9 @@ const ITEM_TARGET: Partial<Record<ItemKind, ItemTargeting['kind']>> = {
   horn: 'horn',
 };
 
+/** Time per cell when a unit walks along its path (matches .token.walking in styles.css). */
+export const WALK_STEP_MS = 170;
+
 interface Props {
   state: GameState;
   canAct: boolean;
@@ -84,6 +88,32 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     const { x } = cellPos(pos);
     el.scrollTo({ left: Math.max(0, (x + W / 2) * scale - el.clientWidth / 2), behavior: 'smooth' });
   }, [b.activation?.unitId, b, scale]);
+
+  // Walking: a unit that moved several cells is shown stepping hex by hex along the path it
+  // really took (around obstacles and enemies), worked out on the state before the move.
+  const prevState = useRef(state);
+  const [walk, setWalk] = useState<Record<string, HexKey>>({});
+  const walkTimers = useRef<number[]>([]);
+  useLayoutEffect(() => {
+    const before = prevState.current;
+    prevState.current = state;
+    const pb = before.battle;
+    if (!pb || pb === b) return;
+    for (const u of Object.values(b.units)) {
+      const was = pb.units[u.id];
+      if (!was?.pos || !u.pos || was.pos === u.pos || !was.alive || !u.alive) continue;
+      const path = movePath(before, was, u.pos);
+      if (path.length < 3) continue;
+      setWalk((w) => ({ ...w, [u.id]: path[0] }));
+      // Step by step, then hand the token back to its real position.
+      const steps = path.slice(1);
+      const timer = (ms: number, f: (w: Record<string, HexKey>) => void) =>
+        walkTimers.current.push(window.setTimeout(() => setWalk((w) => { const next = { ...w }; f(next); return next; }), ms));
+      steps.forEach((k, i) => timer(20 + i * WALK_STEP_MS, (w) => (w[u.id] = k)));
+      timer(20 + steps.length * WALK_STEP_MS, (w) => delete w[u.id]);
+    }
+  }, [b]);
+  useEffect(() => () => walkTimers.current.forEach((t) => window.clearTimeout(t)), []);
 
   // Floating damage / healing numbers: diff unit HP between renders.
   // Also drives the attack animations: who struck whom, and fading-out fallen units.
@@ -276,7 +306,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploySide, b.needsDeploy.length]);
   const deployable = new Set(deploySide ? deployCells(b, deploySide) : []);
-  const posOf = (u: BattleUnit): HexKey | null => (deploySide && u.side === deploySide ? placing[u.id] ?? u.pos : u.pos);
+  const posOf = (u: BattleUnit): HexKey | null => (deploySide && u.side === deploySide ? placing[u.id] ?? u.pos : walk[u.id] ?? u.pos);
 
   function placeAt(k: HexKey) {
     if (!picked || !deployable.has(k)) return;
@@ -387,7 +417,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                 <div style={{ fontWeight: 700, fontSize: 16, color: '#F7EDD2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{UNITS[u.defId].name}</div>
                 <HpBar hp={u.hp} max={u.maxHp} />
                 <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 2 }}>
-                  Ż {u.hp}/{u.maxHp} · A {UNITS[u.defId].attack + u.status.battleAttackBonus} · S {unitSpeed(u)}
+                  <StatIcon stat="Ż" /> {u.hp}/{u.maxHp} · <StatIcon stat="A" /> {UNITS[u.defId].attack + u.status.battleAttackBonus} · <StatIcon stat="S" /> {unitSpeed(u)}
                   {u.abilityUsed && (
                     <>
                       {' · '}
@@ -470,7 +500,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                 return (
                   <button
                     key={u.id}
-                    className={`hexbtn token ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''} ${isTarget ? 'attackable' : ''}`}
+                    className={`hexbtn token ${walk[u.id] ? 'walking' : ''} ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''} ${isTarget ? 'attackable' : ''}`}
                     onClick={() => clickUnit(u)}
                     onMouseEnter={() => setHover(u.pos)}
                     onMouseLeave={() => setHover(null)}
@@ -505,7 +535,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                         className="plate parch"
                         style={{ position: 'absolute', left: '50%', top: -34, transform: 'translateX(-50%)', padding: '1px 8px', whiteSpace: 'nowrap', fontWeight: 800, fontSize: 15, color: preview.lethal ? '#8A1A1A' : '#2B1D10', boxShadow: preview.lethal ? '0 0 0 2px #E0503C, 0 0 10px rgba(224,80,60,0.6)' : undefined, pointerEvents: 'none', zIndex: 5 }}
                       >
-                        {preview.text}
+                        <StatText text={preview.text} />
                       </div>
                     )}
                   </button>
@@ -716,7 +746,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                   </button>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 800, fontSize: 15 }}>{def.name}</div>
-                    <div style={{ fontSize: 13, lineHeight: 1.15 }}>{def.text}</div>
+                    <div style={{ fontSize: 13, lineHeight: 1.15 }}><StatText text={def.text} /></div>
                   </div>
                   <button className="btn prim" disabled={!ok} style={{ padding: '3px 10px', fontSize: 14 }} onClick={() => startItem(id)}>Użyj</button>
                 </div>
@@ -788,7 +818,7 @@ function StatusChips({ u }: { u: BattleUnit }) {
       {list.map((x) => (
         <div key={x.label} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, lineHeight: 1.15, color: x.buff ? '#BFE6B0' : '#F2B6AA' }}>
           <StatusBadge st={{ ...x, value: undefined }} size={18} />
-          {x.label}
+          <StatText text={x.label} />
         </div>
       ))}
     </div>

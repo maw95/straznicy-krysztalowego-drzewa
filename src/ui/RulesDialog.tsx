@@ -18,15 +18,15 @@ const TABS: Array<[Tab, string]> = [
 
 const RULES: Array<[string, string[]]> = [
   ['Cel gry', [
-    'Przymierze Świtu wygrywa, gdy zaniesie do Kryształowego Drzewa wszystkie potrzebne kryształy (2 na mapie krótkiej, 3 na pozostałych) albo gdy polegną wszyscy bohaterowie Hordy.',
-    'Mroczna Horda wygrywa, gdy minie limit rund (8 / 12 / 16 / 20), gdy polegną wszyscy bohaterowie Przymierza albo gdy ukończy rytuał: jeden jej bohater stoi na Drzewie, a pozostali żyjący na polach obok, na koniec dwóch kolejnych rund.',
+    'Przymierze Świtu wygrywa, gdy zaniesie do Kryształowego Drzewa wszystkie potrzebne kryształy: 2, gdy Przymierze ma jednego bohatera, 3 — gdy dwóch. Pokonanie bohaterów Hordy nie wystarczy.',
+    'Mroczna Horda wygrywa, gdy minie limit rund (8 / 12 / 18 / 24), gdy polegną wszyscy bohaterowie Przymierza albo gdy ukończy rytuał: jeden jej bohater stoi na Drzewie, a pozostali żyjący na polach obok, na koniec trzech kolejnych rund (na poziomie łatwym rytuału nie ma).',
   ]],
   ['Runda i ruch', [
-    'W każdej rundzie każdy żyjący bohater ma jedną turę: 2 punkty ruchu. Teren łatwy kosztuje 1, trudny 2; góry, przepaści, martwy gąszcz i ciernie są nieprzejezdne. Niewykorzystane punkty przepadają.',
+    'W każdej rundzie każdy żyjący bohater ma jedną turę: 3 punkty ruchu. Teren łatwy kosztuje 1, trudny 2; góry, przepaści, martwy gąszcz i ciernie są nieprzejezdne. Niewykorzystane punkty przepadają.',
     'Na jednym polu stoi najwyżej jeden bohater — na pole sojusznika nie można wejść. Wyjątek: we własnej bazie może stać kilku bohaterów.',
     'Horda nazywa swoich bohaterów wodzami, a pomocników poplecznikami — w zasadach to po prostu bohaterowie i pomocnicy.',
     'Wejście na pole odkrywa pola sąsiednie. Skarb z pola trafia do wspólnego ekwipunku frakcji.',
-    'Na koniec rundy kryształ na torze rund przesuwa się o jedno pole.',
+    'Na koniec rundy kryształ na torze rund przesuwa się o jedno pole. Na mapie długiej i bardzo długiej Przymierze zaczyna z kilkoma skarbami.',
   ]],
   ['Kryształy i strażnicy', [
     'Kryształów pilnują strażnicy. Wejście na ich pole (tylko Przymierze) rozpoczyna walkę. Zwycięzca od razu podnosi kryształ, a strażnik zostawia skarb.',
@@ -42,11 +42,11 @@ const RULES: Array<[string, string[]]> = [
     'Bitwa trwa, aż polegną wszystkie jednostki jednej strony. Ocalali odzyskują pełne Życie, polegli pomocnicy odpadają z gry, a poległego bohatera przywraca tylko Eliksir Odrodzenia.',
   ]],
   ['Automat zła i strażnicy w bitwie', [
-    'Jednostki automatu (w kooperacji) i strażnicy działają według prostych zasad: zdolności używają przy pierwszej okazji; gdy nikogo nie mogą zaatakować, idą do najbliższego wroga.',
-    'Bohater i strażnik atakują bohatera, jeśli mają go w zasięgu, a jeśli w zasięgu są tylko pomocnicy — tego z najmniejszą liczbą Życia. Pomocnicy automatu atakują najpierw pomocników (z mniejszą liczbą Życia), a dopiero potem bohatera.',
+    'Automat zła ma tylu bohaterów, ilu jest graczy, ale co najmniej dwóch. Jego jednostki (w kooperacji) i strażnicy działają według prostych zasad: zdolności używają przy pierwszej okazji; gdy nikogo nie mogą zaatakować, idą do najbliższego wroga.',
+    'Każda jednostka atakuje wroga z najmniejszą liczbą Życia — najpierw spośród tych, których sięga bez ruchu, potem spośród tych, do których dojdzie. Przy remisie wybiera bohatera. Skarby automat zużywa przy pierwszej okazji, gdy coś dają (szczegóły w Instrukcji, rozdział 12).',
   ]],
   ['Poziomy gry', [
-    'Dla dzieci: pojedynki na planszy, bez zdolności. Normalny: pełna gra (arena 3 na 3, zdolności, skarby). Trudny (kooperacja): automat zła ma o jednego bohatera więcej.',
+    'Łatwy: pojedynki na planszy, bez zdolności i bez rytuału, poległego bohatera zastępuje rezerwowy. Normalny: pełna gra (arena 3 na 3, zdolności, skarby). Trudny (kooperacja): automat zła ma o jednego bohatera więcej i zaczyna z 2 losowymi skarbami.',
     'Własny: rodzaj bitew i ułatwienia (bez zdolności, same Eliksiry Odrodzenia, rezerwowy bohater) oraz utrudnienia (rzut kością −1/0/+1 do każdego ciosu, dodatkowy bohater Hordy). Wszystko opisuje zakładka „Instrukcja”.',
   ]],
 ];

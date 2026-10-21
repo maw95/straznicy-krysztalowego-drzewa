@@ -1,16 +1,17 @@
 // Round track of the board game (docs/grafika/ikony/tor_rund.png, cut by scripts/assets/roundtrack.py):
-// a hexagonal board with the Crystal Tree in the middle and 20 sockets around it. The crystal marker
+// a hexagonal board with the Crystal Tree in the middle and 24 sockets around it. The crystal marker
 // stands in the socket of the current round; sockets past this map's round limit are dimmed.
 
 import { asset } from './common';
 
-/** Image aspect (height / width) and socket centres of rounds 1..20, as fractions of the image. */
-const ASPECT = 0.9508;
+/** Image aspect (height / width) and socket centres of rounds 1..24, as fractions of the image. */
+const ASPECT = 0.9465;
 const SOCKETS: Array<[number, number]> = [
-  [0.5049, 0.1371], [0.6016, 0.1466], [0.6975, 0.1957], [0.773, 0.256], [0.8328, 0.3681],
-  [0.8574, 0.481], [0.8393, 0.5897], [0.7902, 0.6871], [0.7074, 0.7802], [0.6057, 0.8353],
-  [0.5049, 0.8552], [0.3967, 0.8293], [0.2918, 0.7776], [0.218, 0.6931], [0.1754, 0.5966],
-  [0.1484, 0.481], [0.1811, 0.3724], [0.2246, 0.2681], [0.3082, 0.1957], [0.409, 0.1543],
+  [0.5065, 0.1216], [0.5916, 0.1396], [0.6775, 0.1712], [0.7504, 0.2295], [0.8039, 0.3057],
+  [0.8501, 0.387], [0.872, 0.4863], [0.8501, 0.5908], [0.8088, 0.6695], [0.7528, 0.7449],
+  [0.6823, 0.8065], [0.5981, 0.8459], [0.5089, 0.8656], [0.4141, 0.8459], [0.329, 0.8065],
+  [0.2569, 0.7449], [0.2018, 0.6687], [0.1613, 0.5856], [0.1434, 0.4854], [0.1621, 0.3844],
+  [0.2075, 0.3048], [0.2626, 0.2286], [0.3363, 0.1687], [0.423, 0.1396],
 ];
 /** Socket size as a share of the image width. */
 const SOCKET = 0.072;

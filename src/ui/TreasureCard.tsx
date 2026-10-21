@@ -3,6 +3,7 @@
 
 import { ITEMS, type ItemKind } from '../engine/data';
 import { asset } from './common';
+import { StatText } from './markers';
 import { CARD_H, cardSpace } from './UnitCard';
 
 const FRAME_W = 551;
@@ -41,7 +42,7 @@ export function TreasureCard({ kind, width = 300 }: { kind: ItemKind; width?: nu
         <div style={{ position: 'absolute', left: ART.cx - ART.rx, top: (ART.cy - ART.ry) * SY, width: ART.rx * 2, height: ART.ry * 2 * SY, borderRadius: '50%', boxShadow: 'inset 0 0 22px 6px rgba(40,22,4,0.55)' }} />
         <div style={{ ...at(NAME), ...centered, fontWeight: 800, fontSize: nameSize, lineHeight: 1, color: '#20160C', whiteSpace: 'nowrap' }}>{def.name}</div>
         <div style={{ ...at(ROLE), ...centered, fontWeight: 800, fontSize: usage(kind).length > 16 ? 14 : 16, letterSpacing: '0.01em', textTransform: 'uppercase', color: '#2B1D10', whiteSpace: 'nowrap', padding: '0 6px', boxSizing: 'border-box' }}>{usage(kind)}</div>
-        <div style={{ ...at(DESC), ...centered, padding: '0 28px', boxSizing: 'border-box', fontWeight: 600, fontSize: def.text.length > 70 ? 19 : 21, lineHeight: 1.2, color: '#1A1209' }}>{def.text}</div>
+        <div style={{ ...at(DESC), ...centered, padding: '0 28px', boxSizing: 'border-box', fontWeight: 600, fontSize: def.text.length > 70 ? 19 : 21, lineHeight: 1.2, color: '#1A1209' }}><StatText text={def.text} /></div>
       </div>
     </div>
   );
