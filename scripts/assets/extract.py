@@ -198,13 +198,21 @@ TREASURES = [
     ['lightning', 'hourglass', 'courage_horn', 'teleport', 'stone'],
 ]
 
+SINGLE_TREASURES = {'damage_scroll': 'portret_skarb_zwoj_magicznej_strzaly.png'}
+
 
 def treasures():
     sheet = Image.open(os.path.join(SRC, 'portrety', 'portrety_skarby.png')).convert('RGBA')
     rows = [(80, 410), (410, 715), (715, 1010)]
     for r, row in enumerate(TREASURES):
         for c, kind in enumerate(row):
-            art = art_rect(sheet, (c * 290, rows[r][0], (c + 1) * 290 - 2, rows[r][1]))
+            # A separate portrait (portret_skarb_<name>.png) replaces the one cut from the sheet.
+            single = SINGLE_TREASURES.get(kind)
+            path = single and os.path.join(SRC, 'portrety', single)
+            if path and os.path.exists(path):
+                art = Image.open(path).convert('RGBA')
+            else:
+                art = art_rect(sheet, (c * 290, rows[r][0], (c + 1) * 290 - 2, rows[r][1]))
             save(art.resize((400, 400), Image.LANCZOS), 'treasures', f'{kind}.jpg')
     frame = Image.open(os.path.join(SRC, 'karty', 'wzor_karty_skarbu_bez_tekstu.png')).convert('RGBA')
     frame = frame.crop(frame.split()[3].point(lambda v: 255 if v > 60 else 0).getbbox())
@@ -213,6 +221,10 @@ def treasures():
 
 
 if __name__ == '__main__':
+    import sys
+    if sys.argv[1:] == ['treasures']:
+        treasures()
+        sys.exit()
     treasures()
     portraits()
     abilities()

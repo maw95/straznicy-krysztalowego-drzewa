@@ -1,48 +1,45 @@
-"""Round track: docs/grafika/ikony/tor_rund.png -> public/assets/ui/round_track.png + round_crystal.png.
+"""Round track: docs/grafika/ikony/tor_rund.png -> public/assets/ui/round_track.png + round_crystal.png
+(and the same two files for the rulebook, docs/edytowalny_szablon_instrukcji/assets/).
 
-The sheet holds the track and, bottom right, the crystal marker in a gold frame. The track is
-cut out on its own; from the marker only the faceted gem is kept (the frame and its dark-blue
-backing are masked away by the gem's hexagon). Socket centres used by src/ui/RoundTrack.tsx are
-printed as fractions of the track image.
+The sheet (transparent) holds the hexagonal track with 24 sockets and, bottom right, the faceted
+gem that marks the current round. Socket centres used by src/ui/RoundTrack.tsx are printed as
+fractions of the cropped track image.
 Usage: python3 scripts/assets/roundtrack.py
 """
 import os
-from PIL import Image, ImageDraw
+from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SRC = os.path.join(ROOT, 'docs', 'grafika', 'ikony', 'tor_rund.png')
-OUT = os.path.join(ROOT, 'public', 'assets', 'ui')
+OUTS = [os.path.join(ROOT, 'public', 'assets', 'ui'), os.path.join(ROOT, 'docs', 'edytowalny_szablon_instrukcji', 'assets')]
 
-# The marker in the sheet's bottom-right corner, and the gem inside it (pointy-top hexagon).
-MARKER = [(1124, 950), (1226, 1014), (1226, 1146), (1124, 1199), (1019, 1146), (1019, 1014)]
-GEM = [(1123, 1003), (1177, 1042), (1177, 1111), (1123, 1149), (1069, 1111), (1069, 1042)]
-# Socket centres on the sheet, rounds 1..20 (measured on the painting).
-SOCKETS = [(627, 172), (745, 183), (862, 240), (954, 310), (1027, 440), (1057, 571), (1035, 697), (975, 810), (874, 918), (750, 982),
-           (627, 1005), (495, 975), (367, 915), (277, 817), (225, 705), (192, 571), (232, 445), (285, 324), (387, 240), (510, 192)]
+# The round marker: a separate gem in the sheet's bottom-right corner.
+GEM_BOX = (1040, 1000, 1240, 1200)
+# Socket centres on the sheet, rounds 1..24 clockwise from the top: found by matching one painted
+# socket (the two glowing ones, 19 and 24, mirror 7 and 2), then centred on each socket's inside.
+SOCKETS = [(630, 153), (735, 174), (841, 211), (931, 279), (997, 368), (1054, 463), (1081, 579), (1054, 701), (1003, 793), (934, 881),
+           (847, 953), (743, 999), (633, 1022), (516, 999), (411, 953), (322, 881), (254, 792), (204, 695), (182, 578), (205, 460),
+           (261, 367), (329, 278), (420, 208), (527, 174)]
 TRACK_SIZE = 560
 GEM_SIZE = 160
-SS = 4
 
 
-def gem(sheet):
-    mask = Image.new('L', (sheet.width * SS, sheet.height * SS))
-    ImageDraw.Draw(mask).polygon([(x * SS, y * SS) for x, y in GEM], fill=255)
-    mask = mask.resize(sheet.size, Image.LANCZOS)
-    out = sheet.copy()
-    out.putalpha(Image.composite(sheet.getchannel('A'), Image.new('L', sheet.size), mask))
-    out = out.crop(out.getchannel('A').getbbox())
-    k = GEM_SIZE / max(out.size)
-    return out.resize((round(out.width * k), round(out.height * k)), Image.LANCZOS)
+def trimmed(im):
+    return im.crop(im.getchannel('A').point(lambda v: 255 if v > 8 else 0).getbbox())
 
 
 if __name__ == '__main__':
     sheet = Image.open(SRC).convert('RGBA')
+    gem = trimmed(sheet.crop(GEM_BOX))
+    gem = gem.resize((round(gem.width * GEM_SIZE / max(gem.size)), round(gem.height * GEM_SIZE / max(gem.size))), Image.LANCZOS)
     track = sheet.copy()
-    ImageDraw.Draw(track).polygon(MARKER, fill=(0, 0, 0, 0))
+    track.paste((0, 0, 0, 0), GEM_BOX)
     box = track.getchannel('A').point(lambda v: 255 if v > 8 else 0).getbbox()
     track = track.crop(box)
     w, h = track.size
-    track.resize((TRACK_SIZE, round(TRACK_SIZE * h / w)), Image.LANCZOS).save(os.path.join(OUT, 'round_track.png'), optimize=True)
-    gem(sheet).save(os.path.join(OUT, 'round_crystal.png'), optimize=True)
+    for out in OUTS:
+        os.makedirs(out, exist_ok=True)
+        track.resize((TRACK_SIZE, round(TRACK_SIZE * h / w)), Image.LANCZOS).save(os.path.join(out, 'round_track.png'), optimize=True)
+        gem.save(os.path.join(out, 'round_crystal.png'), optimize=True)
     print('track box', box, 'aspect', round(h / w, 4))
     print('sockets', [(round((x - box[0]) / w, 4), round((y - box[1]) / h, 4)) for x, y in SOCKETS])

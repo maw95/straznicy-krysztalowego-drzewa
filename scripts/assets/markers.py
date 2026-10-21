@@ -1,69 +1,102 @@
-"""Cut the board-game markers from docs/grafika/ikony/znaczniki.png into public/assets/markers/.
+"""Cut the board-game markers from docs/grafika/ikony/znaczniki.png (transparent sheet).
 
-The empty damage drop (znacznik_obrazen_pusty.png, already transparent) is only trimmed and scaled;
-the game writes the number on it.
-
-The parchment around each marker is removed by flood-filling from the crop's edges; then only
-the part connected to the marker's centre is kept (neighbouring drops touch each other).
+Each marker is a separate opaque piece of the sheet; pieces are found on a coarse grid of the alpha
+channel and named by their place (rows of 4, 3, 3, 3):
+  drops 1 / 2 / 3 / 5 · used ability, web (rooted), roots (slowed) · curse, attack up, speed up ·
+  shield, vitality, Kryształ Opieki.
+The game gets the status markers in public/assets/markers/ (the damage drop there is the empty one,
+znacznik_obrazen_pusty.png, as the game writes the number itself); the rulebook gets all of them in
+docs/edytowalny_szablon_instrukcji/assets/znaczniki/.
 Usage: python3 scripts/assets/markers.py
 """
 import os
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SRC = os.path.join(ROOT, 'docs', 'grafika', 'ikony', 'znaczniki.png')
 EMPTY_DROP = os.path.join(ROOT, 'docs', 'grafika', 'ikony', 'znacznik_obrazen_pusty.png')
 OUT = os.path.join(ROOT, 'public', 'assets', 'markers')
+MANUAL = os.path.join(ROOT, 'docs', 'edytowalny_szablon_instrukcji', 'assets', 'znaczniki')
 SIZE = 160
-
-# Crop boxes on the sheet (left, top, right, bottom).
-BOXES = {
-    'ability_used': (652, 104, 866, 312),
-    'rooted': (168, 505, 384, 716),
-    'slowed': (468, 505, 684, 716),
-    'cursed': (768, 505, 984, 716),
-    'attack_up': (1068, 505, 1284, 716),
-    'speed_up': (306, 756, 524, 978),
-    'shield': (616, 756, 834, 978),
-    'vitality': (916, 756, 1134, 978),
-}
+ROWS = [
+    ['damage_1', 'damage_2', 'damage_3', 'damage_5'],
+    ['ability_used', 'rooted', 'slowed'],
+    ['cursed', 'attack_up', 'speed_up'],
+    ['shield', 'vitality', 'crystal'],
+]
+STATUS = ['ability_used', 'rooted', 'slowed', 'cursed', 'attack_up', 'speed_up', 'shield', 'vitality']
+GRID = 4  # pixels per cell when looking for pieces
 
 
-def cut(sheet, box):
-    im = sheet.crop(box).convert('RGB')
-    w, h = im.size
-    marked = im.copy()
-    for x, y in [(x, 0) for x in range(0, w, 6)] + [(x, h - 1) for x in range(0, w, 6)] + [(0, y) for y in range(0, h, 6)] + [(w - 1, y) for y in range(0, h, 6)]:
-        r, g, b = marked.getpixel((x, y))
-        if (r, g, b) != (255, 0, 255) and r > 150 and g > 130:  # parchment, not the marker rim
-            ImageDraw.floodfill(marked, (x, y), (255, 0, 255), thresh=60)
-    solid = Image.eval(marked.convert('RGB'), lambda v: v)
-    mask = Image.new('L', (w, h), 0)
-    px, mp = solid.load(), mask.load()
-    for y in range(h):
-        for x in range(w):
-            if px[x, y] != (255, 0, 255):
-                mp[x, y] = 255
-    # Thin lines of the sheet's ornaments that touch a marker are opened away.
-    mask = mask.filter(ImageFilter.MinFilter(7)).filter(ImageFilter.MaxFilter(7))
-    # Keep only the piece connected to the centre.
-    keep = mask.copy()
-    ImageDraw.floodfill(keep, (w // 2, h // 2), 128)
-    keep = keep.point(lambda v: 255 if v == 128 else 0).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(0.8))
-    out = im.convert('RGBA')
-    out.putalpha(keep)
-    out = out.crop(keep.point(lambda v: 255 if v > 40 else 0).getbbox())
-    scale = SIZE / max(out.size)
-    return out.resize((round(out.width * scale), round(out.height * scale)), Image.LANCZOS)
+def pieces(sheet):
+    """Bounding boxes of the opaque pieces (4-connected on a coarse grid), largest first."""
+    a = sheet.getchannel('A')
+    w, h = a.width // GRID, a.height // GRID
+    small = a.resize((w, h), Image.BOX).load()
+    seen = [[False] * w for _ in range(h)]
+    boxes = []
+    for y0 in range(h):
+        for x0 in range(w):
+            if seen[y0][x0] or small[x0, y0] < 128:
+                continue
+            stack, box, n = [(x0, y0)], [x0, y0, x0, y0], 0
+            seen[y0][x0] = True
+            while stack:
+                x, y = stack.pop()
+                n += 1
+                box = [min(box[0], x), min(box[1], y), max(box[2], x), max(box[3], y)]
+                for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if 0 <= nx < w and 0 <= ny < h and not seen[ny][nx] and small[nx, ny] >= 128:
+                        seen[ny][nx] = True
+                        stack.append((nx, ny))
+            boxes.append((n, tuple(v * GRID for v in (box[0], box[1], box[2] + 1, box[3] + 1))))
+    return [b for n, b in sorted(boxes, reverse=True) if n > 200]
+
+
+def split(sheet, box):
+    """Markers stacked in a column touch each other: cut a tall piece where it is thinnest."""
+    x0, y0, x1, y1 = box
+    n = round((y1 - y0) / (x1 - x0))
+    if n < 2:
+        return [box]
+    a = sheet.getchannel('A').crop(box).point(lambda v: 1 if v > 128 else 0)
+    width = [sum(a.crop((0, y, a.width, y + 1)).getdata()) for y in range(a.height)]
+    cuts, step = [0], a.height / n
+    for k in range(1, n):
+        lo, hi = round(step * (k - 0.25)), round(step * (k + 0.25))
+        cuts.append(min(range(lo, hi), key=lambda y: width[y]))
+    cuts.append(a.height)
+    return [(x0, y0 + cuts[i], x1, y0 + cuts[i + 1]) for i in range(n)]
+
+
+def named(sheet):
+    """Pieces sorted into the sheet's rows (top to bottom), each row left to right."""
+    boxes = [b for box in pieces(sheet) for b in split(sheet, box)][: sum(len(r) for r in ROWS)]
+    boxes.sort(key=lambda b: b[1])
+    out, i = {}, 0
+    for row in ROWS:
+        for name, box in zip(row, sorted(boxes[i : i + len(row)], key=lambda b: b[0])):
+            out[name] = box
+        i += len(row)
+    return out
+
+
+def fit(im):
+    im = im.crop(im.getchannel('A').point(lambda v: 255 if v > 20 else 0).getbbox())
+    scale = SIZE / max(im.size)
+    return im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS)
 
 
 if __name__ == '__main__':
-    sheet = Image.open(SRC)
+    sheet = Image.open(SRC).convert('RGBA')
     os.makedirs(OUT, exist_ok=True)
-    for name, box in BOXES.items():
-        cut(sheet, box).save(os.path.join(OUT, f'{name}.png'), optimize=True)
-    drop = Image.open(EMPTY_DROP).convert('RGBA')
-    drop = drop.crop(drop.getchannel('A').getbbox())
-    scale = SIZE / max(drop.size)
-    drop.resize((round(drop.width * scale), round(drop.height * scale)), Image.LANCZOS).save(os.path.join(OUT, 'damage_empty.png'), optimize=True)
-    print('ok ->', OUT)
+    os.makedirs(MANUAL, exist_ok=True)
+    for name, box in named(sheet).items():
+        # Only the piece itself: a neighbour's edge may reach into the box.
+        im = fit(sheet.crop(box))
+        im.save(os.path.join(MANUAL, f'{name}.png'), optimize=True)
+        if name in STATUS:
+            im.save(os.path.join(OUT, f'{name}.png'), optimize=True)
+    drop = fit(Image.open(EMPTY_DROP).convert('RGBA'))
+    drop.save(os.path.join(OUT, 'damage_empty.png'), optimize=True)
+    print('ok ->', OUT, '+', MANUAL)

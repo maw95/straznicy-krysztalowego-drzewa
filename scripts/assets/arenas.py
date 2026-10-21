@@ -5,8 +5,9 @@ Sources (docs/grafika/areny/):
   arena_walki_<przymierze|horda>_przeszkody.png  obstacle sprites on a transparent sheet
 
 The grid is the one the game uses (src/ui/arenaGeometry.ts, src/engine/battle.ts), so cells,
-obstacles and the board line up. Each sheet holds 7 obstacles: the 2 wide ones cover the obstacle
-pairs, the 5 single ones the remaining cells.
+obstacles and the board line up. Each sheet holds 7 obstacle sprites, one per obstacle
+(the two widest span the 2-cell obstacles), fitted over a darkened, outlined base, so it is clear
+which cells are blocked.
 Usage: python3 scripts/assets/arenas.py [przymierze] [horda]   (default: both)
 """
 import os
@@ -22,10 +23,12 @@ SS = 2  # supersampling for the grid lines
 # --- Geometry, copied from src/ui/arenaGeometry.ts and src/engine/battle.ts ---
 HALF_Y = [105, 149, 192, 235, 281.5, 327, 374, 421, 470, 518.5, 569, 619, 671, 722.5, 776, 829, 880, 930]
 COLUMN_SPAN = [(4, 12), (3, 13), (2, 14), (3, 15), (2, 14), (3, 15), (2, 14), (3, 15), (2, 14), (3, 15), (2, 14), (3, 13), (4, 12)]
-OBSTACLES = {
-    'dawn': [(3, 3), (9, 3), (3, 7), (6, 8), (9, 9), (10, 10), (3, 13), (4, 14), (9, 13)],
-    'horde': [(3, 3), (9, 3), (3, 7), (2, 8), (6, 8), (9, 9), (10, 10), (3, 13), (9, 13)],
+# 7 obstacles per arena, two of them 2 cells wide (the same cells as ARENA_OBSTACLES in battle.ts).
+PIECES = {
+    'dawn': [[(3, 3)], [(9, 3)], [(3, 7)], [(6, 8)], [(9, 9), (10, 10)], [(3, 13), (4, 14)], [(9, 13)]],
+    'horde': [[(3, 3)], [(9, 3)], [(3, 7), (2, 8)], [(6, 8)], [(9, 9), (10, 10)], [(3, 13)], [(9, 13)]],
 }
+OBSTACLES = {arena: [c for piece in pieces for c in piece] for arena, pieces in PIECES.items()}
 START_TINT = {'dawn': (205, 245, 190, 120), 'horde': (225, 80, 55, 110)}
 LINE = (240, 205, 120, 215)
 SHADE = (40, 25, 5, 110)
@@ -90,25 +93,24 @@ def sprites(sheet):
     return out
 
 
-def pairs_and_singles(obstacles):
-    """Splits obstacle cells into neighbouring pairs and single cells."""
-    left, pairs = list(obstacles), []
-    for a in obstacles:
-        if a not in left:
-            continue
-        b = next((c for c in left if c != a and abs(c[0] - a[0]) == 1 and abs(c[1] - a[1]) == 1), None)
-        if b:
-            left.remove(a)
-            left.remove(b)
-            pairs.append(tuple(sorted([a, b])))
-    return pairs, left
+BLOCK_FILL = {'dawn': (25, 15, 5, 105), 'horde': (10, 5, 0, 150)}
+BLOCK_LINE = {'dawn': (120, 40, 25, 235), 'horde': (255, 150, 60, 235)}
 
 
-def place(board, sprite, x, y, width):
-    """Puts a sprite with its base around (x, y): about a third of it rises above the cell."""
-    k = width / sprite.width
+def fit(board, sprite, piece):
+    """Fits a sprite over its cells (one hex, or two neighbouring ones): as wide as they allow,
+    rising at most a little above them."""
+    xs = [center(*c)[0] for c in piece]
+    r = spacing(center(*piece[0])[1]) * 2 / 3
+    top = min(HALF_Y[h - 1] for _, h in piece)
+    bottom = max(HALF_Y[h + 1] for _, h in piece)
+    one = HALF_Y[piece[0][1] + 1] - HALF_Y[piece[0][1] - 1]
+    max_w = max(xs) - min(xs) + 2 * r * 0.86
+    max_h = (bottom - top) if len(piece) > 1 else one * 1.12
+    k = min(max_w / sprite.width, max_h / sprite.height)
     s = sprite.resize((round(sprite.width * k), round(sprite.height * k)), Image.LANCZOS)
-    board.alpha_composite(s, (round(x - s.width / 2), round(y - s.height * 0.62)))
+    base = bottom - one * 0.12
+    board.alpha_composite(s, (round((min(xs) + max(xs)) / 2 - s.width / 2), round(base - s.height)))
 
 
 def build(src):
@@ -136,27 +138,21 @@ def build(src):
             draw.line(pts + [pts[0]], fill=(255, 0, 255, 255), width=4 * SS)
     board.alpha_composite(layer.resize(board.size, Image.LANCZOS))
 
-    # Obstacles: wide sprites (widest first) on pairs, the rest on single cells.
+    # Obstacles: a darkened, outlined base on every blocked cell, then one sprite per obstacle
+    # (drawn top to bottom, so lower sprites overlap the ones behind them).
+    layer = Image.new('RGBA', (board.width * SS, board.height * SS))
+    draw = ImageDraw.Draw(layer)
+    for c in OBSTACLES[arena]:
+        pts = [(x * SS, y * SS) for x, y in hexagon(*c)]
+        draw.polygon(pts, fill=BLOCK_FILL[arena])
+        draw.line(pts + [pts[0]], fill=BLOCK_LINE[arena], width=3 * SS, joint='curve')
+    board.alpha_composite(layer.resize(board.size, Image.LANCZOS))
     sheet = Image.open(os.path.join(SRC, f'arena_walki_{src}_przeszkody.png')).convert('RGBA')
-    sp = sprites(sheet)
-    wide = sorted([s for s in sp if s.width > 1.4 * s.height], key=lambda s: -s.width)
-    single = [s for s in sp if s not in wide]
-    pairs, singles = pairs_and_singles(OBSTACLES[arena])
-    jobs = []
-    for i, (a, b) in enumerate(pairs):
-        if i < len(wide):
-            (xa, ya), (xb, yb) = center(*a), center(*b)
-            jobs.append(((xa + xb) / 2, (ya + yb) / 2 + 6, wide[i], 2.15))
-        else:
-            singles += [a, b]
-    for i, c in enumerate(sorted(singles, key=lambda c: (c[1], c[0]))):
-        s = single[i % len(single)]
-        if i >= len(single):
-            s = ImageOps.mirror(s)
-        x, y = center(*c)
-        jobs.append((x, y + 4, s, 1.15))
-    for x, y, s, cells_wide in sorted(jobs, key=lambda j: j[1]):
-        place(board, s, x, y, spacing(y) * 4 / 3 * cells_wide)
+    # The two widest sprites go on the 2-cell obstacles, the others on single cells.
+    sp = sorted(sprites(sheet), key=lambda s: s.width / s.height)
+    wide, narrow = sp[-2:], sp[:-2]
+    for piece in sorted(PIECES[arena], key=lambda p: (max(h for _, h in p), p[0][0])):
+        fit(board, (wide if len(piece) > 1 else narrow).pop(0), piece)
 
     os.makedirs(OUT, exist_ok=True)
     out = os.path.join(OUT, f'{arena}.jpg')
