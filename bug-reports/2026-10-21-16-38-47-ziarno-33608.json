@@ -1,0 +1,45 @@
+{
+ "setup": {
+  "mode": "coop",
+  "mapSize": "short",
+  "battleMode": "arena",
+  "seed": 33608,
+  "seats": [
+   {
+    "name": "Gracz 1",
+    "faction": "dawn",
+    "controller": "human",
+    "heroId": "goldDragon"
+   }
+  ],
+  "rules": {
+   "heroMovePoints": 2,
+   "abilities": true,
+   "treasures": true,
+   "useDice": false,
+   "extraEvilHero": false,
+   "initiativeTie": "defender",
+   "heroReplacement": false,
+   "ritualHold": true,
+   "ritualRounds": 2,
+   "passThroughAllies": true,
+   "unitsBlockSight": false,
+   "battleRoundLimit": 40
+  }
+ },
+ "actions": [],
+ "reports": [
+  {
+   "createdAt": "2026-10-21T16:38:47.377Z",
+   "actionIndex": 0,
+   "round": 1,
+   "screen": "adventure",
+   "text": "piesz",
+   "recentLog": [
+    "[1] Runda 1 z 8. Przymierze potrzebuje 2 kryształów."
+   ],
+   "viewport": "2007×1035",
+   "userAgent": "Mozilla/5.0 (X11; Linux x86_64; rv:158.0) Gecko/20100101 Firefox/158.0"
+  }
+ ]
+}
