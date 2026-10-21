@@ -112,18 +112,25 @@ sheet('@@TOC@@', cls='frontispiece', left='Księga zasad', right='Spis treści',
 story = MD[MD.index('## Opowieść o Drzewie'):MD.index('---\n\n## Spis treści')]
 paras = [md_inline(p.strip()) for p in story.split('\n\n')[1:] if p.strip()]
 chapter('✧', 'Opowieść o Drzewie', 'story')
+# The story is found by content, not by position: paragraphs up to the faction ones tell the tale.
+fac = next(n for n, p in enumerate(paras) if p.startswith('<b>Przymierze Świtu</b>'))
+tale, rest = paras[:fac], paras[fac:]
+named = lambda start: next(p for p in rest if p.startswith(start))
+# A short paragraph (the name of the night) becomes the quote of the first page.
+quote_at = next((n for n, p in enumerate(tale) if len(p) < 90 and n > 0), None)
+quote = tale[quote_at] if quote_at is not None else ''
+body = [p for n, p in enumerate(tale) if n != quote_at]
+first, second = body[:3], body[3:]
 sheet(f'''<div class="eyebrow">Zanim zaczniecie</div><h1>Opowieść o Drzewie</h1>
-<div class="chap-hero" style="grid-template-columns:minmax(0,50fr) minmax(0,50fr);margin:2mm 0 4mm"><img src="assets/krysztalowe_drzewo.png" alt="Kryształowe Drzewo" style="height:92mm"><div class="story"><p class="first">{paras[0]}</p></div></div>
-<div class="story"><p>{paras[1]}</p><p>{paras[2]}</p></div>
-<div class="quote" style="margin-top:4mm">„Od tamtej nocy Drzewo słabnie. Jego blask gaśnie, a wraz z nim gaśnie wiosna.”</div>
+<div class="chap-hero" style="grid-template-columns:minmax(0,50fr) minmax(0,50fr);margin:2mm 0 4mm"><img src="assets/krysztalowe_drzewo.png" alt="Kryształowe Drzewo" style="height:92mm"><div class="story"><p class="first">{first[0]}</p></div></div>
+<div class="story">{''.join(f'<p>{p}</p>' for p in first[1:])}</div>
+{f'<div class="quote" style="margin-top:4mm">„{re.sub(r"<[^>]+>", "", quote)}”</div>' if quote else ''}
 ''', cls='neutral', left='Wprowadzenie', right='Opowieść', foot='Opowieść o Drzewie', key='story')
-sheet(f'''<div class="story"><p class="intro" style="text-indent:0">{paras[3].replace('Od tamtej nocy Drzewo słabnie. Jego blask gaśnie, a wraz z nim gaśnie wiosna. ', '')}</p></div>
-<div class="cols" style="margin:4mm 0 4mm"><div class="card"><h3>Przymierze Świtu</h3><p>{paras[4].replace('<b>Przymierze Świtu</b> — ', '')}</p></div>
-<div class="card" style="--accent:var(--horde)"><h3>Mroczna Horda</h3><p>{paras[5].replace('<b>Mroczna Horda</b> — ', '')}</p></div></div>
-<div class="card" style="--accent:var(--navy)"><h3>Strażnicy</h3><p>{paras[6].replace('Kryształów pilnują <b>Strażnicy</b> — s', 'S')}</p></div>
-<div class="divider">❧</div>
-<div class="figure" style="width:118mm;margin:0 auto"><img src="assets/logo_w_tle.jpg" alt="Strażnicy Kryształowego Drzewa"></div>
-<p class="intro" style="text-align:center;margin-top:5mm"><i>{paras[7]}</i></p>
+sheet(f'''<div class="story">{''.join(f'<p>{p}</p>' for p in second)}</div>
+<div class="cols" style="margin:4mm 0 4mm"><div class="card"><h3>Przymierze Świtu</h3><p>{named('<b>Przymierze Świtu</b>').replace('<b>Przymierze Świtu</b> — ', '')}</p></div>
+<div class="card" style="--accent:var(--horde)"><h3>Mroczna Horda</h3><p>{named('<b>Mroczna Horda</b>').replace('<b>Mroczna Horda</b> — ', '')}</p></div></div>
+<div class="card" style="--accent:var(--navy)"><h3>Strażnicy</h3><p>{named('Kryształów pilnują').replace('Kryształów pilnują <b>Strażnicy</b> — s', 'S')}</p></div>
+<p class="intro" style="text-align:center;margin-top:5mm"><i>{named('Wybierz stronę')}</i></p>
 ''', cls='neutral', left='Wprowadzenie', right='Opowieść', foot='Opowieść o Drzewie')
 
 # 1. Contents of the box
@@ -138,27 +145,29 @@ sheet(f'''<div class="eyebrow">Rozdział 1</div><h1>Co jest w pudełku</h1>
  ['<b>Kafelki skarbów</b>', '16', '8 z zielonym i 8 z bordowym rewersem'],
  ['<b>Siedliska strażników</b>', '3', 'Gryf (zielony rewers), Cyklop i Hydra (bordowy)'],
  ['<b>Drzewo i bazy</b>', '3', 'Kryształowe Drzewo, baza Przymierza, baza Hordy'],
- ['<b>Areny bitwy</b>', '2', 'Przymierza i Hordy, po 7 przeszkód'],
- ['<b>Karty jednostek</b> i <b>figurki</b>', '15 + 15', 'po 3 bohaterów i 3 pomocników każdej frakcji, 3 strażników'],
- ['<b>Karty skarbów</b>', '18', '4 Eliksiry Odrodzenia + po 1 z 14 pozostałych skarbów'],
+ ['<b>Plansza areny</b> (dwustronna)', '1', 'arena Przymierza i arena Hordy, po 7 przeszkód'],
+ ['<b>Karty jednostek</b>', '15', 'Przymierze: 3 bohaterów, 3 pomocników · Horda: 3 wodzów, 3 popleczników · 3 strażników'],
+ ['<b>Figurki</b>', '15', 'po jednej na każdą jednostkę'],
+ ['<b>Karty skarbów</b>', '20', '6 Eliksirów Odrodzenia + po 1 z 14 pozostałych skarbów'],
  ['<b>Kryształy</b>', '3', ''],
- ['<b>Tor rund</b> i <b>znacznik rundy</b>', '1 + 1', 'tablica z 20 gniazdami i kryształowy znacznik'],
+ ['<b>Tor rund</b> i <b>znacznik rundy</b>', '1 + 1', 'tablica z 24 gniazdami i kryształowy znacznik'],
  ['<b>Kość</b> −1 / 0 / +1', '1', 'tylko do utrudnienia „Rzut kością” (rozdział 13)']], 'table')}
 <div class="banner" style="margin-top:4mm">Znaczniki</div>
 <p class="fine" style="text-align:center;margin:-2mm 0 2mm">Tyle wystarczy na najbardziej zaciętą bitwę.</p>
-<div class="markers">
+<div class="markers seven">
 <figure><img src="assets/znaczniki/damage_5.png" alt=""><figcaption>kropla „5” × 10</figcaption></figure>
 <figure><img src="assets/znaczniki/damage_3.png" alt=""><figcaption>kropla „3” × 6</figcaption></figure>
 <figure><img src="assets/znaczniki/damage_2.png" alt=""><figcaption>kropla „2” × 6</figcaption></figure>
 <figure><img src="assets/znaczniki/damage_1.png" alt=""><figcaption>kropla „1” × 6</figcaption></figure>
 <figure><img src="assets/znaczniki/ability_used.png" alt=""><figcaption>zużyta zdolność × 6</figcaption></figure>
 <figure><img src="assets/znaczniki/attack_up.png" alt=""><figcaption>Wzmocnienie Ataku × 6</figcaption></figure>
-<figure><img src="assets/znaczniki/vitality.png" alt=""><figcaption>Żywotność +4 Ż × 4</figcaption></figure>
+<figure><img src="assets/znaczniki/vitality.png" alt=""><figcaption>Żywotność × 4</figcaption></figure>
 <figure><img src="assets/znaczniki/shield.png" alt=""><figcaption>Ochrona × 2</figcaption></figure>
 <figure><img src="assets/znaczniki/rooted.png" alt=""><figcaption>Unieruchomienie × 1</figcaption></figure>
-<figure><img src="assets/znaczniki/slowed.png" alt=""><figcaption>Spowolnienie −2 S × 1</figcaption></figure>
-<figure><img src="assets/znaczniki/cursed.png" alt=""><figcaption>Klątwa −1 A × 1</figcaption></figure>
-<figure><img src="assets/znaczniki/speed_up.png" alt=""><figcaption>Przyspieszenie +3 S × 1</figcaption></figure>
+<figure><img src="assets/znaczniki/slowed.png" alt=""><figcaption>Spowolnienie × 1</figcaption></figure>
+<figure><img src="assets/znaczniki/cursed.png" alt=""><figcaption>Klątwa × 1</figcaption></figure>
+<figure><img src="assets/znaczniki/speed_up.png" alt=""><figcaption>Przyspieszenie × 1</figcaption></figure>
+<figure><img src="assets/znaczniki/crystal.png" alt=""><figcaption>Kryształ Opieki × 3</figcaption></figure>
 </div>
 ''', left='Rozdział 1', right='Elementy gry', foot='Co jest w pudełku', key='box')
 sheet(f'''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Karty jednostek</h1>
@@ -167,6 +176,16 @@ sheet(f'''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Karty 
 <p style="margin-top:4mm">Do tego każda jednostka ma jeden <b>typ</b>: walczy <b>wręcz</b> (miecze), <b>strzela</b> (łuk) albo <b>lata</b> (skrzydło).</p>
 <div class="unit-pair" style="margin-top:6mm"><div class="card slim" style="text-align:center"><img src="assets/karty/goldDragon.jpg" alt="Karta Złotego Smoka" style="height:92mm"><div class="fine">Karta bohatera Przymierza</div></div><div class="card slim" style="text-align:center"><img src="assets/karty/blackDragon.jpg" alt="Karta Czarnego Smoka" style="height:92mm"><div class="fine">Karta bohatera Hordy</div></div></div>
 ''', left='Rozdział 1', right='Elementy gry', foot='Co jest w pudełku')
+sheet('''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Figurki</h1>
+<p class="intro" style="margin-bottom:3mm">Każda jednostka ma swoją figurkę. Kolor mówi, po czyjej jest stronie: <b>zielony</b> — Przymierze Świtu, <b>bordowy</b> — Mroczna Horda, <b>niebieski</b> — strażnicy kryształów.</p>
+<div class="figure" style="width:78%;margin:0 auto 3mm"><img src="assets/figurki/przymierze.jpg" alt="Figurki Przymierza Świtu" style="width:100%"></div>
+<div class="figure" style="width:78%;margin:0 auto"><img src="assets/figurki/horda.jpg" alt="Figurki Mrocznej Hordy" style="width:100%"></div>
+''', left='Rozdział 1', right='Elementy gry', foot='Co jest w pudełku')
+sheet('''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Figurki strażników</h1>
+<div class="figure" style="margin:3mm 0 6mm"><img src="assets/figurki/straznicy.jpg" alt="Figurki strażników kryształów" style="width:100%"></div>
+<div class="card" style="--accent:var(--navy)"><h3>Jedna figurka na jednym polu</h3><p>Figurki stoją na sześciokątnych podstawkach, które mieszczą się w polu areny i na kafelku mapy. Na jednym polu stoi zawsze tylko jedna figurka — wyjątkiem jest baza frakcji, gdzie może stać kilku jej bohaterów.</p></div>
+<div class="card" style="margin-top:4mm"><h3>Figurki z drukarki</h3><p>Figurki są przygotowane do druku na drukarce żywicznej. Jeśli ich nie macie, wystarczą dowolne pionki w trzech kolorach — byle było jasne, kto jest kim.</p></div>
+''', cls='neutral', left='Rozdział 1', right='Elementy gry', foot='Co jest w pudełku')
 
 # 2. Units
 chapter('2', 'Kto jest kim — jednostki', 'units')
@@ -192,8 +211,8 @@ chapter('4', 'Poziom gry — zanim zaczniecie', 'levels')
 lv = md_table('Wybierzcie jeden z trzech poziomów.')
 sheet(f'''<div class="eyebrow">Rozdział 3</div><h1>Jak wygrać</h1>
 <div class="wins">
-<div class="card"><h3>Przymierze Świtu wygrywa, gdy…</h3><ul class="rules"><li>zaniesie do Kryształowego Drzewa wszystkie potrzebne kryształy (2 na mapie krótkiej, 3 na pozostałych), <b>albo</b></li><li>pokona wszystkich bohaterów Hordy.</li></ul></div>
-<div class="card horde"><h3>Mroczna Horda wygrywa, gdy…</h3><ul class="rules"><li>skończy się ostatnia runda (limit: 8 / 12 / 16 / 20 rund), <b>albo</b></li><li>pokona wszystkich bohaterów Przymierza, <b>albo</b></li><li>odprawi <b>rytuał</b>: na koniec dwóch kolejnych rund jeden jej bohater stoi na Drzewie, a pozostali żyjący — tuż obok Drzewa.</li></ul></div>
+<div class="card"><h3>Przymierze Świtu wygrywa, gdy…</h3><ul class="rules"><li>zaniesie do Kryształowego Drzewa wszystkie potrzebne kryształy: <b>2</b>, gdy Przymierze ma jednego bohatera, <b>3</b> — gdy dwóch.</li></ul><p style="margin-top:2mm">Pokonanie bohaterów Hordy nie wystarczy — liczą się tylko kryształy.</p></div>
+<div class="card horde"><h3>Mroczna Horda wygrywa, gdy…</h3><ul class="rules"><li>skończy się ostatnia runda (limit: 8 / 12 / 18 / 24 rund), <b>albo</b></li><li>pokona wszystkich bohaterów Przymierza, <b>albo</b></li><li>odprawi <b>rytuał</b>: na koniec trzech kolejnych rund jeden jej bohater stoi na Drzewie, a pozostali żyjący — tuż obok Drzewa.</li></ul></div>
 </div>
 <div class="quote" style="margin:4mm 0 1mm;font-size:14pt;padding:3mm 8mm">„Drzewo nie pyta, kto jest silniejszy. Pyta tylko, kto zdąży.”</div>
 <p class="see" style="text-align:center">Ostatni bohaterowie obu stron padają w jednej bitwie? Zobacz rozdział 14.</p>
@@ -210,19 +229,19 @@ maps = md_table('2. **Wybierzcie długość mapy:**')
 sheet(f'''<div class="eyebrow">Rozdział 5</div><h1>Przygotowanie</h1>
 <p class="intro">Rozłożenie gry zajmuje kilka minut. Po kolei:</p>
 <div class="steps" style="grid-template-columns:1fr">
-<div class="step" style="min-height:0"><div class="number">1</div><h3>Wybierzcie tryb</h3><p><b>Kooperacja</b> (1–2 graczy): wszyscy gracie Przymierzem przeciw automatowi zła (rozdział 12). <b>Rywalizacja</b> (2–4 graczy): jedni grają Przymierzem, drudzy Hordą; najwyżej 2 graczy na frakcję.</p></div>
+<div class="step" style="min-height:0"><div class="number">1</div><h3>Wybierzcie tryb</h3><p><b>Kooperacja</b> (1–2 graczy): wszyscy gracie Przymierzem przeciwko automatowi zła (rozdział 12). <b>Rywalizacja</b> (2–4 graczy): jedni grają Przymierzem, drudzy Hordą; najwyżej 2 graczy na frakcję.</p></div>
 <div class="step" style="min-height:0"><div class="number">2</div><h3>Wybierzcie długość mapy</h3><p>Dłuższa mapa to więcej pól do odkrycia, więcej skarbów i dłuższa wyprawa. Na pierwszą partię wybierzcie mapę krótką.</p></div>
 </div>
 <div style="margin:4mm 0">{table(maps, 'table')}</div>
-<div class="step" style="min-height:0"><div class="number">3</div><h3>Ułóżcie mapę</h3><p>Trójkąt: Drzewo na szczycie, baza Przymierza w lewym dolnym rogu, baza Hordy w prawym. Lewą połowę wypełnijcie zakrytymi kafelkami z zielonej talii, prawą — z bordowej. Heksy na samym środku należą na zmianę do jednej i drugiej strony (zygzakiem).</p></div>
+<div class="step" style="min-height:0"><div class="number">3</div><h3>Ułóżcie mapę</h3><p>Trójkąt: Drzewo na szczycie, baza Przymierza w lewym dolnym rogu, baza Hordy w prawym. Lewą połowę wypełnijcie zakrytymi kafelkami z zielonej talii, prawą — z bordowej. Pola na samym środku należą na zmianę do jednej i drugiej strony (zygzakiem).</p></div>
 ''', left='Rozdział 5', right='Przygotowanie', foot='Przygotowanie', key='setup')
 sheet('''<div class="pic-left" style="grid-template-columns:1fr 92mm;gap:5mm;align-items:start"><div>
 <div class="step" style="min-height:0;margin-bottom:4mm"><div class="number">✦</div><h3>Skarby i strażnicy</h3><p>Wmieszajcie między zakryte pola kafelki skarbów i <b>siedliska strażników</b> — tyle, ile kryształów jest na mapie. Gryf mieszka po stronie Przymierza, Cyklop i Hydra po stronie Hordy. Na każdym siedlisku połóżcie kryształ.</p></div>
 <div class="step" style="min-height:0"><div class="number">4</div><h3>Odkryjcie</h3><p>Drzewo, obie bazy i pola sąsiadujące z bazami.</p></div>
 </div><div><img src="assets/mapa_przyklad.png" alt="Przykładowa mapa średnia"><p class="caption">Przykład: mapa średnia (8 rzędów) — tu już cała odkryta. U góry Drzewo, w dolnych rogach bazy.</p></div></div>
 <div class="steps" style="margin-top:5mm">
-<div class="step" style="min-height:0"><div class="number">5</div><h3>Bohaterowie</h3><p>Każdy gracz wybiera bohatera i stawia go w bazie swojej frakcji. Pomocnicy obu frakcji czekają przy planszy.</p></div>
-<div class="step" style="min-height:0"><div class="number">6</div><h3>Tor rund</h3><p>Połóżcie <b>kryształowy znacznik</b> w gnieździe „1” toru rund. Gniazda 8, 12, 16 i 20 są wyróżnione — to limity rund czterech map.</p></div>
+<div class="step" style="min-height:0"><div class="number">5</div><h3>Bohaterowie</h3><p>Każdy gracz wybiera bohatera i stawia go w bazie swojej frakcji. Pomocnicy obu frakcji czekają przy planszy. Na mapie długiej i bardzo długiej Przymierze dobiera skarby na start.</p></div>
+<div class="step" style="min-height:0"><div class="number">6</div><h3>Tor rund</h3><p>Połóżcie <b>kryształowy znacznik</b> w gnieździe „1” toru rund. Gniazda 8, 12, 18 i 24 są wyróżnione — to limity rund czterech map.</p></div>
 </div>
 <div class="terrain-pair" style="grid-template-columns:repeat(3,1fr);gap:5mm;margin-top:6mm">
 <div class="tile"><img src="assets/kafelki/lairGriffin_1.png" alt="" style="height:30mm"><div class="name">Gniazdo Gryfa</div><div class="fine">ziemie Przymierza</div></div>
@@ -251,10 +270,10 @@ sheet('''<div class="eyebrow">Rozdział 6</div><h1>Przebieg rundy</h1>
 
 # 7. Adventure
 chapter('7', 'Wędrówka po krainie', 'adventure')
-terr = md_table('W swojej turze bohater ma **2 punkty ruchu**.')
+terr = md_table('W swojej turze bohater ma **3 punkty ruchu**.')
 sheet(f'''<div class="eyebrow">Rozdział 7</div><h1>Wędrówka po krainie</h1>
 <h2>Ruch</h2>
-<p>W swojej turze bohater ma <b>2 punkty ruchu</b>. Niewykorzystane punkty przepadają.</p>
+<p>W swojej turze bohater ma <b>3 punkty ruchu</b>. Niewykorzystane punkty przepadają.</p>
 {table(terr, 'table')}
 <p class="flavor" style="margin-top:3mm">Ziemie Przymierza są łagodniejsze: po jasnej stronie trudne są tylko 2 rodzaje terenu, po ciemnej aż 3.</p>
 <p>Można wchodzić tylko na <b>odkryte</b> pola. Gdy bohater wejdzie na pole, <b>odwróćcie wszystkie zakryte kafelki dookoła niego</b>.</p>
@@ -280,7 +299,7 @@ sheet('''<div class="terrain-pair" style="grid-template-columns:repeat(6,1fr);ga
 <p>Poległego bohatera może wskrzesić <b>żyjący</b> bohater jego frakcji, używając <b>Eliksiru Odrodzenia</b>. Wskrzeszony staje na <b>wybranym wolnym polu obok</b> tego, kto użył eliksiru, i wraca do gry od następnej rundy (jeśli obok nie ma wolnego pola, trzeba najpierw przejść gdzie indziej). Jeśli wszyscy bohaterowie frakcji polegną, frakcja przegrywa — eliksir w ekwipunku już nie pomoże.</p>
 <div class="divider">✧</div>
 <h2>Rytuał</h2>
-<p>Na koniec każdej rundy sprawdźcie: czy <b>jeden bohater Hordy stoi na Drzewie</b>, a <b>wszyscy pozostali żyjący bohaterowie Hordy stoją tuż obok Drzewa</b>? (Gdy Horda ma jednego bohatera, wystarczy, że stoi na Drzewie.) Jeśli tak — rytuał się zaczyna. Jeśli tak będzie również na koniec <b>następnej</b> rundy, Horda wygrywa. Jeśli choć jeden z nich odejdzie albo zginie, rytuał zostaje przerwany.</p>
+<p>Na koniec każdej rundy sprawdźcie: czy <b>jeden bohater Hordy stoi na Drzewie</b>, a <b>wszyscy pozostali żyjący bohaterowie Hordy stoją tuż obok Drzewa</b>? (Gdy Horda ma jednego bohatera, wystarczy, że stoi na Drzewie.) Jeśli tak — rytuał się zaczyna. Jeśli tak będzie na koniec <b>trzech kolejnych</b> rund, Horda wygrywa. Jeśli choć jeden z nich odejdzie albo zginie, rytuał zostaje przerwany.</p>
 <div class="quote" style="margin:5mm 0;font-size:15pt">„Mówią, że podczas rytuału kryształowe liście Drzewa ciemnieją jeden po drugim, jak gasnące świece.”</div>
 <div class="terrain-pair" style="margin:4mm 0 3mm">
 <div class="tile"><img src="assets/baza_przymierza.jpg" alt="Baza Przymierza" style="height:30mm"><div class="name">Baza Przymierza</div><div class="fine">tu zaczynają bohaterowie Świtu</div></div>
@@ -318,7 +337,7 @@ sheet('''<h2>Aktywacja</h2>
 # 9 + 10
 chapter('9', 'Pojedynek na planszy', 'duel')
 chapter('10', 'Strażnicy kryształów', 'guardians')
-sheet('''<div class="eyebrow">Rozdział 9 · poziom dla dzieci</div><h1>Pojedynek na planszy</h1>
+sheet('''<div class="eyebrow">Rozdział 9 · poziom łatwy</div><h1>Pojedynek na planszy</h1>
 <p class="intro flavor">Najprostsza walka: dwóch bohaterów staje naprzeciw siebie i nikt nie ucieka.</p>
 <ul class="rules">
 <li>Walczą <b>tylko dwie jednostki</b>: bohater kontra bohater albo bohater kontra strażnik. Bez pomocników, bez areny, <b>bez ruchu</b>.</li>
@@ -367,10 +386,10 @@ sheet(f'''<div class="eyebrow">Rozdział 11 · Skarby</div><h1>Karty skarbów</h
 ''', left='Rozdział 11', right='Skarby', foot='Karty skarbów')
 
 # 12. Automaton
-chapter('12', 'Gra przeciw automatowi zła', 'coop')
+chapter('12', 'Gra przeciwko automatowi zła', 'coop')
 sheet('''<div class="eyebrow">Rozdział 12 · kooperacja</div><h1>Automat zła</h1>
 <p class="intro flavor">Horda nie śpi. Nawet gdy nikt nią nie dowodzi, jej bohaterowie idą prosto przed siebie — do najbliższej ofiary albo do Drzewa.</p>
-<p>W kooperacji wszyscy gracze prowadzą Przymierze, a Hordę prowadzą proste zasady. <b>Automat ma tylu bohaterów, ilu jest graczy</b> (na poziomie trudnym — o jednego więcej, najwyżej trzech). Losujcie ich przed grą.</p>
+<p>W kooperacji wszyscy gracze prowadzą Przymierze, a Hordę prowadzą proste zasady. <b>Automat ma tylu bohaterów, ilu jest graczy, ale co najmniej dwóch</b> (na poziomie trudnym — o jednego więcej, najwyżej trzech, i 2 losowe skarby na start). Losujcie ich przed grą.</p>
 <div class="banner">Tura bohatera Hordy</div>
 <ol class="rules">
 <li>Czy Horda ma Eliksir Odrodzenia, a któryś jej bohater nie żyje? → wypij go i wskrześ poległego.</li>
@@ -378,17 +397,28 @@ sheet('''<div class="eyebrow">Rozdział 12 · kooperacja</div><h1>Automat zła</
 <li>Czy obok niego stoi bohater Przymierza? → <b>atakuje go</b>.</li>
 <li>W przeciwnym razie idzie w stronę <b>najbliższego</b> celu: bohatera Przymierza albo Drzewa (gdy Drzewo zajął już inny bohater Hordy — wolnego pola obok). Przy remisie wybiera bohatera. Omija pola strażników i własnych bohaterów. Zakryte pola traktuje tak, jakby kosztowały 1.</li>
 </ol>
-<div class="banner">Automat w bitwie</div>
+<div class="paper-note">Automat nie unika złych walk, ale bierze do gry co najmniej dwóch bohaterów. Jeśli chcecie większego wyzwania, wybierzcie poziom <b>trudny</b>.</div>
+''', cls='horde', left='Rozdział 12', right='Kooperacja', foot='Automat zła', key='coop')
+sheet('''<div class="eyebrow">Rozdział 12 · kooperacja</div><h1>Automat w bitwie</h1>
 <p>Pomocników do bitwy automat dobiera <b>losowo</b> spośród żywych. Ustawia bohatera pośrodku kolumny, pomocników nad i pod nim. Jednostkami automatu kierujcie według prostych zasad:</p>
 <ul class="rules">
 <li><b>Zdolności</b> używa przy pierwszej okazji.</li>
-<li><b>Bohater</b> atakuje bohatera przeciwnika, jeśli ma go w zasięgu; jeśli sięga tylko pomocników — tego, który ma najmniej Życia.</li>
-<li><b>Pomocnik</b> atakuje najpierw pomocników przeciwnika (tego, który ma mniej Życia), a dopiero gdy żadnego nie sięga — bohatera.</li>
+<li><b>Każda jednostka</b> atakuje wroga, który ma <b>najmniej Życia</b> — spośród tych, których sięga bez ruchu, a jeśli takich nie ma — spośród tych, do których dojdzie w tej aktywacji. Przy remisie wybiera bohatera.</li>
+<li><b>Skarby</b> zużywa przy pierwszej okazji, gdy coś dają — według tabeli poniżej. Pozostałych skarbów automat nie używa.</li>
 <li>Jeśli jednostka <b>nikogo nie sięga</b>, idzie w stronę najbliższego wroga.</li>
 </ul>
 <p>Tak samo — jak bohater automatu — walczy <b>strażnik</b> (rozdział 10).</p>
-<div class="paper-note"><b>Kooperacja jest celowo trochę łatwiejsza</b> niż rywalizacja — automat nie unika złych walk. Jeśli chcecie prawdziwego wyzwania, wybierzcie poziom <b>trudny</b>.</div>
-''', cls='horde', left='Rozdział 12', right='Kooperacja', foot='Automat zła', key='coop')
+<div class="banner" style="margin-top:4mm">Skarby automatu</div>
+<table class="table"><tr><th>Skarb</th><th>Kiedy automat go używa</th></tr>
+<tr><td><b>Miecz Bohatera</b>, <b>Eliksir Żywotności</b>, <b>Kamień Ochrony</b></td><td>bohater automatu w swojej pierwszej aktywacji bitwy</td></tr>
+<tr><td><b>Tarcza Strażnika</b></td><td>bohater, któremu zostało 5 Życia albo mniej</td></tr>
+<tr><td><b>Wielki Eliksir Uzdrowienia</b></td><td>jednostka, która straciła co najmniej połowę Życia (i co najmniej 4)</td></tr>
+<tr><td><b>Nasiono Drzewa</b></td><td>gdy co najmniej dwie jego jednostki straciły po 2 Życia albo więcej</td></tr>
+<tr><td><b>Zwój Magicznej Strzały</b></td><td>gdy może nim dobić wroga (wróg ma 3 Życia albo mniej)</td></tr>
+<tr><td><b>Błyskawica w Butelce</b></td><td>gdy może dobić wroga (2 Życia albo mniej) albo trafić dwóch wrogów</td></tr>
+<tr><td><b>Eliksir Odrodzenia</b></td><td>gdy padł jego bohater — w bitwie albo na mapie</td></tr>
+</table>
+''', cls='horde', left='Rozdział 12', right='Kooperacja', foot='Automat zła')
 
 # 13. Custom settings
 chapter('13', 'Własne ustawienia', 'custom')
@@ -406,7 +436,7 @@ sheet('''<div class="eyebrow">Rozdział 13</div><h1>Własne ustawienia</h1>
 <li><b>Dodatkowy bohater Hordy</b> (kooperacja) — automat ma o jednego bohatera więcej.</li>
 </ul></div>
 </div>
-<div class="paper-note" style="margin-top:6mm"><b>Uwaga:</b> w rywalizacji jeden na jednego <b>rezerwowy bohater sprzyja Hordzie</b> — samotny bohater Hordy często zdąży odprawić rytuał, zanim Przymierze się pozbiera.</div>
+<div class="paper-note" style="margin-top:6mm"><b>Uwaga:</b> w rywalizacji jeden na jednego na mapie długiej i bardzo długiej <b>rezerwowy bohater sprzyja Hordzie</b> — samotny bohater Hordy często zdąży odprawić rytuał, zanim Przymierze się pozbiera.</div>
 <div class="quote" style="margin-top:7mm;font-size:15pt">„Każda wyprawa jest inna. Kronikarze spisali, która jest łagodna, a która sprawdzi nawet najdzielniejszych.”</div>
 ''', left='Rozdział 13', right='Ustawienia', foot='Własne ustawienia', key='custom')
 
@@ -426,7 +456,7 @@ def diff_table(marker):
 
 
 sheet(f'''<div class="eyebrow">Rozdział 13 · Własne ustawienia</div><h1>Jak trudny jest który wariant</h1>
-<p>Skala od <b>1</b> (bardzo łatwo) do <b>10</b> (bardzo trudno); wyrównana partia to 5–6. Liczby pochodzą z tysięcy partii rozegranych przez komputer — ludzie grają inaczej, więc traktujcie je jako wskazówkę. „Normalny”, „Dla dzieci” i „Trudny” to gotowe poziomy, pozostałe kolumny to poziom Normalny z jednym ułatwieniem albo utrudnieniem.</p>
+<p>Skala od <b>1</b> (bardzo łatwo) do <b>10</b> (bardzo trudno); wyrównana partia to 5–6. Liczby pochodzą z tysięcy partii rozegranych przez komputer — ludzie grają inaczej, więc traktujcie je jako wskazówkę. „Normalny”, „Łatwy” i „Trudny” to gotowe poziomy, pozostałe kolumny to poziom Normalny z jednym ułatwieniem albo utrudnieniem.</p>
 <h3>Kooperacja — 1 gracz</h3><p class="fine muted">trudność dla graczy Przymierza</p>
 {diff_table('**Kooperacja — 1 gracz**')}
 <h3 style="margin-top:5mm">Kooperacja — 2 graczy</h3><p class="fine muted">trudność dla graczy Przymierza</p>
@@ -475,13 +505,28 @@ sheet(f'''<div class="edge"><h3>W bitwie</h3>{battle_edge}</div>''', left='Rozdz
 chapter('15', 'Ściągawka', 'cheat')
 cheat = MD[MD.index('## 15. Ściągawka'):]
 cps = [md_inline(p.strip()).replace('\n', '<br>') for p in cheat.split('\n\n')[1:] if p.strip() and not p.startswith('---') and not p.startswith('>')]
-cheat_html = ''.join(f'<p>{p}</p>' for p in cps)
+# The cheat sheet has numbered parts ("**1. Cel gry**"): each becomes a card; parts 1–3, 4–5
+# and the rest with the closing words each fill a page.
+groups = []
+for p in cps:
+    m = re.match(r'^<b>(\d+)\. (.+?)</b>$', p)
+    if m:
+        groups.append((m.group(2), []))
+    elif groups:
+        groups[-1][1].append(p)
+    else:
+        groups.append(('', [p]))
+card = lambda title, ps: f'<div class="card cheat" style="margin-bottom:3mm"><h3>{title}</h3>' + ''.join(f'<p>{x}</p>' for x in ps) + '</div>'
 ending = md_inline(re.search(r'> 🌳 \*(.+)\*', cheat).group(1))
 sheet(f'''<div class="eyebrow">Rozdział 15</div><h1>Ściągawka</h1>
-<div class="card cheat">{cheat_html}</div>
+{''.join(card(t, ps) for t, ps in groups[:3])}
+''', left='Rozdział 15', right='Ściągawka', foot='Ściągawka', key='cheat')
+sheet(f'''{''.join(card(t, ps) for t, ps in groups[3:5])}
+''', left='Rozdział 15', right='Ściągawka', foot='Ściągawka')
+sheet(f'''{''.join(card(t, ps) for t, ps in groups[5:])}
 <div class="divider">❧</div>
 <div class="pic-left" style="grid-template-columns:62mm 1fr"><img src="assets/krysztalowe_drzewo.png" alt=""><div class="quote" style="font-size:14.5pt">„{ending}”</div></div>
-''', left='Rozdział 15', right='Ściągawka', foot='Ściągawka', key='cheat')
+''', left='Rozdział 15', right='Ściągawka', foot='Ściągawka')
 
 # ---------------------------------------------------------------- assemble
 first_page = {}
@@ -542,5 +587,25 @@ addEventListener('load', () => {
 });
 </script>
 </body></html>''')
-open(OUT, 'w', encoding='utf-8').write('\n'.join(html))
+# Stat letters next to numbers ("+1 A", "−2 S", "Ż 9") become the stat symbols of the cards,
+# in text only (tags and their attributes are left alone).
+STAT_IMG = {'Ż': ('hp', 'Życie'), 'A': ('attack', 'Atak'), 'S': ('speed', 'Szybkość')}
+STAT_AFTER = re.compile(r'([+−\-]?\d+) ?(Ż|A|S)(?=[\s.,;:)/<]|$)')
+STAT_BEFORE = re.compile(r'(?<![^\W\d_])(?<!\d)(Ż|A|S) (\d+)')
+
+
+def stat_img(letter):
+    file, name = STAT_IMG[letter]
+    return f'<img class="stat" src="assets/staty/{file}.png" alt="{name}">'
+
+
+def stat_icons(text):
+    # The number and its symbol stay on one line.
+    text = STAT_AFTER.sub(lambda m: f'<span class="statv">{m.group(1)}{stat_img(m.group(2))}</span>', text)
+    return STAT_BEFORE.sub(lambda m: f'<span class="statv">{stat_img(m.group(1))} {m.group(2)}</span>', text)
+
+
+page = '\n'.join(html)
+page = ''.join(part if part.startswith('<') else stat_icons(part) for part in re.split(r'(<[^>]+>)', page))
+open(OUT, 'w', encoding='utf-8').write(page)
 print('pages', len(pages) + 1, first_page)

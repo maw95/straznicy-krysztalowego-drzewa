@@ -333,6 +333,8 @@ ol.rules li::marker{color:var(--accent);font-family:var(--head);font-weight:700}
 .markers figure{margin:0;width:22mm;text-align:center}
 .markers img{width:14mm;height:14mm;object-fit:contain;display:block;margin:0 auto 1mm;filter:drop-shadow(0 2px 2px #0004)}
 .markers figcaption{font-size:9pt;line-height:1.1;color:#5f4526}
+.markers.seven{gap:2mm 2.5mm}
+.markers.seven figure{width:21.5mm}
 .pic-right{display:grid;grid-template-columns:1fr 62mm;gap:6mm;align-items:start}
 .pic-right img{width:100%;display:block}
 .pic-left{display:grid;grid-template-columns:70mm 1fr;gap:6mm;align-items:center}
@@ -361,3 +363,6 @@ ol.rules li::marker{color:var(--accent);font-family:var(--head);font-weight:700}
 /* Inside the game (?embed): only the printable sheets, on a transparent page */
 .embed body{background:none;padding:6mm 0}
 .embed .hint,.embed #overflow-report{display:none}
+/* Stat symbols (heart, swords, bolt) inside the text, instead of the letters Ż, A, S */
+img.stat{height:1.05em;width:auto;vertical-align:-0.18em;margin:0 .06em}
+.statv{white-space:nowrap}

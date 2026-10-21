@@ -430,3 +430,153 @@ Długość partii z limitem podniesionym do 100 (400 gier na wariant, poziomy No
 - **Automat (kooperacja) i strażnicy w bitwie** grają według instrukcji (`battleAi.ts`, `rulebookAction`): zdolności od razu; bohater/strażnik bije bohatera, inaczej pomocnika z najmniejszym Życiem; pomocnik automatu bije najpierw pomocników; bez celu — do najbliższego wroga. W rywalizacji strażnikiem przy stole kieruje gracz Hordy; w grze jednoosobowej — ten sam gracz.
 - **Wynik (300 gier):** kooperacja łatwiejsza (Normalny 67–77%, Trudny 49–73%), PvP Normalny 41–61%. Zero zawieszonych partii i niedozwolonych ruchów.
 - **Zawartość pudełka** (max potrzeb — bardzo długa mapa, bitwa 3 na 3): 50 + 49 kafelków terenu, 16 kafelków skarbów (8 + 8), 3 siedliska, Drzewo, 2 bazy, 2 areny, 15 kart i 15 figurek, 18 kart skarbów (4 Eliksiry + 14), 3 kryształy, tor rund + znacznik, kość; znaczniki: krople 5 × 10, 3 / 2 / 1 × 6, zużyta zdolność 6, Wzmocnienie Ataku 6, Żywotność 4, Ochrona 2, pozostałe po 1.
+
+### 7.13. Wygrana tylko kryształami, 3 punkty ruchu, nowe boty (2026-10-21, decyzje użytkownika)
+
+- **Przymierze wygrywa tylko kryształami.** Pokonanie wszystkich bohaterów Hordy nie kończy gry. Horda wygrywa limitem rund, wybiciem Przymierza albo rytuałem.
+- **3 punkty ruchu** (było 2), limity rund bez zmian (8 / 12 / 16 / 20).
+- **Kryształy:** 2 przy jednym bohaterze Przymierza, 3 przy dwóch (`crystalsFor`), na każdej mapie.
+- **Bot Przymierza (gracz):** wyprawy po kilka kryształów — z kryształem dalej zwiedza i zbiera, do Drzewa wraca, gdy niesie wszystkie brakujące albo gdy kończy się czas (liczy rundy powrotu); kryształy przed skarbami (skarb tylko ≤ 2 pola); strażnik już z 1 pomocnikiem; Hordę atakuje tylko obok siebie (gdy wyraźnie silniejszy) albo żeby przerwać rytuał; dwóch bohaterów dzieli się kryształami i obszarami zwiedzania; zwiedza w stronę połowy mapy z nieznalezionymi siedliskami; bez kryształu nie stoi na Drzewie ani obok, gdy sojusznik niesie kryształ.
+- **Bot Hordy (gracz w PvP):** gdy Przymierze niesie kryształ — trzyma Drzewo (blokuje oddanie), dochodzi do niego pierwszy albo przechwytuje nosiciela.
+- **Wynik (200 gier, Normalny):** koop 1 gracz 45–67%, koop 2 graczy 40–55%, PvP 1 na 1 24–48%, PvP 2 na 2 26–41%. Słabe miejsce: PvP na długich mapach — rytuał samotnego bohatera Hordy (do 37% partii na bardzo długiej mapie 1 na 1).
+
+### 7.14. Rytuał 3 rundy, boty liczą czas (2026-10-21)
+
+- **Rytuał trwa 3 rundy** na każdej mapie (`ritualRounds: 3`).
+- **Bot Przymierza pilnuje Drzewa z zegarem:** bohater najbliżej Drzewa (także nosiciel) liczy, ile punktów ruchu zostało, zanim Horda dojdzie i utrzyma rytuał. Dopóki zdąży wrócić z zapasem jednej tury, zwiedza i zbiera po drodze; bez zapasu idzie prosto do Drzewa.
+- **Nie atakuje bez wyraźnej przewagi** (obrońca uderza pierwszy: z symulacji obrońca wygrywa ok. 2/3 walk przy równych siłach). Wcześniej ścieżki przechodziły przez wroga już przy stosunku sił 0,9.
+- **Rytuał przerywa sojusznik bez kryształu**, jeśli zdąży (nosiciel straciłby kryształy).
+- **W PvP nosiciel nie atakuje Hordy siedzącej na Drzewie**, dopóki nie ma rytuału ani presji czasu. W koop nie czeka, bo automat z Drzewa nie schodzi.
+- **Kryształy oddaje od razu**, gdy Drzewo jest w zasięgu tej tury.
+- **Skarby:** do 4 pól objazdu, także podczas zwiedzania (wcześniej tylko gdy znał położenie kryształu).
+- **Sprawdzone i odrzucone** (bez efektu albo gorzej):
+  - omijanie zasięgu silniejszych wrogów i niekończenie tury w ich zasięgu;
+  - trzymanie Drzewa, gdy Horda jest blisko.
+- **Wynik (1000 gier, Normalny, pełne zasady, porównanie z tymi samymi ziarnami):**
+  - zmiana od −3 do +3 pkt proc.;
+  - rytuał na bardzo długiej mapie 1 na 1: 20% → 14%;
+  - koop 1 gracz 39–62%, koop 2 graczy 40–56%, PvP 1 na 1 26–46%, PvP 2 na 2 26–43%.
+  - Wyniki dla 200 gier były mylące (szum ±3,5 pkt).
+- **Wnioski strukturalne:**
+  - przewaga obrońcy;
+  - Horda nic nie traci, atakując (śmierć jej bohaterów nie daje Przymierzu wygranej);
+  - w 1 na 1 samotny bohater Hordy na Drzewie od razu tworzy rytuał.
+
+### 7.15. Balans bez remisów — dziennik prac (2026-10-21, w toku)
+
+**Założenia użytkownika:**
+- ten sam odsetek wygranych na danym poziomie niezależnie od mapy i stołu;
+- kryształy zostają;
+- bez nowych zasad;
+- remisy Szybkości mają być rzadkie;
+- Przymierze może mieć trochę więcej punktów.
+
+**Cele, które przyjąłem:** Normalny ok. 50%, Dzieci ok. 70%, Trudny ok. 35% (±5).
+
+**Symulacje:** `scripts/sim/matrix.ts` domyślnie liczy tylko poziomy (Dzieci = `kids`, Normalny = `full`, Trudny = `hard`), 40 wariantów. 200 gier to ok. 1,5 minuty, 300 gier ok. 2 minuty. Filtr jest wyrażeniem regularnym. `SIM_ALL=1` dodaje opcje testowe.
+
+**Ustalenia:**
+- **Remis dla obrońcy był ukrytym bonusem Przymierza.** To Horda zwykle atakuje, więc remis wygrywa broniące się Przymierze. Usunięcie remisów (parzysta Szybkość u Przymierza, nieparzysta u Hordy) przesuwa wyniki o −20 do +25 pkt, zależnie od tego, kto jest szybszy.
+- **Kooperacja jest bardzo czuła na statystyki.** Każde +1 Szybkości bohatera Przymierza (−1 Życia) daje +5–10 pkt w koop.
+- **Różnica koop/PvP bierze się z AI bitewnego.** Automat walczy według instrukcji (prosto), Horda w PvP ma pełne AI. W pojedynkach na planszy (Dzieci) tej różnicy nie ma.
+- **Strażnicy są niegroźni:** Przymierze wygrywa z nimi w 97–100% walk.
+- **Eliksir odrodzenia nie pomaga przy jednym bohaterze Przymierza.** Jego śmierć od razu kończy grę, więc więcej eliksirów pomaga tylko stołom z 2 bohaterami (i pomocnikom). Horda też zbiera eliksiry.
+- **Błąd bota (naprawiony):** gdy następne pole kosztowało więcej niż zostało punktów, bot zawracał i krążył między dwoma polami. Teraz kończy turę. To dało do +8 pkt na dużych mapach.
+- **Duże mapy:** siedliska są losowo rozrzucone po połowie mapy, więc na bardzo długiej mapie część gier kończy się limitem przed znalezieniem ostatniego strażnika.
+- **Rezerwowy bohater Hordy** (`rules.hordeReserve`, w kodzie, domyślnie wyłączony): w koop ~0 do −10 pkt, w Dzieci ok. −10 pkt.
+- **Prostsza zasada celu automatu** („każda jednostka atakuje wroga z najmniejszym Życiem”) obniża koop o 10–20 pkt i dotyczy też strażników. Eksperyment: zmienna `RB_MODE` w `battleAi.ts`, do usunięcia albo wdrożenia.
+- **Oba poziomy z tymi samymi ziarnami (300 gier):**
+
+  | Poziom | Obecne zasady (z poprawionym botem) | Propozycja F1 |
+  |---|---|---|
+  | Dzieci | 34–79%, średnio 61% | 62–87%, średnio 74% |
+  | Normalny | 25–63%, średnio 45% | 37–64%, średnio 52% |
+  | Trudny | 32–48%, średnio 43% | 21–39%, średnio 33% |
+
+  Konfiguracja: `.tmp/F1.json`.
+- **Propozycja F1:**
+  - **Statystyki bez remisów:** Przymierze ma parzystą Szybkość, Horda nieparzystą.
+    - Złoty Smok 9/5/4, Jednorożec 8/5/6, Niedźwiedź 11/4/4 (+1 S każdy, +1 punkt budżetu);
+    - Czarny Smok 7/5/5, Ogr 9/4/5 (+2 S, −2 Ż);
+    - Nietoperz 5/2/3 (−1 S, +1 Ż);
+    - pozostali bez zmian.
+    - Remis zostaje tylko Jednorożec–Gryf (6).
+  - **Automat i strażnicy:** każda jednostka atakuje wroga z najmniejszym Życiem (`automatonTarget: 'weakest'`).
+  - **Koop:** automat gra co najmniej 2 bohaterami (`minEvilHeroes: 2`).
+  - **Limity rund:** 8 / 12 / 18 / 24.
+  - **Dzieci:** dodatkowo bohater rezerwowy (`heroReplacement`) i brak rytuału.
+  - **Trudny:** dodatkowy bohater automatu jak dotąd, a do tego +2 Życia dla każdej jednostki automatu (`automatonHp: 2`).
+- **Odrzucone albo słabe:**
+  - **rezerwowy bohater Hordy:** −3 do −5 pkt dla Przymierza, nie wyrównuje map;
+  - **dłuższy rytuał na dużych mapach (`ritualExtra`):** prawie bez efektu, bo Przymierze i tak przegrywa walkę o Drzewo;
+  - **+1 punkt ruchu na dużych mapach (`moveExtra`):** działa jak 2–4 rundy limitu więcej;
+  - **więcej eliksirów:** nie działa przy jednym bohaterze, a Horda też je zbiera;
+  - **bohater rezerwowy na poziomie Normalnym:** Horda też dostaje rezerwy, więc w PvP jest gorzej.
+- **Nowe parametry silnika:** `hordeReserve`, `minEvilHeroes`, `automatonHp`, `automatonTarget`, `roundLimitDelta`, `MapVariant.ritualExtra/moveExtra`, `LEVEL_RULES`. Wszystkie są domyślnie wyłączone, więc gra ma dotychczasowe zasady, dopóki użytkownik nie zdecyduje.
+- **Strukturalnie zostaje:**
+  - PvP na dużych mapach ok. 37–38% (samotny nosiciel jest ścigany, a w 1 na 1 dochodzi rytuał);
+  - koop 2 graczy ok. 62% wobec 1 gracza ok. 50% (różna liczba kryształów).
+- **Skarby na start (pomysł użytkownika, `MapVariant.startTreasures`):** Przymierze zaczyna grę z kilkoma skarbami w ręku. Skarby bitewne bardzo mocno ograniczają zgony, także przy jednym bohaterze. Eliksir też pomaga samotnemu bohaterowi, bo wskrzesza pomocników.
+  - 2 skarby na długiej i 4 na bardzo długiej (F2) to za dużo: Normalny 48–81%, duże mapy łatwiejsze od małych.
+  - **Wybrane (F3):** długa 1 skarb (nie eliksir), bardzo długa 2 skarby (1 eliksir + 1 inny).
+  - Normalny 46–76%, średnio 56%. Średnie wierszy (krótka/średnia/długa/bardzo długa): 57,5 / 55 / 54 / 58%, czyli wynik nie zależy już od mapy.
+  - Trudny 27–51%, średnio 36%; Dzieci bez zmian (74%).
+  - Konfiguracja: `.tmp/F3.json`.
+  - Zostaje różnica stołów: koop 2 graczy ok. +10 pkt na każdej mapie.
+
+### 7.16. Decyzje użytkownika i Trudny ze skarbami Hordy (2026-10-21)
+
+**Wdrożone w grze i instrukcji:**
+- limity rund 8 / 12 / 18 / 24;
+- poziom „Dla dzieci” nazywa się teraz **„Łatwy”** (identyfikator w kodzie zostaje `kids`);
+- poziom Łatwy ma bohatera rezerwowego i nie ma rytuału. Służy do tego nowa flaga `rules.ritual: false`: rytuał się nie liczy, `ritualFormed` zwraca false, a bot Przymierza nie pilnuje Drzewa.
+  - Łatwy z prawdziwą flagą (F3, 300 gier): 59–91%, średnio ok. 79%. Na F3 z rytuałem 99 rund było 74%, bo boty niepotrzebnie atakowały Hordę na Drzewie.
+
+**Odrzucone:** +2 Życia dla automatu na Trudnym. Bez tego Trudny ≈ Normalny (średnio 55%).
+
+**Test skarbów Hordy na start na Trudnym** (`rules.hordeStartTreasures`; F3 bez +2 Ż; 500 gier):
+
+| Wariant | Średnio | Rozrzut |
+|---|---|---|
+| brak skarbów | 54% | 41–71% |
+| 1 losowy | 43% | 33–61% |
+| 2 losowe | 35% | 26–57% |
+| eliksir + 1 inny | 28% | 19–54% |
+| 1 eliksir | 32% | 22–59% |
+
+- Bardzo długa mapa przy 2 graczach zawsze wychodzi najwyżej, bo Przymierze dostaje tam skarby na start.
+- Uwaga na liczbę kart: w pudełku są 4 eliksiry. Na bardzo długiej mapie leżą 3, a 1 dostaje Przymierze na start, więc eliksir dla Hordy byłby piątym.
+
+### 7.17. Wdrożony zestaw F3 + Trudny z 2 losowymi skarbami Hordy (2026-10-22, zatwierdzone przez użytkownika)
+
+**Statystyki (bez remisów: Przymierze parzysta S, Horda nieparzysta):**
+- Złoty Smok 9/5/4, Jednorożec 8/5/6, Niedźwiedź 11/4/4;
+- Czarny Smok 7/5/5, Ogr 9/4/5;
+- Nietoperz 5/2/3.
+
+**Automat i strażnicy:** każda jednostka atakuje wroga z najmniejszym Życiem w zasięgu (najpierw bez ruchu, potem po ruchu); przy remisie wybiera bohatera.
+
+**Koop:** automat ma co najmniej 2 bohaterów (`minEvilHeroes: 2`).
+
+**Mapy:**
+- limity 8 / 12 / 18 / 24;
+- skarby Przymierza na start: długa 1 losowy (nie eliksir), bardzo długa 1 eliksir + 1 losowy;
+- w pudełku jest 6 Eliksirów Odrodzenia (20 kart skarbów).
+
+**Poziomy:**
+- **Łatwy** (dawniej „Dla dzieci”, id `kids`): pojedynki, bez zdolności, bez rytuału, bohater rezerwowy;
+- **Trudny:** automat ma +1 bohatera i 2 losowe skarby na start.
+
+**Usunięte z kodu** (odrzucone): rezerwowy bohater Hordy, +Ż automatu, dłuższy rytuał na mapie, +PR na mapie, przesunięcie limitu.
+
+**Tor rund:** ma 20 gniazd. Przy limicie 24 znacznik okrąża tor drugi raz (w grze odznaka „+20”). Do decyzji użytkownika: nowa grafika z 24 gniazdami albo drugie okrążenie na planszy.
+
+**Wynik końcowy (300 gier, `.tmp/sim/final.json`):**
+
+| Poziom | Rozrzut | Średnio |
+|---|---|---|
+| Łatwy | 59–91% | 79% |
+| Normalny | 46–76% | 56% |
+| Trudny | 23–59% | 35% |
+
+Tabele trudności w instrukcji wygenerowano z tych danych: trudność = round(1 + 9 × (1 − wygrane Przymierza)), w PvP Horda = 11 − Przymierze.
