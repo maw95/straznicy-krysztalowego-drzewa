@@ -71,18 +71,18 @@ const u = (d: UnitDef): UnitDef => d;
 
 export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   [
-    u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', hp: 9, attack: 5, speed: 3, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),
-    u({ id: 'unicornKing', name: 'Król Jednorożców', side: 'dawn', kind: 'hero', hp: 8, attack: 5, speed: 5, movement: 'walk', attackType: 'melee', ability: 'lightCharge', abilityName: 'Szarża Światła', abilityText: `+${ABILITY.lightChargeBonus} A do ataku wykonanego po ruchu o co najmniej ${ABILITY.lightChargeMinMove} heksy.` }),
-    u({ id: 'ancientBear', name: 'Prastary Niedźwiedź', side: 'dawn', kind: 'hero', hp: 11, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'guardian', abilityName: 'Opiekun Gaju', abilityText: `Raz na bitwę: przyjmuje cios, który zabiłby jego lub sąsiada, i ignoruje ${ABILITY.guardianIgnore} obrażenia.` }),
+    u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),
+    u({ id: 'unicornKing', name: 'Król Jednorożców', side: 'dawn', kind: 'hero', hp: 8, attack: 5, speed: 6, movement: 'walk', attackType: 'melee', ability: 'lightCharge', abilityName: 'Szarża Światła', abilityText: `+${ABILITY.lightChargeBonus} A do ataku wykonanego po ruchu o co najmniej ${ABILITY.lightChargeMinMove} pola.` }),
+    u({ id: 'ancientBear', name: 'Prastary Niedźwiedź', side: 'dawn', kind: 'hero', hp: 11, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'guardian', abilityName: 'Opiekun Gaju', abilityText: `Raz na bitwę: przyjmuje cios, który zabiłby jego lub sąsiada, i ignoruje ${ABILITY.guardianIgnore} obrażenia.` }),
     u({ id: 'elfDruid', name: 'Elf Druid', side: 'dawn', kind: 'support', hp: 4, attack: 1, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Splątane Korzenie', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
     u({ id: 'nymph', name: 'Nimfa', side: 'dawn', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'giftOfLife', abilityName: 'Dar Życia', abilityText: `Raz na bitwę: +${ABILITY.giftOfLifeHeal} Ż sojusznikowi, do maksimum.` }),
-    u({ id: 'pegasus', name: 'Pegaz', side: 'dawn', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'fly', attackType: 'melee', ability: 'airDash', abilityName: 'Powietrzny Zryw', abilityText: `Raz na bitwę: po ataku odskok do ${ABILITY.airDashRange} heksów.` }),
-    u({ id: 'blackDragon', name: 'Czarny Smok', side: 'horde', kind: 'hero', hp: 9, attack: 5, speed: 3, movement: 'fly', attackType: 'melee', ability: 'fireBreath', abilityName: 'Ognisty Oddech', abilityText: 'Raz na bitwę: pełny atak w dwóch wrogów stojących w jednej linii.' }),
+    u({ id: 'pegasus', name: 'Pegaz', side: 'dawn', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'fly', attackType: 'melee', ability: 'airDash', abilityName: 'Powietrzny Zryw', abilityText: `Raz na bitwę: po ataku odskok do ${ABILITY.airDashRange} pól.` }),
+    u({ id: 'blackDragon', name: 'Czarny Smok', side: 'horde', kind: 'hero', hp: 7, attack: 5, speed: 5, movement: 'fly', attackType: 'melee', ability: 'fireBreath', abilityName: 'Ognisty Oddech', abilityText: 'Raz na bitwę: pełny atak w dwóch wrogów stojących w jednej linii.' }),
     u({ id: 'werewolfLord', name: 'Władca Wilkołaków', side: 'horde', kind: 'hero', hp: 8, attack: 5, speed: 5, movement: 'walk', attackType: 'melee', ability: 'bloodCall', abilityName: 'Zew Krwi', abilityText: `Raz na bitwę: +${ABILITY.bloodCallBonus} A przeciw już rannemu celowi.` }),
-    u({ id: 'ironFistOgre', name: 'Ogr Żelazna Pięść', side: 'horde', kind: 'hero', hp: 11, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Twardogłowy', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
+    u({ id: 'ironFistOgre', name: 'Ogr Żelazna Pięść', side: 'horde', kind: 'hero', hp: 9, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Twardogłowy', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
     u({ id: 'goblinShaman', name: 'Goblin Szaman', side: 'horde', kind: 'support', hp: 5, attack: 1, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'curse', abilityName: 'Złowroga Klątwa', abilityText: `Raz na bitwę: trafiony cel ma −${ABILITY.curseMinus} A przy następnym ataku.` }),
-    u({ id: 'caveSpider', name: 'Pająk Jaskiniowy', side: 'horde', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'web', abilityName: 'Pajęcze Sidła', abilityText: `Raz na bitwę: wróg do ${ABILITY.webRange} heksów nie rusza się w następnej aktywacji.` }),
-    u({ id: 'shadowBat', name: 'Nietoperz Cienia', side: 'horde', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'fly', attackType: 'melee', ability: 'nightAmbush', abilityName: 'Nocna Zasadzka', abilityText: `Raz na bitwę: atak zadaje +${ABILITY.nightAmbushBonus} obrażenia.` }),
+    u({ id: 'caveSpider', name: 'Pająk Jaskiniowy', side: 'horde', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'web', abilityName: 'Pajęcze Sidła', abilityText: `Raz na bitwę: wróg do ${ABILITY.webRange} pól nie rusza się w następnej aktywacji.` }),
+    u({ id: 'shadowBat', name: 'Nietoperz Cienia', side: 'horde', kind: 'support', hp: 5, attack: 2, speed: 3, movement: 'fly', attackType: 'melee', ability: 'nightAmbush', abilityName: 'Nocna Zasadzka', abilityText: `Raz na bitwę: atak zadaje +${ABILITY.nightAmbushBonus} obrażenia.` }),
     u({ id: 'cyclops', name: 'Cyklop Błyskotek', side: 'neutral', kind: 'neutral', hp: 23, attack: 2, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'boulder', abilityName: 'Miażdżący Głaz', abilityText: 'Po każdym ataku odpycha trafionego przeciwnika o 1 pole, jeśli to możliwe.' }),
     u({ id: 'griffin', name: 'Gryf Złodziej Skarbów', side: 'neutral', kind: 'neutral', hp: 18, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nestLeap', abilityName: 'Łupieżczy Nalot', abilityText: `Po każdym ataku może odlecieć o maks. ${ABILITY.nestLeapRange} pola.` }),
     u({ id: 'hydra', name: 'Hydra z Zatopionych Ruin', side: 'neutral', kind: 'neutral', hp: 21, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Paszcze Otchłani', abilityText: 'Każdym atakiem może trafić dwóch sąsiadujących przeciwników.' }),
@@ -145,7 +145,7 @@ export const ITEMS: Record<ItemKind, ItemDef> = {
   vitality: { kind: 'vitality', name: 'Eliksir Żywotności', text: '+4 maks. Ż jednej jednostce do końca bitwy.', usableIn: ['battle'] },
   boots: { kind: 'boots', name: 'Buty Wiatru', text: '+3 S jednej jednostce do końca bitwy.', usableIn: ['battle'] },
   horn: { kind: 'horn', name: 'Róg Strażników', text: 'Wymień pomocnika na żywego z rezerwy ALBO daj żywemu pomocnikowi dodatkową aktywację.', usableIn: ['battle'] },
-  map: { kind: 'map', name: 'Magiczna Mapa', text: 'Odkryj 3 wybrane zakryte heksy.', usableIn: ['map'] },
+  map: { kind: 'map', name: 'Magiczna Mapa', text: 'Odkryj 3 wybrane zakryte pola.', usableIn: ['map'] },
   lightning: { kind: 'lightning', name: 'Błyskawica w Butelce', text: 'Do dwóch różnych przeciwników otrzymuje po 2 obrażenia.', usableIn: ['battle'] },
   hourglass: { kind: 'hourglass', name: 'Klepsydra Czasu', text: 'Wybrana jednostka wykonuje dodatkowy ruch bez ataku.', usableIn: ['battle'] },
   courage_horn: { kind: 'courage_horn', name: 'Róg Odwagi', text: '+2 A do następnego ataku jednostki i jednego sąsiedniego sojusznika.', usableIn: ['battle'] },
@@ -262,23 +262,27 @@ export const GUARDIAN_LAIRS: Record<string, { terrain: Terrain; side: TileSide }
   hydra: { terrain: 'lairHydra', side: 'horde' },
 };
 
+/** Eliksiry Odrodzenia in the box (one card of every other treasure). */
+export const RESURRECTION_CARDS = 6;
+
 export interface MapVariant {
   rows: number;
-  crystals: number;
   resurrections: number;
   otherTreasures: number;
   /** Eliksiry Odrodzenia on the map in the "only Eliksiry Odrodzenia" option (no other treasures). */
   onlyResurrections: number;
   roundLimit: number;
+  /** Treasures the Przymierze holds from the start (larger maps). */
+  startTreasures?: { resurrections: number; others: number };
 }
 
 export type MapSize = 'short' | 'medium' | 'long' | 'veryLong';
 
 export const MAP_VARIANTS: Record<MapSize, MapVariant> = {
-  short: { rows: 6, crystals: 2, resurrections: 1, otherTreasures: 1, onlyResurrections: 1, roundLimit: 8 },
-  medium: { rows: 8, crystals: 3, resurrections: 1, otherTreasures: 3, onlyResurrections: 2, roundLimit: 12 },
-  long: { rows: 11, crystals: 3, resurrections: 2, otherTreasures: 4, onlyResurrections: 3, roundLimit: 16 },
-  veryLong: { rows: 14, crystals: 3, resurrections: 3, otherTreasures: 5, onlyResurrections: 4, roundLimit: 20 },
+  short: { rows: 6, resurrections: 1, otherTreasures: 1, onlyResurrections: 1, roundLimit: 8 },
+  medium: { rows: 8, resurrections: 1, otherTreasures: 3, onlyResurrections: 2, roundLimit: 12 },
+  long: { rows: 11, resurrections: 2, otherTreasures: 4, onlyResurrections: 3, roundLimit: 18, startTreasures: { resurrections: 0, others: 1 } },
+  veryLong: { rows: 14, resurrections: 3, otherTreasures: 5, onlyResurrections: 4, roundLimit: 24, startTreasures: { resurrections: 1, others: 1 } },
 };
 
 export const MAP_SIZE_NAMES: Record<MapSize, string> = { short: 'Krótka', medium: 'Średnia', long: 'Długa', veryLong: 'Bardzo długa' };

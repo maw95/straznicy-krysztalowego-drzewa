@@ -222,13 +222,9 @@ function rank(u: BattleUnit): number {
 
 const isLeader = (u: BattleUnit) => UNITS[u.defId].kind !== 'support';
 
-/** Rulebook choice among the enemies `u` can hit; ties go to the lower Życie, then the stable id order. */
-function rulebookTarget(u: BattleUnit, targets: BattleUnit[]): BattleUnit | null {
-  const byHp = (list: BattleUnit[]) => list.slice().sort((a, b) => a.hp - b.hp || (a.id < b.id ? -1 : 1))[0] ?? null;
-  const leaders = targets.filter(isLeader);
-  const supports = targets.filter((t) => !isLeader(t));
-  if (isLeader(u)) return byHp(leaders) ?? byHp(supports);
-  return byHp(supports) ?? byHp(leaders);
+/** Rulebook choice among the enemies `u` can hit: the one with the least Życie; on a tie the hero, then the stable id order. */
+function rulebookTarget(targets: BattleUnit[]): BattleUnit | null {
+  return targets.slice().sort((a, b) => a.hp - b.hp || Number(isLeader(b)) - Number(isLeader(a)) || (a.id < b.id ? -1 : 1))[0] ?? null;
 }
 
 export function followsRulebook(state: GameState, u: BattleUnit): boolean {
@@ -250,16 +246,16 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
       second = breathSecondTarget(state, u, t);
       if (!second) useAbility = false;
     }
-    if (canHitTwo(state, u)) second = rulebookTarget(u, here.filter((x) => x.id !== t.id && dist(x.pos!, u.pos!) === 1));
+    if (canHitTwo(state, u)) second = rulebookTarget(here.filter((x) => x.id !== t.id && dist(x.pos!, u.pos!) === 1));
     return { type: 'battleAttack', targetId: t.id, useAbility, secondTargetId: second?.id };
   };
-  const now = rulebookTarget(u, here);
+  const now = rulebookTarget(here);
   if (now) return strike(now);
   if (act.moved || act.attacked) return { type: 'endActivation' };
   // Move: to a cell from which the chosen enemy can be hit (fewest steps), else towards the nearest enemy.
   const cells = [...reachableCells(state, u)].sort((x, y) => x[1] - y[1] || (x[0] < y[0] ? -1 : 1));
   const reachable = cells.flatMap(([cell]) => attackFrom(cell));
-  const goal = rulebookTarget(u, [...new Map(reachable.map((t) => [t.id, t])).values()]);
+  const goal = rulebookTarget([...new Map(reachable.map((t) => [t.id, t])).values()]);
   if (goal) {
     const cell = cells.find(([c]) => attackFrom(c).some((t) => t.id === goal.id));
     if (cell) return { type: 'battleMove', to: cell[0] };
@@ -274,7 +270,7 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
 function rulebookFreeAbility(state: GameState, u: BattleUnit): Action | null {
   if (u.abilityUsed || !abilityActive(state, u) || abilityOf(u) !== 'web') return null;
   const inRange = enemiesOf(state.battle!, u).filter((e) => dist(e.pos!, u.pos!) <= ABILITY.webRange);
-  const t = rulebookTarget(u, inRange);
+  const t = rulebookTarget(inRange);
   return t ? { type: 'battleAbility', targetId: t.id } : null;
 }
 

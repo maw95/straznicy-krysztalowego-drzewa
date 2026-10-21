@@ -1,6 +1,8 @@
 // Runs every variant (map size × table × option) in parallel and prints a table.
-// Usage: npx tsx scripts/sim/matrix.ts [games=400] [label] [filter]
-//   filter: a substring of the variant name, e.g. "coop1" or "short·pvp1".
+// Usage: npx tsx scripts/sim/matrix.ts [games=300] [label] [filter]
+//   filter: a regular expression on the variant name, e.g. "coop1", "short·pvp1" or "coop.·full".
+// By default only the three difficulty levels (kids, normal = full, hard): 40 variants, about
+// 2–3 minutes at 300 games. SIM_ALL=1 adds the test options (noabilities, dice, …).
 // Results are also written to .tmp/sim/<label>.json for comparing iterations.
 
 import { execFile } from 'node:child_process';
@@ -8,16 +10,17 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { cpus } from 'node:os';
 import { OPTIONS, SIZES, TABLES, merge, variantName, type Summary, type Variant } from './core';
 
-const games = Number(process.argv[2] ?? 400);
+const games = Number(process.argv[2] ?? 300);
 const label = process.argv[3] ?? 'last';
 const filter = process.argv[4] ?? '';
 const CHUNK = 100;
 
 const variants: Variant[] = [];
-for (const size of SIZES) for (const table of TABLES) for (const option of OPTIONS) variants.push({ size, table, option });
+const options = process.env.SIM_ALL ? OPTIONS : OPTIONS.filter((o) => o === 'full' || o === 'kids');
+for (const size of SIZES) for (const table of TABLES) for (const option of options) variants.push({ size, table, option });
 // Harder coop option: one Horde hero more (coop only).
 for (const size of SIZES) for (const table of ['coop1', 'coop2'] as const) variants.push({ size, table, option: 'hard' });
-const chosen = variants.filter((v) => variantName(v).includes(filter));
+const chosen = variants.filter((v) => new RegExp(filter).test(variantName(v)));
 
 const jobs: Array<{ v: Variant; n: number; seed: number }> = [];
 for (const v of chosen) for (let s = 0; s < games; s += CHUNK) jobs.push({ v, n: Math.min(CHUNK, games - s), seed: s + 1 });

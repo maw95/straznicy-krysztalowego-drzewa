@@ -150,65 +150,174 @@ export function goodAction(state: GameState): Action {
   const item = mapItemAction(state);
   if (item) return item;
   if (state.movePoints <= 0 || state.turnBattleDone) return { type: 'endTurn' };
+  const treeK = treeKey();
+  const tree = parseKey(treeK);
+  const nearTree = (k: HexKey) => distance(parseKey(k), tree);
+  const allies = Object.values(state.heroes).filter((h) => h.faction === 'dawn' && h.alive && h.id !== hero.id);
+  const mp = state.rules.heroMovePoints;
+  // One hero per hex: a hero without crystals clears the Tree and the hexes around it while an
+  // ally carries one, so the carrier can get in.
+  if (!hero.crystals.length && (hero.pos === treeK || (allies.some((h) => h.crystals.length) && nearTree(hero.pos) <= 1))) {
+    const off = legalHeroMoves(state).filter((m) => m.kind === 'move').sort((x, y) => nearTree(y.to) - nearTree(x.to))[0];
+    if (off && nearTree(off.to) > nearTree(hero.pos)) return { type: 'moveHero', to: off.to };
+  }
 
-  const enemies = Object.values(state.heroes).filter((h) => h.faction !== hero.faction && h.alive);
-  // Waiting out the clock hands the Horde the win: late in the game any fight beats none.
+  const enemies = Object.values(state.heroes).filter((h) => h.faction !== hero.faction && h.alive && !h.entering);
   const desperate = isDesperate(state);
-  const strongEnough = (enemyId: string) => desperate || ratio(state, hero, state.heroes[enemyId]) >= 0.9;
-  const goals = new Set<HexKey>();
-  if (hero.crystals.length) goals.add(treeKey());
-  // The Horde is at the Tree: its ritual must be broken whatever the odds.
-  const evilAtTree = enemies.filter((e) => e.pos === treeKey());
-  if (evilAtTree.length && (state.ritual > 0 || ritualFormed(state))) goals.add(treeKey());
-  if (!goals.size) {
-    for (const c of Object.values(state.crystals)) {
-      if (c.at.startsWith('hero:') || c.at === 'tree') continue;
-      const tile = state.tiles[c.at];
-      if (!tile.revealed) continue;
-      if (c.guardian && !canFightGuardian(state)) continue;
-      goals.add(c.at);
+  // The defender strikes first, so walking into an enemy needs a real edge (or no time left).
+  const strongEnough = (e: HeroState) => desperate || ratio(state, hero, e) >= huntRatio(state);
+  const enemyAt = (k: HexKey) => enemies.find((e) => e.pos === k);
+  const roundsLeft = state.roundLimit - state.round + 1;
+  // Paths: fights are avoided unless the hex is a goal; hexes next to stronger enemies cost extra.
+  const pathsFor = (goals: Set<HexKey>) =>
+    shortestPaths(state.tiles, hero.pos, (k) => {
+      if (heldByAlly(state, hero, k)) return null;
+      const foe = enemyAt(k);
+      if (foe && !goals.has(k) && !strongEnough(foe)) return null;
+      const t = state.tiles[k];
+      if (t.crystalId && state.crystals[t.crystalId].guardian && !goals.has(k)) return null;
+      const c = knownCost(state, k);
+      return c === null ? null : c + (goals.has(k) || desperate ? 0 : dangerCost(state, hero, k));
+    });
+  const go = (goals: Set<HexKey>, extra: (k: HexKey) => number = () => 0): Action | null => {
+    const paths = pathsFor(goals);
+    let best: { cost: number; path: HexKey[] } | null = null;
+    for (const g of goals) {
+      const p = paths.get(g);
+      if (p && p.path.length > 1 && (!best || p.cost + extra(g) < best.cost)) best = { cost: p.cost + extra(g), path: p.path };
     }
-    for (const k of treasureSpots(state)) goals.add(k);
-    // Beating every Horde hero also wins the game: hunt the ones we clearly outmatch.
-    for (const e of enemies) if (ratio(state, hero, e) >= huntRatio(state)) goals.add(e.pos);
-  }
-  const blocked = (k: HexKey) => {
-    if (heldByAlly(state, hero, k)) return true;
-    const foes = heroesAt(state, k).filter((h) => h.faction !== hero.faction);
-    if (foes.length && !goals.has(k)) return !foes.every((e) => strongEnough(e.id));
-    const t = state.tiles[k];
-    return Boolean(t.crystalId && state.crystals[t.crystalId].guardian && !goals.has(k));
+    if (!best) return null;
+    const next = best.path[1];
+    const foe = enemyAt(next);
+    if (foe && !strongEnough(foe) && !goals.has(next)) return null;
+    const move = legalHeroMoves(state).find((m) => m.to === next);
+    if (move) return { type: 'moveHero', to: next };
+    // The next hex costs more than the points left this turn: wait and go on next turn, rather
+    // than wander off and come back (which never gets anywhere).
+    if ((knownCost(state, next) ?? 0) > state.movePoints) return { type: 'endTurn' };
+    return null;
   };
-  const paths = shortestPaths(state.tiles, hero.pos, (k) => {
-    if (blocked(k)) return null;
-    const c = knownCost(state, k);
-    return c === null ? null : c + (goals.has(k) || desperate ? 0 : dangerCost(state, hero, k));
-  });
-  let best: { cost: number; path: HexKey[] } | null = null;
-  for (const g of goals) {
-    const p = paths.get(g);
-    if (p && (!best || p.cost < best.cost)) best = p;
-  }
-  if (!best) {
-    // Explore: the cheapest revealed hex that borders hidden ones.
-    for (const [k, p] of paths) {
-      if (k === hero.pos || !state.tiles[k].revealed) continue;
-      const hiddenAround = mapNeighbors(state.tiles, k).filter((n) => !state.tiles[n].revealed).length;
-      if (!hiddenAround) continue;
-      const score = p.cost - hiddenAround * 0.3;
-      if (!best || score < best.cost) best = { cost: score, path: p.path };
+
+  const treeCostFrom = (from: HexKey) =>
+    shortestPaths(state.tiles, from, (k) => (heldByAlly(state, hero, k) && k !== hero.pos ? null : knownCost(state, k))).get(treeK)?.cost ?? Infinity;
+  const treeEta = (h: HeroState) => Math.ceil(treeCostFrom(h.pos) / mp);
+
+  // 1. The Horde's ritual must be broken whatever the odds. A carrier leaves it to an ally
+  //    without crystals when that one gets there in time (losing the fight drops the crystals).
+  const ritualHolder = enemies.find((e) => e.pos === treeK);
+  const ritualOn = !!ritualHolder && (state.ritual > 0 || ritualFormed(state));
+  if (ritualOn) {
+    const ritualLeft = state.rules.ritualRounds - state.ritual;
+    const breaker = allies.find((a) => !a.crystals.length && treeEta(a) < ritualLeft);
+    if (!hero.crystals.length || !breaker || desperate) {
+      const a = go(new Set([treeK]));
+      if (a) return a;
     }
   }
-  if (!best) {
-    // Nothing to explore: escort toward the Tree.
-    best = paths.get(treeKey()) ?? null;
+  // A Horde hero camping on the Tree (no ritual yet) wins most fights there: carriers wait
+  // nearby and let it come out, unless time is running out. The coop automaton never comes out,
+  // so there waiting only wastes rounds.
+  const camped = !!ritualHolder && !ritualOn && !desperate && state.setup.mode !== 'coop';
+  const decide = (): Action => {
+    // 2. A beatable enemy right next to us that stands in the way (or would catch a carrier) — strike first.
+    const adjacentFoe = enemies.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && ratio(state, hero, e) >= huntRatio(state));
+    if (adjacentFoe && legalHeroMoves(state).some((m) => m.to === adjacentFoe.pos)) return { type: 'moveHero', to: adjacentFoe.pos };
+
+    // 3. Deliver when the carried crystals finish the job, or when time runs out.
+    const carried = (h: HeroState) => h.crystals.length;
+    const inHand = carried(hero) + allies.reduce((a, h) => a + carried(h), 0);
+    const missing = state.crystalsNeeded - state.factions.dawn.delivered;
+    if (carried(hero)) {
+      const toTree = pathsFor(new Set([treeK])).get(treeK);
+      const eta = toTree ? Math.ceil(toTree.cost / mp) : 99;
+      // Bank what we carry when the Tree is within this turn's reach: a carrier is hunted, and
+      // a crystal at the Tree can't be lost any more.
+      const bank = toTree !== undefined && toTree.cost < state.movePoints;
+      if (!camped && (inHand >= missing || roundsLeft <= eta + 1 || bank)) {
+        // A Horde hero on the Tree must be beaten first.
+        const a = go(new Set([treeK]));
+        if (a) return a;
+      }
+    }
+
+    // 4. Collect: known crystals not carried, each hero taking the ones it is closest to.
+    const canGuardian = canFightGuardian(state);
+    const known = Object.values(state.crystals).filter((c) => !c.at.startsWith('hero:') && c.at !== 'tree' && state.tiles[c.at]?.revealed && (!c.guardian || canGuardian));
+    const dist = (h: HeroState, k: HexKey) => distance(parseKey(h.pos), parseKey(k));
+    const mine = known.filter((c) => !allies.some((a) => dist(a, c.at) < dist(hero, c.at)));
+    const targets = new Set((mine.length ? mine : known).map((c) => c.at));
+    // Treasures (they strengthen the team in battle) when they are a short detour away.
+    const treasures = treasureSpots(state).filter((k) => dist(hero, k) <= (desperate ? 1 : 4));
+    for (const k of treasures) targets.add(k);
+    if (known.length) {
+      const a = go(targets, (k) => (treasures.includes(k) && !known.some((c) => c.at === k) ? 1.5 : 0));
+      if (a) return a;
+    }
+
+    // 5. Explore while crystals are still missing: frontier hexes, the ally exploring elsewhere,
+    //    and the half of the map where unfound lairs can be (the Griffin lives on the Przymierze
+    //    side, the Cyclops and the Hydra on the Horde side).
+    const foundLairs = Object.values(state.crystals).filter((c) => c.at === 'tree' || c.at.startsWith('hero:') || state.tiles[c.at]?.revealed).length;
+    if (foundLairs < state.crystalsNeeded || !known.length) {
+      const hiddenOn = (side: 'dawn' | 'horde') => Object.values(state.tiles).filter((t) => !t.revealed && t.side === side).length;
+      const sideWeight = { dawn: hiddenOn('dawn') > 0 ? 1 : 0, horde: hiddenOn('horde') > 0 ? 2 : 0 };
+      const frontier = new Set<HexKey>();
+      const score = new Map<HexKey, number>();
+      for (const t of Object.values(state.tiles)) {
+        if (!t.revealed || tileCost(t) === null || t.key === hero.pos) continue;
+        const hidden = mapNeighbors(state.tiles, t.key).filter((n) => !state.tiles[n].revealed);
+        if (!hidden.length) continue;
+        frontier.add(t.key);
+        const lairChance = hidden.reduce((a, n) => a + sideWeight[state.tiles[n].side], 0);
+        const crowd = allies.some((a) => dist(a, t.key) < dist(hero, t.key)) ? 3 : 0;
+        score.set(t.key, -lairChance * 0.6 + crowd);
+      }
+      for (const k of treasures) if (!frontier.has(k)) (frontier.add(k), score.set(k, 0.5));
+      const a = go(frontier, (k) => score.get(k) ?? 0);
+      if (a) return a;
+    }
+
+    // 6. Nothing to find: carry what we have home, or wait near the Tree (two hexes short, so a
+    //    carrier can get in).
+    if (carried(hero) && !camped) {
+      const a = go(new Set([treeK]));
+      if (a) return a;
+    }
+    const near = Object.values(state.tiles).filter((t) => t.revealed && tileCost(t) !== null && nearTree(t.key) === 2).map((t) => t.key);
+    if (!near.includes(hero.pos)) {
+      const a = go(new Set(near));
+      if (a) return a;
+    }
+    return { type: 'endTurn' };
+  };
+
+  // 1b. Watch the Tree, with the clock: count the move points left before the Horde could finish
+  //     its ritual (walk to the Tree, then hold it for the ritual rounds). The Przymierze hero
+  //     nearest the Tree may explore or collect on the way only while it can still get back and
+  //     strike in time; with no slack left it heads straight for the Tree.
+  const horde = enemies.filter((e) => e.alive);
+  const guard = [hero, ...allies].sort((x, y) => treeCostFrom(x.pos) - treeCostFrom(y.pos))[0] === hero;
+  if (horde.length && guard && state.rules.ritual !== false) {
+    const formed = ritualFormed(state);
+    const hordeEta = formed ? 0 : Math.max(...horde.map((e) => Math.ceil(Math.max(0, treeCostFrom(e.pos) - 1) / mp)));
+    // The ritual completes at the end of the round the last Horde hero arrives in, plus the
+    // ritual rounds after it; that round counts too (the Horde may move after us).
+    const turnsLeft = Math.min(roundsLeft, hordeEta + state.rules.ritualRounds - 1 - (formed ? state.ritual : 0));
+    const budget = state.movePoints + Math.max(0, turnsLeft - 1) * mp;
+    // Reaching the Tree hex needs the path cost plus a turn's worth of slack (unknown terrain,
+    // allies or guardians in the way).
+    const fits = (from: HexKey, spent: number) => spent + treeCostFrom(from) + mp <= budget;
+    const plan = decide();
+    if (plan.type !== 'moveHero' && plan.type !== 'endTurn') return plan;
+    if (plan.type === 'moveHero') {
+      const step = legalHeroMoves(state).find((m) => m.to === plan.to);
+      if (step && (step.kind !== 'move' || fits(plan.to, step.cost))) return plan;
+    } else if (fits(hero.pos, state.movePoints)) return plan;
+    const a = go(new Set([treeK]));
+    if (a) return a;
+    return plan;
   }
-  if (!best || best.path.length < 2) return { type: 'endTurn' };
-  // Do not walk into an enemy we cannot beat.
-  const next = best.path[1];
-  const foe = enemies.find((e) => e.pos === next);
-  if (foe && !strongEnough(foe.id) && !goals.has(next)) return { type: 'endTurn' };
-  return stepToward(state, best.path);
+  return decide();
 }
 
 /**
@@ -229,6 +338,23 @@ export function hordeBotAction(state: GameState): Action {
   const prey = adjacent.find((e) => beatable(e) || e.crystals.length);
   if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
   if (inRitualPlace(state, hero) && (state.ritual > 0 || own.every((h) => inRitualPlace(state, h)))) return { type: 'endTurn' };
+  // Crystals on the move: hold the Tree (a Horde hero there blocks the delivery), get there
+  // first if we can, otherwise cut the carrier off.
+  const carriers = foes.filter((e) => e.crystals.length);
+  if (carriers.length) {
+    if (hero.pos === tree) return { type: 'endTurn' };
+    const treeHeld = heroesAt(state, tree).some((h) => h.faction === hero.faction);
+    const toTree = shortestPaths(state.tiles, hero.pos, (k) => (heldByAlly(state, hero, k) ? null : knownCost(state, k))).get(tree);
+    const carrierGap = Math.min(...carriers.map((c) => distance(parseKey(c.pos), parseKey(tree))));
+    const goal = !treeHeld && toTree && toTree.cost <= carrierGap * 1.5 ? tree : carriers.sort((x, y) => distance(parseKey(x.pos), parseKey(hero.pos)) - distance(parseKey(y.pos), parseKey(hero.pos)))[0].pos;
+    const p = shortestPaths(state.tiles, hero.pos, (k) => {
+      const t = state.tiles[k];
+      if (t.crystalId && state.crystals[t.crystalId].guardian) return null;
+      if (heldByAlly(state, hero, k)) return null;
+      return knownCost(state, k);
+    }).get(goal);
+    if (p && p.path.length > 1) return stepToward(state, p.path);
+  }
 
   const goals = new Set<HexKey>();
   for (const e of foes) if (e.crystals.length || beatable(e)) goals.add(e.pos);
@@ -259,11 +385,10 @@ export function hordeBotAction(state: GameState): Action {
 /** The last quarter of the rounds: the Horde wins at the limit, so the Dawn stops waiting. */
 const isDesperate = (state: GameState) => state.round > state.roundLimit * 0.75;
 
-/** Guardians are tough: go with two supports, or with one once half the rounds are gone. */
+/** Guardians are tough but beatable with company: go with at least one support (alone only when time runs out). */
 function canFightGuardian(state: GameState): boolean {
-  const supports = state.factions.dawn.supportsAlive.length;
   if (state.setup.battleMode === 'board' || isDesperate(state)) return true;
-  return supports >= 2 || (supports >= 1 && state.round >= state.roundLimit / 2);
+  return state.factions.dawn.supportsAlive.length >= 1;
 }
 
 export function adventureAction(state: GameState): Action {

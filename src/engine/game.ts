@@ -10,6 +10,7 @@ import {
   ITEMS,
   MAP_VARIANTS,
   NON_RESURRECTION_ITEMS,
+  RESURRECTION_CARDS,
   TERRAIN_COST,
   TERRAIN_NAMES,
   UNITS,
@@ -47,6 +48,11 @@ export function log(state: GameState, kind: LogKind, text: string, privateTo?: F
 
 // ------------------------------------------------------------------ setup
 
+/** Crystals on the map (and needed at the Tree): 2 for one Przymierze hero, 3 for two. */
+export function crystalsFor(setup: SetupOptions): number {
+  return setup.seats.filter((s) => s.faction === 'dawn').length >= 2 ? 3 : 2;
+}
+
 export function createGame(setup: SetupOptions): GameState {
   const rng = new Rng(setup.seed);
   const variant = MAP_VARIANTS[setup.mapSize];
@@ -58,7 +64,8 @@ export function createGame(setup: SetupOptions): GameState {
   const pool: ItemKind[] = setup.rules.treasures
     ? rng.shuffle([...Array(variant.resurrections).fill('resurrection'), ...others])
     : Array(variant.onlyResurrections).fill('resurrection');
-  const map = generateMap(setup.mapSize, rng, pool.length);
+  const crystals = crystalsFor(setup);
+  const map = generateMap(setup.mapSize, rng, pool.length, crystals);
 
   const state: GameState = {
     version: 1,
@@ -67,7 +74,7 @@ export function createGame(setup: SetupOptions): GameState {
     rng: 0,
     round: 1,
     roundLimit: variant.roundLimit,
-    crystalsNeeded: variant.crystals,
+    crystalsNeeded: crystals,
     phase: 'adventure',
     players: [],
     heroes: {},
@@ -106,6 +113,31 @@ export function createGame(setup: SetupOptions): GameState {
     state.items[id] = { id, kind, owner: null, foundBy: null };
     state.tiles[map.treasureHexes[i]].treasureId = id;
   });
+  // Treasures in hand from the start: the Przymierze on larger maps (MapVariant.startTreasures),
+  // the Horde on some levels (rules.hordeStartTreasures). Other kinds than those already dealt;
+  // `random` ones may also be an Eliksir Odrodzenia.
+  const dealt = new Set<ItemKind>(others);
+  const give = (faction: FactionId, start: { resurrections: number; others: number; random?: number } | undefined) => {
+    if (!start || !setup.rules.treasures) return;
+    const kinds: ItemKind[] = Array(start.resurrections).fill('resurrection');
+    const rest = () => rng.shuffle(NON_RESURRECTION_ITEMS.filter((k) => !dealt.has(k)));
+    for (const k of rest().slice(0, start.others)) (kinds.push(k), dealt.add(k));
+    for (let i = 0; i < (start.random ?? 0); i++) {
+      // A random card of what is left in the box: Eliksiry Odrodzenia and one of each other treasure.
+      const elixirs = RESURRECTION_CARDS - pool.filter((k) => k === 'resurrection').length - Object.values(state.items).filter((it) => it.kind === 'resurrection' && it.owner).length;
+      const deck = [...Array(Math.max(0, elixirs)).fill('resurrection'), ...rest()] as ItemKind[];
+      const k = deck[rng.int(deck.length)];
+      kinds.push(k);
+      if (k !== 'resurrection') dealt.add(k);
+    }
+    for (const kind of kinds) {
+      const id = `it${Object.keys(state.items).length + 1}`;
+      state.items[id] = { id, kind, owner: faction, foundBy: null };
+      state.factions[faction].inventory.push(id);
+    }
+  };
+  give('dawn', variant.startTreasures);
+  give('horde', setup.rules.hordeStartTreasures);
   map.crystals.forEach((c, i) => {
     const id = `c${i + 1}`;
     state.crystals[id] = { id, guardian: c.guardian, at: c.hex };
@@ -119,10 +151,10 @@ export function createGame(setup: SetupOptions): GameState {
     addHero(state, seat.heroId, seat.faction, player.id);
   });
   if (setup.mode === 'coop') {
-    // As many evil heroes as good heroes at the start (spec section 1).
+    // As many evil heroes as good heroes at the start (spec section 1), at least rules.minEvilHeroes.
     const goodCount = setup.seats.filter((s) => s.faction === 'dawn').length;
     // Optionally one more, to make the coop game harder (there are 3 Horde heroes at most).
-    const evilCount = Math.min(FACTION_HEROES.horde.length, goodCount + (setup.rules.extraEvilHero ? 1 : 0));
+    const evilCount = Math.min(FACTION_HEROES.horde.length, Math.max(goodCount, setup.rules.minEvilHeroes ?? 1) + (setup.rules.extraEvilHero ? 1 : 0));
     const evil = rng.shuffle(FACTION_HEROES.horde).slice(0, evilCount);
     for (const id of evil) addHero(state, id, 'horde', null);
   }
@@ -173,6 +205,8 @@ export function heroesAt(state: GameState, k: HexKey): HeroState[] {
  * is on a hex next to it (one hero per hex, so they gather around the Tree).
  */
 export function ritualFormed(state: GameState): boolean {
+  // The easy level plays without the ritual.
+  if (state.rules.ritual === false) return false;
   const tree = treeKey();
   const evil = Object.values(state.heroes).filter((h) => h.faction === 'horde' && h.alive);
   if (!evil.length || evil.some((h) => h.entering) || !evil.some((h) => h.pos === tree)) return false;
@@ -448,21 +482,11 @@ function checkVictory(state: GameState) {
     finish(state, 'dawn', 'Wszystkie kryształy wróciły do Drzewa.');
     return;
   }
-  // A faction whose heroes are all dead loses. An Eliksir Odrodzenia needs a living hero
-  // to drink it, so it cannot help any more.
-  const allDead = (f: FactionId) => {
-    const heroes = Object.values(state.heroes).filter((h) => h.faction === f);
-    return heroes.length > 0 && heroes.every((h) => !h.alive);
-  };
-  const dawnOut = allDead('dawn');
-  const hordeOut = allDead('horde');
-  // Both lose their last heroes in the same battle: the side that won the battle wins
-  // (its supports were still standing). A drawn battle counts for the Horde.
-  if (dawnOut && hordeOut) {
-    const w = state.lastBattle?.winner === 'dawn' ? 'dawn' : 'horde';
-    finish(state, w, 'Ostatni bohaterowie obu frakcji polegli w jednej bitwie — wygrywa strona, która ją wygrała.');
-  } else if (dawnOut) finish(state, 'horde', 'Wszyscy bohaterowie Przymierza polegli.');
-  else if (hordeOut) finish(state, 'dawn', 'Wszyscy bohaterowie Mrocznej Hordy polegli.');
+  // Przymierze wins only with the crystals. When all its heroes are dead it can no longer
+  // carry them, so the Horde wins (an Eliksir Odrodzenia needs a living hero to drink it).
+  // Beating every Horde hero clears the way, but the crystals still have to reach the Tree.
+  const dawn = Object.values(state.heroes).filter((h) => h.faction === 'dawn');
+  if (dawn.length && dawn.every((h) => !h.alive)) finish(state, 'horde', 'Wszyscy bohaterowie Przymierza polegli.');
 }
 
 function useMapItem(state: GameState, itemId: string, targets: HexKey[] | undefined, unitId: string | undefined) {

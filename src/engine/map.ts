@@ -107,7 +107,7 @@ function setTerrain(tile: Tile, terrain: Terrain, rng: Rng) {
   tile.variant = 1 + rng.int(TERRAIN_VARIANTS[terrain]);
 }
 
-export function generateMap(size: MapSize, rng: Rng, treasureCount: number): GeneratedMap {
+export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crystalCount: number): GeneratedMap {
   const variant = MAP_VARIANTS[size];
   const rows = variant.rows;
   for (let attempt = 0; attempt < 400; attempt++) {
@@ -141,7 +141,7 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number): Gen
     if (!reach.has(tree) || !reach.has(horde)) continue;
 
     // Guardians: Cyclops and Hydra live on Horda land, the Griffin on Przymierze land.
-    const guardians = rng.shuffle(Object.keys(GUARDIAN_LAIRS)).slice(0, variant.crystals);
+    const guardians = rng.shuffle(Object.keys(GUARDIAN_LAIRS)).slice(0, crystalCount);
     const reserved = new Set<HexKey>([tree, dawn, horde, ...mapNeighbors(tiles, dawn), ...mapNeighbors(tiles, horde)]);
     const crystals: Array<{ hex: HexKey; guardian: string }> = [];
     for (const g of guardians) {
@@ -152,7 +152,7 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number): Gen
       crystals.push({ hex: spot, guardian: g });
       reserved.add(spot);
     }
-    if (crystals.length < variant.crystals) continue;
+    if (crystals.length < crystalCount) continue;
     for (const c of crystals) setTerrain(tiles[c.hex], GUARDIAN_LAIRS[c.guardian].terrain, rng);
     // Evil cannot cross guarded hexes, so the Tree must stay reachable around them.
     const guarded = new Set(crystals.map((c) => c.hex));

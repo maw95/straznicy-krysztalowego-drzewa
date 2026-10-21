@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { FACTION_HEROES, FACTION_SUPPORTS, MAP_VARIANTS, UNITS } from '../src/engine/data';
+import { FACTION_HEROES, FACTION_SUPPORTS, MAP_VARIANTS, TERRAIN_COST, UNITS } from '../src/engine/data';
 import { distance, key, line, offsetToHex, parseKey, triToHex } from '../src/engine/hex';
-import { applyAction, createGame, legalHeroMoves, activeHero } from '../src/engine/game';
+import { applyAction, createGame, crystalsFor, legalHeroMoves, activeHero } from '../src/engine/game';
 import { ARENA_COLUMNS, ARENA_OBSTACLES, arenaCell, arenaCells, attackTargets, columnCells, hasLineOfSight, reachableCells } from '../src/engine/battle';
-import { reachableFrom, homeKey, treeKey } from '../src/engine/map';
+import { mapNeighbors, reachableFrom, homeKey, treeKey } from '../src/engine/map';
 import { chooseAction } from '../src/engine/ai';
 import { DEFAULT_RULES, type GameState, type SetupOptions } from '../src/engine/types';
 
@@ -51,7 +51,8 @@ describe('map generation', () => {
       const reach = reachableFrom(s.tiles, homeKey(rows, 'dawn'));
       expect(reach.has(treeKey())).toBe(true);
       for (const c of Object.values(s.crystals)) expect(reach.has(c.at)).toBe(true);
-      expect(Object.values(s.crystals)).toHaveLength(MAP_VARIANTS[size].crystals);
+      expect(Object.values(s.crystals)).toHaveLength(crystalsFor(s.setup));
+      expect(s.crystalsNeeded).toBe(crystalsFor(s.setup));
     }
   });
 
@@ -59,7 +60,8 @@ describe('map generation', () => {
   it.each((['short', 'medium', 'long', 'veryLong'] as const).map((size) => [size, MAP_VARIANTS[size].resurrections, MAP_VARIANTS[size].otherTreasures] as const))('%s treasure pool has exactly %i Odrodzenia + %i others', (size, res, others) => {
     for (let seed = 1; seed <= 30; seed++) {
       const s = createGame(setup({ mapSize: size, seed }));
-      const kinds = Object.values(s.items).map((i) => i.kind);
+      // Treasures on the map (the Przymierze may also hold some from the start).
+      const kinds = Object.values(s.items).filter((i) => !i.owner).map((i) => i.kind);
       expect(kinds.filter((k) => k === 'resurrection')).toHaveLength(res);
       expect(kinds.filter((k) => k !== 'resurrection')).toHaveLength(others);
       expect(new Set(kinds.filter((k) => k !== 'resurrection')).size).toBe(others);
@@ -202,8 +204,10 @@ describe('player-facing keys', () => {
 describe('objectives', () => {
   it('completes the ritual after evil heroes hold the Tree for the configured rounds', () => {
     let s = createGame(setup({ seats: [{ name: 'A', faction: 'dawn', controller: 'human', heroId: 'goldDragon' }] }));
-    const evil = Object.values(s.heroes).find((h) => h.faction === 'horde')!;
-    s.heroes[evil.id].pos = treeKey();
+    // One Horde hero on the Tree, the other on a free hex next to it.
+    const [onTree, beside] = Object.values(s.heroes).filter((h) => h.faction === 'horde');
+    s.heroes[onTree.id].pos = treeKey();
+    s.heroes[beside.id].pos = mapNeighbors(s.tiles, treeKey()).find((k) => TERRAIN_COST[s.tiles[k].terrain] !== null)!;
     for (let i = 0; i < 20 && s.phase !== 'over'; i++) s = applyAction(s, { type: 'endTurn' });
     expect(s.phase).toBe('over');
     expect(s.winner).toBe('horde');

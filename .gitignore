@@ -14,3 +14,6 @@ yarn-error.log*
 
 # Files sent by testers (private game logs and feedback)
 /tester-reports
+
+# Python bytecode of the asset scripts
+__pycache__/

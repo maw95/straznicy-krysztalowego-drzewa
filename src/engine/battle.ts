@@ -119,6 +119,31 @@ export function moveRange(u: BattleUnit): number {
   return Math.max(0, unitSpeed(u) - u.status.slowNext);
 }
 
+/** Breadth-first search over the cells a walker can pass: not through obstacles or enemies (nor allies, unless the rules allow it). */
+function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number>; parent: Map<HexKey, HexKey> } {
+  const b = state.battle!;
+  const range = moveRange(u);
+  const obstacles = new Set(b.obstacles);
+  const dist = new Map<HexKey, number>([[u.pos!, 0]]);
+  const parent = new Map<HexKey, HexKey>();
+  const queue = [u.pos!];
+  while (queue.length) {
+    const cur = queue.shift()!;
+    const d = dist.get(cur)!;
+    if (d >= range) continue;
+    for (const nh of neighbors(parseKey(cur))) {
+      const n = key(nh);
+      if (!inArena(n) || obstacles.has(n) || dist.has(n)) continue;
+      const occ = unitAt(b, n);
+      if (occ && (occ.side !== u.side || !state.rules.passThroughAllies)) continue;
+      dist.set(n, d + 1);
+      parent.set(n, cur);
+      queue.push(n);
+    }
+  }
+  return { dist, parent };
+}
+
 /** Cells the unit can end its move on, with the number of steps used. */
 export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, number> {
   const b = state.battle!;
@@ -135,23 +160,24 @@ export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, num
     }
     return out;
   }
-  const dist = new Map<HexKey, number>([[u.pos, 0]]);
-  const queue = [u.pos];
-  while (queue.length) {
-    const cur = queue.shift()!;
-    const d = dist.get(cur)!;
-    if (d >= range) continue;
-    for (const nh of neighbors(parseKey(cur))) {
-      const n = key(nh);
-      if (!inArena(n) || obstacles.has(n) || dist.has(n)) continue;
-      const occ = occupant(n);
-      if (occ && (occ.side !== u.side || !state.rules.passThroughAllies)) continue;
-      dist.set(n, d + 1);
-      queue.push(n);
-      if (!occ) out.set(n, d + 1);
-    }
-  }
+  for (const [k, d] of walkSearch(state, u).dist) if (d > 0 && !occupant(k)) out.set(k, d);
   return out;
+}
+
+/**
+ * The cells a unit passes on its way to `to`, both ends included: hex by hex around obstacles
+ * and enemies for a walker, straight over everything for a flyer. Call it on the state before
+ * the move. Falls back to [from, to] when there is no walking path (e.g. a teleport).
+ */
+export function movePath(state: GameState, u: BattleUnit, to: HexKey): HexKey[] {
+  if (!u.pos) return [to];
+  if (u.pos === to) return [to];
+  if (state.battle!.duel || UNITS[u.defId].movement === 'fly') return [u.pos, to];
+  const { parent } = walkSearch(state, u);
+  if (!parent.has(to)) return [u.pos, to];
+  const path = [to];
+  while (path[0] !== u.pos) path.unshift(parent.get(path[0])!);
+  return path;
 }
 
 export function hasLineOfSight(state: GameState, from: HexKey, to: HexKey): boolean {

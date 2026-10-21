@@ -1,12 +1,13 @@
 // Rules agreed with the designer in docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md (section "Zasady obowiązujące").
 import { describe, expect, it } from 'vitest';
-import { TERRAIN_COST, TILE_POOLS, UNITS } from '../src/engine/data';
+import { RESURRECTION_CARDS, TERRAIN_COST, TILE_POOLS, UNITS } from '../src/engine/data';
 import { activeHero, applyAction, createGame, legalHeroMoves, ritualFormed } from '../src/engine/game';
-import { abilityActive, arenaCell, arenaObstacles, makeBattleUnit } from '../src/engine/battle';
+import { abilityActive, arenaCell, arenaObstacles, makeBattleUnit, movePath, reachableCells } from '../src/engine/battle';
+import { distance, parseKey } from '../src/engine/hex';
 import { homeKey, mapNeighbors, sideOf, treeKey } from '../src/engine/map';
 import { chooseAction } from '../src/engine/ai';
 import { chooseBattleAction } from '../src/engine/ai/battleAi';
-import { DEFAULT_RULES, type BattleState, type GameState, type SetupOptions } from '../src/engine/types';
+import { DEFAULT_RULES, levelSettings, type BattleState, type GameState, type SetupOptions } from '../src/engine/types';
 
 const setup = (over: Partial<SetupOptions> = {}, rules: Partial<SetupOptions['rules']> = {}): SetupOptions => ({
   mode: 'coop',
@@ -163,19 +164,28 @@ describe('heroes falling', () => {
     return s;
   }
 
-  it('ends the game for Przymierze when the Horde has no living hero, and no elixir drinks itself', () => {
-    for (const loser of ['horde', 'dawn'] as const) {
-      let s = createGame(setup({ mode: 'pvp', seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }, { name: 'B', faction: 'horde', controller: 'bot', heroId: 'blackDragon' }] }));
-      s.items.x = { id: 'x', kind: 'resurrection', owner: loser, foundBy: null };
-      s.factions[loser].inventory.push('x');
-      s = killAll(s, loser);
-      // A living hero of the other faction takes the turn (a dead hero never gets one).
-      s.turnIndex = s.turnOrder.findIndex((id) => s.heroes[id].alive);
-      for (let i = 0; i < 10 && s.phase !== 'over'; i++) s = applyAction(s, chooseAction(s)!);
-      expect(s.phase).toBe('over');
-      expect(s.winner).toBe(loser === 'horde' ? 'dawn' : 'horde');
-      expect(s.factions[loser].inventory).toContain('x');
-    }
+  it('lets the Horde win when every Przymierze hero has fallen, and no elixir drinks itself', () => {
+    let s = createGame(setup({ mode: 'pvp', seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }, { name: 'B', faction: 'horde', controller: 'bot', heroId: 'blackDragon' }] }));
+    s.items.x = { id: 'x', kind: 'resurrection', owner: 'dawn', foundBy: null };
+    s.factions.dawn.inventory.push('x');
+    s = killAll(s, 'dawn');
+    s.turnIndex = s.turnOrder.findIndex((id) => s.heroes[id].alive);
+    for (let i = 0; i < 10 && s.phase !== 'over'; i++) s = applyAction(s, chooseAction(s)!);
+    expect(s.phase).toBe('over');
+    expect(s.winner).toBe('horde');
+    expect(s.factions.dawn.inventory).toContain('x');
+  });
+
+  it('does not give Przymierze the win for beating every Horde hero: the crystals still decide', () => {
+    let s = createGame(setup({ mode: 'pvp', seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }, { name: 'B', faction: 'horde', controller: 'bot', heroId: 'blackDragon' }] }));
+    s = killAll(s, 'horde');
+    s.turnIndex = s.turnOrder.indexOf('goldDragon');
+    for (let i = 0; i < 6 && s.phase !== 'over'; i++) s = applyAction(s, { type: 'endTurn' });
+    expect(s.phase).not.toBe('over');
+    // Once the crystals reach the Tree, Przymierze wins.
+    s.factions.dawn.delivered = s.crystalsNeeded;
+    s = applyAction(s, { type: 'endTurn' });
+    expect(s.winner).toBe('dawn');
   });
 });
 
@@ -322,7 +332,7 @@ describe('harder coop', () => {
   it('fields one Horde hero more when the coop option is on', () => {
     const count = (extraEvilHero: boolean, players: number) =>
       Object.values(createGame(setup({ seats: ([{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }, { name: 'B', faction: 'dawn', controller: 'bot', heroId: 'unicornKing' }] as SetupOptions['seats']).slice(0, players) }, { extraEvilHero })).heroes).filter((h) => h.faction === 'horde').length;
-    expect([count(false, 1), count(true, 1), count(false, 2), count(true, 2)]).toEqual([1, 2, 2, 3]);
+    expect([count(false, 1), count(true, 1), count(false, 2), count(true, 2)]).toEqual([2, 3, 2, 3]);
   });
 });
 
@@ -395,9 +405,9 @@ describe('rulebook battle behaviour (coop automaton and guardians)', () => {
     return s;
   }
 
-  it('a guardian hits the hero when it can, else the weakest support', () => {
+  it('a guardian hits the enemy with the least Życie it can reach', () => {
     const withHero = guardianTurn([['goldDragon', 6, 6], ['nymph', 7, 9, 1]]);
-    expect(chooseBattleAction(withHero)).toMatchObject({ type: 'battleAttack', targetId: 'goldDragon' });
+    expect(chooseBattleAction(withHero)).toMatchObject({ type: 'battleAttack', targetId: 'nymph' });
     const supportsOnly = guardianTurn([['goldDragon', 0, 4], ['nymph', 7, 9, 4], ['elfDruid', 5, 9, 2]]);
     expect(chooseBattleAction(supportsOnly)).toMatchObject({ type: 'battleAttack', targetId: 'elfDruid' });
   });
@@ -406,5 +416,85 @@ describe('rulebook battle behaviour (coop automaton and guardians)', () => {
     const s = guardianTurn([['goldDragon', 0, 4]]);
     const a = chooseBattleAction(s);
     expect(a.type).toBe('battleMove');
+  });
+});
+
+describe('crystals to collect', () => {
+  it('puts 2 crystals on the map for one Przymierze hero and 3 for two', () => {
+    const one = createGame(setup({ mapSize: 'long' }));
+    expect(Object.keys(one.crystals)).toHaveLength(2);
+    expect(one.crystalsNeeded).toBe(2);
+    const two = createGame(setup({ mapSize: 'short', seats: [
+      { name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' },
+      { name: 'B', faction: 'dawn', controller: 'bot', heroId: 'unicornKing' },
+    ] }));
+    expect(Object.keys(two.crystals)).toHaveLength(3);
+    expect(two.crystalsNeeded).toBe(3);
+  });
+});
+
+describe('arena movement path', () => {
+  it('walks hex by hex around obstacles and enemies, the shortest way; flyers go straight', () => {
+    const s = guardianFight('cyclops', [['ancientBear', 2, 8], ['pegasus', 2, 10]]);
+    const b = s.battle!;
+    b.obstacles = [arenaCell(3, 7), arenaCell(3, 9)];
+    const bear = b.units.ancientBear;
+    const reach = reachableCells(s, bear);
+    let detours = 0;
+    for (const [to, steps] of reach) {
+      const path = movePath(s, bear, to);
+      expect(path[0]).toBe(bear.pos);
+      expect(path[path.length - 1]).toBe(to);
+      expect(path.length - 1).toBe(steps);
+      for (let i = 1; i < path.length; i++) {
+        expect(distance(parseKey(path[i - 1]), parseKey(path[i]))).toBe(1);
+        expect(b.obstacles).not.toContain(path[i]);
+        expect(path[i]).not.toBe(b.units.cyclops.pos);
+      }
+      if (steps > distance(parseKey(bear.pos!), parseKey(to))) detours++;
+    }
+    expect(detours).toBeGreaterThan(0);
+    const peg = b.units.pegasus;
+    const far = [...reachableCells(s, peg).keys()].find((k) => distance(parseKey(peg.pos!), parseKey(k)) >= 2)!;
+    expect(movePath(s, peg, far)).toEqual([peg.pos, far]);
+  });
+});
+
+describe('difficulty and balance settings', () => {
+  it('fields at least rules.minEvilHeroes automaton heroes in coop (2 by default)', () => {
+    const count = (s: GameState) => Object.values(s.heroes).filter((h) => h.faction === 'horde').length;
+    expect(count(createGame(setup()))).toBe(2);
+    expect(count(createGame(setup({}, { minEvilHeroes: 1 })))).toBe(1);
+    expect(count(createGame(setup({}, { extraEvilHero: true })))).toBe(3);
+  });
+
+  it('hands the Przymierze its starting treasures on the larger maps', () => {
+    const held = (s: GameState, f: 'dawn' | 'horde') => s.factions[f].inventory.map((id) => s.items[id].kind);
+    expect(held(createGame(setup({ mapSize: 'medium' })), 'dawn')).toEqual([]);
+    const long = held(createGame(setup({ mapSize: 'long' })), 'dawn');
+    expect(long).toHaveLength(1);
+    expect(long).not.toContain('resurrection');
+    const veryLong = held(createGame(setup({ mapSize: 'veryLong' })), 'dawn');
+    expect(veryLong.filter((k) => k === 'resurrection')).toHaveLength(1);
+    expect(veryLong).toHaveLength(2);
+    expect(held(createGame(setup({ mapSize: 'veryLong' }, { treasures: false })), 'dawn')).toEqual([]);
+  });
+
+  it('gives the Horde two random treasures on the hard level, never more Eliksiry than the box holds', () => {
+    for (let seed = 1; seed <= 40; seed++) {
+      const s = createGame({ mode: 'coop', mapSize: 'veryLong', seed, seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }], ...levelSettings('hard', 'coop') });
+      expect(s.factions.horde.inventory).toHaveLength(2);
+      expect(Object.values(s.items).filter((it) => it.kind === 'resurrection').length).toBeLessThanOrEqual(RESURRECTION_CARDS);
+      const kinds = Object.values(s.items).map((it) => it.kind).filter((k) => k !== 'resurrection');
+      expect(new Set(kinds).size).toBe(kinds.length);
+    }
+  });
+
+  it('plays the easy level without the ritual and with reserve heroes', () => {
+    const { rules } = levelSettings('kids', 'coop');
+    expect(rules).toMatchObject({ ritual: false, heroReplacement: true, abilities: false });
+    const s = createGame(setup({}, rules));
+    for (const h of Object.values(s.heroes)) if (h.faction === 'horde') h.pos = treeKey();
+    expect(ritualFormed(s)).toBe(false);
   });
 });

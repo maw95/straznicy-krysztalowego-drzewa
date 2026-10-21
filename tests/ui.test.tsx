@@ -84,7 +84,7 @@ describe('setup screen simplifications', () => {
     for (const t of ['Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Dodatkowy bohater Hordy']) expect(btn(t).getAttribute('aria-pressed')).toBe('false');
     // Every option explains itself in a hover tooltip next to its button.
     const tip = (t: string) => btn(t).parentElement!.querySelector('[role="tooltip"]')?.textContent ?? '';
-    for (const t of ['Kooperacja (wszyscy przeciw AI)', 'Rywalizacja (dobro kontra zło)', 'Krótka', 'Bardzo długa', 'Dla dzieci', 'Normalny', 'Trudny', 'Własny', 'Osobna arena (3 na 3)', 'Na planszy głównej (pojedynek 1 na 1)', 'Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Dodatkowy bohater Hordy']) expect(tip(t).length).toBeGreaterThan(40);
+    for (const t of ['Kooperacja (wszyscy przeciw AI)', 'Rywalizacja (dobro kontra zło)', 'Krótka', 'Bardzo długa', 'Łatwy', 'Normalny', 'Trudny', 'Własny', 'Osobna arena (3 na 3)', 'Na planszy głównej (pojedynek 1 na 1)', 'Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Dodatkowy bohater Hordy']) expect(tip(t).length).toBeGreaterThan(40);
     expect(tip('Krótka')).toContain('limit 8 rund');
     await act(async () => fireEvent.click(btn('Same Eliksiry Odrodzenia')));
     await act(async () => fireEvent.click(btn('Rzut kością')));
@@ -103,17 +103,18 @@ describe('setup screen simplifications', () => {
     expect(btn('Trudny')!.getAttribute('aria-pressed')).toBe('true');
     await act(async () => fireEvent.click(btn('Rozpocznij grę')!));
     let game = (window as any).__game;
-    expect(Object.values(game.heroes).filter((h: any) => h.faction === 'horde')).toHaveLength(2);
+    expect(Object.values(game.heroes).filter((h: any) => h.faction === 'horde')).toHaveLength(3);
+    expect(game.factions.horde.inventory).toHaveLength(2);
     cleanup();
     const second = render(<StrictMode><App /></StrictMode>).container;
     const btn2 = (t: string) => [...second.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement | undefined;
     await act(async () => fireEvent.click(btn2('Rywalizacja (dobro kontra zło)')!));
     expect(btn2('Trudny')).toBeUndefined();
-    await act(async () => fireEvent.click(btn2('Dla dzieci')!));
+    await act(async () => fireEvent.click(btn2('Łatwy')!));
     await act(async () => fireEvent.click(btn2('Rozpocznij grę')!));
     game = (window as any).__game;
     expect(game.setup.battleMode).toBe('board');
-    expect(game.rules).toMatchObject({ abilities: false, useDice: false, extraEvilHero: false });
+    expect(game.rules).toMatchObject({ abilities: false, useDice: false, extraEvilHero: false, heroReplacement: true, ritual: false });
   });
 });
 

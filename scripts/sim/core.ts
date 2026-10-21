@@ -46,7 +46,7 @@ export function setupFor(v: Variant, seed: number): SetupOptions {
     abilities: v.option !== 'noabilities',
     treasures: v.option !== 'notreasures',
     useDice: v.option === 'dice',
-    heroReplacement: v.option === 'replacement',
+    heroReplacement: DEFAULT_RULES.heroReplacement || v.option === 'replacement',
   };
   return { mode, mapSize: v.size, battleMode: v.option === 'board' ? 'board' : 'arena', seed, seats, rules };
 }

@@ -25,10 +25,16 @@ export interface RulesConfig {
   extraEvilHero: boolean;
   /** Simplification: a dead hero's player takes over another unused hero of the faction. */
   heroReplacement: boolean;
+  /** Coop: the automaton fields at least this many Horde heroes (more when there are more players). */
+  minEvilHeroes: number;
+  /** Treasures the Horde holds from the start (difficulty): Eliksiry, other kinds, any random card. */
+  hordeStartTreasures?: { resurrections: number; others: number; random?: number };
   /** Evil heroes standing on the Tree stay there instead of chasing (spec 7: DO USTALENIA). */
   ritualHold: boolean;
   /** Rounds that all living evil heroes must spend on the Tree to complete the ritual. */
   ritualRounds: number;
+  /** The Horde's ritual at the Tree; off on the easy level (the Horde wins by the limit or by beating the heroes). */
+  ritual?: boolean;
   /** Walking units may pass through hexes occupied by allies (never through enemies). */
   passThroughAllies: boolean;
   /** Units standing in the way do not block ranged line of sight (only obstacles do). */
@@ -41,15 +47,16 @@ export interface RulesConfig {
 }
 
 export const DEFAULT_RULES: RulesConfig = {
-  heroMovePoints: 2,
+  heroMovePoints: 3,
   abilities: true,
   treasures: true,
   useDice: false,
   extraEvilHero: false,
   initiativeTie: 'defender',
   heroReplacement: false,
+  minEvilHeroes: 2,
   ritualHold: true,
-  ritualRounds: 2,
+  ritualRounds: 3,
   passThroughAllies: true,
   unitsBlockSight: false,
   battleRoundLimit: 40,
@@ -58,13 +65,22 @@ export const DEFAULT_RULES: RulesConfig = {
 /** Ready-made levels: the setup screen offers these first, single switches only under "Własne". */
 export type Level = 'kids' | 'normal' | 'hard';
 
+/**
+ * What each level changes against DEFAULT_RULES. Easy ("kids"): few rules to remember (duels on
+ * the board, no abilities, no die, no ritual) and a fallen hero's player takes a reserve hero.
+ * Hard exists for coop only: the automaton fields one Horde hero more and starts with two random treasures.
+ */
+export const LEVEL_RULES: Record<Level, { battleMode: BattleMode; rules: Partial<RulesConfig> }> = {
+  kids: { battleMode: 'board', rules: { abilities: false, useDice: false, heroReplacement: true, ritual: false } },
+  normal: { battleMode: 'arena', rules: {} },
+  hard: { battleMode: 'arena', rules: { extraEvilHero: true, hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+};
+
 export function levelSettings(level: Level, mode: Mode): { battleMode: BattleMode; rules: RulesConfig } {
-  if (level === 'kids') {
-    // Few rules to remember: duels on the board, no abilities, no die.
-    return { battleMode: 'board', rules: { ...DEFAULT_RULES, abilities: false, useDice: false } };
-  }
-  // Hard exists for coop only: the automaton fields one Horde hero more.
-  return { battleMode: 'arena', rules: { ...DEFAULT_RULES, extraEvilHero: level === 'hard' && mode === 'coop' } };
+  const { battleMode, rules } = LEVEL_RULES[level];
+  const out = { ...DEFAULT_RULES, ...rules };
+  if (mode !== 'coop') out.extraEvilHero = false;
+  return { battleMode, rules: out };
 }
 
 export interface SeatSetup {
