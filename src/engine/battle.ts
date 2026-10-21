@@ -22,10 +22,10 @@ export const MIDDLE_HALF = 8;
 
 export type ArenaId = 'dawn' | 'horde';
 
-/** Obstacles painted on each arena, as [col, half]. Start columns stay free. */
+/** Obstacles painted on each arena, as [col, half]: 7 pieces, two of them 2 cells wide. Start columns stay free. */
 export const ARENA_OBSTACLES: Record<ArenaId, Array<[number, number]>> = {
-  dawn: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [8, 14], [9, 13]],
-  horde: [[3, 3], [9, 3], [3, 7], [2, 8], [6, 8], [9, 9], [10, 10], [3, 13], [8, 14], [9, 13]],
+  dawn: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
+  horde: [[3, 3], [9, 3], [3, 7], [2, 8], [6, 8], [9, 9], [10, 10], [3, 13], [9, 13]],
 };
 
 export const arenaCell = (col: number, half: number): HexKey => key({ q: col, r: (half - col) / 2 });
@@ -194,9 +194,7 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
   let dmg = unitAttackBase(att) + att.status.nextAttackBonus - att.status.cursedNext;
   if (abilityActive(state, att)) {
     const ab = abilityOf(att);
-    // In a duel nobody moves, so the charge counts for the first attack of the battle instead.
-    const duelCharge = state.battle?.duel && !att.abilityUsed;
-    if (ab === 'lightCharge' && (movedDistance >= ABILITY.lightChargeMinMove || duelCharge)) dmg += ABILITY.lightChargeBonus;
+    if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += ABILITY.lightChargeBonus;
     if (useAbility && !att.abilityUsed) {
       if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += ABILITY.bloodCallBonus;
       if (ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus;
@@ -394,29 +392,33 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
 
 function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, useAbility: boolean, movedDistance: number) {
   const b = state.battle!;
-  let dmg = attackDamage(state, att, target, useAbility, movedDistance) + rollDie(state);
-  dmg = Math.max(0, dmg);
+  const base = attackDamage(state, att, target, useAbility, movedDistance);
+  const die = rollDie(state);
+  // The roll is logged so a blow that the die cut to 0 does not look like a bug.
+  if (state.rules.useDice) blog(state, `Rzut kością: ${die > 0 ? '+1' : die < 0 ? '−1' : '0'} (${base} ${die < 0 ? '−' : '+'} ${Math.abs(die)} = ${Math.max(0, base + die)}).`, 'damage');
+  let dmg = Math.max(0, base + die);
   // Opiekun Gaju: the bear takes a lethal blow aimed at an adjacent ally, if it survives it.
   const bear = livingUnits(b, target.side).find(
     (x) => x.id !== target.id && abilityOf(x) === 'guardian' && !x.abilityUsed && abilityActive(state, x) && adjacent(x.pos!, target.pos!),
   );
   let victim = target;
-  if (bear && dmg >= target.hp && dmg - Math.min(dmg, bear.status.damageReduction) < bear.hp) {
+  if (bear && dmg >= target.hp && dmg - ABILITY.guardianIgnore - Math.min(dmg, bear.status.damageReduction) < bear.hp) {
     bear.abilityUsed = true;
     victim = bear;
-    blog(state, `${unitName(bear)} przejmuje atak (Opiekun Gaju).`, 'ability');
-  }
-  // Opiekun Gaju in a duel: no ally to cover, so the bear shrugs off part of one blow.
-  if (b.duel && abilityOf(victim) === 'guardian' && !victim.abilityUsed && abilityActive(state, victim) && dmg >= 1) {
-    victim.abilityUsed = true;
-    const blocked = Math.min(ABILITY.guardianDuelBlock, dmg);
-    dmg -= blocked;
-    blog(state, `${unitName(victim)} osłania się (Opiekun Gaju): −${blocked} obrażeń.`, 'ability');
+    dmg = Math.max(0, dmg - ABILITY.guardianIgnore);
+    blog(state, `${unitName(bear)} przejmuje atak i ignoruje ${ABILITY.guardianIgnore} obrażenia (Opiekun Gaju).`, 'ability');
   }
   if (victim.status.shieldArmed) {
     victim.status.shieldArmed = false;
     blog(state, `Tarcza Strażnika chroni: ${unitName(victim)}.`, 'item');
+    recordRoll(state, att, victim, base, die, 0);
     return;
+  }
+  // Opiekun Gaju guards the bear itself too: a lethal blow loses part of its strength.
+  if (victim === target && abilityOf(victim) === 'guardian' && !victim.abilityUsed && abilityActive(state, victim) && dmg >= victim.hp) {
+    victim.abilityUsed = true;
+    dmg = Math.max(0, dmg - ABILITY.guardianIgnore);
+    blog(state, `${unitName(victim)} ignoruje ${ABILITY.guardianIgnore} obrażenia (Opiekun Gaju).`, 'ability');
   }
   if (abilityOf(victim) === 'hardHead' && !victim.abilityUsed && abilityActive(state, victim) && dmg >= 2) {
     victim.abilityUsed = true;
@@ -426,7 +428,15 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   }
   dmg = Math.max(0, dmg - victim.status.damageReduction);
   b.damageBy[att.id] = (b.damageBy[att.id] ?? 0) + Math.min(dmg, Math.max(0, victim.hp));
+  recordRoll(state, att, victim, base, die, dmg);
   dealDamage(state, victim, dmg, unitName(att));
+}
+
+function recordRoll(state: GameState, att: BattleUnit, victim: BattleUnit, attack: number, die: number, damage: number) {
+  const b = state.battle!;
+  const rolls = b.rolls ?? [];
+  const seq = (rolls[rolls.length - 1]?.seq ?? 0) + 1;
+  b.rolls = [...rolls, { seq, attackerId: att.id, targetId: victim.id, attack, die: state.rules.useDice ? die : null, damage }].slice(-4);
 }
 
 // ---------------------------------------------------------------- actions
@@ -500,10 +510,6 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       }
     }
   }
-  if (b.duel && ab === 'lightCharge' && !u.abilityUsed && abilityActive(state, u)) {
-    u.abilityUsed = true;
-    blog(state, `${unitName(u)}: ${UNITS[u.defId].abilityName} (pierwszy atak pojedynku).`, 'ability');
-  }
   u.status.nextAttackBonus = 0;
   u.status.cursedNext = 0;
   act.attacked = true;
@@ -542,7 +548,7 @@ export function battleAbility(state: GameState, targetId?: string) {
   const ab = abilityOf(u);
   if (u.abilityUsed || !abilityActive(state, u) || !FREE_ABILITIES.includes(ab)) throw new Error('Zdolność jest niedostępna.');
   if (ab === 'sunburst') {
-    for (const ally of livingUnits(b, u.side)) ally.status.nextAttackBonus += ABILITY.sunburstBonus;
+    for (const ally of livingUnits(b, u.side)) ally.status.nextAttackBonus += ally.id === u.id ? ABILITY.sunburstSelfBonus : ABILITY.sunburstBonus;
   } else if (ab === 'giftOfLife') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side !== u.side) throw new Error('Wybierz żyjącego sojusznika.');

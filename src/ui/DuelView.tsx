@@ -6,6 +6,7 @@ import { FACTION_NAMES, ITEMS, UNITS, type FactionId, type ItemKind } from '../e
 import { abilityActive, abilityOf, attackTargets, ATTACK_ABILITIES, canUseBattleItem, FREE_ABILITIES, unitSpeed } from '../engine/battle';
 import type { Action, BattleUnit, GameState } from '../engine/types';
 import { asset, Frame, HpBar, Medal, Ribbon } from './common';
+import { DamageDrop, DieFace, LastAttack, Marker } from './markers';
 import { UnitCard } from './UnitCard';
 
 /** Treasures that make sense with only two units on the field, and who they target. */
@@ -54,6 +55,21 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [b]);
 
+  // Die rolls: each new attack shows its die by the card that took the blow.
+  const rollSeen = useRef(b.rolls?.[b.rolls.length - 1]?.seq ?? 0);
+  const [rollPops, setRollPops] = useState<Array<{ key: number; id: string; die: number | null; damage: number }>>([]);
+  useEffect(() => {
+    const rolls = b.rolls ?? [];
+    const latest = rolls[rolls.length - 1]?.seq ?? 0;
+    if (latest < rollSeen.current) rollSeen.current = 0;
+    const pops = rolls.filter((r) => r.seq > rollSeen.current && (r.die !== null || r.damage === 0)).map((r) => ({ key: Math.random(), id: r.targetId, die: r.die, damage: r.damage }));
+    rollSeen.current = latest;
+    if (!pops.length) return;
+    setRollPops((p) => [...p, ...pops]);
+    window.setTimeout(() => setRollPops((p) => p.filter((x) => !pops.includes(x))), 2200);
+  }, [b]);
+  const lastRoll = b.rolls?.[b.rolls.length - 1];
+
   const enemy = active ? units.find((u) => u.id !== active.id)! : null;
   const canAttack = Boolean(myTurn && active && !act!.attacked && !act!.moveOnly && attackTargets(state, active).length);
   const ab = active ? abilityOf(active) : null;
@@ -82,13 +98,26 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
         </div>
         <div style={{ fontSize: 15, color: 'var(--muted)', textAlign: 'center' }}>
           Ż {u.hp}/{u.maxHp}
-          {u.abilityUsed ? ' · zdolność zużyta' : ''}
+          {u.abilityUsed && (
+            <>
+              {' · '}
+              <Marker name="ability_used" size={18} title="Zdolność zużyta" /> zdolność zużyta
+            </>
+          )}
         </div>
+        {rollPops
+          .filter((p) => p.id === u.id)
+          .map((p) => (
+            <div key={p.key} className="roll-pop" style={{ left: p.damage > 0 ? '28%' : '50%', top: '35%' }}>
+              {p.die !== null && <DieFace value={p.die} size={40} />}
+              {p.damage === 0 && <DamageDrop amount={0} size={44} />}
+            </div>
+          ))}
         {floats
           .filter((f) => f.id === u.id)
           .map((f) => (
             <div key={f.key} className={`dmg ${f.amount > 0 ? 'heal' : ''}`} style={{ top: '35%', fontSize: 40 }}>
-              {f.amount > 0 ? `+${f.amount}` : f.amount}
+              {f.amount > 0 ? `+${f.amount}` : <DamageDrop amount={-f.amount} size={44} />}
             </div>
           ))}
       </div>
@@ -105,6 +134,11 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
             <div style={{ fontWeight: 900, fontSize: 30, color: '#F3D27A', textShadow: '0 2px 0 #1E1204' }}>VS</div>
             {fighter(units[1])}
           </div>
+          {lastRoll && (
+            <div className="plate parch" style={{ padding: '4px 12px', fontSize: 15 }}>
+              <LastAttack roll={lastRoll} units={b.units} size={22} />
+            </div>
+          )}
           <div style={{ fontSize: 16, color: 'var(--muted)', textAlign: 'center' }}>
             {active ? `${UNITS[active.defId].name} (${FACTION_NAMES[active.side]}) — ${myTurn ? 'Twoja kolej' : 'ruch przeciwnika…'}` : 'Koniec pojedynku'}
           </div>

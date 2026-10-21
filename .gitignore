@@ -11,3 +11,6 @@ yarn-error.log*
 .vscode/*
 /dist
 /.tmp
+
+# Files sent by testers (private game logs and feedback)
+/tester-reports

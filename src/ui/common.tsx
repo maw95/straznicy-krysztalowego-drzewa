@@ -35,11 +35,6 @@ export function Frame(props: {
       <div className={`gi ${props.innerClass ?? 'slate'}`} style={props.innerStyle}>
         {props.children}
       </div>
-      {(['tl', 'tr', 'bl', 'br'] as const).map((c) => (
-        <svg key={c} className={`oc ${c}`} viewBox="0 0 72 72" aria-hidden="true">
-          <use href="#ornCorner" />
-        </svg>
-      ))}
       {props.crest && (
         <svg className="crest" viewBox="0 0 140 66" aria-hidden="true">
           <use href="#ornCrest" />

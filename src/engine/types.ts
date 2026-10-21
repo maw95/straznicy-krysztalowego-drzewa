@@ -8,16 +8,17 @@ export type InitiativeTieMode = 'rotating' | 'defender';
 
 /**
  * Rule switches and TEST parameters. Everything here can change without touching engine code.
- * The default game is the full one; switching off abilities, treasures or the die, or
- * switching on hero replacement, are optional simplifications that mix freely.
+ * The default game is the full one; switching off abilities or treasures, or switching on
+ * hero replacement, are optional simplifications; the damage die and an extra Horde hero
+ * are optional difficulties. All of them mix freely.
  */
 export interface RulesConfig {
   heroMovePoints: number;
   /** Unit abilities, including the guardians'. */
   abilities: boolean;
-  /** Treasures on the map (Eliksiry Odrodzenia included). */
+  /** All treasures on the map; false = only a few Eliksiry Odrodzenia (MapVariant.onlyResurrections). */
   treasures: boolean;
-  /** Damage die −1/0/+1. */
+  /** Damage die −1/0/+1 (a difficulty, off by default). */
   useDice: boolean;
   initiativeTie: InitiativeTieMode;
   /** Harder coop: the automaton fields one Horde hero more than there are Przymierze players. */
@@ -43,7 +44,7 @@ export const DEFAULT_RULES: RulesConfig = {
   heroMovePoints: 2,
   abilities: true,
   treasures: true,
-  useDice: true,
+  useDice: false,
   extraEvilHero: false,
   initiativeTie: 'defender',
   heroReplacement: false,
@@ -53,6 +54,18 @@ export const DEFAULT_RULES: RulesConfig = {
   unitsBlockSight: false,
   battleRoundLimit: 40,
 };
+
+/** Ready-made levels: the setup screen offers these first, single switches only under "Własne". */
+export type Level = 'kids' | 'normal' | 'hard';
+
+export function levelSettings(level: Level, mode: Mode): { battleMode: BattleMode; rules: RulesConfig } {
+  if (level === 'kids') {
+    // Few rules to remember: duels on the board, no abilities, no die.
+    return { battleMode: 'board', rules: { ...DEFAULT_RULES, abilities: false, useDice: false } };
+  }
+  // Hard exists for coop only: the automaton fields one Horde hero more.
+  return { battleMode: 'arena', rules: { ...DEFAULT_RULES, extraEvilHero: level === 'hard' && mode === 'coop' } };
+}
 
 export interface SeatSetup {
   name: string;
@@ -85,6 +98,11 @@ export interface HeroState {
   pos: HexKey;
   alive: boolean;
   crystals: string[];
+  /**
+   * A reserve hero not yet on the board: the free hexes nearest to where the fallen hero died.
+   * On its first turn the player picks one of them (free move); until then `pos` is not used.
+   */
+  entering?: HexKey[];
 }
 
 export interface FactionState {
@@ -198,6 +216,20 @@ export interface BattleState {
   winner: Side | 'draw' | null;
   /** Damage dealt per unit id during this battle (treasures count as 'item'). */
   damageBy: Record<string, number>;
+  /** The latest resolved attacks (newest last), so the screen can show every die roll. */
+  rolls?: AttackRoll[];
+}
+
+/** One resolved attack: the attack value, the die (null without dice) and the damage that landed. */
+export interface AttackRoll {
+  /** Grows with every attack in the battle, so the screen can tell new rolls apart. */
+  seq: number;
+  attackerId: string;
+  /** The unit that took the blow (the bear when Opiekun Gaju steps in). */
+  targetId: string;
+  attack: number;
+  die: number | null;
+  damage: number;
 }
 
 export type LogKind = 'info' | 'move' | 'battle' | 'damage' | 'death' | 'item' | 'crystal' | 'round' | 'victory' | 'ability';

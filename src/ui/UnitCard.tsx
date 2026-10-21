@@ -3,7 +3,7 @@
 // ability medallion, stat icons, and the text from the unit data.
 // Coordinates are in frame pixels (551×713), measured on each frame.
 
-import { UNITS } from '../engine/data';
+import { guardianDuelHp, UNITS } from '../engine/data';
 import { asset } from './common';
 
 interface Box {
@@ -119,7 +119,9 @@ export function cardSpace(bounds: Box) {
     circle: (cx: number, cy: number, r: number) => ({ position: 'absolute' as const, left: X(cx - r), top: Y(cy - r), width: 2 * r * kx, height: 2 * r * ky }),
   };
 }
+/** Role plate: the Horde has its own names for heroes and supports (the rules call them all heroes and supports). */
 const ROLE = { hero: 'Bohater', support: 'Pomocnik', neutral: 'Strażnik' } as const;
+const HORDE_ROLE = { hero: 'Wódz', support: 'Poplecznik', neutral: 'Strażnik' } as const;
 const STAT_LABEL = ['Życie', 'Atak', 'Szybkość'];
 const STAT_ICON = ['hp', 'attack', 'speed'];
 
@@ -138,6 +140,28 @@ function typeIcon(unitId: string): string {
 
 const centered = { display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' as const };
 
+/**
+ * Largest font (in frame pixels) at which `text` fits a box when wrapped word by word.
+ * Glyph widths are estimated (about 0.47 em for this serif at weight 600).
+ */
+export function fitFont(text: string, width: number, height: number, max = 26, min = 13): number {
+  const words = text.split(/\s+/);
+  for (let size = max; size > min; size -= 0.5) {
+    const charW = size * 0.47;
+    let lines = 1;
+    let line = 0;
+    for (const w of words) {
+      const len = w.length * charW;
+      if (line && line + charW + len > width) {
+        lines++;
+        line = len;
+      } else line += (line ? charW : 0) + len;
+    }
+    if (lines * size * 1.12 <= height) return size;
+  }
+  return min;
+}
+
 export function UnitCard({ unitId, width = 300, hp, attack, speed }: { unitId: string; width?: number; hp?: number; attack?: number; speed?: number }) {
   const def = UNITS[unitId];
   const L = frameFor(unitId);
@@ -146,7 +170,9 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed }: { unitId: s
   const nameW = L.name.x1 - L.name.x0;
   const nameSize = Math.min(40, (nameW / Math.max(8, def.name.length)) * 2.05);
   const values = [hp ?? def.hp, attack ?? def.attack, speed ?? def.speed];
-  const descSize = def.abilityText.length > 85 ? 14.5 : def.abilityText.length > 60 ? 15.5 : 16.5;
+  // The description starts right of the ability medallion and gets the largest font that fits.
+  const desc = { ...L.desc, x0: Math.max(L.desc.x0, L.ability.cx + L.ability.r + 8), y0: L.desc.y0 - 4, y1: L.desc.y1 + 3 };
+  const descSize = fitFont(def.abilityText, (desc.x1 - desc.x0) * kx - 16, (desc.y1 - desc.y0) * ky);
   return (
     <div className="card-sheen" style={{ position: 'relative', width, height: CARD_H * scale, flex: 'none', filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.6))' }}>
       <div style={{ position: 'absolute', left: 0, top: 0, width: FRAME_W, height: CARD_H, overflow: 'hidden', transform: `scale(${scale})`, transformOrigin: '0 0', fontFamily: "'Crimson Pro', Georgia, serif" }}>
@@ -155,7 +181,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed }: { unitId: s
 
         <div style={{ ...at(L.name), ...centered, fontWeight: 800, fontSize: nameSize, lineHeight: 1, color: '#20160C', whiteSpace: 'nowrap', letterSpacing: '0.01em' }}>{def.name}</div>
         <div style={{ ...at(L.role), ...centered, fontWeight: 800, fontSize: 19, letterSpacing: '0.1em', textTransform: 'uppercase', color: L.roleOnDark ? '#F7EDD2' : '#2B1D10', textShadow: L.roleOnDark ? '0 1px 0 rgba(0,0,0,0.6)' : 'none' }}>
-          {ROLE[def.kind]}
+          {(def.side === 'horde' ? HORDE_ROLE : ROLE)[def.kind]}
         </div>
 
         <img
@@ -172,6 +198,10 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed }: { unitId: s
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, height: h * 0.64 }}>
                 <img src={asset(`cards/stats/${STAT_ICON[i]}.png`)} alt="" style={{ width: h * 0.56, height: h * 0.56, objectFit: 'contain' }} />
                 <span style={{ fontWeight: 800, fontSize: h * 0.56, lineHeight: 1, color: '#17100A' }}>{values[i]}</span>
+                {/* Guardians fight a lone hero (duel on the board) with less Życie. */}
+                {i === 0 && def.kind === 'neutral' && hp === undefined && (
+                  <span title="Życie w pojedynku na planszy" style={{ fontWeight: 700, fontSize: h * 0.3, lineHeight: 1, color: '#3A2A16', alignSelf: 'flex-end' }}>({guardianDuelHp(unitId)})</span>
+                )}
               </div>
               <div style={{ fontWeight: 700, fontSize: 15, lineHeight: 1, color: '#2B1D10' }}>{STAT_LABEL[i]}</div>
             </div>
@@ -184,7 +214,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed }: { unitId: s
           style={{ ...circle(L.ability.cx, L.ability.cy, L.ability.r), borderRadius: '50%' }}
         />
         <div style={{ ...at(L.band), ...centered, fontWeight: 800, fontSize: def.abilityName.length > 15 ? 17 : 20, letterSpacing: def.abilityName.length > 15 ? '0.05em' : '0.1em', textTransform: 'uppercase', lineHeight: 1, paddingTop: 1, boxSizing: 'border-box', color: '#F7EDD2', textShadow: '0 2px 0 rgba(0,0,0,0.6)', whiteSpace: 'nowrap' }}>{def.abilityName}</div>
-        <div style={{ ...at(L.desc), ...centered, padding: '0 10px', boxSizing: 'border-box', fontWeight: 600, fontSize: descSize, lineHeight: 1.18, color: '#1A1209' }}>{def.abilityText}</div>
+        <div style={{ ...at(desc), ...centered, padding: '0 8px', boxSizing: 'border-box', fontWeight: 600, fontSize: descSize, lineHeight: 1.12, color: '#1A1209' }}>{def.abilityText}</div>
       </div>
     </div>
   );

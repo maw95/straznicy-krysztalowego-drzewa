@@ -1,0 +1,171 @@
+{
+ "setup": {
+  "mode": "pvp",
+  "mapSize": "medium",
+  "battleMode": "arena",
+  "seed": 490552,
+  "seats": [
+   {
+    "name": "Gracz 1",
+    "faction": "dawn",
+    "controller": "human",
+    "heroId": "ancientBear"
+   },
+   {
+    "name": "Gracz 2",
+    "faction": "horde",
+    "controller": "bot",
+    "heroId": "blackDragon"
+   }
+  ],
+  "rules": {
+   "heroMovePoints": 2,
+   "abilities": true,
+   "treasures": true,
+   "useDice": true,
+   "extraEvilHero": false,
+   "initiativeTie": "defender",
+   "heroReplacement": false,
+   "ritualHold": true,
+   "ritualRounds": 2,
+   "passThroughAllies": true,
+   "unitsBlockSight": false,
+   "battleRoundLimit": 40
+  }
+ },
+ "actions": [
+  {
+   "type": "moveHero",
+   "to": "-6,6"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-1,7"
+  },
+  {
+   "type": "moveHero",
+   "to": "-2,7"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-5,5"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-3,7"
+  },
+  {
+   "type": "moveHero",
+   "to": "-3,6"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-4,4"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-4,6"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-3,4"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-4,5"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-2,4"
+  },
+  {
+   "type": "selectSupports",
+   "faction": "dawn",
+   "supportIds": [
+    "elfDruid",
+    "nymph"
+   ]
+  },
+  {
+   "type": "deployUnits",
+   "faction": "dawn",
+   "positions": {
+    "ancientBear": "0,3",
+    "elfDruid": "0,2",
+    "nymph": "0,4"
+   }
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": true
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "11,-2"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": false
+  }
+ ],
+ "reports": [
+  {
+   "createdAt": "2026-10-21T09:35:39.555Z",
+   "actionIndex": 27,
+   "round": 5,
+   "screen": "battle:fight",
+   "text": "w tej walce 2 razy zaatakowałem hydrę elfem, drugi atak nie odjął jej życia - po pierwszym ataku miała 19 życia, po drugim też",
+   "recentLog": [
+    "[5] Runda 5 z 12.",
+    "[5] Prastary Niedźwiedź wyzywa strażnika kryształu: Hydra z Zatopionych Ruin.",
+    "[5] Przymierze Świtu ustawia swoje jednostki.",
+    "[5] Bitwa się rozpoczyna.",
+    "[5] Runda bitwy 1.",
+    "[5] Elf Druid używa zdolności: Splątane Korzenie.",
+    "[5] Elf Druid atakuje: Hydra z Zatopionych Ruin.",
+    "[5] Elf Druid → Hydra z Zatopionych Ruin: 2 obrażeń (Ż 19/21).",
+    "[5] Hydra z Zatopionych Ruin: −2 S w następnej aktywacji.",
+    "[5] Runda bitwy 2.",
+    "[5] Elf Druid atakuje: Hydra z Zatopionych Ruin.",
+    "[5] Elf Druid → Hydra z Zatopionych Ruin: 0 obrażeń (Ż 19/21)."
+   ],
+   "viewport": "2007×1035",
+   "userAgent": "Mozilla/5.0 (X11; Linux x86_64; rv:158.0) Gecko/20100101 Firefox/158.0"
+  }
+ ]
+}

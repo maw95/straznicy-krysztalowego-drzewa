@@ -6,6 +6,7 @@ import {
   FACTION_HEROES,
   FACTION_NAMES,
   FACTION_SUPPORTS,
+  guardianDuelHp,
   ITEMS,
   MAP_VARIANTS,
   NON_RESURRECTION_ITEMS,
@@ -30,7 +31,7 @@ import {
   startBattleFight,
   arenaObstacles,
 } from './battle';
-import type { HexKey } from './hex';
+import { distance, parseKey, type HexKey } from './hex';
 import { generateMap, homeKey, mapNeighbors, revealAround, tileCost, treeKey } from './map';
 import { Rng } from './rng';
 import type { Action, BattleState, GameState, HeroState, LogKind, Player, SetupOptions } from './types';
@@ -52,9 +53,11 @@ export function createGame(setup: SetupOptions): GameState {
 
   // Treasure pool: all Eliksiry Odrodzenia are set aside, then exactly the required
   // number goes back together with random other treasures (spec section 4).
-  // Without treasures the map simply has no treasure tiles.
+  // The simple option ("only Eliksiry Odrodzenia") puts a few elixirs on the map and nothing else.
   const others = rng.shuffle(NON_RESURRECTION_ITEMS).slice(0, variant.otherTreasures);
-  const pool: ItemKind[] = setup.rules.treasures ? rng.shuffle([...Array(variant.resurrections).fill('resurrection'), ...others]) : [];
+  const pool: ItemKind[] = setup.rules.treasures
+    ? rng.shuffle([...Array(variant.resurrections).fill('resurrection'), ...others])
+    : Array(variant.onlyResurrections).fill('resurrection');
   const map = generateMap(setup.mapSize, rng, pool.length);
 
   const state: GameState = {
@@ -162,10 +165,56 @@ export function activeHero(state: GameState): HeroState | null {
 }
 
 export function heroesAt(state: GameState, k: HexKey): HeroState[] {
-  return Object.values(state.heroes).filter((h) => h.alive && h.pos === k);
+  return Object.values(state.heroes).filter((h) => h.alive && !h.entering && h.pos === k);
 }
 
-export type MoveKind = 'move' | 'attackHero' | 'attackGuardian';
+/**
+ * The ritual stands when one living Horde hero is on the Tree and every other living Horde hero
+ * is on a hex next to it (one hero per hex, so they gather around the Tree).
+ */
+export function ritualFormed(state: GameState): boolean {
+  const tree = treeKey();
+  const evil = Object.values(state.heroes).filter((h) => h.faction === 'horde' && h.alive);
+  if (!evil.length || evil.some((h) => h.entering) || !evil.some((h) => h.pos === tree)) return false;
+  const around = new Set(mapNeighbors(state.tiles, tree));
+  return evil.every((h) => h.pos === tree || around.has(h.pos));
+}
+
+/** Where a Horde hero should stand for the ritual: the Tree if no other Horde hero holds it, else a free hex next to it. */
+export function ritualSpot(state: GameState, hero: HeroState): HexKey | null {
+  const tree = treeKey();
+  const holder = heroesAt(state, tree).find((h) => h.faction === 'horde' && h.id !== hero.id);
+  if (!holder) return tree;
+  if (mapNeighbors(state.tiles, tree).includes(hero.pos)) return hero.pos;
+  const free = mapNeighbors(state.tiles, tree).filter((k) => canStand(state, k, 'horde', hero.id));
+  return free.sort((a, b) => distance(parseKey(a), parseKey(hero.pos)) - distance(parseKey(b), parseKey(hero.pos)))[0] ?? null;
+}
+
+/** Free hexes next to `hero` where a hero it revives may stand. */
+export function reviveSpots(state: GameState, hero: HeroState): HexKey[] {
+  return mapNeighbors(state.tiles, hero.pos).filter((k) => canStand(state, k, hero.faction));
+}
+
+/** One hero per hex: only a faction's own base may hold several of its heroes. */
+export function canStand(state: GameState, k: HexKey, faction: FactionId, heroId?: string): boolean {
+  const t = state.tiles[k];
+  if (tileCost(t) === null || (t.crystalId && state.crystals[t.crystalId].guardian)) return false;
+  const others = heroesAt(state, k).filter((h) => h.id !== heroId);
+  if (others.some((h) => h.faction !== faction)) return false;
+  return !others.length || t.home === faction;
+}
+
+/** Free hexes (see canStand) nearest to `from`. */
+export function nearestFreeHexes(state: GameState, from: HexKey, faction: FactionId): HexKey[] {
+  const origin = parseKey(from);
+  const free = Object.values(state.tiles)
+    .filter((t) => canStand(state, t.key, faction))
+    .map((t) => ({ k: t.key, d: distance(origin, parseKey(t.key)) }));
+  const best = Math.min(...free.map((f) => f.d));
+  return free.filter((f) => f.d === best).map((f) => f.k);
+}
+
+export type MoveKind = 'move' | 'attackHero' | 'attackGuardian' | 'enter';
 
 export interface HeroMove {
   to: HexKey;
@@ -177,12 +226,15 @@ export interface HeroMove {
 export function legalHeroMoves(state: GameState): HeroMove[] {
   const hero = activeHero(state);
   if (!hero || state.phase !== 'adventure' || state.turnBattleDone || !hero.alive) return [];
+  if (hero.entering) return hero.entering.map((to) => ({ to, cost: 0, kind: 'enter' as const }));
   const out: HeroMove[] = [];
   for (const n of mapNeighbors(state.tiles, hero.pos)) {
     const tile = state.tiles[n];
     const cost = tileCost(tile);
     if (cost === null || !tile.revealed) continue;
     const enemies = heroesAt(state, n).filter((h) => h.faction !== hero.faction);
+    // One hero per hex: a hex held by an ally is closed (except the faction's own base).
+    if (!enemies.length && heroesAt(state, n).length && tile.home !== hero.faction) continue;
     const crystal = tile.crystalId ? state.crystals[tile.crystalId] : null;
     if (enemies.length) {
       // Attacking needs at least 1 movement point and ends the hero's movement.
@@ -250,8 +302,13 @@ function moveHero(state: GameState, to: HexKey) {
   const move = legalHeroMoves(state).find((m) => m.to === to);
   if (!move) throw new Error('Nie można wejść na to pole.');
   const name = UNITS[hero.id].name;
+  if (move.kind === 'enter') {
+    enterBoard(state, hero, to);
+    return;
+  }
   if (move.kind === 'attackHero') {
-    const defender = heroesAt(state, to).find((h) => h.faction !== hero.faction)!;
+    // Several defenders (only in a base): the one with the most Życie stands up to fight.
+    const defender = heroesAt(state, to).filter((h) => h.faction !== hero.faction).sort((a, b) => UNITS[b.id].hp - UNITS[a.id].hp)[0];
     log(state, 'battle', `${name} atakuje: ${UNITS[defender.id].name}.`);
     const from = hero.pos;
     hero.pos = to;
@@ -275,6 +332,28 @@ function moveHero(state: GameState, to: HexKey) {
   arriveAt(state, hero);
 }
 
+/** A reserve hero steps onto the board at the chosen hex (no movement points spent). */
+function enterBoard(state: GameState, hero: HeroState, to: HexKey) {
+  delete hero.entering;
+  hero.pos = to;
+  const revealed = revealAround(state, to);
+  log(state, 'move', `${UNITS[hero.id].name} wkracza na pole: ${TERRAIN_NAMES[state.tiles[to].terrain]}${revealed.length ? ` (odkryto ${revealed.length})` : ''}.`);
+  arriveAt(state, hero);
+}
+
+/** A Przymierze hero picks up every free crystal lying on its hex. */
+function pickUpCrystals(state: GameState, hero: HeroState) {
+  const tile = state.tiles[hero.pos];
+  for (const c of Object.values(state.crystals)) {
+    if (c.at === hero.pos && !c.guardian) {
+      c.at = `hero:${hero.id}`;
+      hero.crystals.push(c.id);
+      if (tile.crystalId === c.id) tile.crystalId = null;
+      log(state, 'crystal', `${UNITS[hero.id].name} podnosi kryształ.`);
+    }
+  }
+}
+
 /** Pick-ups and delivery after a hero ends up on a hex. */
 function arriveAt(state: GameState, hero: HeroState) {
   const tile = state.tiles[hero.pos];
@@ -289,14 +368,7 @@ function arriveAt(state: GameState, hero: HeroState) {
     log(state, 'item', `Skarb (${UNITS[hero.id].name}): ${ITEMS[item.kind].name}.`, hero.faction);
   }
   if (hero.faction === 'dawn') {
-    for (const c of Object.values(state.crystals)) {
-      if (c.at === hero.pos && !c.guardian) {
-        c.at = `hero:${hero.id}`;
-        hero.crystals.push(c.id);
-        if (tile.crystalId === c.id) tile.crystalId = null;
-        log(state, 'crystal', `${UNITS[hero.id].name} podnosi kryształ.`);
-      }
-    }
+    pickUpCrystals(state, hero);
     if (tile.tree && hero.crystals.length) {
       const blocked = heroesAt(state, hero.pos).some((h) => h.faction === 'horde');
       if (!blocked) {
@@ -312,6 +384,10 @@ function arriveAt(state: GameState, hero: HeroState) {
 
 function endTurn(state: GameState) {
   if (state.phase !== 'adventure') throw new Error('Najpierw zakończ bitwę.');
+  // A reserve that could have come in but did not choose takes the first of its hexes.
+  // (One that took over a turn already spent on a battle waits for its own next turn.)
+  const hero = activeHero(state);
+  if (hero?.entering && !state.turnBattleDone) enterBoard(state, hero, hero.entering[0]);
   advanceTurn(state);
 }
 
@@ -336,9 +412,7 @@ function advanceTurn(state: GameState) {
 }
 
 function endRound(state: GameState) {
-  const tree = treeKey();
-  const evil = Object.values(state.heroes).filter((h) => h.faction === 'horde' && h.alive);
-  if (evil.length && evil.every((h) => h.pos === tree)) {
+  if (ritualFormed(state)) {
     state.ritual += 1;
     log(state, 'round', `Rytuał przy Drzewie trwa (${state.ritual}/${state.rules.ritualRounds}).`);
     if (state.ritual >= state.rules.ritualRounds) {
@@ -405,8 +479,13 @@ function useMapItem(state: GameState, itemId: string, targets: HexKey[] | undefi
     const f = state.factions[hero.faction];
     const deadHero = unitId ? state.heroes[unitId] : undefined;
     if (deadHero && deadHero.faction === hero.faction && !deadHero.alive) {
+      // The revived hero stands on a free hex next to the one who drinks the elixir (one hero per hex).
+      const spots = reviveSpots(state, hero);
+      const to = targets?.[0] ?? spots[0];
+      if (!to || !spots.includes(to)) throw new Error(spots.length ? 'Wskrzeszony bohater staje na wolnym polu obok.' : 'Obok nie ma wolnego pola dla wskrzeszonego bohatera.');
       deadHero.alive = true;
-      deadHero.pos = hero.pos;
+      deadHero.pos = to;
+      revealAround(state, to);
       // The revived hero joins the turn order from the next round.
       log(state, 'item', `${UNITS[hero.id].name} używa Eliksiru Odrodzenia i wskrzesza: ${UNITS[deadHero.id].name}.`);
     } else if (unitId && f.supportsDead.includes(unitId)) {
@@ -458,7 +537,12 @@ function startBattle(state: GameState, s: BattleStart) {
   };
   b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction);
   if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction);
-  if (s.neutralId) b.units[s.neutralId] = makeBattleUnit(s.neutralId, 'neutral');
+  if (s.neutralId) {
+    const g = makeBattleUnit(s.neutralId, 'neutral');
+    // One hero alone against a guardian: the guardian fights with half its Życie.
+    if (b.duel) g.hp = g.maxHp = guardianDuelHp(s.neutralId);
+    b.units[s.neutralId] = g;
+  }
   state.phase = 'battle';
   state.battle = b;
   state.turnBattleDone = true;
@@ -517,6 +601,7 @@ function finalizeBattle(state: GameState) {
       if (crystal) {
         crystal.guardian = null;
         log(state, 'crystal', `Strażnik pokonany. Kryształ jest wolny.`);
+        guardianHoard(state, b.attackerHero);
       }
     } else {
       state.stats.neutralWipes += 1;
@@ -550,6 +635,27 @@ function finalizeBattle(state: GameState) {
   if (!active || !active.alive) advanceTurn(state);
 }
 
+/**
+ * Guardians hoard treasure: a beaten guardian leaves one, drawn from the treasures not yet
+ * in play (Eliksiry Odrodzenia stay out of this draw). Not in the "only Eliksiry Odrodzenia" option.
+ */
+function guardianHoard(state: GameState, heroId: string) {
+  if (!state.rules.treasures) return;
+  const used = new Set(Object.values(state.items).map((i) => i.kind));
+  const left = NON_RESURRECTION_ITEMS.filter((k) => !used.has(k) && ITEMS[k].usableIn.includes('battle'));
+  if (!left.length) return;
+  const rng = new Rng(state.rng);
+  const kind = rng.pick(left);
+  state.rng = rng.state;
+  const hero = state.heroes[heroId];
+  const id = `it${Object.keys(state.items).length + 1}`;
+  state.items[id] = { id, kind, owner: hero.faction, foundBy: hero.id };
+  state.factions[hero.faction].inventory.push(id);
+  state.stats.treasuresCollected[hero.faction] += 1;
+  log(state, 'item', `Strażnik zostawia swój skarb.`);
+  log(state, 'item', `Skarb strażnika (${UNITS[hero.id].name}): ${ITEMS[kind].name}.`, hero.faction);
+}
+
 function killHero(state: GameState, heroId: string, at: HexKey) {
   const hero = state.heroes[heroId];
   if (!hero.alive) return;
@@ -568,6 +674,11 @@ function killHero(state: GameState, heroId: string, at: HexKey) {
   if (state.rules.heroReplacement && (hero.playerId || automaton) && f.unusedHeroes.length) {
     const next = f.unusedHeroes[0];
     addHero(state, next, hero.faction, hero.playerId);
+    // The reserve comes in near where the fallen hero died: on the nearest free hex,
+    // or the player picks one of several equally near on the reserve's first turn.
+    const spots = nearestFreeHexes(state, at, hero.faction);
+    if (spots.length === 1) enterBoard(state, state.heroes[next], spots[0]);
+    else if (spots.length) state.heroes[next].entering = spots;
     hero.playerId = null;
     state.turnOrder = state.turnOrder.map((id) => (id === heroId ? next : id));
     log(state, 'info', automaton ? `Automat zła wprowadza bohatera: ${UNITS[next].name}.` : `Gracz przejmuje bohatera: ${UNITS[next].name}.`);
@@ -600,6 +711,8 @@ export function applyAction(prev: GameState, action: Action): GameState {
       applyBattleAction(state, action);
   }
   if (state.phase === 'battle' && state.battle && checkBattleEnd(state)) finalizeBattle(state);
+  // A free crystal never lies under a Przymierze hero: whoever stands there takes it at once.
+  if (state.phase === 'adventure') for (const h of Object.values(state.heroes)) if (h.alive && h.faction === 'dawn') pickUpCrystals(state, h);
   state.actionCount += 1;
   return state;
 }

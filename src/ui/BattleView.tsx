@@ -20,10 +20,11 @@ import {
   unitSpeed,
 } from '../engine/battle';
 import { distance, parseKey, type HexKey } from '../engine/hex';
-import type { Action, BattleUnit, GameState } from '../engine/types';
+import type { Action, AttackRoll, BattleUnit, GameState } from '../engine/types';
 import { hoverCard } from './hover';
 import { asset, Frame, HpBar, Medal, Portrait, Ribbon, SIDE_RING } from './common';
 import { ART_SIZE, CANVAS_H, CANVAS_W, cellCenter, hexPoints } from './arenaGeometry';
+import { DamageDrop, DieFace, LastAttack, Marker, type MarkerName } from './markers';
 
 /** Box a unit token is laid out in, centred on its cell. */
 const W = 66;
@@ -151,6 +152,28 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     }, 1150);
     return () => window.clearTimeout(t);
   }, [b]);
+
+  // Die rolls: each new attack shows its die over the unit that took the blow
+  // (a blow cut to 0 shows a 0 drop too, since no HP changed).
+  const rollSeen = useRef(b.rolls?.[b.rolls.length - 1]?.seq ?? 0);
+  const [rollPops, setRollPops] = useState<Array<{ key: number; roll: AttackRoll; x: number; y: number }>>([]);
+  useEffect(() => {
+    const rolls = b.rolls ?? [];
+    const latest = rolls[rolls.length - 1]?.seq ?? 0;
+    if (latest < rollSeen.current) rollSeen.current = 0; // a new battle starts counting again
+    const fresh = rolls.filter((r) => r.seq > rollSeen.current);
+    rollSeen.current = latest;
+    const pops = fresh.flatMap((roll) => {
+      const where = b.units[roll.targetId].pos ?? lastSeen.current[roll.targetId]?.pos;
+      if (!where || (roll.die === null && roll.damage > 0)) return [];
+      const { x, y } = cellPos(where);
+      return [{ key: Math.random(), roll, x: x + W / 2 - (roll.damage > 0 ? 34 : 0), y: y + H / 2 - 44 }];
+    });
+    if (!pops.length) return;
+    setRollPops((p) => [...p, ...pops]);
+    window.setTimeout(() => setRollPops((p) => p.filter((x) => !pops.includes(x))), 2200);
+  }, [b]);
+  const lastRoll = b.rolls?.[b.rolls.length - 1];
   const [showThreat, setShowThreat] = useState(false);
 
   useLayoutEffect(() => {
@@ -365,7 +388,12 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                 <HpBar hp={u.hp} max={u.maxHp} />
                 <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 2 }}>
                   Ż {u.hp}/{u.maxHp} · A {UNITS[u.defId].attack + u.status.battleAttackBonus} · S {unitSpeed(u)}
-                  {u.abilityUsed ? ' · zdolność zużyta' : ''}
+                  {u.abilityUsed && (
+                    <>
+                      {' · '}
+                      <Marker name="ability_used" size={16} title="Zdolność zużyta" /> zużyta
+                    </>
+                  )}
                 </div>
                 <StatusChips u={u} />
               </div>
@@ -459,9 +487,14 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                     {statusList(u).length > 0 && (
                       <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', pointerEvents: 'none', display: 'flex', gap: 1, zIndex: 3 }}>
                         {statusList(u).map((st) => (
-                          <StatusBadge key={st.label} st={st} />
+                          <StatusBadge key={st.label} st={st} size={25} />
                         ))}
                       </div>
+                    )}
+                    {u.abilityUsed && (
+                      <span style={{ position: 'absolute', left: -12, bottom: -2, pointerEvents: 'none', zIndex: 3 }}>
+                        <Marker name="ability_used" size={24} title="Zdolność zużyta" />
+                      </span>
                     )}
                     <div className="plate parch" style={{ position: 'absolute', right: -16, bottom: 0, height: 22, padding: '0 6px 0 4px', display: 'flex', alignItems: 'center', gap: 3, fontWeight: 800, fontSize: 16, pointerEvents: 'none' }}>
                       <svg aria-hidden="true" width="14" height="14" viewBox="0 0 64 64"><use href="#iHeart" /></svg>
@@ -516,11 +549,22 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                     />
                   );
                 })}
-              {floaters.map((f) => (
-                <div key={f.key} className={`dmg ${f.amount > 0 ? 'heal' : ''}`} style={{ left: f.x, top: f.y }}>
-                  {f.amount > 0 ? `+${f.amount}` : f.amount}
+              {rollPops.map((p) => (
+                <div key={p.key} className="roll-pop" style={{ left: p.x, top: p.y }}>
+                  {p.roll.die !== null && <DieFace value={p.roll.die} size={28} />}
+                  {p.roll.damage === 0 && <DamageDrop amount={0} size={28} />}
                 </div>
               ))}
+              {floaters.map((f) => (
+                <div key={f.key} className={`dmg ${f.amount > 0 ? 'heal' : ''}`} style={{ left: f.x, top: f.y }}>
+                  {f.amount > 0 ? `+${f.amount}` : <DamageDrop amount={-f.amount} size={26} />}
+                </div>
+              ))}
+              {lastRoll && b.units[lastRoll.attackerId] && (
+                <div className="plate parch" style={{ position: 'absolute', left: 14, top: 18, padding: '4px 10px', fontSize: 14, zIndex: 6, pointerEvents: 'none', maxWidth: '60%' }}>
+                  <LastAttack roll={lastRoll} units={b.units} size={20} />
+                </div>
+              )}
               <button
                 className={`btn plate parch ${showThreat ? 'on' : ''}`}
                 title="Pokaż, gdzie dosięgną Cię wrogowie (T)"
@@ -687,6 +731,8 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
 interface StatusInfo {
   label: string;
   glyph: string;
+  /** Board-game marker for this state, when there is one. */
+  marker?: MarkerName;
   buff: boolean;
   /** Small value shown on the badge (e.g. −2, +1). */
   value?: string;
@@ -696,13 +742,15 @@ interface StatusInfo {
 function statusList(u: BattleUnit): StatusInfo[] {
   const s = u.status;
   const out: StatusInfo[] = [];
-  if (s.rootedNext) out.push({ label: 'Unieruchomiony w następnej aktywacji (Pajęcze Sidła)', glyph: 'sWeb', buff: false });
-  if (s.slowNext) out.push({ label: `−${s.slowNext} S w następnej aktywacji (Splątane Korzenie)`, glyph: 'sRoot', buff: false, value: `−${s.slowNext}` });
-  if (s.cursedNext) out.push({ label: `−${s.cursedNext} A przy następnym ataku (Złowroga Klątwa)`, glyph: 'sSkull', buff: false, value: `−${s.cursedNext}` });
-  if (s.nextAttackBonus) out.push({ label: `+${s.nextAttackBonus} A przy następnym ataku`, glyph: 'sBlade', buff: true, value: `+${s.nextAttackBonus}` });
-  if (s.shieldArmed) out.push({ label: 'Tarcza Strażnika: neguje następny atak', glyph: 'sGuard', buff: true });
+  // A marker carries its own number; the badge repeats it only when the value differs.
+  if (s.rootedNext) out.push({ label: 'Unieruchomiony w następnej aktywacji (Pajęcze Sidła)', glyph: 'sWeb', marker: 'rooted', buff: false });
+  if (s.slowNext) out.push({ label: `−${s.slowNext} S w następnej aktywacji (Splątane Korzenie)`, glyph: 'sRoot', marker: 'slowed', buff: false, value: s.slowNext !== 2 ? `−${s.slowNext}` : undefined });
+  if (s.cursedNext) out.push({ label: `−${s.cursedNext} A przy następnym ataku (Złowroga Klątwa)`, glyph: 'sSkull', marker: 'cursed', buff: false, value: s.cursedNext !== 1 ? `−${s.cursedNext}` : undefined });
+  if (s.nextAttackBonus) out.push({ label: `+${s.nextAttackBonus} A przy następnym ataku`, glyph: 'sBlade', marker: 'attack_up', buff: true, value: s.nextAttackBonus !== 1 ? `+${s.nextAttackBonus}` : undefined });
+  if (s.shieldArmed) out.push({ label: 'Tarcza Strażnika: neguje następny atak', glyph: 'sGuard', marker: 'shield', buff: true });
+  if (u.maxHp > UNITS[u.defId].hp) out.push({ label: `+${u.maxHp - UNITS[u.defId].hp} maks. Ż do końca bitwy (Eliksir Żywotności)`, glyph: 'sGuard', marker: 'vitality', buff: true, value: u.maxHp - UNITS[u.defId].hp !== 4 ? `+${u.maxHp - UNITS[u.defId].hp}` : undefined });
   if (s.battleAttackBonus) out.push({ label: `+${s.battleAttackBonus} A do końca bitwy`, glyph: 'sBlade', buff: true, value: `+${s.battleAttackBonus}` });
-  if (s.battleSpeedBonus) out.push({ label: `+${s.battleSpeedBonus} S do końca bitwy`, glyph: 'sBoltG', buff: true, value: `+${s.battleSpeedBonus}` });
+  if (s.battleSpeedBonus) out.push({ label: `+${s.battleSpeedBonus} S do końca bitwy`, glyph: 'sBoltG', marker: 'speed_up', buff: true, value: s.battleSpeedBonus !== 3 ? `+${s.battleSpeedBonus}` : undefined });
   if (s.damageReduction) out.push({ label: `−${s.damageReduction} otrzymanych obrażeń`, glyph: 'sStone', buff: true, value: `−${s.damageReduction}` });
   return out;
 }
@@ -711,11 +759,15 @@ function statusList(u: BattleUnit): StatusInfo[] {
 function StatusBadge({ st, size = 22 }: { st: StatusInfo; size?: number }) {
   return (
     <span title={st.label} style={{ position: 'relative', width: size, height: size, flex: 'none', display: 'inline-block', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.55))', animation: 'pop-in 0.3s ease-out both' }}>
-      <svg aria-hidden="true" width={size} height={size} viewBox="0 0 40 40">
-        <circle cx="20" cy="20" r="19" fill="url(#mRing)" stroke="#1E1204" strokeWidth="1.4" />
-        <circle cx="20" cy="20" r="15.4" fill={st.buff ? 'url(#stBuff)' : 'url(#stDebuff)'} stroke="#1E1204" strokeWidth="1" />
-        <use href={`#${st.glyph}`} />
-      </svg>
+      {st.marker ? (
+        <img src={asset(`markers/${st.marker}.png`)} alt="" style={{ width: size, height: size, objectFit: 'contain', display: 'block' }} />
+      ) : (
+        <svg aria-hidden="true" width={size} height={size} viewBox="0 0 40 40">
+          <circle cx="20" cy="20" r="19" fill="url(#mRing)" stroke="#1E1204" strokeWidth="1.4" />
+          <circle cx="20" cy="20" r="15.4" fill={st.buff ? 'url(#stBuff)' : 'url(#stDebuff)'} stroke="#1E1204" strokeWidth="1" />
+          <use href={`#${st.glyph}`} />
+        </svg>
+      )}
       {st.value && (
         <span
           className="parch"

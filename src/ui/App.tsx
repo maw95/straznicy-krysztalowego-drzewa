@@ -14,6 +14,8 @@ import { UnitCard } from './UnitCard';
 import { TreasureCard } from './TreasureCard';
 import { readAutosave, replay, writeAutosave, type BugReport, type SaveFile } from './saves';
 import { BugReportDialog } from './BugReportDialog';
+import { TesterDialog } from './TesterDialog';
+import { recordGame } from './journal';
 import { RulesDialog } from './RulesDialog';
 import { BattleSummary } from './BattleSummary';
 import { HoverCardLayer } from './hover';
@@ -35,6 +37,7 @@ export function App() {
   const [confirmedFaction, setConfirmedFaction] = useState<FactionId | null>(null);
   const history = useRef<Action[]>([]);
   const [showRules, setShowRules] = useState(false);
+  const [showTesters, setShowTesters] = useState(false);
   const [showReport, setShowReport] = useState(false);
   /** Bug reports written in this game; saved and exported with it. */
   const reports = useRef<BugReport[]>([]);
@@ -85,8 +88,8 @@ export function App() {
       mapSize: (q.get('size') as SetupOptions['mapSize']) ?? 'short',
       battleMode: q.get('battle') === 'board' ? 'board' : 'arena',
       seed: Number(q.get('seed') ?? 1),
-      // ?abilities=0&treasures=0&dice=0 switch the simplifications on.
-      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') !== '0' },
+      // ?abilities=0&treasures=0 switch simplifications on, ?dice=1 the die.
+      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1' },
       seats:
         mode === 'coop'
           ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))
@@ -192,6 +195,7 @@ export function App() {
   useEffect(() => {
     if (!game) return;
     writeAutosave(game.phase === 'over' ? null : saveFile(game));
+    recordGame(saveFile(game), game);
   }, [game]);
 
   const undo = useCallback(() => {
@@ -325,9 +329,12 @@ export function App() {
     return (
       <>
         <SvgDefs />
-        <SetupScreen onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} />
+        <SetupScreen onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} />
         <Modal open={showRules} onClose={() => setShowRules(false)}>
           <RulesDialog onClose={() => setShowRules(false)} />
+        </Modal>
+        <Modal open={showTesters} onClose={() => setShowTesters(false)}>
+          {showTesters && <TesterDialog onClose={() => setShowTesters(false)} download={download} />}
         </Modal>
         <HoverCardLayer />
         {error && (
@@ -531,9 +538,9 @@ export function App() {
             onSaved={(r) => {
               reports.current = [...reports.current, r];
               writeAutosave(game.phase === 'over' ? null : saveFile(game));
+              recordGame(saveFile(game), game);
             }}
             onClose={() => setShowReport(false)}
-            download={download}
           />
         )}
       </Modal>

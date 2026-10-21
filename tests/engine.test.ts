@@ -17,15 +17,16 @@ const setup = (over: Partial<SetupOptions> = {}): SetupOptions => ({
   ...over,
 });
 
-describe('unit budgets (spec section 2)', () => {
+describe('unit budgets (spec section 2, loosened by balancing)', () => {
+  // The spec budgets (18 for heroes, 11 for supports) are a starting point: balancing moved
+  // a few units by up to 2 points (docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md, section 7.11).
   const typeCost = (id: string) => (UNITS[id].attackType === 'ranged' ? 2 : 0) + (UNITS[id].movement === 'fly' ? 1 : 0);
-  it.each([...FACTION_HEROES.dawn, ...FACTION_HEROES.horde])('hero %s spends 18 points', (id) => {
-    const u = UNITS[id];
-    expect(u.hp + u.attack + u.speed + typeCost(id)).toBe(18);
+  const budget = (id: string) => UNITS[id].hp + UNITS[id].attack + UNITS[id].speed + typeCost(id);
+  it.each([...FACTION_HEROES.dawn, ...FACTION_HEROES.horde])('hero %s spends 18 ± 2 points', (id) => {
+    expect(Math.abs(budget(id) - 18)).toBeLessThanOrEqual(2);
   });
-  it.each([...FACTION_SUPPORTS.dawn, ...FACTION_SUPPORTS.horde])('support %s spends 11 points', (id) => {
-    const u = UNITS[id];
-    expect(u.hp + u.attack + u.speed + typeCost(id)).toBe(11);
+  it.each([...FACTION_SUPPORTS.dawn, ...FACTION_SUPPORTS.horde])('support %s spends 11 ± 1 points', (id) => {
+    expect(Math.abs(budget(id) - 11)).toBeLessThanOrEqual(1);
   });
 });
 
@@ -42,7 +43,7 @@ describe('hex geometry', () => {
 });
 
 describe('map generation', () => {
-  it.each(['short', 'medium', 'long'] as const)('%s map has the right size and reachable objectives', (size) => {
+  it.each(['short', 'medium', 'long', 'veryLong'] as const)('%s map has the right size and reachable objectives', (size) => {
     for (let seed = 1; seed <= 20; seed++) {
       const s = createGame(setup({ mapSize: size, seed }));
       const rows = MAP_VARIANTS[size].rows;
@@ -55,7 +56,7 @@ describe('map generation', () => {
   });
 
   // Counts come from MAP_VARIANTS (tuned for balance; medium has 1 Odrodzenia + 3 others).
-  it.each((['short', 'medium', 'long'] as const).map((size) => [size, MAP_VARIANTS[size].resurrections, MAP_VARIANTS[size].otherTreasures] as const))('%s treasure pool has exactly %i Odrodzenia + %i others', (size, res, others) => {
+  it.each((['short', 'medium', 'long', 'veryLong'] as const).map((size) => [size, MAP_VARIANTS[size].resurrections, MAP_VARIANTS[size].otherTreasures] as const))('%s treasure pool has exactly %i Odrodzenia + %i others', (size, res, others) => {
     for (let seed = 1; seed <= 30; seed++) {
       const s = createGame(setup({ mapSize: size, seed }));
       const kinds = Object.values(s.items).map((i) => i.kind);

@@ -5,12 +5,12 @@ import { FACTION_HEROES, type FactionId, type MapSize } from '../../src/engine/d
 import { applyAction, activeHero, createGame, currentActor, legalHeroMoves } from '../../src/engine/game';
 import { chooseAction } from '../../src/engine/ai';
 import { Rng } from '../../src/engine/rng';
-import { DEFAULT_RULES, type GameState, type SeatSetup, type SetupOptions } from '../../src/engine/types';
+import { DEFAULT_RULES, levelSettings, type GameState, type SeatSetup, type SetupOptions } from '../../src/engine/types';
 
 /** Player configurations: coop with 1–2 good players, PvP 1 on 1 or 2 on 2. */
 export type Table = 'coop1' | 'coop2' | 'pvp1' | 'pvp2';
 /** The full game or one simplification switched on. */
-export type Option = 'full' | 'noabilities' | 'notreasures' | 'nodice' | 'replacement' | 'board' | 'extraevil';
+export type Option = 'full' | 'noabilities' | 'notreasures' | 'dice' | 'replacement' | 'board' | 'kids' | 'hard';
 
 export interface Variant {
   size: MapSize;
@@ -18,9 +18,9 @@ export interface Variant {
   option: Option;
 }
 
-export const SIZES: MapSize[] = ['short', 'medium', 'long'];
+export const SIZES: MapSize[] = ['short', 'medium', 'long', 'veryLong'];
 export const TABLES: Table[] = ['coop1', 'coop2', 'pvp1', 'pvp2'];
-export const OPTIONS: Option[] = ['full', 'noabilities', 'notreasures', 'nodice', 'replacement', 'board'];
+export const OPTIONS: Option[] = ['full', 'noabilities', 'notreasures', 'dice', 'replacement', 'board', 'kids'];
 
 export const variantName = (v: Variant) => `${v.size}·${v.table}·${v.option}`;
 
@@ -39,15 +39,16 @@ export function setupFor(v: Variant, seed: number): SetupOptions {
     seats = [];
     for (let i = 0; i < n; i++) seats.push(seat(`Świt ${i + 1}`, 'dawn', dawn[i]), seat(`Horda ${i + 1}`, 'horde', horde[i]));
   }
+  const mode = v.table.startsWith('coop') ? 'coop' : 'pvp';
+  if (v.option === 'kids' || v.option === 'hard') return { mode, mapSize: v.size, seed, seats, ...levelSettings(v.option, mode) };
   const rules = {
     ...DEFAULT_RULES,
     abilities: v.option !== 'noabilities',
     treasures: v.option !== 'notreasures',
-    useDice: v.option !== 'nodice',
+    useDice: v.option === 'dice',
     heroReplacement: v.option === 'replacement',
-    extraEvilHero: v.option === 'extraevil',
   };
-  return { mode: v.table.startsWith('coop') ? 'coop' : 'pvp', mapSize: v.size, battleMode: v.option === 'board' ? 'board' : 'arena', seed, seats, rules };
+  return { mode, mapSize: v.size, battleMode: v.option === 'board' ? 'board' : 'arena', seed, seats, rules };
 }
 
 export interface UnitTally {

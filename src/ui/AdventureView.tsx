@@ -1,10 +1,11 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FACTION_NAMES, ITEMS, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
-import { activeHero, heroesAt, legalHeroMoves } from '../engine/game';
+import { activeHero, heroesAt, legalHeroMoves, reviveSpots } from '../engine/game';
 import type { HexKey } from '../engine/hex';
 import { mapNeighbors, tileCost } from '../engine/map';
 import type { Action, GameState, Tile } from '../engine/types';
 import { hoverCard } from './hover';
+import { RoundTrack } from './RoundTrack';
 import { asset, Frame, HpBar, Medal, Pips, Portrait, Ribbon, SIDE_RING, tileImage } from './common';
 
 interface Props {
@@ -22,6 +23,11 @@ function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: Hex
   const hero = activeHero(state);
   const out = new Map<HexKey, { cost: number; path: HexKey[]; hostile: boolean }>();
   if (!hero || state.phase !== 'adventure' || state.turnBattleDone) return out;
+  // A reserve hero coming in: any of its entry hexes, one click each.
+  if (hero.entering) {
+    for (const k of hero.entering) out.set(k, { cost: 0, path: [hero.pos, k], hostile: false });
+    return out;
+  }
   out.set(hero.pos, { cost: 0, path: [hero.pos], hostile: false });
   const open = [hero.pos];
   while (open.length) {
@@ -57,6 +63,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const [hover, setHover] = useState<HexKey | null>(null);
   const [mapPicks, setMapPicks] = useState<{ itemId: string; picks: HexKey[] } | null>(null);
   const [resPick, setResPick] = useState<string | null>(null);
+  /** A fallen hero being revived: the player picks a free hex next to the active hero. */
+  const [revive, setRevive] = useState<{ itemId: string; unitId: string } | null>(null);
 
   useLayoutEffect(() => {
     const el = boardRef.current;
@@ -71,7 +79,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const rows = state.rows;
   // Path the active hero walked this turn (drawn as a flowing dotted line).
   const trail = useRef<{ turn: string; hexes: HexKey[] }>({ turn: '', hexes: [] });
-  if (hero) {
+  if (hero && !hero.entering) {
     const turn = `${state.round}:${state.turnIndex}:${hero.id}`;
     if (trail.current.turn !== turn) trail.current = { turn, hexes: [hero.pos] };
     else if (trail.current.hexes[trail.current.hexes.length - 1] !== hero.pos) trail.current.hexes.push(hero.pos);
@@ -91,7 +99,13 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const H = W * 1.1547;
   const boardW = rows * W;
   const boardH = H + (rows - 1) * 0.75 * H;
-  const reach = useMemo(() => (canAct ? reachablePaths(state) : new Map()), [state, canAct]);
+  const reviveAt = useMemo(() => (revive && hero ? reviveSpots(state, hero) : null), [revive, hero, state]);
+  const reach = useMemo(() => {
+    if (!canAct) return new Map();
+    // While placing a revived hero the highlighted hexes are its free spots, not the walk.
+    if (reviveAt && hero) return new Map(reviveAt.map((k) => [k, { cost: 0, path: [hero.pos, k], hostile: false }]));
+    return reachablePaths(state);
+  }, [state, canAct, reviveAt, hero]);
   const legal = useMemo(() => new Set(legalHeroMoves(state).map((m) => m.to)), [state]);
   const preview = hover && reach.get(hover) ? reach.get(hover)!.path : null;
   const tiles = Object.values(state.tiles);
@@ -109,6 +123,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
       return;
     }
     if (!canAct) return;
+    if (revive) {
+      if (reviveAt?.includes(k)) onAction({ type: 'useMapItem', itemId: revive.itemId, unitId: revive.unitId, targets: [k] });
+      setRevive(null);
+      return;
+    }
     const r = reach.get(k);
     if (r) onPath(r.path.slice(1), r.hostile);
     else if (legal.has(k)) onPath([k], legalHeroMoves(state).find((m) => m.to === k)!.kind !== 'move');
@@ -125,12 +144,16 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     <div className="screen slate screen-enter">
       <div className="main-row">
         <Frame crest className="grow map-frame" innerClass="" innerStyle={{ background: '#0B1416' }}>
-          <img src={asset('ui/landscape.jpg')} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.42 }} />
+          {/* Small source image: a soft blur hides its pixels until a larger painting replaces it. */}
+          <img src={asset('ui/landscape.jpg')} alt="" style={{ position: 'absolute', inset: -8, width: 'calc(100% + 16px)', height: 'calc(100% + 16px)', objectFit: 'cover', opacity: 0.42, filter: 'blur(2.5px)' }} />
           <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 140px 50px rgba(4,10,12,0.85)' }} />
           <div style={{ position: 'absolute', left: 18, top: 16, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, zIndex: 2 }}>
             <Ribbon style={{ width: Math.min(330, box.w - 20) }}>Kraina Kryształowego Drzewa</Ribbon>
-            <div className="plate parch" style={{ padding: '2px 14px', fontWeight: 700, fontSize: 15, marginLeft: 22 }}>
-              Runda {state.round} z {state.roundLimit}
+            <div style={{ marginLeft: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+              <RoundTrack round={state.round} limit={state.roundLimit} ritual={state.ritual} ritualRounds={state.rules.ritualRounds} size={Math.max(160, Math.min(290, box.w * 0.26, box.h * 0.45))} />
+              <div className="plate parch" style={{ padding: '2px 14px', fontWeight: 700, fontSize: 15 }}>
+                Runda {state.round} z {state.roundLimit}
+              </div>
             </div>
           </div>
           <div ref={boardRef} className="scroll" style={{ position: 'absolute', inset: '60px 6px 6px', overflow: 'auto', display: 'flex' }}>
@@ -219,11 +242,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               )}
               {/* Hero tokens live in their own layer so they glide between hexes. */}
               {Object.values(state.heroes)
-                .filter((h) => h.alive)
+                .filter((h) => h.alive && !h.entering)
                 .map((h) => {
                   const t = state.tiles[h.pos];
                   const p = pos(t);
-                  const stack = Object.values(state.heroes).filter((o) => o.alive && o.pos === h.pos);
+                  const stack = Object.values(state.heroes).filter((o) => o.alive && !o.entering && o.pos === h.pos);
                   const i = stack.findIndex((o) => o.id === h.id);
                   const spread = stack.length > 1 ? (i - (stack.length - 1) / 2) * W * 0.3 : 0;
                   const size = stack.length > 1 ? W * 0.48 : W * 0.58;
@@ -340,12 +363,30 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               <b>Kogo wskrzesić?</b>
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {deadUnits.map((id) => (
-                  <button key={id} className="btn" style={{ background: 'none', border: 0, padding: 0 }} title={UNITS[id].name} onClick={() => { onAction({ type: 'useMapItem', itemId: resPick, unitId: id }); setResPick(null); }}>
+                  <button
+                    key={id}
+                    className="btn"
+                    style={{ background: 'none', border: 0, padding: 0 }}
+                    title={UNITS[id].name}
+                    onClick={() => {
+                      // A hero comes back on a free hex next to the active hero; a support joins at once.
+                      if (state.heroes[id]) setRevive({ itemId: resPick, unitId: id });
+                      else onAction({ type: 'useMapItem', itemId: resPick, unitId: id });
+                      setResPick(null);
+                    }}
+                  >
                     <Portrait unitId={id} size={44} />
                   </button>
                 ))}
                 <button className="btn plate parch" style={{ padding: '2px 8px' }} onClick={() => setResPick(null)}>Anuluj</button>
               </div>
+            </div>
+          )}
+          {revive && (
+            <div className="plate parch" style={{ padding: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <b>Gdzie stanie {UNITS[revive.unitId].name}?</b>
+              <div style={{ fontSize: 14 }}>{reviveAt?.length ? 'Kliknij podświetlone wolne pole obok swojego bohatera.' : 'Obok nie ma wolnego pola — przejdź gdzie indziej i spróbuj ponownie.'}</div>
+              <button className="btn plate parch" style={{ padding: '2px 8px', alignSelf: 'flex-start' }} onClick={() => setRevive(null)}>Anuluj</button>
             </div>
           )}
           <button className="btn prim" disabled={!canAct} style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, fontSize: 21, flex: 'none' }} onClick={() => onAction({ type: 'endTurn' })}>

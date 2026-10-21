@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import { FACTION_HEROES, FACTION_SUPPORTS, GUARDIANS, ITEMS, type ItemKind } from '../engine/data';
-import { Frame, Ribbon } from './common';
+import { asset, Frame, Ribbon } from './common';
 import { TreasureCard } from './TreasureCard';
 import { UnitCard } from './UnitCard';
 
-type Tab = 'rules' | 'units' | 'treasures' | 'keys';
+type Tab = 'rules' | 'manual' | 'units' | 'treasures' | 'keys';
 
 const TABS: Array<[Tab, string]> = [
-  ['rules', 'Zasady'],
+  ['rules', 'Podstawowe zasady'],
+  ['manual', 'Instrukcja'],
   ['units', 'Jednostki'],
   ['treasures', 'Skarby'],
   ['keys', 'Skróty'],
@@ -17,26 +18,36 @@ const TABS: Array<[Tab, string]> = [
 
 const RULES: Array<[string, string[]]> = [
   ['Cel gry', [
-    'Przymierze Świtu wygrywa, gdy dostarczy do Kryształowego Drzewa wszystkie wymagane kryształy albo gdy polegną wszyscy bohaterowie Hordy.',
-    'Mroczna Horda wygrywa, gdy upłynie limit rund, polegną wszyscy bohaterowie Przymierza albo jej żyjący bohaterowie ukończą rytuał przy Drzewie (staną na nim na koniec dwóch kolejnych rund).',
+    'Przymierze Świtu wygrywa, gdy zaniesie do Kryształowego Drzewa wszystkie potrzebne kryształy (2 na mapie krótkiej, 3 na pozostałych) albo gdy polegną wszyscy bohaterowie Hordy.',
+    'Mroczna Horda wygrywa, gdy minie limit rund (8 / 12 / 16 / 20), gdy polegną wszyscy bohaterowie Przymierza albo gdy ukończy rytuał: jeden jej bohater stoi na Drzewie, a pozostali żyjący na polach obok, na koniec dwóch kolejnych rund.',
   ]],
-  ['Mapa przygody', [
-    'Lewa połowa mapy to ziemie Przymierza, prawa — Hordy. Każdy bohater ma 2 punkty ruchu na turę. Teren łatwy kosztuje 1, trudny 2 (Rzeka, Wzgórza, Mroczne Bagno, Mroczna Jaskinia, Ponure Ruiny). Góry, Przepaść, Martwy Gąszcz i Trujące Ciernie są nieprzechodnie. Niewykorzystane punkty przepadają.',
-    'Wejście na pole odkrywa sąsiednie zakryte pola. Skarb trafia do wspólnego ekwipunku frakcji.',
-    'Kryształów pilnują neutralni strażnicy — wejście na ich pole rozpoczyna walkę. Wejście na pole wrogiego bohatera rozpoczyna bitwę.',
-    'Kryształ oddaje się, wchodząc z nim na pole Drzewa. Jeśli stoi tam zły bohater, najpierw trzeba go pokonać.',
+  ['Runda i ruch', [
+    'W każdej rundzie każdy żyjący bohater ma jedną turę: 2 punkty ruchu. Teren łatwy kosztuje 1, trudny 2; góry, przepaści, martwy gąszcz i ciernie są nieprzejezdne. Niewykorzystane punkty przepadają.',
+    'Na jednym polu stoi najwyżej jeden bohater — na pole sojusznika nie można wejść. Wyjątek: we własnej bazie może stać kilku bohaterów.',
+    'Horda nazywa swoich bohaterów wodzami, a pomocników poplecznikami — w zasadach to po prostu bohaterowie i pomocnicy.',
+    'Wejście na pole odkrywa pola sąsiednie. Skarb z pola trafia do wspólnego ekwipunku frakcji.',
+    'Na koniec rundy kryształ na torze rund przesuwa się o jedno pole.',
+  ]],
+  ['Kryształy i strażnicy', [
+    'Kryształów pilnują strażnicy. Wejście na ich pole (tylko Przymierze) rozpoczyna walkę. Zwycięzca od razu podnosi kryształ, a strażnik zostawia skarb.',
+    'Kryształ oddaje się, wchodząc z nim na pole Drzewa. Jeśli stoi tam bohater Hordy, najpierw trzeba go pokonać.',
+    'Kryształy poległego bohatera zostają na polu bitwy. Bohater Przymierza, który na nim stanie, od razu je podnosi.',
+    'Eliksir Odrodzenia wypity na mapie wskrzesza bohatera na wybranym wolnym polu obok pijącego albo przywraca pomocnika.',
   ]],
   ['Bitwa', [
-    'Na arenie każda strona wystawia bohatera i dwóch pomocników (3 na 3); strażnik walczy sam. W wariancie „na planszy głównej” walczą tylko bohaterowie — pojedynek 1 na 1 bez ruchu.',
-    'Przed walką każda strona ustawia swoje jednostki na polach własnej skrajnej kolumny; pierwszeństwo ma atakujący.',
-    'Co rundę każda jednostka ma jedną aktywację, od najwyższej Szybkości: ruch o tyle pól, ile wynosi Szybkość, i opcjonalnie jeden atak.',
-    'Atak zadaje obrażenia równe Atakowi. Nie ma kontrataków. Strzelec strzela przez całą arenę, jeśli przeszkoda nie zasłania celu; z wrogiem obok może atakować tylko jego. Latający przelatują nad przeszkodami.',
-    'Zdolności bohaterów i pomocników działają raz na bitwę (Szarża Światła zawsze). Zdolności strażników działają przy każdym ataku: Cyklop odpycha trafionego o 1 pole, Gryf może po ataku odlecieć, Hydra może trafić dwóch sąsiadów. Skarby używa się przed akcją własnej jednostki; Tarcza Strażnika działa jako reakcja.',
-    'Do obrażeń dolicza się rzut kością −1/0/+1 (chyba że gra toczy się bez kości).',
-    'Bitwa trwa do śmierci wszystkich jednostek jednej strony. Ocalali odzyskują pełne Życie, polegli pomocnicy giną na stałe, a poległego bohatera przywraca tylko Eliksir Odrodzenia wypity przez żyjącego bohatera tej frakcji.',
+    'Wejście na pole wrogiego bohatera rozpoczyna bitwę. Na arenie każda strona wystawia bohatera i dwóch pomocników (3 na 3); strażnik walczy sam. W pojedynkach na planszy walczą tylko bohaterowie, bez ruchu, a strażnik ma mniej Życia (liczba w nawiasie na karcie).',
+    'Najpierw obie strony ustawiają jednostki w swojej skrajnej kolumnie (zaczyna atakujący). Co rundę każda jednostka ma jedną aktywację, od najszybszej (przy remisie pierwszy działa broniący się): ruch o tyle pól, ile wynosi Szybkość, i jeden atak.',
+    'Cios zadaje tyle obrażeń, ile wynosi Atak. Nie ma kontrataków. Strzelec strzela przez całą arenę, jeśli przeszkoda nie zasłania celu; gdy wróg stoi tuż obok, może atakować tylko jego. Latający przelatują nad przeszkodami.',
+    'Zdolności bohaterów i pomocników działają raz na bitwę (Szarża Światła zawsze). Zdolności strażników działają przy każdym ataku. Skarbów używa się przed akcją własnej jednostki; Tarcza Strażnika działa sama.',
+    'Bitwa trwa, aż polegną wszystkie jednostki jednej strony. Ocalali odzyskują pełne Życie, polegli pomocnicy odpadają z gry, a poległego bohatera przywraca tylko Eliksir Odrodzenia.',
   ]],
-  ['Ułatwienia', [
-    'Pełna gra to bitwy 3 na 3 na arenie, zdolności, skarby, rzut kością i brak zastępowania poległego bohatera. Przy zakładaniu partii można dowolnie łączyć ułatwienia: bez zdolności (także strażników), bez skarbów, bez kości, rezerwowy bohater po śmierci, pojedynki 1 na 1 na planszy głównej.',
+  ['Automat zła i strażnicy w bitwie', [
+    'Jednostki automatu (w kooperacji) i strażnicy działają według prostych zasad: zdolności używają przy pierwszej okazji; gdy nikogo nie mogą zaatakować, idą do najbliższego wroga.',
+    'Bohater i strażnik atakują bohatera, jeśli mają go w zasięgu, a jeśli w zasięgu są tylko pomocnicy — tego z najmniejszą liczbą Życia. Pomocnicy automatu atakują najpierw pomocników (z mniejszą liczbą Życia), a dopiero potem bohatera.',
+  ]],
+  ['Poziomy gry', [
+    'Dla dzieci: pojedynki na planszy, bez zdolności. Normalny: pełna gra (arena 3 na 3, zdolności, skarby). Trudny (kooperacja): automat zła ma o jednego bohatera więcej.',
+    'Własny: rodzaj bitew i ułatwienia (bez zdolności, same Eliksiry Odrodzenia, rezerwowy bohater) oraz utrudnienia (rzut kością −1/0/+1 do każdego ciosu, dodatkowy bohater Hordy). Wszystko opisuje zakładka „Instrukcja”.',
   ]],
 ];
 
@@ -56,7 +67,10 @@ const KEYS: Array<[string, string]> = [
 
 export function RulesDialog({ onClose }: { onClose: () => void }) {
   const [tab, setTab] = useState<Tab>('rules');
-  const cardW = Math.min(200, (window.innerWidth - 110) / 2);
+  // Three cards fill the width of the dialog (min(1080px, 96vw)); on phones they stay readable and wrap.
+  const cardW = Math.max(160, Math.min(320, (Math.min(1080, window.innerWidth * 0.96) - 100) / 3));
+  // Cards sit at most three to a row.
+  const cardRow = { display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center', margin: '0 auto' } as const;
   return (
     <Frame crest style={{ width: 'min(1080px, 96vw)', height: '86vh' }} innerStyle={{ padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
       <Ribbon style={{ width: 'min(420px, 100%)', alignSelf: 'center' }}>Zasady i karty</Ribbon>
@@ -82,6 +96,15 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
             ))}
           </div>
         )}
+        {tab === 'manual' && (
+          // The printable rulebook (docs/edytowalny_szablon_instrukcji, copied by scripts/assets/manual.py).
+          <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <iframe title="Instrukcja" src={asset('manual/index.html?embed')} style={{ flex: 1, minHeight: 0, width: '100%', border: 0, borderRadius: 6, background: 'transparent' }} />
+            <a href={asset('manual/index.html')} target="_blank" rel="noreferrer" style={{ alignSelf: 'center', color: '#F3D27A', fontSize: 15 }}>
+              Otwórz instrukcję w nowej karcie (do druku)
+            </a>
+          </div>
+        )}
         {tab === 'units' &&
           ([
             ['Przymierze Świtu', [...FACTION_HEROES.dawn, ...FACTION_SUPPORTS.dawn]],
@@ -90,7 +113,7 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
           ] as Array<[string, string[]]>).map(([title, ids]) => (
             <div key={title} style={{ marginBottom: 18 }}>
               <div className="lbl" style={{ textAlign: 'center', margin: '4px 0 10px' }}>{title}</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
+              <div style={{ ...cardRow, maxWidth: cardW * 3 + 28 }}>
                 {ids.map((id) => (
                   <UnitCard key={id} unitId={id} width={cardW} />
                 ))}
@@ -98,7 +121,7 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
             </div>
           ))}
         {tab === 'treasures' && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
+          <div style={{ ...cardRow, maxWidth: cardW * 3 + 28 }}>
             {(Object.keys(ITEMS) as ItemKind[]).map((k) => (
               <TreasureCard key={k} kind={k} width={cardW} />
             ))}

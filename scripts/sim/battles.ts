@@ -1,6 +1,6 @@
 // Battle tournament: isolated battles under equal conditions, to compare units.
 // Usage: npx tsx scripts/sim/battles.ts [battles per pairing=300] [options=full]
-//   options: full, noabilities, nodice (comma separated)
+//   options: full, noabilities, dice (comma separated)
 //
 // 1. Every Przymierze hero against every Horda hero, 3 on 3 on the arena, supports drawn
 //    at random, attacker and arena at random.
@@ -17,7 +17,7 @@ import { DEFAULT_RULES, type GameState } from '../../src/engine/types';
 
 const per = Number(process.argv[2] ?? 300);
 const opts = (process.argv[3] ?? 'full').split(',');
-const rules = { ...DEFAULT_RULES, abilities: !opts.includes('noabilities'), useDice: !opts.includes('nodice') };
+const rules = { ...DEFAULT_RULES, abilities: !opts.includes('noabilities'), useDice: opts.includes('dice') };
 
 interface Outcome {
   attackerWon: boolean;
@@ -93,7 +93,9 @@ function battle(seed: number, dawnHero: string, opponent: string, duel: boolean,
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`.padStart(7);
 let seed = 1;
 
-for (const duel of [false, true]) {
+// SIM_ONLY=guardians skips the hero tables.
+const only = process.env.SIM_ONLY;
+for (const duel of only === 'guardians' ? [] : [false, true]) {
   console.log(`\n${duel ? 'Pojedynki 1 na 1' : 'Bitwy 3 na 3'} (${opts.join(',')}) — % wygranych Przymierza; wiersze: Przymierze, kolumny: Horda`);
   console.log(''.padEnd(16) + FACTION_HEROES.horde.map((h) => h.padStart(14)).join(''));
   const supportWins: Record<string, [number, number]> = {};
@@ -139,6 +141,9 @@ for (const duel of [false, true]) {
   }
 }
 
+if (only !== 'guardians') supportsTable();
+
+function supportsTable() {
 // Supports: each pair of supports for each faction, against random opponents (3 on 3).
 console.log('\nPomocnicy — % wygranych swojej strony, gdy biorą udział (bitwy 3 na 3, losowi bohaterowie)');
 const supportStats: Record<string, [number, number]> = {};
@@ -153,3 +158,4 @@ for (let i = 0; i < per * 6; i++) {
   }
 }
 for (const [id, [n, w]] of Object.entries(supportStats).sort()) console.log(`  ${id.padEnd(14)} ${String(n).padStart(6)} ${pct(w / n)}`);
+}

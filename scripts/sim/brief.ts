@@ -12,7 +12,7 @@ for (const r of rows) {
   if (p >= Number(lo) && p <= Number(hi)) inBand++;
   (grid[`${size}·${table}`] ??= {})[option] = `${(p * 100).toFixed(0)}${p < Number(lo) ? '-' : p > Number(hi) ? '+' : ' '}`;
 }
-const opts = ['full', 'noabilities', 'notreasures', 'nodice', 'replacement', 'board', 'extraevil'];
+const opts = ['full', 'noabilities', 'notreasures', 'dice', 'replacement', 'board', 'kids', 'hard'];
 console.log(''.padEnd(14) + opts.map((o) => o.slice(0, 8).padStart(9)).join(''));
 for (const [k, v] of Object.entries(grid)) console.log(k.padEnd(14) + opts.map((o) => (v[o] ?? '').padStart(9)).join(''));
 const ps = rows.map((r) => r.dawnWins / r.games);

@@ -3,6 +3,9 @@ import { StrictMode } from 'react';
 import { act, cleanup, fireEvent, render } from '@testing-library/react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../src/ui/App';
+import { createGame } from '../src/engine/game';
+import { DEFAULT_RULES } from '../src/engine/types';
+import { recordGame } from '../src/ui/journal';
 
 beforeAll(() => {
   (globalThis as any).ResizeObserver = class { observe() {} disconnect() {} unobserve() {} };
@@ -75,25 +78,42 @@ describe('setup screen simplifications', () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<StrictMode><App /></StrictMode>);
     const btn = (t: string) => [...container.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement;
-    for (const t of ['Bez zdolności', 'Bez skarbów', 'Bez rzutu kością', 'Rezerwowy bohater po śmierci']) expect(btn(t).getAttribute('aria-pressed')).toBe('false');
-    await act(async () => fireEvent.click(btn('Bez skarbów')));
-    await act(async () => fireEvent.click(btn('Bez rzutu kością')));
-    expect(btn('Bez skarbów').getAttribute('aria-pressed')).toBe('true');
+    // Single switches are tucked away under "Własny".
+    expect(btn('Same Eliksiry Odrodzenia')).toBeUndefined();
+    await act(async () => fireEvent.click(btn('Własny')));
+    for (const t of ['Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Dodatkowy bohater Hordy']) expect(btn(t).getAttribute('aria-pressed')).toBe('false');
+    // Every option explains itself in a hover tooltip next to its button.
+    const tip = (t: string) => btn(t).parentElement!.querySelector('[role="tooltip"]')?.textContent ?? '';
+    for (const t of ['Kooperacja (wszyscy przeciw AI)', 'Rywalizacja (dobro kontra zło)', 'Krótka', 'Bardzo długa', 'Dla dzieci', 'Normalny', 'Trudny', 'Własny', 'Osobna arena (3 na 3)', 'Na planszy głównej (pojedynek 1 na 1)', 'Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Dodatkowy bohater Hordy']) expect(tip(t).length).toBeGreaterThan(40);
+    expect(tip('Krótka')).toContain('limit 8 rund');
+    await act(async () => fireEvent.click(btn('Same Eliksiry Odrodzenia')));
+    await act(async () => fireEvent.click(btn('Rzut kością')));
+    expect(btn('Same Eliksiry Odrodzenia').getAttribute('aria-pressed')).toBe('true');
     await act(async () => fireEvent.click(btn('Rozpocznij grę')));
     const game = (window as any).__game;
-    expect(game.rules).toMatchObject({ abilities: true, treasures: false, useDice: false, heroReplacement: false });
-    expect(Object.keys(game.items)).toHaveLength(0);
+    expect(game.rules).toMatchObject({ abilities: true, treasures: false, useDice: true, heroReplacement: false });
+    expect(Object.values(game.items).map((i: any) => i.kind)).toEqual(['resurrection']);
   });
 
-  it('offers one more Horde hero in coop only', async () => {
+  it('sets up the levels: hard adds a Horde hero in coop, kids play duels without abilities', async () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<StrictMode><App /></StrictMode>);
     const btn = (t: string) => [...container.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement | undefined;
-    await act(async () => fireEvent.click(btn('Dodatkowy bohater Hordy')!));
-    expect(btn('Dodatkowy bohater Hordy')!.getAttribute('aria-pressed')).toBe('true');
+    await act(async () => fireEvent.click(btn('Trudny')!));
+    expect(btn('Trudny')!.getAttribute('aria-pressed')).toBe('true');
     await act(async () => fireEvent.click(btn('Rozpocznij grę')!));
-    const game = (window as any).__game;
+    let game = (window as any).__game;
     expect(Object.values(game.heroes).filter((h: any) => h.faction === 'horde')).toHaveLength(2);
+    cleanup();
+    const second = render(<StrictMode><App /></StrictMode>).container;
+    const btn2 = (t: string) => [...second.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement | undefined;
+    await act(async () => fireEvent.click(btn2('Rywalizacja (dobro kontra zło)')!));
+    expect(btn2('Trudny')).toBeUndefined();
+    await act(async () => fireEvent.click(btn2('Dla dzieci')!));
+    await act(async () => fireEvent.click(btn2('Rozpocznij grę')!));
+    game = (window as any).__game;
+    expect(game.setup.battleMode).toBe('board');
+    expect(game.rules).toMatchObject({ abilities: false, useDice: false, extraEvilHero: false });
   });
 });
 
@@ -119,5 +139,43 @@ describe('bug reports', () => {
     const auto = JSON.parse(localStorage.getItem('skd-autosave')!);
     expect(auto.reports).toHaveLength(1);
     vi.unstubAllGlobals();
+  });
+});
+
+describe('tester journal', () => {
+  it('keeps games in the browser and exports them with feedback from "DLA TESTERÓW"', async () => {
+    // A finished coop game and one still running, as the game itself records them.
+    const setup = (seed: number) => ({ mode: 'coop' as const, mapSize: 'short' as const, battleMode: 'arena' as const, seed, seats: [{ name: 'Ala', faction: 'dawn' as const, controller: 'human' as const, heroId: 'goldDragon' }], rules: { ...DEFAULT_RULES } });
+    const won = { ...createGame(setup(1)), phase: 'over' as const, winner: 'dawn' as const, endReason: 'test' };
+    window.history.replaceState(null, '', '/');
+    recordGame({ setup: setup(1), actions: [], reports: [{ createdAt: 'x', actionIndex: 0, round: 1, screen: 'adventure', text: 'błąd', recentLog: [], viewport: '', userAgent: '' }] }, won);
+    recordGame({ setup: setup(2), actions: [] }, createGame(setup(2)));
+    const blobs: Blob[] = [];
+    const createUrl = vi.fn((b: Blob) => (blobs.push(b), 'blob:x'));
+    Object.assign(URL, { createObjectURL: createUrl, revokeObjectURL: vi.fn() });
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    const box = doc.querySelector('[aria-label="Twoje partie"]')!.textContent;
+    expect(box).toContain('Rozegrane2');
+    expect(box).toContain('1 wygr. · 0 przegr.');
+    const btn = (t: string) => [...doc.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement;
+    await act(async () => fireEvent.click(btn('INFO DLA TESTERÓW')));
+    expect(doc.body.textContent).toContain('Zgłoszone błędy: 1');
+    await act(async () => fireEvent.change(doc.querySelector('input[aria-label="Twoje imię"]')!, { target: { value: 'Ola' } }));
+    await act(async () => fireEvent.change(doc.querySelector('textarea[aria-label="Twoje uwagi"]')!, { target: { value: 'Fajne smoki' } }));
+    await act(async () => fireEvent.click(btn('Pobierz plik dla twórcy')));
+    expect(blobs).toHaveLength(1);
+    const text = await new Promise<string>((done) => {
+      const reader = new FileReader();
+      reader.onload = () => done(String(reader.result));
+      reader.readAsText(blobs[0]);
+    });
+    const data = JSON.parse(text);
+    expect(data).toMatchObject({ kind: 'skd-tester-export', name: 'Ola', feedback: 'Fajne smoki', stats: { played: 2, finished: 1, reports: 1 } });
+    expect(data.games).toHaveLength(2);
+    expect(data.games[0].result).toMatchObject({ winner: 'dawn' });
+    // The draft stays for the next visit.
+    expect(JSON.parse(localStorage.getItem('skd-feedback-draft')!)).toEqual({ name: 'Ola', feedback: 'Fajne smoki' });
   });
 });

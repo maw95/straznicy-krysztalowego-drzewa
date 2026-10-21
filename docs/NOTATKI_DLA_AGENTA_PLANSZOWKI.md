@@ -61,11 +61,17 @@ Ja sprawdzam ten plik przy każdej sesji.
 - **Przeszkody** to pola z narysowanymi skałami, ruinami, krzakami i cierniami (po 10 pól na arenę, prawie ten sam układ). Na arenie Przymierza zamiast żółtej mazi z pola obok cierni przeszkodą są skały pod korzeniami. Dokładne pola są w `ARENA_OBSTACLES` w `src/engine/battle.ts`.
   - Do potwierdzenia: czy żółte plamy trucizny na arenie Hordy mają być przeszkodą (teraz tak) i czy wysoka kolumna ruin zajmuje jedno pole (teraz tylko pole u jej podstawy).
 
-**Utrudnienie w kooperacji (decyzja użytkownika, 2026-10-20):** domyślnie kooperacja zostaje łatwiejsza. W ustawieniach można włączyć „Dodatkowy bohater Hordy” — automat dostaje o jednego bohatera więcej, niż jest graczy Świtu.
+**Poziomy gry (2026-10-20):** na ekranie ustawień najpierw wybiera się poziom, a pojedyncze przełączniki są schowane pod „Własny”.
+- **Dla dzieci:** pojedynki na planszy, bez zdolności, bez kości (skarby zostają).
+- **Normalny:** pełna gra.
+- **Trudny** (tylko kooperacja): pełna gra + dodatkowy bohater Hordy.
 
-**Zdolności Świtu w pojedynkach na planszy (decyzja użytkownika, 2026-10-20):**
-- Szarża Światła — w pojedynku dodaje premię do pierwszego ataku (nie ma ruchu, więc nie da się jej inaczej użyć).
-- Opiekun Gaju — w pojedynku (nie ma kogo osłaniać) raz na bitwę zmniejsza obrażenia z jednego ataku o 2.
+**Strażnicy (2026-10-20):**
+- Statystyki: Cyklop 23/2/2, Gryf 18/3/6, Hydra 21/2/3 — drużyna traci średnio ok. 0,5 pomocnika na walkę (prośba użytkownika).
+- **W pojedynku na planszy** strażnik ma 55% Życia, w górę (13 / 10 / 12) — inaczej samotny bohater nie miałby szans. Na kartach w nawiasie.
+- **Pokonany strażnik zostawia skarb:** Przymierze dobiera losowy skarb bitewny spoza gry (bez Eliksirów Odrodzenia i Magicznej Mapy). Tylko gdy gra używa skarbów. Rekompensuje straty pomocników, bez niej Świt w PvP spadał do ok. 37–45%.
+
+**Utrudnienie w kooperacji (decyzja użytkownika, 2026-10-20):** domyślnie kooperacja zostaje łatwiejsza. W ustawieniach można włączyć „Dodatkowy bohater Hordy” — automat dostaje o jednego bohatera więcej, niż jest graczy Świtu.
 
 **Strażnicy neutralni** (zdolności bez limitu „raz na bitwę”)
 - **Cyklop Błyskotek** jest **strzelcem**. **Miażdżący Głaz:** po każdym ataku (także z bliska) odpycha trafionego przeciwnika o 1 pole, jeśli to możliwe.
@@ -343,3 +349,84 @@ w przedziale 0.45–0.55: 23/78 · min 25.4 · max 70.5 · średnio 49.3
 - **Pojedynki:** PvP poprawiło się (37–54% zamiast 28–42%), ale kooperacja na planszy stała się za łatwa (54–71%). Przewaga obrońcy w pojedynku jest duża: atakujący wygrywa tylko ok. 30%.
 - **Strażnicy +1 Życia:** prawie bez wpływu — nadal przegrywają z drużyną w ~99% walk i zabierają 0–0,6 pomocnika.
 - **Rezerwowy bohater w PvP 1 na 1:** 25–44% (rytuał kończy 19–46% partii; bez tej opcji partię rozstrzyga zwykle jedna bitwa bohaterów).
+
+### 7.7. Poziomy gry i wzmocnieni strażnicy (2026-10-20)
+Zmiany: cofnięte efekty zdolności w pojedynkach; strażnicy z większym Życiem, połową Życia w pojedynku i skarbem po pokonaniu; poziomy gry; bot Świtu nie idzie do strażnika z jednym pomocnikiem przed połową rund.
+
+1000 partii na wariant (kolumny `kids` i `hard` to gotowe poziomy):
+
+```
+                   full noabilit notreasu   nodice replacem    board     kids     hard
+short·coop1         65+      61+      54       68+      51       53       69+      43-
+short·coop2         66+      68+      50       68+      63+      64+      80+      56+
+short·pvp1          52       50       39-      50       44-      51       62+         
+short·pvp2          54       56+      36-      52       51       47       60+         
+medium·coop1        61+      57+      48       63+      44-      53       67+      38-
+medium·coop2        59+      59+      42-      57+      56+      56+      75+      50 
+medium·pvp1         43-      43-      39-      43-      28-      43-      57+         
+medium·pvp2         47       50       35-      44-      42-      41-      50          
+long·coop1          63+      56+      47       63+      49       53       63+      39-
+long·coop2          64+      63+      46       60+      61+      57+      74+      53 
+long·pvp1           43-      43-      38-      40-      26-      39-      49          
+long·pvp2           49       49       35-      48       44-      34-      45-         
+w przedziale 0.45–0.55: 27/90 · min 25.6 · max 80.2 · średnio 51.8
+```
+
+- **Normalny:** kooperacja 59–66% (celowo łatwiejsza — decyzja użytkownika), PvP 43–54%.
+- **Dla dzieci:** kooperacja 63–80% (łatwo, o to chodzi), PvP 45–62%.
+- **Trudny:** 38–56% — wyzwanie, zwłaszcza dla jednego gracza.
+- Odstają tylko pojedyncze przełączniki z „Własnego” w PvP (bez skarbów 35–39%, rezerwowy bohater 26–51%) — opisane w instrukcji.
+- Instrukcja dla graczy: `docs/INSTRUKCJA.md`.
+
+### 7.8. Limity rund 8 / 12 / 16 (2026-10-21, decyzja użytkownika)
+
+Długość partii z limitem podniesionym do 100 (400 gier na wariant, poziomy Normalny / Dla dzieci / Trudny):
+
+| Mapa | Tryb | Mediana | 90% | 95% | 99% |
+|---|---|---:|---:|---:|---:|
+| Krótka | kooperacja | 3 | 5 | 6 | 7 |
+| Krótka | PvP | 4 | 6 | 7 | 9 |
+| Średnia | kooperacja | 5 | 8 | 9 | 11 |
+| Średnia | PvP | 6 | 9 | 10 | 13 |
+| Długa | kooperacja | 7 | 12 | 13 | 15 |
+| Długa | PvP | 9 | 14 | 15 | 18 |
+
+- Stare limity 12 / 20 / 30 rozstrzygały ok. 0,1–0,3% partii, czyli praktycznie nigdy.
+- Nowe limity 8 / 12 / 16 zmieniają wygrane Świtu o ≤ 1 pp. Limit rozstrzyga 0–0,2% partii w kooperacji, 0,5–3% w PvP i do 4% w PvP dla dzieci.
+
+### 7.9. Kryształ poległego nosiciela i bardzo długa mapa (2026-10-21, decyzje użytkownika)
+
+- **Bezpański kryształ pod bohaterem:** wolny kryształ na polu, na którym stoi żyjący bohater Przymierza, trafia do niego od razu, bez ruchu (sprawdzane po każdej akcji w `applyAction`, testy w `tests/rules.test.ts`).
+- **Bot (zawieszone partie PvP):** w ostatniej ćwierci rund Świt przyjmuje każdą walkę. Zawieszonych partii przy limicie 100: 0/4800 (wcześniej 24).
+- **Bardzo długa mapa** (`veryLong`): 14 rzędów (105 pól), 3 kryształy (więcej strażników nie ma), 3 Eliksiry Odrodzenia + 5 innych skarbów, limit 20 rund (decyzja użytkownika; pierwsza wersja: 2 + 6, limit 22).
+  - Naturalna długość (limit 100): kooperacja mediana 10 / p90 16 / p95 18 / p99 23; PvP 13 / 19 / 21 / 24.
+  - Wygrane Świtu (400 gier) w porównaniu z długą mapą: kooperacja Normalny 55–58% (długa 64–66%), Dla dzieci 62–74%, Trudny 35–48%; PvP Normalny 42–44% (46–48%), Dla dzieci 39% (46–49%). Limit rozstrzyga 0–3,5% partii.
+  - Pierwsza wersja: Świt słabszy niż na długiej mapie, bo dłużej nosi kryształy.
+  - Po zmianie na 3 + 5 i limit 20 (400 gier): kooperacja Normalny 57–62%, Dla dzieci 59–74%, Trudny 39–54%; PvP Normalny 41–46%, Dla dzieci 37–41%. Limit rozstrzyga 1–6,5% partii (najwięcej w PvP 1 na 1). Zawieszonych partii: 0.
+- **Areny: 7 przeszkód** (decyzja użytkownika): 2 szerokie na parach pól + 5 pojedynczych, 9 pól zamiast 10 (usunięte pole (8, 14) na obu arenach). Wpływ na wygrane Świtu: ±3 pp na pozostałych mapach.
+- **Minimum obrażeń zostaje 0** (decyzja użytkownika z 2026-10-21): Atak 1 z rzutem −1 nie zadaje obrażeń. Zasady „co najmniej 1” nie wprowadzamy. Dziennik bitwy pokazuje każdy rzut kością.
+
+### 7.10. Rezerwowy bohater i „Same Eliksiry Odrodzenia” (2026-10-21, decyzje użytkownika)
+
+- **Rezerwowy bohater** wkracza na najbliższe wolne pole od miejsca śmierci poprzednika (wolne = przejezdne, bez wrogiego bohatera i strzeżonego kryształu). Przy kilku polach wybiera gracz na początku tury (`HeroState.entering`, ruch `enter` bez kosztu); bot wybiera pole najbliżej Drzewa.
+  - Wcześniej (start w bazie, limity 8/12/16/20) Świt w 1 bohaterze wygrywał 3–39%. Teraz (300 gier): koop 1 gracz 41–45%, koop 2 graczy 53–65%, PvP 1 na 1 26–36%, PvP 2 na 2 41–50%. W PvP 1 na 1 Horda nadal wygrywa często rytuałem (22–26% partii).
+- **„Bez skarbów” → „Same Eliksiry Odrodzenia”:** 1 / 2 / 3 / 4 eliksiry na mapie (`onlyResurrections`), strażnik nic nie zostawia. Świt (300 gier): koop 57–65%, PvP 41–56% (wcześniej bez skarbów: koop 40–54%, PvP 30–39%).
+
+### 7.11. Wyrównanie bohaterów zdolnościami (2026-10-21)
+
+- **Statystyki zostają lustrzane i w budżecie 18 / 11.** Próby zmian statystyk (także w ramach budżetu) psuły poziom Dla dzieci i „bez zdolności”, gdzie liczą się same liczby (np. Wilkołak z S 5 przeciw bohaterom z S 4 wygrywał 79% pojedynków). Użytkownik zgodził się najpierw złamać budżet, ale po tym pomiarze wróciłem do budżetu i balansu samymi zdolnościami (w poziomach bez zdolności nic się nie zmienia).
+- **Zmiany:**
+  - Opiekun Gaju (Niedźwiedź): przejmuje śmiertelny cios wymierzony w sąsiedniego sojusznika **albo w siebie** i ignoruje z niego 3 obrażenia (raz na bitwę).
+  - Słoneczny Blask (Złoty Smok): drużyna +1 A do następnego ataku, **sam Smok +3 A**.
+  - Szarża Światła (Jednorożec): od **4** pól rozbiegu (było 3).
+- **Wynik (PvP, Normalny, 400 gier na wariant):** strona bohatera wygrywa: Niedźwiedź 48%, Złoty Smok 48%, Jednorożec 58%, Czarny Smok 47%, Ogr 48%, Wilkołak 50% (wcześniej 40–59%). Jednorożec bez Szarży nadal ma ok. 56% — jego siła to zestaw 8/5/5 i sposób gry botów.
+- **Skutek uboczny:** Świt jako całość jest mocniejszy — kooperacja Normalny 59–75% (łatwiej niż wcześniej), PvP 1 na 1 nadal 40–57% (najsłabiej na bardzo długiej mapie). Próby wyrównania 1 na 1 na dużych mapach bez efektu: +1 Eliksir Odrodzenia, rytuał 3 rundy, 2 kryształy zamiast 3.
+
+### 7.12. Jeden bohater na polu, automat według instrukcji (2026-10-21, decyzje użytkownika)
+
+- **Jeden bohater na polu**; wyjątek: własna baza (start). Na pole sojusznika nie można wejść ani przez nie przejść. Przy kilku obrońcach w bazie walczy ten z największą liczbą Życia.
+- **Rytuał:** jeden bohater Hordy na Drzewie, pozostali żyjący na polach obok (`ritualFormed`, `ritualSpot`).
+- **Wskrzeszenie na mapie:** wskrzeszony staje na wybranym wolnym polu obok pijącego (`reviveSpots`, `useMapItem.targets[0]`).
+- **Automat (kooperacja) i strażnicy w bitwie** grają według instrukcji (`battleAi.ts`, `rulebookAction`): zdolności od razu; bohater/strażnik bije bohatera, inaczej pomocnika z najmniejszym Życiem; pomocnik automatu bije najpierw pomocników; bez celu — do najbliższego wroga. W rywalizacji strażnikiem przy stole kieruje gracz Hordy; w grze jednoosobowej — ten sam gracz.
+- **Wynik (300 gier):** kooperacja łatwiejsza (Normalny 67–77%, Trudny 49–73%), PvP Normalny 41–61%. Zero zawieszonych partii i niedozwolonych ruchów.
+- **Zawartość pudełka** (max potrzeb — bardzo długa mapa, bitwa 3 na 3): 50 + 49 kafelków terenu, 16 kafelków skarbów (8 + 8), 3 siedliska, Drzewo, 2 bazy, 2 areny, 15 kart i 15 figurek, 18 kart skarbów (4 Eliksiry + 14), 3 kryształy, tor rund + znacznik, kość; znaczniki: krople 5 × 10, 3 / 2 / 1 × 6, zużyta zdolność 6, Wzmocnienie Ataku 6, Żywotność 4, Ochrona 2, pozostałe po 1.

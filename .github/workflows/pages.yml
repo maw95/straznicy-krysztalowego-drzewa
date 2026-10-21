@@ -1,37 +1,44 @@
 name: Pages
 
-  on:
-    push:
-      branches:
-        - master
-    workflow_dispatch:
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
 
-  permissions:
-    contents: read
-    pages: write
-    id-token: write
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
-  jobs:
-    build:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4
-          with:
-            node-version: 24
-            cache: npm
-        - run: npm ci
-        - run: npm run build
-        - uses: actions/upload-pages-artifact@v3
-          with:
-            path: dist
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # The build needs only the game (src, public, config); the heavy docs/ folder
+      # (rulebook sources, artwork, music masters) is left out of the checkout.
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            /*
+            !/docs/
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
 
-    deploy:
-      needs: build
-      runs-on: ubuntu-latest
-      environment:
-        name: github-pages
-        url: ${{ steps.deployment.outputs.page_url }}
-        steps:
-          - id: deployment
-            uses: actions/deploy-pages@v4
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

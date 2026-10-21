@@ -212,6 +212,72 @@ function rank(u: BattleUnit): number {
   return d.kind === 'hero' ? 0 : d.movement === 'fly' ? 2 : 1;
 }
 
+// ------------------------------------------------------------------ rulebook units
+// The coop automaton's units and the neutral guardians act by the rules printed in the
+// rulebook, so players at the table move them the same way:
+//  - abilities are used at the first opportunity;
+//  - a hero or guardian attacks the enemy hero when it can, otherwise the support with the
+//    least Życie; a support prefers the enemy supports (least Życie first), then the hero;
+//  - a unit with nobody to attack walks towards the nearest enemy.
+
+const isLeader = (u: BattleUnit) => UNITS[u.defId].kind !== 'support';
+
+/** Rulebook choice among the enemies `u` can hit; ties go to the lower Życie, then the stable id order. */
+function rulebookTarget(u: BattleUnit, targets: BattleUnit[]): BattleUnit | null {
+  const byHp = (list: BattleUnit[]) => list.slice().sort((a, b) => a.hp - b.hp || (a.id < b.id ? -1 : 1))[0] ?? null;
+  const leaders = targets.filter(isLeader);
+  const supports = targets.filter((t) => !isLeader(t));
+  if (isLeader(u)) return byHp(leaders) ?? byHp(supports);
+  return byHp(supports) ?? byHp(leaders);
+}
+
+export function followsRulebook(state: GameState, u: BattleUnit): boolean {
+  return u.side === 'neutral' || (state.setup.mode === 'coop' && u.side === 'horde');
+}
+
+function rulebookAction(state: GameState, u: BattleUnit): Action {
+  const b = state.battle!;
+  const act = b.activation!;
+  const canAttack = !act.attacked && !act.moveOnly;
+  const attackFrom = (cell: HexKey | null) => (canAttack ? attackTargets(state, u, cell) : []);
+  const here = attackFrom(u.pos);
+  const strike = (t: BattleUnit): Action => {
+    const ab = abilityOf(u);
+    let useAbility = !u.abilityUsed && abilityActive(state, u) && ATTACK_ABILITIES.includes(ab);
+    if (ab === 'bloodCall' && t.hp >= t.maxHp) useAbility = false;
+    let second: BattleUnit | null = null;
+    if (useAbility && ab === 'fireBreath') {
+      second = breathSecondTarget(state, u, t);
+      if (!second) useAbility = false;
+    }
+    if (canHitTwo(state, u)) second = rulebookTarget(u, here.filter((x) => x.id !== t.id && dist(x.pos!, u.pos!) === 1));
+    return { type: 'battleAttack', targetId: t.id, useAbility, secondTargetId: second?.id };
+  };
+  const now = rulebookTarget(u, here);
+  if (now) return strike(now);
+  if (act.moved || act.attacked) return { type: 'endActivation' };
+  // Move: to a cell from which the chosen enemy can be hit (fewest steps), else towards the nearest enemy.
+  const cells = [...reachableCells(state, u)].sort((x, y) => x[1] - y[1] || (x[0] < y[0] ? -1 : 1));
+  const reachable = cells.flatMap(([cell]) => attackFrom(cell));
+  const goal = rulebookTarget(u, [...new Map(reachable.map((t) => [t.id, t])).values()]);
+  if (goal) {
+    const cell = cells.find(([c]) => attackFrom(c).some((t) => t.id === goal.id));
+    if (cell) return { type: 'battleMove', to: cell[0] };
+  }
+  const enemies = enemiesOf(b, u);
+  const gap = (cell: HexKey) => Math.min(...enemies.map((e) => dist(e.pos!, cell)));
+  const closer = cells.filter(([c]) => gap(c) < gap(u.pos!)).sort((x, y) => gap(x[0]) - gap(y[0]) || x[1] - y[1] || (x[0] < y[0] ? -1 : 1))[0];
+  return closer ? { type: 'battleMove', to: closer[0] } : { type: 'endActivation' };
+}
+
+/** Rulebook use of the abilities that need no attack (Pajęcze Sidła): at once, on the rulebook target. */
+function rulebookFreeAbility(state: GameState, u: BattleUnit): Action | null {
+  if (u.abilityUsed || !abilityActive(state, u) || abilityOf(u) !== 'web') return null;
+  const inRange = enemiesOf(state.battle!, u).filter((e) => dist(e.pos!, u.pos!) <= ABILITY.webRange);
+  const t = rulebookTarget(u, inRange);
+  return t ? { type: 'battleAbility', targetId: t.id } : null;
+}
+
 export function chooseBattleAction(state: GameState): Action {
   const b = state.battle!;
   if (b.stage === 'select') return chooseSupports(state, b.needsSelection[0]);
@@ -225,6 +291,11 @@ export function chooseBattleAction(state: GameState): Action {
   if (u.side !== 'neutral' && !act.acted) {
     const item = itemToUse(state, u);
     if (item) return item;
+  }
+  if (followsRulebook(state, u)) {
+    const free = rulebookFreeAbility(state, u);
+    if (free) return free;
+    return rulebookAction(state, u);
   }
   const free = freeAbility(state, u);
   if (free) return free;

@@ -12,10 +12,9 @@ interface Props {
   save: SaveFile;
   onSaved: (report: BugReport) => void;
   onClose: () => void;
-  download: (name: string, text: string) => void;
 }
 
-export function BugReportDialog({ game, save, onSaved, onClose, download }: Props) {
+export function BugReportDialog({ game, save, onSaved, onClose }: Props) {
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState<string | null>(null);
@@ -38,9 +37,8 @@ export function BugReportDialog({ game, save, onSaved, onClose, download }: Prop
     if (file) {
       setDone(`Zapisano w projekcie: ${file}`);
     } else {
-      const stamp = report.createdAt.slice(0, 19).replace(/[:T]/g, '-');
-      download(`zgloszenie-${stamp}.json`, JSON.stringify(full, null, 1));
-      setDone('Pobrano plik zgłoszenia. Wrzuć go do folderu bug-reports w projekcie.');
+      // Hosted game: the report waits in this browser's tester journal ("DLA TESTERÓW").
+      setDone('Zgłoszenie zapisało się w tej przeglądarce. Wyślesz je razem z resztą: w menu głównym kliknij „INFO DLA TESTERÓW” i pobierz plik dla twórcy.');
     }
     setBusy(false);
   }
@@ -52,7 +50,7 @@ export function BugReportDialog({ game, save, onSaved, onClose, download }: Prop
         {done ? (
           <>
             <div>Dziękuję! {done}</div>
-            <div style={{ fontSize: 15, color: 'var(--muted)' }}>Zgłoszenie zawiera całą partię aż do tej chwili, więc da się dokładnie odtworzyć, co było na ekranie. Trafia też do eksportu partii (JSON).</div>
+            <div style={{ fontSize: 15, color: 'var(--muted)' }}>Zgłoszenie zawiera całą partię aż do tej chwili, więc da się dokładnie odtworzyć, co było na ekranie.</div>
             <button className="btn prim" autoFocus style={{ alignSelf: 'center', padding: '6px 26px', fontSize: 19 }} onClick={onClose}>Wróć do gry</button>
           </>
         ) : (

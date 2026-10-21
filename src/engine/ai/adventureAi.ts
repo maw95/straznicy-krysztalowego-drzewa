@@ -4,13 +4,23 @@
 import { FACTION_SUPPORTS, UNITS, type FactionId } from '../data';
 import { distance, parseKey, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, treeKey } from '../map';
-import { activeHero, currentActor, heroesAt, legalHeroMoves } from '../game';
+import { activeHero, currentActor, heroesAt, legalHeroMoves, reviveSpots, ritualFormed, ritualSpot } from '../game';
 import type { Action, GameState, HeroState } from '../types';
 
 function knownCost(state: GameState, k: HexKey): number | null {
   const t = state.tiles[k];
   // Hidden hexes are assumed passable at cost 1 (spec 7: the AI knows only revealed tiles).
   return t.revealed ? tileCost(t) : 1;
+}
+
+/** One hero per hex: a hex held by an ally is closed to walk on (except the faction's own base). */
+function heldByAlly(state: GameState, hero: HeroState, k: HexKey): boolean {
+  return state.tiles[k].home !== hero.faction && heroesAt(state, k).some((h) => h.faction === hero.faction && h.id !== hero.id);
+}
+
+/** Horde: on the Tree, or next to it while another Horde hero holds the Tree. */
+function inRitualPlace(state: GameState, hero: HeroState): boolean {
+  return ritualSpot(state, hero) === hero.pos;
 }
 
 function stepToward(state: GameState, path: HexKey[]): Action {
@@ -68,11 +78,10 @@ function dangerCost(state: GameState, hero: HeroState, k: HexKey): number {
 
 export function evilAction(state: GameState): Action {
   const hero = activeHero(state)!;
-  const tree = treeKey();
   // Treasures are shared by the faction, the automaton's included: it revives its fallen.
   const item = mapItemAction(state);
   if (item) return item;
-  if (state.rules.ritualHold && hero.pos === tree) return { type: 'endTurn' };
+  if (state.rules.ritualHold && inRitualPlace(state, hero)) return { type: 'endTurn' };
   const goodHeroes = Object.values(state.heroes).filter((h) => h.faction === 'dawn' && h.alive);
   // 1. Attack an adjacent good hero.
   const adjacent = goodHeroes.find((g) => distance(parseKey(g.pos), parseKey(hero.pos)) === 1);
@@ -85,6 +94,7 @@ export function evilAction(state: GameState): Action {
   const paths = shortestPaths(state.tiles, hero.pos, (k) => {
     const t = state.tiles[k];
     if (t.crystalId && state.crystals[t.crystalId].guardian) return null;
+    if (heldByAlly(state, hero, k)) return null;
     return knownCost(state, k);
   });
   let target: { cost: number; path: HexKey[] } | null = null;
@@ -92,7 +102,8 @@ export function evilAction(state: GameState): Action {
     const p = paths.get(spot);
     if (p && (!target || p.cost < target.cost)) target = p;
   }
-  const toTree = paths.get(tree);
+  const spot = ritualSpot(state, hero);
+  const toTree = spot ? paths.get(spot) : undefined;
   if (toTree && (!target || toTree.cost < target.cost)) target = toTree;
   if (!target) return { type: 'endTurn' };
   return stepToward(state, target.path);
@@ -108,7 +119,8 @@ function mapItemAction(state: GameState): Action | null {
     const item = state.items[id];
     if (item.kind === 'resurrection') {
       const dead = Object.values(state.heroes).find((h) => h.faction === hero.faction && !h.alive);
-      if (dead) return { type: 'useMapItem', itemId: id, unitId: dead.id };
+      const spots = reviveSpots(state, hero);
+      if (dead && spots.length) return { type: 'useMapItem', itemId: id, unitId: dead.id, targets: [spots[0]] };
       const deadSupport = FACTION_SUPPORTS[hero.faction].find((s) => f.supportsDead.includes(s));
       if (deadSupport && f.supportsAlive.length < 2) return { type: 'useMapItem', itemId: id, unitId: deadSupport };
     }
@@ -140,12 +152,14 @@ export function goodAction(state: GameState): Action {
   if (state.movePoints <= 0 || state.turnBattleDone) return { type: 'endTurn' };
 
   const enemies = Object.values(state.heroes).filter((h) => h.faction !== hero.faction && h.alive);
-  const strongEnough = (enemyId: string) => ratio(state, hero, state.heroes[enemyId]) >= 0.9;
+  // Waiting out the clock hands the Horde the win: late in the game any fight beats none.
+  const desperate = isDesperate(state);
+  const strongEnough = (enemyId: string) => desperate || ratio(state, hero, state.heroes[enemyId]) >= 0.9;
   const goals = new Set<HexKey>();
   if (hero.crystals.length) goals.add(treeKey());
   // The Horde is at the Tree: its ritual must be broken whatever the odds.
   const evilAtTree = enemies.filter((e) => e.pos === treeKey());
-  if (evilAtTree.length && (state.ritual > 0 || evilAtTree.length === enemies.length)) goals.add(treeKey());
+  if (evilAtTree.length && (state.ritual > 0 || ritualFormed(state))) goals.add(treeKey());
   if (!goals.size) {
     for (const c of Object.values(state.crystals)) {
       if (c.at.startsWith('hero:') || c.at === 'tree') continue;
@@ -159,6 +173,7 @@ export function goodAction(state: GameState): Action {
     for (const e of enemies) if (ratio(state, hero, e) >= huntRatio(state)) goals.add(e.pos);
   }
   const blocked = (k: HexKey) => {
+    if (heldByAlly(state, hero, k)) return true;
     const foes = heroesAt(state, k).filter((h) => h.faction !== hero.faction);
     if (foes.length && !goals.has(k)) return !foes.every((e) => strongEnough(e.id));
     const t = state.tiles[k];
@@ -167,7 +182,7 @@ export function goodAction(state: GameState): Action {
   const paths = shortestPaths(state.tiles, hero.pos, (k) => {
     if (blocked(k)) return null;
     const c = knownCost(state, k);
-    return c === null ? null : c + (goals.has(k) ? 0 : dangerCost(state, hero, k));
+    return c === null ? null : c + (goals.has(k) || desperate ? 0 : dangerCost(state, hero, k));
   });
   let best: { cost: number; path: HexKey[] } | null = null;
   for (const g of goals) {
@@ -213,15 +228,17 @@ export function hordeBotAction(state: GameState): Action {
   const adjacent = foes.filter((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1);
   const prey = adjacent.find((e) => beatable(e) || e.crystals.length);
   if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
-  if (hero.pos === tree && (state.ritual > 0 || own.every((h) => h.pos === tree))) return { type: 'endTurn' };
+  if (inRitualPlace(state, hero) && (state.ritual > 0 || own.every((h) => inRitualPlace(state, h)))) return { type: 'endTurn' };
 
   const goals = new Set<HexKey>();
   for (const e of foes) if (e.crystals.length || beatable(e)) goals.add(e.pos);
   for (const k of treasureSpots(state)) goals.add(k);
-  goals.add(tree);
+  const spot = ritualSpot(state, hero) ?? tree;
+  goals.add(spot);
   const paths = shortestPaths(state.tiles, hero.pos, (k) => {
     const t = state.tiles[k];
     if (t.crystalId && state.crystals[t.crystalId].guardian) return null;
+    if (heldByAlly(state, hero, k)) return null;
     const c = knownCost(state, k);
     return c === null ? null : c + (goals.has(k) ? 0 : dangerCost(state, hero, k));
   });
@@ -229,7 +246,7 @@ export function hordeBotAction(state: GameState): Action {
   for (const g of goals) {
     const p = paths.get(g);
     // Prefer hunting: the Tree counts as a little further away than it is.
-    const cost = p ? p.cost + (g === tree ? 2 : 0) : Infinity;
+    const cost = p ? p.cost + (g === spot ? 2 : 0) : Infinity;
     if (p && (!best || cost < best.cost)) best = { cost, path: p.path };
   }
   if (!best || best.path.length < 2) return { type: 'endTurn' };
@@ -239,12 +256,25 @@ export function hordeBotAction(state: GameState): Action {
   return stepToward(state, best.path);
 }
 
+/** The last quarter of the rounds: the Horde wins at the limit, so the Dawn stops waiting. */
+const isDesperate = (state: GameState) => state.round > state.roundLimit * 0.75;
+
+/** Guardians are tough: go with two supports, or with one once half the rounds are gone. */
 function canFightGuardian(state: GameState): boolean {
-  return state.factions.dawn.supportsAlive.length >= 1;
+  const supports = state.factions.dawn.supportsAlive.length;
+  if (state.setup.battleMode === 'board' || isDesperate(state)) return true;
+  return supports >= 2 || (supports >= 1 && state.round >= state.roundLimit / 2);
 }
 
 export function adventureAction(state: GameState): Action {
   const hero = activeHero(state)!;
+  // A reserve hero coming in picks the hex nearest to the Tree, where both sides are headed.
+  if (hero.entering) {
+    if (state.turnBattleDone) return { type: 'endTurn' };
+    const tree = parseKey(treeKey());
+    const to = [...hero.entering].sort((a, b) => distance(parseKey(a), tree) - distance(parseKey(b), tree))[0];
+    return { type: 'moveHero', to };
+  }
   if (hero.faction === 'dawn') return goodAction(state);
   // The coop automaton follows the rulebook; a Horde player's bot chooses its fights.
   return currentActor(state).kind === 'automaton' ? evilAction(state) : hordeBotAction(state);
