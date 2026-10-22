@@ -22,8 +22,10 @@ html = open(os.path.join(SRC, 'index.html'), encoding='utf-8').read()
 css = open(os.path.join(SRC, 'style.css'), encoding='utf-8').read()
 refs = sorted(set(re.findall(r"assets/[^\"')\s]+", html + css)))
 
-shutil.rmtree(OUT, ignore_errors=True)
-os.makedirs(os.path.join(OUT, 'assets'))
+# Files are overwritten in place and only stale ones removed: deleting the whole folder makes a
+# running Vite dev server lose track of it and answer with the game's index.html instead.
+os.makedirs(os.path.join(OUT, 'assets'), exist_ok=True)
+written = {os.path.join(OUT, 'index.html'), os.path.join(OUT, 'style.css')}
 renamed = {}
 for ref in refs:
     src = os.path.join(SRC, ref)
@@ -39,12 +41,19 @@ for ref in refs:
         if opaque:
             new_ref = re.sub(r'\.png$', '.jpg', ref, flags=re.I)
             im.convert('RGB').save(os.path.join(OUT, new_ref), quality=85, optimize=True)
+            written.add(os.path.join(OUT, new_ref))
             renamed[ref] = new_ref
         else:
             im.thumbnail((MAX_SIDE_ALPHA, MAX_SIDE_ALPHA), Image.LANCZOS)
             im.save(dst, optimize=True)
+            written.add(dst)
     else:
         shutil.copyfile(src, dst)
+        written.add(dst)
+for d, _, fs in os.walk(OUT):
+    for f in fs:
+        if os.path.join(d, f) not in written:
+            os.remove(os.path.join(d, f))
 # Pictures further down load only when scrolled to.
 html = html.replace('<img ', '<img loading="lazy" ')
 for old, new in renamed.items():
