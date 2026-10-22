@@ -614,3 +614,15 @@ Jedna bitwa 3 na 3 bez mapy przygody, także w wersji papierowej (trafi do instr
 - **Punkty w „Twoich partiach”:** za wygraną z komputerem 1 / 2 / 3 pkt (Łatwy / Normalny / Trudny) — zaakceptowane przez użytkownika. Zwykła partia to 3–5 bitew i 3–30 pkt w 20–70 min (ok. 14–33 pkt na godzinę), Arena to jedna bitwa w 5–10 min (ok. 6–36 pkt na godzinę przy samych wygranych, w praktyce mniej), więc się nie opłaca bardziej.
 - **Instrukcja:** rozdział 15 „Arena — szybka bitwa” (ściągawka przeszła na rozdział 16).
 - **Symulacje (1000 partii na każde z 81 starć, `make sim-arena`):** Przymierze wygrywa średnio 58% (boty Normalne) i 56% (Trudne). Najlepsze składy przeciw najlepszym: 46–55% dla Przymierza — wyrównane. Horda ma jednak jednego mocnego bohatera (Czarny Smok ok. 50%, Ogr ok. 41%, Wilkołak ok. 36%), a pary Goblin + Nietoperz i Elf + Pegaz są wyraźnie najsłabsze.
+
+## 9. Balans jednostek 2 (2026-10-22, w toku)
+
+Decyzje użytkownika:
+- **Budżet statystyk bohaterów (18–19 punktów) przestaje obowiązywać.** Zostają specjalizacje: w Hordzie Ogr ma najwięcej Życia, a Władca Wilkołaków jest najszybszy; w Przymierzu Niedźwiedź ma najwięcej Życia, a Jednorożec jest najszybszy. Szybkości dalej bez remisów (Przymierze parzyste, Horda nieparzyste).
+- Wolno zmieniać statystyki o więcej niż 1 i treść zdolności.
+- Zwykła gra: każdy wariant poziomu (Łatwy / Normalny / Trudny, kooperacja i rywalizacja, każda mapa) w granicach ±5 punktów procentowych wygranych Przymierza. W rywalizacji Przymierze może trochę osłabnąć; kooperacja ma zostać łatwiejsza niż rywalizacja. **Zasad poziomu Łatwego nie zmieniamy.**
+
+Ustalenia z symulacji:
+- Na Łatwym bitwy to pojedynki bez zdolności i bez kości — wynik jest z góry przesądzony przez Ż, A i S (pierwszy uderza szybszy). Zmiana statystyki bohatera o 1 potrafi odwrócić pojedynek i przesunąć Łatwy o 30–65 punktów. Statystyki bohaterów można więc zmienić tylko tak, żeby wszystkie pojedynki (9 bohater–bohater, 18 bohater–strażnik) wyszły tak samo: Wilkołak S 7 wymaga Jednorożca S 8; Ogr Ż 10 odwraca tylko rzadki pojedynek z Gryfem. Resztę balansu dają zdolności i pomocnicy (na Łatwym nie działają).
+- Pełne wyrównanie Areny (50/50) obniża Przymierze w zwykłej grze o 3–15 punktów — sprzeczne z limitem ±5. Najlepszy kompromis wyrównuje bohaterów wewnątrz frakcji, a siła frakcji zostaje prawie ta sama.
+- Bot szybką jednostką wbiega przed resztę drużyny, więc sama wyższa Szybkość osłabia jednostkę na arenie.

@@ -14,7 +14,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Instrukcja: nowy rozdział 15 „Arena — szybka bitwa” (ściągawka to teraz rozdział 16) i sekcja Areny w „Podstawowych zasadach”; w notatkach wyniki symulacji Areny (`3309c1e`).
 - Notatki projektowe: punkty za Arenę (1 / 2 / 3) zaakceptowane (`b064e71`).
 - Narzędzia: symulacje Areny przyjmują zmiany testowe (`SIM_OVERRIDE`) i zapisują wyniki do porównań (`1a42647`).
-- Narzędzia: porównywanie zestawów zmian jednostek z wynikami wyjściowymi na Arenie i w całej grze (`scripts/sim/tune.ts`) oraz testowe warianty zdolności Zew Krwi i Twardogłowy (domyślnie wyłączone).
+- Narzędzia: porównywanie zestawów zmian jednostek z wynikami wyjściowymi na Arenie i w całej grze (`scripts/sim/tune.ts`) oraz testowe warianty zdolności Zew Krwi i Twardogłowy (domyślnie wyłączone) (`7c8a91f`).
+- Notatki projektowe: założenia i ustalenia nowego balansu jednostek (bez budżetu statystyk, specjalizacje, limit ±5 punktów).
 
 ## 1.2.0 — 2026-10-22
 
