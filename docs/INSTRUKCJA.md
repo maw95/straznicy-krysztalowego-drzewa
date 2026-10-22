@@ -57,7 +57,7 @@ Wybierz stronę. Drzewo czeka.
 
 Liczby wystarczają na najbardziej wymagającą partię: bardzo długą mapę i bitwę 3 na 3.
 
-- **Kafelki mapy — 105:**
+- **Kafelki mapy — 121:**
   - **50 kafelków terenu Przymierza** z zielonym rewersem: po 7 z każdego z 7 rodzajów (Polana, Las, Rzeka, Most, Wzgórza, Góry, Przepaść) i 1 dodatkowa Polana;
   - **49 kafelków terenu Hordy** z bordowym rewersem: po 7 z każdego z 7 rodzajów (Spalona Ziemia, Jałowa Równina, Mroczne Bagno, Mroczna Jaskinia, Ponure Ruiny, Martwy Gąszcz, Trujące Ciernie);
   - **16 kafelków skarbów**: 8 z zielonym i 8 z bordowym rewersem;
