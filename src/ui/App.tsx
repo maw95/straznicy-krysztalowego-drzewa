@@ -24,6 +24,7 @@ import { Tutorial } from './Tutorial';
 import { Intro, introSeen } from './Intro';
 import { StatsDialog } from './StatsDialog';
 import { ChangelogDialog } from './ChangelogDialog';
+import { FullscreenButton, useAutoFullscreen } from './fullscreen';
 import { TreasureReveal } from './CardBack';
 
 const SPEEDS = { wolno: 900, normalnie: 450, szybko: 120 } as const;
@@ -82,6 +83,9 @@ export function App() {
           ? 'ritual'
           : 'adventure';
   useEffect(() => music.play(theme), [theme]);
+
+  // Full screen on the first click or key press, unless switched off in the menu (never in ?steps= test games).
+  useAutoFullscreen(typeof window !== 'undefined' && !new URLSearchParams(window.location.search).has('steps'));
 
   // Test hook: ?seed=12&steps=40&mode=pvp starts a bot game and fast-forwards it.
   useEffect(() => {
@@ -374,6 +378,7 @@ export function App() {
       >
         {music.muted ? '🔇' : '♪'}
       </button>
+      <FullscreenButton />
       </>
     );
   }
@@ -436,6 +441,7 @@ export function App() {
       >
         {music.muted ? '🔇' : '♪'}
       </button>
+      <FullscreenButton />
       {game.phase === 'battle' && b?.duel && b.stage !== 'select' && <DuelView state={game} canAct={humanTurn} onAction={dispatch} footer={footer} />}
       {game.phase === 'battle' && b && !b.duel && b.stage !== 'select' ? (
         <BattleView state={game} canAct={humanTurn} onAction={dispatch} onShowCard={setCard} footer={footer} />

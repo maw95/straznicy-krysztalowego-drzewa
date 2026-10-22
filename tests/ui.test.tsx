@@ -309,3 +309,67 @@ describe('changelog', () => {
     expect(doc.querySelector('[aria-label="Wersja 1.0.0"]')).not.toBeNull();
   });
 });
+
+describe('full screen', () => {
+  function mockFullscreen() {
+    const root = document.documentElement as any;
+    const calls: string[] = [];
+    Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: true });
+    let element: Element | null = null;
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, get: () => element });
+    root.requestFullscreen = vi.fn(async () => {
+      calls.push('enter');
+      element = root;
+      document.dispatchEvent(new Event('fullscreenchange'));
+    });
+    (document as any).exitFullscreen = vi.fn(async () => {
+      calls.push('exit');
+      element = null;
+      document.dispatchEvent(new Event('fullscreenchange'));
+    });
+    return {
+      calls,
+      restore: () => {
+        delete root.requestFullscreen;
+        delete (document as any).exitFullscreen;
+        delete (document as any).fullscreenEnabled;
+        delete (document as any).fullscreenElement;
+      },
+    };
+  }
+
+  it('goes full screen on the first click, and the corner button toggles it', async () => {
+    const fs = mockFullscreen();
+    window.history.replaceState(null, '', '/');
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    await act(async () => fireEvent.pointerUp(doc.body));
+    await act(async () => fireEvent.pointerUp(doc.body));
+    expect(fs.calls).toEqual(['enter']);
+    const btn = () => doc.querySelector('.fullscreen-btn') as HTMLButtonElement;
+    expect(btn().getAttribute('aria-label')).toBe('Zamknij pełny ekran');
+    await act(async () => fireEvent.click(btn()));
+    expect(fs.calls).toEqual(['enter', 'exit']);
+    expect(btn().getAttribute('aria-label')).toBe('Pełny ekran');
+    fs.restore();
+  });
+
+  it('stays in the window when the player switched it off, and the switch itself does not trigger it', async () => {
+    const fs = mockFullscreen();
+    window.history.replaceState(null, '', '/');
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    const box = [...doc.querySelectorAll('label')].find((l) => l.textContent?.includes('Pełny ekran przy uruchomieniu'))!.querySelector('input')!;
+    await act(async () => {
+      fireEvent.pointerUp(box);
+      fireEvent.click(box);
+    });
+    expect(fs.calls).toEqual([]);
+    expect(localStorage.getItem('skd-fullscreen-auto')).toBe('off');
+    cleanup();
+    render(<App />);
+    await act(async () => fireEvent.pointerUp(document.body));
+    expect(fs.calls).toEqual([]);
+    fs.restore();
+  });
+});

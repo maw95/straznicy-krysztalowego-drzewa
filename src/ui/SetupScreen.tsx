@@ -6,6 +6,7 @@ import { UnitCard } from './UnitCard';
 import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
+import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
 
 const defaultSeats = (mode: Mode, count: number): SeatSetup[] => {
   if (mode === 'coop') {
@@ -24,6 +25,7 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onS
   const fileRef = useRef<HTMLInputElement>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [tutorial, setTutorial] = useState(tutorialEnabled());
+  const [fullscreen, setFullscreen] = useState(autoFullscreen);
   const [mode, setMode] = useState<Mode>('coop');
   const [count, setCount] = useState(1);
   const [seats, setSeats] = useState<SeatSetup[]>(defaultSeats('coop', 1));
@@ -194,6 +196,19 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onS
             />{' '}
             Samouczek (podpowiedzi w pierwszej partii)
           </label>
+          {fullscreenSupported() && (
+            <label style={{ fontSize: 16 }} data-fullscreen-control title="Gra przechodzi na pełny ekran przy pierwszym kliknięciu albo klawiszu — jak F11 w przeglądarce. Esc wraca do okna.">
+              <input
+                type="checkbox"
+                checked={fullscreen}
+                onChange={(e) => {
+                  setFullscreen(e.target.checked);
+                  setAutoFullscreen(e.target.checked);
+                }}
+              />{' '}
+              Pełny ekran przy uruchomieniu
+            </label>
+          )}
           <div className="lbl">Zasady testowe</div>
           <div style={{ display: 'flex', gap: '12px 22px', flexWrap: 'wrap', alignItems: 'center', fontSize: 16 }}>
             <label>

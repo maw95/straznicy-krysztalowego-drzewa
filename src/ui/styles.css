@@ -237,6 +237,7 @@ button { font-family: inherit; }
 .side-battle { width: 262px; }
 .grow { flex: 1; }
 .music-btn { position: fixed; right: 10px; top: 6px; z-index: 60; width: 34px; height: 30px; padding: 0; font-size: 17px; line-height: 1; }
+.fullscreen-btn { position: fixed; right: 50px; top: 6px; z-index: 60; width: 34px; height: 30px; padding: 0; display: inline-flex; align-items: center; justify-content: center; color: #2b1a08; }
 .show-mobile { display: none !important; }
 .bar { flex: none; }
 
