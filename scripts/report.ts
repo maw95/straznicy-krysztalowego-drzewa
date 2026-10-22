@@ -1,5 +1,7 @@
 // Replays bug reports saved by "Zgłoś błąd" and prints the game at the reported moment.
 // Usage: npx tsx scripts/report.ts [file.json ...]   (default: every file in bug-reports/)
+// A tester's file from "INFO DLA TESTERÓW" holds many games: the ones with bug reports are replayed,
+// and its feedback (where testers often describe crashes) is printed; scripts/testers.ts sums up the rest.
 
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -8,6 +10,7 @@ import { cellOf } from '../src/engine/battle';
 import { applyAction, createGame, currentActor } from '../src/engine/game';
 import type { GameState } from '../src/engine/types';
 import type { BugReport, SaveFile } from '../src/ui/saves';
+import type { TesterExport } from '../src/ui/journal';
 
 const files = process.argv.slice(2).length
   ? process.argv.slice(2)
@@ -27,10 +30,20 @@ function describe(s: GameState): string[] {
   return out;
 }
 
-for (const file of files) {
-  const save = JSON.parse(readFileSync(file, 'utf8')) as SaveFile;
+/** The saves in a file: a single game, or the reported games of a tester's export. */
+function savesIn(file: string): Array<{ label: string; save: SaveFile }> {
+  const data = JSON.parse(readFileSync(file, 'utf8')) as SaveFile | TesterExport;
+  if ('kind' in data && data.kind === 'skd-tester-export') {
+    console.log(`\n=== ${file} · plik testera ${data.name || data.testerId} · partii ${data.games.length}`);
+    if (data.feedback) console.log(`Uwagi testera:\n  ${data.feedback.split('\n').join('\n  ')}`);
+    return data.games.filter((g) => g.save.reports?.length).map((g) => ({ label: `${file} · partia ${g.id}`, save: g.save }));
+  }
+  return [{ label: file, save: data as SaveFile }];
+}
+
+for (const { label, save } of files.flatMap(savesIn)) {
   const reports: BugReport[] = save.reports ?? [];
-  console.log(`\n=== ${file} · ziarno ${save.setup.seed} · ${save.setup.mode} · ${save.setup.mapSize} · akcji ${save.actions.length} · zgłoszeń ${reports.length}`);
+  console.log(`\n=== ${label} · ziarno ${save.setup.seed} · ${save.setup.mode} · ${save.setup.mapSize} · akcji ${save.actions.length} · zgłoszeń ${reports.length}`);
   for (const r of reports) {
     let s = createGame(save.setup);
     let error = '';
