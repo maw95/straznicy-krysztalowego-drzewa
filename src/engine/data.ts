@@ -56,7 +56,11 @@ export const ABILITY = {
   giftOfLifeHeal: 3,
   airDashRange: 3,
   bloodCallBonus: 2,
+  /** Balance experiment: Zew Krwi adds its bonus to every attack on a wounded enemy (not once per battle). */
+  bloodCallAlways: false,
   hardHeadIgnore: 2,
+  /** Balance experiment: Twardogłowy also takes this much off every hit (0 = only the once-per-battle effect). */
+  hardHeadEvery: 0,
   /** Opiekun Gaju: damage the bear ignores from the blow it takes over. */
   guardianIgnore: 3,
   curseMinus: 1,

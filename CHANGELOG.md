@@ -13,7 +13,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Arena, część 2: tryb „Arena (jedna bitwa)” w menu — przeciw komputerowi (Łatwy / Normalny / Trudny) albo drugiemu graczowi; ekran przed walką, losowanie skarbów (przy dwóch graczach zakryte, dopóki strona ich nie odsłoni), ekran końca; w „Twoich partiach” osobny wiersz Areny i 1 / 2 / 3 pkt za wygraną z komputerem (`86a53c2`).
 - Instrukcja: nowy rozdział 15 „Arena — szybka bitwa” (ściągawka to teraz rozdział 16) i sekcja Areny w „Podstawowych zasadach”; w notatkach wyniki symulacji Areny (`3309c1e`).
 - Notatki projektowe: punkty za Arenę (1 / 2 / 3) zaakceptowane (`b064e71`).
-- Narzędzia: symulacje Areny przyjmują zmiany testowe (`SIM_OVERRIDE`) i zapisują wyniki do porównań.
+- Narzędzia: symulacje Areny przyjmują zmiany testowe (`SIM_OVERRIDE`) i zapisują wyniki do porównań (`1a42647`).
+- Narzędzia: porównywanie zestawów zmian jednostek z wynikami wyjściowymi na Arenie i w całej grze (`scripts/sim/tune.ts`) oraz testowe warianty zdolności Zew Krwi i Twardogłowy (domyślnie wyłączone).
 
 ## 1.2.0 — 2026-10-22
 

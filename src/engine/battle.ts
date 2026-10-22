@@ -221,7 +221,8 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
   if (abilityActive(state, att)) {
     const ab = abilityOf(att);
     if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += ABILITY.lightChargeBonus;
-    if (useAbility && !att.abilityUsed) {
+    if (ab === 'bloodCall' && ABILITY.bloodCallAlways && target.hp < target.maxHp) dmg += ABILITY.bloodCallBonus;
+    else if (useAbility && !att.abilityUsed) {
       if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += ABILITY.bloodCallBonus;
       if (ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus;
     }
@@ -452,6 +453,7 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
     dmg -= ignored;
     blog(state, `${unitName(victim)} ignoruje ${ignored} obrażeń (Twardogłowy).`, 'ability');
   }
+  if (abilityOf(victim) === 'hardHead' && ABILITY.hardHeadEvery && abilityActive(state, victim)) dmg = Math.max(0, dmg - ABILITY.hardHeadEvery);
   dmg = Math.max(0, dmg - victim.status.damageReduction);
   b.damageBy[att.id] = (b.damageBy[att.id] ?? 0) + Math.min(dmg, Math.max(0, victim.hp));
   recordRoll(state, att, victim, base, die, dmg);
