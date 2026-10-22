@@ -33,6 +33,7 @@ Uzgodnione pomysły do wdrożenia. Najpierw tryb online, potem figurki 3D.
 ### Do ustalenia
 
 - Reset zapomnianego hasła bez e-maila — np. ręcznie przez administratora.
+- Ograniczenie prób logowania (ochrona przed zgadywaniem haseł) — jeszcze nie zrobione w szkielecie serwera.
 
 ## 2. Figurki 3D zamiast portretów
 
