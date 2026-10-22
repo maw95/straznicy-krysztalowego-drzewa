@@ -487,7 +487,7 @@ sheet(f'''<p>W rywalizacji każda strona ma swoją trudność, a poziom Trudny n
 
 # 14. Special cases
 chapter('14', 'Przypadki szczególne', 'edge')
-edge = MD[MD.index('## 14. Przypadki szczególne'):MD.index('## 15. Ściągawka')]
+edge = MD[MD.index('## 14. Przypadki szczególne'):MD.index('## 15. Arena')]
 
 
 def edge_section(title):
@@ -516,9 +516,38 @@ sheet(f'''<div class="eyebrow">Rozdział 14</div><h1>Przypadki szczególne</h1>
 battle_edge = edge_section('W bitwie')
 sheet(f'''<div class="edge"><h3>W bitwie</h3>{battle_edge}</div>''', left='Rozdział 14', right='Przypadki szczególne', foot='Przypadki szczególne')
 
-# 15. Cheat sheet
-chapter('15', 'Ściągawka', 'cheat')
-cheat = MD[MD.index('## 15. Ściągawka'):]
+# 15. Arena
+chapter('15', 'Arena — szybka bitwa', 'arenamode')
+arena_md = MD[MD.index('## 15. Arena'):MD.index('## 16. Ściągawka')]
+
+
+def arena_part(title):
+    """The paragraphs (or numbered steps) under a bold heading of chapter 15."""
+    i = arena_md.index(f'**{title}**') + len(title) + 4
+    j = min([k for k in (arena_md.find('\n**', i), arena_md.find('\n---', i)) if k >= 0])
+    paras = [p.strip() for p in arena_md[i:j].split('\n\n') if p.strip()]
+    steps = [p for p in paras if re.match(r'^\d+\. ', p)]
+    if steps:
+        items = re.split(r'\n(?=\d+\. )', '\n'.join(steps))
+        return '<ol class="rules">' + ''.join(f'<li>{md_inline(re.sub(r"^\d+\. ", "", x))}</li>' for x in items) + '</ol>'
+    return ''.join(f'<p>{md_inline(p)}</p>' for p in paras)
+
+
+arena_intro = [p.strip() for p in arena_md.split('\n\n')[1:] if p.strip() and not p.startswith('**')][:2]
+sheet(f'''<div class="eyebrow">Rozdział 15</div><h1>Arena — szybka bitwa</h1>
+<p class="flavor">{md_inline(arena_intro[0].lstrip('> ').replace('⚔️', '').strip().strip('*'))}</p>
+<p class="intro">{md_inline(arena_intro[1])}</p>
+<h3>Przygotowanie</h3>{arena_part('Przygotowanie')}
+<h3>Losowanie skarbów</h3>{arena_part('Losowanie skarbów')}
+<div class="cols">
+<div class="card"><h3>Bitwa</h3>{arena_part('Bitwa')}</div>
+<div class="card" style="--accent:var(--horde)"><h3>Koniec</h3>{arena_part('Koniec')}</div>
+</div>
+''', left='Rozdział 15', right='Arena', foot='Arena — szybka bitwa', key='arenamode')
+
+# 16. Cheat sheet
+chapter('16', 'Ściągawka', 'cheat')
+cheat = MD[MD.index('## 16. Ściągawka'):]
 cps = [md_inline(p.strip()).replace('\n', '<br>') for p in cheat.split('\n\n')[1:] if p.strip() and not p.startswith('---') and not p.startswith('>')]
 # The cheat sheet has numbered parts ("**1. Cel gry**"): each becomes a card; parts 1–3, 4–5
 # and the rest with the closing words each fill a page.
@@ -533,15 +562,15 @@ for p in cps:
         groups.append(('', [p]))
 card = lambda title, ps: f'<div class="card cheat" style="margin-bottom:3mm"><h3>{title}</h3>' + ''.join(f'<p>{x}</p>' for x in ps) + '</div>'
 ending = md_inline(re.search(r'> 🌳 \*(.+)\*', cheat).group(1))
-sheet(f'''<div class="eyebrow">Rozdział 15</div><h1>Ściągawka</h1>
+sheet(f'''<div class="eyebrow">Rozdział 16</div><h1>Ściągawka</h1>
 {''.join(card(t, ps) for t, ps in groups[:3])}
-''', left='Rozdział 15', right='Ściągawka', foot='Ściągawka', key='cheat')
+''', left='Rozdział 16', right='Ściągawka', foot='Ściągawka', key='cheat')
 sheet(f'''{''.join(card(t, ps) for t, ps in groups[3:5])}
-''', left='Rozdział 15', right='Ściągawka', foot='Ściągawka')
+''', left='Rozdział 16', right='Ściągawka', foot='Ściągawka')
 sheet(f'''{''.join(card(t, ps) for t, ps in groups[5:])}
 <div class="divider">❧</div>
 <div class="pic-left" style="grid-template-columns:62mm 1fr"><img src="assets/krysztalowe_drzewo.png" alt=""><div class="quote" style="font-size:14.5pt">„{ending}”</div></div>
-''', left='Rozdział 15', right='Ściągawka', foot='Ściągawka')
+''', left='Rozdział 16', right='Ściągawka', foot='Ściągawka')
 
 # ---------------------------------------------------------------- assemble
 first_page = {}

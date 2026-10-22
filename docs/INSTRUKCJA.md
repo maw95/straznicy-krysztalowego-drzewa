@@ -48,7 +48,8 @@ Wybierz stronę. Drzewo czeka.
 12. [Gra przeciwko automatowi zła (kooperacja)](#12-gra-przeciwko-automatowi-zła-kooperacja)
 13. [Własne ustawienia](#13-własne-ustawienia)
 14. [Przypadki szczególne](#14-przypadki-szczególne)
-15. [Ściągawka](#15-ściągawka)
+15. [Arena — szybka bitwa](#15-arena--szybka-bitwa)
+16. [Ściągawka](#16-ściągawka)
 
 ---
 
@@ -522,7 +523,33 @@ W rywalizacji każda strona ma swoją trudność, a poziom Trudny nie istnieje. 
 
 ---
 
-## 15. Ściągawka
+## 15. Arena — szybka bitwa
+
+> ⚔️ *Nie zawsze trzeba przemierzać całą krainę. Czasem jedna bitwa wystarczy, żeby sprawdzić, kto jest silniejszy.*
+
+Arena to osobny, krótki sposób gry: **jedna bitwa 3 na 3, bez mapy**, Przymierze Świtu kontra Mroczna Horda. Trwa ok. 5–10 minut. W wersji na komputerze można grać także przeciwko komputerowi (poziom Łatwy, Normalny albo Trudny).
+
+**Przygotowanie**
+
+1. Jeden gracz bierze Przymierze Świtu, drugi Mroczną Hordę. Każdy wybiera **bohatera** swojej frakcji i **2 z 3 pomocników**. Skład jest jawny. Trzeci pomocnik zostaje w rezerwie — przyda się do Rogu Strażników.
+2. Przygotujcie **talię skarbów**: każdy skarb po jednym, bez Magicznej Mapy, i **2 Eliksiry Odrodzenia** — razem 15 kart. Potasujcie ją.
+3. Rzućcie monetą: wygrywający to **gracz A**. Rzućcie też, po której stronie planszy areny walczycie (Przymierza czy Hordy).
+
+**Losowanie skarbów**
+
+Gracze wybierają na zmianę w kolejności **A, B, B, A**. Wybierający odkrywa karty z wierzchu talii, aż ma przed sobą **3 różne skarby** (drugi taki sam Eliksir odkłada na bok), **bierze jeden**, a pozostałe wtasowuje z powrotem do talii. Każdy kończy z **2 skarbami** i trzyma je zakryte, dopóki ich nie użyje.
+
+**Bitwa**
+
+Walczy się jak w rozdziale 8. Gracz A ustawia swoje jednostki pierwszy, w lewej skrajnej kolumnie, potem gracz B w prawej. **Remis inicjatywy:** w nieparzystych rundach bitwy pierwsza działa jednostka gracza A, w parzystych — gracza B. Skarby działają jak w zwykłej bitwie.
+
+**Koniec**
+
+Wygrywa strona, której jednostka jako ostatnia stoi na arenie. Jeśli ostatnie jednostki obu stron padną w tym samym momencie, jest **remis**.
+
+---
+
+## 16. Ściągawka
 
 **1. Cel gry**
 

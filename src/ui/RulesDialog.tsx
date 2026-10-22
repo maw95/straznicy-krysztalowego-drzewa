@@ -49,6 +49,11 @@ const RULES: Array<[string, string[]]> = [
     'Łatwy: pojedynki na planszy, bez zdolności i bez rytuału, poległego bohatera zastępuje rezerwowy. Normalny: pełna gra (arena 3 na 3, zdolności, skarby). Trudny (kooperacja): automat zła ma o jednego bohatera więcej i zaczyna z 2 losowymi skarbami.',
     'Własny: rodzaj bitew i ułatwienia (bez zdolności, same Eliksiry Odrodzenia, rezerwowy bohater) oraz utrudnienia (rzut kością −1/0/+1 do każdego ciosu, dodatkowy bohater Hordy). Wszystko opisuje zakładka „Instrukcja”.',
   ]],
+  ['Arena', [
+    'Jedna bitwa 3 na 3 bez mapy: Przymierze kontra Horda, z komputerem albo z drugim graczem. Każdy wybiera bohatera i 2 z 3 pomocników.',
+    'Skarby ze wspólnej talii (każdy po jednym, bez Magicznej Mapy, i 2 Eliksiry Odrodzenia): na zmianę A, B, B, A wybiera się jeden z 3 pokazanych, pozostałe wracają do talii. Każdy ma 2 skarby, ukryte do użycia.',
+    'Losowo: kto wybiera pierwszy (A) i na której arenie się walczy. Remis inicjatywy na zmianę: w nieparzystych rundach bitwy pierwszy jest A, w parzystych B. Wygrywa strona, która ostatnia stoi na arenie.',
+  ]],
 ];
 
 const KEYS: Array<[string, string]> = [
