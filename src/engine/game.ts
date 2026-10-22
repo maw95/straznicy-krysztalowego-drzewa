@@ -707,6 +707,30 @@ function killHero(state: GameState, heroId: string, at: HexKey) {
     state.turnOrder = state.turnOrder.map((id) => (id === heroId ? next : id));
     log(state, 'info', automaton ? `Automat zła wprowadza bohatera: ${UNITS[next].name}.` : `Gracz przejmuje bohatera: ${UNITS[next].name}.`);
   }
+  if (automaton && state.rules.hordeRespawn) hordeReinforcement(state, heroId);
+}
+
+/**
+ * Coop: once every automaton hero is dead, another Horde hero appears in the Horde base — an unused
+ * one while there is any, then a fallen one comes back (not the one that has just died, if possible).
+ * It joins the turn order from the next round.
+ */
+function hordeReinforcement(state: GameState, fallenId: string) {
+  const horde = Object.values(state.heroes).filter((h) => h.faction === 'horde');
+  if (horde.some((h) => h.alive)) return;
+  const f = state.factions.horde;
+  let id = f.unusedHeroes[0];
+  if (id) addHero(state, id, 'horde', null);
+  else {
+    const dead = FACTION_HEROES.horde.filter((h) => state.heroes[h] && !state.heroes[h].alive);
+    id = dead.find((h) => h !== fallenId) ?? fallenId;
+    Object.assign(state.heroes[id], { alive: true, crystals: [], pos: homeKey(state.rows, 'horde') });
+    delete state.heroes[id].entering;
+  }
+  const hero = state.heroes[id];
+  // A Przymierze hero standing in the Horde base keeps it: the newcomer takes the nearest free hex.
+  if (!canStand(state, hero.pos, 'horde', id)) hero.pos = nearestFreeHexes(state, hero.pos, 'horde')[0] ?? hero.pos;
+  log(state, 'info', `W bazie Hordy pojawia się nowy bohater: ${UNITS[id].name}.`);
 }
 
 // ------------------------------------------------------------------ dispatcher

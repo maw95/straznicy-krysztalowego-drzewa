@@ -42,7 +42,7 @@ const RULES: Array<[string, string[]]> = [
     'Bitwa trwa, aż polegną wszystkie jednostki jednej strony. Ocalali odzyskują pełne Życie, polegli pomocnicy odpadają z gry, a poległego bohatera przywraca tylko Eliksir Odrodzenia.',
   ]],
   ['Automat zła i strażnicy w bitwie', [
-    'Automat zła ma tylu bohaterów, ilu jest graczy, ale co najmniej dwóch. Jego jednostki (w kooperacji) i strażnicy działają według prostych zasad: zdolności używają przy pierwszej okazji; gdy nikogo nie mogą zaatakować, idą do najbliższego wroga.',
+    'Automat zła ma tylu bohaterów, ilu jest graczy (na poziomie trudnym o jednego więcej, co najmniej trzech). Gdy polegną wszyscy, w bazie Hordy pojawia się kolejny bohater — poza poziomem trudnym. Jego jednostki (w kooperacji) i strażnicy działają według prostych zasad: zdolności używają przy pierwszej okazji; gdy nikogo nie mogą zaatakować, idą do najbliższego wroga.',
     'Każda jednostka atakuje wroga z najmniejszą liczbą Życia — najpierw spośród tych, których sięga bez ruchu, potem spośród tych, do których dojdzie. Przy remisie wybiera bohatera. Skarby automat zużywa przy pierwszej okazji, gdy coś dają (szczegóły w Instrukcji, rozdział 12).',
   ]],
   ['Poziomy gry', [

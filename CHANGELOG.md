@@ -10,6 +10,7 @@ Nowe commity trafiają do sekcji „Nieopublikowane”, dopóki nie powstanie ta
 - Menu stats: win rate, points from map length and measured difficulty, detailed table; unfinished games left out
 - Intro slide show on the first launch (story, basic rules, where to find the rulebook); art goes to public/assets/intro/
 - Setup hint: the coop automaton fields at least two Horde heroes
+- Coop automaton: as many Horde heroes as players, a new one in the Horde base when all have fallen (not on Trudny)
 
 ## 1.1.0 — 2026-10-22
 

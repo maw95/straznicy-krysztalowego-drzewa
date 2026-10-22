@@ -27,6 +27,8 @@ export interface RulesConfig {
   heroReplacement: boolean;
   /** Coop: the automaton fields at least this many Horde heroes (more when there are more players). */
   minEvilHeroes: number;
+  /** Coop: when the automaton's last living hero falls, another Horde hero appears in the Horde base. */
+  hordeRespawn?: boolean;
   /** Treasures the Horde holds from the start (difficulty): Eliksiry, other kinds, any random card. */
   hordeStartTreasures?: { resurrections: number; others: number; random?: number };
   /** Evil heroes standing on the Tree stay there instead of chasing (spec 7: DO USTALENIA). */
@@ -54,7 +56,8 @@ export const DEFAULT_RULES: RulesConfig = {
   extraEvilHero: false,
   initiativeTie: 'defender',
   heroReplacement: false,
-  minEvilHeroes: 2,
+  minEvilHeroes: 1,
+  hordeRespawn: true,
   ritualHold: true,
   ritualRounds: 3,
   passThroughAllies: true,
@@ -68,12 +71,13 @@ export type Level = 'kids' | 'normal' | 'hard';
 /**
  * What each level changes against DEFAULT_RULES. Easy ("kids"): few rules to remember (duels on
  * the board, no abilities, no die, no ritual) and a fallen hero's player takes a reserve hero.
- * Hard exists for coop only: the automaton fields one Horde hero more and starts with two random treasures.
+ * Hard exists for coop only: the automaton fields one Horde hero more (at least three), starts with two
+ * random treasures and gets no reinforcements in its base.
  */
 export const LEVEL_RULES: Record<Level, { battleMode: BattleMode; rules: Partial<RulesConfig> }> = {
   kids: { battleMode: 'board', rules: { abilities: false, useDice: false, heroReplacement: true, ritual: false } },
   normal: { battleMode: 'arena', rules: {} },
-  hard: { battleMode: 'arena', rules: { extraEvilHero: true, hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  hard: { battleMode: 'arena', rules: { extraEvilHero: true, minEvilHeroes: 2, hordeRespawn: false, hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
 };
 
 export function levelSettings(level: Level, mode: Mode): { battleMode: BattleMode; rules: RulesConfig } {

@@ -39,10 +39,16 @@ export interface TesterExport {
 
 export function levelOf(setup: SetupOptions): LevelName {
   const r = setup.rules;
+  // Easy and normal: as many Horde heroes as players, reinforcements in the base; hard: neither.
+  const automaton = r.minEvilHeroes === DEFAULT_RULES.minEvilHeroes && Boolean(r.hordeRespawn);
+  const hardAutomaton = r.minEvilHeroes === 2 && !r.hordeRespawn;
   const base = r.treasures && !r.heroReplacement && r.initiativeTie === DEFAULT_RULES.initiativeTie;
   const easy = r.treasures && r.heroReplacement && r.ritual === false && r.initiativeTie === DEFAULT_RULES.initiativeTie;
-  if (easy && setup.battleMode === 'board' && !r.abilities && !r.useDice && !r.extraEvilHero) return 'kids';
-  if (base && setup.battleMode === 'arena' && r.abilities && !r.useDice) return r.extraEvilHero ? (setup.mode === 'coop' ? 'hard' : 'custom') : 'normal';
+  if (easy && automaton && setup.battleMode === 'board' && !r.abilities && !r.useDice && !r.extraEvilHero) return 'kids';
+  if (base && setup.battleMode === 'arena' && r.abilities && !r.useDice) {
+    if (r.extraEvilHero) return setup.mode === 'coop' && hardAutomaton ? 'hard' : 'custom';
+    if (automaton) return 'normal';
+  }
   return 'custom';
 }
 

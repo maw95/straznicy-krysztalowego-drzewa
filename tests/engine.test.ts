@@ -203,7 +203,7 @@ describe('player-facing keys', () => {
 
 describe('objectives', () => {
   it('completes the ritual after evil heroes hold the Tree for the configured rounds', () => {
-    let s = createGame(setup({ seats: [{ name: 'A', faction: 'dawn', controller: 'human', heroId: 'goldDragon' }] }));
+    let s = createGame(setup({ seats: [{ name: 'A', faction: 'dawn', controller: 'human', heroId: 'goldDragon' }], rules: { ...DEFAULT_RULES, minEvilHeroes: 2 } }));
     // One Horde hero on the Tree, the other on a free hex next to it.
     const [onTree, beside] = Object.values(s.heroes).filter((h) => h.faction === 'horde');
     s.heroes[onTree.id].pos = treeKey();

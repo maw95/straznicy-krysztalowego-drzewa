@@ -225,7 +225,12 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onS
               <div style={{ fontWeight: 700, color: '#F3D27A' }}>{UNITS[s.heroId].name}</div>
             </div>
           ))}
-          {mode === 'coop' && <div style={{ fontSize: 15, color: 'var(--muted)' }}>Zło prowadzi automat: tylu bohaterów Hordy, ilu bohaterów Przymierza, ale co najmniej dwóch{rules.extraEvilHero ? ' — i jeszcze jeden' : ''}.</div>}
+          {mode === 'coop' && (
+            <div style={{ fontSize: 15, color: 'var(--muted)' }}>
+              Zło prowadzi automat: tylu bohaterów Hordy, ilu bohaterów Przymierza{rules.minEvilHeroes > 1 ? `, ale co najmniej ${rules.minEvilHeroes === 2 ? 'dwóch' : rules.minEvilHeroes}` : ''}
+              {rules.extraEvilHero ? ' — i jeszcze jeden' : ''}.{rules.hordeRespawn ? ' Gdy polegną wszyscy, w bazie Hordy pojawia się kolejny.' : ''}
+            </div>
+          )}
           <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginTop: 8 }}>
             <button className="btn prim r tester-btn" style={{ height: 56, padding: '0 28px', fontSize: 21 }} onClick={onTesters} title="Informacje dla testerów, statystyki i plik z uwagami dla twórcy">
               INFO DLA TESTERÓW
@@ -289,7 +294,7 @@ const LEVELS: Array<[Level | 'custom', string]> = [
 const LEVEL_HINT: Record<Level | 'custom', string> = {
   kids: 'Krótkie pojedynki na planszy, bez zdolności, bez kości i bez rytuału, a poległego bohatera zastępuje rezerwowy — zasady do ogarnięcia w kilka minut.',
   normal: 'Pełna gra: bitwy 3 na 3 na arenie, zdolności i skarby.',
-  hard: 'Pełna gra, a automat zła ma o jednego bohatera więcej i 2 losowe skarby na start. Wyzwanie dla dorosłych.',
+  hard: 'Pełna gra, a automat zła ma o jednego bohatera więcej (co najmniej trzech) i 2 losowe skarby na start, ale nie dostaje posiłków. Wyzwanie dla dorosłych.',
   custom: 'Wybierz sam: rodzaj bitew, ułatwienia i utrudnienia, które można dowolnie łączyć.',
 };
 
@@ -319,7 +324,7 @@ const TIPS = {
 const LEVEL_TIPS: Record<Level | 'custom', string> = {
   kids: 'Dla najmłodszych (od 5 lat): bitwy to szybkie pojedynki bohaterów na planszy, bez zdolności i bez kości — wystarczy porównać liczby na kartach. Nie ma rytuału, a gdy bohater polegnie, gracz bierze rezerwowego.',
   normal: 'Pełna gra: bitwy 3 na 3 na osobnej arenie, zdolności jednostek i skarby. Obrażenia zawsze równe Atakowi.',
-  hard: 'Pełna gra, a automat zła dostaje jednego bohatera więcej i 2 losowe skarby na start. Wyzwanie dla dorosłych (tylko kooperacja).',
+  hard: 'Pełna gra, a automat zła dostaje jednego bohatera więcej (co najmniej trzech) i 2 losowe skarby na start, ale nie dostaje posiłków. Wyzwanie dla dorosłych (tylko kooperacja).',
   custom: 'Sami składacie zasady: rodzaj bitew, ułatwienia i utrudnienia — wszystko można łączyć.',
 };
 

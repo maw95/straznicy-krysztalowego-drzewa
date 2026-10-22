@@ -332,7 +332,10 @@ describe('harder coop', () => {
   it('fields one Horde hero more when the coop option is on', () => {
     const count = (extraEvilHero: boolean, players: number) =>
       Object.values(createGame(setup({ seats: ([{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }, { name: 'B', faction: 'dawn', controller: 'bot', heroId: 'unicornKing' }] as SetupOptions['seats']).slice(0, players) }, { extraEvilHero })).heroes).filter((h) => h.faction === 'horde').length;
-    expect([count(false, 1), count(true, 1), count(false, 2), count(true, 2)]).toEqual([2, 3, 2, 3]);
+    expect([count(false, 1), count(true, 1), count(false, 2), count(true, 2)]).toEqual([1, 2, 2, 3]);
+    // The hard level: one more than the players, but at least three.
+    const hard = (players: number) => Object.values(createGame({ ...setup({ seats: ([{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }, { name: 'B', faction: 'dawn', controller: 'bot', heroId: 'unicornKing' }] as SetupOptions['seats']).slice(0, players) }), ...levelSettings('hard', 'coop') }).heroes).filter((h) => h.faction === 'horde').length;
+    expect([hard(1), hard(2)]).toEqual([3, 3]);
   });
 });
 
@@ -461,11 +464,11 @@ describe('arena movement path', () => {
 });
 
 describe('difficulty and balance settings', () => {
-  it('fields at least rules.minEvilHeroes automaton heroes in coop (2 by default)', () => {
+  it('fields as many automaton heroes as players in coop, at least rules.minEvilHeroes', () => {
     const count = (s: GameState) => Object.values(s.heroes).filter((h) => h.faction === 'horde').length;
-    expect(count(createGame(setup()))).toBe(2);
-    expect(count(createGame(setup({}, { minEvilHeroes: 1 })))).toBe(1);
-    expect(count(createGame(setup({}, { extraEvilHero: true })))).toBe(3);
+    expect(count(createGame(setup()))).toBe(1);
+    expect(count(createGame(setup({}, { minEvilHeroes: 2 })))).toBe(2);
+    expect(count(createGame(setup({}, { extraEvilHero: true, minEvilHeroes: 2 })))).toBe(3);
   });
 
   it('hands the Przymierze its starting treasures on the larger maps', () => {
@@ -496,5 +499,36 @@ describe('difficulty and balance settings', () => {
     const s = createGame(setup({}, rules));
     for (const h of Object.values(s.heroes)) if (h.faction === 'horde') h.pos = treeKey();
     expect(ritualFormed(s)).toBe(false);
+  });
+});
+
+describe('Horde reinforcements (coop, except the hard level)', () => {
+  const play = (seed: number, level: 'normal' | 'hard') => {
+    let s = createGame({ ...setup({ seed, seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'ancientBear' }] }), ...levelSettings(level, 'coop') });
+    const seen: GameState[] = [];
+    for (let i = 0; i < 4000 && s.phase !== 'over'; i++) {
+      const a = chooseAction(s);
+      if (!a) break;
+      const before = s.log.length;
+      s = applyAction(s, a);
+      if (s.log.slice(before).some((l) => l.text.startsWith('W bazie Hordy pojawia się'))) seen.push(s);
+    }
+    return { s, seen };
+  };
+
+  it('brings a new Horde hero into the Horde base once all of them have fallen', () => {
+    let found: GameState | undefined;
+    for (let seed = 1; seed <= 40 && !found; seed++) found = play(seed, 'normal').seen[0];
+    expect(found).toBeDefined();
+    const horde = Object.values(found!.heroes).filter((h) => h.faction === 'horde');
+    const alive = horde.filter((h) => h.alive);
+    expect(alive).toHaveLength(1);
+    expect(alive[0].pos).toBe(homeKey(found!.rows, 'horde'));
+    // The newcomer is a hero that had not played yet.
+    expect(horde.length).toBe(2);
+  });
+
+  it('sends no reinforcements on the hard level', () => {
+    for (let seed = 1; seed <= 15; seed++) expect(play(seed, 'hard').seen).toHaveLength(0);
   });
 });
