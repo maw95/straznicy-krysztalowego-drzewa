@@ -5,7 +5,9 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vite
 import { App } from '../src/ui/App';
 import { createGame } from '../src/engine/game';
 import { DEFAULT_RULES } from '../src/engine/types';
-import { recordGame } from '../src/ui/journal';
+import { journalBreakdown, journalStats, recordGame } from '../src/ui/journal';
+import { difficultyRating, pointsFor } from '../src/ui/scoring';
+import { levelSettings } from '../src/engine/types';
 
 beforeAll(() => {
   (globalThis as any).ResizeObserver = class { observe() {} disconnect() {} unobserve() {} };
@@ -158,8 +160,11 @@ describe('tester journal', () => {
     const { container } = render(<App />);
     const doc = container.ownerDocument;
     const box = doc.querySelector('[aria-label="Twoje partie"]')!.textContent;
-    expect(box).toContain('Rozegrane2');
+    // The unfinished game is not part of the record.
+    expect(box).toContain('Rozegrane1');
     expect(box).toContain('1 wygr. · 0 przegr.');
+    expect(box).toContain('Procent wygranych100%');
+    expect(box).toContain('Punkty9');
     const btn = (t: string) => [...doc.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement;
     await act(async () => fireEvent.click(btn('INFO DLA TESTERÓW')));
     expect(doc.body.textContent).toContain('Zgłoszone błędy: 1');
@@ -178,6 +183,63 @@ describe('tester journal', () => {
     expect(data.games[0].result).toMatchObject({ winner: 'dawn' });
     // The draft stays for the next visit.
     expect(JSON.parse(localStorage.getItem('skd-feedback-draft')!)).toEqual({ name: 'Ola', feedback: 'Fajne smoki' });
+  });
+});
+
+describe('win rate and points', () => {
+  const seat = (faction: 'dawn' | 'horde', controller: 'human' | 'bot', heroId: string) => ({ name: heroId, faction, controller, heroId });
+  const coop = (seed: number, mapSize: 'short' | 'long' | 'veryLong', level: 'kids' | 'normal' | 'hard') => ({ mode: 'coop' as const, mapSize, seed, seats: [seat('dawn', 'human', 'goldDragon')], ...levelSettings(level, 'coop') });
+  const finish = (setup: ReturnType<typeof coop>, winner: 'dawn' | 'horde') => recordGame({ setup, actions: [] }, { ...createGame(setup), phase: 'over', winner, endReason: 'test' });
+
+  it('scores a win by map length × measured difficulty, 30 at most', () => {
+    expect(['kids', 'normal', 'hard'].map((l) => pointsFor(coop(1, 'veryLong', l as never), l as never, 'dawn'))).toEqual([13, 21, 30]);
+    expect(pointsFor(coop(1, 'short', 'kids'), 'kids', 'dawn')).toBe(3);
+    // PvP: the Horde's difficulty is 11 minus Przymierze's.
+    const pvp = { ...coop(1, 'short', 'normal'), mode: 'pvp' as const, seats: [seat('dawn', 'human', 'goldDragon'), seat('horde', 'bot', 'blackDragon')] };
+    expect([difficultyRating(pvp, 'normal', 'dawn'), difficultyRating(pvp, 'normal', 'horde')]).toEqual([5, 6]);
+    // Custom: the full game plus what each option changes on its own (no abilities +2, the die ±0).
+    const custom = { ...coop(1, 'short', 'normal') };
+    custom.rules = { ...custom.rules, abilities: false, useDice: true };
+    expect(difficultyRating(custom, 'custom', 'dawn')).toBe(7);
+  });
+
+  it('counts only games the humans played against the machine', () => {
+    window.history.replaceState(null, '', '/');
+    finish(coop(1, 'short', 'normal'), 'dawn');
+    finish(coop(2, 'short', 'normal'), 'horde');
+    finish(coop(3, 'veryLong', 'hard'), 'dawn');
+    // Humans on both sides: played, but nobody's win.
+    const pvp = { mode: 'pvp' as const, mapSize: 'short' as const, battleMode: 'arena' as const, seed: 4, seats: [seat('dawn', 'human', 'goldDragon'), seat('horde', 'human', 'blackDragon')], rules: { ...DEFAULT_RULES } };
+    recordGame({ setup: pvp, actions: [] }, { ...createGame(pvp), phase: 'over', winner: 'horde', endReason: 'test' });
+    // A human Horde against a bot Przymierze.
+    const vsBot = { ...pvp, seed: 5, seats: [seat('dawn', 'bot', 'goldDragon'), seat('horde', 'human', 'blackDragon')] };
+    recordGame({ setup: vsBot, actions: [] }, { ...createGame(vsBot), phase: 'over', winner: 'horde', endReason: 'test' });
+    const s = journalStats();
+    // Coop short normal 9 + coop very long hard 30 + Horde short normal 10 (difficulty 6).
+    expect(s).toMatchObject({ finished: 5, won: 3, lost: 1, winRate: 75, points: 9 + 30 + 10 });
+    expect(journalBreakdown().map((r) => [r.mode, r.mapSize, r.level, r.played, r.won, r.lost, r.winRate])).toEqual([
+      ['coop', 'short', 'normal', 2, 1, 1, 50],
+      ['coop', 'veryLong', 'hard', 1, 1, 0, 100],
+      ['pvp', 'short', 'normal', 2, 1, 0, 100],
+    ]);
+  });
+
+  it('opens the detailed table from the menu', async () => {
+    window.history.replaceState(null, '', '/');
+    finish(coop(1, 'short', 'normal'), 'dawn');
+    finish(coop(2, 'short', 'kids'), 'horde');
+    recordGame({ setup: coop(3, 'long', 'hard'), actions: [] }, createGame(coop(3, 'long', 'hard')));
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    const more = [...doc.querySelectorAll('button')].find((b) => b.textContent === 'Dokładne dane')!;
+    await act(async () => fireEvent.click(more));
+    const rows = [...doc.querySelectorAll('table[aria-label="Dokładne dane"] tr')].map((tr) => [...tr.children].map((c) => c.textContent));
+    expect(rows).toEqual([
+      ['Tryb', 'Mapa', 'Poziom', 'Rozegrane', 'Wygrane', 'Przegrane', '% zwycięstw', 'Punkty'],
+      ['Kooperacja', 'Krótka', 'Łatwy', '1', '0', '1', '0%', '0'],
+      ['', 'Krótka', 'Normalny', '1', '1', '0', '100%', '9'],
+      ['Razem', '2', '1', '1', '50%', '9'],
+    ]);
   });
 });
 

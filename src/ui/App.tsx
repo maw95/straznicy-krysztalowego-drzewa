@@ -21,6 +21,7 @@ import { RulesDialog } from './RulesDialog';
 import { BattleSummary } from './BattleSummary';
 import { HoverCardLayer } from './hover';
 import { Tutorial } from './Tutorial';
+import { StatsDialog } from './StatsDialog';
 import { TreasureReveal } from './CardBack';
 
 const SPEEDS = { wolno: 900, normalnie: 450, szybko: 120 } as const;
@@ -39,6 +40,7 @@ export function App() {
   const history = useRef<Action[]>([]);
   const [showRules, setShowRules] = useState(false);
   const [showTesters, setShowTesters] = useState(false);
+  const [showStats, setShowStats] = useState(false);
   const [showReport, setShowReport] = useState(false);
   /** Bug reports written in this game; saved and exported with it. */
   const reports = useRef<BugReport[]>([]);
@@ -292,6 +294,7 @@ export function App() {
         else if (showRules) setShowRules(false);
         else if (showReport) setShowReport(false);
         else if (summary) setSummary(null);
+        else if (showStats) setShowStats(false);
         return;
       }
       if (confirm || card || showLog || showDebug || showRules || showReport || summary) return;
@@ -309,7 +312,7 @@ export function App() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [confirm, card, showLog, showDebug, showRules, showReport, summary, undo, fastForward, humanAction]);
+  }, [confirm, card, showLog, showDebug, showRules, showReport, summary, showStats, undo, fastForward, humanAction]);
 
   const visibleLog = useMemo(() => (game ? game.log.filter((l) => !l.privateTo || l.privateTo === viewer) : []), [game, viewer]);
 
@@ -334,12 +337,15 @@ export function App() {
     return (
       <>
         <SvgDefs />
-        <SetupScreen onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} />
+        <SetupScreen onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} />
         <Modal open={showRules} onClose={() => setShowRules(false)}>
           <RulesDialog onClose={() => setShowRules(false)} />
         </Modal>
         <Modal open={showTesters} onClose={() => setShowTesters(false)}>
           {showTesters && <TesterDialog onClose={() => setShowTesters(false)} download={download} />}
+        </Modal>
+        <Modal open={showStats} onClose={() => setShowStats(false)}>
+          {showStats && <StatsDialog onClose={() => setShowStats(false)} />}
         </Modal>
         <HoverCardLayer />
         {error && (

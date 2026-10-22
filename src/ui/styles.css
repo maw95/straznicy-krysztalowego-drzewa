@@ -503,3 +503,15 @@ button:not(:disabled), .hex-clip[style*='pointer'], label { cursor: url("data:im
 .stats-grid b { color: #f6ead0; text-align: right; font-weight: 700; }
 .stats-grid .win { color: #9be88a; }
 .stats-grid .loss { color: #ff8a70; }
+.stats-grid .points { color: #f3d27a; }
+.stats-more { display: block; width: 100%; margin-top: 10px; padding: 4px 12px; font-size: 15px; }
+/* "Dokładne dane": games per mode, map and level */
+.stats-table { width: 100%; border-collapse: collapse; font-size: 16px; }
+.stats-table th, .stats-table td { padding: 5px 10px; text-align: left; white-space: nowrap; }
+.stats-table th { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #f3d27a; border-bottom: 1px solid rgba(232, 196, 106, 0.55); }
+.stats-table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.04); }
+.stats-table tbody tr.group td { border-top: 1px solid rgba(232, 196, 106, 0.3); }
+.stats-table tfoot td { font-weight: 800; color: #f6ead0; border-top: 1px solid rgba(232, 196, 106, 0.55); }
+.stats-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.stats-table .win { color: #9be88a; }
+.stats-table .loss { color: #ff8a70; }

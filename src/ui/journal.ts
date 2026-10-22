@@ -2,6 +2,8 @@
 // kept in localStorage. "INFO DLA TESTERÓW" turns it into one file the tester sends to the designer;
 // scripts/testers.ts reads such files back (live-player win rates, feedback, bug reports).
 
+import type { FactionId, MapSize } from '../engine/data';
+import { pointsFor } from './scoring';
 import { DEFAULT_RULES, type GameState, type SetupOptions } from '../engine/types';
 import type { SaveFile } from './saves';
 
@@ -96,11 +98,38 @@ export interface JournalStats {
   finished: number;
   coop: { won: number; lost: number };
   pvp: { dawn: number; horde: number };
+  /** Finished games against the automaton or bots, where the humans played one side only. */
+  won: number;
+  lost: number;
+  /** Share of won games among `won + lost`, 0–100; null before the first such game. */
+  winRate: number | null;
+  points: number;
   reports: number;
 }
 
+/**
+ * The humans' result, or null when there is nobody to credit: an unfinished game, a bots-only game,
+ * or a PvP game with humans on both sides (someone won, but so did "you" lose).
+ */
+export function outcomeOf(g: JournalGame): 'won' | 'lost' | null {
+  const side = humanSide(g);
+  if (!g.result || !side) return null;
+  return g.result.winner === side ? 'won' : 'lost';
+}
+
+/** The one faction the humans played, or null (bots only, or humans on both sides). */
+function humanSide(g: JournalGame): FactionId | null {
+  const sides = [...new Set(g.save.setup.seats.filter((s) => s.controller === 'human').map((s) => s.faction))];
+  return sides.length === 1 ? sides[0] : null;
+}
+
+/** Points the game scored: nothing unless the humans won it. */
+export const gamePoints = (g: JournalGame) => (outcomeOf(g) === 'won' ? pointsFor(g.save.setup, g.level, humanSide(g)!) : 0);
+
+const rate = (won: number, lost: number) => (won + lost ? Math.round((100 * won) / (won + lost)) : null);
+
 export function journalStats(j: Journal = readJournal()): JournalStats {
-  const s: JournalStats = { played: j.games.length, finished: 0, coop: { won: 0, lost: 0 }, pvp: { dawn: 0, horde: 0 }, reports: 0 };
+  const s: JournalStats = { played: j.games.length, finished: 0, coop: { won: 0, lost: 0 }, pvp: { dawn: 0, horde: 0 }, won: 0, lost: 0, winRate: null, points: 0, reports: 0 };
   for (const g of j.games) {
     s.reports += g.save.reports?.length ?? 0;
     if (!g.result) continue;
@@ -110,8 +139,49 @@ export function journalStats(j: Journal = readJournal()): JournalStats {
       else s.coop.lost++;
     } else if (g.result.winner === 'dawn') s.pvp.dawn++;
     else s.pvp.horde++;
+    const o = outcomeOf(g);
+    if (o === 'won') {
+      s.won++;
+      s.points += gamePoints(g);
+    } else if (o === 'lost') s.lost++;
   }
+  s.winRate = rate(s.won, s.lost);
   return s;
+}
+
+export interface BreakdownRow {
+  mode: SetupOptions['mode'];
+  mapSize: MapSize;
+  level: LevelName;
+  played: number;
+  won: number;
+  lost: number;
+  winRate: number | null;
+  points: number;
+}
+
+const MAP_ORDER: MapSize[] = ['short', 'medium', 'long', 'veryLong'];
+const LEVEL_ORDER: LevelName[] = ['kids', 'normal', 'hard', 'custom'];
+
+/** Finished games per mode × map × level (only combinations played at least once), in menu order. */
+export function journalBreakdown(j: Journal = readJournal()): BreakdownRow[] {
+  const rows = new Map<string, BreakdownRow>();
+  for (const g of j.games) {
+    // Unfinished games are not part of the record.
+    if (!g.result) continue;
+    const { mode, mapSize } = g.save.setup;
+    const key = `${mode}:${mapSize}:${g.level}`;
+    let row = rows.get(key);
+    if (!row) rows.set(key, (row = { mode, mapSize, level: g.level, played: 0, won: 0, lost: 0, winRate: null, points: 0 }));
+    row.played++;
+    const o = outcomeOf(g);
+    if (o === 'won') {
+      row.won++;
+      row.points += gamePoints(g);
+    } else if (o === 'lost') row.lost++;
+  }
+  const order = (r: BreakdownRow) => (r.mode === 'coop' ? 0 : 100) + MAP_ORDER.indexOf(r.mapSize) * 10 + LEVEL_ORDER.indexOf(r.level);
+  return [...rows.values()].map((r) => ({ ...r, winRate: rate(r.won, r.lost) })).sort((a, b) => order(a) - order(b));
 }
 
 export function buildExport(name: string, feedback: string): TesterExport {

@@ -19,7 +19,7 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] => {
   return out;
 };
 
-export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, }: { onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void }) {
+export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onStats }: { onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void }) {
   const stats = journalStats();
   const fileRef = useRef<HTMLInputElement>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -238,7 +238,7 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, }: 
               <div className="stats-title">Twoje partie</div>
               <div className="stats-grid">
                 <span>Rozegrane</span>
-                <b>{stats.played}</b>
+                <b>{stats.finished}</b>
                 <span>Kooperacja</span>
                 <b>
                   <span className="win">{stats.coop.won} wygr.</span> · <span className="loss">{stats.coop.lost} przegr.</span>
@@ -247,6 +247,10 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, }: 
                 <b>
                   <span className="win">Przymierze {stats.pvp.dawn}</span> · <span className="loss">Horda {stats.pvp.horde}</span>
                 </b>
+                <span>Procent wygranych</span>
+                <b>{stats.winRate === null ? '—' : `${stats.winRate}%`}</b>
+                <span>Punkty</span>
+                <b className="points">{stats.points}</b>
                 {stats.reports > 0 && (
                   <>
                     <span>Zgłoszone błędy</span>
@@ -254,6 +258,9 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, }: 
                   </>
                 )}
               </div>
+              <button className="btn plate parch stats-more" onClick={onStats}>
+                Dokładne dane
+              </button>
             </div>
           </div>
         </Frame>
