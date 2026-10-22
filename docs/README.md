@@ -2,6 +2,9 @@
 
 - `INSTRUKCJA.md` — **instrukcja dla graczy** (fabuła, jednostki, zasady).
 - `NOTATKI_DLA_AGENTA_PLANSZOWKI.md` — **obowiązujące zasady** (sekcja 0), decyzje, otwarte pytania i wyniki symulacji. Gdy źródła się różnią, rozstrzyga ten plik.
+- `WYMIARY_ELEMENTOW.md` — **wymiary elementów fizycznych** i rozmiary grafik do druku.
+- `FIGURKI_SPECYFIKACJA.md` — figurki do druku 3D; `druk3d/` — podstawki, kryształy i modele.
+- `BACKLOG.md` — uzgodnione pomysły do wdrożenia (tryb online, figurki 3D w grze).
 - `zrodla_zasad/` — wcześniejsze źródła zasad: ilustrowana instrukcja (PDF), specyfikacja dla AI i dokument kontekstowy.
 - `grafika/` — projekt graficzny, z którego gra wycina swoje elementy:
   - `okladka/` — okładka (PDF i PNG) i logo;

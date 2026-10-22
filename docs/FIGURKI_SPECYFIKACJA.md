@@ -4,17 +4,17 @@ Specyfikacja 15 figurek *Strażników Kryształowego Drzewa* do druku na drukarc
 
 ---
 
-## 1. Założenia (do potwierdzenia)
+## 1. Założenia
 
-W materiałach gry nie ma jeszcze fizycznych wymiarów plansz, więc przyjąłem:
+Wymiary plansz są ustalone w `WYMIARY_ELEMENTOW.md`; najważniejsze dla figurek:
 
 | Element | Założenie | Skąd |
 |---|---|---|
-| Plansza areny | **A3 (420 × 297 mm)**, dwustronna | grafika areny ma proporcje ok. 4:3 |
-| Pole areny | ok. **33 mm** szerokości, **27 mm** między płaskimi bokami | 13 kolumn heksów na grafice 1448 px |
-| Kafelek mapy | **50 mm** między płaskimi bokami | bardzo długa mapa (14 rzędów) zajmie ok. 70 × 60 cm stołu |
+| Plansza areny | **A3 (420 × 297 mm)**, dwustronna | siatka 346 × 225 mm na środku planszy |
+| Pole areny | **30 mm** między płaskimi bokami, 34,6 mm między rogami | 13 kolumn sześciokątów, 85 pól |
+| Kafelek mapy | **50 mm** między płaskimi bokami | bardzo długa mapa (14 rzędów) zajmie ok. 70 × 62 cm stołu |
 
-**Najważniejsza zasada: na jednym polu stoi jedna figurka.** Podstawka musi się więc zmieścić w polu areny, czyli mieć poniżej 27 mm. Jeśli arena będzie mniejsza niż A3, zmniejszamy podstawki.
+**Najważniejsza zasada: na jednym polu stoi jedna figurka.** Podstawka musi się więc zmieścić w polu areny, czyli mieć poniżej 30 mm; 24 mm zostawia po 3 mm zapasu z każdej strony.
 
 ---
 
@@ -111,7 +111,7 @@ Pozy i cechy wziąłem z ilustracji na kartach (`docs/grafika/karty`, `public/as
 | Podstawka sześciokątna z herbem | 15 | 24 mm między bokami, 3 mm | 6 Przymierza, 6 Hordy, 3 strażników |
 | Kryształy | 3 | graniastosłup sześciokątny 10 mm, wys. 18 mm, z ostrym czubkiem | druk z przezroczystej żywicy, najlepiej niebieskiej |
 | Znacznik rundy | 1 | jak kryształ, 8 mm, wys. 14 mm, lekko zwężany ku dołowi | wchodzi w gniazda toru rund |
-| Tor rund | 1 | sześciokąt ok. 100 mm, 20 gniazd | z grafiki `grafika/ikony/tor_rund_20_pol.png` |
+| Tor rund | 1 | sześciokąt 150 mm, 24 gniazda Ø 14 mm | z grafiki `grafika/ikony/tor_rund.png` (do powiększenia) |
 
 ---
 
