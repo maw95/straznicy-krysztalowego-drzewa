@@ -403,3 +403,31 @@ describe('title screen', () => {
     delete (document as any).fullscreenEnabled;
   });
 });
+
+describe('event log', () => {
+  it('closes cleanly when scrollIntoView returns a Promise (newer Chromium)', async () => {
+    const scroll = vi.fn(() => Promise.resolve());
+    (Element.prototype as any).scrollIntoView = scroll;
+    const errors: unknown[] = [];
+    const onError = (e: ErrorEvent) => errors.push(e.error);
+    window.addEventListener('error', onError);
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const { container } = startSolo(1);
+    const btn = [...container.querySelectorAll('button')].find((b) => b.textContent === 'Dziennik')!;
+    await act(async () => fireEvent.click(btn));
+    expect(scroll).toHaveBeenCalled();
+    let thrown: unknown = null;
+    try {
+      await act(async () => fireEvent.keyDown(window, { key: 'Escape' }));
+      await act(async () => vi.advanceTimersByTime(400));
+    } catch (e) {
+      thrown = e;
+    }
+    window.removeEventListener('error', onError);
+    spy.mockRestore();
+    delete (Element.prototype as any).scrollIntoView;
+    expect(thrown).toBeNull();
+    expect(errors).toEqual([]);
+    expect(container.ownerDocument.body.textContent).not.toContain('Dziennik zdarzeń');
+  });
+});

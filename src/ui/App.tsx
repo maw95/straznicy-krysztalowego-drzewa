@@ -716,7 +716,11 @@ const LOG_ICON: Record<LogEntry['kind'], [string, string]> = {
 
 function LogDialog({ entries }: { entries: LogEntry[] }) {
   const end = useRef<HTMLDivElement>(null);
-  useEffect(() => end.current?.scrollIntoView(), []);
+  // A block body on purpose: newer Chromium returns a Promise from scrollIntoView(), and an effect
+  // must return nothing or a cleanup function (React would call the Promise and crash on close).
+  useEffect(() => {
+    end.current?.scrollIntoView();
+  }, []);
   return (
     <div>
       <Frame style={{ width: 'min(720px, 94vw)', height: '80vh' }} innerStyle={{ padding: 18, display: 'flex', flexDirection: 'column', gap: 10 }}>
