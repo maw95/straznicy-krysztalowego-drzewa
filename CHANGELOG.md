@@ -9,6 +9,7 @@ Nowe commity trafiają do sekcji „Nieopublikowane”, dopóki nie powstanie ta
 - Setup: initiative tie rule moved to the custom level, tutorial above the test rules
 - Menu stats: win rate, points from map length and measured difficulty, detailed table; unfinished games left out
 - Intro slide show on the first launch (story, basic rules, where to find the rulebook); art goes to public/assets/intro/
+- Setup hint: the coop automaton fields at least two Horde heroes
 
 ## 1.1.0 — 2026-10-22
 
