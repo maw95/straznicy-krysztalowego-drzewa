@@ -320,7 +320,7 @@ sheet('''<div class="eyebrow">Rozdział 8 · poziom normalny i trudny</div><h1>B
 ''', left='Rozdział 8', right='Walka', foot='Bitwa na arenie', key='arena')
 sheet('''<h2>Aktywacja</h2>
 <ol class="rules">
-<li><b>Ruch</b> — o tyle pól, ile wynosi Szybkość (można zostać w miejscu). Wolno przejść przez pole sojusznika, nie wolno przez pole wroga ani przez przeszkodę. Jednostki latające przelatują nad wszystkim, ale lądują na wolnym polu.</li>
+<li><b>Ruch</b> — o tyle pól, ile wynosi Szybkość (można zostać w miejscu). Nie wolno przejść przez pole zajęte przez inną jednostkę (sojusznika ani wroga) ani przez przeszkodę. Jednostki latające przelatują nad wszystkim, ale lądują na wolnym polu.</li>
 <li><b>Atak</b> (jeśli chcesz): <b>wręcz</b> — w wroga na sąsiednim polu; <b>strzelec</b> — w dowolnego wroga, którego widać. Przeszkoda na linii zasłania cel, jednostki nie zasłaniają.</li>
 </ol>
 <div class="cols"><div><h3>Obrażenia</h3><p>Cios zadaje tyle obrażeń, ile wynosi <b>Atak</b>. Połóż na karcie krople obrażeń. <b>Nie ma kontrataków.</b> Gdy obrażenia dorównają Życiu, jednostka pada i schodzi z areny.</p></div>

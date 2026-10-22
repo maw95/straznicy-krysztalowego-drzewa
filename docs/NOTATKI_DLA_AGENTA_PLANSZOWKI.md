@@ -615,7 +615,7 @@ Jedna bitwa 3 na 3 bez mapy przygody, także w wersji papierowej (trafi do instr
 - **Instrukcja:** rozdział 15 „Arena — szybka bitwa” (ściągawka przeszła na rozdział 16).
 - **Symulacje (1000 partii na każde z 81 starć, `make sim-arena`):** Przymierze wygrywa średnio 58% (boty Normalne) i 56% (Trudne). Najlepsze składy przeciw najlepszym: 46–55% dla Przymierza — wyrównane. Horda ma jednak jednego mocnego bohatera (Czarny Smok ok. 50%, Ogr ok. 41%, Wilkołak ok. 36%), a pary Goblin + Nietoperz i Elf + Pegaz są wyraźnie najsłabsze.
 
-## 9. Balans jednostek 2 (2026-10-22, w toku)
+## 9. Balans jednostek 2 (2026-10-22, zatwierdzony przez użytkownika)
 
 Decyzje użytkownika:
 - **Budżet statystyk bohaterów (18–19 punktów) przestaje obowiązywać.** Zostają specjalizacje: w Hordzie Ogr ma najwięcej Życia, a Władca Wilkołaków jest najszybszy; w Przymierzu Niedźwiedź ma najwięcej Życia, a Jednorożec jest najszybszy. Szybkości dalej bez remisów (Przymierze parzyste, Horda nieparzyste).
@@ -626,3 +626,18 @@ Ustalenia z symulacji:
 - Na Łatwym bitwy to pojedynki bez zdolności i bez kości — wynik jest z góry przesądzony przez Ż, A i S (pierwszy uderza szybszy). Zmiana statystyki bohatera o 1 potrafi odwrócić pojedynek i przesunąć Łatwy o 30–65 punktów. Statystyki bohaterów można więc zmienić tylko tak, żeby wszystkie pojedynki (9 bohater–bohater, 18 bohater–strażnik) wyszły tak samo: Wilkołak S 7 wymaga Jednorożca S 8; Ogr Ż 10 odwraca tylko rzadki pojedynek z Gryfem. Resztę balansu dają zdolności i pomocnicy (na Łatwym nie działają).
 - Pełne wyrównanie Areny (50/50) obniża Przymierze w zwykłej grze o 3–15 punktów — sprzeczne z limitem ±5. Najlepszy kompromis wyrównuje bohaterów wewnątrz frakcji, a siła frakcji zostaje prawie ta sama.
 - Bot szybką jednostką wbiega przed resztę drużyny, więc sama wyższa Szybkość osłabia jednostkę na arenie.
+
+Wdrożony zestaw (U1 i zasady dodatkowe, zatwierdzone):
+- **Władca Wilkołaków:** S 5 → **7**; **Zew Krwi** zawsze (nie raz na bitwę): **+1 A do każdego ataku na już rannego wroga** (wcześniej raz na bitwę +2 A).
+- **Król Jednorożców:** S 6 → **8**; **Szarża Światła +2 A** (wcześniej +1 A), nadal po ruchu o co najmniej 4 pola.
+- **Ogr Żelazna Pięść:** Ż 9 → **10**.
+- **Bitwa:** chodzące jednostki **nie przechodzą przez sojuszników** (wcześniej mogły) — decyzja po zgłoszeniu z 22.10.
+- **Arena:** przy losowaniu skarbów **Horda widzi 4 karty**, Przymierze 3.
+
+Wyniki (zwykła gra: 500 partii na wariant; Arena: 1000 partii na każde z 81 starć):
+- Łatwy ±1,2 pkt; kooperacja Normalny/Trudny ±4,4 pkt; rywalizacja Normalny: Przymierze −1,6 do −8,2 pkt (zgodnie z decyzją, że Przymierze może w rywalizacji trochę osłabnąć). Kooperacja dalej łatwiejsza niż rywalizacja.
+- Arena: Przymierze 50,3%; bohaterowie 46–53% (Złoty Smok 53, Jednorożec 48, Niedźwiedź 50, Czarny Smok 46, Wilkołak 51, Ogr 52). Najsłabsze pary pomocników: Elf + Pegaz 42%, Goblin + Nietoperz 43% (reszta 52–55%).
+- Odrzucone (łamały limit ±5): osłabienie Słonecznego Blasku, Opiekuna Gaju i Daru Życia (rywalizacja −7 do −15), wzmocnienie Szarży (od 3 pól), Pegaza i Elfa (Ż 5) — kooperacja Trudny +8 do +16; Horda z trzecim skarbem na Arenie (Przymierze 36%).
+- Tabele trudności w rozdziale 13 instrukcji i oceny w `src/ui/scoring.ts` przeliczone na nowo.
+
+**Dla wersji papierowej (do poprawienia):** karty jednostek Władca Wilkołaków (S 7, nowy tekst Zewu Krwi), Król Jednorożców (S 8, Szarża +2 A), Ogr Żelazna Pięść (Ż 10); w instrukcji rozdział 2, zasada ruchu w bitwie (rozdział 8 i ściągawka), rozdział 13 (tabele), rozdział 15 (Horda widzi 4 karty). Figurki bez zmian.

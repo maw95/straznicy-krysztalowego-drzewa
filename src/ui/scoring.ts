@@ -25,18 +25,18 @@ const r = (normal: number, kids: number, hard: number | undefined, optionBase: n
 type Table = Record<MapSize, Ratings>;
 
 /**
- * Difficulty for Przymierze in coop, by the number of players. The level columns follow the Horde
- * reinforcement rule (2026-10-22); the single options were measured before it, against optionBase.
+ * Difficulty for Przymierze in coop, by the number of players. The level columns follow the unit balance
+ * of 2026-10-22 (notes section 9); the single options were measured before it, against optionBase.
  */
 const COOP: Record<1 | 2, Table> = {
-  1: { short: r(4, 2, 8, 5, 7, 5, 5, 6, 5), medium: r(4, 2, 8, 5, 7, 6, 4, 6, 5), long: r(5, 3, 8, 5, 6, 6, 5, 7, 5), veryLong: r(4, 3, 7, 5, 6, 7, 4, 7, 5) },
-  2: { short: r(5, 3, 7, 4, 7, 5, 4, 4, 4), medium: r(5, 3, 7, 4, 6, 5, 5, 4, 5), long: r(5, 4, 7, 4, 5, 5, 4, 4, 4), veryLong: r(4, 3, 5, 3, 4, 4, 3, 4, 3) },
+  1: { short: r(5, 2, 7, 5, 7, 5, 5, 6, 5), medium: r(4, 2, 8, 5, 7, 6, 4, 6, 5), long: r(5, 3, 8, 5, 6, 6, 5, 7, 5), veryLong: r(4, 3, 7, 5, 6, 7, 4, 7, 5) },
+  2: { short: r(4, 3, 7, 4, 7, 5, 4, 4, 4), medium: r(5, 3, 7, 4, 6, 5, 5, 4, 5), long: r(5, 4, 6, 4, 5, 5, 4, 4, 4), veryLong: r(4, 3, 5, 3, 4, 4, 3, 4, 3) },
 };
 
 /** Difficulty for Przymierze in PvP (the Horde's is 11 minus it), 1 on 1 and 2 on 2. */
 const PVP: Record<1 | 2, Table> = {
   1: { short: r(5, 2, undefined, 5, 5, 6, 5, 4, 5), medium: r(6, 2, undefined, 6, 5, 6, 5, 5, 6), long: r(6, 2, undefined, 6, 6, 6, 6, 5, 6), veryLong: r(6, 3, undefined, 6, 6, 7, 6, 6, 6) },
-  2: { short: r(5, 3, undefined, 5, 7, 5, 5, 4, 5), medium: r(5, 3, undefined, 5, 7, 6, 6, 5, 6), long: r(6, 4, undefined, 6, 7, 6, 6, 6, 5), veryLong: r(6, 5, undefined, 6, 6, 6, 6, 7, 5) },
+  2: { short: r(5, 3, undefined, 5, 7, 5, 5, 4, 5), medium: r(6, 4, undefined, 5, 7, 6, 6, 5, 6), long: r(6, 4, undefined, 6, 7, 6, 6, 6, 5), veryLong: r(6, 4, undefined, 6, 6, 6, 6, 7, 5) },
 };
 
 /** Longer maps take longer to win. */

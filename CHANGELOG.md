@@ -18,7 +18,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Notatki projektowe: założenia i ustalenia nowego balansu jednostek (bez budżetu statystyk, specjalizacje, limit ±5 punktów) (`adcc12f`).
 - Balans jednostek: Władca Wilkołaków S 7, a Zew Krwi daje +1 A do każdego ataku na rannego wroga (zamiast raz na bitwę +2 A); Król Jednorożców S 8 i Szarża Światła +2 A; Ogr Żelazna Pięść Ż 10 (`40372c7`).
 - Arena: przy losowaniu skarbów Horda widzi 4 karty zamiast 3 (bez tego Przymierze wygrywało ok. 55% starć); okienko wyboru mieści 4 karty w jednym rzędzie (`0bcd3d5`).
-- Bitwa: chodzące jednostki nie przechodzą już przez pola zajęte przez sojuszników (zgłoszenie z 22 października 2026); opis w „Podstawowych zasadach”.
+- Bitwa: chodzące jednostki nie przechodzą już przez pola zajęte przez sojuszników (zgłoszenie z 22 października 2026); opis w „Podstawowych zasadach” (`e684e4c`).
+- Instrukcja i punkty po nowym balansie: statystyki i zdolności w rozdziale 2 (z nowymi obrazkami kart Wilkołaka, Jednorożca i Ogra), zasada ruchu w bitwie, 4 karty dla Hordy na Arenie, przeliczone tabele trudności w rozdziale 13 i oceny w punktach; w notatkach wyniki balansu i lista zmian dla wersji papierowej.
 
 ## 1.2.0 — 2026-10-22
 

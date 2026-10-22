@@ -51,7 +51,7 @@ const RULES: Array<[string, string[]]> = [
   ]],
   ['Arena', [
     'Jedna bitwa 3 na 3 bez mapy: Przymierze kontra Horda, z komputerem albo z drugim graczem. Każdy wybiera bohatera i 2 z 3 pomocników.',
-    'Skarby ze wspólnej talii (każdy po jednym, bez Magicznej Mapy, i 2 Eliksiry Odrodzenia): na zmianę A, B, B, A wybiera się jeden z 3 pokazanych, pozostałe wracają do talii. Każdy ma 2 skarby, ukryte do użycia.',
+    'Skarby ze wspólnej talii (każdy po jednym, bez Magicznej Mapy, i 2 Eliksiry Odrodzenia): na zmianę A, B, B, A wybiera się jeden z pokazanych (Przymierze widzi 3, Horda 4), pozostałe wracają do talii. Każdy ma 2 skarby, ukryte do użycia.',
     'Losowo: kto wybiera pierwszy (A) i na której arenie się walczy. Remis inicjatywy na zmianę: w nieparzystych rundach bitwy pierwszy jest A, w parzystych B. Wygrywa strona, która ostatnia stoi na arenie.',
   ]],
 ];

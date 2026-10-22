@@ -100,9 +100,9 @@ Każda frakcja ma **trzech bohaterów** i **trzech pomocników**. Każdy gracz p
 Najstarszy z jasnych smoków. Śpi na szczytach gór i budzi się tylko wtedy, gdy kraina naprawdę go potrzebuje. Mówią, że jego łuski pamiętają kolor pierwszego świtu.
 **Słoneczny Blask** — raz na bitwę: każda żyjąca jednostka Przymierza dostaje +1 A do następnego ataku, a sam Smok +3 A.
 
-**🦄 Król Jednorożców** — bohater, wręcz · Ż 8 · A 5 · S 6
+**🦄 Król Jednorożców** — bohater, wręcz · Ż 8 · A 5 · S 8
 Władca srebrnych stad z łąk pod Drzewem. Nigdy nie atakuje pierwszy, ale gdy już ruszy do szarży, ziemia drży aż po horyzont.
-**Szarża Światła** — zawsze, nie raz na bitwę: +1 A do ataku wykonanego po ruchu o co najmniej 4 pola.
+**Szarża Światła** — zawsze, nie raz na bitwę: +2 A do ataku wykonanego po ruchu o co najmniej 4 pola.
 
 **🐻 Prastary Niedźwiedź** — bohater, wręcz · Ż 11 · A 4 · S 4
 Strażnik puszczy, w którego futrze mieszkają ptaki, a w śladach rosną paprocie. Powolny i cierpliwy jak same drzewa — i równie trudny do przewrócenia.
@@ -130,11 +130,11 @@ Horda nazywa swoich bohaterów **wodzami**, a pomocników **poplecznikami**. W z
 To on uderzył w Drzewo w Noc Utraconego Blasku. Od tamtej pory jego oddech pachnie popiołem, a cień zasłania pół nieba.
 **Ognisty Oddech** — raz na bitwę: pełny atak w dwóch wrogów stojących jeden za drugim w linii.
 
-**🐺 Władca Wilkołaków** — wódz, wręcz · Ż 8 · A 5 · S 5
+**🐺 Władca Wilkołaków** — wódz, wręcz · Ż 8 · A 5 · S 7
 Przywódca wilczych sfor z Martwego Gąszczu. Wyczuwa krew z odległości trzech dolin i nigdy nie odpuszcza rannej ofiary.
-**Zew Krwi** — raz na bitwę: +2 A przeciw wrogowi, który jest już ranny.
+**Zew Krwi** — zawsze, nie raz na bitwę: +1 A do każdego ataku na wroga, który jest już ranny.
 
-**👹 Ogr Żelazna Pięść** — wódz, wręcz · Ż 9 · A 4 · S 5
+**👹 Ogr Żelazna Pięść** — wódz, wręcz · Ż 10 · A 4 · S 5
 Kiedyś kowal, dziś pięść Hordy. Jego czaszka jest twardsza niż kowadło, na którym wykuwał miecze.
 **Twardogłowy** — raz na bitwę ignoruje do 2 obrażeń z jednego trafienia.
 
@@ -304,7 +304,7 @@ W każdej rundzie bitwy każda jednostka ma **jedną aktywację**, od najszybsze
 
 ### Aktywacja
 
-1. **Ruch** — o tyle pól, ile wynosi Szybkość (można zostać w miejscu). Wolno przejść przez pole sojusznika, nie wolno przez pole wroga ani przez przeszkodę. Jednostki latające przelatują nad wszystkim, ale lądują na wolnym polu.
+1. **Ruch** — o tyle pól, ile wynosi Szybkość (można zostać w miejscu). Nie wolno przejść przez pole zajęte przez inną jednostkę (sojusznika ani wroga) ani przez przeszkodę. Jednostki latające przelatują nad wszystkim, ale lądują na wolnym polu.
 2. **Atak** (jeśli chcesz):
    - **wręcz** — w wroga na sąsiednim polu;
    - **strzelec** — w dowolnego wroga, którego widać. Przeszkoda na linii zasłania cel, jednostki nie zasłaniają.
@@ -448,7 +448,7 @@ Skala od **1** (bardzo łatwo) do **10** (bardzo trudno); wyrównana partia to 5
 
 | Mapa | Łatwy | Normalny | Trudny |
 |---|---:|---:|---:|
-| Krótka | 2 | 4 | 8 |
+| Krótka | 2 | 5 | 7 |
 | Średnia | 2 | 4 | 8 |
 | Długa | 3 | 5 | 8 |
 | Bardzo długa | 3 | 4 | 7 |
@@ -457,9 +457,9 @@ Skala od **1** (bardzo łatwo) do **10** (bardzo trudno); wyrównana partia to 5
 
 | Mapa | Łatwy | Normalny | Trudny |
 |---|---:|---:|---:|
-| Krótka | 3 | 5 | 7 |
+| Krótka | 3 | 4 | 7 |
 | Średnia | 3 | 5 | 7 |
-| Długa | 4 | 5 | 7 |
+| Długa | 4 | 5 | 6 |
 | Bardzo długa | 3 | 4 | 5 |
 
 W rywalizacji każda strona ma swoją trudność, a poziom Trudny nie istnieje. Trudność Przymierza i Hordy na tym samym poziomie zawsze daje razem 11 — po 5–6 dla obu stron to partia wyrównana.
@@ -478,9 +478,9 @@ W rywalizacji każda strona ma swoją trudność, a poziom Trudny nie istnieje. 
 | Mapa | Przymierze — Łatwy | Przymierze — Normalny | Horda — Łatwy | Horda — Normalny |
 |---|---:|---:|---:|---:|
 | Krótka | 3 | 5 | 8 | 6 |
-| Średnia | 3 | 5 | 8 | 6 |
+| Średnia | 4 | 6 | 7 | 5 |
 | Długa | 4 | 6 | 7 | 5 |
-| Bardzo długa | 5 | 6 | 6 | 5 |
+| Bardzo długa | 4 | 6 | 7 | 5 |
 
 ---
 
@@ -508,7 +508,7 @@ W rywalizacji każda strona ma swoją trudność, a poziom Trudny nie istnieje. 
 - **Zdolności darmowe.** Słoneczny Blask, Dar Życia i Pajęcze Sidła używa się w trakcie aktywacji, oprócz ruchu i ataku.
 - **Szarża Światła** działa przy każdym ataku, jeśli Jednorożec w tej samej aktywacji przeszedł co najmniej 4 pola.
 - **Ognisty Oddech** — Czarny Smok atakuje wroga obok siebie i wroga stojącego **tuż za nim** w tej samej linii. Obaj dostają pełny Atak.
-- **Zew Krwi** można użyć tylko przeciw wrogowi, który ma już jakieś obrażenia.
+- **Zew Krwi** działa sam przy każdym ataku Wilkołaka na wroga, który ma już jakieś obrażenia.
 - **Pajęcze Sidła** — unieruchomiony wróg w swojej następnej aktywacji nie może się ruszyć, ale może atakować.
 - **Twardogłowy** działa sam: przy pierwszym trafieniu za co najmniej 2 obrażenia Ogr ignoruje 2 z nich.
 - **Opiekun Gaju** działa sam, gdy Niedźwiedź albo sąsiedni sojusznik ma dostać cios, który by go zabił. Niedźwiedź przyjmuje taki cios na siebie (tylko jeśli go przeżyje) i ignoruje 3 obrażenia. Raz na bitwę.
@@ -537,7 +537,7 @@ Arena to osobny, krótki sposób gry: **jedna bitwa 3 na 3, bez mapy**, Przymier
 
 **Losowanie skarbów**
 
-Gracze wybierają na zmianę w kolejności **A, B, B, A**. Wybierający odkrywa karty z wierzchu talii, aż ma przed sobą **3 różne skarby** (drugi taki sam Eliksir odkłada na bok), **bierze jeden**, a pozostałe wtasowuje z powrotem do talii. Każdy kończy z **2 skarbami** i trzyma je zakryte, dopóki ich nie użyje.
+Gracze wybierają na zmianę w kolejności **A, B, B, A**. Wybierający odkrywa karty z wierzchu talii, aż ma przed sobą **3 różne skarby** — gracz Hordy **4** — (drugi taki sam Eliksir odkłada na bok), **bierze jeden**, a pozostałe wtasowuje z powrotem do talii. Horda widzi więcej kart, bo na arenie Przymierze jest odrobinę silniejsze. Każdy kończy z **2 skarbami** i trzyma je zakryte, dopóki ich nie użyje.
 
 **Bitwa**
 
@@ -587,7 +587,7 @@ Można wchodzić tylko na **odkryte pola**. Po wejściu odkryj wszystkie zakryte
 
 **Kolejność:** każda jednostka aktywuje się raz na rundę, od najwyższej **Szybkości**. Przy remisie pierwszy działa broniący.
 
-**Aktywacja:** ruch do liczby pól równej Szybkości (można zostać w miejscu), potem opcjonalny atak. Przez sojuszników można przechodzić, przez wrogów i przeszkody — nie. Latający przelatują nad wszystkim, ale lądują na wolnym polu.
+**Aktywacja:** ruch do liczby pól równej Szybkości (można zostać w miejscu), potem opcjonalny atak. Nie przechodzi się przez inne jednostki (sojuszników ani wrogów) ani przez przeszkody. Latający przelatują nad wszystkim, ale lądują na wolnym polu.
 
 **Atak:** wręcz — we wroga na sąsiednim polu; strzelec — w widocznego wroga. Przeszkody zasłaniają linię strzału, jednostki nie. Jeśli wróg stoi obok strzelca, strzelec może atakować tylko jego.
 
