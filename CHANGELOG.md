@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 1.2.0 — 2026-10-22
+
 - Historia zmian w repozytorium: lista commitów w każdej wersji (`1667367`).
 - Instrukcja, rozdział 13: tabele trudności tylko dla poziomów Łatwy, Normalny i Trudny; w rywalizacji osobne kolumny Przymierza i Hordy w kolorach frakcji (`1cb09f8`).
 - Menu: remis inicjatywy jest teraz ustawieniem Własnego poziomu (domyślnie obrońca pierwszy), samouczek stoi nad zasadami testowymi (`14d9a91`).
@@ -23,7 +25,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Poprawione grafiki: nowa okładka (tło menu i ekranu tytułowego, okładka instrukcji) i nowe ilustracje pięciu slajdów wprowadzenia (strażnicy, jak wygrać, wędrówka, bitwa, tryby gry) (`bb144e7`).
 - Poprawka: zamknięcie dziennika zdarzeń wywracało grę („Błąd interfejsu: n is not a function”) w nowszych przeglądarkach opartych na Chrome, np. Operze; zgłosił Filip (`d3e3f39`).
 - Narzędzia: analiza zgłoszeń (`make report`) czyta też pliki testerów z „INFO DLA TESTERÓW” i pokazuje ich uwagi (`b96531b`).
-- Poprawka: liczba na kropli obrażeń w bitwie stoi teraz na środku kropli i nie wystaje poza nią (cyfry równej wysokości, mniejsza czcionka dla liczb dwucyfrowych).
+- Poprawka: liczba na kropli obrażeń w bitwie stoi teraz na środku kropli i nie wystaje poza nią (cyfry równej wysokości, mniejsza czcionka dla liczb dwucyfrowych) (`e6484e6`).
 
 ## 1.1.0 — 2026-10-22
 
