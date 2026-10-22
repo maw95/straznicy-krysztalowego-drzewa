@@ -13,13 +13,15 @@ export function Marker({ name, size = 22, title }: { name: MarkerName; size?: nu
 
 /** Damage as one empty drop with the number written on it. */
 export function DamageDrop({ amount, size = 34 }: { amount: number; size?: number }) {
+  // The drop (115 × 160) fills the square's height; its round belly, where the number goes, is
+  // centred at 62% of the height and about 0.7 of the size wide.
   return (
     <span style={{ position: 'relative', display: 'inline-block', width: size, height: size, flex: 'none' }} aria-label={`−${amount} Życia`}>
       <Marker name="damage_empty" size={size} />
       <span
         style={{
-          position: 'absolute', left: 0, right: 0, top: '22%', textAlign: 'center', lineHeight: 1,
-          fontSize: size * 0.5, fontWeight: 700, color: '#F7E9C4',
+          position: 'absolute', left: 0, right: 0, top: '63%', transform: 'translateY(-50%)', textAlign: 'center', lineHeight: 1,
+          fontSize: size * (amount >= 10 ? 0.38 : 0.5), fontWeight: 700, color: '#F7E9C4', fontStyle: 'normal', fontVariantNumeric: 'lining-nums tabular-nums', letterSpacing: amount >= 10 ? '-0.03em' : undefined,
           textShadow: '0 0 2px #2A0705, 0 1px 2px #2A0705, 1px 0 2px #2A0705, -1px 0 2px #2A0705',
         }}
       >
