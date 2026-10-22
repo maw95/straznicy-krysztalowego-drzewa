@@ -38,6 +38,8 @@ export interface TesterExport {
 }
 
 export function levelOf(setup: SetupOptions): LevelName {
+  // Arena: the computer's strength (two people at one screen play "Normalny").
+  if (setup.mode === 'arena') return setup.seats.some((s) => s.controller === 'bot') ? setup.botLevel ?? 'normal' : 'normal';
   const r = setup.rules;
   // Easy and normal: as many Horde heroes as players, reinforcements in the base; hard: neither.
   const automaton = r.minEvilHeroes === DEFAULT_RULES.minEvilHeroes && Boolean(r.hordeRespawn);
@@ -104,6 +106,8 @@ export interface JournalStats {
   finished: number;
   coop: { won: number; lost: number };
   pvp: { dawn: number; horde: number };
+  /** Arena matches against the computer (two people at one screen count only as played). */
+  arena: { won: number; lost: number };
   /** Finished games against the automaton or bots, where the humans played one side only. */
   won: number;
   lost: number;
@@ -135,17 +139,20 @@ export const gamePoints = (g: JournalGame) => (outcomeOf(g) === 'won' ? pointsFo
 const rate = (won: number, lost: number) => (won + lost ? Math.round((100 * won) / (won + lost)) : null);
 
 export function journalStats(j: Journal = readJournal()): JournalStats {
-  const s: JournalStats = { played: j.games.length, finished: 0, coop: { won: 0, lost: 0 }, pvp: { dawn: 0, horde: 0 }, won: 0, lost: 0, winRate: null, points: 0, reports: 0 };
+  const s: JournalStats = { played: j.games.length, finished: 0, coop: { won: 0, lost: 0 }, pvp: { dawn: 0, horde: 0 }, arena: { won: 0, lost: 0 }, won: 0, lost: 0, winRate: null, points: 0, reports: 0 };
   for (const g of j.games) {
     s.reports += g.save.reports?.length ?? 0;
     if (!g.result) continue;
     s.finished++;
+    const o = outcomeOf(g);
     if (g.save.setup.mode === 'coop') {
       if (g.result.winner === 'dawn') s.coop.won++;
       else s.coop.lost++;
+    } else if (g.save.setup.mode === 'arena') {
+      if (o === 'won') s.arena.won++;
+      else if (o === 'lost') s.arena.lost++;
     } else if (g.result.winner === 'dawn') s.pvp.dawn++;
     else s.pvp.horde++;
-    const o = outcomeOf(g);
     if (o === 'won') {
       s.won++;
       s.points += gamePoints(g);

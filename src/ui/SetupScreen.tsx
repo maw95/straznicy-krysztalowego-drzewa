@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, MAP_VARIANTS, UNITS, type FactionId, type MapSize } from '../engine/data';
-import { DEFAULT_RULES, levelSettings, type BattleMode, type Level, type Controller, type Mode, type RulesConfig, type SeatSetup, type SetupOptions } from '../engine/types';
+import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type Controller, type Mode, type RulesConfig, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
 import { describeSave, parseSave, type SaveFile } from './saves';
@@ -9,6 +9,12 @@ import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
 
 const defaultSeats = (mode: Mode, count: number): SeatSetup[] => {
+  if (mode === 'arena') {
+    return [
+      { name: 'Gracz 1', faction: 'dawn', controller: 'human', heroId: FACTION_HEROES.dawn[0] },
+      { name: 'Komputer', faction: 'horde', controller: 'bot', heroId: FACTION_HEROES.horde[0] },
+    ];
+  }
   if (mode === 'coop') {
     return Array.from({ length: count }, (_, i) => ({ name: `Gracz ${i + 1}`, faction: 'dawn' as FactionId, controller: (i === 0 ? 'human' : 'bot') as Controller, heroId: FACTION_HEROES.dawn[i % 3] }));
   }
@@ -44,13 +50,16 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onS
   const [preview, setPreview] = useState<string>('goldDragon');
 
   const changeMode = (m: Mode) => {
-    const c = m === 'pvp' ? Math.max(2, count) : Math.min(2, count);
+    const c = m === 'pvp' ? Math.max(2, count) : m === 'arena' ? 2 : Math.min(2, count);
     setMode(m);
     setCount(c);
     setSeats(defaultSeats(m, c));
-    // "Trudny" exists for coop only.
+    // "Trudny" exists for coop only; in the arena the level is the computer's strength (no "Własny").
     if (level === 'hard' && m === 'pvp') pickLevel('normal', m);
+    if (level === 'custom' && m === 'arena') pickLevel('normal', m);
   };
+  const arena = mode === 'arena';
+  const versusBot = seats.some((s) => s.controller === 'bot');
   const changeCount = (c: number) => {
     setCount(c);
     setSeats(defaultSeats(mode, c));
@@ -122,7 +131,10 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onS
           <Row label="Tryb">
             <Tip text={TIPS.coop}><button className={choice(mode === 'coop')} style={chip} onClick={() => changeMode('coop')}>Kooperacja (wszyscy przeciw AI)</button></Tip>
             <Tip text={TIPS.pvp}><button className={choice(mode === 'pvp')} style={chip} onClick={() => changeMode('pvp')}>Rywalizacja (dobro kontra zło)</button></Tip>
+            <Tip text={TIPS.arenaMode}><button className={choice(arena)} style={chip} onClick={() => changeMode('arena')}>Arena (jedna bitwa)</button></Tip>
           </Row>
+          {!arena && (
+          <>
           <Row label="Gracze">
             {/* At most 2 players per faction: coop (all Przymierze) takes 1–2, PvP 2–4. */}
             {(mode === 'coop' ? [1, 2] : [2, 3, 4]).map((n) => (
@@ -134,6 +146,22 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onS
               <Tip key={m} text={mapTip(m)}><button className={choice(mapSize === m)} style={chip} onClick={() => setMapSize(m)}>{MAP_SIZE_NAMES[m]}</button></Tip>
             ))}
           </Row>
+          </>
+          )}
+          {arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>{ARENA_HINT}</div>}
+          {arena && versusBot && (
+            <Row label="Komputer">
+              {LEVELS.filter(([l]) => l !== 'custom').map(([l, label]) => (
+                <Tip key={l} text={ARENA_LEVEL_TIPS[l as Level]}>
+                  <button className={choice(level === l)} style={chip} aria-pressed={level === l} onClick={() => pickLevel(l as Level)}>
+                    {label}
+                  </button>
+                </Tip>
+              ))}
+            </Row>
+          )}
+          {!arena && (
+          <>
           <Row label="Poziom">
             {LEVELS.filter(([l]) => l !== 'hard' || mode === 'coop').map(([l, label]) => (
               <Tip key={l} text={LEVEL_TIPS[l]}>
@@ -144,7 +172,9 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onS
             ))}
           </Row>
           <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>{LEVEL_HINT[level]}</div>
-          {level === 'custom' && (
+          </>
+          )}
+          {!arena && level === 'custom' && (
           <>
           <Row label="Bitwy">
             <Tip text={TIPS.arena}><button className={choice(battleMode === 'arena')} style={chip} onClick={() => setBattleMode('arena')}>Osobna arena (3 na 3)</button></Tip>
@@ -250,7 +280,7 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onS
             <button className="btn prim r tester-btn" style={{ height: 56, padding: '0 28px', fontSize: 21 }} onClick={onTesters} title="Informacje dla testerów, statystyki i plik z uwagami dla twórcy">
               INFO DLA TESTERÓW
             </button>
-            <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => onStart({ mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero } })}>
+            <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => onStart(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero } })}>
               Rozpocznij grę
             </button>
           </div>
@@ -272,6 +302,14 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onS
                 <b>
                   <span className="win">Przymierze {stats.pvp.dawn}</span> · <span className="loss">Horda {stats.pvp.horde}</span>
                 </b>
+                {stats.arena.won + stats.arena.lost > 0 && (
+                  <>
+                    <span>Arena</span>
+                    <b>
+                      <span className="win">{stats.arena.won} wygr.</span> · <span className="loss">{stats.arena.lost} przegr.</span>
+                    </b>
+                  </>
+                )}
                 <span>Procent wygranych</span>
                 <b>{stats.winRate === null ? '—' : `${stats.winRate}%`}</b>
                 <span>Punkty</span>
@@ -328,8 +366,17 @@ const EASES: Array<[string, (r: RulesConfig) => boolean, (on: boolean) => Partia
   ['Rezerwowy bohater po śmierci', (r) => r.heroReplacement, (on) => ({ heroReplacement: on }), 'Gdy bohater zginie, gracz bierze nowego, nieużywanego bohatera swojej frakcji. Wkracza on na wolne pole najbliżej miejsca, w którym padł poprzednik — nikt nie odpada z gry.'],
 ];
 
+const ARENA_HINT = 'Jedna bitwa 3 na 3: każdy wybiera bohatera, dwóch pomocników i na zmianę dobiera 2 skarby ze wspólnej talii. Ok. 5–10 minut.';
+
+const ARENA_LEVEL_TIPS: Record<Level, string> = {
+  kids: 'Komputer wybiera pomocników i skarby na chybił trafił.',
+  normal: 'Komputer wybiera rozsądnie, ale nie zawsze najlepszy skarb.',
+  hard: 'Komputer zawsze bierze najmocniejszych pomocników i najlepsze skarby.',
+};
+
 /** Explanations shown when hovering the setup buttons. */
 const TIPS = {
+  arenaMode: 'Szybka bitwa bez mapy: Przymierze Świtu kontra Mroczna Horda, z komputerem albo z drugim graczem. Bohater, dwóch pomocników i 2 skarby dobierane ze wspólnej talii — jeden skarb z trzech pokazanych, na zmianę.',
   coop: 'Wszyscy gracie razem Przymierzem Świtu, a Hordę prowadzi automat według prostych zasad. Dobry wybór na pierwsze partie i do gry z dziećmi.',
   pvp: 'Jedni prowadzą Przymierze Świtu, drudzy Mroczną Hordę (najwyżej 2 graczy na stronę). Przymierze zbiera kryształy dla Drzewa, Horda poluje na jego bohaterów albo odprawia rytuał.',
   arena: 'Bitwa przenosi się na osobną planszę areny: każda strona wystawia bohatera i dwóch pomocników, jednostki chodzą, strzelają i używają zdolności. Ok. 5–10 minut na bitwę.',

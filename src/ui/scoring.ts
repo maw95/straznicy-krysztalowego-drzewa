@@ -72,7 +72,14 @@ export function difficultyRating(setup: SetupOptions, level: 'kids' | 'normal' |
   return side === 'dawn' ? dawn : 11 - dawn;
 }
 
+/**
+ * Arena: one battle (5–10 minutes) instead of a whole game with 3–5 battles, so a win against the
+ * computer scores little — per hour of play no more than an ordinary game on an easy setting.
+ */
+export const ARENA_POINTS: Record<'kids' | 'normal' | 'hard', number> = { kids: 1, normal: 2, hard: 3 };
+
 export function pointsFor(setup: SetupOptions, level: 'kids' | 'normal' | 'hard' | 'custom', side: FactionId): number {
+  if (setup.mode === 'arena') return ARENA_POINTS[level === 'custom' ? 'normal' : level];
   const raw = (MAX_POINTS * MAP_WEIGHT[setup.mapSize] * difficultyRating(setup, level, side)) / TOP_RATING;
   return Math.min(MAX_POINTS, Math.max(1, Math.round(raw)));
 }

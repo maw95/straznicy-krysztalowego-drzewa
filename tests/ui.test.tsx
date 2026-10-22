@@ -431,3 +431,69 @@ describe('event log', () => {
     expect(container.ownerDocument.body.textContent).not.toContain('Dziennik zdarzeń');
   });
 });
+
+describe('arena through the UI', () => {
+  async function startArena(bothHuman: boolean) {
+    window.history.replaceState(null, '', '/');
+    vi.useFakeTimers();
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    const btn = (t: string) => [...doc.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement | undefined;
+    await act(async () => fireEvent.click(btn('Arena (jedna bitwa)')!));
+    if (bothHuman) {
+      const who = doc.querySelectorAll('select[aria-label="Kto gra"]')[1] as HTMLSelectElement;
+      await act(async () => fireEvent.change(who, { target: { value: 'human' } }));
+    }
+    await act(async () => fireEvent.click(btn('Rozpocznij grę')!));
+    return { doc, btn };
+  }
+  const overlayWith = (doc: Document, text: string) => [...doc.querySelectorAll('.overlay')].find((o) => o.textContent?.includes(text));
+
+  /** Answers the support and draft dialogs; records whether each draft dialog opened covered. */
+  async function playPrep(doc: Document, btn: (t: string) => HTMLButtonElement | undefined) {
+    const covers: boolean[] = [];
+    for (let i = 0; i < 80; i++) {
+      await act(async () => vi.advanceTimersByTime(800));
+      const g = (window as any).__game;
+      if (!g.battle || g.battle.stage === 'deploy' || g.battle.stage === 'fight') break;
+      const sel = overlayWith(doc, 'Wybierz dwóch pomocników');
+      if (sel) {
+        for (const c of [...sel.querySelectorAll('button')].filter((b) => b.textContent !== 'Do bitwy!').slice(0, 2)) await act(async () => fireEvent.click(c));
+        await act(async () => fireEvent.click(btn('Do bitwy!')!));
+        continue;
+      }
+      const cover = overlayWith(doc, 'Pokaż skarby');
+      if (cover) {
+        covers.push(true);
+        await act(async () => fireEvent.click(btn('Pokaż skarby')!));
+      }
+      const draft = overlayWith(doc, 'Wybierz skarb');
+      if (draft) {
+        if (!cover) covers.push(false);
+        await act(async () => fireEvent.click(draft.querySelector('button[aria-pressed]')!));
+        await act(async () => fireEvent.click(btn('Biorę ten skarb')!));
+      }
+    }
+    return covers;
+  }
+
+  it('against the computer: two supports, two drafted treasures each, then the battle', async () => {
+    const { doc, btn } = await startArena(false);
+    expect(doc.querySelector('.arena-prep')).not.toBeNull();
+    const covers = await playPrep(doc, btn);
+    const g = (window as any).__game;
+    expect(g.setup.mode).toBe('arena');
+    expect(g.factions.dawn.inventory).toHaveLength(2);
+    expect(g.factions.horde.inventory).toHaveLength(2);
+    expect(['deploy', 'fight']).toContain(g.battle.stage);
+    // Only the human's two picks needed the dialog, and nothing was covered.
+    expect(covers).toEqual([false, false]);
+  });
+
+  it('two players at one screen: the cards are covered whenever the other side picks', async () => {
+    const { doc, btn } = await startArena(true);
+    const covers = await playPrep(doc, btn);
+    // A, B, B, A: covered for A, for B, not again for B's second pick, covered for A.
+    expect(covers).toEqual([true, true, false, true]);
+  });
+});

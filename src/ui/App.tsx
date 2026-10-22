@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { chooseAction } from '../engine/ai';
 import { FACTION_NAMES, UNITS, type FactionId, type ItemKind } from '../engine/data';
 import { applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
@@ -25,6 +25,7 @@ import { Intro, introSeen } from './Intro';
 import { TitleScreen, titlePending } from './TitleScreen';
 import { StatsDialog } from './StatsDialog';
 import { ChangelogDialog } from './ChangelogDialog';
+import { ArenaPrep, DraftDialog } from './ArenaPrep';
 import { FullscreenButton, useAutoFullscreen } from './fullscreen';
 import { TreasureReveal } from './CardBack';
 
@@ -46,6 +47,8 @@ export function App() {
   const [showTesters, setShowTesters] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [showChangelog, setShowChangelog] = useState(false);
+  /** Arena draft at one screen: the side whose cards were last uncovered. */
+  const [draftRevealed, setDraftRevealed] = useState<FactionId | null>(null);
   // The intro plays on the first launch (never in the ?steps= test games).
   const [showIntro, setShowIntro] = useState(() => !introSeen() && !new URLSearchParams(window.location.search).has('steps'));
   // The title screen opens each visit (its START is the click that allows full screen and music).
@@ -74,6 +77,14 @@ export function App() {
   }, []);
   const theme: Theme = !game
     ? 'menu'
+    : game.setup.mode === 'arena'
+      ? game.phase === 'battle'
+        ? 'battle'
+        : game.winner === 'dawn'
+          ? 'dawnVictory'
+          : game.winner === 'horde'
+            ? 'hordeVictory'
+            : 'none'
     : game.phase === 'over'
       ? game.winner === 'dawn'
         ? 'dawnVictory'
@@ -430,6 +441,10 @@ export function App() {
 
   const b = game.battle;
   const selecting = b && b.stage === 'select' && humanTurn && actor.kind === 'human' ? actor.faction : null;
+  const drafting = b && b.stage === 'draft' && game.draft && humanTurn && actor.kind === 'human' ? actor.faction : null;
+  // Two people at one screen: each side's cards stay covered until that side uncovers them.
+  const bothHuman = game.setup.mode === 'arena' && game.players.every((p) => p.controller === 'human');
+  const arenaPrep = game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'select' || b.stage === 'draft')));
 
   return (
     <>
@@ -447,13 +462,27 @@ export function App() {
       </button>
       <FullscreenButton />
       {game.phase === 'battle' && b?.duel && b.stage !== 'select' && <DuelView state={game} canAct={humanTurn} onAction={dispatch} footer={footer} />}
-      {game.phase === 'battle' && b && !b.duel && b.stage !== 'select' ? (
+      {arenaPrep ? (
+        <ArenaPrep state={game} />
+      ) : game.phase === 'battle' && b && !b.duel && b.stage !== 'select' ? (
         <BattleView state={game} canAct={humanTurn} onAction={dispatch} onShowCard={setCard} footer={footer} />
       ) : (
         <AdventureView state={game} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} footer={adventureFooter} />
       )}
 
       <Modal open={Boolean(selecting)}>{selecting && <SupportSelect state={game} faction={selecting} onPick={(ids) => dispatch({ type: 'selectSupports', faction: selecting, supportIds: ids })} />}</Modal>
+      <Modal open={Boolean(drafting)}>
+        {drafting && (
+          <DraftDialog
+            key={`${drafting}-${game.draft!.order.length}`}
+            state={game}
+            faction={drafting}
+            covered={bothHuman && draftRevealed !== drafting}
+            onReveal={() => setDraftRevealed(drafting)}
+            onPick={(kind) => dispatch({ type: 'draftPick', faction: drafting, kind })}
+          />
+        )}
+      </Modal>
 
       {needsHandoff && actor.kind === 'human' && (
         <Handoff state={game} playerId={actor.playerId} onConfirm={() => setConfirmedFaction(actor.faction)} />
@@ -682,8 +711,19 @@ function GameOver({ state, onNew, onLog }: { state: GameState; onNew: () => void
   return (
     <div className={state.winner === 'horde' ? 'quake' : undefined}>
       <Frame crest style={{ width: 'min(620px, 94vw)' }} innerStyle={{ padding: 26, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center' }}>
-        <Ribbon side={state.winner ?? 'dawn'} style={{ width: 460, height: 50 }}>Wygrywa: {state.winner ? FACTION_NAMES[state.winner] : '—'}</Ribbon>
+        <Ribbon side={state.winner ?? 'dawn'} style={{ width: 460, height: 50 }}>{state.winner ? `Wygrywa: ${FACTION_NAMES[state.winner]}` : 'Remis'}</Ribbon>
         <div style={{ fontSize: 20 }}>{state.endReason}</div>
+        {state.setup.mode === 'arena' ? (
+          <div className="well" style={{ padding: '12px 18px', display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '4px 24px', fontSize: 17, textAlign: 'left', width: '100%' }}>
+            <span>Rundy bitwy</span><b>{state.lastBattle?.rounds ?? 0}</b>
+            {(['dawn', 'horde'] as FactionId[]).map((f) => (
+              <Fragment key={f}>
+                <span>Ocaleli: {FACTION_NAMES[f]}</span>
+                <b>{state.lastBattle ? state.lastBattle.units.filter((u) => u.side === f && u.alive).map((u) => UNITS[u.defId].name).join(', ') || '—' : '—'}</b>
+              </Fragment>
+            ))}
+          </div>
+        ) : (
         <div className="well" style={{ padding: '12px 18px', display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '4px 24px', fontSize: 17, textAlign: 'left', width: '100%' }}>
           <span>Rundy</span><b>{state.round}</b>
           <span>Bitwy (w tym ze strażnikami)</span><b>{s.battles} ({s.neutralBattles})</b>
@@ -692,6 +732,7 @@ function GameOver({ state, onNew, onLog }: { state: GameState; onNew: () => void
           <span>Znalezione skarby Świtu / Hordy</span><b>{s.treasuresCollected.dawn} / {s.treasuresCollected.horde}</b>
           <span>Kryształy przy Drzewie</span><b>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b>
         </div>
+        )}
         <div style={{ display: 'flex', gap: 12 }}>
           <button className="btn plate parch" style={{ padding: '8px 18px', fontSize: 18 }} onClick={onLog}>Dziennik</button>
           <button className="btn prim" style={{ padding: '8px 22px', fontSize: 20 }} onClick={onNew}>Nowa gra</button>

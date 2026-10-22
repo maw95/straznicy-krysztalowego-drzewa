@@ -3,7 +3,7 @@
 import { MAP_SIZE_NAMES } from '../engine/data';
 import { Frame, Ribbon } from './common';
 import { journalBreakdown, journalStats, LEVEL_NAMES } from './journal';
-import { MAX_POINTS } from './scoring';
+import { ARENA_POINTS, MAX_POINTS } from './scoring';
 
 const MODE_NAMES = { coop: 'Kooperacja', pvp: 'Rywalizacja', arena: 'Arena' } as const;
 const pct = (v: number | null) => (v === null ? '—' : `${v}%`);
@@ -37,7 +37,7 @@ export function StatsDialog({ onClose }: { onClose: () => void }) {
                 {rows.map((r, i) => (
                   <tr key={`${r.mode}:${r.mapSize}:${r.level}`} className={i > 0 && rows[i - 1].mode !== r.mode ? 'group' : ''}>
                     <td>{i === 0 || rows[i - 1].mode !== r.mode ? MODE_NAMES[r.mode] : ''}</td>
-                    <td>{MAP_SIZE_NAMES[r.mapSize]}</td>
+                    <td>{r.mode === 'arena' ? '—' : MAP_SIZE_NAMES[r.mapSize]}</td>
                     <td>{LEVEL_NAMES[r.level]}</td>
                     <td className="num">{r.played}</td>
                     <td className="num win">{r.won}</td>
@@ -65,7 +65,7 @@ export function StatsDialog({ onClose }: { onClose: () => void }) {
             Liczą się tylko dokończone partie. Wygrane i przegrane to partie przeciwko automatowi albo botom — rywalizacja, w której ludzie grają po obu stronach, liczy się tylko do rozegranych.
           </div>
           <div>
-            <b>Punkty</b> dostaje się za każdą wygraną: im dłuższa mapa i im trudniej było wygrać Twoją stroną (według tysięcy partii rozegranych przez komputer, rozdział 13 instrukcji), tym więcej. Najwięcej, {MAX_POINTS}, daje bardzo długa mapa na poziomie Trudnym.
+            <b>Punkty</b> dostaje się za każdą wygraną: im dłuższa mapa i im trudniej było wygrać Twoją stroną (według tysięcy partii rozegranych przez komputer, rozdział 13 instrukcji), tym więcej. Najwięcej, {MAX_POINTS}, daje bardzo długa mapa na poziomie Trudnym. Wygrana na Arenie z komputerem daje {ARENA_POINTS.kids} / {ARENA_POINTS.normal} / {ARENA_POINTS.hard} pkt (Łatwy / Normalny / Trudny), bo to tylko jedna bitwa.
           </div>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
