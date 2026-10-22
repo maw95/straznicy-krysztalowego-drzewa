@@ -29,7 +29,7 @@ interface Slide {
   text: string[];
   /** Stand-in art until intro/<id>.jpg exists; several images are shown side by side. */
   stand: string[];
-  /** Slow camera move over the art: start and end transform. */
+  /** Slow camera move over the stand-in art: start and end transform. */
   pan: [string, string];
   /** Which part of the art stays in view (CSS object-position). */
   focus?: string;
@@ -133,6 +133,9 @@ export const SLIDES: Slide[] = [
   },
 ];
 
+/** The real slide art is composed for a 16:9 screen: only a gentle push-in, nothing cut off or turned. */
+const ART_PAN: [string, string] = ['scale(1)', 'scale(1.06)'];
+
 export function Intro({ onClose }: { onClose: () => void }) {
   const [index, setIndex] = useState(0);
   const [missing, setMissing] = useState<Set<string>>(new Set());
@@ -162,17 +165,18 @@ export function Intro({ onClose }: { onClose: () => void }) {
       {SLIDES.map((s, i) => {
         const own = !missing.has(s.id);
         const art = own ? [`intro/${s.id}.jpg`] : s.stand;
+        const pan = own ? ART_PAN : s.pan;
         // Only the current slide and its neighbours are in the page: cross-fades without loading everything at once.
         if (Math.abs(i - index) > 1) return null;
         return (
           <div key={s.id} className={`intro-slide ${i === index ? 'on' : ''}`} aria-hidden={i !== index}>
-            <div className="intro-art" style={{ ['--pan-from' as string]: s.pan[0], ['--pan-to' as string]: s.pan[1] } as React.CSSProperties}>
+            <div className="intro-art" style={{ ['--pan-from' as string]: pan[0], ['--pan-to' as string]: pan[1] } as React.CSSProperties}>
               {art.map((src) => (
                 <img
                   key={src}
                   src={asset(src)}
                   alt=""
-                  style={{ objectPosition: s.focus ?? 'center', objectFit: src.endsWith('.png') ? 'contain' : 'cover' }}
+                  style={{ objectPosition: own ? 'center top' : s.focus ?? 'center', objectFit: src.endsWith('.png') ? 'contain' : 'cover' }}
                   onError={own ? () => setMissing((m) => new Set(m).add(s.id)) : undefined}
                 />
               ))}
