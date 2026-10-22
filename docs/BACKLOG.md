@@ -1,6 +1,6 @@
 # Backlog
 
-Uzgodnione pomysły do wdrożenia. Kolejność realizacji jeszcze nieustalona.
+Uzgodnione pomysły do wdrożenia. Najpierw tryb online, potem figurki 3D.
 
 ## 1. Tryb online
 
@@ -8,7 +8,7 @@ Uzgodnione pomysły do wdrożenia. Kolejność realizacji jeszcze nieustalona.
 
 ### Ustalenia
 
-- **Własny serwer** w osobnym repozytorium: Node + TypeScript + WebSocket, hosting na Fly.io
+- **Własny serwer** w osobnym repozytorium `straznicy-krysztalowego-drzewa-backend`: Node + TypeScript + WebSocket, hosting na Fly.io
   (rachunki poniżej 5 USD/mies. są umarzane). Frontend zostaje na GitHub Pages.
 - **Serwer pilnuje zasad:** używa tego samego silnika gry co frontend, sprawdza każdy ruch
   i wysyła graczom tylko to, co mogą widzieć (cudze karty i skarby zostają na serwerze).
@@ -27,9 +27,12 @@ Uzgodnione pomysły do wdrożenia. Kolejność realizacji jeszcze nieustalona.
 - Maszyna Fly musi działać w trakcie partii: `min_machines_running = 1` albo akceptujemy
   kilka sekund rozruchu przy pierwszym połączeniu.
 
+- **Konta graczy:** logowanie nickiem i hasłem; statystyki przypisane do konta.
+- **Kolejność:** zaczynamy od serwera (modele figurek powstają w tym czasie).
+
 ### Do ustalenia
 
-- Konta graczy (nick + hasło) czy anonimowe statystyki z samym nickiem?
+- Reset zapomnianego hasła bez e-maila — np. ręcznie przez administratora.
 
 ## 2. Figurki 3D zamiast portretów
 
@@ -50,7 +53,8 @@ obracają się w kierunku ruchu.
 - Pasek Życia, pierścień aktywnej jednostki i znaczniki (Klątwa, zużyta zdolność) zostają
   jako nakładka 2D nad figurką.
 
+- Portrety w panelach bocznych (lista jednostek, kolejka ruchów) zostają.
+
 ### Do ustalenia
 
-- Portrety w panelach bocznych (lista jednostek, kolejka ruchów) — zostają? (propozycja: tak)
 - Kąt kamery i wielkość figurki względem pola — do dobrania na żywo, gdy będą 2–3 modele.
