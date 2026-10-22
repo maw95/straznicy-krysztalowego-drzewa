@@ -19,7 +19,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Wprowadzenie z prawdziwymi ilustracjami (9 slajdów, JPG zamiast PNG: 3,6 MB zamiast 24,6 MB) i łagodniejszy ruch kamery (`e5920d6`).
 - Pełny ekran jak F11: przycisk w prawym górnym rogu (obok muzyki) i ustawienie „Pełny ekran przy uruchomieniu” — gra przechodzi na pełny ekran przy pierwszym kliknięciu albo klawiszu; Esc wraca do okna (`b54281e`).
 - Ekran tytułowy przy każdym otwarciu gry: logo, hasło i przycisk START, który włącza pełny ekran i muzykę, a za pierwszym razem prowadzi do wprowadzenia (`cdfb484`).
-- Ekran tytułowy wczytuje w tle muzykę menu i (przy pierwszym uruchomieniu) grafiki wprowadzenia, więc po kliknięciu START nic nie doczytuje się na oczach gracza.
+- Ekran tytułowy wczytuje w tle muzykę menu i (przy pierwszym uruchomieniu) grafiki wprowadzenia, więc po kliknięciu START nic nie doczytuje się na oczach gracza (`9167c7a`).
+- Poprawione grafiki: nowa okładka (tło menu i ekranu tytułowego, okładka instrukcji) i nowe ilustracje pięciu slajdów wprowadzenia (strażnicy, jak wygrać, wędrówka, bitwa, tryby gry).
 
 ## 1.1.0 — 2026-10-22
 
