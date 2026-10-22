@@ -18,7 +18,7 @@ export type AbilityId =
   | 'giftOfLife' // Dar Życia
   | 'airDash' // Powietrzny Zryw
   | 'fireBreath' // Ognisty Oddech
-  | 'bloodCall' // Zew Krwi
+  | 'bloodCall' // Zew Krwi (passive)
   | 'hardHead' // Twardogłowy (reaction)
   | 'curse' // Złowroga Klątwa
   | 'web' // Pajęcze Sidła
@@ -50,17 +50,14 @@ export const ABILITY = {
   sunburstBonus: 1,
   /** Słoneczny Blask: the dragon's own bonus. */
   sunburstSelfBonus: 3,
-  lightChargeBonus: 1,
+  lightChargeBonus: 2,
   lightChargeMinMove: 4,
   rootsSlow: 2,
   giftOfLifeHeal: 3,
   airDashRange: 3,
-  bloodCallBonus: 2,
-  /** Balance experiment: Zew Krwi adds its bonus to every attack on a wounded enemy (not once per battle). */
-  bloodCallAlways: false,
+  /** Zew Krwi: bonus to every attack on an enemy that is already wounded. */
+  bloodCallBonus: 1,
   hardHeadIgnore: 2,
-  /** Balance experiment: Twardogłowy also takes this much off every hit (0 = only the once-per-battle effect). */
-  hardHeadEvery: 0,
   /** Opiekun Gaju: damage the bear ignores from the blow it takes over. */
   guardianIgnore: 3,
   curseMinus: 1,
@@ -76,14 +73,14 @@ const u = (d: UnitDef): UnitDef => d;
 export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   [
     u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),
-    u({ id: 'unicornKing', name: 'Król Jednorożców', side: 'dawn', kind: 'hero', hp: 8, attack: 5, speed: 6, movement: 'walk', attackType: 'melee', ability: 'lightCharge', abilityName: 'Szarża Światła', abilityText: `+${ABILITY.lightChargeBonus} A do ataku wykonanego po ruchu o co najmniej ${ABILITY.lightChargeMinMove} pola.` }),
+    u({ id: 'unicornKing', name: 'Król Jednorożców', side: 'dawn', kind: 'hero', hp: 8, attack: 5, speed: 8, movement: 'walk', attackType: 'melee', ability: 'lightCharge', abilityName: 'Szarża Światła', abilityText: `+${ABILITY.lightChargeBonus} A do ataku wykonanego po ruchu o co najmniej ${ABILITY.lightChargeMinMove} pola.` }),
     u({ id: 'ancientBear', name: 'Prastary Niedźwiedź', side: 'dawn', kind: 'hero', hp: 11, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'guardian', abilityName: 'Opiekun Gaju', abilityText: `Raz na bitwę: przyjmuje cios, który zabiłby jego lub sąsiada, i ignoruje ${ABILITY.guardianIgnore} obrażenia.` }),
     u({ id: 'elfDruid', name: 'Elf Druid', side: 'dawn', kind: 'support', hp: 4, attack: 1, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Splątane Korzenie', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
     u({ id: 'nymph', name: 'Nimfa', side: 'dawn', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'giftOfLife', abilityName: 'Dar Życia', abilityText: `Raz na bitwę: +${ABILITY.giftOfLifeHeal} Ż sojusznikowi, do maksimum.` }),
     u({ id: 'pegasus', name: 'Pegaz', side: 'dawn', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'fly', attackType: 'melee', ability: 'airDash', abilityName: 'Powietrzny Zryw', abilityText: `Raz na bitwę: po ataku odskok do ${ABILITY.airDashRange} pól.` }),
     u({ id: 'blackDragon', name: 'Czarny Smok', side: 'horde', kind: 'hero', hp: 7, attack: 5, speed: 5, movement: 'fly', attackType: 'melee', ability: 'fireBreath', abilityName: 'Ognisty Oddech', abilityText: 'Raz na bitwę: pełny atak w dwóch wrogów stojących w jednej linii.' }),
-    u({ id: 'werewolfLord', name: 'Władca Wilkołaków', side: 'horde', kind: 'hero', hp: 8, attack: 5, speed: 5, movement: 'walk', attackType: 'melee', ability: 'bloodCall', abilityName: 'Zew Krwi', abilityText: `Raz na bitwę: +${ABILITY.bloodCallBonus} A przeciw już rannemu celowi.` }),
-    u({ id: 'ironFistOgre', name: 'Ogr Żelazna Pięść', side: 'horde', kind: 'hero', hp: 9, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Twardogłowy', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
+    u({ id: 'werewolfLord', name: 'Władca Wilkołaków', side: 'horde', kind: 'hero', hp: 8, attack: 5, speed: 7, movement: 'walk', attackType: 'melee', ability: 'bloodCall', abilityName: 'Zew Krwi', abilityText: `+${ABILITY.bloodCallBonus} A do każdego ataku na już rannego wroga.` }),
+    u({ id: 'ironFistOgre', name: 'Ogr Żelazna Pięść', side: 'horde', kind: 'hero', hp: 10, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Twardogłowy', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
     u({ id: 'goblinShaman', name: 'Goblin Szaman', side: 'horde', kind: 'support', hp: 5, attack: 1, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'curse', abilityName: 'Złowroga Klątwa', abilityText: `Raz na bitwę: trafiony cel ma −${ABILITY.curseMinus} A przy następnym ataku.` }),
     u({ id: 'caveSpider', name: 'Pająk Jaskiniowy', side: 'horde', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'web', abilityName: 'Pajęcze Sidła', abilityText: `Raz na bitwę: wróg do ${ABILITY.webRange} pól nie rusza się w następnej aktywacji.` }),
     u({ id: 'shadowBat', name: 'Nietoperz Cienia', side: 'horde', kind: 'support', hp: 5, attack: 2, speed: 3, movement: 'fly', attackType: 'melee', ability: 'nightAmbush', abilityName: 'Nocna Zasadzka', abilityText: `Raz na bitwę: atak zadaje +${ABILITY.nightAmbushBonus} obrażenia.` }),

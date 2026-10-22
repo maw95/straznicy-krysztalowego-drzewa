@@ -74,7 +74,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
   const canAttack = Boolean(myTurn && active && !act!.attacked && !act!.moveOnly && attackTargets(state, active).length);
   const ab = active ? abilityOf(active) : null;
   const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state, active));
-  const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab) && !(ab === 'bloodCall' && enemy && enemy.hp >= enemy.maxHp);
+  const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab);
   const freeAbility = abilityReady && ab !== null && FREE_ABILITIES.includes(ab);
   const side: FactionId | null = active && active.side !== 'neutral' ? active.side : null;
   const items = side && myTurn && canUseBattleItem(state, side) ? state.factions[side].inventory.map((id) => state.items[id]).filter((it) => DUEL_ITEMS[it.kind]) : [];

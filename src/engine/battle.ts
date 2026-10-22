@@ -221,17 +221,14 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
   if (abilityActive(state, att)) {
     const ab = abilityOf(att);
     if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += ABILITY.lightChargeBonus;
-    if (ab === 'bloodCall' && ABILITY.bloodCallAlways && target.hp < target.maxHp) dmg += ABILITY.bloodCallBonus;
-    else if (useAbility && !att.abilityUsed) {
-      if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += ABILITY.bloodCallBonus;
-      if (ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus;
-    }
+    if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += ABILITY.bloodCallBonus;
+    if (useAbility && !att.abilityUsed && ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus;
   }
   return Math.max(0, dmg);
 }
 
 /** Abilities that are switched on for a single attack. */
-export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'bloodCall', 'curse', 'nightAmbush'];
+export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
 export const UNLIMITED_ABILITIES: AbilityId[] = ['boulder', 'nestLeap', 'manyHeads'];
 
@@ -453,7 +450,6 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
     dmg -= ignored;
     blog(state, `${unitName(victim)} ignoruje ${ignored} obrażeń (Twardogłowy).`, 'ability');
   }
-  if (abilityOf(victim) === 'hardHead' && ABILITY.hardHeadEvery && abilityActive(state, victim)) dmg = Math.max(0, dmg - ABILITY.hardHeadEvery);
   dmg = Math.max(0, dmg - victim.status.damageReduction);
   b.damageBy[att.id] = (b.damageBy[att.id] ?? 0) + Math.min(dmg, Math.max(0, victim.hp));
   recordRoll(state, att, victim, base, die, dmg);
@@ -495,7 +491,6 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   const ab = abilityOf(u);
   const canUse = useAbility && !u.abilityUsed && abilityActive(state, u) && ATTACK_ABILITIES.includes(ab);
   if (useAbility && !canUse) throw new Error('Zdolność jest niedostępna.');
-  if (canUse && ab === 'bloodCall' && target.hp >= target.maxHp) throw new Error('Zew Krwi działa tylko na rannego wroga.');
 
   const targets: BattleUnit[] = [target];
   if (canUse && ab === 'fireBreath') {

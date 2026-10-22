@@ -17,13 +17,18 @@ const setup = (over: Partial<SetupOptions> = {}): SetupOptions => ({
   ...over,
 });
 
-describe('unit budgets (spec section 2, loosened by balancing)', () => {
-  // The spec budgets (18 for heroes, 11 for supports) are a starting point: balancing moved
-  // a few units by up to 2 points (docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md, section 7.11).
+describe('unit budgets and specialisations (docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md, sections 7.11 and 9)', () => {
   const typeCost = (id: string) => (UNITS[id].attackType === 'ranged' ? 2 : 0) + (UNITS[id].movement === 'fly' ? 1 : 0);
   const budget = (id: string) => UNITS[id].hp + UNITS[id].attack + UNITS[id].speed + typeCost(id);
-  it.each([...FACTION_HEROES.dawn, ...FACTION_HEROES.horde])('hero %s spends 18 ± 2 points', (id) => {
-    expect(Math.abs(budget(id) - 18)).toBeLessThanOrEqual(2);
+  // Heroes have no budget any more (the user's decision); each faction keeps its toughest and its fastest hero.
+  it('keeps the heroes\' specialisations and tie-free speeds', () => {
+    const top = (ids: string[], stat: 'hp' | 'speed') => ids.reduce((a, b) => (UNITS[b][stat] > UNITS[a][stat] ? b : a));
+    expect(top(FACTION_HEROES.horde, 'hp')).toBe('ironFistOgre');
+    expect(top(FACTION_HEROES.horde, 'speed')).toBe('werewolfLord');
+    expect(top(FACTION_HEROES.dawn, 'hp')).toBe('ancientBear');
+    expect(top(FACTION_HEROES.dawn, 'speed')).toBe('unicornKing');
+    for (const id of FACTION_HEROES.dawn) expect(UNITS[id].speed % 2).toBe(0);
+    for (const id of FACTION_HEROES.horde) expect(UNITS[id].speed % 2).toBe(1);
   });
   it.each([...FACTION_SUPPORTS.dawn, ...FACTION_SUPPORTS.horde])('support %s spends 11 ± 1 points', (id) => {
     expect(Math.abs(budget(id) - 11)).toBeLessThanOrEqual(1);

@@ -109,7 +109,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
     const risk = (danger(state, u, cell) / Math.max(1, u.hp)) * caution;
     const targets = act.attacked || act.moveOnly ? [] : attackTargets(state, u, cell);
     for (const t of targets) {
-      for (const useAbility of abilityChoices(state, u, t)) {
+      for (const useAbility of abilityChoices(state, u)) {
         const dmg = attackDamage(state, u, t, useAbility, moved);
         let score = scoreHit(t, dmg);
         let second: BattleUnit | null = null;
@@ -140,10 +140,9 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   return best;
 }
 
-function abilityChoices(state: GameState, u: BattleUnit, t: BattleUnit): boolean[] {
+function abilityChoices(state: GameState, u: BattleUnit): boolean[] {
   const ab = abilityOf(u);
   if (u.abilityUsed || !abilityActive(state, u) || !ATTACK_ABILITIES.includes(ab)) return [false];
-  if (ab === 'bloodCall' && t.hp >= t.maxHp) return [false];
   return [true, false];
 }
 
@@ -273,7 +272,6 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
   const strike = (t: BattleUnit): Action => {
     const ab = abilityOf(u);
     let useAbility = !u.abilityUsed && abilityActive(state, u) && ATTACK_ABILITIES.includes(ab);
-    if (ab === 'bloodCall' && t.hp >= t.maxHp) useAbility = false;
     let second: BattleUnit | null = null;
     if (useAbility && ab === 'fireBreath') {
       second = breathSecondTarget(state, u, t);
