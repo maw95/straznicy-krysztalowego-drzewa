@@ -366,3 +366,14 @@ ol.rules li::marker{color:var(--accent);font-family:var(--head);font-weight:700}
 /* Stat symbols (heart, swords, bolt) inside the text, instead of the letters Ż, A, S */
 img.stat{height:1.05em;width:auto;vertical-align:-0.18em;margin:0 .06em}
 .statv{white-space:nowrap}
+/* Rivalry difficulty tables: Przymierze columns in the Dawn colours, Horda columns in the Horde colours */
+.table.sides th.dawn{--accent:var(--forest)}
+.table.sides th.horde{--accent:var(--horde)}
+.table.sides thead tr:first-child th{border-bottom:1px solid #fff3d360}
+.table.sides th:first-child{vertical-align:middle}
+.table.sides td.dawn{background:linear-gradient(180deg,#17714714,#1771472b)!important}
+.table.sides td.horde{background:linear-gradient(180deg,#8b223814,#8b22382b)!important}
+.table.sides tr:nth-child(even) td.dawn{background:linear-gradient(180deg,#1771472b,#17714740)!important}
+.table.sides tr:nth-child(even) td.horde{background:linear-gradient(180deg,#8b22382b,#8b223840)!important}
+.table.sides td:nth-child(4),.table.sides thead tr:first-child th:nth-child(3),.table.sides thead tr:nth-child(2) th:nth-child(3){border-left:2px solid #b99a6e}
+.sheet.rivalry{--accent:var(--gold-dark);--accent-soft:#f3e2bd}

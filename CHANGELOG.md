@@ -5,6 +5,8 @@ Nowe commity trafiają do sekcji „Nieopublikowane”, dopóki nie powstanie ta
 
 ## Nieopublikowane
 
+- Rulebook ch. 13: difficulty tables for the levels only, rivalry tables per faction in faction colours
+
 ## 1.1.0 — 2026-10-22
 
 - `51f6d15` Balance 1.1: tie-free speeds, simpler automaton, levels Easy/Hard, round limits 8/12/18/24

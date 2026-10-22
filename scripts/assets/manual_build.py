@@ -441,7 +441,7 @@ sheet('''<div class="eyebrow">Rozdział 13</div><h1>Własne ustawienia</h1>
 ''', left='Rozdział 13', right='Ustawienia', foot='Własne ustawienia', key='custom')
 
 
-def diff_table(marker):
+def diff_rows(marker):
     rows = []
     for l in MD[MD.index(marker):].split('\n')[2:]:
         s = l.strip()
@@ -452,23 +452,37 @@ def diff_table(marker):
         if re.match(r'^\|[-:| ]+\|$', s):
             continue
         rows.append([md_inline(c.strip()) for c in s.strip('|').split('|')])
-    return table(rows, 'table compact center small')
+    return rows
+
+
+def diff_table(marker):
+    return table(diff_rows(marker), 'table compact center small')
+
+
+def pvp_table(marker):
+    """Rivalry difficulty: a Przymierze column group and a Horda column group, each in its faction's colours."""
+    rows = diff_rows(marker)[1:]
+    side = lambda f, cells: ''.join(f'<td class="{f}">{c}</td>' for c in cells)
+    head = ('<thead><tr><th rowspan="2">Mapa</th><th colspan="2" class="dawn">Przymierze</th><th colspan="2" class="horde">Horda</th></tr>'
+            '<tr><th class="dawn">Łatwy</th><th class="dawn">Normalny</th><th class="horde">Łatwy</th><th class="horde">Normalny</th></tr></thead>')
+    body = ''.join(f'<tr><td>{r[0]}</td>{side("dawn", r[1:3])}{side("horde", r[3:5])}</tr>' for r in rows)
+    return f'<table class="table compact center small sides">{head}<tbody>{body}</tbody></table>'
 
 
 sheet(f'''<div class="eyebrow">Rozdział 13 · Własne ustawienia</div><h1>Jak trudny jest który wariant</h1>
-<p>Skala od <b>1</b> (bardzo łatwo) do <b>10</b> (bardzo trudno); wyrównana partia to 5–6. Liczby pochodzą z tysięcy partii rozegranych przez komputer — ludzie grają inaczej, więc traktujcie je jako wskazówkę. „Normalny”, „Łatwy” i „Trudny” to gotowe poziomy, pozostałe kolumny to poziom Normalny z jednym ułatwieniem albo utrudnieniem.</p>
+<p>Skala od <b>1</b> (bardzo łatwo) do <b>10</b> (bardzo trudno); wyrównana partia to 5–6. Liczby pochodzą z tysięcy partii rozegranych przez komputer — ludzie grają inaczej, więc traktujcie je jako wskazówkę.</p>
 <h3>Kooperacja — 1 gracz</h3><p class="fine muted">trudność dla graczy Przymierza</p>
 {diff_table('**Kooperacja — 1 gracz**')}
 <h3 style="margin-top:5mm">Kooperacja — 2 graczy</h3><p class="fine muted">trudność dla graczy Przymierza</p>
 {diff_table('**Kooperacja — 2 graczy**')}
-''', cls='neutral', left='Rozdział 13', right='Trudność', foot='Jak trudny jest wariant')
-sheet(f'''<p>W rywalizacji każda strona ma swoją trudność: pierwsza liczba to <b>Przymierze</b>, druga <b>Horda</b> (razem zawsze 11). Po 5–6 dla obu stron to partia wyrównana.</p>
-<h3>Rywalizacja — 1 na 1</h3><p class="fine muted">Przymierze / Horda</p>
-{diff_table('**Rywalizacja — 1 na 1**')}
-<h3 style="margin-top:5mm">Rywalizacja — 2 na 2</h3><p class="fine muted">Przymierze / Horda</p>
-{diff_table('**Rywalizacja — 2 na 2**')}
+''', left='Rozdział 13', right='Trudność', foot='Jak trudny jest wariant')
+sheet(f'''<p>W rywalizacji każda strona ma swoją trudność, a poziom Trudny nie istnieje. Trudność <b>Przymierza</b> i <b>Hordy</b> na tym samym poziomie zawsze daje razem 11 — po 5–6 dla obu stron to partia wyrównana.</p>
+<h3>Rywalizacja — 1 na 1</h3><p class="fine muted">trudność dla każdej ze stron</p>
+{pvp_table('**Rywalizacja — 1 na 1**')}
+<h3 style="margin-top:5mm">Rywalizacja — 2 na 2</h3><p class="fine muted">trudność dla każdej ze stron</p>
+{pvp_table('**Rywalizacja — 2 na 2**')}
 <div class="quote" style="margin-top:7mm;font-size:14pt">„Kronikarze Drzewa rozegrali tysiące partii, żeby sprawdzić, gdzie czeka łatwa wyprawa, a gdzie prawdziwa próba.”</div>
-''', cls='neutral', left='Rozdział 13', right='Trudność', foot='Jak trudny jest wariant')
+''', cls='rivalry', left='Rozdział 13', right='Trudność', foot='Jak trudny jest wariant')
 
 # 14. Special cases
 chapter('14', 'Przypadki szczególne', 'edge')

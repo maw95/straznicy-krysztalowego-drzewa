@@ -439,45 +439,45 @@ Gdy znacie już grę, możecie zamiast gotowego poziomu wybrać pojedyncze ustaw
 
 > 🎲 *Kronikarze Drzewa rozegrali tysiące partii, żeby sprawdzić, gdzie czeka łatwa wyprawa, a gdzie prawdziwa próba.*
 
-Skala od **1** (bardzo łatwo) do **10** (bardzo trudno); wyrównana partia to 5–6. Liczby pochodzą z tysięcy partii rozegranych przez komputer — ludzie grają inaczej, więc traktujcie je jako wskazówkę. „Normalny”, „Łatwy” i „Trudny” to gotowe poziomy, pozostałe kolumny to poziom Normalny z jednym ułatwieniem albo utrudnieniem z listy powyżej.
+Skala od **1** (bardzo łatwo) do **10** (bardzo trudno); wyrównana partia to 5–6. Liczby pochodzą z tysięcy partii rozegranych przez komputer — ludzie grają inaczej, więc traktujcie je jako wskazówkę.
 
 **Kooperacja — 1 gracz** (trudność dla graczy Przymierza):
 
-| Mapa | Normalny | Łatwy | Trudny | Bez zdolności | Same eliksiry | Rezerwowy bohater | Pojedynki | Rzut kością |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Krótka | 5 | 2 | 8 | 7 | 5 | 5 | 6 | 5 |
-| Średnia | 5 | 2 | 8 | 7 | 6 | 4 | 6 | 5 |
-| Długa | 5 | 3 | 8 | 6 | 6 | 5 | 7 | 5 |
-| Bardzo długa | 5 | 3 | 7 | 6 | 7 | 4 | 7 | 5 |
+| Mapa | Łatwy | Normalny | Trudny |
+|---|---:|---:|---:|
+| Krótka | 2 | 5 | 8 |
+| Średnia | 2 | 5 | 8 |
+| Długa | 3 | 5 | 8 |
+| Bardzo długa | 3 | 5 | 7 |
 
 **Kooperacja — 2 graczy** (trudność dla graczy Przymierza):
 
-| Mapa | Normalny | Łatwy | Trudny | Bez zdolności | Same eliksiry | Rezerwowy bohater | Pojedynki | Rzut kością |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Krótka | 4 | 3 | 7 | 7 | 5 | 4 | 4 | 4 |
-| Średnia | 4 | 3 | 7 | 6 | 5 | 5 | 4 | 5 |
-| Długa | 4 | 4 | 7 | 5 | 5 | 4 | 4 | 4 |
-| Bardzo długa | 3 | 3 | 5 | 4 | 4 | 3 | 4 | 3 |
+| Mapa | Łatwy | Normalny | Trudny |
+|---|---:|---:|---:|
+| Krótka | 3 | 4 | 7 |
+| Średnia | 3 | 4 | 7 |
+| Długa | 4 | 4 | 7 |
+| Bardzo długa | 3 | 3 | 5 |
 
-W rywalizacji każda strona ma swoją trudność: pierwsza liczba to **Przymierze**, druga **Horda** (razem zawsze 11). Po 5–6 dla obu stron to partia wyrównana.
+W rywalizacji każda strona ma swoją trudność, a poziom Trudny nie istnieje. Trudność Przymierza i Hordy na tym samym poziomie zawsze daje razem 11 — po 5–6 dla obu stron to partia wyrównana.
 
-**Rywalizacja — 1 na 1** (Przymierze / Horda):
+**Rywalizacja — 1 na 1** (trudność dla każdej ze stron):
 
-| Mapa | Normalny | Łatwy | Bez zdolności | Same eliksiry | Rezerwowy bohater | Pojedynki | Rzut kością |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| Krótka | 5 / 6 | 2 / 9 | 5 / 6 | 6 / 5 | 5 / 6 | 4 / 7 | 5 / 6 |
-| Średnia | 6 / 5 | 2 / 9 | 5 / 6 | 6 / 5 | 5 / 6 | 5 / 6 | 6 / 5 |
-| Długa | 6 / 5 | 2 / 9 | 6 / 5 | 6 / 5 | 6 / 5 | 5 / 6 | 6 / 5 |
-| Bardzo długa | 6 / 5 | 3 / 8 | 6 / 5 | 7 / 4 | 6 / 5 | 6 / 5 | 6 / 5 |
+| Mapa | Przymierze — Łatwy | Przymierze — Normalny | Horda — Łatwy | Horda — Normalny |
+|---|---:|---:|---:|---:|
+| Krótka | 2 | 5 | 9 | 6 |
+| Średnia | 2 | 6 | 9 | 5 |
+| Długa | 2 | 6 | 9 | 5 |
+| Bardzo długa | 3 | 6 | 8 | 5 |
 
-**Rywalizacja — 2 na 2** (Przymierze / Horda):
+**Rywalizacja — 2 na 2** (trudność dla każdej ze stron):
 
-| Mapa | Normalny | Łatwy | Bez zdolności | Same eliksiry | Rezerwowy bohater | Pojedynki | Rzut kością |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| Krótka | 5 / 6 | 3 / 8 | 7 / 4 | 5 / 6 | 5 / 6 | 4 / 7 | 5 / 6 |
-| Średnia | 5 / 6 | 3 / 8 | 7 / 4 | 6 / 5 | 6 / 5 | 5 / 6 | 6 / 5 |
-| Długa | 6 / 5 | 4 / 7 | 7 / 4 | 6 / 5 | 6 / 5 | 6 / 5 | 5 / 6 |
-| Bardzo długa | 6 / 5 | 5 / 6 | 6 / 5 | 6 / 5 | 6 / 5 | 7 / 4 | 5 / 6 |
+| Mapa | Przymierze — Łatwy | Przymierze — Normalny | Horda — Łatwy | Horda — Normalny |
+|---|---:|---:|---:|---:|
+| Krótka | 3 | 5 | 8 | 6 |
+| Średnia | 3 | 5 | 8 | 6 |
+| Długa | 4 | 6 | 7 | 5 |
+| Bardzo długa | 5 | 6 | 6 | 5 |
 
 ---
 
