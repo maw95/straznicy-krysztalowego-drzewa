@@ -8,6 +8,7 @@ Nowe commity trafiają do sekcji „Nieopublikowane”, dopóki nie powstanie ta
 - Rulebook ch. 13: difficulty tables for the levels only, rivalry tables per faction in faction colours
 - Setup: initiative tie rule moved to the custom level, tutorial above the test rules
 - Menu stats: win rate, points from map length and measured difficulty, detailed table; unfinished games left out
+- Intro slide show on the first launch (story, basic rules, where to find the rulebook); art goes to public/assets/intro/
 
 ## 1.1.0 — 2026-10-22
 

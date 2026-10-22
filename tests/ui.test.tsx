@@ -15,6 +15,7 @@ beforeAll(() => {
 beforeEach(() => {
   localStorage.clear();
   localStorage.setItem('skd-tutorial', JSON.stringify({ enabled: false, seen: [] }));
+  localStorage.setItem('skd-intro', 'seen');
 });
 
 /** Accepts confirmation dialogs and dismisses summaries so the scripted player keeps going. */
@@ -259,5 +260,29 @@ describe('setup options', () => {
     await act(async () => fireEvent.click(btn('Normalny')!));
     await act(async () => fireEvent.click(btn('Własny')!));
     expect(btn('Obrońca pierwszy')!.getAttribute('aria-pressed')).toBe('true');
+  });
+});
+
+describe('intro', () => {
+  it('plays on the first launch only, slide by slide', async () => {
+    localStorage.removeItem('skd-intro');
+    window.history.replaceState(null, '', '/');
+    const { container, unmount } = render(<App />);
+    const doc = container.ownerDocument;
+    const intro = () => doc.querySelector('[aria-label="Wprowadzenie"]');
+    const title = () => intro()?.querySelector('h2')?.textContent;
+    const next = () => [...intro()!.querySelectorAll('button')].find((b) => b.textContent === 'Dalej')!;
+    expect(title()).toBe('Kryształowe Drzewo');
+    await act(async () => fireEvent.click(next()));
+    expect(title()).toBe('Noc Utraconego Blasku');
+    for (let i = 0; i < 20 && intro(); i++) await act(async () => fireEvent.click(next()));
+    expect(intro()).toBeNull();
+    unmount();
+    render(<App />);
+    expect(intro()).toBeNull();
+    // The menu button plays it again.
+    const again = [...doc.querySelectorAll('button')].find((b) => b.textContent === 'Wprowadzenie')!;
+    await act(async () => fireEvent.click(again));
+    expect(title()).toBe('Kryształowe Drzewo');
   });
 });

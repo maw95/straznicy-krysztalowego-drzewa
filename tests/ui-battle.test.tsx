@@ -10,6 +10,7 @@ beforeAll(() => {
 beforeEach(() => {
   localStorage.clear();
   localStorage.setItem('skd-tutorial', JSON.stringify({ enabled: false, seen: [] }));
+  localStorage.setItem('skd-intro', 'seen');
 });
 
 /** Accepts confirmation dialogs and dismisses summaries so the scripted player keeps going. */

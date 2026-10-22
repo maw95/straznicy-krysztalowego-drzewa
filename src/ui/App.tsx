@@ -21,6 +21,7 @@ import { RulesDialog } from './RulesDialog';
 import { BattleSummary } from './BattleSummary';
 import { HoverCardLayer } from './hover';
 import { Tutorial } from './Tutorial';
+import { Intro, introSeen } from './Intro';
 import { StatsDialog } from './StatsDialog';
 import { TreasureReveal } from './CardBack';
 
@@ -41,6 +42,8 @@ export function App() {
   const [showRules, setShowRules] = useState(false);
   const [showTesters, setShowTesters] = useState(false);
   const [showStats, setShowStats] = useState(false);
+  // The intro plays on the first launch (never in the ?steps= test games).
+  const [showIntro, setShowIntro] = useState(() => !introSeen() && !new URLSearchParams(window.location.search).has('steps'));
   const [showReport, setShowReport] = useState(false);
   /** Bug reports written in this game; saved and exported with it. */
   const reports = useRef<BugReport[]>([]);
@@ -337,7 +340,7 @@ export function App() {
     return (
       <>
         <SvgDefs />
-        <SetupScreen onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} />
+        <SetupScreen onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} onIntro={() => setShowIntro(true)} />
         <Modal open={showRules} onClose={() => setShowRules(false)}>
           <RulesDialog onClose={() => setShowRules(false)} />
         </Modal>
@@ -347,6 +350,7 @@ export function App() {
         <Modal open={showStats} onClose={() => setShowStats(false)}>
           {showStats && <StatsDialog onClose={() => setShowStats(false)} />}
         </Modal>
+        {showIntro && <Intro onClose={() => setShowIntro(false)} />}
         <HoverCardLayer />
         {error && (
           <div className="plate parch" role="alert" style={{ position: 'fixed', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 80, fontWeight: 700, color: '#8A1A1A' }} onClick={() => setError(null)}>
