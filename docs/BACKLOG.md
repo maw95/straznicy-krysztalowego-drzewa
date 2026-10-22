@@ -30,7 +30,6 @@ Uzgodnione pomysły do wdrożenia. Kolejność realizacji jeszcze nieustalona.
 ### Do ustalenia
 
 - Konta graczy (nick + hasło) czy anonimowe statystyki z samym nickiem?
-- Usunięcie aplikacji `removee` z Fly.io, żeby zwolnić miejsce w limicie 5 USD.
 
 ## 2. Figurki 3D zamiast portretów
 
