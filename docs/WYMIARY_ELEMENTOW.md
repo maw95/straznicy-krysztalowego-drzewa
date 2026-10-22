@@ -9,8 +9,9 @@ więc wersja fizyczna i komputerowa mają te same pola.
 - **Druk:** 300 DPI, spad **3 mm** z każdej strony, ważne napisy i liczby min. **4 mm** od linii cięcia.
 - **Przeliczenie:** 1 mm = 11,81 px przy 300 DPI. Rozmiary w pikselach poniżej już zawierają spad.
 - **Tektura** na kafelki, planszę, tor rund i znaczniki: **2 mm**. Karty: papier kartonowy ok. 300 g/m², lakier matowy.
-- **Jedno pole = jedna figurka.** Podstawka figurki ma 24 mm, a rzut postaci najwyżej 30 mm
-  (zob. `FIGURKI_SPECYFIKACJA.md`), więc najmniejsze pole na stole to **30 mm między płaskimi bokami**.
+- **Jedno pole = jedna figurka.** Pole areny ma **34 mm** między płaskimi bokami — prawie najwięcej,
+  ile mieści szerokość A3 (granica to ok. 36 mm bez żadnej ramki). Podstawka figurki ma **30 mm**,
+  więc między podstawkami sąsiednich figurek zostają 4 mm (zob. `FIGURKI_SPECYFIKACJA.md`).
 
 ## Tabela zbiorcza
 
@@ -18,7 +19,7 @@ więc wersja fizyczna i komputerowa mają te same pola.
 |---|---:|---|---|
 | Kafelek mapy (teren, skarb, siedlisko, Drzewo, baza) | 121 | sześciokąt **50 mm** między płaskimi bokami (57,7 mm między rogami), wierzchołkiem do góry | **661 × 753 px** na kafelek, osobno awers i rewers |
 | Plansza areny, dwustronna | 1 | **420 × 297 mm** (A3), składana raz na pół do 210 × 297 mm | **5031 × 3579 px** na stronę |
-| Pole areny | 85 na stronę | sześciokąt **30 mm** między płaskimi bokami, płaskim bokiem do góry | — (siatka rysowana programowo, niżej) |
+| Pole areny | 85 na stronę | sześciokąt **34 mm** między płaskimi bokami, płaskim bokiem do góry | — (siatka rysowana programowo, niżej) |
 | Karta jednostki | 15 | **80 × 120 mm** (rozmiar „Dixit”, proporcje 2:3 jak obecne wzory) | **1016 × 1488 px** |
 | Karta skarbu | 20 | **63 × 88 mm** (standardowa karta do gry) | **815 × 1110 px** |
 | Rewers karty jednostki / skarbu | po 1 wzorze | jak awers | jak awers |
@@ -27,15 +28,15 @@ więc wersja fizyczna i komputerowa mają te same pola.
 | Tor rund | 1 | sześciokąt **150 mm** między płaskimi bokami, 24 gniazda Ø 14 mm co ok. 17 mm | **2117 × 1843 px** |
 | Kryształowy znacznik rundy (druk 3D) | 1 | graniastosłup sześciokątny 8 mm, wys. 14 mm | — |
 | Kryształy (druk 3D) | 3 | graniastosłup sześciokątny 10 mm, wys. 18 mm | — |
-| Figurki z podstawką (druk 3D) | 15 | podstawka 24 mm, wys. postaci 22–55 mm | — |
+| Figurki z podstawką (druk 3D) | 15 | podstawka 30 mm, wys. postaci 28–68 mm | — |
 | Kość −1 / 0 / +1 | 1 | sześcienna **16 mm**, ścianki: −1, −1, 0, 0, +1, +1 | 6 pól po **189 × 189 px** (bez spadu) |
 | Instrukcja | 1 | **A4** (210 × 297 mm), zeszyt zszywany | 2480 × 3508 px na stronę |
-| Pudełko | 1 | wnętrze **305 × 305 × 75 mm**, zewnątrz ok. 310 × 310 × 80 mm | szablon (wykrojnik) od drukarni |
+| Pudełko | 1 | wnętrze **305 × 305 × 90 mm**, zewnątrz ok. 310 × 310 × 95 mm | szablon (wykrojnik) od drukarni |
 
 ## Kafelki mapy
 
 - **Kształt:** sześciokąt wierzchołkiem do góry, 50 mm między płaskimi bokami — tak jak na mapie w grze.
-  Na kafelku zmieszczą się figurka strażnika (rzut 30 mm) i kryształ (10 mm) obok niej.
+  Na kafelku zmieszczą się figurka strażnika (podstawka 30 mm) i kryształ (10 mm) obok niej.
 - **Liczba:** 50 Przymierza + 49 Hordy + 16 skarbów + 3 siedliska + Drzewo + 2 bazy = **121**.
 - **Miejsce na stole** (sama mapa):
 
@@ -53,8 +54,9 @@ więc wersja fizyczna i komputerowa mają te same pola.
 ## Plansza areny
 
 - **Siatka:** 13 kolumn sześciokątów płaskim bokiem do góry, kolumny po 5–7 pól, 85 pól, kolumny startowe po 5 pól.
-- **Pole 30 mm** między płaskimi bokami (34,6 mm między rogami). Cała siatka zajmuje **346 × 225 mm**
-  i stoi na środku planszy A3. Zostaje ok. 37 mm ramki z każdej strony na ozdoby, herb areny i opis przeszkód.
+- **Pole 34 mm** między płaskimi bokami (39,3 mm między rogami). Cała siatka zajmuje **393 × 255 mm**
+  i stoi na środku planszy A3. Zostaje ramka ok. 14 mm po bokach i 21 mm u góry i u dołu — na ozdobny brzeg,
+  bez miejsca na większe napisy.
 - **Przeszkody:** 7 na każdej stronie, w tych samych polach co w grze (`ARENA_OBSTACLES`).
 - **Siatkę i przeszkody narysować programowo** (SVG) i nałożyć na tło. Generator obrazów nie trafi
   w dokładne wymiary pól, a figurki muszą w nie wchodzić co do milimetra. Od generatora potrzebne jest
@@ -75,8 +77,8 @@ więc wersja fizyczna i komputerowa mają te same pola.
 
 ## Pudełko
 
-- Wnętrze 305 × 305 × 75 mm mieści: złożoną planszę areny (297 × 210 mm), wypraskę z 15 figurkami
-  (najwyższa ma z podstawką ok. 58 mm), wytłoczone arkusze kafelków lub ich stosy, karty, tor rund i instrukcję A4.
+- Wnętrze 305 × 305 × 90 mm mieści: złożoną planszę areny (297 × 210 mm), wypraskę z 15 figurkami
+  (najwyższa ma z podstawką ok. 71 mm), wytłoczone arkusze kafelków lub ich stosy, karty, tor rund i instrukcję A4.
 
 ## Stan obecnych grafik
 

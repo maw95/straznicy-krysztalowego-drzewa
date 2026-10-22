@@ -5,7 +5,7 @@ set -e
 cd "$(dirname "$0")"
 mkdir -p stl podglad
 
-# plik | frakcja | krótka nazwa na tylnej ściance (ok. 13 mm szerokości)
+# plik | frakcja | krótka nazwa na tylnej ściance (ok. 16 mm szerokości)
 UNITS="
 zloty_smok|przymierze|Złoty Smok
 krol_jednorozcow|przymierze|Jednorożec

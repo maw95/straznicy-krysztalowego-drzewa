@@ -1,5 +1,5 @@
 // Podstawka figurki — Strażnicy Kryształowego Drzewa (docs/FIGURKI_SPECYFIKACJA.md, rozdz. 2).
-// Sześciokąt 24 mm między płaskimi bokami, ustawiony jak pola areny (płaski bok z przodu i z tyłu).
+// Sześciokąt 30 mm między płaskimi bokami, ustawiony jak pola areny (płaski bok z przodu i z tyłu).
 // Na górze, przy przedniej krawędzi, wypukły herb frakcji; na środku gniazdo na kołek figurki;
 // na tylnej ściance (opcjonalnie) nazwa jednostki.
 //
@@ -8,11 +8,11 @@
 frakcja = "przymierze";   // "przymierze" | "horda" | "straznik"
 nazwa = "";               // napis na tylnej ściance; pusty = bez napisu
 
-szerokosc = 24;           // mm między płaskimi bokami
+szerokosc = 30;           // mm między płaskimi bokami
 wysokosc = 3;             // mm
 fazka = 0.5;              // mm, fazka górnej krawędzi
 herb_wypuklosc = 0.6;     // mm ponad górną powierzchnię
-herb_rozmiar = 6.5;       // mm, szerokość herbu
+herb_rozmiar = 8;         // mm, szerokość herbu
 kolek_srednica = 3.2;     // mm (kołek figurki Ø 3 mm + luz)
 kolek_glebokosc = 2;      // mm
 napis_wysokosc = 2.2;     // mm (ścianka ma 3 mm)

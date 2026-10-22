@@ -10,11 +10,11 @@ Wymiary plansz są ustalone w `WYMIARY_ELEMENTOW.md`; najważniejsze dla figurek
 
 | Element | Założenie | Skąd |
 |---|---|---|
-| Plansza areny | **A3 (420 × 297 mm)**, dwustronna | siatka 346 × 225 mm na środku planszy |
-| Pole areny | **30 mm** między płaskimi bokami, 34,6 mm między rogami | 13 kolumn sześciokątów, 85 pól |
+| Plansza areny | **A3 (420 × 297 mm)**, dwustronna | siatka 393 × 255 mm na środku planszy |
+| Pole areny | **34 mm** między płaskimi bokami, 39,3 mm między rogami | 13 kolumn sześciokątów, 85 pól |
 | Kafelek mapy | **50 mm** między płaskimi bokami | bardzo długa mapa (14 rzędów) zajmie ok. 70 × 62 cm stołu |
 
-**Najważniejsza zasada: na jednym polu stoi jedna figurka.** Podstawka musi się więc zmieścić w polu areny, czyli mieć poniżej 30 mm; 24 mm zostawia po 3 mm zapasu z każdej strony.
+**Najważniejsza zasada: na jednym polu stoi jedna figurka.** Podstawka musi się więc zmieścić w polu areny, czyli mieć mniej niż 34 mm. Figurki mają być jak największe, więc podstawka ma 30 mm i zostawia po 2 mm zapasu z każdej strony.
 
 ---
 
@@ -22,7 +22,7 @@ Wymiary plansz są ustalone w `WYMIARY_ELEMENTOW.md`; najważniejsze dla figurek
 
 ### Podstawka
 
-- **Kształt:** sześciokąt, **24 mm między płaskimi bokami**, ustawiony tak jak pola areny. Na kafelku mapy (50 mm) jest dużo miejsca.
+- **Kształt:** sześciokąt, **30 mm między płaskimi bokami**, ustawiony tak jak pola areny. Na kafelku mapy (50 mm) jest dużo miejsca.
 - **Wysokość:** 3 mm, z fazką 0,5 mm na górnej krawędzi.
 - **Kolor frakcji na obrzeżu:**
 
@@ -43,18 +43,18 @@ Wymiary plansz są ustalone w `WYMIARY_ELEMENTOW.md`; najważniejsze dla figurek
 
   Dzięki niemu nawet 5-latek od razu wie, czyja to figurka.
 - **Opcjonalnie:** nazwa jednostki wytłoczona na tylnej ściance, pismem min. 2,5 mm wysokości.
-- Postać modeluje się **bez własnej podstawki**. Stopy i łapy łączy się z podstawką kołkiem Ø 3 mm albo się je skleja. Gotowe modele z serwisów zwykle mają okrągłą podstawkę 25 mm: można ją zostawić albo odciąć i postawić figurkę na naszej podstawce.
+- Postać modeluje się **bez własnej podstawki**. Stopy i łapy łączy się z podstawką kołkiem Ø 3 mm albo się je skleja. Gotowe modele z serwisów zwykle mają okrągłą podstawkę 25 mm (skala 28 mm) — trzeba je powiększyć o ok. 25% i postawić na naszej podstawce.
 
 ### Wymiary postaci
 
-- **Rzut postaci** (to, co wystaje poza podstawkę z góry) najwyżej **30 mm**, żeby skrzydła i ogony nie wchodziły na sąsiednie pola. Smoki i Gryf mają skrzydła złożone albo uniesione w górę, a nie rozłożone na boki.
+- **Rzut postaci** najlepiej w obrębie pola (**34 mm**). Skrzydła i ogony mogą wystawać nad sąsiednie pola, ale tylko wysoko (skrzydła uniesione), żeby nie przewracać sąsiednich figurek i nie zasłaniać ich podstawek.
 - **Wysokość** zależy od roli, żeby wielkość mówiła o sile:
 
   | Rola | Wysokość figurki (bez podstawki) |
   |---|---|
-  | pomocnik / poplecznik | 22–30 mm |
-  | bohater / wódz | 32–42 mm |
-  | strażnik | 45–55 mm |
+  | pomocnik / poplecznik | 28–38 mm |
+  | bohater / wódz | 40–52 mm |
+  | strażnik | 56–68 mm |
 
 ### Pod druk żywiczny i dla dzieci
 
@@ -76,31 +76,31 @@ Pozy i cechy wziąłem z ilustracji na kartach (`docs/grafika/karty`, `public/as
 
 | Postać | Rola · typ | Wysokość | Wygląd i poza | Szukaj / opis po angielsku |
 |---|---|---|---|---|
-| **Złoty Smok** | bohater · latający | 40 mm | złote łuski, skrzydła uniesione nad grzbietem, łeb dumnie w górze; stoi na czterech łapach | *golden dragon, wings raised, heroic pose, 28mm scale miniature* |
-| **Król Jednorożców** | bohater · wręcz | 38 mm | biały jednorożec w ozdobnym rzędzie z zielenią i złotem, długa grzywa, jedna przednia noga uniesiona | *unicorn king, ornate barding, rearing slightly, fantasy miniature* |
-| **Prastary Niedźwiedź** | bohater · wręcz | 34 mm | potężny brunatny niedźwiedź z mchem i liśćmi na grzbiecie, talizman na szyi, ryczący | *ancient forest bear, moss on back, druidic amulet, roaring* |
-| **Elf Druid** | pomocnik · strzelec | 30 mm | elf w zielonych szatach z kosturem zakończonym kryształem, druga ręka wyciągnięta (czar) | *elf druid with staff, casting, leaf robes, 28mm* |
-| **Nimfa** | pomocnik · wręcz | 28 mm | nimfa wodna o morskich włosach, zwiewna suknia, dłonie nad kulą wody | *water nymph, flowing hair, holding water orb* |
-| **Pegaz** | pomocnik · latający | 30 mm | biały pegaz, skrzydła uniesione, stoi na tylnych nogach albo w skoku z oparciem o chmurkę | *pegasus, wings up, leaping, supported on cloud base* |
+| **Złoty Smok** | bohater · latający | 50 mm | złote łuski, skrzydła uniesione nad grzbietem, łeb dumnie w górze; stoi na czterech łapach | *golden dragon, wings raised, heroic pose, 28mm scale miniature* |
+| **Król Jednorożców** | bohater · wręcz | 48 mm | biały jednorożec w ozdobnym rzędzie z zielenią i złotem, długa grzywa, jedna przednia noga uniesiona | *unicorn king, ornate barding, rearing slightly, fantasy miniature* |
+| **Prastary Niedźwiedź** | bohater · wręcz | 42 mm | potężny brunatny niedźwiedź z mchem i liśćmi na grzbiecie, talizman na szyi, ryczący | *ancient forest bear, moss on back, druidic amulet, roaring* |
+| **Elf Druid** | pomocnik · strzelec | 38 mm | elf w zielonych szatach z kosturem zakończonym kryształem, druga ręka wyciągnięta (czar) | *elf druid with staff, casting, leaf robes, 28mm* |
+| **Nimfa** | pomocnik · wręcz | 35 mm | nimfa wodna o morskich włosach, zwiewna suknia, dłonie nad kulą wody | *water nymph, flowing hair, holding water orb* |
+| **Pegaz** | pomocnik · latający | 38 mm | biały pegaz, skrzydła uniesione, stoi na tylnych nogach albo w skoku z oparciem o chmurkę | *pegasus, wings up, leaping, supported on cloud base* |
 
 ### Mroczna Horda
 
 | Postać | Rola · typ | Wysokość | Wygląd i poza | Szukaj / opis po angielsku |
 |---|---|---|---|---|
-| **Czarny Smok** | wódz · latający | 42 mm | czarno-czerwony smok z kolcami i świecącymi pęknięciami, paszcza otwarta (ogień), skrzydła w górę | *black red dragon, spikes, fire breath, wings raised* |
-| **Władca Wilkołaków** | wódz · wręcz | 38 mm | wilkołak w zbroi z kolcami i czaszkami, przygarbiony, pazury przed sobą | *werewolf lord, spiked armor, skulls, hunched* |
-| **Ogr Żelazna Pięść** | wódz · wręcz | 36 mm | ogr w ciężkiej zbroi, ogromna żelazna rękawica, szeroka sylwetka | *armored ogre, giant iron gauntlet, brute* |
-| **Goblin Szaman** | poplecznik · strzelec | 24 mm | goblin w czerwonym kapturze z kosturem, czaszki przy pasie, magiczny płomień w dłoni | *goblin shaman, red hood, skull staff* |
-| **Pająk Jaskiniowy** | poplecznik · wręcz | 22 mm (wysokość), 28 mm rozstaw nóg | wielki czarno-czerwony pająk, nogi zwarte, żeby zmieścić się na podstawce | *giant cave spider, red stripes, compact legs* |
-| **Nietoperz Cienia** | poplecznik · latający | 28 mm | czerwono-czarny nietoperz, skrzydła rozłożone w górę, na kamieniu albo gałęzi wychodzącej z podstawki | *giant vampire bat, wings up, perched on rock* |
+| **Czarny Smok** | wódz · latający | 52 mm | czarno-czerwony smok z kolcami i świecącymi pęknięciami, paszcza otwarta (ogień), skrzydła w górę | *black red dragon, spikes, fire breath, wings raised* |
+| **Władca Wilkołaków** | wódz · wręcz | 48 mm | wilkołak w zbroi z kolcami i czaszkami, przygarbiony, pazury przed sobą | *werewolf lord, spiked armor, skulls, hunched* |
+| **Ogr Żelazna Pięść** | wódz · wręcz | 45 mm | ogr w ciężkiej zbroi, ogromna żelazna rękawica, szeroka sylwetka | *armored ogre, giant iron gauntlet, brute* |
+| **Goblin Szaman** | poplecznik · strzelec | 30 mm | goblin w czerwonym kapturze z kosturem, czaszki przy pasie, magiczny płomień w dłoni | *goblin shaman, red hood, skull staff* |
+| **Pająk Jaskiniowy** | poplecznik · wręcz | 28 mm (wysokość), 35 mm rozstaw nóg | wielki czarno-czerwony pająk, nogi zwarte, żeby zmieścić się na podstawce | *giant cave spider, red stripes, compact legs* |
+| **Nietoperz Cienia** | poplecznik · latający | 35 mm | czerwono-czarny nietoperz, skrzydła rozłożone w górę, na kamieniu albo gałęzi wychodzącej z podstawki | *giant vampire bat, wings up, perched on rock* |
 
 ### Strażnicy kryształów
 
 | Postać | Typ | Wysokość | Wygląd i poza | Szukaj / opis po angielsku |
 |---|---|---|---|---|
-| **Cyklop Błyskotek** | strzelec | 50 mm | jednooki olbrzym obwieszony złotem i klejnotami, trzyma kryształ, obok kamień do rzucania | *cyclops with treasure, holding crystal, boulder* |
-| **Gryf Złodziej Skarbów** | latający | 50 mm | gryf (orli łeb, lwie ciało) na stosie złota, skrzydła uniesione | *griffin on treasure pile, wings raised* |
-| **Hydra z Zatopionych Ruin** | wręcz | 48 mm | trzy zielono-niebieskie głowy na zwartej szyi, wynurzona z wody i ruin, przy niej kryształ | *three headed hydra, emerging from ruins, water base* |
+| **Cyklop Błyskotek** | strzelec | 62 mm | jednooki olbrzym obwieszony złotem i klejnotami, trzyma kryształ, obok kamień do rzucania | *cyclops with treasure, holding crystal, boulder* |
+| **Gryf Złodziej Skarbów** | latający | 62 mm | gryf (orli łeb, lwie ciało) na stosie złota, skrzydła uniesione | *griffin on treasure pile, wings raised* |
+| **Hydra z Zatopionych Ruin** | wręcz | 60 mm | trzy zielono-niebieskie głowy na zwartej szyi, wynurzona z wody i ruin, przy niej kryształ | *three headed hydra, emerging from ruins, water base* |
 
 ---
 
@@ -108,7 +108,7 @@ Pozy i cechy wziąłem z ilustracji na kartach (`docs/grafika/karty`, `public/as
 
 | Element | Ile | Wymiary | Uwagi |
 |---|---|---|---|
-| Podstawka sześciokątna z herbem | 15 | 24 mm między bokami, 3 mm | 6 Przymierza, 6 Hordy, 3 strażników |
+| Podstawka sześciokątna z herbem | 15 | 30 mm między bokami, 3 mm | 6 Przymierza, 6 Hordy, 3 strażników |
 | Kryształy | 3 | graniastosłup sześciokątny 10 mm, wys. 18 mm, z ostrym czubkiem | druk z przezroczystej żywicy, najlepiej niebieskiej |
 | Znacznik rundy | 1 | jak kryształ, 8 mm, wys. 14 mm, lekko zwężany ku dołowi | wchodzi w gniazda toru rund |
 | Tor rund | 1 | sześciokąt 150 mm, 24 gniazda Ø 14 mm | z grafiki `grafika/ikony/tor_rund.png` (do powiększenia) |
@@ -129,7 +129,7 @@ Pozy i cechy wziąłem z ilustracji na kartach (`docs/grafika/karty`, `public/as
 
 ## 6. Jak sprawdzić model przed drukiem
 
-- [ ] Rzut z góry mieści się w 30 mm, a podstawka ma 24 mm.
+- [ ] Podstawka ma 30 mm; poza pole 34 mm wystają tylko elementy uniesione wysoko.
 - [ ] Wysokość zgodna z tabelą (± 3 mm).
 - [ ] Najcieńsze elementy ≥ 1,5 mm.
 - [ ] Siatka zamknięta (manifold), bez dziur i podwójnych ścianek.
