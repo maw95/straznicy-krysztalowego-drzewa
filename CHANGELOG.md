@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 1.3.0 — 2026-10-22
+
 - Narzędzia: przebudowa instrukcji (`scripts/assets/manual.py`) nadpisuje pliki zamiast kasować folder, przez co działający serwer deweloperski pokazywał w zakładce „Instrukcja” menu gry zamiast instrukcji (`9b73c58`).
 - Notatki projektowe: zasady nowego trybu Arena (`d8f75e1`).
 - Arena, część 1: zasady w silniku gry (wybór pomocników, losowanie skarbów A, B, B, A ze wspólnej talii, jedna bitwa) i bot na trzech poziomach; ekrany jeszcze w budowie (`4cbdc11`).
@@ -19,7 +21,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Balans jednostek: Władca Wilkołaków S 7, a Zew Krwi daje +1 A do każdego ataku na rannego wroga (zamiast raz na bitwę +2 A); Król Jednorożców S 8 i Szarża Światła +2 A; Ogr Żelazna Pięść Ż 10 (`40372c7`).
 - Arena: przy losowaniu skarbów Horda widzi 4 karty zamiast 3 (bez tego Przymierze wygrywało ok. 55% starć); okienko wyboru mieści 4 karty w jednym rzędzie (`0bcd3d5`).
 - Bitwa: chodzące jednostki nie przechodzą już przez pola zajęte przez sojuszników (zgłoszenie z 22 października 2026); opis w „Podstawowych zasadach” (`e684e4c`).
-- Instrukcja i punkty po nowym balansie: statystyki i zdolności w rozdziale 2 (z nowymi obrazkami kart Wilkołaka, Jednorożca i Ogra), zasada ruchu w bitwie, 4 karty dla Hordy na Arenie, przeliczone tabele trudności w rozdziale 13 i oceny w punktach; w notatkach wyniki balansu i lista zmian dla wersji papierowej.
+- Instrukcja i punkty po nowym balansie: statystyki i zdolności w rozdziale 2 (z nowymi obrazkami kart Wilkołaka, Jednorożca i Ogra), zasada ruchu w bitwie, 4 karty dla Hordy na Arenie, przeliczone tabele trudności w rozdziale 13 i oceny w punktach; w notatkach wyniki balansu i lista zmian dla wersji papierowej (`bdf0d90`).
 
 ## 1.2.0 — 2026-10-22
 
