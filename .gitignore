@@ -17,3 +17,8 @@ yarn-error.log*
 
 # Python bytecode of the asset scripts
 __pycache__/
+
+# Full-resolution 3D models for printing (hundreds of MB, over GitHub's file limit);
+# the game uses the reduced copies from `make modele` in public/modele/
+/docs/druk3d/*.glb
+/docs/druk3d/*.stl

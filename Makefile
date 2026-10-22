@@ -8,9 +8,10 @@ SIZE ?= short
 MODE ?= coop
 OPTIONS ?= full
 BATTLE ?= arena
+RATIO ?= 0.01
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview test test-engine test-ui test-watch typecheck check sim sim-all sim-matrix sim-battles sim-arena sim-tabele report clean
+.PHONY: help install dev build preview test test-engine test-ui test-watch typecheck check sim sim-all sim-matrix sim-battles sim-arena sim-tabele report modele clean
 
 help: ## Lista komend
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -70,6 +71,14 @@ sim-arena: node_modules ## Arena: każdy skład Przymierza przeciw każdemu skł
 
 report: node_modules ## Odtworzenie zgłoszeń błędów z bug-reports/ (albo FILE=ścieżka.json)
 	npx tsx scripts/report.ts $(FILE)
+
+modele: ## Odchudzone modele figurek do gry: docs/druk3d/*.glb -> public/modele/*.glb, np. make modele RATIO=0.01
+	@mkdir -p public/modele
+	@for f in docs/druk3d/*.glb; do \
+		n=$$(basename $$f .glb); \
+		npx -y @gltf-transform/cli@4 simplify $$f .tmp/$$n.glb --ratio $(RATIO) --error 0.001 && \
+		npx -y @gltf-transform/cli@4 meshopt .tmp/$$n.glb public/modele/$$n.glb && rm .tmp/$$n.glb; \
+	done
 
 clean: ## Usunięcie dist/ i plików tymczasowych
 	rm -rf dist .tmp
