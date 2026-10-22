@@ -9,6 +9,8 @@ import { TreasureCard } from './TreasureCard';
 import { UnitCard } from './UnitCard';
 
 const heroOf = (state: GameState, f: FactionId) => Object.values(state.heroes).find((h) => h.faction === f)!.id;
+/** Treasures a side drafts in all: those it holds plus its picks still to come. */
+const picksOf = (state: GameState, f: FactionId) => state.factions[f].inventory.length + (state.draft?.order.filter((x) => x === f).length ?? 0) || ARENA_PICKS;
 
 /** Background while the arena match is being set up (and behind the end screen). */
 export function ArenaPrep({ state }: { state: GameState }) {
@@ -36,7 +38,7 @@ export function ArenaPrep({ state }: { state: GameState }) {
                 : null}
             </div>
             <div className="arena-prep-items">
-              Skarby: {state.factions[f].inventory.length} / {ARENA_PICKS}
+              Skarby: {state.factions[f].inventory.length} / {picksOf(state, f)}
             </div>
           </div>
         ))}
@@ -58,7 +60,7 @@ export function DraftDialog({ state, faction, covered, onReveal, onPick }: { sta
   const [chosen, setChosen] = useState<ItemKind | null>(null);
   const mine = state.factions[faction].inventory.map((id) => state.items[id].kind);
   const pickNo = mine.length + 1;
-  const width = Math.min(230, (window.innerWidth - 120) / 3);
+  const width = Math.min(d.offer.length > 3 ? 200 : 230, (window.innerWidth - 120) / d.offer.length);
   if (covered) {
     return (
       <div>
@@ -74,11 +76,11 @@ export function DraftDialog({ state, faction, covered, onReveal, onPick }: { sta
   }
   return (
     <div>
-      <Frame crest style={{ width: 'min(820px, 96vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+      <Frame crest style={{ width: d.offer.length > 3 ? 'min(960px, 96vw)' : 'min(820px, 96vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
         <Ribbon side={faction} style={{ width: 'min(460px, 92vw)' }}>
-          Wybierz skarb ({pickNo} z {ARENA_PICKS})
+          Wybierz skarb ({pickNo} z {picksOf(state, faction)})
         </Ribbon>
-        <div style={{ fontSize: 16, color: 'var(--muted)', textAlign: 'center' }}>Dwa pozostałe wracają do talii. Przeciwnik nie zobaczy Twoich skarbów, dopóki ich nie użyjesz.</div>
+        <div style={{ fontSize: 16, color: 'var(--muted)', textAlign: 'center' }}>Pozostałe wracają do talii. Przeciwnik nie zobaczy Twoich skarbów, dopóki ich nie użyjesz.</div>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
           {d.offer.map((k) => (
             <button key={k} className="btn" aria-pressed={chosen === k} aria-label={ITEMS[k].name} onClick={() => setChosen(k)} style={{ background: 'none', border: 0, padding: 4, borderRadius: 12, boxShadow: chosen === k ? '0 0 0 3px #9EE4FF, 0 0 16px 4px rgba(158,228,255,0.6)' : 'none' }}>

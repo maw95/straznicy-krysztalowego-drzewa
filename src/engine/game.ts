@@ -12,6 +12,7 @@ import {
   NON_RESURRECTION_ITEMS,
   ARENA_DECK,
   ARENA_OFFER,
+  ARENA_RULES,
   RESURRECTION_CARDS,
   TERRAIN_COST,
   TERRAIN_NAMES,
@@ -182,7 +183,8 @@ export function createGame(setup: SetupOptions): GameState {
  */
 function startArena(state: GameState) {
   const rng = new Rng(state.rng);
-  const first: FactionId = rng.int(2) === 0 ? 'dawn' : 'horde';
+  const coin: FactionId = rng.int(2) === 0 ? 'dawn' : 'horde';
+  const first: FactionId = ARENA_RULES.firstPicker === 'random' ? coin : ARENA_RULES.firstPicker;
   const second: FactionId = first === 'dawn' ? 'horde' : 'dawn';
   const arena = rng.int(2) === 0 ? 'dawn' : 'horde';
   state.rng = rng.state;
@@ -190,7 +192,8 @@ function startArena(state: GameState) {
   const [dawn, horde] = [heroOf('dawn'), heroOf('horde')];
   if (!dawn || !horde) throw new Error('Na arenie walczy jeden bohater Przymierza i jeden Hordy.');
   const hero = (f: FactionId) => (f === 'dawn' ? dawn : horde);
-  state.draft = { deck: [...ARENA_DECK], order: [first, second, second, first], offer: [] };
+  const extra = (['dawn', 'horde'] as FactionId[]).flatMap((f) => Array<FactionId>(ARENA_RULES.extraPicks[f]).fill(f));
+  state.draft = { deck: [...ARENA_DECK], order: [first, second, second, first, ...extra], offer: [] };
   log(state, 'battle', `Arena: ${UNITS[hero('dawn').id].name} kontra ${UNITS[hero('horde').id].name}. Pierwsza wybiera ${FACTION_NAMES[first]}.`);
   startBattle(state, { kind: 'heroes', attackerHero: hero(first).id, defenderHero: hero(second).id, mapHex: hero(first).pos, from: hero(first).pos });
   const b = state.battle!;
@@ -202,7 +205,7 @@ function startArena(state: GameState) {
 function dealOffer(state: GameState) {
   const d = state.draft!;
   const rng = new Rng(state.rng);
-  d.offer = [...new Set(rng.shuffle(d.deck))].slice(0, ARENA_OFFER);
+  d.offer = [...new Set(rng.shuffle(d.deck))].slice(0, ARENA_OFFER + ARENA_RULES.extraOffer[d.order[0]]);
   state.rng = rng.state;
 }
 

@@ -48,8 +48,10 @@ describe('arena', () => {
     const pickers: FactionId[] = [];
     while (s.battle?.stage === 'draft') {
       const d = s.draft!;
-      expect(d.offer).toHaveLength(3);
-      expect(new Set(d.offer).size).toBe(3);
+      // The Horde is shown 4 cards (an arena-only handicap), Przymierze 3.
+      const shown = d.order[0] === 'horde' ? 4 : 3;
+      expect(d.offer).toHaveLength(shown);
+      expect(new Set(d.offer).size).toBe(shown);
       const before = d.deck.length;
       pickers.push(d.order[0]);
       s = applyAction(s, chooseAction(s)!);

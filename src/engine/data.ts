@@ -166,6 +166,19 @@ export const ARENA_DECK: ItemKind[] = [
 /** Arena: treasures each side drafts, and cards shown per pick. */
 export const ARENA_PICKS = 2;
 export const ARENA_OFFER = 3;
+/**
+ * Arena-only handicaps (they do not touch the adventure game): who picks first ('random' = a coin)
+ * and extra treasures a side drafts after the A, B, B, A picks.
+ */
+export const ARENA_RULES: { firstPicker: 'random' | FactionId; extraPicks: Record<FactionId, number>; extraOffer: Record<FactionId, number> } = {
+  firstPicker: 'random',
+  extraPicks: { dawn: 0, horde: 0 },
+  /**
+   * More cards shown to that side at each pick (the choice gets better, the number of treasures stays).
+   * The Horde sees 4: in the arena Przymierze otherwise wins about 55% (simulations, notes section 9).
+   */
+  extraOffer: { dawn: 0, horde: 1 },
+};
 
 // Map tiles. The left half of the triangle is built from Przymierze tiles (green back),
 // the right half from Horda tiles (red back). Costs follow the designer's table.
