@@ -19,7 +19,7 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] => {
   return out;
 };
 
-export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters }: { onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void }) {
+export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, }: { onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void }) {
   const stats = journalStats();
   const fileRef = useRef<HTMLInputElement>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -36,7 +36,8 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters }: {
     const preset = levelSettings(l, m);
     setLevel(l);
     setBattleMode(preset.battleMode);
-    setRules({ ...preset.rules, initiativeTie: rules.initiativeTie });
+    // The levels play the default tie rule; another one is a custom setup.
+    setRules({ ...preset.rules });
   };
   const [preview, setPreview] = useState<string>('goldDragon');
 
@@ -167,29 +168,31 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters }: {
               </Tip>
             )}
           </Row>
-          <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>Pełna gra to wszystko wyłączone. Ułatwienia i utrudnienia można dowolnie łączyć.</div>
+          <Row label="Remis inicjatywy">
+            {TIE_MODES.map(([m, label, tip]) => (
+              <Tip key={m} text={tip}>
+                <button className={choice(rules.initiativeTie === m)} style={chip} aria-pressed={rules.initiativeTie === m} onClick={() => setRules({ ...rules, initiativeTie: m })}>
+                  {label}
+                </button>
+              </Tip>
+            ))}
+          </Row>
+          <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>Pełna gra to wszystko wyłączone i obrońca pierwszy. Ułatwienia i utrudnienia można dowolnie łączyć.</div>
           </>
           )}
-          <div className="lbl" style={{ marginTop: 6 }}>Zasady testowe</div>
+          <label style={{ fontSize: 16, marginTop: 6 }}>
+            <input
+              type="checkbox"
+              checked={tutorial}
+              onChange={(e) => {
+                setTutorial(e.target.checked);
+                setTutorialEnabled(e.target.checked);
+              }}
+            />{' '}
+            Samouczek (podpowiedzi w pierwszej partii)
+          </label>
+          <div className="lbl">Zasady testowe</div>
           <div style={{ display: 'flex', gap: '12px 22px', flexWrap: 'wrap', alignItems: 'center', fontSize: 16 }}>
-            <label>
-              Remis inicjatywy{' '}
-              <select value={rules.initiativeTie} onChange={(e) => setRules({ ...rules, initiativeTie: e.target.value as typeof rules.initiativeTie })}>
-                <option value="rotating">rotacyjnie</option>
-                <option value="defender">obrońca pierwszy</option>
-              </select>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={tutorial}
-                onChange={(e) => {
-                  setTutorial(e.target.checked);
-                  setTutorialEnabled(e.target.checked);
-                }}
-              />{' '}
-              Samouczek (podpowiedzi w pierwszej partii)
-            </label>
             <label>
               Ziarno losowania <input type="number" value={seed} onChange={(e) => setSeed(Number(e.target.value))} style={{ width: 110 }} />
             </label>
@@ -279,6 +282,12 @@ const LEVEL_HINT: Record<Level | 'custom', string> = {
   hard: 'Pełna gra, a automat zła ma o jednego bohatera więcej i 2 losowe skarby na start. Wyzwanie dla dorosłych.',
   custom: 'Wybierz sam: rodzaj bitew, ułatwienia i utrudnienia, które można dowolnie łączyć.',
 };
+
+/** Who strikes first when both units are equally fast: label, mode, explanation. */
+const TIE_MODES: Array<[RulesConfig['initiativeTie'], string, string]> = [
+  ['defender', 'Obrońca pierwszy', 'Przy równej Szybkości pierwsza działa jednostka strony, która została zaatakowana. Tak gra się na każdym poziomie.'],
+  ['rotating', 'Na zmianę', 'Przy równej Szybkości strony zaczynają na zmianę: w nieparzystych rundach bitwy atakujący, w parzystych obrońca.'],
+];
 
 /** Optional simplifications of the full game: label, whether it is on, how to switch it, what it does. */
 const EASES: Array<[string, (r: RulesConfig) => boolean, (on: boolean) => Partial<RulesConfig>, string]> = [

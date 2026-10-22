@@ -180,3 +180,22 @@ describe('tester journal', () => {
     expect(JSON.parse(localStorage.getItem('skd-feedback-draft')!)).toEqual({ name: 'Ola', feedback: 'Fajne smoki' });
   });
 });
+
+describe('setup options', () => {
+  it('offers the initiative tie rule only in the custom level, and a custom tie makes the level custom', async () => {
+    window.history.replaceState(null, '', '/');
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    const btn = (t: string) => [...doc.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement | undefined;
+    expect(btn('Na zmianę')).toBeUndefined();
+    expect(doc.body.textContent).not.toContain('Remis inicjatywy');
+    await act(async () => fireEvent.click(btn('Własny')!));
+    expect(btn('Obrońca pierwszy')!.getAttribute('aria-pressed')).toBe('true');
+    await act(async () => fireEvent.click(btn('Na zmianę')!));
+    expect(btn('Na zmianę')!.getAttribute('aria-pressed')).toBe('true');
+    // Going back to a level restores the default rule.
+    await act(async () => fireEvent.click(btn('Normalny')!));
+    await act(async () => fireEvent.click(btn('Własny')!));
+    expect(btn('Obrońca pierwszy')!.getAttribute('aria-pressed')).toBe('true');
+  });
+});

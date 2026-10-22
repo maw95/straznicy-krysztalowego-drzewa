@@ -6,6 +6,7 @@ Nowe commity trafiają do sekcji „Nieopublikowane”, dopóki nie powstanie ta
 ## Nieopublikowane
 
 - Rulebook ch. 13: difficulty tables for the levels only, rivalry tables per faction in faction colours
+- Setup: initiative tie rule moved to the custom level, tutorial above the test rules
 
 ## 1.1.0 — 2026-10-22
 
