@@ -1,9 +1,12 @@
 // Arena balance: every Przymierze line-up (hero + 2 of 3 supports) against every Horde line-up,
 // bots on both sides drafting treasures, random arena and first pick.
-// Usage: npx tsx scripts/sim/arena.ts [games per match-up = 100] [bot level = normal]
+// Usage: npx tsx scripts/sim/arena.ts [games per match-up = 100] [bot level = normal] [label]
+// SIM_OVERRIDE (see override.ts) tries changed units or abilities; results go to .tmp/sim/arena-<label>.json.
 // Prints win rates per hero, per support pair and per full line-up.
 
+import './override';
 import { execFile } from 'node:child_process';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { cpus } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { FACTION_HEROES, FACTION_SUPPORTS, UNITS, type FactionId } from '../../src/engine/data';
@@ -80,6 +83,8 @@ if (process.argv[2] === '--job') {
   const pct = (w: number, n: number) => `${((100 * w) / n).toFixed(1)}%`.padStart(6);
   const sum = (rows: typeof results) => rows.reduce((a, r) => ({ wins: a.wins + r.wins, draws: a.draws + r.draws, rounds: a.rounds + r.rounds }), { wins: 0, draws: 0, rounds: 0 });
   const all = sum(results);
+  mkdirSync('.tmp/sim', { recursive: true });
+  writeFileSync(`.tmp/sim/arena-${process.argv[4] ?? 'last'}.json`, JSON.stringify({ games, level, lineUps: { dawn: D, horde: H }, results }, null, 1));
   const n = results.length * games;
   console.log(`\nArena · ${games} partii na starcie · bot ${level} · razem ${n} partii`);
   console.log(`Przymierze wygrywa ${pct(all.wins, n)} · remisy ${pct(all.draws, n)} · śr. rund bitwy ${(all.rounds / n).toFixed(1)}`);
