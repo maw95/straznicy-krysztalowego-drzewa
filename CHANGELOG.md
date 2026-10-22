@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Narzędzia: `make sim-tabele` — czytelne tabele z % wygranych Przymierza w każdym trybie, mapie i poziomie oraz z tym, jak przegrywa (wybici bohaterowie, rytuał, limit rund).
+
 ## 1.3.0 — 2026-10-22
 
 - Narzędzia: przebudowa instrukcji (`scripts/assets/manual.py`) nadpisuje pliki zamiast kasować folder, przez co działający serwer deweloperski pokazywał w zakładce „Instrukcja” menu gry zamiast instrukcji (`9b73c58`).
