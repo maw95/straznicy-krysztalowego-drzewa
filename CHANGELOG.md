@@ -6,7 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
-- Narzędzia: przebudowa instrukcji (`scripts/assets/manual.py`) nadpisuje pliki zamiast kasować folder, przez co działający serwer deweloperski pokazywał w zakładce „Instrukcja” menu gry zamiast instrukcji.
+- Narzędzia: przebudowa instrukcji (`scripts/assets/manual.py`) nadpisuje pliki zamiast kasować folder, przez co działający serwer deweloperski pokazywał w zakładce „Instrukcja” menu gry zamiast instrukcji (`9b73c58`).
+- Notatki projektowe: zasady nowego trybu Arena.
 
 ## 1.2.0 — 2026-10-22
 

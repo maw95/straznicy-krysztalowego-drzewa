@@ -599,3 +599,16 @@ Symulacje (500 partii botów na wariant, wygrane Przymierza, obecne → nowe):
 | Trudny | 1 i 2 | bez zmian | | | |
 
 Jeden gracz zyskuje (jeden bohater Hordy zamiast dwóch), dwóch graczy traci (start bez zmian, ale wybita Horda wraca). Tabele trudności w instrukcji (rozdział 13, kolumna Normalny w kooperacji) i oceny w `src/ui/scoring.ts` uaktualnione; kolumny pojedynczych ustawień w `scoring.ts` pochodzą jeszcze sprzed zmiany.
+
+## 8. Arena — nowy tryb gry (2026-10-22, decyzje użytkownika)
+
+Jedna bitwa 3 na 3 bez mapy przygody, także w wersji papierowej (trafi do instrukcji).
+- **Nazwa:** „Arena” (nie „pojedynek” — to już nazwa bitwy bohaterów na planszy).
+- **Strony:** zawsze Przymierze Świtu kontra Mroczna Horda. Przeciw żywemu graczowi albo komputerowi.
+- **Skład:** każdy wybiera bohatera i 2 z 3 pomocników swojej frakcji. Skład jest jawny.
+- **Skarby:** wspólna talia — każdy skarb działający w bitwie po jednym (bez Magicznej Mapy) i **2 Eliksiry Odrodzenia** (15 kart). Losowanie naprzemienne **A, B, B, A**: wybierający widzi 3 różne skarby z wierzchu potasowanej talii, bierze jeden, dwa pozostałe wracają do talii. Każdy ma 2 skarby, **ukryte przed przeciwnikiem do użycia**. Róg Strażników zostaje: „rezerwa” to trzeci, niewybrany pomocnik.
+- **Start:** losowo, kto wybiera pierwszy (A) i na której arenie (Przymierza czy Hordy) się walczy. A ustawia się po lewej, pierwszy, i jest „atakującym” w zasadzie remisu inicjatywy.
+- **Remis inicjatywy:** „na zmianę” (w nieparzystych rundach bitwy pierwszy jest A, w parzystych B).
+- **Jedna bitwa** = cała partia; remis (obie strony giną) jest remisem.
+- **Komputer:** poziomy Łatwy (losowy skład i skarby), Normalny (dobre wybory, czasem drugi najlepszy skarb), Trudny (najlepsze wybory). Bot nie bierze skarbów, których nie umie użyć (Róg Strażników, Róg Odwagi, Klepsydra, Zwój Teleportacji); na arenie używa też Butów Wiatru i wskrzesza pomocników.
+- **Punkty w „Twoich partiach”:** za wygraną z komputerem mało, żeby Arena nie opłacała się bardziej niż zwykła partia (zwykła to 3–5 bitew i 3–30 punktów) — wartości do zatwierdzenia przez użytkownika.
