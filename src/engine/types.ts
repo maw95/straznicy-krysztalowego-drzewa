@@ -1,7 +1,8 @@
 import type { HexKey } from './hex';
 import type { FactionId, ItemKind, MapSize, Side, Terrain, TileSide } from './data';
 
-export type Mode = 'coop' | 'pvp';
+/** coop and pvp play the adventure map; arena is a single 3-on-3 battle with drafted treasures. */
+export type Mode = 'coop' | 'pvp' | 'arena';
 export type BattleMode = 'arena' | 'board';
 export type Controller = 'human' | 'bot';
 export type InitiativeTieMode = 'rotating' | 'defender';
@@ -96,11 +97,32 @@ export interface SeatSetup {
 
 export interface SetupOptions {
   mode: Mode;
+  /** Arena: unused (the map is generated but never shown). */
   mapSize: MapSize;
   battleMode: BattleMode;
   seed: number;
   seats: SeatSetup[];
   rules: RulesConfig;
+  /** Arena against the computer: how well the bot picks its supports and treasures. */
+  botLevel?: Level;
+}
+
+/**
+ * Arena setup: one Przymierze seat and one Horda seat, the full game's battle rules, and ties of
+ * initiative taken in turn (there is no attacker or defender in an arena match).
+ */
+export function arenaSetup(seats: SeatSetup[], seed: number, botLevel: Level = 'normal'): SetupOptions {
+  return { mode: 'arena', mapSize: 'short', battleMode: 'arena', seed, seats, botLevel, rules: { ...DEFAULT_RULES, initiativeTie: 'rotating' } };
+}
+
+/** Arena treasure draft: a shared deck, picks in the order A, B, B, A, three cards offered each time. */
+export interface ArenaDraft {
+  /** Cards left (Eliksir Odrodzenia twice, every other battle treasure once). */
+  deck: ItemKind[];
+  /** Who picks next, front first. */
+  order: FactionId[];
+  /** Distinct kinds shown to the picker now. */
+  offer: ItemKind[];
 }
 
 export interface Player {
@@ -221,7 +243,8 @@ export interface BattleState {
   attackerFrom: HexKey;
   defenderHero: string | null;
   neutralId: string | null;
-  stage: 'select' | 'deploy' | 'fight' | 'over';
+  /** Arena only: 'draft' (treasures) comes between choosing the supports and deploying. */
+  stage: 'select' | 'draft' | 'deploy' | 'fight' | 'over';
   /** Factions still to place their units (attacker first); neutral guardians stay where put. */
   needsDeploy: FactionId[];
   needsSelection: FactionId[];
@@ -318,6 +341,8 @@ export interface GameState {
   stats: GameStats;
   /** Summary of the most recently finished battle (for the after-battle screen). */
   lastBattle: BattleReport | null;
+  /** Arena: the treasure draft while it lasts. */
+  draft?: ArenaDraft | null;
 }
 
 export type Action =
@@ -326,6 +351,7 @@ export type Action =
   | { type: 'useMapItem'; itemId: string; targets?: HexKey[]; unitId?: string }
   | { type: 'selectSupports'; faction: FactionId; supportIds: string[] }
   | { type: 'deployUnits'; faction: FactionId; positions: Record<string, HexKey> }
+  | { type: 'draftPick'; faction: FactionId; kind: ItemKind }
   | { type: 'battleMove'; to: HexKey }
   | { type: 'battleAttack'; targetId: string; secondTargetId?: string; useAbility?: boolean }
   | { type: 'battleAbility'; targetId?: string }

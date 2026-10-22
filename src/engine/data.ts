@@ -155,6 +155,17 @@ export const ITEMS: Record<ItemKind, ItemDef> = {
 
 export const NON_RESURRECTION_ITEMS: ItemKind[] = (Object.keys(ITEMS) as ItemKind[]).filter((k) => k !== 'resurrection');
 
+/** Arena: Eliksiry Odrodzenia in the shared draft deck (the user's choice: 2, not the box's 6). */
+export const ARENA_RESURRECTIONS = 2;
+/** Arena draft deck: every treasure that works in battle once (so no Magiczna Mapa), plus the Eliksiry. */
+export const ARENA_DECK: ItemKind[] = [
+  ...Array<ItemKind>(ARENA_RESURRECTIONS).fill('resurrection'),
+  ...NON_RESURRECTION_ITEMS.filter((k) => ITEMS[k].usableIn.includes('battle')),
+];
+/** Arena: treasures each side drafts, and cards shown per pick. */
+export const ARENA_PICKS = 2;
+export const ARENA_OFFER = 3;
+
 // Map tiles. The left half of the triangle is built from Przymierze tiles (green back),
 // the right half from Horda tiles (red back). Costs follow the designer's table.
 export type Terrain =

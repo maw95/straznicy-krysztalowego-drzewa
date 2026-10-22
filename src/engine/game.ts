@@ -10,6 +10,8 @@ import {
   ITEMS,
   MAP_VARIANTS,
   NON_RESURRECTION_ITEMS,
+  ARENA_DECK,
+  ARENA_OFFER,
   RESURRECTION_CARDS,
   TERRAIN_COST,
   TERRAIN_NAMES,
@@ -35,7 +37,7 @@ import {
 import { distance, parseKey, type HexKey } from './hex';
 import { generateMap, homeKey, mapNeighbors, revealAround, tileCost, treeKey } from './map';
 import { Rng } from './rng';
-import type { Action, BattleState, GameState, HeroState, LogKind, Player, SetupOptions } from './types';
+import type { Action, BattleReport, BattleState, GameState, HeroState, LogKind, Player, SetupOptions } from './types';
 
 export const other = (f: FactionId): FactionId => (f === 'dawn' ? 'horde' : 'dawn');
 
@@ -164,8 +166,87 @@ export function createGame(setup: SetupOptions): GameState {
   state.rng = rng.state;
   state.turnOrder = computeTurnOrder(state);
   state.turnIndex = 0;
+  if (setup.mode === 'arena') {
+    startArena(state);
+    return state;
+  }
   log(state, 'round', `Runda 1 z ${state.roundLimit}. Przymierze potrzebuje ${state.crystalsNeeded} kryształów.`);
   return state;
+}
+
+// ------------------------------------------------------------------ arena
+
+/**
+ * Arena: the two heroes meet at once. A coin decides who picks first (the "attacker", who also
+ * deploys first and starts the odd rounds on ties of initiative) and which painted arena is used.
+ */
+function startArena(state: GameState) {
+  const rng = new Rng(state.rng);
+  const first: FactionId = rng.int(2) === 0 ? 'dawn' : 'horde';
+  const second: FactionId = first === 'dawn' ? 'horde' : 'dawn';
+  const arena = rng.int(2) === 0 ? 'dawn' : 'horde';
+  state.rng = rng.state;
+  const heroOf = (f: FactionId) => Object.values(state.heroes).find((h) => h.faction === f);
+  const [dawn, horde] = [heroOf('dawn'), heroOf('horde')];
+  if (!dawn || !horde) throw new Error('Na arenie walczy jeden bohater Przymierza i jeden Hordy.');
+  const hero = (f: FactionId) => (f === 'dawn' ? dawn : horde);
+  state.draft = { deck: [...ARENA_DECK], order: [first, second, second, first], offer: [] };
+  log(state, 'battle', `Arena: ${UNITS[hero('dawn').id].name} kontra ${UNITS[hero('horde').id].name}. Pierwsza wybiera ${FACTION_NAMES[first]}.`);
+  startBattle(state, { kind: 'heroes', attackerHero: hero(first).id, defenderHero: hero(second).id, mapHex: hero(first).pos, from: hero(first).pos });
+  const b = state.battle!;
+  b.arena = arena;
+  b.obstacles = arenaObstacles(arena);
+}
+
+/** The next three cards for the picker: the deck is shuffled and the first three different kinds are shown. */
+function dealOffer(state: GameState) {
+  const d = state.draft!;
+  const rng = new Rng(state.rng);
+  d.offer = [...new Set(rng.shuffle(d.deck))].slice(0, ARENA_OFFER);
+  state.rng = rng.state;
+}
+
+/** After both sides chose their supports: the draft in the arena, the deployment otherwise. */
+function afterSelection(state: GameState) {
+  if (state.draft?.order.length) {
+    state.battle!.stage = 'draft';
+    dealOffer(state);
+  } else startBattleFight(state);
+}
+
+function draftPick(state: GameState, faction: FactionId, kind: ItemKind) {
+  const d = state.draft;
+  const b = state.battle;
+  if (!d || !b || b.stage !== 'draft' || d.order[0] !== faction) throw new Error('Teraz nie wybiera ta frakcja.');
+  if (!d.offer.includes(kind)) throw new Error('Tego skarbu nie ma wśród pokazanych.');
+  d.deck.splice(d.deck.indexOf(kind), 1);
+  const id = `it${Object.keys(state.items).length + 1}`;
+  const hero = battleHeroOf(b, faction);
+  state.items[id] = { id, kind, owner: faction, foundBy: hero };
+  state.factions[faction].inventory.push(id);
+  log(state, 'item', `${FACTION_NAMES[faction]} wybiera skarb.`);
+  log(state, 'item', `Wybrany skarb: ${ITEMS[kind].name}.`, faction);
+  d.order.shift();
+  d.offer = [];
+  if (d.order.length) dealOffer(state);
+  else {
+    state.draft = null;
+    startBattleFight(state);
+  }
+}
+
+/** The arena match ends with its battle. */
+function finishArena(state: GameState) {
+  const b = state.battle!;
+  state.lastBattle = battleReport(state, b);
+  if (b.winner === 'dawn' || b.winner === 'horde') finish(state, b.winner, 'Na arenie nie ostał się żaden przeciwnik.');
+  else {
+    state.phase = 'over';
+    state.winner = null;
+    state.endReason = 'Remis — obie strony poległy.';
+    state.battle = null;
+    log(state, 'victory', 'Koniec gry: remis.');
+  }
 }
 
 function addHero(state: GameState, heroId: string, faction: FactionId, playerId: string | null) {
@@ -315,6 +396,10 @@ export function currentActor(state: GameState): Actor {
     }
     if (b.stage === 'deploy') {
       const f = b.needsDeploy[0];
+      return actorForFaction(state, f, battleHeroOf(b, f));
+    }
+    if (b.stage === 'draft' && state.draft) {
+      const f = state.draft.order[0];
       return actorForFaction(state, f, battleHeroOf(b, f));
     }
     if (b.stage === 'fight' && b.activation) {
@@ -595,11 +680,12 @@ function selectSupports(state: GameState, faction: FactionId, ids: string[]) {
   if (unique.length !== Math.min(2, pool.length) || unique.some((id) => !pool.includes(id))) throw new Error('Wybierz dwóch żyjących pomocników.');
   addSupports(state, faction, unique);
   b.needsSelection.shift();
-  if (!b.needsSelection.length) startBattleFight(state);
+  if (!b.needsSelection.length) afterSelection(state);
 }
 
 /** Applies battle results to the adventure state once one side is gone. */
 function finalizeBattle(state: GameState) {
+  if (state.setup.mode === 'arena') return finishArena(state);
   const b = state.battle!;
   const winner = b.winner!;
   for (const u of Object.values(b.units)) {
@@ -631,18 +717,7 @@ function finalizeBattle(state: GameState) {
       state.stats.neutralWipes += 1;
     }
   }
-  state.lastBattle = {
-    id: (state.lastBattle?.id ?? 0) + 1,
-    kind: b.kind,
-    duel: b.duel,
-    attacker: b.attacker,
-    defender: b.defender,
-    winner,
-    rounds: b.round,
-    units: Object.values(b.units)
-      .filter((u) => !u.swappedOut)
-      .map((u) => ({ defId: u.defId, side: u.side, hp: Math.max(0, u.hp), maxHp: u.maxHp, alive: u.alive, damage: b.damageBy[u.id] ?? 0 })),
-  };
+  state.lastBattle = battleReport(state, b);
   state.battle = null;
   state.phase = 'adventure';
   const attacker = state.heroes[b.attackerHero];
@@ -657,6 +732,21 @@ function finalizeBattle(state: GameState) {
   if (isOver(state)) return;
   const active = activeHero(state);
   if (!active || !active.alive) advanceTurn(state);
+}
+
+function battleReport(state: GameState, b: BattleState): BattleReport {
+  return {
+    id: (state.lastBattle?.id ?? 0) + 1,
+    kind: b.kind,
+    duel: b.duel,
+    attacker: b.attacker,
+    defender: b.defender,
+    winner: b.winner!,
+    rounds: b.round,
+    units: Object.values(b.units)
+      .filter((u) => !u.swappedOut)
+      .map((u) => ({ defId: u.defId, side: u.side, hp: Math.max(0, u.hp), maxHp: u.maxHp, alive: u.alive, damage: b.damageBy[u.id] ?? 0 })),
+  };
 }
 
 /**
@@ -754,6 +844,9 @@ export function applyAction(prev: GameState, action: Action): GameState {
     case 'deployUnits':
       if (!state.battle) throw new Error('Nie trwa żadna bitwa.');
       deployUnits(state, action.faction, action.positions);
+      break;
+    case 'draftPick':
+      draftPick(state, action.faction, action.kind);
       break;
     default:
       applyBattleAction(state, action);

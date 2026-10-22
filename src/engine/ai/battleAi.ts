@@ -23,20 +23,46 @@ import {
 } from '../battle';
 import { distance, parseKey, type HexKey } from '../hex';
 import type { Action, BattleUnit, GameState } from '../types';
+import type { ItemKind } from '../data';
 
 const dist = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));
 
 export function chooseSupports(state: GameState, faction: FactionId): Action {
   const pool = [...state.factions[faction].supportsAlive];
   const automaton = state.setup.mode === 'coop' && faction === 'horde';
+  // The easy arena bot picks its supports at random, as the automaton does.
+  const careless = state.setup.mode === 'arena' && state.setup.botLevel === 'kids';
   let picked: string[];
-  if (automaton) {
+  if (automaton || careless) {
     // Spec: coop evil supports are chosen at random among the living.
     picked = pool.slice().sort((a, b) => hashPick(state, a) - hashPick(state, b)).slice(0, 2);
   } else {
     picked = pool.slice().sort((a, b) => supportValue(b) - supportValue(a)).slice(0, 2);
   }
   return { type: 'selectSupports', faction, supportIds: picked };
+}
+
+/**
+ * How much a treasure is worth to the bot in an arena draft. Kinds it cannot use (see itemToUse)
+ * are worth nothing, so it never drafts them unless nothing else is offered.
+ */
+const DRAFT_VALUE: Partial<Record<ItemKind, number>> = { resurrection: 9, stone: 8, sword: 7, seed: 7, lightning: 7, heal: 6, damage_scroll: 6, shield: 6, vitality: 6, boots: 4 };
+
+/**
+ * Arena draft: the hard bot takes the most valuable card, the normal one usually does (now and then
+ * the second best), the easy one picks at random.
+ */
+export function chooseDraftPick(state: GameState, faction: FactionId): Action {
+  const offer = state.draft!.offer;
+  const level = state.setup.botLevel ?? 'normal';
+  let kind: ItemKind;
+  if (level === 'kids') kind = offer[hashPick(state, faction) % offer.length];
+  else {
+    const ranked = [...offer].sort((a, b) => (DRAFT_VALUE[b] ?? 0) - (DRAFT_VALUE[a] ?? 0) || (a < b ? -1 : 1));
+    const second = level === 'normal' && ranked.length > 1 && (DRAFT_VALUE[ranked[1]] ?? 0) > 0 && hashPick(state, faction) % 3 === 0;
+    kind = second ? ranked[1] : ranked[0];
+  }
+  return { type: 'draftPick', faction, kind };
 }
 
 function hashPick(state: GameState, id: string): number {
@@ -159,6 +185,9 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
       case 'resurrection': {
         const deadLeader = Object.values(b.units).find((x) => x.side === faction && !x.alive && !x.swappedOut && UNITS[x.defId].kind === 'hero');
         if (deadLeader) return { type: 'battleItem', itemId: item.id, targetId: deadLeader.id };
+        // In the arena the elixir is worth nothing after the battle: a fallen support comes back too.
+        const deadSupport = state.setup.mode === 'arena' && Object.values(b.units).find((x) => x.side === faction && !x.alive && !x.swappedOut);
+        if (deadSupport) return { type: 'battleItem', itemId: item.id, targetId: deadSupport.id };
         break;
       }
       case 'heal': {
@@ -186,6 +215,10 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
         break;
       case 'shield':
         if (UNITS[u.defId].kind === 'hero' && u.hp <= 5) return { type: 'battleItem', itemId: item.id, targetId: u.id };
+        break;
+      case 'boots':
+        // Arena only: the coop automaton keeps to the rulebook's list of treasures it uses.
+        if (state.setup.mode === 'arena' && UNITS[u.defId].kind === 'hero' && b.round === 1) return { type: 'battleItem', itemId: item.id, targetId: u.id };
         break;
       default:
         break;
@@ -278,6 +311,7 @@ export function chooseBattleAction(state: GameState): Action {
   const b = state.battle!;
   if (b.stage === 'select') return chooseSupports(state, b.needsSelection[0]);
   if (b.stage === 'deploy') return chooseDeployment(state, b.needsDeploy[0]);
+  if (b.stage === 'draft') return chooseDraftPick(state, state.draft!.order[0]);
   const act = b.activation!;
   const u = b.units[act.unitId];
   if (act.hop) {

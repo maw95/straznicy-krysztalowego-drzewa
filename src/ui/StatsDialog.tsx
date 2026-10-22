@@ -5,7 +5,7 @@ import { Frame, Ribbon } from './common';
 import { journalBreakdown, journalStats, LEVEL_NAMES } from './journal';
 import { MAX_POINTS } from './scoring';
 
-const MODE_NAMES = { coop: 'Kooperacja', pvp: 'Rywalizacja' } as const;
+const MODE_NAMES = { coop: 'Kooperacja', pvp: 'Rywalizacja', arena: 'Arena' } as const;
 const pct = (v: number | null) => (v === null ? '—' : `${v}%`);
 
 export function StatsDialog({ onClose }: { onClose: () => void }) {

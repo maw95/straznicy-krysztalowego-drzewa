@@ -186,7 +186,7 @@ export function journalBreakdown(j: Journal = readJournal()): BreakdownRow[] {
       row.points += gamePoints(g);
     } else if (o === 'lost') row.lost++;
   }
-  const order = (r: BreakdownRow) => (r.mode === 'coop' ? 0 : 100) + MAP_ORDER.indexOf(r.mapSize) * 10 + LEVEL_ORDER.indexOf(r.level);
+  const order = (r: BreakdownRow) => ({ coop: 0, pvp: 100, arena: 200 })[r.mode] + MAP_ORDER.indexOf(r.mapSize) * 10 + LEVEL_ORDER.indexOf(r.level);
   return [...rows.values()].map((r) => ({ ...r, winRate: rate(r.won, r.lost) })).sort((a, b) => order(a) - order(b));
 }
 
