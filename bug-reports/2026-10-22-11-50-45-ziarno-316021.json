@@ -1,0 +1,334 @@
+{
+ "setup": {
+  "mode": "coop",
+  "mapSize": "short",
+  "battleMode": "arena",
+  "seed": 316021,
+  "seats": [
+   {
+    "name": "Gracz 1",
+    "faction": "dawn",
+    "controller": "human",
+    "heroId": "goldDragon"
+   }
+  ],
+  "rules": {
+   "heroMovePoints": 3,
+   "abilities": true,
+   "treasures": true,
+   "useDice": false,
+   "extraEvilHero": false,
+   "initiativeTie": "defender",
+   "heroReplacement": false,
+   "minEvilHeroes": 1,
+   "hordeRespawn": true,
+   "ritualHold": true,
+   "ritualRounds": 3,
+   "passThroughAllies": true,
+   "unitsBlockSight": false,
+   "battleRoundLimit": 40
+  }
+ },
+ "actions": [
+  {
+   "type": "moveHero",
+   "to": "-4,5"
+  },
+  {
+   "type": "moveHero",
+   "to": "-3,5"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-1,5"
+  },
+  {
+   "type": "moveHero",
+   "to": "0,4"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-3,4"
+  },
+  {
+   "type": "moveHero",
+   "to": "-2,3"
+  },
+  {
+   "type": "selectSupports",
+   "faction": "dawn",
+   "supportIds": [
+    "elfDruid",
+    "nymph"
+   ]
+  },
+  {
+   "type": "deployUnits",
+   "faction": "dawn",
+   "positions": {
+    "goldDragon": "0,5",
+    "elfDruid": "0,4",
+    "nymph": "0,6"
+   }
+  },
+  {
+   "type": "battleMove",
+   "to": "6,-1"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "4,1"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "4,2"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "4,4"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "5,1"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "elfDruid",
+   "useAbility": false
+  },
+  {
+   "type": "battleHop",
+   "to": "1,1"
+  },
+  {
+   "type": "battleAbility"
+  },
+  {
+   "type": "battleMove",
+   "to": "0,2"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "griffin",
+   "useAbility": false
+  },
+  {
+   "type": "battleMove",
+   "to": "5,1"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "griffin",
+   "useAbility": true
+  },
+  {
+   "type": "battleMove",
+   "to": "1,3"
+  },
+  {
+   "type": "battleAbility",
+   "targetId": "elfDruid"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "goldDragon",
+   "useAbility": false
+  },
+  {
+   "type": "battleHop",
+   "to": "0,3"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "griffin",
+   "useAbility": false
+  },
+  {
+   "type": "battleMove",
+   "to": "1,2"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "griffin",
+   "useAbility": false
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "griffin",
+   "useAbility": false
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "0,3"
+  },
+  {
+   "type": "moveHero",
+   "to": "-1,3"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-1,2"
+  },
+  {
+   "type": "moveHero",
+   "to": "0,2"
+  },
+  {
+   "type": "selectSupports",
+   "faction": "dawn",
+   "supportIds": [
+    "elfDruid",
+    "nymph"
+   ]
+  },
+  {
+   "type": "deployUnits",
+   "faction": "dawn",
+   "positions": {
+    "goldDragon": "0,4",
+    "elfDruid": "0,2",
+    "nymph": "0,3"
+   }
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": true
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "11,-1"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "4,0"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": false
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "8,-1"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "3,1"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": false
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "5,-1"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": false
+  },
+  {
+   "type": "battleMove",
+   "to": "4,0"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": false
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "nymph",
+   "useAbility": false
+  },
+  {
+   "type": "battleMove",
+   "to": "4,1"
+  }
+ ],
+ "reports": [
+  {
+   "createdAt": "2026-10-22T11:50:45.472Z",
+   "actionIndex": 66,
+   "round": 3,
+   "screen": "battle:fight",
+   "text": "jednostki nielatające dobrze omijają przeszkody terenowe, ale przenikają przez sojuszników podczas bitwy na arenie. nie powinny móc tego robić.",
+   "recentLog": [
+    "[3] Elf Druid → Hydra z Zatopionych Ruin: 1 obrażeń (Ż 19/21).",
+    "[3] Runda bitwy 3.",
+    "[3] Elf Druid atakuje: Hydra z Zatopionych Ruin.",
+    "[3] Elf Druid → Hydra z Zatopionych Ruin: 1 obrażeń (Ż 18/21).",
+    "[3] Runda bitwy 4.",
+    "[3] Elf Druid atakuje: Hydra z Zatopionych Ruin.",
+    "[3] Elf Druid → Hydra z Zatopionych Ruin: 1 obrażeń (Ż 17/21).",
+    "[3] Nimfa atakuje: Hydra z Zatopionych Ruin.",
+    "[3] Nimfa → Hydra z Zatopionych Ruin: 2 obrażeń (Ż 15/21).",
+    "[3] Hydra z Zatopionych Ruin atakuje: Nimfa.",
+    "[3] Hydra z Zatopionych Ruin → Nimfa: 2 obrażeń (Ż 3/5).",
+    "[3] Runda bitwy 5."
+   ],
+   "viewport": "2048×1152",
+   "userAgent": "Mozilla/5.0 (X11; Linux x86_64; rv:158.0) Gecko/20100101 Firefox/158.0"
+  }
+ ]
+}

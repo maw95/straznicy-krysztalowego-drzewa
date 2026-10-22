@@ -38,7 +38,7 @@ export interface RulesConfig {
   ritualRounds: number;
   /** The Horde's ritual at the Tree; off on the easy level (the Horde wins by the limit or by beating the heroes). */
   ritual?: boolean;
-  /** Walking units may pass through hexes occupied by allies (never through enemies). */
+  /** Walking units may pass through hexes occupied by allies (never through enemies). Off since 2026-10-22 (the user's decision). */
   passThroughAllies: boolean;
   /** Units standing in the way do not block ranged line of sight (only obstacles do). */
   unitsBlockSight: boolean;
@@ -61,7 +61,7 @@ export const DEFAULT_RULES: RulesConfig = {
   hordeRespawn: true,
   ritualHold: true,
   ritualRounds: 3,
-  passThroughAllies: true,
+  passThroughAllies: false,
   unitsBlockSight: false,
   battleRoundLimit: 40,
 };

@@ -100,3 +100,29 @@ describe('arena', () => {
     expect(picks('kids').some((k) => useless.includes(k))).toBe(true);
   });
 });
+
+describe('walking in battle', () => {
+  it('never walks through an ally (nor an enemy); flyers still pass over', async () => {
+    const { movePath, reachableCells, unitAt } = await import('../src/engine/battle');
+    const { UNITS } = await import('../src/engine/data');
+    let checked = 0;
+    for (let seed = 1; seed <= 6; seed++) {
+      let s = createGame(arenaSetup(seats(), seed));
+      for (let i = 0; i < 400 && s.phase !== 'over'; i++) {
+        const b = s.battle;
+        if (b?.stage === 'fight' && b.activation && !b.activation.moved) {
+          const u = b.units[b.activation.unitId];
+          if (UNITS[u.defId].movement !== 'fly') {
+            for (const to of reachableCells(s, u).keys()) {
+              const path = movePath(s, u, to);
+              for (const k of path.slice(1, -1)) expect(unitAt(b, k)).toBeUndefined();
+              checked++;
+            }
+          }
+        }
+        s = applyAction(s, chooseAction(s)!);
+      }
+    }
+    expect(checked).toBeGreaterThan(50);
+  });
+});
