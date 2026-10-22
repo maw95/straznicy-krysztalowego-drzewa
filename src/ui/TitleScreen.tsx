@@ -5,7 +5,8 @@
 import { useEffect } from 'react';
 import { asset } from './common';
 import { autoFullscreen, enterFullscreen } from './fullscreen';
-import { music } from './music';
+import { firstTrack, music } from './music';
+import { introSeen, SLIDES } from './Intro';
 
 const KEY = 'skd-title-done';
 
@@ -25,7 +26,20 @@ function markDone() {
   }
 }
 
+/**
+ * While the title is on screen, fetch what comes right after START: the menu music and, on the first
+ * visit, the intro art (first slide first). Later loads come from the browser cache. A file that fails
+ * to load just loads again when it is needed.
+ */
+function preloadNext() {
+  const images = introSeen() ? [] : SLIDES.map((s) => `intro/${s.id}.jpg`);
+  for (const src of images) new Image().src = asset(src);
+  if (typeof fetch === 'function') fetch(asset(firstTrack('menu'))).catch(() => {});
+}
+
 export function TitleScreen({ onStart }: { onStart: () => void }) {
+  useEffect(preloadNext, []);
+
   const start = () => {
     if (autoFullscreen()) enterFullscreen();
     music.unlock();

@@ -34,6 +34,12 @@ const PLAYLISTS: Record<Exclude<Theme, 'none'>, Playlist> = {
   hordeVictory: { loop: [M('horde-victory-the-fallen')], once: true },
 };
 
+/** The file a theme starts with (for preloading it before it is needed). */
+export function firstTrack(theme: Exclude<Theme, 'none'>): string {
+  const list = PLAYLISTS[theme];
+  return list.intro ?? list.loop[0];
+}
+
 /** Crossfade between two different tracks (README: 2–4 s). */
 const CROSSFADE_MS = 3000;
 /** Fade when the situation changes (map → battle and so on). */
