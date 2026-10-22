@@ -581,7 +581,7 @@ Długość partii z limitem podniesionym do 100 (400 gier na wariant, poziomy No
 
 Tabele trudności w instrukcji wygenerowano z tych danych: trudność = round(1 + 9 × (1 − wygrane Przymierza)), w PvP Horda = 11 − Przymierze.
 
-### 7.18. Posiłki Hordy w kooperacji (2026-10-22, decyzja użytkownika)
+### 7.18. Posiłki Hordy w kooperacji (2026-10-22, decyzja użytkownika, wyniki symulacji zaakceptowane)
 
 Zmiana zasad automatu na poziomach **Łatwym i Normalnym** (Trudny bez zmian, rywalizacja bez zmian):
 - na starcie automat ma **tylu bohaterów, ilu jest graczy** (wcześniej: co najmniej dwóch);
