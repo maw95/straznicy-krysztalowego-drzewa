@@ -23,6 +23,7 @@ import { HoverCardLayer } from './hover';
 import { Tutorial } from './Tutorial';
 import { Intro, introSeen } from './Intro';
 import { StatsDialog } from './StatsDialog';
+import { ChangelogDialog } from './ChangelogDialog';
 import { TreasureReveal } from './CardBack';
 
 const SPEEDS = { wolno: 900, normalnie: 450, szybko: 120 } as const;
@@ -42,6 +43,7 @@ export function App() {
   const [showRules, setShowRules] = useState(false);
   const [showTesters, setShowTesters] = useState(false);
   const [showStats, setShowStats] = useState(false);
+  const [showChangelog, setShowChangelog] = useState(false);
   // The intro plays on the first launch (never in the ?steps= test games).
   const [showIntro, setShowIntro] = useState(() => !introSeen() && !new URLSearchParams(window.location.search).has('steps'));
   const [showReport, setShowReport] = useState(false);
@@ -298,6 +300,7 @@ export function App() {
         else if (showReport) setShowReport(false);
         else if (summary) setSummary(null);
         else if (showStats) setShowStats(false);
+        else if (showChangelog) setShowChangelog(false);
         return;
       }
       if (confirm || card || showLog || showDebug || showRules || showReport || summary) return;
@@ -315,7 +318,7 @@ export function App() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [confirm, card, showLog, showDebug, showRules, showReport, summary, showStats, undo, fastForward, humanAction]);
+  }, [confirm, card, showLog, showDebug, showRules, showReport, summary, showStats, showChangelog, undo, fastForward, humanAction]);
 
   const visibleLog = useMemo(() => (game ? game.log.filter((l) => !l.privateTo || l.privateTo === viewer) : []), [game, viewer]);
 
@@ -340,7 +343,7 @@ export function App() {
     return (
       <>
         <SvgDefs />
-        <SetupScreen onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} onIntro={() => setShowIntro(true)} />
+        <SetupScreen onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} onIntro={() => setShowIntro(true)} onChangelog={() => setShowChangelog(true)} />
         <Modal open={showRules} onClose={() => setShowRules(false)}>
           <RulesDialog onClose={() => setShowRules(false)} />
         </Modal>
@@ -349,6 +352,9 @@ export function App() {
         </Modal>
         <Modal open={showStats} onClose={() => setShowStats(false)}>
           {showStats && <StatsDialog onClose={() => setShowStats(false)} />}
+        </Modal>
+        <Modal open={showChangelog} onClose={() => setShowChangelog(false)}>
+          {showChangelog && <ChangelogDialog onClose={() => setShowChangelog(false)} />}
         </Modal>
         {showIntro && <Intro onClose={() => setShowIntro(false)} />}
         <HoverCardLayer />

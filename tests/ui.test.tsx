@@ -286,3 +286,26 @@ describe('intro', () => {
     expect(title()).toBe('Kryształowe Drzewo');
   });
 });
+
+describe('changelog', () => {
+  it('reads versions, dates and changes from CHANGELOG.md, without commit hashes', async () => {
+    const { parseChangelog } = await import('../src/ui/ChangelogDialog');
+    const r = parseChangelog('# Historia\n\nWstęp.\n\n## W przygotowaniu\n\n- Nowe okienko (`abc1234`).\n\n## 1.1.0 — 2026-10-22\n\n- Balans: **szybkości** (`51f6d15`).\n- Interfejs.\n\n## 1.0.0 — 2026-10-21\n');
+    expect(r).toEqual([
+      { version: null, date: null, changes: ['Nowe okienko.'] },
+      { version: '1.1.0', date: '2026-10-22', changes: ['Balans: szybkości.', 'Interfejs.'] },
+    ]);
+  });
+
+  it('opens from the version number in the menu', async () => {
+    window.history.replaceState(null, '', '/');
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    const version = [...doc.querySelectorAll('button')].find((b) => b.textContent?.startsWith('Wersja '))!;
+    await act(async () => fireEvent.click(version));
+    const v110 = doc.querySelector('[aria-label="Wersja 1.1.0"]')!;
+    expect(v110.textContent).toContain('22 października 2026');
+    expect(v110.textContent).not.toMatch(/51f6d15/);
+    expect(doc.querySelector('[aria-label="Wersja 1.0.0"]')).not.toBeNull();
+  });
+});

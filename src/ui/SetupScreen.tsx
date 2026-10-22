@@ -19,7 +19,7 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] => {
   return out;
 };
 
-export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro }: { onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void }) {
+export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog }: { onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void }) {
   const stats = journalStats();
   const fileRef = useRef<HTMLInputElement>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -241,7 +241,9 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onS
           </div>
           {/* The game version bottom-left, the tester's record in this browser bottom-right. */}
           <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-            <div className="app-version">Wersja {__APP_VERSION__}</div>
+            <button className="app-version" title="Historia zmian" onClick={onChangelog}>
+              Wersja {__APP_VERSION__}
+            </button>
             <div className="stats-box" aria-label="Twoje partie">
               <div className="stats-title">Twoje partie</div>
               <div className="stats-grid">

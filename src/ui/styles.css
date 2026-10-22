@@ -489,7 +489,9 @@ button:not(:disabled), .hex-clip[style*='pointer'], label { cursor: url("data:im
 /* Main menu: the player's record */
 .app-version {
   font-size: 15px; letter-spacing: 0.02em; color: #d9c08a; opacity: 0.8; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  background: none; border: 0; padding: 2px 0; cursor: pointer; text-decoration: underline dotted rgba(217, 192, 138, 0.6); text-underline-offset: 3px;
 }
+.app-version:hover, .app-version:focus-visible { opacity: 1; color: #f3d27a; }
 .stats-box {
   margin-top: 14px; min-width: 300px; padding: 10px 16px 12px; border-radius: 8px;
   background: linear-gradient(180deg, rgba(20, 40, 38, 0.92), rgba(8, 18, 18, 0.92));
@@ -544,3 +546,9 @@ button:not(:disabled), .hex-clip[style*='pointer'], label { cursor: url("data:im
   width: 11px; height: 11px; padding: 0; border-radius: 50%; border: 1px solid #b88a35; background: rgba(0, 0, 0, 0.5); cursor: pointer;
 }
 .intro-dots button.on { background: #9ee4ff; box-shadow: 0 0 8px 2px rgba(158, 228, 255, 0.6); }
+/* "Historia zmian": versions with their dates and changes */
+.changelog-release h3 { margin: 0; font-size: 21px; color: #f3d27a; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.changelog-date { font-size: 15px; color: var(--muted); margin-top: 2px; }
+.changelog-release ul { margin: 8px 0 0; padding-left: 22px; display: flex; flex-direction: column; gap: 5px; line-height: 1.4; }
+.changelog-current { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #10221a; background: #9be88a; border-radius: 999px; padding: 2px 10px; }
+.changelog-release + .changelog-release { border-top: 1px solid rgba(232, 196, 106, 0.3); padding-top: 14px; }
