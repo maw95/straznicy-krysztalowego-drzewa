@@ -11,6 +11,7 @@ Nowe commity trafiają do sekcji „Nieopublikowane”, dopóki nie powstanie ta
 - Intro slide show on the first launch (story, basic rules, where to find the rulebook); art goes to public/assets/intro/
 - Setup hint: the coop automaton fields at least two Horde heroes
 - Coop automaton: as many Horde heroes as players, a new one in the Horde base when all have fallen (not on Trudny)
+- Rulebook and points for the Horde reinforcements: chapters 4, 12 and 13, coop difficulty after the change, sim notes
 
 ## 1.1.0 — 2026-10-22
 

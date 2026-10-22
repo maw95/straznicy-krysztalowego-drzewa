@@ -580,3 +580,22 @@ Długość partii z limitem podniesionym do 100 (400 gier na wariant, poziomy No
 | Trudny | 23–59% | 35% |
 
 Tabele trudności w instrukcji wygenerowano z tych danych: trudność = round(1 + 9 × (1 − wygrane Przymierza)), w PvP Horda = 11 − Przymierze.
+
+### 7.18. Posiłki Hordy w kooperacji (2026-10-22, decyzja użytkownika)
+
+Zmiana zasad automatu na poziomach **Łatwym i Normalnym** (Trudny bez zmian, rywalizacja bez zmian):
+- na starcie automat ma **tylu bohaterów, ilu jest graczy** (wcześniej: co najmniej dwóch);
+- gdy polegnie ostatni żyjący bohater automatu, w **bazie Hordy** od razu staje kolejny: nieużywany bohater Hordy, a gdy takich nie ma — jeden z poległych. Gra od następnej rundy; gdy bazę zajmuje bohater Przymierza, staje na najbliższym wolnym polu.
+- W silniku: `minEvilHeroes: 1`, `hordeRespawn: true` w `DEFAULT_RULES`; Trudny ma `minEvilHeroes: 2`, `hordeRespawn: false`.
+
+Symulacje (500 partii botów na wariant, wygrane Przymierza, obecne → nowe):
+
+| Poziom | Gracze | Krótka | Średnia | Długa | Bardzo długa |
+|---|---|---|---|---|---|
+| Łatwy | 1 | 88 → 90 | 85 → 92 | 82 → 83 | 83 → 78 |
+| Łatwy | 2 | 77 → 78 | 75 → 75 | 70 → 67 | 74 → 73 |
+| Normalny | 1 | 58 → 63 | 57 → 66 | 55 → 56 | 60 → 63 |
+| Normalny | 2 | 66 → 61 | 61 → 53 | 63 → 57 | 78 → 72 |
+| Trudny | 1 i 2 | bez zmian | | | |
+
+Jeden gracz zyskuje (jeden bohater Hordy zamiast dwóch), dwóch graczy traci (start bez zmian, ale wybita Horda wraca). Tabele trudności w instrukcji (rozdział 13, kolumna Normalny w kooperacji) i oceny w `src/ui/scoring.ts` uaktualnione; kolumny pojedynczych ustawień w `scoring.ts` pochodzą jeszcze sprzed zmiany.

@@ -389,7 +389,8 @@ sheet(f'''<div class="eyebrow">Rozdział 11 · Skarby</div><h1>Karty skarbów</h
 chapter('12', 'Gra przeciwko automatowi zła', 'coop')
 sheet('''<div class="eyebrow">Rozdział 12 · kooperacja</div><h1>Automat zła</h1>
 <p class="intro flavor">Horda nie śpi. Nawet gdy nikt nią nie dowodzi, jej bohaterowie idą prosto przed siebie — do najbliższej ofiary albo do Drzewa.</p>
-<p>W kooperacji wszyscy gracze prowadzą Przymierze, a Hordę prowadzą proste zasady. <b>Automat ma tylu bohaterów, ilu jest graczy, ale co najmniej dwóch</b> (na poziomie trudnym — o jednego więcej, najwyżej trzech, i 2 losowe skarby na start). Losujcie ich przed grą.</p>
+<p>W kooperacji wszyscy gracze prowadzą Przymierze, a Hordę prowadzą proste zasady. <b>Automat ma tylu bohaterów, ilu jest graczy</b> (na poziomie trudnym — o jednego więcej, ale co najmniej trzech, i 2 losowe skarby na start). Losujcie ich przed grą.</p>
+<p><b>Posiłki Hordy:</b> gdy polegnie ostatni żyjący bohater automatu, w bazie Hordy od razu staje kolejny — nieużywany bohater Hordy, a gdy takich już nie ma, jeden z poległych (wylosujcie go). Do gry wchodzi od następnej rundy. Jeśli bazę zajmuje bohater Przymierza, nowy staje na najbliższym wolnym polu. Na poziomie trudnym posiłków nie ma.</p>
 <div class="banner">Tura bohatera Hordy</div>
 <ol class="rules">
 <li>Czy Horda ma Eliksir Odrodzenia, a któryś jej bohater nie żyje? → wypij go i wskrześ poległego.</li>
@@ -397,7 +398,7 @@ sheet('''<div class="eyebrow">Rozdział 12 · kooperacja</div><h1>Automat zła</
 <li>Czy obok niego stoi bohater Przymierza? → <b>atakuje go</b>.</li>
 <li>W przeciwnym razie idzie w stronę <b>najbliższego</b> celu: bohatera Przymierza albo Drzewa (gdy Drzewo zajął już inny bohater Hordy — wolnego pola obok). Przy remisie wybiera bohatera. Omija pola strażników i własnych bohaterów. Zakryte pola traktuje tak, jakby kosztowały 1.</li>
 </ol>
-<div class="paper-note">Automat nie unika złych walk, ale bierze do gry co najmniej dwóch bohaterów. Jeśli chcecie większego wyzwania, wybierzcie poziom <b>trudny</b>.</div>
+<div class="paper-note">Automat nie unika złych walk, ale wybita Horda wraca z bazy (poza poziomem trudnym, gdzie od początku ma o jednego bohatera więcej). Jeśli chcecie większego wyzwania, wybierzcie poziom <b>trudny</b>.</div>
 ''', cls='horde', left='Rozdział 12', right='Kooperacja', foot='Automat zła', key='coop')
 sheet('''<div class="eyebrow">Rozdział 12 · kooperacja</div><h1>Automat w bitwie</h1>
 <p>Pomocników do bitwy automat dobiera <b>losowo</b> spośród żywych. Ustawia bohatera pośrodku kolumny, pomocników nad i pod nim. Jednostkami automatu kierujcie według prostych zasad:</p>

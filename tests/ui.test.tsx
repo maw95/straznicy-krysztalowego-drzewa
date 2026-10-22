@@ -165,7 +165,7 @@ describe('tester journal', () => {
     expect(box).toContain('Rozegrane1');
     expect(box).toContain('1 wygr. · 0 przegr.');
     expect(box).toContain('Procent wygranych100%');
-    expect(box).toContain('Punkty9');
+    expect(box).toContain('Punkty7');
     const btn = (t: string) => [...doc.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement;
     await act(async () => fireEvent.click(btn('INFO DLA TESTERÓW')));
     expect(doc.body.textContent).toContain('Zgłoszone błędy: 1');
@@ -193,7 +193,7 @@ describe('win rate and points', () => {
   const finish = (setup: ReturnType<typeof coop>, winner: 'dawn' | 'horde') => recordGame({ setup, actions: [] }, { ...createGame(setup), phase: 'over', winner, endReason: 'test' });
 
   it('scores a win by map length × measured difficulty, 30 at most', () => {
-    expect(['kids', 'normal', 'hard'].map((l) => pointsFor(coop(1, 'veryLong', l as never), l as never, 'dawn'))).toEqual([13, 21, 30]);
+    expect(['kids', 'normal', 'hard'].map((l) => pointsFor(coop(1, 'veryLong', l as never), l as never, 'dawn'))).toEqual([13, 17, 30]);
     expect(pointsFor(coop(1, 'short', 'kids'), 'kids', 'dawn')).toBe(3);
     // PvP: the Horde's difficulty is 11 minus Przymierze's.
     const pvp = { ...coop(1, 'short', 'normal'), mode: 'pvp' as const, seats: [seat('dawn', 'human', 'goldDragon'), seat('horde', 'bot', 'blackDragon')] };
@@ -201,7 +201,7 @@ describe('win rate and points', () => {
     // Custom: the full game plus what each option changes on its own (no abilities +2, the die ±0).
     const custom = { ...coop(1, 'short', 'normal') };
     custom.rules = { ...custom.rules, abilities: false, useDice: true };
-    expect(difficultyRating(custom, 'custom', 'dawn')).toBe(7);
+    expect(difficultyRating(custom, 'custom', 'dawn')).toBe(6);
   });
 
   it('counts only games the humans played against the machine', () => {
@@ -216,8 +216,8 @@ describe('win rate and points', () => {
     const vsBot = { ...pvp, seed: 5, seats: [seat('dawn', 'bot', 'goldDragon'), seat('horde', 'human', 'blackDragon')] };
     recordGame({ setup: vsBot, actions: [] }, { ...createGame(vsBot), phase: 'over', winner: 'horde', endReason: 'test' });
     const s = journalStats();
-    // Coop short normal 9 + coop very long hard 30 + Horde short normal 10 (difficulty 6).
-    expect(s).toMatchObject({ finished: 5, won: 3, lost: 1, winRate: 75, points: 9 + 30 + 10 });
+    // Coop short normal 7 + coop very long hard 30 + Horde short normal 10 (difficulty 6).
+    expect(s).toMatchObject({ finished: 5, won: 3, lost: 1, winRate: 75, points: 7 + 30 + 10 });
     expect(journalBreakdown().map((r) => [r.mode, r.mapSize, r.level, r.played, r.won, r.lost, r.winRate])).toEqual([
       ['coop', 'short', 'normal', 2, 1, 1, 50],
       ['coop', 'veryLong', 'hard', 1, 1, 0, 100],
@@ -238,8 +238,8 @@ describe('win rate and points', () => {
     expect(rows).toEqual([
       ['Tryb', 'Mapa', 'Poziom', 'Rozegrane', 'Wygrane', 'Przegrane', '% zwycięstw', 'Punkty'],
       ['Kooperacja', 'Krótka', 'Łatwy', '1', '0', '1', '0%', '0'],
-      ['', 'Krótka', 'Normalny', '1', '1', '0', '100%', '9'],
-      ['Razem', '2', '1', '1', '50%', '9'],
+      ['', 'Krótka', 'Normalny', '1', '1', '0', '100%', '7'],
+      ['Razem', '2', '1', '1', '50%', '7'],
     ]);
   });
 });

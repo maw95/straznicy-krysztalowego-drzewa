@@ -190,7 +190,7 @@ Wybierzcie jeden z trzech poziomów. Nic więcej nie trzeba ustawiać.
 |---|---|---|
 | 🌱 **Łatwy** | od 5 lat, pierwsza partia | **Pojedynki na planszy** (rozdział 9), **bez zdolności** i **bez rytuału**. Poległego bohatera zastępuje **rezerwowy** (rozdział 13). |
 | ⚔️ **Normalny** | wszyscy | Pełna gra: bitwy 3 na 3 na arenie, zdolności i skarby. |
-| 🔥 **Trudny** | dorośli, tylko kooperacja | Pełna gra, a automat zła ma **jednego bohatera więcej** i zaczyna z **2 losowymi skarbami**. |
+| 🔥 **Trudny** | dorośli, tylko kooperacja | Pełna gra, a automat zła ma **jednego bohatera więcej** i zaczyna z **2 losowymi skarbami**, ale nie dostaje posiłków (rozdział 12). |
 
 Na żadnym poziomie nie rzuca się kością: cios zadaje zawsze tyle obrażeń, ile wynosi Atak. Kość to dodatkowe utrudnienie dla chętnych (rozdział 13).
 
@@ -388,7 +388,9 @@ Skarby są **wspólne dla całej frakcji**. Każdy skarb działa **raz**, potem 
 
 > 🌑 *Horda nie śpi. Nawet gdy nikt nią nie dowodzi, jej bohaterowie idą prosto przed siebie — do najbliższej ofiary albo do Drzewa.*
 
-W kooperacji wszyscy gracze prowadzą Przymierze, a Hordę prowadzą proste zasady. **Automat ma tylu bohaterów, ilu jest graczy, ale co najmniej dwóch** (na poziomie trudnym — o jednego więcej, najwyżej trzech, i do tego 2 losowe skarby na start). Losujcie ich przed grą.
+W kooperacji wszyscy gracze prowadzą Przymierze, a Hordę prowadzą proste zasady. **Automat ma tylu bohaterów, ilu jest graczy** (na poziomie trudnym — o jednego więcej, ale co najmniej trzech, i do tego 2 losowe skarby na start). Losujcie ich przed grą.
+
+**Posiłki Hordy:** gdy polegnie ostatni żyjący bohater automatu, w bazie Hordy od razu staje kolejny — nieużywany bohater Hordy, a gdy takich już nie ma, jeden z poległych (wylosujcie go). Do gry wchodzi od następnej rundy. Jeśli bazę zajmuje bohater Przymierza, nowy staje na najbliższym wolnym polu. Na poziomie trudnym posiłków nie ma.
 
 ### Tura bohatera Hordy
 
@@ -412,7 +414,7 @@ Jednostkami automatu kierujcie według prostych zasad:
 
 Tak samo — jak bohater automatu — walczy **strażnik** (rozdział 10).
 
-> 💡 Automat nie unika złych walk, ale za to bierze do bitwy co najmniej dwóch bohaterów. Jeśli chcecie większego wyzwania, wybierzcie poziom **trudny**.
+> 💡 Automat nie unika złych walk, ale wybita Horda wraca z bazy (poza poziomem trudnym, gdzie od początku ma o jednego bohatera więcej). Jeśli chcecie większego wyzwania, wybierzcie poziom **trudny**.
 
 ---
 
@@ -445,19 +447,19 @@ Skala od **1** (bardzo łatwo) do **10** (bardzo trudno); wyrównana partia to 5
 
 | Mapa | Łatwy | Normalny | Trudny |
 |---|---:|---:|---:|
-| Krótka | 2 | 5 | 8 |
-| Średnia | 2 | 5 | 8 |
+| Krótka | 2 | 4 | 8 |
+| Średnia | 2 | 4 | 8 |
 | Długa | 3 | 5 | 8 |
-| Bardzo długa | 3 | 5 | 7 |
+| Bardzo długa | 3 | 4 | 7 |
 
 **Kooperacja — 2 graczy** (trudność dla graczy Przymierza):
 
 | Mapa | Łatwy | Normalny | Trudny |
 |---|---:|---:|---:|
-| Krótka | 3 | 4 | 7 |
-| Średnia | 3 | 4 | 7 |
-| Długa | 4 | 4 | 7 |
-| Bardzo długa | 3 | 3 | 5 |
+| Krótka | 3 | 5 | 7 |
+| Średnia | 3 | 5 | 7 |
+| Długa | 4 | 5 | 7 |
+| Bardzo długa | 3 | 4 | 5 |
 
 W rywalizacji każda strona ma swoją trudność, a poziom Trudny nie istnieje. Trudność Przymierza i Hordy na tym samym poziomie zawsze daje razem 11 — po 5–6 dla obu stron to partia wyrównana.
 
