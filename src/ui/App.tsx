@@ -22,6 +22,7 @@ import { BattleSummary } from './BattleSummary';
 import { HoverCardLayer } from './hover';
 import { Tutorial } from './Tutorial';
 import { Intro, introSeen } from './Intro';
+import { TitleScreen, titlePending } from './TitleScreen';
 import { StatsDialog } from './StatsDialog';
 import { ChangelogDialog } from './ChangelogDialog';
 import { FullscreenButton, useAutoFullscreen } from './fullscreen';
@@ -47,6 +48,8 @@ export function App() {
   const [showChangelog, setShowChangelog] = useState(false);
   // The intro plays on the first launch (never in the ?steps= test games).
   const [showIntro, setShowIntro] = useState(() => !introSeen() && !new URLSearchParams(window.location.search).has('steps'));
+  // The title screen opens each visit (its START is the click that allows full screen and music).
+  const [showTitle, setShowTitle] = useState(() => titlePending() && !new URLSearchParams(window.location.search).has('steps'));
   const [showReport, setShowReport] = useState(false);
   /** Bug reports written in this game; saved and exported with it. */
   const reports = useRef<BugReport[]>([]);
@@ -360,7 +363,8 @@ export function App() {
         <Modal open={showChangelog} onClose={() => setShowChangelog(false)}>
           {showChangelog && <ChangelogDialog onClose={() => setShowChangelog(false)} />}
         </Modal>
-        {showIntro && <Intro onClose={() => setShowIntro(false)} />}
+        {showIntro && !showTitle && <Intro onClose={() => setShowIntro(false)} />}
+        {showTitle && <TitleScreen onStart={() => setShowTitle(false)} />}
         <HoverCardLayer />
         {error && (
           <div className="plate parch" role="alert" style={{ position: 'fixed', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 80, fontWeight: 700, color: '#8A1A1A' }} onClick={() => setError(null)}>

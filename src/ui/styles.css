@@ -553,3 +553,15 @@ button:not(:disabled), .hex-clip[style*='pointer'], label { cursor: url("data:im
 .changelog-release ul { margin: 8px 0 0; padding-left: 22px; display: flex; flex-direction: column; gap: 5px; line-height: 1.4; }
 .changelog-current { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #10221a; background: #9be88a; border-radius: 999px; padding: 2px 10px; }
 .changelog-release + .changelog-release { border-top: 1px solid rgba(232, 196, 106, 0.3); padding-top: 14px; }
+/* Title screen at every launch: logo, motto and START */
+.title-screen { position: fixed; inset: 0; z-index: 95; overflow: hidden; background: #05090b; color: #f6ead0; display: flex; align-items: center; justify-content: center; }
+.title-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 38%; opacity: 0.75; }
+.title-shade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(4, 8, 10, 0.25) 20%, rgba(4, 8, 10, 0.85) 75%); }
+.title-body { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 0 16px; text-align: center; }
+.title-body h1 { margin: 0; line-height: 0; }
+.title-body h1 img { height: clamp(150px, 32vh, 330px); max-width: 92vw; object-fit: contain; }
+.title-motto { margin: 0; font-size: clamp(20px, 2.4vw, 28px); font-style: italic; color: #f3d27a; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9); }
+.title-start { margin-top: 14px; height: 64px; padding: 0 64px; font-size: 30px; letter-spacing: 0.18em; text-transform: uppercase; animation: title-pulse 2.6s ease-in-out infinite; }
+@keyframes title-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(158, 228, 255, 0); } 50% { box-shadow: 0 0 22px 6px rgba(158, 228, 255, 0.45); } }
+.title-sub { margin: 6px 0 0; font-size: 16px; color: #d9c08a; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9); }
+.title-version { position: absolute; left: 16px; bottom: 12px; font-size: 14px; color: #d9c08a; opacity: 0.75; }

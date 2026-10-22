@@ -16,6 +16,7 @@ beforeEach(() => {
   localStorage.clear();
   localStorage.setItem('skd-tutorial', JSON.stringify({ enabled: false, seen: [] }));
   localStorage.setItem('skd-intro', 'seen');
+  sessionStorage.setItem('skd-title-done', 'done');
 });
 
 /** Accepts confirmation dialogs and dismisses summaries so the scripted player keeps going. */
@@ -371,5 +372,34 @@ describe('full screen', () => {
     await act(async () => fireEvent.pointerUp(document.body));
     expect(fs.calls).toEqual([]);
     fs.restore();
+  });
+});
+
+describe('title screen', () => {
+  it('opens each visit, START goes full screen and on to the intro the first time', async () => {
+    sessionStorage.removeItem('skd-title-done');
+    localStorage.removeItem('skd-intro');
+    const root = document.documentElement as any;
+    Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: true });
+    root.requestFullscreen = vi.fn(async () => {});
+    // START also starts the music; jsdom cannot play audio.
+    vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
+    window.history.replaceState(null, '', '/');
+    const { container, unmount } = render(<App />);
+    const doc = container.ownerDocument;
+    const title = () => doc.querySelector('.title-screen');
+    expect(title()).not.toBeNull();
+    // The intro waits behind the title.
+    expect(doc.querySelector('[aria-label="Wprowadzenie"]')).toBeNull();
+    await act(async () => fireEvent.click([...title()!.querySelectorAll('button')].find((b) => b.textContent === 'Start')!));
+    expect(root.requestFullscreen).toHaveBeenCalled();
+    expect(title()).toBeNull();
+    expect(doc.querySelector('[aria-label="Wprowadzenie"]')).not.toBeNull();
+    // A reload in the same tab skips it.
+    unmount();
+    render(<App />);
+    expect(doc.querySelector('.title-screen')).toBeNull();
+    delete root.requestFullscreen;
+    delete (document as any).fullscreenEnabled;
   });
 });

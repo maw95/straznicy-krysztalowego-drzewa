@@ -11,6 +11,7 @@ beforeEach(() => {
   localStorage.clear();
   localStorage.setItem('skd-tutorial', JSON.stringify({ enabled: false, seen: [] }));
   localStorage.setItem('skd-intro', 'seen');
+  sessionStorage.setItem('skd-title-done', 'done');
 });
 
 /** Accepts confirmation dialogs and dismisses summaries so the scripted player keeps going. */
