@@ -106,7 +106,7 @@ przycisku je chowa.
   z bieżącym stanem (Życie, Klątwa i inne efekty, zużyta zdolność), skarby i portrety.
 - **Touchpad** (kliknięcie dwoma palcami nie da się przytrzymać): krótkie kliknięcie prawym zostawia
   okienko otwarte do następnego kliknięcia. **Telefon:** przytrzymanie palca.
-- Menu kontekstowe przeglądarki wyłączone tylko na planszy i kartach (np. tekst z czatu da się dalej kopiować).
+- Menu kontekstowe przeglądarki nie otwiera się nigdy (prawy przycisk należy do gry); kopiowanie w polach tekstowych działa skrótami Ctrl+C / Ctrl+V.
 - Obecne podglądy kart po najechaniu myszą — do przejrzenia; docelowo prawy przycisk może je zastąpić tam,
   gdzie zasłaniają planszę.
 

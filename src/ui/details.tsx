@@ -1,8 +1,7 @@
 // Details under the right mouse button, as in Heroes: holding the right button over a unit, a treasure or
 // a map hex shows a window with its details, and letting go hides it. A short right click (a touchpad's
 // two-finger click cannot be held) leaves the window open until the next click; on a touch screen holding
-// a finger does what holding the right button does. The browser's own menu stays away only where a thing
-// has details, so text elsewhere (the chat) can still be copied.
+// a finger does what holding the right button does. The browser's own menu never opens (main.tsx).
 
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { hideHoverCard } from './hover';

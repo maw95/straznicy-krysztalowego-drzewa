@@ -22,6 +22,10 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
   }
 }
 
+// The right button belongs to the game (details under it, as in Heroes): the browser's menu never opens.
+// Text fields keep copying and pasting with Ctrl+C / Ctrl+V.
+window.addEventListener('contextmenu', (e) => e.preventDefault());
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
