@@ -6,22 +6,24 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 2.0.0 — 2026-10-23
+
 - Narzędzia: `make sim-tabele` — czytelne tabele z % wygranych Przymierza w każdym trybie, mapie i poziomie oraz z tym, jak przegrywa (wybici bohaterowie, rytuał, limit rund) (`0f1b64f`).
 - Gra online (wersja próbna): przycisk „Gra online” w menu — konto (nick i hasło), pokój z kodem dla znajomych, ustawienia stołu, zajmowanie miejsc i czat; partię we wszystkich trybach prowadzi serwer gry. W trakcie gry: czat, odliczanie, gdy ktoś się rozłączy, i „Oddaj botowi”. Podczas `npm run dev` gra łączy się z serwerem uruchomionym lokalnie (`d73b84d`).
 - Gra online: tempo botów ustawia założyciel pokoju (w lobby i w Opcjach) dla wszystkich graczy; na przycisku „Czat” liczba nowych wiadomości (`a503c65`).
 - Narzędzia: `make silnik` — silnik gry jako pakiet dołączony do wydania na GitHubie; z niego korzysta serwer gry online (`9fbbe08`).
 - Dokumentacja: `docs/INFRASTRUKTURA.md` — gdzie działa gra i serwer, jak wydawać wersje i wdrażać zmiany (`112849c`).
 - Punktacja i rozpoznawanie poziomu przeniesione do silnika gry, żeby serwer liczył ranking tak samo jak gra (`125e876`).
-- Menu „najpierw online”: na starcie „Zaloguj się / Nowe konto / Graj bez konta” (bez konta — tylko gra na tym komputerze; wybór zapamiętany), a po zalogowaniu menu z „Nowy pokój”, kodem pokoju, „Gra na tym komputerze”, rankingiem top 10 (puchary dla miejsc 1–3, własne miejsce pod tabelą), listą graczy online z „Zaproś” i ogólnym czatem. Zaproszenia wyskakują w rogu ekranu (z dźwiękiem i odliczaniem), a gry przeciw komputerowi skończone po zalogowaniu trafiają do rankingu.
-- Bitwa: ikony statystyk w listach jednostek po bokach areny (i pod kartami w pojedynku) są białe, czytelne na ciemnym tle, i odsunięte od paska Życia.
-- Szczegóły pod prawym przyciskiem, jak w Heroesach: przytrzymanie prawego przycisku na polu mapy (teren, koszt ruchu, kryształ ze strażnikiem, skarb, stojący tam bohaterowie), jednostce na arenie (karta z bieżącymi wartościami, Życie, efekty), portrecie albo skarbie pokazuje okienko, a puszczenie je chowa. Krótkie kliknięcie prawym (np. na touchpadzie) zostawia okienko do następnego kliknięcia; na telefonie — przytrzymanie palca.
-- Kursory: złote także na polach mapy i areny i na jednostkach w bitwie (wcześniej systemowe); kursor mówi, co zrobi kliknięcie — but (ruch), miecz (atak wręcz, także strzelca na sąsiada), strzała (strzał), przekreślona strzała (przeszkoda zasłania cel, z podpowiedzią nad celem).
-- Arena: obrysy pól nie nachodzą już na siebie — każdy róg pola liczony z perspektywy planszy na jego własnej wysokości, więc sąsiednie pola mają wspólne krawędzie.
-- Enter w okienkach naciska ich przycisk potwierdzenia albo zamknięcia (np. „Dalej”, „Do ekwipunku”, „Zamknij”, „Zakończ turę” w pytaniu); okienka bez takiego przycisku zamyka. Nie działa na ekranie końca gry, żeby nie zacząć nowej przypadkiem.
-- Bitwa: atak jednym kliknięciem — jednostka walcząca wręcz klika wroga w zasięgu ruchu, podchodzi i atakuje. Stronę wybiera się kursorem (część wroga, w którą celuje mysz, jak w Heroes III); pole, z którego nastąpi atak, świeci się na złoto, a nad wrogiem widać obrażenia. Na telefonie pierwsze dotknięcie pokazuje pole, drugie atakuje.
-- Kursory z nowych grafik: zwykły, but (ruch), skrzydło (ruch jednostki latającej w bitwie), miecz, strzała i przekreślona strzała; miecz i strzały obracają się w stronę ataku — miecz od pola, z którego jednostka uderzy, strzały od strzelca do celu (na mapie miecz od bohatera do pola z walką).
-- Prawy przycisk nigdy nie otwiera menu przeglądarki (należy do gry); w polach tekstowych kopiowanie i wklejanie działa skrótami Ctrl+C / Ctrl+V.
-- Arena: równa złota siatka pól rysowana przez grę na planszy — na malowanych arenach sąsiednie heksy miały osobne obwódki, które nie zawsze leżały na sobie (podwójne krawędzie, jasne pola startowe nachodzące na sąsiadów).
+- Menu „najpierw online”: na starcie „Zaloguj się / Nowe konto / Graj bez konta” (bez konta — tylko gra na tym komputerze; wybór zapamiętany), a po zalogowaniu menu z „Nowy pokój”, kodem pokoju, „Gra na tym komputerze”, rankingiem top 10 (puchary dla miejsc 1–3, własne miejsce pod tabelą), listą graczy online z „Zaproś” i ogólnym czatem. Zaproszenia wyskakują w rogu ekranu (z dźwiękiem i odliczaniem), a gry przeciw komputerowi skończone po zalogowaniu trafiają do rankingu (`3f86dc5`).
+- Bitwa: ikony statystyk w listach jednostek po bokach areny (i pod kartami w pojedynku) są białe, czytelne na ciemnym tle, i odsunięte od paska Życia (`f79eb4c`).
+- Szczegóły pod prawym przyciskiem, jak w Heroesach: przytrzymanie prawego przycisku na polu mapy (teren, koszt ruchu, kryształ ze strażnikiem, skarb, stojący tam bohaterowie), jednostce na arenie (karta z bieżącymi wartościami, Życie, efekty), portrecie albo skarbie pokazuje okienko, a puszczenie je chowa. Krótkie kliknięcie prawym (np. na touchpadzie) zostawia okienko do następnego kliknięcia; na telefonie — przytrzymanie palca (`6b17291`).
+- Kursory: złote także na polach mapy i areny i na jednostkach w bitwie (wcześniej systemowe); kursor mówi, co zrobi kliknięcie — but (ruch), miecz (atak wręcz, także strzelca na sąsiada), strzała (strzał), przekreślona strzała (przeszkoda zasłania cel, z podpowiedzią nad celem) (`5e90c41`).
+- Arena: obrysy pól nie nachodzą już na siebie — każdy róg pola liczony z perspektywy planszy na jego własnej wysokości, więc sąsiednie pola mają wspólne krawędzie (`c36cbdb`).
+- Enter w okienkach naciska ich przycisk potwierdzenia albo zamknięcia (np. „Dalej”, „Do ekwipunku”, „Zamknij”, „Zakończ turę” w pytaniu); okienka bez takiego przycisku zamyka. Nie działa na ekranie końca gry, żeby nie zacząć nowej przypadkiem (`167e25c`).
+- Bitwa: atak jednym kliknięciem — jednostka walcząca wręcz klika wroga w zasięgu ruchu, podchodzi i atakuje. Stronę wybiera się kursorem (część wroga, w którą celuje mysz, jak w Heroes III); pole, z którego nastąpi atak, świeci się na złoto, a nad wrogiem widać obrażenia. Na telefonie pierwsze dotknięcie pokazuje pole, drugie atakuje (`34556ea`).
+- Kursory z nowych grafik: zwykły, but (ruch), skrzydło (ruch jednostki latającej w bitwie), miecz, strzała i przekreślona strzała; miecz i strzały obracają się w stronę ataku — miecz od pola, z którego jednostka uderzy, strzały od strzelca do celu (na mapie miecz od bohatera do pola z walką) (`77e1693`, `c80f70b`).
+- Prawy przycisk nigdy nie otwiera menu przeglądarki (należy do gry); w polach tekstowych kopiowanie i wklejanie działa skrótami Ctrl+C / Ctrl+V (`bcde321`).
+- Arena: równa złota siatka pól rysowana przez grę na planszy — na malowanych arenach sąsiednie heksy miały osobne obwódki, które nie zawsze leżały na sobie (podwójne krawędzie, jasne pola startowe nachodzące na sąsiadów) (`7a97561`).
 
 ## 1.3.0 — 2026-10-22
 
