@@ -109,3 +109,64 @@ przycisku je chowa.
 - Menu kontekstowe przeglądarki wyłączone tylko na planszy i kartach (np. tekst z czatu da się dalej kopiować).
 - Obecne podglądy kart po najechaniu myszą — do przejrzenia; docelowo prawy przycisk może je zastąpić tam,
   gdzie zasłaniają planszę.
+
+## 4. Do przemyślenia: zasady bitwy
+
+Pytania autora — jeszcze bez decyzji. Zmiana zasad (1 i 2) dotyczy też wersji papierowej: instrukcji,
+notatek (`docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md`) i balansu, więc przed decyzją warto puścić symulacje
+(`make sim-battles`, `make sim-tabele`) z wariantem w `SIM_OVERRIDE` / przełącznikiem zasad.
+
+### 4.1. Czy strzelec może się ruszyć, a potem zaatakować?
+
+**Pytanie:** czy po ruchu strzelec powinien tracić możliwość ataku?
+
+**Dziś:** może i ruszyć się, i strzelić w tej samej aktywacji. Zasięg strzału jest nieograniczony (wystarczy
+linia wzroku), a gdy obok stoi wróg, strzelec musi zaatakować sąsiada.
+
+**Uwagi (Claude):**
+- „Ruch albo strzał” mocno osłabia strzelców — przy nieograniczonym zasięgu ruch służy im głównie do ucieczki
+  od sąsiada albo do wyjścia zza przeszkody. Strzelcy wygrywali kiedyś ok. 62% bitew (notatki, sekcja balansu),
+  więc pewne osłabienie może być wskazane, ale ta zasada byłaby dużą zmianą.
+- Łagodniejsze warianty: strzał po ruchu z karą (−1 A), albo „ruch o najwyżej 1–2 pola i strzał”, albo zakaz
+  strzału tylko po ruchu dłuższym niż połowa Szybkości.
+- Prosta do wytłumaczenia na planszy jest wersja „albo ruch, albo strzał”; reszta wymaga liczenia pól.
+- Gra ma już podobny wyjątek (aktywacja „tylko ruch” z Rogu Strażników), więc w kodzie to niewielka zmiana:
+  przełącznik w `RulesConfig`, jak inne zasady testowe.
+
+### 4.2. Czy inne jednostki zasłaniają strzał?
+
+**Pytanie:** czy strzelec może strzelać przez inne jednostki, czy jednostki działają jak przeszkody terenowe?
+
+**Dziś:** zasłaniają tylko przeszkody. W silniku jest już gotowy przełącznik `unitsBlockSight`
+(wyłączony) — po włączeniu jednostki zasłaniają tak jak przeszkody, a kursor pokaże przekreśloną strzałę.
+
+**Uwagi (Claude):**
+- Za: więcej taktyki (zasłanianie strzelca własnymi jednostkami, ustawianie się na linii strzału), naturalne
+  dla gracza.
+- Przeciw: silnie osłabia strzelców w ciasnych bitwach 3 na 3, a na zatłoczonej arenie strzał byłby często
+  niemożliwy; trudniej to sprawdzić „na oko” na planszy papierowej.
+- Wariant pośredni: zasłaniają tylko **wrogie** jednostki (własne nie), albo tylko jednostki duże (smoki, ogr,
+  niedźwiedź, cyklop, hydra).
+- Przełącznik już działa, więc najpierw symulacje: jak zmieni się % wygranych strzelców i długość bitew.
+
+### 4.3. Atak jednym kliknięciem z dojściem do wroga
+
+**Pytanie:** czy jednostka walcząca wręcz (lub latająca) ma móc zaatakować wroga w zasięgu ruchu jednym
+kliknięciem (dojście + atak)? Wygodniej, ale trzeba rozwiązać, z której strony podejdzie.
+
+**Dziś:** dwa kliknięcia — najpierw pole obok wroga, potem wróg (kursor mieczyka pokazuje cel dopiero, gdy
+jednostka stoi obok).
+
+**Uwagi (Claude):**
+- To zmiana tylko interfejsu, nie zasad — wersja papierowa się nie zmienia.
+- Wybór strony, jak w Heroes III: kursor mieczyka **zmienia kierunek** zależnie od tego, w którą część heksa
+  wroga celuje mysz (sześć kierunków = sześć pól wokół wroga); podświetla się pole, z którego nastąpi atak.
+  Pola nieosiągalne albo zajęte są pomijane.
+- Prostszy wariant na start: kliknięcie wroga wybiera **najbliższe osiągalne** pole obok niego (przy remisie
+  to, które wymaga najkrótszej drogi), a pole jest podświetlone przed kliknięciem — kto chce innej strony,
+  robi to jak dziś, dwoma kliknięciami.
+- Pułapki: strona ma znaczenie przy Szarży Światła (liczy się przebyta odległość), Ognistym Oddechu
+  (drugi cel za pierwszym), Miażdżącym Głazie (odpychanie) i przy zasłanianiu sojuszników — tam wybór strony
+  powinien być widoczny przed kliknięciem.
+- Na telefonie „celowanie w część heksa” jest niewygodne — tam lepiej pierwsze dotknięcie pokazuje pole
+  ataku, drugie potwierdza.
