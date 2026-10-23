@@ -26,7 +26,7 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] => {
   return out;
 };
 
-export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog }: { onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void }) {
+export function SetupScreen({ onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog }: { onOnline: () => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void }) {
   const stats = journalStats();
   const fileRef = useRef<HTMLInputElement>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -97,6 +97,9 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onS
               Kontynuuj zapisaną partię
             </button>
           )}
+          <button className="btn prim" style={{ padding: '6px 18px', fontSize: 17 }} onClick={onOnline} title="Graj ze znajomymi przez internet">
+            Gra online
+          </button>
           <button className="btn plate parch" style={{ padding: '6px 14px', fontSize: 16 }} onClick={() => fileRef.current?.click()}>
             Wczytaj z pliku
           </button>
@@ -339,14 +342,14 @@ export function SetupScreen({ onStart, onLoad, autosave, onRules, onTesters, onS
   );
 }
 
-const LEVELS: Array<[Level | 'custom', string]> = [
+export const LEVELS: Array<[Level | 'custom', string]> = [
   ['kids', 'Łatwy'],
   ['normal', 'Normalny'],
   ['hard', 'Trudny'],
   ['custom', 'Własny'],
 ];
 
-const LEVEL_HINT: Record<Level | 'custom', string> = {
+export const LEVEL_HINT: Record<Level | 'custom', string> = {
   kids: 'Krótkie pojedynki na planszy, bez zdolności, bez kości i bez rytuału, a poległego bohatera zastępuje rezerwowy — zasady do ogarnięcia w kilka minut.',
   normal: 'Pełna gra: bitwy 3 na 3 na arenie, zdolności i skarby.',
   hard: 'Pełna gra, a automat zła ma o jednego bohatera więcej (co najmniej trzech) i 2 losowe skarby na start, ale nie dostaje posiłków. Wyzwanie dla dorosłych.',
@@ -366,16 +369,16 @@ const EASES: Array<[string, (r: RulesConfig) => boolean, (on: boolean) => Partia
   ['Rezerwowy bohater po śmierci', (r) => r.heroReplacement, (on) => ({ heroReplacement: on }), 'Gdy bohater zginie, gracz bierze nowego, nieużywanego bohatera swojej frakcji. Wkracza on na wolne pole najbliżej miejsca, w którym padł poprzednik — nikt nie odpada z gry.'],
 ];
 
-const ARENA_HINT = 'Jedna bitwa 3 na 3: każdy wybiera bohatera, dwóch pomocników i na zmianę dobiera 2 skarby ze wspólnej talii. Ok. 5–10 minut.';
+export const ARENA_HINT = 'Jedna bitwa 3 na 3: każdy wybiera bohatera, dwóch pomocników i na zmianę dobiera 2 skarby ze wspólnej talii. Ok. 5–10 minut.';
 
-const ARENA_LEVEL_TIPS: Record<Level, string> = {
+export const ARENA_LEVEL_TIPS: Record<Level, string> = {
   kids: 'Komputer wybiera pomocników i skarby na chybił trafił.',
   normal: 'Komputer wybiera rozsądnie, ale nie zawsze najlepszy skarb.',
   hard: 'Komputer zawsze bierze najmocniejszych pomocników i najlepsze skarby.',
 };
 
 /** Explanations shown when hovering the setup buttons. */
-const TIPS = {
+export const TIPS = {
   arenaMode: 'Szybka bitwa bez mapy: Przymierze Świtu kontra Mroczna Horda, z komputerem albo z drugim graczem. Bohater, dwóch pomocników i 2 skarby dobierane ze wspólnej talii — na zmianę jeden z kilku pokazanych (Przymierze widzi 3, Horda 4).',
   coop: 'Wszyscy gracie razem Przymierzem Świtu, a Hordę prowadzi automat według prostych zasad. Dobry wybór na pierwsze partie i do gry z dziećmi.',
   pvp: 'Jedni prowadzą Przymierze Świtu, drudzy Mroczną Hordę (najwyżej 2 graczy na stronę). Przymierze zbiera kryształy dla Drzewa, Horda poluje na jego bohaterów albo odprawia rytuał.',
@@ -385,7 +388,7 @@ const TIPS = {
   extraHero: 'Automat zła prowadzi o jednego bohatera więcej niż gracze. Trudniej, ale wciąż do wygrania.',
 };
 
-const LEVEL_TIPS: Record<Level | 'custom', string> = {
+export const LEVEL_TIPS: Record<Level | 'custom', string> = {
   kids: 'Dla najmłodszych (od 5 lat): bitwy to szybkie pojedynki bohaterów na planszy, bez zdolności i bez kości — wystarczy porównać liczby na kartach. Nie ma rytuału, a gdy bohater polegnie, gracz bierze rezerwowego.',
   normal: 'Pełna gra: bitwy 3 na 3 na osobnej arenie, zdolności jednostek i skarby. Obrażenia zawsze równe Atakowi.',
   hard: 'Pełna gra, a automat zła dostaje jednego bohatera więcej (co najmniej trzech) i 2 losowe skarby na start, ale nie dostaje posiłków. Wyzwanie dla dorosłych (tylko kooperacja).',
@@ -395,7 +398,7 @@ const LEVEL_TIPS: Record<Level | 'custom', string> = {
 /** Approximate time at the table with one hero per side (simulated game length). */
 const MAP_TIME: Record<MapSize, string> = { short: '20–45', medium: '25–55', long: '30–65', veryLong: '35–70' };
 
-function mapTip(m: MapSize): string {
+export function mapTip(m: MapSize): string {
   const v = MAP_VARIANTS[m];
   const st = v.startTreasures;
   const start = st ? ` · Przymierze zaczyna z ${st.resurrections + st.others} ${st.resurrections + st.others === 1 ? 'skarbem' : 'skarbami'}` : '';
@@ -403,7 +406,7 @@ function mapTip(m: MapSize): string {
 }
 
 /** A button with an explanation that appears on hover (or keyboard focus). */
-function Tip({ text, children }: { text: string; children: React.ReactNode }) {
+export function Tip({ text, children }: { text: string; children: React.ReactNode }) {
   return (
     <span className="tip">
       {children}
@@ -413,12 +416,12 @@ function Tip({ text, children }: { text: string; children: React.ReactNode }) {
 }
 
 /** Seat background tinted by faction: green for Przymierze Świtu, burgundy for Mroczna Horda. */
-const SEAT_TINT: Record<FactionId, string> = {
+export const SEAT_TINT: Record<FactionId, string> = {
   dawn: 'linear-gradient(100deg, rgba(36, 112, 64, 0.62), rgba(14, 50, 30, 0.55))',
   horde: 'linear-gradient(100deg, rgba(128, 22, 34, 0.62), rgba(52, 8, 14, 0.58))',
 };
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+export function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
       <div className="lbl" style={{ width: 118, flex: 'none' }}>{label}</div>

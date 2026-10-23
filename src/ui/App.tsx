@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { chooseAction } from '../engine/ai';
 import { FACTION_NAMES, UNITS, type FactionId, type ItemKind } from '../engine/data';
 import { applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
@@ -28,6 +28,8 @@ import { ChangelogDialog } from './ChangelogDialog';
 import { ArenaPrep, DraftDialog } from './ArenaPrep';
 import { FullscreenButton, useAutoFullscreen } from './fullscreen';
 import { TreasureReveal } from './CardBack';
+import { ChatBox, OnlineScreen } from './OnlineScreen';
+import type { OnlineSession, OnlineState } from '../online/api';
 
 const SPEEDS = { wolno: 900, normalnie: 450, szybko: 120 } as const;
 type Speed = keyof typeof SPEEDS;
@@ -59,6 +61,11 @@ export function App() {
   const saveFile = (g: GameState): SaveFile => ({ setup: g.setup, actions: [...history.current], reports: reports.current });
   const [confirm, setConfirm] = useState<{ text: string; yes: string; onYes: () => void } | null>(null);
   const [summary, setSummary] = useState<number | null>(null);
+  /** Gra online: the screen is open, and the session once logged in (it outlives the screen during a game). */
+  const [onlineScreen, setOnlineScreen] = useState(false);
+  const [session, setSession] = useState<OnlineSession | null>(null);
+  const online = useOnlineState(session);
+  const [showChat, setShowChat] = useState(false);
   /** States before each undoable hero step in the current turn. */
   const undoStack = useRef<Array<{ state: GameState; historyLength: number }>>([]);
   const [, setUndoTick] = useState(0);
@@ -131,13 +138,39 @@ export function App() {
     setGame(s);
   }, []);
 
+  // Online the server holds the game: every state it sends replaces ours.
+  const onlineRoom = online?.room ?? null;
+  const onlineGame = onlineRoom && onlineRoom.status !== 'lobby' ? online!.game : null;
+  useEffect(() => {
+    if (!session) return;
+    gameRef.current = onlineGame;
+    setGame(onlineGame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onlineGame]);
+  useEffect(() => {
+    if (!online?.error || !onlineGame) return;
+    setError(online.error);
+    setSteps([]);
+    session!.clearError();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [online?.error]);
+  /** Online: the players (p1, p2…) whose seats this browser holds and plays itself. */
+  const mySeats = useMemo(
+    () => new Set(onlineRoom?.seats.flatMap((s, i) => (s.player?.id === online!.user.id && !s.botTakeover ? [`p${i + 1}`] : [])) ?? []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [onlineRoom],
+  );
+  const isOnline = Boolean(session && onlineGame);
+  /** People playing at this screen: every human seat locally, only this browser's seats online. */
+  const atThisScreen = (p: { id: string; controller: string }) => (isOnline ? mySeats.has(p.id) : p.controller === 'human');
+
   if (import.meta.env?.MODE === 'test') Object.assign(window, { __game: game, __history: history });
   const actor = game ? currentActor(game) : { kind: 'none' as const };
-  const humanTurn = actor.kind === 'human' && !autoplay;
+  const humanTurn = actor.kind === 'human' && (isOnline ? mySeats.has(actor.playerId) : !autoplay);
   const humanTurnRef = useRef(humanTurn);
   humanTurnRef.current = humanTurn;
   const pvp = game?.setup.mode === 'pvp';
-  const humans = game?.players.filter((p) => p.controller === 'human') ?? [];
+  const humans = game?.players.filter(atThisScreen) ?? [];
   // Hand-off screen only between human players of different factions, and never mid-battle.
   const needsHandoff = Boolean(game && humanTurn && pvp && game.phase === 'adventure' && actor.kind === 'human' && actor.faction !== confirmedFaction && humans.some((p) => p.faction !== actor.faction));
   const viewer: FactionId | null = actor.kind === 'human' ? actor.faction : humans[0]?.faction ?? (game?.setup.mode === 'coop' ? 'dawn' : null);
@@ -147,9 +180,16 @@ export function App() {
   const gameRef = useRef<GameState | null>(game);
   gameRef.current = game;
   const walkUntil = useRef(0);
+  const sessionRef = useRef<OnlineSession | null>(null);
+  sessionRef.current = isOnline ? session : null;
   const dispatch = useCallback((a: Action) => {
     const g = gameRef.current;
     if (!g) return;
+    // Online the server checks and applies the move, then sends the new state to everyone.
+    if (sessionRef.current) {
+      sessionRef.current.send({ type: 'action', action: a });
+      return;
+    }
     try {
       const next = applyAction(g, a);
       // A plain step that revealed nothing new can be taken back (the hero just walked).
@@ -176,7 +216,7 @@ export function App() {
 
   // Bots, the coop automaton and autoplay act on a timer.
   useEffect(() => {
-    if (!game || game.phase === 'over' || needsHandoff) return;
+    if (!game || game.phase === 'over' || needsHandoff || isOnline) return;
     const machine = actor.kind === 'bot' || actor.kind === 'automaton' || (actor.kind === 'human' && autoplay);
     if (!machine) return;
     const t = window.setTimeout(() => {
@@ -184,7 +224,7 @@ export function App() {
       if (a) dispatch(a);
     }, SPEEDS[speed] + Math.max(0, walkUntil.current - Date.now()));
     return () => window.clearTimeout(t);
-  }, [game, actor.kind, autoplay, speed, dispatch, needsHandoff]);
+  }, [game, actor.kind, autoplay, speed, dispatch, needsHandoff, isOnline]);
 
   // Multi-hex moves are played one step at a time.
   useEffect(() => {
@@ -221,9 +261,9 @@ export function App() {
     }
   };
 
-  // Autosave after every action; a finished game clears the slot.
+  // Autosave after every action; a finished game clears the slot. Online games are kept by the server.
   useEffect(() => {
-    if (!game) return;
+    if (!game || isOnline) return;
     writeAutosave(game.phase === 'over' ? null : saveFile(game));
     recordGame(saveFile(game), game);
   }, [game]);
@@ -285,7 +325,7 @@ export function App() {
   const knownItems = useRef<Set<string> | null>(null);
   useEffect(() => {
     if (!game) return;
-    const humanSides = new Set(game.players.filter((p) => p.controller === 'human').map((p) => p.faction));
+    const humanSides = new Set(game.players.filter(atThisScreen).map((p) => p.faction));
     const owned = Object.values(game.items).filter((it) => it.owner && humanSides.has(it.owner));
     if (knownItems.current) {
       const fresh = owned.find((it) => !knownItems.current!.has(it.id));
@@ -299,7 +339,7 @@ export function App() {
   useEffect(() => {
     if (!game?.lastBattle) return;
     const lb = game.lastBattle;
-    const humanSides = new Set(game.players.filter((p) => p.controller === 'human').map((p) => p.faction));
+    const humanSides = new Set(game.players.filter(atThisScreen).map((p) => p.faction));
     if (humanSides.has(lb.attacker as FactionId) || humanSides.has(lb.defender as FactionId)) setSummary(lb.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastBattleId]);
@@ -344,7 +384,7 @@ export function App() {
   // (a teammate drinks the shared elixir, a hero falls...), so summarise it.
   const seenLog = useRef<Record<string, number>>({});
   const [digest, setDigest] = useState<LogEntry[] | null>(null);
-  const turnKey = game && actor.kind === 'human' && game.phase === 'adventure' && !needsHandoff ? `${actor.playerId}:${game.round}:${game.turnIndex}` : null;
+  const turnKey = game && humanTurn && actor.kind === 'human' && game.phase === 'adventure' && !needsHandoff ? `${actor.playerId}:${game.round}:${game.turnIndex}` : null;
   useEffect(() => {
     if (!turnKey || !game || actor.kind !== 'human') return;
     const from = seenLog.current[actor.playerId];
@@ -357,11 +397,28 @@ export function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [turnKey]);
 
+  /** "Nowa gra": online it also leaves the room (the game goes on for the others, a bot takes the seats). */
+  const leaveGame = () => {
+    if (isOnline) session!.send({ type: 'leaveRoom' });
+    setGame(null);
+  };
+
+  if (!game && onlineScreen) {
+    return (
+      <>
+        <SvgDefs />
+        <OnlineScreen session={session} onSession={setSession} onBack={() => setOnlineScreen(false)} />
+        <HoverCardLayer />
+        <FullscreenButton />
+      </>
+    );
+  }
+
   if (!game) {
     return (
       <>
         <SvgDefs />
-        <SetupScreen onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} onIntro={() => setShowIntro(true)} onChangelog={() => setShowChangelog(true)} />
+        <SetupScreen onOnline={() => setOnlineScreen(true)} onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} onIntro={() => setShowIntro(true)} onChangelog={() => setShowChangelog(true)} />
         <Modal open={showRules} onClose={() => setShowRules(false)}>
           <RulesDialog onClose={() => setShowRules(false)} />
         </Modal>
@@ -410,7 +467,10 @@ export function App() {
           ↶ Cofnij
         </button>
       )}
-      {(actor.kind === 'bot' || actor.kind === 'automaton') && (
+      {isOnline && (
+        <button className="btn plate parch" title="Czat z graczami" style={{ padding: '6px 12px', fontSize: 15 }} onClick={() => setShowChat(true)}>Czat</button>
+      )}
+      {!isOnline && (actor.kind === 'bot' || actor.kind === 'automaton') && (
         <button className="btn plate parch" title="Przewiń ruchy botów (F)" style={{ padding: '6px 12px', fontSize: 15 }} onClick={fastForward}>
           ⏩ Przewiń
         </button>
@@ -443,7 +503,7 @@ export function App() {
   const selecting = b && b.stage === 'select' && humanTurn && actor.kind === 'human' ? actor.faction : null;
   const drafting = b && b.stage === 'draft' && game.draft && humanTurn && actor.kind === 'human' ? actor.faction : null;
   // Two people at one screen: each side's cards stay covered until that side uncovers them.
-  const bothHuman = game.setup.mode === 'arena' && game.players.every((p) => p.controller === 'human');
+  const bothHuman = game.setup.mode === 'arena' && game.players.every(atThisScreen);
   const arenaPrep = game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'select' || b.stage === 'draft')));
 
   return (
@@ -461,6 +521,20 @@ export function App() {
         {music.muted ? '🔇' : '♪'}
       </button>
       <FullscreenButton />
+      {isOnline && onlineRoom?.waiting && <WaitingBanner room={onlineRoom} canHand={mySeats.size > 0} onHand={(seat) => session!.send({ type: 'handToBot', seat })} />}
+      {isOnline && online && !online.connected && (
+        <div className="plate parch" role="status" style={{ position: 'fixed', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 81, fontWeight: 700 }}>
+          Utracono połączenie z serwerem — łączę ponownie…
+        </div>
+      )}
+      <Modal open={showChat && isOnline} onClose={() => setShowChat(false)}>
+        {showChat && online && session && (
+          <Frame crest style={{ width: 'min(460px, 94vw)' }} innerStyle={{ padding: 18, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <ChatBox session={session} chat={online.chat} />
+            <button className="btn plate parch" style={{ padding: '6px 16px', alignSelf: 'flex-end' }} onClick={() => setShowChat(false)}>Zamknij</button>
+          </Frame>
+        )}
+      </Modal>
       {game.phase === 'battle' && b?.duel && b.stage !== 'select' && <DuelView state={game} canAct={humanTurn} onAction={dispatch} footer={footer} />}
       {arenaPrep ? (
         <ArenaPrep state={game} />
@@ -510,7 +584,7 @@ export function App() {
       </Modal>
 
       <Modal open={game.phase === 'over'}>
-        <GameOver state={game} onNew={() => setGame(null)} onLog={() => setShowLog(true)} />
+        <GameOver state={game} online={isOnline} onNew={leaveGame} onLog={() => setShowLog(true)} />
       </Modal>
 
       <Modal open={Boolean(card)} onClose={() => setCard(null)}>
@@ -629,7 +703,7 @@ export function App() {
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               <button className="btn prim" style={{ padding: '6px 14px' }} onClick={() => download(`partia-${game.setup.seed}.json`, JSON.stringify(saveFile(game), null, 1))}>Eksport partii (JSON)</button>
               <button className="btn prim" style={{ padding: '6px 14px' }} onClick={() => download(`dziennik-${game.setup.seed}.txt`, game.log.map((l) => `[${l.round}] ${l.text}`).join('\n'))}>Eksport dziennika</button>
-              <button className="btn prim r" style={{ padding: '6px 14px' }} onClick={() => { setShowDebug(false); setGame(null); }}>Nowa gra</button>
+              <button className="btn prim r" style={{ padding: '6px 14px' }} onClick={() => { setShowDebug(false); leaveGame(); }}>{isOnline ? 'Wyjdź z gry' : 'Nowa gra'}</button>
             </div>
             <button className="btn plate parch" style={{ padding: '6px 14px', alignSelf: 'flex-end' }} onClick={() => setShowDebug(false)}>Zamknij</button>
           </Frame>
@@ -706,7 +780,7 @@ function Handoff({ state, playerId, onConfirm }: { state: GameState; playerId: s
   );
 }
 
-function GameOver({ state, onNew, onLog }: { state: GameState; onNew: () => void; onLog: () => void }) {
+function GameOver({ state, online, onNew, onLog }: { state: GameState; online: boolean; onNew: () => void; onLog: () => void }) {
   const s = state.stats;
   return (
     <div className={state.winner === 'horde' ? 'quake' : undefined}>
@@ -735,7 +809,7 @@ function GameOver({ state, onNew, onLog }: { state: GameState; onNew: () => void
         )}
         <div style={{ display: 'flex', gap: 12 }}>
           <button className="btn plate parch" style={{ padding: '8px 18px', fontSize: 18 }} onClick={onLog}>Dziennik</button>
-          <button className="btn prim" style={{ padding: '8px 22px', fontSize: 20 }} onClick={onNew}>Nowa gra</button>
+          <button className="btn prim" style={{ padding: '8px 22px', fontSize: 20 }} onClick={onNew}>{online ? 'Wyjdź z pokoju' : 'Nowa gra'}</button>
         </div>
       </Frame>
     </div>
@@ -777,6 +851,38 @@ function LogDialog({ entries }: { entries: LogEntry[] }) {
           <div ref={end} />
         </div>
       </Frame>
+    </div>
+  );
+}
+
+/** The online session's state, re-rendered on every server message (null when not logged in). */
+function useOnlineState(session: OnlineSession | null): OnlineState | null {
+  return useSyncExternalStore(
+    useCallback((listener: () => void) => (session ? session.subscribe(listener) : () => undefined), [session]),
+    () => session?.state ?? null,
+  );
+}
+
+/** A disconnected player whose turn it is: the countdown to the bot taking over, and "Oddaj botowi". */
+function WaitingBanner({ room, canHand, onHand }: { room: NonNullable<OnlineState['room']>; canHand: boolean; onHand: (seat: number) => void }) {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const t = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(t);
+  }, []);
+  const waiting = room.waiting!;
+  const left = Math.max(0, Math.ceil((waiting.until - now) / 1000));
+  const nick = room.seats[waiting.seat]?.player?.nick ?? 'gracza';
+  return (
+    <div className="plate parch" role="status" style={{ position: 'fixed', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 80, display: 'flex', gap: 14, alignItems: 'center', fontSize: 17 }}>
+      <span>
+        Czekamy na <b>{nick}</b> — bot przejmie za {Math.floor(left / 60)}:{String(left % 60).padStart(2, '0')}
+      </span>
+      {canHand && (
+        <button className="btn prim" style={{ padding: '4px 14px', fontSize: 16 }} onClick={() => onHand(waiting.seat)}>
+          Oddaj botowi
+        </button>
+      )}
     </div>
   );
 }
