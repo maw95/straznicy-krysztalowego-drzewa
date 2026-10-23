@@ -1,6 +1,7 @@
 # Backlog
 
-Uzgodnione pomysły do wdrożenia. Najpierw tryb online, potem figurki 3D.
+Uzgodnione pomysły do wdrożenia. Najpierw tryb online (teraz: menu „najpierw online” i ranking),
+potem figurki 3D; szczegóły pod prawym przyciskiem — po menu online.
 
 ## 1. Tryb online
 
@@ -41,6 +42,32 @@ Uzgodnione pomysły do wdrożenia. Najpierw tryb online, potem figurki 3D.
   zakłada nowe konto. Statystyki przypisane do konta. Limit prób logowania i rejestracji jest na serwerze.
 - **Kolejność:** zaczynamy od serwera (modele figurek powstają w tym czasie).
 
+### Menu „najpierw online” (następny krok)
+
+**Cel:** gra online jest domyślną drogą, a całość ma być maksymalnie prosta i wygodna.
+
+- **Pierwsze uruchomienie** (i po wylogowaniu), po wprowadzeniu: okienko „Zaloguj się / Załóż konto /
+  Graj bez konta”. Przy „Graj bez konta” dopisek, że to gra tylko na tym komputerze (z botami albo przy
+  jednym ekranie) — **gra online wymaga konta**, nie ma kont gościa.
+- Kto ma zapisaną sesję, od razu trafia do menu online, bez okienka. Kto wybrał grę bez konta, nie widzi
+  okienka przy każdym wejściu — w menu ma stały przycisk „Zaloguj się, żeby grać ze znajomymi”.
+- **Menu zalogowanego:** na środku duże „Nowy pokój”, niżej „Dołącz kodem” i „Gra na tym komputerze”
+  (obecny ekran ustawień, już jako podstrona, a nie strona startowa). Z prawej lista graczy online
+  ze statusem (w menu / w pokoju / w grze), pod nią **ogólny czat** wszystkich online (bez historii).
+- **Zaproś** przy graczu na liście: jeśli nie masz pokoju, gra sama go zakłada i wysyła zaproszenie.
+  Nieaktywne przy kimś, kto gra. U zaproszonego dymek „X zaprasza cię do gry — Dołącz / Odrzuć” z dźwiękiem,
+  wygasa po ok. minucie; zapraszający widzi odmowę albo wygaśnięcie. Kod pokoju zostaje jako druga droga.
+- **Ranking:** tabela top 10 według punktów (opis niżej).
+- Serwer niedostępny: menu pokazuje „łączenie…”, a gdy trwa to za długo, proponuje grę bez konta.
+- Połączenie w menu trzyma maszynę Fly przy życiu — po ok. 15 minutach bezczynności rozłączamy.
+
+### Ranking
+
+- Tabela **top 10** graczy według zdobytych **punktów**; w wierszu: nick, punkty, liczba rozegranych gier,
+  procent zwycięstw.
+- **Miejsca 1–3 wyróżnione:** tekst nieco większy i pogrubiony, w kolorze złotym / srebrnym / brązowym,
+  przy nicku puchar w tym samym kolorze.
+
 ## 2. Figurki 3D zamiast portretów
 
 **Cel:** na mapie świata i na arenie stoją trójwymiarowe figurki, które realistycznie
@@ -65,3 +92,16 @@ obracają się w kierunku ruchu.
 ### Do ustalenia
 
 - Kąt kamery i wielkość figurki względem pola — do dobrania na żywo, gdy będą 2–3 modele.
+
+## 3. Szczegóły pod prawym przyciskiem (jak w Heroesach)
+
+**Cel:** przytrzymanie prawego przycisku na czymś w grze pokazuje okienko ze szczegółami; puszczenie
+przycisku je chowa.
+
+- **Co pokazuje:** pole mapy (teren, koszt ruchu, co na nim leży), bohatera na mapie, jednostkę na arenie
+  z bieżącym stanem (Życie, Klątwa i inne efekty, zużyta zdolność), skarby i portrety.
+- **Touchpad** (kliknięcie dwoma palcami nie da się przytrzymać): krótkie kliknięcie prawym zostawia
+  okienko otwarte do następnego kliknięcia. **Telefon:** przytrzymanie palca.
+- Menu kontekstowe przeglądarki wyłączone tylko na planszy i kartach (np. tekst z czatu da się dalej kopiować).
+- Obecne podglądy kart po najechaniu myszą — do przejrzenia; docelowo prawy przycisk może je zastąpić tam,
+  gdzie zasłaniają planszę.
