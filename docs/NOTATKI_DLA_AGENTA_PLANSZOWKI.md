@@ -598,7 +598,7 @@ Symulacje (500 partii botów na wariant, wygrane Przymierza, obecne → nowe):
 | Normalny | 2 | 66 → 61 | 61 → 53 | 63 → 57 | 78 → 72 |
 | Trudny | 1 i 2 | bez zmian | | | |
 
-Jeden gracz zyskuje (jeden bohater Hordy zamiast dwóch), dwóch graczy traci (start bez zmian, ale wybita Horda wraca). Tabele trudności w instrukcji (rozdział 13, kolumna Normalny w kooperacji) i oceny w `src/ui/scoring.ts` uaktualnione; kolumny pojedynczych ustawień w `scoring.ts` pochodzą jeszcze sprzed zmiany.
+Jeden gracz zyskuje (jeden bohater Hordy zamiast dwóch), dwóch graczy traci (start bez zmian, ale wybita Horda wraca). Tabele trudności w instrukcji (rozdział 13, kolumna Normalny w kooperacji) i oceny w `src/engine/scoring.ts` uaktualnione; kolumny pojedynczych ustawień w `scoring.ts` pochodzą jeszcze sprzed zmiany.
 
 ## 8. Arena — nowy tryb gry (2026-10-22, decyzje użytkownika)
 
@@ -638,6 +638,6 @@ Wyniki (zwykła gra: 500 partii na wariant; Arena: 1000 partii na każde z 81 st
 - Łatwy ±1,2 pkt; kooperacja Normalny/Trudny ±4,4 pkt; rywalizacja Normalny: Przymierze −1,6 do −8,2 pkt (zgodnie z decyzją, że Przymierze może w rywalizacji trochę osłabnąć). Kooperacja dalej łatwiejsza niż rywalizacja.
 - Arena: Przymierze 50,3%; bohaterowie 46–53% (Złoty Smok 53, Jednorożec 48, Niedźwiedź 50, Czarny Smok 46, Wilkołak 51, Ogr 52). Najsłabsze pary pomocników: Elf + Pegaz 42%, Goblin + Nietoperz 43% (reszta 52–55%).
 - Odrzucone (łamały limit ±5): osłabienie Słonecznego Blasku, Opiekuna Gaju i Daru Życia (rywalizacja −7 do −15), wzmocnienie Szarży (od 3 pól), Pegaza i Elfa (Ż 5) — kooperacja Trudny +8 do +16; Horda z trzecim skarbem na Arenie (Przymierze 36%).
-- Tabele trudności w rozdziale 13 instrukcji i oceny w `src/ui/scoring.ts` przeliczone na nowo.
+- Tabele trudności w rozdziale 13 instrukcji i oceny w `src/engine/scoring.ts` przeliczone na nowo.
 
 **Dla wersji papierowej (do poprawienia):** karty jednostek Władca Wilkołaków (S 7, nowy tekst Zewu Krwi), Król Jednorożców (S 8, Szarża +2 A), Ogr Żelazna Pięść (Ż 10); w instrukcji rozdział 2, zasada ruchu w bitwie (rozdział 8 i ściągawka), rozdział 13 (tabele), rozdział 15 (Horda widzi 4 karty). Figurki bez zmian.

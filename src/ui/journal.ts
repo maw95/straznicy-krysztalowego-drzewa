@@ -3,13 +3,14 @@
 // scripts/testers.ts reads such files back (live-player win rates, feedback, bug reports).
 
 import type { FactionId, MapSize } from '../engine/data';
-import { pointsFor } from './scoring';
-import { DEFAULT_RULES, type GameState, type SetupOptions } from '../engine/types';
+import { levelOf, pointsFor, type LevelName } from '../engine/scoring';
+import type { GameState, SetupOptions } from '../engine/types';
 import type { SaveFile } from './saves';
 
 const KEY = 'skd-journal';
 
-export type LevelName = 'kids' | 'normal' | 'hard' | 'custom';
+export type { LevelName };
+export { levelOf };
 
 export interface JournalGame {
   /** Same setup = same game (the engine is deterministic), so the setup identifies it. */
@@ -35,23 +36,6 @@ export interface TesterExport {
   userAgent: string;
   stats: JournalStats;
   games: JournalGame[];
-}
-
-export function levelOf(setup: SetupOptions): LevelName {
-  // Arena: the computer's strength (two people at one screen play "Normalny").
-  if (setup.mode === 'arena') return setup.seats.some((s) => s.controller === 'bot') ? setup.botLevel ?? 'normal' : 'normal';
-  const r = setup.rules;
-  // Easy and normal: as many Horde heroes as players, reinforcements in the base; hard: neither.
-  const automaton = r.minEvilHeroes === DEFAULT_RULES.minEvilHeroes && Boolean(r.hordeRespawn);
-  const hardAutomaton = r.minEvilHeroes === 2 && !r.hordeRespawn;
-  const base = r.treasures && !r.heroReplacement && r.initiativeTie === DEFAULT_RULES.initiativeTie;
-  const easy = r.treasures && r.heroReplacement && r.ritual === false && r.initiativeTie === DEFAULT_RULES.initiativeTie;
-  if (easy && automaton && setup.battleMode === 'board' && !r.abilities && !r.useDice && !r.extraEvilHero) return 'kids';
-  if (base && setup.battleMode === 'arena' && r.abilities && !r.useDice) {
-    if (r.extraEvilHero) return setup.mode === 'coop' && hardAutomaton ? 'hard' : 'custom';
-    if (automaton) return 'normal';
-  }
-  return 'custom';
 }
 
 export const LEVEL_NAMES: Record<LevelName, string> = { kids: 'Łatwy', normal: 'Normalny', hard: 'Trudny', custom: 'Własny' };

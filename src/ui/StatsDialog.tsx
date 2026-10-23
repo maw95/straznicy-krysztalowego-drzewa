@@ -3,7 +3,7 @@
 import { MAP_SIZE_NAMES } from '../engine/data';
 import { Frame, Ribbon } from './common';
 import { journalBreakdown, journalStats, LEVEL_NAMES } from './journal';
-import { ARENA_POINTS, MAX_POINTS } from './scoring';
+import { ARENA_POINTS, MAX_POINTS } from '../engine/scoring';
 
 const MODE_NAMES = { coop: 'Kooperacja', pvp: 'Rywalizacja', arena: 'Arena' } as const;
 const pct = (v: number | null) => (v === null ? '—' : `${v}%`);

@@ -6,7 +6,7 @@ import { App } from '../src/ui/App';
 import { createGame } from '../src/engine/game';
 import { DEFAULT_RULES } from '../src/engine/types';
 import { journalBreakdown, journalStats, recordGame } from '../src/ui/journal';
-import { difficultyRating, pointsFor } from '../src/ui/scoring';
+import { difficultyRating, pointsFor } from '../src/engine/scoring';
 import { levelSettings } from '../src/engine/types';
 
 beforeAll(() => {

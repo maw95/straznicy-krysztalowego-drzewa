@@ -4,8 +4,8 @@
 // The ratings are the rulebook tables: round(1 + 9 × (1 − Przymierze win rate)) from the balance
 // simulations (docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md, section 7); update them after rebalancing.
 
-import type { FactionId, MapSize } from '../engine/data';
-import type { SetupOptions } from '../engine/types';
+import type { FactionId, MapSize } from './data';
+import { DEFAULT_RULES, type SetupOptions } from './types';
 
 /** One map's ratings: the levels, then the full game with one custom option switched on. */
 interface Ratings {
@@ -82,4 +82,24 @@ export function pointsFor(setup: SetupOptions, level: 'kids' | 'normal' | 'hard'
   if (setup.mode === 'arena') return ARENA_POINTS[level === 'custom' ? 'normal' : level];
   const raw = (MAX_POINTS * MAP_WEIGHT[setup.mapSize] * difficultyRating(setup, level, side)) / TOP_RATING;
   return Math.min(MAX_POINTS, Math.max(1, Math.round(raw)));
+}
+
+export type LevelName = 'kids' | 'normal' | 'hard' | 'custom';
+
+/** The preset level a setup matches, or 'custom' (the scoring reads its column). */
+export function levelOf(setup: SetupOptions): LevelName {
+  // Arena: the computer's strength (two people at one screen play "Normalny").
+  if (setup.mode === 'arena') return setup.seats.some((s) => s.controller === 'bot') ? setup.botLevel ?? 'normal' : 'normal';
+  const r = setup.rules;
+  // Easy and normal: as many Horde heroes as players, reinforcements in the base; hard: neither.
+  const automaton = r.minEvilHeroes === DEFAULT_RULES.minEvilHeroes && Boolean(r.hordeRespawn);
+  const hardAutomaton = r.minEvilHeroes === 2 && !r.hordeRespawn;
+  const base = r.treasures && !r.heroReplacement && r.initiativeTie === DEFAULT_RULES.initiativeTie;
+  const easy = r.treasures && r.heroReplacement && r.ritual === false && r.initiativeTie === DEFAULT_RULES.initiativeTie;
+  if (easy && automaton && setup.battleMode === 'board' && !r.abilities && !r.useDice && !r.extraEvilHero) return 'kids';
+  if (base && setup.battleMode === 'arena' && r.abilities && !r.useDice) {
+    if (r.extraEvilHero) return setup.mode === 'coop' && hardAutomaton ? 'hard' : 'custom';
+    if (automaton) return 'normal';
+  }
+  return 'custom';
 }
