@@ -27,13 +27,9 @@ Uzgodnione pomysły do wdrożenia. Najpierw tryb online, potem figurki 3D.
 - Maszyna Fly musi działać w trakcie partii: `min_machines_running = 1` albo akceptujemy
   kilka sekund rozruchu przy pierwszym połączeniu.
 
-- **Konta graczy:** logowanie nickiem i hasłem; statystyki przypisane do konta.
+- **Konta graczy:** sam nick (min. 3 znaki) i hasło — bez e-maila i bez resetu hasła; kto zapomni hasła,
+  zakłada nowe konto. Statystyki przypisane do konta. Limit prób logowania i rejestracji jest na serwerze.
 - **Kolejność:** zaczynamy od serwera (modele figurek powstają w tym czasie).
-
-### Do ustalenia
-
-- Reset zapomnianego hasła bez e-maila — np. ręcznie przez administratora.
-- Ograniczenie prób logowania (ochrona przed zgadywaniem haseł) — jeszcze nie zrobione w szkielecie serwera.
 
 ## 2. Figurki 3D zamiast portretów
 
