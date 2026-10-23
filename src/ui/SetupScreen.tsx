@@ -26,7 +26,7 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] => {
   return out;
 };
 
-export function SetupScreen({ onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog }: { onOnline: () => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void }) {
+export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog }: { online: { label: string; title: string }; onOnline: () => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void }) {
   const stats = journalStats();
   const fileRef = useRef<HTMLInputElement>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -97,8 +97,8 @@ export function SetupScreen({ onOnline, onStart, onLoad, autosave, onRules, onTe
               Kontynuuj zapisaną partię
             </button>
           )}
-          <button className="btn prim" style={{ padding: '6px 18px', fontSize: 17 }} onClick={onOnline} title="Graj ze znajomymi przez internet">
-            Gra online
+          <button className="btn prim" style={{ padding: '6px 18px', fontSize: 17 }} onClick={onOnline} title={online.title}>
+            {online.label}
           </button>
           <button className="btn plate parch" style={{ padding: '6px 14px', fontSize: 16 }} onClick={() => fileRef.current?.click()}>
             Wczytaj z pliku

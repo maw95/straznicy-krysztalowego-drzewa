@@ -10,7 +10,9 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Gra online (wersja próbna): przycisk „Gra online” w menu — konto (nick i hasło), pokój z kodem dla znajomych, ustawienia stołu, zajmowanie miejsc i czat; partię we wszystkich trybach prowadzi serwer gry. W trakcie gry: czat, odliczanie, gdy ktoś się rozłączy, i „Oddaj botowi”. Podczas `npm run dev` gra łączy się z serwerem uruchomionym lokalnie (`d73b84d`).
 - Gra online: tempo botów ustawia założyciel pokoju (w lobby i w Opcjach) dla wszystkich graczy; na przycisku „Czat” liczba nowych wiadomości (`a503c65`).
 - Narzędzia: `make silnik` — silnik gry jako pakiet dołączony do wydania na GitHubie; z niego korzysta serwer gry online (`9fbbe08`).
-- Dokumentacja: `docs/INFRASTRUKTURA.md` — gdzie działa gra i serwer, jak wydawać wersje i wdrażać zmiany.
+- Dokumentacja: `docs/INFRASTRUKTURA.md` — gdzie działa gra i serwer, jak wydawać wersje i wdrażać zmiany (`112849c`).
+- Punktacja i rozpoznawanie poziomu przeniesione do silnika gry, żeby serwer liczył ranking tak samo jak gra (`125e876`).
+- Menu „najpierw online”: na starcie „Zaloguj się / Nowe konto / Graj bez konta” (bez konta — tylko gra na tym komputerze; wybór zapamiętany), a po zalogowaniu menu z „Nowy pokój”, kodem pokoju, „Gra na tym komputerze”, rankingiem top 10 (puchary dla miejsc 1–3, własne miejsce pod tabelą), listą graczy online z „Zaproś” i ogólnym czatem. Zaproszenia wyskakują w rogu ekranu (z dźwiękiem i odliczaniem), a gry przeciw komputerowi skończone po zalogowaniu trafiają do rankingu.
 
 ## 1.3.0 — 2026-10-22
 

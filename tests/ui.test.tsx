@@ -16,6 +16,8 @@ beforeEach(() => {
   localStorage.clear();
   localStorage.setItem('skd-tutorial', JSON.stringify({ enabled: false, seen: [] }));
   localStorage.setItem('skd-intro', 'seen');
+  // These tests play locally: "Graj bez konta" starts at the setup screen (the online menu needs a server).
+  localStorage.setItem('skd-play-offline', '1');
   sessionStorage.setItem('skd-title-done', 'done');
 });
 
@@ -285,6 +287,28 @@ describe('intro', () => {
     const again = [...doc.querySelectorAll('button')].find((b) => b.textContent === 'Wprowadzenie')!;
     await act(async () => fireEvent.click(again));
     expect(title()).toBe('Kryształowe Drzewo');
+  });
+});
+
+describe('start screen', () => {
+  it('without an account asks to log in or play without one, and remembers "Graj bez konta"', async () => {
+    localStorage.removeItem('skd-play-offline');
+    window.history.replaceState(null, '', '/');
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    const button = (text: string) => [...doc.querySelectorAll('button')].find((b) => b.textContent?.trim() === text) as HTMLButtonElement | undefined;
+    expect(doc.body.textContent).toContain('Witaj, Strażniku!');
+    expect(button('Zaloguj')).toBeTruthy();
+    expect(doc.body.textContent).toContain('Bez gry online i bez rankingu');
+
+    await act(async () => fireEvent.click(button('Graj bez konta')!));
+    expect(button('Rozpocznij grę')).toBeTruthy();
+    expect(button('Zaloguj się, żeby grać ze znajomymi')).toBeTruthy();
+    expect(localStorage.getItem('skd-play-offline')).toBe('1');
+
+    await act(async () => fireEvent.click(button('Zaloguj się, żeby grać ze znajomymi')!));
+    expect(doc.body.textContent).toContain('Witaj, Strażniku!');
+    expect(localStorage.getItem('skd-play-offline')).toBeNull();
   });
 });
 

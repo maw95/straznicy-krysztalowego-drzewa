@@ -279,6 +279,7 @@ button { font-family: inherit; }
 /* Form controls styled like the parchment option buttons */
 input[type='number'],
 input[type='text'],
+input[type='password'],
 select {
   font-family: inherit;
   font-size: 17px;
@@ -305,6 +306,7 @@ select option { background: #f3e7c9; color: var(--ink); font-weight: 600; }
 input[type='number'] { appearance: textfield; -moz-appearance: textfield; }
 input[type='number']::-webkit-inner-spin-button { -webkit-appearance: none; }
 input[type='text']:focus,
+input[type='password']:focus,
 input[type='number']:focus,
 select:focus-visible {
   box-shadow: 0 0 0 2px #9ee4ff, 0 0 12px 3px rgba(158, 228, 255, 0.55), inset 0 0 16px rgba(120, 80, 20, 0.35);

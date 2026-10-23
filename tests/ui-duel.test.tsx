@@ -11,6 +11,8 @@ beforeEach(() => {
   localStorage.clear();
   localStorage.setItem('skd-tutorial', JSON.stringify({ enabled: false, seen: [] }));
   localStorage.setItem('skd-intro', 'seen');
+  // These tests play locally: "Graj bez konta" starts at the setup screen (the online menu needs a server).
+  localStorage.setItem('skd-play-offline', '1');
   sessionStorage.setItem('skd-title-done', 'done');
 });
 

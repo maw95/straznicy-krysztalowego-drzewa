@@ -44,8 +44,36 @@ export interface TableConfig {
   seats: Array<{ faction: 'dawn' | 'horde'; heroId: string; bot: boolean }>;
 }
 
+/** Where a player online is: in the menu, in a room before the start (or after the end), or playing. */
+export interface PlayerOnline extends User {
+  status: 'menu' | 'room' | 'game';
+}
+
+export interface Invitation {
+  from: User;
+  code: string;
+  expiresAt: number;
+}
+
+export interface RankingRow {
+  place: number;
+  id: number;
+  nick: string;
+  points: number;
+  games: number;
+  /** Share of won games, 0–100. */
+  winRate: number;
+}
+
 export type ServerMessage =
   | { type: 'hello'; user: User; version: string }
+  | { type: 'players'; players: PlayerOnline[] }
+  | { type: 'generalChat'; messages: Array<{ from: string; text: string }> }
+  | { type: 'generalChatMessage'; from: string; text: string }
+  | { type: 'invite'; from: User; code: string; expiresAt: number; now?: number }
+  | { type: 'inviteGone'; code: string }
+  | { type: 'inviteSent'; to: User; expiresAt: number }
+  | { type: 'inviteEnded'; to: User; reason: 'accepted' | 'declined' | 'expired' }
   | { type: 'pong' }
   | { type: 'room'; room: RoomView }
   | { type: 'game'; state: GameState }
@@ -129,7 +157,10 @@ export type ClientMessage =
   | { type: 'action'; action: unknown }
   | { type: 'handToBot'; seat: number }
   | { type: 'botSpeed'; speed: RoomView['botSpeed'] }
-  | { type: 'chat'; text: string };
+  | { type: 'chat'; text: string }
+  | { type: 'generalChat'; text: string }
+  | { type: 'invite'; userId: number }
+  | { type: 'inviteReply'; code: string; accept: boolean };
 
 export interface OnlineState {
   user: User;
@@ -139,6 +170,15 @@ export interface OnlineState {
   chat: Array<{ from: string; text: string }>;
   /** Chat messages received so far (the list above keeps only the last 100), for the unread count. */
   chatReceived: number;
+  /** Everyone online (this player too), with where they are. */
+  players: PlayerOnline[];
+  generalChat: Array<{ from: string; text: string }>;
+  /** Invitations to this player waiting for an answer. */
+  invitations: Invitation[];
+  /** Short notes for this player (an invitation sent, declined…), each shown for a few seconds. */
+  notices: Array<{ id: number; text: string }>;
+  /** The server closed the connection after a long time without activity; reconnect() opens it again. */
+  idle: boolean;
   error: string | null;
 }
 
@@ -156,7 +196,7 @@ export class OnlineSession {
   private closed = false;
 
   constructor(user: User) {
-    this.state = { user, connected: false, room: null, game: null, chat: [], chatReceived: 0, error: null };
+    this.state = { user, connected: false, room: null, game: null, chat: [], chatReceived: 0, players: [], generalChat: [], invitations: [], notices: [], idle: false, error: null };
     this.open();
   }
 
@@ -177,6 +217,24 @@ export class OnlineSession {
   close() {
     this.closed = true;
     this.socket?.close();
+  }
+
+  /** After the idle disconnect: connect again (the server puts the player back where they were). */
+  reconnect() {
+    if (this.state.connected) return;
+    this.update({ idle: false, error: null });
+    this.open();
+  }
+
+  answerInvitation(invitation: Invitation, accept: boolean) {
+    this.update({ invitations: this.state.invitations.filter((i) => i.code !== invitation.code) });
+    this.send({ type: 'inviteReply', code: invitation.code, accept });
+  }
+
+  private notice(text: string) {
+    const id = Date.now() + Math.random();
+    this.update({ notices: [...this.state.notices, { id, text }] });
+    window.setTimeout(() => this.update({ notices: this.state.notices.filter((n) => n.id !== id) }), 5000);
   }
 
   private update(patch: Partial<OnlineState>) {
@@ -200,6 +258,8 @@ export class OnlineSession {
       if (this.closed) return;
       if (event.code === 4401) return this.update({ error: 'Sesja wygasła — zaloguj się ponownie.' });
       if (event.code === 4000) return this.update({ error: 'Gra jest otwarta w innej karcie albo na innym urządzeniu.' });
+      // 4002: nothing happened for a long time (outside a game) — the player reconnects with one click.
+      if (event.code === 4002) return this.update({ idle: true, players: [], invitations: [] });
       const delay = RECONNECT_MS[Math.min(this.attempts++, RECONNECT_MS.length - 1)];
       window.setTimeout(() => !this.closed && this.open(), delay);
     };
@@ -217,6 +277,68 @@ export class OnlineSession {
         return this.update({ room: null, game: null, chat: [] });
       case 'error':
         return this.update({ error: message.message });
+      case 'players':
+        return this.update({ players: message.players });
+      case 'generalChat':
+        return this.update({ generalChat: message.messages });
+      case 'generalChatMessage':
+        return this.update({ generalChat: [...this.state.generalChat.slice(-99), { from: message.from, text: message.text }] });
+      case 'invite':
+        chime();
+        // The countdown runs on this computer's clock (the server's may be a little off): the time left, as sent.
+        return this.update({
+          invitations: [
+            ...this.state.invitations.filter((i) => i.code !== message.code),
+            { from: message.from, code: message.code, expiresAt: Date.now() + Math.max(0, message.expiresAt - (message.now ?? message.expiresAt - 60_000)) },
+          ],
+        });
+      case 'inviteGone':
+        return this.update({ invitations: this.state.invitations.filter((i) => i.code !== message.code) });
+      case 'inviteSent':
+        return this.notice(`Zaproszenie wysłane: ${message.to.nick}.`);
+      case 'inviteEnded':
+        return this.notice(
+          message.reason === 'accepted'
+            ? `${message.to.nick} dołącza do pokoju.`
+            : message.reason === 'declined'
+              ? `${message.to.nick} odrzuca zaproszenie.`
+              : `Zaproszenie dla ${message.to.nick} wygasło.`,
+        );
     }
   }
+}
+
+/** A short two-note chime for an incoming invitation (no sound file needed). */
+function chime() {
+  try {
+    const ctx = new AudioContext();
+    [660, 880].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime + i * 0.16);
+      gain.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + i * 0.16 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + i * 0.16 + 0.35);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(ctx.currentTime + i * 0.16);
+      osc.stop(ctx.currentTime + i * 0.16 + 0.4);
+    });
+    window.setTimeout(() => void ctx.close(), 1000);
+  } catch {
+    // No audio (or not allowed yet): the invitation still shows.
+  }
+}
+
+// ------------------------------------------------------------------ ranking
+
+export async function fetchRanking(): Promise<{ top: RankingRow[]; me: RankingRow | null }> {
+  const token = savedToken();
+  return request('/ranking', { headers: token ? { authorization: `Bearer ${token}` } : {} });
+}
+
+/** A finished offline game, for the ranking: the server replays it and scores it itself. */
+export async function submitResult(setup: unknown, actions: unknown[]): Promise<{ counted: true; fresh: boolean; won: boolean; points: number } | { counted: false; reason: string }> {
+  const token = savedToken();
+  if (!token) throw new ServerError('Nie jesteś zalogowany.');
+  return request('/results', { method: 'POST', headers: { authorization: `Bearer ${token}` }, body: JSON.stringify({ setup, actions }) });
 }

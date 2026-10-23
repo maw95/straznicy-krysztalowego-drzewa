@@ -28,8 +28,8 @@ import { ChangelogDialog } from './ChangelogDialog';
 import { ArenaPrep, DraftDialog } from './ArenaPrep';
 import { FullscreenButton, useAutoFullscreen } from './fullscreen';
 import { TreasureReveal } from './CardBack';
-import { ChatBox, OnlineScreen } from './OnlineScreen';
-import type { OnlineSession, OnlineState } from '../online/api';
+import { ChatBox, OnlineOverlay, OnlineScreen } from './OnlineScreen';
+import { savedToken, submitResult, type Invitation, type OnlineSession, type OnlineState } from '../online/api';
 
 const SPEEDS = { wolno: 900, normalnie: 450, szybko: 120 } as const;
 type Speed = keyof typeof SPEEDS;
@@ -61,8 +61,12 @@ export function App() {
   const saveFile = (g: GameState): SaveFile => ({ setup: g.setup, actions: [...history.current], reports: reports.current });
   const [confirm, setConfirm] = useState<{ text: string; yes: string; onYes: () => void } | null>(null);
   const [summary, setSummary] = useState<number | null>(null);
-  /** Gra online: the screen is open, and the session once logged in (it outlives the screen during a game). */
-  const [onlineScreen, setOnlineScreen] = useState(false);
+  /**
+   * The start screen: the online menu (or, logged out, the choice to log in or play without an account),
+   * unless the player chose to play without an account; then the local setup screen, as before.
+   * The session (once logged in) outlives the screen during a game.
+   */
+  const [onlineScreen, setOnlineScreen] = useState(() => !playsOffline());
   const [session, setSession] = useState<OnlineSession | null>(null);
   const online = useOnlineState(session);
   const [showChat, setShowChat] = useState(false);
@@ -404,28 +408,63 @@ export function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [turnKey]);
 
+  // A local game finished while logged in goes to the ranking: the server replays it and scores it.
+  const [rankingNote, setRankingNote] = useState<string | null>(null);
+  const scored = useRef<string | null>(null);
+  useEffect(() => {
+    if (!game || isOnline || game.phase !== 'over' || !savedToken() || new URLSearchParams(window.location.search).has('steps')) return;
+    const key = `${game.setup.seed}:${history.current.length}`;
+    if (scored.current === key) return;
+    scored.current = key;
+    setRankingNote('Ranking: zapisywanie wyniku…');
+    submitResult(game.setup, history.current)
+      .then((r) => setRankingNote(r.counted ? (r.won ? `Ranking: wygrana, +${r.points} pkt.` : 'Ranking: przegrana zapisana (0 pkt).') : `Ranking: ${r.reason}`))
+      .catch((e: Error) => setRankingNote(`Ranking: ${e.message}`));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game?.phase, isOnline]);
+  useEffect(() => {
+    if (game?.phase !== 'over') setRankingNote(null);
+  }, [game?.phase]);
+
+  /** "Dołącz" on an invitation: a local game in progress is put aside (it stays in the autosave). */
+  const acceptInvitation = (invitation: Invitation) => {
+    if (game && !isOnline) setGame(null);
+    setOnlineScreen(true);
+    session?.answerInvitation(invitation, true);
+  };
+  const overlay = session && <OnlineOverlay session={session} onAccept={acceptInvitation} />;
+
   /** "Nowa gra": online it also leaves the room (the game goes on for the others, a bot takes the seats). */
   const leaveGame = () => {
     if (isOnline) session!.send({ type: 'leaveRoom' });
     setGame(null);
   };
 
-  if (!game && onlineScreen) {
-    return (
-      <>
-        <SvgDefs />
-        <OnlineScreen session={session} onSession={setSession} onBack={() => setOnlineScreen(false)} />
-        <HoverCardLayer />
-        <FullscreenButton />
-      </>
-    );
-  }
-
   if (!game) {
     return (
       <>
         <SvgDefs />
-        <SetupScreen onOnline={() => setOnlineScreen(true)} onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} onIntro={() => setShowIntro(true)} onChangelog={() => setShowChangelog(true)} />
+        {onlineScreen ? (
+          <OnlineScreen
+            session={session}
+            onSession={setSession}
+            onLocalGame={() => setOnlineScreen(false)}
+            onOffline={() => {
+              setPlaysOffline(true);
+              setOnlineScreen(false);
+            }}
+            links={{ onRules: () => setShowRules(true), onIntro: () => setShowIntro(true), onChangelog: () => setShowChangelog(true) }}
+          />
+        ) : (
+        <SetupScreen
+          online={session ? { label: '← Menu online', title: 'Wróć do menu gry online' } : { label: 'Zaloguj się, żeby grać ze znajomymi', title: 'Gra online i ranking wymagają konta' }}
+          onOnline={() => {
+            setPlaysOffline(false);
+            setOnlineScreen(true);
+          }}
+          onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} onIntro={() => setShowIntro(true)} onChangelog={() => setShowChangelog(true)} />
+        )}
+        {overlay}
         <Modal open={showRules} onClose={() => setShowRules(false)}>
           <RulesDialog onClose={() => setShowRules(false)} />
         </Modal>
@@ -535,6 +574,7 @@ export function App() {
         {music.muted ? '🔇' : '♪'}
       </button>
       <FullscreenButton />
+      {overlay}
       {isOnline && onlineRoom?.waiting && <WaitingBanner room={onlineRoom} canHand={mySeats.size > 0} onHand={(seat) => session!.send({ type: 'handToBot', seat })} />}
       {isOnline && online && !online.connected && (
         <div className="plate parch" role="status" style={{ position: 'fixed', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 81, fontWeight: 700 }}>
@@ -544,7 +584,7 @@ export function App() {
       <Modal open={showChat && isOnline} onClose={() => setShowChat(false)}>
         {showChat && online && session && (
           <Frame crest style={{ width: 'min(460px, 94vw)' }} innerStyle={{ padding: 18, display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <ChatBox session={session} chat={online.chat} />
+            <ChatBox title="Czat pokoju" messages={online.chat} onSend={(text) => session.send({ type: 'chat', text })} />
             <button className="btn plate parch" style={{ padding: '6px 16px', alignSelf: 'flex-end' }} onClick={() => setShowChat(false)}>Zamknij</button>
           </Frame>
         )}
@@ -598,7 +638,7 @@ export function App() {
       </Modal>
 
       <Modal open={game.phase === 'over'}>
-        <GameOver state={game} online={isOnline} onNew={leaveGame} onLog={() => setShowLog(true)} />
+        <GameOver state={game} online={isOnline} rankingNote={rankingNote} onNew={leaveGame} onLog={() => setShowLog(true)} />
       </Modal>
 
       <Modal open={Boolean(card)} onClose={() => setCard(null)}>
@@ -805,7 +845,7 @@ function Handoff({ state, playerId, onConfirm }: { state: GameState; playerId: s
   );
 }
 
-function GameOver({ state, online, onNew, onLog }: { state: GameState; online: boolean; onNew: () => void; onLog: () => void }) {
+function GameOver({ state, online, rankingNote, onNew, onLog }: { state: GameState; online: boolean; rankingNote: string | null; onNew: () => void; onLog: () => void }) {
   const s = state.stats;
   return (
     <div className={state.winner === 'horde' ? 'quake' : undefined}>
@@ -832,6 +872,7 @@ function GameOver({ state, online, onNew, onLog }: { state: GameState; online: b
           <span>Kryształy przy Drzewie</span><b>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b>
         </div>
         )}
+        {rankingNote && <div style={{ fontSize: 17, color: '#F3D27A' }}>{rankingNote}</div>}
         <div style={{ display: 'flex', gap: 12 }}>
           <button className="btn plate parch" style={{ padding: '8px 18px', fontSize: 18 }} onClick={onLog}>Dziennik</button>
           <button className="btn prim" style={{ padding: '8px 22px', fontSize: 20 }} onClick={onNew}>{online ? 'Wyjdź z pokoju' : 'Nowa gra'}</button>
@@ -910,4 +951,24 @@ function WaitingBanner({ room, canHand, onHand }: { room: NonNullable<OnlineStat
       )}
     </div>
   );
+}
+
+const OFFLINE_KEY = 'skd-play-offline';
+
+/** The player chose "Graj bez konta": the game starts at the local setup screen, without asking again. */
+function playsOffline(): boolean {
+  try {
+    return localStorage.getItem(OFFLINE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function setPlaysOffline(on: boolean) {
+  try {
+    if (on) localStorage.setItem(OFFLINE_KEY, '1');
+    else localStorage.removeItem(OFFLINE_KEY);
+  } catch {
+    // No storage: the choice holds for this visit only.
+  }
 }
