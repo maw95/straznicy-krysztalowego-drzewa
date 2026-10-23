@@ -13,6 +13,8 @@ beforeEach(() => {
   localStorage.setItem('skd-intro', 'seen');
   // These tests play locally: "Graj bez konta" starts at the setup screen (the online menu needs a server).
   localStorage.setItem('skd-play-offline', '1');
+  // No "Nowa wersja — co nowego" window in the way (it has its own test).
+  localStorage.setItem('skd-last-version', '999.0.0');
   sessionStorage.setItem('skd-title-done', 'done');
 });
 

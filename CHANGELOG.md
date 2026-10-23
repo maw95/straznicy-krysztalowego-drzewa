@@ -6,7 +6,10 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
-- Zgłoszenia błędów i opinie testerów idą prosto do twórcy: „Zgłoś błąd” i „Dla testerów” → „Wyślij do twórcy” wysyłają je na serwer gry (bez internetu zostaje plik do pobrania); „Dla testerów” jest też w menu online. Dla twórcy: `make zgloszenia` pobiera nowe zgłoszenia i od razu je odtwarza.
+- „Zgłoś błąd” wysyła zgłoszenie prosto do twórcy gry, razem z partią — także z gry online. Opinie z „Dla testerów” wysyła przycisk „Wyślij do twórcy” (bez internetu wciąż można pobrać plik); „Dla testerów” jest teraz także w menu gry online (`03e0e5a`).
+- Narzędzia: `make zgloszenia` pobiera z serwera nowe zgłoszenia błędów i opinie, odtwarza błędy i podsumowuje opinie (`03e0e5a`).
+- Po wydaniu nowej wersji gra raz pokazuje okienko „Nowa wersja — co nowego” ze zmianami od Twojej ostatniej wizyty.
+- „Historia zmian” nie pokazuje już numerów technicznych przy niektórych wpisach.
 
 ## 2.0.0 — 2026-10-23
 

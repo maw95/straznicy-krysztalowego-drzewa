@@ -26,6 +26,7 @@ import { Intro, introSeen } from './Intro';
 import { TitleScreen, titlePending } from './TitleScreen';
 import { StatsDialog } from './StatsDialog';
 import { ChangelogDialog } from './ChangelogDialog';
+import { markNewsSeen, pendingNews, WhatsNew } from './WhatsNew';
 import { ArenaPrep, DraftDialog } from './ArenaPrep';
 import { FullscreenButton, useAutoFullscreen } from './fullscreen';
 import { TreasureReveal } from './CardBack';
@@ -57,6 +58,16 @@ export function App() {
   // The title screen opens each visit (its START is the click that allows full screen and music).
   const [showTitle, setShowTitle] = useState(() => titlePending() && !new URLSearchParams(window.location.search).has('steps'));
   const [showReport, setShowReport] = useState(false);
+  /** "Nowa wersja — co nowego": the releases since the version this player last saw (never in ?steps= test games). */
+  const [news, setNews] = useState(() => (new URLSearchParams(window.location.search).has('steps') ? null : pendingNews()));
+  useEffect(() => {
+    if (!news) markNewsSeen();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const closeNews = () => {
+    markNewsSeen();
+    setNews(null);
+  };
   /** Bug reports written in this game; saved and exported with it. */
   const reports = useRef<BugReport[]>([]);
   const saveFile = (g: GameState): SaveFile => ({ setup: g.setup, actions: [...history.current], reports: reports.current });
@@ -477,6 +488,18 @@ export function App() {
         </Modal>
         <Modal open={showChangelog} onClose={() => setShowChangelog(false)}>
           {showChangelog && <ChangelogDialog onClose={() => setShowChangelog(false)} />}
+        </Modal>
+        <Modal open={Boolean(news) && !showTitle && !showIntro} onClose={closeNews}>
+          {news && (
+            <WhatsNew
+              releases={news}
+              onClose={closeNews}
+              onHistory={() => {
+                closeNews();
+                setShowChangelog(true);
+              }}
+            />
+          )}
         </Modal>
         {showIntro && !showTitle && <Intro onClose={() => setShowIntro(false)} />}
         {showTitle && <TitleScreen onStart={() => setShowTitle(false)} />}

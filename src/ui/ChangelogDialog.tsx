@@ -32,13 +32,33 @@ export function parseChangelog(text: string): Release[] {
     const item = line.match(/^-\s+(.+)$/);
     if (item && current) {
       const text = item[1]
-        .replace(/\s*\(`[0-9a-f]{7,40}`\)/g, '')
+        // One commit hash or several: (`abc1234`) or (`abc1234`, `def5678`).
+        .replace(/\s*\((?:`[0-9a-f]{7,40}`(?:,\s*)?)+\)/g, '')
         .replace(/\*\*|`/g, '')
         .trim();
       current.changes.push(text);
     }
   }
   return out.filter((r) => r.changes.length);
+}
+
+/** 2.0.1 → [2, 0, 1], for comparing versions. */
+const parts = (v: string) => v.split('.').map(Number);
+export function newerThan(a: string, b: string): boolean {
+  const [x, y] = [parts(a), parts(b)];
+  for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return (x[i] ?? 0) > (y[i] ?? 0);
+  return false;
+}
+
+/** Entries written for us, not for players: kept in "Historia zmian", left out of "Co nowego". */
+const FOR_DEVELOPERS = /^(Narzędzia|Dokumentacja|Notatki projektowe)\b/;
+
+/** The released versions after `since` up to `upTo` (newest first), with only the changes players notice. */
+export function newsSince(text: string, since: string | null, upTo: string): Release[] {
+  return parseChangelog(text)
+    .filter((r) => r.version && !newerThan(r.version, upTo) && (since === null ? r.version === upTo : newerThan(r.version, since)))
+    .map((r) => ({ ...r, changes: r.changes.filter((c) => !FOR_DEVELOPERS.test(c)) }))
+    .filter((r) => r.changes.length);
 }
 
 export function ChangelogDialog({ onClose }: { onClose: () => void }) {

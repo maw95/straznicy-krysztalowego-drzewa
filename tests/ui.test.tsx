@@ -26,6 +26,8 @@ beforeEach(() => {
   localStorage.setItem('skd-intro', 'seen');
   // These tests play locally: "Graj bez konta" starts at the setup screen (the online menu needs a server).
   localStorage.setItem('skd-play-offline', '1');
+  // No "Nowa wersja — co nowego" window in the way (it has its own test).
+  localStorage.setItem('skd-last-version', '999.0.0');
   sessionStorage.setItem('skd-title-done', 'done');
 });
 
@@ -365,6 +367,47 @@ describe('start screen', () => {
     await act(async () => fireEvent.click(button('Zaloguj się, żeby grać ze znajomymi')!));
     expect(doc.body.textContent).toContain('Witaj, Strażniku!');
     expect(localStorage.getItem('skd-play-offline')).toBeNull();
+  });
+});
+
+describe('what is new after a release', () => {
+  const text = [
+    '# Historia', '', '## W przygotowaniu', '', '- Jeszcze nie wydane.', '',
+    '## 2.0.1 — 2026-10-24', '', '- Zgłoszenia idą do twórcy (`abc1234`).', '- Narzędzia: make zgloszenia (`def5678`).', '',
+    '## 2.0.0 — 2026-10-23', '', '- Gra online (`aaa1111`, `bbb2222`).', '- Dokumentacja: opis serwera.', '',
+    '## 1.4.0 — 2026-10-22', '', '- Arena.', '',
+    '## 1.3.0 — 2026-10-21', '', '- Stare.',
+  ].join('\n');
+
+  it('lists the releases since the one the player last saw, without the developers\' entries', async () => {
+    const { newsSince } = await import('../src/ui/ChangelogDialog');
+    expect(newsSince(text, '1.3.0', '2.0.1')).toEqual([
+      { version: '2.0.1', date: '2026-10-24', changes: ['Zgłoszenia idą do twórcy.'] },
+      { version: '2.0.0', date: '2026-10-23', changes: ['Gra online.'] },
+      { version: '1.4.0', date: '2026-10-22', changes: ['Arena.'] },
+    ]);
+    expect(newsSince(text, '2.0.0', '2.0.1').map((r) => r.version)).toEqual(['2.0.1']);
+    expect(newsSince(text, null, '2.0.1').map((r) => r.version)).toEqual(['2.0.1']);
+    expect(newsSince(text, '2.0.1', '2.0.1')).toEqual([]);
+  });
+
+  it('shows the window once to a returning player, and never to a new one', async () => {
+    const { pendingNews } = await import('../src/ui/WhatsNew');
+    localStorage.removeItem('skd-last-version');
+    localStorage.removeItem('skd-intro');
+    expect(pendingNews()).toBeNull();
+
+    // A returning player: saw the intro, last saw version 1.3.0.
+    localStorage.setItem('skd-intro', 'seen');
+    localStorage.setItem('skd-last-version', '1.3.0');
+    window.history.replaceState(null, '', '/');
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    expect(doc.body.textContent).toContain('Nowa wersja — co nowego');
+    const close = [...doc.querySelectorAll('button')].find((b) => b.textContent === 'Do gry!')!;
+    await act(async () => fireEvent.click(close));
+    expect(localStorage.getItem('skd-last-version')).toBe(__APP_VERSION__);
+    expect(pendingNews()).toBeNull();
   });
 });
 
