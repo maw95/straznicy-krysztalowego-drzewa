@@ -5,6 +5,7 @@
 - `WYMIARY_ELEMENTOW.md` — **wymiary elementów fizycznych** i rozmiary grafik do druku.
 - `FIGURKI_SPECYFIKACJA.md` — figurki do druku 3D; `druk3d/` — podstawki, kryształy i modele.
 - `BACKLOG.md` — uzgodnione pomysły do wdrożenia (tryb online, figurki 3D w grze).
+- `INFRASTRUKTURA.md` — **gdzie działa gra i serwer gry online i jak wdrażać zmiany** (wydania, silnik na serwerze, Fly.io, sekrety).
 - `zrodla_zasad/` — wcześniejsze źródła zasad: ilustrowana instrukcja (PDF), specyfikacja dla AI i dokument kontekstowy.
 - `grafika/` — projekt graficzny, z którego gra wycina swoje elementy:
   - `okladka/` — okładka (PDF i PNG) i logo;

@@ -1,7 +1,7 @@
 # Strażnicy Kryształowego Drzewa — cyfrowy prototyp
 
 Przeglądarkowa wersja planszówki do testów: hot-seat dla 1–4 graczy, boty, kooperacja i rywalizacja.
-Zasady: `docs/` (opis folderów w `docs/README.md`). Notatki dla agenta pracującego nad wersją papierową: `docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md`.
+Zasady: `docs/` (opis folderów w `docs/README.md`). Gra online, serwer i wdrażanie zmian: `docs/INFRASTRUKTURA.md`. Notatki dla agenta pracującego nad wersją papierową: `docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md`.
 
 ## Uruchomienie
 
