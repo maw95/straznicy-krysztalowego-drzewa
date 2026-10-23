@@ -51,7 +51,7 @@ export function BugReportDialog({ game, save, onSaved, onClose }: Props) {
           <>
             <div>Dziękuję! {done}</div>
             <div style={{ fontSize: 15, color: 'var(--muted)' }}>Zgłoszenie zawiera całą partię aż do tej chwili, więc da się dokładnie odtworzyć, co było na ekranie.</div>
-            <button className="btn prim" autoFocus style={{ alignSelf: 'center', padding: '6px 26px', fontSize: 19 }} onClick={onClose}>Wróć do gry</button>
+            <button className="btn prim" data-enter autoFocus style={{ alignSelf: 'center', padding: '6px 26px', fontSize: 19 }} onClick={onClose}>Wróć do gry</button>
           </>
         ) : (
           <>

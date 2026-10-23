@@ -42,7 +42,7 @@ export function BattleSummary({ report, onClose }: { report: BattleReport; onClo
         ))}
       </div>
       <div style={{ textAlign: 'center', fontSize: 14, color: 'var(--muted)' }}>Ocalałe jednostki odzyskują pełne Życie. Polegli pomocnicy nie wracają do puli.</div>
-      <button className="btn prim" autoFocus style={{ alignSelf: 'center', padding: '8px 28px', fontSize: 19 }} onClick={onClose}>
+      <button className="btn prim" data-enter autoFocus style={{ alignSelf: 'center', padding: '8px 28px', fontSize: 19 }} onClick={onClose}>
         Dalej
       </button>
     </Frame>

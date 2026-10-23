@@ -587,7 +587,7 @@ export function App() {
         {showChat && online && session && (
           <Frame crest style={{ width: 'min(460px, 94vw)' }} innerStyle={{ padding: 18, display: 'flex', flexDirection: 'column', gap: 10 }}>
             <ChatBox title="Czat pokoju" messages={online.chat} onSend={(text) => session.send({ type: 'chat', text })} />
-            <button className="btn plate parch" style={{ padding: '6px 16px', alignSelf: 'flex-end' }} onClick={() => setShowChat(false)}>Zamknij</button>
+            <button className="btn plate parch" data-enter style={{ padding: '6px 16px', alignSelf: 'flex-end' }} onClick={() => setShowChat(false)}>Zamknij</button>
           </Frame>
         )}
       </Modal>
@@ -632,7 +632,7 @@ export function App() {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }} onClick={() => setFound(null)}>
             <Ribbon style={{ width: 'min(360px, 90vw)' }}>Znaleziono skarb!</Ribbon>
             <TreasureReveal kind={found} width={Math.min(300, window.innerWidth - 60)} />
-            <button className="btn prim" autoFocus style={{ padding: '6px 26px', fontSize: 18 }} onClick={() => setFound(null)}>
+            <button className="btn prim" data-enter autoFocus style={{ padding: '6px 26px', fontSize: 18 }} onClick={() => setFound(null)}>
               Do ekwipunku
             </button>
           </div>
@@ -669,6 +669,7 @@ export function App() {
               <button className="btn plate parch" style={{ padding: '8px 18px', fontSize: 18 }} onClick={() => setConfirm(null)}>Anuluj</button>
               <button
                 className="btn prim"
+                data-enter
                 autoFocus
                 style={{ padding: '8px 22px', fontSize: 19 }}
                 onClick={() => {
@@ -713,7 +714,7 @@ export function App() {
                 </div>
               ))}
             </div>
-            <button className="btn prim" style={{ alignSelf: 'center', padding: '6px 26px', fontSize: 19 }} onClick={() => setDigest(null)}>
+            <button className="btn prim" data-enter style={{ alignSelf: 'center', padding: '6px 26px', fontSize: 19 }} onClick={() => setDigest(null)}>
               Dalej
             </button>
           </Frame>
@@ -773,7 +774,7 @@ export function App() {
               <button className="btn prim" style={{ padding: '6px 14px' }} onClick={() => download(`dziennik-${game.setup.seed}.txt`, game.log.map((l) => `[${l.round}] ${l.text}`).join('\n'))}>Eksport dziennika</button>
               <button className="btn prim r" style={{ padding: '6px 14px' }} onClick={() => { setShowDebug(false); leaveGame(); }}>{isOnline ? 'Wyjdź z gry' : 'Nowa gra'}</button>
             </div>
-            <button className="btn plate parch" style={{ padding: '6px 14px', alignSelf: 'flex-end' }} onClick={() => setShowDebug(false)}>Zamknij</button>
+            <button className="btn plate parch" data-enter style={{ padding: '6px 14px', alignSelf: 'flex-end' }} onClick={() => setShowDebug(false)}>Zamknij</button>
           </Frame>
         </div>
       </Modal>
@@ -811,7 +812,7 @@ function SupportSelect({ state, faction, onPick }: { state: GameState; faction: 
             </button>
           ))}
         </div>
-        <button className="btn prim" disabled={picked.length !== 2} style={{ height: 50, padding: '0 30px', fontSize: 21 }} onClick={() => onPick(picked)}>
+        <button className="btn prim" data-enter disabled={picked.length !== 2} style={{ height: 50, padding: '0 30px', fontSize: 21 }} onClick={() => onPick(picked)}>
           Do bitwy!
         </button>
       </Frame>

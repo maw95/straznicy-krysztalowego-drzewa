@@ -69,7 +69,7 @@ export function StatsDialog({ onClose }: { onClose: () => void }) {
           </div>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <button className="btn prim" style={{ padding: '6px 28px', fontSize: 18 }} onClick={onClose}>
+          <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 18 }} onClick={onClose}>
             Zamknij
           </button>
         </div>

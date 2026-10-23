@@ -143,7 +143,7 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
           </div>
         )}
       </div>
-      <button className="btn prim" style={{ alignSelf: 'center', padding: '6px 26px', fontSize: 18 }} onClick={onClose}>
+      <button className="btn prim" data-enter style={{ alignSelf: 'center', padding: '6px 26px', fontSize: 18 }} onClick={onClose}>
         Zamknij
       </button>
     </Frame>

@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import type { Side } from '../engine/data';
 import type { Tile } from '../engine/types';
 import { SVG_DEFS } from './svgDefs';
@@ -71,8 +71,38 @@ export function Ribbon({ side = 'dawn', children, style }: { side?: Side; childr
  * Modal layer that fades/scales in and plays a closing animation before unmounting.
  * `open` drives visibility; children are kept while the exit animation runs.
  */
+/** Open dialogs, newest last: Enter belongs to the one on top. */
+const openModals: object[] = [];
+
+/**
+ * A dialog over the screen. Enter presses its button marked `data-enter` (confirm / close / next),
+ * or closes it when it has none; typing in a text field and a focused button keep their own Enter.
+ */
 export function Modal({ open, onClose, children, dim = true }: { open: boolean; onClose?: () => void; children: ReactNode; dim?: boolean }) {
   const [shown, setShown] = useState(open);
+  const body = useRef<HTMLDivElement>(null);
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+  useEffect(() => {
+    if (!open) return;
+    const me = {};
+    openModals.push(me);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Enter' || openModals[openModals.length - 1] !== me || e.repeat) return;
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.tagName === 'BUTTON')) return;
+      const button = body.current?.querySelector<HTMLButtonElement>('button[data-enter]:not(:disabled)');
+      if (button) button.click();
+      else if (closeRef.current) closeRef.current();
+      else return;
+      e.preventDefault();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      openModals.splice(openModals.indexOf(me), 1);
+    };
+  }, [open]);
   const [leaving, setLeaving] = useState(false);
   const [content, setContent] = useState<ReactNode>(children);
   useEffect(() => {
@@ -103,7 +133,7 @@ export function Modal({ open, onClose, children, dim = true }: { open: boolean; 
         }
       }}
     >
-      <div className="modal-body" onClick={(e) => e.stopPropagation()}>
+      <div ref={body} className="modal-body" onClick={(e) => e.stopPropagation()}>
         {open ? children : content}
       </div>
     </div>

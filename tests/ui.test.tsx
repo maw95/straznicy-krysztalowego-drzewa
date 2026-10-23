@@ -331,6 +331,21 @@ describe('details under the right mouse button', () => {
   });
 });
 
+describe('Enter in dialogs', () => {
+  it('presses the dialog\'s confirm button, or closes it', async () => {
+    const { container } = startSolo(5);
+    const doc = container.ownerDocument;
+    await act(async () => fireEvent.keyDown(window, { key: 'r' }));
+    expect(doc.querySelector('.overlay')).not.toBeNull();
+    (doc.activeElement as HTMLElement | null)?.blur();
+    await act(async () => {
+      fireEvent.keyDown(window, { key: 'Enter' });
+      vi.advanceTimersByTime(400);
+    });
+    expect(doc.querySelector('.overlay:not(.leaving)')).toBeNull();
+  });
+});
+
 describe('start screen', () => {
   it('without an account asks to log in or play without one, and remembers "Graj bez konta"', async () => {
     localStorage.removeItem('skd-play-offline');

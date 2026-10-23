@@ -67,7 +67,7 @@ export function DraftDialog({ state, faction, covered, onReveal, onPick }: { sta
         <Frame crest style={{ width: 'min(560px, 94vw)' }} innerStyle={{ padding: 26, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, textAlign: 'center' }}>
           <Ribbon side={faction} style={{ width: 'min(420px, 90vw)' }}>Kolej: {FACTION_NAMES[faction]}</Ribbon>
           <div style={{ fontSize: 19 }}>Skarby są tajne. Przekaż urządzenie graczowi tej strony — drugi gracz niech nie patrzy.</div>
-          <button className="btn prim" style={{ height: 50, padding: '0 30px', fontSize: 21 }} onClick={onReveal} autoFocus>
+          <button className="btn prim" data-enter style={{ height: 50, padding: '0 30px', fontSize: 21 }} onClick={onReveal} autoFocus>
             Pokaż skarby
           </button>
         </Frame>
@@ -89,7 +89,7 @@ export function DraftDialog({ state, faction, covered, onReveal, onPick }: { sta
           ))}
         </div>
         {mine.length > 0 && <div style={{ fontSize: 16 }}>Masz już: {mine.map((k) => ITEMS[k].name).join(', ')}</div>}
-        <button className="btn prim" disabled={!chosen} style={{ height: 50, padding: '0 30px', fontSize: 21 }} onClick={() => chosen && onPick(chosen)}>
+        <button className="btn prim" data-enter disabled={!chosen} style={{ height: 50, padding: '0 30px', fontSize: 21 }} onClick={() => chosen && onPick(chosen)}>
           Biorę ten skarb
         </button>
       </Frame>

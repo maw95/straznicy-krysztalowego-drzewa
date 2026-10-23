@@ -89,7 +89,7 @@ export function TesterDialog({ onClose, download }: { onClose: () => void; downl
             <div>Plik został pobrany (zwykle trafia do folderu <b>Pobrane</b>). Wyślij go do mnie — dziękuję! 🌳</div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
               <button className="btn plate parch" style={{ padding: '6px 16px' }} onClick={exportAll}>Pobierz jeszcze raz</button>
-              <button className="btn prim" autoFocus style={{ padding: '6px 26px' }} onClick={onClose}>Zamknij</button>
+              <button className="btn prim" data-enter autoFocus style={{ padding: '6px 26px' }} onClick={onClose}>Zamknij</button>
             </div>
           </>
         ) : (
