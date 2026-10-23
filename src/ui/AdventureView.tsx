@@ -6,6 +6,7 @@ import { mapNeighbors, tileCost } from '../engine/map';
 import type { Action, GameState, Tile } from '../engine/types';
 import { hoverCard } from './hover';
 import { details, useDetailsShown } from './details';
+import { aimedCursor } from './cursors';
 import { StatIcon, StatText } from './markers';
 import { RoundTrack } from './RoundTrack';
 import { asset, Frame, HpBar, Medal, Pips, Portrait, Ribbon, SIDE_RING, tileImage } from './common';
@@ -128,6 +129,15 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     return 'cur-idle';
   }
 
+  /** Over a hex where walking in starts a fight: the sword turned from the hero towards it. */
+  function fightCursor(k: HexKey): { cursor?: string } {
+    if (!hero || hexCursor(k) !== 'cur-melee') return {};
+    const from = pos(state.tiles[hero.pos]);
+    const to = pos(state.tiles[k]);
+    const cursor = aimedCursor('atak', (Math.atan2(to.y - from.y, to.x - from.x) * 180) / Math.PI);
+    return cursor ? { cursor } : {};
+  }
+
   function clickTile(k: HexKey) {
     setSelected(k);
     if (mapPicks) {
@@ -228,7 +238,10 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         {r.hostile ? '⚔' : r.cost}
                       </div>
                     )}
-                    <span className={`hex-clip ${hexCursor(t.key)}`} style={{ position: 'absolute', inset: 0, zIndex: 5, pointerEvents: 'auto' }} />
+                    {(() => {
+                      const turned = fightCursor(t.key);
+                      return <span className={`hex-clip ${turned.cursor ? '' : hexCursor(t.key)}`} style={{ position: 'absolute', inset: 0, zIndex: 5, pointerEvents: 'auto', ...turned }} />;
+                    })()}
                   </button>
                 );
               })}

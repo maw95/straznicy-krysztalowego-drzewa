@@ -27,6 +27,7 @@ import { asset, Frame, HpBar, Medal, Portrait, Ribbon, SIDE_RING } from './commo
 import { ART_SIZE, CANVAS_H, CANVAS_W, cellCenter, hexPoints } from './arenaGeometry';
 import { DamageDrop, DieFace, LastAttack, Marker, StatIcon, StatText, type MarkerName } from './markers';
 import { details } from './details';
+import { aimedCursor, preloadAimedCursors, type AimedCursor } from './cursors';
 import { UnitCard } from './UnitCard';
 
 /** Box a unit token is laid out in, centred on its cell. */
@@ -285,6 +286,19 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     const engaged = livingUnits(b).some((e) => e.side !== active.side && e.pos && distanceBetween(active.pos!, e.pos) === 1);
     return !engaged && !hasLineOfSight(state, active.pos, u.pos) ? 'cur-blocked' : '';
   };
+  useEffect(preloadAimedCursors, []);
+  /** The sword or the arrow over a unit, turned the way the blow or the shot goes; null for an unturned cursor. */
+  const aimedOver = (u: BattleUnit): string | null => {
+    const kind = ({ 'cur-melee': 'atak', 'cur-ranged': 'strzal', 'cur-blocked': 'strzal_zablokowany' } as Record<string, AimedCursor>)[unitCursor(u)];
+    if (!kind || !active?.pos || !u.pos) return null;
+    // The sword strikes from the lit approach cell (or from where the attacker stands); shots fly from the shooter.
+    const from = kind === 'atak' && approach?.targetId === u.id ? approach.cell : active.pos;
+    const a = cellPos(from);
+    const t = cellPos(u.pos);
+    return aimedCursor(kind, (Math.atan2(t.y - a.y, t.x - a.x) * 180) / Math.PI);
+  };
+  /** Walking or flying to a cell: the boot or the wing. */
+  const moveCursor = active && UNITS[active.defId].movement === 'fly' ? 'cur-fly' : 'cur-move';
   const ab = active ? abilityOf(active) : null;
   const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state, active));
   const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab);
@@ -540,7 +554,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                       onClick={() => clickCell(k)}
                       onMouseEnter={() => setHover(k)}
                       onMouseLeave={() => setHover(null)}
-                      className={moves.has(k) || hops.includes(k) ? 'cur-move' : (deployable.has(k) && picked) || teleportTo ? 'cur-pointer' : undefined}
+                      className={moves.has(k) || hops.includes(k) ? moveCursor : (deployable.has(k) && picked) || teleportTo ? 'cur-pointer' : undefined}
                     />
                   );
                 })}
@@ -570,6 +584,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                   return { dx: (t.x - a.x) * 0.35, dy: (t.y - a.y) * 0.35 };
                 })() : null;
                 const approaching = approach?.targetId === u.id && active ? approach.cell : null;
+                const aimed = aimedOver(u);
                 const preview =
                   hover !== u.pos && !approaching
                     ? null
@@ -583,7 +598,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                 return (
                   <button
                     key={u.id}
-                    className={`hexbtn token ${walk[u.id] ? 'walking' : ''} ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''} ${unitCursor(u)}`}
+                    className={`hexbtn token ${walk[u.id] ? 'walking' : ''} ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''} ${aimed ? '' : unitCursor(u)}`}
                     onClick={() => clickUnit(u)}
                     {...details(() => <UnitDetails u={u} />)}
                     onMouseEnter={() => setHover(u.pos)}
@@ -592,7 +607,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                       setHover(null);
                       if (approach?.targetId === u.id) setApproach(null);
                     }}
-                    style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - 38, width: 54, height: 60, zIndex: lunge ? 4 : 2, ...(lunge ? ({ '--lx': `${lunge.dx}px`, '--ly': `${lunge.dy}px` } as React.CSSProperties) : {}) }}
+                    style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - 38, width: 54, height: 60, zIndex: lunge ? 4 : 2, ...(aimed ? { cursor: aimed } : {}), ...(lunge ? ({ '--lx': `${lunge.dx}px`, '--ly': `${lunge.dy}px` } as React.CSSProperties) : {}) }}
                   >
                     <div style={{ position: 'absolute', left: 4, right: 4, bottom: -4, height: 16, borderRadius: '50%', background: 'rgba(6,10,2,0.55)', pointerEvents: 'none' }} />
                     <Portrait

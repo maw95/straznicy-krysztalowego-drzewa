@@ -117,7 +117,7 @@ button { font-family: inherit; }
 
 .btn { cursor: pointer; }
 .btn:hover:not(:disabled) { filter: brightness(1.08); }
-.btn:disabled { cursor: default; opacity: 0.45; filter: grayscale(0.4); }
+.btn:disabled { cursor: inherit; opacity: 0.45; filter: grayscale(0.4); }
 .btn:focus-visible, .hexbtn:focus-visible { outline: 3px solid #9ee4ff; outline-offset: 2px; }
 .prim {
   border: 2px solid var(--gold);
@@ -134,7 +134,7 @@ button { font-family: inherit; }
 .plate.btn.on { box-shadow: 0 0 0 2px #9ee4ff, 0 0 12px 3px rgba(158, 228, 255, 0.6), inset 0 0 16px rgba(120, 80, 20, 0.35); }
 
 .hexbtn { border: 0; padding: 0; margin: 0; background: none; cursor: pointer; }
-.hexbtn:disabled { cursor: default; }
+.hexbtn:disabled { cursor: inherit; }
 .hex-clip { clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
 
 .medal-ring {
@@ -469,18 +469,47 @@ input[type='range'] { accent-color: #c99a3c; }
   animation: battle-curtain 0.9s ease-in both;
 }
 
-/* Themed cursors */
-html, body { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='30' viewBox='0 0 26 30'%3E%3Cpath d='M3 2l18 11-8 2 5 10-4 2-5-10-6 6z' fill='%23E8C46A' stroke='%232A1804' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M5 6l11 7-5 1' fill='none' stroke='%23FFF4C4' stroke-width='1' opacity='0.8'/%3E%3C/svg%3E") 3 2, auto; }
-button:not(:disabled), label, .cur-pointer, .cur-pointer * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='30' viewBox='0 0 26 30'%3E%3Cpath d='M3 2l18 11-8 2 5 10-4 2-5-10-6 6z' fill='%23FFF0B0' stroke='%232A1804' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 3 2, pointer; }
-/* A spot inside something clickable that does nothing itself (a map hex out of reach): the plain gold arrow. */
-.cur-idle { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='30' viewBox='0 0 26 30'%3E%3Cpath d='M3 2l18 11-8 2 5 10-4 2-5-10-6 6z' fill='%23E8C46A' stroke='%232A1804' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M5 6l11 7-5 1' fill='none' stroke='%23FFF4C4' stroke-width='1' opacity='0.8'/%3E%3C/svg%3E") 3 2, auto;; }
-/* Action cursors on the map and the arena: walking (boot), melee attack (sword), ranged attack (arrow), blocked shot;
-   .cur-pointer is the gold active arrow for other things to click there (deploying, treasure targets). */
-.cur-move, .cur-move * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M10 3h10v13c0 1.6 1 2.6 2.6 3.2l4.6 1.8c1.6.7 2.3 2 2.3 3.6V28H7.2l-1.4-4.4 2.6-5.6z' fill='%23E8C46A' stroke='%232A1804' stroke-width='1.8' stroke-linejoin='round'/%3E%3Cpath d='M10 8h10M7.6 24h21' fill='none' stroke='%232A1804' stroke-width='1.4'/%3E%3Cpath d='M12.5 4.5v9' fill='none' stroke='%23FFF4C4' stroke-width='1.2' opacity='0.8'/%3E%3C/svg%3E") 9 28, pointer !important; }
-.cur-melee, .cur-melee * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M4 4l16 16' stroke='%232A1804' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M4 4l16 16' stroke='%23E4E8EE' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpath d='M16 24l8-8' stroke='%232A1804' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M16 24l8-8' stroke='%23D9A540' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M22 22l6 6' stroke='%235A3A1A' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") 4 4, crosshair !important; }
-.cur-ranged, .cur-ranged * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M6 6l20 20' stroke='%232A1804' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M6 6l20 20' stroke='%23C9A15A' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M3 3l11 3-8 8z' fill='%23E4E8EE' stroke='%232A1804' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M20 26l3-3 3 6zM26 20l-3 3 6 3z' fill='%23B8322A' stroke='%232A1804' stroke-width='1.3' stroke-linejoin='round'/%3E%3C/svg%3E") 3 3, crosshair !important; }
-/* A ranged attacker whose shot an obstacle blocks: the arrow crossed out. */
-.cur-blocked, .cur-blocked * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M6 6l20 20' stroke='%232A1804' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M6 6l20 20' stroke='%23C9A15A' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M3 3l11 3-8 8z' fill='%23E4E8EE' stroke='%232A1804' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M20 26l3-3 3 6zM26 20l-3 3 6 3z' fill='%23B8322A' stroke='%232A1804' stroke-width='1.3' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%232A1804' stroke-width='5'/%3E%3Cpath d='M24 8L8 24' stroke='%232A1804' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23E0402E' stroke-width='3'/%3E%3Cpath d='M24 8L8 24' stroke='%23E0402E' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") 16 16, not-allowed !important; }
+/* Themed cursors (docs/grafika/kursory → public/assets/cursors by scripts/assets/cursors.py; the numbers are the
+   click points at 32 px). Each rule lists a plain image first and the sharp double-size one after it, for the
+   browsers that understand image-set. */
+html, body, .cur-idle {
+  cursor: url('/assets/cursors/zwykly_kursor.png') 6 4, auto;
+  cursor: -webkit-image-set(url('/assets/cursors/zwykly_kursor.png') 1x, url('/assets/cursors/zwykly_kursor@2x.png') 2x) 6 4, auto;
+  cursor: image-set(url('/assets/cursors/zwykly_kursor.png') 1x, url('/assets/cursors/zwykly_kursor@2x.png') 2x) 6 4, auto;
+}
+button:not(:disabled), label, select:not(:disabled), input[type='checkbox']:not(:disabled), .cur-pointer, .cur-pointer * {
+  cursor: url('/assets/cursors/zwykly_kursor.png') 6 4, pointer;
+  cursor: -webkit-image-set(url('/assets/cursors/zwykly_kursor.png') 1x, url('/assets/cursors/zwykly_kursor@2x.png') 2x) 6 4, pointer;
+  cursor: image-set(url('/assets/cursors/zwykly_kursor.png') 1x, url('/assets/cursors/zwykly_kursor@2x.png') 2x) 6 4, pointer;
+}
+/* Action cursors on the map and the arena: walking (boot), flying (wing), melee attack (sword), a shot (arrow),
+   a shot an obstacle blocks (crossed-out arrow). In battle the sword and the arrows turn towards the target
+   (src/ui/cursors.ts); these are the unturned ones. */
+.cur-move, .cur-move * {
+  cursor: url('/assets/cursors/ruch_naziemne.png') 16 16, pointer !important;
+  cursor: -webkit-image-set(url('/assets/cursors/ruch_naziemne.png') 1x, url('/assets/cursors/ruch_naziemne@2x.png') 2x) 16 16, pointer !important;
+  cursor: image-set(url('/assets/cursors/ruch_naziemne.png') 1x, url('/assets/cursors/ruch_naziemne@2x.png') 2x) 16 16, pointer !important;
+}
+.cur-fly, .cur-fly * {
+  cursor: url('/assets/cursors/ruch_latajace.png') 16 16, pointer !important;
+  cursor: -webkit-image-set(url('/assets/cursors/ruch_latajace.png') 1x, url('/assets/cursors/ruch_latajace@2x.png') 2x) 16 16, pointer !important;
+  cursor: image-set(url('/assets/cursors/ruch_latajace.png') 1x, url('/assets/cursors/ruch_latajace@2x.png') 2x) 16 16, pointer !important;
+}
+.cur-melee, .cur-melee * {
+  cursor: url('/assets/cursors/atak.png') 6 4, crosshair !important;
+  cursor: -webkit-image-set(url('/assets/cursors/atak.png') 1x, url('/assets/cursors/atak@2x.png') 2x) 6 4, crosshair !important;
+  cursor: image-set(url('/assets/cursors/atak.png') 1x, url('/assets/cursors/atak@2x.png') 2x) 6 4, crosshair !important;
+}
+.cur-ranged, .cur-ranged * {
+  cursor: url('/assets/cursors/strzal.png') 5 2, crosshair !important;
+  cursor: -webkit-image-set(url('/assets/cursors/strzal.png') 1x, url('/assets/cursors/strzal@2x.png') 2x) 5 2, crosshair !important;
+  cursor: image-set(url('/assets/cursors/strzal.png') 1x, url('/assets/cursors/strzal@2x.png') 2x) 5 2, crosshair !important;
+}
+.cur-blocked, .cur-blocked * {
+  cursor: url('/assets/cursors/strzal_zablokowany.png') 16 16, not-allowed !important;
+  cursor: -webkit-image-set(url('/assets/cursors/strzal_zablokowany.png') 1x, url('/assets/cursors/strzal_zablokowany@2x.png') 2x) 16 16, not-allowed !important;
+  cursor: image-set(url('/assets/cursors/strzal_zablokowany.png') 1x, url('/assets/cursors/strzal_zablokowany@2x.png') 2x) 16 16, not-allowed !important;
+}
 
 /* Parchment scrollbars */
 .scroll::-webkit-scrollbar { width: 10px; }
