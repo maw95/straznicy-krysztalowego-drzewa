@@ -11,7 +11,7 @@ BATTLE ?= arena
 RATIO ?= 0.01
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview test test-engine test-ui test-watch typecheck check sim sim-all sim-matrix sim-battles sim-arena sim-tabele report modele clean
+.PHONY: help install dev build preview test test-engine test-ui test-watch typecheck check sim sim-all sim-matrix sim-battles sim-arena sim-tabele report modele silnik clean
 
 help: ## Lista komend
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -79,6 +79,9 @@ modele: ## Odchudzone modele figurek do gry: docs/druk3d/*.glb -> public/modele/
 		npx -y @gltf-transform/cli@4 simplify $$f .tmp/$$n.glb --ratio $(RATIO) --error 0.001 && \
 		npx -y @gltf-transform/cli@4 meshopt .tmp/$$n.glb public/modele/$$n.glb && rm .tmp/$$n.glb; \
 	done
+
+silnik: ## Silnik gry jako pakiet dla serwera, dołączony do wydania na GitHubie, np. make silnik TAG=1.3.0
+	scripts/engine-package.sh $(or $(TAG),$(shell node -p "require('./package.json').version"))
 
 clean: ## Usunięcie dist/ i plików tymczasowych
 	rm -rf dist .tmp
