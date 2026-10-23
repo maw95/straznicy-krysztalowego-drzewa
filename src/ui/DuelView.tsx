@@ -97,7 +97,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
           <HpBar hp={u.hp} max={u.maxHp} />
         </div>
         <div style={{ fontSize: 15, color: 'var(--muted)', textAlign: 'center' }}>
-          <StatIcon stat="Ż" /> {u.hp}/{u.maxHp}
+          <StatIcon stat="Ż" light /> {u.hp}/{u.maxHp}
           {u.abilityUsed && (
             <>
               {' · '}

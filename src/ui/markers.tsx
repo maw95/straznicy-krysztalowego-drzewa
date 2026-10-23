@@ -75,8 +75,9 @@ const STAT_NAMES = { Ż: 'Życie', A: 'Atak', S: 'Szybkość' } as const;
 type StatLetter = keyof typeof STAT_ICONS;
 
 /** The stat symbol used on the cards (heart, swords, bolt), sized to the surrounding text. */
-export function StatIcon({ stat, size = '1.05em' }: { stat: StatLetter; size?: string | number }) {
-  return <img src={asset(`cards/stats/${STAT_ICONS[stat]}.png`)} alt={STAT_NAMES[stat]} title={STAT_NAMES[stat]} style={{ width: size, height: size, objectFit: 'contain', verticalAlign: '-0.18em', margin: '0 0.06em' }} />;
+/** A stat symbol (black, as on the cards); `light` turns it white for dark backgrounds. */
+export function StatIcon({ stat, size = '1.05em', light = false }: { stat: StatLetter; size?: string | number; light?: boolean }) {
+  return <img src={asset(`cards/stats/${STAT_ICONS[stat]}.png`)} alt={STAT_NAMES[stat]} title={STAT_NAMES[stat]} style={{ width: size, height: size, objectFit: 'contain', verticalAlign: '-0.18em', margin: '0 0.06em', filter: light ? 'brightness(0) invert(1)' : undefined }} />;
 }
 
 /** Text with "+1 A", "−2 S", "Ż 9"… written with the stat symbols instead of the letters. */

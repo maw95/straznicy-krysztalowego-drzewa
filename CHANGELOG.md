@@ -13,6 +13,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Dokumentacja: `docs/INFRASTRUKTURA.md` — gdzie działa gra i serwer, jak wydawać wersje i wdrażać zmiany (`112849c`).
 - Punktacja i rozpoznawanie poziomu przeniesione do silnika gry, żeby serwer liczył ranking tak samo jak gra (`125e876`).
 - Menu „najpierw online”: na starcie „Zaloguj się / Nowe konto / Graj bez konta” (bez konta — tylko gra na tym komputerze; wybór zapamiętany), a po zalogowaniu menu z „Nowy pokój”, kodem pokoju, „Gra na tym komputerze”, rankingiem top 10 (puchary dla miejsc 1–3, własne miejsce pod tabelą), listą graczy online z „Zaproś” i ogólnym czatem. Zaproszenia wyskakują w rogu ekranu (z dźwiękiem i odliczaniem), a gry przeciw komputerowi skończone po zalogowaniu trafiają do rankingu.
+- Bitwa: ikony statystyk w listach jednostek po bokach areny (i pod kartami w pojedynku) są białe, czytelne na ciemnym tle, i odsunięte od paska Życia.
 
 ## 1.3.0 — 2026-10-22
 

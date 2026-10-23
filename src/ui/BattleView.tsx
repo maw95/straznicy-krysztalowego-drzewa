@@ -416,8 +416,8 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: 16, color: '#F7EDD2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{UNITS[u.defId].name}</div>
                 <HpBar hp={u.hp} max={u.maxHp} />
-                <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 2 }}>
-                  <StatIcon stat="Ż" /> {u.hp}/{u.maxHp} · <StatIcon stat="A" /> {UNITS[u.defId].attack + u.status.battleAttackBonus} · <StatIcon stat="S" /> {unitSpeed(u)}
+                <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 6 }}>
+                  <StatIcon stat="Ż" light /> {u.hp}/{u.maxHp} · <StatIcon stat="A" light /> {UNITS[u.defId].attack + u.status.battleAttackBonus} · <StatIcon stat="S" light /> {unitSpeed(u)}
                   {u.abilityUsed && (
                     <>
                       {' · '}
