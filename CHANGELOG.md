@@ -21,6 +21,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Bitwa: atak jednym kliknięciem — jednostka walcząca wręcz klika wroga w zasięgu ruchu, podchodzi i atakuje. Stronę wybiera się kursorem (część wroga, w którą celuje mysz, jak w Heroes III); pole, z którego nastąpi atak, świeci się na złoto, a nad wrogiem widać obrażenia. Na telefonie pierwsze dotknięcie pokazuje pole, drugie atakuje.
 - Kursory z nowych grafik: zwykły, but (ruch), skrzydło (ruch jednostki latającej w bitwie), miecz, strzała i przekreślona strzała; miecz i strzały obracają się w stronę ataku — miecz od pola, z którego jednostka uderzy, strzały od strzelca do celu (na mapie miecz od bohatera do pola z walką).
 - Prawy przycisk nigdy nie otwiera menu przeglądarki (należy do gry); w polach tekstowych kopiowanie i wklejanie działa skrótami Ctrl+C / Ctrl+V.
+- Arena: równa złota siatka pól rysowana przez grę na planszy — na malowanych arenach sąsiednie heksy miały osobne obwódki, które nie zawsze leżały na sobie (podwójne krawędzie, jasne pola startowe nachodzące na sąsiadów).
 
 ## 1.3.0 — 2026-10-22
 

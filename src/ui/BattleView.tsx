@@ -537,6 +537,16 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
               {/* The painted board of the half of the map where the fight broke out. */}
               <img src={asset(`arena/${b.arena}.jpg`)} alt="" style={{ position: 'absolute', left: 0, top: 0, width: ART_SIZE.w, height: ART_SIZE.h }} />
               <svg width={CANVAS_W} height={CANVAS_H} style={{ position: 'absolute', left: 0, top: 0 }}>
+                {/* The painted boards draw each hex with its own gold rim, and neighbouring rims do not always lie on
+                    each other (doubled, overlapping edges). One even gold grid on top covers them. */}
+                <g pointerEvents="none">
+                  {arenaCells().map((k) => (
+                    <polygon key={`gd${k}`} points={hexPoints(k)} fill="none" stroke="rgba(52,34,8,0.85)" strokeWidth="3.4" strokeLinejoin="round" />
+                  ))}
+                  {arenaCells().map((k) => (
+                    <polygon key={`gl${k}`} points={hexPoints(k)} fill="none" stroke="#E4C16E" strokeWidth="1.6" strokeLinejoin="round" />
+                  ))}
+                </g>
                 {arenaCells().map((k) => {
                   const teleportTo = targeting?.kind === 'teleport' && Boolean(targeting.unitId) && !unitAt(b, k) && !b.obstacles.includes(k);
                   let fill = 'transparent';
