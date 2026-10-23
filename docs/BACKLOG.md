@@ -80,7 +80,7 @@ obracają się w kierunku ruchu.
 - **Ruch:** płynny obrót w stronę celu i przesunięcie. Bez animacji szkieletowych.
 - **Modele:** autor dostarcza po jednym GLB na jednostkę (15 sztuk), z kolorami i teksturami.
   Konwencja: podstawka w punkcie (0,0,0), oś Y w górę, przód figurki wzdłuż +Z, wspólna skala.
-- **Odchudzanie:** `make modele` zamienia pełne modele z `docs/druk3d/*.glb` na wersje do gry
+- **Odchudzanie:** `make modele` zamienia pełne modele z `docs/druk3d/**/*.glb` (np. `figurki/pegaz/pegaz.glb`) na wersje do gry
   w `public/modele/` (uproszczenie do 1% trójkątów + kompresja meshopt). Niedźwiedź:
   120 MB / 5 mln trójkątów → 525 KB / 39 tys. trójkątów, bez widocznej różnicy w rozmiarze
   figurki na planszy. Pełne modele do druku nie trafiają do gita (limit 100 MB na plik w GitHubie).

@@ -72,9 +72,9 @@ sim-arena: node_modules ## Arena: każdy skład Przymierza przeciw każdemu skł
 report: node_modules ## Odtworzenie zgłoszeń błędów z bug-reports/ (albo FILE=ścieżka.json)
 	npx tsx scripts/report.ts $(FILE)
 
-modele: ## Odchudzone modele figurek do gry: docs/druk3d/*.glb -> public/modele/*.glb, np. make modele RATIO=0.01
-	@mkdir -p public/modele
-	@for f in docs/druk3d/*.glb; do \
+modele: ## Odchudzone modele figurek do gry: docs/druk3d/**/*.glb -> public/modele/*.glb, np. make modele RATIO=0.01
+	@mkdir -p public/modele .tmp
+	@for f in $$(find docs/druk3d -name '*.glb'); do \
 		n=$$(basename $$f .glb); \
 		npx -y @gltf-transform/cli@4 simplify $$f .tmp/$$n.glb --ratio $(RATIO) --error 0.001 && \
 		npx -y @gltf-transform/cli@4 meshopt .tmp/$$n.glb public/modele/$$n.glb && rm .tmp/$$n.glb; \
