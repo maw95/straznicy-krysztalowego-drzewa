@@ -6,7 +6,7 @@
 
 import { useEffect, useRef } from 'react';
 import type { Group, Mesh, Object3D, OrthographicCamera, Scene, WebGLRenderer } from 'three';
-import { hasFigure, loadFigure, threeLib } from './figures';
+import { hasFigure, lightRoom, loadFigure, threeLib } from './figures';
 
 export interface Piece {
   key: string;
@@ -82,10 +82,16 @@ class Stage {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer = renderer;
     const scene = new THREE.Scene();
-    scene.add(new THREE.HemisphereLight(0xfff4dd, 0x4a5a40, 2.4));
-    const sun = new THREE.DirectionalLight(0xffffff, 2.8);
+    scene.environment = await lightRoom(renderer);
+    scene.environmentIntensity = 0.3;
+    scene.add(new THREE.HemisphereLight(0xfff4dd, 0x4a5a40, 1.5));
+    const sun = new THREE.DirectionalLight(0xffffff, 2.2);
     sun.position.set(-300, 800, 600);
     scene.add(sun);
+    // A light from behind draws a bright edge round each figure, so dark ones show on the dark Horde arena too.
+    const rim = new THREE.DirectionalLight(0xffe2b0, 1.8);
+    rim.position.set(200, 500, -900);
+    scene.add(rim);
     this.scene = scene;
     // An orthographic camera tilted by TILT: a point on the board at screen (x, y) is the world point
     // (x, 0, y / sin TILT), and the camera sits on the line through the origin, so screen and world agree.

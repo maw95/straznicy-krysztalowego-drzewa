@@ -127,10 +127,19 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   };
   const figurePieces: Piece[] = Object.values(state.heroes)
     .filter((h) => h.alive && !h.entering && figureFor(h.id))
-    .map((h) => {
+    .map((h): Piece => {
       const { x, y, size } = heroSpot(h);
       return { key: h.id, unitId: h.id, x, y, size, moveMs: 300, ring: hero?.id === h.id ? '#9EE4FF' : SIDE_RING[h.faction] };
-    });
+    })
+    // Guardians stand by the crystals they keep, on revealed hexes, the crystal glowing in front of them.
+    .concat(
+      Object.values(state.crystals)
+        .filter((c) => c.guardian && figureFor(c.guardian) && state.tiles[c.at]?.revealed)
+        .map((c): Piece => {
+          const p = pos(state.tiles[c.at]);
+          return { key: `guard-${c.id}`, unitId: c.guardian!, x: p.x + W / 2, y: p.y + H * 0.6, size: W * 0.58, ring: SIDE_RING.neutral };
+        }),
+    );
   const sel = selected ? state.tiles[selected] : hero ? state.tiles[hero.pos] : null;
   const faction = hero?.faction ?? 'dawn';
   const inventory = viewer ? state.factions[viewer].inventory.map((id) => state.items[id]) : [];
@@ -244,8 +253,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     )}
                     {crystal && (
                       <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', display: 'flex', alignItems: 'center' }}>
-                        {crystal.guardian && <Portrait unitId={crystal.guardian} size={W * 0.5} ring={SIDE_RING.neutral} title={UNITS[crystal.guardian].name} />}
-                        <div className="twinkle" style={{ marginLeft: crystal.guardian ? -W * 0.12 : 0 }} title="Kryształ">
+                        {crystal.guardian && !figureFor(crystal.guardian) && <Portrait unitId={crystal.guardian} size={W * 0.5} ring={SIDE_RING.neutral} title={UNITS[crystal.guardian].name} />}
+                        <div className="twinkle" style={{ marginLeft: crystal.guardian && !figureFor(crystal.guardian) ? -W * 0.12 : 0 }} title="Kryształ">
                           <Medal fill="mBlue" glyph="gCrystal" size={W * 0.28} />
                         </div>
                       </div>

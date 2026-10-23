@@ -51,20 +51,25 @@ def portraits():
             ('goblinShaman', (0, 520, 496, 860)), ('caveSpider', (496, 520, 952, 860)), ('shadowBat', (952, 520, 1448, 860)),
         ],
         'portrety_straznicy_krysztalu.png': [
-            ('cyclops', (40, 30, 700, 500)), ('griffin', (700, 30, 1400, 500)), ('hydra', (330, 540, 1080, 990)),
+            ('cyclops', (40, 30, 700, 500)), ('griffin', (700, 30, 1400, 500)),
         ],
     }
+    # Units painted later as one picture each (no sheet, no transparency): the file and the card's crop of it.
+    singles = {'hydra': ('hydra.png', (0, 40, 1448, 870))}
+    arts = []
     for sheet_name, cells in sheets.items():
         sheet = Image.open(os.path.join(SRC, 'portrety', sheet_name)).convert('RGBA')
-        for unit, box in cells:
-            art = art_rect(sheet, box)
-            save(art, 'art', f'{unit}.jpg')
-            # Square portrait for tokens: centred, a little above the middle.
-            w, h = art.size
-            s = min(w, h)
-            x = (w - s) // 2
-            y = max(0, int((h - s) * 0.35))
-            save(art.crop((x, y, x + s, y + s)).resize((256, 256), Image.LANCZOS), 'portraits', f'{unit}.jpg')
+        arts += [(unit, art_rect(sheet, box)) for unit, box in cells]
+    for unit, (file, box) in singles.items():
+        arts.append((unit, Image.open(os.path.join(SRC, 'portrety', file)).convert('RGBA').crop(box)))
+    for unit, art in arts:
+        save(art, 'art', f'{unit}.jpg')
+        # Square portrait for tokens: centred, a little above the middle.
+        w, h = art.size
+        s = min(w, h)
+        x = (w - s) // 2
+        y = max(0, int((h - s) * 0.35))
+        save(art.crop((x, y, x + s, y + s)).resize((256, 256), Image.LANCZOS), 'portraits', f'{unit}.jpg')
 
 
 def disc(im, cx, cy, r, feather=1.5):

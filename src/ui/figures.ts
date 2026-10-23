@@ -6,7 +6,7 @@ import type { Object3D } from 'three';
 
 const BASE = import.meta.env?.BASE_URL ?? '/';
 
-/** Units that have a model so far; the others keep their portrait tokens. */
+/** Units that have a model (all 15 now); a unit missing here would keep its portrait token. */
 export const FIGURES = new Set([
   'goldDragon',
   'unicornKing',
@@ -15,31 +15,54 @@ export const FIGURES = new Set([
   'nymph',
   'pegasus',
   'blackDragon',
+  'werewolfLord',
   'ironFistOgre',
   'goblinShaman',
   'caveSpider',
   'shadowBat',
+  'cyclops',
+  'griffin',
+  'hydra',
 ]);
 
 export const hasFigure = (unitId: string) => FIGURES.has(unitId);
 
 type Three = typeof import('three');
-let lib: Promise<{ THREE: Three; load: (url: string) => Promise<Object3D> }> | null = null;
+let lib: Promise<{ THREE: Three; RoomEnvironment: typeof import('three/examples/jsm/environments/RoomEnvironment.js').RoomEnvironment; load: (url: string) => Promise<Object3D> }> | null = null;
 
 /** three.js, the glTF loader and the meshopt decoder, loaded on first use. */
 export function threeLib() {
   lib ??= (async () => {
-    const [THREE, { GLTFLoader }, { MeshoptDecoder }] = await Promise.all([
+    const [THREE, { GLTFLoader }, { MeshoptDecoder }, { RoomEnvironment }] = await Promise.all([
       import('three'),
       import('three/examples/jsm/loaders/GLTFLoader.js'),
       import('three/examples/jsm/libs/meshopt_decoder.module.js'),
+      import('three/examples/jsm/environments/RoomEnvironment.js'),
     ]);
     const loader = new GLTFLoader();
     loader.setMeshoptDecoder(MeshoptDecoder);
-    return { THREE, load: async (url: string) => (await loader.loadAsync(url)).scene };
+    return { THREE, RoomEnvironment, load: async (url: string) => (await loader.loadAsync(url)).scene };
   })();
   return lib;
 }
+
+/**
+ * Something for the figures' metal and gloss to reflect (a soft neutral room): without it the painted
+ * metal of the models (armour, gold, dark scales) renders almost black.
+ */
+export async function lightRoom(renderer: import('three').WebGLRenderer) {
+  let room = rooms.get(renderer);
+  if (!room) {
+    const { THREE, RoomEnvironment } = await threeLib();
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    room = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    pmrem.dispose();
+    rooms.set(renderer, room);
+  }
+  return room;
+}
+/** One room per renderer: it is costly to make, and every picture of that renderer can share it. */
+const rooms = new WeakMap<import('three').WebGLRenderer, import('three').Texture>();
 
 const models = new Map<string, Promise<Object3D>>();
 /** Height of each loaded figure, in base diameters (a dragon with raised wings is tall, a spider low). */

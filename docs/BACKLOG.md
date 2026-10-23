@@ -1,7 +1,7 @@
 # Backlog
 
 Uzgodnione pomysły do wdrożenia. Tryb online z menu „najpierw online” i rankingiem oraz szczegóły pod prawym
-przyciskiem są zrobione; figurki 3D też (czekają na brakujące modele).
+przyciskiem są zrobione; figurki 3D też. Dalej: porządki w kodzie (punkt 5).
 
 ## 1. Tryb online
 
@@ -72,7 +72,7 @@ to przegrana. Kolejność: punkty, procent zwycięstw, kto wcześniej zdobył pu
 - **Miejsca 1–3 wyróżnione:** tekst nieco większy i pogrubiony, w kolorze złotym / srebrnym / brązowym,
   przy nicku puchar w tym samym kolorze.
 
-## 2. Figurki 3D zamiast portretów — zrobione (bez brakujących modeli)
+## 2. Figurki 3D zamiast portretów — zrobione
 
 **Cel:** na mapie świata i na arenie stoją trójwymiarowe figurki, które realistycznie
 obracają się w kierunku ruchu; obracająca się figurka bohatera także obok jego karty w menu.
@@ -97,8 +97,6 @@ obracają się w kierunku ruchu; obracająca się figurka bohatera także obok j
 
 ### Do zrobienia
 
-- **Brakujące modele:** Władca Wilkołaków (`horda/wilkolak/wilkolak.glb`) i strażnicy (`straznicy/cyklop`,
-  `straznicy/gryf`, `straznicy/hydra`). Po dodaniu pliku: `make modele` i dopisanie jednostki w `src/ui/figures.ts`.
 - **Goblin Szaman** waży 6,4 MB: jego model ma osobne wierzchołki dla prawie każdego trójkąta, więc upraszczanie
   stopuje na ok. 170 tys. trójkątów. Lepiej byłoby wyeksportować go ze scalonymi wierzchołkami.
 - Kąt kamery i wielkość figurek — do ewentualnej korekty po obejrzeniu na żywo.
@@ -179,3 +177,13 @@ jednostka stoi obok).
   powinien być widoczny przed kliknięciem.
 - Na telefonie „celowanie w część heksa” jest niewygodne — tam lepiej pierwsze dotknięcie pokazuje pole
   ataku, drugie potwierdza.
+
+## 5. Analiza i uporządkowanie kodu
+
+**Cel:** po wielu iteracjach przejrzeć kod gry i serwera i posprzątać to, co utrudnia czytanie albo spowalnia
+grę: zbyt długie pliki i komponenty (np. `App.tsx`, `BattleView.tsx`), powtórzony kod, martwe gałęzie,
+niepotrzebne przeliczenia przy każdym renderze, rozjechane nazewnictwo i komentarze. Bez zmian w zasadach
+i wyglądzie — testy mają przechodzić bez zmian.
+
+- Najpierw analiza z listą konkretnych problemów i propozycją kolejności, do akceptacji.
+- Potem porządki małymi krokami, każdy osobnym commitem, z testami po każdym.
