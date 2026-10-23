@@ -3,6 +3,8 @@ import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, MAP_VARIANTS, UNITS, typ
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type Controller, type Mode, type RulesConfig, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
+import { FigurePreview } from './FigurePreview';
+import { hasFigure } from './figures';
 import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
@@ -331,10 +333,11 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           </div>
         </Frame>
         <Frame className="side" style={{ width: 420 }} innerStyle={{ padding: 16, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Ribbon side={UNITS[preview].side} style={{ width: '100%' }}>Karta bohatera</Ribbon>
-          {/* The card sits in the middle of the space left under the ribbon. */}
-          <div style={{ flex: 1, minHeight: 0, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px 0' }}>
-            <UnitCard unitId={preview} width={340} />
+          <Ribbon side={UNITS[preview].side} style={{ width: '100%' }}>{UNITS[preview].name}</Ribbon>
+          {/* The turning figure above the card, both in the middle of the space left under the ribbon. */}
+          <div style={{ flex: 1, minHeight: 0, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '6px 0' }}>
+            <FigurePreview unitId={preview} size={230} />
+            <UnitCard unitId={preview} width={hasFigure(preview) ? 280 : 340} />
           </div>
         </Frame>
       </div>

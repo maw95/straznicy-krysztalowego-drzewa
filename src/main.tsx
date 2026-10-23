@@ -2,6 +2,7 @@ import { Component, StrictMode, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './ui/App';
 import { CardGallery } from './ui/CardGallery';
+import { FigureGallery } from './ui/FigureGallery';
 import { SvgDefs } from './ui/common';
 import './ui/styles.css';
 
@@ -29,7 +30,9 @@ window.addEventListener('contextmenu', (e) => e.preventDefault());
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
-      {new URLSearchParams(window.location.search).has('cards') ? (
+      {new URLSearchParams(window.location.search).has('figury') ? (
+        <FigureGallery />
+      ) : new URLSearchParams(window.location.search).has('cards') ? (
         <>
           <SvgDefs />
           <CardGallery />

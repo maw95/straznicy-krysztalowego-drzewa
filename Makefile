@@ -8,7 +8,6 @@ SIZE ?= short
 MODE ?= coop
 OPTIONS ?= full
 BATTLE ?= arena
-RATIO ?= 0.01
 
 .DEFAULT_GOAL := help
 .PHONY: help install dev build preview test test-engine test-ui test-watch typecheck check sim sim-all sim-matrix sim-battles sim-arena sim-tabele report zgloszenia modele silnik clean
@@ -75,12 +74,25 @@ report: node_modules ## Odtworzenie zgłoszeń błędów z bug-reports/ (albo FI
 zgloszenia: node_modules ## Nowe zgłoszenia błędów i opinie z serwera gry: pobranie, odtworzenie, podsumowanie (ACK=0: bez oznaczania)
 	npx tsx scripts/zgloszenia.ts $(if $(filter 0,$(ACK)),--no-ack,)
 
-modele: ## Odchudzone modele figurek do gry: docs/druk3d/**/*.glb -> public/modele/*.glb, np. make modele RATIO=0.01
-	@mkdir -p public/modele .tmp
-	@for f in $$(find docs/druk3d -name '*.glb'); do \
-		n=$$(basename $$f .glb); \
-		npx -y @gltf-transform/cli@4 simplify $$f .tmp/$$n.glb --ratio $(RATIO) --error 0.001 && \
-		npx -y @gltf-transform/cli@4 meshopt .tmp/$$n.glb public/modele/$$n.glb && rm .tmp/$$n.glb; \
+# Figure models for the game: source file (docs/druk3d/figurki/z_teksturami/<faction>/<name>/<name>.glb) → unit id.
+FIGURES := przymierze/zloty_smok:goldDragon przymierze/jednorozec:unicornKing przymierze/niedzwiedz:ancientBear \
+	przymierze/elf_druid:elfDruid przymierze/nimfa:nymph przymierze/pegaz:pegasus \
+	horda/czarny_smok:blackDragon horda/wilkolak:werewolfLord horda/ogr:ironFistOgre \
+	horda/goblin:goblinShaman horda/pajak:caveSpider horda/nietoperz:shadowBat \
+	straznicy/cyklop:cyclops straznicy/gryf:griffin straznicy/hydra:hydra
+RATIO ?= 0.02
+
+modele: ## Figurki 3D do gry: docs/druk3d/figurki/z_teksturami/** -> public/modele/<jednostka>.glb (uproszczone, tekstury 1024 px WebP; model, który wyjdzie ponad 2,5 MB, upraszczany jest z większą tolerancją), np. make modele RATIO=0.02
+	@mkdir -p public/modele
+	@for f in $(FIGURES); do \
+		src=docs/druk3d/figurki/z_teksturami/$${f%%:*}/$$(basename $${f%%:*}).glb; id=$${f##*:}; \
+		if [ -f $$src ]; then \
+			for err in 0.01 0.05; do \
+				npx -y @gltf-transform/cli@4 optimize $$src public/modele/$$id.glb --simplify-ratio $(RATIO) --simplify-error $$err \
+					--texture-size 1024 --texture-compress webp --compress meshopt >/dev/null; \
+				[ $$(stat -c %s public/modele/$$id.glb) -lt 2500000 ] && break; \
+			done; echo "$$id: $$(du -h public/modele/$$id.glb | cut -f1)"; \
+		else echo "$$id: brak modelu ($$src)"; fi; \
 	done
 
 silnik: ## Silnik gry jako pakiet dla serwera, dołączony do wydania na GitHubie, np. make silnik TAG=1.3.0
