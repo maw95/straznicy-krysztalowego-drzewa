@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import type { ItemKind } from '../engine/data';
+import { details } from './details';
 import { TreasureCard } from './TreasureCard';
 import { UnitCard } from './UnitCard';
 
@@ -21,9 +22,18 @@ function set(t: HoverTarget | null) {
   listeners.forEach((fn) => fn());
 }
 
-/** Props to spread on an element that should preview a unit (`unitId`) or treasure (`item:<kind>`). */
+/** The card of a unit (`unitId`) or a treasure (`item:<kind>`). */
+export function CardFor({ id, width }: { id: string; width: number }) {
+  return id.startsWith('item:') ? <TreasureCard kind={id.slice(5) as ItemKind} width={width} /> : <UnitCard unitId={id} width={width} />;
+}
+
+/**
+ * Props to spread on an element that should preview a unit (`unitId`) or treasure (`item:<kind>`):
+ * the card on hover, and the card under the right mouse button (details.tsx).
+ */
 export function hoverCard(id: string) {
   return {
+    ...details(() => <CardFor id={id} width={280} />),
     onMouseEnter: (e: React.MouseEvent) => canHover() && set({ id, x: e.clientX, y: e.clientY }),
     onMouseMove: (e: React.MouseEvent) => current?.id === id && set({ id, x: e.clientX, y: e.clientY }),
     onMouseLeave: () => current?.id === id && set(null),
@@ -56,7 +66,7 @@ export function HoverCardLayer() {
   const top = Math.max(8, Math.min(window.innerHeight - h - 8, current.y - h / 2));
   return (
     <div style={{ position: 'fixed', left, top, zIndex: 90, pointerEvents: 'none', animation: 'fade-in 0.15s ease-out both' }}>
-      {current.id.startsWith('item:') ? <TreasureCard kind={current.id.slice(5) as ItemKind} width={W} /> : <UnitCard unitId={current.id} width={W} />}
+      <CardFor id={current.id} width={W} />
     </div>
   );
 }

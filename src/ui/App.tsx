@@ -20,6 +20,7 @@ import { recordGame } from './journal';
 import { RulesDialog } from './RulesDialog';
 import { BattleSummary } from './BattleSummary';
 import { HoverCardLayer } from './hover';
+import { DetailsLayer } from './details';
 import { Tutorial } from './Tutorial';
 import { Intro, introSeen } from './Intro';
 import { TitleScreen, titlePending } from './TitleScreen';
@@ -480,6 +481,7 @@ export function App() {
         {showIntro && !showTitle && <Intro onClose={() => setShowIntro(false)} />}
         {showTitle && <TitleScreen onStart={() => setShowTitle(false)} />}
         <HoverCardLayer />
+        <DetailsLayer />
         {error && (
           <div className="plate parch" role="alert" style={{ position: 'fixed', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 80, fontWeight: 700, color: '#8A1A1A' }} onClick={() => setError(null)}>
             {error}
@@ -691,6 +693,7 @@ export function App() {
       </Modal>
 
       <HoverCardLayer />
+      <DetailsLayer />
       <Tutorial state={game} active={humanTurn && !needsHandoff && !digest && !summary && !confirm} />
 
       <Modal open={showLog} onClose={() => setShowLog(false)}>

@@ -1,7 +1,7 @@
 # Backlog
 
-Uzgodnione pomysły do wdrożenia. Tryb online z menu „najpierw online” i rankingiem jest zrobiony
-(trafi do graczy z wydaniem 1.4.0); dalej szczegóły pod prawym przyciskiem i figurki 3D.
+Uzgodnione pomysły do wdrożenia. Tryb online z menu „najpierw online” i rankingiem oraz szczegóły pod prawym
+przyciskiem są zrobione (trafią do graczy z wydaniem 1.4.0); dalej figurki 3D.
 
 ## 1. Tryb online
 
@@ -97,7 +97,7 @@ obracają się w kierunku ruchu.
 
 - Kąt kamery i wielkość figurki względem pola — do dobrania na żywo, gdy będą 2–3 modele.
 
-## 3. Szczegóły pod prawym przyciskiem (jak w Heroesach)
+## 3. Szczegóły pod prawym przyciskiem (jak w Heroesach) — zrobione
 
 **Cel:** przytrzymanie prawego przycisku na czymś w grze pokazuje okienko ze szczegółami; puszczenie
 przycisku je chowa.

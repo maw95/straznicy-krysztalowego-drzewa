@@ -11,6 +11,14 @@ import { levelSettings } from '../src/engine/types';
 
 beforeAll(() => {
   (globalThis as any).ResizeObserver = class { observe() {} disconnect() {} unobserve() {} };
+  // jsdom has no PointerEvent: a MouseEvent (it carries the button) with the pointer type is enough here.
+  (globalThis as any).PointerEvent ??= class extends MouseEvent {
+    pointerType: string;
+    constructor(type: string, init: PointerEventInit = {}) {
+      super(type, init);
+      this.pointerType = init.pointerType ?? 'mouse';
+    }
+  };
 });
 beforeEach(() => {
   localStorage.clear();
@@ -287,6 +295,39 @@ describe('intro', () => {
     const again = [...doc.querySelectorAll('button')].find((b) => b.textContent === 'Wprowadzenie')!;
     await act(async () => fireEvent.click(again));
     expect(title()).toBe('Kryształowe Drzewo');
+  });
+});
+
+describe('details under the right mouse button', () => {
+  const details = (doc: Document) => doc.querySelector('[aria-label="Szczegóły"]');
+
+  it('shows a hex while the button is held, and keeps it after a short click until the next one', async () => {
+    const { container } = startSolo(5);
+    const doc = container.ownerDocument;
+    const hex = container.querySelector('button.hexbtn span.hex-clip:last-child') as HTMLElement;
+
+    await act(async () => fireEvent.pointerDown(hex, { button: 2, pointerType: 'mouse' }));
+    expect(details(doc)?.textContent).toMatch(/Koszt ruchu|Nieodkryte pole|Nieprzechodnie/);
+    await act(async () => {
+      vi.advanceTimersByTime(500);
+      fireEvent.pointerUp(window, { button: 2, pointerType: 'mouse' });
+    });
+    expect(details(doc)).toBeNull();
+
+    await act(async () => fireEvent.pointerDown(hex, { button: 2, pointerType: 'mouse' }));
+    await act(async () => fireEvent.pointerUp(window, { button: 2, pointerType: 'mouse' }));
+    expect(details(doc)).not.toBeNull();
+    await act(async () => fireEvent.pointerDown(doc.body, { button: 0, pointerType: 'mouse' }));
+    expect(details(doc)).toBeNull();
+  });
+
+  it('shows the unit card for a portrait, and keeps the browser menu away from it', async () => {
+    const { container } = startSolo(5);
+    const doc = container.ownerDocument;
+    const portrait = container.querySelector('.side-adv .medal-ring') as HTMLElement;
+    await act(async () => fireEvent.pointerDown(portrait, { button: 2, pointerType: 'mouse' }));
+    expect(details(doc)?.textContent).toContain('Złoty Smok');
+    expect(fireEvent.contextMenu(portrait)).toBe(false);
   });
 });
 

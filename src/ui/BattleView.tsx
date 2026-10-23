@@ -26,6 +26,8 @@ import { hoverCard } from './hover';
 import { asset, Frame, HpBar, Medal, Portrait, Ribbon, SIDE_RING } from './common';
 import { ART_SIZE, CANVAS_H, CANVAS_W, cellCenter, hexPoints } from './arenaGeometry';
 import { DamageDrop, DieFace, LastAttack, Marker, StatIcon, StatText, type MarkerName } from './markers';
+import { details } from './details';
+import { UnitCard } from './UnitCard';
 
 /** Box a unit token is laid out in, centred on its cell. */
 const W = 66;
@@ -411,7 +413,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
         {units.map((u) => {
           const isActive = active?.id === u.id;
           return (
-            <button key={u.id} className="btn" onClick={() => clickUnit(u)} style={{ display: 'flex', gap: 10, alignItems: 'center', background: 'none', border: 0, padding: 0, textAlign: 'left', color: 'inherit', opacity: u.alive ? 1 : 0.5 }}>
+            <button key={u.id} className="btn" onClick={() => clickUnit(u)} {...details(() => <UnitDetails u={u} />)} style={{ display: 'flex', gap: 10, alignItems: 'center', background: 'none', border: 0, padding: 0, textAlign: 'left', color: 'inherit', opacity: u.alive ? 1 : 0.5 }}>
               <Portrait unitId={u.defId} size={50} ring={SIDE_RING[s]} dim={!u.alive} glow={isActive ? '0 0 0 2.5px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: 16, color: '#F7EDD2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{UNITS[u.defId].name}</div>
@@ -502,6 +504,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                     key={u.id}
                     className={`hexbtn token ${walk[u.id] ? 'walking' : ''} ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''} ${isTarget ? 'attackable' : ''}`}
                     onClick={() => clickUnit(u)}
+                    {...details(() => <UnitDetails u={u} />)}
                     onMouseEnter={() => setHover(u.pos)}
                     onMouseLeave={() => setHover(null)}
                     style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - 38, width: 54, height: 60, zIndex: lunge ? 4 : 2, cursor: 'pointer', ...(lunge ? ({ '--lx': `${lunge.dx}px`, '--ly': `${lunge.dy}px` } as React.CSSProperties) : {}) }}
@@ -807,6 +810,29 @@ function StatusBadge({ st, size = 22 }: { st: StatusInfo; size?: number }) {
         </span>
       )}
     </span>
+  );
+}
+
+/** Right button on a unit in battle: its card with the current values, Życie and every effect on it. */
+function UnitDetails({ u }: { u: BattleUnit }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: 280 }}>
+      <UnitCard unitId={u.defId} width={280} hp={u.hp} attack={UNITS[u.defId].attack + u.status.battleAttackBonus} speed={unitSpeed(u)} />
+      <div className="plate slate" style={{ padding: '8px 12px', borderRadius: 10, boxShadow: '0 0 0 2px #B88A35, 0 8px 18px rgba(0,0,0,0.6)' }}>
+        <HpBar hp={u.hp} max={u.maxHp} />
+        <div style={{ fontSize: 15, color: '#F7EDD2', marginTop: 6 }}>
+          <StatIcon stat="Ż" light /> {u.hp}/{u.maxHp}
+          {u.abilityUsed && (
+            <>
+              {' · '}
+              <Marker name="ability_used" size={18} title="Zdolność zużyta" /> zdolność zużyta
+            </>
+          )}
+        </div>
+        {statusList(u).length === 0 && !u.abilityUsed && <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 4 }}>Bez dodatkowych efektów.</div>}
+        <StatusChips u={u} />
+      </div>
+    </div>
   );
 }
 

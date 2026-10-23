@@ -5,7 +5,8 @@ import type { HexKey } from '../engine/hex';
 import { mapNeighbors, tileCost } from '../engine/map';
 import type { Action, GameState, Tile } from '../engine/types';
 import { hoverCard } from './hover';
-import { StatText } from './markers';
+import { details, useDetailsShown } from './details';
+import { StatIcon, StatText } from './markers';
 import { RoundTrack } from './RoundTrack';
 import { asset, Frame, HpBar, Medal, Pips, Portrait, Ribbon, SIDE_RING, tileImage } from './common';
 
@@ -58,6 +59,7 @@ function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: Hex
 }
 
 export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowCard, footer }: Props) {
+  const detailsShown = useDetailsShown();
   const boardRef = useRef<HTMLDivElement>(null);
   const [box, setBox] = useState({ w: 800, h: 600 });
   const [selected, setSelected] = useState<HexKey | null>(null);
@@ -174,6 +176,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     className="hexbtn"
                     aria-label={t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole'}
                     onClick={() => clickTile(t.key)}
+                    {...details(() => <TileDetails state={state} k={t.key} />)}
                     onMouseEnter={() => setHover(t.key)}
                     onMouseLeave={() => setHover(null)}
                     // Only the hexagonal hit area below takes the pointer: rectangular button boxes
@@ -267,7 +270,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     </div>
                   );
                 })}
-              {hover && !mapPicks && <HexTooltip state={state} k={hover} reach={reach.get(hover)} heroName={hero ? UNITS[hero.id].name : ''} x={pos(state.tiles[hover]).x} y={pos(state.tiles[hover]).y} W={W} H={H} boardW={boardW} />}
+              {hover && !mapPicks && !detailsShown && <HexTooltip state={state} k={hover} reach={reach.get(hover)} heroName={hero ? UNITS[hero.id].name : ''} x={pos(state.tiles[hover]).x} y={pos(state.tiles[hover]).y} W={W} H={H} boardW={boardW} />}
             </div>
           </div>
           {mapPicks && (
@@ -406,6 +409,55 @@ export function heroHpLine(hp: number, max: number) {
 }
 
 /** Floating details for the hovered hex: terrain, contents, and whether the hero gets there this turn. */
+/** Right button on a hex: the terrain, what lies there and who stands there. */
+function TileDetails({ state, k }: { state: GameState; k: HexKey }) {
+  const t = state.tiles[k];
+  const crystal = t.revealed ? Object.values(state.crystals).find((c) => c.at === k) : undefined;
+  const heroes = t.revealed ? heroesAt(state, k) : [];
+  const cost = t.revealed ? TERRAIN_COST[t.terrain] : undefined;
+  const note = (text: string) => <div style={{ fontSize: 15, lineHeight: 1.3 }}>{text}</div>;
+  return (
+    <div className="plate parch" style={{ width: 300, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <img className="hex-clip" src={tileImage(t)} alt="" style={{ width: 70, height: 80, flex: 'none', objectFit: 'cover' }} />
+        <div>
+          <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole'}</div>
+          <div style={{ fontWeight: 600, fontSize: 15, marginTop: 3 }}>
+            {!t.revealed ? (t.side === 'dawn' ? 'Kraina Przymierza' : 'Kraina Hordy') : cost === null ? 'Nieprzechodnie' : `Koszt ruchu: ${cost}${cost === 2 ? ' (teren trudny)' : ''}`}
+          </div>
+        </div>
+      </div>
+      {!t.revealed && note('Teren i to, co tu leży, są jeszcze ukryte.')}
+      {t.tree && note(`Kryształowe Drzewo: Przymierze oddaje tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded}).`)}
+      {crystal && !crystal.guardian && note('Leży tu kryształ.')}
+      {crystal?.guardian && (
+        <div className="well" style={{ padding: '6px 8px', display: 'flex', gap: 10, alignItems: 'center' }}>
+          <Portrait unitId={crystal.guardian} size={44} ring={SIDE_RING.neutral} preview={false} />
+          <div style={{ fontSize: 15, color: '#F7EDD2' }}>
+            <div style={{ fontWeight: 700 }}>Kryształ pod strażą: {UNITS[crystal.guardian].name}</div>
+            <div>
+              <StatIcon stat="Ż" light /> {UNITS[crystal.guardian].hp} · <StatIcon stat="A" light /> {UNITS[crystal.guardian].attack} · <StatIcon stat="S" light /> {UNITS[crystal.guardian].speed}
+            </div>
+          </div>
+        </div>
+      )}
+      {t.revealed && t.treasureId && note('Leży tu skarb.')}
+      {heroes.map((h) => (
+        <div key={h.id} className="well" style={{ padding: '6px 8px', display: 'flex', gap: 10, alignItems: 'center' }}>
+          <Portrait unitId={h.id} size={44} ring={SIDE_RING[h.faction]} preview={false} />
+          <div style={{ fontSize: 15, color: '#F7EDD2' }}>
+            <div style={{ fontWeight: 700 }}>{UNITS[h.id].name}</div>
+            <div style={{ color: 'var(--muted)' }}>
+              {h.playerId ? state.players.find((p) => p.id === h.playerId)?.name : 'Automat zła'} · {FACTION_NAMES[h.faction]}
+            </div>
+            {h.crystals.length > 0 && <div style={{ color: '#9EE4FF' }}>Niesie {h.crystals.length === 1 ? 'kryształ' : `${h.crystals.length} kryształy`}</div>}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function HexTooltip({ state, k, reach, heroName, x, y, W, H, boardW }: { state: GameState; k: HexKey; reach?: { cost: number; hostile: boolean }; heroName: string; x: number; y: number; W: number; H: number; boardW: number }) {
   const t = state.tiles[k];
   const lines: string[] = [];
