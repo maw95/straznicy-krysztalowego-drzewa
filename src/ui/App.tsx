@@ -66,6 +66,8 @@ export function App() {
   const [session, setSession] = useState<OnlineSession | null>(null);
   const online = useOnlineState(session);
   const [showChat, setShowChat] = useState(false);
+  /** Chat messages read so far: the rest is the number on the "Czat" button. */
+  const [chatRead, setChatRead] = useState(0);
   /** States before each undoable hero step in the current turn. */
   const undoStack = useRef<Array<{ state: GameState; historyLength: number }>>([]);
   const [, setUndoTick] = useState(0);
@@ -161,6 +163,11 @@ export function App() {
     [onlineRoom],
   );
   const isOnline = Boolean(session && onlineGame);
+  // Messages count as read while the chat is open, and in the lobby, where it is always on screen.
+  const unread = online && !showChat ? online.chatReceived - chatRead : 0;
+  useEffect(() => {
+    if (online && (showChat || !isOnline)) setChatRead(online.chatReceived);
+  }, [showChat, isOnline, online?.chatReceived]);
   /** People playing at this screen: every human seat locally, only this browser's seats online. */
   const atThisScreen = (p: { id: string; controller: string }) => (isOnline ? mySeats.has(p.id) : p.controller === 'human');
 
@@ -468,7 +475,14 @@ export function App() {
         </button>
       )}
       {isOnline && (
-        <button className="btn plate parch" title="Czat z graczami" style={{ padding: '6px 12px', fontSize: 15 }} onClick={() => setShowChat(true)}>Czat</button>
+        <button className="btn plate parch" title={unread ? `Czat z graczami — nowe wiadomości: ${unread}` : 'Czat z graczami'} style={{ padding: '6px 12px', fontSize: 15, position: 'relative' }} onClick={() => setShowChat(true)}>
+          Czat
+          {unread > 0 && (
+            <span aria-label={`nowe wiadomości: ${unread}`} style={{ position: 'absolute', top: -8, right: -8, minWidth: 20, height: 20, padding: '0 5px', borderRadius: 10, background: '#B0262B', color: '#FFF', fontSize: 13, fontWeight: 800, lineHeight: '20px', boxShadow: '0 0 0 2px #1E1204' }}>
+              {unread}
+            </span>
+          )}
+        </button>
       )}
       {!isOnline && (actor.kind === 'bot' || actor.kind === 'automaton') && (
         <button className="btn plate parch" title="Przewiń ruchy botów (F)" style={{ padding: '6px 12px', fontSize: 15 }} onClick={fastForward}>
@@ -683,6 +697,16 @@ export function App() {
         <div>
           <Frame crest style={{ width: 'min(560px, 94vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12, fontSize: 17 }}>
             <Ribbon>Opcje i narzędzia testowe</Ribbon>
+            {isOnline && onlineRoom ? (
+              <label title={onlineRoom.ownerId === online!.user.id ? 'Tempo ruchów komputera dla wszystkich w pokoju' : 'Tempo ustawia założyciel pokoju'}>
+                Tempo botów (dla całego pokoju){' '}
+                <select value={onlineRoom.botSpeed} disabled={onlineRoom.ownerId !== online!.user.id} onChange={(e) => session!.send({ type: 'botSpeed', speed: e.target.value as Speed })}>
+                  {Object.keys(SPEEDS).map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </label>
+            ) : (
             <label>
               Tempo botów{' '}
               <select value={speed} onChange={(e) => setSpeed(e.target.value as Speed)}>
@@ -691,7 +715,8 @@ export function App() {
                 ))}
               </select>
             </label>
-            <label><input type="checkbox" checked={autoplay} onChange={(e) => setAutoplay(e.target.checked)} /> Autoplay — boty grają także za ludzi</label>
+            )}
+            {!isOnline && <label><input type="checkbox" checked={autoplay} onChange={(e) => setAutoplay(e.target.checked)} /> Autoplay — boty grają także za ludzi</label>}
             <label style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               Muzyka
               <input type="range" min={0} max={1} step={0.05} value={music.volume} onChange={(e) => music.setVolume(Number(e.target.value))} style={{ flex: 1 }} />

@@ -28,6 +28,8 @@ export interface RoomView {
   mode: 'coop' | 'pvp' | 'arena';
   mapSize: 'short' | 'medium' | 'long' | 'veryLong';
   level: 'kids' | 'normal' | 'hard';
+  /** The computer's pace in this room, set by the owner (the same names as in the game's options). */
+  botSpeed: 'wolno' | 'normalnie' | 'szybko';
   seats: SeatView[];
   members: Array<User & { online: boolean }>;
   /** The disconnected player whose turn it is: their seat and when a bot takes over (ms since epoch). */
@@ -126,6 +128,7 @@ export type ClientMessage =
   | { type: 'start' }
   | { type: 'action'; action: unknown }
   | { type: 'handToBot'; seat: number }
+  | { type: 'botSpeed'; speed: RoomView['botSpeed'] }
   | { type: 'chat'; text: string };
 
 export interface OnlineState {
@@ -134,6 +137,8 @@ export interface OnlineState {
   room: RoomView | null;
   game: GameState | null;
   chat: Array<{ from: string; text: string }>;
+  /** Chat messages received so far (the list above keeps only the last 100), for the unread count. */
+  chatReceived: number;
   error: string | null;
 }
 
@@ -151,7 +156,7 @@ export class OnlineSession {
   private closed = false;
 
   constructor(user: User) {
-    this.state = { user, connected: false, room: null, game: null, chat: [], error: null };
+    this.state = { user, connected: false, room: null, game: null, chat: [], chatReceived: 0, error: null };
     this.open();
   }
 
@@ -207,7 +212,7 @@ export class OnlineSession {
       case 'game':
         return this.update({ game: message.state });
       case 'chat':
-        return this.update({ chat: [...this.state.chat.slice(-99), { from: message.from, text: message.text }] });
+        return this.update({ chat: [...this.state.chat.slice(-99), { from: message.from, text: message.text }], chatReceived: this.state.chatReceived + 1 });
       case 'left':
         return this.update({ room: null, game: null, chat: [] });
       case 'error':

@@ -237,6 +237,13 @@ function RoomLobby({ session, room, me, chat }: { session: OnlineSession; room: 
           ))}
         </Row>
         {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4 }}>{LEVEL_HINT[room.level]}</div>}
+        <Row label="Tempo botów">
+          {(['wolno', 'normalnie', 'szybko'] as const).map((speed) => (
+            <button key={speed} className={choice(room.botSpeed === speed)} style={chip} disabled={!owner} onClick={() => session.send({ type: 'botSpeed', speed })}>
+              {speed}
+            </button>
+          ))}
+        </Row>
 
         <div className="lbl" style={{ marginTop: 6 }}>Miejsca przy stole</div>
         {room.seats.map((s, i) => {
