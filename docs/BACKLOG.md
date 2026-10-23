@@ -149,7 +149,10 @@ linia wzroku), a gdy obok stoi wróg, strzelec musi zaatakować sąsiada.
   niedźwiedź, cyklop, hydra).
 - Przełącznik już działa, więc najpierw symulacje: jak zmieni się % wygranych strzelców i długość bitew.
 
-### 4.3. Atak jednym kliknięciem z dojściem do wroga
+### 4.3. Atak jednym kliknięciem z dojściem do wroga — zrobione
+
+Wdrożone w wersji jak w Heroes III: strona wybierana kursorem, pole ataku podświetlone przed kliknięciem,
+na telefonie dwa dotknięcia. Poniżej pierwotne pytanie i uwagi.
 
 **Pytanie:** czy jednostka walcząca wręcz (lub latająca) ma móc zaatakować wroga w zasięgu ruchu jednym
 kliknięciem (dojście + atak)? Wygodniej, ale trzeba rozwiązać, z której strony podejdzie.

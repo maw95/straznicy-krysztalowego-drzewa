@@ -226,6 +226,51 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   const moves = useMemo(() => (myTurn && active && !act!.moved && !act!.attacked && !targeting ? reachableCells(state, active) : new Map<HexKey, number>()), [state, myTurn, active, act, targeting]);
   const targets = useMemo(() => (myTurn && active && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility ? attackTargets(state, active) : []), [state, myTurn, active, act, targeting, freeAbility]);
   const hops = myTurn && active && act!.hop ? hopCells(state, active, act!.hop) : [];
+
+  // ---------------------------------------------------------------- one click: walk up and attack
+  /**
+   * Where a melee unit can attack an enemy it does not stand next to: the free cells beside the enemy
+   * that it can walk to now. Clicking the enemy walks there and attacks, as in Heroes III.
+   */
+  const approachCells = (u: BattleUnit): HexKey[] => {
+    if (!myTurn || !active?.pos || !u.pos || u.side === active.side || act!.moved || act!.attacked || act!.moveOnly || act!.hop || targeting || freeAbility) return [];
+    if (UNITS[active.defId].attackType !== 'melee' || targets.some((t) => t.id === u.id)) return [];
+    return [...moves.keys()].filter((k) => distanceBetween(k, u.pos!) === 1);
+  };
+  /** The enemy about to be attacked this way and the cell the attack comes from (lit before the click). */
+  const [approach, setApproach] = useState<{ targetId: string; cell: HexKey } | null>(null);
+  /**
+   * The side to attack from: with a mouse, the cell in the direction the pointer points at from the
+   * enemy's centre; without one (touch), the cell nearest to walk to.
+   */
+  function aimApproach(u: BattleUnit, pointer: { x: number; y: number; box: DOMRect } | null) {
+    const cells = approachCells(u);
+    if (!cells.length) return setApproach(null);
+    let cell: HexKey;
+    if (pointer) {
+      const aim = Math.atan2(pointer.y - (pointer.box.top + pointer.box.height / 2), pointer.x - (pointer.box.left + pointer.box.width / 2));
+      const from = cellPos(u.pos!);
+      const off = (k: HexKey) => {
+        const p = cellPos(k);
+        const a = Math.atan2(p.y - from.y, p.x - from.x);
+        return Math.abs(Math.atan2(Math.sin(a - aim), Math.cos(a - aim)));
+      };
+      cell = cells.reduce((best, k) => (off(k) < off(best) ? k : best));
+    } else cell = cells.reduce((best, k) => (moves.get(k)! < moves.get(best)! ? k : best));
+    if (approach?.targetId !== u.id || approach.cell !== cell) setApproach({ targetId: u.id, cell });
+  }
+  /** The attack that follows the approach step, once the unit has walked there. */
+  const pendingAttack = useRef<{ targetId: string; useAbility: boolean; at: number } | null>(null);
+  useEffect(() => {
+    const p = pendingAttack.current;
+    if (!p || !myTurn || !act?.moved) return;
+    pendingAttack.current = null;
+    if (!targets.some((t) => t.id === p.targetId)) return;
+    window.setTimeout(() => onAction({ type: 'battleAttack', targetId: p.targetId, useAbility: p.useAbility }), Math.max(0, p.at - Date.now()));
+    // The timer is not cleared on purpose: a second run of this effect (React's development mode) must not lose the attack.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
+  useEffect(() => setApproach(null), [state]);
   /**
    * The cursor over a unit: a sword for an attack on a neighbour (ranged units fight adjacent enemies too),
    * an arrow for a shot, and a crossed-out arrow when an obstacle hides an enemy from a ranged unit
@@ -233,6 +278,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
    */
   const unitCursor = (u: BattleUnit): string => {
     if (!active?.pos || !u.pos) return '';
+    if (approachCells(u).length) return 'cur-melee';
     if (targets.some((t) => t.id === u.id)) return distanceBetween(active.pos, u.pos) === 1 || UNITS[active.defId].attackType === 'melee' ? 'cur-melee' : 'cur-ranged';
     const canShoot = myTurn && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility && UNITS[active.defId].attackType === 'ranged';
     if (!canShoot || u.side === active.side) return '';
@@ -295,10 +341,10 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   }, [showThreat, active, b, state]);
 
   /** Predicted result of attacking `t` now (shown on hover). */
-  function attackPreview(t: BattleUnit): { text: string; lethal: boolean } {
+  function attackPreview(t: BattleUnit, moved = act?.movedDistance ?? 0): { text: string; lethal: boolean } {
     if (!active) return { text: '', lethal: false };
     if (t.status.shieldArmed) return { text: 'Tarcza zablokuje', lethal: false };
-    let dmg = attackDamage(state, active, t, useAbility && attackAbility, act?.movedDistance ?? 0);
+    let dmg = attackDamage(state, active, t, useAbility && attackAbility, moved);
     dmg = Math.max(0, dmg - t.status.damageReduction);
     const hard = abilityOf(t) === 'hardHead' && !t.abilityUsed && abilityActive(state, t) && dmg >= 2;
     if (hard) dmg = Math.max(0, dmg - ABILITY.hardHeadIgnore);
@@ -353,6 +399,16 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
       setUseAbility(false);
       return;
     }
+    if (approach?.targetId === u.id && approachCells(u).includes(approach.cell)) {
+      const steps = movePath(state, active, approach.cell).length - 1;
+      pendingAttack.current = { targetId: u.id, useAbility: useAbility && attackAbility, at: Date.now() + steps * WALK_STEP_MS };
+      setUseAbility(false);
+      setApproach(null);
+      onAction({ type: 'battleMove', to: approach.cell });
+      return;
+    }
+    // A touch has no pointer to aim with: the first tap shows where the attack would come from, the second attacks.
+    if (approachCells(u).length) return aimApproach(u, null);
     onShowCard(u.defId);
   }
 
@@ -489,6 +545,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                   );
                 })}
                 {active?.pos && <polygon points={hexPoints(active.pos, 2)} fill="rgba(158,228,255,0.15)" stroke="#9EE4FF" strokeWidth="3" pointerEvents="none" />}
+                {approach && <polygon points={hexPoints(approach.cell, 2)} fill="rgba(243,210,122,0.35)" stroke="#F3D27A" strokeWidth="3.5" pointerEvents="none" />}
                 {[...deployable].map((k) => (
                   <polygon key={`dp${k}`} points={hexPoints(k, 3)} fill="none" stroke="#F3D27A" strokeWidth={hover === k && picked ? 3.5 : 2} strokeDasharray={picked ? undefined : '5 4'} pointerEvents="none" />
                 ))}
@@ -512,7 +569,17 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                   const t = cellPos(strike.to);
                   return { dx: (t.x - a.x) * 0.35, dy: (t.y - a.y) * 0.35 };
                 })() : null;
-                const preview = hover !== u.pos ? null : isTarget ? attackPreview(u) : unitCursor(u) === 'cur-blocked' ? { text: 'Przeszkoda zasłania cel', lethal: false } : null;
+                const approaching = approach?.targetId === u.id && active ? approach.cell : null;
+                const preview =
+                  hover !== u.pos && !approaching
+                    ? null
+                    : isTarget
+                      ? attackPreview(u)
+                      : approaching
+                        ? attackPreview(u, movePath(state, active!, approaching).length - 1)
+                        : unitCursor(u) === 'cur-blocked'
+                          ? { text: 'Przeszkoda zasłania cel', lethal: false }
+                          : null;
                 return (
                   <button
                     key={u.id}
@@ -520,14 +587,19 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                     onClick={() => clickUnit(u)}
                     {...details(() => <UnitDetails u={u} />)}
                     onMouseEnter={() => setHover(u.pos)}
-                    onMouseLeave={() => setHover(null)}
+                    onPointerMove={(e) => e.pointerType !== 'touch' && aimApproach(u, { x: e.clientX, y: e.clientY, box: e.currentTarget.getBoundingClientRect() })}
+                    onMouseLeave={() => {
+                      setHover(null);
+                      if (approach?.targetId === u.id) setApproach(null);
+                    }}
                     style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - 38, width: 54, height: 60, zIndex: lunge ? 4 : 2, ...(lunge ? ({ '--lx': `${lunge.dx}px`, '--ly': `${lunge.dy}px` } as React.CSSProperties) : {}) }}
                   >
                     <div style={{ position: 'absolute', left: 4, right: 4, bottom: -4, height: 16, borderRadius: '50%', background: 'rgba(6,10,2,0.55)', pointerEvents: 'none' }} />
                     <Portrait
                       unitId={u.defId}
                       size={54}
-                      preview={!isTarget}
+                      // No card popping up over an enemy you are about to attack: it would hide the lit cell (the card is under the right button).
+                      preview={!isTarget && !approachCells(u).length}
                       ring={SIDE_RING[u.side]}
                       glow={isActive ? '0 0 0 3px #9EE4FF, 0 0 20px 6px rgba(158,228,255,0.75)' : isTarget ? '0 0 0 3px #E0503C, 0 0 18px 5px rgba(224,80,60,0.7)' : '0 0 0 1.5px #1E1204, 0 8px 12px rgba(0,0,0,0.55)'}
                     />

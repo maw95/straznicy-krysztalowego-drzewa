@@ -18,6 +18,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Kursory: złote także na polach mapy i areny i na jednostkach w bitwie (wcześniej systemowe); kursor mówi, co zrobi kliknięcie — but (ruch), miecz (atak wręcz, także strzelca na sąsiada), strzała (strzał), przekreślona strzała (przeszkoda zasłania cel, z podpowiedzią nad celem).
 - Arena: obrysy pól nie nachodzą już na siebie — każdy róg pola liczony z perspektywy planszy na jego własnej wysokości, więc sąsiednie pola mają wspólne krawędzie.
 - Enter w okienkach naciska ich przycisk potwierdzenia albo zamknięcia (np. „Dalej”, „Do ekwipunku”, „Zamknij”, „Zakończ turę” w pytaniu); okienka bez takiego przycisku zamyka. Nie działa na ekranie końca gry, żeby nie zacząć nowej przypadkiem.
+- Bitwa: atak jednym kliknięciem — jednostka walcząca wręcz klika wroga w zasięgu ruchu, podchodzi i atakuje. Stronę wybiera się kursorem (część wroga, w którą celuje mysz, jak w Heroes III); pole, z którego nastąpi atak, świeci się na złoto, a nad wrogiem widać obrażenia. Na telefonie pierwsze dotknięcie pokazuje pole, drugie atakuje.
 
 ## 1.3.0 — 2026-10-22
 
