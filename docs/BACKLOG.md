@@ -1,7 +1,7 @@
 # Backlog
 
 Uzgodnione pomysły do wdrożenia. Tryb online z menu „najpierw online” i rankingiem oraz szczegóły pod prawym
-przyciskiem są zrobione (trafią do graczy z wydaniem 1.4.0); dalej figurki 3D.
+przyciskiem są zrobione; figurki 3D też (czekają na brakujące modele).
 
 ## 1. Tryb online
 
@@ -72,30 +72,36 @@ to przegrana. Kolejność: punkty, procent zwycięstw, kto wcześniej zdobył pu
 - **Miejsca 1–3 wyróżnione:** tekst nieco większy i pogrubiony, w kolorze złotym / srebrnym / brązowym,
   przy nicku puchar w tym samym kolorze.
 
-## 2. Figurki 3D zamiast portretów
+## 2. Figurki 3D zamiast portretów — zrobione (bez brakujących modeli)
 
 **Cel:** na mapie świata i na arenie stoją trójwymiarowe figurki, które realistycznie
-obracają się w kierunku ruchu.
+obracają się w kierunku ruchu; obracająca się figurka bohatera także obok jego karty w menu.
 
-### Ustalenia
+### Jak jest zrobione
 
-- **Plansza zostaje płaska (2D), jak w Heroes 3.** Figurki rysuje three.js w przezroczystej
-  warstwie nad planszą, z nieruchomą kamerą lekko pochyloną, żeby było widać ich przód.
-- **Ruch:** płynny obrót w stronę celu i przesunięcie. Bez animacji szkieletowych.
-- **Modele:** autor dostarcza po jednym GLB na jednostkę (15 sztuk), z kolorami i teksturami.
-  Konwencja: podstawka w punkcie (0,0,0), oś Y w górę, przód figurki wzdłuż +Z, wspólna skala.
-- **Odchudzanie:** `make modele` zamienia pełne modele z `docs/druk3d/**/*.glb` (np. `figurki/pegaz/pegaz.glb`) na wersje do gry
-  w `public/modele/` (uproszczenie do 1% trójkątów + kompresja meshopt). Niedźwiedź:
-  120 MB / 5 mln trójkątów → 525 KB / 39 tys. trójkątów, bez widocznej różnicy w rozmiarze
-  figurki na planszy. Pełne modele do druku nie trafiają do gita (limit 100 MB na plik w GitHubie).
-- Pasek Życia, pierścień aktywnej jednostki i znaczniki (Klątwa, zużyta zdolność) zostają
-  jako nakładka 2D nad figurką.
+- **Plansza zostaje płaska (2D), jak w Heroes 3.** Figurki rysuje three.js na jednym przezroczystym płótnie
+  nad planszą (`src/ui/FigureLayer.tsx`), kamerą ortograficzną pochyloną o 35° (widać przód figurki).
+  three.js ładuje się dopiero przy pierwszej figurce (osobny plik, ok. 190 KB po kompresji).
+- **Ruch:** figurka płynie za pozycją żetonu i obraca się w kierunku ruchu; przy ataku wręcz odwraca się
+  do celu i robi wypad, przy strzale odwraca się do celu, przy trafieniu drży. Pierścień wokół podstawki:
+  kolor strony, niebieski — aktywna jednostka, czerwony — cel ataku. Pasek Życia i znaczniki zostają w 2D.
+- **Skala:** wszystkie figurki mają podstawkę tej samej wielkości (jak wydruki na wspólnej podstawce),
+  wysokość wynika z modelu.
+- **Modele:** `make modele` robi z `docs/druk3d/figurki/z_teksturami/<frakcja>/<nazwa>/<nazwa>.glb`
+  pliki `public/modele/<jednostka>.glb` (2% wierzchołków, tekstury 1024 px WebP, kompresja meshopt):
+  ok. 1–1,5 MB zamiast 120–200 MB. Mapowanie nazw → jednostek jest w Makefile (`FIGURES`), lista jednostek
+  z modelem w `src/ui/figures.ts`. Galeria `?figury` pokazuje każdą figurkę z czterech stron (przód = pierwsza).
+- **Menu:** obracająca się figurka nad kartą bohatera na ekranie ustawień.
+- **Opcje:** „Figurki 3D na planszy” — na słabszym sprzęcie można wrócić do portretów; bez WebGL portrety
+  zostają same. Jednostki bez modelu też mają portret.
 
-- Portrety w panelach bocznych (lista jednostek, kolejka ruchów) zostają.
+### Do zrobienia
 
-### Do ustalenia
-
-- Kąt kamery i wielkość figurki względem pola — do dobrania na żywo, gdy będą 2–3 modele.
+- **Brakujące modele:** Władca Wilkołaków (`horda/wilkolak/wilkolak.glb`) i strażnicy (`straznicy/cyklop`,
+  `straznicy/gryf`, `straznicy/hydra`). Po dodaniu pliku: `make modele` i dopisanie jednostki w `src/ui/figures.ts`.
+- **Goblin Szaman** waży 6,4 MB: jego model ma osobne wierzchołki dla prawie każdego trójkąta, więc upraszczanie
+  stopuje na ok. 170 tys. trójkątów. Lepiej byłoby wyeksportować go ze scalonymi wierzchołkami.
+- Kąt kamery i wielkość figurek — do ewentualnej korekty po obejrzeniu na żywo.
 
 ## 3. Szczegóły pod prawym przyciskiem (jak w Heroesach) — zrobione
 

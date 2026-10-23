@@ -7,6 +7,7 @@ import type { Action, GameState, Tile } from '../engine/types';
 import { hoverCard } from './hover';
 import { details, useDetailsShown } from './details';
 import { aimedCursor } from './cursors';
+import { figureFor, FigureLayer, type Piece } from './FigureLayer';
 import { StatIcon, StatText } from './markers';
 import { RoundTrack } from './RoundTrack';
 import { asset, Frame, HpBar, Medal, Pips, Portrait, Ribbon, SIDE_RING, tileImage } from './common';
@@ -114,6 +115,22 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const preview = hover && reach.get(hover) ? reach.get(hover)!.path : null;
   const tiles = Object.values(state.tiles);
   const pos = (t: Tile) => ({ x: ((rows - 1) / 2 + t.col - t.row / 2) * W, y: t.row * 0.75 * H });
+  /** Where a hero stands on its hex: the middle of the base (heroes sharing a hex stand side by side). */
+  const heroSpot = (h: (typeof state.heroes)[string]) => {
+    const p = pos(state.tiles[h.pos]);
+    const stack = Object.values(state.heroes).filter((o) => o.alive && !o.entering && o.pos === h.pos);
+    const i = stack.findIndex((o) => o.id === h.id);
+    const stacked = stack.length > 1;
+    const spread = stacked ? (i - (stack.length - 1) / 2) * W * 0.3 : 0;
+    const size = stacked ? W * 0.46 : W * 0.62;
+    return { x: p.x + W / 2 + spread, y: p.y + H * 0.66 - (stacked ? (i % 2) * H * 0.12 : 0), size, spread, i, stacked };
+  };
+  const figurePieces: Piece[] = Object.values(state.heroes)
+    .filter((h) => h.alive && !h.entering && figureFor(h.id))
+    .map((h) => {
+      const { x, y, size } = heroSpot(h);
+      return { key: h.id, unitId: h.id, x, y, size, moveMs: 300, ring: hero?.id === h.id ? '#9EE4FF' : SIDE_RING[h.faction] };
+    });
   const sel = selected ? state.tiles[selected] : hero ? state.tiles[hero.pos] : null;
   const faction = hero?.faction ?? 'dawn';
   const inventory = viewer ? state.factions[viewer].inventory.map((id) => state.items[id]) : [];
@@ -268,24 +285,30 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                   />
                 </svg>
               )}
-              {/* Hero tokens live in their own layer so they glide between hexes. */}
+              {/* Heroes with a model stand on the board as 3D figures, the rest as portrait tokens; both glide between hexes. */}
+              <FigureLayer width={boardW} height={boardH} pieces={figurePieces} style={{ zIndex: 7 }} />
               {Object.values(state.heroes)
                 .filter((h) => h.alive && !h.entering)
                 .map((h) => {
-                  const t = state.tiles[h.pos];
-                  const p = pos(t);
-                  const stack = Object.values(state.heroes).filter((o) => o.alive && !o.entering && o.pos === h.pos);
-                  const i = stack.findIndex((o) => o.id === h.id);
-                  const spread = stack.length > 1 ? (i - (stack.length - 1) / 2) * W * 0.3 : 0;
-                  const size = stack.length > 1 ? W * 0.48 : W * 0.58;
+                  const { x, y, size, spread, i, stacked } = heroSpot(h);
                   const isActive = hero?.id === h.id;
+                  if (figureFor(h.id)) {
+                    // The figure is on the 3D layer: only the crystal it carries shows here, by its base.
+                    return h.crystals.length > 0 ? (
+                      <div key={h.id} className="token" style={{ position: 'absolute', left: x + size * 0.3, top: y - size * 0.75, zIndex: 8, pointerEvents: 'none' }}>
+                        <Medal fill="mBlue" glyph="gCrystal" size={W * 0.24} />
+                      </div>
+                    ) : null;
+                  }
+                  const p = pos(state.tiles[h.pos]);
+                  const tokenSize = stacked ? W * 0.48 : W * 0.58;
                   return (
                     <div
                       key={h.id}
                       className={`token ${isActive ? 'active-token' : ''}`}
-                      style={{ position: 'absolute', left: p.x + W / 2 - size / 2 + spread, top: p.y + H * 0.45 - size / 2 - (stack.length > 1 ? (i % 2) * H * 0.12 : 0), zIndex: isActive ? 8 : 7, pointerEvents: 'none' }}
+                      style={{ position: 'absolute', left: p.x + W / 2 - tokenSize / 2 + spread, top: p.y + H * 0.45 - tokenSize / 2 - (stacked ? (i % 2) * H * 0.12 : 0), zIndex: isActive ? 8 : 7, pointerEvents: 'none' }}
                     >
-                      <Portrait unitId={h.id} size={size} ring={SIDE_RING[h.faction]} glow={isActive ? '0 0 0 2.5px #9EE4FF, 0 0 14px 4px rgba(158,228,255,0.6)' : '0 0 0 1.5px #1E1204, 0 8px 14px rgba(0,0,0,0.7)'} title={UNITS[h.id].name} />
+                      <Portrait unitId={h.id} size={tokenSize} ring={SIDE_RING[h.faction]} glow={isActive ? '0 0 0 2.5px #9EE4FF, 0 0 14px 4px rgba(158,228,255,0.6)' : '0 0 0 1.5px #1E1204, 0 8px 14px rgba(0,0,0,0.7)'} title={UNITS[h.id].name} />
                       {h.crystals.length > 0 && (
                         <div style={{ position: 'absolute', right: -6, top: -6 }}>
                           <Medal fill="mBlue" glyph="gCrystal" size={W * 0.24} />

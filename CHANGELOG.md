@@ -6,6 +6,9 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Figurki 3D: na mapie i na arenie bohaterowie i pomocnicy stoją jako trójwymiarowe figurki — obracają się w stronę ruchu, odwracają do celu przy ataku, a pierścień wokół podstawki pokazuje stronę, aktywną jednostkę i cel. W menu obok karty bohatera obraca się jego figurka. Na słabszym sprzęcie figurki można wyłączyć w Opcjach. Władca Wilkołaków i strażnicy mają na razie portrety.
+- Narzędzia: `make modele` robi lekkie figurki do gry z modeli do druku (ok. 1–1,5 MB zamiast 120–200 MB); galeria `?figury` pokazuje każdą z czterech stron.
+
 ## 2.0.1 — 2026-10-23
 
 - „Zgłoś błąd” wysyła zgłoszenie prosto do twórcy gry, razem z partią — także z gry online. Opinie z „Dla testerów” wysyła przycisk „Wyślij do twórcy” (bez internetu wciąż można pobrać plik); „Dla testerów” jest teraz także w menu gry online (`03e0e5a`).

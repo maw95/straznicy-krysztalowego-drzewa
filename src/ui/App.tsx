@@ -31,6 +31,7 @@ import { ArenaPrep, DraftDialog } from './ArenaPrep';
 import { FullscreenButton, useAutoFullscreen } from './fullscreen';
 import { TreasureReveal } from './CardBack';
 import { ChatBox, OnlineOverlay, OnlineScreen } from './OnlineScreen';
+import { figuresOn, setFiguresOn } from './FigureLayer';
 import { savedToken, submitResult, type Invitation, type OnlineSession, type OnlineState } from '../online/api';
 
 const SPEEDS = { wolno: 900, normalnie: 450, szybko: 120 } as const;
@@ -82,6 +83,8 @@ export function App() {
   const [session, setSession] = useState<OnlineSession | null>(null);
   const online = useOnlineState(session);
   const [showChat, setShowChat] = useState(false);
+  /** "Figurki 3D" in the options (kept in the browser; here so that switching redraws the board). */
+  const [figures, setFigures] = useState(figuresOn);
   /** Chat messages read so far: the rest is the number on the "Czat" button. */
   const [chatRead, setChatRead] = useState(0);
   /** States before each undoable hero step in the current turn. */
@@ -787,6 +790,9 @@ export function App() {
             </label>
             )}
             {!isOnline && <label><input type="checkbox" checked={autoplay} onChange={(e) => setAutoplay(e.target.checked)} /> Autoplay — boty grają także za ludzi</label>}
+            <label title="Na słabszym komputerze albo telefonie możesz wrócić do okrągłych portretów">
+              <input type="checkbox" checked={figures} onChange={(e) => { setFiguresOn(e.target.checked); setFigures(e.target.checked); }} /> Figurki 3D na planszy
+            </label>
             <label style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               Muzyka
               <input type="range" min={0} max={1} step={0.05} value={music.volume} onChange={(e) => music.setVolume(Number(e.target.value))} style={{ flex: 1 }} />

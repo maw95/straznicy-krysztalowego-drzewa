@@ -28,6 +28,7 @@ import { ART_SIZE, CANVAS_H, CANVAS_W, cellCenter, hexPoints } from './arenaGeom
 import { DamageDrop, DieFace, LastAttack, Marker, StatIcon, StatText, type MarkerName } from './markers';
 import { details } from './details';
 import { aimedCursor, preloadAimedCursors, type AimedCursor } from './cursors';
+import { figureFor, FigureLayer, type Piece } from './FigureLayer';
 import { UnitCard } from './UnitCard';
 
 /** Box a unit token is laid out in, centred on its cell. */
@@ -583,7 +584,38 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                   <polygon key={`b${t!.id}`} points={hexPoints(t!.pos!, 6)} fill="none" stroke="#FF9A3A" strokeWidth="2" strokeDasharray="5 4" pointerEvents="none" />
                 ))}
               </svg>
+              {/* Units with a model stand on the arena as 3D figures; their tokens below keep only the HP and markers. */}
+              <FigureLayer
+                width={CANVAS_W}
+                height={CANVAS_H}
+                style={{ zIndex: 1 }}
+                pieces={livingUnits(b)
+                  .filter((u) => figureFor(u.defId) && posOf(u))
+                  .map((u): Piece => {
+                    const c = cellCenter(posOf(u)!);
+                    const melee = strikes.find((st) => st.attacker === u.id && !st.ranged);
+                    const shot = strikes.find((st) => st.attacker === u.id && st.ranged);
+                    // Until it moves, a unit faces the enemies (the middle of where they stand).
+                    const enemies = livingUnits(b).filter((e) => e.side !== u.side && e.pos).map((e) => cellCenter(e.pos!));
+                    const face = enemies.length ? { x: enemies.reduce((s, e) => s + e.x, 0) / enemies.length - c.x, y: enemies.reduce((s, e) => s + e.y, 0) / enemies.length - c.y } : undefined;
+                    const isActive = deploySide ? picked === u.id : active?.id === u.id;
+                    return {
+                      key: u.id,
+                      unitId: u.defId,
+                      x: c.x,
+                      y: c.y + 8,
+                      size: 54,
+                      moveMs: walk[u.id] ? WALK_STEP_MS : 300,
+                      ring: isActive ? '#9EE4FF' : targets.some((t) => t.id === u.id) || approach?.targetId === u.id ? '#E0503C' : SIDE_RING[u.side],
+                      lungeAt: melee ? cellCenter(melee.to) : null,
+                      lookAt: shot ? cellCenter(shot.to) : null,
+                      hit: hitIds.includes(u.id),
+                      face,
+                    };
+                  })}
+              />
               {livingUnits(b).map((u) => {
+                const figure = figureFor(u.defId);
                 const { x, y } = cellPos(posOf(u)!);
                 const isActive = deploySide ? picked === u.id : active?.id === u.id;
                 const isTarget = targets.some((t) => t.id === u.id);
@@ -617,17 +649,18 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                       setHover(null);
                       if (approach?.targetId === u.id) setApproach(null);
                     }}
-                    style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - 38, width: 54, height: 60, zIndex: lunge ? 4 : 2, ...(aimed ? { cursor: aimed } : {}), ...(lunge ? ({ '--lx': `${lunge.dx}px`, '--ly': `${lunge.dy}px` } as React.CSSProperties) : {}) }}
+                    // A figure is taller than a portrait token: the box covers it, so clicking the figure works.
+                    style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - (figure ? 58 : 38), width: 54, height: figure ? 80 : 60, zIndex: lunge ? 4 : 2, ...(aimed ? { cursor: aimed } : {}), ...(lunge && !figure ? ({ '--lx': `${lunge.dx}px`, '--ly': `${lunge.dy}px` } as React.CSSProperties) : {}) }}
                   >
-                    <div style={{ position: 'absolute', left: 4, right: 4, bottom: -4, height: 16, borderRadius: '50%', background: 'rgba(6,10,2,0.55)', pointerEvents: 'none' }} />
-                    <Portrait
+                    {!figure && <div style={{ position: 'absolute', left: 4, right: 4, bottom: -4, height: 16, borderRadius: '50%', background: 'rgba(6,10,2,0.55)', pointerEvents: 'none' }} />}
+                    {!figure && <Portrait
                       unitId={u.defId}
                       size={54}
                       // No card popping up over an enemy you are about to attack: it would hide the lit cell (the card is under the right button).
                       preview={!isTarget && !approachCells(u).length}
                       ring={SIDE_RING[u.side]}
                       glow={isActive ? '0 0 0 3px #9EE4FF, 0 0 20px 6px rgba(158,228,255,0.75)' : isTarget ? '0 0 0 3px #E0503C, 0 0 18px 5px rgba(224,80,60,0.7)' : '0 0 0 1.5px #1E1204, 0 8px 12px rgba(0,0,0,0.55)'}
-                    />
+                    />}
                     {statusList(u).length > 0 && (
                       <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', pointerEvents: 'none', display: 'flex', gap: 1, zIndex: 3 }}>
                         {statusList(u).map((st) => (
