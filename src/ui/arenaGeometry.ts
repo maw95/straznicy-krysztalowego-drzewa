@@ -28,22 +28,34 @@ export function cellCenter(k: HexKey): { x: number; y: number } {
   return { x: columnX(col, y) * K, y: y * K };
 }
 
-/** Outline of a cell (flat-topped hexagon), optionally shrunk by `ins` pixels. */
+/**
+ * Outline of a cell (flat-topped hexagon), optionally shrunk by `ins` pixels. Every corner is placed by
+ * the grid's perspective at its own height, so neighbouring cells share their corners exactly (placing
+ * them all from the cell's centre row made neighbours overlap where the columns spread out).
+ */
 export function hexPoints(k: HexKey, ins = 0): string {
   const { col, half } = cellOf(k);
-  const top = HALF_Y[half - 1] * K + ins;
-  const bottom = HALF_Y[half + 1] * K - ins;
-  const y = HALF_Y[half] * K;
-  const x = columnX(col, HALF_Y[half]) * K;
-  const r = ((spacing(HALF_Y[half]) * 2) / 3) * K - ins;
-  return [
-    [x - r, y],
-    [x - r / 2, top],
-    [x + r / 2, top],
-    [x + r, y],
-    [x + r / 2, bottom],
-    [x - r / 2, bottom],
-  ]
-    .map((p) => p.map((v) => v.toFixed(1)).join(','))
+  // Corners in grid units: a third of a column to the side on the rows above and below, two thirds on the centre row.
+  const corners: Array<[number, number]> = [
+    [col - 2 / 3, half],
+    [col - 1 / 3, half - 1],
+    [col + 1 / 3, half - 1],
+    [col + 2 / 3, half],
+    [col + 1 / 3, half + 1],
+    [col - 1 / 3, half + 1],
+  ];
+  const cx = columnX(col, HALF_Y[half]) * K;
+  const cy = HALF_Y[half] * K;
+  return corners
+    .map(([c, h]) => {
+      let x = columnX(c, HALF_Y[h]) * K;
+      let y = HALF_Y[h] * K;
+      if (ins) {
+        const d = Math.hypot(cx - x, cy - y);
+        x += ((cx - x) * ins) / d;
+        y += ((cy - y) * ins) / d;
+      }
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
     .join(' ');
 }

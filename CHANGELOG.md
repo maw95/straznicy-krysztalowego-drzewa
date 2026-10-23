@@ -16,6 +16,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Bitwa: ikony statystyk w listach jednostek po bokach areny (i pod kartami w pojedynku) są białe, czytelne na ciemnym tle, i odsunięte od paska Życia.
 - Szczegóły pod prawym przyciskiem, jak w Heroesach: przytrzymanie prawego przycisku na polu mapy (teren, koszt ruchu, kryształ ze strażnikiem, skarb, stojący tam bohaterowie), jednostce na arenie (karta z bieżącymi wartościami, Życie, efekty), portrecie albo skarbie pokazuje okienko, a puszczenie je chowa. Krótkie kliknięcie prawym (np. na touchpadzie) zostawia okienko do następnego kliknięcia; na telefonie — przytrzymanie palca.
 - Kursory: złote także na polach mapy i areny i na jednostkach w bitwie (wcześniej systemowe); kursor mówi, co zrobi kliknięcie — but (ruch), miecz (atak wręcz, także strzelca na sąsiada), strzała (strzał), przekreślona strzała (przeszkoda zasłania cel, z podpowiedzią nad celem).
+- Arena: obrysy pól nie nachodzą już na siebie — każdy róg pola liczony z perspektywy planszy na jego własnej wysokości, więc sąsiednie pola mają wspólne krawędzie.
 
 ## 1.3.0 — 2026-10-22
 
