@@ -117,6 +117,17 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const faction = hero?.faction ?? 'dawn';
   const inventory = viewer ? state.factions[viewer].inventory.map((id) => state.items[id]) : [];
 
+  /** The cursor over a hex says what a click does: walk there, start a fight, or pick it (map, revival). */
+  function hexCursor(k: HexKey): string {
+    if (mapPicks) return state.tiles[k].revealed ? 'cur-idle' : 'cur-pointer';
+    if (!canAct) return 'cur-idle';
+    if (reviveAt) return reviveAt.includes(k) ? 'cur-pointer' : 'cur-idle';
+    const r = reach.get(k);
+    if (r) return r.hostile ? 'cur-melee' : 'cur-move';
+    if (legal.has(k)) return legalHeroMoves(state).find((m) => m.to === k)!.kind === 'move' ? 'cur-move' : 'cur-melee';
+    return 'cur-idle';
+  }
+
   function clickTile(k: HexKey) {
     setSelected(k);
     if (mapPicks) {
@@ -217,7 +228,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         {r.hostile ? '⚔' : r.cost}
                       </div>
                     )}
-                    <span className="hex-clip" style={{ position: 'absolute', inset: 0, zIndex: 5, pointerEvents: 'auto', cursor: r || legal.has(t.key) ? 'pointer' : 'default' }} />
+                    <span className={`hex-clip ${hexCursor(t.key)}`} style={{ position: 'absolute', inset: 0, zIndex: 5, pointerEvents: 'auto' }} />
                   </button>
                 );
               })}

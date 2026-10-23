@@ -226,6 +226,19 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   const moves = useMemo(() => (myTurn && active && !act!.moved && !act!.attacked && !targeting ? reachableCells(state, active) : new Map<HexKey, number>()), [state, myTurn, active, act, targeting]);
   const targets = useMemo(() => (myTurn && active && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility ? attackTargets(state, active) : []), [state, myTurn, active, act, targeting, freeAbility]);
   const hops = myTurn && active && act!.hop ? hopCells(state, active, act!.hop) : [];
+  /**
+   * The cursor over a unit: a sword for an attack on a neighbour (ranged units fight adjacent enemies too),
+   * an arrow for a shot, and a crossed-out arrow when an obstacle hides an enemy from a ranged unit
+   * that could otherwise shoot (nobody next to it).
+   */
+  const unitCursor = (u: BattleUnit): string => {
+    if (!active?.pos || !u.pos) return '';
+    if (targets.some((t) => t.id === u.id)) return distanceBetween(active.pos, u.pos) === 1 || UNITS[active.defId].attackType === 'melee' ? 'cur-melee' : 'cur-ranged';
+    const canShoot = myTurn && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility && UNITS[active.defId].attackType === 'ranged';
+    if (!canShoot || u.side === active.side) return '';
+    const engaged = livingUnits(b).some((e) => e.side !== active.side && e.pos && distanceBetween(active.pos!, e.pos) === 1);
+    return !engaged && !hasLineOfSight(state, active.pos, u.pos) ? 'cur-blocked' : '';
+  };
   const ab = active ? abilityOf(active) : null;
   const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state, active));
   const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab);
@@ -455,11 +468,12 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
               <img src={asset(`arena/${b.arena}.jpg`)} alt="" style={{ position: 'absolute', left: 0, top: 0, width: ART_SIZE.w, height: ART_SIZE.h }} />
               <svg width={CANVAS_W} height={CANVAS_H} style={{ position: 'absolute', left: 0, top: 0 }}>
                 {arenaCells().map((k) => {
+                  const teleportTo = targeting?.kind === 'teleport' && Boolean(targeting.unitId) && !unitAt(b, k) && !b.obstacles.includes(k);
                   let fill = 'transparent';
                   if (deployable.has(k)) fill = picked ? (hover === k ? 'rgba(243,210,122,0.5)' : 'rgba(243,210,122,0.28)') : 'rgba(243,210,122,0.18)';
                   else if (moves.has(k)) fill = hoverPreview === k ? 'rgba(158,228,255,0.45)' : 'rgba(158,228,255,0.2)';
                   else if (hops.includes(k)) fill = 'rgba(158,228,255,0.28)';
-                  else if (targeting?.kind === 'teleport' && targeting.unitId && !unitAt(b, k) && !b.obstacles.includes(k)) fill = 'rgba(200,160,255,0.25)';
+                  else if (teleportTo) fill = 'rgba(200,160,255,0.25)';
                   return (
                     <polygon
                       key={k}
@@ -470,7 +484,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                       onClick={() => clickCell(k)}
                       onMouseEnter={() => setHover(k)}
                       onMouseLeave={() => setHover(null)}
-                      style={{ cursor: moves.has(k) || hops.includes(k) ? 'pointer' : 'default' }}
+                      className={moves.has(k) || hops.includes(k) ? 'cur-move' : (deployable.has(k) && picked) || teleportTo ? 'cur-pointer' : undefined}
                     />
                   );
                 })}
@@ -498,16 +512,16 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                   const t = cellPos(strike.to);
                   return { dx: (t.x - a.x) * 0.35, dy: (t.y - a.y) * 0.35 };
                 })() : null;
-                const preview = isTarget && hover === u.pos ? attackPreview(u) : null;
+                const preview = hover !== u.pos ? null : isTarget ? attackPreview(u) : unitCursor(u) === 'cur-blocked' ? { text: 'Przeszkoda zasłania cel', lethal: false } : null;
                 return (
                   <button
                     key={u.id}
-                    className={`hexbtn token ${walk[u.id] ? 'walking' : ''} ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''} ${isTarget ? 'attackable' : ''}`}
+                    className={`hexbtn token ${walk[u.id] ? 'walking' : ''} ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''} ${unitCursor(u)}`}
                     onClick={() => clickUnit(u)}
                     {...details(() => <UnitDetails u={u} />)}
                     onMouseEnter={() => setHover(u.pos)}
                     onMouseLeave={() => setHover(null)}
-                    style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - 38, width: 54, height: 60, zIndex: lunge ? 4 : 2, cursor: 'pointer', ...(lunge ? ({ '--lx': `${lunge.dx}px`, '--ly': `${lunge.dy}px` } as React.CSSProperties) : {}) }}
+                    style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - 38, width: 54, height: 60, zIndex: lunge ? 4 : 2, ...(lunge ? ({ '--lx': `${lunge.dx}px`, '--ly': `${lunge.dy}px` } as React.CSSProperties) : {}) }}
                   >
                     <div style={{ position: 'absolute', left: 4, right: 4, bottom: -4, height: 16, borderRadius: '50%', background: 'rgba(6,10,2,0.55)', pointerEvents: 'none' }} />
                     <Portrait
