@@ -16,4 +16,4 @@
   - `areny/` — plansze bitwy Przymierza i Hordy.
 - `muzyka/` — ścieżka dźwiękowa.
 
-Skrypty, które przenoszą grafiki do gry (`public/assets/`): `scripts/assets/extract.py` (karty), `scripts/assets/tiles.py` (kafelki), `scripts/assets/menu.py` (okładka i logo), `scripts/assets/arenas.py` (areny bitew; nowa grafika musi zachować tę samą siatkę pól), `scripts/assets/markers.py` (znaczniki).
+Skrypty, które przenoszą grafiki do gry (`public/assets/`): `scripts/assets/extract.py` (karty), `scripts/assets/tiles.py` (kafelki), `scripts/assets/menu.py` (okładka i logo), `scripts/assets/arenas.py` (areny bitew; nowa grafika musi zachować tę samą siatkę pól), `scripts/assets/markers.py` (znaczniki), `scripts/assets/trophies.py` (puchary rankingu z `grafika/ikony/puchary/`, zmniejszone do 96 px).

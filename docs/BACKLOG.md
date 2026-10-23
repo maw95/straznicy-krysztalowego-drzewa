@@ -1,7 +1,7 @@
 # Backlog
 
-Uzgodnione pomysły do wdrożenia. Najpierw tryb online (teraz: menu „najpierw online” i ranking),
-potem figurki 3D; szczegóły pod prawym przyciskiem — po menu online.
+Uzgodnione pomysły do wdrożenia. Tryb online z menu „najpierw online” i rankingiem jest zrobiony
+(trafi do graczy z wydaniem 1.4.0); dalej szczegóły pod prawym przyciskiem i figurki 3D.
 
 ## 1. Tryb online
 
@@ -42,7 +42,7 @@ potem figurki 3D; szczegóły pod prawym przyciskiem — po menu online.
   zakłada nowe konto. Statystyki przypisane do konta. Limit prób logowania i rejestracji jest na serwerze.
 - **Kolejność:** zaczynamy od serwera (modele figurek powstają w tym czasie).
 
-### Menu „najpierw online” (następny krok)
+### Menu „najpierw online” (zrobione)
 
 **Cel:** gra online jest domyślną drogą, a całość ma być maksymalnie prosta i wygodna.
 
@@ -61,7 +61,11 @@ potem figurki 3D; szczegóły pod prawym przyciskiem — po menu online.
 - Serwer niedostępny: menu pokazuje „łączenie…”, a gdy trwa to za długo, proponuje grę bez konta.
 - Połączenie w menu trzyma maszynę Fly przy życiu — po ok. 15 minutach bezczynności rozłączamy.
 
-### Ranking
+### Ranking (zrobione)
+
+Punkty jak w „Twoich partiach”; liczą się gry online i gry offline przeciw komputerowi skończone po zalogowaniu
+(serwer odtwarza partię i liczy sam), bez gier dwóch osób przy jednym ekranie. Wyjście z gry online przed końcem
+to przegrana. Kolejność: punkty, procent zwycięstw, kto wcześniej zdobył punkty; pod tabelą własne miejsce.
 
 - Tabela **top 10** graczy według zdobytych **punktów**; w wierszu: nick, punkty, liczba rozegranych gier,
   procent zwycięstw.
