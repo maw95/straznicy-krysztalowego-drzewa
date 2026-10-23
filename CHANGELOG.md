@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Zgłoszenia błędów i opinie testerów idą prosto do twórcy: „Zgłoś błąd” i „Dla testerów” → „Wyślij do twórcy” wysyłają je na serwer gry (bez internetu zostaje plik do pobrania); „Dla testerów” jest też w menu online. Dla twórcy: `make zgloszenia` pobiera nowe zgłoszenia i od razu je odtwarza.
+
 ## 2.0.0 — 2026-10-23
 
 - Narzędzia: `make sim-tabele` — czytelne tabele z % wygranych Przymierza w każdym trybie, mapie i poziomie oraz z tym, jak przegrywa (wybici bohaterowie, rytuał, limit rund) (`0f1b64f`).

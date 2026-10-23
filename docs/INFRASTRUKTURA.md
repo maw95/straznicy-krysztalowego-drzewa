@@ -147,6 +147,19 @@ podbić `version` w `package.json` serwera (widać ją w `/health`), sekcja wers
 `git tag -a 0.2.0 -m "Release 0.2.0"`, `git push origin master 0.2.0`, `gh release create 0.2.0 --generate-notes
 -R maw95/straznicy-krysztalowego-drzewa-backend`. Workflow da się też uruchomić ręcznie: `gh workflow run Deploy -R …`.
 
+## Zgłoszenia błędów i opinie graczy
+
+- **W grze:** „Zgłoś błąd” (pasek w trakcie partii, klawisz B) wysyła opis razem z całą partią;
+  „Dla testerów” (menu) wysyła uwagi z dziennikiem partii testera. Oba trafiają na serwer gry (`POST /reports`),
+  także bez konta. Przy grze online serwer sam dokłada ruchy partii z pokoju. Bez internetu zostaje plik
+  do pobrania, jak dawniej. Przy `make dev` zgłoszenia błędów nadal lądują od razu w `bug-reports/`.
+- **Pobranie:** `make zgloszenia` w repozytorium gry — budzi serwer, przez `fly ssh` pobiera nowe zgłoszenia,
+  zapisuje błędy do `bug-reports/…-serwer-<id>.json`, opinie do `tester-reports/`, oznacza je na serwerze
+  jako pobrane, a potem odtwarza błędy (`scripts/report.ts`) i podsumowuje opinie (`scripts/testers.ts`).
+  `make zgloszenia ACK=0` pobiera bez oznaczania. Pliki z serwera nie trafiają do gita (nicki i dane przeglądarek).
+- **Na co dzień:** wystarczy napisać Claude'owi „sprawdź, czy doszły zgłoszenia albo opinie” — uruchomi
+  `make zgloszenia`, przeanalizuje błędy (odtworzony stan gry w chwili zgłoszenia) i opinie i omówi je z Tobą.
+
 ## Serwer na Fly.io
 
 W repo serwera:

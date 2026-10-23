@@ -342,3 +342,18 @@ export async function submitResult(setup: unknown, actions: unknown[]): Promise<
   if (!token) throw new ServerError('Nie jesteś zalogowany.');
   return request('/results', { method: 'POST', headers: { authorization: `Bearer ${token}` }, body: JSON.stringify({ setup, actions }) });
 }
+
+// ------------------------------------------------------------------ bug reports and feedback
+
+/**
+ * "Zgłoś błąd" (`bug`: the save file with the report) and "Dla testerów" (`feedback`: the tester's journal)
+ * go straight to the server, logged in or not; an online game's own actions are added by the server.
+ */
+export async function submitReport(kind: 'bug' | 'feedback', data: object, roomCode?: string): Promise<void> {
+  const token = savedToken();
+  await request('/reports', {
+    method: 'POST',
+    headers: token ? { authorization: `Bearer ${token}` } : {},
+    body: JSON.stringify({ kind, version: __APP_VERSION__, data, ...(roomCode ? { roomCode } : {}) }),
+  });
+}

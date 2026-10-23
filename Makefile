@@ -1,7 +1,7 @@
 # Strażnicy Kryształowego Drzewa — najczęstsze komendy.
 # Node.js jest zainstalowany lokalnie w ~/.local/node, więc dopinamy go do PATH.
 
-export PATH := $(HOME)/.local/node/bin:$(PATH)
+export PATH := $(HOME)/.local/node/bin:$(HOME)/.fly/bin:$(PATH)
 
 GAMES ?= 1000
 SIZE ?= short
@@ -11,7 +11,7 @@ BATTLE ?= arena
 RATIO ?= 0.01
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview test test-engine test-ui test-watch typecheck check sim sim-all sim-matrix sim-battles sim-arena sim-tabele report modele silnik clean
+.PHONY: help install dev build preview test test-engine test-ui test-watch typecheck check sim sim-all sim-matrix sim-battles sim-arena sim-tabele report zgloszenia modele silnik clean
 
 help: ## Lista komend
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -71,6 +71,9 @@ sim-arena: node_modules ## Arena: każdy skład Przymierza przeciw każdemu skł
 
 report: node_modules ## Odtworzenie zgłoszeń błędów z bug-reports/ (albo FILE=ścieżka.json)
 	npx tsx scripts/report.ts $(FILE)
+
+zgloszenia: node_modules ## Nowe zgłoszenia błędów i opinie z serwera gry: pobranie, odtworzenie, podsumowanie (ACK=0: bez oznaczania)
+	npx tsx scripts/zgloszenia.ts $(if $(filter 0,$(ACK)),--no-ack,)
 
 modele: ## Odchudzone modele figurek do gry: docs/druk3d/**/*.glb -> public/modele/*.glb, np. make modele RATIO=0.01
 	@mkdir -p public/modele .tmp

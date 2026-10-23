@@ -182,7 +182,7 @@ describe('tester journal', () => {
     expect(doc.body.textContent).toContain('Zgłoszone błędy: 1');
     await act(async () => fireEvent.change(doc.querySelector('input[aria-label="Twoje imię"]')!, { target: { value: 'Ola' } }));
     await act(async () => fireEvent.change(doc.querySelector('textarea[aria-label="Twoje uwagi"]')!, { target: { value: 'Fajne smoki' } }));
-    await act(async () => fireEvent.click(btn('Pobierz plik dla twórcy')));
+    await act(async () => fireEvent.click(btn('Pobierz plik')));
     expect(blobs).toHaveLength(1);
     const text = await new Promise<string>((done) => {
       const reader = new FileReader();

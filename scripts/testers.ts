@@ -30,9 +30,10 @@ for (const file of files) {
   }
   const s = data.stats;
   console.log(`\n=== ${data.name || '(bez imienia)'} · ${file} · wysłano ${data.exportedAt.slice(0, 16).replace('T', ' ')}`);
-  console.log(`partie: ${s.played} (ukończone ${s.finished}) · koop ${s.coop.won}/${s.coop.lost} · PvP Przymierze ${s.pvp.dawn}, Horda ${s.pvp.horde} · błędy: ${s.reports}`);
+  // Files sent to the game server may come from older or hand-made exports: the statistics are optional.
+  if (s?.coop && s.pvp) console.log(`partie: ${s.played} (ukończone ${s.finished}) · koop ${s.coop.won}/${s.coop.lost} · PvP Przymierze ${s.pvp.dawn}, Horda ${s.pvp.horde} · błędy: ${s.reports}`);
   if (data.feedback) console.log(`uwagi:\n  ${data.feedback.split('\n').join('\n  ')}`);
-  for (const g of data.games) {
+  for (const g of data.games ?? []) {
     const setup = g.save.setup;
     if (g.result) {
       const players = setup.seats.filter((x) => x.faction === 'dawn').length;

@@ -22,3 +22,6 @@ __pycache__/
 # the game uses the reduced copies from `make modele` in public/modele/
 /docs/druk3d/**/*.glb
 /docs/druk3d/**/*.stl
+
+# Reports fetched from the game server (make zgloszenia) carry players' nicks and browser details: kept out of the public repo
+/bug-reports/*-serwer-*.json

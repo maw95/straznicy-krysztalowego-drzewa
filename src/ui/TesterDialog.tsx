@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { MAP_SIZE_NAMES } from '../engine/data';
 import { Frame, Ribbon } from './common';
 import { buildExport, journalStats, LEVEL_NAMES, readJournal } from './journal';
+import { submitReport } from '../online/api';
 
 const DRAFT = 'skd-feedback-draft';
 
@@ -27,7 +28,9 @@ function saveDraft(d: { name: string; feedback: string }) {
 
 export function TesterDialog({ onClose, download }: { onClose: () => void; download: (name: string, text: string) => void }) {
   const [draft, setDraft] = useState(readDraft);
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState<'sent' | 'downloaded' | null>(null);
+  const [sending, setSending] = useState(false);
+  const [problem, setProblem] = useState<string | null>(null);
   const journal = readJournal();
   const stats = journalStats(journal);
   const update = (patch: Partial<typeof draft>) => {
@@ -40,7 +43,20 @@ export function TesterDialog({ onClose, download }: { onClose: () => void; downl
     const data = buildExport(draft.name, draft.feedback);
     const who = (draft.name.trim() || 'tester').toLowerCase().replace(/[^a-z0-9ąćęłńóśźż]+/g, '-').slice(0, 30);
     download(`straznicy-testy-${who}-${data.exportedAt.slice(0, 10)}.json`, JSON.stringify(data));
-    setDone(true);
+    setDone('downloaded');
+  }
+
+  /** Everything (games, bug reports, feedback) straight to the game server. */
+  async function sendAll() {
+    setSending(true);
+    setProblem(null);
+    try {
+      await submitReport('feedback', buildExport(draft.name, draft.feedback));
+      setDone('sent');
+    } catch (e) {
+      setProblem(`${(e as Error).message} Możesz też pobrać plik i wysłać go ręcznie.`);
+    }
+    setSending(false);
   }
 
   const recent = [...journal.games].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)).slice(0, 6);
@@ -60,10 +76,10 @@ export function TesterDialog({ onClose, download }: { onClose: () => void; downl
             <b>Graj normalnie</b> — różne tryby, mapy i poziomy. Gra sama zapisuje Twoje partie i wyniki w tej przeglądarce.
           </li>
           <li>
-            <b>Na koniec</b> wpisz poniżej swoje wrażenia i kliknij <b>„Pobierz plik dla twórcy”</b>. Ten jeden plik zawiera wszystkie Twoje partie, zgłoszone błędy i opinię — wyślij go do mnie, jak Ci wygodnie (Messenger, e-mail…).
+            <b>Na koniec</b> wpisz poniżej swoje wrażenia i kliknij <b>„Wyślij do twórcy”</b> — pójdą prosto do mnie razem z Twoimi partiami i zgłoszonymi błędami. Bez internetu możesz pobrać plik i wysłać go, jak Ci wygodnie.
           </li>
           <li style={{ color: 'var(--muted)', fontSize: 15 }}>
-            Wszystko zostaje tylko na Twoim komputerze, dopóki sam nie wyślesz pliku. Graj w tej samej przeglądarce i nie czyść jej danych, żeby nic nie zginęło.
+            Wszystko zostaje na Twoim komputerze, dopóki sam tego nie wyślesz. Graj w tej samej przeglądarce i nie czyść jej danych, żeby nic nie zginęło.
           </li>
         </ul>
 
@@ -86,9 +102,9 @@ export function TesterDialog({ onClose, download }: { onClose: () => void; downl
 
         {done ? (
           <>
-            <div>Plik został pobrany (zwykle trafia do folderu <b>Pobrane</b>). Wyślij go do mnie — dziękuję! 🌳</div>
+            <div>{done === 'sent' ? 'Wysłane — dziękuję! 🌳 Możesz dalej grać i dopisywać uwagi, a potem wysłać je jeszcze raz.' : <>Plik został pobrany (zwykle trafia do folderu <b>Pobrane</b>). Wyślij go do mnie — dziękuję! 🌳</>}</div>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-              <button className="btn plate parch" style={{ padding: '6px 16px' }} onClick={exportAll}>Pobierz jeszcze raz</button>
+              {done === 'downloaded' && <button className="btn plate parch" style={{ padding: '6px 16px' }} onClick={exportAll}>Pobierz jeszcze raz</button>}
               <button className="btn prim" data-enter autoFocus style={{ padding: '6px 26px' }} onClick={onClose}>Zamknij</button>
             </div>
           </>
@@ -110,9 +126,11 @@ export function TesterDialog({ onClose, download }: { onClose: () => void; downl
               style={{ width: '100%', boxSizing: 'border-box', fontFamily: 'inherit', fontSize: 17, padding: 10, borderRadius: 6, resize: 'vertical' }}
             />
             <div style={{ fontSize: 14, color: 'var(--muted)' }}>Tekst zapisuje się na bieżąco — możesz wracać i dopisywać po kolejnych partiach.</div>
+            {problem && <div role="alert" style={{ color: '#F08A7A', fontWeight: 700 }}>{problem}</div>}
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
               <button className="btn plate parch" style={{ padding: '6px 16px' }} onClick={onClose}>Zamknij</button>
-              <button className="btn prim" style={{ padding: '6px 22px', fontSize: 18 }} onClick={exportAll}>Pobierz plik dla twórcy</button>
+              <button className="btn plate parch" style={{ padding: '6px 16px' }} onClick={exportAll}>Pobierz plik</button>
+              <button className="btn prim" disabled={sending} style={{ padding: '6px 22px', fontSize: 18 }} onClick={sendAll}>Wyślij do twórcy</button>
             </div>
           </>
         )}

@@ -454,7 +454,7 @@ export function App() {
               setPlaysOffline(true);
               setOnlineScreen(false);
             }}
-            links={{ onRules: () => setShowRules(true), onIntro: () => setShowIntro(true), onChangelog: () => setShowChangelog(true) }}
+            links={{ onRules: () => setShowRules(true), onIntro: () => setShowIntro(true), onChangelog: () => setShowChangelog(true), onTesters: () => setShowTesters(true) }}
           />
         ) : (
         <SetupScreen
@@ -729,10 +729,13 @@ export function App() {
             save={saveFile(game)}
             onSaved={(r) => {
               reports.current = [...reports.current, r];
+              // An online game lives on the server: no local save of it (it would replace the local game's).
+              if (isOnline) return;
               writeAutosave(game.phase === 'over' ? null : saveFile(game));
               recordGame(saveFile(game), game);
             }}
             onClose={() => setShowReport(false)}
+            roomCode={isOnline ? onlineRoom?.code : undefined}
           />
         )}
       </Modal>

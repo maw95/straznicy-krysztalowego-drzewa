@@ -1,10 +1,12 @@
 // "Zgłoś błąd": the player describes what went wrong; the report is stored with the game
-// (setup + actions), so the exact moment can be replayed later (scripts/report.ts).
+// (setup + actions), so the exact moment can be replayed later (scripts/report.ts). It goes to the
+// development server's bug-reports/ when there is one, otherwise to the game server (make zgloszenia).
 
 import { useState } from 'react';
 import type { GameState } from '../engine/types';
 import { Frame, Ribbon } from './common';
 import { sendReport, type BugReport, type SaveFile } from './saves';
+import { submitReport } from '../online/api';
 
 interface Props {
   game: GameState;
@@ -12,9 +14,11 @@ interface Props {
   save: SaveFile;
   onSaved: (report: BugReport) => void;
   onClose: () => void;
+  /** An online game: its moves are on the server, which adds them to the report. */
+  roomCode?: string;
 }
 
-export function BugReportDialog({ game, save, onSaved, onClose }: Props) {
+export function BugReportDialog({ game, save, onSaved, onClose, roomCode }: Props) {
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState<string | null>(null);
@@ -22,7 +26,8 @@ export function BugReportDialog({ game, save, onSaved, onClose }: Props) {
   async function submit() {
     const report: BugReport = {
       createdAt: new Date().toISOString(),
-      actionIndex: save.actions.length,
+      // Online the browser keeps no moves: count them from the game itself.
+      actionIndex: game.actionCount,
       round: game.round,
       screen: game.phase === 'battle' ? `battle:${game.battle?.stage}` : game.phase,
       text: text.trim(),
@@ -34,8 +39,11 @@ export function BugReportDialog({ game, save, onSaved, onClose }: Props) {
     setBusy(true);
     onSaved(report);
     const file = await sendReport(full);
+    const sent = !file && (await submitReport('bug', full, roomCode).then(() => true, () => false));
     if (file) {
       setDone(`Zapisano w projekcie: ${file}`);
+    } else if (sent) {
+      setDone('Zgłoszenie poszło prosto do twórcy gry.');
     } else {
       // Hosted game: the report waits in this browser's tester journal ("DLA TESTERÓW").
       setDone('Zgłoszenie zapisało się w tej przeglądarce. Wyślesz je razem z resztą: w menu głównym kliknij „INFO DLA TESTERÓW” i pobierz plik dla twórcy.');
