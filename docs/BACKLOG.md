@@ -17,8 +17,18 @@ Uzgodnione pomysły do wdrożenia. Najpierw tryb online, potem figurki 3D.
   gracz online, gracz przy tym samym komputerze albo bot — dowolnie wymieszani.
 - **Wszystkie tryby:** kooperacja, rywalizacja 1 na 1 i 2 na 2, Arena.
 - **Gra tylko na żywo** (bez korespondencyjnej).
-- **Rozłączenie:** czekamy 2 minuty na powrót gracza, potem jego rolę przejmuje bot.
-  Gracz, który wróci później, odzyskuje miejsce od bota.
+- **Rozłączenie w trakcie partii:** czekamy 2 minuty na powrót gracza, potem jego rolę przejmuje bot.
+  Gracz, który wróci później, odzyskuje miejsce od bota. Gra stoi tylko wtedy, gdy wypada ruch
+  rozłączonego; pozostali widzą odliczanie i mogą wcześniej kliknąć „Oddaj botowi”.
+- **Rozłączenie przed startem:** miejsce w pokoju zwalnia się od razu („Maciek wyszedł”);
+  można wrócić tym samym kodem, jeśli miejsce jest wolne.
+- **Założyciel pokoju** wybiera tryb, mapę i poziom oraz startuje partię. Gdy wyjdzie przed startem,
+  ta rola przechodzi na następnego gracza; w trakcie partii jest zwykłym graczem (zasad pilnuje serwer).
+- **Restart serwera** (np. deploy) nie przerywa partii: serwer trzyma w bazie ziarno i listę ruchów,
+  po restarcie odtwarza partię, a gracze łączą się ponownie automatycznie.
+- **Pusty pokój** (także partia, z której wszyscy wyszli) znika po 10 minutach.
+- **Jedna przeglądarka może zająć kilka miejsc** (gra przy jednym komputerze, reszta stołu online).
+- **Bez widzów** na razie — ewentualnie później.
 - **Czat** w pokoju, bez zapisywania historii (wiadomości żyją tylko w pamięci serwera).
 - **Statystyki** wszystkich partii zapisywane na serwerze (SQLite na wolumenie Fly).
 - **Zgłaszanie błędów** prosto z gry na serwer, zamiast pobierania pliku i wysyłania ręcznie.
