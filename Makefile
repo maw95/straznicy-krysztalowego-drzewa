@@ -63,6 +63,7 @@ sim-battles: node_modules ## Turniej jednostek w równych warunkach (balans boha
 	node --import tsx scripts/sim/battles.ts 300
 
 sim-tabele: node_modules ## Tabele: % wygranych Przymierza w każdym trybie, mapie i poziomie oraz jak przegrywa, np. make sim-tabele GAMES=300
+	@mkdir -p .tmp/sim
 	node --import tsx scripts/sim/matrix.ts $(GAMES) tabele > .tmp/sim/tabele.log
 	node --import tsx scripts/sim/tables.ts tabele
 
