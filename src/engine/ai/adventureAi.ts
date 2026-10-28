@@ -124,7 +124,8 @@ function evilAction(state: GameState, memo: Memo): Action {
   // Treasures are shared by the faction, the automaton's included: it revives its fallen.
   const item = mapItemAction(state);
   if (item) return item;
-  if (state.rules.ritualHold && inRitualPlace(state, hero)) return { type: 'endTurn' };
+  // Evil heroes standing on the Tree (or by it for the ritual) stay there instead of chasing.
+  if (inRitualPlace(state, hero)) return { type: 'endTurn' };
   const goodHeroes = Object.values(state.heroes).filter((h) => h.faction === 'dawn' && h.alive);
   // 1. Attack an adjacent good hero.
   const adjacent = goodHeroes.find((g) => distance(parseKey(g.pos), parseKey(hero.pos)) === 1);

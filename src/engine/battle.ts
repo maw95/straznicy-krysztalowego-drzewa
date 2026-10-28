@@ -145,7 +145,10 @@ export function moveRange(u: BattleUnit): number {
   return Math.max(0, unitSpeed(u) - u.status.slowNext);
 }
 
-/** Breadth-first search over the cells a walker can pass: not through obstacles or enemies (nor allies, unless the rules allow it). */
+/**
+ * Breadth-first search over the cells a walker can pass: not through obstacles nor any other unit
+ * (allies included, since 2026-10-22: the user's decision).
+ */
 function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number>; parent: Map<HexKey, HexKey> } {
   const b = state.battle!;
   const range = moveRange(u);
@@ -160,8 +163,7 @@ function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number
     if (d >= range) continue;
     for (const n of neighborKeys(cur)) {
       if (!inArena(n) || obstacles.has(n) || dist.has(n)) continue;
-      const occ = units.get(n);
-      if (occ && (occ.side !== u.side || !state.rules.passThroughAllies)) continue;
+      if (units.has(n)) continue;
       dist.set(n, d + 1);
       parent.set(n, cur);
       queue.push(n);
@@ -207,14 +209,10 @@ export function movePath(state: GameState, u: BattleUnit, to: HexKey): HexKey[] 
   return path;
 }
 
+/** Only obstacles block a shot: units standing in the way do not. */
 export function hasLineOfSight(state: GameState, from: HexKey, to: HexKey): boolean {
-  const b = state.battle!;
-  const obstacles = obstacleSet(b);
-  for (const k of cellsBetween(from, to)) {
-    if (obstacles.has(k)) return false;
-    if (state.rules.unitsBlockSight && unitAt(b, k)) return false;
-  }
-  return true;
+  const obstacles = obstacleSet(state.battle!);
+  return !cellsBetween(from, to).some((k) => obstacles.has(k));
 }
 
 const adjacent = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b)) === 1;

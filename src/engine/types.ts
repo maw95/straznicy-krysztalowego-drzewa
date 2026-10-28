@@ -32,16 +32,10 @@ export interface RulesConfig {
   hordeRespawn?: boolean;
   /** Treasures the Horde holds from the start (difficulty): Eliksiry, other kinds, any random card. */
   hordeStartTreasures?: { resurrections: number; others: number; random?: number };
-  /** Evil heroes standing on the Tree stay there instead of chasing (spec 7: DO USTALENIA). */
-  ritualHold: boolean;
   /** Rounds that all living evil heroes must spend on the Tree to complete the ritual. */
   ritualRounds: number;
   /** The Horde's ritual at the Tree; off on the easy level (the Horde wins by the limit or by beating the heroes). */
   ritual?: boolean;
-  /** Walking units may pass through hexes occupied by allies (never through enemies). Off since 2026-10-22 (the user's decision). */
-  passThroughAllies: boolean;
-  /** Units standing in the way do not block ranged line of sight (only obstacles do). */
-  unitsBlockSight: boolean;
   /**
    * Safety net, not a design rule: after this many battle rounds the side with
    * more total remaining Ż wins and the other side's units fall.
@@ -59,10 +53,7 @@ export const DEFAULT_RULES: RulesConfig = {
   heroReplacement: false,
   minEvilHeroes: 1,
   hordeRespawn: true,
-  ritualHold: true,
   ritualRounds: 3,
-  passThroughAllies: false,
-  unitsBlockSight: false,
   battleRoundLimit: 40,
 };
 
