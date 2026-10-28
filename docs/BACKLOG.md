@@ -2,7 +2,7 @@
 
 Uzgodnione pomysły do wdrożenia. Zrobione punkty są usuwane (zostają w historii gita i w CHANGELOG.md):
 tryb online z menu i rankingiem, figurki 3D, szczegóły pod prawym przyciskiem, atak jednym kliknięciem,
-porządki w kodzie (etapy 0–4), wersja mobilna, zgłoszenia z 23.10 i 28.10.
+porządki w kodzie (etapy 0–4 i resztki), wersja mobilna, zgłoszenia z 23.10 i 28.10.
 
 ## 1. Figurki 3D — drobne
 
@@ -53,16 +53,6 @@ linia wzroku), a gdy obok stoi wróg, strzelec musi zaatakować sąsiada.
 - Wariant pośredni: zasłaniają tylko **wrogie** jednostki (własne nie), albo tylko jednostki duże (smoki, ogr,
   niedźwiedź, cyklop, hydra).
 - Przełącznik już działa, więc najpierw symulacje: jak zmieni się % wygranych strzelców i długość bitew.
-
-## 4. Porządki w kodzie — resztki
-
-- [ ] Wspólne helpery testów UI (`clearDialogs`, `byText`, ustawienia jsdom) w `tests/helpers/ui.ts`.
-- [ ] Drobne w `AdventureView`: ślad ruchu zmieniany w renderze, efekt bez listy zależności, podwójne liczenie
-  punktów linii śladu.
-- [ ] Wspólne klasy CSS przycisków (#24).
-- [ ] Domyślne miejsca przy stole lokalnie i online (`defaultSeats` w `SetupScreen.tsx`, `defaultTable`
-  w `OnlineScreen.tsx`) — jedna funkcja.
-- [ ] Serwer: wiadomość `game` nadal zawiera wpisy dziennika `privateTo` (ukryte tylko w kliencie).
 
 Uwaga przy wydaniach: serwer odrzuca nieznane typy akcji, więc wydanie gry z nowym typem akcji wymaga najpierw
 wdrożenia serwera z nowym pakietem silnika.
