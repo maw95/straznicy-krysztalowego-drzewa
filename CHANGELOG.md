@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Figurki 3D: wszystkie 15 z nowych modeli autora (także Pegaz, Pająk Jaskiniowy, Hydra i Król Jednorożców), każda poniżej 2,5 MB. W instrukcji każda frakcja ma swoją stronę: większe figurki bohaterów, pod nimi mniejsze figurki pomocników.
 - Figurki 3D obracają się wolniej, a ruch ma dwie fazy: najpierw obrót w miejscu, potem przesunięcie (tak samo przed atakiem: obrót do celu, potem cios).
 - Areny: przeszkody nie wchodzą już na sąsiednie pola (podwójne są obrócone wzdłuż swoich dwóch pól), a ich obwódka jest ciemnożółta na obu arenach.
 - Figurki 3D nie mają już kolorowej poświaty — tylko aktywna figurka ma cienką żółtą obwódkę wokół podstawki.

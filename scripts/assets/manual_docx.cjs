@@ -203,8 +203,8 @@ const AFTER_HEADING = {
   '8. Bitwa na arenie (Horda)': ['arena_horda.jpg', 470, 352, 'Arena Hordy — na ziemiach Hordy. Pola startowe po bokach, 7 przeszkód'],
   // Several pictures: a list of them.
   '2. Kto jest kim — jednostki': [
-    ['figurki/przymierze.png', 470, 288, 'Figurki Przymierza Świtu'],
-    ['figurki/horda.png', 470, 288, 'Figurki Mrocznej Hordy'],
+    ['figurki/przymierze.png', 470, 259, 'Figurki Przymierza Świtu'],
+    ['figurki/horda.png', 470, 259, 'Figurki Mrocznej Hordy'],
     ['figurki/straznicy.png', 470, 141, 'Figurki strażników kryształów'],
   ],
 };

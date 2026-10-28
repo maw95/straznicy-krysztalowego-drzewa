@@ -96,16 +96,18 @@ FIGURES := przymierze_zloty_smok:goldDragon przymierze_jednorozec:unicornKing pr
 	straznik_cyklop:cyclops straznik_gryf:griffin straznik_hydra:hydra
 RATIO ?= 0.02
 
-modele: ## Figurki 3D do gry: docs/druk3d/figurki/z_teksturami/<frakcja>_<postać>.glb -> public/modele/<jednostka>.glb (uproszczone, tekstury 1024 px WebP; model, który wyjdzie ponad 2,5 MB, upraszczany jest z większą tolerancją), np. make modele RATIO=0.02
-	@mkdir -p public/modele
-	@for f in $(FIGURES); do \
+modele: ## Figurki 3D do gry: docs/druk3d/figurki/z_teksturami/<frakcja>_<postać>.glb -> public/modele/<jednostka>.glb (uproszczone także przez szwy UV, scripts/assets/simplify_model.mjs; tekstury 1024 px WebP; model ponad 2,5 MB upraszczany mocniej), np. make modele RATIO=0.02
+	@mkdir -p public/modele .tmp
+	@modules=$$(dirname $$(dirname $$(npx -y -p @gltf-transform/cli@4 which gltf-transform))); \
+	for f in $(FIGURES); do \
 		src=docs/druk3d/figurki/z_teksturami/$${f%%:*}.glb; id=$${f##*:}; \
 		if [ -f $$src ]; then \
-			for err in 0.01 0.05; do \
-				npx -y @gltf-transform/cli@4 optimize $$src public/modele/$$id.glb --simplify-ratio $(RATIO) --simplify-error $$err \
+			for ratio in $(RATIO) 0.012; do \
+				MODULES=$$modules node --max-old-space-size=12000 scripts/assets/simplify_model.mjs $$src .tmp/$$id.glb $$ratio && \
+				npx -y @gltf-transform/cli@4 optimize .tmp/$$id.glb public/modele/$$id.glb --simplify false \
 					--texture-size 1024 --texture-compress webp --compress meshopt >/dev/null; \
 				[ $$(stat -c %s public/modele/$$id.glb) -lt 2500000 ] && break; \
-			done; echo "$$id: $$(du -h public/modele/$$id.glb | cut -f1)"; \
+			done; rm -f .tmp/$$id.glb; echo "$$id: $$(du -h public/modele/$$id.glb | cut -f1)"; \
 		else echo "$$id: brak modelu ($$src)"; fi; \
 	done
 

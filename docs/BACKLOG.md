@@ -8,16 +8,6 @@ porządki w kodzie (etapy 0–4 i resztki), wersja mobilna, zgłoszenia z 23.10 
 
 Szacunki kosztu to tokeny zużyte przez Claude w jednej sesji. Każdy punkt to osobny commit.
 
-- [ ] **1.5. Wszystkie figurki z nowych modeli, nowy układ figurek w instrukcji.** *Koszt: ok. 60–120 tys.*
-  - Stare modele w grze i instrukcji: **Pegaz, Pająk Jaskiniowy, Hydra** (nowe nie upraszczają się poniżej
-    11–15 MB, zob. punkt 2) i **Król Jednorożców** (`make modele` dał plik identyczny ze starym — sprawdzić, czy
-    `przymierze_jednorozec.glb` to na pewno nowy model). Pozostałe 11 sprawdzić porównaniem z rzutem źródła.
-    Spróbować uproszczenia, które ignoruje szwy UV (np. własny skrypt gltf-transform: weld z tolerancją,
-    `simplify` z `lockBorder: false`, albo meshoptimizer „sloppy”), byle tekstury się nie rozjechały;
-    w ostateczności poprosić autora o eksport ze scalonymi wierzchołkami. Potem `make figurki`.
-  - Instrukcja (`scripts/assets/manual_build.py`, strony „Figurki”): w każdej frakcji nagłówek „Bohaterowie”
-    i 3 większe figurki, pod nim „Pomocnicy” i 3 mniejsze. Strażnicy bez zmian. Sprawdzić, czy strony mieszczą
-    się w ramce (pewnie Przymierze i Horda na osobnych stronach).
 - [ ] **1.6. Karty strażników do pojedynku 1 na 1 (błękitny rewers).** *Koszt: ok. 120–200 tys.*
   - Autor dodał rewersy w `docs/grafika/karty/`: `rewers_straznicy_krysztalu.png` (granatowy — zwykli
     strażnicy) i `rewers_straznicy_krysztalu_latwy.png` (błękitny), a także rewersy frakcji i skarbów.
@@ -36,10 +26,6 @@ Szacunki kosztu to tokeny zużyte przez Claude w jednej sesji. Każdy punkt to o
 
 ## 2. Figurki 3D — drobne
 
-- **Pegaz, Pająk Jaskiniowy i Hydra** (zob. 1.5) — nowe pliki z 26.10 mają tyle szwów UV, że upraszczanie stoi na ok. 14%
-  trójkątów (11–15 MB po `make modele`), więc w grze zostały ich poprzednie wersje (1–2,2 MB). Lepiej byłoby
-  wyeksportować je ze scalonymi wierzchołkami (jak nowego Goblina, który ma teraz 1 MB). Uwaga: `make modele`
-  nadpisuje wszystkie 15 — po nim przywrócić te trzy z gita.
 - Kąt kamery i wielkość figurek — do ewentualnej korekty po obejrzeniu na żywo.
 
 ## 3. Szczegóły pod prawym przyciskiem — drobne

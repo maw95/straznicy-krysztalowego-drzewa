@@ -193,13 +193,23 @@ def figures(ids, height):
     return f'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1mm 4mm;align-items:end">{cells}</div>'
 
 
+def faction_figures(heroes, helpers):
+    """A faction's figures: the three heroes large, their helpers smaller below."""
+    return f'''<h3 style="text-align:center;margin:2mm 0 1mm">Bohaterowie</h3>
+{figures(heroes, '72mm')}
+<h3 style="text-align:center;margin:5mm 0 1mm">Pomocnicy</h3>
+{figures(helpers, '52mm')}'''
+
+
 sheet(f'''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Figurki</h1>
 <p class="intro" style="margin-bottom:2mm">Każda jednostka ma swoją figurkę. Kolor podstawki mówi, po czyjej jest stronie: <b>zielony</b> — Przymierze Świtu, <b>bordowy</b> — Mroczna Horda, <b>niebieski</b> — strażnicy kryształów.</p>
 <div class="banner" style="margin:1mm 0 2mm">Przymierze Świtu</div>
-{figures(['goldDragon', 'unicornKing', 'ancientBear', 'elfDruid', 'nymph', 'pegasus'], '31mm')}
-<div class="banner" style="margin:3mm 0 2mm">Mroczna Horda</div>
-{figures(['blackDragon', 'werewolfLord', 'ironFistOgre', 'goblinShaman', 'caveSpider', 'shadowBat'], '31mm')}
+{faction_figures(['goldDragon', 'unicornKing', 'ancientBear'], ['elfDruid', 'nymph', 'pegasus'])}
 ''', left='Rozdział 1', right='Elementy gry', foot='Co jest w pudełku')
+sheet(f'''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Figurki Hordy</h1>
+<div class="banner" style="margin:1mm 0 2mm">Mroczna Horda</div>
+{faction_figures(['blackDragon', 'werewolfLord', 'ironFistOgre'], ['goblinShaman', 'caveSpider', 'shadowBat'])}
+''', cls='horde', left='Rozdział 1', right='Elementy gry', foot='Co jest w pudełku')
 sheet(f'''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Figurki strażników</h1>
 <div style="margin:3mm 0 6mm">{figures(['cyclops', 'griffin', 'hydra'], '52mm')}</div>
 <div class="card" style="--accent:var(--navy)"><h3>Jedna figurka na jednym polu</h3><p>Figurki stoją na sześciokątnych podstawkach, które mieszczą się w polu areny i na kafelku mapy. Na jednym polu stoi zawsze tylko jedna figurka — wyjątkiem jest baza frakcji, gdzie może stać kilku jej bohaterów.</p></div>

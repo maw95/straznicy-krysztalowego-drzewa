@@ -1,7 +1,7 @@
 // Pictures of the 3D figures for the rulebook, rendered by the game's own three.js scene (FigurePreview) in a
 // headless browser, on a transparent background:
 //   docs/edytowalny_szablon_instrukcji/assets/figurki/<unit>.png  — one figure, cropped to it (the HTML rulebook);
-//   docs/edytowalny_szablon_instrukcji/assets/figurki/<faction>.png — the faction's figures side by side (the .docx).
+//   docs/edytowalny_szablon_instrukcji/assets/figurki/<faction>.png — the faction's heroes, larger, above its helpers (the .docx).
 // Run after `make modele`. Usage: npx tsx scripts/browser/figury.ts   (or: make figurki)
 
 import { writeFileSync } from 'node:fs';
@@ -52,16 +52,18 @@ try {
           files[id] = c.toDataURL('image/png');
           cut.push(c);
         }
-        // The set: figures in rows of three, each scaled to one height and standing on a common line.
+        // The set: figures in rows of three standing on a common line; the first row (the heroes) larger.
         const rows = Math.ceil(cut.length / 3);
-        const cellW = 520, cellH = 480, gap = 20;
-        const set = Object.assign(document.createElement('canvas'), { width: 3 * cellW + 2 * gap, height: rows * cellH + (rows - 1) * gap });
+        const cellW = 520, gap = 20;
+        const rowH = rows > 1 ? [500, 360] : [480];
+        const set = Object.assign(document.createElement('canvas'), { width: 3 * cellW + 2 * gap, height: rowH.reduce((a, b) => a + b, 0) + (rows - 1) * gap });
         const g = set.getContext('2d')!;
         cut.forEach((c, i) => {
-          const k = Math.min(cellW / c.width, cellH / c.height);
+          const row = Math.floor(i / 3);
+          const k = Math.min(cellW / c.width, rowH[row] / c.height);
           const [w, h] = [c.width * k, c.height * k];
-          const [cx, cy] = [(i % 3) * (cellW + gap), Math.floor(i / 3) * (cellH + gap)];
-          g.drawImage(c, cx + (cellW - w) / 2, cy + cellH - h, w, h);
+          const [cx, cy] = [(i % 3) * (cellW + gap), rowH.slice(0, row).reduce((a, b) => a + b + gap, 0)];
+          g.drawImage(c, cx + (cellW - w) / 2, cy + rowH[row] - h, w, h);
         });
         files[faction] = set.toDataURL('image/png');
       }
