@@ -320,6 +320,15 @@ wiadomość `game` zawiera cały dziennik z wpisami `privateTo` (filtrowane tylk
 
 ## 8. Nowe zgłoszenia (na końcu, po punktach 5–7)
 
-- [ ] `make zgloszenia` — pobranie nowych zgłoszeń z serwera.
-- [ ] Analiza nowych zgłoszeń z serwera oraz tych dodanych lokalnie do `bug-reports/` (i `tester-reports/`),
-  których jeszcze nie ma w backlogu; wnioski i propozycje do decyzji autora przed wdrażaniem.
+- [x] `make zgloszenia` (28.10): 2 nowe zgłoszenia z serwera, obie z gry online ORK-3769
+  (`bug-reports/2026-10-23-20-38-45-serwer-3.json`, `…-2026-10-25-14-31-26-serwer-4.json`); lokalnie w `bug-reports/`
+  nie ma innych nieprzeanalizowanych plików, `tester-reports/` jest puste.
+- [x] **#3, telefon 375×794:** tor rund zasłaniał pola mapy, nie dało się ich kliknąć. Naprawione w punkcie 6
+  (na telefonie tor rund jest ukryty, runda jest na dolnym pasku).
+- [ ] **#4, do decyzji:** „walka z cyklopem zabrała mi wszystkie punkty ruchu, a powinna zabrać tylko jeden”.
+  Gra działa według obecnych zasad: każda bitwa kończy ruch bohatera w tej turze (silnik: `turnBattleDone`,
+  `movePoints = 0`). Instrukcja mówi to wprost dla bitwy z wrogim bohaterem (rozdz. 7), ale przy strażniku
+  („Strażnik — wejście na jego pole to wyzwanie do walki”) już nie. Możliwości:
+  1. zostawić zasadę i dopisać ją w instrukcji przy strażniku (oraz w podpowiedzi na mapie: „walka zakończy ruch”);
+  2. walka ze strażnikiem kosztuje 1 punkt ruchu, a po wygranej bohater idzie dalej — zmiana zasad także
+     w wersji papierowej, do sprawdzenia symulacjami (przyspiesza zbieranie kryształów, więc kooperacja będzie łatwiejsza).
