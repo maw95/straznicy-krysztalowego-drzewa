@@ -30,6 +30,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Strzelec, który ma wroga tuż obok, widzi nad nim kursor strzały, a nie miecza — i tak strzela, a nie bije wręcz.
 - Narzędzia: `make modele` robi lekkie figurki do gry z modeli do druku (ok. 1–1,5 MB zamiast 120–200 MB); galeria `?figury` pokazuje każdą z czterech stron.
 - Narzędzia: testy interfejsu korzystają ze wspólnych pomocników (`tests/helpers/ui.ts`: przygotowanie jsdom, szukanie przycisków, zamykanie okien).
+- Mapa świata: ślad drogi bohatera i odsłanianie pól liczone porządniej (bez zmian w wyglądzie).
 
 ## 2.0.1 — 2026-10-23
 

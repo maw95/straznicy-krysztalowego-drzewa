@@ -92,22 +92,23 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
 
   const hero = activeHero(state);
   const rows = state.rows;
-  // Path the active hero walked this turn (drawn as a flowing dotted line).
-  const trail = useRef<{ turn: string; hexes: HexKey[] }>({ turn: '', hexes: [] });
+  // Path the active hero walked this turn (drawn as a flowing dotted line). It grows from one render to the next,
+  // so it is state adjusted during render (React re-renders at once, before anything is drawn).
+  const [trail, setTrail] = useState<{ turn: string; hexes: HexKey[] }>({ turn: '', hexes: [] });
   if (hero && !hero.entering) {
     const turn = `${state.round}:${state.turnIndex}:${hero.id}`;
-    if (trail.current.turn !== turn) trail.current = { turn, hexes: [hero.pos] };
-    else if (trail.current.hexes[trail.current.hexes.length - 1] !== hero.pos) trail.current.hexes.push(hero.pos);
+    if (trail.turn !== turn) setTrail({ turn, hexes: [hero.pos] });
+    else if (trail.hexes[trail.hexes.length - 1] !== hero.pos) setTrail({ turn, hexes: [...trail.hexes, hero.pos] });
   }
 
   // Only hexes revealed since the previous render turn over (not the whole map on remount).
   const seenRevealed = useRef<Set<HexKey> | null>(null);
+  const nowRevealed = useMemo(() => new Set(Object.values(state.tiles).filter((t) => t.revealed).map((t) => t.key)), [state.tiles]);
   const freshlyRevealed = new Set<HexKey>();
-  const nowRevealed = new Set(Object.values(state.tiles).filter((t) => t.revealed).map((t) => t.key));
   if (seenRevealed.current) for (const k of nowRevealed) if (!seenRevealed.current.has(k)) freshlyRevealed.add(k);
   useEffect(() => {
     seenRevealed.current = nowRevealed;
-  });
+  }, [nowRevealed]);
   // Fit the triangle into the frame; on phones start with finger-sized hexes and let the map scroll.
   // Phones can zoom (buttons, two fingers) between the whole map and big hexes.
   const fitW = Math.min(118, (box.w - 24) / rows, (box.h - 24) / (1.1547 * (0.75 * (rows - 1) + 1)));
@@ -176,6 +177,12 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const preview = hover && reach.get(hover) ? reach.get(hover)!.path : null;
   const tiles = Object.values(state.tiles);
   const pos = (t: Tile) => ({ x: ((rows - 1) / 2 + t.col - t.row / 2) * W, y: t.row * 0.75 * H });
+  const trailPoints = trail.hexes.length > 1
+    ? trail.hexes.map((k) => {
+        const p = pos(state.tiles[k]);
+        return `${p.x + W / 2},${p.y + H / 2}`;
+      }).join(' ')
+    : null;
   /** Where a hero stands on its hex: the middle of the base (heroes sharing a hex stand side by side). */
   const heroSpot = (h: (typeof state.heroes)[string]) => {
     const p = pos(state.tiles[h.pos]);
@@ -358,10 +365,10 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                   </button>
                 );
               })}
-              {trail.current.hexes.length > 1 && (
+              {trailPoints && (
                 <svg aria-hidden="true" width={boardW} height={boardH} style={{ position: 'absolute', left: 0, top: 0, pointerEvents: 'none', zIndex: 6 }}>
                   <polyline
-                    points={trail.current.hexes.map((k) => `${pos(state.tiles[k]).x + W / 2},${pos(state.tiles[k]).y + H / 2}`).join(' ')}
+                    points={trailPoints}
                     fill="none"
                     stroke="#1E1204"
                     strokeWidth={W * 0.08}
@@ -371,7 +378,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                   />
                   <polyline
                     className="trail"
-                    points={trail.current.hexes.map((k) => `${pos(state.tiles[k]).x + W / 2},${pos(state.tiles[k]).y + H / 2}`).join(' ')}
+                    points={trailPoints}
                     fill="none"
                     stroke="#F3D27A"
                     strokeWidth={W * 0.04}
