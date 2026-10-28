@@ -76,13 +76,21 @@ function supportValue(id: string): number {
   return d.hp + d.attack * 1.5 + (d.attackType === 'ranged' ? 2 : 0);
 }
 
+/** Where `u`'s enemies stand, how far they reach next round and how hard they hit. */
+interface Threat {
+  pos: HexKey;
+  reach: number;
+  attack: number;
+}
+
+function threatsTo(state: GameState, u: BattleUnit): Threat[] {
+  return enemiesOf(state.battle!, u).map((e) => ({ pos: e.pos!, reach: unitSpeed(e) + (UNITS[e.defId].attackType === 'ranged' ? 99 : 1), attack: unitAttackBase(e) }));
+}
+
 /** Danger of standing on `cell`: how much damage enemies could deal there next round. */
-function danger(state: GameState, u: BattleUnit, cell: HexKey): number {
+function danger(threats: Threat[], cell: HexKey): number {
   let total = 0;
-  for (const e of enemiesOf(state.battle!, u)) {
-    const reach = unitSpeed(e) + (UNITS[e.defId].attackType === 'ranged' ? 99 : 1);
-    if (dist(e.pos!, cell) <= reach) total += unitAttackBase(e);
-  }
+  for (const t of threats) if (dist(t.pos, cell) <= t.reach) total += t.attack;
   return total;
 }
 
@@ -101,12 +109,13 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   if (!act.moved && !act.attacked) for (const [k, d] of reachableCells(state, u)) options.push([k, d]);
   const enemies = enemiesOf(b, u);
   const ranged = UNITS[u.defId].attackType === 'ranged';
+  const threats = threatsTo(state, u);
+  // Caution fades as the battle drags on, so nobody kites forever.
+  const caution = Math.max(0, 1 - (b.round - 1) / 6);
   let best: Plan = { moveTo: null, target: null, second: null, useAbility: false, score: -Infinity };
   for (const [cell, steps] of options) {
     const moved = act.movedDistance + steps;
-    // Caution fades as the battle drags on, so nobody kites forever.
-    const caution = Math.max(0, 1 - (b.round - 1) / 6);
-    const risk = (danger(state, u, cell) / Math.max(1, u.hp)) * caution;
+    const risk = (danger(threats, cell) / Math.max(1, u.hp)) * caution;
     const targets = act.attacked || act.moveOnly ? [] : attackTargets(state, u, cell);
     for (const t of targets) {
       for (const useAbility of abilityChoices(state, u)) {
@@ -282,10 +291,11 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
   if (act.moved || act.attacked) return { type: 'endActivation' };
   // Move: to a cell from which the chosen enemy can be hit (fewest steps), else towards the nearest enemy.
   const cells = [...reachableCells(state, u)].sort((x, y) => x[1] - y[1] || (x[0] < y[0] ? -1 : 1));
-  const reachable = cells.flatMap(([cell]) => attackFrom(cell));
+  const from = new Map(cells.map(([cell]) => [cell, attackFrom(cell)]));
+  const reachable = [...from.values()].flat();
   const goal = rulebookTarget([...new Map(reachable.map((t) => [t.id, t])).values()]);
   if (goal) {
-    const cell = cells.find(([c]) => attackFrom(c).some((t) => t.id === goal.id));
+    const cell = cells.find(([c]) => from.get(c)!.some((t) => t.id === goal.id));
     if (cell) return { type: 'battleMove', to: cell[0] };
   }
   const enemies = enemiesOf(b, u);
@@ -310,7 +320,8 @@ export function chooseBattleAction(state: GameState): Action {
   const act = b.activation!;
   const u = b.units[act.unitId];
   if (act.hop) {
-    const cells = hopCells(state, u, act.hop).sort((x, y) => danger(state, u, x) - danger(state, u, y) || (x < y ? -1 : 1));
+    const threats = threatsTo(state, u);
+    const cells = hopCells(state, u, act.hop).sort((x, y) => danger(threats, x) - danger(threats, y) || (x < y ? -1 : 1));
     return cells.length ? { type: 'battleHop', to: cells[0] } : { type: 'endActivation' };
   }
   if (u.side !== 'neutral' && !act.acted) {

@@ -1,7 +1,7 @@
 // Adventure map: triangle generation (variant A), costs and path finding.
 
 import { GUARDIAN_LAIRS, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type MapSize, type Terrain, type TileSide } from './data';
-import { distance, key, neighbors, parseKey, triToHex, type HexKey } from './hex';
+import { distance, key, neighborKeys, parseKey, triToHex, type HexKey } from './hex';
 import { Rng } from './rng';
 import type { GameState, Tile } from './types';
 
@@ -9,13 +9,8 @@ export function tileCost(t: Tile): number | null {
   return TERRAIN_COST[t.terrain];
 }
 
-/** The six neighbouring keys of a hex, on or off the map (pure geometry, so cached). */
-const NEAR = new Map<HexKey, HexKey[]>();
-
 export function mapNeighbors(tiles: Record<HexKey, Tile>, k: HexKey): HexKey[] {
-  let near = NEAR.get(k);
-  if (!near) NEAR.set(k, (near = neighbors(parseKey(k)).map(key)));
-  return near.filter((n) => n in tiles);
+  return neighborKeys(k).filter((n) => n in tiles);
 }
 
 export function treeKey(): HexKey {

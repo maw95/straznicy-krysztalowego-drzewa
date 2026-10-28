@@ -39,6 +39,15 @@ export function neighbors(h: Hex): Hex[] {
   return DIRECTIONS.map((d) => add(h, d));
 }
 
+const NEAR = new Map<HexKey, readonly HexKey[]>();
+
+/** Keys of the six neighbours of a hex, on or off any board (shared: never change the list). */
+export function neighborKeys(k: HexKey): readonly HexKey[] {
+  let near = NEAR.get(k);
+  if (!near) NEAR.set(k, (near = neighbors(parseKey(k)).map(key)));
+  return near;
+}
+
 export function distance(a: Hex, b: Hex): number {
   const dq = a.q - b.q;
   const dr = a.r - b.r;

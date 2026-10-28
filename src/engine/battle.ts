@@ -2,7 +2,7 @@
 // Functions mutate the (already cloned) GameState passed in.
 
 import { ABILITY, ITEMS, UNITS, type AbilityId, type FactionId, type Side } from './data';
-import { distance, directionBetween, add, key, line, neighbors, parseKey, type HexKey } from './hex';
+import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
 import { Rng } from './rng';
 import type { Activation, BattleState, BattleUnit, GameState, UnitStatus } from './types';
 
@@ -36,12 +36,17 @@ export function cellOf(k: HexKey): { col: number; half: number } {
   return { col: h.q, half: 2 * h.r + h.q };
 }
 
-export function arenaCells(): HexKey[] {
-  const out: HexKey[] = [];
-  COLUMN_SPAN.forEach(([from, to], col) => {
+const ARENA_CELLS: readonly HexKey[] = Object.freeze(
+  COLUMN_SPAN.flatMap(([from, to], col) => {
+    const out: HexKey[] = [];
     for (let half = from; half <= to; half += 2) out.push(arenaCell(col, half));
-  });
-  return out;
+    return out;
+  }),
+);
+
+/** Every cell of the arena, column by column (shared: never change the list). */
+export function arenaCells(): readonly HexKey[] {
+  return ARENA_CELLS;
 }
 
 /** Cells of one column, from the middle outwards. */
@@ -56,8 +61,34 @@ export function arenaObstacles(arena: ArenaId): HexKey[] {
   return ARENA_OBSTACLES[arena].map(([c, h]) => arenaCell(c, h));
 }
 
-const ARENA_SET = new Set(arenaCells());
+const ARENA_SET = new Set(ARENA_CELLS);
 export const inArena = (k: HexKey) => ARENA_SET.has(k);
+
+const OBSTACLE_SETS = new WeakMap<HexKey[], Set<HexKey>>();
+
+/** The battle's obstacles as a set, built once per obstacle list. */
+function obstacleSet(b: BattleState): Set<HexKey> {
+  let set = OBSTACLE_SETS.get(b.obstacles);
+  if (!set) OBSTACLE_SETS.set(b.obstacles, (set = new Set(b.obstacles)));
+  return set;
+}
+
+/** Living units by cell, for searches that look up many cells (the first listed, as unitAt finds it). */
+function occupancy(b: BattleState): Map<HexKey, BattleUnit> {
+  const out = new Map<HexKey, BattleUnit>();
+  for (const u of Object.values(b.units)) if (u.alive && u.pos && !out.has(u.pos)) out.set(u.pos, u);
+  return out;
+}
+
+const SIGHT_LINES = new Map<string, readonly HexKey[]>();
+
+/** The cells strictly between two cells on a straight line. */
+function cellsBetween(from: HexKey, to: HexKey): readonly HexKey[] {
+  const k = `${from}|${to}`;
+  let cells = SIGHT_LINES.get(k);
+  if (!cells) SIGHT_LINES.set(k, (cells = line(parseKey(from), parseKey(to)).map(key).slice(1, -1)));
+  return cells;
+}
 
 export function newStatus(): UnitStatus {
   return { slowNext: 0, rootedNext: false, cursedNext: 0, nextAttackBonus: 0, battleAttackBonus: 0, battleSpeedBonus: 0, damageReduction: 0, shieldArmed: false };
@@ -123,18 +154,18 @@ export function moveRange(u: BattleUnit): number {
 function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number>; parent: Map<HexKey, HexKey> } {
   const b = state.battle!;
   const range = moveRange(u);
-  const obstacles = new Set(b.obstacles);
+  const obstacles = obstacleSet(b);
+  const units = occupancy(b);
   const dist = new Map<HexKey, number>([[u.pos!, 0]]);
   const parent = new Map<HexKey, HexKey>();
   const queue = [u.pos!];
-  while (queue.length) {
-    const cur = queue.shift()!;
+  for (let head = 0; head < queue.length; head++) {
+    const cur = queue[head];
     const d = dist.get(cur)!;
     if (d >= range) continue;
-    for (const nh of neighbors(parseKey(cur))) {
-      const n = key(nh);
+    for (const n of neighborKeys(cur)) {
       if (!inArena(n) || obstacles.has(n) || dist.has(n)) continue;
-      const occ = unitAt(b, n);
+      const occ = units.get(n);
       if (occ && (occ.side !== u.side || !state.rules.passThroughAllies)) continue;
       dist.set(n, d + 1);
       parent.set(n, cur);
@@ -150,10 +181,11 @@ export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, num
   const out = new Map<HexKey, number>();
   if (!u.pos || b.duel) return out;
   const range = moveRange(u);
-  const obstacles = new Set(b.obstacles);
-  const occupant = (k: HexKey) => unitAt(b, k);
+  const obstacles = obstacleSet(b);
+  const units = occupancy(b);
+  const occupant = (k: HexKey) => units.get(k);
   if (UNITS[u.defId].movement === 'fly') {
-    for (const k of arenaCells()) {
+    for (const k of ARENA_CELLS) {
       if (k === u.pos || obstacles.has(k) || occupant(k)) continue;
       const d = distance(parseKey(u.pos), parseKey(k));
       if (d <= range) out.set(k, d);
@@ -182,9 +214,8 @@ export function movePath(state: GameState, u: BattleUnit, to: HexKey): HexKey[] 
 
 export function hasLineOfSight(state: GameState, from: HexKey, to: HexKey): boolean {
   const b = state.battle!;
-  const obstacles = new Set(b.obstacles);
-  const path = line(parseKey(from), parseKey(to)).map(key);
-  for (const k of path.slice(1, -1)) {
+  const obstacles = obstacleSet(b);
+  for (const k of cellsBetween(from, to)) {
     if (obstacles.has(k)) return false;
     if (state.rules.unitsBlockSight && unitAt(b, k)) return false;
   }
@@ -543,7 +574,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   if (act.attacked) throw new Error('Ta jednostka już atakowała.');
   if (act.moveOnly) throw new Error('Ta aktywacja pozwala tylko na ruch.');
   const target = b.units[targetId];
-  if (!target || !attackTargets(state, u).some((t) => t.id === targetId)) throw new Error('Nieprawidłowy cel ataku.');
+  const legal = attackTargets(state, u);
+  if (!target || !legal.some((t) => t.id === targetId)) throw new Error('Nieprawidłowy cel ataku.');
   const ab = abilityOf(u);
   const canUse = useAbility && !u.abilityUsed && abilityActive(state, u) && ATTACK_ABILITIES.includes(ab);
   if (useAbility && !canUse) throw new Error('Zdolność jest niedostępna.');
@@ -556,7 +588,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   if (secondTargetId && !(canUse && ab === 'fireBreath')) {
     const second = b.units[secondTargetId];
     if (!canHitTwo(state, u)) throw new Error('Ta jednostka atakuje jeden cel.');
-    if (!second || second.id === target.id || !adjacent(u.pos!, target.pos!) || !adjacent(u.pos!, second.pos!) || !attackTargets(state, u).some((t) => t.id === second.id)) {
+    if (!second || second.id === target.id || !adjacent(u.pos!, target.pos!) || !adjacent(u.pos!, second.pos!) || !legal.some((t) => t.id === second.id)) {
       throw new Error('Drugi cel musi sąsiadować z atakującym.');
     }
     targets.push(second);
@@ -604,8 +636,9 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
 
 export function hopCells(state: GameState, u: BattleUnit, range: number): HexKey[] {
   const b = state.battle!;
-  const obstacles = new Set(b.obstacles);
-  return arenaCells().filter((k) => !obstacles.has(k) && !unitAt(b, k) && u.pos && distance(parseKey(u.pos), parseKey(k)) <= range && k !== u.pos);
+  const obstacles = obstacleSet(b);
+  const units = occupancy(b);
+  return ARENA_CELLS.filter((k) => !obstacles.has(k) && !units.has(k) && u.pos && distance(parseKey(u.pos), parseKey(k)) <= range && k !== u.pos);
 }
 
 export function battleHop(state: GameState, to: HexKey) {
