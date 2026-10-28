@@ -402,40 +402,6 @@ export function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastBattleId]);
 
-  // Keyboard shortcuts (battle-specific keys live in BattleView).
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const t = e.target as HTMLElement;
-      if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA')) return;
-      if (e.key === 'Escape') {
-        if (confirm) setConfirm(null);
-        else if (card) setCard(null);
-        else if (showLog) setShowLog(false);
-        else if (showDebug) setShowDebug(false);
-        else if (showRules) setShowRules(false);
-        else if (showReport) setShowReport(false);
-        else if (summary) setSummary(null);
-        else if (showStats) setShowStats(false);
-        else if (showChangelog) setShowChangelog(false);
-        return;
-      }
-      if (confirm || card || showLog || showDebug || showRules || showReport || summary) return;
-      const k = e.key.toLowerCase();
-      if (k === 'd') setShowLog(true);
-      else if (k === 'o') setShowDebug(true);
-      else if (k === 'r' || k === '?') setShowRules(true);
-      else if (k === 'b' && gameRef.current) setShowReport(true);
-      else if ((k === 'z' && (e.ctrlKey || e.metaKey)) || k === 'u') undo();
-      else if (k === 'f') fastForward();
-      else if ((k === ' ' || k === 'e') && gameRef.current?.phase === 'adventure' && humanTurnRef.current) {
-        e.preventDefault();
-        humanAction({ type: 'endTurn' });
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [confirm, card, showLog, showDebug, showRules, showReport, summary, showStats, showChangelog, undo, fastForward, humanAction]);
-
   const visibleLog = useMemo(() => (game ? game.log.filter((l) => !l.privateTo || l.privateTo === viewer) : []), [game, viewer]);
 
   // "Since your last turn": with bots at the table a lot happens off-screen
@@ -489,6 +455,62 @@ export function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const menuAutosave = useMemo(() => (game ? null : readAutosave()), [game === null]);
   const overlay = session && <OnlineOverlay session={session} onAccept={acceptInvitation} />;
+
+  // Keyboard shortcuts (battle-specific keys live in BattleView). One listener for the whole game;
+  // it reads the open dialogs through a ref.
+  const keys = useRef({ closeTop: (): boolean => false, anyOpen: false, undo, fastForward, humanAction });
+  keys.current = {
+    // Esc closes the dialog on top, one at a time.
+    closeTop: () => {
+      const open: Array<[unknown, () => void]> = [
+        [confirm, () => setConfirm(null)],
+        [card, () => setCard(null)],
+        [found, () => setFound(null)],
+        [digest, () => setDigest(null)],
+        [showLog, () => setShowLog(false)],
+        [showDebug, () => setShowDebug(false)],
+        [showRules, () => setShowRules(false)],
+        [showReport, () => setShowReport(false)],
+        [summary, () => setSummary(null)],
+        [showStats, () => setShowStats(false)],
+        [showChangelog, () => setShowChangelog(false)],
+        [showTesters, () => setShowTesters(false)],
+        [showChat, () => setShowChat(false)],
+      ];
+      const top = open.find(([isOpen]) => isOpen !== null && isOpen !== false);
+      top?.[1]();
+      return Boolean(top);
+    },
+    anyOpen: Boolean(confirm || card || found || digest || showLog || showDebug || showRules || showReport || summary !== null || showStats || showChangelog || showTesters || showChat),
+    undo,
+    fastForward,
+    humanAction,
+  };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA')) return;
+      const ks = keys.current;
+      if (e.key === 'Escape') {
+        ks.closeTop();
+        return;
+      }
+      if (ks.anyOpen) return;
+      const k = e.key.toLowerCase();
+      if (k === 'd') setShowLog(true);
+      else if (k === 'o') setShowDebug(true);
+      else if (k === 'r' || k === '?') setShowRules(true);
+      else if (k === 'b' && gameRef.current) setShowReport(true);
+      else if ((k === 'z' && (e.ctrlKey || e.metaKey)) || k === 'u') ks.undo();
+      else if (k === 'f') ks.fastForward();
+      else if ((k === ' ' || k === 'e') && gameRef.current?.phase === 'adventure' && humanTurnRef.current) {
+        e.preventDefault();
+        ks.humanAction({ type: 'endTurn' });
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   /** "Nowa gra": online it also leaves the room (the game goes on for the others, a bot takes the seats). */
   const leaveGame = () => {
