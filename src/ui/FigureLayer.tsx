@@ -1,7 +1,8 @@
 // 3D figures standing on the flat board (the map and the arena), as in Heroes III: the board stays 2D,
 // the figures are drawn by three.js on one transparent canvas over it, seen by a camera tilted forward.
 // The layer follows the positions the screen gives (screen pixels of each figure's base): a figure glides
-// there, turning to face the way it goes; it faces its target and lunges when it attacks, shakes when hit,
+// there, first turning (slowly) to face the way it goes and only then moving; it turns to its target and
+// then lunges when it attacks, shakes when hit,
 // and a thin outline round its base marks the active unit. Clicks go to the board below.
 
 import { useEffect, useRef } from 'react';
@@ -33,24 +34,37 @@ export interface Piece {
 /** The camera's elevation above the board (degrees): higher shows more of the top, lower more of the front. */
 const TILT = 35;
 const SIN = Math.sin((TILT * Math.PI) / 180);
-const TURN_MS = 160;
+/** A turn takes a moment plus a time per radian: a half turn about 0.7 s. */
+const TURN_MS = 150;
+const TURN_MS_PER_RAD = 180;
 const LUNGE_MS = 420;
 const SHAKE_MS = 300;
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+/** One phase of a figure's motion; phases run one after another, never two at once. */
+type Step =
+  | { kind: 'turn'; to: number; ms: number; from?: number }
+  | { kind: 'move'; to: Point; ms: number; from?: Point; planned: number; undo: { end: Point; endAngle: number; length: number } }
+  | { kind: 'lunge'; at: Point; ms: number };
 
 interface Live {
   piece: Piece;
   node: Group;
   figure: Object3D | null;
   ring: Mesh | null;
-  from: { x: number; y: number };
-  to: { x: number; y: number };
-  moveStart: number;
-  moveMs: number;
+  /** Where the figure stands and how it faces when no step is running. */
+  at: Point;
   angle: number;
-  angleFrom: number;
-  angleTo: number;
-  turnStart: number;
-  lungeStart: number;
+  /** Where and how it will stand once every planned step is done (new steps start from there). */
+  end: Point;
+  endAngle: number;
+  plan: Step[];
+  step: Step | null;
+  stepStart: number;
   shakeStart: number;
 }
 
@@ -132,7 +146,7 @@ class Stage {
         const node = new THREE.Group();
         this.scene.add(node);
         const facing = p.face ? angleOf(p.face.x, p.face.y) : 0;
-        l = { piece: p, node, figure: null, ring: null, from: { x: p.x, y: p.y }, to: { x: p.x, y: p.y }, moveStart: 0, moveMs: 0, angle: facing, angleFrom: facing, angleTo: facing, turnStart: 0, lungeStart: 0, shakeStart: 0 };
+        l = { piece: p, node, figure: null, ring: null, at: { x: p.x, y: p.y }, angle: facing, end: { x: p.x, y: p.y }, endAngle: facing, plan: [], step: null, stepStart: 0, shakeStart: 0 };
         this.live.set(p.key, l);
         const entry = l;
         loadFigure(p.unitId)
@@ -143,19 +157,27 @@ class Stage {
             this.kick();
           })
           .catch(() => undefined);
-      } else if (p.x !== l.to.x || p.y !== l.to.y) {
+      } else if (p.x !== l.end.x || p.y !== l.end.y) {
         changed = true;
-        const at = this.position(l, now);
-        l.from = at;
-        l.to = { x: p.x, y: p.y };
-        l.moveStart = now;
-        l.moveMs = p.moveMs ?? 300;
-        this.turnTo(l, angleOf(p.x - at.x, p.y - at.y), now);
+        // A position replaced at once (a walk puts the figure back at the start of its path right after
+        // the game moved it) is a correction, not a trip: the move that has not started yet is dropped.
+        const last = l.plan[l.plan.length - 1];
+        if (last?.kind === 'move' && now - last.planned < 40) {
+          l.plan.length = last.undo.length;
+          l.end = last.undo.end;
+          l.endAngle = last.undo.endAngle;
+        }
+        const undo = { end: l.end, endAngle: l.endAngle, length: l.plan.length };
+        if (p.x !== l.end.x || p.y !== l.end.y) {
+          this.turnTo(l, angleOf(p.x - l.end.x, p.y - l.end.y));
+          l.plan.push({ kind: 'move', to: { x: p.x, y: p.y }, ms: p.moveMs ?? 300, planned: now, undo });
+          l.end = { x: p.x, y: p.y };
+        }
       }
       if (p.lungeAt && (!l.piece.lungeAt || p.lungeAt.key !== l.piece.lungeAt.key)) {
         changed = true;
-        l.lungeStart = now;
-        this.turnTo(l, angleOf(p.lungeAt.x - p.x, p.lungeAt.y - p.y), now);
+        this.turnTo(l, angleOf(p.lungeAt.x - l.end.x, p.lungeAt.y - l.end.y));
+        l.plan.push({ kind: 'lunge', at: { ...p.lungeAt }, ms: LUNGE_MS });
       }
       if (p.hit && !l.piece.hit) {
         changed = true;
@@ -163,7 +185,7 @@ class Stage {
       }
       if (p.lookAt && (p.lookAt.x !== l.piece.lookAt?.x || p.lookAt.y !== l.piece.lookAt?.y)) {
         changed = true;
-        this.turnTo(l, angleOf(p.lookAt.x - p.x, p.lookAt.y - p.y), now);
+        this.turnTo(l, angleOf(p.lookAt.x - l.end.x, p.lookAt.y - l.end.y));
       }
       if ((p.ring ?? null) !== (l.piece.ring ?? null) || p.size !== l.piece.size) changed = true;
       this.setRing(l, p.ring ?? null);
@@ -179,11 +201,13 @@ class Stage {
     if (changed) this.kick();
   }
 
-  private turnTo(l: Live, angle: number, now: number) {
-    l.angleFrom = l.angle;
+  /** Plans a turn to `angle` after the steps already planned (none when the figure already faces it). */
+  private turnTo(l: Live, angle: number) {
     // The short way round.
-    l.angleTo = l.angle + Math.atan2(Math.sin(angle - l.angle), Math.cos(angle - l.angle));
-    l.turnStart = now;
+    const d = Math.atan2(Math.sin(angle - l.endAngle), Math.cos(angle - l.endAngle));
+    if (Math.abs(d) < 0.05) return;
+    l.endAngle += d;
+    l.plan.push({ kind: 'turn', to: l.endAngle, ms: TURN_MS + Math.abs(d) * TURN_MS_PER_RAD });
   }
 
   private outline: import('three').RingGeometry | null = null;
@@ -213,9 +237,23 @@ class Stage {
     (l.ring.material as import('three').MeshBasicMaterial).color.set(color);
   }
 
-  private position(l: Live, now: number) {
-    const t = l.moveMs ? Math.min(1, (now - l.moveStart) / l.moveMs) : 1;
-    return { x: l.from.x + (l.to.x - l.from.x) * t, y: l.from.y + (l.to.y - l.from.y) * t };
+  /** Runs the figure's plan up to `now`: finished steps settle, the next one starts where the last ended. */
+  private advance(l: Live, now: number) {
+    for (;;) {
+      if (l.step && now - l.stepStart >= l.step.ms) {
+        if (l.step.kind === 'turn') l.angle = l.step.to;
+        if (l.step.kind === 'move') l.at = l.step.to;
+        l.stepStart += l.step.ms;
+        l.step = null;
+      }
+      if (l.step || !l.plan.length) return;
+      const next = l.plan.shift()!;
+      if (next.kind === 'turn') next.from = l.angle;
+      if (next.kind === 'move') next.from = l.at;
+      // Right after the previous step, or now if the figure was standing still.
+      l.stepStart = Math.max(l.stepStart, now - 20);
+      l.step = next;
+    }
   }
 
   /** Draws the next frame, and keeps drawing while anything moves. */
@@ -230,18 +268,23 @@ class Stage {
     let busy = false;
     for (const l of this.live.values()) {
       const p = l.piece;
-      const at = this.position(l, now);
-      if (l.moveMs && now - l.moveStart < l.moveMs) busy = true;
-      let { x, y } = at;
-      const turn = Math.min(1, (now - l.turnStart) / TURN_MS);
-      l.angle = l.angleFrom + (l.angleTo - l.angleFrom) * ease(turn);
-      if (turn < 1) busy = true;
-      const lunge = (now - l.lungeStart) / LUNGE_MS;
-      if (p.lungeAt && lunge < 1) {
-        const k = Math.sin(lunge * Math.PI) * 0.35;
-        x += (p.lungeAt.x - x) * k;
-        y += (p.lungeAt.y - y) * k;
+      this.advance(l, now);
+      let { x, y } = l.at;
+      let angle = l.angle;
+      const step = l.step;
+      if (step) {
         busy = true;
+        const t = Math.min(1, (now - l.stepStart) / step.ms);
+        if (step.kind === 'turn') angle = step.from! + (step.to - step.from!) * ease(t);
+        if (step.kind === 'move') {
+          x = step.from!.x + (step.to.x - step.from!.x) * t;
+          y = step.from!.y + (step.to.y - step.from!.y) * t;
+        }
+        if (step.kind === 'lunge') {
+          const k = Math.sin(t * Math.PI) * 0.35;
+          x += (step.at.x - x) * k;
+          y += (step.at.y - y) * k;
+        }
       }
       const shake = (now - l.shakeStart) / SHAKE_MS;
       if (shake < 1) {
@@ -249,7 +292,7 @@ class Stage {
         busy = true;
       }
       l.node.position.set(x, 0, y / SIN);
-      l.node.rotation.y = l.angle;
+      l.node.rotation.y = angle;
       l.node.scale.setScalar(p.size);
     }
     this.renderer.render(this.scene, this.camera);

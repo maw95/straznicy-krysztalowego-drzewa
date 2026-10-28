@@ -8,10 +8,6 @@ porządki w kodzie (etapy 0–4 i resztki), wersja mobilna, zgłoszenia z 23.10 
 
 Szacunki kosztu to tokeny zużyte przez Claude w jednej sesji. Każdy punkt to osobny commit.
 
-- [ ] **1.4. Wolniejszy obrót figurek i ruch w dwóch fazach.** *Koszt: ok. 30–50 tys.* Tempo przesuwania
-  zostaje. Obrót wolniejszy, a najpierw obrót, potem przesuwanie — nigdy oba naraz (`FigureLayer.tsx`: `turnTo`,
-  `turnStart`, `moveStart`). Dotyczy też zwrotu do celu przed atakiem. Sprawdzić, czy dłuższa animacja nie
-  opóźnia botów ani nie rozjeżdża się z `useBattleAnimations` (kolejne kroki nie mogą się nakładać).
 - [ ] **1.5. Wszystkie figurki z nowych modeli, nowy układ figurek w instrukcji.** *Koszt: ok. 60–120 tys.*
   - Stare modele w grze i instrukcji: **Pegaz, Pająk Jaskiniowy, Hydra** (nowe nie upraszczają się poniżej
     11–15 MB, zob. punkt 2) i **Król Jednorożców** (`make modele` dał plik identyczny ze starym — sprawdzić, czy
