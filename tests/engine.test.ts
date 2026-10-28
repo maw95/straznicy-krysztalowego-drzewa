@@ -1,8 +1,9 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { FACTION_HEROES, FACTION_SUPPORTS, MAP_VARIANTS, TERRAIN_COST, UNITS } from '../src/engine/data';
 import { distance, key, line, parseKey, triToHex } from '../src/engine/hex';
 import { applyAction, createGame, crystalsFor, legalHeroMoves, activeHero } from '../src/engine/game';
-import { ARENA_COLUMNS, ARENA_OBSTACLES, arenaCell, arenaCells, attackTargets, columnCells, hasLineOfSight, reachableCells } from '../src/engine/battle';
+import { ARENA_COLUMNS, ARENA_OBSTACLES, arenaCell, arenaCells, COLUMN_SPAN, attackTargets, columnCells, hasLineOfSight, reachableCells } from '../src/engine/battle';
 import { mapNeighbors, reachableFrom, homeKey, treeKey } from '../src/engine/map';
 import { chooseAction } from '../src/engine/ai';
 import { DEFAULT_RULES, type GameState, type SetupOptions } from '../src/engine/types';
@@ -121,6 +122,16 @@ describe('painted arena', () => {
     expect(columnCells(ARENA_COLUMNS - 1)).toHaveLength(5);
     for (const side of ['dawn', 'horde'] as const) {
       for (const [c, h] of ARENA_OBSTACLES[side]) expect(arenaCells()).toContain(arenaCell(c, h));
+    }
+  });
+
+  it('matches the copy of its geometry in scripts/assets/arenas.py, which paints the boards', () => {
+    const py = readFileSync('scripts/assets/arenas.py', 'utf8');
+    const pairs = (text: string) => [...text.matchAll(/\((\d+), (\d+)\)/g)].map((m) => [Number(m[1]), Number(m[2])]);
+    expect(pairs(py.match(/^COLUMN_SPAN = (.*)$/m)![1])).toEqual(COLUMN_SPAN.map(([a, b]) => [a, b]));
+    const sorted = (cells: number[][]) => cells.map((c) => c.join(',')).sort();
+    for (const side of ['dawn', 'horde'] as const) {
+      expect(sorted(pairs(py.match(new RegExp(`^    '${side}': (.*)$`, 'm'))![1]))).toEqual(sorted(ARENA_OBSTACLES[side]));
     }
   });
 });
