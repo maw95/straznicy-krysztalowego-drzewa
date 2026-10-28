@@ -1,17 +1,10 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import type { Level, Mode } from '../engine/types';
 import { currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
+import { useOnline } from '../online/useOnline';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { ARENA_HINT, ARENA_LEVEL_TIPS, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './SetupScreen';
-
-/** The session's latest state; re-renders on every message from the server. */
-export function useOnline(session: OnlineSession): OnlineState {
-  return useSyncExternalStore(
-    (listener) => session.subscribe(listener),
-    () => session.state,
-  );
-}
 
 /** Links of the main menu that do not depend on the account. */
 export interface MenuLinks {

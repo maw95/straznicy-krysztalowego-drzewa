@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { chooseAction } from '../engine/ai';
 import { FACTION_NAMES, UNITS, type FactionId, type ItemKind } from '../engine/data';
 import { applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
@@ -33,6 +33,7 @@ import { TreasureReveal } from './CardBack';
 import { ChatBox, OnlineOverlay, OnlineScreen } from './OnlineScreen';
 import { figuresOn, setFiguresOn } from './FigureLayer';
 import { savedToken, submitResult, type Invitation, type OnlineSession, type OnlineState } from '../online/api';
+import { useOnline } from '../online/useOnline';
 
 const SPEEDS = { wolno: 900, normalnie: 450, szybko: 120 } as const;
 type Speed = keyof typeof SPEEDS;
@@ -81,7 +82,7 @@ export function App() {
    */
   const [onlineScreen, setOnlineScreen] = useState(() => !playsOffline());
   const [session, setSession] = useState<OnlineSession | null>(null);
-  const online = useOnlineState(session);
+  const online = useOnline(session);
   const [showChat, setShowChat] = useState(false);
   /** "Figurki 3D" in the options (kept in the browser; here so that switching redraws the board). */
   const [figures, setFigures] = useState(figuresOn);
@@ -1022,13 +1023,6 @@ function LogDialog({ entries }: { entries: LogEntry[] }) {
 }
 
 /** The online session's state, re-rendered on every server message (null when not logged in). */
-function useOnlineState(session: OnlineSession | null): OnlineState | null {
-  return useSyncExternalStore(
-    useCallback((listener: () => void) => (session ? session.subscribe(listener) : () => undefined), [session]),
-    () => session?.state ?? null,
-  );
-}
-
 /** A disconnected player whose turn it is: the countdown to the bot taking over, and "Oddaj botowi". */
 function WaitingBanner({ room, canHand, onHand }: { room: NonNullable<OnlineState['room']>; canHand: boolean; onHand: (seat: number) => void }) {
   const [now, setNow] = useState(Date.now());
