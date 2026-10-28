@@ -1,7 +1,8 @@
 # Backlog
 
 Uzgodnione pomysły do wdrożenia. Tryb online z menu „najpierw online” i rankingiem oraz szczegóły pod prawym
-przyciskiem są zrobione; figurki 3D też. Dalej: porządki w kodzie (punkt 5).
+przyciskiem są zrobione; figurki 3D też. Dalej, po kolei: porządki w kodzie (punkt 5),
+wersja mobilna (6), zgłoszenie z 23.10 (7), nowe zgłoszenia (8).
 
 ## 1. Tryb online
 
@@ -181,9 +182,133 @@ jednostka stoi obok).
 ## 5. Analiza i uporządkowanie kodu
 
 **Cel:** po wielu iteracjach przejrzeć kod gry i serwera i posprzątać to, co utrudnia czytanie albo spowalnia
-grę: zbyt długie pliki i komponenty (np. `App.tsx`, `BattleView.tsx`), powtórzony kod, martwe gałęzie,
-niepotrzebne przeliczenia przy każdym renderze, rozjechane nazewnictwo i komentarze. Bez zmian w zasadach
-i wyglądzie — testy mają przechodzić bez zmian.
+grę. Bez zmian w zasadach i wyglądzie, poza poprawkami błędów wymienionymi niżej.
 
-- Najpierw analiza z listą konkretnych problemów i propozycją kolejności, do akceptacji.
-- Potem porządki małymi krokami, każdy osobnym commitem, z testami po każdym.
+**Analiza zrobiona 23.10** (trzech agentów: interfejs, silnik ze skryptami, serwer; każde ustalenie sprawdzone
+w kodzie). Plan zaakceptowany; decyzje:
+- Zmiany lekko zmieniające zachowanie wchodzą wszystkie (podgląd obrażeń, ocena obrońcy wspólnej bazy przez bota,
+  `make sim` bez kości) — każda poprawia błąd.
+- Testy bitew w UI: 12 partii zamiast 36 (każdy bohater ze zdolnościami i bez), pełny przegląd w `make test-slow`.
+- Kolejność: etapy 0–1 od razu, potem 2, 3, 4. Każdy krok osobnym commitem z testami. Serwer wdrażany na bieżąco
+  (bot serwera korzysta z pakietu silnika, więc zmiany zachowania bota trafiają online dopiero z nową wersją
+  pakietu); zmiany w grze zbierane w wydanie 2.0.2.
+
+### Etap 0: siatka bezpieczeństwa
+
+- [ ] **Test „złotych” partii:** boty rozgrywają po kilka ziaren w każdym wariancie (kooperacja, rywalizacja,
+  arena, bitwy na planszy i na arenie, z kością, poziomy łatwy/trudny), test zapisuje skrót stanu końcowego
+  i listy ruchów. Każda późniejsza zmiana musi dać ten sam wynik (poza świadomymi poprawkami, wtedy aktualizacja
+  wzorca osobnym commitem). Dziś `engine.test.ts:179-190` porównuje tylko dwa przebiegi tego samego kodu.
+- Uwaga: decyzje AI i silnika zależą od kolejności wstawiania `state.heroes`, `state.items`, `b.units`,
+  a id skarbów to `it${liczba+1}` — refaktor musi zachować kolejność tworzenia i wzór id.
+
+### Etap 1: błędy
+
+**Serwer** (`straznicy-krysztalowego-drzewa-backend`):
+- [ ] Wyjątek w timerze pokoju (ruch bota, czekanie na gracza, pusty pokój, zaproszenie) wyłącza proces,
+  a po restarcie ten sam ruch bota wyłącza go znowu. `guard(fn)` dla timerów, błąd do logu i do graczy.
+- [ ] Bot bez ruchu (`chooseAction` zwraca null) zamraża partię bez śladu — log i komunikat.
+- [ ] Brak pingu WebSocket: telefon, który zgubi zasięg w swojej turze, zamraża partię na zawsze.
+  `socket.ping()` co ~30 s, `terminate()` bez odpowiedzi (protokół bez zmian).
+- [ ] `maxPayload` 100 MB i akcje zapisywane tak, jak przyszły → limit 64 KB, zapis znormalizowanej akcji,
+  sprawdzenie `action.type`; nie logować całej wiadomości klienta; błędy silnika jako stały polski komunikat.
+- [ ] Token sesji w logach Fly (`/ws?token=…`) → serializer żądań bez query stringa.
+- [ ] Pokój bez właściciela (ostatni wyszedł, ktoś dołącza) — dołączający zostaje właścicielem.
+- [ ] Zaproszenie zamykane jako „przyjęte” przed udanym dołączeniem; zaproszenia nie znikają, gdy zapraszający
+  wyjdzie lub się rozłączy.
+- [ ] Restart przywraca do pokoju graczy, którzy wyszli (i kasuje im przegraną); gracz w dwóch pokojach
+  przywracany losowo.
+- [ ] Zamykanie serwera: zdarzenia `close` gniazd zmieniają pokoje po zamknięciu bazy → flaga `closing`.
+- [ ] Wiadomości JSON niebędące obiektem logowane jako błąd serwera → ignorować.
+- [ ] Drobne: akcja zapisana przed statusem `over` (bez transakcji), czat pokoju bez limitu, limit czatu ogólnego
+  resetuje się przy ponownym połączeniu, „Ta partia już trwa” przy zakończonej, nienumeryczny `PORT`,
+  limit długości `actions` przy odtwarzaniu gry offline do rankingu.
+
+**Gra:**
+- [ ] Animacje bitwy zacinają się przy szybkich botach (`BattleView.tsx:133-188`: sprzątanie co zmianę `b` kasuje
+  timer usuwający `strikes`/`floaters`/`ghosts`; figurka przestaje robić wypad). Timery w refie, czyszczone przy
+  odmontowaniu.
+- [ ] `FigurePreview`: przy szybkim przełączaniu bohaterów dwie pętle rysują na jednym płótnie; nowy renderer
+  przy każdym najechaniu.
+- [ ] Druga partia w sesji: fałszywe „Znaleziono skarb!” (`knownItems`, `seenLog` w App nie są zerowane).
+- [ ] Baner „łączę ponownie…” wisi, gdy po kodach 4401/4000/4002 nie ma ponownego łączenia → flaga `reconnecting`.
+- [ ] Podgląd obrażeń różni się od silnika (UI liczy Kamień Ochrony przed Twardogłowym) → wspólne
+  `predictDamage` w `battle.ts`, helper `bearCanGuard`.
+- [ ] Bot bitewny na chwilę zmienia `u.pos` w stanie wyświetlanym przez ekran (`battleAi.ts:117-120`) → parametr
+  `from` w `breathSecondTarget`.
+- [ ] Bot źle ocenia obrońcę wspólnej bazy (bierze pierwszego, silnik bierze najsilniejszego; `adventureAi.ts:54-58`).
+- [ ] `make sim` domyślnie z kością obrażeń (`scripts/simulate.ts:19`) → bez kości, wspólne `setupFor` z `sim/core.ts`.
+- [ ] Drobne: WebGL nie zwalnia zasobów (pierścienie, tekstura pokoju, `forceContextLoss`), `walkTimers` rośnie,
+  listener `pointerup` w details nie jest usuwany, `JSON.parse` w `api.ts` bez try/catch, timery powiadomień po
+  `close()`, Esc nie zamyka części okien, `describeSave` nazywa arenę „Rywalizacja”, `sim-tabele` pada na czystym
+  checkoutcie, statystyki symulacji (`neutralWipeRate`, stare przyczyny końca gry).
+
+### Etap 2: wydajność (wyniki identyczne — pilnuje test z etapu 0)
+
+- [ ] Silnik: `shortestPaths` z kopcem binarnym i mapą rodziców (63% czasu symulacji), memoizacja ścieżek
+  w jednej decyzji bota (`treeCostFrom`, `pathsFor`), `dangerCost`/`heldByAlly` liczone raz na decyzję,
+  `applyActionInPlace` dla symulacji, raportów i serwera (kopiowanie stanu to 28% czasu), stałe `ARENA_CELLS`,
+  zbiór przeszkód i mapa zajętości w bitwie. Cel: symulacje 2–3× szybciej.
+- [ ] Gra: ekran ustawień odtwarza zapisaną partię dwa razy przy każdym renderze; każdy ruch przepisuje cały
+  dziennik partii w localStorage; `FigureLayer` rysuje klatkę przy każdym najechaniu; `legalHeroMoves` na każde
+  pole mapy; kursory i podejścia w bitwie liczone 3–5 razy na jednostkę; statyczna siatka areny budowana co render;
+  `figureFor` czyta localStorage w renderze; Modal renderuje się podwójnie; przewijanie bitwy po każdej zmianie Życia.
+- [ ] Serwer: lista graczy online wysyłana wszystkim po każdej wiadomości (wysyłać tylko przy zmianie, jeden
+  `Intl.Collator`), serializacja raz na rozgłoszenie, zapytania SQL przygotowane raz, kasowanie wygasłych sesji,
+  zapis pokoju przy połączeniu tylko przy zmianie.
+
+### Etap 3: czytelność
+
+- [ ] Martwy kod i nieaktualne komentarze („arena 9×11”, „pointy-top”, `ritualHold` „DO USTALENIA”,
+  `armedAbility`, nieużywane eksporty i przełączniki zasad — pola zasad zostają opcjonalne przy odczycie zapisów).
+- [ ] Nazwane stałe: tabela `ITEM_EFFECT` (efekty skarbów w silniku, AI i opisach), `SUPPORTS_PER_BATTLE = 2`
+  (6 miejsc), `AI_TUNING`, próg Twardogłowego.
+- [ ] Powtórzony kod: opis pola mapy (3 razy w `AdventureView`), ustawienia stołu lokalnie i online
+  (`setupShared.tsx`), dwa hooki stanu online, zapis autozapisu w zgłoszeniu błędu, wspólna „ramka” App (baner
+  błędu, muzyka, zasady), `walkCost` w AI (4 kopie), `grantItem`, `log`, `livingHeroes`, czytelne tabele punktacji;
+  na serwerze `parseChatText`, `requestUser`, domyślne pola pokoju przy wczytaniu, `rowToRoom`.
+- [ ] Protokół: jedna pełna definicja typów wiadomości klient/serwer (`protocol.ts`).
+- [ ] Testy: wspólne helpery (`battleFixture`, `setup`, `playOut`, `clearDialogs`; na serwerze `useServer`,
+  `roomWith`), fake timers zamiast sleepów, `make test-engine`/`make test-ui` uruchamiają wszystkie swoje testy,
+  12 partii bitew + `make test-slow`.
+
+### Etap 4: większe podziały
+
+- [ ] `App.tsx` (1010 linii): `useLocalGame`, `useBotTimer`, `useStepWalker`, `useOnlineGame`, `useShortcuts`,
+  `musicTheme()`, osobne okna dialogowe.
+- [ ] `BattleView.tsx` (1017 linii): `useBattleAnimations`, `useDeployment`, `ArenaBoard`, `ActivationBar`,
+  `ItemsPanel`, `SidePanel`, `battleStatus.tsx`, `activationHint()`.
+- [ ] Hub serwera: `Connections`, `RoomDirectory`, `Presence`, `Lounge`, `Invitations`; widok pokoju wysyłany raz
+  na zmianę (najpierw sprawdzić, czy klient zależy od kolejności `room`/`game`).
+- [ ] Najdłuższe funkcje: `goodAction` (kroki jako osobne funkcje, kolejność bez zmian), `battleItem` (tablica
+  obsługi), `finalizeBattle`, `createGame`.
+
+Do osobnego sprawdzenia: czy spreparowany `setup` wysłany do `/results` może dać zawyżone punkty (`levelOf`);
+wiadomość `game` zawiera cały dziennik z wpisami `privateTo` (filtrowane tylko w kliencie).
+
+## 6. Wersja mobilna
+
+**Cel:** gra wygodna na telefonie, także na dużych mapach — tyle, ile się da zmieścić.
+
+- [ ] Przegląd wszystkich ekranów na wąskim i niskim ekranie (pion i poziom): mapa świata, arena, panele
+  bohaterów, pasek akcji, okna dialogowe, menu online.
+- [ ] Duże mapy: przewijanie/przybliżanie mapy, panele zwijane albo wysuwane, żeby plansza miała jak najwięcej
+  miejsca.
+- [ ] Opis pola na mapie świata (tooltip) zasłania dużą część ekranu — mniejszy, przy krawędzi ekranu albo
+  zwijany, nie nad planszą.
+
+## 7. Zgłoszenie z 23.10 (`bug-reports/2026-10-23-20-10-31-ziarno-615040.json`)
+
+- [ ] Figurki na arenie i na mapie świata większe, nawet jeśli częściowo wchodzą na sąsiednie heksy
+  (`docs/nachodzace_heksy.png`).
+- [ ] Zamiast jednolitych pierścieni wokół figurek — delikatna aura z gradientem, mniej nachalna.
+- [ ] Arena Hordy: przeszkody terenowe nie mają innego koloru obramowania heksa.
+- [ ] Usunąć przycisk „zasięg wrogów” (chyba nie działa). Zamiast niego: wciśnięty Ctrl z kursorem na jednostce
+  pokazuje jej zasięg.
+- [x] Strzelec z wrogiem obok: kursor strzały zamiast miecza nad tym wrogiem (i tak strzela).
+
+## 8. Nowe zgłoszenia (na końcu, po punktach 5–7)
+
+- [ ] `make zgloszenia` — pobranie nowych zgłoszeń z serwera.
+- [ ] Analiza nowych zgłoszeń z serwera oraz tych dodanych lokalnie do `bug-reports/` (i `tester-reports/`),
+  których jeszcze nie ma w backlogu; wnioski i propozycje do decyzji autora przed wdrażaniem.

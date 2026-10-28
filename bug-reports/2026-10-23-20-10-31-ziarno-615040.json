@@ -1,0 +1,331 @@
+{
+ "setup": {
+  "mode": "pvp",
+  "mapSize": "medium",
+  "battleMode": "arena",
+  "seed": 615040,
+  "seats": [
+   {
+    "name": "Gracz 1",
+    "faction": "dawn",
+    "controller": "human",
+    "heroId": "goldDragon"
+   },
+   {
+    "name": "Gracz 2",
+    "faction": "horde",
+    "controller": "human",
+    "heroId": "ironFistOgre"
+   }
+  ],
+  "rules": {
+   "heroMovePoints": 3,
+   "abilities": true,
+   "treasures": true,
+   "useDice": false,
+   "extraEvilHero": false,
+   "initiativeTie": "defender",
+   "heroReplacement": false,
+   "minEvilHeroes": 1,
+   "hordeRespawn": true,
+   "ritualHold": true,
+   "ritualRounds": 3,
+   "passThroughAllies": false,
+   "unitsBlockSight": false,
+   "battleRoundLimit": 40
+  }
+ },
+ "actions": [
+  {
+   "type": "moveHero",
+   "to": "-6,7"
+  },
+  {
+   "type": "moveHero",
+   "to": "-5,6"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "0,6"
+  },
+  {
+   "type": "moveHero",
+   "to": "-1,6"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-4,5"
+  },
+  {
+   "type": "moveHero",
+   "to": "-5,5"
+  },
+  {
+   "type": "moveHero",
+   "to": "-4,5"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-2,6"
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-3,5"
+  },
+  {
+   "type": "moveHero",
+   "to": "-2,5"
+  },
+  {
+   "type": "selectSupports",
+   "faction": "dawn",
+   "supportIds": [
+    "elfDruid",
+    "nymph"
+   ]
+  },
+  {
+   "type": "deployUnits",
+   "faction": "dawn",
+   "positions": {
+    "goldDragon": "0,4",
+    "elfDruid": "0,3",
+    "nymph": "0,5"
+   }
+  },
+  {
+   "type": "battleMove",
+   "to": "4,0"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "4,1"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "4,3"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "9,-1"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "8,-1"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": false
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": false
+  },
+  {
+   "type": "battleMove",
+   "to": "8,0"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": false
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "nymph",
+   "useAbility": false,
+   "secondTargetId": "goldDragon"
+  },
+  {
+   "type": "battleMove",
+   "to": "10,-1"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": false
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": false
+  },
+  {
+   "type": "battleMove",
+   "to": "9,-2"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": false
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "nymph",
+   "useAbility": false,
+   "secondTargetId": "goldDragon"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "hydra",
+   "useAbility": false
+  },
+  {
+   "type": "endTurn"
+  },
+  {
+   "type": "moveHero",
+   "to": "-2,5"
+  },
+  {
+   "type": "selectSupports",
+   "faction": "horde",
+   "supportIds": [
+    "caveSpider",
+    "goblinShaman"
+   ]
+  },
+  {
+   "type": "selectSupports",
+   "faction": "dawn",
+   "supportIds": [
+    "elfDruid",
+    "nymph"
+   ]
+  },
+  {
+   "type": "deployUnits",
+   "faction": "horde",
+   "positions": {
+    "ironFistOgre": "0,4",
+    "caveSpider": "0,3",
+    "goblinShaman": "0,5"
+   }
+  },
+  {
+   "type": "deployUnits",
+   "faction": "dawn",
+   "positions": {
+    "goldDragon": "12,-2",
+    "elfDruid": "12,-3",
+    "nymph": "12,-1"
+   }
+  },
+  {
+   "type": "battleMove",
+   "to": "5,1"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "10,-3"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "8,-2"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "ironFistOgre",
+   "useAbility": false
+  },
+  {
+   "type": "battleMove",
+   "to": "8,0"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "3,1"
+  },
+  {
+   "type": "endActivation"
+  },
+  {
+   "type": "battleMove",
+   "to": "3,4"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "nymph",
+   "useAbility": false
+  },
+  {
+   "type": "battleMove",
+   "to": "10,-2"
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "goldDragon",
+   "useAbility": false
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "ironFistOgre",
+   "useAbility": false
+  },
+  {
+   "type": "battleAttack",
+   "targetId": "ironFistOgre",
+   "useAbility": false
+  }
+ ],
+ "reports": [
+  {
+   "createdAt": "2026-10-23T20:10:31.884Z",
+   "actionIndex": 59,
+   "round": 3,
+   "screen": "battle:fight",
+   "text": "figurki na arenie walki i na mapie świata mogą być trochę większe, nawet jeśli będą częściowo nachodzić na heksy. kolorowe obwódki wokół figurek nie powinny być jednolitego koloru. widziałbym to raczej jako gradientowa aura, nie tak nachalna. kolory figurek wydają się wypłowiałe w stosunku do reszty gry, może dasz radę je jakoś ożywić ich kolorystykę.\ndodatkowo, na arenie hordy przeszkody terenowe nie są oznaczone innym kolorem obramowań na heksie. Przycisk \"zasięg wrogów\" chyba nie działa, i skasowałbym go. zamiast tego zróbmy tak, że kiedy ktoś wciśnie ctrl mając kursor na jakiej jednostce to pokażemy jego zasięg.\ndodatkowo, kiedy strzelec ma kogoś w zasięgu ataku wręcz, i najeżdża na niego kursorem, kursor pokazuje miecz, a powinien strzałę - po kliknięciu strzelec i tak atakuje na dystans, a nie bije wręcz.",
+   "recentLog": [
+    "[3] Elf Druid atakuje: Ogr Żelazna Pięść.",
+    "[3] Elf Druid → Ogr Żelazna Pięść: 1 obrażeń (Ż 9/10).",
+    "[3] Goblin Szaman atakuje: Nimfa.",
+    "[3] Goblin Szaman → Nimfa: 1 obrażeń (Ż 4/5).",
+    "[3] Runda bitwy 2.",
+    "[3] Ogr Żelazna Pięść atakuje: Złoty Smok.",
+    "[3] Ogr Żelazna Pięść → Złoty Smok: 4 obrażeń (Ż 5/9).",
+    "[3] Złoty Smok atakuje: Ogr Żelazna Pięść.",
+    "[3] Ogr Żelazna Pięść ignoruje 2 obrażeń (Twardogłowy).",
+    "[3] Złoty Smok → Ogr Żelazna Pięść: 3 obrażeń (Ż 6/10).",
+    "[3] Elf Druid atakuje: Ogr Żelazna Pięść.",
+    "[3] Elf Druid → Ogr Żelazna Pięść: 1 obrażeń (Ż 5/10)."
+   ],
+   "viewport": "2048×1152",
+   "userAgent": "Mozilla/5.0 (X11; Linux x86_64; rv:158.0) Gecko/20100101 Firefox/158.0"
+  }
+ ]
+}
