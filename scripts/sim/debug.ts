@@ -1,7 +1,7 @@
 // Prints sample situations where bots waste a turn or an activation.
 import './override';
 import { UNITS } from '../../src/engine/data';
-import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } from '../../src/engine/game';
+import { activeHero, applyActionInPlace, createGame, currentActor, legalHeroMoves } from '../../src/engine/game';
 import { attackTargets, reachableCells } from '../../src/engine/battle';
 import { chooseAction } from '../../src/engine/ai';
 import { cellOf } from '../../src/engine/battle';
@@ -12,7 +12,7 @@ let shownTurns = 0;
 let shownActs = 0;
 const kinds: Record<string, number> = {};
 for (let seed = 1; seed <= 200; seed++) {
-  let s = createGame(setupFor(v, seed));
+  const s = createGame(setupFor(v, seed));
   for (let i = 0; i < 20000 && s.phase !== 'over'; i++) {
     const a = chooseAction(s)!;
     if (s.phase === 'adventure' && a.type === 'endTurn' && s.movePoints === s.rules.heroMovePoints && !s.turnBattleDone) {
@@ -32,7 +32,7 @@ for (let seed = 1; seed <= 200; seed++) {
       kinds[k] = (kinds[k] ?? 0) + 1;
       if (t && shownActs++ < 6) console.log(`IDLE ACT seed ${seed} ${UNITS[u.defId].name} at ${JSON.stringify(cellOf(u.pos!))} targets=${t} moves=${m} moveOnly=${s.battle.activation!.moveOnly}`);
     }
-    s = applyAction(s, a);
+    applyActionInPlace(s, a);
   }
 }
 console.log(kinds);

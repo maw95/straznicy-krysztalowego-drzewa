@@ -10,7 +10,7 @@ OPTIONS ?= full
 BATTLE ?= arena
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview test test-engine test-ui test-watch typecheck check sim sim-all sim-matrix sim-battles sim-arena sim-tabele report zgloszenia modele silnik clean
+.PHONY: help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-arena sim-tabele report zgloszenia modele silnik clean
 
 help: ## Lista komend
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -30,14 +30,21 @@ build: node_modules ## Sprawdzenie typów + wersja statyczna w dist/
 preview: build ## Podgląd zbudowanej wersji (http://localhost:4173)
 	npx vite preview
 
+# Interface tests: the clicking ones and the music player; every other test file checks the rules.
+UI_TESTS := $(wildcard tests/ui*.test.tsx) tests/music.test.ts
+ENGINE_TESTS := $(filter-out $(UI_TESTS),$(wildcard tests/*.test.ts tests/*.test.tsx))
+
 test: node_modules ## Wszystkie testy (zasady + interfejs)
 	npx vitest run
 
 test-engine: node_modules ## Tylko testy zasad (szybkie)
-	npx vitest run tests/engine.test.ts
+	npx vitest run $(ENGINE_TESTS)
 
-test-ui: node_modules ## Tylko testy klikające po interfejsie
-	npx vitest run tests/ui.test.tsx tests/ui-battle.test.tsx
+test-ui: node_modules ## Tylko testy interfejsu (klikające i muzyka)
+	npx vitest run $(UI_TESTS)
+
+test-slow: node_modules ## Wszystkie testy z pełnym przeglądem bitew w interfejsie (36 ziaren zamiast 12)
+	SLOW=1 npx vitest run
 
 test-watch: node_modules ## Testy w trybie ciągłym
 	npx vitest
@@ -47,7 +54,7 @@ typecheck: node_modules ## Sprawdzenie typów TypeScript
 
 check: typecheck test ## Typy + testy (przed commitem)
 
-sim: node_modules ## Symulacje botów, np. make sim GAMES=500 SIZE=medium MODE=pvp OPTIONS=noabilities,nodice BATTLE=board
+sim: node_modules ## Symulacje botów (bez kości obrażeń, chyba że OPTIONS ma dice), np. make sim GAMES=500 SIZE=medium MODE=pvp OPTIONS=noabilities,dice BATTLE=board
 	npx tsx scripts/simulate.ts $(GAMES) $(SIZE) $(MODE) $(OPTIONS) $(BATTLE)
 
 sim-all: node_modules ## Symulacje wszystkich map w kooperacji: pełna gra i bez zdolności
@@ -62,6 +69,7 @@ sim-battles: node_modules ## Turniej jednostek w równych warunkach (balans boha
 	node --import tsx scripts/sim/battles.ts 300
 
 sim-tabele: node_modules ## Tabele: % wygranych Przymierza w każdym trybie, mapie i poziomie oraz jak przegrywa, np. make sim-tabele GAMES=300
+	@mkdir -p .tmp/sim
 	node --import tsx scripts/sim/matrix.ts $(GAMES) tabele > .tmp/sim/tabele.log
 	node --import tsx scripts/sim/tables.ts tabele
 

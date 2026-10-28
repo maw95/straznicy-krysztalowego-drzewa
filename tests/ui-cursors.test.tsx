@@ -46,7 +46,7 @@ function fight(units: Array<[string, 'dawn' | 'horde', number, number]>, obstacl
   s.battle = {
     kind: 'heroes', duel: false, mapHex: Object.keys(s.tiles)[0], arena: 'dawn', attacker: 'horde', defender: 'dawn', attackerHero: 'blackDragon', attackerFrom: Object.keys(s.tiles)[0], defenderHero: 'goldDragon', neutralId: null,
     stage: 'fight', needsDeploy: [], needsSelection: [], obstacles: obstacles.map(([c, h]) => arenaCell(c, h)), units: all, round: 1, order: units.map((u) => u[0]), index: 0,
-    activation: { unitId: units[0][0], moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false },
+    activation: { unitId: units[0][0], moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0 },
     extra: [], winner: null, damageBy: {},
   };
   return s;

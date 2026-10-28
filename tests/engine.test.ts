@@ -1,21 +1,12 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { FACTION_HEROES, FACTION_SUPPORTS, MAP_VARIANTS, TERRAIN_COST, UNITS } from '../src/engine/data';
-import { distance, key, line, offsetToHex, parseKey, triToHex } from '../src/engine/hex';
+import { distance, key, line, parseKey, triToHex } from '../src/engine/hex';
 import { applyAction, createGame, crystalsFor, legalHeroMoves, activeHero } from '../src/engine/game';
-import { ARENA_COLUMNS, ARENA_OBSTACLES, arenaCell, arenaCells, attackTargets, columnCells, hasLineOfSight, reachableCells } from '../src/engine/battle';
+import { ARENA_COLUMNS, ARENA_OBSTACLES, arenaCell, arenaCells, COLUMN_SPAN, attackTargets, columnCells, hasLineOfSight, reachableCells } from '../src/engine/battle';
 import { mapNeighbors, reachableFrom, homeKey, treeKey } from '../src/engine/map';
-import { chooseAction } from '../src/engine/ai';
-import { DEFAULT_RULES, type GameState, type SetupOptions } from '../src/engine/types';
-
-const setup = (over: Partial<SetupOptions> = {}): SetupOptions => ({
-  mode: 'coop',
-  mapSize: 'short',
-  battleMode: 'arena',
-  seed: 7,
-  rules: { ...DEFAULT_RULES },
-  seats: [{ name: 'A', faction: 'dawn', controller: 'human', heroId: 'goldDragon' }],
-  ...over,
-});
+import { DEFAULT_RULES, type GameState } from '../src/engine/types';
+import { playOut, playUntil, setup } from './helpers/engine';
 
 describe('unit budgets and specialisations (docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md, sections 7.11 and 9)', () => {
   const typeCost = (id: string) => (UNITS[id].attackType === 'ranged' ? 2 : 0) + (UNITS[id].movement === 'fly' ? 1 : 0);
@@ -41,9 +32,9 @@ describe('hex geometry', () => {
     expect(distance(triToHex(5, 0), triToHex(0, 0))).toBe(5);
   });
   it('draws a straight line including both ends', () => {
-    const l = line(offsetToHex(4, 0), offsetToHex(4, 5));
+    const l = line({ q: -2, r: 4 }, { q: 3, r: 4 });
     expect(l).toHaveLength(6);
-    expect(key(l[0])).toBe(key(offsetToHex(4, 0)));
+    expect(key(l[0])).toBe('-2,4');
   });
 });
 
@@ -104,12 +95,10 @@ describe('adventure movement', () => {
 
 function battleState(): GameState {
   // Play bot games until a battle starts, then return that state.
+  const fighting = (s: GameState) => s.phase === 'battle' && s.battle?.stage === 'fight';
   for (let seed = 1; seed < 200; seed++) {
-    let s = createGame(setup({ seed, seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }] }));
-    for (let i = 0; i < 400 && s.phase !== 'over'; i++) {
-      if (s.phase === 'battle' && s.battle?.stage === 'fight') return s;
-      s = applyAction(s, chooseAction(s)!);
-    }
+    const s = playUntil(createGame(setup({ seed })), fighting, 400);
+    if (fighting(s)) return s;
   }
   throw new Error('no battle found');
 }
@@ -121,6 +110,16 @@ describe('painted arena', () => {
     expect(columnCells(ARENA_COLUMNS - 1)).toHaveLength(5);
     for (const side of ['dawn', 'horde'] as const) {
       for (const [c, h] of ARENA_OBSTACLES[side]) expect(arenaCells()).toContain(arenaCell(c, h));
+    }
+  });
+
+  it('matches the copy of its geometry in scripts/assets/arenas.py, which paints the boards', () => {
+    const py = readFileSync('scripts/assets/arenas.py', 'utf8');
+    const pairs = (text: string) => [...text.matchAll(/\((\d+), (\d+)\)/g)].map((m) => [Number(m[1]), Number(m[2])]);
+    expect(pairs(py.match(/^COLUMN_SPAN = (.*)$/m)![1])).toEqual(COLUMN_SPAN.map(([a, b]) => [a, b]));
+    const sorted = (cells: number[][]) => cells.map((c) => c.join(',')).sort();
+    for (const side of ['dawn', 'horde'] as const) {
+      expect(sorted(pairs(py.match(new RegExp(`^    '${side}': (.*)$`, 'm'))![1]))).toEqual(sorted(ARENA_OBSTACLES[side]));
     }
   });
 });
@@ -177,11 +176,7 @@ describe('battle rules', () => {
 
 describe('full games', () => {
   it('bots finish games deterministically from a seed', () => {
-    const run = (seed: number) => {
-      let s = createGame(setup({ seed, seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'unicornKing' }] }));
-      for (let i = 0; i < 20000 && s.phase !== 'over'; i++) s = applyAction(s, chooseAction(s)!);
-      return s;
-    };
+    const run = (seed: number) => playOut(createGame(setup({ seed, seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'unicornKing' }] })));
     const a = run(3);
     const b = run(3);
     expect(a.phase).toBe('over');
@@ -191,8 +186,7 @@ describe('full games', () => {
 
   it('kills fallen supports permanently', () => {
     for (let seed = 1; seed < 40; seed++) {
-      let s = createGame(setup({ seed, seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'ancientBear' }] }));
-      for (let i = 0; i < 20000 && s.phase !== 'over'; i++) s = applyAction(s, chooseAction(s)!);
+      const s = playOut(createGame(setup({ seed, seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'ancientBear' }] })));
       const f = s.factions.dawn;
       expect(f.supportsAlive.filter((x) => f.supportsDead.includes(x))).toHaveLength(0);
       expect(f.supportsAlive.length + f.supportsDead.length).toBe(3);
@@ -208,7 +202,7 @@ describe('player-facing keys', () => {
 
 describe('objectives', () => {
   it('completes the ritual after evil heroes hold the Tree for the configured rounds', () => {
-    let s = createGame(setup({ seats: [{ name: 'A', faction: 'dawn', controller: 'human', heroId: 'goldDragon' }], rules: { ...DEFAULT_RULES, minEvilHeroes: 2 } }));
+    let s = createGame(setup({ seats: [{ name: 'A', faction: 'dawn', controller: 'human', heroId: 'goldDragon' }] }, { minEvilHeroes: 2 }));
     // One Horde hero on the Tree, the other on a free hex next to it.
     const [onTree, beside] = Object.values(s.heroes).filter((h) => h.faction === 'horde');
     s.heroes[onTree.id].pos = treeKey();
@@ -252,22 +246,17 @@ describe('board battles (1-on-1 duels)', () => {
   it('fights leaders only, without moving, until one falls', () => {
     let found = 0;
     for (let seed = 1; seed < 60 && found < 5; seed++) {
-      let s = createGame(setup({ seed, battleMode: 'board', seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'ancientBear' }] }));
-      for (let i = 0; i < 3000 && s.phase !== 'over'; i++) {
-        const b = s.battle;
-        if (b && b.stage === 'fight') {
-          found++;
-          expect(b.duel).toBe(true);
-          expect(Object.keys(b.units)).toHaveLength(2);
-          expect(b.obstacles).toHaveLength(0);
-          for (const u of Object.values(b.units)) if (u.alive) expect(reachableCells(s, u).size).toBe(0);
-          const supportsBefore = s.factions.dawn.supportsAlive.length;
-          while (s.phase === 'battle') s = applyAction(s, chooseAction(s)!);
-          expect(s.factions.dawn.supportsAlive.length).toBe(supportsBefore);
-          break;
-        }
-        s = applyAction(s, chooseAction(s)!);
-      }
+      let s = playUntil(createGame(setup({ seed, battleMode: 'board', seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'ancientBear' }] })), (x) => x.battle?.stage === 'fight', 3000);
+      const b = s.battle;
+      if (b?.stage !== 'fight') continue;
+      found++;
+      expect(b.duel).toBe(true);
+      expect(Object.keys(b.units)).toHaveLength(2);
+      expect(b.obstacles).toHaveLength(0);
+      for (const u of Object.values(b.units)) if (u.alive) expect(reachableCells(s, u).size).toBe(0);
+      const supportsBefore = s.factions.dawn.supportsAlive.length;
+      s = playUntil(s, (x) => x.phase !== 'battle');
+      expect(s.factions.dawn.supportsAlive.length).toBe(supportsBefore);
     }
     expect(found).toBeGreaterThan(0);
   });
@@ -276,21 +265,17 @@ describe('board battles (1-on-1 duels)', () => {
 describe('deployment', () => {
   it('lets the attacker deploy first, only on its edge column', () => {
     for (let seed = 1; seed < 80; seed++) {
-      let s = createGame(setup({ seed, seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }] }));
-      for (let i = 0; i < 600 && s.phase !== 'over'; i++) {
-        if (s.battle?.stage === 'deploy') {
-          const b = s.battle;
-          expect(b.needsDeploy[0]).toBe(b.attacker);
-          const own = Object.values(b.units).filter((u) => u.side === b.attacker);
-          const bad = { ...Object.fromEntries(own.map((u) => [u.id, u.pos!])), [own[0].id]: arenaCell(4, 6) };
-          expect(() => applyAction(s, { type: 'deployUnits', faction: b.attacker as 'dawn' | 'horde', positions: bad })).toThrow();
-          const swapped = Object.fromEntries(own.map((u, j) => [u.id, own[(j + 1) % own.length].pos!]));
-          const next = applyAction(s, { type: 'deployUnits', faction: b.attacker as 'dawn' | 'horde', positions: swapped });
-          for (const u of own) expect(next.battle!.units[u.id].pos).toBe(swapped[u.id]);
-          return;
-        }
-        s = applyAction(s, chooseAction(s)!);
-      }
+      const s = playUntil(createGame(setup({ seed })), (x) => x.battle?.stage === 'deploy', 600);
+      const b = s.battle;
+      if (b?.stage !== 'deploy') continue;
+      expect(b.needsDeploy[0]).toBe(b.attacker);
+      const own = Object.values(b.units).filter((u) => u.side === b.attacker);
+      const bad = { ...Object.fromEntries(own.map((u) => [u.id, u.pos!])), [own[0].id]: arenaCell(4, 6) };
+      expect(() => applyAction(s, { type: 'deployUnits', faction: b.attacker as 'dawn' | 'horde', positions: bad })).toThrow();
+      const swapped = Object.fromEntries(own.map((u, j) => [u.id, own[(j + 1) % own.length].pos!]));
+      const next = applyAction(s, { type: 'deployUnits', faction: b.attacker as 'dawn' | 'horde', positions: swapped });
+      for (const u of own) expect(next.battle!.units[u.id].pos).toBe(swapped[u.id]);
+      return;
     }
     throw new Error('no deployment found');
   });

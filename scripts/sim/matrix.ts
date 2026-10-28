@@ -61,6 +61,7 @@ async function main() {
   const d = all.diag;
   console.log(`\nDiagnostyka botów: nielegalne akcje ${d.illegal}, zawieszone gry ${d.stuck}, bitwy przerwane limitem ${d.battleRoundLimit}, bezczynne tury ${d.idleTurns}/${d.turns}, bezczynne aktywacje ${d.idleActivations}/${d.activations}`);
   for (const x of d.illegalSamples) console.log(`  ${x}`);
+  console.log(`Walki ze strażnikami: ${all.neutralFights} · wygrane strażnika ${pct(all.neutralWipes / Math.max(1, all.neutralFights))}`);
   console.log('\nJednostki w bitwach bohaterów (bitwy · % wygranych strony · % śmierci · śr. obrażenia):');
   for (const [id, t] of Object.entries(all.units).sort()) console.log(`  ${id.padEnd(14)} ${String(t.battles).padStart(6)} ${pct(t.wins / t.battles).padStart(7)} ${pct(t.deaths / t.battles).padStart(7)} ${(t.damage / t.battles).toFixed(2).padStart(6)}`);
   console.log('\nWalki ze strażnikami:');
@@ -72,8 +73,6 @@ async function main() {
 function short(reason: string): string {
   if (reason.includes('kryształy')) return 'kryształy';
   if (reason.includes('Przymierza polegli')) return 'wybici Świt';
-  if (reason.includes('Hordy polegli')) return 'wybita Horda';
-  if (reason.includes('obu frakcji')) return 'oboje polegli';
   if (reason.includes('rytuał')) return 'rytuał';
   if (reason.includes('limit rund')) return 'limit';
   return reason.slice(0, 20);

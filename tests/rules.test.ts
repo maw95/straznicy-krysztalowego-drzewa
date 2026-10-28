@@ -2,43 +2,24 @@
 import { describe, expect, it } from 'vitest';
 import { RESURRECTION_CARDS, TERRAIN_COST, TILE_POOLS, UNITS } from '../src/engine/data';
 import { activeHero, applyAction, createGame, legalHeroMoves, ritualFormed } from '../src/engine/game';
-import { abilityActive, arenaCell, arenaObstacles, makeBattleUnit, movePath, reachableCells } from '../src/engine/battle';
+import { abilityActive, arenaCell, arenaObstacles, movePath, predictDamage, reachableCells } from '../src/engine/battle';
 import { distance, parseKey } from '../src/engine/hex';
 import { homeKey, mapNeighbors, sideOf, treeKey } from '../src/engine/map';
 import { chooseAction } from '../src/engine/ai';
 import { chooseBattleAction } from '../src/engine/ai/battleAi';
-import { DEFAULT_RULES, levelSettings, type BattleState, type GameState, type SetupOptions } from '../src/engine/types';
+import { DEFAULT_RULES, levelSettings, type GameState, type SetupOptions } from '../src/engine/types';
+import { activation, battleFixture, playUntil, pvpSeats, setup } from './helpers/engine';
 
-const setup = (over: Partial<SetupOptions> = {}, rules: Partial<SetupOptions['rules']> = {}): SetupOptions => ({
-  mode: 'coop',
-  mapSize: 'short',
-  battleMode: 'arena',
-  seed: 7,
-  seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }],
-  ...over,
-  rules: { ...DEFAULT_RULES, useDice: false, ...rules },
-});
-
-/** A guardian battle with the given guardian alone against the listed Przymierze units, guardian to act. */
-function guardianFight(guardian: string, foes: Array<[string, number, number]>, rules: Partial<SetupOptions['rules']> = {}): GameState {
-  const s = createGame(setup({}, rules));
-  s.phase = 'battle';
-  const g = makeBattleUnit(guardian, 'neutral');
-  g.pos = arenaCell(4, 8);
-  const units: BattleState['units'] = { [guardian]: g };
-  for (const [id, col, half] of foes) {
-    const u = makeBattleUnit(id, 'dawn');
-    u.pos = arenaCell(col, half);
-    units[id] = u;
-  }
-  s.battle = {
-    kind: 'neutral', duel: false, mapHex: Object.keys(s.tiles)[0], arena: 'dawn', attacker: 'dawn', defender: 'neutral', attackerHero: foes[0][0], attackerFrom: Object.keys(s.tiles)[0], defenderHero: null, neutralId: guardian,
-    stage: 'fight', needsDeploy: [], needsSelection: [], obstacles: [], units, round: 1, order: [guardian, ...foes.map((f) => f[0])], index: 0,
-    activation: { unitId: guardian, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false },
-    extra: [], winner: null, damageBy: {},
-  };
-  return s;
+/** A guardian battle with the given guardian at (4, 8) alone against the listed Przymierze units [id, col, half], guardian to act. */
+function guardianFight(guardian: string, foes: Array<[string, number, number, number?]>, rules: Partial<SetupOptions['rules']> = {}, at: [number, number] = [4, 8]): GameState {
+  return battleFixture(
+    createGame(setup({}, rules)),
+    [{ id: guardian, side: 'neutral', col: at[0], half: at[1] }, ...foes.map(([id, col, half, hp]) => ({ id, side: 'dawn' as const, col, half, hp }))],
+    { kind: 'neutral', defender: 'neutral', attackerHero: foes[0][0], neutralId: guardian },
+  );
 }
+
+const pvpGame = (...heroes: string[]) => createGame(setup({ mode: 'pvp', seats: pvpSeats(...heroes) }));
 
 describe('default game and simplifications', () => {
   it('starts as the full game: abilities and treasures, no die, no hero replacement', () => {
@@ -89,11 +70,11 @@ describe('guardian abilities without a once-per-battle limit', () => {
     s = applyAction(s, { type: 'battleAttack', targetId: 'goldDragon' });
     expect(s.battle!.units.goldDragon.pos).toBe(arenaCell(9, 13));
     // Next round: it pushes again.
-    s.battle!.activation = { unitId: 'cyclops', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false };
+    s.battle!.activation = activation('cyclops');
     s = applyAction(s, { type: 'battleAttack', targetId: 'goldDragon' });
     expect(s.battle!.units.goldDragon.pos).toBe(arenaCell(10, 14));
     // Against the arena edge nothing moves.
-    s.battle!.activation = { unitId: 'cyclops', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false };
+    s.battle!.activation = activation('cyclops');
     s = applyAction(s, { type: 'battleAttack', targetId: 'goldDragon' });
     expect(s.battle!.units.goldDragon.pos ?? arenaCell(10, 14)).toBe(arenaCell(10, 14));
   });
@@ -101,7 +82,7 @@ describe('guardian abilities without a once-per-battle limit', () => {
   it('Gryf may fly off after every attack', () => {
     let s = guardianFight('griffin', [['ancientBear', 5, 9], ['nymph', 0, 4]]);
     for (let i = 0; i < 2; i++) {
-      s.battle!.activation = { unitId: 'griffin', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false };
+      s.battle!.activation = activation('griffin');
       s.battle!.units.griffin.pos = arenaCell(4, 8);
       s = applyAction(s, { type: 'battleAttack', targetId: 'ancientBear' });
       expect(s.battle!.activation?.hop).toBe(4);
@@ -113,7 +94,7 @@ describe('guardian abilities without a once-per-battle limit', () => {
   it('Hydra may hit two adjacent enemies with every attack', () => {
     let s = guardianFight('hydra', [['ancientBear', 5, 9], ['nymph', 4, 10], ['elfDruid', 0, 4]]);
     for (let i = 0; i < 2; i++) {
-      s.battle!.activation = { unitId: 'hydra', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false };
+      s.battle!.activation = activation('hydra');
       s = applyAction(s, { type: 'battleAttack', targetId: 'ancientBear', secondTargetId: 'nymph' });
     }
     expect(s.battle!.units.ancientBear.hp).toBe(UNITS.ancientBear.hp - 4);
@@ -124,22 +105,11 @@ describe('guardian abilities without a once-per-battle limit', () => {
 describe('Przymierze hero abilities after balancing', () => {
   /** An arena fight: the listed units at [col, half], the first one to act. */
   function fight(units: Array<[string, 'dawn' | 'horde', number, number]>): GameState {
-    const s = createGame(setup({ mode: 'pvp', seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }, { name: 'B', faction: 'horde', controller: 'bot', heroId: 'blackDragon' }] }));
-    s.phase = 'battle';
-    const all: BattleState['units'] = {};
-    for (const [id, side, col, half] of units) {
-      const u = makeBattleUnit(id, side);
-      u.pos = arenaCell(col, half);
-      all[id] = u;
-    }
-    const first = units[0][0];
-    s.battle = {
-      kind: 'heroes', duel: false, mapHex: Object.keys(s.tiles)[0], arena: 'dawn', attacker: 'horde', defender: 'dawn', attackerHero: 'blackDragon', attackerFrom: Object.keys(s.tiles)[0], defenderHero: 'ancientBear', neutralId: null,
-      stage: 'fight', needsDeploy: [], needsSelection: [], obstacles: [], units: all, round: 1, order: units.map((u) => u[0]), index: 0,
-      activation: { unitId: first, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false },
-      extra: [], winner: null, damageBy: {},
-    };
-    return s;
+    return battleFixture(
+      pvpGame('goldDragon', 'blackDragon'),
+      units.map(([id, side, col, half]) => ({ id, side, col, half })),
+      { attacker: 'horde', defender: 'dawn', attackerHero: 'blackDragon', defenderHero: 'ancientBear' },
+    );
   }
 
   it('Opiekun Gaju softens a lethal blow aimed at the bear itself by 3', () => {
@@ -148,6 +118,30 @@ describe('Przymierze hero abilities after balancing', () => {
     s = applyAction(s, { type: 'battleAttack', targetId: 'ancientBear' });
     expect(s.battle!.units.ancientBear.hp).toBe(3);
     expect(s.battle!.units.ancientBear.abilityUsed).toBe(true);
+  });
+
+  it('predicts the blow the engine deals: Twardogłowy before Kamień Ochrony', () => {
+    // A 2-damage hit on the Ogre holding the stone: Twardogłowy takes both, the stone has nothing left.
+    let s = fight([['elfDruid', 'dawn', 5, 6], ['ironFistOgre', 'horde', 5, 8]]);
+    const b = s.battle!;
+    b.units.elfDruid.status.battleAttackBonus = 1;
+    b.units.ironFistOgre.status.damageReduction = 1;
+    const p = predictDamage(s, b.units.elfDruid, b.units.ironFistOgre, { useAbility: false, movedDistance: 0 });
+    expect(p).toMatchObject({ base: 2, damage: 0, hardHead: 2, shield: false, lethal: false, bearGuard: null });
+    s = applyAction(s, { type: 'battleAttack', targetId: 'ironFistOgre' });
+    expect(s.battle!.units.ironFistOgre.hp).toBe(UNITS.ironFistOgre.hp);
+    expect(s.battle!.units.ironFistOgre.abilityUsed).toBe(true);
+  });
+
+  it('predicts Opiekun Gaju taking over a lethal blow aimed at an ally', () => {
+    const s = fight([['blackDragon', 'horde', 5, 6], ['nymph', 'dawn', 5, 8], ['ancientBear', 'dawn', 6, 9]]);
+    const b = s.battle!;
+    const p = predictDamage(s, b.units.blackDragon, b.units.nymph, { useAbility: false, movedDistance: 0 });
+    expect(p.victim.id).toBe('ancientBear');
+    expect(p).toMatchObject({ bearGuard: 'ally', damage: UNITS.blackDragon.attack - 3, lethal: false });
+    const next = applyAction(s, { type: 'battleAttack', targetId: 'nymph' });
+    expect(next.battle!.units.nymph.hp).toBe(UNITS.nymph.hp);
+    expect(next.battle!.units.ancientBear.hp).toBe(UNITS.ancientBear.hp - p.damage);
   });
 
   it('Słoneczny Blask gives the dragon +3 A and its allies +1 A', () => {
@@ -165,19 +159,19 @@ describe('heroes falling', () => {
   }
 
   it('lets the Horde win when every Przymierze hero has fallen, and no elixir drinks itself', () => {
-    let s = createGame(setup({ mode: 'pvp', seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }, { name: 'B', faction: 'horde', controller: 'bot', heroId: 'blackDragon' }] }));
+    let s = pvpGame('goldDragon', 'blackDragon');
     s.items.x = { id: 'x', kind: 'resurrection', owner: 'dawn', foundBy: null };
     s.factions.dawn.inventory.push('x');
     s = killAll(s, 'dawn');
     s.turnIndex = s.turnOrder.findIndex((id) => s.heroes[id].alive);
-    for (let i = 0; i < 10 && s.phase !== 'over'; i++) s = applyAction(s, chooseAction(s)!);
+    s = playUntil(s, undefined, 10);
     expect(s.phase).toBe('over');
     expect(s.winner).toBe('horde');
     expect(s.factions.dawn.inventory).toContain('x');
   });
 
   it('does not give Przymierze the win for beating every Horde hero: the crystals still decide', () => {
-    let s = createGame(setup({ mode: 'pvp', seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }, { name: 'B', faction: 'horde', controller: 'bot', heroId: 'blackDragon' }] }));
+    let s = pvpGame('goldDragon', 'blackDragon');
     s = killAll(s, 'horde');
     s.turnIndex = s.turnOrder.indexOf('goldDragon');
     for (let i = 0; i < 6 && s.phase !== 'over'; i++) s = applyAction(s, { type: 'endTurn' });
@@ -209,11 +203,7 @@ describe('painted arenas', () => {
 
 describe('several heroes in a base', () => {
   it('sends the winner back when other enemies still stand on the battle hex', () => {
-    const base = createGame(setup({ mode: 'pvp', seats: [
-      { name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' },
-      { name: 'B', faction: 'horde', controller: 'bot', heroId: 'blackDragon' },
-      { name: 'C', faction: 'dawn', controller: 'bot', heroId: 'unicornKing' },
-    ] }));
+    const base = pvpGame('goldDragon', 'blackDragon', 'unicornKing');
     // Only a base may hold several heroes of one faction: the Black Dragon attacks the Przymierze base.
     const target = homeKey(base.rows, 'dawn');
     const start = mapNeighbors(base.tiles, target).find((k) => TERRAIN_COST[base.tiles[k].terrain] !== null)!;
@@ -230,7 +220,7 @@ describe('several heroes in a base', () => {
       s.factions.dawn.supportsDead = s.factions.dawn.supportsAlive;
       s.factions.dawn.supportsAlive = [];
       s = applyAction(s, { type: 'moveHero', to: target });
-      for (let i = 0; i < 2000 && s.phase === 'battle'; i++) s = applyAction(s, chooseAction(s)!);
+      s = playUntil(s, (x) => x.phase !== 'battle', 2000);
       if (!s.heroes.blackDragon.alive) continue;
       expect(s.heroes.blackDragon.pos).toBe(start);
       return;
@@ -249,11 +239,7 @@ describe('several heroes in a base', () => {
   });
 
   it('lets a Przymierze ally on the same hex pick up the crystal of a fallen hero', () => {
-    const base = createGame(setup({ mode: 'pvp', seats: [
-      { name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' },
-      { name: 'B', faction: 'horde', controller: 'bot', heroId: 'blackDragon' },
-      { name: 'C', faction: 'dawn', controller: 'bot', heroId: 'unicornKing' },
-    ] }));
+    const base = pvpGame('goldDragon', 'blackDragon', 'unicornKing');
     // Only a base may hold several heroes of one faction: the Black Dragon attacks the Przymierze base.
     const target = homeKey(base.rows, 'dawn');
     const start = mapNeighbors(base.tiles, target).find((k) => TERRAIN_COST[base.tiles[k].terrain] !== null)!;
@@ -276,7 +262,7 @@ describe('several heroes in a base', () => {
       crystal.guardian = null;
       crystal.at = `hero:${carrier}`;
       s.heroes[carrier].crystals = [crystal.id];
-      for (let i = 0; i < 2000 && s.phase === 'battle'; i++) s = applyAction(s, chooseAction(s)!);
+      s = playUntil(s, (x) => x.phase !== 'battle', 2000);
       if (s.heroes[carrier].alive) continue;
       expect(s.heroes[ally].crystals).toEqual([crystal.id]);
       expect(s.crystals[crystal.id].at).toBe(`hero:${ally}`);
@@ -288,10 +274,7 @@ describe('several heroes in a base', () => {
 
 describe('reserve hero', () => {
   it('comes in on a free hex nearest to where the fallen hero died, chosen on its first turn', () => {
-    const base = createGame(setup({ mode: 'pvp', seats: [
-      { name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' },
-      { name: 'B', faction: 'horde', controller: 'bot', heroId: 'blackDragon' },
-    ] }, { heroReplacement: true }));
+    const base = createGame(setup({ mode: 'pvp', seats: pvpSeats('goldDragon', 'blackDragon') }, { heroReplacement: true }));
     const start = base.heroes.blackDragon.pos;
     const target = mapNeighbors(base.tiles, start).find((k) => TERRAIN_COST[base.tiles[k].terrain] !== null)!;
     for (let seed = 1; seed <= 60; seed++) {
@@ -304,7 +287,7 @@ describe('reserve hero', () => {
       s.factions.dawn.supportsDead = s.factions.dawn.supportsAlive;
       s.factions.dawn.supportsAlive = [];
       s = applyAction(s, { type: 'moveHero', to: target });
-      for (let i = 0; i < 2000 && s.phase === 'battle'; i++) s = applyAction(s, chooseAction(s)!);
+      s = playUntil(s, (x) => x.phase !== 'battle', 2000);
       if (s.heroes.goldDragon.alive || s.phase === 'over') continue;
       const reserve = Object.values(s.heroes).find((h) => h.faction === 'dawn' && h.alive)!;
       // The Black Dragon holds the battle hex, so the reserve comes in next to it.
@@ -340,12 +323,7 @@ describe('harder coop', () => {
 });
 
 describe('one hero per hex', () => {
-  const pvp = () => createGame(setup({ mode: 'pvp', seats: [
-    { name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' },
-    { name: 'B', faction: 'horde', controller: 'bot', heroId: 'blackDragon' },
-    { name: 'C', faction: 'dawn', controller: 'bot', heroId: 'unicornKing' },
-    { name: 'D', faction: 'horde', controller: 'bot', heroId: 'werewolfLord' },
-  ] }));
+  const pvp = () => pvpGame('goldDragon', 'blackDragon', 'unicornKing', 'werewolfLord');
 
   it('closes a hex held by an ally, but not the own base', () => {
     const s = pvp();
@@ -386,27 +364,8 @@ describe('one hero per hex', () => {
 });
 
 describe('rulebook battle behaviour (coop automaton and guardians)', () => {
-  /** A guardian fight with the guardian to act. */
-  function guardianTurn(foes: Array<[string, number, number, number?]>): GameState {
-    const s = createGame(setup());
-    s.phase = 'battle';
-    const g = makeBattleUnit('hydra', 'neutral');
-    g.pos = arenaCell(6, 8);
-    const units: BattleState['units'] = { hydra: g };
-    for (const [id, col, half, hp] of foes) {
-      const u = makeBattleUnit(id, 'dawn');
-      u.pos = arenaCell(col, half);
-      if (hp) u.hp = hp;
-      units[id] = u;
-    }
-    s.battle = {
-      kind: 'neutral', duel: false, mapHex: Object.keys(s.tiles)[0], arena: 'dawn', attacker: 'dawn', defender: 'neutral', attackerHero: foes[0][0], attackerFrom: Object.keys(s.tiles)[0], defenderHero: null, neutralId: 'hydra',
-      stage: 'fight', needsDeploy: [], needsSelection: [], obstacles: [], units, round: 1, order: ['hydra', ...foes.map((f) => f[0])], index: 0,
-      activation: { unitId: 'hydra', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false },
-      extra: [], winner: null, damageBy: {},
-    };
-    return s;
-  }
+  /** A fight with the Hydra at (6, 8) to act. */
+  const guardianTurn = (foes: Array<[string, number, number, number?]>) => guardianFight('hydra', foes, {}, [6, 8]);
 
   it('a guardian hits the enemy with the least Życie it can reach', () => {
     const withHero = guardianTurn([['goldDragon', 6, 6], ['nymph', 7, 9, 1]]);

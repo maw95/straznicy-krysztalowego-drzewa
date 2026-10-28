@@ -1,20 +1,23 @@
 // Game flow: setup, adventure turns, battle triggers and aftermath, victory.
 // `applyAction` is the single entry point: it clones the state, applies one
 // action and returns the new state, so every game is a replayable action log.
+// `applyActionInPlace` does the same on the state it is given (simulations, replays).
 
 import {
   FACTION_HEROES,
   FACTION_NAMES,
   FACTION_SUPPORTS,
   guardianDuelHp,
+  ITEM_EFFECT,
   ITEMS,
   MAP_VARIANTS,
   NON_RESURRECTION_ITEMS,
   ARENA_DECK,
   ARENA_OFFER,
+  ARENA_PICKS,
   ARENA_RULES,
   RESURRECTION_CARDS,
-  TERRAIN_COST,
+  SUPPORTS_PER_BATTLE,
   TERRAIN_NAMES,
   UNITS,
   type FactionId,
@@ -37,17 +40,14 @@ import {
 } from './battle';
 import { distance, parseKey, type HexKey } from './hex';
 import { generateMap, homeKey, mapNeighbors, revealAround, tileCost, treeKey } from './map';
+import { log } from './log';
 import { Rng } from './rng';
-import type { Action, BattleReport, BattleState, GameState, HeroState, LogKind, Player, SetupOptions } from './types';
+import type { Action, BattleReport, BattleState, GameState, HeroState, ItemInstance, Player, SetupOptions } from './types';
 
 export const other = (f: FactionId): FactionId => (f === 'dawn' ? 'horde' : 'dawn');
 
 /** Re-reads the phase after calls that may end the game (keeps TS narrowing honest). */
 export const isOver = (state: GameState): boolean => state.phase === 'over';
-
-export function log(state: GameState, kind: LogKind, text: string, privateTo?: FactionId) {
-  state.log.push({ round: state.round, kind, text, ...(privateTo ? { privateTo } : {}) });
-}
 
 // ------------------------------------------------------------------ setup
 
@@ -112,41 +112,17 @@ export function createGame(setup: SetupOptions): GameState {
   };
 
   pool.forEach((kind, i) => {
-    const id = `it${i + 1}`;
-    state.items[id] = { id, kind, owner: null, foundBy: null };
-    state.tiles[map.treasureHexes[i]].treasureId = id;
+    state.tiles[map.treasureHexes[i]].treasureId = newItem(state, kind).id;
   });
-  // Treasures in hand from the start: the Przymierze on larger maps (MapVariant.startTreasures),
-  // the Horde on some levels (rules.hordeStartTreasures). Other kinds than those already dealt;
-  // `random` ones may also be an Eliksir Odrodzenia.
+  // Treasures in hand from the start: the Przymierze on larger maps, the Horde on some levels.
   const dealt = new Set<ItemKind>(others);
-  const give = (faction: FactionId, start: { resurrections: number; others: number; random?: number } | undefined) => {
-    if (!start || !setup.rules.treasures) return;
-    const kinds: ItemKind[] = Array(start.resurrections).fill('resurrection');
-    const rest = () => rng.shuffle(NON_RESURRECTION_ITEMS.filter((k) => !dealt.has(k)));
-    for (const k of rest().slice(0, start.others)) (kinds.push(k), dealt.add(k));
-    for (let i = 0; i < (start.random ?? 0); i++) {
-      // A random card of what is left in the box: Eliksiry Odrodzenia and one of each other treasure.
-      const elixirs = RESURRECTION_CARDS - pool.filter((k) => k === 'resurrection').length - Object.values(state.items).filter((it) => it.kind === 'resurrection' && it.owner).length;
-      const deck = [...Array(Math.max(0, elixirs)).fill('resurrection'), ...rest()] as ItemKind[];
-      const k = deck[rng.int(deck.length)];
-      kinds.push(k);
-      if (k !== 'resurrection') dealt.add(k);
-    }
-    for (const kind of kinds) {
-      const id = `it${Object.keys(state.items).length + 1}`;
-      state.items[id] = { id, kind, owner: faction, foundBy: null };
-      state.factions[faction].inventory.push(id);
-    }
-  };
-  give('dawn', variant.startTreasures);
-  give('horde', setup.rules.hordeStartTreasures);
+  dealStartTreasures(state, rng, 'dawn', variant.startTreasures, dealt, pool);
+  dealStartTreasures(state, rng, 'horde', setup.rules.hordeStartTreasures, dealt, pool);
   map.crystals.forEach((c, i) => {
     const id = `c${i + 1}`;
     state.crystals[id] = { id, guardian: c.guardian, at: c.hex };
     state.tiles[c.hex].crystalId = id;
   });
-
 
   setup.seats.forEach((seat, i) => {
     const player: Player = { id: `p${i + 1}`, name: seat.name, faction: seat.faction, controller: seat.controller };
@@ -175,6 +151,27 @@ export function createGame(setup: SetupOptions): GameState {
   return state;
 }
 
+/**
+ * Treasures a faction holds from the start (MapVariant.startTreasures, rules.hordeStartTreasures):
+ * Eliksiry Odrodzenia, kinds other than those already `dealt` (it grows), and `random` cards of
+ * what is left in the box, which may be an Eliksir too. `onMap` is the map's treasure pool.
+ */
+function dealStartTreasures(state: GameState, rng: Rng, faction: FactionId, start: { resurrections: number; others: number; random?: number } | undefined, dealt: Set<ItemKind>, onMap: ItemKind[]) {
+  if (!start || !state.rules.treasures) return;
+  const kinds: ItemKind[] = Array(start.resurrections).fill('resurrection');
+  const rest = () => rng.shuffle(NON_RESURRECTION_ITEMS.filter((k) => !dealt.has(k)));
+  for (const k of rest().slice(0, start.others)) (kinds.push(k), dealt.add(k));
+  for (let i = 0; i < (start.random ?? 0); i++) {
+    // A random card of what is left in the box: Eliksiry Odrodzenia and one of each other treasure.
+    const elixirs = RESURRECTION_CARDS - onMap.filter((k) => k === 'resurrection').length - Object.values(state.items).filter((it) => it.kind === 'resurrection' && it.owner).length;
+    const deck = [...Array(Math.max(0, elixirs)).fill('resurrection'), ...rest()] as ItemKind[];
+    const k = deck[rng.int(deck.length)];
+    kinds.push(k);
+    if (k !== 'resurrection') dealt.add(k);
+  }
+  for (const kind of kinds) giveItem(state, newItem(state, kind), faction, null);
+}
+
 // ------------------------------------------------------------------ arena
 
 /**
@@ -185,7 +182,7 @@ function startArena(state: GameState) {
   const rng = new Rng(state.rng);
   const coin: FactionId = rng.int(2) === 0 ? 'dawn' : 'horde';
   const first: FactionId = ARENA_RULES.firstPicker === 'random' ? coin : ARENA_RULES.firstPicker;
-  const second: FactionId = first === 'dawn' ? 'horde' : 'dawn';
+  const second = other(first);
   const arena = rng.int(2) === 0 ? 'dawn' : 'horde';
   state.rng = rng.state;
   const heroOf = (f: FactionId) => Object.values(state.heroes).find((h) => h.faction === f);
@@ -193,7 +190,9 @@ function startArena(state: GameState) {
   if (!dawn || !horde) throw new Error('Na arenie walczy jeden bohater Przymierza i jeden Hordy.');
   const hero = (f: FactionId) => (f === 'dawn' ? dawn : horde);
   const extra = (['dawn', 'horde'] as FactionId[]).flatMap((f) => Array<FactionId>(ARENA_RULES.extraPicks[f]).fill(f));
-  state.draft = { deck: [...ARENA_DECK], order: [first, second, second, first, ...extra], offer: [] };
+  // ARENA_PICKS each, snaking: A, B, B, A, A, B, …
+  const picks = Array.from({ length: ARENA_PICKS }, (_, i) => (i % 2 ? [second, first] : [first, second])).flat();
+  state.draft = { deck: [...ARENA_DECK], order: [...picks, ...extra], offer: [] };
   log(state, 'battle', `Arena: ${UNITS[hero('dawn').id].name} kontra ${UNITS[hero('horde').id].name}. Pierwsza wybiera ${FACTION_NAMES[first]}.`);
   startBattle(state, { kind: 'heroes', attackerHero: hero(first).id, defenderHero: hero(second).id, mapHex: hero(first).pos, from: hero(first).pos });
   const b = state.battle!;
@@ -223,10 +222,7 @@ function draftPick(state: GameState, faction: FactionId, kind: ItemKind) {
   if (!d || !b || b.stage !== 'draft' || d.order[0] !== faction) throw new Error('Teraz nie wybiera ta frakcja.');
   if (!d.offer.includes(kind)) throw new Error('Tego skarbu nie ma wśród pokazanych.');
   d.deck.splice(d.deck.indexOf(kind), 1);
-  const id = `it${Object.keys(state.items).length + 1}`;
-  const hero = battleHeroOf(b, faction);
-  state.items[id] = { id, kind, owner: faction, foundBy: hero };
-  state.factions[faction].inventory.push(id);
+  giveItem(state, newItem(state, kind), faction, battleHeroOf(b, faction));
   log(state, 'item', `${FACTION_NAMES[faction]} wybiera skarb.`);
   log(state, 'item', `Wybrany skarb: ${ITEMS[kind].name}.`, faction);
   d.order.shift();
@@ -252,15 +248,34 @@ function finishArena(state: GameState) {
   }
 }
 
+/**
+ * A new treasure card, owned by nobody yet. Ids follow creation order (it1, it2, …), and the order
+ * of state.items is the order bots look at treasures in: keep both when changing this.
+ */
+function newItem(state: GameState, kind: ItemKind): ItemInstance {
+  const id = `it${Object.keys(state.items).length + 1}`;
+  return (state.items[id] = { id, kind, owner: null, foundBy: null });
+}
+
+/** A treasure goes to a faction's shared inventory; `foundBy` is the hero who got it. */
+function giveItem(state: GameState, item: ItemInstance, faction: FactionId, foundBy: string | null) {
+  item.owner = faction;
+  item.foundBy = foundBy;
+  state.factions[faction].inventory.push(item.id);
+}
+
 function addHero(state: GameState, heroId: string, faction: FactionId, playerId: string | null) {
   state.heroes[heroId] = { id: heroId, faction, playerId, pos: homeKey(state.rows, faction), alive: true, crystals: [] };
   const unused = state.factions[faction].unusedHeroes;
   if (unused.includes(heroId)) unused.splice(unused.indexOf(heroId), 1);
 }
 
+/** Where the coop automaton's heroes come in the turn order: after every player's seat. */
+const AUTOMATON_SEAT = 100;
+
 export function computeTurnOrder(state: GameState): string[] {
   const heroes = Object.values(state.heroes);
-  const seatOrder = (h: HeroState) => (h.playerId ? state.players.findIndex((p) => p.id === h.playerId) : 100);
+  const seatOrder = (h: HeroState) => (h.playerId ? state.players.findIndex((p) => p.id === h.playerId) : AUTOMATON_SEAT);
   const dawn = heroes.filter((h) => h.faction === 'dawn' && h.alive).sort((a, b) => seatOrder(a) - seatOrder(b));
   const horde = heroes.filter((h) => h.faction === 'horde' && h.alive).sort((a, b) => seatOrder(a) - seatOrder(b));
   if (state.setup.mode === 'coop') return [...dawn, ...horde].map((h) => h.id);
@@ -280,8 +295,20 @@ export function activeHero(state: GameState): HeroState | null {
   return id ? state.heroes[id] : null;
 }
 
+/** A faction's living heroes (a reserve still to come in included), in the order of state.heroes. */
+export function livingHeroes(state: GameState, faction: FactionId): HeroState[] {
+  return Object.values(state.heroes).filter((h) => h.faction === faction && h.alive);
+}
+
 export function heroesAt(state: GameState, k: HexKey): HeroState[] {
   return Object.values(state.heroes).filter((h) => h.alive && !h.entering && h.pos === k);
+}
+
+/** The enemy hero who fights for hex `k` when it is attacked: of several (only in a base), the one with the most Życie. */
+export function defenderAt(state: GameState, k: HexKey, attacker: FactionId): HeroState | undefined {
+  return heroesAt(state, k)
+    .filter((h) => h.faction !== attacker)
+    .sort((a, b) => UNITS[b.id].hp - UNITS[a.id].hp)[0];
 }
 
 /**
@@ -292,7 +319,7 @@ export function ritualFormed(state: GameState): boolean {
   // The easy level plays without the ritual.
   if (state.rules.ritual === false) return false;
   const tree = treeKey();
-  const evil = Object.values(state.heroes).filter((h) => h.faction === 'horde' && h.alive);
+  const evil = livingHeroes(state, 'horde');
   if (!evil.length || evil.some((h) => h.entering) || !evil.some((h) => h.pos === tree)) return false;
   const around = new Set(mapNeighbors(state.tiles, tree));
   return evil.every((h) => h.pos === tree || around.has(h.pos));
@@ -350,9 +377,10 @@ export function legalHeroMoves(state: GameState): HeroMove[] {
     const tile = state.tiles[n];
     const cost = tileCost(tile);
     if (cost === null || !tile.revealed) continue;
-    const enemies = heroesAt(state, n).filter((h) => h.faction !== hero.faction);
+    const there = heroesAt(state, n);
+    const enemies = there.filter((h) => h.faction !== hero.faction);
     // One hero per hex: a hex held by an ally is closed (except the faction's own base).
-    if (!enemies.length && heroesAt(state, n).length && tile.home !== hero.faction) continue;
+    if (!enemies.length && there.length && tile.home !== hero.faction) continue;
     const crystal = tile.crystalId ? state.crystals[tile.crystalId] : null;
     if (enemies.length) {
       // Attacking needs at least 1 movement point and ends the hero's movement.
@@ -429,8 +457,7 @@ function moveHero(state: GameState, to: HexKey) {
     return;
   }
   if (move.kind === 'attackHero') {
-    // Several defenders (only in a base): the one with the most Życie stands up to fight.
-    const defender = heroesAt(state, to).filter((h) => h.faction !== hero.faction).sort((a, b) => UNITS[b.id].hp - UNITS[a.id].hp)[0];
+    const defender = defenderAt(state, to, hero.faction)!;
     log(state, 'battle', `${name} atakuje: ${UNITS[defender.id].name}.`);
     const from = hero.pos;
     hero.pos = to;
@@ -481,9 +508,7 @@ function arriveAt(state: GameState, hero: HeroState) {
   const tile = state.tiles[hero.pos];
   if (tile.treasureId) {
     const item = state.items[tile.treasureId];
-    item.owner = hero.faction;
-    item.foundBy = hero.id;
-    state.factions[hero.faction].inventory.push(item.id);
+    giveItem(state, item, hero.faction, hero.id);
     tile.treasureId = null;
     state.stats.treasuresCollected[hero.faction] += 1;
     log(state, 'item', `${UNITS[hero.id].name} znajduje skarb.`);
@@ -583,8 +608,8 @@ function useMapItem(state: GameState, itemId: string, targets: HexKey[] | undefi
   const item = state.items[itemId];
   if (!item || item.owner !== hero.faction) throw new Error('Nie masz tego skarbu.');
   if (item.kind === 'map') {
-    const keys = [...new Set(targets ?? [])].filter((k) => state.tiles[k] && !state.tiles[k].revealed).slice(0, 3);
-    if (!keys.length) throw new Error('Wybierz do 3 zakrytych pól.');
+    const keys = [...new Set(targets ?? [])].filter((k) => state.tiles[k] && !state.tiles[k].revealed).slice(0, ITEM_EFFECT.mapReveal);
+    if (!keys.length) throw new Error(`Wybierz do ${ITEM_EFFECT.mapReveal} zakrytych pól.`);
     for (const k of keys) state.tiles[k].revealed = true;
     log(state, 'item', `${UNITS[hero.id].name} używa Magicznej Mapy: odkryto ${keys.length} pola.`);
   } else if (item.kind === 'resurrection') {
@@ -664,7 +689,7 @@ function startBattle(state: GameState, s: BattleStart) {
   for (const f of [attacker.faction, defenderHero?.faction].filter(Boolean) as FactionId[]) {
     if (b.duel) break;
     const pool = state.factions[f].supportsAlive;
-    if (pool.length <= 2) addSupports(state, f, [...pool]);
+    if (pool.length <= SUPPORTS_PER_BATTLE) addSupports(state, f, [...pool]);
     else b.needsSelection.push(f);
   }
   if (!b.needsSelection.length) startBattleFight(state);
@@ -680,7 +705,7 @@ function selectSupports(state: GameState, faction: FactionId, ids: string[]) {
   if (!b || b.stage !== 'select' || b.needsSelection[0] !== faction) throw new Error('Teraz nie wybiera ta frakcja.');
   const pool = state.factions[faction].supportsAlive;
   const unique = [...new Set(ids)];
-  if (unique.length !== Math.min(2, pool.length) || unique.some((id) => !pool.includes(id))) throw new Error('Wybierz dwóch żyjących pomocników.');
+  if (unique.length !== Math.min(SUPPORTS_PER_BATTLE, pool.length) || unique.some((id) => !pool.includes(id))) throw new Error('Wybierz dwóch żyjących pomocników.');
   addSupports(state, faction, unique);
   b.needsSelection.shift();
   if (!b.needsSelection.length) afterSelection(state);
@@ -690,7 +715,22 @@ function selectSupports(state: GameState, faction: FactionId, ids: string[]) {
 function finalizeBattle(state: GameState) {
   if (state.setup.mode === 'arena') return finishArena(state);
   const b = state.battle!;
-  const winner = b.winner!;
+  applyCasualties(state, b);
+  const resultText = b.winner === 'draw' ? 'remis — obie strony poległy' : `wygrywa ${FACTION_NAMES[b.winner!]}`;
+  log(state, 'battle', `Bitwa zakończona: ${resultText}.`);
+  if (b.kind === 'neutral') resolveGuardianFight(state, b);
+  state.lastBattle = battleReport(state, b);
+  state.battle = null;
+  state.phase = 'adventure';
+  placeAttackerAfterBattle(state, b);
+  checkVictory(state);
+  if (isOver(state)) return;
+  const active = activeHero(state);
+  if (!active || !active.alive) advanceTurn(state);
+}
+
+/** Fallen supports join the faction's dead for good; fallen heroes die on the map. */
+function applyCasualties(state: GameState, b: BattleState) {
   for (const u of Object.values(b.units)) {
     if (u.side === 'neutral' || u.alive || u.swappedOut) continue;
     const f = u.side as FactionId;
@@ -706,35 +746,34 @@ function finalizeBattle(state: GameState) {
       killHero(state, u.defId, b.mapHex);
     }
   }
-  const resultText = winner === 'draw' ? 'remis — obie strony poległy' : `wygrywa ${FACTION_NAMES[winner]}`;
-  log(state, 'battle', `Bitwa zakończona: ${resultText}.`);
-  if (b.kind === 'neutral') {
-    if (winner === b.attacker) {
-      const crystal = Object.values(state.crystals).find((c) => c.at === b.mapHex && c.guardian === b.neutralId);
-      if (crystal) {
-        crystal.guardian = null;
-        log(state, 'crystal', `Strażnik pokonany. Kryształ jest wolny.`);
-        guardianHoard(state, b.attackerHero);
-      }
-    } else {
-      state.stats.neutralWipes += 1;
-    }
+}
+
+/** A beaten guardian frees its crystal and leaves a treasure; a guardian that won is counted. */
+function resolveGuardianFight(state: GameState, b: BattleState) {
+  if (b.winner !== b.attacker) {
+    state.stats.neutralWipes += 1;
+    return;
   }
-  state.lastBattle = battleReport(state, b);
-  state.battle = null;
-  state.phase = 'adventure';
+  const crystal = Object.values(state.crystals).find((c) => c.at === b.mapHex && c.guardian === b.neutralId);
+  if (!crystal) return;
+  crystal.guardian = null;
+  log(state, 'crystal', `Strażnik pokonany. Kryształ jest wolny.`);
+  guardianHoard(state, b.attackerHero);
+}
+
+/**
+ * The attacker, if alive, stays on the battle hex and picks up what lies there. Several enemy
+ * heroes may share a hex but a battle is fought against one of them: if any still stands there,
+ * the winner steps back instead of sharing the hex.
+ */
+function placeAttackerAfterBattle(state: GameState, b: BattleState) {
   const attacker = state.heroes[b.attackerHero];
-  // Several enemy heroes may share a hex but a battle is fought against one of them:
-  // if any still stands there, the winner steps back instead of sharing the hex.
-  if (attacker.alive && heroesAt(state, b.mapHex).some((h) => h.faction !== attacker.faction)) {
+  if (!attacker.alive) return;
+  if (heroesAt(state, b.mapHex).some((h) => h.faction !== attacker.faction)) {
     attacker.pos = b.attackerFrom;
     log(state, 'move', `${UNITS[attacker.id].name} wraca na poprzednie pole — na polu bitwy stoją jeszcze wrogowie.`);
   }
-  if (attacker.alive) arriveAt(state, attacker);
-  checkVictory(state);
-  if (isOver(state)) return;
-  const active = activeHero(state);
-  if (!active || !active.alive) advanceTurn(state);
+  arriveAt(state, attacker);
 }
 
 function battleReport(state: GameState, b: BattleState): BattleReport {
@@ -765,9 +804,7 @@ function guardianHoard(state: GameState, heroId: string) {
   const kind = rng.pick(left);
   state.rng = rng.state;
   const hero = state.heroes[heroId];
-  const id = `it${Object.keys(state.items).length + 1}`;
-  state.items[id] = { id, kind, owner: hero.faction, foundBy: hero.id };
-  state.factions[hero.faction].inventory.push(id);
+  giveItem(state, newItem(state, kind), hero.faction, hero.id);
   state.stats.treasuresCollected[hero.faction] += 1;
   log(state, 'item', `Strażnik zostawia swój skarb.`);
   log(state, 'item', `Skarb strażnika (${UNITS[hero.id].name}): ${ITEMS[kind].name}.`, hero.faction);
@@ -830,7 +867,15 @@ function hordeReinforcement(state: GameState, fallenId: string) {
 
 export function applyAction(prev: GameState, action: Action): GameState {
   if (prev.phase === 'over') throw new Error('Gra się zakończyła.');
-  const state: GameState = structuredClone(prev);
+  return applyActionInPlace(structuredClone(prev), action);
+}
+
+/**
+ * Applies one action to `state` itself and returns it. Faster than applyAction (no copy), for
+ * code that owns the state; when the action is refused the state may be left half changed.
+ */
+export function applyActionInPlace(state: GameState, action: Action): GameState {
+  if (state.phase === 'over') throw new Error('Gra się zakończyła.');
   switch (action.type) {
     case 'moveHero':
       moveHero(state, action.to);
@@ -886,9 +931,4 @@ function applyBattleAction(state: GameState, action: Action) {
     default:
       throw new Error('Nieznana akcja.');
   }
-}
-
-export function terrainCostLabel(k: HexKey, state: GameState): string {
-  const c = TERRAIN_COST[state.tiles[k].terrain];
-  return c === null ? 'nieprzechodnie' : String(c);
 }

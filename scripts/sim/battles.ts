@@ -9,7 +9,7 @@
 
 import './override';
 import { FACTION_HEROES, FACTION_SUPPORTS, GUARDIANS, UNITS, type FactionId } from '../../src/engine/data';
-import { applyAction, createGame } from '../../src/engine/game';
+import { applyActionInPlace, createGame } from '../../src/engine/game';
 import { chooseAction } from '../../src/engine/ai';
 import { mapNeighbors } from '../../src/engine/map';
 import { Rng } from '../../src/engine/rng';
@@ -23,7 +23,6 @@ interface Outcome {
   attackerWon: boolean;
   dawnWon: boolean;
   dawnSupportsLost: number;
-  survivors: string[];
 }
 
 function battleDetail(seed: number, d: string, h: string): { winner: string; supports: Array<[string, string]> } {
@@ -42,15 +41,15 @@ function battle(seed: number, dawnHero: string, opponent: string, duel: boolean,
         { name: 'A', faction: 'dawn' as FactionId, controller: 'bot' as const, heroId: dawnHero },
         { name: 'B', faction: 'horde' as FactionId, controller: 'bot' as const, heroId: opponent },
       ];
-  let s: GameState = createGame({ mode: guardian ? 'coop' : 'pvp', mapSize: 'medium', battleMode: duel ? 'board' : 'arena', seed, seats, rules });
+  const s: GameState = createGame({ mode: guardian ? 'coop' : 'pvp', mapSize: 'medium', battleMode: duel ? 'board' : 'arena', seed, seats, rules });
   for (const f of ['dawn', 'horde'] as FactionId[]) {
     s.factions[f].supportsAlive = rng.shuffle(FACTION_SUPPORTS[f]).slice(0, 2);
     s.factions[f].supportsDead = [];
   }
   s.rng = seed;
   const dawn = s.heroes[dawnHero];
-  // A free hex next to the Przymierze hero; its half of the map picks the arena.
-  const spot = mapNeighbors(s.tiles, dawn.pos).find((k) => s.tiles[k].terrain !== 'mountain' && s.tiles[k].terrain !== 'chasm' && !s.tiles[k].home)!;
+  // A hex next to the Przymierze hero (made a meadow below); its half of the map picks the arena.
+  const spot = mapNeighbors(s.tiles, dawn.pos).find((k) => !s.tiles[k].home)!;
   s.tiles[spot].revealed = true;
   s.tiles[spot].side = rng.next() < 0.5 ? 'dawn' : 'horde';
   s.tiles[spot].terrain = 'meadow';
@@ -75,18 +74,15 @@ function battle(seed: number, dawnHero: string, opponent: string, duel: boolean,
   if (attackerIsDawn) s.turnIndex = s.turnOrder.indexOf(dawnHero);
   s.movePoints = 2;
   s.turnBattleDone = false;
-  const attacker = attackerIsDawn ? dawn : s.heroes[opponent];
   const target = attackerIsDawn ? spot : dawn.pos;
-  s = applyAction(s, { type: 'moveHero', to: target });
-  void attacker;
-  for (let i = 0; i < 5000 && s.phase === 'battle'; i++) s = applyAction(s, chooseAction(s)!);
+  applyActionInPlace(s, { type: 'moveHero', to: target });
+  for (let i = 0; i < 5000 && s.phase === 'battle'; i++) applyActionInPlace(s, chooseAction(s)!);
   const r = s.lastBattle!;
   lastReport = r;
   return {
     attackerWon: r.winner === r.attacker,
     dawnWon: r.winner === 'dawn',
     dawnSupportsLost: r.units.filter((u) => u.side === 'dawn' && UNITS[u.defId].kind === 'support' && !u.alive).length,
-    survivors: r.units.filter((u) => u.alive).map((u) => u.defId),
   };
 }
 
@@ -98,7 +94,6 @@ const only = process.env.SIM_ONLY;
 for (const duel of only === 'guardians' ? [] : [false, true]) {
   console.log(`\n${duel ? 'Pojedynki 1 na 1' : 'Bitwy 3 na 3'} (${opts.join(',')}) — % wygranych Przymierza; wiersze: Przymierze, kolumny: Horda`);
   console.log(''.padEnd(16) + FACTION_HEROES.horde.map((h) => h.padStart(14)).join(''));
-  const supportWins: Record<string, [number, number]> = {};
   let attackerWins = 0;
   let total = 0;
   let dawnTotal = 0;
@@ -111,7 +106,6 @@ for (const duel of only === 'guardians' ? [] : [false, true]) {
         if (o.dawnWon) w++;
         if (o.attackerWon) attackerWins++;
         total++;
-        for (const id of o.survivors) void id;
       }
       dawnTotal += w;
       row.push(pct(w / per).padStart(14));
@@ -119,7 +113,6 @@ for (const duel of only === 'guardians' ? [] : [false, true]) {
     console.log(d.padEnd(16) + row.join(''));
   }
   console.log(`Razem Przymierze: ${pct(dawnTotal / total)} · wygrane atakującego: ${pct(attackerWins / total)}`);
-  void supportWins;
 }
 
 for (const duel of [false, true]) {

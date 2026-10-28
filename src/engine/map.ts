@@ -1,7 +1,7 @@
 // Adventure map: triangle generation (variant A), costs and path finding.
 
 import { GUARDIAN_LAIRS, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type MapSize, type Terrain, type TileSide } from './data';
-import { distance, key, neighbors, parseKey, triToHex, type HexKey } from './hex';
+import { distance, key, neighborKeys, parseKey, triToHex, type HexKey } from './hex';
 import { Rng } from './rng';
 import type { GameState, Tile } from './types';
 
@@ -10,9 +10,7 @@ export function tileCost(t: Tile): number | null {
 }
 
 export function mapNeighbors(tiles: Record<HexKey, Tile>, k: HexKey): HexKey[] {
-  return neighbors(parseKey(k))
-    .map(key)
-    .filter((n) => n in tiles);
+  return neighborKeys(k).filter((n) => n in tiles);
 }
 
 export function treeKey(): HexKey {
@@ -43,33 +41,89 @@ export interface PathResult {
   path: HexKey[];
 }
 
+/** Cheapest first, ties by key: a total order, so the search visits hexes in a fixed order. */
+const before = (a: { cost: number; k: HexKey }, b: { cost: number; k: HexKey }) => a.cost < b.cost || (a.cost === b.cost && a.k < b.k);
+
 /**
  * Dijkstra over map costs. `costOf` lets callers model knowledge
- * (e.g. the coop AI treats hidden hexes as cost 1).
+ * (e.g. the coop AI treats hidden hexes as cost 1). Hexes are settled cheapest first, ties by
+ * key; a hex's path goes through the first settled hex that reached it at its final cost.
+ * Paths are built only when read.
  */
 export function shortestPaths(
   tiles: Record<HexKey, Tile>,
   start: HexKey,
   costOf: (k: HexKey) => number | null,
 ): Map<HexKey, PathResult> {
-  const best = new Map<HexKey, PathResult>([[start, { cost: 0, path: [start] }]]);
-  const open: HexKey[] = [start];
-  while (open.length) {
-    open.sort((a, b) => best.get(a)!.cost - best.get(b)!.cost || (a < b ? -1 : 1));
-    const cur = open.shift()!;
-    const base = best.get(cur)!;
+  const cost = new Map<HexKey, number>([[start, 0]]);
+  const parent = new Map<HexKey, HexKey>();
+  const done = new Set<HexKey>();
+  // Binary heap of (cost, hex); an entry whose cost is out of date is skipped when it comes up.
+  const heap: Array<{ cost: number; k: HexKey }> = [{ cost: 0, k: start }];
+  const push = (e: { cost: number; k: HexKey }) => {
+    let i = heap.push(e) - 1;
+    while (i > 0) {
+      const up = (i - 1) >> 1;
+      if (!before(heap[i], heap[up])) break;
+      [heap[i], heap[up]] = [heap[up], heap[i]];
+      i = up;
+    }
+  };
+  const pop = () => {
+    const top = heap[0];
+    const last = heap.pop()!;
+    if (heap.length) {
+      heap[0] = last;
+      for (let i = 0; ; ) {
+        const l = 2 * i + 1;
+        const r = l + 1;
+        let m = i;
+        if (l < heap.length && before(heap[l], heap[m])) m = l;
+        if (r < heap.length && before(heap[r], heap[m])) m = r;
+        if (m === i) break;
+        [heap[i], heap[m]] = [heap[m], heap[i]];
+        i = m;
+      }
+    }
+    return top;
+  };
+  while (heap.length) {
+    const { cost: d, k: cur } = pop();
+    if (done.has(cur) || d !== cost.get(cur)) continue;
+    done.add(cur);
     for (const n of mapNeighbors(tiles, cur)) {
       const c = costOf(n);
       if (c === null) continue;
-      const next = base.cost + c;
-      const old = best.get(n);
-      if (!old || next < old.cost) {
-        best.set(n, { cost: next, path: [...base.path, n] });
-        if (!open.includes(n)) open.push(n);
+      const next = d + c;
+      const old = cost.get(n);
+      if (old === undefined || next < old) {
+        cost.set(n, next);
+        parent.set(n, cur);
+        push({ cost: next, k: n });
       }
     }
   }
-  return best;
+  const out = new Map<HexKey, PathResult>();
+  for (const [k, c] of cost) out.set(k, new LazyPath(k, c, parent));
+  return out;
+}
+
+class LazyPath implements PathResult {
+  private steps: HexKey[] | null = null;
+  constructor(
+    private readonly to: HexKey,
+    readonly cost: number,
+    private readonly parent: Map<HexKey, HexKey>,
+  ) {}
+
+  get path(): HexKey[] {
+    if (!this.steps) {
+      const out = [this.to];
+      for (let k = this.parent.get(this.to); k !== undefined; k = this.parent.get(k)) out.push(k);
+      this.steps = out.reverse();
+    }
+    return this.steps;
+  }
 }
 
 export function revealAround(state: GameState, k: HexKey): HexKey[] {
@@ -147,7 +201,7 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
     for (const g of guardians) {
       const lair = GUARDIAN_LAIRS[g];
       const options = [...reach].filter((k) => !reserved.has(k) && tiles[k].side === lair.side && tileCost(tiles[k]) !== null);
-      const spot = pickSpread(options, 1, rng, tiles, crystals.map((c) => c.hex))[0];
+      const spot = pickSpread(options, rng, tiles, rows, crystals.map((c) => c.hex));
       if (!spot) break;
       crystals.push({ hex: spot, guardian: g });
       reserved.add(spot);
@@ -167,20 +221,18 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
   throw new Error('Nie udało się wygenerować poprawnej mapy');
 }
 
-/** Picks hexes far from already chosen ones so crystals spread over the map. */
-function pickSpread(candidates: HexKey[], count: number, rng: Rng, tiles: Record<HexKey, Tile>, taken: HexKey[] = []): HexKey[] {
-  const rows = Math.max(...Object.values(tiles).map((t) => t.row)) + 1;
+/**
+ * Picks a hex far from the ones already taken so crystals spread over the map: at least 3 hexes
+ * away if it can, then 2, then 1, from a shuffled pool (one shuffle, whatever is found).
+ */
+function pickSpread(candidates: HexKey[], rng: Rng, tiles: Record<HexKey, Tile>, rows: number, taken: HexKey[]): HexKey | undefined {
   const pool = rng.shuffle(candidates);
-  const chosen: HexKey[] = [];
   for (const minGap of [3, 2, 1]) {
     for (const k of pool) {
-      if (chosen.length >= count) break;
-      if (chosen.includes(k)) continue;
       // Keep crystals off the two bottom rows (unless nothing else fits) so the race is not trivial.
       if (minGap > 1 && tiles[k].row >= rows - 2) continue;
-      if (![...taken, ...chosen].some((c) => distance(parseKey(c), parseKey(k)) < minGap)) chosen.push(k);
+      if (!taken.some((c) => distance(parseKey(c), parseKey(k)) < minGap)) return k;
     }
-    if (chosen.length >= count) break;
   }
-  return chosen;
+  return undefined;
 }

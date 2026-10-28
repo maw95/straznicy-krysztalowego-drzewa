@@ -1,6 +1,5 @@
-// Hex geometry on axial coordinates (pointy-top hexes).
-// Both the triangular adventure map and the 9×11 arena use axial {q, r};
-// helpers below convert from the row/column layouts used by each board.
+// Hex geometry on axial coordinates {q, r}, shared by both boards: the triangular adventure map
+// (triToHex below) and the arena of flat-topped hexes (its (col, half) cells: battle.ts).
 
 export interface Hex {
   q: number;
@@ -11,9 +10,17 @@ export type HexKey = string;
 
 export const key = (h: Hex): HexKey => `${h.q},${h.r}`;
 
+/** Parsed keys: a game uses a few hundred hexes and parses them all the time. */
+const PARSED = new Map<HexKey, Readonly<Hex>>();
+
+/** The hex of a key. The result is shared: never change it. */
 export function parseKey(k: HexKey): Hex {
-  const [q, r] = k.split(',').map(Number);
-  return { q, r };
+  let h = PARSED.get(k);
+  if (!h) {
+    const [q, r] = k.split(',').map(Number);
+    PARSED.set(k, (h = Object.freeze({ q, r })));
+  }
+  return h;
 }
 
 export const DIRECTIONS: readonly Hex[] = [
@@ -31,6 +38,15 @@ export function neighbors(h: Hex): Hex[] {
   return DIRECTIONS.map((d) => add(h, d));
 }
 
+const NEAR = new Map<HexKey, readonly HexKey[]>();
+
+/** Keys of the six neighbours of a hex, on or off any board (shared: never change the list). */
+export function neighborKeys(k: HexKey): readonly HexKey[] {
+  let near = NEAR.get(k);
+  if (!near) NEAR.set(k, (near = neighbors(parseKey(k)).map(key)));
+  return near;
+}
+
 export function distance(a: Hex, b: Hex): number {
   const dq = a.q - b.q;
   const dr = a.r - b.r;
@@ -44,13 +60,6 @@ export function directionBetween(from: Hex, to: Hex): Hex | null {
 
 /** Triangular map: row `row` (0 = top) has row + 1 hexes, `col` in [0, row]. */
 export const triToHex = (row: number, col: number): Hex => ({ q: col - row, r: row });
-export const hexToTri = (h: Hex): { row: number; col: number } => ({ row: h.r, col: h.q + h.r });
-
-/** Arena: "odd-r" offset rows (odd rows shifted right by half a hex). */
-export const offsetToHex = (row: number, col: number): Hex => ({ q: col - (row - (row & 1)) / 2, r: row });
-export function hexToOffset(h: Hex): { row: number; col: number } {
-  return { row: h.r, col: h.q + (h.r - (h.r & 1)) / 2 };
-}
 
 function cubeRound(x: number, y: number, z: number): Hex {
   let rx = Math.round(x);

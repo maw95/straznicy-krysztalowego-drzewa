@@ -7,7 +7,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { UNITS } from '../src/engine/data';
 import { cellOf } from '../src/engine/battle';
-import { applyAction, createGame, currentActor } from '../src/engine/game';
+import { applyActionInPlace, createGame, currentActor } from '../src/engine/game';
 import type { GameState } from '../src/engine/types';
 import type { BugReport, SaveFile } from '../src/ui/saves';
 import type { TesterExport } from '../src/ui/journal';
@@ -44,21 +44,31 @@ function savesIn(file: string): Array<{ label: string; save: SaveFile }> {
 for (const { label, save } of files.flatMap(savesIn)) {
   const reports: BugReport[] = save.reports ?? [];
   console.log(`\n=== ${label} · ziarno ${save.setup.seed} · ${save.setup.mode} · ${save.setup.mapSize} · akcji ${save.actions.length} · zgłoszeń ${reports.length}`);
-  for (const r of reports) {
-    let s = createGame(save.setup);
-    let error = '';
-    for (const a of save.actions.slice(0, r.actionIndex)) {
+  // One replay (in place) for all the reports of a game: the state is described at each reported action.
+  const at = new Map<number, { error: string; lines: string[] }>();
+  let s = reports.length ? createGame(save.setup) : null;
+  let done = 0;
+  let error = '';
+  for (const index of [...new Set(reports.map((r) => r.actionIndex))].sort((a, b) => a - b)) {
+    for (; !error && done < index && done < save.actions.length; done++) {
+      const a = save.actions[done];
       try {
-        s = applyAction(s, a);
+        applyActionInPlace(s!, a);
       } catch (e) {
         error = `odtworzenie przerwane: ${(e as Error).message} przy ${JSON.stringify(a)}`;
-        break;
+        // The refused action may have left the state half changed: rebuild it without that action.
+        s = createGame(save.setup);
+        for (const ok of save.actions.slice(0, done)) applyActionInPlace(s, ok);
       }
     }
+    at.set(index, { error, lines: describe(s!) });
+  }
+  for (const r of reports) {
+    const { error, lines } = at.get(r.actionIndex)!;
     console.log(`\n--- ${r.createdAt} · akcja ${r.actionIndex} · ekran ${r.screen} · ${r.viewport}`);
     console.log(`Opis: ${r.text}`);
     if (error) console.log(error);
-    console.log(describe(s).join('\n'));
+    console.log(lines.join('\n'));
     console.log('Ostatnie wpisy dziennika (widziane przez gracza):');
     for (const l of r.recentLog) console.log(`  ${l}`);
     const next = save.actions.slice(r.actionIndex, r.actionIndex + 3);

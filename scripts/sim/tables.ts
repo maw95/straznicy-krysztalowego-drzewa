@@ -14,7 +14,7 @@ const LEVELS: Array<[string, string]> = [['kids', 'Łatwy'], ['full', 'Normalny'
 const TABLES: Array<[string, string]> = [['coop1', 'Kooperacja — 1 gracz'], ['coop2', 'Kooperacja — 2 graczy'], ['pvp1', 'Rywalizacja — 1 na 1'], ['pvp2', 'Rywalizacja — 2 na 2']];
 /** How a game ended, by the engine's end reason. */
 const ENDS: Array<[string, (reason: string) => boolean]> = [
-  ['wybici', (r) => r.includes('Przymierza polegli') || r.includes('obu frakcji')],
+  ['wybici', (r) => r.includes('Przymierza polegli')],
   ['rytuał', (r) => r.includes('rytuał')],
   ['limit rund', (r) => r.includes('limit rund')],
 ];

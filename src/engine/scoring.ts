@@ -5,7 +5,10 @@
 // simulations (docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md, section 7); update them after rebalancing.
 
 import type { FactionId, MapSize } from './data';
-import { DEFAULT_RULES, type SetupOptions } from './types';
+import { DEFAULT_RULES, type Level, type SetupOptions } from './types';
+
+/** A preset level, or 'custom' for a setup with single options switched on. */
+export type LevelName = Level | 'custom';
 
 /** One map's ratings: the levels, then the full game with one custom option switched on. */
 interface Ratings {
@@ -21,22 +24,56 @@ interface Ratings {
   dice: number;
 }
 
-const r = (normal: number, kids: number, hard: number | undefined, optionBase: number, noAbilities: number, elixirs: number, reserve: number, duels: number, dice: number): Ratings => ({ normal, kids, hard, optionBase, noAbilities, elixirs, reserve, duels, dice });
 type Table = Record<MapSize, Ratings>;
+
+/** One map's Ratings as a row of numbers, in this order (null: not measured). */
+type Row = [normal: number, kids: number, hard: number | null, optionBase: number, noAbilities: number, elixirs: number, reserve: number, duels: number, dice: number];
+
+/** Ratings rows, one per map. */
+function table(rows: Record<MapSize, Row>): Table {
+  const out = {} as Table;
+  for (const size of Object.keys(rows) as MapSize[]) {
+    const [normal, kids, hard, optionBase, noAbilities, elixirs, reserve, duels, dice] = rows[size];
+    out[size] = { normal, kids, hard: hard ?? undefined, optionBase, noAbilities, elixirs, reserve, duels, dice };
+  }
+  return out;
+}
 
 /**
  * Difficulty for Przymierze in coop, by the number of players. The level columns follow the unit balance
  * of 2026-10-22 (notes section 9); the single options were measured before it, against optionBase.
  */
 const COOP: Record<1 | 2, Table> = {
-  1: { short: r(5, 2, 7, 5, 7, 5, 5, 6, 5), medium: r(4, 2, 8, 5, 7, 6, 4, 6, 5), long: r(5, 3, 8, 5, 6, 6, 5, 7, 5), veryLong: r(4, 3, 7, 5, 6, 7, 4, 7, 5) },
-  2: { short: r(4, 3, 7, 4, 7, 5, 4, 4, 4), medium: r(5, 3, 7, 4, 6, 5, 5, 4, 5), long: r(5, 4, 6, 4, 5, 5, 4, 4, 4), veryLong: r(4, 3, 5, 3, 4, 4, 3, 4, 3) },
+  // normal, kids, hard, optionBase, noAbilities, elixirs, reserve, duels, dice (see Row)
+  1: table({
+    short:    [5, 2, 7, 5, 7, 5, 5, 6, 5],
+    medium:   [4, 2, 8, 5, 7, 6, 4, 6, 5],
+    long:     [5, 3, 8, 5, 6, 6, 5, 7, 5],
+    veryLong: [4, 3, 7, 5, 6, 7, 4, 7, 5],
+  }),
+  2: table({
+    short:    [4, 3, 7, 4, 7, 5, 4, 4, 4],
+    medium:   [5, 3, 7, 4, 6, 5, 5, 4, 5],
+    long:     [5, 4, 6, 4, 5, 5, 4, 4, 4],
+    veryLong: [4, 3, 5, 3, 4, 4, 3, 4, 3],
+  }),
 };
 
-/** Difficulty for Przymierze in PvP (the Horde's is 11 minus it), 1 on 1 and 2 on 2. */
+/** Difficulty for Przymierze in PvP (the Horde's is 11 minus it), 1 on 1 and 2 on 2. There is no hard level. */
 const PVP: Record<1 | 2, Table> = {
-  1: { short: r(5, 2, undefined, 5, 5, 6, 5, 4, 5), medium: r(6, 2, undefined, 6, 5, 6, 5, 5, 6), long: r(6, 2, undefined, 6, 6, 6, 6, 5, 6), veryLong: r(6, 3, undefined, 6, 6, 7, 6, 6, 6) },
-  2: { short: r(5, 3, undefined, 5, 7, 5, 5, 4, 5), medium: r(6, 4, undefined, 5, 7, 6, 6, 5, 6), long: r(6, 4, undefined, 6, 7, 6, 6, 6, 5), veryLong: r(6, 4, undefined, 6, 6, 6, 6, 7, 5) },
+  // normal, kids, hard, optionBase, noAbilities, elixirs, reserve, duels, dice (see Row)
+  1: table({
+    short:    [5, 2, null, 5, 5, 6, 5, 4, 5],
+    medium:   [6, 2, null, 6, 5, 6, 5, 5, 6],
+    long:     [6, 2, null, 6, 6, 6, 6, 5, 6],
+    veryLong: [6, 3, null, 6, 6, 7, 6, 6, 6],
+  }),
+  2: table({
+    short:    [5, 3, null, 5, 7, 5, 5, 4, 5],
+    medium:   [6, 4, null, 5, 7, 6, 6, 5, 6],
+    long:     [6, 4, null, 6, 7, 6, 6, 6, 5],
+    veryLong: [6, 4, null, 6, 6, 6, 6, 7, 5],
+  }),
 };
 
 /** Longer maps take longer to win. */
@@ -49,7 +86,7 @@ const TOP_RATING = COOP[1].veryLong.hard!;
  * Measured difficulty (1–10) of a setup for one side. A preset level reads its column; a custom setup
  * starts from the full game and adds what each switched-on option changes on its own.
  */
-export function difficultyRating(setup: SetupOptions, level: 'kids' | 'normal' | 'hard' | 'custom', side: FactionId): number {
+export function difficultyRating(setup: SetupOptions, level: LevelName, side: FactionId): number {
   const pvp = setup.mode === 'pvp';
   const perSide = Math.max(...(['dawn', 'horde'] as const).map((f) => setup.seats.filter((s) => s.faction === f).length));
   const t = (pvp ? PVP : COOP)[perSide >= 2 ? 2 : 1][setup.mapSize];
@@ -76,15 +113,13 @@ export function difficultyRating(setup: SetupOptions, level: 'kids' | 'normal' |
  * Arena: one battle (5–10 minutes) instead of a whole game with 3–5 battles, so a win against the
  * computer scores little — per hour of play no more than an ordinary game on an easy setting.
  */
-export const ARENA_POINTS: Record<'kids' | 'normal' | 'hard', number> = { kids: 1, normal: 2, hard: 3 };
+export const ARENA_POINTS: Record<Level, number> = { kids: 1, normal: 2, hard: 3 };
 
-export function pointsFor(setup: SetupOptions, level: 'kids' | 'normal' | 'hard' | 'custom', side: FactionId): number {
+export function pointsFor(setup: SetupOptions, level: LevelName, side: FactionId): number {
   if (setup.mode === 'arena') return ARENA_POINTS[level === 'custom' ? 'normal' : level];
   const raw = (MAX_POINTS * MAP_WEIGHT[setup.mapSize] * difficultyRating(setup, level, side)) / TOP_RATING;
   return Math.min(MAX_POINTS, Math.max(1, Math.round(raw)));
 }
-
-export type LevelName = 'kids' | 'normal' | 'hard' | 'custom';
 
 /** The preset level a setup matches, or 'custom' (the scoring reads its column). */
 export function levelOf(setup: SetupOptions): LevelName {

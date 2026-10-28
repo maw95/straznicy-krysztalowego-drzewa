@@ -36,8 +36,11 @@ afterEach(() => {
 const buttons = (c: HTMLElement) => [...c.querySelectorAll('button')] as HTMLButtonElement[];
 const byText = (c: HTMLElement, t: string) => buttons(c).find((b) => b.textContent?.trim() === t || b.textContent?.includes(t));
 
+// 12 seeds play every hero with and without abilities twice; `make test-slow` (SLOW=1) plays 36.
+const SEEDS = process.env.SLOW ? 36 : 12;
+
 describe('human battle turns through the UI', () => {
-  it.each(Array.from({ length: 36 }, (_, i) => [i + 1, ['goldDragon', 'unicornKing', 'ancientBear'][i % 3], i % 2 ? '1' : '0']))('UI stays playable (seed %i, %s, abilities=%s)', async (seed, hero, abilities) => {
+  it.each(Array.from({ length: SEEDS }, (_, i) => [i + 1, ['goldDragon', 'unicornKing', 'ancientBear'][i % 3], i % 2 ? '1' : '0']))('UI stays playable (seed %i, %s, abilities=%s)', async (seed, hero, abilities) => {
     window.history.replaceState(null, '', `/?steps=0&seed=${seed}&players=1&hero=${hero}&abilities=${abilities}`);
     vi.useFakeTimers();
     const { container } = render(<StrictMode><App /></StrictMode>);

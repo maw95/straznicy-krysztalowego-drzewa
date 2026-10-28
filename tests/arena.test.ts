@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { ARENA_DECK, ITEMS, type FactionId } from '../src/engine/data';
 import { chooseAction } from '../src/engine/ai';
 import { applyAction, createGame, currentActor } from '../src/engine/game';
-import { arenaSetup, type GameState, type Level, type SeatSetup } from '../src/engine/types';
+import { arenaSetup, type Level, type SeatSetup } from '../src/engine/types';
+import { playOut, playUntil } from './helpers/engine';
 
 const seats = (dawn: SeatSetup['controller'] = 'bot', horde: SeatSetup['controller'] = 'bot'): SeatSetup[] => [
   { name: 'A', faction: 'dawn', controller: dawn, heroId: 'unicornKing' },
@@ -11,16 +12,7 @@ const seats = (dawn: SeatSetup['controller'] = 'bot', horde: SeatSetup['controll
 ];
 
 /** Plays bot actions until the draft starts. */
-function toDraft(seed: number, level: Level = 'normal') {
-  let s = createGame(arenaSetup(seats(), seed, level));
-  while (s.battle?.stage === 'select') s = applyAction(s, chooseAction(s)!);
-  return s;
-}
-
-function playOut(s: GameState) {
-  for (let i = 0; i < 3000 && s.phase !== 'over'; i++) s = applyAction(s, chooseAction(s)!);
-  return s;
-}
+const toDraft = (seed: number, level: Level = 'normal') => playUntil(createGame(arenaSetup(seats(), seed, level)), (s) => s.battle?.stage !== 'select');
 
 describe('arena', () => {
   it('starts straight in battle with both sides choosing supports, on a random arena', () => {
@@ -77,7 +69,7 @@ describe('arena', () => {
   it('ends the game with the battle', () => {
     const winners = new Set<string>();
     for (let seed = 1; seed <= 10; seed++) {
-      const s = playOut(createGame(arenaSetup(seats(), seed)));
+      const s = playOut(createGame(arenaSetup(seats(), seed)), 3000);
       expect(s.phase).toBe('over');
       expect(s.lastBattle).not.toBeNull();
       winners.add(String(s.winner));
