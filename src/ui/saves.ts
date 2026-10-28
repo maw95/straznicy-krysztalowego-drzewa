@@ -66,7 +66,8 @@ export function describeSave(save: SaveFile): string {
   try {
     const s = replay(save);
     const heroes = save.setup.seats.map((x) => x.name).join(', ');
-    return `${save.setup.mode === 'coop' ? 'Kooperacja' : 'Rywalizacja'} · runda ${s.round} · ${heroes}`;
+    const mode = save.setup.mode === 'coop' ? 'Kooperacja' : save.setup.mode === 'arena' ? 'Arena' : 'Rywalizacja';
+    return `${mode} · runda ${s.round} · ${heroes}`;
   } catch {
     return 'Zapis nie daje się odtworzyć';
   }
