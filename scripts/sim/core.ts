@@ -2,10 +2,10 @@
 import './override';
 
 import { FACTION_HEROES, type FactionId, type MapSize } from '../../src/engine/data';
-import { applyAction, activeHero, createGame, currentActor, legalHeroMoves } from '../../src/engine/game';
+import { applyActionInPlace, activeHero, createGame, currentActor, legalHeroMoves } from '../../src/engine/game';
 import { chooseAction } from '../../src/engine/ai';
 import { Rng } from '../../src/engine/rng';
-import { levelSettings, type GameState, type SeatSetup, type SetupOptions } from '../../src/engine/types';
+import { levelSettings, type Action, type GameState, type SeatSetup, type SetupOptions } from '../../src/engine/types';
 
 /** Player configurations: coop with 1–2 good players, PvP 1 on 1 or 2 on 2. */
 export type Table = 'coop1' | 'coop2' | 'pvp1' | 'pvp2';
@@ -105,24 +105,28 @@ export function runVariant(v: Variant, games: number, firstSeed = 1): Summary {
   const sum: Summary = { variant: variantName(v), games, dawnWins: 0, reasons: {}, avgRounds: 0, battlesPerGame: 0, neutralFights: 0, neutralWipes: 0, diag: newDiag(), units: {}, guardianUnits: {}, heroGames: {} };
   for (let g = 0; g < games; g++) {
     const setup = setupFor(v, firstSeed + g);
+    // Actions change the state in place; the ones played are kept to rebuild it after a refused one.
     let s = createGame(setup);
+    const played: Action[] = [];
     let lastReport = 0;
     for (let i = 0; i < 30000 && s.phase !== 'over'; i++) {
       const a = chooseAction(s);
       if (!a) break;
       inspect(s, a, sum.diag);
-      let next: GameState;
+      const logged = s.log.length;
       try {
-        next = applyAction(s, a);
+        applyActionInPlace(s, a);
+        played.push(a);
       } catch (e) {
         sum.diag.illegal++;
         if (sum.diag.illegalSamples.length < 5) sum.diag.illegalSamples.push(`${(e as Error).message} ← ${JSON.stringify(a)}`);
+        s = replay(setup, played);
         // Unstick: end the turn or activation instead.
-        const fallback = s.phase === 'battle' ? { type: 'endActivation' as const } : { type: 'endTurn' as const };
-        next = applyAction(s, fallback);
+        const fallback: Action = s.phase === 'battle' ? { type: 'endActivation' } : { type: 'endTurn' };
+        applyActionInPlace(s, fallback);
+        played.push(fallback);
       }
-      if (next.log.some((l, idx) => idx >= s.log.length && l.text.startsWith('Bitwa trwa zbyt długo'))) sum.diag.battleRoundLimit++;
-      s = next;
+      if (s.log.some((l, idx) => idx >= logged && l.text.startsWith('Bitwa trwa zbyt długo'))) sum.diag.battleRoundLimit++;
       const r = s.lastBattle;
       if (r && r.id !== lastReport) {
         lastReport = r.id;
@@ -154,6 +158,13 @@ export function runVariant(v: Variant, games: number, firstSeed = 1): Summary {
     }
   }
   return sum;
+}
+
+/** The state after `actions`, played from the start. */
+export function replay(setup: SetupOptions, actions: Action[]): GameState {
+  const s = createGame(setup);
+  for (const a of actions) applyActionInPlace(s, a);
+  return s;
 }
 
 /** Looks for bots wasting turns or activations. */

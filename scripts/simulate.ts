@@ -3,7 +3,7 @@
 // options: 'full' (the normal level) or a comma list: kids or hard (a level), noabilities, notreasures,
 // dice, replacement, board. Heroes are drawn at random per game (scripts/sim/core.ts).
 
-import { applyAction, createGame } from '../src/engine/game';
+import { applyActionInPlace, createGame } from '../src/engine/game';
 import { chooseAction } from '../src/engine/ai';
 import type { GameState } from '../src/engine/types';
 import type { MapSize } from '../src/engine/data';
@@ -20,11 +20,11 @@ if (battleArg === 'board') options.push('board');
 for (const o of options) if (![...OPTIONS, 'hard'].includes(o)) throw new Error(`Nieznana opcja: ${o}`);
 
 export function playOut(seed: number, maxActions = 20000): GameState {
-  let s = createGame(setupWith(size, table, options, seed));
+  const s = createGame(setupWith(size, table, options, seed));
   for (let i = 0; i < maxActions && s.phase !== 'over'; i++) {
     const a = chooseAction(s);
     if (!a) break;
-    s = applyAction(s, a);
+    applyActionInPlace(s, a);
   }
   return s;
 }

@@ -7,7 +7,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { UNITS } from '../src/engine/data';
 import { cellOf } from '../src/engine/battle';
-import { applyAction, createGame, currentActor } from '../src/engine/game';
+import { applyActionInPlace, createGame, currentActor } from '../src/engine/game';
 import type { GameState } from '../src/engine/types';
 import type { BugReport, SaveFile } from '../src/ui/saves';
 import type { TesterExport } from '../src/ui/journal';
@@ -44,7 +44,7 @@ function savesIn(file: string): Array<{ label: string; save: SaveFile }> {
 for (const { label, save } of files.flatMap(savesIn)) {
   const reports: BugReport[] = save.reports ?? [];
   console.log(`\n=== ${label} · ziarno ${save.setup.seed} · ${save.setup.mode} · ${save.setup.mapSize} · akcji ${save.actions.length} · zgłoszeń ${reports.length}`);
-  // One replay for all the reports of a game: the state is described at each reported action.
+  // One replay (in place) for all the reports of a game: the state is described at each reported action.
   const at = new Map<number, { error: string; lines: string[] }>();
   let s = reports.length ? createGame(save.setup) : null;
   let done = 0;
@@ -53,9 +53,12 @@ for (const { label, save } of files.flatMap(savesIn)) {
     for (; !error && done < index && done < save.actions.length; done++) {
       const a = save.actions[done];
       try {
-        s = applyAction(s!, a);
+        applyActionInPlace(s!, a);
       } catch (e) {
         error = `odtworzenie przerwane: ${(e as Error).message} przy ${JSON.stringify(a)}`;
+        // The refused action may have left the state half changed: rebuild it without that action.
+        s = createGame(save.setup);
+        for (const ok of save.actions.slice(0, done)) applyActionInPlace(s, ok);
       }
     }
     at.set(index, { error, lines: describe(s!) });

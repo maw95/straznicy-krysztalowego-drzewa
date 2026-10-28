@@ -11,7 +11,7 @@ import { cpus } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { FACTION_HEROES, FACTION_SUPPORTS, UNITS, type FactionId } from '../../src/engine/data';
 import { chooseAction } from '../../src/engine/ai';
-import { applyAction, createGame } from '../../src/engine/game';
+import { applyActionInPlace, createGame } from '../../src/engine/game';
 import { arenaSetup, type Level } from '../../src/engine/types';
 
 interface LineUp {
@@ -28,7 +28,7 @@ function play(dawn: LineUp, horde: LineUp, games: number, level: Level, seed0: n
   let draws = 0;
   let rounds = 0;
   for (let g = 0; g < games; g++) {
-    let s = createGame(
+    const s = createGame(
       arenaSetup(
         [
           { name: 'P', faction: 'dawn', controller: 'bot', heroId: dawn.hero },
@@ -45,7 +45,7 @@ function play(dawn: LineUp, horde: LineUp, games: number, level: Level, seed0: n
           ? { type: 'selectSupports' as const, faction: b.needsSelection[0], supportIds: (b.needsSelection[0] === 'dawn' ? dawn : horde).supports }
           : chooseAction(s);
       if (!a) break;
-      s = applyAction(s, a);
+      applyActionInPlace(s, a);
     }
     if (s.winner === 'dawn') wins++;
     else if (!s.winner) draws++;

@@ -9,7 +9,7 @@
 
 import './override';
 import { FACTION_HEROES, FACTION_SUPPORTS, GUARDIANS, UNITS, type FactionId } from '../../src/engine/data';
-import { applyAction, createGame } from '../../src/engine/game';
+import { applyActionInPlace, createGame } from '../../src/engine/game';
 import { chooseAction } from '../../src/engine/ai';
 import { mapNeighbors } from '../../src/engine/map';
 import { Rng } from '../../src/engine/rng';
@@ -41,7 +41,7 @@ function battle(seed: number, dawnHero: string, opponent: string, duel: boolean,
         { name: 'A', faction: 'dawn' as FactionId, controller: 'bot' as const, heroId: dawnHero },
         { name: 'B', faction: 'horde' as FactionId, controller: 'bot' as const, heroId: opponent },
       ];
-  let s: GameState = createGame({ mode: guardian ? 'coop' : 'pvp', mapSize: 'medium', battleMode: duel ? 'board' : 'arena', seed, seats, rules });
+  const s: GameState = createGame({ mode: guardian ? 'coop' : 'pvp', mapSize: 'medium', battleMode: duel ? 'board' : 'arena', seed, seats, rules });
   for (const f of ['dawn', 'horde'] as FactionId[]) {
     s.factions[f].supportsAlive = rng.shuffle(FACTION_SUPPORTS[f]).slice(0, 2);
     s.factions[f].supportsDead = [];
@@ -75,8 +75,8 @@ function battle(seed: number, dawnHero: string, opponent: string, duel: boolean,
   s.movePoints = 2;
   s.turnBattleDone = false;
   const target = attackerIsDawn ? spot : dawn.pos;
-  s = applyAction(s, { type: 'moveHero', to: target });
-  for (let i = 0; i < 5000 && s.phase === 'battle'; i++) s = applyAction(s, chooseAction(s)!);
+  applyActionInPlace(s, { type: 'moveHero', to: target });
+  for (let i = 0; i < 5000 && s.phase === 'battle'; i++) applyActionInPlace(s, chooseAction(s)!);
   const r = s.lastBattle!;
   lastReport = r;
   return {
