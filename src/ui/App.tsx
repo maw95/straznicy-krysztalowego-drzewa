@@ -271,6 +271,7 @@ export function App() {
     reports.current = [];
     undoStack.current = [];
     setConfirmedFaction(null);
+    forgetSeen();
     setGame(createGame(setup));
   };
 
@@ -281,6 +282,7 @@ export function App() {
       reports.current = [...(save.reports ?? [])];
       undoStack.current = [];
       setConfirmedFaction(null);
+      forgetSeen();
       setGame(g);
     } catch (e) {
       setError(`Nie udało się wczytać zapisu: ${(e as Error).message}`);
@@ -348,16 +350,18 @@ export function App() {
 
   // A freshly found treasure of the viewing faction turns over in front of the player.
   const [found, setFound] = useState<ItemKind | null>(null);
-  const knownItems = useRef<Set<string> | null>(null);
+  const knownItems = useRef<{ seed: number; ids: Set<string> } | null>(null);
   useEffect(() => {
     if (!game) return;
+    // Item ids repeat in every game (it1, it2…): what this screen knows belongs to one game only.
+    if (knownItems.current?.seed !== game.setup.seed) knownItems.current = null;
     const humanSides = new Set(game.players.filter(atThisScreen).map((p) => p.faction));
     const owned = Object.values(game.items).filter((it) => it.owner && humanSides.has(it.owner));
     if (knownItems.current) {
-      const fresh = owned.find((it) => !knownItems.current!.has(it.id));
+      const fresh = owned.find((it) => !knownItems.current!.ids.has(it.id));
       if (fresh && game.phase === 'adventure') setFound(fresh.kind);
     }
-    knownItems.current = new Set(owned.map((it) => it.id));
+    knownItems.current = { seed: game.setup.seed, ids: new Set(owned.map((it) => it.id)) };
   }, [game]);
 
   // After-battle summary for battles a human faction fought in.
@@ -408,13 +412,19 @@ export function App() {
 
   // "Since your last turn": with bots at the table a lot happens off-screen
   // (a teammate drinks the shared elixir, a hero falls...), so summarise it.
-  const seenLog = useRef<Record<string, number>>({});
+  const seenLog = useRef<{ seed: number; at: Record<string, number> } | null>(null);
+  /** A new, loaded or left game: no "found treasure" or "since your last turn" carried over from the last one. */
+  function forgetSeen() {
+    knownItems.current = null;
+    seenLog.current = null;
+  }
   const [digest, setDigest] = useState<LogEntry[] | null>(null);
   const turnKey = game && humanTurn && actor.kind === 'human' && game.phase === 'adventure' && !needsHandoff ? `${actor.playerId}:${game.round}:${game.turnIndex}` : null;
   useEffect(() => {
     if (!turnKey || !game || actor.kind !== 'human') return;
-    const from = seenLog.current[actor.playerId];
-    seenLog.current[actor.playerId] = game.log.length;
+    if (seenLog.current?.seed !== game.setup.seed) seenLog.current = { seed: game.setup.seed, at: {} };
+    const from = seenLog.current.at[actor.playerId];
+    seenLog.current.at[actor.playerId] = game.log.length;
     if (from === undefined) return;
     const important = game.log
       .slice(from)
@@ -452,6 +462,7 @@ export function App() {
   /** "Nowa gra": online it also leaves the room (the game goes on for the others, a bot takes the seats). */
   const leaveGame = () => {
     if (isOnline) session!.send({ type: 'leaveRoom' });
+    forgetSeen();
     setGame(null);
   };
 
