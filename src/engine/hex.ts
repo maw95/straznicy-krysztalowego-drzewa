@@ -11,9 +11,17 @@ export type HexKey = string;
 
 export const key = (h: Hex): HexKey => `${h.q},${h.r}`;
 
+/** Parsed keys: a game uses a few hundred hexes and parses them all the time. */
+const PARSED = new Map<HexKey, Readonly<Hex>>();
+
+/** The hex of a key. The result is shared: never change it. */
 export function parseKey(k: HexKey): Hex {
-  const [q, r] = k.split(',').map(Number);
-  return { q, r };
+  let h = PARSED.get(k);
+  if (!h) {
+    const [q, r] = k.split(',').map(Number);
+    PARSED.set(k, (h = Object.freeze({ q, r })));
+  }
+  return h;
 }
 
 export const DIRECTIONS: readonly Hex[] = [
