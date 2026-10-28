@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ABILITY, FACTION_NAMES, ITEMS, UNITS, type FactionId, type ItemKind, type Side } from '../engine/data';
 import {
   abilityActive,
@@ -46,6 +46,25 @@ type ItemTargeting =
   | { kind: 'courage'; itemId: string; picks: string[] }
   | { kind: 'teleport'; itemId: string; unitId: string | null }
   | { kind: 'horn'; itemId: string; mode: 'swap' | 'extra' | null; unitId: string | null };
+
+/** The arena never changes shape: its cells and their outlines are worked out once. */
+const CELLS = arenaCells();
+const CELL_POINTS = new Map(CELLS.map((k) => [k, hexPoints(k)]));
+
+/** The painted boards draw each hex with its own gold rim, and neighbouring rims do not always lie on
+ *  each other (doubled, overlapping edges). One even gold grid on top covers them. */
+const GoldGrid = memo(function GoldGrid() {
+  return (
+    <>
+      {CELLS.map((k) => (
+        <polygon key={`gd${k}`} points={CELL_POINTS.get(k)} fill="none" stroke="rgba(52,34,8,0.85)" strokeWidth="3.4" strokeLinejoin="round" />
+      ))}
+      {CELLS.map((k) => (
+        <polygon key={`gl${k}`} points={CELL_POINTS.get(k)} fill="none" stroke="#E4C16E" strokeWidth="1.6" strokeLinejoin="round" />
+      ))}
+    </>
+  );
+});
 
 const ITEM_TARGET: Partial<Record<ItemKind, ItemTargeting['kind']>> = {
   heal: 'ownLiving',
@@ -373,7 +392,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     if (!reachOf?.pos) return { walk, hit };
     for (const k of reachableCells(state, reachOf).keys()) walk.add(k);
     const stand = [reachOf.pos, ...walk];
-    for (const c of arenaCells()) {
+    for (const c of CELLS) {
       if (b.obstacles.includes(c) || walk.has(c) || c === reachOf.pos) continue;
       const hits = UNITS[reachOf.defId].attackType === 'ranged' ? stand.some((p) => hasLineOfSight(state, p, c)) : stand.some((p) => distanceBetween(p, c) <= 1);
       if (hits) hit.add(c);
@@ -564,22 +583,15 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
               {/* The painted board of the half of the map where the fight broke out. */}
               <img src={asset(`arena/${b.arena}.jpg`)} alt="" style={{ position: 'absolute', left: 0, top: 0, width: ART_SIZE.w, height: ART_SIZE.h }} />
               <svg width={CANVAS_W} height={CANVAS_H} style={{ position: 'absolute', left: 0, top: 0 }}>
-                {/* The painted boards draw each hex with its own gold rim, and neighbouring rims do not always lie on
-                    each other (doubled, overlapping edges). One even gold grid on top covers them. */}
                 <g pointerEvents="none">
-                  {arenaCells().map((k) => (
-                    <polygon key={`gd${k}`} points={hexPoints(k)} fill="none" stroke="rgba(52,34,8,0.85)" strokeWidth="3.4" strokeLinejoin="round" />
-                  ))}
-                  {arenaCells().map((k) => (
-                    <polygon key={`gl${k}`} points={hexPoints(k)} fill="none" stroke="#E4C16E" strokeWidth="1.6" strokeLinejoin="round" />
-                  ))}
+                  <GoldGrid />
                   {/* Obstacles get their own rim: dark red on the green Dawn board (as painted there), violet on the
                       Horde's lava, where red would not show. */}
                   {b.obstacles.map((k) => (
                     <polygon key={`ob${k}`} points={hexPoints(k, 1.5)} fill="none" stroke={b.arena === 'horde' ? '#B07AE8' : '#8E2C1A'} strokeWidth="3.2" strokeLinejoin="round" />
                   ))}
                 </g>
-                {arenaCells().map((k) => {
+                {CELLS.map((k) => {
                   const teleportTo = targeting?.kind === 'teleport' && Boolean(targeting.unitId) && !unitAt(b, k) && !b.obstacles.includes(k);
                   let fill = 'transparent';
                   if (deployable.has(k)) fill = picked ? (hover === k ? 'rgba(243,210,122,0.5)' : 'rgba(243,210,122,0.28)') : 'rgba(243,210,122,0.18)';
@@ -589,7 +601,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                   return (
                     <polygon
                       key={k}
-                      points={hexPoints(k)}
+                      points={CELL_POINTS.get(k)}
                       fill={fill}
                       stroke={moves.has(k) || hops.includes(k) ? 'rgba(190,240,255,0.75)' : 'none'}
                       strokeWidth="1.5"
