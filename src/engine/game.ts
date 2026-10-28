@@ -715,7 +715,22 @@ function selectSupports(state: GameState, faction: FactionId, ids: string[]) {
 function finalizeBattle(state: GameState) {
   if (state.setup.mode === 'arena') return finishArena(state);
   const b = state.battle!;
-  const winner = b.winner!;
+  applyCasualties(state, b);
+  const resultText = b.winner === 'draw' ? 'remis — obie strony poległy' : `wygrywa ${FACTION_NAMES[b.winner!]}`;
+  log(state, 'battle', `Bitwa zakończona: ${resultText}.`);
+  if (b.kind === 'neutral') resolveGuardianFight(state, b);
+  state.lastBattle = battleReport(state, b);
+  state.battle = null;
+  state.phase = 'adventure';
+  placeAttackerAfterBattle(state, b);
+  checkVictory(state);
+  if (isOver(state)) return;
+  const active = activeHero(state);
+  if (!active || !active.alive) advanceTurn(state);
+}
+
+/** Fallen supports join the faction's dead for good; fallen heroes die on the map. */
+function applyCasualties(state: GameState, b: BattleState) {
   for (const u of Object.values(b.units)) {
     if (u.side === 'neutral' || u.alive || u.swappedOut) continue;
     const f = u.side as FactionId;
@@ -731,35 +746,34 @@ function finalizeBattle(state: GameState) {
       killHero(state, u.defId, b.mapHex);
     }
   }
-  const resultText = winner === 'draw' ? 'remis — obie strony poległy' : `wygrywa ${FACTION_NAMES[winner]}`;
-  log(state, 'battle', `Bitwa zakończona: ${resultText}.`);
-  if (b.kind === 'neutral') {
-    if (winner === b.attacker) {
-      const crystal = Object.values(state.crystals).find((c) => c.at === b.mapHex && c.guardian === b.neutralId);
-      if (crystal) {
-        crystal.guardian = null;
-        log(state, 'crystal', `Strażnik pokonany. Kryształ jest wolny.`);
-        guardianHoard(state, b.attackerHero);
-      }
-    } else {
-      state.stats.neutralWipes += 1;
-    }
+}
+
+/** A beaten guardian frees its crystal and leaves a treasure; a guardian that won is counted. */
+function resolveGuardianFight(state: GameState, b: BattleState) {
+  if (b.winner !== b.attacker) {
+    state.stats.neutralWipes += 1;
+    return;
   }
-  state.lastBattle = battleReport(state, b);
-  state.battle = null;
-  state.phase = 'adventure';
+  const crystal = Object.values(state.crystals).find((c) => c.at === b.mapHex && c.guardian === b.neutralId);
+  if (!crystal) return;
+  crystal.guardian = null;
+  log(state, 'crystal', `Strażnik pokonany. Kryształ jest wolny.`);
+  guardianHoard(state, b.attackerHero);
+}
+
+/**
+ * The attacker, if alive, stays on the battle hex and picks up what lies there. Several enemy
+ * heroes may share a hex but a battle is fought against one of them: if any still stands there,
+ * the winner steps back instead of sharing the hex.
+ */
+function placeAttackerAfterBattle(state: GameState, b: BattleState) {
   const attacker = state.heroes[b.attackerHero];
-  // Several enemy heroes may share a hex but a battle is fought against one of them:
-  // if any still stands there, the winner steps back instead of sharing the hex.
-  if (attacker.alive && heroesAt(state, b.mapHex).some((h) => h.faction !== attacker.faction)) {
+  if (!attacker.alive) return;
+  if (heroesAt(state, b.mapHex).some((h) => h.faction !== attacker.faction)) {
     attacker.pos = b.attackerFrom;
     log(state, 'move', `${UNITS[attacker.id].name} wraca na poprzednie pole — na polu bitwy stoją jeszcze wrogowie.`);
   }
-  if (attacker.alive) arriveAt(state, attacker);
-  checkVictory(state);
-  if (isOver(state)) return;
-  const active = activeHero(state);
-  if (!active || !active.alive) advanceTurn(state);
+  arriveAt(state, attacker);
 }
 
 function battleReport(state: GameState, b: BattleState): BattleReport {
