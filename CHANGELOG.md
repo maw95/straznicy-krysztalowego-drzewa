@@ -10,6 +10,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Hydra ma nowy portret na karcie.
 - Telefon, mapa świata: mapa zajmuje całą ramkę (runda jest na dolnym pasku), można ją przybliżać i oddalać przyciskami +/− albo dwoma palcami, a na początku tury mapa sama przewija się do aktywnego bohatera.
 - Opis pola na mapie nie zasłania już planszy: myszką pojawia się po chwili jako mała notka obok pola, a na ekranie dotykowym dotknięte pole jest opisane w jednym pasku na dole mapy.
+- Telefon trzymany poziomo: okna (zasady, opcje, dziennik) mają mniejsze marginesy, więc mieści się w nich więcej.
 - Telefon trzymany poziomo: mapa albo arena z lewej, panel z prawej, wszystko na jednym ekranie. Na arenie telefon pokazuje same pola (bez szerokiej malowanej ramki), więc heksy są większe; ostatni atak jest opisany na dole areny, a nie pod tytułem bitwy.
 - Zapis partii w trybie Arena jest w menu opisany jako „Arena”, a nie „Rywalizacja”.
 - Esc zamyka każde okno (także czat, „Dla testerów”, „Od Twojej ostatniej tury” i znaleziony skarb), a skróty literowe nie działają, gdy jakieś okno jest otwarte.

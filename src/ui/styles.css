@@ -285,6 +285,9 @@ button { font-family: inherit; }
   .play-row .side-battle { display: none; }
   .screen.play .sticky-mobile { position: relative; bottom: auto; }
   .screen.play .bar > .gi { flex-wrap: nowrap; }
+  /* Dialogs: less margin and no crest, so more of them fits on the low screen. */
+  .overlay { padding: 6px 8px; }
+  .overlay .crest { display: none; }
 }
 
 .log-line { font-size: 15px; line-height: 1.3; }
