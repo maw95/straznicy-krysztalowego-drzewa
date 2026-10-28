@@ -8,6 +8,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 - Figurki 3D: na mapie i na arenie bohaterowie i pomocnicy stoją jako trójwymiarowe figurki — obracają się w stronę ruchu, odwracają do celu przy ataku, a pierścień wokół podstawki pokazuje stronę, aktywną jednostkę i cel. W menu obok karty bohatera obraca się jego figurka. Na słabszym sprzęcie figurki można wyłączyć w Opcjach. Mają je wszystkie jednostki, także strażnicy kryształów — na mapie stoją przy pilnowanym krysztale.
 - Hydra ma nowy portret na karcie.
+- Gra online: napis „Utracono połączenie z serwerem — łączę ponownie…” pojawia się tylko wtedy, gdy gra naprawdę łączy się ponownie (a nie np. po wygaśnięciu sesji).
 - Strzelec, który ma wroga tuż obok, widzi nad nim kursor strzały, a nie miecza — i tak strzela, a nie bije wręcz.
 - Narzędzia: `make modele` robi lekkie figurki do gry z modeli do druku (ok. 1–1,5 MB zamiast 120–200 MB); galeria `?figury` pokazuje każdą z czterech stron.
 

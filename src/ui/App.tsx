@@ -604,7 +604,7 @@ export function App() {
       <FullscreenButton />
       {overlay}
       {isOnline && onlineRoom?.waiting && <WaitingBanner room={onlineRoom} canHand={mySeats.size > 0} onHand={(seat) => session!.send({ type: 'handToBot', seat })} />}
-      {isOnline && online && !online.connected && (
+      {isOnline && online?.reconnecting && (
         <div className="plate parch" role="status" style={{ position: 'fixed', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 81, fontWeight: 700 }}>
           Utracono połączenie z serwerem — łączę ponownie…
         </div>

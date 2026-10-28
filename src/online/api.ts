@@ -165,6 +165,8 @@ export type ClientMessage =
 export interface OnlineState {
   user: User;
   connected: boolean;
+  /** The connection dropped and a new attempt is scheduled (not after the session expired, another tab or idling). */
+  reconnecting: boolean;
   room: RoomView | null;
   game: GameState | null;
   chat: Array<{ from: string; text: string }>;
@@ -196,7 +198,7 @@ export class OnlineSession {
   private closed = false;
 
   constructor(user: User) {
-    this.state = { user, connected: false, room: null, game: null, chat: [], chatReceived: 0, players: [], generalChat: [], invitations: [], notices: [], idle: false, error: null };
+    this.state = { user, connected: false, reconnecting: false, room: null, game: null, chat: [], chatReceived: 0, players: [], generalChat: [], invitations: [], notices: [], idle: false, error: null };
     this.open();
   }
 
@@ -207,7 +209,7 @@ export class OnlineSession {
 
   send(message: ClientMessage) {
     if (this.socket?.readyState === WebSocket.OPEN) this.socket.send(JSON.stringify(message));
-    else this.update({ error: 'Brak połączenia z serwerem — łączę ponownie…' });
+    else this.update({ error: this.state.reconnecting ? 'Brak połączenia z serwerem — łączę ponownie…' : 'Brak połączenia z serwerem.' });
   }
 
   clearError() {
@@ -248,12 +250,12 @@ export class OnlineSession {
     this.socket = socket;
     socket.onopen = () => {
       this.attempts = 0;
-      this.update({ connected: true, error: null });
+      this.update({ connected: true, reconnecting: false, error: null });
     };
     socket.onmessage = (event) => this.receive(JSON.parse(event.data) as ServerMessage);
     socket.onclose = (event) => {
       if (this.socket !== socket) return;
-      this.update({ connected: false });
+      this.update({ connected: false, reconnecting: false });
       // 4401: the session expired; 4000: the same account connected elsewhere (another tab).
       if (this.closed) return;
       if (event.code === 4401) return this.update({ error: 'Sesja wygasła — zaloguj się ponownie.' });
@@ -261,6 +263,7 @@ export class OnlineSession {
       // 4002: nothing happened for a long time (outside a game) — the player reconnects with one click.
       if (event.code === 4002) return this.update({ idle: true, players: [], invitations: [] });
       const delay = RECONNECT_MS[Math.min(this.attempts++, RECONNECT_MS.length - 1)];
+      this.update({ reconnecting: true });
       window.setTimeout(() => !this.closed && this.open(), delay);
     };
   }
