@@ -9,10 +9,13 @@ export function tileCost(t: Tile): number | null {
   return TERRAIN_COST[t.terrain];
 }
 
+/** The six neighbouring keys of a hex, on or off the map (pure geometry, so cached). */
+const NEAR = new Map<HexKey, HexKey[]>();
+
 export function mapNeighbors(tiles: Record<HexKey, Tile>, k: HexKey): HexKey[] {
-  return neighbors(parseKey(k))
-    .map(key)
-    .filter((n) => n in tiles);
+  let near = NEAR.get(k);
+  if (!near) NEAR.set(k, (near = neighbors(parseKey(k)).map(key)));
+  return near.filter((n) => n in tiles);
 }
 
 export function treeKey(): HexKey {
@@ -43,33 +46,89 @@ export interface PathResult {
   path: HexKey[];
 }
 
+/** Cheapest first, ties by key: a total order, so the search visits hexes in a fixed order. */
+const before = (a: { cost: number; k: HexKey }, b: { cost: number; k: HexKey }) => a.cost < b.cost || (a.cost === b.cost && a.k < b.k);
+
 /**
  * Dijkstra over map costs. `costOf` lets callers model knowledge
- * (e.g. the coop AI treats hidden hexes as cost 1).
+ * (e.g. the coop AI treats hidden hexes as cost 1). Hexes are settled cheapest first, ties by
+ * key; a hex's path goes through the first settled hex that reached it at its final cost.
+ * Paths are built only when read.
  */
 export function shortestPaths(
   tiles: Record<HexKey, Tile>,
   start: HexKey,
   costOf: (k: HexKey) => number | null,
 ): Map<HexKey, PathResult> {
-  const best = new Map<HexKey, PathResult>([[start, { cost: 0, path: [start] }]]);
-  const open: HexKey[] = [start];
-  while (open.length) {
-    open.sort((a, b) => best.get(a)!.cost - best.get(b)!.cost || (a < b ? -1 : 1));
-    const cur = open.shift()!;
-    const base = best.get(cur)!;
+  const cost = new Map<HexKey, number>([[start, 0]]);
+  const parent = new Map<HexKey, HexKey>();
+  const done = new Set<HexKey>();
+  // Binary heap of (cost, hex); an entry whose cost is out of date is skipped when it comes up.
+  const heap: Array<{ cost: number; k: HexKey }> = [{ cost: 0, k: start }];
+  const push = (e: { cost: number; k: HexKey }) => {
+    let i = heap.push(e) - 1;
+    while (i > 0) {
+      const up = (i - 1) >> 1;
+      if (!before(heap[i], heap[up])) break;
+      [heap[i], heap[up]] = [heap[up], heap[i]];
+      i = up;
+    }
+  };
+  const pop = () => {
+    const top = heap[0];
+    const last = heap.pop()!;
+    if (heap.length) {
+      heap[0] = last;
+      for (let i = 0; ; ) {
+        const l = 2 * i + 1;
+        const r = l + 1;
+        let m = i;
+        if (l < heap.length && before(heap[l], heap[m])) m = l;
+        if (r < heap.length && before(heap[r], heap[m])) m = r;
+        if (m === i) break;
+        [heap[i], heap[m]] = [heap[m], heap[i]];
+        i = m;
+      }
+    }
+    return top;
+  };
+  while (heap.length) {
+    const { cost: d, k: cur } = pop();
+    if (done.has(cur) || d !== cost.get(cur)) continue;
+    done.add(cur);
     for (const n of mapNeighbors(tiles, cur)) {
       const c = costOf(n);
       if (c === null) continue;
-      const next = base.cost + c;
-      const old = best.get(n);
-      if (!old || next < old.cost) {
-        best.set(n, { cost: next, path: [...base.path, n] });
-        if (!open.includes(n)) open.push(n);
+      const next = d + c;
+      const old = cost.get(n);
+      if (old === undefined || next < old) {
+        cost.set(n, next);
+        parent.set(n, cur);
+        push({ cost: next, k: n });
       }
     }
   }
-  return best;
+  const out = new Map<HexKey, PathResult>();
+  for (const [k, c] of cost) out.set(k, new LazyPath(k, c, parent));
+  return out;
+}
+
+class LazyPath implements PathResult {
+  private steps: HexKey[] | null = null;
+  constructor(
+    private readonly to: HexKey,
+    readonly cost: number,
+    private readonly parent: Map<HexKey, HexKey>,
+  ) {}
+
+  get path(): HexKey[] {
+    if (!this.steps) {
+      const out = [this.to];
+      for (let k = this.parent.get(this.to); k !== undefined; k = this.parent.get(k)) out.push(k);
+      this.steps = out.reverse();
+    }
+    return this.steps;
+  }
 }
 
 export function revealAround(state: GameState, k: HexKey): HexKey[] {
