@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Instrukcja: nowa strona „Rady na pierwsze wyprawy” (wskazówki dla Przymierza, Hordy i na arenę); karty jednostek mają w wersji do druku 8 × 11,2 cm — tak jak karty w grze.
 - Instrukcja ma 40 stron: na drugiej stronie miejsce na wiadomość od autora, „Zasady w obrazkach” (cała gra w ośmiu obrazkach na pierwszą partię), przykład tury na mapie i przykład początku bitwy krok po kroku. Przygotowanie mówi, jak rozłożyć karty skarbów (stos skarbów mapy i talia skarbów), a rozdział 7 nie twierdzi już, że bitwa kończy ruch.
 - Wersja do druku: wszystko, co potrzebne do papierowej wersji gry (wymiary, figurki do druku 3D, instrukcja do edycji), jest teraz w jednym folderze `docs/wersja_planszowa/`.
 - Punkty za partię z ustawieniem „pojedynki na planszy”: od kiedy Złoty Smok używa w pojedynku Słonecznego Blasku, to ustawienie wyraźnie ułatwia grę Przymierzu, więc wygrana Przymierza daje mniej punktów, a wygrana Hordy w rywalizacji więcej. Instrukcja (rozdział 13) mówi, komu pojedynki sprzyjają.

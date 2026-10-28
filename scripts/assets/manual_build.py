@@ -223,7 +223,7 @@ sheet(f'''<div class="eyebrow">Rozdział 1</div><h1>Co jest w pudełku</h1>
  ['<b>Siedliska strażników</b>', '3', 'Gryf (zielony rewers), Cyklop i Hydra (bordowy)'],
  ['<b>Drzewo i bazy</b>', '3', 'Kryształowe Drzewo, baza Przymierza, baza Hordy'],
  ['<b>Plansza areny</b> (dwustronna, A3)', '1', 'arena Przymierza i arena Hordy, po 7 przeszkód'],
- ['<b>Karty jednostek</b> (8 × 12 cm)', '18', 'Przymierze 6 · Horda 6 · strażnicy 3 + 3 do pojedynku (błękitny rewers)'],
+ ['<b>Karty jednostek</b> (8 × 11,2 cm)', '18', 'Przymierze 6 · Horda 6 · strażnicy 3 + 3 do pojedynku (błękitny rewers)'],
  ['<b>Figurki</b>', '15', 'po jednej na każdą jednostkę, podstawka 3 cm'],
  ['<b>Karty skarbów</b> (6,3 × 8,8 cm)', '20', '6 Eliksirów Odrodzenia + po 1 z 14 pozostałych skarbów'],
  ['<b>Kryształy</b>', '3', 'wys. 1,6 cm'],
@@ -632,6 +632,24 @@ sheet(f'''<p>W rywalizacji każda strona ma swoją trudność, a poziom Trudny n
 {pvp_table('**Rywalizacja — 2 na 2**')}
 <div class="quote" style="margin-top:7mm;font-size:14pt">„Kronikarze Drzewa rozegrali tysiące partii, żeby sprawdzić, gdzie czeka łatwa wyprawa, a gdzie prawdziwa próba.”</div>
 ''', cls='rivalry', left='Rozdział 13', right='Trudność', foot='Jak trudny jest wariant')
+
+# Tips for the first games (between chapters 13 and 14)
+chapter('✧', 'Rady na pierwsze wyprawy', 'tips')
+tips_md = MD[MD.index('## Rady na pierwsze wyprawy'):MD.index('## 14. Przypadki szczególne')]
+
+
+def tips(title):
+    part = tips_md[tips_md.index(f'### {title}'):]
+    part = part[:part.find('\n### ', 5)] if '\n### ' in part[5:] else part
+    return '<ul class="rules">' + ''.join(f'<li>{md_inline(l[2:])}</li>' for l in part.split('\n') if l.startswith('- ')) + '</ul>'
+
+
+sheet(f'''<div class="eyebrow">Dla początkujących</div><h1>Rady na pierwsze wyprawy</h1>
+<p class="flavor">{md_inline(re.search(r'> 🧭 \*(.+)\*', tips_md).group(1))}</p>
+<div class="card" style="margin-top:3mm"><h3>Przymierze Świtu</h3>{tips('Przymierze Świtu')}</div>
+<div class="cols" style="margin-top:4mm"><div class="card" style="--accent:var(--horde)"><h3>Mroczna Horda</h3>{tips('Mroczna Horda')}</div>
+<div class="card" style="--accent:var(--navy)"><h3>Na arenie</h3>{tips('Na arenie')}</div></div>
+''', cls='rivalry', left='Rady', right='Pierwsze wyprawy', foot='Rady na pierwsze wyprawy', key='tips')
 
 # 14. Special cases
 chapter('14', 'Przypadki szczególne', 'edge')

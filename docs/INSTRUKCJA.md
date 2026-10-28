@@ -48,6 +48,7 @@ Wybierz stronę. Drzewo czeka.
 11. [Skarby](#11-skarby)
 12. [Gra przeciwko automatowi zła (kooperacja)](#12-gra-przeciwko-automatowi-zła-kooperacja)
 13. [Własne ustawienia](#13-własne-ustawienia)
+- [Rady na pierwsze wyprawy](#rady-na-pierwsze-wyprawy)
 14. [Przypadki szczególne](#14-przypadki-szczególne)
 15. [Arena — szybka bitwa](#15-arena--szybka-bitwa)
 16. [Ściągawka](#16-ściągawka)
@@ -80,7 +81,7 @@ Liczby wystarczają na najbardziej wymagającą partię: bardzo długą mapę i 
   - **3 siedliska strażników**: Gryfa (zielony rewers), Cyklopa i Hydry (bordowy rewers);
   - **Kryształowe Drzewo** i **dwie bazy**: Przymierza i Hordy.
 - **Dwustronna plansza areny** (A3, składana na pół) — z jednej strony zielona arena Przymierza, z drugiej ognista arena Hordy. Na każdej stronie jest 7 przeszkód, a skrajne kolumny to pola startowe.
-- **18 kart jednostek** (8 × 12 cm): 6 Przymierza (3 bohaterów, 3 pomocników), 6 Hordy (3 wodzów, 3 popleczników), 3 strażników (granatowy rewers) i 3 karty strażników do pojedynku (błękitny rewers, rozdział 9).
+- **18 kart jednostek** (8 × 11,2 cm): 6 Przymierza (3 bohaterów, 3 pomocników), 6 Hordy (3 wodzów, 3 popleczników), 3 strażników (granatowy rewers) i 3 karty strażników do pojedynku (błękitny rewers, rozdział 9).
 - **15 figurek** — po jednej na każdą jednostkę (te same 15 postaci co na kartach). Każda stoi na podstawce 3 cm, która mieści się w polu areny i na kafelku mapy.
 - **20 kart skarbów** (6,3 × 8,8 cm): 6 Eliksirów Odrodzenia i po 1 z pozostałych 14 skarbów.
 - **3 kryształy** (wys. 1,6 cm).
@@ -536,6 +537,33 @@ W rywalizacji każda strona ma swoją trudność, a poziom Trudny nie istnieje. 
 | Średnia | 4 | 6 | 7 | 5 |
 | Długa | 4 | 6 | 7 | 5 |
 | Bardzo długa | 4 | 6 | 7 | 5 |
+
+---
+
+## Rady na pierwsze wyprawy
+
+> 🧭 *Kronikarze Drzewa zebrali rady tych, którzy wrócili z wypraw — i tych, którzy nie zdążyli.*
+
+### Przymierze Świtu
+
+- **Czas jest waszym wrogiem.** Zerkajcie na tor rund i liczcie, ile tur zajmie droga powrotna do Drzewa.
+- **Wygrywacie tylko kryształami.** Bitwa z bohaterem Hordy kosztuje pomocników i czas — walczcie, gdy blokuje drogę albo odprawia rytuał.
+- **Do strażnika idźcie z pełną drużyną.** Strażnik często zabiera jednego pomocnika; bez nich kolejne bitwy będą trudne.
+- **Dwóch bohaterów to dwie drogi.** Rozdzielcie się: jeden zwiedza stronę Przymierza, drugi stronę Hordy.
+- **Eliksir Odrodzenia zachowajcie dla bohatera** — poległy bohater to stracone tury.
+
+### Mroczna Horda
+
+- **Drzewo to najlepsza twierdza.** Dopóki bohater Hordy stoi na Drzewie, Przymierze nie odda tam kryształów.
+- **Polujcie na nosiciela.** Kryształy poległego zostają na polu i trzeba po nie wrócić — a to kosztuje Przymierze czas.
+- **Rytuał straszy nawet wtedy, gdy się nie uda.** Przymierze musi zawrócić, żeby go przerwać.
+
+### Na arenie
+
+- **Strzelców chowajcie za przeszkodami** i z dala od wrogów: wróg tuż obok zmusza strzelca, żeby atakował tylko jego.
+- **Królowi Jednorożców zostawcie miejsce na rozbieg** — Szarża Światła działa po ruchu o co najmniej 4 pola.
+- **Prastary Niedźwiedź niech stoi obok najsłabszego sojusznika** — Opiekun Gaju przyjmie za niego śmiertelny cios.
+- **Bijcie najpierw tych, którzy zaraz padną.** Każda jednostka mniej to jedna aktywacja wroga mniej w każdej rundzie.
 
 ---
 
