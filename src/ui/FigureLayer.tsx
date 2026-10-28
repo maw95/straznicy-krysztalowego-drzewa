@@ -20,8 +20,8 @@ export interface Piece {
   moveMs?: number;
   /** A glowing ring round the base (CSS colour), or none. */
   ring?: string | null;
-  /** Lunging at this screen point (an attack); the figure turns to it first. */
-  lungeAt?: { x: number; y: number } | null;
+  /** Lunging at this screen point (an attack); the figure turns to it first. A new `key` is a new lunge. */
+  lungeAt?: { x: number; y: number; key?: number } | null;
   /** Just hit: a short shake. */
   hit?: boolean;
   /** Turns to face this screen point (a shot); stays facing it. */
@@ -148,7 +148,7 @@ class Stage {
         l.moveMs = p.moveMs ?? 300;
         this.turnTo(l, angleOf(p.x - at.x, p.y - at.y), now);
       }
-      if (p.lungeAt && !l.piece.lungeAt) {
+      if (p.lungeAt && (!l.piece.lungeAt || p.lungeAt.key !== l.piece.lungeAt.key)) {
         l.lungeStart = now;
         this.turnTo(l, angleOf(p.lungeAt.x - p.x, p.lungeAt.y - p.y), now);
       }

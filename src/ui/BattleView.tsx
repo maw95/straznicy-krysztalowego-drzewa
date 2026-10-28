@@ -84,20 +84,31 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   const [showItems, setShowItems] = useState(false);
   const [hover, setHover] = useState<HexKey | null>(null);
 
-  // Keep the active unit in view when the arena is scrollable (phones).
+  // Keep the active unit in view when the arena is scrollable (phones): when it changes or moves, not on every hit.
+  const activePos = b.activation ? b.units[b.activation.unitId]?.pos : null;
   useEffect(() => {
     const el = wrapRef.current;
-    const pos = b.activation ? b.units[b.activation.unitId]?.pos : null;
-    if (!el || !pos || el.scrollWidth <= el.clientWidth + 2) return;
-    const { x } = cellPos(pos);
+    if (!el || !activePos || el.scrollWidth <= el.clientWidth + 2) return;
+    const { x } = cellPos(activePos);
     el.scrollTo({ left: Math.max(0, (x + W / 2) * scale - el.clientWidth / 2), behavior: 'smooth' });
-  }, [b.activation?.unitId, b, scale]);
+  }, [b.activation?.unitId, activePos, scale]);
+
+  // Animation clean-ups run to the end even when the next action comes first (bots act every 120–450 ms);
+  // they are dropped only when the arena goes away.
+  const timers = useRef(new Set<number>());
+  const later = (f: () => void, ms: number) => {
+    const t = window.setTimeout(() => {
+      timers.current.delete(t);
+      f();
+    }, ms);
+    timers.current.add(t);
+  };
+  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
 
   // Walking: a unit that moved several cells is shown stepping hex by hex along the path it
   // really took (around obstacles and enemies), worked out on the state before the move.
   const prevState = useRef(state);
   const [walk, setWalk] = useState<Record<string, HexKey>>({});
-  const walkTimers = useRef<number[]>([]);
   useLayoutEffect(() => {
     const before = prevState.current;
     prevState.current = state;
@@ -112,12 +123,11 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
       // Step by step, then hand the token back to its real position.
       const steps = path.slice(1);
       const timer = (ms: number, f: (w: Record<string, HexKey>) => void) =>
-        walkTimers.current.push(window.setTimeout(() => setWalk((w) => { const next = { ...w }; f(next); return next; }), ms));
+        later(() => setWalk((w) => { const next = { ...w }; f(next); return next; }), ms);
       steps.forEach((k, i) => timer(20 + i * WALK_STEP_MS, (w) => (w[u.id] = k)));
       timer(20 + steps.length * WALK_STEP_MS, (w) => delete w[u.id]);
     }
   }, [b]);
-  useEffect(() => () => walkTimers.current.forEach((t) => window.clearTimeout(t)), []);
 
   // Floating damage / healing numbers: diff unit HP between renders.
   // Also drives the attack animations: who struck whom, and fading-out fallen units.
@@ -167,25 +177,27 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     }).filter((x) => x.pos);
     if (newSeals.length) {
       setSeals((x) => [...x, ...newSeals]);
-      window.setTimeout(() => setSeals((x) => x.filter((s) => !newSeals.includes(s))), 1400);
+      later(() => setSeals((x) => x.filter((s) => !newSeals.includes(s))), 1400);
     }
     if (newShards.length) {
       setShards((x) => [...x, ...newShards]);
-      window.setTimeout(() => setShards((x) => x.filter((s) => !newShards.includes(s))), 700);
+      later(() => setShards((x) => x.filter((s) => !newShards.includes(s))), 700);
     }
     if (!fresh.length && !newGhosts.length) return;
     setFloaters((f) => [...f, ...fresh]);
-    setHitIds(hit);
+    setHitIds((ids) => [...ids.filter((id) => !hit.includes(id)), ...hit]);
     setStrikes((x) => [...x, ...newStrikes.filter((st, i, all) => all.findIndex((o) => o.attacker === st.attacker) === i || st.ranged)]);
     setGhosts((g) => [...g, ...newGhosts]);
-    const t = window.setTimeout(() => {
+    later(() => {
       setFloaters((f) => f.filter((x) => !fresh.includes(x)));
       setStrikes((x) => x.filter((st) => !newStrikes.includes(st)));
       setGhosts((g) => g.filter((x) => !newGhosts.includes(x)));
-      setHitIds([]);
+      setHitIds((ids) => ids.filter((id) => !hit.includes(id)));
     }, 1150);
-    return () => window.clearTimeout(t);
   }, [b]);
+
+  /** The newest blow of a unit still being animated (a fast bot may strike again before the last one fades). */
+  const lastStrike = (id: string, ranged: boolean) => [...strikes].reverse().find((st) => st.attacker === id && st.ranged === ranged);
 
   // Die rolls: each new attack shows its die over the unit that took the blow
   // (a blow cut to 0 shows a 0 drop too, since no HP changed).
@@ -205,7 +217,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     });
     if (!pops.length) return;
     setRollPops((p) => [...p, ...pops]);
-    window.setTimeout(() => setRollPops((p) => p.filter((x) => !pops.includes(x))), 2200);
+    later(() => setRollPops((p) => p.filter((x) => !pops.includes(x))), 2200);
   }, [b]);
   const lastRoll = b.rolls?.[b.rolls.length - 1];
   const [showThreat, setShowThreat] = useState(false);
@@ -594,8 +606,8 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                   .filter((u) => figureFor(u.defId) && posOf(u))
                   .map((u): Piece => {
                     const c = cellCenter(posOf(u)!);
-                    const melee = strikes.find((st) => st.attacker === u.id && !st.ranged);
-                    const shot = strikes.find((st) => st.attacker === u.id && st.ranged);
+                    const melee = lastStrike(u.id, false);
+                    const shot = lastStrike(u.id, true);
                     // Until it moves, a unit faces the enemies (the middle of where they stand).
                     const enemies = livingUnits(b).filter((e) => e.side !== u.side && e.pos).map((e) => cellCenter(e.pos!));
                     const face = enemies.length ? { x: enemies.reduce((s, e) => s + e.x, 0) / enemies.length - c.x, y: enemies.reduce((s, e) => s + e.y, 0) / enemies.length - c.y } : undefined;
@@ -608,7 +620,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                       size: 54,
                       moveMs: walk[u.id] ? WALK_STEP_MS : 300,
                       ring: isActive ? '#9EE4FF' : targets.some((t) => t.id === u.id) || approach?.targetId === u.id ? '#E0503C' : SIDE_RING[u.side],
-                      lungeAt: melee ? cellCenter(melee.to) : null,
+                      lungeAt: melee ? { ...cellCenter(melee.to), key: melee.key } : null,
                       lookAt: shot ? cellCenter(shot.to) : null,
                       hit: hitIds.includes(u.id),
                       face,
@@ -620,7 +632,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                 const { x, y } = cellPos(posOf(u)!);
                 const isActive = deploySide ? picked === u.id : active?.id === u.id;
                 const isTarget = targets.some((t) => t.id === u.id);
-                const strike = strikes.find((st) => st.attacker === u.id && !st.ranged);
+                const strike = lastStrike(u.id, false);
                 const lunge = strike ? (() => {
                   const a = cellPos(strike.from);
                   const t = cellPos(strike.to);
