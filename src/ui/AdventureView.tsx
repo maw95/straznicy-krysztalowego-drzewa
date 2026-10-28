@@ -10,7 +10,7 @@ import { aimedCursor } from './cursors';
 import { figureFor, FigureLayer, type Piece } from './FigureLayer';
 import { StatIcon, StatText } from './markers';
 import { RoundTrack } from './RoundTrack';
-import { asset, Frame, HpBar, Medal, Pips, Portrait, Ribbon, SIDE_RING, tileImage } from './common';
+import { asset, COMPACT_QUERY, Frame, Medal, Pips, Portrait, Ribbon, SIDE_RING, tileImage, useMedia } from './common';
 
 interface Props {
   state: GameState;
@@ -21,6 +21,9 @@ interface Props {
   onShowCard: (unitId: string) => void;
   footer: React.ReactNode;
 }
+
+/** The biggest hex a player can zoom the map to (pixels across). */
+const MAX_HEX_W = 120;
 
 /** Cheapest paths the active hero can still walk this turn (revealed hexes only). */
 function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: HexKey[]; hostile: boolean }> {
@@ -62,10 +65,15 @@ function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: Hex
 
 export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowCard, footer }: Props) {
   const detailsShown = useDetailsShown();
+  const compact = useMedia(COMPACT_QUERY);
+  // A finger has no hover: the tapped hex is described in a strip instead of a note beside it.
+  const touch = useMedia('(hover: none)');
   const boardRef = useRef<HTMLDivElement>(null);
   const [box, setBox] = useState({ w: 800, h: 600 });
   const [selected, setSelected] = useState<HexKey | null>(null);
   const [hover, setHover] = useState<HexKey | null>(null);
+  /** The hex last touched with a finger (a finger has no hover). */
+  const [touched, setTouched] = useState<HexKey | null>(null);
   const [mapPicks, setMapPicks] = useState<{ itemId: string; picks: HexKey[] } | null>(null);
   const [resPick, setResPick] = useState<string | null>(null);
   /** A fallen hero being revived: the player picks a free hex next to the active hero. */
@@ -98,12 +106,62 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   useEffect(() => {
     seenRevealed.current = nowRevealed;
   });
-  // Fit the triangle into the frame; on phones keep hexes finger-sized and let the map scroll.
+  // Fit the triangle into the frame; on phones start with finger-sized hexes and let the map scroll.
+  // Phones can zoom (buttons, two fingers) between the whole map and big hexes.
   const fitW = Math.min(118, (box.w - 24) / rows, (box.h - 24) / (1.1547 * (0.75 * (rows - 1) + 1)));
-  const W = box.w < 600 ? Math.max(fitW, 46) : fitW;
+  const [zoomW, setZoomW] = useState<number | null>(null);
+  const W = zoomW !== null ? Math.max(fitW, Math.min(MAX_HEX_W, zoomW)) : box.w < 600 ? Math.max(fitW, 46) : fitW;
   const H = W * 1.1547;
   const boardW = rows * W;
   const boardH = H + (rows - 1) * 0.75 * H;
+
+  // Zooming keeps the point in the middle of the view where it was.
+  const zoomAnchor = useRef<{ fx: number; fy: number } | null>(null);
+  const zoomTo = (w: number) => {
+    const el = boardRef.current;
+    if (el) zoomAnchor.current = { fx: (el.scrollLeft + el.clientWidth / 2) / Math.max(1, el.scrollWidth), fy: (el.scrollTop + el.clientHeight / 2) / Math.max(1, el.scrollHeight) };
+    setZoomW(Math.max(fitW, Math.min(MAX_HEX_W, w)));
+  };
+  useLayoutEffect(() => {
+    const el = boardRef.current;
+    const a = zoomAnchor.current;
+    if (!el || !a) return;
+    zoomAnchor.current = null;
+    el.scrollLeft = a.fx * el.scrollWidth - el.clientWidth / 2;
+    el.scrollTop = a.fy * el.scrollHeight - el.clientHeight / 2;
+  }, [W]);
+  // Two fingers on the map zoom it (the page itself does not zoom there).
+  const pinch = useRef<{ d: number; w: number } | null>(null);
+  const zoomRef = useRef(zoomTo);
+  zoomRef.current = zoomTo;
+  const wRef = useRef(W);
+  wRef.current = W;
+  useEffect(() => {
+    const el = boardRef.current;
+    if (!el) return;
+    const spread = (e: TouchEvent) => Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    const start = (e: TouchEvent) => {
+      if (e.touches.length === 2) pinch.current = { d: spread(e), w: wRef.current };
+    };
+    const move = (e: TouchEvent) => {
+      if (e.touches.length !== 2 || !pinch.current) return;
+      e.preventDefault();
+      zoomRef.current(pinch.current.w * (spread(e) / pinch.current.d));
+    };
+    const end = (e: TouchEvent) => {
+      if (e.touches.length < 2) pinch.current = null;
+    };
+    el.addEventListener('touchstart', start, { passive: true });
+    el.addEventListener('touchmove', move, { passive: false });
+    el.addEventListener('touchend', end);
+    el.addEventListener('touchcancel', end);
+    return () => {
+      el.removeEventListener('touchstart', start);
+      el.removeEventListener('touchmove', move);
+      el.removeEventListener('touchend', end);
+      el.removeEventListener('touchcancel', end);
+    };
+  }, []);
   const reviveAt = useMemo(() => (revive && hero ? reviveSpots(state, hero) : null), [revive, hero, state]);
   const reach = useMemo(() => {
     if (!canAct) return new Map();
@@ -126,6 +184,24 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     const size = stacked ? W * 0.56 : W * 0.78;
     return { x: p.x + W / 2 + spread, y: p.y + H * 0.66 - (stacked ? (i % 2) * H * 0.12 : 0), size, spread, i, stacked };
   };
+  // When the map scrolls (phones, zoomed in), the active hero comes into view at the start of its turn
+  // and whenever it walks out of sight.
+  const heroAt = hero && !hero.entering ? hero.pos : null;
+  useEffect(() => setTouched(null), [hero?.id]);
+  useEffect(() => {
+    const el = boardRef.current;
+    const inner = el?.firstElementChild as HTMLElement | null;
+    if (!el || !inner || !heroAt) return;
+    if (el.scrollWidth <= el.clientWidth + 2 && el.scrollHeight <= el.clientHeight + 2) return;
+    const p = pos(state.tiles[heroAt]);
+    const cx = inner.offsetLeft + p.x + W / 2;
+    const cy = inner.offsetTop + p.y + H / 2;
+    const margin = Math.min(W * 1.2, el.clientWidth / 4, el.clientHeight / 4);
+    const inView = cx > el.scrollLeft + margin && cx < el.scrollLeft + el.clientWidth - margin && cy > el.scrollTop + margin && cy < el.scrollTop + el.clientHeight - margin;
+    if (!inView) el.scrollTo({ left: cx - el.clientWidth / 2, top: cy - el.clientHeight / 2, behavior: 'smooth' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hero?.id, heroAt, fitW]);
+
   const figurePieces: Piece[] = Object.values(state.heroes)
     .filter((h) => h.alive && !h.entering && figureFor(h.id))
     .map((h): Piece => {
@@ -192,13 +268,14 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     : [];
 
   return (
-    <div className="screen slate screen-enter">
-      <div className="main-row">
+    <div className="screen slate screen-enter play">
+      <div className="main-row play-row">
         <Frame crest className="grow map-frame" innerClass="" innerStyle={{ background: '#0B1416' }}>
           {/* Small source image: a soft blur hides its pixels until a larger painting replaces it. */}
           <img src={asset('ui/landscape.jpg')} alt="" style={{ position: 'absolute', inset: -8, width: 'calc(100% + 16px)', height: 'calc(100% + 16px)', objectFit: 'cover', opacity: 0.42, filter: 'blur(2.5px)' }} />
           <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 140px 50px rgba(4,10,12,0.85)' }} />
-          <div style={{ position: 'absolute', left: 18, top: 16, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, zIndex: 2 }}>
+          {/* Phones: the round is in the bar below, so the map gets the whole frame. */}
+          <div className="hide-mobile" style={{ position: 'absolute', left: 18, top: 16, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, zIndex: 2 }}>
             <Ribbon style={{ width: Math.min(330, box.w - 20) }}>Kraina Kryształowego Drzewa</Ribbon>
             <div style={{ marginLeft: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
               <RoundTrack round={state.round} limit={state.roundLimit} ritual={state.ritual} ritualRounds={state.rules.ritualRounds} size={Math.max(160, Math.min(290, box.w * 0.26, box.h * 0.45))} />
@@ -207,7 +284,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </div>
             </div>
           </div>
-          <div ref={boardRef} className="scroll" style={{ position: 'absolute', inset: '60px 6px 6px', overflow: 'auto', display: 'flex' }}>
+          <div ref={boardRef} className="scroll map-scroll" style={{ position: 'absolute', inset: compact ? 6 : '60px 6px 6px', overflow: 'auto', display: 'flex' }}>
             <div style={{ position: 'relative', flex: 'none', margin: 'auto', width: boardW, height: boardH }}>
               {tiles.map((t) => {
                 const p = pos(t);
@@ -216,6 +293,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 const onPath = preview?.includes(t.key);
                 const crystal = t.revealed ? Object.values(state.crystals).find((c) => c.at === t.key) : undefined;
                 const picked = mapPicks?.picks.includes(t.key);
+                const tileDetails = details(() => <TileDetails state={state} k={t.key} />);
                 const rim = picked || isSel ? 'linear-gradient(135deg,#F2FCFF,#9EE4FF 40%,#2A6FB0)' : 'linear-gradient(135deg,#FFF0B0 0%,#E2B04A 30%,#9A6A18 62%,#F0CF78 100%)';
                 return (
                   <button
@@ -224,7 +302,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     className="hexbtn"
                     aria-label={t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole'}
                     onClick={() => clickTile(t.key)}
-                    {...details(() => <TileDetails state={state} k={t.key} />)}
+                    {...tileDetails}
+                    onPointerDown={(e) => {
+                      tileDetails.onPointerDown(e);
+                      if (e.pointerType === 'touch') setTouched(t.key);
+                    }}
                     onMouseEnter={() => setHover(t.key)}
                     onMouseLeave={() => setHover(null)}
                     // Only the hexagonal hit area below takes the pointer: rectangular button boxes
@@ -328,9 +410,16 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     </div>
                   );
                 })}
-              {hover && !mapPicks && !detailsShown && <HexTooltip state={state} k={hover} reach={reach.get(hover)} heroName={hero ? UNITS[hero.id].name : ''} x={pos(state.tiles[hover]).x} y={pos(state.tiles[hover]).y} W={W} H={H} boardW={boardW} />}
+              {hover && !touch && !mapPicks && !detailsShown && <HexTooltip state={state} k={hover} reach={reach.get(hover)} heroName={hero ? UNITS[hero.id].name : ''} x={pos(state.tiles[hover]).x} y={pos(state.tiles[hover]).y} W={W} H={H} boardW={boardW} />}
             </div>
           </div>
+          {compact && (
+            <div style={{ position: 'absolute', right: 10, top: 10, display: 'flex', flexDirection: 'column', gap: 6, zIndex: 5 }}>
+              <button className="btn plate parch zoom-btn" aria-label="Przybliż mapę" disabled={W >= MAX_HEX_W} onClick={() => zoomTo(W * 1.3)}>+</button>
+              <button className="btn plate parch zoom-btn" aria-label="Oddal mapę" disabled={W <= fitW + 0.5} onClick={() => zoomTo(W / 1.3)}>−</button>
+            </div>
+          )}
+          {touch && touched && !mapPicks && !detailsShown && <TileStrip state={state} k={touched} reach={reach.get(touched)} heroName={hero ? UNITS[hero.id].name : ''} />}
           {mapPicks && (
             <div className="plate parch" style={{ position: 'absolute', left: '50%', bottom: 16, transform: 'translateX(-50%)', padding: '8px 14px', display: 'flex', gap: 12, alignItems: 'center', zIndex: 4 }}>
               <b>Magiczna Mapa:</b> wybierz do 3 zakrytych pól ({mapPicks.picks.length}/3)
@@ -462,11 +551,6 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   );
 }
 
-export function heroHpLine(hp: number, max: number) {
-  return <HpBar hp={hp} max={max} />;
-}
-
-/** Floating details for the hovered hex: terrain, contents, and whether the hero gets there this turn. */
 /** Right button on a hex: the terrain, what lies there and who stands there. */
 function TileDetails({ state, k }: { state: GameState; k: HexKey }) {
   const t = state.tiles[k];
@@ -516,7 +600,8 @@ function TileDetails({ state, k }: { state: GameState; k: HexKey }) {
   );
 }
 
-function HexTooltip({ state, k, reach, heroName, x, y, W, H, boardW }: { state: GameState; k: HexKey; reach?: { cost: number; hostile: boolean }; heroName: string; x: number; y: number; W: number; H: number; boardW: number }) {
+/** The lines describing the hovered hex: terrain, contents, and whether the hero gets there this turn. */
+function tileLines(state: GameState, k: HexKey, reach: { cost: number; hostile: boolean } | undefined, heroName: string): { title: string; lines: string[] } {
   const t = state.tiles[k];
   const lines: string[] = [];
   if (t.revealed) {
@@ -530,17 +615,40 @@ function HexTooltip({ state, k, reach, heroName, x, y, W, H, boardW }: { state: 
     for (const h of heroesAt(state, k)) lines.push(`${UNITS[h.id].name}${h.crystals.length ? ' · niesie kryształ' : ''}`);
     if (reach) lines.push(reach.hostile ? `${heroName}: wejście rozpocznie walkę` : `${heroName} dojdzie tu za ${reach.cost} pkt`);
   } else lines.push(t.side === 'dawn' ? 'Kraina Przymierza — teren nieznany' : 'Kraina Hordy — teren nieznany');
-  const width = 220;
-  const left = Math.max(-40, Math.min(boardW - width + 40, x + W / 2 - width / 2));
-  const above = y > 120;
+  return { title: t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole', lines };
+}
+
+/** On a touch screen: the tapped hex in one strip along the bottom of the map, not over the board. */
+function TileStrip({ state, k, reach, heroName }: { state: GameState; k: HexKey; reach?: { cost: number; hostile: boolean }; heroName: string }) {
+  const { title, lines } = tileLines(state, k, reach, heroName);
+  return (
+    <div className="plate parch" style={{ position: 'absolute', left: 8, right: 8, bottom: 8, padding: '4px 10px', fontSize: 14, lineHeight: 1.25, zIndex: 4, pointerEvents: 'none' }}>
+      <b>{title}</b> · {lines.join(' · ')}
+    </div>
+  );
+}
+
+/** With a mouse: a small note next to the hovered hex, after a short pause (moving across the map shows nothing). */
+function HexTooltip({ state, k, reach, heroName, x, y, W, H, boardW }: { state: GameState; k: HexKey; reach?: { cost: number; hostile: boolean }; heroName: string; x: number; y: number; W: number; H: number; boardW: number }) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    setReady(false);
+    const t = window.setTimeout(() => setReady(true), 350);
+    return () => window.clearTimeout(t);
+  }, [k]);
+  if (!ready) return null;
+  const { title, lines } = tileLines(state, k, reach, heroName);
+  const width = 190;
+  // Beside the hex rather than over the hexes around it: to the right, or to the left near the right edge.
+  const right = x + W + width + 8 <= boardW;
   return (
     <div
       className="plate parch"
-      style={{ position: 'absolute', left, top: above ? y - 8 : y + H + 8, transform: above ? 'translateY(-100%)' : undefined, width, padding: '6px 10px', zIndex: 20, pointerEvents: 'none', animation: 'fade-in 0.15s ease-out both' }}
+      style={{ position: 'absolute', left: right ? x + W * 0.9 : x + W * 0.1 - width, top: y + H * 0.15, width, padding: '4px 9px', zIndex: 20, pointerEvents: 'none', animation: 'fade-in 0.15s ease-out both' }}
     >
-      <div style={{ fontWeight: 800, fontSize: 16 }}>{t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole'}</div>
+      <div style={{ fontWeight: 800, fontSize: 14 }}>{title}</div>
       {lines.map((l) => (
-        <div key={l} style={{ fontSize: 14, lineHeight: 1.25 }}>
+        <div key={l} style={{ fontSize: 13, lineHeight: 1.2 }}>
           {l}
         </div>
       ))}

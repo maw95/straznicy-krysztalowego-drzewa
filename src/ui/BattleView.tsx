@@ -23,7 +23,7 @@ import {
 import { distance, parseKey, type HexKey } from '../engine/hex';
 import type { Action, AttackRoll, BattleUnit, GameState } from '../engine/types';
 import { hoverCard } from './hover';
-import { asset, Frame, HpBar, Medal, Portrait, Ribbon, SIDE_RING } from './common';
+import { asset, COMPACT_QUERY, Frame, HpBar, Medal, Portrait, Ribbon, SIDE_RING, useMedia } from './common';
 import { ART_SIZE, CANVAS_H, CANVAS_W, cellCenter, hexPoints } from './arenaGeometry';
 import { DamageDrop, DieFace, LastAttack, Marker, StatIcon, StatText, type MarkerName } from './markers';
 import { details } from './details';
@@ -46,6 +46,10 @@ type ItemTargeting =
   | { kind: 'courage'; itemId: string; picks: string[] }
   | { kind: 'teleport'; itemId: string; unitId: string | null }
   | { kind: 'horn'; itemId: string; mode: 'swap' | 'extra' | null; unitId: string | null };
+
+/** On phones only the cells and a little of the painting round them are shown, so the hexes come out bigger. */
+const FULL_VIEW = { x: 0, y: 0, w: CANVAS_W, h: CANVAS_H };
+const PHONE_VIEW = { x: 55, y: 40, w: 790, h: CANVAS_H - 40 };
 
 /** The arena never changes shape: its cells and their outlines are worked out once. */
 const CELLS = arenaCells();
@@ -94,6 +98,7 @@ interface Props {
 }
 
 export function BattleView({ state, canAct, onAction, onShowCard, footer }: Props) {
+  const view = useMedia(COMPACT_QUERY) ? PHONE_VIEW : FULL_VIEW;
   const b = state.battle!;
   const wrapRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -107,10 +112,10 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   const activePos = b.activation ? b.units[b.activation.unitId]?.pos : null;
   useEffect(() => {
     const el = wrapRef.current;
-    if (!el || !activePos || el.scrollWidth <= el.clientWidth + 2) return;
-    const { x } = cellPos(activePos);
-    el.scrollTo({ left: Math.max(0, (x + W / 2) * scale - el.clientWidth / 2), behavior: 'smooth' });
-  }, [b.activation?.unitId, activePos, scale]);
+    if (!el || !activePos || (el.scrollWidth <= el.clientWidth + 2 && el.scrollHeight <= el.clientHeight + 2)) return;
+    const { x, y } = cellPos(activePos);
+    el.scrollTo({ left: Math.max(0, (x + W / 2 - view.x) * scale - el.clientWidth / 2), top: Math.max(0, (y + H / 2 - view.y) * scale - el.clientHeight / 2), behavior: 'smooth' });
+  }, [b.activation?.unitId, activePos, scale, view]);
 
   // Animation clean-ups run to the end even when the next action comes first (bots act every 120–450 ms);
   // they are dropped only when the arena goes away.
@@ -257,13 +262,17 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   useLayoutEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
-    // On phones keep hexes finger-sized and let the arena scroll instead of shrinking further.
-    const fit = () => setScale(Math.max(Math.min(el.clientWidth / CANVAS_W, el.clientHeight / CANVAS_H), el.clientWidth < 600 ? 0.68 : 0));
+    // On phones the whole width always shows; a low screen (held sideways) keeps the hexes finger-sized
+    // and scrolls up and down instead of shrinking the arena further.
+    const fit = () => {
+      const whole = Math.min(el.clientWidth / view.w, el.clientHeight / view.h);
+      setScale(view === PHONE_VIEW ? Math.min(el.clientWidth / view.w, Math.max(whole, 0.62)) : whole);
+    };
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     fit();
     return () => ro.disconnect();
-  }, []);
+  }, [view]);
 
   const act = b.activation;
   const active = act ? b.units[act.unitId] : null;
@@ -572,14 +581,14 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   };
 
   return (
-    <div className="screen slate screen-enter">
+    <div className="screen slate screen-enter play">
       <div className="battle-curtain" />
-      <div className="main-row battle-row">
+      <div className="main-row battle-row play-row">
         {sidePanel(sides[0])}
         <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#14100A' }}>
           <div ref={wrapRef} className="scroll" style={{ position: 'absolute', inset: 0, overflow: 'auto', display: 'flex' }}>
-            <div style={{ position: 'relative', flex: 'none', margin: 'auto', width: CANVAS_W * scale, height: CANVAS_H * scale, overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', left: 0, top: 0, width: CANVAS_W, height: CANVAS_H, transform: `scale(${scale})`, transformOrigin: '0 0' }}>
+            <div style={{ position: 'relative', flex: 'none', margin: 'auto', width: view.w * scale, height: view.h * scale, overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', left: 0, top: 0, width: CANVAS_W, height: CANVAS_H, transform: `translate(${-view.x * scale}px, ${-view.y * scale}px) scale(${scale})`, transformOrigin: '0 0' }}>
               {/* The painted board of the half of the map where the fight broke out. */}
               <img src={asset(`arena/${b.arena}.jpg`)} alt="" style={{ position: 'absolute', left: 0, top: 0, width: ART_SIZE.w, height: ART_SIZE.h }} />
               <svg width={CANVAS_W} height={CANVAS_H} style={{ position: 'absolute', left: 0, top: 0 }}>
@@ -785,11 +794,12 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                 </div>
               ))}
               {lastRoll && b.units[lastRoll.attackerId] && (
-                <div className="plate parch" style={{ position: 'absolute', left: 14, top: 18, padding: '4px 10px', fontSize: 14, zIndex: 6, pointerEvents: 'none', maxWidth: '60%' }}>
+                // Along the bottom edge of the painting, clear of the title and the cells.
+                <div className="plate parch" style={{ position: 'absolute', left: view.x + 14, top: CANVAS_H - 38, padding: '4px 10px', fontSize: 14, zIndex: 6, pointerEvents: 'none', maxWidth: view.w - 28, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   <LastAttack roll={lastRoll} units={b.units} size={20} />
                 </div>
               )}
-              <div style={{ position: 'absolute', left: '50%', top: 14, transform: 'translateX(-50%)' }}>
+              <div className="hide-mobile" style={{ position: 'absolute', left: '50%', top: 14, transform: 'translateX(-50%)' }}>
                 <Ribbon style={{ width: 340 }}>{`${b.kind === 'neutral' ? 'Bitwa o kryształ' : 'Starcie bohaterów'} · ${b.stage === 'deploy' ? 'ustawienie' : `runda ${b.round}`}`}</Ribbon>
               </div>
             </div>
@@ -803,7 +813,11 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           {active && <span className="hide-mobile"><Portrait unitId={active.defId} size={56} ring={SIDE_RING[active.side]} glow="0 0 0 2.5px #9EE4FF" /></span>}
           <div className="act-info" style={{ width: 170 }}>
-            <div style={{ fontWeight: 800, fontSize: 18, color: '#F3D27A', lineHeight: 1.1 }}>{b.stage === 'deploy' ? 'Ustawienie wojsk' : active ? UNITS[active.defId].name : '—'}</div>
+            <div style={{ fontWeight: 800, fontSize: 18, color: '#F3D27A', lineHeight: 1.1 }}>
+              {b.stage === 'deploy' ? 'Ustawienie wojsk' : active ? UNITS[active.defId].name : '—'}
+              {/* Phones hide the title over the arena: the round is here instead. */}
+              {b.stage !== 'deploy' && <span className="show-mobile" style={{ display: 'none', fontSize: 14, fontWeight: 600, color: 'var(--muted)' }}>Runda bitwy {b.round}</span>}
+            </div>
             <div style={{ fontSize: 14, color: 'var(--muted)' }}>
               {b.stage === 'deploy'
                 ? deploySide

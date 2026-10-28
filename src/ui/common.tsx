@@ -12,7 +12,27 @@ export const tileImage = (t: Tile) => asset(t.revealed ? `tiles/${t.terrain}_${t
 
 export const SIDE_RING: Record<Side, string> = { dawn: '#2C7048', horde: '#9A2226', neutral: '#2A5E9A' };
 export const SIDE_RIBBON: Record<Side, 'g' | 'r' | 'b'> = { dawn: 'g', horde: 'r', neutral: 'b' };
-export const SIDE_MEDAL: Record<Side, string> = { dawn: 'mGreen', horde: 'mRed', neutral: 'mBlue' };
+
+/** The phone layout (the same condition as the media query in styles.css). */
+export const COMPACT_QUERY = '(max-width: 900px), (max-height: 560px) and (max-width: 1100px)';
+
+function mediaMatches(query: string): boolean {
+  return typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia(query).matches;
+}
+
+/** Whether a media query matches, kept up to date as the window turns or resizes. */
+export function useMedia(query: string): boolean {
+  const [matches, setMatches] = useState(() => mediaMatches(query));
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return;
+    const m = window.matchMedia(query);
+    const on = () => setMatches(m.matches);
+    on();
+    m.addEventListener('change', on);
+    return () => m.removeEventListener('change', on);
+  }, [query]);
+  return matches;
+}
 
 export function SvgDefs() {
   return (
