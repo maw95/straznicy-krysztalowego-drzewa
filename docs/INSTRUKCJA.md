@@ -99,7 +99,7 @@ Każda frakcja ma **trzech bohaterów** i **trzech pomocników**. Każdy gracz p
 
 **🐉 Złoty Smok** — bohater, latający · Ż 9 · A 5 · S 4
 Najstarszy z jasnych smoków. Śpi na szczytach gór i budzi się tylko wtedy, gdy kraina naprawdę go potrzebuje. Mówią, że jego łuski pamiętają kolor pierwszego świtu.
-**Słoneczny Blask** — raz na bitwę: każda żyjąca jednostka Przymierza dostaje +1 A do następnego ataku, a sam Smok +3 A.
+**Słoneczny Blask** — raz na bitwę: każda żyjąca jednostka Przymierza dostaje +1 A do następnego ataku, a sam Smok +3 A. *(znacznik +3 Ataku)*
 
 **🦄 Król Jednorożców** — bohater, wręcz · Ż 8 · A 5 · S 8
 Władca srebrnych stad z łąk pod Drzewem. Nigdy nie atakuje pierwszy, ale gdy już ruszy do szarży, ziemia drży aż po horyzont.
@@ -318,7 +318,7 @@ Cios zadaje tyle obrażeń, ile wynosi **Atak**. Połóż na karcie krople obra�
 
 ### Zdolności
 
-Opisy są na kartach. Zdolności „raz na bitwę” po użyciu oznacz znacznikiem **zużytej zdolności**. Efekty, które trwają do następnej aktywacji lub ataku, oznacz odpowiednim znacznikiem (Spowolnienie, Klątwa, Unieruchomienie, Wzmocnienie Ataku).
+Opisy są na kartach. Zdolności „raz na bitwę” po użyciu oznacz znacznikiem **zużytej zdolności**. Efekty, które trwają do następnej aktywacji lub ataku, oznacz odpowiednim znacznikiem (Spowolnienie, Klątwa, Unieruchomienie, Wzmocnienie Ataku, +3 Ataku). Znacznik zdejmij, gdy efekt minie — na przykład +3 Ataku po ataku Smoka.
 
 ### Koniec bitwy
 

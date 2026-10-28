@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Bitwa: Złoty Smok po Słonecznym Blasku ma własny znacznik „+3 Ataku” (znika po jego ataku), Eliksir Żywotności ma nowy znacznik „+4”, a pasek aktywacji pokazuje znaczniki aktywnej jednostki. Oba znaczniki są też w instrukcji.
 - Instrukcja, rozdział 1: lista elementów z pudełka ma rozmiary (kafelki, plansza, karty, figurki, kryształy, tor rund) i nowy znacznik „+3 Ataku” Złotego Smoka.
 - Wersja do druku: wymiary znaczników (Ø 23 mm), kropli obrażeń, toru rund, znacznika rundy i kryształów są już ostateczne — wszystkie te elementy będą drukowane w 3D.
 - **Zmiana zasad:** bitwa nie kończy już ruchu. Wejście na pole wrogiego bohatera albo strażnika kosztuje tyle punktów ruchu, ile koszt terenu tego pola (jak każdy krok), a po wygranej bohater może iść dalej. Zasada jest też w instrukcji i w „Zasadach i kartach”.

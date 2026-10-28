@@ -7,7 +7,7 @@ channel and named by their place (rows of 4, 3, 3, 3):
 The game gets the status markers in public/assets/markers/ (the damage drop there is the empty one,
 znacznik_obrazen_pusty.png, as the game writes the number itself); the rulebook gets all of them in
 docs/edytowalny_szablon_instrukcji/assets/znaczniki/.
-Newer markers are separate files (SEPARATE), scaled to the same size.
+Newer markers are separate files (SEPARATE), scaled to the same size; one of the same name replaces the sheet's.
 Usage: python3 scripts/assets/markers.py
 """
 import os
@@ -25,9 +25,9 @@ ROWS = [
     ['cursed', 'attack_up', 'speed_up'],
     ['shield', 'vitality', 'crystal'],
 ]
-STATUS = ['ability_used', 'rooted', 'slowed', 'cursed', 'attack_up', 'speed_up', 'shield', 'vitality']
+STATUS = ['ability_used', 'rooted', 'slowed', 'cursed', 'attack_up', 'attack_3', 'speed_up', 'shield', 'vitality']
 # name -> file in docs/grafika/ikony/
-SEPARATE = {'attack_3': 'znacznik_+3_ataku.png'}
+SEPARATE = {'attack_3': 'znacznik_+3_ataku.png', 'vitality': 'znacznik_+4_zdrowia.png'}
 GRID = 4  # pixels per cell when looking for pieces
 
 
@@ -103,6 +103,7 @@ if __name__ == '__main__':
     for name, file in SEPARATE.items():
         im = fit(Image.open(os.path.join(os.path.dirname(SRC), file)).convert('RGBA'))
         im.save(os.path.join(MANUAL, f'{name}.png'), optimize=True)
+        im.save(os.path.join(OUT, f'{name}.png'), optimize=True)
     drop = fit(Image.open(EMPTY_DROP).convert('RGBA'))
     drop.save(os.path.join(OUT, 'damage_empty.png'), optimize=True)
     print('ok ->', OUT, '+', MANUAL)

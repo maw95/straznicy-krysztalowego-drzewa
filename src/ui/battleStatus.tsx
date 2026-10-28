@@ -2,7 +2,7 @@
 // and the right-button card.
 
 import type { BattleUnit } from '../engine/types';
-import { UNITS } from '../engine/data';
+import { ABILITY, UNITS } from '../engine/data';
 import { unitSpeed } from '../engine/battle';
 import { asset, HpBar } from './common';
 import { Marker, StatIcon, StatText, type MarkerName } from './markers';
@@ -26,7 +26,10 @@ export function statusList(u: BattleUnit): StatusInfo[] {
   if (s.rootedNext) out.push({ label: 'Unieruchomiony w następnej aktywacji (Pajęcze Sidła)', glyph: 'sWeb', marker: 'rooted', buff: false });
   if (s.slowNext) out.push({ label: `−${s.slowNext} S w następnej aktywacji (Splątane Korzenie)`, glyph: 'sRoot', marker: 'slowed', buff: false, value: s.slowNext !== 2 ? `−${s.slowNext}` : undefined });
   if (s.cursedNext) out.push({ label: `−${s.cursedNext} A przy następnym ataku (Złowroga Klątwa)`, glyph: 'sSkull', marker: 'cursed', buff: false, value: s.cursedNext !== 1 ? `−${s.cursedNext}` : undefined });
-  if (s.nextAttackBonus) out.push({ label: `+${s.nextAttackBonus} A przy następnym ataku`, glyph: 'sBlade', marker: 'attack_up', buff: true, value: s.nextAttackBonus !== 1 ? `+${s.nextAttackBonus}` : undefined });
+  // The Gold Dragon's own Słoneczny Blask bonus has its own "+3" marker; everyone else's next-attack bonus is Wzmocnienie Ataku.
+  const sunburst = UNITS[u.defId].ability === 'sunburst' && s.nextAttackBonus >= ABILITY.sunburstSelfBonus;
+  if (sunburst) out.push({ label: `+${s.nextAttackBonus} A przy następnym ataku (Słoneczny Blask)`, glyph: 'sBlade', marker: 'attack_3', buff: true, value: s.nextAttackBonus !== ABILITY.sunburstSelfBonus ? `+${s.nextAttackBonus}` : undefined });
+  else if (s.nextAttackBonus) out.push({ label: `+${s.nextAttackBonus} A przy następnym ataku`, glyph: 'sBlade', marker: 'attack_up', buff: true, value: s.nextAttackBonus !== 1 ? `+${s.nextAttackBonus}` : undefined });
   if (s.shieldArmed) out.push({ label: 'Tarcza Strażnika: neguje następny atak', glyph: 'sGuard', marker: 'shield', buff: true });
   if (u.maxHp > UNITS[u.defId].hp) out.push({ label: `+${u.maxHp - UNITS[u.defId].hp} maks. Ż do końca bitwy (Eliksir Żywotności)`, glyph: 'sGuard', marker: 'vitality', buff: true, value: u.maxHp - UNITS[u.defId].hp !== 4 ? `+${u.maxHp - UNITS[u.defId].hp}` : undefined });
   if (s.battleAttackBonus) out.push({ label: `+${s.battleAttackBonus} A do końca bitwy`, glyph: 'sBlade', buff: true, value: `+${s.battleAttackBonus}` });

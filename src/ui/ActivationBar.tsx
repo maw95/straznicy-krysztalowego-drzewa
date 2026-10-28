@@ -4,6 +4,7 @@ import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
 import { abilityOf, livingUnits, unitSpeed } from '../engine/battle';
 import type { Action, BattleState, BattleUnit, GameState } from '../engine/types';
 import { asset, Frame, Medal, Portrait, SIDE_RING } from './common';
+import { statusList, StatusBadge } from './battleStatus';
 
 /** The line under the active unit's name: what the player can do now. */
 export function activationHint(b: BattleState, o: { deploySide: FactionId | null; picked: string | null; myTurn: boolean; moves: number; targets: number }): string {
@@ -52,7 +53,15 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
   return (
     <Frame className="bar sticky-mobile" style={{ height: 112 }} innerStyle={{ display: 'flex', alignItems: 'center', gap: 16, padding: '0 18px' }}>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-        {active && <span className="hide-mobile"><Portrait unitId={active.defId} size={56} ring={SIDE_RING[active.side]} glow="0 0 0 2.5px #9EE4FF" /></span>}
+        {active && (
+          <span className="hide-mobile" style={{ position: 'relative' }}>
+            <Portrait unitId={active.defId} size={56} ring={SIDE_RING[active.side]} glow="0 0 0 2.5px #9EE4FF" />
+            {/* The active unit's markers (e.g. the Gold Dragon's +3 after Słoneczny Blask) on the portrait's lower edge. */}
+            <span style={{ position: 'absolute', left: '50%', bottom: -8, transform: 'translateX(-50%)', display: 'flex', gap: 1 }}>
+              {statusList(active).map((st) => <StatusBadge key={st.label} st={{ ...st, value: undefined }} size={20} />)}
+            </span>
+          </span>
+        )}
         <div className="act-info" style={{ width: 170 }}>
           <div style={{ fontWeight: 800, fontSize: 18, color: '#F3D27A', lineHeight: 1.1 }}>
             {b.stage === 'deploy' ? 'Ustawienie wojsk' : active ? UNITS[active.defId].name : '—'}

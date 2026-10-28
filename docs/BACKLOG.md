@@ -20,13 +20,6 @@ punkt to osobny commit; najtańsza kolejność: 1.5 → 1.4 → 1.3 → 1.2 → 
     figurkę albo zestaw na frakcję. Wstawić do instrukcji: `docs/INSTRUKCJA.md` i szablon
     `docs/edytowalny_szablon_instrukcji/assets/figurki/`. Da się to zrobić — gra już rysuje modele three.js,
     trzeba tylko skryptu, który ustawi kamerę i zapisze kadr.
-- [ ] **1.2. Znaczniki „+3 Ataku” i „+4 Zdrowia”.** *Koszt: ok. 60–90 tys. tokenów.*
-  - `docs/grafika/ikony/znacznik_+4_zdrowia.png` zastępuje dotychczasową ikonę Żywotności (+4 Ż).
-  - `docs/grafika/ikony/znacznik_+3_ataku.png` — nowy znacznik przy Złotym Smoku po użyciu Słonecznego Blasku
-    (`sunburstSelfBonus: 3`), widoczny w bitwie (karta, pasek aktywacji, arena), znika po jego ataku.
-  - Dziś znaczniki są wycinane z arkusza `znaczniki.png` (`scripts/assets/markers.py`, `src/ui/markers.tsx`) —
-    nowe są osobnymi plikami, trzeba je dopasować rozmiarem. Instrukcja: opis zdolności Smoka, lista znaczników,
-    szablon (`assets/znaczniki/`).
 
 ## 2. Figurki 3D — drobne
 

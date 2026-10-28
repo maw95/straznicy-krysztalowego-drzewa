@@ -429,7 +429,7 @@ Długość partii z limitem podniesionym do 100 (400 gier na wariant, poziomy No
 - **Wskrzeszenie na mapie:** wskrzeszony staje na wybranym wolnym polu obok pijącego (`reviveSpots`, `useMapItem.targets[0]`).
 - **Automat (kooperacja) i strażnicy w bitwie** grają według instrukcji (`battleAi.ts`, `rulebookAction`): zdolności od razu; bohater/strażnik bije bohatera, inaczej pomocnika z najmniejszym Życiem; pomocnik automatu bije najpierw pomocników; bez celu — do najbliższego wroga. W rywalizacji strażnikiem przy stole kieruje gracz Hordy; w grze jednoosobowej — ten sam gracz.
 - **Wynik (300 gier):** kooperacja łatwiejsza (Normalny 67–77%, Trudny 49–73%), PvP Normalny 41–61%. Zero zawieszonych partii i niedozwolonych ruchów.
-- **Zawartość pudełka** (max potrzeb — bardzo długa mapa, bitwa 3 na 3): 50 + 49 kafelków terenu, 16 kafelków skarbów (8 + 8), 3 siedliska, Drzewo, 2 bazy, 2 areny, 15 kart i 15 figurek, 18 kart skarbów (4 Eliksiry + 14), 3 kryształy, tor rund + znacznik, kość; znaczniki: krople 5 × 10, 3 / 2 / 1 × 6, zużyta zdolność 6, Wzmocnienie Ataku 6, Żywotność 4, Ochrona 2, pozostałe po 1.
+- **Zawartość pudełka** (max potrzeb — bardzo długa mapa, bitwa 3 na 3): 50 + 49 kafelków terenu, 16 kafelków skarbów (8 + 8), 3 siedliska, Drzewo, 2 bazy, 2 areny, 15 kart i 15 figurek, 18 kart skarbów (4 Eliksiry + 14), 3 kryształy, tor rund + znacznik, kość; znaczniki: krople 5 × 10, 3 / 2 / 1 × 6, zużyta zdolność 6, Wzmocnienie Ataku 6, +3 Ataku 1 (Złoty Smok po Słonecznym Blasku), Żywotność 4, Ochrona 2, pozostałe po 1.
 
 ### 7.13. Wygrana tylko kryształami, 3 punkty ruchu, nowe boty (2026-10-21, decyzje użytkownika)
 
