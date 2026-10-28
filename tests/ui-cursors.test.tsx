@@ -146,3 +146,15 @@ describe('Ctrl over a unit shows its reach', () => {
     expect(reachCells(container)).toEqual({ walk: 0, hit: 0 });
   });
 });
+
+describe('attack preview over a target', () => {
+  it('counts the reactions in the engine order: Twardogłowy before Kamień Ochrony (a 2-point blow on the Ogre deals 0)', () => {
+    const s = fight([['nymph', 'dawn', 4, 4], ['ironFistOgre', 'horde', 4, 6]]);
+    s.battle!.units.ironFistOgre.status.damageReduction = 1;
+    const { container } = render(<BattleView state={s} canAct onAction={() => {}} onShowCard={() => {}} footer={null} />);
+    const ogre = [...container.querySelectorAll('button.token')].find((t) => t.querySelector('img')?.getAttribute('src')?.includes('ironFistOgre'))!;
+    fireEvent.mouseEnter(ogre);
+    expect(ogre.textContent).toContain('−0');
+    expect(ogre.textContent).toContain('Twardogłowy');
+  });
+});

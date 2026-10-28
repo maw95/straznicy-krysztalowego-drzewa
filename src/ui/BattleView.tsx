@@ -1,12 +1,12 @@
 import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ABILITY, FACTION_NAMES, ITEMS, UNITS, type FactionId, type ItemKind, type Side } from '../engine/data';
+import { FACTION_NAMES, ITEMS, UNITS, type FactionId, type ItemKind, type Side } from '../engine/data';
 import {
   abilityActive,
   abilityOf,
   alliesOf,
   ATTACK_ABILITIES,
   arenaCells,
-  attackDamage,
+  predictDamage,
   attackTargets,
   breathSecondTarget,
   hasLineOfSight,
@@ -412,14 +412,13 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   /** Predicted result of attacking `t` now (shown on hover). */
   function attackPreview(t: BattleUnit, moved = act?.movedDistance ?? 0): { text: string; lethal: boolean } {
     if (!active) return { text: '', lethal: false };
-    if (t.status.shieldArmed) return { text: 'Tarcza zablokuje', lethal: false };
-    let dmg = attackDamage(state, active, t, useAbility && attackAbility, moved);
-    dmg = Math.max(0, dmg - t.status.damageReduction);
-    const hard = abilityOf(t) === 'hardHead' && !t.abilityUsed && abilityActive(state, t) && dmg >= 2;
-    if (hard) dmg = Math.max(0, dmg - ABILITY.hardHeadIgnore);
-    const left = Math.max(0, t.hp - dmg);
-    const note = hard ? ' (Twardogłowy)' : '';
-    return left === 0 ? { text: `−${dmg} · pokona${note}`, lethal: true } : { text: `−${dmg} → ${left} Ż${note}`, lethal: false };
+    // The engine's own reckoning (reactions in its order), so the preview and the blow always agree.
+    const p = predictDamage(state, active, t, { useAbility: useAbility && attackAbility, movedDistance: moved });
+    if (p.shield) return { text: 'Tarcza zablokuje', lethal: false };
+    const note = p.bearGuard === 'ally' ? ` (${UNITS[p.victim.defId].name} przyjmie cios)` : p.bearGuard === 'self' ? ' (Opiekun Gaju)' : p.hardHead !== null ? ' (Twardogłowy)' : '';
+    if (p.bearGuard === 'ally') return { text: `−${p.damage}${note}`, lethal: false };
+    const left = Math.max(0, t.hp - p.damage);
+    return p.lethal ? { text: `−${p.damage} · pokona${note}`, lethal: true } : { text: `−${p.damage} → ${left} Ż${note}`, lethal: false };
   }
 
   // ---------------------------------------------------------------- deployment

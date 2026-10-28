@@ -12,6 +12,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Opis pola na mapie nie zasłania już planszy: myszką pojawia się po chwili jako mała notka obok pola, a na ekranie dotykowym dotknięte pole jest opisane w jednym pasku na dole mapy.
 - Telefon trzymany poziomo: okna (zasady, opcje, dziennik) mają mniejsze marginesy, więc mieści się w nich więcej.
 - Telefon trzymany poziomo: mapa albo arena z lewej, panel z prawej, wszystko na jednym ekranie. Na arenie telefon pokazuje same pola (bez szerokiej malowanej ramki), więc heksy są większe; ostatni atak jest opisany na dole areny, a nie pod tytułem bitwy.
+- Podgląd obrażeń nad wrogiem liczy dokładnie tak jak gra (np. Ogr z Kamieniem Ochrony: Twardogłowy działa przed Kamieniem, więc cios za 2 pokazuje −0), a gdy cios przyjmie Opiekun Gaju, podgląd to mówi.
 - Zapis partii w trybie Arena jest w menu opisany jako „Arena”, a nie „Rywalizacja”.
 - Esc zamyka każde okno (także czat, „Dla testerów”, „Od Twojej ostatniej tury” i znaleziony skarb), a skróty literowe nie działają, gdy jakieś okno jest otwarte.
 - Figurki na mapie i na arenie są większe (mogą lekko wchodzić na sąsiednie pola), a zamiast jednolitych pierścieni otacza je delikatna, rozmyta poświata w kolorze strony.
