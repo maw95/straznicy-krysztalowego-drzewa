@@ -218,6 +218,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
         }),
     );
   const sel = selected ? state.tiles[selected] : hero ? state.tiles[hero.pos] : null;
+  const selInfo = sel && tileLines(state, sel.key, undefined, '');
   const faction = hero?.faction ?? 'dawn';
   const inventory = viewer ? state.factions[viewer].inventory.map((id) => state.items[id]) : [];
 
@@ -467,12 +468,10 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
             <div className="plate parch" style={{ padding: '9px 12px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
               <img className="hex-clip" src={tileImage(sel)} alt="" style={{ width: 48, height: 55, flex: 'none', objectFit: 'cover' }} />
               <div>
-                <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{sel.revealed ? TERRAIN_NAMES[sel.terrain] : `Nieodkryte pole (${sel.side === 'dawn' ? 'kraina Przymierza' : 'kraina Hordy'})`}</div>
-                <div style={{ fontWeight: 600, fontSize: 15, marginTop: 2 }}>
-                  {sel.revealed ? (TERRAIN_COST[sel.terrain] === null ? 'Nieprzechodnie' : `Koszt ruchu: ${TERRAIN_COST[sel.terrain]}`) : 'Teren i zawartość są ukryte.'}
-                </div>
-                {sel.revealed && sel.treasureId && <div style={{ fontSize: 15, fontStyle: 'italic' }}>Leży tu skarb.</div>}
-                {sel.revealed && Object.values(state.crystals).some((c) => c.at === sel.key && c.guardian) && <div style={{ fontSize: 15, fontStyle: 'italic' }}>Kryształ pod strażą.</div>}
+                <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{selInfo!.title}</div>
+                {selInfo!.lines.map((l) => (
+                  <div key={l} style={{ fontSize: 15, marginTop: 2 }}>{l}</div>
+                ))}
               </div>
             </div>
           )}
