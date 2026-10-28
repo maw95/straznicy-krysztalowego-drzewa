@@ -71,9 +71,9 @@ describe('cursors over units in battle', () => {
     expect(c.elfDruid).toBe('');
   });
 
-  it('a ranged unit next to an enemy fights it hand to hand (sword); the others are out of reach, not hidden', () => {
+  it('a ranged unit next to an enemy still shoots it (arrow); the others are out of reach, not hidden', () => {
     const c = cursors(fight([['elfDruid', 'dawn', 4, 4], ['caveSpider', 'horde', 4, 6], ['goblinShaman', 'horde', 4, 10]]));
-    expect(c.caveSpider).toBe('cur-melee');
+    expect(c.caveSpider).toBe('cur-ranged');
     expect(c.goblinShaman).toBe('');
   });
 

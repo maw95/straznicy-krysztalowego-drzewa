@@ -281,7 +281,8 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   const unitCursor = (u: BattleUnit): string => {
     if (!active?.pos || !u.pos) return '';
     if (approachCells(u).length) return 'cur-melee';
-    if (targets.some((t) => t.id === u.id)) return distanceBetween(active.pos, u.pos) === 1 || UNITS[active.defId].attackType === 'melee' ? 'cur-melee' : 'cur-ranged';
+    // A ranged unit shoots even at a neighbour (it must, when one stands next to it): always the arrow.
+    if (targets.some((t) => t.id === u.id)) return UNITS[active.defId].attackType === 'melee' ? 'cur-melee' : 'cur-ranged';
     const canShoot = myTurn && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility && UNITS[active.defId].attackType === 'ranged';
     if (!canShoot || u.side === active.side) return '';
     const engaged = livingUnits(b).some((e) => e.side !== active.side && e.pos && distanceBetween(active.pos!, e.pos) === 1);
