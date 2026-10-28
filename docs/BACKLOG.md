@@ -205,22 +205,22 @@ w kodzie). Plan zaakceptowany; decyzje:
 ### Etap 1: błędy
 
 **Serwer** (`straznicy-krysztalowego-drzewa-backend`):
-- [ ] Wyjątek w timerze pokoju (ruch bota, czekanie na gracza, pusty pokój, zaproszenie) wyłącza proces,
+- [x] Wyjątek w timerze pokoju (ruch bota, czekanie na gracza, pusty pokój, zaproszenie) wyłącza proces,
   a po restarcie ten sam ruch bota wyłącza go znowu. `guard(fn)` dla timerów, błąd do logu i do graczy.
-- [ ] Bot bez ruchu (`chooseAction` zwraca null) zamraża partię bez śladu — log i komunikat.
-- [ ] Brak pingu WebSocket: telefon, który zgubi zasięg w swojej turze, zamraża partię na zawsze.
+- [x] Bot bez ruchu (`chooseAction` zwraca null) zamraża partię bez śladu — log i komunikat.
+- [x] Brak pingu WebSocket: telefon, który zgubi zasięg w swojej turze, zamraża partię na zawsze.
   `socket.ping()` co ~30 s, `terminate()` bez odpowiedzi (protokół bez zmian).
-- [ ] `maxPayload` 100 MB i akcje zapisywane tak, jak przyszły → limit 64 KB, zapis znormalizowanej akcji,
+- [x] `maxPayload` 100 MB i akcje zapisywane tak, jak przyszły → limit 64 KB, zapis znormalizowanej akcji,
   sprawdzenie `action.type`; nie logować całej wiadomości klienta; błędy silnika jako stały polski komunikat.
-- [ ] Token sesji w logach Fly (`/ws?token=…`) → serializer żądań bez query stringa.
-- [ ] Pokój bez właściciela (ostatni wyszedł, ktoś dołącza) — dołączający zostaje właścicielem.
-- [ ] Zaproszenie zamykane jako „przyjęte” przed udanym dołączeniem; zaproszenia nie znikają, gdy zapraszający
+- [x] Token sesji w logach Fly (`/ws?token=…`) → serializer żądań bez query stringa.
+- [x] Pokój bez właściciela (ostatni wyszedł, ktoś dołącza) — dołączający zostaje właścicielem.
+- [x] Zaproszenie zamykane jako „przyjęte” przed udanym dołączeniem; zaproszenia nie znikają, gdy zapraszający
   wyjdzie lub się rozłączy.
-- [ ] Restart przywraca do pokoju graczy, którzy wyszli (i kasuje im przegraną); gracz w dwóch pokojach
+- [x] Restart przywraca do pokoju graczy, którzy wyszli (i kasuje im przegraną); gracz w dwóch pokojach
   przywracany losowo.
-- [ ] Zamykanie serwera: zdarzenia `close` gniazd zmieniają pokoje po zamknięciu bazy → flaga `closing`.
-- [ ] Wiadomości JSON niebędące obiektem logowane jako błąd serwera → ignorować.
-- [ ] Drobne: akcja zapisana przed statusem `over` (bez transakcji), czat pokoju bez limitu, limit czatu ogólnego
+- [x] Zamykanie serwera: zdarzenia `close` gniazd zmieniają pokoje po zamknięciu bazy → flaga `closing`.
+- [x] Wiadomości JSON niebędące obiektem logowane jako błąd serwera → ignorować.
+- [x] Drobne: akcja zapisana przed statusem `over` (bez transakcji), czat pokoju bez limitu, limit czatu ogólnego
   resetuje się przy ponownym połączeniu, „Ta partia już trwa” przy zakończonej, nienumeryczny `PORT`,
   limit długości `actions` przy odtwarzaniu gry offline do rankingu.
 
@@ -253,7 +253,7 @@ w kodzie). Plan zaakceptowany; decyzje:
   dziennik partii w localStorage; `FigureLayer` rysuje klatkę przy każdym najechaniu; `legalHeroMoves` na każde
   pole mapy; kursory i podejścia w bitwie liczone 3–5 razy na jednostkę; statyczna siatka areny budowana co render;
   `figureFor` czyta localStorage w renderze; Modal renderuje się podwójnie; przewijanie bitwy po każdej zmianie Życia.
-- [ ] Serwer: lista graczy online wysyłana wszystkim po każdej wiadomości (wysyłać tylko przy zmianie, jeden
+- [x] Serwer: lista graczy online wysyłana wszystkim po każdej wiadomości (wysyłać tylko przy zmianie, jeden
   `Intl.Collator`), serializacja raz na rozgłoszenie, zapytania SQL przygotowane raz, kasowanie wygasłych sesji,
   zapis pokoju przy połączeniu tylko przy zmianie.
 
@@ -267,7 +267,7 @@ w kodzie). Plan zaakceptowany; decyzje:
   (`setupShared.tsx`), dwa hooki stanu online, zapis autozapisu w zgłoszeniu błędu, wspólna „ramka” App (baner
   błędu, muzyka, zasady), `walkCost` w AI (4 kopie), `grantItem`, `log`, `livingHeroes`, czytelne tabele punktacji;
   na serwerze `parseChatText`, `requestUser`, domyślne pola pokoju przy wczytaniu, `rowToRoom`.
-- [ ] Protokół: jedna pełna definicja typów wiadomości klient/serwer (`protocol.ts`).
+- [x] Protokół: jedna pełna definicja typów wiadomości klient/serwer (`protocol.ts`).
 - [ ] Testy: wspólne helpery (`battleFixture`, `setup`, `playOut`, `clearDialogs`; na serwerze `useServer`,
   `roomWith`), fake timers zamiast sleepów, `make test-engine`/`make test-ui` uruchamiają wszystkie swoje testy,
   12 partii bitew + `make test-slow`.
@@ -283,6 +283,17 @@ w kodzie). Plan zaakceptowany; decyzje:
 - [ ] Najdłuższe funkcje: `goodAction` (kroki jako osobne funkcje, kolejność bez zmian), `battleItem` (tablica
   obsługi), `finalizeBattle`, `createGame`.
 
+Serwer: etapy 1–4 zrobione i wdrożone 28.10 (60 testów; protokół dla gry bez zmian; „Protokół” zrobiony po stronie serwera).
+
+**Do decyzji autora (z prac nad serwerem):**
+- [ ] **Ranking da się oszukać:** `levelOf` nie sprawdza części zasad (`heroMovePoints`, rytuał, `hordeStartTreasures`,
+  `battleRoundLimit`…), więc spreparowana gra wysłana do `/results` może dostać punkty jak za „Trudny” (do 30 pkt),
+  a serwer nie wie, czy ludzkie miejsca nie grał bot (skrypt może wysyłać do 60 wygranych na godzinę). Możliwa
+  poprawka: dla poziomów gotowych serwer sam buduje ustawienia i odtwarza partię; dla własnych — sprawdza pole po polu.
+- [ ] Wiadomość `game` nadal zawiera wpisy dziennika `privateTo` (ukryte tylko w kliencie).
+- Uwaga przy wydaniach: serwer odrzuca nieznane typy akcji, więc wydanie gry z nowym typem akcji wymaga najpierw
+  wdrożenia serwera z nowym pakietem silnika. Tokeny zapisane w logach Fly przed 28.10 wygasną z logami.
+
 Do osobnego sprawdzenia: czy spreparowany `setup` wysłany do `/results` może dać zawyżone punkty (`levelOf`);
 wiadomość `game` zawiera cały dziennik z wpisami `privateTo` (filtrowane tylko w kliencie).
 
@@ -290,11 +301,11 @@ wiadomość `game` zawiera cały dziennik z wpisami `privateTo` (filtrowane tylk
 
 **Cel:** gra wygodna na telefonie, także na dużych mapach — tyle, ile się da zmieścić.
 
-- [ ] Przegląd wszystkich ekranów na wąskim i niskim ekranie (pion i poziom): mapa świata, arena, panele
+- [x] Przegląd wszystkich ekranów na wąskim i niskim ekranie (pion i poziom): mapa świata, arena, panele
   bohaterów, pasek akcji, okna dialogowe, menu online.
-- [ ] Duże mapy: przewijanie/przybliżanie mapy, panele zwijane albo wysuwane, żeby plansza miała jak najwięcej
+- [x] Duże mapy: przewijanie/przybliżanie mapy, panele zwijane albo wysuwane, żeby plansza miała jak najwięcej
   miejsca.
-- [ ] Opis pola na mapie świata (tooltip) zasłania dużą część ekranu — mniejszy, przy krawędzi ekranu albo
+- [x] Opis pola na mapie świata (tooltip) zasłania dużą część ekranu — mniejszy, przy krawędzi ekranu albo
   zwijany, nie nad planszą.
 
 ## 7. Zgłoszenie z 23.10 (`bug-reports/2026-10-23-20-10-31-ziarno-615040.json`)
