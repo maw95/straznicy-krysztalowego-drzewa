@@ -6,8 +6,8 @@ import type { Level } from '../engine/types';
 
 /** Class of an option button; the chosen one is lit. */
 export const choice = (active: boolean) => `btn plate parch ${active ? 'on' : ''}`;
-/** Size of the small option buttons. */
-export const CHIP = { padding: '4px 14px', fontSize: 17 };
+/** A small option button (mode, map, level, rules); the chosen one is lit. */
+export const chip = (active: boolean) => `${choice(active)} chip`;
 
 export const LEVELS: Array<[Level | 'custom', string]> = [
   ['kids', 'Łatwy'],

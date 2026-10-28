@@ -70,28 +70,28 @@ export function ItemsPanel({ state, side, active, targeting, setTargeting, freeA
           <b>{ITEMS[state.items[targeting.itemId].kind].name}:</b>
           {targeting.kind === 'horn' && !targeting.mode ? (
             <>
-              <button className="btn prim" style={{ padding: '2px 10px' }} onClick={() => setTargeting({ ...targeting, mode: 'swap' })}>Wymiana</button>
-              <button className="btn prim" style={{ padding: '2px 10px' }} onClick={() => setTargeting({ ...targeting, mode: 'extra' })}>Dodatkowa aktywacja</button>
+              <button className="btn prim btn-tiny" onClick={() => setTargeting({ ...targeting, mode: 'swap' })}>Wymiana</button>
+              <button className="btn prim btn-tiny" onClick={() => setTargeting({ ...targeting, mode: 'extra' })}>Dodatkowa aktywacja</button>
             </>
           ) : targeting.kind === 'horn' && targeting.mode === 'swap' && targeting.unitId ? (
             reserve.map((id) => (
-              <button key={id} className="btn prim" style={{ padding: '2px 10px' }} onClick={() => { onAction({ type: 'battleItem', itemId: targeting.itemId, targetId: targeting.unitId!, hornMode: 'swap', reserveId: id }); reset(); }}>{UNITS[id].name}</button>
+              <button key={id} className="btn prim btn-tiny" onClick={() => { onAction({ type: 'battleItem', itemId: targeting.itemId, targetId: targeting.unitId!, hornMode: 'swap', reserveId: id }); reset(); }}>{UNITS[id].name}</button>
             ))
           ) : targeting.kind === 'ownDead' ? (
             deadOwn.map((u) => (
-              <button key={u.id} className="btn prim" style={{ padding: '2px 10px' }} onClick={() => { onAction({ type: 'battleItem', itemId: targeting.itemId, targetId: u.id }); reset(); }}>{UNITS[u.defId].name}</button>
+              <button key={u.id} className="btn prim btn-tiny" onClick={() => { onAction({ type: 'battleItem', itemId: targeting.itemId, targetId: u.id }); reset(); }}>{UNITS[u.defId].name}</button>
             ))
           ) : (
             <span>{targetHint(targeting)}</span>
           )}
           {(targeting.kind === 'lightning' || targeting.kind === 'courage') && targeting.picks.length > 0 && (
-            <button className="btn prim" style={{ padding: '2px 10px' }} onClick={() => { onAction({ type: 'battleItem', itemId: targeting.itemId, targetIds: targeting.picks }); reset(); }}>Gotowe</button>
+            <button className="btn prim btn-tiny" onClick={() => { onAction({ type: 'battleItem', itemId: targeting.itemId, targetIds: targeting.picks }); reset(); }}>Gotowe</button>
           )}
           <button className="btn plate parch" style={{ padding: '2px 8px' }} onClick={reset}>Anuluj</button>
         </div>
       )}
       {freeAbility && <div className="plate parch" style={{ padding: '6px 12px', fontSize: 15 }}>{ab === 'giftOfLife' ? 'Wybierz sojusznika do uleczenia.' : 'Wybierz wroga w zasięgu 4 pól.'}</div>}
-      <button className="btn plate parch" style={{ padding: '4px 12px', fontSize: 15 }} onClick={() => setShowItems(!showItems)}>
+      <button className="btn plate parch btn-small" onClick={() => setShowItems(!showItems)}>
         {showItems ? 'Ukryj skarby' : `Skarby (${state.factions[side].inventory.length})`}
       </button>
       {showItems &&

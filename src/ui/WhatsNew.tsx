@@ -59,7 +59,7 @@ export function WhatsNew({ releases, onClose, onHistory }: { releases: Release[]
           <button className="btn plate parch" style={{ padding: '6px 16px', fontSize: 16 }} onClick={onHistory}>
             Pełna historia zmian
           </button>
-          <button ref={button} className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 18 }} onClick={onClose}>
+          <button ref={button} className="btn prim btn-dialog" data-enter onClick={onClose}>
             Do gry!
           </button>
         </div>

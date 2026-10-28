@@ -556,7 +556,7 @@ export function App() {
         ))}
       </div>
       {undoStack.current.length > 0 && humanTurn && (
-        <button className="btn plate parch" title="Cofnij ostatni krok (U)" style={{ padding: '6px 12px', fontSize: 15 }} onClick={undo}>
+        <button className="btn plate parch btn-bar" title="Cofnij ostatni krok (U)" onClick={undo}>
           ↶ Cofnij
         </button>
       )}
@@ -571,14 +571,14 @@ export function App() {
         </button>
       )}
       {!isOnline && (actor.kind === 'bot' || actor.kind === 'automaton') && (
-        <button className="btn plate parch" title="Przewiń ruchy botów (F)" style={{ padding: '6px 12px', fontSize: 15 }} onClick={fastForward}>
+        <button className="btn plate parch btn-bar" title="Przewiń ruchy botów (F)" onClick={fastForward}>
           ⏩ Przewiń
         </button>
       )}
-      <button className="btn plate parch" title="Dziennik (D)" style={{ padding: '6px 12px', fontSize: 15 }} onClick={() => setShowLog(true)}>Dziennik</button>
-      <button className="btn plate parch hide-mobile" title="Zasady i karty (R)" style={{ padding: '6px 12px', fontSize: 15 }} onClick={() => setShowRules(true)}>Zasady</button>
-      <button className="btn plate parch" title="Opcje (O)" style={{ padding: '6px 12px', fontSize: 15 }} onClick={() => setShowDebug(true)}>Opcje</button>
-      <button className="btn plate parch" title="Opisz błąd — zapisze się razem z partią (B)" style={{ padding: '6px 12px', fontSize: 15 }} onClick={() => setShowReport(true)}>Zgłoś błąd</button>
+      <button className="btn plate parch btn-bar" title="Dziennik (D)" onClick={() => setShowLog(true)}>Dziennik</button>
+      <button className="btn plate parch hide-mobile btn-bar" title="Zasady i karty (R)" onClick={() => setShowRules(true)}>Zasady</button>
+      <button className="btn plate parch btn-bar" title="Opcje (O)" onClick={() => setShowDebug(true)}>Opcje</button>
+      <button className="btn plate parch btn-bar" title="Opisz błąd — zapisze się razem z partią (B)" onClick={() => setShowReport(true)}>Zgłoś błąd</button>
     </div>
   );
 
@@ -753,7 +753,7 @@ function SupportSelect({ state, faction, onPick }: { state: GameState; faction: 
             </button>
           ))}
         </div>
-        <button className="btn prim" data-enter disabled={picked.length !== 2} style={{ height: 50, padding: '0 30px', fontSize: 21 }} onClick={() => onPick(picked)}>
+        <button className="btn prim btn-big" data-enter disabled={picked.length !== 2} onClick={() => onPick(picked)}>
           Do bitwy!
         </button>
       </Frame>
@@ -819,7 +819,7 @@ function GameOver({ state, online, rankingNote, onNew, onLog }: { state: GameSta
         )}
         {rankingNote && <div style={{ fontSize: 17, color: '#F3D27A' }}>{rankingNote}</div>}
         <div style={{ display: 'flex', gap: 12 }}>
-          <button className="btn plate parch" style={{ padding: '8px 18px', fontSize: 18 }} onClick={onLog}>Dziennik</button>
+          <button className="btn plate parch btn-wide" onClick={onLog}>Dziennik</button>
           <button className="btn prim" style={{ padding: '8px 22px', fontSize: 20 }} onClick={onNew}>{online ? 'Wyjdź z pokoju' : 'Nowa gra'}</button>
         </div>
       </Frame>

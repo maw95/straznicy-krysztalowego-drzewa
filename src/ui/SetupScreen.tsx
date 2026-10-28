@@ -9,7 +9,7 @@ import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
-import { ARENA_HINT, ARENA_LEVEL_TIPS, choice, CHIP, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
+import { ARENA_HINT, ARENA_LEVEL_TIPS, chip, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
 
 const defaultSeats = (mode: Mode, count: number): SeatSetup[] => {
   if (mode === 'arena') {
@@ -135,21 +135,21 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
       <div className="main-row setup-row" style={{ position: 'relative', width: '100%', maxWidth: 1400 }}>
         <Frame crest className="grow" innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 14 }}>
           <Row label="Tryb">
-            <Tip text={TIPS.coop}><button className={choice(mode === 'coop')} style={CHIP} onClick={() => changeMode('coop')}>Kooperacja (wszyscy przeciw AI)</button></Tip>
-            <Tip text={TIPS.pvp}><button className={choice(mode === 'pvp')} style={CHIP} onClick={() => changeMode('pvp')}>Rywalizacja (dobro kontra zło)</button></Tip>
-            <Tip text={TIPS.arenaMode}><button className={choice(arena)} style={CHIP} onClick={() => changeMode('arena')}>Arena (jedna bitwa)</button></Tip>
+            <Tip text={TIPS.coop}><button className={chip(mode === 'coop')} onClick={() => changeMode('coop')}>Kooperacja (wszyscy przeciw AI)</button></Tip>
+            <Tip text={TIPS.pvp}><button className={chip(mode === 'pvp')} onClick={() => changeMode('pvp')}>Rywalizacja (dobro kontra zło)</button></Tip>
+            <Tip text={TIPS.arenaMode}><button className={chip(arena)} onClick={() => changeMode('arena')}>Arena (jedna bitwa)</button></Tip>
           </Row>
           {!arena && (
           <>
           <Row label="Gracze">
             {/* At most 2 players per faction: coop (all Przymierze) takes 1–2, PvP 2–4. */}
             {(mode === 'coop' ? [1, 2] : [2, 3, 4]).map((n) => (
-              <button key={n} className={choice(count === n)} style={CHIP} onClick={() => changeCount(n)}>{n}</button>
+              <button key={n} className={chip(count === n)} onClick={() => changeCount(n)}>{n}</button>
             ))}
           </Row>
           <Row label="Mapa">
             {(Object.keys(MAP_SIZE_NAMES) as MapSize[]).map((m) => (
-              <Tip key={m} text={mapTip(m)}><button className={choice(mapSize === m)} style={CHIP} onClick={() => setMapSize(m)}>{MAP_SIZE_NAMES[m]}</button></Tip>
+              <Tip key={m} text={mapTip(m)}><button className={chip(mapSize === m)} onClick={() => setMapSize(m)}>{MAP_SIZE_NAMES[m]}</button></Tip>
             ))}
           </Row>
           </>
@@ -159,7 +159,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             <Row label="Komputer">
               {LEVELS.filter(([l]) => l !== 'custom').map(([l, label]) => (
                 <Tip key={l} text={ARENA_LEVEL_TIPS[l as Level]}>
-                  <button className={choice(level === l)} style={CHIP} aria-pressed={level === l} onClick={() => pickLevel(l as Level)}>
+                  <button className={chip(level === l)} aria-pressed={level === l} onClick={() => pickLevel(l as Level)}>
                     {label}
                   </button>
                 </Tip>
@@ -171,7 +171,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           <Row label="Poziom">
             {LEVELS.filter(([l]) => l !== 'hard' || mode === 'coop').map(([l, label]) => (
               <Tip key={l} text={LEVEL_TIPS[l]}>
-                <button className={choice(level === l)} style={CHIP} aria-pressed={level === l} onClick={() => (l === 'custom' ? setLevel('custom') : pickLevel(l))}>
+                <button className={chip(level === l)} aria-pressed={level === l} onClick={() => (l === 'custom' ? setLevel('custom') : pickLevel(l))}>
                   {label}
                 </button>
               </Tip>
@@ -183,13 +183,13 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           {!arena && level === 'custom' && (
           <>
           <Row label="Bitwy">
-            <Tip text={TIPS.arena}><button className={choice(battleMode === 'arena')} style={CHIP} onClick={() => setBattleMode('arena')}>Osobna arena (3 na 3)</button></Tip>
-            <Tip text={TIPS.board}><button className={choice(battleMode === 'board')} style={CHIP} onClick={() => setBattleMode('board')}>Na planszy głównej (pojedynek 1 na 1)</button></Tip>
+            <Tip text={TIPS.arena}><button className={chip(battleMode === 'arena')} onClick={() => setBattleMode('arena')}>Osobna arena (3 na 3)</button></Tip>
+            <Tip text={TIPS.board}><button className={chip(battleMode === 'board')} onClick={() => setBattleMode('board')}>Na planszy głównej (pojedynek 1 na 1)</button></Tip>
           </Row>
           <Row label="Ułatwienia">
             {EASES.map(([label, on, patch, tip]) => (
               <Tip key={label} text={tip}>
-                <button className={choice(on(rules))} style={CHIP} aria-pressed={on(rules)} onClick={() => setRules({ ...rules, ...patch(!on(rules)) })}>
+                <button className={chip(on(rules))} aria-pressed={on(rules)} onClick={() => setRules({ ...rules, ...patch(!on(rules)) })}>
                   {label}
                 </button>
               </Tip>
@@ -197,13 +197,13 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           </Row>
           <Row label="Utrudnienia">
             <Tip text={TIPS.dice}>
-              <button className={choice(rules.useDice)} style={CHIP} aria-pressed={rules.useDice} onClick={() => setRules({ ...rules, useDice: !rules.useDice })}>
+              <button className={chip(rules.useDice)} aria-pressed={rules.useDice} onClick={() => setRules({ ...rules, useDice: !rules.useDice })}>
                 Rzut kością
               </button>
             </Tip>
             {mode === 'coop' && (
               <Tip text={TIPS.extraHero}>
-                <button className={choice(rules.extraEvilHero)} style={CHIP} aria-pressed={rules.extraEvilHero} onClick={() => setRules({ ...rules, extraEvilHero: !rules.extraEvilHero })}>
+                <button className={chip(rules.extraEvilHero)} aria-pressed={rules.extraEvilHero} onClick={() => setRules({ ...rules, extraEvilHero: !rules.extraEvilHero })}>
                   Dodatkowy bohater Hordy
                 </button>
               </Tip>
@@ -212,7 +212,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           <Row label="Remis inicjatywy">
             {TIE_MODES.map(([m, label, tip]) => (
               <Tip key={m} text={tip}>
-                <button className={choice(rules.initiativeTie === m)} style={CHIP} aria-pressed={rules.initiativeTie === m} onClick={() => setRules({ ...rules, initiativeTie: m })}>
+                <button className={chip(rules.initiativeTie === m)} aria-pressed={rules.initiativeTie === m} onClick={() => setRules({ ...rules, initiativeTie: m })}>
                   {label}
                 </button>
               </Tip>

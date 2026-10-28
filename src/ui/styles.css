@@ -132,6 +132,15 @@ button { font-family: inherit; }
 .prim.b { background-image: url('/assets/ui/cloth_b.jpg'); }
 .plate.btn { font-weight: 700; color: var(--ink); }
 .plate.btn.on { box-shadow: 0 0 0 2px #9ee4ff, 0 0 12px 3px rgba(158, 228, 255, 0.6), inset 0 0 16px rgba(120, 80, 20, 0.35); }
+/* Button sizes repeated across screens. */
+.btn-bare { background: none; border: 0; padding: 0; }
+.btn-tiny { padding: 2px 10px; }
+.btn-small { padding: 4px 12px; font-size: 15px; }
+.btn-bar { padding: 6px 12px; font-size: 15px; }
+.chip { padding: 4px 14px; font-size: 17px; }
+.btn-wide { padding: 8px 18px; font-size: 18px; }
+.btn-dialog { padding: 6px 28px; font-size: 18px; }
+.btn-big { height: 50px; padding: 0 30px; font-size: 21px; }
 
 .hexbtn { border: 0; padding: 0; margin: 0; background: none; cursor: pointer; }
 .hexbtn:disabled { cursor: inherit; }

@@ -73,7 +73,7 @@ export function ConfirmDialog({ confirm, onClose }: { confirm: Confirmation | nu
         <Frame crest style={{ width: 'min(480px, 94vw)' }} innerStyle={{ padding: '24px 22px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, textAlign: 'center' }}>
           <div style={{ fontSize: 20, lineHeight: 1.35 }}>{confirm.text}</div>
           <div style={{ display: 'flex', gap: 12 }}>
-            <button className="btn plate parch" style={{ padding: '8px 18px', fontSize: 18 }} onClick={onClose}>Anuluj</button>
+            <button className="btn plate parch btn-wide" onClick={onClose}>Anuluj</button>
             <button
               className="btn prim"
               data-enter

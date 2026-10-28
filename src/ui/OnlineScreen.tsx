@@ -4,7 +4,7 @@ import type { Level, Mode } from '../engine/types';
 import { BOT_SPEEDS, currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
-import { ARENA_HINT, ARENA_LEVEL_TIPS, choice, CHIP, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
+import { ARENA_HINT, ARENA_LEVEL_TIPS, chip, choice, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
 
 /** Links of the main menu that do not depend on the account. */
 export interface MenuLinks {
@@ -177,9 +177,9 @@ function Home({ session, onSignOut, onLocalGame, links }: { session: OnlineSessi
             </button>
             <RankingTable me={user} refreshKey={room === null && online.connected} />
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: 'auto' }}>
-              <button className="btn plate parch" style={{ padding: '4px 12px', fontSize: 15 }} onClick={links.onRules}>Zasady i karty</button>
-              <button className="btn plate parch" style={{ padding: '4px 12px', fontSize: 15 }} onClick={links.onIntro}>Wprowadzenie</button>
-              <button className="btn plate parch" style={{ padding: '4px 12px', fontSize: 15 }} onClick={links.onTesters} title="Uwagi o grze i zgłoszone błędy — prosto do twórcy">Dla testerów</button>
+              <button className="btn plate parch btn-small" onClick={links.onRules}>Zasady i karty</button>
+              <button className="btn plate parch btn-small" onClick={links.onIntro}>Wprowadzenie</button>
+              <button className="btn plate parch btn-small" onClick={links.onTesters} title="Uwagi o grze i zgłoszone błędy — prosto do twórcy">Dla testerów</button>
               <button className="app-version" title="Historia zmian" onClick={links.onChangelog}>Wersja {__APP_VERSION__}</button>
             </div>
           </Frame>
@@ -341,7 +341,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         <Row label="Tryb">
           {(['coop', 'pvp', 'arena'] as Mode[]).map((m) => (
             <Tip key={m} text={m === 'coop' ? TIPS.coop : m === 'pvp' ? TIPS.pvp : TIPS.arenaMode}>
-              <button className={choice(room.mode === m)} style={CHIP} disabled={!owner} onClick={() => configure(defaultTable(m, m === 'pvp' ? 2 : 1, room.level))}>
+              <button className={chip(room.mode === m)} disabled={!owner} onClick={() => configure(defaultTable(m, m === 'pvp' ? 2 : 1, room.level))}>
                 {m === 'coop' ? 'Kooperacja' : m === 'pvp' ? 'Rywalizacja' : 'Arena'}
               </button>
             </Tip>
@@ -351,7 +351,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
           <>
             <Row label="Gracze">
               {(room.mode === 'coop' ? [1, 2] : [2, 3, 4]).map((n) => (
-                <button key={n} className={choice(room.seats.length === n)} style={CHIP} disabled={!owner} onClick={() => configure({ seats: defaultTable(room.mode, n, room.level).seats })}>
+                <button key={n} className={chip(room.seats.length === n)} disabled={!owner} onClick={() => configure({ seats: defaultTable(room.mode, n, room.level).seats })}>
                   {n}
                 </button>
               ))}
@@ -359,7 +359,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
             <Row label="Mapa">
               {(Object.keys(MAP_SIZE_NAMES) as MapSize[]).map((m) => (
                 <Tip key={m} text={mapTip(m)}>
-                  <button className={choice(room.mapSize === m)} style={CHIP} disabled={!owner} onClick={() => configure({ mapSize: m })}>{MAP_SIZE_NAMES[m]}</button>
+                  <button className={chip(room.mapSize === m)} disabled={!owner} onClick={() => configure({ mapSize: m })}>{MAP_SIZE_NAMES[m]}</button>
                 </Tip>
               ))}
             </Row>
@@ -369,14 +369,14 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         <Row label={arena ? 'Komputer' : 'Poziom'}>
           {LEVELS.filter(([l]) => l !== 'custom' && (l !== 'hard' || room.mode !== 'pvp')).map(([l, label]) => (
             <Tip key={l} text={arena ? ARENA_LEVEL_TIPS[l as Level] : LEVEL_TIPS[l]}>
-              <button className={choice(room.level === l)} style={CHIP} disabled={!owner} onClick={() => configure({ level: l as Level })}>{label}</button>
+              <button className={chip(room.level === l)} disabled={!owner} onClick={() => configure({ level: l as Level })}>{label}</button>
             </Tip>
           ))}
         </Row>
         {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4 }}>{LEVEL_HINT[room.level]}</div>}
         <Row label="Tempo botów">
           {BOT_SPEEDS.map((speed) => (
-            <button key={speed} className={choice(room.botSpeed === speed)} style={CHIP} disabled={!owner} onClick={() => session.send({ type: 'botSpeed', speed })}>
+            <button key={speed} className={chip(room.botSpeed === speed)} disabled={!owner} onClick={() => session.send({ type: 'botSpeed', speed })}>
               {speed}
             </button>
           ))}
@@ -425,7 +425,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         })}
         <div style={{ fontSize: 15, color: 'var(--muted)' }}>Możesz zająć kilka miejsc — zagrasz nimi na zmianę przy tym samym komputerze.</div>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap', marginTop: 6 }}>
-          <button className="btn plate parch" style={{ padding: '8px 18px', fontSize: 18 }} onClick={() => session.send({ type: 'leaveRoom' })}>Wyjdź z pokoju</button>
+          <button className="btn plate parch btn-wide" onClick={() => session.send({ type: 'leaveRoom' })}>Wyjdź z pokoju</button>
           {owner ? (
             <button className="btn prim" disabled={!ready} title={ready ? undefined : 'Każde miejsce musi zająć gracz albo komputer.'} style={{ height: 54, padding: '0 36px', fontSize: 23 }} onClick={() => session.send({ type: 'start' })}>
               Rozpocznij grę

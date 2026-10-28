@@ -443,7 +443,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           <Ribbon side={faction}>{hero ? FACTION_NAMES[hero.faction] : 'Koniec gry'}</Ribbon>
           {hero && (
             <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-              <button className="btn" style={{ background: 'none', border: 0, padding: 0 }} onClick={() => onShowCard(hero.id)} title="Pokaż kartę">
+              <button className="btn btn-bare" onClick={() => onShowCard(hero.id)} title="Pokaż kartę">
                 <Portrait unitId={hero.id} size={64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" />
               </button>
               <div style={{ minWidth: 0 }}>
@@ -458,14 +458,14 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           )}
           <div className="well" style={{ padding: '8px 10px', display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {Object.values(state.heroes).map((h) => (
-              <button key={h.id} className="btn" style={{ background: 'none', border: 0, padding: 0 }} onClick={() => onShowCard(h.id)} title={`${UNITS[h.id].name}${h.alive ? '' : ' (poległ)'}`}>
+              <button key={h.id} className="btn btn-bare" onClick={() => onShowCard(h.id)} title={`${UNITS[h.id].name}${h.alive ? '' : ' (poległ)'}`}>
                 <Portrait unitId={h.id} size={42} ring={SIDE_RING[h.faction]} dim={!h.alive} />
               </button>
             ))}
             <div style={{ width: '100%', display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               {(['dawn', 'horde'] as FactionId[]).flatMap((f) =>
                 [...state.factions[f].supportsAlive, ...state.factions[f].supportsDead].map((id) => (
-                  <button key={id} className="btn" style={{ background: 'none', border: 0, padding: 0 }} onClick={() => onShowCard(id)} title={UNITS[id].name}>
+                  <button key={id} className="btn btn-bare" onClick={() => onShowCard(id)} title={UNITS[id].name}>
                     <Portrait unitId={id} size={30} ring={SIDE_RING[f]} dim={state.factions[f].supportsDead.includes(id)} />
                   </button>
                 )),
@@ -524,8 +524,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 {deadUnits.map((id) => (
                   <button
                     key={id}
-                    className="btn"
-                    style={{ background: 'none', border: 0, padding: 0 }}
+                    className="btn btn-bare"
+                   
                     title={UNITS[id].name}
                     onClick={() => {
                       // A hero comes back on a free hex next to the active hero; a support joins at once.
