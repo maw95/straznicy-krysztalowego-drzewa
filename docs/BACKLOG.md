@@ -27,11 +27,6 @@ punkt to osobny commit; najtańsza kolejność: 1.5 → 1.4 → 1.3 → 1.2 → 
   - Dziś znaczniki są wycinane z arkusza `znaczniki.png` (`scripts/assets/markers.py`, `src/ui/markers.tsx`) —
     nowe są osobnymi plikami, trzeba je dopasować rozmiarem. Instrukcja: opis zdolności Smoka, lista znaczników,
     szablon (`assets/znaczniki/`).
-- [ ] **1.3. Nowe portrety: 6 jednostek Hordy i Hydra.** *Koszt: ok. 40–70 tys. tokenów.*
-  - `docs/grafika/portrety/horda_*_portret.png` i `straznik_hydra_portret.png` (stary `hydra.png` usunięty).
-    Dziś portrety Hordy pochodzą z arkusza `portrety_mroczna_horda.png` — przejść na osobne pliki, przyciąć
-    i zmniejszyć jak pozostałe. Sprawdzić w grze (karta, pasek, okno szczegółów, wybór bohatera) i podmienić
-    w instrukcji i szablonie.
 
 ## 2. Figurki 3D — drobne
 

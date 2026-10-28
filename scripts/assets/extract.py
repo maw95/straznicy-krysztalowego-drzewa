@@ -40,34 +40,41 @@ def art_rect(sheet, box):
     return band.crop((bb[0] + 3, bb[1] + 3, bb[2] - 3, bb[3] - 3))
 
 
+SINGLE_WIDTH = 640
+
+
 def portraits():
     sheets = {
         'portrety_przymierze_switu.png': [
             ('goldDragon', (0, 100, 496, 456)), ('unicornKing', (496, 100, 952, 456)), ('ancientBear', (952, 100, 1448, 456)),
             ('elfDruid', (0, 500, 496, 860)), ('nymph', (496, 500, 952, 860)), ('pegasus', (952, 500, 1448, 860)),
         ],
-        'portrety_mroczna_horda.png': [
-            ('blackDragon', (0, 140, 496, 480)), ('werewolfLord', (496, 140, 952, 480)), ('ironFistOgre', (952, 140, 1448, 480)),
-            ('goblinShaman', (0, 520, 496, 860)), ('caveSpider', (496, 520, 952, 860)), ('shadowBat', (952, 520, 1448, 860)),
-        ],
         'portrety_straznicy_krysztalu.png': [
             ('cyclops', (40, 30, 700, 500)), ('griffin', (700, 30, 1400, 500)),
         ],
     }
-    # Units painted later as one picture each (no sheet, no transparency): the file and the card's crop of it.
-    singles = {'hydra': ('hydra.png', (0, 40, 1448, 870))}
+    # Units painted later as one picture each (no sheet, no transparency): the file and where the square token is
+    # centred across the picture (0 = left edge, 1 = right edge), so the head stays in it.
+    singles = {
+        'blackDragon': ('horda_czarny_smok_portret.png', 0.75), 'werewolfLord': ('horda_wilkolak_portret.png', 0.62),
+        'ironFistOgre': ('horda_ogr_portret.png', 0.62), 'goblinShaman': ('horda_goblin_portret.png', 0.55),
+        'caveSpider': ('horda_pajak_portret.png', 0.45), 'shadowBat': ('horda_nietoperz_portret.png', 0.5),
+        'hydra': ('straznik_hydra_portret.png', 0.5),
+    }
     arts = []
     for sheet_name, cells in sheets.items():
         sheet = Image.open(os.path.join(SRC, 'portrety', sheet_name)).convert('RGBA')
-        arts += [(unit, art_rect(sheet, box)) for unit, box in cells]
-    for unit, (file, box) in singles.items():
-        arts.append((unit, Image.open(os.path.join(SRC, 'portrety', file)).convert('RGBA').crop(box)))
-    for unit, art in arts:
+        arts += [(unit, art_rect(sheet, box), 0.5) for unit, box in cells]
+    for unit, (file, cx) in singles.items():
+        art = Image.open(os.path.join(SRC, 'portrety', file)).convert('RGB')
+        # Scaled down like the other card pictures (the sheets give ~450 px, the guardians ~650 px).
+        arts.append((unit, art.resize((SINGLE_WIDTH, round(art.height * SINGLE_WIDTH / art.width)), Image.LANCZOS), cx))
+    for unit, art, cx in arts:
         save(art, 'art', f'{unit}.jpg')
-        # Square portrait for tokens: centred, a little above the middle.
+        # Square portrait for tokens: a little above the middle, across at cx.
         w, h = art.size
         s = min(w, h)
-        x = (w - s) // 2
+        x = min(w - s, max(0, int(w * cx - s / 2)))
         y = max(0, int((h - s) * 0.35))
         save(art.crop((x, y, x + s, y + s)).resize((256, 256), Image.LANCZOS), 'portraits', f'{unit}.jpg')
 
