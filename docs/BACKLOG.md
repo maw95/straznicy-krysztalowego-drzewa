@@ -20,9 +20,14 @@ Szacunki kosztu to tokeny zużyte przez Claude w jednej sesji. Każdy punkt to o
     w trybie bez areny); symulacje pojedynków (`make sim … BATTLE=board`, wszystkie poziomy) — ani za mocne,
     ani za słabe względem dzisiejszych wyników; zapisać decyzję w `NOTATKI_DLA_AGENTA_PLANSZOWKI.md`.
     Zmiana wyników bitew zmieni test złotych partii — aktualizować świadomie i napisać to w commicie.
+  - [x] Silnik: zdolności, karty pojedynkowe, symulacje, decyzja w notatkach (§12).
   - Instrukcja i szablon: rozdział 1 (karty jednostek: 15 + 3 karty strażników z błękitnym rewersem), opis
     strażników (rozdział 10) i pojedynku (rozdział 9), lista elementów i `WYMIARY_ELEMENTOW.md` (18 kart
     jednostek), rewersy kart w instrukcji, jeśli są pokazane.
+
+- [ ] **1.7. Balans trybu pojedynków po poprawce bota.** *Koszt: ok. 40–80 tys.* Bot w pojedynku używa już
+  Słonecznego Blasku, więc Przymierze z pojedynkami wygrywa ok. 75% zamiast 62% (kooperacja, średnia mapa).
+  `make sim-tabele` dla `board`, porównać z celami poziomów (notatki §9 i dalej), zaproponować autorowi korektę.
 
 ## 2. Figurki 3D — drobne
 

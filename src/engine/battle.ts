@@ -109,7 +109,7 @@ export function abilityActive(state: GameState): boolean {
 }
 
 export function abilityOf(u: BattleUnit): AbilityId {
-  return UNITS[u.defId].ability;
+  return u.ability ?? UNITS[u.defId].ability;
 }
 
 export function livingUnits(b: BattleState, side?: Side): BattleUnit[] {
@@ -257,7 +257,7 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
 /** Abilities that are switched on for a single attack. */
 export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['boulder', 'nestLeap', 'manyHeads'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
@@ -375,6 +375,12 @@ function beginRound(state: GameState, round: number) {
 function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
   const b = state.battle!;
   b.activation = { unitId, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly, hop: 0 };
+  const u = b.units[unitId];
+  if (abilityOf(u) === 'regrowth' && abilityActive(state) && u.hp < u.maxHp) {
+    const healed = Math.min(ABILITY.regrowthHeal, u.maxHp - u.hp);
+    u.hp += healed;
+    log(state, 'ability', `${unitName(u)} odzyskuje ${healed} Ż (Odrastające Głowy).`);
+  }
 }
 
 /** Moves to the next activation, the next round, or nothing if the battle ended. */
@@ -597,7 +603,12 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   log(state, 'battle', `${unitName(u)} atakuje: ${targets.map(unitName).join(', ')}.`);
   for (const t of targets) {
     if (!t.alive) continue;
+    const before = t.hp;
     resolveAttack(state, u, t, canUse, act.movedDistance);
+    if (ab === 'thiefClaw' && abilityActive(state) && t.hp < before && u.hp < u.maxHp) {
+      u.hp = Math.min(u.maxHp, u.hp + ABILITY.thiefClawHeal);
+      log(state, 'ability', `${unitName(u)} odzyskuje ${ABILITY.thiefClawHeal} Ż (Złodziejski Szpon).`);
+    }
     if (canUse && t.alive) {
       if (ab === 'entanglingRoots') {
         t.status.slowNext += ABILITY.rootsSlow;

@@ -7,7 +7,7 @@ import {
   FACTION_HEROES,
   FACTION_NAMES,
   FACTION_SUPPORTS,
-  guardianDuelHp,
+  ABILITY,
   ITEM_EFFECT,
   ITEMS,
   MAP_VARIANTS,
@@ -678,8 +678,13 @@ function startBattle(state: GameState, s: BattleStart) {
   if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction);
   if (s.neutralId) {
     const g = makeBattleUnit(s.neutralId, 'neutral');
-    // One hero alone against a guardian: the guardian fights with half its Życie.
-    if (b.duel) g.hp = g.maxHp = guardianDuelHp(s.neutralId);
+    // One hero alone against a guardian: the guardian fights with its duel card (less Życie, another ability).
+    const card = UNITS[s.neutralId].duel;
+    if (b.duel && card) {
+      g.hp = g.maxHp = card.hp;
+      g.ability = card.ability;
+      if (state.rules.abilities && card.ability === 'stoneSkin') g.status.damageReduction += ABILITY.stoneSkinIgnore;
+    }
     b.units[s.neutralId] = g;
   }
   state.phase = 'battle';

@@ -706,3 +706,20 @@ najwięcej w kooperacji jednego gracza na krótkiej mapie (+10 pp). Balans nie b
   Róg Odwagi +2 dwóm jednostkom — oznaczany **dwoma** znacznikami „+1” na jednostkę; efekty mogą się nakładać: 2 + 4.
 - **Żywotność 1, Ochrona 1:** każdy skarb jest w pudełku raz (Eliksir Żywotności, Tarcza Strażnika).
 - Zużyta zdolność 6 (3 na 3, każda jednostka może mieć zdolność „raz na bitwę”); pozostałe po 1 (każdy efekt ma jedno źródło).
+
+## 12. Karty strażników do pojedynku (2026-10-28, decyzja użytkownika)
+
+- W pojedynku na planszy (bez areny) strażnik walczy **osobną kartą z błękitnym rewersem** (zwykłe karty strażników
+  mają granatowy rewers): mniej Życia i zdolność, która działa jeden na jednego (zwykłe — odepchnięcie, odlot,
+  dwa cele — w pojedynku nic nie dają). W grze: `UNITS[id].duel`.
+  - **Cyklop — Kamienna Skóra, 14 Ż:** każdy cios w Cyklopa zadaje o 1 mniej obrażeń.
+  - **Gryf — Złodziejski Szpon, 10 Ż:** gdy zada obrażenia, odzyskuje 1 Ż.
+  - **Hydra — Odrastające Głowy, 12 Ż:** na początku każdej swojej aktywacji odzyskuje 2 Ż.
+- Odrzucone w symulacjach: Gryf „+3 A do pierwszego ataku” (Złoty Smok przegrywał zawsze), Cyklop z 16 Ż
+  (Jednorożec wygrywał 65%).
+- **Wyniki** (`SIM_ONLY=guardians npx tsx scripts/sim/battles.ts 400 full,dice`): bohater wygrywa 86–100% pojedynków
+  (Smok 99–100%, Jednorożec 86–93%, Niedźwiedź 93–99%); bez kości zawsze, ale zostaje mu zwykle 2–5 Ż
+  (wcześniej 99–100% i duży zapas).
+- **Bot** w pojedynku używa Słonecznego Blasku (wcześniej tylko przy co najmniej dwóch swoich jednostkach, więc
+  w pojedynku nigdy). Przez to Przymierze w trybie pojedynków wygrywa wyraźnie częściej (kooperacja, średnia mapa:
+  ok. 75% zamiast 62%). Decyzja: bot ma grać jak człowiek, balans trybu pojedynków do przejrzenia osobno (backlog).

@@ -41,9 +41,9 @@ exports[`golden bot games > coop1 dice short 1`] = `
 
 exports[`golden bot games > coop1 easy short 1`] = `
 [
-  "seed 1: dawn round 5 actions 53 state 0b4fa84ff05388fe actions eae12b4ca7e21b1a",
+  "seed 1: dawn round 5 actions 53 state b8e3ff9f7d162605 actions eae12b4ca7e21b1a",
   "seed 2: dawn round 3 actions 25 state 48c62e1bad5bc0a3 actions 06552aaa9a703d7b",
-  "seed 3: dawn round 4 actions 34 state 41bb404bef2ec438 actions f2c13e9e321f5777",
+  "seed 3: dawn round 4 actions 34 state 41b2e2f30010bf63 actions f2c13e9e321f5777",
 ]
 `;
 
@@ -97,7 +97,7 @@ exports[`golden bot games > coop1 replacement medium 1`] = `
 
 exports[`golden bot games > coop2 easy medium 1`] = `
 [
-  "seed 1: dawn round 8 actions 100 state 0b0a2b34d10459e6 actions a6ccaa069ada0a26",
+  "seed 1: dawn round 8 actions 100 state 4bd58ffd067ca7ff actions a6ccaa069ada0a26",
 ]
 `;
 
@@ -119,8 +119,8 @@ exports[`golden bot games > coop2 normal medium 1`] = `
 
 exports[`golden bot games > pvp1 board duels with dice short 1`] = `
 [
-  "seed 1: dawn round 5 actions 40 state 0bd41fccd318f327 actions 17d9ed93abb10ba7",
-  "seed 2: dawn round 3 actions 28 state a946fd1c764beb3d actions 7317de8e766bfaf4",
+  "seed 1: dawn round 5 actions 43 state 2200f58a166fc37b actions 72832e979a86a35f",
+  "seed 2: dawn round 3 actions 32 state a9ae789f369e89c9 actions 3ec18fda802058c2",
 ]
 `;
 
@@ -133,7 +133,7 @@ exports[`golden bot games > pvp1 dice medium 1`] = `
 
 exports[`golden bot games > pvp1 easy short 1`] = `
 [
-  "seed 1: dawn round 5 actions 37 state d2d6d328ba7c7a2d actions 9d8a28ac3453cec8",
+  "seed 1: dawn round 5 actions 37 state b412707cae8bf53a actions 9d8a28ac3453cec8",
   "seed 2: dawn round 3 actions 25 state b8faf096f90ec33b actions 06552aaa9a703d7b",
 ]
 `;
@@ -157,8 +157,8 @@ exports[`golden bot games > pvp1 normal short 1`] = `
 
 exports[`golden bot games > pvp2 easy medium 1`] = `
 [
-  "seed 1: dawn round 8 actions 100 state 911930082eec933c actions 817ede9d4cb9c85a",
-  "seed 2: dawn round 10 actions 119 state 428263e19e3b0c3d actions d2dae13ac9394a3f",
+  "seed 1: dawn round 8 actions 100 state d5b4025338f420fa actions 817ede9d4cb9c85a",
+  "seed 2: dawn round 10 actions 119 state 181655f2aae0abc0 actions d2dae13ac9394a3f",
 ]
 `;
 

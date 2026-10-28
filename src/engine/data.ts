@@ -25,7 +25,11 @@ export type AbilityId =
   | 'nightAmbush' // Nocna Zasadzka
   | 'boulder' // Miażdżący Głaz (Cyklop)
   | 'nestLeap' // Łupieżczy Nalot (Gryf)
-  | 'manyHeads'; // Paszcze Otchłani (Hydra)
+  | 'manyHeads' // Paszcze Otchłani (Hydra)
+  // Guardians' duel cards (the light-blue back): abilities that count in a duel on the board.
+  | 'stoneSkin' // Kamienna Skóra (Cyklop)
+  | 'thiefClaw' // Złodziejski Szpon (Gryf)
+  | 'regrowth'; // Odrastające Głowy (Hydra)
 
 export interface UnitDef {
   id: string;
@@ -37,6 +41,15 @@ export interface UnitDef {
   speed: number;
   movement: MovementType;
   attackType: AttackType;
+  ability: AbilityId;
+  abilityName: string;
+  abilityText: string;
+  /** A guardian's second card, for the duel on the board: less Życie and an ability that works one on one. */
+  duel?: DuelCard;
+}
+
+export interface DuelCard {
+  hp: number;
   ability: AbilityId;
   abilityName: string;
   abilityText: string;
@@ -64,8 +77,12 @@ export const ABILITY = {
   webRange: 4,
   nightAmbushBonus: 3,
   nestLeapRange: 4,
-  /** Share of Życie a guardian keeps in a duel on the board. */
-  guardianDuelHpShare: 0.55,
+  /** Kamienna Skóra: damage the Cyclops ignores from every blow in a duel. */
+  stoneSkinIgnore: 1,
+  /** Złodziejski Szpon: Życie the Griffin takes back with every blow that wounds in a duel. */
+  thiefClawHeal: 1,
+  /** Odrastające Głowy: Życie the Hydra gets back at the start of each of its activations in a duel. */
+  regrowthHeal: 2,
 };
 
 const u = (d: UnitDef): UnitDef => d;
@@ -84,9 +101,9 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'goblinShaman', name: 'Goblin Szaman', side: 'horde', kind: 'support', hp: 5, attack: 1, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'curse', abilityName: 'Złowroga Klątwa', abilityText: `Raz na bitwę: trafiony cel ma −${ABILITY.curseMinus} A przy następnym ataku.` }),
     u({ id: 'caveSpider', name: 'Pająk Jaskiniowy', side: 'horde', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'web', abilityName: 'Pajęcze Sidła', abilityText: `Raz na bitwę: wróg do ${ABILITY.webRange} pól nie rusza się w następnej aktywacji.` }),
     u({ id: 'shadowBat', name: 'Nietoperz Cienia', side: 'horde', kind: 'support', hp: 5, attack: 2, speed: 3, movement: 'fly', attackType: 'melee', ability: 'nightAmbush', abilityName: 'Nocna Zasadzka', abilityText: `Raz na bitwę: atak zadaje +${ABILITY.nightAmbushBonus} obrażenia.` }),
-    u({ id: 'cyclops', name: 'Cyklop Błyskotek', side: 'neutral', kind: 'neutral', hp: 23, attack: 2, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'boulder', abilityName: 'Miażdżący Głaz', abilityText: 'Po każdym ataku odpycha trafionego przeciwnika o 1 pole, jeśli to możliwe.' }),
-    u({ id: 'griffin', name: 'Gryf Złodziej Skarbów', side: 'neutral', kind: 'neutral', hp: 18, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nestLeap', abilityName: 'Łupieżczy Nalot', abilityText: `Po każdym ataku może odlecieć o maks. ${ABILITY.nestLeapRange} pola.` }),
-    u({ id: 'hydra', name: 'Hydra z Zatopionych Ruin', side: 'neutral', kind: 'neutral', hp: 21, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Paszcze Otchłani', abilityText: 'Każdym atakiem może trafić dwóch sąsiadujących przeciwników.' }),
+    u({ id: 'cyclops', name: 'Cyklop Błyskotek', side: 'neutral', kind: 'neutral', hp: 23, attack: 2, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'boulder', abilityName: 'Miażdżący Głaz', abilityText: 'Po każdym ataku odpycha trafionego przeciwnika o 1 pole, jeśli to możliwe.', duel: { hp: 14, ability: 'stoneSkin', abilityName: 'Kamienna Skóra', abilityText: `Każdy cios w Cyklopa zadaje o ${ABILITY.stoneSkinIgnore} mniej obrażeń.` } }),
+    u({ id: 'griffin', name: 'Gryf Złodziej Skarbów', side: 'neutral', kind: 'neutral', hp: 18, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nestLeap', abilityName: 'Łupieżczy Nalot', abilityText: `Po każdym ataku może odlecieć o maks. ${ABILITY.nestLeapRange} pola.`, duel: { hp: 10, ability: 'thiefClaw', abilityName: 'Złodziejski Szpon', abilityText: `Gdy zada obrażenia, odzyskuje ${ABILITY.thiefClawHeal} Ż.` } }),
+    u({ id: 'hydra', name: 'Hydra z Zatopionych Ruin', side: 'neutral', kind: 'neutral', hp: 21, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Paszcze Otchłani', abilityText: 'Każdym atakiem może trafić dwóch sąsiadujących przeciwników.', duel: { hp: 12, ability: 'regrowth', abilityName: 'Odrastające Głowy', abilityText: `Na początku każdej swojej aktywacji odzyskuje ${ABILITY.regrowthHeal} Ż.` } }),
   ].map((d) => [d.id, d]),
 );
 
@@ -105,8 +122,8 @@ export const GUARDIANS = ['cyclops', 'griffin', 'hydra'];
 /** Supports a hero takes into a battle on the arena (all of them when fewer are alive). */
 export const SUPPORTS_PER_BATTLE = 2;
 
-/** A guardian fought in a duel on the board (one hero alone) keeps only part of its Życie, rounded up. */
-export const guardianDuelHp = (id: string) => Math.ceil(UNITS[id].hp * ABILITY.guardianDuelHpShare);
+/** A guardian's Życie in a duel on the board (one hero alone): from its duel card. */
+export const guardianDuelHp = (id: string) => UNITS[id].duel?.hp ?? UNITS[id].hp;
 
 export const FACTION_NAMES: Record<Side, string> = {
   dawn: 'Przymierze Świtu',

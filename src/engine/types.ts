@@ -1,5 +1,5 @@
 import type { HexKey } from './hex';
-import type { FactionId, ItemKind, MapSize, Side, Terrain, TileSide } from './data';
+import type { AbilityId, FactionId, ItemKind, MapSize, Side, Terrain, TileSide } from './data';
 
 /** coop and pvp play the adventure map; arena is a single 3-on-3 battle with drafted treasures. */
 export type Mode = 'coop' | 'pvp' | 'arena';
@@ -202,6 +202,8 @@ export interface BattleUnit {
   /** Left the battle through Róg Strażników (returns to the pool unharmed). */
   swappedOut: boolean;
   status: UnitStatus;
+  /** The ability of the card it fights with, when not its usual one (a guardian's duel card). */
+  ability?: AbilityId;
 }
 
 export interface Activation {

@@ -1,6 +1,6 @@
 // Rules agreed with the designer in docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md (section "Zasady obowiązujące").
 import { describe, expect, it } from 'vitest';
-import { RESURRECTION_CARDS, TERRAIN_COST, TILE_POOLS, UNITS } from '../src/engine/data';
+import { ABILITY, RESURRECTION_CARDS, TERRAIN_COST, TILE_POOLS, UNITS } from '../src/engine/data';
 import { activeHero, applyAction, createGame, legalHeroMoves, ritualFormed } from '../src/engine/game';
 import { abilityActive, arenaCell, arenaObstacles, movePath, predictDamage, reachableCells } from '../src/engine/battle';
 import { distance, parseKey } from '../src/engine/hex';
@@ -378,6 +378,58 @@ describe('rulebook battle behaviour (coop automaton and guardians)', () => {
     const s = guardianTurn([['goldDragon', 0, 4]]);
     const a = chooseBattleAction(s);
     expect(a.type).toBe('battleMove');
+  });
+});
+
+describe('guardian duel cards (duel on the board)', () => {
+  /** The Golden Dragon steps onto a guardian's hex next to it, with duels on the board. */
+  function duel(guardian: string): GameState {
+    let s = createGame(setup({ battleMode: 'board' }));
+    const hero = s.heroes.goldDragon;
+    const spot = mapNeighbors(s.tiles, hero.pos).find((k) => !s.tiles[k].home)!;
+    Object.assign(s.tiles[spot], { revealed: true, terrain: 'meadow' });
+    const c = Object.values(s.crystals)[0];
+    s.tiles[c.at].crystalId = null;
+    Object.assign(c, { at: spot, guardian });
+    s.tiles[spot].crystalId = c.id;
+    s.turnIndex = s.turnOrder.indexOf('goldDragon');
+    s.movePoints = 2;
+    s.turnBattleDone = false;
+    s = applyAction(s, { type: 'moveHero', to: spot });
+    expect(s.battle?.duel).toBe(true);
+    return s;
+  }
+
+  it('the guardian fights with its duel card: its Życie and its ability', () => {
+    for (const g of ['cyclops', 'griffin', 'hydra']) {
+      const u = duel(g).battle!.units[g];
+      expect([u.hp, u.maxHp, u.ability]).toEqual([UNITS[g].duel!.hp, UNITS[g].duel!.hp, UNITS[g].duel!.ability]);
+    }
+  });
+
+  it('Kamienna Skóra: every blow at the Cyclops does 1 less', () => {
+    const s = applyAction(duel('cyclops'), { type: 'battleAttack', targetId: 'cyclops' });
+    expect(s.battle!.units.cyclops.hp).toBe(UNITS.cyclops.duel!.hp - (UNITS.goldDragon.attack - ABILITY.stoneSkinIgnore));
+  });
+
+  it('Złodziejski Szpon: the Griffin takes back Życie when it wounds', () => {
+    const s = duel('griffin');
+    expect(s.battle!.activation!.unitId).toBe('griffin');
+    s.battle!.units.griffin.hp = 5;
+    const after = applyAction(s, { type: 'battleAttack', targetId: 'goldDragon' });
+    expect(after.battle!.units.goldDragon.hp).toBe(UNITS.goldDragon.hp - UNITS.griffin.attack);
+    expect(after.battle!.units.griffin.hp).toBe(5 + ABILITY.thiefClawHeal);
+  });
+
+  it('Odrastające Głowy: the Hydra gets Życie back when its activation starts', () => {
+    const s = applyAction(duel('hydra'), { type: 'battleAttack', targetId: 'hydra' });
+    expect(s.battle!.activation!.unitId).toBe('hydra');
+    expect(s.battle!.units.hydra.hp).toBe(UNITS.hydra.duel!.hp - UNITS.goldDragon.attack + ABILITY.regrowthHeal);
+  });
+
+  it('the bot uses Słoneczny Blask in a duel, alone as it is', () => {
+    const s = duel('cyclops');
+    expect(chooseBattleAction(s)).toMatchObject({ type: 'battleAbility' });
   });
 });
 

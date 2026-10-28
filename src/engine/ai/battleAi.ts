@@ -197,7 +197,8 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
   if (u.abilityUsed || !abilityActive(state)) return null;
   const b = state.battle!;
   const ab = abilityOf(u);
-  if (ab === 'sunburst' && livingUnits(b, u.side).length >= 2) return { type: 'battleAbility' };
+  // In a duel the dragon is alone, and its own +3 is worth it all the same.
+  if (ab === 'sunburst' && (livingUnits(b, u.side).length >= 2 || b.duel)) return { type: 'battleAbility' };
   if (ab === 'giftOfLife') {
     const hurt = livingUnits(b, u.side)
       .filter((x) => x.maxHp - x.hp >= 3)
