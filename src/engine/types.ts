@@ -222,8 +222,6 @@ export interface Activation {
   moveOnly: boolean;
   /** Post-attack hop allowance (Powietrzny Zryw / Łupieżczy Nalot). */
   hop: number;
-  /** Ability flags armed for the next attack in this activation. */
-  armedAbility: boolean;
 }
 
 export interface BattleState {

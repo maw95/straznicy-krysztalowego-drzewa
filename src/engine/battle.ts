@@ -376,7 +376,7 @@ function beginRound(state: GameState, round: number) {
 
 function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
   const b = state.battle!;
-  b.activation = { unitId, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly, hop: 0, armedAbility: false };
+  b.activation = { unitId, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly, hop: 0 };
 }
 
 /** Moves to the next activation, the next round, or nothing if the battle ended. */

@@ -34,7 +34,7 @@ function guardianFight(guardian: string, foes: Array<[string, number, number]>, 
   s.battle = {
     kind: 'neutral', duel: false, mapHex: Object.keys(s.tiles)[0], arena: 'dawn', attacker: 'dawn', defender: 'neutral', attackerHero: foes[0][0], attackerFrom: Object.keys(s.tiles)[0], defenderHero: null, neutralId: guardian,
     stage: 'fight', needsDeploy: [], needsSelection: [], obstacles: [], units, round: 1, order: [guardian, ...foes.map((f) => f[0])], index: 0,
-    activation: { unitId: guardian, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false },
+    activation: { unitId: guardian, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0 },
     extra: [], winner: null, damageBy: {},
   };
   return s;
@@ -89,11 +89,11 @@ describe('guardian abilities without a once-per-battle limit', () => {
     s = applyAction(s, { type: 'battleAttack', targetId: 'goldDragon' });
     expect(s.battle!.units.goldDragon.pos).toBe(arenaCell(9, 13));
     // Next round: it pushes again.
-    s.battle!.activation = { unitId: 'cyclops', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false };
+    s.battle!.activation = { unitId: 'cyclops', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0 };
     s = applyAction(s, { type: 'battleAttack', targetId: 'goldDragon' });
     expect(s.battle!.units.goldDragon.pos).toBe(arenaCell(10, 14));
     // Against the arena edge nothing moves.
-    s.battle!.activation = { unitId: 'cyclops', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false };
+    s.battle!.activation = { unitId: 'cyclops', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0 };
     s = applyAction(s, { type: 'battleAttack', targetId: 'goldDragon' });
     expect(s.battle!.units.goldDragon.pos ?? arenaCell(10, 14)).toBe(arenaCell(10, 14));
   });
@@ -101,7 +101,7 @@ describe('guardian abilities without a once-per-battle limit', () => {
   it('Gryf may fly off after every attack', () => {
     let s = guardianFight('griffin', [['ancientBear', 5, 9], ['nymph', 0, 4]]);
     for (let i = 0; i < 2; i++) {
-      s.battle!.activation = { unitId: 'griffin', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false };
+      s.battle!.activation = { unitId: 'griffin', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0 };
       s.battle!.units.griffin.pos = arenaCell(4, 8);
       s = applyAction(s, { type: 'battleAttack', targetId: 'ancientBear' });
       expect(s.battle!.activation?.hop).toBe(4);
@@ -113,7 +113,7 @@ describe('guardian abilities without a once-per-battle limit', () => {
   it('Hydra may hit two adjacent enemies with every attack', () => {
     let s = guardianFight('hydra', [['ancientBear', 5, 9], ['nymph', 4, 10], ['elfDruid', 0, 4]]);
     for (let i = 0; i < 2; i++) {
-      s.battle!.activation = { unitId: 'hydra', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false };
+      s.battle!.activation = { unitId: 'hydra', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0 };
       s = applyAction(s, { type: 'battleAttack', targetId: 'ancientBear', secondTargetId: 'nymph' });
     }
     expect(s.battle!.units.ancientBear.hp).toBe(UNITS.ancientBear.hp - 4);
@@ -136,7 +136,7 @@ describe('Przymierze hero abilities after balancing', () => {
     s.battle = {
       kind: 'heroes', duel: false, mapHex: Object.keys(s.tiles)[0], arena: 'dawn', attacker: 'horde', defender: 'dawn', attackerHero: 'blackDragon', attackerFrom: Object.keys(s.tiles)[0], defenderHero: 'ancientBear', neutralId: null,
       stage: 'fight', needsDeploy: [], needsSelection: [], obstacles: [], units: all, round: 1, order: units.map((u) => u[0]), index: 0,
-      activation: { unitId: first, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false },
+      activation: { unitId: first, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0 },
       extra: [], winner: null, damageBy: {},
     };
     return s;
@@ -426,7 +426,7 @@ describe('rulebook battle behaviour (coop automaton and guardians)', () => {
     s.battle = {
       kind: 'neutral', duel: false, mapHex: Object.keys(s.tiles)[0], arena: 'dawn', attacker: 'dawn', defender: 'neutral', attackerHero: foes[0][0], attackerFrom: Object.keys(s.tiles)[0], defenderHero: null, neutralId: 'hydra',
       stage: 'fight', needsDeploy: [], needsSelection: [], obstacles: [], units, round: 1, order: ['hydra', ...foes.map((f) => f[0])], index: 0,
-      activation: { unitId: 'hydra', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0, armedAbility: false },
+      activation: { unitId: 'hydra', moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly: false, hop: 0 },
       extra: [], winner: null, damageBy: {},
     };
     return s;
