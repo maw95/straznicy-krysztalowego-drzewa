@@ -236,7 +236,7 @@ export class OnlineSession {
   private notice(text: string) {
     const id = Date.now() + Math.random();
     this.update({ notices: [...this.state.notices, { id, text }] });
-    window.setTimeout(() => this.update({ notices: this.state.notices.filter((n) => n.id !== id) }), 5000);
+    window.setTimeout(() => !this.closed && this.update({ notices: this.state.notices.filter((n) => n.id !== id) }), 5000);
   }
 
   private update(patch: Partial<OnlineState>) {
@@ -252,7 +252,15 @@ export class OnlineSession {
       this.attempts = 0;
       this.update({ connected: true, reconnecting: false, error: null });
     };
-    socket.onmessage = (event) => this.receive(JSON.parse(event.data) as ServerMessage);
+    socket.onmessage = (event) => {
+      let message: ServerMessage;
+      try {
+        message = JSON.parse(event.data) as ServerMessage;
+      } catch {
+        return; // not one of ours: ignore it rather than break the connection handler
+      }
+      this.receive(message);
+    };
     socket.onclose = (event) => {
       if (this.socket !== socket) return;
       this.update({ connected: false, reconnecting: false });

@@ -65,6 +65,8 @@ export function DetailsLayer() {
     let pressTimer = 0;
     let touchStart: { x: number; y: number } | null = null;
     let suppressClick = false;
+    // The listener waiting for the right button to come up, if any (removed with the layer).
+    let rightUp: ((e: PointerEvent) => void) | null = null;
 
     const onDown = (e: PointerEvent) => {
       // Any press closes a window left open by a short right click.
@@ -87,12 +89,15 @@ export function DetailsLayer() {
       hideHoverCard();
       show({ content: c.render(), x: e.clientX, y: e.clientY });
       const opened = Date.now();
+      if (rightUp) window.removeEventListener('pointerup', rightUp);
       const onUp = (up: PointerEvent) => {
         if (up.button !== 2) return;
         window.removeEventListener('pointerup', onUp);
+        rightUp = null;
         if (Date.now() - opened >= HOLD_MS) show(null);
         else pinned = true;
       };
+      rightUp = onUp;
       window.addEventListener('pointerup', onUp);
     };
     const onMove = (e: PointerEvent) => {
@@ -135,6 +140,7 @@ export function DetailsLayer() {
       window.removeEventListener('pointercancel', onTouchEnd);
       window.removeEventListener('click', onClick, true);
       window.removeEventListener('keydown', onKey);
+      if (rightUp) window.removeEventListener('pointerup', rightUp);
     };
   }, []);
 
