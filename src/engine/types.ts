@@ -307,10 +307,6 @@ export interface GameStats {
   neutralSupportLosses: number;
 }
 
-export interface TurnSlot {
-  heroId: string;
-}
-
 export interface GameState {
   version: 1;
   setup: SetupOptions;

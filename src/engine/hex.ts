@@ -1,6 +1,5 @@
-// Hex geometry on axial coordinates (pointy-top hexes).
-// Both the triangular adventure map and the 9×11 arena use axial {q, r};
-// helpers below convert from the row/column layouts used by each board.
+// Hex geometry on axial coordinates {q, r}, shared by both boards: the triangular adventure map
+// (triToHex below) and the arena of flat-topped hexes (its (col, half) cells: battle.ts).
 
 export interface Hex {
   q: number;
@@ -61,13 +60,6 @@ export function directionBetween(from: Hex, to: Hex): Hex | null {
 
 /** Triangular map: row `row` (0 = top) has row + 1 hexes, `col` in [0, row]. */
 export const triToHex = (row: number, col: number): Hex => ({ q: col - row, r: row });
-export const hexToTri = (h: Hex): { row: number; col: number } => ({ row: h.r, col: h.q + h.r });
-
-/** Arena: "odd-r" offset rows (odd rows shifted right by half a hex). */
-export const offsetToHex = (row: number, col: number): Hex => ({ q: col - (row - (row & 1)) / 2, r: row });
-export function hexToOffset(h: Hex): { row: number; col: number } {
-  return { row: h.r, col: h.q + (h.r - (h.r & 1)) / 2 };
-}
 
 function cubeRound(x: number, y: number, z: number): Hex {
   let rx = Math.round(x);

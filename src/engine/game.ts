@@ -15,7 +15,6 @@ import {
   ARENA_OFFER,
   ARENA_RULES,
   RESURRECTION_CARDS,
-  TERRAIN_COST,
   TERRAIN_NAMES,
   UNITS,
   type FactionId,
@@ -42,7 +41,7 @@ import { log } from './log';
 import { Rng } from './rng';
 import type { Action, BattleReport, BattleState, GameState, HeroState, Player, SetupOptions } from './types';
 
-export const other = (f: FactionId): FactionId => (f === 'dawn' ? 'horde' : 'dawn');
+const other = (f: FactionId): FactionId => (f === 'dawn' ? 'horde' : 'dawn');
 
 /** Re-reads the phase after calls that may end the game (keeps TS narrowing honest). */
 export const isOver = (state: GameState): boolean => state.phase === 'over';
@@ -183,7 +182,7 @@ function startArena(state: GameState) {
   const rng = new Rng(state.rng);
   const coin: FactionId = rng.int(2) === 0 ? 'dawn' : 'horde';
   const first: FactionId = ARENA_RULES.firstPicker === 'random' ? coin : ARENA_RULES.firstPicker;
-  const second: FactionId = first === 'dawn' ? 'horde' : 'dawn';
+  const second = other(first);
   const arena = rng.int(2) === 0 ? 'dawn' : 'horde';
   state.rng = rng.state;
   const heroOf = (f: FactionId) => Object.values(state.heroes).find((h) => h.faction === f);
@@ -899,9 +898,4 @@ function applyBattleAction(state: GameState, action: Action) {
     default:
       throw new Error('Nieznana akcja.');
   }
-}
-
-export function terrainCostLabel(k: HexKey, state: GameState): string {
-  const c = TERRAIN_COST[state.tiles[k].terrain];
-  return c === null ? 'nieprzechodnie' : String(c);
 }

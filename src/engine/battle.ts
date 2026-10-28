@@ -1,5 +1,5 @@
-// Battle engine: arena 9×11, initiative, movement, attacks, abilities and items.
-// Functions mutate the (already cloned) GameState passed in.
+// Battle engine: the painted arena (13 columns, 85 cells), initiative, movement, attacks,
+// abilities and items. Functions change the GameState passed in.
 
 import { ABILITY, ITEMS, UNITS, type AbilityId, type FactionId, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';

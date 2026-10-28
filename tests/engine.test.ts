@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { FACTION_HEROES, FACTION_SUPPORTS, MAP_VARIANTS, TERRAIN_COST, UNITS } from '../src/engine/data';
-import { distance, key, line, offsetToHex, parseKey, triToHex } from '../src/engine/hex';
+import { distance, key, line, parseKey, triToHex } from '../src/engine/hex';
 import { applyAction, createGame, crystalsFor, legalHeroMoves, activeHero } from '../src/engine/game';
 import { ARENA_COLUMNS, ARENA_OBSTACLES, arenaCell, arenaCells, attackTargets, columnCells, hasLineOfSight, reachableCells } from '../src/engine/battle';
 import { mapNeighbors, reachableFrom, homeKey, treeKey } from '../src/engine/map';
@@ -41,9 +41,9 @@ describe('hex geometry', () => {
     expect(distance(triToHex(5, 0), triToHex(0, 0))).toBe(5);
   });
   it('draws a straight line including both ends', () => {
-    const l = line(offsetToHex(4, 0), offsetToHex(4, 5));
+    const l = line({ q: -2, r: 4 }, { q: 3, r: 4 });
     expect(l).toHaveLength(6);
-    expect(key(l[0])).toBe(key(offsetToHex(4, 0)));
+    expect(key(l[0])).toBe('-2,4');
   });
 });
 
