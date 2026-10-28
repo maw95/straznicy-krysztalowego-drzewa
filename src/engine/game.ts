@@ -43,7 +43,7 @@ import { log } from './log';
 import { Rng } from './rng';
 import type { Action, BattleReport, BattleState, GameState, HeroState, ItemInstance, Player, SetupOptions } from './types';
 
-const other = (f: FactionId): FactionId => (f === 'dawn' ? 'horde' : 'dawn');
+export const other = (f: FactionId): FactionId => (f === 'dawn' ? 'horde' : 'dawn');
 
 /** Re-reads the phase after calls that may end the game (keeps TS narrowing honest). */
 export const isOver = (state: GameState): boolean => state.phase === 'over';
@@ -286,6 +286,11 @@ export function activeHero(state: GameState): HeroState | null {
   return id ? state.heroes[id] : null;
 }
 
+/** A faction's living heroes (a reserve still to come in included), in the order of state.heroes. */
+export function livingHeroes(state: GameState, faction: FactionId): HeroState[] {
+  return Object.values(state.heroes).filter((h) => h.faction === faction && h.alive);
+}
+
 export function heroesAt(state: GameState, k: HexKey): HeroState[] {
   return Object.values(state.heroes).filter((h) => h.alive && !h.entering && h.pos === k);
 }
@@ -305,7 +310,7 @@ export function ritualFormed(state: GameState): boolean {
   // The easy level plays without the ritual.
   if (state.rules.ritual === false) return false;
   const tree = treeKey();
-  const evil = Object.values(state.heroes).filter((h) => h.faction === 'horde' && h.alive);
+  const evil = livingHeroes(state, 'horde');
   if (!evil.length || evil.some((h) => h.entering) || !evil.some((h) => h.pos === tree)) return false;
   const around = new Set(mapNeighbors(state.tiles, tree));
   return evil.every((h) => h.pos === tree || around.has(h.pos));

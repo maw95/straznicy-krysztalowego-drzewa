@@ -4,7 +4,7 @@
 import { FACTION_SUPPORTS, ITEM_EFFECT, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from '../data';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, treeKey, type PathResult } from '../map';
-import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, reviveSpots, ritualFormed, ritualSpot } from '../game';
+import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, livingHeroes, other, reviveSpots, ritualFormed, ritualSpot } from '../game';
 import type { Action, GameState, HeroState } from '../types';
 
 function knownCost(state: GameState, k: HexKey): number | null {
@@ -126,7 +126,7 @@ function evilAction(state: GameState, memo: Memo): Action {
   if (item) return item;
   // Evil heroes standing on the Tree (or by it for the ritual) stay there instead of chasing.
   if (inRitualPlace(state, hero)) return { type: 'endTurn' };
-  const goodHeroes = Object.values(state.heroes).filter((h) => h.faction === 'dawn' && h.alive);
+  const goodHeroes = livingHeroes(state, 'dawn');
   // 1. Attack an adjacent good hero.
   const adjacent = goodHeroes.find((g) => distance(parseKey(g.pos), parseKey(hero.pos)) === 1);
   if (adjacent) {
@@ -197,7 +197,7 @@ function goodAction(state: GameState, memo: Memo): Action {
   const treeK = treeKey();
   const tree = parseKey(treeK);
   const nearTree = (k: HexKey) => distance(parseKey(k), tree);
-  const allies = Object.values(state.heroes).filter((h) => h.faction === 'dawn' && h.alive && h.id !== hero.id);
+  const allies = livingHeroes(state, 'dawn').filter((h) => h.id !== hero.id);
   const mp = state.rules.heroMovePoints;
   // One hero per hex: a hero without crystals clears the Tree and the hexes around it while an
   // ally carries one, so the carrier can get in.
@@ -206,7 +206,7 @@ function goodAction(state: GameState, memo: Memo): Action {
     if (off && nearTree(off.to) > nearTree(hero.pos)) return { type: 'moveHero', to: off.to };
   }
 
-  const enemies = Object.values(state.heroes).filter((h) => h.faction !== hero.faction && h.alive && !h.entering);
+  const enemies = livingHeroes(state, other(hero.faction)).filter((h) => !h.entering);
   const desperate = isDesperate(state);
   // The defender strikes first, so walking into an enemy needs a real edge (or no time left).
   const strongEnough = (e: HeroState) => desperate || memo.ratio(hero, e) >= huntRatio(state);
@@ -371,8 +371,8 @@ function goodAction(state: GameState, memo: Memo): Action {
 function hordeBotAction(state: GameState, memo: Memo): Action {
   const hero = activeHero(state)!;
   const tree = treeKey();
-  const foes = Object.values(state.heroes).filter((h) => h.faction !== hero.faction && h.alive);
-  const own = Object.values(state.heroes).filter((h) => h.faction === hero.faction && h.alive);
+  const foes = livingHeroes(state, other(hero.faction));
+  const own = livingHeroes(state, hero.faction);
   const item = mapItemAction(state);
   if (item) return item;
   if (state.movePoints <= 0 || state.turnBattleDone) return { type: 'endTurn' };
