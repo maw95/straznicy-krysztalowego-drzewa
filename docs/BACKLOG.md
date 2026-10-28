@@ -225,13 +225,13 @@ w kodzie). Plan zaakceptowany; decyzje:
   limit długości `actions` przy odtwarzaniu gry offline do rankingu.
 
 **Gra:**
-- [ ] Animacje bitwy zacinają się przy szybkich botach (`BattleView.tsx:133-188`: sprzątanie co zmianę `b` kasuje
+- [x] Animacje bitwy zacinają się przy szybkich botach (`BattleView.tsx:133-188`: sprzątanie co zmianę `b` kasuje
   timer usuwający `strikes`/`floaters`/`ghosts`; figurka przestaje robić wypad). Timery w refie, czyszczone przy
   odmontowaniu.
-- [ ] `FigurePreview`: przy szybkim przełączaniu bohaterów dwie pętle rysują na jednym płótnie; nowy renderer
+- [x] `FigurePreview`: przy szybkim przełączaniu bohaterów dwie pętle rysują na jednym płótnie; nowy renderer
   przy każdym najechaniu.
-- [ ] Druga partia w sesji: fałszywe „Znaleziono skarb!” (`knownItems`, `seenLog` w App nie są zerowane).
-- [ ] Baner „łączę ponownie…” wisi, gdy po kodach 4401/4000/4002 nie ma ponownego łączenia → flaga `reconnecting`.
+- [x] Druga partia w sesji: fałszywe „Znaleziono skarb!” (`knownItems`, `seenLog` w App nie są zerowane).
+- [x] Baner „łączę ponownie…” wisi, gdy po kodach 4401/4000/4002 nie ma ponownego łączenia → flaga `reconnecting`.
 - [ ] Podgląd obrażeń różni się od silnika (UI liczy Kamień Ochrony przed Twardogłowym) → wspólne
   `predictDamage` w `battle.ts`, helper `bearCanGuard`.
 - [ ] Bot bitewny na chwilę zmienia `u.pos` w stanie wyświetlanym przez ekran (`battleAi.ts:117-120`) → parametr
@@ -299,11 +299,11 @@ wiadomość `game` zawiera cały dziennik z wpisami `privateTo` (filtrowane tylk
 
 ## 7. Zgłoszenie z 23.10 (`bug-reports/2026-10-23-20-10-31-ziarno-615040.json`)
 
-- [ ] Figurki na arenie i na mapie świata większe, nawet jeśli częściowo wchodzą na sąsiednie heksy
+- [x] Figurki na arenie i na mapie świata większe, nawet jeśli częściowo wchodzą na sąsiednie heksy
   (`docs/nachodzace_heksy.png`).
-- [ ] Zamiast jednolitych pierścieni wokół figurek — delikatna aura z gradientem, mniej nachalna.
-- [ ] Arena Hordy: przeszkody terenowe nie mają innego koloru obramowania heksa.
-- [ ] Usunąć przycisk „zasięg wrogów” (chyba nie działa). Zamiast niego: wciśnięty Ctrl z kursorem na jednostce
+- [x] Zamiast jednolitych pierścieni wokół figurek — delikatna aura z gradientem, mniej nachalna.
+- [x] Arena Hordy: przeszkody terenowe nie mają innego koloru obramowania heksa.
+- [x] Usunąć przycisk „zasięg wrogów” (chyba nie działa). Zamiast niego: wciśnięty Ctrl z kursorem na jednostce
   pokazuje jej zasięg.
 - [x] Strzelec z wrogiem obok: kursor strzały zamiast miecza nad tym wrogiem (i tak strzela).
 
