@@ -477,7 +477,7 @@ function goodAction(state: GameState, memo: Memo): Action {
   const hero = activeHero(state)!;
   const item = mapItemAction(state);
   if (item) return item;
-  if (state.movePoints <= 0 || state.turnBattleDone) return { type: 'endTurn' };
+  if (state.movePoints <= 0) return { type: 'endTurn' };
   const c = new GoodContext(state, memo, hero);
   return clearTreeForCarrier(c) ?? breakRitual(c) ?? guardTreeClock(c, decide(c));
 }
@@ -493,7 +493,7 @@ function hordeBotAction(state: GameState, memo: Memo): Action {
   const own = livingHeroes(state, hero.faction);
   const item = mapItemAction(state);
   if (item) return item;
-  if (state.movePoints <= 0 || state.turnBattleDone) return { type: 'endTurn' };
+  if (state.movePoints <= 0) return { type: 'endTurn' };
   // Hold the Tree while the ritual is under way, unless a weak enemy is right there.
   const beatable = (e: HeroState) => memo.ratio(hero, e) >= huntRatio(state);
   const adjacent = foes.filter((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1);

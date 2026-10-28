@@ -29,9 +29,10 @@ const MAX_HEX_W = 120;
 function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: HexKey[]; hostile: boolean }> {
   const hero = activeHero(state);
   const out = new Map<HexKey, { cost: number; path: HexKey[]; hostile: boolean }>();
-  if (!hero || state.phase !== 'adventure' || state.turnBattleDone) return out;
-  // A reserve hero coming in: any of its entry hexes, one click each.
+  if (!hero || state.phase !== 'adventure') return out;
+  // A reserve hero coming in: any of its entry hexes, one click each (not in a turn already spent on a battle).
   if (hero.entering) {
+    if (state.turnBattleDone) return out;
     for (const k of hero.entering) out.set(k, { cost: 0, path: [hero.pos, k], hostile: false });
     return out;
   }
@@ -50,7 +51,8 @@ function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: Hex
       const guarded = Boolean(t.crystalId && state.crystals[t.crystalId].guardian);
       if (guarded && hero.faction === 'horde') continue;
       const hostile = foes || guarded;
-      const cost = hostile ? (base.cost < state.movePoints ? state.movePoints : Infinity) : base.cost + c;
+      // A fight is entered like any hex, at its terrain cost; the walk stops there.
+      const cost = base.cost + c;
       if (cost > state.movePoints) continue;
       const old = out.get(n);
       if (!old || cost < old.cost) {
@@ -612,7 +614,7 @@ function tileLines(state: GameState, k: HexKey, reach: { cost: number; hostile: 
     if (t.treasureId) lines.push('Leży tu skarb');
     if (t.tree) lines.push(`Oddaj tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded})`);
     for (const h of heroesAt(state, k)) lines.push(`${UNITS[h.id].name}${h.crystals.length ? ' · niesie kryształ' : ''}`);
-    if (reach) lines.push(reach.hostile ? `${heroName}: wejście rozpocznie walkę` : `${heroName} dojdzie tu za ${reach.cost} pkt`);
+    if (reach) lines.push(reach.hostile ? `${heroName}: wejście za ${reach.cost} pkt rozpocznie walkę` : `${heroName} dojdzie tu za ${reach.cost} pkt`);
   } else lines.push(t.side === 'dawn' ? 'Kraina Przymierza — teren nieznany' : 'Kraina Hordy — teren nieznany');
   return { title: t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole', lines };
 }

@@ -4,7 +4,7 @@ import { RESURRECTION_CARDS, TERRAIN_COST, TILE_POOLS, UNITS } from '../src/engi
 import { activeHero, applyAction, createGame, legalHeroMoves, ritualFormed } from '../src/engine/game';
 import { abilityActive, arenaCell, arenaObstacles, movePath, predictDamage, reachableCells } from '../src/engine/battle';
 import { distance, parseKey } from '../src/engine/hex';
-import { homeKey, mapNeighbors, sideOf, treeKey } from '../src/engine/map';
+import { homeKey, mapNeighbors, sideOf, tileCost, treeKey } from '../src/engine/map';
 import { chooseAction } from '../src/engine/ai';
 import { chooseBattleAction } from '../src/engine/ai/battleAi';
 import { DEFAULT_RULES, levelSettings, type GameState, type SetupOptions } from '../src/engine/types';
@@ -489,5 +489,27 @@ describe('Horde reinforcements (coop, except the hard level)', () => {
 
   it('sends no reinforcements on the hard level', () => {
     for (let seed = 1; seed <= 15; seed++) expect(play(seed, 'hard').seen).toHaveLength(0);
+  });
+});
+
+describe('a battle on the map costs the entered hex, like any step', () => {
+  it('attacking a neighbouring enemy hero costs the terrain and leaves the rest of the points', () => {
+    const s = createGame(setup({ mode: 'pvp', seats: pvpSeats('ancientBear', 'werewolfLord') }));
+    const bear = Object.values(s.heroes).find((h) => h.faction === 'dawn')!;
+    const wolf = Object.values(s.heroes).find((h) => h.faction === 'horde')!;
+    // Put both heroes side by side on revealed, walkable hexes, the bear to move.
+    const plain = (k: string) => tileCost(s.tiles[k]) === 1 && !s.tiles[k].home && !s.tiles[k].tree && !s.tiles[k].crystalId && !s.tiles[k].treasureId;
+    const pair = Object.keys(s.tiles)
+      .filter(plain)
+      .flatMap((k) => mapNeighbors(s.tiles, k).filter(plain).map((n) => [k, n] as const))[0];
+    for (const k of pair) s.tiles[k].revealed = true;
+    bear.pos = pair[0];
+    wolf.pos = pair[1];
+    s.turnIndex = s.turnOrder.indexOf(bear.id);
+    const attack = legalHeroMoves(s).find((m) => m.to === wolf.pos)!;
+    expect(attack).toMatchObject({ kind: 'attackHero', cost: 1 });
+    const after = applyAction(s, { type: 'moveHero', to: wolf.pos });
+    expect(after.phase).toBe('battle');
+    expect(after.movePoints).toBe(s.movePoints - 1);
   });
 });

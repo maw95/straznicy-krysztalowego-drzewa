@@ -266,7 +266,9 @@ Można wchodzić tylko na **odkryte** pola. Gdy bohater wejdzie na pole, **odwr�
 - **Kryształ bez strażnika** — bohater Przymierza od razu go podnosi. Może nieść dowolnie wiele kryształów. Horda kryształów nie podnosi.
 - **Drzewo** — bohater Przymierza, który wejdzie na Drzewo z kryształami, oddaje mu je wszystkie.
 - **Strażnik** — wejście na jego pole to wyzwanie do walki (rozdział 10). Może to zrobić tylko bohater Przymierza.
-- **Wrogi bohater** — wejście na jego pole rozpoczyna **bitwę** (rozdział 8). Wymaga to co najmniej 1 punktu ruchu i kończy ruch w tej turze. Zwycięzca zostaje na tym polu.
+- **Wrogi bohater** — wejście na jego pole rozpoczyna **bitwę** (rozdział 8). Zwycięzca zostaje na tym polu.
+
+Wejście na pole z walką kosztuje tyle punktów ruchu, ile koszt terenu tego pola — jak każdy krok. Bitwa nie kończy ruchu: jeśli bohater wygra i zostały mu punkty, może iść dalej.
 
 ### Śmierć bohatera
 
@@ -577,7 +579,7 @@ W turze bohater ma **3 punkty ruchu**; niewykorzystane przepadają.
 
 Można wchodzić tylko na **odkryte pola**. Po wejściu odkryj wszystkie zakryte kafelki dookoła. Na jednym polu stoi jeden bohater; wyjątek: własna baza.
 
-**Skarb:** do wspólnego ekwipunku. **Wolny kryształ:** podnosi go Przymierze. **Drzewo:** Przymierze oddaje wszystkie niesione kryształy, jeśli nie ma tam wroga. **Strażnik:** walka tylko dla Przymierza. **Wróg:** bitwa, jeśli masz co najmniej 1 punkt ruchu; ruch się kończy.
+**Skarb:** do wspólnego ekwipunku. **Wolny kryształ:** podnosi go Przymierze. **Drzewo:** Przymierze oddaje wszystkie niesione kryształy, jeśli nie ma tam wroga. **Strażnik:** walka tylko dla Przymierza. **Wróg:** bitwa. Wejście na pole z walką kosztuje tyle, ile koszt terenu; po wygranej bohater może iść dalej, jeśli zostały mu punkty.
 
 **4. Bitwa na arenie**
 

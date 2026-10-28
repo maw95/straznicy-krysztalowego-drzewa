@@ -315,7 +315,7 @@ export interface GameState {
   turnOrder: string[];
   turnIndex: number;
   movePoints: number;
-  /** Set once the active hero fought a battle this turn: movement is over. */
+  /** Set once the active hero fought a battle this turn (a reserve taking over that turn waits for its own). */
   turnBattleDone: boolean;
   battle: BattleState | null;
   ritual: number;

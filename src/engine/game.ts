@@ -370,8 +370,9 @@ export interface HeroMove {
 /** Adjacent hexes the active hero may enter now. */
 export function legalHeroMoves(state: GameState): HeroMove[] {
   const hero = activeHero(state);
-  if (!hero || state.phase !== 'adventure' || state.turnBattleDone || !hero.alive) return [];
-  if (hero.entering) return hero.entering.map((to) => ({ to, cost: 0, kind: 'enter' as const }));
+  if (!hero || state.phase !== 'adventure' || !hero.alive) return [];
+  // A reserve that took over a turn already spent on a battle waits for its own next turn.
+  if (hero.entering) return state.turnBattleDone ? [] : hero.entering.map((to) => ({ to, cost: 0, kind: 'enter' as const }));
   const out: HeroMove[] = [];
   for (const n of mapNeighbors(state.tiles, hero.pos)) {
     const tile = state.tiles[n];
@@ -383,13 +384,13 @@ export function legalHeroMoves(state: GameState): HeroMove[] {
     if (!enemies.length && there.length && tile.home !== hero.faction) continue;
     const crystal = tile.crystalId ? state.crystals[tile.crystalId] : null;
     if (enemies.length) {
-      // Attacking needs at least 1 movement point and ends the hero's movement.
-      if (state.movePoints >= 1) out.push({ to: n, cost: state.movePoints, kind: 'attackHero' });
+      // Attacking is entering the hex: it costs what the terrain costs, and the hero may go on after the battle.
+      if (cost <= state.movePoints) out.push({ to: n, cost, kind: 'attackHero' });
       continue;
     }
     if (crystal?.guardian) {
       if (hero.faction === 'horde') continue;
-      if (state.movePoints >= 1) out.push({ to: n, cost: state.movePoints, kind: 'attackGuardian' });
+      if (cost <= state.movePoints) out.push({ to: n, cost, kind: 'attackGuardian' });
       continue;
     }
     if (cost <= state.movePoints) out.push({ to: n, cost, kind: 'move' });
@@ -456,6 +457,8 @@ function moveHero(state: GameState, to: HexKey) {
     enterBoard(state, hero, to);
     return;
   }
+  // Every step onto another hex costs its terrain, a step into a battle too.
+  state.movePoints -= move.cost;
   if (move.kind === 'attackHero') {
     const defender = defenderAt(state, to, hero.faction)!;
     log(state, 'battle', `${name} atakuje: ${UNITS[defender.id].name}.`);
@@ -474,7 +477,6 @@ function moveHero(state: GameState, to: HexKey) {
     startBattle(state, { kind: 'neutral', attackerHero: hero.id, neutralId: crystal.guardian!, mapHex: to, from });
     return;
   }
-  state.movePoints -= move.cost;
   hero.pos = to;
   const revealed = revealAround(state, to);
   log(state, 'move', `${name} wchodzi na pole: ${TERRAIN_NAMES[state.tiles[to].terrain]}${revealed.length ? ` (odkryto ${revealed.length})` : ''}.`);
@@ -683,7 +685,6 @@ function startBattle(state: GameState, s: BattleStart) {
   state.phase = 'battle';
   state.battle = b;
   state.turnBattleDone = true;
-  state.movePoints = 0;
   state.stats.battles += 1;
   if (s.kind === 'neutral') state.stats.neutralBattles += 1;
   for (const f of [attacker.faction, defenderHero?.faction].filter(Boolean) as FactionId[]) {

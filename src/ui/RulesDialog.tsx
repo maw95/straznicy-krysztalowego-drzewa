@@ -35,7 +35,7 @@ const RULES: Array<[string, string[]]> = [
     'Eliksir Odrodzenia wypity na mapie wskrzesza bohatera na wybranym wolnym polu obok pijącego albo przywraca pomocnika.',
   ]],
   ['Bitwa', [
-    'Wejście na pole wrogiego bohatera rozpoczyna bitwę. Na arenie każda strona wystawia bohatera i dwóch pomocników (3 na 3); strażnik walczy sam. W pojedynkach na planszy walczą tylko bohaterowie, bez ruchu, a strażnik ma mniej Życia (liczba w nawiasie na karcie).',
+    'Wejście na pole wrogiego bohatera (albo strażnika) rozpoczyna bitwę. Kosztuje tyle punktów ruchu, ile koszt terenu tego pola, a po wygranej bohater może iść dalej. Na arenie każda strona wystawia bohatera i dwóch pomocników (3 na 3); strażnik walczy sam. W pojedynkach na planszy walczą tylko bohaterowie, bez ruchu, a strażnik ma mniej Życia (liczba w nawiasie na karcie).',
     'Najpierw obie strony ustawiają jednostki w swojej skrajnej kolumnie (zaczyna atakujący). Co rundę każda jednostka ma jedną aktywację, od najszybszej (przy remisie pierwszy działa broniący się): ruch o tyle pól, ile wynosi Szybkość, i jeden atak. Chodzący obchodzą przeszkody, wrogów i sojuszników — nie przechodzą przez nich.',
     'Cios zadaje tyle obrażeń, ile wynosi Atak. Nie ma kontrataków. Strzelec strzela przez całą arenę, jeśli przeszkoda nie zasłania celu; gdy wróg stoi tuż obok, może atakować tylko jego. Latający przelatują nad przeszkodami.',
     'Zdolności bohaterów i pomocników działają raz na bitwę (Szarża Światła i Zew Krwi zawsze). Zdolności strażników działają przy każdym ataku. Skarbów używa się przed akcją własnej jednostki; Tarcza Strażnika działa sama.',

@@ -140,7 +140,7 @@ Nazwa „Nimfa” i „Nimfa Źródeł” występują zamiennie.
 Wszystkie poniższe reguły są przełączalne w konfiguracji (`src/engine/types.ts`, `DEFAULT_RULES`).
 Jeśli projekt rozstrzygnie je inaczej, wystarczy zmienić ustawienie.
 
-1. **Wejście na pole z wrogim bohaterem** wywołuje bitwę. Atakujący to ten, kto wchodzi. Bitwa kończy ruch bohatera w tej turze.
+1. **Wejście na pole z wrogim bohaterem** wywołuje bitwę. Atakujący to ten, kto wchodzi. Wejście kosztuje tyle punktów ruchu, ile koszt terenu pola; bitwa nie kończy ruchu (od 2026-10-28, sekcja 10).
 2. **Wejście na pole z kryształem pilnowanym przez strażnika** wywołuje bitwę 3 na 1. Zło nie może wchodzić na takie pola.
 3. **Dostarczenie kryształu** następuje automatycznie po wejściu na pole Drzewa, jeśli nie stoi tam zły bohater. Jeśli stoi, najpierw jest bitwa.
 4. **Rytuał** zaczyna się, gdy na koniec rundy na Drzewie stoją wszyscy żyjący główni bohaterowie zła. Zło wygrywa, jeśli ten stan utrzyma się na koniec następnej rundy, czyli 2 kolejne końce rund.
@@ -641,3 +641,57 @@ Wyniki (zwykła gra: 500 partii na wariant; Arena: 1000 partii na każde z 81 st
 - Tabele trudności w rozdziale 13 instrukcji i oceny w `src/engine/scoring.ts` przeliczone na nowo.
 
 **Dla wersji papierowej (do poprawienia):** karty jednostek Władca Wilkołaków (S 7, nowy tekst Zewu Krwi), Król Jednorożców (S 8, Szarża +2 A), Ogr Żelazna Pięść (Ż 10); w instrukcji rozdział 2, zasada ruchu w bitwie (rozdział 8 i ściągawka), rozdział 13 (tabele), rozdział 15 (Horda widzi 4 karty). Figurki bez zmian.
+
+## 10. Bitwa nie kończy ruchu (2026-10-28, decyzja użytkownika)
+
+Zgłoszenie z gry: „walka z cyklopem zabrała mi wszystkie punkty ruchu, a powinna zabrać tylko jeden”. Decyzja autora:
+punkty ruchu zużywa **tylko przejście na inny kafelek**. Żeby zacząć walkę (z wrogim bohaterem albo strażnikiem),
+trzeba wejść na jego pole — kosztuje to dokładnie tyle, ile koszt terenu tego pola. Bitwa nie kończy ruchu: po wygranej
+bohater może iść dalej, a nawet walczyć jeszcze raz, jeśli starczy mu punktów. Rezerwowy bohater, który przejmuje turę
+po bohaterze poległym w bitwie, nadal czeka do swojej następnej tury.
+
+Symulacje (`make sim-tabele GAMES=300`, % wygranych Przymierza; szum ok. ±3 pp): Przymierze zyskuje średnio ok. 4 pp,
+najwięcej w kooperacji jednego gracza na krótkiej mapie (+10 pp). Balans nie był jeszcze korygowany.
+
+| Tryb | Poziom | Mapa | Przed | Po |
+|---|---|---|---|---|
+| Kooperacja — 1 gracz | Łatwy | Krótka | 92% | 96% |
+| Kooperacja — 1 gracz | Łatwy | Średnia | 91% | 94% |
+| Kooperacja — 1 gracz | Łatwy | Długa | 85% | 88% |
+| Kooperacja — 1 gracz | Łatwy | Bardzo długa | 79% | 81% |
+| Kooperacja — 1 gracz | Normalny | Krótka | 57% | 67% |
+| Kooperacja — 1 gracz | Normalny | Średnia | 64% | 72% |
+| Kooperacja — 1 gracz | Normalny | Długa | 59% | 62% |
+| Kooperacja — 1 gracz | Normalny | Bardzo długa | 60% | 68% |
+| Kooperacja — 1 gracz | Trudny | Krótka | 26% | 36% |
+| Kooperacja — 1 gracz | Trudny | Średnia | 29% | 36% |
+| Kooperacja — 1 gracz | Trudny | Długa | 29% | 30% |
+| Kooperacja — 1 gracz | Trudny | Bardzo długa | 41% | 43% |
+| Kooperacja — 2 graczy | Łatwy | Krótka | 76% | 82% |
+| Kooperacja — 2 graczy | Łatwy | Średnia | 75% | 74% |
+| Kooperacja — 2 graczy | Łatwy | Długa | 68% | 70% |
+| Kooperacja — 2 graczy | Łatwy | Bardzo długa | 74% | 79% |
+| Kooperacja — 2 graczy | Normalny | Krótka | 59% | 64% |
+| Kooperacja — 2 graczy | Normalny | Średnia | 56% | 62% |
+| Kooperacja — 2 graczy | Normalny | Długa | 56% | 61% |
+| Kooperacja — 2 graczy | Normalny | Bardzo długa | 73% | 75% |
+| Kooperacja — 2 graczy | Trudny | Krótka | 34% | 42% |
+| Kooperacja — 2 graczy | Trudny | Średnia | 37% | 38% |
+| Kooperacja — 2 graczy | Trudny | Długa | 41% | 45% |
+| Kooperacja — 2 graczy | Trudny | Bardzo długa | 59% | 61% |
+| Rywalizacja — 1 na 1 | Łatwy | Krótka | 91% | 95% |
+| Rywalizacja — 1 na 1 | Łatwy | Średnia | 88% | 90% |
+| Rywalizacja — 1 na 1 | Łatwy | Długa | 86% | 89% |
+| Rywalizacja — 1 na 1 | Łatwy | Bardzo długa | 73% | 75% |
+| Rywalizacja — 1 na 1 | Normalny | Krótka | 52% | 60% |
+| Rywalizacja — 1 na 1 | Normalny | Średnia | 47% | 51% |
+| Rywalizacja — 1 na 1 | Normalny | Długa | 43% | 49% |
+| Rywalizacja — 1 na 1 | Normalny | Bardzo długa | 44% | 45% |
+| Rywalizacja — 2 na 2 | Łatwy | Krótka | 77% | 83% |
+| Rywalizacja — 2 na 2 | Łatwy | Średnia | 72% | 73% |
+| Rywalizacja — 2 na 2 | Łatwy | Długa | 69% | 68% |
+| Rywalizacja — 2 na 2 | Łatwy | Bardzo długa | 60% | 60% |
+| Rywalizacja — 2 na 2 | Normalny | Krótka | 49% | 54% |
+| Rywalizacja — 2 na 2 | Normalny | Średnia | 46% | 47% |
+| Rywalizacja — 2 na 2 | Normalny | Długa | 45% | 48% |
+| Rywalizacja — 2 na 2 | Normalny | Bardzo długa | 45% | 47% |
