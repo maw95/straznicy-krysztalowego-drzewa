@@ -8,19 +8,16 @@ import { DEFAULT_RULES, type Action, type GameState, type LogEntry, type SetupOp
 import { AdventureView } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
 import { DuelView } from './DuelView';
-import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, SvgDefs, asset } from './common';
+import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset } from './common';
 import { SetupScreen } from './SetupScreen';
-import { music, type Theme } from './music';
+import { music } from './music';
+import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, OptionsDialog, VictoryEffects, type Confirmation } from './gameDialogs';
 import { UnitCard } from './UnitCard';
-import { TreasureCard } from './TreasureCard';
 import { readAutosave, replay, writeAutosave, type BugReport, type SaveFile } from './saves';
 import { BugReportDialog } from './BugReportDialog';
 import { TesterDialog } from './TesterDialog';
 import { isTestRun, recordGame } from './journal';
-import { RulesDialog } from './RulesDialog';
 import { BattleSummary } from './BattleSummary';
-import { HoverCardLayer } from './hover';
-import { DetailsLayer } from './details';
 import { Tutorial } from './Tutorial';
 import { Intro, introSeen } from './Intro';
 import { TitleScreen, titlePending } from './TitleScreen';
@@ -28,8 +25,7 @@ import { StatsDialog } from './StatsDialog';
 import { ChangelogDialog } from './ChangelogDialog';
 import { markNewsSeen, pendingNews, WhatsNew } from './WhatsNew';
 import { ArenaPrep, DraftDialog } from './ArenaPrep';
-import { FullscreenButton, useAutoFullscreen } from './fullscreen';
-import { TreasureReveal } from './CardBack';
+import { useAutoFullscreen } from './fullscreen';
 import { ChatBox, OnlineOverlay, OnlineScreen } from './OnlineScreen';
 import { figuresOn, setFiguresOn } from './FigureLayer';
 import { savedToken, submitResult, type BotSpeed, type Invitation, type OnlineSession, type OnlineState } from '../online/api';
@@ -73,7 +69,7 @@ export function App() {
   /** Bug reports written in this game; saved and exported with it. */
   const reports = useRef<BugReport[]>([]);
   const saveFile = (g: GameState): SaveFile => ({ setup: g.setup, actions: [...history.current], reports: reports.current });
-  const [confirm, setConfirm] = useState<{ text: string; yes: string; onYes: () => void } | null>(null);
+  const [confirm, setConfirm] = useState<Confirmation | null>(null);
   const [summary, setSummary] = useState<number | null>(null);
   /**
    * The start screen: the online menu (or, logged out, the choice to log in or play without an account),
@@ -104,27 +100,7 @@ export function App() {
       window.removeEventListener('keydown', unlock);
     };
   }, []);
-  const theme: Theme = !game
-    ? 'menu'
-    : game.setup.mode === 'arena'
-      ? game.phase === 'battle'
-        ? 'battle'
-        : game.winner === 'dawn'
-          ? 'dawnVictory'
-          : game.winner === 'horde'
-            ? 'hordeVictory'
-            : 'none'
-    : game.phase === 'over'
-      ? game.winner === 'dawn'
-        ? 'dawnVictory'
-        : 'hordeVictory'
-      : game.phase === 'battle' && (game.battle?.stage === 'fight' || game.battle?.stage === 'deploy')
-        ? game.battle.kind === 'neutral'
-          ? 'guardian'
-          : 'battle'
-        : game.ritual > 0
-          ? 'ritual'
-          : 'adventure';
+  const theme = musicTheme(game);
   useEffect(() => music.play(theme), [theme]);
 
   // Full screen on the first click or key press, unless switched off in the menu (never in ?steps= test games).
@@ -523,7 +499,6 @@ export function App() {
   if (!game) {
     return (
       <>
-        <SvgDefs />
         {onlineScreen ? (
           <OnlineScreen
             session={session}
@@ -545,9 +520,6 @@ export function App() {
           onStart={start} onLoad={load} autosave={menuAutosave} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} onIntro={() => setShowIntro(true)} onChangelog={() => setShowChangelog(true)} />
         )}
         {overlay}
-        <Modal open={showRules} onClose={() => setShowRules(false)}>
-          <RulesDialog onClose={() => setShowRules(false)} />
-        </Modal>
         <Modal open={showTesters} onClose={() => setShowTesters(false)}>
           {showTesters && <TesterDialog onClose={() => setShowTesters(false)} download={download} />}
         </Modal>
@@ -571,25 +543,7 @@ export function App() {
         </Modal>
         {showIntro && !showTitle && <Intro onClose={() => setShowIntro(false)} />}
         {showTitle && <TitleScreen onStart={() => setShowTitle(false)} />}
-        <HoverCardLayer />
-        <DetailsLayer />
-        {error && (
-          <div className="plate parch" role="alert" style={{ position: 'fixed', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 80, fontWeight: 700, color: '#8A1A1A' }} onClick={() => setError(null)}>
-            {error}
-          </div>
-        )}
-      <button
-        className="btn plate parch music-btn"
-        title={music.muted ? 'Włącz muzykę' : 'Wycisz muzykę'}
-        aria-label={music.muted ? 'Włącz muzykę' : 'Wycisz muzykę'}
-        onClick={() => {
-          music.unlock();
-          music.toggleMute();
-        }}
-      >
-        {music.muted ? '🔇' : '♪'}
-      </button>
-      <FullscreenButton />
+        <AppChrome error={error} onDismissError={() => setError(null)} showRules={showRules} onCloseRules={() => setShowRules(false)} />
       </>
     );
   }
@@ -654,19 +608,7 @@ export function App() {
 
   return (
     <>
-      <SvgDefs />
-      <button
-        className="btn plate parch music-btn"
-        title={music.muted ? 'Włącz muzykę' : 'Wycisz muzykę'}
-        aria-label={music.muted ? 'Włącz muzykę' : 'Wycisz muzykę'}
-        onClick={() => {
-          music.unlock();
-          music.toggleMute();
-        }}
-      >
-        {music.muted ? '🔇' : '♪'}
-      </button>
-      <FullscreenButton />
+      <AppChrome error={error} onDismissError={() => setError(null)} showRules={showRules} onCloseRules={() => setShowRules(false)} />
       {overlay}
       {isOnline && onlineRoom?.waiting && <WaitingBanner room={onlineRoom} canHand={mySeats.size > 0} onHand={(seat) => session!.send({ type: 'handToBot', seat })} />}
       {isOnline && online?.reconnecting && (
@@ -709,109 +651,28 @@ export function App() {
         <Handoff state={game} playerId={actor.playerId} onConfirm={() => setConfirmedFaction(actor.faction)} />
       )}
 
-      {game.phase === 'over' && game.winner === 'dawn' && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 49, pointerEvents: 'none', overflow: 'hidden' }}>
-          <div className="victory-rays" />
-          {Array.from({ length: 26 }, (_, i) => (
-            <span key={i} className="petal" style={{ left: `${(i * 37) % 100}%`, ['--px' as string]: `${((i * 23) % 120) - 60}px`, ['--pr' as string]: `${200 + i * 30}deg`, ['--pd' as string]: `${6 + (i % 5)}s`, ['--pdl' as string]: `${-(i * 0.6)}s` } as React.CSSProperties} />
-          ))}
-        </div>
-      )}
-      {game.phase === 'over' && game.winner === 'horde' && <div className="defeat-fog" style={{ zIndex: 49 }} />}
-      <Modal open={Boolean(found) && !digest && !summary}>
-        {found && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }} onClick={() => setFound(null)}>
-            <Ribbon style={{ width: 'min(360px, 90vw)' }}>Znaleziono skarb!</Ribbon>
-            <TreasureReveal kind={found} width={Math.min(300, window.innerWidth - 60)} />
-            <button className="btn prim" data-enter autoFocus style={{ padding: '6px 26px', fontSize: 18 }} onClick={() => setFound(null)}>
-              Do ekwipunku
-            </button>
-          </div>
-        )}
-      </Modal>
+      <VictoryEffects game={game} />
+      <FoundTreasure kind={found} open={Boolean(found) && !digest && !summary} onClose={() => setFound(null)} />
 
       <Modal open={game.phase === 'over'}>
         <GameOver state={game} online={isOnline} rankingNote={rankingNote} onNew={leaveGame} onLog={() => setShowLog(true)} />
       </Modal>
 
-      <Modal open={Boolean(card)} onClose={() => setCard(null)}>
-        {card && (
-        <div onClick={() => setCard(null)}>
-          {card.startsWith('item:') ? (
-            <TreasureCard kind={card.slice(5) as ItemKind} width={Math.min(360, window.innerWidth - 40)} />
-          ) : (
-            <UnitCard unitId={card} width={Math.min(360, window.innerWidth - 40)} />
-          )}
-        </div>
-        )}
-      </Modal>
+      <CardDialog card={card} onClose={() => setCard(null)} />
 
-      {error && (
-        <div className="plate parch" role="alert" style={{ position: 'absolute', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 80, fontWeight: 700, color: '#8A1A1A' }} onClick={() => setError(null)}>
-          {error}
-        </div>
-      )}
-
-      <Modal open={Boolean(confirm)} onClose={() => setConfirm(null)}>
-        {confirm && (
-          <Frame crest style={{ width: 'min(480px, 94vw)' }} innerStyle={{ padding: '24px 22px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, textAlign: 'center' }}>
-            <div style={{ fontSize: 20, lineHeight: 1.35 }}>{confirm.text}</div>
-            <div style={{ display: 'flex', gap: 12 }}>
-              <button className="btn plate parch" style={{ padding: '8px 18px', fontSize: 18 }} onClick={() => setConfirm(null)}>Anuluj</button>
-              <button
-                className="btn prim"
-                data-enter
-                autoFocus
-                style={{ padding: '8px 22px', fontSize: 19 }}
-                onClick={() => {
-                  const go = confirm.onYes;
-                  setConfirm(null);
-                  go();
-                }}
-              >
-                {confirm.yes}
-              </button>
-            </div>
-          </Frame>
-        )}
-      </Modal>
+      <ConfirmDialog confirm={confirm} onClose={() => setConfirm(null)} />
 
       <Modal open={summary !== null && game.lastBattle?.id === summary} onClose={() => setSummary(null)}>
         {game.lastBattle && <BattleSummary report={game.lastBattle} onClose={() => setSummary(null)} />}
       </Modal>
 
-      <Modal open={showRules} onClose={() => setShowRules(false)}>
-        <RulesDialog onClose={() => setShowRules(false)} />
-      </Modal>
-
-      <HoverCardLayer />
-      <DetailsLayer />
       <Tutorial state={game} active={humanTurn && !needsHandoff && !digest && !summary && !confirm} />
 
       <Modal open={showLog} onClose={() => setShowLog(false)}>
         <LogDialog entries={visibleLog} />
       </Modal>
 
-      <Modal open={Boolean(digest) && !needsHandoff}>
-        {digest && (
-        <div>
-          <Frame crest style={{ width: 'min(620px, 94vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <Ribbon>Od Twojej ostatniej tury</Ribbon>
-            <div className="scroll" style={{ maxHeight: 360 }}>
-              {digest.map((l, i) => (
-                <div key={i} className={`log-line ${l.kind}`} style={{ fontSize: 17 }}>
-                  <span style={{ color: '#9FB8BC', marginRight: 6 }}>[{l.round}]</span>
-                  {l.text}
-                </div>
-              ))}
-            </div>
-            <button className="btn prim" data-enter style={{ alignSelf: 'center', padding: '6px 26px', fontSize: 19 }} onClick={() => setDigest(null)}>
-              Dalej
-            </button>
-          </Frame>
-        </div>
-        )}
-      </Modal>
+      <DigestDialog entries={digest} open={Boolean(digest) && !needsHandoff} onClose={() => setDigest(null)} />
 
       <Modal open={showReport} onClose={() => setShowReport(false)}>
         {showReport && (
@@ -831,50 +692,33 @@ export function App() {
         )}
       </Modal>
 
-      <Modal open={showDebug} onClose={() => setShowDebug(false)}>
-        <div>
-          <Frame crest style={{ width: 'min(560px, 94vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12, fontSize: 17 }}>
-            <Ribbon>Opcje i narzędzia testowe</Ribbon>
-            {isOnline && onlineRoom ? (
-              <label title={onlineRoom.ownerId === online!.user.id ? 'Tempo ruchów komputera dla wszystkich w pokoju' : 'Tempo ustawia założyciel pokoju'}>
-                Tempo botów (dla całego pokoju){' '}
-                <select value={onlineRoom.botSpeed} disabled={onlineRoom.ownerId !== online!.user.id} onChange={(e) => session!.send({ type: 'botSpeed', speed: e.target.value as BotSpeed })}>
-                  {Object.keys(SPEEDS).map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              </label>
-            ) : (
-            <label>
-              Tempo botów{' '}
-              <select value={speed} onChange={(e) => setSpeed(e.target.value as BotSpeed)}>
-                {Object.keys(SPEEDS).map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            </label>
-            )}
-            {!isOnline && <label><input type="checkbox" checked={autoplay} onChange={(e) => setAutoplay(e.target.checked)} /> Autoplay — boty grają także za ludzi</label>}
-            <label title="Na słabszym komputerze albo telefonie możesz wrócić do okrągłych portretów">
-              <input type="checkbox" checked={figures} onChange={(e) => { setFiguresOn(e.target.checked); setFigures(e.target.checked); }} /> Figurki 3D na planszy
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              Muzyka
-              <input type="range" min={0} max={1} step={0.05} value={music.volume} onChange={(e) => music.setVolume(Number(e.target.value))} style={{ flex: 1 }} />
-              <input type="checkbox" checked={!music.muted} onChange={() => music.toggleMute()} /> włączona
-            </label>
-            <div>Ziarno partii: <b>{game.setup.seed}</b> · akcji: {game.actionCount} · gra zapisuje się automatycznie</div>
-            <div style={{ fontSize: 14, color: 'var(--muted)' }}>Skróty: Spacja — koniec tury/aktywacji · U — cofnij · F — przewiń boty · D — dziennik · R — zasady · Z — zdolność · S — skarby · Ctrl na jednostce — jej zasięg · Esc — zamknij</div>
-            <button className="btn plate parch" style={{ padding: '6px 14px', alignSelf: 'flex-start' }} onClick={() => { setShowDebug(false); setShowRules(true); }}>Zasady i karty</button>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              <button className="btn prim" style={{ padding: '6px 14px' }} onClick={() => download(`partia-${game.setup.seed}.json`, JSON.stringify(saveFile(game), null, 1))}>Eksport partii (JSON)</button>
-              <button className="btn prim" style={{ padding: '6px 14px' }} onClick={() => download(`dziennik-${game.setup.seed}.txt`, game.log.map((l) => `[${l.round}] ${l.text}`).join('\n'))}>Eksport dziennika</button>
-              <button className="btn prim r" style={{ padding: '6px 14px' }} onClick={() => { setShowDebug(false); leaveGame(); }}>{isOnline ? 'Wyjdź z gry' : 'Nowa gra'}</button>
-            </div>
-            <button className="btn plate parch" data-enter style={{ padding: '6px 14px', alignSelf: 'flex-end' }} onClick={() => setShowDebug(false)}>Zamknij</button>
-          </Frame>
-        </div>
-      </Modal>
+      <OptionsDialog
+        open={showDebug}
+        onClose={() => setShowDebug(false)}
+        game={game}
+        room={isOnline ? onlineRoom ?? null : null}
+        isOwner={Boolean(isOnline && onlineRoom && onlineRoom.ownerId === online?.user.id)}
+        onRoomSpeed={(s) => session!.send({ type: 'botSpeed', speed: s })}
+        speed={speed}
+        onSpeed={setSpeed}
+        autoplay={autoplay}
+        onAutoplay={setAutoplay}
+        figures={figures}
+        onFigures={(on) => {
+          setFiguresOn(on);
+          setFigures(on);
+        }}
+        onRules={() => {
+          setShowDebug(false);
+          setShowRules(true);
+        }}
+        onExportGame={() => download(`partia-${game.setup.seed}.json`, JSON.stringify(saveFile(game), null, 1))}
+        onExportLog={() => download(`dziennik-${game.setup.seed}.txt`, game.log.map((l) => `[${l.round}] ${l.text}`).join('\n'))}
+        onLeave={() => {
+          setShowDebug(false);
+          leaveGame();
+        }}
+      />
     </>
   );
 }
