@@ -560,6 +560,11 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                   {arenaCells().map((k) => (
                     <polygon key={`gl${k}`} points={hexPoints(k)} fill="none" stroke="#E4C16E" strokeWidth="1.6" strokeLinejoin="round" />
                   ))}
+                  {/* Obstacles get their own rim: dark red on the green Dawn board (as painted there), violet on the
+                      Horde's lava, where red would not show. */}
+                  {b.obstacles.map((k) => (
+                    <polygon key={`ob${k}`} points={hexPoints(k, 1.5)} fill="none" stroke={b.arena === 'horde' ? '#B07AE8' : '#8E2C1A'} strokeWidth="3.2" strokeLinejoin="round" />
+                  ))}
                 </g>
                 {arenaCells().map((k) => {
                   const teleportTo = targeting?.kind === 'teleport' && Boolean(targeting.unitId) && !unitAt(b, k) && !b.obstacles.includes(k);
