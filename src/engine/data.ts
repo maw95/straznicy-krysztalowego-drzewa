@@ -102,6 +102,9 @@ export const FACTION_SUPPORTS: Record<FactionId, string[]> = {
 
 export const GUARDIANS = ['cyclops', 'griffin', 'hydra'];
 
+/** Supports a hero takes into a battle on the arena (all of them when fewer are alive). */
+export const SUPPORTS_PER_BATTLE = 2;
+
 /** A guardian fought in a duel on the board (one hero alone) keeps only part of its Życie, rounded up. */
 export const guardianDuelHp = (id: string) => Math.ceil(UNITS[id].hp * ABILITY.guardianDuelHpShare);
 

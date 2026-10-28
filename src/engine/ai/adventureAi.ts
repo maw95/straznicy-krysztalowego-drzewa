@@ -1,7 +1,7 @@
 // Adventure-map AI: the coop evil automaton (spec section 7) and simple bots
 // for player seats. Both only use information visible on the map.
 
-import { FACTION_SUPPORTS, UNITS, type FactionId } from '../data';
+import { FACTION_SUPPORTS, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from '../data';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, treeKey, type PathResult } from '../map';
 import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, reviveSpots, ritualFormed, ritualSpot } from '../game';
@@ -102,7 +102,7 @@ function stepToward(state: GameState, path: HexKey[]): Action {
  */
 export function teamStrength(state: GameState, f: FactionId, heroId: string): number {
   // In a duel on the board the heroes fight alone.
-  const supports = state.setup.battleMode === 'board' ? [] : state.factions[f].supportsAlive.slice().sort((a, b) => unitValue(b) - unitValue(a)).slice(0, 2);
+  const supports = state.setup.battleMode === 'board' ? [] : state.factions[f].supportsAlive.slice().sort((a, b) => unitValue(b) - unitValue(a)).slice(0, SUPPORTS_PER_BATTLE);
   const team = [heroId, ...supports];
   const hp = team.reduce((a, id) => a + UNITS[id].hp, 0);
   const atk = team.reduce((a, id) => a + UNITS[id].attack * (UNITS[id].attackType === 'ranged' ? 1.3 : 1), 0);
@@ -166,7 +166,7 @@ function mapItemAction(state: GameState): Action | null {
       const spots = reviveSpots(state, hero);
       if (dead && spots.length) return { type: 'useMapItem', itemId: id, unitId: dead.id, targets: [spots[0]] };
       const deadSupport = FACTION_SUPPORTS[hero.faction].find((s) => f.supportsDead.includes(s));
-      if (deadSupport && f.supportsAlive.length < 2) return { type: 'useMapItem', itemId: id, unitId: deadSupport };
+      if (deadSupport && f.supportsAlive.length < SUPPORTS_PER_BATTLE) return { type: 'useMapItem', itemId: id, unitId: deadSupport };
     }
     if (item.kind === 'map') {
       const hidden = Object.values(state.tiles)

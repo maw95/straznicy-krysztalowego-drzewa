@@ -15,6 +15,7 @@ import {
   ARENA_OFFER,
   ARENA_RULES,
   RESURRECTION_CARDS,
+  SUPPORTS_PER_BATTLE,
   TERRAIN_NAMES,
   UNITS,
   type FactionId,
@@ -668,7 +669,7 @@ function startBattle(state: GameState, s: BattleStart) {
   for (const f of [attacker.faction, defenderHero?.faction].filter(Boolean) as FactionId[]) {
     if (b.duel) break;
     const pool = state.factions[f].supportsAlive;
-    if (pool.length <= 2) addSupports(state, f, [...pool]);
+    if (pool.length <= SUPPORTS_PER_BATTLE) addSupports(state, f, [...pool]);
     else b.needsSelection.push(f);
   }
   if (!b.needsSelection.length) startBattleFight(state);
@@ -684,7 +685,7 @@ function selectSupports(state: GameState, faction: FactionId, ids: string[]) {
   if (!b || b.stage !== 'select' || b.needsSelection[0] !== faction) throw new Error('Teraz nie wybiera ta frakcja.');
   const pool = state.factions[faction].supportsAlive;
   const unique = [...new Set(ids)];
-  if (unique.length !== Math.min(2, pool.length) || unique.some((id) => !pool.includes(id))) throw new Error('Wybierz dwóch żyjących pomocników.');
+  if (unique.length !== Math.min(SUPPORTS_PER_BATTLE, pool.length) || unique.some((id) => !pool.includes(id))) throw new Error('Wybierz dwóch żyjących pomocników.');
   addSupports(state, faction, unique);
   b.needsSelection.shift();
   if (!b.needsSelection.length) afterSelection(state);
