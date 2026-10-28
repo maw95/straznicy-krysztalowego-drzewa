@@ -8,7 +8,7 @@ import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { chooseAction } from '../src/engine/ai';
 import { FACTION_HEROES, type FactionId, type MapSize } from '../src/engine/data';
-import { applyAction, createGame } from '../src/engine/game';
+import { applyAction, applyActionInPlace, createGame } from '../src/engine/game';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type Action, type GameState, type Level, type RulesConfig, type SeatSetup, type SetupOptions } from '../src/engine/types';
 
 type Table = 'coop1' | 'coop2' | 'pvp1' | 'pvp2';
@@ -60,8 +60,11 @@ const CASES: Array<[string, (seed: number) => SetupOptions, number[]]> = [
   ['arena dice', (s) => arenaGame('normal', s, { useDice: true }), [1, 2]],
 ];
 
-/** Plays one bot game; an action the engine rejects is recorded and replaced by ending the turn or activation. */
-function play(setup: SetupOptions): { state: GameState; actions: Array<Action | string> } {
+/**
+ * Plays one bot game; an action the engine rejects is recorded and replaced by ending the turn or
+ * activation. `apply` is applyAction (a new state per action, as the screen plays) unless given.
+ */
+function play(setup: SetupOptions, apply: (s: GameState, a: Action) => GameState = applyAction): { state: GameState; actions: Array<Action | string> } {
   let s = createGame(setup);
   const actions: Array<Action | string> = [];
   for (let i = 0; i < 30000 && s.phase !== 'over'; i++) {
@@ -69,7 +72,7 @@ function play(setup: SetupOptions): { state: GameState; actions: Array<Action | 
     if (!a) break;
     actions.push(a);
     try {
-      s = applyAction(s, a);
+      s = apply(s, a);
     } catch (e) {
       actions.push(`illegal: ${(e as Error).message}`);
       s = applyAction(s, s.phase === 'battle' ? { type: 'endActivation' } : { type: 'endTurn' });
@@ -87,6 +90,17 @@ describe('golden bot games', () => {
       return `seed ${seed}: ${state.winner ?? 'none'} round ${state.round} actions ${state.actionCount} state ${hash(state)} actions ${hash(actions)}`;
     });
     expect(out).toMatchSnapshot();
+  });
+
+  it('plays the same games when actions change the state in place', () => {
+    for (const [, make, seeds] of CASES.filter(([name]) => /coop1 normal short|pvp2 normal medium|arena normal|coop1 easy/.test(name))) {
+      for (const seed of seeds) {
+        const a = play(make(seed));
+        const b = play(make(seed), applyActionInPlace);
+        expect(hash(b.state)).toBe(hash(a.state));
+        expect(hash(b.actions)).toBe(hash(a.actions));
+      }
+    }
   });
 
   it('starts from the default rules', () => {

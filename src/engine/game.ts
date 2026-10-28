@@ -1,6 +1,7 @@
 // Game flow: setup, adventure turns, battle triggers and aftermath, victory.
 // `applyAction` is the single entry point: it clones the state, applies one
 // action and returns the new state, so every game is a replayable action log.
+// `applyActionInPlace` does the same on the state it is given (simulations, replays).
 
 import {
   FACTION_HEROES,
@@ -836,7 +837,15 @@ function hordeReinforcement(state: GameState, fallenId: string) {
 
 export function applyAction(prev: GameState, action: Action): GameState {
   if (prev.phase === 'over') throw new Error('Gra się zakończyła.');
-  const state: GameState = structuredClone(prev);
+  return applyActionInPlace(structuredClone(prev), action);
+}
+
+/**
+ * Applies one action to `state` itself and returns it. Faster than applyAction (no copy), for
+ * code that owns the state; when the action is refused the state may be left half changed.
+ */
+export function applyActionInPlace(state: GameState, action: Action): GameState {
+  if (state.phase === 'over') throw new Error('Gra się zakończyła.');
   switch (action.type) {
     case 'moveHero':
       moveHero(state, action.to);
