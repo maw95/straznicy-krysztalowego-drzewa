@@ -289,7 +289,7 @@ w kodzie). Plan zaakceptowany; decyzje:
 Serwer: etapy 1–4 zrobione i wdrożone 28.10 (60 testów; protokół dla gry bez zmian; „Protokół” zrobiony po stronie serwera).
 
 **Do decyzji autora (z prac nad serwerem):**
-- [ ] **Ranking da się oszukać:** `levelOf` nie sprawdza części zasad (`heroMovePoints`, rytuał, `hordeStartTreasures`,
+- [x] ~~**Ranking da się oszukać:**~~ decyzja 28.10: nie poprawiamy, nie zakładamy oszukiwania. `levelOf` nie sprawdza części zasad (`heroMovePoints`, rytuał, `hordeStartTreasures`,
   `battleRoundLimit`…), więc spreparowana gra wysłana do `/results` może dostać punkty jak za „Trudny” (do 30 pkt),
   a serwer nie wie, czy ludzkie miejsca nie grał bot (skrypt może wysyłać do 60 wygranych na godzinę). Możliwa
   poprawka: dla poziomów gotowych serwer sam buduje ustawienia i odtwarza partię; dla własnych — sprawdza pole po polu.
@@ -328,7 +328,7 @@ wiadomość `game` zawiera cały dziennik z wpisami `privateTo` (filtrowane tylk
   nie ma innych nieprzeanalizowanych plików, `tester-reports/` jest puste.
 - [x] **#3, telefon 375×794:** tor rund zasłaniał pola mapy, nie dało się ich kliknąć. Naprawione w punkcie 6
   (na telefonie tor rund jest ukryty, runda jest na dolnym pasku).
-- [ ] **#4, do decyzji:** „walka z cyklopem zabrała mi wszystkie punkty ruchu, a powinna zabrać tylko jeden”.
+- [x] **#4 — decyzja 28.10: bitwa kosztuje koszt terenu i nie kończy ruchu** (wdrożone, notatki sekcja 10). „walka z cyklopem zabrała mi wszystkie punkty ruchu, a powinna zabrać tylko jeden”.
   Gra działa według obecnych zasad: każda bitwa kończy ruch bohatera w tej turze (silnik: `turnBattleDone`,
   `movePoints = 0`). Instrukcja mówi to wprost dla bitwy z wrogim bohaterem (rozdz. 7), ale przy strażniku
   („Strażnik — wejście na jego pole to wyzwanie do walki”) już nie. Możliwości:
