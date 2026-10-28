@@ -290,11 +290,39 @@ export function App() {
   };
 
   // Autosave after every action; a finished game clears the slot. Online games are kept by the server.
+  // The journal holds every game ever played, so rewriting it is dearer: at the start, when the phase
+  // changes, every 10 actions, at the end, and when the page is hidden or closed.
+  const journaled = useRef<{ game: GameState | null; actions: number; phase: string }>({ game: null, actions: -1, phase: '' });
   useEffect(() => {
-    if (!game || isOnline) return;
-    writeAutosave(game.phase === 'over' ? null : saveFile(game));
-    recordGame(saveFile(game), game);
+    if (!game) {
+      // Back in the menu: the game left behind gets its last actions in the journal.
+      const left = journaled.current.game;
+      if (left && history.current.length !== journaled.current.actions) recordGame(saveFile(left), left);
+      journaled.current = { game: null, actions: -1, phase: '' };
+      return;
+    }
+    if (isOnline) return;
+    const save = saveFile(game);
+    writeAutosave(game.phase === 'over' ? null : save);
+    const last = journaled.current;
+    const fresh = last.game?.setup.seed !== game.setup.seed;
+    if (fresh || game.phase !== last.phase || game.phase === 'over' || save.actions.length - last.actions >= 10 || save.actions.length < last.actions) {
+      recordGame(save, game);
+      journaled.current = { game, actions: save.actions.length, phase: game.phase };
+    } else journaled.current = { ...last, game };
   }, [game]);
+  useEffect(() => {
+    const flush = () => {
+      const g = journaled.current.game;
+      if (g && !isOnline && document.visibilityState === 'hidden') recordGame(saveFile(g), g);
+    };
+    document.addEventListener('visibilitychange', flush);
+    window.addEventListener('pagehide', flush);
+    return () => {
+      document.removeEventListener('visibilitychange', flush);
+      window.removeEventListener('pagehide', flush);
+    };
+  }, [isOnline]);
 
   const undo = useCallback(() => {
     const last = undoStack.current.pop();
