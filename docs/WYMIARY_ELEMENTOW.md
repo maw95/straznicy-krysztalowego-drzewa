@@ -8,7 +8,9 @@ więc wersja fizyczna i komputerowa mają te same pola.
 
 - **Druk:** 300 DPI, spad **3 mm** z każdej strony, ważne napisy i liczby min. **4 mm** od linii cięcia.
 - **Przeliczenie:** 1 mm = 11,81 px przy 300 DPI. Rozmiary w pikselach poniżej już zawierają spad.
-- **Tektura** na kafelki, planszę, tor rund i znaczniki: **2 mm**. Karty: papier kartonowy ok. 300 g/m², lakier matowy.
+- **Tektura** na kafelki i planszę: **2 mm**. Karty: papier kartonowy ok. 300 g/m², laminowane ręcznie.
+- **Druk 3D:** figurki, kryształy, znacznik rundy, tor rund, okrągłe znaczniki i krople obrażeń. Grafiki do nich
+  (nadruk lub naklejka na wierzch) liczy się tak samo: 300 DPI i spad 3 mm.
 - **Jedno pole = jedna figurka.** Pole areny ma **34 mm** między płaskimi bokami — prawie najwięcej,
   ile mieści szerokość A3 (granica to ok. 36 mm bez żadnej ramki). Podstawka figurki ma **30 mm**,
   więc między podstawkami sąsiednich figurek zostają 4 mm (zob. `FIGURKI_SPECYFIKACJA.md`).
@@ -23,20 +25,20 @@ więc wersja fizyczna i komputerowa mają te same pola.
 | Karta jednostki | 15 | **80 × 120 mm** (rozmiar „Dixit”, proporcje 2:3 jak obecne wzory) | **1016 × 1488 px** |
 | Karta skarbu | 20 | **63 × 88 mm** (standardowa karta do gry) | **815 × 1110 px** |
 | Rewers karty jednostki / skarbu | po 1 wzorze | jak awers | jak awers |
-| Kropla obrażeń („5”, „3”, „2”, „1”) | 28 | kropla **18 × 22 mm** | **283 × 331 px** |
-| Znaczniki stanu (zużyta zdolność, Wzmocnienie Ataku, Żywotność, Ochrona, Unieruchomienie, Spowolnienie, Klątwa, Przyspieszenie) | 24 | koło **Ø 20 mm** | **307 × 307 px** |
-| Tor rund | 1 | sześciokąt **150 mm** między płaskimi bokami, 24 gniazda Ø 14 mm co ok. 17 mm | **2117 × 1843 px** |
-| Kryształowy znacznik rundy (druk 3D) | 1 | graniastosłup sześciokątny 8 mm, wys. 14 mm | — |
-| Kryształy (druk 3D) | 3 | graniastosłup sześciokątny 10 mm, wys. 18 mm | — |
-| Figurki z podstawką (druk 3D) | 15 | podstawka 30 mm, wys. postaci 28–68 mm | — |
+| Kropla obrażeń („5”, „3”, „2”, „1”, druk 3D) | 28 | kropla **15,6 × 20 mm**, grubość 3 mm | **255 × 307 px** |
+| Znaczniki stanu (zużyta zdolność, Wzmocnienie Ataku, +3 Ataku, Żywotność, Ochrona, Unieruchomienie, Spowolnienie, Klątwa, Przyspieszenie; druk 3D) | 25 | koło **Ø 23 mm**, grubość 4 mm | **343 × 343 px** |
+| Tor rund (druk 3D) | 1 | sześciokąt **150 × 144 mm**, grubość 8 mm, 24 gniazda | **1843 × 1772 px** |
+| Kryształowy znacznik rundy (druk 3D) | 1 | graniastosłup sześciokątny **8 × 9,2 mm**, wys. **30 mm** | — |
+| Kryształy (druk 3D) | 3 | graniastosłup sześciokątny **8 × 7 mm**, wys. **16 mm** | — |
+| Figurki z podstawką (druk 3D, pliki STL autora) | 15 | podstawka 30 mm, wys. postaci 28–68 mm | — |
 | Kość −1 / 0 / +1 | 1 | sześcienna **16 mm**, ścianki: −1, −1, 0, 0, +1, +1 | 6 pól po **189 × 189 px** (bez spadu) |
 | Instrukcja | 1 | **A4** (210 × 297 mm), zeszyt zszywany | 2480 × 3508 px na stronę |
-| Pudełko | 1 | wnętrze **305 × 305 × 90 mm**, zewnątrz ok. 310 × 310 × 95 mm | szablon (wykrojnik) od drukarni |
+| Pudełko | 1 | wnętrze ok. **305 × 305 × 90 mm**, zewnątrz ok. 310 × 310 × 95 mm (przybliżone) | — |
 
 ## Kafelki mapy
 
 - **Kształt:** sześciokąt wierzchołkiem do góry, 50 mm między płaskimi bokami — tak jak na mapie w grze.
-  Na kafelku zmieszczą się figurka strażnika (podstawka 30 mm) i kryształ (10 mm) obok niej.
+  Na kafelku zmieszczą się figurka strażnika (podstawka 30 mm) i kryształ (8 mm) obok niej.
 - **Liczba:** 50 Przymierza + 49 Hordy + 16 skarbów + 3 siedliska + Drzewo + 2 bazy = **121**.
 - **Miejsce na stole** (sama mapa):
 
@@ -64,19 +66,22 @@ więc wersja fizyczna i komputerowa mają te same pola.
 
 ## Karty
 
-- **Karty jednostek 80 × 120 mm:** leżą na nich krople obrażeń i znaczniki stanu, więc potrzebują miejsca.
-  Na karcie warto zostawić wolne pole ok. 70 × 30 mm (np. pod ilustracją) na 5–6 znaczników. Proporcje 2:3 pasują do obecnych wzorów.
-- **Karty skarbów 63 × 88 mm:** standardowe, do kupienia w koszulkach ochronnych.
+- **Karty jednostek 80 × 120 mm:** leżą na nich krople obrażeń i znaczniki stanu. Miejsca na znaczniki na karcie
+  nie zmieniamy (znaczniki Ø 23 mm mogą częściowo leżeć obok karty). Proporcje 2:3 pasują do obecnych wzorów.
+- **Karty skarbów 63 × 88 mm:** standardowy rozmiar; karty są laminowane ręcznie (bez koszulek).
 - **Rogi** zaokrąglone, promień 3 mm.
 
 ## Tor rund
 
-- Sześciokąt 150 mm, w środku Kryształowe Drzewo, 24 gniazda wzdłuż obwodu (po 4 na bok).
+- Sześciokąt **150 × 144 mm**, grubość 8 mm — dokładnie jak w pliku STL autora. W środku Kryształowe Drzewo,
+  24 gniazda wzdłuż obwodu (po 4 na bok).
 - Gniazda limitów **8, 12, 18 i 24** wyróżnione (obwódka, numer większy).
-- Gniazdo Ø 14 mm mieści znacznik rundy (8 mm, 9,2 mm między rogami) z zapasem.
+- Gniazdo mieści znacznik rundy (8 mm między bokami, 9,2 mm między rogami). Znacznik ma 30 mm wysokości,
+  żeby łatwo go wyjąć z gniazda.
 
 ## Pudełko
 
+- Wymiary przybliżone — wypraskę i dokładne wymiary pudełka ustalimy po wydrukowaniu figurek.
 - Wnętrze 305 × 305 × 90 mm mieści: złożoną planszę areny (297 × 210 mm), wypraskę z 15 figurkami
   (najwyższa ma z podstawką ok. 71 mm), wytłoczone arkusze kafelków lub ich stosy, karty, tor rund i instrukcję A4.
 

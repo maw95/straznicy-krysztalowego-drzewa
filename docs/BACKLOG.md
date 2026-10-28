@@ -35,18 +35,6 @@ punkt to osobny commit; najtańsza kolejność: 1.5 → 1.4 → 1.3 → 1.2 → 
 - [ ] **1.4. Instrukcja: lista elementów w pudełku z liczbami.** *Koszt: ok. 15–25 tys. tokenów.*
   - Rozdział 1 instrukcji i szablon: dodać znacznik „+3 Ataku” (ile sztuk — do ustalenia, prawdopodobnie 1),
     wymiary z punktu 1.5 tam, gdzie pomagają; zgodność z tabelą w `docs/WYMIARY_ELEMENTOW.md`.
-- [ ] **1.5. Wymiary elementów ustalone przez autora.** *Koszt: ok. 15–25 tys. tokenów.*
-  - Wpisać do `docs/WYMIARY_ELEMENTOW.md` (tam jest już pełna tabela wymiarów) i `FIGURKI_SPECYFIKACJA.md` §4:
-    okrągłe znaczniki 23 × 23 × 4 mm, krople obrażeń 15,6 × 20 × 3 mm, tor rund 150 × 144 × 8 mm, znacznik
-    rundy 8 × 9,2 × 30 mm, kryształy 8 × 7 × 16 mm; przeliczyć piksele do druku.
-  - Ustalenia z autorem (28.10): tor rund ma dokładnie te wymiary w pliku STL autora (gra bez zmian);
-    znaczniki, kryształy i znacznik rundy są drukowane 3D (nie tektura); znacznik rundy ma ok. 30 mm wysokości,
-    żeby łatwo go wyjąć z gniazda; znacznik „+3 Ataku” — 1 sztuka. Figurki do druku to pliki STL autora
-    z podstawką 30 mm (GLB służą tylko grze). Miejsca na znaczniki na karcie nie zmieniamy.
-  - Pomijamy: kość, woreczki, osobną ściągawkę (zostaje rozdział instrukcji), koszulki (karty laminowane
-    ręcznie), drukarnię i bigowanie (autor robi sam). Wypraska i dokładne wymiary pudełka — dopiero po
-    wydrukowaniu figurek; do tego czasu wartości przybliżone.
-
 ## 2. Figurki 3D — drobne
 
 - **Goblin Szaman** waży 6,4 MB: jego model ma osobne wierzchołki dla prawie każdego trójkąta, więc upraszczanie

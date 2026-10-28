@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wersja do druku: wymiary znaczników (Ø 23 mm), kropli obrażeń, toru rund, znacznika rundy i kryształów są już ostateczne — wszystkie te elementy będą drukowane w 3D.
 - **Zmiana zasad:** bitwa nie kończy już ruchu. Wejście na pole wrogiego bohatera albo strażnika kosztuje tyle punktów ruchu, ile koszt terenu tego pola (jak każdy krok), a po wygranej bohater może iść dalej. Zasada jest też w instrukcji i w „Zasadach i kartach”.
 - Figurki 3D: na mapie i na arenie bohaterowie i pomocnicy stoją jako trójwymiarowe figurki — obracają się w stronę ruchu, odwracają do celu przy ataku, a pierścień wokół podstawki pokazuje stronę, aktywną jednostkę i cel. W menu obok karty bohatera obraca się jego figurka. Na słabszym sprzęcie figurki można wyłączyć w Opcjach. Mają je wszystkie jednostki, także strażnicy kryształów — na mapie stoją przy pilnowanym krysztale.
 - Hydra ma nowy portret na karcie.
