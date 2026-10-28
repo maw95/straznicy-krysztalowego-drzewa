@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, MAP_VARIANTS, UNITS, type FactionId, type MapSize } from '../engine/data';
+import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type Controller, type Mode, type RulesConfig, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
@@ -9,6 +9,7 @@ import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
+import { ARENA_HINT, ARENA_LEVEL_TIPS, choice, CHIP, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
 
 const defaultSeats = (mode: Mode, count: number): SeatSetup[] => {
   if (mode === 'arena') {
@@ -75,8 +76,6 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
     (mode === 'coop' || (seats.some((s) => s.faction === 'dawn') && seats.some((s) => s.faction === 'horde'))) &&
     (['dawn', 'horde'] as FactionId[]).every((f) => seats.filter((s) => s.faction === f).length <= 2);
 
-  const choice = (active: boolean) => `btn plate parch ${active ? 'on' : ''}`;
-  const chip = { padding: '4px 14px', fontSize: 17 };
 
   return (
     <div className="screen slate screen-enter" style={{ alignItems: 'center', paddingTop: 16, gap: 18 }}>
@@ -136,21 +135,21 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
       <div className="main-row setup-row" style={{ position: 'relative', width: '100%', maxWidth: 1400 }}>
         <Frame crest className="grow" innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 14 }}>
           <Row label="Tryb">
-            <Tip text={TIPS.coop}><button className={choice(mode === 'coop')} style={chip} onClick={() => changeMode('coop')}>Kooperacja (wszyscy przeciw AI)</button></Tip>
-            <Tip text={TIPS.pvp}><button className={choice(mode === 'pvp')} style={chip} onClick={() => changeMode('pvp')}>Rywalizacja (dobro kontra zło)</button></Tip>
-            <Tip text={TIPS.arenaMode}><button className={choice(arena)} style={chip} onClick={() => changeMode('arena')}>Arena (jedna bitwa)</button></Tip>
+            <Tip text={TIPS.coop}><button className={choice(mode === 'coop')} style={CHIP} onClick={() => changeMode('coop')}>Kooperacja (wszyscy przeciw AI)</button></Tip>
+            <Tip text={TIPS.pvp}><button className={choice(mode === 'pvp')} style={CHIP} onClick={() => changeMode('pvp')}>Rywalizacja (dobro kontra zło)</button></Tip>
+            <Tip text={TIPS.arenaMode}><button className={choice(arena)} style={CHIP} onClick={() => changeMode('arena')}>Arena (jedna bitwa)</button></Tip>
           </Row>
           {!arena && (
           <>
           <Row label="Gracze">
             {/* At most 2 players per faction: coop (all Przymierze) takes 1–2, PvP 2–4. */}
             {(mode === 'coop' ? [1, 2] : [2, 3, 4]).map((n) => (
-              <button key={n} className={choice(count === n)} style={chip} onClick={() => changeCount(n)}>{n}</button>
+              <button key={n} className={choice(count === n)} style={CHIP} onClick={() => changeCount(n)}>{n}</button>
             ))}
           </Row>
           <Row label="Mapa">
             {(Object.keys(MAP_SIZE_NAMES) as MapSize[]).map((m) => (
-              <Tip key={m} text={mapTip(m)}><button className={choice(mapSize === m)} style={chip} onClick={() => setMapSize(m)}>{MAP_SIZE_NAMES[m]}</button></Tip>
+              <Tip key={m} text={mapTip(m)}><button className={choice(mapSize === m)} style={CHIP} onClick={() => setMapSize(m)}>{MAP_SIZE_NAMES[m]}</button></Tip>
             ))}
           </Row>
           </>
@@ -160,7 +159,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             <Row label="Komputer">
               {LEVELS.filter(([l]) => l !== 'custom').map(([l, label]) => (
                 <Tip key={l} text={ARENA_LEVEL_TIPS[l as Level]}>
-                  <button className={choice(level === l)} style={chip} aria-pressed={level === l} onClick={() => pickLevel(l as Level)}>
+                  <button className={choice(level === l)} style={CHIP} aria-pressed={level === l} onClick={() => pickLevel(l as Level)}>
                     {label}
                   </button>
                 </Tip>
@@ -172,7 +171,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           <Row label="Poziom">
             {LEVELS.filter(([l]) => l !== 'hard' || mode === 'coop').map(([l, label]) => (
               <Tip key={l} text={LEVEL_TIPS[l]}>
-                <button className={choice(level === l)} style={chip} aria-pressed={level === l} onClick={() => (l === 'custom' ? setLevel('custom') : pickLevel(l))}>
+                <button className={choice(level === l)} style={CHIP} aria-pressed={level === l} onClick={() => (l === 'custom' ? setLevel('custom') : pickLevel(l))}>
                   {label}
                 </button>
               </Tip>
@@ -184,13 +183,13 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           {!arena && level === 'custom' && (
           <>
           <Row label="Bitwy">
-            <Tip text={TIPS.arena}><button className={choice(battleMode === 'arena')} style={chip} onClick={() => setBattleMode('arena')}>Osobna arena (3 na 3)</button></Tip>
-            <Tip text={TIPS.board}><button className={choice(battleMode === 'board')} style={chip} onClick={() => setBattleMode('board')}>Na planszy głównej (pojedynek 1 na 1)</button></Tip>
+            <Tip text={TIPS.arena}><button className={choice(battleMode === 'arena')} style={CHIP} onClick={() => setBattleMode('arena')}>Osobna arena (3 na 3)</button></Tip>
+            <Tip text={TIPS.board}><button className={choice(battleMode === 'board')} style={CHIP} onClick={() => setBattleMode('board')}>Na planszy głównej (pojedynek 1 na 1)</button></Tip>
           </Row>
           <Row label="Ułatwienia">
             {EASES.map(([label, on, patch, tip]) => (
               <Tip key={label} text={tip}>
-                <button className={choice(on(rules))} style={chip} aria-pressed={on(rules)} onClick={() => setRules({ ...rules, ...patch(!on(rules)) })}>
+                <button className={choice(on(rules))} style={CHIP} aria-pressed={on(rules)} onClick={() => setRules({ ...rules, ...patch(!on(rules)) })}>
                   {label}
                 </button>
               </Tip>
@@ -198,13 +197,13 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           </Row>
           <Row label="Utrudnienia">
             <Tip text={TIPS.dice}>
-              <button className={choice(rules.useDice)} style={chip} aria-pressed={rules.useDice} onClick={() => setRules({ ...rules, useDice: !rules.useDice })}>
+              <button className={choice(rules.useDice)} style={CHIP} aria-pressed={rules.useDice} onClick={() => setRules({ ...rules, useDice: !rules.useDice })}>
                 Rzut kością
               </button>
             </Tip>
             {mode === 'coop' && (
               <Tip text={TIPS.extraHero}>
-                <button className={choice(rules.extraEvilHero)} style={chip} aria-pressed={rules.extraEvilHero} onClick={() => setRules({ ...rules, extraEvilHero: !rules.extraEvilHero })}>
+                <button className={choice(rules.extraEvilHero)} style={CHIP} aria-pressed={rules.extraEvilHero} onClick={() => setRules({ ...rules, extraEvilHero: !rules.extraEvilHero })}>
                   Dodatkowy bohater Hordy
                 </button>
               </Tip>
@@ -213,7 +212,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           <Row label="Remis inicjatywy">
             {TIE_MODES.map(([m, label, tip]) => (
               <Tip key={m} text={tip}>
-                <button className={choice(rules.initiativeTie === m)} style={chip} aria-pressed={rules.initiativeTie === m} onClick={() => setRules({ ...rules, initiativeTie: m })}>
+                <button className={choice(rules.initiativeTie === m)} style={CHIP} aria-pressed={rules.initiativeTie === m} onClick={() => setRules({ ...rules, initiativeTie: m })}>
                   {label}
                 </button>
               </Tip>
@@ -347,20 +346,6 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
   );
 }
 
-export const LEVELS: Array<[Level | 'custom', string]> = [
-  ['kids', 'Łatwy'],
-  ['normal', 'Normalny'],
-  ['hard', 'Trudny'],
-  ['custom', 'Własny'],
-];
-
-export const LEVEL_HINT: Record<Level | 'custom', string> = {
-  kids: 'Krótkie pojedynki na planszy, bez zdolności, bez kości i bez rytuału, a poległego bohatera zastępuje rezerwowy — zasady do ogarnięcia w kilka minut.',
-  normal: 'Pełna gra: bitwy 3 na 3 na arenie, zdolności i skarby.',
-  hard: 'Pełna gra, a automat zła ma o jednego bohatera więcej (co najmniej trzech) i 2 losowe skarby na start, ale nie dostaje posiłków. Wyzwanie dla dorosłych.',
-  custom: 'Wybierz sam: rodzaj bitew, ułatwienia i utrudnienia, które można dowolnie łączyć.',
-};
-
 /** Who strikes first when both units are equally fast: label, mode, explanation. */
 const TIE_MODES: Array<[RulesConfig['initiativeTie'], string, string]> = [
   ['defender', 'Obrońca pierwszy', 'Przy równej Szybkości pierwsza działa jednostka strony, która została zaatakowana. Tak gra się na każdym poziomie.'],
@@ -373,64 +358,3 @@ const EASES: Array<[string, (r: RulesConfig) => boolean, (on: boolean) => Partia
   ['Same Eliksiry Odrodzenia', (r) => !r.treasures, (on) => ({ treasures: !on }), 'Zamiast talii różnych skarbów na mapie leżą tylko Eliksiry Odrodzenia (1 / 2 / 3 / 4 zależnie od mapy). Jedna prosta karta: wskrzesza poległą jednostkę. Strażnicy nic nie zostawiają.'],
   ['Rezerwowy bohater po śmierci', (r) => r.heroReplacement, (on) => ({ heroReplacement: on }), 'Gdy bohater zginie, gracz bierze nowego, nieużywanego bohatera swojej frakcji. Wkracza on na wolne pole najbliżej miejsca, w którym padł poprzednik — nikt nie odpada z gry.'],
 ];
-
-export const ARENA_HINT = 'Jedna bitwa 3 na 3: każdy wybiera bohatera, dwóch pomocników i na zmianę dobiera 2 skarby ze wspólnej talii. Ok. 5–10 minut.';
-
-export const ARENA_LEVEL_TIPS: Record<Level, string> = {
-  kids: 'Komputer wybiera pomocników i skarby na chybił trafił.',
-  normal: 'Komputer wybiera rozsądnie, ale nie zawsze najlepszy skarb.',
-  hard: 'Komputer zawsze bierze najmocniejszych pomocników i najlepsze skarby.',
-};
-
-/** Explanations shown when hovering the setup buttons. */
-export const TIPS = {
-  arenaMode: 'Szybka bitwa bez mapy: Przymierze Świtu kontra Mroczna Horda, z komputerem albo z drugim graczem. Bohater, dwóch pomocników i 2 skarby dobierane ze wspólnej talii — na zmianę jeden z kilku pokazanych (Przymierze widzi 3, Horda 4).',
-  coop: 'Wszyscy gracie razem Przymierzem Świtu, a Hordę prowadzi automat według prostych zasad. Dobry wybór na pierwsze partie i do gry z dziećmi.',
-  pvp: 'Jedni prowadzą Przymierze Świtu, drudzy Mroczną Hordę (najwyżej 2 graczy na stronę). Przymierze zbiera kryształy dla Drzewa, Horda poluje na jego bohaterów albo odprawia rytuał.',
-  arena: 'Bitwa przenosi się na osobną planszę areny: każda strona wystawia bohatera i dwóch pomocników, jednostki chodzą, strzelają i używają zdolności. Ok. 5–10 minut na bitwę.',
-  board: 'Szybki pojedynek bez ruchu: walczą tylko dwaj bohaterowie (albo bohater ze strażnikiem, który ma wtedy mniej Życia) i na zmianę zadają ciosy. Ok. 1–2 minut.',
-  dice: 'Do każdego ciosu dolicza się rzut kością −1 / 0 / +1. Więcej losowości: słabszy czasem wygra, silniejszy czasem chybi.',
-  extraHero: 'Automat zła prowadzi o jednego bohatera więcej niż gracze. Trudniej, ale wciąż do wygrania.',
-};
-
-export const LEVEL_TIPS: Record<Level | 'custom', string> = {
-  kids: 'Dla najmłodszych (od 5 lat): bitwy to szybkie pojedynki bohaterów na planszy, bez zdolności i bez kości — wystarczy porównać liczby na kartach. Nie ma rytuału, a gdy bohater polegnie, gracz bierze rezerwowego.',
-  normal: 'Pełna gra: bitwy 3 na 3 na osobnej arenie, zdolności jednostek i skarby. Obrażenia zawsze równe Atakowi.',
-  hard: 'Pełna gra, a automat zła dostaje jednego bohatera więcej (co najmniej trzech) i 2 losowe skarby na start, ale nie dostaje posiłków. Wyzwanie dla dorosłych (tylko kooperacja).',
-  custom: 'Sami składacie zasady: rodzaj bitew, ułatwienia i utrudnienia — wszystko można łączyć.',
-};
-
-/** Approximate time at the table with one hero per side (simulated game length). */
-const MAP_TIME: Record<MapSize, string> = { short: '20–45', medium: '25–55', long: '30–65', veryLong: '35–70' };
-
-export function mapTip(m: MapSize): string {
-  const v = MAP_VARIANTS[m];
-  const st = v.startTreasures;
-  const start = st ? ` · Przymierze zaczyna z ${st.resurrections + st.others} ${st.resurrections + st.others === 1 ? 'skarbem' : 'skarbami'}` : '';
-  return `${v.rows} rzędów (${(v.rows * (v.rows + 1)) / 2} pól) · kryształy do zebrania: 2 przy jednym bohaterze Przymierza, 3 przy dwóch · skarby: ${v.resurrections} × Eliksir Odrodzenia + ${v.otherTreasures} inne${start} · limit ${v.roundLimit} rund · ok. ${MAP_TIME[m]} minut przy stole.`;
-}
-
-/** A button with an explanation that appears on hover (or keyboard focus). */
-export function Tip({ text, children }: { text: string; children: React.ReactNode }) {
-  return (
-    <span className="tip">
-      {children}
-      <span className="tip-pop" role="tooltip">{text}</span>
-    </span>
-  );
-}
-
-/** Seat background tinted by faction: green for Przymierze Świtu, burgundy for Mroczna Horda. */
-export const SEAT_TINT: Record<FactionId, string> = {
-  dawn: 'linear-gradient(100deg, rgba(36, 112, 64, 0.62), rgba(14, 50, 30, 0.55))',
-  horde: 'linear-gradient(100deg, rgba(128, 22, 34, 0.62), rgba(52, 8, 14, 0.58))',
-};
-
-export function Row({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-      <div className="lbl" style={{ width: 118, flex: 'none' }}>{label}</div>
-      {children}
-    </div>
-  );
-}

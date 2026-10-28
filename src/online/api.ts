@@ -21,6 +21,10 @@ export interface SeatView {
   botTakeover: boolean;
 }
 
+/** The computer's pace, slowest first (the same names in the game's options and in an online room). */
+export const BOT_SPEEDS = ['wolno', 'normalnie', 'szybko'] as const;
+export type BotSpeed = (typeof BOT_SPEEDS)[number];
+
 export interface RoomView {
   code: string;
   ownerId: number;
@@ -29,7 +33,7 @@ export interface RoomView {
   mapSize: 'short' | 'medium' | 'long' | 'veryLong';
   level: 'kids' | 'normal' | 'hard';
   /** The computer's pace in this room, set by the owner (the same names as in the game's options). */
-  botSpeed: 'wolno' | 'normalnie' | 'szybko';
+  botSpeed: BotSpeed;
   seats: SeatView[];
   members: Array<User & { online: boolean }>;
   /** The disconnected player whose turn it is: their seat and when a bot takes over (ms since epoch). */

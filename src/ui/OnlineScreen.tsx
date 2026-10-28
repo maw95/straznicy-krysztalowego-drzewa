@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import type { Level, Mode } from '../engine/types';
-import { currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
+import { BOT_SPEEDS, currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
-import { ARENA_HINT, ARENA_LEVEL_TIPS, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './SetupScreen';
+import { ARENA_HINT, ARENA_LEVEL_TIPS, choice, CHIP, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
 
 /** Links of the main menu that do not depend on the account. */
 export interface MenuLinks {
@@ -78,7 +78,6 @@ function Welcome({ problem, onRetry, onUser, onOffline }: { problem: string | nu
       setBusy(false);
     }
   };
-  const choice = (active: boolean) => `btn plate parch ${active ? 'on' : ''}`;
   return (
     <Frame crest style={{ width: 'min(460px, 94vw)', position: 'relative' }} innerStyle={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 14 }}>
       <Ribbon style={{ width: 'min(340px, 80vw)', alignSelf: 'center' }}>Witaj, Strażniku!</Ribbon>
@@ -319,8 +318,6 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
   const takenBy = (heroId: string, i: number) => table.seats.some((s, j) => j !== i && s.heroId === heroId);
   const ready = room.seats.every((s) => s.bot || s.player);
   const arena = room.mode === 'arena';
-  const choice = (active: boolean) => `btn plate parch ${active ? 'on' : ''}`;
-  const chip = { padding: '4px 14px', fontSize: 17 };
   const [copied, setCopied] = useState(false);
 
   return (
@@ -344,7 +341,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         <Row label="Tryb">
           {(['coop', 'pvp', 'arena'] as Mode[]).map((m) => (
             <Tip key={m} text={m === 'coop' ? TIPS.coop : m === 'pvp' ? TIPS.pvp : TIPS.arenaMode}>
-              <button className={choice(room.mode === m)} style={chip} disabled={!owner} onClick={() => configure(defaultTable(m, m === 'pvp' ? 2 : 1, room.level))}>
+              <button className={choice(room.mode === m)} style={CHIP} disabled={!owner} onClick={() => configure(defaultTable(m, m === 'pvp' ? 2 : 1, room.level))}>
                 {m === 'coop' ? 'Kooperacja' : m === 'pvp' ? 'Rywalizacja' : 'Arena'}
               </button>
             </Tip>
@@ -354,7 +351,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
           <>
             <Row label="Gracze">
               {(room.mode === 'coop' ? [1, 2] : [2, 3, 4]).map((n) => (
-                <button key={n} className={choice(room.seats.length === n)} style={chip} disabled={!owner} onClick={() => configure({ seats: defaultTable(room.mode, n, room.level).seats })}>
+                <button key={n} className={choice(room.seats.length === n)} style={CHIP} disabled={!owner} onClick={() => configure({ seats: defaultTable(room.mode, n, room.level).seats })}>
                   {n}
                 </button>
               ))}
@@ -362,7 +359,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
             <Row label="Mapa">
               {(Object.keys(MAP_SIZE_NAMES) as MapSize[]).map((m) => (
                 <Tip key={m} text={mapTip(m)}>
-                  <button className={choice(room.mapSize === m)} style={chip} disabled={!owner} onClick={() => configure({ mapSize: m })}>{MAP_SIZE_NAMES[m]}</button>
+                  <button className={choice(room.mapSize === m)} style={CHIP} disabled={!owner} onClick={() => configure({ mapSize: m })}>{MAP_SIZE_NAMES[m]}</button>
                 </Tip>
               ))}
             </Row>
@@ -372,14 +369,14 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         <Row label={arena ? 'Komputer' : 'Poziom'}>
           {LEVELS.filter(([l]) => l !== 'custom' && (l !== 'hard' || room.mode !== 'pvp')).map(([l, label]) => (
             <Tip key={l} text={arena ? ARENA_LEVEL_TIPS[l as Level] : LEVEL_TIPS[l]}>
-              <button className={choice(room.level === l)} style={chip} disabled={!owner} onClick={() => configure({ level: l as Level })}>{label}</button>
+              <button className={choice(room.level === l)} style={CHIP} disabled={!owner} onClick={() => configure({ level: l as Level })}>{label}</button>
             </Tip>
           ))}
         </Row>
         {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4 }}>{LEVEL_HINT[room.level]}</div>}
         <Row label="Tempo botów">
-          {(['wolno', 'normalnie', 'szybko'] as const).map((speed) => (
-            <button key={speed} className={choice(room.botSpeed === speed)} style={chip} disabled={!owner} onClick={() => session.send({ type: 'botSpeed', speed })}>
+          {BOT_SPEEDS.map((speed) => (
+            <button key={speed} className={choice(room.botSpeed === speed)} style={CHIP} disabled={!owner} onClick={() => session.send({ type: 'botSpeed', speed })}>
               {speed}
             </button>
           ))}

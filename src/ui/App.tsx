@@ -32,18 +32,18 @@ import { FullscreenButton, useAutoFullscreen } from './fullscreen';
 import { TreasureReveal } from './CardBack';
 import { ChatBox, OnlineOverlay, OnlineScreen } from './OnlineScreen';
 import { figuresOn, setFiguresOn } from './FigureLayer';
-import { savedToken, submitResult, type Invitation, type OnlineSession, type OnlineState } from '../online/api';
+import { savedToken, submitResult, type BotSpeed, type Invitation, type OnlineSession, type OnlineState } from '../online/api';
 import { useOnline } from '../online/useOnline';
 
-const SPEEDS = { wolno: 900, normalnie: 450, szybko: 120 } as const;
-type Speed = keyof typeof SPEEDS;
+/** Milliseconds between two bot moves at each pace. */
+const SPEEDS: Record<BotSpeed, number> = { wolno: 900, normalnie: 450, szybko: 120 };
 
 export function App() {
   const [game, setGame] = useState<GameState | null>(null);
   const [steps, setSteps] = useState<HexKey[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [card, setCard] = useState<string | null>(null);
-  const [speed, setSpeed] = useState<Speed>('normalnie');
+  const [speed, setSpeed] = useState<BotSpeed>('normalnie');
   const [autoplay, setAutoplay] = useState(false);
   const [showLog, setShowLog] = useState(false);
   const [showDebug, setShowDebug] = useState(false);
@@ -838,7 +838,7 @@ export function App() {
             {isOnline && onlineRoom ? (
               <label title={onlineRoom.ownerId === online!.user.id ? 'Tempo ruchów komputera dla wszystkich w pokoju' : 'Tempo ustawia założyciel pokoju'}>
                 Tempo botów (dla całego pokoju){' '}
-                <select value={onlineRoom.botSpeed} disabled={onlineRoom.ownerId !== online!.user.id} onChange={(e) => session!.send({ type: 'botSpeed', speed: e.target.value as Speed })}>
+                <select value={onlineRoom.botSpeed} disabled={onlineRoom.ownerId !== online!.user.id} onChange={(e) => session!.send({ type: 'botSpeed', speed: e.target.value as BotSpeed })}>
                   {Object.keys(SPEEDS).map((s) => (
                     <option key={s} value={s}>{s}</option>
                   ))}
@@ -847,7 +847,7 @@ export function App() {
             ) : (
             <label>
               Tempo botów{' '}
-              <select value={speed} onChange={(e) => setSpeed(e.target.value as Speed)}>
+              <select value={speed} onChange={(e) => setSpeed(e.target.value as BotSpeed)}>
                 {Object.keys(SPEEDS).map((s) => (
                   <option key={s} value={s}>{s}</option>
                 ))}
