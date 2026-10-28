@@ -67,15 +67,12 @@ export function Ribbon({ side = 'dawn', children, style }: { side?: Side; childr
   );
 }
 
-/**
- * Modal layer that fades/scales in and plays a closing animation before unmounting.
- * `open` drives visibility; children are kept while the exit animation runs.
- */
 /** Open dialogs, newest last: Enter belongs to the one on top. */
 const openModals: object[] = [];
 
 /**
- * A dialog over the screen. Enter presses its button marked `data-enter` (confirm / close / next),
+ * A dialog over the screen: it fades and scales in, and plays a closing animation before unmounting
+ * (`open` drives it; the last children stay on screen while it closes). Enter presses its button marked `data-enter` (confirm / close / next),
  * or closes it when it has none; typing in a text field and a focused button keep their own Enter.
  */
 export function Modal({ open, onClose, children, dim = true }: { open: boolean; onClose?: () => void; children: ReactNode; dim?: boolean }) {
@@ -104,14 +101,16 @@ export function Modal({ open, onClose, children, dim = true }: { open: boolean; 
     };
   }, [open]);
   const [leaving, setLeaving] = useState(false);
-  const [content, setContent] = useState<ReactNode>(children);
+  // What was on screen last, for the closing animation (kept in a ref: an open dialog gets new children
+  // on every render of its parent, and state would render it twice).
+  const content = useRef<ReactNode>(children);
+  if (open) content.current = children;
   useEffect(() => {
     if (open) {
       setShown(true);
       setLeaving(false);
-      setContent(children);
     } else if (shown) setLeaving(true);
-  }, [open, children, shown]);
+  }, [open, shown]);
   // Fallback in case animationend never fires (background tabs, reduced-motion quirks, tests).
   useEffect(() => {
     if (!leaving) return;
@@ -134,7 +133,7 @@ export function Modal({ open, onClose, children, dim = true }: { open: boolean; 
       }}
     >
       <div ref={body} className="modal-body" onClick={(e) => e.stopPropagation()}>
-        {open ? children : content}
+        {open ? children : content.current}
       </div>
     </div>
   );
