@@ -111,7 +111,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     if (reviveAt && hero) return new Map(reviveAt.map((k) => [k, { cost: 0, path: [hero.pos, k], hostile: false }]));
     return reachablePaths(state);
   }, [state, canAct, reviveAt, hero]);
-  const legal = useMemo(() => new Set(legalHeroMoves(state).map((m) => m.to)), [state]);
+  /** Hexes the hero may step on next, and whether stepping there is a walk or a fight. */
+  const legal = useMemo(() => new Map(legalHeroMoves(state).map((m) => [m.to, m.kind])), [state]);
   const preview = hover && reach.get(hover) ? reach.get(hover)!.path : null;
   const tiles = Object.values(state.tiles);
   const pos = (t: Tile) => ({ x: ((rows - 1) / 2 + t.col - t.row / 2) * W, y: t.row * 0.75 * H });
@@ -151,13 +152,13 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     if (reviveAt) return reviveAt.includes(k) ? 'cur-pointer' : 'cur-idle';
     const r = reach.get(k);
     if (r) return r.hostile ? 'cur-melee' : 'cur-move';
-    if (legal.has(k)) return legalHeroMoves(state).find((m) => m.to === k)!.kind === 'move' ? 'cur-move' : 'cur-melee';
+    if (legal.has(k)) return legal.get(k) === 'move' ? 'cur-move' : 'cur-melee';
     return 'cur-idle';
   }
 
   /** Over a hex where walking in starts a fight: the sword turned from the hero towards it. */
-  function fightCursor(k: HexKey): { cursor?: string } {
-    if (!hero || hexCursor(k) !== 'cur-melee') return {};
+  function fightCursor(k: HexKey, plain: string): { cursor?: string } {
+    if (!hero || plain !== 'cur-melee') return {};
     const from = pos(state.tiles[hero.pos]);
     const to = pos(state.tiles[k]);
     const cursor = aimedCursor('atak', (Math.atan2(to.y - from.y, to.x - from.x) * 180) / Math.PI);
@@ -180,7 +181,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     }
     const r = reach.get(k);
     if (r) onPath(r.path.slice(1), r.hostile);
-    else if (legal.has(k)) onPath([k], legalHeroMoves(state).find((m) => m.to === k)!.kind !== 'move');
+    else if (legal.has(k)) onPath([k], legal.get(k) !== 'move');
   }
 
   const deadUnits = viewer
@@ -265,8 +266,9 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                       </div>
                     )}
                     {(() => {
-                      const turned = fightCursor(t.key);
-                      return <span className={`hex-clip ${turned.cursor ? '' : hexCursor(t.key)}`} style={{ position: 'absolute', inset: 0, zIndex: 5, pointerEvents: 'auto', ...turned }} />;
+                      const plain = hexCursor(t.key);
+                      const turned = fightCursor(t.key, plain);
+                      return <span className={`hex-clip ${turned.cursor ? '' : plain}`} style={{ position: 'absolute', inset: 0, zIndex: 5, pointerEvents: 'auto', ...turned }} />;
                     })()}
                   </button>
                 );
