@@ -1,4 +1,4 @@
-"""Builds docs/edytowalny_szablon_instrukcji/index.html from the rule text (docs/INSTRUKCJA.md, hand-laid into pages).
+"""Builds docs/wersja_planszowa/instrukcja_szablon/index.html from the rule text (docs/INSTRUKCJA.md, hand-laid into pages).
 
 Some pages take their text from INSTRUKCJA.md (tables, units, edge cases, cheat sheet); others are written
 here. After a change run: python3 scripts/assets/manual_build.py && python3 scripts/assets/manual.py
@@ -7,7 +7,7 @@ import os
 import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-OUT = os.path.join(ROOT, 'docs/edytowalny_szablon_instrukcji/index.html')
+OUT = os.path.join(ROOT, 'docs/wersja_planszowa/instrukcja_szablon/index.html')
 MD = open(os.path.join(ROOT, 'docs/INSTRUKCJA.md'), encoding='utf-8').read()
 
 CORNERS = ''.join(f'<img class="corner {c}" src="assets/narożnik.svg" alt="">' for c in ('tl', 'tr', 'br', 'bl'))

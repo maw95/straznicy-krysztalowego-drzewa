@@ -1,4 +1,4 @@
-// Editable rulebook: docs/INSTRUKCJA.md -> docs/Instrukcja_Straznicy.docx (opens in Google Docs and Word).
+// Editable rulebook: docs/INSTRUKCJA.md -> docs/wersja_planszowa/Instrukcja_Straznicy.docx (opens in Google Docs and Word).
 // Headings become real heading styles (Google Docs builds its outline from them), tables stay
 // tables, units get their card picture, and "+1 A" / "Ż 9" get the stat symbols of the cards.
 // Usage: npm install --no-save docx && node scripts/assets/manual_docx.cjs
@@ -12,8 +12,8 @@ const {
 
 const ROOT = path.join(__dirname, '..', '..');
 const MD = fs.readFileSync(path.join(ROOT, 'docs', 'INSTRUKCJA.md'), 'utf8');
-const ART = path.join(ROOT, 'docs', 'edytowalny_szablon_instrukcji', 'assets');
-const OUT = path.join(ROOT, 'docs', 'Instrukcja_Straznicy.docx');
+const ART = path.join(ROOT, 'docs', 'wersja_planszowa', 'instrukcja_szablon', 'assets');
+const OUT = path.join(ROOT, 'docs', 'wersja_planszowa', 'Instrukcja_Straznicy.docx');
 
 const FONT = 'EB Garamond';
 const GREEN = '177147';

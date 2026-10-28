@@ -121,7 +121,7 @@ W repo gry, np. dla wersji `1.4.0`:
 6. Wydanie na GitHubie: `gh release create 1.4.0 --generate-notes` (albo przez stronę repo → Releases).
 7. Pakiet silnika do tego wydania: `make silnik` (bierze wersję z `package.json`; z innego taga: `make silnik TAG=1.4.0`).
 
-Przed wypchnięciem warto sprawdzić `git status`: duże pliki (np. modele 3D w `docs/druk3d/`) nie mogą trafić
+Przed wypchnięciem warto sprawdzić `git status`: duże pliki (np. modele 3D w `docs/wersja_planszowa/druk3d/`) nie mogą trafić
 do commita — GitHub odrzuca pliki powyżej 100 MB.
 
 ### Aktualizacja silnika w serwerze (po wydaniu gry)

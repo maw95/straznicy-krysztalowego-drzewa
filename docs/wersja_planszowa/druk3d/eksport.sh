@@ -1,6 +1,6 @@
 #!/bin/bash
 # Eksport wszystkich elementów do druku: 15 podstawek, kryształ, znacznik rundy (STL) + podglądy PNG.
-# Użycie: bash docs/druk3d/eksport.sh   (wyniki w docs/druk3d/stl/ i docs/druk3d/podglad/)
+# Użycie: bash docs/wersja_planszowa/druk3d/eksport.sh   (wyniki w docs/wersja_planszowa/druk3d/stl/ i docs/wersja_planszowa/druk3d/podglad/)
 set -e
 cd "$(dirname "$0")"
 mkdir -p stl podglad

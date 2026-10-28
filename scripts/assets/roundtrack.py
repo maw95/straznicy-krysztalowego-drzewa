@@ -1,5 +1,5 @@
 """Round track: docs/grafika/ikony/tor_rund.png -> public/assets/ui/round_track.png + round_crystal.png
-(and the same two files for the rulebook, docs/edytowalny_szablon_instrukcji/assets/).
+(and the same two files for the rulebook, docs/wersja_planszowa/instrukcja_szablon/assets/).
 
 The sheet (transparent) holds the hexagonal track with 24 sockets and, bottom right, the faceted
 gem that marks the current round. Socket centres used by src/ui/RoundTrack.tsx are printed as
@@ -11,7 +11,7 @@ from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SRC = os.path.join(ROOT, 'docs', 'grafika', 'ikony', 'tor_rund.png')
-OUTS = [os.path.join(ROOT, 'public', 'assets', 'ui'), os.path.join(ROOT, 'docs', 'edytowalny_szablon_instrukcji', 'assets')]
+OUTS = [os.path.join(ROOT, 'public', 'assets', 'ui'), os.path.join(ROOT, 'docs', 'wersja_planszowa', 'instrukcja_szablon', 'assets')]
 
 # The round marker: a separate gem in the sheet's bottom-right corner.
 GEM_BOX = (1040, 1000, 1240, 1200)

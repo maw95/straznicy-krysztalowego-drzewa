@@ -88,7 +88,7 @@ report: node_modules ## Odtworzenie zgłoszeń błędów z bug-reports/ (albo FI
 zgloszenia: node_modules ## Nowe zgłoszenia błędów i opinie z serwera gry: pobranie, odtworzenie, podsumowanie (ACK=0: bez oznaczania)
 	npx tsx scripts/zgloszenia.ts $(if $(filter 0,$(ACK)),--no-ack,)
 
-# Figure models for the game: source file (docs/druk3d/figurki/z_teksturami/<faction>/<name>/<name>.glb) → unit id.
+# Figure models for the game: source file (docs/wersja_planszowa/druk3d/figurki/z_teksturami/<faction>/<name>/<name>.glb) → unit id.
 FIGURES := przymierze_zloty_smok:goldDragon przymierze_jednorozec:unicornKing przymierze_niedzwiedz:ancientBear \
 	przymierze_elf:elfDruid przymierze_nimfa:nymph przymierze_pegaz:pegasus \
 	horda_czarny_smok:blackDragon horda_wilkolak:werewolfLord horda_ogr:ironFistOgre \
@@ -96,11 +96,11 @@ FIGURES := przymierze_zloty_smok:goldDragon przymierze_jednorozec:unicornKing pr
 	straznik_cyklop:cyclops straznik_gryf:griffin straznik_hydra:hydra
 RATIO ?= 0.02
 
-modele: ## Figurki 3D do gry: docs/druk3d/figurki/z_teksturami/<frakcja>_<postać>.glb -> public/modele/<jednostka>.glb (uproszczone także przez szwy UV, scripts/assets/simplify_model.mjs; tekstury 1024 px WebP; model ponad 2,5 MB upraszczany mocniej), np. make modele RATIO=0.02
+modele: ## Figurki 3D do gry: docs/wersja_planszowa/druk3d/figurki/z_teksturami/<frakcja>_<postać>.glb -> public/modele/<jednostka>.glb (uproszczone także przez szwy UV, scripts/assets/simplify_model.mjs; tekstury 1024 px WebP; model ponad 2,5 MB upraszczany mocniej), np. make modele RATIO=0.02
 	@mkdir -p public/modele .tmp
 	@modules=$$(dirname $$(dirname $$(npx -y -p @gltf-transform/cli@4 which gltf-transform))); \
 	for f in $(FIGURES); do \
-		src=docs/druk3d/figurki/z_teksturami/$${f%%:*}.glb; id=$${f##*:}; \
+		src=docs/wersja_planszowa/druk3d/figurki/z_teksturami/$${f%%:*}.glb; id=$${f##*:}; \
 		if [ -f $$src ]; then \
 			for ratio in $(RATIO) 0.012; do \
 				MODULES=$$modules node --max-old-space-size=12000 scripts/assets/simplify_model.mjs $$src .tmp/$$id.glb $$ratio && \
@@ -111,7 +111,7 @@ modele: ## Figurki 3D do gry: docs/druk3d/figurki/z_teksturami/<frakcja>_<posta�
 		else echo "$$id: brak modelu ($$src)"; fi; \
 	done
 
-figurki: node_modules ## Rzuty figurek 3D do instrukcji (PNG z przezroczystym tłem) z public/modele/ -> docs/edytowalny_szablon_instrukcji/assets/figurki/
+figurki: node_modules ## Rzuty figurek 3D do instrukcji (PNG z przezroczystym tłem) z public/modele/ -> docs/wersja_planszowa/instrukcja_szablon/assets/figurki/
 	npx tsx scripts/browser/figury.ts
 
 silnik: ## Silnik gry jako pakiet dla serwera, dołączony do wydania na GitHubie, np. make silnik TAG=1.3.0

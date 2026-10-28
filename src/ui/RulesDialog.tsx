@@ -102,7 +102,7 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
           </div>
         )}
         {tab === 'manual' && (
-          // The printable rulebook (docs/edytowalny_szablon_instrukcji, copied by scripts/assets/manual.py).
+          // The printable rulebook (docs/wersja_planszowa/instrukcja_szablon, copied by scripts/assets/manual.py).
           <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 6 }}>
             <iframe title="Instrukcja" src={asset('manual/index.html?embed')} style={{ flex: 1, minHeight: 0, width: '100%', border: 0, borderRadius: 6, background: 'transparent' }} />
             <a href={asset('manual/index.html')} target="_blank" rel="noreferrer" style={{ alignSelf: 'center', color: '#F3D27A', fontSize: 15 }}>

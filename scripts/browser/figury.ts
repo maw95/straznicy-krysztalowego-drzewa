@@ -1,13 +1,13 @@
 // Pictures of the 3D figures for the rulebook, rendered by the game's own three.js scene (FigurePreview) in a
 // headless browser, on a transparent background:
-//   docs/edytowalny_szablon_instrukcji/assets/figurki/<unit>.png  — one figure, cropped to it (the HTML rulebook);
-//   docs/edytowalny_szablon_instrukcji/assets/figurki/<faction>.png — the faction's heroes, larger, above its helpers (the .docx).
+//   docs/wersja_planszowa/instrukcja_szablon/assets/figurki/<unit>.png  — one figure, cropped to it (the HTML rulebook);
+//   docs/wersja_planszowa/instrukcja_szablon/assets/figurki/<faction>.png — the faction's heroes, larger, above its helpers (the .docx).
 // Run after `make modele`. Usage: npx tsx scripts/browser/figury.ts   (or: make figurki)
 
 import { writeFileSync } from 'node:fs';
 import { openGame } from './game';
 
-const OUT = 'docs/edytowalny_szablon_instrukcji/assets/figurki';
+const OUT = 'docs/wersja_planszowa/instrukcja_szablon/assets/figurki';
 /** Rendered square size; the crop keeps the figure only. */
 const SIZE = 900;
 /** A three-quarter view: the figure turned a little to the viewer's left. */

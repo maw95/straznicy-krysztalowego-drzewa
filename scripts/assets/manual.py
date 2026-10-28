@@ -1,4 +1,4 @@
-"""In-game copy of the rulebook: docs/edytowalny_szablon_instrukcji/ -> public/assets/manual/.
+"""In-game copy of the rulebook: docs/wersja_planszowa/instrukcja_szablon/ -> public/assets/manual/.
 
 Only the files the pages use are copied; big pictures are scaled for the screen (the cover
 from 300 dpi down) and opaque PNGs become JPEGs, with the references rewritten.
@@ -11,7 +11,7 @@ import shutil
 from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-SRC = os.path.join(ROOT, 'docs', 'edytowalny_szablon_instrukcji')
+SRC = os.path.join(ROOT, 'docs', 'wersja_planszowa', 'instrukcja_szablon')
 OUT = os.path.join(ROOT, 'public', 'assets', 'manual')
 MAX_SIDE = 1600
 # Transparent PNGs stay PNG, so they are scaled harder.

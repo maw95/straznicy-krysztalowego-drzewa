@@ -6,7 +6,7 @@ channel and named by their place (rows of 4, 3, 3, 3):
   shield, vitality, Kryształ Opieki.
 The game gets the status markers in public/assets/markers/ (the damage drop there is the empty one,
 znacznik_obrazen_pusty.png, as the game writes the number itself); the rulebook gets all of them in
-docs/edytowalny_szablon_instrukcji/assets/znaczniki/.
+docs/wersja_planszowa/instrukcja_szablon/assets/znaczniki/.
 Newer markers are separate files (SEPARATE), scaled to the same size; one of the same name replaces the sheet's.
 Usage: python3 scripts/assets/markers.py
 """
@@ -17,7 +17,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 SRC = os.path.join(ROOT, 'docs', 'grafika', 'ikony', 'znaczniki.png')
 EMPTY_DROP = os.path.join(ROOT, 'docs', 'grafika', 'ikony', 'znacznik_obrazen_pusty.png')
 OUT = os.path.join(ROOT, 'public', 'assets', 'markers')
-MANUAL = os.path.join(ROOT, 'docs', 'edytowalny_szablon_instrukcji', 'assets', 'znaczniki')
+MANUAL = os.path.join(ROOT, 'docs', 'wersja_planszowa', 'instrukcja_szablon', 'assets', 'znaczniki')
 SIZE = 160
 ROWS = [
     ['damage_1', 'damage_2', 'damage_3', 'damage_5'],
