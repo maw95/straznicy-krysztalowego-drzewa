@@ -191,7 +191,7 @@ function Home({ session, onSignOut, onLocalGame, links }: { session: OnlineSessi
               <button className="app-version" title="Historia zmian" onClick={links.onChangelog}>Wersja {__APP_VERSION__}</button>
             </div>
           </Frame>
-          <Frame style={{ width: 'min(360px, 94vw)', flex: 'none' }} innerClass="slate" innerStyle={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10, height: '100%' }}>
+          <Frame className="side" style={{ width: 'min(360px, 94vw)', flex: 'none' }} innerClass="slate" innerStyle={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10, height: '100%' }}>
             <PlayersOnline session={session} online={online} />
             <ChatBox title="Czat ogólny" messages={online.generalChat} onSend={(text) => session.send({ type: 'generalChat', text })} />
           </Frame>
