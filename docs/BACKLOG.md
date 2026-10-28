@@ -54,3 +54,15 @@ linia wzroku), a gdy obok stoi wróg, strzelec musi zaatakować sąsiada.
 
 Uwaga przy wydaniach: serwer odrzuca nieznane typy akcji, więc wydanie gry z nowym typem akcji wymaga najpierw
 wdrożenia serwera z nowym pakietem silnika.
+
+## 5. Wersja planszowa (prośba autora z 28.10)
+
+- [ ] **5.1. Instrukcja aktualna i rozszerzona (ok. 40 stron).** Sprawdzić zgodność z zasadami
+  (`NOTATKI_DLA_AGENTA_PLANSZOWKI.md`, `src/engine/data.ts`), dopisać m.in. instrukcję obrazkową podstawowych
+  zasad „dla bardzo opornych”, przykładową rozgrywkę i bitwę krok po kroku, porady i słowniczek.
+- [ ] **5.2. Folder `docs/wersja planszowa/`.** Plan krok po kroku (co przygotować, w jakiej kolejności,
+  wymiary, co kupić i gdzie — z linkami) oraz wszystkie pliki do druku: instrukcja PDF, karty, kafelki mapy,
+  arena, tor rund, znaczniki, etykieta z logo na pudełko. Druk na zwykłej drukarce (papier fotograficzny),
+  figurki i żetony z drukarki 3D (zlecone), instrukcja w segregatorze, pudełko z cienkich desek.
+- [ ] **5.3. Druga strona instrukcji: imienna wiadomość od autora dla gracza** — pisze autor sam
+  (strona jest zostawiona pusta w szablonie).
