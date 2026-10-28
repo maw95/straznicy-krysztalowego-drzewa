@@ -114,10 +114,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
         let score = scoreHit(t, dmg);
         let second: BattleUnit | null = null;
         if (useAbility && abilityOf(u) === 'fireBreath') {
-          const saved = u.pos;
-          u.pos = cell;
-          second = breathSecondTarget(state, u, t);
-          u.pos = saved;
+          second = breathSecondTarget(state, u, t, cell);
           if (!second) continue;
           score += scoreHit(second, dmg);
         }

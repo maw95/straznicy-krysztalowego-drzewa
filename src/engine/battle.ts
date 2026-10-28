@@ -204,11 +204,14 @@ export function attackTargets(state: GameState, u: BattleUnit, from: HexKey | nu
   return enemies.filter((e) => hasLineOfSight(state, from, e.pos!));
 }
 
-/** Second target for Ognisty Oddech: the unit standing right behind the first one, in line from the dragon. */
-export function breathSecondTarget(state: GameState, u: BattleUnit, first: BattleUnit): BattleUnit | null {
+/**
+ * Second target for Ognisty Oddech: the unit standing right behind the first one, in line from the
+ * dragon (standing on `from`, its own cell unless a plan tries another).
+ */
+export function breathSecondTarget(state: GameState, u: BattleUnit, first: BattleUnit, from: HexKey | null = u.pos): BattleUnit | null {
   const b = state.battle!;
-  if (!u.pos || !first.pos) return null;
-  const dir = directionBetween(parseKey(u.pos), parseKey(first.pos));
+  if (!from || !first.pos) return null;
+  const dir = directionBetween(parseKey(from), parseKey(first.pos));
   if (!dir) return null;
   const behind = key(add(parseKey(first.pos), dir));
   const other = unitAt(b, behind);
