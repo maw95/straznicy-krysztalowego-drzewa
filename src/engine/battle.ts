@@ -1,11 +1,11 @@
 // Battle engine: the painted arena (13 columns, 85 cells), initiative, movement, attacks,
 // abilities and items. Functions change the GameState passed in.
 
-import { ABILITY, FACTION_NAMES, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type FactionId, type Side } from './data';
+import { ABILITY, FACTION_NAMES, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type FactionId, type ItemKind, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
-import type { Activation, BattleState, BattleUnit, GameState, UnitStatus } from './types';
+import type { BattleState, BattleUnit, GameState, UnitStatus } from './types';
 
 /**
  * The arena drawn by the designer (docs/grafika/areny/arena_walki_*.png): 13 columns of
@@ -688,135 +688,144 @@ function freeCellNear(b: BattleState, side: Side): HexKey | null {
   return deployCells(b, side).find((k) => !unitAt(b, k)) ?? null;
 }
 
-export function battleItem(
-  state: GameState,
-  args: { itemId: string; targetId?: string; targetIds?: string[]; to?: HexKey; hornMode?: 'swap' | 'extra'; reserveId?: string },
-) {
+/** What a player chose when using a treasure in battle (the battleItem action without its type). */
+export interface ItemArgs {
+  itemId: string;
+  targetId?: string;
+  targetIds?: string[];
+  to?: HexKey;
+  hornMode?: 'swap' | 'extra';
+  reserveId?: string;
+}
+
+/** A treasure being used: the game, the battle, the user's side, the choices and the treasure's name (for the log). */
+interface ItemUse {
+  state: GameState;
+  b: BattleState;
+  faction: FactionId;
+  args: ItemArgs;
+  name: string;
+}
+
+/** A unit of the user's side (living or fallen). */
+function ownUnit(use: ItemUse, id?: string): BattleUnit {
+  const t = id ? use.b.units[id] : undefined;
+  if (!t || t.side !== use.faction) throw new Error('Wybierz własną jednostkę.');
+  return t;
+}
+
+/** A living enemy unit. */
+function enemyUnit(use: ItemUse, id?: string): BattleUnit {
+  const t = id ? use.b.units[id] : undefined;
+  if (!t || !t.alive || t.side === use.faction) throw new Error('Wybierz żyjącego wroga.');
+  return t;
+}
+
+function living(t: BattleUnit): BattleUnit {
+  if (!t.alive) throw new Error('Ta jednostka nie żyje.');
+  return t;
+}
+
+/** A living unit of the user's side: the target of most treasures. */
+const ownLiving = (use: ItemUse, id?: string) => living(ownUnit(use, id));
+
+/** What each treasure does in battle; each checks its own targets and throws when they do not fit. */
+const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
+  resurrection: (use) => {
+    const { b, faction, args } = use;
+    const t = ownUnit(use, args.targetId);
+    if (t.alive) throw new Error('Wybierz poległą jednostkę.');
+    const cell = args.to && !unitAt(b, args.to) && !b.obstacles.includes(args.to) ? args.to : freeCellNear(b, faction);
+    if (!cell) throw new Error('Brak wolnego pola.');
+    t.alive = true;
+    t.hp = t.maxHp;
+    t.pos = cell;
+  },
+  heal: (use) => {
+    const t = ownLiving(use, use.args.targetId);
+    t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.heal);
+  },
+  seed: ({ b, faction }) => {
+    for (const t of livingUnits(b, faction)) t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.seedHeal);
+  },
+  damage_scroll: (use) => dealDamage(use.state, enemyUnit(use, use.args.targetId), ITEM_EFFECT.scrollDamage, use.name),
+  lightning: (use) => {
+    const { args } = use;
+    const ids = [...new Set(args.targetIds ?? (args.targetId ? [args.targetId] : []))].slice(0, ITEM_EFFECT.lightningTargets);
+    if (!ids.length) throw new Error('Wybierz do dwóch wrogów.');
+    for (const id of ids) dealDamage(use.state, enemyUnit(use, id), ITEM_EFFECT.lightningDamage, use.name);
+  },
+  sword: (use) => void (ownLiving(use, use.args.targetId).status.battleAttackBonus += ITEM_EFFECT.swordAttack),
+  shield: (use) => void (ownLiving(use, use.args.targetId).status.shieldArmed = true),
+  vitality: (use) => {
+    const t = ownLiving(use, use.args.targetId);
+    t.maxHp += ITEM_EFFECT.vitalityHp;
+    t.hp += ITEM_EFFECT.vitalityHp;
+  },
+  boots: (use) => void (ownLiving(use, use.args.targetId).status.battleSpeedBonus += ITEM_EFFECT.bootsSpeed),
+  stone: (use) => void (ownLiving(use, use.args.targetId).status.damageReduction += ITEM_EFFECT.stoneReduction),
+  courage_horn: (use) => {
+    const { args } = use;
+    const ids = args.targetIds ?? (args.targetId ? [args.targetId] : []);
+    const first = ownLiving(use, ids[0]);
+    first.status.nextAttackBonus += ITEM_EFFECT.courageAttack;
+    if (ids[1]) {
+      const second = ownLiving(use, ids[1]);
+      if (!adjacent(first.pos!, second.pos!)) throw new Error('Drugi sojusznik musi sąsiadować z pierwszym.');
+      second.status.nextAttackBonus += ITEM_EFFECT.courageAttack;
+    }
+  },
+  teleport: (use) => {
+    const { b, args } = use;
+    const t = ownLiving(use, args.targetId);
+    const to = args.to;
+    if (!to || !inArena(to) || unitAt(b, to) || b.obstacles.includes(to)) throw new Error('Wybierz wolne pole.');
+    if (!alliesOf(b, t).some((a) => adjacent(a.pos!, to))) throw new Error('Pole musi sąsiadować z sojusznikiem.');
+    t.pos = to;
+  },
+  hourglass: (use) => {
+    const t = ownLiving(use, use.args.targetId);
+    use.b.extra.unshift({ unitId: t.id, moveOnly: true });
+  },
+  horn: (use) => {
+    const { state, b, faction, args } = use;
+    const t = ownUnit(use, args.targetId);
+    if (UNITS[t.defId].kind !== 'support') throw new Error('Róg działa tylko na pomocnika.');
+    if (args.hornMode === 'extra') {
+      living(t);
+      b.extra.unshift({ unitId: t.id, moveOnly: false });
+      return;
+    }
+    const reserve = args.reserveId;
+    if (!reserve || !state.factions[faction].supportsAlive.includes(reserve) || b.units[reserve]) throw new Error('Wybierz żywego pomocnika z rezerwy.');
+    const nu = makeBattleUnit(reserve, faction);
+    nu.pos = t.alive ? t.pos : freeCellNear(b, faction);
+    if (!nu.pos) throw new Error('Brak wolnego pola.');
+    if (t.alive) {
+      // The swapped unit goes back to the pool unharmed.
+      t.alive = false;
+      t.pos = null;
+      t.swappedOut = true;
+    }
+    b.units[reserve] = nu;
+    const idx = b.order.indexOf(t.id);
+    if (idx >= 0) b.order[idx] = reserve;
+  },
+  map: () => {
+    throw new Error('Magiczną Mapę używa się na mapie przygody.');
+  },
+};
+
+export function battleItem(state: GameState, args: ItemArgs) {
   const b = state.battle!;
-  const act: Activation = b.activation!;
-  const actor = b.units[act.unitId];
+  const actor = b.units[b.activation!.unitId];
   const faction = actor.side as FactionId;
   const item = state.items[args.itemId];
   if (!item || item.owner !== faction || !state.factions[faction].inventory.includes(item.id)) throw new Error('Nie masz tego skarbu.');
   if (!canUseBattleItem(state, faction)) throw new Error('Skarby używa się przed akcją własnej jednostki.');
   if (!ITEMS[item.kind].usableIn.includes('battle')) throw new Error('Tego skarbu nie używa się w bitwie.');
-  const own = (id?: string) => {
-    const t = id ? b.units[id] : undefined;
-    if (!t || t.side !== faction) throw new Error('Wybierz własną jednostkę.');
-    return t;
-  };
-  const enemy = (id?: string) => {
-    const t = id ? b.units[id] : undefined;
-    if (!t || !t.alive || t.side === faction) throw new Error('Wybierz żyjącego wroga.');
-    return t;
-  };
-  const living = (t: BattleUnit) => {
-    if (!t.alive) throw new Error('Ta jednostka nie żyje.');
-    return t;
-  };
   const name = ITEMS[item.kind].name;
-  switch (item.kind) {
-    case 'resurrection': {
-      const t = own(args.targetId);
-      if (t.alive) throw new Error('Wybierz poległą jednostkę.');
-      const cell = args.to && !unitAt(b, args.to) && !b.obstacles.includes(args.to) ? args.to : freeCellNear(b, faction);
-      if (!cell) throw new Error('Brak wolnego pola.');
-      t.alive = true;
-      t.hp = t.maxHp;
-      t.pos = cell;
-      break;
-    }
-    case 'heal': {
-      const t = living(own(args.targetId));
-      t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.heal);
-      break;
-    }
-    case 'seed':
-      for (const t of livingUnits(b, faction)) t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.seedHeal);
-      break;
-    case 'damage_scroll':
-      dealDamage(state, enemy(args.targetId), ITEM_EFFECT.scrollDamage, name);
-      break;
-    case 'lightning': {
-      const ids = [...new Set(args.targetIds ?? (args.targetId ? [args.targetId] : []))].slice(0, ITEM_EFFECT.lightningTargets);
-      if (!ids.length) throw new Error('Wybierz do dwóch wrogów.');
-      for (const id of ids) {
-        const t = enemy(id);
-        dealDamage(state, t, ITEM_EFFECT.lightningDamage, name);
-      }
-      break;
-    }
-    case 'sword':
-      living(own(args.targetId)).status.battleAttackBonus += ITEM_EFFECT.swordAttack;
-      break;
-    case 'shield':
-      living(own(args.targetId)).status.shieldArmed = true;
-      break;
-    case 'vitality': {
-      const t = living(own(args.targetId));
-      t.maxHp += ITEM_EFFECT.vitalityHp;
-      t.hp += ITEM_EFFECT.vitalityHp;
-      break;
-    }
-    case 'boots':
-      living(own(args.targetId)).status.battleSpeedBonus += ITEM_EFFECT.bootsSpeed;
-      break;
-    case 'stone':
-      living(own(args.targetId)).status.damageReduction += ITEM_EFFECT.stoneReduction;
-      break;
-    case 'courage_horn': {
-      const ids = args.targetIds ?? (args.targetId ? [args.targetId] : []);
-      const first = living(own(ids[0]));
-      first.status.nextAttackBonus += ITEM_EFFECT.courageAttack;
-      if (ids[1]) {
-        const second = living(own(ids[1]));
-        if (!adjacent(first.pos!, second.pos!)) throw new Error('Drugi sojusznik musi sąsiadować z pierwszym.');
-        second.status.nextAttackBonus += ITEM_EFFECT.courageAttack;
-      }
-      break;
-    }
-    case 'teleport': {
-      const t = living(own(args.targetId));
-      const to = args.to;
-      if (!to || !inArena(to) || unitAt(b, to) || b.obstacles.includes(to)) throw new Error('Wybierz wolne pole.');
-      const nextToAlly = alliesOf(b, t).some((a) => adjacent(a.pos!, to));
-      if (!nextToAlly) throw new Error('Pole musi sąsiadować z sojusznikiem.');
-      t.pos = to;
-      break;
-    }
-    case 'hourglass': {
-      const t = living(own(args.targetId));
-      b.extra.unshift({ unitId: t.id, moveOnly: true });
-      break;
-    }
-    case 'horn': {
-      const t = own(args.targetId);
-      if (UNITS[t.defId].kind !== 'support') throw new Error('Róg działa tylko na pomocnika.');
-      if (args.hornMode === 'extra') {
-        living(t);
-        b.extra.unshift({ unitId: t.id, moveOnly: false });
-      } else {
-        const reserve = args.reserveId;
-        const f = state.factions[faction];
-        if (!reserve || !f.supportsAlive.includes(reserve) || b.units[reserve]) throw new Error('Wybierz żywego pomocnika z rezerwy.');
-        const nu = makeBattleUnit(reserve, faction);
-        nu.pos = t.alive ? t.pos : freeCellNear(b, faction);
-        if (!nu.pos) throw new Error('Brak wolnego pola.');
-        if (t.alive) {
-          // The swapped unit goes back to the pool unharmed.
-          t.alive = false;
-          t.pos = null;
-          t.swappedOut = true;
-        }
-        b.units[reserve] = nu;
-        const idx = b.order.indexOf(t.id);
-        if (idx >= 0) b.order[idx] = reserve;
-      }
-      break;
-    }
-    case 'map':
-      throw new Error('Magiczną Mapę używa się na mapie przygody.');
-  }
+  ITEM_HANDLERS[item.kind]({ state, b, faction, args, name });
   consumeItem(state, item.id);
   log(state, 'item', `${unitName(actor)} używa skarbu: ${name}.`);
   checkBattleEnd(state);
