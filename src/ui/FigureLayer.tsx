@@ -2,7 +2,7 @@
 // the figures are drawn by three.js on one transparent canvas over it, seen by a camera tilted forward.
 // The layer follows the positions the screen gives (screen pixels of each figure's base): a figure glides
 // there, turning to face the way it goes; it faces its target and lunges when it attacks, shakes when hit,
-// and a glowing ring round its base marks it (active unit, target). Clicks go to the board below.
+// and a thin outline round its base marks the active unit. Clicks go to the board below.
 
 import { useEffect, useRef } from 'react';
 import type { Group, Mesh, Object3D, OrthographicCamera, Scene, WebGLRenderer } from 'three';
@@ -18,7 +18,7 @@ export interface Piece {
   size: number;
   /** How long the glide to a new position takes (ms). */
   moveMs?: number;
-  /** A soft glow round the base (CSS colour), or none. */
+  /** A thin outline round the base (CSS colour), or none. */
   ring?: string | null;
   /** Lunging at this screen point (an attack); the figure turns to it first. A new `key` is a new lunge. */
   lungeAt?: { x: number; y: number; key?: number } | null;
@@ -186,26 +186,12 @@ class Stage {
     l.turnStart = now;
   }
 
-  private aura: { geometry: import('three').PlaneGeometry; texture: import('three').CanvasTexture } | null = null;
+  private outline: import('three').RingGeometry | null = null;
 
-  /** The glow every figure shares: brightest just outside the base, fading out to nothing. */
-  private auraParts() {
-    const THREE = this.three!;
-    if (this.aura) return this.aura;
-    const c = document.createElement('canvas');
-    c.width = c.height = 128;
-    const g = c.getContext('2d')!;
-    // The plane is 1.9 bases wide: radius 64 px = 0.95 base; the base edge (0.5) sits at about 34 px.
-    const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-    grad.addColorStop(0, 'rgba(255,255,255,0.35)');
-    grad.addColorStop(0.45, 'rgba(255,255,255,0.55)');
-    grad.addColorStop(0.58, 'rgba(255,255,255,0.5)');
-    grad.addColorStop(0.78, 'rgba(255,255,255,0.18)');
-    grad.addColorStop(1, 'rgba(255,255,255,0)');
-    g.fillStyle = grad;
-    g.fillRect(0, 0, 128, 128);
-    this.aura = { geometry: new THREE.PlaneGeometry(1.9, 1.9), texture: new THREE.CanvasTexture(c) };
-    return this.aura;
+  /** The outline every marked figure shares: a thin line just outside the base. */
+  private outlineGeometry() {
+    this.outline ??= new this.three!.RingGeometry(0.52, 0.57, 48);
+    return this.outline;
   }
 
   private setRing(l: Live, color: string | null) {
@@ -219,8 +205,7 @@ class Stage {
       return;
     }
     if (!l.ring) {
-      const { geometry, texture } = this.auraParts();
-      l.ring = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+      l.ring = new THREE.Mesh(this.outlineGeometry(), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.9, depthWrite: false }));
       l.ring.rotation.x = -Math.PI / 2;
       l.ring.position.y = 0.01;
       l.node.add(l.ring);
@@ -275,8 +260,7 @@ class Stage {
     this.disposed = true;
     cancelAnimationFrame(this.frame);
     for (const l of this.live.values()) this.setRing(l, null);
-    this.aura?.geometry.dispose();
-    this.aura?.texture.dispose();
+    this.outline?.dispose();
     // Each battle and each map view opens a new canvas: give the WebGL context back at once,
     // or long sessions run into the browser's limit of live contexts.
     this.renderer?.dispose();

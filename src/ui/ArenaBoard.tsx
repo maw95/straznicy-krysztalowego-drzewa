@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { unitAt } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import type { BattleUnit, GameState } from '../engine/types';
-import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
+import { asset, Frame, Portrait, ACTIVE_FIGURE_RING, Ribbon, SIDE_RING } from './common';
 import { ART_SIZE, CANVAS_H, CANVAS_W, CELL_POINTS, CELLS, cellCenter, cellPos, hexPoints, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { DamageDrop, DieFace, LastAttack, Marker, StatText } from './markers';
 import { details } from './details';
@@ -154,7 +154,7 @@ export function ArenaBoard(p: Props) {
                   // A little wider than the hex: figures may lean over the neighbouring cells.
                   size: 70,
                   moveMs: walk[u.id] ? WALK_STEP_MS : 300,
-                  ring: isActive ? '#9EE4FF' : targets.some((t) => t.id === u.id) || approach?.targetId === u.id ? '#E0503C' : SIDE_RING[u.side],
+                  ring: isActive ? ACTIVE_FIGURE_RING : null,
                   lungeAt: melee ? { ...cellCenter(melee.to), key: melee.key } : null,
                   lookAt: shot ? cellCenter(shot.to) : null,
                   hit: hitIds.includes(u.id),

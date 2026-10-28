@@ -10,7 +10,7 @@ import { aimedCursor } from './cursors';
 import { figureFor, FigureLayer, type Piece } from './FigureLayer';
 import { StatIcon, StatText } from './markers';
 import { RoundTrack } from './RoundTrack';
-import { asset, COMPACT_QUERY, Frame, Medal, Pips, Portrait, Ribbon, SIDE_RING, tileImage, useMedia } from './common';
+import { ACTIVE_FIGURE_RING, asset, COMPACT_QUERY, Frame, Medal, Pips, Portrait, Ribbon, SIDE_RING, tileImage, useMedia } from './common';
 
 interface Props {
   state: GameState;
@@ -215,7 +215,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     .filter((h) => h.alive && !h.entering && figureFor(h.id))
     .map((h): Piece => {
       const { x, y, size } = heroSpot(h);
-      return { key: h.id, unitId: h.id, x, y, size, moveMs: 300, ring: hero?.id === h.id ? '#9EE4FF' : SIDE_RING[h.faction] };
+      return { key: h.id, unitId: h.id, x, y, size, moveMs: 300, ring: hero?.id === h.id ? ACTIVE_FIGURE_RING : null };
     })
     // Guardians stand by the crystals they keep, on revealed hexes, the crystal glowing in front of them.
     .concat(
@@ -223,7 +223,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
         .filter((c) => c.guardian && figureFor(c.guardian) && state.tiles[c.at]?.revealed)
         .map((c): Piece => {
           const p = pos(state.tiles[c.at]);
-          return { key: `guard-${c.id}`, unitId: c.guardian!, x: p.x + W / 2, y: p.y + H * 0.6, size: W * 0.72, ring: SIDE_RING.neutral };
+          return { key: `guard-${c.id}`, unitId: c.guardian!, x: p.x + W / 2, y: p.y + H * 0.6, size: W * 0.72 };
         }),
     );
   const sel = selected ? state.tiles[selected] : hero ? state.tiles[hero.pos] : null;

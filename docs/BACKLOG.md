@@ -8,9 +8,6 @@ porządki w kodzie (etapy 0–4 i resztki), wersja mobilna, zgłoszenia z 23.10 
 
 Szacunki kosztu to tokeny zużyte przez Claude w jednej sesji. Każdy punkt to osobny commit.
 
-- [ ] **1.1. Bez poświaty wokół figurek.** *Koszt: ok. 15–25 tys.* Usunąć rozmytą poświatę w kolorze strony
-  wokół podstawek (`src/ui/FigureLayer.tsx`, `aura`/glow) na mapie i na arenie. Nic w zamian. Sprawdzić, czy
-  aktywna jednostka i cel nadal są czytelne (dziś wskazuje je właśnie poświata) — jeśli nie, zapytać autora.
 - [ ] **1.2. Przeszkody na arenach nie wychodzą poza swoje pole.** *Koszt: ok. 50–90 tys.* Przykład błędu:
   `/home/maciek/Obrazy/blad_przeszkody.png` — rysunek przeszkody (kamienie, kwiaty) nachodzi na sąsiednie
   sześciokąty. Obie areny, Przymierza i Hordy (`docs/grafika/areny/*_przeszkody.png`, `scripts/assets/arenas.py`,

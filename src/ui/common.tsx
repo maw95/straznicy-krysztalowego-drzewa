@@ -11,6 +11,8 @@ export const portrait = (unitId: string) => asset(`cards/portraits/${unitId}.jpg
 export const tileImage = (t: Tile) => asset(t.revealed ? `tiles/${t.terrain}_${t.variant}.jpg` : `tiles/back_${t.side}.jpg`);
 
 export const SIDE_RING: Record<Side, string> = { dawn: '#2C7048', horde: '#9A2226', neutral: '#2A5E9A' };
+/** The thin outline round the base of the active 3D figure (the only mark a figure gets). */
+export const ACTIVE_FIGURE_RING = '#F3C842';
 export const SIDE_RIBBON: Record<Side, 'g' | 'r' | 'b'> = { dawn: 'g', horde: 'r', neutral: 'b' };
 
 /** The phone layout (the same condition as the media query in styles.css). */

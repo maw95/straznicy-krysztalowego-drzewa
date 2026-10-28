@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Figurki 3D nie mają już kolorowej poświaty — tylko aktywna figurka ma cienką żółtą obwódkę wokół podstawki.
 - Instrukcja, rozdział 1: krople obrażeń są dwustronne (6 × „1” / „2”, 10 × „3” / „5”), a znaczników Żywotności i Ochrony jest po jednym — tyle, ile naprawdę może być potrzebne w jednej bitwie. Róg Odwagi oznacza się dwoma znacznikami Wzmocnienia Ataku.
 - Instrukcja: figurki są pokazane jako rzuty modeli 3D z gry, każda podpisana, a strażnicy na osobnej stronie. Narzędzia: `make figurki` robi te rzuty od nowa.
 - Figurki 3D: nowe, dokładniejsze modele 11 jednostek (Goblin Szaman jest przy tym kilka razy lżejszy); Cyklop, Gryf, Hydra i Władca Wilkołaków mają figurki także w wersji z GitHuba.
