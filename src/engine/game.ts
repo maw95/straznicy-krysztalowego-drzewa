@@ -38,17 +38,14 @@ import {
 } from './battle';
 import { distance, parseKey, type HexKey } from './hex';
 import { generateMap, homeKey, mapNeighbors, revealAround, tileCost, treeKey } from './map';
+import { log } from './log';
 import { Rng } from './rng';
-import type { Action, BattleReport, BattleState, GameState, HeroState, LogKind, Player, SetupOptions } from './types';
+import type { Action, BattleReport, BattleState, GameState, HeroState, Player, SetupOptions } from './types';
 
 export const other = (f: FactionId): FactionId => (f === 'dawn' ? 'horde' : 'dawn');
 
 /** Re-reads the phase after calls that may end the game (keeps TS narrowing honest). */
 export const isOver = (state: GameState): boolean => state.phase === 'over';
-
-export function log(state: GameState, kind: LogKind, text: string, privateTo?: FactionId) {
-  state.log.push({ round: state.round, kind, text, ...(privateTo ? { privateTo } : {}) });
-}
 
 // ------------------------------------------------------------------ setup
 

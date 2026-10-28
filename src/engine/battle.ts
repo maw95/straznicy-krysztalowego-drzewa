@@ -3,6 +3,7 @@
 
 import { ABILITY, ITEMS, UNITS, type AbilityId, type FactionId, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
+import { log } from './log';
 import { Rng } from './rng';
 import type { Activation, BattleState, BattleUnit, GameState, UnitStatus } from './types';
 
@@ -97,12 +98,6 @@ export function newStatus(): UnitStatus {
 export function makeBattleUnit(defId: string, side: Side): BattleUnit {
   const def = UNITS[defId];
   return { id: defId, defId, side, hp: def.hp, maxHp: def.hp, pos: null, alive: true, abilityUsed: false, swappedOut: false, status: newStatus() };
-}
-
-// ---------------------------------------------------------------- logging
-
-export function blog(state: GameState, text: string, kind: 'battle' | 'damage' | 'death' | 'ability' | 'item' = 'battle') {
-  state.log.push({ round: state.round, kind, text });
 }
 
 const unitName = (u: BattleUnit) => UNITS[u.defId].name;
@@ -306,7 +301,7 @@ export function startBattleFight(state: GameState) {
 function beginFight(state: GameState) {
   const b = state.battle!;
   b.stage = 'fight';
-  blog(state, 'Bitwa się rozpoczyna.');
+  log(state, 'battle', 'Bitwa się rozpoczyna.');
   beginRound(state, 1);
 }
 
@@ -332,7 +327,7 @@ export function deployUnits(state: GameState, faction: FactionId, positions: Rec
   }
   for (const u of own) u.pos = positions[u.id] ?? u.pos;
   b.needsDeploy.shift();
-  blog(state, `${faction === 'dawn' ? 'Przymierze Świtu' : 'Mroczna Horda'} ustawia swoje jednostki.`);
+  log(state, 'battle', `${faction === 'dawn' ? 'Przymierze Świtu' : 'Mroczna Horda'} ustawia swoje jednostki.`);
   if (!b.needsDeploy.length) beginFight(state);
 }
 
@@ -361,7 +356,7 @@ function beginRound(state: GameState, round: number) {
   if (round > state.rules.battleRoundLimit) {
     const hp = (side: Side) => livingUnits(b, side).reduce((a, x) => a + x.hp, 0);
     const loser = hp(b.attacker) >= hp(b.defender) ? b.defender : b.attacker;
-    blog(state, 'Bitwa trwa zbyt długo — strona z mniejszą sumą Ż przegrywa.');
+    log(state, 'battle', 'Bitwa trwa zbyt długo — strona z mniejszą sumą Ż przegrywa.');
     for (const x of livingUnits(b, loser)) {
       x.alive = false;
       x.pos = null;
@@ -375,7 +370,7 @@ function beginRound(state: GameState, round: number) {
     .sort((x, y) => unitSpeed(y) - unitSpeed(x) || sidePriority(state, b, x.side) - sidePriority(state, b, y.side) || ids.indexOf(x.id) - ids.indexOf(y.id))
     .map((u) => u.id);
   b.index = 0;
-  blog(state, `Runda bitwy ${round}.`);
+  log(state, 'battle', `Runda bitwy ${round}.`);
   beginActivation(state, b.order[0], false);
 }
 
@@ -439,12 +434,12 @@ function rollDie(state: GameState): number {
 export function dealDamage(state: GameState, target: BattleUnit, amount: number, source: string) {
   const dmg = Math.max(0, amount);
   target.hp -= dmg;
-  blog(state, `${source} → ${unitName(target)}: ${dmg} obrażeń (Ż ${Math.max(0, target.hp)}/${target.maxHp}).`, 'damage');
+  log(state, 'damage', `${source} → ${unitName(target)}: ${dmg} obrażeń (Ż ${Math.max(0, target.hp)}/${target.maxHp}).`);
   if (target.hp <= 0) {
     target.hp = 0;
     target.alive = false;
     target.pos = null;
-    blog(state, `${unitName(target)} poległ(a).`, 'death');
+    log(state, 'death', `${unitName(target)} poległ(a).`);
   }
 }
 
@@ -518,25 +513,25 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   const die = rollDie(state);
   const p = predictDamage(state, att, target, { useAbility, movedDistance, die });
   // The roll is logged so a blow that the die cut to 0 does not look like a bug.
-  if (state.rules.useDice) blog(state, `Rzut kością: ${die > 0 ? '+1' : die < 0 ? '−1' : '0'} (${p.base} ${die < 0 ? '−' : '+'} ${Math.abs(die)} = ${Math.max(0, p.base + die)}).`, 'damage');
+  if (state.rules.useDice) log(state, 'damage', `Rzut kością: ${die > 0 ? '+1' : die < 0 ? '−1' : '0'} (${p.base} ${die < 0 ? '−' : '+'} ${Math.abs(die)} = ${Math.max(0, p.base + die)}).`);
   const victim = p.victim;
   if (p.bearGuard === 'ally') {
     victim.abilityUsed = true;
-    blog(state, `${unitName(victim)} przejmuje atak i ignoruje ${ABILITY.guardianIgnore} obrażenia (Opiekun Gaju).`, 'ability');
+    log(state, 'ability', `${unitName(victim)} przejmuje atak i ignoruje ${ABILITY.guardianIgnore} obrażenia (Opiekun Gaju).`);
   }
   if (p.shield) {
     victim.status.shieldArmed = false;
-    blog(state, `Tarcza Strażnika chroni: ${unitName(victim)}.`, 'item');
+    log(state, 'item', `Tarcza Strażnika chroni: ${unitName(victim)}.`);
     recordRoll(state, att, victim, p.base, die, 0);
     return;
   }
   if (p.bearGuard === 'self') {
     victim.abilityUsed = true;
-    blog(state, `${unitName(victim)} ignoruje ${ABILITY.guardianIgnore} obrażenia (Opiekun Gaju).`, 'ability');
+    log(state, 'ability', `${unitName(victim)} ignoruje ${ABILITY.guardianIgnore} obrażenia (Opiekun Gaju).`);
   }
   if (p.hardHead !== null) {
     victim.abilityUsed = true;
-    blog(state, `${unitName(victim)} ignoruje ${p.hardHead} obrażeń (Twardogłowy).`, 'ability');
+    log(state, 'ability', `${unitName(victim)} ignoruje ${p.hardHead} obrażeń (Twardogłowy).`);
   }
   b.damageBy[att.id] = (b.damageBy[att.id] ?? 0) + Math.min(p.damage, Math.max(0, victim.hp));
   recordRoll(state, att, victim, p.base, die, p.damage);
@@ -592,24 +587,24 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       throw new Error('Drugi cel musi sąsiadować z atakującym.');
     }
     targets.push(second);
-    blog(state, `${unitName(u)}: ${UNITS[u.defId].abilityName}.`, 'ability');
+    log(state, 'ability', `${unitName(u)}: ${UNITS[u.defId].abilityName}.`);
   }
   if (canUse) {
     u.abilityUsed = true;
-    blog(state, `${unitName(u)} używa zdolności: ${UNITS[u.defId].abilityName}.`, 'ability');
+    log(state, 'ability', `${unitName(u)} używa zdolności: ${UNITS[u.defId].abilityName}.`);
   }
-  blog(state, `${unitName(u)} atakuje: ${targets.map(unitName).join(', ')}.`);
+  log(state, 'battle', `${unitName(u)} atakuje: ${targets.map(unitName).join(', ')}.`);
   for (const t of targets) {
     if (!t.alive) continue;
     resolveAttack(state, u, t, canUse, act.movedDistance);
     if (canUse && t.alive) {
       if (ab === 'entanglingRoots') {
         t.status.slowNext += ABILITY.rootsSlow;
-        blog(state, `${unitName(t)}: −${ABILITY.rootsSlow} S w następnej aktywacji.`, 'ability');
+        log(state, 'ability', `${unitName(t)}: −${ABILITY.rootsSlow} S w następnej aktywacji.`);
       }
       if (ab === 'curse') {
         t.status.cursedNext += ABILITY.curseMinus;
-        blog(state, `${unitName(t)}: −${ABILITY.curseMinus} A przy następnym ataku.`, 'ability');
+        log(state, 'ability', `${unitName(t)}: −${ABILITY.curseMinus} A przy następnym ataku.`);
       }
     }
     // No pushing in a duel: nobody moves there, so the two leaders would never meet again.
@@ -617,7 +612,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       const to = pushCell(state, u.pos!, t.pos!);
       if (to) {
         t.pos = to;
-        blog(state, `${unitName(t)} zostaje odepchnięty o 1 pole (${UNITS[u.defId].abilityName}).`, 'ability');
+        log(state, 'ability', `${unitName(t)} zostaje odepchnięty o 1 pole (${UNITS[u.defId].abilityName}).`);
       }
     }
   }
@@ -650,7 +645,7 @@ export function battleHop(state: GameState, to: HexKey) {
   u.pos = to;
   if (!UNLIMITED_ABILITIES.includes(abilityOf(u))) u.abilityUsed = true;
   act.hop = 0;
-  blog(state, `${unitName(u)} odskakuje (${UNITS[u.defId].abilityName}).`, 'ability');
+  log(state, 'ability', `${unitName(u)} odskakuje (${UNITS[u.defId].abilityName}).`);
   endActivation(state);
 }
 
@@ -669,10 +664,10 @@ export function battleAbility(state: GameState, targetId?: string) {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side === u.side || distance(parseKey(u.pos!), parseKey(t.pos!)) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);
     t.status.rootedNext = true;
-    blog(state, `${unitName(t)} zostaje unieruchomiony do swojej następnej aktywacji.`, 'ability');
+    log(state, 'ability', `${unitName(t)} zostaje unieruchomiony do swojej następnej aktywacji.`);
   }
   u.abilityUsed = true;
-  blog(state, `${unitName(u)} używa zdolności: ${UNITS[u.defId].abilityName}.`, 'ability');
+  log(state, 'ability', `${unitName(u)} używa zdolności: ${UNITS[u.defId].abilityName}.`);
 }
 
 // ---------------------------------------------------------------- items
@@ -822,7 +817,7 @@ export function battleItem(
       throw new Error('Magiczną Mapę używa się na mapie przygody.');
   }
   consumeItem(state, item.id);
-  blog(state, `${unitName(actor)} używa skarbu: ${name}.`, 'item');
+  log(state, 'item', `${unitName(actor)} używa skarbu: ${name}.`);
   checkBattleEnd(state);
 }
 
