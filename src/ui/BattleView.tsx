@@ -617,7 +617,8 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                       unitId: u.defId,
                       x: c.x,
                       y: c.y + 8,
-                      size: 54,
+                      // A little wider than the hex: figures may lean over the neighbouring cells.
+                      size: 70,
                       moveMs: walk[u.id] ? WALK_STEP_MS : 300,
                       ring: isActive ? '#9EE4FF' : targets.some((t) => t.id === u.id) || approach?.targetId === u.id ? '#E0503C' : SIDE_RING[u.side],
                       lungeAt: melee ? { ...cellCenter(melee.to), key: melee.key } : null,

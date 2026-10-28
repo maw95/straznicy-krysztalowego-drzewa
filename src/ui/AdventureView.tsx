@@ -122,7 +122,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     const i = stack.findIndex((o) => o.id === h.id);
     const stacked = stack.length > 1;
     const spread = stacked ? (i - (stack.length - 1) / 2) * W * 0.3 : 0;
-    const size = stacked ? W * 0.46 : W * 0.62;
+    const size = stacked ? W * 0.56 : W * 0.78;
     return { x: p.x + W / 2 + spread, y: p.y + H * 0.66 - (stacked ? (i % 2) * H * 0.12 : 0), size, spread, i, stacked };
   };
   const figurePieces: Piece[] = Object.values(state.heroes)
@@ -137,7 +137,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
         .filter((c) => c.guardian && figureFor(c.guardian) && state.tiles[c.at]?.revealed)
         .map((c): Piece => {
           const p = pos(state.tiles[c.at]);
-          return { key: `guard-${c.id}`, unitId: c.guardian!, x: p.x + W / 2, y: p.y + H * 0.6, size: W * 0.58, ring: SIDE_RING.neutral };
+          return { key: `guard-${c.id}`, unitId: c.guardian!, x: p.x + W / 2, y: p.y + H * 0.6, size: W * 0.72, ring: SIDE_RING.neutral };
         }),
     );
   const sel = selected ? state.tiles[selected] : hero ? state.tiles[hero.pos] : null;
