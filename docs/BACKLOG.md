@@ -195,7 +195,7 @@ w kodzie). Plan zaakceptowany; decyzje:
 
 ### Etap 0: siatka bezpieczeństwa
 
-- [ ] **Test „złotych” partii:** boty rozgrywają po kilka ziaren w każdym wariancie (kooperacja, rywalizacja,
+- [x] **Test „złotych” partii:** boty rozgrywają po kilka ziaren w każdym wariancie (kooperacja, rywalizacja,
   arena, bitwy na planszy i na arenie, z kością, poziomy łatwy/trudny), test zapisuje skrót stanu końcowego
   i listy ruchów. Każda późniejsza zmiana musi dać ten sam wynik (poza świadomymi poprawkami, wtedy aktualizacja
   wzorca osobnym commitem). Dziś `engine.test.ts:179-190` porównuje tylko dwa przebiegi tego samego kodu.
@@ -232,24 +232,24 @@ w kodzie). Plan zaakceptowany; decyzje:
   przy każdym najechaniu.
 - [x] Druga partia w sesji: fałszywe „Znaleziono skarb!” (`knownItems`, `seenLog` w App nie są zerowane).
 - [x] Baner „łączę ponownie…” wisi, gdy po kodach 4401/4000/4002 nie ma ponownego łączenia → flaga `reconnecting`.
-- [ ] Podgląd obrażeń różni się od silnika (UI liczy Kamień Ochrony przed Twardogłowym) → wspólne
+- [x] Podgląd obrażeń różni się od silnika (UI liczy Kamień Ochrony przed Twardogłowym) → wspólne
   `predictDamage` w `battle.ts`, helper `bearCanGuard`.
-- [ ] Bot bitewny na chwilę zmienia `u.pos` w stanie wyświetlanym przez ekran (`battleAi.ts:117-120`) → parametr
+- [x] Bot bitewny na chwilę zmienia `u.pos` w stanie wyświetlanym przez ekran (`battleAi.ts:117-120`) → parametr
   `from` w `breathSecondTarget`.
-- [ ] Bot źle ocenia obrońcę wspólnej bazy (bierze pierwszego, silnik bierze najsilniejszego; `adventureAi.ts:54-58`).
-- [ ] `make sim` domyślnie z kością obrażeń (`scripts/simulate.ts:19`) → bez kości, wspólne `setupFor` z `sim/core.ts`.
-- [ ] Drobne: WebGL nie zwalnia zasobów (pierścienie, tekstura pokoju, `forceContextLoss`), `walkTimers` rośnie,
+- [x] Bot źle ocenia obrońcę wspólnej bazy (bierze pierwszego, silnik bierze najsilniejszego; `adventureAi.ts:54-58`).
+- [x] `make sim` domyślnie z kością obrażeń (`scripts/simulate.ts:19`) → bez kości, wspólne `setupFor` z `sim/core.ts`.
+- [x] Drobne: WebGL nie zwalnia zasobów (pierścienie, tekstura pokoju, `forceContextLoss`), `walkTimers` rośnie,
   listener `pointerup` w details nie jest usuwany, `JSON.parse` w `api.ts` bez try/catch, timery powiadomień po
   `close()`, Esc nie zamyka części okien, `describeSave` nazywa arenę „Rywalizacja”, `sim-tabele` pada na czystym
   checkoutcie, statystyki symulacji (`neutralWipeRate`, stare przyczyny końca gry).
 
 ### Etap 2: wydajność (wyniki identyczne — pilnuje test z etapu 0)
 
-- [ ] Silnik: `shortestPaths` z kopcem binarnym i mapą rodziców (63% czasu symulacji), memoizacja ścieżek
+- [x] Silnik: `shortestPaths` z kopcem binarnym i mapą rodziców (63% czasu symulacji), memoizacja ścieżek
   w jednej decyzji bota (`treeCostFrom`, `pathsFor`), `dangerCost`/`heldByAlly` liczone raz na decyzję,
   `applyActionInPlace` dla symulacji, raportów i serwera (kopiowanie stanu to 28% czasu), stałe `ARENA_CELLS`,
   zbiór przeszkód i mapa zajętości w bitwie. Cel: symulacje 2–3× szybciej.
-- [ ] Gra: ekran ustawień odtwarza zapisaną partię dwa razy przy każdym renderze; każdy ruch przepisuje cały
+- [x] Gra: ekran ustawień odtwarza zapisaną partię dwa razy przy każdym renderze; każdy ruch przepisuje cały
   dziennik partii w localStorage; `FigureLayer` rysuje klatkę przy każdym najechaniu; `legalHeroMoves` na każde
   pole mapy; kursory i podejścia w bitwie liczone 3–5 razy na jednostkę; statyczna siatka areny budowana co render;
   `figureFor` czyta localStorage w renderze; Modal renderuje się podwójnie; przewijanie bitwy po każdej zmianie Życia.
@@ -259,28 +259,31 @@ w kodzie). Plan zaakceptowany; decyzje:
 
 ### Etap 3: czytelność
 
-- [ ] Martwy kod i nieaktualne komentarze („arena 9×11”, „pointy-top”, `ritualHold` „DO USTALENIA”,
+- [x] Martwy kod i nieaktualne komentarze („arena 9×11”, „pointy-top”, `ritualHold` „DO USTALENIA”,
   `armedAbility`, nieużywane eksporty i przełączniki zasad — pola zasad zostają opcjonalne przy odczycie zapisów).
-- [ ] Nazwane stałe: tabela `ITEM_EFFECT` (efekty skarbów w silniku, AI i opisach), `SUPPORTS_PER_BATTLE = 2`
+- [x] Nazwane stałe: tabela `ITEM_EFFECT` (efekty skarbów w silniku, AI i opisach), `SUPPORTS_PER_BATTLE = 2`
   (6 miejsc), `AI_TUNING`, próg Twardogłowego.
-- [ ] Powtórzony kod: opis pola mapy (3 razy w `AdventureView`), ustawienia stołu lokalnie i online
+- [x] Powtórzony kod: opis pola mapy (3 razy w `AdventureView`), ustawienia stołu lokalnie i online
   (`setupShared.tsx`), dwa hooki stanu online, zapis autozapisu w zgłoszeniu błędu, wspólna „ramka” App (baner
   błędu, muzyka, zasady), `walkCost` w AI (4 kopie), `grantItem`, `log`, `livingHeroes`, czytelne tabele punktacji;
   na serwerze `parseChatText`, `requestUser`, domyślne pola pokoju przy wczytaniu, `rowToRoom`.
 - [x] Protokół: jedna pełna definicja typów wiadomości klient/serwer (`protocol.ts`).
-- [ ] Testy: wspólne helpery (`battleFixture`, `setup`, `playOut`, `clearDialogs`; na serwerze `useServer`,
+- [x] Testy: wspólne helpery (`battleFixture`, `setup`, `playOut`, `clearDialogs`; na serwerze `useServer`,
   `roomWith`), fake timers zamiast sleepów, `make test-engine`/`make test-ui` uruchamiają wszystkie swoje testy,
-  12 partii bitew + `make test-slow`.
+  12 partii bitew + `make test-slow`. **Zostało:** wspólne helpery testów UI (`clearDialogs`, `byText`, ustawienia
+  jsdom) w `tests/helpers/ui.ts`; drobne w `AdventureView` (ślad ruchu zmieniany w renderze, efekt bez listy zależności,
+  podwójne liczenie punktów linii śladu); wspólne klasy CSS przycisków (#24); domyślne miejsca przy stole lokalnie
+  i online (`defaultSeats`/`defaultTable`).
 
 ### Etap 4: większe podziały
 
-- [ ] `App.tsx` (1010 linii): `useLocalGame`, `useBotTimer`, `useStepWalker`, `useOnlineGame`, `useShortcuts`,
+- [x] `App.tsx` (1010 linii): `useLocalGame`, `useBotTimer`, `useStepWalker`, `useOnlineGame`, `useShortcuts`,
   `musicTheme()`, osobne okna dialogowe.
-- [ ] `BattleView.tsx` (1017 linii): `useBattleAnimations`, `useDeployment`, `ArenaBoard`, `ActivationBar`,
+- [x] `BattleView.tsx` (1017 linii): `useBattleAnimations`, `useDeployment`, `ArenaBoard`, `ActivationBar`,
   `ItemsPanel`, `SidePanel`, `battleStatus.tsx`, `activationHint()`.
-- [ ] Hub serwera: `Connections`, `RoomDirectory`, `Presence`, `Lounge`, `Invitations`; widok pokoju wysyłany raz
+- [x] Hub serwera: `Connections`, `RoomDirectory`, `Presence`, `Lounge`, `Invitations`; widok pokoju wysyłany raz
   na zmianę (najpierw sprawdzić, czy klient zależy od kolejności `room`/`game`).
-- [ ] Najdłuższe funkcje: `goodAction` (kroki jako osobne funkcje, kolejność bez zmian), `battleItem` (tablica
+- [x] Najdłuższe funkcje: `goodAction` (kroki jako osobne funkcje, kolejność bez zmian), `battleItem` (tablica
   obsługi), `finalizeBattle`, `createGame`.
 
 Serwer: etapy 1–4 zrobione i wdrożone 28.10 (60 testów; protokół dla gry bez zmian; „Protokół” zrobiony po stronie serwera).
