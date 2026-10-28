@@ -22,7 +22,7 @@ więc wersja fizyczna i komputerowa mają te same pola.
 | Kafelek mapy (teren, skarb, siedlisko, Drzewo, baza) | 121 | sześciokąt **50 mm** między płaskimi bokami (57,7 mm między rogami), wierzchołkiem do góry | **661 × 753 px** na kafelek, osobno awers i rewers |
 | Plansza areny, dwustronna | 1 | **420 × 297 mm** (A3), składana raz na pół do 210 × 297 mm | **5031 × 3579 px** na stronę |
 | Pole areny | 85 na stronę | sześciokąt **34 mm** między płaskimi bokami, płaskim bokiem do góry | — (siatka rysowana programowo, niżej) |
-| Karta jednostki | 18 (15 + 3 karty strażników do pojedynku) | **80 × 120 mm** (rozmiar „Dixit”, proporcje 2:3 jak obecne wzory) | **1016 × 1488 px** |
+| Karta jednostki | 18 (15 + 3 karty strażników do pojedynku) | **80 × 112 mm** (proporcje kart z gry, 63 : 88 — jak karta skarbu, tylko większa) | **981 × 1358 px** |
 | Karta skarbu | 20 | **63 × 88 mm** (standardowa karta do gry) | **815 × 1110 px** |
 | Rewers karty | 5 wzorów: Przymierze, Horda, strażnicy (granatowy), strażnicy do pojedynku (błękitny), skarby — `docs/grafika/karty/rewers_*.png` | jak awers | jak awers |
 | Kropla obrażeń, dwustronna („1” / „2” i „3” / „5”, druk 3D) | 16 (6 + 10) | kropla **15,6 × 20 mm**, grubość 3 mm | **255 × 307 px** |
@@ -34,6 +34,17 @@ więc wersja fizyczna i komputerowa mają te same pola.
 | Kość −1 / 0 / +1 | 1 | sześcienna **16 mm**, ścianki: −1, −1, 0, 0, +1, +1 | 6 pól po **189 × 189 px** (bez spadu) |
 | Instrukcja | 1 | **A4** (210 × 297 mm), zeszyt zszywany | 2480 × 3508 px na stronę |
 | Pudełko | 1 | wnętrze ok. **305 × 305 × 90 mm**, zewnątrz ok. 310 × 310 × 95 mm (przybliżone) | — |
+
+## Druk w domu (pliki w `do_druku/`, `make druk`)
+
+- Wszystko jest ułożone na arkuszach **A4 w 300 DPI**, z linią kontrolną 50 mm na każdym arkuszu; drukować w skali 100%.
+- **Plansza areny A3** jest na 4 arkuszach A4 (po dwa na stronę). Każda połowa sięga 5 mm za środek planszy i ma tam linię
+  cięcia; zewnętrzne 5 mm ramki odpada (drukarka i tak go nie drukuje). Siatka jest narysowana od nowa jako regularne
+  sześciokąty 34 mm (malowana siatka z gry ma lekką perspektywę), tło to obraz z gry powiększony 3,4 raza.
+- **Kafelki:** 15 na arkusz, obraz 6% większy od linii cięcia (spad), rewersy 12% większe i w lustrzanym układzie.
+- **Karty:** spad 1,5 mm w kolorze brzegu karty, znaczniki cięcia na marginesach, rewersy w lustrzanym układzie.
+- Obrazy kafelków mają w źródle ok. 340 px na kafelek (ok. 170 DPI przy 50 mm) — na papierze fotograficznym wyglądają
+  dobrze, ale z bliska są lekko miękkie. Lepsze będą po wygenerowaniu grafik w docelowych rozmiarach (niżej).
 
 ## Kafelki mapy
 
@@ -66,7 +77,7 @@ więc wersja fizyczna i komputerowa mają te same pola.
 
 ## Karty
 
-- **Karty jednostek 80 × 120 mm:** leżą na nich krople obrażeń i znaczniki stanu. Miejsca na znaczniki na karcie
+- **Karty jednostek 80 × 112 mm:** (do 28.10 planowane 80 × 120 mm; karty z gry mają proporcje 63 : 88, więc pliki do druku mają 80 × 111,7 mm, a rewersy 2 : 3 są przycięte o 4 mm u góry i u dołu) leżą na nich krople obrażeń i znaczniki stanu. Miejsca na znaczniki na karcie
   nie zmieniamy (znaczniki Ø 23 mm mogą częściowo leżeć obok karty). Proporcje 2:3 pasują do obecnych wzorów.
 - **Karty skarbów 63 × 88 mm:** standardowy rozmiar; karty są laminowane ręcznie (bez koszulek).
 - **Rogi** zaokrąglone, promień 3 mm.

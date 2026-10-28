@@ -10,7 +10,7 @@ OPTIONS ?= full
 BATTLE ?= arena
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-arena sim-tabele report zgloszenia modele figurki silnik clean
+.PHONY: help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-arena sim-tabele report zgloszenia modele figurki druk silnik clean
 
 help: ## Lista komend
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -113,6 +113,12 @@ modele: ## Figurki 3D do gry: docs/wersja_planszowa/druk3d/figurki/z_teksturami/
 
 figurki: node_modules ## Rzuty figurek 3D do instrukcji (PNG z przezroczystym tłem) z public/modele/ -> docs/wersja_planszowa/instrukcja_szablon/assets/figurki/
 	npx tsx scripts/browser/figury.ts
+
+druk: node_modules ## Pliki do druku wersji planszowej -> docs/wersja_planszowa/do_druku/ (instrukcja PDF, karty, kafelki, arena, naklejki, pudełko; ok. 1 min)
+	npx tsx scripts/browser/karty.ts >/dev/null
+	python3 scripts/assets/manual_build.py >/dev/null
+	npx tsx scripts/browser/instrukcja.ts
+	python3 scripts/assets/druk.py
 
 silnik: ## Silnik gry jako pakiet dla serwera, dołączony do wydania na GitHubie, np. make silnik TAG=1.3.0
 	scripts/engine-package.sh $(or $(TAG),$(shell node -p "require('./package.json').version"))

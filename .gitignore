@@ -25,3 +25,6 @@ __pycache__/
 
 # Reports fetched from the game server (make zgloszenia) carry players' nicks and browser details: kept out of the public repo
 /bug-reports/*-serwer-*.json
+
+# Print files made by `make druk` (large PDFs, rebuilt from the sources at any time)
+/docs/wersja_planszowa/do_druku/
