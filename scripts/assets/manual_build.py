@@ -105,7 +105,14 @@ def chapter(num, title, key):
 
 
 # ---------------------------------------------------------------- pages
-# 2: contents
+# 2: the author's letter to the player. The author writes it by hand on the printed page, or types it over the
+# ruled lines (replace the <div class="lines"> with <p> paragraphs in index.html, or here).
+sheet('''<div class="eyebrow">Od autora</div><h1>Słowo na drogę</h1>
+<div class="letter"><div class="to">Drogi / Droga ……………………………………</div><div class="lines"></div>
+<div class="sign">Autor gry</div></div>
+''', left='Od autora', right='Dla gracza', foot='Od autora')
+
+# 3: contents
 sheet('@@TOC@@', cls='frontispiece', left='Księga zasad', right='Spis treści', foot='Spis treści')
 
 # Story
@@ -132,6 +139,76 @@ sheet(f'''<div class="story">{''.join(f'<p>{p}</p>' for p in second)}</div>
 <div class="card" style="--accent:var(--navy)"><h3>Strażnicy</h3><p>{named('Kryształów pilnują').replace('Kryształów pilnują <b>Strażnicy</b> — s', 'S')}</p></div>
 <p class="intro" style="text-align:center;margin-top:5mm"><i>{named('Wybierz stronę')}</i></p>
 ''', cls='neutral', left='Wprowadzenie', right='Opowieść', foot='Opowieść o Drzewie')
+
+# Rules in pictures: the whole game in eight panels, for the first game and for those who skip rulebooks.
+chapter('✧', 'Zasady w obrazkach', 'pictures')
+pics_md = MD[MD.index('## Zasady w obrazkach'):MD.index('## 1. Co jest w pudełku')]
+PIC_TEXT = []
+for l in pics_md.split('\n'):
+    m = re.match(r'^\d+\. \*\*(.+?)\*\* ?(.*)$', l)
+    if m:
+        PIC_TEXT.append((md_inline(m.group(1)), md_inline(m.group(2))))
+pics_intro = md_inline(re.search(r'\n\*(.+)\*\n', pics_md).group(1))
+
+
+def img(src, h, extra=''):
+    return f'<img src="assets/{src}" alt="" style="height:{h}mm;{extra}">'
+
+
+def hexes(cells, w=21):
+    """Pointy-top tiles at axial (q, r) positions: [(q, r, image, badge, badge class, figure)]."""
+    h = w * 300 / 260
+    xs = [w * (q + r / 2) for q, r, *_ in cells]
+    ys = [0.75 * h * r for _, r, *_ in cells]
+    x0, y0 = min(xs), min(ys)
+    out, over = [], []
+    for (q, r, src, badge, bcls, fig), x, y in zip(cells, xs, ys):
+        x, y = x - x0, y - y0
+        out.append(f'<img src="assets/kafelki/{src}.png" alt="" style="left:{x:.1f}mm;top:{y:.1f}mm;width:{w}mm">')
+    # Figures and badges go over all the tiles, so a neighbouring tile never covers them.
+    out, over = [], out
+    for (q, r, src, badge, bcls, fig), x, y in zip(cells, xs, ys):
+        x, y = x - x0, y - y0
+        if fig:
+            out.append(f'<img src="assets/{fig}" alt="" style="left:{x + w * 0.15:.1f}mm;top:{y - h * 0.32:.1f}mm;width:{w * 0.7:.1f}mm;height:{h * 1.05:.1f}mm;object-fit:contain;object-position:center bottom">')
+        if badge:
+            out.append(f'<div class="badge {bcls}" style="left:{x + w / 2 - 4:.1f}mm;top:{y + h - 9.5:.1f}mm">{badge}</div>')
+    out = over + out
+    width = max(xs) - x0 + w
+    height = max(ys) - y0 + h
+    return f'<div class="hexes" style="width:{width:.1f}mm;height:{height:.1f}mm">{"".join(out)}</div>'
+
+
+def panel(n, art):
+    say, more = PIC_TEXT[n - 1]
+    return (f'<div class="pic-panel"><div class="pic-num">{n}</div><div class="pic-art">{art}</div>'
+            f'<div class="pic-say">{say}</div><div class="pic-more">{more}</div></div>')
+
+
+ARROW = '<span class="pic-arrow">➜</span>'
+tile_with = lambda src, badge, cls, label: (f'<div style="text-align:center">{hexes([(0, 0, src, badge, cls, None)], 25)}'
+                                            f'<div class="under">{label}</div></div>')
+pic_art = {
+    1: f'<div>{img("figurki/goldDragon.png", 34)}<div>{img("znaczniki/crystal.png", 9)}{img("znaczniki/crystal.png", 9)}{img("znaczniki/crystal.png", 9)}</div></div>{ARROW}{img("krysztalowe_drzewo.png", 50)}',
+    2: f'<div style="text-align:center">{img("round_track.png", 46, "margin:0 auto")}<div class="badge" style="width:auto;display:inline-flex;padding:0 2mm;border-radius:2mm;margin-top:1mm">limit: 8 · 12 · 18 · 24</div></div>',
+    3: tile_with('meadow_1', '1', '', 'Polana — łatwy') + tile_with('river_1', '2', '', 'Rzeka — trudny') + tile_with('mountain_1', '✕', 'no', 'Góry — przeszkoda'),
+    4: hexes([(0, 0, 'forest_1', '', '', 'figurki/unicornKing.png'), (1, 0, 'meadow_1', '', '', None), (-1, 0, 'river_1', '', '', None),
+              (0, -1, 'back_dawn', '?', '', None), (1, -1, 'lairGriffin_1', 'nowy', 'new', 'znaczniki/crystal.png'), (-1, 1, 'back_dawn', '?', '', None), (0, 1, 'hill_1', 'nowy', 'new', None)], 20),
+    5: f'{img("figurki/unicornKing.png", 44)}<span class="pic-arrow" style="font-size:30pt">⚔</span>{img("figurki/werewolfLord.png", 44)}',
+    6: f'<div><div class="badge" style="margin:0 auto 1mm">1</div>{img("karty/unicornKing.jpg", 46)}<div class="under">Szybkość 8</div></div>'
+       f'<div><div class="badge" style="margin:0 auto 1mm">2</div>{img("karty/werewolfLord.jpg", 46)}<div class="under">Szybkość 7</div></div>',
+    7: f'<div style="position:relative">{img("karty/werewolfLord.jpg", 58)}{img("znaczniki/damage_5.png", 15, "position:absolute;left:4mm;top:21mm;transform:rotate(-12deg)")}{img("znaczniki/damage_1.png", 12, "position:absolute;left:20mm;top:26mm;transform:rotate(9deg)")}</div>'
+       f'<div class="under" style="max-width:24mm;text-align:left">krople 5 + 1<br>= 6 obrażeń.<br>Życie 8 —<br>jeszcze stoi.</div>',
+    8: f'{img("figurki/griffin.png", 34)}{ARROW}<div>{img("znaczniki/crystal.png", 15)}<div class="under">kryształ</div></div><div>{img("karty/sword.jpg", 36)}<div class="under">i skarb</div></div>',
+}
+sheet(f"""<div class="eyebrow">Na pierwszą partię</div><h1>Zasady w obrazkach</h1>
+<p class="fine" style="text-align:center;margin:-2mm 0 2mm;line-height:1.2">{pics_intro}</p>
+<div class="pics">{''.join(panel(n, pic_art[n]) for n in (1, 2, 3, 4))}</div>
+""", cls='neutral', left='Zasady w obrazkach', right='Wyprawa', foot='Zasady w obrazkach', key='pictures')
+sheet(f"""<div class="eyebrow">Na pierwszą partię</div><h1>Walka w obrazkach</h1>
+<p class="fine" style="text-align:center;margin:-1mm 0 3mm">Na poziomie łatwym walczą tylko dwaj bohaterowie (rozdział 9). Na arenie każda jednostka najpierw się rusza, potem atakuje (rozdział 8).</p>
+<div class="pics">{''.join(panel(n, pic_art[n]) for n in (5, 6, 7, 8))}</div>
+""", cls='neutral', left='Zasady w obrazkach', right='Walka', foot='Zasady w obrazkach')
 
 # 1. Contents of the box
 chapter('1', 'Co jest w pudełku', 'box')
@@ -266,7 +343,8 @@ sheet(f'''<div class="eyebrow">Rozdział 5</div><h1>Przygotowanie</h1>
 <div class="step" style="min-height:0"><div class="number">3</div><h3>Ułóżcie mapę</h3><p>Trójkąt: Drzewo na szczycie, baza Przymierza w lewym dolnym rogu, baza Hordy w prawym. Lewą połowę wypełnijcie zakrytymi kafelkami z zielonej talii, prawą — z bordowej. Pola na samym środku należą na zmianę do jednej i drugiej strony (zygzakiem).</p></div>
 ''', left='Rozdział 5', right='Przygotowanie', foot='Przygotowanie', key='setup')
 sheet('''<div class="pic-left" style="grid-template-columns:1fr 92mm;gap:5mm;align-items:start"><div>
-<div class="step" style="min-height:0;margin-bottom:4mm"><div class="number">✦</div><h3>Skarby i strażnicy</h3><p>Wmieszajcie między zakryte pola kafelki skarbów i <b>siedliska strażników</b> — tyle, ile kryształów jest na mapie. Gryf mieszka po stronie Przymierza, Cyklop i Hydra po stronie Hordy. Na każdym siedlisku połóżcie kryształ.</p></div>
+<div class="step" style="min-height:0;margin-bottom:4mm"><div class="number">✦</div><h3>Skarby i strażnicy</h3><p>Wmieszajcie między zakryte pola kafelki skarbów i <b>siedliska strażników</b> — tyle, ile kryształów jest na mapie. Gryf mieszka po stronie Przymierza, Cyklop i Hydra po stronie Hordy. Na każdym siedlisku połóżcie kryształ.</p>
+<p style="margin-top:1.5mm"><b>Stos skarbów mapy:</b> odłóżcie tyle Eliksirów Odrodzenia i losowych innych skarbów, ile podaje tabela, potasujcie i połóżcie zakryte obok mapy. Kto wejdzie na kafelek skarbu, bierze wierzchnią kartę. Reszta kart to <b>talia skarbów</b> (skarby na start i od strażników).</p></div>
 <div class="step" style="min-height:0"><div class="number">4</div><h3>Odkryjcie</h3><p>Drzewo, obie bazy i pola sąsiadujące z bazami.</p></div>
 </div><div><img src="assets/mapa_przyklad.png" alt="Przykładowa mapa średnia"><p class="caption">Przykład: mapa średnia (8 rzędów) — tu już cała odkryta. U góry Drzewo, w dolnych rogach bazy.</p></div></div>
 <div class="steps" style="margin-top:5mm">
@@ -314,8 +392,9 @@ sheet(f'''<div class="eyebrow">Rozdział 7</div><h1>Wędrówka po krainie</h1>
 <li><b>Kryształ bez strażnika</b> — bohater Przymierza od razu go podnosi. Może nieść dowolnie wiele kryształów. Horda kryształów nie podnosi.</li>
 <li><b>Drzewo</b> — bohater Przymierza, który wejdzie na Drzewo z kryształami, oddaje mu je wszystkie.</li>
 <li><b>Strażnik</b> — wejście na jego pole to wyzwanie do walki (rozdział 10). Może to zrobić tylko bohater Przymierza.</li>
-<li><b>Wrogi bohater</b> — wejście na jego pole rozpoczyna <b>bitwę</b> (rozdział 8). Wymaga to co najmniej 1 punktu ruchu i kończy ruch w tej turze. Zwycięzca zostaje na tym polu.</li>
+<li><b>Wrogi bohater</b> — wejście na jego pole rozpoczyna <b>bitwę</b> (rozdział 8). Zwycięzca zostaje na tym polu.</li>
 </ul>
+<p class="fine" style="margin-top:1mm">Wejście na pole z walką kosztuje tyle punktów ruchu, ile koszt terenu tego pola — jak każdy krok. Bitwa nie kończy ruchu: jeśli bohater wygra i zostały mu punkty, może iść dalej.</p>
 ''', left='Rozdział 7', right='Mapa przygody', foot='Wędrówka po krainie', key='adventure')
 sheet('''<div class="terrain-pair" style="grid-template-columns:repeat(6,1fr);gap:2.5mm;margin-bottom:4mm">
 <div class="tile" style="padding:1.5mm"><img src="assets/kafelki/meadow_1.png" alt="" style="height:22mm"><div class="name" style="font-size:10pt">Polana</div><div class="fine">łatwy · 1</div></div>
@@ -336,6 +415,21 @@ sheet('''<div class="terrain-pair" style="grid-template-columns:repeat(6,1fr);ga
 <div class="tile"><img src="assets/baza_hordy.jpg" alt="Baza Hordy" style="height:30mm"><div class="name">Baza Hordy</div><div class="fine">tu zaczyna Mroczna Horda</div></div></div>
 <p class="see">Atak na bazę pełną bohaterów, kryształ pod stopami, rytuał a wskrzeszeni — szczegóły w rozdziale 14.</p>
 ''', left='Rozdział 7', right='Mapa przygody', foot='Wędrówka po krainie')
+
+ex_map = MD[MD.index('### Przykład: tura na mapie'):MD.index('## 8. Bitwa na arenie')]
+ex_steps = re.findall(r'^\d+\. (.+)$', ex_map, re.M)
+ex_fight = md_inline(re.search(r'^\*\*Walka w środku ruchu\.\*\* (.+)$', ex_map, re.M).group(1))
+sheet(f"""<div class="eyebrow">Rozdział 7 · Przykład</div><h1>Tura na mapie</h1>
+<p class="intro">{md_inline(ex_map.split(chr(10) + chr(10))[1])}</p>
+<div style="display:flex;justify-content:center;margin:3mm 0 1mm">
+{hexes([(0, 0, 'meadow_1', 'start', 'new', None), (1, 0, 'forest_1', '1', '', None), (2, -1, 'treasureDawn_1', '2', '', 'figurki/unicornKing.png'),
+        (2, 0, 'meadow_1', '', '', None), (1, -1, 'hill_1', 'nowy', 'new', None), (2, -2, 'river_1', 'nowy', 'new', None),
+        (3, -1, 'mountain_1', '✕', 'no', None), (3, 0, 'back_dawn', '', '', None), (1, -2, 'back_dawn', '', '', None)], 30)}</div>
+<p class="caption" style="margin:0 0 3mm">Numery pokazują drogę Jednorożca, „nowy” — kafelki odkryte w tej turze, zielone rewersy — pola wciąż zakryte.</p>
+<ol class="rules example">{''.join(f'<li>{md_inline(x)}</li>' for x in ex_steps)}</ol>
+<div class="card" style="margin-top:3mm"><h3>Walka w środku ruchu</h3><p>{ex_fight}</p></div>
+<div class="paper-note" style="margin-top:4mm"><b>Pamiętaj:</b> punkty ruchu nie przechodzą na następną turę, a kafelki odwraca się po każdym kroku — dopiero wtedy wiadomo, dokąd warto iść dalej.</div>
+""", left='Rozdział 7', right='Przykład', foot='Przykład: tura na mapie')
 
 # 8. Arena battle
 chapter('8', 'Bitwa na arenie', 'arena')
@@ -363,6 +457,30 @@ sheet('''<h2>Aktywacja</h2>
 </ul>
 <p class="see">Dokładne działanie zdolności, strzelanie z bliska i bardzo długie bitwy opisuje rozdział 14.</p>
 ''', left='Rozdział 8', right='Walka', foot='Bitwa na arenie')
+
+ex_b = MD[MD.index('### Przykład: początek bitwy'):MD.index('## 9. Pojedynek')]
+MARK = {'Spowolnienia': 'slowed', 'zużytej zdolności': 'ability_used', 'Klątwy': 'cursed'}
+
+
+def ex_items(title):
+    part = ex_b[ex_b.index(f'**{title}**'):]
+    part = part[:part.find('\n\n**', 5)] if '\n\n**Runda' in part[5:] else part
+    items = [md_inline(l[2:]) for l in part.split('\n') if l.startswith('- ')]
+    # The status markers named in the text get their pictures.
+    for word, file in MARK.items():
+        items = [x.replace(f'znacznik {word}', f'znacznik {word} <img class="mk" src="assets/znaczniki/{file}.png" alt="">') for x in items]
+    return '<ul class="rules example">' + ''.join(f'<li>{x}</li>' for x in items) + '</ul>'
+
+
+ex_intro = md_inline(ex_b.split('\n\n')[1])
+team = lambda ids, cap: ''.join(f'<figure><img src="assets/karty/{i}.jpg" alt=""><figcaption>{FIGURE_NAMES[i]}</figcaption></figure>' for i in ids)
+sheet(f"""<div class="eyebrow">Rozdział 8 · Przykład</div><h1>Początek bitwy</h1>
+<p style="font-size:11.2pt;line-height:1.25">{ex_intro}</p>
+<div class="example-cards">{team(['werewolfLord', 'goblinShaman', 'caveSpider'], '')}<div style="width:6mm"></div>{team(['unicornKing', 'elfDruid', 'nymph'], '')}</div>
+<div class="order"><b>Kolejność:</b><span class="d">Jednorożec 8</span>➜<span class="h">Wilkołak 7</span>➜<span class="d">Elf i Nimfa 4</span>➜<span class="h">Goblin i Pająk 3</span></div>
+<h3>Runda 1</h3>{ex_items('Runda 1')}
+<h3>Runda 2</h3>{ex_items('Runda 2')}
+""", left='Rozdział 8', right='Przykład', foot='Przykład: bitwa')
 
 # 9 + 10
 chapter('9', 'Pojedynek na planszy', 'duel')

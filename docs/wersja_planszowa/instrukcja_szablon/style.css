@@ -377,3 +377,34 @@ img.stat{height:1.05em;width:auto;vertical-align:-0.18em;margin:0 .06em}
 .table.sides tr:nth-child(even) td.horde{background:linear-gradient(180deg,#8b22382b,#8b223840)!important}
 .table.sides td:nth-child(4),.table.sides thead tr:first-child th:nth-child(3),.table.sides thead tr:nth-child(2) th:nth-child(3){border-left:2px solid #b99a6e}
 .sheet.rivalry{--accent:var(--gold-dark);--accent-soft:#f3e2bd}
+/* The author's letter on page 2: ruled lines to write on by hand (or type over them in index.html) */
+.letter{margin-top:6mm}
+.letter .to{font-family:var(--head);font-size:15pt;color:var(--accent);margin-bottom:4mm}
+.letter .lines{height:150mm;background:repeating-linear-gradient(180deg,transparent 0,transparent 9.4mm,#b99a6e80 9.4mm,#b99a6e80 10mm)}
+.letter .sign{margin-top:8mm;text-align:right;font-style:italic;font-size:13pt}
+/* Rules in pictures: big numbered panels, few words */
+.pics{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:5mm}
+.pic-panel{position:relative;min-width:0;overflow:hidden;height:98mm;padding:3mm 3.5mm;border:1px solid #bea06f;border-radius:3mm;background:linear-gradient(180deg,#fff9e9d9,#f1dfb6b8);display:flex;flex-direction:column;align-items:center;text-align:center}
+.pic-num{position:absolute;left:2.5mm;top:2.5mm;width:10mm;height:10mm;border-radius:50%;border:1px solid #7f5920;background:radial-gradient(circle at 35% 30%,#fff2ca 0%,#deb25f 34%,var(--accent) 100%);color:#fff;font:700 15pt var(--head);display:flex;align-items:center;justify-content:center;text-shadow:0 1px 2px #0008}
+.pic-art{flex:1;width:100%;min-height:0;display:flex;align-items:center;justify-content:center;gap:2mm}
+.pic-art img{display:block}
+.pic-say{font-family:var(--head);font-weight:700;font-size:12.6pt;line-height:1.15;color:var(--accent)}
+.pic-more{font-size:10.6pt;line-height:1.2;margin-top:1mm}
+.pic-arrow{font-size:24pt;color:var(--gold-dark);line-height:1}
+.hexes{position:relative;flex:none}
+.hexes>img,.hexes>.badge{position:absolute}
+.badge{width:8mm;height:8mm;border-radius:50%;background:#fff3cf;border:1.5px solid var(--gold-dark);font:700 11pt var(--head);color:var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px #0006}
+.badge.no{background:#f6d4d4;border-color:var(--horde);color:var(--horde)}
+.badge.new{background:#e2f3d9;border-color:var(--forest);color:var(--forest);font-size:8.5pt;width:auto;padding:0 1.4mm;border-radius:2mm;height:6mm}
+.under{font-size:9.6pt;line-height:1.1;margin-top:1mm}
+/* Worked examples */
+.example-cards{display:flex;justify-content:center;gap:2.5mm;margin:2mm 0 3mm}
+.example-cards figure{margin:0;text-align:center;width:25mm}
+.example-cards img{width:25mm;display:block}
+.example-cards figcaption{font-size:9pt;line-height:1.05;margin-top:.6mm}
+.example li{font-size:11.2pt;line-height:1.24;margin-bottom:1mm}
+img.mk{height:6.5mm;width:auto;vertical-align:-1.8mm;margin:0 .5mm}
+.order{display:flex;align-items:center;justify-content:center;gap:1.6mm;flex-wrap:wrap;font-size:11pt;margin:1mm 0 2mm}
+.order span{padding:.6mm 2.2mm;border-radius:1.5mm;border:1px solid #bea06f;background:#fff7e3}
+.order span.h{border-color:var(--horde);color:var(--horde)}
+.order span.d{border-color:var(--forest);color:var(--forest)}

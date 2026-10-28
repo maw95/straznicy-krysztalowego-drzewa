@@ -1,6 +1,8 @@
 # Strażnicy Kryształowego Drzewa — szablon instrukcji A4
 
-Pełna instrukcja gry (26 stron A4) na bazie szablonu HTML/CSS. Treść pochodzi z `docs/INSTRUKCJA.md`: okładka, spis treści, opowieść, rozdziały 1–15 (w tym „Przypadki szczególne” i ściągawka).
+Pełna instrukcja gry (40 stron A4) na bazie szablonu HTML/CSS. Treść pochodzi z `docs/INSTRUKCJA.md`: okładka, wiadomość od autora (strona 2), spis treści, opowieść, zasady w obrazkach, rozdziały 1–16 z przykładami (tura na mapie, początek bitwy), przypadki szczególne i ściągawka. Strony składa skrypt `scripts/assets/manual_build.py`; gotowy PDF do druku robi `make druk` (plik `../do_druku/01_instrukcja_A4.pdf`).
+
+**Strona 2 — wiadomość od autora:** ma linie do pisania ręcznego po wydrukowaniu. Żeby wpisać tekst na komputerze, w `index.html` (albo w `scripts/assets/manual_build.py`, jeśli strony będą składane od nowa) zamień `<div class="lines"></div>` na akapity `<p>…</p>`, a kropki po „Drogi / Droga” na imię gracza.
 
 ## Jak zacząć
 

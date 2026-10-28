@@ -34,6 +34,7 @@ Wybierz stronę. Drzewo czeka.
 
 ## Spis treści
 
+- [Zasady w obrazkach](#zasady-w-obrazkach) — cała gra w ośmiu obrazkach
 1. [Co jest w pudełku](#1-co-jest-w-pudełku)
 2. [Kto jest kim — jednostki](#2-kto-jest-kim--jednostki)
 3. [Jak wygrać](#3-jak-wygrać)
@@ -50,6 +51,21 @@ Wybierz stronę. Drzewo czeka.
 14. [Przypadki szczególne](#14-przypadki-szczególne)
 15. [Arena — szybka bitwa](#15-arena--szybka-bitwa)
 16. [Ściągawka](#16-ściągawka)
+
+---
+
+## Zasady w obrazkach
+
+*Cała gra w ośmiu obrazkach — na pierwszą partię, dla najmłodszych i dla wszystkich, którzy nie lubią czytać instrukcji. Szczegóły są w dalszych rozdziałach.*
+
+1. **Przymierze zanosi kryształy do Drzewa.** Potrzeba 2 kryształów, gdy Przymierze ma jednego bohatera, i 3 — gdy dwóch.
+2. **Horda wygrywa, gdy skończy się czas.** Kryształowy znacznik idzie po torze rund; po ostatniej rundzie mapy (8 / 12 / 18 / 24) wygrywa Horda. Wygrywa też, gdy pokona wszystkich bohaterów Przymierza albo odprawi rytuał przy Drzewie.
+3. **W swojej turze bohater ma 3 punkty ruchu.** Łatwy teren kosztuje 1 punkt, trudny 2, a na przeszkodę nie da się wejść.
+4. **Wszedłeś na pole? Odwróć zakryte kafelki dookoła.** Tak odkrywa się krainę: skarby, siedliska strażników i kryształy.
+5. **Wejdź na pole wroga, a zacznie się walka.** Bohater Przymierza może też wyzwać strażnika kryształu.
+6. **Szybszy uderza pierwszy.** Przy równej Szybkości pierwszy jest ten, kto się broni.
+7. **Cios zadaje tyle obrażeń, ile wynosi Atak.** Połóż krople na karcie. Gdy obrażenia dorównają Życiu, jednostka pada.
+8. **Pokonany strażnik oddaje kryształ i skarb.** Bohater od razu podnosi kryształ, a Przymierze dobiera skarb.
 
 ---
 
@@ -222,6 +238,7 @@ Na poziomie łatwym zasady mieszczą się na jednej kartce: chodzicie po mapie, 
    - Drzewo na szczycie, baza Przymierza w lewym dolnym rogu, baza Hordy w prawym.
    - Lewą połowę wypełnijcie zakrytymi kafelkami z zielonej talii, prawą — z bordowej. Pola na samym środku należą na zmianę do jednej i drugiej strony (zygzakiem).
    - Wmieszajcie między nie kafelki skarbów i **siedliska strażników** — tyle, ile kryształów jest na mapie. Gryf mieszka po stronie Przymierza, Cyklop i Hydra po stronie Hordy. Na każdym siedlisku połóżcie kryształ.
+   - Kafelków skarbów jest tyle, ile skarbów na mapie (tabela wyżej). **Stos skarbów mapy:** odłóżcie tyle Eliksirów Odrodzenia i losowych innych skarbów, ile podaje tabela, potasujcie je i połóżcie zakryte obok mapy. Kto wejdzie na kafelek skarbu, bierze wierzchnią kartę. Pozostałe karty skarbów to **talia skarbów** — z niej Przymierze dobiera skarby na start i skarby zostawione przez strażników.
 4. **Odkryjcie** Drzewo, obie bazy i pola sąsiadujące z bazami.
 5. **Każdy gracz wybiera bohatera** i stawia go w bazie swojej frakcji. Pomocnicy obu frakcji czekają przy planszy. Na mapie długiej i bardzo długiej Przymierze dobiera swoje skarby na start (tabela wyżej).
 6. Połóżcie **kryształowy znacznik** w gnieździe „1” toru rund. Zerknijcie, które gniazdo jest limitem waszej mapy (8, 12, 18 albo 24 — te gniazda są wyróżnione).
@@ -287,6 +304,16 @@ Na koniec każdej rundy sprawdźcie: czy **jeden bohater Hordy stoi na Drzewie**
 
 Atak na bazę pełną bohaterów, kryształ pod stopami, rytuał a wskrzeszeni — szczegóły w [rozdziale 14](#14-przypadki-szczególne).
 
+### Przykład: tura na mapie
+
+Król Jednorożców stoi na Polanie i ma **3 punkty ruchu**.
+
+1. Wchodzi do **Lasu** (koszt 1, zostają 2 punkty). Gracze odwracają zakryte kafelki dookoła Lasu: pojawiają się **Wzgórza** i **kafelek skarbu**.
+2. Wchodzi na **skarb** (koszt 1, został 1 punkt) i bierze wierzchnią kartę ze stosu skarbów mapy — trafia ona do wspólnego ekwipunku Przymierza. Dookoła odkrywają się **Góry** i **Rzeka**.
+3. Wzgórza i Rzeka kosztują po 2 punkty, a na Góry nie da się wejść. Jednorożec kończy turę — ostatni punkt przepada.
+
+**Walka w środku ruchu.** W następnej turze obok Jednorożca, na Spalonej Ziemi, stoi Władca Wilkołaków. Wejście na jego pole kosztuje 1 punkt (tyle, ile Spalona Ziemia) i zaczyna bitwę. Jednorożec wygrywa, zostaje na tym polu i ma jeszcze 2 punkty — może iść dalej.
+
 ---
 
 ## 8. Bitwa na arenie
@@ -331,6 +358,29 @@ Bitwa trwa, **dopóki jedna strona nie straci wszystkich jednostek** — nawet j
 - Poległy **bohater** zostaje martwy na mapie (rozdział 7).
 
 Dokładne działanie zdolności, strzelanie z bliska i bardzo długie bitwy opisuje [rozdział 14](#14-przypadki-szczególne).
+
+### Przykład: początek bitwy
+
+Władca Wilkołaków wchodzi na pole Króla Jednorożców na ziemiach Przymierza, więc walka toczy się na zielonej arenie. Wilkołak zabiera Goblina Szamana i Pająka Jaskiniowego, Jednorożec — Elfa Druida i Nimfę. Horda atakuje, więc ustawia się pierwsza; skrajne kolumny dzieli 12 pól.
+
+**Kolejność w każdej rundzie:** Jednorożec (S 8) → Wilkołak (S 7) → Elf Druid i Nimfa (S 4) → Goblin Szaman i Pająk (S 3).
+
+**Runda 1**
+
+- **Jednorożec** podchodzi tylko o 3 pola. Wilkołak przejdzie najwyżej 7, więc w tej rundzie go nie dosięgnie.
+- **Wilkołak** podbiega o 7 pól. Do Jednorożca brakuje mu jednego pola — nie atakuje.
+- **Elf Druid** strzela do Wilkołaka: 1 obrażenie i Splątane Korzenie — znacznik Spowolnienia (−2 S w następnej aktywacji Wilkołaka) i znacznik zużytej zdolności przy Elfie.
+- **Nimfa** podchodzi bliżej Jednorożca.
+- **Goblin Szaman** strzela do Jednorożca: 1 obrażenie i Złowroga Klątwa — znacznik Klątwy (−1 A przy następnym ataku Jednorożca).
+- **Pająk** podchodzi bliżej. Jednorożec jest dalej niż 4 pola, więc Pajęcze Sidła jeszcze go nie sięgną.
+
+**Runda 2**
+
+- **Jednorożec** obiega Wilkołaka i staje obok niego — przeszedł 4 pola, więc działa Szarża Światła. Cios: 5 A + 2 (Szarża) − 1 (Klątwa) = **6 obrażeń**. Wilkołak ma 7 obrażeń przy 8 Życia. Znacznik Klątwy schodzi.
+- **Wilkołak** jest spowolniony, ale stoi obok celu. Cios: 5 A + 1 (Zew Krwi, bo Jednorożec jest już ranny) = **6 obrażeń**. Jednorożec ma 7 obrażeń przy 8 Życia. Znacznik Spowolnienia schodzi.
+- **Elf Druid** strzela do Wilkołaka: 1 obrażenie — **Wilkołak pada** i schodzi z areny.
+- **Nimfa** używa Daru Życia: Jednorożec odzyskuje 3 Ż i ma już tylko 4 obrażenia.
+- **Bitwa trwa dalej.** Goblin i Pająk walczą, choć ich wódz padł — bitwa kończy się dopiero wtedy, gdy jedna strona straci wszystkie jednostki.
 
 ---
 
