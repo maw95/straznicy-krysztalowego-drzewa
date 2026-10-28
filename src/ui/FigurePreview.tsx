@@ -54,36 +54,48 @@ export function FigureStill({ unitId, size, turn }: { unitId: string; size: numb
 
 export function FigurePreview({ unitId, size = 260, spin = true, turn = 0 }: { unitId: string; size?: number; spin?: boolean; turn?: number }) {
   const canvas = useRef<HTMLCanvasElement>(null);
+  // One renderer for the canvas while it is on screen; hovering other heroes only swaps the figure.
+  const renderer = useRef<WebGLRenderer | null>(null);
   const [failed, setFailed] = useState(false);
 
+  useEffect(() => () => {
+    renderer.current?.dispose();
+    renderer.current = null;
+  }, []);
+
   useEffect(() => {
+    setFailed(false);
     if (!hasFigure(unitId) || !canvas.current) return;
     let stop = false;
     let frame = 0;
-    let dispose = () => {};
     (async () => {
       const { THREE } = await threeLib();
       const figure = await loadFigure(unitId);
       if (stop || !canvas.current) return;
-      const renderer = new THREE.WebGLRenderer({ canvas: canvas.current, alpha: true, antialias: true });
-      renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-      renderer.setSize(size, size, false);
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      const { scene, camera } = await stage(figure, figureHeight(unitId), renderer);
+      if (renderer.current?.domElement !== canvas.current) {
+        renderer.current?.dispose();
+        renderer.current = new THREE.WebGLRenderer({ canvas: canvas.current, alpha: true, antialias: true });
+      }
+      const r = renderer.current;
+      r.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+      r.setSize(size, size, false);
+      r.toneMapping = THREE.ACESFilmicToneMapping;
+      const { scene, camera } = await stage(figure, figureHeight(unitId), r);
+      // Another hero may have been picked while the scene was being set up: that one draws, not this.
+      if (stop) return;
       figure.rotation.y = turn;
       const start = performance.now();
       const draw = () => {
+        if (stop) return;
         if (spin) figure.rotation.y = turn + ((performance.now() - start) / 1000) * 0.6;
-        renderer.render(scene, camera);
+        r.render(scene, camera);
         if (spin) frame = requestAnimationFrame(draw);
       };
       draw();
-      dispose = () => renderer.dispose();
     })().catch(() => !stop && setFailed(true));
     return () => {
       stop = true;
       cancelAnimationFrame(frame);
-      dispose();
     };
   }, [unitId, size, spin, turn]);
 
