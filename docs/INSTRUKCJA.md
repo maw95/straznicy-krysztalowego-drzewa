@@ -428,7 +428,7 @@ Tak samo — jak bohater automatu — walczy **strażnik** (rozdział 10).
 
 Gdy znacie już grę, możecie zamiast gotowego poziomu wybrać pojedyncze ustawienia. Ułatwienia i utrudnienia można dowolnie łączyć.
 
-- **Bitwy:** na arenie (3 na 3) albo pojedynki na planszy.
+- **Bitwy:** na arenie (3 na 3) albo pojedynki na planszy. Pojedynki **sprzyjają Przymierzu** — najbardziej na mapie krótkiej i średniej, a w rywalizacji bardziej niż w kooperacji.
 
 **Ułatwienia:**
 

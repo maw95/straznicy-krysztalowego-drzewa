@@ -41,21 +41,22 @@ function table(rows: Record<MapSize, Row>): Table {
 
 /**
  * Difficulty for Przymierze in coop, by the number of players. The level columns follow the unit balance
- * of 2026-10-22 (notes section 9); the single options were measured before it, against optionBase.
+ * of 2026-10-22 (notes section 9); the single options were measured before it, against optionBase
+ * (duels re-measured on 2026-10-28, notes section 13: the change against the normal level, added to optionBase).
  */
 const COOP: Record<1 | 2, Table> = {
   // normal, kids, hard, optionBase, noAbilities, elixirs, reserve, duels, dice (see Row)
   1: table({
-    short:    [5, 2, 7, 5, 7, 5, 5, 6, 5],
-    medium:   [4, 2, 8, 5, 7, 6, 4, 6, 5],
-    long:     [5, 3, 8, 5, 6, 6, 5, 7, 5],
-    veryLong: [4, 3, 7, 5, 6, 7, 4, 7, 5],
+    short:    [5, 2, 7, 5, 7, 5, 5, 4, 5],
+    medium:   [4, 2, 8, 5, 7, 6, 4, 4, 5],
+    long:     [5, 3, 8, 5, 6, 6, 5, 4, 5],
+    veryLong: [4, 3, 7, 5, 6, 7, 4, 6, 5],
   }),
   2: table({
-    short:    [4, 3, 7, 4, 7, 5, 4, 4, 4],
-    medium:   [5, 3, 7, 4, 6, 5, 5, 4, 5],
-    long:     [5, 4, 6, 4, 5, 5, 4, 4, 4],
-    veryLong: [4, 3, 5, 3, 4, 4, 3, 4, 3],
+    short:    [4, 3, 7, 4, 7, 5, 4, 2, 4],
+    medium:   [5, 3, 7, 4, 6, 5, 5, 3, 5],
+    long:     [5, 4, 6, 4, 5, 5, 4, 3, 4],
+    veryLong: [4, 3, 5, 3, 4, 4, 3, 3, 3],
   }),
 };
 
@@ -63,16 +64,16 @@ const COOP: Record<1 | 2, Table> = {
 const PVP: Record<1 | 2, Table> = {
   // normal, kids, hard, optionBase, noAbilities, elixirs, reserve, duels, dice (see Row)
   1: table({
-    short:    [5, 2, null, 5, 5, 6, 5, 4, 5],
-    medium:   [6, 2, null, 6, 5, 6, 5, 5, 6],
+    short:    [5, 2, null, 5, 5, 6, 5, 3, 5],
+    medium:   [6, 2, null, 6, 5, 6, 5, 4, 6],
     long:     [6, 2, null, 6, 6, 6, 6, 5, 6],
-    veryLong: [6, 3, null, 6, 6, 7, 6, 6, 6],
+    veryLong: [6, 3, null, 6, 6, 7, 6, 5, 6],
   }),
   2: table({
-    short:    [5, 3, null, 5, 7, 5, 5, 4, 5],
-    medium:   [6, 4, null, 5, 7, 6, 6, 5, 6],
-    long:     [6, 4, null, 6, 7, 6, 6, 6, 5],
-    veryLong: [6, 4, null, 6, 6, 6, 6, 7, 5],
+    short:    [5, 3, null, 5, 7, 5, 5, 2, 5],
+    medium:   [6, 4, null, 5, 7, 6, 6, 3, 6],
+    long:     [6, 4, null, 6, 7, 6, 6, 5, 5],
+    veryLong: [6, 4, null, 6, 6, 6, 6, 6, 5],
   }),
 };
 

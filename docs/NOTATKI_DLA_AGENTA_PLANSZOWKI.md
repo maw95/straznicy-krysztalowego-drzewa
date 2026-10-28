@@ -723,3 +723,30 @@ najwięcej w kooperacji jednego gracza na krótkiej mapie (+10 pp). Balans nie b
 - **Bot** w pojedynku używa Słonecznego Blasku (wcześniej tylko przy co najmniej dwóch swoich jednostkach, więc
   w pojedynku nigdy). Przez to Przymierze w trybie pojedynków wygrywa wyraźnie częściej (kooperacja, średnia mapa:
   ok. 75% zamiast 62%). Decyzja: bot ma grać jak człowiek, balans trybu pojedynków do przejrzenia osobno (backlog).
+
+## 13. Tryb pojedynków po poprawce bota (2026-10-28, decyzja użytkownika)
+
+Ustawienie „pojedynki na planszy” (poziom Normalny, bitwy 1 na 1 zamiast areny) po tym, jak bot zaczął używać
+Słonecznego Blasku w pojedynku (§12). Symulacje: `SIM_ALL=1 npx tsx scripts/sim/matrix.ts 300 board '·(full|board|kids)$'`.
+
+**Przyczyna przewagi Przymierza:** pojedynek bohater na bohatera bez kości jest z góry rozstrzygnięty i Przymierze
+wygrywa 8 z 9 par (`scripts/sim/battles.ts`): Złoty Smok z Blaskiem (+3 A dla siebie) bije każdego bohatera Hordy,
+Niedźwiedź (Opiekun Gaju chroni też jego samego) również; tylko Jednorożec przegrywa z Ogrem. Ognisty Oddech
+Czarnego Smoka w pojedynku nic nie daje. Z kośćmi Przymierze wygrywa 75% pojedynków bohaterów.
+
+Wygrane Przymierza (300 partii na wariant), Normalny → z pojedynkami:
+
+| Tryb | Krótka | Średnia | Długa | Bardzo długa |
+|---|---|---|---|---|
+| Kooperacja — 1 gracz | 67 → 83 | 72 → 78 | 62 → 74 | 68 → 61 |
+| Kooperacja — 2 graczy | 64 → 88 | 62 → 76 | 61 → 75 | 75 → 79 |
+| Rywalizacja — 1 na 1 | 60 → 85 | 51 → 74 | 49 → 64 | 45 → 52 |
+| Rywalizacja — 2 na 2 | 54 → 86 | 47 → 71 | 48 → 61 | 47 → 51 |
+
+Sprawdzone warianty zasady (Blask w pojedynku daje Smokowi mniej): +2 A — Przymierze średnio ok. 8 pp ponad
+Normalny, Smok przegrywa tylko z Wilkołakiem; +1 A — średnio ok. 0 pp (rozrzut −22 do +15 pp), ale Złoty Smok
+przegrywa każdy pojedynek z bohaterem Hordy.
+
+**Decyzja użytkownika:** zasady bez zmian, poprawiona tylko punktacja. Kolumna `duels` w `src/engine/scoring.ts` =
+`optionBase` + round(9 × (Normalny − pojedynki)) z powyższych wyników; w instrukcji (rozdział 13) zdanie, że
+pojedynki sprzyjają Przymierzu. Poziom Łatwy (pojedynki bez zdolności) się nie zmienia.

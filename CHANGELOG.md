@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Punkty za partię z ustawieniem „pojedynki na planszy”: od kiedy Złoty Smok używa w pojedynku Słonecznego Blasku, to ustawienie wyraźnie ułatwia grę Przymierzu, więc wygrana Przymierza daje mniej punktów, a wygrana Hordy w rywalizacji więcej. Instrukcja (rozdział 13) mówi, komu pojedynki sprzyjają.
 - Instrukcja: karty strażników do pojedynku (błękitny rewers) — w liście elementów (18 kart jednostek), przy strażnikach (z obrazkami kart), w zasadach pojedynku i w ściągawce.
 - Karty strażników do pojedynku są w grze: w pojedynku strażnik pokazuje swoją kartę pojedynkową (błękitna obwódka, napis „Pojedynek”), a wszystkie trzy są w „Zasadach i kartach → Jednostki”. Zwykła karta strażnika nie ma już liczby Życia w nawiasie.
 - **Zmiana zasad:** w pojedynku na planszy strażnik walczy osobną kartą: Cyklop ma Kamienną Skórę (każdy cios w niego o 1 mniej, 14 Życia), Gryf Złodziejski Szpon (gdy zrani, odzyskuje 1 Życie, 10 Życia), a Hydra Odrastające Głowy (na początku swojej aktywacji odzyskuje 2 Życia, 12 Życia). Bot Przymierza w pojedynku używa Słonecznego Blasku.
