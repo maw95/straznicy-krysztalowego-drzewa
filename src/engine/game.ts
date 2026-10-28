@@ -114,33 +114,15 @@ export function createGame(setup: SetupOptions): GameState {
   pool.forEach((kind, i) => {
     state.tiles[map.treasureHexes[i]].treasureId = newItem(state, kind).id;
   });
-  // Treasures in hand from the start: the Przymierze on larger maps (MapVariant.startTreasures),
-  // the Horde on some levels (rules.hordeStartTreasures). Other kinds than those already dealt;
-  // `random` ones may also be an Eliksir Odrodzenia.
+  // Treasures in hand from the start: the Przymierze on larger maps, the Horde on some levels.
   const dealt = new Set<ItemKind>(others);
-  const give = (faction: FactionId, start: { resurrections: number; others: number; random?: number } | undefined) => {
-    if (!start || !setup.rules.treasures) return;
-    const kinds: ItemKind[] = Array(start.resurrections).fill('resurrection');
-    const rest = () => rng.shuffle(NON_RESURRECTION_ITEMS.filter((k) => !dealt.has(k)));
-    for (const k of rest().slice(0, start.others)) (kinds.push(k), dealt.add(k));
-    for (let i = 0; i < (start.random ?? 0); i++) {
-      // A random card of what is left in the box: Eliksiry Odrodzenia and one of each other treasure.
-      const elixirs = RESURRECTION_CARDS - pool.filter((k) => k === 'resurrection').length - Object.values(state.items).filter((it) => it.kind === 'resurrection' && it.owner).length;
-      const deck = [...Array(Math.max(0, elixirs)).fill('resurrection'), ...rest()] as ItemKind[];
-      const k = deck[rng.int(deck.length)];
-      kinds.push(k);
-      if (k !== 'resurrection') dealt.add(k);
-    }
-    for (const kind of kinds) giveItem(state, newItem(state, kind), faction, null);
-  };
-  give('dawn', variant.startTreasures);
-  give('horde', setup.rules.hordeStartTreasures);
+  dealStartTreasures(state, rng, 'dawn', variant.startTreasures, dealt, pool);
+  dealStartTreasures(state, rng, 'horde', setup.rules.hordeStartTreasures, dealt, pool);
   map.crystals.forEach((c, i) => {
     const id = `c${i + 1}`;
     state.crystals[id] = { id, guardian: c.guardian, at: c.hex };
     state.tiles[c.hex].crystalId = id;
   });
-
 
   setup.seats.forEach((seat, i) => {
     const player: Player = { id: `p${i + 1}`, name: seat.name, faction: seat.faction, controller: seat.controller };
@@ -167,6 +149,27 @@ export function createGame(setup: SetupOptions): GameState {
   }
   log(state, 'round', `Runda 1 z ${state.roundLimit}. Przymierze potrzebuje ${state.crystalsNeeded} kryształów.`);
   return state;
+}
+
+/**
+ * Treasures a faction holds from the start (MapVariant.startTreasures, rules.hordeStartTreasures):
+ * Eliksiry Odrodzenia, kinds other than those already `dealt` (it grows), and `random` cards of
+ * what is left in the box, which may be an Eliksir too. `onMap` is the map's treasure pool.
+ */
+function dealStartTreasures(state: GameState, rng: Rng, faction: FactionId, start: { resurrections: number; others: number; random?: number } | undefined, dealt: Set<ItemKind>, onMap: ItemKind[]) {
+  if (!start || !state.rules.treasures) return;
+  const kinds: ItemKind[] = Array(start.resurrections).fill('resurrection');
+  const rest = () => rng.shuffle(NON_RESURRECTION_ITEMS.filter((k) => !dealt.has(k)));
+  for (const k of rest().slice(0, start.others)) (kinds.push(k), dealt.add(k));
+  for (let i = 0; i < (start.random ?? 0); i++) {
+    // A random card of what is left in the box: Eliksiry Odrodzenia and one of each other treasure.
+    const elixirs = RESURRECTION_CARDS - onMap.filter((k) => k === 'resurrection').length - Object.values(state.items).filter((it) => it.kind === 'resurrection' && it.owner).length;
+    const deck = [...Array(Math.max(0, elixirs)).fill('resurrection'), ...rest()] as ItemKind[];
+    const k = deck[rng.int(deck.length)];
+    kinds.push(k);
+    if (k !== 'resurrection') dealt.add(k);
+  }
+  for (const kind of kinds) giveItem(state, newItem(state, kind), faction, null);
 }
 
 // ------------------------------------------------------------------ arena
