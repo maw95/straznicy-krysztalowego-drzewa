@@ -2,7 +2,7 @@
 // Both paintings share one grid, measured from their gold lines: rows of hex edges get
 // taller towards the bottom and columns spread out (a slight perspective).
 
-import { cellOf } from '../engine/battle';
+import { arenaCells, cellOf } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 
 /** Painting size in pixels and the scale it is shown at. */
@@ -58,4 +58,18 @@ export function hexPoints(k: HexKey, ins = 0): string {
       return `${x.toFixed(1)},${y.toFixed(1)}`;
     })
     .join(' ');
+}
+
+/** The arena never changes shape: its cells and their outlines are worked out once. */
+export const CELLS = arenaCells();
+export const CELL_POINTS = new Map(CELLS.map((k) => [k, hexPoints(k)]));
+
+/** Box a unit token is laid out in, centred on its cell. */
+export const TOKEN_W = 66;
+export const TOKEN_H = 76;
+
+/** Top-left corner of the token box on a cell. */
+export function cellPos(k: HexKey) {
+  const c = cellCenter(k);
+  return { x: c.x - TOKEN_W / 2, y: c.y - TOKEN_H / 2 };
 }

@@ -1,93 +1,37 @@
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { FACTION_NAMES, ITEMS, UNITS, type FactionId, type ItemKind, type Side } from '../engine/data';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { UNITS, type FactionId, type Side } from '../engine/data';
 import {
   abilityActive,
   abilityOf,
-  alliesOf,
   ATTACK_ABILITIES,
-  arenaCells,
   predictDamage,
   attackTargets,
   breathSecondTarget,
   hasLineOfSight,
-  canUseBattleItem,
-  deployCells,
   FREE_ABILITIES,
   hopCells,
   livingUnits,
   movePath,
   reachableCells,
   unitAt,
-  unitSpeed,
 } from '../engine/battle';
 import { distance, parseKey, type HexKey } from '../engine/hex';
-import type { Action, AttackRoll, BattleUnit, GameState } from '../engine/types';
-import { hoverCard } from './hover';
-import { asset, COMPACT_QUERY, Frame, HpBar, Medal, Portrait, Ribbon, SIDE_RING, useMedia } from './common';
-import { ART_SIZE, CANVAS_H, CANVAS_W, cellCenter, hexPoints } from './arenaGeometry';
-import { DamageDrop, DieFace, LastAttack, Marker, StatIcon, StatText, type MarkerName } from './markers';
-import { details } from './details';
+import type { Action, BattleUnit, GameState } from '../engine/types';
+import { COMPACT_QUERY, useMedia } from './common';
+import { CANVAS_H, CANVAS_W, CELLS, cellPos, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { aimedCursor, preloadAimedCursors, type AimedCursor } from './cursors';
-import { figureFor, FigureLayer, type Piece } from './FigureLayer';
-import { UnitCard } from './UnitCard';
+import { ArenaBoard } from './ArenaBoard';
+import { ActivationBar, activationHint } from './ActivationBar';
+import { SidePanel } from './BattleSidePanel';
+import { ItemsPanel, type ItemTargeting } from './ItemsPanel';
+import { useBattleAnimations, WALK_STEP_MS } from './useBattleAnimations';
+import { useDeployment } from './useDeployment';
 
-/** Box a unit token is laid out in, centred on its cell. */
-const W = 66;
-const H = 76;
-
-function cellPos(k: HexKey) {
-  const c = cellCenter(k);
-  return { x: c.x - W / 2, y: c.y - H / 2 };
-}
-
-type ItemTargeting =
-  | { kind: 'ownLiving' | 'ownDead' | 'enemy'; itemId: string }
-  | { kind: 'lightning'; itemId: string; picks: string[] }
-  | { kind: 'courage'; itemId: string; picks: string[] }
-  | { kind: 'teleport'; itemId: string; unitId: string | null }
-  | { kind: 'horn'; itemId: string; mode: 'swap' | 'extra' | null; unitId: string | null };
+export { WALK_STEP_MS };
 
 /** On phones only the cells and a little of the painting round them are shown, so the hexes come out bigger. */
 const FULL_VIEW = { x: 0, y: 0, w: CANVAS_W, h: CANVAS_H };
 const PHONE_VIEW = { x: 55, y: 40, w: 790, h: CANVAS_H - 40 };
-
-/** The arena never changes shape: its cells and their outlines are worked out once. */
-const CELLS = arenaCells();
-const CELL_POINTS = new Map(CELLS.map((k) => [k, hexPoints(k)]));
-
-/** The painted boards draw each hex with its own gold rim, and neighbouring rims do not always lie on
- *  each other (doubled, overlapping edges). One even gold grid on top covers them. */
-const GoldGrid = memo(function GoldGrid() {
-  return (
-    <>
-      {CELLS.map((k) => (
-        <polygon key={`gd${k}`} points={CELL_POINTS.get(k)} fill="none" stroke="rgba(52,34,8,0.85)" strokeWidth="3.4" strokeLinejoin="round" />
-      ))}
-      {CELLS.map((k) => (
-        <polygon key={`gl${k}`} points={CELL_POINTS.get(k)} fill="none" stroke="#E4C16E" strokeWidth="1.6" strokeLinejoin="round" />
-      ))}
-    </>
-  );
-});
-
-const ITEM_TARGET: Partial<Record<ItemKind, ItemTargeting['kind']>> = {
-  heal: 'ownLiving',
-  sword: 'ownLiving',
-  shield: 'ownLiving',
-  vitality: 'ownLiving',
-  boots: 'ownLiving',
-  stone: 'ownLiving',
-  hourglass: 'ownLiving',
-  resurrection: 'ownDead',
-  damage_scroll: 'enemy',
-  lightning: 'lightning',
-  courage_horn: 'courage',
-  teleport: 'teleport',
-  horn: 'horn',
-};
-
-/** Time per cell when a unit walks along its path (matches .token.walking in styles.css). */
-export const WALK_STEP_MS = 170;
 
 interface Props {
   state: GameState;
@@ -117,133 +61,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     el.scrollTo({ left: Math.max(0, (x + W / 2 - view.x) * scale - el.clientWidth / 2), top: Math.max(0, (y + H / 2 - view.y) * scale - el.clientHeight / 2), behavior: 'smooth' });
   }, [b.activation?.unitId, activePos, scale, view]);
 
-  // Animation clean-ups run to the end even when the next action comes first (bots act every 120–450 ms);
-  // they are dropped only when the arena goes away.
-  const timers = useRef(new Set<number>());
-  const later = (f: () => void, ms: number) => {
-    const t = window.setTimeout(() => {
-      timers.current.delete(t);
-      f();
-    }, ms);
-    timers.current.add(t);
-  };
-  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
-
-  // Walking: a unit that moved several cells is shown stepping hex by hex along the path it
-  // really took (around obstacles and enemies), worked out on the state before the move.
-  const prevState = useRef(state);
-  const [walk, setWalk] = useState<Record<string, HexKey>>({});
-  useLayoutEffect(() => {
-    const before = prevState.current;
-    prevState.current = state;
-    const pb = before.battle;
-    if (!pb || pb === b) return;
-    for (const u of Object.values(b.units)) {
-      const was = pb.units[u.id];
-      if (!was?.pos || !u.pos || was.pos === u.pos || !was.alive || !u.alive) continue;
-      const path = movePath(before, was, u.pos);
-      if (path.length < 3) continue;
-      setWalk((w) => ({ ...w, [u.id]: path[0] }));
-      // Step by step, then hand the token back to its real position.
-      const steps = path.slice(1);
-      const timer = (ms: number, f: (w: Record<string, HexKey>) => void) =>
-        later(() => setWalk((w) => { const next = { ...w }; f(next); return next; }), ms);
-      steps.forEach((k, i) => timer(20 + i * WALK_STEP_MS, (w) => (w[u.id] = k)));
-      timer(20 + steps.length * WALK_STEP_MS, (w) => delete w[u.id]);
-    }
-  }, [b]);
-
-  // Floating damage / healing numbers: diff unit HP between renders.
-  // Also drives the attack animations: who struck whom, and fading-out fallen units.
-  const lastSeen = useRef<Record<string, { hp: number; pos: HexKey | null; alive: boolean }>>({});
-  const prevActive = useRef<string | null>(null);
-  const [floaters, setFloaters] = useState<Array<{ key: number; amount: number; x: number; y: number }>>([]);
-  const [hitIds, setHitIds] = useState<string[]>([]);
-  const [strikes, setStrikes] = useState<Array<{ key: number; from: HexKey; to: HexKey; ranged: boolean; attacker: string }>>([]);
-  const [ghosts, setGhosts] = useState<Array<{ key: number; defId: string; side: Side; pos: HexKey }>>([]);
-  const [seals, setSeals] = useState<Array<{ key: number; ability: string; pos: HexKey; color: string }>>([]);
-  const [shards, setShards] = useState<Array<{ key: number; pos: HexKey; gold: boolean }>>([]);
-  const abilitySeen = useRef<Record<string, boolean>>({});
-  useEffect(() => {
-    const fresh: Array<{ key: number; amount: number; x: number; y: number }> = [];
-    const hit: string[] = [];
-    const newStrikes: typeof strikes = [];
-    const newGhosts: typeof ghosts = [];
-    const attacker = prevActive.current ? b.units[prevActive.current] : undefined;
-    for (const u of Object.values(b.units)) {
-      const prev = lastSeen.current[u.id];
-      if (prev && prev.hp !== u.hp) {
-        const where = u.pos ?? prev.pos;
-        if (where) {
-          const { x, y } = cellPos(where);
-          fresh.push({ key: Math.random(), amount: u.hp - prev.hp, x: x + W / 2, y: y + H / 2 - 40 });
-          if (u.hp < prev.hp && attacker && attacker.id !== u.id && attacker.side !== u.side && attacker.pos) {
-            newStrikes.push({ key: Math.random(), from: attacker.pos, to: where, ranged: UNITS[attacker.defId].attackType === 'ranged', attacker: attacker.id });
-          }
-        }
-        if (u.hp < prev.hp) hit.push(u.id);
-      }
-      if (prev?.alive && !u.alive && !u.swappedOut && prev.pos) newGhosts.push({ key: Math.random(), defId: u.defId, side: u.side, pos: prev.pos });
-      lastSeen.current[u.id] = { hp: u.hp, pos: u.pos ?? prev?.pos ?? null, alive: u.alive };
-    }
-    prevActive.current = b.activation?.unitId ?? null;
-    // Ability seals: a unit's ability flag flipped since the last render.
-    const newSeals: typeof seals = [];
-    for (const u of Object.values(b.units)) {
-      if (u.abilityUsed && abilitySeen.current[u.id] === false && (u.pos ?? lastSeen.current[u.id]?.pos)) {
-        newSeals.push({ key: Math.random(), ability: UNITS[u.defId].ability, pos: (u.pos ?? lastSeen.current[u.id].pos)!, color: u.side === 'dawn' ? '#9BE88A' : u.side === 'horde' ? '#FF7A5A' : '#9EE4FF' });
-      }
-      abilitySeen.current[u.id] = u.abilityUsed;
-    }
-    const newShards = hit.map((id) => {
-      const u = b.units[id];
-      return { key: Math.random(), pos: (u.pos ?? lastSeen.current[id]?.pos)!, gold: !u.alive };
-    }).filter((x) => x.pos);
-    if (newSeals.length) {
-      setSeals((x) => [...x, ...newSeals]);
-      later(() => setSeals((x) => x.filter((s) => !newSeals.includes(s))), 1400);
-    }
-    if (newShards.length) {
-      setShards((x) => [...x, ...newShards]);
-      later(() => setShards((x) => x.filter((s) => !newShards.includes(s))), 700);
-    }
-    if (!fresh.length && !newGhosts.length) return;
-    setFloaters((f) => [...f, ...fresh]);
-    setHitIds((ids) => [...ids.filter((id) => !hit.includes(id)), ...hit]);
-    setStrikes((x) => [...x, ...newStrikes.filter((st, i, all) => all.findIndex((o) => o.attacker === st.attacker) === i || st.ranged)]);
-    setGhosts((g) => [...g, ...newGhosts]);
-    later(() => {
-      setFloaters((f) => f.filter((x) => !fresh.includes(x)));
-      setStrikes((x) => x.filter((st) => !newStrikes.includes(st)));
-      setGhosts((g) => g.filter((x) => !newGhosts.includes(x)));
-      setHitIds((ids) => ids.filter((id) => !hit.includes(id)));
-    }, 1150);
-  }, [b]);
-
-  /** The newest blow of a unit still being animated (a fast bot may strike again before the last one fades). */
-  const lastStrike = (id: string, ranged: boolean) => [...strikes].reverse().find((st) => st.attacker === id && st.ranged === ranged);
-
-  // Die rolls: each new attack shows its die over the unit that took the blow
-  // (a blow cut to 0 shows a 0 drop too, since no HP changed).
-  const rollSeen = useRef(b.rolls?.[b.rolls.length - 1]?.seq ?? 0);
-  const [rollPops, setRollPops] = useState<Array<{ key: number; roll: AttackRoll; x: number; y: number }>>([]);
-  useEffect(() => {
-    const rolls = b.rolls ?? [];
-    const latest = rolls[rolls.length - 1]?.seq ?? 0;
-    if (latest < rollSeen.current) rollSeen.current = 0; // a new battle starts counting again
-    const fresh = rolls.filter((r) => r.seq > rollSeen.current);
-    rollSeen.current = latest;
-    const pops = fresh.flatMap((roll) => {
-      const where = b.units[roll.targetId].pos ?? lastSeen.current[roll.targetId]?.pos;
-      if (!where || (roll.die === null && roll.damage > 0)) return [];
-      const { x, y } = cellPos(where);
-      return [{ key: Math.random(), roll, x: x + W / 2 - (roll.damage > 0 ? 34 : 0), y: y + H / 2 - 44 }];
-    });
-    if (!pops.length) return;
-    setRollPops((p) => [...p, ...pops]);
-    later(() => setRollPops((p) => p.filter((x) => !pops.includes(x))), 2200);
-  }, [b]);
-  const lastRoll = b.rolls?.[b.rolls.length - 1];
+  const anim = useBattleAnimations(state);
   // Ctrl held over a unit shows its reach: where it can walk and what it can hit next.
   const [ctrlHeld, setCtrlHeld] = useState(false);
   useEffect(() => {
@@ -287,7 +105,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
    * Where a melee unit can attack an enemy it does not stand next to: the free cells beside the enemy
    * that it can walk to now. Clicking the enemy walks there and attacks, as in Heroes III.
    */
-  const approachCells = (u: BattleUnit): HexKey[] => {
+  const approachCellsOf = (u: BattleUnit): HexKey[] => {
     if (!myTurn || !active?.pos || !u.pos || u.side === active.side || act!.moved || act!.attacked || act!.moveOnly || act!.hop || targeting || freeAbility) return [];
     if (UNITS[active.defId].attackType !== 'melee' || targets.some((t) => t.id === u.id)) return [];
     return [...moves.keys()].filter((k) => distanceBetween(k, u.pos!) === 1);
@@ -331,16 +149,28 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
    * an arrow for a shot, and a crossed-out arrow when an obstacle hides an enemy from a ranged unit
    * that could otherwise shoot (nobody next to it).
    */
-  const unitCursor = (u: BattleUnit): string => {
+  const unitCursorOf = (u: BattleUnit, approachable: boolean, engaged: boolean): string => {
     if (!active?.pos || !u.pos) return '';
-    if (approachCells(u).length) return 'cur-melee';
+    if (approachable) return 'cur-melee';
     // A ranged unit shoots even at a neighbour (it must, when one stands next to it): always the arrow.
     if (targets.some((t) => t.id === u.id)) return UNITS[active.defId].attackType === 'melee' ? 'cur-melee' : 'cur-ranged';
     const canShoot = myTurn && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility && UNITS[active.defId].attackType === 'ranged';
     if (!canShoot || u.side === active.side) return '';
-    const engaged = livingUnits(b).some((e) => e.side !== active.side && e.pos && distanceBetween(active.pos!, e.pos) === 1);
     return !engaged && !hasLineOfSight(state, active.pos, u.pos) ? 'cur-blocked' : '';
   };
+  /** Approach cells and cursor of every unit, worked out once per change instead of on each use. */
+  const unitInfo = useMemo(() => {
+    const engaged = Boolean(active?.pos) && livingUnits(b).some((e) => e.side !== active!.side && e.pos && distanceBetween(active!.pos!, e.pos) === 1);
+    const out = new Map<string, { approach: HexKey[]; cursor: string }>();
+    for (const u of Object.values(b.units)) {
+      const approach = approachCellsOf(u);
+      out.set(u.id, { approach, cursor: unitCursorOf(u, approach.length > 0, engaged) });
+    }
+    return out;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, b, myTurn, active, act, moves, targets, targeting, freeAbility]);
+  const approachCells = (u: BattleUnit): HexKey[] => unitInfo.get(u.id)?.approach ?? [];
+  const unitCursor = (u: BattleUnit): string => unitInfo.get(u.id)?.cursor ?? '';
   useEffect(preloadAimedCursors, []);
   /** The sword or the arrow over a unit, turned the way the blow or the shot goes; null for an unturned cursor. */
   const aimedOver = (u: BattleUnit): string | null => {
@@ -355,10 +185,9 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   /** Walking or flying to a cell: the boot or the wing. */
   const moveCursor = active && UNITS[active.defId].movement === 'fly' ? 'cur-fly' : 'cur-move';
   const ab = active ? abilityOf(active) : null;
-  const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state, active));
+  const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state));
   const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab);
   const freeAbilityReady = abilityReady && ab !== null && FREE_ABILITIES.includes(ab);
-  const itemsAllowed = myTurn && side ? canUseBattleItem(state, side) : false;
 
   function reset() {
     setTargeting(null);
@@ -422,29 +251,8 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   }
 
   // ---------------------------------------------------------------- deployment
-  const deploySide: FactionId | null = b.stage === 'deploy' && canAct ? b.needsDeploy[0] ?? null : null;
-  const [placing, setPlacing] = useState<Record<string, HexKey>>({});
-  const [picked, setPicked] = useState<string | null>(null);
-  useEffect(() => {
-    // Start from the current (default) placement each time a faction gets to deploy.
-    if (!deploySide) return;
-    const init: Record<string, HexKey> = {};
-    for (const u of Object.values(b.units)) if (u.side === deploySide && u.pos) init[u.id] = u.pos;
-    setPlacing(init);
-    setPicked(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deploySide, b.needsDeploy.length]);
-  const deployable = new Set(deploySide ? deployCells(b, deploySide) : []);
-  const posOf = (u: BattleUnit): HexKey | null => (deploySide && u.side === deploySide ? placing[u.id] ?? u.pos : walk[u.id] ?? u.pos);
-
-  function placeAt(k: HexKey) {
-    if (!picked || !deployable.has(k)) return;
-    const occupant = Object.keys(placing).find((id) => placing[id] === k);
-    const next = { ...placing, [picked]: k };
-    if (occupant && occupant !== picked) next[occupant] = placing[picked];
-    setPlacing(next);
-    setPicked(null);
-  }
+  const deploy = useDeployment(b, canAct, anim.walk);
+  const { deploySide, picked, setPicked, posOf, placeAt } = deploy;
 
   function clickUnit(u: BattleUnit) {
     if (deploySide) {
@@ -522,548 +330,93 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     }
   }
 
-  function startItem(itemId: string) {
-    const kind = state.items[itemId].kind;
-    const tk = ITEM_TARGET[kind];
-    if (!tk) return onAction({ type: 'battleItem', itemId });
-    if (tk === 'lightning' || tk === 'courage') setTargeting({ kind: tk, itemId, picks: [] });
-    else if (tk === 'teleport') setTargeting({ kind: 'teleport', itemId, unitId: null });
-    else if (tk === 'horn') setTargeting({ kind: 'horn', itemId, mode: null, unitId: null });
-    else setTargeting({ kind: tk, itemId });
-  }
-
-  const sides: Side[] = [b.attacker, b.defender];
-  const deadOwn = side ? Object.values(b.units).filter((u) => u.side === side && !u.alive && !u.swappedOut) : [];
-  const reserve = side ? state.factions[side].supportsAlive.filter((id) => !b.units[id]) : [];
-  // Initiative order of the round (fastest first); units that already acted are dimmed.
-  const queue = b.order.map((id, i) => ({ id, done: i < b.index, current: id === act?.unitId })).filter((q) => b.units[q.id]?.alive);
-  /** Next round's initiative (living units by Speed). */
-  const nextRound = livingUnits(b).sort((x, y) => unitSpeed(y) - unitSpeed(x)).map((u) => u.id);
+  const living = livingUnits(b);
   const hoverPreview = hover && active && moves.has(hover) ? hover : null;
   const breathPreview = useAbility && ab === 'fireBreath' && active ? targets.map((t) => breathSecondTarget(state, active, t)).filter(Boolean) : [];
 
-  const sidePanel = (s: Side) => {
-    const units = Object.values(b.units).filter((u) => u.side === s && !u.swappedOut);
-    return (
-      <Frame className="side side-battle" innerStyle={{ padding: '16px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <Ribbon side={s}>{FACTION_NAMES[s]}</Ribbon>
-        {units.map((u) => {
-          const isActive = active?.id === u.id;
-          return (
-            <button key={u.id} className="btn" onClick={() => clickUnit(u)} {...details(() => <UnitDetails u={u} />)} style={{ display: 'flex', gap: 10, alignItems: 'center', background: 'none', border: 0, padding: 0, textAlign: 'left', color: 'inherit', opacity: u.alive ? 1 : 0.5 }}>
-              <Portrait unitId={u.defId} size={50} ring={SIDE_RING[s]} dim={!u.alive} glow={isActive ? '0 0 0 2.5px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 700, fontSize: 16, color: '#F7EDD2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{UNITS[u.defId].name}</div>
-                <HpBar hp={u.hp} max={u.maxHp} />
-                <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 6 }}>
-                  <StatIcon stat="Ż" light /> {u.hp}/{u.maxHp} · <StatIcon stat="A" light /> {UNITS[u.defId].attack + u.status.battleAttackBonus} · <StatIcon stat="S" light /> {unitSpeed(u)}
-                  {u.abilityUsed && (
-                    <>
-                      {' · '}
-                      <Marker name="ability_used" size={16} title="Zdolność zużyta" /> zużyta
-                    </>
-                  )}
-                </div>
-                <StatusChips u={u} />
-              </div>
-            </button>
-          );
-        })}
-        <div style={{ flex: 1 }} />
-        {s !== 'neutral' && (
-          <div style={{ fontSize: 14, color: 'var(--muted)', padding: '0 0 10px 8px' }}>
-            Rezerwa: {state.factions[s].supportsAlive.filter((id) => !b.units[id]).map((id) => UNITS[id].name).join(', ') || '—'}
-          </div>
-        )}
-      </Frame>
-    );
+  /** The note over a unit under the pointer: the blow it would take, or why it cannot be shot. */
+  const previewOf = (u: BattleUnit): { text: string; lethal: boolean } | null => {
+    const approaching = approach?.targetId === u.id && active ? approach.cell : null;
+    if (hover !== u.pos && !approaching) return null;
+    if (targets.some((t) => t.id === u.id)) return attackPreview(u);
+    if (approaching) return attackPreview(u, movePath(state, active!, approaching).length - 1);
+    return unitCursor(u) === 'cur-blocked' ? { text: 'Przeszkoda zasłania cel', lethal: false } : null;
   };
 
+  const sides: Side[] = [b.attacker, b.defender];
   return (
     <div className="screen slate screen-enter play">
       <div className="battle-curtain" />
       <div className="main-row battle-row play-row">
-        {sidePanel(sides[0])}
-        <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#14100A' }}>
-          <div ref={wrapRef} className="scroll" style={{ position: 'absolute', inset: 0, overflow: 'auto', display: 'flex' }}>
-            <div style={{ position: 'relative', flex: 'none', margin: 'auto', width: view.w * scale, height: view.h * scale, overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', left: 0, top: 0, width: CANVAS_W, height: CANVAS_H, transform: `translate(${-view.x * scale}px, ${-view.y * scale}px) scale(${scale})`, transformOrigin: '0 0' }}>
-              {/* The painted board of the half of the map where the fight broke out. */}
-              <img src={asset(`arena/${b.arena}.jpg`)} alt="" style={{ position: 'absolute', left: 0, top: 0, width: ART_SIZE.w, height: ART_SIZE.h }} />
-              <svg width={CANVAS_W} height={CANVAS_H} style={{ position: 'absolute', left: 0, top: 0 }}>
-                <g pointerEvents="none">
-                  <GoldGrid />
-                  {/* Obstacles get their own rim: dark red on the green Dawn board (as painted there), violet on the
-                      Horde's lava, where red would not show. */}
-                  {b.obstacles.map((k) => (
-                    <polygon key={`ob${k}`} points={hexPoints(k, 1.5)} fill="none" stroke={b.arena === 'horde' ? '#B07AE8' : '#8E2C1A'} strokeWidth="3.2" strokeLinejoin="round" />
-                  ))}
-                </g>
-                {CELLS.map((k) => {
-                  const teleportTo = targeting?.kind === 'teleport' && Boolean(targeting.unitId) && !unitAt(b, k) && !b.obstacles.includes(k);
-                  let fill = 'transparent';
-                  if (deployable.has(k)) fill = picked ? (hover === k ? 'rgba(243,210,122,0.5)' : 'rgba(243,210,122,0.28)') : 'rgba(243,210,122,0.18)';
-                  else if (moves.has(k)) fill = hoverPreview === k ? 'rgba(158,228,255,0.45)' : 'rgba(158,228,255,0.2)';
-                  else if (hops.includes(k)) fill = 'rgba(158,228,255,0.28)';
-                  else if (teleportTo) fill = 'rgba(200,160,255,0.25)';
-                  return (
-                    <polygon
-                      key={k}
-                      points={CELL_POINTS.get(k)}
-                      fill={fill}
-                      stroke={moves.has(k) || hops.includes(k) ? 'rgba(190,240,255,0.75)' : 'none'}
-                      strokeWidth="1.5"
-                      onClick={() => clickCell(k)}
-                      onMouseEnter={() => setHover(k)}
-                      onMouseLeave={() => setHover(null)}
-                      className={moves.has(k) || hops.includes(k) ? moveCursor : (deployable.has(k) && picked) || teleportTo ? 'cur-pointer' : undefined}
-                    />
-                  );
-                })}
-                {active?.pos && <polygon points={hexPoints(active.pos, 2)} fill="rgba(158,228,255,0.15)" stroke="#9EE4FF" strokeWidth="3" pointerEvents="none" />}
-                {approach && <polygon points={hexPoints(approach.cell, 2)} fill="rgba(243,210,122,0.35)" stroke="#F3D27A" strokeWidth="3.5" pointerEvents="none" />}
-                {[...deployable].map((k) => (
-                  <polygon key={`dp${k}`} points={hexPoints(k, 3)} fill="none" stroke="#F3D27A" strokeWidth={hover === k && picked ? 3.5 : 2} strokeDasharray={picked ? undefined : '5 4'} pointerEvents="none" />
-                ))}
-                {[...reach.walk].map((k) => (
-                  <polygon key={`rw${k}`} points={hexPoints(k, 3)} fill="rgba(158,228,255,0.24)" stroke="rgba(190,240,255,0.8)" strokeWidth="1.5" pointerEvents="none" />
-                ))}
-                {[...reach.hit].map((k) => (
-                  <polygon key={`rh${k}`} points={hexPoints(k, 3)} fill="rgba(224,60,40,0.3)" stroke="rgba(240,100,80,0.85)" strokeWidth="1.5" strokeDasharray="4 3" pointerEvents="none" />
-                ))}
-                {targets.map((t) => (
-                  <polygon key={t.id} points={hexPoints(t.pos!, 2)} fill="rgba(224,80,60,0.16)" stroke="#E0503C" strokeWidth="3" pointerEvents="none" />
-                ))}
-                {breathPreview.map((t) => (
-                  <polygon key={`b${t!.id}`} points={hexPoints(t!.pos!, 6)} fill="none" stroke="#FF9A3A" strokeWidth="2" strokeDasharray="5 4" pointerEvents="none" />
-                ))}
-              </svg>
-              {/* Units with a model stand on the arena as 3D figures; their tokens below keep only the HP and markers. */}
-              <FigureLayer
-                width={CANVAS_W}
-                height={CANVAS_H}
-                style={{ zIndex: 1 }}
-                pieces={livingUnits(b)
-                  .filter((u) => figureFor(u.defId) && posOf(u))
-                  .map((u): Piece => {
-                    const c = cellCenter(posOf(u)!);
-                    const melee = lastStrike(u.id, false);
-                    const shot = lastStrike(u.id, true);
-                    // Until it moves, a unit faces the enemies (the middle of where they stand).
-                    const enemies = livingUnits(b).filter((e) => e.side !== u.side && e.pos).map((e) => cellCenter(e.pos!));
-                    const face = enemies.length ? { x: enemies.reduce((s, e) => s + e.x, 0) / enemies.length - c.x, y: enemies.reduce((s, e) => s + e.y, 0) / enemies.length - c.y } : undefined;
-                    const isActive = deploySide ? picked === u.id : active?.id === u.id;
-                    return {
-                      key: u.id,
-                      unitId: u.defId,
-                      x: c.x,
-                      y: c.y + 8,
-                      // A little wider than the hex: figures may lean over the neighbouring cells.
-                      size: 70,
-                      moveMs: walk[u.id] ? WALK_STEP_MS : 300,
-                      ring: isActive ? '#9EE4FF' : targets.some((t) => t.id === u.id) || approach?.targetId === u.id ? '#E0503C' : SIDE_RING[u.side],
-                      lungeAt: melee ? { ...cellCenter(melee.to), key: melee.key } : null,
-                      lookAt: shot ? cellCenter(shot.to) : null,
-                      hit: hitIds.includes(u.id),
-                      face,
-                    };
-                  })}
-              />
-              {livingUnits(b).map((u) => {
-                const figure = figureFor(u.defId);
-                const { x, y } = cellPos(posOf(u)!);
-                const isActive = deploySide ? picked === u.id : active?.id === u.id;
-                const isTarget = targets.some((t) => t.id === u.id);
-                const strike = lastStrike(u.id, false);
-                const lunge = strike ? (() => {
-                  const a = cellPos(strike.from);
-                  const t = cellPos(strike.to);
-                  return { dx: (t.x - a.x) * 0.35, dy: (t.y - a.y) * 0.35 };
-                })() : null;
-                const approaching = approach?.targetId === u.id && active ? approach.cell : null;
-                const aimed = aimedOver(u);
-                const preview =
-                  hover !== u.pos && !approaching
-                    ? null
-                    : isTarget
-                      ? attackPreview(u)
-                      : approaching
-                        ? attackPreview(u, movePath(state, active!, approaching).length - 1)
-                        : unitCursor(u) === 'cur-blocked'
-                          ? { text: 'Przeszkoda zasłania cel', lethal: false }
-                          : null;
-                return (
-                  <button
-                    key={u.id}
-                    className={`hexbtn token ${walk[u.id] ? 'walking' : ''} ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''} ${aimed ? '' : unitCursor(u)}`}
-                    onClick={() => clickUnit(u)}
-                    {...details(() => <UnitDetails u={u} />)}
-                    onMouseEnter={() => setHover(u.pos)}
-                    onPointerMove={(e) => e.pointerType !== 'touch' && aimApproach(u, { x: e.clientX, y: e.clientY, box: e.currentTarget.getBoundingClientRect() })}
-                    onMouseLeave={() => {
-                      setHover(null);
-                      if (approach?.targetId === u.id) setApproach(null);
-                    }}
-                    // A figure is taller than a portrait token: the box covers it, so clicking the figure works.
-                    style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - (figure ? 58 : 38), width: 54, height: figure ? 80 : 60, zIndex: lunge ? 4 : 2, ...(aimed ? { cursor: aimed } : {}), ...(lunge && !figure ? ({ '--lx': `${lunge.dx}px`, '--ly': `${lunge.dy}px` } as React.CSSProperties) : {}) }}
-                  >
-                    {!figure && <div style={{ position: 'absolute', left: 4, right: 4, bottom: -4, height: 16, borderRadius: '50%', background: 'rgba(6,10,2,0.55)', pointerEvents: 'none' }} />}
-                    {!figure && <Portrait
-                      unitId={u.defId}
-                      size={54}
-                      // No card popping up over an enemy you are about to attack: it would hide the lit cell (the card is under the right button).
-                      preview={!isTarget && !approachCells(u).length}
-                      ring={SIDE_RING[u.side]}
-                      glow={isActive ? '0 0 0 3px #9EE4FF, 0 0 20px 6px rgba(158,228,255,0.75)' : isTarget ? '0 0 0 3px #E0503C, 0 0 18px 5px rgba(224,80,60,0.7)' : '0 0 0 1.5px #1E1204, 0 8px 12px rgba(0,0,0,0.55)'}
-                    />}
-                    {statusList(u).length > 0 && (
-                      <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', pointerEvents: 'none', display: 'flex', gap: 1, zIndex: 3 }}>
-                        {statusList(u).map((st) => (
-                          <StatusBadge key={st.label} st={st} size={25} />
-                        ))}
-                      </div>
-                    )}
-                    {u.abilityUsed && (
-                      <span style={{ position: 'absolute', left: -12, bottom: -2, pointerEvents: 'none', zIndex: 3 }}>
-                        <Marker name="ability_used" size={24} title="Zdolność zużyta" />
-                      </span>
-                    )}
-                    <div className="plate parch" style={{ position: 'absolute', right: -16, bottom: 0, height: 22, padding: '0 6px 0 4px', display: 'flex', alignItems: 'center', gap: 3, fontWeight: 800, fontSize: 16, pointerEvents: 'none' }}>
-                      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 64 64"><use href="#iHeart" /></svg>
-                      {u.hp}
-                    </div>
-                    {preview && (
-                      <div
-                        className="plate parch"
-                        style={{ position: 'absolute', left: '50%', top: -34, transform: 'translateX(-50%)', padding: '1px 8px', whiteSpace: 'nowrap', fontWeight: 800, fontSize: 15, color: preview.lethal ? '#8A1A1A' : '#2B1D10', boxShadow: preview.lethal ? '0 0 0 2px #E0503C, 0 0 10px rgba(224,80,60,0.6)' : undefined, pointerEvents: 'none', zIndex: 5 }}
-                      >
-                        <StatText text={preview.text} />
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
-              {seals.map((se) => {
-                const { x, y } = cellPos(se.pos);
-                return (
-                  <div key={se.key}>
-                    <div className="ring-wave" style={{ left: x + W / 2, top: y + H / 2 - 8, ['--rc' as string]: se.color } as React.CSSProperties} />
-                    <img className="seal" src={asset(`cards/abilities/${se.ability}.png`)} alt="" style={{ left: x + W / 2, top: y + H / 2 - 40 }} />
-                  </div>
-                );
-              })}
-              {shards.map((sh) => {
-                const { x, y } = cellPos(sh.pos);
-                return Array.from({ length: sh.gold ? 14 : 8 }, (_, i) => {
-                  const a = (i / (sh.gold ? 14 : 8)) * Math.PI * 2 + (i % 3) * 0.3;
-                  const d = 28 + (i % 4) * 10;
-                  return <span key={`${sh.key}${i}`} className={`shard ${sh.gold ? 'gold' : ''}`} style={{ left: x + W / 2, top: y + H / 2 - 8, ['--hx' as string]: `${Math.cos(a) * d}px`, ['--hy' as string]: `${Math.sin(a) * d}px` } as React.CSSProperties} />;
-                });
-              })}
-              {ghosts.map((g) => {
-                const { x, y } = cellPos(g.pos);
-                return (
-                  <div key={g.key} className="ghost" style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - 38, pointerEvents: 'none', zIndex: 3 }}>
-                    <Portrait unitId={g.defId} size={54} ring={SIDE_RING[g.side]} preview={false} />
-                  </div>
-                );
-              })}
-              {strikes
-                .filter((st) => st.ranged)
-                .map((st) => {
-                  const a = cellPos(st.from);
-                  const t = cellPos(st.to);
-                  return (
-                    <div
-                      key={st.key}
-                      className="projectile"
-                      style={{ left: a.x + W / 2 - 7, top: a.y + H / 2 - 20, ['--px' as string]: `${t.x - a.x}px`, ['--py' as string]: `${t.y - a.y}px` } as React.CSSProperties}
-                    />
-                  );
-                })}
-              {rollPops.map((p) => (
-                <div key={p.key} className="roll-pop" style={{ left: p.x, top: p.y }}>
-                  {p.roll.die !== null && <DieFace value={p.roll.die} size={28} />}
-                  {p.roll.damage === 0 && <DamageDrop amount={0} size={28} />}
-                </div>
-              ))}
-              {floaters.map((f) => (
-                <div key={f.key} className={`dmg ${f.amount > 0 ? 'heal' : ''}`} style={{ left: f.x, top: f.y }}>
-                  {f.amount > 0 ? `+${f.amount}` : <DamageDrop amount={-f.amount} size={26} />}
-                </div>
-              ))}
-              {lastRoll && b.units[lastRoll.attackerId] && (
-                // Along the bottom edge of the painting, clear of the title and the cells.
-                <div className="plate parch" style={{ position: 'absolute', left: view.x + 14, top: CANVAS_H - 38, padding: '4px 10px', fontSize: 14, zIndex: 6, pointerEvents: 'none', maxWidth: view.w - 28, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  <LastAttack roll={lastRoll} units={b.units} size={20} />
-                </div>
-              )}
-              <div className="hide-mobile" style={{ position: 'absolute', left: '50%', top: 14, transform: 'translateX(-50%)' }}>
-                <Ribbon style={{ width: 340 }}>{`${b.kind === 'neutral' ? 'Bitwa o kryształ' : 'Starcie bohaterów'} · ${b.stage === 'deploy' ? 'ustawienie' : `runda ${b.round}`}`}</Ribbon>
-              </div>
-            </div>
-            </div>
-          </div>
-        </Frame>
-        {sidePanel(sides[1])}
+        <SidePanel s={sides[0]} state={state} active={active} onUnit={clickUnit} />
+        <ArenaBoard
+          state={state}
+          wrapRef={wrapRef}
+          view={view}
+          scale={scale}
+          anim={anim}
+          deploy={deploy}
+          targeting={targeting}
+          hover={hover}
+          setHover={setHover}
+          active={active}
+          living={living}
+          moves={moves}
+          hops={hops}
+          targets={targets}
+          hoverPreview={hoverPreview}
+          moveCursor={moveCursor}
+          approach={approach}
+          setApproach={setApproach}
+          reach={reach}
+          breathPreview={breathPreview}
+          approachCells={approachCells}
+          unitCursor={unitCursor}
+          aimedOver={aimedOver}
+          previewOf={previewOf}
+          aimApproach={aimApproach}
+          onCell={clickCell}
+          onUnit={clickUnit}
+        />
+        <SidePanel s={sides[1]} state={state} active={active} onUnit={clickUnit} />
       </div>
 
-      <Frame className="bar sticky-mobile" style={{ height: 112 }} innerStyle={{ display: 'flex', alignItems: 'center', gap: 16, padding: '0 18px' }}>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          {active && <span className="hide-mobile"><Portrait unitId={active.defId} size={56} ring={SIDE_RING[active.side]} glow="0 0 0 2.5px #9EE4FF" /></span>}
-          <div className="act-info" style={{ width: 170 }}>
-            <div style={{ fontWeight: 800, fontSize: 18, color: '#F3D27A', lineHeight: 1.1 }}>
-              {b.stage === 'deploy' ? 'Ustawienie wojsk' : active ? UNITS[active.defId].name : '—'}
-              {/* Phones hide the title over the arena: the round is here instead. */}
-              {b.stage !== 'deploy' && <span className="show-mobile" style={{ display: 'none', fontSize: 14, fontWeight: 600, color: 'var(--muted)' }}>Runda bitwy {b.round}</span>}
-            </div>
-            <div style={{ fontSize: 14, color: 'var(--muted)' }}>
-              {b.stage === 'deploy'
-                ? deploySide
-                  ? picked
-                    ? 'Wskaż złote pole w swojej kolumnie'
-                    : 'Kliknij jednostkę, potem pole'
-                  : `${FACTION_NAMES[b.needsDeploy[0]]} ustawia jednostki…`
-                : !myTurn
-                ? 'Ruch przeciwnika…'
-                : act!.hop
-                  ? 'Wybierz pole odskoku'
-                  : !act!.acted && active!.status.rootedNext
-                    ? targets.length
-                      ? 'Unieruchomiony — może tylko atakować'
-                      : 'Unieruchomiony (Pajęcze Sidła) — zakończ'
-                  : !act!.acted && moves.size === 0 && targets.length === 0
-                    ? 'Brak ruchu i celu — zakończ'
-                    : act!.moveOnly
-                      ? 'Dodatkowy ruch'
-                      : act!.attacked
-                        ? 'Atak wykonany'
-                        : act!.moved
-                          ? targets.length
-                            ? 'Wybierz cel ataku'
-                            : 'Brak celu — zakończ'
-                          : 'Ruch, potem atak'}
-            </div>
-          </div>
-        </div>
-        {deploySide && (
-          <button
-            className="btn prim"
-            style={{ height: 60, padding: '0 22px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 19 }}
-            onClick={() => onAction({ type: 'deployUnits', faction: deploySide, positions: placing })}
-          >
-            <Medal fill="mRed" glyph="gSwords" size={32} />
-            Gotowe — do bitwy
-          </button>
-        )}
-        {myTurn && active && (
-          <div style={{ display: 'flex', gap: 8 }}>
-            {attackAbility && (
-              <button className={`btn plate parch act-btn ${useAbility ? 'on' : ''}`} style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }} onClick={() => setUseAbility(!useAbility)} title={UNITS[active.defId].abilityText}>
-                <img src={asset(`cards/abilities/${abilityOf(active)}.png`)} alt="" style={{ width: 34, height: 34 }} />
-                <span style={{ fontSize: 13, lineHeight: 1.05, textAlign: 'center' }}>{UNITS[active.defId].abilityName}{useAbility ? ' ✓' : ''}</span>
-              </button>
-            )}
-            {freeAbilityReady && (
-              <button
-                className={`btn plate parch act-btn ${freeAbility ? 'on' : ''}`}
-                style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}
-                title={UNITS[active.defId].abilityText}
-                onClick={() => (ab === 'sunburst' ? onAction({ type: 'battleAbility' }) : setFreeAbility(!freeAbility))}
-              >
-                <img src={asset(`cards/abilities/${abilityOf(active)}.png`)} alt="" style={{ width: 34, height: 34 }} />
-                <span style={{ fontSize: 13, lineHeight: 1.05, textAlign: 'center' }}>{UNITS[active.defId].abilityName}</span>
-              </button>
-            )}
-            <button className="btn prim act-btn" style={{ width: 96, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, fontSize: 15 }} onClick={() => { reset(); onAction({ type: 'endActivation' }); }}>
-              <Medal fill="mGreen" glyph="gHourglass" size={30} />
-              {act!.hop ? 'Pomiń' : 'Koniec'}
-            </button>
-          </div>
-        )}
-        <div className="well hide-mobile" style={{ height: 76, padding: '0 12px', display: 'flex', alignItems: 'center', gap: 7, overflow: 'hidden', maxWidth: 520 }}>
-          <div className="lbl" style={{ marginRight: 2 }}>Kolejka</div>
-          {queue
-            .filter((q) => !q.done || q.current)
-            .map((q) => (
-              <div key={q.id} style={{ position: 'relative', flex: 'none' }} title={UNITS[b.units[q.id].defId].name}>
-                <Portrait unitId={b.units[q.id].defId} size={q.current ? 48 : 38} ring={SIDE_RING[b.units[q.id].side]} glow={q.current ? '0 0 0 2.5px #9EE4FF' : undefined} />
-                <div className="plate parch" style={{ position: 'absolute', right: -6, bottom: -6, width: 20, height: 18, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 12 }}>{unitSpeed(b.units[q.id])}</div>
-              </div>
-            ))}
-          <div title="Następna runda" style={{ flex: 'none', alignSelf: 'stretch', display: 'flex', alignItems: 'center', gap: 4, margin: '0 2px', color: '#E7CF8F', fontWeight: 800, fontSize: 13 }}>
-            <div style={{ width: 2, height: '60%', background: 'linear-gradient(#0000, #B88A35, #0000)' }} />R{b.round + 1}
-          </div>
-          {nextRound.map((id) => (
-            <div key={`n${id}`} style={{ flex: 'none', opacity: 0.6 }} title={`${UNITS[b.units[id].defId].name} — następna runda`}>
-              <Portrait unitId={b.units[id].defId} size={30} ring={SIDE_RING[b.units[id].side]} />
-            </div>
-          ))}
-        </div>
-        <div className="footer-slot" style={{ flex: 1, minWidth: 0 }}>{footer}</div>
-      </Frame>
+      <ActivationBar
+        state={state}
+        active={active}
+        hint={activationHint(b, { deploySide, picked, myTurn, moves: moves.size, targets: targets.length })}
+        myTurn={myTurn}
+        deploySide={deploySide}
+        placing={deploy.placing}
+        attackAbility={attackAbility}
+        useAbility={useAbility}
+        setUseAbility={setUseAbility}
+        freeAbilityReady={freeAbilityReady}
+        freeAbility={freeAbility}
+        setFreeAbility={setFreeAbility}
+        onAction={onAction}
+        reset={reset}
+        footer={footer}
+      />
 
       {myTurn && side && (
-        <div className="items-float" style={{ position: 'absolute', right: 300, bottom: 150, zIndex: 20, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: 'calc(100vw - 24px)' }}>
-          {targeting && (
-            <div className="plate parch" style={{ padding: '6px 12px', display: 'flex', gap: 10, alignItems: 'center', fontSize: 15 }}>
-              <b>{ITEMS[state.items[targeting.itemId].kind].name}:</b>
-              {targeting.kind === 'horn' && !targeting.mode ? (
-                <>
-                  <button className="btn prim" style={{ padding: '2px 10px' }} onClick={() => setTargeting({ ...targeting, mode: 'swap' })}>Wymiana</button>
-                  <button className="btn prim" style={{ padding: '2px 10px' }} onClick={() => setTargeting({ ...targeting, mode: 'extra' })}>Dodatkowa aktywacja</button>
-                </>
-              ) : targeting.kind === 'horn' && targeting.mode === 'swap' && targeting.unitId ? (
-                reserve.map((id) => (
-                  <button key={id} className="btn prim" style={{ padding: '2px 10px' }} onClick={() => { onAction({ type: 'battleItem', itemId: targeting.itemId, targetId: targeting.unitId!, hornMode: 'swap', reserveId: id }); reset(); }}>{UNITS[id].name}</button>
-                ))
-              ) : targeting.kind === 'ownDead' ? (
-                deadOwn.map((u) => (
-                  <button key={u.id} className="btn prim" style={{ padding: '2px 10px' }} onClick={() => { onAction({ type: 'battleItem', itemId: targeting.itemId, targetId: u.id }); reset(); }}>{UNITS[u.defId].name}</button>
-                ))
-              ) : (
-                <span>{targetHint(targeting)}</span>
-              )}
-              {(targeting.kind === 'lightning' || targeting.kind === 'courage') && targeting.picks.length > 0 && (
-                <button className="btn prim" style={{ padding: '2px 10px' }} onClick={() => { onAction({ type: 'battleItem', itemId: targeting.itemId, targetIds: targeting.picks }); reset(); }}>Gotowe</button>
-              )}
-              <button className="btn plate parch" style={{ padding: '2px 8px' }} onClick={reset}>Anuluj</button>
-            </div>
-          )}
-          {freeAbility && <div className="plate parch" style={{ padding: '6px 12px', fontSize: 15 }}>{ab === 'giftOfLife' ? 'Wybierz sojusznika do uleczenia.' : 'Wybierz wroga w zasięgu 4 pól.'}</div>}
-          <button className="btn plate parch" style={{ padding: '4px 12px', fontSize: 15 }} onClick={() => setShowItems(!showItems)}>
-            {showItems ? 'Ukryj skarby' : `Skarby (${state.factions[side].inventory.length})`}
-          </button>
-          {showItems &&
-            state.factions[side].inventory.map((id) => {
-              const def = ITEMS[state.items[id].kind];
-              const ok = itemsAllowed && def.usableIn.includes('battle') && !(def.kind === 'resurrection' && !deadOwn.length) && !(def.kind === 'horn' && !alliesOf(b, active!).concat(active!).some((x) => UNITS[x.defId].kind === 'support'));
-              return (
-                <div key={id} className="plate parch" style={{ width: 'min(330px, calc(100vw - 24px))', padding: '5px 9px', display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <button className="btn" title="Pokaż kartę skarbu" onClick={() => onShowCard(`item:${def.kind}`)} style={{ background: 'none', border: 0, padding: 0, flex: 'none' }}>
-                    <img {...hoverCard(`item:${def.kind}`)} src={asset(`cards/treasures/${def.kind}.jpg`)} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
-                  </button>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 800, fontSize: 15 }}>{def.name}</div>
-                    <div style={{ fontSize: 13, lineHeight: 1.15 }}><StatText text={def.text} /></div>
-                  </div>
-                  <button className="btn prim" disabled={!ok} style={{ padding: '3px 10px', fontSize: 14 }} onClick={() => startItem(id)}>Użyj</button>
-                </div>
-              );
-            })}
-        </div>
+        <ItemsPanel
+          state={state}
+          side={side}
+          active={active!}
+          targeting={targeting}
+          setTargeting={setTargeting}
+          freeAbility={freeAbility}
+          ab={ab}
+          showItems={showItems}
+          setShowItems={setShowItems}
+          onAction={onAction}
+          onShowCard={onShowCard}
+          reset={reset}
+        />
       )}
     </div>
   );
-}
-
-interface StatusInfo {
-  label: string;
-  glyph: string;
-  /** Board-game marker for this state, when there is one. */
-  marker?: MarkerName;
-  buff: boolean;
-  /** Small value shown on the badge (e.g. −2, +1). */
-  value?: string;
-}
-
-/** Visible effects on a unit, so rules like Pajęcze Sidła never look like a frozen turn. */
-function statusList(u: BattleUnit): StatusInfo[] {
-  const s = u.status;
-  const out: StatusInfo[] = [];
-  // A marker carries its own number; the badge repeats it only when the value differs.
-  if (s.rootedNext) out.push({ label: 'Unieruchomiony w następnej aktywacji (Pajęcze Sidła)', glyph: 'sWeb', marker: 'rooted', buff: false });
-  if (s.slowNext) out.push({ label: `−${s.slowNext} S w następnej aktywacji (Splątane Korzenie)`, glyph: 'sRoot', marker: 'slowed', buff: false, value: s.slowNext !== 2 ? `−${s.slowNext}` : undefined });
-  if (s.cursedNext) out.push({ label: `−${s.cursedNext} A przy następnym ataku (Złowroga Klątwa)`, glyph: 'sSkull', marker: 'cursed', buff: false, value: s.cursedNext !== 1 ? `−${s.cursedNext}` : undefined });
-  if (s.nextAttackBonus) out.push({ label: `+${s.nextAttackBonus} A przy następnym ataku`, glyph: 'sBlade', marker: 'attack_up', buff: true, value: s.nextAttackBonus !== 1 ? `+${s.nextAttackBonus}` : undefined });
-  if (s.shieldArmed) out.push({ label: 'Tarcza Strażnika: neguje następny atak', glyph: 'sGuard', marker: 'shield', buff: true });
-  if (u.maxHp > UNITS[u.defId].hp) out.push({ label: `+${u.maxHp - UNITS[u.defId].hp} maks. Ż do końca bitwy (Eliksir Żywotności)`, glyph: 'sGuard', marker: 'vitality', buff: true, value: u.maxHp - UNITS[u.defId].hp !== 4 ? `+${u.maxHp - UNITS[u.defId].hp}` : undefined });
-  if (s.battleAttackBonus) out.push({ label: `+${s.battleAttackBonus} A do końca bitwy`, glyph: 'sBlade', buff: true, value: `+${s.battleAttackBonus}` });
-  if (s.battleSpeedBonus) out.push({ label: `+${s.battleSpeedBonus} S do końca bitwy`, glyph: 'sBoltG', marker: 'speed_up', buff: true, value: s.battleSpeedBonus !== 3 ? `+${s.battleSpeedBonus}` : undefined });
-  if (s.damageReduction) out.push({ label: `−${s.damageReduction} otrzymanych obrażeń`, glyph: 'sStone', buff: true, value: `−${s.damageReduction}` });
-  return out;
-}
-
-/** Small gilded medallion: green for buffs, crimson for debuffs, value on a parchment tab. */
-function StatusBadge({ st, size = 22 }: { st: StatusInfo; size?: number }) {
-  return (
-    <span title={st.label} style={{ position: 'relative', width: size, height: size, flex: 'none', display: 'inline-block', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.55))', animation: 'pop-in 0.3s ease-out both' }}>
-      {st.marker ? (
-        <img src={asset(`markers/${st.marker}.png`)} alt="" style={{ width: size, height: size, objectFit: 'contain', display: 'block' }} />
-      ) : (
-        <svg aria-hidden="true" width={size} height={size} viewBox="0 0 40 40">
-          <circle cx="20" cy="20" r="19" fill="url(#mRing)" stroke="#1E1204" strokeWidth="1.4" />
-          <circle cx="20" cy="20" r="15.4" fill={st.buff ? 'url(#stBuff)' : 'url(#stDebuff)'} stroke="#1E1204" strokeWidth="1" />
-          <use href={`#${st.glyph}`} />
-        </svg>
-      )}
-      {st.value && (
-        <span
-          className="parch"
-          style={{ position: 'absolute', left: '50%', bottom: -7, transform: 'translateX(-50%)', padding: '0 3px', borderRadius: 3, border: '1px solid #B88A35', fontSize: 10, fontWeight: 800, lineHeight: '11px', color: st.buff ? '#1D5233' : '#7A1418', whiteSpace: 'nowrap' }}
-        >
-          {st.value}
-        </span>
-      )}
-    </span>
-  );
-}
-
-/** Right button on a unit in battle: its card with the current values, Życie and every effect on it. */
-function UnitDetails({ u }: { u: BattleUnit }) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: 280 }}>
-      <UnitCard unitId={u.defId} width={280} hp={u.hp} attack={UNITS[u.defId].attack + u.status.battleAttackBonus} speed={unitSpeed(u)} />
-      <div className="plate slate" style={{ padding: '8px 12px', borderRadius: 10, boxShadow: '0 0 0 2px #B88A35, 0 8px 18px rgba(0,0,0,0.6)' }}>
-        <HpBar hp={u.hp} max={u.maxHp} />
-        <div style={{ fontSize: 15, color: '#F7EDD2', marginTop: 6 }}>
-          <StatIcon stat="Ż" light /> {u.hp}/{u.maxHp}
-          {u.abilityUsed && (
-            <>
-              {' · '}
-              <Marker name="ability_used" size={18} title="Zdolność zużyta" /> zdolność zużyta
-            </>
-          )}
-        </div>
-        {statusList(u).length === 0 && !u.abilityUsed && <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 4 }}>Bez dodatkowych efektów.</div>}
-        <StatusChips u={u} />
-      </div>
-    </div>
-  );
-}
-
-function StatusChips({ u }: { u: BattleUnit }) {
-  const list = statusList(u);
-  if (!list.length) return null;
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 6 }}>
-      {list.map((x) => (
-        <div key={x.label} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, lineHeight: 1.15, color: x.buff ? '#BFE6B0' : '#F2B6AA' }}>
-          <StatusBadge st={{ ...x, value: undefined }} size={18} />
-          <StatText text={x.label} />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function targetHint(t: ItemTargeting): string {
-  switch (t.kind) {
-    case 'ownLiving':
-      return 'wybierz własną jednostkę';
-    case 'enemy':
-      return 'wybierz wroga';
-    case 'lightning':
-      return `wybierz do 2 wrogów (${t.picks.length}/2)`;
-    case 'courage':
-      return t.picks.length ? 'wybierz sąsiedniego sojusznika lub „Gotowe”' : 'wybierz jednostkę';
-    case 'teleport':
-      return t.unitId ? 'wybierz wolne pole obok sojusznika' : 'wybierz jednostkę do teleportu';
-    case 'horn':
-      return t.mode === 'extra' ? 'wybierz pomocnika' : 'wybierz pomocnika do wymiany';
-    default:
-      return '';
-  }
 }
 
 const distanceBetween = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));

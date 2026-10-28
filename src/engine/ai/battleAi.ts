@@ -183,7 +183,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
 
 function abilityChoices(state: GameState, u: BattleUnit): boolean[] {
   const ab = abilityOf(u);
-  if (u.abilityUsed || !abilityActive(state, u) || !ATTACK_ABILITIES.includes(ab)) return [false];
+  if (u.abilityUsed || !abilityActive(state) || !ATTACK_ABILITIES.includes(ab)) return [false];
   return [true, false];
 }
 
@@ -194,7 +194,7 @@ function scoreHit(t: BattleUnit, dmg: number): number {
 }
 
 function freeAbility(state: GameState, u: BattleUnit): Action | null {
-  if (u.abilityUsed || !abilityActive(state, u)) return null;
+  if (u.abilityUsed || !abilityActive(state)) return null;
   const b = state.battle!;
   const ab = abilityOf(u);
   if (ab === 'sunburst' && livingUnits(b, u.side).length >= 2) return { type: 'battleAbility' };
@@ -313,7 +313,7 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
   const here = attackFrom(u.pos);
   const strike = (t: BattleUnit): Action => {
     const ab = abilityOf(u);
-    let useAbility = !u.abilityUsed && abilityActive(state, u) && ATTACK_ABILITIES.includes(ab);
+    let useAbility = !u.abilityUsed && abilityActive(state) && ATTACK_ABILITIES.includes(ab);
     let second: BattleUnit | null = null;
     if (useAbility && ab === 'fireBreath') {
       second = breathSecondTarget(state, u, t);
@@ -342,7 +342,7 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
 
 /** Rulebook use of the abilities that need no attack (Pajęcze Sidła): at once, on the rulebook target. */
 function rulebookFreeAbility(state: GameState, u: BattleUnit): Action | null {
-  if (u.abilityUsed || !abilityActive(state, u) || abilityOf(u) !== 'web') return null;
+  if (u.abilityUsed || !abilityActive(state) || abilityOf(u) !== 'web') return null;
   const inRange = enemiesOf(state.battle!, u).filter((e) => dist(e.pos!, u.pos!) <= ABILITY.webRange);
   const t = rulebookTarget(inRange);
   return t ? { type: 'battleAbility', targetId: t.id } : null;

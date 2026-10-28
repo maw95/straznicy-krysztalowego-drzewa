@@ -73,7 +73,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
   const enemy = active ? units.find((u) => u.id !== active.id)! : null;
   const canAttack = Boolean(myTurn && active && !act!.attacked && !act!.moveOnly && attackTargets(state, active).length);
   const ab = active ? abilityOf(active) : null;
-  const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state, active));
+  const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state));
   const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab);
   const freeAbility = abilityReady && ab !== null && FREE_ABILITIES.includes(ab);
   const side: FactionId | null = active && active.side !== 'neutral' ? active.side : null;

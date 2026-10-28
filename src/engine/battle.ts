@@ -104,7 +104,7 @@ const unitName = (u: BattleUnit) => UNITS[u.defId].name;
 
 // ---------------------------------------------------------------- queries
 
-export function abilityActive(state: GameState, _u?: BattleUnit): boolean {
+export function abilityActive(state: GameState): boolean {
   return state.rules.abilities;
 }
 
@@ -245,7 +245,7 @@ export function breathSecondTarget(state: GameState, u: BattleUnit, first: Battl
 /** Expected damage of a plain attack, before the defender's reactions. */
 export function attackDamage(state: GameState, att: BattleUnit, target: BattleUnit, useAbility: boolean, movedDistance: number): number {
   let dmg = unitAttackBase(att) + att.status.nextAttackBonus - att.status.cursedNext;
-  if (abilityActive(state, att)) {
+  if (abilityActive(state)) {
     const ab = abilityOf(att);
     if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += ABILITY.lightChargeBonus;
     if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += ABILITY.bloodCallBonus;
@@ -261,7 +261,7 @@ export const UNLIMITED_ABILITIES: AbilityId[] = ['boulder', 'nestLeap', 'manyHea
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
-  return abilityOf(u) === 'manyHeads' && abilityActive(state, u);
+  return abilityOf(u) === 'manyHeads' && abilityActive(state);
 }
 
 /**
@@ -443,7 +443,7 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
 
 /** Opiekun Gaju: whether `bear` can still take the blow aimed at `x` (itself, or an ally next to it). */
 export function bearCanGuard(state: GameState, bear: BattleUnit, x: BattleUnit): boolean {
-  if (abilityOf(bear) !== 'guardian' || bear.abilityUsed || !abilityActive(state, bear)) return false;
+  if (abilityOf(bear) !== 'guardian' || bear.abilityUsed || !abilityActive(state)) return false;
   return bear.id === x.id || (!!bear.pos && !!x.pos && adjacent(bear.pos, x.pos));
 }
 
@@ -495,7 +495,7 @@ export function predictDamage(
     dmg = Math.max(0, dmg - ABILITY.guardianIgnore);
   }
   let hardHead: number | null = null;
-  if (abilityOf(victim) === 'hardHead' && !victim.abilityUsed && abilityActive(state, victim) && dmg >= HARD_HEAD_MIN_DAMAGE) {
+  if (abilityOf(victim) === 'hardHead' && !victim.abilityUsed && abilityActive(state) && dmg >= HARD_HEAD_MIN_DAMAGE) {
     hardHead = Math.min(ABILITY.hardHeadIgnore, dmg);
     dmg -= hardHead;
   }
@@ -573,7 +573,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   const legal = attackTargets(state, u);
   if (!target || !legal.some((t) => t.id === targetId)) throw new Error('Nieprawidłowy cel ataku.');
   const ab = abilityOf(u);
-  const canUse = useAbility && !u.abilityUsed && abilityActive(state, u) && ATTACK_ABILITIES.includes(ab);
+  const canUse = useAbility && !u.abilityUsed && abilityActive(state) && ATTACK_ABILITIES.includes(ab);
   if (useAbility && !canUse) throw new Error('Zdolność jest niedostępna.');
 
   const targets: BattleUnit[] = [target];
@@ -609,7 +609,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       }
     }
     // No pushing in a duel: nobody moves there, so the two leaders would never meet again.
-    if (ab === 'boulder' && t.alive && !b.duel && abilityActive(state, u)) {
+    if (ab === 'boulder' && t.alive && !b.duel && abilityActive(state)) {
       const to = pushCell(state, u.pos!, t.pos!);
       if (to) {
         t.pos = to;
@@ -623,7 +623,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   act.acted = true;
   if (checkBattleEnd(state)) return;
   const hopAbility = ab === 'airDash' || ab === 'nestLeap';
-  if (hopAbility && !b.duel && (!u.abilityUsed || ab === 'nestLeap') && abilityActive(state, u) && u.alive) {
+  if (hopAbility && !b.duel && (!u.abilityUsed || ab === 'nestLeap') && abilityActive(state) && u.alive) {
     act.hop = ab === 'airDash' ? ABILITY.airDashRange : ABILITY.nestLeapRange;
     return;
   }
@@ -654,7 +654,7 @@ export function battleAbility(state: GameState, targetId?: string) {
   const b = state.battle!;
   const u = b.units[b.activation!.unitId];
   const ab = abilityOf(u);
-  if (u.abilityUsed || !abilityActive(state, u) || !FREE_ABILITIES.includes(ab)) throw new Error('Zdolność jest niedostępna.');
+  if (u.abilityUsed || !abilityActive(state) || !FREE_ABILITIES.includes(ab)) throw new Error('Zdolność jest niedostępna.');
   if (ab === 'sunburst') {
     for (const ally of livingUnits(b, u.side)) ally.status.nextAttackBonus += ally.id === u.id ? ABILITY.sunburstSelfBonus : ABILITY.sunburstBonus;
   } else if (ab === 'giftOfLife') {
