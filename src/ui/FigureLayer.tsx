@@ -122,10 +122,13 @@ class Stage {
     if (!THREE || !this.scene) return;
     const now = performance.now();
     const seen = new Set<string>();
+    // The views pass new pieces on every render (a hover is enough): draw only when something changed.
+    let changed = false;
     for (const p of pieces) {
       seen.add(p.key);
       let l = this.live.get(p.key);
       if (!l) {
+        changed = true;
         const node = new THREE.Group();
         this.scene.add(node);
         const facing = p.face ? angleOf(p.face.x, p.face.y) : 0;
@@ -141,6 +144,7 @@ class Stage {
           })
           .catch(() => undefined);
       } else if (p.x !== l.to.x || p.y !== l.to.y) {
+        changed = true;
         const at = this.position(l, now);
         l.from = at;
         l.to = { x: p.x, y: p.y };
@@ -149,21 +153,30 @@ class Stage {
         this.turnTo(l, angleOf(p.x - at.x, p.y - at.y), now);
       }
       if (p.lungeAt && (!l.piece.lungeAt || p.lungeAt.key !== l.piece.lungeAt.key)) {
+        changed = true;
         l.lungeStart = now;
         this.turnTo(l, angleOf(p.lungeAt.x - p.x, p.lungeAt.y - p.y), now);
       }
-      if (p.hit && !l.piece.hit) l.shakeStart = now;
-      if (p.lookAt && (p.lookAt.x !== l.piece.lookAt?.x || p.lookAt.y !== l.piece.lookAt?.y)) this.turnTo(l, angleOf(p.lookAt.x - p.x, p.lookAt.y - p.y), now);
+      if (p.hit && !l.piece.hit) {
+        changed = true;
+        l.shakeStart = now;
+      }
+      if (p.lookAt && (p.lookAt.x !== l.piece.lookAt?.x || p.lookAt.y !== l.piece.lookAt?.y)) {
+        changed = true;
+        this.turnTo(l, angleOf(p.lookAt.x - p.x, p.lookAt.y - p.y), now);
+      }
+      if ((p.ring ?? null) !== (l.piece.ring ?? null) || p.size !== l.piece.size) changed = true;
       this.setRing(l, p.ring ?? null);
       l.piece = p;
     }
     for (const [key, l] of this.live) {
       if (seen.has(key)) continue;
+      changed = true;
       this.setRing(l, null);
       this.scene.remove(l.node);
       this.live.delete(key);
     }
-    this.kick();
+    if (changed) this.kick();
   }
 
   private turnTo(l: Live, angle: number, now: number) {
@@ -306,21 +319,28 @@ export function FigureLayer({ width, height, pieces, style }: { width: number; h
 
 const SWITCH = 'skd-figures';
 
-/** "Figurki 3D" in the options: on unless the player switched them off (slow computers keep the portraits). */
+let switchedOn: boolean | null = null;
+
+/** "Figurki 3D" in the options: on unless the player switched them off (slow computers keep the portraits).
+ *  Read from storage once; the views ask for every unit on every render. */
 export function figuresOn(): boolean {
-  try {
-    return localStorage.getItem(SWITCH) !== 'off';
-  } catch {
-    return true;
+  if (switchedOn === null) {
+    try {
+      switchedOn = localStorage.getItem(SWITCH) !== 'off';
+    } catch {
+      switchedOn = true;
+    }
   }
+  return switchedOn;
 }
 
 export function setFiguresOn(on: boolean) {
+  switchedOn = on;
   try {
     if (on) localStorage.removeItem(SWITCH);
     else localStorage.setItem(SWITCH, 'off');
   } catch {
-    // No storage: the choice lasts until the page is closed only if the caller keeps it.
+    // No storage: the choice lasts until the page is closed.
   }
 }
 
