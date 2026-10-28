@@ -4,7 +4,7 @@ import type { Level, Mode } from '../engine/types';
 import { BOT_SPEEDS, currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
-import { ARENA_HINT, ARENA_LEVEL_TIPS, chip, choice, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
+import { ARENA_HINT, ARENA_LEVEL_TIPS, chip, choice, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
 
 /** Links of the main menu that do not depend on the account. */
 export interface MenuLinks {
@@ -296,19 +296,13 @@ function RankingTable({ me, refreshKey }: { me: User; refreshKey: unknown }) {
   );
 }
 
-const defaultTable = (mode: Mode, count: number, level: Level): TableConfig => {
-  const seats: TableConfig['seats'] =
-    mode === 'arena'
-      ? [
-          { faction: 'dawn', heroId: FACTION_HEROES.dawn[0], bot: false },
-          { faction: 'horde', heroId: FACTION_HEROES.horde[0], bot: true },
-        ]
-      : Array.from({ length: count }, (_, i) => {
-          const faction: FactionId = mode === 'coop' || i % 2 === 0 ? 'dawn' : 'horde';
-          return { faction, heroId: FACTION_HEROES[faction][mode === 'coop' ? i : Math.floor(i / 2)], bot: false };
-        });
-  return { mode, mapSize: 'short', level: mode === 'pvp' && level === 'hard' ? 'normal' : level, seats };
-};
+const defaultTable = (mode: Mode, count: number, level: Level): TableConfig => ({
+  mode,
+  mapSize: 'short',
+  level: mode === 'pvp' && level === 'hard' ? 'normal' : level,
+  // Online every seat waits for a player, except the arena's opponent.
+  seats: defaultHeroes(mode, count).map((seat, i) => ({ ...seat, bot: mode === 'arena' && i === 1 })),
+});
 
 function RoomLobby({ session, room, me, online }: { session: OnlineSession; room: RoomView; me: User; online: OnlineState }) {
   const owner = room.ownerId === me.id;

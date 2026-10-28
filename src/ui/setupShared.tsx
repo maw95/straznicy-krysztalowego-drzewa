@@ -1,13 +1,28 @@
 // Pieces of the game setup shared by the local setup screen and the online room: level names and hints,
-// explanations, the faction tint of a seat, labelled rows and the option buttons.
+// explanations, the faction tint of a seat, labelled rows, the option buttons and the heroes of a fresh table.
 
-import { MAP_VARIANTS, type FactionId, type MapSize } from '../engine/data';
-import type { Level } from '../engine/types';
+import { FACTION_HEROES, MAP_VARIANTS, type FactionId, type MapSize } from '../engine/data';
+import type { Level, Mode } from '../engine/types';
 
 /** Class of an option button; the chosen one is lit. */
 export const choice = (active: boolean) => `btn plate parch ${active ? 'on' : ''}`;
 /** A small option button (mode, map, level, rules); the chosen one is lit. */
 export const chip = (active: boolean) => `${choice(active)} chip`;
+
+/**
+ * Factions and heroes of a fresh table, the same locally and online: the arena pits the first hero of each side,
+ * coop seats the Przymierze heroes in turn, and rivalry alternates the sides (Przymierze first).
+ */
+export const defaultHeroes = (mode: Mode, count: number): Array<{ faction: FactionId; heroId: string }> =>
+  mode === 'arena'
+    ? [
+        { faction: 'dawn', heroId: FACTION_HEROES.dawn[0] },
+        { faction: 'horde', heroId: FACTION_HEROES.horde[0] },
+      ]
+    : Array.from({ length: count }, (_, i) => {
+        const faction: FactionId = mode === 'coop' || i % 2 === 0 ? 'dawn' : 'horde';
+        return { faction, heroId: FACTION_HEROES[faction][mode === 'coop' ? i % FACTION_HEROES.dawn.length : Math.floor(i / 2)] };
+      });
 
 export const LEVELS: Array<[Level | 'custom', string]> = [
   ['kids', 'Łatwy'],

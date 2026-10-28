@@ -32,6 +32,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Narzędzia: testy interfejsu korzystają ze wspólnych pomocników (`tests/helpers/ui.ts`: przygotowanie jsdom, szukanie przycisków, zamykanie okien).
 - Mapa świata: ślad drogi bohatera i odsłanianie pól liczone porządniej (bez zmian w wyglądzie).
 - Narzędzia: powtarzające się rozmiary przycisków są klasami CSS (`btn-bar`, `chip`, `btn-dialog`…), wygląd bez zmian.
+- Narzędzia: domyślni bohaterowie przy nowym stole są wspólni dla gry lokalnej i pokoju online (`defaultHeroes`).
 
 ## 2.0.1 — 2026-10-23
 

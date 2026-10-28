@@ -9,25 +9,14 @@ import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
-import { ARENA_HINT, ARENA_LEVEL_TIPS, chip, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
+import { ARENA_HINT, ARENA_LEVEL_TIPS, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
 
-const defaultSeats = (mode: Mode, count: number): SeatSetup[] => {
-  if (mode === 'arena') {
-    return [
-      { name: 'Gracz 1', faction: 'dawn', controller: 'human', heroId: FACTION_HEROES.dawn[0] },
-      { name: 'Komputer', faction: 'horde', controller: 'bot', heroId: FACTION_HEROES.horde[0] },
-    ];
-  }
-  if (mode === 'coop') {
-    return Array.from({ length: count }, (_, i) => ({ name: `Gracz ${i + 1}`, faction: 'dawn' as FactionId, controller: (i === 0 ? 'human' : 'bot') as Controller, heroId: FACTION_HEROES.dawn[i % 3] }));
-  }
-  const out: SeatSetup[] = [];
-  for (let i = 0; i < count; i++) {
-    const faction: FactionId = i % 2 === 0 ? 'dawn' : 'horde';
-    out.push({ name: `Gracz ${i + 1}`, faction, controller: i < 2 ? 'human' : 'bot', heroId: FACTION_HEROES[faction][Math.floor(i / 2)] });
-  }
-  return out;
-};
+/** Fresh seats: the first player is a person (both players of a two-sided game), the rest are bots. */
+const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
+  defaultHeroes(mode, count).map(({ faction, heroId }, i) => {
+    const human = mode === 'pvp' ? i < 2 : i === 0;
+    return { name: mode === 'arena' && !human ? 'Komputer' : `Gracz ${i + 1}`, faction, controller: human ? 'human' : 'bot', heroId };
+  });
 
 export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog }: { online: { label: string; title: string }; onOnline: () => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void }) {
   // Both read and replay saved games: once per visit to the menu, not on every hover and keystroke.
