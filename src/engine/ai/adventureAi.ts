@@ -1,7 +1,7 @@
 // Adventure-map AI: the coop evil automaton (spec section 7) and simple bots
 // for player seats. Both only use information visible on the map.
 
-import { FACTION_SUPPORTS, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from '../data';
+import { FACTION_SUPPORTS, ITEM_EFFECT, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from '../data';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, treeKey, type PathResult } from '../map';
 import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, reviveSpots, ritualFormed, ritualSpot } from '../game';
@@ -172,7 +172,7 @@ function mapItemAction(state: GameState): Action | null {
       const hidden = Object.values(state.tiles)
         .filter((t) => !t.revealed)
         .sort((a, b) => distance(parseKey(a.key), parseKey(hero.pos)) - distance(parseKey(b.key), parseKey(hero.pos)))
-        .slice(0, 3)
+        .slice(0, ITEM_EFFECT.mapReveal)
         .map((t) => t.key);
       if (hidden.length) return { type: 'useMapItem', itemId: id, targets: hidden };
     }

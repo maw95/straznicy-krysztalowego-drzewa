@@ -8,6 +8,7 @@ import {
   FACTION_NAMES,
   FACTION_SUPPORTS,
   guardianDuelHp,
+  ITEM_EFFECT,
   ITEMS,
   MAP_VARIANTS,
   NON_RESURRECTION_ITEMS,
@@ -588,8 +589,8 @@ function useMapItem(state: GameState, itemId: string, targets: HexKey[] | undefi
   const item = state.items[itemId];
   if (!item || item.owner !== hero.faction) throw new Error('Nie masz tego skarbu.');
   if (item.kind === 'map') {
-    const keys = [...new Set(targets ?? [])].filter((k) => state.tiles[k] && !state.tiles[k].revealed).slice(0, 3);
-    if (!keys.length) throw new Error('Wybierz do 3 zakrytych pól.');
+    const keys = [...new Set(targets ?? [])].filter((k) => state.tiles[k] && !state.tiles[k].revealed).slice(0, ITEM_EFFECT.mapReveal);
+    if (!keys.length) throw new Error(`Wybierz do ${ITEM_EFFECT.mapReveal} zakrytych pól.`);
     for (const k of keys) state.tiles[k].revealed = true;
     log(state, 'item', `${UNITS[hero.id].name} używa Magicznej Mapy: odkryto ${keys.length} pola.`);
   } else if (item.kind === 'resurrection') {

@@ -1,7 +1,7 @@
 // Battle engine: the painted arena (13 columns, 85 cells), initiative, movement, attacks,
 // abilities and items. Functions change the GameState passed in.
 
-import { ABILITY, ITEMS, UNITS, type AbilityId, type FactionId, type Side } from './data';
+import { ABILITY, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type FactionId, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
@@ -725,50 +725,50 @@ export function battleItem(
     }
     case 'heal': {
       const t = living(own(args.targetId));
-      t.hp = Math.min(t.maxHp, t.hp + 6);
+      t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.heal);
       break;
     }
     case 'seed':
-      for (const t of livingUnits(b, faction)) t.hp = Math.min(t.maxHp, t.hp + 2);
+      for (const t of livingUnits(b, faction)) t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.seedHeal);
       break;
     case 'damage_scroll':
-      dealDamage(state, enemy(args.targetId), 3, name);
+      dealDamage(state, enemy(args.targetId), ITEM_EFFECT.scrollDamage, name);
       break;
     case 'lightning': {
-      const ids = [...new Set(args.targetIds ?? (args.targetId ? [args.targetId] : []))].slice(0, 2);
+      const ids = [...new Set(args.targetIds ?? (args.targetId ? [args.targetId] : []))].slice(0, ITEM_EFFECT.lightningTargets);
       if (!ids.length) throw new Error('Wybierz do dwóch wrogów.');
       for (const id of ids) {
         const t = enemy(id);
-        dealDamage(state, t, 2, name);
+        dealDamage(state, t, ITEM_EFFECT.lightningDamage, name);
       }
       break;
     }
     case 'sword':
-      living(own(args.targetId)).status.battleAttackBonus += 2;
+      living(own(args.targetId)).status.battleAttackBonus += ITEM_EFFECT.swordAttack;
       break;
     case 'shield':
       living(own(args.targetId)).status.shieldArmed = true;
       break;
     case 'vitality': {
       const t = living(own(args.targetId));
-      t.maxHp += 4;
-      t.hp += 4;
+      t.maxHp += ITEM_EFFECT.vitalityHp;
+      t.hp += ITEM_EFFECT.vitalityHp;
       break;
     }
     case 'boots':
-      living(own(args.targetId)).status.battleSpeedBonus += 3;
+      living(own(args.targetId)).status.battleSpeedBonus += ITEM_EFFECT.bootsSpeed;
       break;
     case 'stone':
-      living(own(args.targetId)).status.damageReduction += 1;
+      living(own(args.targetId)).status.damageReduction += ITEM_EFFECT.stoneReduction;
       break;
     case 'courage_horn': {
       const ids = args.targetIds ?? (args.targetId ? [args.targetId] : []);
       const first = living(own(ids[0]));
-      first.status.nextAttackBonus += 2;
+      first.status.nextAttackBonus += ITEM_EFFECT.courageAttack;
       if (ids[1]) {
         const second = living(own(ids[1]));
         if (!adjacent(first.pos!, second.pos!)) throw new Error('Drugi sojusznik musi sąsiadować z pierwszym.');
-        second.status.nextAttackBonus += 2;
+        second.status.nextAttackBonus += ITEM_EFFECT.courageAttack;
       }
       break;
     }

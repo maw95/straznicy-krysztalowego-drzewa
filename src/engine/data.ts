@@ -139,22 +139,52 @@ export interface ItemDef {
   usableIn: Array<'map' | 'battle'>;
 }
 
+/**
+ * Numbers used by treasures. TEST values like the stats: the engine, the bots and the card texts
+ * read them from here.
+ */
+export const ITEM_EFFECT = {
+  /** Wielki Eliksir Uzdrowienia: Życie restored, up to the maximum. */
+  heal: 6,
+  /** Nasiono Drzewa: Życie for every living unit of the side. */
+  seedHeal: 2,
+  /** Zwój Magicznej Strzały: damage to one target. */
+  scrollDamage: 3,
+  /** Błyskawica w Butelce: damage to each of up to `lightningTargets` enemies. */
+  lightningDamage: 2,
+  lightningTargets: 2,
+  /** Miecz Bohatera: Atak until the end of the battle. */
+  swordAttack: 2,
+  /** Eliksir Żywotności: maximum (and current) Życie until the end of the battle. */
+  vitalityHp: 4,
+  /** Buty Wiatru: Szybkość until the end of the battle. */
+  bootsSpeed: 3,
+  /** Kamień Ochrony: damage taken off every blow until the end of the battle. */
+  stoneReduction: 1,
+  /** Róg Odwagi: Atak for the next attack of a unit and one ally next to it. */
+  courageAttack: 2,
+  /** Magiczna Mapa: hidden hexes revealed. */
+  mapReveal: 3,
+};
+
+const E = ITEM_EFFECT;
+
 export const ITEMS: Record<ItemKind, ItemDef> = {
   resurrection: { kind: 'resurrection', name: 'Eliksir Odrodzenia', text: 'Wskrzesza 1 poległą jednostkę. Także poza bitwą.', usableIn: ['map', 'battle'] },
-  heal: { kind: 'heal', name: 'Wielki Eliksir Uzdrowienia', text: 'Usuwa z wybranej jednostki do 6 punktów obrażeń.', usableIn: ['battle'] },
-  seed: { kind: 'seed', name: 'Nasiono Drzewa', text: '+2 Ż każdej żyjącej własnej jednostce na arenie.', usableIn: ['battle'] },
-  damage_scroll: { kind: 'damage_scroll', name: 'Zwój Magicznej Strzały', text: '3 obrażenia wybranemu celowi.', usableIn: ['battle'] },
-  sword: { kind: 'sword', name: 'Miecz Bohatera', text: '+2 A jednej jednostce do końca bitwy.', usableIn: ['battle'] },
+  heal: { kind: 'heal', name: 'Wielki Eliksir Uzdrowienia', text: `Usuwa z wybranej jednostki do ${E.heal} punktów obrażeń.`, usableIn: ['battle'] },
+  seed: { kind: 'seed', name: 'Nasiono Drzewa', text: `+${E.seedHeal} Ż każdej żyjącej własnej jednostce na arenie.`, usableIn: ['battle'] },
+  damage_scroll: { kind: 'damage_scroll', name: 'Zwój Magicznej Strzały', text: `${E.scrollDamage} obrażenia wybranemu celowi.`, usableIn: ['battle'] },
+  sword: { kind: 'sword', name: 'Miecz Bohatera', text: `+${E.swordAttack} A jednej jednostce do końca bitwy.`, usableIn: ['battle'] },
   shield: { kind: 'shield', name: 'Tarcza Strażnika', text: 'Neguje wszystkie obrażenia z jednego ataku (reakcja).', usableIn: ['battle'] },
-  vitality: { kind: 'vitality', name: 'Eliksir Żywotności', text: '+4 maks. Ż jednej jednostce do końca bitwy.', usableIn: ['battle'] },
-  boots: { kind: 'boots', name: 'Buty Wiatru', text: '+3 S jednej jednostce do końca bitwy.', usableIn: ['battle'] },
+  vitality: { kind: 'vitality', name: 'Eliksir Żywotności', text: `+${E.vitalityHp} maks. Ż jednej jednostce do końca bitwy.`, usableIn: ['battle'] },
+  boots: { kind: 'boots', name: 'Buty Wiatru', text: `+${E.bootsSpeed} S jednej jednostce do końca bitwy.`, usableIn: ['battle'] },
   horn: { kind: 'horn', name: 'Róg Strażników', text: 'Wymień pomocnika na żywego z rezerwy ALBO daj żywemu pomocnikowi dodatkową aktywację.', usableIn: ['battle'] },
-  map: { kind: 'map', name: 'Magiczna Mapa', text: 'Odkryj 3 wybrane zakryte pola.', usableIn: ['map'] },
-  lightning: { kind: 'lightning', name: 'Błyskawica w Butelce', text: 'Do dwóch różnych przeciwników otrzymuje po 2 obrażenia.', usableIn: ['battle'] },
+  map: { kind: 'map', name: 'Magiczna Mapa', text: `Odkryj ${E.mapReveal} wybrane zakryte pola.`, usableIn: ['map'] },
+  lightning: { kind: 'lightning', name: 'Błyskawica w Butelce', text: `Do ${E.lightningTargets === 2 ? 'dwóch' : E.lightningTargets} różnych przeciwników otrzymuje po ${E.lightningDamage} obrażenia.`, usableIn: ['battle'] },
   hourglass: { kind: 'hourglass', name: 'Klepsydra Czasu', text: 'Wybrana jednostka wykonuje dodatkowy ruch bez ataku.', usableIn: ['battle'] },
-  courage_horn: { kind: 'courage_horn', name: 'Róg Odwagi', text: '+2 A do następnego ataku jednostki i jednego sąsiedniego sojusznika.', usableIn: ['battle'] },
+  courage_horn: { kind: 'courage_horn', name: 'Róg Odwagi', text: `+${E.courageAttack} A do następnego ataku jednostki i jednego sąsiedniego sojusznika.`, usableIn: ['battle'] },
   teleport: { kind: 'teleport', name: 'Zwój Teleportacji', text: 'Teleport na wolne pole sąsiadujące z sojusznikiem.', usableIn: ['battle'] },
-  stone: { kind: 'stone', name: 'Kamień Ochrony', text: '−1 otrzymanych obrażeń z każdego ataku do końca bitwy.', usableIn: ['battle'] },
+  stone: { kind: 'stone', name: 'Kamień Ochrony', text: `−${E.stoneReduction} otrzymanych obrażeń z każdego ataku do końca bitwy.`, usableIn: ['battle'] },
 };
 
 export const NON_RESURRECTION_ITEMS: ItemKind[] = (Object.keys(ITEMS) as ItemKind[]).filter((k) => k !== 'resurrection');

@@ -1,7 +1,7 @@
 // Heuristic battle AI. It is greedy and deterministic: equal scores are broken
 // by stable ordering, so simulations replay exactly from a seed.
 
-import { ABILITY, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from '../data';
+import { ABILITY, ITEM_EFFECT, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from '../data';
 import {
   abilityActive,
   abilityOf,
@@ -201,16 +201,17 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
         break;
       }
       case 'seed':
-        if (own.filter((x) => x.maxHp - x.hp >= 2).length >= 2) return { type: 'battleItem', itemId: item.id };
+        // Worth it when at least two units can take the whole gift.
+        if (own.filter((x) => x.maxHp - x.hp >= ITEM_EFFECT.seedHeal).length >= 2) return { type: 'battleItem', itemId: item.id };
         break;
       case 'damage_scroll': {
-        const t = enemies.find((e) => e.hp <= 3);
+        const t = enemies.find((e) => e.hp <= ITEM_EFFECT.scrollDamage);
         if (t) return { type: 'battleItem', itemId: item.id, targetId: t.id };
         break;
       }
       case 'lightning': {
-        const ts = enemies.filter((e) => e.hp <= 2);
-        if (ts.length || enemies.length >= 2) return { type: 'battleItem', itemId: item.id, targetIds: (ts.length ? ts : enemies).slice(0, 2).map((e) => e.id) };
+        const ts = enemies.filter((e) => e.hp <= ITEM_EFFECT.lightningDamage);
+        if (ts.length || enemies.length >= 2) return { type: 'battleItem', itemId: item.id, targetIds: (ts.length ? ts : enemies).slice(0, ITEM_EFFECT.lightningTargets).map((e) => e.id) };
         break;
       }
       case 'sword':
