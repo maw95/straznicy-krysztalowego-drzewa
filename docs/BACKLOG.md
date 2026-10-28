@@ -4,24 +4,62 @@ Uzgodnione pomysły do wdrożenia. Zrobione punkty są usuwane (zostają w histo
 tryb online z menu i rankingiem, figurki 3D, szczegóły pod prawym przyciskiem, atak jednym kliknięciem,
 porządki w kodzie (etapy 0–4 i resztki), wersja mobilna, zgłoszenia z 23.10 i 28.10.
 
-## 1. Figurki 3D — drobne
+## 1. Nowe materiały od autora (28.10)
+
+Szacunki kosztu to tokeny zużyte przez Claude w jednej sesji (czytanie plików, zrzuty ekranu, testy). Każdy
+punkt to osobny commit; najtańsza kolejność: 1.5 → 1.4 → 1.3 → 1.2 → 1.1.
+
+- [ ] **1.1. Nowe modele figurek (GLB) w grze i rzuty w instrukcji.** *Koszt: ok. 150–250 tys. tokenów*
+      (część a ok. 50–80 tys., część b ok. 100–170 tys.).
+  - a) `docs/druk3d/figurki/z_teksturami/*.glb` (15 plików, razem 2,9 GB) → `make modele` → `public/modele/`,
+    z limitem 2,5 MB na model; sprawdzić rozmiary, galerię `?figury` i figurki na mapie i arenie. Przy okazji
+    sprawdzić, czy nowy Goblin ma scalone wierzchołki (punkt 2) i czy nieśledzone w gicie
+    `public/modele/{cyclops,griffin,hydra,werewolfLord}.glb` mają trafić do repozytorium.
+  - b) Nowe podglądy figurek zamiast `docs/grafika/figurki/pomalowane/{horda,przymierze}.png` (+ strażnicy):
+    render modeli three.js w przeglądarce bez okna, z przezroczystym tłem (PNG z kanałem alfa), jeden obraz na
+    figurkę albo zestaw na frakcję. Wstawić do instrukcji: `docs/INSTRUKCJA.md` i szablon
+    `docs/edytowalny_szablon_instrukcji/assets/figurki/`. Da się to zrobić — gra już rysuje modele three.js,
+    trzeba tylko skryptu, który ustawi kamerę i zapisze kadr.
+- [ ] **1.2. Znaczniki „+3 Ataku” i „+4 Zdrowia”.** *Koszt: ok. 60–90 tys. tokenów.*
+  - `docs/grafika/ikony/znacznik_+4_zdrowia.png` zastępuje dotychczasową ikonę Żywotności (+4 Ż).
+  - `docs/grafika/ikony/znacznik_+3_ataku.png` — nowy znacznik przy Złotym Smoku po użyciu Słonecznego Blasku
+    (`sunburstSelfBonus: 3`), widoczny w bitwie (karta, pasek aktywacji, arena), znika po jego ataku.
+  - Dziś znaczniki są wycinane z arkusza `znaczniki.png` (`scripts/assets/markers.py`, `src/ui/markers.tsx`) —
+    nowe są osobnymi plikami, trzeba je dopasować rozmiarem. Instrukcja: opis zdolności Smoka, lista znaczników,
+    szablon (`assets/znaczniki/`).
+- [ ] **1.3. Nowe portrety: 6 jednostek Hordy i Hydra.** *Koszt: ok. 40–70 tys. tokenów.*
+  - `docs/grafika/portrety/horda_*_portret.png` i `straznik_hydra_portret.png` (stary `hydra.png` usunięty).
+    Dziś portrety Hordy pochodzą z arkusza `portrety_mroczna_horda.png` — przejść na osobne pliki, przyciąć
+    i zmniejszyć jak pozostałe. Sprawdzić w grze (karta, pasek, okno szczegółów, wybór bohatera) i podmienić
+    w instrukcji i szablonie.
+- [ ] **1.4. Instrukcja: lista elementów w pudełku z liczbami.** *Koszt: ok. 15–25 tys. tokenów.*
+  - Rozdział 1 instrukcji i szablon: dodać znacznik „+3 Ataku” (ile sztuk — do ustalenia, prawdopodobnie 1),
+    wymiary z punktu 1.5 tam, gdzie pomagają; zgodność z tabelą w `docs/WYMIARY_ELEMENTOW.md`.
+- [ ] **1.5. Wymiary elementów ustalone przez autora.** *Koszt: ok. 15–25 tys. tokenów.*
+  - Wpisać do `docs/WYMIARY_ELEMENTOW.md` (tam jest już pełna tabela wymiarów) i `FIGURKI_SPECYFIKACJA.md` §4:
+    okrągłe znaczniki 23 × 23 × 4 mm, krople obrażeń 15,6 × 20 × 3 mm, tor rund 150 × 144 × 8 mm, znacznik
+    rundy 8 × 9,2 × 30 mm, kryształy 8 × 7 × 16 mm; przeliczyć piksele do druku.
+  - Do wyjaśnienia z autorem przed wpisaniem — lista w odpowiedzi z 28.10 (m.in. kształt toru 150 × 144 mm,
+    miejsce na znaczniki 23 mm na karcie, grubość 4 mm a tektura 2 mm).
+
+## 2. Figurki 3D — drobne
 
 - **Goblin Szaman** waży 6,4 MB: jego model ma osobne wierzchołki dla prawie każdego trójkąta, więc upraszczanie
   stopuje na ok. 170 tys. trójkątów. Lepiej byłoby wyeksportować go ze scalonymi wierzchołkami.
 - Kąt kamery i wielkość figurek — do ewentualnej korekty po obejrzeniu na żywo.
 
-## 2. Szczegóły pod prawym przyciskiem — drobne
+## 3. Szczegóły pod prawym przyciskiem — drobne
 
 - Obecne podglądy kart po najechaniu myszą — do przejrzenia; docelowo prawy przycisk może je zastąpić tam,
   gdzie zasłaniają planszę.
 
-## 3. Do przemyślenia: zasady bitwy
+## 4. Do przemyślenia: zasady bitwy
 
 Pytania autora — jeszcze bez decyzji. Zmiana zasad dotyczy też wersji papierowej: instrukcji,
 notatek (`docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md`) i balansu, więc przed decyzją warto puścić symulacje
 (`make sim-battles`, `make sim-tabele`) z wariantem w `SIM_OVERRIDE` / przełącznikiem zasad.
 
-### 3.1. Czy strzelec może się ruszyć, a potem zaatakować?
+### 4.1. Czy strzelec może się ruszyć, a potem zaatakować?
 
 **Pytanie:** czy po ruchu strzelec powinien tracić możliwość ataku?
 
@@ -38,7 +76,7 @@ linia wzroku), a gdy obok stoi wróg, strzelec musi zaatakować sąsiada.
 - Gra ma już podobny wyjątek (aktywacja „tylko ruch” z Rogu Strażników), więc w kodzie to niewielka zmiana:
   przełącznik w `RulesConfig`, jak inne zasady testowe.
 
-### 3.2. Czy inne jednostki zasłaniają strzał?
+### 4.2. Czy inne jednostki zasłaniają strzał?
 
 **Pytanie:** czy strzelec może strzelać przez inne jednostki, czy jednostki działają jak przeszkody terenowe?
 
