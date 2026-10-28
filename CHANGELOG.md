@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Figurki 3D: nowe, dokładniejsze modele 11 jednostek (Goblin Szaman jest przy tym kilka razy lżejszy); Cyklop, Gryf, Hydra i Władca Wilkołaków mają figurki także w wersji z GitHuba.
 - Bitwa: Złoty Smok po Słonecznym Blasku ma własny znacznik „+3 Ataku” (znika po jego ataku), Eliksir Żywotności ma nowy znacznik „+4”, a pasek aktywacji pokazuje znaczniki aktywnej jednostki. Oba znaczniki są też w instrukcji.
 - Instrukcja, rozdział 1: lista elementów z pudełka ma rozmiary (kafelki, plansza, karty, figurki, kryształy, tor rund) i nowy znacznik „+3 Ataku” Złotego Smoka.
 - Wersja do druku: wymiary znaczników (Ø 23 mm), kropli obrażeń, toru rund, znacznika rundy i kryształów są już ostateczne — wszystkie te elementy będą drukowane w 3D.
