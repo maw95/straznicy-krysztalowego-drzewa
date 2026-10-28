@@ -201,7 +201,7 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
     for (const g of guardians) {
       const lair = GUARDIAN_LAIRS[g];
       const options = [...reach].filter((k) => !reserved.has(k) && tiles[k].side === lair.side && tileCost(tiles[k]) !== null);
-      const spot = pickSpread(options, 1, rng, tiles, crystals.map((c) => c.hex))[0];
+      const spot = pickSpread(options, rng, tiles, rows, crystals.map((c) => c.hex));
       if (!spot) break;
       crystals.push({ hex: spot, guardian: g });
       reserved.add(spot);
@@ -221,20 +221,18 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
   throw new Error('Nie udało się wygenerować poprawnej mapy');
 }
 
-/** Picks hexes far from already chosen ones so crystals spread over the map. */
-function pickSpread(candidates: HexKey[], count: number, rng: Rng, tiles: Record<HexKey, Tile>, taken: HexKey[] = []): HexKey[] {
-  const rows = Math.max(...Object.values(tiles).map((t) => t.row)) + 1;
+/**
+ * Picks a hex far from the ones already taken so crystals spread over the map: at least 3 hexes
+ * away if it can, then 2, then 1, from a shuffled pool (one shuffle, whatever is found).
+ */
+function pickSpread(candidates: HexKey[], rng: Rng, tiles: Record<HexKey, Tile>, rows: number, taken: HexKey[]): HexKey | undefined {
   const pool = rng.shuffle(candidates);
-  const chosen: HexKey[] = [];
   for (const minGap of [3, 2, 1]) {
     for (const k of pool) {
-      if (chosen.length >= count) break;
-      if (chosen.includes(k)) continue;
       // Keep crystals off the two bottom rows (unless nothing else fits) so the race is not trivial.
       if (minGap > 1 && tiles[k].row >= rows - 2) continue;
-      if (![...taken, ...chosen].some((c) => distance(parseKey(c), parseKey(k)) < minGap)) chosen.push(k);
+      if (!taken.some((c) => distance(parseKey(c), parseKey(k)) < minGap)) return k;
     }
-    if (chosen.length >= count) break;
   }
-  return chosen;
+  return undefined;
 }
