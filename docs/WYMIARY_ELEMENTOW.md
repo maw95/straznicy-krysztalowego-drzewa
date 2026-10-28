@@ -22,9 +22,9 @@ więc wersja fizyczna i komputerowa mają te same pola.
 | Kafelek mapy (teren, skarb, siedlisko, Drzewo, baza) | 121 | sześciokąt **50 mm** między płaskimi bokami (57,7 mm między rogami), wierzchołkiem do góry | **661 × 753 px** na kafelek, osobno awers i rewers |
 | Plansza areny, dwustronna | 1 | **420 × 297 mm** (A3), składana raz na pół do 210 × 297 mm | **5031 × 3579 px** na stronę |
 | Pole areny | 85 na stronę | sześciokąt **34 mm** między płaskimi bokami, płaskim bokiem do góry | — (siatka rysowana programowo, niżej) |
-| Karta jednostki | 15 | **80 × 120 mm** (rozmiar „Dixit”, proporcje 2:3 jak obecne wzory) | **1016 × 1488 px** |
+| Karta jednostki | 18 (15 + 3 karty strażników do pojedynku) | **80 × 120 mm** (rozmiar „Dixit”, proporcje 2:3 jak obecne wzory) | **1016 × 1488 px** |
 | Karta skarbu | 20 | **63 × 88 mm** (standardowa karta do gry) | **815 × 1110 px** |
-| Rewers karty jednostki / skarbu | po 1 wzorze | jak awers | jak awers |
+| Rewers karty | 5 wzorów: Przymierze, Horda, strażnicy (granatowy), strażnicy do pojedynku (błękitny), skarby — `docs/grafika/karty/rewers_*.png` | jak awers | jak awers |
 | Kropla obrażeń, dwustronna („1” / „2” i „3” / „5”, druk 3D) | 16 (6 + 10) | kropla **15,6 × 20 mm**, grubość 3 mm | **255 × 307 px** |
 | Znaczniki stanu (zużyta zdolność, Wzmocnienie Ataku, +3 Ataku, Żywotność, Ochrona, Unieruchomienie, Spowolnienie, Klątwa, Przyspieszenie; druk 3D) | 19 | koło **Ø 23 mm**, grubość 4 mm | **343 × 343 px** |
 | Tor rund (druk 3D) | 1 | sześciokąt **150 × 144 mm**, grubość 8 mm, 24 gniazda | **1843 × 1772 px** |

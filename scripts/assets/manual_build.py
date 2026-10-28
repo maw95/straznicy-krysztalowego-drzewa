@@ -146,7 +146,7 @@ sheet(f'''<div class="eyebrow">Rozdział 1</div><h1>Co jest w pudełku</h1>
  ['<b>Siedliska strażników</b>', '3', 'Gryf (zielony rewers), Cyklop i Hydra (bordowy)'],
  ['<b>Drzewo i bazy</b>', '3', 'Kryształowe Drzewo, baza Przymierza, baza Hordy'],
  ['<b>Plansza areny</b> (dwustronna, A3)', '1', 'arena Przymierza i arena Hordy, po 7 przeszkód'],
- ['<b>Karty jednostek</b> (8 × 12 cm)', '15', 'Przymierze: 3 bohaterów, 3 pomocników · Horda: 3 wodzów, 3 popleczników · 3 strażników'],
+ ['<b>Karty jednostek</b> (8 × 12 cm)', '18', 'Przymierze 6 · Horda 6 · strażnicy 3 + 3 do pojedynku (błękitny rewers)'],
  ['<b>Figurki</b>', '15', 'po jednej na każdą jednostkę, podstawka 3 cm'],
  ['<b>Karty skarbów</b> (6,3 × 8,8 cm)', '20', '6 Eliksirów Odrodzenia + po 1 z 14 pozostałych skarbów'],
  ['<b>Kryształy</b>', '3', 'wys. 1,6 cm'],
@@ -231,7 +231,8 @@ sheet(f'''<div class="eyebrow">Rozdział 2 · Kto jest kim</div><h1>Mroczna Hord
 sheet(f'''<div class="eyebrow">Rozdział 2 · Kto jest kim</div><h1>Strażnicy kryształów</h1>
 <p class="flavor" style="text-align:center;margin-bottom:4mm">Niebieski herb z kryształem. Ani dobrzy, ani źli — po prostu nie oddają tego, co do nich trafiło.</p>
 <div class="units" style="grid-template-columns:1fr">{units_html('Strażnicy kryształów').replace('<div class="units">', '').rsplit('</div>', 1)[0]}</div>
-<div class="paper-note" style="margin-top:5mm"><b>Liczba w nawiasie</b> przy Życiu strażnika to jego Życie w <b>pojedynku na planszy</b> (rozdział 9) — tam walczy sam przeciw jednemu bohaterowi, więc ma go mniej.</div>
+<div class="paper-note" style="margin-top:4mm"><b>Karty do pojedynku.</b> W pojedynku na planszy (rozdział 9) strażnik walczy kartą z <b>błękitnym rewersem</b>: mniej Życia i zdolność do walki jeden na jednego.</div>
+<div style="display:flex;justify-content:center;gap:6mm;margin-top:3mm">{''.join(f'<img src="assets/karty/{g}_pojedynek.jpg" alt="Karta do pojedynku: {FIGURE_NAMES[g]}" style="width:34mm">' for g in ('cyclops', 'griffin', 'hydra'))}</div>
 ''', cls='neutral', left='Rozdział 2', right='Jednostki', foot='Strażnicy kryształów')
 
 # 3 + 4. Winning and levels
@@ -372,7 +373,7 @@ sheet('''<div class="eyebrow">Rozdział 9 · poziom łatwy</div><h1>Pojedynek na
 <li>Walczą <b>tylko dwie jednostki</b>: bohater kontra bohater albo bohater kontra strażnik. Bez pomocników, bez areny, <b>bez ruchu</b>.</li>
 <li>Pierwszy uderza ten, kto ma większą Szybkość. Przy remisie — ten, kto się broni.</li>
 <li>Na zmianę zadajecie sobie ciosy równe Atakowi, aż ktoś padnie.</li>
-<li><b>Strażnik w pojedynku ma mniej Życia</b> — liczbę w nawiasie na jego karcie (około połowy).</li>
+<li><b>Strażnik walczy kartą z błękitnym rewersem</b> (rozdział 2): mniej Życia i zdolność do walki jeden na jednego. Na poziomie łatwym zdolności nie działają — liczy się tylko Życie z tej karty.</li>
 </ul>
 <div class="divider">✦</div>
 <div class="eyebrow">Rozdział 10</div><h2>Strażnicy kryształów</h2>

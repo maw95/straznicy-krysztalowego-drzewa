@@ -64,7 +64,7 @@ Liczby wystarczają na najbardziej wymagającą partię: bardzo długą mapę i 
   - **3 siedliska strażników**: Gryfa (zielony rewers), Cyklopa i Hydry (bordowy rewers);
   - **Kryształowe Drzewo** i **dwie bazy**: Przymierza i Hordy.
 - **Dwustronna plansza areny** (A3, składana na pół) — z jednej strony zielona arena Przymierza, z drugiej ognista arena Hordy. Na każdej stronie jest 7 przeszkód, a skrajne kolumny to pola startowe.
-- **15 kart jednostek** (8 × 12 cm): 6 Przymierza (3 bohaterów, 3 pomocników), 6 Hordy (3 wodzów, 3 popleczników) i 3 strażników.
+- **18 kart jednostek** (8 × 12 cm): 6 Przymierza (3 bohaterów, 3 pomocników), 6 Hordy (3 wodzów, 3 popleczników), 3 strażników (granatowy rewers) i 3 karty strażników do pojedynku (błękitny rewers, rozdział 9).
 - **15 figurek** — po jednej na każdą jednostkę (te same 15 postaci co na kartach). Każda stoi na podstawce 3 cm, która mieści się w polu areny i na kafelku mapy.
 - **20 kart skarbów** (6,3 × 8,8 cm): 6 Eliksirów Odrodzenia i po 1 z pozostałych 14 skarbów.
 - **3 kryształy** (wys. 1,6 cm).
@@ -155,17 +155,19 @@ Najcichszy sługa Hordy. Spada z ciemności, zanim ktokolwiek usłyszy szum skrz
 
 > *Niebieski herb z kryształem. Ani dobrzy, ani źli — po prostu nie oddają tego, co do nich trafiło.*
 
-**👁️ Cyklop Błyskotek** — strzelec · Ż 23 (w pojedynku 13) · A 2 · S 2
+**👁️ Cyklop Błyskotek** — strzelec · Ż 23 · A 2 · S 2
 Olbrzym z jaskini pełnej świecidełek. Kryształ Opieki uważa za najpiękniejszą błyskotkę na świecie i rzuca głazami w każdego, kto po nią sięgnie.
 **Miażdżący Głaz** — po każdym trafieniu odpycha cel o 1 pole dalej (jeśli to pole jest wolne).
 
-**🦅 Gryf Złodziej Skarbów** — latający · Ż 18 (w pojedynku 10) · A 3 · S 6
+**🦅 Gryf Złodziej Skarbów** — latający · Ż 18 · A 3 · S 6
 Kradnie wszystko, co błyszczy, a kryształ porwał prosto z powietrza. Atakuje z nieba i natychmiast wraca na swoje gniazdo.
 **Łupieżczy Nalot** — po każdym ataku może odlecieć o maks. 4 pola.
 
-**🐍 Hydra z Zatopionych Ruin** — wręcz · Ż 21 (w pojedynku 12) · A 2 · S 3
+**🐍 Hydra z Zatopionych Ruin** — wręcz · Ż 21 · A 2 · S 3
 Spała w zalanych ruinach, dopóki kryształ nie spadł jej prosto pod nos. Teraz pilnuje go wszystkimi głowami naraz.
 **Paszcze Otchłani** — każdym atakiem może trafić dwóch przeciwników stojących obok niej.
+
+W **pojedynku na planszy** strażnik walczy swoją drugą kartą, z **błękitnym rewersem** (zwykłe karty strażników mają granatowy): ma na niej mniej Życia i zdolność do walki jeden na jednego. **Cyklop** — Ż 14, *Kamienna Skóra*: każdy cios w Cyklopa zadaje o 1 mniej obrażeń. **Gryf** — Ż 10, *Złodziejski Szpon*: gdy zada obrażenia, odzyskuje 1 Ż. **Hydra** — Ż 12, *Odrastające Głowy*: na początku każdej swojej aktywacji odzyskuje 2 Ż.
 
 ---
 
@@ -341,7 +343,7 @@ Dokładne działanie zdolności, strzelanie z bliska i bardzo długie bitwy opis
 - Walczą **tylko dwie jednostki**: bohater kontra bohater albo bohater kontra strażnik. Bez pomocników, bez areny, **bez ruchu**.
 - Pierwszy uderza ten, kto ma większą Szybkość. Przy remisie — ten, kto się broni.
 - Na zmianę zadajecie sobie ciosy równe Atakowi, aż ktoś padnie.
-- **Strażnik w pojedynku ma mniej Życia** — liczbę w nawiasie na jego karcie (około połowy).
+- **Strażnik walczy kartą z błękitnym rewersem** (rozdział 2): mniej Życia i zdolność do walki jeden na jednego — Kamienna Skóra Cyklopa, Złodziejski Szpon Gryfa, Odrastające Głowy Hydry. Na poziomie łatwym zdolności nie działają: liczy się tylko Życie z tej karty.
 
 ---
 
@@ -520,7 +522,7 @@ W rywalizacji każda strona ma swoją trudność, a poziom Trudny nie istnieje. 
   - **Cyklop** strzela. Po każdym trafieniu odpycha cel o 1 pole dalej od siebie, jeśli to pole jest wolne i nie jest przeszkodą.
   - **Gryf** po każdym ataku może odlecieć na wolne pole w odległości do 4.
   - **Hydra** każdym atakiem może trafić dwóch wrogów stojących obok niej.
-  - W pojedynku nikt się nie rusza, więc Cyklop nie odpycha, a Gryf i Pegaz nie odlatują.
+  - W pojedynku nikt się nie rusza, więc Pegaz nie odlatuje, a strażnicy walczą kartami z błękitnym rewersem (ich zdolności z rozdziału 2 zamiast powyższych).
 - **Wskrzeszenie w bitwie.** Eliksir Odrodzenia użyty w bitwie stawia jednostkę z pełnym Życiem na wolnym polu waszej kolumny startowej.
 - **Bardzo długa bitwa.** Jeśli bitwa trwa 40 rund, kończy się: przegrywa strona z mniejszą sumą Życia jednostek na arenie (przy równej sumie — broniący się).
 
@@ -611,7 +613,7 @@ Bitwa trwa do utraty wszystkich jednostek przez jedną stronę. Po bitwie ocalal
 • **Horda nie podnosi kryształów.**
 • Bohater Przymierza nie odda kryształów Drzewu, dopóki stoi na nim bohater Hordy.
 • Gdy padnie ostatni bohater Przymierza, wygrywa Horda — także wtedy, gdy w tej samej bitwie padł ostatni bohater Hordy.
-• **Pojedynek na planszy:** tylko dwie jednostki, bez ruchu i pomocników. Pierwszy atakuje szybszy; przy remisie — broniący. Strażnik ma Życie podane w nawiasie na karcie.
+• **Pojedynek na planszy:** tylko dwie jednostki, bez ruchu i pomocników. Pierwszy atakuje szybszy; przy remisie — broniący. Strażnik walczy kartą z błękitnym rewersem.
 
 ---
 

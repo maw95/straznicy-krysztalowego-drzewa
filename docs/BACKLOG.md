@@ -8,24 +8,6 @@ porządki w kodzie (etapy 0–4 i resztki), wersja mobilna, zgłoszenia z 23.10 
 
 Szacunki kosztu to tokeny zużyte przez Claude w jednej sesji. Każdy punkt to osobny commit.
 
-- [ ] **1.6. Karty strażników do pojedynku 1 na 1 (błękitny rewers).** *Koszt: ok. 120–200 tys.*
-  - Autor dodał rewersy w `docs/grafika/karty/`: `rewers_straznicy_krysztalu.png` (granatowy — zwykli
-    strażnicy) i `rewers_straznicy_krysztalu_latwy.png` (błękitny), a także rewersy frakcji i skarbów.
-  - W wersji planszowej pojedynek na planszy (bez areny, `battle=board`, np. poziom Łatwy) to **3 osobne karty
-    strażników** z błękitnym rewersem: mniej Życia (dziś gra liczy je jako `guardianDuelHpShare` 0,55 Życia,
-    np. Hydra 21 → 12) i **inna zdolność**, przydatna w walce 1 na 1. Dzisiejsze zdolności (Miażdżący Głaz —
-    odepchnięcie, Łupieżczy Nalot — odlot po ataku, Paszcze Otchłani — dwa cele) działają tylko na arenie.
-  - Kroki: zaproponować 3 zdolności pojedynkowe (sprawdzić, jak działa pojedynek: `DuelView.tsx`, silnik),
-    pokazać autorowi przed wdrożeniem; wdrożyć w silniku i na kartach w grze (karta pojedynkowa zamiast zwykłej
-    w trybie bez areny); symulacje pojedynków (`make sim … BATTLE=board`, wszystkie poziomy) — ani za mocne,
-    ani za słabe względem dzisiejszych wyników; zapisać decyzję w `NOTATKI_DLA_AGENTA_PLANSZOWKI.md`.
-    Zmiana wyników bitew zmieni test złotych partii — aktualizować świadomie i napisać to w commicie.
-  - [x] Silnik: zdolności, karty pojedynkowe, symulacje, decyzja w notatkach (§12).
-  - [x] Karty w grze: `UnitCard duel` w pojedynku, w szczegółach jednostki i w „Zasadach → Jednostki”.
-  - Instrukcja i szablon: rozdział 1 (karty jednostek: 15 + 3 karty strażników z błękitnym rewersem), opis
-    strażników (rozdział 10) i pojedynku (rozdział 9), lista elementów i `WYMIARY_ELEMENTOW.md` (18 kart
-    jednostek), rewersy kart w instrukcji, jeśli są pokazane.
-
 - [ ] **1.7. Balans trybu pojedynków po poprawce bota.** *Koszt: ok. 40–80 tys.* Bot w pojedynku używa już
   Słonecznego Blasku, więc Przymierze z pojedynkami wygrywa ok. 75% zamiast 62% (kooperacja, średnia mapa).
   `make sim-tabele` dla `board`, porównać z celami poziomów (notatki §9 i dalej), zaproponować autorowi korektę.
