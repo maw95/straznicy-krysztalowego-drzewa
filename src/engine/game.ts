@@ -41,7 +41,7 @@ import { distance, parseKey, type HexKey } from './hex';
 import { generateMap, homeKey, mapNeighbors, revealAround, tileCost, treeKey } from './map';
 import { log } from './log';
 import { Rng } from './rng';
-import type { Action, BattleReport, BattleState, GameState, HeroState, Player, SetupOptions } from './types';
+import type { Action, BattleReport, BattleState, GameState, HeroState, ItemInstance, Player, SetupOptions } from './types';
 
 const other = (f: FactionId): FactionId => (f === 'dawn' ? 'horde' : 'dawn');
 
@@ -111,9 +111,7 @@ export function createGame(setup: SetupOptions): GameState {
   };
 
   pool.forEach((kind, i) => {
-    const id = `it${i + 1}`;
-    state.items[id] = { id, kind, owner: null, foundBy: null };
-    state.tiles[map.treasureHexes[i]].treasureId = id;
+    state.tiles[map.treasureHexes[i]].treasureId = newItem(state, kind).id;
   });
   // Treasures in hand from the start: the Przymierze on larger maps (MapVariant.startTreasures),
   // the Horde on some levels (rules.hordeStartTreasures). Other kinds than those already dealt;
@@ -132,11 +130,7 @@ export function createGame(setup: SetupOptions): GameState {
       kinds.push(k);
       if (k !== 'resurrection') dealt.add(k);
     }
-    for (const kind of kinds) {
-      const id = `it${Object.keys(state.items).length + 1}`;
-      state.items[id] = { id, kind, owner: faction, foundBy: null };
-      state.factions[faction].inventory.push(id);
-    }
+    for (const kind of kinds) giveItem(state, newItem(state, kind), faction, null);
   };
   give('dawn', variant.startTreasures);
   give('horde', setup.rules.hordeStartTreasures);
@@ -222,10 +216,7 @@ function draftPick(state: GameState, faction: FactionId, kind: ItemKind) {
   if (!d || !b || b.stage !== 'draft' || d.order[0] !== faction) throw new Error('Teraz nie wybiera ta frakcja.');
   if (!d.offer.includes(kind)) throw new Error('Tego skarbu nie ma wśród pokazanych.');
   d.deck.splice(d.deck.indexOf(kind), 1);
-  const id = `it${Object.keys(state.items).length + 1}`;
-  const hero = battleHeroOf(b, faction);
-  state.items[id] = { id, kind, owner: faction, foundBy: hero };
-  state.factions[faction].inventory.push(id);
+  giveItem(state, newItem(state, kind), faction, battleHeroOf(b, faction));
   log(state, 'item', `${FACTION_NAMES[faction]} wybiera skarb.`);
   log(state, 'item', `Wybrany skarb: ${ITEMS[kind].name}.`, faction);
   d.order.shift();
@@ -249,6 +240,22 @@ function finishArena(state: GameState) {
     state.battle = null;
     log(state, 'victory', 'Koniec gry: remis.');
   }
+}
+
+/**
+ * A new treasure card, owned by nobody yet. Ids follow creation order (it1, it2, …), and the order
+ * of state.items is the order bots look at treasures in: keep both when changing this.
+ */
+function newItem(state: GameState, kind: ItemKind): ItemInstance {
+  const id = `it${Object.keys(state.items).length + 1}`;
+  return (state.items[id] = { id, kind, owner: null, foundBy: null });
+}
+
+/** A treasure goes to a faction's shared inventory; `foundBy` is the hero who got it. */
+function giveItem(state: GameState, item: ItemInstance, faction: FactionId, foundBy: string | null) {
+  item.owner = faction;
+  item.foundBy = foundBy;
+  state.factions[faction].inventory.push(item.id);
 }
 
 function addHero(state: GameState, heroId: string, faction: FactionId, playerId: string | null) {
@@ -487,9 +494,7 @@ function arriveAt(state: GameState, hero: HeroState) {
   const tile = state.tiles[hero.pos];
   if (tile.treasureId) {
     const item = state.items[tile.treasureId];
-    item.owner = hero.faction;
-    item.foundBy = hero.id;
-    state.factions[hero.faction].inventory.push(item.id);
+    giveItem(state, item, hero.faction, hero.id);
     tile.treasureId = null;
     state.stats.treasuresCollected[hero.faction] += 1;
     log(state, 'item', `${UNITS[hero.id].name} znajduje skarb.`);
@@ -771,9 +776,7 @@ function guardianHoard(state: GameState, heroId: string) {
   const kind = rng.pick(left);
   state.rng = rng.state;
   const hero = state.heroes[heroId];
-  const id = `it${Object.keys(state.items).length + 1}`;
-  state.items[id] = { id, kind, owner: hero.faction, foundBy: hero.id };
-  state.factions[hero.faction].inventory.push(id);
+  giveItem(state, newItem(state, kind), hero.faction, hero.id);
   state.stats.treasuresCollected[hero.faction] += 1;
   log(state, 'item', `Strażnik zostawia swój skarb.`);
   log(state, 'item', `Skarb strażnika (${UNITS[hero.id].name}): ${ITEMS[kind].name}.`, hero.faction);
