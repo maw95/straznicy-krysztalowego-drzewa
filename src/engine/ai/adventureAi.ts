@@ -21,7 +21,7 @@ class Memo {
   private strengths = new Map<string, number>();
   private held = new Map<string, Set<HexKey>>();
   private dangers = new Map<string, Hex[]>();
-  private paths = new Map<string, Map<HexKey, PathResult>>();
+  private walks = new Map<string, Map<HexKey, PathResult>>();
 
   constructor(readonly state: GameState) {}
 
@@ -76,13 +76,44 @@ class Memo {
     return extra;
   }
 
-  /** shortestPaths, run once per decision for each start and kind of path (`kind` names the cost function). */
-  shortestPaths(from: HexKey, kind: string, costOf: (k: HexKey) => number | null): Map<HexKey, PathResult> {
+  /**
+   * Cheapest walks of `hero` from `from` (its own hex unless given) with walkCost(opts), worked out
+   * once per decision for each start and kind of walk (`kind` names the options).
+   */
+  paths(hero: HeroState, kind: string, opts: WalkOptions, from: HexKey = hero.pos): Map<HexKey, PathResult> {
     const k = `${from}|${kind}`;
-    let p = this.paths.get(k);
-    if (!p) this.paths.set(k, (p = shortestPaths(this.state.tiles, from, costOf)));
+    let p = this.walks.get(k);
+    if (!p) this.walks.set(k, (p = shortestPaths(this.state.tiles, from, walkCost(this, hero, opts))));
     return p;
   }
+}
+
+interface WalkOptions {
+  /** Hexes the hero means to reach: a guardian or an enemy standing there is the point, and they cost no danger. */
+  goals?: Set<HexKey>;
+  /** Crystal hexes still guarded are closed (unless they are goals). Off for a plain distance. */
+  avoidGuardians?: boolean;
+  /** Hexes of enemy heroes the hero would rather not fight are closed (unless they are goals). */
+  avoid?: (k: HexKey) => boolean;
+  /** Hexes near stronger enemies cost extra (Memo.dangerCost), goals excepted. */
+  danger?: boolean;
+}
+
+/**
+ * What a step onto each hex costs `hero` in a bot's path search: hexes held by allies are closed,
+ * hidden ones count as passable (knownCost), the rest as `opts` says.
+ */
+function walkCost(memo: Memo, hero: HeroState, opts: WalkOptions): (k: HexKey) => number | null {
+  const state = memo.state;
+  return (k) => {
+    if (memo.heldByAlly(hero, k)) return null;
+    const goal = opts.goals?.has(k) ?? false;
+    if (!goal && opts.avoid?.(k)) return null;
+    const t = state.tiles[k];
+    if (opts.avoidGuardians && !goal && t.crystalId && state.crystals[t.crystalId].guardian) return null;
+    const c = knownCost(state, k);
+    return c === null || goal || !opts.danger ? c : c + memo.dangerCost(hero, k);
+  };
 }
 
 /** Horde: on the Tree, or next to it while another Horde hero holds the Tree. */
@@ -135,12 +166,7 @@ function evilAction(state: GameState, memo: Memo): Action {
   }
   // 2–4. Head for the closer of: nearest good hero, the Tree. Ties go to the hero.
   const goodSpots = new Set(goodHeroes.map((g) => g.pos));
-  const paths = shortestPaths(state.tiles, hero.pos, (k) => {
-    const t = state.tiles[k];
-    if (t.crystalId && state.crystals[t.crystalId].guardian) return null;
-    if (memo.heldByAlly(hero, k)) return null;
-    return knownCost(state, k);
-  });
+  const paths = memo.paths(hero, 'evil', { avoidGuardians: true });
   let target: { cost: number; path: HexKey[] } | null = null;
   for (const spot of goodSpots) {
     const p = paths.get(spot);
@@ -213,16 +239,11 @@ function goodAction(state: GameState, memo: Memo): Action {
   const enemyAt = (k: HexKey) => enemies.find((e) => e.pos === k);
   const roundsLeft = state.roundLimit - state.round + 1;
   // Paths: fights are avoided unless the hex is a goal; hexes next to stronger enemies cost extra.
-  const pathsFor = (goals: Set<HexKey>) =>
-    memo.shortestPaths(hero.pos, `goals ${[...goals].sort().join(' ')}`, (k) => {
-      if (memo.heldByAlly(hero, k)) return null;
-      const foe = enemyAt(k);
-      if (foe && !goals.has(k) && !strongEnough(foe)) return null;
-      const t = state.tiles[k];
-      if (t.crystalId && state.crystals[t.crystalId].guardian && !goals.has(k)) return null;
-      const c = knownCost(state, k);
-      return c === null ? null : c + (goals.has(k) || desperate ? 0 : memo.dangerCost(hero, k));
-    });
+  const avoid = (k: HexKey) => {
+    const foe = enemyAt(k);
+    return !!foe && !strongEnough(foe);
+  };
+  const pathsFor = (goals: Set<HexKey>) => memo.paths(hero, `goals ${[...goals].sort().join(' ')}`, { goals, avoid, avoidGuardians: true, danger: !desperate });
   const go = (goals: Set<HexKey>, extra: (k: HexKey) => number = () => 0): Action | null => {
     const paths = pathsFor(goals);
     let best: { cost: number; path: HexKey[] } | null = null;
@@ -242,8 +263,8 @@ function goodAction(state: GameState, memo: Memo): Action {
     return null;
   };
 
-  const treeCostFrom = (from: HexKey) =>
-    memo.shortestPaths(from, 'tree', (k) => (memo.heldByAlly(hero, k) && k !== hero.pos ? null : knownCost(state, k))).get(treeK)?.cost ?? Infinity;
+  // How far the Tree is from a hex, by the hero's knowledge of the map (anyone's distance, for comparing).
+  const treeCostFrom = (from: HexKey) => memo.paths(hero, 'plain', {}, from).get(treeK)?.cost ?? Infinity;
   const treeEta = (h: HeroState) => Math.ceil(treeCostFrom(h.pos) / mp);
 
   // 1. The Horde's ritual must be broken whatever the odds. A carrier leaves it to an ally
@@ -388,15 +409,10 @@ function hordeBotAction(state: GameState, memo: Memo): Action {
   if (carriers.length) {
     if (hero.pos === tree) return { type: 'endTurn' };
     const treeHeld = heroesAt(state, tree).some((h) => h.faction === hero.faction);
-    const toTree = shortestPaths(state.tiles, hero.pos, (k) => (memo.heldByAlly(hero, k) ? null : knownCost(state, k))).get(tree);
+    const toTree = memo.paths(hero, 'plain', {}).get(tree);
     const carrierGap = Math.min(...carriers.map((c) => distance(parseKey(c.pos), parseKey(tree))));
     const goal = !treeHeld && toTree && toTree.cost <= carrierGap * 1.5 ? tree : carriers.sort((x, y) => distance(parseKey(x.pos), parseKey(hero.pos)) - distance(parseKey(y.pos), parseKey(hero.pos)))[0].pos;
-    const p = shortestPaths(state.tiles, hero.pos, (k) => {
-      const t = state.tiles[k];
-      if (t.crystalId && state.crystals[t.crystalId].guardian) return null;
-      if (memo.heldByAlly(hero, k)) return null;
-      return knownCost(state, k);
-    }).get(goal);
+    const p = memo.paths(hero, 'evil', { avoidGuardians: true }).get(goal);
     if (p && p.path.length > 1) return stepToward(state, p.path);
   }
 
@@ -405,13 +421,8 @@ function hordeBotAction(state: GameState, memo: Memo): Action {
   for (const k of treasureSpots(state)) goals.add(k);
   const spot = ritualSpot(state, hero) ?? tree;
   goals.add(spot);
-  const paths = shortestPaths(state.tiles, hero.pos, (k) => {
-    const t = state.tiles[k];
-    if (t.crystalId && state.crystals[t.crystalId].guardian) return null;
-    if (memo.heldByAlly(hero, k)) return null;
-    const c = knownCost(state, k);
-    return c === null ? null : c + (goals.has(k) ? 0 : memo.dangerCost(hero, k));
-  });
+  // (No goal is a guarded hex: no hero stands there, and treasures and the Tree are never put on one.)
+  const paths = memo.paths(hero, 'hunt', { goals, avoidGuardians: true, danger: true });
   let best: { cost: number; path: HexKey[] } | null = null;
   for (const g of goals) {
     const p = paths.get(g);
