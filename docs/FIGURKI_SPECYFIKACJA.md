@@ -112,7 +112,7 @@ Pozy i cechy wziąłem z ilustracji na kartach (`docs/grafika/karty`, `public/as
 | Kryształy | 3 | **8 × 7 × 16 mm** (graniastosłup sześciokątny 8 mm między rogami, 7 mm między bokami, wys. 16 mm), z ostrym czubkiem | druk z przezroczystej żywicy, najlepiej niebieskiej |
 | Znacznik rundy | 1 | **8 × 9,2 × 30 mm** (sześciokąt 8 mm między bokami, 9,2 mm między rogami), wys. **30 mm** | wchodzi w gniazda toru rund; wysoki, żeby łatwo go wyjąć z gniazda |
 | Tor rund | 1 | **150 × 144 × 8 mm**, 24 gniazda | wymiary z pliku STL autora (gra rysuje tor bez zmian) |
-| Okrągłe znaczniki stanu | 24 + 1 | koło **Ø 23 mm**, grubość **4 mm** | 24 dotychczasowe + 1 znacznik „+3 Ataku” |
+| Okrągłe znaczniki stanu | 22 + 1 | koło **Ø 23 mm**, grubość **4 mm** | 22 dotychczasowe + 1 znacznik „+3 Ataku” |
 | Krople obrażeń | 28 | **15,6 × 20 × 3 mm** | kształt kropli, liczba wypukła lub z naklejką |
 
 Figurki drukuje się z plików STL autora z podstawką 30 mm; pliki GLB w `public/modele/` służą tylko grze.

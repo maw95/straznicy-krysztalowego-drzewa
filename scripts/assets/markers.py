@@ -7,6 +7,7 @@ channel and named by their place (rows of 4, 3, 3, 3):
 The game gets the status markers in public/assets/markers/ (the damage drop there is the empty one,
 znacznik_obrazen_pusty.png, as the game writes the number itself); the rulebook gets all of them in
 docs/edytowalny_szablon_instrukcji/assets/znaczniki/.
+Newer markers are separate files (SEPARATE), scaled to the same size.
 Usage: python3 scripts/assets/markers.py
 """
 import os
@@ -25,6 +26,8 @@ ROWS = [
     ['shield', 'vitality', 'crystal'],
 ]
 STATUS = ['ability_used', 'rooted', 'slowed', 'cursed', 'attack_up', 'speed_up', 'shield', 'vitality']
+# name -> file in docs/grafika/ikony/
+SEPARATE = {'attack_3': 'znacznik_+3_ataku.png'}
 GRID = 4  # pixels per cell when looking for pieces
 
 
@@ -97,6 +100,9 @@ if __name__ == '__main__':
         im.save(os.path.join(MANUAL, f'{name}.png'), optimize=True)
         if name in STATUS:
             im.save(os.path.join(OUT, f'{name}.png'), optimize=True)
+    for name, file in SEPARATE.items():
+        im = fit(Image.open(os.path.join(os.path.dirname(SRC), file)).convert('RGBA'))
+        im.save(os.path.join(MANUAL, f'{name}.png'), optimize=True)
     drop = fit(Image.open(EMPTY_DROP).convert('RGBA'))
     drop.save(os.path.join(OUT, 'damage_empty.png'), optimize=True)
     print('ok ->', OUT, '+', MANUAL)

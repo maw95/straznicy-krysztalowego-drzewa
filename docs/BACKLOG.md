@@ -32,9 +32,7 @@ punkt to osobny commit; najtańsza kolejność: 1.5 → 1.4 → 1.3 → 1.2 → 
     Dziś portrety Hordy pochodzą z arkusza `portrety_mroczna_horda.png` — przejść na osobne pliki, przyciąć
     i zmniejszyć jak pozostałe. Sprawdzić w grze (karta, pasek, okno szczegółów, wybór bohatera) i podmienić
     w instrukcji i szablonie.
-- [ ] **1.4. Instrukcja: lista elementów w pudełku z liczbami.** *Koszt: ok. 15–25 tys. tokenów.*
-  - Rozdział 1 instrukcji i szablon: dodać znacznik „+3 Ataku” (ile sztuk — do ustalenia, prawdopodobnie 1),
-    wymiary z punktu 1.5 tam, gdzie pomagają; zgodność z tabelą w `docs/WYMIARY_ELEMENTOW.md`.
+
 ## 2. Figurki 3D — drobne
 
 - **Goblin Szaman** waży 6,4 MB: jego model ma osobne wierzchołki dla prawie każdego trójkąta, więc upraszczanie

@@ -26,7 +26,7 @@ więc wersja fizyczna i komputerowa mają te same pola.
 | Karta skarbu | 20 | **63 × 88 mm** (standardowa karta do gry) | **815 × 1110 px** |
 | Rewers karty jednostki / skarbu | po 1 wzorze | jak awers | jak awers |
 | Kropla obrażeń („5”, „3”, „2”, „1”, druk 3D) | 28 | kropla **15,6 × 20 mm**, grubość 3 mm | **255 × 307 px** |
-| Znaczniki stanu (zużyta zdolność, Wzmocnienie Ataku, +3 Ataku, Żywotność, Ochrona, Unieruchomienie, Spowolnienie, Klątwa, Przyspieszenie; druk 3D) | 25 | koło **Ø 23 mm**, grubość 4 mm | **343 × 343 px** |
+| Znaczniki stanu (zużyta zdolność, Wzmocnienie Ataku, +3 Ataku, Żywotność, Ochrona, Unieruchomienie, Spowolnienie, Klątwa, Przyspieszenie; druk 3D) | 23 | koło **Ø 23 mm**, grubość 4 mm | **343 × 343 px** |
 | Tor rund (druk 3D) | 1 | sześciokąt **150 × 144 mm**, grubość 8 mm, 24 gniazda | **1843 × 1772 px** |
 | Kryształowy znacznik rundy (druk 3D) | 1 | graniastosłup sześciokątny **8 × 9,2 mm**, wys. **30 mm** | — |
 | Kryształy (druk 3D) | 3 | graniastosłup sześciokątny **8 × 7 mm**, wys. **16 mm** | — |

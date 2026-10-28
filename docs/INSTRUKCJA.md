@@ -57,22 +57,23 @@ Wybierz stronę. Drzewo czeka.
 
 Liczby wystarczają na najbardziej wymagającą partię: bardzo długą mapę i bitwę 3 na 3.
 
-- **Kafelki mapy — 121:**
+- **Kafelki mapy — 121** (sześciokąty 5 cm):
   - **50 kafelków terenu Przymierza** z zielonym rewersem: po 7 z każdego z 7 rodzajów (Polana, Las, Rzeka, Most, Wzgórza, Góry, Przepaść) i 1 dodatkowa Polana;
   - **49 kafelków terenu Hordy** z bordowym rewersem: po 7 z każdego z 7 rodzajów (Spalona Ziemia, Jałowa Równina, Mroczne Bagno, Mroczna Jaskinia, Ponure Ruiny, Martwy Gąszcz, Trujące Ciernie);
   - **16 kafelków skarbów**: 8 z zielonym i 8 z bordowym rewersem;
   - **3 siedliska strażników**: Gryfa (zielony rewers), Cyklopa i Hydry (bordowy rewers);
   - **Kryształowe Drzewo** i **dwie bazy**: Przymierza i Hordy.
-- **Dwustronna plansza areny** — z jednej strony zielona arena Przymierza, z drugiej ognista arena Hordy. Na każdej stronie jest 7 przeszkód, a skrajne kolumny to pola startowe.
-- **15 kart jednostek**: 6 Przymierza (3 bohaterów, 3 pomocników), 6 Hordy (3 wodzów, 3 popleczników) i 3 strażników.
-- **15 figurek** — po jednej na każdą jednostkę (te same 15 postaci co na kartach).
-- **20 kart skarbów**: 6 Eliksirów Odrodzenia i po 1 z pozostałych 14 skarbów.
-- **3 kryształy**.
-- **Tor rund** — sześciokątna tablica z Drzewem pośrodku i 24 gniazdami — oraz **kryształowy znacznik rundy**.
-- **Znaczniki** (wystarczą na jedną bitwę):
+- **Dwustronna plansza areny** (A3, składana na pół) — z jednej strony zielona arena Przymierza, z drugiej ognista arena Hordy. Na każdej stronie jest 7 przeszkód, a skrajne kolumny to pola startowe.
+- **15 kart jednostek** (8 × 12 cm): 6 Przymierza (3 bohaterów, 3 pomocników), 6 Hordy (3 wodzów, 3 popleczników) i 3 strażników.
+- **15 figurek** — po jednej na każdą jednostkę (te same 15 postaci co na kartach). Każda stoi na podstawce 3 cm, która mieści się w polu areny i na kafelku mapy.
+- **20 kart skarbów** (6,3 × 8,8 cm): 6 Eliksirów Odrodzenia i po 1 z pozostałych 14 skarbów.
+- **3 kryształy** (wys. 1,6 cm).
+- **Tor rund** — sześciokątna tablica (15 cm) z Drzewem pośrodku i 24 gniazdami — oraz **kryształowy znacznik rundy** (wys. 3 cm, łatwo go wyjąć z gniazda).
+- **Znaczniki** (wystarczą na jedną bitwę; okrągłe mają 2,3 cm):
   - **krople obrażeń**: 10 × „5”, 6 × „3”, 6 × „2”, 6 × „1”;
   - **zużyta zdolność**: 6;
   - **Wzmocnienie Ataku**: 6; **Żywotność (+4 Ż)**: 4; **Ochrona**: 2;
+  - **+3 Ataku** (Złoty Smok po Słonecznym Blasku): 1;
   - **Unieruchomienie**, **Spowolnienie (−2 S)**, **Klątwa (−1 A)**, **Przyspieszenie (+3 S)**: po 1.
 - **Kość** −1 / 0 / +1 — tylko do utrudnienia „Rzut kością” (rozdział 13).
 

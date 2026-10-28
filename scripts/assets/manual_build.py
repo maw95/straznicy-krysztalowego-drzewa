@@ -142,15 +142,15 @@ sheet(f'''<div class="eyebrow">Rozdział 1</div><h1>Co jest w pudełku</h1>
 {table([['Element', 'Ile', 'Szczegóły'],
  ['<b>Kafelki terenu Przymierza</b> (zielony rewers)', '50', 'po 7 z każdego z 7 rodzajów + 1 dodatkowa Polana'],
  ['<b>Kafelki terenu Hordy</b> (bordowy rewers)', '49', 'po 7 z każdego z 7 rodzajów'],
- ['<b>Kafelki skarbów</b>', '16', '8 z zielonym i 8 z bordowym rewersem'],
+ ['<b>Kafelki skarbów</b>', '16', '8 z zielonym i 8 z bordowym rewersem; wszystkie kafelki mają 5 cm'],
  ['<b>Siedliska strażników</b>', '3', 'Gryf (zielony rewers), Cyklop i Hydra (bordowy)'],
  ['<b>Drzewo i bazy</b>', '3', 'Kryształowe Drzewo, baza Przymierza, baza Hordy'],
- ['<b>Plansza areny</b> (dwustronna)', '1', 'arena Przymierza i arena Hordy, po 7 przeszkód'],
- ['<b>Karty jednostek</b>', '15', 'Przymierze: 3 bohaterów, 3 pomocników · Horda: 3 wodzów, 3 popleczników · 3 strażników'],
- ['<b>Figurki</b>', '15', 'po jednej na każdą jednostkę'],
- ['<b>Karty skarbów</b>', '20', '6 Eliksirów Odrodzenia + po 1 z 14 pozostałych skarbów'],
- ['<b>Kryształy</b>', '3', ''],
- ['<b>Tor rund</b> i <b>znacznik rundy</b>', '1 + 1', 'tablica z 24 gniazdami i kryształowy znacznik'],
+ ['<b>Plansza areny</b> (dwustronna, A3)', '1', 'arena Przymierza i arena Hordy, po 7 przeszkód'],
+ ['<b>Karty jednostek</b> (8 × 12 cm)', '15', 'Przymierze: 3 bohaterów, 3 pomocników · Horda: 3 wodzów, 3 popleczników · 3 strażników'],
+ ['<b>Figurki</b>', '15', 'po jednej na każdą jednostkę, podstawka 3 cm'],
+ ['<b>Karty skarbów</b> (6,3 × 8,8 cm)', '20', '6 Eliksirów Odrodzenia + po 1 z 14 pozostałych skarbów'],
+ ['<b>Kryształy</b>', '3', 'wys. 1,6 cm'],
+ ['<b>Tor rund</b> i <b>znacznik rundy</b>', '1 + 1', 'tablica 15 cm z 24 gniazdami, znacznik wys. 3 cm'],
  ['<b>Kość</b> −1 / 0 / +1', '1', 'tylko do utrudnienia „Rzut kością” (rozdział 13)']], 'table')}
 <div class="banner" style="margin-top:4mm">Znaczniki</div>
 <p class="fine" style="text-align:center;margin:-2mm 0 2mm">Tyle wystarczy na najbardziej zaciętą bitwę.</p>
@@ -161,6 +161,7 @@ sheet(f'''<div class="eyebrow">Rozdział 1</div><h1>Co jest w pudełku</h1>
 <figure><img src="assets/znaczniki/damage_1.png" alt=""><figcaption>kropla „1” × 6</figcaption></figure>
 <figure><img src="assets/znaczniki/ability_used.png" alt=""><figcaption>zużyta zdolność × 6</figcaption></figure>
 <figure><img src="assets/znaczniki/attack_up.png" alt=""><figcaption>Wzmocnienie Ataku × 6</figcaption></figure>
+<figure><img src="assets/znaczniki/attack_3.png" alt=""><figcaption>+3 Ataku × 1</figcaption></figure>
 <figure><img src="assets/znaczniki/vitality.png" alt=""><figcaption>Żywotność × 4</figcaption></figure>
 <figure><img src="assets/znaczniki/shield.png" alt=""><figcaption>Ochrona × 2</figcaption></figure>
 <figure><img src="assets/znaczniki/rooted.png" alt=""><figcaption>Unieruchomienie × 1</figcaption></figure>
