@@ -27,6 +27,41 @@ import type { ItemKind } from '../data';
 
 const dist = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));
 
+/** The battle bot's judgement in numbers (tuned with simulations; changing one changes the games). */
+const AI_TUNING = {
+  /** A shooter's reach when weighing danger: anywhere on the arena. */
+  rangedReach: 99,
+  /** Caution fades over this many battle rounds, so nobody kites forever. */
+  cautionRounds: 6,
+  /** Bonus for using Splątane Korzenie or Złowroga Klątwa with an attack. */
+  debuffBonus: 1.5,
+  /** How much a shooter and a melee unit mind the danger of the cell they attack from. */
+  attackRiskRanged: 3,
+  attackRiskMelee: 1.5,
+  /** A shooter attacking with an enemy next to it. */
+  rangedCrowded: 2,
+  /** Where a unit that does not attack stands: shooters this far from the nearest enemy, melee as close as it gets. */
+  rangedDistance: 4,
+  rangedDistanceWeight: 0.4,
+  meleeClosing: 0.6,
+  /** How much a shooter and a melee unit mind danger when only moving. */
+  moveRiskRanged: 2.5,
+  moveRiskMelee: 1,
+  /** A blow that kills: its base score, more for a leader. */
+  killScore: 12,
+  killLeader: 8,
+  /** A blow that does not kill: damage counts this much more on a leader, plus the target's wounds. */
+  leaderDamage: 1.3,
+  woundWeight: 0.15,
+  /** Choosing supports: Atak weighs this much against Życie, and a shooter gets a bonus. */
+  supportAttackWeight: 1.5,
+  supportRangedBonus: 2,
+  /** Wielki Eliksir Uzdrowienia: drunk by a unit missing at least this much Życie and down to half. */
+  healMissing: 4,
+  /** Tarcza Strażnika: raised by a hero down to this much Życie. */
+  shieldHp: 5,
+};
+
 export function chooseSupports(state: GameState, faction: FactionId): Action {
   const pool = [...state.factions[faction].supportsAlive];
   const automaton = state.setup.mode === 'coop' && faction === 'horde';
@@ -73,7 +108,7 @@ function hashPick(state: GameState, id: string): number {
 
 function supportValue(id: string): number {
   const d = UNITS[id];
-  return d.hp + d.attack * 1.5 + (d.attackType === 'ranged' ? 2 : 0);
+  return d.hp + d.attack * AI_TUNING.supportAttackWeight + (d.attackType === 'ranged' ? AI_TUNING.supportRangedBonus : 0);
 }
 
 /** Where `u`'s enemies stand, how far they reach next round and how hard they hit. */
@@ -84,7 +119,7 @@ interface Threat {
 }
 
 function threatsTo(state: GameState, u: BattleUnit): Threat[] {
-  return enemiesOf(state.battle!, u).map((e) => ({ pos: e.pos!, reach: unitSpeed(e) + (UNITS[e.defId].attackType === 'ranged' ? 99 : 1), attack: unitAttackBase(e) }));
+  return enemiesOf(state.battle!, u).map((e) => ({ pos: e.pos!, reach: unitSpeed(e) + (UNITS[e.defId].attackType === 'ranged' ? AI_TUNING.rangedReach : 1), attack: unitAttackBase(e) }));
 }
 
 /** Danger of standing on `cell`: how much damage enemies could deal there next round. */
@@ -111,7 +146,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   const ranged = UNITS[u.defId].attackType === 'ranged';
   const threats = threatsTo(state, u);
   // Caution fades as the battle drags on, so nobody kites forever.
-  const caution = Math.max(0, 1 - (b.round - 1) / 6);
+  const caution = Math.max(0, 1 - (b.round - 1) / AI_TUNING.cautionRounds);
   let best: Plan = { moveTo: null, target: null, second: null, useAbility: false, score: -Infinity };
   for (const [cell, steps] of options) {
     const moved = act.movedDistance + steps;
@@ -131,16 +166,16 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
           second = targets.filter((x) => x.id !== t.id && dist(x.pos!, cell) === 1).sort((x, y) => scoreHit(y, dmg) - scoreHit(x, dmg))[0] ?? null;
           if (second) score += scoreHit(second, dmg);
         }
-        if (useAbility && ['entanglingRoots', 'curse'].includes(abilityOf(u))) score += 1.5;
-        score -= risk * (ranged ? 3 : 1.5);
-        if (ranged && targets.some((x) => dist(x.pos!, cell) === 1)) score -= 2;
+        if (useAbility && ['entanglingRoots', 'curse'].includes(abilityOf(u))) score += AI_TUNING.debuffBonus;
+        score -= risk * (ranged ? AI_TUNING.attackRiskRanged : AI_TUNING.attackRiskMelee);
+        if (ranged && targets.some((x) => dist(x.pos!, cell) === 1)) score -= AI_TUNING.rangedCrowded;
         if (score > best.score) best = { moveTo: cell === u.pos ? null : cell, target: t, second, useAbility, score };
       }
     }
     // Positional value when not attacking from this cell.
     const nearest = Math.min(...enemies.map((e) => dist(e.pos!, cell)));
-    let pos = ranged ? -Math.abs(nearest - 4) * 0.4 : -nearest * 0.6;
-    pos -= risk * (ranged ? 2.5 : 1);
+    let pos = ranged ? -Math.abs(nearest - AI_TUNING.rangedDistance) * AI_TUNING.rangedDistanceWeight : -nearest * AI_TUNING.meleeClosing;
+    pos -= risk * (ranged ? AI_TUNING.moveRiskRanged : AI_TUNING.moveRiskMelee);
     if (pos > best.score) best = { moveTo: cell === u.pos ? null : cell, target: null, second: null, useAbility: false, score: pos };
   }
   return best;
@@ -154,8 +189,8 @@ function abilityChoices(state: GameState, u: BattleUnit): boolean[] {
 
 function scoreHit(t: BattleUnit, dmg: number): number {
   const isLeader = UNITS[t.defId].kind !== 'support';
-  if (dmg >= t.hp) return 12 + (isLeader ? 8 : 0) + UNITS[t.defId].attack;
-  return dmg * (isLeader ? 1.3 : 1) + (t.maxHp - t.hp) * 0.15;
+  if (dmg >= t.hp) return AI_TUNING.killScore + (isLeader ? AI_TUNING.killLeader : 0) + UNITS[t.defId].attack;
+  return dmg * (isLeader ? AI_TUNING.leaderDamage : 1) + (t.maxHp - t.hp) * AI_TUNING.woundWeight;
 }
 
 function freeAbility(state: GameState, u: BattleUnit): Action | null {
@@ -196,7 +231,7 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
         break;
       }
       case 'heal': {
-        const t = own.find((x) => x.maxHp - x.hp >= 4 && x.hp <= x.maxHp / 2);
+        const t = own.find((x) => x.maxHp - x.hp >= AI_TUNING.healMissing && x.hp <= x.maxHp / 2);
         if (t) return { type: 'battleItem', itemId: item.id, targetId: t.id };
         break;
       }
@@ -220,7 +255,7 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
         if (UNITS[u.defId].kind === 'hero' && b.round === 1) return { type: 'battleItem', itemId: item.id, targetId: u.id };
         break;
       case 'shield':
-        if (UNITS[u.defId].kind === 'hero' && u.hp <= 5) return { type: 'battleItem', itemId: item.id, targetId: u.id };
+        if (UNITS[u.defId].kind === 'hero' && u.hp <= AI_TUNING.shieldHp) return { type: 'battleItem', itemId: item.id, targetId: u.id };
         break;
       case 'boots':
         // Arena only: the coop automaton keeps to the rulebook's list of treasures it uses.

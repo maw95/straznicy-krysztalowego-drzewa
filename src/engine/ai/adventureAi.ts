@@ -7,6 +7,36 @@ import { mapNeighbors, shortestPaths, tileCost, treeKey, type PathResult } from 
 import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, livingHeroes, other, reviveSpots, ritualFormed, ritualSpot } from '../game';
 import type { Action, GameState, HeroState } from '../types';
 
+/** The adventure bots' judgement in numbers (tuned with simulations; changing one changes the games). */
+const AI_TUNING = {
+  /** Strength ratio needed to attack an enemy hero, in arena battles and in duels on the board (see huntRatio). */
+  huntRatioArena: 1.1,
+  huntRatioDuel: 1.6,
+  /** An enemy this much stronger (ratio below it) is one to keep away from. */
+  avoidRatio: 0.85,
+  /** Extra path cost next to such an enemy, and two steps from it. */
+  dangerNext: 4,
+  dangerTwoSteps: 2,
+  /** Shooters count this much more in a team's attack (they hit from afar). */
+  rangedAttack: 1.3,
+  /** Choosing the best supports: Atak weighs this much against Życie, and a shooter gets a bonus. */
+  supportAttackWeight: 1.5,
+  supportRangedBonus: 2,
+  /** Share of the round limit after which the Przymierze stops waiting (isDesperate). */
+  desperateAfter: 0.75,
+  /** Przymierze: treasures within this many hexes are worth a detour (1 when desperate), at this extra cost. */
+  treasureDetour: 4,
+  treasureDetourCost: 1.5,
+  /** Exploring: weight of the hidden hexes where a lair may be, cost of a frontier hex an ally is nearer to, and a treasure's score. */
+  lairWeight: 0.6,
+  crowdCost: 3,
+  treasureFrontier: 0.5,
+  /** Horde bot: it races a carrier to the Tree when its way there is at most this many times the carrier's distance. */
+  raceToTree: 1.5,
+  /** Horde bot: the Tree counts this much further away than it is (it prefers hunting). */
+  treeExtra: 2,
+};
+
 function knownCost(state: GameState, k: HexKey): number | null {
   const t = state.tiles[k];
   // Hidden hexes are assumed passable at cost 1 (spec 7: the AI knows only revealed tiles).
@@ -62,7 +92,7 @@ class Memo {
     let near = this.dangers.get(hero.id);
     if (!near) {
       near = Object.values(this.state.heroes)
-        .filter((e) => e.alive && e.faction !== hero.faction && this.ratio(hero, e) < 0.85)
+        .filter((e) => e.alive && e.faction !== hero.faction && this.ratio(hero, e) < AI_TUNING.avoidRatio)
         .map((e) => parseKey(e.pos));
       this.dangers.set(hero.id, near);
     }
@@ -70,8 +100,8 @@ class Memo {
     const at = parseKey(k);
     for (const e of near) {
       const d = distance(e, at);
-      if (d <= 1) extra = Math.max(extra, 4);
-      else if (d === 2) extra = Math.max(extra, 2);
+      if (d <= 1) extra = Math.max(extra, AI_TUNING.dangerNext);
+      else if (d === 2) extra = Math.max(extra, AI_TUNING.dangerTwoSteps);
     }
     return extra;
   }
@@ -136,17 +166,17 @@ export function teamStrength(state: GameState, f: FactionId, heroId: string): nu
   const supports = state.setup.battleMode === 'board' ? [] : state.factions[f].supportsAlive.slice().sort((a, b) => unitValue(b) - unitValue(a)).slice(0, SUPPORTS_PER_BATTLE);
   const team = [heroId, ...supports];
   const hp = team.reduce((a, id) => a + UNITS[id].hp, 0);
-  const atk = team.reduce((a, id) => a + UNITS[id].attack * (UNITS[id].attackType === 'ranged' ? 1.3 : 1), 0);
+  const atk = team.reduce((a, id) => a + UNITS[id].attack * (UNITS[id].attackType === 'ranged' ? AI_TUNING.rangedAttack : 1), 0);
   return hp * atk;
 }
 
-const unitValue = (id: string) => UNITS[id].hp + UNITS[id].attack * 1.5 + (UNITS[id].attackType === 'ranged' ? 2 : 0);
+const unitValue = (id: string) => UNITS[id].hp + UNITS[id].attack * AI_TUNING.supportAttackWeight + (UNITS[id].attackType === 'ranged' ? AI_TUNING.supportRangedBonus : 0);
 
 /**
  * Player bots go after an enemy hero only with a clear edge: the defender acts first on
  * Speed ties, and in a duel on the board that first blow often decides.
  */
-const huntRatio = (state: GameState) => (state.setup.battleMode === 'board' ? 1.6 : 1.1);
+const huntRatio = (state: GameState) => (state.setup.battleMode === 'board' ? AI_TUNING.huntRatioDuel : AI_TUNING.huntRatioArena);
 
 // ------------------------------------------------------------------ evil
 
@@ -312,10 +342,10 @@ function goodAction(state: GameState, memo: Memo): Action {
     const mine = known.filter((c) => !allies.some((a) => dist(a, c.at) < dist(hero, c.at)));
     const targets = new Set((mine.length ? mine : known).map((c) => c.at));
     // Treasures (they strengthen the team in battle) when they are a short detour away.
-    const treasures = treasureSpots(state).filter((k) => dist(hero, k) <= (desperate ? 1 : 4));
+    const treasures = treasureSpots(state).filter((k) => dist(hero, k) <= (desperate ? 1 : AI_TUNING.treasureDetour));
     for (const k of treasures) targets.add(k);
     if (known.length) {
-      const a = go(targets, (k) => (treasures.includes(k) && !known.some((c) => c.at === k) ? 1.5 : 0));
+      const a = go(targets, (k) => (treasures.includes(k) && !known.some((c) => c.at === k) ? AI_TUNING.treasureDetourCost : 0));
       if (a) return a;
     }
 
@@ -334,10 +364,10 @@ function goodAction(state: GameState, memo: Memo): Action {
         if (!hidden.length) continue;
         frontier.add(t.key);
         const lairChance = hidden.reduce((a, n) => a + sideWeight[state.tiles[n].side], 0);
-        const crowd = allies.some((a) => dist(a, t.key) < dist(hero, t.key)) ? 3 : 0;
-        score.set(t.key, -lairChance * 0.6 + crowd);
+        const crowd = allies.some((a) => dist(a, t.key) < dist(hero, t.key)) ? AI_TUNING.crowdCost : 0;
+        score.set(t.key, -lairChance * AI_TUNING.lairWeight + crowd);
       }
-      for (const k of treasures) if (!frontier.has(k)) (frontier.add(k), score.set(k, 0.5));
+      for (const k of treasures) if (!frontier.has(k)) (frontier.add(k), score.set(k, AI_TUNING.treasureFrontier));
       const a = go(frontier, (k) => score.get(k) ?? 0);
       if (a) return a;
     }
@@ -411,7 +441,7 @@ function hordeBotAction(state: GameState, memo: Memo): Action {
     const treeHeld = heroesAt(state, tree).some((h) => h.faction === hero.faction);
     const toTree = memo.paths(hero, 'plain', {}).get(tree);
     const carrierGap = Math.min(...carriers.map((c) => distance(parseKey(c.pos), parseKey(tree))));
-    const goal = !treeHeld && toTree && toTree.cost <= carrierGap * 1.5 ? tree : carriers.sort((x, y) => distance(parseKey(x.pos), parseKey(hero.pos)) - distance(parseKey(y.pos), parseKey(hero.pos)))[0].pos;
+    const goal = !treeHeld && toTree && toTree.cost <= carrierGap * AI_TUNING.raceToTree ? tree : carriers.sort((x, y) => distance(parseKey(x.pos), parseKey(hero.pos)) - distance(parseKey(y.pos), parseKey(hero.pos)))[0].pos;
     const p = memo.paths(hero, 'evil', { avoidGuardians: true }).get(goal);
     if (p && p.path.length > 1) return stepToward(state, p.path);
   }
@@ -427,7 +457,7 @@ function hordeBotAction(state: GameState, memo: Memo): Action {
   for (const g of goals) {
     const p = paths.get(g);
     // Prefer hunting: the Tree counts as a little further away than it is.
-    const cost = p ? p.cost + (g === spot ? 2 : 0) : Infinity;
+    const cost = p ? p.cost + (g === spot ? AI_TUNING.treeExtra : 0) : Infinity;
     if (p && (!best || cost < best.cost)) best = { cost, path: p.path };
   }
   if (!best || best.path.length < 2) return { type: 'endTurn' };
@@ -438,7 +468,7 @@ function hordeBotAction(state: GameState, memo: Memo): Action {
 }
 
 /** The last quarter of the rounds: the Horde wins at the limit, so the Dawn stops waiting. */
-const isDesperate = (state: GameState) => state.round > state.roundLimit * 0.75;
+const isDesperate = (state: GameState) => state.round > state.roundLimit * AI_TUNING.desperateAfter;
 
 /** Guardians are tough but beatable with company: go with at least one support (alone only when time runs out). */
 function canFightGuardian(state: GameState): boolean {
