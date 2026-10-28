@@ -1067,4 +1067,4 @@ function targetHint(t: ItemTargeting): string {
   }
 }
 
-export const distanceBetween = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));
+const distanceBetween = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));

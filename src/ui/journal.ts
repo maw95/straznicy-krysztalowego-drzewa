@@ -68,9 +68,14 @@ function writeJournal(j: Journal) {
 }
 
 /** Records the current state of a game (called after every action and every bug report). */
+/** A test hook run (?steps=… fast-forwards a bot game): not real play, so no journal, intro or ranking. */
+export function isTestRun(): boolean {
+  return typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('steps');
+}
+
 export function recordGame(save: SaveFile, game: GameState) {
   // Test hooks (?steps=…) fast-forward bot games; they are not real play.
-  if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('steps')) return;
+  if (isTestRun()) return;
   const j = readJournal();
   const id = gameId(save.setup);
   const now = new Date().toISOString();

@@ -16,7 +16,7 @@ import { TreasureCard } from './TreasureCard';
 import { readAutosave, replay, writeAutosave, type BugReport, type SaveFile } from './saves';
 import { BugReportDialog } from './BugReportDialog';
 import { TesterDialog } from './TesterDialog';
-import { recordGame } from './journal';
+import { isTestRun, recordGame } from './journal';
 import { RulesDialog } from './RulesDialog';
 import { BattleSummary } from './BattleSummary';
 import { HoverCardLayer } from './hover';
@@ -55,12 +55,12 @@ export function App() {
   /** Arena draft at one screen: the side whose cards were last uncovered. */
   const [draftRevealed, setDraftRevealed] = useState<FactionId | null>(null);
   // The intro plays on the first launch (never in the ?steps= test games).
-  const [showIntro, setShowIntro] = useState(() => !introSeen() && !new URLSearchParams(window.location.search).has('steps'));
+  const [showIntro, setShowIntro] = useState(() => !introSeen() && !isTestRun());
   // The title screen opens each visit (its START is the click that allows full screen and music).
-  const [showTitle, setShowTitle] = useState(() => titlePending() && !new URLSearchParams(window.location.search).has('steps'));
+  const [showTitle, setShowTitle] = useState(() => titlePending() && !isTestRun());
   const [showReport, setShowReport] = useState(false);
   /** "Nowa wersja — co nowego": the releases since the version this player last saw (never in ?steps= test games). */
-  const [news, setNews] = useState(() => (new URLSearchParams(window.location.search).has('steps') ? null : pendingNews()));
+  const [news, setNews] = useState(() => (isTestRun() ? null : pendingNews()));
   useEffect(() => {
     if (!news) markNewsSeen();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -127,7 +127,7 @@ export function App() {
   useEffect(() => music.play(theme), [theme]);
 
   // Full screen on the first click or key press, unless switched off in the menu (never in ?steps= test games).
-  useAutoFullscreen(typeof window !== 'undefined' && !new URLSearchParams(window.location.search).has('steps'));
+  useAutoFullscreen(!isTestRun());
 
   // Test hook: ?seed=12&steps=40&mode=pvp starts a bot game and fast-forwards it.
   useEffect(() => {
@@ -431,7 +431,7 @@ export function App() {
   const [rankingNote, setRankingNote] = useState<string | null>(null);
   const scored = useRef<string | null>(null);
   useEffect(() => {
-    if (!game || isOnline || game.phase !== 'over' || !savedToken() || new URLSearchParams(window.location.search).has('steps')) return;
+    if (!game || isOnline || game.phase !== 'over' || !savedToken() || isTestRun()) return;
     const key = `${game.setup.seed}:${history.current.length}`;
     if (scored.current === key) return;
     scored.current = key;
