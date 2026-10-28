@@ -2,8 +2,8 @@
 // for player seats. Both only use information visible on the map.
 
 import { FACTION_SUPPORTS, UNITS, type FactionId } from '../data';
-import { distance, parseKey, type HexKey } from '../hex';
-import { mapNeighbors, shortestPaths, tileCost, treeKey } from '../map';
+import { distance, parseKey, type Hex, type HexKey } from '../hex';
+import { mapNeighbors, shortestPaths, tileCost, treeKey, type PathResult } from '../map';
 import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, reviveSpots, ritualFormed, ritualSpot } from '../game';
 import type { Action, GameState, HeroState } from '../types';
 
@@ -13,9 +13,76 @@ function knownCost(state: GameState, k: HexKey): number | null {
   return t.revealed ? tileCost(t) : 1;
 }
 
-/** One hero per hex: a hex held by an ally is closed to walk on (except the faction's own base). */
-function heldByAlly(state: GameState, hero: HeroState, k: HexKey): boolean {
-  return state.tiles[k].home !== hero.faction && heroesAt(state, k).some((h) => h.faction === hero.faction && h.id !== hero.id);
+/**
+ * What a bot works out again and again while it makes one decision. The state does not change
+ * while it decides, so the answers are kept for that decision (and thrown away after it).
+ */
+class Memo {
+  private strengths = new Map<string, number>();
+  private held = new Map<string, Set<HexKey>>();
+  private dangers = new Map<string, Hex[]>();
+  private paths = new Map<string, Map<HexKey, PathResult>>();
+
+  constructor(readonly state: GameState) {}
+
+  teamStrength(f: FactionId, heroId: string): number {
+    const k = `${f}:${heroId}`;
+    let v = this.strengths.get(k);
+    if (v === undefined) this.strengths.set(k, (v = teamStrength(this.state, f, heroId)));
+    return v;
+  }
+
+  /**
+   * Strength ratio of `a` against `b` (above 1: a is stronger). When several heroes share b's
+   * hex, the one the engine sends to fight (the one with the most Życie) is the one that counts.
+   */
+  ratio(a: HeroState, b: HeroState): number {
+    const defender = defenderAt(this.state, b.pos, a.faction) ?? b;
+    return this.teamStrength(a.faction, a.id) / Math.max(1, this.teamStrength(defender.faction, defender.id));
+  }
+
+  /** One hero per hex: a hex held by an ally is closed to walk on (except the faction's own base). */
+  heldByAlly(hero: HeroState, k: HexKey): boolean {
+    let held = this.held.get(hero.id);
+    if (!held) {
+      held = new Set();
+      for (const h of Object.values(this.state.heroes)) {
+        if (h.alive && !h.entering && h.faction === hero.faction && h.id !== hero.id && this.state.tiles[h.pos].home !== hero.faction) held.add(h.pos);
+      }
+      this.held.set(hero.id, held);
+    }
+    return held.has(k);
+  }
+
+  /**
+   * Extra path cost near enemies the hero would rather not meet: a hex next to a clearly
+   * stronger enemy, or two steps from it (it could walk up and attack next turn).
+   */
+  dangerCost(hero: HeroState, k: HexKey): number {
+    let near = this.dangers.get(hero.id);
+    if (!near) {
+      near = Object.values(this.state.heroes)
+        .filter((e) => e.alive && e.faction !== hero.faction && this.ratio(hero, e) < 0.85)
+        .map((e) => parseKey(e.pos));
+      this.dangers.set(hero.id, near);
+    }
+    let extra = 0;
+    const at = parseKey(k);
+    for (const e of near) {
+      const d = distance(e, at);
+      if (d <= 1) extra = Math.max(extra, 4);
+      else if (d === 2) extra = Math.max(extra, 2);
+    }
+    return extra;
+  }
+
+  /** shortestPaths, run once per decision for each start and kind of path (`kind` names the cost function). */
+  shortestPaths(from: HexKey, kind: string, costOf: (k: HexKey) => number | null): Map<HexKey, PathResult> {
+    const k = `${from}|${kind}`;
+    let p = this.paths.get(k);
+    if (!p) this.paths.set(k, (p = shortestPaths(this.state.tiles, from, costOf)));
+    return p;
+  }
 }
 
 /** Horde: on the Tree, or next to it while another Horde hero holds the Tree. */
@@ -50,33 +117,9 @@ const unitValue = (id: string) => UNITS[id].hp + UNITS[id].attack * 1.5 + (UNITS
  */
 const huntRatio = (state: GameState) => (state.setup.battleMode === 'board' ? 1.6 : 1.1);
 
-/**
- * Strength ratio of `a` against `b` (above 1: a is stronger). When several heroes share b's
- * hex, the one the engine sends to fight (the one with the most Życie) is the one that counts.
- */
-function ratio(state: GameState, a: HeroState, b: HeroState): number {
-  const defender = defenderAt(state, b.pos, a.faction) ?? b;
-  return teamStrength(state, a.faction, a.id) / Math.max(1, teamStrength(state, defender.faction, defender.id));
-}
-
-/**
- * Extra path cost near enemies the hero would rather not meet: a hex next to a clearly
- * stronger enemy, or two steps from it (it could walk up and attack next turn).
- */
-function dangerCost(state: GameState, hero: HeroState, k: HexKey): number {
-  let extra = 0;
-  for (const e of Object.values(state.heroes)) {
-    if (!e.alive || e.faction === hero.faction || ratio(state, hero, e) >= 0.85) continue;
-    const d = distance(parseKey(e.pos), parseKey(k));
-    if (d <= 1) extra = Math.max(extra, 4);
-    else if (d === 2) extra = Math.max(extra, 2);
-  }
-  return extra;
-}
-
 // ------------------------------------------------------------------ evil
 
-export function evilAction(state: GameState): Action {
+function evilAction(state: GameState, memo: Memo): Action {
   const hero = activeHero(state)!;
   // Treasures are shared by the faction, the automaton's included: it revives its fallen.
   const item = mapItemAction(state);
@@ -94,7 +137,7 @@ export function evilAction(state: GameState): Action {
   const paths = shortestPaths(state.tiles, hero.pos, (k) => {
     const t = state.tiles[k];
     if (t.crystalId && state.crystals[t.crystalId].guardian) return null;
-    if (heldByAlly(state, hero, k)) return null;
+    if (memo.heldByAlly(hero, k)) return null;
     return knownCost(state, k);
   });
   let target: { cost: number; path: HexKey[] } | null = null;
@@ -145,7 +188,7 @@ function treasureSpots(state: GameState): HexKey[] {
 
 // ------------------------------------------------------------------ good
 
-export function goodAction(state: GameState): Action {
+function goodAction(state: GameState, memo: Memo): Action {
   const hero = activeHero(state)!;
   const item = mapItemAction(state);
   if (item) return item;
@@ -165,19 +208,19 @@ export function goodAction(state: GameState): Action {
   const enemies = Object.values(state.heroes).filter((h) => h.faction !== hero.faction && h.alive && !h.entering);
   const desperate = isDesperate(state);
   // The defender strikes first, so walking into an enemy needs a real edge (or no time left).
-  const strongEnough = (e: HeroState) => desperate || ratio(state, hero, e) >= huntRatio(state);
+  const strongEnough = (e: HeroState) => desperate || memo.ratio(hero, e) >= huntRatio(state);
   const enemyAt = (k: HexKey) => enemies.find((e) => e.pos === k);
   const roundsLeft = state.roundLimit - state.round + 1;
   // Paths: fights are avoided unless the hex is a goal; hexes next to stronger enemies cost extra.
   const pathsFor = (goals: Set<HexKey>) =>
-    shortestPaths(state.tiles, hero.pos, (k) => {
-      if (heldByAlly(state, hero, k)) return null;
+    memo.shortestPaths(hero.pos, `goals ${[...goals].sort().join(' ')}`, (k) => {
+      if (memo.heldByAlly(hero, k)) return null;
       const foe = enemyAt(k);
       if (foe && !goals.has(k) && !strongEnough(foe)) return null;
       const t = state.tiles[k];
       if (t.crystalId && state.crystals[t.crystalId].guardian && !goals.has(k)) return null;
       const c = knownCost(state, k);
-      return c === null ? null : c + (goals.has(k) || desperate ? 0 : dangerCost(state, hero, k));
+      return c === null ? null : c + (goals.has(k) || desperate ? 0 : memo.dangerCost(hero, k));
     });
   const go = (goals: Set<HexKey>, extra: (k: HexKey) => number = () => 0): Action | null => {
     const paths = pathsFor(goals);
@@ -199,7 +242,7 @@ export function goodAction(state: GameState): Action {
   };
 
   const treeCostFrom = (from: HexKey) =>
-    shortestPaths(state.tiles, from, (k) => (heldByAlly(state, hero, k) && k !== hero.pos ? null : knownCost(state, k))).get(treeK)?.cost ?? Infinity;
+    memo.shortestPaths(from, 'tree', (k) => (memo.heldByAlly(hero, k) && k !== hero.pos ? null : knownCost(state, k))).get(treeK)?.cost ?? Infinity;
   const treeEta = (h: HeroState) => Math.ceil(treeCostFrom(h.pos) / mp);
 
   // 1. The Horde's ritual must be broken whatever the odds. A carrier leaves it to an ally
@@ -220,7 +263,7 @@ export function goodAction(state: GameState): Action {
   const camped = !!ritualHolder && !ritualOn && !desperate && state.setup.mode !== 'coop';
   const decide = (): Action => {
     // 2. A beatable enemy right next to us that stands in the way (or would catch a carrier) — strike first.
-    const adjacentFoe = enemies.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && ratio(state, hero, e) >= huntRatio(state));
+    const adjacentFoe = enemies.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && memo.ratio(hero, e) >= huntRatio(state));
     if (adjacentFoe && legalHeroMoves(state).some((m) => m.to === adjacentFoe.pos)) return { type: 'moveHero', to: adjacentFoe.pos };
 
     // 3. Deliver when the carried crystals finish the job, or when time runs out.
@@ -324,7 +367,7 @@ export function goodAction(state: GameState): Action {
  * A Horde player's bot (PvP). Unlike the coop automaton it picks its fights: it attacks
  * heroes it can beat, hunts crystal carriers, and otherwise goes for the ritual at the Tree.
  */
-export function hordeBotAction(state: GameState): Action {
+function hordeBotAction(state: GameState, memo: Memo): Action {
   const hero = activeHero(state)!;
   const tree = treeKey();
   const foes = Object.values(state.heroes).filter((h) => h.faction !== hero.faction && h.alive);
@@ -333,7 +376,7 @@ export function hordeBotAction(state: GameState): Action {
   if (item) return item;
   if (state.movePoints <= 0 || state.turnBattleDone) return { type: 'endTurn' };
   // Hold the Tree while the ritual is under way, unless a weak enemy is right there.
-  const beatable = (e: HeroState) => ratio(state, hero, e) >= huntRatio(state);
+  const beatable = (e: HeroState) => memo.ratio(hero, e) >= huntRatio(state);
   const adjacent = foes.filter((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1);
   const prey = adjacent.find((e) => beatable(e) || e.crystals.length);
   if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
@@ -344,13 +387,13 @@ export function hordeBotAction(state: GameState): Action {
   if (carriers.length) {
     if (hero.pos === tree) return { type: 'endTurn' };
     const treeHeld = heroesAt(state, tree).some((h) => h.faction === hero.faction);
-    const toTree = shortestPaths(state.tiles, hero.pos, (k) => (heldByAlly(state, hero, k) ? null : knownCost(state, k))).get(tree);
+    const toTree = shortestPaths(state.tiles, hero.pos, (k) => (memo.heldByAlly(hero, k) ? null : knownCost(state, k))).get(tree);
     const carrierGap = Math.min(...carriers.map((c) => distance(parseKey(c.pos), parseKey(tree))));
     const goal = !treeHeld && toTree && toTree.cost <= carrierGap * 1.5 ? tree : carriers.sort((x, y) => distance(parseKey(x.pos), parseKey(hero.pos)) - distance(parseKey(y.pos), parseKey(hero.pos)))[0].pos;
     const p = shortestPaths(state.tiles, hero.pos, (k) => {
       const t = state.tiles[k];
       if (t.crystalId && state.crystals[t.crystalId].guardian) return null;
-      if (heldByAlly(state, hero, k)) return null;
+      if (memo.heldByAlly(hero, k)) return null;
       return knownCost(state, k);
     }).get(goal);
     if (p && p.path.length > 1) return stepToward(state, p.path);
@@ -364,9 +407,9 @@ export function hordeBotAction(state: GameState): Action {
   const paths = shortestPaths(state.tiles, hero.pos, (k) => {
     const t = state.tiles[k];
     if (t.crystalId && state.crystals[t.crystalId].guardian) return null;
-    if (heldByAlly(state, hero, k)) return null;
+    if (memo.heldByAlly(hero, k)) return null;
     const c = knownCost(state, k);
-    return c === null ? null : c + (goals.has(k) ? 0 : dangerCost(state, hero, k));
+    return c === null ? null : c + (goals.has(k) ? 0 : memo.dangerCost(hero, k));
   });
   let best: { cost: number; path: HexKey[] } | null = null;
   for (const g of goals) {
@@ -400,7 +443,8 @@ export function adventureAction(state: GameState): Action {
     const to = [...hero.entering].sort((a, b) => distance(parseKey(a), tree) - distance(parseKey(b), tree))[0];
     return { type: 'moveHero', to };
   }
-  if (hero.faction === 'dawn') return goodAction(state);
+  const memo = new Memo(state);
+  if (hero.faction === 'dawn') return goodAction(state, memo);
   // The coop automaton follows the rulebook; a Horde player's bot chooses its fights.
-  return currentActor(state).kind === 'automaton' ? evilAction(state) : hordeBotAction(state);
+  return currentActor(state).kind === 'automaton' ? evilAction(state, memo) : hordeBotAction(state, memo);
 }
