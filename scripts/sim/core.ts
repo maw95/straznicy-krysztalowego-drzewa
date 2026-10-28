@@ -5,7 +5,7 @@ import { FACTION_HEROES, type FactionId, type MapSize } from '../../src/engine/d
 import { applyAction, activeHero, createGame, currentActor, legalHeroMoves } from '../../src/engine/game';
 import { chooseAction } from '../../src/engine/ai';
 import { Rng } from '../../src/engine/rng';
-import { DEFAULT_RULES, levelSettings, type GameState, type SeatSetup, type SetupOptions } from '../../src/engine/types';
+import { levelSettings, type GameState, type SeatSetup, type SetupOptions } from '../../src/engine/types';
 
 /** Player configurations: coop with 1–2 good players, PvP 1 on 1 or 2 on 2. */
 export type Table = 'coop1' | 'coop2' | 'pvp1' | 'pvp2';
@@ -26,29 +26,36 @@ export const variantName = (v: Variant) => `${v.size}·${v.table}·${v.option}`;
 
 /** Heroes are drawn at random per game, so no hero choice biases the results. */
 export function setupFor(v: Variant, seed: number): SetupOptions {
+  return setupWith(v.size, v.table, [v.option], seed);
+}
+
+/**
+ * A bot-only setup with any mix of options: a level ('kids' or 'hard', else the normal one), then the
+ * single switches on top of it.
+ */
+export function setupWith(size: MapSize, table: Table, options: Option[], seed: number): SetupOptions {
   const rng = new Rng(seed * 7919 + 13);
   const pick = (f: FactionId, n: number) => rng.shuffle(FACTION_HEROES[f]).slice(0, n);
   const seat = (name: string, faction: FactionId, heroId: string): SeatSetup => ({ name, faction, controller: 'bot', heroId });
   let seats: SeatSetup[];
-  if (v.table === 'coop1' || v.table === 'coop2') {
-    seats = pick('dawn', v.table === 'coop1' ? 1 : 2).map((h, i) => seat(`Bot ${i + 1}`, 'dawn', h));
+  if (table === 'coop1' || table === 'coop2') {
+    seats = pick('dawn', table === 'coop1' ? 1 : 2).map((h, i) => seat(`Bot ${i + 1}`, 'dawn', h));
   } else {
-    const n = v.table === 'pvp1' ? 1 : 2;
+    const n = table === 'pvp1' ? 1 : 2;
     const dawn = pick('dawn', n);
     const horde = pick('horde', n);
     seats = [];
     for (let i = 0; i < n; i++) seats.push(seat(`Świt ${i + 1}`, 'dawn', dawn[i]), seat(`Horda ${i + 1}`, 'horde', horde[i]));
   }
-  const mode = v.table.startsWith('coop') ? 'coop' : 'pvp';
-  if (v.option === 'kids' || v.option === 'hard') return { mode, mapSize: v.size, seed, seats, ...levelSettings(v.option, mode) };
-  const rules = {
-    ...DEFAULT_RULES,
-    abilities: v.option !== 'noabilities',
-    treasures: v.option !== 'notreasures',
-    useDice: v.option === 'dice',
-    heroReplacement: DEFAULT_RULES.heroReplacement || v.option === 'replacement',
-  };
-  return { mode, mapSize: v.size, battleMode: v.option === 'board' ? 'board' : 'arena', seed, seats, rules };
+  const mode = table.startsWith('coop') ? 'coop' : 'pvp';
+  const level = options.includes('kids') ? 'kids' : options.includes('hard') ? 'hard' : 'normal';
+  const base = levelSettings(level, mode);
+  const rules = { ...base.rules };
+  if (options.includes('noabilities')) rules.abilities = false;
+  if (options.includes('notreasures')) rules.treasures = false;
+  if (options.includes('dice')) rules.useDice = true;
+  if (options.includes('replacement')) rules.heroReplacement = true;
+  return { mode, mapSize: size, battleMode: options.includes('board') ? 'board' : base.battleMode, seed, seats, rules };
 }
 
 export interface UnitTally {

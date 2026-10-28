@@ -1,42 +1,26 @@
 // Mass simulations: bots play every seat, results go to stdout as CSV + summary.
-// Usage: npm run sim -- [games=200] [size=short|medium|long] [mode=coop|pvp] [options=full] [battle=arena|board]
-// options: 'full' (default game) or a comma list of simplifications: noabilities,notreasures,nodice,replacement
+// Usage: npm run sim -- [games=200] [size=short|medium|long|veryLong] [mode=coop|pvp|coop1|coop2|pvp1|pvp2] [options=full] [battle=arena|board]
+// options: 'full' (the normal level) or a comma list: kids or hard (a level), noabilities, notreasures,
+// dice, replacement, board. Heroes are drawn at random per game (scripts/sim/core.ts).
 
-import { createGame, applyAction } from '../src/engine/game';
+import { applyAction, createGame } from '../src/engine/game';
 import { chooseAction } from '../src/engine/ai';
-import { DEFAULT_RULES, type GameState, type SetupOptions } from '../src/engine/types';
+import type { GameState } from '../src/engine/types';
 import type { MapSize } from '../src/engine/data';
+import { OPTIONS, setupWith, type Option, type Table } from './sim/core';
 
 const [gamesArg, sizeArg, modeArg, diffArg, battleArg] = process.argv.slice(2);
 const games = Number(gamesArg ?? 200);
 const size = (sizeArg ?? 'short') as MapSize;
-const mode = (modeArg ?? 'coop') as 'coop' | 'pvp';
-const options = (diffArg ?? 'full').split(',');
-const rules = {
-  ...DEFAULT_RULES,
-  abilities: !options.includes('noabilities'),
-  treasures: !options.includes('notreasures'),
-  useDice: !options.includes('nodice'),
-  heroReplacement: options.includes('replacement'),
-};
-const battleMode = (battleArg ?? 'arena') as 'arena' | 'board';
-
-export function setupFor(seed: number): SetupOptions {
-  const seats =
-    mode === 'coop'
-      ? [
-          { name: 'Bot 1', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'goldDragon' },
-          { name: 'Bot 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' },
-        ]
-      : [
-          { name: 'Bot Świt', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'ancientBear' },
-          { name: 'Bot Horda', faction: 'horde' as const, controller: 'bot' as const, heroId: 'werewolfLord' },
-        ];
-  return { mode, mapSize: size, battleMode, seed, seats, rules };
-}
+const mode = modeArg ?? 'coop';
+// Plain "coop" plays two Przymierze bots, plain "pvp" one on one.
+const table = (mode === 'coop' ? 'coop2' : mode === 'pvp' ? 'pvp1' : mode) as Table;
+const options = (diffArg ?? 'full').split(',') as Option[];
+if (battleArg === 'board') options.push('board');
+for (const o of options) if (![...OPTIONS, 'hard'].includes(o)) throw new Error(`Nieznana opcja: ${o}`);
 
 export function playOut(seed: number, maxActions = 20000): GameState {
-  let s = createGame(setupFor(seed));
+  let s = createGame(setupWith(size, table, options, seed));
   for (let i = 0; i < maxActions && s.phase !== 'over'; i++) {
     const a = chooseAction(s);
     if (!a) break;
@@ -59,7 +43,7 @@ for (let g = 1; g <= games; g++) {
   rows.push([g, w, JSON.stringify(s.endReason ?? ''), s.round, st.battles, st.heroDeaths.dawn, st.heroDeaths.horde, st.supportDeaths.dawn, st.supportDeaths.horde, st.neutralBattles, st.neutralWipes, st.neutralSupportLosses, s.factions.dawn.delivered, s.actionCount].join(','));
 }
 if (process.env.CSV) console.log(rows.join('\n'));
-console.log(`\n${games} gier · ${size} · ${mode} · ${options.join(',')} · ${battleMode === 'board' ? 'pojedynki na mapie' : 'arena'}`);
+console.log(`\n${games} gier · ${size} · ${table} · ${options.join(',')}`);
 for (const [k, v] of Object.entries(tally)) console.log(`  ${k}: ${((v / games) * 100).toFixed(1)}%`);
 console.log(`  średnio rund: ${(rounds / games).toFixed(1)} · niedokończone: ${stuck}`);
 const reasons: Record<string, number> = {};

@@ -16,7 +16,7 @@ export PATH=~/.local/node/bin:$PATH
 npm install
 make dev          # gra pod http://localhost:5173 (lub: npm run dev)
 npm test           # testy zasad
-npm run sim -- 1000 short coop full    # symulacje botów (rozmiar: short|medium|long, tryb: coop|pvp, ułatwienia: full albo np. noabilities,notreasures,nodice,replacement)
+npm run sim -- 1000 short coop full    # symulacje botów (rozmiar: short|medium|long, tryb: coop|pvp, opcje: full albo np. noabilities,notreasures,dice,replacement)
 npm run build      # wersja statyczna w dist/
 ```
 

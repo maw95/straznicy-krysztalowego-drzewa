@@ -48,7 +48,7 @@ typecheck: node_modules ## Sprawdzenie typów TypeScript
 
 check: typecheck test ## Typy + testy (przed commitem)
 
-sim: node_modules ## Symulacje botów, np. make sim GAMES=500 SIZE=medium MODE=pvp OPTIONS=noabilities,nodice BATTLE=board
+sim: node_modules ## Symulacje botów (bez kości obrażeń, chyba że OPTIONS ma dice), np. make sim GAMES=500 SIZE=medium MODE=pvp OPTIONS=noabilities,dice BATTLE=board
 	npx tsx scripts/simulate.ts $(GAMES) $(SIZE) $(MODE) $(OPTIONS) $(BATTLE)
 
 sim-all: node_modules ## Symulacje wszystkich map w kooperacji: pełna gra i bez zdolności
