@@ -264,9 +264,12 @@ function addHero(state: GameState, heroId: string, faction: FactionId, playerId:
   if (unused.includes(heroId)) unused.splice(unused.indexOf(heroId), 1);
 }
 
+/** Where the coop automaton's heroes come in the turn order: after every player's seat. */
+const AUTOMATON_SEAT = 100;
+
 export function computeTurnOrder(state: GameState): string[] {
   const heroes = Object.values(state.heroes);
-  const seatOrder = (h: HeroState) => (h.playerId ? state.players.findIndex((p) => p.id === h.playerId) : 100);
+  const seatOrder = (h: HeroState) => (h.playerId ? state.players.findIndex((p) => p.id === h.playerId) : AUTOMATON_SEAT);
   const dawn = heroes.filter((h) => h.faction === 'dawn' && h.alive).sort((a, b) => seatOrder(a) - seatOrder(b));
   const horde = heroes.filter((h) => h.faction === 'horde' && h.alive).sort((a, b) => seatOrder(a) - seatOrder(b));
   if (state.setup.mode === 'coop') return [...dawn, ...horde].map((h) => h.id);

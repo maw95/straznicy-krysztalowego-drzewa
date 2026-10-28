@@ -1,7 +1,7 @@
 // Battle engine: the painted arena (13 columns, 85 cells), initiative, movement, attacks,
 // abilities and items. Functions change the GameState passed in.
 
-import { ABILITY, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type FactionId, type Side } from './data';
+import { ABILITY, FACTION_NAMES, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type FactionId, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
@@ -325,7 +325,7 @@ export function deployUnits(state: GameState, faction: FactionId, positions: Rec
   }
   for (const u of own) u.pos = positions[u.id] ?? u.pos;
   b.needsDeploy.shift();
-  log(state, 'battle', `${faction === 'dawn' ? 'Przymierze Świtu' : 'Mroczna Horda'} ustawia swoje jednostki.`);
+  log(state, 'battle', `${FACTION_NAMES[faction]} ustawia swoje jednostki.`);
   if (!b.needsDeploy.length) beginFight(state);
 }
 
@@ -536,11 +536,14 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   dealDamage(state, victim, p.damage, unitName(att));
 }
 
+/** Attacks kept in BattleState.rolls for the screen. */
+const ROLLS_KEPT = 4;
+
 function recordRoll(state: GameState, att: BattleUnit, victim: BattleUnit, attack: number, die: number, damage: number) {
   const b = state.battle!;
   const rolls = b.rolls ?? [];
   const seq = (rolls[rolls.length - 1]?.seq ?? 0) + 1;
-  b.rolls = [...rolls, { seq, attackerId: att.id, targetId: victim.id, attack, die: state.rules.useDice ? die : null, damage }].slice(-4);
+  b.rolls = [...rolls, { seq, attackerId: att.id, targetId: victim.id, attack, die: state.rules.useDice ? die : null, damage }].slice(-ROLLS_KEPT);
 }
 
 // ---------------------------------------------------------------- actions
