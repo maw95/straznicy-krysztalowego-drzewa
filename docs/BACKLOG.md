@@ -39,8 +39,13 @@ punkt to osobny commit; najtańsza kolejność: 1.5 → 1.4 → 1.3 → 1.2 → 
   - Wpisać do `docs/WYMIARY_ELEMENTOW.md` (tam jest już pełna tabela wymiarów) i `FIGURKI_SPECYFIKACJA.md` §4:
     okrągłe znaczniki 23 × 23 × 4 mm, krople obrażeń 15,6 × 20 × 3 mm, tor rund 150 × 144 × 8 mm, znacznik
     rundy 8 × 9,2 × 30 mm, kryształy 8 × 7 × 16 mm; przeliczyć piksele do druku.
-  - Do wyjaśnienia z autorem przed wpisaniem — lista w odpowiedzi z 28.10 (m.in. kształt toru 150 × 144 mm,
-    miejsce na znaczniki 23 mm na karcie, grubość 4 mm a tektura 2 mm).
+  - Ustalenia z autorem (28.10): tor rund ma dokładnie te wymiary w pliku STL autora (gra bez zmian);
+    znaczniki, kryształy i znacznik rundy są drukowane 3D (nie tektura); znacznik rundy ma ok. 30 mm wysokości,
+    żeby łatwo go wyjąć z gniazda; znacznik „+3 Ataku” — 1 sztuka. Figurki do druku to pliki STL autora
+    z podstawką 30 mm (GLB służą tylko grze). Miejsca na znaczniki na karcie nie zmieniamy.
+  - Pomijamy: kość, woreczki, osobną ściągawkę (zostaje rozdział instrukcji), koszulki (karty laminowane
+    ręcznie), drukarnię i bigowanie (autor robi sam). Wypraska i dokładne wymiary pudełka — dopiero po
+    wydrukowaniu figurek; do tego czasu wartości przybliżone.
 
 ## 2. Figurki 3D — drobne
 
