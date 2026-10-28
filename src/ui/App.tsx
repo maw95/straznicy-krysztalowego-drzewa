@@ -485,6 +485,9 @@ export function App() {
     setOnlineScreen(true);
     session?.answerInvitation(invitation, true);
   };
+  // Read once each time the menu opens, not on every render of the setup screen.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const menuAutosave = useMemo(() => (game ? null : readAutosave()), [game === null]);
   const overlay = session && <OnlineOverlay session={session} onAccept={acceptInvitation} />;
 
   /** "Nowa gra": online it also leaves the room (the game goes on for the others, a bot takes the seats). */
@@ -516,7 +519,7 @@ export function App() {
             setPlaysOffline(false);
             setOnlineScreen(true);
           }}
-          onStart={start} onLoad={load} autosave={readAutosave()} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} onIntro={() => setShowIntro(true)} onChangelog={() => setShowChangelog(true)} />
+          onStart={start} onLoad={load} autosave={menuAutosave} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} onIntro={() => setShowIntro(true)} onChangelog={() => setShowChangelog(true)} />
         )}
         {overlay}
         <Modal open={showRules} onClose={() => setShowRules(false)}>

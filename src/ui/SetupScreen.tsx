@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, MAP_VARIANTS, UNITS, type FactionId, type MapSize } from '../engine/data';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type Controller, type Mode, type RulesConfig, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
@@ -29,7 +29,9 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] => {
 };
 
 export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog }: { online: { label: string; title: string }; onOnline: () => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void }) {
-  const stats = journalStats();
+  // Both read and replay saved games: once per visit to the menu, not on every hover and keystroke.
+  const stats = useMemo(journalStats, []);
+  const saveLabel = useMemo(() => autosave && describeSave(autosave), [autosave]);
   const fileRef = useRef<HTMLInputElement>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [tutorial, setTutorial] = useState(tutorialEnabled());
@@ -95,7 +97,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
         </h1>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: 6 }}>
           {autosave && (
-            <button className="btn prim" style={{ padding: '6px 18px', fontSize: 17 }} title={describeSave(autosave)} onClick={() => onLoad(autosave)}>
+            <button className="btn prim" style={{ padding: '6px 18px', fontSize: 17 }} title={saveLabel ?? undefined} onClick={() => onLoad(autosave)}>
               Kontynuuj zapisaną partię
             </button>
           )}
@@ -128,7 +130,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             }}
           />
         </div>
-        {autosave && <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 4 }}>{describeSave(autosave)}</div>}
+        {autosave && <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 4 }}>{saveLabel}</div>}
         {loadError && <div style={{ fontSize: 15, color: '#F08A7A', marginTop: 4 }}>{loadError}</div>}
       </div>
       <div className="main-row setup-row" style={{ position: 'relative', width: '100%', maxWidth: 1400 }}>
