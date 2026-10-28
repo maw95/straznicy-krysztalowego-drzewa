@@ -287,7 +287,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
    * Where a melee unit can attack an enemy it does not stand next to: the free cells beside the enemy
    * that it can walk to now. Clicking the enemy walks there and attacks, as in Heroes III.
    */
-  const approachCells = (u: BattleUnit): HexKey[] => {
+  const approachCellsOf = (u: BattleUnit): HexKey[] => {
     if (!myTurn || !active?.pos || !u.pos || u.side === active.side || act!.moved || act!.attacked || act!.moveOnly || act!.hop || targeting || freeAbility) return [];
     if (UNITS[active.defId].attackType !== 'melee' || targets.some((t) => t.id === u.id)) return [];
     return [...moves.keys()].filter((k) => distanceBetween(k, u.pos!) === 1);
@@ -331,16 +331,28 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
    * an arrow for a shot, and a crossed-out arrow when an obstacle hides an enemy from a ranged unit
    * that could otherwise shoot (nobody next to it).
    */
-  const unitCursor = (u: BattleUnit): string => {
+  const unitCursorOf = (u: BattleUnit, approachable: boolean, engaged: boolean): string => {
     if (!active?.pos || !u.pos) return '';
-    if (approachCells(u).length) return 'cur-melee';
+    if (approachable) return 'cur-melee';
     // A ranged unit shoots even at a neighbour (it must, when one stands next to it): always the arrow.
     if (targets.some((t) => t.id === u.id)) return UNITS[active.defId].attackType === 'melee' ? 'cur-melee' : 'cur-ranged';
     const canShoot = myTurn && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility && UNITS[active.defId].attackType === 'ranged';
     if (!canShoot || u.side === active.side) return '';
-    const engaged = livingUnits(b).some((e) => e.side !== active.side && e.pos && distanceBetween(active.pos!, e.pos) === 1);
     return !engaged && !hasLineOfSight(state, active.pos, u.pos) ? 'cur-blocked' : '';
   };
+  /** Approach cells and cursor of every unit, worked out once per change instead of on each use. */
+  const unitInfo = useMemo(() => {
+    const engaged = Boolean(active?.pos) && livingUnits(b).some((e) => e.side !== active!.side && e.pos && distanceBetween(active!.pos!, e.pos) === 1);
+    const out = new Map<string, { approach: HexKey[]; cursor: string }>();
+    for (const u of Object.values(b.units)) {
+      const approach = approachCellsOf(u);
+      out.set(u.id, { approach, cursor: unitCursorOf(u, approach.length > 0, engaged) });
+    }
+    return out;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, b, myTurn, active, act, moves, targets, targeting, freeAbility]);
+  const approachCells = (u: BattleUnit): HexKey[] => unitInfo.get(u.id)?.approach ?? [];
+  const unitCursor = (u: BattleUnit): string => unitInfo.get(u.id)?.cursor ?? '';
   useEffect(preloadAimedCursors, []);
   /** The sword or the arrow over a unit, turned the way the blow or the shot goes; null for an unturned cursor. */
   const aimedOver = (u: BattleUnit): string | null => {
@@ -534,11 +546,13 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
 
   const sides: Side[] = [b.attacker, b.defender];
   const deadOwn = side ? Object.values(b.units).filter((u) => u.side === side && !u.alive && !u.swappedOut) : [];
-  const reserve = side ? state.factions[side].supportsAlive.filter((id) => !b.units[id]) : [];
+  const reserveOf = (s: FactionId) => state.factions[s].supportsAlive.filter((id) => !b.units[id]);
+  const reserve = side ? reserveOf(side) : [];
   // Initiative order of the round (fastest first); units that already acted are dimmed.
   const queue = b.order.map((id, i) => ({ id, done: i < b.index, current: id === act?.unitId })).filter((q) => b.units[q.id]?.alive);
   /** Next round's initiative (living units by Speed). */
-  const nextRound = livingUnits(b).sort((x, y) => unitSpeed(y) - unitSpeed(x)).map((u) => u.id);
+  const living = livingUnits(b);
+  const nextRound = [...living].sort((x, y) => unitSpeed(y) - unitSpeed(x)).map((u) => u.id);
   const hoverPreview = hover && active && moves.has(hover) ? hover : null;
   const breathPreview = useAbility && ab === 'fireBreath' && active ? targets.map((t) => breathSecondTarget(state, active, t)).filter(Boolean) : [];
 
@@ -572,7 +586,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
         <div style={{ flex: 1 }} />
         {s !== 'neutral' && (
           <div style={{ fontSize: 14, color: 'var(--muted)', padding: '0 0 10px 8px' }}>
-            Rezerwa: {state.factions[s].supportsAlive.filter((id) => !b.units[id]).map((id) => UNITS[id].name).join(', ') || '—'}
+            Rezerwa: {reserveOf(s).map((id) => UNITS[id].name).join(', ') || '—'}
           </div>
         )}
       </Frame>
@@ -643,14 +657,14 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                 width={CANVAS_W}
                 height={CANVAS_H}
                 style={{ zIndex: 1 }}
-                pieces={livingUnits(b)
+                pieces={living
                   .filter((u) => figureFor(u.defId) && posOf(u))
                   .map((u): Piece => {
                     const c = cellCenter(posOf(u)!);
                     const melee = lastStrike(u.id, false);
                     const shot = lastStrike(u.id, true);
                     // Until it moves, a unit faces the enemies (the middle of where they stand).
-                    const enemies = livingUnits(b).filter((e) => e.side !== u.side && e.pos).map((e) => cellCenter(e.pos!));
+                    const enemies = living.filter((e) => e.side !== u.side && e.pos).map((e) => cellCenter(e.pos!));
                     const face = enemies.length ? { x: enemies.reduce((s, e) => s + e.x, 0) / enemies.length - c.x, y: enemies.reduce((s, e) => s + e.y, 0) / enemies.length - c.y } : undefined;
                     const isActive = deploySide ? picked === u.id : active?.id === u.id;
                     return {
@@ -669,7 +683,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                     };
                   })}
               />
-              {livingUnits(b).map((u) => {
+              {living.map((u) => {
                 const figure = figureFor(u.defId);
                 const { x, y } = cellPos(posOf(u)!);
                 const isActive = deploySide ? picked === u.id : active?.id === u.id;
@@ -682,6 +696,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                 })() : null;
                 const approaching = approach?.targetId === u.id && active ? approach.cell : null;
                 const aimed = aimedOver(u);
+                const statuses = statusList(u);
                 const preview =
                   hover !== u.pos && !approaching
                     ? null
@@ -716,9 +731,9 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                       ring={SIDE_RING[u.side]}
                       glow={isActive ? '0 0 0 3px #9EE4FF, 0 0 20px 6px rgba(158,228,255,0.75)' : isTarget ? '0 0 0 3px #E0503C, 0 0 18px 5px rgba(224,80,60,0.7)' : '0 0 0 1.5px #1E1204, 0 8px 12px rgba(0,0,0,0.55)'}
                     />}
-                    {statusList(u).length > 0 && (
+                    {statuses.length > 0 && (
                       <div style={{ position: 'absolute', left: '50%', top: -13, transform: 'translateX(-50%)', pointerEvents: 'none', display: 'flex', gap: 1, zIndex: 3 }}>
-                        {statusList(u).map((st) => (
+                        {statuses.map((st) => (
                           <StatusBadge key={st.label} st={st} size={25} />
                         ))}
                       </div>
