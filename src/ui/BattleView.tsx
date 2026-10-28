@@ -185,7 +185,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   /** Walking or flying to a cell: the boot or the wing. */
   const moveCursor = active && UNITS[active.defId].movement === 'fly' ? 'cur-fly' : 'cur-move';
   const ab = active ? abilityOf(active) : null;
-  const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state, active));
+  const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state));
   const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab);
   const freeAbilityReady = abilityReady && ab !== null && FREE_ABILITIES.includes(ab);
 

@@ -36,7 +36,7 @@ describe('default game and simplifications', () => {
 
   it('switches guardian abilities off together with everyone else', () => {
     const s = guardianFight('hydra', [['goldDragon', 5, 9], ['nymph', 4, 10]], { abilities: false });
-    expect(abilityActive(s, s.battle!.units.hydra)).toBe(false);
+    expect(abilityActive(s)).toBe(false);
     expect(() => applyAction(s, { type: 'battleAttack', targetId: 'goldDragon', secondTargetId: 'nymph' })).toThrow();
   });
 });
