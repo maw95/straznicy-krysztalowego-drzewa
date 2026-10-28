@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Areny: przeszkody nie wchodzą już na sąsiednie pola (podwójne są obrócone wzdłuż swoich dwóch pól), a ich obwódka jest ciemnożółta na obu arenach.
 - Figurki 3D nie mają już kolorowej poświaty — tylko aktywna figurka ma cienką żółtą obwódkę wokół podstawki.
 - Instrukcja, rozdział 1: krople obrażeń są dwustronne (6 × „1” / „2”, 10 × „3” / „5”), a znaczników Żywotności i Ochrony jest po jednym — tyle, ile naprawdę może być potrzebne w jednej bitwie. Róg Odwagi oznacza się dwoma znacznikami Wzmocnienia Ataku.
 - Instrukcja: figurki są pokazane jako rzuty modeli 3D z gry, każda podpisana, a strażnicy na osobnej stronie. Narzędzia: `make figurki` robi te rzuty od nowa.
@@ -28,7 +29,6 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Zapis partii w trybie Arena jest w menu opisany jako „Arena”, a nie „Rywalizacja”.
 - Esc zamyka każde okno (także czat, „Dla testerów”, „Od Twojej ostatniej tury” i znaleziony skarb), a skróty literowe nie działają, gdy jakieś okno jest otwarte.
 - Figurki na mapie i na arenie są większe (mogą lekko wchodzić na sąsiednie pola), a zamiast jednolitych pierścieni otacza je delikatna, rozmyta poświata w kolorze strony.
-- Arena Hordy: przeszkody terenowe mają fioletowe obramowanie, więc odróżniają się od zwykłych pól (na arenie Przymierza — ciemnoczerwone, jak dotąd).
 - Bitwa: przycisk „Zasięg wrogów” zastępuje Ctrl — przytrzymany nad dowolną jednostką pokazuje, dokąd może dojść (niebieskie pola) i kogo dosięgnie (czerwone).
 - Figurka obok karty bohatera w menu nie miga już przy szybkim przełączaniu bohaterów, a menu nie tworzy przy tym coraz to nowych płócien 3D.
 - Bitwa przy szybkich botach: animacje ataków już się nie zacinają — figurka robi wypad przy każdym ataku, a liczby obrażeń i ślady ciosów znikają jak trzeba. Na telefonie arena nie przewija się po każdym trafieniu, tylko gdy zmienia się aktywna jednostka.

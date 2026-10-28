@@ -70,6 +70,9 @@ interface Props {
   onUnit: (u: BattleUnit) => void;
 }
 
+/** Rim of the blocked cells on both arenas (scripts/assets/arenas.py paints the same one). */
+const OBSTACLE_RIM = '#A88414';
+
 export function ArenaBoard(p: Props) {
   const { state, view, scale, anim, deploy, targeting, hover, setHover, active, moves, hops, targets, approach } = p;
   const b = state.battle!;
@@ -86,10 +89,9 @@ export function ArenaBoard(p: Props) {
           <svg width={CANVAS_W} height={CANVAS_H} style={{ position: 'absolute', left: 0, top: 0 }}>
             <g pointerEvents="none">
               <GoldGrid />
-              {/* Obstacles get their own rim: dark red on the green Dawn board (as painted there), violet on the
-                  Horde's lava, where red would not show. */}
+              {/* Obstacles get their own rim: dark yellow on both boards (as painted there). */}
               {b.obstacles.map((k) => (
-                <polygon key={`ob${k}`} points={hexPoints(k, 1.5)} fill="none" stroke={b.arena === 'horde' ? '#B07AE8' : '#8E2C1A'} strokeWidth="3.2" strokeLinejoin="round" />
+                <polygon key={`ob${k}`} points={hexPoints(k, 1.5)} fill="none" stroke={OBSTACLE_RIM} strokeWidth="3.2" strokeLinejoin="round" />
               ))}
             </g>
             {CELLS.map((k) => {

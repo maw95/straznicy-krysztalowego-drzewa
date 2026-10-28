@@ -6,13 +6,14 @@ Sources (docs/grafika/areny/):
 
 The grid is the one the game uses (src/ui/arenaGeometry.ts, src/engine/battle.ts), so cells,
 obstacles and the board line up. Each sheet holds 7 obstacle sprites, one per obstacle
-(the two widest span the 2-cell obstacles), fitted over a darkened, outlined base, so it is clear
-which cells are blocked.
+(the two widest span the 2-cell obstacles, turned along them), fitted over a darkened, outlined base
+and cut off at the edges of their own cells, so it is clear which cells are blocked.
 Usage: python3 scripts/assets/arenas.py [przymierze] [horda]   (default: both)
 """
 import os
 import sys
-from PIL import Image, ImageDraw, ImageOps
+import math
+from PIL import Image, ImageChops, ImageDraw, ImageOps
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SRC = os.path.join(ROOT, 'docs', 'grafika', 'areny')
@@ -94,23 +95,38 @@ def sprites(sheet):
 
 
 BLOCK_FILL = {'dawn': (25, 15, 5, 105), 'horde': (10, 5, 0, 150)}
-BLOCK_LINE = {'dawn': (120, 40, 25, 235), 'horde': (255, 150, 60, 235)}
+# Dark yellow on both boards (the game draws the same rim over it, ArenaBoard.tsx).
+BLOCK_LINE = (168, 132, 20, 235)
 
 
 def fit(board, sprite, piece):
-    """Fits a sprite over its cells (one hex, or two neighbouring ones): as wide as they allow,
-    rising at most a little above them."""
-    xs = [center(*c)[0] for c in piece]
-    r = spacing(center(*piece[0])[1]) * 2 / 3
-    top = min(HALF_Y[h - 1] for _, h in piece)
-    bottom = max(HALF_Y[h + 1] for _, h in piece)
+    """Puts a sprite on its cells and keeps it inside them: on one hex it fills the cell, on two
+    neighbouring hexes it is turned along the line between them and stretched to cover both.
+    Whatever still sticks out is cut off at the cells' edges, so no sprite reaches a free cell."""
+    centres = [center(*c) for c in piece]
+    r = spacing(centres[0][1]) * 2 / 3
     one = HALF_Y[piece[0][1] + 1] - HALF_Y[piece[0][1] - 1]
-    max_w = max(xs) - min(xs) + 2 * r * 0.86
-    max_h = (bottom - top) if len(piece) > 1 else one * 1.12
-    k = min(max_w / sprite.width, max_h / sprite.height)
-    s = sprite.resize((round(sprite.width * k), round(sprite.height * k)), Image.LANCZOS)
-    base = bottom - one * 0.12
-    board.alpha_composite(s, (round((min(xs) + max(xs)) / 2 - s.width / 2), round(base - s.height)))
+    cx = sum(x for x, _ in centres) / len(centres)
+    cy = sum(y for _, y in centres) / len(centres)
+    if len(piece) == 1:
+        k = min(2 * r * 0.92 / sprite.width, one * 0.92 / sprite.height)
+        s = sprite.resize((round(sprite.width * k), round(sprite.height * k)), Image.LANCZOS)
+    else:
+        (x0, y0), (x1, y1) = centres
+        length = math.hypot(x1 - x0, y1 - y0) + 2 * r * 0.8
+        # Stretched lengthwise a little at most (a wider sprite reads as a longer obstacle, not a squashed one).
+        k = min(length / sprite.width, one * 0.8 / sprite.height)
+        s = sprite.resize((round(min(length, sprite.width * k * 1.25)), round(sprite.height * k)), Image.LANCZOS)
+        s = s.rotate(-math.degrees(math.atan2(y1 - y0, x1 - x0)), resample=Image.BICUBIC, expand=True)
+    layer = Image.new('RGBA', board.size)
+    layer.alpha_composite(s, (round(cx - s.width / 2), round(cy - s.height / 2)))
+    mask = Image.new('L', (board.width * SS, board.height * SS))
+    draw = ImageDraw.Draw(mask)
+    for c in piece:
+        draw.polygon([(x * SS, y * SS) for x, y in hexagon(*c)], fill=255)
+    mask = mask.resize(board.size, Image.LANCZOS)
+    layer.putalpha(ImageChops.multiply(layer.getchannel('A'), mask))
+    board.alpha_composite(layer)
 
 
 def build(src):
@@ -145,7 +161,7 @@ def build(src):
     for c in OBSTACLES[arena]:
         pts = [(x * SS, y * SS) for x, y in hexagon(*c)]
         draw.polygon(pts, fill=BLOCK_FILL[arena])
-        draw.line(pts + [pts[0]], fill=BLOCK_LINE[arena], width=3 * SS, joint='curve')
+        draw.line(pts + [pts[0]], fill=BLOCK_LINE, width=3 * SS, joint='curve')
     board.alpha_composite(layer.resize(board.size, Image.LANCZOS))
     sheet = Image.open(os.path.join(SRC, f'arena_walki_{src}_przeszkody.png')).convert('RGBA')
     # The two widest sprites go on the 2-cell obstacles, the others on single cells.

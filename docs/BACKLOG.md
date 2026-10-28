@@ -8,13 +8,6 @@ porządki w kodzie (etapy 0–4 i resztki), wersja mobilna, zgłoszenia z 23.10 
 
 Szacunki kosztu to tokeny zużyte przez Claude w jednej sesji. Każdy punkt to osobny commit.
 
-- [ ] **1.2. Przeszkody na arenach nie wychodzą poza swoje pole.** *Koszt: ok. 50–90 tys.* Przykład błędu:
-  `/home/maciek/Obrazy/blad_przeszkody.png` — rysunek przeszkody (kamienie, kwiaty) nachodzi na sąsiednie
-  sześciokąty. Obie areny, Przymierza i Hordy (`docs/grafika/areny/*_przeszkody.png`, `scripts/assets/arenas.py`,
-  `ARENA_OBSTACLES`). Przeszkody można obrócić, wydłużyć, zmniejszyć — byle każda mieściła się w swoim polu.
-  Sprawdzić zrzutem całej areny (desktop i telefon).
-- [ ] **1.3. Obwódki przeszkód: ciemnożółte na obu arenach.** *Koszt: ok. 10–20 tys.* Dziś ciemnoczerwone
-  (Przymierze) i fioletowe (Horda); jeden kolor dla obu. Najlepiej razem z 1.2 (te same zrzuty).
 - [ ] **1.4. Wolniejszy obrót figurek i ruch w dwóch fazach.** *Koszt: ok. 30–50 tys.* Tempo przesuwania
   zostaje. Obrót wolniejszy, a najpierw obrót, potem przesuwanie — nigdy oba naraz (`FigureLayer.tsx`: `turnTo`,
   `turnStart`, `moveStart`). Dotyczy też zwrotu do celu przed atakiem. Sprawdzić, czy dłuższa animacja nie
