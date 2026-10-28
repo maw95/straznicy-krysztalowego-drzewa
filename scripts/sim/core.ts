@@ -81,18 +81,6 @@ export interface Diagnostics {
   activations: number;
 }
 
-export interface GameResult {
-  winner: string;
-  reason: string;
-  rounds: number;
-  heroes: string[];
-  battles: number;
-  heroBattles: number;
-  neutralBattles: number;
-  neutralWipes: number;
-  delivered: number;
-}
-
 export interface Summary {
   variant: string;
   games: number;
@@ -100,7 +88,9 @@ export interface Summary {
   reasons: Record<string, number>;
   avgRounds: number;
   battlesPerGame: number;
-  neutralWipeRate: number;
+  /** Battles against guardians, and those the guardian won (the rate is wipes / fights). */
+  neutralFights: number;
+  neutralWipes: number;
   diag: Diagnostics;
   /** Per unit, in battles between heroes / against guardians. */
   units: Record<string, UnitTally>;
@@ -112,9 +102,7 @@ export interface Summary {
 const newDiag = (): Diagnostics => ({ illegal: 0, illegalSamples: [], stuck: 0, battleRoundLimit: 0, idleTurns: 0, turns: 0, idleActivations: 0, activations: 0 });
 
 export function runVariant(v: Variant, games: number, firstSeed = 1): Summary {
-  const sum: Summary = { variant: variantName(v), games, dawnWins: 0, reasons: {}, avgRounds: 0, battlesPerGame: 0, neutralWipeRate: 0, diag: newDiag(), units: {}, guardianUnits: {}, heroGames: {} };
-  let neutral = 0;
-  let wipes = 0;
+  const sum: Summary = { variant: variantName(v), games, dawnWins: 0, reasons: {}, avgRounds: 0, battlesPerGame: 0, neutralFights: 0, neutralWipes: 0, diag: newDiag(), units: {}, guardianUnits: {}, heroGames: {} };
   for (let g = 0; g < games; g++) {
     const setup = setupFor(v, firstSeed + g);
     let s = createGame(setup);
@@ -147,8 +135,8 @@ export function runVariant(v: Variant, games: number, firstSeed = 1): Summary {
           t.damage += u.damage;
         }
         if (r.kind === 'neutral') {
-          neutral++;
-          if (r.winner !== r.attacker) wipes++;
+          sum.neutralFights++;
+          if (r.winner !== r.attacker) sum.neutralWipes++;
         }
       }
     }
@@ -165,7 +153,6 @@ export function runVariant(v: Variant, games: number, firstSeed = 1): Summary {
       if (winner === seat.faction) t.wins++;
     }
   }
-  sum.neutralWipeRate = neutral ? wipes / neutral : 0;
   return sum;
 }
 
@@ -195,7 +182,8 @@ export function merge(a: Summary, b: Summary): Summary {
   for (const [k, v] of Object.entries(b.reasons)) out.reasons[k] = (out.reasons[k] ?? 0) + v;
   out.avgRounds = (a.avgRounds * a.games + b.avgRounds * b.games) / n;
   out.battlesPerGame = (a.battlesPerGame * a.games + b.battlesPerGame * b.games) / n;
-  out.neutralWipeRate = (a.neutralWipeRate + b.neutralWipeRate) / 2;
+  out.neutralFights += b.neutralFights;
+  out.neutralWipes += b.neutralWipes;
   for (const k of Object.keys(out.diag) as Array<keyof Diagnostics>) {
     if (k === 'illegalSamples') out.diag.illegalSamples = [...a.diag.illegalSamples, ...b.diag.illegalSamples].slice(0, 5);
     else (out.diag[k] as number) += b.diag[k] as number;
