@@ -126,3 +126,23 @@ describe('one click: walk up to an enemy and attack it', () => {
     expect(actions).toEqual([{ type: 'battleMove', to: arenaCell(4, 8) }]);
   });
 });
+
+describe('Ctrl over a unit shows its reach', () => {
+  const reachCells = (c: HTMLElement) => ({
+    walk: [...c.querySelectorAll('polygon')].filter((p) => p.getAttribute('stroke') === 'rgba(190,240,255,0.8)').length,
+    hit: [...c.querySelectorAll('polygon')].filter((p) => p.getAttribute('stroke') === 'rgba(240,100,80,0.85)').length,
+  });
+
+  it('appears while Ctrl is held over an enemy, and goes when Ctrl is let go', () => {
+    const { container } = render(<BattleView state={fight([['elfDruid', 'dawn', 4, 4], ['caveSpider', 'horde', 8, 8]])} canAct onAction={() => {}} onShowCard={() => {}} footer={null} />);
+    const spider = [...container.querySelectorAll('button.token')].find((t) => t.querySelector('img')?.getAttribute('src')?.includes('caveSpider'))!;
+    fireEvent.mouseEnter(spider);
+    expect(reachCells(container)).toEqual({ walk: 0, hit: 0 });
+    act(() => void fireEvent.keyDown(window, { key: 'Control', ctrlKey: true }));
+    const shown = reachCells(container);
+    expect(shown.walk).toBeGreaterThan(0);
+    expect(shown.hit).toBeGreaterThan(0);
+    act(() => void fireEvent.keyUp(window, { key: 'Control', ctrlKey: false }));
+    expect(reachCells(container)).toEqual({ walk: 0, hit: 0 });
+  });
+});

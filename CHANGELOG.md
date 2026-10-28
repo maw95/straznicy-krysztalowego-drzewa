@@ -8,8 +8,9 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 - Figurki 3D: na mapie i na arenie bohaterowie i pomocnicy stoją jako trójwymiarowe figurki — obracają się w stronę ruchu, odwracają do celu przy ataku, a pierścień wokół podstawki pokazuje stronę, aktywną jednostkę i cel. W menu obok karty bohatera obraca się jego figurka. Na słabszym sprzęcie figurki można wyłączyć w Opcjach. Mają je wszystkie jednostki, także strażnicy kryształów — na mapie stoją przy pilnowanym krysztale.
 - Hydra ma nowy portret na karcie.
-- Arena Hordy: przeszkody terenowe mają fioletowe obramowanie, więc odróżniają się od zwykłych pól (na arenie Przymierza — ciemnoczerwone, jak dotąd).
 - Figurki na mapie i na arenie są większe (mogą lekko wchodzić na sąsiednie pola), a zamiast jednolitych pierścieni otacza je delikatna, rozmyta poświata w kolorze strony.
+- Arena Hordy: przeszkody terenowe mają fioletowe obramowanie, więc odróżniają się od zwykłych pól (na arenie Przymierza — ciemnoczerwone, jak dotąd).
+- Bitwa: przycisk „Zasięg wrogów” zastępuje Ctrl — przytrzymany nad dowolną jednostką pokazuje, dokąd może dojść (niebieskie pola) i kogo dosięgnie (czerwone).
 - Figurka obok karty bohatera w menu nie miga już przy szybkim przełączaniu bohaterów, a menu nie tworzy przy tym coraz to nowych płócien 3D.
 - Bitwa przy szybkich botach: animacje ataków już się nie zacinają — figurka robi wypad przy każdym ataku, a liczby obrażeń i ślady ciosów znikają jak trzeba. Na telefonie arena nie przewija się po każdym trafieniu, tylko gdy zmienia się aktywna jednostka.
 - Druga partia w tej samej sesji nie pokazuje już na starcie fałszywego „Znaleziono skarb!”, a podsumowanie „Od Twojej ostatniej tury” nie miesza wpisów z poprzedniej partii.

@@ -220,7 +220,20 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     later(() => setRollPops((p) => p.filter((x) => !pops.includes(x))), 2200);
   }, [b]);
   const lastRoll = b.rolls?.[b.rolls.length - 1];
-  const [showThreat, setShowThreat] = useState(false);
+  // Ctrl held over a unit shows its reach: where it can walk and what it can hit next.
+  const [ctrlHeld, setCtrlHeld] = useState(false);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => setCtrlHeld(e.ctrlKey);
+    const off = () => setCtrlHeld(false);
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('keyup', onKey);
+    window.addEventListener('blur', off);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('keyup', onKey);
+      window.removeEventListener('blur', off);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     const el = wrapRef.current;
@@ -324,7 +337,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     setFreeAbility(false);
   }
 
-  // Battle shortcuts: Space ends the activation, Z ability, S treasures, T enemy reach.
+  // Battle shortcuts: Space ends the activation, Z ability, S treasures.
   const keyState = useRef({ myTurn, attackAbility, freeAbilityReady, ab });
   keyState.current = { myTurn, attackAbility, freeAbilityReady, ab };
   useEffect(() => {
@@ -333,7 +346,6 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
       if (tag === 'INPUT' || tag === 'SELECT' || document.querySelector('.overlay:not(.leaving)')) return;
       const k = e.key.toLowerCase();
       const ks = keyState.current;
-      if (k === 't') setShowThreat((v) => !v);
       if (!ks.myTurn) return;
       if (k === ' ') {
         e.preventDefault();
@@ -352,21 +364,22 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onAction]);
 
-  /** Cells enemies of the active unit's side can hit next round (move + melee reach, or line of sight for shooters). */
-  const threat = useMemo(() => {
-    const out = new Set<HexKey>();
-    if (!showThreat || !active) return out;
-    const foes = livingUnits(b).filter((u) => u.side !== active.side);
-    for (const f of foes) {
-      const stand = [f.pos!, ...reachableCells(state, f).keys()];
-      if (UNITS[f.defId].attackType === 'ranged') {
-        for (const c of arenaCells()) if (!b.obstacles.includes(c) && stand.some((p) => hasLineOfSight(state, p, c))) out.add(c);
-      } else {
-        for (const p of stand) for (const c of arenaCells()) if (distanceBetween(p, c) <= 1 && !b.obstacles.includes(c)) out.add(c);
-      }
+  /** The reach of the unit under the cursor while Ctrl is held: the cells it can walk to, and the ones it can
+   *  hit from there (next to them for melee, any cell in sight for shooters). */
+  const reachOf = ctrlHeld && hover ? livingUnits(b).find((u) => u.pos === hover) ?? null : null;
+  const reach = useMemo(() => {
+    const walk = new Set<HexKey>();
+    const hit = new Set<HexKey>();
+    if (!reachOf?.pos) return { walk, hit };
+    for (const k of reachableCells(state, reachOf).keys()) walk.add(k);
+    const stand = [reachOf.pos, ...walk];
+    for (const c of arenaCells()) {
+      if (b.obstacles.includes(c) || walk.has(c) || c === reachOf.pos) continue;
+      const hits = UNITS[reachOf.defId].attackType === 'ranged' ? stand.some((p) => hasLineOfSight(state, p, c)) : stand.some((p) => distanceBetween(p, c) <= 1);
+      if (hits) hit.add(c);
     }
-    return out;
-  }, [showThreat, active, b, state]);
+    return { walk, hit };
+  }, [reachOf, b, state]);
 
   /** Predicted result of attacking `t` now (shown on hover). */
   function attackPreview(t: BattleUnit, moved = act?.movedDistance ?? 0): { text: string; lethal: boolean } {
@@ -592,8 +605,11 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                 {[...deployable].map((k) => (
                   <polygon key={`dp${k}`} points={hexPoints(k, 3)} fill="none" stroke="#F3D27A" strokeWidth={hover === k && picked ? 3.5 : 2} strokeDasharray={picked ? undefined : '5 4'} pointerEvents="none" />
                 ))}
-                {[...threat].map((k) => (
-                  <polygon key={`th${k}`} points={hexPoints(k, 3)} fill="rgba(224,60,40,0.16)" stroke="rgba(224,80,60,0.55)" strokeWidth="1.5" strokeDasharray="4 3" pointerEvents="none" />
+                {[...reach.walk].map((k) => (
+                  <polygon key={`rw${k}`} points={hexPoints(k, 3)} fill="rgba(158,228,255,0.24)" stroke="rgba(190,240,255,0.8)" strokeWidth="1.5" pointerEvents="none" />
+                ))}
+                {[...reach.hit].map((k) => (
+                  <polygon key={`rh${k}`} points={hexPoints(k, 3)} fill="rgba(224,60,40,0.3)" stroke="rgba(240,100,80,0.85)" strokeWidth="1.5" strokeDasharray="4 3" pointerEvents="none" />
                 ))}
                 {targets.map((t) => (
                   <polygon key={t.id} points={hexPoints(t.pos!, 2)} fill="rgba(224,80,60,0.16)" stroke="#E0503C" strokeWidth="3" pointerEvents="none" />
@@ -761,14 +777,6 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
                   <LastAttack roll={lastRoll} units={b.units} size={20} />
                 </div>
               )}
-              <button
-                className={`btn plate parch ${showThreat ? 'on' : ''}`}
-                title="Pokaż, gdzie dosięgną Cię wrogowie (T)"
-                onClick={() => setShowThreat((v) => !v)}
-                style={{ position: 'absolute', right: 14, top: 18, padding: '4px 10px', fontSize: 14, zIndex: 6 }}
-              >
-                Zasięg wrogów
-              </button>
               <div style={{ position: 'absolute', left: '50%', top: 14, transform: 'translateX(-50%)' }}>
                 <Ribbon style={{ width: 340 }}>{`${b.kind === 'neutral' ? 'Bitwa o kryształ' : 'Starcie bohaterów'} · ${b.stage === 'deploy' ? 'ustawienie' : `runda ${b.round}`}`}</Ribbon>
               </div>

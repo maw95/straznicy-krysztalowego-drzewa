@@ -63,7 +63,7 @@ const KEYS: Array<[string, string]> = [
   ['F', 'przewiń ruchy botów'],
   ['Z', 'włącz zdolność aktywnej jednostki'],
   ['S', 'pokaż skarby w bitwie'],
-  ['T', 'pokaż zasięg wrogów w bitwie'],
+  ['Ctrl', 'przytrzymany nad jednostką w bitwie: pokazuje, dokąd dojdzie i kogo dosięgnie'],
   ['D', 'dziennik'],
   ['R', 'zasady i karty'],
   ['O', 'opcje'],

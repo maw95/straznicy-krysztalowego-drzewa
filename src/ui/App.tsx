@@ -810,7 +810,7 @@ export function App() {
               <input type="checkbox" checked={!music.muted} onChange={() => music.toggleMute()} /> włączona
             </label>
             <div>Ziarno partii: <b>{game.setup.seed}</b> · akcji: {game.actionCount} · gra zapisuje się automatycznie</div>
-            <div style={{ fontSize: 14, color: 'var(--muted)' }}>Skróty: Spacja — koniec tury/aktywacji · U — cofnij · F — przewiń boty · D — dziennik · R — zasady · Z — zdolność · S — skarby · T — zasięg wrogów · Esc — zamknij</div>
+            <div style={{ fontSize: 14, color: 'var(--muted)' }}>Skróty: Spacja — koniec tury/aktywacji · U — cofnij · F — przewiń boty · D — dziennik · R — zasady · Z — zdolność · S — skarby · Ctrl na jednostce — jej zasięg · Esc — zamknij</div>
             <button className="btn plate parch" style={{ padding: '6px 14px', alignSelf: 'flex-start' }} onClick={() => { setShowDebug(false); setShowRules(true); }}>Zasady i karty</button>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               <button className="btn prim" style={{ padding: '6px 14px' }} onClick={() => download(`partia-${game.setup.seed}.json`, JSON.stringify(saveFile(game), null, 1))}>Eksport partii (JSON)</button>
