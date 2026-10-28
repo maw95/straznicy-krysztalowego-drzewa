@@ -155,15 +155,13 @@ sheet(f'''<div class="eyebrow">Rozdział 1</div><h1>Co jest w pudełku</h1>
 <div class="banner" style="margin-top:4mm">Znaczniki</div>
 <p class="fine" style="text-align:center;margin:-2mm 0 2mm">Tyle wystarczy na najbardziej zaciętą bitwę.</p>
 <div class="markers seven">
-<figure><img src="assets/znaczniki/damage_5.png" alt=""><figcaption>kropla „5” × 10</figcaption></figure>
-<figure><img src="assets/znaczniki/damage_3.png" alt=""><figcaption>kropla „3” × 6</figcaption></figure>
-<figure><img src="assets/znaczniki/damage_2.png" alt=""><figcaption>kropla „2” × 6</figcaption></figure>
-<figure><img src="assets/znaczniki/damage_1.png" alt=""><figcaption>kropla „1” × 6</figcaption></figure>
+<figure><img src="assets/znaczniki/damage_1.png" alt=""><figcaption>kropla „1” / „2” × 6</figcaption></figure>
+<figure><img src="assets/znaczniki/damage_5.png" alt=""><figcaption>kropla „3” / „5” × 10</figcaption></figure>
 <figure><img src="assets/znaczniki/ability_used.png" alt=""><figcaption>zużyta zdolność × 6</figcaption></figure>
 <figure><img src="assets/znaczniki/attack_up.png" alt=""><figcaption>Wzmocnienie Ataku × 6</figcaption></figure>
 <figure><img src="assets/znaczniki/attack_3.png" alt=""><figcaption>+3 Ataku × 1</figcaption></figure>
-<figure><img src="assets/znaczniki/vitality.png" alt=""><figcaption>Żywotność × 4</figcaption></figure>
-<figure><img src="assets/znaczniki/shield.png" alt=""><figcaption>Ochrona × 2</figcaption></figure>
+<figure><img src="assets/znaczniki/vitality.png" alt=""><figcaption>Żywotność × 1</figcaption></figure>
+<figure><img src="assets/znaczniki/shield.png" alt=""><figcaption>Ochrona × 1</figcaption></figure>
 <figure><img src="assets/znaczniki/rooted.png" alt=""><figcaption>Unieruchomienie × 1</figcaption></figure>
 <figure><img src="assets/znaczniki/slowed.png" alt=""><figcaption>Spowolnienie × 1</figcaption></figure>
 <figure><img src="assets/znaczniki/cursed.png" alt=""><figcaption>Klątwa × 1</figcaption></figure>

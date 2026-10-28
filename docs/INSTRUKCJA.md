@@ -70,9 +70,9 @@ Liczby wystarczają na najbardziej wymagającą partię: bardzo długą mapę i 
 - **3 kryształy** (wys. 1,6 cm).
 - **Tor rund** — sześciokątna tablica (15 cm) z Drzewem pośrodku i 24 gniazdami — oraz **kryształowy znacznik rundy** (wys. 3 cm, łatwo go wyjąć z gniazda).
 - **Znaczniki** (wystarczą na jedną bitwę; okrągłe mają 2,3 cm):
-  - **krople obrażeń**: 10 × „5”, 6 × „3”, 6 × „2”, 6 × „1”;
+  - **krople obrażeń**, dwustronne: 6 × „1” / „2” i 10 × „3” / „5”;
   - **zużyta zdolność**: 6;
-  - **Wzmocnienie Ataku**: 6; **Żywotność (+4 Ż)**: 4; **Ochrona**: 2;
+  - **Wzmocnienie Ataku (+1 A)**: 6; **Żywotność (+4 Ż)**: 1; **Ochrona**: 1;
   - **+3 Ataku** (Złoty Smok po Słonecznym Blasku): 1;
   - **Unieruchomienie**, **Spowolnienie (−2 S)**, **Klątwa (−1 A)**, **Przyspieszenie (+3 S)**: po 1.
 - **Kość** −1 / 0 / +1 — tylko do utrudnienia „Rzut kością” (rozdział 13).
@@ -382,7 +382,7 @@ Skarby są **wspólne dla całej frakcji**. Każdy skarb działa **raz**, potem 
 | **Magiczna Mapa** | odkryj 3 wybrane zakryte kafelki | mapa |
 | **Błyskawica w Butelce** | do dwóch różnych wrogów: po 2 obrażenia | bitwa |
 | **Klepsydra Czasu** | wybrana jednostka wykonuje dodatkowy ruch (bez ataku) | bitwa |
-| **Róg Odwagi** | +2 A do następnego ataku jednostki i jednego sąsiedniego sojusznika | bitwa |
+| **Róg Odwagi** | +2 A do następnego ataku jednostki i jednego sąsiedniego sojusznika *(po 2 znaczniki Wzmocnienia Ataku)* | bitwa |
 | **Zwój Teleportacji** | przenieś sojusznika na wolne pole obok innego sojusznika | bitwa |
 | **Kamień Ochrony** | −1 obrażenie z każdego ataku w tę jednostkę do końca bitwy | bitwa |
 

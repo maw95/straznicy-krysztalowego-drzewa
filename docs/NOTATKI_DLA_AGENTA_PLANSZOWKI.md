@@ -429,7 +429,7 @@ Długość partii z limitem podniesionym do 100 (400 gier na wariant, poziomy No
 - **Wskrzeszenie na mapie:** wskrzeszony staje na wybranym wolnym polu obok pijącego (`reviveSpots`, `useMapItem.targets[0]`).
 - **Automat (kooperacja) i strażnicy w bitwie** grają według instrukcji (`battleAi.ts`, `rulebookAction`): zdolności od razu; bohater/strażnik bije bohatera, inaczej pomocnika z najmniejszym Życiem; pomocnik automatu bije najpierw pomocników; bez celu — do najbliższego wroga. W rywalizacji strażnikiem przy stole kieruje gracz Hordy; w grze jednoosobowej — ten sam gracz.
 - **Wynik (300 gier):** kooperacja łatwiejsza (Normalny 67–77%, Trudny 49–73%), PvP Normalny 41–61%. Zero zawieszonych partii i niedozwolonych ruchów.
-- **Zawartość pudełka** (max potrzeb — bardzo długa mapa, bitwa 3 na 3): 50 + 49 kafelków terenu, 16 kafelków skarbów (8 + 8), 3 siedliska, Drzewo, 2 bazy, 2 areny, 15 kart i 15 figurek, 18 kart skarbów (4 Eliksiry + 14), 3 kryształy, tor rund + znacznik, kość; znaczniki: krople 5 × 10, 3 / 2 / 1 × 6, zużyta zdolność 6, Wzmocnienie Ataku 6, +3 Ataku 1 (Złoty Smok po Słonecznym Blasku), Żywotność 4, Ochrona 2, pozostałe po 1.
+- **Zawartość pudełka** (max potrzeb — bardzo długa mapa, bitwa 3 na 3): 50 + 49 kafelków terenu, 16 kafelków skarbów (8 + 8), 3 siedliska, Drzewo, 2 bazy, 2 areny, 15 kart i 15 figurek, 18 kart skarbów (4 Eliksiry + 14), 3 kryształy, tor rund + znacznik, kość; znaczniki: zob. rozdział 11 (krople dwustronne 6 × 1/2 i 10 × 3/5, zużyta zdolność 6, Wzmocnienie Ataku 6, +3 Ataku 1, Żywotność 1, Ochrona 1, pozostałe po 1).
 
 ### 7.13. Wygrana tylko kryształami, 3 punkty ruchu, nowe boty (2026-10-21, decyzje użytkownika)
 
@@ -695,3 +695,14 @@ najwięcej w kooperacji jednego gracza na krótkiej mapie (+10 pp). Balans nie b
 | Rywalizacja — 2 na 2 | Normalny | Średnia | 46% | 47% |
 | Rywalizacja — 2 na 2 | Normalny | Długa | 45% | 48% |
 | Rywalizacja — 2 na 2 | Normalny | Bardzo długa | 45% | 47% |
+
+## 11. Liczba znaczników w pudełku (2026-10-28, decyzja użytkownika)
+
+- **Krople obrażeń są dwustronne:** jedne „1” / „2”, drugie „3” / „5”. Najwięcej obrażeń naraz: Przymierze 11 + 9 + 8
+  (Niedźwiedź, Złoty Smok, Jednorożec) i Horda 10 + 8 + 7 (Ogr, Wilkołak, Czarny Smok), jedna jednostka z Eliksirem
+  Żywotności (+4) — żywa jednostka ma najwyżej Życie − 1 obrażeń, razem 51. Najmniej żetonów: na każdą z 6 jednostek
+  jeden mały, a piątki duże → **6 × „1/2” i 10 × „3/5”** (bitwa z Cyklopem, 23 Ż, potrzebuje 4 małych i 10 dużych).
+- **Wzmocnienie Ataku (+1 A): 6.** Słoneczny Blask daje +1 dwóm sojusznikom Smoka (sam Smok ma znacznik „+3 Ataku”),
+  Róg Odwagi +2 dwóm jednostkom — oznaczany **dwoma** znacznikami „+1” na jednostkę; efekty mogą się nakładać: 2 + 4.
+- **Żywotność 1, Ochrona 1:** każdy skarb jest w pudełku raz (Eliksir Żywotności, Tarcza Strażnika).
+- Zużyta zdolność 6 (3 na 3, każda jednostka może mieć zdolność „raz na bitwę”); pozostałe po 1 (każdy efekt ma jedno źródło).
