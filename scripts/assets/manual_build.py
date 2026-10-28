@@ -177,13 +177,33 @@ sheet(f'''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Karty 
 <p style="margin-top:4mm">Do tego każda jednostka ma jeden <b>typ</b>: walczy <b>wręcz</b> (miecze), <b>strzela</b> (łuk) albo <b>lata</b> (skrzydło).</p>
 <div class="unit-pair" style="margin-top:6mm"><div class="card slim" style="text-align:center"><img src="assets/karty/goldDragon.jpg" alt="Karta Złotego Smoka" style="height:92mm"><div class="fine">Karta bohatera Przymierza</div></div><div class="card slim" style="text-align:center"><img src="assets/karty/blackDragon.jpg" alt="Karta Czarnego Smoka" style="height:92mm"><div class="fine">Karta bohatera Hordy</div></div></div>
 ''', left='Rozdział 1', right='Elementy gry', foot='Co jest w pudełku')
-sheet('''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Figurki</h1>
-<p class="intro" style="margin-bottom:3mm">Każda jednostka ma swoją figurkę. Kolor mówi, po czyjej jest stronie: <b>zielony</b> — Przymierze Świtu, <b>bordowy</b> — Mroczna Horda, <b>niebieski</b> — strażnicy kryształów.</p>
-<div class="figure" style="width:78%;margin:0 auto 3mm"><img src="assets/figurki/przymierze.jpg" alt="Figurki Przymierza Świtu" style="width:100%"></div>
-<div class="figure" style="width:78%;margin:0 auto"><img src="assets/figurki/horda.jpg" alt="Figurki Mrocznej Hordy" style="width:100%"></div>
+FIGURE_NAMES = {
+    'goldDragon': 'Złoty Smok', 'unicornKing': 'Król Jednorożców', 'ancientBear': 'Prastary Niedźwiedź',
+    'elfDruid': 'Elf Druid', 'nymph': 'Nimfa', 'pegasus': 'Pegaz',
+    'blackDragon': 'Czarny Smok', 'werewolfLord': 'Władca Wilkołaków', 'ironFistOgre': 'Ogr Żelazna Pięść',
+    'goblinShaman': 'Goblin Szaman', 'caveSpider': 'Pająk Jaskiniowy', 'shadowBat': 'Nietoperz Cienia',
+    'cyclops': 'Cyklop Błyskotek', 'griffin': 'Gryf Złodziej Skarbów', 'hydra': 'Hydra z Zatopionych Ruin',
+}
+
+
+def figures(ids, height):
+    """Rendered figures (make figurki, transparent PNGs) in rows of three, each named below."""
+    cells = ''.join(
+        f'<figure style="margin:0;text-align:center"><img src="assets/figurki/{i}.png" alt="Figurka: {FIGURE_NAMES[i]}" '
+        f'style="height:{height};width:100%;object-fit:contain;object-position:center bottom"><figcaption class="fine">{FIGURE_NAMES[i]}</figcaption></figure>'
+        for i in ids)
+    return f'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1mm 4mm;align-items:end">{cells}</div>'
+
+
+sheet(f'''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Figurki</h1>
+<p class="intro" style="margin-bottom:2mm">Każda jednostka ma swoją figurkę. Kolor podstawki mówi, po czyjej jest stronie: <b>zielony</b> — Przymierze Świtu, <b>bordowy</b> — Mroczna Horda, <b>niebieski</b> — strażnicy kryształów.</p>
+<div class="banner" style="margin:1mm 0 2mm">Przymierze Świtu</div>
+{figures(['goldDragon', 'unicornKing', 'ancientBear', 'elfDruid', 'nymph', 'pegasus'], '31mm')}
+<div class="banner" style="margin:3mm 0 2mm">Mroczna Horda</div>
+{figures(['blackDragon', 'werewolfLord', 'ironFistOgre', 'goblinShaman', 'caveSpider', 'shadowBat'], '31mm')}
 ''', left='Rozdział 1', right='Elementy gry', foot='Co jest w pudełku')
-sheet('''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Figurki strażników</h1>
-<div class="figure" style="margin:3mm 0 6mm"><img src="assets/figurki/straznicy.jpg" alt="Figurki strażników kryształów" style="width:100%"></div>
+sheet(f'''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Figurki strażników</h1>
+<div style="margin:3mm 0 6mm">{figures(['cyclops', 'griffin', 'hydra'], '52mm')}</div>
 <div class="card" style="--accent:var(--navy)"><h3>Jedna figurka na jednym polu</h3><p>Figurki stoją na sześciokątnych podstawkach, które mieszczą się w polu areny i na kafelku mapy. Na jednym polu stoi zawsze tylko jedna figurka — wyjątkiem jest baza frakcji, gdzie może stać kilku jej bohaterów.</p></div>
 <div class="card" style="margin-top:4mm"><h3>Figurki z drukarki</h3><p>Figurki są przygotowane do druku na drukarce żywicznej. Jeśli ich nie macie, wystarczą dowolne pionki w trzech kolorach — byle było jasne, kto jest kim.</p></div>
 ''', cls='neutral', left='Rozdział 1', right='Elementy gry', foot='Co jest w pudełku')

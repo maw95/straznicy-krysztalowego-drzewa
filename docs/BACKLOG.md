@@ -2,24 +2,7 @@
 
 Uzgodnione pomysły do wdrożenia. Zrobione punkty są usuwane (zostają w historii gita i w CHANGELOG.md):
 tryb online z menu i rankingiem, figurki 3D, szczegóły pod prawym przyciskiem, atak jednym kliknięciem,
-porządki w kodzie (etapy 0–4 i resztki), wersja mobilna, zgłoszenia z 23.10 i 28.10.
-
-## 1. Nowe materiały od autora (28.10)
-
-Szacunki kosztu to tokeny zużyte przez Claude w jednej sesji (czytanie plików, zrzuty ekranu, testy). Każdy
-punkt to osobny commit; najtańsza kolejność: 1.5 → 1.4 → 1.3 → 1.2 → 1.1.
-
-- [ ] **1.1. Nowe modele figurek (GLB) w grze i rzuty w instrukcji.** *Koszt: ok. 150–250 tys. tokenów*
-      (część a ok. 50–80 tys., część b ok. 100–170 tys.).
-  - a) `docs/druk3d/figurki/z_teksturami/*.glb` (15 plików, razem 2,9 GB) → `make modele` → `public/modele/`,
-    z limitem 2,5 MB na model; sprawdzić rozmiary, galerię `?figury` i figurki na mapie i arenie. Przy okazji
-    sprawdzić, czy nowy Goblin ma scalone wierzchołki (punkt 2) i czy nieśledzone w gicie
-    `public/modele/{cyclops,griffin,hydra,werewolfLord}.glb` mają trafić do repozytorium.
-  - b) Nowe podglądy figurek zamiast `docs/grafika/figurki/pomalowane/{horda,przymierze}.png` (+ strażnicy):
-    render modeli three.js w przeglądarce bez okna, z przezroczystym tłem (PNG z kanałem alfa), jeden obraz na
-    figurkę albo zestaw na frakcję. Wstawić do instrukcji: `docs/INSTRUKCJA.md` i szablon
-    `docs/edytowalny_szablon_instrukcji/assets/figurki/`. Da się to zrobić — gra już rysuje modele three.js,
-    trzeba tylko skryptu, który ustawi kamerę i zapisze kadr.
+porządki w kodzie (etapy 0–4 i resztki), wersja mobilna, zgłoszenia z 23.10 i 28.10, nowe materiały od autora z 28.10 (modele, portrety, znaczniki, wymiary).
 
 ## 2. Figurki 3D — drobne
 

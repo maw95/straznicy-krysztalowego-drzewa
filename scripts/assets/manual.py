@@ -17,6 +17,8 @@ MAX_SIDE = 1600
 # Transparent PNGs stay PNG, so they are scaled harder.
 MAX_SIDE_ALPHA = 900
 BIG = 300_000
+# Figures stand at most ~5 cm tall on a page: on screen they need far fewer pixels than the print.
+MAX_SIDE_FIGURE = 420
 
 html = open(os.path.join(SRC, 'index.html'), encoding='utf-8').read()
 css = open(os.path.join(SRC, 'style.css'), encoding='utf-8').read()
@@ -44,7 +46,8 @@ for ref in refs:
             written.add(os.path.join(OUT, new_ref))
             renamed[ref] = new_ref
         else:
-            im.thumbnail((MAX_SIDE_ALPHA, MAX_SIDE_ALPHA), Image.LANCZOS)
+            side = MAX_SIDE_FIGURE if ref.startswith('assets/figurki/') else MAX_SIDE_ALPHA
+            im.thumbnail((side, side), Image.LANCZOS)
             im.save(dst, optimize=True)
             written.add(dst)
     else:
