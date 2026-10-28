@@ -115,12 +115,13 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
             ['Przymierze Świtu', [...FACTION_HEROES.dawn, ...FACTION_SUPPORTS.dawn]],
             ['Mroczna Horda', [...FACTION_HEROES.horde, ...FACTION_SUPPORTS.horde]],
             ['Strażnicy kryształów', GUARDIANS],
-          ] as Array<[string, string[]]>).map(([title, ids]) => (
+            ['Strażnicy w pojedynku na planszy (karty z błękitnym rewersem)', GUARDIANS, true],
+          ] as Array<[string, string[], boolean?]>).map(([title, ids, duel]) => (
             <div key={title} style={{ marginBottom: 18 }}>
               <div className="lbl" style={{ textAlign: 'center', margin: '4px 0 10px' }}>{title}</div>
               <div style={{ ...cardRow, maxWidth: cardW * 3 + 28 }}>
                 {ids.map((id) => (
-                  <UnitCard key={id} unitId={id} width={cardW} />
+                  <UnitCard key={id} unitId={id} width={cardW} duel={duel} />
                 ))}
               </div>
             </div>

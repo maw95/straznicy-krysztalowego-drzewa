@@ -21,6 +21,7 @@ Szacunki kosztu to tokeny zużyte przez Claude w jednej sesji. Każdy punkt to o
     ani za słabe względem dzisiejszych wyników; zapisać decyzję w `NOTATKI_DLA_AGENTA_PLANSZOWKI.md`.
     Zmiana wyników bitew zmieni test złotych partii — aktualizować świadomie i napisać to w commicie.
   - [x] Silnik: zdolności, karty pojedynkowe, symulacje, decyzja w notatkach (§12).
+  - [x] Karty w grze: `UnitCard duel` w pojedynku, w szczegółach jednostki i w „Zasadach → Jednostki”.
   - Instrukcja i szablon: rozdział 1 (karty jednostek: 15 + 3 karty strażników z błękitnym rewersem), opis
     strażników (rozdział 10) i pojedynku (rozdział 9), lista elementów i `WYMIARY_ELEMENTOW.md` (18 kart
     jednostek), rewersy kart w instrukcji, jeśli są pokazane.

@@ -3,7 +3,7 @@
 // ability medallion, stat icons, and the text from the unit data.
 // Coordinates are in frame pixels (551×713), measured on each frame.
 
-import { guardianDuelHp, UNITS } from '../engine/data';
+import { UNITS } from '../engine/data';
 import { asset } from './common';
 import { StatText } from './markers';
 
@@ -163,8 +163,17 @@ export function fitFont(text: string, width: number, height: number, max = 26, m
   return min;
 }
 
-export function UnitCard({ unitId, width = 300, hp, attack, speed }: { unitId: string; width?: number; hp?: number; attack?: number; speed?: number }) {
-  const def = UNITS[unitId];
+/** Light blue of the guardians' duel cards (their back in the box is light blue too). */
+const DUEL_BLUE = '#8FD3F4';
+
+/**
+ * A unit's card; `duel` shows a guardian's duel card instead (the duel on the board): its Życie and ability,
+ * "Pojedynek" on the role plate and a light-blue edge.
+ */
+export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false }: { unitId: string; width?: number; hp?: number; attack?: number; speed?: number; duel?: boolean }) {
+  const base = UNITS[unitId];
+  const card = duel ? base.duel : undefined;
+  const def = card ? { ...base, hp: card.hp, abilityName: card.abilityName, abilityText: card.abilityText } : base;
   const L = frameFor(unitId);
   const scale = width / FRAME_W;
   const { at, circle, kx, ky, X, Y } = cardSpace(L.bounds);
@@ -175,14 +184,14 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed }: { unitId: s
   const desc = { ...L.desc, x0: Math.max(L.desc.x0, L.ability.cx + L.ability.r + 8), y0: L.desc.y0 - 4, y1: L.desc.y1 + 3 };
   const descSize = fitFont(def.abilityText, (desc.x1 - desc.x0) * kx - 16, (desc.y1 - desc.y0) * ky);
   return (
-    <div className="card-sheen" style={{ position: 'relative', width, height: CARD_H * scale, flex: 'none', filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.6))' }}>
+    <div className="card-sheen" style={{ position: 'relative', width, height: CARD_H * scale, flex: 'none', filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.6))', ...(card ? { borderRadius: 12 * scale, boxShadow: `0 0 0 ${Math.max(2, 4 * scale)}px ${DUEL_BLUE}` } : {}) }}>
       <div style={{ position: 'absolute', left: 0, top: 0, width: FRAME_W, height: CARD_H, overflow: 'hidden', transform: `scale(${scale})`, transformOrigin: '0 0', fontFamily: "'Crimson Pro', Georgia, serif" }}>
         <img src={asset(`cards/art/${unitId}.jpg`)} alt={def.name} style={{ ...at(L.art), objectFit: 'cover', objectPosition: 'center 35%' }} />
         <img src={asset(`cards/frames/${L.file}.png`)} alt="" style={{ position: 'absolute', left: X(0), top: Y(0), width: FRAME_W * kx, height: SRC_H * ky }} />
 
         <div style={{ ...at(L.name), ...centered, fontWeight: 800, fontSize: nameSize, lineHeight: 1, color: '#20160C', whiteSpace: 'nowrap', letterSpacing: '0.01em' }}>{def.name}</div>
         <div style={{ ...at(L.role), ...centered, fontWeight: 800, fontSize: 19, letterSpacing: '0.1em', textTransform: 'uppercase', color: L.roleOnDark ? '#F7EDD2' : '#2B1D10', textShadow: L.roleOnDark ? '0 1px 0 rgba(0,0,0,0.6)' : 'none' }}>
-          {(def.side === 'horde' ? HORDE_ROLE : ROLE)[def.kind]}
+          {card ? 'Pojedynek' : (def.side === 'horde' ? HORDE_ROLE : ROLE)[def.kind]}
         </div>
 
         <img
@@ -199,16 +208,13 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed }: { unitId: s
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, height: h * 0.64 }}>
                 <img src={asset(`cards/stats/${STAT_ICON[i]}.png`)} alt="" style={{ width: h * 0.56, height: h * 0.56, objectFit: 'contain' }} />
                 <span style={{ fontWeight: 800, fontSize: h * 0.56, lineHeight: 1, color: '#17100A' }}>{values[i]}</span>
-                {/* Guardians fight a lone hero (duel on the board) with less Życie. */}
-                {i === 0 && def.kind === 'neutral' && hp === undefined && (
-                  <span title="Życie w pojedynku na planszy" style={{ fontWeight: 700, fontSize: h * 0.3, lineHeight: 1, color: '#3A2A16', alignSelf: 'flex-end' }}>({guardianDuelHp(unitId)})</span>
-                )}
               </div>
               <div style={{ fontWeight: 700, fontSize: 15, lineHeight: 1, color: '#2B1D10' }}>{STAT_LABEL[i]}</div>
             </div>
           );
         })}
 
+        {/* A duel card keeps the guardian's medallion (no picture of its own yet). */}
         <img
           src={asset(`cards/abilities/${def.ability}_inner.png`)}
           alt=""

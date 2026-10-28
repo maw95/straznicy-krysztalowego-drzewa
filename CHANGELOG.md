@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Karty strażników do pojedynku są w grze: w pojedynku strażnik pokazuje swoją kartę pojedynkową (błękitna obwódka, napis „Pojedynek”), a wszystkie trzy są w „Zasadach i kartach → Jednostki”. Zwykła karta strażnika nie ma już liczby Życia w nawiasie.
 - **Zmiana zasad:** w pojedynku na planszy strażnik walczy osobną kartą: Cyklop ma Kamienną Skórę (każdy cios w niego o 1 mniej, 14 Życia), Gryf Złodziejski Szpon (gdy zrani, odzyskuje 1 Życie, 10 Życia), a Hydra Odrastające Głowy (na początku swojej aktywacji odzyskuje 2 Życia, 12 Życia). Bot Przymierza w pojedynku używa Słonecznego Blasku.
 - Figurki 3D: wszystkie 15 z nowych modeli autora (także Pegaz, Pająk Jaskiniowy, Hydra i Król Jednorożców), każda poniżej 2,5 MB. W instrukcji każda frakcja ma swoją stronę: większe figurki bohaterów, pod nimi mniejsze figurki pomocników.
 - Figurki 3D obracają się wolniej, a ruch ma dwie fazy: najpierw obrót w miejscu, potem przesunięcie (tak samo przed atakiem: obrót do celu, potem cios).

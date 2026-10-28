@@ -91,7 +91,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
     return (
       <div key={u.id} style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, opacity: u.alive ? 1 : 0.4, transition: 'opacity 0.4s' }}>
         <div className={isActive ? 'active-token' : undefined} style={{ borderRadius: 14, boxShadow: isActive ? '0 0 0 3px #9EE4FF, 0 0 24px 6px rgba(158,228,255,0.55)' : 'none', transition: 'box-shadow 0.3s' }}>
-          <UnitCard unitId={u.defId} width={Math.min(230, (window.innerWidth - 90) / 2)} hp={u.hp} attack={UNITS[u.defId].attack + u.status.battleAttackBonus} speed={unitSpeed(u)} />
+          <UnitCard unitId={u.defId} duel={Boolean(u.ability)} width={Math.min(230, (window.innerWidth - 90) / 2)} hp={u.hp} attack={UNITS[u.defId].attack + u.status.battleAttackBonus} speed={unitSpeed(u)} />
         </div>
         <div style={{ width: '90%' }}>
           <HpBar hp={u.hp} max={u.maxHp} />

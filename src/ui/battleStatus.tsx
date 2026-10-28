@@ -67,7 +67,7 @@ export function StatusBadge({ st, size = 22 }: { st: StatusInfo; size?: number }
 export function UnitDetails({ u }: { u: BattleUnit }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: 280 }}>
-      <UnitCard unitId={u.defId} width={280} hp={u.hp} attack={UNITS[u.defId].attack + u.status.battleAttackBonus} speed={unitSpeed(u)} />
+      <UnitCard unitId={u.defId} duel={Boolean(u.ability)} width={280} hp={u.hp} attack={UNITS[u.defId].attack + u.status.battleAttackBonus} speed={unitSpeed(u)} />
       <div className="plate slate" style={{ padding: '8px 12px', borderRadius: 10, boxShadow: '0 0 0 2px #B88A35, 0 8px 18px rgba(0,0,0,0.6)' }}>
         <HpBar hp={u.hp} max={u.maxHp} />
         <div style={{ fontSize: 15, color: '#F7EDD2', marginTop: 6 }}>
