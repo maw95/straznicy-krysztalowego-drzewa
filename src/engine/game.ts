@@ -358,9 +358,10 @@ export function legalHeroMoves(state: GameState): HeroMove[] {
     const tile = state.tiles[n];
     const cost = tileCost(tile);
     if (cost === null || !tile.revealed) continue;
-    const enemies = heroesAt(state, n).filter((h) => h.faction !== hero.faction);
+    const there = heroesAt(state, n);
+    const enemies = there.filter((h) => h.faction !== hero.faction);
     // One hero per hex: a hex held by an ally is closed (except the faction's own base).
-    if (!enemies.length && heroesAt(state, n).length && tile.home !== hero.faction) continue;
+    if (!enemies.length && there.length && tile.home !== hero.faction) continue;
     const crystal = tile.crystalId ? state.crystals[tile.crystalId] : null;
     if (enemies.length) {
       // Attacking needs at least 1 movement point and ends the hero's movement.
