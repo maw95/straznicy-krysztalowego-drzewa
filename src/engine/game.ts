@@ -14,6 +14,7 @@ import {
   NON_RESURRECTION_ITEMS,
   ARENA_DECK,
   ARENA_OFFER,
+  ARENA_PICKS,
   ARENA_RULES,
   RESURRECTION_CARDS,
   SUPPORTS_PER_BATTLE,
@@ -186,7 +187,9 @@ function startArena(state: GameState) {
   if (!dawn || !horde) throw new Error('Na arenie walczy jeden bohater Przymierza i jeden Hordy.');
   const hero = (f: FactionId) => (f === 'dawn' ? dawn : horde);
   const extra = (['dawn', 'horde'] as FactionId[]).flatMap((f) => Array<FactionId>(ARENA_RULES.extraPicks[f]).fill(f));
-  state.draft = { deck: [...ARENA_DECK], order: [first, second, second, first, ...extra], offer: [] };
+  // ARENA_PICKS each, snaking: A, B, B, A, A, B, …
+  const picks = Array.from({ length: ARENA_PICKS }, (_, i) => (i % 2 ? [second, first] : [first, second])).flat();
+  state.draft = { deck: [...ARENA_DECK], order: [...picks, ...extra], offer: [] };
   log(state, 'battle', `Arena: ${UNITS[hero('dawn').id].name} kontra ${UNITS[hero('horde').id].name}. Pierwsza wybiera ${FACTION_NAMES[first]}.`);
   startBattle(state, { kind: 'heroes', attackerHero: hero(first).id, defenderHero: hero(second).id, mapHex: hero(first).pos, from: hero(first).pos });
   const b = state.battle!;
