@@ -284,6 +284,13 @@ export function heroesAt(state: GameState, k: HexKey): HeroState[] {
   return Object.values(state.heroes).filter((h) => h.alive && !h.entering && h.pos === k);
 }
 
+/** The enemy hero who fights for hex `k` when it is attacked: of several (only in a base), the one with the most Życie. */
+export function defenderAt(state: GameState, k: HexKey, attacker: FactionId): HeroState | undefined {
+  return heroesAt(state, k)
+    .filter((h) => h.faction !== attacker)
+    .sort((a, b) => UNITS[b.id].hp - UNITS[a.id].hp)[0];
+}
+
 /**
  * The ritual stands when one living Horde hero is on the Tree and every other living Horde hero
  * is on a hex next to it (one hero per hex, so they gather around the Tree).
@@ -429,8 +436,7 @@ function moveHero(state: GameState, to: HexKey) {
     return;
   }
   if (move.kind === 'attackHero') {
-    // Several defenders (only in a base): the one with the most Życie stands up to fight.
-    const defender = heroesAt(state, to).filter((h) => h.faction !== hero.faction).sort((a, b) => UNITS[b.id].hp - UNITS[a.id].hp)[0];
+    const defender = defenderAt(state, to, hero.faction)!;
     log(state, 'battle', `${name} atakuje: ${UNITS[defender.id].name}.`);
     const from = hero.pos;
     hero.pos = to;

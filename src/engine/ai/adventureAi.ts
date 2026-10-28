@@ -4,7 +4,7 @@
 import { FACTION_SUPPORTS, UNITS, type FactionId } from '../data';
 import { distance, parseKey, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, treeKey } from '../map';
-import { activeHero, currentActor, heroesAt, legalHeroMoves, reviveSpots, ritualFormed, ritualSpot } from '../game';
+import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, reviveSpots, ritualFormed, ritualSpot } from '../game';
 import type { Action, GameState, HeroState } from '../types';
 
 function knownCost(state: GameState, k: HexKey): number | null {
@@ -52,10 +52,10 @@ const huntRatio = (state: GameState) => (state.setup.battleMode === 'board' ? 1.
 
 /**
  * Strength ratio of `a` against `b` (above 1: a is stronger). When several heroes share b's
- * hex, the one the engine sends to fight (the first there) is the one that counts.
+ * hex, the one the engine sends to fight (the one with the most Życie) is the one that counts.
  */
 function ratio(state: GameState, a: HeroState, b: HeroState): number {
-  const defender = heroesAt(state, b.pos).find((h) => h.faction === b.faction) ?? b;
+  const defender = defenderAt(state, b.pos, a.faction) ?? b;
   return teamStrength(state, a.faction, a.id) / Math.max(1, teamStrength(state, defender.faction, defender.id));
 }
 
