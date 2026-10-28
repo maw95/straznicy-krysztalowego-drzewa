@@ -54,6 +54,12 @@ typecheck: node_modules ## Sprawdzenie typów TypeScript
 
 check: typecheck test ## Typy + testy (przed commitem)
 
+# A screenshot through a headless browser (its own Vite server on :5180). Q = the test hook query from App.tsx.
+WIDOK ?= desktop
+zrzut: node_modules ## Zrzut ekranu gry (mały), np. make zrzut Q='steps=400&until=battle&mode=pvp&seed=3' WIDOK=telefon ELEMENT=.arena-frame
+	@mkdir -p .tmp
+	npx tsx scripts/browser/zrzut.ts '$(Q)' --widok $(WIDOK) $(if $(ELEMENT),--element '$(ELEMENT)',)
+
 sim: node_modules ## Symulacje botów (bez kości obrażeń, chyba że OPTIONS ma dice), np. make sim GAMES=500 SIZE=medium MODE=pvp OPTIONS=noabilities,dice BATTLE=board
 	npx tsx scripts/simulate.ts $(GAMES) $(SIZE) $(MODE) $(OPTIONS) $(BATTLE)
 
