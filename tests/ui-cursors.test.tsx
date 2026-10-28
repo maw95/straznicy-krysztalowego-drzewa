@@ -1,27 +1,14 @@
 // @vitest-environment jsdom
-import { act, cleanup, fireEvent, render } from '@testing-library/react';
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { arenaCell, makeBattleUnit } from '../src/engine/battle';
 import { applyAction, createGame } from '../src/engine/game';
 import type { Action } from '../src/engine/types';
 import { DEFAULT_RULES, type BattleState, type GameState } from '../src/engine/types';
 import { BattleView } from '../src/ui/BattleView';
+import { setupUiTests } from './helpers/ui';
 
-beforeAll(() => {
-  (globalThis as any).ResizeObserver = class { observe() {} disconnect() {} unobserve() {} };
-  // jsdom has no PointerEvent: a MouseEvent (it carries the position) with the pointer type is enough here.
-  (globalThis as any).PointerEvent ??= class extends MouseEvent {
-    pointerType: string;
-    constructor(type: string, init: PointerEventInit = {}) {
-      super(type, init);
-      this.pointerType = init.pointerType ?? 'mouse';
-    }
-  };
-});
-afterEach(() => {
-  cleanup();
-  vi.useRealTimers();
-});
+setupUiTests({ localPlay: false });
 
 /** An arena fight with the listed units at [col, half] (even columns use even halves); the first one acts. */
 function fight(units: Array<[string, 'dawn' | 'horde', number, number]>, obstacles: Array<[number, number]> = []): GameState {

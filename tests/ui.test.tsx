@@ -1,50 +1,16 @@
 // @vitest-environment jsdom
 import { StrictMode } from 'react';
 import { act, cleanup, fireEvent, render } from '@testing-library/react';
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { App } from '../src/ui/App';
 import { createGame } from '../src/engine/game';
 import { DEFAULT_RULES } from '../src/engine/types';
 import { journalBreakdown, journalStats, recordGame } from '../src/ui/journal';
 import { difficultyRating, pointsFor } from '../src/engine/scoring';
 import { levelSettings } from '../src/engine/types';
+import { button, byText, clearDialogs, setupUiTests } from './helpers/ui';
 
-beforeAll(() => {
-  (globalThis as any).ResizeObserver = class { observe() {} disconnect() {} unobserve() {} };
-  // jsdom has no PointerEvent: a MouseEvent (it carries the button) with the pointer type is enough here.
-  (globalThis as any).PointerEvent ??= class extends MouseEvent {
-    pointerType: string;
-    constructor(type: string, init: PointerEventInit = {}) {
-      super(type, init);
-      this.pointerType = init.pointerType ?? 'mouse';
-    }
-  };
-});
-beforeEach(() => {
-  localStorage.clear();
-  localStorage.setItem('skd-tutorial', JSON.stringify({ enabled: false, seen: [] }));
-  localStorage.setItem('skd-intro', 'seen');
-  // These tests play locally: "Graj bez konta" starts at the setup screen (the online menu needs a server).
-  localStorage.setItem('skd-play-offline', '1');
-  // No "Nowa wersja — co nowego" window in the way (it has its own test).
-  localStorage.setItem('skd-last-version', '999.0.0');
-  sessionStorage.setItem('skd-title-done', 'done');
-});
-
-/** Accepts confirmation dialogs and dismisses summaries so the scripted player keeps going. */
-async function clearDialogs(c: HTMLElement) {
-  const ready = [...c.querySelectorAll('button')].find((b) => b.textContent?.includes('Gotowe — do bitwy')) as HTMLButtonElement | undefined;
-  if (ready) await act(async () => fireEvent.click(ready));
-  for (let i = 0; i < 3; i++) {
-    const btn = [...c.querySelectorAll('.overlay button.prim')].find((b) => /Zakończ turę|Do walki|Dalej|Do ekwipunku/.test(b.textContent ?? '')) as HTMLButtonElement | undefined;
-    if (!btn) return;
-    await act(async () => fireEvent.click(btn));
-  }
-}
-afterEach(() => {
-  cleanup();
-  vi.useRealTimers();
-});
+setupUiTests();
 
 function startSolo(seed: number) {
   window.history.replaceState(null, '', `/?steps=0&seed=${seed}&players=1`);
@@ -52,7 +18,7 @@ function startSolo(seed: number) {
   return render(<StrictMode><App /></StrictMode>);
 }
 
-const endTurnButton = (c: HTMLElement) => [...c.querySelectorAll('button')].find((b) => b.textContent?.includes('Zakończ turę')) as HTMLButtonElement | undefined;
+const endTurnButton = (c: HTMLElement) => byText(c, 'Zakończ turę');
 /** Hex buttons showing a movement cost plate = hexes the hero can walk to. */
 const reachableHexes = (c: HTMLElement) => [...c.querySelectorAll('button.hexbtn')].filter((b) => b.querySelector('.plate'));
 
@@ -93,7 +59,7 @@ describe('setup screen simplifications', () => {
   it('starts the full game by default and applies clicked simplifications', async () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<StrictMode><App /></StrictMode>);
-    const btn = (t: string) => [...container.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement;
+    const btn = (t: string) => button(container, t)!;
     // Single switches are tucked away under "Własny".
     expect(btn('Same Eliksiry Odrodzenia')).toBeUndefined();
     await act(async () => fireEvent.click(btn('Własny')));
@@ -114,7 +80,7 @@ describe('setup screen simplifications', () => {
   it('sets up the levels: hard adds a Horde hero in coop, kids play duels without abilities', async () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<StrictMode><App /></StrictMode>);
-    const btn = (t: string) => [...container.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement | undefined;
+    const btn = (t: string) => button(container, t);
     await act(async () => fireEvent.click(btn('Trudny')!));
     expect(btn('Trudny')!.getAttribute('aria-pressed')).toBe('true');
     await act(async () => fireEvent.click(btn('Rozpocznij grę')!));
@@ -123,7 +89,7 @@ describe('setup screen simplifications', () => {
     expect(game.factions.horde.inventory).toHaveLength(2);
     cleanup();
     const second = render(<StrictMode><App /></StrictMode>).container;
-    const btn2 = (t: string) => [...second.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement | undefined;
+    const btn2 = (t: string) => button(second, t);
     await act(async () => fireEvent.click(btn2('Rywalizacja (dobro kontra zło)')!));
     expect(btn2('Trudny')).toBeUndefined();
     await act(async () => fireEvent.click(btn2('Łatwy')!));
@@ -143,7 +109,7 @@ describe('bug reports', () => {
     }));
     const { container } = startSolo(3);
     await act(async () => vi.advanceTimersByTime(100));
-    const btn = (t: string) => [...container.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement;
+    const btn = (t: string) => button(container, t)!;
     await act(async () => fireEvent.click(btn('Zgłoś błąd')));
     const area = container.ownerDocument.querySelector('textarea[aria-label="Opis błędu"]') as HTMLTextAreaElement;
     expect(area).toBeTruthy();
@@ -179,7 +145,7 @@ describe('tester journal', () => {
     expect(box).toContain('1 wygr. · 0 przegr.');
     expect(box).toContain('Procent wygranych100%');
     expect(box).toContain('Punkty9');
-    const btn = (t: string) => [...doc.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement;
+    const btn = (t: string) => button(doc, t)!;
     await act(async () => fireEvent.click(btn('INFO DLA TESTERÓW')));
     expect(doc.body.textContent).toContain('Zgłoszone błędy: 1');
     await act(async () => fireEvent.change(doc.querySelector('input[aria-label="Twoje imię"]')!, { target: { value: 'Ola' } }));
@@ -262,7 +228,7 @@ describe('setup options', () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<App />);
     const doc = container.ownerDocument;
-    const btn = (t: string) => [...doc.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement | undefined;
+    const btn = (t: string) => button(doc, t);
     expect(btn('Na zmianę')).toBeUndefined();
     expect(doc.body.textContent).not.toContain('Remis inicjatywy');
     await act(async () => fireEvent.click(btn('Własny')!));
@@ -354,17 +320,16 @@ describe('start screen', () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<App />);
     const doc = container.ownerDocument;
-    const button = (text: string) => [...doc.querySelectorAll('button')].find((b) => b.textContent?.trim() === text) as HTMLButtonElement | undefined;
     expect(doc.body.textContent).toContain('Witaj, Strażniku!');
-    expect(button('Zaloguj')).toBeTruthy();
+    expect(button(doc, 'Zaloguj')).toBeTruthy();
     expect(doc.body.textContent).toContain('Bez gry online i bez rankingu');
 
-    await act(async () => fireEvent.click(button('Graj bez konta')!));
-    expect(button('Rozpocznij grę')).toBeTruthy();
-    expect(button('Zaloguj się, żeby grać ze znajomymi')).toBeTruthy();
+    await act(async () => fireEvent.click(button(doc, 'Graj bez konta')!));
+    expect(button(doc, 'Rozpocznij grę')).toBeTruthy();
+    expect(button(doc, 'Zaloguj się, żeby grać ze znajomymi')).toBeTruthy();
     expect(localStorage.getItem('skd-play-offline')).toBe('1');
 
-    await act(async () => fireEvent.click(button('Zaloguj się, żeby grać ze znajomymi')!));
+    await act(async () => fireEvent.click(button(doc, 'Zaloguj się, żeby grać ze znajomymi')!));
     expect(doc.body.textContent).toContain('Witaj, Strażniku!');
     expect(localStorage.getItem('skd-play-offline')).toBeNull();
   });
@@ -561,7 +526,7 @@ describe('arena through the UI', () => {
     vi.useFakeTimers();
     const { container } = render(<App />);
     const doc = container.ownerDocument;
-    const btn = (t: string) => [...doc.querySelectorAll('button')].find((b) => b.textContent?.trim() === t) as HTMLButtonElement | undefined;
+    const btn = (t: string) => button(doc, t);
     await act(async () => fireEvent.click(btn('Arena (jedna bitwa)')!));
     if (bothHuman) {
       const who = doc.querySelectorAll('select[aria-label="Kto gra"]')[1] as HTMLSelectElement;

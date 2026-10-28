@@ -1,40 +1,11 @@
 // @vitest-environment jsdom
 import { StrictMode } from 'react';
-import { act, cleanup, fireEvent, render } from '@testing-library/react';
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { App } from '../src/ui/App';
+import { byText, clearDialogs, setupUiTests } from './helpers/ui';
 
-beforeAll(() => {
-  (globalThis as any).ResizeObserver = class { observe() {} disconnect() {} unobserve() {} };
-});
-beforeEach(() => {
-  localStorage.clear();
-  localStorage.setItem('skd-tutorial', JSON.stringify({ enabled: false, seen: [] }));
-  localStorage.setItem('skd-intro', 'seen');
-  // These tests play locally: "Graj bez konta" starts at the setup screen (the online menu needs a server).
-  localStorage.setItem('skd-play-offline', '1');
-  // No "Nowa wersja — co nowego" window in the way (it has its own test).
-  localStorage.setItem('skd-last-version', '999.0.0');
-  sessionStorage.setItem('skd-title-done', 'done');
-});
-
-/** Accepts confirmation dialogs and dismisses summaries so the scripted player keeps going. */
-async function clearDialogs(c: HTMLElement) {
-  const ready = [...c.querySelectorAll('button')].find((b) => b.textContent?.includes('Gotowe — do bitwy')) as HTMLButtonElement | undefined;
-  if (ready) await act(async () => fireEvent.click(ready));
-  for (let i = 0; i < 3; i++) {
-    const btn = [...c.querySelectorAll('.overlay button.prim')].find((b) => /Zakończ turę|Do walki|Dalej|Do ekwipunku/.test(b.textContent ?? '')) as HTMLButtonElement | undefined;
-    if (!btn) return;
-    await act(async () => fireEvent.click(btn));
-  }
-}
-afterEach(() => {
-  cleanup();
-  vi.useRealTimers();
-});
-
-const buttons = (c: HTMLElement) => [...c.querySelectorAll('button')] as HTMLButtonElement[];
-const byText = (c: HTMLElement, t: string) => buttons(c).find((b) => b.textContent?.trim() === t || b.textContent?.includes(t));
+setupUiTests();
 
 // 12 seeds play every hero with and without abilities twice; `make test-slow` (SLOW=1) plays 36.
 const SEEDS = process.env.SLOW ? 36 : 12;
