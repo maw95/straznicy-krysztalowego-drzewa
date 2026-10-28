@@ -417,46 +417,99 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
   }
 }
 
-function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, useAbility: boolean, movedDistance: number) {
+/** Opiekun Gaju: whether `bear` can still take the blow aimed at `x` (itself, or an ally next to it). */
+export function bearCanGuard(state: GameState, bear: BattleUnit, x: BattleUnit): boolean {
+  if (abilityOf(bear) !== 'guardian' || bear.abilityUsed || !abilityActive(state, bear)) return false;
+  return bear.id === x.id || (!!bear.pos && !!x.pos && adjacent(bear.pos, x.pos));
+}
+
+export interface DamagePrediction {
+  /** Attack value before the die. */
+  base: number;
+  /** The unit that takes the blow: the target, or the bear when Opiekun Gaju steps in for it. */
+  victim: BattleUnit;
+  /** Damage that lands on the victim after every reaction. */
+  damage: number;
+  /** Opiekun Gaju fires: the bear takes over an ally's blow ('ally') or softens a lethal one on itself ('self'). */
+  bearGuard: 'ally' | 'self' | null;
+  /** Damage Twardogłowy ignores (null when it does not fire). */
+  hardHead: number | null;
+  /** Tarcza Strażnika stops the whole blow. */
+  shield: boolean;
+  /** The victim falls. */
+  lethal: boolean;
+}
+
+/**
+ * What an attack of `att` on `target` does, with the defender's reactions in the engine's order:
+ * Opiekun Gaju (for an ally), Tarcza Strażnika, Opiekun Gaju (the bear itself), Twardogłowy, then
+ * Kamień Ochrony. Pure: the battle uses it to resolve the blow and the screen to preview it.
+ * `die` is the damage die's result (0 without the die or for a preview).
+ */
+export function predictDamage(
+  state: GameState,
+  att: BattleUnit,
+  target: BattleUnit,
+  opts: { useAbility: boolean; movedDistance: number; die?: number },
+): DamagePrediction {
   const b = state.battle!;
-  const base = attackDamage(state, att, target, useAbility, movedDistance);
-  const die = rollDie(state);
-  // The roll is logged so a blow that the die cut to 0 does not look like a bug.
-  if (state.rules.useDice) blog(state, `Rzut kością: ${die > 0 ? '+1' : die < 0 ? '−1' : '0'} (${base} ${die < 0 ? '−' : '+'} ${Math.abs(die)} = ${Math.max(0, base + die)}).`, 'damage');
-  let dmg = Math.max(0, base + die);
+  const base = attackDamage(state, att, target, opts.useAbility, opts.movedDistance);
+  let dmg = Math.max(0, base + (opts.die ?? 0));
+  let bearGuard: DamagePrediction['bearGuard'] = null;
   // Opiekun Gaju: the bear takes a lethal blow aimed at an adjacent ally, if it survives it.
-  const bear = livingUnits(b, target.side).find(
-    (x) => x.id !== target.id && abilityOf(x) === 'guardian' && !x.abilityUsed && abilityActive(state, x) && adjacent(x.pos!, target.pos!),
-  );
+  const bear = livingUnits(b, target.side).find((x) => x.id !== target.id && bearCanGuard(state, x, target));
   let victim = target;
   if (bear && dmg >= target.hp && dmg - ABILITY.guardianIgnore - Math.min(dmg, bear.status.damageReduction) < bear.hp) {
-    bear.abilityUsed = true;
+    bearGuard = 'ally';
     victim = bear;
     dmg = Math.max(0, dmg - ABILITY.guardianIgnore);
-    blog(state, `${unitName(bear)} przejmuje atak i ignoruje ${ABILITY.guardianIgnore} obrażenia (Opiekun Gaju).`, 'ability');
   }
-  if (victim.status.shieldArmed) {
-    victim.status.shieldArmed = false;
-    blog(state, `Tarcza Strażnika chroni: ${unitName(victim)}.`, 'item');
-    recordRoll(state, att, victim, base, die, 0);
-    return;
-  }
+  if (victim.status.shieldArmed) return { base, victim, damage: 0, bearGuard, hardHead: null, shield: true, lethal: false };
   // Opiekun Gaju guards the bear itself too: a lethal blow loses part of its strength.
-  if (victim === target && abilityOf(victim) === 'guardian' && !victim.abilityUsed && abilityActive(state, victim) && dmg >= victim.hp) {
-    victim.abilityUsed = true;
+  if (victim === target && bearCanGuard(state, victim, victim) && dmg >= victim.hp) {
+    bearGuard = 'self';
     dmg = Math.max(0, dmg - ABILITY.guardianIgnore);
-    blog(state, `${unitName(victim)} ignoruje ${ABILITY.guardianIgnore} obrażenia (Opiekun Gaju).`, 'ability');
   }
-  if (abilityOf(victim) === 'hardHead' && !victim.abilityUsed && abilityActive(state, victim) && dmg >= 2) {
-    victim.abilityUsed = true;
-    const ignored = Math.min(ABILITY.hardHeadIgnore, dmg);
-    dmg -= ignored;
-    blog(state, `${unitName(victim)} ignoruje ${ignored} obrażeń (Twardogłowy).`, 'ability');
+  let hardHead: number | null = null;
+  if (abilityOf(victim) === 'hardHead' && !victim.abilityUsed && abilityActive(state, victim) && dmg >= HARD_HEAD_MIN_DAMAGE) {
+    hardHead = Math.min(ABILITY.hardHeadIgnore, dmg);
+    dmg -= hardHead;
   }
   dmg = Math.max(0, dmg - victim.status.damageReduction);
-  b.damageBy[att.id] = (b.damageBy[att.id] ?? 0) + Math.min(dmg, Math.max(0, victim.hp));
-  recordRoll(state, att, victim, base, die, dmg);
-  dealDamage(state, victim, dmg, unitName(att));
+  return { base, victim, damage: dmg, bearGuard, hardHead, shield: false, lethal: dmg >= victim.hp };
+}
+
+/** Twardogłowy fires only on a blow of at least this much damage. */
+const HARD_HEAD_MIN_DAMAGE = 2;
+
+function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, useAbility: boolean, movedDistance: number) {
+  const b = state.battle!;
+  const die = rollDie(state);
+  const p = predictDamage(state, att, target, { useAbility, movedDistance, die });
+  // The roll is logged so a blow that the die cut to 0 does not look like a bug.
+  if (state.rules.useDice) blog(state, `Rzut kością: ${die > 0 ? '+1' : die < 0 ? '−1' : '0'} (${p.base} ${die < 0 ? '−' : '+'} ${Math.abs(die)} = ${Math.max(0, p.base + die)}).`, 'damage');
+  const victim = p.victim;
+  if (p.bearGuard === 'ally') {
+    victim.abilityUsed = true;
+    blog(state, `${unitName(victim)} przejmuje atak i ignoruje ${ABILITY.guardianIgnore} obrażenia (Opiekun Gaju).`, 'ability');
+  }
+  if (p.shield) {
+    victim.status.shieldArmed = false;
+    blog(state, `Tarcza Strażnika chroni: ${unitName(victim)}.`, 'item');
+    recordRoll(state, att, victim, p.base, die, 0);
+    return;
+  }
+  if (p.bearGuard === 'self') {
+    victim.abilityUsed = true;
+    blog(state, `${unitName(victim)} ignoruje ${ABILITY.guardianIgnore} obrażenia (Opiekun Gaju).`, 'ability');
+  }
+  if (p.hardHead !== null) {
+    victim.abilityUsed = true;
+    blog(state, `${unitName(victim)} ignoruje ${p.hardHead} obrażeń (Twardogłowy).`, 'ability');
+  }
+  b.damageBy[att.id] = (b.damageBy[att.id] ?? 0) + Math.min(p.damage, Math.max(0, victim.hp));
+  recordRoll(state, att, victim, p.base, die, p.damage);
+  dealDamage(state, victim, p.damage, unitName(att));
 }
 
 function recordRoll(state: GameState, att: BattleUnit, victim: BattleUnit, attack: number, die: number, damage: number) {

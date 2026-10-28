@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { RESURRECTION_CARDS, TERRAIN_COST, TILE_POOLS, UNITS } from '../src/engine/data';
 import { activeHero, applyAction, createGame, legalHeroMoves, ritualFormed } from '../src/engine/game';
-import { abilityActive, arenaCell, arenaObstacles, makeBattleUnit, movePath, reachableCells } from '../src/engine/battle';
+import { abilityActive, arenaCell, arenaObstacles, makeBattleUnit, movePath, predictDamage, reachableCells } from '../src/engine/battle';
 import { distance, parseKey } from '../src/engine/hex';
 import { homeKey, mapNeighbors, sideOf, treeKey } from '../src/engine/map';
 import { chooseAction } from '../src/engine/ai';
@@ -148,6 +148,30 @@ describe('Przymierze hero abilities after balancing', () => {
     s = applyAction(s, { type: 'battleAttack', targetId: 'ancientBear' });
     expect(s.battle!.units.ancientBear.hp).toBe(3);
     expect(s.battle!.units.ancientBear.abilityUsed).toBe(true);
+  });
+
+  it('predicts the blow the engine deals: Twardogłowy before Kamień Ochrony', () => {
+    // A 2-damage hit on the Ogre holding the stone: Twardogłowy takes both, the stone has nothing left.
+    let s = fight([['elfDruid', 'dawn', 5, 6], ['ironFistOgre', 'horde', 5, 8]]);
+    const b = s.battle!;
+    b.units.elfDruid.status.battleAttackBonus = 1;
+    b.units.ironFistOgre.status.damageReduction = 1;
+    const p = predictDamage(s, b.units.elfDruid, b.units.ironFistOgre, { useAbility: false, movedDistance: 0 });
+    expect(p).toMatchObject({ base: 2, damage: 0, hardHead: 2, shield: false, lethal: false, bearGuard: null });
+    s = applyAction(s, { type: 'battleAttack', targetId: 'ironFistOgre' });
+    expect(s.battle!.units.ironFistOgre.hp).toBe(UNITS.ironFistOgre.hp);
+    expect(s.battle!.units.ironFistOgre.abilityUsed).toBe(true);
+  });
+
+  it('predicts Opiekun Gaju taking over a lethal blow aimed at an ally', () => {
+    const s = fight([['blackDragon', 'horde', 5, 6], ['nymph', 'dawn', 5, 8], ['ancientBear', 'dawn', 6, 9]]);
+    const b = s.battle!;
+    const p = predictDamage(s, b.units.blackDragon, b.units.nymph, { useAbility: false, movedDistance: 0 });
+    expect(p.victim.id).toBe('ancientBear');
+    expect(p).toMatchObject({ bearGuard: 'ally', damage: UNITS.blackDragon.attack - 3, lethal: false });
+    const next = applyAction(s, { type: 'battleAttack', targetId: 'nymph' });
+    expect(next.battle!.units.nymph.hp).toBe(UNITS.nymph.hp);
+    expect(next.battle!.units.ancientBear.hp).toBe(UNITS.ancientBear.hp - p.damage);
   });
 
   it('Słoneczny Blask gives the dragon +3 A and its allies +1 A', () => {
