@@ -408,3 +408,29 @@ img.mk{height:6.5mm;width:auto;vertical-align:-1.8mm;margin:0 .5mm}
 .order span{padding:.6mm 2.2mm;border-radius:1.5mm;border:1px solid #bea06f;background:#fff7e3}
 .order span.h{border-color:var(--horde);color:var(--horde)}
 .order span.d{border-color:var(--forest);color:var(--forest)}
+
+/* Footer: the text sits above the thin inner line of the frame (which runs a little lower than the sides), never across it */
+.sheet:not(.cover):not(.overflow)::after{inset:13mm 13mm 11mm 13mm}
+.footer{bottom:12.2mm}
+.footer::before{top:-1.4mm}
+/* Marker names: the count always on its own line */
+.markers figcaption .count{display:block}
+/* Painting chapter */
+.paint p,.paint li{font-size:10.4pt;line-height:1.22}
+.paint p{margin-bottom:1.6mm}
+.paint h3{font-size:13pt;margin-bottom:1.4mm}
+.paint ul.rules{margin-bottom:1.6mm;padding-left:5mm}
+.paint ul.rules li{margin-bottom:.7mm}
+.paint .card{padding:3mm 3.4mm}
+.paint .tech{font-size:10pt;line-height:1.2}
+.paint .tech b{color:var(--accent)}
+.paint .sw{display:inline-block;width:2.8mm;height:2.8mm;border-radius:50%;border:1px solid #5a3a12;vertical-align:-.3mm;margin-right:1mm}
+.markers.seven{gap:2mm 2.5mm}
+.markers.seven figure{width:26mm}
+.markers.seven figcaption{font-size:8.8pt}
+/* A little air in reserve on the fullest pages, so another browser's font metrics do not push text past the frame */
+.markers.seven img{width:12mm;height:12mm}
+.toc-item.sub{padding:1.15mm 0}
+.units{gap:2.4mm 5mm}
+.cheat p{margin-bottom:1.9mm}
+ul.rules li,ol.rules li{margin-bottom:1.2mm}
