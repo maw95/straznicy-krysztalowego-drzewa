@@ -10,6 +10,8 @@ drukujemy na zwykłej drukarce (papier fotograficzny), pudełko robimy ręcznie 
 |---|---|
 | `PLAN_KROK_PO_KROKU.md` | ten plik |
 | `do_druku/` | **gotowe PDF-y do druku** (tworzy je `make druk`; pliki nie są w gicie, można je zawsze zrobić od nowa) |
+| `okladki_przod_tyl_grzbiet.pdf` | **okładka segregatora** autora: 3 strony — przód (A4), tył (A4) i **grzbiet 20 × 297 mm** |
+| `logo_zolte_120mm.pdf`, `logo_zolte_przezroczyste.png` | **żółte logo na przezroczystym tle** na pudełko: PDF 140 × 110 mm z logo szerokim na 120 mm, PNG 1448 × 1086 px (RGBA) |
 | `WYMIARY_ELEMENTOW.md` | wymiary wszystkich elementów i zasady druku |
 | `FIGURKI_SPECYFIKACJA.md`, `druk3d/` | figurki, podstawki, kryształy, znacznik rundy — pliki do druku 3D |
 | `instrukcja_szablon/` | instrukcja A4 w HTML (źródło PDF-a); strona 1 (po okładce) to wiadomość od autora |
@@ -25,8 +27,10 @@ Pliki w `do_druku/`:
 | `06_kafelki_mapy_awersy.pdf` + `07_…_rewersy.pdf` | 9 + 8 | papier fotograficzny |
 | `08_arena_A3_na_4_arkuszach_A4.pdf` | 4 | papier fotograficzny |
 | `09_naklejki_znaczniki_kosc_tor_rund.pdf` | 2 | papier samoprzylepny (strona 2 — tylko gdy tor rund jest jednokolorowy) |
-| `10_okladka_A4_pokrywa_i_segregator.pdf` | 1 (+1) | papier fotograficzny — na pokrywę pudełka i do okładki segregatora |
-| `11_logo_etykiety_pudelka_i_grzbiet.pdf` | 3 | papier fotograficzny / samoprzylepny |
+| `10_okladka_A4_pokrywa_i_segregator.pdf` | 1 (+1) | papier fotograficzny — wersja zapasowa; do segregatora użyj `okladki_przod_tyl_grzbiet.pdf` z tego folderu (niżej) |
+| `11_logo_etykiety_pudelka_i_grzbiet.pdf` | 3 | papier fotograficzny / samoprzylepny — etykiety na boki pudełka (strona 2) i grzbiety 35, 50 i 70 mm (strona 3) |
+| `../okladki_przod_tyl_grzbiet.pdf` (plik autora) | 2 + pasek | papier fotograficzny — okładka segregatora: przód i tył A4 oraz pasek grzbietu 20 mm |
+| `../logo_zolte_120mm.pdf` (plik autora) | 1 | logo na wieko pudełka (patrz krok 8, „Grafiki”) |
 
 **Razem ok. 40 arkuszy papieru fotograficznego, 2 arkusze samoprzylepnego i 20–40 kartek na instrukcję.**
 Z zapasem na pomyłki kupcie 50–60 arkuszy fotograficznego.
@@ -104,8 +108,11 @@ Ceny orientacyjne.
    w `instrukcja_szablon/index.html` (opis w `instrukcja_szablon/README.md`) albo wydrukuj stronę z liniami i napisz ręcznie.
 2. Druk: skala 100%. Dwustronnie (41 stron = 21 kartek) na papierze matowym 160–200 g albo jednostronnie do koszulek
    (dwie strony plecami do siebie w jednej koszulce).
-3. Strony wpinamy po kolei; okładka (`10_okladka_…pdf`) do przezroczystej kieszeni na przodzie segregatora,
-   etykieta na grzbiet z `11_logo_etykiety_…pdf` (trzecia strona: szerokości 35, 50 i 70 mm — wybierz swoją).
+3. Strony wpinamy po kolei. Okładka segregatora: `okladki_przod_tyl_grzbiet.pdf` (plik w folderze `wersja_planszowa/`,
+   nie w `do_druku/`) — **strona 1 to przód** (do przezroczystej kieszeni na przodzie), **strona 2 to tył**, **strona 3 to
+   pasek grzbietu 20 × 297 mm** (do kieszeni na grzbiecie). Wydrukuj w skali 100%. Grzbiet ma 20 mm szerokości, więc
+   **sprawdź, czy tyle ma grzbiet Twojego segregatora** (zmierzony w kroku 0). Jeśli grzbiet jest szerszy, weź etykietę
+   z `11_logo_etykiety_…pdf` (trzecia strona: 35, 50 i 70 mm).
 
 ## Krok 3. Karty (2–3 h)
 
@@ -252,8 +259,13 @@ Pokrywa ma 1 mm luzu. Przy innej grubości płyt podstaw w wzorach swoje `t`. Ś
    86 mm nad wewnętrzną powierzchnią dna, dopiero gdy EVA jest jeszcze nieprzyklejona (do pomiaru).
 3. Wieko: przyklej ramkę z listewek do wieka, potem rant do ramki. Sprawdź nasuwanie na korpus przed wyschnięciem klejów.
 4. Szlif 240, odkurz, 1–2 cienkie warstwy lakieru albo bejcy + lakier (lakier wodny, matowy). **Nie lakieruj gniazd EVA.**
-5. **Grafiki:** na wieko okładka A4 (`10_…pdf`) albo samo logo (`11_…pdf`, strona 1), na boki etykiety 270 × 26 mm
-   (`11_…pdf`, strona 2). Klej do decoupage: cienka warstwa pod spód, dociśnij od środka do brzegów,
+5. **Grafiki:** na wieko **żółte logo na przezroczystym tle** (`logo_zolte_120mm.pdf`, skala 100%, logo ma 120 mm szerokości;
+   ten sam kształt jest w `logo_zolte_przezroczyste.png`, gdy chcesz go przeskalować), na boki etykiety 270 × 26 mm
+   (`11_…pdf`, strona 2). **Uwaga na drukarkę:** domowe drukarki nie drukują koloru białego, więc żółty nadruk na
+   przezroczystej folii samoprzylepnej będzie półprzezroczysty i zmatowieje na ciemnym drewnie. Na jasnym drewnie albo
+   białym lakierze wygląda dobrze; na ciemnym lepiej wydrukować na **białej** folii samoprzylepnej i wyciąć logo po obrysie,
+   albo użyć wydruku jako szablonu i pomalować żółtą farbą akrylową. Zrób próbę na odpadzie sklejki. Klej do decoupage
+   dotyczy papieru; folię samoprzylepną po prostu przyklej, bez kleju. Klej do decoupage: cienka warstwa pod spód, dociśnij od środka do brzegów,
    po wyschnięciu 2–3 cienkie warstwy na wierzch.
 6. Po pełnym wyschnięciu: przyklej EVA do dna, wytnij gniazda *przed* przyklejeniem (łatwiej), ustaw półkę, nóżki filcowe
    pod dno.
@@ -278,7 +290,8 @@ Balsa jest jeszcze lżejsza (ok. 150 kg/m³), ale krucha: nadaje się najwyżej 
 - [ ] 3 kryształy, tor rund, znacznik rundy
 - [ ] 16 kropli obrażeń, 19 znaczników stanu
 - [ ] Kość −1 / 0 / +1
-- [ ] Pudełko z logo
+- [ ] Pudełko z logo (żółte logo na wieku, etykiety na bokach)
+- [ ] Okładka segregatora: przód, tył i grzbiet
 
 ## Jak odświeżyć pliki do druku
 
