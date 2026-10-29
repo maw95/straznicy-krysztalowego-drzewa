@@ -416,7 +416,7 @@ img.mk{height:6.5mm;width:auto;vertical-align:-1.8mm;margin:0 .5mm}
 /* Marker names: the count always on its own line */
 .markers figcaption .count{display:block}
 /* Painting chapter */
-.paint p,.paint li{font-size:10.4pt;line-height:1.22}
+.paint p,.paint li{font-size:9.8pt;line-height:1.2}
 .paint p{margin-bottom:1.6mm}
 .paint h3{font-size:13pt;margin-bottom:1.4mm}
 .paint ul.rules{margin-bottom:1.6mm;padding-left:5mm}
