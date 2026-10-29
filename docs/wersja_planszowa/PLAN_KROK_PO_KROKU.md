@@ -12,14 +12,14 @@ drukujemy na zwykłej drukarce (papier fotograficzny), pudełko robimy ręcznie 
 | `do_druku/` | **gotowe PDF-y do druku** (tworzy je `make druk`; pliki nie są w gicie, można je zawsze zrobić od nowa) |
 | `WYMIARY_ELEMENTOW.md` | wymiary wszystkich elementów i zasady druku |
 | `FIGURKI_SPECYFIKACJA.md`, `druk3d/` | figurki, podstawki, kryształy, znacznik rundy — pliki do druku 3D |
-| `instrukcja_szablon/` | instrukcja A4 w HTML (źródło PDF-a); strona 2 to wiadomość od autora |
+| `instrukcja_szablon/` | instrukcja A4 w HTML (źródło PDF-a); strona 1 (po okładce) to wiadomość od autora |
 | `Instrukcja_Straznicy.docx` | instrukcja do edycji w Wordzie / Dokumentach Google |
 
 Pliki w `do_druku/`:
 
 | Plik | Arkuszy A4 | Na czym drukować |
 |---|---:|---|
-| `01_instrukcja_A4.pdf` | 40 stron | papier matowy 160–200 g (dwustronnie) albo jednostronnie do koszulek |
+| `01_instrukcja_A4.pdf` | 41 stron (okładka + 40 numerowanych) | papier matowy 160–200 g (dwustronnie) albo jednostronnie do koszulek |
 | `02_karty_jednostek_awersy.pdf` + `03_…_rewersy.pdf` | 5 + 5 | papier fotograficzny |
 | `04_karty_skarbow_awersy.pdf` + `05_…_rewersy.pdf` | 3 + 3 | papier fotograficzny |
 | `06_kafelki_mapy_awersy.pdf` + `07_…_rewersy.pdf` | 9 + 8 | papier fotograficzny |
@@ -95,9 +95,9 @@ Ceny orientacyjne.
 
 ## Krok 2. Instrukcja do segregatora (1 h)
 
-1. Plik: `01_instrukcja_A4.pdf` (40 stron A4). **Strona 2 jest na wiadomość od autora** — przed drukiem wpisz ją
+1. Plik: `01_instrukcja_A4.pdf` (41 stron A4: okładka i 40 numerowanych). **Strona 1 jest na wiadomość od autora** — przed drukiem wpisz ją
    w `instrukcja_szablon/index.html` (opis w `instrukcja_szablon/README.md`) albo wydrukuj stronę z liniami i napisz ręcznie.
-2. Druk: skala 100%. Dwustronnie (40 stron = 20 kartek) na papierze matowym 160–200 g albo jednostronnie do koszulek
+2. Druk: skala 100%. Dwustronnie (41 stron = 21 kartek) na papierze matowym 160–200 g albo jednostronnie do koszulek
    (dwie strony plecami do siebie w jednej koszulce).
 3. Strony wpinamy po kolei; okładka (`10_okladka_…pdf`) do przezroczystej kieszeni na przodzie segregatora,
    etykieta na grzbiet z `11_logo_etykiety_…pdf` (trzecia strona: szerokości 35, 50 i 70 mm — wybierz swoją).

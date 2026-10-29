@@ -10,6 +10,18 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 OUT = os.path.join(ROOT, 'docs/wersja_planszowa/instrukcja_szablon/index.html')
 MD = open(os.path.join(ROOT, 'docs/INSTRUKCJA.md'), encoding='utf-8').read()
 
+import shutil
+from PIL import Image
+
+ASSETS = os.path.join(ROOT, 'docs/wersja_planszowa/instrukcja_szablon/assets')
+for src, dst in (('dawn', 'arena_przymierze'), ('horde', 'arena_horda')):
+    shutil.copy(os.path.join(ROOT, f'public/assets/arena/{src}.jpg'), os.path.join(ASSETS, f'{dst}.jpg'))
+hex_mask = Image.open(os.path.join(ASSETS, 'kafelki/tree_1.png')).getchannel('A')  # the outline every tile shares
+for src, dst in (('baseDawn_1', 'baseDawn_1'), ('baseHorde_1', 'baseHorde_1')):
+    tile = Image.open(os.path.join(ROOT, f'public/assets/tiles/{src}.jpg')).convert('RGBA')
+    tile.putalpha(hex_mask)
+    tile.save(os.path.join(ASSETS, f'kafelki/{dst}.png'))
+
 CORNERS = ''.join(f'<img class="corner {c}" src="assets/narożnik.svg" alt="">' for c in ('tl', 'tr', 'br', 'bl'))
 pages = []  # (html, chapter_key or None)
 toc = []  # (number, title, key)
@@ -108,8 +120,7 @@ def chapter(num, title, key):
 # 2: the author's letter to the player. The author writes it by hand on the printed page, or types it over the
 # ruled lines (replace the <div class="lines"> with <p> paragraphs in index.html, or here).
 sheet('''<div class="eyebrow">Od autora</div><h1>Słowo na drogę</h1>
-<div class="letter"><div class="to">Drogi / Droga ……………………………………</div><div class="lines"></div>
-<div class="sign">Autor gry</div></div>
+<div class="letter"><div class="lines"></div></div>
 ''', left='Od autora', right='Dla gracza', foot='Od autora')
 
 # 3: contents
@@ -134,7 +145,7 @@ sheet(f'''<div class="eyebrow">Zanim zaczniecie</div><h1>Opowieść o Drzewie</h
 {f'<div class="quote" style="margin-top:4mm">„{re.sub(r"<[^>]+>", "", quote)}”</div>' if quote else ''}
 ''', cls='neutral', left='Wprowadzenie', right='Opowieść', foot='Opowieść o Drzewie', key='story')
 sheet(f'''<div class="story">{''.join(f'<p>{p}</p>' for p in second)}</div>
-<div class="cols" style="margin:4mm 0 4mm"><div class="card"><h3>Przymierze Świtu</h3><p>{named('<b>Przymierze Świtu</b>').replace('<b>Przymierze Świtu</b> — ', '')}</p></div>
+<div class="cols" style="margin:4mm 0 4mm"><div class="card" style="--accent:var(--forest)"><h3>Przymierze Świtu</h3><p>{named('<b>Przymierze Świtu</b>').replace('<b>Przymierze Świtu</b> — ', '')}</p></div>
 <div class="card" style="--accent:var(--horde)"><h3>Mroczna Horda</h3><p>{named('<b>Mroczna Horda</b>').replace('<b>Mroczna Horda</b> — ', '')}</p></div></div>
 <div class="card" style="--accent:var(--navy)"><h3>Strażnicy</h3><p>{named('Kryształów pilnują').replace('Kryształów pilnują <b>Strażnicy</b> — s', 'S')}</p></div>
 <p class="intro" style="text-align:center;margin-top:5mm"><i>{named('Wybierz stronę')}</i></p>
@@ -228,22 +239,22 @@ sheet(f'''<div class="eyebrow">Rozdział 1</div><h1>Co jest w pudełku</h1>
  ['<b>Karty skarbów</b> (6,3 × 8,8 cm)', '20', '6 Eliksirów Odrodzenia + po 1 z 14 pozostałych skarbów'],
  ['<b>Kryształy</b>', '3', 'wys. 1,6 cm'],
  ['<b>Tor rund</b> i <b>znacznik rundy</b>', '1 + 1', 'tablica 15 cm z 24 gniazdami, znacznik wys. 3 cm'],
- ['<b>Kość</b> −1 / 0 / +1', '1', 'tylko do utrudnienia „Rzut kością” (rozdział 13)']], 'table')}
+ ['<b>Kość</b> −1 / 0 / +1', '1', 'tylko do utrudnienia „Rzut kością” (rozdział 13)']], 'table compact')}
 <div class="banner" style="margin-top:4mm">Znaczniki</div>
 <p class="fine" style="text-align:center;margin:-2mm 0 2mm">Tyle wystarczy na najbardziej zaciętą bitwę.</p>
 <div class="markers seven">
-<figure><img src="assets/znaczniki/damage_1.png" alt=""><figcaption>kropla „1” / „2” × 6</figcaption></figure>
-<figure><img src="assets/znaczniki/damage_5.png" alt=""><figcaption>kropla „3” / „5” × 10</figcaption></figure>
-<figure><img src="assets/znaczniki/ability_used.png" alt=""><figcaption>zużyta zdolność × 6</figcaption></figure>
-<figure><img src="assets/znaczniki/attack_up.png" alt=""><figcaption>Wzmocnienie Ataku × 6</figcaption></figure>
-<figure><img src="assets/znaczniki/attack_3.png" alt=""><figcaption>+3 Ataku × 1</figcaption></figure>
-<figure><img src="assets/znaczniki/vitality.png" alt=""><figcaption>Żywotność × 1</figcaption></figure>
-<figure><img src="assets/znaczniki/shield.png" alt=""><figcaption>Ochrona × 1</figcaption></figure>
-<figure><img src="assets/znaczniki/rooted.png" alt=""><figcaption>Unieruchomienie × 1</figcaption></figure>
-<figure><img src="assets/znaczniki/slowed.png" alt=""><figcaption>Spowolnienie × 1</figcaption></figure>
-<figure><img src="assets/znaczniki/cursed.png" alt=""><figcaption>Klątwa × 1</figcaption></figure>
-<figure><img src="assets/znaczniki/speed_up.png" alt=""><figcaption>Przyspieszenie × 1</figcaption></figure>
-<figure><img src="assets/znaczniki/crystal.png" alt=""><figcaption>Kryształ Opieki × 3</figcaption></figure>
+<figure><img src="assets/znaczniki/damage_1.png" alt=""><figcaption>kropla „1” / „2”<span class="count">× 6</span></figcaption></figure>
+<figure><img src="assets/znaczniki/damage_5.png" alt=""><figcaption>kropla „3” / „5”<span class="count">× 10</span></figcaption></figure>
+<figure><img src="assets/znaczniki/ability_used.png" alt=""><figcaption>zużyta zdolność<span class="count">× 6</span></figcaption></figure>
+<figure><img src="assets/znaczniki/attack_up.png" alt=""><figcaption>Wzmocnienie Ataku<span class="count">× 6</span></figcaption></figure>
+<figure><img src="assets/znaczniki/attack_3.png" alt=""><figcaption>+3 Ataku<span class="count">× 1</span></figcaption></figure>
+<figure><img src="assets/znaczniki/vitality.png" alt=""><figcaption>Żywotność<span class="count">× 1</span></figcaption></figure>
+<figure><img src="assets/znaczniki/shield.png" alt=""><figcaption>Ochrona<span class="count">× 1</span></figcaption></figure>
+<figure><img src="assets/znaczniki/rooted.png" alt=""><figcaption>Unieruchomienie<span class="count">× 1</span></figcaption></figure>
+<figure><img src="assets/znaczniki/slowed.png" alt=""><figcaption>Spowolnienie<span class="count">× 1</span></figcaption></figure>
+<figure><img src="assets/znaczniki/cursed.png" alt=""><figcaption>Klątwa<span class="count">× 1</span></figcaption></figure>
+<figure><img src="assets/znaczniki/speed_up.png" alt=""><figcaption>Przyspieszenie<span class="count">× 1</span></figcaption></figure>
+<figure><img src="assets/znaczniki/crystal.png" alt=""><figcaption>Kryształ Opieki<span class="count">× 3</span></figcaption></figure>
 </div>
 ''', left='Rozdział 1', right='Elementy gry', foot='Co jest w pudełku', key='box')
 sheet(f'''<div class="eyebrow">Rozdział 1 · Co jest w pudełku</div><h1>Karty jednostek</h1>
@@ -343,13 +354,13 @@ sheet(f'''<div class="eyebrow">Rozdział 5</div><h1>Przygotowanie</h1>
 <div class="step" style="min-height:0"><div class="number">3</div><h3>Ułóżcie mapę</h3><p>Trójkąt: Drzewo na szczycie, baza Przymierza w lewym dolnym rogu, baza Hordy w prawym. Lewą połowę wypełnijcie zakrytymi kafelkami z zielonej talii, prawą — z bordowej. Pola na samym środku należą na zmianę do jednej i drugiej strony (zygzakiem).</p></div>
 ''', left='Rozdział 5', right='Przygotowanie', foot='Przygotowanie', key='setup')
 sheet('''<div class="pic-left" style="grid-template-columns:1fr 92mm;gap:5mm;align-items:start"><div>
-<div class="step" style="min-height:0;margin-bottom:4mm"><div class="number">✦</div><h3>Skarby i strażnicy</h3><p>Wmieszajcie między zakryte pola kafelki skarbów i <b>siedliska strażników</b> — tyle, ile kryształów jest na mapie. Gryf mieszka po stronie Przymierza, Cyklop i Hydra po stronie Hordy. Na każdym siedlisku połóżcie kryształ.</p>
+<div class="step" style="min-height:0;margin-bottom:4mm"><div class="number">4</div><h3>Skarby i strażnicy</h3><p>Wmieszajcie między zakryte pola kafelki skarbów i <b>siedliska strażników</b> — tyle, ile kryształów jest na mapie. Gryf mieszka po stronie Przymierza, Cyklop i Hydra po stronie Hordy. Na każdym siedlisku połóżcie kryształ.</p>
 <p style="margin-top:1.5mm"><b>Stos skarbów mapy:</b> odłóżcie tyle Eliksirów Odrodzenia i losowych innych skarbów, ile podaje tabela, potasujcie i połóżcie zakryte obok mapy. Kto wejdzie na kafelek skarbu, bierze wierzchnią kartę. Reszta kart to <b>talia skarbów</b> (skarby na start i od strażników).</p></div>
-<div class="step" style="min-height:0"><div class="number">4</div><h3>Odkryjcie</h3><p>Drzewo, obie bazy i pola sąsiadujące z bazami.</p></div>
+<div class="step" style="min-height:0"><div class="number">5</div><h3>Odkryjcie</h3><p>Drzewo, obie bazy i pola sąsiadujące z bazami.</p></div>
 </div><div><img src="assets/mapa_przyklad.png" alt="Przykładowa mapa średnia"><p class="caption">Przykład: mapa średnia (8 rzędów) — tu już cała odkryta. U góry Drzewo, w dolnych rogach bazy.</p></div></div>
 <div class="steps" style="margin-top:5mm">
-<div class="step" style="min-height:0"><div class="number">5</div><h3>Bohaterowie</h3><p>Każdy gracz wybiera bohatera i stawia go w bazie swojej frakcji. Pomocnicy obu frakcji czekają przy planszy. Na mapie długiej i bardzo długiej Przymierze dobiera skarby na start.</p></div>
-<div class="step" style="min-height:0"><div class="number">6</div><h3>Tor rund</h3><p>Połóżcie <b>kryształowy znacznik</b> w gnieździe „1” toru rund. Gniazda 8, 12, 18 i 24 są wyróżnione — to limity rund czterech map.</p></div>
+<div class="step" style="min-height:0"><div class="number">6</div><h3>Bohaterowie</h3><p>Każdy gracz wybiera bohatera i stawia go w bazie swojej frakcji. Pomocnicy obu frakcji czekają przy planszy. Na mapie długiej i bardzo długiej Przymierze dobiera skarby na start.</p></div>
+<div class="step" style="min-height:0"><div class="number">7</div><h3>Tor rund</h3><p>Połóżcie <b>kryształowy znacznik</b> w gnieździe „1” toru rund. Gniazda 8, 12, 18 i 24 są wyróżnione — to limity rund czterech map.</p></div>
 </div>
 <div class="terrain-pair" style="grid-template-columns:repeat(3,1fr);gap:5mm;margin-top:6mm">
 <div class="tile"><img src="assets/kafelki/lairGriffin_1.png" alt="" style="height:30mm"><div class="name">Gniazdo Gryfa</div><div class="fine">ziemie Przymierza</div></div>
@@ -411,8 +422,8 @@ sheet('''<div class="terrain-pair" style="grid-template-columns:repeat(6,1fr);ga
 <p>Na koniec każdej rundy sprawdźcie: czy <b>jeden bohater Hordy stoi na Drzewie</b>, a <b>wszyscy pozostali żyjący bohaterowie Hordy stoją tuż obok Drzewa</b>? (Gdy Horda ma jednego bohatera, wystarczy, że stoi na Drzewie.) Jeśli tak — rytuał się zaczyna. Jeśli tak będzie na koniec <b>trzech kolejnych</b> rund, Horda wygrywa. Jeśli choć jeden z nich odejdzie albo zginie, rytuał zostaje przerwany.</p>
 <div class="quote" style="margin:5mm 0;font-size:15pt">„Mówią, że podczas rytuału kryształowe liście Drzewa ciemnieją jeden po drugim, jak gasnące świece.”</div>
 <div class="terrain-pair" style="margin:4mm 0 3mm">
-<div class="tile"><img src="assets/baza_przymierza.jpg" alt="Baza Przymierza" style="height:30mm"><div class="name">Baza Przymierza</div><div class="fine">tu zaczynają bohaterowie Świtu</div></div>
-<div class="tile"><img src="assets/baza_hordy.jpg" alt="Baza Hordy" style="height:30mm"><div class="name">Baza Hordy</div><div class="fine">tu zaczyna Mroczna Horda</div></div></div>
+<div class="tile"><img src="assets/kafelki/baseDawn_1.png" alt="Baza Przymierza" style="height:24mm"><div class="name">Baza Przymierza</div><div class="fine">tu zaczynają bohaterowie Świtu</div></div>
+<div class="tile"><img src="assets/kafelki/baseHorde_1.png" alt="Baza Hordy" style="height:24mm"><div class="name">Baza Hordy</div><div class="fine">tu zaczyna Mroczna Horda</div></div></div>
 <p class="see">Atak na bazę pełną bohaterów, kryształ pod stopami, rytuał a wskrzeszeni — szczegóły w rozdziale 14.</p>
 ''', left='Rozdział 7', right='Mapa przygody', foot='Wędrówka po krainie')
 
@@ -726,7 +737,7 @@ for p in cps:
         groups[-1][1].append(p)
     else:
         groups.append(('', [p]))
-card = lambda title, ps: f'<div class="card cheat" style="margin-bottom:3mm"><h3>{title}</h3>' + ''.join(f'<p>{x}</p>' for x in ps) + '</div>'
+card = lambda title, ps: f'<div class="card cheat" style="margin-bottom:2.4mm"><h3>{title}</h3>' + ''.join(f'<p>{x}</p>' for x in ps) + '</div>'
 ending = md_inline(re.search(r'> 🌳 \*(.+)\*', cheat).group(1))
 sheet(f'''<div class="eyebrow">Rozdział 16</div><h1>Ściągawka</h1>
 {''.join(card(t, ps) for t, ps in groups[:3])}
@@ -738,9 +749,33 @@ sheet(f'''{''.join(card(t, ps) for t, ps in groups[5:])}
 <div class="pic-left" style="grid-template-columns:62mm 1fr"><img src="assets/krysztalowe_drzewo.png" alt=""><div class="quote" style="font-size:14.5pt">„{ending}”</div></div>
 ''', left='Rozdział 16', right='Ściągawka', foot='Ściągawka')
 
+# 17. Painting the figures: one page, two ways (a quick drybrush and a tidier one)
+chapter('17', 'Malowanie figurek', 'paint')
+sheet('''<div class="paint"><div class="eyebrow">Rozdział 17 · dla tych, którzy mają drukarkę i pędzle</div><h1 style="font-size:26pt;margin-bottom:2mm">Malowanie figurek</h1>
+<p>Pomalowane figurki i znaczniki lepiej widać na planszy. Najpierw <b>umyj</b> wydruk ciepłą wodą z płynem i szczoteczką, wysusz i <b>zdejmij</b> podpory. Kolor podstawki podpowiada frakcję: <span class="sw" style="background:#177147"></span>zielony — Przymierze, <span class="sw" style="background:#8b2238"></span>bordowy — Horda, <span class="sw" style="background:#1d63a6"></span>niebieski — strażnicy.</p>
+<div class="cols" style="gap:4mm;margin:2mm 0 2.4mm">
+<div class="card"><h3>A. Na szybko</h3><p class="fine" style="margin-bottom:1mm">jeden kolor drybrushem · ok. 5 minut na figurkę</p>
+<b class="lead-in">Sprzęt</b>
+<ul class="rules"><li>czarny podkład w sprayu (np. Army Painter Matt Black albo Citadel Chaos Black)</li><li>szeroki, stary pędzel do drybrushu (rozmiar 6–8) i mały do podstawki (rozmiar 2)</li><li>ręcznik papierowy, kubek z wodą</li></ul>
+<b class="lead-in">Farby (po jednej na frakcję)</b>
+<ul class="rules"><li><span class="sw" style="background:#e7d9a5"></span>Przymierze: kość słoniowa — Citadel Ushabti Bone / Vallejo Ivory</li><li><span class="sw" style="background:#9a9da3"></span>Horda: jasny szary — Citadel Administratum Grey / Vallejo Light Grey</li><li><span class="sw" style="background:#9cc3e6"></span>Strażnicy: jasny błękit — Vallejo Sky Blue</li><li>do podstawki: zielona, bordowa lub niebieska farba akrylowa (np. Vallejo Game Color)</li></ul>
+<b class="lead-in">Jak to zrobić</b>
+<ol class="rules"><li>Pokryj figurkę czarnym podkładem i poczekaj, aż wyschnie.</li><li>Nabierz farbę na suchy pędzel i <b>zetrzyj ją prawie całą</b> na papierze.</li><li>Pociągaj pędzlem w poprzek figurki — farba zostanie tylko na wypukłościach: łuskach, futrze, krawędziach.</li><li>Pomaluj brzeg podstawki w kolorze frakcji. Gotowe.</li></ol></div>
+<div class="card"><h3>B. Porządniej</h3><p class="fine" style="margin-bottom:1mm">kilka kolorów, cieniowanie · ok. 30–45 minut na figurkę</p>
+<b class="lead-in">Sprzęt</b>
+<ul class="rules"><li>podkład w sprayu: szary (Przymierze, strażnicy) albo czarny (Horda)</li><li>pędzle: cienki 0–1 (detale), średni 2–3 (kolory), szeroki do drybrushu</li><li>akryle (np. Vallejo Game Color); do cieniowania Citadel Shade (Nuln Oil, Agrax Earthshade)</li><li>paleta (talerzyk), matowy lakier w sprayu</li></ul>
+<b class="lead-in">Farby</b>
+<ul class="rules"><li><span class="sw" style="background:#c99633"></span>Przymierze: złoty (Retributor Armour), zielony (Warpstone Glow), kość słoniowa</li><li><span class="sw" style="background:#8b2238"></span>Horda: bordowy (Khorne Red), czerń, stal (Leadbelcher), brąz skóry</li><li><span class="sw" style="background:#1d63a6"></span>Strażnicy: niebieski (Macragge Blue), ziemista skóra, złoto na skarby</li></ul>
+<b class="lead-in">Jak to zrobić</b>
+<ol class="rules"><li>Podkład, potem <b>kolory podstawowe</b> dużymi płaszczyznami, cienkimi warstwami.</li><li><b>Cieniowanie</b> — rozcieńczony cień na całą figurkę.</li><li><b>Drybrush</b> jaśniejszym odcieniem, potem <b>światła</b> cienkim pędzlem na krawędziach.</li><li>Oczy, pazury, klejnoty, podstawka, matowy lakier.</li></ol></div></div>
+<div class="card slim tech"><h3 style="font-size:12pt">Techniki, które warto znać</h3>
+<p style="margin:0"><b>Podkład (priming)</b> — warstwa, do której farba się trzyma. <b>Drybrush</b> — suchy pędzel, który muska tylko wypukłości. <b>Cieniowanie (wash / shade)</b> — rozcieńczona ciemna farba spływa w zagłębienia. <b>Warstwowanie (layering)</b> — kolor od ciemnego do jasnego cienkimi warstwami. <b>Światła (edge highlight)</b> — jasna kreska na krawędziach. <b>Lakier matowy</b> — chroni farbę przed ścieraniem przy graniu.</p></div>
+<p class="fine" style="margin-top:1.5mm;text-align:center">Kryształy: pomaluj tylko podstawkę, sam kryształ zostaw przezroczysty. Znaczniki: drybrush jednym kolorem. Podkład w sprayu nakładaj na dworze.</p></div>
+''', left='Rozdział 17', right='Malowanie', foot='Malowanie figurek', key='paint')
+
 # ---------------------------------------------------------------- assemble
 first_page = {}
-for n, (_, _, _, _, _, key) in enumerate(pages, start=2):
+for n, (_, _, _, _, _, key) in enumerate(pages, start=1):
     if key and key not in first_page:
         first_page[key] = n
 first_page.setdefault('levels', first_page['win'])
@@ -757,9 +792,9 @@ html = ['<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="
         '<!-- Strony generuje skrypt z treści docs/INSTRUKCJA.md; można je też edytować ręcznie. Każda strona to blok <section class="sheet">. -->',
         '<!-- OKŁADKA -->',
         '<section class="sheet cover"><img src="assets/okladka_A4_300dpi.png" alt="Strażnicy Kryształowego Drzewa — okładka"></section>']
-for n, (cls, left, right, foot, body, key) in enumerate(pages, start=2):
+for n, (cls, left, right, foot, body, key) in enumerate(pages, start=1):
     body = body.replace('@@TOC@@', toc_html)
-    html.append(f'\n<!-- STRONA {n}: {foot} -->\n<section class="sheet {cls}">{CORNERS}<div class="inside">'
+    html.append(f'\n<!-- STRONA {n} (bez okładki): {foot} -->\n<section class="sheet {cls}">{CORNERS}<div class="inside">'
                 f'<header class="running"><span>{left}</span><span class="star">✧</span><span>{right}</span></header><div class="hair"></div>\n'
                 f'{body.strip()}\n</div><footer class="footer"><span>Strażnicy Kryształowego Drzewa</span><span>{foot}</span><span class="folio">{n}</span></footer></section>')
 html.append('''

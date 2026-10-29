@@ -1,8 +1,8 @@
 # Strażnicy Kryształowego Drzewa — szablon instrukcji A4
 
-Pełna instrukcja gry (40 stron A4) na bazie szablonu HTML/CSS. Treść pochodzi z `docs/INSTRUKCJA.md`: okładka, wiadomość od autora (strona 2), spis treści, opowieść, zasady w obrazkach, rozdziały 1–16 z przykładami (tura na mapie, początek bitwy), przypadki szczególne i ściągawka. Strony składa skrypt `scripts/assets/manual_build.py`; gotowy PDF do druku robi `make druk` (plik `../do_druku/01_instrukcja_A4.pdf`).
+Pełna instrukcja gry (okładka + 40 numerowanych stron A4; okładka nie ma numeru) na bazie szablonu HTML/CSS. Treść pochodzi z `docs/INSTRUKCJA.md`: okładka, wiadomość od autora (strona 1), spis treści, opowieść, zasady w obrazkach, rozdziały 1–16 z przykładami (tura na mapie, początek bitwy), przypadki szczególne, ściągawka i rozdział 17 o malowaniu figurek. Strony składa skrypt `scripts/assets/manual_build.py`; gotowy PDF do druku robi `make druk` (plik `../do_druku/01_instrukcja_A4.pdf`).
 
-**Strona 2 — wiadomość od autora:** ma linie do pisania ręcznego po wydrukowaniu. Żeby wpisać tekst na komputerze, w `index.html` (albo w `scripts/assets/manual_build.py`, jeśli strony będą składane od nowa) zamień `<div class="lines"></div>` na akapity `<p>…</p>`, a kropki po „Drogi / Droga” na imię gracza.
+**Strona 1 — wiadomość od autora:** ma linie do pisania ręcznego po wydrukowaniu. Żeby wpisać tekst na komputerze, w `index.html` (albo w `scripts/assets/manual_build.py`, jeśli strony będą składane od nowa) zamień `<div class="lines"></div>` na akapity `<p>…</p>`.
 
 ## Jak zacząć
 
