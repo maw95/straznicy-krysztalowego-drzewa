@@ -324,10 +324,10 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
         </Frame>
         <Frame className="side" style={{ width: 420 }} innerStyle={{ padding: 16, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Ribbon side={UNITS[preview].side} style={{ width: '100%' }}>{UNITS[preview].name}</Ribbon>
-          {/* The turning figure above the card, both in the middle of the space left under the ribbon. */}
+          {/* The card above the turning figure, both in the middle of the space left under the ribbon. */}
           <div style={{ flex: 1, minHeight: 0, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '6px 0' }}>
-            <FigurePreview unitId={preview} size={230} />
             <UnitCard unitId={preview} width={hasFigure(preview) ? 280 : 340} />
+            <FigurePreview unitId={preview} size={300} />
           </div>
         </Frame>
       </div>

@@ -6,6 +6,7 @@ porządki w kodzie (etapy 0–4 i resztki), wersja mobilna, zgłoszenia z 23.10 
 
 ## 2. Figurki 3D — drobne
 
+- [x] Menu główne, panel po prawej: karta jednostki na górze, figurka pod nią i większa (300 px zamiast 230).
 - Kąt kamery i wielkość figurek — do ewentualnej korekty po obejrzeniu na żywo.
 
 ## 3. Szczegóły pod prawym przyciskiem — drobne
