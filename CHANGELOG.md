@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Plan wersji planszowej: lżejsze pudełko — sklejka topolowa 3 mm (dno 4 mm), listewki 10 × 10 w narożnikach, wyjmowana półka nad figurkami, figurki w piance EVA 10 mm z otworami Ø 35 mm (sześciokątna podstawka 30 mm ma 34,6 mm między rogami, więc otwornica 30 mm nie wystarczy), orientacyjna waga i lista cięcia.
 - Instrukcja (poprawki): okładka nie jest liczona do numeracji stron; „Przymierze Świtu” na stronie opowieści ma zielony nagłówek; nazwa gry i rozdziału w stopce nie są już „przekreślone” linią ramki; liczby przy znacznikach („× 6”) zawsze stoją w osobnej linii; punkt „Skarby i strażnicy” w przygotowaniu ma numer 4 (kolejne przesunięte); bazy Przymierza i Hordy mają przezroczyste tło; obrazki aren pokazują aktualny układ przeszkód i obwódki; strona „Słowo na drogę” bez linijek „Drogi / Droga” i „Autor gry”; nowy rozdział 17 „Malowanie figurek” (malowanie na szybko drybrushem albo porządniej, techniki, sprzęt i farby) na jednej stronie; na gęstych stronach więcej zapasu, żeby tekst nie wychodził poza ramkę.
 - Menu główne: w panelu po prawej karta jednostki jest teraz na górze, a pod nią większa figurka 3D.
 - Wersja do druku: `make druk` robi gotowe PDF-y na drukarkę domową (A4, 300 DPI) — instrukcję, karty jednostek i skarbów z rewersami, 121 kafelków mapy z rewersami, dwustronną planszę areny na 4 arkuszach, naklejki na znaczniki z drukarki 3D, kość i tor rund, okładkę, logo i etykiety na pudełko i grzbiet segregatora.

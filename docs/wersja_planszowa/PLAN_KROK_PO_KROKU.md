@@ -76,7 +76,12 @@ Ceny orientacyjne.
 
 | Co | Ile | Gdzie |
 |---|---|---|
-| **Sklejka 4 mm** (albo deseczki lipowe/topolowe 4–5 mm) — najlepiej docięta w sklepie na wymiar z listy w kroku 8 | ok. 0,5 m² | [Castorama](https://www.castorama.pl/) / [Leroy Merlin](https://www.leroymerlin.pl/) (dział drewna: docinanie płyt na miejscu — zapytaj, czy tną sklejkę 4 mm) · [Allegro](https://allegro.pl/listing?string=sklejka%204%20mm%20docinanie%20na%20wymiar) |
+| **Sklejka topolowa 3 mm** (ścianki, wieko, półka) — docięta w sklepie na wymiar z listy w kroku 8; topola jest jedną z najlżejszych sklejek (ok. 450 kg/m³), unikaj brzozowej, MDF i HDF (ok. 700+) | ok. 0,7 m² | [Castorama](https://www.castorama.pl/) / [Leroy Merlin](https://www.leroymerlin.pl/) (dział drewna: docinanie płyt na miejscu — zapytaj, czy tną sklejkę 3 mm) · [Allegro](https://allegro.pl/listing?string=sklejka%20topolowa%203%20mm%20docinanie%20na%20wymiar) |
+| **Sklejka topolowa 4 mm** (tylko dno) | ok. 0,11 m² (kawałek 600 × 400) | jak wyżej |
+| Listwa lipowa lub sosnowa **10 × 10 mm** (słupki narożne, szyny półki, ramka wieka) | ok. 3 m (2 × 1,5 m) | dział drewna · [Allegro](https://allegro.pl/listing?string=listwa%20lipowa%2010x10) |
+| **Pianka EVA 10 mm** (wkładka z gniazdami na figurki; albo 2 × 5 mm sklejone) — arkusz 500 × 500 mm wystarczy | 1 | [Allegro](https://allegro.pl/listing?string=pianka%20EVA%2010%20mm%20arkusz) · sklepy cosplay |
+| **Otwornica bimetalowa Ø 35 mm** (gniazda w EVA; patrz krok 8 — dlaczego 35, a nie 30) + wiertarka | 1 | [Allegro](https://allegro.pl/listing?string=otwornica%20bimetalowa%2035%20mm) |
+| Klej do EVA (kontaktowy, np. do pianek i gumy) albo taśma dwustronna — przyklejenie EVA do dna | 1 mały | [Allegro](https://allegro.pl/listing?string=klej%20kontaktowy%20do%20EVA) |
 | Klej do drewna D2/D3 (np. Wikol) | 1 | [Allegro](https://allegro.pl/listing?string=klej%20do%20drewna%20wikol) |
 | Kątownik stolarski + ściski stolarskie albo taśma malarska do trzymania ścianek | 1 + 4 | [Allegro](https://allegro.pl/listing?string=%C5%9Bciski%20stolarskie%20zestaw) |
 | Papier ścierny 120, 180, 240 | po 2 ark. | [Allegro](https://allegro.pl/listing?string=papier%20%C5%9Bcierny%20zestaw%20120%20180%20240) |
@@ -170,50 +175,98 @@ Plik `09_…pdf`, papier samoprzylepny.
 Rozłóż partię próbną według instrukcji (mapa krótka, rozdział 5) — szybko widać, czego brakuje. Zmierz też
 **najwyższą figurkę z podstawką** (planowo ok. 71 mm) — od niej zależy wysokość pudełka.
 
-## Krok 8. Pudełko z cienkich desek (1–2 dni z suszeniem)
+## Krok 8. Lekkie pudełko z cienkiej sklejki (1–2 dni z suszeniem)
 
-### Wymiary
+Cel: pudełko **lekkie** i nadal sztywne. Zasady: lekki gatunek (topola), cienkie ścianki 3 mm, grubsze tylko dno (4 mm),
+sztywność dają listewki 10 × 10 mm w narożnikach, a nie grubość płyt. Pokrywa nasuwana jak w pudełku na buty —
+bez zawiasów, zamknięć i łańcuszków (to dodatkowe gramy i robota).
 
-Wnętrze musi zmieścić **segregator** (leży płasko), plansze, karty, stosy kafelków i figurki. Wzór (w mm):
+### Układ pięter (od dna)
 
-- **długość wewnętrzna L** = dłuższy bok segregatora + 10
-- **szerokość wewnętrzna W** = krótszy bok segregatora + 10 (co najmniej 300 — plansza areny złożona ma ok. 205 × 290)
-- **wysokość wewnętrzna H** = najwyższa figurka (ok. 75) + grzbiet segregatora + 5
+1. **Dno 4 mm** + **pianka EVA 10 mm** przyklejona do całego dna, z 15 gniazdami na figurki.
+2. **Półka 3 mm** wyjmowana, leży na szynach 10 × 10 przyklejonych do długich ścianek, 86 mm nad dnem
+   (EVA 10 + najwyższa figurka z podstawką 71 + luz 5). Półka chroni figurki przed naciskiem.
+3. Na półce: złożona plansza areny, karty, tor rund, woreczki oraz **stosy kafelków** (6 stosów po 20, każdy kafelek
+   ok. 2,3 mm, czyli stos ok. 46 mm).
+4. Na samej górze: **segregator** (leży płasko, grzbiet 40 mm).
 
-Przykład dla typowego segregatora A4 (320 × 290 mm, grzbiet 40 mm): **L = 330, W = 300, H = 120.**
+Ta sama półka przy okazji obciąża tylko szyny, a nie figurki. Przy 3 mm ugięcie półki pod 2 kg to szacunkowo ok. 2 mm
+(rozpiętość 310 mm) — wystarczy, bo pod półką jest 9 mm luzu; po zbudowaniu sprawdź na pustym pudełku z ciężarem.
 
-### Lista cięcia (sklejka t = 4 mm, dla przykładu wyżej)
+### Wnętrze figurek: pianka EVA z otworami
+
+- Otwory wycinaj **otwornicą bimetalową**, a nie piłą: pianka rwie się przy szybkim cięciu. Przyłóż EVA do kawałka
+  zbędnej deski, dociśnij ściskiem, tnij na **niskich obrotach** i bez nacisku, od razu głębokość całej grubości.
+- **Średnica otworu: 35 mm, nie 30.** Podstawka jest sześciokątem 30 mm *między płaskimi bokami*, czyli
+  **34,6 mm między rogami** — w okrągły otwór 30 mm nie wejdzie (rogi wciskałyby się w piankę po 2,3 mm z każdej strony;
+  wciśnięcie byłoby ciężkie, a wyjmowanie rwałoby gniazdo). Otwór 35 mm daje sześciokątowi luz ok. 0,2 mm, a elastyczna
+  pianka lekko go trzyma. Jeśli figurka zbyt się lula — weź otwornicę 33 mm. **Zrób próbę na odpadzie, zanim potniesz
+  arkusz.** Tylko gdyby podstawki były okrągłe 30 mm, pasowałaby otwornica 30–31 mm.
+- Dlaczego EVA 10 mm: podstawka ma 3 mm wysokości, więc w 5 mm pianki trzymałaby się tylko na 3 mm i figurka mogłaby
+  wyskoczyć przy przechylaniu pudełka. W 10 mm pianka obejmuje podstawkę z zapasem i amortyzuje wstrząsy.
+- **Rozstaw:** 15 gniazd, środek do środka co najmniej **50 mm** (5 × 3 gniazda zajmują ok. 250 × 150 mm). Skrzydła, ogony
+  i broń zajmują więcej miejsca niż podstawka, więc przed cięciem ustaw wszystkie figurki na kartonie z zapasem 5–10 mm
+  i obrysuj miejsca (bohaterów, zwłaszcza smoki, rozstaw szerzej).
+- EVA klej do dna klejem kontaktowym albo taśmą dwustronną. Klej PVA do pianki się nie nadaje.
+- Dodatkowo (opcja): na spodzie półki, nad figurkami, przyklej pasek EVA 5 mm — lekko dociska figurki, gdyby ktoś odwrócił
+  pudełko. Wtedy luz nad figurkami to 4 mm, więc sprawdź na najwyższej figurce.
+
+### Wymiary (w mm)
+
+Wnętrze musi zmieścić **segregator**, plansze, karty, stosy kafelków i figurki. Wzór:
+
+- **długość wewnętrzna L** = dłuższy bok segregatora + **20** (10 na luz i 10 na słupki narożne)
+- **szerokość wewnętrzna W** = krótszy bok segregatora + **20** (co najmniej 300 — złożona arena ma ok. 205 × 290)
+- **wysokość wewnętrzna H** = 86 (EVA, figurki, luz) + 3 (półka) + wysokość stosów kafelków (ok. 46) + grzbiet
+  segregatora (40) + 5 luzu
+
+Przykład dla segregatora A4 (320 × 290, grzbiet 40): **L = 340, W = 310, H = 180** (zewnętrznie ok. 346 × 316 × 184).
+Najpierw zmierz **swój** segregator i **grubość swoich kafelków** (stos 20 szt.) i podstaw do wzorów. Gdyby H miało
+być niższe, zrób stosy po 15 kafelków (8 stosów, ok. 35 mm) albo część kafelków włóż do segregatora w kieszeniach.
+
+### Lista cięcia (t = 3 mm; dno 4 mm; dla przykładu wyżej)
 
 | Element | Ile | Wymiar (mm) | Wzór |
 |---|---:|---|---|
-| Dno | 1 | 338 × 308 | (L + 2t) × (W + 2t) |
-| Ścianka długa | 2 | 338 × 120 | (L + 2t) × H — stoi na dnie |
-| Ścianka krótka | 2 | 300 × 120 | W × H — między długimi |
-| Pokrywa — wieko | 1 | 347 × 317 | (L + 4t + 1) × (W + 4t + 1) |
-| Pokrywa — rant długi | 2 | 347 × 30 | (L + 4t + 1) × 30 |
-| Pokrywa — rant krótki | 2 | 309 × 30 | (W + 2t + 1) × 30 |
-| Opcjonalnie przegródka (sklejka 3 mm) | 1–2 | 300 × 80 | W × (H − 40) |
+| Dno (sklejka **4 mm**) | 1 | 346 × 316 | (L + 2t) × (W + 2t) |
+| Ścianka długa | 2 | 346 × 180 | (L + 2t) × H |
+| Ścianka krótka | 2 | 310 × 180 | W × H — między długimi |
+| Półka | 1 | 339 × 309, w narożnikach wycięcia 10 × 10 | (L − 1) × (W − 1) |
+| Pokrywa — wieko | 1 | 353 × 323 | (L + 4t + 1) × (W + 4t + 1) |
+| Pokrywa — rant długi | 2 | 353 × 30 | (L + 4t + 1) × 30 |
+| Pokrywa — rant krótki | 2 | 317 × 30 | (W + 2t + 1) × 30 |
+| Listwa 10 × 10: słupki narożne | 4 | 180 | H |
+| Listwa 10 × 10: szyny półki (długie ścianki, wysoko 86 mm) | 2 | 320 | L − 20 |
+| Listwa 10 × 10: ramka wewnątrz wieka | 2 + 2 | 347 oraz 303 | dopasuj do rantów |
 
-Pokrywa jest nasuwana jak w pudełku na buty (1 mm luzu). Przy innej grubości desek podstaw w wzorach swoje `t`.
-Z listą cięcia najprościej pojechać do marketu budowlanego i poprosić o docięcie (krok 1).
+Pokrywa ma 1 mm luzu. Przy innej grubości płyt podstaw w wzorach swoje `t`. Ścianki można rozciąć wzdłuż, ale
+**nie tnij pasków węższych niż 30 mm samodzielnie piłą ręczną** — daj całą listę do docięcia (krok 1) i zapytaj o rzaz
+(ok. 3 mm: lista musi mieć wymiary gotowych części).
 
 ### Składanie
 
-1. Przeszlifuj krawędzie (papier 120, potem 180).
-2. Sklej ścianki długie i krótkie w ramkę (klej do drewna + kątownik + ściski/taśma), potem przyklej ramkę do dna.
-   Tak samo wieko z rantami. Suszenie wg kleju (zwykle kilka godzin, pełna wytrzymałość po dobie).
-3. Szlif 240, odkurz, 1–2 warstwy lakieru albo bejca + lakier (szlif 240 między warstwami).
-4. **Grafiki:** na wieko okładka A4 (`10_…pdf`) albo samo logo (`11_…pdf`, strona 1), na boki etykiety 270 × 26 mm
-   (`11_…pdf`, strona 2). Przyklej klejem do decoupage: cienka warstwa pod spód, dociśnij od środka do brzegów,
-   po wyschnięciu 2–3 cienkie warstwy na wierzch (zabezpieczają wydruk).
-5. Nóżki filcowe pod dno.
+1. Przeszlifuj krawędzie (papier 120, potem 180). Zrób **próbne ustawienie na sucho** wszystkich części.
+2. Do czterech słupków przyklej ścianki: długie i krótkie ustawione w ramkę na słupkach (klej do drewna, kątownik,
+   ściski albo taśma malarska), potem przyklej ramkę do dna (klej + dociśnięcie ciężarkami; ścianki 3 mm mają
+   cienką krawędź, więc słupki i ewentualny wałek kleju od środka dają wytrzymałość). Szyny półki przyklej na wysokości
+   86 mm nad wewnętrzną powierzchnią dna, dopiero gdy EVA jest jeszcze nieprzyklejona (do pomiaru).
+3. Wieko: przyklej ramkę z listewek do wieka, potem rant do ramki. Sprawdź nasuwanie na korpus przed wyschnięciem klejów.
+4. Szlif 240, odkurz, 1–2 cienkie warstwy lakieru albo bejcy + lakier (lakier wodny, matowy). **Nie lakieruj gniazd EVA.**
+5. **Grafiki:** na wieko okładka A4 (`10_…pdf`) albo samo logo (`11_…pdf`, strona 1), na boki etykiety 270 × 26 mm
+   (`11_…pdf`, strona 2). Klej do decoupage: cienka warstwa pod spód, dociśnij od środka do brzegów,
+   po wyschnięciu 2–3 cienkie warstwy na wierzch.
+6. Po pełnym wyschnięciu: przyklej EVA do dna, wytnij gniazda *przed* przyklejeniem (łatwiej), ustaw półkę, nóżki filcowe
+   pod dno.
+7. **Próba końcowa:** obciąż pudełko zastępczo masą gry, sprawdź półkę i dno; włóż figurki, zamknij wieko i przenieś
+   pudełko poziomo, podtrzymując dno — nie za wieko.
 
-### Wnętrze (propozycja)
+### Waga
 
-- Na dnie: **figurki** w piance (pick and pluck) albo w przegródkach.
-- Na nich: plansza areny (złożona), karty (gumki), kafelki w stosach po 20 (gumki albo woreczki), tor rund,
-  woreczki ze znacznikami, kryształami i kością.
-- Na samej górze: **segregator** z instrukcją.
+Szacunek (poziom topolowej sklejki ok. 450 kg/m³): puste pudełko **ok. 1,2 kg**, z czego sklejka 3 mm ok. 0,7 kg, dno 4 mm
+ok. 0,2 kg, listewki ok. 0,1 kg, EVA ok. 0,1 kg. Wersja z wszystkimi płytami 4 mm i dnem 6 mm byłaby cięższa o ok.
+0,3–0,5 kg. Do wagi gry dochodzi segregator, kafelki i karty (te trzy rzeczy to prawdopodobnie 2–3 kg), więc samo
+pudełko to niewiele — największy zysk dają: cienkie płyty, brak okuć i EVA zamiast sklejki w przegródkach.
+Balsa jest jeszcze lżejsza (ok. 150 kg/m³), ale krucha: nadaje się najwyżej na wewnętrzne przegródki, nie na ścianki.
 
 ## Lista kontrolna kompletnego pudełka
 
