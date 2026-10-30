@@ -378,8 +378,8 @@ def strip(w, h, text, size):
 
 
 def author_files():
-    """The author's own logo files (docs/wersja_planszowa/) go next to the generated sheets, ready to print."""
-    for name in ('logo_zolte_120mm.pdf', 'logo_zolte_przezroczyste.png'):
+    """The author's own cover and logo files (docs/wersja_planszowa/) go next to the generated sheets, ready to print."""
+    for name in ('okladki_przod_tyl_grzbiet.pdf', 'logo_zolte_120mm.pdf', 'logo_zolte_przezroczyste.png'):
         shutil.copy(os.path.join(ROOT, 'docs', 'wersja_planszowa', name), os.path.join(OUT, name))
         print(name, '(plik autora)')
 

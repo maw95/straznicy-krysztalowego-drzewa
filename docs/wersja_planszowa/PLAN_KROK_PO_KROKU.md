@@ -29,7 +29,7 @@ Pliki w `do_druku/`:
 | `09_naklejki_znaczniki_kosc_tor_rund.pdf` | 2 | papier samoprzylepny (strona 2 — tylko gdy tor rund jest jednokolorowy) |
 | `10_okladka_A4_pokrywa_i_segregator.pdf` | 1 (+1) | papier fotograficzny — wersja zapasowa; do segregatora użyj `okladki_przod_tyl_grzbiet.pdf` z tego folderu (niżej) |
 | `11_logo_etykiety_pudelka_i_grzbiet.pdf` | 3 | papier fotograficzny / samoprzylepny — etykiety na boki pudełka (strona 2) i grzbiety 35, 50 i 70 mm (strona 3) |
-| `../okladki_przod_tyl_grzbiet.pdf` (plik autora) | 2 + pasek | papier fotograficzny — okładka segregatora: przód i tył A4 oraz pasek grzbietu 10 mm |
+| `okladki_przod_tyl_grzbiet.pdf` (plik autora, kopiowany przez `make druk`) | 2 + pasek | papier fotograficzny — okładka segregatora: przód i tył A4 oraz pasek grzbietu 10 mm |
 | `logo_zolte_120mm.pdf` (plik autora, kopiowany przez `make druk`) | 1 | logo na wieko pudełka (patrz krok 8, „Grafiki”) |
 
 **Razem ok. 40 arkuszy papieru fotograficznego, 2 arkusze samoprzylepnego i 20–40 kartek na instrukcję.**
@@ -108,8 +108,7 @@ Ceny orientacyjne.
    w `instrukcja_szablon/index.html` (opis w `instrukcja_szablon/README.md`) albo wydrukuj stronę z liniami i napisz ręcznie.
 2. Druk: skala 100%. Dwustronnie (41 stron = 21 kartek) na papierze matowym 160–200 g albo jednostronnie do koszulek
    (dwie strony plecami do siebie w jednej koszulce).
-3. Strony wpinamy po kolei. Okładka segregatora: `okladki_przod_tyl_grzbiet.pdf` (plik w folderze `wersja_planszowa/`,
-   nie w `do_druku/`) — **strona 1 to przód** (do przezroczystej kieszeni na przodzie), **strona 2 to tył**, **strona 3 to
+3. Strony wpinamy po kolei. Okładka segregatora: `okladki_przod_tyl_grzbiet.pdf` (plik autora; oryginał w `wersja_planszowa/`, kopia w `do_druku/`) — **strona 1 to przód** (do przezroczystej kieszeni na przodzie), **strona 2 to tył**, **strona 3 to
    pasek grzbietu 10 × 297 mm** (do kieszeni na grzbiecie). Wydrukuj w skali 100%. Grzbiet ma 10 mm szerokości, więc
    **sprawdź, czy tyle ma grzbiet Twojego segregatora** (zmierzony w kroku 0). Jeśli grzbiet jest szerszy, weź etykietę
    z `11_logo_etykiety_…pdf` (trzecia strona: 35, 50 i 70 mm).
