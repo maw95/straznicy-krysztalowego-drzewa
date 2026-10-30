@@ -295,10 +295,6 @@ def arena_sheets():
             for y in range(0, A4[1], mm(6)):
                 d.line((cut, y, cut, y + mm(3)), fill=(255, 255, 255), width=4)
                 d.line((cut + 4, y, cut + 4, y + mm(3)), fill=(0, 0, 0), width=4)
-            label = 'tnij tu: środek planszy (zagięcie)'
-            tx = cut - mm(52) if side == 'lewa' else cut + mm(3)
-            d.rectangle((tx - mm(1), mm(10), tx + mm(50), mm(15)), fill=(255, 255, 255))
-            d.text((tx, mm(10.6)), label, fill=(0, 0, 0), font=font(2.8))
             out.append(p)
     save('08_arena_A3_na_4_arkuszach_A4.pdf', out)
 
