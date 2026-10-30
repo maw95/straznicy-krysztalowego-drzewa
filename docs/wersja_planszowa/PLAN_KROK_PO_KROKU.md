@@ -10,7 +10,7 @@ drukujemy na zwykłej drukarce (papier fotograficzny), pudełko robimy ręcznie 
 |---|---|
 | `PLAN_KROK_PO_KROKU.md` | ten plik |
 | `do_druku/` | **gotowe PDF-y do druku** (tworzy je `make druk`; pliki nie są w gicie, można je zawsze zrobić od nowa) |
-| `okladki_przod_tyl_grzbiet.pdf` | **okładka segregatora** autora: 3 strony — przód (A4), tył (A4) i **grzbiet 20 × 297 mm** |
+| `okladki_przod_tyl_grzbiet.pdf` | **okładka segregatora** autora: 3 strony — przód (A4), tył (A4) i **grzbiet 10 × 297 mm** |
 | `logo_zolte_120mm.pdf`, `logo_zolte_przezroczyste.png` | **żółte logo na przezroczystym tle** na pudełko: PDF 140 × 110 mm z logo szerokim na 120 mm, PNG 1448 × 1086 px (RGBA) |
 | `WYMIARY_ELEMENTOW.md` | wymiary wszystkich elementów i zasady druku |
 | `FIGURKI_SPECYFIKACJA.md`, `druk3d/` | figurki, podstawki, kryształy, znacznik rundy — pliki do druku 3D |
@@ -29,7 +29,7 @@ Pliki w `do_druku/`:
 | `09_naklejki_znaczniki_kosc_tor_rund.pdf` | 2 | papier samoprzylepny (strona 2 — tylko gdy tor rund jest jednokolorowy) |
 | `10_okladka_A4_pokrywa_i_segregator.pdf` | 1 (+1) | papier fotograficzny — wersja zapasowa; do segregatora użyj `okladki_przod_tyl_grzbiet.pdf` z tego folderu (niżej) |
 | `11_logo_etykiety_pudelka_i_grzbiet.pdf` | 3 | papier fotograficzny / samoprzylepny — etykiety na boki pudełka (strona 2) i grzbiety 35, 50 i 70 mm (strona 3) |
-| `../okladki_przod_tyl_grzbiet.pdf` (plik autora) | 2 + pasek | papier fotograficzny — okładka segregatora: przód i tył A4 oraz pasek grzbietu 20 mm |
+| `../okladki_przod_tyl_grzbiet.pdf` (plik autora) | 2 + pasek | papier fotograficzny — okładka segregatora: przód i tył A4 oraz pasek grzbietu 10 mm |
 | `../logo_zolte_120mm.pdf` (plik autora) | 1 | logo na wieko pudełka (patrz krok 8, „Grafiki”) |
 
 **Razem ok. 40 arkuszy papieru fotograficznego, 2 arkusze samoprzylepnego i 20–40 kartek na instrukcję.**
@@ -110,7 +110,7 @@ Ceny orientacyjne.
    (dwie strony plecami do siebie w jednej koszulce).
 3. Strony wpinamy po kolei. Okładka segregatora: `okladki_przod_tyl_grzbiet.pdf` (plik w folderze `wersja_planszowa/`,
    nie w `do_druku/`) — **strona 1 to przód** (do przezroczystej kieszeni na przodzie), **strona 2 to tył**, **strona 3 to
-   pasek grzbietu 20 × 297 mm** (do kieszeni na grzbiecie). Wydrukuj w skali 100%. Grzbiet ma 20 mm szerokości, więc
+   pasek grzbietu 10 × 297 mm** (do kieszeni na grzbiecie). Wydrukuj w skali 100%. Grzbiet ma 10 mm szerokości, więc
    **sprawdź, czy tyle ma grzbiet Twojego segregatora** (zmierzony w kroku 0). Jeśli grzbiet jest szerszy, weź etykietę
    z `11_logo_etykiety_…pdf` (trzecia strona: 35, 50 i 70 mm).
 

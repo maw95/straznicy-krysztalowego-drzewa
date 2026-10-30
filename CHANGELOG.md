@@ -8,7 +8,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 - Okładka w lepszej jakości (pełne 300 DPI zamiast powiększanego obrazka): ostrzejsza w menu głównym, w instrukcji w grze i w wersji do druku.
 - Nowa okładka (zmienione widoki niektórych postaci): w menu głównym gry, na okładce instrukcji w grze i w wersji do druku.
-- Plan wersji planszowej: okładka segregatora (przód, tył, grzbiet 20 mm) i żółte logo na przezroczystym tle na pudełko, z uwagą, na czym je wydrukować.
+- Plan wersji planszowej: okładka segregatora (przód, tył, grzbiet 10 mm) i żółte logo na przezroczystym tle na pudełko, z uwagą, na czym je wydrukować.
 ## 2.1.0 — 2026-10-29
 
 - Instrukcja, rozdział 17: wariant „na szybko” podaje farby w kolorze frakcji (zieleń, bordo, granat) i ten sam kolor na podstawkę; wariant „porządniej” ma pełną paletę z nazwami farb na wszystkie 15 figurek, cienie i wskazówki mieszania; z nagłówka zniknęła uwaga o drukarce.
