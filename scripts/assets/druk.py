@@ -87,23 +87,16 @@ def trim_marks(d, xs, ys, box, off):
 
 
 # ---------------------------------------------------------------- cards
-def card_piece(src, w, h, bleed):
-    """The card at its cut size, rounded corners filled with its edge colour, plus the bleed all round."""
-    im = Image.open(src).convert('RGB').resize((w, h), Image.LANCZOS)
+def card_piece(src, w, h, bleed, trim=0):
+    """The card at its cut size, rounded corners filled with its edge colour, plus the bleed all round.
+    A back picture (2 : 3) is stretched a little to the card's proportions so its whole frame stays on the card;
+    `trim` drops the picture's pale outermost pixels."""
+    im = Image.open(src).convert('RGB')
+    im = im.crop((trim, trim, im.width - trim, im.height - trim)).resize((w, h), Image.LANCZOS)
     colour = edge_colour(im)
     out = Image.new('RGB', (w + 2 * bleed, h + 2 * bleed), colour)
     out.paste(im, (bleed, bleed), rounded(w, h, mm(3.2)))
     return out
-
-
-def back_piece(src, w, h, bleed):
-    """A card back cut to the front's proportions (centred), with the bleed taken from the picture itself."""
-    im = Image.open(src).convert('RGB')
-    W, H = w + 2 * bleed, h + 2 * bleed
-    k = max(W / im.width, H / im.height)
-    im = im.resize((math.ceil(im.width * k), math.ceil(im.height * k)), Image.LANCZOS)
-    x, y = (im.width - W) // 2, (im.height - H) // 2
-    return im.crop((x, y, x + W, y + H))
 
 
 def card_sheets(title, faces, backs, size, cols, rows, gap):
@@ -126,7 +119,7 @@ def card_sheets(title, faces, backs, size, cols, rows, gap):
             c, r = i % cols, i // cols
             x, y = x0 + c * (w + g), y0 + r * (h + g)
             f.paste(card_piece(face, w, h, bleed), (x - bleed, y - bleed))
-            b.paste(back_piece(back, w, h, bleed), (A4[0] - x - w - bleed, y - bleed))
+            b.paste(card_piece(back, w, h, bleed, trim=6), (A4[0] - x - w - bleed, y - bleed))
         fronts.append(f)
         rears.append(b)
     return fronts, rears
@@ -194,8 +187,8 @@ def hex_piece(art, grow):
 
 
 def tile_slots():
-    """Centres of the 15 tiles on a sheet: 5 rows of 3, every other row shifted half a tile (4 mm between tiles)."""
-    gap = 4
+    """Centres of the 15 tiles on a sheet: 5 rows of 3, every other row shifted half a tile (7 mm between tiles, room for the bleed and the scissors)."""
+    gap = 7
     px, py = TILE_W + gap, TILE_H * 0.75 + gap * math.sqrt(3) / 2
     gw, gh = 3 * TILE_W + 2 * gap + px / 2, 4 * py + TILE_H
     x0, y0 = (210 - gw) / 2 + TILE_W / 2, (297 - gh) / 2 + TILE_H / 2
@@ -241,19 +234,17 @@ def tile_sheets():
 
 
 # ---------------------------------------------------------------- arena
-BOARD = (420, 297)
+BOARD = (410, 297)  # printed size: A3 minus the 5 mm of each sheet that is cut off at the fold
 CELL = 34  # mm between the flat sides
 
 
 def arena_board(src):
-    """The A3 board at 300 dpi: the painted terrain with a regular grid of 34 mm cells drawn over it
+    """The board at 300 dpi: the whole painted terrain, frame included, with a regular grid of 34 mm cells drawn over it
     (the game's painting has a slight perspective, a printed board must not), start columns, obstacles."""
     arena = arenas.NAMES[src]
     W, H = mm(BOARD[0]), mm(BOARD[1])
     terrain = Image.open(os.path.join(ART, 'areny', f'arena_walki_{src}.png')).convert('RGBA')
-    k = max(W / terrain.width, H / terrain.height)
-    terrain = terrain.resize((math.ceil(terrain.width * k), math.ceil(terrain.height * k)), Image.LANCZOS)
-    board = terrain.crop(((terrain.width - W) // 2, (terrain.height - H) // 2, (terrain.width - W) // 2 + W, (terrain.height - H) // 2 + H))
+    board = terrain.resize((W, H), Image.LANCZOS)  # 4 : 3 picture on 410 : 297, a 3.5% stretch keeps the frame whole
     R = mm(CELL) / math.sqrt(3)
     half = mm(CELL) / 2
     # Columns 0..12, half-rows 1..16 at the outer edges: the grid is 20 R x 15 half-rows, centred on the board.
@@ -291,16 +282,16 @@ def arena_board(src):
 
 def arena_sheets():
     """Each side of the board on two A4 sheets. A home printer leaves a few mm white at the sheet's edge, so
-    each half reaches 5 mm past the fold, with the cut line printed there; the outer 5 mm of the frame is left out."""
+    each half reaches 5 mm past the fold, with the cut line printed there; the whole frame is on the outer edges."""
     out = []
     for src, name in (('przymierze', 'Przymierza'), ('horda', 'Hordy')):
         board = arena_board(src)
-        for side, x in (('lewa', 5), ('prawa', 205)):
+        for side, x in (('lewa', 0), ('prawa', 200)):
             p = page(f'Plansza areny {name} — {side} połowa (34 mm na pole)')
             part = board.crop((mm(x), 0, mm(x + 210), mm(297)))
             p.paste(part, (0, 0))
             d = ImageDraw.Draw(p)
-            cut = mm(210 - x)
+            cut = mm(205 - x)
             for y in range(0, A4[1], mm(6)):
                 d.line((cut, y, cut, y + mm(3)), fill=(255, 255, 255), width=4)
                 d.line((cut + 4, y, cut + 4, y + mm(3)), fill=(0, 0, 0), width=4)

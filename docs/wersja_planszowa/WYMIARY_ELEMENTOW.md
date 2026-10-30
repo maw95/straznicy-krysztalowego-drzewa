@@ -39,10 +39,10 @@ więc wersja fizyczna i komputerowa mają te same pola.
 
 - Wszystko jest ułożone na arkuszach **A4 w 300 DPI**, z linią kontrolną 50 mm na każdym arkuszu; drukować w skali 100%.
 - **Plansza areny A3** jest na 4 arkuszach A4 (po dwa na stronę). Każda połowa sięga 5 mm za środek planszy i ma tam linię
-  cięcia; zewnętrzne 5 mm ramki odpada (drukarka i tak go nie drukuje). Siatka jest narysowana od nowa jako regularne
+  cięcia. Obraz areny (z całą ramką) jest rozciągnięty na 410 × 297 mm, bo po przycięciu przy środku każda połowa ma 205 mm; ramka jest więc cała na zewnętrznych krawędziach (o 3,5% szersza niż w grze). Siatka jest narysowana od nowa jako regularne
   sześciokąty 34 mm (malowana siatka z gry ma lekką perspektywę), tło to obraz z gry powiększony 3,4 raza.
-- **Kafelki:** 15 na arkusz, obraz 6% większy od linii cięcia (spad), rewersy 12% większe i w lustrzanym układzie.
-- **Karty:** spad 1,5 mm w kolorze brzegu karty, znaczniki cięcia na marginesach, rewersy w lustrzanym układzie.
+- **Kafelki:** 15 na arkusz, obraz 6% większy od linii cięcia (spad), rewersy 12% większe i w lustrzanym układzie; między kafelkami 7 mm przerwy (na spad i nożyczki).
+- **Karty:** spad 1,5 mm w kolorze brzegu karty, znaczniki cięcia na marginesach, rewersy w lustrzanym układzie; obraz rewersu jest lekko rozciągnięty do proporcji karty, żeby cała ramka zmieściła się na karcie.
 - Obrazy kafelków mają w źródle ok. 340 px na kafelek (ok. 170 DPI przy 50 mm) — na papierze fotograficznym wyglądają
   dobrze, ale z bliska są lekko miękkie. Lepsze będą po wygenerowaniu grafik w docelowych rozmiarach (niżej).
 
