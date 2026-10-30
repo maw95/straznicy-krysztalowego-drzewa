@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Okładka w lepszej jakości (pełne 300 DPI zamiast powiększanego obrazka): ostrzejsza w menu głównym, w instrukcji w grze i w wersji do druku.
 - Nowa okładka (zmienione widoki niektórych postaci): w menu głównym gry, na okładce instrukcji w grze i w wersji do druku.
 - Plan wersji planszowej: okładka segregatora (przód, tył, grzbiet 20 mm) i żółte logo na przezroczystym tle na pudełko, z uwagą, na czym je wydrukować.
 ## 2.1.0 — 2026-10-29
