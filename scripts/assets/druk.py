@@ -11,6 +11,7 @@ Usage: python3 scripts/assets/druk.py [karty] [kafelki] [arena] [znaczniki] [pud
 """
 import math
 import os
+import shutil
 import sys
 from PIL import Image, ImageChops, ImageDraw, ImageFont
 
@@ -376,6 +377,13 @@ def strip(w, h, text, size):
     return im
 
 
+def author_files():
+    """The author's own logo files (docs/wersja_planszowa/) go next to the generated sheets, ready to print."""
+    for name in ('logo_zolte_120mm.pdf', 'logo_zolte_przezroczyste.png'):
+        shutil.copy(os.path.join(ROOT, 'docs', 'wersja_planszowa', name), os.path.join(OUT, name))
+        print(name, '(plik autora)')
+
+
 def box_sheets():
     cover = Image.open(os.path.join(ART, 'okladka', 'okladka.png')).convert('RGB').resize(A4, Image.LANCZOS)
     logo = Image.open(os.path.join(ART, 'okladka', 'logo.png')).convert('RGBA')
@@ -413,4 +421,5 @@ if __name__ == '__main__':
         sticker_sheets()
     if 'pudelko' in parts:
         box_sheets()
+        author_files()
     print('ok ->', OUT)

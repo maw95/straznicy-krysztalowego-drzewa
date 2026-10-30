@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wersja do druku: w folderze `do_druku/` leżą też żółte logo na pudełko (`logo_zolte_120mm.pdf` i `logo_zolte_przezroczyste.png`).
 - Wersja do druku: z planszy areny zniknął napis „tnij tu: środek planszy”, który zostawałby widoczny na przyciętej połowie; linia cięcia leży w pasku, który się odcina.
 - Wersja do druku: rewersy kart (jednostek i skarbów) mają całą ramkę zamiast uciętych brzegów, kafelki mapy mają 7 mm przerwy zamiast 4 mm, a plansza areny ma całą ramkę także na bokach, górze i dole.
 - Okładka w lepszej jakości (pełne 300 DPI zamiast powiększanego obrazka): ostrzejsza w menu głównym, w instrukcji w grze i w wersji do druku.

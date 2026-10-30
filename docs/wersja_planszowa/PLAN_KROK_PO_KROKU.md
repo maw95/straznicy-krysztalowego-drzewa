@@ -30,7 +30,7 @@ Pliki w `do_druku/`:
 | `10_okladka_A4_pokrywa_i_segregator.pdf` | 1 (+1) | papier fotograficzny — wersja zapasowa; do segregatora użyj `okladki_przod_tyl_grzbiet.pdf` z tego folderu (niżej) |
 | `11_logo_etykiety_pudelka_i_grzbiet.pdf` | 3 | papier fotograficzny / samoprzylepny — etykiety na boki pudełka (strona 2) i grzbiety 35, 50 i 70 mm (strona 3) |
 | `../okladki_przod_tyl_grzbiet.pdf` (plik autora) | 2 + pasek | papier fotograficzny — okładka segregatora: przód i tył A4 oraz pasek grzbietu 10 mm |
-| `../logo_zolte_120mm.pdf` (plik autora) | 1 | logo na wieko pudełka (patrz krok 8, „Grafiki”) |
+| `logo_zolte_120mm.pdf` (plik autora, kopiowany przez `make druk`) | 1 | logo na wieko pudełka (patrz krok 8, „Grafiki”) |
 
 **Razem ok. 40 arkuszy papieru fotograficznego, 2 arkusze samoprzylepnego i 20–40 kartek na instrukcję.**
 Z zapasem na pomyłki kupcie 50–60 arkuszy fotograficznego.
