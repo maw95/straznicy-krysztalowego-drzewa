@@ -211,10 +211,6 @@ const AFTER_HEADING = {
 
 // ---------------------------------------------------------------- walk the markdown
 const children = [];
-// Cover.
-const cover = path.join(ROOT, 'public', 'assets', 'manual', 'assets', 'okladka_A4_300dpi.jpg');
-if (fs.existsSync(cover)) children.push(new Paragraph({ alignment: AlignmentType.CENTER, children: [new ImageRun({ type: 'jpg', data: fs.readFileSync(cover), transformation: { width: 600, height: 848 } })] }));
-
 const lines = MD.split('\n');
 let section = '';
 let firstChapter = true;

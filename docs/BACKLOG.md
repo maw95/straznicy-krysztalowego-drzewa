@@ -66,5 +66,5 @@ wdrożenia serwera z nowym pakietem silnika.
   arena, tor rund, znaczniki, etykieta z logo na pudełko. Druk na zwykłej drukarce (papier fotograficzny),
   figurki i żetony z drukarki 3D (zlecone), instrukcja w segregatorze, pudełko z cienkich desek.
   *Zrobione 28.10: `docs/wersja_planszowa/PLAN_KROK_PO_KROKU.md`, PDF-y robi `make druk`.*
-- [ ] **5.3. Druga strona instrukcji: imienna wiadomość od autora dla gracza** — pisze autor sam
+- [ ] **5.3. Pierwsza strona instrukcji: imienna wiadomość od autora dla gracza** — pisze autor sam
   (strona jest zostawiona pusta w szablonie).

@@ -790,11 +790,10 @@ html = ['<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="
         '<div class="hint">Instrukcja • Format A4 • Aby zapisać jako PDF: Ctrl+P → Zapisz jako PDF → marginesy „Brak” → włącz „Grafika w tle”</div>',
         '<div id="overflow-report"></div>',
         '<!-- Strony generuje skrypt z treści docs/INSTRUKCJA.md; można je też edytować ręcznie. Każda strona to blok <section class="sheet">. -->',
-        '<!-- OKŁADKA -->',
-        '<section class="sheet cover"><img src="assets/okladka_A4_300dpi.png" alt="Strażnicy Kryształowego Drzewa — okładka"></section>']
+        ]
 for n, (cls, left, right, foot, body, key) in enumerate(pages, start=1):
     body = body.replace('@@TOC@@', toc_html)
-    html.append(f'\n<!-- STRONA {n} (bez okładki): {foot} -->\n<section class="sheet {cls}">{CORNERS}<div class="inside">'
+    html.append(f'\n<!-- STRONA {n}: {foot} -->\n<section class="sheet {cls}">{CORNERS}<div class="inside">'
                 f'<header class="running"><span>{left}</span><span class="star">✧</span><span>{right}</span></header><div class="hair"></div>\n'
                 f'{body.strip()}\n</div><footer class="footer"><span>Strażnicy Kryształowego Drzewa</span><span>{foot}</span><span class="folio">{n}</span></footer></section>')
 html.append('''
