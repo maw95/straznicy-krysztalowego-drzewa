@@ -120,7 +120,7 @@ def card_sheets(title, faces, backs, size, cols, rows, gap):
             c, r = i % cols, i // cols
             x, y = x0 + c * (w + g), y0 + r * (h + g)
             f.paste(card_piece(face, w, h, bleed), (x - bleed, y - bleed))
-            b.paste(card_piece(back, w, h, bleed, trim=6), (A4[0] - x - w - bleed, y - bleed))
+            b.paste(card_piece(back, w, h, bleed, trim=12), (A4[0] - x - w - bleed, y - bleed))
         fronts.append(f)
         rears.append(b)
     return fronts, rears
