@@ -33,10 +33,10 @@ Kolejność prac: interfejs celu → punkty kontrolne (najprostszy) → przetrwa
 
 ## Etap 2 — ekonomia i rozwój
 
-- **Zasoby [do potwierdzenia]:** złoto, drewno, ruda (kryształy zostają celem, nie walutą). Kopalnie na mapie dają dochód co rundę.
+- **Zasoby:** złoto, drewno, ruda/kamień + jeden rzadki, magiczny zasób (nazwa w `DECYZJE.md`; „kryształy” zostają celem, nie walutą). Kopalnie na mapie dają dochód co rundę.
 - **Osady:** startowa osada frakcji + osady do zdobycia. W osadzie jeden budynek na rundę; budynki odblokowują
   jednostki, bonusy i ulepszenia. Przyrost „puli rekrutów” w cyklu tygodniowym (7 rund).
-- **Armia [do potwierdzenia]:** zalecany model *drużyny* zamiast stosów: bohater prowadzi do N pojedynczych jednostek
+- **Armia (uzgodnione):** model *drużyny* zamiast stosów: bohater prowadzi do N pojedynczych jednostek
   (N rośnie z poziomem bohatera i budynkami). Dzięki temu arena i bitwy figurek zostają bez przebudowy; stosy jak w
   Heroesach wymagałyby nowego silnika bitew.
 - **Bohaterowie:** doświadczenie za bitwy, poziomy, wybór 1 z 3 umiejętności przy awansie (drzewka na frakcję), ekwipunek.
@@ -44,7 +44,7 @@ Kolejność prac: interfejs celu → punkty kontrolne (najprostszy) → przetrwa
 
 ## Etap 3 — frakcje
 
-Cel: razem co najmniej 5 frakcji (Przymierze Świtu, Mroczna Horda + 3 nowe). Każda: 3 bohaterów, 4–5 jednostek
+Premiera: Przymierze Świtu, Mroczna Horda + Żelazne Klany, Dzikie Stada, Królestwo Umarłych. Później (DLC): Wolne Kompanie, Dwór Wiecznego Szronu, Imperium Piasków, Rój Głębin, Władcy Przypływów (pomysły autora, patrz niżej). Każda: 3 bohaterów, 4–5 jednostek
 rekrutowanych w osadzie, własna osada z budynkami i jedna mechanika wyróżniająca. Propozycje **[do potwierdzenia]**:
 - *Leśny Krąg* (elfy/natura): pułapki, ruch przez las, wsparcie z dystansu.
 - *Krypta* (nieumarli): odrodzenia, osłabianie, tanie jednostki.
@@ -67,3 +67,24 @@ Każda frakcja: symulacje balansu (`make sim-tabele`) przed włączeniem do gry;
 Etapy 0 → 1 → 2 → 3 → 4; etap 3 (zawartość) można częściowo prowadzić równolegle po etapie 2. Minimum, które ma
 sens jako płatna premiera na Steamie: etap 1 (co najmniej 3 cele i 3 kształty map), etap 2 w pełni, 1–2 nowe
 frakcje, wyprawa roguelike i osiągnięcia. Reszta jako aktualizacje po premierze.
+
+## Frakcje — pomysły autora (3.11.2026)
+
+- **Żelazne Klany:** krasnoludy, golemy, machiny; odporność, osłanianie sojuszników, ulepszanie wyposażenia; mała mobilność.
+- **Imperium Piasków:** dżinny, sfinksy, skorpiony; mobilność, miraże, zasadzki, przestawianie jednostek.
+- **Dwór Wiecznego Szronu:** lodowe olbrzymy, wiedźmy, białe wilki, śnieżne sowy; spowalnianie, izolowanie, kontrola pola.
+- **Królestwo Umarłych:** władcy grobowców, szkielety, upiory, ożywione zbroje (baśniowo, nie makabrycznie); odrodzenia, osłabianie, wyczerpanie.
+- **Dzikie Stada:** minotaury, centaury, satyrowie, wielkie bestie; szarże, odpychanie, premie za ruch przed atakiem.
+- **Wolne Kompanie:** lisy, borsuki, kruki, wydry; pułapki, skarby, kombinacje specjalistów.
+- **Rój Głębin:** grzyboludy, chrząszcze, modliszki; premie w grupie, zatruwanie, zajmowanie terenu.
+- **Władcy Przypływów:** trytony, syreny, kraboludy, żółwie, węże morskie; przyciąganie, odpychanie, ochrona (zdolności działają też na mapach bez wody).
+
+Uwagi: odpychanie występuje u Stad i Przypływów (rozdzielić role: Stada = szarża, Przypływy = osłona i zamiana miejsc);
+odrodzenia Umarłych kolidują ze skarbem „Wskrzeszenie”; niedźwiedzie Klanów nakładają się na Prastarego Niedźwiedzia;
+koszt balansu rośnie kwadratowo z liczbą frakcji (5 frakcji = 10 par).
+
+## Grafika i animacja (w toku, patrz `DECYZJE.md`)
+
+Rezygnacja z figurek 3D na rzecz jednostek 2D jest rozważana. Styl ma być mroczniejszy niż obecny. Grafiki mają być
+generowane przez usługę AI zintegrowaną z Claude (bez ręcznego przepisywania promptów). Rejestr zasobów: `assets.json`
+(źródło, narzędzie, prompt, licencja, czy AI), potrzebny też do ujawnienia AI na Steamie.
