@@ -11,6 +11,22 @@ Każdy etap kończy się grywalną, przetestowaną wersją. Golden test (`tests/
 Klasyczny i ma się nie zmieniać; nowe tryby dostają własne golden testy. Boty (`src/engine/ai/`) muszą umieć grać
 każdy nowy cel i każdą nową mechanikę, bo to dziś główny koszt rozbudowy.
 
+## Drabinka złożoności (priorytet rodzinny)
+
+Decyzja z 3.11.2026: gra „rośnie razem z dziećmi”. Najprostszy poziom jest pełnowartościowym produktem i flagą gry;
+kolejne poziomy dokładają mechaniki jako aktualizacje (każda to okazja do marketingu). Poziomy działają jako presety
+przełączników („Własne ustawienia” z instrukcji pozwalają włączać warstwy osobno). Najwyższy poziom ma być niewiele
+mniej złożony niż Heroes III, ale to cel końcowy, nie fundament (patrz `KONKURENCJA_I_FILARY.md`).
+
+1. **Przygoda** (od 5 lat): dzisiejsza gra: bez zasobów, bohater + dwa wsparcia, skarby, strażnicy, handicapy, hotseat.
+2. **Wyprawa:** poziomy bohaterów, artefakty, więcej obiektów na mapie, nowe cele i kształty map (etap 1).
+3. **Królestwo:** osady, jedna waluta (złoto), rekrutacja jednostek.
+4. **Imperium:** pełna ekonomia (złoto, drewno, ruda/kamień, Gwiezdny Pył), budynki, cykl tygodniowy, drzewka umiejętności,
+   mechaniki frakcji (etap 2).
+5. **Legenda:** magia (czary), pełne specjalności bohaterów, zaawansowane scenariusze (blisko Heroes III).
+
+Pomysł do przemyślenia: autopilot wybranych warstw dla młodszych graczy (`KONKURENCJA_I_FILARY.md`).
+
 ## Etap 0 — porządek
 
 - Pole `ruleset` w ustawieniach gry: `classic` (planszówka) albo `digital`. Wszystkie zmiany etapów 1–4 działają tylko w `digital`.
@@ -31,7 +47,7 @@ mapy ręcznie projektowane (plik JSON, używany przez kampanię).
 
 Kolejność prac: interfejs celu → punkty kontrolne (najprostszy) → przetrwanie → boss → eskorta; generator: prostokąt → pierścień → wyspy → mapy ręczne.
 
-## Etap 2 — ekonomia i rozwój
+## Etap 2 — ekonomia i rozwój (poziomy 3–4 drabinki)
 
 - **Zasoby:** złoto, drewno, ruda/kamień + jeden rzadki, magiczny zasób (nazwa w `DECYZJE.md`; „kryształy” zostają celem, nie walutą). Kopalnie na mapie dają dochód co rundę.
 - **Osady:** startowa osada frakcji + osady do zdobycia. W osadzie jeden budynek na rundę; budynki odblokowują
@@ -64,7 +80,8 @@ Każda frakcja: symulacje balansu (`make sim-tabele`) przed włączeniem do gry;
 
 ## Kolejność i realistyczny zakres
 
-Etapy 0 → 1 → 2 → 3 → 4; etap 3 (zawartość) można częściowo prowadzić równolegle po etapie 2. Minimum, które ma
+Etapy 0 → 1 → 2 → 3 → 4; etap 3 (zawartość) można częściowo prowadzić równolegle po etapie 2. Propozycja przy priorytecie rodzinnym [do potwierdzenia]: premiera na poziomach 1–2 drabinki (z hotseatem i trybem rodzinnym), poziomy 3–5 jako aktualizacje.
+Wcześniejsze minimum, które miało
 sens jako płatna premiera na Steamie: etap 1 (co najmniej 3 cele i 3 kształty map), etap 2 w pełni, 1–2 nowe
 frakcje, wyprawa roguelike i osiągnięcia. Reszta jako aktualizacje po premierze.
 

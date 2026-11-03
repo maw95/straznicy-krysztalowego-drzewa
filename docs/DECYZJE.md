@@ -22,7 +22,17 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
   Wybrane: **Scenario** (plan płatny, miesięczny kredyt, oficjalny serwer MCP). Do sprawdzenia przed dłuższym użyciem:
   czy MCP/API działa na najtańszym planie, licencja komercyjna, spójność postaci. Plan awaryjny: Leonardo.ai (tańszy), fal.ai (płatność za użycie).
 
+- **Pozycjonowanie rodzinne:** „przygoda w stylu Heroesów, która rośnie razem z dziećmi”; priorytet: hotseat, tryb rodzinny,
+  wspólna gra rodzic + dziecko (`KONKURENCJA_I_FILARY.md`).
+- **Drabinka złożoności** (Przygoda → Wyprawa → Królestwo → Imperium → Legenda), każdy poziom jako preset przełączników;
+  najprostszy poziom jest flagowy, wyższe jako aktualizacje (`ROZBUDOWA_CYFROWA.md`).
+
 ## Czekają na decyzję
+
+0. **Autopilot dla warstw** (młodszy gracz z automatycznie zarządzaną ekonomią): zapisane jako pomysł, autor jeszcze przemyśli.
+0. **Zakres premiery:** propozycja poziomy 1–2 + hotseat/tryb rodzinny, reszta jako aktualizacje (do potwierdzenia).
+0. **Przegląd konkurencji na Steamie ręcznie** (tagi Family Friendly, Local Co-Op, Turn-Based Strategy) i test z 5–10 parami rodzic + dziecko.
+
 
 1. **Test na jednej jednostce** (Złoty Smok albo jednostka Hordy): po założeniu konta i klucza ocenić jakość i spójność.
 2. **Odniesienia wizualne do mrocznego stylu** dla Hordy i neutralnych (gry, ilustracje, kolory).
