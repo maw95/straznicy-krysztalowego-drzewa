@@ -565,3 +565,29 @@ describe('a battle on the map costs the entered hex, like any step', () => {
     expect(after.movePoints).toBe(s.movePoints - 1);
   });
 });
+
+describe('Dzielna Kaczka (easter egg hero)', () => {
+  const duckFight = () =>
+    battleFixture(
+      pvpGame('goldDragon', 'blackDragon'),
+      [
+        { id: 'braveDuck', side: 'dawn', col: 5, half: 6 },
+        { id: 'goblinShaman', side: 'horde', col: 5, half: 8 },
+        { id: 'ironFistOgre', side: 'horde', col: 6, half: 6 },
+      ],
+      { attacker: 'dawn', defender: 'horde', attackerHero: 'braveDuck', defenderHero: 'blackDragon' },
+    );
+
+  it('is a fragile, fast, hard-hitting flyer', () => {
+    expect(UNITS.braveDuck).toMatchObject({ hp: 3, attack: 6, speed: 10, movement: 'fly', kind: 'hero' });
+  });
+
+  it('Kacza Furia: a kill gives her another activation, a mere hit does not', () => {
+    let s = applyAction(duckFight(), { type: 'battleAttack', targetId: 'goblinShaman' });
+    expect(s.battle!.units.goblinShaman.alive).toBe(false);
+    expect(s.battle!.activation).toMatchObject({ unitId: 'braveDuck', attacked: false, moveOnly: false });
+    s = applyAction(s, { type: 'battleAttack', targetId: 'ironFistOgre' });
+    expect(s.battle!.units.ironFistOgre.alive).toBe(true);
+    expect(s.battle!.activation!.unitId).not.toBe('braveDuck');
+  });
+});

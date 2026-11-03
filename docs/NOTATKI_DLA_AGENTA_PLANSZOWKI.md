@@ -750,3 +750,10 @@ przegrywa każdy pojedynek z bohaterem Hordy.
 **Decyzja użytkownika:** zasady bez zmian, poprawiona tylko punktacja. Kolumna `duels` w `src/engine/scoring.ts` =
 `optionBase` + round(9 × (Normalny − pojedynki)) z powyższych wyników; w instrukcji (rozdział 13) zdanie, że
 pojedynki sprzyjają Przymierzu. Poziom Łatwy (pojedynki bez zdolności) się nie zmienia.
+
+## 14. Dzielna Kaczka — bohater easter egg (2026-11-03, prośba użytkownika)
+
+- Ukryty bohater Przymierza Świtu, **poza** pulą `FACTION_HEROES` (silnik nigdy jej nie losuje, więc wyniki botów i `golden.test.ts` się nie zmieniają). Odblokowanie: pięć kliknięć w herb Przymierza na ekranie nowej gry (zapamiętane w przeglądarce, `skd-duck`). Tylko gra lokalna — w trybie online jej nie ma.
+- Liczby: Ż 3, A 6, S 10, lata, walka wręcz. Celowo przesadzona.
+- Umiejętność **Kacza Furia** (pasywna, bez limitu na bitwę): gdy atak Kaczki zabije wroga, jej aktywacja zaczyna się od nowa (ruch + atak) — zanim zagra następna jednostka. Zabój kolejnego wroga daje kolejną aktywację.
+- Grafiki (karta, portret, ikony) są rysowane z SVG, a figurka 3D budowana z prymitywów w `figures.ts` — do wymiany na prawdziwe, gdy autor je przygotuje.

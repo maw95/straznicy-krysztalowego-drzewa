@@ -14,6 +14,7 @@ export type AbilityId =
   | 'sunburst' // Słoneczny Blask
   | 'lightCharge' // Szarża Światła (passive)
   | 'guardian' // Opiekun Gaju (reaction)
+  | 'duckFury' // Kacza Furia (passive; easter egg hero)
   | 'entanglingRoots' // Splątane Korzenie
   | 'giftOfLife' // Dar Życia
   | 'airDash' // Powietrzny Zryw
@@ -92,6 +93,8 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),
     u({ id: 'unicornKing', name: 'Król Jednorożców', side: 'dawn', kind: 'hero', hp: 8, attack: 5, speed: 8, movement: 'walk', attackType: 'melee', ability: 'lightCharge', abilityName: 'Szarża Światła', abilityText: `+${ABILITY.lightChargeBonus} A do ataku wykonanego po ruchu o co najmniej ${ABILITY.lightChargeMinMove} pola.` }),
     u({ id: 'ancientBear', name: 'Prastary Niedźwiedź', side: 'dawn', kind: 'hero', hp: 11, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'guardian', abilityName: 'Opiekun Gaju', abilityText: `Raz na bitwę: przyjmuje cios, który zabiłby jego lub sąsiada, i ignoruje ${ABILITY.guardianIgnore} obrażenia.` }),
+    // Easter egg hero (not in FACTION_HEROES): fragile, fast and hits hard; every kill gives her another activation.
+    u({ id: 'braveDuck', name: 'Dzielna Kaczka', side: 'dawn', kind: 'hero', hp: 3, attack: 6, speed: 10, movement: 'fly', attackType: 'melee', ability: 'duckFury', abilityName: 'Kacza Furia', abilityText: 'Gdy jej atak zabije wroga, Kaczka od razu aktywuje się jeszcze raz (ruch i atak). Bez limitu na bitwę.' }),
     u({ id: 'elfDruid', name: 'Elf Druid', side: 'dawn', kind: 'support', hp: 4, attack: 1, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Splątane Korzenie', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
     u({ id: 'nymph', name: 'Nimfa', side: 'dawn', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'giftOfLife', abilityName: 'Dar Życia', abilityText: `Raz na bitwę: +${ABILITY.giftOfLifeHeal} Ż sojusznikowi, do maksimum.` }),
     u({ id: 'pegasus', name: 'Pegaz', side: 'dawn', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'fly', attackType: 'melee', ability: 'airDash', abilityName: 'Powietrzny Zryw', abilityText: `Raz na bitwę: po ataku odskok do ${ABILITY.airDashRange} pól.` }),
@@ -111,6 +114,9 @@ export const FACTION_HEROES: Record<FactionId, string[]> = {
   dawn: ['goldDragon', 'unicornKing', 'ancientBear'],
   horde: ['blackDragon', 'werewolfLord', 'ironFistOgre'],
 };
+
+/** Easter egg heroes: unlocked on the setup screen (click the Dawn crest five times), never drawn by the engine. */
+export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [] };
 
 export const FACTION_SUPPORTS: Record<FactionId, string[]> = {
   dawn: ['elfDruid', 'nymph', 'pegasus'],

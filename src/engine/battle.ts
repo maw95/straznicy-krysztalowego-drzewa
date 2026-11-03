@@ -257,7 +257,7 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
 /** Abilities that are switched on for a single attack. */
 export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
@@ -633,6 +633,11 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   act.attacked = true;
   act.acted = true;
   if (checkBattleEnd(state)) return;
+  // Kacza Furia: a kill gives the duck another full activation right away.
+  if (ab === 'duckFury' && abilityActive(state) && u.alive && targets.some((t) => !t.alive)) {
+    b.extra.unshift({ unitId: u.id, moveOnly: false });
+    log(state, 'ability', `${unitName(u)} wpada w szał i aktywuje się ponownie (${UNITS[u.defId].abilityName}).`);
+  }
   const hopAbility = ab === 'airDash' || ab === 'nestLeap';
   if (hopAbility && !b.duel && (!u.abilityUsed || ab === 'nestLeap') && abilityActive(state) && u.alive) {
     act.hop = ab === 'airDash' ? ABILITY.airDashRange : ABILITY.nestLeapRange;

@@ -23,6 +23,7 @@ export const FIGURES = new Set([
   'cyclops',
   'griffin',
   'hydra',
+  'braveDuck',
 ]);
 
 export const hasFigure = (unitId: string) => FIGURES.has(unitId);
@@ -64,6 +65,33 @@ export async function lightRoom(renderer: import('three').WebGLRenderer) {
 /** One room per renderer: it is costly to make, and every picture of that renderer can share it. */
 const rooms = new WeakMap<import('three').WebGLRenderer, import('three').Texture>();
 
+/** The easter egg duck has no print model: a little figure built from primitives (base 1 wide, facing +Z). */
+function duckModel(THREE: Three): Object3D {
+  const g = new THREE.Group();
+  const mat = (color: number, metal = 0) => new THREE.MeshStandardMaterial({ color, roughness: 0.55, metalness: metal });
+  const add = (geo: import('three').BufferGeometry, m: import('three').Material, x: number, y: number, z: number, sx = 1, sy = 1, sz = 1) => {
+    const mesh = new THREE.Mesh(geo, m);
+    mesh.position.set(x, y, z);
+    mesh.scale.set(sx, sy, sz);
+    g.add(mesh);
+    return mesh;
+  };
+  const feather = mat(0xfff0b8);
+  const orange = mat(0xf08a24);
+  add(new THREE.CylinderGeometry(0.5, 0.5, 0.06, 32), mat(0x6b4a22), 0, 0.03, 0); // base
+  add(new THREE.SphereGeometry(0.3, 24, 18), feather, 0, 0.42, -0.02, 1, 0.85, 1.25); // body
+  add(new THREE.SphereGeometry(0.2, 24, 18), feather, 0, 0.74, 0.18); // head
+  add(new THREE.ConeGeometry(0.07, 0.2, 16), orange, 0, 0.72, 0.4).rotation.x = Math.PI / 2; // beak
+  for (const x of [-0.08, 0.08]) add(new THREE.SphereGeometry(0.03, 12, 10), mat(0x111111), x, 0.79, 0.34); // eyes
+  add(new THREE.SphereGeometry(0.2, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2), mat(0xd9a82e, 0.8), 0, 0.8, 0.18); // helmet
+  add(new THREE.ConeGeometry(0.1, 0.35, 12), feather, 0, 0.5, -0.42).rotation.x = -Math.PI / 2.4; // tail
+  for (const x of [-0.3, 0.3]) add(new THREE.SphereGeometry(0.16, 16, 12), mat(0xf4c65a), x, 0.46, -0.05, 0.35, 0.8, 1.2); // wings
+  for (const x of [-0.12, 0.12]) add(new THREE.CylinderGeometry(0.025, 0.025, 0.14, 8), orange, x, 0.13, 0.05); // legs
+  const sword = add(new THREE.BoxGeometry(0.05, 0.05, 0.55), mat(0xdde6ee, 0.9), 0.4, 0.5, 0.3);
+  sword.rotation.set(0.5, 0, 0);
+  return g;
+}
+
 const models = new Map<string, Promise<Object3D>>();
 /** Height of each loaded figure, in base diameters (a dragon with raised wings is tall, a spider low). */
 const heights = new Map<string, number>();
@@ -81,7 +109,7 @@ export async function loadFigure(unitId: string): Promise<Object3D> {
   if (!model) {
     model = (async () => {
       const { THREE, load } = await threeLib();
-      const scene = await load(`${BASE}modele/${unitId}.glb`);
+      const scene = unitId === 'braveDuck' ? duckModel(THREE) : await load(`${BASE}modele/${unitId}.glb`);
       scene.updateMatrixWorld(true);
       const box = new THREE.Box3().setFromObject(scene);
       const height = box.max.y - box.min.y;

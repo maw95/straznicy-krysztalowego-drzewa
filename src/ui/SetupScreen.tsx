@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type FactionId, type MapSize } from '../engine/data';
+import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, MAP_SIZE_NAMES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type Controller, type Mode, type RulesConfig, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
@@ -42,6 +42,17 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
     setRules({ ...preset.rules });
   };
   const [preview, setPreview] = useState<string>('goldDragon');
+  // Easter egg: five clicks on a Dawn crest wake up the Brave Duck (remembered in this browser).
+  const [duck, setDuck] = useState(() => { try { return localStorage.getItem('skd-duck') === '1'; } catch { return false; } });
+  const crestClicks = useRef(0);
+  const crestClick = (f: FactionId, i: number) => {
+    if (f !== 'dawn' || duck || ++crestClicks.current < 5) return;
+    try { localStorage.setItem('skd-duck', '1'); } catch { /* private mode: only for this visit */ }
+    setDuck(true);
+    update(i, { heroId: SECRET_HEROES.dawn[0] });
+    setPreview(SECRET_HEROES.dawn[0]);
+  };
+  const heroesOf = (f: FactionId) => (duck ? [...FACTION_HEROES[f], ...SECRET_HEROES[f]] : FACTION_HEROES[f]);
 
   const changeMode = (m: Mode) => {
     const c = m === 'pvp' ? Math.max(2, count) : m === 'arena' ? 2 : Math.min(2, count);
@@ -243,7 +254,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           <div className="lbl" style={{ marginTop: 6 }}>Miejsca przy stole</div>
           {seats.map((s, i) => (
             <div key={i} className="well" style={{ padding: '6px 12px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', background: SEAT_TINT[s.faction], transition: 'background 0.35s' }}>
-              <img src={asset(`cards/crests/${s.faction}.png`)} alt="" title={FACTION_NAMES[s.faction]} style={{ width: 46, height: 46, objectFit: 'contain', flex: 'none', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.5))' }} />
+              <img src={asset(`cards/crests/${s.faction}.png`)} alt="" title={FACTION_NAMES[s.faction]} onClick={() => crestClick(s.faction, i)} style={{ width: 46, height: 46, objectFit: 'contain', flex: 'none', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.5))' }} />
               <input type="text" value={s.name} onChange={(e) => update(i, { name: e.target.value })} style={{ width: 130 }} aria-label="Imię gracza" />
               {mode === 'pvp' && (
                 <select value={s.faction} aria-label="Frakcja" onChange={(e) => update(i, { faction: e.target.value as FactionId, heroId: FACTION_HEROES[e.target.value as FactionId][0] })}>
@@ -256,7 +267,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
                 <option value="bot">Bot</option>
               </select>
               <div style={{ display: 'flex', gap: 6 }}>
-                {FACTION_HEROES[s.faction].map((h) => (
+                {heroesOf(s.faction).map((h) => (
                   <button key={h} className="btn" title={UNITS[h].name} onMouseEnter={() => setPreview(h)} onClick={() => { update(i, { heroId: h }); setPreview(h); }} disabled={takenBy(h, i)} style={{ background: 'none', border: 0, padding: 0 }}>
                     <Portrait unitId={h} size={46} ring={SIDE_RING[s.faction]} glow={s.heroId === h ? '0 0 0 3px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} dim={takenBy(h, i)} />
                   </button>
