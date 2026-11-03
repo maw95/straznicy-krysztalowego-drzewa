@@ -14,17 +14,18 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
 - Workflow: ta kolejka decyzji, karta frakcji jako specyfikacja (`KARTA_FRAKCJI_SZABLON.md`), automatyczny balans symulacjami,
   przewodnik stylu i manifest zasobów (`assets.json`), arkusz kontaktowy do wyboru grafik, równoległe gałęzie z bramką jakości.
 
+- Rzadki zasób nazywa się **Gwiezdny Pył**.
+- Animacja jednostek: próbujemy animacji proceduralnej (warstwy, deformacja siatki, efekty, ruch w kodzie); ulepszenie
+  bohaterów prawdziwą animacją dopiero po teście. Figurki 3D są do zastąpienia jednostkami 2D (do potwierdzenia po teście na jednej jednostce).
+- Styl: mroczniejszy tylko dla jednostek Hordy i neutralnych (strażnicy); pozostałe grafiki (karty, kafle, interfejs, Przymierze) zostają.
+- Usługa AI do grafik: wybór pozostawiony Claude'owi, z wymogiem taniej subskrypcji (nie płatności za zużycie).
+  Wybrane: **Scenario** (plan płatny, miesięczny kredyt, oficjalny serwer MCP). Do sprawdzenia przed dłuższym użyciem:
+  czy MCP/API działa na najtańszym planie, licencja komercyjna, spójność postaci. Plan awaryjny: Leonardo.ai (tańszy), fal.ai (płatność za użycie).
+
 ## Czekają na decyzję
 
-1. **Nazwa rzadkiego zasobu.** Autor: nie „Klejnoty” (za bliskie Kryształom), raczej magiczny pył. Propozycje:
-   *Gwiezdny Pył* (rekomendacja, neutralny wobec fabuły), *Pył Drzewa* (łączy z fabułą), *Esencja*, *Poświata*.
-2. **Animacja jednostek.** Do omówienia: 3D vs 2D; animacja proceduralna (warstwy, deformacja siatki, efekty) vs klatki
-   z AI vs szkielet (rig). Plan: krótki test na jednej jednostce (Złoty Smok).
-3. **Usługa AI do grafik** (portrety, jednostki, kafle, interfejs), z którą Claude może pracować bez ręcznego
-   przepisywania promptów: kandydaci to Scenario (oficjalny serwer MCP), fal.ai (API, wiele modeli), PixelLab (tylko pixel art).
-   Do sprawdzenia: licencja komercyjna, własność wyników, koszt, spójność postaci.
-4. **Styl graficzny: mroczniejszy niż dziś.** Pytania: odniesienia wizualne, czy nowa stylistyka obejmie też istniejące
-   karty, kafle i interfejs (spójność), czy tylko nowe frakcje.
+1. **Test na jednej jednostce** (Złoty Smok albo jednostka Hordy): po założeniu konta i klucza ocenić jakość i spójność.
+2. **Odniesienia wizualne do mrocznego stylu** dla Hordy i neutralnych (gry, ilustracje, kolory).
 
 ## Przyjęte domyślnie (do przejrzenia)
 
