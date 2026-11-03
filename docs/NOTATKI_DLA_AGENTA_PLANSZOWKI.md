@@ -756,4 +756,4 @@ pojedynki sprzyjają Przymierzu. Poziom Łatwy (pojedynki bez zdolności) się n
 - Ukryty bohater Przymierza Świtu, **poza** pulą `FACTION_HEROES` (silnik nigdy jej nie losuje, więc wyniki botów i `golden.test.ts` się nie zmieniają). Odblokowanie: pięć kliknięć w herb Przymierza na ekranie nowej gry (zapamiętane w przeglądarce, `skd-duck`). Tylko gra lokalna — w trybie online jej nie ma.
 - Liczby: Ż 3, A 6, S 10, lata, walka wręcz. Celowo przesadzona.
 - Umiejętność **Kacza Furia** (pasywna, bez limitu na bitwę): gdy atak Kaczki zabije wroga, jej aktywacja zaczyna się od nowa (ruch + atak) — zanim zagra następna jednostka. Zabój kolejnego wroga daje kolejną aktywację.
-- Grafiki (karta, portret, ikony) są rysowane z SVG, a figurka 3D budowana z prymitywów w `figures.ts` — do wymiany na prawdziwe, gdy autor je przygotuje.
+- Portret (`docs/grafika/portrety/dzielna_kaczka.png`) i model (`dzielna_kaczka.glb`) są od autora; model jest zwrócony w -Z, więc `figures.ts` obraca go o 180°. Ikony umiejętności `duckFury*.png` są nadal tymczasowe (rysowane z SVG) — do wymiany.

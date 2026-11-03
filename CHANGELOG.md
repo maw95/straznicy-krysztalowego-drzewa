@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Dzielna Kaczka ma już swój malowany portret i prawdziwą figurkę 3D (zamiast tymczasowych rysunków); ikony umiejętności Kaczej Furii są jeszcze tymczasowe.
 - Sekret: pięć kliknięć w herb Przymierza na ekranie nowej gry budzi Dzielną Kaczkę — kruchego (3 Ż), bardzo szybkiego (10 S) bohatera z atakiem 6 i umiejętnością Kacza Furia: gdy jej atak zabije wroga, od razu aktywuje się jeszcze raz.
 - Instrukcja (w grze i do druku) nie ma już strony z okładką: okładka segregatora jest osobnym plikiem, a instrukcja zaczyna się od wiadomości od autora.
 - Wersja do druku: w folderze `do_druku/` leżą też okładka segregatora (`okladki_przod_tyl_grzbiet.pdf`) i żółte logo na pudełko (`logo_zolte_120mm.pdf`, `logo_zolte_przezroczyste.png`).

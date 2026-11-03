@@ -93,7 +93,7 @@ FIGURES := przymierze_zloty_smok:goldDragon przymierze_jednorozec:unicornKing pr
 	przymierze_elf:elfDruid przymierze_nimfa:nymph przymierze_pegaz:pegasus \
 	horda_czarny_smok:blackDragon horda_wilkolak:werewolfLord horda_ogr:ironFistOgre \
 	horda_goblin:goblinShaman horda_pajak:caveSpider horda_nietoperz:shadowBat \
-	straznik_cyklop:cyclops straznik_gryf:griffin straznik_hydra:hydra
+	straznik_cyklop:cyclops straznik_gryf:griffin straznik_hydra:hydra dzielna_kaczka:braveDuck
 RATIO ?= 0.02
 
 modele: ## Figurki 3D do gry: docs/wersja_planszowa/druk3d/figurki/z_teksturami/<frakcja>_<postać>.glb -> public/modele/<jednostka>.glb (uproszczone także przez szwy UV, scripts/assets/simplify_model.mjs; tekstury 1024 px WebP; model ponad 2,5 MB upraszczany mocniej), np. make modele RATIO=0.02

@@ -59,7 +59,7 @@ def portraits():
         'blackDragon': ('horda_czarny_smok_portret.png', 0.75), 'werewolfLord': ('horda_wilkolak_portret.png', 0.62),
         'ironFistOgre': ('horda_ogr_portret.png', 0.62), 'goblinShaman': ('horda_goblin_portret.png', 0.55),
         'caveSpider': ('horda_pajak_portret.png', 0.45), 'shadowBat': ('horda_nietoperz_portret.png', 0.5),
-        'hydra': ('straznik_hydra_portret.png', 0.5),
+        'hydra': ('straznik_hydra_portret.png', 0.5), 'braveDuck': ('dzielna_kaczka.png', 0.58),
     }
     arts = []
     for sheet_name, cells in sheets.items():
@@ -236,6 +236,9 @@ if __name__ == '__main__':
     import sys
     if sys.argv[1:] == ['treasures']:
         treasures()
+        sys.exit()
+    if sys.argv[1:] == ['portraits']:
+        portraits()
         sys.exit()
     treasures()
     portraits()
