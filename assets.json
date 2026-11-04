@@ -92,7 +92,7 @@
       "pliki": [
         "public/assets/arena/cyfrowa/dawn.webp"
       ],
-      "typ": "tło areny (cyfrowa, bez siatki; siatkę rysuje kod)",
+      "typ": "tło areny (cyfrowa, bez siatki; siatkę rysuje kod); środek planszy zastąpiony czystą teksturą (scripts/assets/arena_cyfrowa.py)",
       "model": "GPT Image 2.5 Flare, 1536x1024, jakość high, tło opaque",
       "scenario_asset": "asset_SSJTYewi3d145ZjwKmXreeYw",
       "prompt": "Top-down view of an empty fantasy battlefield arena background for a turn-based strategy game, in the painterly style of Heroes of Might and Magic 3 battle backgrounds but darker, grittier and more serious. The centre of the image is a wide, calm, open stretch of flat meadow ground: muted olive and moss green grass, worn patches of dry earth, a few tiny pale wildflowers, very even and uncluttered so a game grid can be drawn on it. Around the edges a natural frame: ancient mossy grey stone ruins and broken walls, tall dark pine trees and bushes, fallen leaves, a misty stream at the bottom edge. Overcast late-afternoon light, desaturated earthy colours, soft shadows. Absolutely no grid, no hexagons, no lines, no UI, no text, no characters, no units, no objects in the central 70% of the image.",
@@ -106,7 +106,7 @@
       "pliki": [
         "public/assets/arena/cyfrowa/horde.webp"
       ],
-      "typ": "tło areny (cyfrowa, bez siatki; siatkę rysuje kod)",
+      "typ": "tło areny (cyfrowa, bez siatki; siatkę rysuje kod); środek planszy zastąpiony czystą teksturą (scripts/assets/arena_cyfrowa.py)",
       "model": "GPT Image 2.5 Flare, 1536x1024, jakość high, tło opaque",
       "scenario_asset": "asset_AbX1y6iJxKAAocC7WUCpnoVF",
       "prompt": "Top-down view of an empty dark fantasy battlefield arena background for a turn-based strategy game, in the painterly style of Heroes of Might and Magic 3 battle backgrounds but darker, grittier and more serious. The centre of the image is a wide, calm, open stretch of flat scorched volcanic ground: dark charcoal basalt and ash with thin faint glowing ember-orange cracks, very even and uncluttered so a game grid can be drawn on it. Around the edges a natural frame: jagged black rock walls, dead blackened trees, smouldering embers, a dull glowing lava stream at the bottom edge. Dim smoky red-orange light, desaturated dark colours, deep shadows. Absolutely no grid, no hexagons, no lines, no UI, no text, no characters, no units, no objects in the central 70% of the image.",
@@ -167,6 +167,104 @@
       "scenario_asset": "asset_PGaf7XHaQbQmTAJoJCqoWbsJ",
       "prompt": "A charred twisted dead tree stump with a few smouldering ember cracks and a pile of blackened rubble at its base, game obstacle sprite for a dark fantasy strategy game, seen from a slightly raised three-quarter front view, centred, filling about 80% of the frame width, resting on the ground, painterly realistic style, dark desaturated colours, dim smoky red light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
       "narzedzie": "Scenario (plan Starter)",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/pine",
+      "pliki": [
+        "public/assets/arena/cyfrowa/pine.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare, 768x768, jakość medium, tło transparent",
+      "scenario_asset": "asset_w2kFeg3aUANRu9tLFFvJsFPy",
+      "prompt": "A single lone gnarled dark pine tree with a thick twisted trunk and dense dark green needles, game obstacle sprite for a fantasy strategy game, seen from a slightly raised three-quarter front view, centred, resting on the ground, painterly realistic style, muted desaturated earthy colours, overcast light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/log",
+      "pliki": [
+        "public/assets/arena/cyfrowa/log.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare, 768x768, jakość medium, tło transparent",
+      "scenario_asset": "asset_3wW1H4eHvNRCQkwMwaZnEUUZ",
+      "prompt": "A large fallen mossy log with bracket fungi and a few broken branches, lying on the ground, game obstacle sprite for a fantasy strategy game, seen from a slightly raised three-quarter front view, centred, resting on the ground, painterly realistic style, muted desaturated earthy colours, overcast light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/brambles",
+      "pliki": [
+        "public/assets/arena/cyfrowa/brambles.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare, 768x768, jakość medium, tło transparent",
+      "scenario_asset": "asset_ejVKU3ixsUKK1hpa7WfYP97M",
+      "prompt": "A dense tangle of thorny bramble bushes with dry brown stems and a few dark berries, game obstacle sprite for a fantasy strategy game, seen from a slightly raised three-quarter front view, centred, resting on the ground, painterly realistic style, muted desaturated earthy colours, overcast light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/statue",
+      "pliki": [
+        "public/assets/arena/cyfrowa/statue.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare, 768x768, jakość medium, tło transparent",
+      "scenario_asset": "asset_3h9mDrtCh9EMVt35BQbxHjk5",
+      "prompt": "A weathered grey stone statue of a hooded knight, cracked and covered with moss and ivy, standing on a small square stone plinth, game obstacle sprite for a fantasy strategy game, seen from a slightly raised three-quarter front view, centred, resting on the ground, painterly realistic style, muted desaturated earthy colours, overcast light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/bones",
+      "pliki": [
+        "public/assets/arena/cyfrowa/bones.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare, 768x768, jakość medium, tło transparent",
+      "scenario_asset": "asset_Q6YrHYTkLqi9XnLXLYAcotZH",
+      "prompt": "A pile of old bones with a giant ribcage and a cracked horned skull, charred and ashy, game obstacle sprite for a dark fantasy strategy game, seen from a slightly raised three-quarter front view, centred, resting on the ground, painterly realistic style, dark desaturated colours, dim smoky red light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/barricade",
+      "pliki": [
+        "public/assets/arena/cyfrowa/barricade.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare, 768x768, jakość medium, tło transparent",
+      "scenario_asset": "asset_QXsYYRvG9CivKbxTZopnSqTM",
+      "prompt": "A wrecked wooden barricade of sharpened spiked stakes and rusty iron plates, scorched and broken, game obstacle sprite for a dark fantasy strategy game, seen from a slightly raised three-quarter front view, centred, resting on the ground, painterly realistic style, dark desaturated colours, dim smoky red light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/crystals",
+      "pliki": [
+        "public/assets/arena/cyfrowa/crystals.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare, 768x768, jakość medium, tło transparent",
+      "scenario_asset": "asset_bipz6gthRJAPnsgZWomG1fiH",
+      "prompt": "A cluster of dark red crystals growing out of black rock, glowing faintly from inside with a dull ember-red light, game obstacle sprite for a dark fantasy strategy game, seen from a slightly raised three-quarter front view, centred, resting on the ground, painterly realistic style, dark desaturated colours, dim smoky red light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
       "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"

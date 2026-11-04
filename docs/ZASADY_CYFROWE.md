@@ -59,6 +59,7 @@ W trybie `digital` bitwa toczy się na **innej planszy** niż klasyczna (`Battle
   kolumny startowej, głowa w tym samym rzędzie, kolumnę dalej.
 - Pojedynek na mapie (`duel`): dwie jednostki na sąsiednich polach środkowego rzędu.
 - **Oprawa:** tła bez siatki w poważnym, stonowanym stylu (`public/assets/arena/cyfrowa/dawn|horde.webp`), siatkę rysuje kod
-  (`src/ui/arenaGeometry.ts`, `geometryOf`); przeszkody to osobne obrazy z przezroczystością (głazy i ruina na łące, skały i martwe
-  drzewo na polu Hordy) z delikatnym złotym obrysem pola. Wybór ogona w interfejsie: najechanie pokazuje ogon, prawy przycisk
+  (`src/ui/arenaGeometry.ts`, `geometryOf`); przeszkody to osobne obrazy z przezroczystością (łąka: głazy, ruina, sosna, kłoda, ciernie, posąg; pole Hordy: skały, martwe
+  drzewo, kości, barykada, kryształy; wariant zależy od pola), wpasowane w dolną część heksa, z delikatnym złotym obrysem pola. Pod planszą tło ma czystą teksturę (drzewa i ruiny ramy nie wchodzą pod heksy, `scripts/assets/arena_cyfrowa.py`); aktywną jednostkę
+  pokazują niebieskie pola, bez żółtego kółka (kółko zostaje tylko przy rozstawianiu). Wybór ogona w interfejsie: najechanie pokazuje ogon, prawy przycisk
   myszy obraca jednostkę (druga strona).

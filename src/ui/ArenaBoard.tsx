@@ -37,7 +37,12 @@ const GoldGrid = memo(function GoldGrid({ cells, points, wide }: { cells: readon
 });
 
 /** Obstacle pictures of the digital arenas (public/assets/arena/cyfrowa): the two variants used on each arena. */
-const OBSTACLE_ART = { dawn: ['boulders', 'ruin'], horde: ['spires', 'deadtree'] } as const;
+const OBSTACLE_ART = {
+  dawn: ['boulders', 'ruin', 'pine', 'log', 'brambles', 'statue'],
+  horde: ['spires', 'deadtree', 'bones', 'barricade', 'crystals'],
+} as const;
+/** An obstacle picture is fitted into this box, standing on the lower part of its hex. */
+const OBSTACLE_BOX = { w: 76, h: 92, base: 26 };
 
 export interface ArenaView {
   x: number;
@@ -85,6 +90,8 @@ interface Props {
 
 /** Rim of the blocked cells on both arenas (scripts/assets/arenas.py paints the same one). */
 const OBSTACLE_RIM = '#A88414';
+/** How far below the middle of its hex(es) a sprite unit stands (its feet). */
+const FEET = 24;
 
 export function ArenaBoard(p: Props) {
   const { state, view, scale, anim, deploy, targeting, hover, setHover, active, moves, hops, targets, approach } = p;
@@ -113,9 +120,9 @@ export function ArenaBoard(p: Props) {
   /** Feet of a sprite unit: the middle of its hex, or between its two hexes. */
   const anchorOf = (fp: { head: HexKey; tail?: HexKey }) => {
     const h = cellCenter(fp.head);
-    if (!fp.tail) return { x: h.x, y: h.y + 10 };
+    if (!fp.tail) return { x: h.x, y: h.y + FEET };
     const t = cellCenter(fp.tail);
-    return { x: (h.x + t.x) / 2, y: (h.y + t.y) / 2 + 10 };
+    return { x: (h.x + t.x) / 2, y: (h.y + t.y) / 2 + FEET };
   };
   const spritePieces: SpritePiece[] = spriteUnits.flatMap((u): SpritePiece[] => {
     const fp = footprintOf(u);
@@ -129,8 +136,9 @@ export function ArenaBoard(p: Props) {
       if (enemies.length) flip = enemies.reduce((m, x) => m + x, 0) / enemies.length < a.x;
     }
     const melee = lastStrike(u.id, false);
-    const isActive = deploySide ? picked === u.id : active?.id === u.id;
-    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, ring: isActive ? ACTIVE_FIGURE_RING : null, attack: melee ? { key: melee.key, towardX: cellCenter(melee.to).x } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy' }];
+    // In a fight the blue cells already mark the active unit; the ring only shows which unit is picked while deploying.
+    const ring = deploySide && picked === u.id ? ACTIVE_FIGURE_RING : null;
+    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, ring, attack: melee ? { key: melee.key, towardX: cellCenter(melee.to).x } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy' }];
   });
   return (
     <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#14100A' }}>
@@ -144,8 +152,13 @@ export function ArenaBoard(p: Props) {
             b.obstacles.map((k) => {
               const c = cellCenter(k);
               const { col, row } = wideCellOf(k);
-              const name = OBSTACLE_ART[b.arena][(col + row) % 2];
-              return <img key={`ob${k}`} src={asset(`arena/cyfrowa/${name}.webp`)} alt="" style={{ position: 'absolute', left: c.x - 46, top: c.y - 74, width: 92, pointerEvents: 'none', filter: b.arena === 'horde' ? 'brightness(1.55) contrast(1.05)' : undefined }} />;
+              const names = OBSTACLE_ART[b.arena];
+              const name = names[(col * 5 + row * 3 + col * row) % names.length];
+              return (
+                <div key={`ob${k}`} style={{ position: 'absolute', left: c.x - OBSTACLE_BOX.w / 2, top: c.y + OBSTACLE_BOX.base - OBSTACLE_BOX.h, width: OBSTACLE_BOX.w, height: OBSTACLE_BOX.h, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', pointerEvents: 'none' }}>
+                  <img src={asset(`arena/cyfrowa/${name}.webp`)} alt="" style={{ maxWidth: '100%', maxHeight: '100%', filter: b.arena === 'horde' ? 'brightness(1.55) contrast(1.05)' : undefined }} />
+                </div>
+              );
             })}
           <svg width={CANVAS_W} height={CANVAS_H} style={{ position: 'absolute', left: 0, top: 0 }}>
             <g pointerEvents="none">
@@ -241,7 +254,7 @@ export function ArenaBoard(p: Props) {
             const sprite = spriteIds.has(u.id);
             const figure = sprite || figureFor(u.defId);
             const fp = sprite ? footprintOf(u) : null;
-            const { x, y } = fp ? (() => { const a = anchorOf(fp); return { x: a.x - W / 2, y: a.y - 10 - H / 2 }; })() : cellPos(posOf(u)!);
+            const { x, y } = fp ? (() => { const a = anchorOf(fp); return { x: a.x - W / 2, y: a.y - FEET - H / 2 }; })() : cellPos(posOf(u)!);
             const isActive = deploySide ? picked === u.id : active?.id === u.id;
             const isTarget = targets.some((t) => t.id === u.id);
             const strike = lastStrike(u.id, false);
