@@ -6,7 +6,8 @@ import { cellsOf, deployHeads, unitAt } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import { isDigital, type BattleUnit, type GameState } from '../engine/types';
 import { asset, Frame, Portrait, ACTIVE_FIGURE_RING, Ribbon, SIDE_RING } from './common';
-import { ART_SIZE, CANVAS_H, CANVAS_W, CELL_POINTS, CELLS, cellCenter, cellPos, hexPoints, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
+import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
+import { wideCellOf } from '../engine/battle';
 import { DamageDrop, DieFace, LastAttack, Marker, StatText } from './markers';
 import { details } from './details';
 import { figureFor, FigureLayer, type Piece } from './FigureLayer';
@@ -19,18 +20,24 @@ import type { Deployment } from './useDeployment';
 
 /** The painted boards draw each hex with its own gold rim, and neighbouring rims do not always lie on
  *  each other (doubled, overlapping edges). One even gold grid on top covers them. */
-const GoldGrid = memo(function GoldGrid() {
+const GoldGrid = memo(function GoldGrid({ cells, points, wide }: { cells: readonly HexKey[]; points: Map<HexKey, string>; wide: boolean }) {
+  // The digital arena has no painted grid: a quiet one is drawn over the plain picture.
+  const dark = wide ? { stroke: 'rgba(20,14,6,0.45)', width: 2.6 } : { stroke: 'rgba(52,34,8,0.85)', width: 3.4 };
+  const light = wide ? { stroke: 'rgba(236,214,150,0.4)', width: 1.1 } : { stroke: '#E4C16E', width: 1.6 };
   return (
     <>
-      {CELLS.map((k) => (
-        <polygon key={`gd${k}`} points={CELL_POINTS.get(k)} fill="none" stroke="rgba(52,34,8,0.85)" strokeWidth="3.4" strokeLinejoin="round" />
+      {cells.map((k) => (
+        <polygon key={`gd${k}`} points={points.get(k)} fill="none" stroke={dark.stroke} strokeWidth={dark.width} strokeLinejoin="round" />
       ))}
-      {CELLS.map((k) => (
-        <polygon key={`gl${k}`} points={CELL_POINTS.get(k)} fill="none" stroke="#E4C16E" strokeWidth="1.6" strokeLinejoin="round" />
+      {cells.map((k) => (
+        <polygon key={`gl${k}`} points={points.get(k)} fill="none" stroke={light.stroke} strokeWidth={light.width} strokeLinejoin="round" />
       ))}
     </>
   );
 });
+
+/** Obstacle pictures of the digital arenas (public/assets/arena/cyfrowa): the two variants used on each arena. */
+const OBSTACLE_ART = { dawn: ['boulders', 'ruin'], horde: ['spires', 'deadtree'] } as const;
 
 export interface ArenaView {
   x: number;
@@ -82,6 +89,9 @@ const OBSTACLE_RIM = '#A88414';
 export function ArenaBoard(p: Props) {
   const { state, view, scale, anim, deploy, targeting, hover, setHover, active, moves, hops, targets, approach } = p;
   const b = state.battle!;
+  const geo = geometryOf(b.layout);
+  const wide = b.layout === 'wide';
+  const { cellCenter, cellPos, hexPoints, cells: CELLS, cellPoints: CELL_POINTS, canvasW: CANVAS_W, canvasH: CANVAS_H, art: ART_SIZE } = geo;
   const { deployable, picked, deploySide, posOf } = deploy;
   const { walk, hitIds, strikes, seals, shards, ghosts, rollPops, floaters, lastStrike } = anim;
   const lastRoll = b.rolls?.[b.rolls.length - 1];
@@ -128,12 +138,24 @@ export function ArenaBoard(p: Props) {
         <div style={{ position: 'relative', flex: 'none', margin: 'auto', width: view.w * scale, height: view.h * scale, overflow: 'hidden' }}>
         <div style={{ position: 'absolute', left: 0, top: 0, width: CANVAS_W, height: CANVAS_H, transform: `translate(${-view.x * scale}px, ${-view.y * scale}px) scale(${scale})`, transformOrigin: '0 0' }}>
           {/* The painted board of the half of the map where the fight broke out. */}
-          <img src={asset(`arena/${b.arena}.jpg`)} alt="" style={{ position: 'absolute', left: 0, top: 0, width: ART_SIZE.w, height: ART_SIZE.h, ...(isDigital(state.rules) ? { filter: 'brightness(0.72) saturate(0.62) contrast(1.05)' } : {}) }} />
+          <img src={asset(wide ? `arena/cyfrowa/${b.arena}.webp` : `arena/${b.arena}.jpg`)} alt="" style={{ position: 'absolute', left: 0, top: 0, width: ART_SIZE.w, height: ART_SIZE.h }} />
+          {/* Digital arena: obstacles are pictures standing on their cells. */}
+          {wide &&
+            b.obstacles.map((k) => {
+              const c = cellCenter(k);
+              const { col, row } = wideCellOf(k);
+              const name = OBSTACLE_ART[b.arena][(col + row) % 2];
+              return <img key={`ob${k}`} src={asset(`arena/cyfrowa/${name}.webp`)} alt="" style={{ position: 'absolute', left: c.x - 46, top: c.y - 74, width: 92, pointerEvents: 'none', filter: b.arena === 'horde' ? 'brightness(1.55) contrast(1.05)' : undefined }} />;
+            })}
           <svg width={CANVAS_W} height={CANVAS_H} style={{ position: 'absolute', left: 0, top: 0 }}>
             <g pointerEvents="none">
-              <GoldGrid />
+              <GoldGrid cells={CELLS} points={CELL_POINTS} wide={wide} />
               {/* Obstacles get their own rim: dark yellow on both boards (as painted there). */}
-              {b.obstacles.map((k) => (
+              {wide &&
+                b.obstacles.map((k) => (
+                  <polygon key={`ob${k}`} points={hexPoints(k, 2)} fill="rgba(0,0,0,0.12)" stroke={OBSTACLE_RIM} strokeOpacity="0.75" strokeWidth="2" strokeLinejoin="round" />
+                ))}
+              {!wide && b.obstacles.map((k) => (
                 <polygon key={`ob${k}`} points={hexPoints(k, 1.5)} fill="none" stroke={OBSTACLE_RIM} strokeWidth="3.2" strokeLinejoin="round" />
               ))}
             </g>

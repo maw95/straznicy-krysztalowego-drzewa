@@ -2,7 +2,7 @@
 // Both paintings share one grid, measured from their gold lines: rows of hex edges get
 // taller towards the bottom and columns spread out (a slight perspective).
 
-import { arenaCells, cellOf } from '../engine/battle';
+import { arenaCells, cellOf, layoutCells, wideCellOf, WIDE_COLUMNS, WIDE_ROWS } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 
 /** Painting size in pixels and the scale it is shown at. */
@@ -73,3 +73,81 @@ export function cellPos(k: HexKey) {
   const c = cellCenter(k);
   return { x: c.x - TOKEN_W / 2, y: c.y - TOKEN_H / 2 };
 }
+
+// ---------------------------------------------------------------- the digital arena (pointy-topped hexes in rows)
+
+/**
+ * Where the cells of one arena sit on its picture. The classic arena is painted (above); the digital one ("wide") is a plain
+ * picture (public/assets/arena/cyfrowa/*.webp) with the grid drawn over it by the code: pointy-topped hexes in 9 rows of 13,
+ * odd rows shifted half a cell to the right.
+ */
+export interface ArenaGeometry {
+  cells: readonly HexKey[];
+  cellPoints: Map<HexKey, string>;
+  cellCenter: (k: HexKey) => { x: number; y: number };
+  hexPoints: (k: HexKey, ins?: number) => string;
+  /** Top-left corner of the unit token box on a cell. */
+  cellPos: (k: HexKey) => { x: number; y: number };
+  canvasW: number;
+  canvasH: number;
+  /** Size the picture is shown at. */
+  art: { w: number; h: number };
+  fullView: { x: number; y: number; w: number; h: number };
+  phoneView: { x: number; y: number; w: number; h: number };
+}
+
+const CLASSIC_GEOMETRY: ArenaGeometry = {
+  cells: CELLS,
+  cellPoints: CELL_POINTS,
+  cellCenter,
+  hexPoints,
+  cellPos,
+  canvasW: CANVAS_W,
+  canvasH: CANVAS_H,
+  art: ART_SIZE,
+  fullView: { x: 0, y: 0, w: CANVAS_W, h: CANVAS_H },
+  phoneView: { x: 55, y: 40, w: 790, h: CANVAS_H - 40 },
+};
+
+/** Width of one hex of the wide arena and the picture's size (3:2, like the generated pictures). */
+const WIDE_HEX_W = 62;
+const WIDE_HEX_S = WIDE_HEX_W / Math.sqrt(3);
+const WIDE_W = 1000;
+const WIDE_H = 667;
+const WIDE_X0 = (WIDE_W - (WIDE_COLUMNS + 0.5) * WIDE_HEX_W) / 2;
+const WIDE_Y0 = (WIDE_H - (WIDE_ROWS * 1.5 + 0.5) * WIDE_HEX_S) / 2;
+
+function wideCenter(k: HexKey) {
+  const { col, row } = wideCellOf(k);
+  return { x: WIDE_X0 + WIDE_HEX_W * (col + 0.5 + (row & 1) / 2), y: WIDE_Y0 + WIDE_HEX_S + 1.5 * WIDE_HEX_S * row };
+}
+
+function wideHexPoints(k: HexKey, ins = 0): string {
+  const c = wideCenter(k);
+  const r = WIDE_HEX_S - ins;
+  return Array.from({ length: 6 }, (_, i) => {
+    const a = ((30 + 60 * i) * Math.PI) / 180;
+    return `${(c.x + r * Math.cos(a)).toFixed(1)},${(c.y + r * Math.sin(a)).toFixed(1)}`;
+  }).join(' ');
+}
+
+const WIDE_CELL_LIST = layoutCells({ layout: 'wide' });
+
+const WIDE_GEOMETRY: ArenaGeometry = {
+  cells: WIDE_CELL_LIST,
+  cellPoints: new Map(WIDE_CELL_LIST.map((k) => [k, wideHexPoints(k)])),
+  cellCenter: wideCenter,
+  hexPoints: wideHexPoints,
+  cellPos: (k) => {
+    const c = wideCenter(k);
+    return { x: c.x - TOKEN_W / 2, y: c.y - TOKEN_H / 2 };
+  },
+  canvasW: WIDE_W,
+  canvasH: WIDE_H,
+  art: { w: WIDE_W, h: WIDE_H },
+  fullView: { x: 0, y: 0, w: WIDE_W, h: WIDE_H },
+  phoneView: { x: 50, y: 50, w: 900, h: WIDE_H - 70 },
+};
+
+/** The geometry of a battle's arena (`BattleState.layout`). */
+export const geometryOf = (layout?: 'wide'): ArenaGeometry => (layout === 'wide' ? WIDE_GEOMETRY : CLASSIC_GEOMETRY);

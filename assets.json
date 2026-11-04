@@ -3,7 +3,10 @@
   "assets": [
     {
       "id": "zloty_smok/stoi",
-      "pliki": ["public/assets/jednostki/zloty_smok/stoi.webp", "docs/grafika/jednostki/zloty_smok/stoi_niebieskie.png"],
+      "pliki": [
+        "public/assets/jednostki/zloty_smok/stoi.webp",
+        "docs/grafika/jednostki/zloty_smok/stoi_niebieskie.png"
+      ],
       "typ": "grafika jednostki",
       "narzedzie": "Scenario (plan Starter)",
       "model": "GPT Image 2.5 Flare, 1024 px, jakość high; potem złożony lokalnie na niebieskim tle #0000FF",
@@ -15,7 +18,10 @@
     },
     {
       "id": "zloty_smok/martwy",
-      "pliki": ["public/assets/jednostki/zloty_smok/martwy.webp", "docs/grafika/jednostki/zloty_smok/martwy_niebieskie.png"],
+      "pliki": [
+        "public/assets/jednostki/zloty_smok/martwy.webp",
+        "docs/grafika/jednostki/zloty_smok/martwy_niebieskie.png"
+      ],
       "typ": "grafika jednostki (trup)",
       "narzedzie": "Scenario (plan Starter)",
       "model": "GPT Image 2.5 Flare, 1024 px, z obrazem stojącym jako odniesieniem",
@@ -27,7 +33,9 @@
     },
     {
       "id": "zloty_smok/wzbicie",
-      "pliki": ["public/assets/jednostki/zloty_smok/wzbicie.webp"],
+      "pliki": [
+        "public/assets/jednostki/zloty_smok/wzbicie.webp"
+      ],
       "typ": "animacja (49 klatek, 24 kl./s); lądowanie = odtwarzanie od tyłu",
       "narzedzie": "Scenario (plan Starter)",
       "model": "P-Video 2, 720p, klatka początkowa i końcowa; tło usunięte ffmpeg chromakey + scripts/animacje/clean_frames.py",
@@ -39,7 +47,9 @@
     },
     {
       "id": "zloty_smok/lot",
-      "pliki": ["public/assets/jednostki/zloty_smok/lot.webp"],
+      "pliki": [
+        "public/assets/jednostki/zloty_smok/lot.webp"
+      ],
       "typ": "animacja, pętla (73 klatki, 24 kl./s)",
       "narzedzie": "Scenario (plan Starter)",
       "model": "P-Video 2, 720p, klatka początkowa; tło usunięte jak wyżej",
@@ -51,7 +61,9 @@
     },
     {
       "id": "zloty_smok/smierc",
-      "pliki": ["public/assets/jednostki/zloty_smok/smierc.webp"],
+      "pliki": [
+        "public/assets/jednostki/zloty_smok/smierc.webp"
+      ],
       "typ": "animacja (73 klatki, 24 kl./s); ostatnia klatka zgodna z martwy.webp",
       "narzedzie": "Scenario (plan Starter)",
       "model": "P-Video 2, 720p, klatka początkowa = stoi, końcowa = martwy; tło usunięte jak wyżej",
@@ -63,13 +75,99 @@
     },
     {
       "id": "zloty_smok/atak",
-      "pliki": ["public/assets/jednostki/zloty_smok/atak.webp"],
+      "pliki": [
+        "public/assets/jednostki/zloty_smok/atak.webp"
+      ],
       "typ": "animacja, zionięcie ogniem (73 klatki, 24 kl./s); ogień ucięty prawą krawędzią (do poprawy)",
       "narzedzie": "Scenario (plan Starter)",
       "model": "P-Video 2, 720p, 3 s, klatka początkowa = stoi; tło usunięte jak wyżej",
       "scenario_asset": "asset_Y1RiMpb9834DzTc3aqZ5TjdW",
       "prompt": "Side view, locked static camera. The golden dragon stands in place on the ground, then rears its head back, takes a deep breath, and thrusts its head forward with jaws wide open, exhaling a long stream of fire to the right. Its body stays planted, wings half raised and trembling slightly. After the breath it lowers its head and settles back to its standing pose. Plain solid blue background stays unchanged, no camera movement.",
       "data": "2026-11-04",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/dawn",
+      "pliki": [
+        "public/assets/arena/cyfrowa/dawn.webp"
+      ],
+      "typ": "tło areny (cyfrowa, bez siatki; siatkę rysuje kod)",
+      "model": "GPT Image 2.5 Flare, 1536x1024, jakość high, tło opaque",
+      "scenario_asset": "asset_SSJTYewi3d145ZjwKmXreeYw",
+      "prompt": "Top-down view of an empty fantasy battlefield arena background for a turn-based strategy game, in the painterly style of Heroes of Might and Magic 3 battle backgrounds but darker, grittier and more serious. The centre of the image is a wide, calm, open stretch of flat meadow ground: muted olive and moss green grass, worn patches of dry earth, a few tiny pale wildflowers, very even and uncluttered so a game grid can be drawn on it. Around the edges a natural frame: ancient mossy grey stone ruins and broken walls, tall dark pine trees and bushes, fallen leaves, a misty stream at the bottom edge. Overcast late-afternoon light, desaturated earthy colours, soft shadows. Absolutely no grid, no hexagons, no lines, no UI, no text, no characters, no units, no objects in the central 70% of the image.",
+      "narzedzie": "Scenario (plan Starter)",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/horde",
+      "pliki": [
+        "public/assets/arena/cyfrowa/horde.webp"
+      ],
+      "typ": "tło areny (cyfrowa, bez siatki; siatkę rysuje kod)",
+      "model": "GPT Image 2.5 Flare, 1536x1024, jakość high, tło opaque",
+      "scenario_asset": "asset_AbX1y6iJxKAAocC7WUCpnoVF",
+      "prompt": "Top-down view of an empty dark fantasy battlefield arena background for a turn-based strategy game, in the painterly style of Heroes of Might and Magic 3 battle backgrounds but darker, grittier and more serious. The centre of the image is a wide, calm, open stretch of flat scorched volcanic ground: dark charcoal basalt and ash with thin faint glowing ember-orange cracks, very even and uncluttered so a game grid can be drawn on it. Around the edges a natural frame: jagged black rock walls, dead blackened trees, smouldering embers, a dull glowing lava stream at the bottom edge. Dim smoky red-orange light, desaturated dark colours, deep shadows. Absolutely no grid, no hexagons, no lines, no UI, no text, no characters, no units, no objects in the central 70% of the image.",
+      "narzedzie": "Scenario (plan Starter)",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/boulders",
+      "pliki": [
+        "public/assets/arena/cyfrowa/boulders.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "model": "GPT Image 2.5 Flare, 768x768, jakość medium, tło transparent",
+      "scenario_asset": "asset_ytNRn2XyqzozKTpVerDFwirZ",
+      "prompt": "A single cluster of large mossy grey boulders with a small dark green shrub at its base, game obstacle sprite for a fantasy strategy game, seen from a slightly raised three-quarter front view, centred, filling about 80% of the frame width, resting on the ground, painterly realistic style, muted desaturated earthy colours, overcast light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "narzedzie": "Scenario (plan Starter)",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/ruin",
+      "pliki": [
+        "public/assets/arena/cyfrowa/ruin.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "model": "GPT Image 2.5 Flare, 768x768, jakość medium, tło transparent",
+      "scenario_asset": "asset_6XzeBKrFLHxQnhKqvr6erFFV",
+      "prompt": "A broken ancient grey stone column beside a fragment of crumbling mossy ruin wall with ivy, game obstacle sprite for a fantasy strategy game, seen from a slightly raised three-quarter front view, centred, filling about 80% of the frame width, resting on the ground, painterly realistic style, muted desaturated earthy colours, overcast light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "narzedzie": "Scenario (plan Starter)",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/spires",
+      "pliki": [
+        "public/assets/arena/cyfrowa/spires.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "model": "GPT Image 2.5 Flare, 768x768, jakość medium, tło transparent",
+      "scenario_asset": "asset_hjxseFMGrM8BJC4xopaxQrZC",
+      "prompt": "A cluster of jagged black basalt rock spires with thin glowing ember-orange cracks, game obstacle sprite for a dark fantasy strategy game, seen from a slightly raised three-quarter front view, centred, filling about 80% of the frame width, resting on the ground, painterly realistic style, dark desaturated colours, dim smoky red light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "narzedzie": "Scenario (plan Starter)",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/deadtree",
+      "pliki": [
+        "public/assets/arena/cyfrowa/deadtree.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "model": "GPT Image 2.5 Flare, 768x768, jakość medium, tło transparent",
+      "scenario_asset": "asset_PGaf7XHaQbQmTAJoJCqoWbsJ",
+      "prompt": "A charred twisted dead tree stump with a few smouldering ember cracks and a pile of blackened rubble at its base, game obstacle sprite for a dark fantasy strategy game, seen from a slightly raised three-quarter front view, centred, filling about 80% of the frame width, resting on the ground, painterly realistic style, dark desaturated colours, dim smoky red light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "narzedzie": "Scenario (plan Starter)",
+      "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }

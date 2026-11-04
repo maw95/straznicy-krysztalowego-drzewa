@@ -42,7 +42,7 @@ Złoty Smok (wzorzec). W pojedynku na mapie (`duel`) wszystkie jednostki zajmuj�
 ### Interfejs dużych jednostek
 
 - Najechanie na pole ruchu pokazuje, gdzie ułożyłby się ogon (przerywana ramka); **prawy przycisk myszy** zmienia pole ogona
-  (kolejne z do czterech możliwych, najpierw po tej samej stronie), lewy wykonuje ruch z wybranym ogonem.
+  (w układzie kolumnowym kolejne z do czterech możliwych, w poziomym druga strona), lewy wykonuje ruch z wybranym ogonem.
 - Przy rozstawieniu klika się pole **ogona** w kolumnie startowej (głowa leży kolumnę dalej); ten sam klik wybiera jednostkę.
 - Kliknięcie któregokolwiek z dwóch pól jednostki wybiera ją albo ją atakuje (przez pole planszy, bo żeton jest mały).
 
@@ -58,3 +58,7 @@ W trybie `digital` bitwa toczy się na **innej planszy** niż klasyczna (`Battle
   opcja to ta sama strona co dotąd (ruch w prawo ustawia ogon po lewej), druga to obrót jednostki. W rozstawieniu ogon leży na polu
   kolumny startowej, głowa w tym samym rzędzie, kolumnę dalej.
 - Pojedynek na mapie (`duel`): dwie jednostki na sąsiednich polach środkowego rzędu.
+- **Oprawa:** tła bez siatki w poważnym, stonowanym stylu (`public/assets/arena/cyfrowa/dawn|horde.webp`), siatkę rysuje kod
+  (`src/ui/arenaGeometry.ts`, `geometryOf`); przeszkody to osobne obrazy z przezroczystością (głazy i ruina na łące, skały i martwe
+  drzewo na polu Hordy) z delikatnym złotym obrysem pola. Wybór ogona w interfejsie: najechanie pokazuje ogon, prawy przycisk
+  myszy obraca jednostkę (druga strona).

@@ -6,7 +6,7 @@ import { UNITS, type Side } from '../engine/data';
 import { movePath } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import type { AttackRoll, GameState } from '../engine/types';
-import { cellPos, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
+import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 
 /** Time per cell when a unit walks along its path (matches .token.walking in styles.css). */
 export const WALK_STEP_MS = 170;
@@ -23,6 +23,7 @@ export type BattleAnimations = ReturnType<typeof useBattleAnimations>;
 
 export function useBattleAnimations(state: GameState) {
   const b = state.battle!;
+  const { cellPos } = geometryOf(b.layout);
 
   // Animation clean-ups run to the end even when the next action comes first (bots act every 120–450 ms);
   // they are dropped only when the arena goes away.

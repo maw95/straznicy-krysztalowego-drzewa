@@ -20,7 +20,7 @@ import {
 import { distance, parseKey, type HexKey } from '../engine/hex';
 import type { Action, BattleUnit, GameState } from '../engine/types';
 import { COMPACT_QUERY, useMedia } from './common';
-import { CANVAS_H, CANVAS_W, CELLS, cellPos, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
+import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { aimedCursor, preloadAimedCursors, type AimedCursor } from './cursors';
 import { ArenaBoard } from './ArenaBoard';
 import { ActivationBar, activationHint } from './ActivationBar';
@@ -31,9 +31,6 @@ import { useDeployment } from './useDeployment';
 
 export { WALK_STEP_MS };
 
-/** On phones only the cells and a little of the painting round them are shown, so the hexes come out bigger. */
-const FULL_VIEW = { x: 0, y: 0, w: CANVAS_W, h: CANVAS_H };
-const PHONE_VIEW = { x: 55, y: 40, w: 790, h: CANVAS_H - 40 };
 
 interface Props {
   state: GameState;
@@ -44,8 +41,11 @@ interface Props {
 }
 
 export function BattleView({ state, canAct, onAction, onShowCard, footer }: Props) {
-  const view = useMedia(COMPACT_QUERY) ? PHONE_VIEW : FULL_VIEW;
   const b = state.battle!;
+  const geo = geometryOf(b.layout);
+  const { cellPos } = geo;
+  // On phones only the cells and a little of the painting round them are shown, so the hexes come out bigger.
+  const view = useMedia(COMPACT_QUERY) ? geo.phoneView : geo.fullView;
   const wrapRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [useAbility, setUseAbility] = useState(false);
@@ -89,7 +89,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     // and scrolls up and down instead of shrinking the arena further.
     const fit = () => {
       const whole = Math.min(el.clientWidth / view.w, el.clientHeight / view.h);
-      setScale(view === PHONE_VIEW ? Math.min(el.clientWidth / view.w, Math.max(whole, 0.62)) : whole);
+      setScale(view === geo.phoneView ? Math.min(el.clientWidth / view.w, Math.max(whole, 0.62)) : whole);
     };
     const ro = new ResizeObserver(fit);
     ro.observe(el);
@@ -235,7 +235,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
     if (!reachOf?.pos) return { walk, hit };
     for (const k of reachableCells(state, reachOf).keys()) walk.add(k);
     const stand = [reachOf.pos, ...walk];
-    for (const c of CELLS) {
+    for (const c of geo.cells) {
       if (b.obstacles.includes(c) || walk.has(c) || c === reachOf.pos) continue;
       const hits = UNITS[reachOf.defId].attackType === 'ranged' ? stand.some((p) => hasLineOfSight(state, p, c)) : stand.some((p) => distanceBetween(p, c) <= 1);
       if (hits) hit.add(c);
