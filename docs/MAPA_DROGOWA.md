@@ -17,6 +17,7 @@ każdy nowy zasób wpisujemy do manifestu (źródło, narzędzie, prompt, licenc
 - [x] Etap 0: pole `ruleset` (`classic` / `digital`) w ustawieniach gry; zmiany tylko w `digital`; dokument zasad cyfrowych obok notatek planszówki (`ZASADY_CYFROWE.md`).
 - [x] Silnik bitwy (`digital`), trupy: martwe jednostki zostają na planszy, nie zajmują heksa (można po nich chodzić); wskrzeszenie na polu trupa. (Widok trupów w UI przyjdzie z rendererem 2D.)
 - [x] Silnik bitwy (`digital`), duże jednostki: 2 heksy, głowa + ogon poziomo (ruch, atak, rozstawienie, trup, boty); rozmiar ustalany przy każdej frakcji, na start tylko Złoty Smok. (Wybór pola ogona i rozstawienie w interfejsie przyjdą z rendererem 2D.)
+- [ ] Boty a duże jednostki (przed drugą dużą jednostką w grze): ocena pozycji i zagrożeń liczy dziś odległość od głowy; przy wielu dużych jednostkach liczyć od najbliższego pola (`unitDistance`), uwzględnić wybór ogona w ruchu i rozstawieniu (`ai/battleAi.ts`: `dist(e.pos…)`, `threats`, `second`, rozstawienie), dopisać testy bitew z kilkoma dużymi jednostkami.
 - [ ] Renderer 2D zamiast figurek 3D (`FigureLayer`): sprite'y z arkuszy klatek, odbicie lustrzane, maszyna stanów (stoi, ruch, atak, trafienie, śmierć), cień pod jednostką.
 - [ ] Ruch: prędkość po planszy stała, ustalana w kodzie; pętla lotu/chodu powtarzana do dystansu, wzbicie i lądowanie raz.
 - [ ] Złoty Smok jako pierwsza jednostka w grze, w pełni zintegrowana (wzorzec dla reszty).
