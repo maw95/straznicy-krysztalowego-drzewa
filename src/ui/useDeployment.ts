@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import type { FactionId } from '../engine/data';
-import { deployCells } from '../engine/battle';
+import { deployCellOf, deployCells } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import type { BattleState, BattleUnit } from '../engine/types';
 
 export type Deployment = ReturnType<typeof useDeployment>;
 
-/** `walk` holds the cells of units shown mid-walk; other units stand where the state (or the new setup) puts them. */
+/**
+ * `walk` holds the cells of units shown mid-walk; other units stand where the state (or the new setup) puts them.
+ * `posOf` is the cell a unit is shown on; while deploying, a large unit's deploy cell is its tail (the head lies one column further).
+ */
 export function useDeployment(b: BattleState, canAct: boolean, walk: Record<string, HexKey>) {
   const deploySide: FactionId | null = b.stage === 'deploy' && canAct ? b.needsDeploy[0] ?? null : null;
   const [placing, setPlacing] = useState<Record<string, HexKey>>({});
@@ -17,13 +20,16 @@ export function useDeployment(b: BattleState, canAct: boolean, walk: Record<stri
     // Start from the current (default) placement each time a faction gets to deploy.
     if (!deploySide) return;
     const init: Record<string, HexKey> = {};
-    for (const u of Object.values(b.units)) if (u.side === deploySide && u.pos) init[u.id] = u.pos;
+    for (const u of Object.values(b.units)) {
+      const cell = deployCellOf(u);
+      if (u.side === deploySide && cell) init[u.id] = cell;
+    }
     setPlacing(init);
     setPicked(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploySide, b.needsDeploy.length]);
   const deployable = new Set(deploySide ? deployCells(b, deploySide) : []);
-  const posOf = (u: BattleUnit): HexKey | null => (deploySide && u.side === deploySide ? placing[u.id] ?? u.pos : walk[u.id] ?? u.pos);
+  const posOf = (u: BattleUnit): HexKey | null => (deploySide && u.side === deploySide ? placing[u.id] ?? deployCellOf(u) : walk[u.id] ?? u.pos);
 
   function placeAt(k: HexKey) {
     if (!picked || !deployable.has(k)) return;

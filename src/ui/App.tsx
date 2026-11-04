@@ -4,7 +4,7 @@ import { FACTION_NAMES, UNITS, type FactionId, type ItemKind } from '../engine/d
 import { applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
 import { movePath } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
-import { DEFAULT_RULES, type Action, type GameState, type LogEntry, type SetupOptions } from '../engine/types';
+import { arenaSetup, DEFAULT_RULES, type Action, type GameState, type LogEntry, type SetupOptions } from '../engine/types';
 import { AdventureView } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
 import { DuelView } from './DuelView';
@@ -114,7 +114,10 @@ export function App() {
     history.current = [];
     const mode = q.get('mode') === 'pvp' ? 'pvp' : 'coop';
     const human = q.get('human') !== '0';
-    let s = createGame({
+    const digital = q.get('ruleset') === 'digital';
+    // ?mode=arena starts an arena duel (?hero= for Przymierze), e.g. ?mode=arena&ruleset=digital&steps=60&until=battle.
+    const arena = q.get('mode') === 'arena' ? arenaSetup([{ name: 'Gracz 1', faction: 'dawn', controller: human ? 'human' : 'bot', heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'horde', controller: 'bot', heroId: 'werewolfLord' }], Number(q.get('seed') ?? 1)) : null;
+    let s = createGame(arena ? { ...arena, rules: { ...arena.rules, ...(digital ? { ruleset: 'digital' as const } : {}) } } : {
       mode,
       mapSize: (q.get('size') as SetupOptions['mapSize']) ?? 'short',
       battleMode: q.get('battle') === 'board' ? 'board' : 'arena',

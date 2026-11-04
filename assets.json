@@ -3,7 +3,7 @@
   "assets": [
     {
       "id": "zloty_smok/stoi",
-      "pliki": ["public/jednostki/zloty_smok/stoi.webp", "docs/grafika/jednostki/zloty_smok/stoi_niebieskie.png"],
+      "pliki": ["public/assets/jednostki/zloty_smok/stoi.webp", "docs/grafika/jednostki/zloty_smok/stoi_niebieskie.png"],
       "typ": "grafika jednostki",
       "narzedzie": "Scenario (plan Starter)",
       "model": "GPT Image 2.5 Flare, 1024 px, jakość high; potem złożony lokalnie na niebieskim tle #0000FF",
@@ -15,7 +15,7 @@
     },
     {
       "id": "zloty_smok/martwy",
-      "pliki": ["public/jednostki/zloty_smok/martwy.webp", "docs/grafika/jednostki/zloty_smok/martwy_niebieskie.png"],
+      "pliki": ["public/assets/jednostki/zloty_smok/martwy.webp", "docs/grafika/jednostki/zloty_smok/martwy_niebieskie.png"],
       "typ": "grafika jednostki (trup)",
       "narzedzie": "Scenario (plan Starter)",
       "model": "GPT Image 2.5 Flare, 1024 px, z obrazem stojącym jako odniesieniem",
@@ -27,7 +27,7 @@
     },
     {
       "id": "zloty_smok/wzbicie",
-      "pliki": ["public/jednostki/zloty_smok/wzbicie.webp"],
+      "pliki": ["public/assets/jednostki/zloty_smok/wzbicie.webp"],
       "typ": "animacja (49 klatek, 24 kl./s); lądowanie = odtwarzanie od tyłu",
       "narzedzie": "Scenario (plan Starter)",
       "model": "P-Video 2, 720p, klatka początkowa i końcowa; tło usunięte ffmpeg chromakey + scripts/animacje/clean_frames.py",
@@ -39,7 +39,7 @@
     },
     {
       "id": "zloty_smok/lot",
-      "pliki": ["public/jednostki/zloty_smok/lot.webp"],
+      "pliki": ["public/assets/jednostki/zloty_smok/lot.webp"],
       "typ": "animacja, pętla (73 klatki, 24 kl./s)",
       "narzedzie": "Scenario (plan Starter)",
       "model": "P-Video 2, 720p, klatka początkowa; tło usunięte jak wyżej",
@@ -51,7 +51,7 @@
     },
     {
       "id": "zloty_smok/smierc",
-      "pliki": ["public/jednostki/zloty_smok/smierc.webp"],
+      "pliki": ["public/assets/jednostki/zloty_smok/smierc.webp"],
       "typ": "animacja (73 klatki, 24 kl./s); ostatnia klatka zgodna z martwy.webp",
       "narzedzie": "Scenario (plan Starter)",
       "model": "P-Video 2, 720p, klatka początkowa = stoi, końcowa = martwy; tło usunięte jak wyżej",
@@ -63,7 +63,7 @@
     },
     {
       "id": "zloty_smok/atak",
-      "pliki": ["public/jednostki/zloty_smok/atak.webp"],
+      "pliki": ["public/assets/jednostki/zloty_smok/atak.webp"],
       "typ": "animacja, zionięcie ogniem (73 klatki, 24 kl./s); ogień ucięty prawą krawędzią (do poprawy)",
       "narzedzie": "Scenario (plan Starter)",
       "model": "P-Video 2, 720p, 3 s, klatka początkowa = stoi; tło usunięte jak wyżej",

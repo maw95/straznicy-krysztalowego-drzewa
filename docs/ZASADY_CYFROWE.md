@@ -38,3 +38,10 @@ Złoty Smok (wzorzec). W pojedynku na mapie (`duel`) wszystkie jednostki zajmuj�
   akcja jest odrzucana (wskrzeszenie szuka najbliższego pola, na którym jednostka się zmieści).
 - **Trup dużej jednostki** leży na obu polach (`corpse` + `corpseTail`) i nie zajmuje żadnego; wskrzeszenie odtwarza oba pola, jeśli są wolne.
 - **Boty** planują po polu głowy (dla pojedynczego smoka to wystarcza); ocena odległości do dużych wrogów liczona od ich głowy.
+
+### Interfejs dużych jednostek
+
+- Najechanie na pole ruchu pokazuje, gdzie ułożyłby się ogon (przerywana ramka); **prawy przycisk myszy** zmienia pole ogona
+  (kolejne z do czterech możliwych, najpierw po tej samej stronie), lewy wykonuje ruch z wybranym ogonem.
+- Przy rozstawieniu klika się pole **ogona** w kolumnie startowej (głowa leży kolumnę dalej); ten sam klik wybiera jednostkę.
+- Kliknięcie któregokolwiek z dwóch pól jednostki wybiera ją albo ją atakuje (przez pole planszy, bo żeton jest mały).

@@ -12,7 +12,9 @@ import {
   hopCells,
   livingUnits,
   movePath,
+  isLarge,
   reachableCells,
+  tailOptions,
   unitAt,
 } from '../engine/battle';
 import { distance, parseKey, type HexKey } from '../engine/hex';
@@ -51,6 +53,9 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
   const [targeting, setTargeting] = useState<ItemTargeting | null>(null);
   const [showItems, setShowItems] = useState(false);
   const [hover, setHover] = useState<HexKey | null>(null);
+  /** Which tail cell a large unit takes when it moves to the cell under the pointer (right click cycles). */
+  const [tailPick, setTailPick] = useState(0);
+  useEffect(() => setTailPick(0), [hover]);
 
   // Keep the active unit in view when the arena is scrollable (phones): when it changes or moves, not on every hit.
   const activePos = b.activation ? b.units[b.activation.unitId]?.pos : null;
@@ -304,7 +309,15 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
       return;
     }
     if (hops.includes(k)) return onAction({ type: 'battleHop', to: k });
-    if (moves.has(k)) onAction({ type: 'battleMove', to: k });
+    if (moves.has(k)) onAction({ type: 'battleMove', to: k, ...(previewTail && hoverPreview === k ? { tail: previewTail } : {}) });
+  }
+
+  /** Right click on a cell the active large unit can move to: show the next possible tail cell. */
+  function altCell(k: HexKey) {
+    if (moves.has(k) && active && isLarge(state, active)) {
+      setHover(k);
+      setTailPick((n) => n + 1);
+    }
   }
 
   function pickForItem(u: BattleUnit) {
@@ -332,6 +345,8 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
 
   const living = livingUnits(b);
   const hoverPreview = hover && active && moves.has(hover) ? hover : null;
+  const tailChoices = hoverPreview && active && isLarge(state, active) ? tailOptions(b, active, hoverPreview) : [];
+  const previewTail = tailChoices.length ? tailChoices[tailPick % tailChoices.length] : null;
   const breathPreview = useAbility && ab === 'fireBreath' && active ? targets.map((t) => breathSecondTarget(state, active, t)).filter(Boolean) : [];
 
   /** The note over a unit under the pointer: the blow it would take, or why it cannot be shot. */
@@ -376,6 +391,8 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
           previewOf={previewOf}
           aimApproach={aimApproach}
           onCell={clickCell}
+          onCellAlt={altCell}
+          previewTail={previewTail}
           onUnit={clickUnit}
         />
         <SidePanel s={sides[1]} state={state} active={active} onUnit={clickUnit} />

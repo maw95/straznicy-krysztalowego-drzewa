@@ -46,7 +46,7 @@ Stan na 4.11.2026, po teście na Złotym Smoku. Decyzje: `DECYZJE.md`. Skrypt cz
 ## Gdzie to leży w repozytorium
 
 Zaakceptowany zasób trafia do repo w tej samej sesji (CLAUDE.md, „Assets”), z wpisem w `assets.json`.
-- `public/jednostki/<jednostka>/`: arkusze klatek WebP z alfą (`stoi`, `martwy` jako pojedyncze obrazy; `atak`, `lot`, `wzbicie`,
+- `public/assets/jednostki/<jednostka>/`: arkusze klatek WebP z alfą (`stoi`, `martwy` jako pojedyncze obrazy; `atak`, `lot`, `wzbicie`,
   `smierc` jako siatka po 8 kolumn, klatki zapisane wierszami) i `anim.json` (rozmiar klatki, liczba klatek, 24 kl./s).
 - `docs/grafika/jednostki/<jednostka>/`: obrazy źródłowe na niebieskim tle (potrzebne jako klatka początkowa nowych klipów).
 - Skrypt: `python3 scripts/animacje/pack_unit.py <ffmpeg> <katalog z mp4 i png> <wyjście> 320 8` (wycięcie tła, czyszczenie, arkusze).

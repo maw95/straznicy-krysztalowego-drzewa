@@ -2,14 +2,16 @@
 // and the animations over them.
 
 import { memo } from 'react';
-import { unitAt } from '../engine/battle';
+import { cellsOf, deployHeads, unitAt } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
-import type { BattleUnit, GameState } from '../engine/types';
+import { isDigital, type BattleUnit, type GameState } from '../engine/types';
 import { asset, Frame, Portrait, ACTIVE_FIGURE_RING, Ribbon, SIDE_RING } from './common';
 import { ART_SIZE, CANVAS_H, CANVAS_W, CELL_POINTS, CELLS, cellCenter, cellPos, hexPoints, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { DamageDrop, DieFace, LastAttack, Marker, StatText } from './markers';
 import { details } from './details';
 import { figureFor, FigureLayer, type Piece } from './FigureLayer';
+import { SpriteLayer, type SpritePiece } from './SpriteLayer';
+import { hasSprites } from './sprites';
 import { statusList, StatusBadge, UnitDetails } from './battleStatus';
 import type { ItemTargeting } from './ItemsPanel';
 import { WALK_STEP_MS, type BattleAnimations } from './useBattleAnimations';
@@ -67,6 +69,10 @@ interface Props {
   previewOf: (u: BattleUnit) => { text: string; lethal: boolean } | null;
   aimApproach: (u: BattleUnit, pointer: { x: number; y: number; box: DOMRect } | null) => void;
   onCell: (k: HexKey) => void;
+  /** Right click on a cell: another tail cell for a large unit about to move there. */
+  onCellAlt: (k: HexKey) => void;
+  /** Where the tail of the active large unit would lie if it moved to the cell under the pointer. */
+  previewTail: HexKey | null;
   onUnit: (u: BattleUnit) => void;
 }
 
@@ -79,6 +85,43 @@ export function ArenaBoard(p: Props) {
   const { deployable, picked, deploySide, posOf } = deploy;
   const { walk, hitIds, strikes, seals, shards, ghosts, rollPops, floaters, lastStrike } = anim;
   const lastRoll = b.rolls?.[b.rolls.length - 1];
+
+  // Digital ruleset: units with sprites are drawn by the sprite layer (corpses too), on one hex or two.
+  const spriteUnits = isDigital(state.rules) ? Object.values(b.units).filter((u) => hasSprites(u.defId) && !u.swappedOut && (u.alive ? u.pos || posOf(u) : u.corpse)) : [];
+  const spriteIds = new Set(spriteUnits.filter((u) => u.alive).map((u) => u.id));
+  /** The cells a sprite unit lies on: head and (large units) tail. While deploying, the deploy cell is the tail. */
+  const footprintOf = (u: BattleUnit): { head: HexKey; tail?: HexKey } | null => {
+    if (!u.alive) return u.corpse ? { head: u.corpse, tail: u.corpseTail } : null;
+    if (deploySide === u.side) {
+      const at = posOf(u);
+      if (!at) return null;
+      if (!u.tail) return { head: at };
+      return { head: u.tail === at ? u.pos! : deployHeads(b, u.side, at)[0] ?? at, tail: at };
+    }
+    return u.pos ? { head: u.pos, tail: u.tail } : null;
+  };
+  /** Feet of a sprite unit: the middle of its hex, or between its two hexes. */
+  const anchorOf = (fp: { head: HexKey; tail?: HexKey }) => {
+    const h = cellCenter(fp.head);
+    if (!fp.tail) return { x: h.x, y: h.y + 10 };
+    const t = cellCenter(fp.tail);
+    return { x: (h.x + t.x) / 2, y: (h.y + t.y) / 2 + 10 };
+  };
+  const spritePieces: SpritePiece[] = spriteUnits.flatMap((u): SpritePiece[] => {
+    const fp = footprintOf(u);
+    if (!fp) return [];
+    const a = anchorOf(fp);
+    // A large unit faces away from its tail; a single-hex one faces the enemies until it moves.
+    let flip = false;
+    if (fp.tail) flip = cellCenter(fp.tail).x > cellCenter(fp.head).x;
+    else {
+      const enemies = p.living.filter((e) => e.side !== u.side && e.pos).map((e) => cellCenter(e.pos!).x);
+      if (enemies.length) flip = enemies.reduce((m, x) => m + x, 0) / enemies.length < a.x;
+    }
+    const melee = lastStrike(u.id, false);
+    const isActive = deploySide ? picked === u.id : active?.id === u.id;
+    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, ring: isActive ? ACTIVE_FIGURE_RING : null, attack: melee ? { key: melee.key, towardX: cellCenter(melee.to).x } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy' }];
+  });
   return (
     <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#14100A' }}>
       <div ref={p.wrapRef} className="scroll" style={{ position: 'absolute', inset: 0, overflow: 'auto', display: 'flex' }}>
@@ -109,13 +152,19 @@ export function ArenaBoard(p: Props) {
                   stroke={moves.has(k) || hops.includes(k) ? 'rgba(190,240,255,0.75)' : 'none'}
                   strokeWidth="1.5"
                   onClick={() => p.onCell(k)}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    p.onCellAlt(k);
+                  }}
                   onMouseEnter={() => setHover(k)}
                   onMouseLeave={() => setHover(null)}
                   className={moves.has(k) || hops.includes(k) ? p.moveCursor : (deployable.has(k) && picked) || teleportTo ? 'cur-pointer' : undefined}
                 />
               );
             })}
-            {active?.pos && <polygon points={hexPoints(active.pos, 2)} fill="rgba(158,228,255,0.15)" stroke="#9EE4FF" strokeWidth="3" pointerEvents="none" />}
+            {active &&
+              cellsOf(active).map((k) => <polygon key={`ac${k}`} points={hexPoints(k, 2)} fill="rgba(158,228,255,0.15)" stroke="#9EE4FF" strokeWidth="3" pointerEvents="none" />)}
+            {p.previewTail && <polygon points={hexPoints(p.previewTail, 3)} fill="rgba(158,228,255,0.2)" stroke="#9EE4FF" strokeWidth="2" strokeDasharray="5 4" pointerEvents="none" />}
             {approach && <polygon points={hexPoints(approach.cell, 2)} fill="rgba(243,210,122,0.35)" stroke="#F3D27A" strokeWidth="3.5" pointerEvents="none" />}
             {[...deployable].map((k) => (
               <polygon key={`dp${k}`} points={hexPoints(k, 3)} fill="none" stroke="#F3D27A" strokeWidth={hover === k && picked ? 3.5 : 2} strokeDasharray={picked ? undefined : '5 4'} pointerEvents="none" />
@@ -126,20 +175,22 @@ export function ArenaBoard(p: Props) {
             {[...p.reach.hit].map((k) => (
               <polygon key={`rh${k}`} points={hexPoints(k, 3)} fill="rgba(224,60,40,0.3)" stroke="rgba(240,100,80,0.85)" strokeWidth="1.5" strokeDasharray="4 3" pointerEvents="none" />
             ))}
-            {targets.map((t) => (
-              <polygon key={t.id} points={hexPoints(t.pos!, 2)} fill="rgba(224,80,60,0.16)" stroke="#E0503C" strokeWidth="3" pointerEvents="none" />
-            ))}
+            {targets.flatMap((t) =>
+              cellsOf(t).map((k) => <polygon key={`${t.id}${k}`} points={hexPoints(k, 2)} fill="rgba(224,80,60,0.16)" stroke="#E0503C" strokeWidth="3" pointerEvents="none" />),
+            )}
             {p.breathPreview.map((t) => (
               <polygon key={`b${t!.id}`} points={hexPoints(t!.pos!, 6)} fill="none" stroke="#FF9A3A" strokeWidth="2" strokeDasharray="5 4" pointerEvents="none" />
             ))}
           </svg>
+          {/* Digital ruleset: sprites (and corpses) of the units that have them. */}
+          {spritePieces.length > 0 && <SpriteLayer width={CANVAS_W} height={CANVAS_H} style={{ zIndex: 1 }} pieces={spritePieces} />}
           {/* Units with a model stand on the arena as 3D figures; their tokens below keep only the HP and markers. */}
           <FigureLayer
             width={CANVAS_W}
             height={CANVAS_H}
             style={{ zIndex: 1 }}
             pieces={p.living
-              .filter((u) => figureFor(u.defId) && posOf(u))
+              .filter((u) => figureFor(u.defId) && posOf(u) && !spriteIds.has(u.id))
               .map((u): Piece => {
                 const c = cellCenter(posOf(u)!);
                 const melee = lastStrike(u.id, false);
@@ -165,8 +216,10 @@ export function ArenaBoard(p: Props) {
               })}
           />
           {p.living.map((u) => {
-            const figure = figureFor(u.defId);
-            const { x, y } = cellPos(posOf(u)!);
+            const sprite = spriteIds.has(u.id);
+            const figure = sprite || figureFor(u.defId);
+            const fp = sprite ? footprintOf(u) : null;
+            const { x, y } = fp ? (() => { const a = anchorOf(fp); return { x: a.x - W / 2, y: a.y - 10 - H / 2 }; })() : cellPos(posOf(u)!);
             const isActive = deploySide ? picked === u.id : active?.id === u.id;
             const isTarget = targets.some((t) => t.id === u.id);
             const strike = lastStrike(u.id, false);
@@ -190,8 +243,9 @@ export function ArenaBoard(p: Props) {
                   setHover(null);
                   if (approach?.targetId === u.id) p.setApproach(null);
                 }}
-                // A figure is taller than a portrait token: the box covers it, so clicking the figure works.
-                style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - (figure ? 58 : 38), width: 54, height: figure ? 80 : 60, zIndex: lunge ? 4 : 2, ...(aimed ? { cursor: aimed } : {}), ...(lunge && !figure ? ({ '--lx': `${lunge.dx}px`, '--ly': `${lunge.dy}px` } as React.CSSProperties) : {}) }}
+                // A figure is taller than a portrait token: the box covers it, so clicking the figure works. A sprite unit's box stays
+                // small (it may lie on two hexes and reach over its neighbours): a click on either of its hexes finds it through the cell.
+                style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - (sprite ? 50 : figure ? 58 : 38), width: 54, height: sprite ? 64 : figure ? 80 : 60, zIndex: lunge ? 4 : 2, ...(aimed ? { cursor: aimed } : {}), ...(lunge && !figure ? ({ '--lx': `${lunge.dx}px`, '--ly': `${lunge.dy}px` } as React.CSSProperties) : {}) }}
               >
                 {!figure && <div style={{ position: 'absolute', left: 4, right: 4, bottom: -4, height: 16, borderRadius: '50%', background: 'rgba(6,10,2,0.55)', pointerEvents: 'none' }} />}
                 {!figure && <Portrait
@@ -246,7 +300,7 @@ export function ArenaBoard(p: Props) {
               return <span key={`${sh.key}${i}`} className={`shard ${sh.gold ? 'gold' : ''}`} style={{ left: x + W / 2, top: y + H / 2 - 8, ['--hx' as string]: `${Math.cos(a) * d}px`, ['--hy' as string]: `${Math.sin(a) * d}px` } as React.CSSProperties} />;
             });
           })}
-          {ghosts.map((g) => {
+          {ghosts.filter((g) => !(isDigital(state.rules) && hasSprites(g.defId))).map((g) => {
             const { x, y } = cellPos(g.pos);
             return (
               <div key={g.key} className="ghost" style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - 38, pointerEvents: 'none', zIndex: 3 }}>

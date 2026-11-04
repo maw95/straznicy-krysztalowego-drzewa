@@ -406,7 +406,7 @@ const duelSpot = (b: BattleState, side: Side) => (side === b.attacker ? arenaCel
 export const deployCellOf = (u: BattleUnit): HexKey | null => u.tail ?? u.pos;
 
 /** Head cells for a large unit whose tail lies on the deploy cell `k` of its side, nearest the middle row first. */
-function deployHeads(b: BattleState, side: Side, k: HexKey): HexKey[] {
+export function deployHeads(b: BattleState, side: Side, k: HexKey): HexKey[] {
   const { col, half } = cellOf(k);
   const towards = side === b.attacker ? 1 : -1;
   return [half - 1, half + 1]
