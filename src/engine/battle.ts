@@ -5,7 +5,7 @@ import { ABILITY, FACTION_NAMES, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
-import type { BattleState, BattleUnit, GameState, UnitStatus } from './types';
+import { isDigital, type BattleState, type BattleUnit, type GameState, type UnitStatus } from './types';
 
 /**
  * The arena drawn by the designer (docs/grafika/areny/arena_walki_*.png): 13 columns of
@@ -442,6 +442,7 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
   if (target.hp <= 0) {
     target.hp = 0;
     target.alive = false;
+    if (isDigital(state.rules) && target.pos) target.corpse = target.pos;
     target.pos = null;
     log(state, 'death', `${unitName(target)} poległ(a).`);
   }
@@ -704,6 +705,19 @@ function freeCellNear(b: BattleState, side: Side): HexKey | null {
   return deployCells(b, side).find((k) => !unitAt(b, k)) ?? null;
 }
 
+/** The free arena cell closest to `from` (ties: arena order), for a unit that stands up where something else stands. */
+function nearestFreeCell(b: BattleState, from: HexKey): HexKey | null {
+  const o = parseKey(from);
+  let best: HexKey | null = null;
+  let bestD = Infinity;
+  for (const k of ARENA_CELLS) {
+    if (b.obstacles.includes(k) || unitAt(b, k)) continue;
+    const d = distance(o, parseKey(k));
+    if (d < bestD) (best = k), (bestD = d);
+  }
+  return best;
+}
+
 /** What a player chose when using a treasure in battle (the battleItem action without its type). */
 export interface ItemArgs {
   itemId: string;
@@ -751,11 +765,19 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     const { b, faction, args } = use;
     const t = ownUnit(use, args.targetId);
     if (t.alive) throw new Error('Wybierz poległą jednostkę.');
-    const cell = args.to && !unitAt(b, args.to) && !b.obstacles.includes(args.to) ? args.to : freeCellNear(b, faction);
+    // Digital ruleset: the fallen unit lies where it fell, so it stands up there (or on the nearest free cell).
+    const fallen = isDigital(use.state.rules) && t.corpse ? t.corpse : null;
+    const cell =
+      args.to && !unitAt(b, args.to) && !b.obstacles.includes(args.to)
+        ? args.to
+        : fallen
+          ? nearestFreeCell(b, fallen)
+          : freeCellNear(b, faction);
     if (!cell) throw new Error('Brak wolnego pola.');
     t.alive = true;
     t.hp = t.maxHp;
     t.pos = cell;
+    delete t.corpse;
   },
   heal: (use) => {
     const t = ownLiving(use, use.args.targetId);

@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { arenaCell, battleItem, dealDamage, reachableCells, unitAt } from '../src/engine/battle';
 import { createGame } from '../src/engine/game';
+import { distance, parseKey } from '../src/engine/hex';
 import { DEFAULT_RULES, isDigital } from '../src/engine/types';
-import { setup } from './helpers/engine';
+import { battleFixture, setup } from './helpers/engine';
 
 describe('ruleset', () => {
   it('is classic unless the digital ruleset is switched on', () => {
@@ -19,5 +21,62 @@ describe('ruleset', () => {
     const classic = createGame(setup());
     const digital = createGame(setup({}, { ruleset: 'digital' }));
     expect({ ...digital, rules: classic.rules, setup: classic.setup }).toEqual(classic);
+  });
+});
+
+describe('digital ruleset: corpses', () => {
+  const fallLayout = [
+    { id: 'goldDragon', side: 'dawn' as const, col: 5, half: 9 },
+    { id: 'nymph', side: 'dawn' as const, col: 4, half: 8 },
+    { id: 'blackDragon', side: 'horde' as const, col: 7, half: 9 },
+  ];
+  const kill = (ruleset?: 'digital') => {
+    const s = battleFixture(createGame(setup({}, ruleset ? { ruleset } : {})), fallLayout);
+    dealDamage(s, s.battle!.units.nymph, 99, 'test');
+    return s;
+  };
+  const elixir = (s: ReturnType<typeof kill>) => {
+    s.items.e1 = { id: 'e1', kind: 'resurrection', owner: 'dawn', foundBy: null };
+    s.factions.dawn.inventory.push('e1');
+  };
+
+  it('classic: the fallen unit leaves no body', () => {
+    const u = kill().battle!.units.nymph;
+    expect(u.alive).toBe(false);
+    expect(u.pos).toBeNull();
+    expect(u.corpse).toBeUndefined();
+  });
+
+  it('digital: the body lies on the cell where the unit fell, and the cell stays free', () => {
+    const s = kill('digital');
+    const u = s.battle!.units.nymph;
+    expect(u.pos).toBeNull();
+    expect(u.corpse).toBe(arenaCell(4, 8));
+    expect(unitAt(s.battle!, arenaCell(4, 8))).toBeUndefined();
+  });
+
+  it('digital: a unit can walk across a corpse', () => {
+    const s = kill('digital');
+    expect(reachableCells(s, s.battle!.units.goldDragon).has(arenaCell(4, 8))).toBe(true);
+    expect(s.battle!.units.nymph.alive).toBe(false);
+  });
+
+  it('digital: Resurrection stands the unit up on its corpse cell', () => {
+    const s = kill('digital');
+    elixir(s);
+    battleItem(s, { itemId: 'e1', targetId: 'nymph' });
+    const u = s.battle!.units.nymph;
+    expect([u.alive, u.pos, u.corpse, u.hp]).toEqual([true, arenaCell(4, 8), undefined, u.maxHp]);
+  });
+
+  it('digital: Resurrection uses the nearest free cell when someone stands on the corpse', () => {
+    const s = kill('digital');
+    elixir(s);
+    s.battle!.units.goldDragon.pos = arenaCell(4, 8);
+    battleItem(s, { itemId: 'e1', targetId: 'nymph' });
+    const u = s.battle!.units.nymph;
+    expect(u.alive).toBe(true);
+    expect(u.pos).not.toBe(arenaCell(4, 8));
+    expect(distance(parseKey(u.pos!), parseKey(arenaCell(4, 8)))).toBe(1);
   });
 });

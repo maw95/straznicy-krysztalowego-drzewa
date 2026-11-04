@@ -209,6 +209,8 @@ export interface BattleUnit {
   hp: number;
   maxHp: number;
   pos: HexKey | null;
+  /** Digital ruleset: the cell where the unit fell. It lies there without occupying it (pos is null); a Resurrection stands it up there. */
+  corpse?: HexKey;
   alive: boolean;
   abilityUsed: boolean;
   /** Left the battle through Róg Strażników (returns to the pool unharmed). */
