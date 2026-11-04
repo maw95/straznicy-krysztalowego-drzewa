@@ -90,6 +90,12 @@ export const ABILITY = {
 
 const u = (d: UnitDef): UnitDef => d;
 
+/**
+ * Digital ruleset: a shooter that moves has used its turn (no move + shot), so shooters hit harder to make up for it.
+ * Provisional: tune with `make sim-tabele` once the digital edition has its own balance tables.
+ */
+export const DIGITAL_RANGED_BONUS = 1;
+
 export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   [
     u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', size: 2, hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),

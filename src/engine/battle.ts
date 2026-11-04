@@ -1,7 +1,7 @@
 // Battle engine: the painted arena (13 columns, 85 cells), initiative, movement, attacks,
 // abilities and items. Functions change the GameState passed in.
 
-import { ABILITY, FACTION_NAMES, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type FactionId, type ItemKind, type Side } from './data';
+import { ABILITY, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type FactionId, type ItemKind, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
@@ -422,6 +422,7 @@ export function breathSecondTarget(state: GameState, u: BattleUnit, first: Battl
 /** Expected damage of a plain attack, before the defender's reactions. */
 export function attackDamage(state: GameState, att: BattleUnit, target: BattleUnit, useAbility: boolean, movedDistance: number): number {
   let dmg = unitAttackBase(att) + att.status.nextAttackBonus - att.status.cursedNext;
+  if (isDigital(state.rules) && UNITS[att.defId].attackType === 'ranged') dmg += DIGITAL_RANGED_BONUS;
   if (abilityActive(state)) {
     const ab = abilityOf(att);
     if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += ABILITY.lightChargeBonus;
@@ -798,7 +799,14 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   act.moved = true;
   act.acted = true;
   act.movedDistance = steps;
-  if (act.moveOnly) endActivation(state);
+  // Digital ruleset: moving without attacking ends the turn, so a shooter cannot move and shoot, and a melee unit keeps its turn
+  // only when its move brought an enemy within reach (the attack that follows is the other half of the same click).
+  if (act.moveOnly || !canAttackAfterMove(state, u) || (isDigital(state.rules) && attackTargets(state, u).length === 0)) endActivation(state);
+}
+
+/** Whether the unit may still attack after moving: always in the classic rules, not for shooters in the digital ruleset. */
+export function canAttackAfterMove(state: GameState, u: BattleUnit): boolean {
+  return !isDigital(state.rules) || UNITS[u.defId].attackType !== 'ranged';
 }
 
 export function battleAttack(state: GameState, targetId: string, useAbility: boolean, secondTargetId?: string) {

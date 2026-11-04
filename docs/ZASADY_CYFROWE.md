@@ -70,3 +70,12 @@ W trybie `digital` bitwa toczy się na **innej planszy** niż klasyczna (`Battle
 Ostatni cios kończy bitwę natychmiast, więc interfejs przytrzymuje ostatni stan walki (z poległymi jako trupami, `src/ui/useEndHold.ts`,
 `END_HOLD_MS` = 2,8 s), żeby było widać animację śmierci, i dopiero potem pokazuje okno wyniku. Tło areny wypełnia całe okno
 (rozmyta, przyciemniona kopia za planszą), więc na szerokich ekranach nie ma czarnych pasów.
+
+### Ruch kończy turę (digital, 5.11.2026)
+
+Jednostka, która ruszyła się bez ataku, kończy aktywację automatycznie (nie ma osobnego „potem wybierz cel albo zakończ”).
+- **Strzelec** po ruchu nie strzela: ruch zastępuje strzał (strzela, stojąc w miejscu).
+- **Jednostka wręcz** zachowuje aktywację po ruchu tylko wtedy, gdy ruch doprowadził ją do wroga w zasięgu ataku (klik w wroga to ruch i
+  atak w jednym geście, jak dotąd); gdy nikogo nie dosięga, tura kończy się sama.
+- **Wyrównanie:** strzelcy mają `DIGITAL_RANGED_BONUS` (+1 do ataku, `data.ts`). Wartość tymczasowa do strojenia symulacjami.
+- Roboty (`ai/battleAi.ts`) stosują tę samą regułę: strzelec ocenia strzał tylko z miejsca, w którym stoi.

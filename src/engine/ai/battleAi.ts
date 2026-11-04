@@ -9,6 +9,7 @@ import {
   attackTargets,
   ATTACK_ABILITIES,
   breathSecondTarget,
+  canAttackAfterMove,
   canHitTwo,
   canUseBattleItem,
   cellsOf,
@@ -158,7 +159,8 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
     // A large unit standing on `cell` also lies on the cell of its tail.
     const mine = footprintAt(state, u, cell);
     const risk = (danger(threats, mine) / Math.max(1, u.hp)) * caution;
-    const targets = act.attacked || act.moveOnly ? [] : attackTargets(state, u, cell);
+    // A shooter of the digital ruleset cannot shoot after moving: from another cell it only takes a position.
+    const targets = act.attacked || act.moveOnly || (cell !== u.pos && !canAttackAfterMove(state, u)) ? [] : attackTargets(state, u, cell);
     for (const t of targets) {
       for (const useAbility of abilityChoices(state, u)) {
         const dmg = attackDamage(state, u, t, useAbility, moved);
@@ -317,7 +319,7 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
   const b = state.battle!;
   const act = b.activation!;
   const canAttack = !act.attacked && !act.moveOnly;
-  const attackFrom = (cell: HexKey | null) => (canAttack ? attackTargets(state, u, cell) : []);
+  const attackFrom = (cell: HexKey | null) => (canAttack && (cell === u.pos || canAttackAfterMove(state, u)) ? attackTargets(state, u, cell) : []);
   const here = attackFrom(u.pos);
   const strike = (t: BattleUnit): Action => {
     const ab = abilityOf(u);

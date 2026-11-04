@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { arenaCell, battleItem, dealDamage, reachableCells, unitAt } from '../src/engine/battle';
+import { arenaCell, battleAttack, battleItem, battleMove, dealDamage, reachableCells, unitAt } from '../src/engine/battle';
 import { createGame } from '../src/engine/game';
 import { distance, parseKey } from '../src/engine/hex';
 import { DEFAULT_RULES, isDigital } from '../src/engine/types';
@@ -78,5 +78,38 @@ describe('digital ruleset: corpses', () => {
     expect(u.alive).toBe(true);
     expect(u.pos).not.toBe(arenaCell(4, 8));
     expect(distance(parseKey(u.pos!), parseKey(arenaCell(4, 8)))).toBe(1);
+  });
+});
+
+describe('digital ruleset: moving ends the turn unless an attack follows', () => {
+  const play = (ruleset: 'digital' | undefined, mover: string, enemyCol: number) => {
+    const s = battleFixture(createGame(setup({}, ruleset ? { ruleset } : {})), [
+      { id: mover, side: 'dawn', col: 3, half: 9 },
+      { id: 'werewolfLord', side: 'horde', col: enemyCol, half: 9 },
+    ]);
+    battleMove(s, arenaCell(4, 8));
+    return s.battle!;
+  };
+
+  it('a shooter that moves has used its turn (the classic shooter still shoots after moving)', () => {
+    expect(play('digital', 'elfDruid', 5).activation?.unitId).not.toBe('elfDruid');
+    expect(play(undefined, 'elfDruid', 5).activation?.unitId).toBe('elfDruid');
+  });
+
+  it('a melee unit that moves next to nobody has used its turn, one that reaches an enemy may still attack it', () => {
+    expect(play('digital', 'nymph', 9).activation?.unitId).not.toBe('nymph');
+    expect(play('digital', 'nymph', 5).activation?.unitId).toBe('nymph');
+  });
+
+  it('shooters hit harder in the digital ruleset', () => {
+    const hit = (ruleset?: 'digital') => {
+      const s = battleFixture(createGame(setup({}, ruleset ? { ruleset } : {})), [
+        { id: 'elfDruid', side: 'dawn', col: 3, half: 9 },
+        { id: 'werewolfLord', side: 'horde', col: 5, half: 9 },
+      ]);
+      battleAttack(s, 'werewolfLord', false);
+      return s.battle!.units.werewolfLord.hp;
+    };
+    expect(hit(undefined) - hit('digital')).toBe(1);
   });
 });
