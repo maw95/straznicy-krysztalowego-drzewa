@@ -36,6 +36,8 @@ const GoldGrid = memo(function GoldGrid({ cells, points, wide }: { cells: readon
   );
 });
 
+/** Mirror copies of the picture round the board: [columns, rows] away from it (a very wide screen needs two columns each side). */
+const MIRRORS: Array<[number, number]> = [-2, -1, 0, 1, 2].flatMap((dx) => [-1, 0, 1].map((dy): [number, number] => [dx, dy])).filter(([dx, dy]) => dx !== 0 || dy !== 0);
 /** An obstacle picture is fitted into this box, standing on the lower part of its hex. */
 const OBSTACLE_BOX = { w: 76, h: 92, base: 26 };
 /** The same for an obstacle that lies on two neighbouring cells of a row. */
@@ -139,9 +141,16 @@ export function ArenaBoard(p: Props) {
   });
   return (
     <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#14100A' }}>
-      {/* On a wide screen the board does not fill the window: the picture, blurred and dimmed, fills what is left (no black bars). */}
+      {/* On a wide screen the board does not fill the window: the picture goes on past its edges as mirror images of itself
+          (the seams match, the frame of trees and rocks simply continues), laid out like the board so they line up with it. */}
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-        <img src={asset(wide ? `arena/cyfrowa/${b.arena}.webp` : `arena/${b.arena}.jpg`)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(14px) brightness(0.55)', transform: 'scale(1.12)' }} />
+        <div style={{ position: 'absolute', left: '50%', top: '50%', width: CANVAS_W, height: CANVAS_H, transformOrigin: '0 0', transform: `translate(${-(view.w * scale) / 2 - view.x * scale}px, ${-(view.h * scale) / 2 - view.y * scale}px) scale(${scale})` }}>
+          {MIRRORS.map(([dx, dy]) => (
+            <div key={`${dx},${dy}`} style={{ position: 'absolute', left: dx * CANVAS_W, top: dy * CANVAS_H, width: CANVAS_W, height: CANVAS_H, overflow: 'hidden', transform: `scale(${dx % 2 ? -1 : 1}, ${dy % 2 ? -1 : 1})` }}>
+              <img src={asset(wide ? `arena/cyfrowa/${b.arena}.webp` : `arena/${b.arena}.jpg`)} alt="" style={{ width: ART_SIZE.w, height: ART_SIZE.h, display: 'block' }} />
+            </div>
+          ))}
+        </div>
       </div>
       <div ref={p.wrapRef} className="scroll" style={{ position: 'absolute', inset: 0, overflow: 'auto', display: 'flex' }}>
         <div style={{ position: 'relative', flex: 'none', margin: 'auto', width: view.w * scale, height: view.h * scale, overflow: 'hidden' }}>

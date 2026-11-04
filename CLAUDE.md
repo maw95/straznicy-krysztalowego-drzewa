@@ -19,7 +19,7 @@ answer in Polish; code, comments and commit messages in English; CHANGELOG.md an
 
 ## Commands (Makefile; Node is in ~/.local/node, the Makefile adds it to PATH)
 - `make check` — typecheck + all tests (~10 s). Before every commit. `make test-engine` / `make test-ui` for one half.
-- `make zrzut Q='steps=400&until=battle&mode=pvp&seed=3' WIDOK=desktop|wielki|telefon|poziomo ELEMENT=.arena-frame` — small
+- `make zrzut Q='steps=400&until=battle&mode=pvp&seed=3' WIDOK=desktop|wielki|ultraszeroki|telefon|poziomo ELEMENT=.arena-frame` — small
   screenshot in `.tmp/` through a headless browser with its own Vite server on :5180. Query hook: App.tsx (`steps`,
   `seed`, `mode`, `players`, `size`, `until=battle`, `battle=board`). For clicks/hover checks write a short script
   importing `openGame` from `scripts/browser/game.ts`.

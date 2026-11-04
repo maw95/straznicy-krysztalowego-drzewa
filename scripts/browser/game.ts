@@ -11,6 +11,7 @@ export const PORT = 5180;
 export const VIEWS = {
   desktop: { width: 1600, height: 900, mobile: false },
   wielki: { width: 2560, height: 1440, mobile: false },
+  ultraszeroki: { width: 3440, height: 1440, mobile: false },
   telefon: { width: 390, height: 844, mobile: true },
   poziomo: { width: 844, height: 390, mobile: true },
 } as const;
