@@ -35,6 +35,14 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
 - **Workflow usług AI, po jednej naraz:** najpierw Scenario (grafiki, test ze Smokiem). ElevenLabs (efekty dźwiękowe, muzyka, głosy)
   sprawdzamy dopiero przy dźwięku, najpierw na próbce. Higgsfield (wideo) odłożony do trailera.
   Scenario to źródło statycznych grafik; ruch jednostek zostaje animacją proceduralną w kodzie.
+- **Scenario, plany (ustalenia z 4.11):** trening własnego modelu tylko na Pro/Max/Enterprise (25 obrazów treningowych na model
+  na Pro, 1 trening naraz). API i MCP działają od Startera (15 $/mies., 1500 CU wspólnych dla aplikacji, API i MCP; na Starterze
+  po wyczerpaniu CU generowanie staje do odnowienia). Wszystkie płatne plany mają pełną licencję komercyjną bez tantiem; Free
+  tylko do testów. Support (wstępna odpowiedź, prawdopodobnie automatyczna; nie potwierdzona jeszcze przez człowieka): po spadku
+  z Pro na Starter wytrenowane modele zostają w bibliotece i można ich używać (też przez API/MCP); nowych modeli nie wytrenujemy
+  bez powrotu na Pro. Plan: Starter teraz; Pro na miesiąc dopiero do treningu stylu, po przygotowaniu 20–25 obrazów treningowych.
+  Anulowanie do Free kasuje zasoby i modele po 30 dniach, a klucze API przestają działać: nie schodzimy do Free.
+  Animacje: Scenario ma metodę sprite sheetów z wideo (Seedance/Pixverse + ręczny wybór klatek), traktowaną jako plan B dla bohaterów.
 - **Animacja szkieletowa** (2D skeletal, np. Spine/DragonBones) zamiast proceduralnej: rozważona, odłożona. Lepsza jakość ruchu, ale
   każda postać wymaga pocięcia na części i rigu (ok. 40 postaci na premierę). Wracamy do niej tylko dla bohaterów, jeśli po teście
   ruch proceduralny wyda się zbyt sztywny.
