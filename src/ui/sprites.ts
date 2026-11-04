@@ -29,6 +29,9 @@ export const SPRITES: Record<string, SpriteSpec> = {
   unicornKing: { dir: 'jednostki/krol_jednorozcow', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   elfDruid: { dir: 'jednostki/elf_druid', box: SMALL, speed: { chod: 1.4, smierc: 1.5, trafienie: 1.4 } },
   nymph: { dir: 'jednostki/nimfa', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  goblinShaman: { dir: 'jednostki/goblin_szaman', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  caveSpider: { dir: 'jednostki/pajak_jaskiniowy', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  shadowBat: { dir: 'jednostki/nietoperz_cienia', box: SMALL, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   ancientBear: { dir: 'jednostki/prastary_niedzwiedz', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
 };
 

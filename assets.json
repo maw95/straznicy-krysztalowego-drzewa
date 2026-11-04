@@ -908,6 +908,276 @@
       "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "goblin_szaman/stoi",
+      "pliki": [
+        "public/assets/jednostki/goblin_szaman/stoi.webp"
+      ],
+      "typ": "grafika stoi",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, portret jako odniesienie",
+      "scenario_asset": "asset_7GoUfyyuYGcC1vK8F6VMCNB9",
+      "odniesienie": "asset_57EJtQPov7kRk9mKizcbEMiy (portret karty)",
+      "prompt": "Use the reference image only for the character design (a goblin shaman with green skin, long pointed ears, a pointed hood and robe in dark crimson with ornamental trim, bone and brass charms, holding a wooden staff topped with a red gem). Draw this same character as a full-body game sprite in a strict side view, standing upright holding the staff in its left hand, facing right, in a serious painterly realistic style with muted dark crimson, charcoal, olive green and old brown tones, no blue anywhere on the character. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "goblin_szaman/martwy",
+      "pliki": [
+        "public/assets/jednostki/goblin_szaman/martwy.webp"
+      ],
+      "typ": "grafika trupa",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, medium, stoi jako odniesienie",
+      "scenario_asset": "asset_fnG3Lh7PwwtXeWguWrZofRCv",
+      "odniesienie": "asset_57EJtQPov7kRk9mKizcbEMiy (portret karty)",
+      "prompt": "The same goblin shaman as in the reference image, now lying still on its side on the ground in a strict side view with its head to the right, staff resting beside it, eyes closed, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on the same horizontal line as the standing goblin's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "goblin_szaman/chod",
+      "pliki": [
+        "public/assets/jednostki/goblin_szaman/chod.webp"
+      ],
+      "typ": "pętla chodu (73 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_m6gXRxUeSdaaDw77LoJmLwYJ",
+      "odniesienie": "asset_57EJtQPov7kRk9mKizcbEMiy (portret karty)",
+      "prompt": "Side view, locked static camera. The small goblin shaman walks in place with a steady shuffling walking cycle, robe swaying, holding its staff, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "goblin_szaman/atak",
+      "pliki": [
+        "public/assets/jednostki/goblin_szaman/atak.webp"
+      ],
+      "typ": "atak (73 kl.); kula magii wyszła częściowo niebieskawa",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_5txRgkArCyFvnsQtjnSQZRRx",
+      "odniesienie": "asset_57EJtQPov7kRk9mKizcbEMiy (portret karty)",
+      "prompt": "Side view, locked static camera. The goblin shaman raises its staff high with both hands, the red gem glows, and it releases a ball of dark green magic that flies away to the right, then it lowers the staff and settles back into its standing pose. The body stays at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "goblin_szaman/smierc",
+      "pliki": [
+        "public/assets/jednostki/goblin_szaman/smierc.webp"
+      ],
+      "typ": "śmierć (73 kl.), koniec = martwy",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, stoi -> martwy",
+      "scenario_asset": "asset_A7vyYiNYBqDxHw4WMABAJFVx",
+      "odniesienie": "asset_57EJtQPov7kRk9mKizcbEMiy (portret karty)",
+      "prompt": "Side view, locked static camera. The goblin shaman sits down and rests, then lies down on its side and falls asleep. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "goblin_szaman/trafienie",
+      "pliki": [
+        "public/assets/jednostki/goblin_szaman/trafienie.webp"
+      ],
+      "typ": "trafienie (49 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_6v9KoHYNf9BNxDTtA76LBRDa",
+      "odniesienie": "asset_57EJtQPov7kRk9mKizcbEMiy (portret karty)",
+      "prompt": "Side view, locked static camera. The goblin shaman standing in place is startled: it flinches and rocks backwards a little, its head jerks up, then it steadies itself and settles back to its standing pose. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "pajak_jaskiniowy/stoi",
+      "pliki": [
+        "public/assets/jednostki/pajak_jaskiniowy/stoi.webp"
+      ],
+      "typ": "grafika stoi",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, portret jako odniesienie",
+      "scenario_asset": "asset_wvNwLGDcwB82Hs84dbeqF4vC",
+      "odniesienie": "asset_eRaMUaHksB8gETki14ZBu8GP (portret karty)",
+      "prompt": "Use the reference image only for the character design (a large cave spider with a round striped abdomen in dark purple-black and dull red bands, eight banded legs, small glossy eyes, pale curved mandibles). Draw this same character as a full-body game sprite in a strict side view, standing on all eight legs, facing right, in a serious painterly realistic style with muted charcoal, dark purple, dull red and grey tones, no blue anywhere on the creature. The whole creature is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no web, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "pajak_jaskiniowy/martwy",
+      "pliki": [
+        "public/assets/jednostki/pajak_jaskiniowy/martwy.webp"
+      ],
+      "typ": "grafika trupa",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, medium, stoi jako odniesienie",
+      "scenario_asset": "asset_XaTdkn9B57AN86dEdRUUrQa4",
+      "odniesienie": "asset_eRaMUaHksB8gETki14ZBu8GP (portret karty)",
+      "prompt": "The same spider as in the reference image, now resting still on the ground in a strict side view facing right, its body lowered flat to the ground with all eight legs folded in and curled under and beside it, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on the same horizontal line as the standing spider's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "pajak_jaskiniowy/chod",
+      "pliki": [
+        "public/assets/jednostki/pajak_jaskiniowy/chod.webp"
+      ],
+      "typ": "pętla chodu (73 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_Fgg19BFwDEEh3nsJw7XX5rec",
+      "odniesienie": "asset_eRaMUaHksB8gETki14ZBu8GP (portret karty)",
+      "prompt": "Side view, locked static camera. The giant spider crawls in place, its eight legs stepping in a steady alternating rhythm, body swaying slightly, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "pajak_jaskiniowy/atak",
+      "pliki": [
+        "public/assets/jednostki/pajak_jaskiniowy/atak.webp"
+      ],
+      "typ": "atak (73 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_sPiua76R7XnAk9QQPEh51XFQ",
+      "odniesienie": "asset_eRaMUaHksB8gETki14ZBu8GP (portret karty)",
+      "prompt": "Side view, locked static camera. The giant spider leaps forward to the right in a quick pounce with its front legs raised high, then lands and settles back into its standing pose. The body ends at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "pajak_jaskiniowy/smierc",
+      "pliki": [
+        "public/assets/jednostki/pajak_jaskiniowy/smierc.webp"
+      ],
+      "typ": "śmierć (73 kl.), koniec = martwy",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, stoi -> martwy",
+      "scenario_asset": "asset_WnueZcaHsZR1y57WyoWekdpH",
+      "odniesienie": "asset_eRaMUaHksB8gETki14ZBu8GP (portret karty)",
+      "prompt": "Side view, locked static camera. The giant spider sinks down slowly, its legs fold in under it and it settles flat onto the ground and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "pajak_jaskiniowy/trafienie",
+      "pliki": [
+        "public/assets/jednostki/pajak_jaskiniowy/trafienie.webp"
+      ],
+      "typ": "trafienie (49 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_JbBEVEaGtPgqDGm12TtSJNeu",
+      "odniesienie": "asset_eRaMUaHksB8gETki14ZBu8GP (portret karty)",
+      "prompt": "Side view, locked static camera. The giant spider standing in place is startled: it flinches and rocks backwards a little, its front legs jerk up, then it steadies itself and settles back to its standing pose. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "nietoperz_cienia/stoi",
+      "pliki": [
+        "public/assets/jednostki/nietoperz_cienia/stoi.webp"
+      ],
+      "typ": "poza zawisu",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, portret jako odniesienie",
+      "scenario_asset": "asset_KLuFznFYD8JugxgjRK6csFzP",
+      "odniesienie": "asset_Zh5eoNijbr7qsMaReEJfYbno (portret karty)",
+      "prompt": "Use the reference image only for the character design (a large bat with dark plum-purple shaggy fur, a pale cream chest, big pointed ears, glowing amber eyes, and wide leathery wings in dark crimson with dark membranes and bony finger struts, small pale claws). Draw this same character as a full-body game sprite in a strict side view, hovering in the air with its wings spread wide open, facing right, in a serious painterly realistic style with muted dark plum, charcoal, dark crimson and grey tones, no blue anywhere on the creature. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its lowest point on a horizontal line about 78% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "nietoperz_cienia/martwy",
+      "pliki": [
+        "public/assets/jednostki/nietoperz_cienia/martwy.webp"
+      ],
+      "typ": "grafika trupa",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, medium, stoi jako odniesienie",
+      "scenario_asset": "asset_VPJeSdhkCHHHofraSV8smCiT",
+      "odniesienie": "asset_Zh5eoNijbr7qsMaReEJfYbno (portret karty)",
+      "prompt": "The same bat as in the reference image, now lying still on the ground on its belly in a strict side view facing right, wings folded closed against its body, head resting low, eyes closed, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "nietoperz_cienia/lot",
+      "pliki": [
+        "public/assets/jednostki/nietoperz_cienia/lot.webp"
+      ],
+      "typ": "pętla zawisu (73 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_HxomzWUPgJvx7Hhu8SWv91sX",
+      "odniesienie": "asset_Zh5eoNijbr7qsMaReEJfYbno (portret karty)",
+      "prompt": "Side view, locked static camera. The bat hovers in the air in place, flapping its wide wings up and down in a steady rhythm, always facing right, the body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "nietoperz_cienia/atak",
+      "pliki": [
+        "public/assets/jednostki/nietoperz_cienia/atak.webp"
+      ],
+      "typ": "atak (73 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_uiMLSXsCo2YidH1Z31Fb1b37",
+      "odniesienie": "asset_Zh5eoNijbr7qsMaReEJfYbno (portret karty)",
+      "prompt": "Side view, locked static camera. The bat dives forward and down to the right with a shriek, mouth open and claws extended, then rises back up and returns to its hovering pose with wings spread. The body ends at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "nietoperz_cienia/smierc",
+      "pliki": [
+        "public/assets/jednostki/nietoperz_cienia/smierc.webp"
+      ],
+      "typ": "śmierć (73 kl.), koniec = martwy",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, stoi -> martwy",
+      "scenario_asset": "asset_SR654dkQinKdojJuYS5Vazxc",
+      "odniesienie": "asset_Zh5eoNijbr7qsMaReEJfYbno (portret karty)",
+      "prompt": "Side view, locked static camera. The bat slowly sinks down from the air, its wings fold in, it settles onto the ground on its belly, lowers its head and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "nietoperz_cienia/trafienie",
+      "pliki": [
+        "public/assets/jednostki/nietoperz_cienia/trafienie.webp"
+      ],
+      "typ": "trafienie (49 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_iJ4hAuQSghGVddAgLLhjxayd",
+      "odniesienie": "asset_Zh5eoNijbr7qsMaReEJfYbno (portret karty)",
+      "prompt": "Side view, locked static camera. The bat hovering in place is startled: it flinches and rocks backwards a little, its wings jerk up, then it steadies itself and settles back to its hovering pose with wings spread, facing right. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
