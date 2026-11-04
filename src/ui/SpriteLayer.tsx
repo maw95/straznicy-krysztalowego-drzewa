@@ -137,7 +137,11 @@ class Stage {
         l.attackKey = p.attack.key;
         l.queue.push({ kind: 'clip', clip: 'atak', reverse: false, ms: clipMs(set, 'atak') });
       }
-      if (p.hit && !was.hit) l.hitStart = now;
+      if (p.hit && !was.hit) {
+        // A hit clip (when the unit has one) plays after what is running; otherwise a shake and a flash in code.
+        if (set.frames.trafienie && !p.dead) l.queue.push({ kind: 'clip', clip: 'trafienie', reverse: false, ms: clipMs(set, 'trafienie') });
+        else l.hitStart = now;
+      }
       if (!l.queue.length && !l.seg) l.flip = p.flip;
     }
   }

@@ -16,7 +16,7 @@ export interface SpriteSpec {
 }
 
 export const SPRITES: Record<string, SpriteSpec> = {
-  goldDragon: { dir: 'jednostki/zloty_smok', width: 250, feet: 0.85, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5 } },
+  goldDragon: { dir: 'jednostki/zloty_smok', width: 250, feet: 0.85, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
 };
 
 /** Whether the unit is drawn from sprites in the digital ruleset (otherwise: 3D figure or portrait token). */

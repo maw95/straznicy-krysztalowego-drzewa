@@ -324,6 +324,20 @@
       "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "zloty_smok/trafienie",
+      "pliki": [
+        "public/assets/jednostki/zloty_smok/trafienie.webp"
+      ],
+      "typ": "animacja trafienia (49 klatek, 24 kl./s): odskok, ryk, powrót do pozy",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2, 720p, 2 s, klatka początkowa = stoi; tło usunięte ffmpeg chromakey + scripts/animacje/clean_frames.py",
+      "scenario_asset": "asset_fngySc1fWP23tn7TSHw7n97X",
+      "prompt": "Side view, locked static camera. The golden dragon standing in place is startled: it flinches and recoils backwards a little, its head jerks back and its wings flare briefly, then it steadies itself and settles back to its standing pose. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

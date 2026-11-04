@@ -22,7 +22,7 @@ każdy nowy zasób wpisujemy do manifestu (źródło, narzędzie, prompt, licenc
 - [x] Renderer 2D zamiast figurek 3D (`FigureLayer`): sprite'y z arkuszy klatek, odbicie lustrzane, maszyna stanów (stoi, ruch, atak, trafienie, śmierć, trup), cień pod jednostką. Gotowe jako `SpriteLayer` (`src/ui/SpriteLayer.tsx`, rejestr `src/ui/sprites.ts`); działa w trybie `digital` dla jednostek z wpisem w `SPRITES`, reszta nadal jako figurki 3D/portrety (mieszanie w jednej frakcji dopiero po wymianie całej frakcji).
 - [x] Ruch: prędkość po planszy stała, ustalana w kodzie (`FLY_SPEED`); pętla lotu powtarzana do dystansu, wzbicie i lądowanie raz (lądowanie = wzbicie od tyłu). Do zrobienia przy jednostce naziemnej: pętla chodu po ścieżce.
 - [ ] Złoty Smok jako pierwsza jednostka w grze, w pełni zintegrowana (wzorzec dla reszty).
-- [ ] Trafienie w kodzie: jest drgnięcie i błysk (`HIT_MS`), brak cofnięcia; do oceny przez autora, jeśli za słabe, klip.
+- [x] Trafienie: klip `trafienie` (odskok, ryk, powrót), gdy jednostka go ma; bez klipu drgnięcie i błysk w kodzie (`HIT_MS`). Złoty Smok ma klip (4.11.2026 akceptacja autora: kod słaby, docelowo klipy).
 
 ## Faza B — potok zasobów i pierwsza frakcja w nowej grafice
 
