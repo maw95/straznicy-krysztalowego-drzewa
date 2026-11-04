@@ -1,8 +1,8 @@
 // The arena itself: the painted board with its grid and lit cells, the unit tokens and 3D figures,
 // and the animations over them.
 
-import { memo } from 'react';
-import { cellsOf, deployHeads, unitAt } from '../engine/battle';
+import { memo, useRef } from 'react';
+import { cellsOf, deployHeads, movePath, unitAt } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import { isDigital, type BattleUnit, type GameState } from '../engine/types';
 import { asset, Frame, Portrait, ACTIVE_FIGURE_RING, Ribbon, SIDE_RING } from './common';
@@ -103,6 +103,22 @@ export function ArenaBoard(p: Props) {
   const lastRoll = b.rolls?.[b.rolls.length - 1];
 
   // Digital ruleset: units with sprites are drawn by the sprite layer (corpses too), on one hex or two.
+  // The way a walker took over the board since the last state (worked out here, from the two states, so the sprite layer gets it
+  // together with the new position).
+  const prevState = useRef(state);
+  const movePaths = useRef<Record<string, HexKey[]>>({});
+  if (prevState.current !== state) {
+    const before = prevState.current;
+    const next: Record<string, HexKey[]> = {};
+    if (before.battle && before.battle !== b) {
+      for (const u of Object.values(b.units)) {
+        const was = before.battle.units[u.id];
+        if (was?.pos && u.pos && was.pos !== u.pos && was.alive && u.alive) next[u.id] = movePath(before, was, u.pos);
+      }
+    }
+    movePaths.current = next;
+    prevState.current = state;
+  }
   const spriteUnits = isDigital(state.rules) ? Object.values(b.units).filter((u) => hasSprites(u.defId) && !u.swappedOut && (u.alive ? u.pos || posOf(u) : u.corpse)) : [];
   const spriteIds = new Set(spriteUnits.filter((u) => u.alive).map((u) => u.id));
   /** The cells a sprite unit lies on: head and (large units) tail. While deploying, the deploy cell is the tail. */
@@ -135,9 +151,12 @@ export function ArenaBoard(p: Props) {
       if (enemies.length) flip = enemies.reduce((m, x) => m + x, 0) / enemies.length < a.x;
     }
     const melee = lastStrike(u.id, false);
+    const way = movePaths.current[u.id];
+    const off = way ? { x: a.x - cellCenter(fp.head).x, y: a.y - (cellCenter(fp.head).y + FEET) } : null;
+    const path = way && off ? way.map((k) => ({ x: cellCenter(k).x + off.x, y: cellCenter(k).y + FEET + off.y })) : null;
     // In a fight the blue cells already mark the active unit; the ring only shows which unit is picked while deploying.
     const ring = deploySide && picked === u.id ? ACTIVE_FIGURE_RING : null;
-    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, ring, attack: melee ? { key: melee.key, towardX: cellCenter(melee.to).x } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy' }];
+    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, ring, attack: melee ? { key: melee.key, towardX: cellCenter(melee.to).x } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy', path }];
   });
   return (
     <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#14100A' }}>

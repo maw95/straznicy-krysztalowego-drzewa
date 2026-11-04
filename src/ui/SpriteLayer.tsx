@@ -23,17 +23,21 @@ export interface SpritePiece {
   hit?: boolean;
   /** Stand at the new place at once instead of flying there (setting up units before a battle). */
   snap?: boolean;
+  /** A walker's way over the board (feet positions, the first one where it started): it follows it instead of a straight line. */
+  path?: Array<{ x: number; y: number }> | null;
 }
 
 /** Flight speed over the board (canvas pixels per second); take-off and landing add their own time. */
 const FLY_SPEED = 420;
+/** Walking speed over the board (canvas pixels per second). */
+const WALK_SPEED = 300;
 const MIN_GLIDE_MS = 250;
 const HIT_MS = 320;
 
 /** One stretch of a unit's motion; they run one after another. */
 type Seg =
   | { kind: 'clip'; clip: string; reverse: boolean; ms: number; then?: 'corpse' | 'stand' }
-  | { kind: 'glide'; from: { x: number; y: number }; to: { x: number; y: number }; ms: number };
+  | { kind: 'glide'; from: { x: number; y: number }; to: { x: number; y: number }; ms: number; /** Stops of a walker's way (from first to last), when it is not a straight line. */ path?: Array<{ x: number; y: number }>; walk?: boolean };
 
 interface Live {
   piece: SpritePiece;
@@ -117,14 +121,13 @@ class Stage {
       } else if (!p.dead && Math.hypot(p.x - l.endX, p.y - l.endY) > 4) {
         const from = { x: l.endX, y: l.endY };
         const to = { x: p.x, y: p.y };
-        const has = set.frames.wzbicie && set.frames.lot;
-        if (has) {
-          l.queue.push({ kind: 'clip', clip: 'wzbicie', reverse: false, ms: clipMs(set, 'wzbicie') });
-          l.queue.push({ kind: 'glide', from, to, ms: Math.max(MIN_GLIDE_MS, (Math.hypot(to.x - from.x, to.y - from.y) / FLY_SPEED) * 1000) });
-          l.queue.push({ kind: 'clip', clip: 'wzbicie', reverse: true, ms: clipMs(set, 'wzbicie') });
-        } else {
-          l.queue.push({ kind: 'glide', from, to, ms: Math.max(MIN_GLIDE_MS, (Math.hypot(to.x - from.x, to.y - from.y) / FLY_SPEED) * 1000) });
-        }
+        const flies = Boolean(set.frames.wzbicie && set.frames.lot);
+        const stops = !flies && p.path && p.path.length >= 2 ? [from, ...p.path.slice(1, -1), to] : undefined;
+        const length = stops ? stops.slice(1).reduce((m, q, i) => m + Math.hypot(q.x - stops[i].x, q.y - stops[i].y), 0) : Math.hypot(to.x - from.x, to.y - from.y);
+        const ms = Math.max(MIN_GLIDE_MS, (length / (flies ? FLY_SPEED : WALK_SPEED)) * 1000);
+        if (flies) l.queue.push({ kind: 'clip', clip: 'wzbicie', reverse: false, ms: clipMs(set, 'wzbicie') });
+        l.queue.push({ kind: 'glide', from, to, ms, path: stops, walk: !flies });
+        if (flies) l.queue.push({ kind: 'clip', clip: 'wzbicie', reverse: true, ms: clipMs(set, 'wzbicie') });
         l.endX = p.x;
         l.endY = p.y;
       } else if (!l.queue.length && !l.seg) {
@@ -198,7 +201,7 @@ class Stage {
   }
 
   private drawUnit(ctx: CanvasRenderingContext2D, l: Live, set: SpriteSet, now: number) {
-    const { spec, frameW, frameH, cols } = set;
+    const { frameW, frameH, cols } = set;
     let x = l.x;
     const y = l.y;
     let img: HTMLImageElement = l.rest === 'corpse' ? set.martwy : set.stoi;
@@ -210,15 +213,26 @@ class Stage {
     if (seg) {
       const t = Math.min(1, (now - l.segStart) / seg.ms);
       if (seg.kind === 'glide') {
-        x = seg.from.x + (seg.to.x - seg.from.x) * easeInOut(t);
+        // A flyer eases in and out; a walker goes at a steady pace along its way, turned the way it goes.
+        const at = seg.walk ? t : easeInOut(t);
+        const pts = seg.path ?? [seg.from, seg.to];
+        const lens = pts.slice(1).map((q, i) => Math.hypot(q.x - pts[i].x, q.y - pts[i].y));
+        let d = at * lens.reduce((m, v) => m + v, 0);
+        let leg = 0;
+        while (leg < lens.length - 1 && d > lens[leg]) d -= lens[leg++];
+        const f = lens[leg] > 0 ? Math.min(1, d / lens[leg]) : 1;
+        x = pts[leg].x + (pts[leg + 1].x - pts[leg].x) * f;
         l.x = x;
-        l.y = seg.from.y + (seg.to.y - seg.from.y) * easeInOut(t);
+        l.y = pts[leg].y + (pts[leg + 1].y - pts[leg].y) * f;
+        const dx = pts[leg + 1].x - pts[leg].x;
+        if (seg.walk && Math.abs(dx) > 1) l.flip = dx < 0;
       }
-      const clip = seg.kind === 'glide' ? 'lot' : seg.clip;
+      const clip = seg.kind === 'glide' ? set.moveClip ?? '' : seg.clip;
       const n = set.frames[clip];
       if (n) {
-        // Glide: the loop repeats for as long as it flies; a clip plays once (a reversed one backwards).
-        const frame = seg.kind === 'glide' ? Math.floor(((now - l.segStart) / 1000) * set.fps * (spec.speed.lot ?? 1)) % n : Math.min(n - 1, Math.floor(t * n));
+        // Glide: the loop repeats for as long as it moves (its phase follows the clock, so a walk path does not restart the stride
+        // at every turn); a clip plays once (a reversed one backwards).
+        const frame = seg.kind === 'glide' ? Math.floor((now / 1000) * set.fps * (set.spec.speed[clip] ?? 1)) % n : Math.min(n - 1, Math.floor(t * n));
         const idx = seg.kind === 'clip' && seg.reverse ? n - 1 - frame : frame;
         img = set.sheets[clip];
         sx = (idx % cols) * frameW;
@@ -227,20 +241,21 @@ class Stage {
         sh = frameH;
       }
     }
-    const dw = spec.width;
+    const dw = set.width;
     const dh = (dw * frameH) / frameW;
+    const bodyPx = dw * set.body;
     const gy = l.seg?.kind === 'glide' ? l.y : y;
     // Shadow on the ground, ring for the active unit.
     ctx.save();
     ctx.fillStyle = 'rgba(0,0,0,0.38)';
     ctx.beginPath();
-    ctx.ellipse(x, gy + 2, dw * 0.2, dw * 0.055, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, gy + 2, bodyPx * 0.36, bodyPx * 0.1, 0, 0, Math.PI * 2);
     ctx.fill();
     if (l.piece.ring && !l.piece.dead) {
       ctx.strokeStyle = l.piece.ring;
       ctx.lineWidth = 2.5;
       ctx.beginPath();
-      ctx.ellipse(x, gy + 2, dw * 0.24, dw * 0.07, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, gy + 2, bodyPx * 0.44, bodyPx * 0.13, 0, 0, Math.PI * 2);
       ctx.stroke();
     }
     // Hit: shake and flash.
@@ -251,7 +266,7 @@ class Stage {
     }
     ctx.translate(x, 0);
     if (l.flip) ctx.scale(-1, 1);
-    ctx.drawImage(img, sx, sy, sw, sh, -dw / 2, gy - spec.feet * dh, dw, dh);
+    ctx.drawImage(img, sx, sy, sw, sh, -set.cx * dw, gy - set.feet * dh, dw, dh);
     ctx.restore();
   }
 

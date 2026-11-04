@@ -47,6 +47,11 @@ def main() -> None:
     x1, y1 = min(size, max(b[2] for b in boxes) + pad), min(size, max(b[3] for b in boxes) + pad)
     w, h = x1 - x0, y1 - y0
     meta = {"source_frame": size, "crop": [x0, y0, w, h], "frame": [w, h], "cols": cols, "fps": 24, "clips": {}}
+    # Where the unit stands in the cropped frame, from the standing picture: feet line, horizontal middle and body width (fractions).
+    if "stoi" in clips:
+        sb = clips["stoi"][0].crop((x0, y0, x1, y1)).getchannel("A").point(lambda v: 255 if v > 8 else 0).filter(ImageFilter.MinFilter(7)).getbbox()
+        if sb:
+            meta.update({"feet": round(sb[3] / h, 4), "cx": round((sb[0] + sb[2]) / 2 / w, 4), "body": round((sb[2] - sb[0]) / w, 4)})
     for name, fs in clips.items():
         fs = [f.crop((x0, y0, x1, y1)) for f in fs]
         rows = math.ceil(len(fs) / cols) if len(fs) > 1 else 1
