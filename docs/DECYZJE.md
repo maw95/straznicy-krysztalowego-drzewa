@@ -27,15 +27,26 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
 - **Drabinka złożoności** (Przygoda → Wyprawa → Królestwo → Imperium → Legenda), każdy poziom jako preset przełączników;
   najprostszy poziom jest flagowy, wyższe jako aktualizacje (`ROZBUDOWA_CYFROWA.md`).
 
+## Podjęte (4.11.2026)
+
+- **Autopilot dla warstw:** zatwierdzony (rodzic na wyższym poziomie, dziecko na tej samej mapie z automatycznie zarządzanymi warstwami).
+- **Zakres premiery:** poziomy 1–2 drabinki (Przygoda, Wyprawa) + hotseat i tryb rodzinny; poziomy 3–5 jako aktualizacje.
+- **Styl mroczniejszych jednostek:** poważniejszy, nie kreskówkowy.
+- **Workflow usług AI, po jednej naraz:** najpierw Scenario (grafiki, test ze Smokiem). ElevenLabs (efekty dźwiękowe, muzyka, głosy)
+  sprawdzamy dopiero przy dźwięku, najpierw na próbce. Higgsfield (wideo) odłożony do trailera.
+  Scenario to źródło statycznych grafik; ruch jednostek zostaje animacją proceduralną w kodzie.
+
 ## Czekają na decyzję
 
-0. **Autopilot dla warstw** (młodszy gracz z automatycznie zarządzaną ekonomią): zapisane jako pomysł, autor jeszcze przemyśli.
-0. **Zakres premiery:** propozycja poziomy 1–2 + hotseat/tryb rodzinny, reszta jako aktualizacje (do potwierdzenia).
-0. **Przegląd konkurencji na Steamie ręcznie** (tagi Family Friendly, Local Co-Op, Turn-Based Strategy) i test z 5–10 parami rodzic + dziecko.
+0. **Przegląd konkurencji na Steamie ręcznie** (tagi Family Friendly, Local Co-Op, Turn-Based Strategy) i test z 5–10 parami
+   rodzic + dziecko: odłożone, na razie się tym nie przejmujemy.
 
 
-1. **Test na jednej jednostce** (Złoty Smok albo jednostka Hordy): po założeniu konta i klucza ocenić jakość i spójność.
-2. **Odniesienia wizualne do mrocznego stylu** dla Hordy i neutralnych (gry, ilustracje, kolory).
+1. **Test na jednej jednostce** (Złoty Smok albo jednostka Hordy): po założeniu konta Scenario i autoryzacji MCP ocenić
+   (a) jakość i spójność obrazu, (b) czy postać da się dostać w warstwach lub na czystym tle do animacji proceduralnej,
+   (c) czy Scenario ma coś użytecznego do animacji (sprite sheety). Plan jest zatwierdzony; czeka na konto autora.
+2. **Odniesienia wizualne do mrocznego stylu** dla Hordy i neutralnych: Claude dobiera propozycje, autor ocenia.
+   Kierunek: bardziej poważny, mroczny.
 
 ## Przyjęte domyślnie (do przejrzenia)
 
