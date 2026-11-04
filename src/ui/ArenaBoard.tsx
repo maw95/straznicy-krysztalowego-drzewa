@@ -185,8 +185,10 @@ export function ArenaBoard(p: Props) {
               const box = g.cells.length > 1 ? OBSTACLE_BOX_DOUBLE : OBSTACLE_BOX;
               const x = cs.reduce((m, c) => m + c.x, 0) / cs.length;
               const y = cs.reduce((m, c) => m + c.y, 0) / cs.length;
+              // A pair on a slant (two rows) leans the same way, a little less than the line between its cells.
+              const lean = cs.length > 1 && Math.abs(cs[1].y - cs[0].y) > 10 ? (cs[1].x > cs[0].x) === (cs[1].y > cs[0].y) ? 30 : -30 : 0;
               return (
-                <div key={`ob${g.art}`} style={{ position: 'absolute', left: x - box.w / 2, top: y + box.base - box.h, width: box.w, height: box.h, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', pointerEvents: 'none' }}>
+                <div key={`ob${g.art}`} style={{ position: 'absolute', left: x - box.w / 2, top: y + box.base - box.h, width: box.w, height: box.h, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', pointerEvents: 'none', transform: lean ? `rotate(${lean}deg)` : undefined, transformOrigin: '50% 80%' }}>
                   <img src={asset(`arena/cyfrowa/${g.art}.webp`)} alt="" style={{ maxWidth: '100%', maxHeight: '100%', filter: b.arena === 'horde' ? 'brightness(1.55) contrast(1.05)' : undefined }} />
                 </div>
               );

@@ -1,6 +1,6 @@
 // Digital ruleset: the wide arena (pointy-topped hexes in rows, 13 × 9).
 import { describe, expect, it } from 'vitest';
-import { arenaObstacles, battleMove, deployCells, layoutCells, makeBattleUnit, reachableCells, tailOptions, wideCell, wideCellOf, type ArenaId } from '../src/engine/battle';
+import { WIDE_OBSTACLES, arenaObstacles, battleMove, deployCells, layoutCells, makeBattleUnit, reachableCells, tailOptions, wideCell, wideCellOf, type ArenaId } from '../src/engine/battle';
 import { applyActionInPlace, createGame } from '../src/engine/game';
 import { chooseAction } from '../src/engine/ai';
 import { distance, neighborKeys, parseKey, type HexKey } from '../src/engine/hex';
@@ -76,6 +76,27 @@ const seats = (hero: string, horde = 'werewolfLord'): SeatSetup[] => [
   { name: 'A', faction: 'dawn', controller: 'bot', heroId: hero },
   { name: 'B', faction: 'horde', controller: 'bot', heroId: horde },
 ];
+
+describe('wide arena obstacles', () => {
+  it.each(['dawn', 'horde'] as ArenaId[])('%s: the two cells of an obstacle are neighbours, no cell is used twice, no picture repeats', (arena) => {
+    const used = new Set<HexKey>();
+    const arts = new Set<string>();
+    for (const g of WIDE_OBSTACLES[arena]) {
+      const cells = g.cells.map(([c, r]) => wideCell(c, r));
+      if (cells.length === 2) expect(distance(parseKey(cells[0]), parseKey(cells[1]))).toBe(1);
+      for (const k of cells) (expect(used.has(k)).toBe(false), used.add(k));
+      expect(arts.has(g.art)).toBe(false);
+      arts.add(g.art);
+    }
+  });
+
+  it('some two-cell obstacles lie on a slant (across two rows)', () => {
+    for (const arena of ['dawn', 'horde'] as ArenaId[]) {
+      const slanted = WIDE_OBSTACLES[arena].filter((g) => g.cells.length === 2 && g.cells[0][1] !== g.cells[1][1]);
+      expect(slanted.length).toBeGreaterThan(0);
+    }
+  });
+});
 
 describe('bots with several large units', () => {
   it('play whole battles when both sides field a large hero, without sharing cells', () => {

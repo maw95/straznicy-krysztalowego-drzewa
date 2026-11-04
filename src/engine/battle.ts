@@ -84,7 +84,7 @@ export function wideCellOf(k: HexKey): { col: number; row: number } {
 const WIDE_CELLS: readonly HexKey[] = Object.freeze(Array.from({ length: WIDE_ROWS }, (_, row) => Array.from({ length: WIDE_COLUMNS }, (_, col) => wideCell(col, row))).flat());
 const WIDE_SET = new Set(WIDE_CELLS);
 
-/** One obstacle of a wide arena: one or two neighbouring cells in a row [col, row] and the name of its picture (public/assets/arena/cyfrowa). */
+/** One obstacle of a wide arena: one or two neighbouring cells [col, row] (side by side in a row, or on a slant across two rows) and the name of its picture (public/assets/arena/cyfrowa). */
 export interface ObstacleGroup {
   art: string;
   cells: Array<[number, number]>;
@@ -97,7 +97,7 @@ export interface ObstacleGroup {
 export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
   dawn: [
     { art: 'log', cells: [[3, 1], [4, 1]] },
-    { art: 'wall', cells: [[8, 7], [9, 7]] },
+    { art: 'wall', cells: [[8, 6], [8, 7]] },
     { art: 'ridge', cells: [[5, 4], [6, 4]] },
     { art: 'boulders', cells: [[9, 2]] },
     { art: 'ruin', cells: [[3, 6]] },
@@ -107,7 +107,7 @@ export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
   ],
   horde: [
     { art: 'bones', cells: [[3, 2], [4, 2]] },
-    { art: 'barricade', cells: [[8, 6], [9, 6]] },
+    { art: 'barricade', cells: [[9, 5], [9, 6]] },
     { art: 'siegecart', cells: [[5, 5], [6, 5]] },
     { art: 'spires', cells: [[9, 3]] },
     { art: 'deadtree', cells: [[2, 6]] },

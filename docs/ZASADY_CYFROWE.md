@@ -58,7 +58,7 @@ W trybie `digital` bitwa toczy się na **innej planszy** niż klasyczna (`Battle
   opcja to ta sama strona co dotąd (ruch w prawo ustawia ogon po lewej), druga to obrót jednostki. W rozstawieniu ogon leży na polu
   kolumny startowej, głowa w tym samym rzędzie, kolumnę dalej.
 - Pojedynek na mapie (`duel`): dwie jednostki na sąsiednich polach środkowego rzędu.
-- Dwupolowa przeszkoda to dwa sąsiednie pola w jednym rzędzie (jak duża jednostka); wszystkie jej pola blokują ruch i strzał.
+- Dwupolowa przeszkoda to dwa sąsiednie pola: w jednym rzędzie albo pod skosem w dwóch rzędach (na każdej arenie jedna); wszystkie jej pola blokują ruch i strzał.
 - **Oprawa:** tła bez siatki w poważnym, stonowanym stylu (`public/assets/arena/cyfrowa/dawn|horde.webp`), siatkę rysuje kod
   (`src/ui/arenaGeometry.ts`, `geometryOf`); przeszkody to osobne obrazy z przezroczystością (łąka: kłoda, ściana ruin i grań po 2 pola, a głazy, ruina, sosna, ciernie, posąg po 1 polu; pole Hordy: kości, barykada i wóz
   oblężniczy po 2 pola, a skały, martwe drzewo, kryształy, totem po 1 polu; żaden obraz nie powtarza się na jednej arenie, układ jest w `WIDE_OBSTACLES`), wpasowane w dolną część heksa, z delikatnym złotym obrysem pola. Pod planszą tło ma czystą teksturę (drzewa i ruiny ramy nie wchodzą pod heksy, `scripts/assets/arena_cyfrowa.py`); aktywną jednostkę

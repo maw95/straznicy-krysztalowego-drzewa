@@ -77,6 +77,4 @@ Wdrożone tego samego dnia: brak okrągłego cienia pod jednostką, cienki pasek
 kończy turę (strzelec nie ma „ruch + strzał”, strzelcy +1 do ataku; patrz `ZASADY_CYFROWE.md`, a strojenie +1 symulacjami zostaje do zrobienia).
 
 - [x] **Obrażenia w momencie uderzenia animacji** (wdrożone 5.11): `SpriteLayer` zgłasza uderzenie w ok. 45% klipu ataku (`impact.ts`), `useImpactHold` (walka) i `useEndHold` (ostatni cios) trzymają stan sprzed ciosu do tego momentu (awaryjnie 6 s); obrażenia, paski, trafienie i śmierć pojawiają się wtedy. W czasie przytrzymania nie da się klikać. Atak bez obrażeń (tarcza) też się animuje (wykrywany po `rolls`).
-- [ ] **Dwupolowe przeszkody pod skosem.** Silnik zna grupy sąsiednich pól (`WIDE_OBSTACLES`); wystarczy dopuścić drugą parę pól w rzędach
-  sąsiednich (sąsiad „NE/SE” zamiast tego samego rzędu) i obrócić obraz (CSS `rotate` o ±30° albo osobne sprite'y). Skośna przeszkoda
-  lepiej chroni przed strzelcami, bo zasłania linię strzału w poprzek rzędów. Potrzebne: test osiągalności pól i 2–3 skośne sprite'y.
+- [x] **Dwupolowe przeszkody pod skosem** (wdrożone 5.11): na każdej arenie jedna dwupolowa przeszkoda leży na dwóch sąsiednich polach w różnych rzędach (łąka: ściana ruin; pole Hordy: barykada); obraz jest obrócony o ±30°. Test sprawdza sąsiedztwo pól.
