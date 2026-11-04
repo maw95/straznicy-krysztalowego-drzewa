@@ -62,7 +62,8 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
   jako trup. Wskrzeszenie = ta sama animacja odtworzona od tyłu.
 - **Martwe jednostki zostają na planszy, ale nie zajmują heksa** (jak w Heroesach): inne jednostki mogą po nich chodzić.
   Wymaga zmiany silnika bitwy w trybie rozszerzonym (tryb „Klasyczny” bez zmian).
-- **Test filmikowy na Złotym Smoku (4.11): obiecujący, wymaga poprawek.** Potok: obraz jednostki na zielonym tle (przesłany do Scenario)
+- **Animacje Złotego Smoka (4.11): zaakceptowane** (lot: wzbicie + pętla + lądowanie jako wzbicie od tyłu; śmierć). Autor: „jak na animację
+  z AI nieźle”. Szczegóły potoku, lekcje i koszty: `POTOK_ANIMACJI.md`. Pierwszy test poniżej (obiecujący, z poprawkami). Potok: obraz jednostki na zielonym tle (przesłany do Scenario)
   → P-Video 2 (3 s, 720p, 24 kl./s, klatka początkowa i końcowa, 15 CU) → wycięcie tła ffmpeg `chromakey` → klatki PNG z alfą.
   Lot: skrzydła naprawdę machają, pętla się domyka. Śmierć: płynny upadek, ostatnia klatka zgodna z obrazem trupa. Złoto nie znosi
   filtra `despill` (przebarwia na czerwono): wycinamy bez niego. Do poprawy: zostawić margines w kadrze (skrzydła i ogon wychodziły
@@ -84,7 +85,8 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
    rodzic + dziecko: odłożone, na razie się tym nie przejmujemy.
 
 
-1. **Animacja jednostek 2D z osobnych warstw:** test na Złotym Smoku (patrz „Podjęte 4.11”); wybór metody czeka na decyzję.
+1. **Dalsze kroki animacji:** klip ataku, test trafienia w kodzie, pętla chodu dla jednostki naziemnej, potem integracja z grą
+   (arkusze klatek, jednostki na 2 heksy, trup bez zajmowania heksa). Potok: `POTOK_ANIMACJI.md`.
 2. **Odniesienia wizualne do mrocznego stylu** dla Hordy i neutralnych: Claude dobiera propozycje, autor ocenia.
    Kierunek: bardziej poważny, mroczny.
 
