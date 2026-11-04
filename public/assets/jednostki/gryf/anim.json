@@ -1,0 +1,24 @@
+{
+ "source_frame": 320,
+ "crop": [
+  0,
+  9,
+  320,
+  276
+ ],
+ "frame": [
+  320,
+  276
+ ],
+ "cols": 8,
+ "fps": 24,
+ "clips": {
+  "atak": 73,
+  "lot": 73,
+  "smierc": 73,
+  "trafienie": 49
+ },
+ "feet": 0.8297,
+ "cx": 0.5078,
+ "body": 0.8344
+}

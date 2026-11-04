@@ -1433,6 +1433,96 @@
       "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "gryf/stoi",
+      "pliki": [
+        "public/assets/jednostki/gryf/stoi.webp"
+      ],
+      "typ": "poza zawisu",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, portret jako odniesienie",
+      "scenario_asset": "asset_yWTpZJL4tzFW7LCAzqmJxHWp",
+      "odniesienie": "asset_3hqx78yrBJStkV8ZSQTXiaqK (portret karty)",
+      "prompt": "Use the reference image only for the character design (a majestic griffin with a white-feathered eagle head and a sharp golden-orange beak, large feathered wings in warm brown and bone tones, a tawny lion body with a brown tail, eagle talons on the front legs, and a gold chest harness set with amber gems). Draw this same character as a full-body game sprite in a strict side view, hovering in the air with its wings spread wide open, facing right, in a serious painterly realistic style with muted earthy brown, bone, off-white and dull gold tones, no blue anywhere on the creature. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its lowest point on a horizontal line about 78% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "gryf/martwy",
+      "pliki": [
+        "public/assets/jednostki/gryf/martwy.webp"
+      ],
+      "typ": "grafika trupa",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, medium, stoi jako odniesienie",
+      "scenario_asset": "asset_oSGEagDccvSFai5gk37oK8H6",
+      "odniesienie": "asset_3hqx78yrBJStkV8ZSQTXiaqK (portret karty)",
+      "prompt": "The same griffin as in the reference image, now lying still on the ground on its belly in a strict side view facing right, wings folded closed against its body, head resting low, eyes closed, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "gryf/lot",
+      "pliki": [
+        "public/assets/jednostki/gryf/lot.webp"
+      ],
+      "typ": "pętla zawisu",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_TZ5uUfzixNinmTNu5LRXaHHQ",
+      "odniesienie": "asset_3hqx78yrBJStkV8ZSQTXiaqK (portret karty)",
+      "prompt": "Side view, locked static camera. The griffin hovers in the air in place, flapping its wide wings up and down in a steady rhythm, always facing right, the body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "gryf/atak",
+      "pliki": [
+        "public/assets/jednostki/gryf/atak.webp"
+      ],
+      "typ": "atak",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_Jte5N9JhZMrP1rXzLSziAJKM",
+      "odniesienie": "asset_3hqx78yrBJStkV8ZSQTXiaqK (portret karty)",
+      "prompt": "Side view, locked static camera. The griffin swoops forward and reaches out with its talons towards the right, beak open with a screech, then returns to its hovering pose with wings spread. The body ends at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "gryf/smierc",
+      "pliki": [
+        "public/assets/jednostki/gryf/smierc.webp"
+      ],
+      "typ": "śmierć, koniec = martwy",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, stoi -> martwy (lastFrameImage)",
+      "scenario_asset": "asset_LEsLvDBDvRR8RABgtJG4FQms",
+      "odniesienie": "asset_3hqx78yrBJStkV8ZSQTXiaqK (portret karty)",
+      "prompt": "Side view, locked static camera. The griffin slowly sinks down from the air, its wings fold in, it settles onto the ground on its belly, lowers its head and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "gryf/trafienie",
+      "pliki": [
+        "public/assets/jednostki/gryf/trafienie.webp"
+      ],
+      "typ": "trafienie",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_b751VFUzdFJFDqBDtvoSXYB7",
+      "odniesienie": "asset_3hqx78yrBJStkV8ZSQTXiaqK (portret karty)",
+      "prompt": "Side view, locked static camera. The griffin hovering in place is startled: it flinches and rocks backwards a little, its wings jerk up, then it steadies itself and settles back to its hovering pose with wings spread, facing right. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
