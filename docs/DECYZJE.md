@@ -16,7 +16,7 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
 
 - Rzadki zasób nazywa się **Gwiezdny Pył**.
 - Animacja jednostek: próbujemy animacji proceduralnej (warstwy, deformacja siatki, efekty, ruch w kodzie); ulepszenie
-  bohaterów prawdziwą animacją dopiero po teście. Figurki 3D są do zastąpienia jednostkami 2D (do potwierdzenia po teście na jednej jednostce).
+  bohaterów prawdziwą animacją dopiero po teście. Figurki 3D są zastępowane jednostkami 2D (potwierdzone po teście ze Smokiem, patrz niżej).
 - Styl: mroczniejszy tylko dla jednostek Hordy i neutralnych (strażnicy); pozostałe grafiki (karty, kafle, interfejs, Przymierze) zostają.
 - Usługa AI do grafik: wybór pozostawiony Claude'owi, z wymogiem taniej subskrypcji (nie płatności za zużycie).
   Wybrane: **Scenario** (plan płatny, miesięczny kredyt, oficjalny serwer MCP). Do sprawdzenia przed dłuższym użyciem:
@@ -47,15 +47,23 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
   każda postać wymaga pocięcia na części i rigu (ok. 40 postaci na premierę). Wracamy do niej tylko dla bohaterów, jeśli po teście
   ruch proceduralny wyda się zbyt sztywny.
 
+- **Test Scenario ze Złotym Smokiem (4.11): pozytywny.** MCP podłączone (OAuth, plan Starter). Model GPT Image 2.5 Flare
+  (ok. 2 CU za obraz 1024 px, jakość „high”, tło „transparent”) daje czysty PNG z prawdziwą przezroczystością, bez wycinania tła.
+  Na arenie sylwetka jest czytelna już w rozmiarze jednego pola, a złoto dobrze odcina się od ciemnej areny. Droższy model
+  (Sunburst, ok. 12 CU) niepotrzebny na razie. Otwarte: spójność całej frakcji (trening stylu na Pro) i animacja.
+- **Duże jednostki zajmują 2 heksy** (jak w Heroesach); jednostka może być większa niż pole. Mechanika zajmowania dwóch pól
+  do zaprojektowania osobno (zasady planszówki zamrożone w trybie „Klasycznym”).
+- **Widok z boku** (jak postacie w Heroes III) jest w porządku; nie dążymy do widoku z góry.
+- **Figurki 3D znikają z wersji komputerowej:** zastępują je grafiki 2D z AI (figurki zostają tylko w wersji planszowej).
+  Stare figurki i nowe grafiki nie mogą współistnieć w jednej frakcji, więc wymiana idzie frakcjami, nie pojedynczymi jednostkami.
+
 ## Czekają na decyzję
 
 0. **Przegląd konkurencji na Steamie ręcznie** (tagi Family Friendly, Local Co-Op, Turn-Based Strategy) i test z 5–10 parami
    rodzic + dziecko: odłożone, na razie się tym nie przejmujemy.
 
 
-1. **Test na jednej jednostce** (Złoty Smok albo jednostka Hordy): po założeniu konta Scenario i autoryzacji MCP ocenić
-   (a) jakość i spójność obrazu, (b) czy postać da się dostać w warstwach lub na czystym tle do animacji proceduralnej,
-   (c) czy Scenario ma coś użytecznego do animacji (sprite sheety). Plan jest zatwierdzony; czeka na konto autora.
+1. **Test animacji proceduralnej na Złotym Smoku** (cięcie na części, ruch w przeglądarce): następny krok po teście grafiki.
 2. **Odniesienia wizualne do mrocznego stylu** dla Hordy i neutralnych: Claude dobiera propozycje, autor ocenia.
    Kierunek: bardziej poważny, mroczny.
 
