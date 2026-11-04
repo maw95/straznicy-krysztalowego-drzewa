@@ -35,6 +35,11 @@ answer in Polish; code, comments and commit messages in English; CHANGELOG.md an
 - Never touch the author's own servers (game :5173, backend :8080, its data/): test servers use other ports and a
   scratch database (`PORT=8090 DATABASE_PATH=… ALLOWED_ORIGINS=http://localhost:5180`).
 
+## Assets
+- Every accepted graphic, animation, sound or music goes into the repo in the same session (sources in the cloud are not a backup).
+  Keep it small: frame sheets/WebP instead of loose PNG frames, check `du -sh` before committing; list each file in
+  `assets.json` (source, tool, model, prompt, date, AI yes/no, licence).
+
 ## Saving tokens
 - Read only the part of a file you need (grep for the symbol, then read that range).
 - Screenshots: `make zrzut` defaults are small; crop with `ELEMENT=`; check logic by text (DOM queries) when a

@@ -43,6 +43,18 @@ Stan na 4.11.2026, po teście na Złotym Smoku. Decyzje: `DECYZJE.md`. Skrypt cz
   jest w klipie (czerwono-pomarańczowy, dobrze się wycina), ale ucina go prawa krawędź kadru: przy następnych klipach ataku dać
   jednostkę bliżej lewej strony kadru albo ogień dorobić w kodzie (cząsteczki) i prosić model tylko o ruch głowy.
 
+## Gdzie to leży w repozytorium
+
+Zaakceptowany zasób trafia do repo w tej samej sesji (CLAUDE.md, „Assets”), z wpisem w `assets.json`.
+- `public/jednostki/<jednostka>/`: arkusze klatek WebP z alfą (`stoi`, `martwy` jako pojedyncze obrazy; `atak`, `lot`, `wzbicie`,
+  `smierc` jako siatka po 8 kolumn, klatki zapisane wierszami) i `anim.json` (rozmiar klatki, liczba klatek, 24 kl./s).
+- `docs/grafika/jednostki/<jednostka>/`: obrazy źródłowe na niebieskim tle (potrzebne jako klatka początkowa nowych klipów).
+- Skrypt: `python3 scripts/animacje/pack_unit.py <ffmpeg> <katalog z mp4 i png> <wyjście> 320 8` (wycięcie tła, czyszczenie, arkusze).
+- Rozmiar: klatka 320 px zamiast 512, WebP jakość 70: ok. 3,5 MB na jednostkę (512 px dawało 7,3 MB; przy ok. 40 jednostkach
+  to różnica ponad 150 MB). Surowych mp4 nie trzymamy w gicie (7,5 MB na jednostkę); master to Scenario, a arkusze są wersją końcową.
+- Wspólny kadr: skrzydła w locie i ogień sięgają krawędzi, więc przycinanie do prostokąta jednostki nic nie daje; trzeba
+  zostawiać margines już przy generowaniu.
+
 ## Koszty (rzeczywiste)
 
 Obraz Flare 1024 px: `high` ok. 14 CU, `medium` 4 CU. Klip: 5 CU za sekundę (draft 3 CU/s). Test Złotego Smoka kosztował łącznie
