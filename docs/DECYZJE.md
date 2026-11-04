@@ -35,6 +35,9 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
 - **Workflow usług AI, po jednej naraz:** najpierw Scenario (grafiki, test ze Smokiem). ElevenLabs (efekty dźwiękowe, muzyka, głosy)
   sprawdzamy dopiero przy dźwięku, najpierw na próbce. Higgsfield (wideo) odłożony do trailera.
   Scenario to źródło statycznych grafik; ruch jednostek zostaje animacją proceduralną w kodzie.
+- **Animacja szkieletowa** (2D skeletal, np. Spine/DragonBones) zamiast proceduralnej: rozważona, odłożona. Lepsza jakość ruchu, ale
+  każda postać wymaga pocięcia na części i rigu (ok. 40 postaci na premierę). Wracamy do niej tylko dla bohaterów, jeśli po teście
+  ruch proceduralny wyda się zbyt sztywny.
 
 ## Czekają na decyzję
 
