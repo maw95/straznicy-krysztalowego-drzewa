@@ -520,81 +520,6 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
-      "id": "wladca_wilkolakow/stoi",
-      "pliki": [
-        "public/assets/jednostki/wladca_wilkolakow/stoi.webp"
-      ],
-      "typ": "grafika jednostki (stoi), niebieskie tło do wideo",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "GPT Image 2.5 Flare 1024 px, high, z portretem jako odniesieniem",
-      "scenario_asset": "asset_A5mVZ8WmejSp1vV2zoVLkLLm",
-      "odniesienie": "asset_Mf9RrwzG28mYHQSKvetsMwBt (portret karty)",
-      "prompt": "Use the reference image only for the character design (a powerful muscular werewolf lord with grey shaggy fur, a red feathered mantle and collar, gold bands set with red rubies on the arms and chest, long claws). Draw this same character as a full-body game sprite in a strict side view, standing upright on two legs in a menacing stance, facing right, in a serious painterly realistic style with muted grey, brown, dark red and gold tones, no blue anywhere on the character. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "wladca_wilkolakow/martwy",
-      "pliki": [
-        "public/assets/jednostki/wladca_wilkolakow/martwy.webp"
-      ],
-      "typ": "grafika jednostki (trup)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "GPT Image 2.5 Flare 1024 px, medium, z obrazem stojącym jako odniesieniem",
-      "scenario_asset": "asset_N2vFq6Vv9MeTBnAhphUfu1Wt",
-      "odniesienie": "asset_Mf9RrwzG28mYHQSKvetsMwBt (portret karty)",
-      "prompt": "The same werewolf lord as in the reference image, now lying still on its back-side on the ground in a strict side view facing right, head resting low, eyes closed, arms relaxed beside the body, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on the same horizontal line as the standing figure's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "wladca_wilkolakow/chod",
-      "pliki": [
-        "public/assets/jednostki/wladca_wilkolakow/chod.webp"
-      ],
-      "typ": "animacja, pętla chodu (73 kl., 24 kl./s)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
-      "scenario_asset": "asset_ZEM9uZ1kAqGiT6TsoQY4rfxQ",
-      "odniesienie": "asset_Mf9RrwzG28mYHQSKvetsMwBt (portret karty)",
-      "prompt": "Side view, locked static camera. The werewolf lord walks in place with a steady heavy walking cycle, legs stepping in turn, arms and shoulders swaying, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "wladca_wilkolakow/atak",
-      "pliki": [
-        "public/assets/jednostki/wladca_wilkolakow/atak.webp"
-      ],
-      "typ": "animacja ataku (73 kl.)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
-      "scenario_asset": "asset_vdHTAgA7JpPtAvdhnt2VLcMD",
-      "odniesienie": "asset_Mf9RrwzG28mYHQSKvetsMwBt (portret karty)",
-      "prompt": "Side view, locked static camera. The werewolf lord throws back its head with a roar, then leaps a little forward and swings its arm forward towards the right in a powerful sweeping motion, then steps back and settles into its standing pose. The body ends at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "wladca_wilkolakow/smierc",
-      "pliki": [
-        "public/assets/jednostki/wladca_wilkolakow/smierc.webp"
-      ],
-      "typ": "animacja śmierci (73 kl.), koniec = martwy",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi, końcowa = martwy (1. próba z 'sinks down heavily ... Defeat animation' zablokowana filtrem)",
-      "scenario_asset": "asset_bu6kg9DjkbPAwunDHYSscraw",
-      "odniesienie": "asset_Mf9RrwzG28mYHQSKvetsMwBt (portret karty)",
-      "prompt": "Side view, locked static camera. The werewolf lord settles down slowly, its knees bend, it lowers itself to the ground, rests its head and lies still, as if falling asleep. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
       "id": "krol_jednorozcow/stoi",
       "pliki": [
         "public/assets/jednostki/krol_jednorozcow/stoi.webp"
@@ -680,81 +605,6 @@
       "scenario_asset": "asset_AbbEQXJVXFTf86EaHwEvRB97",
       "odniesienie": "asset_8NmUqnodTa95j4NwdmKPWAPR (portret karty)",
       "prompt": "Side view, locked static camera. The white unicorn standing in place is startled: it flinches and rocks backwards a little, its head jerks up, then it steadies itself and settles back to its standing pose. The hooves stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "elf_druid/stoi",
-      "pliki": [
-        "public/assets/jednostki/elf_druid/stoi.webp"
-      ],
-      "typ": "grafika jednostki (stoi), niebieskie tło do wideo",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "GPT Image 2.5 Flare 1024 px, high, z portretem jako odniesieniem",
-      "scenario_asset": "asset_gK49PzWhVvipf5wGDsEMrcYq",
-      "odniesienie": "asset_GJAL9q3eh3bb19vKxCV1pkhp (portret karty)",
-      "prompt": "Use the reference image only for the character design (a young elf druid with long blond hair, pointed ears, a leaf circlet, green forest robes with gold trim, a white tunic, small pink flowers on the clothes, holding a gnarled wooden staff topped with a glowing green orb). Draw this same character as a full-body game sprite in a strict side view, standing upright, facing right, holding the staff in the right hand beside the body, in a serious painterly realistic style with muted green, gold, cream and brown tones, no blue anywhere on the character (turn any blue gems green or gold). The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "elf_druid/martwy",
-      "pliki": [
-        "public/assets/jednostki/elf_druid/martwy.webp"
-      ],
-      "typ": "grafika jednostki (trup)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "GPT Image 2.5 Flare 1024 px, medium, z obrazem stojącym jako odniesieniem",
-      "scenario_asset": "asset_YA7Ykf8Quu8EB1MC6Ad8nR6M",
-      "odniesienie": "asset_GJAL9q3eh3bb19vKxCV1pkhp (portret karty)",
-      "prompt": "The same elf druid as in the reference image, now lying still on the ground on her back in a strict side view with her head to the left and feet to the right, eyes closed, arms resting, the staff lying beside her, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with her body bottom on the same horizontal line as the standing figure's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "elf_druid/chod",
-      "pliki": [
-        "public/assets/jednostki/elf_druid/chod.webp"
-      ],
-      "typ": "animacja, pętla chodu (73 kl., 24 kl./s)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
-      "scenario_asset": "asset_tydyMPqjY2uhAwkLVLMTrPzm",
-      "odniesienie": "asset_GJAL9q3eh3bb19vKxCV1pkhp (portret karty)",
-      "prompt": "Side view, locked static camera. The elf druid walks in place with a steady graceful walking cycle, feet stepping in turn, robe and hair swaying slightly, holding the staff, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "elf_druid/smierc",
-      "pliki": [
-        "public/assets/jednostki/elf_druid/smierc.webp"
-      ],
-      "typ": "animacja śmierci (49 kl.), BEZ klatki końcowej (z lastFrameImage dwa razy zablokowane filtrem)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
-      "scenario_asset": "asset_eyuJikCLMjNMApWwWwecLCK8",
-      "odniesienie": "asset_GJAL9q3eh3bb19vKxCV1pkhp (portret karty)",
-      "prompt": "Side view, locked static camera. The elf druid lowers the staff, kneels slowly and then lies down on her back on the ground, closing her eyes and resting still. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "elf_druid/trafienie",
-      "pliki": [
-        "public/assets/jednostki/elf_druid/trafienie.webp"
-      ],
-      "typ": "animacja trafienia (49 kl.)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
-      "scenario_asset": "asset_cRzCnkV34fHDVwPQpMZ73Jdj",
-      "odniesienie": "asset_GJAL9q3eh3bb19vKxCV1pkhp (portret karty)",
-      "prompt": "Side view, locked static camera. The elf druid standing in place is startled: she flinches and rocks backwards a little, her head jerks up, then she steadies herself and settles back to her standing pose. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
       "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
@@ -1285,156 +1135,6 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
-      "id": "hydra/stoi",
-      "pliki": [
-        "public/assets/jednostki/hydra/stoi.webp"
-      ],
-      "typ": "grafika jednostki (stoi)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "GPT Image 2.5 Flare 1024 px, high, z portretem jako odniesieniem (druga wersja: mniejsza, w lewej polowie kadru; pierwsza asset_jpVa2PcK2vGU1auDLCuoZB4D byla zbyt szeroka)",
-      "scenario_asset": "asset_eieVNujCNmVr36pF5pXo9yVd",
-      "odniesienie": "asset_3agBiyUnV4uFffWJCNMfJEHA (portret karty)",
-      "prompt": "Use the reference image only for the character design (a huge three-headed hydra with dark green scaled bodies, tan belly plates, golden spiky frills on the heads, and sharp tan talons). Draw this same character as a full-body game sprite in a strict side view, standing on four legs with three long necks and three heads raised, facing right, in a serious painterly realistic style with muted dull green, olive and brown tones, no blue and no cyan anywhere on the character. The whole figure is small and fully inside the frame: it occupies at most 42% of the frame width and 40% of the frame height, placed in the left half of the frame with a large empty area to its right, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "hydra/martwy",
-      "pliki": [
-        "public/assets/jednostki/hydra/martwy.webp"
-      ],
-      "typ": "grafika jednostki (trup)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "GPT Image 2.5 Flare 1024 px, medium, z obrazem stojacym jako odniesieniem",
-      "scenario_asset": "asset_6TjqjmTfDB39W5hnm7Z1mFZo",
-      "odniesienie": "asset_3agBiyUnV4uFffWJCNMfJEHA (portret karty)",
-      "prompt": "The same hydra as in the reference image, now lying still on the ground on its belly in a strict side view facing right, its three necks resting low on the ground, eyes closed, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on the same horizontal line as the standing hydra's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "hydra/chod",
-      "pliki": [
-        "public/assets/jednostki/hydra/chod.webp"
-      ],
-      "typ": "animacja, petla chodu (73 kl.)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka poczatkowa = stoi",
-      "scenario_asset": "asset_xFPEWsVNYgHeuo1m5zx6FBMU",
-      "odniesienie": "asset_3agBiyUnV4uFffWJCNMfJEHA (portret karty)",
-      "prompt": "Side view, locked static camera. The hydra walks in place with a steady heavy walking cycle, legs stepping in turn, its three necks and heads swaying gently, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "hydra/atak",
-      "pliki": [
-        "public/assets/jednostki/hydra/atak.webp"
-      ],
-      "typ": "animacja ataku (73 kl.)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka poczatkowa = stoi",
-      "scenario_asset": "asset_GCtLBBmVNKVrgY9dugpqEiFr",
-      "odniesienie": "asset_3agBiyUnV4uFffWJCNMfJEHA (portret karty)",
-      "prompt": "Side view, locked static camera. The hydra lowers its three heads and all three heads dart forward towards the right on their long necks with mouths open, then pull back and return to the standing pose. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "hydra/smierc",
-      "pliki": [
-        "public/assets/jednostki/hydra/smierc.webp"
-      ],
-      "typ": "animacja smierci (73 kl.), koniec = martwy",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka poczatkowa = stoi, koncowa = martwy",
-      "scenario_asset": "asset_iYALVks4Aw2qgW7FA3asKTho",
-      "odniesienie": "asset_3agBiyUnV4uFffWJCNMfJEHA (portret karty)",
-      "prompt": "Side view, locked static camera. The hydra sinks down slowly, its legs fold under it, it settles onto its belly, lowers its three heads to the ground and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "ogr_zelazna_piesc/stoi",
-      "pliki": [
-        "public/assets/jednostki/ogr_zelazna_piesc/stoi.webp"
-      ],
-      "typ": "grafika jednostki (stoi), niebieskie tło do wideo",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "GPT Image 2.5 Flare 1024 px, high, z portretem jako odniesieniem",
-      "scenario_asset": "asset_rqtyc6f4brnzmBh5q8vx6vN2",
-      "odniesienie": "asset_vPkYrV5NBveB76NxKrkX3nHW (portret karty)",
-      "prompt": "Use the reference image only for the character design (a huge muscular olive-green ogre with a heavy brow and tusks, wearing dark brown-iron spiked plate armour with red gems, a red cloth sash and iron-gauntleted fists). Draw this same character as a full-body game sprite in a strict side view, standing upright on two legs in a heavy menacing stance, facing right, in a serious painterly realistic style with muted olive-green, grey, brown iron and dark red tones, no blue anywhere on the character. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "ogr_zelazna_piesc/martwy",
-      "pliki": [
-        "public/assets/jednostki/ogr_zelazna_piesc/martwy.webp"
-      ],
-      "typ": "grafika jednostki (trup)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "GPT Image 2.5 Flare 1024 px, medium, z obrazem stojącym jako odniesieniem",
-      "scenario_asset": "asset_8NvbLuTdp8ZEfQPPMgkARkBr",
-      "odniesienie": "asset_vPkYrV5NBveB76NxKrkX3nHW (portret karty)",
-      "prompt": "The same ogre as in the reference image, now lying still on its back on the ground in a strict side view with its head to the right, eyes closed, arms resting beside the body, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours and size, centred horizontally in the frame, with its body bottom on the same horizontal line as the standing ogre's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "ogr_zelazna_piesc/chod",
-      "pliki": [
-        "public/assets/jednostki/ogr_zelazna_piesc/chod.webp"
-      ],
-      "typ": "animacja, pętla chodu (73 kl., 24 kl./s)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
-      "scenario_asset": "asset_YkEffSU3Zbe4jvRBAc5a85mk",
-      "odniesienie": "asset_vPkYrV5NBveB76NxKrkX3nHW (portret karty)",
-      "prompt": "Side view, locked static camera. The armoured ogre walks in place with a steady heavy walking cycle, legs stepping in turn, arms and shoulders swaying slightly, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "ogr_zelazna_piesc/trafienie",
-      "pliki": [
-        "public/assets/jednostki/ogr_zelazna_piesc/trafienie.webp"
-      ],
-      "typ": "animacja trafienia (49 kl.)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
-      "scenario_asset": "asset_fYE3KVQbdPeykW6R4TwpHSJN",
-      "odniesienie": "asset_vPkYrV5NBveB76NxKrkX3nHW (portret karty)",
-      "prompt": "Side view, locked static camera. The armoured ogre standing in place is startled: it flinches and rocks backwards a little, its head jerks up, then it steadies itself and settles back to its standing pose. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "ogr_zelazna_piesc/atak",
-      "pliki": [
-        "public/assets/jednostki/ogr_zelazna_piesc/atak.webp"
-      ],
-      "typ": "animacja ataku (49 kl.)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 2 s, klatka poczatkowa = stoi",
-      "scenario_asset": "asset_ff8nwyZdnh3iPo7DvMrm4axh",
-      "odniesienie": "asset_vPkYrV5NBveB76NxKrkX3nHW (portret karty)",
-      "prompt": "Side view, locked static camera. The ogre leans forward and reaches its arm out towards the right in a wide sweeping motion, then returns to its standing pose. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
       "id": "gryf/stoi",
       "pliki": [
         "public/assets/jednostki/gryf/stoi.webp"
@@ -1595,6 +1295,381 @@
       "scenario_asset": "asset_UKs7aSQARJJHtdsp81mH96s8",
       "odniesienie": "asset_wo1YP2g1SUicDP9WnBR3kJya (portret karty)",
       "prompt": "Side view, locked static camera. The duck hovering in place is startled: it flinches and rocks backwards a little, its wings jerk up, then it steadies itself and settles back to its hovering pose with wings spread, facing right. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzielna_kaczka/smierc",
+      "pliki": [
+        "public/assets/jednostki/dzielna_kaczka/smierc.webp"
+      ],
+      "typ": "smierc (opadniecie, bez klatki koncowej)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, stoi",
+      "scenario_asset": "asset_dNVDqH91X9KD5No4UAe97FnG",
+      "odniesienie": "asset_wo1YP2g1SUicDP9WnBR3kJya (portret karty)",
+      "prompt": "Side view, locked static camera. The duck hovering in the air gently loses height, drifts down and settles onto the ground, folding its wings, and rests there. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "wladca_wilkolakow/stoi",
+      "pliki": [
+        "public/assets/jednostki/wladca_wilkolakow/stoi.webp"
+      ],
+      "typ": "grafika jednostki (stoi), niebieskie tło do wideo",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, z portretem jako odniesieniem",
+      "scenario_asset": "asset_A5mVZ8WmejSp1vV2zoVLkLLm",
+      "odniesienie": "asset_Mf9RrwzG28mYHQSKvetsMwBt (portret karty)",
+      "prompt": "Use the reference image only for the character design (a powerful muscular werewolf lord with grey shaggy fur, a red feathered mantle and collar, gold bands set with red rubies on the arms and chest, long claws). Draw this same character as a full-body game sprite in a strict side view, standing upright on two legs in a menacing stance, facing right, in a serious painterly realistic style with muted grey, brown, dark red and gold tones, no blue anywhere on the character. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "wladca_wilkolakow/martwy",
+      "pliki": [
+        "public/assets/jednostki/wladca_wilkolakow/martwy.webp"
+      ],
+      "typ": "grafika jednostki (trup)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, medium, z obrazem stojącym jako odniesieniem",
+      "scenario_asset": "asset_N2vFq6Vv9MeTBnAhphUfu1Wt",
+      "odniesienie": "asset_Mf9RrwzG28mYHQSKvetsMwBt (portret karty)",
+      "prompt": "The same werewolf lord as in the reference image, now lying still on its back-side on the ground in a strict side view facing right, head resting low, eyes closed, arms relaxed beside the body, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on the same horizontal line as the standing figure's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "wladca_wilkolakow/chod",
+      "pliki": [
+        "public/assets/jednostki/wladca_wilkolakow/chod.webp"
+      ],
+      "typ": "animacja, pętla chodu (73 kl., 24 kl./s)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_ZEM9uZ1kAqGiT6TsoQY4rfxQ",
+      "odniesienie": "asset_Mf9RrwzG28mYHQSKvetsMwBt (portret karty)",
+      "prompt": "Side view, locked static camera. The werewolf lord walks in place with a steady heavy walking cycle, legs stepping in turn, arms and shoulders swaying, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "wladca_wilkolakow/atak",
+      "pliki": [
+        "public/assets/jednostki/wladca_wilkolakow/atak.webp"
+      ],
+      "typ": "animacja ataku (73 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_vdHTAgA7JpPtAvdhnt2VLcMD",
+      "odniesienie": "asset_Mf9RrwzG28mYHQSKvetsMwBt (portret karty)",
+      "prompt": "Side view, locked static camera. The werewolf lord throws back its head with a roar, then leaps a little forward and swings its arm forward towards the right in a powerful sweeping motion, then steps back and settles into its standing pose. The body ends at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "wladca_wilkolakow/smierc",
+      "pliki": [
+        "public/assets/jednostki/wladca_wilkolakow/smierc.webp"
+      ],
+      "typ": "animacja śmierci (73 kl.), koniec = martwy",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi, końcowa = martwy (1. próba z 'sinks down heavily ... Defeat animation' zablokowana filtrem)",
+      "scenario_asset": "asset_bu6kg9DjkbPAwunDHYSscraw",
+      "odniesienie": "asset_Mf9RrwzG28mYHQSKvetsMwBt (portret karty)",
+      "prompt": "Side view, locked static camera. The werewolf lord settles down slowly, its knees bend, it lowers itself to the ground, rests its head and lies still, as if falling asleep. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "wladca_wilkolakow/trafienie",
+      "pliki": [
+        "public/assets/jednostki/wladca_wilkolakow/trafienie.webp"
+      ],
+      "typ": "trafienie (2 s)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, stoi",
+      "scenario_asset": "asset_DPbF4akPKLvQq6WG83ZtYSZv",
+      "odniesienie": "asset_Mf9RrwzG28mYHQSKvetsMwBt (portret karty)",
+      "prompt": "Side view, locked static camera. The werewolf standing in place is startled: it flinches and rocks backwards a little with a growl, keeps facing right the whole time, then steadies itself and settles back to its standing pose. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "hydra/stoi",
+      "pliki": [
+        "public/assets/jednostki/hydra/stoi.webp"
+      ],
+      "typ": "grafika jednostki (stoi)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, z portretem jako odniesieniem (druga wersja: mniejsza, w lewej polowie kadru; pierwsza asset_jpVa2PcK2vGU1auDLCuoZB4D byla zbyt szeroka)",
+      "scenario_asset": "asset_eieVNujCNmVr36pF5pXo9yVd",
+      "odniesienie": "asset_3agBiyUnV4uFffWJCNMfJEHA (portret karty)",
+      "prompt": "Use the reference image only for the character design (a huge three-headed hydra with dark green scaled bodies, tan belly plates, golden spiky frills on the heads, and sharp tan talons). Draw this same character as a full-body game sprite in a strict side view, standing on four legs with three long necks and three heads raised, facing right, in a serious painterly realistic style with muted dull green, olive and brown tones, no blue and no cyan anywhere on the character. The whole figure is small and fully inside the frame: it occupies at most 42% of the frame width and 40% of the frame height, placed in the left half of the frame with a large empty area to its right, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "hydra/martwy",
+      "pliki": [
+        "public/assets/jednostki/hydra/martwy.webp"
+      ],
+      "typ": "grafika jednostki (trup)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, medium, z obrazem stojacym jako odniesieniem",
+      "scenario_asset": "asset_6TjqjmTfDB39W5hnm7Z1mFZo",
+      "odniesienie": "asset_3agBiyUnV4uFffWJCNMfJEHA (portret karty)",
+      "prompt": "The same hydra as in the reference image, now lying still on the ground on its belly in a strict side view facing right, its three necks resting low on the ground, eyes closed, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on the same horizontal line as the standing hydra's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "hydra/chod",
+      "pliki": [
+        "public/assets/jednostki/hydra/chod.webp"
+      ],
+      "typ": "animacja, petla chodu (73 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka poczatkowa = stoi",
+      "scenario_asset": "asset_xFPEWsVNYgHeuo1m5zx6FBMU",
+      "odniesienie": "asset_3agBiyUnV4uFffWJCNMfJEHA (portret karty)",
+      "prompt": "Side view, locked static camera. The hydra walks in place with a steady heavy walking cycle, legs stepping in turn, its three necks and heads swaying gently, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "hydra/atak",
+      "pliki": [
+        "public/assets/jednostki/hydra/atak.webp"
+      ],
+      "typ": "animacja ataku (73 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka poczatkowa = stoi",
+      "scenario_asset": "asset_GCtLBBmVNKVrgY9dugpqEiFr",
+      "odniesienie": "asset_3agBiyUnV4uFffWJCNMfJEHA (portret karty)",
+      "prompt": "Side view, locked static camera. The hydra lowers its three heads and all three heads dart forward towards the right on their long necks with mouths open, then pull back and return to the standing pose. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "hydra/smierc",
+      "pliki": [
+        "public/assets/jednostki/hydra/smierc.webp"
+      ],
+      "typ": "animacja smierci (73 kl.), koniec = martwy",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka poczatkowa = stoi, koncowa = martwy",
+      "scenario_asset": "asset_iYALVks4Aw2qgW7FA3asKTho",
+      "odniesienie": "asset_3agBiyUnV4uFffWJCNMfJEHA (portret karty)",
+      "prompt": "Side view, locked static camera. The hydra sinks down slowly, its legs fold under it, it settles onto its belly, lowers its three heads to the ground and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "hydra/trafienie",
+      "pliki": [
+        "public/assets/jednostki/hydra/trafienie.webp"
+      ],
+      "typ": "trafienie (2 s)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, stoi",
+      "scenario_asset": "asset_FGkvSvmzKLmfzFHcvDvB7aw8",
+      "odniesienie": "asset_3agBiyUnV4uFffWJCNMfJEHA (portret karty)",
+      "prompt": "Side view, locked static camera. The hydra standing in place flinches and its heads sway back a little together, then they settle back to the standing pose. The body stays at the same spot, facing right. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ogr_zelazna_piesc/stoi",
+      "pliki": [
+        "public/assets/jednostki/ogr_zelazna_piesc/stoi.webp"
+      ],
+      "typ": "grafika jednostki (stoi), niebieskie tło do wideo",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, z portretem jako odniesieniem",
+      "scenario_asset": "asset_rqtyc6f4brnzmBh5q8vx6vN2",
+      "odniesienie": "asset_vPkYrV5NBveB76NxKrkX3nHW (portret karty)",
+      "prompt": "Use the reference image only for the character design (a huge muscular olive-green ogre with a heavy brow and tusks, wearing dark brown-iron spiked plate armour with red gems, a red cloth sash and iron-gauntleted fists). Draw this same character as a full-body game sprite in a strict side view, standing upright on two legs in a heavy menacing stance, facing right, in a serious painterly realistic style with muted olive-green, grey, brown iron and dark red tones, no blue anywhere on the character. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ogr_zelazna_piesc/martwy",
+      "pliki": [
+        "public/assets/jednostki/ogr_zelazna_piesc/martwy.webp"
+      ],
+      "typ": "grafika jednostki (trup)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, medium, z obrazem stojącym jako odniesieniem",
+      "scenario_asset": "asset_8NvbLuTdp8ZEfQPPMgkARkBr",
+      "odniesienie": "asset_vPkYrV5NBveB76NxKrkX3nHW (portret karty)",
+      "prompt": "The same ogre as in the reference image, now lying still on its back on the ground in a strict side view with its head to the right, eyes closed, arms resting beside the body, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours and size, centred horizontally in the frame, with its body bottom on the same horizontal line as the standing ogre's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ogr_zelazna_piesc/chod",
+      "pliki": [
+        "public/assets/jednostki/ogr_zelazna_piesc/chod.webp"
+      ],
+      "typ": "animacja, pętla chodu (73 kl., 24 kl./s)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_YkEffSU3Zbe4jvRBAc5a85mk",
+      "odniesienie": "asset_vPkYrV5NBveB76NxKrkX3nHW (portret karty)",
+      "prompt": "Side view, locked static camera. The armoured ogre walks in place with a steady heavy walking cycle, legs stepping in turn, arms and shoulders swaying slightly, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ogr_zelazna_piesc/trafienie",
+      "pliki": [
+        "public/assets/jednostki/ogr_zelazna_piesc/trafienie.webp"
+      ],
+      "typ": "animacja trafienia (49 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_fYE3KVQbdPeykW6R4TwpHSJN",
+      "odniesienie": "asset_vPkYrV5NBveB76NxKrkX3nHW (portret karty)",
+      "prompt": "Side view, locked static camera. The armoured ogre standing in place is startled: it flinches and rocks backwards a little, its head jerks up, then it steadies itself and settles back to its standing pose. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ogr_zelazna_piesc/atak",
+      "pliki": [
+        "public/assets/jednostki/ogr_zelazna_piesc/atak.webp"
+      ],
+      "typ": "animacja ataku (49 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, klatka poczatkowa = stoi",
+      "scenario_asset": "asset_ff8nwyZdnh3iPo7DvMrm4axh",
+      "odniesienie": "asset_vPkYrV5NBveB76NxKrkX3nHW (portret karty)",
+      "prompt": "Side view, locked static camera. The ogre leans forward and reaches its arm out towards the right in a wide sweeping motion, then returns to its standing pose. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ogr_zelazna_piesc/smierc",
+      "pliki": [
+        "public/assets/jednostki/ogr_zelazna_piesc/smierc.webp"
+      ],
+      "typ": "smierc (siada i spi, bez klatki koncowej)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, stoi",
+      "scenario_asset": "asset_u5Erf7kAQ5PhYbUvgCfsJyZN",
+      "odniesienie": "asset_vPkYrV5NBveB76NxKrkX3nHW (portret karty)",
+      "prompt": "Side view, locked static camera. The ogre lowers its head and sits down slowly on the ground, rests and falls asleep. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "elf_druid/stoi",
+      "pliki": [
+        "public/assets/jednostki/elf_druid/stoi.webp"
+      ],
+      "typ": "grafika jednostki (stoi), niebieskie tło do wideo",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, z portretem jako odniesieniem",
+      "scenario_asset": "asset_gK49PzWhVvipf5wGDsEMrcYq",
+      "odniesienie": "asset_GJAL9q3eh3bb19vKxCV1pkhp (portret karty)",
+      "prompt": "Use the reference image only for the character design (a young elf druid with long blond hair, pointed ears, a leaf circlet, green forest robes with gold trim, a white tunic, small pink flowers on the clothes, holding a gnarled wooden staff topped with a glowing green orb). Draw this same character as a full-body game sprite in a strict side view, standing upright, facing right, holding the staff in the right hand beside the body, in a serious painterly realistic style with muted green, gold, cream and brown tones, no blue anywhere on the character (turn any blue gems green or gold). The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "elf_druid/martwy",
+      "pliki": [
+        "public/assets/jednostki/elf_druid/martwy.webp"
+      ],
+      "typ": "grafika jednostki (trup)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, medium, z obrazem stojącym jako odniesieniem",
+      "scenario_asset": "asset_YA7Ykf8Quu8EB1MC6Ad8nR6M",
+      "odniesienie": "asset_GJAL9q3eh3bb19vKxCV1pkhp (portret karty)",
+      "prompt": "The same elf druid as in the reference image, now lying still on the ground on her back in a strict side view with her head to the left and feet to the right, eyes closed, arms resting, the staff lying beside her, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with her body bottom on the same horizontal line as the standing figure's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "elf_druid/chod",
+      "pliki": [
+        "public/assets/jednostki/elf_druid/chod.webp"
+      ],
+      "typ": "animacja, pętla chodu (73 kl., 24 kl./s)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_tydyMPqjY2uhAwkLVLMTrPzm",
+      "odniesienie": "asset_GJAL9q3eh3bb19vKxCV1pkhp (portret karty)",
+      "prompt": "Side view, locked static camera. The elf druid walks in place with a steady graceful walking cycle, feet stepping in turn, robe and hair swaying slightly, holding the staff, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "elf_druid/smierc",
+      "pliki": [
+        "public/assets/jednostki/elf_druid/smierc.webp"
+      ],
+      "typ": "animacja śmierci (49 kl.), BEZ klatki końcowej (z lastFrameImage dwa razy zablokowane filtrem)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_eyuJikCLMjNMApWwWwecLCK8",
+      "odniesienie": "asset_GJAL9q3eh3bb19vKxCV1pkhp (portret karty)",
+      "prompt": "Side view, locked static camera. The elf druid lowers the staff, kneels slowly and then lies down on her back on the ground, closing her eyes and resting still. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "elf_druid/trafienie",
+      "pliki": [
+        "public/assets/jednostki/elf_druid/trafienie.webp"
+      ],
+      "typ": "animacja trafienia (49 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_cRzCnkV34fHDVwPQpMZ73Jdj",
+      "odniesienie": "asset_GJAL9q3eh3bb19vKxCV1pkhp (portret karty)",
+      "prompt": "Side view, locked static camera. The elf druid standing in place is startled: she flinches and rocks backwards a little, her head jerks up, then she steadies herself and settles back to her standing pose. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "elf_druid/atak",
+      "pliki": [
+        "public/assets/jednostki/elf_druid/atak.webp"
+      ],
+      "typ": "atak (3 s)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, stoi",
+      "scenario_asset": "asset_5Nv82Qz7jjhi7RoKCzaLiLYq",
+      "odniesienie": "asset_GJAL9q3eh3bb19vKxCV1pkhp (portret karty)",
+      "prompt": "Side view, locked static camera. The elf raises its staff with both hands in front of it towards the right, a gentle green and golden wave of leaves flows out from the staff towards the right, then the elf lowers the staff upright and settles into the standing pose. No blue or cyan colours anywhere. Plain solid blue background stays unchanged, no camera movement.",
       "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"

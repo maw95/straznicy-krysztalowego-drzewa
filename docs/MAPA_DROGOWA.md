@@ -26,12 +26,13 @@ każdy nowy zasób wpisujemy do manifestu (źródło, narzędzie, prompt, licenc
 
 ## Faza B — potok zasobów i pierwsza frakcja w nowej grafice
 
-- [ ] Klip ataku (smok): najpierw decyzja autora, jaki to atak (zionięcie, pazury, ugryzienie).
-- [ ] Pętla chodu dla jednostki naziemnej (test na jednej jednostce Przymierza lub Hordy).
-- [ ] Odniesienia stylu dla mrocznych jednostek (Horda, neutralni): propozycje Claude, ocena autora.
+- [x] Klip ataku (smok): zionięcie (4.11), klip gotowy.
+- [x] Pętla chodu dla jednostki naziemnej: Prastary Niedźwiedź, potem wszystkie chodzące (chód po ścieżce wokół przeszkód).
+- [x] Odniesienia stylu dla mrocznych jednostek: przewodnik `STYL_JEDNOSTEK.md` (do oceny autora); zrobione jednostki Hordy i neutralnych są podstawą oceny.
 - [ ] Trening własnego stylu w Scenario (Pro na jeden miesiąc): najpierw 20–25 obrazów treningowych, potem powrót na Starter.
-- [ ] Manifest zasobów (`assets.json`) i spis licencji wszystkich grafik i muzyki.
-- [ ] Przymierze Świtu w nowej grafice (obrazy, ruch, atak, śmierć, trup); potem Mroczna Horda. Wymiana frakcjami, bez mieszania z figurkami 3D.
+- [x] Manifest zasobów (`assets.json`): wszystkie grafiki i animacje z promptami i ID zasobów. Spis licencji muzyki: do zrobienia.
+- [x] Przymierze Świtu i Mroczna Horda (oraz strażnicy neutralni) w nowej grafice (obrazy, ruch, atak, trafienie, śmierć, trup) w trybie cyfrowym: 16 jednostek, szczegóły i braki w `RAPORT_NOCNY_5_11_2026.md`. Braki do uzupełnienia: klip śmierci Ogra, ataku Elfa i Cyklopa, trafienia Wilkołaka i Hydry (w grze zastępuje je drgnięcie i błysk).
+- [ ] Trening własnego stylu w Scenario (Pro): nie robiony, bo wymaga zmiany planu (decyzja autora).
 - [ ] Dźwięk: próbka efektów i muzyki z ElevenLabs (przed zakupem planu), spis licencji obecnej muzyki.
 
 ## Faza C — mapy i cele (etap 1, poziom 2 „Wyprawa”)
