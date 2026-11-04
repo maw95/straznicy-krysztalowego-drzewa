@@ -6,6 +6,12 @@ export type Mode = 'coop' | 'pvp' | 'arena';
 export type BattleMode = 'arena' | 'board';
 export type Controller = 'human' | 'bot';
 export type InitiativeTieMode = 'rotating' | 'defender';
+/**
+ * `classic` = the board game's rules, frozen (golden.test.ts guards them). `digital` = the extended digital edition
+ * (2-hex units, corpses that stay on the board, new maps and goals). Every change of the digital edition must be
+ * gated with `isDigital(rules)`; a missing field means classic, so old saves and the online server keep working.
+ */
+export type Ruleset = 'classic' | 'digital';
 
 /**
  * Rule switches and TEST parameters. Everything here can change without touching engine code.
@@ -14,6 +20,8 @@ export type InitiativeTieMode = 'rotating' | 'defender';
  * are optional difficulties. All of them mix freely.
  */
 export interface RulesConfig {
+  /** Missing = classic. Read it only through `isDigital`. */
+  ruleset?: Ruleset;
   heroMovePoints: number;
   /** Unit abilities, including the guardians'. */
   abilities: boolean;
@@ -41,6 +49,10 @@ export interface RulesConfig {
    * more total remaining Ż wins and the other side's units fall.
    */
   battleRoundLimit: number;
+}
+
+export function isDigital(rules: Pick<RulesConfig, 'ruleset'>): boolean {
+  return rules.ruleset === 'digital';
 }
 
 export const DEFAULT_RULES: RulesConfig = {
