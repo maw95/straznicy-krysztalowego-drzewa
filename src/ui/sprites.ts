@@ -33,7 +33,7 @@ export const SPRITES: Record<string, SpriteSpec> = {
   caveSpider: { dir: 'jednostki/pajak_jaskiniowy', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   shadowBat: { dir: 'jednostki/nietoperz_cienia', box: SMALL, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   blackDragon: { dir: 'jednostki/czarny_smok', box: LARGE, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  cyclops: { dir: 'jednostki/cyklop', box: LARGE, speed: { chod: 1.4, smierc: 1.5, trafienie: 1.4 } },
+  cyclops: { dir: 'jednostki/cyklop', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   hydra: { dir: 'jednostki/hydra', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   griffin: { dir: 'jednostki/gryf', box: LARGE, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   braveDuck: { dir: 'jednostki/dzielna_kaczka', box: SMALL, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
