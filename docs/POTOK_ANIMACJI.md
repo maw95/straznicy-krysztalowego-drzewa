@@ -7,7 +7,7 @@ Stan na 4.11.2026, po teście na Złotym Smoku. Decyzje: `DECYZJE.md`. Skrypt cz
 - **Stoi:** nieruchomy obraz (bez animacji bezczynności).
 - **Ruch:** jednostka chodząca: pętla chodu (jeden klip). Jednostka latająca: **wzbicie, lot (pętla), lądowanie**; wzbicie i lądowanie
   trwają tyle samo niezależnie od dystansu, pętla lotu jest powtarzana tyle razy, ile trzeba. Prędkość przesuwania po planszy ustala kod.
-- **Atak:** klip (jeszcze nie testowany).
+- **Atak:** klip (3 s, tylko klatka początkowa); jednostka wraca do pozy stojącej, więc klip domyka się sam. Test: zionięcie Złotego Smoka.
 - **Trafienie:** w kodzie (drgnięcie, błysk, cofnięcie); filmik tylko jeśli efekt nie wystarczy (jeszcze nie testowane).
 - **Śmierć:** klip, ostatnia klatka zostaje na planszy jako trup (trup nie zajmuje heksa). Wskrzeszenie = ten sam klip od tyłu.
 - Jednostka jest zwrócona w jedną stronę; druga strona to odbicie lustrzane w kodzie.
@@ -39,6 +39,10 @@ Stan na 4.11.2026, po teście na Złotym Smoku. Decyzje: `DECYZJE.md`. Skrypt cz
   **mimo to nalicza koszt**. Działało: „sinks down heavily”, „settles down”, „defeat animation”, „rears up with a mighty roar”.
 - Plan Starter: 2 równoległe zadania wideo. Ruch w klipach bywa skupiony na początku, potem poza jest statyczna.
 
+- Atak (zionięcie, 4.11): działa za pierwszym razem z samą klatką początkową: wzięcie zamachu głową, wystrzał ognia, powrót do pozy. Ogień
+  jest w klipie (czerwono-pomarańczowy, dobrze się wycina), ale ucina go prawa krawędź kadru: przy następnych klipach ataku dać
+  jednostkę bliżej lewej strony kadru albo ogień dorobić w kodzie (cząsteczki) i prosić model tylko o ruch głowy.
+
 ## Koszty (rzeczywiste)
 
 Obraz Flare 1024 px: `high` ok. 14 CU, `medium` 4 CU. Klip: 5 CU za sekundę (draft 3 CU/s). Test Złotego Smoka kosztował łącznie
@@ -46,6 +50,6 @@ ok. 215 z 1500 CU (w tym kilka nieudanych prób i 2 klipy zablokowane filtrem).
 
 ## Zasoby testu (konto Scenario, zespół `team_zDf2maTQWeujYog6ZCYKPQia`, projekt `proj_uSX9K6bwwMNRjZA1FdLS5Wit`)
 
-Smok stojący na niebieskim: `asset_2F3Uz19Nd1s3DUPbtBFHFP1k`; martwy: `asset_VcfZ5tSUi7CgFx6hQyR9tm8y`; poza lotu A (skrzydła w górze):
+Atak (zionięcie): `asset_Y1RiMpb9834DzTc3aqZ5TjdW` (15 CU, jedna próba). Smok stojący na niebieskim: `asset_2F3Uz19Nd1s3DUPbtBFHFP1k`; martwy: `asset_VcfZ5tSUi7CgFx6hQyR9tm8y`; poza lotu A (skrzydła w górze):
 `asset_M2cndZ3T5VE7p2hFQ1eTrQkt`; wzbicie: `asset_RpGYdAfrRqmiBtfRuUhnWPAm`; lot: `asset_9wWhDweBKfAkRo1MkpdFnMXe`; śmierć:
 `asset_iWH8hy8x76PoBVbEhJ6tf26W`. Lądowanie = wzbicie od tyłu (bez klipu). Licencja: plan płatny, pełna komercyjna (`DECYZJE.md`).

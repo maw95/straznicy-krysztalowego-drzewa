@@ -79,13 +79,16 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
 - **Figurki 3D znikają z wersji komputerowej:** zastępują je grafiki 2D z AI (figurki zostają tylko w wersji planszowej).
   Stare figurki i nowe grafiki nie mogą współistnieć w jednej frakcji, więc wymiana idzie frakcjami, nie pojedynczymi jednostkami.
 
+- **Atak Złotego Smoka: zionięcie ogniem (4.11), klip wygenerowany.** Jedna próba, 15 CU, klatka początkowa = smok stojący, 3 s. Wyszło
+  czytelnie (zamach głową, strumień ognia, powrót do pozy); ogień ucięty przez prawą krawędź kadru. Szczegóły: `POTOK_ANIMACJI.md`.
+
 ## Czekają na decyzję
 
 0. **Przegląd konkurencji na Steamie ręcznie** (tagi Family Friendly, Local Co-Op, Turn-Based Strategy) i test z 5–10 parami
    rodzic + dziecko: odłożone, na razie się tym nie przejmujemy.
 
 
-1. **Dalsze kroki animacji:** klip ataku, test trafienia w kodzie, pętla chodu dla jednostki naziemnej, potem integracja z grą
+1. **Dalsze kroki animacji:** (klip ataku zrobiony), test trafienia w kodzie, pętla chodu dla jednostki naziemnej, potem integracja z grą
    (arkusze klatek, jednostki na 2 heksy, trup bez zajmowania heksa). Potok: `POTOK_ANIMACJI.md`.
 2. **Odniesienia wizualne do mrocznego stylu** dla Hordy i neutralnych: Claude dobiera propozycje, autor ocenia.
    Kierunek: bardziej poważny, mroczny.
