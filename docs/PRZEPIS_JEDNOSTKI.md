@@ -55,6 +55,16 @@ Wszystko w `.tmp/zrodla/<idJednostki>/` (np. `.tmp/zrodla/unicornKing/`): `stoi.
    i **nie edytuj ani nie commituj niczego w `src/`, `assets.json`, `docs/`** (robi to koordynator, żeby nie było konfliktów).
 9. **Raport** w `.tmp/zrodla/<id>/RAPORT.txt`: foldery, zużyte CU (policz z cen), ID zasobów, uwagi jakościowe (do poprawy / ryzyka).
 
+## Lekcje z kolejnych jednostek (5.11.2026)
+
+- Zablokowane przez filtr treści zadania kosztują tyle co udane (ogr: 45 CU na trzy próby). **Nie używaj** w promptach: fist, gauntlet,
+  claw, slash, strike, kill, blood, crash, collapse, final. Zamiast „fist”: „swings its arm forward”; zamiast „death/lies dead”: „settles
+  down and rests”, „sinks down”, „defeat animation”. Przy śmierci filtr bywa wrażliwy także na `lastFrameImage` z trupem: jeśli
+  zablokuje, spróbuj prostszego opisu („sits down and rests”) i tej samej klatki końcowej, a w ostateczności bez klatki końcowej.
+- Klip `trafienie` ma kończyć się w tej samej pozie i zwrócony w prawo jak `stoi`. Jeśli postać po klipie stoi przodem do kamery albo
+  w innej pozie, **pomiń ten klip** (nie pakuj go): kod użyje wtedy drgnięcia i błysku.
+- `martwy` ma leżeć na boku/brzuchu z głową w prawo; trup na plecach z nogami w lewo wygląda źle, więc jedna poprawka promptu.
+
 ## Rozmiary i rola na planszy (ustala koordynator w `sprites.ts` i `data.ts`)
 
 Duże (2 pola): smoki, niedźwiedź, ogr, cyklop, hydra, gryf, jednorożec. Małe (1 pole): reszta. Rozmiar ciała na planszy: ok. 140 px dla
