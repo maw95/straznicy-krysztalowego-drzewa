@@ -72,10 +72,30 @@ describe('wide arena', () => {
   void makeBattleUnit;
 });
 
-const seats = (hero: string): SeatSetup[] => [
+const seats = (hero: string, horde = 'werewolfLord'): SeatSetup[] => [
   { name: 'A', faction: 'dawn', controller: 'bot', heroId: hero },
-  { name: 'B', faction: 'horde', controller: 'bot', heroId: 'werewolfLord' },
+  { name: 'B', faction: 'horde', controller: 'bot', heroId: horde },
 ];
+
+describe('bots with several large units', () => {
+  it('play whole battles when both sides field a large hero, without sharing cells', () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      const o = arenaSetup(seats('ancientBear', 'blackDragon'), seed);
+      // The Black Dragon is made large too, so the battle has two large units besides the supports.
+      const s = createGame({ ...o, rules: { ...o.rules, ruleset: 'digital' } });
+      let steps = 0;
+      while (s.phase !== 'over' && steps++ < 6000) {
+        applyActionInPlace(s, chooseAction(s)!);
+        const seen = new Set<HexKey>();
+        for (const u of Object.values(s.battle?.units ?? {})) {
+          if (!u.alive) continue;
+          for (const c of [u.pos, u.tail]) if (c) (expect(seen.has(c)).toBe(false), seen.add(c));
+        }
+      }
+      expect(s.phase).toBe('over');
+    }
+  });
+});
 
 describe('bots on the wide arena', () => {
   it.each(['goldDragon', 'unicornKing', 'ancientBear', 'braveDuck'])('play whole digital battles with %s without sharing cells', (hero) => {

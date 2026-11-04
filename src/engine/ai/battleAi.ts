@@ -11,13 +11,16 @@ import {
   breathSecondTarget,
   canHitTwo,
   canUseBattleItem,
+  cellsOf,
   deployCells,
   enemiesOf,
+  footprintAt,
   hopCells,
   livingUnits,
   middleDistance,
   reachableCells,
   unitAttackBase,
+  unitDistance,
   unitSpeed,
 } from '../battle';
 import { distance, parseKey, type HexKey } from '../hex';
@@ -25,6 +28,8 @@ import type { Action, BattleUnit, GameState } from '../types';
 import type { ItemKind } from '../data';
 
 const dist = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));
+/** Shortest distance between two sets of cells: a large unit lies on two, so it is as near as its nearer cell. */
+const dist2 = (a: readonly HexKey[], b: readonly HexKey[]) => Math.min(...a.flatMap((x) => b.map((y) => dist(x, y))));
 
 /** The battle bot's judgement in numbers (tuned with simulations; changing one changes the games). */
 const AI_TUNING = {
@@ -112,19 +117,20 @@ function supportValue(id: string): number {
 
 /** Where `u`'s enemies stand, how far they reach next round and how hard they hit. */
 interface Threat {
-  pos: HexKey;
+  /** The cells the enemy lies on. */
+  cells: HexKey[];
   reach: number;
   attack: number;
 }
 
 function threatsTo(state: GameState, u: BattleUnit): Threat[] {
-  return enemiesOf(state.battle!, u).map((e) => ({ pos: e.pos!, reach: unitSpeed(e) + (UNITS[e.defId].attackType === 'ranged' ? AI_TUNING.rangedReach : 1), attack: unitAttackBase(e) }));
+  return enemiesOf(state.battle!, u).map((e) => ({ cells: cellsOf(e), reach: unitSpeed(e) + (UNITS[e.defId].attackType === 'ranged' ? AI_TUNING.rangedReach : 1), attack: unitAttackBase(e) }));
 }
 
 /** Danger of standing on `cell`: how much damage enemies could deal there next round. */
-function danger(threats: Threat[], cell: HexKey): number {
+function danger(threats: Threat[], mine: readonly HexKey[]): number {
   let total = 0;
-  for (const t of threats) if (dist(t.pos, cell) <= t.reach) total += t.attack;
+  for (const t of threats) if (dist2(t.cells, mine) <= t.reach) total += t.attack;
   return total;
 }
 
@@ -149,7 +155,9 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   let best: Plan = { moveTo: null, target: null, second: null, useAbility: false, score: -Infinity };
   for (const [cell, steps] of options) {
     const moved = act.movedDistance + steps;
-    const risk = (danger(threats, cell) / Math.max(1, u.hp)) * caution;
+    // A large unit standing on `cell` also lies on the cell of its tail.
+    const mine = footprintAt(state, u, cell);
+    const risk = (danger(threats, mine) / Math.max(1, u.hp)) * caution;
     const targets = act.attacked || act.moveOnly ? [] : attackTargets(state, u, cell);
     for (const t of targets) {
       for (const useAbility of abilityChoices(state, u)) {
@@ -162,17 +170,17 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
           score += scoreHit(second, dmg);
         }
         if (canHitTwo(state, u)) {
-          second = targets.filter((x) => x.id !== t.id && dist(x.pos!, cell) === 1).sort((x, y) => scoreHit(y, dmg) - scoreHit(x, dmg))[0] ?? null;
+          second = targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), mine) === 1).sort((x, y) => scoreHit(y, dmg) - scoreHit(x, dmg))[0] ?? null;
           if (second) score += scoreHit(second, dmg);
         }
         if (useAbility && ['entanglingRoots', 'curse'].includes(abilityOf(u))) score += AI_TUNING.debuffBonus;
         score -= risk * (ranged ? AI_TUNING.attackRiskRanged : AI_TUNING.attackRiskMelee);
-        if (ranged && targets.some((x) => dist(x.pos!, cell) === 1)) score -= AI_TUNING.rangedCrowded;
+        if (ranged && targets.some((x) => dist2(cellsOf(x), mine) === 1)) score -= AI_TUNING.rangedCrowded;
         if (score > best.score) best = { moveTo: cell === u.pos ? null : cell, target: t, second, useAbility, score };
       }
     }
     // Positional value when not attacking from this cell.
-    const nearest = Math.min(...enemies.map((e) => dist(e.pos!, cell)));
+    const nearest = Math.min(...enemies.map((e) => dist2(cellsOf(e), mine)));
     let pos = ranged ? -Math.abs(nearest - AI_TUNING.rangedDistance) * AI_TUNING.rangedDistanceWeight : -nearest * AI_TUNING.meleeClosing;
     pos -= risk * (ranged ? AI_TUNING.moveRiskRanged : AI_TUNING.moveRiskMelee);
     if (pos > best.score) best = { moveTo: cell === u.pos ? null : cell, target: null, second: null, useAbility: false, score: pos };
@@ -206,7 +214,7 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
   }
   if (ab === 'web') {
     const t = enemiesOf(b, u)
-      .filter((e) => dist(e.pos!, u.pos!) <= ABILITY.webRange)
+      .filter((e) => unitDistance(e, u) <= ABILITY.webRange)
       .sort((x, y) => unitAttackBase(y) - unitAttackBase(x))[0];
     if (t) return { type: 'battleAbility', targetId: t.id };
   }
@@ -319,7 +327,7 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
       second = breathSecondTarget(state, u, t);
       if (!second) useAbility = false;
     }
-    if (canHitTwo(state, u)) second = rulebookTarget(here.filter((x) => x.id !== t.id && dist(x.pos!, u.pos!) === 1));
+    if (canHitTwo(state, u)) second = rulebookTarget(here.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(u)) === 1));
     return { type: 'battleAttack', targetId: t.id, useAbility, secondTargetId: second?.id };
   };
   const now = rulebookTarget(here);
@@ -335,7 +343,7 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
     if (cell) return { type: 'battleMove', to: cell[0] };
   }
   const enemies = enemiesOf(b, u);
-  const gap = (cell: HexKey) => Math.min(...enemies.map((e) => dist(e.pos!, cell)));
+  const gap = (cell: HexKey) => Math.min(...enemies.map((e) => dist2(cellsOf(e), footprintAt(state, u, cell))));
   const closer = cells.filter(([c]) => gap(c) < gap(u.pos!)).sort((x, y) => gap(x[0]) - gap(y[0]) || x[1] - y[1] || (x[0] < y[0] ? -1 : 1))[0];
   return closer ? { type: 'battleMove', to: closer[0] } : { type: 'endActivation' };
 }
@@ -343,7 +351,7 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
 /** Rulebook use of the abilities that need no attack (Pajęcze Sidła): at once, on the rulebook target. */
 function rulebookFreeAbility(state: GameState, u: BattleUnit): Action | null {
   if (u.abilityUsed || !abilityActive(state) || abilityOf(u) !== 'web') return null;
-  const inRange = enemiesOf(state.battle!, u).filter((e) => dist(e.pos!, u.pos!) <= ABILITY.webRange);
+  const inRange = enemiesOf(state.battle!, u).filter((e) => unitDistance(e, u) <= ABILITY.webRange);
   const t = rulebookTarget(inRange);
   return t ? { type: 'battleAbility', targetId: t.id } : null;
 }
@@ -357,7 +365,7 @@ export function chooseBattleAction(state: GameState): Action {
   const u = b.units[act.unitId];
   if (act.hop) {
     const threats = threatsTo(state, u);
-    const cells = hopCells(state, u, act.hop).sort((x, y) => danger(threats, x) - danger(threats, y) || (x < y ? -1 : 1));
+    const cells = hopCells(state, u, act.hop).sort((x, y) => danger(threats, footprintAt(state, u, x)) - danger(threats, footprintAt(state, u, y)) || (x < y ? -1 : 1));
     return cells.length ? { type: 'battleHop', to: cells[0] } : { type: 'endActivation' };
   }
   if (u.side !== 'neutral' && !act.acted) {

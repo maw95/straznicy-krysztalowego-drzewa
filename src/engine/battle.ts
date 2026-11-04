@@ -228,7 +228,7 @@ function fitsAt(state: GameState, u: BattleUnit, head: HexKey): boolean {
 }
 
 /** The cells the unit would cover with its head on `from` (a planned move): head plus the first legal tail. */
-function footprintAt(state: GameState, u: BattleUnit, from: HexKey): HexKey[] {
+export function footprintAt(state: GameState, u: BattleUnit, from: HexKey): HexKey[] {
   if (from === u.pos) return cellsOf(u);
   if (!isLarge(state, u)) return [from];
   const t = tailOptions(state.battle!, u, from)[0];
