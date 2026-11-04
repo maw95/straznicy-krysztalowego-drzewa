@@ -12,11 +12,10 @@ import {
   canHitTwo,
   canUseBattleItem,
   deployCells,
-  cellOf,
   enemiesOf,
   hopCells,
   livingUnits,
-  MIDDLE_HALF,
+  middleDistance,
   reachableCells,
   unitAttackBase,
   unitSpeed,
@@ -273,7 +272,7 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
 function chooseDeployment(state: GameState, faction: FactionId): Action {
   const b = state.battle!;
   const own = Object.values(b.units).filter((u) => u.side === faction);
-  const cells = deployCells(b, faction).sort((x, y) => Math.abs(cellOf(x).half - MIDDLE_HALF) - Math.abs(cellOf(y).half - MIDDLE_HALF));
+  const cells = deployCells(b, faction).sort((x, y) => middleDistance(b, x) - middleDistance(b, y));
   const order = own.slice().sort((x, y) => rank(x) - rank(y));
   const positions: Record<string, HexKey> = {};
   // Melee first takes central cells, shooters the outer ones.

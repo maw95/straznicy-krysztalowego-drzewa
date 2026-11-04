@@ -58,12 +58,53 @@ export function columnCells(col: number): HexKey[] {
   return halves.sort((a, b) => Math.abs(a - MIDDLE_HALF) - Math.abs(b - MIDDLE_HALF) || a - b).map((half) => arenaCell(col, half));
 }
 
-export function arenaObstacles(arena: ArenaId): HexKey[] {
-  return ARENA_OBSTACLES[arena].map(([c, h]) => arenaCell(c, h));
+export function arenaObstacles(arena: ArenaId, layout?: 'wide'): HexKey[] {
+  return layout === 'wide' ? WIDE_OBSTACLES[arena].map(([c, r]) => wideCell(c, r)) : ARENA_OBSTACLES[arena].map(([c, h]) => arenaCell(c, h));
 }
 
 const ARENA_SET = new Set(ARENA_CELLS);
 export const inArena = (k: HexKey) => ARENA_SET.has(k);
+
+// ---------------------------------------------------------------- the digital arena ("wide")
+// Pointy-topped hexes in horizontal rows, like Heroes III: 13 columns × 9 rows, odd rows shifted half a cell to the right
+// (axial q = col − ⌊row / 2⌋). Units fit side by side in a row, so a large unit is simply two neighbours in one row.
+
+export const WIDE_COLUMNS = 13;
+export const WIDE_ROWS = 9;
+export const WIDE_MIDDLE_ROW = 4;
+
+export const wideCell = (col: number, row: number): HexKey => key({ q: col - (row - (row & 1)) / 2, r: row });
+
+/** Column and row of a cell of the wide arena. */
+export function wideCellOf(k: HexKey): { col: number; row: number } {
+  const h = parseKey(k);
+  return { col: h.q + (h.r - (h.r & 1)) / 2, row: h.r };
+}
+
+const WIDE_CELLS: readonly HexKey[] = Object.freeze(Array.from({ length: WIDE_ROWS }, (_, row) => Array.from({ length: WIDE_COLUMNS }, (_, col) => wideCell(col, row))).flat());
+const WIDE_SET = new Set(WIDE_CELLS);
+
+/** Obstacles of the wide arenas, as [col, row]. The start columns 0 and 12 and the columns next to them (where a large unit's head lies) stay free; every free cell stays reachable. */
+export const WIDE_OBSTACLES: Record<ArenaId, Array<[number, number]>> = {
+  dawn: [[2, 1], [10, 1], [6, 1], [4, 3], [8, 3], [6, 4], [4, 5], [8, 5], [2, 7], [10, 7], [6, 7]],
+  horde: [[3, 2], [9, 2], [6, 2], [5, 4], [7, 4], [3, 6], [9, 6], [6, 6], [2, 4], [10, 4]],
+};
+
+/** Every cell of the arena of this battle (shared: never change the list). */
+export const layoutCells = (b: Pick<BattleState, 'layout'>): readonly HexKey[] => (b.layout === 'wide' ? WIDE_CELLS : ARENA_CELLS);
+export const inLayout = (b: Pick<BattleState, 'layout'>, k: HexKey): boolean => (b.layout === 'wide' ? WIDE_SET : ARENA_SET).has(k);
+
+/** How far a cell lies from the middle row (the rows next to it first): the order units are deployed in. */
+export function middleDistance(b: Pick<BattleState, 'layout'>, k: HexKey): number {
+  return b.layout === 'wide' ? Math.abs(wideCellOf(k).row - WIDE_MIDDLE_ROW) : Math.abs(cellOf(k).half - MIDDLE_HALF);
+}
+
+/** Cells of one column of the wide arena, from the middle row outwards. */
+function wideColumnCells(col: number): HexKey[] {
+  return Array.from({ length: WIDE_ROWS }, (_, row) => row)
+    .sort((a, b) => Math.abs(a - WIDE_MIDDLE_ROW) - Math.abs(b - WIDE_MIDDLE_ROW) || a - b)
+    .map((row) => wideCell(col, row));
+}
 
 const OBSTACLE_SETS = new WeakMap<HexKey[], Set<HexKey>>();
 
@@ -100,6 +141,7 @@ function occupancy(b: BattleState, skip?: BattleUnit): Map<HexKey, BattleUnit> {
  * its facing unless the move turns it (a move to the right faces right, the tail trails on the left).
  */
 export function tailOptions(b: BattleState, u: BattleUnit, head: HexKey, units: Map<HexKey, BattleUnit> = occupancy(b, u)): HexKey[] {
+  if (b.layout === 'wide') return wideTailOptions(b, u, head, units);
   const { col, half } = cellOf(head);
   let prefer = u.side === b.attacker ? -1 : 1;
   if (u.pos && u.tail) prefer = Math.sign(cellOf(u.tail).col - cellOf(u.pos).col) || prefer;
@@ -116,6 +158,23 @@ export function tailOptions(b: BattleState, u: BattleUnit, head: HexKey, units: 
     }
   }
   return out;
+}
+
+/**
+ * Wide arena: the tail lies in the same row, right or left of the head. The side it already lies on comes first, and a move
+ * turns the unit the way it goes (a move to the right trails the tail on the left), so the second option is the turn.
+ */
+function wideTailOptions(b: BattleState, u: BattleUnit, head: HexKey, units: Map<HexKey, BattleUnit>): HexKey[] {
+  const h = parseKey(head);
+  const x = (k: { q: number; r: number }) => k.q + k.r / 2;
+  let prefer = u.side === b.attacker ? -1 : 1;
+  if (u.pos && u.tail) prefer = Math.sign(x(parseKey(u.tail)) - x(parseKey(u.pos))) || prefer;
+  if (u.pos && u.pos !== head) {
+    const dx = x(h) - x(parseKey(u.pos));
+    if (Math.abs(dx) > 0.01) prefer = -Math.sign(dx);
+  }
+  const obstacles = obstacleSet(b);
+  return [prefer, -prefer].map((d) => key({ q: h.q + d, r: h.r })).filter((k) => WIDE_SET.has(k) && !obstacles.has(k) && !units.has(k));
 }
 
 /** Puts the unit's head on `head` (and for a large unit its tail on `tail`, or the first legal tail). False when it does not fit. */
@@ -237,7 +296,7 @@ function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number
     const d = dist.get(cur)!;
     if (d >= range) continue;
     for (const n of neighborKeys(cur)) {
-      if (!inArena(n) || obstacles.has(n) || dist.has(n)) continue;
+      if (!inLayout(b, n) || obstacles.has(n) || dist.has(n)) continue;
       if (units.has(n)) continue;
       dist.set(n, d + 1);
       parent.set(n, cur);
@@ -260,7 +319,7 @@ export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, num
   const large = isLarge(state, u);
   const roomy = (k: HexKey) => !large || tailOptions(b, u, k, units).length > 0;
   if (UNITS[u.defId].movement === 'fly') {
-    for (const k of ARENA_CELLS) {
+    for (const k of layoutCells(b)) {
       if (k === u.pos || obstacles.has(k) || occupant(k)) continue;
       const d = distance(parseKey(u.pos), parseKey(k));
       if (d <= range && roomy(k)) out.set(k, d);
@@ -364,7 +423,7 @@ export function pushCell(state: GameState, from: HexKey, target: HexKey): HexKey
   const cell = path[distance(a, t) + 1];
   if (!cell) return null;
   const k = key(cell);
-  if (!inArena(k) || b.obstacles.includes(k) || unitAt(b, k)) return null;
+  if (!inLayout(b, k) || b.obstacles.includes(k) || unitAt(b, k)) return null;
   return k;
 }
 /** Abilities used as a free action during the unit's activation. */
@@ -393,11 +452,14 @@ function beginFight(state: GameState) {
 
 /** Cells a side may deploy on: its edge column, minus obstacles. */
 export function deployCells(b: BattleState, side: Side): HexKey[] {
-  return columnCells(side === b.attacker ? 0 : ARENA_COLUMNS - 1).filter((k) => !b.obstacles.includes(k));
+  const wide = b.layout === 'wide';
+  const col = side === b.attacker ? 0 : (wide ? WIDE_COLUMNS : ARENA_COLUMNS) - 1;
+  return (wide ? wideColumnCells(col) : columnCells(col)).filter((k) => !b.obstacles.includes(k));
 }
 
 /** Duel spots: the two leaders on neighbouring cells in the middle. */
-const duelSpot = (b: BattleState, side: Side) => (side === b.attacker ? arenaCell(5, 9) : arenaCell(6, 10));
+const duelSpot = (b: BattleState, side: Side) =>
+  b.layout === 'wide' ? wideCell(side === b.attacker ? 6 : 7, WIDE_MIDDLE_ROW) : side === b.attacker ? arenaCell(5, 9) : arenaCell(6, 10);
 
 /**
  * The cell a unit holds in its side's start column. For a large unit that is its tail: the head lies one column
@@ -407,8 +469,13 @@ export const deployCellOf = (u: BattleUnit): HexKey | null => u.tail ?? u.pos;
 
 /** Head cells for a large unit whose tail lies on the deploy cell `k` of its side, nearest the middle row first. */
 export function deployHeads(b: BattleState, side: Side, k: HexKey): HexKey[] {
-  const { col, half } = cellOf(k);
   const towards = side === b.attacker ? 1 : -1;
+  if (b.layout === 'wide') {
+    const h = parseKey(k);
+    const head = key({ q: h.q + towards, r: h.r });
+    return WIDE_SET.has(head) && !b.obstacles.includes(head) ? [head] : [];
+  }
+  const { col, half } = cellOf(k);
   return [half - 1, half + 1]
     .sort((x, y) => Math.abs(x - MIDDLE_HALF) - Math.abs(y - MIDDLE_HALF) || x - y)
     .map((h) => arenaCell(col + towards, h))
@@ -787,7 +854,7 @@ export function hopCells(state: GameState, u: BattleUnit, range: number): HexKey
   const b = state.battle!;
   const obstacles = obstacleSet(b);
   const units = occupancy(b, u);
-  return ARENA_CELLS.filter((k) => !obstacles.has(k) && !units.has(k) && u.pos && distance(parseKey(u.pos), parseKey(k)) <= range && k !== u.pos && fitsAt(state, u, k));
+  return layoutCells(b).filter((k) => !obstacles.has(k) && !units.has(k) && u.pos && distance(parseKey(u.pos), parseKey(k)) <= range && k !== u.pos && fitsAt(state, u, k));
 }
 
 export function battleHop(state: GameState, to: HexKey) {
@@ -848,7 +915,7 @@ function nearestFreeCell(state: GameState, u: BattleUnit, from: HexKey): HexKey 
   const o = parseKey(from);
   let best: HexKey | null = null;
   let bestD = Infinity;
-  for (const k of ARENA_CELLS) {
+  for (const k of layoutCells(b)) {
     if (b.obstacles.includes(k) || unitAt(b, k) || !fitsAt(state, u, k)) continue;
     const d = distance(o, parseKey(k));
     if (d < bestD) (best = k), (bestD = d);
@@ -956,7 +1023,7 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     const { b, args } = use;
     const t = ownLiving(use, args.targetId);
     const to = args.to;
-    if (!to || !inArena(to) || unitAt(b, to) || b.obstacles.includes(to)) throw new Error('Wybierz wolne pole.');
+    if (!to || !inLayout(b, to) || unitAt(b, to) || b.obstacles.includes(to)) throw new Error('Wybierz wolne pole.');
     if (!alliesOf(b, t).some((a) => cellsOf(a).some((c) => adjacent(c, to)))) throw new Error('Pole musi sąsiadować z sojusznikiem.');
     if (!placeUnit(use.state, t, to)) throw new Error('Jednostka nie zmieści się na tym polu.');
   },

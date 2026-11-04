@@ -1,6 +1,6 @@
 // Digital ruleset: large units (2 cells, head + tail).
 import { describe, expect, it } from 'vitest';
-import { arenaCell, battleAttack, battleItem, battleMove, cellsOf, dealDamage, reachableCells, tailOptions, unitAt, attackTargets } from '../src/engine/battle';
+import { arenaCell, wideCell, wideCellOf, battleAttack, battleItem, battleMove, cellsOf, dealDamage, reachableCells, tailOptions, unitAt, attackTargets } from '../src/engine/battle';
 import { applyActionInPlace, createGame } from '../src/engine/game';
 import { distance, parseKey } from '../src/engine/hex';
 import { chooseAction } from '../src/engine/ai';
@@ -118,8 +118,10 @@ describe('large units in a bot battle', () => {
       const s = playUntil(digitalArena(seed), (x) => x.battle?.stage === 'deploy');
       const d = s.battle!.units.goldDragon;
       const left = s.battle!.attacker === 'dawn';
-      expect(parseKey(d.tail!).q).toBe(left ? 0 : 12);
-      expect(parseKey(d.pos!).q).toBe(left ? 1 : 11);
+      expect(s.battle!.layout).toBe('wide');
+      expect(wideCellOf(d.tail!).col).toBe(left ? 0 : 12);
+      expect(wideCellOf(d.pos!).col).toBe(left ? 1 : 11);
+      expect(wideCellOf(d.pos!).row).toBe(wideCellOf(d.tail!).row);
       expect(distance(parseKey(d.pos!), parseKey(d.tail!))).toBe(1);
     }
   });
@@ -129,9 +131,9 @@ describe('large units in a bot battle', () => {
     const seed = [1, 2, 3, 4, 5, 6, 7, 8].find((n) => digitalArena(n).battle!.attacker === 'dawn')!;
     const s = playUntil(digitalArena(seed), (x) => x.battle?.stage === 'deploy');
     const b = s.battle!;
-    applyActionInPlace(s, { type: 'deployUnits', faction: 'dawn', positions: { goldDragon: arenaCell(0, 4) } });
-    expect(b.units.goldDragon.tail).toBe(arenaCell(0, 4));
-    expect(b.units.goldDragon.pos).toBe(arenaCell(1, 5));
+    applyActionInPlace(s, { type: 'deployUnits', faction: 'dawn', positions: { goldDragon: wideCell(0, 1) } });
+    expect(b.units.goldDragon.tail).toBe(wideCell(0, 1));
+    expect(b.units.goldDragon.pos).toBe(wideCell(1, 1));
   });
 
   it('play whole battles without two units ever sharing a cell', () => {

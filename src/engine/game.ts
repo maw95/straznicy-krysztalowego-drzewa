@@ -42,7 +42,7 @@ import { distance, parseKey, type HexKey } from './hex';
 import { generateMap, homeKey, mapNeighbors, revealAround, tileCost, treeKey } from './map';
 import { log } from './log';
 import { Rng } from './rng';
-import type { Action, BattleReport, BattleState, GameState, HeroState, ItemInstance, Player, SetupOptions } from './types';
+import { isDigital, type Action, BattleReport, BattleState, GameState, HeroState, ItemInstance, Player, SetupOptions } from './types';
 
 export const other = (f: FactionId): FactionId => (f === 'dawn' ? 'horde' : 'dawn');
 
@@ -197,7 +197,7 @@ function startArena(state: GameState) {
   startBattle(state, { kind: 'heroes', attackerHero: hero(first).id, defenderHero: hero(second).id, mapHex: hero(first).pos, from: hero(first).pos });
   const b = state.battle!;
   b.arena = arena;
-  b.obstacles = arenaObstacles(arena);
+  b.obstacles = arenaObstacles(arena, b.layout);
 }
 
 /** The next three cards for the picker: the deck is shuffled and the first three different kinds are shown. */
@@ -664,7 +664,8 @@ function startBattle(state: GameState, s: BattleStart) {
     stage: 'select',
     needsDeploy: [],
     needsSelection: [],
-    obstacles: state.setup.battleMode === 'board' ? [] : arenaObstacles(state.tiles[s.mapHex].side),
+    ...(isDigital(state.rules) ? { layout: 'wide' as const } : {}),
+    obstacles: state.setup.battleMode === 'board' ? [] : arenaObstacles(state.tiles[s.mapHex].side, isDigital(state.rules) ? 'wide' : undefined),
     units: {},
     round: 0,
     order: [],

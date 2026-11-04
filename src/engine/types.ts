@@ -237,6 +237,8 @@ export interface Activation {
 
 export interface BattleState {
   kind: 'heroes' | 'neutral';
+  /** Arena shape: missing = the classic painted arena (flat-topped hexes in columns); 'wide' = the digital one (pointy-topped hexes in rows, 13 × 9). */
+  layout?: 'wide';
   /**
    * Board variant: a 1-on-1 duel fought on the adventure map. Only the two leaders
    * take part (no supports), they stand next to each other and nobody moves.

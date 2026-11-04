@@ -45,3 +45,16 @@ Złoty Smok (wzorzec). W pojedynku na mapie (`duel`) wszystkie jednostki zajmuj�
   (kolejne z do czterech możliwych, najpierw po tej samej stronie), lewy wykonuje ruch z wybranym ogonem.
 - Przy rozstawieniu klika się pole **ogona** w kolumnie startowej (głowa leży kolumnę dalej); ten sam klik wybiera jednostkę.
 - Kliknięcie któregokolwiek z dwóch pól jednostki wybiera ją albo ją atakuje (przez pole planszy, bo żeton jest mały).
+
+## Arena cyfrowa: poziome heksy 13 × 9 (5.11.2026)
+
+W trybie `digital` bitwa toczy się na **innej planszy** niż klasyczna (`BattleState.layout: 'wide'`); klasyczna zostaje bez zmian.
+- Heksy ułożone jak w Heroes III: **poziome rzędy** (heks „na czubku”), 13 kolumn × 9 rzędów = 117 pól, co drugi rząd przesunięty
+  o pół pola w prawo. Środkowy rząd to 4.
+- Kolumny startowe: skrajna lewa (atakujący) i skrajna prawa (broniący), po 9 pól; jednostki stają od środkowego rzędu w obie strony.
+- Przeszkody: osobne zestawy dla obu aren (Przymierza i Hordy), ok. 10 pól każdy; kolumny 0, 1, 11, 12 zawsze wolne (w kolumnie 1/11
+  leży głowa dużej jednostki rozstawionej w kolumnie startowej), a wszystkie wolne pola są osiągalne (test).
+- **Duża jednostka leży w jednym rzędzie:** ogon na polu po lewej albo po prawej od głowy. Wybór ogona to wybór strony: pierwsza
+  opcja to ta sama strona co dotąd (ruch w prawo ustawia ogon po lewej), druga to obrót jednostki. W rozstawieniu ogon leży na polu
+  kolumny startowej, głowa w tym samym rzędzie, kolumnę dalej.
+- Pojedynek na mapie (`duel`): dwie jednostki na sąsiednich polach środkowego rzędu.
