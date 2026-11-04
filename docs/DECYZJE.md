@@ -51,6 +51,10 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
   (ok. 2 CU za obraz 1024 px, jakość „high”, tło „transparent”) daje czysty PNG z prawdziwą przezroczystością, bez wycinania tła.
   Na arenie sylwetka jest czytelna już w rozmiarze jednego pola, a złoto dobrze odcina się od ciemnej areny. Droższy model
   (Sunburst, ok. 12 CU) niepotrzebny na razie. Otwarte: spójność całej frakcji (trening stylu na Pro) i animacja.
+- **Animacja przez deformację jednego obrazu: odrzucona (4.11).** Siatka 32×32 z ruchem skrzydeł, ogona i głowy na pojedynczym
+  PNG daje rozciąganie rogów, łap i ogona (ogon schowany pod skrzydłem się wydłuża i kurczy), bo obraz nie ma osobnych części.
+  Poprawki masek nie pomogły. Nie wracamy do tej metody. Do sprawdzenia: postać w osobnych warstwach (skrzydła, tułów, głowa,
+  ogon) animowana jak lalka, z warstwami z generatora AI (edycja obrazu) lub z ręcznej separacji.
 - **Duże jednostki zajmują 2 heksy** (jak w Heroesach); jednostka może być większa niż pole. Mechanika zajmowania dwóch pól
   do zaprojektowania osobno (zasady planszówki zamrożone w trybie „Klasycznym”).
 - **Widok z boku** (jak postacie w Heroes III) jest w porządku; nie dążymy do widoku z góry.
@@ -63,7 +67,7 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
    rodzic + dziecko: odłożone, na razie się tym nie przejmujemy.
 
 
-1. **Test animacji proceduralnej na Złotym Smoku** (cięcie na części, ruch w przeglądarce): następny krok po teście grafiki.
+1. **Animacja jednostek 2D z osobnych warstw:** test na Złotym Smoku (patrz „Podjęte 4.11”); wybór metody czeka na decyzję.
 2. **Odniesienia wizualne do mrocznego stylu** dla Hordy i neutralnych: Claude dobiera propozycje, autor ocenia.
    Kierunek: bardziej poważny, mroczny.
 
