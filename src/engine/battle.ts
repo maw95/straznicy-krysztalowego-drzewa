@@ -74,11 +74,86 @@ function obstacleSet(b: BattleState): Set<HexKey> {
   return set;
 }
 
-/** Living units by cell, for searches that look up many cells (the first listed, as unitAt finds it). */
-function occupancy(b: BattleState): Map<HexKey, BattleUnit> {
+/** The cells a living unit lies on: its head, and for a large unit (digital ruleset) its tail. */
+export function cellsOf(u: BattleUnit): HexKey[] {
+  return u.pos ? (u.tail ? [u.pos, u.tail] : [u.pos]) : [];
+}
+
+/** Digital ruleset: whether the unit lies on two cells (head + tail). Duels never use large units. */
+export function isLarge(state: GameState, u: BattleUnit): boolean {
+  return isDigital(state.rules) && UNITS[u.defId].size === 2 && !state.battle?.duel;
+}
+
+/** Living units by cell, for searches that look up many cells (the first listed, as unitAt finds it); `skip` leaves one unit out. */
+function occupancy(b: BattleState, skip?: BattleUnit): Map<HexKey, BattleUnit> {
   const out = new Map<HexKey, BattleUnit>();
-  for (const u of Object.values(b.units)) if (u.alive && u.pos && !out.has(u.pos)) out.set(u.pos, u);
+  for (const u of Object.values(b.units)) {
+    if (!u.alive || u === skip) continue;
+    for (const c of cellsOf(u)) if (!out.has(c)) out.set(c, u);
+  }
   return out;
+}
+
+/**
+ * Cells where the tail of a large unit may lie when its head is on `head`: the four neighbours in the next columns
+ * (column ±1, half-row ±1), free of obstacles and other units. The side it already lies on comes first, so a unit keeps
+ * its facing unless the move turns it (a move to the right faces right, the tail trails on the left).
+ */
+export function tailOptions(b: BattleState, u: BattleUnit, head: HexKey, units: Map<HexKey, BattleUnit> = occupancy(b, u)): HexKey[] {
+  const { col, half } = cellOf(head);
+  let prefer = u.side === b.attacker ? -1 : 1;
+  if (u.pos && u.tail) prefer = Math.sign(cellOf(u.tail).col - cellOf(u.pos).col) || prefer;
+  if (u.pos && u.pos !== head) {
+    const dc = col - cellOf(u.pos).col;
+    if (dc) prefer = -Math.sign(dc);
+  }
+  const obstacles = obstacleSet(b);
+  const out: HexKey[] = [];
+  for (const side of [prefer, -prefer]) {
+    for (const dh of [-1, 1]) {
+      const k = arenaCell(col + side, half + dh);
+      if (inArena(k) && !obstacles.has(k) && !units.has(k)) out.push(k);
+    }
+  }
+  return out;
+}
+
+/** Puts the unit's head on `head` (and for a large unit its tail on `tail`, or the first legal tail). False when it does not fit. */
+function placeUnit(state: GameState, u: BattleUnit, head: HexKey, tail?: HexKey): boolean {
+  if (!isLarge(state, u)) {
+    u.pos = head;
+    delete u.tail;
+    return true;
+  }
+  const options = tailOptions(state.battle!, u, head);
+  const t = tail && options.includes(tail) ? tail : options[0];
+  if (!t) return false;
+  u.pos = head;
+  u.tail = t;
+  return true;
+}
+
+/** Whether a unit could stand with its head on `head` (always for a small one). */
+function fitsAt(state: GameState, u: BattleUnit, head: HexKey): boolean {
+  return !isLarge(state, u) || tailOptions(state.battle!, u, head).length > 0;
+}
+
+/** The cells the unit would cover with its head on `from` (a planned move): head plus the first legal tail. */
+function footprintAt(state: GameState, u: BattleUnit, from: HexKey): HexKey[] {
+  if (from === u.pos) return cellsOf(u);
+  if (!isLarge(state, u)) return [from];
+  const t = tailOptions(state.battle!, u, from)[0];
+  return t ? [from, t] : [from];
+}
+
+/** A fallen unit leaves the board (its cells become free) and, in the digital ruleset, a corpse where it lay. */
+function removeFromBoard(state: GameState, u: BattleUnit, corpse: boolean) {
+  if (corpse && isDigital(state.rules) && u.pos) {
+    u.corpse = u.pos;
+    if (u.tail) u.corpseTail = u.tail;
+  }
+  u.pos = null;
+  delete u.tail;
 }
 
 const SIGHT_LINES = new Map<string, readonly HexKey[]>();
@@ -117,7 +192,7 @@ export function livingUnits(b: BattleState, side?: Side): BattleUnit[] {
 }
 
 export function unitAt(b: BattleState, k: HexKey): BattleUnit | undefined {
-  return Object.values(b.units).find((u) => u.alive && u.pos === k);
+  return Object.values(b.units).find((u) => u.alive && (u.pos === k || u.tail === k));
 }
 
 export function enemiesOf(b: BattleState, u: BattleUnit): BattleUnit[] {
@@ -153,7 +228,7 @@ function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number
   const b = state.battle!;
   const range = moveRange(u);
   const obstacles = obstacleSet(b);
-  const units = occupancy(b);
+  const units = occupancy(b, u);
   const dist = new Map<HexKey, number>([[u.pos!, 0]]);
   const parent = new Map<HexKey, HexKey>();
   const queue = [u.pos!];
@@ -179,17 +254,20 @@ export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, num
   if (!u.pos || b.duel) return out;
   const range = moveRange(u);
   const obstacles = obstacleSet(b);
-  const units = occupancy(b);
+  const units = occupancy(b, u);
   const occupant = (k: HexKey) => units.get(k);
+  // A large unit needs room for its tail as well: the head may only go where some tail cell is free.
+  const large = isLarge(state, u);
+  const roomy = (k: HexKey) => !large || tailOptions(b, u, k, units).length > 0;
   if (UNITS[u.defId].movement === 'fly') {
     for (const k of ARENA_CELLS) {
       if (k === u.pos || obstacles.has(k) || occupant(k)) continue;
       const d = distance(parseKey(u.pos), parseKey(k));
-      if (d <= range) out.set(k, d);
+      if (d <= range && roomy(k)) out.set(k, d);
     }
     return out;
   }
-  for (const [k, d] of walkSearch(state, u).dist) if (d > 0 && !occupant(k)) out.set(k, d);
+  for (const [k, d] of walkSearch(state, u).dist) if (d > 0 && !occupant(k) && roomy(k)) out.set(k, d);
   return out;
 }
 
@@ -217,15 +295,25 @@ export function hasLineOfSight(state: GameState, from: HexKey, to: HexKey): bool
 
 const adjacent = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b)) === 1;
 
+/** Distance between two units: the shortest distance between any of their cells. */
+export function unitDistance(a: BattleUnit, b: BattleUnit): number {
+  let best = Infinity;
+  for (const x of cellsOf(a)) for (const y of cellsOf(b)) best = Math.min(best, distance(parseKey(x), parseKey(y)));
+  return best;
+}
+
+const unitsAdjacent = (a: BattleUnit, b: BattleUnit) => unitDistance(a, b) === 1;
+
 /** Legal attack targets from the unit's current position. */
 export function attackTargets(state: GameState, u: BattleUnit, from: HexKey | null = u.pos): BattleUnit[] {
   const b = state.battle!;
   if (!from) return [];
   const enemies = enemiesOf(b, u);
-  const near = enemies.filter((e) => adjacent(from, e.pos!));
+  const mine = footprintAt(state, u, from);
+  const near = enemies.filter((e) => cellsOf(e).some((c) => mine.some((m) => adjacent(m, c))));
   if (UNITS[u.defId].attackType === 'melee') return near;
   if (near.length) return near;
-  return enemies.filter((e) => hasLineOfSight(state, from, e.pos!));
+  return enemies.filter((e) => cellsOf(e).some((c) => hasLineOfSight(state, from, c)));
 }
 
 /**
@@ -239,7 +327,7 @@ export function breathSecondTarget(state: GameState, u: BattleUnit, first: Battl
   if (!dir) return null;
   const behind = key(add(parseKey(first.pos), dir));
   const other = unitAt(b, behind);
-  return other && other.side !== u.side ? other : null;
+  return other && other.id !== first.id && other.side !== u.side ? other : null;
 }
 
 /** Expected damage of a plain attack, before the defender's reactions. */
@@ -287,7 +375,7 @@ export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web'];
 /** After support selection: default placement, then each faction may rearrange (attacker first). */
 export function startBattleFight(state: GameState) {
   const b = state.battle!;
-  deploy(b);
+  deploy(state);
   b.needsDeploy = b.duel ? [] : ([b.attacker, b.defender].filter((s) => s !== 'neutral') as FactionId[]);
   if (b.needsDeploy.length) {
     b.stage = 'deploy';
@@ -311,25 +399,56 @@ export function deployCells(b: BattleState, side: Side): HexKey[] {
 /** Duel spots: the two leaders on neighbouring cells in the middle. */
 const duelSpot = (b: BattleState, side: Side) => (side === b.attacker ? arenaCell(5, 9) : arenaCell(6, 10));
 
+/**
+ * The cell a unit holds in its side's start column. For a large unit that is its tail: the head lies one column
+ * further towards the enemy (so a unit placed in column 0 faces right and one in column 12 faces left).
+ */
+export const deployCellOf = (u: BattleUnit): HexKey | null => u.tail ?? u.pos;
+
+/** Head cells for a large unit whose tail lies on the deploy cell `k` of its side, nearest the middle row first. */
+function deployHeads(b: BattleState, side: Side, k: HexKey): HexKey[] {
+  const { col, half } = cellOf(k);
+  const towards = side === b.attacker ? 1 : -1;
+  return [half - 1, half + 1]
+    .sort((x, y) => Math.abs(x - MIDDLE_HALF) - Math.abs(y - MIDDLE_HALF) || x - y)
+    .map((h) => arenaCell(col + towards, h))
+    .filter((c) => inArena(c) && !b.obstacles.includes(c));
+}
+
 export function deployUnits(state: GameState, faction: FactionId, positions: Record<string, HexKey>) {
   const b = state.battle!;
   if (b.stage !== 'deploy' || b.needsDeploy[0] !== faction) throw new Error('Teraz nie ustawia ta frakcja.');
   const own = Object.values(b.units).filter((u) => u.side === faction);
   const allowed = new Set(deployCells(b, faction));
-  const used = new Set<HexKey>();
+  // Cells already taken by the other side count too (a large unit's head reaches into the next column).
+  const used = new Set<HexKey>(Object.values(b.units).filter((u) => u.side !== faction).flatMap(cellsOf));
+  const placed = new Map<string, { pos: HexKey; tail?: HexKey }>();
   for (const u of own) {
-    const k = positions[u.id] ?? u.pos;
+    const k = positions[u.id] ?? deployCellOf(u);
     if (!k || !allowed.has(k)) throw new Error('Jednostki można ustawić tylko w swojej skrajnej kolumnie.');
     if (used.has(k)) throw new Error('Dwie jednostki nie mogą stać na jednym polu.');
     used.add(k);
+    if (isLarge(state, u)) {
+      const keep = u.pos && u.tail === k && !used.has(u.pos) ? [u.pos] : [];
+      const head = [...keep, ...deployHeads(b, faction, k)].find((c) => !used.has(c));
+      if (!head) throw new Error('Duża jednostka nie zmieści się na tym polu.');
+      used.add(head);
+      placed.set(u.id, { pos: head, tail: k });
+    } else placed.set(u.id, { pos: k });
   }
-  for (const u of own) u.pos = positions[u.id] ?? u.pos;
+  for (const u of own) {
+    const at = placed.get(u.id)!;
+    u.pos = at.pos;
+    if (at.tail) u.tail = at.tail;
+    else delete u.tail;
+  }
   b.needsDeploy.shift();
   log(state, 'battle', `${FACTION_NAMES[faction]} ustawia swoje jednostki.`);
   if (!b.needsDeploy.length) beginFight(state);
 }
 
-function deploy(b: BattleState) {
+function deploy(state: GameState) {
+  const b = state.battle!;
   if (b.duel) {
     // Duel: the two leaders face each other on neighbouring cells.
     for (const u of Object.values(b.units)) u.pos = duelSpot(b, u.side);
@@ -340,7 +459,22 @@ function deploy(b: BattleState) {
     const units = Object.values(b.units).filter((u) => u.side === side);
     // Hero (or guardian) in the middle, supports above and below.
     units.sort((x, y) => (UNITS[x.defId].kind === 'support' ? 1 : 0) - (UNITS[y.defId].kind === 'support' ? 1 : 0));
-    units.forEach((u, i) => (u.pos = cells[i]));
+    const taken = new Set<HexKey>();
+    units.forEach((u, i) => {
+      if (isLarge(state, u)) {
+        // Tail on the deploy cell, head one column towards the enemy (first free of the two).
+        const head = deployHeads(b, side, cells[i]).find((c) => !taken.has(c));
+        u.tail = cells[i];
+        u.pos = head ?? cells[i];
+        if (!head) delete u.tail;
+        taken.add(u.pos);
+        if (u.tail) taken.add(u.tail);
+      } else {
+        u.pos = cells[i];
+        delete u.tail;
+        taken.add(cells[i]);
+      }
+    });
   }
 }
 
@@ -357,7 +491,7 @@ function beginRound(state: GameState, round: number) {
     log(state, 'battle', 'Bitwa trwa zbyt długo — strona z mniejszą sumą Ż przegrywa.');
     for (const x of livingUnits(b, loser)) {
       x.alive = false;
-      x.pos = null;
+      removeFromBoard(state, x, false);
     }
     checkBattleEnd(state);
     return;
@@ -442,8 +576,7 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
   if (target.hp <= 0) {
     target.hp = 0;
     target.alive = false;
-    if (isDigital(state.rules) && target.pos) target.corpse = target.pos;
-    target.pos = null;
+    removeFromBoard(state, target, true);
     log(state, 'death', `${unitName(target)} poległ(a).`);
   }
 }
@@ -451,7 +584,7 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
 /** Opiekun Gaju: whether `bear` can still take the blow aimed at `x` (itself, or an ally next to it). */
 export function bearCanGuard(state: GameState, bear: BattleUnit, x: BattleUnit): boolean {
   if (abilityOf(bear) !== 'guardian' || bear.abilityUsed || !abilityActive(state)) return false;
-  return bear.id === x.id || (!!bear.pos && !!x.pos && adjacent(bear.pos, x.pos));
+  return bear.id === x.id || (!!bear.pos && !!x.pos && unitsAdjacent(bear, x));
 }
 
 export interface DamagePrediction {
@@ -555,7 +688,7 @@ function recordRoll(state: GameState, att: BattleUnit, victim: BattleUnit, attac
 
 // ---------------------------------------------------------------- actions
 
-export function battleMove(state: GameState, to: HexKey) {
+export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   const b = state.battle!;
   const act = b.activation!;
   const u = b.units[act.unitId];
@@ -563,7 +696,8 @@ export function battleMove(state: GameState, to: HexKey) {
   const cells = reachableCells(state, u);
   const steps = cells.get(to);
   if (steps === undefined) throw new Error('Pole poza zasięgiem ruchu.');
-  u.pos = to;
+  if (tail && isLarge(state, u) && !tailOptions(b, u, to).includes(tail)) throw new Error('Ogon nie zmieści się na tym polu.');
+  placeUnit(state, u, to, tail);
   act.moved = true;
   act.acted = true;
   act.movedDistance = steps;
@@ -591,7 +725,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   if (secondTargetId && !(canUse && ab === 'fireBreath')) {
     const second = b.units[secondTargetId];
     if (!canHitTwo(state, u)) throw new Error('Ta jednostka atakuje jeden cel.');
-    if (!second || second.id === target.id || !adjacent(u.pos!, target.pos!) || !adjacent(u.pos!, second.pos!) || !legal.some((t) => t.id === second.id)) {
+    if (!second || second.id === target.id || !unitsAdjacent(u, target) || !unitsAdjacent(u, second) || !legal.some((t) => t.id === second.id)) {
       throw new Error('Drugi cel musi sąsiadować z atakującym.');
     }
     targets.push(second);
@@ -621,8 +755,10 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       }
     }
     // No pushing in a duel: nobody moves there, so the two leaders would never meet again.
-    if (ab === 'boulder' && t.alive && !b.duel && abilityActive(state)) {
-      const to = pushCell(state, u.pos!, t.pos!);
+    // Large units (digital ruleset) are too heavy to push.
+    if (ab === 'boulder' && t.alive && !t.tail && !b.duel && abilityActive(state)) {
+      const from = cellsOf(u).reduce((a, c) => (distance(parseKey(c), parseKey(t.pos!)) < distance(parseKey(a), parseKey(t.pos!)) ? c : a));
+      const to = pushCell(state, from, t.pos!);
       if (to) {
         t.pos = to;
         log(state, 'ability', `${unitName(t)} zostaje odepchnięty o 1 pole (${UNITS[u.defId].abilityName}).`);
@@ -650,8 +786,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
 export function hopCells(state: GameState, u: BattleUnit, range: number): HexKey[] {
   const b = state.battle!;
   const obstacles = obstacleSet(b);
-  const units = occupancy(b);
-  return ARENA_CELLS.filter((k) => !obstacles.has(k) && !units.has(k) && u.pos && distance(parseKey(u.pos), parseKey(k)) <= range && k !== u.pos);
+  const units = occupancy(b, u);
+  return ARENA_CELLS.filter((k) => !obstacles.has(k) && !units.has(k) && u.pos && distance(parseKey(u.pos), parseKey(k)) <= range && k !== u.pos && fitsAt(state, u, k));
 }
 
 export function battleHop(state: GameState, to: HexKey) {
@@ -660,7 +796,7 @@ export function battleHop(state: GameState, to: HexKey) {
   const u = b.units[act.unitId];
   if (!act.hop) throw new Error('Odskok jest niedostępny.');
   if (!hopCells(state, u, act.hop).includes(to)) throw new Error('Pole poza zasięgiem odskoku.');
-  u.pos = to;
+  placeUnit(state, u, to);
   if (!UNLIMITED_ABILITIES.includes(abilityOf(u))) u.abilityUsed = true;
   act.hop = 0;
   log(state, 'ability', `${unitName(u)} odskakuje (${UNITS[u.defId].abilityName}).`);
@@ -680,7 +816,7 @@ export function battleAbility(state: GameState, targetId?: string) {
     t.hp = Math.min(t.maxHp, t.hp + ABILITY.giftOfLifeHeal);
   } else if (ab === 'web') {
     const t = targetId ? b.units[targetId] : undefined;
-    if (!t || !t.alive || t.side === u.side || distance(parseKey(u.pos!), parseKey(t.pos!)) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);
+    if (!t || !t.alive || t.side === u.side || unitDistance(u, t) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);
     t.status.rootedNext = true;
     log(state, 'ability', `${unitName(t)} zostaje unieruchomiony do swojej następnej aktywacji.`);
   }
@@ -697,21 +833,23 @@ export function canUseBattleItem(state: GameState, faction: FactionId): boolean 
   return u.side === faction && !b.activation.acted;
 }
 
-function freeCellNear(b: BattleState, side: Side): HexKey | null {
+function freeCellNear(state: GameState, side: Side, u?: BattleUnit): HexKey | null {
+  const b = state.battle!;
   if (b.duel) {
     const spot = duelSpot(b, side);
     return unitAt(b, spot) ? null : spot;
   }
-  return deployCells(b, side).find((k) => !unitAt(b, k)) ?? null;
+  return deployCells(b, side).find((k) => !unitAt(b, k) && (!u || fitsAt(state, u, k))) ?? null;
 }
 
 /** The free arena cell closest to `from` (ties: arena order), for a unit that stands up where something else stands. */
-function nearestFreeCell(b: BattleState, from: HexKey): HexKey | null {
+function nearestFreeCell(state: GameState, u: BattleUnit, from: HexKey): HexKey | null {
+  const b = state.battle!;
   const o = parseKey(from);
   let best: HexKey | null = null;
   let bestD = Infinity;
   for (const k of ARENA_CELLS) {
-    if (b.obstacles.includes(k) || unitAt(b, k)) continue;
+    if (b.obstacles.includes(k) || unitAt(b, k) || !fitsAt(state, u, k)) continue;
     const d = distance(o, parseKey(k));
     if (d < bestD) (best = k), (bestD = d);
   }
@@ -768,16 +906,17 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     // Digital ruleset: the fallen unit lies where it fell, so it stands up there (or on the nearest free cell).
     const fallen = isDigital(use.state.rules) && t.corpse ? t.corpse : null;
     const cell =
-      args.to && !unitAt(b, args.to) && !b.obstacles.includes(args.to)
+      args.to && !unitAt(b, args.to) && !b.obstacles.includes(args.to) && fitsAt(use.state, t, args.to)
         ? args.to
         : fallen
-          ? nearestFreeCell(b, fallen)
-          : freeCellNear(b, faction);
+          ? nearestFreeCell(use.state, t, fallen)
+          : freeCellNear(use.state, faction, t);
     if (!cell) throw new Error('Brak wolnego pola.');
     t.alive = true;
     t.hp = t.maxHp;
-    t.pos = cell;
+    placeUnit(use.state, t, cell, cell === fallen ? t.corpseTail : undefined);
     delete t.corpse;
+    delete t.corpseTail;
   },
   heal: (use) => {
     const t = ownLiving(use, use.args.targetId);
@@ -809,7 +948,7 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     first.status.nextAttackBonus += ITEM_EFFECT.courageAttack;
     if (ids[1]) {
       const second = ownLiving(use, ids[1]);
-      if (!adjacent(first.pos!, second.pos!)) throw new Error('Drugi sojusznik musi sąsiadować z pierwszym.');
+      if (!unitsAdjacent(first, second)) throw new Error('Drugi sojusznik musi sąsiadować z pierwszym.');
       second.status.nextAttackBonus += ITEM_EFFECT.courageAttack;
     }
   },
@@ -818,8 +957,8 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     const t = ownLiving(use, args.targetId);
     const to = args.to;
     if (!to || !inArena(to) || unitAt(b, to) || b.obstacles.includes(to)) throw new Error('Wybierz wolne pole.');
-    if (!alliesOf(b, t).some((a) => adjacent(a.pos!, to))) throw new Error('Pole musi sąsiadować z sojusznikiem.');
-    t.pos = to;
+    if (!alliesOf(b, t).some((a) => cellsOf(a).some((c) => adjacent(c, to)))) throw new Error('Pole musi sąsiadować z sojusznikiem.');
+    if (!placeUnit(use.state, t, to)) throw new Error('Jednostka nie zmieści się na tym polu.');
   },
   hourglass: (use) => {
     const t = ownLiving(use, use.args.targetId);
@@ -837,13 +976,18 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     const reserve = args.reserveId;
     if (!reserve || !state.factions[faction].supportsAlive.includes(reserve) || b.units[reserve]) throw new Error('Wybierz żywego pomocnika z rezerwy.');
     const nu = makeBattleUnit(reserve, faction);
-    nu.pos = t.alive ? t.pos : freeCellNear(b, faction);
-    if (!nu.pos) throw new Error('Brak wolnego pola.');
+    const spot = t.alive ? t.pos : freeCellNear(use.state, faction, nu);
+    // The swapped unit leaves first, so a large newcomer may lie on the cells it frees.
+    const was = { alive: t.alive, pos: t.pos, tail: t.tail };
     if (t.alive) {
       // The swapped unit goes back to the pool unharmed.
       t.alive = false;
-      t.pos = null;
+      removeFromBoard(use.state, t, false);
       t.swappedOut = true;
+    }
+    if (!spot || !placeUnit(use.state, nu, spot)) {
+      if (was.alive) Object.assign(t, was, { swappedOut: false });
+      throw new Error('Brak wolnego pola.');
     }
     b.units[reserve] = nu;
     const idx = b.order.indexOf(t.id);

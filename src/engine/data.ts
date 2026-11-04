@@ -45,6 +45,8 @@ export interface UnitDef {
   ability: AbilityId;
   abilityName: string;
   abilityText: string;
+  /** Digital ruleset only: 2 = a large unit lying on two cells (head + tail). Default 1. */
+  size?: 1 | 2;
   /** A guardian's second card, for the duel on the board: less Życie and an ability that works one on one. */
   duel?: DuelCard;
 }
@@ -90,7 +92,7 @@ const u = (d: UnitDef): UnitDef => d;
 
 export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   [
-    u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),
+    u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', size: 2, hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),
     u({ id: 'unicornKing', name: 'Król Jednorożców', side: 'dawn', kind: 'hero', hp: 8, attack: 5, speed: 8, movement: 'walk', attackType: 'melee', ability: 'lightCharge', abilityName: 'Szarża Światła', abilityText: `+${ABILITY.lightChargeBonus} A do ataku wykonanego po ruchu o co najmniej ${ABILITY.lightChargeMinMove} pola.` }),
     u({ id: 'ancientBear', name: 'Prastary Niedźwiedź', side: 'dawn', kind: 'hero', hp: 11, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'guardian', abilityName: 'Opiekun Gaju', abilityText: `Raz na bitwę: przyjmuje cios, który zabiłby jego lub sąsiada, i ignoruje ${ABILITY.guardianIgnore} obrażenia.` }),
     // Easter egg hero (not in FACTION_HEROES): fragile, fast and hits hard; every kill gives her another activation.

@@ -211,6 +211,10 @@ export interface BattleUnit {
   pos: HexKey | null;
   /** Digital ruleset: the cell where the unit fell. It lies there without occupying it (pos is null); a Resurrection stands it up there. */
   corpse?: HexKey;
+  /** Digital ruleset, large unit: the second cell of a corpse. */
+  corpseTail?: HexKey;
+  /** Digital ruleset, large unit (UnitDef.size 2): the cell behind the head. The head is `pos`. */
+  tail?: HexKey;
   alive: boolean;
   abilityUsed: boolean;
   /** Left the battle through Róg Strażników (returns to the pool unharmed). */
@@ -353,7 +357,7 @@ export type Action =
   | { type: 'selectSupports'; faction: FactionId; supportIds: string[] }
   | { type: 'deployUnits'; faction: FactionId; positions: Record<string, HexKey> }
   | { type: 'draftPick'; faction: FactionId; kind: ItemKind }
-  | { type: 'battleMove'; to: HexKey }
+  | { type: 'battleMove'; to: HexKey; tail?: HexKey }
   | { type: 'battleAttack'; targetId: string; secondTargetId?: string; useAbility?: boolean }
   | { type: 'battleAbility'; targetId?: string }
   | { type: 'battleHop'; to: HexKey }
