@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wczesna wersja wydania cyfrowego, do wybrania na ekranie nowej gry w trybie Arena („Zasady: Cyfrowe (w budowie)”): arena z poziomymi heksami jak w Heroes III, nowe ciemniejsze tła z różnymi przeszkodami (także zajmującymi dwa pola), Złoty Smok jako animowana grafika 2D na dwóch polach (lot, zionięcie, śmierć, zostaje jako trup), a po ostatnim ciosie widać jeszcze chwilę animację śmierci przed wynikiem. Zasady klasyczne zostają bez zmian.
 - Dzielna Kaczka ma już swój malowany portret i prawdziwą figurkę 3D (zamiast tymczasowych rysunków); ikony umiejętności Kaczej Furii są jeszcze tymczasowe.
 - Sekret: pięć kliknięć w herb Przymierza na ekranie nowej gry budzi Dzielną Kaczkę — kruchego (3 Ż), bardzo szybkiego (10 S) bohatera z atakiem 6 i umiejętnością Kacza Furia: gdy jej atak zabije wroga, od razu aktywuje się jeszcze raz.
 - Instrukcja (w grze i do druku) nie ma już strony z okładką: okładka segregatora jest osobnym plikiem, a instrukcja zaczyna się od wiadomości od autora.

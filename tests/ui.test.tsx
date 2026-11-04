@@ -537,6 +537,24 @@ describe('arena through the UI', () => {
   }
   const overlayWith = (doc: Document, text: string) => [...doc.querySelectorAll('.overlay')].find((o) => o.textContent?.includes(text));
 
+  it('the "Zasady" switch starts the digital edition (wide arena) or the classic game', async () => {
+    for (const [label, digital] of [['Cyfrowe (w budowie)', true], ['Klasyczne', false]] as const) {
+      window.history.replaceState(null, '', '/');
+      vi.useFakeTimers();
+      const { container, unmount } = render(<App />);
+      const doc = container.ownerDocument;
+      const btn = (t: string) => button(doc, t);
+      await act(async () => fireEvent.click(btn('Arena (jedna bitwa)')!));
+      await act(async () => fireEvent.click(btn(label)!));
+      await act(async () => fireEvent.click(btn('Rozpocznij grę')!));
+      const g = (window as any).__game;
+      expect(g.rules.ruleset === 'digital').toBe(digital);
+      expect(g.battle.layout === 'wide').toBe(digital);
+      unmount();
+      vi.useRealTimers();
+    }
+  });
+
   /** Answers the support and draft dialogs; records whether each draft dialog opened covered. */
   async function playPrep(doc: Document, btn: (t: string) => HTMLButtonElement | undefined) {
     const covers: boolean[] = [];
