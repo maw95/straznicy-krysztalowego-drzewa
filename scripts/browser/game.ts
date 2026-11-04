@@ -7,9 +7,10 @@ import { createServer, type ViteDevServer } from 'vite';
 
 export const PORT = 5180;
 
-/** Window sizes: a desktop, an upright phone and a phone held sideways. */
+/** Window sizes: a desktop, a big 1440p screen, an upright phone and a phone held sideways. */
 export const VIEWS = {
   desktop: { width: 1600, height: 900, mobile: false },
+  wielki: { width: 2560, height: 1440, mobile: false },
   telefon: { width: 390, height: 844, mobile: true },
   poziomo: { width: 844, height: 390, mobile: true },
 } as const;

@@ -7,7 +7,7 @@ import type { HexKey } from '../engine/hex';
 import { isDigital, type BattleUnit, type GameState } from '../engine/types';
 import { asset, Frame, Portrait, ACTIVE_FIGURE_RING, Ribbon, SIDE_RING } from './common';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
-import { wideCellOf } from '../engine/battle';
+import { wideObstacleGroups } from '../engine/battle';
 import { DamageDrop, DieFace, LastAttack, Marker, StatText } from './markers';
 import { details } from './details';
 import { figureFor, FigureLayer, type Piece } from './FigureLayer';
@@ -36,13 +36,10 @@ const GoldGrid = memo(function GoldGrid({ cells, points, wide }: { cells: readon
   );
 });
 
-/** Obstacle pictures of the digital arenas (public/assets/arena/cyfrowa): the two variants used on each arena. */
-const OBSTACLE_ART = {
-  dawn: ['boulders', 'ruin', 'pine', 'log', 'brambles', 'statue'],
-  horde: ['spires', 'deadtree', 'bones', 'barricade', 'crystals'],
-} as const;
 /** An obstacle picture is fitted into this box, standing on the lower part of its hex. */
 const OBSTACLE_BOX = { w: 76, h: 92, base: 26 };
+/** The same for an obstacle that lies on two neighbouring cells of a row. */
+const OBSTACLE_BOX_DOUBLE = { w: 144, h: 86, base: 26 };
 
 export interface ArenaView {
   x: number;
@@ -142,6 +139,10 @@ export function ArenaBoard(p: Props) {
   });
   return (
     <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#14100A' }}>
+      {/* On a wide screen the board does not fill the window: the picture, blurred and dimmed, fills what is left (no black bars). */}
+      <div aria-hidden="true" style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+        <img src={asset(wide ? `arena/cyfrowa/${b.arena}.webp` : `arena/${b.arena}.jpg`)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(14px) brightness(0.55)', transform: 'scale(1.12)' }} />
+      </div>
       <div ref={p.wrapRef} className="scroll" style={{ position: 'absolute', inset: 0, overflow: 'auto', display: 'flex' }}>
         <div style={{ position: 'relative', flex: 'none', margin: 'auto', width: view.w * scale, height: view.h * scale, overflow: 'hidden' }}>
         <div style={{ position: 'absolute', left: 0, top: 0, width: CANVAS_W, height: CANVAS_H, transform: `translate(${-view.x * scale}px, ${-view.y * scale}px) scale(${scale})`, transformOrigin: '0 0' }}>
@@ -149,14 +150,14 @@ export function ArenaBoard(p: Props) {
           <img src={asset(wide ? `arena/cyfrowa/${b.arena}.webp` : `arena/${b.arena}.jpg`)} alt="" style={{ position: 'absolute', left: 0, top: 0, width: ART_SIZE.w, height: ART_SIZE.h }} />
           {/* Digital arena: obstacles are pictures standing on their cells. */}
           {wide &&
-            b.obstacles.map((k) => {
-              const c = cellCenter(k);
-              const { col, row } = wideCellOf(k);
-              const names = OBSTACLE_ART[b.arena];
-              const name = names[(col * 5 + row * 3 + col * row) % names.length];
+            wideObstacleGroups(b.arena).map((g) => {
+              const cs = g.cells.map(cellCenter);
+              const box = g.cells.length > 1 ? OBSTACLE_BOX_DOUBLE : OBSTACLE_BOX;
+              const x = cs.reduce((m, c) => m + c.x, 0) / cs.length;
+              const y = cs.reduce((m, c) => m + c.y, 0) / cs.length;
               return (
-                <div key={`ob${k}`} style={{ position: 'absolute', left: c.x - OBSTACLE_BOX.w / 2, top: c.y + OBSTACLE_BOX.base - OBSTACLE_BOX.h, width: OBSTACLE_BOX.w, height: OBSTACLE_BOX.h, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', pointerEvents: 'none' }}>
-                  <img src={asset(`arena/cyfrowa/${name}.webp`)} alt="" style={{ maxWidth: '100%', maxHeight: '100%', filter: b.arena === 'horde' ? 'brightness(1.55) contrast(1.05)' : undefined }} />
+                <div key={`ob${g.art}`} style={{ position: 'absolute', left: x - box.w / 2, top: y + box.base - box.h, width: box.w, height: box.h, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', pointerEvents: 'none' }}>
+                  <img src={asset(`arena/cyfrowa/${g.art}.webp`)} alt="" style={{ maxWidth: '100%', maxHeight: '100%', filter: b.arena === 'horde' ? 'brightness(1.55) contrast(1.05)' : undefined }} />
                 </div>
               );
             })}

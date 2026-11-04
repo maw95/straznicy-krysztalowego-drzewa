@@ -59,7 +59,7 @@ export function columnCells(col: number): HexKey[] {
 }
 
 export function arenaObstacles(arena: ArenaId, layout?: 'wide'): HexKey[] {
-  return layout === 'wide' ? WIDE_OBSTACLES[arena].map(([c, r]) => wideCell(c, r)) : ARENA_OBSTACLES[arena].map(([c, h]) => arenaCell(c, h));
+  return layout === 'wide' ? wideObstacleGroups(arena).flatMap((g) => g.cells) : ARENA_OBSTACLES[arena].map(([c, h]) => arenaCell(c, h));
 }
 
 const ARENA_SET = new Set(ARENA_CELLS);
@@ -84,11 +84,41 @@ export function wideCellOf(k: HexKey): { col: number; row: number } {
 const WIDE_CELLS: readonly HexKey[] = Object.freeze(Array.from({ length: WIDE_ROWS }, (_, row) => Array.from({ length: WIDE_COLUMNS }, (_, col) => wideCell(col, row))).flat());
 const WIDE_SET = new Set(WIDE_CELLS);
 
-/** Obstacles of the wide arenas, as [col, row]. The start columns 0 and 12 and the columns next to them (where a large unit's head lies) stay free; every free cell stays reachable. */
-export const WIDE_OBSTACLES: Record<ArenaId, Array<[number, number]>> = {
-  dawn: [[2, 1], [10, 1], [6, 1], [4, 3], [8, 3], [6, 4], [4, 5], [8, 5], [2, 7], [10, 7], [6, 7]],
-  horde: [[3, 2], [9, 2], [6, 2], [5, 4], [7, 4], [3, 6], [9, 6], [6, 6], [2, 4], [10, 4]],
+/** One obstacle of a wide arena: one or two neighbouring cells in a row [col, row] and the name of its picture (public/assets/arena/cyfrowa). */
+export interface ObstacleGroup {
+  art: string;
+  cells: Array<[number, number]>;
+}
+
+/**
+ * Obstacles of the wide arenas. The start columns 0 and 12 and the columns next to them (where a large unit's head lies) stay
+ * free, every free cell stays reachable (tests), and no picture repeats on one arena.
+ */
+export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
+  dawn: [
+    { art: 'log', cells: [[3, 1], [4, 1]] },
+    { art: 'wall', cells: [[8, 7], [9, 7]] },
+    { art: 'ridge', cells: [[5, 4], [6, 4]] },
+    { art: 'boulders', cells: [[9, 2]] },
+    { art: 'ruin', cells: [[3, 6]] },
+    { art: 'pine', cells: [[10, 5]] },
+    { art: 'brambles', cells: [[7, 1]] },
+    { art: 'statue', cells: [[6, 7]] },
+  ],
+  horde: [
+    { art: 'bones', cells: [[3, 2], [4, 2]] },
+    { art: 'barricade', cells: [[8, 6], [9, 6]] },
+    { art: 'siegecart', cells: [[5, 5], [6, 5]] },
+    { art: 'spires', cells: [[9, 3]] },
+    { art: 'deadtree', cells: [[2, 6]] },
+    { art: 'crystals', cells: [[6, 2]] },
+    { art: 'totem', cells: [[10, 5]] },
+  ],
 };
+
+/** The obstacle groups of a wide arena with their cells as keys (for drawing). */
+export const wideObstacleGroups = (arena: ArenaId): Array<{ art: string; cells: HexKey[] }> =>
+  WIDE_OBSTACLES[arena].map((g) => ({ art: g.art, cells: g.cells.map(([c, r]) => wideCell(c, r)) }));
 
 /** Every cell of the arena of this battle (shared: never change the list). */
 export const layoutCells = (b: Pick<BattleState, 'layout'>): readonly HexKey[] => (b.layout === 'wide' ? WIDE_CELLS : ARENA_CELLS);

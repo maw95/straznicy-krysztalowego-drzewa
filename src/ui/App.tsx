@@ -18,6 +18,7 @@ import { BugReportDialog } from './BugReportDialog';
 import { TesterDialog } from './TesterDialog';
 import { isTestRun, recordGame } from './journal';
 import { BattleSummary } from './BattleSummary';
+import { useEndHold } from './useEndHold';
 import { Tutorial } from './Tutorial';
 import { Intro, introSeen } from './Intro';
 import { TitleScreen, titlePending } from './TitleScreen';
@@ -71,6 +72,8 @@ export function App() {
   const saveFile = (g: GameState): SaveFile => ({ setup: g.setup, actions: [...history.current], reports: reports.current });
   const [confirm, setConfirm] = useState<Confirmation | null>(null);
   const [summary, setSummary] = useState<number | null>(null);
+  // The finished battle stays on screen for a moment so the last death animation can be seen.
+  const held = useEndHold(game);
   /**
    * The start screen: the online menu (or, logged out, the choice to log in or play without an account),
    * unless the player chose to play without an account; then the local setup screen, as before.
@@ -607,7 +610,7 @@ export function App() {
   const drafting = b && b.stage === 'draft' && game.draft && humanTurn && actor.kind === 'human' ? actor.faction : null;
   // Two people at one screen: each side's cards stay covered until that side uncovers them.
   const bothHuman = game.setup.mode === 'arena' && game.players.every(atThisScreen);
-  const arenaPrep = game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'select' || b.stage === 'draft')));
+  const arenaPrep = !held && game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'select' || b.stage === 'draft')));
 
   return (
     <>
@@ -630,8 +633,8 @@ export function App() {
       {game.phase === 'battle' && b?.duel && b.stage !== 'select' && <DuelView state={game} canAct={humanTurn} onAction={dispatch} footer={footer} />}
       {arenaPrep ? (
         <ArenaPrep state={game} />
-      ) : game.phase === 'battle' && b && !b.duel && b.stage !== 'select' ? (
-        <BattleView state={game} canAct={humanTurn} onAction={dispatch} onShowCard={setCard} footer={footer} />
+      ) : held || (game.phase === 'battle' && b && !b.duel && b.stage !== 'select') ? (
+        <BattleView state={held ?? game} canAct={humanTurn && !held} onAction={dispatch} onShowCard={setCard} footer={footer} />
       ) : (
         <AdventureView state={game} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} footer={adventureFooter} />
       )}
@@ -657,7 +660,7 @@ export function App() {
       <VictoryEffects game={game} />
       <FoundTreasure kind={found} open={Boolean(found) && !digest && !summary} onClose={() => setFound(null)} />
 
-      <Modal open={game.phase === 'over'}>
+      <Modal open={game.phase === 'over' && !held}>
         <GameOver state={game} online={isOnline} rankingNote={rankingNote} onNew={leaveGame} onLog={() => setShowLog(true)} />
       </Modal>
 
@@ -665,7 +668,7 @@ export function App() {
 
       <ConfirmDialog confirm={confirm} onClose={() => setConfirm(null)} />
 
-      <Modal open={summary !== null && game.lastBattle?.id === summary} onClose={() => setSummary(null)}>
+      <Modal open={summary !== null && game.lastBattle?.id === summary && !held} onClose={() => setSummary(null)}>
         {game.lastBattle && <BattleSummary report={game.lastBattle} onClose={() => setSummary(null)} />}
       </Modal>
 

@@ -268,6 +268,62 @@
       "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/wall",
+      "pliki": [
+        "public/assets/arena/cyfrowa/wall.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare, 1024x512 (przeszkoda 2-polowa), jakość medium, tło transparent",
+      "scenario_asset": "asset_H53bgo8fqu2bGdgrFRATMfvX",
+      "prompt": "A long crumbling ancient grey stone wall segment, horizontally elongated, covered with ivy and moss, with a few fallen stones at its base, game obstacle sprite for a fantasy strategy game, seen from a slightly raised three-quarter front view, centred, filling about 90% of the frame width, resting on the ground, painterly realistic style, muted desaturated earthy colours, overcast light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/ridge",
+      "pliki": [
+        "public/assets/arena/cyfrowa/ridge.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare, 1024x512 (przeszkoda 2-polowa), jakość medium, tło transparent",
+      "scenario_asset": "asset_SC2X72P9AHarqEmC7QE29SkY",
+      "prompt": "A low rocky outcrop ridge of grey boulders and flat stone slabs with grass tufts and a little moss, horizontally elongated, game obstacle sprite for a fantasy strategy game, seen from a slightly raised three-quarter front view, centred, filling about 90% of the frame width, resting on the ground, painterly realistic style, muted desaturated earthy colours, overcast light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/siegecart",
+      "pliki": [
+        "public/assets/arena/cyfrowa/siegecart.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare, 1024x512 (przeszkoda 2-polowa), jakość medium, tło transparent",
+      "scenario_asset": "asset_SP2eD5fHF9kTDbAq6FojaYP5",
+      "prompt": "A wrecked burnt wooden siege cart with a broken wheel, a charred spiked battering ram and scattered rusty iron, horizontally elongated, game obstacle sprite for a dark fantasy strategy game, seen from a slightly raised three-quarter front view, centred, filling about 90% of the frame width, resting on the ground, painterly realistic style, dark desaturated colours, dim smoky red light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "arena_cyfrowa/totem",
+      "pliki": [
+        "public/assets/arena/cyfrowa/totem.webp"
+      ],
+      "typ": "przeszkoda areny (sprite, przezroczystość)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare, 768x768, jakość medium, tło transparent",
+      "scenario_asset": "asset_i6VU8SX6R5tRvKdpDVSC9Dbr",
+      "prompt": "A tall crude totem pole of stacked animal skulls and rusty iron spikes bound with chains, with a faint ember-red glow in the eye sockets, game obstacle sprite for a dark fantasy strategy game, seen from a slightly raised three-quarter front view, centred, filling about 80% of the frame height, resting on the ground, painterly realistic style, dark desaturated colours, dim smoky red light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

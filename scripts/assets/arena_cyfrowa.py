@@ -57,6 +57,7 @@ if __name__ == "__main__":
         clean_plate(Image.open(os.path.join(src, f"{name}_raw.png")).convert("RGB")).save(os.path.join(dst, f"{name}.webp"), quality=82, method=6)
     for f in sorted(glob.glob(os.path.join(src, "*.png"))):
         name = os.path.basename(f)[:-4]
-        if name.endswith("_raw") or name in ("both", "obst", "obst2"):
+        # Raw backgrounds and contact sheets (obst*.png, both.png, clean.png) are not sprites.
+        if name.endswith("_raw") or name in ("both", "clean") or name.startswith("obst"):
             continue
         sprite(Image.open(f).convert("RGBA")).save(os.path.join(dst, f"{name}.webp"), quality=85, method=6)
