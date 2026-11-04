@@ -634,7 +634,7 @@ export function App() {
       {arenaPrep ? (
         <ArenaPrep state={game} />
       ) : held || (game.phase === 'battle' && b && !b.duel && b.stage !== 'select') ? (
-        <BattleView state={held ?? game} canAct={humanTurn && !held} onAction={dispatch} onShowCard={setCard} footer={footer} />
+        <BattleView state={held ? held.view : game} attack={held?.attack ?? null} canAct={humanTurn && !held} onAction={dispatch} onShowCard={setCard} footer={footer} />
       ) : (
         <AdventureView state={game} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} footer={adventureFooter} />
       )}

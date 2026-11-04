@@ -76,14 +76,7 @@ wdrożenia serwera z nowym pakietem silnika.
 Wdrożone tego samego dnia: brak okrągłego cienia pod jednostką, cienki pasek życia zamiast tabliczki, w trybie cyfrowym ruch bez ataku
 kończy turę (strzelec nie ma „ruch + strzał”, strzelcy +1 do ataku; patrz `ZASADY_CYFROWE.md`, a strojenie +1 symulacjami zostaje do zrobienia).
 
-- [ ] **Obrażenia w momencie uderzenia animacji.** Dziś znacznik obrażeń, odjęcie życia i trafienie pojawiają się od razu po kliknięciu ataku,
-  a smok dopiero potem dolatuje i atakuje. Projekt: (1) `SpriteLayer` wysyła zdarzenie „uderzenie” (np. `skd-impact` z id jednostki) w ok. 45%
-  klipu ataku (albo od razu, gdy jednostka nie ma klipu); (2) w `BattleView` hook `useImpactHold(state)` przy ataku jednostki ze sprite'ami
-  przytrzymuje poprzedni stan (`before`) do tego zdarzenia (awaryjnie do ok. 6 s) i przekazuje go jako stan do rysowania (obrażenia,
-  paski, trup i `useBattleAnimations` liczą się wtedy dopiero po uderzeniu); w czasie przytrzymania `canAct` jest wyłączone;
-  (3) sam klip ataku napastnika dostaje klucz z hooka (nie z `lastStrike`), żeby nie odtworzyć go dwa razy; (4) `useEndHold` (ostatni cios)
-  też czeka na uderzenie, zanim pokaże stan końcowy z trupami. Pułapki: atak bez obrażeń (tarcza) nie tworzy dziś `strike`; ataki dystansowe;
-  kolejne akcje botów w trakcie przytrzymania (zostają w kolejce, rysowanie skacze do najnowszego stanu po zwolnieniu).
+- [x] **Obrażenia w momencie uderzenia animacji** (wdrożone 5.11): `SpriteLayer` zgłasza uderzenie w ok. 45% klipu ataku (`impact.ts`), `useImpactHold` (walka) i `useEndHold` (ostatni cios) trzymają stan sprzed ciosu do tego momentu (awaryjnie 6 s); obrażenia, paski, trafienie i śmierć pojawiają się wtedy. W czasie przytrzymania nie da się klikać. Atak bez obrażeń (tarcza) też się animuje (wykrywany po `rolls`).
 - [ ] **Dwupolowe przeszkody pod skosem.** Silnik zna grupy sąsiednich pól (`WIDE_OBSTACLES`); wystarczy dopuścić drugą parę pól w rzędach
   sąsiednich (sąsiad „NE/SE” zamiast tego samego rzędu) i obrócić obraz (CSS `rotate` o ±30° albo osobne sprite'y). Skośna przeszkoda
   lepiej chroni przed strzelcami, bo zasłania linię strzału w poprzek rzędów. Potrzebne: test osiągalności pól i 2–3 skośne sprite'y.

@@ -20,6 +20,7 @@ import {
 import { distance, parseKey, type HexKey } from '../engine/hex';
 import type { Action, BattleUnit, GameState } from '../engine/types';
 import { COMPACT_QUERY, useMedia } from './common';
+import { useImpactHold, type AttackNow } from './useImpactHold';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { aimedCursor, preloadAimedCursors, type AimedCursor } from './cursors';
 import { ArenaBoard } from './ArenaBoard';
@@ -38,9 +39,16 @@ interface Props {
   onAction: (a: Action) => void;
   onShowCard: (unitId: string) => void;
   footer: React.ReactNode;
+  /** An attack to animate while the screen holds the state before it (the end of a battle). */
+  attack?: AttackNow | null;
 }
 
-export function BattleView({ state, canAct, onAction, onShowCard, footer }: Props) {
+export function BattleView({ state: liveState, canAct: canActNow, onAction, onShowCard, footer, attack: heldAttack }: Props) {
+  // The blow of a unit with sprites lands when its attack animation does: until then the state before it stays on screen.
+  const impact = useImpactHold(liveState);
+  const state = impact.view;
+  const canAct = canActNow && !impact.holding;
+  const attackNow = heldAttack ?? impact.attack;
   const b = state.battle!;
   const geo = geometryOf(b.layout);
   const { cellPos } = geo;
@@ -391,6 +399,7 @@ export function BattleView({ state, canAct, onAction, onShowCard, footer }: Prop
           previewOf={previewOf}
           aimApproach={aimApproach}
           onCell={clickCell}
+          attackNow={attackNow}
           onCellAlt={altCell}
           previewTail={previewTail}
           onUnit={clickUnit}

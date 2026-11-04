@@ -13,6 +13,7 @@ import { details } from './details';
 import { figureFor, FigureLayer, type Piece } from './FigureLayer';
 import { SpriteLayer, type SpritePiece } from './SpriteLayer';
 import { hasSprites } from './sprites';
+import type { AttackNow } from './useImpactHold';
 import { statusList, StatusBadge, UnitDetails } from './battleStatus';
 import type { ItemTargeting } from './ItemsPanel';
 import { WALK_STEP_MS, type BattleAnimations } from './useBattleAnimations';
@@ -80,6 +81,8 @@ interface Props {
   previewOf: (u: BattleUnit) => { text: string; lethal: boolean } | null;
   aimApproach: (u: BattleUnit, pointer: { x: number; y: number; box: DOMRect } | null) => void;
   onCell: (k: HexKey) => void;
+  /** The attack of a unit with sprites being animated (its damage shows when the blow lands). */
+  attackNow: AttackNow | null;
   /** Right click on a cell: another tail cell for a large unit about to move there. */
   onCellAlt: (k: HexKey) => void;
   /** Where the tail of the active large unit would lie if it moved to the cell under the pointer. */
@@ -150,13 +153,12 @@ export function ArenaBoard(p: Props) {
       const enemies = p.living.filter((e) => e.side !== u.side && e.pos).map((e) => cellCenter(e.pos!).x);
       if (enemies.length) flip = enemies.reduce((m, x) => m + x, 0) / enemies.length < a.x;
     }
-    const melee = lastStrike(u.id, false);
     const way = movePaths.current[u.id];
     const off = way ? { x: a.x - cellCenter(fp.head).x, y: a.y - (cellCenter(fp.head).y + FEET) } : null;
     const path = way && off ? way.map((k) => ({ x: cellCenter(k).x + off.x, y: cellCenter(k).y + FEET + off.y })) : null;
     // In a fight the blue cells already mark the active unit; the ring only shows which unit is picked while deploying.
     const ring = deploySide && picked === u.id ? ACTIVE_FIGURE_RING : null;
-    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, ring, attack: melee ? { key: melee.key, towardX: cellCenter(melee.to).x } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy', path }];
+    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, ring, attack: p.attackNow && p.attackNow.unitId === u.id ? { key: p.attackNow.key, towardX: cellCenter(b.units[p.attackNow.targetId]?.pos ?? b.units[p.attackNow.targetId]?.corpse ?? fp.head).x } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy', path }];
   });
   return (
     <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#14100A' }}>

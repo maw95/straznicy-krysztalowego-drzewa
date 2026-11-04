@@ -4,6 +4,7 @@
 // A hit is a shake and a flash in code. Clicks go to the board below.
 
 import { useEffect, useRef } from 'react';
+import { emitImpact } from './impact';
 import { loadSprites, SPRITES, type SpriteSet } from './sprites';
 
 export interface SpritePiece {
@@ -33,10 +34,12 @@ const FLY_SPEED = 420;
 const WALK_SPEED = 300;
 const MIN_GLIDE_MS = 250;
 const HIT_MS = 320;
+/** The blow of an attack clip lands this far into it. */
+const IMPACT_AT = 0.45;
 
 /** One stretch of a unit's motion; they run one after another. */
 type Seg =
-  | { kind: 'clip'; clip: string; reverse: boolean; ms: number; then?: 'corpse' | 'stand' }
+  | { kind: 'clip'; clip: string; reverse: boolean; ms: number; then?: 'corpse' | 'stand'; /** An attack clip: announces its blow (once) when it gets there. */ impact?: { unit: string; done: boolean } }
   | { kind: 'glide'; from: { x: number; y: number }; to: { x: number; y: number }; ms: number; /** Stops of a walker's way (from first to last), when it is not a straight line. */ path?: Array<{ x: number; y: number }>; walk?: boolean };
 
 interface Live {
@@ -136,9 +139,10 @@ class Stage {
         l.endX = p.x;
         l.endY = p.y;
       }
-      if (p.attack && p.attack.key !== l.attackKey && set.frames.atak) {
+      if (p.attack && p.attack.key !== l.attackKey) {
         l.attackKey = p.attack.key;
-        l.queue.push({ kind: 'clip', clip: 'atak', reverse: false, ms: clipMs(set, 'atak') });
+        if (set.frames.atak) l.queue.push({ kind: 'clip', clip: 'atak', reverse: false, ms: clipMs(set, 'atak'), impact: { unit: p.key, done: false } });
+        else window.setTimeout(() => emitImpact(p.key), 0); // no clip: the blow lands at once
       }
       if (p.hit && !was.hit) {
         // A hit clip (when the unit has one) plays after what is running; otherwise a shake and a flash in code.
@@ -174,6 +178,10 @@ class Stage {
         if (next.kind === 'clip' && next.clip === 'atak' && l.piece.attack) l.flip = l.piece.attack.towardX < l.x;
       }
       const seg = l.seg;
+      if (seg.kind === 'clip' && seg.impact && !seg.impact.done && now - l.segStart >= seg.ms * IMPACT_AT) {
+        seg.impact.done = true;
+        emitImpact(seg.impact.unit);
+      }
       if (now - l.segStart < seg.ms) return;
       // Segment done.
       if (seg.kind === 'glide') {
