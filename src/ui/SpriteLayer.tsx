@@ -245,12 +245,8 @@ class Stage {
     const dh = (dw * frameH) / frameW;
     const bodyPx = dw * set.body;
     const gy = l.seg?.kind === 'glide' ? l.y : y;
-    // Shadow on the ground, ring for the active unit.
+    // Ring for the picked unit (no shadow: the pictures already stand on the ground).
     ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.38)';
-    ctx.beginPath();
-    ctx.ellipse(x, gy + 2, bodyPx * 0.36, bodyPx * 0.1, 0, 0, Math.PI * 2);
-    ctx.fill();
     if (l.piece.ring && !l.piece.dead) {
       ctx.strokeStyle = l.piece.ring;
       ctx.lineWidth = 2.5;

@@ -332,10 +332,18 @@ export function ArenaBoard(p: Props) {
                     <Marker name="ability_used" size={24} title="Zdolność zużyta" />
                   </span>
                 )}
+                {isDigital(state.rules) ? (
+                  // Digital ruleset: a slim life bar (green → red) with the number inside, instead of the big plate.
+                  <div title={`Życie ${u.hp}/${u.maxHp}`} style={{ position: 'absolute', left: '50%', bottom: sprite ? -4 : 2, transform: 'translateX(-50%)', width: 42, height: 9, borderRadius: 5, background: 'rgba(12,8,4,0.78)', border: '1px solid rgba(228,193,110,0.7)', overflow: 'hidden', pointerEvents: 'none' }}>
+                    <div style={{ width: `${Math.max(0, Math.min(1, u.hp / u.maxHp)) * 100}%`, height: '100%', background: u.hp / u.maxHp > 0.5 ? '#6FB45A' : u.hp / u.maxHp > 0.25 ? '#D9A93A' : '#C8452E' }} />
+                    <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 800, color: '#FFF6DC', textShadow: '0 0 2px #000, 0 0 2px #000' }}>{u.hp}</span>
+                  </div>
+                ) : (
                 <div className="plate parch" style={{ position: 'absolute', right: -16, bottom: 0, height: 22, padding: '0 6px 0 4px', display: 'flex', alignItems: 'center', gap: 3, fontWeight: 800, fontSize: 16, pointerEvents: 'none' }}>
                   <svg aria-hidden="true" width="14" height="14" viewBox="0 0 64 64"><use href="#iHeart" /></svg>
                   {u.hp}
                 </div>
+                )}
                 {preview && (
                   <div
                     className="plate parch"
