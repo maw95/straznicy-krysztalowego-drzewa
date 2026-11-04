@@ -55,6 +55,23 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
   PNG daje rozciąganie rogów, łap i ogona (ogon schowany pod skrzydłem się wydłuża i kurczy), bo obraz nie ma osobnych części.
   Poprawki masek nie pomogły. Nie wracamy do tej metody. Do sprawdzenia: postać w osobnych warstwach (skrzydła, tułów, głowa,
   ogon) animowana jak lalka, z warstwami z generatora AI (edycja obrazu) lub z ręcznej separacji.
+- **Animacje jednostek: krótkie filmiki z AI (4.11).** Zestaw na jednostkę: ruch/lot (pętla), atak, śmierć. Bezczynność to nieruchomy
+  obraz, trafienie robimy w kodzie (drgnięcie, błysk, cofnięcie; filmik dorobimy, gdy efekt nie wystarczy). Jednostka jest zwrócona
+  w jedną stronę, druga strona to odbicie lustrzane w kodzie.
+  Śmierć: klatka początkowa = stojąca jednostka, końcowa = osobno wygenerowany obraz martwej; ostatnia klatka zostaje na planszy
+  jako trup. Wskrzeszenie = ta sama animacja odtworzona od tyłu.
+- **Martwe jednostki zostają na planszy, ale nie zajmują heksa** (jak w Heroesach): inne jednostki mogą po nich chodzić.
+  Wymaga zmiany silnika bitwy w trybie rozszerzonym (tryb „Klasyczny” bez zmian).
+- **Test filmikowy na Złotym Smoku (4.11): obiecujący, wymaga poprawek.** Potok: obraz jednostki na zielonym tle (przesłany do Scenario)
+  → P-Video 2 (3 s, 720p, 24 kl./s, klatka początkowa i końcowa, 15 CU) → wycięcie tła ffmpeg `chromakey` → klatki PNG z alfą.
+  Lot: skrzydła naprawdę machają, pętla się domyka. Śmierć: płynny upadek, ostatnia klatka zgodna z obrazem trupa. Złoto nie znosi
+  filtra `despill` (przebarwia na czerwono): wycinamy bez niego. Do poprawy: zostawić margines w kadrze (skrzydła i ogon wychodziły
+  poza kadr), zielona poświata na krawędziach i półprzezroczystych błonach skrzydeł (próba z niebieskim tłem), artefakty modelu
+  w środku śmierci (oderwany fragment ogona). Prompt ze słowem „struck down” zablokował filtr treści (przemoc), a zadanie i tak
+  zostało naliczone: opisy śmierci formułować łagodnie („settles down, lies still”).
+- **Koszty (rzeczywiste, 4.11):** obraz GPT Image 2.5 Flare 1024 px, jakość „high”: ok. 14 CU (nie ok. 2 CU z katalogu; kosztuje też
+  podanie obrazu referencyjnego); klip P-Video 2 720p 3 s: 15 CU. Na jednostkę (obraz bazowy, obraz trupa, 3 klipy) ok. 75 CU, ok. 40 jednostek
+  to ok. 3000 CU bez poprawek: kilka miesięcy Startera albo Pro (5000 CU). Zużyte do tej pory: 100 CU z 1500.
 - **Duże jednostki zajmują 2 heksy** (jak w Heroesach); jednostka może być większa niż pole. Mechanika zajmowania dwóch pól
   do zaprojektowania osobno (zasady planszówki zamrożone w trybie „Klasycznym”).
 - **Widok z boku** (jak postacie w Heroes III) jest w porządku; nie dążymy do widoku z góry.
