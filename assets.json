@@ -1523,6 +1523,81 @@
       "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzielna_kaczka/stoi",
+      "pliki": [
+        "public/assets/jednostki/dzielna_kaczka/stoi.webp"
+      ],
+      "typ": "poza zawisu",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, portret jako odniesienie",
+      "scenario_asset": "asset_a2upmsfsoMuRguZhht8zKnUT",
+      "odniesienie": "asset_wo1YP2g1SUicDP9WnBR3kJya (portret karty)",
+      "prompt": "Use the reference image only for the character design (a brave white duck with an orange bill, wearing a bronze Roman-style helmet with a tall red plume, a dark red cape, a bronze breastplate with leather straps and gold buckles, holding a small golden sword and a round wooden shield with a golden feather emblem). Draw this same character as a full-body game sprite in a strict side view, hovering in the air with its wings spread wide open, facing right, in a serious painterly realistic style with muted cream white, bronze, dull gold, russet red and olive tones, no blue anywhere on the character. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its lowest point on a horizontal line about 78% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzielna_kaczka/martwy",
+      "pliki": [
+        "public/assets/jednostki/dzielna_kaczka/martwy.webp"
+      ],
+      "typ": "grafika trupa",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, medium, stoi jako odniesienie",
+      "scenario_asset": "asset_7dEbRKReCp5McncLrmtjMqc5",
+      "odniesienie": "asset_wo1YP2g1SUicDP9WnBR3kJya (portret karty)",
+      "prompt": "The same duck as in the reference image, now lying still on the ground on its belly in a strict side view facing right, wings folded closed against its body, head resting low, eyes closed, as if fast asleep, defeated and motionless, the sword and shield lying beside it. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzielna_kaczka/lot",
+      "pliki": [
+        "public/assets/jednostki/dzielna_kaczka/lot.webp"
+      ],
+      "typ": "petla zawisu (73 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, stoi",
+      "scenario_asset": "asset_SyQiRii1SyQgyt8K4vz9HjoF",
+      "odniesienie": "asset_wo1YP2g1SUicDP9WnBR3kJya (portret karty)",
+      "prompt": "Side view, locked static camera. The duck hovers in the air in place, flapping its wide wings up and down in a steady rhythm, always facing right, the body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzielna_kaczka/atak",
+      "pliki": [
+        "public/assets/jednostki/dzielna_kaczka/atak.webp"
+      ],
+      "typ": "atak (73 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, stoi",
+      "scenario_asset": "asset_LMParBpYAxtY5gsELLU4FwYi",
+      "odniesienie": "asset_wo1YP2g1SUicDP9WnBR3kJya (portret karty)",
+      "prompt": "Side view, locked static camera. The duck darts forward and down to the right, quickly pecking the air with its bill, then rises back up and returns to its hovering pose with wings spread. The body ends at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzielna_kaczka/trafienie",
+      "pliki": [
+        "public/assets/jednostki/dzielna_kaczka/trafienie.webp"
+      ],
+      "typ": "trafienie (49 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, stoi",
+      "scenario_asset": "asset_UKs7aSQARJJHtdsp81mH96s8",
+      "odniesienie": "asset_wo1YP2g1SUicDP9WnBR3kJya (portret karty)",
+      "prompt": "Side view, locked static camera. The duck hovering in place is startled: it flinches and rocks backwards a little, its wings jerk up, then it steadies itself and settles back to its hovering pose with wings spread, facing right. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
