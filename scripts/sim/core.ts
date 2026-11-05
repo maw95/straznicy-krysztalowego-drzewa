@@ -57,6 +57,8 @@ export function setupWith(size: MapSize, table: Table, options: Option[], seed: 
   if (options.includes('replacement')) rules.heroReplacement = true;
   // SIM_DIGITAL=1: the digital edition's rules.
   if (process.env.SIM_DIGITAL) rules.ruleset = 'digital';
+  // SIM_OBJECTIVE=control: the control-points goal (digital ruleset only).
+  if (process.env.SIM_OBJECTIVE === 'control') rules.objective = 'control';
   return { mode, mapSize: size, battleMode: options.includes('board') ? 'board' : base.battleMode, seed, seats, rules };
 }
 

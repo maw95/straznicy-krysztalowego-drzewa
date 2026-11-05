@@ -318,8 +318,8 @@ export function defenderAt(state: GameState, k: HexKey, attacker: FactionId): He
  * is on a hex next to it (one hero per hex, so they gather around the Tree).
  */
 export function ritualFormed(state: GameState): boolean {
-  // The easy level plays without the ritual.
-  if (state.rules.ritual === false) return false;
+  // The easy level plays without the ritual, and so does every goal but the crystals.
+  if (state.rules.ritual === false || objectiveOf(state) !== 'crystals') return false;
   const tree = treeKey();
   const evil = livingHeroes(state, 'horde');
   if (!evil.length || evil.some((h) => h.entering) || !evil.some((h) => h.pos === tree)) return false;

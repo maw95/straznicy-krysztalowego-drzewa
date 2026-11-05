@@ -105,3 +105,26 @@ Decyzja autora: każdy bohater Przymierza ma jedną cechę, a wersja cyfrowa mo�
 
 Arena, `make sim-arena` z `SIM_DIGITAL=1` (150 gier na parę składów): Przymierze 50,0%; Złoty Smok 50,0%, Jednorożec 52,0%, Niedźwiedź 48,1%, Czarny Smok 48,0%,
 Wilkołak 51,4%, Ogr 50,4%. Przygoda (100 gier na wariant): kooperacja Normalny 55–61% na 1 graczu, bez wyraźnej zmiany. Próby: `SIM_OVERRIDE='{"digitalStats":{...}}'`.
+
+## Cel „Punkty kontrolne” (5.11.2026, wersja cyfrowa)
+
+Drugi cel obok klasycznego (kryształy do Drzewa i rytuał Hordy). Interfejs celu: `src/engine/objectives.ts` (`init`, `checkVictory`,
+`onRoundEnd`, `onRoundLimit`, `progress`); wybór przez `rules.objective` (`'crystals'` domyślnie, `'control'` tylko w wersji cyfrowej).
+
+- Na mapie leżą **trzy punkty kontrolne**: środkowy (na osi trójkąta, wart **2**) i dwa boczne, odbite lustrzanie (po **1**). Układ liczony z ziarna
+  gry osobnym generatorem (mapa się nie zmienia); punkt nie leży na Drzewie, w bazie ani koło niej, ani na polu kryształu. Pole niedostępne
+  (góra, jezioro) jest w razie potrzeby oczyszczone na łąkę lub spaloną ziemię. Punkty są odkryte od początku.
+- Strona **trzyma** punkt, gdy jej bohater stoi na nim na koniec rundy (na polu jest jeden bohater, więc trzeba pokonać tego, kto stoi).
+- Na koniec rundy: kto trzyma więcej punktów (według wartości) ma przewagę. Przewaga przez **K rund z rzędu** wygrywa:
+  K = 3 (krótka i średnia mapa), 4 (długa), 5 (bardzo długa); Przymierze potrzebuje o 1 rundę więcej, bo w rundzie rusza pierwsze (`CONTROL` w `data.ts`).
+  Remis lub zmiana lidera zeruje serię.
+- Limit rund: wygrywa strona, która łącznie dłużej miała przewagę; remis wygrywa Horda (jak limit w grze o kryształy). Polegli wszyscy bohaterowie
+  Przymierza = wygrywa Horda (jak zawsze). Kryształy i strażnicy zostają na mapie, ale niczego nie dają; rytuał nie działa.
+- Boty (`controlAction` w `adventureAi.ts`, oba obozy i automat): atakują pokonywalnego wroga obok, trzymają punkt, na którym stoją (bocznego puszczają,
+  gdy środkowy jest wolny i nikt swój nie jest bliżej), reszta idzie do najbliższego punktu, środkowy liczy się o 3 bliżej; strona, która jest „pod”
+  (wróg ma przewagę), atakuje już przy sile 0,7 zamiast 1,1.
+
+Symulacje (`SIM_DIGITAL=1 SIM_OBJECTIVE=control`, 200 partii botów na wariant), wygrane Przymierza, poziom Normalny:
+kooperacja 1 gracz 51–60%, 2 graczy 64–81%; rywalizacja 1 na 1 44–59%, 2 na 2 55–74%. Trudny (koop) 21–65%. Łatwy (pojedynki na planszy)
+68–92%: tak ma być, to poziom dla dzieci. Przymierze jest mocniejsze w kooperacji na dużych mapach i w 2 na 2 (do ewentualnego strojenia).
+Dawne próby: bez wagi środka i bez „wyprzedzenia” botów 1 na 1 kończyło się w 85–93% limitem rund (patowe stanie na bocznych punktach).

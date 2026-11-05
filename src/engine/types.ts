@@ -366,6 +366,8 @@ export interface ControlState {
   /** The side that held more points at the end of the last round(s), and for how many rounds in a row. */
   lead: FactionId | null;
   streak: number;
+  /** Rounds each side has led in all (decides when the round limit comes first). */
+  led: Record<FactionId, number>;
 }
 
 export type Action =

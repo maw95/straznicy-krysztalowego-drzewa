@@ -5,6 +5,7 @@ import { FACTION_SUPPORTS, ITEM_EFFECT, SUPPORTS_PER_BATTLE, UNITS, type Faction
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, treeKey, type PathResult } from '../map';
 import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, livingHeroes, other, reviveSpots, ritualFormed, ritualSpot } from '../game';
+import { objectiveOf } from '../objectives';
 import type { Action, Crystal, GameState, HeroState } from '../types';
 
 /** The adventure bots' judgement in numbers (tuned with simulations; changing one changes the games). */
@@ -35,6 +36,10 @@ const AI_TUNING = {
   raceToTree: 1.5,
   /** Horde bot: the Tree counts this much further away than it is (it prefers hunting). */
   treeExtra: 2,
+  /** Control points: the middle one (worth more) counts this much nearer than it is. */
+  centreBonus: 3,
+  /** Control points: a side that is behind (the enemy has the lead) attacks at this strength ratio instead of waiting for a clear edge. */
+  behindRatio: 0.7,
 };
 
 function knownCost(state: GameState, k: HexKey): number | null {
@@ -534,6 +539,59 @@ function hordeBotAction(state: GameState, memo: Memo): Action {
   return stepToward(state, best.path);
 }
 
+// ------------------------------------------------------------------ control points
+
+/**
+ * Objective 'control' (both sides, and the coop automaton): strike a beatable enemy next to us, hold the point we stand on,
+ * otherwise walk to the nearest point nobody of ours is nearer to (a point held by a beatable enemy is a goal too: the fight is the way in).
+ */
+function controlAction(state: GameState, memo: Memo): Action {
+  const hero = activeHero(state)!;
+  const item = mapItemAction(state);
+  if (item) return item;
+  if (state.movePoints <= 0) return { type: 'endTurn' };
+  const automaton = currentActor(state).kind === 'automaton';
+  const points = state.control!.points;
+  const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
+  const allies = livingHeroes(state, hero.faction).filter((a) => a.id !== hero.id && !a.entering);
+  // The automaton follows the rulebook and always attacks; a player's bot picks its fights.
+  const behind = state.control!.lead !== null && state.control!.lead !== hero.faction;
+  const needRatio = behind ? AI_TUNING.behindRatio : huntRatio(state);
+  const beatable = (e: HeroState) => automaton || memo.ratio(hero, e) >= needRatio;
+  const prey = foes.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && beatable(e));
+  if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
+  const dist = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));
+  const centre = points[0];
+  const centreFoe = foes.find((e) => e.pos === centre);
+  const centreOpen = !allies.some((a) => a.pos === centre) && (!centreFoe || beatable(centreFoe));
+  let goals: Set<HexKey>;
+  if (points.includes(hero.pos)) {
+    // Hold the point we stand on, unless it is a side one and the middle (worth more) is open and nobody of ours is nearer to it.
+    if (hero.pos === centre || !centreOpen || allies.some((a) => dist(a.pos, centre) <= dist(hero.pos, centre))) return { type: 'endTurn' };
+    goals = new Set([centre]);
+  } else {
+    const open = points.filter((k) => {
+      const on = foes.find((e) => e.pos === k);
+      return !allies.some((a) => a.pos === k) && (!on || beatable(on));
+    });
+    const mine = open.filter((k) => !allies.some((a) => dist(a.pos, k) < dist(hero.pos, k)));
+    goals = new Set(mine.length ? mine : open);
+  }
+  if (!goals.size) return { type: 'endTurn' };
+  const paths = memo.paths(hero, 'control', { goals, avoidGuardians: true, danger: true });
+  let best: { cost: number; path: HexKey[] } | null = null;
+  for (const g of goals) {
+    const p = paths.get(g);
+    const cost = p ? p.cost - (g === points[0] ? AI_TUNING.centreBonus : 0) : Infinity;
+    if (p && (!best || cost < best.cost)) best = { cost, path: p.path };
+  }
+  if (!best || best.path.length < 2) return { type: 'endTurn' };
+  const next = best.path[1];
+  const foe = foes.find((e) => e.pos === next);
+  if (foe && !beatable(foe)) return { type: 'endTurn' };
+  return stepToward(state, best.path);
+}
+
 /** The last quarter of the rounds: the Horde wins at the limit, so the Dawn stops waiting. */
 const isDesperate = (state: GameState) => state.round > state.roundLimit * AI_TUNING.desperateAfter;
 
@@ -548,11 +606,12 @@ export function adventureAction(state: GameState): Action {
   // A reserve hero coming in picks the hex nearest to the Tree, where both sides are headed.
   if (hero.entering) {
     if (state.turnBattleDone) return { type: 'endTurn' };
-    const tree = parseKey(treeKey());
+    const tree = parseKey(state.control ? state.control.points[0] : treeKey());
     const to = [...hero.entering].sort((a, b) => distance(parseKey(a), tree) - distance(parseKey(b), tree))[0];
     return { type: 'moveHero', to };
   }
   const memo = new Memo(state);
+  if (objectiveOf(state) === 'control') return controlAction(state, memo);
   if (hero.faction === 'dawn') return goodAction(state, memo);
   // The coop automaton follows the rulebook; a Horde player's bot chooses its fights.
   return currentActor(state).kind === 'automaton' ? evilAction(state, memo) : hordeBotAction(state, memo);

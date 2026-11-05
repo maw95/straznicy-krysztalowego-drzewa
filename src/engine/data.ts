@@ -109,6 +109,20 @@ export const DIGITAL_STATS: Record<string, Partial<Pick<UnitDef, 'hp' | 'attack'
   blackDragon: { attack: 6 },
 };
 
+/**
+ * Objective 'control' (digital ruleset): three control points on the map (one in the middle, worth `centreWeight`, one on each side, mirrored,
+ * worth 1). A side holds a point while its hero stands on it at the end of the round; the side that holds more points (by worth) for
+ * `roundsToWin` rounds in a row wins. At the round limit the side that led for more rounds wins (level goes to the Horde, as the limit does in the
+ * crystals game). Tuned with simulations (docs/ZASADY_CYFROWE.md).
+ */
+export const CONTROL = {
+  points: 3,
+  centreWeight: 2,
+  /** Extra rounds in a row the Przymierze needs: it moves first in a round, so it reaches the middle first (a side that holds the middle from its first turn would otherwise win too often). */
+  dawnExtraRounds: 1,
+  roundsToWin: { short: 3, medium: 3, long: 4, veryLong: 5 } as Record<MapSize, number>,
+};
+
 export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   [
     u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', size: 2, hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),
