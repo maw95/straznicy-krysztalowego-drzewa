@@ -93,7 +93,7 @@ export function controlCounts(state: GameState): Record<FactionId, number> {
 }
 
 /** Rounds in a row `side` must lead to win. */
-export const controlRoundsToWin = (state: GameState, side: FactionId): number => CONTROL.roundsToWin[state.setup.mapSize] + (side === 'dawn' ? CONTROL.dawnExtraRounds : 0);
+export const controlRoundsToWin = (state: GameState, side: FactionId): number => CONTROL.roundsToWin[state.setup.mapSize] + (side === 'dawn' ? state.rules.controlDawnExtra ?? CONTROL.dawnExtraRounds : 0);
 
 /**
  * Three points on unclaimed hexes: one in the middle (on the axis of the triangle) and a pair mirrored over it, so neither side is

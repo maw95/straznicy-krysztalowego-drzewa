@@ -43,6 +43,7 @@ import { generateMap, homeKey, mapNeighbors, revealAround, tileCost, treeKey } f
 import { log } from './log';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { Rng } from './rng';
+import { digitalRules } from './tuning';
 import { isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
 
 export const other = (f: FactionId): FactionId => (f === 'dawn' ? 'horde' : 'dawn');
@@ -58,6 +59,7 @@ export function crystalsFor(setup: SetupOptions): number {
 }
 
 export function createGame(setup: SetupOptions): GameState {
+  const rules = digitalRules(setup);
   const rng = new Rng(setup.seed);
   const variant = MAP_VARIANTS[setup.mapSize];
 
@@ -65,7 +67,7 @@ export function createGame(setup: SetupOptions): GameState {
   // number goes back together with random other treasures (spec section 4).
   // The simple option ("only Eliksiry Odrodzenia") puts a few elixirs on the map and nothing else.
   const others = rng.shuffle(NON_RESURRECTION_ITEMS).slice(0, variant.otherTreasures);
-  const pool: ItemKind[] = setup.rules.treasures
+  const pool: ItemKind[] = rules.treasures
     ? rng.shuffle([...Array(variant.resurrections).fill('resurrection'), ...others])
     : Array(variant.onlyResurrections).fill('resurrection');
   const crystals = crystalsFor(setup);
@@ -74,10 +76,10 @@ export function createGame(setup: SetupOptions): GameState {
   const state: GameState = {
     version: 1,
     setup,
-    rules: setup.rules,
+    rules,
     rng: 0,
     round: 1,
-    roundLimit: variant.roundLimit,
+    roundLimit: variant.roundLimit + (rules.roundLimitBonus ?? 0),
     crystalsNeeded: crystals,
     phase: 'adventure',
     players: [],
@@ -92,7 +94,7 @@ export function createGame(setup: SetupOptions): GameState {
     items: {},
     turnOrder: [],
     turnIndex: 0,
-    movePoints: setup.rules.heroMovePoints,
+    movePoints: rules.heroMovePoints,
     turnBattleDone: false,
     battle: null,
     ritual: 0,
@@ -117,8 +119,8 @@ export function createGame(setup: SetupOptions): GameState {
   });
   // Treasures in hand from the start: the Przymierze on larger maps, the Horde on some levels.
   const dealt = new Set<ItemKind>(others);
-  dealStartTreasures(state, rng, 'dawn', variant.startTreasures, dealt, pool);
-  dealStartTreasures(state, rng, 'horde', setup.rules.hordeStartTreasures, dealt, pool);
+  dealStartTreasures(state, rng, 'dawn', rules.dawnStartTreasures ?? variant.startTreasures, dealt, pool);
+  dealStartTreasures(state, rng, 'horde', rules.hordeStartTreasures, dealt, pool);
   map.crystals.forEach((c, i) => {
     const id = `c${i + 1}`;
     state.crystals[id] = { id, guardian: c.guardian, at: c.hex };
@@ -135,7 +137,7 @@ export function createGame(setup: SetupOptions): GameState {
     // As many evil heroes as good heroes at the start (spec section 1), at least rules.minEvilHeroes.
     const goodCount = setup.seats.filter((s) => s.faction === 'dawn').length;
     // Optionally one more, to make the coop game harder (there are 3 Horde heroes at most).
-    const evilCount = Math.min(FACTION_HEROES.horde.length, Math.max(goodCount, setup.rules.minEvilHeroes ?? 1) + (setup.rules.extraEvilHero ? 1 : 0));
+    const evilCount = Math.min(FACTION_HEROES.horde.length, Math.max(goodCount, rules.minEvilHeroes ?? 1) + (rules.extraEvilHero ? 1 : 0));
     const evil = rng.shuffle(FACTION_HEROES.horde).slice(0, evilCount);
     for (const id of evil) addHero(state, id, 'horde', null);
   }

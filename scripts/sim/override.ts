@@ -1,6 +1,8 @@
 // Experiment without editing the game: SIM_OVERRIDE='{"units":{"ironFistOgre":{"hp":10}},"ability":{"hardHeadIgnore":3},"rules":{"ritualRounds":3},"maps":{"short":{"roundLimit":14}}}'
+// "tuning":[{"objective":"control","level":"hard","players":1,"rules":{"extraEvilHero":false}}] adds digital tuning entries (src/engine/tuning.ts).
 // "digitalStats":{"unicornKing":{"hp":10}} changes the digital ruleset's own numbers (DIGITAL_STATS). Applied once when a simulation process starts (worker processes inherit the variable).
 
+import { DIGITAL_TUNING } from '../../src/engine/tuning';
 import { ABILITY, ARENA_RULES, CONTROL, DIGITAL_STATS, ITEM_EFFECT, MAP_VARIANTS, UNITS } from '../../src/engine/data';
 import { DEFAULT_RULES, LEVEL_RULES, type Level } from '../../src/engine/types';
 
@@ -9,6 +11,7 @@ if (raw) {
   const o = JSON.parse(raw);
   for (const [id, patch] of Object.entries(o.units ?? {})) Object.assign(UNITS[id], patch);
   for (const [id, patch] of Object.entries(o.digitalStats ?? {})) DIGITAL_STATS[id] = { ...DIGITAL_STATS[id], ...(patch as object) };
+  DIGITAL_TUNING.push(...(o.tuning ?? []));
   Object.assign(ABILITY, { ...o.ability });
   if (o.control) Object.assign(CONTROL, { ...o.control, roundsToWin: { ...CONTROL.roundsToWin, ...o.control.roundsToWin } });
   Object.assign(ITEM_EFFECT, o.items ?? {});

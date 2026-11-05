@@ -1,0 +1,67 @@
+// Digital ruleset: balance levers on top of the level presets (types.ts LEVEL_RULES), so the board game's levels stay as printed.
+// createGame applies the matching entries to the rules of the game (the setup keeps the preset: ranking and saves read it as before).
+// Tuned with `SIM_DIGITAL=1 [SIM_OBJECTIVE=control] make sim-tabele` (see docs/ZASADY_CYFROWE.md for the targets and results).
+
+import { levelOf } from './scoring';
+import { isDigital, type RulesConfig, type SetupOptions } from './types';
+import type { MapSize } from './data';
+
+export interface DigitalTune {
+  /** Where it applies; a missing field matches everything. */
+  objective?: 'crystals' | 'control';
+  level?: 'kids' | 'normal' | 'hard';
+  mode?: 'coop' | 'pvp';
+  /** Przymierza seats (players on the good side). */
+  players?: number;
+  maps?: MapSize[];
+  /** Changes to the rules; applied in order, later entries win. */
+  rules: Partial<RulesConfig>;
+}
+
+/**
+ * The levers (numbers from simulations, 200+ games per cell; targets: Easy 70-90 percent, Normal 45-65, Hard 30-50 wins of the Przymierza).
+ * "Treasures" = random treasure cards the Horde holds from the start (hordeStartTreasures) or the Przymierza (dawnStartTreasures).
+ */
+export const DIGITAL_TUNING: DigitalTune[] = [
+  // --- Goal 'crystals' ---
+  // Easy: a dead hero is replaced in the board duels, which made 1-hero games on medium maps too easy and 1 against 1 on short ones too.
+  { objective: 'crystals', level: 'kids', mode: 'coop', players: 1, maps: ['medium'], rules: { heroReplacement: false } },
+  { objective: 'crystals', level: 'kids', mode: 'pvp', players: 1, maps: ['short', 'medium'], rules: { heroReplacement: false } },
+  { objective: 'crystals', level: 'kids', mode: 'pvp', players: 2, maps: ['veryLong'], rules: { heroMovePoints: 4, roundLimitBonus: 6 } },
+  // Normal and Hard, two players: the second hero made the largest maps too easy.
+  { objective: 'crystals', level: 'normal', mode: 'coop', players: 2, maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
+  { objective: 'crystals', level: 'normal', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  { objective: 'crystals', level: 'hard', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  { objective: 'crystals', level: 'normal', mode: 'pvp', players: 2, maps: ['medium'], rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
+  { objective: 'crystals', level: 'normal', mode: 'pvp', players: 1, maps: ['long'], rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
+  // --- Goal 'control' ---
+  { objective: 'control', level: 'hard', mode: 'coop', players: 1, rules: { extraEvilHero: false } },
+  { objective: 'control', level: 'hard', mode: 'coop', players: 1, maps: ['short', 'medium'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
+  { objective: 'control', level: 'normal', mode: 'coop', players: 2, rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
+  { objective: 'control', level: 'normal', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { objective: 'control', level: 'hard', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  { objective: 'control', level: 'normal', mode: 'pvp', players: 1, maps: ['short', 'medium'], rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
+  { objective: 'control', level: 'normal', mode: 'pvp', players: 2, maps: ['long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
+  { objective: 'control', level: 'normal', mode: 'pvp', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+];
+
+/** The rules a game is played with: the setup's, plus the digital levers that match it. */
+export function digitalRules(setup: SetupOptions): RulesConfig {
+  const base = setup.rules;
+  if (!isDigital(base) || setup.mode === 'arena') return base;
+  const level = levelOf(setup);
+  // Only the ready-made levels are tuned; "Własny" is exactly what the player switched on.
+  if (level === 'custom') return base;
+  const players = setup.seats.filter((s) => s.faction === 'dawn').length;
+  const objective = base.objective === 'control' ? 'control' : 'crystals';
+  let rules = base;
+  for (const t of DIGITAL_TUNING) {
+    if (t.objective && t.objective !== objective) continue;
+    if (t.level && t.level !== level) continue;
+    if (t.mode && t.mode !== setup.mode) continue;
+    if (t.players && t.players !== players) continue;
+    if (t.maps && !t.maps.includes(setup.mapSize)) continue;
+    rules = { ...rules, ...t.rules };
+  }
+  return rules;
+}

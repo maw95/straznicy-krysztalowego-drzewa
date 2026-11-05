@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Elf Druid: zielono-złota fala liści w ataku rozpływa się na brzegu kadru zamiast urywać się twardą krawędzią.
 - Złoty Smok: płomień w ataku rozpływa się na prawym brzegu kadru zamiast urywać się twardą krawędzią.
 - Czarny Smok ma nowy klip ataku: płomień jest wyraźniejszy i na prawym brzegu kadru rozpływa się zamiast urywać twardą krawędzią.
 - Wydanie cyfrowe: jednostka, która rusza i od razu uderza (kliknięcie dalekiego wroga), najpierw dolatuje na miejsce, a dopiero potem atakuje i pokazują się obrażenia; poprawiona też śmierć, która przy niektórych ciosach odtwarzała się dwa razy (jednostka upadała, wstawała i upadała znowu).
@@ -18,6 +19,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Wersja cyfrowa: karty bohaterów na ekranie nowej gry i przed bitwą na arenie pokazują cyfrowe Życie, Atak i Szybkość (np. Jednorożec ma 10 S).
 - Pod maską: cel gry (kryształy do Drzewa i rytuał Hordy) jest teraz wymiennym modułem, żeby można było dodawać nowe cele; wyniki gier bez zmian.
 - Wersja cyfrowa: na ekranie nowej gry (kooperacja, rywalizacja) jest wybór „Cel”: kryształy do Drzewa albo „Punkty kontrolne” — trzy punkty na mapie (środkowy wart 2, boczne po 1); kto trzyma więcej punktów przez kilka rund z rzędu, wygrywa. Punkty oznaczają sztandary na mapie, a panel „Cele” i pasek na dole pokazują, kto ile trzyma i jak długo.
+- Wersja cyfrowa: wyrównany poziom trudności przygody. Na bardzo długiej mapie w dwóch graczy jest trudniej (Horda startuje ze skarbami), Trudny na punktach kontrolnych dla jednego gracza jest łatwiejszy, a wygrane Przymierza w kooperacji i rywalizacji mieszczą się w pasmach: Łatwy 70–90%, Normalny 45–65%, Trudny 30–50%. Gra planszowa bez zmian.
 - Wczesna wersja wydania cyfrowego, do wybrania na ekranie nowej gry w trybie Arena („Zasady: Cyfrowe (w budowie)”): arena z poziomymi heksami jak w Heroes III, ciemniejsze tła z różnymi przeszkodami (także zajmującymi dwa pola, jedna pod skosem), wszystkie 16 jednostek jako animowana grafika 2D (chód lub lot, atak, trafienie, śmierć, zostają jako trupy), duże jednostki na dwóch polach, cienkie paski życia, obrażenia pokazują się w chwili uderzenia animacji, a po ostatnim ciosie widać jeszcze chwilę śmierć przed wynikiem. W tym trybie ruch bez ataku kończy turę (strzelec nie może ruszyć się i strzelić, ma za to +1 do ataku). Zasady klasyczne zostają bez zmian.
 - Dzielna Kaczka ma już swój malowany portret i prawdziwą figurkę 3D (zamiast tymczasowych rysunków); ikony umiejętności Kaczej Furii są jeszcze tymczasowe.
 - Sekret: pięć kliknięć w herb Przymierza na ekranie nowej gry budzi Dzielną Kaczkę — kruchego (3 Ż), bardzo szybkiego (10 S) bohatera z atakiem 6 i umiejętnością Kacza Furia: gdy jej atak zabije wroga, od razu aktywuje się jeszcze raz.

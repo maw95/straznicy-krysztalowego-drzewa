@@ -128,3 +128,81 @@ Symulacje (`SIM_DIGITAL=1 SIM_OBJECTIVE=control`, 200 partii botów na wariant),
 kooperacja 1 gracz 51–60%, 2 graczy 64–81%; rywalizacja 1 na 1 44–59%, 2 na 2 55–74%. Trudny (koop) 21–65%. Łatwy (pojedynki na planszy)
 68–92%: tak ma być, to poziom dla dzieci. Przymierze jest mocniejsze w kooperacji na dużych mapach i w 2 na 2 (do ewentualnego strojenia).
 Dawne próby: bez wagi środka i bez „wyprzedzenia” botów 1 na 1 kończyło się w 85–93% limitem rund (patowe stanie na bocznych punktach).
+
+## Strojenie przygody w wersji cyfrowej (5.11.2026)
+
+Cel autora: wygrane Przymierza **Łatwy 70–90%, Normalny 45–65%, Trudny 30–50%** (boty, bez areny) w obu celach. Dźwignie są tylko w wersji cyfrowej:
+`src/engine/tuning.ts` (`DIGITAL_TUNING`), stosowane przez `createGame` do reguł gry (ustawienie zostaje takie, jak ustawia poziom: ranking i zapisy go nie widzą).
+Strojone są gotowe poziomy; poziom „Własny” nie jest ruszany. Pola reguł: `hordeStartTreasures` / `dawnStartTreasures` (losowe skarby na starcie Hordy / Przymierza),
+`roundLimitBonus` (dodatkowe rundy limitu), `controlDawnExtra`, a także istniejące `heroReplacement`, `extraEvilHero`, `heroMovePoints`.
+
+Użyte liczby (reszta komórek bez zmian):
+- Kryształy: Łatwy 1 gracz na średniej mapie i Łatwy 1 na 1 na krótkiej i średniej: bez zastępowania polegniętego bohatera; Łatwy 2 na 2 na bardzo długiej: 4 punkty ruchu i +6 rund limitu;
+  Normalny 2 graczy: krótka 1 losowy skarb Hordy, bardzo długa 2; Trudny 2 graczy bardzo długa: 4; Normalny 2 na 2 średnia i Normalny 1 na 1 długa: 1 losowy skarb Przymierza.
+- Punkty kontrolne: Trudny 1 gracz: bez dodatkowego bohatera Hordy, a na krótkiej i średniej 1 losowy skarb Hordy; Normalny 2 graczy: 1 skarb Hordy (bardzo długa 3);
+  Trudny 2 graczy bardzo długa: 4; Normalny 2 na 2: długa 1 skarb Hordy, bardzo długa 2; Normalny 1 na 1 krótka i średnia: 1 skarb Przymierza.
+- Dodatkowe rundy Przymierza w serii nie pomagają w rywalizacji (tam zwycięstwa idą z przewagi na limicie), więc zostało `dawnExtraRounds: 1`.
+- Poziom Łatwy to pojedynki na planszy, więc skarby Hordy prawie nie mają na niego wpływu; dźwignią jest tam zastępowanie bohatera.
+
+Wyniki końcowe (300 partii na komórkę, wygrane Przymierza; szum ok. ±3 punkty).
+
+Cel „Kryształy”:
+
+```
+Kooperacja — 1 gracz
+│ Mapa         │ Łatwy │ Normalny │ Trudny │
+│ Krótka       │   96% │      55% │    36% │
+│ Średnia      │   67% │      60% │    35% │
+│ Długa        │   88% │      58% │    34% │
+│ Bardzo długa │   81% │      64% │    43% │
+Kooperacja — 2 graczy
+│ Mapa         │ Łatwy │ Normalny │ Trudny │
+│ Krótka       │   83% │      53% │    43% │
+│ Średnia      │   74% │      55% │    37% │
+│ Długa        │   70% │      62% │    46% │
+│ Bardzo długa │   80% │      58% │    46% │
+Rywalizacja — 1 na 1
+│ Mapa         │ Łatwy │ Normalny │
+│ Krótka       │   79% │      51% │
+│ Średnia      │   69% │      48% │
+│ Długa        │   89% │      50% │
+│ Bardzo długa │   75% │      47% │
+Rywalizacja — 2 na 2
+│ Mapa         │ Łatwy │ Normalny │
+│ Krótka       │   83% │      47% │
+│ Średnia      │   73% │      47% │
+│ Długa        │   68% │      45% │
+│ Bardzo długa │   68% │      50% │
+```
+
+Cel „Punkty kontrolne”:
+
+```
+Kooperacja — 1 gracz
+│ Mapa         │ Łatwy │ Normalny │ Trudny │
+│ Krótka       │   89% │      48% │    31% │
+│ Średnia      │   82% │      51% │    35% │
+│ Długa        │   80% │      58% │    31% │
+│ Bardzo długa │   68% │      60% │    34% │
+Kooperacja — 2 graczy
+│ Mapa         │ Łatwy │ Normalny │ Trudny │
+│ Krótka       │   93% │      51% │    40% │
+│ Średnia      │   86% │      56% │    40% │
+│ Długa        │   84% │      60% │    46% │
+│ Bardzo długa │   86% │      60% │    50% │
+Rywalizacja — 1 na 1
+│ Mapa         │ Łatwy │ Normalny │
+│ Krótka       │   90% │      58% │
+│ Średnia      │   85% │      59% │
+│ Długa        │   81% │      51% │
+│ Bardzo długa │   69% │      62% │
+Rywalizacja — 2 na 2
+│ Mapa         │ Łatwy │ Normalny │
+│ Krótka       │   84% │      64% │
+│ Średnia      │   77% │      56% │
+│ Długa        │   82% │      55% │
+│ Bardzo długa │   86% │      63% │
+```
+
+Znane odchyłki: Łatwy 1 gracz na krótkiej mapie (kryształy) ok. 96% (dźwignia zastępowania bohatera spada tam za nisko, ok. 62%), Łatwy 1 gracz na średniej mapie ok. 67%,
+Łatwy 2 na 2 na długiej i bardzo długiej ok. 68%.

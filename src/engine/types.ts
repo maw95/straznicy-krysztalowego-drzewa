@@ -27,6 +27,8 @@ export interface RulesConfig {
   ruleset?: Ruleset;
   /** Missing = 'crystals'. Read it only through `objectiveOf` (objectives.ts). */
   objective?: ObjectiveId;
+  /** Objective 'control', digital tuning: rounds in a row the Przymierza needs on top of the map's number (missing = CONTROL.dawnExtraRounds). */
+  controlDawnExtra?: number;
   heroMovePoints: number;
   /** Unit abilities, including the guardians'. */
   abilities: boolean;
@@ -45,6 +47,10 @@ export interface RulesConfig {
   hordeRespawn?: boolean;
   /** Treasures the Horde holds from the start (difficulty): Eliksiry, other kinds, any random card. */
   hordeStartTreasures?: { resurrections: number; others: number; random?: number };
+  /** Digital tuning: rounds added to the map's round limit (a game that would stall at the limit gets time to be decided). */
+  roundLimitBonus?: number;
+  /** Digital tuning: the treasures the Przymierza hold from the start instead of the map's (MapVariant.startTreasures). */
+  dawnStartTreasures?: { resurrections: number; others: number; random?: number };
   /** Rounds that all living evil heroes must spend on the Tree to complete the ritual. */
   ritualRounds: number;
   /** The Horde's ritual at the Tree; off on the easy level (the Horde wins by the limit or by beating the heroes). */

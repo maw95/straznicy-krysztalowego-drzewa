@@ -96,7 +96,7 @@ describe('setup screen simplifications', () => {
     await act(async () => fireEvent.click(btn2('Rozpocznij grę')!));
     game = (window as any).__game;
     expect(game.setup.battleMode).toBe('board');
-    expect(game.rules).toMatchObject({ abilities: false, useDice: false, extraEvilHero: false, heroReplacement: true, ritual: false });
+    expect(game.setup.rules).toMatchObject({ abilities: false, useDice: false, extraEvilHero: false, heroReplacement: true, ritual: false });
   });
 });
 
