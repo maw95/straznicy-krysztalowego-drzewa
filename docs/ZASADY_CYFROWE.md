@@ -79,3 +79,14 @@ Jednostka, która ruszyła się bez ataku, kończy aktywację automatycznie (nie
   atak w jednym geście, jak dotąd); gdy nikogo nie dosięga, tura kończy się sama.
 - **Wyrównanie:** strzelcy mają `DIGITAL_RANGED_BONUS` (+1 do ataku, `data.ts`). Wartość tymczasowa do strojenia symulacjami.
 - Roboty (`ai/battleAi.ts`) stosują tę samą regułę: strzelec ocenia strzał tylko z miejsca, w którym stoi.
+
+### Strojenie wersji cyfrowej (5.11.2026)
+
+Symulacje z `SIM_DIGITAL=1` (`scripts/sim/arena.ts`, `matrix.ts`; np. `SIM_DIGITAL=1 node --import tsx scripts/sim/arena.ts 40 normal etykieta`).
+- **Ogon dużej jednostki:** komputer układa go po stronie odwróconej od wrogów (`tailFor` w `ai/battleAi.ts`). Na wyniki nie ma wpływu
+  (arena: 52,4% → 51,1% wygranych Przymierza przy 3240 partiach, w granicach szumu); zostaje, bo zachowuje się rozsądniej.
+- **`DIGITAL_RANGED_BONUS`:** 0 → Przymierze wygrywa 55,0% w arenie, 1 → ok. 52%, 2 → 50,7%. Zostaje 1: różnice mieszczą się w szumie (±1,7 pkt),
+  a w przygodzie wersja cyfrowa jest bliska klasycznej (150 partii na wariant: kooperacja 52–81% Przymierza, rywalizacja 44–53%; klasyczna: 61–80% i 44–60%).
+- **Do rozważenia:** Król Jednorożców przegrywa w arenie cyfrowej (35–39% wygranych Przymierza przy 50%), a Złoty Smok i Niedźwiedź wygrywają
+  ok. 60%. Liczby bohatera są wspólne z klasycznymi zasadami, więc ich zmiana ruszyłaby też planszówkę (i `golden.test.ts`); wymaga decyzji autora
+  albo osobnych liczb dla wersji cyfrowej.
