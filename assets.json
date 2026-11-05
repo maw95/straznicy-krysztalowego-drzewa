@@ -610,96 +610,6 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
-      "id": "nimfa/stoi",
-      "pliki": [
-        "public/assets/jednostki/nimfa/stoi.webp"
-      ],
-      "typ": "grafika jednostki (stoi)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "GPT Image 2.5 Flare 1024 px, high, z portretem jako odniesieniem",
-      "scenario_asset": "asset_SPxmS7BcdAuev5v65q19RTzD",
-      "odniesienie": "asset_MKZEjTzpQfF9naAVdmjisoxT (portret karty)",
-      "prompt": "Use the reference image only for the character design (a graceful forest nymph with very long flowing hair, a crown of pink flowers and green leaves, a light sheer white dress, golden leaf-shaped bracelets and necklace). Draw this same character as a full-body game sprite in a strict side view, standing upright with a calm pose, arms relaxed at her sides, facing right, in a serious painterly realistic style with muted white, pale gold, soft green and warm ginger-copper tones; her hair is pale cream-gold with copper highlights and the dress is white with gold trim, no blue and no teal anywhere on the character (redraw all blue or teal parts of the reference in white, gold, green or copper). The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its bare feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "nimfa/martwy",
-      "pliki": [
-        "public/assets/jednostki/nimfa/martwy.webp"
-      ],
-      "typ": "trup",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "Flare 1024 px, medium, odniesienie = stoi",
-      "scenario_asset": "asset_qJB3TwQDPFzGkQRQJpsZHnzE",
-      "odniesienie": "asset_MKZEjTzpQfF9naAVdmjisoxT (portret karty)",
-      "prompt": "The same nymph as in the reference image, now lying still on the ground on her side in a strict side view, head to the left and feet to the right, eyes closed, resting peacefully as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with her body bottom on the same horizontal line as the standing figure's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "nimfa/chod",
-      "pliki": [
-        "public/assets/jednostki/nimfa/chod.webp"
-      ],
-      "typ": "pętla chodu (73 kl.)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, start = stoi",
-      "scenario_asset": "asset_HHc8g96nV71APw7W8z5UuEHF",
-      "odniesienie": "asset_MKZEjTzpQfF9naAVdmjisoxT (portret karty)",
-      "prompt": "Side view, locked static camera. The nymph walks in place with a steady graceful walking cycle, bare feet stepping in turn, long hair and dress swaying slightly, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "nimfa/atak",
-      "pliki": [
-        "public/assets/jednostki/nimfa/atak.webp"
-      ],
-      "typ": "atak (73 kl.)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, start = stoi",
-      "scenario_asset": "asset_7sPJcMuwCWkZZu27VstKkxMm",
-      "odniesienie": "asset_MKZEjTzpQfF9naAVdmjisoxT (portret karty)",
-      "prompt": "Side view, locked static camera. The nymph stretches both hands forward to the right and releases a burst of glowing golden and green light leaves flying to the right, then lowers her arms back down to her sides and ends standing calmly in exactly her starting pose. The bare feet stay at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "nimfa/smierc",
-      "pliki": [
-        "public/assets/jednostki/nimfa/smierc.webp"
-      ],
-      "typ": "śmierć (73 kl.), koniec = martwy",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, start = stoi, koniec = martwy",
-      "scenario_asset": "asset_xu2VHhjw7Zss15R9zBGoPk4e",
-      "odniesienie": "asset_MKZEjTzpQfF9naAVdmjisoxT (portret karty)",
-      "prompt": "Side view, locked static camera. The nymph gently lowers herself to the ground, lies down on her side and rests peacefully, closing her eyes. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "nimfa/trafienie",
-      "pliki": [
-        "public/assets/jednostki/nimfa/trafienie.webp"
-      ],
-      "typ": "trafienie (49 kl.)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 2 s, start = stoi",
-      "scenario_asset": "asset_LaC3UWZ6NsSkjAAe7oxTMVm5",
-      "odniesienie": "asset_MKZEjTzpQfF9naAVdmjisoxT (portret karty)",
-      "prompt": "Side view, locked static camera. The nymph standing in place is startled: she flinches and rocks backwards a little, her head jerks up, then she steadies herself and settles back to her standing pose. The bare feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
       "id": "goblin_szaman/stoi",
       "pliki": [
         "public/assets/jednostki/goblin_szaman/stoi.webp"
@@ -1685,6 +1595,96 @@
       "scenario_asset": "asset_dNVDqH91X9KD5No4UAe97FnG",
       "odniesienie": "asset_wo1YP2g1SUicDP9WnBR3kJya (portret karty)",
       "prompt": "Side view, locked static camera. The duck hovering in the air gently loses height, drifts down and settles onto the ground, folding its wings, and rests there. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "nimfa/stoi",
+      "pliki": [
+        "public/assets/jednostki/nimfa/stoi.webp"
+      ],
+      "typ": "grafika jednostki (stoi), druga wersja zgodna z portretem (miętowe włosy)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, z portretem jako odniesieniem",
+      "scenario_asset": "asset_8AFjBXghP8MT9EShhtoFABcf",
+      "odniesienie": "asset_MKZEjTzpQfF9naAVdmjisoxT (portret karty)",
+      "prompt": "Use the reference image for the character design and keep it faithful: a young graceful forest water nymph with very long flowing wavy hair that is pale silvery-white near the crown and fades through soft mint green into seafoam green toward the long ends (no blue, no cyan), a crown of green leaves and thin twisting vines holding large soft pink and peach lotus-like flowers, one bare shoulder, a light sheer white flowing dress with delicate green vines and small leaves wrapped around the waist and bodice, golden leaf-shaped armlets and bracelets, a golden leaf necklace, bare feet, a calm gentle expression. Draw this same character as a full-body game sprite in a strict side view, standing upright with a calm pose, one hand slightly raised in front of her, facing right, serious painterly realistic style, muted natural tones of mint green, ivory white, gold and soft pink, no blue anywhere on the character. (frame/margin/blue-background wording as in the recipe)",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "nimfa/martwy",
+      "pliki": [
+        "public/assets/jednostki/nimfa/martwy.webp"
+      ],
+      "typ": "grafika jednostki (trup), druga wersja",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, medium, z nowym stoi jako odniesieniem",
+      "scenario_asset": "asset_1PrannrpCVwHHJBQ7xi3SV4C",
+      "odniesienie": "asset_MKZEjTzpQfF9naAVdmjisoxT (portret karty)",
+      "prompt": "The same nymph as in the reference image, now lying still on the ground on her side in a strict side view, head to the right and feet to the left, her long mint green hair spread out on the ground, eyes closed, resting peacefully as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with her body bottom on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "nimfa/chod",
+      "pliki": [
+        "public/assets/jednostki/nimfa/chod.webp"
+      ],
+      "typ": "animacja chodu (73 kl.), druga wersja",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka poczatkowa = nowe stoi",
+      "scenario_asset": "asset_riKSCmjP1GpwLHBoBJfYBwug",
+      "odniesienie": "asset_MKZEjTzpQfF9naAVdmjisoxT (portret karty)",
+      "prompt": "Side view, locked static camera. The nymph walks in place with a steady graceful walking cycle, bare feet stepping in turn, long hair and dress swaying slightly, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "nimfa/atak",
+      "pliki": [
+        "public/assets/jednostki/nimfa/atak.webp"
+      ],
+      "typ": "animacja ataku (73 kl.), druga wersja, prawa krawędź wygaszana",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka poczatkowa = nowe stoi",
+      "scenario_asset": "asset_KxyyJABxnXUQ3XSudKH7NYPR",
+      "odniesienie": "asset_MKZEjTzpQfF9naAVdmjisoxT (portret karty)",
+      "prompt": "Side view, locked static camera. The nymph stretches both hands forward to the right and releases a burst of glowing golden and green light leaves flying to the right, then lowers her arms back down and ends standing calmly in exactly her starting pose. The bare feet stay at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "nimfa/smierc",
+      "pliki": [
+        "public/assets/jednostki/nimfa/smierc.webp"
+      ],
+      "typ": "animacja smierci (73 kl.), koniec = martwy",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka poczatkowa = nowe stoi, koncowa = nowy martwy",
+      "scenario_asset": "asset_W2fgmKfMc8YYCJEA48zoqjCf",
+      "odniesienie": "asset_MKZEjTzpQfF9naAVdmjisoxT (portret karty)",
+      "prompt": "Side view, locked static camera. The nymph gently lowers herself to the ground, lies down on her side and rests peacefully, closing her eyes. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "nimfa/trafienie",
+      "pliki": [
+        "public/assets/jednostki/nimfa/trafienie.webp"
+      ],
+      "typ": "trafienie (49 kl.), druga wersja",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, nowe stoi",
+      "scenario_asset": "asset_Ub2cqwHETRrn5v6CijdvQY5i",
+      "odniesienie": "asset_MKZEjTzpQfF9naAVdmjisoxT (portret karty)",
+      "prompt": "Side view, locked static camera. The nymph standing in place is startled: she flinches and rocks backwards a little, her head jerks up, then she steadies herself and settles back to her standing pose. The bare feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
       "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"

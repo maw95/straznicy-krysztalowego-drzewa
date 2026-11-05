@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nimfa w wersji cyfrowej wygląda jak na swoim portrecie (miętowo-seledynowe włosy, korona z kwiatów i pnączy, złote ozdoby); nowe są wszystkie jej animacje (chód, atak, trafienie, śmierć), a śmierć nie ma już podwójnego upadku.
 - Dzielna Kaczka: nowa animacja trafienia, skrzydła nie rozmywają się już w trakcie uderzenia.
 - Ogr Żelazna Pięść: po śmierci leży w tej samej zgarbionej pozie, w której kończy się animacja, więc nie ma już skoku przy przejściu.
 - Elf Druid: zielono-złota fala liści w ataku rozpływa się na brzegu kadru zamiast urywać się twardą krawędzią.
