@@ -970,96 +970,6 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
-      "id": "czarny_smok/stoi",
-      "pliki": [
-        "public/assets/jednostki/czarny_smok/stoi.webp"
-      ],
-      "typ": "grafika jednostki (stoi = zawis w powietrzu), niebieskie tlo",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "GPT Image 2.5 Flare 1024 px, high, z portretem jako odniesieniem",
-      "scenario_asset": "asset_3LZ73HLXfweVSajdQLLjjxXJ",
-      "odniesienie": "asset_egsbEr979MND9tYzY2DTE2dx (portret karty)",
-      "prompt": "Use the reference image only for the character design (a huge black dragon with dark graphite scales, curved horns, glowing ember-orange eyes, and large wings with dark red membranes). Draw this same character as a full-body game sprite in a strict side view, hovering in the air with wings spread, facing right, in a serious painterly realistic style with muted black, graphite, dark red and ember tones, no blue and no purple anywhere on the character. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, placed in the left half of the frame, its lowest point on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "czarny_smok/martwy",
-      "pliki": [
-        "public/assets/jednostki/czarny_smok/martwy.webp"
-      ],
-      "typ": "grafika jednostki (trup)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "GPT Image 2.5 Flare 1024 px, medium, z obrazem stojacym jako odniesieniem",
-      "scenario_asset": "asset_R31neKezf8UjddeNtLt66AYf",
-      "odniesienie": "asset_egsbEr979MND9tYzY2DTE2dx (portret karty)",
-      "prompt": "The same dragon as in the reference image, now lying still on the ground on its belly in a strict side view facing right, wings folded against its body, head resting low on the ground, eyes closed, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "czarny_smok/lot",
-      "pliki": [
-        "public/assets/jednostki/czarny_smok/lot.webp"
-      ],
-      "typ": "animacja, petla zawisu (73 kl.)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka poczatkowa = stoi",
-      "scenario_asset": "asset_gMMRoEGYRGrx3FwYeFxJZ9X7",
-      "odniesienie": "asset_egsbEr979MND9tYzY2DTE2dx (portret karty)",
-      "prompt": "Side view, locked static camera. The black dragon hovers in place in the air, flapping its wings in a steady rhythm, always facing right, its body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "czarny_smok/atak",
-      "pliki": [
-        "public/assets/jednostki/czarny_smok/atak.webp"
-      ],
-      "typ": "animacja ataku (zionięcie, 73 kl.)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka poczatkowa = stoi",
-      "scenario_asset": "asset_T1Tmxw3miDQEcbjiqrYagXK5",
-      "odniesienie": "asset_egsbEr979MND9tYzY2DTE2dx (portret karty)",
-      "prompt": "Side view, locked static camera. The black dragon hovering in the air thrusts its head forward with jaws wide open, exhaling a long stream of fire to the right, then pulls its head back and returns to its hovering pose, wings still beating. The body stays at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "czarny_smok/smierc",
-      "pliki": [
-        "public/assets/jednostki/czarny_smok/smierc.webp"
-      ],
-      "typ": "animacja smierci (73 kl.), koniec = martwy",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka poczatkowa = stoi, koncowa = martwy",
-      "scenario_asset": "asset_Q5pJAu7ZA8NYhJ3pKjMAWLHs",
-      "odniesienie": "asset_egsbEr979MND9tYzY2DTE2dx (portret karty)",
-      "prompt": "Side view, locked static camera. The black dragon sinks down slowly from the air, its wings fold, it settles onto the ground on its belly, lowers its head and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "czarny_smok/trafienie",
-      "pliki": [
-        "public/assets/jednostki/czarny_smok/trafienie.webp"
-      ],
-      "typ": "animacja trafienia (49 kl.)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 2 s, klatka poczatkowa = stoi",
-      "scenario_asset": "asset_YhhPssFYTtj8Pch49E2nF2vT",
-      "odniesienie": "asset_egsbEr979MND9tYzY2DTE2dx (portret karty)",
-      "prompt": "Side view, locked static camera. The black dragon hovering in the air is startled: it flinches and rocks backwards a little, its head jerks up with a growl, then it steadies itself and returns to its hovering pose. The body stays at the same spot. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-05",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
       "id": "gryf/stoi",
       "pliki": [
         "public/assets/jednostki/gryf/stoi.webp"
@@ -1685,6 +1595,96 @@
       "scenario_asset": "asset_83fh5cWWLie2FbxDM2G3naxV",
       "odniesienie": "asset_9QLYrEZE1q9dPaMDE27PXe7U (portret karty)",
       "prompt": "Side view, locked static camera. The cyclops stays facing right the whole time. It draws its right arm back a little, then swings the arm forward towards the right in a heavy sweeping motion, and then lowers the arm and settles back into its standing pose. The feet stay on the same spot and the whole body stays inside the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "czarny_smok/stoi",
+      "pliki": [
+        "public/assets/jednostki/czarny_smok/stoi.webp"
+      ],
+      "typ": "grafika jednostki (stoi = zawis w powietrzu), niebieskie tlo",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, z portretem jako odniesieniem",
+      "scenario_asset": "asset_3LZ73HLXfweVSajdQLLjjxXJ",
+      "odniesienie": "asset_egsbEr979MND9tYzY2DTE2dx (portret karty)",
+      "prompt": "Use the reference image only for the character design (a huge black dragon with dark graphite scales, curved horns, glowing ember-orange eyes, and large wings with dark red membranes). Draw this same character as a full-body game sprite in a strict side view, hovering in the air with wings spread, facing right, in a serious painterly realistic style with muted black, graphite, dark red and ember tones, no blue and no purple anywhere on the character. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, placed in the left half of the frame, its lowest point on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "czarny_smok/martwy",
+      "pliki": [
+        "public/assets/jednostki/czarny_smok/martwy.webp"
+      ],
+      "typ": "grafika jednostki (trup)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, medium, z obrazem stojacym jako odniesieniem",
+      "scenario_asset": "asset_R31neKezf8UjddeNtLt66AYf",
+      "odniesienie": "asset_egsbEr979MND9tYzY2DTE2dx (portret karty)",
+      "prompt": "The same dragon as in the reference image, now lying still on the ground on its belly in a strict side view facing right, wings folded against its body, head resting low on the ground, eyes closed, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "czarny_smok/lot",
+      "pliki": [
+        "public/assets/jednostki/czarny_smok/lot.webp"
+      ],
+      "typ": "animacja, petla zawisu (73 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka poczatkowa = stoi",
+      "scenario_asset": "asset_gMMRoEGYRGrx3FwYeFxJZ9X7",
+      "odniesienie": "asset_egsbEr979MND9tYzY2DTE2dx (portret karty)",
+      "prompt": "Side view, locked static camera. The black dragon hovers in place in the air, flapping its wings in a steady rhythm, always facing right, its body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "czarny_smok/atak",
+      "pliki": [
+        "public/assets/jednostki/czarny_smok/atak.webp"
+      ],
+      "typ": "animacja ataku (zionięcie, 73 kl.), start: stoi zmniejszone do 80%, klatki powiększone z powrotem, prawa krawędź wygaszana w pakowaniu",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka poczatkowa = stoi (asset_D4cQjwqYozFY2vCrqiz17wLK, 80%)",
+      "scenario_asset": "asset_vQtMEz6BTHHtzHV9mQqkVC79",
+      "odniesienie": "asset_egsbEr979MND9tYzY2DTE2dx (portret karty)",
+      "prompt": "Side view, locked static camera. The black dragon hovering in the air thrusts its head forward with jaws wide open, exhaling a stream of fire to the right, then pulls its head back and returns to its hovering pose, wings still beating. The body stays at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "czarny_smok/smierc",
+      "pliki": [
+        "public/assets/jednostki/czarny_smok/smierc.webp"
+      ],
+      "typ": "animacja smierci (73 kl.), koniec = martwy",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 3 s, klatka poczatkowa = stoi, koncowa = martwy",
+      "scenario_asset": "asset_Q5pJAu7ZA8NYhJ3pKjMAWLHs",
+      "odniesienie": "asset_egsbEr979MND9tYzY2DTE2dx (portret karty)",
+      "prompt": "Side view, locked static camera. The black dragon sinks down slowly from the air, its wings fold, it settles onto the ground on its belly, lowers its head and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "czarny_smok/trafienie",
+      "pliki": [
+        "public/assets/jednostki/czarny_smok/trafienie.webp"
+      ],
+      "typ": "animacja trafienia (49 kl.)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "P-Video 2 720p 2 s, klatka poczatkowa = stoi",
+      "scenario_asset": "asset_YhhPssFYTtj8Pch49E2nF2vT",
+      "odniesienie": "asset_egsbEr979MND9tYzY2DTE2dx (portret karty)",
+      "prompt": "Side view, locked static camera. The black dragon hovering in the air is startled: it flinches and rocks backwards a little, its head jerks up with a growl, then it steadies itself and returns to its hovering pose. The body stays at the same spot. Plain solid blue background stays unchanged, no camera movement.",
       "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"

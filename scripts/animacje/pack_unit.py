@@ -18,6 +18,11 @@ sys.path.insert(0, os.path.dirname(__file__))
 from clean_frames import clean  # noqa: E402
 
 
+def _mul(a: Image.Image, b: Image.Image) -> Image.Image:
+    from PIL import ImageChops
+    return ImageChops.multiply(a, b)
+
+
 def main() -> None:
     ff, src, dst = sys.argv[1:4]
     size = int(sys.argv[4]) if len(sys.argv) > 4 else 512
@@ -52,8 +57,18 @@ def main() -> None:
         sb = clips["stoi"][0].crop((x0, y0, x1, y1)).getchannel("A").point(lambda v: 255 if v > 8 else 0).filter(ImageFilter.MinFilter(7)).getbbox()
         if sb:
             meta.update({"feet": round(sb[3] / h, 4), "cx": round((sb[0] + sb[2]) / 2 / w, 4), "body": round((sb[2] - sb[0]) / w, 4)})
+    # FADE_RIGHT="atak=0.2,..." dissolves the right edge of those clips over that fraction of the frame width, so a flame or a wave that
+    # runs out of the frame fades away instead of ending in a hard vertical cut.
+    fades = {k: float(v) for k, v in (kv.split("=") for kv in os.environ.get("FADE_RIGHT", "").split(",") if kv)}
     for name, fs in clips.items():
         fs = [f.crop((x0, y0, x1, y1)) for f in fs]
+        if name in fades:
+            band = max(1, int(w * fades[name]))
+            ramp = Image.new("L", (w, 1), 255)
+            for i in range(band):
+                ramp.putpixel((w - band + i, 0), int(255 * (1 - (i + 1) / band) ** 1.3))
+            mask = ramp.resize((w, h))
+            fs = [Image.merge("RGBA", (*f.split()[:3], _mul(f.getchannel("A"), mask))) for f in fs]
         rows = math.ceil(len(fs) / cols) if len(fs) > 1 else 1
         out = Image.new("RGBA", ((cols if len(fs) > 1 else 1) * w, rows * h), (0, 0, 0, 0))
         for i, f in enumerate(fs):
