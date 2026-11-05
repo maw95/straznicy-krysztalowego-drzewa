@@ -4,6 +4,7 @@ import { FACTION_NAMES, UNITS, type FactionId, type ItemKind } from '../engine/d
 import { applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
 import { movePath } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
+import { controlCounts } from '../engine/objectives';
 import { arenaSetup, DEFAULT_RULES, type Action, type GameState, type LogEntry, type SetupOptions } from '../engine/types';
 import { AdventureView } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
@@ -125,8 +126,8 @@ export function App() {
       mapSize: (q.get('size') as SetupOptions['mapSize']) ?? 'short',
       battleMode: q.get('battle') === 'board' ? 'board' : 'arena',
       seed: Number(q.get('seed') ?? 1),
-      // ?abilities=0&treasures=0 switch simplifications on, ?dice=1 the die.
-      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1', ...(q.get('ruleset') !== 'board' ? { ruleset: 'digital' as const } : {}) },
+      // ?abilities=0&treasures=0 switch simplifications on, ?dice=1 the die, ?objective=control the control points goal.
+      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1', ...(q.get('ruleset') !== 'board' ? { ruleset: 'digital' as const } : {}), ...(q.get('objective') === 'control' ? { objective: 'control' as const } : {}) },
       seats:
         mode === 'coop'
           ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))
@@ -595,7 +596,11 @@ export function App() {
         Zakończ turę
       </button>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 17 }}>
-        <img src={asset('ui/ico_krysztal.png')} alt="" style={{ width: 'min(32px, 94vw)' }} /> Kryształy <b style={{ color: '#F3D27A' }}>{game.factions.dawn.delivered}/{game.crystalsNeeded}</b>
+        {game.control ? (
+          <>Punkty <b style={{ color: '#F3D27A' }}>{controlCounts(game).dawn}</b>:<b style={{ color: '#F08A7A' }}>{controlCounts(game).horde}</b></>
+        ) : (
+          <><img src={asset('ui/ico_krysztal.png')} alt="" style={{ width: 'min(32px, 94vw)' }} /> Kryształy <b style={{ color: '#F3D27A' }}>{game.factions.dawn.delivered}/{game.crystalsNeeded}</b></>
+        )}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 17 }}>
         <Medal fill="mGreen" glyph="gHourglass" size={32} /> Runda <b style={{ color: '#F3D27A' }}>{game.round}/{game.roundLimit}</b>
@@ -820,7 +825,7 @@ function GameOver({ state, online, rankingNote, onNew, onLog }: { state: GameSta
           <span>Polegli bohaterowie Świtu / Hordy</span><b>{s.heroDeaths.dawn} / {s.heroDeaths.horde}</b>
           <span>Polegli pomocnicy Świtu / Hordy</span><b>{s.supportDeaths.dawn} / {s.supportDeaths.horde}</b>
           <span>Znalezione skarby Świtu / Hordy</span><b>{s.treasuresCollected.dawn} / {s.treasuresCollected.horde}</b>
-          <span>Kryształy przy Drzewie</span><b>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b>
+          {state.control ? <><span>Punkty kontrolne (Świt / Horda)</span><b>{controlCounts(state).dawn} / {controlCounts(state).horde}</b></> : <><span>Kryształy przy Drzewie</span><b>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b></>}
         </div>
         )}
         {rankingNote && <div style={{ fontSize: 17, color: '#F3D27A' }}>{rankingNote}</div>}

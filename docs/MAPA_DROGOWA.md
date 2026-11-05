@@ -37,7 +37,7 @@ każdy nowy zasób wpisujemy do manifestu (źródło, narzędzie, prompt, licenc
 
 ## Faza C — mapy i cele (etap 1, poziom 2 „Wyprawa”)
 
-- [x] Interfejs celu (`objectives.ts`: `init`, `checkVictory`, `onRoundEnd`, `onRoundLimit`, `progress`) i cel „Punkty kontrolne” (silnik, boty, symulacje, opis w `ZASADY_CYFROWE.md`). Dalej: przetrwanie → boss → eskorta.
+- [x] Interfejs celu (`objectives.ts`: `init`, `checkVictory`, `onRoundEnd`, `onRoundLimit`, `progress`) i cel „Punkty kontrolne” (silnik, boty, symulacje, interfejs: sztandary na mapie, panel „Cele”, wybór celu w `SetupScreen`; opis w `ZASADY_CYFROWE.md`). Dalej: przetrwanie → boss → eskorta.
 - [ ] Generator map: prostokąt → pierścień → wyspy → mapy ręczne (JSON).
 - [ ] Poziomy bohaterów, artefakty, więcej obiektów na mapie.
 

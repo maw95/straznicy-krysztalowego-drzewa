@@ -558,6 +558,33 @@ describe('arena through the UI', () => {
     }
   });
 
+  it('the "Cel" row appears only for the digital edition outside the arena; control points start a game with points and a progress line', async () => {
+    localStorage.removeItem('skd-edition');
+    window.history.replaceState(null, '', '/');
+    vi.useFakeTimers();
+    const { container, unmount } = render(<App />);
+    const doc = container.ownerDocument;
+    const btn = (t: string) => button(doc, t);
+    await act(async () => fireEvent.click(btn('Kooperacja (wszyscy przeciw AI)')!));
+    expect(btn('Punkty kontrolne')).toBeTruthy();
+    expect(btn('Kryształy do Drzewa')!.getAttribute('aria-pressed')).toBe('true');
+    await act(async () => fireEvent.click(btn('Planszowa')!));
+    expect(btn('Punkty kontrolne')).toBeUndefined();
+    await act(async () => fireEvent.click(btn('Cyfrowa')!));
+    await act(async () => fireEvent.click(btn('Arena (jedna bitwa)')!));
+    expect(btn('Punkty kontrolne')).toBeUndefined();
+    await act(async () => fireEvent.click(btn('Kooperacja (wszyscy przeciw AI)')!));
+    await act(async () => fireEvent.click(btn('Punkty kontrolne')!));
+    await act(async () => fireEvent.click(btn('Rozpocznij grę')!));
+    const g = (window as any).__game;
+    expect(g.rules.objective).toBe('control');
+    expect(g.control.points).toHaveLength(3);
+    expect(doc.body.textContent).toContain('Punkty kontrolne');
+    expect(doc.querySelectorAll('.control-flag').length).toBe(3);
+    unmount();
+    vi.useRealTimers();
+  });
+
   /** Answers the support and draft dialogs; records whether each draft dialog opened covered. */
   async function playPrep(doc: Document, btn: (t: string) => HTMLButtonElement | undefined) {
     const covers: boolean[] = [];

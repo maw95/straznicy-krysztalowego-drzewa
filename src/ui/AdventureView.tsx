@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FACTION_NAMES, ITEMS, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
 import { activeHero, heroesAt, legalHeroMoves, reviveSpots } from '../engine/game';
+import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import type { HexKey } from '../engine/hex';
 import { mapNeighbors, tileCost } from '../engine/map';
 import type { Action, GameState, Tile } from '../engine/types';
@@ -339,6 +340,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         ))}
                       </>
                     )}
+                    {state.control?.points.includes(t.key) && <ControlFlag holder={controlHolder(state, t.key)} centre={state.control.points[0] === t.key} size={W} />}
                     {t.revealed && t.treasureId && (
                       <div className="glint" style={{ position: 'absolute', right: W * 0.12, top: H * 0.24 }} title="Skarb">
                         <Medal fill="mBrown" glyph="gChest" size={W * 0.3} />
@@ -487,7 +489,16 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
 
           <div className="well" style={{ padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 5, fontSize: 16 }}>
             <div className="lbl">Cele</div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Kryształy przy Drzewie</span><b style={{ color: '#F3D27A' }}>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b></div>
+            {objectiveOf(state) === 'control' ? (
+              OBJECTIVES.control.progress(state).map((l) => (
+                <div key={l.label} style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', columnGap: 8 }}>
+                  <span>{l.label}</span>
+                  <b style={{ color: l.tone === 'horde' ? '#F08A7A' : '#F3D27A' }}>{l.value}</b>
+                </div>
+              ))
+            ) : (
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Kryształy przy Drzewie</span><b style={{ color: '#F3D27A' }}>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b></div>
+            )}
             <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Runda</span><b style={{ color: '#F3D27A' }}>{state.round} / {state.roundLimit}</b></div>
             {state.ritual > 0 && <div style={{ color: '#F08A7A', fontWeight: 700 }}>Rytuał przy Drzewie: {state.ritual}/{state.rules.ritualRounds}</div>}
           </div>
@@ -578,7 +589,8 @@ function TileDetails({ state, k }: { state: GameState; k: HexKey }) {
         </div>
       </div>
       {!t.revealed && note('Teren i to, co tu leży, są jeszcze ukryte.')}
-      {t.tree && note(`Kryształowe Drzewo: Przymierze oddaje tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded}).`)}
+      {t.tree && objectiveOf(state) === 'crystals' && note(`Kryształowe Drzewo: Przymierze oddaje tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded}).`)}
+      {state.control?.points.includes(t.key) && note(controlNote(state, t.key))}
       {crystal && !crystal.guardian && note('Leży tu kryształ.')}
       {crystal?.guardian && (
         <div className="well" style={{ padding: '6px 8px', display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -619,7 +631,8 @@ function tileLines(state: GameState, k: HexKey, reach: { cost: number; hostile: 
     if (crystal?.guardian) lines.push(`Kryształ pod strażą: ${UNITS[crystal.guardian].name}`);
     else if (crystal) lines.push('Leży tu kryształ');
     if (t.treasureId) lines.push('Leży tu skarb');
-    if (t.tree) lines.push(`Oddaj tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded})`);
+    if (t.tree && objectiveOf(state) === 'crystals') lines.push(`Oddaj tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded})`);
+    if (state.control?.points.includes(k)) lines.push(controlNote(state, k));
     for (const h of heroesAt(state, k)) lines.push(`${UNITS[h.id].name}${h.crystals.length ? ' · niesie kryształ' : ''}`);
     if (reach) lines.push(reach.hostile ? `${heroName}: wejście za ${reach.cost} pkt rozpocznie walkę` : `${heroName} dojdzie tu za ${reach.cost} pkt`);
   } else lines.push(t.side === 'dawn' ? 'Kraina Przymierza — teren nieznany' : 'Kraina Hordy — teren nieznany');
@@ -661,5 +674,28 @@ function HexTooltip({ state, k, reach, heroName, x, y, W, H, boardW }: { state: 
         </div>
       ))}
     </div>
+  );
+}
+
+
+/** The text about a control point for the tile description. */
+function controlNote(state: GameState, k: HexKey): string {
+  const holder = controlHolder(state, k);
+  const who = holder ? `trzyma ${FACTION_NAMES[holder]}` : 'nikt go nie trzyma';
+  return `Punkt kontrolny (wart ${controlWeight(state, k)}): ${who}. Trzyma go ten, czyj bohater stoi tu na koniec rundy.`;
+}
+
+/** A banner on a control point: gold for the Przymierze, red for the Horda, grey while nobody holds it; the middle one has a double ring. */
+function ControlFlag({ holder, centre, size }: { holder: FactionId | null; centre: boolean; size: number }) {
+  const colour = holder === 'dawn' ? '#F3D27A' : holder === 'horde' ? '#E0705E' : '#C9D4D8';
+  const w = size * 0.42;
+  return (
+    <svg className="control-flag" width={w} height={w} viewBox="0 0 40 40" style={{ position: 'absolute', left: size * 0.29, top: size * 0.04, pointerEvents: 'none', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.8))' }} aria-label="Punkt kontrolny">
+      <title>Punkt kontrolny</title>
+      <circle cx="20" cy="20" r="18" fill="rgba(10,16,18,0.55)" stroke={colour} strokeWidth="2.5" />
+      {centre && <circle cx="20" cy="20" r="14" fill="none" stroke={colour} strokeWidth="1.5" />}
+      <line x1="15" y1="30" x2="15" y2="9" stroke={colour} strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M15 9 L29 14 L15 19 Z" fill={colour} stroke="#1E1204" strokeWidth="1" />
+    </svg>
   );
 }
