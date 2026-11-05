@@ -117,7 +117,7 @@ export function App() {
     history.current = [];
     const mode = q.get('mode') === 'pvp' ? 'pvp' : 'coop';
     const human = q.get('human') !== '0';
-    const digital = q.get('ruleset') === 'digital';
+    const digital = q.get('ruleset') !== 'board';
     // ?mode=arena starts an arena duel (?hero= for Przymierze), e.g. ?mode=arena&ruleset=digital&steps=60&until=battle.
     const arena = q.get('mode') === 'arena' ? arenaSetup([{ name: 'Gracz 1', faction: 'dawn', controller: human ? 'human' : 'bot', heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'horde', controller: 'bot', heroId: 'werewolfLord' }], Number(q.get('seed') ?? 1)) : null;
     let s = createGame(arena ? { ...arena, rules: { ...arena.rules, ...(digital ? { ruleset: 'digital' as const } : {}) } } : {
@@ -126,7 +126,7 @@ export function App() {
       battleMode: q.get('battle') === 'board' ? 'board' : 'arena',
       seed: Number(q.get('seed') ?? 1),
       // ?abilities=0&treasures=0 switch simplifications on, ?dice=1 the die.
-      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1', ...(q.get('ruleset') === 'digital' ? { ruleset: 'digital' as const } : {}) },
+      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1', ...(q.get('ruleset') !== 'board' ? { ruleset: 'digital' as const } : {}) },
       seats:
         mode === 'coop'
           ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))

@@ -5,7 +5,7 @@ Co zrobione bez udziału autora, co obejrzeć i co zostało. Szczegóły zasad: 
 
 ## Jak to obejrzeć
 
-Ekran nowej gry → Arena → „Zasady: Cyfrowe (w budowie)”. Albo adres testowy `?mode=arena&ruleset=digital&seed=1&steps=80&until=battle`
+Ekran nowej gry → „Wersja: Cyfrowa” (domyślna od 5.11, we wszystkich trybach; „Planszowa” przywraca figurki 3D). Adres testowy `?mode=arena&seed=1&steps=80&until=battle` (cyfrowa; `&ruleset=board` daje planszową)
 (`&hero=<id>` wybiera bohatera Przymierza, np. `ancientBear`, `unicornKing`, `braveDuck`, `griffin`).
 
 ## Zrobione

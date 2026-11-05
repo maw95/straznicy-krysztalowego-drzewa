@@ -54,7 +54,7 @@ export const TIPS = {
   arena: 'Bitwa przenosi się na osobną planszę areny: każda strona wystawia bohatera i dwóch pomocników, jednostki chodzą, strzelają i używają zdolności. Ok. 5–10 minut na bitwę.',
   board: 'Szybki pojedynek bez ruchu: walczą tylko dwaj bohaterowie (albo bohater ze strażnikiem, który ma wtedy mniej Życia) i na zmianę zadają ciosy. Ok. 1–2 minut.',
   dice: 'Do każdego ciosu dolicza się rzut kością −1 / 0 / +1. Więcej losowości: słabszy czasem wygra, silniejszy czasem chybi.',
-  digital: 'Wczesna wersja wydania cyfrowego (w budowie): arena z poziomymi heksami, jednostki w nowej grafice 2D z animacjami (na razie tylko Złoty Smok, zajmujący 2 pola), trupy zostają na planszy. Zasady klasyczne to wierna planszówka.',
+  digital: 'Wersja cyfrowa: jednostki w nowej grafice 2D z animacjami, arena z poziomymi heksami, duże jednostki na dwóch polach, trupy zostają na planszy, ruch bez ataku kończy turę. Mapa świata zostaje z figurkami 3D. Wersja planszowa to wierna planszówka.',
   extraHero: 'Automat zła prowadzi o jednego bohatera więcej niż gracze. Trudniej, ale wciąż do wygrania.',
 };
 

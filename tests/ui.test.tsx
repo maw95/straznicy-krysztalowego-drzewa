@@ -537,19 +537,22 @@ describe('arena through the UI', () => {
   }
   const overlayWith = (doc: Document, text: string) => [...doc.querySelectorAll('.overlay')].find((o) => o.textContent?.includes(text));
 
-  it('the "Zasady" switch starts the digital edition (wide arena) or the classic game', async () => {
-    for (const [label, digital] of [['Cyfrowe (w budowie)', true], ['Klasyczne', false]] as const) {
+  it('the "Wersja" switch starts the digital edition (wide arena) or the board edition, in the arena and in the adventure, and is remembered', async () => {
+    localStorage.removeItem('skd-edition');
+    for (const [mode, label, digital] of [['Arena (jedna bitwa)', 'Cyfrowa', true], ['Arena (jedna bitwa)', 'Planszowa', false], ['Kooperacja (wszyscy przeciw AI)', 'Cyfrowa', true], ['Kooperacja (wszyscy przeciw AI)', 'Planszowa', false]] as const) {
       window.history.replaceState(null, '', '/');
       vi.useFakeTimers();
       const { container, unmount } = render(<App />);
       const doc = container.ownerDocument;
       const btn = (t: string) => button(doc, t);
-      await act(async () => fireEvent.click(btn('Arena (jedna bitwa)')!));
+      // Digital unless the board edition was picked before (it is remembered in the browser).
+      await act(async () => fireEvent.click(btn(mode)!));
+      expect(btn('Cyfrowa')!.getAttribute('aria-pressed')).toBe(String(localStorage.getItem('skd-edition') !== 'board'));
       await act(async () => fireEvent.click(btn(label)!));
       await act(async () => fireEvent.click(btn('Rozpocznij grę')!));
       const g = (window as any).__game;
       expect(g.rules.ruleset === 'digital').toBe(digital);
-      expect(g.battle.layout === 'wide').toBe(digital);
+      if (mode.startsWith('Arena')) expect(g.battle.layout === 'wide').toBe(digital);
       unmount();
       vi.useRealTimers();
     }

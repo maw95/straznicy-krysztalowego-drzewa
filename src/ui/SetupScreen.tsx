@@ -18,9 +18,15 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
     return { name: mode === 'arena' && !human ? 'Komputer' : `Gracz ${i + 1}`, faction, controller: human ? 'human' : 'bot', heroId };
   });
 
-/** The arena set-up with the digital ruleset switched on when asked. */
+/** The set-up with the digital edition's rules switched on when asked (the arena battles; the board duels of the easy level are the same). */
 function withRuleset(setup: SetupOptions, digital: boolean): SetupOptions {
   return digital ? { ...setup, rules: { ...setup.rules, ruleset: 'digital' } } : setup;
+}
+
+const EDITION_KEY = 'skd-edition';
+/** The edition picked last time in this browser: digital unless the board edition was chosen. */
+function savedDigital(): boolean {
+  try { return localStorage.getItem(EDITION_KEY) !== 'board'; } catch { return true; }
 }
 
 export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog }: { online: { label: string; title: string }; onOnline: () => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void }) {
@@ -39,8 +45,12 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e6));
   const [rules, setRules] = useState({ ...DEFAULT_RULES });
   const [level, setLevel] = useState<Level | 'custom'>('normal');
-  /** The digital edition's rules (work in progress); the arena only for now. */
-  const [digital, setDigital] = useState(false);
+  /** The digital edition (2D units, its rules) or the board edition (3D figures, the board game's rules); remembered in this browser. */
+  const [digital, setDigitalState] = useState(savedDigital);
+  const setDigital = (on: boolean) => {
+    setDigitalState(on);
+    try { localStorage.setItem(EDITION_KEY, on ? 'digital' : 'board'); } catch { /* private mode: only for this visit */ }
+  };
   const pickLevel = (l: Level, m: Mode = mode) => {
     const preset = levelSettings(l, m);
     setLevel(l);
@@ -162,12 +172,10 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           </>
           )}
           {arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>{ARENA_HINT}</div>}
-          {arena && (
-            <Row label="Zasady">
-              <Tip text="Zasady planszówki, bez zmian: malowana arena i figurki 3D."><button className={chip(!digital)} aria-pressed={!digital} onClick={() => setDigital(false)}>Klasyczne</button></Tip>
-              <Tip text={TIPS.digital}><button className={chip(digital)} aria-pressed={digital} onClick={() => setDigital(true)}>Cyfrowe (w budowie)</button></Tip>
-            </Row>
-          )}
+          <Row label="Wersja">
+            <Tip text={TIPS.digital}><button className={chip(digital)} aria-pressed={digital} onClick={() => setDigital(true)}>Cyfrowa</button></Tip>
+            <Tip text="Zasady planszówki, bez zmian: malowana arena i figurki 3D."><button className={chip(!digital)} aria-pressed={!digital} onClick={() => setDigital(false)}>Planszowa</button></Tip>
+          </Row>
           {arena && versusBot && (
             <Row label="Komputer">
               {LEVELS.filter(([l]) => l !== 'custom').map(([l, label]) => (
@@ -299,7 +307,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             <button className="btn prim r tester-btn" style={{ height: 56, padding: '0 28px', fontSize: 21 }} onClick={onTesters} title="Informacje dla testerów, statystyki i plik z uwagami dla twórcy">
               INFO DLA TESTERÓW
             </button>
-            <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => onStart(arena ? withRuleset(arenaSetup(seats, seed, level === 'custom' ? 'normal' : level), digital) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero } })}>
+            <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero } }, digital))}>
               Rozpocznij grę
             </button>
           </div>

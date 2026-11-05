@@ -21,7 +21,7 @@ answer in Polish; code, comments and commit messages in English; CHANGELOG.md an
 - `make check` — typecheck + all tests (~10 s). Before every commit. `make test-engine` / `make test-ui` for one half.
 - `make zrzut Q='steps=400&until=battle&mode=pvp&seed=3' WIDOK=desktop|wielki|ultraszeroki|telefon|poziomo ELEMENT=.arena-frame` — small
   screenshot in `.tmp/` through a headless browser with its own Vite server on :5180. Query hook: App.tsx (`steps`,
-  `seed`, `mode`, `players`, `size`, `until=battle`, `battle=board`). For clicks/hover checks write a short script
+  `seed`, `mode`, `players`, `size`, `until=battle`, `battle=board`, `ruleset=board` for the board edition; digital is the default). For clicks/hover checks write a short script
   importing `openGame` from `scripts/browser/game.ts`.
 - `make sim-tabele GAMES=300` — Dawn win rates per mode/map/level (~30 s). Keep simulations under 3 minutes.
 - `make zgloszenia` — fetch bug reports from the server ("sprawdź zgłoszenia"): analyse, then consult the author.
