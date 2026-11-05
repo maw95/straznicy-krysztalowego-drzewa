@@ -46,3 +46,16 @@ Ekran nowej gry → „Wersja: Cyfrowa” (domyślna od 5.11, we wszystkich tryb
 ## Dalej (kolejność z mapy drogowej)
 
 Faza C (mapy i cele, etap 1), faza D (tryb rodzinny), dźwięk (ElevenLabs, najpierw próbka), osiągnięcia i strona sklepu (faza E).
+
+## Poprawki grafiki z wieczoru 5.11 (po treningu stylu i przejściu na Pro)
+
+- **Ostrość:** wszystkie 16 jednostek przepakowane z filmów źródłowych do 512 px (wcześniej 320 px).
+- **Ogień smoków i fala Elfa:** prawa krawędź klatek ataku jest wygaszana przy pakowaniu (`FADE_RIGHT` w `pack_unit.py`), więc płomień i liście rozpływają się
+  zamiast urywać twardą krawędzią. Czarny Smok ma też nowy klip ataku (start: obraz stoi zmniejszony do 80%, klatki powiększone z powrotem), Złoty Smok zostaje przy
+  starym klipie (nowa próba dała głowę bez ognia). Płomień Złotego Smoka jest nadal krótki i różowawy (obwódka klucza).
+- **Ogr:** trup to ostatnia klatka klipu śmierci (zgarbione siedzenie), więc nie ma skoku przy przejściu.
+- **Kaczka:** nowy klip trafienia, skrzydła stabilne. **Nietoperz:** druga próba nie była wyraźnie lepsza, zostaje stary klip (rozmyte końce skrzydeł na kilku klatkach).
+- **Nimfa:** nowy obraz zgodny z portretem (miętowe włosy), nowe wszystkie klipy; śmierć kończy się jak trup.
+- **LoRA stylu** (`model_FFW3Lgcev3oDibePrd4TqBor`, Flux 2 Dev, 15 epok, 1755 CU): próbki mają niebieskie tło, widok z boku w prawo i spójny ciemny styl malarski, nadaje się
+  do nowych jednostek; nie przyjmuje obrazu odniesienia, więc dla jednostek z portretem zostaje Flare z portretem.
+- Do zrobienia: Hydra/Wilkołak i inne drobne wady z listy wyżej, które nie zostały ruszone (trupy na plecach głową w prawo, zryw zamiast uderzenia u Pegaza/Jednorożca/Gryfa).

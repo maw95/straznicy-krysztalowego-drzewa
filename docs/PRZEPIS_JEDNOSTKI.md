@@ -69,3 +69,12 @@ Wszystko w `.tmp/zrodla/<idJednostki>/` (np. `.tmp/zrodla/unicornKing/`): `stoi.
 
 Duże (2 pola): smoki, niedźwiedź, ogr, cyklop, hydra, gryf, jednorożec. Małe (1 pole): reszta. Rozmiar ciała na planszy: ok. 140 px dla
 dużych, ok. 70 px dla małych (`bodyW`).
+
+## Lekcje z poprawek (5.11.2026, wieczór)
+
+- **Ogień i fale ucięte prawą krawędzią:** nie pomaga prompt „krótki płomień” ani zmniejszenie obrazu startowego (płomień i tak sięga krawędzi, bo postać zajmuje 2/3 kadru).
+  Pomaga wygaszanie prawej krawędzi przy pakowaniu: `FADE_RIGHT="atak=0.12" WEBP_Q=80 python3 scripts/animacje/pack_unit.py ...`.
+- **Trup niezgodny z końcem klipu śmierci:** najtaniej użyć ostatniej klatki klipu jako `martwy.png` (`ffmpeg -sseof -0.045 -i smierc.mp4 -frames:v 1 martwy.png`), 0 CU.
+- **Kolor włosów i szczegóły:** portret karty jako odniesienie nie wystarcza; opisz barwy słowami (nimfa: miętowo-seledynowe włosy, bez błękitu); wtedy `stoi` pasuje do portretu.
+- **Pobieranie w tle:** `cd` w złożonej komendzie z `&` rozwala ścieżki; pobieraj kolejno albo z pełnymi ścieżkami.
+- **Skrypty pomocnicze** (nie w repo): w `.tmp/neu/` leżą `shrink.py`, `post.py`, `sheet.py`, `check.py` (zmniejszenie obrazu startowego, przeskalowanie klatek, arkusz kontaktowy).
