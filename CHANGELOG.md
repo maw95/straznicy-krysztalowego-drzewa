@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Złoty Smok: płomień w ataku rozpływa się na prawym brzegu kadru zamiast urywać się twardą krawędzią.
 - Czarny Smok ma nowy klip ataku: płomień jest wyraźniejszy i na prawym brzegu kadru rozpływa się zamiast urywać twardą krawędzią.
 - Wydanie cyfrowe: jednostka, która rusza i od razu uderza (kliknięcie dalekiego wroga), najpierw dolatuje na miejsce, a dopiero potem atakuje i pokazują się obrażenia; poprawiona też śmierć, która przy niektórych ciosach odtwarzała się dwa razy (jednostka upadała, wstawała i upadała znowu).
 - Na ekranie nowej gry jest przełącznik „Wersja: Cyfrowa / Planszowa” we wszystkich trybach (arena, kooperacja, przeciwko sobie); domyślna jest cyfrowa, a wybór gra pamięta. Bitwy w wersji cyfrowej mają jednostki w grafice 2D także w przygodzie, mapa świata zostaje z figurkami 3D.
