@@ -296,8 +296,9 @@ function RankingTable({ me, refreshKey }: { me: User; refreshKey: unknown }) {
   );
 }
 
-const defaultTable = (mode: Mode, count: number, level: Level): TableConfig => ({
+const defaultTable = (mode: Mode, count: number, level: Level, digital: boolean): TableConfig => ({
   mode,
+  digital,
   mapSize: 'short',
   level: mode === 'pvp' && level === 'hard' ? 'normal' : level,
   // Online every seat waits for a player, except the arena's opponent.
@@ -306,7 +307,7 @@ const defaultTable = (mode: Mode, count: number, level: Level): TableConfig => (
 
 function RoomLobby({ session, room, me, online }: { session: OnlineSession; room: RoomView; me: User; online: OnlineState }) {
   const owner = room.ownerId === me.id;
-  const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
+  const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
   const configure = (patch: Partial<TableConfig>) => session.send({ type: 'configure', table: { ...table, ...patch } });
   const updateSeat = (i: number, patch: Partial<TableConfig['seats'][number]>) => configure({ seats: table.seats.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
   const takenBy = (heroId: string, i: number) => table.seats.some((s, j) => j !== i && s.heroId === heroId);
@@ -335,7 +336,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         <Row label="Tryb">
           {(['coop', 'pvp', 'arena'] as Mode[]).map((m) => (
             <Tip key={m} text={m === 'coop' ? TIPS.coop : m === 'pvp' ? TIPS.pvp : TIPS.arenaMode}>
-              <button className={chip(room.mode === m)} disabled={!owner} onClick={() => configure(defaultTable(m, m === 'pvp' ? 2 : 1, room.level))}>
+              <button className={chip(room.mode === m)} disabled={!owner} onClick={() => configure(defaultTable(m, m === 'pvp' ? 2 : 1, room.level, table.digital))}>
                 {m === 'coop' ? 'Kooperacja' : m === 'pvp' ? 'Rywalizacja' : 'Arena'}
               </button>
             </Tip>
@@ -345,7 +346,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
           <>
             <Row label="Gracze">
               {(room.mode === 'coop' ? [1, 2] : [2, 3, 4]).map((n) => (
-                <button key={n} className={chip(room.seats.length === n)} disabled={!owner} onClick={() => configure({ seats: defaultTable(room.mode, n, room.level).seats })}>
+                <button key={n} className={chip(room.seats.length === n)} disabled={!owner} onClick={() => configure({ seats: defaultTable(room.mode, n, room.level, table.digital).seats })}>
                   {n}
                 </button>
               ))}
@@ -368,6 +369,10 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
           ))}
         </Row>
         {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4 }}>{LEVEL_HINT[room.level]}</div>}
+        <Row label="Wersja">
+          <Tip text={TIPS.digital}><button className={chip(table.digital)} aria-pressed={table.digital} disabled={!owner} onClick={() => configure({ digital: true })}>Cyfrowa</button></Tip>
+          <Tip text="Zasady planszówki, bez zmian: malowana arena i figurki 3D."><button className={chip(!table.digital)} aria-pressed={!table.digital} disabled={!owner} onClick={() => configure({ digital: false })}>Planszowa</button></Tip>
+        </Row>
         <Row label="Tempo botów">
           {BOT_SPEEDS.map((speed) => (
             <button key={speed} className={chip(room.botSpeed === speed)} disabled={!owner} onClick={() => session.send({ type: 'botSpeed', speed })}>

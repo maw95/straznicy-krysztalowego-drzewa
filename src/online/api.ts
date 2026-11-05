@@ -32,6 +32,8 @@ export interface RoomView {
   mode: 'coop' | 'pvp' | 'arena';
   mapSize: 'short' | 'medium' | 'long' | 'veryLong';
   level: 'kids' | 'normal' | 'hard';
+  /** The digital edition at the table (a server that does not know editions leaves it out: the board edition). */
+  digital?: boolean;
   /** The computer's pace in this room, set by the owner (the same names as in the game's options). */
   botSpeed: BotSpeed;
   seats: SeatView[];
@@ -45,6 +47,7 @@ export interface TableConfig {
   mode: RoomView['mode'];
   mapSize: RoomView['mapSize'];
   level: RoomView['level'];
+  digital: boolean;
   seats: Array<{ faction: 'dawn' | 'horde'; heroId: string; bot: boolean }>;
 }
 

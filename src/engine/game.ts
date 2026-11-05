@@ -42,7 +42,7 @@ import { distance, parseKey, type HexKey } from './hex';
 import { generateMap, homeKey, mapNeighbors, revealAround, tileCost, treeKey } from './map';
 import { log } from './log';
 import { Rng } from './rng';
-import { isDigital, type Action, BattleReport, BattleState, GameState, HeroState, ItemInstance, Player, SetupOptions } from './types';
+import { isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
 
 export const other = (f: FactionId): FactionId => (f === 'dawn' ? 'horde' : 'dawn');
 
