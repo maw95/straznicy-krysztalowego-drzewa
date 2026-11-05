@@ -41,6 +41,7 @@ import {
 import { distance, parseKey, type HexKey } from './hex';
 import { generateMap, homeKey, mapNeighbors, revealAround, tileCost, treeKey } from './map';
 import { log } from './log';
+import { objectiveOf, OBJECTIVES } from './objectives';
 import { Rng } from './rng';
 import { isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
 
@@ -123,6 +124,7 @@ export function createGame(setup: SetupOptions): GameState {
     state.crystals[id] = { id, guardian: c.guardian, at: c.hex };
     state.tiles[c.hex].crystalId = id;
   });
+  OBJECTIVES[objectiveOf(state)].init(state);
 
   setup.seats.forEach((seat, i) => {
     const player: Player = { id: `p${i + 1}`, name: seat.name, faction: seat.faction, controller: seat.controller };
@@ -561,19 +563,10 @@ function advanceTurn(state: GameState) {
 }
 
 function endRound(state: GameState) {
-  if (ritualFormed(state)) {
-    state.ritual += 1;
-    log(state, 'round', `Rytuał przy Drzewie trwa (${state.ritual}/${state.rules.ritualRounds}).`);
-    if (state.ritual >= state.rules.ritualRounds) {
-      finish(state, 'horde', 'Mroczna Horda ukończyła rytuał przy Drzewie.');
-      return;
-    }
-  } else if (state.ritual) {
-    state.ritual = 0;
-    log(state, 'round', 'Rytuał został przerwany.');
-  }
+  const objective = OBJECTIVES[objectiveOf(state)];
+  if (objective.onRoundEnd(state)) return;
   if (state.round >= state.roundLimit) {
-    finish(state, 'horde', 'Upłynął limit rund.');
+    objective.onRoundLimit(state);
     return;
   }
   state.round += 1;
@@ -583,7 +576,7 @@ function endRound(state: GameState) {
   if (!state.turnOrder.length) finish(state, 'horde', 'Nikt nie może już grać.');
 }
 
-function finish(state: GameState, winner: Side, reason: string) {
+export function finish(state: GameState, winner: Side, reason: string) {
   state.phase = 'over';
   state.winner = winner;
   state.endReason = reason;
@@ -593,13 +586,10 @@ function finish(state: GameState, winner: Side, reason: string) {
 
 function checkVictory(state: GameState) {
   if (state.phase === 'over') return;
-  if (state.factions.dawn.delivered >= state.crystalsNeeded) {
-    finish(state, 'dawn', 'Wszystkie kryształy wróciły do Drzewa.');
-    return;
-  }
-  // Przymierze wins only with the crystals. When all its heroes are dead it can no longer
-  // carry them, so the Horde wins (an Eliksir Odrodzenia needs a living hero to drink it).
-  // Beating every Horde hero clears the way, but the crystals still have to reach the Tree.
+  OBJECTIVES[objectiveOf(state)].checkVictory(state);
+  if ((state.phase as GameState['phase']) === 'over') return; // the objective may have finished the game
+  // Przymierze wins only with its goal. When all its heroes are dead it can no longer
+  // carry crystals or hold points, so the Horde wins (an Eliksir Odrodzenia needs a living hero to drink it).
   const dawn = Object.values(state.heroes).filter((h) => h.faction === 'dawn');
   if (dawn.length && dawn.every((h) => !h.alive)) finish(state, 'horde', 'Wszyscy bohaterowie Przymierza polegli.');
 }

@@ -19,9 +19,14 @@ export type Ruleset = 'classic' | 'digital';
  * hero replacement, are optional simplifications; the damage die and an extra Horde hero
  * are optional difficulties. All of them mix freely.
  */
+/** What a game is played for: bring the crystals to the Tree (the board game's goal), or hold control points (digital ruleset). */
+export type ObjectiveId = 'crystals' | 'control';
+
 export interface RulesConfig {
   /** Missing = classic. Read it only through `isDigital`. */
   ruleset?: Ruleset;
+  /** Missing = 'crystals'. Read it only through `objectiveOf` (objectives.ts). */
+  objective?: ObjectiveId;
   heroMovePoints: number;
   /** Unit abilities, including the guardians'. */
   abilities: boolean;
@@ -352,6 +357,15 @@ export interface GameState {
   lastBattle: BattleReport | null;
   /** Arena: the treasure draft while it lasts. */
   draft?: ArenaDraft | null;
+  /** Objective 'control': the control points and who has led for how many rounds (see objectives.ts). */
+  control?: ControlState;
+}
+
+export interface ControlState {
+  points: HexKey[];
+  /** The side that held more points at the end of the last round(s), and for how many rounds in a row. */
+  lead: FactionId | null;
+  streak: number;
 }
 
 export type Action =
