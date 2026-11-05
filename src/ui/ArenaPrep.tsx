@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { ARENA_PICKS, FACTION_NAMES, ITEMS, UNITS, type FactionId, type ItemKind } from '../engine/data';
-import type { GameState } from '../engine/types';
+import { isDigital, type GameState } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { TreasureCard } from './TreasureCard';
 import { UnitCard } from './UnitCard';
@@ -29,7 +29,7 @@ export function ArenaPrep({ state }: { state: GameState }) {
       <div className="arena-prep-row">
         {(['dawn', 'horde'] as FactionId[]).map((f, i) => (
           <div key={f} className="arena-prep-side" style={{ order: i * 2 }}>
-            <UnitCard unitId={heroOf(state, f)} width={Math.min(260, window.innerWidth / 3.4)} />
+            <UnitCard unitId={heroOf(state, f)} width={Math.min(260, window.innerWidth / 3.4)} digital={isDigital(state.rules)} />
             <div className="arena-prep-supports" aria-label={`Pomocnicy: ${FACTION_NAMES[f]}`}>
               {b
                 ? Object.values(b.units)

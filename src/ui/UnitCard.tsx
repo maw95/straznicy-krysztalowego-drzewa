@@ -3,7 +3,7 @@
 // ability medallion, stat icons, and the text from the unit data.
 // Coordinates are in frame pixels (551×713), measured on each frame.
 
-import { UNITS } from '../engine/data';
+import { battleStats, UNITS } from '../engine/data';
 import { asset } from './common';
 import { StatText } from './markers';
 
@@ -170,7 +170,7 @@ const DUEL_BLUE = '#8FD3F4';
  * A unit's card; `duel` shows a guardian's duel card instead (the duel on the board): its Życie and ability,
  * "Pojedynek" on the role plate and a light-blue edge.
  */
-export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false }: { unitId: string; width?: number; hp?: number; attack?: number; speed?: number; duel?: boolean }) {
+export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false, digital = false }: { unitId: string; width?: number; hp?: number; attack?: number; speed?: number; duel?: boolean; /** The digital edition's Życie, Atak and Szybkość (where they differ from the printed card). */ digital?: boolean }) {
   const base = UNITS[unitId];
   const card = duel ? base.duel : undefined;
   const def = card ? { ...base, hp: card.hp, abilityName: card.abilityName, abilityText: card.abilityText } : base;
@@ -179,7 +179,8 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false 
   const { at, circle, kx, ky, X, Y } = cardSpace(L.bounds);
   const nameW = L.name.x1 - L.name.x0;
   const nameSize = Math.min(40, (nameW / Math.max(8, def.name.length)) * 2.05);
-  const values = [hp ?? def.hp, attack ?? def.attack, speed ?? def.speed];
+  const stats = card ? def : battleStats(unitId, digital);
+  const values = [hp ?? stats.hp, attack ?? stats.attack, speed ?? stats.speed];
   // The description starts right of the ability medallion and gets the largest font that fits.
   const desc = { ...L.desc, x0: Math.max(L.desc.x0, L.ability.cx + L.ability.r + 8), y0: L.desc.y0 - 4, y1: L.desc.y1 + 3 };
   const descSize = fitFont(def.abilityText, (desc.x1 - desc.x0) * kx - 16, (desc.y1 - desc.y0) * ky);

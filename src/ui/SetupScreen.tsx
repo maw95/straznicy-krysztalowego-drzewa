@@ -358,7 +358,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           <Ribbon side={UNITS[preview].side} style={{ width: '100%' }}>{UNITS[preview].name}</Ribbon>
           {/* The card above the turning figure, both in the middle of the space left under the ribbon. */}
           <div style={{ flex: 1, minHeight: 0, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '6px 0' }}>
-            <UnitCard unitId={preview} width={hasFigure(preview) ? 280 : 340} />
+            <UnitCard unitId={preview} width={hasFigure(preview) ? 280 : 340} digital={digital} />
             <FigurePreview unitId={preview} size={300} />
           </div>
         </Frame>
