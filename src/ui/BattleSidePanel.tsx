@@ -1,7 +1,7 @@
 // A side of the battle next to the arena: its units with Życie, Atak, Szybkość and effects, and its reserve.
 
 import { FACTION_NAMES, UNITS, type FactionId, type Side } from '../engine/data';
-import { unitSpeed } from '../engine/battle';
+import { unitAttackBase, unitSpeed } from '../engine/battle';
 import type { BattleUnit, GameState } from '../engine/types';
 import { Frame, HpBar, Portrait, Ribbon, SIDE_RING } from './common';
 import { Marker, StatIcon } from './markers';
@@ -30,7 +30,7 @@ export function SidePanel({ s, state, active, onUnit }: Props) {
               <div style={{ fontWeight: 700, fontSize: 16, color: '#F7EDD2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{UNITS[u.defId].name}</div>
               <HpBar hp={u.hp} max={u.maxHp} />
               <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 6 }}>
-                <StatIcon stat="Ż" light /> {u.hp}/{u.maxHp} · <StatIcon stat="A" light /> {UNITS[u.defId].attack + u.status.battleAttackBonus} · <StatIcon stat="S" light /> {unitSpeed(u)}
+                <StatIcon stat="Ż" light /> {u.hp}/{u.maxHp} · <StatIcon stat="A" light /> {unitAttackBase(u)} · <StatIcon stat="S" light /> {unitSpeed(u)}
                 {u.abilityUsed && (
                   <>
                     {' · '}

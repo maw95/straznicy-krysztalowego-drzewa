@@ -90,3 +90,18 @@ Symulacje z `SIM_DIGITAL=1` (`scripts/sim/arena.ts`, `matrix.ts`; np. `SIM_DIGIT
 - **Do rozważenia:** Król Jednorożców przegrywa w arenie cyfrowej (35–39% wygranych Przymierza przy 50%), a Złoty Smok i Niedźwiedź wygrywają
   ok. 60%. Liczby bohatera są wspólne z klasycznymi zasadami, więc ich zmiana ruszyłaby też planszówkę (i `golden.test.ts`); wymaga decyzji autora
   albo osobnych liczb dla wersji cyfrowej.
+
+## Własne liczby bohaterów w wersji cyfrowej (5.11.2026)
+
+Powód: w arenie cyfrowej Król Jednorożców wygrywał tylko 34% (duży cel na dwóch polach i najmniej życia; szarża działa i daje te same ok. 14 punktów co w planszówce).
+Decyzja autora: każdy bohater Przymierza ma jedną cechę, a wersja cyfrowa może mieć inne liczby niż planszowa (`DIGITAL_STATS` w `data.ts`, `battleStats`).
+
+| Bohater | planszowa Ż/A/S | cyfrowa Ż/A/S | cecha |
+|---|---|---|---|
+| Złoty Smok | 9/5/4 | 7/7/4 | atak |
+| Prastary Niedźwiedź | 11/4/4 | 12/4/3 | życie |
+| Król Jednorożców | 8/5/8 | 8/5/10 | prędkość |
+| Czarny Smok | 7/5/5 | 7/6/5 | wyrównanie Hordy |
+
+Arena, `make sim-arena` z `SIM_DIGITAL=1` (150 gier na parę składów): Przymierze 50,0%; Złoty Smok 50,0%, Jednorożec 52,0%, Niedźwiedź 48,1%, Czarny Smok 48,0%,
+Wilkołak 51,4%, Ogr 50,4%. Przygoda (100 gier na wariant): kooperacja Normalny 55–61% na 1 graczu, bez wyraźnej zmiany. Próby: `SIM_OVERRIDE='{"digitalStats":{...}}'`.

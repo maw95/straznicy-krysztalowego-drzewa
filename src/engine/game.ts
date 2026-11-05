@@ -675,8 +675,9 @@ function startBattle(state: GameState, s: BattleStart) {
     winner: null,
     damageBy: {},
   };
-  b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction);
-  if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction);
+  const digital = isDigital(state.rules) && !b.duel;
+  b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction, digital);
+  if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital);
   if (s.neutralId) {
     const g = makeBattleUnit(s.neutralId, 'neutral');
     // One hero alone against a guardian: the guardian fights with its duel card (less Życie, another ability).
@@ -704,7 +705,8 @@ function startBattle(state: GameState, s: BattleStart) {
 
 function addSupports(state: GameState, faction: FactionId, ids: string[]) {
   const b = state.battle!;
-  for (const id of ids) b.units[id] = makeBattleUnit(id, faction);
+  const digital = isDigital(state.rules) && !b.duel;
+  for (const id of ids) b.units[id] = makeBattleUnit(id, faction, digital);
 }
 
 function selectSupports(state: GameState, faction: FactionId, ids: string[]) {

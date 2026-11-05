@@ -96,6 +96,19 @@ const u = (d: UnitDef): UnitDef => d;
  */
 export const DIGITAL_RANGED_BONUS = 1;
 
+/**
+ * Digital ruleset: the numbers of a unit's battle stats that differ from the board game's (the rest stay as in UNITS).
+ * Each Przymierze hero has one trait: the Gold Dragon hits hardest (7 A, brittle), the Ancient Bear has the most life (12 Ż, slow),
+ * the Unicorn King is the fastest (10 S). The Black Dragon gets 6 A so that the Horde keeps up. Tuned with `make sim-arena` (SIM_DIGITAL=1):
+ * every hero wins 48–52% of arena games, Przymierze 50.0% overall (150 games per line-up pair).
+ */
+export const DIGITAL_STATS: Record<string, Partial<Pick<UnitDef, 'hp' | 'attack' | 'speed'>>> = {
+  goldDragon: { hp: 7, attack: 7, speed: 4 },
+  ancientBear: { hp: 12, attack: 4, speed: 3 },
+  unicornKing: { hp: 8, attack: 5, speed: 10 },
+  blackDragon: { attack: 6 },
+};
+
 export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   [
     u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', size: 2, hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),
@@ -375,3 +388,9 @@ export const MAP_VARIANTS: Record<MapSize, MapVariant> = {
 };
 
 export const MAP_SIZE_NAMES: Record<MapSize, string> = { short: 'Krótka', medium: 'Średnia', long: 'Długa', veryLong: 'Bardzo długa' };
+
+/** The hp, attack and speed of a unit in a battle: the board game's, or the digital ruleset's where they differ. */
+export function battleStats(defId: string, digital: boolean | undefined): Pick<UnitDef, 'hp' | 'attack' | 'speed'> {
+  const { hp, attack, speed } = UNITS[defId];
+  return { hp, attack, speed, ...(digital ? DIGITAL_STATS[defId] : undefined) };
+}

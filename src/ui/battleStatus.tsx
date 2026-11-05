@@ -2,8 +2,8 @@
 // and the right-button card.
 
 import type { BattleUnit } from '../engine/types';
-import { ABILITY, UNITS } from '../engine/data';
-import { unitSpeed } from '../engine/battle';
+import { ABILITY, battleStats, UNITS } from '../engine/data';
+import { unitAttackBase, unitSpeed } from '../engine/battle';
 import { asset, HpBar } from './common';
 import { Marker, StatIcon, StatText, type MarkerName } from './markers';
 import { UnitCard } from './UnitCard';
@@ -31,7 +31,8 @@ export function statusList(u: BattleUnit): StatusInfo[] {
   if (sunburst) out.push({ label: `+${s.nextAttackBonus} A przy następnym ataku (Słoneczny Blask)`, glyph: 'sBlade', marker: 'attack_3', buff: true, value: s.nextAttackBonus !== ABILITY.sunburstSelfBonus ? `+${s.nextAttackBonus}` : undefined });
   else if (s.nextAttackBonus) out.push({ label: `+${s.nextAttackBonus} A przy następnym ataku`, glyph: 'sBlade', marker: 'attack_up', buff: true, value: s.nextAttackBonus !== 1 ? `+${s.nextAttackBonus}` : undefined });
   if (s.shieldArmed) out.push({ label: 'Tarcza Strażnika: neguje następny atak', glyph: 'sGuard', marker: 'shield', buff: true });
-  if (u.maxHp > UNITS[u.defId].hp) out.push({ label: `+${u.maxHp - UNITS[u.defId].hp} maks. Ż do końca bitwy (Eliksir Żywotności)`, glyph: 'sGuard', marker: 'vitality', buff: true, value: u.maxHp - UNITS[u.defId].hp !== 4 ? `+${u.maxHp - UNITS[u.defId].hp}` : undefined });
+  const baseHp = battleStats(u.defId, u.digital).hp;
+  if (u.maxHp > baseHp) out.push({ label: `+${u.maxHp - baseHp} maks. Ż do końca bitwy (Eliksir Żywotności)`, glyph: 'sGuard', marker: 'vitality', buff: true, value: u.maxHp - baseHp !== 4 ? `+${u.maxHp - baseHp}` : undefined });
   if (s.battleAttackBonus) out.push({ label: `+${s.battleAttackBonus} A do końca bitwy`, glyph: 'sBlade', buff: true, value: `+${s.battleAttackBonus}` });
   if (s.battleSpeedBonus) out.push({ label: `+${s.battleSpeedBonus} S do końca bitwy`, glyph: 'sBoltG', marker: 'speed_up', buff: true, value: s.battleSpeedBonus !== 3 ? `+${s.battleSpeedBonus}` : undefined });
   if (s.damageReduction) out.push({ label: `−${s.damageReduction} otrzymanych obrażeń`, glyph: 'sStone', buff: true, value: `−${s.damageReduction}` });
@@ -67,7 +68,7 @@ export function StatusBadge({ st, size = 22 }: { st: StatusInfo; size?: number }
 export function UnitDetails({ u }: { u: BattleUnit }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: 280 }}>
-      <UnitCard unitId={u.defId} duel={Boolean(u.ability)} width={280} hp={u.hp} attack={UNITS[u.defId].attack + u.status.battleAttackBonus} speed={unitSpeed(u)} />
+      <UnitCard unitId={u.defId} duel={Boolean(u.ability)} width={280} hp={u.hp} attack={unitAttackBase(u)} speed={unitSpeed(u)} />
       <div className="plate slate" style={{ padding: '8px 12px', borderRadius: 10, boxShadow: '0 0 0 2px #B88A35, 0 8px 18px rgba(0,0,0,0.6)' }}>
         <HpBar hp={u.hp} max={u.maxHp} />
         <div style={{ fontSize: 15, color: '#F7EDD2', marginTop: 6 }}>

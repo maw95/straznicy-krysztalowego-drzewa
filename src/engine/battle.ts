@@ -1,7 +1,7 @@
 // Battle engine: the painted arena (13 columns, 85 cells), initiative, movement, attacks,
 // abilities and items. Functions change the GameState passed in.
 
-import { ABILITY, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type FactionId, type ItemKind, type Side } from './data';
+import { ABILITY, battleStats, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type FactionId, type ItemKind, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
@@ -259,9 +259,9 @@ export function newStatus(): UnitStatus {
   return { slowNext: 0, rootedNext: false, cursedNext: 0, nextAttackBonus: 0, battleAttackBonus: 0, battleSpeedBonus: 0, damageReduction: 0, shieldArmed: false };
 }
 
-export function makeBattleUnit(defId: string, side: Side): BattleUnit {
-  const def = UNITS[defId];
-  return { id: defId, defId, side, hp: def.hp, maxHp: def.hp, pos: null, alive: true, abilityUsed: false, swappedOut: false, status: newStatus() };
+export function makeBattleUnit(defId: string, side: Side, digital = false): BattleUnit {
+  const { hp } = battleStats(defId, digital);
+  return { id: defId, defId, side, hp, maxHp: hp, ...(digital ? { digital: true as const } : {}), pos: null, alive: true, abilityUsed: false, swappedOut: false, status: newStatus() };
 }
 
 const unitName = (u: BattleUnit) => UNITS[u.defId].name;
@@ -297,11 +297,11 @@ export function activeUnit(b: BattleState): BattleUnit | null {
 }
 
 export function unitSpeed(u: BattleUnit): number {
-  return UNITS[u.defId].speed + u.status.battleSpeedBonus;
+  return battleStats(u.defId, u.digital).speed + u.status.battleSpeedBonus;
 }
 
 export function unitAttackBase(u: BattleUnit): number {
-  return UNITS[u.defId].attack + u.status.battleAttackBonus;
+  return battleStats(u.defId, u.digital).attack + u.status.battleAttackBonus;
 }
 
 export function moveRange(u: BattleUnit): number {
@@ -1080,7 +1080,7 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     }
     const reserve = args.reserveId;
     if (!reserve || !state.factions[faction].supportsAlive.includes(reserve) || b.units[reserve]) throw new Error('Wybierz żywego pomocnika z rezerwy.');
-    const nu = makeBattleUnit(reserve, faction);
+    const nu = makeBattleUnit(reserve, faction, Boolean(t.digital));
     const spot = t.alive ? t.pos : freeCellNear(use.state, faction, nu);
     // The swapped unit leaves first, so a large newcomer may lie on the cells it frees.
     const was = { alive: t.alive, pos: t.pos, tail: t.tail };

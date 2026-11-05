@@ -208,6 +208,8 @@ export interface BattleUnit {
   side: Side;
   hp: number;
   maxHp: number;
+  /** Fights under the digital ruleset: its own hp, attack and speed (see `battleStats`). */
+  digital?: true;
   pos: HexKey | null;
   /** Digital ruleset: the cell where the unit fell. It lies there without occupying it (pos is null); a Resurrection stands it up there. */
   corpse?: HexKey;
