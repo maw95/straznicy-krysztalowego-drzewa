@@ -1,7 +1,7 @@
 // Arena balance: every Przymierze line-up (hero + 2 of 3 supports) against every Horde line-up,
 // bots on both sides drafting treasures, random arena and first pick.
 // Usage: npx tsx scripts/sim/arena.ts [games per match-up = 100] [bot level = normal] [label]
-// SIM_OVERRIDE (see override.ts) tries changed units or abilities; results go to .tmp/sim/arena-<label>.json.
+// SIM_DIGITAL=1 plays the digital ruleset. SIM_OVERRIDE (see override.ts) tries changed units or abilities; results go to .tmp/sim/arena-<label>.json.
 // Prints win rates per hero, per support pair and per full line-up.
 
 import './override';
@@ -28,16 +28,16 @@ function play(dawn: LineUp, horde: LineUp, games: number, level: Level, seed0: n
   let draws = 0;
   let rounds = 0;
   for (let g = 0; g < games; g++) {
-    const s = createGame(
-      arenaSetup(
-        [
-          { name: 'P', faction: 'dawn', controller: 'bot', heroId: dawn.hero },
-          { name: 'H', faction: 'horde', controller: 'bot', heroId: horde.hero },
-        ],
-        seed0 + g,
-        level,
-      ),
+    const setup = arenaSetup(
+      [
+        { name: 'P', faction: 'dawn', controller: 'bot', heroId: dawn.hero },
+        { name: 'H', faction: 'horde', controller: 'bot', heroId: horde.hero },
+      ],
+      seed0 + g,
+      level,
     );
+    // SIM_DIGITAL=1: the digital edition's rules (large units, move ends the turn, shooters +1).
+    const s = createGame(process.env.SIM_DIGITAL ? { ...setup, rules: { ...setup.rules, ruleset: 'digital' } } : setup);
     for (let i = 0; i < 4000 && s.phase !== 'over'; i++) {
       const b = s.battle;
       const a =

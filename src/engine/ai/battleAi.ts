@@ -16,6 +16,8 @@ import {
   deployCells,
   enemiesOf,
   footprintAt,
+  isLarge,
+  tailOptions,
   hopCells,
   livingUnits,
   middleDistance,
@@ -135,6 +137,33 @@ function danger(threats: Threat[], mine: readonly HexKey[]): number {
   return total;
 }
 
+/**
+ * Where a large unit puts its tail when its head goes to `head`: on the side away from the enemies (the head faces them), so
+ * the tail is the cell they reach last. Ties keep the engine's own order (the side it lies on already, or the turn).
+ */
+function tailFor(state: GameState, u: BattleUnit, head: HexKey): HexKey | undefined {
+  const b = state.battle!;
+  const options = tailOptions(b, u, head);
+  if (options.length < 2) return options[0];
+  const enemies = enemiesOf(b, u);
+  if (!enemies.length) return options[0];
+  const gap = (k: HexKey) => Math.min(...enemies.map((e) => dist2(cellsOf(e), [k])));
+  return options.reduce((best, k) => (gap(k) > gap(best) ? k : best));
+}
+
+/** The cells the unit would cover with its head on `cell`: head plus the tail it would choose. */
+function plannedFootprint(state: GameState, u: BattleUnit, cell: HexKey): HexKey[] {
+  if (cell === u.pos || !isLarge(state, u)) return footprintAt(state, u, cell);
+  const t = tailFor(state, u, cell);
+  return t ? [cell, t] : [cell];
+}
+
+/** A move to `to`, with the tail of a large unit on its tactical side. */
+function moveTo(state: GameState, u: BattleUnit, to: HexKey): Action {
+  const tail = to === u.pos || !isLarge(state, u) ? undefined : tailFor(state, u, to);
+  return tail ? { type: 'battleMove', to, tail } : { type: 'battleMove', to };
+}
+
 interface Plan {
   moveTo: HexKey | null;
   target: BattleUnit | null;
@@ -157,7 +186,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   for (const [cell, steps] of options) {
     const moved = act.movedDistance + steps;
     // A large unit standing on `cell` also lies on the cell of its tail.
-    const mine = footprintAt(state, u, cell);
+    const mine = plannedFootprint(state, u, cell);
     const risk = (danger(threats, mine) / Math.max(1, u.hp)) * caution;
     // A shooter of the digital ruleset cannot shoot after moving: from another cell it only takes a position.
     const targets = act.attacked || act.moveOnly || (cell !== u.pos && !canAttackAfterMove(state, u)) ? [] : attackTargets(state, u, cell);
@@ -342,12 +371,12 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
   const goal = rulebookTarget([...new Map(reachable.map((t) => [t.id, t])).values()]);
   if (goal) {
     const cell = cells.find(([c]) => from.get(c)!.some((t) => t.id === goal.id));
-    if (cell) return { type: 'battleMove', to: cell[0] };
+    if (cell) return moveTo(state, u, cell[0]);
   }
   const enemies = enemiesOf(b, u);
-  const gap = (cell: HexKey) => Math.min(...enemies.map((e) => dist2(cellsOf(e), footprintAt(state, u, cell))));
+  const gap = (cell: HexKey) => Math.min(...enemies.map((e) => dist2(cellsOf(e), plannedFootprint(state, u, cell))));
   const closer = cells.filter(([c]) => gap(c) < gap(u.pos!)).sort((x, y) => gap(x[0]) - gap(y[0]) || x[1] - y[1] || (x[0] < y[0] ? -1 : 1))[0];
-  return closer ? { type: 'battleMove', to: closer[0] } : { type: 'endActivation' };
+  return closer ? moveTo(state, u, closer[0]) : { type: 'endActivation' };
 }
 
 /** Rulebook use of the abilities that need no attack (Pajęcze Sidła): at once, on the rulebook target. */
@@ -382,7 +411,7 @@ export function chooseBattleAction(state: GameState): Action {
   const free = freeAbility(state, u);
   if (free) return free;
   const plan = planActivation(state, u);
-  if (plan.moveTo && !act.moved && !act.attacked) return { type: 'battleMove', to: plan.moveTo };
+  if (plan.moveTo && !act.moved && !act.attacked) return moveTo(state, u, plan.moveTo);
   if (plan.target && !act.attacked && !act.moveOnly) {
     return { type: 'battleAttack', targetId: plan.target.id, useAbility: plan.useAbility, secondTargetId: plan.second?.id };
   }

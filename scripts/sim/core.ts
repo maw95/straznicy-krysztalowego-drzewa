@@ -55,6 +55,8 @@ export function setupWith(size: MapSize, table: Table, options: Option[], seed: 
   if (options.includes('notreasures')) rules.treasures = false;
   if (options.includes('dice')) rules.useDice = true;
   if (options.includes('replacement')) rules.heroReplacement = true;
+  // SIM_DIGITAL=1: the digital edition's rules.
+  if (process.env.SIM_DIGITAL) rules.ruleset = 'digital';
   return { mode, mapSize: size, battleMode: options.includes('board') ? 'board' : base.battleMode, seed, seats, rules };
 }
 
