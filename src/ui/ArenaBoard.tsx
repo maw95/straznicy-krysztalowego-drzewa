@@ -251,7 +251,7 @@ export function ArenaBoard(p: Props) {
             ))}
           </svg>
           {/* Digital ruleset: sprites (and corpses) of the units that have them. */}
-          {spritePieces.length > 0 && <SpriteLayer width={CANVAS_W} height={CANVAS_H} style={{ zIndex: 1 }} pieces={spritePieces} />}
+          {spritePieces.length > 0 && <SpriteLayer width={CANVAS_W} height={CANVAS_H} scale={scale} style={{ zIndex: 1 }} pieces={spritePieces} />}
           {/* Units with a model stand on the arena as 3D figures; their tokens below keep only the HP and markers. */}
           <FigureLayer
             width={CANVAS_W}

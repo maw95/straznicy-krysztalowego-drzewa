@@ -69,6 +69,8 @@ class Stage {
   private pieces: SpritePiece[] = [];
   private frame = 0;
   private disposed = false;
+  /** Canvas pixels per layout pixel: the board is scaled on the screen, and screens are denser than 1:1. */
+  private res = 1;
 
   constructor(private canvas: HTMLCanvasElement) {
     this.ctx = canvas.getContext('2d');
@@ -197,7 +199,11 @@ class Stage {
   private draw(now: number) {
     const { ctx, canvas } = this;
     if (!ctx) return;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.setTransform(this.res, 0, 0, this.res, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     const lives = [...this.live.values()];
     for (const l of lives) this.advance(l, now);
     // Corpses lie under the living; the rest are drawn from the back (top of the board) to the front.
@@ -274,9 +280,11 @@ class Stage {
     ctx.restore();
   }
 
-  resize(w: number, h: number) {
-    this.canvas.width = w;
-    this.canvas.height = h;
+  /** The canvas covers w × h layout pixels, drawn with `res` canvas pixels each (the bitmap is that much sharper). */
+  resize(w: number, h: number, res: number) {
+    this.res = res;
+    this.canvas.width = Math.round(w * res);
+    this.canvas.height = Math.round(h * res);
     this.start();
   }
 
@@ -290,7 +298,10 @@ const isCorpse = (l: Live) => l.rest === 'corpse' && !l.seg;
 const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 
 /** Sprites for `pieces` on a transparent canvas the size of the board (it lets clicks through). */
-export function SpriteLayer({ width, height, pieces, style }: { width: number; height: number; pieces: SpritePiece[]; style?: React.CSSProperties }) {
+/** Biggest bitmap side (canvas pixels): a huge board on a dense screen must not eat the memory. */
+const MAX_SIDE = 4096;
+
+export function SpriteLayer({ width, height, pieces, scale = 1, style }: { width: number; height: number; pieces: SpritePiece[]; /** How much the board is scaled on the screen. */ scale?: number; style?: React.CSSProperties }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const stage = useRef<Stage | null>(null);
   const latest = useRef(pieces);
@@ -306,10 +317,12 @@ export function SpriteLayer({ width, height, pieces, style }: { width: number; h
       stage.current = null;
     };
   }, []);
-  useEffect(() => stage.current?.resize(width, height), [width, height]);
+  const dpr = typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1;
+  const res = Math.max(1, Math.min(3, scale * dpr, MAX_SIDE / width, MAX_SIDE / height));
+  useEffect(() => stage.current?.resize(width, height, res), [width, height, res]);
   useEffect(() => stage.current?.update(pieces), [pieces]);
 
-  return <canvas ref={canvas} width={width} height={height} aria-hidden="true" style={{ position: 'absolute', left: 0, top: 0, width, height, pointerEvents: 'none', ...style }} />;
+  return <canvas ref={canvas} width={Math.round(width * res)} height={Math.round(height * res)} aria-hidden="true" style={{ position: 'absolute', left: 0, top: 0, width, height, pointerEvents: 'none', ...style }} />;
 }
 
 export const spriteIds = Object.keys(SPRITES);
