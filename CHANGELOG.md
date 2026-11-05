@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Dzielna Kaczka: nowa animacja trafienia, skrzydła nie rozmywają się już w trakcie uderzenia.
 - Ogr Żelazna Pięść: po śmierci leży w tej samej zgarbionej pozie, w której kończy się animacja, więc nie ma już skoku przy przejściu.
 - Elf Druid: zielono-złota fala liści w ataku rozpływa się na brzegu kadru zamiast urywać się twardą krawędzią.
 - Złoty Smok: płomień w ataku rozpływa się na prawym brzegu kadru zamiast urywać się twardą krawędzią.
