@@ -45,9 +45,9 @@ Wszystko w `.tmp/zrodla/<idJednostki>/` (np. `.tmp/zrodla/unicornKing/`): `stoi.
 5. **Pobranie:** `asset_download` daje podpisany URL; pobierz go `curl -sL -o <plik> "<url>"` (URL cały, dokładnie skopiowany) do
    `.tmp/zrodla/<id>/`. Sprawdź `file <plik>` (PNG lub „ISO Media”, nie XML z błędem).
 6. **Pakowanie arkuszy** (z korzenia repozytorium):
-   `python3 scripts/animacje/pack_unit.py $(cat .tmp/ffpath) .tmp/zrodla/<id> public/assets/jednostki/<folder> 320 8`
+   `WEBP_Q=80 python3 scripts/animacje/pack_unit.py $(cat .tmp/ffpath) .tmp/zrodla/<id> public/assets/jednostki/<folder> 512 8`
    (`<folder>` to nazwa po polsku z podkreślnikami, np. `krol_jednorozcow`). Powstają `stoi.webp`, `martwy.webp`, arkusze klipów i
-   `anim.json`. Całość powinna ważyć poniżej ok. 4 MB.
+   `anim.json`. Całość powinna ważyć ok. 5–9 MB (od 5.11 klatki mają 512 px, jakość 80; wcześniej 320 px: obraz był miękki). Źródłowe filmy mają 960 px. Uwaga: w katalogu źródłowym nie zostawiaj dodatkowych `.png`/`.mp4` (arkusze kontaktowe), bo skrypt je też spakuje.
 7. **Kontrola:** zrób arkusz kontaktowy kilku klatek każdego klipu (PIL, tło ciemne) i obejrzyj: postać cała w kadrze, brak niebieskiej
    obwódki, pętla chodu/lotu się domyka, śmierć kończy się jak `martwy`. Drobne wady zapisz w raporcie, nie ponawiaj bez potrzeby.
 8. **Manifest:** zapisz `.tmp/zrodla/<id>/manifest.json` (format: nagłówek `scripts/animacje/manifest.py`, wzór:
