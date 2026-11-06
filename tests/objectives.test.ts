@@ -3,7 +3,8 @@ import { BOSS, CONTROL, SURVIVAL } from '../src/engine/data';
 import { createGame } from '../src/engine/game';
 import { distance, parseKey } from '../src/engine/hex';
 import { tileCost, treeKey } from '../src/engine/map';
-import { controlCounts, controlRoundsToWin, objectiveOf, OBJECTIVES } from '../src/engine/objectives';
+import { artifactCarrier, controlCounts, controlRoundsToWin, objectiveOf, OBJECTIVES } from '../src/engine/objectives';
+import { homeOf } from '../src/engine/map';
 import { playOut, pvpSeats, setup } from './helpers/engine';
 
 describe('objectives', () => {
@@ -197,6 +198,44 @@ describe('objective boss (digital ruleset)', () => {
       expect(s.phase).toBe('over');
       expect(s.boss!.hp).toBeLessThanOrEqual(s.boss!.maxHp);
       expect(s.boss!.hits.dawn + s.boss!.hits.horde).toBe(s.boss!.maxHp - s.boss!.hp);
+    }
+  });
+});
+
+describe('objective artifact (digital ruleset)', () => {
+  const art = (over: Parameters<typeof setup>[0] = {}, shape?: 'rectangle' | 'ring') => createGame({ ...setup(over, { ruleset: 'digital', objective: 'artifact' }), ...(shape ? { mapShape: shape } : {}) });
+
+  it('lies free in the middle; a hero that picks it up carries it with fewer move points', () => {
+    for (const shape of [undefined, 'rectangle', 'ring'] as const) {
+      const s = art({}, shape);
+      expect(objectiveOf(s)).toBe('artifact');
+      expect(s.crystals.artifact.at).toBe(s.artifact!.start);
+      expect(artifactCarrier(s)).toBeNull();
+    }
+    const s = art();
+    const hero = Object.values(s.heroes).find((h) => h.faction === 'dawn')!;
+    hero.crystals.push('artifact');
+    s.crystals.artifact.at = `hero:${hero.id}`;
+    expect(artifactCarrier(s)?.id).toBe(hero.id);
+  });
+
+  it('the carrier wins on its own base, not on the other one; the Tree does not take it', () => {
+    const s = art();
+    const hero = Object.values(s.heroes).find((h) => h.faction === 'dawn')!;
+    hero.crystals.push('artifact');
+    hero.pos = homeOf(s, 'horde');
+    OBJECTIVES.artifact.checkVictory(s);
+    expect(s.phase).not.toBe('over');
+    hero.pos = homeOf(s, 'dawn');
+    OBJECTIVES.artifact.checkVictory(s);
+    expect(s.winner).toBe('dawn');
+  });
+
+  it('bots play it to the end on every shape; the artifact is never lost', () => {
+    for (const shape of [undefined, 'rectangle', 'ring'] as const) {
+      const s = playOut(art({ seed: 6 }, shape));
+      expect(s.phase).toBe('over');
+      expect(s.crystals.artifact).toBeDefined();
     }
   });
 });

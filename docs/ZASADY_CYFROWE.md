@@ -161,6 +161,16 @@ W środku mapy (pole środkowego punktu kontrolnego, w każdym kształcie) leży
 Roboty: Horda od razu idzie do legowiska; Przymierze dopiero, gdy jest gotowe (zostaje przynajmniej jeden pomocnik, albo Boss ma ≤ 12 Ż, albo minęła połowa rund), wcześniej gra jak w „Kryształach”.
 Symulacja (`SIM_OBJECTIVE=boss SIM_DIGITAL=1`, 100 gier, Normalny): Przymierze 34–68% (kooperacja 57%, rywalizacja 53% łącznie); mapa krótka jest najtrudniejsza (34–56%), bo Przymierze dochodzi do Bossa w 2 rundach. Wariant kooperacyjny „wszyscy przeciw Bossowi bez Hordy” jest do rozważenia (Do akceptacji autora).
 
+## Cel „Artefakt” (6.11.2026, wersja cyfrowa)
+
+Na polu środkowego punktu kontrolnego leży Artefakt (w silniku: kryształ o id `artifact`, `state.artifact`). Podnosi go każdy bohater, który wejdzie na pole (także Horda, która zwykle kryształów nie bierze).
+Kto zaniesie go do **własnej bazy**, wygrywa grę; Drzewo go nie przyjmuje. Niosący ma `ARTIFACT.carrierSlow` = 1 punkt ruchu mniej (od początku tury i w chwili podniesienia). Polegli niosący upuszcza go na polu śmierci,
+a następny bohater (obojętnie której strony) go podnosi. Limit rund wygrywa Horda; gdy polegną wszyscy bohaterowie Przymierza, też.
+Roboty: niosący idzie do swojej bazy (omija wrogów, których nie pokona), pozostali uderzają sąsiada, którego pokonają, i idą po leżący Artefakt albo polują na niosącego wroga.
+Symulacja (`SIM_OBJECTIVE=artifact SIM_DIGITAL=1`, 100 gier, Normalny): trójkąt 56% kooperacja / 50% rywalizacja, prostokąt 56% / 48%, pierścień 55% / 43%.
+Bez strojenia Przymierze wygrywało 68% (na bardzo długiej mapie 80–90%): rusza pierwsze i pierwsze dochodzi do środka. Spowolnienie niosącego o 2 pkt ruchu było za mocne (poniżej 30%);
+na długich mapach Horda startuje z losowymi skarbami (długa 2, bardzo długa 4; `DIGITAL_TUNING`). Wariant „eskorta” (Przymierze niesie Artefakt z własnej bazy do Drzewa) jest w „Do akceptacji autora”.
+
 ## Cel „Przetrwanie” (6.11.2026, wersja cyfrowa, tylko kooperacja)
 
 Przymierze wygrywa, gdy minie ustalona liczba rund, a choć jeden ich bohater żyje: 6 / 9 / 14 / 18 rund (mapa krótka / średnia / długa / bardzo długa; `SURVIVAL.rounds`).

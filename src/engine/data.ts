@@ -158,6 +158,15 @@ export const BOSS = {
   twoHeroesFactor: 1.25,
 };
 
+/**
+ * Objective 'artifact' (digital ruleset): the artifact lies in the middle of the map; the hero that carries it to its own base wins. The carrier
+ * has `carrierSlow` move points fewer (a heavy load), so the other side can catch up. A fallen carrier drops it where it fell. At the round limit
+ * the Horde win. Tuned with simulations (docs/ZASADY_CYFROWE.md).
+ */
+export const ARTIFACT = {
+  carrierSlow: 1,
+};
+
 export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   [
     u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', size: 2, hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),

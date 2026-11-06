@@ -17,6 +17,7 @@ import {
   ARENA_OFFER,
   ARENA_PICKS,
   ARENA_RULES,
+  ARTIFACT,
   RESURRECTION_CARDS,
   SUPPORTS_PER_BATTLE,
   TERRAIN_NAMES,
@@ -502,14 +503,18 @@ function enterBoard(state: GameState, hero: HeroState, to: HexKey) {
 }
 
 /** A Przymierze hero picks up every free crystal lying on its hex. */
-function pickUpCrystals(state: GameState, hero: HeroState) {
+function pickUpCrystals(state: GameState, hero: HeroState, only?: string) {
   const tile = state.tiles[hero.pos];
   for (const c of Object.values(state.crystals)) {
-    if (c.at === hero.pos && !c.guardian) {
+    if (c.at === hero.pos && !c.guardian && (!only || c.id === only)) {
       c.at = `hero:${hero.id}`;
       hero.crystals.push(c.id);
       if (tile.crystalId === c.id) tile.crystalId = null;
-      log(state, 'crystal', `${UNITS[hero.id].name} podnosi kryształ.`);
+      if (c.id === 'artifact') {
+        state.artifact!.handovers += 1;
+        state.movePoints = Math.max(0, state.movePoints - ARTIFACT.carrierSlow);
+      }
+      log(state, 'crystal', c.id === 'artifact' ? `${UNITS[hero.id].name} podnosi Artefakt.` : `${UNITS[hero.id].name} podnosi kryształ.`);
     }
   }
 }
@@ -527,15 +532,19 @@ function arriveAt(state: GameState, hero: HeroState) {
   }
   if (hero.faction === 'dawn') {
     pickUpCrystals(state, hero);
-    if (tile.tree && hero.crystals.length) {
+    // The artifact is never given to the Tree (it is carried to a base, see objectives.ts).
+    const ordinary = hero.crystals.filter((id) => id !== 'artifact');
+    if (tile.tree && ordinary.length) {
       const blocked = heroesAt(state, hero.pos).some((h) => h.faction === 'horde');
       if (!blocked) {
-        for (const id of hero.crystals) state.crystals[id].at = 'tree';
-        state.factions.dawn.delivered += hero.crystals.length;
-        log(state, 'crystal', `${UNITS[hero.id].name} oddaje ${hero.crystals.length} kryształ(y) Drzewu (${state.factions.dawn.delivered}/${state.crystalsNeeded}).`);
-        hero.crystals = [];
+        for (const id of ordinary) state.crystals[id].at = 'tree';
+        state.factions.dawn.delivered += ordinary.length;
+        log(state, 'crystal', `${UNITS[hero.id].name} oddaje ${ordinary.length} kryształ(y) Drzewu (${state.factions.dawn.delivered}/${state.crystalsNeeded}).`);
+        hero.crystals = hero.crystals.filter((id) => id === 'artifact');
       }
     }
+  } else if (state.artifact) {
+    pickUpCrystals(state, hero, 'artifact');
   }
   checkVictory(state);
 }
@@ -565,7 +574,7 @@ function advanceTurn(state: GameState) {
       if (state.phase === 'over') return;
     }
   }
-  state.movePoints = state.rules.heroMovePoints;
+  state.movePoints = state.rules.heroMovePoints - (activeHero(state)?.crystals.includes('artifact') ? ARTIFACT.carrierSlow : 0);
   state.turnBattleDone = false;
 }
 

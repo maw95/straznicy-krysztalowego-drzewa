@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowy cel przygody w wersji cyfrowej, „Artefakt”: w środku mapy leży Artefakt, a wygrywa strona, której bohater zaniesie go do własnej bazy. Niosący idzie wolniej, a poległy upuszcza Artefakt na polu, więc wróg może go przejąć.
 - Nowy cel przygody w wersji cyfrowej, „Boss”: w środku mapy leży legowisko potężnego Bossa, którego wyzywają obie strony; rany Bossa zostają między walkami, a wygrywa ten, kto zada ostatni cios.
 - Wersja cyfrowa: nowe kształty mapy przygody, „Prostokąt” (Drzewo w środku, bazy po bokach) i „Pierścień” (obręcz wokół jeziora, do Drzewa wiodą dwie drogi). Wybierasz je w ekranie startu; Przymierze dostaje na nich skarby na start, żeby szanse były wyrównane.
 - Nowy cel przygody w wersji cyfrowej, „Przetrwanie” (kooperacja): trzeba utrzymać przy życiu choć jednego bohatera przez kilka rund, a co dwie rundy w bazie Hordy pojawia się kolejny bohater. Wybierasz go w ekranie startu obok „Punktów kontrolnych”.

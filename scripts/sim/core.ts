@@ -63,6 +63,7 @@ export function setupWith(size: MapSize, table: Table, options: Option[], seed: 
   if (process.env.SIM_OBJECTIVE === 'survival' && mode === 'coop') rules.objective = 'survival';
   // SIM_OBJECTIVE=boss: the race for the Boss's last blow.
   if (process.env.SIM_OBJECTIVE === 'boss') rules.objective = 'boss';
+  if (process.env.SIM_OBJECTIVE === 'artifact') rules.objective = 'artifact';
   const mapShape = process.env.SIM_SHAPE === 'rectangle' || process.env.SIM_SHAPE === 'ring' ? process.env.SIM_SHAPE : undefined;
   return { mode, mapSize: size, ...(mapShape ? { mapShape } : {}), battleMode: options.includes('board') ? 'board' : base.battleMode, seed, seats, rules };
 }

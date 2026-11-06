@@ -8,7 +8,7 @@ import type { MapSize } from './data';
 
 export interface DigitalTune {
   /** Where it applies; a missing field matches everything. */
-  objective?: 'crystals' | 'control' | 'survival' | 'boss';
+  objective?: 'crystals' | 'control' | 'survival' | 'boss' | 'artifact';
   level?: 'kids' | 'normal' | 'hard';
   mode?: 'coop' | 'pvp';
   /** Przymierza seats (players on the good side). */
@@ -45,6 +45,10 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   { objective: 'control', level: 'normal', mode: 'pvp', players: 1, maps: ['short', 'medium'], rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
   { objective: 'control', level: 'normal', mode: 'pvp', players: 2, maps: ['long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
   { objective: 'control', level: 'normal', mode: 'pvp', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  // --- Goal 'artifact': the Przymierza move first and reach the middle first, which tells on long maps.
+  { objective: 'artifact', level: 'normal', maps: ['long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  { objective: 'artifact', level: 'normal', maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+
   // --- Map shapes other than the triangle, goal 'crystals' (last, so they win over the entries above): the Przymierza are weaker there
   // (the Tree is open on more sides, the roads cross), so they start with treasures (ring: also one more move point and an Eliksir).
   { objective: 'crystals', shape: 'rectangle', rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
@@ -59,7 +63,7 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
   // Only the ready-made levels are tuned; "Własny" is exactly what the player switched on.
   if (level === 'custom') return base;
   const players = setup.seats.filter((s) => s.faction === 'dawn').length;
-  const objective = base.objective === 'control' || base.objective === 'survival' || base.objective === 'boss' ? base.objective : 'crystals';
+  const objective = base.objective === 'control' || base.objective === 'survival' || base.objective === 'boss' || base.objective === 'artifact' ? base.objective : 'crystals';
   let rules = base;
   for (const t of DIGITAL_TUNING) {
     if (t.objective && t.objective !== objective) continue;

@@ -3,7 +3,7 @@
 // progress for the screen. 'crystals' is the board game's goal (carry the crystals to the Tree, the Horde's ritual); the
 // others belong to the digital ruleset. Result of a game under 'crystals' must never change (tests/golden.test.ts).
 
-import { BOSS, CONTROL, FACTION_NAMES, SURVIVAL, type FactionId } from './data';
+import { BOSS, CONTROL, FACTION_NAMES, SURVIVAL, UNITS, type FactionId } from './data';
 import { finish, heroesAt, ritualFormed, spawnHordeHero } from './game';
 import { distance, key, parseKey, triToHex, type HexKey } from './hex';
 import { log } from './log';
@@ -39,7 +39,7 @@ export interface Objective {
 /** The objective of a game: 'control' and 'survival' only in the digital ruleset, otherwise the crystals goal. */
 export const objectiveOf = (state: Pick<GameState, 'rules'>): ObjectiveId => {
   const o = state.rules.objective;
-  return (o === 'control' || o === 'survival' || o === 'boss') && isDigital(state.rules) ? o : 'crystals';
+  return (o === 'control' || o === 'survival' || o === 'boss' || o === 'artifact') && isDigital(state.rules) ? o : 'crystals';
 };
 
 const crystals: Objective = {
@@ -356,4 +356,39 @@ const boss: Objective = {
   },
 };
 
-export const OBJECTIVES: Record<ObjectiveId, Objective> = { crystals, control, survival, boss };
+// ------------------------------------------------------------------ artifact
+
+/** The hero carrying the artifact, or null while it lies on a hex. */
+export const artifactCarrier = (state: GameState) => Object.values(state.heroes).find((h) => h.alive && h.crystals.includes('artifact')) ?? null;
+
+const artifact: Objective = {
+  id: 'artifact',
+  name: 'Artefakt',
+  summary: 'W środku mapy leży Artefakt. Kto zaniesie go do swojej bazy, wygrywa. Bohater, który go niesie, może zginąć, a wtedy Artefakt upada na pole i podnosi go następny.',
+  init(state) {
+    const at = placeControlPoints(state)[0];
+    state.crystals.artifact = { id: 'artifact', guardian: null, at };
+    state.tiles[at].crystalId = 'artifact';
+    state.artifact = { start: at, handovers: 0 };
+    revealAround(state, at);
+  },
+  checkVictory(state) {
+    const h = artifactCarrier(state);
+    if (h && state.tiles[h.pos].home === h.faction) finish(state, h.faction, `${FACTION_NAMES[h.faction]} zaniosło Artefakt do swojej bazy.`);
+  },
+  onRoundEnd() {
+    return false;
+  },
+  onRoundLimit(state) {
+    finish(state, 'horde', 'Upłynął limit rund: nikt nie zaniósł Artefaktu do bazy.');
+  },
+  progress(state) {
+    const h = artifactCarrier(state);
+    return [
+      { label: 'Artefakt', value: h ? `niesie ${UNITS[h.id].name}` : 'leży na mapie', tone: h?.faction },
+      { label: 'Zmiany właściciela', value: `${state.artifact!.handovers}` },
+    ];
+  },
+};
+
+export const OBJECTIVES: Record<ObjectiveId, Objective> = { crystals, control, survival, boss, artifact };

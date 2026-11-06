@@ -103,7 +103,7 @@ Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symul
 1. [x] **Cel „Przetrwanie X rund”** (6.11): `objectives.ts` (`survival`), fale Hordy co 2 rundy, boty, wybór w ekranie startu (tylko kooperacja), testy; wyniki i opis w `ZASADY_CYFROWE.md`. Do dostrojenia w 6.2.6: 2 graczy wygrywa 76–85%.
 2. [x] **Generator map: prostokąt i pierścień** (6.11): `generateMap(size, rng, …, shape)`, wybór „Kształt mapy” w `SetupScreen`, `SIM_SHAPE=rectangle|ring` w symulacjach, strojenie skarbami startowymi (opis w `ZASADY_CYFROWE.md`). Poziomy Łatwy/Trudny na nowych kształtach nie były strojone osobno; serwer musi dostać nowy pakiet silnika przed wydaniem (nowe pole `mapShape`).
 3. [x] **Cel „Boss”** (6.11): legowisko w środku mapy, rany zostają, wyścig o ostatni cios, boty, testy (opis i wyniki w `ZASADY_CYFROWE.md`). Wariant „kooperacyjny bez Hordy” — patrz „Do akceptacji autora”.
-4. [ ] **Cel „Artefakt / eskorta”**.
+4. [x] **Cel „Artefakt”** (6.11): wyścig o Artefakt w środku mapy, niesiony do własnej bazy; boty, strojenie, testy (`ZASADY_CYFROWE.md`). Wariant „eskorta” zapisany w sekcji 7.
 5. [ ] **Generator: wyspy** (mosty, latanie daje skróty) i **mapy ręczne z JSON** (potrzebne później kampanii).
 6. [ ] Tabela balansu: Świt vs Horda per cel i kształt (`make sim-tabele`), pasma wygranych jak w poprzednim strojeniu.
 
@@ -158,4 +158,5 @@ Sesja autonomiczna 6.11.2026. Każda pozycja: co wybrałem, dlaczego, gdzie to z
 - **Przetrwanie:** 6/9/14/18 rund, fala co 2 rundy, tylko kooperacja; dla 2 graczy za łatwo (76–85%). Zmiana: `SURVIVAL` w `data.ts`.
 - **Kształty mapy:** liczba pól prostokąta i pierścienia (`MAP_SHAPES`), mnożnik limitu rund (`SHAPE_ROUND_FACTOR`) i skarby startowe Przymierza na tych mapach (`DIGITAL_TUNING`, wpisy z `shape`) dobrane symulacjami. Poziomy Łatwy/Trudny nie były strojone osobno.
 - **Boss:** Hydra albo Cyklop ze zwiększonym życiem, bez własnej grafiki (potrzebna, jeśli ma być wyróżniony); wariant „wszyscy przeciw Bossowi bez Hordy” nie jest zrobiony, bo obecny wyścig o ostatni cios ma już tryb kooperacyjny z automatem Hordy.
+- **Artefakt:** zrobiony jako wyścig w obie strony (kto pierwszy zaniesie do swojej bazy). Wariant „eskorta” (Przymierze niesie Artefakt z bazy do Drzewa, Horda tylko poluje) pominąłem jako mało różny od wyścigu przy tych samych botach; do rozważenia po opinii z gry.
 - **Serwer:** nowe pola ustawień (`mapShape`) i nowe cele (`survival`, `boss`) wymagają wdrożenia backendu z nowym pakietem silnika przed wydaniem gry.

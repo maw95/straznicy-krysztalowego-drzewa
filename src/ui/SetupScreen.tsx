@@ -190,7 +190,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           </Row>
           {digital && !arena && (
             <Row label="Cel">
-              {(['crystals', 'control', 'survival', 'boss'] as const).filter((o) => o !== 'survival' || mode === 'coop').map((o) => (
+              {(['crystals', 'control', 'survival', 'boss', 'artifact'] as const).filter((o) => o !== 'survival' || mode === 'coop').map((o) => (
                 <Tip key={o} text={OBJECTIVES[o].summary}><button className={chip(objective === o)} aria-pressed={objective === o} onClick={() => setObjective(o)}>{OBJECTIVES[o].name}</button></Tip>
               ))}
             </Row>

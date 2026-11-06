@@ -3,9 +3,9 @@
 
 import { FACTION_SUPPORTS, ITEM_EFFECT, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from '../data';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
-import { mapNeighbors, shortestPaths, tileCost, treeOf, type PathResult } from '../map';
+import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, livingHeroes, other, reviveSpots, ritualFormed, ritualSpot } from '../game';
-import { objectiveOf } from '../objectives';
+import { artifactCarrier, objectiveOf } from '../objectives';
 import type { Action, Crystal, GameState, HeroState } from '../types';
 
 /** The adventure bots' judgement in numbers (tuned with simulations; changing one changes the games). */
@@ -627,6 +627,37 @@ function survivalAction(state: GameState, memo: Memo): Action {
   return stepToward(state, best.path);
 }
 
+// ------------------------------------------------------------------ artifact
+
+/**
+ * Objective 'artifact' (both sides): a carrier goes home with the artifact (around enemies it cannot beat); anyone else strikes a beatable enemy
+ * next to it, then goes for the artifact where it lies, or hunts the enemy carrier.
+ */
+function artifactAction(state: GameState, memo: Memo): Action {
+  const hero = activeHero(state)!;
+  const item = mapItemAction(state);
+  if (item) return item;
+  if (state.movePoints <= 0) return { type: 'endTurn' };
+  const automaton = currentActor(state).kind === 'automaton';
+  const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
+  const carrier = artifactCarrier(state);
+  const carrying = carrier?.id === hero.id;
+  const beatable = (e: HeroState) => automaton || memo.ratio(hero, e) >= huntRatio(state);
+  const prey = foes.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && (beatable(e) || e.id === carrier?.id));
+  if (!carrying && prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
+  let goal: HexKey;
+  if (carrying) goal = homeOf(state, hero.faction);
+  else if (carrier) goal = carrier.pos;
+  else goal = state.crystals.artifact.at;
+  const paths = memo.paths(hero, 'artifact', { goals: new Set([goal]), avoidGuardians: true, danger: carrying || hero.faction === 'dawn' });
+  const p = paths.get(goal);
+  if (!p || p.path.length < 2) return { type: 'endTurn' };
+  const next = p.path[1];
+  const foe = foes.find((e) => e.pos === next);
+  if (foe && !beatable(foe) && !(carrier && foe.id === carrier.id)) return { type: 'endTurn' };
+  return stepToward(state, p.path);
+}
+
 // ------------------------------------------------------------------ boss
 
 /**
@@ -677,6 +708,7 @@ export function adventureAction(state: GameState): Action {
   if (objectiveOf(state) === 'control') return controlAction(state, memo);
   if (objectiveOf(state) === 'survival') return survivalAction(state, memo);
   if (objectiveOf(state) === 'boss') return bossAction(state, memo);
+  if (objectiveOf(state) === 'artifact') return artifactAction(state, memo);
   if (hero.faction === 'dawn') return goodAction(state, memo);
   // The coop automaton follows the rulebook; a Horde player's bot chooses its fights.
   return currentActor(state).kind === 'automaton' ? evilAction(state, memo) : hordeBotAction(state, memo);
