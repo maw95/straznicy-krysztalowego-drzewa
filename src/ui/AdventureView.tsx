@@ -23,6 +23,8 @@ interface Props {
   onPath: (steps: HexKey[], hostile: boolean) => void;
   onShowCard: (unitId: string) => void;
   footer: React.ReactNode;
+  /** Family mode: the hex the hint points at (a pulsing ring). */
+  hintHex?: HexKey | null;
 }
 
 /** The biggest hex a player can zoom the map to (pixels across). */
@@ -68,7 +70,7 @@ function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: Hex
   return out;
 }
 
-export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowCard, footer }: Props) {
+export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowCard, footer, hintHex }: Props) {
   const detailsShown = useDetailsShown();
   const compact = useMedia(COMPACT_QUERY);
   // A finger has no hover: the tapped hex is described in a strip instead of a note beside it.
@@ -357,6 +359,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         <Medal fill="mBrown" glyph="gChest" size={W * 0.3} />
                       </div>
                     )}
+                    {hintHex === t.key && <div className="hint-ring" data-hint="hex" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 5 }} />}
                     {t.revealed && t.site && !t.site.used && (
                       <div className="glint" style={{ position: 'absolute', left: W * 0.12, top: H * 0.24 }} title={`${SITE.names[t.site.kind]}: ${SITE.texts[t.site.kind]}`} data-site={t.site.kind}>
                         <Medal fill={SITE_LOOK[t.site.kind][0]} glyph={SITE_LOOK[t.site.kind][1]} size={W * 0.3} />

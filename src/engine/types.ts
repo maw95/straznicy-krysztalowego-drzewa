@@ -116,6 +116,8 @@ export interface SeatSetup {
   faction: FactionId;
   controller: Controller;
   heroId: string;
+  /** Family mode (coop): the younger player; its hero gets the help of `FAMILY` (data.ts) and the screen offers hints. */
+  child?: boolean;
 }
 
 export interface SetupOptions {
@@ -157,6 +159,7 @@ export interface Player {
   name: string;
   faction: FactionId;
   controller: Controller;
+  child?: boolean;
 }
 
 export interface HeroState {

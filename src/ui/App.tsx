@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { chooseAction } from '../engine/ai';
+import { describeAction } from './hint';
 import { FACTION_NAMES, UNITS, type FactionId, type ItemKind } from '../engine/data';
 import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
 import { movePath } from '../engine/battle';
@@ -39,6 +40,8 @@ const SPEEDS: Record<BotSpeed, number> = { wolno: 900, normalnie: 450, szybko: 1
 export function App() {
   const [game, setGame] = useState<GameState | null>(null);
   const [steps, setSteps] = useState<HexKey[]>([]);
+  /** Family mode: the hint on screen (see showHint). */
+  const [hint, setHint] = useState<{ text: string; hex: HexKey | null; at: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [card, setCard] = useState<string | null>(null);
   const [speed, setSpeed] = useState<BotSpeed>('normalnie');
@@ -131,7 +134,7 @@ export function App() {
       rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1', ...(q.get('growth') === '1' ? { heroGrowth: true } : {}), ...(q.get('ruleset') !== 'board' ? { ruleset: 'digital' as const } : {}), ...(['control', 'survival', 'boss', 'artifact'].includes(q.get('objective') ?? '') ? { objective: q.get('objective') as 'control' | 'survival' | 'boss' | 'artifact' } : {}) },
       seats:
         mode === 'coop'
-          ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))
+          ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon', ...(q.get('child') === '1' ? { child: true } : {}) }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))
           : [{ name: 'Ala', faction: 'dawn', controller: 'human', heroId: 'ancientBear' }, { name: 'Bartek', faction: 'horde', controller: 'human', heroId: 'werewolfLord' }],
     });
     for (let i = 0; i < Number(q.get('steps')) && s.phase !== 'over'; i++) {
@@ -556,6 +559,15 @@ export function App() {
     );
   }
 
+  /** Family mode: what the bot would do now, shown as a sentence and (on the map) as a pulsing hex until the next action. */
+  const showHint = () => {
+    const g = gameRef.current;
+    if (!g) return;
+    const a = chooseAction(g);
+    setHint({ text: describeAction(g, a), hex: a?.type === 'moveHero' ? a.to : null, at: g.actionCount });
+  };
+  const hintNow = hint && game && hint.at === game.actionCount ? hint : null;
+
   const footer = (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
       <div className="plate parch hide-mobile" style={{ flex: 1, minWidth: 0, padding: '6px 12px', fontSize: 15, lineHeight: 1.25, overflow: 'hidden' }}>
@@ -563,6 +575,11 @@ export function App() {
           <div key={i} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: i === 1 ? 700 : 500, color: i === 1 ? '#2B1D10' : '#6B5233' }}>{l.text}</div>
         ))}
       </div>
+      {humanTurn && game.players.some((p) => p.child) && (
+        <button className="btn plate parch btn-bar" title="Podpowiedź: co zrobiłby komputer" onClick={showHint}>
+          💡 Podpowiedź
+        </button>
+      )}
       {undoStack.current.length > 0 && humanTurn && (
         <button className="btn plate parch btn-bar" title="Cofnij ostatni krok (U)" onClick={undo}>
           ↶ Cofnij
@@ -642,7 +659,7 @@ export function App() {
       ) : held || (game.phase === 'battle' && b && !b.duel && b.stage !== 'select') ? (
         <BattleView state={held ? held.view : game} attack={held?.attack ?? null} canAct={humanTurn && !held} onAction={dispatch} onShowCard={setCard} footer={footer} />
       ) : (
-        <AdventureView state={game} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} footer={adventureFooter} />
+        <AdventureView state={game} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} footer={adventureFooter} />
       )}
 
       <Modal open={Boolean(selecting)}>{selecting && <SupportSelect state={game} faction={selecting} onPick={(ids) => dispatch({ type: 'selectSupports', faction: selecting, supportIds: ids })} />}</Modal>
@@ -664,6 +681,11 @@ export function App() {
       )}
 
       <SkillDialog hero={humanTurn && game.phase === 'adventure' && !steps.length ? activeHero(game) : null} onChoose={(skill) => dispatch({ type: 'chooseSkill', skill })} />
+      {hintNow && (
+        <div className="plate parch" role="status" style={{ position: 'fixed', top: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 50, padding: '8px 16px', fontSize: 18, maxWidth: 'min(640px, 92vw)', cursor: 'pointer' }} onClick={() => setHint(null)}>
+          💡 {hintNow.text}
+        </div>
+      )}
       <VictoryEffects game={game} />
       <FoundTreasure kind={found} open={Boolean(found) && !digest && !summary} onClose={() => setFound(null)} />
 

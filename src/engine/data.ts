@@ -169,6 +169,12 @@ export const ARTIFACT = {
   carrierSlow: 1,
 };
 
+/**
+ * Family mode (digital ruleset, coop): the hero of a seat marked as a child is a little stronger, so a parent and a child can play on one team
+ * without the child holding the team back: `extraHp` more Życie in battle and `extraMove` more move points on the map.
+ */
+export const FAMILY = { extraHp: 2, extraMove: 1 };
+
 export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   [
     u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', size: 2, hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),

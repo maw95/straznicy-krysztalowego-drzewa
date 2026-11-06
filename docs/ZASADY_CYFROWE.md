@@ -172,6 +172,15 @@ Domyślnie wyłączony (gry bez niego są takie jak dotąd); w ekranie startu �
 - Wpływ na balans (`SIM_GROWTH=1 SIM_DIGITAL=1`, 100 gier na wariant, Normalny, cel Kryształy): Przymierze 62% w kooperacji i 51% w rywalizacji wobec 59% i 50% bez rozwoju; średni poziom na koniec gry: Przymierze 2,7, Horda 1,8 (bez PD za rundy Horda miała 1,1 i Przymierze wygrywało o 5–7 pkt więcej).
 - Serwer: nowa akcja `chooseSkill` wymaga wdrożenia backendu z nowym pakietem silnika.
 
+## Tryb rodzinny (6.11.2026, wersja cyfrowa, kooperacja)
+
+Parę rodzic + dziecko w jednej drużynie: w ekranie startu (kooperacja, wersja cyfrowa) przy miejscu gracza-człowieka jest pole „Dziecko” (`SeatSetup.child`).
+- **Pomoc dla dziecka** (`FAMILY` w `data.ts`): jego bohater ma w bitwie o 2 Ż więcej i o 1 punkt ruchu więcej na mapie. Rodzic gra bez zmian; to ta sama drużyna, więc nic nie wpływa na balans rywalizacji.
+- **Podpowiedź**: przycisk w dolnym pasku (tylko gdy któryś gracz jest dzieckiem) pyta bota „co byś zrobił” (`chooseAction`) i pokazuje to zdaniem u góry ekranu (`ui/hint.ts`), a na mapie podświetla pole docelowe. Znika po następnym ruchu.
+- Hotseat: w rywalizacji ekran przekazania urządzenia (`Handoff`) ukrywa skarby frakcji między graczami; w kooperacji ludzie dzielą ekran bez ukrywania (skarby są wspólne).
+- Poziom i cele dla rodziny: poziom 1 „Przygoda” (domyślny) bez rozwoju bohatera; „Poziom 2: Wyprawa” dodaje rozwój i inne cele.
+- Serwer: pole `child` w miejscu gracza wymaga wdrożenia backendu z nowym pakietem silnika (stary serwer zignoruje je albo odrzuci ustawienia).
+
 ## Artefakty bohatera i obiekty na mapie (6.11.2026, część rozwoju bohatera)
 
 Działają razem z `heroGrowth` (`src/engine/sites.ts`).

@@ -117,8 +117,8 @@ Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symul
 ### 6.4. Tryb rodzinny i presety (faza D) — po 6.2 i 6.3, bo preset wymaga gotowych warstw
 
 1. [x] Presety poziomów 1 i 2 jako zestawy przełączników (6.11): `presets.ts` (`resolveTier`), wybór „Poziom gry” w ekranie startu; poziom 1 = Kryształy + trójkąt + bez rozwoju (domyślny), poziom 2 = wybór celu i kształtu + rozwój bohatera, „Własne” = wszystko osobno.
-2. [ ] Hotseat: sprawdzić, co już jest, dopisać przekazywanie ekranu, ukrywanie informacji między graczami.
-3. [ ] Tryb rodzinny: rodzic + dziecko w jednej drużynie, handicapy, podpowiedzi dla młodszego gracza.
+2. [x] Hotseat sprawdzony (6.11): rywalizacja ma ekran przekazania i ukrywa skarby frakcji, kooperacja dzieli ekran bez ukrywania (skarby wspólne); nic do dopisania.
+3. [x] Tryb rodzinny (6.11): pole „Dziecko” przy miejscu gracza, pomoc w bitwie i na mapie, przycisk „Podpowiedź” z botem (`ZASADY_CYFROWE.md`). Test z prawdziwymi parami rodzic + dziecko nadal po stronie autora.
 4. [ ] (Po premierze, razem z ekonomią) autopilot warstw.
 
 ### 6.5. Dźwięk (niezależny, można w każdej chwili) — przed premierą

@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Tryb rodzinny w kooperacji (wersja cyfrowa): przy miejscu gracza można zaznaczyć „Dziecko”. Bohater dziecka ma więcej życia i ruchu, a przycisk „Podpowiedź” mówi, co zrobiłby komputer, i podświetla pole na mapie.
 - Ekran startu (wersja cyfrowa): wybór poziomu gry. „Poziom 1: Przygoda” to prosta gra z planszówki, „Poziom 2: Wyprawa” odblokowuje cele, kształty map i rozwój bohatera, a „Własne ustawienia” pozwalają przełączać wszystko osobno.
 - Rozwój bohatera: artefakty (broń, zbroja, buty) znajdowane w skrzyniach na mapie, u pokonanych strażników i po wygranych walkach; na mapie pojawiają się też kapliczki (punkty doświadczenia) i obozy najemników (wracają polegli pomocnicy).
 - Wersja cyfrowa, opcja „Rozwój bohatera”: bohaterowie zbierają punkty doświadczenia z bitew i skarbów, awansują do 5 poziomu i przy każdym awansie wybierają jedną z trzech umiejętności (większa siła, życie, szybkość, ruch na mapie, wsparcie pomocników albo skarb).

@@ -341,6 +341,11 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
                 <option value="human">Człowiek</option>
                 <option value="bot">Bot</option>
               </select>
+              {digital && mode === 'coop' && s.controller === 'human' && (
+                <label title="Tryb rodzinny: bohater dziecka ma więcej życia i ruchu, a na ekranie jest przycisk Podpowiedź." style={{ display: 'flex', gap: 5, alignItems: 'center', fontSize: 15 }}>
+                  <input type="checkbox" checked={Boolean(s.child)} aria-label="Dziecko" onChange={(e) => update(i, { child: e.target.checked })} /> Dziecko
+                </label>
+              )}
               <div style={{ display: 'flex', gap: 6 }}>
                 {heroesOf(s.faction).map((h) => (
                   <button key={h} className="btn" title={UNITS[h].name} onMouseEnter={() => setPreview(h)} onClick={() => { update(i, { heroId: h }); setPreview(h); }} disabled={takenBy(h, i)} style={{ background: 'none', border: 0, padding: 0 }}>

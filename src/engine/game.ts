@@ -18,6 +18,7 @@ import {
   ARENA_PICKS,
   ARENA_RULES,
   ARTIFACT,
+  FAMILY,
   RESURRECTION_CARDS,
   SUPPORTS_PER_BATTLE,
   TERRAIN_NAMES,
@@ -136,7 +137,7 @@ export function createGame(setup: SetupOptions): GameState {
   OBJECTIVES[objectiveOf(state)].init(state);
 
   setup.seats.forEach((seat, i) => {
-    const player: Player = { id: `p${i + 1}`, name: seat.name, faction: seat.faction, controller: seat.controller };
+    const player: Player = { id: `p${i + 1}`, name: seat.name, faction: seat.faction, controller: seat.controller, ...(seat.child && setup.mode === 'coop' && isDigital(rules) ? { child: true } : {}) };
     state.players.push(player);
     addHero(state, seat.heroId, seat.faction, player.id);
   });
@@ -275,6 +276,9 @@ function giveItem(state: GameState, item: ItemInstance, faction: FactionId, foun
   item.foundBy = foundBy;
   state.factions[faction].inventory.push(item.id);
 }
+
+/** Whether the hero is played by a child (family mode). */
+export const isChildHero = (state: GameState, hero: HeroState): boolean => Boolean(hero.playerId && state.players.find((p) => p.id === hero.playerId)?.child);
 
 /** A new treasure card of `kind` goes to the faction's shared inventory. */
 export function grantTreasure(state: GameState, kind: ItemKind, faction: FactionId, foundBy: string | null) {
@@ -586,7 +590,7 @@ function advanceTurn(state: GameState) {
       if (state.phase === 'over') return;
     }
   }
-  state.movePoints = state.rules.heroMovePoints + moveBonus(activeHero(state) ?? undefined) + gearMoveBonus(activeHero(state) ?? undefined) - (activeHero(state)?.crystals.includes('artifact') ? ARTIFACT.carrierSlow : 0);
+  state.movePoints = state.rules.heroMovePoints + moveBonus(activeHero(state) ?? undefined) + (activeHero(state) && isChildHero(state, activeHero(state)!) ? FAMILY.extraMove : 0) + gearMoveBonus(activeHero(state) ?? undefined) - (activeHero(state)?.crystals.includes('artifact') ? ARTIFACT.carrierSlow : 0);
   state.turnBattleDone = false;
 }
 
@@ -700,6 +704,10 @@ function startBattle(state: GameState, s: BattleStart) {
   for (const h of [attacker, defenderHero]) if (h && state.rules.heroGrowth) {
     applyHeroSkills(h, b.units[h.id]);
     applyGear(h, b.units[h.id]);
+  }
+  for (const h of [attacker, defenderHero]) if (h && isChildHero(state, h)) {
+    b.units[h.id].hp += FAMILY.extraHp;
+    b.units[h.id].maxHp += FAMILY.extraHp;
   }
   if (s.neutralId) {
     const g = makeBattleUnit(s.neutralId, 'neutral');
