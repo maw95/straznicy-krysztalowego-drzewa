@@ -30,7 +30,9 @@ describe('digital tuning levers', () => {
   it('are keyed to real levels, modes and maps', () => {
     for (const t of DIGITAL_TUNING) {
       expect(['crystals', 'control']).toContain(t.objective);
-      expect(['kids', 'normal', 'hard']).toContain(t.level);
+      // The entries of a map shape apply to every level.
+      if (t.shape) expect(['rectangle', 'ring']).toContain(t.shape);
+      else expect(['kids', 'normal', 'hard']).toContain(t.level);
       for (const m of t.maps ?? []) expect(['short', 'medium', 'long', 'veryLong']).toContain(m);
     }
     // PvP has no Hard level.
