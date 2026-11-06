@@ -1,7 +1,7 @@
 # Mapa drogowa wydania cyfrowego
 
 Jedna lista „co dalej”. Łączy kod (etapy z `ROZBUDOWA_CYFROWA.md`) z pracą nad grafiką, animacją i dźwiękiem (`POTOK_ANIMACJI.md`).
-Decyzje i pytania do autora: `DECYZJE.md`. Zrobione punkty oznaczamy [x] (i zostawiamy do końca fazy). Stan na 4.11.2026.
+Decyzje i pytania do autora: `DECYZJE.md`. Zrobione punkty oznaczamy [x] (i zostawiamy do końca fazy). Stan na 6.11.2026 (faza C zamknięta, faza D w toku: patrz `BACKLOG.md`, sekcja 6.4).
 
 Zasady: zasady planszówki zamrożone jako tryb „Klasyczny” (`golden.test.ts` nie może się zmienić); jedna zmiana = jeden commit;
 każdy nowy zasób wpisujemy do manifestu (źródło, narzędzie, prompt, licencja, czy AI), bo potrzebne jest ujawnienie AI na Steamie.
@@ -37,13 +37,16 @@ każdy nowy zasób wpisujemy do manifestu (źródło, narzędzie, prompt, licenc
 
 ## Faza C — mapy i cele (etap 1, poziom 2 „Wyprawa”)
 
-- [x] Interfejs celu (`objectives.ts`: `init`, `checkVictory`, `onRoundEnd`, `onRoundLimit`, `progress`) i cel „Punkty kontrolne” (silnik, boty, symulacje, interfejs: sztandary na mapie, panel „Cele”, wybór celu w `SetupScreen`; opis w `ZASADY_CYFROWE.md`). Dalej: przetrwanie → boss → eskorta.
-- [ ] Generator map: prostokąt → pierścień → wyspy → mapy ręczne (JSON).
-- [ ] Poziomy bohaterów, artefakty, więcej obiektów na mapie.
+- [x] Interfejs celu (`objectives.ts`: `init`, `checkVictory`, `onRoundEnd`, `onRoundLimit`, `progress`) i cel „Punkty kontrolne” (silnik, boty, symulacje, interfejs: sztandary na mapie, panel „Cele”, wybór celu w `SetupScreen`; opis w `ZASADY_CYFROWE.md`).
+- [x] Cele „Przetrwanie”, „Boss” i „Artefakt” (6.11; „eskorta” jako osobny wariant odłożona, `BACKLOG` sekcja 7).
+- [x] Generator map: prostokąt, pierścień, wyspy i mapy ręczne (tekst/JSON, `customMaps.ts`) — 6.11.
+- [x] Tabela balansu cele × kształty (`make sim-cele`); poza pasmem kilka komórek (Dolina), lista w `ZASADY_CYFROWE.md`.
+- [x] Rozwój bohatera: doświadczenie, poziomy 1–5, wybór 1 z 3 umiejętności, artefakty (3 sloty), kapliczki, obozy najemników i skrzynie (przełącznik `heroGrowth`, domyślnie wyłączony do czasu presetów).
+- [ ] Do dopracowania przed premierą: grafika obiektów mapy i artefaktów (dziś medale), drzewka umiejętności z rozgałęzieniami, własny Boss (grafika), strojenie Doliny.
 
 ## Faza D — tryb rodzinny
 
-- [ ] Hotseat i tryb rodzinny (wspólna gra rodzic + dziecko), poziomy 1–2 jako preset przełączników.
+- [ ] Hotseat i tryb rodzinny (wspólna gra rodzic + dziecko), poziomy 1–2 jako preset przełączników (w toku, `BACKLOG` 6.4).
 - [ ] Autopilot dla warstw (bot zarządza osadami; dziecko wędruje i walczy): po wprowadzeniu warstw ekonomii.
 
 ## Faza E — premiera na Steamie (poziomy 1–2)
