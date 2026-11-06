@@ -172,6 +172,17 @@ Domyślnie wyłączony (gry bez niego są takie jak dotąd); w ekranie startu �
 - Wpływ na balans (`SIM_GROWTH=1 SIM_DIGITAL=1`, 100 gier na wariant, Normalny, cel Kryształy): Przymierze 62% w kooperacji i 51% w rywalizacji wobec 59% i 50% bez rozwoju; średni poziom na koniec gry: Przymierze 2,7, Horda 1,8 (bez PD za rundy Horda miała 1,1 i Przymierze wygrywało o 5–7 pkt więcej).
 - Serwer: nowa akcja `chooseSkill` wymaga wdrożenia backendu z nowym pakietem silnika.
 
+## Artefakty bohatera i obiekty na mapie (6.11.2026, część rozwoju bohatera)
+
+Działają razem z `heroGrowth` (`src/engine/sites.ts`).
+- **Artefakty**: trzy miejsca (broń, zbroja, buty), po dwa poziomy: broń +1 / +2 A, zbroja +2 / +4 Ż, buty +1 S (poziom 2 też +1 punkt ruchu na mapie). Artefakt wyższego poziomu zastępuje niższy, równy lub gorszy
+  zamienia się w losowy skarb dla frakcji. Nazwy są osobne dla Świtu i Hordy. Bonusy działają w bitwie jak umiejętności (`applyGear`), zakładane od razu.
+- **Skąd**: skrzynia, pokonany strażnik (poziom 1) i wygrana walka bohaterów (zdobycz poziomu 1).
+- **Obiekty na mapie** (2 / 3 / 5 / 7 na mapie krótkiej / średniej / długiej / bardzo długiej, rozmieszczane z ziarna na wolnych polach): **kapliczka** (+2 PD), **obóz najemników** (wraca jeden poległy pomocnik frakcji albo +1 PD), **skrzynia** (artefakt). Każdy obiekt użyje pierwszy bohater, który na nim stanie (każda strona). Boty zbierają je jak skarby.
+  W interfejsie to medale na polu (fiolet, czerwień, błękit) z opisem w dymku; docelowa grafika to osobna sprawa (`BACKLOG`, sekcja 7).
+- **Balans** (`SIM_GROWTH=1`, 100 gier na wariant, Normalny, cel Kryształy): sam rozwój 62% / 51% (kooperacja / rywalizacja); z artefaktami i obiektami Przymierze rosło do 69–73% / 63–69%, bo to ono spotyka strażników. Wyrównane startem Hordy z 2 losowymi skarbami przy włączonym rozwoju
+  (`DIGITAL_TUNING`, wpis `growth`): 61% / 51%. Obiekty bez artefaktów ze strażników i walk dają ok. +4 pkt Przymierzu.
+
 ## Tabela balansu: cele × kształty (6.11.2026)
 
 `make sim-cele GAMES=40` (około 1,5 minuty): wygrane Przymierza, poziom Normalny, kooperacja / rywalizacja, cztery rozmiary map razem (40 gier na wariant). Cel pasma: 45–65%.

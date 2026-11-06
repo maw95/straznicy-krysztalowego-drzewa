@@ -110,8 +110,8 @@ Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symul
 ### 6.3. Rozwój bohatera (poziom 2 „Wyprawa”) — równolegle z końcem 6.2
 
 1. [x] Doświadczenie i poziomy bohaterów, wybór 1 z 3 umiejętności przy awansie (6.11): `growth.ts`, okno wyboru, panel bohatera, boty, testy, symulacje (opis w `ZASADY_CYFROWE.md`). Wspólna pula 6 umiejętności; osobne drzewka z rozgałęzieniami do rozbudowy.
-2. [ ] Artefakty (ekwipunek bohatera, sloty), nagrody ze skrzyń i strażników.
-3. [ ] Więcej obiektów na mapie: kapliczki, obozy najemników, skrzynie, strażnicy.
+2. [x] Artefakty bohatera (3 sloty × 2 poziomy), nagrody ze skrzyń, strażników i walk (6.11): `sites.ts`, opis i balans w `ZASADY_CYFROWE.md`.
+3. [x] Więcej obiektów na mapie: kapliczki, obozy najemników, skrzynie (6.11); strażnicy bez kryształu (zwykli strażnicy z nagrodą) nie dodani, bo strażnicy kryształów już dają nagrodę.
 4. [ ] Symulacje balansu z rozwojem (bohater poziom 1 vs awans), żeby nie zepsuć pasm wygranych.
 
 ### 6.4. Tryb rodzinny i presety (faza D) — po 6.2 i 6.3, bo preset wymaga gotowych warstw
@@ -160,4 +160,5 @@ Sesja autonomiczna 6.11.2026. Każda pozycja: co wybrałem, dlaczego, gdzie to z
 - **Boss:** Hydra albo Cyklop ze zwiększonym życiem, bez własnej grafiki (potrzebna, jeśli ma być wyróżniony); wariant „wszyscy przeciw Bossowi bez Hordy” nie jest zrobiony, bo obecny wyścig o ostatni cios ma już tryb kooperacyjny z automatem Hordy.
 - **Artefakt:** zrobiony jako wyścig w obie strony (kto pierwszy zaniesie do swojej bazy). Wariant „eskorta” (Przymierze niesie Artefakt z bazy do Drzewa, Horda tylko poluje) pominąłem jako mało różny od wyścigu przy tych samych botach; do rozważenia po opinii z gry.
 - **Rozwój bohatera:** progi PD, liczby PD, pula 6 umiejętności i ich siła (`growth.ts`) to moje pierwsze strzały; umiejętności nie mają jeszcze ikon ani kart. Rozwój zostaje domyślnie wyłączony do czasu presetów (6.4).
+- **Obiekty mapy i artefakty:** medale zamiast grafiki (potrzebne ilustracje kapliczki, obozu, skrzyni oraz ikony 6 artefaktów); liczby artefaktów i liczba obiektów to pierwsze strzały.
 - **Serwer:** nowe pola ustawień (`mapShape`) i nowe cele (`survival`, `boss`) wymagają wdrożenia backendu z nowym pakietem silnika przed wydaniem gry.

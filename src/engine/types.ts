@@ -1,4 +1,5 @@
 import type { SkillId } from './growth';
+import type { SiteKind, Slot } from './sites';
 import type { HexKey } from './hex';
 import type { AbilityId, FactionId, ItemKind, MapSize, Side, Terrain, TileSide } from './data';
 
@@ -176,6 +177,8 @@ export interface HeroState {
   level?: number;
   skills?: SkillId[];
   offer?: SkillId[];
+  /** Artifacts worn, by slot (sites.ts). */
+  gear?: Partial<Record<Slot, string>>;
 }
 
 export interface FactionState {
@@ -202,6 +205,8 @@ export interface Tile {
   treasureId: string | null;
   home: FactionId | null;
   tree: boolean;
+  /** A site on the hex (shrine, camp, chest) and whether it has been used (sites.ts); only with hero growth. */
+  site?: { kind: SiteKind; used: boolean };
 }
 
 export interface Crystal {

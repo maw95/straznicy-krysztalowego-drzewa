@@ -14,6 +14,8 @@ export interface DigitalTune {
   /** Przymierza seats (players on the good side). */
   players?: number;
   maps?: MapSize[];
+  /** Hero growth switched on (missing = any). */
+  growth?: boolean;
   /** Map shape (missing = any; the triangle is what a setup without `mapShape` plays). */
   shape?: MapShape;
   /** Changes to the rules; applied in order, later entries win. */
@@ -25,6 +27,8 @@ export interface DigitalTune {
  * "Treasures" = random treasure cards the Horde holds from the start (hordeStartTreasures) or the Przymierza (dawnStartTreasures).
  */
 export const DIGITAL_TUNING: DigitalTune[] = [
+  // --- Hero growth (first, so the cells below keep their own numbers): the Przymierza meet the guardians and so take most of the artifacts; the Horde start with treasures.
+  { growth: true, objective: 'crystals', rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
   // --- Goal 'crystals' ---
   // Easy: a dead hero is replaced in the board duels, which made 1-hero games on medium maps too easy and 1 against 1 on short ones too.
   { objective: 'crystals', level: 'kids', mode: 'coop', players: 1, maps: ['medium'], rules: { heroReplacement: false } },
@@ -75,6 +79,7 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
     if (t.mode && t.mode !== setup.mode) continue;
     if (t.players && t.players !== players) continue;
     if (t.maps && !t.maps.includes(setup.mapSize)) continue;
+    if (t.growth !== undefined && t.growth !== Boolean(base.heroGrowth)) continue;
     if (t.shape && t.shape !== (setup.mapShape ?? 'triangle')) continue;
     rules = { ...rules, ...t.rules };
   }

@@ -245,7 +245,7 @@ function mapItemAction(state: GameState): Action | null {
 /** Revealed treasures the hero could pick up, for bots that go out of their way for them. */
 function treasureSpots(state: GameState): HexKey[] {
   return Object.values(state.tiles)
-    .filter((t) => t.revealed && t.treasureId)
+    .filter((t) => t.revealed && (t.treasureId || (t.site && !t.site.used)))
     .map((t) => t.key);
 }
 

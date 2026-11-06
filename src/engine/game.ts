@@ -45,6 +45,7 @@ import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } fro
 import { log } from './log';
 import { applyHeroSkills, applySupportSkill, awardXp, chooseSkill, GROWTH, moveBonus } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
+import { applyGear, ARTIFACTS, gearMoveBonus, giveArtifact, placeSites, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
 import { isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
@@ -151,6 +152,7 @@ export function createGame(setup: SetupOptions): GameState {
   for (const f of ['dawn', 'horde'] as FactionId[]) revealAround(state, homeOf(state, f));
   state.tiles[treeOf(state)].revealed = true;
   state.rng = rng.state;
+  placeSites(state);
   state.turnOrder = computeTurnOrder(state);
   state.turnIndex = 0;
   if (setup.mode === 'arena') {
@@ -538,6 +540,7 @@ function arriveAt(state: GameState, hero: HeroState) {
     log(state, 'item', `${UNITS[hero.id].name} znajduje skarb.`);
     log(state, 'item', `Skarb (${UNITS[hero.id].name}): ${ITEMS[item.kind].name}.`, hero.faction);
   }
+  if (state.rules.heroGrowth) visitSite(state, hero, tile);
   if (hero.faction === 'dawn') {
     pickUpCrystals(state, hero);
     // The artifact is never given to the Tree (it is carried to a base, see objectives.ts).
@@ -583,7 +586,7 @@ function advanceTurn(state: GameState) {
       if (state.phase === 'over') return;
     }
   }
-  state.movePoints = state.rules.heroMovePoints + moveBonus(activeHero(state) ?? undefined) - (activeHero(state)?.crystals.includes('artifact') ? ARTIFACT.carrierSlow : 0);
+  state.movePoints = state.rules.heroMovePoints + moveBonus(activeHero(state) ?? undefined) + gearMoveBonus(activeHero(state) ?? undefined) - (activeHero(state)?.crystals.includes('artifact') ? ARTIFACT.carrierSlow : 0);
   state.turnBattleDone = false;
 }
 
@@ -694,7 +697,10 @@ function startBattle(state: GameState, s: BattleStart) {
   const digital = isDigital(state.rules) && !b.duel;
   b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction, digital);
   if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital);
-  for (const h of [attacker, defenderHero]) if (h && state.rules.heroGrowth) applyHeroSkills(h, b.units[h.id]);
+  for (const h of [attacker, defenderHero]) if (h && state.rules.heroGrowth) {
+    applyHeroSkills(h, b.units[h.id]);
+    applyGear(h, b.units[h.id]);
+  }
   if (s.neutralId) {
     const g = makeBattleUnit(s.neutralId, 'neutral');
     // One hero alone against a guardian: the guardian fights with its duel card (less Życie, another ability).
@@ -773,6 +779,8 @@ function awardBattleXp(state: GameState, b: BattleState) {
     if (!hero?.alive) continue;
     const won = b.winner === hero.faction;
     awardXp(state, hero, won ? (b.kind === 'neutral' ? GROWTH.xp.guardian : GROWTH.xp.hero) : GROWTH.xp.lost);
+    // Spoils: the winner of a fight between heroes takes a first-tier artifact from the fallen (the Horde meet guardians rarely, so this evens it out).
+    if (won && b.kind === 'heroes') giveArtifact(state, hero, ARTIFACTS.filter((a) => a.tier === 1)[(state.round + hero.id.length) % 3]);
   }
 }
 
@@ -820,6 +828,8 @@ function resolveGuardianFight(state: GameState, b: BattleState) {
   crystal.guardian = null;
   log(state, 'crystal', `Strażnik pokonany. Kryształ jest wolny.`);
   guardianHoard(state, b.attackerHero);
+  // With hero growth a beaten guardian also leaves an artifact (first tier).
+  if (state.rules.heroGrowth) giveArtifact(state, state.heroes[b.attackerHero], ARTIFACTS.filter((a) => a.tier === 1)[(Object.keys(state.crystals).length + state.round) % 3]);
 }
 
 /**

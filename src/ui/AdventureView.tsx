@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FACTION_NAMES, ITEMS, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
 import { activeHero, heroesAt, legalHeroMoves, reviveSpots } from '../engine/game';
 import { levelOf, SKILL_EFFECT, SKILL_NAMES, xpToNext } from '../engine/growth';
+import { gearOf, SITE } from '../engine/sites';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { parseKey, type HexKey } from '../engine/hex';
 import { mapNeighbors, tileCost } from '../engine/map';
@@ -356,6 +357,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         <Medal fill="mBrown" glyph="gChest" size={W * 0.3} />
                       </div>
                     )}
+                    {t.revealed && t.site && !t.site.used && (
+                      <div className="glint" style={{ position: 'absolute', left: W * 0.12, top: H * 0.24 }} title={`${SITE.names[t.site.kind]}: ${SITE.texts[t.site.kind]}`} data-site={t.site.kind}>
+                        <Medal fill={SITE_LOOK[t.site.kind][0]} glyph={SITE_LOOK[t.site.kind][1]} size={W * 0.3} />
+                      </div>
+                    )}
                     {crystal && (
                       <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', display: 'flex', alignItems: 'center' }}>
                         {crystal.guardian && !figureFor(crystal.guardian) && <Portrait unitId={crystal.guardian} size={W * 0.5} ring={SIDE_RING.neutral} title={UNITS[crystal.guardian].name} />}
@@ -460,6 +466,9 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </button>
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{UNITS[hero.id].name}</div>
+                {state.rules.heroGrowth && gearOf(hero).length > 0 && (
+                  <div style={{ fontSize: 13 }} title={gearOf(hero).map((a) => `${a.names[hero.faction]}: ${a.text}`).join('\n')}>Artefakty: {gearOf(hero).map((a) => a.names[hero.faction]).join(', ')}</div>
+                )}
                 {state.rules.heroGrowth && (
                   <div style={{ fontSize: 14 }} title={(hero.skills ?? []).map((s) => `${SKILL_NAMES[hero.faction][s]}: ${SKILL_EFFECT[s].text}`).join('\n') || 'Brak umiejętności'}>
                     Poziom {levelOf(hero)} · PD {hero.xp ?? 0}{xpToNext(hero) !== null ? `/${xpToNext(hero)}` : ''}{(hero.skills ?? []).length ? ` · ${(hero.skills ?? []).map((s) => SKILL_NAMES[hero.faction][s]).join(', ')}` : ''}
@@ -619,6 +628,7 @@ function TileDetails({ state, k }: { state: GameState; k: HexKey }) {
         </div>
       )}
       {t.revealed && t.treasureId && note('Leży tu skarb.')}
+      {t.revealed && t.site && note(t.site.used ? `${SITE.names[t.site.kind]} (już użyta).` : `${SITE.names[t.site.kind]}: ${SITE.texts[t.site.kind]}`)}
       {heroes.map((h) => (
         <div key={h.id} className="well" style={{ padding: '6px 8px', display: 'flex', gap: 10, alignItems: 'center' }}>
           <Portrait unitId={h.id} size={44} ring={SIDE_RING[h.faction]} preview={false} />
@@ -646,6 +656,7 @@ function tileLines(state: GameState, k: HexKey, reach: { cost: number; hostile: 
     if (crystal?.guardian) lines.push(`Kryształ pod strażą: ${UNITS[crystal.guardian].name}`);
     else if (crystal) lines.push('Leży tu kryształ');
     if (t.treasureId) lines.push('Leży tu skarb');
+    if (t.site && !t.site.used) lines.push(SITE.names[t.site.kind]);
     if (t.tree && objectiveOf(state) === 'crystals') lines.push(`Oddaj tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded})`);
     if (state.control?.points.includes(k)) lines.push(controlNote(state, k));
     for (const h of heroesAt(state, k)) lines.push(`${UNITS[h.id].name}${h.crystals.length ? ' · niesie kryształ' : ''}`);
@@ -665,6 +676,9 @@ function TileStrip({ state, k, reach, heroName }: { state: GameState; k: HexKey;
 }
 
 /** With a mouse: a small note next to the hovered hex, after a short pause (moving across the map shows nothing). */
+/** Medal colour and glyph of a site on the map (art to come: backlog section 7). */
+const SITE_LOOK = { shrine: ['mPurple', 'gStar'], camp: ['mRed', 'gSwords'], chest: ['mBlue', 'gChest'] } as const;
+
 function HexTooltip({ state, k, reach, heroName, x, y, W, H, boardW }: { state: GameState; k: HexKey; reach?: { cost: number; hostile: boolean }; heroName: string; x: number; y: number; W: number; H: number; boardW: number }) {
   const [ready, setReady] = useState(false);
   useEffect(() => {
