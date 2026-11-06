@@ -161,6 +161,21 @@ Poziomy Łatwy i Trudny dostają te same skarby (nie były strojone osobno).
 - Strojenie (`DIGITAL_TUNING`, cel „Kryształy”, 80 gier na wariant, poziom Normalny): bez niego Przymierze wygrywało 12–35% (wąskie drogi, jeden bohater Hordy zamyka most); z 4 punktami ruchu i 4 skarbami na start:
   wyspy 52% (kooperacja) / 59% (rywalizacja), Cieśnina 42% / 62%, Dolina 33% / 54% (w kooperacji do dalszego strojenia, bo automat Hordy jest agresywny). Limit rund ×1,7 (wyspy) i ×2 (ręczne).
 
+## Tabela balansu: cele × kształty (6.11.2026)
+
+`make sim-cele GAMES=40` (około 1,5 minuty): wygrane Przymierza, poziom Normalny, kooperacja / rywalizacja, cztery rozmiary map razem (40 gier na wariant). Cel pasma: 45–65%.
+
+| cel | trójkąt | prostokąt | pierścień | wyspy | Cieśnina | Dolina |
+|---|---|---|---|---|---|---|
+| Kryształy | 58 / 55 | 48 / 52 | 41 / 46 | 50 / 57 | 44 / 63 | **29** / 57 |
+| Punkty kontrolne | 58 / 58 | 60 / 57 | 55 / 51 | 57 / 57 | 64 / 58 | 63 / 57 |
+| Przetrwanie | 69 / – | 61 / – | 68 / – | 62 / – | 62 / – | 69 / – |
+| Boss | 61 / 57 | 56 / 52 | 57 / 59 | 48 / 50 | 49 / 47 | **41** / 42 |
+| Artefakt | 59 / 54 | 52 / 49 | 57 / 44 | 49 / 39 | 59 / 47 | 53 / 41 |
+
+Poza pasmem: Kryształy na Dolinie w kooperacji (ok. 35% po dodaniu skarbów; automat Hordy zamyka otwartą dolinę), Boss na Dolinie (41–42%), rywalizacja Artefaktu na wyspach (39%) i Przetrwanie (do 69%, górna granica).
+Liczby 40 gier na komórkę mają szum ±8 pkt, więc to wskazówka, nie wyrok; do dalszego strojenia przed premierą (np. 200 gier w problematycznych komórkach).
+
 ## Cel „Boss” (6.11.2026, wersja cyfrowa)
 
 W środku mapy (pole środkowego punktu kontrolnego, w każdym kształcie) leży legowisko Bossa: Hydry albo Cyklopa (losowo z ziarna) ze zwiększonym życiem

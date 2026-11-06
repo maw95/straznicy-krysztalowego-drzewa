@@ -79,6 +79,9 @@ sim-tabele: node_modules ## Tabele: % wygranych Przymierza w każdym trybie, map
 	node --import tsx scripts/sim/matrix.ts $(GAMES) tabele > .tmp/sim/tabele.log
 	node --import tsx scripts/sim/tables.ts tabele
 
+sim-cele: node_modules ## Tabela: % wygranych Przymierza dla każdego celu i kształtu mapy (cele cyfrowe), np. make sim-cele GAMES=40
+	node --import tsx scripts/sim/goals.ts $(or $(GAMES),40)
+
 sim-arena: node_modules ## Arena: każdy skład Przymierza przeciw każdemu składowi Hordy, np. make sim-arena GAMES=1000
 	node --import tsx scripts/sim/arena.ts $(GAMES) normal
 

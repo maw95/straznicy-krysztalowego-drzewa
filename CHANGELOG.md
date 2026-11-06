@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Narzędzie dla autora: `make sim-cele` pokazuje w minutę i pół, jak często wygrywa Przymierze w każdym celu i na każdym kształcie mapy.
 - Wersja cyfrowa: kształt mapy „Wyspy” (trzy wyspy rozdzielone wodą, dojście po mostach) oraz gotowe, ręcznie narysowane mapy „Cieśnina” i „Dolina”, wybierane w ekranie startu.
 - Nowy cel przygody w wersji cyfrowej, „Artefakt”: w środku mapy leży Artefakt, a wygrywa strona, której bohater zaniesie go do własnej bazy. Niosący idzie wolniej, a poległy upuszcza Artefakt na polu, więc wróg może go przejąć.
 - Nowy cel przygody w wersji cyfrowej, „Boss”: w środku mapy leży legowisko potężnego Bossa, którego wyzywają obie strony; rany Bossa zostają między walkami, a wygrywa ten, kto zada ostatni cios.

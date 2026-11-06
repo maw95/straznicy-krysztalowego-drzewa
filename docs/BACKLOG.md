@@ -105,7 +105,7 @@ Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symul
 3. [x] **Cel „Boss”** (6.11): legowisko w środku mapy, rany zostają, wyścig o ostatni cios, boty, testy (opis i wyniki w `ZASADY_CYFROWE.md`). Wariant „kooperacyjny bez Hordy” — patrz „Do akceptacji autora”.
 4. [x] **Cel „Artefakt”** (6.11): wyścig o Artefakt w środku mapy, niesiony do własnej bazy; boty, strojenie, testy (`ZASADY_CYFROWE.md`). Wariant „eskorta” zapisany w sekcji 7.
 5. [x] **Generator: wyspy** (mosty; latania nie ma, więc skrótów nie ma) i **mapy ręczne z JSON** (`customMaps.ts`, dwie dołączone) — 6.11, opis i wyniki w `ZASADY_CYFROWE.md`. Mapa Dolina w kooperacji: 33% (do strojenia przy 6.2.6).
-6. [ ] Tabela balansu: Świt vs Horda per cel i kształt (`make sim-tabele`), pasma wygranych jak w poprzednim strojeniu.
+6. [x] Tabela balansu: Świt vs Horda per cel i kształt (`make sim-cele`, 6.11): w tabeli w `ZASADY_CYFROWE.md`; poza pasmem 45–65%: Kryształy na Dolinie (koop), Boss na Dolinie, Artefakt na wyspach (rywalizacja), Przetrwanie (do 69%).
 
 ### 6.3. Rozwój bohatera (poziom 2 „Wyprawa”) — równolegle z końcem 6.2
 
