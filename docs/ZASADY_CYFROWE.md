@@ -195,6 +195,8 @@ Działają razem z `heroGrowth` (`src/engine/sites.ts`).
 | Boss | 61 / 57 | 56 / 52 | 57 / 59 | 48 / 50 | 49 / 47 | **41** / 42 |
 | Artefakt | 59 / 54 | 52 / 49 | 57 / 44 | 49 / 39 | 59 / 47 | 53 / 41 |
 
+Z włączonym rozwojem bohatera (`SIM_GROWTH=1 make sim-cele GAMES=40`) tabela jest w granicach szumu taka sama (np. trójkąt: Kryształy 59 / 54, Punkty kontrolne 64 / 54, Boss 67 / 59, Artefakt 60 / 52; Dolina Kryształy w kooperacji nadal 29%), więc rozwój nie psuje pasm.
+
 Poza pasmem: Kryształy na Dolinie w kooperacji (ok. 35% po dodaniu skarbów; automat Hordy zamyka otwartą dolinę), Boss na Dolinie (41–42%), rywalizacja Artefaktu na wyspach (39%) i Przetrwanie (do 69%, górna granica).
 Liczby 40 gier na komórkę mają szum ±8 pkt, więc to wskazówka, nie wyrok; do dalszego strojenia przed premierą (np. 200 gier w problematycznych komórkach).
 

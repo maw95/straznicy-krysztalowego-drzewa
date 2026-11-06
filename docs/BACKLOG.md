@@ -112,7 +112,7 @@ Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symul
 1. [x] Doświadczenie i poziomy bohaterów, wybór 1 z 3 umiejętności przy awansie (6.11): `growth.ts`, okno wyboru, panel bohatera, boty, testy, symulacje (opis w `ZASADY_CYFROWE.md`). Wspólna pula 6 umiejętności; osobne drzewka z rozgałęzieniami do rozbudowy.
 2. [x] Artefakty bohatera (3 sloty × 2 poziomy), nagrody ze skrzyń, strażników i walk (6.11): `sites.ts`, opis i balans w `ZASADY_CYFROWE.md`.
 3. [x] Więcej obiektów na mapie: kapliczki, obozy najemników, skrzynie (6.11); strażnicy bez kryształu (zwykli strażnicy z nagrodą) nie dodani, bo strażnicy kryształów już dają nagrodę.
-4. [ ] Symulacje balansu z rozwojem (bohater poziom 1 vs awans), żeby nie zepsuć pasm wygranych.
+4. [x] Symulacje balansu z rozwojem (6.11): `SIM_GROWTH=1`; wyniki w `ZASADY_CYFROWE.md` (tabela celów × kształtów z rozwojem mieści się w pasmach jak bez niego).
 
 ### 6.4. Tryb rodzinny i presety (faza D) — po 6.2 i 6.3, bo preset wymaga gotowych warstw
 
