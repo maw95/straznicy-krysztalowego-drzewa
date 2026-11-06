@@ -144,6 +144,6 @@ Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symul
 ### 6.8. Uwagi o kolejności
 
 - Grafika frakcji idzie frakcjami (stare figurki i nowe grafiki nie mieszają się), więc nowa frakcja = pełen zestaw naraz; stąd frakcje dopiero po premierze.
-- Trening własnego stylu w Scenario (Pro) zostaje odłożony, dopóki nie ma 20–25 obrazów treningowych i decyzji o planie; blokuje tylko nowe frakcje.
+- Trening własnego stylu w Scenario zakończył się (autor, 6.11.2026): model do sprawdzenia próbką (jedna jednostka nowej frakcji w stylu istniejących) i decyzji autora, zanim ruszą nowe frakcje; blokuje tylko je.
 - Serwer: wydanie z nowym typem akcji wymaga najpierw wdrożenia backendu z nowym pakietem silnika (nowe cele, awanse i artefakty to nowe akcje).
 - Kontrola kosztów balansu: każdy nowy cel i kształt mapy mnoży tabelę symulacji — trzymać symulacje poniżej 3 minut.
