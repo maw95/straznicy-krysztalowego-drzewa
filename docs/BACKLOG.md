@@ -116,7 +116,7 @@ Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symul
 
 ### 6.4. Tryb rodzinny i presety (faza D) — po 6.2 i 6.3, bo preset wymaga gotowych warstw
 
-1. [ ] Presety poziomów 1 i 2 jako zestawy przełączników w `RulesConfig` („Własne ustawienia” zostają).
+1. [x] Presety poziomów 1 i 2 jako zestawy przełączników (6.11): `presets.ts` (`resolveTier`), wybór „Poziom gry” w ekranie startu; poziom 1 = Kryształy + trójkąt + bez rozwoju (domyślny), poziom 2 = wybór celu i kształtu + rozwój bohatera, „Własne” = wszystko osobno.
 2. [ ] Hotseat: sprawdzić, co już jest, dopisać przekazywanie ekranu, ukrywanie informacji między graczami.
 3. [ ] Tryb rodzinny: rodzic + dziecko w jednej drużynie, handicapy, podpowiedzi dla młodszego gracza.
 4. [ ] (Po premierze, razem z ekonomią) autopilot warstw.

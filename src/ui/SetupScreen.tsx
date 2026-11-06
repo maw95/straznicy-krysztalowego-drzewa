@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, MAP_SIZE_NAMES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import { CUSTOM_MAPS } from '../engine/customMaps';
+import { resolveTier, TIERS, type Tier } from '../engine/presets';
 import { OBJECTIVES } from '../engine/objectives';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type RulesConfig, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
@@ -63,6 +64,8 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
   const [objective, setObjective] = useState<ObjectiveId>('crystals');
   const [shape, setShape] = useState<MapShape>('triangle');
   const [growth, setGrowth] = useState(false);
+  /** The complexity level of a digital adventure (presets.ts): decides which of the switches below the player may change. */
+  const [tier, setTier] = useState<Tier>('adventure');
   const [customId, setCustomId] = useState(Object.keys(CUSTOM_MAPS)[0]);
   const setDigital = (on: boolean) => {
     setDigitalState(on);
@@ -193,7 +196,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             <Tip text={TIPS.digital}><button className={chip(digital)} aria-pressed={digital} onClick={() => setDigital(true)}>Cyfrowa</button></Tip>
             <Tip text="Zasady planszówki, bez zmian: malowana arena i figurki 3D."><button className={chip(!digital)} aria-pressed={!digital} onClick={() => setDigital(false)}>Planszowa</button></Tip>
           </Row>
-          {digital && !arena && (
+          {digital && !arena && tier !== 'adventure' && (
             <Row label="Cel">
               {(['crystals', 'control', 'survival', 'boss', 'artifact'] as const).filter((o) => o !== 'survival' || mode === 'coop').map((o) => (
                 <Tip key={o} text={OBJECTIVES[o].summary}><button className={chip(objective === o)} aria-pressed={objective === o} onClick={() => setObjective(o)}>{OBJECTIVES[o].name}</button></Tip>
@@ -201,19 +204,26 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             </Row>
           )}
           {digital && !arena && (
+            <Row label="Poziom gry">
+              {(Object.keys(TIERS) as Tier[]).map((t) => (
+                <Tip key={t} text={TIERS[t].summary}><button className={chip(tier === t)} aria-pressed={tier === t} onClick={() => setTier(t)}>{TIERS[t].name}</button></Tip>
+              ))}
+            </Row>
+          )}
+          {digital && !arena && tier === 'custom' && (
             <Row label="Rozwój bohatera">
               <Tip text="Bohaterowie zbierają punkty doświadczenia z bitew i skarbów, awansują i wybierają jedną z trzech umiejętności."><button className={chip(growth)} aria-pressed={growth} onClick={() => setGrowth(true)}>Włączony</button></Tip>
               <Tip text="Bohaterowie mają stałe liczby przez całą grę."><button className={chip(!growth)} aria-pressed={!growth} onClick={() => setGrowth(false)}>Wyłączony</button></Tip>
             </Row>
           )}
-          {digital && !arena && (
+          {digital && !arena && tier !== 'adventure' && (
             <Row label="Kształt mapy">
               {(Object.keys(SHAPE_NAMES) as MapShape[]).map((sh) => (
                 <Tip key={sh} text={SHAPE_TIPS[sh]}><button className={chip(shape === sh)} aria-pressed={shape === sh} onClick={() => setShape(sh)}>{SHAPE_NAMES[sh]}</button></Tip>
               ))}
             </Row>
           )}
-          {digital && !arena && shape === 'custom' && (
+          {digital && !arena && tier !== 'adventure' && shape === 'custom' && (
             <Row label="Mapa">
               {Object.values(CUSTOM_MAPS).map((m) => (
                 <Tip key={m.id} text={m.summary}><button className={chip(customId === m.id)} aria-pressed={customId === m.id} onClick={() => setCustomId(m.id)}>{m.name}</button></Tip>
@@ -351,7 +361,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             <button className="btn prim r tester-btn" style={{ height: 56, padding: '0 28px', fontSize: 21 }} onClick={onTesters} title="Informacje dla testerów, statystyki i plik z uwagami dla twórcy">
               INFO DLA TESTERÓW
             </button>
-            <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero } }, digital, objective, shape, customId, growth))}>
+            <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero } }, digital, ...(() => { const r = resolveTier(tier, { objective, shape, customMapId: customId, growth }); return [r.objective, r.shape, r.customMapId, r.growth] as const; })()))}>
               Rozpocznij grę
             </button>
           </div>

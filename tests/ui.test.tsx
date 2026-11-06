@@ -566,6 +566,9 @@ describe('arena through the UI', () => {
     const doc = container.ownerDocument;
     const btn = (t: string) => button(doc, t);
     await act(async () => fireEvent.click(btn('Kooperacja (wszyscy przeciw AI)')!));
+    // Level 1 (the default) fixes the goal; level 2 opens the choice.
+    expect(btn('Punkty kontrolne')).toBeUndefined();
+    await act(async () => fireEvent.click(btn('Poziom 2: Wyprawa')!));
     expect(btn('Punkty kontrolne')).toBeTruthy();
     expect(btn('Kryształy do Drzewa')!.getAttribute('aria-pressed')).toBe('true');
     await act(async () => fireEvent.click(btn('Planszowa')!));
@@ -574,10 +577,12 @@ describe('arena through the UI', () => {
     await act(async () => fireEvent.click(btn('Arena (jedna bitwa)')!));
     expect(btn('Punkty kontrolne')).toBeUndefined();
     await act(async () => fireEvent.click(btn('Kooperacja (wszyscy przeciw AI)')!));
+    await act(async () => fireEvent.click(btn('Poziom 2: Wyprawa')!));
     await act(async () => fireEvent.click(btn('Punkty kontrolne')!));
     await act(async () => fireEvent.click(btn('Rozpocznij grę')!));
     const g = (window as any).__game;
     expect(g.rules.objective).toBe('control');
+    expect(g.rules.heroGrowth).toBe(true);
     expect(g.control.points).toHaveLength(3);
     expect(doc.body.textContent).toContain('Punkty kontrolne');
     expect(doc.querySelectorAll('.control-flag').length).toBe(3);
