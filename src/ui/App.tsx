@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { chooseAction } from '../engine/ai';
 import { FACTION_NAMES, UNITS, type FactionId, type ItemKind } from '../engine/data';
-import { applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
+import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
 import { movePath } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import { controlCounts } from '../engine/objectives';
@@ -12,7 +12,7 @@ import { DuelView } from './DuelView';
 import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset } from './common';
 import { SetupScreen } from './SetupScreen';
 import { music } from './music';
-import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, OptionsDialog, VictoryEffects, type Confirmation } from './gameDialogs';
+import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, OptionsDialog, SkillDialog, VictoryEffects, type Confirmation } from './gameDialogs';
 import { UnitCard } from './UnitCard';
 import { readAutosave, replay, writeAutosave, type BugReport, type SaveFile } from './saves';
 import { BugReportDialog } from './BugReportDialog';
@@ -128,7 +128,7 @@ export function App() {
       battleMode: q.get('battle') === 'board' ? 'board' : 'arena',
       seed: Number(q.get('seed') ?? 1),
       // ?abilities=0&treasures=0 switch simplifications on, ?dice=1 the die, ?objective=control the control points goal.
-      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1', ...(q.get('ruleset') !== 'board' ? { ruleset: 'digital' as const } : {}), ...(['control', 'survival', 'boss', 'artifact'].includes(q.get('objective') ?? '') ? { objective: q.get('objective') as 'control' | 'survival' | 'boss' | 'artifact' } : {}) },
+      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1', ...(q.get('growth') === '1' ? { heroGrowth: true } : {}), ...(q.get('ruleset') !== 'board' ? { ruleset: 'digital' as const } : {}), ...(['control', 'survival', 'boss', 'artifact'].includes(q.get('objective') ?? '') ? { objective: q.get('objective') as 'control' | 'survival' | 'boss' | 'artifact' } : {}) },
       seats:
         mode === 'coop'
           ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))
@@ -663,6 +663,7 @@ export function App() {
         <Handoff state={game} playerId={actor.playerId} onConfirm={() => setConfirmedFaction(actor.faction)} />
       )}
 
+      <SkillDialog hero={humanTurn && game.phase === 'adventure' && !steps.length ? activeHero(game) : null} onChoose={(skill) => dispatch({ type: 'chooseSkill', skill })} />
       <VictoryEffects game={game} />
       <FoundTreasure kind={found} open={Boolean(found) && !digest && !summary} onClose={() => setFound(null)} />
 

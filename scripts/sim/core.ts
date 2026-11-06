@@ -64,6 +64,8 @@ export function setupWith(size: MapSize, table: Table, options: Option[], seed: 
   // SIM_OBJECTIVE=boss: the race for the Boss's last blow.
   if (process.env.SIM_OBJECTIVE === 'boss') rules.objective = 'boss';
   if (process.env.SIM_OBJECTIVE === 'artifact') rules.objective = 'artifact';
+  // SIM_GROWTH=1: hero growth (experience, levels, skills).
+  if (process.env.SIM_GROWTH) rules.heroGrowth = true;
   const mapShape = ['rectangle', 'ring', 'islands', 'custom'].includes(process.env.SIM_SHAPE ?? '') ? (process.env.SIM_SHAPE as 'rectangle' | 'ring' | 'islands' | 'custom') : undefined;
   return { mode, mapSize: size, ...(mapShape ? { mapShape, ...(process.env.SIM_MAP ? { customMapId: process.env.SIM_MAP } : {}) } : {}), battleMode: options.includes('board') ? 'board' : base.battleMode, seed, seats, rules };
 }

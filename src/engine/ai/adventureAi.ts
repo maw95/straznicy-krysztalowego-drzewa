@@ -5,6 +5,7 @@ import { FACTION_SUPPORTS, ITEM_EFFECT, SUPPORTS_PER_BATTLE, UNITS, type Faction
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, livingHeroes, other, reviveSpots, ritualFormed, ritualSpot } from '../game';
+import { BOT_SKILL_ORDER } from '../growth';
 import { artifactCarrier, objectiveOf } from '../objectives';
 import type { Action, Crystal, GameState, HeroState } from '../types';
 
@@ -697,6 +698,8 @@ function canFightGuardian(state: GameState): boolean {
 
 export function adventureAction(state: GameState): Action {
   const hero = activeHero(state)!;
+  // A level up first: the skill the bots like best of the three offered.
+  if (hero.offer?.length) return { type: 'chooseSkill', skill: BOT_SKILL_ORDER.find((s) => hero.offer!.includes(s)) ?? hero.offer[0] };
   // A reserve hero coming in picks the hex nearest to the Tree, where both sides are headed.
   if (hero.entering) {
     if (state.turnBattleDone) return { type: 'endTurn' };

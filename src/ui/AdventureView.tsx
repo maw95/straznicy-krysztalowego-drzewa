@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FACTION_NAMES, ITEMS, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
 import { activeHero, heroesAt, legalHeroMoves, reviveSpots } from '../engine/game';
+import { levelOf, SKILL_EFFECT, SKILL_NAMES, xpToNext } from '../engine/growth';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { parseKey, type HexKey } from '../engine/hex';
 import { mapNeighbors, tileCost } from '../engine/map';
@@ -459,6 +460,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </button>
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{UNITS[hero.id].name}</div>
+                {state.rules.heroGrowth && (
+                  <div style={{ fontSize: 14 }} title={(hero.skills ?? []).map((s) => `${SKILL_NAMES[hero.faction][s]}: ${SKILL_EFFECT[s].text}`).join('\n') || 'Brak umiejętności'}>
+                    Poziom {levelOf(hero)} · PD {hero.xp ?? 0}{xpToNext(hero) !== null ? `/${xpToNext(hero)}` : ''}{(hero.skills ?? []).length ? ` · ${(hero.skills ?? []).map((s) => SKILL_NAMES[hero.faction][s]).join(', ')}` : ''}
+                  </div>
+                )}
                 <div style={{ fontSize: 15, color: 'var(--muted)' }}>{hero.playerId ? state.players.find((p) => p.id === hero.playerId)?.name : 'Automat zła'}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3, fontSize: 15 }}>
                   Ruch <Pips total={state.rules.heroMovePoints} left={state.movePoints} />

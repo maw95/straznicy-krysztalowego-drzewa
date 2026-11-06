@@ -43,6 +43,7 @@ import {
 import { distance, parseKey, type HexKey } from './hex';
 import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { log } from './log';
+import { applyHeroSkills, applySupportSkill, awardXp, chooseSkill, GROWTH, moveBonus } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
@@ -273,6 +274,11 @@ function giveItem(state: GameState, item: ItemInstance, faction: FactionId, foun
   state.factions[faction].inventory.push(item.id);
 }
 
+/** A new treasure card of `kind` goes to the faction's shared inventory. */
+export function grantTreasure(state: GameState, kind: ItemKind, faction: FactionId, foundBy: string | null) {
+  giveItem(state, newItem(state, kind), faction, foundBy);
+}
+
 function addHero(state: GameState, heroId: string, faction: FactionId, playerId: string | null) {
   state.heroes[heroId] = { id: heroId, faction, playerId, pos: homeOf(state, faction), alive: true, crystals: [] };
   const unused = state.factions[faction].unusedHeroes;
@@ -460,6 +466,7 @@ export function currentActor(state: GameState): Actor {
 
 function moveHero(state: GameState, to: HexKey) {
   const hero = activeHero(state)!;
+  if (hero.offer) throw new Error('Najpierw wybierz umiejętność.');
   const move = legalHeroMoves(state).find((m) => m.to === to);
   if (!move) throw new Error('Nie można wejść na to pole.');
   const name = UNITS[hero.id].name;
@@ -527,6 +534,7 @@ function arriveAt(state: GameState, hero: HeroState) {
     giveItem(state, item, hero.faction, hero.id);
     tile.treasureId = null;
     state.stats.treasuresCollected[hero.faction] += 1;
+    awardXp(state, hero, GROWTH.xp.treasure);
     log(state, 'item', `${UNITS[hero.id].name} znajduje skarb.`);
     log(state, 'item', `Skarb (${UNITS[hero.id].name}): ${ITEMS[item.kind].name}.`, hero.faction);
   }
@@ -551,6 +559,7 @@ function arriveAt(state: GameState, hero: HeroState) {
 
 function endTurn(state: GameState) {
   if (state.phase !== 'adventure') throw new Error('Najpierw zakończ bitwę.');
+  if (activeHero(state)?.offer) throw new Error('Najpierw wybierz umiejętność.');
   // A reserve that could have come in but did not choose takes the first of its hexes.
   // (One that took over a turn already spent on a battle waits for its own next turn.)
   const hero = activeHero(state);
@@ -574,11 +583,12 @@ function advanceTurn(state: GameState) {
       if (state.phase === 'over') return;
     }
   }
-  state.movePoints = state.rules.heroMovePoints - (activeHero(state)?.crystals.includes('artifact') ? ARTIFACT.carrierSlow : 0);
+  state.movePoints = state.rules.heroMovePoints + moveBonus(activeHero(state) ?? undefined) - (activeHero(state)?.crystals.includes('artifact') ? ARTIFACT.carrierSlow : 0);
   state.turnBattleDone = false;
 }
 
 function endRound(state: GameState) {
+  if (state.rules.heroGrowth) for (const h of Object.values(state.heroes)) if (h.faction === 'horde') awardXp(state, h, GROWTH.hordeRoundXp);
   const objective = OBJECTIVES[objectiveOf(state)];
   if (objective.onRoundEnd(state)) return;
   if (state.round >= state.roundLimit) {
@@ -684,6 +694,7 @@ function startBattle(state: GameState, s: BattleStart) {
   const digital = isDigital(state.rules) && !b.duel;
   b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction, digital);
   if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital);
+  for (const h of [attacker, defenderHero]) if (h && state.rules.heroGrowth) applyHeroSkills(h, b.units[h.id]);
   if (s.neutralId) {
     const g = makeBattleUnit(s.neutralId, 'neutral');
     // One hero alone against a guardian: the guardian fights with its duel card (less Życie, another ability).
@@ -717,7 +728,11 @@ function startBattle(state: GameState, s: BattleStart) {
 function addSupports(state: GameState, faction: FactionId, ids: string[]) {
   const b = state.battle!;
   const digital = isDigital(state.rules) && !b.duel;
-  for (const id of ids) b.units[id] = makeBattleUnit(id, faction, digital);
+  for (const id of ids) {
+    b.units[id] = makeBattleUnit(id, faction, digital);
+    // The leader of the side (the attacking or the defending hero of this faction) strengthens its supports.
+    if (state.rules.heroGrowth) applySupportSkill(state.heroes[b.attacker === faction ? b.attackerHero : b.defenderHero ?? ''], b.units[id]);
+  }
 }
 
 function selectSupports(state: GameState, faction: FactionId, ids: string[]) {
@@ -739,6 +754,7 @@ function finalizeBattle(state: GameState) {
   const resultText = b.winner === 'draw' ? 'remis — obie strony poległy' : `wygrywa ${FACTION_NAMES[b.winner!]}`;
   log(state, 'battle', `Bitwa zakończona: ${resultText}.`);
   if (b.kind === 'neutral') resolveGuardianFight(state, b);
+  awardBattleXp(state, b);
   state.lastBattle = battleReport(state, b);
   state.battle = null;
   state.phase = 'adventure';
@@ -747,6 +763,17 @@ function finalizeBattle(state: GameState) {
   if (isOver(state)) return;
   const active = activeHero(state);
   if (!active || !active.alive) advanceTurn(state);
+}
+
+/** Experience for the heroes that lived through a battle: more for a win (most for a guardian). */
+function awardBattleXp(state: GameState, b: BattleState) {
+  if (!state.rules.heroGrowth) return;
+  for (const id of [b.attackerHero, b.defenderHero]) {
+    const hero = id ? state.heroes[id] : null;
+    if (!hero?.alive) continue;
+    const won = b.winner === hero.faction;
+    awardXp(state, hero, won ? (b.kind === 'neutral' ? GROWTH.xp.guardian : GROWTH.xp.hero) : GROWTH.xp.lost);
+  }
 }
 
 /** Fallen supports join the faction's dead for good; fallen heroes die on the map. */
@@ -923,6 +950,10 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
       break;
     case 'endTurn':
       endTurn(state);
+      break;
+    case 'chooseSkill':
+      if (state.phase !== 'adventure' || !activeHero(state)?.offer) throw new Error('Teraz nie wybiera się umiejętności.');
+      chooseSkill(state, activeHero(state)!.id, action.skill);
       break;
     case 'useMapItem':
       useMapItem(state, action.itemId, action.targets, action.unitId);

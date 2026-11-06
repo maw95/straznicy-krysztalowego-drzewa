@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wersja cyfrowa, opcja „Rozwój bohatera”: bohaterowie zbierają punkty doświadczenia z bitew i skarbów, awansują do 5 poziomu i przy każdym awansie wybierają jedną z trzech umiejętności (większa siła, życie, szybkość, ruch na mapie, wsparcie pomocników albo skarb).
 - Narzędzie dla autora: `make sim-cele` pokazuje w minutę i pół, jak często wygrywa Przymierze w każdym celu i na każdym kształcie mapy.
 - Wersja cyfrowa: kształt mapy „Wyspy” (trzy wyspy rozdzielone wodą, dojście po mostach) oraz gotowe, ręcznie narysowane mapy „Cieśnina” i „Dolina”, wybierane w ekranie startu.
 - Nowy cel przygody w wersji cyfrowej, „Artefakt”: w środku mapy leży Artefakt, a wygrywa strona, której bohater zaniesie go do własnej bazy. Niosący idzie wolniej, a poległy upuszcza Artefakt na polu, więc wróg może go przejąć.

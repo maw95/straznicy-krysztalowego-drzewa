@@ -3,8 +3,9 @@
 // a card, the options) and the end-of-game effects.
 
 import type { ReactNode } from 'react';
-import type { ItemKind } from '../engine/data';
-import type { GameState, LogEntry } from '../engine/types';
+import { UNITS, type ItemKind } from '../engine/data';
+import { levelOf, SKILL_EFFECT, SKILL_NAMES, type SkillId } from '../engine/growth';
+import type { GameState, HeroState, LogEntry } from '../engine/types';
 import type { BotSpeed, RoomView } from '../online/api';
 import { BOT_SPEEDS } from '../online/api';
 import { Frame, Modal, Ribbon, SvgDefs } from './common';
@@ -131,6 +132,28 @@ export function FoundTreasure({ kind, open, onClose }: { kind: ItemKind | null; 
           <button className="btn prim" data-enter autoFocus style={{ padding: '6px 26px', fontSize: 18 }} onClick={onClose}>
             Do ekwipunku
           </button>
+        </div>
+      )}
+    </Modal>
+  );
+}
+
+/** A hero reached a level: three skills to choose from. */
+export function SkillDialog({ hero, onChoose }: { hero: HeroState | null; onChoose: (skill: SkillId) => void }) {
+  return (
+    <Modal open={Boolean(hero?.offer?.length)}>
+      {hero?.offer && (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, maxWidth: 'min(720px, 94vw)' }}>
+          <Ribbon style={{ width: 'min(420px, 90vw)' }}>Poziom {levelOf(hero)}: wybierz umiejętność</Ribbon>
+          <div style={{ fontSize: 18 }}>{UNITS[hero.id].name}</div>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+            {hero.offer.map((s) => (
+              <button key={s} className="btn plate parch" data-skill={s} style={{ width: 200, padding: '12px 14px', textAlign: 'left' }} onClick={() => onChoose(s)}>
+                <div style={{ fontWeight: 800, fontSize: 19 }}>{SKILL_NAMES[hero.faction][s]}</div>
+                <div style={{ fontSize: 15, marginTop: 4 }}>{SKILL_EFFECT[s].text}</div>
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </Modal>

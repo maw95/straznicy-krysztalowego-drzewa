@@ -161,6 +161,17 @@ Poziomy Łatwy i Trudny dostają te same skarby (nie były strojone osobno).
 - Strojenie (`DIGITAL_TUNING`, cel „Kryształy”, 80 gier na wariant, poziom Normalny): bez niego Przymierze wygrywało 12–35% (wąskie drogi, jeden bohater Hordy zamyka most); z 4 punktami ruchu i 4 skarbami na start:
   wyspy 52% (kooperacja) / 59% (rywalizacja), Cieśnina 42% / 62%, Dolina 33% / 54% (w kooperacji do dalszego strojenia, bo automat Hordy jest agresywny). Limit rund ×1,7 (wyspy) i ×2 (ręczne).
 
+## Rozwój bohatera (6.11.2026, wersja cyfrowa, przełącznik `heroGrowth`)
+
+Domyślnie wyłączony (gry bez niego są takie jak dotąd); w ekranie startu „Rozwój bohatera: Włączony”, a presety poziomów (6.4) będą go włączać.
+- **Punkty doświadczenia (PD)** dla bohatera, który przeżył bitwę: 3 za wygraną ze strażnikiem, 2 za wygraną z bohaterem wroga, 1 za przegraną; 1 za znaleziony skarb; Horda dodatkowo 1 PD za każdą rundę (rzadko spotyka strażników).
+- **Poziomy 1–5**: progi 3 / 7 / 12 / 18 PD łącznie (`GROWTH.thresholds`). Przy awansie bohater dostaje **trzy umiejętności do wyboru** (losowane z ziarna gry spośród jeszcze niewziętych) i do wyboru nie rusza się ani nie kończy tury (`chooseSkill`, nowa akcja).
+- **Umiejętności** (te same efekty, inne nazwy dla Świtu i Hordy, `SKILL_NAMES`): Moc +1 A bohatera w bitwie; Hart +2 Ż; Lekkość +1 S; Opiekun/Okrzyk: pomocnicy bohatera +1 Ż w bitwie; Tropiciel +1 punkt ruchu na mapie; Dar: od razu losowy skarb dla frakcji.
+  Na razie wspólna pula 6 umiejętności dla obu frakcji (drzewka z rozgałęzieniami później, `BACKLOG` 6.3).
+- Boty wybierają w kolejności: Moc, Hart, Opiekun, Lekkość, Tropiciel, Dar (`BOT_SKILL_ORDER`).
+- Wpływ na balans (`SIM_GROWTH=1 SIM_DIGITAL=1`, 100 gier na wariant, Normalny, cel Kryształy): Przymierze 62% w kooperacji i 51% w rywalizacji wobec 59% i 50% bez rozwoju; średni poziom na koniec gry: Przymierze 2,7, Horda 1,8 (bez PD za rundy Horda miała 1,1 i Przymierze wygrywało o 5–7 pkt więcej).
+- Serwer: nowa akcja `chooseSkill` wymaga wdrożenia backendu z nowym pakietem silnika.
+
 ## Tabela balansu: cele × kształty (6.11.2026)
 
 `make sim-cele GAMES=40` (około 1,5 minuty): wygrane Przymierza, poziom Normalny, kooperacja / rywalizacja, cztery rozmiary map razem (40 gier na wariant). Cel pasma: 45–65%.

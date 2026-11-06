@@ -109,7 +109,7 @@ Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symul
 
 ### 6.3. Rozwój bohatera (poziom 2 „Wyprawa”) — równolegle z końcem 6.2
 
-1. [ ] Doświadczenie i poziomy bohaterów (punkty za bitwy i skarby), wybór 1 z 3 umiejętności przy awansie (drzewka najpierw tylko dla Świtu i Hordy).
+1. [x] Doświadczenie i poziomy bohaterów, wybór 1 z 3 umiejętności przy awansie (6.11): `growth.ts`, okno wyboru, panel bohatera, boty, testy, symulacje (opis w `ZASADY_CYFROWE.md`). Wspólna pula 6 umiejętności; osobne drzewka z rozgałęzieniami do rozbudowy.
 2. [ ] Artefakty (ekwipunek bohatera, sloty), nagrody ze skrzyń i strażników.
 3. [ ] Więcej obiektów na mapie: kapliczki, obozy najemników, skrzynie, strażnicy.
 4. [ ] Symulacje balansu z rozwojem (bohater poziom 1 vs awans), żeby nie zepsuć pasm wygranych.
@@ -159,4 +159,5 @@ Sesja autonomiczna 6.11.2026. Każda pozycja: co wybrałem, dlaczego, gdzie to z
 - **Kształty mapy:** liczba pól prostokąta i pierścienia (`MAP_SHAPES`), mnożnik limitu rund (`SHAPE_ROUND_FACTOR`) i skarby startowe Przymierza na tych mapach (`DIGITAL_TUNING`, wpisy z `shape`) dobrane symulacjami. Poziomy Łatwy/Trudny nie były strojone osobno.
 - **Boss:** Hydra albo Cyklop ze zwiększonym życiem, bez własnej grafiki (potrzebna, jeśli ma być wyróżniony); wariant „wszyscy przeciw Bossowi bez Hordy” nie jest zrobiony, bo obecny wyścig o ostatni cios ma już tryb kooperacyjny z automatem Hordy.
 - **Artefakt:** zrobiony jako wyścig w obie strony (kto pierwszy zaniesie do swojej bazy). Wariant „eskorta” (Przymierze niesie Artefakt z bazy do Drzewa, Horda tylko poluje) pominąłem jako mało różny od wyścigu przy tych samych botach; do rozważenia po opinii z gry.
+- **Rozwój bohatera:** progi PD, liczby PD, pula 6 umiejętności i ich siła (`growth.ts`) to moje pierwsze strzały; umiejętności nie mają jeszcze ikon ani kart. Rozwój zostaje domyślnie wyłączony do czasu presetów (6.4).
 - **Serwer:** nowe pola ustawień (`mapShape`) i nowe cele (`survival`, `boss`) wymagają wdrożenia backendu z nowym pakietem silnika przed wydaniem gry.

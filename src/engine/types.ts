@@ -1,3 +1,4 @@
+import type { SkillId } from './growth';
 import type { HexKey } from './hex';
 import type { AbilityId, FactionId, ItemKind, MapSize, Side, Terrain, TileSide } from './data';
 
@@ -65,6 +66,8 @@ export interface RulesConfig {
   battleRoundLimit: number;
   /** Experiment (backlog 4.2): units standing between shooter and target block the shot like obstacles. Off by default. */
   unitsBlockSight?: boolean;
+  /** Digital ruleset: heroes earn experience, reach levels and choose skills (growth.ts). Off = as before. */
+  heroGrowth?: boolean;
 }
 
 export function isDigital(rules: Pick<RulesConfig, 'ruleset'>): boolean {
@@ -168,6 +171,11 @@ export interface HeroState {
    * On its first turn the player picks one of them (free move); until then `pos` is not used.
    */
   entering?: HexKey[];
+  /** Hero growth (rule `heroGrowth`): experience, level (missing = 1), the skills chosen and the three on offer now (see growth.ts). */
+  xp?: number;
+  level?: number;
+  skills?: SkillId[];
+  offer?: SkillId[];
 }
 
 export interface FactionState {
@@ -397,6 +405,7 @@ export interface ControlState {
 export type Action =
   | { type: 'moveHero'; to: HexKey }
   | { type: 'endTurn' }
+  | { type: 'chooseSkill'; skill: SkillId }
   | { type: 'useMapItem'; itemId: string; targets?: HexKey[]; unitId?: string }
   | { type: 'selectSupports'; faction: FactionId; supportIds: string[] }
   | { type: 'deployUnits'; faction: FactionId; positions: Record<string, HexKey> }

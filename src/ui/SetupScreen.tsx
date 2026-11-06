@@ -21,9 +21,9 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
   });
 
 /** The set-up with the digital edition's rules switched on when asked (the arena battles; the board duels of the easy level are the same), and its objective. */
-function withRuleset(setup: SetupOptions, digital: boolean, objective: ObjectiveId = 'crystals', shape: MapShape = 'triangle', customMapId?: string): SetupOptions {
+function withRuleset(setup: SetupOptions, digital: boolean, objective: ObjectiveId = 'crystals', shape: MapShape = 'triangle', customMapId?: string, growth = false): SetupOptions {
   if (!digital) return setup;
-  return { ...setup, ...(shape !== 'triangle' && setup.mode !== 'arena' ? { mapShape: shape, ...(shape === 'custom' ? { customMapId } : {}) } : {}), rules: { ...setup.rules, ruleset: 'digital', ...(objective !== 'crystals' && (objective !== 'survival' || setup.mode === 'coop') && setup.mode !== 'arena' ? { objective } : {}) } };
+  return { ...setup, ...(shape !== 'triangle' && setup.mode !== 'arena' ? { mapShape: shape, ...(shape === 'custom' ? { customMapId } : {}) } : {}), rules: { ...setup.rules, ruleset: 'digital', ...(growth && setup.mode !== 'arena' ? { heroGrowth: true } : {}), ...(objective !== 'crystals' && (objective !== 'survival' || setup.mode === 'coop') && setup.mode !== 'arena' ? { objective } : {}) } };
 }
 
 const SHAPE_NAMES: Record<MapShape, string> = { triangle: 'Trójkąt', rectangle: 'Prostokąt', ring: 'Pierścień', islands: 'Wyspy', custom: 'Własna mapa' };
@@ -62,6 +62,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
   /** The goal of an adventure game (the digital edition only): the crystals, or the control points. */
   const [objective, setObjective] = useState<ObjectiveId>('crystals');
   const [shape, setShape] = useState<MapShape>('triangle');
+  const [growth, setGrowth] = useState(false);
   const [customId, setCustomId] = useState(Object.keys(CUSTOM_MAPS)[0]);
   const setDigital = (on: boolean) => {
     setDigitalState(on);
@@ -197,6 +198,12 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
               {(['crystals', 'control', 'survival', 'boss', 'artifact'] as const).filter((o) => o !== 'survival' || mode === 'coop').map((o) => (
                 <Tip key={o} text={OBJECTIVES[o].summary}><button className={chip(objective === o)} aria-pressed={objective === o} onClick={() => setObjective(o)}>{OBJECTIVES[o].name}</button></Tip>
               ))}
+            </Row>
+          )}
+          {digital && !arena && (
+            <Row label="Rozwój bohatera">
+              <Tip text="Bohaterowie zbierają punkty doświadczenia z bitew i skarbów, awansują i wybierają jedną z trzech umiejętności."><button className={chip(growth)} aria-pressed={growth} onClick={() => setGrowth(true)}>Włączony</button></Tip>
+              <Tip text="Bohaterowie mają stałe liczby przez całą grę."><button className={chip(!growth)} aria-pressed={!growth} onClick={() => setGrowth(false)}>Wyłączony</button></Tip>
             </Row>
           )}
           {digital && !arena && (
@@ -344,7 +351,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             <button className="btn prim r tester-btn" style={{ height: 56, padding: '0 28px', fontSize: 21 }} onClick={onTesters} title="Informacje dla testerów, statystyki i plik z uwagami dla twórcy">
               INFO DLA TESTERÓW
             </button>
-            <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero } }, digital, objective, shape, customId))}>
+            <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero } }, digital, objective, shape, customId, growth))}>
               Rozpocznij grę
             </button>
           </div>
