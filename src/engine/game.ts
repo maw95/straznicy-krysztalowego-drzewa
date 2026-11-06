@@ -397,7 +397,8 @@ export function legalHeroMoves(state: GameState): HeroMove[] {
       continue;
     }
     if (crystal?.guardian) {
-      if (hero.faction === 'horde') continue;
+      // The Horde leave guardians alone, except the Boss: both sides race for the last blow.
+      if (hero.faction === 'horde' && !(state.boss && crystal.id === 'boss')) continue;
       if (cost <= state.movePoints) out.push({ to: n, cost, kind: 'attackGuardian' });
       continue;
     }
@@ -683,6 +684,11 @@ function startBattle(state: GameState, s: BattleStart) {
       g.ability = card.ability;
       if (state.rules.abilities && card.ability === 'stoneSkin') g.status.damageReduction += ABILITY.stoneSkinIgnore;
     }
+    // The Boss keeps its wounds from fight to fight.
+    if (state.boss && s.mapHex === state.boss.at) {
+      g.hp = state.boss.hp;
+      g.maxHp = state.boss.maxHp;
+    }
     b.units[s.neutralId] = g;
   }
   state.phase = 'battle';
@@ -755,6 +761,20 @@ function applyCasualties(state: GameState, b: BattleState) {
 
 /** A beaten guardian frees its crystal and leaves a treasure; a guardian that won is counted. */
 function resolveGuardianFight(state: GameState, b: BattleState) {
+  if (state.boss && b.mapHex === state.boss.at) {
+    const boss = state.boss;
+    const unit = b.units[b.neutralId!];
+    boss.hits[b.attacker as FactionId] += boss.hp - Math.max(0, unit.hp);
+    boss.hp = Math.max(0, unit.hp);
+    if (b.winner === b.attacker && !unit.alive) {
+      boss.slain = b.attacker as FactionId;
+      log(state, 'crystal', `${FACTION_NAMES[b.attacker]} zadaje Bossowi ostatni cios.`);
+    } else {
+      state.stats.neutralWipes += 1;
+      log(state, 'info', `Boss ma jeszcze ${boss.hp}/${boss.maxHp} Ż.`);
+    }
+    return;
+  }
   if (b.winner !== b.attacker) {
     state.stats.neutralWipes += 1;
     return;

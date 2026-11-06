@@ -3,7 +3,7 @@
 // progress for the screen. 'crystals' is the board game's goal (carry the crystals to the Tree, the Horde's ritual); the
 // others belong to the digital ruleset. Result of a game under 'crystals' must never change (tests/golden.test.ts).
 
-import { CONTROL, FACTION_NAMES, SURVIVAL, type FactionId } from './data';
+import { BOSS, CONTROL, FACTION_NAMES, SURVIVAL, type FactionId } from './data';
 import { finish, heroesAt, ritualFormed, spawnHordeHero } from './game';
 import { distance, key, parseKey, triToHex, type HexKey } from './hex';
 import { log } from './log';
@@ -39,7 +39,7 @@ export interface Objective {
 /** The objective of a game: 'control' and 'survival' only in the digital ruleset, otherwise the crystals goal. */
 export const objectiveOf = (state: Pick<GameState, 'rules'>): ObjectiveId => {
   const o = state.rules.objective;
-  return (o === 'control' || o === 'survival') && isDigital(state.rules) ? o : 'crystals';
+  return (o === 'control' || o === 'survival' || o === 'boss') && isDigital(state.rules) ? o : 'crystals';
 };
 
 const crystals: Objective = {
@@ -318,4 +318,42 @@ const survival: Objective = {
   },
 };
 
-export const OBJECTIVES: Record<ObjectiveId, Objective> = { crystals, control, survival };
+// ------------------------------------------------------------------ boss
+
+const boss: Objective = {
+  id: 'boss',
+  name: 'Boss',
+  summary: 'W środku mapy jest legowisko Bossa. Obie strony mogą go wyzywać, a rany zostają między walkami. Kto zada ostatni cios, wygrywa.',
+  init(state) {
+    const rng = new Rng((state.setup.seed ^ 0x5bd1e995) | 0);
+    // The middle control point's place is the lair (it is cleared into passable ground, like the control points are).
+    const at = placeControlPoints(state)[0];
+    const guardian = rng.pick(['hydra', 'cyclops']);
+    const dawnHeroes = state.setup.seats.filter((s) => s.faction === 'dawn').length;
+    const hp = Math.round(BOSS.hp[state.setup.mapSize] * (dawnHeroes >= 2 ? BOSS.twoHeroesFactor : 1));
+    state.tiles[at].terrain = guardian === 'hydra' ? 'lairHydra' : 'lairCyclops';
+    state.tiles[at].crystalId = 'boss';
+    state.crystals.boss = { id: 'boss', guardian, at };
+    state.boss = { at, guardian, hp, maxHp: hp, slain: null, hits: { dawn: 0, horde: 0 } };
+    revealAround(state, at);
+  },
+  checkVictory(state) {
+    const b = state.boss!;
+    if (b.slain) finish(state, b.slain, `Boss pokonany: ostatni cios zadała strona „${FACTION_NAMES[b.slain]}”.`);
+  },
+  onRoundEnd() {
+    return false;
+  },
+  onRoundLimit(state) {
+    finish(state, 'horde', 'Upłynął limit rund: nikt nie pokonał Bossa.');
+  },
+  progress(state) {
+    const b = state.boss!;
+    return [
+      { label: 'Boss', value: `${b.hp} / ${b.maxHp} Ż` },
+      { label: 'Zadane rany (Świt / Horda)', value: `${b.hits.dawn} / ${b.hits.horde}` },
+    ];
+  },
+};
+
+export const OBJECTIVES: Record<ObjectiveId, Objective> = { crystals, control, survival, boss };

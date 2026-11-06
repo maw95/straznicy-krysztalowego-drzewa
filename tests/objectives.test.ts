@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CONTROL, SURVIVAL } from '../src/engine/data';
+import { BOSS, CONTROL, SURVIVAL } from '../src/engine/data';
 import { createGame } from '../src/engine/game';
 import { distance, parseKey } from '../src/engine/hex';
 import { tileCost, treeKey } from '../src/engine/map';
@@ -162,5 +162,41 @@ describe('objective survival (digital ruleset, coop)', () => {
     const s = playOut(survival({ seed: 4 }));
     expect(s.phase).toBe('over');
     expect(OBJECTIVES.survival.progress(createGame(setup({ mode: 'coop' }, { ruleset: 'digital', objective: 'survival' }))).map((l) => l.label)).toEqual(['Przetrwane rundy', 'Fale Hordy']);
+  });
+});
+
+describe('objective boss (digital ruleset)', () => {
+  const boss = (over: Parameters<typeof setup>[0] = {}, shape?: 'rectangle' | 'ring') => createGame({ ...setup(over, { ruleset: 'digital', objective: 'boss' }), ...(shape ? { mapShape: shape } : {}) });
+
+  it('puts the Boss in a lair in the middle (a guardian both sides may challenge), with the Życie of the map', () => {
+    for (const shape of [undefined, 'rectangle', 'ring'] as const) {
+      const s = boss({ mapSize: 'medium' }, shape);
+      expect(objectiveOf(s)).toBe('boss');
+      const b = s.boss!;
+      expect(b.hp).toBe(BOSS.hp.medium);
+      expect(s.crystals.boss.guardian).toBe(b.guardian);
+      expect(s.tiles[b.at].crystalId).toBe('boss');
+      expect(s.tiles[b.at].revealed).toBe(true);
+    }
+    expect(objectiveOf(createGame(setup({}, { objective: 'boss' })))).toBe('crystals');
+  });
+
+  it('the side that strikes the last blow wins; at the round limit the Horde win', () => {
+    const s = boss();
+    s.boss!.slain = 'horde';
+    OBJECTIVES.boss.checkVictory(s);
+    expect(s.winner).toBe('horde');
+    const t = boss();
+    OBJECTIVES.boss.onRoundLimit(t);
+    expect(t.winner).toBe('horde');
+  });
+
+  it('bots play it to the end on every shape, and the Boss keeps its wounds', () => {
+    for (const shape of [undefined, 'rectangle', 'ring'] as const) {
+      const s = playOut(boss({ seed: 5 }, shape));
+      expect(s.phase).toBe('over');
+      expect(s.boss!.hp).toBeLessThanOrEqual(s.boss!.maxHp);
+      expect(s.boss!.hits.dawn + s.boss!.hits.horde).toBe(s.boss!.maxHp - s.boss!.hp);
+    }
   });
 });

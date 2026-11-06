@@ -627,7 +627,35 @@ function survivalAction(state: GameState, memo: Memo): Action {
   return stepToward(state, best.path);
 }
 
+// ------------------------------------------------------------------ boss
+
+/**
+ * Objective 'boss': the Horde (automaton or bot) goes straight for the lair (its heroes come back when they fall); the Przymierze strike an
+ * enemy hero next to them, go for the Boss once they are ready (a support left, or the Boss is nearly dead, or half the rounds are gone), and
+ * until then play the crystals game, whose guardians leave treasures.
+ */
+function bossAction(state: GameState, memo: Memo): Action {
+  const hero = activeHero(state)!;
+  const boss = state.boss!;
+  const ready = hero.faction === 'horde' || state.factions.dawn.supportsAlive.length >= 1 || boss.hp <= BOSS_FINISH_HP || state.round > state.roundLimit / 2;
+  if (!ready) return goodAction(state, memo);
+  const item = mapItemAction(state);
+  if (item) return item;
+  if (state.movePoints <= 0) return { type: 'endTurn' };
+  const automaton = currentActor(state).kind === 'automaton';
+  const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
+  const prey = foes.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && (automaton || memo.ratio(hero, e) >= huntRatio(state)));
+  if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
+  const paths = memo.paths(hero, 'boss', { goals: new Set([boss.at]), avoidGuardians: true, danger: hero.faction === 'dawn' });
+  const p = paths.get(boss.at);
+  if (!p || p.path.length < 2) return { type: 'endTurn' };
+  return stepToward(state, p.path);
+}
+
 /** The last quarter of the rounds: the Horde wins at the limit, so the Dawn stops waiting. */
+/** The Boss is this close to death: the Przymierze go for it even without supports. */
+const BOSS_FINISH_HP = 12;
+
 const isDesperate = (state: GameState) => state.round > state.roundLimit * AI_TUNING.desperateAfter;
 
 /** Guardians are tough but beatable with company: go with at least one support (alone only when time runs out). */
@@ -648,6 +676,7 @@ export function adventureAction(state: GameState): Action {
   const memo = new Memo(state);
   if (objectiveOf(state) === 'control') return controlAction(state, memo);
   if (objectiveOf(state) === 'survival') return survivalAction(state, memo);
+  if (objectiveOf(state) === 'boss') return bossAction(state, memo);
   if (hero.faction === 'dawn') return goodAction(state, memo);
   // The coop automaton follows the rulebook; a Horde player's bot chooses its fights.
   return currentActor(state).kind === 'automaton' ? evilAction(state, memo) : hordeBotAction(state, memo);

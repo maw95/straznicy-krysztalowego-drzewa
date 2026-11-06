@@ -23,7 +23,7 @@ export type Ruleset = 'classic' | 'digital';
 /** Shape of the adventure map: the board game's triangle, or (digital ruleset) a rectangle or a ring around a lake. */
 export type MapShape = 'triangle' | 'rectangle' | 'ring';
 
-export type ObjectiveId = 'crystals' | 'control' | 'survival';
+export type ObjectiveId = 'crystals' | 'control' | 'survival' | 'boss';
 
 export interface RulesConfig {
   /** Missing = classic. Read it only through `isDigital`. */
@@ -377,6 +377,8 @@ export interface GameState {
   control?: ControlState;
   /** Objective 'survival': the rounds to hold out and the waves of the Horde that came so far. */
   survival?: { rounds: number; waves: number };
+  /** Objective 'boss': the lair in the middle of the map, the Boss's Życie left (it keeps the wounds between fights) and who struck the last blow. */
+  boss?: { at: HexKey; guardian: string; hp: number; maxHp: number; slain: FactionId | null; hits: Record<FactionId, number> };
 }
 
 export interface ControlState {

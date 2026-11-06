@@ -147,6 +147,17 @@ export const MAP_SHAPES = {
 /** The map's round limit is multiplied by this on a shape other than the triangle (the roads are longer, and the limit goes to the Horde). */
 export const SHAPE_ROUND_FACTOR = { triangle: 1, rectangle: 1.25, ring: 1.5 } as const;
 
+/**
+ * Objective 'boss' (digital ruleset): a guardian (the Hydra or the Cyclops) with `hp` Życie sits in a lair in the middle of the map and is
+ * challenged like any guardian, but by both sides; the wounds stay between fights, and whoever strikes the last blow wins the game.
+ * At the round limit the Horde win (as in the other goals). Tuned with simulations (docs/ZASADY_CYFROWE.md).
+ */
+export const BOSS = {
+  hp: { short: 54, medium: 54, long: 62, veryLong: 92 } as Record<MapSize, number>,
+  /** Life is multiplied by this when two Przymierza heroes play (two heroes strike twice as often). */
+  twoHeroesFactor: 1.25,
+};
+
 export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   [
     u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', size: 2, hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),

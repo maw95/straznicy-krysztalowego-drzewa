@@ -150,6 +150,17 @@ Prostokąt: Przymierze zaczyna z 3 losowymi skarbami → 49% (kooperacja) i 51% 
 Cele „Punkty kontrolne” i „Przetrwanie” nie potrzebowały strojenia (kontrola: prostokąt 58%/56%, pierścień 56%/51%, trójkąt 56%/57%; przetrwanie: 61% i 67% wobec 68% w trójkącie).
 Poziomy Łatwy i Trudny dostają te same skarby (nie były strojone osobno).
 
+## Cel „Boss” (6.11.2026, wersja cyfrowa)
+
+W środku mapy (pole środkowego punktu kontrolnego, w każdym kształcie) leży legowisko Bossa: Hydry albo Cyklopa (losowo z ziarna) ze zwiększonym życiem
+(`BOSS.hp`: 54 / 54 / 62 / 92 Ż na mapie krótkiej / średniej / długiej / bardzo długiej, ×1,25 przy dwóch bohaterach Przymierza). Boss to zwykły strażnik, ale:
+- wyzywają go **obie strony** (Horda zwykle omija strażników); walka jak ze strażnikiem, bohater plus pomocnicy;
+- **rany zostają** między walkami (`state.boss.hp`): przegrany bohater i tak coś zdziera, a kto zada ostatni cios, **wygrywa grę**;
+- nie ma kryształu ani skarbu strażnika za Bossa; pozostali strażnicy na mapie działają jak zawsze (dają skarby, więc opłaca się najpierw je zdobyć);
+- limit rund wygrywa Horda (jak w innych celach), a gdy polegną wszyscy bohaterowie Przymierza, wygrywa Horda.
+Roboty: Horda od razu idzie do legowiska; Przymierze dopiero, gdy jest gotowe (zostaje przynajmniej jeden pomocnik, albo Boss ma ≤ 12 Ż, albo minęła połowa rund), wcześniej gra jak w „Kryształach”.
+Symulacja (`SIM_OBJECTIVE=boss SIM_DIGITAL=1`, 100 gier, Normalny): Przymierze 34–68% (kooperacja 57%, rywalizacja 53% łącznie); mapa krótka jest najtrudniejsza (34–56%), bo Przymierze dochodzi do Bossa w 2 rundach. Wariant kooperacyjny „wszyscy przeciw Bossowi bez Hordy” jest do rozważenia (Do akceptacji autora).
+
 ## Cel „Przetrwanie” (6.11.2026, wersja cyfrowa, tylko kooperacja)
 
 Przymierze wygrywa, gdy minie ustalona liczba rund, a choć jeden ich bohater żyje: 6 / 9 / 14 / 18 rund (mapa krótka / średnia / długa / bardzo długa; `SURVIVAL.rounds`).

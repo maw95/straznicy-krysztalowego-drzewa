@@ -102,7 +102,7 @@ Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symul
 
 1. [x] **Cel „Przetrwanie X rund”** (6.11): `objectives.ts` (`survival`), fale Hordy co 2 rundy, boty, wybór w ekranie startu (tylko kooperacja), testy; wyniki i opis w `ZASADY_CYFROWE.md`. Do dostrojenia w 6.2.6: 2 graczy wygrywa 76–85%.
 2. [x] **Generator map: prostokąt i pierścień** (6.11): `generateMap(size, rng, …, shape)`, wybór „Kształt mapy” w `SetupScreen`, `SIM_SHAPE=rectangle|ring` w symulacjach, strojenie skarbami startowymi (opis w `ZASADY_CYFROWE.md`). Poziomy Łatwy/Trudny na nowych kształtach nie były strojone osobno; serwer musi dostać nowy pakiet silnika przed wydaniem (nowe pole `mapShape`).
-3. [ ] **Cel „Boss”** (legowisko, wyścig o ostatni cios, potem wariant kooperacyjny).
+3. [x] **Cel „Boss”** (6.11): legowisko w środku mapy, rany zostają, wyścig o ostatni cios, boty, testy (opis i wyniki w `ZASADY_CYFROWE.md`). Wariant „kooperacyjny bez Hordy” — patrz „Do akceptacji autora”.
 4. [ ] **Cel „Artefakt / eskorta”**.
 5. [ ] **Generator: wyspy** (mosty, latanie daje skróty) i **mapy ręczne z JSON** (potrzebne później kampanii).
 6. [ ] Tabela balansu: Świt vs Horda per cel i kształt (`make sim-tabele`), pasma wygranych jak w poprzednim strojeniu.
@@ -147,3 +147,15 @@ Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symul
 - Trening własnego stylu w Scenario zakończył się (autor, 6.11.2026): model do sprawdzenia próbką (jedna jednostka nowej frakcji w stylu istniejących) i decyzji autora, zanim ruszą nowe frakcje; blokuje tylko je.
 - Serwer: wydanie z nowym typem akcji wymaga najpierw wdrożenia backendu z nowym pakietem silnika (nowe cele, awanse i artefakty to nowe akcje).
 - Kontrola kosztów balansu: każdy nowy cel i kształt mapy mnoży tabelę symulacji — trzymać symulacje poniżej 3 minut.
+
+## 7. Do akceptacji autora (decyzje podjęte samodzielnie, można zmienić)
+
+Sesja autonomiczna 6.11.2026. Każda pozycja: co wybrałem, dlaczego, gdzie to zmienić.
+
+- **Muzyka — licencje:** w `assets.json` są pola „DO USTALENIA PRZEZ AUTORA” (źródło, narzędzie, licencja 10 utworów). Bez tego nie wydawać na Steamie.
+- **Klipy 3D/2D:** braki z `RAPORT_NOCNY_5_11_2026.md` (atak Elfa i Cyklopa, zryw u Pegaza/Jednorożca/Gryfa) zostają: wymagają generowania i oceny na oko.
+- **Zasłanianie strzału (4.2):** zostaje wyłączone (symulacja bez różnicy); przełącznik `rules.unitsBlockSight` jest w kodzie.
+- **Przetrwanie:** 6/9/14/18 rund, fala co 2 rundy, tylko kooperacja; dla 2 graczy za łatwo (76–85%). Zmiana: `SURVIVAL` w `data.ts`.
+- **Kształty mapy:** liczba pól prostokąta i pierścienia (`MAP_SHAPES`), mnożnik limitu rund (`SHAPE_ROUND_FACTOR`) i skarby startowe Przymierza na tych mapach (`DIGITAL_TUNING`, wpisy z `shape`) dobrane symulacjami. Poziomy Łatwy/Trudny nie były strojone osobno.
+- **Boss:** Hydra albo Cyklop ze zwiększonym życiem, bez własnej grafiki (potrzebna, jeśli ma być wyróżniony); wariant „wszyscy przeciw Bossowi bez Hordy” nie jest zrobiony, bo obecny wyścig o ostatni cios ma już tryb kooperacyjny z automatem Hordy.
+- **Serwer:** nowe pola ustawień (`mapShape`) i nowe cele (`survival`, `boss`) wymagają wdrożenia backendu z nowym pakietem silnika przed wydaniem gry.
