@@ -78,3 +78,72 @@ kończy turę (strzelec nie ma „ruch + strzał”, strzelcy +1 do ataku; patrz
 
 - [x] **Obrażenia w momencie uderzenia animacji** (wdrożone 5.11): `SpriteLayer` zgłasza uderzenie w ok. 45% klipu ataku (`impact.ts`), `useImpactHold` (walka) i `useEndHold` (ostatni cios) trzymają stan sprzed ciosu do tego momentu (awaryjnie 6 s); obrażenia, paski, trafienie i śmierć pojawiają się wtedy. W czasie przytrzymania nie da się klikać. Atak bez obrażeń (tarcza) też się animuje (wykrywany po `rolls`).
 - [x] **Dwupolowe przeszkody pod skosem** (wdrożone 5.11): na każdej arenie jedna dwupolowa przeszkoda leży na dwóch sąsiednich polach w różnych rzędach (łąka: ściana ruin; pole Hordy: barykada); obraz jest obrócony o ±30°. Test sprawdza sąsiedztwo pól.
+
+## 6. Plan rozbudowy cyfrowej: kolejność prac (6.11.2026)
+
+Zebrane z `MAPA_DROGOWA.md`, `ROZBUDOWA_CYFROWA.md`, `DECYZJE.md` i `RAPORT_NOCNY_5_11_2026.md`. Cel najbliższy: **premiera na poziomach 1–2**
+(Przygoda + Wyprawa, hotseat, tryb rodzinny, Przymierze + Horda). Poziomy 3–5 i nowe frakcje to aktualizacje po premierze.
+Zasada: każdy krok kończy się grywalną, przetestowaną wersją; `golden.test.ts` (klasyczny) bez zmian; nowe tryby dostają własne golden testy.
+
+### 6.1. Najpierw: domknięcie tego, co rozgrzebane (małe, szybkie)
+
+- [ ] Strojenie „strzelcy +1 do ataku” w trybie cyfrowym symulacjami (`make sim-tabele`) — wynik wpisać do `ZASADY_CYFROWE.md`.
+- [ ] Braki klipów: śmierć Ogra (sprawdzić, czy po ostatnich poprawkach nadal brak), atak Elfa i Cyklopa, trafienie Wilkołaka i Hydry
+  (lista w raporcie nocnym); drobne wady: trupy na plecach głową w prawo, zryw zamiast uderzenia u Pegaza/Jednorożca/Gryfa.
+- [ ] Złoty Smok „w pełni zintegrowany” (punkt z fazy A): odhaczyć albo wypisać, czego brakuje (wybór pola ogona i rozstawienie dużych w UI).
+- [ ] Bot wybiera stronę ogona dużej jednostki taktycznie (dziś losowo/domyślnie).
+- [ ] Spis licencji obecnej muzyki (potrzebny do Steama; zrobić teraz, bo im później, tym trudniej odtworzyć źródła).
+- [ ] Decyzje 4.1 / 4.2 (ruch + strzał, zasłanianie strzału): w trybie cyfrowym 4.1 jest rozstrzygnięte, 4.2 sprawdzić symulacją `unitsBlockSight`
+  i zamknąć wpisem w `ZASADY_CYFROWE.md`.
+
+### 6.2. Cele i mapy (faza C, poziom 2 „Wyprawa”) — główna oś pracy
+
+Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symulacjami.
+
+1. [ ] **Cel „Przetrwanie X rund”** (fale wrogów jak „automat zła”; używa istniejących neutralnych) — najprostszy po punktach kontrolnych.
+2. [ ] **Generator map: prostokąt** (`generateMap(shape, size, seed)`), potem **pierścień**. Wybór kształtu w `SetupScreen`; boty i symulacje na nowych kształtach.
+3. [ ] **Cel „Boss”** (legowisko, wyścig o ostatni cios, potem wariant kooperacyjny).
+4. [ ] **Cel „Artefakt / eskorta”**.
+5. [ ] **Generator: wyspy** (mosty, latanie daje skróty) i **mapy ręczne z JSON** (potrzebne później kampanii).
+6. [ ] Tabela balansu: Świt vs Horda per cel i kształt (`make sim-tabele`), pasma wygranych jak w poprzednim strojeniu.
+
+### 6.3. Rozwój bohatera (poziom 2 „Wyprawa”) — równolegle z końcem 6.2
+
+1. [ ] Doświadczenie i poziomy bohaterów (punkty za bitwy i skarby), wybór 1 z 3 umiejętności przy awansie (drzewka najpierw tylko dla Świtu i Hordy).
+2. [ ] Artefakty (ekwipunek bohatera, sloty), nagrody ze skrzyń i strażników.
+3. [ ] Więcej obiektów na mapie: kapliczki, obozy najemników, skrzynie, strażnicy.
+4. [ ] Symulacje balansu z rozwojem (bohater poziom 1 vs awans), żeby nie zepsuć pasm wygranych.
+
+### 6.4. Tryb rodzinny i presety (faza D) — po 6.2 i 6.3, bo preset wymaga gotowych warstw
+
+1. [ ] Presety poziomów 1 i 2 jako zestawy przełączników w `RulesConfig` („Własne ustawienia” zostają).
+2. [ ] Hotseat: sprawdzić, co już jest, dopisać przekazywanie ekranu, ukrywanie informacji między graczami.
+3. [ ] Tryb rodzinny: rodzic + dziecko w jednej drużynie, handicapy, podpowiedzi dla młodszego gracza.
+4. [ ] (Po premierze, razem z ekonomią) autopilot warstw.
+
+### 6.5. Dźwięk (niezależny, można w każdej chwili) — przed premierą
+
+1. [ ] Próbka efektów i muzyki z ElevenLabs (najpierw próbka, potem decyzja o planie).
+2. [ ] Efekty: ciosy, śmierć, kroki, interfejs; muzyka: menu, mapa, bitwa. Wszystko do `assets.json` z licencją.
+
+### 6.6. Premiera na Steamie (faza E) — gdy 6.1–6.5 gotowe
+
+- [ ] Ostateczne potwierdzenie zakresu premiery (autor).
+- [ ] Osiągnięcia, strona sklepu, zrzuty i trailer (wideo: Higgsfield odłożony do tego momentu), ujawnienie użycia AI, przegląd licencji.
+- [ ] Opakowanie komputerowe (Electron/Tauri — do wyboru), zapis profilu, chmura Steam.
+- [ ] Test z parami rodzic + dziecko i przegląd konkurencji (odłożone przez autora).
+
+### 6.7. Po premierze (aktualizacje, w tej kolejności)
+
+1. [ ] **Etap 2: ekonomia** (poziomy 3–4): najpierw złoto + osady + rekrutacja (poziom 3 „Królestwo”), potem drewno, ruda, Gwiezdny Pył, budynki, cykl tygodniowy.
+2. [ ] **Autopilot warstw** dla dzieci (wymaga ekonomii).
+3. [ ] **Nowe frakcje**: Dzikie Stada → Królestwo Umarłych → Żelazne Klany (karta frakcji, grafika, symulacje 10 par); potem DLC.
+4. [ ] **Kampania fabularna** (wymaga map ręcznych z 6.2) i **wyprawa roguelike** (8–10 map, nagrody po bitwie, profil trwały, seed dnia z rankingiem).
+5. [ ] **Poziom 5 „Legenda”**: magia, specjalności bohaterów.
+
+### 6.8. Uwagi o kolejności
+
+- Grafika frakcji idzie frakcjami (stare figurki i nowe grafiki nie mieszają się), więc nowa frakcja = pełen zestaw naraz; stąd frakcje dopiero po premierze.
+- Trening własnego stylu w Scenario (Pro) zostaje odłożony, dopóki nie ma 20–25 obrazów treningowych i decyzji o planie; blokuje tylko nowe frakcje.
+- Serwer: wydanie z nowym typem akcji wymaga najpierw wdrożenia backendu z nowym pakietem silnika (nowe cele, awanse i artefakty to nowe akcje).
+- Kontrola kosztów balansu: każdy nowy cel i kształt mapy mnoży tabelę symulacji — trzymać symulacje poniżej 3 minut.
