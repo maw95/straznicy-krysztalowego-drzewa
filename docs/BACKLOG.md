@@ -100,7 +100,7 @@ Zasada: każdy krok kończy się grywalną, przetestowaną wersją; `golden.test
 
 Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symulacjami.
 
-1. [ ] **Cel „Przetrwanie X rund”** (fale wrogów jak „automat zła”; używa istniejących neutralnych) — najprostszy po punktach kontrolnych.
+1. [x] **Cel „Przetrwanie X rund”** (6.11): `objectives.ts` (`survival`), fale Hordy co 2 rundy, boty, wybór w ekranie startu (tylko kooperacja), testy; wyniki i opis w `ZASADY_CYFROWE.md`. Do dostrojenia w 6.2.6: 2 graczy wygrywa 76–85%.
 2. [ ] **Generator map: prostokąt** (`generateMap(shape, size, seed)`), potem **pierścień**. Wybór kształtu w `SetupScreen`; boty i symulacje na nowych kształtach.
 3. [ ] **Cel „Boss”** (legowisko, wyścig o ostatni cios, potem wariant kooperacyjny).
 4. [ ] **Cel „Artefakt / eskorta”**.

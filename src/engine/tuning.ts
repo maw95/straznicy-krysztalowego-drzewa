@@ -8,7 +8,7 @@ import type { MapSize } from './data';
 
 export interface DigitalTune {
   /** Where it applies; a missing field matches everything. */
-  objective?: 'crystals' | 'control';
+  objective?: 'crystals' | 'control' | 'survival';
   level?: 'kids' | 'normal' | 'hard';
   mode?: 'coop' | 'pvp';
   /** Przymierza seats (players on the good side). */
@@ -53,7 +53,7 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
   // Only the ready-made levels are tuned; "Własny" is exactly what the player switched on.
   if (level === 'custom') return base;
   const players = setup.seats.filter((s) => s.faction === 'dawn').length;
-  const objective = base.objective === 'control' ? 'control' : 'crystals';
+  const objective = base.objective === 'control' || base.objective === 'survival' ? base.objective : 'crystals';
   let rules = base;
   for (const t of DIGITAL_TUNING) {
     if (t.objective && t.objective !== objective) continue;

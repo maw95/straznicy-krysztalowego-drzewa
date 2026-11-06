@@ -3,8 +3,8 @@
 // progress for the screen. 'crystals' is the board game's goal (carry the crystals to the Tree, the Horde's ritual); the
 // others belong to the digital ruleset. Result of a game under 'crystals' must never change (tests/golden.test.ts).
 
-import { CONTROL, FACTION_NAMES, type FactionId } from './data';
-import { finish, heroesAt, ritualFormed } from './game';
+import { CONTROL, FACTION_NAMES, SURVIVAL, type FactionId } from './data';
+import { finish, heroesAt, ritualFormed, spawnHordeHero } from './game';
 import { distance, key, parseKey, triToHex, type HexKey } from './hex';
 import { log } from './log';
 import { homeKey, mapNeighbors, revealAround, tileCost, treeKey } from './map';
@@ -36,8 +36,11 @@ export interface Objective {
   progress(state: GameState): ProgressLine[];
 }
 
-/** The objective of a game: 'control' only in the digital ruleset, otherwise the crystals goal. */
-export const objectiveOf = (state: Pick<GameState, 'rules'>): ObjectiveId => (state.rules.objective === 'control' && isDigital(state.rules) ? 'control' : 'crystals');
+/** The objective of a game: 'control' and 'survival' only in the digital ruleset, otherwise the crystals goal. */
+export const objectiveOf = (state: Pick<GameState, 'rules'>): ObjectiveId => {
+  const o = state.rules.objective;
+  return (o === 'control' || o === 'survival') && isDigital(state.rules) ? o : 'crystals';
+};
 
 const crystals: Objective = {
   id: 'crystals',
@@ -230,4 +233,42 @@ const control: Objective = {
   },
 };
 
-export const OBJECTIVES: Record<ObjectiveId, Objective> = { crystals, control };
+// ------------------------------------------------------------------ survival
+
+const survival: Objective = {
+  id: 'survival',
+  name: 'Przetrwanie',
+  summary: 'Fale Hordy: co dwie rundy w bazie Hordy pojawia się kolejny bohater. Przymierze wygrywa, gdy przetrwa wyznaczoną liczbę rund, Horda, gdy polegną wszyscy jego bohaterowie.',
+  init(state) {
+    state.survival = { rounds: SURVIVAL.rounds[state.setup.mapSize], waves: 0 };
+  },
+  checkVictory() {},
+  onRoundEnd(state) {
+    const s = state.survival!;
+    const dawnAlive = Object.values(state.heroes).filter((h) => h.faction === 'dawn' && h.alive).length;
+    if (state.round >= s.rounds) {
+      finish(state, 'dawn', `Przymierze przetrwało ${s.rounds} rund.`);
+      return true;
+    }
+    if (state.round % SURVIVAL.waveEvery === 0) {
+      const hordeAlive = Object.values(state.heroes).filter((h) => h.faction === 'horde' && h.alive).length;
+      if (hordeAlive < dawnAlive + SURVIVAL.extra && spawnHordeHero(state)) {
+        s.waves += 1;
+        log(state, 'round', `Fala Hordy (${s.waves}): do bazy Hordy przybywa kolejny bohater.`);
+      }
+    }
+    return false;
+  },
+  onRoundLimit(state) {
+    finish(state, 'dawn', 'Przymierze przetrwało.');
+  },
+  progress(state) {
+    const s = state.survival!;
+    return [
+      { label: 'Przetrwane rundy', value: `${Math.min(state.round - 1, s.rounds)} / ${s.rounds}`, tone: 'dawn' },
+      { label: 'Fale Hordy', value: `${s.waves}`, tone: 'horde' },
+    ];
+  },
+};
+
+export const OBJECTIVES: Record<ObjectiveId, Objective> = { crystals, control, survival };

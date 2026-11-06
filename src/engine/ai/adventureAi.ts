@@ -592,6 +592,40 @@ function controlAction(state: GameState, memo: Memo): Action {
   return stepToward(state, best.path);
 }
 
+// ------------------------------------------------------------------ survival
+
+/**
+ * Objective 'survival': the Horde (automaton or bot) hunts the nearest Przymierze hero; the Przymierze strike a beatable enemy next to them,
+ * otherwise gather at the Tree and wait for the Horde to come (the longer they live, the closer the win; they leave the Tree only to fight).
+ */
+function survivalAction(state: GameState, memo: Memo): Action {
+  const hero = activeHero(state)!;
+  const item = mapItemAction(state);
+  if (item) return item;
+  if (state.movePoints <= 0) return { type: 'endTurn' };
+  const automaton = currentActor(state).kind === 'automaton';
+  const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
+  const beatable = (e: HeroState) => hero.faction === 'horde' || automaton || memo.ratio(hero, e) >= huntRatio(state);
+  const prey = foes.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && beatable(e));
+  if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
+  const goals = new Set<HexKey>();
+  if (hero.faction === 'horde') for (const e of foes) goals.add(e.pos);
+  else {
+    const tree = treeKey();
+    if (hero.pos === tree) return { type: 'endTurn' };
+    goals.add(tree);
+  }
+  if (!goals.size) return { type: 'endTurn' };
+  const paths = memo.paths(hero, 'survival', { goals, avoidGuardians: true, danger: hero.faction === 'dawn' });
+  let best: { cost: number; path: HexKey[] } | null = null;
+  for (const g of goals) {
+    const p = paths.get(g);
+    if (p && (!best || p.cost < best.cost)) best = { cost: p.cost, path: p.path };
+  }
+  if (!best || best.path.length < 2) return { type: 'endTurn' };
+  return stepToward(state, best.path);
+}
+
 /** The last quarter of the rounds: the Horde wins at the limit, so the Dawn stops waiting. */
 const isDesperate = (state: GameState) => state.round > state.roundLimit * AI_TUNING.desperateAfter;
 
@@ -612,6 +646,7 @@ export function adventureAction(state: GameState): Action {
   }
   const memo = new Memo(state);
   if (objectiveOf(state) === 'control') return controlAction(state, memo);
+  if (objectiveOf(state) === 'survival') return survivalAction(state, memo);
   if (hero.faction === 'dawn') return goodAction(state, memo);
   // The coop automaton follows the rulebook; a Horde player's bot chooses its fights.
   return currentActor(state).kind === 'automaton' ? evilAction(state, memo) : hordeBotAction(state, memo);

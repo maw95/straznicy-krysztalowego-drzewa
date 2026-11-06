@@ -59,6 +59,8 @@ export function setupWith(size: MapSize, table: Table, options: Option[], seed: 
   if (process.env.SIM_DIGITAL) rules.ruleset = 'digital';
   // SIM_OBJECTIVE=control: the control-points goal (digital ruleset only).
   if (process.env.SIM_OBJECTIVE === 'control') rules.objective = 'control';
+  // SIM_OBJECTIVE=survival: waves of the Horde (digital ruleset, coop tables only).
+  if (process.env.SIM_OBJECTIVE === 'survival' && mode === 'coop') rules.objective = 'survival';
   return { mode, mapSize: size, battleMode: options.includes('board') ? 'board' : base.battleMode, seed, seats, rules };
 }
 

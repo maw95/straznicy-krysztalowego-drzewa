@@ -22,7 +22,7 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
 /** The set-up with the digital edition's rules switched on when asked (the arena battles; the board duels of the easy level are the same), and its objective. */
 function withRuleset(setup: SetupOptions, digital: boolean, objective: ObjectiveId = 'crystals'): SetupOptions {
   if (!digital) return setup;
-  return { ...setup, rules: { ...setup.rules, ruleset: 'digital', ...(objective === 'control' && setup.mode !== 'arena' ? { objective } : {}) } };
+  return { ...setup, rules: { ...setup.rules, ruleset: 'digital', ...(objective !== 'crystals' && (objective !== 'survival' || setup.mode === 'coop') && setup.mode !== 'arena' ? { objective } : {}) } };
 }
 
 const EDITION_KEY = 'skd-edition';
@@ -182,7 +182,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           </Row>
           {digital && !arena && (
             <Row label="Cel">
-              {(['crystals', 'control'] as const).map((o) => (
+              {(['crystals', 'control', 'survival'] as const).filter((o) => o !== 'survival' || mode === 'coop').map((o) => (
                 <Tip key={o} text={OBJECTIVES[o].summary}><button className={chip(objective === o)} aria-pressed={objective === o} onClick={() => setObjective(o)}>{OBJECTIVES[o].name}</button></Tip>
               ))}
             </Row>

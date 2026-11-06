@@ -123,6 +123,17 @@ export const CONTROL = {
   roundsToWin: { short: 3, medium: 3, long: 4, veryLong: 5 } as Record<MapSize, number>,
 };
 
+/**
+ * Objective 'survival' (digital ruleset, coop): the Przymierze win when `rounds` rounds have passed with at least one hero alive;
+ * the Horde win when every hero falls. Every `waveEvery` rounds the automaton's reserves arrive (a new hero in the Horde base)
+ * while it fields fewer heroes than the Przymierze have alive plus `extra`. Tuned with simulations (docs/ZASADY_CYFROWE.md).
+ */
+export const SURVIVAL = {
+  waveEvery: 2,
+  extra: 1,
+  rounds: { short: 6, medium: 9, long: 14, veryLong: 18 } as Record<MapSize, number>,
+};
+
 export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   [
     u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', size: 2, hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),

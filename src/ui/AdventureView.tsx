@@ -489,8 +489,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
 
           <div className="well" style={{ padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 5, fontSize: 16 }}>
             <div className="lbl">Cele</div>
-            {objectiveOf(state) === 'control' ? (
-              OBJECTIVES.control.progress(state).map((l) => (
+            {objectiveOf(state) !== 'crystals' ? (
+              OBJECTIVES[objectiveOf(state)].progress(state).map((l) => (
                 <div key={l.label} style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', columnGap: 8 }}>
                   <span>{l.label}</span>
                   <b style={{ color: l.tone === 'horde' ? '#F08A7A' : '#F3D27A' }}>{l.value}</b>

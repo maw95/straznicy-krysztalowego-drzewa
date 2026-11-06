@@ -849,12 +849,18 @@ function killHero(state: GameState, heroId: string, at: HexKey) {
 function hordeReinforcement(state: GameState, fallenId: string) {
   const horde = Object.values(state.heroes).filter((h) => h.faction === 'horde');
   if (horde.some((h) => h.alive)) return;
+  spawnHordeHero(state, fallenId);
+}
+
+/** A Horde hero appears in the Horde base: an unused one while there is any, then a fallen one (not `fallenId`, if possible). False when there is nobody to bring. */
+export function spawnHordeHero(state: GameState, fallenId: string | null = null): boolean {
   const f = state.factions.horde;
   let id = f.unusedHeroes[0];
   if (id) addHero(state, id, 'horde', null);
   else {
     const dead = FACTION_HEROES.horde.filter((h) => state.heroes[h] && !state.heroes[h].alive);
-    id = dead.find((h) => h !== fallenId) ?? fallenId;
+    id = dead.find((h) => h !== fallenId) ?? dead[0] ?? fallenId!;
+    if (!id) return false;
     Object.assign(state.heroes[id], { alive: true, crystals: [], pos: homeKey(state.rows, 'horde') });
     delete state.heroes[id].entering;
   }
@@ -862,6 +868,7 @@ function hordeReinforcement(state: GameState, fallenId: string) {
   // A Przymierze hero standing in the Horde base keeps it: the newcomer takes the nearest free hex.
   if (!canStand(state, hero.pos, 'horde', id)) hero.pos = nearestFreeHexes(state, hero.pos, 'horde')[0] ?? hero.pos;
   log(state, 'info', `W bazie Hordy pojawia się nowy bohater: ${UNITS[id].name}.`);
+  return true;
 }
 
 // ------------------------------------------------------------------ dispatcher

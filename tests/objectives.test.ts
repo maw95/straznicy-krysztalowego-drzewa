@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CONTROL } from '../src/engine/data';
+import { CONTROL, SURVIVAL } from '../src/engine/data';
 import { createGame } from '../src/engine/game';
 import { distance, parseKey } from '../src/engine/hex';
 import { tileCost, treeKey } from '../src/engine/map';
@@ -123,5 +123,44 @@ describe('objective control (digital ruleset)', () => {
         expect(pvp.phase, `pvp ${seed} ${mapSize}`).toBe('over');
       }
     }
+  });
+});
+
+describe('objective survival (digital ruleset, coop)', () => {
+  const survival = (over: Parameters<typeof setup>[0] = {}) => createGame(setup({ mode: 'coop', ...over }, { ruleset: 'digital', objective: 'survival' }));
+
+  it('is only played in the digital ruleset, with the rounds to hold out set by the map', () => {
+    expect(objectiveOf(createGame(setup({}, { objective: 'survival' })))).toBe('crystals');
+    const s = survival({ mapSize: 'short' });
+    expect(objectiveOf(s)).toBe('survival');
+    expect(s.survival).toEqual({ rounds: SURVIVAL.rounds.short, waves: 0 });
+  });
+
+  it('the Przymierze win after the last round, while a hero lives', () => {
+    const s = survival();
+    s.round = s.survival!.rounds;
+    expect(OBJECTIVES.survival.onRoundEnd(s)).toBe(true);
+    expect(s.winner).toBe('dawn');
+  });
+
+  it('every second round brings a Horde hero while the automaton fields fewer than the Przymierze plus one', () => {
+    const s = survival();
+    const hordeAlive = () => Object.values(s.heroes).filter((h) => h.faction === 'horde' && h.alive).length;
+    const before = hordeAlive();
+    s.round = 1;
+    OBJECTIVES.survival.onRoundEnd(s);
+    expect(hordeAlive()).toBe(before);
+    s.round = 2;
+    for (const h of Object.values(s.heroes)) if (h.faction === 'horde' && h.alive && hordeAlive() > 1) h.alive = false;
+    const low = hordeAlive();
+    OBJECTIVES.survival.onRoundEnd(s);
+    expect(hordeAlive()).toBeGreaterThan(low);
+    expect(s.survival!.waves).toBe(1);
+  });
+
+  it('bots play it to the end, and the report shows the progress', () => {
+    const s = playOut(survival({ seed: 4 }));
+    expect(s.phase).toBe('over');
+    expect(OBJECTIVES.survival.progress(createGame(setup({ mode: 'coop' }, { ruleset: 'digital', objective: 'survival' }))).map((l) => l.label)).toEqual(['Przetrwane rundy', 'Fale Hordy']);
   });
 });

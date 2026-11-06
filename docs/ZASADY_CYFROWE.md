@@ -135,6 +135,15 @@ kooperacja 1 gracz 51–60%, 2 graczy 64–81%; rywalizacja 1 na 1 44–59%, 2 n
 68–92%: tak ma być, to poziom dla dzieci. Przymierze jest mocniejsze w kooperacji na dużych mapach i w 2 na 2 (do ewentualnego strojenia).
 Dawne próby: bez wagi środka i bez „wyprzedzenia” botów 1 na 1 kończyło się w 85–93% limitem rund (patowe stanie na bocznych punktach).
 
+## Cel „Przetrwanie” (6.11.2026, wersja cyfrowa, tylko kooperacja)
+
+Przymierze wygrywa, gdy minie ustalona liczba rund, a choć jeden ich bohater żyje: 6 / 9 / 14 / 18 rund (mapa krótka / średnia / długa / bardzo długa; `SURVIVAL.rounds`).
+Horda wygrywa, gdy polegną wszyscy bohaterowie Przymierza (zwykła zasada). Co dwie rundy (na koniec rundy) w bazie Hordy pojawia się kolejny bohater, dopóki automat ma
+mniej bohaterów niż żyje ich po stronie Przymierza plus jeden (`spawnHordeHero`: najpierw nieużyty, potem poległy; dołącza do kolejności od następnej rundy).
+Roboty: Horda szuka najbliższego bohatera Przymierza; Przymierze uderza sąsiada, którego pokona, a poza tym zbiera się przy Drzewie (przeszkody i strażników omija).
+Symulacja (`SIM_OBJECTIVE=survival SIM_DIGITAL=1`, 100 gier, Normalny): 1 gracz 47–72% wygranych Przymierza, 2 graczy 76–85%; Trudny 37–52% i 53–67% (60 gier).
+Dla 2 graczy cel jest łatwiejszy (dwóch bohaterów wzajemnie się wspiera, a limit fal rośnie o 1 na bohatera); do ewentualnego dostrojenia przy tabelach balansu (6.2.6).
+
 ## Strojenie przygody w wersji cyfrowej (5.11.2026)
 
 Cel autora: wygrane Przymierza **Łatwy 70–90%, Normalny 45–65%, Trudny 30–50%** (boty, bez areny) w obu celach. Dźwignie są tylko w wersji cyfrowej:

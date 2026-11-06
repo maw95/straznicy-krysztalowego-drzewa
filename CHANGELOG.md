@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowy cel przygody w wersji cyfrowej, „Przetrwanie” (kooperacja): trzeba utrzymać przy życiu choć jednego bohatera przez kilka rund, a co dwie rundy w bazie Hordy pojawia się kolejny bohater. Wybierasz go w ekranie startu obok „Punktów kontrolnych”.
 - Silnik: przywrócony przełącznik „jednostki zasłaniają strzał” (domyślnie wyłączony). Symulacje pokazały, że nie zmienia balansu, więc w grze strzał zasłaniają tylko przeszkody.
 - Nimfa w wersji cyfrowej wygląda jak na swoim portrecie (miętowo-seledynowe włosy, korona z kwiatów i pnączy, złote ozdoby); nowe są wszystkie jej animacje (chód, atak, trafienie, śmierć), a śmierć nie ma już podwójnego upadku.
 - Dzielna Kaczka: nowa animacja trafienia, skrzydła nie rozmywają się już w trakcie uderzenia.

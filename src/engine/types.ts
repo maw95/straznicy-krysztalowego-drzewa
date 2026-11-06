@@ -20,7 +20,7 @@ export type Ruleset = 'classic' | 'digital';
  * are optional difficulties. All of them mix freely.
  */
 /** What a game is played for: bring the crystals to the Tree (the board game's goal), or hold control points (digital ruleset). */
-export type ObjectiveId = 'crystals' | 'control';
+export type ObjectiveId = 'crystals' | 'control' | 'survival';
 
 export interface RulesConfig {
   /** Missing = classic. Read it only through `isDigital`. */
@@ -367,6 +367,8 @@ export interface GameState {
   draft?: ArenaDraft | null;
   /** Objective 'control': the control points and who has led for how many rounds (see objectives.ts). */
   control?: ControlState;
+  /** Objective 'survival': the rounds to hold out and the waves of the Horde that came so far. */
+  survival?: { rounds: number; waves: number };
 }
 
 export interface ControlState {
