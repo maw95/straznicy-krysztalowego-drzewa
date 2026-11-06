@@ -11,6 +11,7 @@ import {
   ITEM_EFFECT,
   ITEMS,
   MAP_VARIANTS,
+  SHAPE_ROUND_FACTOR,
   NON_RESURRECTION_ITEMS,
   ARENA_DECK,
   ARENA_OFFER,
@@ -39,7 +40,7 @@ import {
   arenaObstacles,
 } from './battle';
 import { distance, parseKey, type HexKey } from './hex';
-import { generateMap, homeKey, mapNeighbors, revealAround, tileCost, treeKey } from './map';
+import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { log } from './log';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { Rng } from './rng';
@@ -71,7 +72,8 @@ export function createGame(setup: SetupOptions): GameState {
     ? rng.shuffle([...Array(variant.resurrections).fill('resurrection'), ...others])
     : Array(variant.onlyResurrections).fill('resurrection');
   const crystals = crystalsFor(setup);
-  const map = generateMap(setup.mapSize, rng, pool.length, crystals);
+  const map = generateMap(setup.mapSize, rng, pool.length, crystals, isDigital(rules) ? setup.mapShape : undefined);
+  const digital = isDigital(rules);
 
   const state: GameState = {
     version: 1,
@@ -79,7 +81,7 @@ export function createGame(setup: SetupOptions): GameState {
     rules,
     rng: 0,
     round: 1,
-    roundLimit: variant.roundLimit + (rules.roundLimitBonus ?? 0),
+    roundLimit: Math.round(variant.roundLimit * (isDigital(rules) ? SHAPE_ROUND_FACTOR[setup.mapShape ?? 'triangle'] : 1)) + (rules.roundLimitBonus ?? 0),
     crystalsNeeded: crystals,
     phase: 'adventure',
     players: [],
@@ -90,6 +92,8 @@ export function createGame(setup: SetupOptions): GameState {
     },
     tiles: map.tiles,
     rows: map.rows,
+    // Only a map of another shape stores them (the triangle's corners are the default), so a triangle game's state is as before.
+    ...(digital && setup.mapShape && setup.mapShape !== 'triangle' ? { tree: map.tree, homes: map.homes } : {}),
     crystals: {},
     items: {},
     turnOrder: [],
@@ -142,8 +146,8 @@ export function createGame(setup: SetupOptions): GameState {
     for (const id of evil) addHero(state, id, 'horde', null);
   }
 
-  for (const f of ['dawn', 'horde'] as FactionId[]) revealAround(state, homeKey(state.rows, f));
-  state.tiles[treeKey()].revealed = true;
+  for (const f of ['dawn', 'horde'] as FactionId[]) revealAround(state, homeOf(state, f));
+  state.tiles[treeOf(state)].revealed = true;
   state.rng = rng.state;
   state.turnOrder = computeTurnOrder(state);
   state.turnIndex = 0;
@@ -269,7 +273,7 @@ function giveItem(state: GameState, item: ItemInstance, faction: FactionId, foun
 }
 
 function addHero(state: GameState, heroId: string, faction: FactionId, playerId: string | null) {
-  state.heroes[heroId] = { id: heroId, faction, playerId, pos: homeKey(state.rows, faction), alive: true, crystals: [] };
+  state.heroes[heroId] = { id: heroId, faction, playerId, pos: homeOf(state, faction), alive: true, crystals: [] };
   const unused = state.factions[faction].unusedHeroes;
   if (unused.includes(heroId)) unused.splice(unused.indexOf(heroId), 1);
 }
@@ -322,7 +326,7 @@ export function defenderAt(state: GameState, k: HexKey, attacker: FactionId): He
 export function ritualFormed(state: GameState): boolean {
   // The easy level plays without the ritual, and so does every goal but the crystals.
   if (state.rules.ritual === false || objectiveOf(state) !== 'crystals') return false;
-  const tree = treeKey();
+  const tree = treeOf(state);
   const evil = livingHeroes(state, 'horde');
   if (!evil.length || evil.some((h) => h.entering) || !evil.some((h) => h.pos === tree)) return false;
   const around = new Set(mapNeighbors(state.tiles, tree));
@@ -331,7 +335,7 @@ export function ritualFormed(state: GameState): boolean {
 
 /** Where a Horde hero should stand for the ritual: the Tree if no other Horde hero holds it, else a free hex next to it. */
 export function ritualSpot(state: GameState, hero: HeroState): HexKey | null {
-  const tree = treeKey();
+  const tree = treeOf(state);
   const holder = heroesAt(state, tree).find((h) => h.faction === 'horde' && h.id !== hero.id);
   if (!holder) return tree;
   if (mapNeighbors(state.tiles, tree).includes(hero.pos)) return hero.pos;
@@ -861,7 +865,7 @@ export function spawnHordeHero(state: GameState, fallenId: string | null = null)
     const dead = FACTION_HEROES.horde.filter((h) => state.heroes[h] && !state.heroes[h].alive);
     id = dead.find((h) => h !== fallenId) ?? dead[0] ?? fallenId!;
     if (!id) return false;
-    Object.assign(state.heroes[id], { alive: true, crystals: [], pos: homeKey(state.rows, 'horde') });
+    Object.assign(state.heroes[id], { alive: true, crystals: [], pos: homeOf(state, 'horde') });
     delete state.heroes[id].entering;
   }
   const hero = state.heroes[id];

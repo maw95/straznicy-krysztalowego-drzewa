@@ -1,9 +1,9 @@
 // Adventure map: triangle generation (variant A), costs and path finding.
 
-import { GUARDIAN_LAIRS, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type MapSize, type Terrain, type TileSide } from './data';
+import { GUARDIAN_LAIRS, MAP_SHAPES, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type MapSize, type Terrain, type TileSide } from './data';
 import { distance, key, neighborKeys, parseKey, triToHex, type HexKey } from './hex';
 import { Rng } from './rng';
-import type { GameState, Tile } from './types';
+import type { GameState, MapShape, Tile } from './types';
 
 export function tileCost(t: Tile): number | null {
   return TERRAIN_COST[t.terrain];
@@ -20,6 +20,12 @@ export function treeKey(): HexKey {
 export function homeKey(rows: number, faction: 'dawn' | 'horde'): HexKey {
   return key(triToHex(rows - 1, faction === 'dawn' ? 0 : rows - 1));
 }
+
+/** The Tree of this game's map (the triangle's corner in a game saved before other shapes existed). */
+export const treeOf = (state: Pick<GameState, 'tree'>): HexKey => state.tree ?? treeKey();
+
+/** The base of `faction` on this game's map. */
+export const homeOf = (state: Pick<GameState, 'homes' | 'rows'>, faction: 'dawn' | 'horde'): HexKey => state.homes?.[faction] ?? homeKey(state.rows, faction);
 
 /** Breadth-first reachability through passable hexes. */
 export function reachableFrom(tiles: Record<HexKey, Tile>, start: HexKey, blocked: (k: HexKey) => boolean = () => false): Set<HexKey> {
@@ -142,7 +148,51 @@ export interface GeneratedMap {
   tiles: Record<HexKey, Tile>;
   crystals: Array<{ hex: HexKey; guardian: string }>;
   treasureHexes: HexKey[];
+  tree: HexKey;
+  homes: Record<'dawn' | 'horde', HexKey>;
 }
+
+/** The hexes of a map shape in the order they are generated, with the Tree and the bases (the triangle's order is what the golden test hashes). */
+interface Layout {
+  cells: Array<{ row: number; col: number; hex: { q: number; r: number } }>;
+  rows: number;
+  tree: HexKey;
+  homes: Record<'dawn' | 'horde', HexKey>;
+}
+
+function triangleLayout(size: MapSize): Layout {
+  const rows = MAP_VARIANTS[size].rows;
+  const cells = [];
+  for (let row = 0; row < rows; row++) for (let col = 0; col <= row; col++) cells.push({ row, col, hex: triToHex(row, col) });
+  return { cells, rows, tree: treeKey(), homes: { dawn: homeKey(rows, 'dawn'), horde: homeKey(rows, 'horde') } };
+}
+
+/** Pointy-topped rows, odd rows shifted half a hex to the right: (col, row) is the hex {q: col - floor(row / 2), r: row}. */
+function rectangleLayout(size: MapSize): Layout {
+  const { width, height } = MAP_SHAPES.rectangle[size];
+  const cells = [];
+  for (let row = 0; row < height; row++) for (let col = 0; col < width; col++) cells.push({ row, col, hex: { q: col - Math.floor(row / 2), r: row } });
+  const mid = Math.floor(height / 2);
+  const at = (col: number) => key({ q: col - Math.floor(mid / 2), r: mid });
+  return { cells, rows: height, tree: at(Math.floor(width / 2)), homes: { dawn: at(0), horde: at(width - 1) } };
+}
+
+/** The ring of hexes at distance radius-1 and radius from the middle; the Tree, the Przymierze and the Horda stand on three corners of it. */
+function ringLayout(size: MapSize): Layout {
+  const R = MAP_SHAPES.ring[size].radius;
+  const cells = [];
+  let n = 0;
+  for (let r = -R; r <= R; r++) {
+    for (let q = Math.max(-R, -R - r); q <= Math.min(R, R - r); q++) {
+      const d = distance({ q: 0, r: 0 }, { q, r });
+      if (d >= R - 2) cells.push({ row: r + R, col: n++, hex: { q, r } });
+    }
+  }
+  // Corners of the hexagon of radius R: (-R,0), (R,-R) and (0,R) are 2R apart from each other (the Tree on the left, the bases on the right).
+  return { cells, rows: 2 * R + 1, tree: key({ q: -R, r: 0 }), homes: { dawn: key({ q: R, r: -R }), horde: key({ q: 0, r: R }) } };
+}
+
+const layoutOf = (shape: MapShape, size: MapSize): Layout => (shape === 'rectangle' ? rectangleLayout(size) : shape === 'ring' ? ringLayout(size) : triangleLayout(size));
 
 /**
  * Left half of the triangle is Przymierze land, right half Horda land. Rows with an odd
@@ -161,23 +211,27 @@ function setTerrain(tile: Tile, terrain: Terrain, rng: Rng) {
   tile.variant = 1 + rng.int(TERRAIN_VARIANTS[terrain]);
 }
 
-export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crystalCount: number): GeneratedMap {
-  const variant = MAP_VARIANTS[size];
-  const rows = variant.rows;
+export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crystalCount: number, shape: MapShape = 'triangle'): GeneratedMap {
+  const layout = layoutOf(shape, size);
+  const { rows } = layout;
+  const sideAt = (row: number, col: number, hex: { q: number; r: number }): TileSide => {
+    if (shape === 'triangle') return sideOf(row, col);
+    const a = distance(hex, parseKey(layout.homes.dawn));
+    const b = distance(hex, parseKey(layout.homes.horde));
+    return a < b ? 'dawn' : a > b ? 'horde' : (row + col) % 2 === 0 ? 'dawn' : 'horde';
+  };
   for (let attempt = 0; attempt < 400; attempt++) {
     const tiles: Record<HexKey, Tile> = {};
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col <= row; col++) {
-        const k = key(triToHex(row, col));
-        const side = sideOf(row, col);
-        const tile: Tile = { key: k, row, col, terrain: 'meadow', side, variant: 1, revealed: false, crystalId: null, treasureId: null, home: null, tree: false };
-        setTerrain(tile, rng.pick(TILE_POOLS[side]), rng);
-        tiles[k] = tile;
-      }
+    for (const { row, col, hex } of layout.cells) {
+      const k = key(hex);
+      const side = sideAt(row, col, hex);
+      const tile: Tile = { key: k, row, col, terrain: 'meadow', side, variant: 1, revealed: false, crystalId: null, treasureId: null, home: null, tree: false };
+      setTerrain(tile, rng.pick(TILE_POOLS[side]), rng);
+      tiles[k] = tile;
     }
-    const tree = treeKey();
-    const dawn = homeKey(rows, 'dawn');
-    const horde = homeKey(rows, 'horde');
+    const tree = layout.tree;
+    const dawn = layout.homes.dawn;
+    const horde = layout.homes.horde;
     setTerrain(tiles[tree], 'tree', rng);
     tiles[tree].tree = true;
     setTerrain(tiles[dawn], 'baseDawn', rng);
@@ -201,7 +255,7 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
     for (const g of guardians) {
       const lair = GUARDIAN_LAIRS[g];
       const options = [...reach].filter((k) => !reserved.has(k) && tiles[k].side === lair.side && tileCost(tiles[k]) !== null);
-      const spot = pickSpread(options, rng, tiles, rows, crystals.map((c) => c.hex));
+      const spot = pickSpread(options, rng, (k) => (shape === 'triangle' ? tiles[k].row >= rows - 2 : distance(parseKey(k), parseKey(dawn)) <= 2 || distance(parseKey(k), parseKey(horde)) <= 2), crystals.map((c) => c.hex));
       if (!spot) break;
       crystals.push({ hex: spot, guardian: g });
       reserved.add(spot);
@@ -216,7 +270,7 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
     if (rest.length < treasureCount) continue;
     const treasureHexes = rest.slice(0, treasureCount);
     for (const k of treasureHexes) setTerrain(tiles[k], tiles[k].side === 'dawn' ? 'treasureDawn' : 'treasureHorde', rng);
-    return { rows, tiles, crystals, treasureHexes };
+    return { rows, tiles, crystals, treasureHexes, tree, homes: { dawn, horde } };
   }
   throw new Error('Nie udało się wygenerować poprawnej mapy');
 }
@@ -225,12 +279,12 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
  * Picks a hex far from the ones already taken so crystals spread over the map: at least 3 hexes
  * away if it can, then 2, then 1, from a shuffled pool (one shuffle, whatever is found).
  */
-function pickSpread(candidates: HexKey[], rng: Rng, tiles: Record<HexKey, Tile>, rows: number, taken: HexKey[]): HexKey | undefined {
+function pickSpread(candidates: HexKey[], rng: Rng, nearBase: (k: HexKey) => boolean, taken: HexKey[]): HexKey | undefined {
   const pool = rng.shuffle(candidates);
   for (const minGap of [3, 2, 1]) {
     for (const k of pool) {
-      // Keep crystals off the two bottom rows (unless nothing else fits) so the race is not trivial.
-      if (minGap > 1 && tiles[k].row >= rows - 2) continue;
+      // Keep crystals off the two bottom rows of the triangle, or the hexes near a base, so the race is not trivial (unless nothing else fits).
+      if (minGap > 1 && nearBase(k)) continue;
       if (!taken.some((c) => distance(parseKey(c), parseKey(k)) < minGap)) return k;
     }
   }

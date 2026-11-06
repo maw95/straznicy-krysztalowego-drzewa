@@ -20,6 +20,9 @@ export type Ruleset = 'classic' | 'digital';
  * are optional difficulties. All of them mix freely.
  */
 /** What a game is played for: bring the crystals to the Tree (the board game's goal), or hold control points (digital ruleset). */
+/** Shape of the adventure map: the board game's triangle, or (digital ruleset) a rectangle or a ring around a lake. */
+export type MapShape = 'triangle' | 'rectangle' | 'ring';
+
 export type ObjectiveId = 'crystals' | 'control' | 'survival';
 
 export interface RulesConfig {
@@ -113,6 +116,8 @@ export interface SeatSetup {
 
 export interface SetupOptions {
   mode: Mode;
+  /** Shape of the adventure map (digital ruleset): missing = the triangle of the board game. */
+  mapShape?: MapShape;
   /** Arena: unused (the map is generated but never shown). */
   mapSize: MapSize;
   battleMode: BattleMode;
@@ -347,6 +352,9 @@ export interface GameState {
   factions: Record<FactionId, FactionState>;
   tiles: Record<HexKey, Tile>;
   rows: number;
+  /** Where the Tree and the two bases lie (missing in old saves = the triangle's corners: read them through treeOf / homeOf). */
+  tree?: HexKey;
+  homes?: Record<FactionId, HexKey>;
   crystals: Record<string, Crystal>;
   items: Record<string, ItemInstance>;
   turnOrder: string[];

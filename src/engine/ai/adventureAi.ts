@@ -3,7 +3,7 @@
 
 import { FACTION_SUPPORTS, ITEM_EFFECT, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from '../data';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
-import { mapNeighbors, shortestPaths, tileCost, treeKey, type PathResult } from '../map';
+import { mapNeighbors, shortestPaths, tileCost, treeOf, type PathResult } from '../map';
 import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, livingHeroes, other, reviveSpots, ritualFormed, ritualSpot } from '../game';
 import { objectiveOf } from '../objectives';
 import type { Action, Crystal, GameState, HeroState } from '../types';
@@ -252,7 +252,7 @@ function treasureSpots(state: GameState): HexKey[] {
 
 /** What the Przymierze bot knows while it decides one move: built once, read by every step below. */
 class GoodContext {
-  readonly treeK = treeKey();
+  readonly treeK: HexKey;
   readonly allies: HeroState[];
   /** Enemy heroes on the board (a reserve still to come in is not). */
   readonly enemies: HeroState[];
@@ -272,6 +272,7 @@ class GoodContext {
     readonly memo: Memo,
     readonly hero: HeroState,
   ) {
+    this.treeK = treeOf(state);
     this.allies = livingHeroes(state, 'dawn').filter((h) => h.id !== hero.id);
     this.enemies = livingHeroes(state, other(hero.faction)).filter((h) => !h.entering);
     this.desperate = isDesperate(state);
@@ -493,7 +494,7 @@ function goodAction(state: GameState, memo: Memo): Action {
  */
 function hordeBotAction(state: GameState, memo: Memo): Action {
   const hero = activeHero(state)!;
-  const tree = treeKey();
+  const tree = treeOf(state);
   const foes = livingHeroes(state, other(hero.faction));
   const own = livingHeroes(state, hero.faction);
   const item = mapItemAction(state);
@@ -611,7 +612,7 @@ function survivalAction(state: GameState, memo: Memo): Action {
   const goals = new Set<HexKey>();
   if (hero.faction === 'horde') for (const e of foes) goals.add(e.pos);
   else {
-    const tree = treeKey();
+    const tree = treeOf(state);
     if (hero.pos === tree) return { type: 'endTurn' };
     goals.add(tree);
   }
@@ -640,7 +641,7 @@ export function adventureAction(state: GameState): Action {
   // A reserve hero coming in picks the hex nearest to the Tree, where both sides are headed.
   if (hero.entering) {
     if (state.turnBattleDone) return { type: 'endTurn' };
-    const tree = parseKey(state.control ? state.control.points[0] : treeKey());
+    const tree = parseKey(state.control ? state.control.points[0] : treeOf(state));
     const to = [...hero.entering].sort((a, b) => distance(parseKey(a), tree) - distance(parseKey(b), tree))[0];
     return { type: 'moveHero', to };
   }

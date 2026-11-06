@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, MAP_SIZE_NAMES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import { OBJECTIVES } from '../engine/objectives';
-import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type Controller, type Mode, type ObjectiveId, type RulesConfig, type SeatSetup, type SetupOptions } from '../engine/types';
+import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type RulesConfig, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
 import { FigurePreview } from './FigurePreview';
@@ -20,10 +20,17 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
   });
 
 /** The set-up with the digital edition's rules switched on when asked (the arena battles; the board duels of the easy level are the same), and its objective. */
-function withRuleset(setup: SetupOptions, digital: boolean, objective: ObjectiveId = 'crystals'): SetupOptions {
+function withRuleset(setup: SetupOptions, digital: boolean, objective: ObjectiveId = 'crystals', shape: MapShape = 'triangle'): SetupOptions {
   if (!digital) return setup;
-  return { ...setup, rules: { ...setup.rules, ruleset: 'digital', ...(objective !== 'crystals' && (objective !== 'survival' || setup.mode === 'coop') && setup.mode !== 'arena' ? { objective } : {}) } };
+  return { ...setup, ...(shape !== 'triangle' && setup.mode !== 'arena' ? { mapShape: shape } : {}), rules: { ...setup.rules, ruleset: 'digital', ...(objective !== 'crystals' && (objective !== 'survival' || setup.mode === 'coop') && setup.mode !== 'arena' ? { objective } : {}) } };
 }
+
+const SHAPE_NAMES: Record<MapShape, string> = { triangle: 'Trójkąt', rectangle: 'Prostokąt', ring: 'Pierścień' };
+const SHAPE_TIPS: Record<MapShape, string> = {
+  triangle: 'Mapa z planszówki: trójkąt, Drzewo na szczycie, bazy w dolnych rogach.',
+  rectangle: 'Prostokąt: bazy pośrodku krótszych boków, Drzewo w środku mapy.',
+  ring: 'Pierścień wokół jeziora: Drzewo i obie bazy na rogach, do każdego dwie drogi.',
+};
 
 const EDITION_KEY = 'skd-edition';
 /** The edition picked last time in this browser: digital unless the board edition was chosen. */
@@ -51,6 +58,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
   const [digital, setDigitalState] = useState(savedDigital);
   /** The goal of an adventure game (the digital edition only): the crystals, or the control points. */
   const [objective, setObjective] = useState<ObjectiveId>('crystals');
+  const [shape, setShape] = useState<MapShape>('triangle');
   const setDigital = (on: boolean) => {
     setDigitalState(on);
     try { localStorage.setItem(EDITION_KEY, on ? 'digital' : 'board'); } catch { /* private mode: only for this visit */ }
@@ -187,6 +195,13 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
               ))}
             </Row>
           )}
+          {digital && !arena && (
+            <Row label="Kształt mapy">
+              {(Object.keys(SHAPE_NAMES) as MapShape[]).map((sh) => (
+                <Tip key={sh} text={SHAPE_TIPS[sh]}><button className={chip(shape === sh)} aria-pressed={shape === sh} onClick={() => setShape(sh)}>{SHAPE_NAMES[sh]}</button></Tip>
+              ))}
+            </Row>
+          )}
           {arena && versusBot && (
             <Row label="Komputer">
               {LEVELS.filter(([l]) => l !== 'custom').map(([l, label]) => (
@@ -318,7 +333,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             <button className="btn prim r tester-btn" style={{ height: 56, padding: '0 28px', fontSize: 21 }} onClick={onTesters} title="Informacje dla testerów, statystyki i plik z uwagami dla twórcy">
               INFO DLA TESTERÓW
             </button>
-            <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero } }, digital, objective))}>
+            <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero } }, digital, objective, shape))}>
               Rozpocznij grę
             </button>
           </div>

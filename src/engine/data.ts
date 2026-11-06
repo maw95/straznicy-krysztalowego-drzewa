@@ -134,6 +134,19 @@ export const SURVIVAL = {
   rounds: { short: 6, medium: 9, long: 14, veryLong: 18 } as Record<MapSize, number>,
 };
 
+/**
+ * Map shapes other than the triangle (digital ruleset). Rectangle: `width` × `height` hexes, the bases in the middle of the short sides,
+ * the Tree in the middle. Ring: hexes at distance `radius - 2` to `radius` from the centre (the lake inside is no map), the Tree and the bases on
+ * three corners of the ring, so the three are equally far from each other. Sizes roughly match the triangle's number of hexes.
+ */
+export const MAP_SHAPES = {
+  rectangle: { short: { width: 7, height: 4 }, medium: { width: 9, height: 5 }, long: { width: 13, height: 6 }, veryLong: { width: 15, height: 8 } },
+  ring: { short: { radius: 3 }, medium: { radius: 4 }, long: { radius: 5 }, veryLong: { radius: 7 } },
+} as const;
+
+/** The map's round limit is multiplied by this on a shape other than the triangle (the roads are longer, and the limit goes to the Horde). */
+export const SHAPE_ROUND_FACTOR = { triangle: 1, rectangle: 1.25, ring: 1.5 } as const;
+
 export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   [
     u({ id: 'goldDragon', name: 'Złoty Smok', side: 'dawn', kind: 'hero', size: 2, hp: 9, attack: 5, speed: 4, movement: 'fly', attackType: 'melee', ability: 'sunburst', abilityName: 'Słoneczny Blask', abilityText: `Raz na bitwę: twoje jednostki +${ABILITY.sunburstBonus} A do następnego ataku, sam Smok +${ABILITY.sunburstSelfBonus} A.` }),

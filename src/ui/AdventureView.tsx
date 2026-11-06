@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FACTION_NAMES, ITEMS, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
 import { activeHero, heroesAt, legalHeroMoves, reviveSpots } from '../engine/game';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
-import type { HexKey } from '../engine/hex';
+import { parseKey, type HexKey } from '../engine/hex';
 import { mapNeighbors, tileCost } from '../engine/map';
 import type { Action, GameState, Tile } from '../engine/types';
 import { hoverCard } from './hover';
@@ -92,7 +92,16 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   }, []);
 
   const hero = activeHero(state);
-  const rows = state.rows;
+  // The board is as wide and tall as the map is (any shape): x counts hex widths from the leftmost hex, y rows from the top one.
+  const extent = useMemo(() => {
+    let x0 = Infinity, x1 = -Infinity, r0 = Infinity, r1 = -Infinity;
+    for (const k of Object.keys(state.tiles)) {
+      const { q, r } = parseKey(k);
+      x0 = Math.min(x0, q + r / 2); x1 = Math.max(x1, q + r / 2); r0 = Math.min(r0, r); r1 = Math.max(r1, r);
+    }
+    return { x0, cols: x1 - x0 + 1, r0, rows: r1 - r0 + 1 };
+  }, [state.tiles]);
+  const rows = extent.rows;
   // Path the active hero walked this turn (drawn as a flowing dotted line). It grows from one render to the next,
   // so it is state adjusted during render (React re-renders at once, before anything is drawn).
   const [trail, setTrail] = useState<{ turn: string; hexes: HexKey[] }>({ turn: '', hexes: [] });
@@ -112,11 +121,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   }, [nowRevealed]);
   // Fit the triangle into the frame; on phones start with finger-sized hexes and let the map scroll.
   // Phones can zoom (buttons, two fingers) between the whole map and big hexes.
-  const fitW = Math.min(118, (box.w - 24) / rows, (box.h - 24) / (1.1547 * (0.75 * (rows - 1) + 1)));
+  const fitW = Math.min(118, (box.w - 24) / extent.cols, (box.h - 24) / (1.1547 * (0.75 * (rows - 1) + 1)));
   const [zoomW, setZoomW] = useState<number | null>(null);
   const W = zoomW !== null ? Math.max(fitW, Math.min(MAX_HEX_W, zoomW)) : box.w < 600 ? Math.max(fitW, 46) : fitW;
   const H = W * 1.1547;
-  const boardW = rows * W;
+  const boardW = extent.cols * W;
   const boardH = H + (rows - 1) * 0.75 * H;
 
   // Zooming keeps the point in the middle of the view where it was.
@@ -177,7 +186,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const legal = useMemo(() => new Map(legalHeroMoves(state).map((m) => [m.to, m.kind])), [state]);
   const preview = hover && reach.get(hover) ? reach.get(hover)!.path : null;
   const tiles = Object.values(state.tiles);
-  const pos = (t: Tile) => ({ x: ((rows - 1) / 2 + t.col - t.row / 2) * W, y: t.row * 0.75 * H });
+  const pos = (t: Tile) => ({ x: (parseKey(t.key).q + parseKey(t.key).r / 2 - extent.x0) * W, y: (parseKey(t.key).r - extent.r0) * 0.75 * H });
   const trailPoints = trail.hexes.length > 1
     ? trail.hexes.map((k) => {
         const p = pos(state.tiles[k]);
@@ -295,7 +304,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </div>
             </div>
           </div>
-          <div ref={boardRef} className="scroll map-scroll" style={{ position: 'absolute', inset: compact ? 6 : '60px 6px 6px', overflow: 'auto', display: 'flex' }}>
+          <div ref={boardRef} className="scroll map-scroll" style={{ position: 'absolute', inset: compact ? 6 : '60px 6px 6px', ...(!compact && state.setup.mapShape && state.setup.mapShape !== 'triangle' ? { left: 'clamp(194px, calc(26% + 34px), 324px)' } : {}), overflow: 'auto', display: 'flex' }}>
             <div style={{ position: 'relative', flex: 'none', margin: 'auto', width: boardW, height: boardH }}>
               {tiles.map((t) => {
                 const p = pos(t);

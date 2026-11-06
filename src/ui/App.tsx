@@ -124,6 +124,7 @@ export function App() {
     let s = createGame(arena ? { ...arena, rules: { ...arena.rules, ...(digital ? { ruleset: 'digital' as const } : {}) } } : {
       mode,
       mapSize: (q.get('size') as SetupOptions['mapSize']) ?? 'short',
+      ...(q.get('shape') === 'rectangle' || q.get('shape') === 'ring' ? { mapShape: q.get('shape') as 'rectangle' | 'ring' } : {}),
       battleMode: q.get('battle') === 'board' ? 'board' : 'arena',
       seed: Number(q.get('seed') ?? 1),
       // ?abilities=0&treasures=0 switch simplifications on, ?dice=1 the die, ?objective=control the control points goal.

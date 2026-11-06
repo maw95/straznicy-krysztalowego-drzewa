@@ -7,7 +7,7 @@ import { CONTROL, FACTION_NAMES, SURVIVAL, type FactionId } from './data';
 import { finish, heroesAt, ritualFormed, spawnHordeHero } from './game';
 import { distance, key, parseKey, triToHex, type HexKey } from './hex';
 import { log } from './log';
-import { homeKey, mapNeighbors, revealAround, tileCost, treeKey } from './map';
+import { homeOf, mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { Rng } from './rng';
 import { isDigital, type GameState, type ObjectiveId } from './types';
 
@@ -104,11 +104,12 @@ export const controlRoundsToWin = (state: GameState, side: FactionId): number =>
  * the ones that already are passable are preferred. The choice comes from the game's seed (its own generator: the map is untouched).
  */
 function placeControlPoints(state: GameState): HexKey[] {
+  if (state.tree && state.setup.mapShape && state.setup.mapShape !== 'triangle') return placeControlPointsGeneric(state);
   const rows = state.rows;
   const rng = new Rng((state.setup.seed ^ 0x2c1b3c6d) | 0);
-  const reserved = new Set<HexKey>([treeKey()]);
+  const reserved = new Set<HexKey>([treeOf(state)]);
   for (const f of ['dawn', 'horde'] as const) {
-    const home = homeKey(rows, f);
+    const home = homeOf(state, f);
     reserved.add(home);
     for (const n of mapNeighbors(state.tiles, home)) reserved.add(n);
   }
@@ -187,6 +188,52 @@ function placeControlPoints(state: GameState): HexKey[] {
     }
   }
   return chosen;
+}
+
+/**
+ * Control points on a rectangle or a ring: the middle point is a hex equally far from both bases (the one nearest the Tree that is not the Tree,
+ * a base or next to a base), the other two are a pair that swap their distances to the bases (so neither side is nearer), the closest pair to the
+ * middle point that is at least 2 hexes from it. Hexes that are not passable are cleared like in the triangle.
+ */
+function placeControlPointsGeneric(state: GameState): HexKey[] {
+  const rng = new Rng((state.setup.seed ^ 0x2c1b3c6d) | 0);
+  const tree = treeOf(state);
+  const [dh, hh] = [parseKey(homeOf(state, 'dawn')), parseKey(homeOf(state, 'horde'))];
+  const free = new Set(Object.keys(state.tiles));
+  free.delete(tree);
+  for (const f of ['dawn', 'horde'] as const) {
+    free.delete(homeOf(state, f));
+    for (const n of mapNeighbors(state.tiles, homeOf(state, f))) free.delete(n);
+  }
+  const dd = (k: HexKey): [number, number] => [distance(parseKey(k), dh), distance(parseKey(k), hh)];
+  const treePos = parseKey(tree);
+  const byTree = (a: HexKey, b: HexKey) => distance(parseKey(a), treePos) - distance(parseKey(b), treePos);
+  const passableFirst = (a: HexKey, b: HexKey) => Number(tileCost(state.tiles[a]) === null) - Number(tileCost(state.tiles[b]) === null);
+  const middles = rng.shuffle([...free].filter((k) => dd(k)[0] === dd(k)[1])).sort((a, b) => byTree(a, b) || passableFirst(a, b));
+  for (const mid of middles) {
+    const pairs: Array<[HexKey, HexKey]> = [];
+    for (const a of free) {
+      const [x, y] = dd(a);
+      if (x >= y || distance(parseKey(a), parseKey(mid)) < 2) continue;
+      for (const b of free) {
+        const [u, v] = dd(b);
+        if (u === y && v === x && distance(parseKey(b), parseKey(mid)) >= 2) pairs.push([a, b]);
+      }
+    }
+    if (!pairs.length) continue;
+    const cost = ([a, b]: [HexKey, HexKey]) => distance(parseKey(a), parseKey(mid)) * 4 + Number(tileCost(state.tiles[a]) === null) + Number(tileCost(state.tiles[b]) === null);
+    const best = Math.min(...pairs.map(cost));
+    const [a, b] = rng.pick(pairs.filter((p) => cost(p) === best));
+    for (const k of [mid, a, b]) {
+      const t = state.tiles[k];
+      if (tileCost(t) === null) {
+        t.terrain = t.side === 'dawn' ? 'meadow' : 'scorched';
+        t.variant = 1;
+      }
+    }
+    return [mid, a, b];
+  }
+  throw new Error('Nie udało się rozmieścić punktów kontrolnych.');
 }
 
 const control: Objective = {

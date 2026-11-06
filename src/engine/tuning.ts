@@ -3,7 +3,7 @@
 // Tuned with `SIM_DIGITAL=1 [SIM_OBJECTIVE=control] make sim-tabele` (see docs/ZASADY_CYFROWE.md for the targets and results).
 
 import { levelOf } from './scoring';
-import { isDigital, type RulesConfig, type SetupOptions } from './types';
+import { isDigital, type MapShape, type RulesConfig, type SetupOptions } from './types';
 import type { MapSize } from './data';
 
 export interface DigitalTune {
@@ -14,6 +14,8 @@ export interface DigitalTune {
   /** Przymierza seats (players on the good side). */
   players?: number;
   maps?: MapSize[];
+  /** Map shape (missing = any; the triangle is what a setup without `mapShape` plays). */
+  shape?: MapShape;
   /** Changes to the rules; applied in order, later entries win. */
   rules: Partial<RulesConfig>;
 }
@@ -43,6 +45,10 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   { objective: 'control', level: 'normal', mode: 'pvp', players: 1, maps: ['short', 'medium'], rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
   { objective: 'control', level: 'normal', mode: 'pvp', players: 2, maps: ['long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
   { objective: 'control', level: 'normal', mode: 'pvp', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  // --- Map shapes other than the triangle, goal 'crystals' (last, so they win over the entries above): the Przymierza are weaker there
+  // (the Tree is open on more sides, the roads cross), so they start with treasures (ring: also one more move point and an Eliksir).
+  { objective: 'crystals', shape: 'rectangle', rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { objective: 'crystals', shape: 'ring', rules: { heroMovePoints: 4, dawnStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
 ];
 
 /** The rules a game is played with: the setup's, plus the digital levers that match it. */
@@ -61,6 +67,7 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
     if (t.mode && t.mode !== setup.mode) continue;
     if (t.players && t.players !== players) continue;
     if (t.maps && !t.maps.includes(setup.mapSize)) continue;
+    if (t.shape && t.shape !== (setup.mapShape ?? 'triangle')) continue;
     rules = { ...rules, ...t.rules };
   }
   return rules;

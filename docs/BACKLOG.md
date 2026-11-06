@@ -101,7 +101,7 @@ Zasada: każdy krok kończy się grywalną, przetestowaną wersją; `golden.test
 Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symulacjami.
 
 1. [x] **Cel „Przetrwanie X rund”** (6.11): `objectives.ts` (`survival`), fale Hordy co 2 rundy, boty, wybór w ekranie startu (tylko kooperacja), testy; wyniki i opis w `ZASADY_CYFROWE.md`. Do dostrojenia w 6.2.6: 2 graczy wygrywa 76–85%.
-2. [ ] **Generator map: prostokąt** (`generateMap(shape, size, seed)`), potem **pierścień**. Wybór kształtu w `SetupScreen`; boty i symulacje na nowych kształtach.
+2. [x] **Generator map: prostokąt i pierścień** (6.11): `generateMap(size, rng, …, shape)`, wybór „Kształt mapy” w `SetupScreen`, `SIM_SHAPE=rectangle|ring` w symulacjach, strojenie skarbami startowymi (opis w `ZASADY_CYFROWE.md`). Poziomy Łatwy/Trudny na nowych kształtach nie były strojone osobno; serwer musi dostać nowy pakiet silnika przed wydaniem (nowe pole `mapShape`).
 3. [ ] **Cel „Boss”** (legowisko, wyścig o ostatni cios, potem wariant kooperacyjny).
 4. [ ] **Cel „Artefakt / eskorta”**.
 5. [ ] **Generator: wyspy** (mosty, latanie daje skróty) i **mapy ręczne z JSON** (potrzebne później kampanii).

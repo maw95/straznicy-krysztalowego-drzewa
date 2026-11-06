@@ -135,6 +135,21 @@ kooperacja 1 gracz 51–60%, 2 graczy 64–81%; rywalizacja 1 na 1 44–59%, 2 n
 68–92%: tak ma być, to poziom dla dzieci. Przymierze jest mocniejsze w kooperacji na dużych mapach i w 2 na 2 (do ewentualnego strojenia).
 Dawne próby: bez wagi środka i bez „wyprzedzenia” botów 1 na 1 kończyło się w 85–93% limitem rund (patowe stanie na bocznych punktach).
 
+## Kształty mapy przygody (6.11.2026, wersja cyfrowa)
+
+Oprócz trójkąta z planszówki (`mapShape` w ustawieniach gry, wybór w ekranie startu: „Kształt mapy”):
+- **Prostokąt** (`MAP_SHAPES.rectangle`): 7×4, 9×5, 13×6 i 15×8 pól; bazy pośrodku krótszych boków, Drzewo w środku; połowa bliższa bazie jest ziemią tej frakcji.
+- **Pierścień** (`MAP_SHAPES.ring`): obręcz grubości 3 pól wokół jeziora (promień 3 / 4 / 5 / 7), Drzewo i obie bazy na trzech rogach (po 2R od siebie), do każdego dwie drogi. Grubość 2 pola nie wystarczała: jeden bohater zamykał korytarz i Przymierze wygrywało tylko 15%.
+- Limit rund mnożony o `SHAPE_ROUND_FACTOR` (prostokąt ×1,25, pierścień ×1,5), bo drogi są dłuższe.
+- Stan gry zapisuje `tree` i `homes` tylko dla innych kształtów niż trójkąt (reszta czyta `treeOf` / `homeOf` z domyślnymi rogami trójkąta), więc gry w trójkącie i `golden.test.ts` są bez zmian.
+- Planszówka (Klasyczny) zawsze gra na trójkącie; `mapShape` jest ignorowane.
+- Punkty kontrolne: środkowy leży na polu równo oddalonym od obu baz (najbliżej Drzewa), boczne to para lustrzana (zamieniona odległość do baz).
+
+Strojenie (`DIGITAL_TUNING`, wpisy z `shape`, 100 gier na wariant, poziom Normalny, cel „Kryształy”): bez strojenia Przymierze wygrywało 38–40% na prostokącie i 16–28% na pierścieniu (Drzewo otwarte z wielu stron).
+Prostokąt: Przymierze zaczyna z 3 losowymi skarbami → 49% (kooperacja) i 51% (rywalizacja). Pierścień: 4 skarby i 4 punkty ruchu → 44% i 52%.
+Cele „Punkty kontrolne” i „Przetrwanie” nie potrzebowały strojenia (kontrola: prostokąt 58%/56%, pierścień 56%/51%, trójkąt 56%/57%; przetrwanie: 61% i 67% wobec 68% w trójkącie).
+Poziomy Łatwy i Trudny dostają te same skarby (nie były strojone osobno).
+
 ## Cel „Przetrwanie” (6.11.2026, wersja cyfrowa, tylko kooperacja)
 
 Przymierze wygrywa, gdy minie ustalona liczba rund, a choć jeden ich bohater żyje: 6 / 9 / 14 / 18 rund (mapa krótka / średnia / długa / bardzo długa; `SURVIVAL.rounds`).
