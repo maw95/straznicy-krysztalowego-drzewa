@@ -87,14 +87,14 @@ Zasada: każdy krok kończy się grywalną, przetestowaną wersją; `golden.test
 
 ### 6.1. Najpierw: domknięcie tego, co rozgrzebane (małe, szybkie)
 
-- [ ] Strojenie „strzelcy +1 do ataku” w trybie cyfrowym symulacjami (`make sim-tabele`) — wynik wpisać do `ZASADY_CYFROWE.md`.
+- [x] Strojenie „strzelcy +1 do ataku” w trybie cyfrowym: zrobione 5.11, wynik w `ZASADY_CYFROWE.md` („Strojenie wersji cyfrowej”); zostaje +1.
 - [ ] Braki klipów: śmierć Ogra (sprawdzić, czy po ostatnich poprawkach nadal brak), atak Elfa i Cyklopa, trafienie Wilkołaka i Hydry
   (lista w raporcie nocnym); drobne wady: trupy na plecach głową w prawo, zryw zamiast uderzenia u Pegaza/Jednorożca/Gryfa.
-- [ ] Złoty Smok „w pełni zintegrowany” (punkt z fazy A): odhaczyć albo wypisać, czego brakuje (wybór pola ogona i rozstawienie dużych w UI).
-- [ ] Bot wybiera stronę ogona dużej jednostki taktycznie (dziś losowo/domyślnie).
-- [ ] Spis licencji obecnej muzyki (potrzebny do Steama; zrobić teraz, bo im później, tym trudniej odtworzyć źródła).
-- [ ] Decyzje 4.1 / 4.2 (ruch + strzał, zasłanianie strzału): w trybie cyfrowym 4.1 jest rozstrzygnięte, 4.2 sprawdzić symulacją `unitsBlockSight`
-  i zamknąć wpisem w `ZASADY_CYFROWE.md`.
+- [x] Złoty Smok „w pełni zintegrowany”: silnik, boty, wybór ogona (najechanie + prawy przycisk) i rozstawienie dużych w UI działają; zostają tylko klipy z poprzedniego punktu.
+- [x] Bot wybiera stronę ogona dużej jednostki taktycznie (`tailFor`, 5.11; bez wpływu na wyniki, zostaje).
+- [~] Spis licencji obecnej muzyki: 10 utworów wpisanych do `assets.json` (6.11), ale **źródło, narzędzie i licencja są oznaczone „DO USTALENIA PRZEZ AUTORA”** — z plików da się odczytać tylko ślady Logic Pro / FL Studio. Autor musi uzupełnić, skąd pochodzi każdy utwór.
+- [x] Decyzje 4.1 / 4.2: 4.1 rozstrzygnięte (ruch zastępuje strzał, strzelcy +1). 4.2: przełącznik `rules.unitsBlockSight` przywrócony i sprawdzony symulacją (6.11):
+  arena cyfrowa 48,8% → 50,1% wygranych Przymierza (1620 partii, szum ±2,4) — bez wpływu na balans, więc **jednostki nie zasłaniają strzału** (prościej na planszy), wpis w `ZASADY_CYFROWE.md`.
 
 ### 6.2. Cele i mapy (faza C, poziom 2 „Wyprawa”) — główna oś pracy
 

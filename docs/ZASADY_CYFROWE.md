@@ -80,6 +80,12 @@ Jednostka, która ruszyła się bez ataku, kończy aktywację automatycznie (nie
 - **Wyrównanie:** strzelcy mają `DIGITAL_RANGED_BONUS` (+1 do ataku, `data.ts`). Wartość tymczasowa do strojenia symulacjami.
 - Roboty (`ai/battleAi.ts`) stosują tę samą regułę: strzelec ocenia strzał tylko z miejsca, w którym stoi.
 
+### Zasłanianie strzału jednostkami (6.11.2026)
+
+Jednostki **nie** zasłaniają strzału, tylko przeszkody. Sprawdzone symulacją z `rules.unitsBlockSight` (jednostki między strzelcem a celem blokują strzał, poza polami strzelca
+i celu): arena cyfrowa, 20 gier na parę składów, Przymierze 48,8% bez zasłaniania i 50,1% z nim (szum ±2,4 pkt), więc balans się nie zmienia, a reguła byłaby trudniejsza na planszy.
+Przełącznik zostaje w kodzie jako eksperyment (`SIM_OVERRIDE='{"rules":{"unitsBlockSight":true}}'`), domyślnie wyłączony.
+
 ### Strojenie wersji cyfrowej (5.11.2026)
 
 Symulacje z `SIM_DIGITAL=1` (`scripts/sim/arena.ts`, `matrix.ts`; np. `SIM_DIGITAL=1 node --import tsx scripts/sim/arena.ts 40 normal etykieta`).

@@ -60,6 +60,8 @@ export interface RulesConfig {
    * more total remaining Ż wins and the other side's units fall.
    */
   battleRoundLimit: number;
+  /** Experiment (backlog 4.2): units standing between shooter and target block the shot like obstacles. Off by default. */
+  unitsBlockSight?: boolean;
 }
 
 export function isDigital(rules: Pick<RulesConfig, 'ruleset'>): boolean {

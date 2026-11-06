@@ -376,10 +376,17 @@ export function movePath(state: GameState, u: BattleUnit, to: HexKey): HexKey[] 
   return path;
 }
 
-/** Only obstacles block a shot: units standing in the way do not. */
+/** Obstacles block a shot; units standing in the way do not, unless `rules.unitsBlockSight` is on. */
 export function hasLineOfSight(state: GameState, from: HexKey, to: HexKey): boolean {
-  const obstacles = obstacleSet(state.battle!);
-  return !cellsBetween(from, to).some((k) => obstacles.has(k));
+  const b = state.battle!;
+  const obstacles = obstacleSet(b);
+  const between = cellsBetween(from, to);
+  if (between.some((k) => obstacles.has(k))) return false;
+  if (!state.rules.unitsBlockSight) return true;
+  // A unit's own cells (a large unit's tail) never hide it from itself, so cells of the shooter and target are ignored.
+  const all = Object.values(b.units);
+  const ends = new Set(all.filter((u) => cellsOf(u).some((c) => c === from || c === to)).flatMap(cellsOf));
+  return !all.some((u) => u.pos && !ends.has(u.pos) && cellsOf(u).some((c) => between.includes(c)));
 }
 
 const adjacent = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b)) === 1;

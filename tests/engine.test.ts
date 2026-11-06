@@ -6,7 +6,7 @@ import { applyAction, createGame, crystalsFor, legalHeroMoves, activeHero } from
 import { ARENA_COLUMNS, ARENA_OBSTACLES, arenaCell, arenaCells, COLUMN_SPAN, attackTargets, columnCells, hasLineOfSight, reachableCells } from '../src/engine/battle';
 import { mapNeighbors, reachableFrom, homeKey, treeKey } from '../src/engine/map';
 import { DEFAULT_RULES, type GameState } from '../src/engine/types';
-import { playOut, playUntil, setup } from './helpers/engine';
+import { battleFixture, playOut, playUntil, setup } from './helpers/engine';
 
 describe('unit budgets and specialisations (docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md, sections 7.11 and 9)', () => {
   const typeCost = (id: string) => (UNITS[id].attackType === 'ranged' ? 2 : 0) + (UNITS[id].movement === 'fly' ? 1 : 0);
@@ -158,6 +158,19 @@ describe('battle rules', () => {
     const s = battleState();
     s.battle!.obstacles = [arenaCell(5, 9)];
     expect(hasLineOfSight(s, arenaCell(2, 6), arenaCell(8, 12))).toBe(false);
+    expect(hasLineOfSight(s, arenaCell(2, 4), arenaCell(8, 10))).toBe(true);
+  });
+
+  it('lets units block a shot only when rules.unitsBlockSight is on', () => {
+    const s = battleFixture(createGame(setup()), [
+      { id: 'elfDruid', side: 'dawn', col: 2, half: 6 },
+      { id: 'ironFistOgre', side: 'horde', col: 8, half: 12 },
+      { id: 'goblinShaman', side: 'horde', col: 5, half: 9 },
+    ]);
+    const [from, to] = [arenaCell(2, 6), arenaCell(8, 12)];
+    expect(hasLineOfSight(s, from, to)).toBe(true);
+    s.rules = { ...s.rules, unitsBlockSight: true };
+    expect(hasLineOfSight(s, from, to)).toBe(false);
     expect(hasLineOfSight(s, arenaCell(2, 4), arenaCell(8, 10))).toBe(true);
   });
 

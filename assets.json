@@ -1688,6 +1688,136 @@
       "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "muzyka/menu-sylvan-waltz",
+      "pliki": [
+        "public/assets/music/menu-sylvan-waltz.mp3"
+      ],
+      "typ": "muzyka (menu)",
+      "tytul": "Sylvan Waltz",
+      "narzedzie": "DO USTALENIA PRZEZ AUTORA (pliki mają ślady Logic Pro / FL Studio; przycięte i wyciszone lokalnie, patrz docs/muzyka/README.txt)",
+      "zrodlo": "DO USTALENIA PRZEZ AUTORA: skąd pochodzi utwór (biblioteka, pakiet, autor)",
+      "data": "do ustalenia (w repo od pierwszego commita)",
+      "ai": "do ustalenia",
+      "licencja": "DO USTALENIA PRZEZ AUTORA: warunki użycia komercyjnego i na Steamie; bez tego nie wydawać"
+    },
+    {
+      "id": "muzyka/map-sylvan-waltz",
+      "pliki": [
+        "public/assets/music/map-sylvan-waltz.mp3"
+      ],
+      "typ": "muzyka (mapa)",
+      "tytul": "Sylvan Waltz (pętla)",
+      "narzedzie": "DO USTALENIA PRZEZ AUTORA (pliki mają ślady Logic Pro / FL Studio; przycięte i wyciszone lokalnie, patrz docs/muzyka/README.txt)",
+      "zrodlo": "DO USTALENIA PRZEZ AUTORA: skąd pochodzi utwór (biblioteka, pakiet, autor)",
+      "data": "do ustalenia (w repo od pierwszego commita)",
+      "ai": "do ustalenia",
+      "licencja": "DO USTALENIA PRZEZ AUTORA: warunki użycia komercyjnego i na Steamie; bez tego nie wydawać"
+    },
+    {
+      "id": "muzyka/map-maddies-mirror",
+      "pliki": [
+        "public/assets/music/map-maddies-mirror.mp3"
+      ],
+      "typ": "muzyka (mapa)",
+      "tytul": "Maddie's Mirror",
+      "narzedzie": "DO USTALENIA PRZEZ AUTORA (pliki mają ślady Logic Pro / FL Studio; przycięte i wyciszone lokalnie, patrz docs/muzyka/README.txt)",
+      "zrodlo": "DO USTALENIA PRZEZ AUTORA: skąd pochodzi utwór (biblioteka, pakiet, autor)",
+      "data": "do ustalenia (w repo od pierwszego commita)",
+      "ai": "do ustalenia",
+      "licencja": "DO USTALENIA PRZEZ AUTORA: warunki użycia komercyjnego i na Steamie; bez tego nie wydawać"
+    },
+    {
+      "id": "muzyka/battle-fantasy-choir-1",
+      "pliki": [
+        "public/assets/music/battle-fantasy-choir-1.mp3"
+      ],
+      "typ": "muzyka (bitwa)",
+      "tytul": "Fantasy Choir 1",
+      "narzedzie": "DO USTALENIA PRZEZ AUTORA (pliki mają ślady Logic Pro / FL Studio; przycięte i wyciszone lokalnie, patrz docs/muzyka/README.txt)",
+      "zrodlo": "DO USTALENIA PRZEZ AUTORA: skąd pochodzi utwór (biblioteka, pakiet, autor)",
+      "data": "do ustalenia (w repo od pierwszego commita)",
+      "ai": "do ustalenia",
+      "licencja": "DO USTALENIA PRZEZ AUTORA: warunki użycia komercyjnego i na Steamie; bez tego nie wydawać"
+    },
+    {
+      "id": "muzyka/battle-fantasy-choir-2",
+      "pliki": [
+        "public/assets/music/battle-fantasy-choir-2.mp3"
+      ],
+      "typ": "muzyka (bitwa)",
+      "tytul": "Fantasy Choir 2",
+      "narzedzie": "DO USTALENIA PRZEZ AUTORA (pliki mają ślady Logic Pro / FL Studio; przycięte i wyciszone lokalnie, patrz docs/muzyka/README.txt)",
+      "zrodlo": "DO USTALENIA PRZEZ AUTORA: skąd pochodzi utwór (biblioteka, pakiet, autor)",
+      "data": "do ustalenia (w repo od pierwszego commita)",
+      "ai": "do ustalenia",
+      "licencja": "DO USTALENIA PRZEZ AUTORA: warunki użycia komercyjnego i na Steamie; bez tego nie wydawać"
+    },
+    {
+      "id": "muzyka/guardian-fantasy-choir-3",
+      "pliki": [
+        "public/assets/music/guardian-fantasy-choir-3.mp3"
+      ],
+      "typ": "muzyka (strażnik)",
+      "tytul": "Fantasy Choir 3",
+      "narzedzie": "DO USTALENIA PRZEZ AUTORA (pliki mają ślady Logic Pro / FL Studio; przycięte i wyciszone lokalnie, patrz docs/muzyka/README.txt)",
+      "zrodlo": "DO USTALENIA PRZEZ AUTORA: skąd pochodzi utwór (biblioteka, pakiet, autor)",
+      "data": "do ustalenia (w repo od pierwszego commita)",
+      "ai": "do ustalenia",
+      "licencja": "DO USTALENIA PRZEZ AUTORA: warunki użycia komercyjnego i na Steamie; bez tego nie wydawać"
+    },
+    {
+      "id": "muzyka/guardian-determined-pursuit",
+      "pliki": [
+        "public/assets/music/guardian-determined-pursuit.mp3"
+      ],
+      "typ": "muzyka (strażnik)",
+      "tytul": "Determined Pursuit",
+      "narzedzie": "DO USTALENIA PRZEZ AUTORA (pliki mają ślady Logic Pro / FL Studio; przycięte i wyciszone lokalnie, patrz docs/muzyka/README.txt)",
+      "zrodlo": "DO USTALENIA PRZEZ AUTORA: skąd pochodzi utwór (biblioteka, pakiet, autor)",
+      "data": "do ustalenia (w repo od pierwszego commita)",
+      "ai": "do ustalenia",
+      "licencja": "DO USTALENIA PRZEZ AUTORA: warunki użycia komercyjnego i na Steamie; bez tego nie wydawać"
+    },
+    {
+      "id": "muzyka/ritual-defeat-loop",
+      "pliki": [
+        "public/assets/music/ritual-defeat-loop.mp3"
+      ],
+      "typ": "muzyka (rytuał)",
+      "tytul": "Defeat (pętla)",
+      "narzedzie": "DO USTALENIA PRZEZ AUTORA (pliki mają ślady Logic Pro / FL Studio; przycięte i wyciszone lokalnie, patrz docs/muzyka/README.txt)",
+      "zrodlo": "DO USTALENIA PRZEZ AUTORA: skąd pochodzi utwór (biblioteka, pakiet, autor)",
+      "data": "do ustalenia (w repo od pierwszego commita)",
+      "ai": "do ustalenia",
+      "licencja": "DO USTALENIA PRZEZ AUTORA: warunki użycia komercyjnego i na Steamie; bez tego nie wydawać"
+    },
+    {
+      "id": "muzyka/dawn-victory-a-legend-will-rise",
+      "pliki": [
+        "public/assets/music/dawn-victory-a-legend-will-rise.mp3"
+      ],
+      "typ": "muzyka (wygrana Przymierza)",
+      "tytul": "A Legend Will Rise",
+      "narzedzie": "DO USTALENIA PRZEZ AUTORA (pliki mają ślady Logic Pro / FL Studio; przycięte i wyciszone lokalnie, patrz docs/muzyka/README.txt)",
+      "zrodlo": "DO USTALENIA PRZEZ AUTORA: skąd pochodzi utwór (biblioteka, pakiet, autor)",
+      "data": "do ustalenia (w repo od pierwszego commita)",
+      "ai": "do ustalenia",
+      "licencja": "DO USTALENIA PRZEZ AUTORA: warunki użycia komercyjnego i na Steamie; bez tego nie wydawać"
+    },
+    {
+      "id": "muzyka/horde-victory-the-fallen",
+      "pliki": [
+        "public/assets/music/horde-victory-the-fallen.mp3"
+      ],
+      "typ": "muzyka (wygrana Hordy)",
+      "tytul": "The Fallen",
+      "narzedzie": "DO USTALENIA PRZEZ AUTORA (pliki mają ślady Logic Pro / FL Studio; przycięte i wyciszone lokalnie, patrz docs/muzyka/README.txt)",
+      "zrodlo": "DO USTALENIA PRZEZ AUTORA: skąd pochodzi utwór (biblioteka, pakiet, autor)",
+      "data": "do ustalenia (w repo od pierwszego commita)",
+      "ai": "do ustalenia",
+      "licencja": "DO USTALENIA PRZEZ AUTORA: warunki użycia komercyjnego i na Steamie; bez tego nie wydawać"
     }
   ]
 }

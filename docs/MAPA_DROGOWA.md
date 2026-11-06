@@ -21,7 +21,7 @@ każdy nowy zasób wpisujemy do manifestu (źródło, narzędzie, prompt, licenc
 - [x] Boty a duże jednostki: ocena zagrożeń, odległości do wrogów, drugiego celu i skoku liczy najkrótszą odległość między polami jednostek (`dist2`, `footprintAt`); test bitew z kilkoma dużymi jednostkami. Do zrobienia później: bot nie wybiera strony ogona taktycznie.
 - [x] Renderer 2D zamiast figurek 3D (`FigureLayer`): sprite'y z arkuszy klatek, odbicie lustrzane, maszyna stanów (stoi, ruch, atak, trafienie, śmierć, trup), cień pod jednostką. Gotowe jako `SpriteLayer` (`src/ui/SpriteLayer.tsx`, rejestr `src/ui/sprites.ts`); działa w trybie `digital` dla jednostek z wpisem w `SPRITES`, reszta nadal jako figurki 3D/portrety (mieszanie w jednej frakcji dopiero po wymianie całej frakcji).
 - [x] Ruch: prędkość po planszy stała, ustalana w kodzie (`FLY_SPEED`); pętla lotu powtarzana do dystansu, wzbicie i lądowanie raz (lądowanie = wzbicie od tyłu). Do zrobienia przy jednostce naziemnej: pętla chodu po ścieżce.
-- [ ] Złoty Smok jako pierwsza jednostka w grze, w pełni zintegrowana (wzorzec dla reszty).
+- [x] Złoty Smok jako pierwsza jednostka w grze, w pełni zintegrowana (wzorzec dla reszty).
 - [x] Trafienie: klip `trafienie` (odskok, ryk, powrót), gdy jednostka go ma; bez klipu drgnięcie i błysk w kodzie (`HIT_MS`). Złoty Smok ma klip (4.11.2026 akceptacja autora: kod słaby, docelowo klipy).
 
 ## Faza B — potok zasobów i pierwsza frakcja w nowej grafice
@@ -30,7 +30,7 @@ każdy nowy zasób wpisujemy do manifestu (źródło, narzędzie, prompt, licenc
 - [x] Pętla chodu dla jednostki naziemnej: Prastary Niedźwiedź, potem wszystkie chodzące (chód po ścieżce wokół przeszkód).
 - [x] Odniesienia stylu dla mrocznych jednostek: przewodnik `STYL_JEDNOSTEK.md` (do oceny autora); zrobione jednostki Hordy i neutralnych są podstawą oceny.
 - [ ] Trening własnego stylu w Scenario (Pro na jeden miesiąc): najpierw 20–25 obrazów treningowych, potem powrót na Starter.
-- [x] Manifest zasobów (`assets.json`): wszystkie grafiki i animacje z promptami i ID zasobów. Spis licencji muzyki: do zrobienia.
+- [x] Manifest zasobów (`assets.json`): wszystkie grafiki i animacje z promptami i ID zasobów. Muzyka wpisana do manifestu (6.11), licencje do uzupełnienia przez autora.
 - [x] Przymierze Świtu i Mroczna Horda (oraz strażnicy neutralni) w nowej grafice (obrazy, ruch, atak, trafienie, śmierć, trup) w trybie cyfrowym: 16 jednostek, szczegóły i braki w `RAPORT_NOCNY_5_11_2026.md`. Braki do uzupełnienia: klip śmierci Ogra, ataku Elfa i Cyklopa, trafienia Wilkołaka i Hydry (w grze zastępuje je drgnięcie i błysk).
 - [ ] Trening własnego stylu w Scenario (Pro): nie robiony, bo wymaga zmiany planu (decyzja autora).
 - [ ] Dźwięk: próbka efektów i muzyki z ElevenLabs (przed zakupem planu), spis licencji obecnej muzyki.
