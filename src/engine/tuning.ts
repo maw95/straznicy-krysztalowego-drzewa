@@ -53,6 +53,10 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   // (the Tree is open on more sides, the roads cross), so they start with treasures (ring: also one more move point and an Eliksir).
   { objective: 'crystals', shape: 'rectangle', rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
   { objective: 'crystals', shape: 'ring', rules: { heroMovePoints: 4, dawnStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  // Islands and hand-made maps: the roads are narrow (a bridge, a gap), so the Przymierza start with treasures and a move point more; in coop they get one treasure more.
+  { objective: 'crystals', shape: 'islands', rules: { heroMovePoints: 4, dawnStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  { objective: 'crystals', shape: 'custom', rules: { heroMovePoints: 4, dawnStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  { objective: 'crystals', shape: 'custom', mode: 'coop', rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 6 } } },
 ];
 
 /** The rules a game is played with: the setup's, plus the digital levers that match it. */

@@ -31,7 +31,7 @@ describe('digital tuning levers', () => {
     for (const t of DIGITAL_TUNING) {
       expect(['crystals', 'control', 'survival', 'boss', 'artifact']).toContain(t.objective);
       // The entries of a map shape apply to every level.
-      if (t.shape) expect(['rectangle', 'ring']).toContain(t.shape);
+      if (t.shape) expect(['rectangle', 'ring', 'islands', 'custom']).toContain(t.shape);
       else expect(['kids', 'normal', 'hard']).toContain(t.level);
       for (const m of t.maps ?? []) expect(['short', 'medium', 'long', 'veryLong']).toContain(m);
     }

@@ -21,7 +21,7 @@ export type Ruleset = 'classic' | 'digital';
  */
 /** What a game is played for: bring the crystals to the Tree (the board game's goal), or hold control points (digital ruleset). */
 /** Shape of the adventure map: the board game's triangle, or (digital ruleset) a rectangle or a ring around a lake. */
-export type MapShape = 'triangle' | 'rectangle' | 'ring';
+export type MapShape = 'triangle' | 'rectangle' | 'ring' | 'islands' | 'custom';
 
 export type ObjectiveId = 'crystals' | 'control' | 'survival' | 'boss' | 'artifact';
 
@@ -118,6 +118,8 @@ export interface SetupOptions {
   mode: Mode;
   /** Shape of the adventure map (digital ruleset): missing = the triangle of the board game. */
   mapShape?: MapShape;
+  /** Shape 'custom': the id of a hand-made map (src/engine/customMaps.ts). */
+  customMapId?: string;
   /** Arena: unused (the map is generated but never shown). */
   mapSize: MapSize;
   battleMode: BattleMode;

@@ -142,10 +142,12 @@ export const SURVIVAL = {
 export const MAP_SHAPES = {
   rectangle: { short: { width: 7, height: 4 }, medium: { width: 9, height: 5 }, long: { width: 13, height: 6 }, veryLong: { width: 15, height: 8 } },
   ring: { short: { radius: 3 }, medium: { radius: 4 }, long: { radius: 5 }, veryLong: { radius: 7 } },
+  /** Islands: three land masses (the Przymierza's, the Tree's, the Horda's) between two channels; `bridges` hexes of each channel are bridges. */
+  islands: { short: { width: 9, height: 5, bridges: 1 }, medium: { width: 11, height: 6, bridges: 2 }, long: { width: 15, height: 7, bridges: 2 }, veryLong: { width: 19, height: 9, bridges: 3 } },
 } as const;
 
 /** The map's round limit is multiplied by this on a shape other than the triangle (the roads are longer, and the limit goes to the Horde). */
-export const SHAPE_ROUND_FACTOR = { triangle: 1, rectangle: 1.25, ring: 1.5 } as const;
+export const SHAPE_ROUND_FACTOR = { triangle: 1, rectangle: 1.25, ring: 1.5, islands: 1.7, custom: 2 } as const;
 
 /**
  * Objective 'boss' (digital ruleset): a guardian (the Hydra or the Cyclops) with `hp` Życie sits in a lair in the middle of the map and is

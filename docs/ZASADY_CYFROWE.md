@@ -150,6 +150,17 @@ Prostokąt: Przymierze zaczyna z 3 losowymi skarbami → 49% (kooperacja) i 51% 
 Cele „Punkty kontrolne” i „Przetrwanie” nie potrzebowały strojenia (kontrola: prostokąt 58%/56%, pierścień 56%/51%, trójkąt 56%/57%; przetrwanie: 61% i 67% wobec 68% w trójkącie).
 Poziomy Łatwy i Trudny dostają te same skarby (nie były strojone osobno).
 
+## Wyspy i mapy ręczne (6.11.2026, wersja cyfrowa)
+
+- **Wyspy** (`mapShape: 'islands'`): trzy lądy obok siebie (Przymierza, Drzewo pośrodku, Horda), między nimi dwie cieśniny wody (pola nieprzejezdne), a w każdej
+  `MAP_SHAPES.islands[...].bridges` mostów w tych samych rzędach po obu stronach, więc obie bazy mają tyle samo dróg do Drzewa. Rzędy mostów losuje generator z ziarna.
+  Most nie dostaje strażnika ani skarbu (zablokowałby drogę). Latania nie ma: bohaterowie na mapie nie latają (skróty przez wodę odłożone).
+- **Mapy ręczne** (`mapShape: 'custom'`, `customMapId`): plik z planem w tekście (`src/engine/customMaps.ts`: `.` ląd, `#` woda lub skała, `=` most, `T` Drzewo, `D` baza Przymierza, `H` baza Hordy;
+  nieparzyste rzędy przesunięte o pół pola jak w prostokącie). Mapa może przyjść z JSON-a (`parseCustomMap`, `registerCustomMap`, z walidacją), więc kampania doda własne.
+  Dołączone: „Cieśnina” (trzy mosty przez każdą cieśninę) i „Dolina” (otwarta, z dwoma grzbietami skał). Rozmiar mapy z ekranu startu wybiera tylko limit rund i liczbę skarbów.
+- Strojenie (`DIGITAL_TUNING`, cel „Kryształy”, 80 gier na wariant, poziom Normalny): bez niego Przymierze wygrywało 12–35% (wąskie drogi, jeden bohater Hordy zamyka most); z 4 punktami ruchu i 4 skarbami na start:
+  wyspy 52% (kooperacja) / 59% (rywalizacja), Cieśnina 42% / 62%, Dolina 33% / 54% (w kooperacji do dalszego strojenia, bo automat Hordy jest agresywny). Limit rund ×1,7 (wyspy) i ×2 (ręczne).
+
 ## Cel „Boss” (6.11.2026, wersja cyfrowa)
 
 W środku mapy (pole środkowego punktu kontrolnego, w każdym kształcie) leży legowisko Bossa: Hydry albo Cyklopa (losowo z ziarna) ze zwiększonym życiem

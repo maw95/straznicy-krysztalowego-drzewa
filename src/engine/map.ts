@@ -3,6 +3,7 @@
 import { GUARDIAN_LAIRS, MAP_SHAPES, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type MapSize, type Terrain, type TileSide } from './data';
 import { distance, key, neighborKeys, parseKey, triToHex, type HexKey } from './hex';
 import { Rng } from './rng';
+import { CUSTOM_MAPS } from './customMaps';
 import type { GameState, MapShape, Tile } from './types';
 
 export function tileCost(t: Tile): number | null {
@@ -158,6 +159,8 @@ interface Layout {
   rows: number;
   tree: HexKey;
   homes: Record<'dawn' | 'horde', HexKey>;
+  /** Hexes whose terrain is fixed by the map ('#' impassable, '=' bridge); the others are drawn from the side's tile pool. */
+  forced?: Record<HexKey, 'wall' | 'bridge'>;
 }
 
 function triangleLayout(size: MapSize): Layout {
@@ -192,7 +195,57 @@ function ringLayout(size: MapSize): Layout {
   return { cells, rows: 2 * R + 1, tree: key({ q: -R, r: 0 }), homes: { dawn: key({ q: R, r: -R }), horde: key({ q: 0, r: R }) } };
 }
 
-const layoutOf = (shape: MapShape, size: MapSize): Layout => (shape === 'rectangle' ? rectangleLayout(size) : shape === 'ring' ? ringLayout(size) : triangleLayout(size));
+/** A map drawn as text (see customMaps.ts): rows of pointy-topped hexes, odd rows shifted half a hex to the right. */
+function gridLayout(rows: string[]): Layout {
+  const cells: Layout['cells'] = [];
+  const forced: Record<HexKey, 'wall' | 'bridge'> = {};
+  const found: Record<string, HexKey> = {};
+  rows.forEach((line, row) => {
+    for (let col = 0; col < line.length; col++) {
+      const ch = line[col];
+      if (ch === ' ') continue;
+      const hex = { q: col - Math.floor(row / 2), r: row };
+      cells.push({ row, col, hex });
+      if (ch === '#') forced[key(hex)] = 'wall';
+      else if (ch === '=') forced[key(hex)] = 'bridge';
+      else if (ch === 'T' || ch === 'D' || ch === 'H') found[ch] = key(hex);
+    }
+  });
+  return { cells, rows: rows.length, tree: found.T, homes: { dawn: found.D, horde: found.H }, forced };
+}
+
+/**
+ * Three islands side by side (the Przymierza's, the Tree's in the middle, the Horda's) with a channel of water between them; a few hexes of each
+ * channel (the same rows in both) are bridges, so both bases have the same roads to the Tree. The rows of the bridges come from the generator.
+ */
+function islandsLayout(size: MapSize, rng: Rng): Layout {
+  const { width, height, bridges } = MAP_SHAPES.islands[size];
+  const channel = Math.round(width / 4);
+  const bridgeRows = new Set(rng.shuffle([...Array(height).keys()]).slice(0, bridges));
+  const rows: string[] = [];
+  const mid = Math.floor(height / 2);
+  for (let r = 0; r < height; r++) {
+    let line = '';
+    for (let c = 0; c < width; c++) {
+      if (c === channel - 1 || c === width - channel) line += bridgeRows.has(r) ? '=' : '#';
+      else if (r === mid && c === 0) line += 'D';
+      else if (r === mid && c === width - 1) line += 'H';
+      else if (r === mid && c === Math.floor(width / 2)) line += 'T';
+      else line += '.';
+    }
+    rows.push(line);
+  }
+  return gridLayout(rows);
+}
+
+function customLayout(id: string | undefined): Layout {
+  const map = CUSTOM_MAPS[id ?? ''];
+  if (!map) throw new Error(`Nie ma takiej mapy: ${id}.`);
+  return gridLayout(map.rows);
+}
+
+const layoutOf = (shape: MapShape, size: MapSize, rng: Rng, customMapId?: string): Layout =>
+  shape === 'rectangle' ? rectangleLayout(size) : shape === 'ring' ? ringLayout(size) : shape === 'islands' ? islandsLayout(size, rng) : shape === 'custom' ? customLayout(customMapId) : triangleLayout(size);
 
 /**
  * Left half of the triangle is Przymierze land, right half Horda land. Rows with an odd
@@ -211,8 +264,8 @@ function setTerrain(tile: Tile, terrain: Terrain, rng: Rng) {
   tile.variant = 1 + rng.int(TERRAIN_VARIANTS[terrain]);
 }
 
-export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crystalCount: number, shape: MapShape = 'triangle'): GeneratedMap {
-  const layout = layoutOf(shape, size);
+export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crystalCount: number, shape: MapShape = 'triangle', customMapId?: string): GeneratedMap {
+  const layout = layoutOf(shape, size, rng, customMapId);
   const { rows } = layout;
   const sideAt = (row: number, col: number, hex: { q: number; r: number }): TileSide => {
     if (shape === 'triangle') return sideOf(row, col);
@@ -227,6 +280,8 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
       const side = sideAt(row, col, hex);
       const tile: Tile = { key: k, row, col, terrain: 'meadow', side, variant: 1, revealed: false, crystalId: null, treasureId: null, home: null, tree: false };
       setTerrain(tile, rng.pick(TILE_POOLS[side]), rng);
+      const fixed = layout.forced?.[k];
+      if (fixed) setTerrain(tile, fixed === 'bridge' ? 'bridge' : side === 'dawn' ? 'chasm' : 'deadThicket', rng);
       tiles[k] = tile;
     }
     const tree = layout.tree;
@@ -242,7 +297,7 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
     tiles[horde].side = 'horde';
     // Starting neighbourhoods stay passable so nobody is walled in on turn one.
     for (const base of [dawn, horde]) {
-      for (const n of mapNeighbors(tiles, base)) if (tileCost(tiles[n]) === null) setTerrain(tiles[n], tiles[n].side === 'dawn' ? 'meadow' : 'scorched', rng);
+      for (const n of mapNeighbors(tiles, base)) if (tileCost(tiles[n]) === null && !layout.forced?.[n]) setTerrain(tiles[n], tiles[n].side === 'dawn' ? 'meadow' : 'scorched', rng);
     }
 
     const reach = reachableFrom(tiles, dawn);
@@ -250,7 +305,8 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
 
     // Guardians: Cyclops and Hydra live on Horda land, the Griffin on Przymierze land.
     const guardians = rng.shuffle(Object.keys(GUARDIAN_LAIRS)).slice(0, crystalCount);
-    const reserved = new Set<HexKey>([tree, dawn, horde, ...mapNeighbors(tiles, dawn), ...mapNeighbors(tiles, horde)]);
+    // Bridges stay bridges (a guardian or a treasure there would also block the road).
+    const reserved = new Set<HexKey>([tree, dawn, horde, ...mapNeighbors(tiles, dawn), ...mapNeighbors(tiles, horde), ...Object.keys(layout.forced ?? {})]);
     const crystals: Array<{ hex: HexKey; guardian: string }> = [];
     for (const g of guardians) {
       const lair = GUARDIAN_LAIRS[g];

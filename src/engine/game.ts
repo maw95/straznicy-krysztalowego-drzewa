@@ -73,7 +73,7 @@ export function createGame(setup: SetupOptions): GameState {
     ? rng.shuffle([...Array(variant.resurrections).fill('resurrection'), ...others])
     : Array(variant.onlyResurrections).fill('resurrection');
   const crystals = crystalsFor(setup);
-  const map = generateMap(setup.mapSize, rng, pool.length, crystals, isDigital(rules) ? setup.mapShape : undefined);
+  const map = generateMap(setup.mapSize, rng, pool.length, crystals, isDigital(rules) ? setup.mapShape : undefined, setup.customMapId);
   const digital = isDigital(rules);
 
   const state: GameState = {
