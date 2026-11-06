@@ -161,4 +161,14 @@ Sesja autonomiczna 6.11.2026. Każda pozycja: co wybrałem, dlaczego, gdzie to z
 - **Artefakt:** zrobiony jako wyścig w obie strony (kto pierwszy zaniesie do swojej bazy). Wariant „eskorta” (Przymierze niesie Artefakt z bazy do Drzewa, Horda tylko poluje) pominąłem jako mało różny od wyścigu przy tych samych botach; do rozważenia po opinii z gry.
 - **Rozwój bohatera:** progi PD, liczby PD, pula 6 umiejętności i ich siła (`growth.ts`) to moje pierwsze strzały; umiejętności nie mają jeszcze ikon ani kart. Rozwój zostaje domyślnie wyłączony do czasu presetów (6.4).
 - **Obiekty mapy i artefakty:** medale zamiast grafiki (potrzebne ilustracje kapliczki, obozu, skrzyni oraz ikony 6 artefaktów); liczby artefaktów i liczba obiektów to pierwsze strzały.
+- **Tryb rodzinny:** pomoc dla dziecka (+2 Ż w bitwie, +1 ruch) i podpowiedź z bota to pierwsze strzały; wartości w `FAMILY` (`data.ts`). Test z prawdziwymi rodzinami zostaje po Twojej stronie.
 - **Serwer:** nowe pola ustawień (`mapShape`) i nowe cele (`survival`, `boss`) wymagają wdrożenia backendu z nowym pakietem silnika przed wydaniem gry.
+
+### Czeka na autora (nie da się zrobić bez Ciebie)
+
+- **Dźwięk (6.5):** ElevenLabs wymaga zalogowania (autoryzacja złącza MCP) i decyzji o planie; po zalogowaniu zrobię próbkę efektów i muzyki.
+- **Muzyka:** źródła i licencje 10 utworów w `assets.json` (pola „DO USTALENIA PRZEZ AUTORA”).
+- **Model stylu w Scenario:** trening się skończył; sprawdzić próbką (jedna jednostka nowej frakcji) i zdecydować, czy ruszają nowe frakcje po premierze (nie generowałem nic, żeby nie wydawać kredytów bez zgody).
+- **Grafika:** klipy z listy braków, ilustracje obiektów mapy (kapliczka, obóz, skrzynia), ikony artefaktów, własny Boss.
+- **Premiera na Steamie (6.6):** potwierdzenie zakresu, strona sklepu, osiągnięcia, opakowanie komputerowe; test z parami rodzic + dziecko.
+- **Wdrożenie serwera:** przed wydaniem backend musi dostać nowy pakiet silnika (nowe pola `mapShape`, `customMapId`, `child`, nowe akcje `chooseSkill`, cele `survival`/`boss`/`artifact`).
