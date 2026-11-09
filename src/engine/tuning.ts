@@ -5,6 +5,7 @@
 import { levelOf } from './scoring';
 import { isDigital, type MapShape, type RulesConfig, type SetupOptions } from './types';
 import type { MapSize } from './data';
+import { AUTO_TUNING } from './tuningAuto';
 
 export interface DigitalTune {
   /** Where it applies; a missing field matches everything. */
@@ -81,6 +82,10 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   { objective: 'crystals', shape: 'islands', rules: { heroMovePoints: 4, dawnStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
   { objective: 'crystals', shape: 'custom', rules: { heroMovePoints: 4, dawnStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
   { objective: 'crystals', shape: 'custom', mode: 'coop', rules: { dawnStartTreasures: { resurrections: 1, others: 0, random: 9 } } },
+  // Generated entries (scripts/sim/tune.ts), last: they win over everything above on the triangle map.
+  ...AUTO_TUNING,
+  // Hand fixes of cells the tuner could not settle (it gave up on them): artifact, Hard, one player, medium map, without hero growth.
+  { objective: 'artifact', level: 'hard', mode: 'coop', players: 1, maps: ['medium'], growth: false, shape: 'triangle', rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 0 } } },
 ];
 
 /** The rules a game is played with: the setup's, plus the digital levers that match it. */

@@ -244,6 +244,15 @@ Zmiana z 9.11.2026: w przetrwaniu nie ma kryształów ani Drzewa. Strażnicy zos
 Pasek na dole pokazuje przetrwane rundy zamiast kryształów. Po zmianie przestrojono Łatwy i dwóch graczy (wpisy `objective: 'survival'` w `tuning.ts`): Łatwy 1 gracz bez zastępowania
 bohatera na krótkiej mapie, Łatwy 2 graczy bez zastępowania (z rozwojem z nim), skarby Hordy dla Normalnego i Trudnego 2 graczy. Poza pasmem zostaje Łatwy z rozwojem na długich mapach (ok. 53–63%).
 
+## Strojenie automatyczne i nowe pasma (9.11.2026)
+
+Pasma wygranych Przymierza (autor, 9.11.2026; zastępują wcześniejsze 70–90 / 45–65 / 30–50): **Łatwy 60–80%, Normalny 40–60%, Trudny 30–45%**.
+Zamiast ręcznego dobierania liczb działa stroiciel `scripts/sim/tuneLevels.ts` (`node --import tsx scripts/sim/tuneLevels.ts <cel> <rozwój 0|1> [gier] [rund]`, ok. 30–60 s na cel i ustawienie rozwoju):
+dla każdej komórki (rozmiar mapy × stół × poziom) szuka najmniejszej zmiany dźwigni (losowe skarby startowe Hordy i Przymierza, w trudnym poziomie dodatkowy bohater Hordy), która wprowadza wynik w pasmo z marginesem 3 punktów.
+`scripts/sim/tuneMerge.ts` zbiera wyniki do wygenerowanego `src/engine/tuningAuto.ts` (222 wpisy dla mapy-trójkąta, cele: Kryształy, Punkty kontrolne, Przetrwanie, Boss, Artefakt, z rozwojem i bez), który `DIGITAL_TUNING` dokleja na końcu.
+Weryfikacja na 300 grach (`make sim-tabele` z `SIM_DIGITAL=1 SIM_OBJECTIVE=<cel>`, z `SIM_GROWTH=1` i bez): z 400 komórek poza pasmem zostało 16, w większości o 1–4 punkty (szum). Wyraźnie poza: Boss, Trudny, 1 gracz, mapa krótka (55–58% przy paśmie do 45%: żadna z dźwigni tego nie rusza, bo bohater dochodzi do Bossa wcześniej, niż skarby Hordy mają znaczenie) i Artefakt, Trudny, 1 gracz, mapa średnia (poprawione ręcznie).
+Kształty map inne niż trójkąt zachowują dawne strojenie (tabela celów × kształtów w `make sim-cele` jest do przeliczenia z nowymi pasmami).
+
 ## Strojenie przygody w wersji cyfrowej (5.11.2026)
 
 Cel autora: wygrane Przymierza **Łatwy 70–90%, Normalny 45–65%, Trudny 30–50%** (boty, bez areny) w obu celach. Dźwignie są tylko w wersji cyfrowej:
