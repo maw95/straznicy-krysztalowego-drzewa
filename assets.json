@@ -1882,8 +1882,7 @@
         "public/assets/dzwieki/treasure_found.mp3",
         "public/assets/dzwieki/level_up.mp3",
         "public/assets/dzwieki/victory.mp3",
-        "public/assets/dzwieki/defeat.mp3",
-        "public/assets/dzwieki/sword_hit_b.mp3"
+        "public/assets/dzwieki/defeat.mp3"
       ],
       "typ": "dźwięk (efekt)",
       "narzedzie": "Scenario (plan płatny)",
@@ -1897,8 +1896,7 @@
         "treasure_found": "asset_GY4ogTawM3UcnkuxeaH5ugud",
         "level_up": "asset_MgxJrsnBGscU2AnnfGeDjWhx",
         "victory": "asset_Qm62wtEKdq8RaPsUbEqBAW1h",
-        "defeat": "asset_HPZfsvcVdfXXstspY9XxdHU6",
-        "sword_hit_b": "asset_vLKQJqqPXNhGQiNcdYpqxdKH"
+        "defeat": "asset_HPZfsvcVdfXXstspY9XxdHU6"
       },
       "prompt": {
         "sword_hit": "Fast sword swing whoosh followed by a heavy steel blade scraping and clanging against plate armour, loud sharp metallic impact with short ring, realistic sword fight foley, no music, no voices (1 s, promptInfluence 0.7)",
@@ -1909,13 +1907,12 @@
         "treasure_found": "Old wooden treasure chest lid creaking open slowly, a few gold coins and jewels clinking softly, gentle airy magical shimmer, natural organic foley, no synth, no musical notes, no voices (2 s, promptInfluence 0.5)",
         "level_up": "Uplifting short level up chime, rising bright bell and harp arpeggio with sparkle, fantasy game sound effect, no voices, no drums (1.5 s)",
         "victory": "Short triumphant orchestral victory fanfare, heroic warm brass and soaring strings, timpani, rising to a bright glorious climax with a clear final chord, medieval fantasy, instrumental (9 s; model ElevenLabs Music v2.5, stereo, fade-out 400 ms)",
-        "defeat": "Somber dramatic orchestral defeat piece, low strings and a slow descending horn motif, dark mournful tone, slow tempo, heavy and sorrowful, ending with a long fading final note, dark fantasy, instrumental (9 s; model ElevenLabs Music v2.5, stereo, fade-out 400 ms)",
-        "sword_hit_b": "Two steel swords clashing hard, sharp bright metallic clang with scraping slide and short ringing, close-up, realistic medieval battle foley, no music, no voices (1 s, promptInfluence 0.7); wariant do wyboru"
+        "defeat": "Somber dramatic orchestral defeat piece, low strings and a slow descending horn motif, dark mournful tone, slow tempo, heavy and sorrowful, ending with a long fading final note, dark fantasy, instrumental (9 s; model ElevenLabs Music v2.5, stereo, fade-out 400 ms)"
       },
       "data": "2026-11-09",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
-      "uwagi": "po odsłuchu autora: usunięto unit_death i muzykę mapy; poprawione sword_hit, footstep_walk, treasure_found, victory, defeat; pierwsze wersje tych plików zastąpione (ich asset id nie są już używane)"
+      "uwagi": "po odsłuchu autora: usunięto unit_death i muzykę mapy; poprawione sword_hit, footstep_walk, treasure_found, victory, defeat; pierwsze wersje tych plików zastąpione (ich asset id nie są już używane) 9.11: wybrany sword_hit (bez wariantu b); victory z dłuższym, łagodniejszym wyciszeniem (ffmpeg afade 2,7 s); footstep_walk obrobiony do płynnej pętli (crossfade końca z początkiem 0,3 s)."
     }
   ]
 }
