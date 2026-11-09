@@ -663,3 +663,16 @@ describe('arena through the UI', () => {
     expect(covers).toEqual([true, true, false, true]);
   });
 });
+
+describe('tutorial follows the objective', () => {
+  it('the welcome tip of a survival game does not send the player to the Tree', async () => {
+    localStorage.removeItem('skd-tutorial');
+    window.history.replaceState(null, '', '/?steps=1&objective=survival&mode=coop');
+    const { container, unmount } = render(<App />);
+    const dialog = container.ownerDocument.querySelector('[role="dialog"][aria-label="Witaj w Krainie Kryształowego Drzewa"]');
+    expect(dialog?.textContent).toContain('przetrwać');
+    expect(dialog?.textContent).not.toContain('zanieść do Drzewa');
+    unmount();
+    window.history.replaceState(null, '', '/');
+  });
+});

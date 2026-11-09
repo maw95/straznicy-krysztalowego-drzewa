@@ -2,20 +2,38 @@
 // first comes up. Progress is remembered in the browser; it can be switched off in setup.
 
 import { useEffect, useState } from 'react';
+import { controlRoundsToWin, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import type { GameState } from '../engine/types';
 
 interface Tip {
   id: string;
   title: string;
-  text: string;
+  /** The tip's text; a function when it depends on the game (the objective). */
+  text: string | ((s: GameState) => string);
   when: (s: GameState) => boolean;
+}
+
+/** The first tip: what this game is played for (the objective chosen in the setup). */
+function welcomeText(s: GameState): string {
+  switch (objectiveOf(s)) {
+    case 'control':
+      return `Twoim celem są punkty kontrolne: flagi na mapie. Stań bohaterem na punkcie i utrzymaj więcej punktów niż Horda przez ${controlRoundsToWin(s, 'dawn')} rundy z rzędu. Środkowy punkt jest wart 2, boczne po 1.`;
+    case 'survival':
+      return `Twoim celem jest przetrwać ${s.survival?.rounds ?? ''} rund. Co dwie rundy w bazie Hordy pojawia się kolejny bohater, więc trzymajcie się razem. Kryształów i Drzewa tu nie ma: liczy się, czy choć jeden bohater Przymierza dożyje końca.`;
+    case 'boss':
+      return `Twoim celem jest Boss: ${OBJECTIVES.boss.summary}`;
+    case 'artifact':
+      return `Twoim celem jest Artefakt: ${OBJECTIVES.artifact.summary}`;
+    default:
+      return 'Twoim celem jest odnaleźć kryształy, odebrać je strażnikom i zanieść do Drzewa na szczycie mapy, zanim minie limit rund.';
+  }
 }
 
 const TIPS: Tip[] = [
   {
     id: 'welcome',
     title: 'Witaj w Krainie Kryształowego Drzewa',
-    text: 'Twoim celem jest odnaleźć kryształy, odebrać je strażnikom i zanieść do Drzewa na szczycie mapy, zanim minie limit rund.',
+    text: welcomeText,
     when: (s) => s.phase === 'adventure',
   },
   {
@@ -33,7 +51,10 @@ const TIPS: Tip[] = [
   {
     id: 'guardian',
     title: 'Strażnik kryształu',
-    text: 'Widzisz kryształ pod strażą? Wejście na jego pole rozpocznie walkę. Strażnik jest silny — dobrze mieć pełną drużynę pomocników.',
+    text: (s) =>
+      objectiveOf(s) === 'survival'
+        ? 'Widzisz strażnika? Wejście na jego pole rozpocznie walkę. Strażnik jest silny — dobrze mieć pełną drużynę pomocników — ale pokonany zostawia skarb. Kryształów tu nie ma.'
+        : 'Widzisz kryształ pod strażą? Wejście na jego pole rozpocznie walkę. Strażnik jest silny — dobrze mieć pełną drużynę pomocników.',
     when: (s) => s.phase === 'adventure' && Object.values(s.crystals).some((c) => c.guardian && s.tiles[c.at]?.revealed),
   },
   {
@@ -64,7 +85,7 @@ const TIPS: Tip[] = [
     id: 'crystal',
     title: 'Masz kryształ!',
     text: 'Zanieś go na pole Drzewa na szczycie mapy. Jeśli zginiesz, kryształ upadnie na pole bitwy.',
-    when: (s) => s.phase === 'adventure' && Object.values(s.heroes).some((h) => h.crystals.length > 0),
+    when: (s) => s.phase === 'adventure' && objectiveOf(s) === 'crystals' && Object.values(s.heroes).some((h) => h.crystals.length > 0),
   },
 ];
 
@@ -108,7 +129,7 @@ export function Tutorial({ state, active }: { state: GameState; active: boolean 
       style={{ position: 'fixed', left: '50%', bottom: 110, transform: 'translateX(-50%)', zIndex: 45, width: 'min(520px, 92vw)', padding: '12px 16px', animation: 'pop-in 0.3s ease-out both', boxShadow: '0 0 0 2px #9EE4FF, 0 12px 30px rgba(0,0,0,0.6)' }}
     >
       <div style={{ fontWeight: 800, fontSize: 19, marginBottom: 4 }}>{tip.title}</div>
-      <div style={{ fontSize: 16, lineHeight: 1.35 }}>{tip.text}</div>
+      <div style={{ fontSize: 16, lineHeight: 1.35 }}>{typeof tip.text === 'function' ? tip.text(state) : tip.text}</div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
         <button className="btn" style={{ background: 'none', border: 0, color: '#6B5233', fontSize: 14, textDecoration: 'underline', padding: 0 }} onClick={() => setStore({ enabled: false, seen: store.seen })}>
           Wyłącz samouczek
