@@ -208,3 +208,16 @@ Wcześniejsze zgłoszenia z tego dnia (rano) są w sekcji 8; zgłoszenie z 28.10
 - [x] **9.3. Martwy Wilkołak leży na 3 heksach i za wysoko.** Powinien zajmować 2 pola i leżeć niżej (rozmiar/pozycja klipu śmierci w `sprites.ts`, kotwica dla jednostek dużych).
 - [ ] **9.4. Figurki 2D (do oceny autora, grafika):** Szaman Goblinów powinien być niski (gobliny są niskie); Nietoperz większy i groźniejszy; pozycja spoczynku Nietoperza wygląda jak lot — **decyzja autora 9.11: ma siedzieć** (potrzebna poza siedząca, grafika/klip).
 - [x] **9.5. Zwycięstwo Hordy: dwa dźwięki naraz.** Po wygranej Hordy gra odpala nowy efekt „victory” i jednocześnie starą muzykę `horde-victory-the-fallen` (motyw `hordeVictory` w `music.ts`). Ma grać tylko efekt zwycięstwa (zgłoszenie autora 9.11, po południu). Sprawdzić też zwycięstwo Przymierza (`dawnVictory`) i porażkę.
+
+## 10. Decyzje czekające na autora (stan 9.11.2026)
+
+Osiem rzeczy, bez których nie ruszę dalej reszty backlogu. Kiedy autor zdecyduje, odpowiedź wpisać tu i odhaczyć.
+
+- [ ] **10.1. Muzyka, licencje.** 10 utworów w `assets.json` ma pola „DO USTALENIA PRZEZ AUTORA” (źródło, narzędzie, licencja). Bez tego nie wydawać na Steamie. (Patrz 6.1, sekcja 7.)
+- [ ] **10.2. Nowe frakcje po premierze.** Model stylu w Scenario jest wytrenowany. Czy generować próbkę jednej jednostki nowej frakcji (zużywa kredyty)? Od tego zależy 6.7.3.
+- [ ] **10.3. Zakres premiery (6.6).** Czy zostajemy przy poziomach 1–2 (Przygoda i Wyprawa, hotseat, tryb rodzinny)?
+- [ ] **10.4. Grafiki do zrobienia w Scenario.** Ilustracje kapliczki, obozu i skrzyni na mapie, własny Boss, klipy z listy braków (zryw Pegaza, Jednorożca i Gryfa; atak Elfa i Cyklopa), poza siedząca Nietoperza (9.4). Które i w jakiej kolejności?
+- [ ] **10.5. Strojenie Kryształów, 1 gracz w kooperacji** (Normalny 21–42%). Potrzebna nowa dźwignia: liczba strażników, liczba kryształów, czy zostawić.
+- [ ] **10.6. Przetrwanie dla 2 graczy** (76–85% wygranych). Zmniejszyć liczbę rund czy wzmocnić falę Hordy (`SURVIVAL` w `data.ts`)?
+- [ ] **10.7. Boss.** Wariant „wszyscy przeciw Bossowi” bez Hordy i własna grafika Bossa: robić teraz czy po premierze?
+- [ ] **10.8. Wiadomość od autora na pierwszej stronie instrukcji (5.3).** Pisze autor sam.
