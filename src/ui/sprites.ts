@@ -74,12 +74,17 @@ export interface SpriteSet {
   sheets: Record<string, HTMLImageElement>;
   stoi: HTMLImageElement;
   martwy: HTMLImageElement;
+  /** How the fallen unit is drawn: scale (a small unit's corpse may span at most CORPSE_MAX_W canvas pixels) and the shift that puts its lowest point on the feet line, in canvas pixels. */
+  corpse: { scale: number; dy: number };
 }
+
+/** Widest a one-hex unit's corpse may be drawn (canvas pixels): it must fit on two hexes. */
+const CORPSE_MAX_W = 100;
 
 const cache = new Map<string, Promise<SpriteSet>>();
 
 /** Size in pixels of the visible part (alpha above a threshold, ignoring specks) of a picture, or null when the browser cannot tell. */
-function measureBody(im: HTMLImageElement): { w: number; h: number } | null {
+function measureBody(im: HTMLImageElement): { w: number; h: number; x0: number; x1: number; y1: number } | null {
   try {
     const c = document.createElement('canvas');
     c.width = im.width;
@@ -94,7 +99,7 @@ function measureBody(im: HTMLImageElement): { w: number; h: number } | null {
     for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) if (d[(y * c.width + x) * 4 + 3] > 40) (colHits[x]++, rowHits[y]++);
     for (let x = 0; x < c.width; x++) if (colHits[x] > 2) (x0 = Math.min(x0, x), (x1 = Math.max(x1, x)));
     for (let y = 0; y < c.height; y++) if (rowHits[y] > 2) (y0 = Math.min(y0, y), (y1 = Math.max(y1, y)));
-    return x1 < 0 ? null : { w: x1 - x0 + 1, h: y1 - y0 + 1 };
+    return x1 < 0 ? null : { w: x1 - x0 + 1, h: y1 - y0 + 1, x0, x1, y1 };
   } catch {
     return null;
   }
@@ -121,10 +126,18 @@ export function loadSprites(defId: string): Promise<SpriteSet> {
       const body = measureBody(stoi);
       const box = spec.box ?? SMALL;
       const width = spec.width ?? (body ? meta.frame[0] * Math.min(box[0] / body.w, box[1] / body.h) : (box[0] / (meta.body ?? 0.55)));
+      const feet = meta.feet ?? spec.feet ?? 0.85;
+      const lying = measureBody(martwy);
+      const small = !spec.width && (spec.box ?? SMALL) === SMALL;
+      const lyingW = lying ? (lying.w / meta.frame[0]) * width : 0;
+      const scale = small && lyingW > CORPSE_MAX_W ? CORPSE_MAX_W / lyingW : 1;
+      const dh = (width * meta.frame[1]) / meta.frame[0];
+      // The lowest point of the corpse lies on the feet line (a little below it, as the hexes' centres are), whatever the picture's margins.
+      const dy = lying ? 2 - scale * (lying.y1 / meta.frame[1] - feet) * dh : 0;
       return {
         spec,
         width,
-        feet: meta.feet ?? spec.feet ?? 0.85,
+        feet,
         cx: meta.cx ?? 0.5,
         body: meta.body ?? 0.55,
         moveClip: meta.clips.lot ? 'lot' : meta.clips.chod ? 'chod' : null,
@@ -136,6 +149,7 @@ export function loadSprites(defId: string): Promise<SpriteSet> {
         sheets: Object.fromEntries(names.map((n, i) => [n, sheets[i]])),
         stoi,
         martwy,
+        corpse: { scale, dy },
       } satisfies SpriteSet;
     })();
     p.catch(() => cache.delete(defId));

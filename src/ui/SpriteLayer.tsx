@@ -296,9 +296,14 @@ class Stage {
       x += Math.sin(since / 22) * 4 * (1 - since / HIT_MS);
       ctx.filter = `brightness(${1 + 1.2 * (1 - since / HIT_MS)})`;
     }
-    ctx.translate(x, 0);
-    ctx.scale((l.flip ? -1 : 1) * turn, 1);
-    ctx.drawImage(img, sx, sy, sw, sh, -set.cx * dw, gy - set.feet * dh, dw, dh);
+    // The fallen unit is drawn smaller and lower than the standing one (set.corpse); the death clip eases into that pose, standing up eases out of it.
+    let lie = l.rest === 'corpse' && !seg ? 1 : 0;
+    if (seg?.kind === 'clip' && seg.clip === 'smierc') lie = seg.reverse ? 1 - Math.min(1, (now - l.segStart) / seg.ms) : Math.min(1, (now - l.segStart) / seg.ms);
+    const k = 1 + (set.corpse.scale - 1) * lie;
+    ctx.translate(x, gy);
+    ctx.scale((l.flip ? -1 : 1) * turn * k, k);
+    ctx.translate(0, (set.corpse.dy * lie) / k);
+    ctx.drawImage(img, sx, sy, sw, sh, -set.cx * dw, -set.feet * dh, dw, dh);
     ctx.restore();
   }
 
