@@ -616,6 +616,8 @@ export function App() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 17 }}>
         {game.control ? (
           <>Punkty <b style={{ color: '#F3D27A' }}>{controlCounts(game).dawn}</b>:<b style={{ color: '#F08A7A' }}>{controlCounts(game).horde}</b></>
+        ) : game.survival ? (
+          <>Przetrwane rundy <b style={{ color: '#F3D27A' }}>{Math.min(game.round - 1, game.survival.rounds)}/{game.survival.rounds}</b></>
         ) : (
           <><img src={asset('ui/ico_krysztal.png')} alt="" style={{ width: 'min(32px, 94vw)' }} /> Kryształy <b style={{ color: '#F3D27A' }}>{game.factions.dawn.delivered}/{game.crystalsNeeded}</b></>
         )}
@@ -849,7 +851,7 @@ function GameOver({ state, online, rankingNote, onNew, onLog }: { state: GameSta
           <span>Polegli bohaterowie Świtu / Hordy</span><b>{s.heroDeaths.dawn} / {s.heroDeaths.horde}</b>
           <span>Polegli pomocnicy Świtu / Hordy</span><b>{s.supportDeaths.dawn} / {s.supportDeaths.horde}</b>
           <span>Znalezione skarby Świtu / Hordy</span><b>{s.treasuresCollected.dawn} / {s.treasuresCollected.horde}</b>
-          {state.control ? <><span>Punkty kontrolne (Świt / Horda)</span><b>{controlCounts(state).dawn} / {controlCounts(state).horde}</b></> : <><span>Kryształy przy Drzewie</span><b>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b></>}
+          {state.control ? <><span>Punkty kontrolne (Świt / Horda)</span><b>{controlCounts(state).dawn} / {controlCounts(state).horde}</b></> : state.survival ? <><span>Fale Hordy</span><b>{state.survival.waves}</b></> : <><span>Kryształy przy Drzewie</span><b>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b></>}
         </div>
         )}
         {rankingNote && <div style={{ fontSize: 17, color: '#F3D27A' }}>{rankingNote}</div>}

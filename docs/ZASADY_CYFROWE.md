@@ -239,6 +239,11 @@ Roboty: Horda szuka najbliższego bohatera Przymierza; Przymierze uderza sąsiad
 Symulacja (`SIM_OBJECTIVE=survival SIM_DIGITAL=1`, 100 gier, Normalny): 1 gracz 47–72% wygranych Przymierza, 2 graczy 76–85%; Trudny 37–52% i 53–67% (60 gier).
 Dla 2 graczy cel jest łatwiejszy (dwóch bohaterów wzajemnie się wspiera, a limit fal rośnie o 1 na bohatera); do ewentualnego dostrojenia przy tabelach balansu (6.2.6).
 
+Zmiana z 9.11.2026: w przetrwaniu nie ma kryształów ani Drzewa. Strażnicy zostają (walka, skarb, doświadczenie), ale pokonany nic nie zostawia i nie rysuje się przy nim kryształ
+(`Crystal.decoy`). Kafelek Drzewa to zwykłe, przechodnie pole (losowy teren bez mostu); Przymierze nadal zbiera się na środku mapy, więc zachowanie botów jest to samo.
+Pasek na dole pokazuje przetrwane rundy zamiast kryształów. Po zmianie przestrojono Łatwy i dwóch graczy (wpisy `objective: 'survival'` w `tuning.ts`): Łatwy 1 gracz bez zastępowania
+bohatera na krótkiej mapie, Łatwy 2 graczy bez zastępowania (z rozwojem z nim), skarby Hordy dla Normalnego i Trudnego 2 graczy. Poza pasmem zostaje Łatwy z rozwojem na długich mapach (ok. 53–63%).
+
 ## Strojenie przygody w wersji cyfrowej (5.11.2026)
 
 Cel autora: wygrane Przymierza **Łatwy 70–90%, Normalny 45–65%, Trudny 30–50%** (boty, bez areny) w obu celach. Dźwignie są tylko w wersji cyfrowej:

@@ -53,6 +53,15 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   { objective: 'control', level: 'normal', mode: 'pvp', players: 1, maps: ['short', 'medium'], rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
   { objective: 'control', level: 'normal', mode: 'pvp', players: 2, maps: ['long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
   { objective: 'control', level: 'normal', mode: 'pvp', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  // --- Goal 'survival' (coop only): Easy plays board duels with a replacement hero, which made it nearly unlosable; two players made Normal too easy.
+  { objective: 'survival', level: 'kids', mode: 'coop', players: 1, maps: ['short'], rules: { heroReplacement: false, dawnStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  { objective: 'survival', level: 'kids', mode: 'coop', players: 1, maps: ['medium', 'long', 'veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  { growth: true, objective: 'survival', level: 'kids', mode: 'coop', players: 1, maps: ['medium', 'long', 'veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 0 }, dawnStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  { objective: 'survival', level: 'kids', mode: 'coop', players: 2, rules: { heroReplacement: false } },
+  { growth: true, objective: 'survival', level: 'kids', mode: 'coop', players: 2, rules: { heroReplacement: true } },
+  { objective: 'survival', level: 'normal', mode: 'coop', players: 2, rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  { objective: 'survival', level: 'hard', mode: 'coop', players: 2, rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  { objective: 'survival', level: 'hard', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
   // --- Goal 'artifact': the Przymierza move first and reach the middle first, which tells on long maps.
   { objective: 'artifact', level: 'normal', maps: ['long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
   { objective: 'artifact', level: 'normal', maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },

@@ -130,6 +130,17 @@ describe('objective control (digital ruleset)', () => {
 describe('objective survival (digital ruleset, coop)', () => {
   const survival = (over: Parameters<typeof setup>[0] = {}) => createGame(setup({ mode: 'coop', ...over }, { ruleset: 'digital', objective: 'survival' }));
 
+  it('has no Tree tile and the guardians keep no crystals: a beaten guardian leaves nothing to carry', () => {
+    const s = survival();
+    const tree = s.tiles[treeKey()];
+    expect(tree.terrain).not.toBe('tree');
+    expect(tree.tree).toBe(false);
+    expect(tileCost(tree)).not.toBeNull();
+    const all = Object.values(s.crystals);
+    expect(all.length).toBeGreaterThan(0);
+    expect(all.every((c) => c.decoy)).toBe(true);
+  });
+
   it('is only played in the digital ruleset, with the rounds to hold out set by the map', () => {
     expect(objectiveOf(createGame(setup({}, { objective: 'survival' })))).toBe('crystals');
     const s = survival({ mapSize: 'short' });

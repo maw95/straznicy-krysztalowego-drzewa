@@ -3,7 +3,7 @@
 // progress for the screen. 'crystals' is the board game's goal (carry the crystals to the Tree, the Horde's ritual); the
 // others belong to the digital ruleset. Result of a game under 'crystals' must never change (tests/golden.test.ts).
 
-import { BOSS, CONTROL, FACTION_NAMES, SURVIVAL, UNITS, type FactionId } from './data';
+import { BOSS, CONTROL, FACTION_NAMES, SURVIVAL, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, UNITS, type FactionId, type Terrain } from './data';
 import { finish, heroesAt, ritualFormed, spawnHordeHero } from './game';
 import { distance, key, parseKey, triToHex, type HexKey } from './hex';
 import { log } from './log';
@@ -288,6 +288,15 @@ const survival: Objective = {
   summary: 'Fale Hordy: co dwie rundy w bazie Hordy pojawia się kolejny bohater. Przymierze wygrywa, gdy przetrwa wyznaczoną liczbę rund, Horda, gdy polegną wszyscy jego bohaterowie.',
   init(state) {
     state.survival = { rounds: SURVIVAL.rounds[state.setup.mapSize], waves: 0 };
+    // Nobody carries crystals to the Tree here: the guardians stay (a fight, a treasure, experience) but keep nothing.
+    for (const c of Object.values(state.crystals)) c.decoy = true;
+    // The Tree's hex becomes an ordinary one (the Przymierze still gather there: treeOf stays the middle of the map).
+    const rng = new Rng((state.setup.seed ^ 0x2f6e2b1) | 0);
+    const tile = state.tiles[treeOf(state)];
+    const options = [...TILE_POOLS.dawn, ...TILE_POOLS.horde].filter((t: Terrain) => t !== 'bridge' && TERRAIN_COST[t] !== null);
+    tile.terrain = rng.pick(options);
+    tile.variant = 1 + rng.int(TERRAIN_VARIANTS[tile.terrain]);
+    tile.tree = false;
   },
   checkVictory() {},
   onRoundEnd(state) {

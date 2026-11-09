@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Cel „Przetrwanie”: strażnicy zostali, ale już nie chronią kryształów (pokonany nic nie zostawia), a w miejscu kafelka Drzewa jest zwykłe pole. Na dole ekranu licznik przetrwanych rund zamiast kryształów. Poziomy trudności przestrojone.
 - Mapa „Wyspy”: kanały między wyspami to teraz widoczna od początku woda (nowy kafelek), więc od razu widać trzy wyspy, a mosty to luki w wodzie. Wcześniej kanał był kolumną ukrytych pól i mapa wyglądała jak zwykły prostokąt.
 - Wersja cyfrowa: karta strzelca (np. Elfa Druida) pokazuje Atak z premią strzelca (+1), czyli tyle, ile jednostka naprawdę zadaje, a nie tylko wartość wydrukowaną.
 - „Leśny Tropiciel” (i „Nocny Zwiadowca”) daje dodatkowy punkt ruchu od razu po wyborze, a nie dopiero w następnej turze. Pasek ruchu bohatera na mapie pokazuje teraz wszystkie punkty (też te z umiejętności, pomocy dla dziecka i wyposażenia), np. cztery zamiast trzech.

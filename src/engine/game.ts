@@ -840,7 +840,12 @@ function resolveGuardianFight(state: GameState, b: BattleState) {
   const crystal = Object.values(state.crystals).find((c) => c.at === b.mapHex && c.guardian === b.neutralId);
   if (!crystal) return;
   crystal.guardian = null;
-  log(state, 'crystal', `Strażnik pokonany. Kryształ jest wolny.`);
+  if (crystal.decoy) {
+    // Survival: the guardian guarded nothing worth carrying.
+    delete state.crystals[crystal.id];
+    if (state.tiles[crystal.at]?.crystalId === crystal.id) state.tiles[crystal.at].crystalId = null;
+    log(state, 'info', 'Strażnik pokonany.');
+  } else log(state, 'crystal', `Strażnik pokonany. Kryształ jest wolny.`);
   guardianHoard(state, b.attackerHero);
   // With hero growth a beaten guardian also leaves an artifact (first tier).
   if (state.rules.heroGrowth) giveArtifact(state, state.heroes[b.attackerHero], ARTIFACTS.filter((a) => a.tier === 1)[(Object.keys(state.crystals).length + state.round) % 3]);

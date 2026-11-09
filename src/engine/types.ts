@@ -217,6 +217,8 @@ export interface Crystal {
   guardian: string | null;
   /** Hex key while on the map, 'hero:<id>' when carried, 'tree' when delivered. */
   at: string;
+  /** Objective 'survival': only the guardian is real; the beaten guardian leaves no crystal (and none is drawn or counted). */
+  decoy?: boolean;
 }
 
 export interface ItemInstance {
