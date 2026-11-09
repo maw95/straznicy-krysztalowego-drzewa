@@ -4,7 +4,7 @@
 
 import type { ReactNode } from 'react';
 import { UNITS, type ItemKind } from '../engine/data';
-import { levelOf, SKILL_EFFECT, SKILL_NAMES, type SkillId } from '../engine/growth';
+import { levelOf, type SkillId } from '../engine/growth';
 import type { GameState, HeroState, LogEntry } from '../engine/types';
 import type { BotSpeed, RoomView } from '../online/api';
 import { BOT_SPEEDS } from '../online/api';
@@ -12,6 +12,7 @@ import { Frame, Modal, Ribbon, SvgDefs } from './common';
 import { DetailsLayer } from './details';
 import { FullscreenButton } from './fullscreen';
 import { HoverCardLayer } from './hover';
+import { SkillCard, XpBar } from './growthUi';
 import { music, type Theme } from './music';
 import { RulesDialog } from './RulesDialog';
 import { TreasureCard } from './TreasureCard';
@@ -146,14 +147,13 @@ export function SkillDialog({ hero, onChoose }: { hero: HeroState | null; onChoo
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, maxWidth: 'min(720px, 94vw)' }}>
           <Ribbon style={{ width: 'min(420px, 90vw)' }}>Poziom {levelOf(hero)}: wybierz umiejętność</Ribbon>
           <div style={{ fontSize: 18 }}>{UNITS[hero.id].name}</div>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <XpBar hero={hero} />
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
             {hero.offer.map((s) => (
-              <button key={s} className="btn plate parch" data-skill={s} style={{ width: 200, padding: '12px 14px', textAlign: 'left' }} onClick={() => onChoose(s)}>
-                <div style={{ fontWeight: 800, fontSize: 19 }}>{SKILL_NAMES[hero.faction][s]}</div>
-                <div style={{ fontSize: 15, marginTop: 4 }}>{SKILL_EFFECT[s].text}</div>
-              </button>
+              <SkillCard key={s} faction={hero.faction} skill={s} onChoose={onChoose} />
             ))}
           </div>
+          <div style={{ fontSize: 14, color: 'var(--muted)' }}>Umiejętność zostaje bohaterowi do końca gry.</div>
         </div>
       )}
     </Modal>

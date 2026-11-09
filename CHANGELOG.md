@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Rozwój bohatera stał się czytelny: pod portretem jest pasek poziomu i PD (ile masz, ile brakuje do następnego poziomu), ikony umiejętności i trzy miejsca na artefakty (broń, zbroja, buty; puste są zaznaczone). Za każde zdobyte PD pojawia się notka, za co. Zdobycie artefaktu ogłasza osobna karta z opisem, źródłem (skrzynia, strażnik, pokonany bohater) i wyjaśnieniem, czym artefakt różni się od skarbu. Umiejętności do wyboru to teraz karty z ikonami i ozdobną ramką. Wyjaśnienia są też w samouczku i w „Zasadach i kartach”.
 - Gra online: stany od serwera są pokazywane po kolei, każdy po zakończeniu animacji poprzedniego (cios, trafienie, śmierć, ruch). Wcześniej ekran przeskakiwał i pokazywał dwa ciosy naraz albo kończył bitwę przed ostatnim ciosem.
 - Punkty kontrolne, boss i artefakt: strażnicy już nie pilnują kryształów (pokonany nic nie zostawia), a pasek na dole pokazuje postęp celu zamiast kryształów.
 - Animacje bitwy: jednostki obracają się płynnie (zamiast przeskoku na lustrzane odbicie), zawsze są zwrócone w stronę ruchu i celu, a kolejność to ruch, obrót, atak. Komputer czeka z następną akcją, aż skończy się pokaz poprzedniej (cios, trafienie, śmierć), więc ataki nie nakładają się. Okno znalezionego skarbu i podsumowanie bitwy pojawiają się dopiero po pokazie ostatniego ciosu. Czarny Smok jest tak duży jak Złoty.

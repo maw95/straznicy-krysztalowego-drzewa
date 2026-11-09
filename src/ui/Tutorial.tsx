@@ -64,6 +64,18 @@ const TIPS: Tip[] = [
     when: (s) => s.phase === 'adventure' && s.factions.dawn.inventory.length + s.factions.horde.inventory.length > 0,
   },
   {
+    id: 'growth',
+    title: 'Rozwój bohatera',
+    text: 'Bohaterowie zdobywają punkty doświadczenia (PD): za bitwy, skarby i kapliczki. Pasek pod portretem pokazuje poziom i ile PD brakuje do następnego; po awansie wybierasz jedną z trzech umiejętności. Za każdym razem, gdy dostajesz PD, na dole po lewej pojawia się notka, za co.',
+    when: (s) => s.phase === 'adventure' && Boolean(s.rules.heroGrowth),
+  },
+  {
+    id: 'artifact',
+    title: 'Artefakty',
+    text: 'Artefakt to stałe wyposażenie jednego bohatera: broń, zbroja albo buty (po jednym na miejsce), widoczne pod portretem. W odróżnieniu od skarbów nie jest kartą frakcji i nie zużywa się. Leżą w skrzyniach na mapie, wypadają ze strażników i z pokonanych bohaterów.',
+    when: (s) => s.phase === 'adventure' && Object.values(s.heroes).some((h) => Object.keys(h.gear ?? {}).length > 0),
+  },
+  {
     id: 'deploy',
     title: 'Ustawienie wojsk',
     text: 'Przed walką możesz ustawić swoje jednostki na złotych polach swojej skrajnej kolumny: kliknij jednostkę, potem pole (zajęte pole zamieni je miejscami). Atakujący ustawia się pierwszy.',

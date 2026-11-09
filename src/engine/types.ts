@@ -328,10 +328,17 @@ export interface AttackRoll {
 
 export type LogKind = 'info' | 'move' | 'battle' | 'damage' | 'death' | 'item' | 'crystal' | 'round' | 'victory' | 'ability';
 
+/** A structured happening behind a log line, for the screen to announce (experience gained, an artifact found). */
+export type LogEvent =
+  | { type: 'xp'; heroId: string; amount: number; reason: string }
+  | { type: 'artifact'; heroId: string; artifactId: string; source: string; kept: boolean };
+
 export interface LogEntry {
   round: number;
   kind: LogKind;
   text: string;
+  /** What this line announces, when the screen should say it louder than the log does. */
+  event?: LogEvent;
   /** Visible only to this faction (private draws). */
   privateTo?: FactionId;
 }

@@ -34,6 +34,12 @@ const RULES: Array<[string, string[]]> = [
     'Kryształy poległego bohatera zostają na polu bitwy. Bohater Przymierza, który na nim stanie, od razu je podnosi.',
     'Eliksir Odrodzenia wypity na mapie wskrzesza bohatera na wybranym wolnym polu obok pijącego albo przywraca pomocnika.',
   ]],
+  ['Rozwój bohatera (wersja cyfrowa, poziom 2 „Wyprawa”)', [
+    'Bohaterowie zdobywają punkty doświadczenia (PD): 3 za pokonanego strażnika, 2 za wygraną walkę z bohaterem, 1 za przegraną, którą przeżyli, 1 za skarb, 2 za kapliczkę. Horda dostaje dodatkowo 1 PD na koniec każdej rundy.',
+    'Progi poziomów to 3, 7, 12 i 18 PD (poziomy 2–5). Na każdym nowym poziomie bohater wybiera jedną z trzech zaproponowanych umiejętności; zostaje ona do końca gry. Pasek poziomu i PD jest pod portretem bohatera.',
+    'Artefakty to stałe wyposażenie jednego bohatera, po jednym na miejsce: broń (+Atak), zbroja (+Życie), buty (+Szybkość, wyższy poziom także +1 punkt ruchu). Różnią się od skarbów: skarb to jednorazowa karta frakcji, artefakt nigdy się nie zużywa i należy do bohatera.',
+    'Artefakt dostaje się ze skrzyni na mapie, po pokonaniu strażnika albo wygranej walce z bohaterem. Lepszy zastępuje słabszy na tym samym miejscu; jeśli bohater ma już lepszy, frakcja dostaje zamiast niego skarb. Zdobycie artefaktu ogłasza osobne okno.',
+  ]],
   ['Bitwa', [
     'Wejście na pole wrogiego bohatera (albo strażnika) rozpoczyna bitwę. Kosztuje tyle punktów ruchu, ile koszt terenu tego pola, a po wygranej bohater może iść dalej. Na arenie każda strona wystawia bohatera i dwóch pomocników (3 na 3); strażnik walczy sam. W pojedynkach na planszy walczą tylko bohaterowie, bez ruchu, a strażnik ma mniej Życia (liczba w nawiasie na karcie).',
     'Najpierw obie strony ustawiają jednostki w swojej skrajnej kolumnie (zaczyna atakujący). Co rundę każda jednostka ma jedną aktywację, od najszybszej (przy remisie pierwszy działa broniący się): ruch o tyle pól, ile wynosi Szybkość, i jeden atak. Chodzący obchodzą przeszkody, wrogów i sojuszników — nie przechodzą przez nich.',

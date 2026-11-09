@@ -542,7 +542,7 @@ function arriveAt(state: GameState, hero: HeroState) {
     giveItem(state, item, hero.faction, hero.id);
     tile.treasureId = null;
     state.stats.treasuresCollected[hero.faction] += 1;
-    awardXp(state, hero, GROWTH.xp.treasure);
+    awardXp(state, hero, GROWTH.xp.treasure, 'znaleziony skarb');
     log(state, 'item', `${UNITS[hero.id].name} znajduje skarb.`);
     log(state, 'item', `Skarb (${UNITS[hero.id].name}): ${ITEMS[item.kind].name}.`, hero.faction);
   }
@@ -794,9 +794,9 @@ function awardBattleXp(state: GameState, b: BattleState) {
     const hero = id ? state.heroes[id] : null;
     if (!hero?.alive) continue;
     const won = b.winner === hero.faction;
-    awardXp(state, hero, won ? (b.kind === 'neutral' ? GROWTH.xp.guardian : GROWTH.xp.hero) : GROWTH.xp.lost);
+    awardXp(state, hero, won ? (b.kind === 'neutral' ? GROWTH.xp.guardian : GROWTH.xp.hero) : GROWTH.xp.lost, won ? (b.kind === 'neutral' ? 'pokonany strażnik' : 'wygrana walka z bohaterem') : 'przegrana walka, którą bohater przeżył');
     // Spoils: the winner of a fight between heroes takes a first-tier artifact from the fallen (the Horde meet guardians rarely, so this evens it out).
-    if (won && b.kind === 'heroes') giveArtifact(state, hero, ARTIFACTS.filter((a) => a.tier === 1)[(state.round + hero.id.length) % 3]);
+    if (won && b.kind === 'heroes') giveArtifact(state, hero, ARTIFACTS.filter((a) => a.tier === 1)[(state.round + hero.id.length) % 3], 'łup z pokonanego bohatera');
   }
 }
 
@@ -850,7 +850,7 @@ function resolveGuardianFight(state: GameState, b: BattleState) {
   } else log(state, 'crystal', `Strażnik pokonany. Kryształ jest wolny.`);
   guardianHoard(state, b.attackerHero);
   // With hero growth a beaten guardian also leaves an artifact (first tier).
-  if (state.rules.heroGrowth) giveArtifact(state, state.heroes[b.attackerHero], ARTIFACTS.filter((a) => a.tier === 1)[(Object.keys(state.crystals).length + state.round) % 3]);
+  if (state.rules.heroGrowth) giveArtifact(state, state.heroes[b.attackerHero], ARTIFACTS.filter((a) => a.tier === 1)[(Object.keys(state.crystals).length + state.round) % 3], 'łup po pokonanym strażniku');
 }
 
 /**

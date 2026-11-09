@@ -188,9 +188,9 @@ karta strzelca pokazuje Atak z premią, wyspy z widoczną wodą, przetrwanie bez
 
 ### 8.2. Rozwój bohatera: czytelność (do zrobienia)
 
-- [ ] Poziom i PD: czytelniejszy pasek (ile PD ma bohater, ile do następnego poziomu, za co dostał).
-- [ ] Wybór umiejętności jako karty z ikonami i ozdobami, jak karty skarbów.
-- [ ] Artefakty: opis, czym są i czym różnią się od skarbów; powiadomienie o zdobyciu (z nazwą i źródłem); ikony; widoczna lista na mapie świata.
+- [x] Poziom i PD: pasek pod portretem (poziom, PD, ile brakuje) i notka „+N PD (powód)” po każdym zdobyciu; wpis w dzienniku z powodem.
+- [x] Wybór umiejętności jako karty z medalionem-ikoną i ramką (ikony to medaliony wektorowe z istniejących symboli; docelowo można je zastąpić grafiką z AI).
+- [x] Artefakty: karta przy zdobyciu (nazwa, miejsce, efekt, źródło, różnica wobec skarbów), ikony (medaliony wg miejsca, fiolet dla wyższego poziomu), trzy sloty widoczne pod portretem, opis w samouczku i w zasadach.
 
 ### 8.3. Balans (z symulacji 9.11)
 

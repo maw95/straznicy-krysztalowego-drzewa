@@ -57,9 +57,11 @@ function drawOffer(state: GameState, hero: HeroState): SkillId[] {
 }
 
 /** Gives experience; a hero that reaches a level gets three skills to choose from (one choice at a time). */
-export function awardXp(state: GameState, hero: HeroState, amount: number): void {
+export function awardXp(state: GameState, hero: HeroState, amount: number, reason?: string): void {
   if (!growthOn(state) || !hero.alive || amount <= 0) return;
   hero.xp = (hero.xp ?? 0) + amount;
+  // The reason is what the player is told (a line in the log and a note on the screen); no reason, no line (the Horde's per-round experience).
+  if (reason) log(state, 'info', `${UNITS[hero.id].name}: +${amount} PD (${reason}).`, hero.faction, { type: 'xp', heroId: hero.id, amount, reason });
   maybeLevelUp(state, hero);
 }
 

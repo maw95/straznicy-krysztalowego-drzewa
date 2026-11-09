@@ -70,7 +70,7 @@ export function visitSite(state: GameState, hero: HeroState, tile: Tile): void {
   const name = UNITS[hero.id].name;
   if (site.kind === 'shrine') {
     log(state, 'info', `${name} modli się w kapliczce.`);
-    awardXp(state, hero, SITE.shrineXp);
+    awardXp(state, hero, SITE.shrineXp, 'kapliczka');
   } else if (site.kind === 'camp') {
     const f = state.factions[hero.faction];
     const fallen = f.supportsDead[0];
@@ -80,21 +80,21 @@ export function visitSite(state: GameState, hero: HeroState, tile: Tile): void {
       log(state, 'info', `${name} wynajmuje najemników: wraca ${UNITS[fallen].name}.`);
     } else {
       log(state, 'info', `${name} zagląda do obozu najemników, ale nikt nie poległ.`);
-      awardXp(state, hero, 1);
+      awardXp(state, hero, 1, 'obóz najemników');
     }
   } else {
     const rng = new Rng((state.setup.seed ^ 0x2545f491 ^ (state.round * 131 + hero.id.length)) | 0);
-    giveArtifact(state, hero, rng.pick(ARTIFACTS));
+    giveArtifact(state, hero, rng.pick(ARTIFACTS), 'skrzynia');
   }
 }
 
 /** The hero takes the artifact if it beats what sits in its slot; otherwise the faction gets a treasure card instead. */
-export function giveArtifact(state: GameState, hero: HeroState, art: ArtifactDef): void {
+export function giveArtifact(state: GameState, hero: HeroState, art: ArtifactDef, source: string): void {
   const name = UNITS[hero.id].name;
   const current = hero.gear?.[art.slot] ? ARTIFACT_BY_ID[hero.gear[art.slot]!] : null;
   if (!current || current.tier < art.tier) {
     hero.gear = { ...hero.gear, [art.slot]: art.id };
-    log(state, 'item', `${name} zakłada artefakt: ${art.names[hero.faction]} (${art.text})`, hero.faction);
+    log(state, 'item', `${name} zakłada artefakt: ${art.names[hero.faction]} (${art.text}) — źródło: ${source}.`, hero.faction, { type: 'artifact', heroId: hero.id, artifactId: art.id, source, kept: true });
     return;
   }
   const used = new Set(Object.values(state.items).map((i) => i.kind));
@@ -102,7 +102,7 @@ export function giveArtifact(state: GameState, hero: HeroState, art: ArtifactDef
   const kinds = NON_RESURRECTION_ITEMS.filter((k) => !used.has(k));
   if (kinds.length) {
     grantTreasure(state, rng.pick(kinds), hero.faction, hero.id);
-    log(state, 'item', `${FACTION_NAMES[hero.faction]}: ${art.names[hero.faction]} nie jest lepszy od tego, co ${name} ma, więc zamiast niego jest skarb.`, hero.faction);
+    log(state, 'item', `${FACTION_NAMES[hero.faction]}: ${art.names[hero.faction]} (${source}) nie jest lepszy od tego, co ${name} ma, więc zamiast niego jest skarb.`, hero.faction, { type: 'artifact', heroId: hero.id, artifactId: art.id, source, kept: false });
   }
 }
 

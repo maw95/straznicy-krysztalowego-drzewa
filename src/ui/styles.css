@@ -649,3 +649,27 @@ button:not(:disabled), label, select:not(:disabled), input[type='checkbox']:not(
 .hint-ring { clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); background: radial-gradient(circle, rgba(255,235,140,0.55) 0%, rgba(255,235,140,0.18) 60%, rgba(255,235,140,0) 100%); animation: hint-pulse 1.1s ease-in-out infinite; }
 @keyframes hint-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .hint-ring { animation: none; opacity: 0.8; } }
+
+/* Hero growth: skills and artifacts as cards, the level and experience bar */
+.skill-card {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 14px 14px; border-radius: 14px; text-align: center; color: #3A2410; cursor: pointer;
+  background: radial-gradient(ellipse at 50% 18%, #FBF1D6, #E9D4A2 70%, #D6BC84);
+  box-shadow: 0 0 0 2px #B88A35, 0 0 0 4px #1E1204, inset 0 0 0 5px rgba(120, 80, 20, 0.18), inset 0 0 22px rgba(120, 80, 20, 0.28), 0 10px 20px rgba(0, 0, 0, 0.55);
+  border: 0; font: inherit; transition: transform 0.15s, box-shadow 0.15s;
+}
+button.skill-card:hover, button.skill-card:focus-visible { transform: translateY(-4px); box-shadow: 0 0 0 2px #F3D27A, 0 0 0 4px #1E1204, inset 0 0 22px rgba(120, 80, 20, 0.28), 0 14px 24px rgba(0, 0, 0, 0.6), 0 0 18px rgba(243, 210, 122, 0.55); }
+.skill-card-art { padding: 8px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 70%); filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.45)); }
+.skill-card-name { font-weight: 800; font-size: 21px; line-height: 1.1; }
+.skill-card-text { font-size: 16px; line-height: 1.3; min-height: 3.9em; }
+.skill-card-pick { margin-top: 4px; padding: 3px 18px; border-radius: 8px; font-weight: 800; color: #F6EAD0; background: linear-gradient(180deg, #2E8A3A, #14501E); box-shadow: 0 0 0 1.5px #1E1204; }
+.xpbar { display: flex; align-items: center; gap: 10px; }
+.xpbar-level {
+  flex: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; color: #3A2410;
+  background: radial-gradient(circle at 35% 30%, #FFF0B0, #E2B04A 55%, #9A6A18); box-shadow: 0 0 0 2px #1E1204, 0 0 8px rgba(243, 210, 122, 0.5);
+}
+.xpbar-track { height: 12px; border-radius: 6px; background: #14201F; box-shadow: inset 0 0 0 1.5px #1E1204, 0 0 0 1px rgba(184, 138, 53, 0.6); overflow: hidden; }
+.xpbar-fill { height: 100%; background: linear-gradient(180deg, #C9F0FF, #4AA8E0 55%, #2A6FB0); transition: width 0.6s ease-out; }
+.xpbar-text { font-size: 13px; margin-top: 3px; color: #F7EDD2; }
+.gear-empty { display: inline-flex; }
+.xp-toasts { position: fixed; left: 14px; bottom: 96px; z-index: 48; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+.xp-toast { padding: 6px 14px; border-radius: 10px; font-size: 16px; font-weight: 700; color: #F6EAD0; background: linear-gradient(180deg, rgba(26, 52, 70, 0.95), rgba(10, 24, 36, 0.95)); box-shadow: 0 0 0 1.5px #9EE4FF, 0 6px 14px rgba(0, 0, 0, 0.55); animation: pop-in 0.3s ease-out both; }

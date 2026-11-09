@@ -42,11 +42,11 @@ describe('sites on the map and hero gear (hero growth)', () => {
   it('a better artifact replaces a worse one in the slot; an equal or worse one turns into a treasure', () => {
     const s = grown();
     const hero = activeHero(s)!;
-    giveArtifact(s, hero, ARTIFACT_BY_ID.blade1);
-    giveArtifact(s, hero, ARTIFACT_BY_ID.blade2);
+    giveArtifact(s, hero, ARTIFACT_BY_ID.blade1, 'test');
+    giveArtifact(s, hero, ARTIFACT_BY_ID.blade2, 'test');
     expect(hero.gear?.weapon).toBe('blade2');
     const treasures = s.factions[hero.faction].inventory.length;
-    giveArtifact(s, hero, ARTIFACT_BY_ID.blade1);
+    giveArtifact(s, hero, ARTIFACT_BY_ID.blade1, 'test');
     expect(hero.gear?.weapon).toBe('blade2');
     expect(s.factions[hero.faction].inventory.length).toBe(treasures + 1);
   });

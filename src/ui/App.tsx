@@ -6,10 +6,11 @@ import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } fro
 import { movePath } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import { controlCounts, objectiveOf, OBJECTIVES } from '../engine/objectives';
-import { arenaSetup, DEFAULT_RULES, type Action, type GameState, type LogEntry, type SetupOptions } from '../engine/types';
+import { arenaSetup, DEFAULT_RULES, type Action, type GameState, type LogEntry, type LogEvent, type SetupOptions } from '../engine/types';
 import { AdventureView } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
 import { usePresentation } from './usePresentation';
+import { ArtifactFound, xpNote } from './growthUi';
 import { animationWait, ATTACK_SHOW_MS, holdFor, resetAnimLock } from './animLock';
 import { DuelView } from './DuelView';
 import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset } from './common';
@@ -147,6 +148,8 @@ export function App() {
       s = applyAction(s, a);
       history.current.push(a);
       if (q.get('until') === 'battle' && s.phase === 'battle' && s.battle?.stage === 'fight') break;
+      // ?until=offer stops when a hero has skills to choose from (for looking at the skill cards).
+      if (q.get('until') === 'offer' && Object.values(s.heroes).some((h) => h.offer?.length)) break;
     }
     setGame(s);
   }, []);
@@ -394,6 +397,33 @@ export function App() {
     knownItems.current = { seed: game.setup.seed, ids: new Set(owned.map((it) => it.id)) };
   }, [game]);
 
+  // Hero growth: experience gained and artifacts found by the heroes at this screen. A note on the map for experience; the artifact
+  // gets a card (what it is, where it came from), because it used to go unnoticed.
+  const newsSeen = useRef<{ seed: number; n: number } | null>(null);
+  const [xpNotes, setXpNotes] = useState<Array<{ key: number; text: string }>>([]);
+  const [artifactNews, setArtifactNews] = useState<Array<Extract<LogEvent, { type: 'artifact' }>>>([]);
+  useEffect(() => {
+    if (!game) {
+      newsSeen.current = null;
+      return;
+    }
+    const seen = newsSeen.current;
+    const total = game.log.length;
+    newsSeen.current = { seed: game.setup.seed, n: total };
+    // A new, loaded or taken-back game: nothing is announced for what was already in it.
+    if (!seen || seen.seed !== game.setup.seed || seen.n > total) return;
+    const sides = new Set(game.players.filter(atThisScreen).map((p) => p.faction));
+    const fresh = game.log.slice(seen.n).flatMap((l) => (l.event ? [l.event] : [])).filter((ev) => sides.has(game.heroes[ev.heroId]?.faction));
+    const notes = fresh.flatMap((ev) => (ev.type === 'xp' ? [{ key: Math.random(), text: xpNote(ev) }] : []));
+    const arts = fresh.flatMap((ev) => (ev.type === 'artifact' ? [ev] : []));
+    if (notes.length) {
+      setXpNotes((n) => [...n, ...notes].slice(-4));
+      window.setTimeout(() => setXpNotes((n) => n.filter((x) => !notes.includes(x))), 4500);
+    }
+    if (arts.length) setArtifactNews((a) => [...a, ...arts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game]);
+
   // After-battle summary for battles a human faction fought in.
   const lastBattleId = game?.lastBattle?.id ?? null;
   useEffect(() => {
@@ -468,6 +498,7 @@ export function App() {
         [confirm, () => setConfirm(null)],
         [card, () => setCard(null)],
         [found, () => setFound(null)],
+        [artifactNews.length ? artifactNews : null, () => setArtifactNews((a) => a.slice(1))],
         [digest, () => setDigest(null)],
         [showLog, () => setShowLog(false)],
         [showDebug, () => setShowDebug(false)],
@@ -483,7 +514,7 @@ export function App() {
       top?.[1]();
       return Boolean(top);
     },
-    anyOpen: Boolean(confirm || card || found || digest || showLog || showDebug || showRules || showReport || summary !== null || showStats || showChangelog || showTesters || showChat),
+    anyOpen: Boolean(confirm || card || found || artifactNews.length || digest || showLog || showDebug || showRules || showReport || summary !== null || showStats || showChangelog || showTesters || showChat),
     undo,
     fastForward,
     humanAction,
@@ -706,6 +737,21 @@ export function App() {
       )}
       <VictoryEffects game={game} />
       <FoundTreasure kind={found} open={Boolean(found) && !digest && !summary && !held} onClose={() => setFound(null)} />
+
+      <div className="xp-toasts" aria-live="polite">
+        {xpNotes.map((n) => (
+          <div key={n.key} className="xp-toast">{n.text}</div>
+        ))}
+      </div>
+      <Modal open={artifactNews.length > 0 && !digest && !summary && !held && !found} onClose={() => setArtifactNews((a) => a.slice(1))}>
+        {artifactNews[0] && (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+            <Ribbon style={{ width: 'min(380px, 90vw)' }}>Artefakt!</Ribbon>
+            <ArtifactFound event={artifactNews[0]} faction={game.heroes[artifactNews[0].heroId]?.faction ?? 'dawn'} />
+            <button className="btn prim" style={{ padding: '6px 28px', fontSize: 20 }} onClick={() => setArtifactNews((a) => a.slice(1))}>Rozumiem</button>
+          </div>
+        )}
+      </Modal>
 
       <Modal open={game.phase === 'over' && !held}>
         <GameOver state={game} online={isOnline} rankingNote={rankingNote} onNew={leaveGame} onLog={() => setShowLog(true)} />
