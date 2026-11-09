@@ -5,35 +5,28 @@ import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
 import { GROWTH, levelOf, SKILL_EFFECT, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
 import { ARTIFACT_BY_ID, gearOf, type ArtifactDef, type Slot } from '../engine/sites';
 import type { HeroState, LogEvent } from '../engine/types';
-import { Medal } from './common';
+import { asset } from './common';
 
-/** Medal colour and glyph of each skill (the glyphs are in svgDefs.ts). */
-export const SKILL_LOOK: Record<SkillId, readonly [string, string]> = {
-  might: ['mRed', 'gSword'],
-  vigor: ['mGreen', 'gHeartG'],
-  swift: ['mBlue', 'gWing'],
-  leader: ['mPurple', 'gFlag'],
-  pathfinder: ['mBrown', 'gScroll'],
-  fortune: ['mPurple', 'gStar'],
-};
+/** The painted icon of a skill (public/assets/ikony/umiejetnosci, made with Scenario). */
+export function SkillIcon({ skill, size = 40 }: { skill: SkillId; size?: number }) {
+  return <img src={asset(`ikony/umiejetnosci/${skill}.webp`)} alt="" width={size} height={size} style={{ flex: 'none', display: 'block' }} />;
+}
 
 export const SLOT_NAMES: Record<Slot, string> = { weapon: 'Broń', armor: 'Zbroja', boots: 'Buty' };
 const SLOT_GLYPH: Record<Slot, string> = { weapon: 'gSword', armor: 'gShield', boots: 'gBoot' };
-const SLOT_FILL: Record<Slot, string> = { weapon: 'mRed', armor: 'mBlue', boots: 'mGreen' };
 const SLOTS: Slot[] = ['weapon', 'armor', 'boots'];
 
-/** The medal of an artifact: the colour of its slot, purple for the stronger tier. */
+/** The painted icon of an artifact (public/assets/ikony/artefakty): bronze for the first tier, gold and purple for the second. */
 export function ArtifactMedal({ art, size = 40 }: { art: ArtifactDef; size?: number }) {
-  return <Medal fill={art.tier === 2 ? 'mPurple' : SLOT_FILL[art.slot]} glyph={SLOT_GLYPH[art.slot]} size={size} />;
+  return <img src={asset(`ikony/artefakty/${art.id}.webp`)} alt="" width={size} height={size} style={{ flex: 'none', display: 'block' }} />;
 }
 
 /** One skill as a card: a big medal, the name, what it does. A button when `onChoose` is given. */
 export function SkillCard({ faction, skill, onChoose, width = 210 }: { faction: FactionId; skill: SkillId; onChoose?: (s: SkillId) => void; width?: number }) {
-  const [fill, glyph] = SKILL_LOOK[skill];
   const body = (
     <>
       <div className="skill-card-art">
-        <Medal fill={fill} glyph={glyph} size={92} />
+        <SkillIcon skill={skill} size={104} />
       </div>
       <div className="skill-card-name">{SKILL_NAMES[faction][skill]}</div>
       <div className="skill-card-text">{SKILL_EFFECT[skill].text}</div>
@@ -91,7 +84,7 @@ export function HeroGrowth({ hero }: { hero: HeroState }) {
         {skills.length === 0 && <span style={{ fontSize: 13, color: 'var(--muted)' }}>jeszcze żadnej (pierwsza na poziomie 2)</span>}
         {skills.map((s) => (
           <span key={s} title={`${SKILL_NAMES[hero.faction][s]}: ${SKILL_EFFECT[s].text}`}>
-            <Medal fill={SKILL_LOOK[s][0]} glyph={SKILL_LOOK[s][1]} size={34} />
+            <SkillIcon skill={s} size={36} />
           </span>
         ))}
       </div>
@@ -101,7 +94,7 @@ export function HeroGrowth({ hero }: { hero: HeroState }) {
           const art = gear.find((a) => a.slot === slot);
           return art ? (
             <span key={slot} title={`${SLOT_NAMES[slot]}: ${art.names[hero.faction]}. ${art.text}${art.tier === 2 ? ' (wyższy poziom)' : ''}`} data-gear={art.id}>
-              <ArtifactMedal art={art} size={38} />
+              <ArtifactMedal art={art} size={40} />
             </span>
           ) : (
             <span key={slot} className="gear-empty" title={`${SLOT_NAMES[slot]}: puste miejsce. Artefakty leżą w skrzyniach na mapie, wypadają ze strażników i z pokonanych bohaterów.`} data-gear-empty={slot}>

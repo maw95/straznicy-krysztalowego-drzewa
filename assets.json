@@ -1832,6 +1832,44 @@
       "data": "2026-11-09",
       "ai": false,
       "licencja": "własna (kod w repo)"
+    },
+    {
+      "id": "ikony/umiejetnosci",
+      "pliki": [
+        "public/assets/ikony/umiejetnosci/might.webp",
+        "public/assets/ikony/umiejetnosci/vigor.webp",
+        "public/assets/ikony/umiejetnosci/swift.webp",
+        "public/assets/ikony/umiejetnosci/leader.webp",
+        "public/assets/ikony/umiejetnosci/pathfinder.webp",
+        "public/assets/ikony/umiejetnosci/fortune.webp"
+      ],
+      "typ": "ikony medalionowe",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, 1024x1024, jakość medium, tło przezroczyste; lokalnie przycięte do okręgu i zmniejszone do 192 px (webp q85)",
+      "data": "2026-11-09",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "scenario_asset": "might: asset_Pi6EAWj4pUaQrkYKMRxXzydL, vigor: asset_NRuy4Krt9ADaC3kCwyVN1YEt, swift: asset_Mf3wGJTjcVmnpGzXTW6ygWkq, leader: asset_2x9f9yCytQvDw7qRG7zbipuD, pathfinder: asset_ZsLazkE1DbcKL9zXwURM759z, fortune: asset_Zpy19ySgM7NKfZowYzSmAp2p",
+      "prompt": "Game UI icon, a single round medallion emblem centered on a transparent background. Ornate gold ring rim with subtle engraved detail, a deep <kolor> glowing enamel disc inside, <symbol> in the centre, soft warm glow. Dark-fantasy hand-painted style like Heroes of Might and Magic III, rich painterly shading, top-left lighting, bold simple silhouette readable at 64 px. No text, no shadow outside the medallion, nothing outside the circle. Symbole: might = raised silver sword (red); vigor = strong red-and-gold heart (green); swift = white feathered wing with wind swirl (blue); leader = banner standard on golden pole (purple); pathfinder = brass compass on old map scroll with boot print (brown); fortune = golden star with sparkles above small open treasure chest (purple)."
+    },
+    {
+      "id": "ikony/artefakty",
+      "pliki": [
+        "public/assets/ikony/artefakty/blade1.webp",
+        "public/assets/ikony/artefakty/blade2.webp",
+        "public/assets/ikony/artefakty/mail1.webp",
+        "public/assets/ikony/artefakty/mail2.webp",
+        "public/assets/ikony/artefakty/boots1.webp",
+        "public/assets/ikony/artefakty/boots2.webp"
+      ],
+      "typ": "ikony medalionowe",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, 1024x1024, jakość medium, tło przezroczyste; lokalnie przycięte do okręgu i zmniejszone do 192 px (webp q85)",
+      "data": "2026-11-09",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "scenario_asset": "blade1: asset_6j7JYsfrJUsBoRZSLpsLBzVF, blade2: asset_f3b9e914pnVyUgt9s644YdmX, mail1: asset_LjmnfMSm5nKhxqo8kT7R8uW3, mail2: asset_UoMLsof4u4oaZjQa8T6Vwpp2, boots1: asset_C59bSoyVdMoinVzX4wCE8Tcx, boots2: asset_SQ4Ay56GAF42YWeFNLijEhDV",
+      "prompt": "Game UI icon, a single round medallion emblem centered on a transparent background. Tier 1: Plain bronze and silver ring rim (modest, simple, worn), a dark slate-grey enamel disc inside, <przedmiot> in the centre, no glow, no gems. Dark-fantasy hand-painted style like Heroes of Might and Magic III, rich painterly shading, top-left lighting, bold simple silhouette readable at 64 px. No text, no shadow outside the medallion, nothing outside the circle. Tier 2: Rich ornate gold ring rim with engraved filigree and small purple gems, a deep purple glowing enamel disc inside, <przedmiot>, strong magical glow. Przedmioty: blade1 = simple plain iron short sword with leather grip; blade2 = magnificent long sword with glowing blue-white edge, golden hilt with purple gem; mail1 = simple chain mail shirt with leather straps; mail2 = ornate golden plate cuirass with purple gem inlays; boots1 = sturdy brown leather traveller's boots; boots2 = golden winged boots with white feathers and purple gems."
     }
   ]
 }
