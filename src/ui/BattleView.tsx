@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { UNITS, type FactionId, type Side } from '../engine/data';
+import { ABILITY, UNITS, type FactionId, type Side } from '../engine/data';
 import {
   abilityActive,
   abilityOf,
@@ -169,6 +169,12 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
    */
   const unitCursorOf = (u: BattleUnit, approachable: boolean, engaged: boolean): string => {
     if (!active?.pos || !u.pos) return '';
+    // A free ability is armed (Dar Życia, Sieć): a wand over every unit it can be cast on.
+    if (freeAbility && myTurn && u.alive) {
+      const ability = UNITS[active.defId].ability;
+      if (ability === 'giftOfLife' && u.side === active.side) return 'cur-spell';
+      if (ability === 'web' && u.side !== active.side && unitDistance(active, u) <= ABILITY.webRange) return 'cur-spell';
+    }
     if (approachable) return 'cur-melee';
     // A ranged unit shoots even at a neighbour (it must, when one stands next to it): always the arrow.
     if (targets.some((t) => t.id === u.id)) return UNITS[active.defId].attackType === 'melee' ? 'cur-melee' : 'cur-ranged';

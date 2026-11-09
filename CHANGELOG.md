@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Walka: gdy włączysz zdolność, którą rzuca się na jednostkę (Dar Życia Nimfy, Pajęcze Sidła), kursor zmienia się w różdżkę nad każdą jednostką, na której da się ją użyć.
 - Tryb Boss: przy legowisku Bossa nie ma już ikony kryształu ani napisu „Leży tu kryształ” (w tym trybie kryształy nie są potrzebne).
 - Koniec bitwy: okno wyboru umiejętności po awansie (i dźwięk awansu) czeka teraz na koniec pokazu ostatniego ciosu i animacji śmierci, tak jak okna skarbu i podsumowania; wcześniej wyskakiwało od razu na arenie. Dziennik z początku tury nie otwiera się już sam w grze z samymi botami (jest przycisk „Dziennik”).
 - Nowe malowane grafiki: woda między wyspami (zamiast gładkiego gradientu), puste miejsca na artefakty (miecz, tarcza, but w brązowych medalionach) oraz tarcza poziomu bohatera, która z każdym poziomem jest bogatsza: szare żelazo, brąz, srebro, złoto z szafirami, a na 5. poziomie złote skrzydła z błękitnymi kryształami i poświatą. Numer poziomu jest na środku tarczy.
