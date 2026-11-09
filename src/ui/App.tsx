@@ -460,7 +460,8 @@ export function App() {
     sfx.play(game.winner && (mine as string[]).includes(game.winner) ? 'victory' : 'defeat');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game, held]);
-  const offering = game && humanTurn && game.phase === 'adventure' && !steps.length ? activeHero(game) : null;
+  // Not while the finished battle is still on screen (the engine is already on the map, the arena shows the last blow).
+  const offering = game && humanTurn && !held && game.phase === 'adventure' && !steps.length ? activeHero(game) : null;
   const offerKey = offering?.offer?.length ? `${offering.id}:${offering.level ?? 1}` : null;
   useEffect(() => {
     if (offerKey) sfx.play('level_up');
@@ -490,6 +491,8 @@ export function App() {
   const turnKey = game && humanTurn && actor.kind === 'human' && game.phase === 'adventure' && !needsHandoff ? `${actor.playerId}:${game.round}:${game.turnIndex}` : null;
   useEffect(() => {
     if (!turnKey || !game || actor.kind !== 'human') return;
+    // The digest tells a player what the others did meanwhile; against bots alone the "Dziennik" button is enough (author, 9.11).
+    if (!game.players.some((p) => p.controller !== 'bot' && p.faction !== actor.faction)) return;
     if (seenLog.current?.seed !== game.setup.seed) seenLog.current = { seed: game.setup.seed, at: {} };
     const from = seenLog.current.at[actor.playerId];
     seenLog.current.at[actor.playerId] = game.log.length;
@@ -771,7 +774,7 @@ export function App() {
         <Handoff state={game} playerId={actor.playerId} onConfirm={() => setConfirmedFaction(actor.faction)} />
       )}
 
-      <SkillDialog hero={humanTurn && game.phase === 'adventure' && !steps.length ? activeHero(game) : null} onChoose={(skill) => dispatch({ type: 'chooseSkill', skill })} />
+      <SkillDialog hero={humanTurn && !held && game.phase === 'adventure' && !steps.length ? activeHero(game) : null} onChoose={(skill) => dispatch({ type: 'chooseSkill', skill })} />
       {hintNow && (
         <div className="plate parch" role="status" style={{ position: 'fixed', top: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 50, padding: '8px 16px', fontSize: 18, maxWidth: 'min(640px, 92vw)', cursor: 'pointer' }} onClick={() => setHint(null)}>
           💡 {hintNow.text}
@@ -807,7 +810,7 @@ export function App() {
         {game.lastBattle && <BattleSummary report={game.lastBattle} onClose={() => setSummary(null)} />}
       </Modal>
 
-      <Tutorial state={game} active={humanTurn && !needsHandoff && !digest && !summary && !confirm} />
+      <Tutorial state={game} active={humanTurn && !needsHandoff && !digest && !summary && !confirm && !held} />
 
       <Modal open={showLog} onClose={() => setShowLog(false)}>
         <LogDialog entries={visibleLog} />

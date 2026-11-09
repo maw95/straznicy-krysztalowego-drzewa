@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Koniec bitwy: okno wyboru umiejętności po awansie (i dźwięk awansu) czeka teraz na koniec pokazu ostatniego ciosu i animacji śmierci, tak jak okna skarbu i podsumowania; wcześniej wyskakiwało od razu na arenie. Dziennik z początku tury nie otwiera się już sam w grze z samymi botami (jest przycisk „Dziennik”).
 - Nowe malowane grafiki: woda między wyspami (zamiast gładkiego gradientu), puste miejsca na artefakty (miecz, tarcza, but w brązowych medalionach) oraz tarcza poziomu bohatera, która z każdym poziomem jest bogatsza: szare żelazo, brąz, srebro, złoto z szafirami, a na 5. poziomie złote skrzydła z błękitnymi kryształami i poświatą. Numer poziomu jest na środku tarczy.
 - Wersja cyfrowa: polegli (np. Władca Wilkołaków) nie leżą już na trzech heksach ani za wysoko: trup jednostki jednopolowej jest ograniczony do szerokości dwóch heksów i leży na linii stóp, a animacja śmierci płynnie do tego dochodzi.
 - Koniec gry: po zwycięstwie (Hordy i Przymierza) gra tylko dźwięk zwycięstwa albo porażki; stare utwory zwycięstwa nie nakładają się już na niego.

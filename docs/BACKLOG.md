@@ -221,3 +221,26 @@ Osiem rzeczy, bez których nie ruszę dalej reszty backlogu. Kiedy autor zdecydu
 - [ ] **10.6. Przetrwanie dla 2 graczy** (76–85% wygranych). Zmniejszyć liczbę rund czy wzmocnić falę Hordy (`SURVIVAL` w `data.ts`)?
 - [ ] **10.7. Boss.** Wariant „wszyscy przeciw Bossowi” bez Hordy i własna grafika Bossa: robić teraz czy po premierze?
 - [ ] **10.8. Wiadomość od autora na pierwszej stronie instrukcji (5.3).** Pisze autor sam.
+
+## 11. Zgłoszenia z 9.11.2026, wieczór (partie z ziarnami 114857 i 281360)
+
+Pliki w `bug-reports/` są kumulatywne (każdy zawiera wszystkie wcześniejsze zgłoszenia partii), więc unikalnych uwag jest 17. Zgłoszenie z 28.10 („żarcik”) to żart.
+
+### Błędy i mechanika
+- [x] **11.1. Koniec bitwy: okna wyskakują przed animacją śmierci (zgłoszone dwa razy: 13:57 i 14:07).** Przyczyna: okno wyboru umiejętności (awans po zabiciu strażnika) i dźwięk awansu nie czekały na pokaz ostatniego ciosu, bo silnik jest już na mapie, a arena jeszcze pokazuje cios. Teraz czeka też okno umiejętności, dźwięk awansu i samouczek. Sprawdzone w przeglądarce na partii 114857, akcja 31: najpierw cios i martwy gryf, dopiero potem okna.
+- [x] **11.2. Dziennik wyskakuje sam.** Podsumowanie „co się działo” na początku tury nie pokazuje się już w grze z samymi botami (przycisk „Dziennik” zostaje); zostaje w grze, gdzie przeciwnikiem jest drugi człowiek (hotseat/online).
+- [x] **11.3. Tryb Boss: ikona kryształu przy legowisku.** Legowisko Bossa trzyma „kryształ” tylko technicznie; ikona i napis „Leży tu kryształ” znikają.
+- [ ] **11.4. Błysk na zakrytych kafelkach (zdradza, gdzie leży skarb).** Nie odtworzone: w kodzie `glint` i `twinkle` są tylko dla odkrytych pól, na zrzucie z akcji 42 błyska tylko to, co odkryte. Prośba do autora: zrzut ekranu albo opis, który kafelek błyszczał (może pole świeżo odkryte przed obrotem kafelka).
+- [ ] **11.5. Pegaz nie może zaatakować hydry** (partia 114857, akcja 60). Nie odtworzone: silnik daje pole podejścia 5,4, a w przeglądarce kliknięcie głowy hydry wykonuje atak. Hydra jest tam prawie całkiem zasłonięta przez Nimfę i Jednorożca (ogon pod Jednorożcem), więc gracz mógł klikać w zasłoniętą część. Do przemyślenia razem z autorem: klikalność jednostek zasłoniętych przez inne.
+- [x] **11.6. Kursor zdolności.** Przy zdolności na sojuszniku (Dar Życia Nimfy itp.) kursor zmienia się na „czar”, tak jak miecz przy ataku, żeby było widać, że można kliknąć.
+- [x] **11.7. Pegaz na dwóch heksach.** Wygląda śmiesznie mało obok Jednorożca; w wersji cyfrowej Pegaz ma `size: 2` (jak bohaterowie i strażnicy) i większe pudełko w `sprites.ts`. Wersja planszowa bez zmian. Symulacje (60 gier na komórkę) bez wyjątków, wyniki w pasmach; stroiciel nie ruszany.
+
+### Rozwój i mapa
+- [ ] **11.8. Poziomy 6–10 i nowe sloty artefaktów (hełm, zbroja).** Duża zmiana balansu (rozwój, stroiciel, złote partie testowe), do osobnej sesji; potrzebne decyzje autora o krzywej PD i bonusach (patrz 10).
+- [ ] **11.9. Ładniejsze okrągłe ikony na kafelkach (gwiazdka, skrzynia, miecze) z Scenario.** Wymaga kredytów i akceptacji autora (10.4).
+
+### Grafika i animacje (do ustalenia, Scenario)
+- [ ] **11.10. Poza spoczynku:** Pegaz stoi na ziemi (bez rozłożonych skrzydeł), Czarny Smok stoi (nie leci); brakuje klipu lotu Pegaza.
+- [ ] **11.11. Animacja obrotu jednorożca jest płaska („kartka papieru”).** Obecny obrót to zwężenie obrazu (240 ms); lepszy byłby klip obrotu albo zwężenie z lekkim uniesieniem i cieniem.
+- [ ] **11.12. Pająk:** animacja ataku wygląda dziwnie (podskok i machanie odnóżami), pająk ma być większy i groźniejszy.
+- [ ] **11.13. Rzut Cyklopa:** ma rzucać wielkim kamieniem (nowy klip albo pocisk w kodzie).
