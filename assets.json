@@ -1877,60 +1877,45 @@
         "public/assets/dzwieki/sword_hit.mp3",
         "public/assets/dzwieki/arrow_shot.mp3",
         "public/assets/dzwieki/magic_cast.mp3",
-        "public/assets/dzwieki/unit_death.mp3",
         "public/assets/dzwieki/footstep_walk.mp3",
         "public/assets/dzwieki/ui_click.mp3",
         "public/assets/dzwieki/treasure_found.mp3",
         "public/assets/dzwieki/level_up.mp3",
         "public/assets/dzwieki/victory.mp3",
-        "public/assets/dzwieki/defeat.mp3"
+        "public/assets/dzwieki/defeat.mp3",
+        "public/assets/dzwieki/sword_hit_b.mp3"
       ],
       "typ": "dźwięk (efekt)",
       "narzedzie": "Scenario (plan płatny)",
-      "model": "ElevenLabs Sound Effects v3 (model_elevenlabs-sound-effects-v3), promptInfluence 0.3-0.6; przycięta cisza, szczyt ok. -3 dB, mp3 128 kbps mono (ffmpeg)",
+      "model": "ElevenLabs Sound Effects v3 (model_elevenlabs-sound-effects-v3) dla efektów; ElevenLabs Music v2.5 (model_elevenlabs-music-v2-5, instrumental) dla victory i defeat; przycięta cisza, szczyt ok. -3 do -5 dB, mp3 128 kbps (efekty mono, victory/defeat stereo), ffmpeg",
       "scenario_asset": {
-        "sword_hit": "asset_2JsJbercVjinHZ6YEZbhN4rc",
+        "sword_hit": "asset_T5KacyKwv4DdjEV74kxgusCi",
         "arrow_shot": "asset_f3rriPg5uJc6HoQGCvaTfRmJ",
         "magic_cast": "asset_PTRFYN6xDx4ty3Q2kJAbFFW7",
-        "unit_death": "asset_JVWpPrLPA93r7ftSkKp4UCLo",
-        "footstep_walk": "asset_jwx3gLHHoox3v8wZ6XTP3KoX",
+        "footstep_walk": "asset_kwVSGKuuVoZpnM8sHHtx9drX",
         "ui_click": "asset_DN72LBN49qTVnjXb3UPNTmyo",
-        "treasure_found": "asset_cBXPQzKSQVbAPwT5xUGaakTk",
+        "treasure_found": "asset_GY4ogTawM3UcnkuxeaH5ugud",
         "level_up": "asset_MgxJrsnBGscU2AnnfGeDjWhx",
-        "victory": "asset_pDy9PksqNzBcYW7vFM2kmMcy",
-        "defeat": "asset_jT3NvshBkmNmDoK5y5zteQAw"
+        "victory": "asset_Qm62wtEKdq8RaPsUbEqBAW1h",
+        "defeat": "asset_HPZfsvcVdfXXstspY9XxdHU6",
+        "sword_hit_b": "asset_vLKQJqqPXNhGQiNcdYpqxdKH"
       },
       "prompt": {
-        "sword_hit": "Single sword blade striking steel armour, sharp metallic clang with short ring, medieval fantasy game sound effect, no voices, no music (1 s)",
+        "sword_hit": "Fast sword swing whoosh followed by a heavy steel blade scraping and clanging against plate armour, loud sharp metallic impact with short ring, realistic sword fight foley, no music, no voices (1 s, promptInfluence 0.7)",
         "arrow_shot": "Bow string release and arrow whoosh flying past, quick twang then airy swish, medieval fantasy game sound effect, no voices, no music (0.8 s)",
         "magic_cast": "Short magical spell cast, shimmering sparkling arcane whoosh with glittering rising tones, fantasy game sound effect, no voices, no speech, no music (1 s)",
-        "unit_death": "Heavy armoured body collapsing to the ground, metal clatter and thud with crumbling debris, fantasy game unit death sound effect, no voices, no screams, no music (1.2 s)",
-        "footstep_walk": "Four armoured footsteps walking on dirt ground, metal armour clinks and soft crunch of earth, foley, fantasy game sound effect, no voices, no music (1 s)",
+        "footstep_walk": "One person walking calmly in leather boots on dry earth and grass, seven steps with slightly irregular spacing, soft crunch, constant quiet background, no ring-out, realistic foley, no music, no voices (4 s, loop true, promptInfluence 0.5)",
         "ui_click": "Subtle single wooden and stone button click, short soft tap, game user interface sound, no voices, no music (0.5 s)",
-        "treasure_found": "Wooden treasure chest creaking open followed by a bright magical chime and sparkle, reward found, fantasy game sound effect, no voices, no music (1.5 s)",
+        "treasure_found": "Old wooden treasure chest lid creaking open slowly, a few gold coins and jewels clinking softly, gentle airy magical shimmer, natural organic foley, no synth, no musical notes, no voices (2 s, promptInfluence 0.5)",
         "level_up": "Uplifting short level up chime, rising bright bell and harp arpeggio with sparkle, fantasy game sound effect, no voices, no drums (1.5 s)",
-        "victory": "Triumphant short victory sting, heroic brass fanfare with timpani and bright finish, medieval fantasy game jingle, no voices (3.5 s)",
-        "defeat": "Dark low defeat sting, somber descending low brass and cellos with deep drum hit and fading ominous tail, dark fantasy game jingle, no voices (3.5 s)"
+        "victory": "Short triumphant orchestral victory fanfare, heroic warm brass and soaring strings, timpani, rising to a bright glorious climax with a clear final chord, medieval fantasy, instrumental (9 s; model ElevenLabs Music v2.5, stereo, fade-out 400 ms)",
+        "defeat": "Somber dramatic orchestral defeat piece, low strings and a slow descending horn motif, dark mournful tone, slow tempo, heavy and sorrowful, ending with a long fading final note, dark fantasy, instrumental (9 s; model ElevenLabs Music v2.5, stereo, fade-out 400 ms)",
+        "sword_hit_b": "Two steel swords clashing hard, sharp bright metallic clang with scraping slide and short ringing, close-up, realistic medieval battle foley, no music, no voices (1 s, promptInfluence 0.7); wariant do wyboru"
       },
       "data": "2026-11-09",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
-      "uwagi": "próbka do odsłuchu, decyzja autora jeszcze nie zapadła"
-    },
-    {
-      "id": "dzwieki/muzyka/map_calm_sample",
-      "pliki": [
-        "public/assets/dzwieki/muzyka/map_calm_sample.mp3"
-      ],
-      "typ": "muzyka",
-      "narzedzie": "Scenario (plan płatny)",
-      "model": "ElevenLabs Music v2.5 (model_elevenlabs-music-v2-5), instrumental, 25 s, mp3 128 kbps stereo; bez obróbki (bez pętli)",
-      "scenario_asset": "asset_mpQ9Hht9kpBgChGJsf9PioLk",
-      "prompt": "Calm fantasy map exploration music, gentle harp arpeggios and soft sustained strings, slow tempo, peaceful, warm, ambient, loopable with a steady even texture and no big ending, instrumental",
-      "data": "2026-11-09",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
-      "uwagi": "próbka do odsłuchu; model nie ma trybu pętli, płynne zapętlenie wymaga obróbki"
+      "uwagi": "po odsłuchu autora: usunięto unit_death i muzykę mapy; poprawione sword_hit, footstep_walk, treasure_found, victory, defeat; pierwsze wersje tych plików zastąpione (ich asset id nie są już używane)"
     }
   ]
 }
