@@ -88,8 +88,8 @@ Zasada: każdy krok kończy się grywalną, przetestowaną wersją; `golden.test
 ### 6.1. Najpierw: domknięcie tego, co rozgrzebane (małe, szybkie)
 
 - [x] Strojenie „strzelcy +1 do ataku” w trybie cyfrowym: zrobione 5.11, wynik w `ZASADY_CYFROWE.md` („Strojenie wersji cyfrowej”); zostaje +1.
-- [ ] Braki klipów: śmierć Ogra (sprawdzić, czy po ostatnich poprawkach nadal brak), atak Elfa i Cyklopa, trafienie Wilkołaka i Hydry
-  (lista w raporcie nocnym); drobne wady: trupy na plecach głową w prawo, zryw zamiast uderzenia u Pegaza/Jednorożca/Gryfa.
+- [x] Braki klipów: sprawdzone 9.11, każda z 16 jednostek ma komplet klipów (atak, śmierć, trafienie, ruch).
+- [ ] Drobne wady klipów (do obejrzenia przez autora): trupy na plecach głową w prawo, zryw zamiast uderzenia u Pegaza/Jednorożca/Gryfa.
 - [x] Złoty Smok „w pełni zintegrowany”: silnik, boty, wybór ogona (najechanie + prawy przycisk) i rozstawienie dużych w UI działają; zostają tylko klipy z poprzedniego punktu.
 - [x] Bot wybiera stronę ogona dużej jednostki taktycznie (`tailFor`, 5.11; bez wpływu na wyniki, zostaje).
 - [~] Spis licencji obecnej muzyki: 10 utworów wpisanych do `assets.json` (6.11), ale **źródło, narzędzie i licencja są oznaczone „DO USTALENIA PRZEZ AUTORA”** — z plików da się odczytać tylko ślady Logic Pro / FL Studio. Autor musi uzupełnić, skąd pochodzi każdy utwór.
