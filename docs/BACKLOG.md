@@ -182,7 +182,7 @@ karta strzelca pokazuje Atak z premią, wyspy z widoczną wodą, przetrwanie bez
 
 - [x] Obrót jednostki: zamiast przeskoku tekstury obrót (zwężenie obrazu, 240 ms, w kodzie); jednostka zawsze zwrócona w stronę ruchu i celu ataku; kolejność ruch → obrót → atak. Docelowo można dorobić prawdziwy klip obrotu (AI), kod obsłuży go jak inne klipy.
 - [x] Hydra obracała się po ciosie, bo po każdej akcji jednostka wracała do domyślnego zwrotu; teraz zostaje zwrócona tak, jak ostatnio.
-- [x] Atak i kolejny atak nakładały się, bo bot działał, gdy ekran jeszcze czekał na cios gracza (`animLock.ts`): akcje botów czekają na koniec animacji poprzedniej (cios, trafienie, śmierć, ruch). Gra online bez tego: serwer gra bez czekania na ekran (do zrobienia: kolejka stanów do pokazania).
+- [x] Atak i kolejny atak nakładały się, bo bot działał, gdy ekran jeszcze czekał na cios gracza (`animLock.ts`): akcje botów czekają na koniec animacji poprzedniej (cios, trafienie, śmierć, ruch). Online to samo załatwia kolejka stanów (`usePresentation.ts`): każdy stan od serwera jest pokazywany po kolei (sprawdzone testami; do obejrzenia w prawdziwej grze online).
 - [x] Koniec bitwy: okno znalezionego skarbu i podsumowanie czekały tylko częściowo; teraz oba czekają, aż skończy się pokaz ostatniego ciosu i śmierci.
 - [x] Rozmiar Czarnego Smoka zbliżony do Złotego (osobne pudełko w `sprites.ts`; do oceny na żywo).
 

@@ -9,6 +9,7 @@ import { controlCounts, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { arenaSetup, DEFAULT_RULES, type Action, type GameState, type LogEntry, type SetupOptions } from '../engine/types';
 import { AdventureView } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
+import { usePresentation } from './usePresentation';
 import { animationWait, ATTACK_SHOW_MS, holdFor, resetAnimLock } from './animLock';
 import { DuelView } from './DuelView';
 import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset } from './common';
@@ -153,12 +154,11 @@ export function App() {
   // Online the server holds the game: every state it sends replaces ours.
   const onlineRoom = online?.room ?? null;
   const onlineGame = onlineRoom && onlineRoom.status !== 'lobby' ? online!.game : null;
-  useEffect(() => {
-    if (!session) return;
-    gameRef.current = onlineGame;
-    setGame(onlineGame);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onlineGame]);
+  // The states are shown one by one, each after the animations of the one before (usePresentation).
+  usePresentation(session ?? null, onlineGame, (g) => {
+    gameRef.current = g;
+    setGame(g);
+  });
   useEffect(() => {
     if (!online?.error || !onlineGame) return;
     setError(online.error);

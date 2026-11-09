@@ -214,6 +214,13 @@ export class OnlineSession {
     return () => void this.listeners.delete(listener);
   }
 
+  private gameListeners = new Set<(state: GameState) => void>();
+  /** Every game state the server sends, one by one (the plain `state.game` only keeps the last of several that arrive together). */
+  onGameState(listener: (state: GameState) => void) {
+    this.gameListeners.add(listener);
+    return () => void this.gameListeners.delete(listener);
+  }
+
   send(message: ClientMessage) {
     if (this.socket?.readyState === WebSocket.OPEN) this.socket.send(JSON.stringify(message));
     else this.update({ error: this.state.reconnecting ? 'Brak połączenia z serwerem — łączę ponownie…' : 'Brak połączenia z serwerem.' });
@@ -288,6 +295,7 @@ export class OnlineSession {
       case 'room':
         return this.update({ room: message.room, game: message.room.status === 'lobby' ? null : this.state.game });
       case 'game':
+        for (const l of [...this.gameListeners]) l(message.state);
         return this.update({ game: message.state });
       case 'chat':
         return this.update({ chat: [...this.state.chat.slice(-99), { from: message.from, text: message.text }], chatReceived: this.state.chatReceived + 1 });
