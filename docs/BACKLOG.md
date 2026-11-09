@@ -195,4 +195,5 @@ karta strzelca pokazuje Atak z premią, wyspy z widoczną wodą, przetrwanie bez
 ### 8.3. Balans (z symulacji 9.11)
 
 - Poza pasmem po przestrojeniu: Łatwy w przetrwaniu z rozwojem na długich mapach (ok. 53–63%), kilka komórek Łatwego o 1–3 punkty poniżej 70%, wyspy z rozwojem (Normalny 1 gracz na długich mapach ok. 33–35%), Kryształy na Dolinie w kooperacji (ok. 30%), Boss na Dolinie (ok. 40%).
-- Czy przetrwanie ma być jedynym celem bez kryształów? Przy punktach kontrolnych, bossie i artefakcie strażnicy nadal pilnują kryształów, których nikt nie potrzebuje: do decyzji autora.
+- Kryształy strażników zniknęły we wszystkich celach poza „Kryształami” (9.11). Kafelek Drzewa jest zwykłym polem tylko w przetrwaniu.
+- Poziomy Łatwy i Trudny w celach innych niż Kryształy i przetrwanie nie były strojone (sim 9.11, 100 gier: boss Łatwy 52–57%, artefakt Trudny 17–44%, punkty kontrolne Trudny 29–35%): do przestrojenia.

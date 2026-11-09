@@ -5,7 +5,7 @@ import { FACTION_NAMES, UNITS, type FactionId, type ItemKind } from '../engine/d
 import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
 import { movePath } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
-import { controlCounts } from '../engine/objectives';
+import { controlCounts, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { arenaSetup, DEFAULT_RULES, type Action, type GameState, type LogEntry, type SetupOptions } from '../engine/types';
 import { AdventureView } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
@@ -632,6 +632,8 @@ export function App() {
           <>Punkty <b style={{ color: '#F3D27A' }}>{controlCounts(game).dawn}</b>:<b style={{ color: '#F08A7A' }}>{controlCounts(game).horde}</b></>
         ) : game.survival ? (
           <>Przetrwane rundy <b style={{ color: '#F3D27A' }}>{Math.min(game.round - 1, game.survival.rounds)}/{game.survival.rounds}</b></>
+        ) : objectiveOf(game) !== 'crystals' ? (
+          <>{OBJECTIVES[objectiveOf(game)].progress(game)[0]?.label} <b style={{ color: '#F3D27A' }}>{OBJECTIVES[objectiveOf(game)].progress(game)[0]?.value}</b></>
         ) : (
           <><img src={asset('ui/ico_krysztal.png')} alt="" style={{ width: 'min(32px, 94vw)' }} /> Kryształy <b style={{ color: '#F3D27A' }}>{game.factions.dawn.delivered}/{game.crystalsNeeded}</b></>
         )}
@@ -865,7 +867,7 @@ function GameOver({ state, online, rankingNote, onNew, onLog }: { state: GameSta
           <span>Polegli bohaterowie Świtu / Hordy</span><b>{s.heroDeaths.dawn} / {s.heroDeaths.horde}</b>
           <span>Polegli pomocnicy Świtu / Hordy</span><b>{s.supportDeaths.dawn} / {s.supportDeaths.horde}</b>
           <span>Znalezione skarby Świtu / Hordy</span><b>{s.treasuresCollected.dawn} / {s.treasuresCollected.horde}</b>
-          {state.control ? <><span>Punkty kontrolne (Świt / Horda)</span><b>{controlCounts(state).dawn} / {controlCounts(state).horde}</b></> : state.survival ? <><span>Fale Hordy</span><b>{state.survival.waves}</b></> : <><span>Kryształy przy Drzewie</span><b>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b></>}
+          {state.control ? <><span>Punkty kontrolne (Świt / Horda)</span><b>{controlCounts(state).dawn} / {controlCounts(state).horde}</b></> : objectiveOf(state) !== 'crystals' ? <><span>{OBJECTIVES[objectiveOf(state)].progress(state)[0]?.label}</span><b>{OBJECTIVES[objectiveOf(state)].progress(state)[0]?.value}</b></> : <><span>Kryształy przy Drzewie</span><b>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b></>}
         </div>
         )}
         {rankingNote && <div style={{ fontSize: 17, color: '#F3D27A' }}>{rankingNote}</div>}

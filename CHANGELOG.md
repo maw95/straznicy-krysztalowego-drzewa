@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Punkty kontrolne, boss i artefakt: strażnicy już nie pilnują kryształów (pokonany nic nie zostawia), a pasek na dole pokazuje postęp celu zamiast kryształów.
 - Animacje bitwy: jednostki obracają się płynnie (zamiast przeskoku na lustrzane odbicie), zawsze są zwrócone w stronę ruchu i celu, a kolejność to ruch, obrót, atak. Komputer czeka z następną akcją, aż skończy się pokaz poprzedniej (cios, trafienie, śmierć), więc ataki nie nakładają się. Okno znalezionego skarbu i podsumowanie bitwy pojawiają się dopiero po pokazie ostatniego ciosu. Czarny Smok jest tak duży jak Złoty.
 - Samouczek zna cel gry: w przetrwaniu, punktach kontrolnych, bossie i artefakcie pierwsza podpowiedź mówi, o co naprawdę chodzi, a nie o kryształy i Drzewo.
 - Cel „Przetrwanie”: strażnicy zostali, ale już nie chronią kryształów (pokonany nic nie zostawia), a w miejscu kafelka Drzewa jest zwykłe pole. Na dole ekranu licznik przetrwanych rund zamiast kryształów. Poziomy trudności przestrojone.

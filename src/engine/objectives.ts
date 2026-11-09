@@ -288,8 +288,6 @@ const survival: Objective = {
   summary: 'Fale Hordy: co dwie rundy w bazie Hordy pojawia się kolejny bohater. Przymierze wygrywa, gdy przetrwa wyznaczoną liczbę rund, Horda, gdy polegną wszyscy jego bohaterowie.',
   init(state) {
     state.survival = { rounds: SURVIVAL.rounds[state.setup.mapSize], waves: 0 };
-    // Nobody carries crystals to the Tree here: the guardians stay (a fight, a treasure, experience) but keep nothing.
-    for (const c of Object.values(state.crystals)) c.decoy = true;
     // The Tree's hex becomes an ordinary one (the Przymierze still gather there: treeOf stays the middle of the map).
     const rng = new Rng((state.setup.seed ^ 0x2f6e2b1) | 0);
     const tile = state.tiles[treeOf(state)];

@@ -134,6 +134,8 @@ export function createGame(setup: SetupOptions): GameState {
     state.crystals[id] = { id, guardian: c.guardian, at: c.hex };
     state.tiles[c.hex].crystalId = id;
   });
+  // Only the crystals goal carries crystals to the Tree: in every other goal the guardians stay (a fight, a treasure, experience) but keep nothing.
+  if (objectiveOf(state) !== 'crystals') for (const c of Object.values(state.crystals)) c.decoy = true;
   OBJECTIVES[objectiveOf(state)].init(state);
 
   setup.seats.forEach((seat, i) => {

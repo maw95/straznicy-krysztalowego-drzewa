@@ -139,6 +139,9 @@ describe('objective survival (digital ruleset, coop)', () => {
     const all = Object.values(s.crystals);
     expect(all.length).toBeGreaterThan(0);
     expect(all.every((c) => c.decoy)).toBe(true);
+    // Every goal but the crystals goal: the guardians keep nothing.
+    for (const objective of ['control', 'boss', 'artifact'] as const) expect(Object.values(createGame(setup({ mode: 'coop' }, { ruleset: 'digital', objective })).crystals).filter((c) => c.id !== 'artifact' && c.id !== 'boss').every((c) => c.decoy)).toBe(true);
+    expect(Object.values(createGame(setup()).crystals).some((c) => c.decoy)).toBe(false);
   });
 
   it('is only played in the digital ruleset, with the rounds to hold out set by the map', () => {
