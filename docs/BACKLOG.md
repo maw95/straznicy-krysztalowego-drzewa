@@ -194,7 +194,6 @@ karta strzelca pokazuje Atak z premią, wyspy z widoczną wodą, przetrwanie bez
 
 ### 8.3. Balans (z symulacji 9.11)
 
-- [x] Nowe pasma autora: Łatwy 60–80%, Normalny 40–60%, Trudny 30–45% (wygrane Przymierza). Stroiciel automatyczny (`scripts/sim/tuneLevels.ts`) przestroił mapę-trójkąt we wszystkich celach, z rozwojem i bez; po weryfikacji na 300 grach poza pasmem zostało 16 z 400 komórek.
-- Poza pasmem: Boss, Trudny, 1 gracz, krótka mapa (55–58%): dźwignie nie działają, potrzebny inny mechanizm (np. twardszy Boss na Trudnym).
-- Do przeliczenia z nowymi pasmami: kształty map inne niż trójkąt (`make sim-cele`), Dolina, wyspy z rozwojem (Normalny 1 gracz na długich mapach ok. 33–35%).
+- [x] Pasma autora: Łatwy 65–85%, Normalny 45–65%, Trudny 30–45% (wygrane Przymierza). Stroiciel automatyczny (`scripts/sim/tuneLevels.ts`) przestroił wszystkie kształty map, cele i ustawienia rozwoju. Po weryfikacji na 250 grach poza pasmem zostało 256 z 2400 komórek.
+- Poza pasmem najwięcej: Boss (Trudny: według autora nie ruszamy), Kryształy na Cieśninie i Dolinie (10–14 z 40 komórek), Artefakt i Boss z rozwojem na wyspach. Do poprawy drugim przebiegiem stroiciela albo innymi dźwigniami.
 - Kryształy strażników zniknęły we wszystkich celach poza „Kryształami” (9.11). Kafelek Drzewa jest zwykłym polem tylko w przetrwaniu.

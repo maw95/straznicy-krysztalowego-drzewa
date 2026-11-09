@@ -246,12 +246,12 @@ bohatera na krótkiej mapie, Łatwy 2 graczy bez zastępowania (z rozwojem z nim
 
 ## Strojenie automatyczne i nowe pasma (9.11.2026)
 
-Pasma wygranych Przymierza (autor, 9.11.2026; zastępują wcześniejsze 70–90 / 45–65 / 30–50): **Łatwy 60–80%, Normalny 40–60%, Trudny 30–45%**.
-Zamiast ręcznego dobierania liczb działa stroiciel `scripts/sim/tuneLevels.ts` (`node --import tsx scripts/sim/tuneLevels.ts <cel> <rozwój 0|1> [gier] [rund]`, ok. 30–60 s na cel i ustawienie rozwoju):
-dla każdej komórki (rozmiar mapy × stół × poziom) szuka najmniejszej zmiany dźwigni (losowe skarby startowe Hordy i Przymierza, w trudnym poziomie dodatkowy bohater Hordy), która wprowadza wynik w pasmo z marginesem 3 punktów.
-`scripts/sim/tuneMerge.ts` zbiera wyniki do wygenerowanego `src/engine/tuningAuto.ts` (222 wpisy dla mapy-trójkąta, cele: Kryształy, Punkty kontrolne, Przetrwanie, Boss, Artefakt, z rozwojem i bez), który `DIGITAL_TUNING` dokleja na końcu.
-Weryfikacja na 300 grach (`make sim-tabele` z `SIM_DIGITAL=1 SIM_OBJECTIVE=<cel>`, z `SIM_GROWTH=1` i bez): z 400 komórek poza pasmem zostało 16, w większości o 1–4 punkty (szum). Wyraźnie poza: Boss, Trudny, 1 gracz, mapa krótka (55–58% przy paśmie do 45%: żadna z dźwigni tego nie rusza, bo bohater dochodzi do Bossa wcześniej, niż skarby Hordy mają znaczenie) i Artefakt, Trudny, 1 gracz, mapa średnia (poprawione ręcznie).
-Kształty map inne niż trójkąt zachowują dawne strojenie (tabela celów × kształtów w `make sim-cele` jest do przeliczenia z nowymi pasmami).
+Pasma wygranych Przymierza (autor, 9.11.2026; zastępują wszystkie wcześniejsze): **Łatwy 65–85%, Normalny 45–65%, Trudny 30–45%**.
+Zamiast ręcznego dobierania liczb działa stroiciel `scripts/sim/tuneLevels.ts` (`[SIM_SHAPE=… SIM_MAP=…] node --import tsx scripts/sim/tuneLevels.ts <cel> <rozwój 0|1> [gier] [rund]`, ok. 30 s na cel, kształt mapy i ustawienie rozwoju):
+dla każdej komórki (rozmiar mapy × stół × poziom) szuka najmniejszej zmiany dźwigni (losowe skarby startowe Hordy i Przymierza, w trudnym poziomie i w kooperacji dodatkowi bohaterowie Hordy), która wprowadza wynik w pasmo z marginesem 3 punktów.
+`scripts/sim/tuneMerge.ts` zbiera wyniki do wygenerowanego `src/engine/tuningAuto.ts` (1346 wpisów: mapy trójkąt, prostokąt, pierścień, wyspy, Cieśnina i Dolina; cele Kryształy, Punkty kontrolne, Przetrwanie, Boss, Artefakt; z rozwojem bohatera i bez), który `DIGITAL_TUNING` dokleja na końcu.
+Wpisy `customMapId` rozróżniają dwie ręczne mapy. Strojenie od zera: `"noAuto": true` w `SIM_OVERRIDE` pomija wygenerowane wpisy.
+Weryfikacja na 250 grach na komórkę (nie niezależna: te same ziarna co przy strojeniu): z 2400 komórek poza pasmem zostało 256 (11%), w większości o kilka punktów. Najwięcej: Boss (Trudny: dźwignie nie działają, bo bohater dochodzi do Bossa, zanim skarby Hordy mają znaczenie; autor: nie ruszać) oraz Kryształy na Cieśninie i Dolinie (10–14 z 40 komórek: ręczne mapy mają dużo wcześniejszych wpisów i mało miejsca na korektę).
 
 ## Strojenie przygody w wersji cyfrowej (5.11.2026)
 

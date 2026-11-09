@@ -6,7 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
-- Balans: poziomy trudności wszystkich celów (kryształy, punkty kontrolne, przetrwanie, boss, artefakt, z rozwojem bohatera i bez) przestrojone automatycznie na wygrane Przymierza: Łatwy 60–80%, Normalny 40–60%, Trudny 30–45%.
+- Balans: poziomy trudności wszystkich celów (kryształy, punkty kontrolne, przetrwanie, boss, artefakt, z rozwojem bohatera i bez) przestrojone automatycznie na wygrane Przymierza: Łatwy 65–85%, Normalny 45–65%, Trudny 30–45%. Obejmuje wszystkie kształty map (trójkąt, prostokąt, pierścień, wyspy, Cieśnina, Dolina).
 - Umiejętności i artefakty mają własne, malowane ikony (medaliony: miecz, serce, skrzydło, sztandar, kompas, skrzynia; miecz, zbroja i buty w dwóch poziomach: brąz i złoto z fioletem).
 - Rozwój bohatera stał się czytelny: pod portretem jest pasek poziomu i PD (ile masz, ile brakuje do następnego poziomu), ikony umiejętności i trzy miejsca na artefakty (broń, zbroja, buty; puste są zaznaczone). Za każde zdobyte PD pojawia się notka, za co. Zdobycie artefaktu ogłasza osobna karta z opisem, źródłem (skrzynia, strażnik, pokonany bohater) i wyjaśnieniem, czym artefakt różni się od skarbu. Umiejętności do wyboru to teraz karty z ikonami i ozdobną ramką. Wyjaśnienia są też w samouczku i w „Zasadach i kartach”.
 - Gra online: stany od serwera są pokazywane po kolei, każdy po zakończeniu animacji poprzedniego (cios, trafienie, śmierć, ruch). Wcześniej ekran przeskakiwał i pokazywał dwa ciosy naraz albo kończył bitwę przed ostatnim ciosem.

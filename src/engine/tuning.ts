@@ -17,6 +17,8 @@ export interface DigitalTune {
   maps?: MapSize[];
   /** Hero growth switched on (missing = any). */
   growth?: boolean;
+  /** A hand-made map (shape 'custom'): its id; missing = every one. */
+  customMapId?: string;
   /** Map shape (missing = any; the triangle is what a setup without `mapShape` plays). */
   shape?: MapShape;
   /** Changes to the rules; applied in order, later entries win. */
@@ -84,8 +86,6 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   { objective: 'crystals', shape: 'custom', mode: 'coop', rules: { dawnStartTreasures: { resurrections: 1, others: 0, random: 9 } } },
   // Generated entries (scripts/sim/tune.ts), last: they win over everything above on the triangle map.
   ...AUTO_TUNING,
-  // Hand fixes of cells the tuner could not settle (it gave up on them): artifact, Hard, one player, medium map, without hero growth.
-  { objective: 'artifact', level: 'hard', mode: 'coop', players: 1, maps: ['medium'], growth: false, shape: 'triangle', rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 0 } } },
 ];
 
 /** The rules a game is played with: the setup's, plus the digital levers that match it. */
@@ -106,6 +106,7 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
     if (t.maps && !t.maps.includes(setup.mapSize)) continue;
     if (t.growth !== undefined && t.growth !== Boolean(base.heroGrowth)) continue;
     if (t.shape && t.shape !== (setup.mapShape ?? 'triangle')) continue;
+    if (t.customMapId && t.customMapId !== setup.customMapId) continue;
     rules = { ...rules, ...t.rules };
   }
   return rules;

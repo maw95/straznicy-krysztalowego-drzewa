@@ -2,8 +2,9 @@
 // the smallest change of the levers (start treasures of the two sides, hero replacement, an extra Horde hero) that brings the Przymierza's
 // win rate into the band of its level. Results (DigitalTune entries for the triangle map) go to .tmp/sim/auto-<objective>-g<growth>.json;
 // scripts/sim/tuneMerge.ts turns all of them into src/engine/tuningAuto.ts.
-// Usage: node --import tsx scripts/sim/tuneLevels.ts <objective> <growth 0|1> [games=120] [rounds=8]
-// Bands (the author, 9.11.2026): Easy 60-80, Normal 40-60, Hard 30-45 percent wins of the Przymierza. About 5-10 minutes per objective.
+// Usage: [SIM_SHAPE=rectangle|ring|islands|custom SIM_MAP=ciesnina|dolina] node --import tsx scripts/sim/tuneLevels.ts <objective> <growth 0|1> [games=120] [rounds=8]
+// Without SIM_SHAPE the triangle map. The entries of the old hand-made tuning stay in force while measuring; the generated ones of an earlier run do not (noAuto).
+// Bands (the author, 9.11.2026): Easy 65-85, Normal 45-65, Hard 30-45 percent wins of the Przymierza. About 1 minute per objective and shape.
 
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -12,7 +13,10 @@ const [objective, growthArg, gamesArg, roundsArg] = process.argv.slice(2);
 const growth = growthArg === '1';
 const games = Number(gamesArg ?? 120);
 const maxRounds = Number(roundsArg ?? 8);
-const BAND: Record<string, [number, number]> = { kids: [60, 80], full: [40, 60], hard: [30, 45] };
+const BAND: Record<string, [number, number]> = { kids: [65, 85], full: [45, 65], hard: [30, 45] };
+const shape = process.env.SIM_SHAPE ?? 'triangle';
+const map = process.env.SIM_MAP;
+const tag = `${shape}${map ? `-${map}` : ''}-${objective}-g${growthArg}`;
 const LEVEL: Record<string, string> = { kids: 'kids', full: 'normal', hard: 'hard' };
 
 type Patch = Record<string, unknown>;
@@ -68,7 +72,8 @@ function entryOf(c: Cell, step: number) {
     players: c.table.endsWith('1') ? 1 : 2,
     maps: [c.size],
     growth,
-    shape: 'triangle',
+    shape,
+    ...(map ? { customMapId: map } : {}),
     rules: patch,
   };
 }
@@ -77,7 +82,7 @@ function measure(cells: Cell[], label: string): Map<string, number> {
   const filter = `^(${cells.map((c) => c.name).join('|')})$`;
   const tuning = cells.filter((c) => c.step !== 0).map((c) => entryOf(c, c.step));
   execFileSync('node', ['--import', 'tsx', 'scripts/sim/matrix.ts', String(games), label, filter], {
-    env: { ...process.env, SIM_DIGITAL: '1', SIM_OBJECTIVE: objective, ...(growth ? { SIM_GROWTH: '1' } : {}), SIM_OVERRIDE: JSON.stringify({ tuning: [...ALREADY, ...tuning] }) },
+    env: { ...process.env, SIM_DIGITAL: '1', SIM_OBJECTIVE: objective, ...(growth ? { SIM_GROWTH: '1' } : {}), SIM_OVERRIDE: JSON.stringify({ noAuto: true, tuning: [...ALREADY, ...tuning] }) },
     stdio: ['ignore', 'ignore', 'inherit'],
     maxBuffer: 1 << 28,
   });
@@ -100,11 +105,11 @@ for (const size of ['short', 'medium', 'long', 'veryLong']) {
   }
 }
 
-let base = measure(all, `tune-${objective}-${growthArg}-0`);
+let base = measure(all, `tune-${tag}-0`);
 for (const c of all) c.rate = base.get(c.name) ?? 0;
 const finished = new Map<string, { step: number; rate: number }>();
 for (const c of all) if (dist(c, c.rate) === 0) (c.done = true), finished.set(c.name, { step: 0, rate: c.rate });
-console.log(`${objective} g${growthArg}: ${all.filter((c) => !c.done).length}/${all.length} cells out of band at the start`);
+console.log(`${tag}: ${all.filter((c) => !c.done).length}/${all.length} cells out of band at the start`);
 
 for (let round = 1; round <= maxRounds; round++) {
   const open = all.filter((c) => !c.done);
@@ -129,7 +134,7 @@ for (let round = 1; round <= maxRounds; round++) {
   }
   const run = open.filter((c) => !c.done);
   if (!run.length) break;
-  const res = measure(run, `tune-${objective}-${growthArg}-${round}`);
+  const res = measure(run, `tune-${tag}-${round}`);
   for (const c of run) {
     const r = res.get(c.name) ?? 0;
     const was = c.best;
@@ -151,5 +156,5 @@ for (const c of all) {
     report.push(`${c.name} ${Math.round(startRate)}% -> ${Math.round(chosen.rate)}%${chosen.rate < BAND[c.option][0] || chosen.rate > BAND[c.option][1] ? ' (OUT)' : dist(c, chosen.rate) ? ' (edge)' : ''}`);
   } else if (dist(c, startRate) > 0) report.push(`${c.name} ${Math.round(startRate)}% unchanged (OUT)`);
 }
-writeFileSync(`.tmp/sim/auto-${objective}-g${growthArg}.json`, JSON.stringify({ objective, growth, games, entries, report }, null, 1));
+writeFileSync(`.tmp/sim/auto-${tag}.json`, JSON.stringify({ objective, growth, games, entries, report }, null, 1));
 console.log(report.join('\n'));
