@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Koniec gry: po zwycięstwie (Hordy i Przymierza) gra tylko dźwięk zwycięstwa albo porażki; stare utwory zwycięstwa nie nakładają się już na niego.
 - Wersja cyfrowa: dwupolowe jednostki da się atakować z każdej strony, także od strony ogona, a dwupolowy atakujący liczy podejście całym swoim ciałem. Kursor miecza pojawia się też nad polem ogona, nie tylko nad głową.
 - Wersja cyfrowa: Szaman Goblinów (i inni strzelcy) ma ten sam Atak na karcie przy wyborze pomocników i w podglądzie karty, co na arenie; wcześniej te widoki pokazywały wartość z wydrukowanej karty.
 - Efekty dźwiękowe: cios mieczem, strzał z łuku, czar (zdolność), kroki idących jednostek, kliknięcie przycisku, znaleziony skarb, awans bohatera, wygrana i przegrana. W opcjach jest osobny suwak i przełącznik „Efekty”, niezależny od muzyki.

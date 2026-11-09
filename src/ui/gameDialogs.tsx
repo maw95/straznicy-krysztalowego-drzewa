@@ -20,14 +20,15 @@ import { TreasureCard } from './TreasureCard';
 import { TreasureReveal } from './CardBack';
 import { UnitCard } from './UnitCard';
 
-/** The music for what is on screen: menu, map, battle, a guardian fight, the ritual or the end of the game. */
+/** The music for what is on screen: menu, map, battle, a guardian fight or the ritual (silence at the end of the game). */
 export function musicTheme(game: GameState | null): Theme {
   if (!game) return 'menu';
   if (game.setup.mode === 'arena') {
     if (game.phase === 'battle') return 'battle';
-    return game.winner === 'dawn' ? 'dawnVictory' : game.winner === 'horde' ? 'hordeVictory' : 'none';
+    return 'none';
   }
-  if (game.phase === 'over') return game.winner === 'dawn' ? 'dawnVictory' : 'hordeVictory';
+  // The end of the game is the victory or defeat sound effect (App.tsx); the old victory pieces would play over it.
+  if (game.phase === 'over') return 'none';
   if (game.phase === 'battle' && (game.battle?.stage === 'fight' || game.battle?.stage === 'deploy')) return game.battle.kind === 'neutral' ? 'guardian' : 'battle';
   return game.ritual > 0 ? 'ritual' : 'adventure';
 }
