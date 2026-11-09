@@ -1818,6 +1818,20 @@
       "data": "do ustalenia (w repo od pierwszego commita)",
       "ai": "do ustalenia",
       "licencja": "DO USTALENIA PRZEZ AUTORA: warunki użycia komercyjnego i na Steamie; bez tego nie wydawać"
+    },
+    {
+      "id": "kafelki/woda",
+      "pliki": [
+        "public/assets/tiles/water_1.jpg",
+        "public/assets/tiles/water_2.jpg"
+      ],
+      "typ": "grafika kafelka mapy (woda między wyspami)",
+      "narzedzie": "skrypt scripts/assets/water_tiles.py (Pillow)",
+      "model": "brak (generowane proceduralnie: gradient, szum, linie fal)",
+      "prompt": "nie dotyczy",
+      "data": "2026-11-09",
+      "ai": false,
+      "licencja": "własna (kod w repo)"
     }
   ]
 }

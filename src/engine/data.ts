@@ -342,6 +342,8 @@ export type Terrain =
   | 'ruins'
   | 'deadThicket'
   | 'thorns'
+  // The channels between the islands (digital ruleset)
+  | 'water'
   // Special tiles
   | 'tree'
   | 'baseDawn'
@@ -369,6 +371,7 @@ export const TERRAIN_NAMES: Record<Terrain, string> = {
   ruins: 'Ponure Ruiny',
   deadThicket: 'Martwy Gąszcz',
   thorns: 'Trujące Ciernie',
+  water: 'Woda',
   tree: 'Kryształowe Drzewo',
   baseDawn: 'Baza Przymierza Świtu',
   baseHorde: 'Baza Mrocznej Hordy',
@@ -403,12 +406,13 @@ export const TERRAIN_COST: Record<Terrain, number | null> = {
   chasm: null,
   deadThicket: null,
   thorns: null,
+  water: null,
 };
 
 /** Number of art variants per terrain (public/assets/tiles/<terrain>_<n>.jpg). */
 export const TERRAIN_VARIANTS: Record<Terrain, number> = {
   meadow: 4, forest: 4, river: 4, bridge: 4, hill: 4, mountain: 4, chasm: 4,
-  scorched: 4, swamp: 4, barren: 4, darkCave: 4, ruins: 4, deadThicket: 4, thorns: 4,
+  scorched: 4, swamp: 4, barren: 4, darkCave: 4, ruins: 4, deadThicket: 4, thorns: 4, water: 2,
   tree: 1, baseDawn: 1, baseHorde: 1, lairCyclops: 1, lairGriffin: 1, lairHydra: 1,
   treasureDawn: 4, treasureHorde: 4,
 };

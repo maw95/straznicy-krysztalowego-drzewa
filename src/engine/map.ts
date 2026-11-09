@@ -161,6 +161,8 @@ interface Layout {
   homes: Record<'dawn' | 'horde', HexKey>;
   /** Hexes whose terrain is fixed by the map ('#' impassable, '=' bridge); the others are drawn from the side's tile pool. */
   forced?: Record<HexKey, 'wall' | 'bridge'>;
+  /** What the '#' hexes are: water (always visible, so the islands can be seen) instead of the side's own obstacle tile. */
+  wallTerrain?: 'water';
 }
 
 function triangleLayout(size: MapSize): Layout {
@@ -235,7 +237,7 @@ function islandsLayout(size: MapSize, rng: Rng): Layout {
     }
     rows.push(line);
   }
-  return gridLayout(rows);
+  return { ...gridLayout(rows), wallTerrain: 'water' };
 }
 
 function customLayout(id: string | undefined): Layout {
@@ -281,7 +283,9 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
       const tile: Tile = { key: k, row, col, terrain: 'meadow', side, variant: 1, revealed: false, crystalId: null, treasureId: null, home: null, tree: false };
       setTerrain(tile, rng.pick(TILE_POOLS[side]), rng);
       const fixed = layout.forced?.[k];
-      if (fixed) setTerrain(tile, fixed === 'bridge' ? 'bridge' : side === 'dawn' ? 'chasm' : 'deadThicket', rng);
+      if (fixed) setTerrain(tile, fixed === 'bridge' ? 'bridge' : layout.wallTerrain ?? (side === 'dawn' ? 'chasm' : 'deadThicket'), rng);
+      // Water has nothing hidden under it: it is on the map from the start, which is what shows the islands.
+      if (tile.terrain === 'water') tile.revealed = true;
       tiles[k] = tile;
     }
     const tree = layout.tree;
