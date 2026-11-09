@@ -29,6 +29,8 @@ interface Props {
 
 /** The biggest hex a player can zoom the map to (pixels across). */
 const MAX_HEX_W = 120;
+/** The Boss's lair and the Artifact use a crystal record, but only a real crystal (and the Artifact) is drawn as one. */
+const showsCrystal = (c: { id: string; decoy?: boolean }) => !c.decoy && c.id !== 'boss';
 
 /** Cheapest paths the active hero can still walk this turn (revealed hexes only). */
 function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: HexKey[]; hostile: boolean }> {
@@ -368,7 +370,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     {crystal && (
                       <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', display: 'flex', alignItems: 'center' }}>
                         {crystal.guardian && !figureFor(crystal.guardian) && <Portrait unitId={crystal.guardian} size={W * 0.5} ring={SIDE_RING.neutral} title={UNITS[crystal.guardian].name} />}
-                        {!crystal.decoy && (
+                        {showsCrystal(crystal) && (
                           <div className="twinkle" style={{ marginLeft: crystal.guardian && !figureFor(crystal.guardian) ? -W * 0.12 : 0 }} title="Kryształ">
                             <Medal fill="mBlue" glyph="gCrystal" size={W * 0.28} />
                           </div>
@@ -613,7 +615,7 @@ function TileDetails({ state, k }: { state: GameState; k: HexKey }) {
       {!t.revealed && note('Teren i to, co tu leży, są jeszcze ukryte.')}
       {t.tree && objectiveOf(state) === 'crystals' && note(`Kryształowe Drzewo: Przymierze oddaje tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded}).`)}
       {state.control?.points.includes(t.key) && note(controlNote(state, t.key))}
-      {crystal && !crystal.guardian && !crystal.decoy && note('Leży tu kryształ.')}
+      {crystal && !crystal.guardian && showsCrystal(crystal) && note('Leży tu kryształ.')}
       {crystal?.guardian && (
         <div className="well" style={{ padding: '6px 8px', display: 'flex', gap: 10, alignItems: 'center' }}>
           <Portrait unitId={crystal.guardian} size={44} ring={SIDE_RING.neutral} preview={false} />
@@ -652,7 +654,7 @@ function tileLines(state: GameState, k: HexKey, reach: { cost: number; hostile: 
     lines.push(cost === null ? 'Nieprzechodnie' : `Koszt ruchu: ${cost}${cost === 2 ? ' (teren trudny)' : ''}`);
     const crystal = Object.values(state.crystals).find((c) => c.at === k);
     if (crystal?.guardian) lines.push(`${crystal.decoy ? 'Strażnik' : 'Kryształ pod strażą'}: ${UNITS[crystal.guardian].name}`);
-    else if (crystal && !crystal.decoy) lines.push('Leży tu kryształ');
+    else if (crystal && showsCrystal(crystal)) lines.push('Leży tu kryształ');
     if (t.treasureId) lines.push('Leży tu skarb');
     if (t.site && !t.site.used) lines.push(SITE.names[t.site.kind]);
     if (t.tree && objectiveOf(state) === 'crystals') lines.push(`Oddaj tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded})`);
