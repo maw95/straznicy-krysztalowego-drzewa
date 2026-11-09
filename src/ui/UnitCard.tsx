@@ -3,7 +3,7 @@
 // ability medallion, stat icons, and the text from the unit data.
 // Coordinates are in frame pixels (551×713), measured on each frame.
 
-import { battleStats, UNITS } from '../engine/data';
+import { battleStats, DIGITAL_RANGED_BONUS, UNITS } from '../engine/data';
 import { asset } from './common';
 import { StatText } from './markers';
 
@@ -180,7 +180,9 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false,
   const nameW = L.name.x1 - L.name.x0;
   const nameSize = Math.min(40, (nameW / Math.max(8, def.name.length)) * 2.05);
   const stats = card ? def : battleStats(unitId, digital);
-  const values = [hp ?? stats.hp, attack ?? stats.attack, speed ?? stats.speed];
+  // In the digital ruleset a shooter hits one harder than the printed Atak says; the card shows what the unit really deals.
+  const shooterBonus = digital && def.attackType === 'ranged' ? DIGITAL_RANGED_BONUS : 0;
+  const values = [hp ?? stats.hp, (attack ?? stats.attack) + shooterBonus, speed ?? stats.speed];
   // The description starts right of the ability medallion and gets the largest font that fits.
   const desc = { ...L.desc, x0: Math.max(L.desc.x0, L.ability.cx + L.ability.r + 8), y0: L.desc.y0 - 4, y1: L.desc.y1 + 3 };
   const descSize = fitFont(def.abilityText, (desc.x1 - desc.x0) * kx - 16, (desc.y1 - desc.y0) * ky);

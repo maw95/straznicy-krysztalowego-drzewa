@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wersja cyfrowa: karta strzelca (np. Elfa Druida) pokazuje Atak z premią strzelca (+1), czyli tyle, ile jednostka naprawdę zadaje, a nie tylko wartość wydrukowaną.
 - „Leśny Tropiciel” (i „Nocny Zwiadowca”) daje dodatkowy punkt ruchu od razu po wyborze, a nie dopiero w następnej turze. Pasek ruchu bohatera na mapie pokazuje teraz wszystkie punkty (też te z umiejętności, pomocy dla dziecka i wyposażenia), np. cztery zamiast trzech.
 - Balans wersji cyfrowej po naprawie Nocnej Zasadzki: przestrojone poziomy z rozwojem bohatera (Łatwy był za trudny, Trudny w kooperacji dla dwóch graczy za łatwy) i kilka komórek bez rozwoju.
 - Naprawiono Nocną Zasadzkę Nietoperza Cienia: dodatkowe obrażenia (+3) nie były doliczane do ciosu, który jej używał, choć podgląd je pokazywał. Boty z nietoperzem biją teraz tak, jak mówi karta.

@@ -12,3 +12,11 @@ describe('UnitCard in the digital edition', () => {
     expect(texts(false)).toContain('8');
   });
 });
+
+describe('UnitCard: shooters in the digital edition', () => {
+  const attackShown = (digital: boolean) => [...render(<UnitCard unitId="elfDruid" digital={digital} />).container.querySelectorAll('div')].map((d) => d.textContent);
+  it('shows the Elf Druid with Atak 2 (printed 1 plus the shooter bonus), the printed card with 1', () => {
+    expect(attackShown(true)).toContain('2');
+    expect(attackShown(false)).not.toContain('2');
+  });
+});
