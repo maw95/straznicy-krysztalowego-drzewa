@@ -203,7 +203,7 @@ karta strzelca pokazuje Atak z premią, wyspy z widoczną wodą, przetrwanie bez
 
 Wcześniejsze zgłoszenia z tego dnia (rano) są w sekcji 8; zgłoszenie z 28.10 („żarcik astronaucik”) to żart, bez błędu.
 
-- [ ] **9.1. Szaman Goblinów: Atak na karcie ≠ Atak na arenie.** Przy wyborze pomocników karta pokazuje 1 A, na arenie jednostka ma 2 A (premia strzelca +1). Poprawka z 9.11 objęła karty w innych widokach (np. Elf Druid), ale nie ekran wyboru pomocników — sprawdzić, które widoki kart nadal biorą wartość wydrukowaną, i ujednolicić.
+- [x] **9.1. Szaman Goblinów: Atak na karcie ≠ Atak na arenie.** Przy wyborze pomocników karta pokazuje 1 A, na arenie jednostka ma 2 A (premia strzelca +1). Poprawka z 9.11 objęła karty w innych widokach (np. Elf Druid), ale nie ekran wyboru pomocników — sprawdzić, które widoki kart nadal biorą wartość wydrukowaną, i ujednolicić.
 - [ ] **9.2. Klikalność jednostek dwupolowych (błąd, wysoki priorytet — blokuje atak).** Wilkołak nie może zaatakować Złotego Smoka „centralnie od tyłu”: kursor nie zmienia się na miecz. Sprawdzić test trafienia (hit-testing) i wybór celu przy ataku z kierunku ogona dużej jednostki; odtworzyć na `?seed=4400` (partia z zgłoszenia, akcja 28).
 - [ ] **9.3. Martwy Wilkołak leży na 3 heksach i za wysoko.** Powinien zajmować 2 pola i leżeć niżej (rozmiar/pozycja klipu śmierci w `sprites.ts`, kotwica dla jednostek dużych).
-- [ ] **9.4. Figurki 2D (do oceny autora, grafika):** Szaman Goblinów powinien być niski (gobliny są niskie); Nietoperz większy i groźniejszy; pozycja spoczynku Nietoperza wygląda jak lot — albo siedzi, albo wisi w miejscu z ciągłą animacją lotu (decyzja autora, które).
+- [ ] **9.4. Figurki 2D (do oceny autora, grafika):** Szaman Goblinów powinien być niski (gobliny są niskie); Nietoperz większy i groźniejszy; pozycja spoczynku Nietoperza wygląda jak lot — **decyzja autora 9.11: ma siedzieć** (potrzebna poza siedząca, grafika/klip).

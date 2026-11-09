@@ -6,7 +6,7 @@ import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } fro
 import { movePath } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import { controlCounts, objectiveOf, OBJECTIVES } from '../engine/objectives';
-import { arenaSetup, DEFAULT_RULES, type Action, type GameState, type LogEntry, type LogEvent, type SetupOptions } from '../engine/types';
+import { arenaSetup, DEFAULT_RULES, isDigital, type Action, type GameState, type LogEntry, type LogEvent, type SetupOptions } from '../engine/types';
 import { AdventureView } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
 import { usePresentation } from './usePresentation';
@@ -18,7 +18,7 @@ import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset } from './commo
 import { SetupScreen } from './SetupScreen';
 import { music } from './music';
 import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, OptionsDialog, SkillDialog, VictoryEffects, type Confirmation } from './gameDialogs';
-import { UnitCard } from './UnitCard';
+import { DigitalCardsContext, UnitCard } from './UnitCard';
 import { readAutosave, replay, writeAutosave, type BugReport, type SaveFile } from './saves';
 import { BugReportDialog } from './BugReportDialog';
 import { TesterDialog } from './TesterDialog';
@@ -727,7 +727,7 @@ export function App() {
   const arenaPrep = !held && game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'select' || b.stage === 'draft')));
 
   return (
-    <>
+    <DigitalCardsContext.Provider value={isDigital(game.rules)}>
       <AppChrome error={error} onDismissError={() => setError(null)} showRules={showRules} onCloseRules={() => setShowRules(false)} />
       {overlay}
       {isOnline && onlineRoom?.waiting && <WaitingBanner room={onlineRoom} canHand={mySeats.size > 0} onHand={(seat) => session!.send({ type: 'handToBot', seat })} />}
@@ -860,7 +860,7 @@ export function App() {
           leaveGame();
         }}
       />
-    </>
+    </DigitalCardsContext.Provider>
   );
 }
 

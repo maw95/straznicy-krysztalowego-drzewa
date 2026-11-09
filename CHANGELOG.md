@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wersja cyfrowa: Szaman Goblinów (i inni strzelcy) ma ten sam Atak na karcie przy wyborze pomocników i w podglądzie karty, co na arenie; wcześniej te widoki pokazywały wartość z wydrukowanej karty.
 - Efekty dźwiękowe: cios mieczem, strzał z łuku, czar (zdolność), kroki idących jednostek, kliknięcie przycisku, znaleziony skarb, awans bohatera, wygrana i przegrana. W opcjach jest osobny suwak i przełącznik „Efekty”, niezależny od muzyki.
 - Dźwięki mapy przygody: krok bohatera, podniesienie kryształu i oddanie go Drzewu.
 - Balans: poziomy trudności wszystkich celów (kryształy, punkty kontrolne, przetrwanie, boss, artefakt, z rozwojem bohatera i bez) przestrojone automatycznie na wygrane Przymierza: Łatwy 65–85%, Normalny 45–65%, Trudny 30–45%. Obejmuje wszystkie kształty map (trójkąt, prostokąt, pierścień, wyspy, Cieśnina, Dolina).

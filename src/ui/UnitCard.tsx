@@ -3,6 +3,7 @@
 // ability medallion, stat icons, and the text from the unit data.
 // Coordinates are in frame pixels (551×713), measured on each frame.
 
+import { createContext, useContext } from 'react';
 import { battleStats, DIGITAL_RANGED_BONUS, UNITS } from '../engine/data';
 import { asset } from './common';
 import { StatText } from './markers';
@@ -170,7 +171,12 @@ const DUEL_BLUE = '#8FD3F4';
  * A unit's card; `duel` shows a guardian's duel card instead (the duel on the board): its Życie and ability,
  * "Pojedynek" on the role plate and a light-blue edge.
  */
-export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false, digital = false }: { unitId: string; width?: number; hp?: number; attack?: number; speed?: number; duel?: boolean; /** The digital edition's Życie, Atak and Szybkość (where they differ from the printed card). */ digital?: boolean }) {
+/** Set by the app while a digital game is on, so every card (hover, dialogs, helper pick) shows the digital stats. */
+export const DigitalCardsContext = createContext(false);
+
+export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false, digital: digitalProp }: { unitId: string; width?: number; hp?: number; attack?: number; speed?: number; duel?: boolean; /** The digital edition's Życie, Atak and Szybkość (where they differ from the printed card). */ digital?: boolean }) {
+  const inDigitalGame = useContext(DigitalCardsContext);
+  const digital = digitalProp ?? inDigitalGame;
   const base = UNITS[unitId];
   const card = duel ? base.duel : undefined;
   const def = card ? { ...base, hp: card.hp, abilityName: card.abilityName, abilityText: card.abilityText } : base;
