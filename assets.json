@@ -1825,13 +1825,15 @@
         "public/assets/tiles/water_1.jpg",
         "public/assets/tiles/water_2.jpg"
       ],
-      "typ": "grafika kafelka mapy (woda między wyspami)",
-      "narzedzie": "skrypt scripts/assets/water_tiles.py (Pillow)",
-      "model": "brak (generowane proceduralnie: gradient, szum, linie fal)",
-      "prompt": "nie dotyczy",
+      "typ": "grafika kafelka mapy (woda między wyspami), malowana",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, 1040x1200, jakość medium, 3 warianty (użyte 2), zmniejszone do 260x300 jpg q88",
+      "prompt": "Top-down painted fantasy water texture for a board game map tile, in the style of a dark fantasy hand-painted strategy game (Heroes of Might and Magic III): deep teal-blue water with soft dark depths, gentle curved ripples with pale foam highlights, a few drifting leaves and faint light reflections, subtle painterly brush strokes. Fills the entire frame edge to edge, no border, no shoreline, no objects, no text, no characters.",
       "data": "2026-11-09",
-      "ai": false,
-      "licencja": "własna (kod w repo)"
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "scenario_asset": "water_1: asset_gtdYdeEioteJb7R2pFiWyvNa, water_2: asset_Y7ZGbeaQ9kZDB8Cfjeo1iEvm",
+      "uwaga": "Zastępuje wersję proceduralną (scripts/assets/water_tiles.py, zostaje w repo)."
     },
     {
       "id": "ikony/umiejetnosci",
@@ -1938,6 +1940,42 @@
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
       "uwagi": "do odsłuchu przez autora; głośność ustawiona w sfx.ts (GAIN), pliki nieznormalizowane"
+    },
+    {
+      "id": "ikony/sloty",
+      "pliki": [
+        "public/assets/ikony/sloty/weapon.webp",
+        "public/assets/ikony/sloty/armor.webp",
+        "public/assets/ikony/sloty/boots.webp"
+      ],
+      "typ": "ikony pustych miejsc na artefakty (miecz, tarcza, but)",
+      "prompt": "Game UI icon, a round medallion for an EMPTY equipment slot, painted dark fantasy style like Heroes of Might and Magic III: ornate dark bronze ring frame with fine gold edge, inside a dark recessed socket of deep brown-teal velvet with a faint engraved ghost silhouette of <a longsword | a knight's heater shield | a pair of leather travelling boots> in muted gold, dim and unlit, clearly empty. Centered, transparent background, no text.",
+      "scenario_asset": "weapon: asset_hRftdWfcvtCnBX3vKALccfBs, armor: asset_UzKhcquZiu7LdW1RMCCsG5Lo, boots: asset_i6R6FNoRnW1zH8D4wEpzudg2",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare",
+      "data": "2026-11-09",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "skrypt": "scripts/assets/growth_art.py (czarne tło → przezroczystość, przycięcie, zmniejszenie)"
+    },
+    {
+      "id": "ikony/poziom",
+      "pliki": [
+        "public/assets/ikony/poziom/1.webp",
+        "public/assets/ikony/poziom/2.webp",
+        "public/assets/ikony/poziom/3.webp",
+        "public/assets/ikony/poziom/4.webp",
+        "public/assets/ikony/poziom/5.webp"
+      ],
+      "typ": "tarcze poziomu bohatera (pięć rang: żelazo, brąz, srebro, złoto z szafirami, złote skrzydła z kryształami); numer dodaje interfejs",
+      "prompt": "Game UI badge for a hero level, painted dark fantasy style like Heroes of Might and Magic III: a small heraldic kite shield with a COMPLETELY BLANK smooth flat center field ... Level N tier: 1 plain dull grey iron; 2 bronze with rivets; 3 polished silver with small wings; 4 gold with filigree, wings, sapphires, warm glow; 5 radiant gold with laurel, large wings, cyan crystals, magical aura. Centered, transparent background.",
+      "scenario_asset": "1: asset_WmkzvFK9FzsfK8MaTgFQQoG1, 2: asset_wRJkc6hZQ7b6rQ6XBKbEwzfF, 3: asset_acSRDiAvtgEC8rG3KPniawR5, 4: asset_ctHzhrUfyL8rYXq9BP6b453F, 5: asset_LBAq8pestPLm1zC58MZaz5yd",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare",
+      "data": "2026-11-09",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "skrypt": "scripts/assets/growth_art.py (czarne tło → przezroczystość, przycięcie, zmniejszenie)"
     }
   ]
 }

@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowe malowane grafiki: woda między wyspami (zamiast gładkiego gradientu), puste miejsca na artefakty (miecz, tarcza, but w brązowych medalionach) oraz tarcza poziomu bohatera, która z każdym poziomem jest bogatsza: szare żelazo, brąz, srebro, złoto z szafirami, a na 5. poziomie złote skrzydła z błękitnymi kryształami i poświatą. Numer poziomu jest na środku tarczy.
 - Wersja cyfrowa: polegli (np. Władca Wilkołaków) nie leżą już na trzech heksach ani za wysoko: trup jednostki jednopolowej jest ograniczony do szerokości dwóch heksów i leży na linii stóp, a animacja śmierci płynnie do tego dochodzi.
 - Koniec gry: po zwycięstwie (Hordy i Przymierza) gra tylko dźwięk zwycięstwa albo porażki; stare utwory zwycięstwa nie nakładają się już na niego.
 - Wersja cyfrowa: dwupolowe jednostki da się atakować z każdej strony, także od strony ogona, a dwupolowy atakujący liczy podejście całym swoim ciałem. Kursor miecza pojawia się też nad polem ogona, nie tylko nad głową.

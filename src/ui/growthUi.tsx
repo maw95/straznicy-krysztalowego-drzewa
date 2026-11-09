@@ -13,7 +13,6 @@ export function SkillIcon({ skill, size = 40 }: { skill: SkillId; size?: number 
 }
 
 export const SLOT_NAMES: Record<Slot, string> = { weapon: 'Broń', armor: 'Zbroja', boots: 'Buty' };
-const SLOT_GLYPH: Record<Slot, string> = { weapon: 'gSword', armor: 'gShield', boots: 'gBoot' };
 const SLOTS: Slot[] = ['weapon', 'armor', 'boots'];
 
 /** The painted icon of an artifact (public/assets/ikony/artefakty): bronze for the first tier, gold and purple for the second. */
@@ -54,8 +53,10 @@ export function XpBar({ hero }: { hero: HeroState }) {
   const pct = next === null ? 1 : Math.max(0, Math.min(1, (xp - from) / (next - from)));
   return (
     <div className="xpbar" title={next === null ? 'Najwyższy poziom.' : `Do poziomu ${level + 1} brakuje ${Math.max(0, next - xp)} PD. PD dają bitwy, skarby i kapliczki.`}>
-      <div className="xpbar-level" aria-label={`Poziom ${level}`}>
-        {level}
+      {/* A shield that grows richer with the level: plain iron, bronze, silver, gold with sapphires, winged gold with crystals. */}
+      <div className={`xpbar-level lvl${Math.min(level, 5)}`} aria-label={`Poziom ${level}`}>
+        <img src={asset(`ikony/poziom/${Math.min(Math.max(level, 1), 5)}.webp`)} alt="" width={56} height={56} />
+        <span>{level}</span>
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div className="xpbar-track">
@@ -98,12 +99,7 @@ export function HeroGrowth({ hero }: { hero: HeroState }) {
             </span>
           ) : (
             <span key={slot} className="gear-empty" title={`${SLOT_NAMES[slot]}: puste miejsce. Artefakty leżą w skrzyniach na mapie, wypadają ze strażników i z pokonanych bohaterów.`} data-gear-empty={slot}>
-              <svg width="38" height="38" viewBox="0 0 40 40" aria-hidden="true">
-                <circle cx="20" cy="20" r="17" fill="none" stroke="#B88A35" strokeWidth="1.6" strokeDasharray="4 3" opacity="0.7" />
-                <g opacity="0.35" transform="translate(6 6) scale(0.7)">
-                  <use href={`#${SLOT_GLYPH[slot]}`} />
-                </g>
-              </svg>
+              <img src={asset(`ikony/sloty/${slot === 'weapon' ? 'weapon' : slot === 'armor' ? 'armor' : 'boots'}.webp`)} alt="" width={40} height={40} style={{ display: 'block', opacity: 0.9 }} />
             </span>
           );
         })}
