@@ -9,6 +9,7 @@ import { controlCounts } from '../engine/objectives';
 import { arenaSetup, DEFAULT_RULES, type Action, type GameState, type LogEntry, type SetupOptions } from '../engine/types';
 import { AdventureView } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
+import { animationWait, ATTACK_SHOW_MS, holdFor, resetAnimLock } from './animLock';
 import { DuelView } from './DuelView';
 import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset } from './common';
 import { SetupScreen } from './SetupScreen';
@@ -45,6 +46,8 @@ export function App() {
   const [error, setError] = useState<string | null>(null);
   const [card, setCard] = useState<string | null>(null);
   const [speed, setSpeed] = useState<BotSpeed>('normalnie');
+  const botSpeedRef = useRef(speed);
+  botSpeedRef.current = speed;
   const [autoplay, setAutoplay] = useState(false);
   const [showLog, setShowLog] = useState(false);
   const [showDebug, setShowDebug] = useState(false);
@@ -193,7 +196,6 @@ export function App() {
   // (state updater functions may run twice in React's development mode).
   const gameRef = useRef<GameState | null>(game);
   gameRef.current = game;
-  const walkUntil = useRef(0);
   const sessionRef = useRef<OnlineSession | null>(null);
   sessionRef.current = isOnline ? session : null;
   const dispatch = useCallback((a: Action) => {
@@ -218,7 +220,9 @@ export function App() {
       history.current.push(a);
       // A unit walking along its path on the arena: let the next machine action wait for it.
       const mover = a.type === 'battleMove' && g.battle?.activation ? g.battle.units[g.battle.activation.unitId] : null;
-      walkUntil.current = mover && a.type === 'battleMove' ? Date.now() + (movePath(g, mover, a.to).length - 1) * WALK_STEP_MS : 0;
+      if (mover && a.type === 'battleMove') holdFor((movePath(g, mover, a.to).length - 1) * WALK_STEP_MS);
+      // A blow, an item or an ability takes time to show: the next machine action waits for it (a fast bot speed shortens the wait).
+      if (a.type === 'battleAttack' || a.type === 'battleItem') holdFor(botSpeedRef.current === 'szybko' ? ATTACK_SHOW_MS * 0.4 : ATTACK_SHOW_MS);
       gameRef.current = next;
       setGame(next);
       setError(null);
@@ -233,10 +237,18 @@ export function App() {
     if (!game || game.phase === 'over' || needsHandoff || isOnline) return;
     const machine = actor.kind === 'bot' || actor.kind === 'automaton' || (actor.kind === 'human' && autoplay);
     if (!machine) return;
-    const t = window.setTimeout(() => {
+    let t = 0;
+    // Acts when the arena has finished showing the last action (animLock); asks again while it has not.
+    const tick = () => {
+      const wait = animationWait();
+      if (wait > 0) {
+        t = window.setTimeout(tick, wait);
+        return;
+      }
       const a = chooseAction(game);
       if (a) dispatch(a);
-    }, SPEEDS[speed] + Math.max(0, walkUntil.current - Date.now()));
+    };
+    t = window.setTimeout(tick, SPEEDS[speed]);
     return () => window.clearTimeout(t);
   }, [game, actor.kind, autoplay, speed, dispatch, needsHandoff, isOnline]);
 
@@ -255,6 +267,7 @@ export function App() {
   }, [steps, game, humanTurn, dispatch]);
 
   const start = (setup: SetupOptions) => {
+    resetAnimLock();
     history.current = [];
     reports.current = [];
     undoStack.current = [];
@@ -264,6 +277,7 @@ export function App() {
   };
 
   const load = (save: SaveFile) => {
+    resetAnimLock();
     try {
       const g = replay(save);
       history.current = [...save.actions];
@@ -689,7 +703,7 @@ export function App() {
         </div>
       )}
       <VictoryEffects game={game} />
-      <FoundTreasure kind={found} open={Boolean(found) && !digest && !summary} onClose={() => setFound(null)} />
+      <FoundTreasure kind={found} open={Boolean(found) && !digest && !summary && !held} onClose={() => setFound(null)} />
 
       <Modal open={game.phase === 'over' && !held}>
         <GameOver state={game} online={isOnline} rankingNote={rankingNote} onNew={leaveGame} onLog={() => setShowLog(true)} />
@@ -709,7 +723,7 @@ export function App() {
         <LogDialog entries={visibleLog} />
       </Modal>
 
-      <DigestDialog entries={digest} open={Boolean(digest) && !needsHandoff} onClose={() => setDigest(null)} />
+      <DigestDialog entries={digest} open={Boolean(digest) && !needsHandoff && !held} onClose={() => setDigest(null)} />
 
       <Modal open={showReport} onClose={() => setShowReport(false)}>
         {showReport && (

@@ -180,11 +180,11 @@ karta strzelca pokazuje Atak z premią, wyspy z widoczną wodą, przetrwanie bez
 
 ### 8.1. Animacje bitwy (w toku; kolejność prac)
 
-- [ ] Obrót jednostki: animacja zamiast przeskoku tekstury na lustrzane odbicie; jednostka zawsze zwrócona w stronę ruchu; kolejność ruch → obrót → atak (zgłoszenie: Złoty Smok okrążający wroga leciał tyłem).
-- [ ] Hydra obraca się w prawo po otrzymaniu ciosu: obracać tylko w stronę własnego ruchu lub celu własnego ataku.
-- [ ] Atak jednej jednostki i kolejny atak (np. hydry po ataku elfa) nie mogą nakładać się w czasie: kolejna akcja startuje po zakończeniu animacji poprzedniej, razem z animacją otrzymania obrażeń i śmierci.
-- [ ] Koniec bitwy: ekran wyniku i wyszarzenie dopiero po skończeniu animacji ostatniego ataku i śmierci.
-- [ ] Rozmiar Czarnego Smoka zbliżony do Złotego (dziś wyraźnie mniejszy).
+- [x] Obrót jednostki: zamiast przeskoku tekstury obrót (zwężenie obrazu, 240 ms, w kodzie); jednostka zawsze zwrócona w stronę ruchu i celu ataku; kolejność ruch → obrót → atak. Docelowo można dorobić prawdziwy klip obrotu (AI), kod obsłuży go jak inne klipy.
+- [x] Hydra obracała się po ciosie, bo po każdej akcji jednostka wracała do domyślnego zwrotu; teraz zostaje zwrócona tak, jak ostatnio.
+- [x] Atak i kolejny atak nakładały się, bo bot działał, gdy ekran jeszcze czekał na cios gracza (`animLock.ts`): akcje botów czekają na koniec animacji poprzedniej (cios, trafienie, śmierć, ruch). Gra online bez tego: serwer gra bez czekania na ekran (do zrobienia: kolejka stanów do pokazania).
+- [x] Koniec bitwy: okno znalezionego skarbu i podsumowanie czekały tylko częściowo; teraz oba czekają, aż skończy się pokaz ostatniego ciosu i śmierci.
+- [x] Rozmiar Czarnego Smoka zbliżony do Złotego (osobne pudełko w `sprites.ts`; do oceny na żywo).
 
 ### 8.2. Rozwój bohatera: czytelność (do zrobienia)
 

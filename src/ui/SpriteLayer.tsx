@@ -34,11 +34,14 @@ const FLY_SPEED = 420;
 const WALK_SPEED = 300;
 const MIN_GLIDE_MS = 250;
 const HIT_MS = 320;
+/** A unit turning round (a squash of the picture to nothing and out again on the other side): there is no turn clip yet. */
+const TURN_MS = 240;
 /** The blow of an attack clip lands this far into it. */
 const IMPACT_AT = 0.45;
 
 /** One stretch of a unit's motion; they run one after another. */
 type Seg =
+  | { kind: 'turn'; to: boolean; ms: number }
   | { kind: 'clip'; clip: string; reverse: boolean; ms: number; then?: 'corpse' | 'stand'; /** An attack clip: announces its blow (once) when it gets there. */ impact?: { unit: string; done: boolean } }
   | { kind: 'glide'; from: { x: number; y: number }; to: { x: number; y: number }; ms: number; /** Stops of a walker's way (from first to last), when it is not a straight line. */ path?: Array<{ x: number; y: number }>; walk?: boolean };
 
@@ -48,6 +51,8 @@ interface Live {
   x: number;
   y: number;
   flip: boolean;
+  /** Which way it faces when the queued motion ends (a turn is queued whenever the next stretch needs the other way). */
+  endFlip: boolean;
   /** Where it will be when the queued motion ends (a new move starts from there). */
   endX: number;
   endY: number;
@@ -104,7 +109,7 @@ class Stage {
       if (!set) continue;
       let l = this.live.get(p.key);
       if (!l) {
-        l = { piece: p, x: p.x, y: p.y, flip: p.flip, endX: p.x, endY: p.y, queue: [], seg: null, segStart: now, rest: p.dead ? 'corpse' : 'stand', hitStart: -1e9, attackKey: p.attack?.key ?? null };
+        l = { piece: p, x: p.x, y: p.y, flip: p.flip, endFlip: p.flip, endX: p.x, endY: p.y, queue: [], seg: null, segStart: now, rest: p.dead ? 'corpse' : 'stand', hitStart: -1e9, attackKey: p.attack?.key ?? null };
         this.live.set(p.key, l);
         continue;
       }
@@ -122,7 +127,7 @@ class Stage {
         l.seg = null;
         l.x = l.endX = p.x;
         l.y = l.endY = p.y;
-        l.flip = p.flip;
+        l.flip = l.endFlip = p.flip;
       } else if (!p.dead && Math.hypot(p.x - l.endX, p.y - l.endY) > 4) {
         const from = { x: l.endX, y: l.endY };
         const to = { x: p.x, y: p.y };
@@ -130,6 +135,8 @@ class Stage {
         const stops = !flies && p.path && p.path.length >= 2 ? [from, ...p.path.slice(1, -1), to] : undefined;
         const length = stops ? stops.slice(1).reduce((m, q, i) => m + Math.hypot(q.x - stops[i].x, q.y - stops[i].y), 0) : Math.hypot(to.x - from.x, to.y - from.y);
         const ms = Math.max(MIN_GLIDE_MS, (length / (flies ? FLY_SPEED : WALK_SPEED)) * 1000);
+        // A unit always faces the way it goes: it turns first (a flyer too: it used to take off facing the enemy and fly backwards).
+        if (Math.abs(to.x - from.x) > 4) this.faceTo(l, to.x < from.x);
         if (flies) l.queue.push({ kind: 'clip', clip: 'wzbicie', reverse: false, ms: clipMs(set, 'wzbicie') });
         l.queue.push({ kind: 'glide', from, to, ms, path: stops, walk: !flies });
         if (flies) l.queue.push({ kind: 'clip', clip: 'wzbicie', reverse: true, ms: clipMs(set, 'wzbicie') });
@@ -143,6 +150,8 @@ class Stage {
       }
       if (p.attack && p.attack.key !== l.attackKey) {
         l.attackKey = p.attack.key;
+        // Move, then turn to the target, then strike.
+        this.faceTo(l, p.attack.towardX < l.endX);
         if (set.frames.atak) l.queue.push({ kind: 'clip', clip: 'atak', reverse: false, ms: clipMs(set, 'atak'), impact: { unit: p.key, done: false } });
         else window.setTimeout(() => emitImpact(p.key), 0); // no clip: the blow lands at once
       }
@@ -151,8 +160,14 @@ class Stage {
         if (set.frames.trafienie && !p.dead) l.queue.push({ kind: 'clip', clip: 'trafienie', reverse: false, ms: clipMs(set, 'trafienie') });
         else l.hitStart = now;
       }
-      if (!l.queue.length && !l.seg) l.flip = p.flip;
     }
+  }
+
+  /** Queues a turn when the unit does not already face that way once the queued motion ends. */
+  private faceTo(l: Live, flip: boolean) {
+    if (l.endFlip === flip) return;
+    l.queue.push({ kind: 'turn', to: flip, ms: TURN_MS });
+    l.endFlip = flip;
   }
 
   private start() {
@@ -176,8 +191,6 @@ class Stage {
         if (!next) return;
         l.seg = next;
         l.segStart = now;
-        if (next.kind === 'clip' && next.clip === 'wzbicie' && !next.reverse) l.flip = l.piece.flip;
-        if (next.kind === 'clip' && next.clip === 'atak' && l.piece.attack) l.flip = l.piece.attack.towardX < l.x;
       }
       const seg = l.seg;
       if (seg.kind === 'clip' && seg.impact && !seg.impact.done && now - l.segStart >= seg.ms * IMPACT_AT) {
@@ -189,8 +202,8 @@ class Stage {
       if (seg.kind === 'glide') {
         l.x = seg.to.x;
         l.y = seg.to.y;
-      } else if (seg.then) l.rest = seg.then;
-      if (seg.kind === 'clip' && seg.clip === 'atak') l.flip = l.piece.flip;
+      } else if (seg.kind === 'turn') l.flip = seg.to;
+      else if (seg.then) l.rest = seg.then;
       l.segStart += seg.ms;
       l.seg = null;
     }
@@ -224,6 +237,8 @@ class Stage {
     let sw = img.width;
     let sh = img.height;
     const seg = l.seg;
+    /** Horizontal scale of a turn in progress: 1 → 0 → -1 (relative to the way it faced before). */
+    let turn = 1;
     if (seg) {
       const t = Math.min(1, (now - l.segStart) / seg.ms);
       if (seg.kind === 'glide') {
@@ -239,9 +254,13 @@ class Stage {
         l.x = x;
         l.y = pts[leg].y + (pts[leg + 1].y - pts[leg].y) * f;
         const dx = pts[leg + 1].x - pts[leg].x;
-        if (seg.walk && Math.abs(dx) > 1) l.flip = dx < 0;
+        if (seg.walk && Math.abs(dx) > 1) {
+          l.flip = dx < 0;
+          l.endFlip = l.flip;
+        }
       }
-      const clip = seg.kind === 'glide' ? set.moveClip ?? '' : seg.clip;
+      if (seg.kind === 'turn') turn = Math.cos(Math.PI * easeInOut(t));
+      const clip = seg.kind === 'glide' ? set.moveClip ?? '' : seg.kind === 'turn' ? '' : seg.clip;
       const n = set.frames[clip];
       if (n) {
         // Glide: the loop repeats for as long as it moves (its phase follows the clock, so a walk path does not restart the stride
@@ -275,7 +294,7 @@ class Stage {
       ctx.filter = `brightness(${1 + 1.2 * (1 - since / HIT_MS)})`;
     }
     ctx.translate(x, 0);
-    if (l.flip) ctx.scale(-1, 1);
+    ctx.scale((l.flip ? -1 : 1) * turn, 1);
     ctx.drawImage(img, sx, sy, sw, sh, -set.cx * dw, gy - set.feet * dh, dw, dh);
     ctx.restore();
   }

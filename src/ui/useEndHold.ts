@@ -4,6 +4,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { isDigital, type BattleReport, type GameState } from '../engine/types';
+import { AFTER_KILL_MS, beginHold, endHold } from './animLock';
 import { IMPACT_TIMEOUT_MS, onImpact } from './impact';
 import { hasSprites } from './sprites';
 import type { AttackNow } from './useImpactHold';
@@ -87,5 +88,12 @@ export function useEndHold(game: GameState | null): EndHold | null {
   }, [game]);
   useEffect(() => onImpact((id) => waiting.current?.unitId === id && show(waiting.current.final)), []);
   useEffect(() => () => clear(), []);
+  // Nothing machine-driven starts on the adventure map while the finished battle is still on screen.
+  const holding = held !== null;
+  useEffect(() => {
+    if (!holding) return;
+    beginHold();
+    return () => endHold(AFTER_KILL_MS / 3);
+  }, [holding]);
   return held;
 }

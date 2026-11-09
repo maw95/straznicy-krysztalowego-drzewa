@@ -4,6 +4,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { isDigital, type GameState } from '../engine/types';
+import { AFTER_IMPACT_MS, AFTER_KILL_MS, beginHold, endHold } from './animLock';
 import { emitImpact, IMPACT_TIMEOUT_MS, onImpact } from './impact';
 import { hasSprites } from './sprites';
 
@@ -58,12 +59,21 @@ export function useImpactHold(live: GameState) {
     }
   }
 
+  // A machine player waits while the screen holds the state before a blow; after the blow it waits for the hit and the death to play.
+  const liveRef = useRef(live);
+  liveRef.current = live;
   useEffect(() => {
     if (!hold) return;
+    beginHold();
+    const killed = () => {
+      const b = liveRef.current.battle;
+      return Boolean(b && hold.view.battle && Object.values(hold.view.battle.units).some((u) => u.alive && !b.units[u.id]?.alive));
+    };
     timer.current = window.setTimeout(release, IMPACT_TIMEOUT_MS);
     const off = onImpact((id) => id === hold.attack.unitId && release());
     return () => {
       off();
+      endHold(killed() ? AFTER_KILL_MS : AFTER_IMPACT_MS);
       if (timer.current) window.clearTimeout(timer.current);
       timer.current = null;
     };

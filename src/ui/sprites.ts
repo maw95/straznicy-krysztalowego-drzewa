@@ -32,7 +32,8 @@ export const SPRITES: Record<string, SpriteSpec> = {
   goblinShaman: { dir: 'jednostki/goblin_szaman', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   caveSpider: { dir: 'jednostki/pajak_jaskiniowy', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   shadowBat: { dir: 'jednostki/nietoperz_cienia', box: SMALL, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  blackDragon: { dir: 'jednostki/czarny_smok', box: LARGE, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  // The Black Dragon's body is taller than wide: a box of its own makes it as big on screen as the Golden Dragon (about 135 px).
+  blackDragon: { dir: 'jednostki/czarny_smok', box: [150, 136] as const, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   cyclops: { dir: 'jednostki/cyklop', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   hydra: { dir: 'jednostki/hydra', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   griffin: { dir: 'jednostki/gryf', box: LARGE, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
