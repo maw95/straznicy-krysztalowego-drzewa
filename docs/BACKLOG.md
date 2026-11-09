@@ -172,3 +172,27 @@ Sesja autonomiczna 6.11.2026. Każda pozycja: co wybrałem, dlaczego, gdzie to z
 - **Grafika:** klipy z listy braków, ilustracje obiektów mapy (kapliczka, obóz, skrzynia), ikony artefaktów, własny Boss.
 - **Premiera na Steamie (6.6):** potwierdzenie zakresu, strona sklepu, osiągnięcia, opakowanie komputerowe; test z parami rodzic + dziecko.
 - **Wdrożenie serwera:** przed wydaniem backend musi dostać nowy pakiet silnika (nowe pola `mapShape`, `customMapId`, `child`, nowe akcje `chooseSkill`, cele `survival`/`boss`/`artifact`).
+
+## 8. Zgłoszenia z 9.11.2026 (partie testowe autora)
+
+Zrobione (patrz CHANGELOG): Nocna Zasadzka dodaje +3 (i przestrojony balans), Leśny Tropiciel daje ruch od razu i pasek ruchu pokazuje wszystkie punkty,
+karta strzelca pokazuje Atak z premią, wyspy z widoczną wodą, przetrwanie bez kryształów i bez kafelka Drzewa, samouczek zależny od celu.
+
+### 8.1. Animacje bitwy (w toku; kolejność prac)
+
+- [ ] Obrót jednostki: animacja zamiast przeskoku tekstury na lustrzane odbicie; jednostka zawsze zwrócona w stronę ruchu; kolejność ruch → obrót → atak (zgłoszenie: Złoty Smok okrążający wroga leciał tyłem).
+- [ ] Hydra obraca się w prawo po otrzymaniu ciosu: obracać tylko w stronę własnego ruchu lub celu własnego ataku.
+- [ ] Atak jednej jednostki i kolejny atak (np. hydry po ataku elfa) nie mogą nakładać się w czasie: kolejna akcja startuje po zakończeniu animacji poprzedniej, razem z animacją otrzymania obrażeń i śmierci.
+- [ ] Koniec bitwy: ekran wyniku i wyszarzenie dopiero po skończeniu animacji ostatniego ataku i śmierci.
+- [ ] Rozmiar Czarnego Smoka zbliżony do Złotego (dziś wyraźnie mniejszy).
+
+### 8.2. Rozwój bohatera: czytelność (do zrobienia)
+
+- [ ] Poziom i PD: czytelniejszy pasek (ile PD ma bohater, ile do następnego poziomu, za co dostał).
+- [ ] Wybór umiejętności jako karty z ikonami i ozdobami, jak karty skarbów.
+- [ ] Artefakty: opis, czym są i czym różnią się od skarbów; powiadomienie o zdobyciu (z nazwą i źródłem); ikony; widoczna lista na mapie świata.
+
+### 8.3. Balans (z symulacji 9.11)
+
+- Poza pasmem po przestrojeniu: Łatwy w przetrwaniu z rozwojem na długich mapach (ok. 53–63%), kilka komórek Łatwego o 1–3 punkty poniżej 70%, wyspy z rozwojem (Normalny 1 gracz na długich mapach ok. 33–35%), Kryształy na Dolinie w kooperacji (ok. 30%), Boss na Dolinie (ok. 40%).
+- Czy przetrwanie ma być jedynym celem bez kryształów? Przy punktach kontrolnych, bossie i artefakcie strażnicy nadal pilnują kryształów, których nikt nie potrzebuje: do decyzji autora.
