@@ -23,7 +23,7 @@ const SMALL = [76, 96] as const;
 
 export const SPRITES: Record<string, SpriteSpec> = {
   goldDragon: { dir: 'jednostki/zloty_smok', width: 250, feet: 0.85, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  pegasus: { dir: 'jednostki/pegaz', box: SMALL, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  pegasus: { dir: 'jednostki/pegaz', box: LARGE, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   werewolfLord: { dir: 'jednostki/wladca_wilkolakow', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   ironFistOgre: { dir: 'jednostki/ogr_zelazna_piesc', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   unicornKing: { dir: 'jednostki/krol_jednorozcow', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
