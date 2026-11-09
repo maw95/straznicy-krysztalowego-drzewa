@@ -276,6 +276,47 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
                 <Tip text="Bohaterowie mają stałe liczby przez całą grę."><button className={chip(!growth)} aria-pressed={!growth} onClick={() => setGrowth(false)}>Wyłączony</button></Tip>
               </Row>
             )}
+            {digital && !arena && tier === 'custom' && (
+              <>
+                <Row label="Bitwy">
+                  <Tip text={TIPS.arena}><button className={chip(battleMode === 'arena')} onClick={() => setBattleMode('arena')}>Osobna arena (3 na 3)</button></Tip>
+                  <Tip text={TIPS.board}><button className={chip(battleMode === 'board')} onClick={() => setBattleMode('board')}>Na planszy głównej (pojedynek 1 na 1)</button></Tip>
+                </Row>
+                <Row label="Ułatwienia">
+                  {EASES.map(([label, on, patch, tip]) => (
+                    <Tip key={label} text={tip}>
+                      <button className={chip(on(rules))} aria-pressed={on(rules)} onClick={() => setRules({ ...rules, ...patch(!on(rules)) })}>
+                        {label}
+                      </button>
+                    </Tip>
+                  ))}
+                </Row>
+                <Row label="Utrudnienia">
+                  <Tip text={TIPS.dice}>
+                    <button className={chip(rules.useDice)} aria-pressed={rules.useDice} onClick={() => setRules({ ...rules, useDice: !rules.useDice })}>
+                      Rzut kością
+                    </button>
+                  </Tip>
+                  {mode === 'coop' && (
+                    <Tip text={TIPS.extraHero}>
+                      <button className={chip(rules.extraEvilHero)} aria-pressed={rules.extraEvilHero} onClick={() => setRules({ ...rules, extraEvilHero: !rules.extraEvilHero })}>
+                        Dodatkowy bohater Hordy
+                      </button>
+                    </Tip>
+                  )}
+                </Row>
+                <Row label="Remis inicjatywy">
+                  {TIE_MODES.map(([m, label, tip]) => (
+                    <Tip key={m} text={tip}>
+                      <button className={chip(rules.initiativeTie === m)} aria-pressed={rules.initiativeTie === m} onClick={() => setRules({ ...rules, initiativeTie: m })}>
+                        {label}
+                      </button>
+                    </Tip>
+                  ))}
+                </Row>
+                <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>Pełna gra to wszystko wyłączone i obrońca pierwszy. Ułatwienia i utrudnienia można dowolnie łączyć.</div>
+              </>
+            )}
             {digital && !arena && tier !== 'adventure' && (
               <Row label="Cel">
                 {(['crystals', 'control', 'survival', 'boss', 'artifact'] as const).filter((o) => o !== 'survival' || mode === 'coop').map((o) => (
@@ -318,56 +359,15 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             {!arena && (
               <>
                 <Row label="Trudność">
-                  {LEVELS.filter(([l]) => l !== 'hard' || mode === 'coop').map(([l, label]) => (
+                  {LEVELS.filter(([l]) => l !== 'custom' && (l !== 'hard' || mode === 'coop')).map(([l, label]) => (
                     <Tip key={l} text={LEVEL_TIPS[l]}>
-                      <button className={chip(level === l)} aria-pressed={level === l} onClick={() => (l === 'custom' ? setLevel('custom') : pickLevel(l))}>
+                      <button className={chip(level === l)} aria-pressed={level === l} onClick={() => pickLevel(l as Level)}>
                         {label}
                       </button>
                     </Tip>
                   ))}
                 </Row>
                 <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>{LEVEL_HINT[level]}</div>
-              </>
-            )}
-            {!arena && level === 'custom' && (
-              <>
-                <Row label="Bitwy">
-                  <Tip text={TIPS.arena}><button className={chip(battleMode === 'arena')} onClick={() => setBattleMode('arena')}>Osobna arena (3 na 3)</button></Tip>
-                  <Tip text={TIPS.board}><button className={chip(battleMode === 'board')} onClick={() => setBattleMode('board')}>Na planszy głównej (pojedynek 1 na 1)</button></Tip>
-                </Row>
-                <Row label="Ułatwienia">
-                  {EASES.map(([label, on, patch, tip]) => (
-                    <Tip key={label} text={tip}>
-                      <button className={chip(on(rules))} aria-pressed={on(rules)} onClick={() => setRules({ ...rules, ...patch(!on(rules)) })}>
-                        {label}
-                      </button>
-                    </Tip>
-                  ))}
-                </Row>
-                <Row label="Utrudnienia">
-                  <Tip text={TIPS.dice}>
-                    <button className={chip(rules.useDice)} aria-pressed={rules.useDice} onClick={() => setRules({ ...rules, useDice: !rules.useDice })}>
-                      Rzut kością
-                    </button>
-                  </Tip>
-                  {mode === 'coop' && (
-                    <Tip text={TIPS.extraHero}>
-                      <button className={chip(rules.extraEvilHero)} aria-pressed={rules.extraEvilHero} onClick={() => setRules({ ...rules, extraEvilHero: !rules.extraEvilHero })}>
-                        Dodatkowy bohater Hordy
-                      </button>
-                    </Tip>
-                  )}
-                </Row>
-                <Row label="Remis inicjatywy">
-                  {TIE_MODES.map(([m, label, tip]) => (
-                    <Tip key={m} text={tip}>
-                      <button className={chip(rules.initiativeTie === m)} aria-pressed={rules.initiativeTie === m} onClick={() => setRules({ ...rules, initiativeTie: m })}>
-                        {label}
-                      </button>
-                    </Tip>
-                  ))}
-                </Row>
-                <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>Pełna gra to wszystko wyłączone i obrońca pierwszy. Ułatwienia i utrudnienia można dowolnie łączyć.</div>
               </>
             )}
             {!arena && (

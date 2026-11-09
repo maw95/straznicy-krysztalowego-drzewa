@@ -64,13 +64,13 @@ describe('setup screen simplifications', () => {
     const { container } = render(<StrictMode><App /></StrictMode>);
     const btn = (t: string) => button(container, t)!;
     await next(container);
-    // Single switches are tucked away under "Własny".
+    // Single switches are tucked away under the "Własne ustawienia" level.
     expect(btn('Same Eliksiry Odrodzenia')).toBeUndefined();
-    await act(async () => fireEvent.click(btn('Własny')));
+    await act(async () => fireEvent.click(btn('Własne ustawienia')));
     for (const t of ['Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Dodatkowy bohater Hordy']) expect(btn(t).getAttribute('aria-pressed')).toBe('false');
     // Every option explains itself in a hover tooltip next to its button.
     const tip = (t: string) => btn(t).parentElement!.querySelector('[role="tooltip"]')?.textContent ?? '';
-    for (const t of ['Kooperacja (wszyscy przeciw AI)', 'Rywalizacja (dobro kontra zło)', 'Krótka', 'Bardzo długa', 'Łatwy', 'Normalny', 'Trudny', 'Własny', 'Osobna arena (3 na 3)', 'Na planszy głównej (pojedynek 1 na 1)', 'Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Dodatkowy bohater Hordy']) expect(tip(t).length).toBeGreaterThan(40);
+    for (const t of ['Kooperacja (wszyscy przeciw AI)', 'Rywalizacja (dobro kontra zło)', 'Krótka', 'Bardzo długa', 'Łatwy', 'Normalny', 'Trudny', 'Własne ustawienia', 'Osobna arena (3 na 3)', 'Na planszy głównej (pojedynek 1 na 1)', 'Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Dodatkowy bohater Hordy']) expect(tip(t).length).toBeGreaterThan(40);
     expect(tip('Krótka')).toContain('limit 8 rund');
     await act(async () => fireEvent.click(btn('Same Eliksiry Odrodzenia')));
     await act(async () => fireEvent.click(btn('Rzut kością')));
@@ -241,13 +241,12 @@ describe('setup options', () => {
     await next(doc);
     expect(btn('Na zmianę')).toBeUndefined();
     expect(doc.body.textContent).not.toContain('Remis inicjatywy');
-    await act(async () => fireEvent.click(btn('Własny')!));
+    await act(async () => fireEvent.click(btn('Własne ustawienia')!));
     expect(btn('Obrońca pierwszy')!.getAttribute('aria-pressed')).toBe('true');
     await act(async () => fireEvent.click(btn('Na zmianę')!));
     expect(btn('Na zmianę')!.getAttribute('aria-pressed')).toBe('true');
-    // Going back to a level restores the default rule.
+    // Picking a difficulty restores its preset, including the default rule.
     await act(async () => fireEvent.click(btn('Normalny')!));
-    await act(async () => fireEvent.click(btn('Własny')!));
     expect(btn('Obrońca pierwszy')!.getAttribute('aria-pressed')).toBe('true');
   });
 });

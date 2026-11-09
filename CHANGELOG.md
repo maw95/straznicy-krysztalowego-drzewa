@@ -6,7 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
-- Menu główne podzielone na trzy ekrany: najpierw wybór wersji (planszowa albo cyfrowa, z opisem), potem ustawienia gry (tryb, poziom, cel, kształt i wielkość mapy, trudność, liczba graczy), na końcu miejsca przy stole z opcjami (samouczek, pełny ekran). „Twoje partie” ze statystykami zostały na pierwszym ekranie. Ziarno losowania zniknęło z menu.
+- Menu główne podzielone na trzy ekrany: najpierw wybór wersji (planszowa albo cyfrowa, z opisem), potem ustawienia gry (tryb, poziom, cel, kształt i wielkość mapy, trudność, liczba graczy), na końcu miejsca przy stole z opcjami (samouczek, pełny ekran). „Twoje partie” ze statystykami zostały na pierwszym ekranie. Ziarno losowania zniknęło z menu. Wszystkie własne ustawienia (rozwój bohatera, rodzaj bitew, ułatwienia, utrudnienia, remis inicjatywy) są teraz pod poziomem „Własne ustawienia”, a trudność to tylko Łatwy, Normalny i Trudny.
 - Tryb rodzinny w kooperacji (wersja cyfrowa): przy miejscu gracza można zaznaczyć „Dziecko”. Bohater dziecka ma więcej życia i ruchu, a przycisk „Podpowiedź” mówi, co zrobiłby komputer, i podświetla pole na mapie.
 - Ekran startu (wersja cyfrowa): wybór poziomu gry. „Poziom 1: Przygoda” to prosta gra z planszówki, „Poziom 2: Wyprawa” odblokowuje cele, kształty map i rozwój bohatera, a „Własne ustawienia” pozwalają przełączać wszystko osobno.
 - Rozwój bohatera: artefakty (broń, zbroja, buty) znajdowane w skrzyniach na mapie, u pokonanych strażników i po wygranych walkach; na mapie pojawiają się też kapliczki (punkty doświadczenia) i obozy najemników (wracają polegli pomocnicy).

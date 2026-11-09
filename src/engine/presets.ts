@@ -16,7 +16,7 @@ export interface Switches {
 export const TIERS: Record<Tier, { name: string; summary: string }> = {
   adventure: { name: 'Poziom 1: Przygoda', summary: 'Zasady z planszówki w wersji cyfrowej: kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start, także dla dzieci.' },
   expedition: { name: 'Poziom 2: Wyprawa', summary: 'Do wyboru cel (punkty kontrolne, przetrwanie, boss, artefakt) i kształt mapy; bohaterowie zdobywają doświadczenie, artefakty i umiejętności.' },
-  custom: { name: 'Własne ustawienia', summary: 'Każdy przełącznik osobno.' },
+  custom: { name: 'Własne ustawienia', summary: 'Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia, utrudnienia i remis inicjatywy, a do tego cel i kształt mapy.' },
 };
 
 /** The switches a tier sets, given what the player picked on the screen (the picks count where the tier leaves the choice open). */
