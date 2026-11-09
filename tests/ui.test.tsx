@@ -55,11 +55,15 @@ describe('solo coop through the UI', () => {
   });
 });
 
+/** The set-up is a three-page wizard: edition, options, table. Moves forward `n` pages. */
+const next = async (doc: ParentNode, n = 1) => { for (let i = 0; i < n; i++) await act(async () => fireEvent.click(button(doc, 'Dalej →')!)); };
+
 describe('setup screen simplifications', () => {
   it('starts the full game by default and applies clicked simplifications', async () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<StrictMode><App /></StrictMode>);
     const btn = (t: string) => button(container, t)!;
+    await next(container);
     // Single switches are tucked away under "Własny".
     expect(btn('Same Eliksiry Odrodzenia')).toBeUndefined();
     await act(async () => fireEvent.click(btn('Własny')));
@@ -71,6 +75,7 @@ describe('setup screen simplifications', () => {
     await act(async () => fireEvent.click(btn('Same Eliksiry Odrodzenia')));
     await act(async () => fireEvent.click(btn('Rzut kością')));
     expect(btn('Same Eliksiry Odrodzenia').getAttribute('aria-pressed')).toBe('true');
+    await next(container);
     await act(async () => fireEvent.click(btn('Rozpocznij grę')));
     const game = (window as any).__game;
     expect(game.rules).toMatchObject({ abilities: true, treasures: false, useDice: true, heroReplacement: false });
@@ -81,8 +86,10 @@ describe('setup screen simplifications', () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<StrictMode><App /></StrictMode>);
     const btn = (t: string) => button(container, t);
+    await next(container);
     await act(async () => fireEvent.click(btn('Trudny')!));
     expect(btn('Trudny')!.getAttribute('aria-pressed')).toBe('true');
+    await next(container);
     await act(async () => fireEvent.click(btn('Rozpocznij grę')!));
     let game = (window as any).__game;
     expect(Object.values(game.heroes).filter((h: any) => h.faction === 'horde')).toHaveLength(3);
@@ -90,9 +97,11 @@ describe('setup screen simplifications', () => {
     cleanup();
     const second = render(<StrictMode><App /></StrictMode>).container;
     const btn2 = (t: string) => button(second, t);
+    await next(second);
     await act(async () => fireEvent.click(btn2('Rywalizacja (dobro kontra zło)')!));
     expect(btn2('Trudny')).toBeUndefined();
     await act(async () => fireEvent.click(btn2('Łatwy')!));
+    await next(second);
     await act(async () => fireEvent.click(btn2('Rozpocznij grę')!));
     game = (window as any).__game;
     expect(game.setup.battleMode).toBe('board');
@@ -229,6 +238,7 @@ describe('setup options', () => {
     const { container } = render(<App />);
     const doc = container.ownerDocument;
     const btn = (t: string) => button(doc, t);
+    await next(doc);
     expect(btn('Na zmianę')).toBeUndefined();
     expect(doc.body.textContent).not.toContain('Remis inicjatywy');
     await act(async () => fireEvent.click(btn('Własny')!));
@@ -325,9 +335,13 @@ describe('start screen', () => {
     expect(doc.body.textContent).toContain('Bez gry online i bez rankingu');
 
     await act(async () => fireEvent.click(button(doc, 'Graj bez konta')!));
-    expect(button(doc, 'Rozpocznij grę')).toBeTruthy();
+    expect(button(doc, 'Dalej →')).toBeTruthy();
     expect(button(doc, 'Zaloguj się, żeby grać ze znajomymi')).toBeTruthy();
+    await next(doc, 2);
+    expect(button(doc, 'Rozpocznij grę')).toBeTruthy();
     expect(localStorage.getItem('skd-play-offline')).toBe('1');
+    await act(async () => fireEvent.click(button(doc, '← Wstecz')!));
+    await act(async () => fireEvent.click(button(doc, '← Wstecz')!));
 
     await act(async () => fireEvent.click(button(doc, 'Zaloguj się, żeby grać ze znajomymi')!));
     expect(doc.body.textContent).toContain('Witaj, Strażniku!');
@@ -448,6 +462,7 @@ describe('full screen', () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<App />);
     const doc = container.ownerDocument;
+    await next(doc, 2);
     const box = [...doc.querySelectorAll('label')].find((l) => l.textContent?.includes('Pełny ekran przy uruchomieniu'))!.querySelector('input')!;
     await act(async () => {
       fireEvent.pointerUp(box);
@@ -527,7 +542,9 @@ describe('arena through the UI', () => {
     const { container } = render(<App />);
     const doc = container.ownerDocument;
     const btn = (t: string) => button(doc, t);
+    await next(doc);
     await act(async () => fireEvent.click(btn('Arena (jedna bitwa)')!));
+    await next(doc);
     if (bothHuman) {
       const who = doc.querySelectorAll('select[aria-label="Kto gra"]')[1] as HTMLSelectElement;
       await act(async () => fireEvent.change(who, { target: { value: 'human' } }));
@@ -546,9 +563,11 @@ describe('arena through the UI', () => {
       const doc = container.ownerDocument;
       const btn = (t: string) => button(doc, t);
       // Digital unless the board edition was picked before (it is remembered in the browser).
-      await act(async () => fireEvent.click(btn(mode)!));
       expect(btn('Cyfrowa')!.getAttribute('aria-pressed')).toBe(String(localStorage.getItem('skd-edition') !== 'board'));
       await act(async () => fireEvent.click(btn(label)!));
+      await next(doc);
+      await act(async () => fireEvent.click(btn(mode)!));
+      await next(doc);
       await act(async () => fireEvent.click(btn('Rozpocznij grę')!));
       const g = (window as any).__game;
       expect(g.rules.ruleset === 'digital').toBe(digital);
@@ -565,20 +584,27 @@ describe('arena through the UI', () => {
     const { container, unmount } = render(<App />);
     const doc = container.ownerDocument;
     const btn = (t: string) => button(doc, t);
+    const back = async () => act(async () => fireEvent.click(btn('← Wstecz')!));
+    await next(doc);
     await act(async () => fireEvent.click(btn('Kooperacja (wszyscy przeciw AI)')!));
     // Level 1 (the default) fixes the goal; level 2 opens the choice.
     expect(btn('Punkty kontrolne')).toBeUndefined();
     await act(async () => fireEvent.click(btn('Poziom 2: Wyprawa')!));
     expect(btn('Punkty kontrolne')).toBeTruthy();
     expect(btn('Kryształy do Drzewa')!.getAttribute('aria-pressed')).toBe('true');
+    await back();
     await act(async () => fireEvent.click(btn('Planszowa')!));
+    await next(doc);
     expect(btn('Punkty kontrolne')).toBeUndefined();
+    await back();
     await act(async () => fireEvent.click(btn('Cyfrowa')!));
+    await next(doc);
     await act(async () => fireEvent.click(btn('Arena (jedna bitwa)')!));
     expect(btn('Punkty kontrolne')).toBeUndefined();
     await act(async () => fireEvent.click(btn('Kooperacja (wszyscy przeciw AI)')!));
     await act(async () => fireEvent.click(btn('Poziom 2: Wyprawa')!));
     await act(async () => fireEvent.click(btn('Punkty kontrolne')!));
+    await next(doc);
     await act(async () => fireEvent.click(btn('Rozpocznij grę')!));
     const g = (window as any).__game;
     expect(g.rules.objective).toBe('control');
