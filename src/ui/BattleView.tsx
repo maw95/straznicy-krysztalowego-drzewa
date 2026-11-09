@@ -9,6 +9,8 @@ import {
   breathSecondTarget,
   hasLineOfSight,
   FREE_ABILITIES,
+  cellsOf,
+  footprintAt,
   hopCells,
   livingUnits,
   movePath,
@@ -16,6 +18,7 @@ import {
   reachableCells,
   tailOptions,
   unitAt,
+  unitDistance,
 } from '../engine/battle';
 import { distance, parseKey, type HexKey } from '../engine/hex';
 import type { Action, BattleUnit, GameState } from '../engine/types';
@@ -121,7 +124,9 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const approachCellsOf = (u: BattleUnit): HexKey[] => {
     if (!myTurn || !active?.pos || !u.pos || u.side === active.side || act!.moved || act!.attacked || act!.moveOnly || act!.hop || targeting || freeAbility) return [];
     if (UNITS[active.defId].attackType !== 'melee' || targets.some((t) => t.id === u.id)) return [];
-    return [...moves.keys()].filter((k) => distanceBetween(k, u.pos!) === 1);
+    // A large unit (target or attacker) lies on two cells: any cell of the attacker's footprint beside any cell of the target counts.
+    const theirs = cellsOf(u);
+    return [...moves.keys()].filter((k) => footprintAt(state, active, k).some((m) => theirs.some((c) => distanceBetween(m, c) === 1)));
   };
   /** The enemy about to be attacked this way and the cell the attack comes from (lit before the click). */
   const [approach, setApproach] = useState<{ targetId: string; cell: HexKey } | null>(null);
@@ -129,13 +134,13 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
    * The side to attack from: with a mouse, the cell in the direction the pointer points at from the
    * enemy's centre; without one (touch), the cell nearest to walk to.
    */
-  function aimApproach(u: BattleUnit, pointer: { x: number; y: number; box: DOMRect } | null) {
+  function aimApproach(u: BattleUnit, pointer: { x: number; y: number; box: DOMRect } | null, origin: HexKey = u.pos!) {
     const cells = approachCells(u);
     if (!cells.length) return setApproach(null);
     let cell: HexKey;
     if (pointer) {
       const aim = Math.atan2(pointer.y - (pointer.box.top + pointer.box.height / 2), pointer.x - (pointer.box.left + pointer.box.width / 2));
-      const from = cellPos(u.pos!);
+      const from = cellPos(origin);
       const off = (k: HexKey) => {
         const p = cellPos(k);
         const a = Math.atan2(p.y - from.y, p.x - from.x);
@@ -173,7 +178,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   };
   /** Approach cells and cursor of every unit, worked out once per change instead of on each use. */
   const unitInfo = useMemo(() => {
-    const engaged = Boolean(active?.pos) && livingUnits(b).some((e) => e.side !== active!.side && e.pos && distanceBetween(active!.pos!, e.pos) === 1);
+    const engaged = Boolean(active?.pos) && livingUnits(b).some((e) => e.side !== active!.side && unitDistance(active!, e) === 1);
     const out = new Map<string, { approach: HexKey[]; cursor: string }>();
     for (const u of Object.values(b.units)) {
       const approach = approachCellsOf(u);

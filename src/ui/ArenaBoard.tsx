@@ -79,7 +79,7 @@ interface Props {
   unitCursor: (u: BattleUnit) => string;
   aimedOver: (u: BattleUnit) => string | null;
   previewOf: (u: BattleUnit) => { text: string; lethal: boolean } | null;
-  aimApproach: (u: BattleUnit, pointer: { x: number; y: number; box: DOMRect } | null) => void;
+  aimApproach: (u: BattleUnit, pointer: { x: number; y: number; box: DOMRect } | null, origin?: HexKey) => void;
   onCell: (k: HexKey) => void;
   /** The attack of a unit with sprites being animated (its damage shows when the blow lands). */
   attackNow: AttackNow | null;
@@ -212,6 +212,9 @@ export function ArenaBoard(p: Props) {
               else if (moves.has(k)) fill = p.hoverPreview === k ? 'rgba(158,228,255,0.45)' : 'rgba(158,228,255,0.2)';
               else if (hops.includes(k)) fill = 'rgba(158,228,255,0.28)';
               else if (teleportTo) fill = 'rgba(200,160,255,0.25)';
+              // A large unit's tail cell has no button of its own: the cell carries the cursor and the aim of the attack.
+              const tailOwner = unitAt(b, k);
+              const owner = tailOwner && tailOwner.tail === k ? tailOwner : undefined;
               return (
                 <polygon
                   key={k}
@@ -225,8 +228,13 @@ export function ArenaBoard(p: Props) {
                     p.onCellAlt(k);
                   }}
                   onMouseEnter={() => setHover(k)}
-                  onMouseLeave={() => setHover(null)}
-                  className={moves.has(k) || hops.includes(k) ? p.moveCursor : (deployable.has(k) && picked) || teleportTo ? 'cur-pointer' : undefined}
+                  onPointerMove={owner ? (e) => e.pointerType !== 'touch' && p.aimApproach(owner, { x: e.clientX, y: e.clientY, box: e.currentTarget.getBoundingClientRect() }, k) : undefined}
+                  onMouseLeave={() => {
+                    setHover(null);
+                    if (owner && approach?.targetId === owner.id) p.setApproach(null);
+                  }}
+                  className={moves.has(k) || hops.includes(k) ? p.moveCursor : (deployable.has(k) && picked) || teleportTo ? 'cur-pointer' : owner ? `${p.aimedOver(owner) ? '' : p.unitCursor(owner)}` : undefined}
+                  style={owner && p.aimedOver(owner) ? { cursor: p.aimedOver(owner)! } : undefined}
                 />
               );
             })}
