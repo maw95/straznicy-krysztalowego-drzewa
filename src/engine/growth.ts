@@ -3,7 +3,7 @@
 // level presets of the family mode switch it on), so games without it are untouched.
 
 import { FACTION_NAMES, ITEMS, NON_RESURRECTION_ITEMS, UNITS, type FactionId } from './data';
-import { grantTreasure } from './game';
+import { activeHero, grantTreasure } from './game';
 import { log } from './log';
 import { Rng } from './rng';
 import type { BattleUnit, GameState, HeroState } from './types';
@@ -80,6 +80,8 @@ export function chooseSkill(state: GameState, heroId: string, skill: SkillId): v
   hero.offer = undefined;
   log(state, 'info', `${UNITS[hero.id].name} wybiera umiejętność: ${SKILL_NAMES[hero.faction][skill]}.`, hero.faction);
   if (skill === 'fortune') grantFortune(state, hero);
+  // The extra move point counts at once when it is the hero's own turn, not only from the next one.
+  if (skill === 'pathfinder' && activeHero(state)?.id === hero.id) state.movePoints += 1;
   maybeLevelUp(state, hero);
 }
 

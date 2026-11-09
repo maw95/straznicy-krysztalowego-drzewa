@@ -590,8 +590,14 @@ function advanceTurn(state: GameState) {
       if (state.phase === 'over') return;
     }
   }
-  state.movePoints = state.rules.heroMovePoints + moveBonus(activeHero(state) ?? undefined) + (activeHero(state) && isChildHero(state, activeHero(state)!) ? FAMILY.extraMove : 0) + gearMoveBonus(activeHero(state) ?? undefined) - (activeHero(state)?.crystals.includes('artifact') ? ARTIFACT.carrierSlow : 0);
+  state.movePoints = moveAllowance(state);
   state.turnBattleDone = false;
+}
+
+/** Move points the active hero gets at the start of its turn: the rules' base plus skills, family help and gear, minus the artifact's weight. */
+export function moveAllowance(state: GameState): number {
+  const hero = activeHero(state) ?? undefined;
+  return state.rules.heroMovePoints + moveBonus(hero) + (hero && isChildHero(state, hero) ? FAMILY.extraMove : 0) + gearMoveBonus(hero) - (hero?.crystals.includes('artifact') ? ARTIFACT.carrierSlow : 0);
 }
 
 function endRound(state: GameState) {

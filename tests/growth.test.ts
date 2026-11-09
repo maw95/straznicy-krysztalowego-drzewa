@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyAction, createGame, activeHero } from '../src/engine/game';
+import { applyAction, createGame, activeHero, moveAllowance } from '../src/engine/game';
 import { makeBattleUnit } from '../src/engine/battle';
 import { ALL_SKILLS, applyHeroSkills, applySupportSkill, awardXp, chooseSkill, GROWTH, levelOf, MAX_LEVEL, type SkillId } from '../src/engine/growth';
 import { playOut, setup } from './helpers/engine';
@@ -85,5 +85,17 @@ describe('hero growth (digital ruleset, rule heroGrowth)', () => {
     const s = playOut(grown({ seed: 4, mapSize: 'medium' }));
     const horde = Object.values(s.heroes).filter((h) => h.faction === 'horde');
     expect(horde.some((h) => (h.xp ?? 0) > 0)).toBe(true);
+  });
+});
+
+describe('Leśny Tropiciel', () => {
+  it('adds its move point at once in the hero\'s own turn, and the turn start counts it too', () => {
+    const s = grown();
+    const h = activeHero(s)!;
+    const before = s.movePoints;
+    h.offer = ['pathfinder', 'might', 'vigor'];
+    chooseSkill(s, h.id, 'pathfinder');
+    expect(s.movePoints).toBe(before + 1);
+    expect(moveAllowance(s)).toBe(s.rules.heroMovePoints + 1);
   });
 });

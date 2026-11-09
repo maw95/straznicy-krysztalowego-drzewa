@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FACTION_NAMES, ITEMS, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
-import { activeHero, heroesAt, legalHeroMoves, reviveSpots } from '../engine/game';
+import { activeHero, heroesAt, legalHeroMoves, moveAllowance, reviveSpots } from '../engine/game';
 import { levelOf, SKILL_EFFECT, SKILL_NAMES, xpToNext } from '../engine/growth';
 import { gearOf, SITE } from '../engine/sites';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
@@ -479,7 +479,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 )}
                 <div style={{ fontSize: 15, color: 'var(--muted)' }}>{hero.playerId ? state.players.find((p) => p.id === hero.playerId)?.name : 'Automat zła'}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3, fontSize: 15 }}>
-                  Ruch <Pips total={state.rules.heroMovePoints} left={state.movePoints} />
+                  Ruch <Pips total={Math.max(state.rules.heroMovePoints, moveAllowance(state), state.movePoints)} left={state.movePoints} />
                   {hero.crystals.length > 0 && <span style={{ color: '#9EE4FF' }}>· niesie {hero.crystals.length} kryształ(y)</span>}
                 </div>
               </div>
