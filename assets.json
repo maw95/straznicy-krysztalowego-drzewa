@@ -1870,6 +1870,67 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
       "scenario_asset": "blade1: asset_6j7JYsfrJUsBoRZSLpsLBzVF, blade2: asset_f3b9e914pnVyUgt9s644YdmX, mail1: asset_LjmnfMSm5nKhxqo8kT7R8uW3, mail2: asset_UoMLsof4u4oaZjQa8T6Vwpp2, boots1: asset_C59bSoyVdMoinVzX4wCE8Tcx, boots2: asset_SQ4Ay56GAF42YWeFNLijEhDV",
       "prompt": "Game UI icon, a single round medallion emblem centered on a transparent background. Tier 1: Plain bronze and silver ring rim (modest, simple, worn), a dark slate-grey enamel disc inside, <przedmiot> in the centre, no glow, no gems. Dark-fantasy hand-painted style like Heroes of Might and Magic III, rich painterly shading, top-left lighting, bold simple silhouette readable at 64 px. No text, no shadow outside the medallion, nothing outside the circle. Tier 2: Rich ornate gold ring rim with engraved filigree and small purple gems, a deep purple glowing enamel disc inside, <przedmiot>, strong magical glow. Przedmioty: blade1 = simple plain iron short sword with leather grip; blade2 = magnificent long sword with glowing blue-white edge, golden hilt with purple gem; mail1 = simple chain mail shirt with leather straps; mail2 = ornate golden plate cuirass with purple gem inlays; boots1 = sturdy brown leather traveller's boots; boots2 = golden winged boots with white feathers and purple gems."
+    },
+    {
+      "id": "dzwieki/efekty_probka",
+      "pliki": [
+        "public/assets/dzwieki/sword_hit.mp3",
+        "public/assets/dzwieki/arrow_shot.mp3",
+        "public/assets/dzwieki/magic_cast.mp3",
+        "public/assets/dzwieki/unit_death.mp3",
+        "public/assets/dzwieki/footstep_walk.mp3",
+        "public/assets/dzwieki/ui_click.mp3",
+        "public/assets/dzwieki/treasure_found.mp3",
+        "public/assets/dzwieki/level_up.mp3",
+        "public/assets/dzwieki/victory.mp3",
+        "public/assets/dzwieki/defeat.mp3"
+      ],
+      "typ": "dźwięk (efekt)",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3 (model_elevenlabs-sound-effects-v3), promptInfluence 0.3-0.6; przycięta cisza, szczyt ok. -3 dB, mp3 128 kbps mono (ffmpeg)",
+      "scenario_asset": {
+        "sword_hit": "asset_2JsJbercVjinHZ6YEZbhN4rc",
+        "arrow_shot": "asset_f3rriPg5uJc6HoQGCvaTfRmJ",
+        "magic_cast": "asset_PTRFYN6xDx4ty3Q2kJAbFFW7",
+        "unit_death": "asset_JVWpPrLPA93r7ftSkKp4UCLo",
+        "footstep_walk": "asset_jwx3gLHHoox3v8wZ6XTP3KoX",
+        "ui_click": "asset_DN72LBN49qTVnjXb3UPNTmyo",
+        "treasure_found": "asset_cBXPQzKSQVbAPwT5xUGaakTk",
+        "level_up": "asset_MgxJrsnBGscU2AnnfGeDjWhx",
+        "victory": "asset_pDy9PksqNzBcYW7vFM2kmMcy",
+        "defeat": "asset_jT3NvshBkmNmDoK5y5zteQAw"
+      },
+      "prompt": {
+        "sword_hit": "Single sword blade striking steel armour, sharp metallic clang with short ring, medieval fantasy game sound effect, no voices, no music (1 s)",
+        "arrow_shot": "Bow string release and arrow whoosh flying past, quick twang then airy swish, medieval fantasy game sound effect, no voices, no music (0.8 s)",
+        "magic_cast": "Short magical spell cast, shimmering sparkling arcane whoosh with glittering rising tones, fantasy game sound effect, no voices, no speech, no music (1 s)",
+        "unit_death": "Heavy armoured body collapsing to the ground, metal clatter and thud with crumbling debris, fantasy game unit death sound effect, no voices, no screams, no music (1.2 s)",
+        "footstep_walk": "Four armoured footsteps walking on dirt ground, metal armour clinks and soft crunch of earth, foley, fantasy game sound effect, no voices, no music (1 s)",
+        "ui_click": "Subtle single wooden and stone button click, short soft tap, game user interface sound, no voices, no music (0.5 s)",
+        "treasure_found": "Wooden treasure chest creaking open followed by a bright magical chime and sparkle, reward found, fantasy game sound effect, no voices, no music (1.5 s)",
+        "level_up": "Uplifting short level up chime, rising bright bell and harp arpeggio with sparkle, fantasy game sound effect, no voices, no drums (1.5 s)",
+        "victory": "Triumphant short victory sting, heroic brass fanfare with timpani and bright finish, medieval fantasy game jingle, no voices (3.5 s)",
+        "defeat": "Dark low defeat sting, somber descending low brass and cellos with deep drum hit and fading ominous tail, dark fantasy game jingle, no voices (3.5 s)"
+      },
+      "data": "2026-11-09",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "próbka do odsłuchu, decyzja autora jeszcze nie zapadła"
+    },
+    {
+      "id": "dzwieki/muzyka/map_calm_sample",
+      "pliki": [
+        "public/assets/dzwieki/muzyka/map_calm_sample.mp3"
+      ],
+      "typ": "muzyka",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Music v2.5 (model_elevenlabs-music-v2-5), instrumental, 25 s, mp3 128 kbps stereo; bez obróbki (bez pętli)",
+      "scenario_asset": "asset_mpQ9Hht9kpBgChGJsf9PioLk",
+      "prompt": "Calm fantasy map exploration music, gentle harp arpeggios and soft sustained strings, slow tempo, peaceful, warm, ambient, loopable with a steady even texture and no big ending, instrumental",
+      "data": "2026-11-09",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "próbka do odsłuchu; model nie ma trybu pętli, płynne zapętlenie wymaga obróbki"
     }
   ]
 }
