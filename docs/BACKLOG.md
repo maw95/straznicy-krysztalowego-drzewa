@@ -241,6 +241,6 @@ Pliki w `bug-reports/` są kumulatywne (każdy zawiera wszystkie wcześniejsze z
 
 ### Grafika i animacje (do ustalenia, Scenario)
 - [ ] **11.10. Poza spoczynku:** Pegaz stoi na ziemi (bez rozłożonych skrzydeł), Czarny Smok stoi (nie leci); brakuje klipu lotu Pegaza.
-- [ ] **11.11. Animacja obrotu jednorożca jest płaska („kartka papieru”).** Obecny obrót to zwężenie obrazu (240 ms); lepszy byłby klip obrotu albo zwężenie z lekkim uniesieniem i cieniem.
+- [x] **11.11. Animacja obrotu jednorożca jest płaska („kartka papieru”).** Obrót w kodzie: zwężenie tylko do połowy, podskok i przechył (300 ms). Prawdziwy klip obrotu (AI) nadal możliwy, kod obsłuży go jak inne klipy; do oceny autora na żywo.
 - [ ] **11.12. Pająk:** animacja ataku wygląda dziwnie (podskok i machanie odnóżami), pająk ma być większy i groźniejszy.
 - [ ] **11.13. Rzut Cyklopa:** ma rzucać wielkim kamieniem (nowy klip albo pocisk w kodzie).

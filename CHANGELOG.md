@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wersja cyfrowa: obrót jednostki nie wygląda już jak obrót kartki papieru: obraz zwęża się tylko do połowy, jednostka lekko podskakuje i przechyla się w stronę obrotu (prawdziwy klip obrotu nadal czeka na grafikę).
 - Wersja cyfrowa: Pegaz zajmuje dwa heksy (jak Jednorożec i Smoki) i jest narysowany odpowiednio większy.
 - Walka: gdy włączysz zdolność, którą rzuca się na jednostkę (Dar Życia Nimfy, Pajęcze Sidła), kursor zmienia się w różdżkę nad każdą jednostką, na której da się ją użyć.
 - Tryb Boss: przy legowisku Bossa nie ma już ikony kryształu ani napisu „Leży tu kryształ” (w tym trybie kryształy nie są potrzebne).

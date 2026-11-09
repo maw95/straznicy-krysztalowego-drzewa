@@ -35,8 +35,8 @@ const FLY_SPEED = 420;
 const WALK_SPEED = 300;
 const MIN_GLIDE_MS = 250;
 const HIT_MS = 320;
-/** A unit turning round (a squash of the picture to nothing and out again on the other side): there is no turn clip yet. */
-const TURN_MS = 240;
+/** A unit turning round (the picture narrows, hops and leans, then widens on the other side): there is no turn clip yet. */
+const TURN_MS = 300;
 /** The blow of an attack clip lands this far into it. */
 const IMPACT_AT = 0.45;
 
@@ -242,6 +242,8 @@ class Stage {
     const seg = l.seg;
     /** Horizontal scale of a turn in progress: 1 → 0 → -1 (relative to the way it faced before). */
     let turn = 1;
+    let turnLift = 0;
+    let turnLean = 0;
     if (seg) {
       const t = Math.min(1, (now - l.segStart) / seg.ms);
       if (seg.kind === 'glide') {
@@ -262,7 +264,15 @@ class Stage {
           l.endFlip = l.flip;
         }
       }
-      if (seg.kind === 'turn') turn = Math.cos(Math.PI * easeInOut(t));
+      if (seg.kind === 'turn') {
+        // No turn clip yet: the picture never thins to a sheet of paper. It narrows only to about half, hops a little and leans
+        // into the turn, and the mirror image takes over at the middle, where the hop hides the switch.
+        const c = Math.cos(Math.PI * easeInOut(t));
+        const swing = Math.sin(Math.PI * t);
+        turn = Math.sign(c || 1) * (0.5 + 0.5 * Math.abs(c));
+        turnLift = swing * 7;
+        turnLean = (t < 0.5 ? 1 : -1) * swing * 0.1 * (l.flip ? -1 : 1);
+      }
       const clip = seg.kind === 'glide' ? set.moveClip ?? '' : seg.kind === 'turn' ? '' : seg.clip;
       const n = set.frames[clip];
       if (n) {
@@ -300,7 +310,8 @@ class Stage {
     let lie = l.rest === 'corpse' && !seg ? 1 : 0;
     if (seg?.kind === 'clip' && seg.clip === 'smierc') lie = seg.reverse ? 1 - Math.min(1, (now - l.segStart) / seg.ms) : Math.min(1, (now - l.segStart) / seg.ms);
     const k = 1 + (set.corpse.scale - 1) * lie;
-    ctx.translate(x, gy);
+    ctx.translate(x, gy - turnLift);
+    ctx.rotate(turnLean);
     ctx.scale((l.flip ? -1 : 1) * turn * k, k);
     ctx.translate(0, (set.corpse.dy * lie) / k);
     ctx.drawImage(img, sx, sy, sw, sh, -set.cx * dw, -set.feet * dh, dw, dh);
