@@ -254,6 +254,11 @@ Użyte liczby (reszta komórek bez zmian):
 - Dodatkowe rundy Przymierza w serii nie pomagają w rywalizacji (tam zwycięstwa idą z przewagi na limicie), więc zostało `dawnExtraRounds: 1`.
 - Poziom Łatwy to pojedynki na planszy, więc skarby Hordy prawie nie mają na niego wpływu; dźwignią jest tam zastępowanie bohatera.
 
+Poprawka z 9.11.2026 (Nocna Zasadzka naprawdę dodaje +3, patrz CHANGELOG) obniżyła wygrane Przymierza o 3–10 punktów, więc wpisy zostały przejrzane na nowo (`make sim-tabele`
+z `SIM_DIGITAL=1`, także z `SIM_GROWTH=1`). Z rozwojem bohatera: Łatwy bez losowych skarbów Hordy (dawały jej zbyt dużą przewagę w pojedynkach), Trudny 2 graczy 3 skarby Hordy (bardzo długa 5),
+Normalny 2 graczy bardzo długa 3 skarby, Łatwy 1 na 1 bardzo długa i 1 gracz krótka bez zastępowania bohatera; Łatwy 2 na 2 bardzo długa dostaje 3 losowe skarby Przymierza;
+Normalny 2 na 2 długa 1 skarb Przymierza. Wszystko w pasmach poza kilkoma komórkami Łatwego o 1–3 punkty poniżej 70% (w granicy szumu).
+
 Wyniki końcowe (300 partii na komórkę, wygrane Przymierza; szum ok. ±3 punkty).
 
 Cel „Kryształy”:

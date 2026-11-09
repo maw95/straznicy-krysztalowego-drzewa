@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Balans wersji cyfrowej po naprawie Nocnej Zasadzki: przestrojone poziomy z rozwojem bohatera (Łatwy był za trudny, Trudny w kooperacji dla dwóch graczy za łatwy) i kilka komórek bez rozwoju.
 - Naprawiono Nocną Zasadzkę Nietoperza Cienia: dodatkowe obrażenia (+3) nie były doliczane do ciosu, który jej używał, choć podgląd je pokazywał. Boty z nietoperzem biją teraz tak, jak mówi karta.
 - Menu główne podzielone na trzy ekrany: najpierw wybór wersji (planszowa albo cyfrowa, z opisem), potem ustawienia gry (tryb, poziom, cel, kształt i wielkość mapy, trudność, liczba graczy), na końcu miejsca przy stole z opcjami (samouczek, pełny ekran). „Twoje partie” ze statystykami zostały na pierwszym ekranie. Ziarno losowania zniknęło z menu. Wszystkie własne ustawienia (rozwój bohatera, rodzaj bitew, ułatwienia, utrudnienia, remis inicjatywy) są teraz pod poziomem „Własne ustawienia”, a trudność to tylko Łatwy, Normalny i Trudny.
 - Tryb rodzinny w kooperacji (wersja cyfrowa): przy miejscu gracza można zaznaczyć „Dziecko”. Bohater dziecka ma więcej życia i ruchu, a przycisk „Podpowiedź” mówi, co zrobiłby komputer, i podświetla pole na mapie.

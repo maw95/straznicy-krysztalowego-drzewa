@@ -33,13 +33,17 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   // Easy: a dead hero is replaced in the board duels, which made 1-hero games on medium maps too easy and 1 against 1 on short ones too.
   { objective: 'crystals', level: 'kids', mode: 'coop', players: 1, maps: ['medium'], rules: { heroReplacement: false } },
   { objective: 'crystals', level: 'kids', mode: 'pvp', players: 1, maps: ['short', 'medium'], rules: { heroReplacement: false } },
-  { objective: 'crystals', level: 'kids', mode: 'pvp', players: 2, maps: ['veryLong'], rules: { heroMovePoints: 4, roundLimitBonus: 6 } },
+  { objective: 'crystals', level: 'kids', mode: 'pvp', players: 2, maps: ['long'], rules: { heroMovePoints: 4, roundLimitBonus: 6 } },
+  { objective: 'crystals', level: 'kids', mode: 'pvp', players: 2, maps: ['veryLong'], rules: { heroMovePoints: 4, roundLimitBonus: 6, dawnStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { growth: true, objective: 'crystals', level: 'kids', mode: 'pvp', players: 1, maps: ['veryLong'], rules: { heroMovePoints: 4, roundLimitBonus: 6 } },
+  { growth: true, objective: 'crystals', level: 'kids', mode: 'coop', players: 1, maps: ['short'], rules: { heroReplacement: false } },
   // Normal and Hard, two players: the second hero made the largest maps too easy.
   { objective: 'crystals', level: 'normal', mode: 'coop', players: 2, maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
   { objective: 'crystals', level: 'normal', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
   { objective: 'crystals', level: 'hard', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
   { objective: 'crystals', level: 'normal', mode: 'pvp', players: 2, maps: ['medium'], rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
   { objective: 'crystals', level: 'normal', mode: 'pvp', players: 1, maps: ['long'], rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
+  { objective: 'crystals', level: 'normal', mode: 'pvp', players: 2, maps: ['long'], rules: { dawnStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
   // --- Goal 'control' ---
   { objective: 'control', level: 'hard', mode: 'coop', players: 1, rules: { extraEvilHero: false } },
   { objective: 'control', level: 'hard', mode: 'coop', players: 1, maps: ['short', 'medium'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
@@ -52,6 +56,13 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   // --- Goal 'artifact': the Przymierza move first and reach the middle first, which tells on long maps.
   { objective: 'artifact', level: 'normal', maps: ['long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
   { objective: 'artifact', level: 'normal', maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+
+  // --- Hero growth on the triangle map (after the cells above, so they win): the growth entry above gave the Horde treasures at every level, which made Easy too hard
+  // and left two-player Hard too easy, so these cells are set again.
+  { growth: true, shape: 'triangle', objective: 'crystals', level: 'kids', rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 0 } } },
+  { growth: true, shape: 'triangle', objective: 'crystals', level: 'normal', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { growth: true, shape: 'triangle', objective: 'crystals', level: 'hard', mode: 'coop', players: 2, maps: ['short', 'medium', 'long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { growth: true, shape: 'triangle', objective: 'crystals', level: 'hard', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 5 } } },
 
   // --- Map shapes other than the triangle, goal 'crystals' (last, so they win over the entries above): the Przymierza are weaker there
   // (the Tree is open on more sides, the roads cross), so they start with treasures (ring: also one more move point and an Eliksir).
