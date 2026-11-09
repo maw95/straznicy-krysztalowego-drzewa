@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Efekty dźwiękowe: cios mieczem, strzał z łuku, czar (zdolność), kroki idących jednostek, kliknięcie przycisku, znaleziony skarb, awans bohatera, wygrana i przegrana. W opcjach jest osobny suwak i przełącznik „Efekty”, niezależny od muzyki.
 - Balans: poziomy trudności wszystkich celów (kryształy, punkty kontrolne, przetrwanie, boss, artefakt, z rozwojem bohatera i bez) przestrojone automatycznie na wygrane Przymierza: Łatwy 65–85%, Normalny 45–65%, Trudny 30–45%. Obejmuje wszystkie kształty map (trójkąt, prostokąt, pierścień, wyspy, Cieśnina, Dolina).
 - Umiejętności i artefakty mają własne, malowane ikony (medaliony: miecz, serce, skrzydło, sztandar, kompas, skrzynia; miecz, zbroja i buty w dwóch poziomach: brąz i złoto z fioletem).
 - Rozwój bohatera stał się czytelny: pod portretem jest pasek poziomu i PD (ile masz, ile brakuje do następnego poziomu), ikony umiejętności i trzy miejsca na artefakty (broń, zbroja, buty; puste są zaznaczone). Za każde zdobyte PD pojawia się notka, za co. Zdobycie artefaktu ogłasza osobna karta z opisem, źródłem (skrzynia, strażnik, pokonany bohater) i wyjaśnieniem, czym artefakt różni się od skarbu. Umiejętności do wyboru to teraz karty z ikonami i ozdobną ramką. Wyjaśnienia są też w samouczku i w „Zasadach i kartach”.

@@ -7,6 +7,7 @@ import { movePath } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import type { AttackRoll, GameState } from '../engine/types';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
+import { sfx } from './sfx';
 
 /** Time per cell when a unit walks along its path (matches .token.walking in styles.css). */
 export const WALK_STEP_MS = 170;
@@ -108,6 +109,7 @@ export function useBattleAnimations(state: GameState) {
       return { key: Math.random(), pos: (u.pos ?? lastSeen.current[id]?.pos)!, gold: !u.alive };
     }).filter((x) => x.pos);
     if (newSeals.length) {
+      sfx.play('magic_cast');
       setSeals((x) => [...x, ...newSeals]);
       later(() => setSeals((x) => x.filter((s) => !newSeals.includes(s))), 1400);
     }
@@ -116,6 +118,8 @@ export function useBattleAnimations(state: GameState) {
       later(() => setShards((x) => x.filter((s) => !newShards.includes(s))), 700);
     }
     if (!fresh.length && !newGhosts.length) return;
+    // One sound per attacker: a blade for a melee blow, a bowstring for a shot.
+    for (const st of newStrikes.filter((x, i, all) => all.findIndex((o) => o.attacker === x.attacker && o.ranged === x.ranged) === i)) sfx.play(st.ranged ? 'arrow_shot' : 'sword_hit');
     setFloaters((f) => [...f, ...fresh]);
     setHitIds((ids) => [...ids.filter((id) => !hit.includes(id)), ...hit]);
     setStrikes((x) => [...x, ...newStrikes.filter((st, i, all) => all.findIndex((o) => o.attacker === st.attacker) === i || st.ranged)]);

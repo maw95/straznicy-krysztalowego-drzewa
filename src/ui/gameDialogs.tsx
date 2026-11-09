@@ -14,6 +14,7 @@ import { FullscreenButton } from './fullscreen';
 import { HoverCardLayer } from './hover';
 import { SkillCard, XpBar } from './growthUi';
 import { music, type Theme } from './music';
+import { sfx } from './sfx';
 import { RulesDialog } from './RulesDialog';
 import { TreasureCard } from './TreasureCard';
 import { TreasureReveal } from './CardBack';
@@ -235,6 +236,11 @@ export function OptionsDialog(props: {
             Muzyka
             <input type="range" min={0} max={1} step={0.05} value={music.volume} onChange={(e) => music.setVolume(Number(e.target.value))} style={{ flex: 1 }} />
             <input type="checkbox" checked={!music.muted} onChange={() => music.toggleMute()} /> włączona
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            Efekty
+            <input type="range" min={0} max={1} step={0.05} value={sfx.volume} onChange={(e) => sfx.setVolume(Number(e.target.value))} onPointerUp={() => sfx.play('sword_hit')} style={{ flex: 1 }} />
+            <input type="checkbox" checked={!sfx.muted} onChange={() => sfx.toggleMute()} /> włączone
           </label>
           <div>Ziarno partii: <b>{game.setup.seed}</b> · akcji: {game.actionCount} · gra zapisuje się automatycznie</div>
           <div style={{ fontSize: 14, color: 'var(--muted)' }}>Skróty: Spacja — koniec tury/aktywacji · U — cofnij · F — przewiń boty · D — dziennik · R — zasady · Z — zdolność · S — skarby · Ctrl na jednostce — jej zasięg · Esc — zamknij</div>

@@ -5,6 +5,7 @@
 
 import { useEffect, useRef } from 'react';
 import { emitImpact } from './impact';
+import { sfx } from './sfx';
 import { loadSprites, SPRITES, type SpriteSet } from './sprites';
 
 export interface SpritePiece {
@@ -103,7 +104,7 @@ class Stage {
   private apply(pieces: SpritePiece[]) {
     const now = performance.now();
     const keys = new Set(pieces.map((p) => p.key));
-    for (const k of this.live.keys()) if (!keys.has(k)) this.live.delete(k);
+    for (const k of this.live.keys()) if (!keys.has(k)) (this.live.delete(k), sfx.walking(k, false));
     for (const p of pieces) {
       const set = this.sets.get(p.defId);
       if (!set) continue;
@@ -191,6 +192,7 @@ class Stage {
         if (!next) return;
         l.seg = next;
         l.segStart = now;
+        if (next.kind === 'glide' && next.walk) sfx.walking(l.piece.key, true);
       }
       const seg = l.seg;
       if (seg.kind === 'clip' && seg.impact && !seg.impact.done && now - l.segStart >= seg.ms * IMPACT_AT) {
@@ -202,6 +204,7 @@ class Stage {
       if (seg.kind === 'glide') {
         l.x = seg.to.x;
         l.y = seg.to.y;
+        if (seg.walk) sfx.walking(l.piece.key, false);
       } else if (seg.kind === 'turn') l.flip = seg.to;
       else if (seg.then) l.rest = seg.then;
       l.segStart += seg.ms;
@@ -309,6 +312,7 @@ class Stage {
 
   dispose() {
     this.disposed = true;
+    for (const k of this.live.keys()) sfx.walking(k, false);
     cancelAnimationFrame(this.frame);
   }
 }

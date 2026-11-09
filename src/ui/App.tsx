@@ -11,6 +11,7 @@ import { AdventureView } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
 import { usePresentation } from './usePresentation';
 import { ArtifactFound, xpNote } from './growthUi';
+import { sfx } from './sfx';
 import { animationWait, ATTACK_SHOW_MS, holdFor, resetAnimLock } from './animLock';
 import { DuelView } from './DuelView';
 import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset } from './common';
@@ -103,6 +104,16 @@ export function App() {
   // Music follows the situation on the table; audio starts on the first gesture.
   const [, setMusicTick] = useState(0);
   useEffect(() => music.subscribe(() => setMusicTick((t) => t + 1)), []);
+  useEffect(() => sfx.subscribe(() => setMusicTick((t) => t + 1)), []);
+  // A soft click on every button (the sound belongs to the press, not to what the button does).
+  useEffect(() => {
+    const onDown = (e: PointerEvent) => {
+      const b = (e.target as HTMLElement | null)?.closest?.('button');
+      if (b && !(b as HTMLButtonElement).disabled) sfx.play('ui_click');
+    };
+    document.addEventListener('pointerdown', onDown, true);
+    return () => document.removeEventListener('pointerdown', onDown, true);
+  }, []);
   useEffect(() => {
     const unlock = () => music.unlock();
     window.addEventListener('pointerdown', unlock, { once: true });
@@ -392,7 +403,7 @@ export function App() {
     const owned = Object.values(game.items).filter((it) => it.owner && humanSides.has(it.owner));
     if (knownItems.current) {
       const fresh = owned.find((it) => !knownItems.current!.ids.has(it.id));
-      if (fresh && game.phase === 'adventure') setFound(fresh.kind);
+      if (fresh && game.phase === 'adventure') (setFound(fresh.kind), sfx.play('treasure_found'));
     }
     knownItems.current = { seed: game.setup.seed, ids: new Set(owned.map((it) => it.id)) };
   }, [game]);
@@ -423,6 +434,23 @@ export function App() {
     if (arts.length) setArtifactNews((a) => [...a, ...arts]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game]);
+
+  // The end of a game sounds like a win or a loss for the people at this screen; a level-up sounds when the skills are offered.
+  const endSound = useRef<string | null>(null);
+  useEffect(() => {
+    if (!game || game.phase !== 'over' || held) return;
+    const key = `${game.setup.seed}:${game.actionCount}`;
+    if (endSound.current === key) return;
+    endSound.current = key;
+    const mine = game.players.filter(atThisScreen).map((p) => p.faction);
+    sfx.play(game.winner && (mine as string[]).includes(game.winner) ? 'victory' : 'defeat');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game, held]);
+  const offering = game && humanTurn && game.phase === 'adventure' && !steps.length ? activeHero(game) : null;
+  const offerKey = offering?.offer?.length ? `${offering.id}:${offering.level ?? 1}` : null;
+  useEffect(() => {
+    if (offerKey) sfx.play('level_up');
+  }, [offerKey]);
 
   // After-battle summary for battles a human faction fought in.
   const lastBattleId = game?.lastBattle?.id ?? null;

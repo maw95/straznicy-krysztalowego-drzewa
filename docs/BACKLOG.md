@@ -123,8 +123,8 @@ Kolejność: od najtańszego do najdroższego, każdy cel razem z botami i symul
 
 ### 6.5. Dźwięk (niezależny, można w każdej chwili) — przed premierą
 
-1. [ ] Próbka efektów i muzyki z ElevenLabs (najpierw próbka, potem decyzja o planie).
-2. [ ] Efekty: ciosy, śmierć, kroki, interfejs; muzyka: menu, mapa, bitwa. Wszystko do `assets.json` z licencją.
+1. [x] Próbka efektów ze Scenario (ElevenLabs Sound Effects v3 i Music v2.5 przez Scenario), przesłuchana i poprawiona przez autora (9.11); muzyka z próbki odrzucona (obecna jest lepsza).
+2. [~] Efekty podpięte (cios, strzał, czar, kroki, klik, skarb, awans, wygrana, przegrana; `ui/sfx.ts`, opcje: suwak „Efekty”). Śmierć jednostki bez dźwięku (decyzja autora). Zostają: dźwięki mapy przygody (krok bohatera), dźwięk kryształu i Drzewa, ewentualnie więcej wariantów ciosu.
 
 ### 6.6. Premiera na Steamie (faza E) — gdy 6.1–6.5 gotowe
 
