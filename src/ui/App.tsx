@@ -408,6 +408,20 @@ export function App() {
     knownItems.current = { seed: game.setup.seed, ids: new Set(owned.map((it) => it.id)) };
   }, [game]);
 
+  // Adventure map sounds, taken from the log so bots, hotseat and online players are all heard: a hero's step, a crystal picked up
+  // or given to the Tree. Only entries added since the last look count, and a burst of steps is played as one.
+  const soundedLog = useRef<{ seed: number; n: number } | null>(null);
+  useEffect(() => {
+    if (!game) return;
+    const prev = soundedLog.current;
+    soundedLog.current = { seed: game.setup.seed, n: game.log.length };
+    if (!prev || prev.seed !== game.setup.seed || game.phase !== 'adventure') return;
+    const fresh = game.log.slice(prev.n);
+    if (fresh.some((l) => l.kind === 'crystal' && l.text.includes('oddaje'))) sfx.play('tree_deliver');
+    else if (fresh.some((l) => l.kind === 'crystal' && l.text.includes('podnosi'))) sfx.play('crystal_pickup');
+    else if (fresh.some((l) => l.kind === 'move' && /wchodzi na pole|wkracza na pole/.test(l.text))) sfx.play('hero_step');
+  }, [game]);
+
   // Hero growth: experience gained and artifacts found by the heroes at this screen. A note on the map for experience; the artifact
   // gets a card (what it is, where it came from), because it used to go unnoticed.
   const newsSeen = useRef<{ seed: number; n: number } | null>(null);

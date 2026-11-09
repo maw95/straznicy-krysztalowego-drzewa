@@ -1913,6 +1913,31 @@
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
       "uwagi": "po odsłuchu autora: usunięto unit_death i muzykę mapy; poprawione sword_hit, footstep_walk, treasure_found, victory, defeat; pierwsze wersje tych plików zastąpione (ich asset id nie są już używane) 9.11: wybrany sword_hit (bez wariantu b); victory z dłuższym, łagodniejszym wyciszeniem (ffmpeg afade 2,7 s); footstep_walk obrobiony do płynnej pętli (crossfade końca z początkiem 0,3 s)."
+    },
+    {
+      "id": "dzwieki/mapa_przygody",
+      "pliki": [
+        "public/assets/dzwieki/hero_step.mp3",
+        "public/assets/dzwieki/crystal_pickup.mp3",
+        "public/assets/dzwieki/tree_deliver.mp3"
+      ],
+      "typ": "dźwięk (efekt)",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3 (model_elevenlabs-sound-effects-v3), mp3 128 kbps stereo, bez obróbki (brak ffmpeg w systemie)",
+      "scenario_asset": {
+        "hero_step": "asset_XVRcyobaKVS88AmaXvVAUwCq",
+        "crystal_pickup": "asset_D6CyftGBijkcpZTWq28ZuNF2",
+        "tree_deliver": "asset_aMro1FXftbgb9kyxyce8iPe7"
+      },
+      "prompt": {
+        "hero_step": "A single calm footstep of a traveller in leather boots on dry earth and grass, soft crunch, short, realistic foley, no music, no voices (0.6 s, promptInfluence 0.6)",
+        "crystal_pickup": "Picking up a magical crystal: a bright glassy crystalline chime with a soft airy shimmer and a gentle resonant glow, fantasy game sound effect, no voices, no drums, no music (1.5 s)",
+        "tree_deliver": "Magical crystal delivered to an ancient living tree: a deep warm resonant hum swelling with rustling leaves and a glittering shimmer of glass chimes, majestic and soft, fantasy game sound effect, no voices, no drums, no music (2.5 s)"
+      },
+      "data": "2026-11-09",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "do odsłuchu przez autora; głośność ustawiona w sfx.ts (GAIN), pliki nieznormalizowane"
     }
   ]
 }

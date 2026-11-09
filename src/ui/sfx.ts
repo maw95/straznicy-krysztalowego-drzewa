@@ -4,10 +4,10 @@
 
 import { asset } from './common';
 
-export type Sfx = 'sword_hit' | 'arrow_shot' | 'magic_cast' | 'footstep_walk' | 'ui_click' | 'treasure_found' | 'level_up' | 'victory' | 'defeat';
+export type Sfx = 'sword_hit' | 'arrow_shot' | 'magic_cast' | 'footstep_walk' | 'ui_click' | 'treasure_found' | 'level_up' | 'victory' | 'defeat' | 'hero_step' | 'crystal_pickup' | 'tree_deliver';
 
 /** Relative loudness of each sound (the files are normalised to about the same peak, but a click should be quiet and a fanfare roomy). */
-const GAIN: Record<Sfx, number> = { sword_hit: 0.9, arrow_shot: 0.8, magic_cast: 0.8, footstep_walk: 0.45, ui_click: 0.5, treasure_found: 0.8, level_up: 0.8, victory: 0.85, defeat: 0.85 };
+const GAIN: Record<Sfx, number> = { sword_hit: 0.9, arrow_shot: 0.8, magic_cast: 0.8, footstep_walk: 0.45, ui_click: 0.5, treasure_found: 0.8, level_up: 0.8, victory: 0.85, defeat: 0.85, hero_step: 0.6, crystal_pickup: 0.8, tree_deliver: 0.85 };
 
 const STORE_KEY = 'skd-sfx';
 
