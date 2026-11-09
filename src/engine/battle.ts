@@ -434,7 +434,7 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
     const ab = abilityOf(att);
     if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += ABILITY.lightChargeBonus;
     if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += ABILITY.bloodCallBonus;
-    if (useAbility && !att.abilityUsed && ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus;
+    if (useAbility && ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus;
   }
   return Math.max(0, dmg);
 }

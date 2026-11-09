@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { ABILITY, RESURRECTION_CARDS, TERRAIN_COST, TILE_POOLS, UNITS } from '../src/engine/data';
 import { activeHero, applyAction, createGame, legalHeroMoves, ritualFormed } from '../src/engine/game';
-import { abilityActive, arenaCell, arenaObstacles, movePath, predictDamage, reachableCells } from '../src/engine/battle';
+import { abilityActive, arenaCell, arenaObstacles, battleAttack, movePath, predictDamage, reachableCells } from '../src/engine/battle';
 import { distance, parseKey } from '../src/engine/hex';
 import { homeKey, mapNeighbors, sideOf, tileCost, treeKey } from '../src/engine/map';
 import { chooseAction } from '../src/engine/ai';
@@ -589,5 +589,19 @@ describe('Dzielna Kaczka (easter egg hero)', () => {
     s = applyAction(s, { type: 'battleAttack', targetId: 'ironFistOgre' });
     expect(s.battle!.units.ironFistOgre.alive).toBe(true);
     expect(s.battle!.activation!.unitId).not.toBe('braveDuck');
+  });
+});
+
+describe('Nocna Zasadzka', () => {
+  it('adds its bonus damage to the attack that uses it (the ability is marked used, but the blow still gets the bonus)', () => {
+    const s = battleFixture(createGame(setup()), [
+      { id: 'shadowBat', side: 'horde', col: 5, half: 9 },
+      { id: 'nymph', side: 'dawn', col: 4, half: 8 },
+      { id: 'goldDragon', side: 'dawn', col: 0, half: 0 },
+    ]);
+    const bat = s.battle!.units.shadowBat;
+    battleAttack(s, 'nymph', true);
+    expect(bat.abilityUsed).toBe(true);
+    expect(s.battle!.units.nymph.alive).toBe(false);
   });
 });
