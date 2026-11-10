@@ -4,6 +4,14 @@ import { asset } from './common';
 
 /** Set by the app while a game with scaled Życie and Atak is on (`rules.statScale`); 1 elsewhere. */
 export const StatScaleContext = createContext(1);
+/** The same for Życie, which has a scale of its own (`rules.hpScale`, by default the same as Atak's). */
+export const HpScaleContext = createContext<number | null>(null);
+/** Both scales a rule text needs (Atak's and Życie's). */
+export function useScales(): [number, number] {
+  const k = useContext(StatScaleContext);
+  const hp = useContext(HpScaleContext);
+  return [k, hp ?? k];
+}
 
 /** Set by the app while a game under the digital ruleset is on: treasure cards named after gear show their digital names and pictures. */
 export const DigitalContext = createContext(false);
@@ -23,7 +31,8 @@ export const HeroLevelsContext = createContext<Record<string, number>>({});
 
 /** A rule text of the board game's numbers, as the game being played reads it. */
 export function useScaledText(text: string): string {
-  return scaleText(text, useContext(StatScaleContext));
+  const [k, hp] = useScales();
+  return scaleText(text, k, hp);
 }
 
 /** The same, as an element (for rule texts inside a component that is not itself a hook user). */

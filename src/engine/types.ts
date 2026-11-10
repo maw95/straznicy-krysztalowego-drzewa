@@ -32,6 +32,8 @@ export interface RulesConfig {
   ruleset?: Ruleset;
   /** Digital Expedition and higher: every Życie and Atak, and every bonus that adds or takes them, is this many times the board game's (missing = 1). Read it through `scaleOf`. */
   statScale?: number;
+  /** Życie goes by its own scale (missing = the same as `statScale`; the digital Expedition plays with HP_SCALE). */
+  hpScale?: number;
   /** Missing = 'crystals'. Read it only through `objectiveOf` (objectives.ts). */
   objective?: ObjectiveId;
   /** Objective 'control', digital tuning: rounds in a row the Przymierza needs on top of the map's number (missing = CONTROL.dawnExtraRounds). */
@@ -256,6 +258,8 @@ export interface BattleUnit {
   digital?: true;
   /** Życie and Atak of this unit are this many times the board game's (missing = 1; see `scaleOf` in battle.ts). */
   scale?: number;
+  /** Życie of this unit is this many times the board game's (missing = `scale`). */
+  hpScale?: number;
   pos: HexKey | null;
   /** Digital ruleset: the cell where the unit fell. It lies there without occupying it (pos is null); a Resurrection stands it up there. */
   corpse?: HexKey;

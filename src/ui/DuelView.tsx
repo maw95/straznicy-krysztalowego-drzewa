@@ -145,7 +145,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
           {myTurn && active && (
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
               {attackAbility && (
-                <button className={`btn plate parch ${useAbility ? 'on' : ''}`} style={{ padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 15 }} title={scaleText(UNITS[active.defId].abilityText, state.rules.statScale ?? 1)} onClick={() => setUseAbility(!useAbility)}>
+                <button className={`btn plate parch ${useAbility ? 'on' : ''}`} style={{ padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 15 }} title={scaleText(UNITS[active.defId].abilityText, state.rules.statScale ?? 1, state.rules.hpScale)} onClick={() => setUseAbility(!useAbility)}>
                   <img src={asset(`cards/abilities/${abilityOf(active)}.png`)} alt="" style={{ width: 30, height: 30 }} />
                   {UNITS[active.defId].abilityName}
                   {useAbility ? ' ✓' : ''}

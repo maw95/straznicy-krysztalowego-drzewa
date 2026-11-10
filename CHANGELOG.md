@@ -6,6 +6,10 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Życie ma własną skalę: w Wyprawie Życie jest teraz ×5 (Atak nadal ×3), więc bohater potrzebuje 2–4 ciosów, żeby pokonać innego bohatera (dawniej mocny cios, np. Szarża Jednorożca, zabijał bohatera jednym uderzeniem). Wszystkie liczby Życia i leczenia (Czarny Smok ma 35 Ż, Niedźwiedź 60 Ż) są odpowiednio większe.
+- Bitwa: koniec walki jest płynny. Ostatni cios nie odbudowuje już areny (znikało „wygaszenie ekranu”, a jednostki odwracały się i zaczynały ruch od nowa), zwycięzca nie obraca się, a trup Złotego Smoka nie jest mniejszy, Czarnego nie jest dwa razy większy niż za życia.
+- Bitwa: kursor ataku (miecz, strzała, różdżka) pojawia się na całym heksie jednostki, także na pierwszym heksie dużej jednostki i na dole heksa małej. Różdżka jest teraz malowana i pokazuje się też przy używaniu skarbów na jednostce.
+- Bitwa: ataki magiczne (Goblin Szaman, Elf Druid, Nimfa) mają własny dźwięk. Goblin jest nieco większy, nogi Króla Jednorożców krótsze.
 - Mapa: punkty kontrolne mają malowane znaczniki (szary sztandar, zielono-złoty Przymierza, czerwono-żelazny Hordy; środkowy z dodatkowym pierścieniem) zamiast wektorowych.
 - Bitwa: strzelcy walczą wręcz, gdy cel stoi obok. Elf Druid, Goblin Szaman i Cyklop mają osobny klip ataku z bliska (laska, laska, zamach ręką), a strzała albo głaz lecą tylko na odległość.
 - Zgłoszenia z 10.11: Horda może wyzywać strażników we wszystkich celach poza „Kryształami” (w trybie punktów kontrolnych, przetrwania, artefaktu i bossa strażnik to zwykła walka). Dotąd mogła tylko w „Kryształach”, gdzie to ma sens.

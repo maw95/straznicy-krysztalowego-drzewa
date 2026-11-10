@@ -330,7 +330,7 @@ class Stage {
     const k = 1 + (set.corpse.scale - 1) * lie;
     ctx.translate(x, gy - turnLift);
     ctx.rotate(turnLean);
-    ctx.scale((l.flip ? -1 : 1) * turn * k, k);
+    ctx.scale((l.flip ? -1 : 1) * turn * k, k * (set.spec.stretchY ?? 1));
     ctx.translate(0, (set.corpse.dy * lie) / k);
     ctx.drawImage(img, sx, sy, sw, sh, -set.cx * dw, -set.feet * dh, dw, dh);
     if (blend) {

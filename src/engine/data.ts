@@ -492,18 +492,25 @@ export const MAP_SIZE_NAMES: Record<MapSize, string> = { short: 'Krótka', mediu
 
 /** Digital Expedition and higher: Życie and Atak (and every bonus to them) are this many times the board game's, so that small bonuses and defence have room. */
 export const STAT_SCALE = 3;
+/**
+ * The same for Życie: its own scale, larger than Atak's, so that a hero needs two to four blows to bring another hero down (with the same
+ * scale a hero with a strong blow took one: report 674974). Chosen on the hero matrix: with ×5 Życie and ×3 Atak no pair of heroes is finished
+ * in one blow, 93% of the pairs in two to four (mean 2.8), the rest are the Ogre's blows on the Bear. See docs/ZASADY_CYFROWE.md.
+ */
+export const HP_SCALE = 5;
 
 /**
  * A rule text of the board game's numbers, with the numbers of Życie and Atak multiplied by `scale` ("+2 A" becomes "+6 A", "ignoruje 3 obrażenia" "ignoruje 9 obrażeń");
  * distances, speed, move points and counts stay. Used wherever a card or a skill is shown in a game with `statScale`.
  */
-export function scaleText(text: string, scale: number): string {
-  if (scale === 1) return text;
-  return text.replace(/(\d+)(?= (?:maks\. )?[AŻ](?![a-ząćęłńóśźż]))|(\d+)(?= (?:mniej |otrzymanych )?(?:obrażeń|obrażenia|obrażenie|punktów obrażeń))/g, (_m, a?: string, b?: string) => String(Number((a ?? b)!) * scale));
+export function scaleText(text: string, scale: number, hpScale = scale): string {
+  if (scale === 1 && hpScale === 1) return text;
+  // Życie (and the points a healing restores) go by the Życie scale, Atak and damage by the Atak scale.
+  return text.replace(/(\d+)(?= (?:maks\. )?Ż(?![a-ząćęłńóśźż]))|(\d+)(?= punktów obrażeń)|(\d+)(?= A(?![a-ząćęłńóśźż]))|(\d+)(?= (?:mniej |otrzymanych )?(?:obrażeń|obrażenia|obrażenie))/g, (_m, hp?: string, heal?: string, atk?: string, dmg?: string) => String(Number((hp ?? heal ?? atk ?? dmg)!) * (hp !== undefined || heal !== undefined ? hpScale : scale)));
 }
 
 /** The hp, attack and speed of a unit in a battle: the board game's, or the digital ruleset's where they differ; Życie and Atak times `scale` (the digital Expedition plays with 3, see `scaleOf`). */
-export function battleStats(defId: string, digital: boolean | undefined, scale = 1): Pick<UnitDef, 'hp' | 'attack' | 'speed'> {
+export function battleStats(defId: string, digital: boolean | undefined, scale = 1, hpScale = scale): Pick<UnitDef, 'hp' | 'attack' | 'speed'> {
   const { hp, attack, speed } = { ...UNITS[defId], ...(digital ? DIGITAL_STATS[defId] : undefined) };
-  return { hp: hp * scale, attack: attack * scale, speed };
+  return { hp: hp * hpScale, attack: attack * scale, speed };
 }

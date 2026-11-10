@@ -232,8 +232,20 @@ Zrobione 10.11 (szczegóły w CHANGELOG.md): przycinanie animacji i martwa pauza
 Horda i strażnicy poza trybem Kryształów, rozbicie punktów ruchu w panelu (niesiony Artefakt −1), wyjaśnienie awansu, skala liczb w opisie zdolności, zasięg skoku dużych jednostek, bok ataku krawędzią heksa także na dużych jednostkach,
 rozmiary figurek (Czarny Smok, Goblin, Pająk, Gryf), osobny klip walki wręcz strzelców (Elf Druid, Goblin Szaman, Cyklop), malowane znaczniki punktów kontrolnych.
 - [x] „Starą skalę statystyk” w partii 891393 wyjaśnia ustawienie: tryb „Własne” z wyłączonym rozwojem bohatera (skala ×3 włącza się razem z rozwojem, `statScale`). Nie błąd.
-- [ ] **12.1. Zabicie jednym ciosem (Jednorożec z Szarżą kontra Czarny Smok, Złoty Smok ze Słonecznym Blaskiem kontra Wilkołak): do decyzji autora.** Dziś Życie bohaterów to 7 × 3 = 21, a cios z premiami łatwo dochodzi do 21. Opcje: (a) osobna skala Życia, np. ×4 przy Ataku ×3 (więcej Życia wszędzie; psuje niezmienność „×3 = ×1” i wymaga nowego strojenia), (b) tylko bohaterowie dostają +Życia (np. +30%), (c) zasada „pełne Życie przeżywa jeden śmiertelny cios z 1 Ż” (jak odporność w grach rolniczych, najtańsza, nie zmienia reszty liczb), (d) obniżyć premie (Szarża, Słoneczny Blask). Rekomendacja: (c) albo (b), po symulacji 150 gier.
+- [x] **12.1. (zrobione 11.11: osobna skala Życia ×5, patrz 13) Zabicie jednym ciosem (Jednorożec z Szarżą kontra Czarny Smok, Złoty Smok ze Słonecznym Blaskiem kontra Wilkołak): do decyzji autora.** Dziś Życie bohaterów to 7 × 3 = 21, a cios z premiami łatwo dochodzi do 21. Opcje: (a) osobna skala Życia, np. ×4 przy Ataku ×3 (więcej Życia wszędzie; psuje niezmienność „×3 = ×1” i wymaga nowego strojenia), (b) tylko bohaterowie dostają +Życia (np. +30%), (c) zasada „pełne Życie przeżywa jeden śmiertelny cios z 1 Ż” (jak odporność w grach rolniczych, najtańsza, nie zmienia reszty liczb), (d) obniżyć premie (Szarża, Słoneczny Blask). Rekomendacja: (c) albo (b), po symulacji 150 gier.
 - [ ] **12.2. Walka wręcz cyklopa i strzelców (klipy) i nowe klipy ataku do oceny autora na żywo.** Elf Druid i Goblin Szaman uderzają laską, Cyklop zamachem ręki; Nimfa dostała klip ataku z bliska (`.tmp/nowe/nymph/atak_wrecz.mp4`), ale nie jest używany (jest jednostką walczącą wręcz, jej klip ataku już wygląda jak pchnięcie światłem).
+
+## 13. Zgłoszenia z 10.11.2026, wieczór (partie ziaren 216950 i 915914)
+
+Zrobione 11.11 (szczegóły w CHANGELOG.md):
+- [x] Goblin Szaman nieco większy (nadal niski).
+- [x] Osobny dźwięk ataków magicznych (Goblin Szaman, Elf Druid, Nimfa): `magic_attack.mp3` (ElevenLabs SFX przez Scenario).
+- [x] Kursor-różdżka: malowany (Scenario) i używany także przy skarbach wymierzonych w jednostkę.
+- [x] Kursor ataku tylko w niektórych miejscach heksa: przyczyna to pudełko jednostki (54×64) pokrywające środek heksa; teraz każdy heks jednostki niesie kursor i celowanie (pierwszy heks dużej jednostki, dół heksa małej). Filmy w `~/Wideo/problemy_z_kursorem_podczas_walki` nie pokazywały kursora (nagranie bez wskaźnika), więc wniosek z kodu, do sprawdzenia na żywo.
+- [x] Figurka Króla Jednorożców: nogi skrócone (obraz ściśnięty od stóp o 14%).
+- [x] Dziwne animacje przy końcu bitwy: arena była budowana od nowa przy ostatnim ciosie (ciemny błysk, jednostki zaczynały od pozy wyjściowej, Złoty Smok obracał się w lewo). Wstrzymanie końca liczone teraz w renderze, bez odmontowania; po ostatnim ciosie jednostka patrzy w stronę poległych.
+- [x] Trupy: rozmiar zbliżony do stojącej jednostki (Złoty Smok nie mniejszy, Czarny nie dwa razy większy).
+- [x] **Osobna skala Życia ×5 przy Ataku ×3** (decyzja autora 11.11: bohater ma ściągać bohatera w 2–4 ciosy; uzasadnienie liczb w `ZASADY_CYFROWE.md`). Zamyka punkt 12.1.
 
 ## 10. Decyzje czekające na autora (stan 9.11.2026)
 

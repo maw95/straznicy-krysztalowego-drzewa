@@ -11,6 +11,8 @@ import { sfx } from './sfx';
 
 /** Time per cell when a unit walks along its path (matches .token.walking in styles.css). */
 export const WALK_STEP_MS = 170;
+/** Units whose blow is a spell (it has its own sound, not a blade or a bowstring; report 216950). */
+const MAGIC_ATTACKERS = new Set(['goblinShaman', 'elfDruid', 'nymph']);
 
 export interface Strike {
   key: number;
@@ -120,7 +122,7 @@ export function useBattleAnimations(state: GameState) {
     }
     if (!fresh.length && !newGhosts.length) return;
     // One sound per attacker: a blade for a melee blow, a bowstring for a shot.
-    for (const st of newStrikes.filter((x, i, all) => all.findIndex((o) => o.attacker === x.attacker && o.ranged === x.ranged) === i)) sfx.play(st.ranged ? 'arrow_shot' : 'sword_hit');
+    for (const st of newStrikes.filter((x, i, all) => all.findIndex((o) => o.attacker === x.attacker && o.ranged === x.ranged) === i)) sfx.play(MAGIC_ATTACKERS.has(st.attacker) ? 'magic_attack' : st.ranged ? 'arrow_shot' : 'sword_hit');
     setFloaters((f) => [...f, ...fresh]);
     setHitIds((ids) => [...ids.filter((id) => !hit.includes(id)), ...hit]);
     setStrikes((x) => [...x, ...newStrikes.filter((st, i, all) => all.findIndex((o) => o.attacker === st.attacker) === i || st.ranged)]);

@@ -21,6 +21,7 @@ import {
   ARTIFACT,
   FAMILY,
   STAT_SCALE,
+  HP_SCALE,
   RESURRECTION_CARDS,
   SUPPORTS_PER_BATTLE,
   TERRAIN_NAMES,
@@ -41,6 +42,7 @@ import {
   endActivation,
   makeBattleUnit,
   scaleOf,
+  hpScaleOf,
   startBattleFight,
   arenaObstacles,
 } from './battle';
@@ -69,7 +71,7 @@ export function crystalsFor(setup: SetupOptions): number {
 export function createGame(setup: SetupOptions): GameState {
   const tuned = digitalRules(setup);
   // Hero growth (the Expedition level and higher) plays with the larger numbers; an explicit `statScale` (tests, simulations) wins.
-  const rules = isDigital(tuned) && tuned.heroGrowth && setup.mode !== 'arena' && tuned.statScale === undefined ? { ...tuned, statScale: STAT_SCALE } : tuned;
+  const rules = isDigital(tuned) && tuned.heroGrowth && setup.mode !== 'arena' && tuned.statScale === undefined ? { ...tuned, statScale: STAT_SCALE, hpScale: HP_SCALE } : tuned;
   const rng = new Rng(setup.seed);
   const variant = MAP_VARIANTS[setup.mapSize];
 
@@ -743,8 +745,9 @@ function startBattle(state: GameState, s: BattleStart) {
   };
   const digital = isDigital(state.rules) && !b.duel;
   const scale = scaleOf(state);
-  b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction, digital, scale);
-  if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital, scale);
+  const hpScale = hpScaleOf(state);
+  b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction, digital, scale, hpScale);
+  if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital, scale, hpScale);
   for (const h of [attacker, defenderHero]) if (h && state.rules.heroGrowth) {
     applyHeroSkills(h, b.units[h.id]);
     applyMilestones(h, b.units[h.id]);
@@ -752,11 +755,11 @@ function startBattle(state: GameState, s: BattleStart) {
     if (deployDepthOf(h)) (b.deployDepth ??= {})[h.faction] = deployDepthOf(h);
   }
   for (const h of [attacker, defenderHero]) if (h && isChildHero(state, h)) {
-    b.units[h.id].hp += FAMILY.extraHp * scale;
-    b.units[h.id].maxHp += FAMILY.extraHp * scale;
+    b.units[h.id].hp += FAMILY.extraHp * hpScale;
+    b.units[h.id].maxHp += FAMILY.extraHp * hpScale;
   }
   if (s.neutralId) {
-    const g = makeBattleUnit(s.neutralId, 'neutral', false, scale);
+    const g = makeBattleUnit(s.neutralId, 'neutral', false, scale, hpScale);
     // One hero alone against a guardian: the guardian fights with its duel card (less Życie, another ability).
     const card = UNITS[s.neutralId].duel;
     if (b.duel && card) {
@@ -789,7 +792,7 @@ function addSupports(state: GameState, faction: FactionId, ids: string[]) {
   const b = state.battle!;
   const digital = isDigital(state.rules) && !b.duel;
   for (const id of ids) {
-    b.units[id] = makeBattleUnit(id, faction, digital, scaleOf(state));
+    b.units[id] = makeBattleUnit(id, faction, digital, scaleOf(state), hpScaleOf(state));
     // The leader of the side (the attacking or the defending hero of this faction) strengthens its supports.
     if (state.rules.heroGrowth) {
       const leader = state.heroes[b.attacker === faction ? b.attackerHero : b.defenderHero ?? ''];

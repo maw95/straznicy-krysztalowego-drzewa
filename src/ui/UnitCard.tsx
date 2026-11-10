@@ -8,7 +8,7 @@ import { battleStats, DIGITAL_RANGED_BONUS, UNITS } from '../engine/data';
 import { asset } from './common';
 import { StatText } from './markers';
 import { abilityTextAt, milestoneTier } from '../engine/growth';
-import { HeroLevelsContext, StatScaleContext } from './statScale';
+import { HeroLevelsContext, useScales } from './statScale';
 
 interface Box {
   x0: number;
@@ -178,18 +178,18 @@ export const DigitalCardsContext = createContext(false);
 
 export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false, digital: digitalProp }: { unitId: string; width?: number; hp?: number; attack?: number; speed?: number; duel?: boolean; /** The digital edition's Życie, Atak and Szybkość (where they differ from the printed card). */ digital?: boolean }) {
   const inDigitalGame = useContext(DigitalCardsContext);
-  const statScale = useContext(StatScaleContext);
+  const [statScale, hpScale] = useScales();
   const digital = digitalProp ?? inDigitalGame;
   const base = UNITS[unitId];
   const card = duel ? base.duel : undefined;
   const level = useContext(HeroLevelsContext)[unitId];
-  const def = card ? { ...base, hp: card.hp * statScale, abilityName: card.abilityName, abilityText: card.abilityText } : level ? { ...base, abilityText: abilityTextAt(unitId, base.abilityText, milestoneTier(level)) } : base;
+  const def = card ? { ...base, hp: card.hp * hpScale, abilityName: card.abilityName, abilityText: card.abilityText } : level ? { ...base, abilityText: abilityTextAt(unitId, base.abilityText, milestoneTier(level)) } : base;
   const L = frameFor(unitId);
   const scale = width / FRAME_W;
   const { at, circle, kx, ky, X, Y } = cardSpace(L.bounds);
   const nameW = L.name.x1 - L.name.x0;
   const nameSize = Math.min(40, (nameW / Math.max(8, def.name.length)) * 2.05);
-  const stats = card ? def : battleStats(unitId, digital, statScale);
+  const stats = card ? def : battleStats(unitId, digital, statScale, hpScale);
   // In the digital ruleset a shooter hits one harder than the printed Atak says; the card shows what the unit really deals.
   const shooterBonus = digital && def.attackType === 'ranged' ? DIGITAL_RANGED_BONUS * statScale : 0;
   const values = [hp ?? stats.hp, (attack ?? stats.attack) + shooterBonus, speed ?? stats.speed];

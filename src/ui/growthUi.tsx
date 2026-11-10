@@ -1,7 +1,7 @@
 // Hero growth on the screen (digital ruleset, "Wyprawa"): the level and experience bar, the skills as cards with icons, the five
 // gear slots laid out like a hero's sheet (helmet on top, weapon - armour - shield, boots below), the hero sheet itself, and the notices that tell the player what just happened (experience gained, an artifact found).
 
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data';
 import { GROWTH, levelOf, skillRank, skillText, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
 import { makeBattleUnit, unitAttackBase, unitSpeed } from '../engine/battle';
@@ -9,7 +9,7 @@ import { applyHeroSkills, applyMilestones } from '../engine/growth';
 import { applyGear, ARTIFACT_BY_ID, canReceive, gearOf, PACK_SIZE, packOf, passTargets, RARITY_NAMES, type ArtifactDef, type Slot } from '../engine/sites';
 import type { Action, GameState, HeroState, LogEvent } from '../engine/types';
 import { asset, Modal, Portrait, Ribbon, SIDE_RING } from './common';
-import { RuleText, StatScaleContext } from './statScale';
+import { RuleText, useScales } from './statScale';
 
 /** The painted icon of a skill (public/assets/ikony/umiejetnosci, made with Scenario). */
 // The new skills borrow a neighbour's medal until their own are painted (Scenario, backlog 10.4).
@@ -26,11 +26,11 @@ export function ArtifactMedal({ art, size = 40 }: { art: ArtifactDef; size?: num
   return <img className={`gear-medal r${art.rarity}`} src={asset(`ikony/artefakty/${art.id}.webp`)} alt="" width={size} height={size} style={{ flex: 'none', display: 'block' }} />;
 }
 
-const artTitle = (art: ArtifactDef, scale: number) => `${SLOT_NAMES[art.slot]}: ${art.name} (${RARITY_NAMES[art.rarity]}). ${scaleText(art.text, scale)}`;
+const artTitle = (art: ArtifactDef, scale: [number, number]) => `${SLOT_NAMES[art.slot]}: ${art.name} (${RARITY_NAMES[art.rarity]}). ${scaleText(art.text, scale[0], scale[1])}`;
 
 /** The five gear slots laid out like a hero's sheet: the helmet on top, weapon - armour - shield in the middle, the boots below. */
 export function GearDoll({ hero, size = 40, picked, onPick }: { hero: HeroState; size?: number; picked?: string | null; onPick?: (art: ArtifactDef) => void }) {
-  const scale = useContext(StatScaleContext);
+  const scale = useScales();
   const gear = gearOf(hero);
   const cell = (slot: Slot, col: number, row: number) => {
     const art = gear.find((a) => a.slot === slot);
@@ -113,7 +113,7 @@ const levelStart = (level: number) => (level <= 1 ? 0 : GROWTH.thresholds[level 
 
 /** The hero's skills (icons) and the gear slots (filled or empty), with a hover text for each; a click on the gear opens the hero's sheet. */
 export function HeroGrowth({ hero, state, onAction }: { hero: HeroState; state?: GameState; onAction?: (a: Action) => void }) {
-  const scale = useContext(StatScaleContext);
+  const scale = useScales();
   const [sheet, setSheet] = useState(false);
   const skills = [...new Set(hero.skills ?? [])];
   return (
@@ -123,7 +123,7 @@ export function HeroGrowth({ hero, state, onAction }: { hero: HeroState; state?:
         <span className="lbl" style={{ width: 108, flex: 'none' }}>Umiejętności</span>
         {skills.length === 0 && <span style={{ fontSize: 13, color: 'var(--muted)' }}>jeszcze żadnej (pierwsza na poziomie 2)</span>}
         {skills.map((s) => (
-          <span key={s} title={`${SKILL_NAMES[hero.faction][s]} ${ROMAN[skillRank(hero, s)]}: ${scaleText(skillText(s, skillRank(hero, s)), scale)}`} style={{ position: 'relative' }}>
+          <span key={s} title={`${SKILL_NAMES[hero.faction][s]} ${ROMAN[skillRank(hero, s)]}: ${scaleText(skillText(s, skillRank(hero, s)), scale[0], scale[1])}`} style={{ position: 'relative' }}>
             <SkillIcon skill={s} size={36} />
             {skillRank(hero, s) > 1 && <span className="skill-rank">{ROMAN[skillRank(hero, s)]}</span>}
           </span>
@@ -148,7 +148,7 @@ export function HeroGrowth({ hero, state, onAction }: { hero: HeroState; state?:
 
 /** The hero's sheet: portrait, level, the numbers it enters a battle with, the gear on a figure-like layout, and what every artifact and skill does. */
 export function HeroSheet({ hero, state, onAction, onClose }: { hero: HeroState; state?: GameState; onAction?: (a: Action) => void; onClose: () => void }) {
-  const scale = useContext(StatScaleContext);
+  const scale = useScales();
   // The artifact the player has clicked (worn or in the backpack): the buttons below act on it. Only with `onAction` (the hero's own turn).
   const [pickedId, setPicked] = useState<string | null>(null);
   const pack = packOf(hero);
@@ -160,8 +160,8 @@ export function HeroSheet({ hero, state, onAction, onClose }: { hero: HeroState;
     setPicked(null);
   };
   // The hero's unit as a battle would make it: card numbers plus skills, milestones and gear.
-  const plain = makeBattleUnit(hero.id, hero.faction, true, scale);
-  const unit = makeBattleUnit(hero.id, hero.faction, true, scale);
+  const plain = makeBattleUnit(hero.id, hero.faction, true, scale[0], scale[1]);
+  const unit = makeBattleUnit(hero.id, hero.faction, true, scale[0], scale[1]);
   applyHeroSkills(hero, unit);
   applyMilestones(hero, unit);
   applyGear(hero, unit);

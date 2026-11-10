@@ -179,6 +179,12 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       if (ability === 'giftOfLife' && u.side === active.side) return 'cur-spell';
       if (ability === 'web' && u.side !== active.side && unitDistance(active, u) <= ABILITY.webRange) return 'cur-spell';
     }
+    // A treasure is being aimed (Eliksir, Zwój, Róg...): the same wand as for an ability, over every unit it can be used on.
+    if (targeting && myTurn && u.alive) {
+      const k = targeting.kind;
+      const own = u.side === side;
+      if (((k === 'ownLiving' || k === 'courage' || k === 'teleport') && own) || ((k === 'enemy' || k === 'lightning') && !own) || (k === 'horn' && own && UNITS[u.defId].kind === 'support')) return 'cur-spell';
+    }
     if (approachable) return 'cur-melee';
     // A ranged unit shoots even at a neighbour (it must, when one stands next to it): always the arrow.
     if (targets.some((t) => t.id === u.id)) return UNITS[active.defId].attackType === 'melee' ? 'cur-melee' : 'cur-ranged';

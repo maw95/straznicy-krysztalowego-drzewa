@@ -257,14 +257,16 @@ function cellsBetween(from: HexKey, to: HexKey): readonly HexKey[] {
 
 /** How many times larger than the board game's the numbers of this game are (the Życie and Atak of units and everything that adds or takes them): 1 or, in the digital Expedition, 3. */
 export const scaleOf = (state: Pick<GameState, 'rules'>): number => state.rules.statScale ?? 1;
+/** The same for Życie and for what restores it (healing): its own scale, by default the same as Atak's. */
+export const hpScaleOf = (state: Pick<GameState, 'rules'>): number => state.rules.hpScale ?? scaleOf(state);
 
 export function newStatus(): UnitStatus {
   return { slowNext: 0, rootedNext: false, cursedNext: 0, nextAttackBonus: 0, battleAttackBonus: 0, battleSpeedBonus: 0, damageReduction: 0, shieldArmed: false };
 }
 
-export function makeBattleUnit(defId: string, side: Side, digital = false, scale = 1): BattleUnit {
-  const { hp } = battleStats(defId, digital, scale);
-  return { id: defId, defId, side, hp, maxHp: hp, ...(digital ? { digital: true as const } : {}), ...(scale !== 1 ? { scale } : {}), pos: null, alive: true, abilityUsed: false, swappedOut: false, status: newStatus() };
+export function makeBattleUnit(defId: string, side: Side, digital = false, scale = 1, hpScale = scale): BattleUnit {
+  const { hp } = battleStats(defId, digital, scale, hpScale);
+  return { id: defId, defId, side, hp, maxHp: hp, ...(digital ? { digital: true as const } : {}), ...(scale !== 1 ? { scale } : {}), ...(hpScale !== scale ? { hpScale } : {}), pos: null, alive: true, abilityUsed: false, swappedOut: false, status: newStatus() };
 }
 
 const unitName = (u: BattleUnit) => UNITS[u.defId].name;
@@ -303,11 +305,11 @@ export function activeUnit(b: BattleState): BattleUnit | null {
 }
 
 export function unitSpeed(u: BattleUnit): number {
-  return battleStats(u.defId, u.digital, u.scale).speed + u.status.battleSpeedBonus;
+  return battleStats(u.defId, u.digital, u.scale, u.hpScale).speed + u.status.battleSpeedBonus;
 }
 
 export function unitAttackBase(u: BattleUnit): number {
-  return battleStats(u.defId, u.digital, u.scale).attack + u.status.battleAttackBonus;
+  return battleStats(u.defId, u.digital, u.scale, u.hpScale).attack + u.status.battleAttackBonus;
 }
 
 export function moveRange(u: BattleUnit): number {
@@ -637,7 +639,7 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
   b.activation = { unitId, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly, hop: 0 };
   const u = b.units[unitId];
   if (abilityOf(u) === 'regrowth' && abilityActive(state) && u.hp < u.maxHp) {
-    const healed = Math.min(ABILITY.regrowthHeal * scaleOf(state), u.maxHp - u.hp);
+    const healed = Math.min(ABILITY.regrowthHeal * hpScaleOf(state), u.maxHp - u.hp);
     u.hp += healed;
     log(state, 'ability', `${unitName(u)} odzyskuje ${healed} Ż (Odrastające Głowy).`);
   }
@@ -885,8 +887,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     const before = t.hp;
     resolveAttack(state, u, t, canUse, act.movedDistance);
     if (ab === 'thiefClaw' && abilityActive(state) && u.alive && t.hp < before && u.hp < u.maxHp) {
-      u.hp = Math.min(u.maxHp, u.hp + ABILITY.thiefClawHeal * scaleOf(state));
-      log(state, 'ability', `${unitName(u)} odzyskuje ${ABILITY.thiefClawHeal * scaleOf(state)} Ż (Złodziejski Szpon).`);
+      u.hp = Math.min(u.maxHp, u.hp + ABILITY.thiefClawHeal * hpScaleOf(state));
+      log(state, 'ability', `${unitName(u)} odzyskuje ${ABILITY.thiefClawHeal * hpScaleOf(state)} Ż (Złodziejski Szpon).`);
     }
     if (canUse && t.alive) {
       if (ab === 'entanglingRoots') {
@@ -921,7 +923,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     const haste = (u.tier ?? 0) >= MILESTONE_TIER.duckHaste ? 1 : 0;
     b.extra.unshift({ unitId: u.id, moveOnly: false, ...(haste ? { speedBonus: haste } : {}) });
     log(state, 'ability', `${unitName(u)} wpada w szał i aktywuje się ponownie (${UNITS[u.defId].abilityName})${haste ? ', szybciej o 1 S' : ''}.`);
-    const heal = abilityNum(u, 'duckKillHeal') * scaleOf(state);
+    const heal = abilityNum(u, 'duckKillHeal') * hpScaleOf(state);
     if (heal > 0 && u.hp < u.maxHp) {
       u.hp = Math.min(u.maxHp, u.hp + heal);
       log(state, 'ability', `${unitName(u)} odzyskuje ${heal} Ż po zabiciu wroga.`);
@@ -968,7 +970,7 @@ export function battleAbility(state: GameState, targetId?: string) {
   } else if (ab === 'giftOfLife') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side !== u.side) throw new Error('Wybierz żyjącego sojusznika.');
-    t.hp = Math.min(t.maxHp, t.hp + ABILITY.giftOfLifeHeal * scaleOf(state));
+    t.hp = Math.min(t.maxHp, t.hp + ABILITY.giftOfLifeHeal * hpScaleOf(state));
   } else if (ab === 'web') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side === u.side || unitDistance(u, t) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);
@@ -1075,10 +1077,10 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
   },
   heal: (use) => {
     const t = ownLiving(use, use.args.targetId);
-    t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.heal * scaleOf(use.state));
+    t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.heal * hpScaleOf(use.state));
   },
   seed: ({ state, b, faction }) => {
-    for (const t of livingUnits(b, faction)) t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.seedHeal * scaleOf(state));
+    for (const t of livingUnits(b, faction)) t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.seedHeal * hpScaleOf(state));
   },
   damage_scroll: (use) => dealDamage(use.state, enemyUnit(use, use.args.targetId), ITEM_EFFECT.scrollDamage * scaleOf(use.state), use.name),
   lightning: (use) => {
@@ -1091,8 +1093,8 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
   shield: (use) => void (ownLiving(use, use.args.targetId).status.shieldArmed = true),
   vitality: (use) => {
     const t = ownLiving(use, use.args.targetId);
-    t.maxHp += ITEM_EFFECT.vitalityHp * scaleOf(use.state);
-    t.hp += ITEM_EFFECT.vitalityHp * scaleOf(use.state);
+    t.maxHp += ITEM_EFFECT.vitalityHp * hpScaleOf(use.state);
+    t.hp += ITEM_EFFECT.vitalityHp * hpScaleOf(use.state);
   },
   boots: (use) => void (ownLiving(use, use.args.targetId).status.battleSpeedBonus += ITEM_EFFECT.bootsSpeed),
   stone: (use) => void (ownLiving(use, use.args.targetId).status.damageReduction += ITEM_EFFECT.stoneReduction * scaleOf(use.state)),
@@ -1130,7 +1132,7 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     }
     const reserve = args.reserveId;
     if (!reserve || !state.factions[faction].supportsAlive.includes(reserve) || b.units[reserve]) throw new Error('Wybierz żywego pomocnika z rezerwy.');
-    const nu = makeBattleUnit(reserve, faction, Boolean(t.digital), t.scale ?? 1);
+    const nu = makeBattleUnit(reserve, faction, Boolean(t.digital), t.scale ?? 1, t.hpScale ?? t.scale ?? 1);
     const spot = t.alive ? t.pos : freeCellNear(use.state, faction, nu);
     // The swapped unit leaves first, so a large newcomer may lie on the cells it frees.
     const was = { alive: t.alive, pos: t.pos, tail: t.tail };

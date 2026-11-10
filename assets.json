@@ -2076,6 +2076,36 @@
       "data": "2026-11-10",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "cursors/rozdzka",
+      "pliki": [
+        "public/assets/cursors/rozdzka.png",
+        "public/assets/cursors/rozdzka@2x.png",
+        "docs/grafika/kursory/rozdzka.png"
+      ],
+      "typ": "kursor różdżki (zdolność lub skarb na jednostce), styl jak pozostałe kursory",
+      "prompt": "Use the reference image only for the art style and the rendering: a polished golden game mouse-cursor icon with soft shading and a dark outline, isolated on a transparent background, tilted on a diagonal with its tip at the top-left. Draw a magic wand in exactly this style: a slender golden wand with a small ornate grip, pointing to the top-left, its tip crowned by a bright glowing four-pointed white-gold star with a few tiny sparkles. Single icon, centered, large, no text, no shadow, nothing else in the image. (odniesienie: docs/grafika/kursory/atak.png)",
+      "scenario_asset": "asset_kWkYLDWq9uX4EDPWcjokk7qT (odniesienie stylu: asset_7zyg82x4knfrWJ6HzCpFNyBB)",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, 1024x1024, jakość medium; scripts/assets/cursors.py-owe cięcie (32 i 64 px)",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/magic_attack",
+      "pliki": [
+        "public/assets/dzwieki/magic_attack.mp3"
+      ],
+      "typ": "dźwięk ataku magicznego (Goblin Szaman, Elf Druid, Nimfa)",
+      "prompt": "Short fantasy magic spell attack: a bright energy zap with a quick whoosh and a crystalline sparkle tail, clean game sound effect, no music, no voice",
+      "scenario_asset": "asset_S6KDf4r51UnF6b4X3xSqtd9p",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

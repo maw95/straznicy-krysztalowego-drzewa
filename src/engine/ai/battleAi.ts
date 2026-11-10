@@ -23,6 +23,7 @@ import {
   livingUnits,
   middleDistance,
   reachableCells,
+  hpScaleOf,
   scaleOf,
   unitAttackBase,
   unitDistance,
@@ -232,7 +233,8 @@ function scoreHit(t: BattleUnit, dmg: number): number {
   if (dmg >= t.hp) return AI_TUNING.killScore + (isLeader ? AI_TUNING.killLeader : 0) + UNITS[t.defId].attack;
   // The weights were tuned on the board game's numbers: with larger numbers the damage and the wounds are counted back in those.
   const k = t.scale ?? 1;
-  return (dmg / k) * (isLeader ? AI_TUNING.leaderDamage : 1) + ((t.maxHp - t.hp) / k) * AI_TUNING.woundWeight;
+  const hk = t.hpScale ?? k;
+  return (dmg / k) * (isLeader ? AI_TUNING.leaderDamage : 1) + ((t.maxHp - t.hp) / hk) * AI_TUNING.woundWeight;
 }
 
 function freeAbility(state: GameState, u: BattleUnit): Action | null {
@@ -243,7 +245,7 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
   if (ab === 'sunburst' && (livingUnits(b, u.side).length >= 2 || b.duel)) return { type: 'battleAbility' };
   if (ab === 'giftOfLife') {
     const hurt = livingUnits(b, u.side)
-      .filter((x) => x.maxHp - x.hp >= 3 * scaleOf(state))
+      .filter((x) => x.maxHp - x.hp >= 3 * hpScaleOf(state))
       .sort((x, y) => (UNITS[y.defId].kind === 'support' ? 0 : 1) - (UNITS[x.defId].kind === 'support' ? 0 : 1))[0];
     if (hurt) return { type: 'battleAbility', targetId: hurt.id };
   }
@@ -274,13 +276,13 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
         break;
       }
       case 'heal': {
-        const t = own.find((x) => x.maxHp - x.hp >= AI_TUNING.healMissing * scaleOf(state) && x.hp <= x.maxHp / 2);
+        const t = own.find((x) => x.maxHp - x.hp >= AI_TUNING.healMissing * hpScaleOf(state) && x.hp <= x.maxHp / 2);
         if (t) return { type: 'battleItem', itemId: item.id, targetId: t.id };
         break;
       }
       case 'seed':
         // Worth it when at least two units can take the whole gift.
-        if (own.filter((x) => x.maxHp - x.hp >= ITEM_EFFECT.seedHeal * scaleOf(state)).length >= 2) return { type: 'battleItem', itemId: item.id };
+        if (own.filter((x) => x.maxHp - x.hp >= ITEM_EFFECT.seedHeal * hpScaleOf(state)).length >= 2) return { type: 'battleItem', itemId: item.id };
         break;
       case 'damage_scroll': {
         const t = enemies.find((e) => e.hp <= ITEM_EFFECT.scrollDamage * scaleOf(state));
@@ -298,7 +300,7 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
         if (UNITS[u.defId].kind === 'hero' && b.round === 1) return { type: 'battleItem', itemId: item.id, targetId: u.id };
         break;
       case 'shield':
-        if (UNITS[u.defId].kind === 'hero' && u.hp <= AI_TUNING.shieldHp * scaleOf(state)) return { type: 'battleItem', itemId: item.id, targetId: u.id };
+        if (UNITS[u.defId].kind === 'hero' && u.hp <= AI_TUNING.shieldHp * hpScaleOf(state)) return { type: 'battleItem', itemId: item.id, targetId: u.id };
         break;
       case 'boots':
         // Arena only: the coop automaton keeps to the rulebook's list of treasures it uses.

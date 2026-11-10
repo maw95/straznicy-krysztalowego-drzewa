@@ -178,7 +178,7 @@ export function applyHeroSkills(hero: HeroState | undefined, unit: BattleUnit): 
   const k = unit.scale ?? 1;
   unit.status.battleAttackBonus += rankValue(SKILL_RANKS.might, hero, 'might') * k;
   unit.status.battleSpeedBonus += rankValue(SKILL_RANKS.swift, hero, 'swift');
-  const hp = rankValue(SKILL_RANKS.vigor, hero, 'vigor') * k;
+  const hp = rankValue(SKILL_RANKS.vigor, hero, 'vigor') * (unit.hpScale ?? k);
   unit.hp += hp;
   unit.maxHp += hp;
   addMarksman(hero, unit);
@@ -192,7 +192,7 @@ function addMarksman(hero: Pick<HeroState, 'skills'>, unit: BattleUnit): void {
 /** Pomocnicy of a hero with the skill Dowódca. */
 export function applySupportSkill(hero: HeroState | undefined, unit: BattleUnit): void {
   if (!hero) return;
-  const hp = rankValue(SKILL_RANKS.leader, hero, 'leader') * (unit.scale ?? 1);
+  const hp = rankValue(SKILL_RANKS.leader, hero, 'leader') * (unit.hpScale ?? unit.scale ?? 1);
   unit.hp += hp;
   unit.maxHp += hp;
   addMarksman(hero, unit);

@@ -2,7 +2,7 @@
 // fallen unit's death animation was seen. In the digital ruleset the last fight state is held for a moment, with the units the
 // final blow felled shown as fallen, before the result and the summary appear.
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { isDigital, type BattleReport, type GameState } from '../engine/types';
 import { AFTER_KILL_MS, beginHold, endHold } from './animLock';
 import { IMPACT_TIMEOUT_MS, onImpact } from './impact';
@@ -45,49 +45,59 @@ export interface EndHold {
 }
 
 export function useEndHold(game: GameState | null): EndHold | null {
-  const prev = useRef<GameState | null>(null);
-  const timer = useRef<number | null>(null);
+  const [prev, setPrev] = useState<GameState | null>(game);
   const [held, setHeld] = useState<EndHold | null>(null);
-  /** The result waiting for the last blow of a unit with sprites to land. */
-  const waiting = useRef<{ unitId: string; final: GameState } | null>(null);
-  const clear = () => {
-    if (timer.current) window.clearTimeout(timer.current);
-    timer.current = null;
-  };
-  const show = (final: GameState) => {
-    waiting.current = null;
-    clear();
-    setHeld({ view: final, attack: null });
-    timer.current = window.setTimeout(() => setHeld(null), END_HOLD_MS);
-  };
-  // A layout effect, so the hold is set before the first paint of the finished game (no flash of the result).
-  useLayoutEffect(() => {
-    const before = prev.current;
-    prev.current = game;
-    if (!game || !before) return;
-    const fought = before.phase === 'battle' && before.battle?.stage === 'fight';
-    const over = !(game.phase === 'battle' && game.battle?.stage === 'fight');
-    if (fought && over && isDigital(game.rules) && game.lastBattle && game.lastBattle.id !== before.lastBattle?.id) {
-      const final = finalView(before, game.lastBattle);
-      const bb = before.battle!;
-      const att = bb.activation ? bb.units[bb.activation.unitId] : null;
-      if (att && hasSprites(att.defId) && !bb.activation!.attacked) {
-        // The last blow of a unit with sprites: show the fight as it was until the blow lands, then the result.
-        const target = Object.values(bb.units).find((u) => u.alive && u.side !== att.side);
-        waiting.current = { unitId: att.id, final };
-        setHeld({ view: before, attack: { unitId: att.id, targetId: target?.id ?? att.id, key: Date.now() } });
-        clear();
-        timer.current = window.setTimeout(() => waiting.current && show(waiting.current.final), IMPACT_TIMEOUT_MS);
-      } else show(final);
-    } else if (game.setup.seed !== before.setup.seed || game.actionCount < before.actionCount) {
-      // A different game was started or loaded: drop any hold.
-      waiting.current = null;
-      clear();
-      setHeld(null);
+  /** The result waiting for the last blow of a unit with sprites to land (the screen shows the fight as it was until then). */
+  const [waiting, setWaiting] = useState<{ unitId: string; final: GameState } | null>(null);
+  // Worked out while rendering, not in an effect: the screen must go from the fight straight to the held fight, without a frame of the
+  // map in between (the arena would be torn down and built again: a flash of black, and every unit standing as at the start).
+  if (game !== prev) {
+    setPrev(game);
+    const before = prev;
+    if (game && before) {
+      const fought = before.phase === 'battle' && before.battle?.stage === 'fight';
+      const over = !(game.phase === 'battle' && game.battle?.stage === 'fight');
+      if (fought && over && isDigital(game.rules) && game.lastBattle && game.lastBattle.id !== before.lastBattle?.id) {
+        const final = finalView(before, game.lastBattle);
+        const bb = before.battle!;
+        const att = bb.activation ? bb.units[bb.activation.unitId] : null;
+        if (att && hasSprites(att.defId) && !bb.activation!.attacked) {
+          // The last blow of a unit with sprites: show the fight as it was until the blow lands, then the result.
+          const target = Object.values(bb.units).find((u) => u.alive && u.side !== att.side);
+          setWaiting({ unitId: att.id, final });
+          setHeld({ view: before, attack: { unitId: att.id, targetId: target?.id ?? att.id, key: Date.now() } });
+        } else {
+          setWaiting(null);
+          setHeld({ view: final, attack: null });
+        }
+      } else if (game.setup.seed !== before.setup.seed || game.actionCount < before.actionCount) {
+        // A different game was started or loaded: drop any hold.
+        setWaiting(null);
+        setHeld(null);
+      }
     }
-  }, [game]);
-  useEffect(() => onImpact((id) => waiting.current?.unitId === id && show(waiting.current.final)), []);
-  useEffect(() => () => clear(), []);
+  }
+  // The blow lands (or never does: a sprite that did not load, a hidden tab): the result follows.
+  useEffect(() => {
+    if (!waiting) return;
+    const show = () => {
+      setWaiting(null);
+      setHeld({ view: waiting.final, attack: null });
+    };
+    const off = onImpact((id) => id === waiting.unitId && show());
+    const timer = window.setTimeout(show, IMPACT_TIMEOUT_MS);
+    return () => {
+      off();
+      window.clearTimeout(timer);
+    };
+  }, [waiting]);
+  // The finished battle stays for a moment (the death clip of a large unit takes about two seconds), then the result.
+  const showing = held !== null && waiting === null;
+  useEffect(() => {
+    if (!showing) return;
+    const timer = window.setTimeout(() => setHeld(null), END_HOLD_MS);
+    return () => window.clearTimeout(timer);
+  }, [showing, held]);
   // Nothing machine-driven starts on the adventure map while the finished battle is still on screen.
   const holding = held !== null;
   useEffect(() => {

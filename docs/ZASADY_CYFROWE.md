@@ -356,6 +356,19 @@ Rywalizacja — 2 na 2
 Znane odchyłki: Łatwy 1 gracz na krótkiej mapie (kryształy) ok. 96% (dźwignia zastępowania bohatera spada tam za nisko, ok. 62%), Łatwy 1 gracz na średniej mapie ok. 67%,
 Łatwy 2 na 2 na długiej i bardzo długiej ok. 68%.
 
+## Osobna skala Życia (11.11.2026)
+
+**Życie ma własną skalę: ×5, przy Ataku ×3** (`HP_SCALE` i `STAT_SCALE` w `data.ts`; reguły `hpScale` i `statScale`; odczyt przez `hpScaleOf` i `scaleOf` w `battle.ts`). Powód (zgłoszenie 10.11): przy wspólnej skali ×3 bohater z mocnym ciosem
+(Szarża Światła, Słoneczny Blask) zabijał innego bohatera jednym uderzeniem. Cel autora: bohater ściąga bohatera w 2–4 ciosy.
+- **Wybór liczby** (macierz „kto kogo”, 6 bohaterów, cios = Atak + typowa premia zdolności ≈ 0–3, ×3, kontra Życie × skala): przy Życiu ×3 jednym ciosem kończy 33% par (średnio 1,7 ciosu); ×4: 3% par, 97% w 2–4 (średnio 2,4);
+  **×5: 0% jednym ciosem, 93% w 2–4 (średnio 2,8)**; ×6: 93% w 2–4 (średnio 3,2); ×7: 33% par w 5+ ciosów. Wybrane ×5: żadna para nie kończy się jednym ciosem, a reszta (7%) to Ogr uderzający Niedźwiedzia.
+  Test `tests/reports1110.test.ts` pilnuje, żeby żaden zwykły cios bohatera nie zabijał innego bohatera.
+- Na skalę Życia idą: Życie jednostek i strażników, Życie bossa, leczenie (Dar Życia, Eliksir Uzdrowienia, Nasiono, Odrastanie, Szpon Złodzieja, Kacza Furia), Eliksir Żywotności, umiejętności Hart i Opieka nad Drużyną, Życie z artefaktów i pomoc dla dziecka.
+  Na skalę Ataku: ciosy, premie do ataku, obrażenia skarbów, ignorowanie obrażeń, Obrona, ciernie.
+- Teksty (`scaleText`) mnożą liczby przed „Ż” i „punktów obrażeń” (leczenie) przez skalę Życia, resztę przez skalę Ataku.
+- Skutek dla bitew: walki trwają ok. 1,7 raza dłużej (więcej ciosów na jednostkę), a bohaterowie żyją dłużej przy ciosach pomocników i strażników. Balans po zmianie (`SIM_GROWTH=1 make sim-cele GAMES=60`, Normalny): wszystkie cele i mapy nadal 46–61%, jak przed zmianą
+  (poza znaną Doliną z Kryształami w kooperacji, 35%). Test „×3 = ×1” (`statscale.test.ts`) gra z jedną skalą (reguła `hpScale` pusta = skala Ataku).
+
 ## Skala statystyk (10.11.2026, wersja cyfrowa, od poziomu Wyprawa)
 
 Gdy włączony jest rozwój bohatera (poziom 2 „Wyprawa” i wyżej), **Życie i Atak wszystkich jednostek oraz każdy bonus, który je dodaje lub odejmuje, są pomnożone przez 3** (`STAT_SCALE` w `data.ts`, reguła `statScale`, odczyt przez `scaleOf` w `battle.ts`).

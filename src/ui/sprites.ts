@@ -13,6 +13,8 @@ export interface SpriteSpec {
   box?: readonly [number, number];
   /** Widest the corpse may be drawn (canvas pixels), for a one-hex unit with a box of its own (a SMALL box implies CORPSE_MAX_W). */
   corpseMax?: number;
+  /** The picture is drawn this much taller (< 1: lower) than it is wide, anchored at the feet. */
+  stretchY?: number;
   /** Where the feet stand, as a fraction of the frame height (when anim.json does not say). */
   feet?: number;
   /** Playback speed of each clip against its recorded 24 fps (the take-off and landing are slowed or sped up here). */
@@ -31,11 +33,12 @@ export const SPRITES: Record<string, SpriteSpec> = {
   pegasus: { dir: 'jednostki/pegaz', box: [132, 106] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   werewolfLord: { dir: 'jednostki/wladca_wilkolakow', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   ironFistOgre: { dir: 'jednostki/ogr_zelazna_piesc', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  unicornKing: { dir: 'jednostki/krol_jednorozcow', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  // The legs are too long for the body in the picture: squashed from the feet up (report 216950).
+  unicornKing: { dir: 'jednostki/krol_jednorozcow', box: LARGE, stretchY: 0.86, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   elfDruid: { dir: 'jednostki/elf_druid', box: SMALL, speed: { chod: 1.4, atak: 1.5, atak_wrecz: 1.5, smierc: 1.5, trafienie: 1.4 } },
   nymph: { dir: 'jednostki/nimfa', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // Goblins are short: the shaman stands lower than the elf and the nymph.
-  goblinShaman: { dir: 'jednostki/goblin_szaman', box: [66, 62] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, atak_wrecz: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  goblinShaman: { dir: 'jednostki/goblin_szaman', box: [80, 72] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, atak_wrecz: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // The spider and the bat are wide and low: a wider box makes them big and menacing (they overhang their hex a little).
   caveSpider: { dir: 'jednostki/pajak_jaskiniowy', box: [92, 68] as const, corpseMax: 100, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   shadowBat: { dir: 'jednostki/nietoperz_cienia', box: [96, 96] as const, corpseMax: CORPSE_MAX_W, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
@@ -166,12 +169,15 @@ export function loadSprites(defId: string): Promise<SpriteSet> {
       // Fit the visible body (measured on the standing picture) into the unit's box.
       const body = measureBody(stoi);
       const box = spec.box ?? SMALL;
-      const width = spec.width ?? (body ? meta.frame[0] * Math.min(box[0] / body.w, box[1] / body.h) : (box[0] / (meta.body ?? 0.55)));
+      const width = spec.width ?? (body ? meta.frame[0] * Math.min(box[0] / body.w, box[1] / (body.h * (spec.stretchY ?? 1))) : (box[0] / (meta.body ?? 0.55)));
       const feet = meta.feet ?? spec.feet ?? 0.85;
       const lying = measureBody(martwy);
       const corpseMax = spec.corpseMax ?? (!spec.width && (spec.box ?? SMALL) === SMALL ? CORPSE_MAX_W : 0);
       const lyingW = lying ? (lying.w / meta.frame[0]) * width : 0;
-      const scale = corpseMax && lyingW > corpseMax ? corpseMax / lyingW : 1;
+      // The fallen unit is drawn about as wide as it stood (reports 674974, 915914: the Golden Dragon looked smaller dead than alive, the Black
+      // Dragon almost twice as big), within what two hexes hold for a small one.
+      let scale = lying && body && lying.w > 0 ? Math.min(1.3, Math.max(0.7, body.w / lying.w)) : 1;
+      if (corpseMax && lyingW * scale > corpseMax) scale = corpseMax / lyingW;
       const dh = (width * meta.frame[1]) / meta.frame[0];
       // The lowest point of the corpse lies on the feet line (a little below it, as the hexes' centres are), whatever the picture's margins.
       const dy = lying ? 2 - scale * (lying.y1 / meta.frame[1] - feet) * dh : 0;

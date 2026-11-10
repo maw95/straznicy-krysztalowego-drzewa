@@ -557,7 +557,9 @@ button:not(:disabled), label, select:not(:disabled), input[type='checkbox']:not(
 }
 
 .cur-spell, .cur-spell * {
-  cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M5 27 L20 12' stroke='%231E1204' stroke-width='6' stroke-linecap='round'/><path d='M5 27 L20 12' stroke='%23C99A3C' stroke-width='3' stroke-linecap='round'/><path d='M23 2 L25 8 L31 10 L25 12 L23 18 L21 12 L15 10 L21 8 Z' fill='%23F3F7B0' stroke='%231E1204' stroke-width='1.5' stroke-linejoin='round'/></svg>") 23 10, pointer !important;
+  cursor: url('/assets/cursors/rozdzka.png') 5 0, pointer !important;
+  cursor: -webkit-image-set(url('/assets/cursors/rozdzka.png') 1x, url('/assets/cursors/rozdzka@2x.png') 2x) 5 0, pointer !important;
+  cursor: image-set(url('/assets/cursors/rozdzka.png') 1x, url('/assets/cursors/rozdzka@2x.png') 2x) 5 0, pointer !important;
 }
 
 /* Parchment scrollbars */

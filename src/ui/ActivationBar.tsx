@@ -84,7 +84,7 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
       {myTurn && active && (
         <div style={{ display: 'flex', gap: 8 }}>
           {attackAbility && (
-            <button className={`btn plate parch act-btn ${useAbility ? 'on' : ''}`} style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }} onClick={() => setUseAbility(!useAbility)} title={scaleText(UNITS[active.defId].abilityText, state.rules.statScale ?? 1)}>
+            <button className={`btn plate parch act-btn ${useAbility ? 'on' : ''}`} style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }} onClick={() => setUseAbility(!useAbility)} title={scaleText(UNITS[active.defId].abilityText, state.rules.statScale ?? 1, state.rules.hpScale)}>
               <img src={asset(`cards/abilities/${abilityOf(active)}.png`)} alt="" style={{ width: 34, height: 34 }} />
               <span style={{ fontSize: 13, lineHeight: 1.05, textAlign: 'center' }}>{UNITS[active.defId].abilityName}{useAbility ? ' ✓' : ''}</span>
             </button>

@@ -283,8 +283,8 @@ export function applyGear(hero: HeroState | undefined, unit: BattleUnit): void {
   for (const a of worn) {
     unit.status.battleAttackBonus += (a.attack ?? 0) * k;
     unit.status.battleSpeedBonus += a.speed ?? 0;
-    unit.hp += (a.hp ?? 0) * k;
-    unit.maxHp += (a.hp ?? 0) * k;
+    unit.hp += (a.hp ?? 0) * (unit.hpScale ?? k);
+    unit.maxHp += (a.hp ?? 0) * (unit.hpScale ?? k);
   }
   // A hero is never slowed to a standstill by its helmet.
   unit.status.battleSpeedBonus = Math.max(unit.status.battleSpeedBonus, 1 - UNITS[unit.defId].speed);
@@ -302,7 +302,7 @@ export function applyGear(hero: HeroState | undefined, unit: BattleUnit): void {
 /** A hero's helmet may strengthen its supports. */
 export function applySupportGear(hero: HeroState | undefined, unit: BattleUnit): void {
   if (!hero) return;
-  const hp = gearOf(hero).reduce((s, a) => s + (a.supportHp ?? 0), 0) * (unit.scale ?? 1);
+  const hp = gearOf(hero).reduce((s, a) => s + (a.supportHp ?? 0), 0) * (unit.hpScale ?? unit.scale ?? 1);
   unit.hp += hp;
   unit.maxHp += hp;
 }

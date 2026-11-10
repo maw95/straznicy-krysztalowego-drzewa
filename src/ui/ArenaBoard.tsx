@@ -160,7 +160,9 @@ export function ArenaBoard(p: Props) {
     let flip = false;
     if (fp.tail) flip = cellCenter(fp.tail).x > cellCenter(fp.head).x;
     else {
-      const enemies = p.living.filter((e) => e.side !== u.side && e.pos).map((e) => cellCenter(e.pos!).x);
+      let enemies = p.living.filter((e) => e.side !== u.side && e.pos).map((e) => cellCenter(e.pos!).x);
+      // Nobody left standing (the end of a battle): it keeps facing the fallen, not turning back to the default side.
+      if (!enemies.length) enemies = Object.values(b.units).filter((e) => e.side !== u.side && e.corpse).map((e) => cellCenter(e.corpse!).x);
       if (enemies.length) flip = enemies.reduce((m, x) => m + x, 0) / enemies.length < a.x;
     }
     const way = movePaths.current[u.id];
@@ -222,9 +224,9 @@ export function ArenaBoard(p: Props) {
               else if (moves.has(k)) fill = p.hoverPreview === k ? 'rgba(158,228,255,0.45)' : 'rgba(158,228,255,0.2)';
               else if (hops.includes(k)) fill = 'rgba(158,228,255,0.28)';
               else if (teleportTo) fill = 'rgba(200,160,255,0.25)';
-              // A large unit's tail cell has no button of its own: the cell carries the cursor and the aim of the attack.
-              const tailOwner = unitAt(b, k);
-              const owner = tailOwner && tailOwner.tail === k ? tailOwner : undefined;
+              // Every hex of a unit carries the cursor and the aim of the attack itself (a large unit's tail has no button; the box of a small one
+              // covers only the middle of its hex, so the sword used to show only there: report 216950).
+              const owner = unitAt(b, k) ?? undefined;
               return (
                 <polygon
                   key={k}
