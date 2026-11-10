@@ -9,8 +9,8 @@ import { Rng } from './rng';
 import type { BattleUnit, GameState, HeroState } from './types';
 
 export const GROWTH = {
-  /** Experience needed for level 2, 3, 4, 5 (cumulative). */
-  thresholds: [3, 7, 12, 18],
+  /** Experience needed for level 2 ... 10 (cumulative); the curve steepens after level 5, so level 10 stays rare. Provisional: tune with the simulations. */
+  thresholds: [3, 7, 12, 18, 26, 38, 56, 84, 128],
   /** Experience for a won battle with a guardian / with another hero, for a lost battle (the hero survived) and for a treasure found. */
   xp: { guardian: 3, hero: 2, lost: 1, treasure: 1 },
   /** The Horde meet guardians rarely, so every living Horde hero also gains this much experience at the end of each round. */
