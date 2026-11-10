@@ -213,12 +213,12 @@ Wcześniejsze zgłoszenia z tego dnia (rano) są w sekcji 8; zgłoszenie z 28.10
 
 Osiem rzeczy, bez których nie ruszę dalej reszty backlogu. Kiedy autor zdecyduje, odpowiedź wpisać tu i odhaczyć.
 
-- [x] **10.1. Muzyka, licencje.** Autor podał źródła i licencje (10.11.2026), wpisane do `assets.json`: CC0 (Fantasy Choir, Determined Pursuit, A Legend Will Rise), CC BY (Defeat 4.0; Sylvan Waltz, Maddie's Mirror, The Fallen 3.0, wymagają podania autora). **Do zrobienia:** ekran „Autorzy” w grze (i w instrukcji) z wymaganymi wpisami; dokładne adresy utworów do uzupełnienia w `assets.json`.
+- [x] **10.1. Muzyka, licencje.** Autor podał źródła i licencje (10.11.2026), wpisane do `assets.json`: CC0 (Fantasy Choir, Determined Pursuit, A Legend Will Rise), CC BY (Defeat 4.0; Sylvan Waltz, Maddie's Mirror, The Fallen 3.0, wymagają podania autora). **Do zrobienia:** ekran „Autorzy” w grze (i w instrukcji) z wymaganymi wpisami; adresy utworów wpisane do `assets.json` (10.11).
 - [ ] **10.2. Nowe frakcje po premierze.** Decyzja autora (10.11): najpierw kończymy to, co mamy, nowe frakcje później. Bez próbki w Scenario na razie.
 - [ ] **10.3. Zakres premiery (6.6).** Decyzja autora (10.11): poziomy 1–2 plus **poziom 3** (do zaprojektowania, razem z 11.8).
 - [ ] **10.4. Grafiki do zrobienia w Scenario.** Decyzja autora (10.11): wszystkie z listy, w dowolnej kolejności (kapliczka, obóz, skrzynia, własny Boss, klipy zrywu i ataków, poza Nietoperza, ikony 11.9, pozy 11.10, pająk 11.12, rzut Cyklopa 11.13).
-- [ ] **10.5. Strojenie Kryształów, 1 gracz w kooperacji** (Normalny 21–42%). Autor pyta (10.11), czy dotyczy planszówki: nie, to ustawienia wersji cyfrowej (presety poziomów); odpowiedź do sprawdzenia przed zmianami. Potrzebna nowa dźwignia: liczba strażników, liczba kryształów, czy zostawić.
-- [ ] **10.6. Przetrwanie dla 2 graczy** (76–85% wygranych). Autor pyta (10.11), na jakim poziomie: liczba pochodzi z tabeli sprzed poziomów trudności, trzeba przeliczyć osobno Łatwy/Normalny/Trudny. Zmniejszyć liczbę rund czy wzmocnić falę Hordy (`SURVIVAL` w `data.ts`)?
+- [ ] **10.5. Strojenie Kryształów, 1 gracz w kooperacji** (Normalny 21–42%). Autor pyta (10.11), czy dotyczy planszówki: nie, to ustawienia wersji cyfrowej (presety poziomów); Przeliczone 10.11 (150 gier): na trójkącie Kryształy koop w pasmach; poza pasmem tylko ręczne mapy, Normalny 1 gracz: Cieśnina 35–43%, Dolina 25–31% (pasmo 45–65%). Potrzebna nowa dźwignia: liczba strażników, liczba kryształów, czy zostawić.
+- [ ] **10.6. Przetrwanie dla 2 graczy** (76–85% wygranych). Nieaktualne: przeliczone 10.11 (150 gier, trójkąt): Normalny 47–67%, Trudny 29–41%, Łatwy 66–84% — wszystko w pasmach, nic do zmiany. Zmniejszyć liczbę rund czy wzmocnić falę Hordy (`SURVIVAL` w `data.ts`)?
 - [ ] **10.7. Boss.** Decyzja autora (10.11): robić teraz — wariant „wszyscy przeciw Bossowi” bez Hordy i własna grafika Bossa.
 - [x] **10.8. Wiadomość od autora na pierwszej stronie instrukcji (5.3).** Decyzja autora (10.11): na razie się tym nie przejmujemy.
 
