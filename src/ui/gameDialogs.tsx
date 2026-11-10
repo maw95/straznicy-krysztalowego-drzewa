@@ -4,7 +4,7 @@
 
 import type { ReactNode } from 'react';
 import { UNITS, type ItemKind } from '../engine/data';
-import { levelOf, type SkillId } from '../engine/growth';
+import { levelOf, skillRank, type SkillId } from '../engine/growth';
 import type { GameState, HeroState, LogEntry } from '../engine/types';
 import type { BotSpeed, RoomView } from '../online/api';
 import { BOT_SPEEDS } from '../online/api';
@@ -152,7 +152,7 @@ export function SkillDialog({ hero, onChoose }: { hero: HeroState | null; onChoo
           <XpBar hero={hero} />
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
             {hero.offer.map((s) => (
-              <SkillCard key={s} faction={hero.faction} skill={s} onChoose={onChoose} />
+              <SkillCard key={s} faction={hero.faction} skill={s} rank={skillRank(hero, s) + 1} raise={skillRank(hero, s) > 0} onChoose={onChoose} />
             ))}
           </div>
           <div style={{ fontSize: 14, color: 'var(--muted)' }}>Umiejętność zostaje bohaterowi do końca gry.</div>

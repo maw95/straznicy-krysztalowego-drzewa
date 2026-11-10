@@ -22,7 +22,7 @@ Na początku sesji Claude mówi, który temat jest „Teraz”.
 7. Grafiki ze Scenario (10.4) w partiach, dopiero gdy nazwy i opisy z punktów 3 i 4 są zamrożone.
 8. Poziom 3 „Królestwo” (osady, złoto, rekrutacja): osobny, duży projekt.
 
-**Parking:** do 8 graczy (dziś 4; patrz `MECHANIKI_I_POZIOMY.md`), 11.4 (błysk kafelków, czeka na obserwację), 11.5 (do potwierdzenia na żywo), nowe frakcje (10.2), kampania i wyprawa roguelike, poziomy 4–5.
+**Parking:** zmiana wersjonowania (pomysł autora, 10.11): dziś jest 2.1.0, a gra jest jeszcze przed premierą; rozsądniej, żeby **1.0 była wersją gotową na premierę** (do ustalenia: numeracja przed premierą, np. 0.x, co z tagami i wpisami w CHANGELOG.md, wersja w `package.json`, pokazywana w grze i sprawdzana przez „Co nowego”/`skd-last-version`, tagi GitHub Pages i serwera), Ognisty Oddech Czarnego Smoka rani też sojuszników (friendly-fire, decyzja autora 10.11; osobny commit z symulacjami, patrz `MECHANIKI_I_POZIOMY.md`), mechanika „cios od tyłu / z flanki” dla innych jednostek, do 8 graczy (dziś 4; patrz `MECHANIKI_I_POZIOMY.md`), 11.4 (błysk kafelków, czeka na obserwację), 11.5 (do potwierdzenia na żywo), nowe frakcje (10.2), kampania i wyprawa roguelike, poziomy 4–5.
 
 ## 2. Figurki 3D — drobne
 

@@ -22,15 +22,28 @@ export const MAX_LEVEL = GROWTH.thresholds.length + 1;
 
 export type SkillId = 'might' | 'vigor' | 'swift' | 'leader' | 'pathfinder' | 'fortune';
 
-/** What a skill does, in the words of the rules; the names per faction are in SKILL_NAMES. */
-export const SKILL_EFFECT: Record<SkillId, { text: string }> = {
-  might: { text: '+1 A bohatera w bitwie.' },
-  vigor: { text: '+2 Ż bohatera w bitwie.' },
-  swift: { text: '+1 S bohatera w bitwie.' },
-  leader: { text: 'Pomocnicy bohatera mają +1 Ż w bitwie.' },
-  pathfinder: { text: '+1 punkt ruchu na mapie.' },
-  fortune: { text: 'Od razu: losowy skarb dla frakcji.' },
+/** A skill has ranks I-III; taking a skill the hero already has raises its rank (the list `skills` holds it once per rank). */
+export const MAX_RANK = 3;
+
+/** What a skill gives at rank I, II, III (small-scale numbers; the battle scale multiplies them). Provisional: tune with the simulations. */
+export const SKILL_RANKS = {
+  might: [1, 2, 3], // A
+  vigor: [2, 4, 6], // Ż
+  swift: [1, 2, 2], // S
+  leader: [1, 2, 3], // Ż of the supports
+  pathfinder: [1, 2, 2], // move points on the map
+} as const;
+
+/** What a skill does at each rank, in the words of the rules; the names per faction are in SKILL_NAMES. */
+export const SKILL_EFFECT: Record<SkillId, { texts: [string, string, string] }> = {
+  might: { texts: SKILL_RANKS.might.map((n) => `+${n} A bohatera w bitwie.`) as [string, string, string] },
+  vigor: { texts: SKILL_RANKS.vigor.map((n) => `+${n} Ż bohatera w bitwie.`) as [string, string, string] },
+  swift: { texts: SKILL_RANKS.swift.map((n) => `+${n} S bohatera w bitwie.`) as [string, string, string] },
+  leader: { texts: SKILL_RANKS.leader.map((n) => `Pomocnicy bohatera mają +${n} Ż w bitwie.`) as [string, string, string] },
+  pathfinder: { texts: SKILL_RANKS.pathfinder.map((n) => `+${n} punkt${n === 1 ? '' : 'y'} ruchu na mapie.`) as [string, string, string] },
+  fortune: { texts: ['Od razu: losowy skarb dla frakcji.', 'Od razu: kolejny losowy skarb dla frakcji.', 'Od razu: jeszcze jeden losowy skarb dla frakcji.'] },
 };
+export const skillText = (skill: SkillId, rank: number) => SKILL_EFFECT[skill].texts[Math.min(Math.max(rank, 1), MAX_RANK) - 1];
 
 export const SKILL_NAMES: Record<FactionId, Record<SkillId, string>> = {
   dawn: { might: 'Moc Świtu', vigor: 'Hart Gaju', swift: 'Lekkość Wiatru', leader: 'Opieka nad Drużyną', pathfinder: 'Leśny Tropiciel', fortune: 'Dar Strażników' },
@@ -44,16 +57,27 @@ export const BOT_SKILL_ORDER: SkillId[] = ['might', 'vigor', 'leader', 'swift', 
 export const growthOn = (state: Pick<GameState, 'rules'>) => Boolean(state.rules.heroGrowth);
 export const levelOf = (h: Pick<HeroState, 'level'>) => h.level ?? 1;
 export const hasSkill = (h: Pick<HeroState, 'skills'>, s: SkillId) => Boolean(h.skills?.includes(s));
+/** The rank (0 = not taken, 1-3) of a skill. */
+export const skillRank = (h: Pick<HeroState, 'skills'>, s: SkillId) => (h.skills ?? []).filter((x) => x === s).length;
+const rankValue = (table: readonly number[], h: Pick<HeroState, 'skills'>, s: SkillId) => (skillRank(h, s) > 0 ? table[Math.min(skillRank(h, s), MAX_RANK) - 1] : 0);
 
 /** Experience still needed for the next level, or null at the top. */
 export const xpToNext = (h: HeroState): number | null => (levelOf(h) >= MAX_LEVEL ? null : GROWTH.thresholds[levelOf(h) - 1]);
 
-/** The three skills offered at a level up: the ones the hero has not got, drawn from the game's seed (not from the game's own generator, so it never shifts the rest). */
-function drawOffer(state: GameState, hero: HeroState): SkillId[] {
-  const free = ALL_SKILLS.filter((s) => !hasSkill(hero, s));
+/**
+ * The skills offered at a level up, drawn from the game's seed (not from the game's own generator, so it never shifts the rest): the ones the
+ * hero has not got and the ones it has below rank III. When the hero has any skill it can still raise, at least one such raise is among the offers.
+ */
+export function drawOffer(state: GameState, hero: HeroState): SkillId[] {
+  const raise = ALL_SKILLS.filter((s) => skillRank(hero, s) > 0 && skillRank(hero, s) < MAX_RANK);
+  const fresh = ALL_SKILLS.filter((s) => skillRank(hero, s) === 0);
   let h = (state.setup.seed ^ 0x9e3779b1) | 0;
   for (const ch of `${hero.id}:${levelOf(hero)}`) h = (Math.imul(h, 31) + ch.charCodeAt(0)) | 0;
-  return new Rng(h).shuffle(free).slice(0, GROWTH.offer);
+  const rng = new Rng(h);
+  const raises = rng.shuffle(raise);
+  const first = raises.slice(0, 1);
+  const rest = rng.shuffle([...fresh, ...raises.slice(1)]);
+  return [...first, ...rest].slice(0, GROWTH.offer);
 }
 
 /** Gives experience; a hero that reaches a level gets three skills to choose from (one choice at a time). */
@@ -80,10 +104,11 @@ export function chooseSkill(state: GameState, heroId: string, skill: SkillId): v
   if (!hero?.offer?.includes(skill)) throw new Error('Tej umiejętności nie ma w ofercie.');
   hero.skills = [...(hero.skills ?? []), skill];
   hero.offer = undefined;
-  log(state, 'info', `${UNITS[hero.id].name} wybiera umiejętność: ${SKILL_NAMES[hero.faction][skill]}.`, hero.faction);
+  const rank = skillRank(hero, skill);
+  log(state, 'info', `${UNITS[hero.id].name} wybiera umiejętność: ${SKILL_NAMES[hero.faction][skill]}${rank > 1 ? ` (stopień ${rank})` : ''}.`, hero.faction);
   if (skill === 'fortune') grantFortune(state, hero);
   // The extra move point counts at once when it is the hero's own turn, not only from the next one.
-  if (skill === 'pathfinder' && activeHero(state)?.id === hero.id) state.movePoints += 1;
+  if (skill === 'pathfinder' && activeHero(state)?.id === hero.id) state.movePoints += rankValue(SKILL_RANKS.pathfinder, hero, 'pathfinder') - (skillRank(hero, 'pathfinder') > 1 ? SKILL_RANKS.pathfinder[skillRank(hero, 'pathfinder') - 2] : 0);
   maybeLevelUp(state, hero);
 }
 
@@ -102,21 +127,20 @@ function grantFortune(state: GameState, hero: HeroState): void {
 export function applyHeroSkills(hero: HeroState | undefined, unit: BattleUnit): void {
   if (!hero?.skills?.length) return;
   const k = unit.scale ?? 1;
-  if (hasSkill(hero, 'might')) unit.status.battleAttackBonus += k;
-  if (hasSkill(hero, 'swift')) unit.status.battleSpeedBonus += 1;
-  if (hasSkill(hero, 'vigor')) {
-    unit.hp += 2 * k;
-    unit.maxHp += 2 * k;
-  }
+  unit.status.battleAttackBonus += rankValue(SKILL_RANKS.might, hero, 'might') * k;
+  unit.status.battleSpeedBonus += rankValue(SKILL_RANKS.swift, hero, 'swift');
+  const hp = rankValue(SKILL_RANKS.vigor, hero, 'vigor') * k;
+  unit.hp += hp;
+  unit.maxHp += hp;
 }
 
 /** Pomocnicy of a hero with the skill Dowódca. */
 export function applySupportSkill(hero: HeroState | undefined, unit: BattleUnit): void {
-  if (hero && hasSkill(hero, 'leader')) {
-    unit.hp += unit.scale ?? 1;
-    unit.maxHp += unit.scale ?? 1;
-  }
+  if (!hero) return;
+  const hp = rankValue(SKILL_RANKS.leader, hero, 'leader') * (unit.scale ?? 1);
+  unit.hp += hp;
+  unit.maxHp += hp;
 }
 
 /** Extra move points on the map. */
-export const moveBonus = (hero: HeroState | undefined) => (hero && hasSkill(hero, 'pathfinder') ? 1 : 0);
+export const moveBonus = (hero: HeroState | undefined) => (hero ? rankValue(SKILL_RANKS.pathfinder, hero, 'pathfinder') : 0);

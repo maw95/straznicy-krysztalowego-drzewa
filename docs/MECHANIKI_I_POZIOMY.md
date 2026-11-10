@@ -22,14 +22,22 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 
 **Do zbudowania — bohater (11.8)**
 - [ ] Poziomy 6–10, krzywa wykładnicza (propozycja progów: 26, 38, 56, 84, 128 PD); poziom 10 ma być rzadkością.
-- [ ] Umiejętności w stopniach I–III. Przy awansie, gdy bohater ma umiejętność na I lub II, wśród 3 ofert jest zawsze co najmniej jedno jej rozwinięcie.
+- [x] Umiejętności w stopniach I–III (10.11, stare 6 umiejętności; nowe pięć dojdzie osobno). Przy awansie, gdy bohater ma umiejętność na I lub II, wśród 3 ofert jest zawsze co najmniej jedno jej rozwinięcie.
 - [ ] Nowe umiejętności (decyzje autora):
   - **Strzelec:** +A strzałów.
   - **Taktyk:** rozstawienie o 1 / 2 / 3 heksy dalej (stopnie I / II / III).
   - **Zwiadowca:** odkrywa pola w promieniu 2 / 3 / 4 na starcie tury (stopień I dawałby promień 1, a to już jest, więc zaczynamy od 2).
   - **Łowca skarbów:** po walce ze strażnikiem wybór skarbu: I — 1 z 2, II — 1 z 3, III — 2 z 3 (zamiast losu).
   - **Uczony** (dawniej „Mentor”): dodatkowe PD za każdą wygraną walkę (+1 / +2 / +3; do dostrojenia, żeby poziom 10 został rzadkością).
-- [ ] Kamienie milowe na poziomach 3, 6 i 9: ulepszenie własnej zdolności z karty bohatera.
+- [ ] Kamienie milowe na poziomach 3, 6 i 9: ulepszenie własnej zdolności z karty bohatera (decyzje autora, 10.11; stopnie się kumulują, liczby w małej skali, ×3 liczy `statScale`):
+  - **Złoty Smok** (Słoneczny Blask, sojusznicy / Smok): start +1 / +3 → poz. 3: +2 / +3 → poz. 6: +2 / +4 → poz. 9: +2 / +5.
+  - **Król Jednorożców** (Szarża Światła): +2 → 3 → 4 → 5 A.
+  - **Prastary Niedźwiedź** (Opiekun Gaju, ignorowane obrażenia): 3 → 5 → 5 i **dowolny sojusznik** (nie tylko sąsiad) → 7.
+  - **Czarny Smok** (Ognisty Oddech): kamienie milowe do ustalenia po sprawdzeniu w praktyce. Osobna decyzja autora: Oddech ma **ranić też sojuszników** w linii (friendly-fire); zmienia boty, golden test i balans Hordy, więc osobny commit z symulacjami, najpierw może tylko wersja cyfrowa.
+  - **Władca Wilkołaków** (Zew Krwi): +1 → 2 → 3 → 4 A na rannego wroga.
+  - **Ogr Żelazna Pięść** (Twardogłowy): ignoruje 2 → 3 → 4 → 5 obrażeń.
+  - **Dzielna Kaczka** (propozycja do akceptacji): po zabiciu wroga leczy się o 1 → 2 → 3 Ż; na poz. 9 dodatkowa aktywacja daje też +1 S.
+  - **Pomysł zapamiętany:** zwiększone obrażenia od tyłu / z flanki (Zew Krwi z mechaniką pozycji względem wroga) jako mechanika dla innych jednostek (przyszli neutralni, nowe frakcje), nie dla Władcy Wilkołaków.
 
 **Do zbudowania — artefakty**
 - [ ] 5 slotów: hełm u góry, w środku broń–zbroja–tarcza, na dole buty (układ jak w Heroes III i Tibii). Puste sloty z malowanymi ikonami już są.

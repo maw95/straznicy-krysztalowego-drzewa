@@ -3,7 +3,7 @@
 
 import { useContext } from 'react';
 import { FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data';
-import { GROWTH, levelOf, SKILL_EFFECT, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
+import { GROWTH, levelOf, skillRank, skillText, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
 import { ARTIFACT_BY_ID, gearOf, type ArtifactDef, type Slot } from '../engine/sites';
 import type { HeroState, LogEvent } from '../engine/types';
 import { asset } from './common';
@@ -22,15 +22,18 @@ export function ArtifactMedal({ art, size = 40 }: { art: ArtifactDef; size?: num
   return <img src={asset(`ikony/artefakty/${art.id}.webp`)} alt="" width={size} height={size} style={{ flex: 'none', display: 'block' }} />;
 }
 
-/** One skill as a card: a big medal, the name, what it does. A button when `onChoose` is given. */
-export function SkillCard({ faction, skill, onChoose, width = 210 }: { faction: FactionId; skill: SkillId; onChoose?: (s: SkillId) => void; width?: number }) {
+const ROMAN = ['', 'I', 'II', 'III'];
+
+/** One skill as a card: a big medal, the name (with its rank), what it does. A button when `onChoose` is given. */
+export function SkillCard({ faction, skill, rank = 1, raise = false, onChoose, width = 210 }: { faction: FactionId; skill: SkillId; rank?: number; raise?: boolean; onChoose?: (s: SkillId) => void; width?: number }) {
   const body = (
     <>
       <div className="skill-card-art">
         <SkillIcon skill={skill} size={104} />
       </div>
-      <div className="skill-card-name">{SKILL_NAMES[faction][skill]}</div>
-      <div className="skill-card-text"><RuleText text={SKILL_EFFECT[skill].text} /></div>
+      <div className="skill-card-name">{SKILL_NAMES[faction][skill]} {ROMAN[rank]}</div>
+      {raise && <div className="skill-card-raise">Rozwinięcie: stopień {ROMAN[rank]}</div>}
+      <div className="skill-card-text"><RuleText text={skillText(skill, rank)} /></div>
       {onChoose && <div className="skill-card-pick">Wybierz</div>}
     </>
   );
@@ -78,7 +81,7 @@ const levelStart = (level: number) => (level <= 1 ? 0 : GROWTH.thresholds[level 
 /** The hero's skills (icons) and the three gear slots (filled or empty), with a hover text for each. */
 export function HeroGrowth({ hero }: { hero: HeroState }) {
   const scale = useContext(StatScaleContext);
-  const skills = hero.skills ?? [];
+  const skills = [...new Set(hero.skills ?? [])];
   const gear = gearOf(hero);
   return (
     <div className="well" style={{ padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 8 }} data-growth>
@@ -87,8 +90,9 @@ export function HeroGrowth({ hero }: { hero: HeroState }) {
         <span className="lbl" style={{ width: 108, flex: 'none' }}>Umiejętności</span>
         {skills.length === 0 && <span style={{ fontSize: 13, color: 'var(--muted)' }}>jeszcze żadnej (pierwsza na poziomie 2)</span>}
         {skills.map((s) => (
-          <span key={s} title={`${SKILL_NAMES[hero.faction][s]}: ${scaleText(SKILL_EFFECT[s].text, scale)}`}>
+          <span key={s} title={`${SKILL_NAMES[hero.faction][s]} ${ROMAN[skillRank(hero, s)]}: ${scaleText(skillText(s, skillRank(hero, s)), scale)}`} style={{ position: 'relative' }}>
             <SkillIcon skill={s} size={36} />
+            {skillRank(hero, s) > 1 && <span className="skill-rank">{ROMAN[skillRank(hero, s)]}</span>}
           </span>
         ))}
       </div>

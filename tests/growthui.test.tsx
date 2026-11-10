@@ -10,6 +10,16 @@ import { setup } from './helpers/engine';
 const grown = () => createGame(setup({}, { ruleset: 'digital', heroGrowth: true }));
 
 describe('hero growth: what the player is told', () => {
+  it('a skill card shows its rank and, for a raise, says so', () => {
+    const { container } = render(<SkillCard faction="dawn" skill="might" rank={2} raise />);
+    expect(container.textContent).toContain('Moc Świtu II');
+    expect(container.textContent).toContain('Rozwinięcie: stopień II');
+    expect(container.textContent).toContain('+2 A');
+    const fresh = render(<SkillCard faction="dawn" skill="might" />);
+    expect(fresh.container.textContent).not.toContain('Rozwinięcie');
+    expect(fresh.container.textContent).toContain('+1 A');
+  });
+
   it('experience comes with the reason, as a log line and a structured event', () => {
     const s = grown();
     const h = activeHero(s)!;

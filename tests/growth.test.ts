@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { applyAction, createGame, activeHero, moveAllowance } from '../src/engine/game';
 import { makeBattleUnit } from '../src/engine/battle';
-import { ALL_SKILLS, applyHeroSkills, applySupportSkill, awardXp, chooseSkill, GROWTH, levelOf, MAX_LEVEL, type SkillId } from '../src/engine/growth';
+import { ALL_SKILLS, applyHeroSkills, applySupportSkill, awardXp, chooseSkill, GROWTH, levelOf, MAX_LEVEL, MAX_RANK, moveBonus, skillRank, type SkillId } from '../src/engine/growth';
 import { playOut, setup } from './helpers/engine';
 
 const grown = (over: Parameters<typeof setup>[0] = {}) => createGame(setup(over, { ruleset: 'digital', heroGrowth: true }));
@@ -31,7 +31,7 @@ describe('hero growth (digital ruleset, rule heroGrowth)', () => {
     expect(activeHero(after)!.offer).toBeUndefined();
   });
 
-  it('the offer is the same for the same game (it comes from the seed), and a skill is never offered twice', () => {
+  it('the offer is the same for the same game (it comes from the seed), and a skill already taken comes back only as a raise', () => {
     const a = grown({ seed: 9 });
     const b = grown({ seed: 9 });
     awardXp(a, activeHero(a)!, 3);
@@ -40,7 +40,26 @@ describe('hero growth (digital ruleset, rule heroGrowth)', () => {
     const h = activeHero(a)!;
     chooseSkill(a, h.id, h.offer![0]);
     awardXp(a, h, 5);
-    expect(h.offer).not.toContain(h.skills![0]);
+    // A hero with a skill below rank III always gets at least one raise among the offers, and no skill twice in one offer.
+    expect(h.offer).toContain(h.skills![0]);
+    expect(new Set(h.offer).size).toBe(h.offer!.length);
+  });
+
+  it('skills have ranks I-III: a repeated pick raises the rank, the effect grows, a rank III skill is not offered again', () => {
+    const hero = { id: 'goldDragon', faction: 'dawn' as const, playerId: 'p1', pos: '0,0', alive: true, crystals: [], skills: ['might'] as SkillId[] };
+    const bonus = (skills: SkillId[]) => {
+      const unit = makeBattleUnit('goldDragon', 'dawn', true);
+      applyHeroSkills({ ...hero, skills }, unit);
+      return unit.status.battleAttackBonus;
+    };
+    expect([bonus(['might']), bonus(['might', 'might']), bonus(['might', 'might', 'might'])]).toEqual([1, 2, 3]);
+    expect(skillRank({ skills: ['might', 'might', 'vigor'] }, 'might')).toBe(2);
+    expect(moveBonus({ ...hero, skills: ['pathfinder', 'pathfinder'] })).toBe(2);
+    const s = grown();
+    const h = activeHero(s)!;
+    h.skills = Array(MAX_RANK).fill('might');
+    awardXp(s, h, 100);
+    expect(h.offer).not.toContain('might');
   });
 
   it('stops at the top level', () => {
