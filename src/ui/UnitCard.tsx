@@ -7,6 +7,7 @@ import { createContext, useContext } from 'react';
 import { battleStats, DIGITAL_RANGED_BONUS, UNITS } from '../engine/data';
 import { asset } from './common';
 import { StatText } from './markers';
+import { StatScaleContext } from './statScale';
 
 interface Box {
   x0: number;
@@ -176,18 +177,19 @@ export const DigitalCardsContext = createContext(false);
 
 export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false, digital: digitalProp }: { unitId: string; width?: number; hp?: number; attack?: number; speed?: number; duel?: boolean; /** The digital edition's Życie, Atak and Szybkość (where they differ from the printed card). */ digital?: boolean }) {
   const inDigitalGame = useContext(DigitalCardsContext);
+  const statScale = useContext(StatScaleContext);
   const digital = digitalProp ?? inDigitalGame;
   const base = UNITS[unitId];
   const card = duel ? base.duel : undefined;
-  const def = card ? { ...base, hp: card.hp, abilityName: card.abilityName, abilityText: card.abilityText } : base;
+  const def = card ? { ...base, hp: card.hp * statScale, abilityName: card.abilityName, abilityText: card.abilityText } : base;
   const L = frameFor(unitId);
   const scale = width / FRAME_W;
   const { at, circle, kx, ky, X, Y } = cardSpace(L.bounds);
   const nameW = L.name.x1 - L.name.x0;
   const nameSize = Math.min(40, (nameW / Math.max(8, def.name.length)) * 2.05);
-  const stats = card ? def : battleStats(unitId, digital);
+  const stats = card ? def : battleStats(unitId, digital, statScale);
   // In the digital ruleset a shooter hits one harder than the printed Atak says; the card shows what the unit really deals.
-  const shooterBonus = digital && def.attackType === 'ranged' ? DIGITAL_RANGED_BONUS : 0;
+  const shooterBonus = digital && def.attackType === 'ranged' ? DIGITAL_RANGED_BONUS * statScale : 0;
   const values = [hp ?? stats.hp, (attack ?? stats.attack) + shooterBonus, speed ?? stats.speed];
   // The description starts right of the ability medallion and gets the largest font that fits.
   const desc = { ...L.desc, x0: Math.max(L.desc.x0, L.ability.cx + L.ability.r + 8), y0: L.desc.y0 - 4, y1: L.desc.y1 + 3 };
@@ -230,7 +232,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false,
           style={{ ...circle(L.ability.cx, L.ability.cy, L.ability.r), borderRadius: '50%' }}
         />
         <div style={{ ...at(L.band), ...centered, fontWeight: 800, fontSize: def.abilityName.length > 15 ? 17 : 20, letterSpacing: def.abilityName.length > 15 ? '0.05em' : '0.1em', textTransform: 'uppercase', lineHeight: 1, paddingTop: 1, boxSizing: 'border-box', color: '#F7EDD2', textShadow: '0 2px 0 rgba(0,0,0,0.6)', whiteSpace: 'nowrap' }}>{def.abilityName}</div>
-        <div style={{ ...at(desc), ...centered, padding: '0 8px', boxSizing: 'border-box', fontWeight: 600, fontSize: descSize, lineHeight: 1.12, color: '#1A1209' }}><StatText text={def.abilityText} /></div>
+        <div style={{ ...at(desc), ...centered, padding: '0 8px', boxSizing: 'border-box', fontWeight: 600, fontSize: descSize, lineHeight: 1.12, color: '#1A1209' }}><StatText rule text={def.abilityText} /></div>
       </div>
     </div>
   );

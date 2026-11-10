@@ -1,0 +1,15 @@
+import { createContext, useContext } from 'react';
+import { scaleText } from '../engine/data';
+
+/** Set by the app while a game with scaled Życie and Atak is on (`rules.statScale`); 1 elsewhere. */
+export const StatScaleContext = createContext(1);
+
+/** A rule text of the board game's numbers, as the game being played reads it. */
+export function useScaledText(text: string): string {
+  return scaleText(text, useContext(StatScaleContext));
+}
+
+/** The same, as an element (for rule texts inside a component that is not itself a hook user). */
+export function RuleText({ text }: { text: string }) {
+  return <>{useScaledText(text)}</>;
+}

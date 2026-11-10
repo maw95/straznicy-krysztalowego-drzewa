@@ -4,6 +4,7 @@
 // others belong to the digital ruleset. Result of a game under 'crystals' must never change (tests/golden.test.ts).
 
 import { BOSS, CONTROL, FACTION_NAMES, SURVIVAL, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, UNITS, type FactionId, type Terrain } from './data';
+import { scaleOf } from './battle';
 import { finish, heroesAt, ritualFormed, spawnHordeHero } from './game';
 import { distance, key, parseKey, triToHex, type HexKey } from './hex';
 import { log } from './log';
@@ -337,7 +338,7 @@ const boss: Objective = {
     const at = placeControlPoints(state)[0];
     const guardian = rng.pick(['hydra', 'cyclops']);
     const dawnHeroes = state.setup.seats.filter((s) => s.faction === 'dawn').length;
-    const hp = Math.round(BOSS.hp[state.setup.mapSize] * (dawnHeroes >= 2 ? BOSS.twoHeroesFactor : 1));
+    const hp = Math.round(BOSS.hp[state.setup.mapSize] * scaleOf(state) * (dawnHeroes >= 2 ? BOSS.twoHeroesFactor : 1));
     state.tiles[at].terrain = guardian === 'hydra' ? 'lairHydra' : 'lairCyclops';
     state.tiles[at].crystalId = 'boss';
     state.crystals.boss = { id: 'boss', guardian, at };

@@ -105,7 +105,7 @@ export function ItemsPanel({ state, side, active, targeting, setTargeting, freeA
               </button>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 800, fontSize: 15 }}>{def.name}</div>
-                <div style={{ fontSize: 13, lineHeight: 1.15 }}><StatText text={def.text} /></div>
+                <div style={{ fontSize: 13, lineHeight: 1.15 }}><StatText rule text={def.text} /></div>
               </div>
               <button className="btn prim" disabled={!ok} style={{ padding: '3px 10px', fontSize: 14 }} onClick={() => startItem(id)}>Użyj</button>
             </div>

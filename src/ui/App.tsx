@@ -19,6 +19,7 @@ import { SetupScreen } from './SetupScreen';
 import { music } from './music';
 import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, OptionsDialog, SkillDialog, VictoryEffects, type Confirmation } from './gameDialogs';
 import { DigitalCardsContext, UnitCard } from './UnitCard';
+import { StatScaleContext } from './statScale';
 import { readAutosave, replay, writeAutosave, type BugReport, type SaveFile } from './saves';
 import { BugReportDialog } from './BugReportDialog';
 import { TesterDialog } from './TesterDialog';
@@ -731,6 +732,7 @@ export function App() {
 
   return (
     <DigitalCardsContext.Provider value={isDigital(game.rules)}>
+    <StatScaleContext.Provider value={game.rules.statScale ?? 1}>
       <AppChrome error={error} onDismissError={() => setError(null)} showRules={showRules} onCloseRules={() => setShowRules(false)} />
       {overlay}
       {isOnline && onlineRoom?.waiting && <WaitingBanner room={onlineRoom} canHand={mySeats.size > 0} onHand={(seat) => session!.send({ type: 'handToBot', seat })} />}
@@ -863,6 +865,7 @@ export function App() {
           leaveGame();
         }}
       />
+    </StatScaleContext.Provider>
     </DigitalCardsContext.Provider>
   );
 }

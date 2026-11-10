@@ -459,8 +459,20 @@ export const MAP_VARIANTS: Record<MapSize, MapVariant> = {
 
 export const MAP_SIZE_NAMES: Record<MapSize, string> = { short: 'Krótka', medium: 'Średnia', long: 'Długa', veryLong: 'Bardzo długa' };
 
-/** The hp, attack and speed of a unit in a battle: the board game's, or the digital ruleset's where they differ. */
-export function battleStats(defId: string, digital: boolean | undefined): Pick<UnitDef, 'hp' | 'attack' | 'speed'> {
-  const { hp, attack, speed } = UNITS[defId];
-  return { hp, attack, speed, ...(digital ? DIGITAL_STATS[defId] : undefined) };
+/** Digital Expedition and higher: Życie and Atak (and every bonus to them) are this many times the board game's, so that small bonuses and defence have room. */
+export const STAT_SCALE = 3;
+
+/**
+ * A rule text of the board game's numbers, with the numbers of Życie and Atak multiplied by `scale` ("+2 A" becomes "+6 A", "ignoruje 3 obrażenia" "ignoruje 9 obrażeń");
+ * distances, speed, move points and counts stay. Used wherever a card or a skill is shown in a game with `statScale`.
+ */
+export function scaleText(text: string, scale: number): string {
+  if (scale === 1) return text;
+  return text.replace(/(\d+)(?= (?:maks\. )?[AŻ](?![a-ząćęłńóśźż]))|(\d+)(?= (?:mniej |otrzymanych )?(?:obrażeń|obrażenia|obrażenie|punktów obrażeń))/g, (_m, a?: string, b?: string) => String(Number((a ?? b)!) * scale));
+}
+
+/** The hp, attack and speed of a unit in a battle: the board game's, or the digital ruleset's where they differ; Życie and Atak times `scale` (the digital Expedition plays with 3, see `scaleOf`). */
+export function battleStats(defId: string, digital: boolean | undefined, scale = 1): Pick<UnitDef, 'hp' | 'attack' | 'speed'> {
+  const { hp, attack, speed } = { ...UNITS[defId], ...(digital ? DIGITAL_STATS[defId] : undefined) };
+  return { hp: hp * scale, attack: attack * scale, speed };
 }

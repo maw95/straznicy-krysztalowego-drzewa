@@ -30,6 +30,8 @@ export type ObjectiveId = 'crystals' | 'control' | 'survival' | 'boss' | 'artifa
 export interface RulesConfig {
   /** Missing = classic. Read it only through `isDigital`. */
   ruleset?: Ruleset;
+  /** Digital Expedition and higher: every Życie and Atak, and every bonus that adds or takes them, is this many times the board game's (missing = 1). Read it through `scaleOf`. */
+  statScale?: number;
   /** Missing = 'crystals'. Read it only through `objectiveOf` (objectives.ts). */
   objective?: ObjectiveId;
   /** Objective 'control', digital tuning: rounds in a row the Przymierza needs on top of the map's number (missing = CONTROL.dawnExtraRounds). */
@@ -248,6 +250,8 @@ export interface BattleUnit {
   maxHp: number;
   /** Fights under the digital ruleset: its own hp, attack and speed (see `battleStats`). */
   digital?: true;
+  /** Życie and Atak of this unit are this many times the board game's (missing = 1; see `scaleOf` in battle.ts). */
+  scale?: number;
   pos: HexKey | null;
   /** Digital ruleset: the cell where the unit fell. It lies there without occupying it (pos is null); a Resurrection stands it up there. */
   corpse?: HexKey;

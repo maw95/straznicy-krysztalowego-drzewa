@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wyprawa (poziom 2 i wyżej): Życie i Atak wszystkich jednostek są trzy razy większe (np. Prastary Niedźwiedź ma 36 Ż), a wszystkie premie, zdolności i skarby odpowiednio większe. Gra przebiega tak samo, ale pozostawia miejsce na drobniejsze premie i obronę. Przygoda (poziom 1) i planszówka bez zmian.
 - Muzyka: uzupełnione źródła i licencje wszystkich utworów (część wymaga podania autora, ekran „Autorzy” w przygotowaniu).
 - Walka: wroga jednostkę zasłoniętą przez własnych sojuszników można zaatakować, klikając w jej heks (wcześniej klik w pole przykryte ramką stojącego przed nią sojusznika nic nie robił); kursor miecza i wybór strony ataku działają tak samo.
 - Wersja cyfrowa: obrót jednostki nie wygląda już jak obrót kartki papieru: obraz zwęża się tylko do połowy, jednostka lekko podskakuje i przechyla się w stronę obrotu (prawdziwy klip obrotu nadal czeka na grafikę).

@@ -335,3 +335,12 @@ Rywalizacja — 2 na 2
 
 Znane odchyłki: Łatwy 1 gracz na krótkiej mapie (kryształy) ok. 96% (dźwignia zastępowania bohatera spada tam za nisko, ok. 62%), Łatwy 1 gracz na średniej mapie ok. 67%,
 Łatwy 2 na 2 na długiej i bardzo długiej ok. 68%.
+
+## Skala statystyk (10.11.2026, wersja cyfrowa, od poziomu Wyprawa)
+
+Gdy włączony jest rozwój bohatera (poziom 2 „Wyprawa” i wyżej), **Życie i Atak wszystkich jednostek oraz każdy bonus, który je dodaje lub odejmuje, są pomnożone przez 3** (`STAT_SCALE` w `data.ts`, reguła `statScale`, odczyt przez `scaleOf` w `battle.ts`).
+Szybkość, zasięgi, punkty ruchu i liczby (ile pól odkryć, ilu wrogów trafia błyskawica) zostają. Cel: małe premie (np. +1 do Ataku) i obrona liczbowa (tarcze 1 / 2 / 3 pkt) mają sens, nie dublując ani nie wyłączając jednostek. Poziom 1 „Przygoda” i planszówka zostają z małymi liczbami.
+- Mnożone: Życie i Atak jednostek (`battleStats(defId, digital, scale)`), premia strzelców, zdolności (Słoneczny Blask, Szarża Światła, Opiekun Gaju, Twardogłowy, Zew Krwi, Klątwa, Dar Życia, Nocna Zasadzka, Złodziejski Szpon, Odrastające Głowy, Kamienna Skóra), efekty skarbów (leczenie, strzała, błyskawica, miecz, eliksir żywotności, róg odwagi, kamień ochrony), umiejętności i artefakty bohatera, dodatkowe Życie trybu rodzinnego, Życie Bossa, kość obrażeń (±1 → ±3), próg Twardogłowego.
+- Roboty: progi i wagi oceny uderzeń przeliczane z powrotem na stare liczby, więc **gra przebiega dokładnie tak samo jak przy małych liczbach** (test `tests/statscale.test.ts`: te same ziarna ×1 i ×3 dają ten sam wynik w każdym z pięciu celów). Balans i strojenie (`tuningAuto.ts`) zostają bez zmian.
+- Interfejs: karty jednostek, skarby, umiejętności i artefakty pokazują liczby przeliczone (`scaleText`, `StatScaleContext`).
+- Nowe zasady, które to umożliwia (do zrobienia): „minimum 1 obrażenia” przy obronie liczbowej, tarcze 1 / 2 / 3, drobne premie umiejętności i artefaktów.

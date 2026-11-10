@@ -5,6 +5,7 @@ import { FACTION_SUPPORTS, ITEM_EFFECT, SUPPORTS_PER_BATTLE, UNITS, type Faction
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, livingHeroes, other, reviveSpots, ritualFormed, ritualSpot } from '../game';
+import { scaleOf } from '../battle';
 import { BOT_SKILL_ORDER } from '../growth';
 import { artifactCarrier, objectiveOf } from '../objectives';
 import type { Action, Crystal, GameState, HeroState } from '../types';
@@ -669,7 +670,7 @@ function artifactAction(state: GameState, memo: Memo): Action {
 function bossAction(state: GameState, memo: Memo): Action {
   const hero = activeHero(state)!;
   const boss = state.boss!;
-  const ready = hero.faction === 'horde' || state.factions.dawn.supportsAlive.length >= 1 || boss.hp <= BOSS_FINISH_HP || state.round > state.roundLimit / 2;
+  const ready = hero.faction === 'horde' || state.factions.dawn.supportsAlive.length >= 1 || boss.hp <= BOSS_FINISH_HP * scaleOf(state) || state.round > state.roundLimit / 2;
   if (!ready) return goodAction(state, memo);
   const item = mapItemAction(state);
   if (item) return item;

@@ -11,10 +11,10 @@ porządki w kodzie (etapy 0–4 i resztki), wersja mobilna, zgłoszenia z 23.10 
 Zasada: **jeden aktywny temat naraz.** Nowe pomysły autora trafiają do „Parkingu” i nie przerywają bieżącego tematu. Temat kończy się commitem i wpisem tutaj; wtedy dobra chwila na `/clear`.
 Na początku sesji Claude mówi, który temat jest „Teraz”.
 
-**Teraz:** 1. Skala statystyk (A i Ż ×3 od poziomu 2, zasada „minimum 1 obrażenia”) z ponownym strojeniem balansu. Fundament dla wszystkiego poniżej.
+**Teraz:** 2. Poziomy bohatera 6–10, krzywa PD, umiejętności w stopniach (patrz niżej). Skala statystyk ×3 jest zrobiona (10.11, `ZASADY_CYFROWE.md`): gra przebiega identycznie jak przy małych liczbach, więc balans nie wymagał strojenia; „minimum 1 obrażenia” dojdzie razem z tarczami.
 
 **Dalej (kolejność zależy od poprzedniego):**
-2. Poziomy bohatera 6–10, krzywa PD, umiejętności w stopniach (Strzelec, Taktyk, Zwiadowca, Łowca skarbów, Uczony), kamienie milowe 3 / 6 / 9.
+2. (teraz) Poziomy bohatera 6–10, krzywa PD, umiejętności w stopniach (Strzelec, Taktyk, Zwiadowca, Łowca skarbów, Uczony), kamienie milowe 3 / 6 / 9.
 3. Artefakty: 5 slotów, trzy rzadkości, jedna nazwa i obrazek dla wszystkich, nowe efekty, widok postaci jak w Heroes III.
 4. Neutralni: najpierw projekt jednostek (rozmowa: 6 słabych + 3 bossów), potem silnik spotkań, nagrody, boty, nowy Boss (10.7).
 5. Rozmiary map XL i XXL + strojenie.

@@ -540,7 +540,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                   </button>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 800, fontSize: 15, lineHeight: 1.1 }}>{def.name}</div>
-                    <div style={{ fontSize: 13, lineHeight: 1.15 }}><StatText text={def.text} /></div>
+                    <div style={{ fontSize: 13, lineHeight: 1.15 }}><StatText rule text={def.text} /></div>
                     {it.foundBy && <div style={{ fontSize: 12, fontStyle: 'italic', color: '#6B5233' }}>Znalazł(a): {UNITS[it.foundBy].name}</div>}
                   </div>
                   {usable && (

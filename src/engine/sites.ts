@@ -109,11 +109,12 @@ export function giveArtifact(state: GameState, hero: HeroState, art: ArtifactDef
 /** Gear bonuses in battle (added to the skills' ones). */
 export function applyGear(hero: HeroState | undefined, unit: BattleUnit): void {
   if (!hero) return;
+  const k = unit.scale ?? 1;
   for (const a of gearOf(hero)) {
-    unit.status.battleAttackBonus += a.attack ?? 0;
+    unit.status.battleAttackBonus += (a.attack ?? 0) * k;
     unit.status.battleSpeedBonus += a.speed ?? 0;
-    unit.hp += a.hp ?? 0;
-    unit.maxHp += a.hp ?? 0;
+    unit.hp += (a.hp ?? 0) * k;
+    unit.maxHp += (a.hp ?? 0) * k;
   }
 }
 

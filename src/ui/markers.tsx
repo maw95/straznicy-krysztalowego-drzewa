@@ -1,9 +1,11 @@
 // Markers of the board game (docs/grafika/ikony/znaczniki.png and single znacznik_*.png, by scripts/assets/markers.py):
 // the same tokens the players put on the table, shown on the screen.
 
-import { UNITS } from '../engine/data';
+import { useContext } from 'react';
+import { scaleText, UNITS } from '../engine/data';
 import type { AttackRoll, BattleState } from '../engine/types';
 import { asset } from './common';
+import { StatScaleContext } from './statScale';
 
 export type MarkerName = 'ability_used' | 'rooted' | 'slowed' | 'cursed' | 'attack_up' | 'attack_3' | 'speed_up' | 'shield' | 'vitality' | 'damage_empty';
 
@@ -81,7 +83,9 @@ export function StatIcon({ stat, size = '1.05em', light = false }: { stat: StatL
 }
 
 /** Text with "+1 A", "−2 S", "Ż 9"… written with the stat symbols instead of the letters. */
-export function StatText({ text }: { text: string }) {
+export function StatText({ text: plain, rule = false }: { text: string; /** A rule text of the board game's numbers: shown as the game being played reads it (`statScale`). */ rule?: boolean }) {
+  const k = useContext(StatScaleContext);
+  const text = rule ? scaleText(plain, k) : plain;
   // "+1 A" (number, symbol) or "Ż 9" (symbol, number); each pair stays on one line.
   const re = /([+−-]?\d+) ?(Ż|A|S)(?=[\s.,;:)/]|$)|(?<![\p{L}\d])(Ż|A|S) (\d+)/gu;
   const out: React.ReactNode[] = [];

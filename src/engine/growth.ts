@@ -101,19 +101,20 @@ function grantFortune(state: GameState, hero: HeroState): void {
 /** Skill bonuses applied to the hero's unit when a battle starts. */
 export function applyHeroSkills(hero: HeroState | undefined, unit: BattleUnit): void {
   if (!hero?.skills?.length) return;
-  if (hasSkill(hero, 'might')) unit.status.battleAttackBonus += 1;
+  const k = unit.scale ?? 1;
+  if (hasSkill(hero, 'might')) unit.status.battleAttackBonus += k;
   if (hasSkill(hero, 'swift')) unit.status.battleSpeedBonus += 1;
   if (hasSkill(hero, 'vigor')) {
-    unit.hp += 2;
-    unit.maxHp += 2;
+    unit.hp += 2 * k;
+    unit.maxHp += 2 * k;
   }
 }
 
 /** Pomocnicy of a hero with the skill Dowódca. */
 export function applySupportSkill(hero: HeroState | undefined, unit: BattleUnit): void {
   if (hero && hasSkill(hero, 'leader')) {
-    unit.hp += 1;
-    unit.maxHp += 1;
+    unit.hp += unit.scale ?? 1;
+    unit.maxHp += unit.scale ?? 1;
   }
 }
 

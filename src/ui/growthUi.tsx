@@ -1,11 +1,13 @@
 // Hero growth on the screen (digital ruleset, "Wyprawa"): the level and experience bar, the skills as cards with icons, the three
 // gear slots, and the notices that tell the player what just happened (experience gained, an artifact found).
 
-import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
+import { useContext } from 'react';
+import { FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data';
 import { GROWTH, levelOf, SKILL_EFFECT, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
 import { ARTIFACT_BY_ID, gearOf, type ArtifactDef, type Slot } from '../engine/sites';
 import type { HeroState, LogEvent } from '../engine/types';
 import { asset } from './common';
+import { RuleText, StatScaleContext } from './statScale';
 
 /** The painted icon of a skill (public/assets/ikony/umiejetnosci, made with Scenario). */
 export function SkillIcon({ skill, size = 40 }: { skill: SkillId; size?: number }) {
@@ -28,7 +30,7 @@ export function SkillCard({ faction, skill, onChoose, width = 210 }: { faction: 
         <SkillIcon skill={skill} size={104} />
       </div>
       <div className="skill-card-name">{SKILL_NAMES[faction][skill]}</div>
-      <div className="skill-card-text">{SKILL_EFFECT[skill].text}</div>
+      <div className="skill-card-text"><RuleText text={SKILL_EFFECT[skill].text} /></div>
       {onChoose && <div className="skill-card-pick">Wybierz</div>}
     </>
   );
@@ -75,6 +77,7 @@ const levelStart = (level: number) => (level <= 1 ? 0 : GROWTH.thresholds[level 
 
 /** The hero's skills (icons) and the three gear slots (filled or empty), with a hover text for each. */
 export function HeroGrowth({ hero }: { hero: HeroState }) {
+  const scale = useContext(StatScaleContext);
   const skills = hero.skills ?? [];
   const gear = gearOf(hero);
   return (
@@ -84,7 +87,7 @@ export function HeroGrowth({ hero }: { hero: HeroState }) {
         <span className="lbl" style={{ width: 108, flex: 'none' }}>Umiejętności</span>
         {skills.length === 0 && <span style={{ fontSize: 13, color: 'var(--muted)' }}>jeszcze żadnej (pierwsza na poziomie 2)</span>}
         {skills.map((s) => (
-          <span key={s} title={`${SKILL_NAMES[hero.faction][s]}: ${SKILL_EFFECT[s].text}`}>
+          <span key={s} title={`${SKILL_NAMES[hero.faction][s]}: ${scaleText(SKILL_EFFECT[s].text, scale)}`}>
             <SkillIcon skill={s} size={36} />
           </span>
         ))}
@@ -94,7 +97,7 @@ export function HeroGrowth({ hero }: { hero: HeroState }) {
         {SLOTS.map((slot) => {
           const art = gear.find((a) => a.slot === slot);
           return art ? (
-            <span key={slot} title={`${SLOT_NAMES[slot]}: ${art.names[hero.faction]}. ${art.text}${art.tier === 2 ? ' (wyższy poziom)' : ''}`} data-gear={art.id}>
+            <span key={slot} title={`${SLOT_NAMES[slot]}: ${art.names[hero.faction]}. ${scaleText(art.text, scale)}${art.tier === 2 ? ' (wyższy poziom)' : ''}`} data-gear={art.id}>
               <ArtifactMedal art={art} size={40} />
             </span>
           ) : (
@@ -127,7 +130,7 @@ export function ArtifactFound({ event, faction }: { event: Extract<LogEvent, { t
           Artefakt · {SLOT_NAMES[art.slot]}
           {art.tier === 2 ? ' · wyższy poziom' : ''}
         </div>
-        <div className="skill-card-text">{art.text}</div>
+        <div className="skill-card-text"><RuleText text={art.text} /></div>
       </div>
       <div style={{ fontSize: 18 }}>
         <b>{UNITS[event.heroId].name}</b> — {event.source}.

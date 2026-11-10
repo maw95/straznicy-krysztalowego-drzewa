@@ -255,13 +255,16 @@ function cellsBetween(from: HexKey, to: HexKey): readonly HexKey[] {
   return cells;
 }
 
+/** How many times larger than the board game's the numbers of this game are (the Życie and Atak of units and everything that adds or takes them): 1 or, in the digital Expedition, 3. */
+export const scaleOf = (state: Pick<GameState, 'rules'>): number => state.rules.statScale ?? 1;
+
 export function newStatus(): UnitStatus {
   return { slowNext: 0, rootedNext: false, cursedNext: 0, nextAttackBonus: 0, battleAttackBonus: 0, battleSpeedBonus: 0, damageReduction: 0, shieldArmed: false };
 }
 
-export function makeBattleUnit(defId: string, side: Side, digital = false): BattleUnit {
-  const { hp } = battleStats(defId, digital);
-  return { id: defId, defId, side, hp, maxHp: hp, ...(digital ? { digital: true as const } : {}), pos: null, alive: true, abilityUsed: false, swappedOut: false, status: newStatus() };
+export function makeBattleUnit(defId: string, side: Side, digital = false, scale = 1): BattleUnit {
+  const { hp } = battleStats(defId, digital, scale);
+  return { id: defId, defId, side, hp, maxHp: hp, ...(digital ? { digital: true as const } : {}), ...(scale !== 1 ? { scale } : {}), pos: null, alive: true, abilityUsed: false, swappedOut: false, status: newStatus() };
 }
 
 const unitName = (u: BattleUnit) => UNITS[u.defId].name;
@@ -297,11 +300,11 @@ export function activeUnit(b: BattleState): BattleUnit | null {
 }
 
 export function unitSpeed(u: BattleUnit): number {
-  return battleStats(u.defId, u.digital).speed + u.status.battleSpeedBonus;
+  return battleStats(u.defId, u.digital, u.scale).speed + u.status.battleSpeedBonus;
 }
 
 export function unitAttackBase(u: BattleUnit): number {
-  return battleStats(u.defId, u.digital).attack + u.status.battleAttackBonus;
+  return battleStats(u.defId, u.digital, u.scale).attack + u.status.battleAttackBonus;
 }
 
 export function moveRange(u: BattleUnit): number {
@@ -429,12 +432,12 @@ export function breathSecondTarget(state: GameState, u: BattleUnit, first: Battl
 /** Expected damage of a plain attack, before the defender's reactions. */
 export function attackDamage(state: GameState, att: BattleUnit, target: BattleUnit, useAbility: boolean, movedDistance: number): number {
   let dmg = unitAttackBase(att) + att.status.nextAttackBonus - att.status.cursedNext;
-  if (isDigital(state.rules) && UNITS[att.defId].attackType === 'ranged') dmg += DIGITAL_RANGED_BONUS;
+  if (isDigital(state.rules) && UNITS[att.defId].attackType === 'ranged') dmg += DIGITAL_RANGED_BONUS * scaleOf(state);
   if (abilityActive(state)) {
     const ab = abilityOf(att);
-    if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += ABILITY.lightChargeBonus;
-    if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += ABILITY.bloodCallBonus;
-    if (useAbility && ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus;
+    if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += ABILITY.lightChargeBonus * scaleOf(state);
+    if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += ABILITY.bloodCallBonus * scaleOf(state);
+    if (useAbility && ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus * scaleOf(state);
   }
   return Math.max(0, dmg);
 }
@@ -616,7 +619,7 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
   b.activation = { unitId, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly, hop: 0 };
   const u = b.units[unitId];
   if (abilityOf(u) === 'regrowth' && abilityActive(state) && u.hp < u.maxHp) {
-    const healed = Math.min(ABILITY.regrowthHeal, u.maxHp - u.hp);
+    const healed = Math.min(ABILITY.regrowthHeal * scaleOf(state), u.maxHp - u.hp);
     u.hp += healed;
     log(state, 'ability', `${unitName(u)} odzyskuje ${healed} Ż (Odrastające Głowy).`);
   }
@@ -671,7 +674,7 @@ function rollDie(state: GameState): number {
   const rng = new Rng(state.rng);
   const v = rng.int(3) - 1;
   state.rng = rng.state;
-  return v;
+  return v * scaleOf(state);
 }
 
 export function dealDamage(state: GameState, target: BattleUnit, amount: number, source: string) {
@@ -728,20 +731,20 @@ export function predictDamage(
   // Opiekun Gaju: the bear takes a lethal blow aimed at an adjacent ally, if it survives it.
   const bear = livingUnits(b, target.side).find((x) => x.id !== target.id && bearCanGuard(state, x, target));
   let victim = target;
-  if (bear && dmg >= target.hp && dmg - ABILITY.guardianIgnore - Math.min(dmg, bear.status.damageReduction) < bear.hp) {
+  if (bear && dmg >= target.hp && dmg - ABILITY.guardianIgnore * scaleOf(state) - Math.min(dmg, bear.status.damageReduction) < bear.hp) {
     bearGuard = 'ally';
     victim = bear;
-    dmg = Math.max(0, dmg - ABILITY.guardianIgnore);
+    dmg = Math.max(0, dmg - ABILITY.guardianIgnore * scaleOf(state));
   }
   if (victim.status.shieldArmed) return { base, victim, damage: 0, bearGuard, hardHead: null, shield: true, lethal: false };
   // Opiekun Gaju guards the bear itself too: a lethal blow loses part of its strength.
   if (victim === target && bearCanGuard(state, victim, victim) && dmg >= victim.hp) {
     bearGuard = 'self';
-    dmg = Math.max(0, dmg - ABILITY.guardianIgnore);
+    dmg = Math.max(0, dmg - ABILITY.guardianIgnore * scaleOf(state));
   }
   let hardHead: number | null = null;
-  if (abilityOf(victim) === 'hardHead' && !victim.abilityUsed && abilityActive(state) && dmg >= HARD_HEAD_MIN_DAMAGE) {
-    hardHead = Math.min(ABILITY.hardHeadIgnore, dmg);
+  if (abilityOf(victim) === 'hardHead' && !victim.abilityUsed && abilityActive(state) && dmg >= HARD_HEAD_MIN_DAMAGE * scaleOf(state)) {
+    hardHead = Math.min(ABILITY.hardHeadIgnore * scaleOf(state), dmg);
     dmg -= hardHead;
   }
   dmg = Math.max(0, dmg - victim.status.damageReduction);
@@ -756,11 +759,11 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   const die = rollDie(state);
   const p = predictDamage(state, att, target, { useAbility, movedDistance, die });
   // The roll is logged so a blow that the die cut to 0 does not look like a bug.
-  if (state.rules.useDice) log(state, 'damage', `Rzut kością: ${die > 0 ? '+1' : die < 0 ? '−1' : '0'} (${p.base} ${die < 0 ? '−' : '+'} ${Math.abs(die)} = ${Math.max(0, p.base + die)}).`);
+  if (state.rules.useDice) log(state, 'damage', `Rzut kością: ${die > 0 ? `+${die}` : die < 0 ? `−${-die}` : '0'} (${p.base} ${die < 0 ? '−' : '+'} ${Math.abs(die)} = ${Math.max(0, p.base + die)}).`);
   const victim = p.victim;
   if (p.bearGuard === 'ally') {
     victim.abilityUsed = true;
-    log(state, 'ability', `${unitName(victim)} przejmuje atak i ignoruje ${ABILITY.guardianIgnore} obrażenia (Opiekun Gaju).`);
+    log(state, 'ability', `${unitName(victim)} przejmuje atak i ignoruje ${ABILITY.guardianIgnore * scaleOf(state)} obrażenia (Opiekun Gaju).`);
   }
   if (p.shield) {
     victim.status.shieldArmed = false;
@@ -770,7 +773,7 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   }
   if (p.bearGuard === 'self') {
     victim.abilityUsed = true;
-    log(state, 'ability', `${unitName(victim)} ignoruje ${ABILITY.guardianIgnore} obrażenia (Opiekun Gaju).`);
+    log(state, 'ability', `${unitName(victim)} ignoruje ${ABILITY.guardianIgnore * scaleOf(state)} obrażenia (Opiekun Gaju).`);
   }
   if (p.hardHead !== null) {
     victim.abilityUsed = true;
@@ -853,8 +856,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     const before = t.hp;
     resolveAttack(state, u, t, canUse, act.movedDistance);
     if (ab === 'thiefClaw' && abilityActive(state) && t.hp < before && u.hp < u.maxHp) {
-      u.hp = Math.min(u.maxHp, u.hp + ABILITY.thiefClawHeal);
-      log(state, 'ability', `${unitName(u)} odzyskuje ${ABILITY.thiefClawHeal} Ż (Złodziejski Szpon).`);
+      u.hp = Math.min(u.maxHp, u.hp + ABILITY.thiefClawHeal * scaleOf(state));
+      log(state, 'ability', `${unitName(u)} odzyskuje ${ABILITY.thiefClawHeal * scaleOf(state)} Ż (Złodziejski Szpon).`);
     }
     if (canUse && t.alive) {
       if (ab === 'entanglingRoots') {
@@ -862,8 +865,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
         log(state, 'ability', `${unitName(t)}: −${ABILITY.rootsSlow} S w następnej aktywacji.`);
       }
       if (ab === 'curse') {
-        t.status.cursedNext += ABILITY.curseMinus;
-        log(state, 'ability', `${unitName(t)}: −${ABILITY.curseMinus} A przy następnym ataku.`);
+        t.status.cursedNext += ABILITY.curseMinus * scaleOf(state);
+        log(state, 'ability', `${unitName(t)}: −${ABILITY.curseMinus * scaleOf(state)} A przy następnym ataku.`);
       }
     }
     // No pushing in a duel: nobody moves there, so the two leaders would never meet again.
@@ -921,11 +924,11 @@ export function battleAbility(state: GameState, targetId?: string) {
   const ab = abilityOf(u);
   if (u.abilityUsed || !abilityActive(state) || !FREE_ABILITIES.includes(ab)) throw new Error('Zdolność jest niedostępna.');
   if (ab === 'sunburst') {
-    for (const ally of livingUnits(b, u.side)) ally.status.nextAttackBonus += ally.id === u.id ? ABILITY.sunburstSelfBonus : ABILITY.sunburstBonus;
+    for (const ally of livingUnits(b, u.side)) ally.status.nextAttackBonus += ally.id === u.id ? ABILITY.sunburstSelfBonus * scaleOf(state) : ABILITY.sunburstBonus * scaleOf(state);
   } else if (ab === 'giftOfLife') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side !== u.side) throw new Error('Wybierz żyjącego sojusznika.');
-    t.hp = Math.min(t.maxHp, t.hp + ABILITY.giftOfLifeHeal);
+    t.hp = Math.min(t.maxHp, t.hp + ABILITY.giftOfLifeHeal * scaleOf(state));
   } else if (ab === 'web') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side === u.side || unitDistance(u, t) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);
@@ -1032,36 +1035,36 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
   },
   heal: (use) => {
     const t = ownLiving(use, use.args.targetId);
-    t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.heal);
+    t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.heal * scaleOf(use.state));
   },
-  seed: ({ b, faction }) => {
-    for (const t of livingUnits(b, faction)) t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.seedHeal);
+  seed: ({ state, b, faction }) => {
+    for (const t of livingUnits(b, faction)) t.hp = Math.min(t.maxHp, t.hp + ITEM_EFFECT.seedHeal * scaleOf(state));
   },
-  damage_scroll: (use) => dealDamage(use.state, enemyUnit(use, use.args.targetId), ITEM_EFFECT.scrollDamage, use.name),
+  damage_scroll: (use) => dealDamage(use.state, enemyUnit(use, use.args.targetId), ITEM_EFFECT.scrollDamage * scaleOf(use.state), use.name),
   lightning: (use) => {
     const { args } = use;
     const ids = [...new Set(args.targetIds ?? (args.targetId ? [args.targetId] : []))].slice(0, ITEM_EFFECT.lightningTargets);
     if (!ids.length) throw new Error('Wybierz do dwóch wrogów.');
-    for (const id of ids) dealDamage(use.state, enemyUnit(use, id), ITEM_EFFECT.lightningDamage, use.name);
+    for (const id of ids) dealDamage(use.state, enemyUnit(use, id), ITEM_EFFECT.lightningDamage * scaleOf(use.state), use.name);
   },
-  sword: (use) => void (ownLiving(use, use.args.targetId).status.battleAttackBonus += ITEM_EFFECT.swordAttack),
+  sword: (use) => void (ownLiving(use, use.args.targetId).status.battleAttackBonus += ITEM_EFFECT.swordAttack * scaleOf(use.state)),
   shield: (use) => void (ownLiving(use, use.args.targetId).status.shieldArmed = true),
   vitality: (use) => {
     const t = ownLiving(use, use.args.targetId);
-    t.maxHp += ITEM_EFFECT.vitalityHp;
-    t.hp += ITEM_EFFECT.vitalityHp;
+    t.maxHp += ITEM_EFFECT.vitalityHp * scaleOf(use.state);
+    t.hp += ITEM_EFFECT.vitalityHp * scaleOf(use.state);
   },
   boots: (use) => void (ownLiving(use, use.args.targetId).status.battleSpeedBonus += ITEM_EFFECT.bootsSpeed),
-  stone: (use) => void (ownLiving(use, use.args.targetId).status.damageReduction += ITEM_EFFECT.stoneReduction),
+  stone: (use) => void (ownLiving(use, use.args.targetId).status.damageReduction += ITEM_EFFECT.stoneReduction * scaleOf(use.state)),
   courage_horn: (use) => {
     const { args } = use;
     const ids = args.targetIds ?? (args.targetId ? [args.targetId] : []);
     const first = ownLiving(use, ids[0]);
-    first.status.nextAttackBonus += ITEM_EFFECT.courageAttack;
+    first.status.nextAttackBonus += ITEM_EFFECT.courageAttack * scaleOf(use.state);
     if (ids[1]) {
       const second = ownLiving(use, ids[1]);
       if (!unitsAdjacent(first, second)) throw new Error('Drugi sojusznik musi sąsiadować z pierwszym.');
-      second.status.nextAttackBonus += ITEM_EFFECT.courageAttack;
+      second.status.nextAttackBonus += ITEM_EFFECT.courageAttack * scaleOf(use.state);
     }
   },
   teleport: (use) => {
@@ -1087,7 +1090,7 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     }
     const reserve = args.reserveId;
     if (!reserve || !state.factions[faction].supportsAlive.includes(reserve) || b.units[reserve]) throw new Error('Wybierz żywego pomocnika z rezerwy.');
-    const nu = makeBattleUnit(reserve, faction, Boolean(t.digital));
+    const nu = makeBattleUnit(reserve, faction, Boolean(t.digital), t.scale ?? 1);
     const spot = t.alive ? t.pos : freeCellNear(use.state, faction, nu);
     // The swapped unit leaves first, so a large newcomer may lie on the cells it frees.
     const was = { alive: t.alive, pos: t.pos, tail: t.tail };
