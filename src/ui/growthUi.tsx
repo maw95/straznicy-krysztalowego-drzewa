@@ -6,8 +6,8 @@ import { FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data'
 import { GROWTH, levelOf, skillRank, skillText, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
 import { makeBattleUnit, unitAttackBase, unitSpeed } from '../engine/battle';
 import { applyHeroSkills, applyMilestones } from '../engine/growth';
-import { applyGear, ARTIFACT_BY_ID, gearOf, RARITY_NAMES, type ArtifactDef, type Slot } from '../engine/sites';
-import type { HeroState, LogEvent } from '../engine/types';
+import { applyGear, ARTIFACT_BY_ID, canReceive, gearOf, PACK_SIZE, packOf, passTargets, RARITY_NAMES, type ArtifactDef, type Slot } from '../engine/sites';
+import type { Action, GameState, HeroState, LogEvent } from '../engine/types';
 import { asset, Modal, Portrait, Ribbon, SIDE_RING } from './common';
 import { RuleText, StatScaleContext } from './statScale';
 
@@ -29,13 +29,13 @@ export function ArtifactMedal({ art, size = 40 }: { art: ArtifactDef; size?: num
 const artTitle = (art: ArtifactDef, scale: number) => `${SLOT_NAMES[art.slot]}: ${art.name} (${RARITY_NAMES[art.rarity]}). ${scaleText(art.text, scale)}`;
 
 /** The five gear slots laid out like a hero's sheet: the helmet on top, weapon - armour - shield in the middle, the boots below. */
-export function GearDoll({ hero, size = 40 }: { hero: HeroState; size?: number }) {
+export function GearDoll({ hero, size = 40, picked, onPick }: { hero: HeroState; size?: number; picked?: string | null; onPick?: (art: ArtifactDef) => void }) {
   const scale = useContext(StatScaleContext);
   const gear = gearOf(hero);
   const cell = (slot: Slot, col: number, row: number) => {
     const art = gear.find((a) => a.slot === slot);
     return art ? (
-      <span key={slot} className="gear-slot" style={{ gridColumn: col, gridRow: row }} title={artTitle(art, scale)} data-gear={art.id}>
+      <span key={slot} className={`gear-slot ${picked === art.id ? 'picked' : ''} ${onPick ? 'pickable' : ''}`} style={{ gridColumn: col, gridRow: row }} title={artTitle(art, scale)} data-gear={art.id} onClick={onPick ? () => onPick(art) : undefined}>
         <ArtifactMedal art={art} size={size} />
       </span>
     ) : (
@@ -112,7 +112,7 @@ export function XpBar({ hero }: { hero: HeroState }) {
 const levelStart = (level: number) => (level <= 1 ? 0 : GROWTH.thresholds[level - 2] ?? 0);
 
 /** The hero's skills (icons) and the gear slots (filled or empty), with a hover text for each; a click on the gear opens the hero's sheet. */
-export function HeroGrowth({ hero }: { hero: HeroState }) {
+export function HeroGrowth({ hero, state, onAction }: { hero: HeroState; state?: GameState; onAction?: (a: Action) => void }) {
   const scale = useContext(StatScaleContext);
   const [sheet, setSheet] = useState(false);
   const skills = [...new Set(hero.skills ?? [])];
@@ -137,17 +137,28 @@ export function HeroGrowth({ hero }: { hero: HeroState }) {
         <button className="btn btn-bare" onClick={() => setSheet(true)} title="Karta bohatera: wyposażenie, umiejętności i liczby w bitwie" style={{ padding: 0 }}>
           <GearDoll hero={hero} size={40} />
         </button>
+        {(hero.pack?.length ?? 0) > 0 && <span className="pack-count" title={`W plecaku: ${packOf(hero).map((a) => a.name).join(', ')}`} data-pack-count>plecak {hero.pack!.length}/{PACK_SIZE}</span>}
       </div>
       <Modal open={sheet} onClose={() => setSheet(false)}>
-        {sheet && <HeroSheet hero={hero} onClose={() => setSheet(false)} />}
+        {sheet && <HeroSheet hero={hero} state={state} onAction={onAction} onClose={() => setSheet(false)} />}
       </Modal>
     </div>
   );
 }
 
 /** The hero's sheet: portrait, level, the numbers it enters a battle with, the gear on a figure-like layout, and what every artifact and skill does. */
-export function HeroSheet({ hero, onClose }: { hero: HeroState; onClose: () => void }) {
+export function HeroSheet({ hero, state, onAction, onClose }: { hero: HeroState; state?: GameState; onAction?: (a: Action) => void; onClose: () => void }) {
   const scale = useContext(StatScaleContext);
+  // The artifact the player has clicked (worn or in the backpack): the buttons below act on it. Only with `onAction` (the hero's own turn).
+  const [pickedId, setPicked] = useState<string | null>(null);
+  const pack = packOf(hero);
+  const picked = pickedId ? [...gearOf(hero), ...pack].find((a) => a.id === pickedId) ?? null : null;
+  const pickedWorn = Boolean(picked && hero.gear?.[picked.slot] === picked.id);
+  const allies = state && onAction ? passTargets(state, hero) : [];
+  const act = (a: Action) => {
+    onAction?.(a);
+    setPicked(null);
+  };
   // The hero's unit as a battle would make it: card numbers plus skills, milestones and gear.
   const plain = makeBattleUnit(hero.id, hero.faction, true, scale);
   const unit = makeBattleUnit(hero.id, hero.faction, true, scale);
@@ -179,9 +190,39 @@ export function HeroSheet({ hero, onClose }: { hero: HeroState; onClose: () => v
         <div className="hero-sheet-col" style={{ alignItems: 'center' }}>
           <div className="lbl" style={{ color: '#6B4A22' }}>Wyposażenie</div>
           <div className="hero-sheet-doll">
-            <GearDoll hero={hero} size={68} />
+            <GearDoll hero={hero} size={68} picked={pickedId} onPick={onAction ? (a) => setPicked(pickedId === a.id ? null : a.id) : undefined} />
           </div>
-          <div style={{ fontSize: 13, color: '#6B4A22', maxWidth: 230, textAlign: 'center', lineHeight: 1.3 }}>Po jednym artefakcie na miejsce. Lepszy (rzadszy) zastępuje gorszy.</div>
+          <div className="lbl" style={{ color: '#6B4A22' }}>Plecak {pack.length}/{PACK_SIZE}</div>
+          <div className="pack-row" data-pack>
+            {Array.from({ length: PACK_SIZE }, (_, i) => {
+              const a = pack[i];
+              return a ? (
+                <span key={i} className={`gear-slot ${pickedId === a.id ? 'picked' : ''} ${onAction ? 'pickable' : ''}`} title={artTitle(a, scale)} data-pack-item={a.id} onClick={onAction ? () => setPicked(pickedId === a.id ? null : a.id) : undefined}>
+                  <ArtifactMedal art={a} size={46} />
+                </span>
+              ) : (
+                <span key={i} className="pack-empty" />
+              );
+            })}
+          </div>
+          {picked && onAction ? (
+            <div className="sheet-actions" data-sheet-actions>
+              <b>{picked.name}</b>
+              {pickedWorn ? (
+                <button className="btn plate parch" disabled={pack.length >= PACK_SIZE} title={pack.length >= PACK_SIZE ? 'Plecak jest pełny.' : undefined} onClick={() => act({ type: 'unequipArtifact', slot: picked.slot })} data-unequip>Zdejmij do plecaka</button>
+              ) : (
+                <button className="btn plate parch" onClick={() => act({ type: 'equipArtifact', artifactId: picked.id })} data-equip>Załóż{hero.gear?.[picked.slot] ? ` (zamiast: ${ARTIFACT_BY_ID[hero.gear[picked.slot]!]?.name})` : ''}</button>
+              )}
+              {allies.map((h) => (
+                <button key={h.id} className="btn plate parch" disabled={!canReceive(h, picked)} title={canReceive(h, picked) ? undefined : 'Sojusznik ma zajęte to miejsce i pełny plecak.'} onClick={() => act({ type: 'passArtifact', artifactId: picked.id, toHeroId: h.id })} data-pass={h.id}>Przekaż: {UNITS[h.id].name}</button>
+              ))}
+              {allies.length === 0 && <span style={{ fontSize: 13, color: '#6B4A22' }}>Przekazać artefakt można sojusznikowi na sąsiednim polu.</span>}
+            </div>
+          ) : (
+            <div style={{ fontSize: 13, color: '#6B4A22', maxWidth: 250, textAlign: 'center', lineHeight: 1.3 }}>
+              Po jednym artefakcie na miejsce; rzadszy sam zastępuje pospolitszy, reszta trafia do plecaka.{onAction ? ' Kliknij artefakt, żeby go założyć, zdjąć albo przekazać sojusznikowi obok.' : ''}
+            </div>
+          )}
         </div>
         <div className="hero-sheet-col" style={{ flex: 1, minWidth: 220 }}>
           <div className="lbl" style={{ color: '#6B4A22' }}>Artefakty</div>
@@ -240,8 +281,10 @@ export function ArtifactFound({ event, faction }: { event: Extract<LogEvent, { t
       </div>
       <div style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.35 }}>
         {event.kept
-          ? 'Artefakt zakłada się na stałe, po jednym na miejsce (hełm, broń, zbroja, tarcza, buty). Widać go pod portretem bohatera i na karcie bohatera. W odróżnieniu od skarbów nie zużywa się i należy do jednego bohatera, nie do całej frakcji; kto pokona bohatera, zabiera mu artefakty.'
-          : `${FACTION_NAMES[faction]} ma już lepszy artefakt na tym miejscu, więc w zamian frakcja dostała kartę skarbu.`}
+          ? event.packed
+            ? `Bohater nosi już na tym miejscu coś równie dobrego albo lepszego, więc artefakt trafił do plecaka (do ${PACK_SIZE} sztuk). W karcie bohatera można go założyć albo przekazać sojusznikowi stojącemu obok.`
+            : 'Artefakt zakłada się na stałe, po jednym na miejsce (hełm, broń, zbroja, tarcza, buty). Widać go pod portretem bohatera i na karcie bohatera. W odróżnieniu od skarbów nie zużywa się i należy do jednego bohatera, nie do całej frakcji; kto pokona bohatera, zabiera mu artefakty.'
+          : `Bohater ma już lepszy artefakt na tym miejscu i pełny plecak, więc w zamian ${FACTION_NAMES[faction]} dostaje kartę skarbu.`}
       </div>
     </div>
   );

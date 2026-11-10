@@ -158,6 +158,7 @@ export function App() {
     });
     // ?skills=treasureHunter,treasureHunter gives every hero those skills from the start (for looking at their dialogs).
     if (q.get('skills')) for (const h of Object.values(s.heroes)) h.skills = q.get('skills')!.split(',') as SkillId[];
+    if (q.get('pack')) for (const h of Object.values(s.heroes)) h.pack = q.get('pack')!.split(',').filter((id) => ARTIFACT_BY_ID[id]);
     if (q.get('gear')) for (const h of Object.values(s.heroes)) h.gear = Object.fromEntries(q.get('gear')!.split(',').filter((id) => ARTIFACT_BY_ID[id]).map((id) => [ARTIFACT_BY_ID[id].slot, id]));
     // ?level=9 puts every hero on that level (for looking at the milestones on the cards).
     if (q.get('level')) for (const h of Object.values(s.heroes)) h.level = Number(q.get('level'));

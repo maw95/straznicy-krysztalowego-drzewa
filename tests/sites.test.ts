@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { makeBattleUnit, predictDamage } from '../src/engine/battle';
-import { activeHero, createGame, legalHeroMoves } from '../src/engine/game';
+import { activeHero, applyAction, createGame, legalHeroMoves } from '../src/engine/game';
+import { itemDef } from '../src/engine/data';
 import { tileCost } from '../src/engine/map';
-import { applyGear, applySupportGear, ARTIFACT_BY_ID, ARTIFACTS, captureGear, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, SITE, SLOTS, visitSite } from '../src/engine/sites';
+import { applyGear, applySupportGear, ARTIFACT_BY_ID, ARTIFACTS, captureGear, PACK_SIZE, passTargets, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, SITE, SLOTS, visitSite } from '../src/engine/sites';
 import { playOut, setup } from './helpers/engine';
 
 const grown = (over: Parameters<typeof setup>[0] = {}, growth = true) => createGame(setup(over, { ruleset: 'digital', ...(growth ? { heroGrowth: true } : {}) }));
@@ -40,15 +41,21 @@ describe('sites on the map and hero gear (hero growth)', () => {
     expect(hero.xp).toBe(SITE.shrineXp);
   });
 
-  it('a rarer artifact replaces a more common one in the slot; an equal or worse one turns into a treasure', () => {
+  it('a rarer artifact replaces a more common one in the slot; the rest goes into the backpack, and into a treasure once that is full', () => {
     const s = grown();
     const hero = activeHero(s)!;
     giveArtifact(s, hero, ARTIFACT_BY_ID.blade1, 'test');
     giveArtifact(s, hero, ARTIFACT_BY_ID.blade2, 'test');
     expect(hero.gear?.weapon).toBe('blade2');
     const treasures = s.factions[hero.faction].inventory.length;
+    // The one it replaced and every one that is no better go into the backpack; a treasure comes instead only when the backpack is full.
+    expect(hero.pack).toEqual(['blade1']);
+    for (let i = 1; i < PACK_SIZE; i++) giveArtifact(s, hero, ARTIFACT_BY_ID.blade1, 'test');
+    expect(hero.pack).toHaveLength(PACK_SIZE);
+    expect(s.factions[hero.faction].inventory.length).toBe(treasures);
     giveArtifact(s, hero, ARTIFACT_BY_ID.blade1, 'test');
     expect(hero.gear?.weapon).toBe('blade2');
+    expect(hero.pack).toHaveLength(PACK_SIZE);
     expect(s.factions[hero.faction].inventory.length).toBe(treasures + 1);
   });
 
@@ -121,9 +128,50 @@ describe('sites on the map and hero gear (hero growth)', () => {
     const loser = Object.values(s.heroes).find((h) => h.id !== winner.id)!;
     winner.gear = { weapon: 'blade2', boots: 'boots1' };
     loser.gear = { weapon: 'blade1', boots: 'boots2', shield: 'buckler' };
-    expect(captureGear(s, winner, loser)).toBe(2);
-    expect(winner.gear).toEqual({ weapon: 'blade2', boots: 'boots2', shield: 'buckler' });
+    loser.pack = ['helm1'];
+    expect(captureGear(s, winner, loser)).toBe(4);
+    expect(winner.gear).toEqual({ weapon: 'blade2', boots: 'boots2', shield: 'buckler', helmet: 'helm1' });
+    expect(winner.pack).toEqual(['blade1', 'boots1']);
+    expect(loser.gear).toEqual({});
+    expect(loser.pack).toEqual([]);
+    // A full backpack: only what improves the winner's gear changes hands.
+    winner.pack = ['mail1', 'mail1', 'mail1', 'mail1'];
+    loser.gear = { armor: 'thornMail', weapon: 'blade1' };
+    expect(captureGear(s, winner, loser)).toBe(1);
+    expect(winner.gear?.armor).toBe('thornMail');
     expect(loser.gear).toEqual({ weapon: 'blade1' });
+  });
+
+  it('the active hero swaps gear with its backpack and hands artifacts to an ally on a neighbouring hex', () => {
+    let s = grown({ seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId: 'goldDragon' }, { name: 'B', faction: 'dawn', controller: 'bot', heroId: 'unicornKing' }] });
+    const id = activeHero(s)!.id;
+    const allyId = Object.values(s.heroes).find((h) => h.id !== id && h.faction === s.heroes[id].faction)!.id;
+    s.heroes[id].gear = { weapon: 'blade2' };
+    s.heroes[id].pack = ['blade1', 'helm1'];
+    s = applyAction(s, { type: 'equipArtifact', artifactId: 'blade1' });
+    expect(s.heroes[id].gear).toEqual({ weapon: 'blade1' });
+    expect(s.heroes[id].pack).toEqual(['helm1', 'blade2']);
+    s = applyAction(s, { type: 'unequipArtifact', slot: 'weapon' });
+    expect(s.heroes[id].gear).toEqual({});
+    expect(s.heroes[id].pack).toEqual(['helm1', 'blade2', 'blade1']);
+    expect(() => applyAction(s, { type: 'equipArtifact', artifactId: 'treeAegis' })).toThrow();
+    // Both start on the base (the same hex): the ally puts on what fills an empty slot and packs the rest.
+    expect(passTargets(s, s.heroes[id]).map((h) => h.id)).toContain(allyId);
+    s.heroes[allyId].gear = { weapon: 'hunterBlade' };
+    s = applyAction(s, { type: 'passArtifact', artifactId: 'helm1', toHeroId: allyId });
+    s = applyAction(s, { type: 'passArtifact', artifactId: 'blade2', toHeroId: allyId });
+    expect(s.heroes[allyId].gear).toEqual({ weapon: 'hunterBlade', helmet: 'helm1' });
+    expect(s.heroes[allyId].pack).toEqual(['blade2']);
+    expect(s.heroes[id].pack).toEqual(['blade1']);
+    // Far apart: no passing.
+    s.heroes[allyId].pos = Object.keys(s.tiles).find((k) => passTargets({ ...s, heroes: { ...s.heroes, [allyId]: { ...s.heroes[allyId], pos: k } } }, s.heroes[id]).length === 0)!;
+    expect(() => applyAction(s, { type: 'passArtifact', artifactId: 'blade1', toHeroId: allyId })).toThrow();
+  });
+
+  it('the digital ruleset renames the four treasure cards that sound like gear; the board edition keeps the printed names', () => {
+    expect(['sword', 'boots', 'shield', 'stone'].map((k) => itemDef(k as 'sword', true).name)).toEqual(['Eliksir Mocy', 'Eliksir Chyżości', 'Zwój Tarczy', 'Runa Ochrony']);
+    expect(itemDef('sword', false).name).toBe('Miecz Bohatera');
+    expect(itemDef('heal', true).name).toBe(itemDef('heal', false).name);
   });
 
   it('bots play with sites to the end', () => {

@@ -46,7 +46,7 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 - [ ] Przykłady efektów: Hełm Olbrzyma (+Ż bohatera, −1 S), Hełm Dowódcy (+Ż pomocników), Korona Zwiadowcy (odkrywa pola w promieniu 2), Kolczuga Cierni (atakujący w zwarciu traci 1 Ż),
   Ostrze Rannych (+A przeciw rannym), tarcza zmniejszająca pierwszy cios w bitwie (nazwa do wymyślenia). Sandały Skoczka do przemyślenia.
 
-- [x] (10.11: przejmuje te, które poprawiają jego wyposażenie; bez plecaka reszta zostaje u pokonanego) Decyzje autora (10.11): po wygranej walce bohaterów zwycięzca **przejmuje artefakty pokonanego** (zamiast dzisiejszej losowej „zdobyczy” stopnia 1; `game.ts`, „łup z pokonanego bohatera”);
+- [x] (10.11: przejmuje założone i z plecaka; co poprawia wyposażenie, zakłada, resztę chowa do plecaka, póki ma miejsce) Decyzje autora (10.11): po wygranej walce bohaterów zwycięzca **przejmuje artefakty pokonanego** (zamiast dzisiejszej losowej „zdobyczy” stopnia 1; `game.ts`, „łup z pokonanego bohatera”);
   przegrany traci wszystkie artefakty, które zwycięzca może przejąć. Ryzyko kuli śnieżnej zaakceptowane (sprawdzić symulacjami).
 - [x] (10.11: 4 miejsca, karta bohatera) **Plecak** (wariant C): artefakty, które nie pasują do slotu albo są gorsze, trafiają do plecaka bohatera (ograniczona liczba miejsc, do ustalenia). Nowy fragment interfejsu: lista plecaka, zakładanie i zdejmowanie.
 - [x] (10.11: w turze bohatera, sojusznik na tym samym lub sąsiednim polu) **Przekazywanie artefaktów między bohaterami**, jeśli stoją na sąsiednich polach (też z plecaka do plecaka).

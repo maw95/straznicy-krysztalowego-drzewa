@@ -189,7 +189,7 @@ Parę rodzic + dziecko w jednej drużynie: w ekranie startu (kooperacja, wersja 
 ## Artefakty bohatera i obiekty na mapie (6.11.2026, część rozwoju bohatera)
 
 Działają razem z `heroGrowth` (`src/engine/sites.ts`).
-- **Artefakty** (przebudowane 10.11.2026): pięć miejsc — hełm, broń, zbroja, tarcza, buty (`SLOTS`) — i trzy rzadkości: zwykły, rzadki, legendarny (`rarity` 1–3). Jedna nazwa i jeden obrazek dla obu frakcji, efekt taki sam dla każdego nosiciela. Rzadszy zastępuje pospolitszy; równy lub gorszy zamienia się w losowy skarb dla frakcji (plecaka jeszcze nie ma). Liczby w małej skali (×3 liczy `statScale`), poza Obroną.
+- **Artefakty** (przebudowane 10.11.2026): pięć miejsc — hełm, broń, zbroja, tarcza, buty (`SLOTS`) — i trzy rzadkości: zwykły, rzadki, legendarny (`rarity` 1–3). Jedna nazwa i jeden obrazek dla obu frakcji, efekt taki sam dla każdego nosiciela. Rzadszy zastępuje pospolitszy; równy lub gorszy trafia do plecaka. Liczby w małej skali (×3 liczy `statScale`), poza Obroną.
 
   | Miejsce | Zwykły | Rzadki | Legendarny |
   |---|---|---|---|

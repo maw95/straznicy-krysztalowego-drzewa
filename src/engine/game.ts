@@ -49,7 +49,7 @@ import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } fro
 import { log } from './log';
 import { applyHeroSkills, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
-import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, placeSites, visitSite } from './sites';
+import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, placeSites, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
 import { isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
@@ -1035,6 +1035,16 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
       if (state.phase !== 'adventure' || !activeHero(state)?.treasurePick) throw new Error('Teraz nie wybiera się skarbu.');
       chooseTreasure(state, activeHero(state)!.id, action.kind);
       break;
+    case 'equipArtifact':
+    case 'unequipArtifact':
+    case 'passArtifact': {
+      const hero = activeHero(state);
+      if (state.phase !== 'adventure' || !hero?.alive || !state.rules.heroGrowth) throw new Error('Teraz nie można zmieniać wyposażenia.');
+      if (action.type === 'equipArtifact') equipArtifact(state, hero, action.artifactId);
+      else if (action.type === 'unequipArtifact') unequipArtifact(state, hero, action.slot);
+      else passArtifact(state, hero, action.artifactId, action.toHeroId);
+      break;
+    }
     case 'useMapItem':
       useMapItem(state, action.itemId, action.targets, action.unitId);
       break;

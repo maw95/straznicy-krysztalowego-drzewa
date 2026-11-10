@@ -186,6 +186,8 @@ export interface HeroState {
   treasurePick?: { kinds: ItemKind[]; take: number };
   /** Artifacts worn, by slot (sites.ts). */
   gear?: Partial<Record<Slot, string>>;
+  /** Artifacts carried but not worn (the backpack, at most `PACK_SIZE`; sites.ts). */
+  pack?: string[];
 }
 
 export interface FactionState {
@@ -345,7 +347,7 @@ export type LogKind = 'info' | 'move' | 'battle' | 'damage' | 'death' | 'item' |
 /** A structured happening behind a log line, for the screen to announce (experience gained, an artifact found). */
 export type LogEvent =
   | { type: 'xp'; heroId: string; amount: number; reason: string }
-  | { type: 'artifact'; heroId: string; artifactId: string; source: string; kept: boolean };
+  | { type: 'artifact'; heroId: string; artifactId: string; source: string; kept: boolean; packed?: boolean };
 
 export interface LogEntry {
   round: number;
@@ -438,6 +440,10 @@ export type Action =
   | { type: 'endTurn' }
   | { type: 'chooseSkill'; skill: SkillId }
   | { type: 'chooseTreasure'; kind: ItemKind }
+  /** The active hero's gear: put on an artifact from the backpack, take one off into the backpack, hand one to an ally on a neighbouring hex. */
+  | { type: 'equipArtifact'; artifactId: string }
+  | { type: 'unequipArtifact'; slot: Slot }
+  | { type: 'passArtifact'; artifactId: string; toHeroId: string }
   | { type: 'useMapItem'; itemId: string; targets?: HexKey[]; unitId?: string }
   | { type: 'selectSupports'; faction: FactionId; supportIds: string[] }
   | { type: 'deployUnits'; faction: FactionId; positions: Record<string, HexKey> }

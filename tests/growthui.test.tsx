@@ -1,5 +1,7 @@
 // @vitest-environment jsdom
 import { render } from '@testing-library/react';
+import { DigitalContext } from '../src/ui/statScale';
+import { TreasureCard } from '../src/ui/TreasureCard';
 import { describe, expect, it } from 'vitest';
 import { activeHero, createGame } from '../src/engine/game';
 import { awardXp, GROWTH } from '../src/engine/growth';
@@ -34,13 +36,25 @@ describe('hero growth: what the player is told', () => {
     expect(s.log.slice(before).filter((l) => l.event)).toHaveLength(0);
   });
 
-  it('an artifact is announced with its source, and a worse one is told apart', () => {
+  it('an artifact is announced with its source; one that goes into the backpack or turns into a treasure is told apart', () => {
     const s = grown();
     const h = activeHero(s)!;
     giveArtifact(s, h, ARTIFACT_BY_ID.blade1, 'skrzynia');
     expect(s.log[s.log.length - 1].event).toMatchObject({ type: 'artifact', artifactId: 'blade1', source: 'skrzynia', kept: true });
     giveArtifact(s, h, ARTIFACT_BY_ID.blade1, 'łup po pokonanym strażniku');
-    expect(s.log[s.log.length - 1].event).toMatchObject({ type: 'artifact', source: 'łup po pokonanym strażniku', kept: false });
+    expect(s.log[s.log.length - 1].event).toMatchObject({ type: 'artifact', source: 'łup po pokonanym strażniku', kept: true, packed: true });
+    h.pack = ['blade1', 'blade1', 'blade1', 'blade1'];
+    giveArtifact(s, h, ARTIFACT_BY_ID.blade1, 'skrzynia');
+    expect(s.log[s.log.length - 1].event).toMatchObject({ type: 'artifact', source: 'skrzynia', kept: false });
+  });
+
+  it('a treasure card named after gear shows its digital name and picture in a digital game', () => {
+    const digital = render(<DigitalContext.Provider value={true}><TreasureCard kind="sword" /></DigitalContext.Provider>).container;
+    expect(digital.textContent).toContain('Eliksir Mocy');
+    expect(digital.querySelector('img[src*="treasures/cyfrowe/sword.jpg"]')).not.toBeNull();
+    const board = render(<TreasureCard kind="sword" />).container;
+    expect(board.textContent).toContain('Miecz Bohatera');
+    expect(board.querySelector('img[src*="treasures/sword.jpg"]')).not.toBeNull();
   });
 
   it('the experience bar shows the points, the level and what is missing', () => {

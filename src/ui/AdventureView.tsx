@@ -482,7 +482,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </div>
             </div>
           )}
-          {hero && state.rules.heroGrowth && <HeroGrowth hero={hero} />}
+          {hero && state.rules.heroGrowth && <HeroGrowth hero={hero} state={state} onAction={canAct && hero.faction === viewer ? onAction : undefined} />}
           <div className="well" style={{ padding: '8px 10px', display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {Object.values(state.heroes).map((h) => (
               <button key={h.id} className="btn btn-bare" onClick={() => onShowCard(h.id)} title={`${UNITS[h.id].name}${h.alive ? '' : ' (poległ)'}`}>
