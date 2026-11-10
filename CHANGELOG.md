@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Mapa: zakryte pola nie mrugają już pojedynczo. Mgła nad nimi przeskakiwała raz na minutę (pętla animacji miała szew), a że każde pole zaczyna w innej chwili, wyglądało to jak błysk na jednym zakrytym kafelku. Błysk nie zdradzał skarbów, ale mylił.
 - Rozwój bohatera: sprawdzony symulacjami (progi PD, umiejętności, kamienie milowe). Żaden bohater ani kamień milowy nie wychodzi poza szum; liczby bez zmian.
 - Karty bohaterów w grze z rozwojem pokazują osiągnięty kamień milowy: pod opisem zdolności dopisana jest linia „Poziom N: …” z aktualnymi liczbami.
 - Rozwój bohatera: kamienie milowe na poziomach 3, 6 i 9 wzmacniają własną zdolność bohatera (np. Szarża Światła Króla Jednorożców: +2 → +3 → +4 → +5 do Ataku; Czarny Smok oddycha na 9. poziomie dwa razy w bitwie; Dzielna Kaczka leczy się po zabiciu wroga). Awans na kamień milowy zapisuje się w dzienniku.

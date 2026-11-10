@@ -375,7 +375,9 @@ input[type='range'] { accent-color: #c99a3c; }
 /* ================================================================ polish */
 
 /* Drifting fog over unrevealed hexes */
-@keyframes fog-drift { from { background-position: 0 0, 0 0; } to { background-position: 512px 128px, -512px 64px; } }
+/* The drift ends a whole number of fog tiles away (260 px and 380 px, see background-size), so the loop has no seam: with other numbers the fog
+   jumped once a minute, and as every hex starts at another moment, single hidden hexes seemed to blink (report 11.4). */
+@keyframes fog-drift { from { background-position: 0 0, 0 0; } to { background-position: 520px 260px, -380px 380px; } }
 .fog {
   position: absolute;
   inset: 0;
