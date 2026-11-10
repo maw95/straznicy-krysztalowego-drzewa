@@ -97,6 +97,16 @@ const FEET = 24;
 
 export function ArenaBoard(p: Props) {
   const { state, view, scale, anim, deploy, targeting, hover, setHover, active, moves, hops, targets, approach } = p;
+  /**
+   * A unit's box reaches over its neighbours' hexes. When the pointer is over the hex of an attackable unit and the box belongs
+   * to a unit that is not a target (an ally standing in front), the click and the cursor go to the target under the pointer.
+   */
+  const behind = (e: { clientX: number; clientY: number }, u: BattleUnit): BattleUnit => {
+    if (targets.some((t) => t.id === u.id)) return u;
+    const cell = (document.elementsFromPoint?.(e.clientX, e.clientY) ?? []).find((el) => el.hasAttribute('data-cell'))?.getAttribute('data-cell');
+    const under = cell ? unitAt(p.state.battle!, cell as HexKey) : undefined;
+    return under && targets.some((t) => t.id === under.id) ? under : u;
+  };
   const b = state.battle!;
   const geo = geometryOf(b.layout);
   const wide = b.layout === 'wide';
@@ -219,6 +229,7 @@ export function ArenaBoard(p: Props) {
                 <polygon
                   key={k}
                   points={CELL_POINTS.get(k)}
+                  data-cell={k}
                   fill={fill}
                   stroke={moves.has(k) || hops.includes(k) ? 'rgba(190,240,255,0.75)' : 'none'}
                   strokeWidth="1.5"
@@ -311,10 +322,19 @@ export function ArenaBoard(p: Props) {
               <button
                 key={u.id}
                 className={`hexbtn token ${walk[u.id] ? 'walking' : ''} ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''} ${aimed ? '' : p.unitCursor(u)}`}
-                onClick={() => p.onUnit(u)}
+                data-unit={u.id}
+                onClick={(e) => p.onUnit(behind(e, u))}
                 {...details(() => <UnitDetails u={u} />)}
                 onMouseEnter={() => setHover(u.pos)}
-                onPointerMove={(e) => e.pointerType !== 'touch' && p.aimApproach(u, { x: e.clientX, y: e.clientY, box: e.currentTarget.getBoundingClientRect() })}
+                onPointerMove={(e) => {
+                  if (e.pointerType === 'touch') return;
+                  // Over the hex of a target hidden behind this box: the cursor and the aim belong to that target.
+                  const t = behind(e, u);
+                  const own = e.currentTarget;
+                  const el = t === u ? own : (document.querySelector<HTMLElement>(`[data-unit="${t.id}"]`) ?? own);
+                  own.style.cursor = t === u ? '' : getComputedStyle(el).cursor;
+                  p.aimApproach(t, { x: e.clientX, y: e.clientY, box: el.getBoundingClientRect() });
+                }}
                 onMouseLeave={() => {
                   setHover(null);
                   if (approach?.targetId === u.id) p.setApproach(null);
