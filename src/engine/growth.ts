@@ -40,6 +40,12 @@ export function milestoneText(heroId: string, tier: number, k: number): string |
   }
 }
 
+/** A hero card's ability text with the milestone reached (small-scale numbers, the screen scales them like the rest of the card). */
+export function abilityTextAt(defId: string, text: string, tier: number): string {
+  const note = tier > 0 ? milestoneText(defId, tier, 1) : null;
+  return note ? `${text} Poziom ${MILESTONE_LEVELS[tier - 1]}: ${note}` : text;
+}
+
 /** The hero's milestone reached goes onto its unit when a battle starts. */
 export function applyMilestones(hero: HeroState | undefined, unit: BattleUnit): void {
   const tier = hero ? milestoneTier(levelOf(hero)) : 0;

@@ -7,7 +7,8 @@ import { createContext, useContext } from 'react';
 import { battleStats, DIGITAL_RANGED_BONUS, UNITS } from '../engine/data';
 import { asset } from './common';
 import { StatText } from './markers';
-import { StatScaleContext } from './statScale';
+import { abilityTextAt, milestoneTier } from '../engine/growth';
+import { HeroLevelsContext, StatScaleContext } from './statScale';
 
 interface Box {
   x0: number;
@@ -181,7 +182,8 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false,
   const digital = digitalProp ?? inDigitalGame;
   const base = UNITS[unitId];
   const card = duel ? base.duel : undefined;
-  const def = card ? { ...base, hp: card.hp * statScale, abilityName: card.abilityName, abilityText: card.abilityText } : base;
+  const level = useContext(HeroLevelsContext)[unitId];
+  const def = card ? { ...base, hp: card.hp * statScale, abilityName: card.abilityName, abilityText: card.abilityText } : level ? { ...base, abilityText: abilityTextAt(unitId, base.abilityText, milestoneTier(level)) } : base;
   const L = frameFor(unitId);
   const scale = width / FRAME_W;
   const { at, circle, kx, ky, X, Y } = cardSpace(L.bounds);

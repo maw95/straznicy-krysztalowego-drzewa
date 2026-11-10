@@ -20,7 +20,7 @@ import { SetupScreen } from './SetupScreen';
 import { music } from './music';
 import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
 import { DigitalCardsContext, UnitCard } from './UnitCard';
-import { StatScaleContext } from './statScale';
+import { HeroLevelsContext, StatScaleContext } from './statScale';
 import { readAutosave, replay, writeAutosave, type BugReport, type SaveFile } from './saves';
 import { BugReportDialog } from './BugReportDialog';
 import { TesterDialog } from './TesterDialog';
@@ -157,6 +157,8 @@ export function App() {
     });
     // ?skills=treasureHunter,treasureHunter gives every hero those skills from the start (for looking at their dialogs).
     if (q.get('skills')) for (const h of Object.values(s.heroes)) h.skills = q.get('skills')!.split(',') as SkillId[];
+    // ?level=9 puts every hero on that level (for looking at the milestones on the cards).
+    if (q.get('level')) for (const h of Object.values(s.heroes)) h.level = Number(q.get('level'));
     for (let i = 0; i < Number(q.get('steps')) && s.phase !== 'over'; i++) {
       const a = chooseAction(s);
       if (!a) break;
@@ -482,6 +484,7 @@ export function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastBattleId]);
 
+  const heroLevels = useMemo(() => (game?.rules.heroGrowth ? Object.fromEntries(Object.values(game.heroes).map((h) => [h.id, h.level ?? 1])) : {}), [game]);
   const visibleLog = useMemo(() => (game ? game.log.filter((l) => !l.privateTo || l.privateTo === viewer) : []), [game, viewer]);
 
   // "Since your last turn": with bots at the table a lot happens off-screen
@@ -737,6 +740,7 @@ export function App() {
   return (
     <DigitalCardsContext.Provider value={isDigital(game.rules)}>
     <StatScaleContext.Provider value={game.rules.statScale ?? 1}>
+    <HeroLevelsContext.Provider value={heroLevels}>
       <AppChrome error={error} onDismissError={() => setError(null)} showRules={showRules} onCloseRules={() => setShowRules(false)} />
       {overlay}
       {isOnline && onlineRoom?.waiting && <WaitingBanner room={onlineRoom} canHand={mySeats.size > 0} onHand={(seat) => session!.send({ type: 'handToBot', seat })} />}
@@ -870,6 +874,7 @@ export function App() {
           leaveGame();
         }}
       />
+    </HeroLevelsContext.Provider>
     </StatScaleContext.Provider>
     </DigitalCardsContext.Provider>
   );
