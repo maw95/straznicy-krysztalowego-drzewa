@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyAction, createGame, activeHero, moveAllowance } from '../src/engine/game';
+import { applyAction, applyActionInPlace, createGame, activeHero, moveAllowance } from '../src/engine/game';
 import { cellOf, deployCells, makeBattleUnit } from '../src/engine/battle';
 
 import { ALL_SKILLS, applyHeroSkills, applySupportSkill, awardXp, chooseSkill, GROWTH, levelOf, MAX_LEVEL, MAX_RANK, moveBonus, scoutRadiusOf, skillRank, SKILL_RANKS, type SkillId } from '../src/engine/growth';
@@ -160,5 +160,37 @@ describe('Strzelec, Taktyk, Zwiadowca', () => {
     take(s, 'scout');
     expect(hidden()).toBeLessThanOrEqual(afterOne);
     expect(scoutRadiusOf(h)).toBe(SKILL_RANKS.scout[1]);
+  });
+});
+
+describe('Łowca skarbów, Uczony', () => {
+  it('a pending treasure choice blocks moving and ending the turn; choosing gives the treasure to the faction', () => {
+    const s = grown();
+    const h = activeHero(s)!;
+    h.treasurePick = { kinds: ['sword', 'shield', 'stone'], take: 2 };
+    expect(() => applyAction(s, { type: 'endTurn' })).toThrow(/skarb/);
+    expect(() => applyActionInPlace(s, { type: 'chooseTreasure', kind: 'heal' })).toThrow();
+    const before = s.factions[h.faction].inventory.length;
+    applyActionInPlace(s, { type: 'chooseTreasure', kind: 'shield' });
+    expect(h.treasurePick).toEqual({ kinds: ['sword', 'stone'], take: 1 });
+    applyActionInPlace(s, { type: 'chooseTreasure', kind: 'sword' });
+    expect(h.treasurePick).toBeUndefined();
+    expect(s.factions[h.faction].inventory.length).toBe(before + 2);
+  });
+
+  it('bots with both skills play whole games: every choice is made, Uczony adds experience, treasures come from the offers', () => {
+    let picks = 0;
+    let scholar = 0;
+    for (const seed of [1, 2, 3, 4, 5, 6]) {
+      const s = grown({ seed, mapSize: 'medium' });
+      for (const h of Object.values(s.heroes)) h.skills = ['treasureHunter', 'treasureHunter', 'scholar', 'scholar'];
+      const end = playOut(s);
+      expect(end.phase).toBe('over');
+      expect(Object.values(end.heroes).every((h) => !h.treasurePick)).toBe(true);
+      picks += end.log.filter((l) => l.text.includes('bohater wybiera')).length;
+      scholar += end.log.filter((l) => l.text.includes('od Uczonego')).length;
+    }
+    expect(picks).toBeGreaterThan(0);
+    expect(scholar).toBeGreaterThan(0);
   });
 });

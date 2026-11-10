@@ -2,7 +2,7 @@
 // one of three offered skills. Skills are small, permanent bonuses; each faction has its own names for the same effects. Off by default (the
 // level presets of the family mode switch it on), so games without it are untouched.
 
-import { FACTION_NAMES, ITEMS, NON_RESURRECTION_ITEMS, UNITS, type FactionId } from './data';
+import { FACTION_NAMES, ITEMS, NON_RESURRECTION_ITEMS, UNITS, type FactionId, type ItemKind } from './data';
 import { activeHero, grantTreasure, scoutAround } from './game';
 import { log } from './log';
 import { Rng } from './rng';
@@ -20,7 +20,7 @@ export const GROWTH = {
 };
 export const MAX_LEVEL = GROWTH.thresholds.length + 1;
 
-export type SkillId = 'might' | 'vigor' | 'swift' | 'leader' | 'pathfinder' | 'fortune' | 'marksman' | 'tactician' | 'scout';
+export type SkillId = 'might' | 'vigor' | 'swift' | 'leader' | 'pathfinder' | 'fortune' | 'marksman' | 'tactician' | 'scout' | 'treasureHunter' | 'scholar';
 
 /** A skill has ranks I-III; taking a skill the hero already has raises its rank (the list `skills` holds it once per rank). */
 export const MAX_RANK = 3;
@@ -34,6 +34,9 @@ export const SKILL_RANKS = {
   pathfinder: [1, 2, 2], // move points on the map
   marksman: [1, 2, 3], // A of the hero's shooters (the hero too, when it shoots)
   tactician: [1, 2, 3], // extra columns the hero's units may be deployed in
+  huntPool: [2, 3, 3], // Łowca skarbów: treasures shown after a guardian fight ...
+  huntTake: [1, 1, 2], // ... and how many of them the hero keeps
+  scholar: [1, 2, 3], // extra XP for every won battle
   scout: [2, 3, 4], // radius of the hexes revealed at the start of the hero's turn (and on every step)
 } as const;
 
@@ -47,18 +50,20 @@ export const SKILL_EFFECT: Record<SkillId, { texts: [string, string, string] }> 
   marksman: { texts: SKILL_RANKS.marksman.map((n) => `Strzelcy bohatera (też on sam, jeśli strzela) mają +${n} A w bitwie.`) as [string, string, string] },
   tactician: { texts: SKILL_RANKS.tactician.map((n) => `Rozstawienie przed bitwą: jednostki bohatera mogą stanąć o ${n} ${n === 1 ? 'kolumnę' : 'kolumny'} dalej.`) as [string, string, string] },
   scout: { texts: SKILL_RANKS.scout.map((n) => `Na początku tury odkrywa pola w promieniu ${n} od bohatera.`) as [string, string, string] },
+  treasureHunter: { texts: [0, 1, 2].map((i) => `Po walce ze strażnikiem: ${SKILL_RANKS.huntTake[i] === 1 ? 'jeden skarb' : `${SKILL_RANKS.huntTake[i]} skarby`} do wyboru spośród ${SKILL_RANKS.huntPool[i]} (zamiast losu).`) as [string, string, string] },
+  scholar: { texts: SKILL_RANKS.scholar.map((n) => `+${n} PD za każdą wygraną walkę.`) as [string, string, string] },
   fortune: { texts: ['Od razu: losowy skarb dla frakcji.', 'Od razu: kolejny losowy skarb dla frakcji.', 'Od razu: jeszcze jeden losowy skarb dla frakcji.'] },
 };
 export const skillText = (skill: SkillId, rank: number) => SKILL_EFFECT[skill].texts[Math.min(Math.max(rank, 1), MAX_RANK) - 1];
 
 export const SKILL_NAMES: Record<FactionId, Record<SkillId, string>> = {
-  dawn: { might: 'Moc Świtu', vigor: 'Hart Gaju', swift: 'Lekkość Wiatru', leader: 'Opieka nad Drużyną', pathfinder: 'Leśny Tropiciel', fortune: 'Dar Strażników', marksman: 'Oko Łucznika', tactician: 'Sztuka Wojny', scout: 'Orle Oko' },
-  horde: { might: 'Furia Hordy', vigor: 'Pancerz z Kości', swift: 'Pęd Ciemności', leader: 'Okrzyk Wodza', pathfinder: 'Nocny Zwiadowca', fortune: 'Łupieżca', marksman: 'Krzywy Łuk', tactician: 'Zasadzka', scout: 'Ślepia Wilka' },
+  dawn: { might: 'Moc Świtu', vigor: 'Hart Gaju', swift: 'Lekkość Wiatru', leader: 'Opieka nad Drużyną', pathfinder: 'Leśny Tropiciel', fortune: 'Dar Strażników', marksman: 'Oko Łucznika', tactician: 'Sztuka Wojny', scout: 'Orle Oko', treasureHunter: 'Skarbnik Gaju', scholar: 'Mądrość Drzewa' },
+  horde: { might: 'Furia Hordy', vigor: 'Pancerz z Kości', swift: 'Pęd Ciemności', leader: 'Okrzyk Wodza', pathfinder: 'Nocny Zwiadowca', fortune: 'Łupieżca', marksman: 'Krzywy Łuk', tactician: 'Zasadzka', scout: 'Ślepia Wilka', treasureHunter: 'Nos Hieny', scholar: 'Pamięć Przodków' },
 };
 
 export const ALL_SKILLS = Object.keys(SKILL_EFFECT) as SkillId[];
 /** The order bots prefer: strength first, then Życie, speed, the squad, the roads. */
-export const BOT_SKILL_ORDER: SkillId[] = ['might', 'vigor', 'leader', 'swift', 'marksman', 'pathfinder', 'tactician', 'scout', 'fortune'];
+export const BOT_SKILL_ORDER: SkillId[] = ['might', 'vigor', 'leader', 'swift', 'marksman', 'pathfinder', 'tactician', 'scout', 'treasureHunter', 'scholar', 'fortune'];
 
 export const growthOn = (state: Pick<GameState, 'rules'>) => Boolean(state.rules.heroGrowth);
 export const levelOf = (h: Pick<HeroState, 'level'>) => h.level ?? 1;
@@ -154,6 +159,28 @@ export function applySupportSkill(hero: HeroState | undefined, unit: BattleUnit)
   unit.hp += hp;
   unit.maxHp += hp;
   addMarksman(hero, unit);
+}
+
+/** Łowca skarbów: how many treasures are shown after a guardian fight and how many the hero keeps (null = no skill). */
+export function huntOf(hero: HeroState | undefined): { pool: number; take: number } | null {
+  const r = hero ? skillRank(hero, 'treasureHunter') : 0;
+  return r > 0 ? { pool: SKILL_RANKS.huntPool[Math.min(r, MAX_RANK) - 1], take: SKILL_RANKS.huntTake[Math.min(r, MAX_RANK) - 1] } : null;
+}
+
+/** Uczony: extra experience for a won battle. */
+export const scholarXp = (hero: HeroState | undefined) => (hero ? rankValue(SKILL_RANKS.scholar, hero, 'scholar') : 0);
+
+/** The hero keeps one of the shown treasures (the rest of the pool is never made). */
+export function chooseTreasure(state: GameState, heroId: string, kind: ItemKind): void {
+  const hero = state.heroes[heroId];
+  const pick = hero?.treasurePick;
+  if (!pick?.kinds.includes(kind)) throw new Error('Tego skarbu nie ma wśród pokazanych.');
+  grantTreasure(state, kind, hero.faction, hero.id);
+  state.stats.treasuresCollected[hero.faction] += 1;
+  log(state, 'item', `Skarb strażnika (${UNITS[hero.id].name}): ${ITEMS[kind].name}.`, hero.faction);
+  pick.take -= 1;
+  pick.kinds = pick.kinds.filter((k) => k !== kind);
+  if (pick.take <= 0 || !pick.kinds.length) hero.treasurePick = undefined;
 }
 
 /** Extra columns a hero's units may be deployed in. */

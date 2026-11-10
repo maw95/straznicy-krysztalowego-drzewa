@@ -182,6 +182,8 @@ export interface HeroState {
   level?: number;
   skills?: SkillId[];
   offer?: SkillId[];
+  /** Łowca skarbów: treasures shown after a guardian fight; the hero keeps `take` of them (growth.ts, `chooseTreasure`). */
+  treasurePick?: { kinds: ItemKind[]; take: number };
   /** Artifacts worn, by slot (sites.ts). */
   gear?: Partial<Record<Slot, string>>;
 }
@@ -429,6 +431,7 @@ export type Action =
   | { type: 'moveHero'; to: HexKey }
   | { type: 'endTurn' }
   | { type: 'chooseSkill'; skill: SkillId }
+  | { type: 'chooseTreasure'; kind: ItemKind }
   | { type: 'useMapItem'; itemId: string; targets?: HexKey[]; unitId?: string }
   | { type: 'selectSupports'; faction: FactionId; supportIds: string[] }
   | { type: 'deployUnits'; faction: FactionId; positions: Record<string, HexKey> }

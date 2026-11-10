@@ -27,8 +27,8 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
   - [x] **Strzelec** (10.11): +1 / +2 / +3 A dla strzelców bohatera (pomocnicy, a także sam bohater, jeśli strzela); mnożone przez `statScale`. Nazwy: Oko Łucznika / Krzywy Łuk.
   - [x] **Taktyk** (10.11; Sztuka Wojny / Zasadzka): rozstawienie o 1 / 2 / 3 heksy dalej (stopnie I / II / III).
   - [x] **Zwiadowca** (10.11; Orle Oko / Ślepia Wilka): odkrywa pola w promieniu 2 / 3 / 4 na starcie tury (stopień I dawałby promień 1, a to już jest, więc zaczynamy od 2).
-  - **Łowca skarbów:** po walce ze strażnikiem wybór skarbu: I — 1 z 2, II — 1 z 3, III — 2 z 3 (zamiast losu).
-  - **Uczony** (dawniej „Mentor”): dodatkowe PD za każdą wygraną walkę (+1 / +2 / +3; do dostrojenia, żeby poziom 10 został rzadkością).
+  - [x] **Łowca skarbów** (10.11; Skarbnik Gaju / Nos Hieny): po walce ze strażnikiem wybór skarbu: I — 1 z 2, II — 1 z 3, III — 2 z 3 (zamiast losu).
+  - [x] **Uczony** (10.11; Mądrość Drzewa / Pamięć Przodków; dawniej „Mentor”): dodatkowe PD za każdą wygraną walkę (+1 / +2 / +3; do dostrojenia, żeby poziom 10 został rzadkością).
 - [ ] Kamienie milowe na poziomach 3, 6 i 9: ulepszenie własnej zdolności z karty bohatera (decyzje autora, 10.11; stopnie się kumulują, liczby w małej skali, ×3 liczy `statScale`):
   - **Złoty Smok** (Słoneczny Blask, sojusznicy / Smok): start +1 / +3 → poz. 3: +2 / +3 → poz. 6: +2 / +4 → poz. 9: +2 / +5.
   - **Król Jednorożców** (Szarża Światła): +2 → 3 → 4 → 5 A.

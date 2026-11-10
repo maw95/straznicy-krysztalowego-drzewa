@@ -3,7 +3,7 @@
 // a card, the options) and the end-of-game effects.
 
 import type { ReactNode } from 'react';
-import { UNITS, type ItemKind } from '../engine/data';
+import { ITEMS, UNITS, type ItemKind } from '../engine/data';
 import { levelOf, skillRank, type SkillId } from '../engine/growth';
 import type { GameState, HeroState, LogEntry } from '../engine/types';
 import type { BotSpeed, RoomView } from '../online/api';
@@ -156,6 +156,28 @@ export function SkillDialog({ hero, onChoose }: { hero: HeroState | null; onChoo
             ))}
           </div>
           <div style={{ fontSize: 14, color: 'var(--muted)' }}>Umiejętność zostaje bohaterowi do końca gry.</div>
+        </div>
+      )}
+    </Modal>
+  );
+}
+
+/** A Łowca skarbów beat a guardian: the treasures to choose from. */
+export function TreasureDialog({ hero, onChoose }: { hero: HeroState | null; onChoose: (kind: ItemKind) => void }) {
+  const pick = hero?.treasurePick;
+  return (
+    <Modal open={Boolean(pick?.kinds.length)}>
+      {hero && pick && (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, maxWidth: 'min(960px, 94vw)' }}>
+          <Ribbon style={{ width: 'min(460px, 90vw)' }}>Skarb strażnika: wybierz {pick.take > 1 ? `(jeszcze ${pick.take})` : 'jeden'}</Ribbon>
+          <div style={{ fontSize: 18 }}>{UNITS[hero.id].name}</div>
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+            {pick.kinds.map((k) => (
+              <button key={k} className="treasure-pick" onClick={() => onChoose(k)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }} aria-label={ITEMS[k].name}>
+                <TreasureCard kind={k} width={Math.min(220, (window.innerWidth - 60) / 2)} />
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </Modal>

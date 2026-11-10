@@ -90,7 +90,7 @@ export function chooseSupports(state: GameState, faction: FactionId): Action {
  * How much a treasure is worth to the bot in an arena draft. Kinds it cannot use (see itemToUse)
  * are worth nothing, so it never drafts them unless nothing else is offered.
  */
-const DRAFT_VALUE: Partial<Record<ItemKind, number>> = { resurrection: 9, stone: 8, sword: 7, seed: 7, lightning: 7, heal: 6, damage_scroll: 6, shield: 6, vitality: 6, boots: 4 };
+export const DRAFT_VALUE: Partial<Record<ItemKind, number>> = { resurrection: 9, stone: 8, sword: 7, seed: 7, lightning: 7, heal: 6, damage_scroll: 6, shield: 6, vitality: 6, boots: 4 };
 
 /**
  * Arena draft: the hard bot takes the most valuable card, the normal one usually does (now and then

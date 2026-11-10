@@ -7,6 +7,7 @@ import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult 
 import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, livingHeroes, other, reviveSpots, ritualFormed, ritualSpot } from '../game';
 import { scaleOf } from '../battle';
 import { BOT_SKILL_ORDER } from '../growth';
+import { DRAFT_VALUE } from './battleAi';
 import { artifactCarrier, objectiveOf } from '../objectives';
 import type { Action, Crystal, GameState, HeroState } from '../types';
 
@@ -700,6 +701,10 @@ function canFightGuardian(state: GameState): boolean {
 export function adventureAction(state: GameState): Action {
   const hero = activeHero(state)!;
   // A level up first: the skill the bots like best of the three offered.
+  if (hero.treasurePick) {
+    const best = [...hero.treasurePick.kinds].sort((x, y) => (DRAFT_VALUE[y] ?? 0) - (DRAFT_VALUE[x] ?? 0) || (x < y ? -1 : 1))[0];
+    return { type: 'chooseTreasure', kind: best };
+  }
   if (hero.offer?.length) return { type: 'chooseSkill', skill: BOT_SKILL_ORDER.find((s) => hero.offer!.includes(s)) ?? hero.offer[0] };
   // A reserve hero coming in picks the hex nearest to the Tree, where both sides are headed.
   if (hero.entering) {

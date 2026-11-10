@@ -11,7 +11,7 @@ import { RuleText, StatScaleContext } from './statScale';
 
 /** The painted icon of a skill (public/assets/ikony/umiejetnosci, made with Scenario). */
 // The new skills borrow a neighbour's medal until their own are painted (Scenario, backlog 10.4).
-const BORROWED_ICON: Partial<Record<SkillId, SkillId>> = { marksman: 'might', tactician: 'leader', scout: 'pathfinder' };
+const BORROWED_ICON: Partial<Record<SkillId, SkillId>> = { marksman: 'might', tactician: 'leader', scout: 'pathfinder', treasureHunter: 'fortune', scholar: 'vigor' };
 
 export function SkillIcon({ skill, size = 40 }: { skill: SkillId; size?: number }) {
   return <img src={asset(`ikony/umiejetnosci/${BORROWED_ICON[skill] ?? skill}.webp`)} alt="" width={size} height={size} style={{ flex: 'none', display: 'block' }} />;

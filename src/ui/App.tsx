@@ -11,13 +11,14 @@ import { AdventureView } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
 import { usePresentation } from './usePresentation';
 import { ArtifactFound, xpNote } from './growthUi';
+import type { SkillId } from '../engine/growth';
 import { sfx } from './sfx';
 import { animationWait, ATTACK_SHOW_MS, holdFor, resetAnimLock } from './animLock';
 import { DuelView } from './DuelView';
 import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset } from './common';
 import { SetupScreen } from './SetupScreen';
 import { music } from './music';
-import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, OptionsDialog, SkillDialog, VictoryEffects, type Confirmation } from './gameDialogs';
+import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
 import { DigitalCardsContext, UnitCard } from './UnitCard';
 import { StatScaleContext } from './statScale';
 import { readAutosave, replay, writeAutosave, type BugReport, type SaveFile } from './saves';
@@ -154,6 +155,8 @@ export function App() {
           ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon', ...(q.get('child') === '1' ? { child: true } : {}) }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))
           : [{ name: 'Ala', faction: 'dawn', controller: 'human', heroId: 'ancientBear' }, { name: 'Bartek', faction: 'horde', controller: 'human', heroId: 'werewolfLord' }],
     });
+    // ?skills=treasureHunter,treasureHunter gives every hero those skills from the start (for looking at their dialogs).
+    if (q.get('skills')) for (const h of Object.values(s.heroes)) h.skills = q.get('skills')!.split(',') as SkillId[];
     for (let i = 0; i < Number(q.get('steps')) && s.phase !== 'over'; i++) {
       const a = chooseAction(s);
       if (!a) break;
@@ -161,6 +164,7 @@ export function App() {
       history.current.push(a);
       if (q.get('until') === 'battle' && s.phase === 'battle' && s.battle?.stage === 'fight') break;
       // ?until=offer stops when a hero has skills to choose from (for looking at the skill cards).
+      if (q.get('until') === 'treasure' && Object.values(s.heroes).some((h) => h.treasurePick)) break;
       if (q.get('until') === 'offer' && Object.values(s.heroes).some((h) => h.offer?.length)) break;
     }
     setGame(s);
@@ -776,6 +780,7 @@ export function App() {
         <Handoff state={game} playerId={actor.playerId} onConfirm={() => setConfirmedFaction(actor.faction)} />
       )}
 
+      <TreasureDialog hero={humanTurn && !held && game.phase === 'adventure' && !steps.length && !activeHero(game)?.offer ? activeHero(game) : null} onChoose={(kind) => dispatch({ type: 'chooseTreasure', kind })} />
       <SkillDialog hero={humanTurn && !held && game.phase === 'adventure' && !steps.length ? activeHero(game) : null} onChoose={(skill) => dispatch({ type: 'chooseSkill', skill })} />
       {hintNow && (
         <div className="plate parch" role="status" style={{ position: 'fixed', top: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 50, padding: '8px 16px', fontSize: 18, maxWidth: 'min(640px, 92vw)', cursor: 'pointer' }} onClick={() => setHint(null)}>

@@ -46,7 +46,7 @@ import {
 import { distance, parseKey, type HexKey } from './hex';
 import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { log } from './log';
-import { applyHeroSkills, applySupportSkill, awardXp, chooseSkill, deployDepthOf, GROWTH, moveBonus, scoutRadiusOf } from './growth';
+import { applyHeroSkills, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { applyGear, ARTIFACTS, gearMoveBonus, giveArtifact, placeSites, visitSite } from './sites';
 import { Rng } from './rng';
@@ -479,6 +479,7 @@ export function currentActor(state: GameState): Actor {
 function moveHero(state: GameState, to: HexKey) {
   const hero = activeHero(state)!;
   if (hero.offer) throw new Error('Najpierw wybierz umiejętność.');
+  if (hero.treasurePick) throw new Error('Najpierw wybierz skarb.');
   const move = legalHeroMoves(state).find((m) => m.to === to);
   if (!move) throw new Error('Nie można wejść na to pole.');
   const name = UNITS[hero.id].name;
@@ -573,6 +574,7 @@ function arriveAt(state: GameState, hero: HeroState) {
 function endTurn(state: GameState) {
   if (state.phase !== 'adventure') throw new Error('Najpierw zakończ bitwę.');
   if (activeHero(state)?.offer) throw new Error('Najpierw wybierz umiejętność.');
+  if (activeHero(state)?.treasurePick) throw new Error('Najpierw wybierz skarb.');
   // A reserve that could have come in but did not choose takes the first of its hexes.
   // (One that took over a turn already spent on a battle waits for its own next turn.)
   const hero = activeHero(state);
@@ -809,7 +811,9 @@ function awardBattleXp(state: GameState, b: BattleState) {
     const hero = id ? state.heroes[id] : null;
     if (!hero?.alive) continue;
     const won = b.winner === hero.faction;
-    awardXp(state, hero, won ? (b.kind === 'neutral' ? GROWTH.xp.guardian : GROWTH.xp.hero) : GROWTH.xp.lost, won ? (b.kind === 'neutral' ? 'pokonany strażnik' : 'wygrana walka z bohaterem') : 'przegrana walka, którą bohater przeżył');
+    const scholar = won ? scholarXp(hero) : 0;
+    const reason = won ? (b.kind === 'neutral' ? 'pokonany strażnik' : 'wygrana walka z bohaterem') : 'przegrana walka, którą bohater przeżył';
+    awardXp(state, hero, (won ? (b.kind === 'neutral' ? GROWTH.xp.guardian : GROWTH.xp.hero) : GROWTH.xp.lost) + scholar, scholar ? `${reason}, w tym ${scholar} od Uczonego` : reason);
     // Spoils: the winner of a fight between heroes takes a first-tier artifact from the fallen (the Horde meet guardians rarely, so this evens it out).
     if (won && b.kind === 'heroes') giveArtifact(state, hero, ARTIFACTS.filter((a) => a.tier === 1)[(state.round + hero.id.length) % 3], 'łup z pokonanego bohatera');
   }
@@ -908,13 +912,28 @@ function guardianHoard(state: GameState, heroId: string) {
   const left = NON_RESURRECTION_ITEMS.filter((k) => !used.has(k) && ITEMS[k].usableIn.includes('battle'));
   if (!left.length) return;
   const rng = new Rng(state.rng);
+  const hero = state.heroes[heroId];
+  // Łowca skarbów: the hero is shown several treasures and keeps some of them, instead of a draw.
+  const hunt = state.rules.heroGrowth ? huntOf(hero) : null;
+  if (hunt && left.length > 1) {
+    const kinds = rng.shuffle(left).slice(0, hunt.pool);
+    state.rng = rng.state;
+    log(state, 'item', 'Strażnik zostawia swój skarb: bohater wybiera.');
+    if (kinds.length <= hunt.take) for (const k of kinds) chooseTreasureNow(state, hero, k);
+    else hero.treasurePick = { kinds, take: hunt.take };
+    return;
+  }
   const kind = rng.pick(left);
   state.rng = rng.state;
-  const hero = state.heroes[heroId];
   giveItem(state, newItem(state, kind), hero.faction, hero.id);
   state.stats.treasuresCollected[hero.faction] += 1;
   log(state, 'item', `Strażnik zostawia swój skarb.`);
   log(state, 'item', `Skarb strażnika (${UNITS[hero.id].name}): ${ITEMS[kind].name}.`, hero.faction);
+}
+
+function chooseTreasureNow(state: GameState, hero: HeroState, kind: ItemKind) {
+  hero.treasurePick = { kinds: [kind], take: 1 };
+  chooseTreasure(state, hero.id, kind);
 }
 
 function killHero(state: GameState, heroId: string, at: HexKey) {
@@ -1000,6 +1019,10 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'chooseSkill':
       if (state.phase !== 'adventure' || !activeHero(state)?.offer) throw new Error('Teraz nie wybiera się umiejętności.');
       chooseSkill(state, activeHero(state)!.id, action.skill);
+      break;
+    case 'chooseTreasure':
+      if (state.phase !== 'adventure' || !activeHero(state)?.treasurePick) throw new Error('Teraz nie wybiera się skarbu.');
+      chooseTreasure(state, activeHero(state)!.id, action.kind);
       break;
     case 'useMapItem':
       useMapItem(state, action.itemId, action.targets, action.unitId);
