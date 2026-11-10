@@ -431,7 +431,8 @@ export function breathSecondTarget(state: GameState, u: BattleUnit, first: Battl
   if (!dir) return null;
   const behind = key(add(parseKey(first.pos), dir));
   const other = unitAt(b, behind);
-  return other && other.id !== first.id && other.side !== u.side ? other : null;
+  // The digital ruleset: the flame does not know friends from foes, an ally standing behind the target burns too (the author's decision of 10.11).
+  return other && other.id !== first.id && (other.side !== u.side || isDigital(state.rules)) ? other : null;
 }
 
 /** Expected damage of a plain attack, before the defender's reactions. */

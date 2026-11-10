@@ -356,6 +356,11 @@ Rywalizacja — 2 na 2
 Znane odchyłki: Łatwy 1 gracz na krótkiej mapie (kryształy) ok. 96% (dźwignia zastępowania bohatera spada tam za nisko, ok. 62%), Łatwy 1 gracz na średniej mapie ok. 67%,
 Łatwy 2 na 2 na długiej i bardzo długiej ok. 68%.
 
+## Ognisty Oddech rani sojuszników (11.11.2026, tylko wersja cyfrowa)
+
+Oddech Czarnego Smoka trafia dwie jednostki w jednej linii. W wersji cyfrowej (`breathSecondTarget` w `battle.ts`) drugą jednostką może być sojusznik stojący za wrogiem: dostaje ten sam pełny cios. Planszówka bez zmian (golden bez zmian).
+Boty (`battleAi.ts`, `AI_TUNING.friendlyFire` = 1,2) liczą cios w sojusznika jako stratę i nie używają oddechu w linii z własną jednostką. Symulacje (`SIM_GROWTH=1 make sim-cele GAMES=60`): bez zmian poza szumem. Tekst karty w wersji cyfrowej: `DIGITAL_ABILITY_TEXTS`.
+
 ## Osobna skala Życia (11.11.2026)
 
 **Życie ma własną skalę: ×5, przy Ataku ×3** (`HP_SCALE` i `STAT_SCALE` w `data.ts`; reguły `hpScale` i `statScale`; odczyt przez `hpScaleOf` i `scaleOf` w `battle.ts`). Powód (zgłoszenie 10.11): przy wspólnej skali ×3 bohater z mocnym ciosem

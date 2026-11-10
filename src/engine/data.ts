@@ -328,6 +328,12 @@ export function itemDef(kind: ItemKind, digital: boolean): ItemDef {
   return name ? { ...ITEMS[kind], name } : ITEMS[kind];
 }
 
+/** Ability texts that differ in the digital ruleset (the card says what the unit really does there). */
+export const DIGITAL_ABILITY_TEXTS: Record<string, string> = {
+  blackDragon: 'Raz na bitwę: pełny atak w dwie jednostki stojące w jednej linii, także w sojusznika za wrogiem.',
+};
+export const abilityTextFor = (defId: string, digital: boolean | undefined): string => (digital ? DIGITAL_ABILITY_TEXTS[defId] : undefined) ?? UNITS[defId].abilityText;
+
 export const NON_RESURRECTION_ITEMS: ItemKind[] = (Object.keys(ITEMS) as ItemKind[]).filter((k) => k !== 'resurrection');
 
 /** Arena: Eliksiry Odrodzenia in the shared draft deck (the user's choice: 2, not the box's 6). */

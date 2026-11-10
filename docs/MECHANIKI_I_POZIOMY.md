@@ -33,7 +33,7 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
   - **Złoty Smok** (Słoneczny Blask, sojusznicy / Smok): start +1 / +3 → poz. 3: +2 / +3 → poz. 6: +2 / +4 → poz. 9: +2 / +5.
   - **Król Jednorożców** (Szarża Światła): +2 → 3 → 4 → 5 A.
   - **Prastary Niedźwiedź** (Opiekun Gaju, ignorowane obrażenia): 3 → 5 → 5 i **dowolny sojusznik** (nie tylko sąsiad) → 7.
-  - **Czarny Smok** (Ognisty Oddech): brak wcześniejszych ustaleń, propozycja Claude'a do akceptacji (10.11): poz. 3: +1 A w Oddechu, poz. 6: +2 A, poz. 9: +2 A i drugi Oddech w bitwie (do sprawdzenia symulacjami; w razie przesady: ponowne naładowanie po 3 rundach albo +3 A). Osobna decyzja autora: Oddech ma **ranić też sojuszników** w linii (friendly-fire); zmienia boty, golden test i balans Hordy, więc osobny commit z symulacjami, najpierw może tylko wersja cyfrowa.
+  - **Czarny Smok** (Ognisty Oddech): brak wcześniejszych ustaleń, propozycja Claude'a do akceptacji (10.11): poz. 3: +1 A w Oddechu, poz. 6: +2 A, poz. 9: +2 A i drugi Oddech w bitwie (do sprawdzenia symulacjami; w razie przesady: ponowne naładowanie po 3 rundach albo +3 A). **Zrobione 11.11:** Oddech rani też sojuszników w linii (tylko wersja cyfrowa, boty to uwzględniają; `ZASADY_CYFROWE.md`).
   - **Władca Wilkołaków** (Zew Krwi): +1 → 2 → 3 → 4 A na rannego wroga.
   - **Ogr Żelazna Pięść** (Twardogłowy): ignoruje 2 → 3 → 4 → 5 obrażeń.
   - **Dzielna Kaczka** (zaakceptowane przez autora 10.11): po zabiciu wroga leczy się o 1 → 2 → 3 Ż; na poz. 9 dodatkowa aktywacja daje też +1 S.

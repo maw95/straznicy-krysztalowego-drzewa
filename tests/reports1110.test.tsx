@@ -3,8 +3,8 @@
 import { describe, expect, it } from 'vitest';
 import { activeHero, createGame, hordeMayFightGuardian, moveAllowance, moveBreakdown } from '../src/engine/game';
 import { ARTIFACT, battleStats, FACTION_HEROES, HP_SCALE, scaleText, STAT_SCALE } from '../src/engine/data';
-import { makeBattleUnit } from '../src/engine/battle';
-import { setup } from './helpers/engine';
+import { battleAttack, breathSecondTarget, makeBattleUnit } from '../src/engine/battle';
+import { battleFixture, setup } from './helpers/engine';
 import { render } from '@testing-library/react';
 import { CreditsDialog, MUSIC } from '../src/ui/CreditsDialog';
 import assets from '../assets.json';
@@ -53,5 +53,18 @@ describe('reports of 10.11.2026', () => {
       expect(MUSIC.some((t) => t.url === url), `${a.id}: ${url}`).toBe(true);
     }
     for (const t of MUSIC) expect(container.textContent).toContain(t.author);
+  });
+
+  it('Ognisty Oddech burns an ally standing behind the target in the digital ruleset only', () => {
+    const line = (rules: Parameters<typeof setup>[1]) =>
+      battleFixture(createGame(setup({}, rules)), [{ id: 'blackDragon', side: 'dawn', col: 4, half: 4 }, { id: 'caveSpider', side: 'horde', col: 4, half: 6 }, { id: 'nymph', side: 'dawn', col: 4, half: 8 }]);
+    const board = line({});
+    const digital = line({ ruleset: 'digital' });
+    const b = (s: typeof board) => s.battle!;
+    expect(breathSecondTarget(board, b(board).units.blackDragon, b(board).units.caveSpider)).toBeNull();
+    expect(breathSecondTarget(digital, b(digital).units.blackDragon, b(digital).units.caveSpider)?.id).toBe('nymph');
+    const hp = b(digital).units.nymph.hp;
+    battleAttack(digital, 'caveSpider', true);
+    expect(b(digital).units.nymph.hp).toBeLessThan(hp);
   });
 });

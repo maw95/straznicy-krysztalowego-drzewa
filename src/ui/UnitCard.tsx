@@ -4,7 +4,7 @@
 // Coordinates are in frame pixels (551×713), measured on each frame.
 
 import { createContext, useContext } from 'react';
-import { battleStats, DIGITAL_RANGED_BONUS, UNITS } from '../engine/data';
+import { abilityTextFor, battleStats, DIGITAL_RANGED_BONUS, UNITS } from '../engine/data';
 import { asset } from './common';
 import { StatText } from './markers';
 import { abilityTextAt, milestoneTier } from '../engine/growth';
@@ -183,7 +183,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false,
   const base = UNITS[unitId];
   const card = duel ? base.duel : undefined;
   const level = useContext(HeroLevelsContext)[unitId];
-  const def = card ? { ...base, hp: card.hp * hpScale, abilityName: card.abilityName, abilityText: card.abilityText } : level ? { ...base, abilityText: abilityTextAt(unitId, base.abilityText, milestoneTier(level)) } : base;
+  const def = card ? { ...base, hp: card.hp * hpScale, abilityName: card.abilityName, abilityText: card.abilityText } : level ? { ...base, abilityText: abilityTextAt(unitId, abilityTextFor(unitId, digital), milestoneTier(level)) } : { ...base, abilityText: abilityTextFor(unitId, digital) };
   const L = frameFor(unitId);
   const scale = width / FRAME_W;
   const { at, circle, kx, ky, X, Y } = cardSpace(L.bounds);

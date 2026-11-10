@@ -39,6 +39,8 @@ const dist2 = (a: readonly HexKey[], b: readonly HexKey[]) => Math.min(...a.flat
 
 /** The battle bot's judgement in numbers (tuned with simulations; changing one changes the games). */
 const AI_TUNING = {
+  /** Ognisty Oddech: how much a blow on an ally standing behind the target weighs against the breath (1 = as much as the same blow on an enemy is worth). */
+  friendlyFire: 1.2,
   /** A shooter's reach when weighing danger: anywhere on the arena. */
   rangedReach: 99,
   /** Caution fades over this many battle rounds, so nobody kites forever. */
@@ -201,7 +203,8 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
         if (useAbility && abilityOf(u) === 'fireBreath') {
           second = breathSecondTarget(state, u, t, cell);
           if (!second) continue;
-          score += scoreHit(second, dmg);
+          // An ally behind the target burns too: that counts against the breath, and a kill of an ally counts most.
+          score += second.side === u.side ? -AI_TUNING.friendlyFire * scoreHit(second, dmg) : scoreHit(second, dmg);
         }
         if (canHitTwo(state, u)) {
           second = targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), mine) === 1).sort((x, y) => scoreHit(y, dmg) - scoreHit(x, dmg))[0] ?? null;
@@ -369,7 +372,7 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
     let second: BattleUnit | null = null;
     if (useAbility && ab === 'fireBreath') {
       second = breathSecondTarget(state, u, t);
-      if (!second) useAbility = false;
+      if (!second || second.side === u.side) useAbility = false;
     }
     if (canHitTwo(state, u)) second = rulebookTarget(here.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(u)) === 1));
     return { type: 'battleAttack', targetId: t.id, useAbility, secondTargetId: second?.id };

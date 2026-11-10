@@ -2,7 +2,7 @@
 // Nobody moves; the active unit attacks, uses its ability or a treasure, or passes.
 
 import { useEffect, useRef, useState } from 'react';
-import { FACTION_NAMES, itemDef, ITEMS, scaleText, UNITS, type FactionId, type ItemKind } from '../engine/data';
+import { abilityTextFor, FACTION_NAMES, itemDef, ITEMS, scaleText, UNITS, type FactionId, type ItemKind } from '../engine/data';
 import { abilityActive, abilityOf, attackTargets, ATTACK_ABILITIES, canUseBattleItem, FREE_ABILITIES, unitSpeed } from '../engine/battle';
 import { isDigital, type Action, type BattleUnit, type GameState } from '../engine/types';
 import { asset, Frame, HpBar, Medal, Ribbon } from './common';
@@ -145,7 +145,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
           {myTurn && active && (
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
               {attackAbility && (
-                <button className={`btn plate parch ${useAbility ? 'on' : ''}`} style={{ padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 15 }} title={scaleText(UNITS[active.defId].abilityText, state.rules.statScale ?? 1, state.rules.hpScale)} onClick={() => setUseAbility(!useAbility)}>
+                <button className={`btn plate parch ${useAbility ? 'on' : ''}`} style={{ padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 15 }} title={scaleText(abilityTextFor(active.defId, isDigital(state.rules)), state.rules.statScale ?? 1, state.rules.hpScale)} onClick={() => setUseAbility(!useAbility)}>
                   <img src={asset(`cards/abilities/${abilityOf(active)}.png`)} alt="" style={{ width: 30, height: 30 }} />
                   {UNITS[active.defId].abilityName}
                   {useAbility ? ' ✓' : ''}
@@ -155,7 +155,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
                 <button
                   className="btn plate parch"
                   style={{ padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 15 }}
-                  title={scaleText(UNITS[active.defId].abilityText, state.rules.statScale ?? 1)}
+                  title={scaleText(abilityTextFor(active.defId, isDigital(state.rules)), state.rules.statScale ?? 1)}
                   onClick={() => onAction({ type: 'battleAbility', targetId: ab === 'web' ? enemy!.id : active.id })}
                 >
                   <img src={asset(`cards/abilities/${abilityOf(active)}.png`)} alt="" style={{ width: 30, height: 30 }} />
