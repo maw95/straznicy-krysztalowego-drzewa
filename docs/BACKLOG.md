@@ -6,6 +6,24 @@ Uzgodnione pomysły do wdrożenia. Zrobione punkty są usuwane (zostają w histo
 tryb online z menu i rankingiem, figurki 3D, szczegóły pod prawym przyciskiem, atak jednym kliknięciem,
 porządki w kodzie (etapy 0–4 i resztki), wersja mobilna, zgłoszenia z 23.10 i 28.10, nowe materiały od autora z 28.10 (modele, portrety, znaczniki, wymiary), uwagi autora z 28.10 (druga tura).
 
+## Teraz / Dalej / Parking (plan pracy z 10.11.2026)
+
+Zasada: **jeden aktywny temat naraz.** Nowe pomysły autora trafiają do „Parkingu” i nie przerywają bieżącego tematu. Temat kończy się commitem i wpisem tutaj; wtedy dobra chwila na `/clear`.
+Na początku sesji Claude mówi, który temat jest „Teraz”.
+
+**Teraz:** 1. Skala statystyk (A i Ż ×3 od poziomu 2, zasada „minimum 1 obrażenia”) z ponownym strojeniem balansu. Fundament dla wszystkiego poniżej.
+
+**Dalej (kolejność zależy od poprzedniego):**
+2. Poziomy bohatera 6–10, krzywa PD, umiejętności w stopniach (Strzelec, Taktyk, Zwiadowca, Łowca skarbów, Uczony), kamienie milowe 3 / 6 / 9.
+3. Artefakty: 5 slotów, trzy rzadkości, jedna nazwa i obrazek dla wszystkich, nowe efekty, widok postaci jak w Heroes III.
+4. Neutralni: najpierw projekt jednostek (rozmowa: 6 słabych + 3 bossów), potem silnik spotkań, nagrody, boty, nowy Boss (10.7).
+5. Rozmiary map XL i XXL + strojenie.
+6. Ekran „Autorzy” (mały temat, wymóg licencji CC BY; można wcisnąć między duże).
+7. Grafiki ze Scenario (10.4) w partiach, dopiero gdy nazwy i opisy z punktów 3 i 4 są zamrożone.
+8. Poziom 3 „Królestwo” (osady, złoto, rekrutacja): osobny, duży projekt.
+
+**Parking:** 11.4 (błysk kafelków, czeka na obserwację), 11.5 (do potwierdzenia na żywo), nowe frakcje (10.2), kampania i wyprawa roguelike, poziomy 4–5.
+
 ## 2. Figurki 3D — drobne
 
 - [x] Menu główne, panel po prawej: karta jednostki na górze, figurka pod nią i większa (300 px zamiast 230).

@@ -77,7 +77,7 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 
 ## Otwarte pytania (10.11)
 
-1. **Skala statystyk:** płaska obrona 1 / 2 / 3 pkt ma sens przy skali ok. ×5 (pomocnicy A 5–10), przy ×3 tarcza za 3 pkt niemal wyłącza słabych pomocników. Skala tylko od poziomu 2.
-2. **Nazwy i obrazki artefaktów:** dziś ten sam artefakt ma inną nazwę i obrazek dla Przymierza i Hordy. Czy zostawić, czy jedna nazwa i jeden obrazek dla wszystkich?
-3. **Sandały Skoczka:** czy zastąpić (np. buty ignorujące koszt terenu trudnego na mapie)?
+1. **Skala statystyk:** cyfrowy atak pomocników to 2 (strzelcy 1 + premia 1), więc przy ×3 mają A 6, a tarcza 1 / 2 / 3 pkt zmniejsza ich cios o 17–50%: działa. Skala tylko od poziomu 2.
+2. ~~Nazwy i obrazki artefaktów~~ — decyzja autora: jedna nazwa i jeden obrazek dla wszystkich; zwolnione nazwy i grafiki idą do nowych artefaktów.
+3. ~~Sandały Skoczka~~ — decyzja autora: zamiast nich buty ignorujące koszt terenu trudnego na mapie (nazwa: Buty / Trzewiki Trapera).
 4. **Spotkania z neutralnymi:** co dokładnie jest „skarbem” (karta skarbu, artefakt, oba)? Jak boty oceniają, czy atakować spotkanie?
