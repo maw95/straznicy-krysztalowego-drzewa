@@ -11,6 +11,7 @@ export interface MenuLinks {
   onRules: () => void;
   onIntro: () => void;
   onChangelog: () => void;
+  onCredits: () => void;
   onTesters: () => void;
 }
 
@@ -181,6 +182,7 @@ function Home({ session, onSignOut, onLocalGame, links }: { session: OnlineSessi
               <button className="btn plate parch btn-small" onClick={links.onIntro}>Wprowadzenie</button>
               <button className="btn plate parch btn-small" onClick={links.onTesters} title="Uwagi o grze i zgłoszone błędy — prosto do twórcy">Dla testerów</button>
               <button className="app-version" title="Historia zmian" onClick={links.onChangelog}>Wersja {__APP_VERSION__}</button>
+              <button className="app-version" title="Autorzy muzyki, grafiki i gry" onClick={links.onCredits}>Autorzy</button>
             </div>
           </Frame>
           <Frame className="side" style={{ width: 'min(360px, 94vw)', flex: 'none' }} innerClass="slate" innerStyle={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10, height: '100%' }}>

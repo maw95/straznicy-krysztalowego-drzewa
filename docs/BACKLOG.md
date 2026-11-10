@@ -251,7 +251,7 @@ Zrobione 11.11 (szczegóły w CHANGELOG.md):
 
 Osiem rzeczy, bez których nie ruszę dalej reszty backlogu. Kiedy autor zdecyduje, odpowiedź wpisać tu i odhaczyć.
 
-- [x] **10.1. Muzyka, licencje.** Autor podał źródła i licencje (10.11.2026), wpisane do `assets.json`: CC0 (Fantasy Choir, Determined Pursuit, A Legend Will Rise), CC BY (Defeat 4.0; Sylvan Waltz, Maddie's Mirror, The Fallen 3.0, wymagają podania autora). **Do zrobienia:** ekran „Autorzy” w grze (i w instrukcji) z wymaganymi wpisami; adresy utworów wpisane do `assets.json` (10.11).
+- [x] **10.1. Muzyka, licencje.** Autor podał źródła i licencje (10.11.2026), wpisane do `assets.json`: CC0 (Fantasy Choir, Determined Pursuit, A Legend Will Rise), CC BY (Defeat 4.0; Sylvan Waltz, Maddie's Mirror, The Fallen 3.0, wymagają podania autora). Ekran „Autorzy” zrobiony 11.11 (menu, `CreditsDialog.tsx`, instrukcja); adresy utworów w `assets.json` (10.11).
 - [ ] **10.2. Nowe frakcje po premierze.** Decyzja autora (10.11): najpierw kończymy to, co mamy, nowe frakcje później. Bez próbki w Scenario na razie.
 - [ ] **10.3. Zakres premiery (6.6).** Decyzja autora (10.11): poziomy 1–2 plus **poziom 3** (do zaprojektowania, razem z 11.8).
 - [ ] **10.4. Grafiki do zrobienia w Scenario.** Zrobione 10.11: poza Nietoperza, klipy ataków, ikony 11.9, pozy 11.10, pająk 11.12, rzut Cyklopa 11.13, ikony artefaktów i slotów. Zostają: własny Boss oraz ikony pięciu nowych umiejętności (dziś pożyczone). Decyzja autora (10.11): wszystkie z listy, w dowolnej kolejności (kapliczka, obóz, skrzynia, własny Boss, klipy zrywu i ataków, poza Nietoperza, ikony 11.9, pozy 11.10, pająk 11.12, rzut Cyklopa 11.13).

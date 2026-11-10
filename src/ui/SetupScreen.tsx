@@ -45,7 +45,7 @@ function savedDigital(): boolean {
   try { return localStorage.getItem(EDITION_KEY) !== 'board'; } catch { return true; }
 }
 
-export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog }: { online: { label: string; title: string }; onOnline: () => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void }) {
+export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog, onCredits }: { online: { label: string; title: string }; onOnline: () => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void; onCredits: () => void }) {
   // Both read and replay saved games: once per visit to the menu, not on every hover and keystroke.
   const stats = useMemo(journalStats, []);
   const saveLabel = useMemo(() => autosave && describeSave(autosave), [autosave]);
@@ -210,9 +210,14 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             </div>
             {/* The tester's record in this browser sits on the first page: it is the place a returning player lands on. */}
             <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 16, flexWrap: 'wrap' }}>
-              <button className="app-version" title="Historia zmian" onClick={onChangelog}>
-                Wersja {__APP_VERSION__}
-              </button>
+              <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
+                <button className="app-version" title="Historia zmian" onClick={onChangelog}>
+                  Wersja {__APP_VERSION__}
+                </button>
+                <button className="app-version" title="Autorzy muzyki, grafiki i gry" onClick={onCredits} data-credits-open>
+                  Autorzy
+                </button>
+              </div>
               <div className="stats-box" aria-label="Twoje partie">
                 <div className="stats-title">Twoje partie</div>
                 <div className="stats-grid">

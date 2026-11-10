@@ -33,6 +33,7 @@ import { Intro, introSeen } from './Intro';
 import { TitleScreen, titlePending } from './TitleScreen';
 import { StatsDialog } from './StatsDialog';
 import { ChangelogDialog } from './ChangelogDialog';
+import { CreditsDialog } from './CreditsDialog';
 import { markNewsSeen, pendingNews, WhatsNew } from './WhatsNew';
 import { ArenaPrep, DraftDialog } from './ArenaPrep';
 import { useAutoFullscreen } from './fullscreen';
@@ -63,6 +64,7 @@ export function App() {
   const [showTesters, setShowTesters] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [showChangelog, setShowChangelog] = useState(false);
+  const [showCredits, setShowCredits] = useState(false);
   /** Arena draft at one screen: the side whose cards were last uncovered. */
   const [draftRevealed, setDraftRevealed] = useState<FactionId | null>(null);
   // The intro plays on the first launch (never in the ?steps= test games).
@@ -569,6 +571,7 @@ export function App() {
         [summary, () => setSummary(null)],
         [showStats, () => setShowStats(false)],
         [showChangelog, () => setShowChangelog(false)],
+        [showCredits, () => setShowCredits(false)],
         [showTesters, () => setShowTesters(false)],
         [showChat, () => setShowChat(false)],
       ];
@@ -576,7 +579,7 @@ export function App() {
       top?.[1]();
       return Boolean(top);
     },
-    anyOpen: Boolean(confirm || card || found || artifactNews.length || digest || showLog || showDebug || showRules || showReport || summary !== null || showStats || showChangelog || showTesters || showChat),
+    anyOpen: Boolean(confirm || card || found || artifactNews.length || digest || showLog || showDebug || showRules || showReport || summary !== null || showStats || showChangelog || showCredits || showTesters || showChat),
     undo,
     fastForward,
     humanAction,
@@ -626,7 +629,7 @@ export function App() {
               setPlaysOffline(true);
               setOnlineScreen(false);
             }}
-            links={{ onRules: () => setShowRules(true), onIntro: () => setShowIntro(true), onChangelog: () => setShowChangelog(true), onTesters: () => setShowTesters(true) }}
+            links={{ onRules: () => setShowRules(true), onIntro: () => setShowIntro(true), onChangelog: () => setShowChangelog(true), onCredits: () => setShowCredits(true), onTesters: () => setShowTesters(true) }}
           />
         ) : (
         <SetupScreen
@@ -635,7 +638,7 @@ export function App() {
             setPlaysOffline(false);
             setOnlineScreen(true);
           }}
-          onStart={start} onLoad={load} autosave={menuAutosave} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} onIntro={() => setShowIntro(true)} onChangelog={() => setShowChangelog(true)} />
+          onStart={start} onLoad={load} autosave={menuAutosave} onRules={() => setShowRules(true)} onTesters={() => setShowTesters(true)} onStats={() => setShowStats(true)} onIntro={() => setShowIntro(true)} onChangelog={() => setShowChangelog(true)} onCredits={() => setShowCredits(true)} />
         )}
         {overlay}
         <Modal open={showTesters} onClose={() => setShowTesters(false)}>
@@ -643,6 +646,9 @@ export function App() {
         </Modal>
         <Modal open={showStats} onClose={() => setShowStats(false)}>
           {showStats && <StatsDialog onClose={() => setShowStats(false)} />}
+        </Modal>
+        <Modal open={showCredits} onClose={() => setShowCredits(false)}>
+          {showCredits && <CreditsDialog onClose={() => setShowCredits(false)} />}
         </Modal>
         <Modal open={showChangelog} onClose={() => setShowChangelog(false)}>
           {showChangelog && <ChangelogDialog onClose={() => setShowChangelog(false)} />}

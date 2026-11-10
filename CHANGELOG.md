@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Menu: nowy przycisk „Autorzy” (obok numeru wersji) z listą autorów muzyki, licencjami (CC BY, CC0), informacją o użyciu AI przy grafice i dźwiękach oraz użytym oprogramowaniu.
 - Życie ma własną skalę: w Wyprawie Życie jest teraz ×5 (Atak nadal ×3), więc bohater potrzebuje 2–4 ciosów, żeby pokonać innego bohatera (dawniej mocny cios, np. Szarża Jednorożca, zabijał bohatera jednym uderzeniem). Wszystkie liczby Życia i leczenia (Czarny Smok ma 35 Ż, Niedźwiedź 60 Ż) są odpowiednio większe.
 - Bitwa: koniec walki jest płynny. Ostatni cios nie odbudowuje już areny (znikało „wygaszenie ekranu”, a jednostki odwracały się i zaczynały ruch od nowa), zwycięzca nie obraca się, a trup Złotego Smoka nie jest mniejszy, Czarnego nie jest dwa razy większy niż za życia.
 - Bitwa: kursor ataku (miecz, strzała, różdżka) pojawia się na całym heksie jednostki, także na pierwszym heksie dużej jednostki i na dole heksa małej. Różdżka jest teraz malowana i pokazuje się też przy używaniu skarbów na jednostce.

@@ -693,6 +693,10 @@ Bitwa trwa do utraty wszystkich jednostek przez jedną stronę. Po bitwie ocalal
 • Gdy padnie ostatni bohater Przymierza, wygrywa Horda — także wtedy, gdy w tej samej bitwie padł ostatni bohater Hordy.
 • **Pojedynek na planszy:** tylko dwie jednostki, bez ruchu i pomocników. Pierwszy atakuje szybszy; przy remisie — broniący. Strażnik walczy kartą z błękitnym rewersem.
 
+## Autorzy (wersja cyfrowa)
+
+W menu głównym przycisk „Autorzy” otwiera listę: autorzy muzyki wraz z licencjami (CC BY wymaga podania autora), informacja, że grafika, animacje i efekty dźwiękowe powstały z użyciem narzędzi AI (Scenario), oraz użyte oprogramowanie.
+
 ---
 
 > 🌳 *Kiedy ostatni kryształ wraca na swoje miejsce, Drzewo rozbłyska tak jasno, że przez chwilę w całej krainie nie ma ani jednego cienia. Nawet wilki podnoszą wtedy łby i patrzą w górę. Bo w głębi serca każdy pamięta, że to Drzewo dało światło także im.*

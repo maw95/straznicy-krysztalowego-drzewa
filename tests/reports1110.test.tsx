@@ -1,9 +1,13 @@
+// @vitest-environment jsdom
 // Fixes from the author's reports of 10.11.2026 (bug-reports/2026-11-10-*).
 import { describe, expect, it } from 'vitest';
 import { activeHero, createGame, hordeMayFightGuardian, moveAllowance, moveBreakdown } from '../src/engine/game';
 import { ARTIFACT, battleStats, FACTION_HEROES, HP_SCALE, scaleText, STAT_SCALE } from '../src/engine/data';
 import { makeBattleUnit } from '../src/engine/battle';
 import { setup } from './helpers/engine';
+import { render } from '@testing-library/react';
+import { CreditsDialog, MUSIC } from '../src/ui/CreditsDialog';
+import assets from '../assets.json';
 
 describe('reports of 10.11.2026', () => {
   it('the Horde may challenge a guardian in every goal but Kryształy (report 674974)', () => {
@@ -38,5 +42,16 @@ describe('reports of 10.11.2026', () => {
     for (const a of heroes) for (const d of heroes) if (a !== d) expect(hits(a, d)).toBeGreaterThanOrEqual(2);
     expect(scaleText('+2 Ż, +2 A, ignoruje 2 obrażenia, usuwa do 3 punktów obrażeń', 3, 5)).toBe('+10 Ż, +6 A, ignoruje 6 obrażenia, usuwa do 15 punktów obrażeń');
     expect(scaleText('+2 A', 3)).toBe('+6 A');
+  });
+
+  it('the credits name every CC BY track of assets.json with its author', () => {
+    const { container } = render(<CreditsDialog onClose={() => {}} />);
+    const ccBy = (assets as { assets: Array<{ id: string; zrodlo?: string; licencja?: string }> }).assets.filter((a) => a.id.startsWith('muzyka/') && /CC BY/.test(a.licencja ?? ''));
+    expect(ccBy.length).toBeGreaterThan(0);
+    for (const a of ccBy) {
+      const url = (a.zrodlo ?? '').match(/https:\/\/\S+/)?.[0];
+      expect(MUSIC.some((t) => t.url === url), `${a.id}: ${url}`).toBe(true);
+    }
+    for (const t of MUSIC) expect(container.textContent).toContain(t.author);
   });
 });
