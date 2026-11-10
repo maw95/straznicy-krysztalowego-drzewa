@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 2.2.0 — 2026-11-11
+
 - Umiejętności: pięć nowych (Strzelec, Taktyk, Zwiadowca, Łowca skarbów, Uczony) ma własne malowane ikony zamiast pożyczonych.
 - Czarny Smok: Ognisty Oddech w wersji cyfrowej rani też sojusznika, który stoi w linii za trafionym wrogiem (decyzja autora). Boty biorą to pod uwagę i nie zionią w swoich. Planszówka bez zmian.
 - Menu: nowy przycisk „Autorzy” (obok numeru wersji) z listą autorów muzyki, licencjami (CC BY, CC0), informacją o użyciu AI przy grafice i dźwiękach oraz użytym oprogramowaniu.
