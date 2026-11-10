@@ -270,6 +270,8 @@ export interface BattleUnit {
   /** Left the battle through Róg Strażników (returns to the pool unharmed). */
   swappedOut: boolean;
   status: UnitStatus;
+  /** What the hero's artifacts do in this battle (sites.ts): blows on it are `defense` weaker (never below 1), a melee attacker loses `thorns` Życie, its attacks on a wounded enemy are `vsWounded` stronger, the first blow on it is halved. */
+  gear?: { defense?: number; thorns?: number; vsWounded?: number; firstHit?: true };
   /** The ability of the card it fights with, when not its usual one (a guardian's duel card). */
   ability?: AbilityId;
 }

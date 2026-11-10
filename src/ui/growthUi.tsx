@@ -1,12 +1,14 @@
-// Hero growth on the screen (digital ruleset, "Wyprawa"): the level and experience bar, the skills as cards with icons, the three
-// gear slots, and the notices that tell the player what just happened (experience gained, an artifact found).
+// Hero growth on the screen (digital ruleset, "Wyprawa"): the level and experience bar, the skills as cards with icons, the five
+// gear slots laid out like a hero's sheet (helmet on top, weapon - armour - shield, boots below), the hero sheet itself, and the notices that tell the player what just happened (experience gained, an artifact found).
 
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data';
 import { GROWTH, levelOf, skillRank, skillText, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
-import { ARTIFACT_BY_ID, gearOf, type ArtifactDef, type Slot } from '../engine/sites';
+import { makeBattleUnit, unitAttackBase, unitSpeed } from '../engine/battle';
+import { applyHeroSkills, applyMilestones } from '../engine/growth';
+import { applyGear, ARTIFACT_BY_ID, gearOf, RARITY_NAMES, type ArtifactDef, type Slot } from '../engine/sites';
 import type { HeroState, LogEvent } from '../engine/types';
-import { asset } from './common';
+import { asset, Modal, Portrait, Ribbon, SIDE_RING } from './common';
 import { RuleText, StatScaleContext } from './statScale';
 
 /** The painted icon of a skill (public/assets/ikony/umiejetnosci, made with Scenario). */
@@ -17,12 +19,40 @@ export function SkillIcon({ skill, size = 40 }: { skill: SkillId; size?: number 
   return <img src={asset(`ikony/umiejetnosci/${BORROWED_ICON[skill] ?? skill}.webp`)} alt="" width={size} height={size} style={{ flex: 'none', display: 'block' }} />;
 }
 
-export const SLOT_NAMES: Record<Slot, string> = { weapon: 'Broń', armor: 'Zbroja', boots: 'Buty' };
-const SLOTS: Slot[] = ['weapon', 'armor', 'boots'];
+export const SLOT_NAMES: Record<Slot, string> = { helmet: 'Hełm', weapon: 'Broń', armor: 'Zbroja', shield: 'Tarcza', boots: 'Buty' };
 
-/** The painted icon of an artifact (public/assets/ikony/artefakty): bronze for the first tier, gold and purple for the second. */
+/** The painted icon of an artifact (public/assets/ikony/artefakty); the rim tells the rarity: iron common, silver and sapphire rare, gold and purple legendary. */
 export function ArtifactMedal({ art, size = 40 }: { art: ArtifactDef; size?: number }) {
-  return <img src={asset(`ikony/artefakty/${art.id}.webp`)} alt="" width={size} height={size} style={{ flex: 'none', display: 'block' }} />;
+  return <img className={`gear-medal r${art.rarity}`} src={asset(`ikony/artefakty/${art.id}.webp`)} alt="" width={size} height={size} style={{ flex: 'none', display: 'block' }} />;
+}
+
+const artTitle = (art: ArtifactDef, scale: number) => `${SLOT_NAMES[art.slot]}: ${art.name} (${RARITY_NAMES[art.rarity]}). ${scaleText(art.text, scale)}`;
+
+/** The five gear slots laid out like a hero's sheet: the helmet on top, weapon - armour - shield in the middle, the boots below. */
+export function GearDoll({ hero, size = 40 }: { hero: HeroState; size?: number }) {
+  const scale = useContext(StatScaleContext);
+  const gear = gearOf(hero);
+  const cell = (slot: Slot, col: number, row: number) => {
+    const art = gear.find((a) => a.slot === slot);
+    return art ? (
+      <span key={slot} className="gear-slot" style={{ gridColumn: col, gridRow: row }} title={artTitle(art, scale)} data-gear={art.id}>
+        <ArtifactMedal art={art} size={size} />
+      </span>
+    ) : (
+      <span key={slot} className="gear-slot gear-empty" style={{ gridColumn: col, gridRow: row }} title={`${SLOT_NAMES[slot]}: puste miejsce. Artefakty leżą w skrzyniach na mapie, wypadają ze strażników i przechodzą na zwycięzcę walki bohaterów.`} data-gear-empty={slot}>
+        <img src={asset(`ikony/sloty/${slot}.webp`)} alt="" width={size} height={size} style={{ display: 'block', opacity: 0.9 }} />
+      </span>
+    );
+  };
+  return (
+    <div className="gear-doll" style={{ gridTemplateColumns: `repeat(3, ${size}px)`, gridTemplateRows: `repeat(3, ${size}px)` }} data-gear-doll>
+      {cell('helmet', 2, 1)}
+      {cell('weapon', 1, 2)}
+      {cell('armor', 2, 2)}
+      {cell('shield', 3, 2)}
+      {cell('boots', 2, 3)}
+    </div>
+  );
 }
 
 const ROMAN = ['', 'I', 'II', 'III'];
@@ -81,11 +111,11 @@ export function XpBar({ hero }: { hero: HeroState }) {
 /** Experience at which a level starts (the thresholds are cumulative). */
 const levelStart = (level: number) => (level <= 1 ? 0 : GROWTH.thresholds[level - 2] ?? 0);
 
-/** The hero's skills (icons) and the three gear slots (filled or empty), with a hover text for each. */
+/** The hero's skills (icons) and the gear slots (filled or empty), with a hover text for each; a click on the gear opens the hero's sheet. */
 export function HeroGrowth({ hero }: { hero: HeroState }) {
   const scale = useContext(StatScaleContext);
+  const [sheet, setSheet] = useState(false);
   const skills = [...new Set(hero.skills ?? [])];
-  const gear = gearOf(hero);
   return (
     <div className="well" style={{ padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 8 }} data-growth>
       <XpBar hero={hero} />
@@ -99,21 +129,87 @@ export function HeroGrowth({ hero }: { hero: HeroState }) {
           </span>
         ))}
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-        <span className="lbl" style={{ width: 108, flex: 'none' }} title="Artefakty to stałe wyposażenie bohatera, po jednym na miejsce. Skarby to jednorazowe karty frakcji.">Artefakty</span>
-        {SLOTS.map((slot) => {
-          const art = gear.find((a) => a.slot === slot);
-          return art ? (
-            <span key={slot} title={`${SLOT_NAMES[slot]}: ${art.names[hero.faction]}. ${scaleText(art.text, scale)}${art.tier === 2 ? ' (wyższy poziom)' : ''}`} data-gear={art.id}>
-              <ArtifactMedal art={art} size={40} />
-            </span>
-          ) : (
-            <span key={slot} className="gear-empty" title={`${SLOT_NAMES[slot]}: puste miejsce. Artefakty leżą w skrzyniach na mapie, wypadają ze strażników i z pokonanych bohaterów.`} data-gear-empty={slot}>
-              <img src={asset(`ikony/sloty/${slot === 'weapon' ? 'weapon' : slot === 'armor' ? 'armor' : 'boots'}.webp`)} alt="" width={40} height={40} style={{ display: 'block', opacity: 0.9 }} />
-            </span>
-          );
-        })}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ width: 104, flex: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <span className="lbl" title="Artefakty to stałe wyposażenie bohatera, po jednym na miejsce. Skarby to jednorazowe karty frakcji.">Artefakty</span>
+          <button className="btn plate parch" style={{ padding: '3px 8px', fontSize: 14 }} onClick={() => setSheet(true)} data-hero-sheet-open>Karta bohatera</button>
+        </div>
+        <button className="btn btn-bare" onClick={() => setSheet(true)} title="Karta bohatera: wyposażenie, umiejętności i liczby w bitwie" style={{ padding: 0 }}>
+          <GearDoll hero={hero} size={40} />
+        </button>
       </div>
+      <Modal open={sheet} onClose={() => setSheet(false)}>
+        {sheet && <HeroSheet hero={hero} onClose={() => setSheet(false)} />}
+      </Modal>
+    </div>
+  );
+}
+
+/** The hero's sheet: portrait, level, the numbers it enters a battle with, the gear on a figure-like layout, and what every artifact and skill does. */
+export function HeroSheet({ hero, onClose }: { hero: HeroState; onClose: () => void }) {
+  const scale = useContext(StatScaleContext);
+  // The hero's unit as a battle would make it: card numbers plus skills, milestones and gear.
+  const plain = makeBattleUnit(hero.id, hero.faction, true, scale);
+  const unit = makeBattleUnit(hero.id, hero.faction, true, scale);
+  applyHeroSkills(hero, unit);
+  applyMilestones(hero, unit);
+  applyGear(hero, unit);
+  const stat = (label: string, now: number, base: number) => (
+    <div className="sheet-stat" title={now === base ? undefined : `Karta: ${base}, z umiejętnościami i artefaktami: ${now}`}>
+      <span>{label}</span>
+      <b style={{ color: now > base ? '#2E7A32' : now < base ? '#A03020' : undefined }}>{now}</b>
+    </div>
+  );
+  const gear = gearOf(hero);
+  const skills = [...new Set(hero.skills ?? [])];
+  return (
+    <div className="hero-sheet" data-hero-sheet>
+      <Ribbon side={hero.faction} style={{ width: 'min(420px, 88vw)', alignSelf: 'center' }}>{UNITS[hero.id].name}</Ribbon>
+      <div className="hero-sheet-body">
+        <div className="hero-sheet-col" style={{ alignItems: 'center' }}>
+          <Portrait unitId={hero.id} size={112} ring={SIDE_RING[hero.faction]} preview={false} />
+          <div style={{ fontSize: 15, color: '#6B4A22' }}>{FACTION_NAMES[hero.faction]}</div>
+          <div className="sheet-stats">
+            {stat('Życie', unit.maxHp, plain.maxHp)}
+            {stat('Atak', unitAttackBase(unit), unitAttackBase(plain))}
+            {stat('Szybkość', unitSpeed(unit), unitSpeed(plain))}
+            {unit.gear?.defense ? stat('Obrona', unit.gear.defense, 0) : null}
+          </div>
+        </div>
+        <div className="hero-sheet-col" style={{ alignItems: 'center' }}>
+          <div className="lbl" style={{ color: '#6B4A22' }}>Wyposażenie</div>
+          <div className="hero-sheet-doll">
+            <GearDoll hero={hero} size={68} />
+          </div>
+          <div style={{ fontSize: 13, color: '#6B4A22', maxWidth: 230, textAlign: 'center', lineHeight: 1.3 }}>Po jednym artefakcie na miejsce. Lepszy (rzadszy) zastępuje gorszy.</div>
+        </div>
+        <div className="hero-sheet-col" style={{ flex: 1, minWidth: 220 }}>
+          <div className="lbl" style={{ color: '#6B4A22' }}>Artefakty</div>
+          {gear.length === 0 && <div style={{ fontSize: 15, color: '#6B4A22' }}>Jeszcze żadnego. Leżą w skrzyniach, wypadają ze strażników i przechodzą na zwycięzcę walki bohaterów.</div>}
+          {gear.map((a) => (
+            <div key={a.id} className="sheet-line">
+              <ArtifactMedal art={a} size={38} />
+              <div>
+                <b>{a.name}</b> <span className={`rarity r${a.rarity}`}>{RARITY_NAMES[a.rarity]}</span>
+                <div><RuleText text={a.text} /></div>
+              </div>
+            </div>
+          ))}
+          <div className="lbl" style={{ color: '#6B4A22', marginTop: 6 }}>Umiejętności</div>
+          {skills.length === 0 && <div style={{ fontSize: 15, color: '#6B4A22' }}>Pierwsza na poziomie 2.</div>}
+          {skills.map((s) => (
+            <div key={s} className="sheet-line">
+              <SkillIcon skill={s} size={38} />
+              <div>
+                <b>{SKILL_NAMES[hero.faction][s]} {ROMAN[skillRank(hero, s)]}</b>
+                <div><RuleText text={skillText(s, skillRank(hero, s))} /></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ maxWidth: 520, alignSelf: 'center', width: '100%' }}><XpBar hero={hero} /></div>
+      <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20, alignSelf: 'center' }} onClick={onClose}>Zamknij</button>
     </div>
   );
 }
@@ -126,16 +222,16 @@ export function xpNote(ev: Extract<LogEvent, { type: 'xp' }>): string {
 /** The dialog shown when a hero finds an artifact: what it is, where it came from, how it differs from treasures. */
 export function ArtifactFound({ event, faction }: { event: Extract<LogEvent, { type: 'artifact' }>; faction: FactionId }) {
   const art = ARTIFACT_BY_ID[event.artifactId];
+  if (!art) return null;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, maxWidth: 'min(460px, 92vw)', textAlign: 'center' }}>
       <div className="skill-card" style={{ width: 240, cursor: 'default' }}>
         <div className="skill-card-art">
           <ArtifactMedal art={art} size={100} />
         </div>
-        <div className="skill-card-name">{art.names[faction]}</div>
+        <div className="skill-card-name">{art.name}</div>
         <div style={{ fontSize: 13, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#8A5A2E' }}>
-          Artefakt · {SLOT_NAMES[art.slot]}
-          {art.tier === 2 ? ' · wyższy poziom' : ''}
+          Artefakt · {SLOT_NAMES[art.slot]} · <span className={`rarity r${art.rarity}`}>{RARITY_NAMES[art.rarity]}</span>
         </div>
         <div className="skill-card-text"><RuleText text={art.text} /></div>
       </div>
@@ -144,7 +240,7 @@ export function ArtifactFound({ event, faction }: { event: Extract<LogEvent, { t
       </div>
       <div style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.35 }}>
         {event.kept
-          ? 'Artefakt zakłada się na stałe, po jednym na miejsce (broń, zbroja, buty). Widać go pod portretem bohatera. W odróżnieniu od skarbów nie zużywa się i należy do jednego bohatera, nie do całej frakcji.'
+          ? 'Artefakt zakłada się na stałe, po jednym na miejsce (hełm, broń, zbroja, tarcza, buty). Widać go pod portretem bohatera i na karcie bohatera. W odróżnieniu od skarbów nie zużywa się i należy do jednego bohatera, nie do całej frakcji; kto pokona bohatera, zabiera mu artefakty.'
           : `${FACTION_NAMES[faction]} ma już lepszy artefakt na tym miejscu, więc w zamian frakcja dostała kartę skarbu.`}
       </div>
     </div>

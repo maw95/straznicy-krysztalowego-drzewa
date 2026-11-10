@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { makeBattleUnit } from '../src/engine/battle';
-import { activeHero, createGame } from '../src/engine/game';
-import { applyGear, ARTIFACT_BY_ID, gearMoveBonus, giveArtifact, SITE, visitSite } from '../src/engine/sites';
+import { makeBattleUnit, predictDamage } from '../src/engine/battle';
+import { activeHero, createGame, legalHeroMoves } from '../src/engine/game';
+import { tileCost } from '../src/engine/map';
+import { applyGear, applySupportGear, ARTIFACT_BY_ID, ARTIFACTS, captureGear, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, SITE, SLOTS, visitSite } from '../src/engine/sites';
 import { playOut, setup } from './helpers/engine';
 
 const grown = (over: Parameters<typeof setup>[0] = {}, growth = true) => createGame(setup(over, { ruleset: 'digital', ...(growth ? { heroGrowth: true } : {}) }));
@@ -39,7 +40,7 @@ describe('sites on the map and hero gear (hero growth)', () => {
     expect(hero.xp).toBe(SITE.shrineXp);
   });
 
-  it('a better artifact replaces a worse one in the slot; an equal or worse one turns into a treasure', () => {
+  it('a rarer artifact replaces a more common one in the slot; an equal or worse one turns into a treasure', () => {
     const s = grown();
     const hero = activeHero(s)!;
     giveArtifact(s, hero, ARTIFACT_BY_ID.blade1, 'test');
@@ -61,7 +62,68 @@ describe('sites on the map and hero gear (hero growth)', () => {
     expect(unit.status.battleAttackBonus).toBe(2);
     expect(unit.status.battleSpeedBonus).toBe(1);
     expect(unit.hp).toBe(hp + 4);
+    expect(unit.gear).toEqual({ thorns: 1, vsWounded: 1 });
     expect(gearMoveBonus(hero)).toBe(1);
+  });
+
+  it('has five slots with a common, a rare and a legendary artifact each, under one name for every faction', () => {
+    expect(SLOTS).toEqual(['helmet', 'weapon', 'armor', 'shield', 'boots']);
+    for (const slot of SLOTS) expect(ARTIFACTS.filter((a) => a.slot === slot).map((a) => a.rarity).sort()).toEqual([1, 2, 3]);
+    expect(new Set(ARTIFACTS.map((a) => a.name)).size).toBe(ARTIFACTS.length);
+  });
+
+  it('shields weaken every blow on the hero (never below 1) and the legendary one halves the first blow', () => {
+    const s = grown();
+    const hero = activeHero(s)!;
+    const scale = s.rules.statScale ?? 1;
+    const foe = makeBattleUnit('werewolfLord', 'horde', true, scale);
+    const blow = (gear: NonNullable<typeof hero.gear>, extra = 0) => {
+      hero.gear = gear;
+      const unit = makeBattleUnit(hero.id, hero.faction, true, scale);
+      applyGear(hero, unit);
+      foe.status.battleAttackBonus = extra;
+      s.battle = { units: { [unit.id]: unit, [foe.id]: foe } } as unknown as typeof s.battle;
+      return predictDamage(s, foe, unit, { useAbility: false, movedDistance: 0 }).damage;
+    };
+    const plain = blow({});
+    expect(blow({ shield: 'buckler' })).toBe(plain - 1);
+    expect(blow({ shield: 'watchShield' })).toBe(plain - 2);
+    expect(blow({ shield: 'treeAegis' })).toBe(Math.max(1, Math.ceil(plain / 2) - 3));
+    expect(blow({ shield: 'watchShield' }, 1 - plain)).toBe(1);
+    s.battle = null;
+  });
+
+  it('other effects: stronger supports, a wider view, thorns, a bonus against the wounded, flat terrain cost', () => {
+    const s = grown();
+    const hero = activeHero(s)!;
+    hero.gear = { helmet: 'helm1', weapon: 'hunterBlade', armor: 'thornMail', boots: 'trapperBoots' };
+    const k = s.rules.statScale ?? 1;
+    const support = makeBattleUnit('nymph', 'dawn', true, k);
+    const hp = support.hp;
+    applySupportGear(hero, support);
+    expect(support.hp).toBe(hp + k);
+    const unit = makeBattleUnit(hero.id, hero.faction, true, k);
+    applyGear(hero, unit);
+    expect(unit.gear).toEqual({ thorns: k, vsWounded: k });
+    expect(gearReveal(hero)).toBe(0);
+    hero.gear = { helmet: 'scoutCrown' };
+    expect(gearReveal(hero)).toBe(2);
+    const rough = Object.values(s.tiles).find((t) => (tileCost(t) ?? 0) > 1)!;
+    expect(heroTileCost(hero, rough)).toBe(tileCost(rough));
+    hero.gear = { boots: 'trapperBoots' };
+    expect(heroTileCost(hero, rough)).toBe(1);
+    for (const m of legalHeroMoves(s)) expect(m.cost).toBeLessThanOrEqual(1);
+  });
+
+  it('the winner of a fight between heroes takes the artifacts that improve its gear; the loser keeps the rest', () => {
+    const s = grown();
+    const winner = activeHero(s)!;
+    const loser = Object.values(s.heroes).find((h) => h.id !== winner.id)!;
+    winner.gear = { weapon: 'blade2', boots: 'boots1' };
+    loser.gear = { weapon: 'blade1', boots: 'boots2', shield: 'buckler' };
+    expect(captureGear(s, winner, loser)).toBe(2);
+    expect(winner.gear).toEqual({ weapon: 'blade2', boots: 'boots2', shield: 'buckler' });
+    expect(loser.gear).toEqual({ weapon: 'blade1' });
   });
 
   it('bots play with sites to the end', () => {

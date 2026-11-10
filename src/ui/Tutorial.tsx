@@ -72,7 +72,7 @@ const TIPS: Tip[] = [
   {
     id: 'artifact',
     title: 'Artefakty',
-    text: 'Artefakt to stałe wyposażenie jednego bohatera: broń, zbroja albo buty (po jednym na miejsce), widoczne pod portretem. W odróżnieniu od skarbów nie jest kartą frakcji i nie zużywa się. Leżą w skrzyniach na mapie, wypadają ze strażników i z pokonanych bohaterów.',
+    text: 'Artefakt to stałe wyposażenie jednego bohatera: hełm, broń, zbroja, tarcza albo buty (po jednym na miejsce), widoczne pod portretem i na karcie bohatera. Są zwykłe, rzadkie i legendarne; rzadszy zastępuje pospolitszy. W odróżnieniu od skarbów artefakt nie jest kartą frakcji i nie zużywa się. Leżą w skrzyniach na mapie, wypadają ze strażników, a zwycięzca walki bohaterów zabiera artefakty pokonanego.',
     when: (s) => s.phase === 'adventure' && Object.values(s.heroes).some((h) => Object.keys(h.gear ?? {}).length > 0),
   },
   {

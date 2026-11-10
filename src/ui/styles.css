@@ -697,5 +697,22 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .xpbar-fill { height: 100%; background: linear-gradient(180deg, #C9F0FF, #4AA8E0 55%, #2A6FB0); transition: width 0.6s ease-out; }
 .xpbar-text { font-size: 13px; margin-top: 3px; color: #F7EDD2; }
 .gear-empty { display: inline-flex; }
+.gear-doll { display: grid; gap: 3px; justify-content: center; }
+.gear-slot { display: inline-flex; border-radius: 50%; }
+.gear-medal.r2 { filter: drop-shadow(0 0 3px rgba(110, 180, 255, 0.75)); }
+.gear-medal.r3 { filter: drop-shadow(0 0 4px rgba(200, 130, 255, 0.9)); }
+.rarity { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 800; padding: 0 6px; border-radius: 6px; color: #F6EAD0; background: #6B6F76; }
+.rarity.r2 { background: #2D62B0; }
+.rarity.r3 { background: #7A2FB0; }
+.hero-sheet { display: flex; flex-direction: column; gap: 12px; width: min(860px, 94vw); max-height: 88vh; overflow: auto; padding: 16px 18px; border-radius: 14px; color: #3A2410;
+  background: radial-gradient(ellipse at 50% 12%, #FBF1D6, #E9D4A2 70%, #D6BC84);
+  box-shadow: 0 0 0 2px #B88A35, 0 0 0 4px #1E1204, inset 0 0 0 5px rgba(120, 80, 20, 0.18), inset 0 0 26px rgba(120, 80, 20, 0.3), 0 12px 26px rgba(0, 0, 0, 0.6); }
+.hero-sheet-body { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+.hero-sheet-col { display: flex; flex-direction: column; gap: 8px; }
+.hero-sheet-doll { padding: 14px 18px; border-radius: 14px; background: radial-gradient(ellipse at 50% 40%, #4A3520, #2A1C0E 75%); box-shadow: inset 0 0 0 2px #B88A35, inset 0 0 18px rgba(0, 0, 0, 0.7), 0 0 0 2px #1E1204; }
+.sheet-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 17px; }
+.sheet-stat { display: flex; justify-content: space-between; gap: 10px; padding: 1px 8px; border-radius: 6px; background: rgba(120, 80, 20, 0.12); }
+.hero-sheet .xpbar-text { color: #6B4A22; }
+.sheet-line { display: flex; gap: 8px; align-items: flex-start; font-size: 15px; line-height: 1.25; }
 .xp-toasts { position: fixed; left: 14px; bottom: 96px; z-index: 48; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
 .xp-toast { padding: 6px 14px; border-radius: 10px; font-size: 16px; font-weight: 700; color: #F6EAD0; background: linear-gradient(180deg, rgba(26, 52, 70, 0.95), rgba(10, 24, 36, 0.95)); box-shadow: 0 0 0 1.5px #9EE4FF, 0 6px 14px rgba(0, 0, 0, 0.55); animation: pop-in 0.3s ease-out both; }

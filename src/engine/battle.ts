@@ -436,6 +436,7 @@ export function breathSecondTarget(state: GameState, u: BattleUnit, first: Battl
 export function attackDamage(state: GameState, att: BattleUnit, target: BattleUnit, useAbility: boolean, movedDistance: number): number {
   let dmg = unitAttackBase(att) + att.status.nextAttackBonus - att.status.cursedNext;
   if (isDigital(state.rules) && UNITS[att.defId].attackType === 'ranged') dmg += DIGITAL_RANGED_BONUS * scaleOf(state);
+  if (att.gear?.vsWounded && target.hp < target.maxHp) dmg += att.gear.vsWounded;
   if (abilityActive(state)) {
     const ab = abilityOf(att);
     if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += abilityNum(att, 'lightChargeBonus') * scaleOf(state);
@@ -766,6 +767,11 @@ export function predictDamage(
     dmg -= hardHead;
   }
   dmg = Math.max(0, dmg - victim.status.damageReduction);
+  // The hero's shield (artifacts): the first blow of the battle is halved, every blow is weaker by its defence, but a blow that lands takes at least 1.
+  if (victim.gear && dmg > 0) {
+    if (victim.gear.firstHit) dmg = Math.ceil(dmg / 2);
+    if (victim.gear.defense) dmg = Math.max(1, dmg - victim.gear.defense);
+  }
   return { base, victim, damage: dmg, bearGuard, hardHead, shield: false, lethal: dmg >= victim.hp };
 }
 
@@ -799,7 +805,10 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   }
   b.damageBy[att.id] = (b.damageBy[att.id] ?? 0) + Math.min(p.damage, Math.max(0, victim.hp));
   recordRoll(state, att, victim, p.base, die, p.damage);
+  if (victim.gear?.firstHit && p.damage > 0) delete victim.gear.firstHit;
   dealDamage(state, victim, p.damage, unitName(att));
+  // Kolczuga Cierni: whoever hits the hero in melee is pricked itself.
+  if (victim.gear?.thorns && p.damage > 0 && att.alive && UNITS[att.defId].attackType === 'melee') dealDamage(state, att, victim.gear.thorns, 'Ciernie zbroi');
 }
 
 /** Attacks kept in BattleState.rolls for the screen. */
@@ -872,10 +881,10 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   }
   log(state, 'battle', `${unitName(u)} atakuje: ${targets.map(unitName).join(', ')}.`);
   for (const t of targets) {
-    if (!t.alive) continue;
+    if (!t.alive || !u.alive) continue;
     const before = t.hp;
     resolveAttack(state, u, t, canUse, act.movedDistance);
-    if (ab === 'thiefClaw' && abilityActive(state) && t.hp < before && u.hp < u.maxHp) {
+    if (ab === 'thiefClaw' && abilityActive(state) && u.alive && t.hp < before && u.hp < u.maxHp) {
       u.hp = Math.min(u.maxHp, u.hp + ABILITY.thiefClawHeal * scaleOf(state));
       log(state, 'ability', `${unitName(u)} odzyskuje ${ABILITY.thiefClawHeal * scaleOf(state)} Ż (Złodziejski Szpon).`);
     }
@@ -905,6 +914,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   act.attacked = true;
   act.acted = true;
   if (checkBattleEnd(state)) return;
+  // The attacker fell on the thorns of the hero's armour: its activation is over.
+  if (!u.alive) return endActivation(state);
   // Kacza Furia: a kill gives the duck another full activation right away.
   if (ab === 'duckFury' && abilityActive(state) && u.alive && targets.some((t) => !t.alive)) {
     const haste = (u.tier ?? 0) >= MILESTONE_TIER.duckHaste ? 1 : 0;

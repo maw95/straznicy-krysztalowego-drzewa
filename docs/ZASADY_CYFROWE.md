@@ -189,9 +189,20 @@ Parę rodzic + dziecko w jednej drużynie: w ekranie startu (kooperacja, wersja 
 ## Artefakty bohatera i obiekty na mapie (6.11.2026, część rozwoju bohatera)
 
 Działają razem z `heroGrowth` (`src/engine/sites.ts`).
-- **Artefakty**: trzy miejsca (broń, zbroja, buty), po dwa poziomy: broń +1 / +2 A, zbroja +2 / +4 Ż, buty +1 S (poziom 2 też +1 punkt ruchu na mapie). Artefakt wyższego poziomu zastępuje niższy, równy lub gorszy
-  zamienia się w losowy skarb dla frakcji. Nazwy są osobne dla Świtu i Hordy. Bonusy działają w bitwie jak umiejętności (`applyGear`), zakładane od razu.
-- **Skąd**: skrzynia, pokonany strażnik (poziom 1) i wygrana walka bohaterów (zdobycz poziomu 1).
+- **Artefakty** (przebudowane 10.11.2026): pięć miejsc — hełm, broń, zbroja, tarcza, buty (`SLOTS`) — i trzy rzadkości: zwykły, rzadki, legendarny (`rarity` 1–3). Jedna nazwa i jeden obrazek dla obu frakcji, efekt taki sam dla każdego nosiciela. Rzadszy zastępuje pospolitszy; równy lub gorszy zamienia się w losowy skarb dla frakcji (plecaka jeszcze nie ma). Liczby w małej skali (×3 liczy `statScale`), poza Obroną.
+
+  | Miejsce | Zwykły | Rzadki | Legendarny |
+  |---|---|---|---|
+  | Hełm | Hełm Dowódcy: pomocnicy +1 Ż | Korona Zwiadowcy: +1 Ż, odkrywa pola w promieniu 2 | Hełm Olbrzyma: +6 Ż, −1 S |
+  | Broń | Stalowy Miecz: +1 A | Ostrze Łowcy: +1 A, na rannych jeszcze +1 A | Ostrze Zorzy: +2 A, na rannych jeszcze +1 A |
+  | Zbroja | Kolczuga: +2 Ż | Kolczuga Cierni: +2 Ż, atakujący w zwarciu traci 1 Ż | Zbroja Strażnika: +4 Ż, atakujący w zwarciu traci 1 Ż |
+  | Tarcza | Puklerz: Obrona 1 | Tarcza Czujności: Obrona 2 | Egida Drzewa: Obrona 3, pierwszy cios w bitwie dzielony na pół |
+  | Buty | Buty Wędrowca: +1 S | Trzewiki Trapera: każde pole mapy kosztuje 1 ruch | Skrzydlate Sandały: +1 S, +1 punkt ruchu na mapie |
+
+  **Obrona** to punkty dużej skali (Wyprawa, ×3): każdy cios zadany bohaterowi jest o tyle słabszy, ale cios, który trafia, zabiera **co najmniej 1** (`predictDamage`, po Twardogłowym i Kamieniu Ochrony; `defenseOf` przelicza na inne skale). To jedyny efekt, który celowo nie skaluje się liniowo, więc test „×3 = ×1” (`statscale.test.ts`) gra bez tarcz. Ciernie nie działają na strzelców; atakujący może od nich zginąć (kończy wtedy aktywację).
+- **Skąd**: skrzynia (szanse zwykły / rzadki / legendarny 60 / 30 / 10), pokonany strażnik (70 / 25 / 5; `ARTIFACT_ODDS`, losowane z ziarna gry) i wygrana walka bohaterów: zwycięzca **przejmuje artefakty pokonanego**, które poprawiają jego wyposażenie (`captureGear`; reszta zostaje u pokonanego), a gdy nie ma czego przejąć, znajduje zwykły artefakt jak dawniej (wyrównanie dla Hordy, która rzadko spotyka strażników).
+- **Karta bohatera** (`HeroSheet` w `growthUi.tsx`, przycisk „Karta bohatera” w panelu): portret, Życie / Atak / Szybkość / Obrona z premiami, wyposażenie w układzie postaci (hełm u góry, broń–zbroja–tarcza, buty na dole), opisy artefaktów i umiejętności.
+- **Balans po zmianie** (`SIM_GROWTH=1 make sim-cele GAMES=60`, Normalny, kooperacja / rywalizacja): wszystkie cele i mapy w paśmie 45–65% (49–59%), poza znaną wcześniej Doliną z Kryształami w kooperacji (37%). Stroiciel nie był potrzebny.
 - **Obiekty na mapie** (2 / 3 / 5 / 7 na mapie krótkiej / średniej / długiej / bardzo długiej, rozmieszczane z ziarna na wolnych polach): **kapliczka** (+2 PD), **obóz najemników** (wraca jeden poległy pomocnik frakcji albo +1 PD), **skrzynia** (artefakt). Każdy obiekt użyje pierwszy bohater, który na nim stanie (każda strona). Boty zbierają je jak skarby.
   W interfejsie to medale na polu (fiolet, czerwień, błękit) z opisem w dymku; docelowa grafika to osobna sprawa (`BACKLOG`, sekcja 7).
 - **Balans** (`SIM_GROWTH=1`, 100 gier na wariant, Normalny, cel Kryształy): sam rozwój 62% / 51% (kooperacja / rywalizacja); z artefaktami i obiektami Przymierze rosło do 69–73% / 63–69%, bo to ono spotyka strażników. Wyrównane startem Hordy z 2 losowymi skarbami przy włączonym rozwoju

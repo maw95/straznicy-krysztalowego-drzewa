@@ -1862,7 +1862,16 @@
         "public/assets/ikony/artefakty/mail1.webp",
         "public/assets/ikony/artefakty/mail2.webp",
         "public/assets/ikony/artefakty/boots1.webp",
-        "public/assets/ikony/artefakty/boots2.webp"
+        "public/assets/ikony/artefakty/boots2.webp",
+        "public/assets/ikony/artefakty/helm1.webp",
+        "public/assets/ikony/artefakty/scoutCrown.webp",
+        "public/assets/ikony/artefakty/giantHelm.webp",
+        "public/assets/ikony/artefakty/hunterBlade.webp",
+        "public/assets/ikony/artefakty/thornMail.webp",
+        "public/assets/ikony/artefakty/trapperBoots.webp",
+        "public/assets/ikony/artefakty/buckler.webp",
+        "public/assets/ikony/artefakty/watchShield.webp",
+        "public/assets/ikony/artefakty/treeAegis.webp"
       ],
       "typ": "ikony medalionowe",
       "narzedzie": "Scenario (plan płatny)",
@@ -1870,8 +1879,8 @@
       "data": "2026-11-09",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
-      "scenario_asset": "blade1: asset_6j7JYsfrJUsBoRZSLpsLBzVF, blade2: asset_f3b9e914pnVyUgt9s644YdmX, mail1: asset_LjmnfMSm5nKhxqo8kT7R8uW3, mail2: asset_UoMLsof4u4oaZjQa8T6Vwpp2, boots1: asset_C59bSoyVdMoinVzX4wCE8Tcx, boots2: asset_SQ4Ay56GAF42YWeFNLijEhDV",
-      "prompt": "Game UI icon, a single round medallion emblem centered on a transparent background. Tier 1: Plain bronze and silver ring rim (modest, simple, worn), a dark slate-grey enamel disc inside, <przedmiot> in the centre, no glow, no gems. Dark-fantasy hand-painted style like Heroes of Might and Magic III, rich painterly shading, top-left lighting, bold simple silhouette readable at 64 px. No text, no shadow outside the medallion, nothing outside the circle. Tier 2: Rich ornate gold ring rim with engraved filigree and small purple gems, a deep purple glowing enamel disc inside, <przedmiot>, strong magical glow. Przedmioty: blade1 = simple plain iron short sword with leather grip; blade2 = magnificent long sword with glowing blue-white edge, golden hilt with purple gem; mail1 = simple chain mail shirt with leather straps; mail2 = ornate golden plate cuirass with purple gem inlays; boots1 = sturdy brown leather traveller's boots; boots2 = golden winged boots with white feathers and purple gems."
+      "scenario_asset": "blade1: asset_6j7JYsfrJUsBoRZSLpsLBzVF, blade2: asset_f3b9e914pnVyUgt9s644YdmX, mail1: asset_LjmnfMSm5nKhxqo8kT7R8uW3, mail2: asset_UoMLsof4u4oaZjQa8T6Vwpp2, boots1: asset_C59bSoyVdMoinVzX4wCE8Tcx, boots2: asset_SQ4Ay56GAF42YWeFNLijEhDV; (10.11.2026) helm1: asset_6U6CYXHRRdD1WoCYmLE9sYm7, scoutCrown: asset_y6rUE9zUzCbVvA6e3PfUeWNh, giantHelm: asset_SAXhDNScYK6sbGEMr4LZPSa6, hunterBlade: asset_7RnHv8aziqzRZY61wrgUTGGC, thornMail: asset_eZ5Nvqsfbpe3Xcaso22BDhMm, trapperBoots: asset_VQX68SXtsCgSRFe4gMGcC34N, buckler: asset_7cV6ccdAfhbEfSJpcRgWv1r6, watchShield: asset_8rLnL5nw8eGUSvQEUU7cuU32, treeAegis: asset_u6jx86EjyigmDqXeyS9wCnG6",
+      "prompt": "Game UI icon, a single round medallion emblem centered on a transparent background. Tier 1: Plain bronze and silver ring rim (modest, simple, worn), a dark slate-grey enamel disc inside, <przedmiot> in the centre, no glow, no gems. Dark-fantasy hand-painted style like Heroes of Might and Magic III, rich painterly shading, top-left lighting, bold simple silhouette readable at 64 px. No text, no shadow outside the medallion, nothing outside the circle. Tier 2: Rich ornate gold ring rim with engraved filigree and small purple gems, a deep purple glowing enamel disc inside, <przedmiot>, strong magical glow. Przedmioty: blade1 = simple plain iron short sword with leather grip; blade2 = magnificent long sword with glowing blue-white edge, golden hilt with purple gem; mail1 = simple chain mail shirt with leather straps; mail2 = ornate golden plate cuirass with purple gem inlays; boots1 = sturdy brown leather traveller's boots; boots2 = golden winged boots with white feathers and purple gems. (10.11.2026) Rzadkość zamiast poziomu: zwykły = Tier 1, legendarny = Tier 2, rzadki: Polished silver ring rim with fine engraving and four small blue sapphires, a deep sapphire-blue softly glowing enamel disc inside, <przedmiot>, gentle magical glow. Nowe przedmioty: helm1 = iron officer's helmet with a short red horsehair crest; scoutCrown = slender silver scout's crown with eagle feathers and a blue eye-shaped gem; giantHelm = massive golden horned great helm; hunterBlade = curved hunter's sabre with a serrated silver blade; thornMail = chain mail shirt covered with thorn-like spikes; trapperBoots = fur-lined leather trapper's boots; buckler = small round wooden buckler with an iron boss; watchShield = silver kite shield with an engraved open eye; treeAegis = golden tower shield with a glowing crystal tree. Cięcie: scripts/assets/icons_cut.py."
     },
     {
       "id": "dzwieki/efekty_probka",
@@ -1944,13 +1953,15 @@
     {
       "id": "ikony/sloty",
       "pliki": [
+        "public/assets/ikony/sloty/helmet.webp",
         "public/assets/ikony/sloty/weapon.webp",
         "public/assets/ikony/sloty/armor.webp",
+        "public/assets/ikony/sloty/shield.webp",
         "public/assets/ikony/sloty/boots.webp"
       ],
-      "typ": "ikony pustych miejsc na artefakty (miecz, tarcza, but)",
+      "typ": "ikony pustych miejsc na artefakty (hełm, miecz, napierśnik, tarcza, but)",
       "prompt": "Game UI icon, a round medallion for an EMPTY equipment slot, painted dark fantasy style like Heroes of Might and Magic III: ornate dark bronze ring frame with fine gold edge, inside a dark recessed socket of deep brown-teal velvet with a faint engraved ghost silhouette of <a longsword | a knight's heater shield | a pair of leather travelling boots> in muted gold, dim and unlit, clearly empty. Centered, transparent background, no text.",
-      "scenario_asset": "weapon: asset_hRftdWfcvtCnBX3vKALccfBs, armor: asset_UzKhcquZiu7LdW1RMCCsG5Lo, boots: asset_i6R6FNoRnW1zH8D4wEpzudg2",
+      "scenario_asset": "weapon: asset_hRftdWfcvtCnBX3vKALccfBs, shield (dawniej armor): asset_UzKhcquZiu7LdW1RMCCsG5Lo, boots: asset_i6R6FNoRnW1zH8D4wEpzudg2, (10.11.2026) armor: asset_LbRxfZyL7NsWB8Qkp7XiqqkL, helmet: asset_1tdTUrJpESdqNPcbRtjWKeoj",
       "narzedzie": "Scenario (plan płatny)",
       "model": "GPT Image 2.5 Flare",
       "data": "2026-11-09",
@@ -1976,9 +1987,6 @@
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
       "skrypt": "scripts/assets/growth_art.py (czarne tło → przezroczystość, przycięcie, zmniejszenie)"
-    }
-  ]
-}
     },
     {
       "id": "ikony/mapa",
@@ -2020,3 +2028,6 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
       "scenario_asset": "shadowBat: stoi asset_aQPgtfKPjVtpccCKDWYA1Y48, wzbicie asset_frPJAHyPLFeuk9dTWtfRMPjV, atak asset_FX1PMFRKE8ydA4ScCFS1x3vp, smierc asset_3Vzff2n1tkgwnbT78rPpCDT8, trafienie asset_mmmH3rhvmg2aHUV5QjdLaZk3; pegasus: stoi asset_S4MbhCQnafbusi9ACXnnonEE, wzbicie asset_ex7kmJTzHDQfSJTyQikdkRJP, atak asset_xrYDaAeb9qLLRvAsEWkWVhKu, smierc asset_XpDCqeCKKAZ37hohgoviBP1x, trafienie asset_ybhS6c8gQGmCYzn1c9VJ36hR; blackDragon: stoi asset_8wuZqoizWvhDWUV2brXA5tXz, wzbicie asset_2mr9o4S1pmnmZLXiAGvH8LQa, atak asset_YrDJAYarabwyiiHCdpGLoCGB, smierc asset_DD1ZXKP6xkbmHqgYKh4cfDQP, trafienie asset_aX8vghth5bek9s6KjtPSpzxM; caveSpider atak asset_r8bokfH4BxCGoLtu9fBFwuQb; cyclops atak asset_sx9FwuVsufHGLnZrsFTGwwtm; unicornKing atak asset_4HtpUqmyepAz8mJWWzoezSH7; griffin atak asset_StbqCa6y4QGkYSBV9HcBGJFj; elfDruid: martwy asset_7jFcZbriWNUkF1cPrckNov5P, smierc asset_4Dbn9VwVR7Vh7Dvak4AkVZCL; goblinShaman: martwy asset_2XWdNoBzgJwfxfzZjk1iNJjC, smierc asset_XyQ2T8KyW4pqtuBmihw6pckC; werewolfLord: martwy asset_jtNMiJ7SGfgmbrnMv7xaGHeo, smierc asset_biQnJQZ3prYf83Fvr4HcN51u (martwy w grze = ostatnia klatka klipu śmierci)",
       "prompt": "Pozy: 'The same <jednostka> as in the reference image ..., same painterly realistic style, same colours and same body size, but now it is NOT flying: it <sits perched on the ground like a menacing gargoyle, wings folded like a cloak | stands calmly on all four legs, wings folded | stands firmly on all four legs, wings half-closed above its back> in a strict side view facing right ... Plain solid pure blue background (#0000FF)'. Klipy: 'Side view, locked static camera. ... Plain solid blue background stays unchanged, no camera movement.' — wzbicie: 'unfolds its wings, pushes off the ground and takes off straight up ... ends hovering'; ataki: uderzenie w miejscu (bat: rears up, snaps its fangs forward; pegasus: rears up and kicks out with both front hooves; black dragon: thrusts its head forward exhaling a short stream of fire; spider: rears up, spreads its fangs and snaps forward, no jumping; cyclops: heaves up a huge round grey boulder above its head and hurls it to the right; unicorn: rears up and jabs its horn forward and down, stamping; griffin: reaches both front legs sharply forward in a sweeping motion). Pełne brzmienie i lekcje: docs/PRZEPIS_JEDNOSTKI.md."
+    }
+  ]
+}

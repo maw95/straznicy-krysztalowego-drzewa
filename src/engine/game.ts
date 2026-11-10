@@ -48,7 +48,7 @@ import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } fro
 import { log } from './log';
 import { applyHeroSkills, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
-import { applyGear, ARTIFACTS, gearMoveBonus, giveArtifact, placeSites, visitSite } from './sites';
+import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, placeSites, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
 import { isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
@@ -403,7 +403,7 @@ export function legalHeroMoves(state: GameState): HeroMove[] {
   const out: HeroMove[] = [];
   for (const n of mapNeighbors(state.tiles, hero.pos)) {
     const tile = state.tiles[n];
-    const cost = tileCost(tile);
+    const cost = heroTileCost(hero, tile);
     if (cost === null || !tile.revealed) continue;
     const there = heroesAt(state, n);
     const enemies = there.filter((h) => h.faction !== hero.faction);
@@ -508,7 +508,7 @@ function moveHero(state: GameState, to: HexKey) {
     return;
   }
   hero.pos = to;
-  const revealed = revealAround(state, to, Math.max(1, scoutRadiusOf(hero)));
+  const revealed = revealAround(state, to, Math.max(1, scoutRadiusOf(hero), gearReveal(hero)));
   log(state, 'move', `${name} wchodzi na pole: ${TERRAIN_NAMES[state.tiles[to].terrain]}${revealed.length ? ` (odkryto ${revealed.length})` : ''}.`);
   arriveAt(state, hero);
 }
@@ -605,7 +605,7 @@ function advanceTurn(state: GameState) {
 
 /** A hero with the skill Zwiadowca uncovers the hexes around itself at the start of its turn (and when it picks the skill). */
 export function scoutAround(state: GameState, hero: HeroState | undefined) {
-  const radius = scoutRadiusOf(hero);
+  const radius = Math.max(scoutRadiusOf(hero), gearReveal(hero));
   if (!hero || !hero.alive || !hero.pos || radius < 2) return;
   const revealed = revealAround(state, hero.pos, radius);
   if (revealed.length) log(state, 'move', `${UNITS[hero.id].name} wypatruje okolicę (odkryto ${revealed.length}).`, hero.faction);
@@ -771,7 +771,11 @@ function addSupports(state: GameState, faction: FactionId, ids: string[]) {
   for (const id of ids) {
     b.units[id] = makeBattleUnit(id, faction, digital, scaleOf(state));
     // The leader of the side (the attacking or the defending hero of this faction) strengthens its supports.
-    if (state.rules.heroGrowth) applySupportSkill(state.heroes[b.attacker === faction ? b.attackerHero : b.defenderHero ?? ''], b.units[id]);
+    if (state.rules.heroGrowth) {
+      const leader = state.heroes[b.attacker === faction ? b.attackerHero : b.defenderHero ?? ''];
+      applySupportSkill(leader, b.units[id]);
+      applySupportGear(leader, b.units[id]);
+    }
   }
 }
 
@@ -815,8 +819,13 @@ function awardBattleXp(state: GameState, b: BattleState) {
     const scholar = won ? scholarXp(hero) : 0;
     const reason = won ? (b.kind === 'neutral' ? 'pokonany strażnik' : 'wygrana walka z bohaterem') : 'przegrana walka, którą bohater przeżył';
     awardXp(state, hero, (won ? (b.kind === 'neutral' ? GROWTH.xp.guardian : GROWTH.xp.hero) : GROWTH.xp.lost) + scholar, scholar ? `${reason}, w tym ${scholar} od Uczonego` : reason);
-    // Spoils: the winner of a fight between heroes takes a first-tier artifact from the fallen (the Horde meet guardians rarely, so this evens it out).
-    if (won && b.kind === 'heroes') giveArtifact(state, hero, ARTIFACTS.filter((a) => a.tier === 1)[(state.round + hero.id.length) % 3], 'łup z pokonanego bohatera');
+    // Spoils: the winner of a fight between heroes takes the beaten hero's artifacts (those that improve its own gear); when there is nothing
+    // to take it still finds a common one (the Horde meet guardians rarely, so this evens it out).
+    if (won && b.kind === 'heroes') {
+      const loser = state.heroes[(id === b.attackerHero ? b.defenderHero : b.attackerHero) ?? ''];
+      const common = ARTIFACTS.filter((a) => a.rarity === 1);
+      if (!loser || !captureGear(state, hero, loser)) giveArtifact(state, hero, common[(state.round + hero.id.length) % common.length], 'łup z pokonanego bohatera');
+    }
   }
 }
 
@@ -869,8 +878,8 @@ function resolveGuardianFight(state: GameState, b: BattleState) {
     log(state, 'info', 'Strażnik pokonany.');
   } else log(state, 'crystal', `Strażnik pokonany. Kryształ jest wolny.`);
   guardianHoard(state, b.attackerHero);
-  // With hero growth a beaten guardian also leaves an artifact (first tier).
-  if (state.rules.heroGrowth) giveArtifact(state, state.heroes[b.attackerHero], ARTIFACTS.filter((a) => a.tier === 1)[(Object.keys(state.crystals).length + state.round) % 3], 'łup po pokonanym strażniku');
+  // With hero growth a beaten guardian also leaves an artifact (mostly a common one).
+  if (state.rules.heroGrowth) giveArtifact(state, state.heroes[b.attackerHero], drawArtifact(state, state.heroes[b.attackerHero], ARTIFACT_ODDS.guardian, 0x68bc21eb), 'łup po pokonanym strażniku');
 }
 
 /**

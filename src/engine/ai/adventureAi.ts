@@ -4,6 +4,7 @@
 import { FACTION_SUPPORTS, ITEM_EFFECT, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from '../data';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
+import { heroTileCost } from '../sites';
 import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, livingHeroes, other, reviveSpots, ritualFormed, ritualSpot } from '../game';
 import { scaleOf } from '../battle';
 import { BOT_SKILL_ORDER } from '../growth';
@@ -45,10 +46,10 @@ const AI_TUNING = {
   behindRatio: 0.7,
 };
 
-function knownCost(state: GameState, k: HexKey): number | null {
+function knownCost(state: GameState, k: HexKey, hero?: HeroState): number | null {
   const t = state.tiles[k];
   // Hidden hexes are assumed passable at cost 1 (spec 7: the AI knows only revealed tiles).
-  return t.revealed ? tileCost(t) : 1;
+  return t.revealed ? heroTileCost(hero, t) : 1;
 }
 
 /**
@@ -149,7 +150,7 @@ function walkCost(memo: Memo, hero: HeroState, opts: WalkOptions): (k: HexKey) =
     if (!goal && opts.avoid?.(k)) return null;
     const t = state.tiles[k];
     if (opts.avoidGuardians && !goal && t.crystalId && state.crystals[t.crystalId].guardian) return null;
-    const c = knownCost(state, k);
+    const c = knownCost(state, k, hero);
     return c === null || goal || !opts.danger ? c : c + memo.dangerCost(hero, k);
   };
 }

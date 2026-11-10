@@ -40,13 +40,13 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
   - **Pomysł zapamiętany:** zwiększone obrażenia od tyłu / z flanki (Zew Krwi z mechaniką pozycji względem wroga) jako mechanika dla innych jednostek (przyszli neutralni, nowe frakcje), nie dla Władcy Wilkołaków.
 
 **Do zbudowania — artefakty**
-- [ ] 5 slotów: hełm u góry, w środku broń–zbroja–tarcza, na dole buty (układ jak w Heroes III i Tibii). Puste sloty z malowanymi ikonami już są.
-- [ ] Trzy rzadkości: zwykły, rzadki, legendarny. Efekty różnorodne, nie same „+Ż”; efekt jest taki sam dla każdego nosiciela.
-- [ ] Obrona jako liczba (tarcze 1 / 2 / 3 pkt) ma sens dopiero po zwiększeniu statystyk (patrz „Skala statystyk”), z zasadą „minimum 1 obrażenia”.
+- [x] (10.11) 5 slotów: hełm u góry, w środku broń–zbroja–tarcza, na dole buty (układ jak w Heroes III i Tibii). Puste sloty z malowanymi ikonami już są.
+- [x] (10.11, 15 artefaktów, tabela w `ZASADY_CYFROWE.md`) Trzy rzadkości: zwykły, rzadki, legendarny. Efekty różnorodne, nie same „+Ż”; efekt jest taki sam dla każdego nosiciela.
+- [x] (10.11, razem z „minimum 1 obrażenia”) Obrona jako liczba (tarcze 1 / 2 / 3 pkt) ma sens dopiero po zwiększeniu statystyk (patrz „Skala statystyk”), z zasadą „minimum 1 obrażenia”.
 - [ ] Przykłady efektów: Hełm Olbrzyma (+Ż bohatera, −1 S), Hełm Dowódcy (+Ż pomocników), Korona Zwiadowcy (odkrywa pola w promieniu 2), Kolczuga Cierni (atakujący w zwarciu traci 1 Ż),
   Ostrze Rannych (+A przeciw rannym), tarcza zmniejszająca pierwszy cios w bitwie (nazwa do wymyślenia). Sandały Skoczka do przemyślenia.
 
-- [ ] Decyzje autora (10.11): po wygranej walce bohaterów zwycięzca **przejmuje artefakty pokonanego** (zamiast dzisiejszej losowej „zdobyczy” stopnia 1; `game.ts`, „łup z pokonanego bohatera”);
+- [x] (10.11: przejmuje te, które poprawiają jego wyposażenie; bez plecaka reszta zostaje u pokonanego) Decyzje autora (10.11): po wygranej walce bohaterów zwycięzca **przejmuje artefakty pokonanego** (zamiast dzisiejszej losowej „zdobyczy” stopnia 1; `game.ts`, „łup z pokonanego bohatera”);
   przegrany traci wszystkie artefakty, które zwycięzca może przejąć. Ryzyko kuli śnieżnej zaakceptowane (sprawdzić symulacjami).
 - [ ] **Plecak** (wariant C): artefakty, które nie pasują do slotu albo są gorsze, trafiają do plecaka bohatera (ograniczona liczba miejsc, do ustalenia). Nowy fragment interfejsu: lista plecaka, zakładanie i zdejmowanie.
 - [ ] **Przekazywanie artefaktów między bohaterami**, jeśli stoją na sąsiednich polach (też z plecaka do plecaka).

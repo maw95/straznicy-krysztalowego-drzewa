@@ -11,6 +11,7 @@ import { AdventureView } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
 import { usePresentation } from './usePresentation';
 import { ArtifactFound, xpNote } from './growthUi';
+import { ARTIFACT_BY_ID } from '../engine/sites';
 import type { SkillId } from '../engine/growth';
 import { sfx } from './sfx';
 import { animationWait, ATTACK_SHOW_MS, holdFor, resetAnimLock } from './animLock';
@@ -157,19 +158,20 @@ export function App() {
     });
     // ?skills=treasureHunter,treasureHunter gives every hero those skills from the start (for looking at their dialogs).
     if (q.get('skills')) for (const h of Object.values(s.heroes)) h.skills = q.get('skills')!.split(',') as SkillId[];
+    if (q.get('gear')) for (const h of Object.values(s.heroes)) h.gear = Object.fromEntries(q.get('gear')!.split(',').filter((id) => ARTIFACT_BY_ID[id]).map((id) => [ARTIFACT_BY_ID[id].slot, id]));
     // ?level=9 puts every hero on that level (for looking at the milestones on the cards).
     if (q.get('level')) for (const h of Object.values(s.heroes)) h.level = Number(q.get('level'));
     for (let i = 0; i < Number(q.get('steps')) && s.phase !== 'over'; i++) {
-      const a = chooseAction(s);
+      let a = chooseAction(s);
       if (!a) break;
-      s = applyAction(s, a);
-      history.current.push(a);
       // ?supports=pegasus,shadowBat makes the bots take these supports into a battle (for looking at their sprites).
       if (a.type === 'selectSupports' && q.get('supports')) {
         const alive = s.factions[a.faction].supportsAlive;
         const wanted = q.get('supports')!.split(',').filter((id) => alive.includes(id));
         a = { ...a, supportIds: [...wanted, ...a.supportIds.filter((id) => !wanted.includes(id))].slice(0, a.supportIds.length) };
       }
+      s = applyAction(s, a);
+      history.current.push(a);
       if (q.get('until') === 'battle' && s.phase === 'battle' && s.battle?.stage === 'fight') break;
       // ?until=offer stops when a hero has skills to choose from (for looking at the skill cards).
       if (q.get('until') === 'treasure' && Object.values(s.heroes).some((h) => h.treasurePick)) break;

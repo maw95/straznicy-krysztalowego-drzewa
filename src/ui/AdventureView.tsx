@@ -2,10 +2,10 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FACTION_NAMES, ITEMS, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
 import { activeHero, heroesAt, legalHeroMoves, moveAllowance, reviveSpots } from '../engine/game';
 import { HeroGrowth } from './growthUi';
-import { SITE } from '../engine/sites';
+import { heroTileCost, SITE } from '../engine/sites';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { parseKey, type HexKey } from '../engine/hex';
-import { mapNeighbors, tileCost } from '../engine/map';
+import { mapNeighbors } from '../engine/map';
 import type { Action, GameState, Tile } from '../engine/types';
 import { hoverCard } from './hover';
 import { details, useDetailsShown } from './details';
@@ -52,7 +52,7 @@ function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: Hex
     if (base.hostile) continue;
     for (const n of mapNeighbors(state.tiles, cur)) {
       const t = state.tiles[n];
-      const c = tileCost(t);
+      const c = heroTileCost(hero, t);
       if (!t.revealed || c === null) continue;
       const foes = heroesAt(state, n).some((h) => h.faction !== hero.faction);
       const guarded = Boolean(t.crystalId && state.crystals[t.crystalId].guardian);

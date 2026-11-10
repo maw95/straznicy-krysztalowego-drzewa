@@ -1,39 +1,82 @@
-// Hero gear (artifacts in three slots) and sites on the adventure map (shrines, mercenary camps, chests); both belong to hero growth
+// Hero gear (artifacts in five slots, three rarities) and sites on the adventure map (shrines, mercenary camps, chests); both belong to hero growth
 // (rule `heroGrowth`, growth.ts) and are off without it. A site is used once, by the first hero that steps on it.
 
-import { FACTION_NAMES, NON_RESURRECTION_ITEMS, UNITS, type FactionId } from './data';
+import { FACTION_NAMES, NON_RESURRECTION_ITEMS, STAT_SCALE, UNITS } from './data';
 import { awardXp, growthOn } from './growth';
-import { grantTreasure } from './game';
+import { activeHero, grantTreasure, scoutAround } from './game';
 import { log } from './log';
 import { Rng } from './rng';
 import { tileCost } from './map';
 import type { BattleUnit, GameState, HeroState, Tile } from './types';
 
-export type Slot = 'weapon' | 'armor' | 'boots';
+export type Slot = 'helmet' | 'weapon' | 'armor' | 'shield' | 'boots';
+/** The five places of a hero's gear, in the order of the hero's sheet: the helmet on top, weapon - armour - shield in the middle, the boots below. */
+export const SLOTS: Slot[] = ['helmet', 'weapon', 'armor', 'shield', 'boots'];
 export type SiteKind = 'shrine' | 'camp' | 'chest';
+/** 1 common (zwykły), 2 rare (rzadki), 3 legendary (legendarny). */
+export type Rarity = 1 | 2 | 3;
+export const RARITY_NAMES: Record<Rarity, string> = { 1: 'zwykły', 2: 'rzadki', 3: 'legendarny' };
 
-/** An artifact: it sits in a slot of a hero and gives a bonus in battle (or on the map). Tier 2 beats tier 1 of the same slot. */
+/**
+ * An artifact: it sits in a slot of a hero and works the same for every hero (one name and one picture, whatever the faction). A higher rarity
+ * beats a lower one of the same slot. Życie and Atak numbers are the board game's (the battle scale multiplies them); `defense` is in
+ * points of the digital Expedition (scale 3), see `defenseOf`.
+ */
 export interface ArtifactDef {
   id: string;
   slot: Slot;
-  tier: 1 | 2;
+  rarity: Rarity;
+  name: string;
+  text: string;
+  /** Bonuses of the hero in a battle. */
   attack?: number;
   hp?: number;
   speed?: number;
+  /** Extra move points on the map. */
   move?: number;
-  text: string;
-  names: Record<FactionId, string>;
+  /** Życie added to each of the hero's supports. */
+  supportHp?: number;
+  /** Radius of the hexes revealed around the hero (like the skill Zwiadowca). */
+  reveal?: number;
+  /** Życie an enemy loses when it hits the hero in melee. */
+  thorns?: number;
+  /** Extra Atak against a wounded enemy. */
+  vsWounded?: number;
+  /** Every blow on the hero is this much weaker (never below 1). */
+  defense?: number;
+  /** The first blow on the hero in a battle does half its damage. */
+  firstHit?: true;
+  /** Every hex of the map costs the hero 1 move point. */
+  trapper?: true;
 }
 
 export const ARTIFACTS: ArtifactDef[] = [
-  { id: 'blade1', slot: 'weapon', tier: 1, attack: 1, text: '+1 A bohatera w bitwie.', names: { dawn: 'Miecz Brzasku', horde: 'Ząbkowany Tasak' } },
-  { id: 'blade2', slot: 'weapon', tier: 2, attack: 2, text: '+2 A bohatera w bitwie.', names: { dawn: 'Ostrze Zorzy', horde: 'Rzeźnik Dusz' } },
-  { id: 'mail1', slot: 'armor', tier: 1, hp: 2, text: '+2 Ż bohatera w bitwie.', names: { dawn: 'Kolczuga Gaju', horde: 'Skóry Stworów' } },
-  { id: 'mail2', slot: 'armor', tier: 2, hp: 4, text: '+4 Ż bohatera w bitwie.', names: { dawn: 'Zbroja Strażnika', horde: 'Płyty z Żelaznych Klanów' } },
-  { id: 'boots1', slot: 'boots', tier: 1, speed: 1, text: '+1 S bohatera w bitwie.', names: { dawn: 'Buty Wędrowca', horde: 'Buty Łowcy' } },
-  { id: 'boots2', slot: 'boots', tier: 2, speed: 1, move: 1, text: '+1 S w bitwie i +1 punkt ruchu na mapie.', names: { dawn: 'Skrzydlate Sandały', horde: 'Kopyta Cienia' } },
+  { id: 'helm1', slot: 'helmet', rarity: 1, name: 'Hełm Dowódcy', supportHp: 1, text: 'Pomocnicy bohatera mają +1 Ż w bitwie.' },
+  { id: 'scoutCrown', slot: 'helmet', rarity: 2, name: 'Korona Zwiadowcy', hp: 1, reveal: 2, text: '+1 Ż bohatera w bitwie. Na początku tury odkrywa pola w promieniu 2 od bohatera.' },
+  { id: 'giantHelm', slot: 'helmet', rarity: 3, name: 'Hełm Olbrzyma', hp: 6, speed: -1, text: '+6 Ż bohatera w bitwie, ale −1 S.' },
+  { id: 'blade1', slot: 'weapon', rarity: 1, name: 'Stalowy Miecz', attack: 1, text: '+1 A bohatera w bitwie.' },
+  { id: 'hunterBlade', slot: 'weapon', rarity: 2, name: 'Ostrze Łowcy', attack: 1, vsWounded: 1, text: '+1 A bohatera w bitwie, a przeciw rannym wrogom jeszcze +1 A.' },
+  { id: 'blade2', slot: 'weapon', rarity: 3, name: 'Ostrze Zorzy', attack: 2, vsWounded: 1, text: '+2 A bohatera w bitwie, a przeciw rannym wrogom jeszcze +1 A.' },
+  { id: 'mail1', slot: 'armor', rarity: 1, name: 'Kolczuga', hp: 2, text: '+2 Ż bohatera w bitwie.' },
+  { id: 'thornMail', slot: 'armor', rarity: 2, name: 'Kolczuga Cierni', hp: 2, thorns: 1, text: '+2 Ż bohatera w bitwie. Wróg, który trafi bohatera w zwarciu, sam traci 1 Ż.' },
+  { id: 'mail2', slot: 'armor', rarity: 3, name: 'Zbroja Strażnika', hp: 4, thorns: 1, text: '+4 Ż bohatera w bitwie. Wróg, który trafi bohatera w zwarciu, sam traci 1 Ż.' },
+  { id: 'buckler', slot: 'shield', rarity: 1, name: 'Puklerz', defense: 1, text: 'Obrona 1: każdy cios zadany bohaterowi jest o 1 słabszy (ale zabiera co najmniej 1).' },
+  { id: 'watchShield', slot: 'shield', rarity: 2, name: 'Tarcza Czujności', defense: 2, text: 'Obrona 2: każdy cios zadany bohaterowi jest o 2 słabszy (ale zabiera co najmniej 1).' },
+  { id: 'treeAegis', slot: 'shield', rarity: 3, name: 'Egida Drzewa', defense: 3, firstHit: true, text: 'Obrona 3: każdy cios zadany bohaterowi jest o 3 słabszy (ale zabiera co najmniej 1). Pierwszy cios w bitwie zabiera mu tylko połowę.' },
+  { id: 'boots1', slot: 'boots', rarity: 1, name: 'Buty Wędrowca', speed: 1, text: '+1 S bohatera w bitwie.' },
+  { id: 'trapperBoots', slot: 'boots', rarity: 2, name: 'Trzewiki Trapera', trapper: true, text: 'Na mapie każde pole kosztuje bohatera 1 punkt ruchu: trudny teren go nie spowalnia.' },
+  { id: 'boots2', slot: 'boots', rarity: 3, name: 'Skrzydlate Sandały', speed: 1, move: 1, text: '+1 S w bitwie i +1 punkt ruchu na mapie.' },
 ];
 export const ARTIFACT_BY_ID: Record<string, ArtifactDef> = Object.fromEntries(ARTIFACTS.map((a) => [a.id, a]));
+
+/** How often each rarity turns up (common, rare, legendary), by where the artifact comes from. Provisional: tune with the simulations. */
+export const ARTIFACT_ODDS = {
+  chest: [60, 30, 10],
+  guardian: [70, 25, 5],
+} as const;
+
+/** `defense` of an artifact in this battle's numbers: it is written for the digital Expedition (scale 3). */
+export const defenseOf = (points: number, scale: number) => Math.max(1, Math.round((points * scale) / STAT_SCALE));
 
 export const SITE = {
   /** How many sites a map has, by map size, when hero growth is on. */
@@ -48,7 +91,7 @@ export const SITE = {
   } as Record<SiteKind, string>,
 };
 
-export const gearOf = (hero: Pick<HeroState, 'gear'>): ArtifactDef[] => Object.values(hero.gear ?? {}).map((id) => ARTIFACT_BY_ID[id]);
+export const gearOf = (hero: Pick<HeroState, 'gear'>): ArtifactDef[] => Object.values(hero.gear ?? {}).map((id) => ARTIFACT_BY_ID[id]).filter(Boolean);
 
 /** Puts the sites on free passable hexes (not the bases, the Tree, a treasure or a lair), drawn from the game's seed. */
 export function placeSites(state: GameState): void {
@@ -83,39 +126,109 @@ export function visitSite(state: GameState, hero: HeroState, tile: Tile): void {
       awardXp(state, hero, 1, 'obóz najemników');
     }
   } else {
-    const rng = new Rng((state.setup.seed ^ 0x2545f491 ^ (state.round * 131 + hero.id.length)) | 0);
-    giveArtifact(state, hero, rng.pick(ARTIFACTS), 'skrzynia');
+    giveArtifact(state, hero, drawArtifact(state, hero, ARTIFACT_ODDS.chest, 0x2545f491), 'skrzynia');
+  }
+}
+
+/** An artifact drawn from the game's seed (not from the game's own generator, so it never shifts the rest): first the rarity by `odds`, then one of that rarity. */
+export function drawArtifact(state: GameState, hero: HeroState, odds: readonly number[], salt: number): ArtifactDef {
+  const rng = new Rng((state.setup.seed ^ salt ^ (state.round * 131 + hero.id.length * 17 + Object.keys(hero.gear ?? {}).length)) | 0);
+  let roll = rng.int(odds.reduce((a, b) => a + b, 0));
+  let rarity = 1;
+  for (let i = 0; i < odds.length; i++) {
+    if (roll < odds[i]) {
+      rarity = i + 1;
+      break;
+    }
+    roll -= odds[i];
+  }
+  return rng.pick(ARTIFACTS.filter((a) => a.rarity === rarity));
+}
+
+/** Whether `art` is worth putting on: the slot is empty or holds something of a lower rarity. */
+export function improves(hero: Pick<HeroState, 'gear'>, art: ArtifactDef): boolean {
+  const current = hero.gear?.[art.slot] ? ARTIFACT_BY_ID[hero.gear[art.slot]!] : null;
+  return !current || current.rarity < art.rarity;
+}
+
+function equip(state: GameState, hero: HeroState, art: ArtifactDef, source: string): void {
+  hero.gear = { ...hero.gear, [art.slot]: art.id };
+  log(state, 'item', `${UNITS[hero.id].name} zakłada artefakt: ${art.name} (${art.text}) — źródło: ${source}.`, hero.faction, { type: 'artifact', heroId: hero.id, artifactId: art.id, source, kept: true });
+  // What works on the map counts at once on the hero's own turn.
+  if (activeHero(state)?.id === hero.id) {
+    if (art.reveal) scoutAround(state, hero);
+    if (art.move) state.movePoints += art.move;
   }
 }
 
 /** The hero takes the artifact if it beats what sits in its slot; otherwise the faction gets a treasure card instead. */
 export function giveArtifact(state: GameState, hero: HeroState, art: ArtifactDef, source: string): void {
   const name = UNITS[hero.id].name;
-  const current = hero.gear?.[art.slot] ? ARTIFACT_BY_ID[hero.gear[art.slot]!] : null;
-  if (!current || current.tier < art.tier) {
-    hero.gear = { ...hero.gear, [art.slot]: art.id };
-    log(state, 'item', `${name} zakłada artefakt: ${art.names[hero.faction]} (${art.text}) — źródło: ${source}.`, hero.faction, { type: 'artifact', heroId: hero.id, artifactId: art.id, source, kept: true });
-    return;
-  }
+  if (improves(hero, art)) return equip(state, hero, art, source);
   const used = new Set(Object.values(state.items).map((i) => i.kind));
   const rng = new Rng((state.setup.seed ^ 0x1b873593 ^ Object.keys(state.items).length) | 0);
   const kinds = NON_RESURRECTION_ITEMS.filter((k) => !used.has(k));
   if (kinds.length) {
     grantTreasure(state, rng.pick(kinds), hero.faction, hero.id);
-    log(state, 'item', `${FACTION_NAMES[hero.faction]}: ${art.names[hero.faction]} (${source}) nie jest lepszy od tego, co ${name} ma, więc zamiast niego jest skarb.`, hero.faction, { type: 'artifact', heroId: hero.id, artifactId: art.id, source, kept: false });
+    log(state, 'item', `${FACTION_NAMES[hero.faction]}: ${art.name} (${source}) nie jest lepszy od tego, co ${name} ma, więc zamiast niego jest skarb.`, hero.faction, { type: 'artifact', heroId: hero.id, artifactId: art.id, source, kept: false });
   }
+}
+
+/** The winner of a fight between heroes takes every artifact of the beaten hero that improves its own gear; the loser keeps the rest. Returns how many changed hands. */
+export function captureGear(state: GameState, winner: HeroState, loser: HeroState): number {
+  let taken = 0;
+  for (const slot of SLOTS) {
+    const id = loser.gear?.[slot];
+    const art = id ? ARTIFACT_BY_ID[id] : null;
+    if (!art || !improves(winner, art)) continue;
+    const rest = { ...loser.gear };
+    delete rest[slot];
+    loser.gear = rest;
+    equip(state, winner, art, `zdobycz: ${UNITS[loser.id].name}`);
+    taken++;
+  }
+  return taken;
 }
 
 /** Gear bonuses in battle (added to the skills' ones). */
 export function applyGear(hero: HeroState | undefined, unit: BattleUnit): void {
   if (!hero) return;
   const k = unit.scale ?? 1;
-  for (const a of gearOf(hero)) {
+  const worn = gearOf(hero);
+  for (const a of worn) {
     unit.status.battleAttackBonus += (a.attack ?? 0) * k;
     unit.status.battleSpeedBonus += a.speed ?? 0;
     unit.hp += (a.hp ?? 0) * k;
     unit.maxHp += (a.hp ?? 0) * k;
   }
+  // A hero is never slowed to a standstill by its helmet.
+  unit.status.battleSpeedBonus = Math.max(unit.status.battleSpeedBonus, 1 - UNITS[unit.defId].speed);
+  const sum = (f: (a: ArtifactDef) => number | undefined) => worn.reduce((s, a) => s + (f(a) ?? 0), 0);
+  const defense = sum((a) => a.defense);
+  const gear = {
+    ...(defense ? { defense: defenseOf(defense, k) } : {}),
+    ...(sum((a) => a.thorns) ? { thorns: sum((a) => a.thorns) * k } : {}),
+    ...(sum((a) => a.vsWounded) ? { vsWounded: sum((a) => a.vsWounded) * k } : {}),
+    ...(worn.some((a) => a.firstHit) ? { firstHit: true as const } : {}),
+  };
+  if (Object.keys(gear).length) unit.gear = gear;
+}
+
+/** A hero's helmet may strengthen its supports. */
+export function applySupportGear(hero: HeroState | undefined, unit: BattleUnit): void {
+  if (!hero) return;
+  const hp = gearOf(hero).reduce((s, a) => s + (a.supportHp ?? 0), 0) * (unit.scale ?? 1);
+  unit.hp += hp;
+  unit.maxHp += hp;
+}
+
+/** Radius of the hexes the hero's gear reveals (0 = none). */
+export const gearReveal = (hero: HeroState | undefined) => (hero ? gearOf(hero).reduce((s, a) => Math.max(s, a.reveal ?? 0), 0) : 0);
+
+/** What a step onto `tile` costs this hero: the terrain's cost, or 1 everywhere in Trzewiki Trapera (null = impassable). */
+export function heroTileCost(hero: Pick<HeroState, 'gear'> | undefined, tile: Tile): number | null {
+  const c = tileCost(tile);
+  return c !== null && c > 1 && hero && gearOf(hero).some((a) => a.trapper) ? 1 : c;
 }
 
 export const gearMoveBonus = (hero: HeroState | undefined) => (hero ? gearOf(hero).reduce((s, a) => s + (a.move ?? 0), 0) : 0);

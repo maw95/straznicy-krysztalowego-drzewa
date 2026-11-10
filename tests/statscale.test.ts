@@ -1,7 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createGame } from '../src/engine/game';
 import { makeBattleUnit, scaleOf } from '../src/engine/battle';
 import { battleStats, STAT_SCALE, UNITS } from '../src/engine/data';
+import { ARTIFACTS } from '../src/engine/sites';
 import { playOut, pvpSeats, setup } from './helpers/engine';
 
 describe('stat scale (digital Expedition: Życie and Atak times 3)', () => {
@@ -22,6 +23,10 @@ describe('stat scale (digital Expedition: Życie and Atak times 3)', () => {
   });
 
   // Every number is multiplied the same way, so a whole game must play out exactly as with the small numbers: same winner, same length, same fights.
+  // The one exception by design is defence (shields: points of the large scale, a blow takes at least 1), so these games are played without shields.
+  const shields = ARTIFACTS.filter((a) => a.slot === 'shield');
+  beforeAll(() => void shields.forEach((a) => ARTIFACTS.splice(ARTIFACTS.indexOf(a), 1)));
+  afterAll(() => void ARTIFACTS.push(...shields));
   it.each(['crystals', 'control', 'survival', 'boss', 'artifact'] as const)('changes nothing about how games end (goal %s: ×3 equals ×1 over many bot games)', (objective) => {
     for (let seed = 1; seed <= 12; seed++) {
       const pvp = seed % 3 === 0 && objective !== 'survival';
