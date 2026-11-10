@@ -2028,6 +2028,22 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
       "scenario_asset": "shadowBat: stoi asset_aQPgtfKPjVtpccCKDWYA1Y48, wzbicie asset_frPJAHyPLFeuk9dTWtfRMPjV, atak asset_FX1PMFRKE8ydA4ScCFS1x3vp, smierc asset_3Vzff2n1tkgwnbT78rPpCDT8, trafienie asset_mmmH3rhvmg2aHUV5QjdLaZk3; pegasus: stoi asset_S4MbhCQnafbusi9ACXnnonEE, wzbicie asset_ex7kmJTzHDQfSJTyQikdkRJP, atak asset_xrYDaAeb9qLLRvAsEWkWVhKu, smierc asset_XpDCqeCKKAZ37hohgoviBP1x, trafienie asset_ybhS6c8gQGmCYzn1c9VJ36hR; blackDragon: stoi asset_8wuZqoizWvhDWUV2brXA5tXz, wzbicie asset_2mr9o4S1pmnmZLXiAGvH8LQa, atak asset_YrDJAYarabwyiiHCdpGLoCGB, smierc asset_DD1ZXKP6xkbmHqgYKh4cfDQP, trafienie asset_aX8vghth5bek9s6KjtPSpzxM; caveSpider atak asset_r8bokfH4BxCGoLtu9fBFwuQb; cyclops atak asset_sx9FwuVsufHGLnZrsFTGwwtm; unicornKing atak asset_4HtpUqmyepAz8mJWWzoezSH7; griffin atak asset_StbqCa6y4QGkYSBV9HcBGJFj; elfDruid: martwy asset_7jFcZbriWNUkF1cPrckNov5P, smierc asset_4Dbn9VwVR7Vh7Dvak4AkVZCL; goblinShaman: martwy asset_2XWdNoBzgJwfxfzZjk1iNJjC, smierc asset_XyQ2T8KyW4pqtuBmihw6pckC; werewolfLord: martwy asset_jtNMiJ7SGfgmbrnMv7xaGHeo, smierc asset_biQnJQZ3prYf83Fvr4HcN51u (martwy w grze = ostatnia klatka klipu śmierci)",
       "prompt": "Pozy: 'The same <jednostka> as in the reference image ..., same painterly realistic style, same colours and same body size, but now it is NOT flying: it <sits perched on the ground like a menacing gargoyle, wings folded like a cloak | stands calmly on all four legs, wings folded | stands firmly on all four legs, wings half-closed above its back> in a strict side view facing right ... Plain solid pure blue background (#0000FF)'. Klipy: 'Side view, locked static camera. ... Plain solid blue background stays unchanged, no camera movement.' — wzbicie: 'unfolds its wings, pushes off the ground and takes off straight up ... ends hovering'; ataki: uderzenie w miejscu (bat: rears up, snaps its fangs forward; pegasus: rears up and kicks out with both front hooves; black dragon: thrusts its head forward exhaling a short stream of fire; spider: rears up, spreads its fangs and snaps forward, no jumping; cyclops: heaves up a huge round grey boulder above its head and hurls it to the right; unicorn: rears up and jabs its horn forward and down, stamping; griffin: reaches both front legs sharply forward in a sweeping motion). Pełne brzmienie i lekcje: docs/PRZEPIS_JEDNOSTKI.md."
+    },
+    {
+      "id": "cards/treasures/cyfrowe",
+      "pliki": [
+        "public/assets/cards/treasures/cyfrowe/sword.jpg",
+        "public/assets/cards/treasures/cyfrowe/boots.jpg",
+        "public/assets/cards/treasures/cyfrowe/shield.jpg"
+      ],
+      "typ": "obrazki trzech kart skarbów w wersji cyfrowej: Eliksir Mocy (sword), Eliksir Chyżości (boots), Zwój Tarczy (shield)",
+      "prompt": "Use the reference image only for the art style (bright, colourful, stylized fantasy game card illustration with a sunny landscape background, strong clean shapes, glossy highlights). Square illustration of a single item in the centre, large: <a stout glass potion flask filled with a glowing fiery red-orange elixir, a small golden sword emblem on the flask, red sparks | a slender glass potion flask with a small white feathered wing, swirling pale sky-blue and mint elixir, ribbons of wind and green leaves | an unrolled parchment scroll with golden rollers and a blue ribbon, a glowing blue emblem of a shield with a white tree, a translucent magic shield above it>. Background: sunny mountains and a distant castle / temple ruins, blue sky. No text, no frame, no border.",
+      "scenario_asset": "sword: asset_shZeGjQiaXj2T49ddTx9vAb1, boots: asset_xVXDWQprxwjXZUMTYMnFEGFW, shield: asset_PrgwK676EQ5GFFidxEM8N43u; odniesienie stylu: asset_HmM5paYnqqkV5xYT5sXdm4DL (karta „Wielki Eliksir Uzdrowienia” z gry)",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, 1024x1024, jakość medium; lokalnie zmniejszone do 400 px (jpg q85)",
+      "data": "2026-11-10",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

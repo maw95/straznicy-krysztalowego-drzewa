@@ -2,7 +2,7 @@
 // Nobody moves; the active unit attacks, uses its ability or a treasure, or passes.
 
 import { useEffect, useRef, useState } from 'react';
-import { FACTION_NAMES, ITEMS, UNITS, type FactionId, type ItemKind } from '../engine/data';
+import { FACTION_NAMES, itemDef, ITEMS, UNITS, type FactionId, type ItemKind } from '../engine/data';
 import { abilityActive, abilityOf, attackTargets, ATTACK_ABILITIES, canUseBattleItem, FREE_ABILITIES, unitSpeed } from '../engine/battle';
 import { isDigital, type Action, type BattleUnit, type GameState } from '../engine/types';
 import { asset, Frame, HpBar, Medal, Ribbon } from './common';
@@ -183,7 +183,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
               {items.map((it) => (
                 <button key={it.id} className="btn plate parch" style={{ padding: '4px 10px', fontSize: 14 }} title={ITEMS[it.kind].text} onClick={() => useItem(it.id)}>
-                  {ITEMS[it.kind].name}
+                  {itemDef(it.kind, isDigital(state.rules)).name}
                 </button>
               ))}
             </div>

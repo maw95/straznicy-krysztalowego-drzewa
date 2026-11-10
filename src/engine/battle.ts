@@ -1,7 +1,7 @@
 // Battle engine: the painted arena (13 columns, 85 cells), initiative, movement, attacks,
 // abilities and items. Functions change the GameState passed in.
 
-import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, battleStats, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type FactionId, type ItemKind, type Side } from './data';
+import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, battleStats, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, itemDef, ITEMS, UNITS, type AbilityId, type FactionId, type ItemKind, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
@@ -791,7 +791,7 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   }
   if (p.shield) {
     victim.status.shieldArmed = false;
-    log(state, 'item', `Tarcza Strażnika chroni: ${unitName(victim)}.`);
+    log(state, 'item', `${itemDef('shield', isDigital(state.rules)).name} chroni: ${unitName(victim)}.`);
     recordRoll(state, att, victim, p.base, die, 0);
     return;
   }
@@ -1158,7 +1158,7 @@ export function battleItem(state: GameState, args: ItemArgs) {
   if (!item || item.owner !== faction || !state.factions[faction].inventory.includes(item.id)) throw new Error('Nie masz tego skarbu.');
   if (!canUseBattleItem(state, faction)) throw new Error('Skarby używa się przed akcją własnej jednostki.');
   if (!ITEMS[item.kind].usableIn.includes('battle')) throw new Error('Tego skarbu nie używa się w bitwie.');
-  const name = ITEMS[item.kind].name;
+  const name = itemDef(item.kind, isDigital(state.rules)).name;
   ITEM_HANDLERS[item.kind]({ state, b, faction, args, name });
   consumeItem(state, item.id);
   log(state, 'item', `${unitName(actor)} używa skarbu: ${name}.`);

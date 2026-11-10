@@ -1,10 +1,10 @@
 // Treasures in battle: the list of the faction's treasures and, while one is being aimed, what to pick next.
 
-import { ITEMS, UNITS, type FactionId, type ItemKind } from '../engine/data';
+import { itemDef, UNITS, type FactionId, type ItemKind } from '../engine/data';
 import { alliesOf, canUseBattleItem } from '../engine/battle';
-import type { Action, BattleUnit, GameState } from '../engine/types';
+import { isDigital, type Action, type BattleUnit, type GameState } from '../engine/types';
+import { itemArt } from './statScale';
 import { hoverCard } from './hover';
-import { asset } from './common';
 import { StatText } from './markers';
 import { reserveOf } from './BattleSidePanel';
 
@@ -67,7 +67,7 @@ export function ItemsPanel({ state, side, active, targeting, setTargeting, freeA
     <div className="items-float" style={{ position: 'absolute', right: 300, bottom: 150, zIndex: 20, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: 'calc(100vw - 24px)' }}>
       {targeting && (
         <div className="plate parch" style={{ padding: '6px 12px', display: 'flex', gap: 10, alignItems: 'center', fontSize: 15 }}>
-          <b>{ITEMS[state.items[targeting.itemId].kind].name}:</b>
+          <b>{itemDef(state.items[targeting.itemId].kind, isDigital(state.rules)).name}:</b>
           {targeting.kind === 'horn' && !targeting.mode ? (
             <>
               <button className="btn prim btn-tiny" onClick={() => setTargeting({ ...targeting, mode: 'swap' })}>Wymiana</button>
@@ -96,12 +96,12 @@ export function ItemsPanel({ state, side, active, targeting, setTargeting, freeA
       </button>
       {showItems &&
         state.factions[side].inventory.map((id) => {
-          const def = ITEMS[state.items[id].kind];
+          const def = itemDef(state.items[id].kind, isDigital(state.rules));
           const ok = itemsAllowed && def.usableIn.includes('battle') && !(def.kind === 'resurrection' && !deadOwn.length) && !(def.kind === 'horn' && !alliesOf(b, active).concat(active).some((x) => UNITS[x.defId].kind === 'support'));
           return (
             <div key={id} className="plate parch" style={{ width: 'min(330px, calc(100vw - 24px))', padding: '5px 9px', display: 'flex', gap: 8, alignItems: 'center' }}>
               <button className="btn" title="Pokaż kartę skarbu" onClick={() => onShowCard(`item:${def.kind}`)} style={{ background: 'none', border: 0, padding: 0, flex: 'none' }}>
-                <img {...hoverCard(`item:${def.kind}`)} src={asset(`cards/treasures/${def.kind}.jpg`)} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
+                <img {...hoverCard(`item:${def.kind}`)} src={itemArt(def.kind, isDigital(state.rules))} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
               </button>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 800, fontSize: 15 }}>{def.name}</div>

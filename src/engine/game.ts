@@ -10,6 +10,7 @@ import {
   ABILITY,
   ITEM_EFFECT,
   ITEMS,
+  itemDef,
   MAP_VARIANTS,
   SHAPE_ROUND_FACTOR,
   NON_RESURRECTION_ITEMS,
@@ -243,7 +244,7 @@ function draftPick(state: GameState, faction: FactionId, kind: ItemKind) {
   d.deck.splice(d.deck.indexOf(kind), 1);
   giveItem(state, newItem(state, kind), faction, battleHeroOf(b, faction));
   log(state, 'item', `${FACTION_NAMES[faction]} wybiera skarb.`);
-  log(state, 'item', `Wybrany skarb: ${ITEMS[kind].name}.`, faction);
+  log(state, 'item', `Wybrany skarb: ${itemDef(kind, isDigital(state.rules)).name}.`, faction);
   d.order.shift();
   d.offer = [];
   if (d.order.length) dealOffer(state);
@@ -549,7 +550,7 @@ function arriveAt(state: GameState, hero: HeroState) {
     state.stats.treasuresCollected[hero.faction] += 1;
     awardXp(state, hero, GROWTH.xp.treasure, 'znaleziony skarb');
     log(state, 'item', `${UNITS[hero.id].name} znajduje skarb.`);
-    log(state, 'item', `Skarb (${UNITS[hero.id].name}): ${ITEMS[item.kind].name}.`, hero.faction);
+    log(state, 'item', `Skarb (${UNITS[hero.id].name}): ${itemDef(item.kind, isDigital(state.rules)).name}.`, hero.faction);
   }
   if (state.rules.heroGrowth) visitSite(state, hero, tile);
   if (hero.faction === 'dawn') {
@@ -938,7 +939,7 @@ function guardianHoard(state: GameState, heroId: string) {
   giveItem(state, newItem(state, kind), hero.faction, hero.id);
   state.stats.treasuresCollected[hero.faction] += 1;
   log(state, 'item', `Strażnik zostawia swój skarb.`);
-  log(state, 'item', `Skarb strażnika (${UNITS[hero.id].name}): ${ITEMS[kind].name}.`, hero.faction);
+  log(state, 'item', `Skarb strażnika (${UNITS[hero.id].name}): ${itemDef(kind, isDigital(state.rules)).name}.`, hero.faction);
 }
 
 function chooseTreasureNow(state: GameState, hero: HeroState, kind: ItemKind) {

@@ -1,9 +1,9 @@
 // "Podpowiedź" for the younger player (family mode): what the bot would do now, in words.
 
-import { ITEMS, TERRAIN_NAMES, UNITS } from '../engine/data';
+import { itemDef, TERRAIN_NAMES, UNITS } from '../engine/data';
 import { activeHero } from '../engine/game';
 import { SKILL_NAMES } from '../engine/growth';
-import type { Action, GameState } from '../engine/types';
+import { isDigital, type Action, type GameState } from '../engine/types';
 
 /** The suggested action as one sentence. */
 export function describeAction(state: GameState, a: Action | null): string {
@@ -22,7 +22,7 @@ export function describeAction(state: GameState, a: Action | null): string {
     case 'chooseSkill':
       return `Wybierz umiejętność: ${SKILL_NAMES[Object.values(state.heroes).find((h) => h.offer?.includes(a.skill))?.faction ?? 'dawn'][a.skill]}.`;
     case 'chooseTreasure':
-      return `Wybierz skarb: ${ITEMS[a.kind].name}.`;
+      return `Wybierz skarb: ${itemDef(a.kind, isDigital(state.rules)).name}.`;
     case 'battleAttack':
       return `Zaatakuj: ${name(a.targetId)}.`;
     case 'battleMove':

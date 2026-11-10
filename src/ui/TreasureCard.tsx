@@ -2,6 +2,7 @@
 // Coordinates are in frame pixels (551×789), measured on the blank frame.
 
 import { ITEMS, type ItemKind } from '../engine/data';
+import { useItem } from './statScale';
 import { asset } from './common';
 import { StatText } from './markers';
 import { CARD_H, cardSpace } from './UnitCard';
@@ -27,7 +28,7 @@ function usage(kind: ItemKind): string {
 }
 
 export function TreasureCard({ kind, width = 300 }: { kind: ItemKind; width?: number }) {
-  const def = ITEMS[kind];
+  const { def, art } = useItem(kind);
   const scale = width / FRAME_W;
   const nameSize = Math.min(38, ((NAME.x1 - NAME.x0 - 40) / Math.max(10, def.name.length)) * 1.95);
   return (
@@ -35,7 +36,7 @@ export function TreasureCard({ kind, width = 300 }: { kind: ItemKind; width?: nu
       <div style={{ position: 'absolute', left: 0, top: 0, width: FRAME_W, height: CARD_H, transform: `scale(${scale})`, transformOrigin: '0 0', fontFamily: "'Crimson Pro', Georgia, serif" }}>
         <img src={asset('cards/frames/treasure.png')} alt="" style={{ position: 'absolute', inset: 0, width: FRAME_W, height: CARD_H }} />
         <img
-          src={asset(`cards/treasures/${kind}.jpg`)}
+          src={art}
           alt={def.name}
           style={{ position: 'absolute', left: ART.cx - ART.rx, top: (ART.cy - ART.ry) * SY, width: ART.rx * 2, height: ART.ry * 2 * SY, borderRadius: '50%', objectFit: 'cover' }}
         />

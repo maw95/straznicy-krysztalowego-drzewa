@@ -2,12 +2,12 @@
 // one of three offered skills. Skills are small, permanent bonuses; each faction has its own names for the same effects. Off by default (the
 // level presets of the family mode switch it on), so games without it are untouched.
 
-import { ABILITY_TIERS, FACTION_NAMES, ITEMS, MILESTONE_TIER, NON_RESURRECTION_ITEMS, UNITS, type FactionId, type ItemKind } from './data';
+import { ABILITY_TIERS, FACTION_NAMES, itemDef, MILESTONE_TIER, NON_RESURRECTION_ITEMS, UNITS, type FactionId, type ItemKind } from './data';
 import { activeHero, grantTreasure, scoutAround } from './game';
 import { scaleOf } from './battle';
 import { log } from './log';
 import { Rng } from './rng';
-import type { BattleUnit, GameState, HeroState } from './types';
+import { isDigital, type BattleUnit, type GameState, type HeroState } from './types';
 
 export const GROWTH = {
   /** Experience needed for level 2 ... 10 (cumulative); the curve steepens after level 5, so level 10 stays rare. Provisional: tune with the simulations. */
@@ -169,7 +169,7 @@ function grantFortune(state: GameState, hero: HeroState): void {
   const rng = new Rng((state.setup.seed ^ 0x51ed270b ^ Object.keys(state.items).length) | 0);
   const kind = rng.pick(left);
   grantTreasure(state, kind, hero.faction, hero.id);
-  log(state, 'item', `${FACTION_NAMES[hero.faction]} dostaje skarb: ${ITEMS[kind].name}.`, hero.faction);
+  log(state, 'item', `${FACTION_NAMES[hero.faction]} dostaje skarb: ${itemDef(kind, isDigital(state.rules)).name}.`, hero.faction);
 }
 
 /** Skill bonuses applied to the hero's unit when a battle starts. */
@@ -214,7 +214,7 @@ export function chooseTreasure(state: GameState, heroId: string, kind: ItemKind)
   if (!pick?.kinds.includes(kind)) throw new Error('Tego skarbu nie ma wśród pokazanych.');
   grantTreasure(state, kind, hero.faction, hero.id);
   state.stats.treasuresCollected[hero.faction] += 1;
-  log(state, 'item', `Skarb strażnika (${UNITS[hero.id].name}): ${ITEMS[kind].name}.`, hero.faction);
+  log(state, 'item', `Skarb strażnika (${UNITS[hero.id].name}): ${itemDef(kind, isDigital(state.rules)).name}.`, hero.faction);
   pick.take -= 1;
   pick.kinds = pick.kinds.filter((k) => k !== kind);
   if (pick.take <= 0 || !pick.kinds.length) hero.treasurePick = undefined;

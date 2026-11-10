@@ -2,7 +2,7 @@
 // and the right-button card.
 
 import type { BattleUnit } from '../engine/types';
-import { ABILITY, battleStats, UNITS } from '../engine/data';
+import { ABILITY, battleStats, itemDef, UNITS } from '../engine/data';
 import { unitAttackBase, unitSpeed } from '../engine/battle';
 import { asset, HpBar } from './common';
 import { Marker, StatIcon, StatText, type MarkerName } from './markers';
@@ -31,7 +31,7 @@ export function statusList(u: BattleUnit): StatusInfo[] {
   const sunburst = UNITS[u.defId].ability === 'sunburst' && s.nextAttackBonus >= ABILITY.sunburstSelfBonus * (u.scale ?? 1);
   if (sunburst) out.push({ label: `+${s.nextAttackBonus} A przy następnym ataku (Słoneczny Blask)`, glyph: 'sBlade', marker: 'attack_3', buff: true, value: s.nextAttackBonus !== ABILITY.sunburstSelfBonus ? `+${s.nextAttackBonus}` : undefined });
   else if (s.nextAttackBonus) out.push({ label: `+${s.nextAttackBonus} A przy następnym ataku`, glyph: 'sBlade', marker: 'attack_up', buff: true, value: s.nextAttackBonus !== 1 ? `+${s.nextAttackBonus}` : undefined });
-  if (s.shieldArmed) out.push({ label: 'Tarcza Strażnika: neguje następny atak', glyph: 'sGuard', marker: 'shield', buff: true });
+  if (s.shieldArmed) out.push({ label: `${itemDef('shield', Boolean(u.digital)).name}: neguje następny atak`, glyph: 'sGuard', marker: 'shield', buff: true });
   const baseHp = battleStats(u.defId, u.digital, u.scale).hp;
   if (u.maxHp > baseHp) out.push({ label: `+${u.maxHp - baseHp} maks. Ż do końca bitwy (Eliksir Żywotności)`, glyph: 'sGuard', marker: 'vitality', buff: true, value: u.maxHp - baseHp !== 4 ? `+${u.maxHp - baseHp}` : undefined });
   if (s.battleAttackBonus) out.push({ label: `+${s.battleAttackBonus} A do końca bitwy`, glyph: 'sBlade', buff: true, value: `+${s.battleAttackBonus}` });

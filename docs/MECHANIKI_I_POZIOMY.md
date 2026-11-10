@@ -48,9 +48,9 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 
 - [x] (10.11: przejmuje te, które poprawiają jego wyposażenie; bez plecaka reszta zostaje u pokonanego) Decyzje autora (10.11): po wygranej walce bohaterów zwycięzca **przejmuje artefakty pokonanego** (zamiast dzisiejszej losowej „zdobyczy” stopnia 1; `game.ts`, „łup z pokonanego bohatera”);
   przegrany traci wszystkie artefakty, które zwycięzca może przejąć. Ryzyko kuli śnieżnej zaakceptowane (sprawdzić symulacjami).
-- [ ] **Plecak** (wariant C): artefakty, które nie pasują do slotu albo są gorsze, trafiają do plecaka bohatera (ograniczona liczba miejsc, do ustalenia). Nowy fragment interfejsu: lista plecaka, zakładanie i zdejmowanie.
-- [ ] **Przekazywanie artefaktów między bohaterami**, jeśli stoją na sąsiednich polach (też z plecaka do plecaka).
-- [ ] Skarby (karty jednorazowe) rozróżnione od artefaktów (wariant A, decyzja autora): zasada „to, co się nosi, jest artefaktem; to, co się zużywa, jest eliksirem, zwojem, runą albo rogiem”.
+- [x] (10.11: 4 miejsca, karta bohatera) **Plecak** (wariant C): artefakty, które nie pasują do slotu albo są gorsze, trafiają do plecaka bohatera (ograniczona liczba miejsc, do ustalenia). Nowy fragment interfejsu: lista plecaka, zakładanie i zdejmowanie.
+- [x] (10.11: w turze bohatera, sojusznik na tym samym lub sąsiednim polu) **Przekazywanie artefaktów między bohaterami**, jeśli stoją na sąsiednich polach (też z plecaka do plecaka).
+- [x] (10.11: nazwy jak niżej, nowe obrazki trzech kart) Skarby (karty jednorazowe) rozróżnione od artefaktów (wariant A, decyzja autora): zasada „to, co się nosi, jest artefaktem; to, co się zużywa, jest eliksirem, zwojem, runą albo rogiem”.
   Cztery karty „wyposażenia” dostają w wersji cyfrowej nowe nazwy i grafiki, efekty bez zmian: Miecz Bohatera → Eliksir Mocy (+A), Buty Wiatru → Eliksir Chyżości (+S), Tarcza Strażnika → Zwój Tarczy (neguje cios), Kamień Ochrony → Runa Ochrony (−1 z każdego ciosu). Nazwy robocze. Planszówka bez zmian.
 
 **Do zbudowania — spotkania z neutralnymi (propozycja autora 10.11)**

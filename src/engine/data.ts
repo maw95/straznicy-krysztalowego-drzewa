@@ -316,6 +316,18 @@ export const ITEMS: Record<ItemKind, ItemDef> = {
   stone: { kind: 'stone', name: 'Kamień Ochrony', text: `−${E.stoneReduction} otrzymanych obrażeń z każdego ataku do końca bitwy.`, usableIn: ['battle'] },
 };
 
+/**
+ * Digital ruleset: what is worn is an artifact, what is used up is an elixir, a scroll, a rune or a horn. The four treasure cards named after
+ * gear carry other names (and pictures) there; what they do is unchanged, and the board edition keeps the printed names.
+ */
+export const DIGITAL_ITEM_NAMES: Partial<Record<ItemKind, string>> = { sword: 'Eliksir Mocy', boots: 'Eliksir Chyżości', shield: 'Zwój Tarczy', stone: 'Runa Ochrony' };
+
+/** A treasure card as the ruleset in play names it. */
+export function itemDef(kind: ItemKind, digital: boolean): ItemDef {
+  const name = digital ? DIGITAL_ITEM_NAMES[kind] : undefined;
+  return name ? { ...ITEMS[kind], name } : ITEMS[kind];
+}
+
 export const NON_RESURRECTION_ITEMS: ItemKind[] = (Object.keys(ITEMS) as ItemKind[]).filter((k) => k !== 'resurrection');
 
 /** Arena: Eliksiry Odrodzenia in the shared draft deck (the user's choice: 2, not the box's 6). */

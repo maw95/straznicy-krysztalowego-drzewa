@@ -21,7 +21,7 @@ import { SetupScreen } from './SetupScreen';
 import { music } from './music';
 import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
 import { DigitalCardsContext, UnitCard } from './UnitCard';
-import { HeroLevelsContext, StatScaleContext } from './statScale';
+import { DigitalContext, HeroLevelsContext, StatScaleContext } from './statScale';
 import { readAutosave, replay, writeAutosave, type BugReport, type SaveFile } from './saves';
 import { BugReportDialog } from './BugReportDialog';
 import { TesterDialog } from './TesterDialog';
@@ -747,6 +747,7 @@ export function App() {
 
   return (
     <DigitalCardsContext.Provider value={isDigital(game.rules)}>
+    <DigitalContext.Provider value={isDigital(game.rules)}>
     <StatScaleContext.Provider value={game.rules.statScale ?? 1}>
     <HeroLevelsContext.Provider value={heroLevels}>
       <AppChrome error={error} onDismissError={() => setError(null)} showRules={showRules} onCloseRules={() => setShowRules(false)} />
@@ -884,6 +885,7 @@ export function App() {
       />
     </HeroLevelsContext.Provider>
     </StatScaleContext.Provider>
+    </DigitalContext.Provider>
     </DigitalCardsContext.Provider>
   );
 }

@@ -1,12 +1,13 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { FACTION_NAMES, ITEMS, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
+import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
 import { activeHero, heroesAt, legalHeroMoves, moveAllowance, reviveSpots } from '../engine/game';
 import { HeroGrowth } from './growthUi';
 import { heroTileCost, SITE } from '../engine/sites';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { parseKey, type HexKey } from '../engine/hex';
 import { mapNeighbors } from '../engine/map';
-import type { Action, GameState, Tile } from '../engine/types';
+import { isDigital, type Action, type GameState, type Tile } from '../engine/types';
+import { itemArt } from './statScale';
 import { hoverCard } from './hover';
 import { details, useDetailsShown } from './details';
 import { aimedCursor } from './cursors';
@@ -531,12 +532,12 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           <div className="scroll" style={{ flex: 1, minHeight: 60, display: 'flex', flexDirection: 'column', gap: 6 }}>
             {inventory.length === 0 && <div style={{ fontSize: 15, color: 'var(--muted)', fontStyle: 'italic' }}>Brak skarbów.</div>}
             {inventory.map((it) => {
-              const def = ITEMS[it.kind];
+              const def = itemDef(it.kind, isDigital(state.rules));
               const usable = canAct && hero?.faction === viewer && def.usableIn.includes('map') && (it.kind !== 'resurrection' || deadUnits.length > 0);
               return (
                 <div key={it.id} className="plate parch" style={{ padding: '6px 9px', display: 'flex', gap: 8, alignItems: 'center' }}>
                   <button className="btn" title="Pokaż kartę skarbu" onClick={() => onShowCard(`item:${it.kind}`)} style={{ background: 'none', border: 0, padding: 0, flex: 'none' }}>
-                    <img {...hoverCard(`item:${it.kind}`)} src={asset(`cards/treasures/${it.kind}.jpg`)} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
+                    <img {...hoverCard(`item:${it.kind}`)} src={itemArt(it.kind, isDigital(state.rules))} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
                   </button>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 800, fontSize: 15, lineHeight: 1.1 }}>{def.name}</div>

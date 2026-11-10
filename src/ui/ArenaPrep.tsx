@@ -2,7 +2,7 @@
 // choose their supports and draft treasures, and the draft dialog itself.
 
 import { useState } from 'react';
-import { ARENA_PICKS, FACTION_NAMES, ITEMS, UNITS, type FactionId, type ItemKind } from '../engine/data';
+import { ARENA_PICKS, FACTION_NAMES, itemDef, UNITS, type FactionId, type ItemKind } from '../engine/data';
 import { isDigital, type GameState } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { TreasureCard } from './TreasureCard';
@@ -83,12 +83,12 @@ export function DraftDialog({ state, faction, covered, onReveal, onPick }: { sta
         <div style={{ fontSize: 16, color: 'var(--muted)', textAlign: 'center' }}>Pozostałe wracają do talii. Przeciwnik nie zobaczy Twoich skarbów, dopóki ich nie użyjesz.</div>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
           {d.offer.map((k) => (
-            <button key={k} className="btn" aria-pressed={chosen === k} aria-label={ITEMS[k].name} onClick={() => setChosen(k)} style={{ background: 'none', border: 0, padding: 4, borderRadius: 12, boxShadow: chosen === k ? '0 0 0 3px #9EE4FF, 0 0 16px 4px rgba(158,228,255,0.6)' : 'none' }}>
+            <button key={k} className="btn" aria-pressed={chosen === k} aria-label={itemDef(k, isDigital(state.rules)).name} onClick={() => setChosen(k)} style={{ background: 'none', border: 0, padding: 4, borderRadius: 12, boxShadow: chosen === k ? '0 0 0 3px #9EE4FF, 0 0 16px 4px rgba(158,228,255,0.6)' : 'none' }}>
               <TreasureCard kind={k} width={width} />
             </button>
           ))}
         </div>
-        {mine.length > 0 && <div style={{ fontSize: 16 }}>Masz już: {mine.map((k) => ITEMS[k].name).join(', ')}</div>}
+        {mine.length > 0 && <div style={{ fontSize: 16 }}>Masz już: {mine.map((k) => itemDef(k, isDigital(state.rules)).name).join(', ')}</div>}
         <button className="btn prim btn-big" data-enter disabled={!chosen} onClick={() => chosen && onPick(chosen)}>
           Biorę ten skarb
         </button>
