@@ -420,7 +420,7 @@ export function ArenaBoard(p: Props) {
               return (
                 <div
                   key={st.key}
-                  className="projectile"
+                  className={st.attacker === 'cyclops' ? 'projectile boulder' : 'projectile'}
                   style={{ left: a.x + W / 2 - 7, top: a.y + H / 2 - 20, ['--px' as string]: `${t.x - a.x}px`, ['--py' as string]: `${t.y - a.y}px` } as React.CSSProperties}
                 />
               );

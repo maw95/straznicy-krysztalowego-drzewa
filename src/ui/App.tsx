@@ -164,6 +164,12 @@ export function App() {
       if (!a) break;
       s = applyAction(s, a);
       history.current.push(a);
+      // ?supports=pegasus,shadowBat makes the bots take these supports into a battle (for looking at their sprites).
+      if (a.type === 'selectSupports' && q.get('supports')) {
+        const alive = s.factions[a.faction].supportsAlive;
+        const wanted = q.get('supports')!.split(',').filter((id) => alive.includes(id));
+        a = { ...a, supportIds: [...wanted, ...a.supportIds.filter((id) => !wanted.includes(id))].slice(0, a.supportIds.length) };
+      }
       if (q.get('until') === 'battle' && s.phase === 'battle' && s.battle?.stage === 'fight') break;
       // ?until=offer stops when a hero has skills to choose from (for looking at the skill cards).
       if (q.get('until') === 'treasure' && Object.values(s.heroes).some((h) => h.treasurePick)) break;

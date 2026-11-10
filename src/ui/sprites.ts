@@ -11,6 +11,8 @@ export interface SpriteSpec {
   width?: number;
   /** The box (canvas pixels) the unit's body is fitted into: LARGE for a unit on two hexes, SMALL on one; the frame follows from it. */
   box?: readonly [number, number];
+  /** Widest the corpse may be drawn (canvas pixels), for a one-hex unit with a box of its own (a SMALL box implies CORPSE_MAX_W). */
+  corpseMax?: number;
   /** Where the feet stand, as a fraction of the frame height (when anim.json does not say). */
   feet?: number;
   /** Playback speed of each clip against its recorded 24 fps (the take-off and landing are slowed or sped up here). */
@@ -21,20 +23,26 @@ export interface SpriteSpec {
 const LARGE = [150, 120] as const;
 const SMALL = [76, 96] as const;
 
+/** Widest a one-hex unit's corpse may be drawn (canvas pixels): it must fit on two hexes. */
+const CORPSE_MAX_W = 100;
+
 export const SPRITES: Record<string, SpriteSpec> = {
   goldDragon: { dir: 'jednostki/zloty_smok', width: 250, feet: 0.85, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  pegasus: { dir: 'jednostki/pegaz', box: LARGE, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  pegasus: { dir: 'jednostki/pegaz', box: [132, 106] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   werewolfLord: { dir: 'jednostki/wladca_wilkolakow', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   ironFistOgre: { dir: 'jednostki/ogr_zelazna_piesc', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   unicornKing: { dir: 'jednostki/krol_jednorozcow', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   elfDruid: { dir: 'jednostki/elf_druid', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   nymph: { dir: 'jednostki/nimfa', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  goblinShaman: { dir: 'jednostki/goblin_szaman', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  caveSpider: { dir: 'jednostki/pajak_jaskiniowy', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  shadowBat: { dir: 'jednostki/nietoperz_cienia', box: SMALL, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  // Goblins are short: the shaman stands lower than the elf and the nymph.
+  goblinShaman: { dir: 'jednostki/goblin_szaman', box: [76, 80] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  // The spider and the bat are wide and low: a wider box makes them big and menacing (they overhang their hex a little).
+  caveSpider: { dir: 'jednostki/pajak_jaskiniowy', box: [112, 96] as const, corpseMax: 112, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  shadowBat: { dir: 'jednostki/nietoperz_cienia', box: [96, 96] as const, corpseMax: CORPSE_MAX_W, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // The Black Dragon's body is taller than wide: a box of its own makes it as big on screen as the Golden Dragon (about 135 px).
-  blackDragon: { dir: 'jednostki/czarny_smok', box: [150, 136] as const, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  cyclops: { dir: 'jednostki/cyklop', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  blackDragon: { dir: 'jednostki/czarny_smok', box: [150, 136] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  // The throw is played fast so that the boulder (a projectile drawn by the arena, styles.css) leaves his hands with the blow.
+  cyclops: { dir: 'jednostki/cyklop', box: LARGE, speed: { chod: 1.4, atak: 2.2, smierc: 1.5, trafienie: 1.4 } },
   hydra: { dir: 'jednostki/hydra', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   griffin: { dir: 'jednostki/gryf', box: LARGE, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   braveDuck: { dir: 'jednostki/dzielna_kaczka', box: SMALL, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
@@ -77,9 +85,6 @@ export interface SpriteSet {
   /** How the fallen unit is drawn: scale (a small unit's corpse may span at most CORPSE_MAX_W canvas pixels) and the shift that puts its lowest point on the feet line, in canvas pixels. */
   corpse: { scale: number; dy: number };
 }
-
-/** Widest a one-hex unit's corpse may be drawn (canvas pixels): it must fit on two hexes. */
-const CORPSE_MAX_W = 100;
 
 const cache = new Map<string, Promise<SpriteSet>>();
 
@@ -128,9 +133,9 @@ export function loadSprites(defId: string): Promise<SpriteSet> {
       const width = spec.width ?? (body ? meta.frame[0] * Math.min(box[0] / body.w, box[1] / body.h) : (box[0] / (meta.body ?? 0.55)));
       const feet = meta.feet ?? spec.feet ?? 0.85;
       const lying = measureBody(martwy);
-      const small = !spec.width && (spec.box ?? SMALL) === SMALL;
+      const corpseMax = spec.corpseMax ?? (!spec.width && (spec.box ?? SMALL) === SMALL ? CORPSE_MAX_W : 0);
       const lyingW = lying ? (lying.w / meta.frame[0]) * width : 0;
-      const scale = small && lyingW > CORPSE_MAX_W ? CORPSE_MAX_W / lyingW : 1;
+      const scale = corpseMax && lyingW > corpseMax ? corpseMax / lyingW : 1;
       const dh = (width * meta.frame[1]) / meta.frame[0];
       // The lowest point of the corpse lies on the feet line (a little below it, as the hexes' centres are), whatever the picture's margins.
       const dy = lying ? 2 - scale * (lying.y1 / meta.frame[1] - feet) * dh : 0;

@@ -213,6 +213,19 @@ button { font-family: inherit; }
   box-shadow: 0 0 12px 4px rgba(255, 220, 120, 0.7);
   animation: fly-shot 0.45s ease-in both;
 }
+/* The Cyclops hurls a boulder: it leaves his hands when the throw of the attack clip lets go (sprites.ts: clip speed 2.2), flies in an arc and spins. */
+.projectile.boulder {
+  width: 46px; height: 46px; margin: -62px 0 0 -16px; border-radius: 0; box-shadow: none; opacity: 0;
+  background: url('/assets/ikony/mapa/glaz.webp') center / contain no-repeat;
+  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.55));
+  animation: fly-boulder 0.5s 0.62s cubic-bezier(0.3, 0, 0.7, 1) forwards;
+}
+@keyframes fly-boulder {
+  0% { transform: translate(0, 0) rotate(0deg) scale(0.9); opacity: 1; }
+  50% { transform: translate(calc(var(--px) * 0.5), calc(var(--py) * 0.5 - 46px)) rotate(200deg) scale(1.05); opacity: 1; }
+  92% { opacity: 1; }
+  100% { transform: translate(var(--px), calc(var(--py) + 42px)) rotate(400deg) scale(1); opacity: 0; }
+}
 .dmg {
   position: absolute;
   left: 50%;

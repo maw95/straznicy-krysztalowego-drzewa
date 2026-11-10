@@ -2,13 +2,13 @@
  "source_frame": 512,
  "crop": [
   0,
-  0,
+  25,
   512,
-  492
+  451
  ],
  "frame": [
   512,
-  492
+  451
  ],
  "cols": 8,
  "fps": 24,
@@ -16,9 +16,10 @@
   "atak": 73,
   "lot": 73,
   "smierc": 73,
-  "trafienie": 49
+  "trafienie": 49,
+  "wzbicie": 49
  },
- "feet": 0.8659,
- "cx": 0.3701,
- "body": 0.6387
+ "feet": 0.7894,
+ "cx": 0.4521,
+ "body": 0.7246
 }

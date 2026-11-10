@@ -1979,3 +1979,44 @@
     }
   ]
 }
+    },
+    {
+      "id": "ikony/mapa",
+      "pliki": [
+        "public/assets/ikony/mapa/shrine.webp",
+        "public/assets/ikony/mapa/camp.webp",
+        "public/assets/ikony/mapa/chest.webp",
+        "public/assets/ikony/mapa/treasure.webp",
+        "public/assets/ikony/mapa/glaz.webp"
+      ],
+      "typ": "okrągłe znaczniki na kafelkach mapy (kapliczka, obóz najemników, skrzynia z artefaktem, skarb) i głaz Cyklopa (pocisk na arenie)",
+      "prompt": "Game map marker icon, a single round medallion emblem centered on a transparent background: ornate gold ring rim with fine filigree, a <deep violet | deep crimson red | deep royal blue | warm dark brown> enamel disc inside, and in the centre <a small white stone forest shrine with a bright golden eight-pointed star above it | two crossed steel swords in front of a small mercenary camp tent | a closed iron-bound armoury chest with a sword hilt and a helmet on its lid | an open wooden treasure chest overflowing with gold coins>. Dark-fantasy hand-painted style like Heroes of Might and Magic III, rich painterly shading, top-left lighting, bold simple silhouette readable at 48 px. No text. Głaz: A single huge rough round grey granite boulder, game sprite, centered on a transparent background, dark-fantasy hand-painted style, cracks and moss specks, no ground, no shadow.",
+      "scenario_asset": "shrine: asset_Ed4LRyKQMDFnPPwGJ72zikAa, camp: asset_4g8DgnZQd4iYkUd8MohHPEMA, chest: asset_4FFSEvsbwf6Ctb3Z3TRTkVTS, treasure: asset_QZ12NNtyK18AdcJix9byFkGt, glaz: asset_BzLSQSvRgPKxDmQ4shH97FPk",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, 1024x1024, jakość medium, tło przezroczyste; scripts/assets/icons_cut.py (128 px, głaz 96 px, webp q85)",
+      "data": "2026-11-10",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/poprawki-2026-11-10",
+      "pliki": [
+        "public/assets/jednostki/nietoperz_cienia/",
+        "public/assets/jednostki/pegaz/",
+        "public/assets/jednostki/czarny_smok/",
+        "public/assets/jednostki/pajak_jaskiniowy/atak.webp",
+        "public/assets/jednostki/cyklop/atak.webp",
+        "public/assets/jednostki/krol_jednorozcow/atak.webp",
+        "public/assets/jednostki/gryf/atak.webp",
+        "public/assets/jednostki/elf_druid/",
+        "public/assets/jednostki/goblin_szaman/",
+        "public/assets/jednostki/wladca_wilkolakow/"
+      ],
+      "typ": "poprawki grafik jednostek: pozy spoczynku na ziemi z klipem wzbicia (Nietoperz siedzi, Pegaz i Czarny Smok stoją) i ich nowe klipy ataku, śmierci i trafienia; nowe ataki Pająka, Cyklopa (rzut głazem), Króla Jednorożców i Gryfa; nowe klipy śmierci i trupy Elfa Druida, Goblina Szamana i Władcy Wilkołaków (na boku / brzuchu, głową w prawo). Arkusze przepakowane w całości (wspólny kadr jednostki).",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "obrazy: GPT Image 2.5 Flare 1024 px (pozy: high, trupy: medium) z dawnym obrazem jednostki jako odniesieniem; klipy: P-Video 2, 720p, 24 kl./s, 2–3 s; pakowanie: scripts/animacje/pack_unit.py 512 px, WebP q80",
+      "data": "2026-11-10",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "scenario_asset": "shadowBat: stoi asset_aQPgtfKPjVtpccCKDWYA1Y48, wzbicie asset_frPJAHyPLFeuk9dTWtfRMPjV, atak asset_FX1PMFRKE8ydA4ScCFS1x3vp, smierc asset_3Vzff2n1tkgwnbT78rPpCDT8, trafienie asset_mmmH3rhvmg2aHUV5QjdLaZk3; pegasus: stoi asset_S4MbhCQnafbusi9ACXnnonEE, wzbicie asset_ex7kmJTzHDQfSJTyQikdkRJP, atak asset_xrYDaAeb9qLLRvAsEWkWVhKu, smierc asset_XpDCqeCKKAZ37hohgoviBP1x, trafienie asset_ybhS6c8gQGmCYzn1c9VJ36hR; blackDragon: stoi asset_8wuZqoizWvhDWUV2brXA5tXz, wzbicie asset_2mr9o4S1pmnmZLXiAGvH8LQa, atak asset_YrDJAYarabwyiiHCdpGLoCGB, smierc asset_DD1ZXKP6xkbmHqgYKh4cfDQP, trafienie asset_aX8vghth5bek9s6KjtPSpzxM; caveSpider atak asset_r8bokfH4BxCGoLtu9fBFwuQb; cyclops atak asset_sx9FwuVsufHGLnZrsFTGwwtm; unicornKing atak asset_4HtpUqmyepAz8mJWWzoezSH7; griffin atak asset_StbqCa6y4QGkYSBV9HcBGJFj; elfDruid: martwy asset_7jFcZbriWNUkF1cPrckNov5P, smierc asset_4Dbn9VwVR7Vh7Dvak4AkVZCL; goblinShaman: martwy asset_2XWdNoBzgJwfxfzZjk1iNJjC, smierc asset_XyQ2T8KyW4pqtuBmihw6pckC; werewolfLord: martwy asset_jtNMiJ7SGfgmbrnMv7xaGHeo, smierc asset_biQnJQZ3prYf83Fvr4HcN51u (martwy w grze = ostatnia klatka klipu śmierci)",
+      "prompt": "Pozy: 'The same <jednostka> as in the reference image ..., same painterly realistic style, same colours and same body size, but now it is NOT flying: it <sits perched on the ground like a menacing gargoyle, wings folded like a cloak | stands calmly on all four legs, wings folded | stands firmly on all four legs, wings half-closed above its back> in a strict side view facing right ... Plain solid pure blue background (#0000FF)'. Klipy: 'Side view, locked static camera. ... Plain solid blue background stays unchanged, no camera movement.' — wzbicie: 'unfolds its wings, pushes off the ground and takes off straight up ... ends hovering'; ataki: uderzenie w miejscu (bat: rears up, snaps its fangs forward; pegasus: rears up and kicks out with both front hooves; black dragon: thrusts its head forward exhaling a short stream of fire; spider: rears up, spreads its fangs and snaps forward, no jumping; cyclops: heaves up a huge round grey boulder above its head and hurls it to the right; unicorn: rears up and jabs its horn forward and down, stamping; griffin: reaches both front legs sharply forward in a sweeping motion). Pełne brzmienie i lekcje: docs/PRZEPIS_JEDNOSTKI.md."

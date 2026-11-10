@@ -65,6 +65,16 @@ Wszystko w `.tmp/zrodla/<idJednostki>/` (np. `.tmp/zrodla/unicornKing/`): `stoi.
   w innej pozie, **pomiń ten klip** (nie pakuj go): kod użyje wtedy drgnięcia i błysku.
 - `martwy` ma leżeć na boku/brzuchu z głową w prawo; trup na plecach z nogami w lewo wygląda źle, więc jedna poprawka promptu.
 
+## Jednostka latająca, która w spoczynku stoi (10.11.2026: Nietoperz, Pegaz, Czarny Smok)
+
+- `stoi` to poza na ziemi (siedzi / stoi, skrzydła złożone), generowana z dawnym obrazem zawisu jako odniesieniem („the same ... but now it is NOT flying”).
+- Dochodzi klip `wzbicie` (2 s, `image` = nowe `stoi`, `lastFrameImage` = dawna poza zawisu); lądowanie to ten sam klip od tyłu. Pętla `lot` zostaje dawna.
+  Kod (`SpriteLayer`) sam gra wzbicie → lot → lądowanie, gdy `anim.json` ma oba klipy.
+- `atak`, `smierc` (z `lastFrameImage` = dawny `martwy`) i `trafienie` trzeba zrobić od nowa z nowego `stoi`, bo stare zaczynały się w powietrzu.
+- Atak ma być **uderzeniem w miejscu** (staje dęba i bije kopytami, kąsa, dźga rogiem), nie biegiem do przodu: „does not run or walk forward”, „hind hooves stay at the same spot”.
+- Filtr treści zablokował (i policzył 15 CU) „rakes both front talons ... swipe ... screech”; przeszło „reaches both front legs sharply forward ... sweeping motion ... loud call”.
+- Pocisk rysowany przez arenę (głaz Cyklopa: `.projectile.boulder` w `styles.css`) startuje z opóźnieniem dobranym do chwili wyrzutu w klipie (prędkość klipu w `sprites.ts`).
+
 ## Rozmiary i rola na planszy (ustala koordynator w `sprites.ts` i `data.ts`)
 
 Duże (2 pola): smoki, niedźwiedź, ogr, cyklop, hydra, gryf, jednorożec. Małe (1 pole): reszta. Rozmiar ciała na planszy: ok. 140 px dla

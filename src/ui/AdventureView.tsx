@@ -358,13 +358,13 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     {state.control?.points.includes(t.key) && <ControlFlag holder={controlHolder(state, t.key)} centre={state.control.points[0] === t.key} size={W} />}
                     {t.revealed && t.treasureId && (
                       <div className="glint" style={{ position: 'absolute', right: W * 0.12, top: H * 0.24 }} title="Skarb">
-                        <Medal fill="mBrown" glyph="gChest" size={W * 0.3} />
+                        <img src={asset('ikony/mapa/treasure.webp')} alt="" width={W * 0.34} height={W * 0.34} style={{ display: 'block' }} />
                       </div>
                     )}
                     {hintHex === t.key && <div className="hint-ring" data-hint="hex" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 5 }} />}
                     {t.revealed && t.site && !t.site.used && (
                       <div className="glint" style={{ position: 'absolute', left: W * 0.12, top: H * 0.24 }} title={`${SITE.names[t.site.kind]}: ${SITE.texts[t.site.kind]}`} data-site={t.site.kind}>
-                        <Medal fill={SITE_LOOK[t.site.kind][0]} glyph={SITE_LOOK[t.site.kind][1]} size={W * 0.3} />
+                        <img src={asset(`ikony/mapa/${t.site.kind}.webp`)} alt="" width={W * 0.34} height={W * 0.34} style={{ display: 'block' }} />
                       </div>
                     )}
                     {crystal && (
@@ -676,8 +676,6 @@ function TileStrip({ state, k, reach, heroName }: { state: GameState; k: HexKey;
 }
 
 /** With a mouse: a small note next to the hovered hex, after a short pause (moving across the map shows nothing). */
-/** Medal colour and glyph of a site on the map (art to come: backlog section 7). */
-const SITE_LOOK = { shrine: ['mPurple', 'gStar'], camp: ['mRed', 'gSwords'], chest: ['mBlue', 'gChest'] } as const;
 
 function HexTooltip({ state, k, reach, heroName, x, y, W, H, boardW }: { state: GameState; k: HexKey; reach?: { cost: number; hostile: boolean }; heroName: string; x: number; y: number; W: number; H: number; boardW: number }) {
   const [ready, setReady] = useState(false);

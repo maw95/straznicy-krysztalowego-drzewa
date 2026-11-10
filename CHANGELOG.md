@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Mapa: malowane okrągłe znaczniki na kafelkach (kapliczka, obóz najemników, skrzynia z artefaktem, skarb) zamiast prostych medalików.
+- Bitwa, grafika jednostek: Nietoperz Cienia siedzi (i jest większy), Pegaz i Czarny Smok stoją na ziemi; do lotu wzbijają się i po nim lądują. Nowe ataki: Pegaz i Król Jednorożców uderzają kopytami i rogiem zamiast biec, Gryf bije szponami, Pająk Jaskiniowy (większy) staje dęba i kąsa, Cyklop podnosi i ciska głaz, który leci przez arenę. Goblin Szaman jest niższy. Elf Druid, Goblin Szaman i Władca Wilkołaków po śmierci leżą na boku albo brzuchu, głową w prawo.
 - Mapa: zakryte pola nie mrugają już pojedynczo. Mgła nad nimi przeskakiwała raz na minutę (pętla animacji miała szew), a że każde pole zaczyna w innej chwili, wyglądało to jak błysk na jednym zakrytym kafelku. Błysk nie zdradzał skarbów, ale mylił.
 - Rozwój bohatera: sprawdzony symulacjami (progi PD, umiejętności, kamienie milowe). Żaden bohater ani kamień milowy nie wychodzi poza szum; liczby bez zmian.
 - Karty bohaterów w grze z rozwojem pokazują osiągnięty kamień milowy: pod opisem zdolności dopisana jest linia „Poziom N: …” z aktualnymi liczbami.
