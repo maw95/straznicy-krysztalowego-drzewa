@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Rozwój bohatera: trzy nowe umiejętności ze stopniami I–III. Strzelec (Oko Łucznika / Krzywy Łuk) daje strzelcom +1/+2/+3 do Ataku; Taktyk (Sztuka Wojny / Zasadzka) pozwala ustawić jednostki przed bitwą o 1/2/3 kolumny dalej; Zwiadowca (Orle Oko / Ślepia Wilka) odkrywa na starcie tury pola w promieniu 2/3/4. Medale na razie pożyczają ikony innych umiejętności.
 - Rozwój bohatera: poziomy 6–10. Kolejne progi doświadczenia to 26, 38, 56, 84 i 128 PD łącznie, więc wysokie poziomy są rzadkie (poziom 10 wymaga bardzo długiej wyprawy).
 - Rozwój bohatera: umiejętności mają stopnie I–III. Wybranie umiejętności, którą bohater już ma, podnosi jej stopień (np. Moc daje +1, +2, +3 do Ataku). Przy awansie wśród propozycji jest zawsze co najmniej jedno rozwinięcie, jeśli bohater ma coś do rozwinięcia.
 - Wyprawa (poziom 2 i wyżej): Życie i Atak wszystkich jednostek są trzy razy większe (np. Prastary Niedźwiedź ma 36 Ż), a wszystkie premie, zdolności i skarby odpowiednio większe. Gra przebiega tak samo, ale pozostawia miejsce na drobniejsze premie i obronę. Przygoda (poziom 1) i planszówka bez zmian.

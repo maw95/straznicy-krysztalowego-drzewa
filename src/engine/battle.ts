@@ -494,8 +494,15 @@ function beginFight(state: GameState) {
 /** Cells a side may deploy on: its edge column, minus obstacles. */
 export function deployCells(b: BattleState, side: Side): HexKey[] {
   const wide = b.layout === 'wide';
-  const col = side === b.attacker ? 0 : (wide ? WIDE_COLUMNS : ARENA_COLUMNS) - 1;
-  return (wide ? wideColumnCells(col) : columnCells(col)).filter((k) => !b.obstacles.includes(k));
+  const attacking = side === b.attacker;
+  const last = (wide ? WIDE_COLUMNS : ARENA_COLUMNS) - 1;
+  const cells: HexKey[] = [];
+  // The edge column first, then the extra columns of a side whose hero is a Taktyk.
+  for (let d = 0; d <= (b.deployDepth?.[side] ?? 0); d++) {
+    const col = attacking ? d : last - d;
+    cells.push(...(wide ? wideColumnCells(col) : columnCells(col)));
+  }
+  return cells.filter((k) => !b.obstacles.includes(k));
 }
 
 /** Duel spots: the two leaders on neighbouring cells in the middle. */
@@ -531,11 +538,17 @@ export function deployUnits(state: GameState, faction: FactionId, positions: Rec
   // Cells already taken by the other side count too (a large unit's head reaches into the next column).
   const used = new Set<HexKey>(Object.values(b.units).filter((u) => u.side !== faction).flatMap(cellsOf));
   const placed = new Map<string, { pos: HexKey; tail?: HexKey }>();
+  // First every unit claims its own cell (a large one its tail); only then the large ones pick a head, so a head never takes a cell someone chose.
+  const cellFor = new Map<string, HexKey>();
   for (const u of own) {
     const k = positions[u.id] ?? deployCellOf(u);
-    if (!k || !allowed.has(k)) throw new Error('Jednostki można ustawić tylko w swojej skrajnej kolumnie.');
+    if (!k || !allowed.has(k)) throw new Error('Jednostki można ustawić tylko w swoich kolumnach startowych.');
     if (used.has(k)) throw new Error('Dwie jednostki nie mogą stać na jednym polu.');
     used.add(k);
+    cellFor.set(u.id, k);
+  }
+  for (const u of own) {
+    const k = cellFor.get(u.id)!;
     if (isLarge(state, u)) {
       const keep = u.pos && u.tail === k && !used.has(u.pos) ? [u.pos] : [];
       const head = [...keep, ...deployHeads(b, faction, k)].find((c) => !used.has(c));

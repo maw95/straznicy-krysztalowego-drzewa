@@ -302,6 +302,8 @@ export interface BattleState {
   stage: 'select' | 'draft' | 'deploy' | 'fight' | 'over';
   /** Factions still to place their units (attacker first); neutral guardians stay where put. */
   needsDeploy: FactionId[];
+  /** Extra columns a side may deploy in (the hero's skill Taktyk). */
+  deployDepth?: Partial<Record<Side, number>>;
   needsSelection: FactionId[];
   obstacles: HexKey[];
   units: Record<string, BattleUnit>;

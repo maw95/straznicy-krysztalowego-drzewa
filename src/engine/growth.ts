@@ -3,7 +3,7 @@
 // level presets of the family mode switch it on), so games without it are untouched.
 
 import { FACTION_NAMES, ITEMS, NON_RESURRECTION_ITEMS, UNITS, type FactionId } from './data';
-import { activeHero, grantTreasure } from './game';
+import { activeHero, grantTreasure, scoutAround } from './game';
 import { log } from './log';
 import { Rng } from './rng';
 import type { BattleUnit, GameState, HeroState } from './types';
@@ -20,7 +20,7 @@ export const GROWTH = {
 };
 export const MAX_LEVEL = GROWTH.thresholds.length + 1;
 
-export type SkillId = 'might' | 'vigor' | 'swift' | 'leader' | 'pathfinder' | 'fortune';
+export type SkillId = 'might' | 'vigor' | 'swift' | 'leader' | 'pathfinder' | 'fortune' | 'marksman' | 'tactician' | 'scout';
 
 /** A skill has ranks I-III; taking a skill the hero already has raises its rank (the list `skills` holds it once per rank). */
 export const MAX_RANK = 3;
@@ -32,6 +32,9 @@ export const SKILL_RANKS = {
   swift: [1, 2, 2], // S
   leader: [1, 2, 3], // Ż of the supports
   pathfinder: [1, 2, 2], // move points on the map
+  marksman: [1, 2, 3], // A of the hero's shooters (the hero too, when it shoots)
+  tactician: [1, 2, 3], // extra columns the hero's units may be deployed in
+  scout: [2, 3, 4], // radius of the hexes revealed at the start of the hero's turn (and on every step)
 } as const;
 
 /** What a skill does at each rank, in the words of the rules; the names per faction are in SKILL_NAMES. */
@@ -41,18 +44,21 @@ export const SKILL_EFFECT: Record<SkillId, { texts: [string, string, string] }> 
   swift: { texts: SKILL_RANKS.swift.map((n) => `+${n} S bohatera w bitwie.`) as [string, string, string] },
   leader: { texts: SKILL_RANKS.leader.map((n) => `Pomocnicy bohatera mają +${n} Ż w bitwie.`) as [string, string, string] },
   pathfinder: { texts: SKILL_RANKS.pathfinder.map((n) => `+${n} punkt${n === 1 ? '' : 'y'} ruchu na mapie.`) as [string, string, string] },
+  marksman: { texts: SKILL_RANKS.marksman.map((n) => `Strzelcy bohatera (też on sam, jeśli strzela) mają +${n} A w bitwie.`) as [string, string, string] },
+  tactician: { texts: SKILL_RANKS.tactician.map((n) => `Rozstawienie przed bitwą: jednostki bohatera mogą stanąć o ${n} ${n === 1 ? 'kolumnę' : 'kolumny'} dalej.`) as [string, string, string] },
+  scout: { texts: SKILL_RANKS.scout.map((n) => `Na początku tury odkrywa pola w promieniu ${n} od bohatera.`) as [string, string, string] },
   fortune: { texts: ['Od razu: losowy skarb dla frakcji.', 'Od razu: kolejny losowy skarb dla frakcji.', 'Od razu: jeszcze jeden losowy skarb dla frakcji.'] },
 };
 export const skillText = (skill: SkillId, rank: number) => SKILL_EFFECT[skill].texts[Math.min(Math.max(rank, 1), MAX_RANK) - 1];
 
 export const SKILL_NAMES: Record<FactionId, Record<SkillId, string>> = {
-  dawn: { might: 'Moc Świtu', vigor: 'Hart Gaju', swift: 'Lekkość Wiatru', leader: 'Opieka nad Drużyną', pathfinder: 'Leśny Tropiciel', fortune: 'Dar Strażników' },
-  horde: { might: 'Furia Hordy', vigor: 'Pancerz z Kości', swift: 'Pęd Ciemności', leader: 'Okrzyk Wodza', pathfinder: 'Nocny Zwiadowca', fortune: 'Łupieżca' },
+  dawn: { might: 'Moc Świtu', vigor: 'Hart Gaju', swift: 'Lekkość Wiatru', leader: 'Opieka nad Drużyną', pathfinder: 'Leśny Tropiciel', fortune: 'Dar Strażników', marksman: 'Oko Łucznika', tactician: 'Sztuka Wojny', scout: 'Orle Oko' },
+  horde: { might: 'Furia Hordy', vigor: 'Pancerz z Kości', swift: 'Pęd Ciemności', leader: 'Okrzyk Wodza', pathfinder: 'Nocny Zwiadowca', fortune: 'Łupieżca', marksman: 'Krzywy Łuk', tactician: 'Zasadzka', scout: 'Ślepia Wilka' },
 };
 
 export const ALL_SKILLS = Object.keys(SKILL_EFFECT) as SkillId[];
 /** The order bots prefer: strength first, then Życie, speed, the squad, the roads. */
-export const BOT_SKILL_ORDER: SkillId[] = ['might', 'vigor', 'leader', 'swift', 'pathfinder', 'fortune'];
+export const BOT_SKILL_ORDER: SkillId[] = ['might', 'vigor', 'leader', 'swift', 'marksman', 'pathfinder', 'tactician', 'scout', 'fortune'];
 
 export const growthOn = (state: Pick<GameState, 'rules'>) => Boolean(state.rules.heroGrowth);
 export const levelOf = (h: Pick<HeroState, 'level'>) => h.level ?? 1;
@@ -107,6 +113,7 @@ export function chooseSkill(state: GameState, heroId: string, skill: SkillId): v
   const rank = skillRank(hero, skill);
   log(state, 'info', `${UNITS[hero.id].name} wybiera umiejętność: ${SKILL_NAMES[hero.faction][skill]}${rank > 1 ? ` (stopień ${rank})` : ''}.`, hero.faction);
   if (skill === 'fortune') grantFortune(state, hero);
+  if (skill === 'scout' && activeHero(state)?.id === hero.id) scoutAround(state, hero);
   // The extra move point counts at once when it is the hero's own turn, not only from the next one.
   if (skill === 'pathfinder' && activeHero(state)?.id === hero.id) state.movePoints += rankValue(SKILL_RANKS.pathfinder, hero, 'pathfinder') - (skillRank(hero, 'pathfinder') > 1 ? SKILL_RANKS.pathfinder[skillRank(hero, 'pathfinder') - 2] : 0);
   maybeLevelUp(state, hero);
@@ -132,6 +139,12 @@ export function applyHeroSkills(hero: HeroState | undefined, unit: BattleUnit): 
   const hp = rankValue(SKILL_RANKS.vigor, hero, 'vigor') * k;
   unit.hp += hp;
   unit.maxHp += hp;
+  addMarksman(hero, unit);
+}
+
+/** Szkoła strzelecka: a ranged unit of the hero gets the attack bonus. */
+function addMarksman(hero: Pick<HeroState, 'skills'>, unit: BattleUnit): void {
+  if (UNITS[unit.defId].attackType === 'ranged') unit.status.battleAttackBonus += rankValue(SKILL_RANKS.marksman, hero, 'marksman') * (unit.scale ?? 1);
 }
 
 /** Pomocnicy of a hero with the skill Dowódca. */
@@ -140,7 +153,14 @@ export function applySupportSkill(hero: HeroState | undefined, unit: BattleUnit)
   const hp = rankValue(SKILL_RANKS.leader, hero, 'leader') * (unit.scale ?? 1);
   unit.hp += hp;
   unit.maxHp += hp;
+  addMarksman(hero, unit);
 }
+
+/** Extra columns a hero's units may be deployed in. */
+export const deployDepthOf = (hero: HeroState | undefined) => (hero ? rankValue(SKILL_RANKS.tactician, hero, 'tactician') : 0);
+
+/** Radius of the hexes a hero reveals (0 = no Zwiadowca; the step itself always reveals the neighbours). */
+export const scoutRadiusOf = (hero: HeroState | undefined) => (hero ? rankValue(SKILL_RANKS.scout, hero, 'scout') : 0);
 
 /** Extra move points on the map. */
 export const moveBonus = (hero: HeroState | undefined) => (hero ? rankValue(SKILL_RANKS.pathfinder, hero, 'pathfinder') : 0);

@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { applyAction, createGame, activeHero, moveAllowance } from '../src/engine/game';
-import { makeBattleUnit } from '../src/engine/battle';
-import { ALL_SKILLS, applyHeroSkills, applySupportSkill, awardXp, chooseSkill, GROWTH, levelOf, MAX_LEVEL, MAX_RANK, moveBonus, skillRank, type SkillId } from '../src/engine/growth';
-import { playOut, setup } from './helpers/engine';
+import { cellOf, deployCells, makeBattleUnit } from '../src/engine/battle';
+
+import { ALL_SKILLS, applyHeroSkills, applySupportSkill, awardXp, chooseSkill, GROWTH, levelOf, MAX_LEVEL, MAX_RANK, moveBonus, scoutRadiusOf, skillRank, SKILL_RANKS, type SkillId } from '../src/engine/growth';
+import { battleFixture, playOut, setup } from './helpers/engine';
 
 const grown = (over: Parameters<typeof setup>[0] = {}) => createGame(setup(over, { ruleset: 'digital', heroGrowth: true }));
 
@@ -116,5 +117,48 @@ describe('Leśny Tropiciel', () => {
     chooseSkill(s, h.id, 'pathfinder');
     expect(s.movePoints).toBe(before + 1);
     expect(moveAllowance(s)).toBe(s.rules.heroMovePoints + 1);
+  });
+});
+
+describe('Strzelec, Taktyk, Zwiadowca', () => {
+  const take = (s: ReturnType<typeof grown>, skill: SkillId, times = 1) => {
+    const h = activeHero(s)!;
+    for (let i = 0; i < times; i++) {
+      h.offer = [skill, 'might', 'vigor'];
+      chooseSkill(s, h.id, skill);
+    }
+    return h;
+  };
+
+  it('Strzelec: a ranged unit gets +A by rank, a melee one nothing', () => {
+    const s = grown();
+    const h = take(s, 'marksman', 2);
+    const archer = makeBattleUnit('elfDruid', 'dawn', true, 3);
+    const guard = makeBattleUnit('nymph', 'dawn', true, 3);
+    applySupportSkill(h, archer);
+    applySupportSkill(h, guard);
+    expect(archer.status.battleAttackBonus).toBe(SKILL_RANKS.marksman[1] * 3);
+    expect(guard.status.battleAttackBonus).toBe(0);
+  });
+
+  it('Taktyk: the side of a Taktyk deploys in extra columns, the other side only in its edge column', () => {
+    const s = battleFixture(grown(), [{ id: 'braveDuck', side: 'dawn', col: 0, half: 8 }, { id: 'blackDragon', side: 'horde', col: 12, half: 8 }], { stage: 'deploy', deployDepth: { dawn: 2 } });
+    const b = s.battle!;
+    const cols = (side: 'dawn' | 'horde') => new Set(deployCells(b, side).map((k) => cellOf(k).col));
+    expect([...cols('dawn')].sort((x, y) => x - y)).toEqual([0, 1, 2]);
+    expect([...cols('horde')]).toEqual([12]);
+  });
+
+  it('Zwiadowca: reveals the radius at the start of the turn and when chosen', () => {
+    const s = grown({ mapSize: 'medium' });
+    const h = activeHero(s)!;
+    const hidden = () => Object.values(s.tiles).filter((t) => !t.revealed).length;
+    const before = hidden();
+    take(s, 'scout');
+    const afterOne = hidden();
+    expect(afterOne).toBeLessThan(before);
+    take(s, 'scout');
+    expect(hidden()).toBeLessThanOrEqual(afterOne);
+    expect(scoutRadiusOf(h)).toBe(SKILL_RANKS.scout[1]);
   });
 });

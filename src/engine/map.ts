@@ -133,13 +133,21 @@ class LazyPath implements PathResult {
   }
 }
 
-export function revealAround(state: GameState, k: HexKey): HexKey[] {
+/** Reveals the hex and every hex within `radius` steps of it (1 = the neighbours); returns the newly revealed ones. */
+export function revealAround(state: GameState, k: HexKey, radius = 1): HexKey[] {
   const revealed: HexKey[] = [];
-  for (const n of [k, ...mapNeighbors(state.tiles, k)]) {
-    if (!state.tiles[n].revealed) {
-      state.tiles[n].revealed = true;
-      revealed.push(n);
+  const seen = new Set<HexKey>([k]);
+  let ring: HexKey[] = [k];
+  for (let step = 0; step <= radius; step++) {
+    const next: HexKey[] = [];
+    for (const h of ring) {
+      if (!state.tiles[h].revealed) {
+        state.tiles[h].revealed = true;
+        revealed.push(h);
+      }
+      if (step < radius) for (const n of mapNeighbors(state.tiles, h)) if (!seen.has(n)) (seen.add(n), next.push(n));
     }
+    ring = next;
   }
   return revealed;
 }

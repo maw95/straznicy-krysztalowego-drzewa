@@ -46,7 +46,7 @@ import {
 import { distance, parseKey, type HexKey } from './hex';
 import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { log } from './log';
-import { applyHeroSkills, applySupportSkill, awardXp, chooseSkill, GROWTH, moveBonus } from './growth';
+import { applyHeroSkills, applySupportSkill, awardXp, chooseSkill, deployDepthOf, GROWTH, moveBonus, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { applyGear, ARTIFACTS, gearMoveBonus, giveArtifact, placeSites, visitSite } from './sites';
 import { Rng } from './rng';
@@ -507,7 +507,7 @@ function moveHero(state: GameState, to: HexKey) {
     return;
   }
   hero.pos = to;
-  const revealed = revealAround(state, to);
+  const revealed = revealAround(state, to, Math.max(1, scoutRadiusOf(hero)));
   log(state, 'move', `${name} wchodzi na pole: ${TERRAIN_NAMES[state.tiles[to].terrain]}${revealed.length ? ` (odkryto ${revealed.length})` : ''}.`);
   arriveAt(state, hero);
 }
@@ -598,6 +598,15 @@ function advanceTurn(state: GameState) {
   }
   state.movePoints = moveAllowance(state);
   state.turnBattleDone = false;
+  scoutAround(state, activeHero(state) ?? undefined);
+}
+
+/** A hero with the skill Zwiadowca uncovers the hexes around itself at the start of its turn (and when it picks the skill). */
+export function scoutAround(state: GameState, hero: HeroState | undefined) {
+  const radius = scoutRadiusOf(hero);
+  if (!hero || !hero.alive || !hero.pos || radius < 2) return;
+  const revealed = revealAround(state, hero.pos, radius);
+  if (revealed.length) log(state, 'move', `${UNITS[hero.id].name} wypatruje okolicę (odkryto ${revealed.length}).`, hero.faction);
 }
 
 /** Move points the active hero gets at the start of its turn: the rules' base plus skills, family help and gear, minus the artifact's weight. */
@@ -717,6 +726,7 @@ function startBattle(state: GameState, s: BattleStart) {
   for (const h of [attacker, defenderHero]) if (h && state.rules.heroGrowth) {
     applyHeroSkills(h, b.units[h.id]);
     applyGear(h, b.units[h.id]);
+    if (deployDepthOf(h)) (b.deployDepth ??= {})[h.faction] = deployDepthOf(h);
   }
   for (const h of [attacker, defenderHero]) if (h && isChildHero(state, h)) {
     b.units[h.id].hp += FAMILY.extraHp * scale;

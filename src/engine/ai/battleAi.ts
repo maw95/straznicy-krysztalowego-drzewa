@@ -14,6 +14,7 @@ import {
   canUseBattleItem,
   cellsOf,
   deployCells,
+  deployHeads,
   enemiesOf,
   footprintAt,
   isLarge,
@@ -317,8 +318,15 @@ function chooseDeployment(state: GameState, faction: FactionId): Action {
   const cells = deployCells(b, faction).sort((x, y) => middleDistance(b, x) - middleDistance(b, y));
   const order = own.slice().sort((x, y) => rank(x) - rank(y));
   const positions: Record<string, HexKey> = {};
-  // Melee first takes central cells, shooters the outer ones.
-  order.forEach((u, i) => (positions[u.id] = cells[i]));
+  // Melee first takes central cells, shooters the outer ones. A large unit's head reaches into the next column (more than one column when the
+  // hero is a Taktyk), so the cell it will take is kept free for it.
+  const taken = new Set<HexKey>();
+  for (const u of order) {
+    const k = cells.find((c) => !taken.has(c) && (!isLarge(state, u) || deployHeads(b, faction, c).some((h) => !taken.has(h))))!;
+    taken.add(k);
+    if (isLarge(state, u)) taken.add(deployHeads(b, faction, k).find((h) => !taken.has(h))!);
+    positions[u.id] = k;
+  }
   return { type: 'deployUnits', faction, positions };
 }
 
