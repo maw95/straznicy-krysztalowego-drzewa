@@ -236,7 +236,7 @@ Pliki w `bug-reports/` są kumulatywne (każdy zawiera wszystkie wcześniejsze z
 - [x] **11.7. Pegaz na dwóch heksach.** Wygląda śmiesznie mało obok Jednorożca; w wersji cyfrowej Pegaz ma `size: 2` (jak bohaterowie i strażnicy) i większe pudełko w `sprites.ts`. Wersja planszowa bez zmian. Symulacje (60 gier na komórkę) bez wyjątków, wyniki w pasmach; stroiciel nie ruszany.
 
 ### Rozwój i mapa
-- [ ] **11.8. (ustalenia 10.11: krzywa PD wykładnicza, poziom 10 rzadkością; sloty broń/tarcza/hełm/zbroja/buty, układ jak w Heroes III: hełm u góry, broń–zbroja–tarcza, buty na dole; bohaterowie Hordy rozwijają się tak samo jak Przymierza; strażnicy bez doświadczenia, tylko podrasowane statystyki; artefakty do wspólnego zaprojektowania) Poziomy 6–10 i nowe sloty artefaktów (hełm, zbroja).** Duża zmiana balansu (rozwój, stroiciel, złote partie testowe), do osobnej sesji; potrzebne decyzje autora o krzywej PD i bonusach (patrz 10).
+- [ ] **11.8. (ustalenia 10.11: poziomy 6–10 i 5 slotów wchodzą już do Wyprawy (wariant B); krzywa PD wykładnicza, poziom 10 rzadkością; sloty broń/tarcza/hełm/zbroja/buty, układ jak w Heroes III: hełm u góry, broń–zbroja–tarcza, buty na dole; bohaterowie Hordy rozwijają się tak samo jak Przymierza; strażnicy bez doświadczenia, tylko podrasowane statystyki; artefakty do wspólnego zaprojektowania) Poziomy 6–10 i nowe sloty artefaktów (hełm, zbroja).** Duża zmiana balansu (rozwój, stroiciel, złote partie testowe), do osobnej sesji; potrzebne decyzje autora o krzywej PD i bonusach (patrz 10).
 - [ ] **11.9. Ładniejsze okrągłe ikony na kafelkach (gwiazdka, skrzynia, miecze) z Scenario.** Wymaga kredytów i akceptacji autora (10.4).
 
 ### Grafika i animacje (do ustalenia, Scenario)
