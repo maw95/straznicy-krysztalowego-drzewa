@@ -29,7 +29,7 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
   - [x] **Zwiadowca** (10.11; Orle Oko / Ślepia Wilka): odkrywa pola w promieniu 2 / 3 / 4 na starcie tury (stopień I dawałby promień 1, a to już jest, więc zaczynamy od 2).
   - [x] **Łowca skarbów** (10.11; Skarbnik Gaju / Nos Hieny): po walce ze strażnikiem wybór skarbu: I — 1 z 2, II — 1 z 3, III — 2 z 3 (zamiast losu).
   - [x] **Uczony** (10.11; Mądrość Drzewa / Pamięć Przodków; dawniej „Mentor”): dodatkowe PD za każdą wygraną walkę (+1 / +2 / +3; do dostrojenia, żeby poziom 10 został rzadkością).
-- [ ] Kamienie milowe na poziomach 3, 6 i 9: ulepszenie własnej zdolności z karty bohatera (decyzje autora, 10.11; stopnie się kumulują, liczby w małej skali, ×3 liczy `statScale`):
+- [x] Kamienie milowe na poziomach 3, 6 i 9 (zrobione 10.11, `ABILITY_TIERS` w `data.ts`; wartości robocze do strojenia, krok 5): ulepszenie własnej zdolności z karty bohatera (decyzje autora, 10.11; stopnie się kumulują, liczby w małej skali, ×3 liczy `statScale`):
   - **Złoty Smok** (Słoneczny Blask, sojusznicy / Smok): start +1 / +3 → poz. 3: +2 / +3 → poz. 6: +2 / +4 → poz. 9: +2 / +5.
   - **Król Jednorożców** (Szarża Światła): +2 → 3 → 4 → 5 A.
   - **Prastary Niedźwiedź** (Opiekun Gaju, ignorowane obrażenia): 3 → 5 → 5 i **dowolny sojusznik** (nie tylko sąsiad) → 7.

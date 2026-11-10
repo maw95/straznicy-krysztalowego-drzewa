@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { applyAction, applyActionInPlace, createGame, activeHero, moveAllowance } from '../src/engine/game';
-import { cellOf, deployCells, makeBattleUnit } from '../src/engine/battle';
+import { abilityNum, bearCanGuard, cellOf, deployCells, makeBattleUnit } from '../src/engine/battle';
 
-import { ALL_SKILLS, applyHeroSkills, applySupportSkill, awardXp, chooseSkill, GROWTH, levelOf, MAX_LEVEL, MAX_RANK, moveBonus, scoutRadiusOf, skillRank, SKILL_RANKS, type SkillId } from '../src/engine/growth';
+import { ALL_SKILLS, applyHeroSkills, applyMilestones, milestoneText, milestoneTier, applySupportSkill, awardXp, chooseSkill, GROWTH, levelOf, MAX_LEVEL, MAX_RANK, moveBonus, scoutRadiusOf, skillRank, SKILL_RANKS, type SkillId } from '../src/engine/growth';
+import { UNITS } from '../src/engine/data';
 import { battleFixture, playOut, setup } from './helpers/engine';
 
 const grown = (over: Parameters<typeof setup>[0] = {}) => createGame(setup(over, { ruleset: 'digital', heroGrowth: true }));
@@ -192,5 +193,75 @@ describe('Łowca skarbów, Uczony', () => {
     }
     expect(picks).toBeGreaterThan(0);
     expect(scholar).toBeGreaterThan(0);
+  });
+});
+
+describe('hero milestones (levels 3, 6, 9)', () => {
+  it('the tier is the number of milestones reached', () => {
+    expect([1, 2, 3, 5, 6, 8, 9, 10].map(milestoneTier)).toEqual([0, 0, 1, 1, 2, 2, 3, 3]);
+  });
+
+  it('each hero\'s own ability grows with the tier (small scale times the battle scale)', () => {
+    const at = (id: string, level: number) => {
+      const u = makeBattleUnit(id, UNITS[id].side as 'dawn' | 'horde', true, 3);
+      applyMilestones({ level, skills: [] } as never, u);
+      return u;
+    };
+    expect([1, 3, 6, 9].map((l) => abilityNum(at('goldDragon', l), 'sunburstSelfBonus'))).toEqual([3, 3, 4, 5]);
+    expect([1, 3, 6, 9].map((l) => abilityNum(at('unicornKing', l), 'lightChargeBonus'))).toEqual([2, 3, 4, 5]);
+    expect([1, 3, 6, 9].map((l) => abilityNum(at('ancientBear', l), 'guardianIgnore'))).toEqual([3, 5, 5, 7]);
+    expect([1, 3, 6, 9].map((l) => abilityNum(at('werewolfLord', l), 'bloodCallBonus'))).toEqual([1, 2, 3, 4]);
+    expect([1, 3, 6, 9].map((l) => abilityNum(at('ironFistOgre', l), 'hardHeadIgnore'))).toEqual([2, 3, 4, 5]);
+    expect([1, 3, 6, 9].map((l) => abilityNum(at('braveDuck', l), 'duckKillHeal'))).toEqual([0, 1, 2, 3]);
+    expect([1, 3, 6, 9].map((l) => abilityNum(at('blackDragon', l), 'breathBonus'))).toEqual([0, 1, 2, 2]);
+    expect(at('blackDragon', 8).abilityExtra).toBeUndefined();
+    expect(at('blackDragon', 9).abilityExtra).toBe(true);
+    expect(at('goldDragon', 2).tier).toBeUndefined();
+  });
+
+  it('the bear guards any ally from milestone 2 on, and before only a neighbour', () => {
+    const s = battleFixture(grown(), [{ id: 'ancientBear', side: 'dawn', col: 2, half: 8 }, { id: 'elfDruid', side: 'dawn', col: 2, half: 12 }, { id: 'blackDragon', side: 'horde', col: 9, half: 8 }]);
+    const bear = s.battle!.units.ancientBear;
+    const far = s.battle!.units.elfDruid;
+    expect(bearCanGuard(s, bear, far)).toBe(false);
+    bear.tier = 2;
+    expect(bearCanGuard(s, bear, far)).toBe(true);
+  });
+
+  it('the Black Dragon at milestone 3 breathes twice in a battle, and with +A each time', () => {
+    let s = battleFixture(grown(), [{ id: 'blackDragon', side: 'horde', col: 5, half: 8 }, { id: 'goldDragon', side: 'dawn', col: 6, half: 8 }, { id: 'unicornKing', side: 'dawn', col: 6, half: 10 }], { attacker: 'horde', defender: 'dawn', attackerHero: 'blackDragon' });
+    const dragon = s.battle!.units.blackDragon;
+    applyMilestones({ level: 9, skills: [] } as never, dragon);
+    for (const u of Object.values(s.battle!.units)) if (u.side === 'dawn') u.hp = u.maxHp = 500;
+    s = applyAction(s, { type: 'battleAttack', targetId: 'goldDragon', useAbility: true });
+    expect(s.battle!.units.blackDragon.abilityUsed).toBe(false);
+    expect(s.battle!.units.blackDragon.abilityExtra).toBe(false);
+    s.battle!.activation = { ...s.battle!.activation!, unitId: 'blackDragon', attacked: false, acted: false };
+    s = applyAction(s, { type: 'battleAttack', targetId: 'goldDragon', useAbility: true });
+    expect(s.battle!.units.blackDragon.abilityUsed).toBe(true);
+  });
+
+  it('a level-up at a milestone says what it gives', () => {
+    expect(milestoneText('braveDuck', 1, 3)).toContain('3 Ż');
+    expect(milestoneText('braveDuck', 1, 3)).not.toContain('+1 S');
+    expect(milestoneText('braveDuck', 3, 3)).toContain('+1 S');
+    const s = grown();
+    const h = activeHero(s)!;
+    h.level = 2;
+    h.xp = 0;
+    awardXp(s, h, GROWTH.thresholds[1]);
+    expect(levelOf(h)).toBe(3);
+    expect(s.log.some((l) => l.text.includes('kamień milowy (poziom 3)'))).toBe(true);
+  });
+
+  it('bots play whole games with every hero at level 9', () => {
+    for (const seed of [1, 2, 3, 4]) {
+      const s = grown({ seed, mapSize: 'medium' });
+      for (const h of Object.values(s.heroes)) {
+        h.level = 9;
+        h.xp = GROWTH.thresholds[7];
+      }
+      expect(playOut(s).phase).toBe('over');
+    }
   });
 });

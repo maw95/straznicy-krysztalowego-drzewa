@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Rozwój bohatera: kamienie milowe na poziomach 3, 6 i 9 wzmacniają własną zdolność bohatera (np. Szarża Światła Króla Jednorożców: +2 → +3 → +4 → +5 do Ataku; Czarny Smok oddycha na 9. poziomie dwa razy w bitwie; Dzielna Kaczka leczy się po zabiciu wroga). Awans na kamień milowy zapisuje się w dzienniku.
 - Rozwój bohatera: Łowca skarbów (Skarbnik Gaju / Nos Hieny) pozwala po walce ze strażnikiem wybrać skarb zamiast losu: 1 z 2, 1 z 3, a na III stopniu 2 z 3. Uczony (Mądrość Drzewa / Pamięć Przodków) daje +1/+2/+3 PD za każdą wygraną walkę.
 - Rozwój bohatera: trzy nowe umiejętności ze stopniami I–III. Strzelec (Oko Łucznika / Krzywy Łuk) daje strzelcom +1/+2/+3 do Ataku; Taktyk (Sztuka Wojny / Zasadzka) pozwala ustawić jednostki przed bitwą o 1/2/3 kolumny dalej; Zwiadowca (Orle Oko / Ślepia Wilka) odkrywa na starcie tury pola w promieniu 2/3/4. Medale na razie pożyczają ikony innych umiejętności.
 - Rozwój bohatera: poziomy 6–10. Kolejne progi doświadczenia to 26, 38, 56, 84 i 128 PD łącznie, więc wysokie poziomy są rzadkie (poziom 10 wymaga bardzo długiej wyprawy).

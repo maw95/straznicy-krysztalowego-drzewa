@@ -46,7 +46,7 @@ import {
 import { distance, parseKey, type HexKey } from './hex';
 import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { log } from './log';
-import { applyHeroSkills, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
+import { applyHeroSkills, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { applyGear, ARTIFACTS, gearMoveBonus, giveArtifact, placeSites, visitSite } from './sites';
 import { Rng } from './rng';
@@ -727,6 +727,7 @@ function startBattle(state: GameState, s: BattleStart) {
   if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital, scale);
   for (const h of [attacker, defenderHero]) if (h && state.rules.heroGrowth) {
     applyHeroSkills(h, b.units[h.id]);
+    applyMilestones(h, b.units[h.id]);
     applyGear(h, b.units[h.id]);
     if (deployDepthOf(h)) (b.deployDepth ??= {})[h.faction] = deployDepthOf(h);
   }

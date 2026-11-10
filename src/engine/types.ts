@@ -263,6 +263,10 @@ export interface BattleUnit {
   tail?: HexKey;
   alive: boolean;
   abilityUsed: boolean;
+  /** Hero milestone reached (0-3, missing = 0): levels 3 / 6 / 9 strengthen the hero's own ability (`ABILITY_TIERS`). */
+  tier?: number;
+  /** Ognisty Oddech at milestone 3: one more breath left in this battle. */
+  abilityExtra?: boolean;
   /** Left the battle through Róg Strażników (returns to the pool unharmed). */
   swappedOut: boolean;
   status: UnitStatus;
@@ -314,7 +318,7 @@ export interface BattleState {
   index: number;
   activation: Activation | null;
   /** Extra activations queued by items (Róg Strażników, Klepsydra). */
-  extra: Array<{ unitId: string; moveOnly: boolean }>;
+  extra: Array<{ unitId: string; moveOnly: boolean; /** Speed bonus for this activation only (Kacza Furia, milestone 3). */ speedBonus?: number }>;
   winner: Side | 'draw' | null;
   /** Damage dealt per unit id during this battle (treasures count as 'item'). */
   damageBy: Record<string, number>;

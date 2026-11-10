@@ -88,6 +88,25 @@ export const ABILITY = {
   regrowthHeal: 2,
 };
 
+/**
+ * Hero milestones (digital Expedition, hero growth): the abilities' numbers at the start and after levels 3, 6 and 9 (small scale; the battle scale
+ * multiplies them). Index 0 is the base value of `ABILITY`. Provisional: tune with the simulations.
+ */
+export const ABILITY_TIERS = {
+  sunburstBonus: [ABILITY.sunburstBonus, 2, 2, 2],
+  sunburstSelfBonus: [ABILITY.sunburstSelfBonus, 3, 4, 5],
+  lightChargeBonus: [ABILITY.lightChargeBonus, 3, 4, 5],
+  guardianIgnore: [ABILITY.guardianIgnore, 5, 5, 7],
+  bloodCallBonus: [ABILITY.bloodCallBonus, 2, 3, 4],
+  hardHeadIgnore: [ABILITY.hardHeadIgnore, 3, 4, 5],
+  /** Ognisty Oddech: extra Atak against both targets. */
+  breathBonus: [0, 1, 2, 2],
+  /** Kacza Furia: Życie the duck takes back when its blow kills. */
+  duckKillHeal: [0, 1, 2, 3],
+} as const;
+/** From this milestone on: the bear guards any ally (not only a neighbour), the Black Dragon may breathe twice, the duck's extra activation is faster. */
+export const MILESTONE_TIER = { bearAnyAlly: 2, breathTwice: 3, duckHaste: 3 } as const;
+
 const u = (d: UnitDef): UnitDef => d;
 
 /**

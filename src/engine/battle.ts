@@ -1,7 +1,7 @@
 // Battle engine: the painted arena (13 columns, 85 cells), initiative, movement, attacks,
 // abilities and items. Functions change the GameState passed in.
 
-import { ABILITY, battleStats, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type FactionId, type ItemKind, type Side } from './data';
+import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, battleStats, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, ITEMS, UNITS, type AbilityId, type FactionId, type ItemKind, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
@@ -275,6 +275,9 @@ export function abilityActive(state: GameState): boolean {
   return state.rules.abilities;
 }
 
+/** A hero ability's number for the milestone this unit has reached (small scale: multiply by `scaleOf`). */
+export const abilityNum = (u: BattleUnit, key: keyof typeof ABILITY_TIERS): number => ABILITY_TIERS[key][u.tier ?? 0];
+
 export function abilityOf(u: BattleUnit): AbilityId {
   return u.ability ?? UNITS[u.defId].ability;
 }
@@ -435,8 +438,9 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
   if (isDigital(state.rules) && UNITS[att.defId].attackType === 'ranged') dmg += DIGITAL_RANGED_BONUS * scaleOf(state);
   if (abilityActive(state)) {
     const ab = abilityOf(att);
-    if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += ABILITY.lightChargeBonus * scaleOf(state);
-    if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += ABILITY.bloodCallBonus * scaleOf(state);
+    if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += abilityNum(att, 'lightChargeBonus') * scaleOf(state);
+    if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += abilityNum(att, 'bloodCallBonus') * scaleOf(state);
+    if (useAbility && ab === 'fireBreath') dmg += abilityNum(att, 'breathBonus') * scaleOf(state);
     if (useAbility && ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus * scaleOf(state);
   }
   return Math.max(0, dmg);
@@ -652,6 +656,7 @@ export function endActivation(state: GameState) {
   if (b.extra.length) {
     const next = b.extra.shift()!;
     if (b.units[next.unitId].alive) {
+      if (next.speedBonus) b.units[next.unitId].status.slowNext -= next.speedBonus;
       beginActivation(state, next.unitId, next.moveOnly);
       return;
     }
@@ -705,7 +710,7 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
 /** Opiekun Gaju: whether `bear` can still take the blow aimed at `x` (itself, or an ally next to it). */
 export function bearCanGuard(state: GameState, bear: BattleUnit, x: BattleUnit): boolean {
   if (abilityOf(bear) !== 'guardian' || bear.abilityUsed || !abilityActive(state)) return false;
-  return bear.id === x.id || (!!bear.pos && !!x.pos && unitsAdjacent(bear, x));
+  return bear.id === x.id || (!!bear.pos && !!x.pos && ((bear.tier ?? 0) >= MILESTONE_TIER.bearAnyAlly || unitsAdjacent(bear, x)));
 }
 
 export interface DamagePrediction {
@@ -744,20 +749,20 @@ export function predictDamage(
   // Opiekun Gaju: the bear takes a lethal blow aimed at an adjacent ally, if it survives it.
   const bear = livingUnits(b, target.side).find((x) => x.id !== target.id && bearCanGuard(state, x, target));
   let victim = target;
-  if (bear && dmg >= target.hp && dmg - ABILITY.guardianIgnore * scaleOf(state) - Math.min(dmg, bear.status.damageReduction) < bear.hp) {
+  if (bear && dmg >= target.hp && dmg - abilityNum(bear, 'guardianIgnore') * scaleOf(state) - Math.min(dmg, bear.status.damageReduction) < bear.hp) {
     bearGuard = 'ally';
     victim = bear;
-    dmg = Math.max(0, dmg - ABILITY.guardianIgnore * scaleOf(state));
+    dmg = Math.max(0, dmg - abilityNum(bear, 'guardianIgnore') * scaleOf(state));
   }
   if (victim.status.shieldArmed) return { base, victim, damage: 0, bearGuard, hardHead: null, shield: true, lethal: false };
   // Opiekun Gaju guards the bear itself too: a lethal blow loses part of its strength.
   if (victim === target && bearCanGuard(state, victim, victim) && dmg >= victim.hp) {
     bearGuard = 'self';
-    dmg = Math.max(0, dmg - ABILITY.guardianIgnore * scaleOf(state));
+    dmg = Math.max(0, dmg - abilityNum(victim, 'guardianIgnore') * scaleOf(state));
   }
   let hardHead: number | null = null;
   if (abilityOf(victim) === 'hardHead' && !victim.abilityUsed && abilityActive(state) && dmg >= HARD_HEAD_MIN_DAMAGE * scaleOf(state)) {
-    hardHead = Math.min(ABILITY.hardHeadIgnore * scaleOf(state), dmg);
+    hardHead = Math.min(abilityNum(victim, 'hardHeadIgnore') * scaleOf(state), dmg);
     dmg -= hardHead;
   }
   dmg = Math.max(0, dmg - victim.status.damageReduction);
@@ -776,7 +781,7 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   const victim = p.victim;
   if (p.bearGuard === 'ally') {
     victim.abilityUsed = true;
-    log(state, 'ability', `${unitName(victim)} przejmuje atak i ignoruje ${ABILITY.guardianIgnore * scaleOf(state)} obrażenia (Opiekun Gaju).`);
+    log(state, 'ability', `${unitName(victim)} przejmuje atak i ignoruje ${abilityNum(victim, 'guardianIgnore') * scaleOf(state)} obrażenia (Opiekun Gaju).`);
   }
   if (p.shield) {
     victim.status.shieldArmed = false;
@@ -786,7 +791,7 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   }
   if (p.bearGuard === 'self') {
     victim.abilityUsed = true;
-    log(state, 'ability', `${unitName(victim)} ignoruje ${ABILITY.guardianIgnore * scaleOf(state)} obrażenia (Opiekun Gaju).`);
+    log(state, 'ability', `${unitName(victim)} ignoruje ${abilityNum(victim, 'guardianIgnore') * scaleOf(state)} obrażenia (Opiekun Gaju).`);
   }
   if (p.hardHead !== null) {
     victim.abilityUsed = true;
@@ -860,8 +865,10 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     log(state, 'ability', `${unitName(u)}: ${UNITS[u.defId].abilityName}.`);
   }
   if (canUse) {
-    u.abilityUsed = true;
-    log(state, 'ability', `${unitName(u)} używa zdolności: ${UNITS[u.defId].abilityName}.`);
+    // Ognisty Oddech at milestone 3 can be used twice in a battle.
+    if (u.abilityExtra) u.abilityExtra = false;
+    else u.abilityUsed = true;
+    log(state, 'ability', `${unitName(u)} używa zdolności: ${UNITS[u.defId].abilityName}${u.abilityExtra ? ' (zostaje jeszcze jeden Oddech)' : ''}.`);
   }
   log(state, 'battle', `${unitName(u)} atakuje: ${targets.map(unitName).join(', ')}.`);
   for (const t of targets) {
@@ -900,8 +907,14 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   if (checkBattleEnd(state)) return;
   // Kacza Furia: a kill gives the duck another full activation right away.
   if (ab === 'duckFury' && abilityActive(state) && u.alive && targets.some((t) => !t.alive)) {
-    b.extra.unshift({ unitId: u.id, moveOnly: false });
-    log(state, 'ability', `${unitName(u)} wpada w szał i aktywuje się ponownie (${UNITS[u.defId].abilityName}).`);
+    const haste = (u.tier ?? 0) >= MILESTONE_TIER.duckHaste ? 1 : 0;
+    b.extra.unshift({ unitId: u.id, moveOnly: false, ...(haste ? { speedBonus: haste } : {}) });
+    log(state, 'ability', `${unitName(u)} wpada w szał i aktywuje się ponownie (${UNITS[u.defId].abilityName})${haste ? ', szybciej o 1 S' : ''}.`);
+    const heal = abilityNum(u, 'duckKillHeal') * scaleOf(state);
+    if (heal > 0 && u.hp < u.maxHp) {
+      u.hp = Math.min(u.maxHp, u.hp + heal);
+      log(state, 'ability', `${unitName(u)} odzyskuje ${heal} Ż po zabiciu wroga.`);
+    }
   }
   const hopAbility = ab === 'airDash' || ab === 'nestLeap';
   if (hopAbility && !b.duel && (!u.abilityUsed || ab === 'nestLeap') && abilityActive(state) && u.alive) {
@@ -937,7 +950,7 @@ export function battleAbility(state: GameState, targetId?: string) {
   const ab = abilityOf(u);
   if (u.abilityUsed || !abilityActive(state) || !FREE_ABILITIES.includes(ab)) throw new Error('Zdolność jest niedostępna.');
   if (ab === 'sunburst') {
-    for (const ally of livingUnits(b, u.side)) ally.status.nextAttackBonus += ally.id === u.id ? ABILITY.sunburstSelfBonus * scaleOf(state) : ABILITY.sunburstBonus * scaleOf(state);
+    for (const ally of livingUnits(b, u.side)) ally.status.nextAttackBonus += ally.id === u.id ? abilityNum(u, 'sunburstSelfBonus') * scaleOf(state) : abilityNum(u, 'sunburstBonus') * scaleOf(state);
   } else if (ab === 'giftOfLife') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side !== u.side) throw new Error('Wybierz żyjącego sojusznika.');

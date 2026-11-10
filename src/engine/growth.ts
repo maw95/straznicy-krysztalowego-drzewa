@@ -2,8 +2,9 @@
 // one of three offered skills. Skills are small, permanent bonuses; each faction has its own names for the same effects. Off by default (the
 // level presets of the family mode switch it on), so games without it are untouched.
 
-import { FACTION_NAMES, ITEMS, NON_RESURRECTION_ITEMS, UNITS, type FactionId, type ItemKind } from './data';
+import { ABILITY_TIERS, FACTION_NAMES, ITEMS, MILESTONE_TIER, NON_RESURRECTION_ITEMS, UNITS, type FactionId, type ItemKind } from './data';
 import { activeHero, grantTreasure, scoutAround } from './game';
+import { scaleOf } from './battle';
 import { log } from './log';
 import { Rng } from './rng';
 import type { BattleUnit, GameState, HeroState } from './types';
@@ -19,6 +20,33 @@ export const GROWTH = {
   offer: 3,
 };
 export const MAX_LEVEL = GROWTH.thresholds.length + 1;
+
+/** Levels that strengthen a hero's own ability (`ABILITY_TIERS`); the tier is how many of them the hero has reached. */
+export const MILESTONE_LEVELS = [3, 6, 9] as const;
+export const milestoneTier = (level: number) => MILESTONE_LEVELS.filter((l) => level >= l).length;
+
+/** What each milestone gives (for the log and the screen), by the numbers of `ABILITY_TIERS` times the battle scale `k`. */
+export function milestoneText(heroId: string, tier: number, k: number): string | null {
+  const n = (key: keyof typeof ABILITY_TIERS) => ABILITY_TIERS[key][tier] * k;
+  switch (heroId) {
+    case 'goldDragon': return `Słoneczny Blask: sojusznicy +${n('sunburstBonus')} A, Smok +${n('sunburstSelfBonus')} A.`;
+    case 'unicornKing': return `Szarża Światła: +${n('lightChargeBonus')} A.`;
+    case 'ancientBear': return `Opiekun Gaju ignoruje ${n('guardianIgnore')} obrażeń${tier >= 2 ? ' i chroni dowolnego sojusznika, nie tylko sąsiada' : ''}.`;
+    case 'blackDragon': return `Ognisty Oddech: +${n('breathBonus')} A${tier >= 3 ? ', a użyć go można dwa razy w bitwie' : ''}.`;
+    case 'werewolfLord': return `Zew Krwi: +${n('bloodCallBonus')} A na rannego wroga.`;
+    case 'ironFistOgre': return `Twardogłowy ignoruje ${n('hardHeadIgnore')} obrażeń.`;
+    case 'braveDuck': return `Kacza Furia: po zabiciu wroga Kaczka leczy się o ${n('duckKillHeal')} Ż${tier >= 3 ? ', a jej dodatkowa aktywacja daje +1 S' : ''}.`;
+    default: return null;
+  }
+}
+
+/** The hero's milestone reached goes onto its unit when a battle starts. */
+export function applyMilestones(hero: HeroState | undefined, unit: BattleUnit): void {
+  const tier = hero ? milestoneTier(levelOf(hero)) : 0;
+  if (!tier) return;
+  unit.tier = tier;
+  if (tier >= MILESTONE_TIER.breathTwice && UNITS[unit.defId].ability === 'fireBreath') unit.abilityExtra = true;
+}
 
 export type SkillId = 'might' | 'vigor' | 'swift' | 'leader' | 'pathfinder' | 'fortune' | 'marksman' | 'tactician' | 'scout' | 'treasureHunter' | 'scholar';
 
@@ -107,6 +135,9 @@ function maybeLevelUp(state: GameState, hero: HeroState): void {
   hero.level = levelOf(hero) + 1;
   hero.offer = drawOffer(state, hero);
   log(state, 'info', `${UNITS[hero.id].name} awansuje na poziom ${hero.level}: do wyboru ${hero.offer.length} umiejętności.`, hero.faction);
+  const tier = (MILESTONE_LEVELS as readonly number[]).includes(hero.level) ? milestoneTier(hero.level) : 0;
+  const note = tier ? milestoneText(hero.id, tier, scaleOf(state)) : null;
+  if (note) log(state, 'info', `${UNITS[hero.id].name}: kamień milowy (poziom ${hero.level}). ${note}`, hero.faction);
 }
 
 /** The hero picks one of the offered skills. */

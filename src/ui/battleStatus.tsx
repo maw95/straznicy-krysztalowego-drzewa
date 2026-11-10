@@ -24,7 +24,8 @@ export function statusList(u: BattleUnit): StatusInfo[] {
   const out: StatusInfo[] = [];
   // A marker carries its own number; the badge repeats it only when the value differs.
   if (s.rootedNext) out.push({ label: 'Unieruchomiony w następnej aktywacji (Pajęcze Sidła)', glyph: 'sWeb', marker: 'rooted', buff: false });
-  if (s.slowNext) out.push({ label: `−${s.slowNext} S w następnej aktywacji (Splątane Korzenie)`, glyph: 'sRoot', marker: 'slowed', buff: false, value: s.slowNext !== 2 ? `−${s.slowNext}` : undefined });
+  if (s.slowNext < 0) out.push({ label: `+${-s.slowNext} S w tej aktywacji (Kacza Furia)`, glyph: 'sBoltG', marker: 'speed_up', buff: true, value: `+${-s.slowNext}` });
+  else if (s.slowNext) out.push({ label: `−${s.slowNext} S w następnej aktywacji (Splątane Korzenie)`, glyph: 'sRoot', marker: 'slowed', buff: false, value: s.slowNext !== 2 ? `−${s.slowNext}` : undefined });
   if (s.cursedNext) out.push({ label: `−${s.cursedNext} A przy następnym ataku (Złowroga Klątwa)`, glyph: 'sSkull', marker: 'cursed', buff: false, value: s.cursedNext !== 1 ? `−${s.cursedNext}` : undefined });
   // The Gold Dragon's own Słoneczny Blask bonus has its own "+3" marker; everyone else's next-attack bonus is Wzmocnienie Ataku.
   const sunburst = UNITS[u.defId].ability === 'sunburst' && s.nextAttackBonus >= ABILITY.sunburstSelfBonus * (u.scale ?? 1);
