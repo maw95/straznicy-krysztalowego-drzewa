@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Rozwój bohatera: sprawdzony symulacjami (progi PD, umiejętności, kamienie milowe). Żaden bohater ani kamień milowy nie wychodzi poza szum; liczby bez zmian.
 - Karty bohaterów w grze z rozwojem pokazują osiągnięty kamień milowy: pod opisem zdolności dopisana jest linia „Poziom N: …” z aktualnymi liczbami.
 - Rozwój bohatera: kamienie milowe na poziomach 3, 6 i 9 wzmacniają własną zdolność bohatera (np. Szarża Światła Króla Jednorożców: +2 → +3 → +4 → +5 do Ataku; Czarny Smok oddycha na 9. poziomie dwa razy w bitwie; Dzielna Kaczka leczy się po zabiciu wroga). Awans na kamień milowy zapisuje się w dzienniku.
 - Rozwój bohatera: Łowca skarbów (Skarbnik Gaju / Nos Hieny) pozwala po walce ze strażnikiem wybrać skarb zamiast losu: 1 z 2, 1 z 3, a na III stopniu 2 z 3. Uczony (Mądrość Drzewa / Pamięć Przodków) daje +1/+2/+3 PD za każdą wygraną walkę.
