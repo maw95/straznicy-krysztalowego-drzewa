@@ -79,7 +79,10 @@ export interface SpriteSet {
   fps: number;
   /** Frames per clip. */
   frames: Record<string, number>;
-  sheets: Record<string, HTMLImageElement>;
+  /** The clip sheets, decoded ahead of time (`ImageBitmap`) and filled in as they arrive: a clip whose sheet is not there yet is simply not drawn. */
+  sheets: Record<string, CanvasImageSource>;
+  /** Settles when every sheet is in (or has failed): the stage can wait for it before a battle starts. */
+  ready: Promise<void>;
   stoi: HTMLImageElement;
   martwy: HTMLImageElement;
   /** How the fallen unit is drawn: scale (a small unit's corpse may span at most CORPSE_MAX_W canvas pixels) and the shift that puts its lowest point on the feet line, in canvas pixels. */
@@ -118,6 +121,39 @@ const image = (src: string) =>
     im.src = src;
   });
 
+/**
+ * A clip sheet decoded off the main thread. Drawing a plain <img> decodes it on the main thread at its first draw (200-400 ms for a long clip, a
+ * stall in the middle of an attack); an ImageBitmap is decoded before it is needed. The first draw (the upload to the graphics card) is
+ * done here too, on a one-pixel canvas, one sheet at a time.
+ */
+async function decodedSheet(url: string): Promise<CanvasImageSource> {
+  if (typeof createImageBitmap !== 'function') return image(url);
+  const blob = await (await fetch(url)).blob();
+  const bitmap = await createImageBitmap(blob);
+  await new Promise((ok) => window.setTimeout(ok, 0));
+  try {
+    warm ??= document.createElement('canvas').getContext('2d');
+    warm?.drawImage(bitmap, 0, 0, 1, 1, 0, 0, 1, 1);
+  } catch {
+    /* a context that cannot draw it: the stage will find out */
+  }
+  return bitmap;
+}
+let warm: CanvasRenderingContext2D | null | undefined;
+
+/** Drops the decoded sheets of every unit not in `keep` (a new battle began): decoded sheets are tens of megabytes each. */
+export function releaseSpritesExcept(keep: Iterable<string>) {
+  const stay = new Set(keep);
+  for (const [id, p] of [...cache.entries()]) {
+    if (stay.has(id)) continue;
+    cache.delete(id);
+    void p.then((set) => {
+      for (const s of Object.values(set.sheets)) if (typeof ImageBitmap !== 'undefined' && s instanceof ImageBitmap) s.close();
+      set.sheets = {};
+    }, () => undefined);
+  }
+}
+
 export function loadSprites(defId: string): Promise<SpriteSet> {
   let p = cache.get(defId);
   if (!p) {
@@ -126,7 +162,7 @@ export function loadSprites(defId: string): Promise<SpriteSet> {
       const url = (f: string) => asset(`${spec.dir}/${f}`);
       const meta = (await (await fetch(url('anim.json'))).json()) as AnimJson;
       const names = Object.keys(meta.clips);
-      const [stoi, martwy, ...sheets] = await Promise.all([image(url('stoi.webp')), image(url('martwy.webp')), ...names.map((n) => image(url(`${n}.webp`)))]);
+      const [stoi, martwy] = await Promise.all([image(url('stoi.webp')), image(url('martwy.webp'))]);
       // Fit the visible body (measured on the standing picture) into the unit's box.
       const body = measureBody(stoi);
       const box = spec.box ?? SMALL;
@@ -139,6 +175,18 @@ export function loadSprites(defId: string): Promise<SpriteSet> {
       const dh = (width * meta.frame[1]) / meta.frame[0];
       // The lowest point of the corpse lies on the feet line (a little below it, as the hexes' centres are), whatever the picture's margins.
       const dy = lying ? 2 - scale * (lying.y1 / meta.frame[1] - feet) * dh : 0;
+      // The sheets come in one after another, the ones a fight needs first (a blow, a hit, a death), while the unit already stands on the board.
+      const sheets: Record<string, CanvasImageSource> = {};
+      const order = ['atak', 'trafienie', 'smierc', 'wzbicie', 'lot', 'chod'];
+      const ready = (async () => {
+        for (const n of [...names].sort((a, b) => order.indexOf(a) - order.indexOf(b))) {
+          try {
+            sheets[n] = await decodedSheet(url(`${n}.webp`));
+          } catch {
+            /* a sheet that fails to load: that clip is not drawn */
+          }
+        }
+      })();
       return {
         spec,
         width,
@@ -151,7 +199,8 @@ export function loadSprites(defId: string): Promise<SpriteSet> {
         cols: meta.cols,
         fps: meta.fps,
         frames: meta.clips,
-        sheets: Object.fromEntries(names.map((n, i) => [n, sheets[i]])),
+        sheets,
+        ready,
         stoi,
         martwy,
         corpse: { scale, dy },

@@ -7,18 +7,20 @@
   512
  ],
  "frame": [
-  512,
-  512
+  384,
+  384
  ],
  "cols": 8,
- "fps": 24,
+ "fps": 12.0,
  "clips": {
-  "atak": 73,
-  "chod": 73,
-  "smierc": 73,
-  "trafienie": 49
+  "atak": 37,
+  "chod": 37,
+  "smierc": 37,
+  "trafienie": 25
  },
  "feet": 0.752,
  "cx": 0.3184,
- "body": 0.5625
+ "body": 0.5625,
+ "step": 2,
+ "scale": 0.75
 }

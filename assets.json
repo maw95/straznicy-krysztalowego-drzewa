@@ -2020,7 +2020,7 @@
         "public/assets/jednostki/goblin_szaman/",
         "public/assets/jednostki/wladca_wilkolakow/"
       ],
-      "typ": "poprawki grafik jednostek: pozy spoczynku na ziemi z klipem wzbicia (Nietoperz siedzi, Pegaz i Czarny Smok stoją) i ich nowe klipy ataku, śmierci i trafienia; nowe ataki Pająka, Cyklopa (rzut głazem), Króla Jednorożców i Gryfa; nowe klipy śmierci i trupy Elfa Druida, Goblina Szamana i Władcy Wilkołaków (na boku / brzuchu, głową w prawo). Arkusze przepakowane w całości (wspólny kadr jednostki).",
+      "typ": "poprawki grafik jednostek: pozy spoczynku na ziemi z klipem wzbicia (Nietoperz siedzi, Pegaz i Czarny Smok stoją) i ich nowe klipy ataku, śmierci i trafienia; nowe ataki Pająka, Cyklopa (rzut głazem), Króla Jednorożców i Gryfa; nowe klipy śmierci i trupy Elfa Druida, Goblina Szamana i Władcy Wilkołaków (na boku / brzuchu, głową w prawo). Arkusze przepakowane w całości (wspólny kadr jednostki). Wszystkie arkusze jednostek (16 folderów) zmniejszone 10.11.2026 skryptem scripts/animacje/shrink_unit.py: klatki 0,75 (ok. 384 px), co druga klatka (12 kl./s w anim.json; gra miesza sąsiednie klatki), WebP q82; 107 MB → 38 MB.",
       "narzedzie": "Scenario (plan płatny)",
       "model": "obrazy: GPT Image 2.5 Flare 1024 px (pozy: high, trupy: medium) z dawnym obrazem jednostki jako odniesieniem; klipy: P-Video 2, 720p, 24 kl./s, 2–3 s; pakowanie: scripts/animacje/pack_unit.py 512 px, WebP q80",
       "data": "2026-11-10",

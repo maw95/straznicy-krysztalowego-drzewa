@@ -7,18 +7,20 @@
   435
  ],
  "frame": [
-  451,
-  435
+  338,
+  326
  ],
  "cols": 8,
- "fps": 24,
+ "fps": 12.0,
  "clips": {
-  "atak": 73,
-  "lot": 73,
-  "smierc": 49,
-  "trafienie": 49
+  "atak": 37,
+  "lot": 37,
+  "smierc": 25,
+  "trafienie": 25
  },
  "feet": 0.7126,
  "cx": 0.4867,
- "body": 0.7827
+ "body": 0.7827,
+ "step": 2,
+ "scale": 0.75
 }

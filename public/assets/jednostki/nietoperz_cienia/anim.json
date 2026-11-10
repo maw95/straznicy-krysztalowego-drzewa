@@ -7,19 +7,21 @@
   360
  ],
  "frame": [
-  465,
-  360
+  349,
+  270
  ],
  "cols": 8,
- "fps": 24,
+ "fps": 12.0,
  "clips": {
-  "atak": 73,
-  "lot": 73,
-  "smierc": 73,
-  "trafienie": 49,
-  "wzbicie": 49
+  "atak": 37,
+  "lot": 37,
+  "smierc": 37,
+  "trafienie": 25,
+  "wzbicie": 25
  },
  "feet": 0.9472,
  "cx": 0.4527,
- "body": 0.5871
+ "body": 0.5871,
+ "step": 2,
+ "scale": 0.75
 }

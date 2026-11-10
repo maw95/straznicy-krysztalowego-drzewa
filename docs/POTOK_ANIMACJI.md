@@ -43,6 +43,17 @@ Stan na 4.11.2026, po teście na Złotym Smoku. Decyzje: `DECYZJE.md`. Skrypt cz
   jest w klipie (czerwono-pomarańczowy, dobrze się wycina), ale ucina go prawa krawędź kadru: przy następnych klipach ataku dać
   jednostkę bliżej lewej strony kadru albo ogień dorobić w kodzie (cząsteczki) i prosić model tylko o ruch głowy.
 
+## Pamięć i płynność (10.11.2026)
+
+- Arkusz długiego klipu po spakowaniu (512 px, 73 klatki) ma ok. 19 megapikseli (80 MB po zdekodowaniu). Przeglądarka dekodowała go na głównym wątku
+  przy pierwszym rysowaniu (200–400 ms zacięcia w środku ataku), nie mieściła w pamięci dekodera więcej niż kilku takich arkuszy i dekodowała je w kółko.
+  Stąd przycinanie animacji walki, a w najgorszym razie spóźniona śmierć.
+- Dlatego po `pack_unit.py` każdy folder przechodzi przez `python3 scripts/animacje/shrink_unit.py public/assets/jednostki/<folder>` (skala 0,75, co druga klatka,
+  w `anim.json` `step: 2`, `fps: 12`; skrypt odmawia ponownego uruchomienia na tym samym folderze). Nowa jednostka powinna przejść ten krok od razu.
+- Gra (`sprites.ts`) dekoduje arkusze z wyprzedzeniem poza głównym wątkiem (`createImageBitmap`), w kolejności: atak, trafienie, śmierć, reszta; jednostka stoi już na
+  planszy, a klip, którego arkusz jeszcze nie dotarł, po prostu się nie rysuje. Po zmianie składu jednostek na planszy arkusze nieobecnych są zwalniane.
+  `SpriteLayer` miesza dwie sąsiednie klatki (przezroczystość), więc ruch jest płynny przy 60 Hz mimo 12 klatek na sekundę w arkuszu.
+
 ## Gdzie to leży w repozytorium
 
 Zaakceptowany zasób trafia do repo w tej samej sesji (CLAUDE.md, „Assets”), z wpisem w `assets.json`.

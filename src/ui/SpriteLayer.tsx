@@ -6,7 +6,7 @@
 import { useEffect, useRef } from 'react';
 import { emitImpact } from './impact';
 import { sfx } from './sfx';
-import { loadSprites, SPRITES, type SpriteSet } from './sprites';
+import { loadSprites, releaseSpritesExcept, SPRITES, type SpriteSet } from './sprites';
 
 export interface SpritePiece {
   key: string;
@@ -84,6 +84,12 @@ class Stage {
 
   update(pieces: SpritePiece[]) {
     this.pieces = pieces;
+    // A different set of units on the board (a new battle): the decoded sheets of units that are gone are let go, tens of megabytes each.
+    const ids = new Set(pieces.map((p) => p.defId));
+    if (ids.size && [...this.sets.keys()].some((id) => !ids.has(id))) {
+      releaseSpritesExcept(ids);
+      for (const id of [...this.sets.keys()]) if (!ids.has(id)) this.sets.delete(id);
+    }
     for (const p of pieces) {
       if (!this.sets.has(p.defId)) {
         this.sets.set(p.defId, null as never);
@@ -110,9 +116,10 @@ class Stage {
       if (!set) continue;
       let l = this.live.get(p.key);
       if (!l) {
-        l = { piece: p, x: p.x, y: p.y, flip: p.flip, endFlip: p.flip, endX: p.x, endY: p.y, queue: [], seg: null, segStart: now, rest: p.dead ? 'corpse' : 'stand', hitStart: -1e9, attackKey: p.attack?.key ?? null };
+        // A unit that appears with an attack to play (the arena is rebuilt for the last blow of a battle) plays it: the blow must not be skipped.
+        l = { piece: p, x: p.x, y: p.y, flip: p.flip, endFlip: p.flip, endX: p.x, endY: p.y, queue: [], seg: null, segStart: now, rest: p.dead ? 'corpse' : 'stand', hitStart: -1e9, attackKey: null };
         this.live.set(p.key, l);
-        continue;
+        if (!p.attack) continue;
       }
       const was = l.piece;
       l.piece = p;
@@ -234,11 +241,14 @@ class Stage {
     const { frameW, frameH, cols } = set;
     let x = l.x;
     const y = l.y;
-    let img: HTMLImageElement = l.rest === 'corpse' ? set.martwy : set.stoi;
+    let img: CanvasImageSource = l.rest === 'corpse' ? set.martwy : set.stoi;
     let sx = 0;
     let sy = 0;
-    let sw = img.width;
-    let sh = img.height;
+    let sw = (img as HTMLImageElement).width;
+    let sh = (img as HTMLImageElement).height;
+    /** The next frame of the clip and how far the clock is between the two: both are drawn, the second one faded in, so the motion
+     *  is smooth at any screen rate (the clips have 12 frames a second, a screen 60 or more). */
+    let blend: { sx: number; sy: number; alpha: number } | null = null;
     const seg = l.seg;
     /** Horizontal scale of a turn in progress: 1 → 0 → -1 (relative to the way it faced before). */
     let turn = 1;
@@ -275,16 +285,23 @@ class Stage {
       }
       const clip = seg.kind === 'glide' ? set.moveClip ?? '' : seg.kind === 'turn' ? '' : seg.clip;
       const n = set.frames[clip];
-      if (n) {
+      const sheet = set.sheets[clip];
+      if (n && sheet) {
         // Glide: the loop repeats for as long as it moves (its phase follows the clock, so a walk path does not restart the stride
         // at every turn); a clip plays once (a reversed one backwards).
-        const frame = seg.kind === 'glide' ? Math.floor((now / 1000) * set.fps * (set.spec.speed[clip] ?? 1)) % n : Math.min(n - 1, Math.floor(t * n));
-        const idx = seg.kind === 'clip' && seg.reverse ? n - 1 - frame : frame;
-        img = set.sheets[clip];
+        const looped = seg.kind === 'glide';
+        const pos = looped ? ((now / 1000) * set.fps * (set.spec.speed[clip] ?? 1)) % n : Math.min(n - 1, t * (n - 1));
+        const frame = Math.floor(pos);
+        const fade = pos - frame;
+        const at = (f: number) => (seg.kind === 'clip' && seg.reverse ? n - 1 - f : f);
+        const next = looped ? (frame + 1) % n : Math.min(n - 1, frame + 1);
+        const idx = at(frame);
+        img = sheet;
         sx = (idx % cols) * frameW;
         sy = Math.floor(idx / cols) * frameH;
         sw = frameW;
         sh = frameH;
+        if (fade > 0.02 && next !== frame) blend = { sx: (at(next) % cols) * frameW, sy: Math.floor(at(next) / cols) * frameH, alpha: fade };
       }
     }
     const dw = set.width;
@@ -315,6 +332,10 @@ class Stage {
     ctx.scale((l.flip ? -1 : 1) * turn * k, k);
     ctx.translate(0, (set.corpse.dy * lie) / k);
     ctx.drawImage(img, sx, sy, sw, sh, -set.cx * dw, -set.feet * dh, dw, dh);
+    if (blend) {
+      ctx.globalAlpha = blend.alpha;
+      ctx.drawImage(img, blend.sx, blend.sy, sw, sh, -set.cx * dw, -set.feet * dh, dw, dh);
+    }
     ctx.restore();
   }
 
