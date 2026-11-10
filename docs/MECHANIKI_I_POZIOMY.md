@@ -38,9 +38,12 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 - [ ] Przykłady efektów: Hełm Olbrzyma (+Ż bohatera, −1 S), Hełm Dowódcy (+Ż pomocników), Korona Zwiadowcy (odkrywa pola w promieniu 2), Kolczuga Cierni (atakujący w zwarciu traci 1 Ż),
   Ostrze Rannych (+A przeciw rannym), tarcza zmniejszająca pierwszy cios w bitwie (nazwa do wymyślenia). Sandały Skoczka do przemyślenia.
 
-- [ ] Decyzja autora (10.11): po wygranej walce bohaterów zwycięzca **przejmuje artefakty pokonanego** (zamiast dzisiejszej losowej „zdobyczy” stopnia 1; `game.ts`, „łup z pokonanego bohatera”). Do ustalenia: co z artefaktem, który nie pasuje do slotu (patrz otwarte pytania).
-- [ ] Skarby (karty jednorazowe) na poziomie 2 i wyżej muszą się wyraźnie różnić od artefaktów (trwałe wyposażenie). Dziś cztery karty są „wyposażeniem na jedną bitwę”: Miecz Bohatera, Buty Wiatru, Tarcza Strażnika, Kamień Ochrony.
-  Zasada do rozważenia: **to, co się nosi, jest artefaktem; to, co się zużywa, jest eliksirem, zwojem, runą albo rogiem.**
+- [ ] Decyzje autora (10.11): po wygranej walce bohaterów zwycięzca **przejmuje artefakty pokonanego** (zamiast dzisiejszej losowej „zdobyczy” stopnia 1; `game.ts`, „łup z pokonanego bohatera”);
+  przegrany traci wszystkie artefakty, które zwycięzca może przejąć. Ryzyko kuli śnieżnej zaakceptowane (sprawdzić symulacjami).
+- [ ] **Plecak** (wariant C): artefakty, które nie pasują do slotu albo są gorsze, trafiają do plecaka bohatera (ograniczona liczba miejsc, do ustalenia). Nowy fragment interfejsu: lista plecaka, zakładanie i zdejmowanie.
+- [ ] **Przekazywanie artefaktów między bohaterami**, jeśli stoją na sąsiednich polach (też z plecaka do plecaka).
+- [ ] Skarby (karty jednorazowe) rozróżnione od artefaktów (wariant A, decyzja autora): zasada „to, co się nosi, jest artefaktem; to, co się zużywa, jest eliksirem, zwojem, runą albo rogiem”.
+  Cztery karty „wyposażenia” dostają w wersji cyfrowej nowe nazwy i grafiki, efekty bez zmian: Miecz Bohatera → Eliksir Mocy (+A), Buty Wiatru → Eliksir Chyżości (+S), Tarcza Strażnika → Zwój Tarczy (neguje cios), Kamień Ochrony → Runa Ochrony (−1 z każdego ciosu). Nazwy robocze. Planszówka bez zmian.
 
 **Do zbudowania — spotkania z neutralnymi (propozycja autora 10.11)**
 - [ ] Nowe jednostki neutralne: 6 słabych (po 2 pasujące do każdego z 3 strażników) i 3 potężni bossowie (do walki potrzebny rozwinięty bohater).
@@ -74,6 +77,10 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 
 - [ ] Magia (czary), pełne specjalności bohaterów, zaawansowane scenariusze.
 
+## Do przypisania do poziomu
+
+- [ ] **Do 8 graczy** (dziś maks. 4; decyzja autora 10.11). Wymaga przemyślenia: każda frakcja ma 3 bohaterów, więc 8 graczy to więcej bohaterów lub więcej frakcji naraz (stąd związek z nowymi frakcjami), drużyny w trybie rywalizacji, rozmiar mapy (XL / XXL), czas tury przy hotseacie i online.
+
 ## Po premierze
 
 - [ ] Nowe frakcje (Żelazne Klany, Dzikie Stada, Królestwo Umarłych, potem DLC); najpierw dokończyć to, co mamy (10.2).
@@ -81,8 +88,7 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 
 ## Otwarte pytania (10.11)
 
-0. **Przejęte artefakty:** jeśli lepsze niż własne, zakładamy; co z resztą (przepada, leży na polu, plecak)? Czy przegrany traci wszystkie artefakty?
-   **Skarby:** przemianować cztery karty „wyposażenia” na eliksiry / zwoje / runy (tylko wersja cyfrowa), czy je usunąć i dać inne efekty?
+0. ~~Przejęte artefakty i skarby~~ — rozstrzygnięte 10.11 (patrz wyżej): plecak, przekazywanie na sąsiednich polach, przemianowanie czterech kart.
 1. **Skala statystyk:** cyfrowy atak pomocników to 2 (strzelcy 1 + premia 1), więc przy ×3 mają A 6, a tarcza 1 / 2 / 3 pkt zmniejsza ich cios o 17–50%: działa. Skala tylko od poziomu 2.
 2. ~~Nazwy i obrazki artefaktów~~ — decyzja autora: jedna nazwa i jeden obrazek dla wszystkich; zwolnione nazwy i grafiki idą do nowych artefaktów.
 3. ~~Sandały Skoczka~~ — decyzja autora: zamiast nich buty ignorujące koszt terenu trudnego na mapie (nazwa: Buty / Trzewiki Trapera).

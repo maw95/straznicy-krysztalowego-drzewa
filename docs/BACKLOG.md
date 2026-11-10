@@ -22,7 +22,7 @@ Na początku sesji Claude mówi, który temat jest „Teraz”.
 7. Grafiki ze Scenario (10.4) w partiach, dopiero gdy nazwy i opisy z punktów 3 i 4 są zamrożone.
 8. Poziom 3 „Królestwo” (osady, złoto, rekrutacja): osobny, duży projekt.
 
-**Parking:** 11.4 (błysk kafelków, czeka na obserwację), 11.5 (do potwierdzenia na żywo), nowe frakcje (10.2), kampania i wyprawa roguelike, poziomy 4–5.
+**Parking:** do 8 graczy (dziś 4; patrz `MECHANIKI_I_POZIOMY.md`), 11.4 (błysk kafelków, czeka na obserwację), 11.5 (do potwierdzenia na żywo), nowe frakcje (10.2), kampania i wyprawa roguelike, poziomy 4–5.
 
 ## 2. Figurki 3D — drobne
 
