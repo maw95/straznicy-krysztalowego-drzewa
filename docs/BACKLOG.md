@@ -217,7 +217,7 @@ Osiem rzeczy, bez których nie ruszę dalej reszty backlogu. Kiedy autor zdecydu
 - [ ] **10.2. Nowe frakcje po premierze.** Decyzja autora (10.11): najpierw kończymy to, co mamy, nowe frakcje później. Bez próbki w Scenario na razie.
 - [ ] **10.3. Zakres premiery (6.6).** Decyzja autora (10.11): poziomy 1–2 plus **poziom 3** (do zaprojektowania, razem z 11.8).
 - [ ] **10.4. Grafiki do zrobienia w Scenario.** Decyzja autora (10.11): wszystkie z listy, w dowolnej kolejności (kapliczka, obóz, skrzynia, własny Boss, klipy zrywu i ataków, poza Nietoperza, ikony 11.9, pozy 11.10, pająk 11.12, rzut Cyklopa 11.13).
-- [ ] **10.5. Strojenie Kryształów, 1 gracz w kooperacji** (Normalny 21–42%). Autor pyta (10.11), czy dotyczy planszówki: nie, to ustawienia wersji cyfrowej (presety poziomów); Przeliczone 10.11 (150 gier): na trójkącie Kryształy koop w pasmach; poza pasmem tylko ręczne mapy, Normalny 1 gracz: Cieśnina 35–43%, Dolina 25–31% (pasmo 45–65%). Potrzebna nowa dźwignia: liczba strażników, liczba kryształów, czy zostawić.
+- [x] **10.5. Decyzja autora (10.11): zostawiamy (wariant b), wracamy po 11.8.** Strojenie Kryształów, 1 gracz w kooperacji** (Normalny 21–42%). Autor pyta (10.11), czy dotyczy planszówki: nie, to ustawienia wersji cyfrowej (presety poziomów); Przeliczone 10.11 (150 gier): na trójkącie Kryształy koop w pasmach; poza pasmem tylko ręczne mapy, Normalny 1 gracz: Cieśnina 35–43%, Dolina 25–31% (pasmo 45–65%). Potrzebna nowa dźwignia: liczba strażników, liczba kryształów, czy zostawić.
 - [ ] **10.6. Przetrwanie dla 2 graczy** (76–85% wygranych). Nieaktualne: przeliczone 10.11 (150 gier, trójkąt): Normalny 47–67%, Trudny 29–41%, Łatwy 66–84% — wszystko w pasmach, nic do zmiany. Zmniejszyć liczbę rund czy wzmocnić falę Hordy (`SURVIVAL` w `data.ts`)?
 - [ ] **10.7. Boss.** Decyzja autora (10.11): robić teraz — wariant „wszyscy przeciw Bossowi” bez Hordy i własna grafika Bossa.
 - [x] **10.8. Wiadomość od autora na pierwszej stronie instrukcji (5.3).** Decyzja autora (10.11): na razie się tym nie przejmujemy.
@@ -236,7 +236,7 @@ Pliki w `bug-reports/` są kumulatywne (każdy zawiera wszystkie wcześniejsze z
 - [x] **11.7. Pegaz na dwóch heksach.** Wygląda śmiesznie mało obok Jednorożca; w wersji cyfrowej Pegaz ma `size: 2` (jak bohaterowie i strażnicy) i większe pudełko w `sprites.ts`. Wersja planszowa bez zmian. Symulacje (60 gier na komórkę) bez wyjątków, wyniki w pasmach; stroiciel nie ruszany.
 
 ### Rozwój i mapa
-- [ ] **11.8. Poziomy 6–10 i nowe sloty artefaktów (hełm, zbroja).** Duża zmiana balansu (rozwój, stroiciel, złote partie testowe), do osobnej sesji; potrzebne decyzje autora o krzywej PD i bonusach (patrz 10).
+- [ ] **11.8. (ustalenia 10.11: krzywa PD wykładnicza, poziom 10 rzadkością; sloty broń/tarcza/hełm/zbroja/buty, układ jak w Heroes III: hełm u góry, broń–zbroja–tarcza, buty na dole; bohaterowie Hordy rozwijają się tak samo jak Przymierza; strażnicy bez doświadczenia, tylko podrasowane statystyki; artefakty do wspólnego zaprojektowania) Poziomy 6–10 i nowe sloty artefaktów (hełm, zbroja).** Duża zmiana balansu (rozwój, stroiciel, złote partie testowe), do osobnej sesji; potrzebne decyzje autora o krzywej PD i bonusach (patrz 10).
 - [ ] **11.9. Ładniejsze okrągłe ikony na kafelkach (gwiazdka, skrzynia, miecze) z Scenario.** Wymaga kredytów i akceptacji autora (10.4).
 
 ### Grafika i animacje (do ustalenia, Scenario)
