@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Muzyka: uzupełnione źródła i licencje wszystkich utworów (część wymaga podania autora, ekran „Autorzy” w przygotowaniu).
 - Walka: wroga jednostkę zasłoniętą przez własnych sojuszników można zaatakować, klikając w jej heks (wcześniej klik w pole przykryte ramką stojącego przed nią sojusznika nic nie robił); kursor miecza i wybór strony ataku działają tak samo.
 - Wersja cyfrowa: obrót jednostki nie wygląda już jak obrót kartki papieru: obraz zwęża się tylko do połowy, jednostka lekko podskakuje i przechyla się w stronę obrotu (prawdziwy klip obrotu nadal czeka na grafikę).
 - Wersja cyfrowa: Pegaz zajmuje dwa heksy (jak Jednorożec i Smoki) i jest narysowany odpowiednio większy.

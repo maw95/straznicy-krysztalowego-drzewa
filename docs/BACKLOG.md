@@ -213,14 +213,14 @@ Wcześniejsze zgłoszenia z tego dnia (rano) są w sekcji 8; zgłoszenie z 28.10
 
 Osiem rzeczy, bez których nie ruszę dalej reszty backlogu. Kiedy autor zdecyduje, odpowiedź wpisać tu i odhaczyć.
 
-- [ ] **10.1. Muzyka, licencje.** 10 utworów w `assets.json` ma pola „DO USTALENIA PRZEZ AUTORA” (źródło, narzędzie, licencja). Bez tego nie wydawać na Steamie. (Patrz 6.1, sekcja 7.)
-- [ ] **10.2. Nowe frakcje po premierze.** Model stylu w Scenario jest wytrenowany. Czy generować próbkę jednej jednostki nowej frakcji (zużywa kredyty)? Od tego zależy 6.7.3.
-- [ ] **10.3. Zakres premiery (6.6).** Czy zostajemy przy poziomach 1–2 (Przygoda i Wyprawa, hotseat, tryb rodzinny)?
-- [ ] **10.4. Grafiki do zrobienia w Scenario.** Ilustracje kapliczki, obozu i skrzyni na mapie, własny Boss, klipy z listy braków (zryw Pegaza, Jednorożca i Gryfa; atak Elfa i Cyklopa), poza siedząca Nietoperza (9.4). Które i w jakiej kolejności?
-- [ ] **10.5. Strojenie Kryształów, 1 gracz w kooperacji** (Normalny 21–42%). Potrzebna nowa dźwignia: liczba strażników, liczba kryształów, czy zostawić.
-- [ ] **10.6. Przetrwanie dla 2 graczy** (76–85% wygranych). Zmniejszyć liczbę rund czy wzmocnić falę Hordy (`SURVIVAL` w `data.ts`)?
-- [ ] **10.7. Boss.** Wariant „wszyscy przeciw Bossowi” bez Hordy i własna grafika Bossa: robić teraz czy po premierze?
-- [ ] **10.8. Wiadomość od autora na pierwszej stronie instrukcji (5.3).** Pisze autor sam.
+- [x] **10.1. Muzyka, licencje.** Autor podał źródła i licencje (10.11.2026), wpisane do `assets.json`: CC0 (Fantasy Choir, Determined Pursuit, A Legend Will Rise), CC BY (Defeat 4.0; Sylvan Waltz, Maddie's Mirror, The Fallen 3.0, wymagają podania autora). **Do zrobienia:** ekran „Autorzy” w grze (i w instrukcji) z wymaganymi wpisami; dokładne adresy utworów do uzupełnienia w `assets.json`.
+- [ ] **10.2. Nowe frakcje po premierze.** Decyzja autora (10.11): najpierw kończymy to, co mamy, nowe frakcje później. Bez próbki w Scenario na razie.
+- [ ] **10.3. Zakres premiery (6.6).** Decyzja autora (10.11): poziomy 1–2 plus **poziom 3** (do zaprojektowania, razem z 11.8).
+- [ ] **10.4. Grafiki do zrobienia w Scenario.** Decyzja autora (10.11): wszystkie z listy, w dowolnej kolejności (kapliczka, obóz, skrzynia, własny Boss, klipy zrywu i ataków, poza Nietoperza, ikony 11.9, pozy 11.10, pająk 11.12, rzut Cyklopa 11.13).
+- [ ] **10.5. Strojenie Kryształów, 1 gracz w kooperacji** (Normalny 21–42%). Autor pyta (10.11), czy dotyczy planszówki: nie, to ustawienia wersji cyfrowej (presety poziomów); odpowiedź do sprawdzenia przed zmianami. Potrzebna nowa dźwignia: liczba strażników, liczba kryształów, czy zostawić.
+- [ ] **10.6. Przetrwanie dla 2 graczy** (76–85% wygranych). Autor pyta (10.11), na jakim poziomie: liczba pochodzi z tabeli sprzed poziomów trudności, trzeba przeliczyć osobno Łatwy/Normalny/Trudny. Zmniejszyć liczbę rund czy wzmocnić falę Hordy (`SURVIVAL` w `data.ts`)?
+- [ ] **10.7. Boss.** Decyzja autora (10.11): robić teraz — wariant „wszyscy przeciw Bossowi” bez Hordy i własna grafika Bossa.
+- [x] **10.8. Wiadomość od autora na pierwszej stronie instrukcji (5.3).** Decyzja autora (10.11): na razie się tym nie przejmujemy.
 
 ## 11. Zgłoszenia z 9.11.2026, wieczór (partie z ziarnami 114857 i 281360)
 
@@ -230,7 +230,7 @@ Pliki w `bug-reports/` są kumulatywne (każdy zawiera wszystkie wcześniejsze z
 - [x] **11.1. Koniec bitwy: okna wyskakują przed animacją śmierci (zgłoszone dwa razy: 13:57 i 14:07).** Przyczyna: okno wyboru umiejętności (awans po zabiciu strażnika) i dźwięk awansu nie czekały na pokaz ostatniego ciosu, bo silnik jest już na mapie, a arena jeszcze pokazuje cios. Teraz czeka też okno umiejętności, dźwięk awansu i samouczek. Sprawdzone w przeglądarce na partii 114857, akcja 31: najpierw cios i martwy gryf, dopiero potem okna.
 - [x] **11.2. Dziennik wyskakuje sam.** Podsumowanie „co się działo” na początku tury nie pokazuje się już w grze z samymi botami (przycisk „Dziennik” zostaje); zostaje w grze, gdzie przeciwnikiem jest drugi człowiek (hotseat/online).
 - [x] **11.3. Tryb Boss: ikona kryształu przy legowisku.** Legowisko Bossa trzyma „kryształ” tylko technicznie; ikona i napis „Leży tu kryształ” znikają.
-- [ ] **11.4. Błysk na zakrytych kafelkach (zdradza, gdzie leży skarb).** Nie odtworzone: w kodzie `glint` i `twinkle` są tylko dla odkrytych pól, na zrzucie z akcji 42 błyska tylko to, co odkryte. Prośba do autora: zrzut ekranu albo opis, który kafelek błyszczał (może pole świeżo odkryte przed obrotem kafelka).
+- [ ] **11.4. (autor nagrał film 10.11, `nagranie.webm`: mignął zakryty kafelek Hordy w prawym dolnym rogu, potem kafelek Przymierza, czwarty od lewej; analiza klatek nie pokazała błysku niezależnego od kursora) Błysk na zakrytych kafelkach (zdradza, gdzie leży skarb).** Nie odtworzone: w kodzie `glint` i `twinkle` są tylko dla odkrytych pól, na zrzucie z akcji 42 błyska tylko to, co odkryte. Prośba do autora: zrzut ekranu albo opis, który kafelek błyszczał (może pole świeżo odkryte przed obrotem kafelka).
 - [x] **11.5. Pegaz nie może zaatakować hydry** (partia 114857, akcja 60). Poprawka 10.11: klik w heks celu trafia w cel, gdy pole przykrywa ramka sojusznika (`behind` w `ArenaBoard.tsx`); sprawdzone testami i hit-testem w przeglądarce, nie na tej samej partii. Nie odtworzone: silnik daje pole podejścia 5,4, a w przeglądarce kliknięcie głowy hydry wykonuje atak. Hydra jest tam prawie całkiem zasłonięta przez Nimfę i Jednorożca (ogon pod Jednorożcem), więc gracz mógł klikać w zasłoniętą część. Do przemyślenia razem z autorem: klikalność jednostek zasłoniętych przez inne.
 - [x] **11.6. Kursor zdolności.** Przy zdolności na sojuszniku (Dar Życia Nimfy itp.) kursor zmienia się na „czar”, tak jak miecz przy ataku, żeby było widać, że można kliknąć.
 - [x] **11.7. Pegaz na dwóch heksach.** Wygląda śmiesznie mało obok Jednorożca; w wersji cyfrowej Pegaz ma `size: 2` (jak bohaterowie i strażnicy) i większe pudełko w `sprites.ts`. Wersja planszowa bez zmian. Symulacje (60 gier na komórkę) bez wyjątków, wyniki w pasmach; stroiciel nie ruszany.
