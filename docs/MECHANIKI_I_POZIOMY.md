@@ -38,6 +38,10 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 - [ ] Przykłady efektów: Hełm Olbrzyma (+Ż bohatera, −1 S), Hełm Dowódcy (+Ż pomocników), Korona Zwiadowcy (odkrywa pola w promieniu 2), Kolczuga Cierni (atakujący w zwarciu traci 1 Ż),
   Ostrze Rannych (+A przeciw rannym), tarcza zmniejszająca pierwszy cios w bitwie (nazwa do wymyślenia). Sandały Skoczka do przemyślenia.
 
+- [ ] Decyzja autora (10.11): po wygranej walce bohaterów zwycięzca **przejmuje artefakty pokonanego** (zamiast dzisiejszej losowej „zdobyczy” stopnia 1; `game.ts`, „łup z pokonanego bohatera”). Do ustalenia: co z artefaktem, który nie pasuje do slotu (patrz otwarte pytania).
+- [ ] Skarby (karty jednorazowe) na poziomie 2 i wyżej muszą się wyraźnie różnić od artefaktów (trwałe wyposażenie). Dziś cztery karty są „wyposażeniem na jedną bitwę”: Miecz Bohatera, Buty Wiatru, Tarcza Strażnika, Kamień Ochrony.
+  Zasada do rozważenia: **to, co się nosi, jest artefaktem; to, co się zużywa, jest eliksirem, zwojem, runą albo rogiem.**
+
 **Do zbudowania — spotkania z neutralnymi (propozycja autora 10.11)**
 - [ ] Nowe jednostki neutralne: 6 słabych (po 2 pasujące do każdego z 3 strażników) i 3 potężni bossowie (do walki potrzebny rozwinięty bohater).
 - [ ] Spotkania na mapie i nagrody:
@@ -77,6 +81,8 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 
 ## Otwarte pytania (10.11)
 
+0. **Przejęte artefakty:** jeśli lepsze niż własne, zakładamy; co z resztą (przepada, leży na polu, plecak)? Czy przegrany traci wszystkie artefakty?
+   **Skarby:** przemianować cztery karty „wyposażenia” na eliksiry / zwoje / runy (tylko wersja cyfrowa), czy je usunąć i dać inne efekty?
 1. **Skala statystyk:** cyfrowy atak pomocników to 2 (strzelcy 1 + premia 1), więc przy ×3 mają A 6, a tarcza 1 / 2 / 3 pkt zmniejsza ich cios o 17–50%: działa. Skala tylko od poziomu 2.
 2. ~~Nazwy i obrazki artefaktów~~ — decyzja autora: jedna nazwa i jeden obrazek dla wszystkich; zwolnione nazwy i grafiki idą do nowych artefaktów.
 3. ~~Sandały Skoczka~~ — decyzja autora: zamiast nich buty ignorujące koszt terenu trudnego na mapie (nazwa: Buty / Trzewiki Trapera).
