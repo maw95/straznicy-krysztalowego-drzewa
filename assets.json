@@ -1843,7 +1843,12 @@
         "public/assets/ikony/umiejetnosci/swift.webp",
         "public/assets/ikony/umiejetnosci/leader.webp",
         "public/assets/ikony/umiejetnosci/pathfinder.webp",
-        "public/assets/ikony/umiejetnosci/fortune.webp"
+        "public/assets/ikony/umiejetnosci/fortune.webp",
+        "public/assets/ikony/umiejetnosci/marksman.webp",
+        "public/assets/ikony/umiejetnosci/tactician.webp",
+        "public/assets/ikony/umiejetnosci/scout.webp",
+        "public/assets/ikony/umiejetnosci/treasureHunter.webp",
+        "public/assets/ikony/umiejetnosci/scholar.webp"
       ],
       "typ": "ikony medalionowe",
       "narzedzie": "Scenario (plan płatny)",
@@ -1851,8 +1856,8 @@
       "data": "2026-11-09",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
-      "scenario_asset": "might: asset_Pi6EAWj4pUaQrkYKMRxXzydL, vigor: asset_NRuy4Krt9ADaC3kCwyVN1YEt, swift: asset_Mf3wGJTjcVmnpGzXTW6ygWkq, leader: asset_2x9f9yCytQvDw7qRG7zbipuD, pathfinder: asset_ZsLazkE1DbcKL9zXwURM759z, fortune: asset_Zpy19ySgM7NKfZowYzSmAp2p",
-      "prompt": "Game UI icon, a single round medallion emblem centered on a transparent background. Ornate gold ring rim with subtle engraved detail, a deep <kolor> glowing enamel disc inside, <symbol> in the centre, soft warm glow. Dark-fantasy hand-painted style like Heroes of Might and Magic III, rich painterly shading, top-left lighting, bold simple silhouette readable at 64 px. No text, no shadow outside the medallion, nothing outside the circle. Symbole: might = raised silver sword (red); vigor = strong red-and-gold heart (green); swift = white feathered wing with wind swirl (blue); leader = banner standard on golden pole (purple); pathfinder = brass compass on old map scroll with boot print (brown); fortune = golden star with sparkles above small open treasure chest (purple)."
+      "scenario_asset": "might: asset_Pi6EAWj4pUaQrkYKMRxXzydL, vigor: asset_NRuy4Krt9ADaC3kCwyVN1YEt, swift: asset_Mf3wGJTjcVmnpGzXTW6ygWkq, leader: asset_2x9f9yCytQvDw7qRG7zbipuD, pathfinder: asset_ZsLazkE1DbcKL9zXwURM759z, fortune: asset_Zpy19ySgM7NKfZowYzSmAp2p; (11.11.2026) marksman: asset_E7RaWQ31m1rHeF44ofWiT57n, tactician: asset_GoC1aNrcCmdsFEJv2kve1Mja, scout: asset_cMQuJQuUWN1bFRuw8njxz7RR, treasureHunter: asset_3NkW9pm2sWvEKuMrFMEg7ppM, scholar: asset_EEnUkpdtEyWhx95VFA2P1c2x",
+      "prompt": "Game UI icon, a single round medallion emblem centered on a transparent background. Ornate gold ring rim with subtle engraved detail, a deep <kolor> glowing enamel disc inside, <symbol> in the centre, soft warm glow. Dark-fantasy hand-painted style like Heroes of Might and Magic III, rich painterly shading, top-left lighting, bold simple silhouette readable at 64 px. No text, no shadow outside the medallion, nothing outside the circle. Symbole: might = raised silver sword (red); vigor = strong red-and-gold heart (green); swift = white feathered wing with wind swirl (blue); leader = banner standard on golden pole (purple); pathfinder = brass compass on old map scroll with boot print (brown); fortune = golden star with sparkles above small open treasure chest (purple). Nowe (11.11.2026): marksman = drawn wooden longbow with golden arrow aimed at a target ring (amber-orange); tactician = war table with map, two crossed batons and a golden chess knight (teal); scout = sharp golden eagle eye with feathers (sky-blue); treasureHunter = open chest overflowing with gold, green gem and brass key (emerald-brown); scholar = open ancient book with a luminous white tree (indigo)."
     },
     {
       "id": "ikony/artefakty",

@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Umiejętności: pięć nowych (Strzelec, Taktyk, Zwiadowca, Łowca skarbów, Uczony) ma własne malowane ikony zamiast pożyczonych.
 - Czarny Smok: Ognisty Oddech w wersji cyfrowej rani też sojusznika, który stoi w linii za trafionym wrogiem (decyzja autora). Boty biorą to pod uwagę i nie zionią w swoich. Planszówka bez zmian.
 - Menu: nowy przycisk „Autorzy” (obok numeru wersji) z listą autorów muzyki, licencjami (CC BY, CC0), informacją o użyciu AI przy grafice i dźwiękach oraz użytym oprogramowaniu.
 - Życie ma własną skalę: w Wyprawie Życie jest teraz ×5 (Atak nadal ×3), więc bohater potrzebuje 2–4 ciosów, żeby pokonać innego bohatera (dawniej mocny cios, np. Szarża Jednorożca, zabijał bohatera jednym uderzeniem). Wszystkie liczby Życia i leczenia (Czarny Smok ma 35 Ż, Niedźwiedź 60 Ż) są odpowiednio większe.
