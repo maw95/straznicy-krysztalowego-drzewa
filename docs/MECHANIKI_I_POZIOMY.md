@@ -1,54 +1,83 @@
-# Mechaniki wersji cyfrowej i podział na poziomy drabinki
+# Mechaniki wersji cyfrowej według poziomów drabinki
 
-Stan z 10.11.2026. Jedno miejsce z listą wszystkich mechanik (zbudowanych i wymyślonych), żeby przypisać je do poziomów drabinki
-(`ROZBUDOWA_CYFROWA.md`: 1 Przygoda, 2 Wyprawa, 3 Królestwo, 4 Imperium, 5 Legenda). Kolumna „Poziom” to **propozycja do dyskusji**, nie decyzja.
-Decyzje autora: poziomy 1–2 + poziom 3 (Królestwo) w premierze; poziomy 6–10 bohatera i 5 slotów artefaktów wchodzą już do Wyprawy (poziom 2).
+Stan z 10.11.2026. Wszystkie mechaniki (zbudowane i wymyślone) w jednym miejscu, posortowane według poziomu drabinki z `ROZBUDOWA_CYFROWA.md`:
+1 Przygoda, 2 Wyprawa, 3 Królestwo, 4 Imperium, 5 Legenda. Przypisanie do poziomów jest **propozycją do dyskusji**, o ile nie napisano „decyzja autora”.
+Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): poziomy 1, 2 i 3.
 
-## A. Zbudowane
+## Poziom 1 — Przygoda (od 5 lat)
 
-| Mechanika | Gdzie dziś | Poziom |
-|---|---|---|
-| Cel Kryształy / rytuał Hordy | domyślny | 1 |
-| Cele: punkty kontrolne, przetrwanie, boss, artefakt | wybór w ekranie startu | 2 |
-| Kształty map: trójkąt (1), prostokąt, pierścień, wyspy, Cieśnina, Dolina | wybór w ekranie startu | 2 |
-| Poziomy trudności Łatwy / Normalny / Trudny (stroiciel) | wszystkie poziomy | 1+ |
-| Arena z poziomymi heksami, duże jednostki na 2 heksach, trupy nie zajmują heksa | bitwa | 1+ |
-| Rozwój bohatera: PD, poziomy 1–5, 6 umiejętności | `heroGrowth` | 2 |
-| Artefakty (3 sloty), kapliczki, obozy najemników, skrzynie | część rozwoju | 2 |
-| Kość obrażeń −1/0/+1, zasłanianie strzału (eksperyment) | opcje własne | własne |
-| Hotseat, online, tryb rodzinny, boty | wszystkie | 1+ |
+- [x] Cel Kryształy / rytuał Hordy, mapa-trójkąt, 4 rozmiary map (w tej chwili: krótka, średnia, długa, bardzo długa).
+- [x] Bohater + dwóch pomocników, skarby, strażnicy, poziomy trudności Łatwy / Normalny / Trudny (stroiciel).
+- [x] Arena z poziomymi heksami, duże jednostki na 2 heksach, trupy nie zajmują heksa.
+- [x] Hotseat, online, tryb rodzinny, boty, mały zestaw liczb (jak w planszówce).
+- [ ] Ekran „Autorzy” (wymóg licencji CC BY dla części muzyki; 10.1).
+- Strażnicy spotykani pojedynczo, bez rozwoju bohatera (bez zmian).
 
-## B. Ustalone, do zbudowania (11.8, poziom 2)
+## Poziom 2 — Wyprawa (decyzja autora: tu wchodzą też poziomy 6–10 i 5 slotów)
 
-- Poziomy bohatera 6–10, krzywa wykładnicza (propozycja progów: 26, 38, 56, 84, 128 PD); poziom 10 ma być rzadkością.
-- Umiejętności w stopniach I–III (jak w Heroes III); przy awansie, gdy bohater ma umiejętność na I lub II, wśród 3 ofert jest zawsze co najmniej jedno jej rozwinięcie.
-- Nowe umiejętności: Strzelec, Taktyk (rozstawienie o 1 / 2 / 3 heksy dalej), Zwiadowca (do przemyślenia: stopień I jest bezsensowny, bo pola obok bohatera są zawsze odkryte), zamiast Łowcy skarbów coś bez losowości (do wymyślenia).
-- Kamienie milowe na poziomach 3, 6 i 9: ulepszenie własnej zdolności z karty bohatera.
-- 5 slotów: hełm u góry, w środku broń–zbroja–tarcza, na dole buty (układ jak w Heroes III i Tibii); trzy rzadkości; artefakty z różnymi efektami, nie same „+Ż”.
-- Efekt artefaktu jest taki sam dla każdego nosiciela i frakcji; frakcja zmienia tylko nazwę i obrazek (inaczej nowe frakcje byłyby bardzo kosztowne).
-- Bohaterowie Hordy rozwijają się tak samo jak Przymierza; strażnicy nie zdobywają doświadczenia, ich statystyki można podrasować (poziom trudności lub poziom gry).
+**Już zbudowane**
+- [x] Cele: punkty kontrolne, przetrwanie, boss, artefakt; kształty map: prostokąt, pierścień, wyspy, Cieśnina, Dolina.
+- [x] Rozwój bohatera: PD, poziomy 1–5, 6 umiejętności; artefakty w 3 slotach; kapliczki, obozy najemników, skrzynie.
+- [x] Bohaterowie Hordy rozwijają się tak samo jak Przymierza (autor, 10.11); strażnicy nie zdobywają doświadczenia.
 
-## C. Wymyślone, jeszcze nieprzypisane
+**Do zbudowania — bohater (11.8)**
+- [ ] Poziomy 6–10, krzywa wykładnicza (propozycja progów: 26, 38, 56, 84, 128 PD); poziom 10 ma być rzadkością.
+- [ ] Umiejętności w stopniach I–III. Przy awansie, gdy bohater ma umiejętność na I lub II, wśród 3 ofert jest zawsze co najmniej jedno jej rozwinięcie.
+- [ ] Nowe umiejętności (decyzje autora):
+  - **Strzelec:** +A strzałów.
+  - **Taktyk:** rozstawienie o 1 / 2 / 3 heksy dalej (stopnie I / II / III).
+  - **Zwiadowca:** odkrywa pola w promieniu 2 / 3 / 4 na starcie tury (stopień I dawałby promień 1, a to już jest, więc zaczynamy od 2).
+  - **Łowca skarbów:** po walce ze strażnikiem wybór skarbu: I — 1 z 2, II — 1 z 3, III — 2 z 3 (zamiast losu).
+  - **Uczony** (dawniej „Mentor”): dodatkowe PD za każdą wygraną walkę (+1 / +2 / +3; do dostrojenia, żeby poziom 10 został rzadkością).
+- [ ] Kamienie milowe na poziomach 3, 6 i 9: ulepszenie własnej zdolności z karty bohatera.
 
-| Mechanika | Uwagi | Poziom (propozycja) |
-|---|---|---|
-| Zestawy artefaktów (3 sztuki = bonus) | autor: za dużo dla poziomu 2 | 3 |
-| Skala statystyk (A i Ż większe liczby) | patrz rozmowa 10.11: potrzebna decyzja | 2 (albo 2+) |
-| Rozmiary map XS, S, M, L, XL, XXL | 4 istniejące = XS–L, nowe XL i XXL | 2 |
-| Boss „wszyscy przeciw Bossowi” bez Hordy, własna grafika Bossa | 10.7: robić teraz | 2 |
-| Autopilot warstw (rodzic wyżej, dziecko na tej samej mapie) | zatwierdzony | od 2 |
-| Osady, złoto, rekrutacja; drużyna do N jednostek rosnąca z poziomem bohatera | etap 2 | 3 |
-| Zakup artefaktów za złoto w osadzie | po osadach | 3 |
-| Zasoby: drewno, ruda, Gwiezdny Pył; budynki; cykl tygodniowy (7 rund); kopalnie | etap 2 | 4 |
-| Drzewka umiejętności frakcji, mechaniki wyróżniające frakcję | etap 2–3 | 4 |
-| Magia (czary), specjalności bohaterów, zaawansowane scenariusze | | 5 |
-| Nowe frakcje (Żelazne Klany, Dzikie Stada, Królestwo Umarłych, DLC) | 10.2: najpierw dokończyć obecne | po premierze |
-| Kampania fabularna, wyprawa roguelike (osobny tryb, nie to samo co poziom 2 „Wyprawa”), seed dnia | etap 4 | po premierze |
-| Ekran „Autorzy” (wymóg CC BY dla muzyki) | 10.1 | od razu |
+**Do zbudowania — artefakty**
+- [ ] 5 slotów: hełm u góry, w środku broń–zbroja–tarcza, na dole buty (układ jak w Heroes III i Tibii). Puste sloty z malowanymi ikonami już są.
+- [ ] Trzy rzadkości: zwykły, rzadki, legendarny. Efekty różnorodne, nie same „+Ż”; efekt jest taki sam dla każdego nosiciela.
+- [ ] Obrona jako liczba (tarcze 1 / 2 / 3 pkt) ma sens dopiero po zwiększeniu statystyk (patrz „Skala statystyk”), z zasadą „minimum 1 obrażenia”.
+- [ ] Przykłady efektów: Hełm Olbrzyma (+Ż bohatera, −1 S), Hełm Dowódcy (+Ż pomocników), Korona Zwiadowcy (odkrywa pola w promieniu 2), Kolczuga Cierni (atakujący w zwarciu traci 1 Ż),
+  Ostrze Rannych (+A przeciw rannym), tarcza zmniejszająca pierwszy cios w bitwie (nazwa do wymyślenia). Sandały Skoczka do przemyślenia.
 
-## D. Otwarte pytania
+**Do zbudowania — spotkania z neutralnymi (propozycja autora 10.11)**
+- [ ] Nowe jednostki neutralne: 6 słabych (po 2 pasujące do każdego z 3 strażników) i 3 potężni bossowie (do walki potrzebny rozwinięty bohater).
+- [ ] Spotkania na mapie i nagrody:
+  - sam strażnik, albo 2–3 słabe jednostki: zwykły skarb;
+  - strażnik + 2 słabe, albo mocna jednostka: rzadki skarb;
+  - mocna jednostka + 2 słabe: legendarny skarb.
+- [ ] Silniejsze spotkania stoją głębiej na mapie (dalej od bazy). Na poziomie 1 zostają sami strażnicy.
+- [ ] Podrasowane statystyki strażników (zależne od poziomu gry lub trudności).
 
-1. Skala statystyk: czy zwiększać liczby (A i Ż), i czy tylko od poziomu 2? (rozmowa 10.11)
-2. Czym zastąpić „Łowcę skarbów” i jak sensownie zrobić „Zwiadowcę”?
-3. Jakie efekty mają mieć artefakty (tarcza bez płaskiej obrony)?
-4. Skąd bierze się rzadkość artefaktu, skoro strażnicy nie są podzieleni na „silniejszych i słabszych”?
+**Do zbudowania — mapy i inne**
+- [ ] Skala statystyk A i Ż (decyzja autora w toku; patrz niżej).
+- [ ] Rozmiary map: XS, S, M, L (dzisiejsze cztery) oraz nowe XL i XXL; ponowne strojenie po zmianie skali.
+- [ ] Boss „wszyscy przeciw Bossowi” bez Hordy, własna grafika Bossa (10.7: robić teraz).
+- [ ] Autopilot warstw (rodzic na wyższym poziomie, dziecko na tej samej mapie z automatycznie zarządzanymi warstwami).
+- [ ] Kość obrażeń i zasłanianie strzału zostają opcjami „Własnymi”.
+
+## Poziom 3 — Królestwo (decyzja autora: wchodzi do premiery)
+
+- [ ] Osady (startowa + do zdobycia), jedna waluta (złoto), rekrutacja jednostek.
+- [ ] Drużyna: bohater prowadzi do N pojedynczych jednostek (N rośnie z poziomem bohatera i budynkami).
+- [ ] Zakup artefaktów za złoto w osadzie.
+- [ ] Zestawy artefaktów (3 przedmioty = bonus).
+
+## Poziom 4 — Imperium
+
+- [ ] Zasoby: drewno, ruda/kamień, Gwiezdny Pył; kopalnie; budynki, jeden na rundę; cykl tygodniowy (7 rund).
+- [ ] Drzewka umiejętności frakcji, mechaniki wyróżniające frakcję.
+
+## Poziom 5 — Legenda
+
+- [ ] Magia (czary), pełne specjalności bohaterów, zaawansowane scenariusze.
+
+## Po premierze
+
+- [ ] Nowe frakcje (Żelazne Klany, Dzikie Stada, Królestwo Umarłych, potem DLC); najpierw dokończyć to, co mamy (10.2).
+- [ ] Kampania fabularna, wyprawa roguelike (osobny tryb, nie to samo co poziom 2 „Wyprawa”), seed dnia z rankingiem.
+
+## Otwarte pytania (10.11)
+
+1. **Skala statystyk:** płaska obrona 1 / 2 / 3 pkt ma sens przy skali ok. ×5 (pomocnicy A 5–10), przy ×3 tarcza za 3 pkt niemal wyłącza słabych pomocników. Skala tylko od poziomu 2.
+2. **Nazwy i obrazki artefaktów:** dziś ten sam artefakt ma inną nazwę i obrazek dla Przymierza i Hordy. Czy zostawić, czy jedna nazwa i jeden obrazek dla wszystkich?
+3. **Sandały Skoczka:** czy zastąpić (np. buty ignorujące koszt terenu trudnego na mapie)?
+4. **Spotkania z neutralnymi:** co dokładnie jest „skarbem” (karta skarbu, artefakt, oba)? Jak boty oceniają, czy atakować spotkanie?
