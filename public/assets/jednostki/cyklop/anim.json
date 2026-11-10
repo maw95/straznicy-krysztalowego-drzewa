@@ -14,6 +14,7 @@
  "fps": 12.0,
  "clips": {
   "atak": 37,
+  "atak_wrecz": 37,
   "chod": 37,
   "smierc": 37,
   "trafienie": 25

@@ -20,7 +20,7 @@ export interface SpritePiece {
   /** Outline round the feet (CSS colour) marking the active unit. */
   ring?: string | null;
   /** A melee blow: a new `key` plays the attack once; the unit turns towards `towardX` while it lasts. */
-  attack?: { key: number; towardX: number } | null;
+  attack?: { key: number; towardX: number; /** The target stands next to the attacker: a shooter uses its close-combat clip (`atak_wrecz`) when it has one. */ melee?: boolean } | null;
   /** Just hit: a short shake and flash. */
   hit?: boolean;
   /** Stand at the new place at once instead of flying there (setting up units before a battle). */
@@ -160,7 +160,8 @@ class Stage {
         l.attackKey = p.attack.key;
         // Move, then turn to the target, then strike.
         this.faceTo(l, p.attack.towardX < l.endX);
-        if (set.frames.atak) l.queue.push({ kind: 'clip', clip: 'atak', reverse: false, ms: clipMs(set, 'atak'), impact: { unit: p.key, done: false } });
+        const clip = p.attack.melee && set.frames.atak_wrecz ? 'atak_wrecz' : 'atak';
+        if (set.frames[clip]) l.queue.push({ kind: 'clip', clip, reverse: false, ms: clipMs(set, clip), impact: { unit: p.key, done: false } });
         else window.setTimeout(() => emitImpact(p.key), 0); // no clip: the blow lands at once
       }
       if (p.hit && !was.hit) {

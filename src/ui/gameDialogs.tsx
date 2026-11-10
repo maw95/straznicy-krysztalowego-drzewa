@@ -4,7 +4,7 @@
 
 import type { ReactNode } from 'react';
 import { ITEMS, UNITS, type ItemKind } from '../engine/data';
-import { levelOf, skillRank, type SkillId } from '../engine/growth';
+import { GROWTH, levelOf, skillRank, type SkillId } from '../engine/growth';
 import type { GameState, HeroState, LogEntry } from '../engine/types';
 import type { BotSpeed, RoomView } from '../online/api';
 import { BOT_SPEEDS } from '../online/api';
@@ -142,7 +142,7 @@ export function FoundTreasure({ kind, open, onClose }: { kind: ItemKind | null; 
 }
 
 /** A hero reached a level: three skills to choose from. */
-export function SkillDialog({ hero, onChoose }: { hero: HeroState | null; onChoose: (skill: SkillId) => void }) {
+export function SkillDialog({ hero, onChoose, earned = [] }: { hero: HeroState | null; onChoose: (skill: SkillId) => void; /** The latest experience this hero earned, newest last ("+2 PD: wygrana walka z bohaterem"): the answer to "why did I level up?". */ earned?: string[] }) {
   return (
     <Modal open={Boolean(hero?.offer?.length)}>
       {hero?.offer && (
@@ -150,6 +150,10 @@ export function SkillDialog({ hero, onChoose }: { hero: HeroState | null; onChoo
           <Ribbon style={{ width: 'min(420px, 90vw)' }}>Poziom {levelOf(hero)}: wybierz umiejętność</Ribbon>
           <div style={{ fontSize: 18 }}>{UNITS[hero.id].name}</div>
           <XpBar hero={hero} />
+          <div style={{ fontSize: 15, maxWidth: 560, textAlign: 'center', lineHeight: 1.35 }} data-xp-why>
+            Awans za doświadczenie (PD). {earned.length > 0 ? <>Ostatnio: <b>{earned.join('; ')}</b>. </> : null}
+            PD dają: pokonany strażnik +{GROWTH.xp.guardian}, wygrana walka z bohaterem +{GROWTH.xp.hero}, przegrana walka, którą bohater przeżył, +{GROWTH.xp.lost}, każdy znaleziony skarb +{GROWTH.xp.treasure}, kapliczka +2.
+          </div>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
             {hero.offer.map((s) => (
               <SkillCard key={s} faction={hero.faction} skill={s} rank={skillRank(hero, s) + 1} raise={skillRank(hero, s) > 0} onChoose={onChoose} />

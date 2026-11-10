@@ -2044,6 +2044,38 @@
       "data": "2026-11-10",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ikony/mapa-kontrola",
+      "pliki": [
+        "public/assets/ikony/mapa/kontrola_none.webp",
+        "public/assets/ikony/mapa/kontrola_dawn.webp",
+        "public/assets/ikony/mapa/kontrola_horde.webp"
+      ],
+      "typ": "znaczniki punktów kontrolnych na mapie: neutralny (szary sztandar), Przymierza (zielono-złoty z drzewem), Hordy (czerwono-żelazny z czaszką); środkowy punkt dostaje w kodzie dodatkowy pierścień",
+      "prompt": "Game map marker icon, a single round medallion emblem centered on a transparent background: ornate <silver ring rim, deep slate-grey enamel disc | gold ring rim with green gems, deep forest-green enamel disc | dark iron ring rim with spikes and red gems, deep crimson-black enamel disc>, and in the centre a tall wooden pole planted in a small stone base with a <plain pale grey cloth banner | golden-green cloth banner with a white glowing crystal tree emblem | tattered blood-red and black banner with a horned skull emblem> fluttering from it, the marker of a control point <neutral, unclaimed | held by the Alliance of the Dawn | held by the Dark Horde>. Dark-fantasy hand-painted style like Heroes of Might and Magic III, rich painterly shading, top-left lighting, readable at 48 px. No text.",
+      "scenario_asset": "none: asset_pLDEifzav66Zv1gpxHgTihWu, dawn: asset_RC4PW58B5n6qp6nuGAVADzDP, horde: asset_SEjqSe3BAQ8gQ7H4yrjJ8pQk",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, 1024x1024, jakość medium, tło przezroczyste; scripts/assets/icons_cut.py (128 px)",
+      "data": "2026-11-10",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/atak-wrecz-strzelcow",
+      "pliki": [
+        "public/assets/jednostki/elf_druid/atak_wrecz.webp",
+        "public/assets/jednostki/goblin_szaman/atak_wrecz.webp",
+        "public/assets/jednostki/cyklop/atak_wrecz.webp"
+      ],
+      "typ": "klipy ataku z bliska strzelców (gra używa ich, gdy cel stoi obok): Elf Druid i Goblin Szaman zamach laską, Cyklop zamach ręką (dawny klip ataku)",
+      "prompt": "Side view, locked static camera. The <elf druid | goblin shaman> stays facing right the whole time. <She | It> lifts <her | its> wooden staff with both hands, swings it forward to the right in one short sweeping motion at close range, and then lowers it and settles back into exactly <her | its> starting standing pose. <Her | Its> feet stay at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement. Cyklop: dawny klip ataku (zamach prawą ręką).",
+      "scenario_asset": "elfDruid: asset_rSKTNpMmzc6RjHjHMfNRakrT, goblinShaman: asset_dXJ3gebA99r11wyhmyWWcxj5, cyclops: asset_83fh5cWWLie2FbxDM2G3naxV; (nieużywany) nymph: asset_KtccZFYhGPWqJQYH9xrbx7En",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "P-Video 2, 720p, 24 kl./s, 3 s; pack_unit.py + shrink_unit.py",
+      "data": "2026-11-10",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

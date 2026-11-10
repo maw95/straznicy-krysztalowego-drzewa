@@ -6,6 +6,15 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Mapa: punkty kontrolne mają malowane znaczniki (szary sztandar, zielono-złoty Przymierza, czerwono-żelazny Hordy; środkowy z dodatkowym pierścieniem) zamiast wektorowych.
+- Bitwa: strzelcy walczą wręcz, gdy cel stoi obok. Elf Druid, Goblin Szaman i Cyklop mają osobny klip ataku z bliska (laska, laska, zamach ręką), a strzała albo głaz lecą tylko na odległość.
+- Zgłoszenia z 10.11: Horda może wyzywać strażników we wszystkich celach poza „Kryształami” (w trybie punktów kontrolnych, przetrwania, artefaktu i bossa strażnik to zwykła walka). Dotąd mogła tylko w „Kryształach”, gdzie to ma sens.
+- Zgłoszenia z 10.11: panel bohatera pokazuje, z czego składają się punkty ruchu (podstawa, Leśny Tropiciel, buty, niesiony Artefakt −1; podpowiedź nad paskiem ruchu) i dopisuje „Artefakt spowalnia: −1 ruchu”. To tłumaczy „3 zamiast 4” i „0 po polu za 2”.
+- Zgłoszenia z 10.11: okno wyboru umiejętności wyjaśnia, skąd awans (ostatnio zdobyte PD z powodami i tabelka, co daje PD).
+- Zgłoszenia z 10.11: opis zdolności po najechaniu na przycisk w bitwie pokazuje liczby w skali gry (Nocna Zasadzka: +9 A zamiast +3).
+- Zgłoszenia z 10.11: Powietrzny Zryw Pegaza (i inne skoki) liczy zasięg od bliższego z dwóch pól dużej jednostki, więc Pegaz skacze naprawdę o 3 pola.
+- Zgłoszenia z 10.11: w bitwie bok ataku wybiera się krawędzią heksa pod kursorem także na dużych jednostkach (Hydra, smoki): liczy się ten z dwóch heksów, nad którym jest kursor, i sąsiad od strony kursora.
+- Zgłoszenia z 10.11: rozmiary figurek: Czarny Smok dorównuje Złotemu, Goblin Szaman jest naprawdę niski, Pająk mieści się w swoim heksie, Gryf jest większy.
 - Bitwa: animacje nie przycinają się. Arkusze animacji jednostek są trzy razy lżejsze (107 → 38 MB), dekodują się z wyprzedzeniem zamiast w środku ciosu, a sąsiednie klatki są płynnie mieszane. Dawniej pierwszy cios, trafienie i śmierć każdej jednostki zacinały grę na 0,2–0,4 s (a przy słabszej karcie dłużej), co wyglądało jak spóźniona animacja śmierci.
 - Bitwa: ostatni cios walki zawsze pokazuje animację ataku. Dotąd po kliknięciu ostatniego ciosu ekran czekał kilka sekund (do limitu 6 s) na cios, który się nie zaczął, i dopiero potem pokazywał śmierć.
 - Artefakty: plecak i przekazywanie. Bohater nosi do 4 artefaktów w plecaku; trafia tam to, czego nie zakłada od razu (dawniej zamieniało się w skarb), a zwycięzca walki bohaterów zabiera też plecak pokonanego. W swojej turze w „Karcie bohatera” można kliknąć artefakt i go założyć, zdjąć albo przekazać sojusznikowi stojącemu na sąsiednim polu.

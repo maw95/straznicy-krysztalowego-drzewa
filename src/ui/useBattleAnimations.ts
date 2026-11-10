@@ -3,7 +3,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { UNITS, type Side } from '../engine/data';
-import { movePath } from '../engine/battle';
+import { movePath, unitDistance } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import type { AttackRoll, GameState } from '../engine/types';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
@@ -87,7 +87,8 @@ export function useBattleAnimations(state: GameState) {
           const { x, y } = cellPos(where);
           fresh.push({ key: Math.random(), amount: u.hp - prev.hp, x: x + W / 2, y: y + H / 2 - 40 });
           if (u.hp < prev.hp && attacker && attacker.id !== u.id && attacker.side !== u.side && attacker.pos) {
-            newStrikes.push({ key: Math.random(), from: attacker.pos, to: where, ranged: UNITS[attacker.defId].attackType === 'ranged', attacker: attacker.id });
+            // A shooter next to its target fights in melee: no arrow or boulder flies (it has its own close-combat clip).
+            newStrikes.push({ key: Math.random(), from: attacker.pos, to: where, ranged: UNITS[attacker.defId].attackType === 'ranged' && unitDistance(attacker, u) > 1, attacker: attacker.id });
           }
         }
         if (u.hp < prev.hp) hit.push(u.id);

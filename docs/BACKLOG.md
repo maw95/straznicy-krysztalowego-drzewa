@@ -226,6 +226,15 @@ Wcześniejsze zgłoszenia z tego dnia (rano) są w sekcji 8; zgłoszenie z 28.10
 - [x] **9.4. (zrobione 10.11: Szaman niższy, Nietoperz większy i siedzi, z klipem wzbicia; do oceny na żywo) Figurki 2D (do oceny autora, grafika):** Szaman Goblinów powinien być niski (gobliny są niskie); Nietoperz większy i groźniejszy; pozycja spoczynku Nietoperza wygląda jak lot — **decyzja autora 9.11: ma siedzieć** (potrzebna poza siedząca, grafika/klip).
 - [x] **9.5. Zwycięstwo Hordy: dwa dźwięki naraz.** Po wygranej Hordy gra odpala nowy efekt „victory” i jednocześnie starą muzykę `horde-victory-the-fallen` (motyw `hordeVictory` w `music.ts`). Ma grać tylko efekt zwycięstwa (zgłoszenie autora 9.11, po południu). Sprawdzić też zwycięstwo Przymierza (`dawnVictory`) i porażkę.
 
+## 12. Zgłoszenia z 10.11.2026 (partie ziaren 674974, 891393, 555702, 975907 i inne)
+
+Zrobione 10.11 (szczegóły w CHANGELOG.md): przycinanie animacji i martwa pauza po ostatnim ciosie (arkusze 107 → 38 MB, dekodowanie z wyprzedzeniem, mieszanie klatek; ostatni cios znów gra animację ataku),
+Horda i strażnicy poza trybem Kryształów, rozbicie punktów ruchu w panelu (niesiony Artefakt −1), wyjaśnienie awansu, skala liczb w opisie zdolności, zasięg skoku dużych jednostek, bok ataku krawędzią heksa także na dużych jednostkach,
+rozmiary figurek (Czarny Smok, Goblin, Pająk, Gryf), osobny klip walki wręcz strzelców (Elf Druid, Goblin Szaman, Cyklop), malowane znaczniki punktów kontrolnych.
+- [x] „Starą skalę statystyk” w partii 891393 wyjaśnia ustawienie: tryb „Własne” z wyłączonym rozwojem bohatera (skala ×3 włącza się razem z rozwojem, `statScale`). Nie błąd.
+- [ ] **12.1. Zabicie jednym ciosem (Jednorożec z Szarżą kontra Czarny Smok, Złoty Smok ze Słonecznym Blaskiem kontra Wilkołak): do decyzji autora.** Dziś Życie bohaterów to 7 × 3 = 21, a cios z premiami łatwo dochodzi do 21. Opcje: (a) osobna skala Życia, np. ×4 przy Ataku ×3 (więcej Życia wszędzie; psuje niezmienność „×3 = ×1” i wymaga nowego strojenia), (b) tylko bohaterowie dostają +Życia (np. +30%), (c) zasada „pełne Życie przeżywa jeden śmiertelny cios z 1 Ż” (jak odporność w grach rolniczych, najtańsza, nie zmienia reszty liczb), (d) obniżyć premie (Szarża, Słoneczny Blask). Rekomendacja: (c) albo (b), po symulacji 150 gier.
+- [ ] **12.2. Walka wręcz cyklopa i strzelców (klipy) i nowe klipy ataku do oceny autora na żywo.** Elf Druid i Goblin Szaman uderzają laską, Cyklop zamachem ręki; Nimfa dostała klip ataku z bliska (`.tmp/nowe/nymph/atak_wrecz.mp4`), ale nie jest używany (jest jednostką walczącą wręcz, jej klip ataku już wygląda jak pchnięcie światłem).
+
 ## 10. Decyzje czekające na autora (stan 9.11.2026)
 
 Osiem rzeczy, bez których nie ruszę dalej reszty backlogu. Kiedy autor zdecyduje, odpowiedź wpisać tu i odhaczyć.

@@ -142,7 +142,7 @@ export function App() {
     const human = q.get('human') !== '0';
     const digital = q.get('ruleset') !== 'board';
     // ?mode=arena starts an arena duel (?hero= for Przymierze), e.g. ?mode=arena&ruleset=digital&steps=60&until=battle.
-    const arena = q.get('mode') === 'arena' ? arenaSetup([{ name: 'Gracz 1', faction: 'dawn', controller: human ? 'human' : 'bot', heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'horde', controller: 'bot', heroId: 'werewolfLord' }], Number(q.get('seed') ?? 1)) : null;
+    const arena = q.get('mode') === 'arena' ? arenaSetup([{ name: 'Gracz 1', faction: 'dawn', controller: human ? 'human' : 'bot', heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'horde', controller: 'bot', heroId: q.get('foe') ?? 'werewolfLord' }], Number(q.get('seed') ?? 1)) : null;
     let s = createGame(arena ? { ...arena, rules: { ...arena.rules, ...(digital ? { ruleset: 'digital' as const } : {}) } } : {
       mode,
       mapSize: (q.get('size') as SetupOptions['mapSize']) ?? 'short',
@@ -795,7 +795,7 @@ export function App() {
       )}
 
       <TreasureDialog hero={humanTurn && !held && game.phase === 'adventure' && !steps.length && !activeHero(game)?.offer ? activeHero(game) : null} onChoose={(kind) => dispatch({ type: 'chooseTreasure', kind })} />
-      <SkillDialog hero={humanTurn && !held && game.phase === 'adventure' && !steps.length ? activeHero(game) : null} onChoose={(skill) => dispatch({ type: 'chooseSkill', skill })} />
+      <SkillDialog hero={humanTurn && !held && game.phase === 'adventure' && !steps.length ? activeHero(game) : null} earned={game.log.flatMap((e) => (e.event?.type === 'xp' && e.event.heroId === activeHero(game)?.id ? [`+${e.event.amount} PD (${e.event.reason})`] : [])).slice(-4)} onChoose={(skill) => dispatch({ type: 'chooseSkill', skill })} />
       {hintNow && (
         <div className="plate parch" role="status" style={{ position: 'fixed', top: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 50, padding: '8px 16px', fontSize: 18, maxWidth: 'min(640px, 92vw)', cursor: 'pointer' }} onClick={() => setHint(null)}>
           💡 {hintNow.text}

@@ -1,6 +1,6 @@
 // The bar under the arena: the active unit and what it can do, its ability and end buttons, the initiative queue.
 
-import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
+import { FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data';
 import { abilityOf, livingUnits, unitSpeed } from '../engine/battle';
 import type { Action, BattleState, BattleUnit, GameState } from '../engine/types';
 import { asset, Frame, Medal, Portrait, SIDE_RING } from './common';
@@ -84,7 +84,7 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
       {myTurn && active && (
         <div style={{ display: 'flex', gap: 8 }}>
           {attackAbility && (
-            <button className={`btn plate parch act-btn ${useAbility ? 'on' : ''}`} style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }} onClick={() => setUseAbility(!useAbility)} title={UNITS[active.defId].abilityText}>
+            <button className={`btn plate parch act-btn ${useAbility ? 'on' : ''}`} style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }} onClick={() => setUseAbility(!useAbility)} title={scaleText(UNITS[active.defId].abilityText, state.rules.statScale ?? 1)}>
               <img src={asset(`cards/abilities/${abilityOf(active)}.png`)} alt="" style={{ width: 34, height: 34 }} />
               <span style={{ fontSize: 13, lineHeight: 1.05, textAlign: 'center' }}>{UNITS[active.defId].abilityName}{useAbility ? ' ✓' : ''}</span>
             </button>
@@ -93,7 +93,7 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
             <button
               className={`btn plate parch act-btn ${freeAbility ? 'on' : ''}`}
               style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}
-              title={UNITS[active.defId].abilityText}
+              title={scaleText(UNITS[active.defId].abilityText, state.rules.statScale ?? 1)}
               onClick={() => (ab === 'sunburst' ? onAction({ type: 'battleAbility' }) : setFreeAbility(!freeAbility))}
             >
               <img src={asset(`cards/abilities/${abilityOf(active)}.png`)} alt="" style={{ width: 34, height: 34 }} />

@@ -135,8 +135,12 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
    * enemy's centre; without one (touch), the cell nearest to walk to.
    */
   function aimApproach(u: BattleUnit, pointer: { x: number; y: number; box: DOMRect } | null, origin: HexKey = u.pos!) {
-    const cells = approachCells(u);
-    if (!cells.length) return setApproach(null);
+    const all = approachCells(u);
+    if (!all.length) return setApproach(null);
+    // As in Heroes III: the edge of the hex under the pointer says which side the blow comes from. Of a large unit's two hexes the one under the
+    // pointer counts, and the side is a hex next to that very one (when the walk can reach one).
+    const beside = all.filter((k) => distanceBetween(k, origin) === 1);
+    const cells = beside.length ? beside : all;
     let cell: HexKey;
     if (pointer) {
       const aim = Math.atan2(pointer.y - (pointer.box.top + pointer.box.height / 2), pointer.x - (pointer.box.left + pointer.box.width / 2));

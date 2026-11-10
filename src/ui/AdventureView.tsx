@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
-import { activeHero, heroesAt, legalHeroMoves, moveAllowance, reviveSpots } from '../engine/game';
+import { activeHero, heroesAt, hordeMayFightGuardian, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots } from '../engine/game';
 import { HeroGrowth } from './growthUi';
 import { heroTileCost, SITE } from '../engine/sites';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
@@ -57,7 +57,7 @@ function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: Hex
       if (!t.revealed || c === null) continue;
       const foes = heroesAt(state, n).some((h) => h.faction !== hero.faction);
       const guarded = Boolean(t.crystalId && state.crystals[t.crystalId].guardian);
-      if (guarded && hero.faction === 'horde') continue;
+      if (guarded && hero.faction === 'horde' && !hordeMayFightGuardian(state, t.crystalId!)) continue;
       const hostile = foes || guarded;
       // A fight is entered like any hex, at its terrain cost; the walk stops there.
       const cost = base.cost + c;
@@ -476,7 +476,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 <div style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{UNITS[hero.id].name}</div>
                 <div style={{ fontSize: 15, color: 'var(--muted)' }}>{hero.playerId ? state.players.find((p) => p.id === hero.playerId)?.name : 'Automat zła'}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3, fontSize: 15 }}>
-                  Ruch <Pips total={Math.max(state.rules.heroMovePoints, moveAllowance(state), state.movePoints)} left={state.movePoints} />
+                  <span title={`Punkty ruchu w tej turze: ${moveBreakdown(state).map((p) => `${p.points > 0 && p.label !== 'podstawa' ? '+' : ''}${p.points} ${p.label}`).join(', ')} = ${moveAllowance(state)}.`}>Ruch <Pips total={Math.max(state.rules.heroMovePoints, moveAllowance(state), state.movePoints)} left={state.movePoints} /></span>
+                  {hero.crystals.includes('artifact') && <span style={{ color: '#F3D27A' }} data-carrier-slow>· Artefakt spowalnia: −1 ruchu</span>}
                   {hero.crystals.length > 0 && <span style={{ color: '#9EE4FF' }}>· niesie {hero.crystals.length} kryształ(y)</span>}
                 </div>
               </div>
@@ -713,17 +714,13 @@ function controlNote(state: GameState, k: HexKey): string {
   return `Punkt kontrolny (wart ${controlWeight(state, k)}): ${who}. Trzyma go ten, czyj bohater stoi tu na koniec rundy.`;
 }
 
-/** A banner on a control point: gold for the Przymierze, red for the Horda, grey while nobody holds it; the middle one has a double ring. */
+/** A control point: a painted medallion with a banner (grey while nobody holds it, the Przymierze's green and gold, the Horda's red and iron); the middle one has a second ring. */
 function ControlFlag({ holder, centre, size }: { holder: FactionId | null; centre: boolean; size: number }) {
-  const colour = holder === 'dawn' ? '#F3D27A' : holder === 'horde' ? '#E0705E' : '#C9D4D8';
-  const w = size * 0.42;
+  const w = size * 0.46;
   return (
-    <svg className="control-flag" width={w} height={w} viewBox="0 0 40 40" style={{ position: 'absolute', left: size * 0.29, top: size * 0.04, pointerEvents: 'none', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.8))' }} aria-label="Punkt kontrolny">
-      <title>Punkt kontrolny</title>
-      <circle cx="20" cy="20" r="18" fill="rgba(10,16,18,0.55)" stroke={colour} strokeWidth="2.5" />
-      {centre && <circle cx="20" cy="20" r="14" fill="none" stroke={colour} strokeWidth="1.5" />}
-      <line x1="15" y1="30" x2="15" y2="9" stroke={colour} strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M15 9 L29 14 L15 19 Z" fill={colour} stroke="#1E1204" strokeWidth="1" />
-    </svg>
+    <span className="control-flag" title="Punkt kontrolny" data-control={holder ?? 'none'} style={{ position: 'absolute', left: size * 0.27, top: size * 0.02, width: w, height: w, pointerEvents: 'none', display: 'block', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.8))' }}>
+      <img src={asset(`ikony/mapa/kontrola_${holder ?? 'none'}.webp`)} alt="" width={w} height={w} style={{ display: 'block' }} />
+      {centre && <span style={{ position: 'absolute', inset: -3, borderRadius: '50%', boxShadow: '0 0 0 2px #F3D27A, 0 0 8px 2px rgba(243, 210, 122, 0.7)' }} />}
+    </span>
   );
 }

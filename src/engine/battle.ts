@@ -939,7 +939,10 @@ export function hopCells(state: GameState, u: BattleUnit, range: number): HexKey
   const b = state.battle!;
   const obstacles = obstacleSet(b);
   const units = occupancy(b, u);
-  return layoutCells(b).filter((k) => !obstacles.has(k) && !units.has(k) && u.pos && distance(parseKey(u.pos), parseKey(k)) <= range && k !== u.pos && fitsAt(state, u, k));
+  // A unit on two hexes hops as far as a small one in the direction it faces: the range counts from the nearer of its two cells (report 187493: the Pegasus
+  // got only two hexes out of three once it lay on two).
+  const reach = (k: HexKey) => Math.min(...cellsOf(u).map((c) => distance(parseKey(c), parseKey(k))));
+  return layoutCells(b).filter((k) => !obstacles.has(k) && !units.has(k) && u.pos && reach(k) <= range && k !== u.pos && fitsAt(state, u, k));
 }
 
 export function battleHop(state: GameState, to: HexKey) {

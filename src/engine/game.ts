@@ -368,6 +368,15 @@ export function reviveSpots(state: GameState, hero: HeroState): HexKey[] {
   return mapNeighbors(state.tiles, hero.pos).filter((k) => canStand(state, k, hero.faction));
 }
 
+/**
+ * Whether a Horde hero may challenge the guardian of this crystal. In the crystals goal the Horde leave guardians alone (the guardians keep
+ * the crystals the Horde only wait for at the Tree); in every other goal a guardian is just a fight (a treasure, experience), open to both
+ * sides, and in the Boss goal both sides race for the last blow. The Horde's bots still do not go looking for guardians (adventureAi).
+ */
+export function hordeMayFightGuardian(state: GameState, crystalId: string): boolean {
+  return objectiveOf(state) !== 'crystals' || Boolean(state.boss && crystalId === 'boss');
+}
+
 /** One hero per hex: only a faction's own base may hold several of its heroes. */
 export function canStand(state: GameState, k: HexKey, faction: FactionId, heroId?: string): boolean {
   const t = state.tiles[k];
@@ -417,8 +426,7 @@ export function legalHeroMoves(state: GameState): HeroMove[] {
       continue;
     }
     if (crystal?.guardian) {
-      // The Horde leave guardians alone, except the Boss: both sides race for the last blow.
-      if (hero.faction === 'horde' && !(state.boss && crystal.id === 'boss')) continue;
+      if (hero.faction === 'horde' && !hordeMayFightGuardian(state, crystal.id)) continue;
       if (cost <= state.movePoints) out.push({ to: n, cost, kind: 'attackGuardian' });
       continue;
     }
@@ -614,8 +622,19 @@ export function scoutAround(state: GameState, hero: HeroState | undefined) {
 
 /** Move points the active hero gets at the start of its turn: the rules' base plus skills, family help and gear, minus the artifact's weight. */
 export function moveAllowance(state: GameState): number {
+  return moveBreakdown(state).reduce((sum, p) => sum + p.points, 0);
+}
+
+/** What the move points of the active hero's turn are made of (for the screen: a player who counts them must be able to see where each went). */
+export function moveBreakdown(state: GameState): Array<{ label: string; points: number }> {
   const hero = activeHero(state) ?? undefined;
-  return state.rules.heroMovePoints + moveBonus(hero) + (hero && isChildHero(state, hero) ? FAMILY.extraMove : 0) + gearMoveBonus(hero) - (hero?.crystals.includes('artifact') ? ARTIFACT.carrierSlow : 0);
+  const parts = [{ label: 'podstawa', points: state.rules.heroMovePoints }];
+  const add = (label: string, points: number) => points && parts.push({ label, points });
+  add('Leśny Tropiciel (umiejętność)', moveBonus(hero));
+  add('pomoc dla dziecka', hero && isChildHero(state, hero) ? FAMILY.extraMove : 0);
+  add('artefakty (buty)', gearMoveBonus(hero));
+  add('niesiony Artefakt', hero?.crystals.includes('artifact') ? -ARTIFACT.carrierSlow : 0);
+  return parts;
 }
 
 function endRound(state: GameState) {

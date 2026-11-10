@@ -2,7 +2,7 @@
 // and the animations over them.
 
 import { memo, useRef } from 'react';
-import { cellsOf, deployHeads, movePath, unitAt } from '../engine/battle';
+import { cellsOf, deployHeads, movePath, unitAt, unitDistance } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import { isDigital, type BattleUnit, type GameState } from '../engine/types';
 import { asset, Frame, Portrait, ACTIVE_FIGURE_RING, Ribbon, SIDE_RING } from './common';
@@ -168,7 +168,7 @@ export function ArenaBoard(p: Props) {
     const path = way && off ? way.map((k) => ({ x: cellCenter(k).x + off.x, y: cellCenter(k).y + FEET + off.y })) : null;
     // In a fight the blue cells already mark the active unit; the ring only shows which unit is picked while deploying.
     const ring = deploySide && picked === u.id ? ACTIVE_FIGURE_RING : null;
-    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, ring, attack: p.attackNow && p.attackNow.unitId === u.id ? { key: p.attackNow.key, towardX: cellCenter(b.units[p.attackNow.targetId]?.pos ?? b.units[p.attackNow.targetId]?.corpse ?? fp.head).x } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy', path }];
+    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, ring, attack: p.attackNow && p.attackNow.unitId === u.id ? { key: p.attackNow.key, melee: b.units[p.attackNow.targetId] ? unitDistance(u, b.units[p.attackNow.targetId]) === 1 : false, towardX: cellCenter(b.units[p.attackNow.targetId]?.pos ?? b.units[p.attackNow.targetId]?.corpse ?? fp.head).x } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy', path }];
   });
   return (
     <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#14100A' }}>
@@ -333,7 +333,9 @@ export function ArenaBoard(p: Props) {
                   const own = e.currentTarget;
                   const el = t === u ? own : (document.querySelector<HTMLElement>(`[data-unit="${t.id}"]`) ?? own);
                   own.style.cursor = t === u ? '' : getComputedStyle(el).cursor;
-                  p.aimApproach(t, { x: e.clientX, y: e.clientY, box: el.getBoundingClientRect() });
+                  // The hex of the unit under the pointer (a large unit lies on two): its edges say the side of the attack.
+                  const cellEl = (document.elementsFromPoint?.(e.clientX, e.clientY) ?? []).find((x) => x.hasAttribute('data-cell') && cellsOf(t).includes(x.getAttribute('data-cell') as HexKey));
+                  p.aimApproach(t, { x: e.clientX, y: e.clientY, box: (cellEl ?? el).getBoundingClientRect() }, cellEl ? (cellEl.getAttribute('data-cell') as HexKey) : undefined);
                 }}
                 onMouseLeave={() => {
                   setHover(null);

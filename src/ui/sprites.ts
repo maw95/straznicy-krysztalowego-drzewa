@@ -32,19 +32,19 @@ export const SPRITES: Record<string, SpriteSpec> = {
   werewolfLord: { dir: 'jednostki/wladca_wilkolakow', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   ironFistOgre: { dir: 'jednostki/ogr_zelazna_piesc', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   unicornKing: { dir: 'jednostki/krol_jednorozcow', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  elfDruid: { dir: 'jednostki/elf_druid', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  elfDruid: { dir: 'jednostki/elf_druid', box: SMALL, speed: { chod: 1.4, atak: 1.5, atak_wrecz: 1.5, smierc: 1.5, trafienie: 1.4 } },
   nymph: { dir: 'jednostki/nimfa', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // Goblins are short: the shaman stands lower than the elf and the nymph.
-  goblinShaman: { dir: 'jednostki/goblin_szaman', box: [76, 80] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  goblinShaman: { dir: 'jednostki/goblin_szaman', box: [66, 62] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, atak_wrecz: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // The spider and the bat are wide and low: a wider box makes them big and menacing (they overhang their hex a little).
-  caveSpider: { dir: 'jednostki/pajak_jaskiniowy', box: [112, 96] as const, corpseMax: 112, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  caveSpider: { dir: 'jednostki/pajak_jaskiniowy', box: [92, 68] as const, corpseMax: 100, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   shadowBat: { dir: 'jednostki/nietoperz_cienia', box: [96, 96] as const, corpseMax: CORPSE_MAX_W, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  // The Black Dragon's body is taller than wide: a box of its own makes it as big on screen as the Golden Dragon (about 135 px).
-  blackDragon: { dir: 'jednostki/czarny_smok', box: [150, 136] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  // The Black Dragon now stands on the ground (a long body with a tail): a wider box keeps it as big on screen as the Golden Dragon (report 674974).
+  blackDragon: { dir: 'jednostki/czarny_smok', box: [200, 150] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // The throw is played fast so that the boulder (a projectile drawn by the arena, styles.css) leaves his hands with the blow.
-  cyclops: { dir: 'jednostki/cyklop', box: LARGE, speed: { chod: 1.4, atak: 2.2, smierc: 1.5, trafienie: 1.4 } },
+  cyclops: { dir: 'jednostki/cyklop', box: LARGE, speed: { chod: 1.4, atak: 2.2, atak_wrecz: 1.5, smierc: 1.5, trafienie: 1.4 } },
   hydra: { dir: 'jednostki/hydra', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  griffin: { dir: 'jednostki/gryf', box: LARGE, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  griffin: { dir: 'jednostki/gryf', box: [172, 140] as const, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   braveDuck: { dir: 'jednostki/dzielna_kaczka', box: SMALL, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   ancientBear: { dir: 'jednostki/prastary_niedzwiedz', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
 };
@@ -177,7 +177,7 @@ export function loadSprites(defId: string): Promise<SpriteSet> {
       const dy = lying ? 2 - scale * (lying.y1 / meta.frame[1] - feet) * dh : 0;
       // The sheets come in one after another, the ones a fight needs first (a blow, a hit, a death), while the unit already stands on the board.
       const sheets: Record<string, CanvasImageSource> = {};
-      const order = ['atak', 'trafienie', 'smierc', 'wzbicie', 'lot', 'chod'];
+      const order = ['atak', 'atak_wrecz', 'trafienie', 'smierc', 'wzbicie', 'lot', 'chod'];
       const ready = (async () => {
         for (const n of [...names].sort((a, b) => order.indexOf(a) - order.indexOf(b))) {
           try {
