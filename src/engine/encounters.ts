@@ -46,10 +46,13 @@ export function placeEncounters(state: GameState): void {
   if (!growthOn(state) || !isDigital(state.rules) || state.setup.mode === 'arena' || state.setup.battleMode !== 'arena') return;
   const rng = new Rng((state.setup.seed ^ 0x2b7e1516) | 0);
   const homes = Object.values(state.tiles).filter((t) => t.home).map((t) => parseKey(t.key));
+  const tree = Object.values(state.tiles).find((t) => t.tree);
+  // Nothing close to a base or to the Tree: the first steps and the delivery of crystals must stay open.
+  const nearBase = (k: string) => [...homes, ...(tree ? [parseKey(tree.key)] : [])].some((h) => distance(h, parseKey(k)) <= ENCOUNTERS.minDistance);
   const depthOf = (k: string) => Math.min(...homes.map((h) => distance(h, parseKey(k))));
   // Guardians and their lairs already block hexes: a road must stay open past them as well.
   const blocked = new Set<string>(Object.values(state.crystals).filter((c) => c.guardian && state.tiles[c.at]).map((c) => c.at));
-  const candidates = rng.shuffle(Object.values(state.tiles).filter((t) => !t.home && !t.tree && !t.crystalId && !t.treasureId && !t.site && t.terrain !== 'bridge' && tileCost(t) !== null));
+  const candidates = rng.shuffle(Object.values(state.tiles).filter((t) => !t.home && !t.tree && !nearBase(t.key) && !t.crystalId && !t.treasureId && !t.site && t.terrain !== 'bridge' && tileCost(t) !== null));
   const chosen: string[] = [];
   const want = ENCOUNTERS.count[state.setup.mapSize] ?? 2;
   for (const t of candidates) {

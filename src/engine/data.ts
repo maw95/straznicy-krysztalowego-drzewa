@@ -207,6 +207,8 @@ export const BOSS = {
   hp: { short: 54, medium: 54, long: 62, veryLong: 92, huge: 104, giant: 116 } as Record<MapSize, number>,
   /** Life is multiplied by this when two Przymierza heroes play (two heroes strike twice as often). */
   twoHeroesFactor: 1.25,
+  /** The neutral bosses (hero growth) are tougher than the Hydra and the Cyclops: their Życie is the table's times this. Tuned with `SIM_OBJECTIVE=boss`. */
+  hpFactor: { stoneGolem: 0.5, stormKing: 0.5, kraken: 0.5 } as Record<string, number>,
 };
 
 /**
@@ -289,6 +291,8 @@ export type EncounterMotif = keyof typeof ENCOUNTER_MOTIFS;
 export const ENCOUNTERS = {
   /** How many encounters a map holds, by map size. Provisional: tune with the simulations. */
   count: { short: 2, medium: 3, long: 5, veryLong: 7, huge: 9, giant: 11 } as Record<MapSize, number>,
+  /** An encounter stands farther than this from a base and from the Tree. */
+  minDistance: 2,
   /** Neutral units that stand beside the Kraken (its tentacles). */
   krakenTentacles: 3,
 };

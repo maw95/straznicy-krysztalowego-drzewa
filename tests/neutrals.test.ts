@@ -172,6 +172,7 @@ describe('neutral encounters on the map', () => {
     const hero = Object.values(s.heroes).find((h) => h.faction === 'dawn')!;
     const from = Object.keys(s.tiles).find((k) => s.tiles[k].crystalId === null && !s.tiles[k].home && neighborKeys(k).includes(c.at))!;
     hero.pos = from;
+    s.tiles[c.at].revealed = true;
     s.turnOrder = [hero.id];
     s.turnIndex = 0;
     s.movePoints = 3;
@@ -198,5 +199,17 @@ describe('neutral encounters on the map', () => {
       const s = playOut(grown({ mapSize: 'medium', seed }));
       expect(s.phase).toBe('over');
     }
+  });
+});
+
+describe('bots and encounters', () => {
+  it('bots fight encounters in some games (and the games still end)', () => {
+    let fought = 0;
+    for (const seed of [1, 2, 3, 4, 5, 6]) {
+      const s = playOut(createGame(setup({ mapSize: 'medium', seed }, { ruleset: 'digital', heroGrowth: true })));
+      expect(s.phase).toBe('over');
+      if (Object.values(s.crystals).filter((c) => c.encounter).length < 3) fought += 1;
+    }
+    expect(fought).toBeGreaterThan(0);
   });
 });

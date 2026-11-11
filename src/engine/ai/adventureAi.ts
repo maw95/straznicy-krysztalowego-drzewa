@@ -5,9 +5,9 @@ import { FACTION_SUPPORTS, ITEM_EFFECT, SUPPORTS_PER_BATTLE, UNITS, type Faction
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { heroTileCost } from '../sites';
-import { activeHero, currentActor, defenderAt, heroesAt, legalHeroMoves, livingHeroes, other, reviveSpots, ritualFormed, ritualSpot } from '../game';
+import { activeHero, currentActor, defenderAt, heroesAt, hordeMayFightGuardian, legalHeroMoves, livingHeroes, other, reviveSpots, ritualFormed, ritualSpot } from '../game';
 import { hpScaleOf } from '../battle';
-import { BOT_SKILL_ORDER } from '../growth';
+import { BOT_SKILL_ORDER, levelOf } from '../growth';
 import { DRAFT_VALUE } from './battleAi';
 import { artifactCarrier, objectiveOf } from '../objectives';
 import type { Action, Crystal, GameState, HeroState } from '../types';
@@ -132,6 +132,8 @@ interface WalkOptions {
   goals?: Set<HexKey>;
   /** Crystal hexes still guarded are closed (unless they are goals). Off for a plain distance. */
   avoidGuardians?: boolean;
+  /** Neutral encounters may be goals of this walk (encounterDetour only; every other walk keeps clear of them). */
+  encounters?: boolean;
   /** Hexes of enemy heroes the hero would rather not fight are closed (unless they are goals). */
   avoid?: (k: HexKey) => boolean;
   /** Hexes near stronger enemies cost extra (Memo.dangerCost), goals excepted. */
@@ -150,6 +152,8 @@ function walkCost(memo: Memo, hero: HeroState, opts: WalkOptions): (k: HexKey) =
     if (!goal && opts.avoid?.(k)) return null;
     const t = state.tiles[k];
     if (opts.avoidGuardians && !goal && t.crystalId && state.crystals[t.crystalId].guardian) return null;
+    // Neutral encounters are fought only on purpose (encounterDetour): no other walk goes through them.
+    if (t.crystalId && state.crystals[t.crystalId].encounter && !(goal && opts.encounters)) return null;
     const c = knownCost(state, k, hero);
     return c === null || goal || !opts.danger ? c : c + memo.dangerCost(hero, k);
   };
@@ -699,6 +703,33 @@ function canFightGuardian(state: GameState): boolean {
   return state.factions.dawn.supportsAlive.length >= 1;
 }
 
+/**
+ * Neutral encounters (encounters.ts): a bot goes for one when it is strong enough for its tier (level and supports alive), it is not far, and the
+ * game is not near its end. The hero's level stands for the "developed hero" the stronger groups need.
+ */
+const ENCOUNTER_BOT = { minLevel: [2, 4, 7], minSupports: [2, 2, 2], maxCost: 4, lastRounds: 0.5 } as const;
+
+function encounterDetour(state: GameState, hero: HeroState, memo: Memo): Action | null {
+  if (!Object.values(state.crystals).some((c) => c.encounter)) return null;
+  if (isDesperate(state) || state.round > state.roundLimit * ENCOUNTER_BOT.lastRounds || state.turnBattleDone) return null;
+  const supports = state.factions[hero.faction].supportsAlive.length;
+  const goals = new Set(
+    Object.values(state.crystals)
+      .filter((c) => c.encounter && state.tiles[c.at]?.revealed && levelOf(hero) >= ENCOUNTER_BOT.minLevel[c.tier ?? 0] && supports >= ENCOUNTER_BOT.minSupports[c.tier ?? 0] && (hero.faction === 'dawn' || hordeMayFightGuardian(state, c.id)))
+      .map((c) => c.at),
+  );
+  if (!goals.size) return null;
+  const paths = memo.paths(hero, 'encounter', { goals, avoidGuardians: true, danger: true, encounters: true });
+  let best: { cost: number; path: HexKey[] } | null = null;
+  for (const g of goals) {
+    const p = paths.get(g);
+    if (p && p.path.length >= 2 && p.cost <= ENCOUNTER_BOT.maxCost && (!best || p.cost < best.cost)) best = { cost: p.cost, path: p.path };
+  }
+  if (!best) return null;
+  const next = best.path[1];
+  return legalHeroMoves(state).some((m) => m.to === next) ? { type: 'moveHero', to: next } : null;
+}
+
 export function adventureAction(state: GameState): Action {
   const hero = activeHero(state)!;
   // A level up first: the skill the bots like best of the three offered.
@@ -715,6 +746,10 @@ export function adventureAction(state: GameState): Action {
     return { type: 'moveHero', to };
   }
   const memo = new Memo(state);
+  if (currentActor(state).kind !== 'automaton') {
+    const detour = encounterDetour(state, hero, memo);
+    if (detour) return detour;
+  }
   if (objectiveOf(state) === 'control') return controlAction(state, memo);
   if (objectiveOf(state) === 'survival') return survivalAction(state, memo);
   if (objectiveOf(state) === 'boss') return bossAction(state, memo);

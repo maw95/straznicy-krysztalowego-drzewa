@@ -389,7 +389,7 @@ Szybkość, zasięgi, punkty ruchu i liczby (ile pól odkryć, ilu wrogów trafi
 - Punkty rankingowe: waga mapy 1,15 i 1,3 (Bardzo długa = 1), sufit `MAX_POINTS` = 40; dawne mapy liczą się jak dotąd (wzorzec 30). Trudność bazowa XL i XXL w tabelach `scoring.ts` jest skopiowana z „Bardzo długiej”, do poprawy, gdy będą dane z gier.
 - Strojenie: `SIM_SIZES=huge,giant SIM_SHAPE=<kształt> node --import tsx scripts/sim/tuneLevels.ts <cel> 1 120 10` (z rozwojem bohatera, czyli poziom Wyprawa; ok. 1–6 min na kombinację), wyniki w `.tmp/sim/auto-*-xl.json`, scalone przez `tuneMerge.ts` do `tuningAuto.ts`. Przejścia: 4 kształty × 5 celów. Po tuningu część komórek została poza pasmem (około jedna czwarta: najczęściej rywalizacja 1 na 1 i Trudny w kooperacji na XXL, gdzie dźwignie startowych skarbów nie wystarczają). Mapy własne („ciesnina”, „dolina”) i poziom 1 (bez rozwoju) na XL i XXL nie są strojone; poziom 1 przestrojony tylko na trójkącie i kryształach bez rozwoju jednym przebiegiem.
 
-## Neutralni: słabe jednostki i bossowie (PROJEKT z 11.11.2026, do akceptacji autora, jeszcze bez kodu)
+## Neutralni: słabe jednostki i bossowie (projekt zatwierdzony i wdrożony 11.11.2026)
 
 Decyzje autora (11.11): motywy kamień / powietrze / woda; każdy motyw ma 2 słabych i 1 bossa, żadna jednostka nie powtarza mechaniki strażników (odpychanie, odlot po ataku, trafianie dwóch celów); nowa zasada „cios od tyłu”; własny Boss od razu razem z trybem „wszyscy przeciw Bossowi” (10.7).
 Liczby są w skali bazowej (przed „Skalą statystyk” i osobną skalą Życia), robocze, do strojenia symulacjami. Zdolności działają bez limitu „raz na bitwę”, jak u strażników.
@@ -429,3 +429,12 @@ Wszyscy gracze po jednej stronie, bez Hordy, przeciwko jednemu z trzech bossów 
 
 ### Otwarte
 Nazwy i opisy wyglądu do zaakceptowania; boty oceniają spotkanie jak strażnika (siła / skarb) po zrobieniu silnika spotkań.
+
+### Wdrożenie (11.11.2026)
+- **Silnik:** jednostki i zdolności w `data.ts` / `battle.ts` (testy w `tests/neutrals.test.ts`). Nowe pojęcia: „front” jednostki (`facing`: kierunek ostatniego ruchu albo ataku; stojąca w miejscu patrzy na najbliższego wroga), pola naładowane (`BattleState.fields`), teleport zamiast ruchu (akcja `battleTeleport`, używana tylko przez automat: Podkopnik i Król Burzy; gracz nigdy nie steruje neutralnymi).
+- **Spotkania na mapie** (`encounters.ts`): tylko z rozwojem bohatera w wersji cyfrowej i na arenie (nie w pojedynku na planszy). Liczba spotkań wg wielkości mapy (`ENCOUNTERS.count`: 2 / 3 / 5 / 7 / 9 / 11), nie bliżej niż 2 pola od bazy i od Drzewa, nie obok siebie, nigdy nie przecinają drogi (sprawdzane przeszukiwaniem mapy). Najpłytsza trzecia część to zwykłe (2–3 słabi), środkowa rzadkie (strażnik + 2 słabi), najgłębsza legendarne (boss + 2 słabi; Kraken z trzema mackami). Motyw losowany z ziarna.
+- **Nagroda:** skarb jak od strażnika i artefakt rzadkości spotkania.
+- **Boty:** objeżdżają spotkania tylko celowo (`encounterDetour`): poziom bohatera co najmniej 2 / 4 / 7 dla zwykłego / rzadkiego / legendarnego, dwóch pomocników, do 4 kroków, w pierwszej połowie rund. Żadna inna ścieżka bota nie przechodzi przez spotkanie (wcześniej bot wchodził w nie przez „eksplorację”).
+- **Boss na mapie:** z rozwojem bohatera cel „Boss” losuje też Kamiennego Golema, Króla Burzy i Krakena (życie × `BOSS.hpFactor` = 0,5).
+- **Symulacje** (`SIM_GROWTH=1 make sim-cele GAMES=40`, trójkąt, kooperacja / rywalizacja, przed zmianami → po): Kryształy 53/57 → 46/50, Punkty kontrolne 57/62 → 52/63, Przetrwanie 55 → 45, Boss 59/59 → ok. 50/53 (po dostrojeniu `hpFactor`; przed nim 40/42), Artefakt 56/62 → 48/62. Wszystko w paśmie Normalnego (45–65), poza Przetrwaniem i Kryształami o kilka punktów na dole (40 gier na wariant: błąd około ±8). Do powtórzenia dłuższą serią.
+- **Jeszcze nie ma:** własnych grafik, sprite’ów i dźwięków (zastępcze: portret strażnika z tego samego motywu, ikona zdolności podobnej), ikon zdolności, trybu „wszyscy przeciw Bossowi” bez Hordy (10.7).

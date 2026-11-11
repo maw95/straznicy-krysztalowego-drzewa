@@ -3,7 +3,7 @@
 // progress for the screen. 'crystals' is the board game's goal (carry the crystals to the Tree, the Horde's ritual); the
 // others belong to the digital ruleset. Result of a game under 'crystals' must never change (tests/golden.test.ts).
 
-import { BOSS, CONTROL, FACTION_NAMES, SURVIVAL, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, UNITS, type FactionId, type Terrain } from './data';
+import { BOSS, CONTROL, ENCOUNTERS, FACTION_NAMES, NEUTRAL_BOSSES, SURVIVAL, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, UNITS, type FactionId, type Terrain } from './data';
 import { hpScaleOf } from './battle';
 import { finish, heroesAt, ritualFormed, spawnHordeHero } from './game';
 import { distance, key, parseKey, triToHex, type HexKey } from './hex';
@@ -328,6 +328,9 @@ const survival: Objective = {
 
 // ------------------------------------------------------------------ boss
 
+/** The lair art of the neutral bosses (no pictures of their own yet): the lair of the guardian of their motif. */
+const BOSS_LAIR: Record<string, Terrain> = { stoneGolem: 'lairCyclops', stormKing: 'lairGriffin', kraken: 'lairHydra' };
+
 const boss: Objective = {
   id: 'boss',
   name: 'Boss',
@@ -336,12 +339,14 @@ const boss: Objective = {
     const rng = new Rng((state.setup.seed ^ 0x5bd1e995) | 0);
     // The middle control point's place is the lair (it is cleared into passable ground, like the control points are).
     const at = placeControlPoints(state)[0];
-    const guardian = rng.pick(['hydra', 'cyclops']);
+    // With hero growth the Boss may also be one of the three neutral bosses (stoneGolem, stormKing, kraken); without it the draw is as before.
+    const guardian = rng.pick(state.rules.heroGrowth ? ['hydra', 'cyclops', ...NEUTRAL_BOSSES] : ['hydra', 'cyclops']);
     const dawnHeroes = state.setup.seats.filter((s) => s.faction === 'dawn').length;
-    const hp = Math.round(BOSS.hp[state.setup.mapSize] * hpScaleOf(state) * (dawnHeroes >= 2 ? BOSS.twoHeroesFactor : 1));
-    state.tiles[at].terrain = guardian === 'hydra' ? 'lairHydra' : 'lairCyclops';
+    const hp = Math.round(BOSS.hp[state.setup.mapSize] * hpScaleOf(state) * (dawnHeroes >= 2 ? BOSS.twoHeroesFactor : 1) * (BOSS.hpFactor[guardian] ?? 1));
+    state.tiles[at].terrain = guardian === 'hydra' ? 'lairHydra' : guardian === 'cyclops' ? 'lairCyclops' : (BOSS_LAIR[guardian] ?? 'lairCyclops');
     state.tiles[at].crystalId = 'boss';
-    state.crystals.boss = { id: 'boss', guardian, at };
+    // The Kraken fights with its tentacles; they are fresh in every fight (only the head's wounds stay).
+    state.crystals.boss = { id: 'boss', guardian, at, ...(guardian === 'kraken' ? { encounter: ['kraken', ...Array.from({ length: ENCOUNTERS.krakenTentacles }, () => 'tentacle')] } : {}) };
     state.boss = { at, guardian, hp, maxHp: hp, slain: null, hits: { dawn: 0, horde: 0 } };
     revealAround(state, at);
   },
