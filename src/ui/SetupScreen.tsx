@@ -55,6 +55,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
   const [objective, setObjective] = useState<ObjectiveId>('crystals');
   const [shape, setShape] = useState<MapShape>('triangle');
   const [growth, setGrowth] = useState(false);
+  const [noHorde, setNoHorde] = useState(false);
   /** The complexity level of a digital adventure (presets.ts): decides which of the switches below the player may change. */
   const [tier, setTier] = useState<Tier>('adventure');
   const [customId, setCustomId] = useState(Object.keys(CUSTOM_MAPS)[0]);
@@ -109,7 +110,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
 
   const startGame = () => {
     const r = resolveTier(tier, { objective, shape, customMapId: customId, growth });
-    onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero } }, digital, r.objective, r.shape, r.customMapId, r.growth));
+    onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero, ...(noHorde && mode === 'coop' && r.objective === 'boss' ? { noHorde: true } : {}) } }, digital, r.objective, r.shape, r.customMapId, r.growth));
   };
   const backBtn = (to: Step) => <button className="btn plate parch" style={{ height: 52, padding: '0 28px', fontSize: 20 }} onClick={() => setStep(to)}>← Wstecz</button>;
   const stepName = step === 'start' ? '' : `Krok ${step === 'options' ? 2 : 3} z 3: ${step === 'options' ? 'Ustawienia gry' : 'Miejsca przy stole'} · ${digital ? 'wersja cyfrowa' : 'wersja planszowa'}`;
@@ -315,6 +316,12 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
                 {(['crystals', 'control', 'survival', 'boss', 'artifact'] as const).filter((o) => o !== 'survival' || mode === 'coop').map((o) => (
                   <Tip key={o} text={OBJECTIVES[o].summary}><button className={chip(objective === o)} aria-pressed={objective === o} onClick={() => setObjective(o)}>{OBJECTIVES[o].name}</button></Tip>
                 ))}
+              </Row>
+            )}
+            {digital && !arena && tier !== 'adventure' && mode === 'coop' && objective === 'boss' && (
+              <Row label="Horda">
+                <Tip text="Horda prowadzi swoich bohaterów i też atakuje Bossa."><button className={chip(!noHorde)} aria-pressed={!noHorde} onClick={() => setNoHorde(false)}>Gra przeciw nam</button></Tip>
+                <Tip text="Wszyscy gracze razem przeciw samemu Bossowi: Horda nie ma bohaterów, a Boss ma trochę więcej Życia."><button className={chip(noHorde)} aria-pressed={noHorde} onClick={() => setNoHorde(true)}>Bez Hordy, wszyscy przeciw Bossowi</button></Tip>
               </Row>
             )}
             {digital && !arena && tier !== 'adventure' && (

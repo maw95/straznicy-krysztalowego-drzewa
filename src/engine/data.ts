@@ -207,6 +207,8 @@ export const BOSS = {
   hp: { short: 54, medium: 54, long: 62, veryLong: 92, huge: 104, giant: 116 } as Record<MapSize, number>,
   /** Life is multiplied by this when two Przymierza heroes play (two heroes strike twice as often). */
   twoHeroesFactor: 1.25,
+  /** Without the Horde (rules.noHorde) nobody else wounds the Boss or hunts the heroes, so its Życie is multiplied by this. Tuned with `SIM_NOHORDE=1`. */
+  noHordeFactor: 1.2,
   /** The neutral bosses (hero growth) are tougher than the Hydra and the Cyclops: their Życie is the table's times this. Tuned with `SIM_OBJECTIVE=boss`. */
   hpFactor: { stoneGolem: 0.5, stormKing: 0.5, kraken: 0.5 } as Record<string, number>,
 };

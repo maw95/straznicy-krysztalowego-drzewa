@@ -342,7 +342,7 @@ const boss: Objective = {
     // With hero growth the Boss may also be one of the three neutral bosses (stoneGolem, stormKing, kraken); without it the draw is as before.
     const guardian = rng.pick(state.rules.heroGrowth ? ['hydra', 'cyclops', ...NEUTRAL_BOSSES] : ['hydra', 'cyclops']);
     const dawnHeroes = state.setup.seats.filter((s) => s.faction === 'dawn').length;
-    const hp = Math.round(BOSS.hp[state.setup.mapSize] * hpScaleOf(state) * (dawnHeroes >= 2 ? BOSS.twoHeroesFactor : 1) * (BOSS.hpFactor[guardian] ?? 1));
+    const hp = Math.round(BOSS.hp[state.setup.mapSize] * hpScaleOf(state) * (dawnHeroes >= 2 ? BOSS.twoHeroesFactor : 1) * (BOSS.hpFactor[guardian] ?? 1) * (state.rules.noHorde ? BOSS.noHordeFactor : 1));
     state.tiles[at].terrain = guardian === 'hydra' ? 'lairHydra' : guardian === 'cyclops' ? 'lairCyclops' : (BOSS_LAIR[guardian] ?? 'lairCyclops');
     state.tiles[at].crystalId = 'boss';
     // The Kraken fights with its tentacles; they are fresh in every fight (only the head's wounds stay).
@@ -358,13 +358,13 @@ const boss: Objective = {
     return false;
   },
   onRoundLimit(state) {
-    finish(state, 'horde', 'Upłynął limit rund: nikt nie pokonał Bossa.');
+    finish(state, 'horde', state.rules.noHorde ? 'Upłynął limit rund: Boss nie został pokonany.' : 'Upłynął limit rund: nikt nie pokonał Bossa.');
   },
   progress(state) {
     const b = state.boss!;
     return [
       { label: 'Boss', value: `${b.hp} / ${b.maxHp} Ż` },
-      { label: 'Zadane rany (Świt / Horda)', value: `${b.hits.dawn} / ${b.hits.horde}` },
+      state.rules.noHorde ? { label: 'Zadane rany', value: `${b.hits.dawn}` } : { label: 'Zadane rany (Świt / Horda)', value: `${b.hits.dawn} / ${b.hits.horde}` },
     ];
   },
 };

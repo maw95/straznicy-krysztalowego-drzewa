@@ -425,7 +425,7 @@ Cel ma „front”: kierunek ostatniego ruchu albo ataku jednostki (stojąca w m
 Poziom 1: tylko sami strażnicy (jak dziś). Silniejsze spotkania stoją głębiej, czyli dalej od baz. „Mocna jednostka” z pierwotnego pomysłu to teraz boss z własnego motywu; słabi towarzysze pochodzą z tego samego motywu.
 
 ### Tryb „Boss” (10.7, wariant kooperacyjny)
-Wszyscy gracze po jednej stronie, bez Hordy, przeciwko jednemu z trzech bossów w legowisku na środku mapy. Każdy boss ma własną grafikę (Scenario, po zamrożeniu nazw i opisów).
+Wszyscy gracze po jednej stronie, bez Hordy, przeciwko bossowi w legowisku na środku mapy (reguła `noHorde`, tylko kooperacja i cel „Boss”; w ustawieniach lokalnych wiersz „Horda”). Horda nie ma bohaterów, więc wygrywa tylko Przymierze, które zada ostatni cios; porażka to polegli bohaterowie albo limit rund. Życie Bossa ×`BOSS.noHordeFactor` (1,2). Symulacje (60 gier, z rozwojem): przed strojeniem ×1,0 ok. 55 % (1 gracz) i 70 % (2 graczy); przy ×1,3 ok. 39 % / 60 %; wybrane ×1,2. Online jeszcze nie ma tej opcji (pole stołu + backend). Własna grafika Bossa: Scenario, po zamrożeniu nazw.
 
 ### Otwarte
 Nazwy i opisy wyglądu do zaakceptowania; boty oceniają spotkanie jak strażnika (siła / skarb) po zrobieniu silnika spotkań.
@@ -437,4 +437,4 @@ Nazwy i opisy wyglądu do zaakceptowania; boty oceniają spotkanie jak strażnik
 - **Boty:** objeżdżają spotkania tylko celowo (`encounterDetour`): poziom bohatera co najmniej 2 / 4 / 7 dla zwykłego / rzadkiego / legendarnego, dwóch pomocników, do 4 kroków, w pierwszej połowie rund. Żadna inna ścieżka bota nie przechodzi przez spotkanie (wcześniej bot wchodził w nie przez „eksplorację”).
 - **Boss na mapie:** z rozwojem bohatera cel „Boss” losuje też Kamiennego Golema, Króla Burzy i Krakena (życie × `BOSS.hpFactor` = 0,5).
 - **Symulacje** (`SIM_GROWTH=1 make sim-cele GAMES=40`, trójkąt, kooperacja / rywalizacja, przed zmianami → po): Kryształy 53/57 → 46/50, Punkty kontrolne 57/62 → 52/63, Przetrwanie 55 → 45, Boss 59/59 → ok. 50/53 (po dostrojeniu `hpFactor`; przed nim 40/42), Artefakt 56/62 → 48/62. Wszystko w paśmie Normalnego (45–65), poza Przetrwaniem i Kryształami o kilka punktów na dole (40 gier na wariant: błąd około ±8). Do powtórzenia dłuższą serią.
-- **Jeszcze nie ma:** własnych grafik, sprite’ów i dźwięków (zastępcze: portret strażnika z tego samego motywu, ikona zdolności podobnej), ikon zdolności, trybu „wszyscy przeciw Bossowi” bez Hordy (10.7).
+- **Jeszcze nie ma:** własnych grafik, sprite’ów i dźwięków (zastępcze: portret strażnika z tego samego motywu, ikona zdolności podobnej), ikon zdolności, własnej grafiki Bossa (10.7).

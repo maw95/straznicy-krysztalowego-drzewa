@@ -54,6 +54,8 @@ export interface RulesConfig {
   minEvilHeroes: number;
   /** Coop: when the automaton's last living hero falls, another Horde hero appears in the Horde base. */
   hordeRespawn?: boolean;
+  /** Coop, goal 'boss': no Horde heroes at all, every player is on the Przymierze side and the Boss is the only enemy (backlog 10.7). */
+  noHorde?: boolean;
   /** Treasures the Horde holds from the start (difficulty): Eliksiry, other kinds, any random card. */
   hordeStartTreasures?: { resurrections: number; others: number; random?: number };
   /** Digital tuning: rounds added to the map's round limit (a game that would stall at the limit gets time to be decided). */

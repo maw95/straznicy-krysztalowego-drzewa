@@ -156,7 +156,7 @@ export function createGame(setup: SetupOptions): GameState {
     // As many evil heroes as good heroes at the start (spec section 1), at least rules.minEvilHeroes.
     const goodCount = setup.seats.filter((s) => s.faction === 'dawn').length;
     // Optionally one more, to make the coop game harder (there are 3 Horde heroes at most).
-    const evilCount = Math.min(FACTION_HEROES.horde.length, Math.max(goodCount, rules.minEvilHeroes ?? 1) + (rules.extraEvilHero ? 1 : 0));
+    const evilCount = rules.noHorde && objectiveOf(state) === 'boss' ? 0 : Math.min(FACTION_HEROES.horde.length, Math.max(goodCount, rules.minEvilHeroes ?? 1) + (rules.extraEvilHero ? 1 : 0));
     const evil = rng.shuffle(FACTION_HEROES.horde).slice(0, evilCount);
     for (const id of evil) addHero(state, id, 'horde', null);
   }
