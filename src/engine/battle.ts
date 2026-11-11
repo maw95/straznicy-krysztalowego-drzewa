@@ -408,11 +408,16 @@ export function unitDistance(a: BattleUnit, b: BattleUnit): number {
 
 const unitsAdjacent = (a: BattleUnit, b: BattleUnit) => unitDistance(a, b) === 1;
 
+/** Kraken's head is untouchable while any tentacle of its side lives. */
+export const headCovered = (state: GameState, u: BattleUnit) =>
+  abilityOf(u) === 'tentacles' && abilityActive(state) && livingUnits(state.battle!, u.side).some((x) => x.defId === 'tentacle');
+
 /** Legal attack targets from the unit's current position. */
 export function attackTargets(state: GameState, u: BattleUnit, from: HexKey | null = u.pos): BattleUnit[] {
   const b = state.battle!;
   if (!from) return [];
-  const enemies = enemiesOf(b, u);
+  // Kraken: the head cannot be hit while a tentacle lives.
+  const enemies = enemiesOf(b, u).filter((e) => !headCovered(state, e));
   const mine = footprintAt(state, u, from);
   const near = enemies.filter((e) => cellsOf(e).some((c) => mine.some((m) => adjacent(m, c))));
   if (UNITS[u.defId].attackType === 'melee') return near;
@@ -435,6 +440,34 @@ export function breathSecondTarget(state: GameState, u: BattleUnit, first: Battl
   return other && other.id !== first.id && (other.side !== u.side || isDigital(state.rules)) ? other : null;
 }
 
+/** Digital ruleset: the target's front is where it last moved or attacked; a unit that has done neither faces its nearest enemy. */
+function frontOf(state: GameState, target: BattleUnit): { q: number; r: number } | null {
+  if (target.facing) return target.facing;
+  if (!target.pos) return null;
+  const me = parseKey(target.pos);
+  const near = enemiesOf(state.battle!, target)
+    .filter((e) => e.pos)
+    .sort((a, b) => unitDistance(target, a) - unitDistance(target, b))[0];
+  return near?.pos ? { q: parseKey(near.pos).q - me.q, r: parseKey(near.pos).r - me.r } : null;
+}
+
+const cartesian = (v: { q: number; r: number }) => ({ x: v.q + v.r / 2, y: v.r * 0.8660254 });
+
+/** Zajście od tyłu: whether the attacker stands in the half-plane behind the target's front. */
+export function fromBehind(state: GameState, att: BattleUnit, target: BattleUnit): boolean {
+  if (!att.pos || !target.pos) return false;
+  const front = frontOf(state, target);
+  if (!front) return false;
+  const a = parseKey(att.pos);
+  const t = parseKey(target.pos);
+  const f = cartesian(front);
+  const d = cartesian({ q: a.q - t.q, r: a.r - t.r });
+  return f.x * d.x + f.y * d.y < -1e-9;
+}
+
+/** Kamienny Golem: its rune core is bare once it has lost half its Życie. */
+export const coreExposed = (u: BattleUnit) => abilityOf(u) === 'runeGolem' && u.hp * 2 <= u.maxHp;
+
 /** Expected damage of a plain attack, before the defender's reactions. */
 export function attackDamage(state: GameState, att: BattleUnit, target: BattleUnit, useAbility: boolean, movedDistance: number): number {
   let dmg = unitAttackBase(att) + att.status.nextAttackBonus - att.status.cursedNext;
@@ -446,6 +479,8 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
     if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += abilityNum(att, 'bloodCallBonus') * scaleOf(state);
     if (useAbility && ab === 'fireBreath') dmg += abilityNum(att, 'breathBonus') * scaleOf(state);
     if (useAbility && ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus * scaleOf(state);
+    if (ab === 'dive' && movedDistance >= ABILITY.diveMinMove) dmg += ABILITY.diveBonus * scaleOf(state);
+    if (ab === 'backstab' && fromBehind(state, att, target)) dmg += ABILITY.backstabBonus * scaleOf(state);
   }
   return Math.max(0, dmg);
 }
@@ -453,7 +488,7 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
 /** Abilities that are switched on for a single attack. */
 export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
@@ -626,6 +661,7 @@ function beginRound(state: GameState, round: number) {
     return;
   }
   b.round = round;
+  if (b.fields) b.fields = b.fields.filter((f) => f.until >= round);
   const ids = Object.keys(b.units);
   b.order = livingUnits(b)
     .sort((x, y) => unitSpeed(y) - unitSpeed(x) || sidePriority(state, b, x.side) - sidePriority(state, b, y.side) || ids.indexOf(x.id) - ids.indexOf(y.id))
@@ -643,6 +679,11 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
     const healed = Math.min(ABILITY.regrowthHeal * hpScaleOf(state), u.maxHp - u.hp);
     u.hp += healed;
     log(state, 'ability', `${unitName(u)} odzyskuje ${healed} Ż (Odrastające Głowy).`);
+  }
+  if (abilityOf(u) === 'bogRegrowth' && abilityActive(state) && u.hp < u.maxHp) {
+    const healed = Math.min(ABILITY.bogRegrowthHeal * hpScaleOf(state), u.maxHp - u.hp);
+    u.hp += healed;
+    log(state, 'ability', `${unitName(u)} odzyskuje ${healed} Ż (Bagienne Odrastanie).`);
   }
 }
 
@@ -706,8 +747,15 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
   if (target.hp <= 0) {
     target.hp = 0;
     target.alive = false;
+    const diedOn = cellsOf(target);
     removeFromBoard(state, target, true);
     log(state, 'death', `${unitName(target)} poległ(a).`);
+    // Rozprysk: a Kruszyniec bursts into shards that hurt everyone next to it.
+    if (abilityOf(target) === 'shardBurst' && abilityActive(state) && state.battle) {
+      const cells = diedOn;
+      const hit = Object.values(state.battle.units).filter((x) => x.alive && x.id !== target.id && cellsOf(x).some((c) => cells.some((k) => adjacent(k, c))));
+      for (const x of hit) if (x.alive) dealDamage(state, x, ABILITY.shardBurstDamage * scaleOf(state), `Rozprysk (${unitName(target)})`);
+    }
   }
 }
 
@@ -770,6 +818,8 @@ export function predictDamage(
     dmg -= hardHead;
   }
   dmg = Math.max(0, dmg - victim.status.damageReduction);
+  // Kamienna Skóra of the Golem boss: a blow that lands takes at least 1.
+  if (abilityOf(victim) === 'runeGolem' && abilityActive(state) && !coreExposed(victim) && dmg > 0) dmg = Math.max(1, dmg - ABILITY.runeSkinIgnore * scaleOf(state));
   // The hero's shield (artifacts): the first blow of the battle is halved, every blow is weaker by its defence, but a blow that lands takes at least 1.
   if (victim.gear && dmg > 0) {
     if (victim.gear.firstHit) dmg = Math.ceil(dmg / 2);
@@ -810,6 +860,8 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   recordRoll(state, att, victim, p.base, die, p.damage);
   if (victim.gear?.firstHit && p.damage > 0) delete victim.gear.firstHit;
   dealDamage(state, victim, p.damage, unitName(att));
+  // Wyładowanie: whoever strikes the Król Burzy from close by is shocked.
+  if (abilityOf(victim) === 'stormKing' && abilityActive(state) && att.alive && unitsAdjacent(att, victim)) dealDamage(state, att, ABILITY.dischargeDamage * scaleOf(state), 'Wyładowanie');
   // Kolczuga Cierni: whoever hits the hero in melee is pricked itself.
   if (victim.gear?.thorns && p.damage > 0 && att.alive && UNITS[att.defId].attackType === 'melee') dealDamage(state, att, victim.gear.thorns, 'Ciernie zbroi');
 }
@@ -835,10 +887,14 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   const steps = cells.get(to);
   if (steps === undefined) throw new Error('Pole poza zasięgiem ruchu.');
   if (tail && isLarge(state, u) && !tailOptions(b, u, to).includes(tail)) throw new Error('Ogon nie zmieści się na tym polu.');
+  const from = u.pos ? parseKey(u.pos) : null;
   placeUnit(state, u, to, tail);
+  if (from) u.facing = { q: parseKey(to).q - from.q, r: parseKey(to).r - from.r };
   act.moved = true;
   act.acted = true;
   act.movedDistance = steps;
+  stepOnFields(state, u);
+  if (!u.alive) return endActivation(state);
   // Digital ruleset: moving without attacking ends the turn, so a shooter cannot move and shoot, and a melee unit keeps its turn
   // only when its move brought an enemy within reach (the attack that follows is the other half of the same click).
   if (act.moveOnly || !canAttackAfterMove(state, u) || (isDigital(state.rules) && attackTargets(state, u).length === 0)) endActivation(state);
@@ -883,6 +939,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     log(state, 'ability', `${unitName(u)} używa zdolności: ${UNITS[u.defId].abilityName}${u.abilityExtra ? ' (zostaje jeszcze jeden Oddech)' : ''}.`);
   }
   log(state, 'battle', `${unitName(u)} atakuje: ${targets.map(unitName).join(', ')}.`);
+  if (u.pos && target.pos) u.facing = { q: parseKey(target.pos).q - parseKey(u.pos).q, r: parseKey(target.pos).r - parseKey(u.pos).r };
   for (const t of targets) {
     if (!t.alive || !u.alive) continue;
     const before = t.hp;
@@ -890,6 +947,10 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     if (ab === 'thiefClaw' && abilityActive(state) && u.alive && t.hp < before && u.hp < u.maxHp) {
       u.hp = Math.min(u.maxHp, u.hp + ABILITY.thiefClawHeal * hpScaleOf(state));
       log(state, 'ability', `${unitName(u)} odzyskuje ${ABILITY.thiefClawHeal * hpScaleOf(state)} Ż (Złodziejski Szpon).`);
+    }
+    if (ab === 'grab' && abilityActive(state) && t.alive && t.hp < before) {
+      t.status.rootedNext = true;
+      log(state, 'ability', `${unitName(t)} zostaje schwytany i nie ruszy się w swojej następnej aktywacji (${UNITS[u.defId].abilityName}).`);
     }
     if (canUse && t.alive) {
       if (ab === 'entanglingRoots') {
@@ -908,9 +969,15 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       const to = pushCell(state, from, t.pos!);
       if (to) {
         t.pos = to;
+        stepOnFields(state, t);
         log(state, 'ability', `${unitName(t)} zostaje odepchnięty o 1 pole (${UNITS[u.defId].abilityName}).`);
       }
     }
+  }
+  // Trzęsienie: the Golem with its rune core bare shakes everything around it after each attack.
+  if (ab === 'runeGolem' && abilityActive(state) && u.alive && coreExposed(u)) {
+    log(state, 'ability', `${unitName(u)}: Trzęsienie.`);
+    for (const x of Object.values(b.units)) if (x.alive && x.id !== u.id && x.pos && unitsAdjacent(u, x)) dealDamage(state, x, ABILITY.quakeDamage * scaleOf(state), 'Trzęsienie');
   }
   u.status.nextAttackBonus = 0;
   u.status.cursedNext = 0;
@@ -958,7 +1025,52 @@ export function battleHop(state: GameState, to: HexKey) {
   if (!UNLIMITED_ABILITIES.includes(abilityOf(u))) u.abilityUsed = true;
   act.hop = 0;
   log(state, 'ability', `${unitName(u)} odskakuje (${UNITS[u.defId].abilityName}).`);
+  stepOnFields(state, u);
   endActivation(state);
+}
+
+/** How far the unit may teleport instead of moving (Podkop, Król Burzy); 0 when it cannot. */
+export function teleportRange(state: GameState, u: BattleUnit): number {
+  if (!abilityActive(state) || !isDigital(state.rules)) return 0;
+  const ab = abilityOf(u);
+  return ab === 'burrow' ? ABILITY.burrowRange : ab === 'stormKing' ? ABILITY.stormTeleportRange : 0;
+}
+
+/** Cells the active unit may teleport to (empty when it has already moved or attacked, or in a duel). */
+export function teleportCells(state: GameState, u: BattleUnit): HexKey[] {
+  const b = state.battle!;
+  const act = b.activation;
+  const range = teleportRange(state, u);
+  if (!range || b.duel || !act || act.unitId !== u.id || act.moved || act.attacked || act.moveOnly || u.status.rootedNext) return [];
+  return hopCells(state, u, range);
+}
+
+/** Podkop / Teleport: the unit leaves the field and its turn ends (a teleport is a move: no attack after it). */
+export function battleTeleport(state: GameState, to: HexKey) {
+  const b = state.battle!;
+  const act = b.activation!;
+  const u = b.units[act.unitId];
+  if (!teleportCells(state, u).includes(to)) throw new Error('Pole poza zasięgiem teleportu.');
+  const from = u.pos!;
+  const ab = abilityOf(u);
+  placeUnit(state, u, to);
+  act.moved = true;
+  act.acted = true;
+  log(state, 'ability', `${unitName(u)} ${ab === 'burrow' ? 'wychodzi spod ziemi' : 'teleportuje się'} (${UNITS[u.defId].abilityName}).`);
+  if (ab === 'stormKing') {
+    (b.fields ??= []).push({ cell: from, until: b.round + ABILITY.chargedFieldRounds - 1 });
+    log(state, 'ability', 'Opuszczone pole zostaje naładowane.');
+  }
+  stepOnFields(state, u);
+  endActivation(state);
+}
+
+/** Pola Naładowane: a unit that has stepped on a charged field takes damage. */
+function stepOnFields(state: GameState, u: BattleUnit) {
+  const b = state.battle!;
+  if (!b.fields?.length || !u.alive) return;
+  const here = cellsOf(u);
+  if (b.fields.some((f) => f.until >= b.round && here.includes(f.cell))) dealDamage(state, u, ABILITY.chargedFieldDamage * scaleOf(state), 'Pole Naładowane');
 }
 
 export function battleAbility(state: GameState, targetId?: string) {

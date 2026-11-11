@@ -30,7 +30,18 @@ export type AbilityId =
   // Guardians' duel cards (the light-blue back): abilities that count in a duel on the board.
   | 'stoneSkin' // Kamienna Skóra (Cyklop)
   | 'thiefClaw' // Złodziejski Szpon (Gryf)
-  | 'regrowth'; // Odrastające Głowy (Hydra)
+  | 'regrowth' // Odrastające Głowy (Hydra)
+  // Neutral encounters (digital ruleset): weak units and bosses of the three motifs (docs/ZASADY_CYFROWE.md, "Neutralni").
+  | 'none' // no ability (Kraken's tentacles)
+  | 'shardBurst' // Rozprysk (Kruszyniec)
+  | 'burrow' // Podkop (Podkopnik)
+  | 'dive' // Nurkowanie (Orzeł Skalny)
+  | 'backstab' // Zajście od tyłu (Harpia)
+  | 'grab' // Chwyt (Szczypiec)
+  | 'bogRegrowth' // Bagienne Odrastanie (Bagienny Pełzacz)
+  | 'runeGolem' // Kamienna Skóra, Runiczny Rdzeń and Trzęsienie (Kamienny Golem)
+  | 'stormKing' // Teleport, Pole Naładowane and Wyładowanie (Król Burzy)
+  | 'tentacles'; // Macki (Kraken)
 
 export interface UnitDef {
   id: string;
@@ -86,6 +97,25 @@ export const ABILITY = {
   thiefClawHeal: 1,
   /** Odrastające Głowy: Życie the Hydra gets back at the start of each of its activations in a duel. */
   regrowthHeal: 2,
+  /** Rozprysk: damage a dying Kruszyniec deals to every neighbouring unit (small scale: multiply by `scaleOf`). */
+  shardBurstDamage: 1,
+  /** Podkop: how far the Podkopnik may come up from where it dug in. */
+  burrowRange: 4,
+  /** Nurkowanie: the Eagle must have flown at least this far for the bonus. */
+  diveMinMove: 3,
+  diveBonus: 1,
+  /** Zajście od tyłu: bonus for a blow from behind (small scale). */
+  backstabBonus: 1,
+  /** Bagienne Odrastanie: Życie regained at the start of each activation (hp scale). */
+  bogRegrowthHeal: 1,
+  /** Kamienny Golem: damage ignored from every blow while its rune core is covered (small scale), and what the Trzęsienie deals (small scale). */
+  runeSkinIgnore: 2,
+  quakeDamage: 1,
+  /** Król Burzy: teleport range, how many rounds the charged field lasts (this one and the next), field and Wyładowanie damage (small scale). */
+  stormTeleportRange: 6,
+  chargedFieldRounds: 2,
+  chargedFieldDamage: 1,
+  dischargeDamage: 1,
 };
 
 /**
@@ -204,6 +234,17 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'elfDruid', name: 'Elf Druid', side: 'dawn', kind: 'support', hp: 4, attack: 1, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Splątane Korzenie', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
     u({ id: 'nymph', name: 'Nimfa', side: 'dawn', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'giftOfLife', abilityName: 'Dar Życia', abilityText: `Raz na bitwę: +${ABILITY.giftOfLifeHeal} Ż sojusznikowi, do maksimum.` }),
     u({ id: 'pegasus', name: 'Pegaz', side: 'dawn', kind: 'support', size: 2, hp: 4, attack: 2, speed: 4, movement: 'fly', attackType: 'melee', ability: 'airDash', abilityName: 'Powietrzny Zryw', abilityText: `Raz na bitwę: po ataku odskok do ${ABILITY.airDashRange} pól.` }),
+    // Neutral encounters (digital ruleset). Stats are in the small scale, like the guardians'; see docs/ZASADY_CYFROWE.md.
+    u({ id: 'shardling', name: 'Kruszyniec', side: 'neutral', kind: 'neutral', hp: 8, attack: 2, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'shardBurst', abilityName: 'Rozprysk', abilityText: `Po śmierci rozpryskuje się i rani o ${ABILITY.shardBurstDamage} wszystkie sąsiednie jednostki (także swoje).` }),
+    u({ id: 'burrower', name: 'Podkopnik', side: 'neutral', kind: 'neutral', hp: 9, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'burrow', abilityName: 'Podkop', abilityText: `Zamiast ruchu znika pod ziemią i wyłania się na dowolnym wolnym polu w odległości do ${ABILITY.burrowRange}; w tej aktywacji nie atakuje.` }),
+    u({ id: 'skyEagle', name: 'Orzeł Skalny', side: 'neutral', kind: 'neutral', hp: 7, attack: 2, speed: 6, movement: 'fly', attackType: 'melee', ability: 'dive', abilityName: 'Nurkowanie', abilityText: `Jeśli przed atakiem przeleciał co najmniej ${ABILITY.diveMinMove} pola, zadaje +${ABILITY.diveBonus} obrażeń.` }),
+    u({ id: 'harpy', name: 'Harpia', side: 'neutral', kind: 'neutral', hp: 8, attack: 2, speed: 5, movement: 'fly', attackType: 'melee', ability: 'backstab', abilityName: 'Zajście od tyłu', abilityText: `+${ABILITY.backstabBonus} obrażeń, gdy atakuje z tyłu celu.` }),
+    u({ id: 'pincer', name: 'Szczypiec', side: 'neutral', kind: 'neutral', hp: 12, attack: 2, speed: 2, movement: 'walk', attackType: 'melee', ability: 'grab', abilityName: 'Chwyt', abilityText: 'Trafiony wróg nie może się ruszyć do końca swojej następnej aktywacji.' }),
+    u({ id: 'bogCrawler', name: 'Bagienny Pełzacz', side: 'neutral', kind: 'neutral', hp: 10, attack: 2, speed: 2, movement: 'walk', attackType: 'melee', ability: 'bogRegrowth', abilityName: 'Bagienne Odrastanie', abilityText: `Na początku swojej aktywacji odzyskuje ${ABILITY.bogRegrowthHeal} Ż.` }),
+    u({ id: 'stoneGolem', name: 'Kamienny Golem', side: 'neutral', kind: 'neutral', size: 2, hp: 40, attack: 4, speed: 2, movement: 'walk', attackType: 'melee', ability: 'runeGolem', abilityName: 'Runiczny Rdzeń', abilityText: `Kamienna Skóra: każdy cios zadaje o ${ABILITY.runeSkinIgnore} mniej. Gdy straci połowę Życia, rdzeń się odsłania: skóra znika, a po każdym jego ataku Trzęsienie zadaje ${ABILITY.quakeDamage} obrażenie wszystkim wokół.` }),
+    u({ id: 'stormKing', name: 'Król Burzy', side: 'neutral', kind: 'neutral', hp: 30, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'stormKing', abilityName: 'Burza', abilityText: `Zamiast ruchu teleportuje się do ${ABILITY.stormTeleportRange} pól. Pole, które opuścił, przez ${ABILITY.chargedFieldRounds} rundy rani o ${ABILITY.chargedFieldDamage} każdego, kto na nie wejdzie. Kto uderzy go z bliska, dostaje ${ABILITY.dischargeDamage}.` }),
+    u({ id: 'kraken', name: 'Kraken', side: 'neutral', kind: 'neutral', size: 2, hp: 36, attack: 3, speed: 0, movement: 'walk', attackType: 'melee', ability: 'tentacles', abilityName: 'Macki', abilityText: 'Dopóki żyje choć jedna macka, głowa jest nietykalna.' }),
+    u({ id: 'tentacle', name: 'Macka Krakena', side: 'neutral', kind: 'neutral', hp: 6, attack: 2, speed: 0, movement: 'walk', attackType: 'melee', ability: 'none', abilityName: 'Macka', abilityText: 'Bije sąsiadów, nie rusza się.' }),
     u({ id: 'blackDragon', name: 'Czarny Smok', side: 'horde', kind: 'hero', size: 2, hp: 7, attack: 5, speed: 5, movement: 'fly', attackType: 'melee', ability: 'fireBreath', abilityName: 'Ognisty Oddech', abilityText: 'Raz na bitwę: pełny atak w dwóch wrogów stojących w jednej linii.' }),
     u({ id: 'werewolfLord', name: 'Władca Wilkołaków', side: 'horde', kind: 'hero', hp: 8, attack: 5, speed: 7, movement: 'walk', attackType: 'melee', ability: 'bloodCall', abilityName: 'Zew Krwi', abilityText: `+${ABILITY.bloodCallBonus} A do każdego ataku na już rannego wroga.` }),
     u({ id: 'ironFistOgre', name: 'Ogr Żelazna Pięść', side: 'horde', kind: 'hero', size: 2, hp: 10, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Twardogłowy', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
@@ -230,6 +271,10 @@ export const FACTION_SUPPORTS: Record<FactionId, string[]> = {
 };
 
 export const GUARDIANS = ['cyclops', 'griffin', 'hydra'];
+/** Weak neutral units of the digital encounters, two per motif (stone, air, water). */
+export const NEUTRAL_WEAK = ['shardling', 'burrower', 'skyEagle', 'harpy', 'pincer', 'bogCrawler'];
+/** Neutral bosses of the digital encounters, one per motif. */
+export const NEUTRAL_BOSSES = ['stoneGolem', 'stormKing', 'kraken'];
 
 /** Supports a hero takes into a battle on the arena (all of them when fewer are alive). */
 export const SUPPORTS_PER_BATTLE = 2;

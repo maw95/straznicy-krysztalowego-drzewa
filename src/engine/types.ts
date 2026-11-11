@@ -280,6 +280,8 @@ export interface BattleUnit {
   gear?: { defense?: number; thorns?: number; vsWounded?: number; firstHit?: true };
   /** The ability of the card it fights with, when not its usual one (a guardian's duel card). */
   ability?: AbilityId;
+  /** Digital ruleset: the direction (axial vector) the unit last moved or attacked in: its front (Zajście od tyłu). */
+  facing?: { q: number; r: number };
 }
 
 export interface Activation {
@@ -312,6 +314,8 @@ export interface BattleState {
   attackerFrom: HexKey;
   defenderHero: string | null;
   neutralId: string | null;
+  /** Króla Burzy's charged fields (digital ruleset): a unit that steps on `cell` takes damage while `round` <= `until`. */
+  fields?: Array<{ cell: HexKey; until: number }>;
   /** Arena only: 'draft' (treasures) comes between choosing the supports and deploying. */
   stage: 'select' | 'draft' | 'deploy' | 'fight' | 'over';
   /** Factions still to place their units (attacker first); neutral guardians stay where put. */
@@ -456,5 +460,6 @@ export type Action =
   | { type: 'battleAttack'; targetId: string; secondTargetId?: string; useAbility?: boolean }
   | { type: 'battleAbility'; targetId?: string }
   | { type: 'battleHop'; to: HexKey }
+  | { type: 'battleTeleport'; to: HexKey }
   | { type: 'battleItem'; itemId: string; targetId?: string; targetIds?: string[]; to?: HexKey; hornMode?: 'swap' | 'extra'; reserveId?: string }
   | { type: 'endActivation' };

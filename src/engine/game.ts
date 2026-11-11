@@ -34,6 +34,7 @@ import {
   battleAbility,
   battleAttack,
   battleHop,
+  battleTeleport,
   battleItem,
   battleMove,
   checkBattleEnd,
@@ -1105,6 +1106,9 @@ function applyBattleAction(state: GameState, action: Action) {
       break;
     case 'battleHop':
       battleHop(state, action.to);
+      break;
+    case 'battleTeleport':
+      battleTeleport(state, action.to);
       break;
     case 'battleItem':
       battleItem(state, action);
