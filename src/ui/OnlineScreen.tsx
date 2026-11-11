@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type FactionId, type MapSize } from '../engine/data';
-import type { Level, Mode } from '../engine/types';
+import type { Level, MapShape, Mode } from '../engine/types';
+import { CUSTOM_MAPS } from '../engine/customMaps';
+import { OBJECTIVES } from '../engine/objectives';
+import { TIERS } from '../engine/presets';
 import { BOT_SPEEDS, currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
-import { ARENA_HINT, ARENA_LEVEL_TIPS, chip, choice, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
+import { SHAPE_NAMES, SHAPE_TIPS, ARENA_HINT, ARENA_LEVEL_TIPS, chip, choice, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
 
 /** Links of the main menu that do not depend on the account. */
 export interface MenuLinks {
@@ -301,6 +304,9 @@ function RankingTable({ me, refreshKey }: { me: User; refreshKey: unknown }) {
 const defaultTable = (mode: Mode, count: number, level: Level, digital: boolean): TableConfig => ({
   mode,
   digital,
+  tier: 'adventure',
+  objective: 'crystals',
+  shape: 'triangle',
   mapSize: 'short',
   level: mode === 'pvp' && level === 'hard' ? 'normal' : level,
   // Online every seat waits for a player, except the arena's opponent.
@@ -309,7 +315,7 @@ const defaultTable = (mode: Mode, count: number, level: Level, digital: boolean)
 
 function RoomLobby({ session, room, me, online }: { session: OnlineSession; room: RoomView; me: User; online: OnlineState }) {
   const owner = room.ownerId === me.id;
-  const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
+  const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, tier: room.tier ?? 'adventure', objective: room.objective ?? 'crystals', shape: room.shape ?? 'triangle', ...(room.customMapId ? { customMapId: room.customMapId } : {}), seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
   const configure = (patch: Partial<TableConfig>) => session.send({ type: 'configure', table: { ...table, ...patch } });
   const updateSeat = (i: number, patch: Partial<TableConfig['seats'][number]>) => configure({ seats: table.seats.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
   const takenBy = (heroId: string, i: number) => table.seats.some((s, j) => j !== i && s.heroId === heroId);
@@ -338,7 +344,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         <Row label="Tryb">
           {(['coop', 'pvp', 'arena'] as Mode[]).map((m) => (
             <Tip key={m} text={m === 'coop' ? TIPS.coop : m === 'pvp' ? TIPS.pvp : TIPS.arenaMode}>
-              <button className={chip(room.mode === m)} disabled={!owner} onClick={() => configure(defaultTable(m, m === 'pvp' ? 2 : 1, room.level, table.digital))}>
+              <button className={chip(room.mode === m)} disabled={!owner} onClick={() => configure({ ...defaultTable(m, m === 'pvp' ? 2 : 1, room.level, table.digital), tier: table.tier, objective: m !== 'coop' && table.objective === 'survival' ? 'crystals' : table.objective, shape: table.shape, customMapId: table.customMapId })}>
                 {m === 'coop' ? 'Kooperacja' : m === 'pvp' ? 'Rywalizacja' : 'Arena'}
               </button>
             </Tip>
@@ -375,6 +381,40 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
           <Tip text={TIPS.digital}><button className={chip(table.digital)} aria-pressed={table.digital} disabled={!owner} onClick={() => configure({ digital: true })}>Cyfrowa</button></Tip>
           <Tip text="Zasady planszówki, bez zmian: malowana arena i figurki 3D."><button className={chip(!table.digital)} aria-pressed={!table.digital} disabled={!owner} onClick={() => configure({ digital: false })}>Planszowa</button></Tip>
         </Row>
+        {table.digital && !arena && (
+          <>
+            <Row label="Poziom gry">
+              {(['adventure', 'expedition'] as const).map((t) => (
+                <Tip key={t} text={TIERS[t].summary}>
+                  <button className={chip(table.tier === t)} aria-pressed={table.tier === t} disabled={!owner} onClick={() => configure(t === 'adventure' ? { tier: t, objective: 'crystals', shape: 'triangle', customMapId: undefined } : { tier: t })}>{TIERS[t].name}</button>
+                </Tip>
+              ))}
+            </Row>
+            {table.tier === 'expedition' && (
+              <>
+                <Row label="Cel">
+                  {(['crystals', 'control', 'survival', 'boss', 'artifact'] as const).filter((o) => o !== 'survival' || room.mode === 'coop').map((o) => (
+                    <Tip key={o} text={OBJECTIVES[o].summary}><button className={chip(table.objective === o)} aria-pressed={table.objective === o} disabled={!owner} onClick={() => configure({ objective: o })}>{OBJECTIVES[o].name}</button></Tip>
+                  ))}
+                </Row>
+                <Row label="Kształt mapy">
+                  {(Object.keys(SHAPE_NAMES) as MapShape[]).map((sh) => (
+                    <Tip key={sh} text={SHAPE_TIPS[sh]}>
+                      <button className={chip(table.shape === sh)} aria-pressed={table.shape === sh} disabled={!owner} onClick={() => configure(sh === 'custom' ? { shape: sh, customMapId: Object.keys(CUSTOM_MAPS)[0] } : { shape: sh, customMapId: undefined })}>{SHAPE_NAMES[sh]}</button>
+                    </Tip>
+                  ))}
+                </Row>
+                {table.shape === 'custom' && (
+                  <Row label="Własna mapa">
+                    {Object.values(CUSTOM_MAPS).map((m) => (
+                      <Tip key={m.id} text={m.summary}><button className={chip(table.customMapId === m.id)} aria-pressed={table.customMapId === m.id} disabled={!owner} onClick={() => configure({ customMapId: m.id })}>{m.name}</button></Tip>
+                    ))}
+                  </Row>
+                )}
+              </>
+            )}
+          </>
+        )}
         <Row label="Tempo botów">
           {BOT_SPEEDS.map((speed) => (
             <button key={speed} className={chip(room.botSpeed === speed)} disabled={!owner} onClick={() => session.send({ type: 'botSpeed', speed })}>

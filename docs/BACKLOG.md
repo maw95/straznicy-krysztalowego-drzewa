@@ -247,6 +247,11 @@ Zrobione 11.11 (szczegóły w CHANGELOG.md):
 - [x] Trupy: rozmiar zbliżony do stojącej jednostki (Złoty Smok nie mniejszy, Czarny nie dwa razy większy).
 - [x] **Osobna skala Życia ×5 przy Ataku ×3** (decyzja autora 11.11: bohater ma ściągać bohatera w 2–4 ciosy; uzasadnienie liczb w `ZASADY_CYFROWE.md`). Zamyka punkt 12.1.
 
+## 14. Zgłoszenie autora z 11.11.2026
+
+- [x] **14.1. Gra online bez wyboru poziomu gry.** W pokoju nie było poziomu 2 „Wyprawa” (cel, kształt mapy, rozwój bohatera). Zrobione 11.11: stół ma pola `tier`, `objective`, `shape`, `customMapId` (serwer sprawdza je w `parseTable`, silnik składa grę przez `withRuleset` z `presets.ts`, wspólne z grą lokalną). Starsi klienci i zapisane pokoje grają „Przygodę”. Poziom „Własne” (luźne przełączniki zasad) nie jest online, do decyzji autora, czy go potrzeba.
+- Przejrzenie `bug-reports/`: wszystkie zgłoszenia z ziarnami po 9.11 są w sekcjach 8, 9, 11, 12, 13; starsze (21–23.10, `serwer-*`) zamknięte wcześniej, nowych z serwera brak (`make zgloszenia`).
+
 ## 10. Decyzje czekające na autora (stan 9.11.2026)
 
 Osiem rzeczy, bez których nie ruszę dalej reszty backlogu. Kiedy autor zdecyduje, odpowiedź wpisać tu i odhaczyć.

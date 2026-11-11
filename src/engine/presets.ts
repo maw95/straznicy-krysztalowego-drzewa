@@ -2,7 +2,7 @@
 // adventure of the board game's goal on the triangle map with fixed heroes; level 2 "Wyprawa" adds the goals, the map shapes and hero growth.
 // "Własne" leaves every switch to the player. The presets only choose switches that already exist, so no rule lives here.
 
-import type { MapShape, ObjectiveId } from './types';
+import type { MapShape, ObjectiveId, SetupOptions } from './types';
 
 export type Tier = 'adventure' | 'expedition' | 'custom';
 
@@ -24,4 +24,10 @@ export function resolveTier(tier: Tier, picks: Switches): Switches {
   if (tier === 'adventure') return { objective: 'crystals', shape: 'triangle', growth: false };
   if (tier === 'expedition') return { ...picks, growth: true };
   return picks;
+}
+
+/** The set-up with the digital edition's rules switched on when asked (the arena battles; the board duels of the easy level are the same), and its objective, map and hero growth. */
+export function withRuleset(setup: SetupOptions, digital: boolean, objective: ObjectiveId = 'crystals', shape: MapShape = 'triangle', customMapId?: string, growth = false): SetupOptions {
+  if (!digital) return setup;
+  return { ...setup, ...(shape !== 'triangle' && setup.mode !== 'arena' ? { mapShape: shape, ...(shape === 'custom' ? { customMapId } : {}) } : {}), rules: { ...setup.rules, ruleset: 'digital', ...(growth && setup.mode !== 'arena' ? { heroGrowth: true } : {}), ...(objective !== 'crystals' && (objective !== 'survival' || setup.mode === 'coop') && setup.mode !== 'arena' ? { objective } : {}) } };
 }

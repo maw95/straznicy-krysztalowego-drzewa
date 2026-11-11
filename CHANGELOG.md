@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Gra online: w pokoju można wybrać poziom gry. Obok „Poziomu 1: Przygoda” jest „Poziom 2: Wyprawa” z wyborem celu (kryształy, punkty kontrolne, przetrwanie, boss, artefakt) i kształtu mapy (trójkąt, prostokąt, pierścień, wyspy, własna mapa); w Wyprawie bohaterowie zdobywają doświadczenie jak w grze lokalnej (zgłoszenie autora, 11.11). Poziom „Własne” zostaje na razie tylko w grze lokalnej.
+
 ## 2.2.0 — 2026-11-11
 
 - Umiejętności: pięć nowych (Strzelec, Taktyk, Zwiadowca, Łowca skarbów, Uczony) ma własne malowane ikony zamiast pożyczonych.

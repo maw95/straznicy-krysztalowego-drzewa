@@ -2,7 +2,7 @@
 // explanations, the faction tint of a seat, labelled rows, the option buttons and the heroes of a fresh table.
 
 import { FACTION_HEROES, MAP_VARIANTS, type FactionId, type MapSize } from '../engine/data';
-import type { Level, Mode } from '../engine/types';
+import type { Level, MapShape, Mode } from '../engine/types';
 
 /** Class of an option button; the chosen one is lit. */
 export const choice = (active: boolean) => `btn plate parch ${active ? 'on' : ''}`;
@@ -99,3 +99,12 @@ export function Row({ label, children }: { label: string; children: React.ReactN
     </div>
   );
 }
+
+export const SHAPE_NAMES: Record<MapShape, string> = { triangle: 'Trójkąt', rectangle: 'Prostokąt', ring: 'Pierścień', islands: 'Wyspy', custom: 'Własna mapa' };
+export const SHAPE_TIPS: Record<MapShape, string> = {
+  triangle: 'Mapa z planszówki: trójkąt, Drzewo na szczycie, bazy w dolnych rogach.',
+  rectangle: 'Prostokąt: bazy pośrodku krótszych boków, Drzewo w środku mapy.',
+  ring: 'Pierścień wokół jeziora: Drzewo i obie bazy na rogach, do każdego dwie drogi.',
+  islands: 'Trzy wyspy rozdzielone wodą: bazy po bokach, Drzewo na środkowej wyspie, dojście po mostach.',
+  custom: 'Gotowa, ręcznie narysowana mapa (wybierz ją obok).',
+};

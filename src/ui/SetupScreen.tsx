@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, MAP_SIZE_NAMES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import { CUSTOM_MAPS } from '../engine/customMaps';
-import { resolveTier, TIERS, type Tier } from '../engine/presets';
+import { resolveTier, TIERS, withRuleset, type Tier } from '../engine/presets';
 import { OBJECTIVES } from '../engine/objectives';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type RulesConfig, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
@@ -12,7 +12,7 @@ import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
-import { ARENA_HINT, ARENA_LEVEL_TIPS, choice, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
+import { SHAPE_NAMES, SHAPE_TIPS, ARENA_HINT, ARENA_LEVEL_TIPS, choice, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
 
 /** Fresh seats: the first player is a person (both players of a two-sided game), the rest are bots. */
 const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
@@ -21,20 +21,6 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
     return { name: mode === 'arena' && !human ? 'Komputer' : `Gracz ${i + 1}`, faction, controller: human ? 'human' : 'bot', heroId };
   });
 
-/** The set-up with the digital edition's rules switched on when asked (the arena battles; the board duels of the easy level are the same), and its objective. */
-function withRuleset(setup: SetupOptions, digital: boolean, objective: ObjectiveId = 'crystals', shape: MapShape = 'triangle', customMapId?: string, growth = false): SetupOptions {
-  if (!digital) return setup;
-  return { ...setup, ...(shape !== 'triangle' && setup.mode !== 'arena' ? { mapShape: shape, ...(shape === 'custom' ? { customMapId } : {}) } : {}), rules: { ...setup.rules, ruleset: 'digital', ...(growth && setup.mode !== 'arena' ? { heroGrowth: true } : {}), ...(objective !== 'crystals' && (objective !== 'survival' || setup.mode === 'coop') && setup.mode !== 'arena' ? { objective } : {}) } };
-}
-
-const SHAPE_NAMES: Record<MapShape, string> = { triangle: 'Trójkąt', rectangle: 'Prostokąt', ring: 'Pierścień', islands: 'Wyspy', custom: 'Własna mapa' };
-const SHAPE_TIPS: Record<MapShape, string> = {
-  triangle: 'Mapa z planszówki: trójkąt, Drzewo na szczycie, bazy w dolnych rogach.',
-  rectangle: 'Prostokąt: bazy pośrodku krótszych boków, Drzewo w środku mapy.',
-  ring: 'Pierścień wokół jeziora: Drzewo i obie bazy na rogach, do każdego dwie drogi.',
-  islands: 'Trzy wyspy rozdzielone wodą: bazy po bokach, Drzewo na środkowej wyspie, dojście po mostach.',
-  custom: 'Gotowa, ręcznie narysowana mapa (wybierz ją obok).',
-};
 
 /** The pages of the new-game wizard: the edition, the game's options, the seats at the table. */
 type Step = 'start' | 'options' | 'table';

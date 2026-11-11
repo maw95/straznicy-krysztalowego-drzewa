@@ -2,7 +2,7 @@
 // `npm run dev` talks to a server started locally (make dev in the backend repo); the built game to Fly.io.
 // VITE_SERVER_URL overrides both.
 
-import type { GameState } from '../engine/types';
+import type { GameState, MapShape, ObjectiveId } from '../engine/types';
 
 export const SERVER_URL: string =
   import.meta.env.VITE_SERVER_URL ?? (import.meta.env.DEV ? 'http://localhost:8080' : 'https://straznicy-backend.fly.dev');
@@ -34,6 +34,11 @@ export interface RoomView {
   level: 'kids' | 'normal' | 'hard';
   /** The digital edition at the table (a server that does not know editions leaves it out: the board edition). */
   digital?: boolean;
+  /** The digital edition's level and what "Wyprawa" lets the owner pick (a server without levels leaves them out: "Przygoda"). */
+  tier?: 'adventure' | 'expedition';
+  objective?: ObjectiveId;
+  shape?: MapShape;
+  customMapId?: string;
   /** The computer's pace in this room, set by the owner (the same names as in the game's options). */
   botSpeed: BotSpeed;
   seats: SeatView[];
@@ -48,6 +53,10 @@ export interface TableConfig {
   mapSize: RoomView['mapSize'];
   level: RoomView['level'];
   digital: boolean;
+  tier: 'adventure' | 'expedition';
+  objective: ObjectiveId;
+  shape: MapShape;
+  customMapId?: string;
   seats: Array<{ faction: 'dawn' | 'horde'; heroId: string; bot: boolean }>;
 }
 
