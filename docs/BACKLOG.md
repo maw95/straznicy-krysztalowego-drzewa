@@ -16,8 +16,8 @@ Na początku sesji Claude mówi, który temat jest „Teraz”.
 **Dalej (kolejność zależy od poprzedniego):**
 3. (zrobione 10.11) Artefakty: 5 slotów, trzy rzadkości, jedna nazwa i obrazek dla wszystkich, nowe efekty, widok postaci jak w Heroes III.
 4. (teraz) Neutralni: najpierw projekt jednostek (rozmowa: 6 słabych + 3 bossów), potem silnik spotkań, nagrody, boty, nowy Boss (10.7).
-5. Rozmiary map XL i XXL + strojenie.
-6. Ekran „Autorzy” (mały temat, wymóg licencji CC BY; można wcisnąć między duże).
+5. (zrobione 11.11) Rozmiary map XL i XXL + strojenie (około jedna czwarta komórek poza pasmem, patrz ZASADY_CYFROWE.md).
+6. (zrobione 11.11) Ekran „Autorzy” (mały temat, wymóg licencji CC BY; można wcisnąć między duże).
 7. Grafiki ze Scenario (10.4) w partiach, dopiero gdy nazwy i opisy z punktów 3 i 4 są zamrożone.
 8. Poziom 3 „Królestwo” (osady, złoto, rekrutacja): osobny, duży projekt.
 

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, MAP_SIZE_NAMES, UNITS, type FactionId, type MapSize } from '../engine/data';
+import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, MAP_SIZE_NAMES, BOARD_MAP_SIZES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import { CUSTOM_MAPS } from '../engine/customMaps';
 import { resolveTier, TIERS, withRuleset, type Tier } from '../engine/presets';
 import { OBJECTIVES } from '../engine/objectives';
@@ -60,6 +60,8 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
   const [customId, setCustomId] = useState(Object.keys(CUSTOM_MAPS)[0]);
   const setDigital = (on: boolean) => {
     setDigitalState(on);
+    // The XL and XXL maps are the digital edition's.
+    if (!on && !BOARD_MAP_SIZES.includes(mapSize)) setMapSize('veryLong');
     try { localStorage.setItem(EDITION_KEY, on ? 'digital' : 'board'); } catch { /* private mode: only for this visit */ }
   };
   const pickLevel = (l: Level, m: Mode = mode) => {
@@ -331,7 +333,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             )}
             {!arena && (
               <Row label="Wielkość mapy">
-                {(Object.keys(MAP_SIZE_NAMES) as MapSize[]).map((m) => (
+                {(Object.keys(MAP_SIZE_NAMES) as MapSize[]).filter((m) => digital || BOARD_MAP_SIZES.includes(m)).map((m) => (
                   <Tip key={m} text={mapTip(m)}><button className={chip(mapSize === m)} onClick={() => setMapSize(m)}>{MAP_SIZE_NAMES[m]}</button></Tip>
                 ))}
               </Row>

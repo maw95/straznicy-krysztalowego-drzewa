@@ -51,12 +51,16 @@ const COOP: Record<1 | 2, Table> = {
     medium:   [4, 2, 8, 5, 7, 6, 4, 4, 5],
     long:     [5, 3, 8, 5, 6, 6, 5, 4, 5],
     veryLong: [4, 3, 7, 5, 6, 7, 4, 6, 5],
+    huge: [4, 3, 7, 5, 6, 7, 4, 6, 5],
+    giant: [4, 3, 7, 5, 6, 7, 4, 6, 5],
   }),
   2: table({
     short:    [4, 3, 7, 4, 7, 5, 4, 2, 4],
     medium:   [5, 3, 7, 4, 6, 5, 5, 3, 5],
     long:     [5, 4, 6, 4, 5, 5, 4, 3, 4],
     veryLong: [4, 3, 5, 3, 4, 4, 3, 3, 3],
+    huge: [4, 3, 5, 3, 4, 4, 3, 3, 3],
+    giant: [4, 3, 5, 3, 4, 4, 3, 3, 3],
   }),
 };
 
@@ -68,18 +72,24 @@ const PVP: Record<1 | 2, Table> = {
     medium:   [6, 2, null, 6, 5, 6, 5, 4, 6],
     long:     [6, 2, null, 6, 6, 6, 6, 5, 6],
     veryLong: [6, 3, null, 6, 6, 7, 6, 5, 6],
+    huge: [6, 3, null, 6, 6, 7, 6, 5, 6],
+    giant: [6, 3, null, 6, 6, 7, 6, 5, 6],
   }),
   2: table({
     short:    [5, 3, null, 5, 7, 5, 5, 2, 5],
     medium:   [6, 4, null, 5, 7, 6, 6, 3, 6],
     long:     [6, 4, null, 6, 7, 6, 6, 5, 5],
     veryLong: [6, 4, null, 6, 6, 6, 6, 6, 5],
+    huge: [6, 4, null, 6, 6, 6, 6, 6, 5],
+    giant: [6, 4, null, 6, 6, 6, 6, 6, 5],
   }),
 };
 
 /** Longer maps take longer to win. */
-export const MAP_WEIGHT: Record<MapSize, number> = { short: 0.4, medium: 0.6, long: 0.8, veryLong: 1 };
-export const MAX_POINTS = 30;
+export const MAP_WEIGHT: Record<MapSize, number> = { short: 0.4, medium: 0.6, long: 0.8, veryLong: 1, huge: 1.15, giant: 1.3 };
+/** The ceiling of the points for one win: the hard level, one player, on the XXL map (the biggest map of the board game, XL below it, tops at 30). */
+export const MAX_POINTS = 40;
+const BOARD_TOP_POINTS = 30;
 /** The rating that scores MAX_POINTS on the biggest map: the hard level, one player. */
 const TOP_RATING = COOP[1].veryLong.hard!;
 
@@ -118,7 +128,7 @@ export const ARENA_POINTS: Record<Level, number> = { kids: 1, normal: 2, hard: 3
 
 export function pointsFor(setup: SetupOptions, level: LevelName, side: FactionId): number {
   if (setup.mode === 'arena') return ARENA_POINTS[level === 'custom' ? 'normal' : level];
-  const raw = (MAX_POINTS * MAP_WEIGHT[setup.mapSize] * difficultyRating(setup, level, side)) / TOP_RATING;
+  const raw = (BOARD_TOP_POINTS * MAP_WEIGHT[setup.mapSize] * difficultyRating(setup, level, side)) / TOP_RATING;
   return Math.min(MAX_POINTS, Math.max(1, Math.round(raw)));
 }
 

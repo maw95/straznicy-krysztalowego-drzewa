@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Mapy XL („ogromna”) i XXL („gigantyczna”) w wersji cyfrowej, w grze lokalnej i online: trójkąt o 17 i 20 rzędach (153 i 210 pól), większe prostokąty, pierścienie i wyspy, więcej skarbów, miejsc na mapie i rund (limit 30 i 36). Poziomy trudności przestrojone symulacjami, żeby Przymierze wygrywało tyle samo co na mniejszych mapach. Za wygraną na XL i XXL jest więcej punktów rankingowych (do 40). Planszówka zostaje przy czterech rozmiarach.
+
 - Gra online: w pokoju można wybrać poziom gry. Obok „Poziomu 1: Przygoda” jest „Poziom 2: Wyprawa” z wyborem celu (kryształy, punkty kontrolne, przetrwanie, boss, artefakt) i kształtu mapy (trójkąt, prostokąt, pierścień, wyspy, własna mapa); w Wyprawie bohaterowie zdobywają doświadczenie jak w grze lokalnej (zgłoszenie autora, 11.11). Poziom „Własne” zostaje na razie tylko w grze lokalnej.
 
 ## 2.2.0 — 2026-11-11

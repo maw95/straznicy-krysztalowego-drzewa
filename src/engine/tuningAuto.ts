@@ -513,6 +513,26 @@ const ENTRIES = `
 {"objective":"artifact","level":"hard","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
 {"objective":"artifact","level":"kids","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":10}}}
 {"objective":"artifact","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":1}}}
+# islands-artifact-g1-xl (19 cells, 120 games each)
+{"objective":"artifact","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"artifact","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"artifact","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"artifact","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"artifact","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"artifact","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"artifact","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
 # islands-artifact-g1 (30 cells, 200 games each)
 {"objective":"artifact","level":"kids","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
 {"objective":"artifact","level":"hard","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
@@ -569,6 +589,25 @@ const ENTRIES = `
 {"objective":"boss","level":"hard","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
 {"objective":"boss","level":"kids","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
 {"objective":"boss","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+# islands-boss-g1-xl (18 cells, 120 games each)
+{"objective":"boss","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"boss","level":"hard","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"boss","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"boss","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"boss","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"boss","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15},"extraEvilHero":true,"minEvilHeroes":2}}
+{"objective":"boss","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":12}}}
+{"objective":"boss","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":12}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"boss","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
 # islands-boss-g1 (25 cells, 200 games each)
 {"objective":"boss","level":"kids","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
 {"objective":"boss","level":"hard","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
@@ -617,6 +656,27 @@ const ENTRIES = `
 {"objective":"control","level":"normal","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":1}}}
 {"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
 {"objective":"control","level":"normal","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+# islands-control-g1-xl (20 cells, 120 games each)
+{"objective":"control","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"control","level":"normal","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"control","level":"hard","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"control","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"control","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"control","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"control","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"control","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"control","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"control","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15}}}
+{"objective":"control","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"control","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"control","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"control","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"control","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
 # islands-control-g1 (22 cells, 120 games each)
 {"objective":"control","level":"kids","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":1}}}
 {"objective":"control","level":"hard","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
@@ -668,6 +728,24 @@ const ENTRIES = `
 {"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
 {"objective":"crystals","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":20},"dawnStartTreasures":{"resurrections":0,"others":0,"random":0}}}
 {"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+# islands-crystals-g1-xl (17 cells, 120 games each)
+{"objective":"crystals","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+{"objective":"crystals","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":1}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"crystals","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"crystals","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":1}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
 # islands-crystals-g1 (22 cells, 120 games each)
 {"objective":"crystals","level":"kids","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
 {"objective":"crystals","level":"hard","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
@@ -705,6 +783,14 @@ const ENTRIES = `
 {"objective":"survival","level":"kids","mode":"coop","players":1,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15}}}
 {"objective":"survival","level":"normal","mode":"coop","players":1,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
 {"objective":"survival","level":"hard","mode":"coop","players":1,"maps":["veryLong"],"growth":false,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+# islands-survival-g1-xl (7 cells, 120 games each)
+{"objective":"survival","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"survival","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+{"objective":"survival","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"survival","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":1}}}
+{"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"survival","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
 # islands-survival-g1 (11 cells, 120 games each)
 {"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":1}}}
 {"objective":"survival","level":"hard","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"islands","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
@@ -745,6 +831,26 @@ const ENTRIES = `
 {"objective":"artifact","level":"hard","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
 {"objective":"artifact","level":"kids","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":12}}}
 {"objective":"artifact","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+# rectangle-artifact-g1-xl (19 cells, 120 games each)
+{"objective":"artifact","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"artifact","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"artifact","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"artifact","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15}}}
+{"objective":"artifact","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"artifact","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15},"extraEvilHero":true,"minEvilHeroes":2}}
+{"objective":"artifact","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
 # rectangle-artifact-g1 (24 cells, 120 games each)
 {"objective":"artifact","level":"hard","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
 {"objective":"artifact","level":"kids","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":3}}}
@@ -799,6 +905,22 @@ const ENTRIES = `
 {"objective":"boss","level":"hard","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":8}}}
 {"objective":"boss","level":"kids","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
 {"objective":"boss","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+# rectangle-boss-g1-xl (15 cells, 120 games each)
+{"objective":"boss","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"boss","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"boss","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":12}}}
+{"objective":"boss","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"boss","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":12}}}
+{"objective":"boss","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":20},"dawnStartTreasures":{"resurrections":0,"others":0,"random":0},"extraEvilHero":true,"minEvilHeroes":3}}
+{"objective":"boss","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"boss","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
 # rectangle-boss-g1 (33 cells, 120 games each)
 {"objective":"boss","level":"kids","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
 {"objective":"boss","level":"normal","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":1}}}
@@ -858,6 +980,26 @@ const ENTRIES = `
 {"objective":"control","level":"kids","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":12}}}
 {"objective":"control","level":"normal","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
 {"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+# rectangle-control-g1-xl (19 cells, 120 games each)
+{"objective":"control","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"control","level":"normal","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"control","level":"hard","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"control","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"control","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"control","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"control","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"control","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"control","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"control","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15},"extraEvilHero":true,"minEvilHeroes":2}}
+{"objective":"control","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"control","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"control","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":12}}}
+{"objective":"control","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
 # rectangle-control-g1 (20 cells, 120 games each)
 {"objective":"control","level":"hard","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
 {"objective":"control","level":"normal","mode":"pvp","players":1,"maps":["short"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":2}}}
@@ -906,6 +1048,24 @@ const ENTRIES = `
 {"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
 {"objective":"crystals","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":20},"dawnStartTreasures":{"resurrections":0,"others":0,"random":0}}}
 {"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+# rectangle-crystals-g1-xl (17 cells, 120 games each)
+{"objective":"crystals","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":1}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"hard","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"crystals","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"crystals","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8},"extraEvilHero":false,"minEvilHeroes":1}}
+{"objective":"crystals","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
 # rectangle-crystals-g1 (22 cells, 120 games each)
 {"objective":"crystals","level":"kids","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
 {"objective":"crystals","level":"normal","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
@@ -946,6 +1106,13 @@ const ENTRIES = `
 {"objective":"survival","level":"kids","mode":"coop","players":1,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15},"extraEvilHero":true,"minEvilHeroes":2}}
 {"objective":"survival","level":"normal","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
 {"objective":"survival","level":"hard","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+# rectangle-survival-g1-xl (6 cells, 120 games each)
+{"objective":"survival","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"survival","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"survival","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"survival","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":8}}}
 # rectangle-survival-g1 (13 cells, 120 games each)
 {"objective":"survival","level":"normal","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":1}}}
 {"objective":"survival","level":"hard","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"rectangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
@@ -982,6 +1149,21 @@ const ENTRIES = `
 {"objective":"artifact","level":"normal","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":1}}}
 {"objective":"artifact","level":"kids","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
 {"objective":"artifact","level":"normal","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+# ring-artifact-g1-xl (14 cells, 120 games each)
+{"objective":"artifact","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"artifact","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"artifact","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"artifact","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
 # ring-artifact-g1 (28 cells, 120 games each)
 {"objective":"artifact","level":"kids","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":1}}}
 {"objective":"artifact","level":"hard","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
@@ -1037,6 +1219,24 @@ const ENTRIES = `
 {"objective":"boss","level":"normal","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
 {"objective":"boss","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
 {"objective":"boss","level":"normal","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+# ring-boss-g1-xl (17 cells, 120 games each)
+{"objective":"boss","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"hard","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"boss","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"boss","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"boss","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"boss","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"boss","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":20},"dawnStartTreasures":{"resurrections":0,"others":0,"random":0},"extraEvilHero":true,"minEvilHeroes":3}}
+{"objective":"boss","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
 # ring-boss-g1 (24 cells, 120 games each)
 {"objective":"boss","level":"kids","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
 {"objective":"boss","level":"normal","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":1}}}
@@ -1076,6 +1276,19 @@ const ENTRIES = `
 {"objective":"control","level":"kids","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
 {"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
 {"objective":"control","level":"normal","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+# ring-control-g1-xl (12 cells, 120 games each)
+{"objective":"control","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"control","level":"hard","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"control","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+{"objective":"control","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15},"extraEvilHero":true,"minEvilHeroes":2}}
+{"objective":"control","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"control","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":20},"dawnStartTreasures":{"resurrections":0,"others":0,"random":0},"extraEvilHero":true,"minEvilHeroes":3}}
+{"objective":"control","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
 # ring-control-g1 (18 cells, 120 games each)
 {"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["short"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
 {"objective":"control","level":"normal","mode":"pvp","players":2,"maps":["short"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":1}}}
@@ -1124,6 +1337,23 @@ const ENTRIES = `
 {"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
 {"objective":"crystals","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":1}}}
 {"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+# ring-crystals-g1-xl (16 cells, 120 games each)
+{"objective":"crystals","level":"normal","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"crystals","level":"hard","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"crystals","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"crystals","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"crystals","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5},"extraEvilHero":false}}
+{"objective":"crystals","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":1}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
 # ring-crystals-g1 (23 cells, 120 games each)
 {"objective":"crystals","level":"hard","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
 {"objective":"crystals","level":"kids","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
@@ -1166,6 +1396,14 @@ const ENTRIES = `
 {"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":12}}}
 {"objective":"survival","level":"normal","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
 {"objective":"survival","level":"hard","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+# ring-survival-g1-xl (7 cells, 120 games each)
+{"objective":"survival","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"survival","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+{"objective":"survival","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"survival","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"survival","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
 # ring-survival-g1 (13 cells, 120 games each)
 {"objective":"survival","level":"hard","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
 {"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"ring","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":1}}}
@@ -1209,6 +1447,26 @@ const ENTRIES = `
 {"objective":"artifact","level":"hard","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
 {"objective":"artifact","level":"kids","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":8}}}
 {"objective":"artifact","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+# triangle-artifact-g1-xl (19 cells, 120 games each)
+{"objective":"artifact","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"artifact","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"artifact","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"artifact","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"artifact","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"artifact","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"artifact","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"artifact","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"artifact","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"artifact","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
 # triangle-artifact-g1 (26 cells, 120 games each)
 {"objective":"artifact","level":"normal","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":1}}}
 {"objective":"artifact","level":"hard","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
@@ -1270,6 +1528,27 @@ const ENTRIES = `
 {"objective":"boss","level":"normal","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
 {"objective":"boss","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
 {"objective":"boss","level":"normal","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+# triangle-boss-g1-xl (20 cells, 120 games each)
+{"objective":"boss","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"boss","level":"hard","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"boss","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"boss","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"boss","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"boss","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15},"extraEvilHero":true,"minEvilHeroes":2}}
+{"objective":"boss","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":20},"dawnStartTreasures":{"resurrections":0,"others":0,"random":0},"extraEvilHero":true,"minEvilHeroes":3}}
+{"objective":"boss","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"boss","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15}}}
+{"objective":"boss","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":20},"dawnStartTreasures":{"resurrections":0,"others":0,"random":0},"extraEvilHero":true,"minEvilHeroes":3}}
+{"objective":"boss","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"boss","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"boss","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"boss","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
 # triangle-boss-g1 (32 cells, 120 games each)
 {"objective":"boss","level":"kids","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
 {"objective":"boss","level":"normal","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":10}}}
@@ -1322,6 +1601,23 @@ const ENTRIES = `
 {"objective":"control","level":"hard","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
 {"objective":"control","level":"normal","mode":"pvp","players":1,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":1}}}
 {"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+# triangle-control-g1-xl (16 cells, 120 games each)
+{"objective":"control","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"hard","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"control","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"control","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"control","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"control","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"control","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"control","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"control","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"control","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"control","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"control","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
 # triangle-control-g1 (19 cells, 120 games each)
 {"objective":"control","level":"normal","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
 {"objective":"control","level":"normal","mode":"pvp","players":2,"maps":["short"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":1}}}
@@ -1342,6 +1638,20 @@ const ENTRIES = `
 {"objective":"control","level":"kids","mode":"pvp","players":1,"maps":["veryLong"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
 {"objective":"control","level":"normal","mode":"pvp","players":1,"maps":["veryLong"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":1}}}
 {"objective":"control","level":"kids","mode":"pvp","players":2,"maps":["veryLong"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+# triangle-crystals-g0-xl (13 cells, 120 games each)
+{"objective":"crystals","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"crystals","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"crystals","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"crystals","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":1,"maps":["giant"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":1}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":2}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
 # triangle-crystals-g0 (15 cells, 120 games each)
 {"objective":"crystals","level":"kids","mode":"coop","players":1,"maps":["short"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":15},"extraEvilHero":true,"minEvilHeroes":2}}
 {"objective":"crystals","level":"kids","mode":"coop","players":2,"maps":["short"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
@@ -1358,6 +1668,23 @@ const ENTRIES = `
 {"objective":"crystals","level":"kids","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
 {"objective":"crystals","level":"hard","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
 {"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+# triangle-crystals-g1-xl (16 cells, 120 games each)
+{"objective":"crystals","level":"hard","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":3}}}
+{"objective":"crystals","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"crystals","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+{"objective":"crystals","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+{"objective":"crystals","level":"hard","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":8}}}
+{"objective":"crystals","level":"normal","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"crystals","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":6}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"crystals","level":"kids","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+{"objective":"crystals","level":"normal","mode":"pvp","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
 # triangle-crystals-g1 (17 cells, 120 games each)
 {"objective":"crystals","level":"hard","mode":"coop","players":1,"maps":["short"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
 {"objective":"crystals","level":"kids","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
@@ -1391,6 +1718,14 @@ const ENTRIES = `
 {"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":2}}}
 {"objective":"survival","level":"normal","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
 {"objective":"survival","level":"hard","mode":"coop","players":2,"maps":["veryLong"],"growth":false,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}
+# triangle-survival-g1-xl (7 cells, 120 games each)
+{"objective":"survival","level":"kids","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"survival","level":"hard","mode":"coop","players":1,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0}}}
+{"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"survival","level":"hard","mode":"coop","players":2,"maps":["huge"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":4}}}
+{"objective":"survival","level":"kids","mode":"coop","players":1,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":10}}}
+{"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":0},"dawnStartTreasures":{"resurrections":0,"others":0,"random":13}}}
+{"objective":"survival","level":"hard","mode":"coop","players":2,"maps":["giant"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":12}}}
 # triangle-survival-g1 (12 cells, 120 games each)
 {"objective":"survival","level":"kids","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":1}}}
 {"objective":"survival","level":"hard","mode":"coop","players":2,"maps":["short"],"growth":true,"shape":"triangle","rules":{"hordeStartTreasures":{"resurrections":0,"others":0,"random":5}}}

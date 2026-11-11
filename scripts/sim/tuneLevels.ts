@@ -3,7 +3,7 @@
 // win rate into the band of its level. Results (DigitalTune entries for the triangle map) go to .tmp/sim/auto-<objective>-g<growth>.json;
 // scripts/sim/tuneMerge.ts turns all of them into src/engine/tuningAuto.ts.
 // Usage: [SIM_SHAPE=rectangle|ring|islands|custom SIM_MAP=ciesnina|dolina] node --import tsx scripts/sim/tuneLevels.ts <objective> <growth 0|1> [games=120] [rounds=8]
-// Without SIM_SHAPE the triangle map. The entries of the old hand-made tuning stay in force while measuring; the generated ones of an earlier run do not (noAuto).
+// SIM_SIZES=huge,giant tunes the XL and XXL maps (into auto-<tag>-xl.json). Without SIM_SHAPE the triangle map. The entries of the old hand-made tuning stay in force while measuring; the generated ones of an earlier run do not (noAuto).
 // Bands (the author, 9.11.2026): Easy 65-85, Normal 45-65, Hard 30-45 percent wins of the Przymierza. About 1 minute per objective and shape.
 
 import { execFileSync } from 'node:child_process';
@@ -16,7 +16,9 @@ const maxRounds = Number(roundsArg ?? 8);
 const BAND: Record<string, [number, number]> = { kids: [65, 85], full: [45, 65], hard: [30, 45] };
 const shape = process.env.SIM_SHAPE ?? 'triangle';
 const map = process.env.SIM_MAP;
-const tag = `${shape}${map ? `-${map}` : ''}-${objective}-g${growthArg}`;
+const SIZES = process.env.SIM_SIZES ? process.env.SIM_SIZES.split(',') : ['short', 'medium', 'long', 'veryLong'];
+// Other sizes than the board game's go to a file of their own, so that the merge keeps both.
+const tag = `${shape}${map ? `-${map}` : ''}-${objective}-g${growthArg}${process.env.SIM_SIZES ? '-xl' : ''}`;
 const LEVEL: Record<string, string> = { kids: 'kids', full: 'normal', hard: 'hard' };
 
 type Patch = Record<string, unknown>;
@@ -95,7 +97,7 @@ const ALREADY: unknown[] = [];
 
 const coop = (t: string) => t.startsWith('coop');
 const all: Cell[] = [];
-for (const size of ['short', 'medium', 'long', 'veryLong']) {
+for (const size of SIZES) {
   for (const table of ['coop1', 'coop2', 'pvp1', 'pvp2']) {
     for (const option of coop(table) ? ['kids', 'full', 'hard'] : ['kids', 'full']) {
       if (objective === 'survival' && !coop(table)) continue;

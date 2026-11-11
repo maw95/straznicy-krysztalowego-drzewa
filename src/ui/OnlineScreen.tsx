@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type FactionId, type MapSize } from '../engine/data';
+import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, BOARD_MAP_SIZES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import type { Level, MapShape, Mode } from '../engine/types';
 import { CUSTOM_MAPS } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
@@ -360,7 +360,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
               ))}
             </Row>
             <Row label="Mapa">
-              {(Object.keys(MAP_SIZE_NAMES) as MapSize[]).map((m) => (
+              {(Object.keys(MAP_SIZE_NAMES) as MapSize[]).filter((m) => table.digital || BOARD_MAP_SIZES.includes(m)).map((m) => (
                 <Tip key={m} text={mapTip(m)}>
                   <button className={chip(room.mapSize === m)} disabled={!owner} onClick={() => configure({ mapSize: m })}>{MAP_SIZE_NAMES[m]}</button>
                 </Tip>
@@ -379,7 +379,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4 }}>{LEVEL_HINT[room.level]}</div>}
         <Row label="Wersja">
           <Tip text={TIPS.digital}><button className={chip(table.digital)} aria-pressed={table.digital} disabled={!owner} onClick={() => configure({ digital: true })}>Cyfrowa</button></Tip>
-          <Tip text="Zasady planszówki, bez zmian: malowana arena i figurki 3D."><button className={chip(!table.digital)} aria-pressed={!table.digital} disabled={!owner} onClick={() => configure({ digital: false })}>Planszowa</button></Tip>
+          <Tip text="Zasady planszówki, bez zmian: malowana arena i figurki 3D."><button className={chip(!table.digital)} aria-pressed={!table.digital} disabled={!owner} onClick={() => configure({ digital: false, ...(BOARD_MAP_SIZES.includes(table.mapSize) ? {} : { mapSize: 'veryLong' as const }) })}>Planszowa</button></Tip>
         </Row>
         {table.digital && !arena && (
           <>

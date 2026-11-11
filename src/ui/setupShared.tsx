@@ -66,7 +66,7 @@ export const LEVEL_TIPS: Record<Level | 'custom', string> = {
 };
 
 /** Approximate time at the table with one hero per side (simulated game length). */
-const MAP_TIME: Record<MapSize, string> = { short: '20–45', medium: '25–55', long: '30–65', veryLong: '35–70' };
+const MAP_TIME: Record<MapSize, string> = { short: '20–45', medium: '25–55', long: '30–65', veryLong: '35–70', huge: '45–90', giant: '55–110' };
 
 export function mapTip(m: MapSize): string {
   const v = MAP_VARIANTS[m];

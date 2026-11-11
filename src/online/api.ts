@@ -2,6 +2,7 @@
 // `npm run dev` talks to a server started locally (make dev in the backend repo); the built game to Fly.io.
 // VITE_SERVER_URL overrides both.
 
+import type { MapSize } from '../engine/data';
 import type { GameState, MapShape, ObjectiveId } from '../engine/types';
 
 export const SERVER_URL: string =
@@ -30,7 +31,7 @@ export interface RoomView {
   ownerId: number;
   status: 'lobby' | 'playing' | 'over';
   mode: 'coop' | 'pvp' | 'arena';
-  mapSize: 'short' | 'medium' | 'long' | 'veryLong';
+  mapSize: MapSize;
   level: 'kids' | 'normal' | 'hard';
   /** The digital edition at the table (a server that does not know editions leaves it out: the board edition). */
   digital?: boolean;

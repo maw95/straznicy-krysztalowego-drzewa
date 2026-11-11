@@ -18,7 +18,8 @@ export interface Variant {
   option: Option;
 }
 
-export const SIZES: MapSize[] = ['short', 'medium', 'long', 'veryLong'];
+/** The board game's sizes; SIM_SIZES=huge,giant (comma separated) picks others, e.g. the digital edition's XL and XXL. */
+export const SIZES: MapSize[] = process.env.SIM_SIZES ? (process.env.SIM_SIZES.split(',') as MapSize[]) : ['short', 'medium', 'long', 'veryLong'];
 export const TABLES: Table[] = ['coop1', 'coop2', 'pvp1', 'pvp2'];
 export const OPTIONS: Option[] = ['full', 'noabilities', 'notreasures', 'dice', 'replacement', 'board', 'kids'];
 

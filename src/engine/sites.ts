@@ -81,7 +81,7 @@ export const defenseOf = (points: number, scale: number) => Math.max(1, Math.rou
 
 export const SITE = {
   /** How many sites a map has, by map size, when hero growth is on. */
-  count: { short: 2, medium: 3, long: 5, veryLong: 7 } as Record<string, number>,
+  count: { short: 2, medium: 3, long: 5, veryLong: 7, huge: 9, giant: 11 } as Record<string, number>,
   /** Experience from a shrine. */
   shrineXp: 2,
   names: { shrine: 'Kapliczka', camp: 'Obóz najemników', chest: 'Skrzynia' } as Record<SiteKind, string>,

@@ -139,7 +139,7 @@ export const CONTROL = {
   centreWeight: 2,
   /** Extra rounds in a row the Przymierze needs: it moves first in a round, so it reaches the middle first (a side that holds the middle from its first turn would otherwise win too often). */
   dawnExtraRounds: 1,
-  roundsToWin: { short: 3, medium: 3, long: 4, veryLong: 5 } as Record<MapSize, number>,
+  roundsToWin: { short: 3, medium: 3, long: 4, veryLong: 5, huge: 6, giant: 7 } as Record<MapSize, number>,
 };
 
 /**
@@ -150,7 +150,7 @@ export const CONTROL = {
 export const SURVIVAL = {
   waveEvery: 2,
   extra: 1,
-  rounds: { short: 6, medium: 9, long: 14, veryLong: 18 } as Record<MapSize, number>,
+  rounds: { short: 6, medium: 9, long: 14, veryLong: 18, huge: 22, giant: 26 } as Record<MapSize, number>,
 };
 
 /**
@@ -159,10 +159,10 @@ export const SURVIVAL = {
  * three corners of the ring, so the three are equally far from each other. Sizes roughly match the triangle's number of hexes.
  */
 export const MAP_SHAPES = {
-  rectangle: { short: { width: 7, height: 4 }, medium: { width: 9, height: 5 }, long: { width: 13, height: 6 }, veryLong: { width: 15, height: 8 } },
-  ring: { short: { radius: 3 }, medium: { radius: 4 }, long: { radius: 5 }, veryLong: { radius: 7 } },
+  rectangle: { short: { width: 7, height: 4 }, medium: { width: 9, height: 5 }, long: { width: 13, height: 6 }, veryLong: { width: 15, height: 8 }, huge: { width: 18, height: 10 }, giant: { width: 21, height: 12 } },
+  ring: { short: { radius: 3 }, medium: { radius: 4 }, long: { radius: 5 }, veryLong: { radius: 7 }, huge: { radius: 8 }, giant: { radius: 10 } },
   /** Islands: three land masses (the Przymierza's, the Tree's, the Horda's) between two channels; `bridges` hexes of each channel are bridges. */
-  islands: { short: { width: 9, height: 5, bridges: 1 }, medium: { width: 11, height: 6, bridges: 2 }, long: { width: 15, height: 7, bridges: 2 }, veryLong: { width: 19, height: 9, bridges: 3 } },
+  islands: { short: { width: 9, height: 5, bridges: 1 }, medium: { width: 11, height: 6, bridges: 2 }, long: { width: 15, height: 7, bridges: 2 }, veryLong: { width: 19, height: 9, bridges: 3 }, huge: { width: 23, height: 11, bridges: 3 }, giant: { width: 27, height: 13, bridges: 4 } },
 } as const;
 
 /** The map's round limit is multiplied by this on a shape other than the triangle (the roads are longer, and the limit goes to the Horde). */
@@ -174,7 +174,7 @@ export const SHAPE_ROUND_FACTOR = { triangle: 1, rectangle: 1.25, ring: 1.5, isl
  * At the round limit the Horde win (as in the other goals). Tuned with simulations (docs/ZASADY_CYFROWE.md).
  */
 export const BOSS = {
-  hp: { short: 54, medium: 54, long: 62, veryLong: 92 } as Record<MapSize, number>,
+  hp: { short: 54, medium: 54, long: 62, veryLong: 92, huge: 104, giant: 116 } as Record<MapSize, number>,
   /** Life is multiplied by this when two Przymierza heroes play (two heroes strike twice as often). */
   twoHeroesFactor: 1.25,
 };
@@ -485,16 +485,21 @@ export interface MapVariant {
   startTreasures?: { resurrections: number; others: number };
 }
 
-export type MapSize = 'short' | 'medium' | 'long' | 'veryLong';
+/** The board game's four sizes, then the digital edition's XL (`huge`) and XXL (`giant`). */
+export type MapSize = 'short' | 'medium' | 'long' | 'veryLong' | 'huge' | 'giant';
+/** The sizes the board edition has. */
+export const BOARD_MAP_SIZES: MapSize[] = ['short', 'medium', 'long', 'veryLong'];
 
 export const MAP_VARIANTS: Record<MapSize, MapVariant> = {
   short: { rows: 6, resurrections: 1, otherTreasures: 1, onlyResurrections: 1, roundLimit: 8 },
   medium: { rows: 8, resurrections: 1, otherTreasures: 3, onlyResurrections: 2, roundLimit: 12 },
   long: { rows: 11, resurrections: 2, otherTreasures: 4, onlyResurrections: 3, roundLimit: 18, startTreasures: { resurrections: 0, others: 1 } },
   veryLong: { rows: 14, resurrections: 3, otherTreasures: 5, onlyResurrections: 4, roundLimit: 24, startTreasures: { resurrections: 1, others: 1 } },
+  huge: { rows: 17, resurrections: 4, otherTreasures: 6, onlyResurrections: 5, roundLimit: 30, startTreasures: { resurrections: 1, others: 2 } },
+  giant: { rows: 20, resurrections: 5, otherTreasures: 8, onlyResurrections: 6, roundLimit: 36, startTreasures: { resurrections: 2, others: 2 } },
 };
 
-export const MAP_SIZE_NAMES: Record<MapSize, string> = { short: 'Krótka', medium: 'Średnia', long: 'Długa', veryLong: 'Bardzo długa' };
+export const MAP_SIZE_NAMES: Record<MapSize, string> = { short: 'Krótka', medium: 'Średnia', long: 'Długa', veryLong: 'Bardzo długa', huge: 'XL (ogromna)', giant: 'XXL (gigantyczna)' };
 
 /** Digital Expedition and higher: Życie and Atak (and every bonus to them) are this many times the board game's, so that small bonuses and defence have room. */
 export const STAT_SCALE = 3;

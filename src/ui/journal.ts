@@ -162,7 +162,7 @@ export interface BreakdownRow {
   points: number;
 }
 
-const MAP_ORDER: MapSize[] = ['short', 'medium', 'long', 'veryLong'];
+const MAP_ORDER: MapSize[] = ['short', 'medium', 'long', 'veryLong', 'huge', 'giant'];
 const LEVEL_ORDER: LevelName[] = ['kids', 'normal', 'hard', 'custom'];
 
 /** Finished games per mode × map × level (only combinations played at least once), in menu order. */

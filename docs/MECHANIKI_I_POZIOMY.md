@@ -64,7 +64,7 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 
 **Do zbudowania — mapy i inne**
 - [ ] Skala statystyk A i Ż (decyzja autora w toku; patrz niżej).
-- [ ] Rozmiary map: XS, S, M, L (dzisiejsze cztery) oraz nowe XL i XXL; ponowne strojenie po zmianie skali.
+- [x] Rozmiary map: XS, S, M, L (dzisiejsze cztery) oraz nowe XL i XXL (11.11; tylko wersja cyfrowa, szczegóły i wyniki strojenia w `ZASADY_CYFROWE.md`).
 - [ ] Boss „wszyscy przeciw Bossowi” bez Hordy, własna grafika Bossa (10.7: robić teraz).
 - [ ] Autopilot warstw (rodzic na wyższym poziomie, dziecko na tej samej mapie z automatycznie zarządzanymi warstwami).
 - [ ] Kość obrażeń i zasłanianie strzału zostają opcjami „Własnymi”.
