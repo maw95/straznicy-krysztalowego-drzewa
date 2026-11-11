@@ -2111,6 +2111,66 @@
       "data": "2026-11-11",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/neutralni-ilustracje",
+      "pliki": [
+        "public/assets/cards/art/shardling.jpg",
+        "public/assets/cards/art/burrower.jpg",
+        "public/assets/cards/art/skyEagle.jpg",
+        "public/assets/cards/art/harpy.jpg",
+        "public/assets/cards/art/pincer.jpg",
+        "public/assets/cards/art/bogCrawler.jpg",
+        "public/assets/cards/art/stoneGolem.jpg",
+        "public/assets/cards/art/stormKing.jpg",
+        "public/assets/cards/art/kraken.jpg",
+        "public/assets/cards/portraits/shardling.jpg",
+        "public/assets/cards/portraits/burrower.jpg",
+        "public/assets/cards/portraits/skyEagle.jpg",
+        "public/assets/cards/portraits/harpy.jpg",
+        "public/assets/cards/portraits/pincer.jpg",
+        "public/assets/cards/portraits/bogCrawler.jpg",
+        "public/assets/cards/portraits/stoneGolem.jpg",
+        "public/assets/cards/portraits/stormKing.jpg",
+        "public/assets/cards/portraits/kraken.jpg"
+      ],
+      "typ": "ilustracje kart i portrety dziewięciu neutralnych jednostek",
+      "opis": "1008x704 przeskalowane do 630x441; portret = kwadratowy wycinek 256 px. Prompt: 'Heroic fantasy card illustration in the style of Heroes of Might and Magic III painted art: <opis jednostki>, rich oil painting, dramatic lighting, no text, no frame.'",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/neutralni-ikony-zdolnosci",
+      "pliki": [
+        "public/assets/cards/abilities/shardBurst.png",
+        "public/assets/cards/abilities/shardBurst_inner.png",
+        "public/assets/cards/abilities/burrow.png",
+        "public/assets/cards/abilities/burrow_inner.png",
+        "public/assets/cards/abilities/dive.png",
+        "public/assets/cards/abilities/dive_inner.png",
+        "public/assets/cards/abilities/backstab.png",
+        "public/assets/cards/abilities/backstab_inner.png",
+        "public/assets/cards/abilities/grab.png",
+        "public/assets/cards/abilities/grab_inner.png",
+        "public/assets/cards/abilities/bogRegrowth.png",
+        "public/assets/cards/abilities/bogRegrowth_inner.png",
+        "public/assets/cards/abilities/runeGolem.png",
+        "public/assets/cards/abilities/runeGolem_inner.png",
+        "public/assets/cards/abilities/stormKing.png",
+        "public/assets/cards/abilities/stormKing_inner.png",
+        "public/assets/cards/abilities/tentacles.png",
+        "public/assets/cards/abilities/tentacles_inner.png"
+      ],
+      "typ": "ikony dziewięciu nowych zdolności neutralnych",
+      "opis": "Symbol (1024x1024, czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę z web.png (192 px; wersja _inner 160 px). Prompt: 'Square game ability icon, glowing red neon line-art glyph on a dark crimson background ... <symbol>'.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

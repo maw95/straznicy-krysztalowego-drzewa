@@ -7,21 +7,13 @@ import { hoverCard } from './hover';
 const BASE = import.meta.env?.BASE_URL ?? '/';
 export const asset = (path: string) => `${BASE}assets/${path}`;
 /**
- * The neutral encounter units (docs/ZASADY_CYFROWE.md, "Neutralni") have no pictures of their own yet: until the Scenario art is accepted they borrow
- * the picture of their motif's guardian. Remove an entry when the unit's own files land in public/assets.
+ * The neutral encounter units (docs/ZASADY_CYFROWE.md, "Neutralni") have no pictures of their own yet: the tentacle of the Kraken still borrows the Hydra's picture. Remove an entry when the unit's own files land in public/assets.
  */
-const BORROWED_ART: Record<string, string> = {
-  shardling: 'cyclops', burrower: 'cyclops', stoneGolem: 'cyclops',
-  skyEagle: 'griffin', harpy: 'griffin', stormKing: 'griffin',
-  pincer: 'hydra', bogCrawler: 'hydra', kraken: 'hydra', tentacle: 'hydra',
-};
+const BORROWED_ART: Record<string, string> = { tentacle: 'hydra' };
 /** Id of the files (portrait, card art) a unit is drawn from. */
 export const artId = (unitId: string) => BORROWED_ART[unitId] ?? unitId;
-/** Icons of the new abilities are borrowed the same way. */
-const BORROWED_ABILITY: Record<string, string> = {
-  shardBurst: 'boulder', burrow: 'web', dive: 'airDash', backstab: 'nightAmbush', grab: 'entanglingRoots', bogRegrowth: 'giftOfLife',
-  runeGolem: 'guardian', stormKing: 'lightCharge', tentacles: 'manyHeads', none: 'guardian',
-};
+/** An ability without a picture of its own borrows one (the nine new neutral abilities have their own since 11.11). */
+const BORROWED_ABILITY: Record<string, string> = { none: 'guardian' };
 export const abilityArt = (ability: string) => BORROWED_ABILITY[ability] ?? ability;
 export const portrait = (unitId: string) => asset(`cards/portraits/${artId(unitId)}.jpg`);
 /** Face of a map tile (one of the art variants), or its green/red back while hidden. */
