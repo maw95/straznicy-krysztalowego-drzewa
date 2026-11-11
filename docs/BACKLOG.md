@@ -15,7 +15,7 @@ Na początku sesji Claude mówi, który temat jest „Teraz”.
 
 **Dalej (kolejność zależy od poprzedniego):**
 3. (zrobione 10.11) Artefakty: 5 slotów, trzy rzadkości, jedna nazwa i obrazek dla wszystkich, nowe efekty, widok postaci jak w Heroes III.
-4. (teraz) Neutralni: najpierw projekt jednostek (rozmowa: 6 słabych + 3 bossów), potem silnik spotkań, nagrody, boty, nowy Boss (10.7).
+4. (teraz, silnik gotowy 11.11) Neutralni: 6 słabych + 3 bossów, spotkania na mapie, nagrody, boty i bossowie w celu „Boss” są wdrożone (`ZASADY_CYFROWE.md`, „Wdrożenie”). Zostaje: własne grafiki, sprite’y i ikony zdolności ze Scenario (punkt 7), tryb „wszyscy przeciw Bossowi” bez Hordy (10.7), powtórzenie symulacji dłuższą serią (Kryształy i Przetrwanie kilka punktów niżej niż przed spotkaniami), wydanie silnika i wdrożenie backendu (online).
 5. (zrobione 11.11) Rozmiary map XL i XXL + strojenie (około jedna czwarta komórek poza pasmem, patrz ZASADY_CYFROWE.md).
 6. (zrobione 11.11) Ekran „Autorzy” (mały temat, wymóg licencji CC BY; można wcisnąć między duże).
 7. Grafiki ze Scenario (10.4) w partiach, dopiero gdy nazwy i opisy z punktów 3 i 4 są zamrożone.
