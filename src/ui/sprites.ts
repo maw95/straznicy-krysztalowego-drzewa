@@ -59,6 +59,7 @@ export const SPRITES: Record<string, SpriteSpec> = {
   bogCrawler: { dir: 'jednostki/bagienny_pelzacz', box: [80, 98] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   stoneGolem: { dir: 'jednostki/kamienny_golem', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   stormKing: { dir: 'jednostki/krol_burzy', box: [150, 130] as const, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  tentacle: { dir: 'jednostki/macka_krakena', box: [70, 100] as const, corpseMax: CORPSE_MAX_W, speed: { atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   kraken: { dir: 'jednostki/kraken', box: [184, 144] as const, speed: { atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
 };
 

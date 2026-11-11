@@ -2412,6 +2412,31 @@
       "data": "2026-11-11",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/macka_krakena",
+      "pliki": [
+        "public/assets/jednostki/macka_krakena/anim.json",
+        "public/assets/jednostki/macka_krakena/atak.webp",
+        "public/assets/jednostki/macka_krakena/martwy.webp",
+        "public/assets/jednostki/macka_krakena/smierc.webp",
+        "public/assets/jednostki/macka_krakena/stoi.webp",
+        "public/assets/jednostki/macka_krakena/trafienie.webp"
+      ],
+      "typ": "figurka 2D z animacjami (stoi, martwy, atak, trafienie, śmierć)",
+      "model": "GPT Image 2.5 Flare 1024 px + P-Video 2 720p (atak 3 s, trafienie 2 s, śmierć 3 s), bez dźwięku",
+      "scenario_assets": {
+        "stoi": "asset_Stqxx2qYeKTzSKzr9EwmcL4Y",
+        "martwy": "asset_NsQZFZSSJqkpKQ9rAi4sDXMS",
+        "atak": "asset_CpYHyJahBfyKHW2wgBGcRpND",
+        "trafienie": "asset_kQcswCtKYjDAJWWGU2X56NPj",
+        "smierc": "asset_wk1AMFASEHvY78ndZb3MTeX3"
+      },
+      "opis": "Potok jak w docs/POTOK_ANIMACJI.md; obrazy źródłowe w docs/grafika/jednostki/macka_krakena",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
