@@ -50,6 +50,16 @@ export const SPRITES: Record<string, SpriteSpec> = {
   griffin: { dir: 'jednostki/gryf', box: [172, 140] as const, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   braveDuck: { dir: 'jednostki/dzielna_kaczka', box: SMALL, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   ancientBear: { dir: 'jednostki/prastary_niedzwiedz', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  // The neutral encounter units (11.11). The two bosses on two hexes use LARGE; the weak ones sit in one-hex boxes.
+  shardling: { dir: 'jednostki/kruszyniec', box: [64, 90] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  burrower: { dir: 'jednostki/podkopnik', box: [94, 66] as const, corpseMax: 100, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  skyEagle: { dir: 'jednostki/orzel_skalny', box: [100, 88] as const, corpseMax: CORPSE_MAX_W, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  harpy: { dir: 'jednostki/harpia', box: [100, 96] as const, corpseMax: CORPSE_MAX_W, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  pincer: { dir: 'jednostki/szczypiec', box: [98, 72] as const, corpseMax: 100, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  bogCrawler: { dir: 'jednostki/bagienny_pelzacz', box: [80, 98] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  stoneGolem: { dir: 'jednostki/kamienny_golem', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  stormKing: { dir: 'jednostki/krol_burzy', box: [150, 130] as const, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  kraken: { dir: 'jednostki/kraken', box: [184, 144] as const, speed: { atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
 };
 
 /** Whether the unit is drawn from sprites in the digital ruleset (otherwise: 3D figure or portrait token). */

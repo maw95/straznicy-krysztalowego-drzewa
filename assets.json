@@ -2171,6 +2171,247 @@
       "data": "2026-11-11",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/kruszyniec",
+      "pliki": [
+        "public/assets/jednostki/kruszyniec/anim.json",
+        "public/assets/jednostki/kruszyniec/atak.webp",
+        "public/assets/jednostki/kruszyniec/chod.webp",
+        "public/assets/jednostki/kruszyniec/martwy.webp",
+        "public/assets/jednostki/kruszyniec/smierc.webp",
+        "public/assets/jednostki/kruszyniec/stoi.webp",
+        "public/assets/jednostki/kruszyniec/trafienie.webp"
+      ],
+      "typ": "figurka 2D z animacjami (stoi, martwy, ruch, atak, trafienie, śmierć)",
+      "model": "GPT Image 2.5 Flare 1024 px (stoi high, martwy medium, z ilustracją karty i obrazem stojącym jako odniesieniem) + P-Video 2 720p (chód/lot 3 s, atak 3 s, trafienie 2 s, śmierć 3 s: stoi → martwy), bez dźwięku",
+      "scenario_assets": {
+        "stoi": "asset_qUyE3iTUevo1xi6ZcGiJZTQv",
+        "martwy": "asset_UepAdbAxf5biPUbZnYqW13s6",
+        "chod": "asset_Eh9BibdenjKPxkaSraMH3wMV",
+        "atak": "asset_1MWmHeapMVYNe37aQXb3pEgM",
+        "trafienie": "asset_7fShCKLgiHKEUGBXR7tT3juG",
+        "smierc": "asset_GAFNEWhqx4UutXCzutUdgqTf"
+      },
+      "opis": "Potok jak w docs/POTOK_ANIMACJI.md: niebieskie tło #0000FF, wycięcie chromakey, pack_unit.py (512 px) i shrink_unit.py. Obrazy źródłowe: docs/grafika/jednostki/kruszyniec",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/podkopnik",
+      "pliki": [
+        "public/assets/jednostki/podkopnik/anim.json",
+        "public/assets/jednostki/podkopnik/atak.webp",
+        "public/assets/jednostki/podkopnik/chod.webp",
+        "public/assets/jednostki/podkopnik/martwy.webp",
+        "public/assets/jednostki/podkopnik/smierc.webp",
+        "public/assets/jednostki/podkopnik/stoi.webp",
+        "public/assets/jednostki/podkopnik/trafienie.webp"
+      ],
+      "typ": "figurka 2D z animacjami (stoi, martwy, ruch, atak, trafienie, śmierć)",
+      "model": "GPT Image 2.5 Flare 1024 px (stoi high, martwy medium, z ilustracją karty i obrazem stojącym jako odniesieniem) + P-Video 2 720p (chód/lot 3 s, atak 3 s, trafienie 2 s, śmierć 3 s: stoi → martwy), bez dźwięku",
+      "scenario_assets": {
+        "stoi": "asset_9CnT2dDy7BktqkWS6tvoMKwW",
+        "martwy": "asset_zxbXuaMBWTthj7QmiPg4guVC",
+        "chod": "asset_8ozUnPUmGF8wBD1Ywp5XHamB",
+        "atak": "asset_Ld2qjcWA3gQ2psXR2GjZfNYh",
+        "trafienie": "asset_VmV5Nc4YFaBFQBRZ3Ce1EcSw",
+        "smierc": "asset_ZtbCcJXYteXKCwwudHrn8MUY"
+      },
+      "opis": "Potok jak w docs/POTOK_ANIMACJI.md: niebieskie tło #0000FF, wycięcie chromakey, pack_unit.py (512 px) i shrink_unit.py. Obrazy źródłowe: docs/grafika/jednostki/podkopnik",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/orzel_skalny",
+      "pliki": [
+        "public/assets/jednostki/orzel_skalny/anim.json",
+        "public/assets/jednostki/orzel_skalny/atak.webp",
+        "public/assets/jednostki/orzel_skalny/lot.webp",
+        "public/assets/jednostki/orzel_skalny/martwy.webp",
+        "public/assets/jednostki/orzel_skalny/smierc.webp",
+        "public/assets/jednostki/orzel_skalny/stoi.webp",
+        "public/assets/jednostki/orzel_skalny/trafienie.webp"
+      ],
+      "typ": "figurka 2D z animacjami (stoi, martwy, ruch, atak, trafienie, śmierć)",
+      "model": "GPT Image 2.5 Flare 1024 px (stoi high, martwy medium, z ilustracją karty i obrazem stojącym jako odniesieniem) + P-Video 2 720p (chód/lot 3 s, atak 3 s, trafienie 2 s, śmierć 3 s: stoi → martwy), bez dźwięku",
+      "scenario_assets": {
+        "stoi": "asset_5KRkysqjvc6n97ZtyKfTdPVf",
+        "martwy": "asset_i6o5RHwmT9FEEnVFG6iuTcWX",
+        "lot": "asset_JH12U6DLkhT4J8qAWJuRSNzg",
+        "atak": "asset_NVUYUaWLF5yzBj5dyaLwQes3",
+        "trafienie": "asset_DwSgJaQRjxwFpC4YSeZTyf6p",
+        "smierc": "asset_nqZD2M6wvKa6wctzzWT5ozwS"
+      },
+      "opis": "Potok jak w docs/POTOK_ANIMACJI.md: niebieskie tło #0000FF, wycięcie chromakey, pack_unit.py (512 px) i shrink_unit.py. Obrazy źródłowe: docs/grafika/jednostki/orzel_skalny",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/harpia",
+      "pliki": [
+        "public/assets/jednostki/harpia/anim.json",
+        "public/assets/jednostki/harpia/atak.webp",
+        "public/assets/jednostki/harpia/lot.webp",
+        "public/assets/jednostki/harpia/martwy.webp",
+        "public/assets/jednostki/harpia/smierc.webp",
+        "public/assets/jednostki/harpia/stoi.webp",
+        "public/assets/jednostki/harpia/trafienie.webp"
+      ],
+      "typ": "figurka 2D z animacjami (stoi, martwy, ruch, atak, trafienie, śmierć)",
+      "model": "GPT Image 2.5 Flare 1024 px (stoi high, martwy medium, z ilustracją karty i obrazem stojącym jako odniesieniem) + P-Video 2 720p (chód/lot 3 s, atak 3 s, trafienie 2 s, śmierć 3 s: stoi → martwy), bez dźwięku",
+      "scenario_assets": {
+        "stoi": "asset_U7DC6xTWuBQG7HawbdKEUjPc",
+        "martwy": "asset_cozsF4bai8UWm5RrueQk5po2",
+        "lot": "asset_WJmtF6dYdPpdo3kYBG4tYVur",
+        "atak": "asset_wzzXmfXK87gg1pV5r3RFBAkk",
+        "trafienie": "asset_JfHaRKbGWHNDhCMiSrF7zJxZ",
+        "smierc": "asset_E17LjQzgqP3buur6Ywp2zrhw"
+      },
+      "opis": "Potok jak w docs/POTOK_ANIMACJI.md: niebieskie tło #0000FF, wycięcie chromakey, pack_unit.py (512 px) i shrink_unit.py. Obrazy źródłowe: docs/grafika/jednostki/harpia",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/szczypiec",
+      "pliki": [
+        "public/assets/jednostki/szczypiec/anim.json",
+        "public/assets/jednostki/szczypiec/atak.webp",
+        "public/assets/jednostki/szczypiec/chod.webp",
+        "public/assets/jednostki/szczypiec/martwy.webp",
+        "public/assets/jednostki/szczypiec/smierc.webp",
+        "public/assets/jednostki/szczypiec/stoi.webp",
+        "public/assets/jednostki/szczypiec/trafienie.webp"
+      ],
+      "typ": "figurka 2D z animacjami (stoi, martwy, ruch, atak, trafienie, śmierć)",
+      "model": "GPT Image 2.5 Flare 1024 px (stoi high, martwy medium, z ilustracją karty i obrazem stojącym jako odniesieniem) + P-Video 2 720p (chód/lot 3 s, atak 3 s, trafienie 2 s, śmierć 3 s: stoi → martwy), bez dźwięku",
+      "scenario_assets": {
+        "stoi": "asset_nMAGHpjeh468UG9tuqL4Rhrj",
+        "martwy": "asset_VyBqj8yiaobNQDYiZpY9SBCk",
+        "chod": "asset_wL19YAKRb5DHZz64NRAphb3M",
+        "atak": "asset_zVSw5WSivJHXda8xoTT8i293",
+        "trafienie": "asset_hsz3L7opng6x3oYtAneKriJd",
+        "smierc": "asset_eokEbkJPyRphVhHk6Je2cfyo"
+      },
+      "opis": "Potok jak w docs/POTOK_ANIMACJI.md: niebieskie tło #0000FF, wycięcie chromakey, pack_unit.py (512 px) i shrink_unit.py. Obrazy źródłowe: docs/grafika/jednostki/szczypiec",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/bagienny_pelzacz",
+      "pliki": [
+        "public/assets/jednostki/bagienny_pelzacz/anim.json",
+        "public/assets/jednostki/bagienny_pelzacz/atak.webp",
+        "public/assets/jednostki/bagienny_pelzacz/chod.webp",
+        "public/assets/jednostki/bagienny_pelzacz/martwy.webp",
+        "public/assets/jednostki/bagienny_pelzacz/smierc.webp",
+        "public/assets/jednostki/bagienny_pelzacz/stoi.webp",
+        "public/assets/jednostki/bagienny_pelzacz/trafienie.webp"
+      ],
+      "typ": "figurka 2D z animacjami (stoi, martwy, ruch, atak, trafienie, śmierć)",
+      "model": "GPT Image 2.5 Flare 1024 px (stoi high, martwy medium, z ilustracją karty i obrazem stojącym jako odniesieniem) + P-Video 2 720p (chód/lot 3 s, atak 3 s, trafienie 2 s, śmierć 3 s: stoi → martwy), bez dźwięku",
+      "scenario_assets": {
+        "stoi": "asset_vvGCDuceHBezwCNg3VeqKTSB",
+        "martwy": "asset_podvNEqs7CsEq246NJ8dY76j",
+        "chod": "asset_g5GGdMeKCe25seLRaafPv32M",
+        "atak": "asset_WJwWimXrMC4cvww5zqRHSq7e",
+        "trafienie": "asset_cb5QxaNXbMaLdJrQGfu2REZX",
+        "smierc": "asset_D6b6hi88ATFY8L4QP8i91rLM"
+      },
+      "opis": "Potok jak w docs/POTOK_ANIMACJI.md: niebieskie tło #0000FF, wycięcie chromakey, pack_unit.py (512 px) i shrink_unit.py. Obrazy źródłowe: docs/grafika/jednostki/bagienny_pelzacz",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/kamienny_golem",
+      "pliki": [
+        "public/assets/jednostki/kamienny_golem/anim.json",
+        "public/assets/jednostki/kamienny_golem/atak.webp",
+        "public/assets/jednostki/kamienny_golem/chod.webp",
+        "public/assets/jednostki/kamienny_golem/martwy.webp",
+        "public/assets/jednostki/kamienny_golem/smierc.webp",
+        "public/assets/jednostki/kamienny_golem/stoi.webp",
+        "public/assets/jednostki/kamienny_golem/trafienie.webp"
+      ],
+      "typ": "figurka 2D z animacjami (stoi, martwy, ruch, atak, trafienie, śmierć)",
+      "model": "GPT Image 2.5 Flare 1024 px (stoi high, martwy medium, z ilustracją karty i obrazem stojącym jako odniesieniem) + P-Video 2 720p (chód/lot 3 s, atak 3 s, trafienie 2 s, śmierć 3 s: stoi → martwy), bez dźwięku",
+      "scenario_assets": {
+        "stoi": "asset_GHviPc5w7X6teskLA8u7CLZb",
+        "martwy": "asset_XS2XJyBD9yaBFHaPbmJPAfdk",
+        "chod": "asset_a6kcUbiRAfTRwDi2BGanu67j",
+        "atak": "asset_epZ62mxmcbwpVUCEs9QABaHc",
+        "trafienie": "asset_C99s2d5PaBg34AELQGko5jjN",
+        "smierc": "asset_PY3TBKJtQpSm55G9fAgr28Ls"
+      },
+      "opis": "Potok jak w docs/POTOK_ANIMACJI.md: niebieskie tło #0000FF, wycięcie chromakey, pack_unit.py (512 px) i shrink_unit.py. Obrazy źródłowe: docs/grafika/jednostki/kamienny_golem",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/krol_burzy",
+      "pliki": [
+        "public/assets/jednostki/krol_burzy/anim.json",
+        "public/assets/jednostki/krol_burzy/atak.webp",
+        "public/assets/jednostki/krol_burzy/lot.webp",
+        "public/assets/jednostki/krol_burzy/martwy.webp",
+        "public/assets/jednostki/krol_burzy/smierc.webp",
+        "public/assets/jednostki/krol_burzy/stoi.webp",
+        "public/assets/jednostki/krol_burzy/trafienie.webp"
+      ],
+      "typ": "figurka 2D z animacjami (stoi, martwy, ruch, atak, trafienie, śmierć)",
+      "model": "GPT Image 2.5 Flare 1024 px (stoi high, martwy medium, z ilustracją karty i obrazem stojącym jako odniesieniem) + P-Video 2 720p (chód/lot 3 s, atak 3 s, trafienie 2 s, śmierć 3 s: stoi → martwy), bez dźwięku",
+      "scenario_assets": {
+        "stoi": "asset_3se8NE82CUnKrDhCe1cbcY5j",
+        "martwy": "asset_YvETsZHkXENtEaDBignUF2R9",
+        "lot": "asset_NjMYhCmum45wauJw91H3Asfk",
+        "atak": "asset_w1Q987jQUZoC8xmdZfmun7RR",
+        "trafienie": "asset_x7pBNYMTNVz92FfLBpTTT9hM",
+        "smierc": "asset_4v1o3jkRiPk6qPCANinkGyfP"
+      },
+      "opis": "Potok jak w docs/POTOK_ANIMACJI.md: niebieskie tło #0000FF, wycięcie chromakey, pack_unit.py (512 px) i shrink_unit.py. Obrazy źródłowe: docs/grafika/jednostki/krol_burzy",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/kraken",
+      "pliki": [
+        "public/assets/jednostki/kraken/anim.json",
+        "public/assets/jednostki/kraken/atak.webp",
+        "public/assets/jednostki/kraken/martwy.webp",
+        "public/assets/jednostki/kraken/smierc.webp",
+        "public/assets/jednostki/kraken/stoi.webp",
+        "public/assets/jednostki/kraken/trafienie.webp"
+      ],
+      "typ": "figurka 2D z animacjami (stoi, martwy, ruch, atak, trafienie, śmierć)",
+      "model": "GPT Image 2.5 Flare 1024 px (stoi high, martwy medium, z ilustracją karty i obrazem stojącym jako odniesieniem) + P-Video 2 720p (chód/lot 3 s, atak 3 s, trafienie 2 s, śmierć 3 s: stoi → martwy), bez dźwięku",
+      "scenario_assets": {
+        "stoi": "asset_GFg11DaDNR54dwEr8qpjdWDv",
+        "martwy": "asset_ERFXvGVt3QFB9EkZP7zCRwDQ",
+        "atak": "asset_xfhDis2umn7nZruFxKU7qhmo",
+        "trafienie": "asset_TGCcbpDxmkXa2M6ykf5jM1U2",
+        "smierc": "asset_WyAFjgXuEwJGGncQb5rrcWFZ"
+      },
+      "opis": "Potok jak w docs/POTOK_ANIMACJI.md: niebieskie tło #0000FF, wycięcie chromakey, pack_unit.py (512 px) i shrink_unit.py. Obrazy źródłowe: docs/grafika/jednostki/kraken",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-11",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

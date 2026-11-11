@@ -1,0 +1,26 @@
+{
+ "source_frame": 512,
+ "crop": [
+  40,
+  68,
+  472,
+  331
+ ],
+ "frame": [
+  354,
+  248
+ ],
+ "cols": 8,
+ "fps": 12.0,
+ "clips": {
+  "atak": 37,
+  "chod": 37,
+  "smierc": 37,
+  "trafienie": 25
+ },
+ "feet": 0.9245,
+ "cx": 0.4608,
+ "body": 0.8708,
+ "step": 2,
+ "scale": 0.75
+}
