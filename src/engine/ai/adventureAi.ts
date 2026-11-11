@@ -353,7 +353,7 @@ class GoodContext {
   /** Known crystals to collect: revealed, not carried nor delivered, guarded only when the guardian can be taken on. */
   get known(): Crystal[] {
     const canGuardian = canFightGuardian(this.state);
-    return (this.known_ ??= Object.values(this.state.crystals).filter((c) => !c.at.startsWith('hero:') && c.at !== 'tree' && this.state.tiles[c.at]?.revealed && (!c.guardian || canGuardian)));
+    return (this.known_ ??= Object.values(this.state.crystals).filter((c) => !c.encounter && !c.at.startsWith('hero:') && c.at !== 'tree' && this.state.tiles[c.at]?.revealed && (!c.guardian || canGuardian)));
   }
 
   /** Treasures (they strengthen the team in battle) a short detour away. */
@@ -420,7 +420,7 @@ function collect(c: GoodContext): Action | null {
  */
 function explore(c: GoodContext): Action | null {
   const { hero, state } = c;
-  const foundLairs = Object.values(state.crystals).filter((x) => x.at === 'tree' || x.at.startsWith('hero:') || state.tiles[x.at]?.revealed).length;
+  const foundLairs = Object.values(state.crystals).filter((x) => !x.encounter && x.at === 'tree' || x.at.startsWith('hero:') || state.tiles[x.at]?.revealed).length;
   if (foundLairs >= state.crystalsNeeded && c.known.length) return null;
   const hiddenOn = (side: 'dawn' | 'horde') => Object.values(state.tiles).filter((t) => !t.revealed && t.side === side).length;
   const sideWeight = { dawn: hiddenOn('dawn') > 0 ? 1 : 0, horde: hiddenOn('horde') > 0 ? 2 : 0 };

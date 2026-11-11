@@ -227,6 +227,10 @@ export interface Crystal {
   at: string;
   /** Objective 'survival': only the guardian is real; the beaten guardian leaves no crystal (and none is drawn or counted). */
   decoy?: boolean;
+  /** Neutral encounter (encounters.ts): every unit of the group (`guardian` is the lead one, shown on the map). It leaves no crystal; a win gives the reward of its `tier`. */
+  encounter?: string[];
+  /** Reward and depth of an encounter: 0 common, 1 rare, 2 legendary. */
+  tier?: 0 | 1 | 2;
 }
 
 export interface ItemInstance {

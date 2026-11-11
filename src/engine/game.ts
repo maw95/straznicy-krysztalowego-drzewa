@@ -48,6 +48,7 @@ import {
   arenaObstacles,
 } from './battle';
 import { distance, parseKey, type HexKey } from './hex';
+import { placeEncounters } from './encounters';
 import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { log } from './log';
 import { applyHeroSkills, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
@@ -164,6 +165,7 @@ export function createGame(setup: SetupOptions): GameState {
   state.tiles[treeOf(state)].revealed = true;
   state.rng = rng.state;
   placeSites(state);
+  placeEncounters(state);
   state.turnOrder = computeTurnOrder(state);
   state.turnIndex = 0;
   if (setup.mode === 'arena') {
@@ -512,11 +514,11 @@ function moveHero(state: GameState, to: HexKey) {
   }
   if (move.kind === 'attackGuardian') {
     const crystal = state.crystals[state.tiles[to].crystalId!];
-    log(state, 'battle', `${name} wyzywa strażnika kryształu: ${UNITS[crystal.guardian!].name}.`);
+    log(state, 'battle', crystal.encounter ? `${name} wyzywa strażników: ${crystal.encounter.map((id) => UNITS[id].name).join(', ')}.` : `${name} wyzywa strażnika kryształu: ${UNITS[crystal.guardian!].name}.`);
     const from = hero.pos;
     hero.pos = to;
     revealAround(state, to);
-    startBattle(state, { kind: 'neutral', attackerHero: hero.id, neutralId: crystal.guardian!, mapHex: to, from });
+    startBattle(state, { kind: 'neutral', attackerHero: hero.id, neutralId: crystal.guardian!, encounter: crystal.encounter, mapHex: to, from });
     return;
   }
   hero.pos = to;
@@ -712,6 +714,8 @@ interface BattleStart {
   attackerHero: string;
   defenderHero?: string;
   neutralId?: string;
+  /** Neutral encounter: every unit of the group (the first is `neutralId`). */
+  encounter?: string[];
   mapHex: HexKey;
   from: HexKey;
 }
@@ -774,6 +778,14 @@ function startBattle(state: GameState, s: BattleStart) {
       g.maxHp = state.boss.maxHp;
     }
     b.units[s.neutralId] = g;
+    // The rest of an encounter: units of the same kind get a number so that their ids differ (the first keeps the definition id).
+    const seen: Record<string, number> = { [s.neutralId]: 1 };
+    for (const defId of (s.encounter ?? []).slice(1)) {
+      const n = (seen[defId] = (seen[defId] ?? 0) + 1);
+      const extra = makeBattleUnit(defId, 'neutral', false, scale, hpScale);
+      extra.id = n === 1 ? defId : `${defId}${n}`;
+      b.units[extra.id] = extra;
+    }
   }
   state.phase = 'battle';
   state.battle = b;
@@ -899,11 +911,13 @@ function resolveGuardianFight(state: GameState, b: BattleState) {
     // Survival: the guardian guarded nothing worth carrying.
     delete state.crystals[crystal.id];
     if (state.tiles[crystal.at]?.crystalId === crystal.id) state.tiles[crystal.at].crystalId = null;
-    log(state, 'info', 'Strażnik pokonany.');
+    log(state, 'info', crystal.encounter ? 'Strażnicy pokonani.' : 'Strażnik pokonany.');
   } else log(state, 'crystal', `Strażnik pokonany. Kryształ jest wolny.`);
   guardianHoard(state, b.attackerHero);
-  // With hero growth a beaten guardian also leaves an artifact (mostly a common one).
-  if (state.rules.heroGrowth) giveArtifact(state, state.heroes[b.attackerHero], drawArtifact(state, state.heroes[b.attackerHero], ARTIFACT_ODDS.guardian, 0x68bc21eb), 'łup po pokonanym strażniku');
+  // With hero growth a beaten guardian also leaves an artifact (mostly a common one); an encounter leaves one of the rarity of its tier.
+  const tierOdds = [[100, 0, 0], [0, 100, 0], [0, 0, 100]] as const;
+  const odds = crystal.encounter ? tierOdds[crystal.tier ?? 0] : ARTIFACT_ODDS.guardian;
+  if (state.rules.heroGrowth) giveArtifact(state, state.heroes[b.attackerHero], drawArtifact(state, state.heroes[b.attackerHero], odds, 0x68bc21eb), crystal.encounter ? 'łup po pokonanych strażnikach' : 'łup po pokonanym strażniku');
 }
 
 /**

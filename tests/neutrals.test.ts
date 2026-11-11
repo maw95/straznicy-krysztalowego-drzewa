@@ -1,11 +1,14 @@
 // Digital ruleset: the weak units and bosses of the neutral encounters (docs/ZASADY_CYFROWE.md, "Neutralni").
 import { describe, expect, it } from 'vitest';
 import { arenaCell, attackTargets, battleAttack, battleMove, battleTeleport, dealDamage, fromBehind, makeBattleUnit, predictDamage, teleportCells, endActivation } from '../src/engine/battle';
+import { chooseAction } from '../src/engine/ai';
 import { createGame } from '../src/engine/game';
 import { neighborKeys } from '../src/engine/hex';
+import { ARTIFACT_BY_ID } from '../src/engine/sites';
 import type { Side } from '../src/engine/data';
 import type { GameState } from '../src/engine/types';
-import { activation, battleFixture, setup } from './helpers/engine';
+import { applyActionInPlace } from '../src/engine/game';
+import { activation, battleFixture, playOut, setup } from './helpers/engine';
 
 interface Spec { id: string; defId: string; side: Side; cell: string; hp?: number }
 
@@ -132,5 +135,68 @@ describe('neutral encounters: abilities', () => {
     const dhp = d.hp;
     battleAttack(s, 'k', false);
     expect(d.hp).toBe(dhp - 1);
+  });
+});
+
+describe('neutral encounters on the map', () => {
+  const grown = (over: Parameters<typeof setup>[0] = {}) => createGame(setup(over, { ruleset: 'digital', heroGrowth: true }));
+  const encountersOf = (s: GameState) => Object.values(s.crystals).filter((c) => c.encounter);
+
+  it('are placed only with hero growth in the digital ruleset', () => {
+    expect(encountersOf(createGame(setup({}, { ruleset: 'digital' })))).toHaveLength(0);
+    expect(encountersOf(createGame(setup({}, { heroGrowth: true })))).toHaveLength(0);
+    const s = grown({ mapSize: 'long' });
+    const list = encountersOf(s);
+    expect(list.length).toBeGreaterThan(0);
+    for (const c of list) {
+      expect(s.tiles[c.at].crystalId).toBe(c.id);
+      expect(c.decoy).toBe(true);
+      expect(c.guardian).toBe(c.encounter![0]);
+    }
+  });
+
+  it('get stronger with depth: 2–3 weak, a guardian + 2 weak, a boss + companions', () => {
+    const s = grown({ mapSize: 'giant', seed: 11 });
+    const tiers = new Set(encountersOf(s).map((c) => c.tier));
+    expect(tiers).toEqual(new Set([0, 1, 2]));
+    for (const c of encountersOf(s)) {
+      if (c.tier === 0) expect(c.encounter!.length).toBeGreaterThanOrEqual(2);
+      if (c.tier === 1) expect(['cyclops', 'griffin', 'hydra']).toContain(c.encounter![0]);
+      if (c.tier === 2) expect(['stoneGolem', 'stormKing', 'kraken']).toContain(c.encounter![0]);
+    }
+  });
+
+  it('a hero who beats one gets a treasure and an artifact of its tier, and the hex is free', () => {
+    const s = grown({ mapSize: 'long', seed: 5 });
+    const c = encountersOf(s).find((x) => x.tier === 0)!;
+    const hero = Object.values(s.heroes).find((h) => h.faction === 'dawn')!;
+    const from = Object.keys(s.tiles).find((k) => s.tiles[k].crystalId === null && !s.tiles[k].home && neighborKeys(k).includes(c.at))!;
+    hero.pos = from;
+    s.turnOrder = [hero.id];
+    s.turnIndex = 0;
+    s.movePoints = 3;
+    applyActionInPlace(s, { type: 'moveHero', to: c.at });
+    expect(s.battle!.neutralId).toBe(c.guardian);
+    expect(Object.values(s.battle!.units).filter((u) => u.side === 'neutral')).toHaveLength(c.encounter!.length);
+    expect(new Set(Object.keys(s.battle!.units)).size).toBe(Object.keys(s.battle!.units).length);
+    // Bots pick supports and deploy; then the neutral side falls at once and the next action closes the battle.
+    for (let i = 0; i < 20 && s.battle!.stage !== 'fight'; i++) applyActionInPlace(s, chooseAction(s)!);
+    expect(s.battle!.stage).toBe('fight');
+    for (const u of Object.values(s.battle!.units)) if (u.side === 'neutral') dealDamage(s, u, 999, 'test');
+    const before = Object.values(hero.gear ?? {}).length + (hero.pack?.length ?? 0);
+    applyActionInPlace(s, { type: 'endActivation' });
+    expect(s.phase).toBe('adventure');
+    expect(s.crystals[c.id]).toBeUndefined();
+    expect(s.tiles[c.at].crystalId).toBeNull();
+    expect(Object.values(hero.gear ?? {}).length + (hero.pack?.length ?? 0)).toBe(before + 1);
+    const art = [...Object.values(hero.gear ?? {}), ...(hero.pack ?? [])].map((id) => ARTIFACT_BY_ID[id]);
+    expect(art.some((a) => a.rarity === 1)).toBe(true);
+  });
+
+  it('bots play whole games with encounters on the map', () => {
+    for (const seed of [1, 2, 3]) {
+      const s = playOut(grown({ mapSize: 'medium', seed }));
+      expect(s.phase).toBe('over');
+    }
   });
 });

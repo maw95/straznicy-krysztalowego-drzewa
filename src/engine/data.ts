@@ -276,6 +276,23 @@ export const NEUTRAL_WEAK = ['shardling', 'burrower', 'skyEagle', 'harpy', 'pinc
 /** Neutral bosses of the digital encounters, one per motif. */
 export const NEUTRAL_BOSSES = ['stoneGolem', 'stormKing', 'kraken'];
 
+/**
+ * Neutral encounters on the adventure map (digital Expedition, hero growth): groups of neutral units guard a hex; the deeper from the bases, the
+ * stronger the group and the rarer the reward (docs/ZASADY_CYFROWE.md, "Neutralni"). Each motif has its guardian, two weak units and a boss.
+ */
+export const ENCOUNTER_MOTIFS = {
+  stone: { weak: ['shardling', 'burrower'], guardian: 'cyclops', boss: 'stoneGolem' },
+  air: { weak: ['skyEagle', 'harpy'], guardian: 'griffin', boss: 'stormKing' },
+  water: { weak: ['pincer', 'bogCrawler'], guardian: 'hydra', boss: 'kraken' },
+} as const;
+export type EncounterMotif = keyof typeof ENCOUNTER_MOTIFS;
+export const ENCOUNTERS = {
+  /** How many encounters a map holds, by map size. Provisional: tune with the simulations. */
+  count: { short: 2, medium: 3, long: 5, veryLong: 7, huge: 9, giant: 11 } as Record<MapSize, number>,
+  /** Neutral units that stand beside the Kraken (its tentacles). */
+  krakenTentacles: 3,
+};
+
 /** Supports a hero takes into a battle on the arena (all of them when fewer are alive). */
 export const SUPPORTS_PER_BATTLE = 2;
 

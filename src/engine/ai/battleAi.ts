@@ -19,6 +19,7 @@ import {
   footprintAt,
   isLarge,
   tailOptions,
+  teleportCells,
   hopCells,
   livingUnits,
   middleDistance,
@@ -377,6 +378,8 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
     if (canHitTwo(state, u)) second = rulebookTarget(here.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(u)) === 1));
     return { type: 'battleAttack', targetId: t.id, useAbility, secondTargetId: second?.id };
   };
+  const tp = rulebookTeleport(state, u, here);
+  if (tp) return tp;
   const now = rulebookTarget(here);
   if (now) return strike(now);
   if (act.moved || act.attacked) return { type: 'endActivation' };
@@ -393,6 +396,33 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
   const gap = (cell: HexKey) => Math.min(...enemies.map((e) => dist2(cellsOf(e), plannedFootprint(state, u, cell))));
   const closer = cells.filter(([c]) => gap(c) < gap(u.pos!)).sort((x, y) => gap(x[0]) - gap(y[0]) || x[1] - y[1] || (x[0] < y[0] ? -1 : 1))[0];
   return closer ? moveTo(state, u, closer[0]) : { type: 'endActivation' };
+}
+
+/**
+ * Teleports of the neutral units (the move that ends the turn): the Król Burzy jumps away from an enemy next to him (it shocks no one, but he
+ * wants to shoot, and his old field stays charged) to a cell from which he can shoot; the Podkopnik digs in when no enemy can be reached on foot,
+ * and comes up as near the enemy as it can.
+ */
+function rulebookTeleport(state: GameState, u: BattleUnit, hereTargets: BattleUnit[]): Action | null {
+  const ab = abilityOf(u);
+  const cells = teleportCells(state, u);
+  if (!cells.length) return null;
+  const b = state.battle!;
+  const enemies = enemiesOf(b, u);
+  const gap = (cell: HexKey) => Math.min(...enemies.map((e) => dist2(cellsOf(e), plannedFootprint(state, u, cell))));
+  if (ab === 'stormKing') {
+    if (!enemies.some((e) => unitDistance(e, u) === 1)) return null;
+    const good = cells.filter((c) => gap(c) > 1 && attackTargets(state, u, c).length > 0).sort((x, y) => gap(y) - gap(x) || (x < y ? -1 : 1));
+    return good.length ? { type: 'battleTeleport', to: good[0] } : null;
+  }
+  if (ab === 'burrow') {
+    if (hereTargets.length) return null;
+    const walk = [...reachableCells(state, u)].some(([c]) => attackTargets(state, u, c).length > 0);
+    if (walk) return null;
+    const best = cells.slice().sort((x, y) => gap(x) - gap(y) || (x < y ? -1 : 1))[0];
+    return best && gap(best) < Math.min(...enemies.map((e) => unitDistance(e, u))) ? { type: 'battleTeleport', to: best } : null;
+  }
+  return null;
 }
 
 /** Rulebook use of the abilities that need no attack (Pajęcze Sidła): at once, on the rulebook target. */
