@@ -391,44 +391,41 @@ Szybkość, zasięgi, punkty ruchu i liczby (ile pól odkryć, ilu wrogów trafi
 
 ## Neutralni: słabe jednostki i bossowie (PROJEKT z 11.11.2026, do akceptacji autora, jeszcze bez kodu)
 
-Decyzje autora (11.11): każdy strażnik dostaje 2 słabych pobratymców i 1 bossa (motyw kamień / powietrze / woda); wchodzi nowa zdolność „cios od tyłu / z flanki”; własny Boss od razu razem z trybem „wszyscy przeciw Bossowi” (10.7).
-Liczby są w skali bazowej (przed „Skalą statystyk” i osobną skalą Życia), robocze, do strojenia symulacjami. Wszystkie zdolności działają bez limitu „raz na bitwę”, jak u strażników.
+Decyzje autora (11.11): motywy kamień / powietrze / woda; każdy motyw ma 2 słabych i 1 bossa, żadna jednostka nie powtarza mechaniki strażników (odpychanie, odlot po ataku, trafianie dwóch celów); nowa zasada „cios od tyłu”; własny Boss od razu razem z trybem „wszyscy przeciw Bossowi” (10.7).
+Liczby są w skali bazowej (przed „Skalą statystyk” i osobną skalą Życia), robocze, do strojenia symulacjami. Zdolności działają bez limitu „raz na bitwę”, jak u strażników.
 
-### Nowa zasada: cios od tyłu / z flanki
-Cel ma „front”: kierunek ostatniego ruchu albo ataku jednostki (dla jednostek stojących w miejscu: w stronę najbliższego wroga). Atak z pola leżącego w półkolu za celem (3 z 6 sąsiednich heksów) zadaje +1 obrażeń („cios od tyłu”). Dotyczy tylko jednostek ze zdolnością „Zajście od tyłu” (poniżej), nie bohaterów. Szczegóły i test w silniku dopiero po akceptacji.
+### Nowa zasada: cios od tyłu
+Cel ma „front”: kierunek ostatniego ruchu albo ataku jednostki (stojąca w miejscu: w stronę najbliższego wroga). Atak z pola w półkolu za celem (3 z 6 sąsiednich heksów) zadaje +1 obrażeń. Dotyczy tylko jednostek ze zdolnością „Zajście od tyłu” (Harpia), nie bohaterów.
 
 ### Słabe jednostki (6)
 | Motyw | Jednostka | Rola | Ż | A | S | Ruch | Zdolność |
 |---|---|---|---|---|---|---|---|
-| Kamień | Kamienny Pomiot | strzelec | 8 | 2 | 2 | chodzi | **Rzut Odłamkiem:** po ataku odpycha cel o 1 pole (jak Cyklop, słabszy: tylko gdy cel jest lekki, rozmiar 1). |
-| Kamień | Skalny Golem | wręcz, tank | 14 | 2 | 2 | chodzi | **Kamienna Skóra:** każdy cios w niego zadaje o 1 mniej (min. 1). |
-| Powietrze | Pisklę Gryfa | wręcz, szybki | 7 | 2 | 6 | lata | **Nalot:** po ataku może odlecieć o maks. 2 pola. |
-| Powietrze | Harpia | wręcz, flankujący | 8 | 2 | 5 | lata | **Zajście od tyłu:** +1 obrażeń, gdy atakuje z tyłu celu. |
-| Woda | Wężowa Głowa | wręcz | 9 | 2 | 3 | chodzi | **Dwa Kły:** atak trafia dwóch sąsiadujących wrogów (jak Hydra, ale 1 obrażenie na drugiego). |
+| Kamień | Kruszyniec | strzelec, mały stwór z odłamków skał | 8 | 2 | 2 | chodzi | **Rozprysk:** po śmierci rozpryskuje się i rani o 1 wszystkie sąsiednie jednostki (też swoje). |
+| Kamień | Podkopnik | wręcz, kret | 9 | 2 | 3 | chodzi | **Podkop:** zamiast ruchu znika pod ziemią i wyłania się na dowolnym wolnym polu w odległości do 4; ten atak jest wtedy stracony. |
+| Powietrze | Orzeł Skalny | wręcz, drapieżny ptak | 7 | 2 | 6 | lata | **Nurkowanie:** jeśli przed atakiem przeleciał w linii prostej co najmniej 3 pola, zadaje +1 obrażeń. |
+| Powietrze | Harpia | wręcz, flankująca | 8 | 2 | 5 | lata | **Zajście od tyłu:** +1 obrażeń, gdy atakuje z tyłu celu. |
+| Woda | Szczypiec | wręcz, olbrzymi rak | 12 | 2 | 2 | chodzi | **Chwyt:** trafiony wróg nie może się ruszyć do końca swojej następnej aktywacji. |
 | Woda | Bagienny Pełzacz | wręcz, regenerujący | 10 | 2 | 2 | chodzi | **Bagienne Odrastanie:** na początku swojej aktywacji odzyskuje 1 Ż. |
 
-Flanka (Zajście od tyłu) trafia do Harpii i Króla Burzy, czyli do jednostek latających, które łatwo obejść. Skalny Golem zostaje przy Kamiennej Skórze (tank bez flanki).
-
 ### Bossowie (3), rozmiar 2 heksy
-| Boss | Motyw | Ż (bazowo) | A | S | Ruch | Zdolność |
+| Boss | Motyw | Ż (bazowo) | A | S | Ruch | Zdolności |
 |---|---|---|---|---|---|---|
-| Tytan Gór | kamień | 40 | 4 | 2 | chodzi | **Lawina:** po ataku odpycha cel o 2 pola, a trafione przeszkody (inne jednostki) ranią je o 1. |
-| Król Burzy | powietrze | 32 | 4 | 7 | lata | **Burzowy Nalot:** po ataku odlatuje o maks. 5 pól; **Zajście od tyłu** +2. |
-| Hydra Pradawna | woda | 36 | 3 | 3 | chodzi | **Pięć Głów:** każdy atak trafia do trzech sąsiadujących wrogów; odzyskuje 2 Ż na początku aktywacji. |
+| Kamienny Golem | kamień | 40 | 4 | 2 | chodzi | **Kamienna Skóra:** każdy cios zadaje o 2 mniej (min. 1). **Runiczny Rdzeń:** gdy straci połowę Życia, rdzeń się odsłania: Kamienna Skóra znika, a po każdym jego ataku **Trzęsienie** zadaje 1 obrażenie wszystkim jednostkom wokół niego. |
+| Król Burzy | powietrze (żywiołak burzy) | 30 | 3 | 4 | teleport | Atakuje normalnie z dystansu (strzelec). **Teleport:** zamiast ruchu przenosi się na dowolne wolne pole w odległości do 6. **Pole Naładowane:** w polu, które opuścił, przez 2 rundy każda jednostka, która tam wejdzie, dostaje 1 obrażenie. **Wyładowanie:** każdy, kto uderzy go z bliska, dostaje 1 obrażenie. |
+| Kraken | woda | 36 | 3 | 0 | stoi | **Macki:** wraz z nim stoją 3 macki (osobne słabe jednostki: Ż 6, A 2, S 0, bijące sąsiadów). Głowa jest nietykalna, dopóki żyje choć jedna macka. |
 
-Bosse mają życie liczone jak `BOSS.hp` (zależne od długości mapy i liczby bohaterów), liczby wyżej to tylko proporcje względem innych jednostek.
+Życie bossów liczone jest jak `BOSS.hp` (zależy od długości mapy i liczby bohaterów); liczby wyżej to proporcje względem innych jednostek. Wymaga rozstrzygnięcia przy kodzie: czy Trzęsienie rani też pozostałe jednostki neutralne stojące obok Golema (propozycja: tak, „wszystkich wokół”) i czy Wyładowanie działa na strzały (propozycja: nie, tylko na cios z bliska).
 
 ### Spotkania i nagrody (propozycja)
 | Skład | Skarb | Gdzie |
 |---|---|---|
 | strażnik albo 2–3 słabe | zwykły | blisko bazy (poziom 2+) |
-| strażnik + 2 słabe, albo 1 mocna (boss na „słabej” skali) | rzadki | w połowie drogi |
-| mocna + 2 słabe | legendarny | najdalej od bazy |
-Poziom 1: tylko sami strażnicy (jak dziś). Silniejsze spotkania stoją głębiej, czyli dalej od baz.
+| strażnik + 2 słabe | rzadki | w połowie drogi |
+| boss + 2 słabe | legendarny | najdalej od bazy |
+Poziom 1: tylko sami strażnicy (jak dziś). Silniejsze spotkania stoją głębiej, czyli dalej od baz. „Mocna jednostka” z pierwotnego pomysłu to teraz boss z własnego motywu; słabi towarzysze pochodzą z tego samego motywu.
 
 ### Tryb „Boss” (10.7, wariant kooperacyjny)
-Wszyscy gracze po jednej stronie, bez Hordy, przeciwko jednemu z trzech bossów w legowisku na środku mapy. Boss ma własną grafikę (do zrobienia w Scenario po zamrożeniu nazw i opisów) i dostaje zdolność po jednym z trzech motywów.
+Wszyscy gracze po jednej stronie, bez Hordy, przeciwko jednemu z trzech bossów w legowisku na środku mapy. Każdy boss ma własną grafikę (Scenario, po zamrożeniu nazw i opisów).
 
-### Otwarte pytania
-1. Nazwy i motywy (robocze) — czy pasują do świata gry?
-2. Boty: oceniają spotkanie jak strażnika (siła / skarb) — do zrobienia po silniku spotkań.
+### Otwarte
+Nazwy i opisy wyglądu do zaakceptowania; boty oceniają spotkanie jak strażnika (siła / skarb) po zrobieniu silnika spotkań.
