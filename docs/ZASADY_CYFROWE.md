@@ -388,3 +388,47 @@ Szybkość, zasięgi, punkty ruchu i liczby (ile pól odkryć, ilu wrogów trafi
 - Klucze `huge` (XL, „ogromna”) i `giant` (XXL, „gigantyczna”) w `MapSize`. Trójkąt: 17 i 20 rzędów (153 i 210 pól), limit rund 30 i 36, 4 / 5 Eliksirów i 6 / 8 innych skarbów, 9 / 11 miejsc (kapliczki, obozy, skrzynie), start Przymierza z 3 i 4 skarbami. Prostokąt 18×10 i 21×12, pierścień o promieniu 8 i 10, wyspy 23×11 i 27×13. Planszówka ma nadal cztery rozmiary (`BOARD_MAP_SIZES`); serwer odrzuca XL i XXL bez wersji cyfrowej.
 - Punkty rankingowe: waga mapy 1,15 i 1,3 (Bardzo długa = 1), sufit `MAX_POINTS` = 40; dawne mapy liczą się jak dotąd (wzorzec 30). Trudność bazowa XL i XXL w tabelach `scoring.ts` jest skopiowana z „Bardzo długiej”, do poprawy, gdy będą dane z gier.
 - Strojenie: `SIM_SIZES=huge,giant SIM_SHAPE=<kształt> node --import tsx scripts/sim/tuneLevels.ts <cel> 1 120 10` (z rozwojem bohatera, czyli poziom Wyprawa; ok. 1–6 min na kombinację), wyniki w `.tmp/sim/auto-*-xl.json`, scalone przez `tuneMerge.ts` do `tuningAuto.ts`. Przejścia: 4 kształty × 5 celów. Po tuningu część komórek została poza pasmem (około jedna czwarta: najczęściej rywalizacja 1 na 1 i Trudny w kooperacji na XXL, gdzie dźwignie startowych skarbów nie wystarczają). Mapy własne („ciesnina”, „dolina”) i poziom 1 (bez rozwoju) na XL i XXL nie są strojone; poziom 1 przestrojony tylko na trójkącie i kryształach bez rozwoju jednym przebiegiem.
+
+## Neutralni: słabe jednostki i bossowie (PROJEKT z 11.11.2026, do akceptacji autora, jeszcze bez kodu)
+
+Decyzje autora (11.11): każdy strażnik dostaje 2 słabych pobratymców i 1 bossa (motyw kamień / powietrze / woda); wchodzi nowa zdolność „cios od tyłu / z flanki”; własny Boss od razu razem z trybem „wszyscy przeciw Bossowi” (10.7).
+Liczby są w skali bazowej (przed „Skalą statystyk” i osobną skalą Życia), robocze, do strojenia symulacjami. Wszystkie zdolności działają bez limitu „raz na bitwę”, jak u strażników.
+
+### Nowa zasada: cios od tyłu / z flanki
+Cel ma „front”: kierunek ostatniego ruchu albo ataku jednostki (dla jednostek stojących w miejscu: w stronę najbliższego wroga). Atak z pola leżącego w półkolu za celem (3 z 6 sąsiednich heksów) zadaje +1 obrażeń („cios od tyłu”). Dotyczy tylko jednostek ze zdolnością „Zajście od tyłu” (poniżej), nie bohaterów. Szczegóły i test w silniku dopiero po akceptacji.
+
+### Słabe jednostki (6)
+| Motyw | Jednostka | Rola | Ż | A | S | Ruch | Zdolność |
+|---|---|---|---|---|---|---|---|
+| Kamień | Kamienny Pomiot | strzelec | 8 | 2 | 2 | chodzi | **Rzut Odłamkiem:** po ataku odpycha cel o 1 pole (jak Cyklop, słabszy: tylko gdy cel jest lekki, rozmiar 1). |
+| Kamień | Skalny Golem | wręcz, tank | 14 | 2 | 2 | chodzi | **Kamienna Skóra:** każdy cios w niego zadaje o 1 mniej (min. 1). |
+| Powietrze | Pisklę Gryfa | wręcz, szybki | 7 | 2 | 6 | lata | **Nalot:** po ataku może odlecieć o maks. 2 pola. |
+| Powietrze | Harpia | wręcz, flankujący | 8 | 2 | 5 | lata | **Zajście od tyłu:** +1 obrażeń, gdy atakuje z tyłu celu. |
+| Woda | Wężowa Głowa | wręcz | 9 | 2 | 3 | chodzi | **Dwa Kły:** atak trafia dwóch sąsiadujących wrogów (jak Hydra, ale 1 obrażenie na drugiego). |
+| Woda | Bagienny Pełzacz | wręcz, regenerujący | 10 | 2 | 2 | chodzi | **Bagienne Odrastanie:** na początku swojej aktywacji odzyskuje 1 Ż. |
+
+Flanka (Zajście od tyłu) trafia do Harpii i Króla Burzy, czyli do jednostek latających, które łatwo obejść. Skalny Golem zostaje przy Kamiennej Skórze (tank bez flanki).
+
+### Bossowie (3), rozmiar 2 heksy
+| Boss | Motyw | Ż (bazowo) | A | S | Ruch | Zdolność |
+|---|---|---|---|---|---|---|
+| Tytan Gór | kamień | 40 | 4 | 2 | chodzi | **Lawina:** po ataku odpycha cel o 2 pola, a trafione przeszkody (inne jednostki) ranią je o 1. |
+| Król Burzy | powietrze | 32 | 4 | 7 | lata | **Burzowy Nalot:** po ataku odlatuje o maks. 5 pól; **Zajście od tyłu** +2. |
+| Hydra Pradawna | woda | 36 | 3 | 3 | chodzi | **Pięć Głów:** każdy atak trafia do trzech sąsiadujących wrogów; odzyskuje 2 Ż na początku aktywacji. |
+
+Bosse mają życie liczone jak `BOSS.hp` (zależne od długości mapy i liczby bohaterów), liczby wyżej to tylko proporcje względem innych jednostek.
+
+### Spotkania i nagrody (propozycja)
+| Skład | Skarb | Gdzie |
+|---|---|---|
+| strażnik albo 2–3 słabe | zwykły | blisko bazy (poziom 2+) |
+| strażnik + 2 słabe, albo 1 mocna (boss na „słabej” skali) | rzadki | w połowie drogi |
+| mocna + 2 słabe | legendarny | najdalej od bazy |
+Poziom 1: tylko sami strażnicy (jak dziś). Silniejsze spotkania stoją głębiej, czyli dalej od baz.
+
+### Tryb „Boss” (10.7, wariant kooperacyjny)
+Wszyscy gracze po jednej stronie, bez Hordy, przeciwko jednemu z trzech bossów w legowisku na środku mapy. Boss ma własną grafikę (do zrobienia w Scenario po zamrożeniu nazw i opisów) i dostaje zdolność po jednym z trzech motywów.
+
+### Otwarte pytania
+1. Nazwy i motywy (robocze) — czy pasują do świata gry?
+2. Boty: oceniają spotkanie jak strażnika (siła / skarb) — do zrobienia po silniku spotkań.
