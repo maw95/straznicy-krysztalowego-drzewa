@@ -6,7 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
-- Cel „Boss” w kooperacji (lokalnie): można wybrać „Bez Hordy, wszyscy przeciw Bossowi”. Horda nie ma wtedy bohaterów, a wszyscy gracze razem biją samego Bossa, który ma o jedną piątą więcej Życia. Online jeszcze nie.
+- Cel „Boss” w kooperacji (lokalnie i online): można wybrać „Bez Hordy, wszyscy przeciw Bossowi”. Horda nie ma wtedy bohaterów, a wszyscy gracze razem biją samego Bossa, który ma o jedną piątą więcej Życia. Działa też online (wybiera właściciel pokoju).
 
 - Neutralni na mapie Wyprawy: obok strażników kryształów stoją grupy dziewięciu nowych potworów, im dalej od baz, tym groźniejsze, a nagrodą jest skarb i artefakt (zwykły, rzadki albo legendarny). Słabi: Kruszyniec (po śmierci rozpryskuje się), Podkopnik (wychodzi spod ziemi tuż przy bohaterze), Orzeł Skalny (nurkuje z rozbiegu), Harpia (boli od tyłu), Szczypiec (chwyta i nie puszcza), Bagienny Pełzacz (odrasta). Bossowie: Kamienny Golem (twarda skóra, a po utracie połowy Życia trzęsienie), Król Burzy (teleportuje się, zostawia naładowane pola i razi tych, którzy go uderzą z bliska) i Kraken (nietykalny, dopóki żyją jego macki). Mają własne ilustracje kart, portrety i ikony zdolności; na planszy też mają własne figurki z animacjami ruchu, ataku, trafienia i śmierci.
 

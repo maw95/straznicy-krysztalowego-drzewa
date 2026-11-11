@@ -40,6 +40,8 @@ export interface RoomView {
   objective?: ObjectiveId;
   shape?: MapShape;
   customMapId?: string;
+  /** Coop, goal Boss: no Horde heroes (an older server leaves it out). */
+  noHorde?: boolean;
   /** The computer's pace in this room, set by the owner (the same names as in the game's options). */
   botSpeed: BotSpeed;
   seats: SeatView[];
@@ -58,6 +60,7 @@ export interface TableConfig {
   objective: ObjectiveId;
   shape: MapShape;
   customMapId?: string;
+  noHorde?: boolean;
   seats: Array<{ faction: 'dawn' | 'horde'; heroId: string; bot: boolean }>;
 }
 

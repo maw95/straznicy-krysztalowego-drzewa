@@ -315,7 +315,7 @@ const defaultTable = (mode: Mode, count: number, level: Level, digital: boolean)
 
 function RoomLobby({ session, room, me, online }: { session: OnlineSession; room: RoomView; me: User; online: OnlineState }) {
   const owner = room.ownerId === me.id;
-  const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, tier: room.tier ?? 'adventure', objective: room.objective ?? 'crystals', shape: room.shape ?? 'triangle', ...(room.customMapId ? { customMapId: room.customMapId } : {}), seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
+  const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, tier: room.tier ?? 'adventure', objective: room.objective ?? 'crystals', shape: room.shape ?? 'triangle', ...(room.customMapId ? { customMapId: room.customMapId } : {}), ...(room.noHorde ? { noHorde: true } : {}), seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
   const configure = (patch: Partial<TableConfig>) => session.send({ type: 'configure', table: { ...table, ...patch } });
   const updateSeat = (i: number, patch: Partial<TableConfig['seats'][number]>) => configure({ seats: table.seats.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
   const takenBy = (heroId: string, i: number) => table.seats.some((s, j) => j !== i && s.heroId === heroId);
@@ -397,6 +397,12 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
                     <Tip key={o} text={OBJECTIVES[o].summary}><button className={chip(table.objective === o)} aria-pressed={table.objective === o} disabled={!owner} onClick={() => configure({ objective: o })}>{OBJECTIVES[o].name}</button></Tip>
                   ))}
                 </Row>
+                {table.objective === 'boss' && room.mode === 'coop' && (
+                  <Row label="Horda">
+                    <Tip text="Horda prowadzi swoich bohaterów i też atakuje Bossa."><button className={chip(!table.noHorde)} aria-pressed={!table.noHorde} disabled={!owner} onClick={() => configure({ noHorde: false })}>Gra przeciw nam</button></Tip>
+                    <Tip text="Wszyscy gracze razem przeciw samemu Bossowi: Horda nie ma bohaterów, a Boss ma trochę więcej Życia."><button className={chip(table.noHorde === true)} aria-pressed={table.noHorde === true} disabled={!owner} onClick={() => configure({ noHorde: true })}>Bez Hordy, wszyscy przeciw Bossowi</button></Tip>
+                  </Row>
+                )}
                 <Row label="Kształt mapy">
                   {(Object.keys(SHAPE_NAMES) as MapShape[]).map((sh) => (
                     <Tip key={sh} text={SHAPE_TIPS[sh]}>

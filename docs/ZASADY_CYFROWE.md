@@ -425,7 +425,7 @@ Cel ma „front”: kierunek ostatniego ruchu albo ataku jednostki (stojąca w m
 Poziom 1: tylko sami strażnicy (jak dziś). Silniejsze spotkania stoją głębiej, czyli dalej od baz. „Mocna jednostka” z pierwotnego pomysłu to teraz boss z własnego motywu; słabi towarzysze pochodzą z tego samego motywu.
 
 ### Tryb „Boss” (10.7, wariant kooperacyjny)
-Wszyscy gracze po jednej stronie, bez Hordy, przeciwko bossowi w legowisku na środku mapy (reguła `noHorde`, tylko kooperacja i cel „Boss”; w ustawieniach lokalnych wiersz „Horda”). Horda nie ma bohaterów, więc wygrywa tylko Przymierze, które zada ostatni cios; porażka to polegli bohaterowie albo limit rund. Życie Bossa ×`BOSS.noHordeFactor` (1,2). Symulacje (60 gier, z rozwojem): przed strojeniem ×1,0 ok. 55 % (1 gracz) i 70 % (2 graczy); przy ×1,3 ok. 39 % / 60 %; wybrane ×1,2. Online jeszcze nie ma tej opcji (pole stołu + backend). Własna grafika Bossa: Scenario, po zamrożeniu nazw.
+Wszyscy gracze po jednej stronie, bez Hordy, przeciwko bossowi w legowisku na środku mapy (reguła `noHorde`, tylko kooperacja i cel „Boss”; w ustawieniach lokalnych wiersz „Horda”). Horda nie ma bohaterów, więc wygrywa tylko Przymierze, które zada ostatni cios; porażka to polegli bohaterowie albo limit rund. Życie Bossa ×`BOSS.noHordeFactor` (1,2). Symulacje (60 gier, z rozwojem): przed strojeniem ×1,0 ok. 55 % (1 gracz) i 70 % (2 graczy); przy ×1,3 ok. 39 % / 60 %; wybrane ×1,2. Online: pole stołu `noHorde` (serwer przyjmuje je tylko w kooperacji z celem Boss). Własna grafika Bossa: Scenario, po zamrożeniu nazw.
 
 ### Otwarte
 Nazwy i opisy wyglądu do zaakceptowania; boty oceniają spotkanie jak strażnika (siła / skarb) po zrobieniu silnika spotkań.
