@@ -5,7 +5,7 @@ import { memo, useRef } from 'react';
 import { cellsOf, deployHeads, movePath, unitAt, unitDistance } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import { isDigital, type BattleUnit, type GameState } from '../engine/types';
-import { asset, Frame, Portrait, ACTIVE_FIGURE_RING, Ribbon, SIDE_RING } from './common';
+import { abilityArt, asset, Frame, Portrait, ACTIVE_FIGURE_RING, Ribbon, SIDE_RING } from './common';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { wideObstacleGroups } from '../engine/battle';
 import { DamageDrop, DieFace, LastAttack, Marker, StatText } from './markers';
@@ -253,6 +253,11 @@ export function ArenaBoard(p: Props) {
             })}
             {active &&
               cellsOf(active).map((k) => <polygon key={`ac${k}`} points={hexPoints(k, 2)} fill="rgba(158,228,255,0.15)" stroke="#9EE4FF" strokeWidth="3" pointerEvents="none" />)}
+            {(b.fields ?? []).map((f) => (
+              <polygon key={`cf${f.cell}`} points={hexPoints(f.cell, 3)} fill="rgba(255,226,90,0.28)" stroke="#FFE25A" strokeWidth="2.5" strokeDasharray="3 3" pointerEvents="none">
+                <title>Pole Naładowane: rani o 1 każdego, kto na nie wejdzie</title>
+              </polygon>
+            ))}
             {p.previewTail && <polygon points={hexPoints(p.previewTail, 3)} fill="rgba(158,228,255,0.2)" stroke="#9EE4FF" strokeWidth="2" strokeDasharray="5 4" pointerEvents="none" />}
             {approach && <polygon points={hexPoints(approach.cell, 2)} fill="rgba(243,210,122,0.35)" stroke="#F3D27A" strokeWidth="3.5" pointerEvents="none" />}
             {[...deployable].map((k) => (
@@ -396,7 +401,7 @@ export function ArenaBoard(p: Props) {
             return (
               <div key={se.key}>
                 <div className="ring-wave" style={{ left: x + W / 2, top: y + H / 2 - 8, ['--rc' as string]: se.color } as React.CSSProperties} />
-                <img className="seal" src={asset(`cards/abilities/${se.ability}.png`)} alt="" style={{ left: x + W / 2, top: y + H / 2 - 40 }} />
+                <img className="seal" src={asset(`cards/abilities/${abilityArt(se.ability)}.png`)} alt="" style={{ left: x + W / 2, top: y + H / 2 - 40 }} />
               </div>
             );
           })}

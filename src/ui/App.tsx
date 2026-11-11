@@ -4,7 +4,8 @@ import { describeAction } from './hint';
 import { FACTION_NAMES, UNITS, type FactionId, type ItemKind } from '../engine/data';
 import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
 import { movePath } from '../engine/battle';
-import type { HexKey } from '../engine/hex';
+import { neighborKeys, type HexKey } from '../engine/hex';
+import { tileCost } from '../engine/map';
 import { controlCounts, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { arenaSetup, DEFAULT_RULES, isDigital, type Action, type GameState, type LogEntry, type LogEvent, type SetupOptions } from '../engine/types';
 import { AdventureView } from './AdventureView';
@@ -164,6 +165,19 @@ export function App() {
     if (q.get('gear')) for (const h of Object.values(s.heroes)) h.gear = Object.fromEntries(q.get('gear')!.split(',').filter((id) => ARTIFACT_BY_ID[id]).map((id) => [ARTIFACT_BY_ID[id].slot, id]));
     // ?level=9 puts every hero on that level (for looking at the milestones on the cards).
     if (q.get('level')) for (const h of Object.values(s.heroes)) h.level = Number(q.get('level'));
+    // ?encounter=2 (with growth=1) walks the active hero into the first neutral encounter of that tier (0 common, 1 rare, 2 legendary), for looking at the new units.
+    if (q.get('encounter')) {
+      const enc = Object.values(s.crystals).find((c) => c.encounter && c.tier === Number(q.get('encounter')));
+      const hero = activeHero(s);
+      const next = enc && hero ? neighborKeys(enc.at).find((k) => s.tiles[k] && tileCost(s.tiles[k]) !== null && !s.tiles[k].crystalId) : null;
+      if (enc && hero && next) {
+        hero.pos = next;
+        s.tiles[enc.at].revealed = true;
+        s.movePoints = 3;
+        s = applyAction(s, { type: 'moveHero', to: enc.at });
+        history.current.push({ type: 'moveHero', to: enc.at });
+      }
+    }
     for (let i = 0; i < Number(q.get('steps')) && s.phase !== 'over'; i++) {
       let a = chooseAction(s);
       if (!a) break;
@@ -406,7 +420,7 @@ export function App() {
     const g = gameRef.current!;
     const target = path[path.length - 1];
     const guarded = Object.values(g.crystals).find((c) => c.at === target && c.guardian);
-    const text = guarded ? `Wejście na to pole rozpocznie walkę ze strażnikiem: ${UNITS[guarded.guardian!].name}.` : 'Wejście na to pole rozpocznie bitwę z wrogim bohaterem.';
+    const text = guarded?.encounter ? `Wejście na to pole rozpocznie walkę ze strażnikami: ${guarded.encounter.map((id) => UNITS[id].name).join(', ')}.` : guarded ? `Wejście na to pole rozpocznie walkę ze strażnikiem: ${UNITS[guarded.guardian!].name}.` : 'Wejście na to pole rozpocznie bitwę z wrogim bohaterem.';
     setConfirm({ text, yes: 'Do walki!', onYes: () => setSteps(path) });
   }, []);
 

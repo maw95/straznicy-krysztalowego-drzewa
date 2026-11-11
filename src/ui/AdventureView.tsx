@@ -622,7 +622,8 @@ function TileDetails({ state, k }: { state: GameState; k: HexKey }) {
         <div className="well" style={{ padding: '6px 8px', display: 'flex', gap: 10, alignItems: 'center' }}>
           <Portrait unitId={crystal.guardian} size={44} ring={SIDE_RING.neutral} preview={false} />
           <div style={{ fontSize: 15, color: '#F7EDD2' }}>
-            <div style={{ fontWeight: 700 }}>{crystal.decoy ? 'Strażnik' : 'Kryształ pod strażą'}: {UNITS[crystal.guardian].name}</div>
+            <div style={{ fontWeight: 700 }}>{crystal.encounter ? 'Strażnicy' : crystal.decoy ? 'Strażnik' : 'Kryształ pod strażą'}: {crystal.encounter ? crystal.encounter.map((id) => UNITS[id].name).join(', ') : UNITS[crystal.guardian].name}</div>
+            {crystal.encounter && <div>Nagroda: {['zwykły', 'rzadki', 'legendarny'][crystal.tier ?? 0]} artefakt i skarb.</div>}
             <div>
               <StatIcon stat="Ż" light /> {UNITS[crystal.guardian].hp} · <StatIcon stat="A" light /> {UNITS[crystal.guardian].attack} · <StatIcon stat="S" light /> {UNITS[crystal.guardian].speed}
             </div>
@@ -655,7 +656,7 @@ function tileLines(state: GameState, k: HexKey, reach: { cost: number; hostile: 
     const cost = TERRAIN_COST[t.terrain];
     lines.push(cost === null ? 'Nieprzechodnie' : `Koszt ruchu: ${cost}${cost === 2 ? ' (teren trudny)' : ''}`);
     const crystal = Object.values(state.crystals).find((c) => c.at === k);
-    if (crystal?.guardian) lines.push(`${crystal.decoy ? 'Strażnik' : 'Kryształ pod strażą'}: ${UNITS[crystal.guardian].name}`);
+    if (crystal?.guardian) lines.push(crystal.encounter ? `Strażnicy: ${crystal.encounter.map((id) => UNITS[id].name).join(', ')}` : `${crystal.decoy ? 'Strażnik' : 'Kryształ pod strażą'}: ${UNITS[crystal.guardian].name}`);
     else if (crystal && showsCrystal(crystal)) lines.push('Leży tu kryształ');
     if (t.treasureId) lines.push('Leży tu skarb');
     if (t.site && !t.site.used) lines.push(SITE.names[t.site.kind]);

@@ -5,7 +5,7 @@
 
 import { createContext, useContext } from 'react';
 import { abilityTextFor, battleStats, DIGITAL_RANGED_BONUS, UNITS } from '../engine/data';
-import { asset } from './common';
+import { abilityArt, artId, asset } from './common';
 import { StatText } from './markers';
 import { abilityTextAt, milestoneTier } from '../engine/growth';
 import { HeroLevelsContext, useScales } from './statScale';
@@ -199,7 +199,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false,
   return (
     <div className="card-sheen" style={{ position: 'relative', width, height: CARD_H * scale, flex: 'none', filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.6))', ...(card ? { borderRadius: 12 * scale, boxShadow: `0 0 0 ${Math.max(2, 4 * scale)}px ${DUEL_BLUE}` } : {}) }}>
       <div style={{ position: 'absolute', left: 0, top: 0, width: FRAME_W, height: CARD_H, overflow: 'hidden', transform: `scale(${scale})`, transformOrigin: '0 0', fontFamily: "'Crimson Pro', Georgia, serif" }}>
-        <img src={asset(`cards/art/${unitId}.jpg`)} alt={def.name} style={{ ...at(L.art), objectFit: 'cover', objectPosition: 'center 35%' }} />
+        <img src={asset(`cards/art/${artId(unitId)}.jpg`)} alt={def.name} style={{ ...at(L.art), objectFit: 'cover', objectPosition: 'center 35%' }} />
         <img src={asset(`cards/frames/${L.file}.png`)} alt="" style={{ position: 'absolute', left: X(0), top: Y(0), width: FRAME_W * kx, height: SRC_H * ky }} />
 
         <div style={{ ...at(L.name), ...centered, fontWeight: 800, fontSize: nameSize, lineHeight: 1, color: '#20160C', whiteSpace: 'nowrap', letterSpacing: '0.01em' }}>{def.name}</div>
@@ -229,7 +229,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false,
 
         {/* A duel card keeps the guardian's medallion (no picture of its own yet). */}
         <img
-          src={asset(`cards/abilities/${def.ability}_inner.png`)}
+          src={asset(`cards/abilities/${abilityArt(def.ability)}_inner.png`)}
           alt=""
           style={{ ...circle(L.ability.cx, L.ability.cy, L.ability.r), borderRadius: '50%' }}
         />
