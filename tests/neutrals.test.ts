@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { arenaCell, attackTargets, battleAttack, battleMove, battleTeleport, dealDamage, fromBehind, makeBattleUnit, predictDamage, teleportCells, endActivation } from '../src/engine/battle';
 import { chooseAction } from '../src/engine/ai';
 import { createGame } from '../src/engine/game';
+import { encounterUnits } from '../src/engine/encounters';
+import { Rng } from '../src/engine/rng';
 import { neighborKeys } from '../src/engine/hex';
 import { ARTIFACT_BY_ID } from '../src/engine/sites';
 import type { Side } from '../src/engine/data';
@@ -112,6 +114,14 @@ describe('neutral encounters: abilities', () => {
   it('Kraken: the head shoots a hero who stays away from it', () => {
     const s = fight([{ id: 'k', defId: 'kraken', side: 'neutral', cell: here }, hero(arenaCell(6, 4)), { id: 't', defId: 'tentacle', side: 'neutral', cell: near(here, 5) }]);
     expect(attackTargets(s, s.battle!.units.k).map((u) => u.id)).toContain('goldDragon');
+  });
+
+  it('Kraken: stands with its tentacles and the two weak units of the water, like the other bosses with theirs', () => {
+    const units = encounterUnits(2, 'water', new Rng(1));
+    expect(units[0]).toBe('kraken');
+    expect(units.filter((u) => u === 'tentacle')).toHaveLength(2);
+    expect(units.filter((u) => ['pincer', 'bogCrawler'].includes(u))).toHaveLength(2);
+    expect(encounterUnits(2, 'air', new Rng(1))).toHaveLength(3);
   });
 
   it('Podkop: the Podkopnik comes up up to 4 hexes away and its turn ends', () => {

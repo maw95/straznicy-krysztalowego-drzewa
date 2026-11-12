@@ -20,8 +20,8 @@ export function encounterUnits(tier: 0 | 1 | 2, motif: EncounterMotif, rng: Rng)
     return group;
   }
   if (tier === 1) return [m.guardian, ...weak(2)];
-  // The Kraken stands with its own tentacles instead of weak companions.
-  return motif === 'water' ? [m.boss, ...Array.from({ length: ENCOUNTERS.krakenTentacles }, () => 'tentacle')] : [m.boss, ...weak(2)];
+  // The Kraken stands with its tentacles and, like every boss, with two weak units of its motif (the crab and the bog creature).
+  return motif === 'water' ? [m.boss, ...Array.from({ length: ENCOUNTERS.krakenTentacles }, () => 'tentacle'), ...weak(2)] : [m.boss, ...weak(2)];
 }
 
 /** Whether every passable hex without an encounter or an unbeaten guardian can still be reached from the first one. */

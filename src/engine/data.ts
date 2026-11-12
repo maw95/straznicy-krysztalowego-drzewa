@@ -249,7 +249,7 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'bogCrawler', name: 'Bagienny Pełzacz', side: 'neutral', kind: 'neutral', hp: 10, attack: 2, speed: 2, movement: 'walk', attackType: 'melee', ability: 'bogRegrowth', abilityName: 'Bagienne Odrastanie', abilityText: `Na początku swojej aktywacji odzyskuje ${ABILITY.bogRegrowthHeal} Ż.` }),
     u({ id: 'stoneGolem', name: 'Kamienny Golem', side: 'neutral', kind: 'neutral', size: 2, hp: 40, attack: 4, speed: 2, movement: 'walk', attackType: 'melee', ability: 'runeGolem', abilityName: 'Runiczny Rdzeń', abilityText: `Kamienna Skóra: każdy cios zadaje o ${ABILITY.runeSkinIgnore} mniej obrażeń. Gdy straci połowę Życia, rdzeń się odsłania: skóra znika, a po każdym jego ataku Trzęsienie zadaje ${ABILITY.quakeDamage} obrażenie wszystkim wokół.` }),
     u({ id: 'stormKing', name: 'Król Burzy', side: 'neutral', kind: 'neutral', hp: 30, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'stormKing', abilityName: 'Burza', abilityText: `Zamiast ruchu teleportuje się do ${ABILITY.stormTeleportRange} pól. Pole, które opuścił, przez ${ABILITY.chargedFieldRounds} rundy rani o ${ABILITY.chargedFieldDamage} każdego, kto na nie wejdzie. Kto uderzy go z bliska, dostaje ${ABILITY.dischargeDamage} obrażenie.` }),
-    u({ id: 'kraken', name: 'Kraken', side: 'neutral', kind: 'neutral', size: 2, hp: 36, attack: 2, speed: 0, movement: 'walk', attackType: 'ranged', ability: 'tentacles', abilityName: 'Macki', abilityText: 'Dopóki żyje choć jedna macka, głowa jest nietykalna. Głowa strzela strugą wody w dowolnego wroga w zasięgu wzroku.' }),
+    u({ id: 'kraken', name: 'Kraken', side: 'neutral', kind: 'neutral', size: 2, hp: 30, attack: 1, speed: 0, movement: 'walk', attackType: 'ranged', ability: 'tentacles', abilityName: 'Macki', abilityText: 'Dopóki żyje choć jedna macka, głowa jest nietykalna. Głowa strzela strugą wody w dowolnego wroga w zasięgu wzroku.' }),
     u({ id: 'tentacle', name: 'Macka Krakena', side: 'neutral', kind: 'neutral', hp: 6, attack: 2, speed: 0, movement: 'walk', attackType: 'melee', ability: 'none', abilityName: 'Macka', abilityText: 'Bije sąsiadów, nie rusza się.' }),
     u({ id: 'blackDragon', name: 'Czarny Smok', side: 'horde', kind: 'hero', size: 2, hp: 7, attack: 5, speed: 5, movement: 'fly', attackType: 'melee', ability: 'fireBreath', abilityName: 'Ognisty Oddech', abilityText: 'Raz na bitwę: pełny atak w dwóch wrogów stojących w jednej linii.' }),
     u({ id: 'werewolfLord', name: 'Władca Wilkołaków', side: 'horde', kind: 'hero', hp: 8, attack: 5, speed: 7, movement: 'walk', attackType: 'melee', ability: 'bloodCall', abilityName: 'Zew Krwi', abilityText: `+${ABILITY.bloodCallBonus} A do każdego ataku na już rannego wroga.` }),
@@ -298,7 +298,7 @@ export const ENCOUNTERS = {
   /** An encounter stands farther than this from a base and from the Tree. */
   minDistance: 2,
   /** Neutral units that stand beside the Kraken (its tentacles). */
-  krakenTentacles: 3,
+  krakenTentacles: 2,
 };
 
 /** Supports a hero takes into a battle on the arena (all of them when fewer are alive). */

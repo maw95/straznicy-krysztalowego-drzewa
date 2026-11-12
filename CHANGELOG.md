@@ -7,7 +7,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 ## W przygotowaniu
 
 - Pegaz jest mocniejszy w wersji cyfrowej (5 Życia i 3 Ataku zamiast 4 i 2): symulacje pokazały, że z nim drużyna wygrywała wyraźnie rzadziej niż z Elfem Druidem i Nimfą. Wersja planszowa bez zmian.
-- Kraken nie stoi już bezczynnie: jego głowa strzela strugą wody w każdego wroga w zasięgu wzroku, więc nie da się go bezkarnie ostrzeliwać z dystansu, a walka z nim jest groźniejsza (jak przystało na legendarną nagrodę).
+- Kraken nie stoi już bezczynnie: jego głowa strzela strugą wody w każdego wroga w zasięgu wzroku, a obok niego stoją jeszcze dwie macki, krab i błotny stwór (jak obok Króla Burzy Harpia i Orzeł). Walka jest groźna, ale podobnie trudna dla każdego z trzech bohaterów.
 - W oknie „Autorzy” jest trzech autorów gry: Maciej Woźniak (pomysł, zasady, wykonanie), Aleksandra Szestowicka (pomoc przy fabule) i Zuzanna Woźniak (autorka Dzielnej Kaczki).
 
 ## 2.4.0 — 2026-11-12
