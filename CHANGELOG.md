@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Poległe jednostki nie zmniejszają się już po śmierci: leżą w tej samej skali co żywe (Cyklop i Hydra były rysowane o 30% mniejsze). Zwłoki małych jednostek nadal mają limit szerokości dwóch heksów, ale luźniejszy niż dotąd.
+
 - Jednostka dwupolowa (np. Jednorożec), która podchodzi do wroga, pokazuje na żółto dwa heksy: pole głowy i pole ogona, więc widać, gdzie stanie cała.
 
 - Jednostka walcząca wręcz, która stoi już obok wroga i jeszcze się nie ruszyła, może go „obejść”: wskaż krawędź heksa po drugiej stronie wroga, a podświetli się pole, z którego uderzy (jednostka tam podejdzie i zaatakuje). Wskazanie strony, z której już stoi, bije od razu, jak dotąd.

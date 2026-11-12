@@ -26,7 +26,7 @@ const LARGE = [150, 120] as const;
 const SMALL = [76, 96] as const;
 
 /** Widest a one-hex unit's corpse may be drawn (canvas pixels): it must fit on two hexes. */
-const CORPSE_MAX_W = 100;
+const CORPSE_MAX_W = 120;
 
 export const SPRITES: Record<string, SpriteSpec> = {
   goldDragon: { dir: 'jednostki/zloty_smok', width: 250, feet: 0.85, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
@@ -185,9 +185,9 @@ export function loadSprites(defId: string): Promise<SpriteSet> {
       const lying = measureBody(martwy);
       const corpseMax = spec.corpseMax ?? (!spec.width && (spec.box ?? SMALL) === SMALL ? CORPSE_MAX_W : 0);
       const lyingW = lying ? (lying.w / meta.frame[0]) * width : 0;
-      // The fallen unit is drawn about as wide as it stood (reports 674974, 915914: the Golden Dragon looked smaller dead than alive, the Black
-      // Dragon almost twice as big), within what two hexes hold for a small one.
-      let scale = lying && body && lying.w > 0 ? Math.min(1.3, Math.max(0.7, body.w / lying.w)) : 1;
+      // The fallen unit is drawn at the scale it stood in (the lying and the standing picture share one canvas size). Matching the standing width
+      // shrank every lying creature (the Cyclops to 0.7: reports 40037, 805567), so only a small unit's corpse is held to what two hexes hold.
+      let scale = 1;
       if (corpseMax && lyingW * scale > corpseMax) scale = corpseMax / lyingW;
       const dh = (width * meta.frame[1]) / meta.frame[0];
       // The lowest point of the corpse lies on the feet line (a little below it, as the hexes' centres are), whatever the picture's margins.
