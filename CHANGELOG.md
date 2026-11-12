@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Jednostka strzelająca, która musi uderzyć sąsiada, pokazuje kursor miecza zamiast strzały.
+
 - Kursor ataku (miecz lub strzała) widać teraz na całym heksie wroga, także w jego środku. Wcześniej w środku pojawiał się zwykły kursor, a atak „świecił” tylko przy krawędziach.
 
 - Miażdżący Głaz Cyklopa: gra mówi teraz, dlaczego cel nie został odepchnięty (jednostki dwupolowe, np. Niedźwiedź, są za ciężkie; albo nie ma za nim wolnego pola), a opis zdolności o tym wspomina.

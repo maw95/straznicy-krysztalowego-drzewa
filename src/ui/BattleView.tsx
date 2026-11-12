@@ -186,8 +186,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       if (((k === 'ownLiving' || k === 'courage' || k === 'teleport') && own) || ((k === 'enemy' || k === 'lightning') && !own) || (k === 'horn' && own && UNITS[u.defId].kind === 'support')) return 'cur-spell';
     }
     if (approachable) return 'cur-melee';
-    // A ranged unit shoots even at a neighbour (it must, when one stands next to it): always the arrow.
-    if (targets.some((t) => t.id === u.id)) return UNITS[active.defId].attackType === 'melee' ? 'cur-melee' : 'cur-ranged';
+    // A ranged unit shoots even at a neighbour (it must, when one stands next to it), but then it strikes: the sword, not the arrow.
+    if (targets.some((t) => t.id === u.id)) return UNITS[active.defId].attackType === 'melee' || unitDistance(active, u) === 1 ? 'cur-melee' : 'cur-ranged';
     const canShoot = myTurn && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility && UNITS[active.defId].attackType === 'ranged';
     if (!canShoot || u.side === active.side) return '';
     return !engaged && !hasLineOfSight(state, active.pos, u.pos) ? 'cur-blocked' : '';
