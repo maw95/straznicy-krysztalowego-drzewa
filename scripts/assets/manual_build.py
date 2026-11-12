@@ -786,7 +786,7 @@ for num, title, key in toc:
 toc_html += '<div class="divider">✦</div><p class="fine muted" style="text-align:center">Gra przygodowa dla 1–4 graczy od 5 lat · partia trwa od kwadransa do godziny<br>Wersja robocza instrukcji — prototyp do testów</p>'
 
 html = ['<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
-        '<title>Strażnicy Kryształowego Drzewa — instrukcja</title><link rel="stylesheet" href="style.css"></head><body>',
+        '<title>Gleamroot: Strażnicy Kryształowego Drzewa — instrukcja</title><link rel="stylesheet" href="style.css"></head><body>',
         '<div class="hint">Instrukcja • Format A4 • Aby zapisać jako PDF: Ctrl+P → Zapisz jako PDF → marginesy „Brak” → włącz „Grafika w tle”</div>',
         '<div id="overflow-report"></div>',
         '<!-- Strony generuje skrypt z treści docs/INSTRUKCJA.md; można je też edytować ręcznie. Każda strona to blok <section class="sheet">. -->',
@@ -795,7 +795,7 @@ for n, (cls, left, right, foot, body, key) in enumerate(pages, start=1):
     body = body.replace('@@TOC@@', toc_html)
     html.append(f'\n<!-- STRONA {n}: {foot} -->\n<section class="sheet {cls}">{CORNERS}<div class="inside">'
                 f'<header class="running"><span>{left}</span><span class="star">✧</span><span>{right}</span></header><div class="hair"></div>\n'
-                f'{body.strip()}\n</div><footer class="footer"><span>Strażnicy Kryształowego Drzewa</span><span>{foot}</span><span class="folio">{n}</span></footer></section>')
+                f'{body.strip()}\n</div><footer class="footer"><span>Gleamroot: Strażnicy Kryształowego Drzewa</span><span>{foot}</span><span class="folio">{n}</span></footer></section>')
 html.append('''
 <script>
 // Podgląd roboczy: strona, na której tekst wychodzi poza ramkę, dostaje czerwony obrys (tylko na ekranie, nie w druku).
@@ -827,7 +827,7 @@ addEventListener('load', () => {
     }
   });
   document.getElementById('overflow-report').textContent = bad.length ? 'Przepełnione strony: ' + bad.join(', ') : 'Wszystkie strony mieszczą się w ramkach.';
-  document.title = (bad.length ? 'OVERFLOW ' + bad.join(',') : 'OK') + ' — Strażnicy Kryształowego Drzewa';
+  document.title = (bad.length ? 'OVERFLOW ' + bad.join(',') : 'OK') + ' — Gleamroot: Strażnicy Kryształowego Drzewa';
 });
 </script>
 </body></html>''')

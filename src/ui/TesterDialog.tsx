@@ -66,7 +66,7 @@ export function TesterDialog({ onClose, download }: { onClose: () => void; downl
       <Frame crest style={{ width: 'min(760px, 96vw)' }} innerClass="slate scroll" innerStyle={{ padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 12, fontSize: 17, maxHeight: '86vh' }}>
         <Ribbon>Dla testerów</Ribbon>
         <div>
-          Dziękuję, że testujesz <b>Strażników Kryształowego Drzewa</b>! To wczesna wersja gry planszowej — każda uwaga pomoże.
+          Dziękuję, że testujesz grę <b>Gleamroot: Strażnicy Kryształowego Drzewa</b>! To wczesna wersja gry planszowej — każda uwaga pomoże.
         </div>
         <ul style={{ margin: 0, paddingLeft: 22, display: 'flex', flexDirection: 'column', gap: 6 }}>
           <li>

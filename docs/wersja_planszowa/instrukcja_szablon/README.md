@@ -1,4 +1,4 @@
-# Strażnicy Kryształowego Drzewa — szablon instrukcji A4
+# Gleamroot: Strażnicy Kryształowego Drzewa — szablon instrukcji A4
 
 Pełna instrukcja gry (40 numerowanych stron A4; okładka segregatora jest osobnym plikiem `okladki_przod_tyl_grzbiet.pdf`) na bazie szablonu HTML/CSS. Treść pochodzi z `docs/INSTRUKCJA.md`: wiadomość od autora (strona 1), spis treści, opowieść, zasady w obrazkach, rozdziały 1–16 z przykładami (tura na mapie, początek bitwy), przypadki szczególne, ściągawka i rozdział 17 o malowaniu figurek. Strony składa skrypt `scripts/assets/manual_build.py`; gotowy PDF do druku robi `make druk` (plik `../do_druku/01_instrukcja_A4.pdf`).
 

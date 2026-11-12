@@ -1,4 +1,4 @@
-# Strażnicy Kryształowego Drzewa
+# Gleamroot: Strażnicy Kryształowego Drzewa
 
 *Gra przygodowa dla 1–4 graczy od 5 lat. Partia trwa od kwadransa do godziny.*
 

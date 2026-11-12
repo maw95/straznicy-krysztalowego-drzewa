@@ -29,7 +29,7 @@ export function CreditsDialog({ onClose }: { onClose: () => void }) {
         <Ribbon>Autorzy</Ribbon>
         <section data-credits="game">
           <h3 className="credits-h">Gra</h3>
-          <p>„Strażnicy Kryształowego Drzewa”: gra planszowa i jej wersja cyfrowa.</p>
+          <p>„Gleamroot: Strażnicy Kryształowego Drzewa”: gra planszowa i jej wersja cyfrowa.</p>
           <ul className="credits-list">
             <li><b>Maciej Woźniak</b>: pomysł, zasady, projekt i wykonanie wersji cyfrowej.</li>
             <li><b>Aleksandra Szestowicka</b>: pomoc przy fabule.</li>

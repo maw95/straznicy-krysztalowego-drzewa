@@ -1,4 +1,4 @@
-# Dokumentacja gry „Strażnicy Kryształowego Drzewa”
+# Dokumentacja gry „Gleamroot: Strażnicy Kryształowego Drzewa”
 
 - `INSTRUKCJA.md` — **instrukcja dla graczy** (fabuła, jednostki, zasady).
 - `NOTATKI_DLA_AGENTA_PLANSZOWKI.md` — **obowiązujące zasady** (sekcja 0), decyzje, otwarte pytania i wyniki symulacji. Gdy źródła się różnią, rozstrzyga ten plik.

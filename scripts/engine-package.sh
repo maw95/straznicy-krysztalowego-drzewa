@@ -19,7 +19,7 @@ cat > "$work/package/package.json" <<JSON
 {
   "name": "straznicy-engine",
   "version": "$tag",
-  "description": "Silnik gry Strażnicy Kryształowego Drzewa (zasady, mapa, boty) z wydania $tag — źródła TypeScript",
+  "description": "Silnik gry Gleamroot: Strażnicy Kryształowego Drzewa (zasady, mapa, boty) z wydania $tag — źródła TypeScript",
   "type": "module",
   "license": "UNLICENSED",
   "repository": "github:maw95/straznicy-krysztalowego-drzewa",

@@ -50,7 +50,7 @@ export function OnlineScreen({ session, onSession, onLocalGame, onOffline, links
     <div className="screen slate screen-enter" style={{ alignItems: 'center', paddingTop: 16, gap: 14 }}>
       <img className="ken-burns" src={asset('ui/cover.jpg')} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 38%', opacity: 0.3 }} />
       <h1 style={{ margin: 0, lineHeight: 0, position: 'relative' }}>
-        <img className="logo-glow" src={asset('ui/logo.png')} alt="Strażnicy Kryształowego Drzewa" style={{ height: 'clamp(70px, 11vh, 110px)' }} />
+        <img className="logo-glow" src={asset('ui/logo.png')} alt="Gleamroot: Strażnicy Kryształowego Drzewa" style={{ height: 'clamp(70px, 11vh, 110px)' }} />
       </h1>
       {session ? (
         <Home session={session} onSignOut={() => onSession(null)} onLocalGame={onLocalGame} links={links} />

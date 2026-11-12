@@ -395,13 +395,13 @@ def box_sheets():
     # Box sides: one 270 x 26 mm label per wall, turned along the sheet.
     sp = page('Etykiety na boki pudełka (4 szt., 270 × 26 mm)')
     for i in range(4):
-        lab = strip(270, 26, 'Strażnicy Kryształowego Drzewa', 11).rotate(90, expand=True)
+        lab = strip(270, 26, 'Gleamroot: Strażnicy Kryształowego Drzewa', 11).rotate(90, expand=True)
         sp.paste(lab, (mm(30) + i * mm(40), mm(14)))
     # Binder spines: the common widths of an A4 ring binder (a label 4 mm narrower than the spine).
     bp = page('Etykiety na grzbiet segregatora A4 — wybierz szerokość swojego segregatora')
     x = mm(20)
     for w in (35, 50, 70):
-        spine = strip(270, w - 4, 'Strażnicy Kryształowego Drzewa', min(11, (w - 4) * 0.42)).rotate(90, expand=True)
+        spine = strip(270, w - 4, 'Gleamroot: Strażnicy Kryształowego Drzewa', min(11, (w - 4) * 0.42)).rotate(90, expand=True)
         bp.paste(spine, (x, mm(14)))
         ImageDraw.Draw(bp).text((x, mm(287)), f'grzbiet {w} mm', fill=(90, 90, 90), font=font(2.4))
         x += spine.width + mm(12)

@@ -61,7 +61,7 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
   });
 
   return (
-    <div className="title-screen" role="dialog" aria-label="Strażnicy Kryształowego Drzewa">
+    <div className="title-screen" role="dialog" aria-label="Gleamroot: Strażnicy Kryształowego Drzewa">
       {/* The box cover carries its own logo at the top, which a tall screen would show: there, the night Tree from the intro. */}
       <picture>
         <source media="(max-aspect-ratio: 1/1)" srcSet={asset('intro/01-drzewo.jpg')} />
@@ -78,7 +78,7 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
       ))}
       <div className="title-body">
         <h1>
-          <img className="logo-glow" src={asset('ui/logo.png')} alt="Strażnicy Kryształowego Drzewa" />
+          <img className="logo-glow" src={asset('ui/logo.png')} alt="Gleamroot: Strażnicy Kryształowego Drzewa" />
         </h1>
         <p className="title-motto">Wybierz stronę. Drzewo czeka.</p>
         <button className="btn prim title-start" onClick={start} autoFocus>

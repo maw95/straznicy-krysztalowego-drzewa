@@ -1,4 +1,4 @@
-# Strażnicy Kryształowego Drzewa — notes for Claude
+# Gleamroot: Strażnicy Kryształowego Drzewa — notes for Claude
 
 Digital prototype of a board game: React 18 + TypeScript + Vite, three.js figures, vitest. The online server is a
 separate repo next to this one (`../straznicy-krysztalowego-drzewa-backend`, Fly.io). The author writes in Polish:

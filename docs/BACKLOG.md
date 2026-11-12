@@ -72,3 +72,11 @@ Poza pasmem (decyzja autora 10.11: zostawiamy, wracać tylko przy okazji):
 - Zbadane, bez zmian (to nie błąd): „bezczynne tury” w kontroli (31%), przetrwaniu (24%) i artefakcie (12%) to bohaterowie trzymający punkt kontrolny albo czekający przy Drzewie, tak jak każe cel; „bezczynne aktywacje” w bitwie (Elf Druid, Niedźwiedź) to wybór pozostania na miejscu, a przypadki z celem w zasięgu (Nimfa, Pegaz) to 2–3 na ok. 240.
 
 Wartości robocze do akceptacji autora (zmiana w jednym miejscu): `SURVIVAL` (rundy, fale), `MAP_SHAPES`, `SHAPE_ROUND_FACTOR`, `DIGITAL_TUNING`, progi PD i pula umiejętności (`growth.ts`), `FAMILY` (pomoc dla dziecka, `data.ts`), liczby artefaktów i obiektów na mapie, liczby jednostek i bossów neutralnych, liczba spotkań na mapie, progi botów, progi wskaźnika trudności (`levelOfFight`).
+
+## H. Zmiana nazwy na Gleamroot: co zostało (12.11.2026)
+
+Zrobione: logo w grze (`ui/logo.png`, źródło `docs/grafika/okladka/logo.png`, stare w `logo_stare_straznicy.png`), teksty w grze, instrukcja HTML, opisy techniczne. Zostaje:
+- [ ] Okładka do druku (`docs/grafika/okladka/okladka.png`, `ui/cover.jpg` w grze): ma stare logo wypalone u góry; w grze go nie widać (przycięcie), ale na wydruku tak. Trzeba zrobić okładkę z nowym logo (wygenerować bez logo i nałożyć nowe), potem `python3 scripts/assets/menu.py` i `druk.py`.
+- [ ] Pliki w `docs/wersja_planszowa/`: `logo_zolte_*`, `okladki_przod_tyl_grzbiet.pdf`, `Instrukcja_Straznicy.docx` mają starą nazwę (binarne, do przerobienia po ostatecznym potwierdzeniu nazwy).
+- [ ] Domeny i konta (autor), znak towarowy (autor sprawdził: brak wpisów), tytuł w sklepie Steam.
+- Nie zmieniamy: nazw technicznych (repozytorium, pakiet, aplikacja na Fly), „Kryształowe Drzewo” jako miejsca w fabule, `docs/zrodla_zasad/*` (źródła historyczne).

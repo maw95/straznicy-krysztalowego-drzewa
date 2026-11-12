@@ -1,4 +1,4 @@
-# Strażnicy Kryształowego Drzewa — najczęstsze komendy.
+# Gleamroot: Strażnicy Kryształowego Drzewa — najczęstsze komendy.
 # Node.js jest zainstalowany lokalnie w ~/.local/node, więc dopinamy go do PATH.
 
 export PATH := $(HOME)/.local/node/bin:$(HOME)/.fly/bin:$(PATH)

@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Gra ma nową nazwę: **Gleamroot: Strażnicy Kryształowego Drzewa**. Nowe logo (to samo kryształowe drzewo, wielki napis „Gleamroot” i pod nim dotychczasowy tytuł) jest na ekranie tytułowym, w menu i na ekranie gry online; nowa nazwa jest też w karcie przeglądarki, w oknach „Autorzy” i „Dla testerów” oraz w instrukcji.
 - Boty lepiej korzystają ze skarbów w bitwie: do tej pory nigdy nie używały Rogu Odwagi, Rogu Strażników, Klepsydry Czasu i Butów Wiatru (ok. jedna trzecia zdobytych skarbów szła na marne), teraz bohater dmucha w róg przed ciosem, pomocnik ze Rogiem Strażników atakuje dwa razy, a Klepsydra daje bohaterowi drugi ruch, gdy nie dosięga wroga. Przeciwnicy i boty zastępujące graczy są przez to nieco groźniejsi (wygrane Przymierza w symulacjach wzrosły zwykle o 1–3 punkty).
 - Naprawiony cel „Boss” z Krakenem: boty nie wchodziły w jego legowisko (gra stała w miejscu do limitu rund i wygrywała Horda). Teraz Kraken jest tak samo trudnym bossem jak Hydra, Cyklop, Golem i Król Burzy (Przymierze wygrywa z nim w 50–70% gier).
 - Karty jednostek i skarbów otwierają się prawym przyciskiem myszy (na telefonie długim przytrzymaniem) i zostają na ekranie do następnego kliknięcia gdziekolwiek. Samo najechanie pokazuje tylko małą podpowiedź: nazwę i liczby (Życie, Atak, Szybkość) albo nazwę skarbu.

@@ -3219,6 +3219,24 @@
       "data": "2026-11-12",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/logo_gleamroot",
+      "pliki": [
+        "docs/grafika/okladka/logo.png",
+        "public/assets/ui/logo.png"
+      ],
+      "typ": "logo gry „Gleamroot: Strażnicy Kryształowego Drzewa”",
+      "opis": "Edycja poprzedniego logo (obraz odniesienia; zostaje drzewo i ramka, zmienia się napis): wielki 'GLEAMROOT' i pod nim mniejsze 'STRAŻNICY KRYSZTAŁOWEGO DRZEWA'. 1440 px (źródło) i 720 px (gra, scripts/assets/menu.py). Wybrany 1 z 3 wariantów, pisownia sprawdzona. Stare logo: docs/grafika/okladka/logo_stare_straznicy.png. Prompt: 'Edit this game logo. Keep exactly the same style, the glowing blue crystal tree on top, the golden branches and the ornate golden and dark-blue banner shape. Replace only the lettering: the big golden embossed word GLEAMROOT in a single line ..., and below it, in a clearly smaller golden line, the Polish text STRAŻNICY KRYSZTAŁOWEGO DRZEWA ... Transparent background.'",
+      "scenario_asset": {
+        "odniesienie": "asset_Ap45k3cHSKdhNfBxDNi5ksz3",
+        "wybrany": "asset_9qUejsgjGYftbWwVExiHRMxk"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Sunburst, jakość high, przezroczyste tło",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
