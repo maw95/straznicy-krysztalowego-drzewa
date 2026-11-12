@@ -3201,6 +3201,24 @@
       "data": "2026-11-12",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/krol_burzy",
+      "pliki": [
+        "public/assets/efekty/pole_burzy.webp",
+        "public/assets/efekty/teleport.webp"
+      ],
+      "typ": "arkusze klatek efektów: Pole Naładowane (pętla 24 kl.) i teleport (22 kl.), jeden wiersz, WebP z alfą",
+      "opis": "Klipy 3 s na czarnym tle, 12 kl./s, alfa z jasności (scripts/animacje/pack_fx.py), grane przez CSS steps() z mix-blend-mode: screen; teleport zmienia barwę filtrem (burza cyjan, zwój fiolet). Prompty: 'Top-down view of a flat circular patch of crackling blue-white electricity on a pure black background ... seamless looping energy field' oraz 'On a pure black background, a magical teleportation burst: a vertical pillar of glowing violet-white light rises from a glowing ring on the ground ... fades to black'.",
+      "scenario_asset": {
+        "pole_burzy": "asset_FYCRttTD78KcgnZDwC1ukrtJ",
+        "teleport": "asset_RkPtC2ZyNWWyBauNn4NoJ1Kw"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "P-Video 2 720p, 3 s, bez dźwięku (po 15 CU)",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

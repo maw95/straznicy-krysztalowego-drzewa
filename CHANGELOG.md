@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Efekty Króla Burzy wyglądają jak prawdziwa błyskawica: Pole Naładowane iskrzy trzeszczącą energią, a teleport (też ze Zwoju Teleportacji) to słup światła z pierścieniem, zamiast rysowanych kresek.
 - Ciosy w walce wręcz brzmią różnie: do miecza doszły trzy nowe dźwięki (cięcie, ciężkie uderzenie, rozdarcie) losowane przy każdym ciosie. Krok bohatera, podniesienie kryształu i oddanie go Drzewu miały już swoje dźwięki.
 - Macka Krakena ma własną ilustrację karty, portret i ikonę zdolności zamiast pożyczonych od Krakena i Strażnika.
 - Pegaz jest mocniejszy w wersji cyfrowej (5 Życia i 3 Ataku zamiast 4 i 2): symulacje pokazały, że z nim drużyna wygrywała wyraźnie rzadziej niż z Elfem Druidem i Nimfą. Wersja planszowa bez zmian.

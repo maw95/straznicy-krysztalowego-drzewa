@@ -259,14 +259,11 @@ export function ArenaBoard(p: Props) {
             {active &&
               cellsOf(active).map((k) => <polygon key={`ac${k}`} points={hexPoints(k, 2)} fill="rgba(158,228,255,0.15)" stroke="#9EE4FF" strokeWidth="3" pointerEvents="none" />)}
             {(b.fields ?? []).map((f) => {
-              // Pole Naładowane (Król Burzy): a bluish glow with flickering lightning, not a plain yellow hex.
-              const c = cellCenter(f.cell);
+              // Pole Naładowane (Król Burzy): a bluish glow under the lightning sheet (the .fx-field layer below), not a plain yellow hex.
               return (
                 <g key={`cf${f.cell}`} className="charged-field" pointerEvents="none">
                   <polygon points={hexPoints(f.cell, 3)} fill="rgba(70,130,255,0.26)" stroke="#9EE4FF" strokeWidth="2.5" />
                   <polygon points={hexPoints(f.cell, 9)} fill="rgba(190,230,255,0.16)" stroke="none" />
-                  <path className="zap z1" d={`M${c.x - 14} ${c.y - 22} L${c.x - 3} ${c.y - 8} L${c.x - 12} ${c.y - 2} L${c.x + 2} ${c.y + 12} L${c.x - 4} ${c.y + 22}`} />
-                  <path className="zap z2" d={`M${c.x + 15} ${c.y - 18} L${c.x + 5} ${c.y - 6} L${c.x + 14} ${c.y + 2} L${c.x + 3} ${c.y + 14}`} />
                   <title>{`Pole Naładowane: rani o ${ABILITY.chargedFieldDamage * scaleOf(state)} każdego, kto na nie wejdzie`}</title>
                 </g>
               );
@@ -420,20 +417,13 @@ export function ArenaBoard(p: Props) {
               </div>
             );
           })}
+          {(b.fields ?? []).map((f) => {
+            const c = cellCenter(f.cell);
+            return <span key={`fx${f.cell}`} className="fx-sheet fx-field" style={{ left: c.x, top: c.y }} />;
+          })}
           {bursts.map((e) => {
             const { x, y } = cellPos(e.pos);
-            const color = e.kind === 'storm' ? '#9EE4FF' : '#D2A8FF';
-            return (
-              <div key={e.key} className={`tp-burst ${e.late ? 'late' : ''}`} style={{ left: x + W / 2, top: y + H / 2 - 8, ['--rc' as string]: color } as React.CSSProperties}>
-                <span className="tp-column" />
-                <span className="tp-ring" />
-                {Array.from({ length: 10 }, (_, i) => {
-                  const a = (i / 10) * Math.PI * 2 + 0.4;
-                  const d = 22 + (i % 3) * 12;
-                  return <span key={i} className="tp-spark" style={{ ['--hx' as string]: `${Math.cos(a) * d}px`, ['--hy' as string]: `${Math.sin(a) * d - 14}px` } as React.CSSProperties} />;
-                })}
-              </div>
-            );
+            return <span key={e.key} className={`fx-sheet fx-teleport ${e.kind} ${e.late ? 'late' : ''}`} style={{ left: x + W / 2, top: y + H / 2 + 4 }} />;
           })}
           {shards.map((sh) => {
             const { x, y } = cellPos(sh.pos);
