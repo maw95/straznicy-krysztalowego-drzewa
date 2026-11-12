@@ -339,7 +339,8 @@ export function ArenaBoard(p: Props) {
                   const t = behind(e, u);
                   const own = e.currentTarget;
                   const el = t === u ? own : (document.querySelector<HTMLElement>(`[data-unit="${t.id}"]`) ?? own);
-                  own.style.cursor = t === u ? '' : getComputedStyle(el).cursor;
+                  // Back over its own hex the box keeps the turned cursor React gave it: clearing the style here left the plain cursor in the middle of the hex.
+                  own.style.cursor = t === u ? (aimed ?? '') : getComputedStyle(el).cursor;
                   // The hex of the unit under the pointer (a large unit lies on two): its edges say the side of the attack.
                   const cellEl = (document.elementsFromPoint?.(e.clientX, e.clientY) ?? []).find((x) => x.hasAttribute('data-cell') && cellsOf(t).includes(x.getAttribute('data-cell') as HexKey));
                   p.aimApproach(t, { x: e.clientX, y: e.clientY, box: (cellEl ?? el).getBoundingClientRect() }, cellEl ? (cellEl.getAttribute('data-cell') as HexKey) : undefined);

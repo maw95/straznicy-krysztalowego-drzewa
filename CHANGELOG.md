@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Kursor ataku (miecz lub strzała) widać teraz na całym heksie wroga, także w jego środku. Wcześniej w środku pojawiał się zwykły kursor, a atak „świecił” tylko przy krawędziach.
+
 - Miażdżący Głaz Cyklopa: gra mówi teraz, dlaczego cel nie został odepchnięty (jednostki dwupolowe, np. Niedźwiedź, są za ciężkie; albo nie ma za nim wolnego pola), a opis zdolności o tym wspomina.
 
 - Jednostka dwupolowa (np. Jednorożec) nie przechodzi już przez lukę szerokości jednego pola między dwiema jednostkami lub przeszkodami: ogon musi się gdzieś zmieścić na każdym polu trasy, nie tylko na polu docelowym.
