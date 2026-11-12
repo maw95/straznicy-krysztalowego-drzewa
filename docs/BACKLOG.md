@@ -16,7 +16,6 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
 ## B. Średnie
 
-- [ ] **B2. Szkic projektu poziomu 3 „Królestwo”** (osady, złoto, rekrutacja): Claude pisze `docs/POZIOM_3_KROLESTWO.md` (co nowego względem poziomu 2, złoto i osady, rekrutacja, cel gry, wpływ na boty i online, podział na kroki z szacunkiem pracy) i zatrzymuje się z listą pytań do autora. Kodu nie rusza, dopóki autor nie zaakceptuje szkicu.
 
 ## C. Dalej (kolejność; po akceptacji B2)
 
@@ -41,6 +40,8 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
 ## Pytania czekające na autora
 
+- **Poziom 3 „Królestwo”** (dawne B2): szkic w `docs/POZIOM_3_KROLESTWO.md`, 11 pytań na jego końcu (termin względem premiery, rekrutacja A/B, wielkość drużyny, wspólna kasa). Sekcja C czeka na odpowiedzi.
+- **Wydanie 2.6.0 i wdrożenie serwera** (B1): zmiany są w commitach lokalnie (gra `05cba8e`, serwer `9b07989`); drugie wydanie wymaga zgody autora (tag, push `master`, wydanie na GitHubie, potem `npm install` pakietu silnika w serwerze, `make deploy`, push serwera).
 - **Łatwy w wydaniu planszowym** (uzupełnienie do dawnego A8): w edycji planszowej Łatwy 1 na 1 daje 94/91/88/79% (powyżej pasma), a 2 na 2 na bardzo długiej mapie 61%. Dźwignie stroiciela działają tylko w grze cyfrowej, żeby plansza została „jak wydrukowana”. Czy stroić też planszową (zmieniałoby to wydrukowane zasady poziomu Łatwy), czy zostawić? Domyślnie: zostawiam.
 
 ## F. Do sprawdzenia na żywo (autor)
