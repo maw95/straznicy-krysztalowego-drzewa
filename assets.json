@@ -3165,6 +3165,22 @@
       "data": "2026-11-12",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/macka-krakena-grafiki",
+      "pliki": [
+        "public/assets/cards/art/tentacle.jpg",
+        "public/assets/cards/portraits/tentacle.jpg",
+        "public/assets/cards/abilities/none.png",
+        "public/assets/cards/abilities/none_inner.png"
+      ],
+      "typ": "ilustracja karty i portret Macki Krakena oraz ikona zdolności „brak” (pojedyncza macka)",
+      "opis": "Ilustracja 1008x704 przeskalowana do 630x441, portret = kwadratowy wycinek 256 px; ikona: symbol wycięty w koło i wstawiony w ramkę z tentacles.png (192 px; _inner 160 px). Prompty jak dla pozostałych neutralnych: 'Heroic fantasy card illustration in the style of Heroes of Might and Magic III painted art: a single giant sea-green tentacle ... stormy ocean ...' oraz 'Square game ability icon, glowing red neon line-art glyph on a dark crimson background: a single curled tentacle with suckers striking sideways ...'. Wybrane 1 z 2 wariantów każdego.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

@@ -6,15 +6,10 @@ import { hoverCard } from './hover';
 
 const BASE = import.meta.env?.BASE_URL ?? '/';
 export const asset = (path: string) => `${BASE}assets/${path}`;
-/**
- * The neutral encounter units (docs/ZASADY_CYFROWE.md, "Neutralni") have no pictures of their own yet: the tentacle of the Kraken borrows the Kraken's card art. Remove an entry when the unit's own files land in public/assets.
- */
-const BORROWED_ART: Record<string, string> = { tentacle: 'kraken' };
-/** Id of the files (portrait, card art) a unit is drawn from. */
-export const artId = (unitId: string) => BORROWED_ART[unitId] ?? unitId;
-/** An ability without a picture of its own borrows one (the nine new neutral abilities have their own since 11.11). */
-const BORROWED_ABILITY: Record<string, string> = { none: 'guardian' };
-export const abilityArt = (ability: string) => BORROWED_ABILITY[ability] ?? ability;
+/** Id of the files (portrait, card art) a unit is drawn from: its own id. */
+export const artId = (unitId: string) => unitId;
+/** Id of the ability icon files. */
+export const abilityArt = (ability: string) => ability;
 export const portrait = (unitId: string) => asset(`cards/portraits/${artId(unitId)}.jpg`);
 /** Face of a map tile (one of the art variants), or its green/red back while hidden. */
 export const tileImage = (t: Tile) => asset(t.revealed ? `tiles/${t.terrain}_${t.variant}.jpg` : `tiles/back_${t.side}.jpg`);
