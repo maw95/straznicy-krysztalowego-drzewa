@@ -87,6 +87,8 @@ interface Props {
   onCellAlt: (k: HexKey) => void;
   /** Where the tail of the active large unit would lie if it moved to the cell under the pointer. */
   previewTail: HexKey | null;
+  /** The tail cell of a large attacker that walks up to its target (next to the lit approach cell). */
+  approachTail: HexKey | null;
   onUnit: (u: BattleUnit) => void;
 }
 
@@ -260,6 +262,7 @@ export function ArenaBoard(p: Props) {
             ))}
             {p.previewTail && <polygon points={hexPoints(p.previewTail, 3)} fill="rgba(158,228,255,0.2)" stroke="#9EE4FF" strokeWidth="2" strokeDasharray="5 4" pointerEvents="none" />}
             {approach && <polygon points={hexPoints(approach.cell, 2)} fill="rgba(243,210,122,0.35)" stroke="#F3D27A" strokeWidth="3.5" pointerEvents="none" />}
+            {approach && p.approachTail && <polygon points={hexPoints(p.approachTail, 2)} fill="rgba(243,210,122,0.25)" stroke="#F3D27A" strokeWidth="2.5" strokeDasharray="6 4" pointerEvents="none" />}
             {[...deployable].map((k) => (
               <polygon key={`dp${k}`} points={hexPoints(k, 3)} fill="none" stroke="#F3D27A" strokeWidth={hover === k && picked ? 3.5 : 2} strokeDasharray={picked ? undefined : '5 4'} pointerEvents="none" />
             ))}

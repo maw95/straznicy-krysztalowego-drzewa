@@ -384,6 +384,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const hoverPreview = hover && active && moves.has(hover) ? hover : null;
   const tailChoices = hoverPreview && active && isLarge(state, active) ? tailOptions(b, active, hoverPreview) : [];
   const previewTail = tailChoices.length ? tailChoices[tailPick % tailChoices.length] : null;
+  // A large unit walking up to attack: where its tail will lie (the first legal cell, which is what the engine takes when no tail is named).
+  const approachTail = approach && active && isLarge(state, active) ? footprintAt(state, active, approach.cell)[1] ?? null : null;
   const breathPreview = useAbility && ab === 'fireBreath' && active ? targets.map((t) => breathSecondTarget(state, active, t)).filter(Boolean) : [];
 
   /** The note over a unit under the pointer: the blow it would take, or why it cannot be shot. */
@@ -431,6 +433,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
           attackNow={attackNow}
           onCellAlt={altCell}
           previewTail={previewTail}
+          approachTail={approachTail}
           onUnit={clickUnit}
         />
         <SidePanel s={sides[1]} state={state} active={active} onUnit={clickUnit} />

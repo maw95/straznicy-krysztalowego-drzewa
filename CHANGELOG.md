@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Jednostka dwupolowa (np. Jednorożec), która podchodzi do wroga, pokazuje na żółto dwa heksy: pole głowy i pole ogona, więc widać, gdzie stanie cała.
+
 - Jednostka walcząca wręcz, która stoi już obok wroga i jeszcze się nie ruszyła, może go „obejść”: wskaż krawędź heksa po drugiej stronie wroga, a podświetli się pole, z którego uderzy (jednostka tam podejdzie i zaatakuje). Wskazanie strony, z której już stoi, bije od razu, jak dotąd.
 
 - Jednostka strzelająca, która musi uderzyć sąsiada, pokazuje kursor miecza zamiast strzały.
