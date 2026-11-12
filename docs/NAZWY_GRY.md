@@ -64,3 +64,37 @@ Strona to wiki fantasy „The Waning Border” (postacie, artefakty, miejsca, ma
 Ocena: to ta sama dziedzina (fantasy, kryształ jako źródło magii i osi fabuły) i **to samo słowo użyte jako nazwa własna**, więc „Shardroot” jako tytuł naszej gry będzie mylony z cudzym światem, a ewentualny spór o znak towarowy dotyczyłby dokładnie fantasy. Czy to opublikowana książka lub gra, nie wiadomo (na stronie nie ma wzmianki o wydawcy; jest tylko zakładka Contact).
 
 **Rekomendacja:** nie budować marki na „Shardroot”. Wracamy do listy: **Crystal Wardens** (wolna na Steamie; polska wersja „Crystal Wardens: Strażnicy Kryształowego Drzewa” według tego samego schematu co wyżej) albo inna nazwa z tabeli (Dawnroot, Heartroot, Crystalbough). Przed wyborem powtórzyć sprawdzenie domen i nazw dla nowego kandydata, w tym wyszukanie nazwy razem z słowami „fantasy”, „novel” i „game”.
+
+## Wybór autora (12.11.2026): Gleamroot
+
+Po odrzuceniu „Shardroot” (patrz wyżej) autor wybrał **Gleamroot** (gleam + root, „błysk korzenia”).
+
+- Angielska wersja: **Gleamroot: Wardens of the Crystal Tree**.
+- Polska wersja: **Gleamroot: Strażnicy Kryształowego Drzewa** (podtytuł to dzisiejszy tytuł; marka wspólna na całym świecie).
+
+### Sprawdzenie domen, kont i sklepów (12.11.2026)
+
+Rejestry RDAP (`rdap.org`, `rdap.dns.pl`): brak wpisu = wolna. Nie jest to rezerwacja.
+
+| Adres / miejsce | Stan |
+|-----------------|------|
+| gleamroot.com, .net, .org, .pl, .eu | wolne |
+| gleamroot.io, .gg, .app, .games, .game, .dev, .xyz | wolne |
+| Steam (sklep US i PL) | brak gry o tej nazwie |
+| itch.io (gleamroot.itch.io), GitHub (github.com/gleamroot), YouTube (@gleamroot) | wolne |
+| X, Instagram, TikTok, Twitch, Bluesky, Reddit | nie dało się rozstrzygnąć automatycznie (serwisy odpowiadają „200” albo „403” także dla nieistniejących kont); sprawdzić ręcznie i zająć nazwę |
+
+### Zastane użycia nazwy (wyszukiwanie w sieci)
+
+Nie znaleziono książki, gry, firmy ani znaku towarowego o nazwie „Gleamroot”. Są za to dwa użycia **jako nazwa przedmiotu w cudzych grach**:
+
+- **Grow a Garden (Roblox):** „Gleamroot” to mityczna roślina z aktualizacji z 16.08.2025: drzewiasta, ze świecącym turkusowym listowiem i „kryształowymi korzeniami”. Jest dużo poradników i wycen (kilka stron z wynikami).
+- **Enshrouded:** materiał „Gleam Root” (pisany osobno) i „Gleam Root Dust”.
+
+Ocena: to nie jest konflikt marki (przedmiot w grze to nie tytuł, więc ryzyko prawne jest małe), ale: (1) wyszukiwanie „Gleamroot” pokaże na razie poradniki do Robloxa, nie naszą grę, co osłabia znajdowalność na początku; (2) motyw (świecące drzewo z kryształowymi korzeniami) jest zaskakująco bliski naszemu, więc część graczy może skojarzyć nazwę z Robloxem. Dopisek „Wardens of the Crystal Tree” i hasło „strategia/taktyka na heksach” w opisie sklepu rozwiązuje większość problemu.
+
+### Do zrobienia przed ostatecznym wyborem
+
+1. Obejrzeć znak towarowy w TMview (EUIPO), WIPO Global Brand Database i USPTO pod „Gleamroot” i podobnymi (klasy 9, 41; tu sprawdzono tylko wyszukiwarką ogólną).
+2. Kupić domeny (rekomendacja: **gleamroot.com** jako główna, **.games** albo **.io** jako zapas, **.pl** dla polskiej strony) i zająć nazwę na itch.io, GitHubie, YouTube, X, Instagramie, TikToku, Twitchu, Bluesky.
+3. Dopiero wtedy zmieniać nazwę w grze (menu, `package.json`, CHANGELOG, instrukcja, okładka, `README`).
