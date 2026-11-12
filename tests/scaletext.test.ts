@@ -9,6 +9,9 @@ describe('scaleText', () => {
     expect(scaleText('+4 maks. Ż jednej jednostce do końca bitwy.', 3)).toBe('+12 maks. Ż jednej jednostce do końca bitwy.');
     expect(scaleText('−1 otrzymanych obrażeń z każdego ataku do końca bitwy.', 3)).toBe('−3 otrzymanych obrażeń z każdego ataku do końca bitwy.');
     expect(scaleText('Każdy cios w Cyklopa zadaje o 1 mniej obrażeń.', 3)).toBe('Każdy cios w Cyklopa zadaje o 3 mniej obrażeń.');
+    expect(scaleText('Po śmierci rozpryskuje się i rani o 1 wszystkie sąsiednie jednostki.', 3)).toContain('rani o 3 wszystkie');
+    expect(scaleText('Kamienna Skóra: każdy cios zadaje o 2 mniej obrażeń.', 3)).toContain('o 6 mniej');
+    expect(scaleText('Kto uderzy go z bliska, dostaje 1 obrażenie.', 3)).toContain('dostaje 3');
     expect(scaleText('Odkryj 3 wybrane zakryte pola.', 3)).toBe('Odkryj 3 wybrane zakryte pola.');
     expect(scaleText('Po ataku odskok do 3 pól.', 3)).toBe('Po ataku odskok do 3 pól.');
   });

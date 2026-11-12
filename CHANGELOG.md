@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Opisy zdolności w Wyprawie pokazują prawdziwe liczby: Rozprysk Kruszyńca rani o 3 (nie o 1), Kamienna Skóra Golema zmniejsza cios o 6 (nie o 2), a Wyładowanie Króla Burzy zadaje 3 (nie 1). Silnik liczył dobrze, mylił się tylko opis.
+
 ## 2.3.0 — 2026-11-11
 
 - Cel „Boss” w kooperacji (lokalnie i online): można wybrać „Bez Hordy, wszyscy przeciw Bossowi”. Horda nie ma wtedy bohaterów, a wszyscy gracze razem biją samego Bossa, który ma o jedną piątą więcej Życia. Działa też online (wybiera właściciel pokoju).
