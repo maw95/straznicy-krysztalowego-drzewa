@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Muzyka rytuału cichnie, gdy tylko rytuał przestaje trwać (np. po pokonaniu bohatera Hordy przy Drzewie), a nie dopiero na końcu rundy.
+
 - Poległe jednostki nie zmniejszają się już po śmierci: leżą w tej samej skali co żywe (Cyklop i Hydra były rysowane o 30% mniejsze). Zwłoki małych jednostek nadal mają limit szerokości dwóch heksów, ale luźniejszy niż dotąd.
 
 - Jednostka dwupolowa (np. Jednorożec), która podchodzi do wroga, pokazuje na żółto dwa heksy: pole głowy i pole ogona, więc widać, gdzie stanie cała.

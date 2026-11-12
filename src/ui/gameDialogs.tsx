@@ -4,6 +4,7 @@
 
 import type { ReactNode } from 'react';
 import { ITEMS, UNITS, type ItemKind } from '../engine/data';
+import { ritualFormed } from '../engine/game';
 import { GROWTH, levelOf, skillRank, type SkillId } from '../engine/growth';
 import type { GameState, HeroState, LogEntry } from '../engine/types';
 import type { BotSpeed, RoomView } from '../online/api';
@@ -30,7 +31,8 @@ export function musicTheme(game: GameState | null): Theme {
   // The end of the game is the victory or defeat sound effect (App.tsx); the old victory pieces would play over it.
   if (game.phase === 'over') return 'none';
   if (game.phase === 'battle' && (game.battle?.stage === 'fight' || game.battle?.stage === 'deploy')) return game.battle.kind === 'neutral' ? 'guardian' : 'battle';
-  return game.ritual > 0 ? 'ritual' : 'adventure';
+  // The counter only drops at the end of the round, so the ritual music also needs the ritual to still stand (the dragon beaten in the middle of the round silenced it).
+  return game.ritual > 0 && ritualFormed(game) ? 'ritual' : 'adventure';
 }
 
 /** What every screen has: the music and full-screen buttons, an error note, the rules and the card/details layers. */
