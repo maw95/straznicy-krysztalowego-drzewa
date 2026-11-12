@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Rzut Cyklopa: animacja trafienia, iskry i znacznik obrażeń pokazują się dopiero, gdy kamień doleci do celu, a nie w chwili wypuszczenia go z rąk.
+
 - Muzyka rytuału cichnie, gdy tylko rytuał przestaje trwać (np. po pokonaniu bohatera Hordy przy Drzewie), a nie dopiero na końcu rundy.
 
 - Poległe jednostki nie zmniejszają się już po śmierci: leżą w tej samej skali co żywe (Cyklop i Hydra były rysowane o 30% mniejsze). Zwłoki małych jednostek nadal mają limit szerokości dwóch heksów, ale luźniejszy niż dotąd.

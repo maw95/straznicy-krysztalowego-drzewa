@@ -9,6 +9,9 @@ import type { AttackRoll, GameState } from '../engine/types';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { sfx } from './sfx';
 
+/** The Cyclops' boulder leaves his hands 0.62 s after the blow is announced and flies for 0.5 s (styles.css, .projectile.boulder): the hit shows when it lands. */
+const BOULDER_LANDS_MS = 1120;
+
 /** Time per cell when a unit walks along its path (matches .token.walking in styles.css). */
 export const WALK_STEP_MS = 170;
 /** Units whose blow is a spell (it has its own sound, not a blade or a bowstring; report 216950). */
@@ -116,23 +119,32 @@ export function useBattleAnimations(state: GameState) {
       setSeals((x) => [...x, ...newSeals]);
       later(() => setSeals((x) => x.filter((s) => !newSeals.includes(s))), 1400);
     }
+    // A thrown boulder is still in the air: the hit, its sparks and the damage numbers wait until it lands.
+    const wait = newStrikes.some((st) => st.ranged && st.attacker === 'cyclops') ? BOULDER_LANDS_MS : 0;
+    const whenLanded = (f: () => void) => (wait ? later(f, wait) : f());
     if (newShards.length) {
-      setShards((x) => [...x, ...newShards]);
-      later(() => setShards((x) => x.filter((s) => !newShards.includes(s))), 700);
+      whenLanded(() => {
+        setShards((x) => [...x, ...newShards]);
+        later(() => setShards((x) => x.filter((s) => !newShards.includes(s))), 700);
+      });
     }
     if (!fresh.length && !newGhosts.length) return;
     // One sound per attacker: a blade for a melee blow, a bowstring for a shot.
     for (const st of newStrikes.filter((x, i, all) => all.findIndex((o) => o.attacker === x.attacker && o.ranged === x.ranged) === i)) sfx.play(MAGIC_ATTACKERS.has(st.attacker) ? 'magic_attack' : st.ranged ? 'arrow_shot' : 'sword_hit');
-    setFloaters((f) => [...f, ...fresh]);
-    setHitIds((ids) => [...ids.filter((id) => !hit.includes(id)), ...hit]);
     setStrikes((x) => [...x, ...newStrikes.filter((st, i, all) => all.findIndex((o) => o.attacker === st.attacker) === i || st.ranged)]);
     setGhosts((g) => [...g, ...newGhosts]);
+    whenLanded(() => {
+      setFloaters((f) => [...f, ...fresh]);
+      setHitIds((ids) => [...ids.filter((id) => !hit.includes(id)), ...hit]);
+      later(() => {
+        setFloaters((f) => f.filter((x) => !fresh.includes(x)));
+        setHitIds((ids) => ids.filter((id) => !hit.includes(id)));
+      }, 1150);
+    });
     later(() => {
-      setFloaters((f) => f.filter((x) => !fresh.includes(x)));
       setStrikes((x) => x.filter((st) => !newStrikes.includes(st)));
       setGhosts((g) => g.filter((x) => !newGhosts.includes(x)));
-      setHitIds((ids) => ids.filter((id) => !hit.includes(id)));
-    }, 1150);
+    }, wait + 1150);
   }, [b]);
 
   /** The newest blow of a unit still being animated (a fast bot may strike again before the last one fades). */
