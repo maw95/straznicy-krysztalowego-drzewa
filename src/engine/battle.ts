@@ -967,6 +967,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     }
     // No pushing in a duel: nobody moves there, so the two leaders would never meet again.
     // Large units (digital ruleset) are too heavy to push.
+    if (ab === 'boulder' && t.alive && t.tail && !b.duel && abilityActive(state)) log(state, 'ability', `${unitName(t)} jest zbyt ciężki, by go odepchnąć (${UNITS[u.defId].abilityName}).`);
     if (ab === 'boulder' && t.alive && !t.tail && !b.duel && abilityActive(state)) {
       const from = cellsOf(u).reduce((a, c) => (distance(parseKey(c), parseKey(t.pos!)) < distance(parseKey(a), parseKey(t.pos!)) ? c : a));
       const to = pushCell(state, from, t.pos!);
@@ -974,7 +975,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
         t.pos = to;
         stepOnFields(state, t);
         log(state, 'ability', `${unitName(t)} zostaje odepchnięty o 1 pole (${UNITS[u.defId].abilityName}).`);
-      }
+      } else log(state, 'ability', `${unitName(t)} nie ma gdzie się cofnąć (${UNITS[u.defId].abilityName}).`);
     }
   }
   // Trzęsienie: the Golem with its rune core bare shakes everything around it after each attack.

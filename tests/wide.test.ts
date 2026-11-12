@@ -1,6 +1,6 @@
 // Digital ruleset: the wide arena (pointy-topped hexes in rows, 13 × 9).
 import { describe, expect, it } from 'vitest';
-import { WIDE_OBSTACLES, arenaObstacles, battleMove, deployCells, layoutCells, makeBattleUnit, movePath, reachableCells, tailOptions, wideCell, wideCellOf, type ArenaId } from '../src/engine/battle';
+import { WIDE_OBSTACLES, arenaObstacles, battleMove, deployCells, layoutCells, makeBattleUnit, reachableCells, tailOptions, wideCell, wideCellOf, type ArenaId } from '../src/engine/battle';
 import { applyActionInPlace, createGame } from '../src/engine/game';
 import { chooseAction } from '../src/engine/ai';
 import { distance, neighborKeys, parseKey, type HexKey } from '../src/engine/hex';
