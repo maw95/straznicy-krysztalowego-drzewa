@@ -344,6 +344,8 @@ export interface BattleState {
   rolls?: AttackRoll[];
   /** Life a unit regained by itself at the start of its activation (Odrastające Głowy, Bagienne Odrastanie), newest last: the screen shows it apart from the blow that came just before. */
   heals?: Array<{ unitId: string; amount: number }>;
+  /** Jumps over the board (newest last): the screen plays a teleport instead of a walk. `kind`: Król Burzy, Podkop or the Zwój Teleportacji. */
+  teleports?: Array<{ unitId: string; from: HexKey; to: HexKey; kind: 'storm' | 'burrow' | 'scroll' }>;
 }
 
 /** One resolved attack: the attack value, the die (null without dice) and the damage that landed. */

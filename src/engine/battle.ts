@@ -1060,6 +1060,7 @@ export function battleTeleport(state: GameState, to: HexKey) {
   const from = u.pos!;
   const ab = abilityOf(u);
   placeUnit(state, u, to);
+  (b.teleports ??= []).push({ unitId: u.id, from, to, kind: ab === 'stormKing' ? 'storm' : 'burrow' });
   act.moved = true;
   act.acted = true;
   log(state, 'ability', `${unitName(u)} ${ab === 'burrow' ? 'wychodzi spod ziemi' : 'teleportuje się'} (${UNITS[u.defId].abilityName}).`);
@@ -1234,7 +1235,9 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     const to = args.to;
     if (!to || !inLayout(b, to) || unitAt(b, to) || b.obstacles.includes(to)) throw new Error('Wybierz wolne pole.');
     if (!alliesOf(b, t).some((a) => cellsOf(a).some((c) => adjacent(c, to)))) throw new Error('Pole musi sąsiadować z sojusznikiem.');
+    const from = t.pos!;
     if (!placeUnit(use.state, t, to)) throw new Error('Jednostka nie zmieści się na tym polu.');
+    (b.teleports ??= []).push({ unitId: t.id, from, to, kind: 'scroll' });
   },
   hourglass: (use) => {
     const t = ownLiving(use, use.args.targetId);

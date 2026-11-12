@@ -2,7 +2,8 @@
 // and the animations over them.
 
 import { memo, useRef } from 'react';
-import { cellsOf, deployHeads, movePath, unitAt, unitDistance } from '../engine/battle';
+import { cellsOf, deployHeads, movePath, scaleOf, unitAt, unitDistance } from '../engine/battle';
+import { ABILITY } from '../engine/data';
 import type { HexKey } from '../engine/hex';
 import { isDigital, type BattleUnit, type GameState } from '../engine/types';
 import { abilityArt, asset, Frame, Portrait, ACTIVE_FIGURE_RING, Ribbon, SIDE_RING } from './common';
@@ -114,7 +115,7 @@ export function ArenaBoard(p: Props) {
   const wide = b.layout === 'wide';
   const { cellCenter, cellPos, hexPoints, cells: CELLS, cellPoints: CELL_POINTS, canvasW: CANVAS_W, canvasH: CANVAS_H, art: ART_SIZE } = geo;
   const { deployable, picked, deploySide, posOf } = deploy;
-  const { walk, hitIds, strikes, seals, shards, ghosts, rollPops, floaters, lastStrike } = anim;
+  const { walk, hitIds, strikes, seals, shards, bursts, ghosts, rollPops, floaters, lastStrike } = anim;
   const lastRoll = b.rolls?.[b.rolls.length - 1];
 
   // Digital ruleset: units with sprites are drawn by the sprite layer (corpses too), on one hex or two.
@@ -172,7 +173,9 @@ export function ArenaBoard(p: Props) {
     const path = way && off ? way.map((k) => ({ x: cellCenter(k).x + off.x, y: cellCenter(k).y + FEET + off.y })) : null;
     // In a fight the blue cells already mark the active unit; the ring only shows which unit is picked while deploying.
     const ring = deploySide && picked === u.id ? ACTIVE_FIGURE_RING : null;
-    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, ring, attack: p.attackNow && p.attackNow.unitId === u.id ? { key: p.attackNow.key, melee: b.units[p.attackNow.targetId] ? unitDistance(u, b.units[p.attackNow.targetId]) === 1 : false, towardX: cellCenter(b.units[p.attackNow.targetId]?.pos ?? b.units[p.attackNow.targetId]?.corpse ?? fp.head).x } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy', path }];
+    const lastJump = b.teleports?.[b.teleports.length - 1];
+    const blink = lastJump?.unitId === u.id && lastJump.to === u.pos && lastJump.kind !== 'burrow';
+    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, blink, ring, attack: p.attackNow && p.attackNow.unitId === u.id ? { key: p.attackNow.key, melee: b.units[p.attackNow.targetId] ? unitDistance(u, b.units[p.attackNow.targetId]) === 1 : false, towardX: cellCenter(b.units[p.attackNow.targetId]?.pos ?? b.units[p.attackNow.targetId]?.corpse ?? fp.head).x } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy', path }];
   });
   return (
     <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#14100A' }}>
@@ -255,11 +258,19 @@ export function ArenaBoard(p: Props) {
             })}
             {active &&
               cellsOf(active).map((k) => <polygon key={`ac${k}`} points={hexPoints(k, 2)} fill="rgba(158,228,255,0.15)" stroke="#9EE4FF" strokeWidth="3" pointerEvents="none" />)}
-            {(b.fields ?? []).map((f) => (
-              <polygon key={`cf${f.cell}`} points={hexPoints(f.cell, 3)} fill="rgba(255,226,90,0.28)" stroke="#FFE25A" strokeWidth="2.5" strokeDasharray="3 3" pointerEvents="none">
-                <title>Pole Naładowane: rani o 1 każdego, kto na nie wejdzie</title>
-              </polygon>
-            ))}
+            {(b.fields ?? []).map((f) => {
+              // Pole Naładowane (Król Burzy): a bluish glow with flickering lightning, not a plain yellow hex.
+              const c = cellCenter(f.cell);
+              return (
+                <g key={`cf${f.cell}`} className="charged-field" pointerEvents="none">
+                  <polygon points={hexPoints(f.cell, 3)} fill="rgba(70,130,255,0.26)" stroke="#9EE4FF" strokeWidth="2.5" />
+                  <polygon points={hexPoints(f.cell, 9)} fill="rgba(190,230,255,0.16)" stroke="none" />
+                  <path className="zap z1" d={`M${c.x - 14} ${c.y - 22} L${c.x - 3} ${c.y - 8} L${c.x - 12} ${c.y - 2} L${c.x + 2} ${c.y + 12} L${c.x - 4} ${c.y + 22}`} />
+                  <path className="zap z2" d={`M${c.x + 15} ${c.y - 18} L${c.x + 5} ${c.y - 6} L${c.x + 14} ${c.y + 2} L${c.x + 3} ${c.y + 14}`} />
+                  <title>{`Pole Naładowane: rani o ${ABILITY.chargedFieldDamage * scaleOf(state)} każdego, kto na nie wejdzie`}</title>
+                </g>
+              );
+            })}
             {p.previewTail && <polygon points={hexPoints(p.previewTail, 3)} fill="rgba(158,228,255,0.2)" stroke="#9EE4FF" strokeWidth="2" strokeDasharray="5 4" pointerEvents="none" />}
             {approach && <polygon points={hexPoints(approach.cell, 2)} fill="rgba(243,210,122,0.35)" stroke="#F3D27A" strokeWidth="3.5" pointerEvents="none" />}
             {approach && p.approachTail && <polygon points={hexPoints(p.approachTail, 2)} fill="rgba(243,210,122,0.25)" stroke="#F3D27A" strokeWidth="2.5" strokeDasharray="6 4" pointerEvents="none" />}
@@ -406,6 +417,21 @@ export function ArenaBoard(p: Props) {
               <div key={se.key}>
                 <div className="ring-wave" style={{ left: x + W / 2, top: y + H / 2 - 8, ['--rc' as string]: se.color } as React.CSSProperties} />
                 <img className="seal" src={asset(`cards/abilities/${abilityArt(se.ability)}.png`)} alt="" style={{ left: x + W / 2, top: y + H / 2 - 40 }} />
+              </div>
+            );
+          })}
+          {bursts.map((e) => {
+            const { x, y } = cellPos(e.pos);
+            const color = e.kind === 'storm' ? '#9EE4FF' : '#D2A8FF';
+            return (
+              <div key={e.key} className={`tp-burst ${e.late ? 'late' : ''}`} style={{ left: x + W / 2, top: y + H / 2 - 8, ['--rc' as string]: color } as React.CSSProperties}>
+                <span className="tp-column" />
+                <span className="tp-ring" />
+                {Array.from({ length: 10 }, (_, i) => {
+                  const a = (i / 10) * Math.PI * 2 + 0.4;
+                  const d = 22 + (i % 3) * 12;
+                  return <span key={i} className="tp-spark" style={{ ['--hx' as string]: `${Math.cos(a) * d}px`, ['--hy' as string]: `${Math.sin(a) * d - 14}px` } as React.CSSProperties} />;
+                })}
               </div>
             );
           })}

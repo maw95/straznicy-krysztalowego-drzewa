@@ -6,6 +6,9 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Teleportacja wygląda jak teleportacja: jednostka blednie i maleje tam, gdzie stała, po czym pojawia się w nowym miejscu, a w obu miejscach błyska filar światła z pierścieniem i iskrami (niebieskie dla Króla Burzy, fioletowe dla Zwoju Teleportacji). Wcześniej jednostka po prostu przelatywała.
+- Pola, które Król Burzy zostawia po teleportacji, mają grafikę pola elektrycznego (niebieska poświata i migające błyskawice) zamiast żółtego heksa. Podpowiedź pokazuje prawdziwe obrażenia (×3 w Wyprawie).
+
 - Odrastanie Bagiennego Pełzacza i Hydry pokazuje się osobno: najpierw znacznik obrażeń od ciosu (np. −6), chwilę później leczenie (+5), zamiast jednego znacznika z różnicą (−1).
 
 - Rzut Cyklopa: animacja trafienia, iskry i znacznik obrażeń pokazują się dopiero, gdy kamień doleci do celu, a nie w chwili wypuszczenia go z rąk.

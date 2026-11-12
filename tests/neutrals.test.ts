@@ -123,6 +123,8 @@ describe('neutral encounters: abilities', () => {
     const to = teleportCells(s, s.battle!.units.k)[0];
     battleTeleport(s, to);
     expect(s.battle!.fields).toEqual([{ cell: here, until: s.battle!.round + 1 }]);
+    // The screen plays the jump as a teleport (report 903503), not as a walk.
+    expect(s.battle!.teleports).toEqual([{ unitId: 'k', from: here, to, kind: 'storm' }]);
     const w = s.battle!.units.w;
     w.pos = near(here, 0);
     s.battle!.activation = activation('w');

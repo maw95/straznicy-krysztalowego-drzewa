@@ -79,6 +79,8 @@ export function useBattleAnimations(state: GameState) {
   const [shards, setShards] = useState<Array<{ key: number; pos: HexKey; gold: boolean }>>([]);
   const abilitySeen = useRef<Record<string, boolean>>({});
   const healsSeen = useRef(0);
+  const teleportsSeen = useRef(0);
+  const [bursts, setBursts] = useState<Array<{ key: number; pos: HexKey; kind: 'storm' | 'scroll'; late: boolean }>>([]);
   useEffect(() => {
     const fresh: Array<{ key: number; amount: number; x: number; y: number }> = [];
     const hit: string[] = [];
@@ -111,6 +113,16 @@ export function useBattleAnimations(state: GameState) {
       }
       if (prev?.alive && !u.alive && !u.swappedOut && prev.pos) newGhosts.push({ key: Math.random(), defId: u.defId, side: u.side, pos: prev.pos });
       lastSeen.current[u.id] = { hp: u.hp, pos: u.pos ?? prev?.pos ?? null, alive: u.alive };
+    }
+    // A teleport: a burst of light where the unit leaves, and a later one where it lands (the sprite fades out, then in: SpriteLayer's blink).
+    const allTp = b.teleports ?? [];
+    if (allTp.length < teleportsSeen.current) teleportsSeen.current = 0;
+    const newBursts = allTp.slice(teleportsSeen.current).flatMap((t) => (t.kind === 'burrow' ? [] : [{ key: Math.random(), pos: t.from, kind: t.kind as 'storm' | 'scroll', late: false }, { key: Math.random(), pos: t.to, kind: t.kind as 'storm' | 'scroll', late: true }]));
+    teleportsSeen.current = allTp.length;
+    if (newBursts.length) {
+      sfx.play('magic_cast');
+      setBursts((x) => [...x, ...newBursts]);
+      later(() => setBursts((x) => x.filter((e) => !newBursts.includes(e))), 1500);
     }
     prevActive.current = b.activation?.unitId ?? null;
     // Ability seals: a unit's ability flag flipped since the last render.
@@ -189,5 +201,5 @@ export function useBattleAnimations(state: GameState) {
     later(() => setRollPops((p) => p.filter((x) => !pops.includes(x))), 2200);
   }, [b]);
 
-  return { walk, floaters, hitIds, strikes, ghosts, seals, shards, rollPops, lastStrike };
+  return { walk, floaters, hitIds, strikes, ghosts, seals, shards, bursts, rollPops, lastStrike };
 }

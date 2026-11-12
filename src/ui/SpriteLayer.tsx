@@ -27,7 +27,12 @@ export interface SpritePiece {
   snap?: boolean;
   /** A walker's way over the board (feet positions, the first one where it started): it follows it instead of a straight line. */
   path?: Array<{ x: number; y: number }> | null;
+  /** The move to this place was a teleport: it fades out where it stood and fades in here instead of gliding. */
+  blink?: boolean;
 }
+
+/** A teleport: half of it fading out where the unit stood, half fading in at its new place. */
+const BLINK_MS = 760;
 
 /** Flight speed over the board (canvas pixels per second); take-off and landing add their own time. */
 const FLY_SPEED = 420;
@@ -44,6 +49,7 @@ const IMPACT_AT = 0.45;
 type Seg =
   | { kind: 'turn'; to: boolean; ms: number }
   | { kind: 'clip'; clip: string; reverse: boolean; ms: number; then?: 'corpse' | 'stand'; /** An attack clip: announces its blow (once) when it gets there. */ impact?: { unit: string; done: boolean } }
+  | { kind: 'blink'; from: { x: number; y: number }; to: { x: number; y: number }; ms: number }
   | { kind: 'glide'; from: { x: number; y: number }; to: { x: number; y: number }; ms: number; /** Stops of a walker's way (from first to last), when it is not a straight line. */ path?: Array<{ x: number; y: number }>; walk?: boolean };
 
 interface Live {
@@ -139,15 +145,18 @@ class Stage {
       } else if (!p.dead && Math.hypot(p.x - l.endX, p.y - l.endY) > 4) {
         const from = { x: l.endX, y: l.endY };
         const to = { x: p.x, y: p.y };
-        const flies = Boolean(set.frames.wzbicie && set.frames.lot);
-        const stops = !flies && p.path && p.path.length >= 2 ? [from, ...p.path.slice(1, -1), to] : undefined;
-        const length = stops ? stops.slice(1).reduce((m, q, i) => m + Math.hypot(q.x - stops[i].x, q.y - stops[i].y), 0) : Math.hypot(to.x - from.x, to.y - from.y);
-        const ms = Math.max(MIN_GLIDE_MS, (length / (flies ? FLY_SPEED : WALK_SPEED)) * 1000);
-        // A unit always faces the way it goes: it turns first (a flyer too: it used to take off facing the enemy and fly backwards).
-        if (Math.abs(to.x - from.x) > 4) this.faceTo(l, to.x < from.x);
-        if (flies) l.queue.push({ kind: 'clip', clip: 'wzbicie', reverse: false, ms: clipMs(set, 'wzbicie') });
-        l.queue.push({ kind: 'glide', from, to, ms, path: stops, walk: !flies });
-        if (flies) l.queue.push({ kind: 'clip', clip: 'wzbicie', reverse: true, ms: clipMs(set, 'wzbicie') });
+        if (p.blink) l.queue.push({ kind: 'blink', from, to, ms: BLINK_MS });
+        else {
+          const flies = Boolean(set.frames.wzbicie && set.frames.lot);
+          const stops = !flies && p.path && p.path.length >= 2 ? [from, ...p.path.slice(1, -1), to] : undefined;
+          const length = stops ? stops.slice(1).reduce((m, q, i) => m + Math.hypot(q.x - stops[i].x, q.y - stops[i].y), 0) : Math.hypot(to.x - from.x, to.y - from.y);
+          const ms = Math.max(MIN_GLIDE_MS, (length / (flies ? FLY_SPEED : WALK_SPEED)) * 1000);
+          // A unit always faces the way it goes: it turns first (a flyer too: it used to take off facing the enemy and fly backwards).
+          if (Math.abs(to.x - from.x) > 4) this.faceTo(l, to.x < from.x);
+          if (flies) l.queue.push({ kind: 'clip', clip: 'wzbicie', reverse: false, ms: clipMs(set, 'wzbicie') });
+          l.queue.push({ kind: 'glide', from, to, ms, path: stops, walk: !flies });
+          if (flies) l.queue.push({ kind: 'clip', clip: 'wzbicie', reverse: true, ms: clipMs(set, 'wzbicie') });
+        }
         l.endX = p.x;
         l.endY = p.y;
       } else if (!l.queue.length && !l.seg) {
@@ -209,10 +218,10 @@ class Stage {
       }
       if (now - l.segStart < seg.ms) return;
       // Segment done.
-      if (seg.kind === 'glide') {
+      if (seg.kind === 'glide' || seg.kind === 'blink') {
         l.x = seg.to.x;
         l.y = seg.to.y;
-        if (seg.walk) sfx.walking(l.piece.key, false);
+        if (seg.kind === 'glide' && seg.walk) sfx.walking(l.piece.key, false);
       } else if (seg.kind === 'turn') l.flip = seg.to;
       else if (seg.then) l.rest = seg.then;
       l.segStart += seg.ms;
@@ -241,7 +250,10 @@ class Stage {
   private drawUnit(ctx: CanvasRenderingContext2D, l: Live, set: SpriteSet, now: number) {
     const { frameW, frameH, cols } = set;
     let x = l.x;
-    const y = l.y;
+    let y = l.y;
+    /** A teleport in progress: how visible the unit is and how much of its size it keeps. */
+    let vis = 1;
+    let shrink = 1;
     let img: CanvasImageSource = l.rest === 'corpse' ? set.martwy : set.stoi;
     let sx = 0;
     let sy = 0;
@@ -275,6 +287,16 @@ class Stage {
           l.endFlip = l.flip;
         }
       }
+      if (seg.kind === 'blink') {
+        // First half: it fades out and shrinks where it stood; second half: it grows back and fades in at the new place.
+        const first = t < 0.5;
+        const q = first ? t * 2 : (t - 0.5) * 2;
+        const at = first ? seg.from : seg.to;
+        x = l.x = at.x;
+        y = l.y = at.y;
+        vis = first ? 1 - q : q;
+        shrink = first ? 1 - 0.3 * q : 0.7 + 0.3 * q;
+      }
       if (seg.kind === 'turn') {
         // No turn clip yet: the picture never thins to a sheet of paper. It narrows only to about half, hops a little and leans
         // into the turn, and the mirror image takes over at the middle, where the hop hides the switch.
@@ -284,7 +306,7 @@ class Stage {
         turnLift = swing * 7;
         turnLean = (t < 0.5 ? 1 : -1) * swing * 0.1 * (l.flip ? -1 : 1);
       }
-      const clip = seg.kind === 'glide' ? set.moveClip ?? '' : seg.kind === 'turn' ? '' : seg.clip;
+      const clip = seg.kind === 'glide' ? set.moveClip ?? '' : seg.kind === 'turn' || seg.kind === 'blink' ? '' : seg.clip;
       const n = set.frames[clip];
       const sheet = set.sheets[clip];
       if (n && sheet) {
@@ -311,6 +333,7 @@ class Stage {
     const gy = l.seg?.kind === 'glide' ? l.y : y;
     // Ring for the picked unit (no shadow: the pictures already stand on the ground).
     ctx.save();
+    ctx.globalAlpha = vis;
     if (l.piece.ring && !l.piece.dead) {
       ctx.strokeStyle = l.piece.ring;
       ctx.lineWidth = 2.5;
@@ -330,7 +353,7 @@ class Stage {
     const k = 1 + (set.corpse.scale - 1) * lie;
     ctx.translate(x, gy - turnLift);
     ctx.rotate(turnLean);
-    ctx.scale((l.flip ? -1 : 1) * turn * k, k * (set.spec.stretchY ?? 1));
+    ctx.scale((l.flip ? -1 : 1) * turn * k * shrink, k * shrink * (set.spec.stretchY ?? 1));
     ctx.translate(0, (set.corpse.dy * lie) / k);
     ctx.drawImage(img, sx, sy, sw, sh, -set.cx * dw, -set.feet * dh, dw, dh);
     if (blend) {
