@@ -342,6 +342,8 @@ export interface BattleState {
   damageBy: Record<string, number>;
   /** The latest resolved attacks (newest last), so the screen can show every die roll. */
   rolls?: AttackRoll[];
+  /** Life a unit regained by itself at the start of its activation (Odrastające Głowy, Bagienne Odrastanie), newest last: the screen shows it apart from the blow that came just before. */
+  heals?: Array<{ unitId: string; amount: number }>;
 }
 
 /** One resolved attack: the attack value, the die (null without dice) and the damage that landed. */

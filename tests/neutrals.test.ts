@@ -80,6 +80,8 @@ describe('neutral encounters: abilities', () => {
     const s = fight([hero(arenaCell(2, 2)), { id: 'b', defId: 'bogCrawler', side: 'neutral', cell: here, hp: 5 }]);
     endActivation(s);
     expect(s.battle!.units.b.hp).toBe(6);
+    // The screen shows the regrowth apart from the blow that came just before it (report 805567).
+    expect(s.battle!.heals).toEqual([{ unitId: 'b', amount: 1 }]);
   });
 
   it('Kamienny Golem: Kamienna Skóra −2 (min 1) until half its Życie is gone, then Trzęsienie hurts everyone around', () => {

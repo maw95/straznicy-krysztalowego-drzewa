@@ -682,11 +682,13 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
     const healed = Math.min(ABILITY.regrowthHeal * hpScaleOf(state), u.maxHp - u.hp);
     u.hp += healed;
     log(state, 'ability', `${unitName(u)} odzyskuje ${healed} Ż (Odrastające Głowy).`);
+    (b.heals ??= []).push({ unitId: u.id, amount: healed });
   }
   if (abilityOf(u) === 'bogRegrowth' && abilityActive(state) && u.hp < u.maxHp) {
     const healed = Math.min(ABILITY.bogRegrowthHeal * hpScaleOf(state), u.maxHp - u.hp);
     u.hp += healed;
     log(state, 'ability', `${unitName(u)} odzyskuje ${healed} Ż (Bagienne Odrastanie).`);
+    (b.heals ??= []).push({ unitId: u.id, amount: healed });
   }
 }
 

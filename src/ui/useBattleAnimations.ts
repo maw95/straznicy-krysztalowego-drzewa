@@ -78,25 +78,36 @@ export function useBattleAnimations(state: GameState) {
   const [seals, setSeals] = useState<Array<{ key: number; ability: string; pos: HexKey; color: string }>>([]);
   const [shards, setShards] = useState<Array<{ key: number; pos: HexKey; gold: boolean }>>([]);
   const abilitySeen = useRef<Record<string, boolean>>({});
+  const healsSeen = useRef(0);
   useEffect(() => {
     const fresh: Array<{ key: number; amount: number; x: number; y: number }> = [];
     const hit: string[] = [];
     const newStrikes: typeof strikes = [];
     const newGhosts: typeof ghosts = [];
     const attacker = prevActive.current ? b.units[prevActive.current] : undefined;
+    // Life a unit regained by itself since the last render (the next activation began right after a blow): shown apart from the blow, not netted against it.
+    const allHeals = b.heals ?? [];
+    if (allHeals.length < healsSeen.current) healsSeen.current = 0; // a new battle
+    const healedBy: Record<string, number> = {};
+    for (const h of allHeals.slice(healsSeen.current)) healedBy[h.unitId] = (healedBy[h.unitId] ?? 0) + h.amount;
+    healsSeen.current = allHeals.length;
+    const healFresh: typeof fresh = [];
     for (const u of Object.values(b.units)) {
       const prev = lastSeen.current[u.id];
-      if (prev && prev.hp !== u.hp) {
+      const healed = healedBy[u.id] ?? 0;
+      if (prev && (prev.hp !== u.hp || healed)) {
         const where = u.pos ?? prev.pos;
+        const delta = u.hp - prev.hp - healed;
         if (where) {
           const { x, y } = cellPos(where);
-          fresh.push({ key: Math.random(), amount: u.hp - prev.hp, x: x + W / 2, y: y + H / 2 - 40 });
-          if (u.hp < prev.hp && attacker && attacker.id !== u.id && attacker.side !== u.side && attacker.pos) {
+          if (delta) fresh.push({ key: Math.random(), amount: delta, x: x + W / 2, y: y + H / 2 - 40 });
+          if (healed) healFresh.push({ key: Math.random(), amount: healed, x: x + W / 2, y: y + H / 2 - 40 });
+          if (delta < 0 && attacker && attacker.id !== u.id && attacker.side !== u.side && attacker.pos) {
             // A shooter next to its target fights in melee: no arrow or boulder flies (it has its own close-combat clip).
             newStrikes.push({ key: Math.random(), from: attacker.pos, to: where, ranged: UNITS[attacker.defId].attackType === 'ranged' && unitDistance(attacker, u) > 1, attacker: attacker.id });
           }
         }
-        if (u.hp < prev.hp) hit.push(u.id);
+        if (delta < 0) hit.push(u.id);
       }
       if (prev?.alive && !u.alive && !u.swappedOut && prev.pos) newGhosts.push({ key: Math.random(), defId: u.defId, side: u.side, pos: prev.pos });
       lastSeen.current[u.id] = { hp: u.hp, pos: u.pos ?? prev?.pos ?? null, alive: u.alive };
@@ -127,6 +138,13 @@ export function useBattleAnimations(state: GameState) {
         setShards((x) => [...x, ...newShards]);
         later(() => setShards((x) => x.filter((s) => !newShards.includes(s))), 700);
       });
+    }
+    if (healFresh.length) {
+      // After the blow's number, so both are read: −6, then +5.
+      later(() => {
+        setFloaters((f) => [...f, ...healFresh]);
+        later(() => setFloaters((f) => f.filter((x) => !healFresh.includes(x))), 1150);
+      }, wait + 700);
     }
     if (!fresh.length && !newGhosts.length) return;
     // One sound per attacker: a blade for a melee blow, a bowstring for a shot.

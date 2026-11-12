@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Odrastanie Bagiennego Pełzacza i Hydry pokazuje się osobno: najpierw znacznik obrażeń od ciosu (np. −6), chwilę później leczenie (+5), zamiast jednego znacznika z różnicą (−1).
+
 - Rzut Cyklopa: animacja trafienia, iskry i znacznik obrażeń pokazują się dopiero, gdy kamień doleci do celu, a nie w chwili wypuszczenia go z rąk.
 
 - Muzyka rytuału cichnie, gdy tylko rytuał przestaje trwać (np. po pokonaniu bohatera Hordy przy Drzewie), a nie dopiero na końcu rundy.
