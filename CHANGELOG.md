@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Naprawiony rzadki błąd botów: smok, który nie mógł zionąć ogniem (drugi cel byłby sojusznikiem), podawał mimo to drugi cel, a gra odrzucała taki atak i walka z botem mogła stanąć.
+
 - Kamienna Skóra Kamiennego Golema jest słabsza: zmniejsza każdy cios o 3 (w Wyprawie), nie o 6. Elf z Atakiem 6 zadaje mu teraz 3 obrażenia zamiast 1.
 
 - Leśny Tropiciel (i odpowiedniki Hordy) na III stopniu daje +3 punkty ruchu na mapie; wcześniej III stopień dawał tyle samo co II (+2).

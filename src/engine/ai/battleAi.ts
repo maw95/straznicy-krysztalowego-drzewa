@@ -373,7 +373,11 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
     let second: BattleUnit | null = null;
     if (useAbility && ab === 'fireBreath') {
       second = breathSecondTarget(state, u, t);
-      if (!second || second.side === u.side) useAbility = false;
+      // Not breathing (no second target, or an ally would burn): the second target goes too, the engine refuses it for a plain attack.
+      if (!second || second.side === u.side) {
+        useAbility = false;
+        second = null;
+      }
     }
     if (canHitTwo(state, u)) second = rulebookTarget(here.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(u)) === 1));
     return { type: 'battleAttack', targetId: t.id, useAbility, secondTargetId: second?.id };
