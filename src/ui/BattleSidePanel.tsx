@@ -24,7 +24,7 @@ export function SidePanel({ s, state, active, onUnit }: Props) {
       {units.map((u) => {
         const isActive = active?.id === u.id;
         return (
-          <button key={u.id} className="btn" onClick={() => onUnit(u)} {...details(() => <UnitDetails u={u} />)} style={{ display: 'flex', gap: 10, alignItems: 'center', background: 'none', border: 0, padding: 0, textAlign: 'left', color: 'inherit', opacity: u.alive ? 1 : 0.5 }}>
+          <button key={u.id} className="btn" onClick={() => onUnit(u)} {...details(() => <UnitDetails u={u} />, { pin: true })} style={{ display: 'flex', gap: 10, alignItems: 'center', background: 'none', border: 0, padding: 0, textAlign: 'left', color: 'inherit', opacity: u.alive ? 1 : 0.5 }}>
             <Portrait unitId={u.defId} size={50} ring={SIDE_RING[s]} dim={!u.alive} glow={isActive ? '0 0 0 2.5px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontWeight: 700, fontSize: 16, color: '#F7EDD2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{UNITS[u.defId].name}</div>

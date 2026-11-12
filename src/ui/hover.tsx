@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import type { ItemKind } from '../engine/data';
 import { details } from './details';
 import { TreasureCard } from './TreasureCard';
-import { UnitCard } from './UnitCard';
+import { UnitCard, UnitTip } from './UnitCard';
+import { useItem } from './statScale';
 
 interface HoverTarget {
   id: string;
@@ -27,13 +28,21 @@ export function CardFor({ id, width }: { id: string; width: number }) {
   return id.startsWith('item:') ? <TreasureCard kind={id.slice(5) as ItemKind} width={width} /> : <UnitCard unitId={id} width={width} />;
 }
 
+/** The small hint shown on hover: name and stats of a unit, name of a treasure. */
+function TipFor({ id }: { id: string }) {
+  return id.startsWith('item:') ? <ItemTip kind={id.slice(5) as ItemKind} /> : <UnitTip unitId={id} />;
+}
+function ItemTip({ kind }: { kind: ItemKind }) {
+  return <b>{useItem(kind).def.name}</b>;
+}
+
 /**
  * Props to spread on an element that should preview a unit (`unitId`) or treasure (`item:<kind>`):
  * the card on hover, and the card under the right mouse button (details.tsx).
  */
 export function hoverCard(id: string) {
   return {
-    ...details(() => <CardFor id={id} width={280} />),
+    ...details(() => <CardFor id={id} width={280} />, { pin: true }),
     onMouseEnter: (e: React.MouseEvent) => canHover() && set({ id, x: e.clientX, y: e.clientY }),
     onMouseMove: (e: React.MouseEvent) => current?.id === id && set({ id, x: e.clientX, y: e.clientY }),
     onMouseLeave: () => current?.id === id && set(null),
@@ -43,8 +52,6 @@ export function hoverCard(id: string) {
 export function hideHoverCard() {
   set(null);
 }
-
-const W = 220;
 
 export function HoverCardLayer() {
   const [, tick] = useState(0);
@@ -61,12 +68,12 @@ export function HoverCardLayer() {
     };
   }, []);
   if (!current) return null;
-  const h = (W * 88) / 63;
-  const left = current.x + 24 + W > window.innerWidth ? current.x - W - 24 : current.x + 24;
-  const top = Math.max(8, Math.min(window.innerHeight - h - 8, current.y - h / 2));
+  const left = current.x + 18 + 300 > window.innerWidth ? undefined : current.x + 18;
+  const right = left === undefined ? window.innerWidth - current.x + 18 : undefined;
+  const top = Math.max(8, Math.min(window.innerHeight - 40, current.y - 14));
   return (
-    <div style={{ position: 'fixed', left, top, zIndex: 90, pointerEvents: 'none', animation: 'fade-in 0.15s ease-out both' }}>
-      <CardFor id={current.id} width={W} />
+    <div className="plate parch" style={{ position: 'fixed', left, right, top, zIndex: 90, pointerEvents: 'none', padding: '3px 10px', fontSize: 15, whiteSpace: 'nowrap', animation: 'fade-in 0.15s ease-out both' }}>
+      <TipFor id={current.id} />
     </div>
   );
 }

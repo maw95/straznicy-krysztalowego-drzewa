@@ -176,6 +176,23 @@ const DUEL_BLUE = '#8FD3F4';
 /** Set by the app while a digital game is on, so every card (hover, dialogs, helper pick) shows the digital stats. */
 export const DigitalCardsContext = createContext(false);
 
+/** The small hover hint of a unit: its name and the three numbers the card shows (the card itself opens under the right mouse button). */
+export function UnitTip({ unitId }: { unitId: string }) {
+  const digital = useContext(DigitalCardsContext);
+  const [statScale, hpScale] = useScales();
+  const base = UNITS[unitId];
+  const stats = battleStats(unitId, digital, statScale, hpScale);
+  const bonus = digital && base.attackType === 'ranged' ? DIGITAL_RANGED_BONUS * statScale : 0;
+  return (
+    <>
+      <b>{base.name}</b>
+      <span style={{ marginLeft: 8 }}>
+        Życie {stats.hp} · Atak {stats.attack + bonus} · Szybkość {stats.speed}
+      </span>
+    </>
+  );
+}
+
 export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false, digital: digitalProp }: { unitId: string; width?: number; hp?: number; attack?: number; speed?: number; duel?: boolean; /** The digital edition's Życie, Atak and Szybkość (where they differ from the printed card). */ digital?: boolean }) {
   const inDigitalGame = useContext(DigitalCardsContext);
   const [statScale, hpScale] = useScales();

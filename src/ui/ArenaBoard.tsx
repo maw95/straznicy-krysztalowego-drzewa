@@ -342,7 +342,7 @@ export function ArenaBoard(p: Props) {
                 className={`hexbtn token ${walk[u.id] ? 'walking' : ''} ${hitIds.includes(u.id) ? 'hit' : ''} ${lunge ? 'lunge' : ''} ${aimed ? '' : p.unitCursor(u)}`}
                 data-unit={u.id}
                 onClick={(e) => p.onUnit(behind(e, u))}
-                {...details(() => <UnitDetails u={u} />)}
+                {...details(() => <UnitDetails u={u} />, { pin: true })}
                 onMouseEnter={() => setHover(u.pos)}
                 onPointerMove={(e) => {
                   if (e.pointerType === 'touch') return;

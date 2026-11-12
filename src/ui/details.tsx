@@ -31,14 +31,17 @@ function show(next: Shown | null) {
  * reaches the inner one first: each sets the candidate and the outer one, set last, wins — it is the one
  * that knows most (the hex tells about its guardian too). The layer picks the candidate up afterwards.
  */
-let candidate: { render: () => ReactNode; touch: boolean } | null = null;
+let candidate: { render: () => ReactNode; touch: boolean; pin: boolean } | null = null;
 
-/** Props for an element that has details: `render` builds the window's content when it opens. */
-export function details(render: () => ReactNode) {
+/**
+ * Props for an element that has details: `render` builds the window's content when it opens. With `pin` (the unit and treasure
+ * cards) the window stays open after the right button or the finger comes up and closes on the next press anywhere.
+ */
+export function details(render: () => ReactNode, opts: { pin?: boolean } = {}) {
   return {
     onPointerDown: (e: React.PointerEvent) => {
       const touch = e.pointerType === 'touch';
-      if ((touch && e.button === 0) || (!touch && e.button === 2)) candidate = { render, touch };
+      if ((touch && e.button === 0) || (!touch && e.button === 2)) candidate = { render, touch, pin: Boolean(opts.pin) };
     },
     onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
   };
@@ -73,6 +76,8 @@ export function DetailsLayer() {
       if (shown && pinned) {
         show(null);
         pinned = false;
+        // The tap that closes a card on a touch screen must not also move a hero or attack.
+        if (e.pointerType === 'touch') suppressClick = true;
       }
       const c = candidate;
       candidate = null;
@@ -83,6 +88,7 @@ export function DetailsLayer() {
           hideHoverCard();
           show({ content: c.render(), x: touchStart!.x, y: touchStart!.y });
           suppressClick = true;
+          pinned = c.pin;
         }, LONG_PRESS_MS);
         return;
       }
@@ -94,7 +100,7 @@ export function DetailsLayer() {
         if (up.button !== 2) return;
         window.removeEventListener('pointerup', onUp);
         rightUp = null;
-        if (Date.now() - opened >= HOLD_MS) show(null);
+        if (!c.pin && Date.now() - opened >= HOLD_MS) show(null);
         else pinned = true;
       };
       rightUp = onUp;
