@@ -58,10 +58,15 @@ describe('cursors over units in battle', () => {
     expect(c.elfDruid).toBe('');
   });
 
-  it('a ranged unit next to an enemy still shoots it (arrow); the others are out of reach, not hidden', () => {
+  it('a ranged unit next to an enemy must strike it (sword, not arrow); the others are out of reach, not hidden', () => {
     const c = cursors(fight([['elfDruid', 'dawn', 4, 4], ['caveSpider', 'horde', 4, 6], ['goblinShaman', 'horde', 4, 10]]));
-    expect(c.caveSpider).toBe('cur-ranged');
+    expect(c.caveSpider).toBe('cur-melee');
     expect(c.goblinShaman).toBe('');
+  });
+
+  it('a ranged unit with nobody next to it shoots from a distance (arrow)', () => {
+    const c = cursors(fight([['elfDruid', 'dawn', 4, 4], ['caveSpider', 'horde', 8, 4]]));
+    expect(c.caveSpider).toBe('cur-ranged');
   });
 
   it('a melee unit: a sword over a neighbouring enemy', () => {
