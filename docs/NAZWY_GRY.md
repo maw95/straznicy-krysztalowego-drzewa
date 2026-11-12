@@ -56,3 +56,11 @@ Rejestry RDAP (`rdap.org`, `rdap.dns.pl`) i DNS; „wolna” = brak wpisu w reje
 | X, Instagram | nie dało się rozstrzygnąć automatycznie (serwisy odpowiadają „200” także dla nieistniejących kont); sprawdzić ręcznie |
 
 **Wniosek:** brak `.com` to główny kłopot. Warto sprawdzić, czy właściciel `shardroot.com` używa nazwy jako marki (jeśli to gra, oprogramowanie lub firma w tej samej branży, nazwa jest ryzykowna prawnie), i przejrzeć TMview (EUIPO) oraz WIPO Global Brand Database przed kupnem czegokolwiek. Praktyczne wyjścia, gdy `.com` nie da się odzyskać: **shardroot.games** albo **.io** jako adres główny (typowe dla gier), `.pl` dla polskiej strony, a na Steamie i tak liczy się strona sklepu, nie domena.
+
+### Co stoi pod shardroot.com (sprawdzone przez autora 12.11.2026)
+
+Strona to wiki fantasy „The Waning Border” (postacie, artefakty, miejsca, mapa, zakony). **The Shardroot** jest w tym świecie centralnym elementem: ogromnym kryształem będącym źródłem całej magii, wokół którego zbudowano stolicę imperium; jego rozrost spowodował Katastrofę. Domena zarejestrowana 24.08.2025.
+
+Ocena: to ta sama dziedzina (fantasy, kryształ jako źródło magii i osi fabuły) i **to samo słowo użyte jako nazwa własna**, więc „Shardroot” jako tytuł naszej gry będzie mylony z cudzym światem, a ewentualny spór o znak towarowy dotyczyłby dokładnie fantasy. Czy to opublikowana książka lub gra, nie wiadomo (na stronie nie ma wzmianki o wydawcy; jest tylko zakładka Contact).
+
+**Rekomendacja:** nie budować marki na „Shardroot”. Wracamy do listy: **Crystal Wardens** (wolna na Steamie; polska wersja „Crystal Wardens: Strażnicy Kryształowego Drzewa” według tego samego schematu co wyżej) albo inna nazwa z tabeli (Dawnroot, Heartroot, Crystalbough). Przed wyborem powtórzyć sprawdzenie domen i nazw dla nowego kandydata, w tym wyszukanie nazwy razem z słowami „fantasy”, „novel” i „game”.
