@@ -7,13 +7,12 @@ Zasada: **jeden aktywny temat naraz.** Nowe pomysły autora trafiają do „Pomy
 
 ## 1. Teraz
 
-**Neutralni: zostaje wydanie silnika i wdrożenie backendu.** Silnik, grafiki i dźwięki dziewięciu neutralnych są gotowe (wydanie 2.4.0). Żeby spotkania i artefakty działały online, backend musi dostać nowy pakiet silnika (`make deploy` w repozytorium backendu). Serwer odrzuca nieznane typy akcji, więc to trzeba zrobić przed wydaniem gry z nowymi akcjami (nowe pola `mapShape`, `customMapId`, `child`, `tier`, `objective`, `shape`, akcje `chooseSkill`, cele `survival`/`boss`/`artifact`, `noHorde`).
+**Wydanie z nowymi akcjami i zmianami z 12.11.** Backend działa już na silniku 2.4.0 (wdrożony 12.11, nowe akcje i cele przyjmuje). Zmiany Krakena (głowa strzela, Atak 2) i Pegaza (5 Ż, 3 A w wersji cyfrowej) wejdą do następnego wydania silnika; po nim backend znów dostanie nowy pakiet (`make deploy`), bo walki z Krakenem i Pegazem liczy też serwer.
 
-## 2. Nowe uwagi autora (12.11.2026, partia ziarna 236189)
+## 2. Nowe uwagi autora i obserwacje
 
-- [ ] **2.1. Kraken jest zbyt bierny.** Dopóki się do niego nie podejdzie, nic nie robi; można go zastrzelić z dystansu. Pomysły autora: atak dystansowy albo możliwość poruszania się. Do przemyślenia razem z 2.2 (zmiana Krakena i jego macek: `data.ts`, `neutrals.test.ts`, opis w `ZASADY_CYFROWE.md`).
-- [ ] **2.2. Walka z Krakenem za łatwa jak na legendarny artefakt.** Bohater (Złoty Smok) bez pomocników, tylko trzy macki Krakena, wygrana bez użycia skarbu. Sprawdzić symulacją (bohater solo kontra Kraken z mackami) i dobrać: życie/atak Krakena, liczbę macek, albo niższą rzadkość nagrody. Wskaźnik trudności walki (`difficulty.ts`) powinien dla takiej walki pokazywać „łatwa”, więc to dobry test jego progów.
-- [ ] **2.3. Czy Pegaz jest słabszym pomocnikiem niż Elf Druid i Nimfa?** Autor prosi o symulacje. Plan: `make sim-battles` albo osobny skrypt, w którym ta sama drużyna dostaje kolejno każdego pomocnika (w trybie cyfrowym, z rozwojem i bez), porównanie % wygranych i średniego Życia po bitwie; jeśli Pegaz wyraźnie odstaje, podpowiedzieć poprawkę (statystyki, zdolność).
+- [ ] **2.1. Prastary Niedźwiedź przegrywa z Krakenem w 0% nawet z dwoma pomocnikami** (`make sim-kraken`, `SIM_GROWN=1`; Złoty Smok 50–85%, Jednorożec 70–95%). Zabija dwie macki z trzech i ginie. Do zbadania: czy to słabość bota (ustawienie, wybór celu) czy zbyt twarde macki dla wolnego, bijącego wręcz bohatera.
+- [ ] **2.2. Pegaz i Kraken: sprawdzić w prawdziwej grze** (autor), czy nowe liczby odpowiadają wrażeniom; stare uwagi z 12.11 (partia 236189) zostały zrealizowane.
 
 ## 3. Dalej (kolejność)
 
@@ -43,7 +42,7 @@ Zasada: **jeden aktywny temat naraz.** Nowe pomysły autora trafiają do „Pomy
 - **Pożyczone obrazki strażników** dla części zdolności (`BORROWED_ART`, `BORROWED_ABILITY` w `src/ui/common.tsx`): własne ikony.
 - **Dźwięki mapy przygody:** krok bohatera, kryształ i Drzewo; ewentualnie więcej wariantów ciosu (`ui/sfx.ts`).
 - **Wariant celu „Artefakt” z eskortą** (Przymierze niesie Artefakt z bazy do Drzewa, Horda tylko poluje): pominięty jako mało różny od wyścigu; wrócić po opinii z gry.
-- **Wskaźnik trudności walki** pokazać też w oknie potwierdzenia walki (dziś tylko w podpowiedzi pola na mapie); sprawdzić walkę bohatera bez pomocników (patrz 2.2).
+- **Wskaźnik trudności walki** pokazać też w oknie potwierdzenia walki (dziś tylko w podpowiedzi pola na mapie); walka bohatera bez pomocników przeciw Krakenowi jest już sprawdzona (`make sim-kraken`).
 - **Drzewka umiejętności bohatera** z rozgałęzieniami (dziś wspólna pula 6 umiejętności).
 
 ## 6. Do sprawdzenia na żywo (autor)
