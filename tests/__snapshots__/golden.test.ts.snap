@@ -9,8 +9,8 @@ exports[`golden bot games > arena dice 1`] = `
 
 exports[`golden bot games > arena easy 1`] = `
 [
-  "seed 1: horde round 1 actions 28 state b02a959550b6ae3d actions 316e29d8e3f4bbcd",
-  "seed 2: horde round 1 actions 51 state 909d2231c09c0afa actions 19126a2292dfe5f8",
+  "seed 1: horde round 1 actions 30 state 6c4c40d388c5be2e actions dad22278c1ad312b",
+  "seed 2: horde round 1 actions 53 state 71fb5ee60de49fbd actions 63ec3ab92535aeeb",
   "seed 3: dawn round 1 actions 43 state 43d213321d3623d1 actions 74e2bee1537d5a01",
 ]
 `;
@@ -33,15 +33,15 @@ exports[`golden bot games > arena normal 1`] = `
 
 exports[`golden bot games > coop1 dice short 1`] = `
 [
-  "seed 1: horde round 1 actions 56 state ffbe5c960cf8e044 actions 7a62e477a41aac9c",
-  "seed 2: dawn round 3 actions 74 state 45d2265be3fb20a1 actions bc906a6e7ff6ba9d",
-  "seed 3: dawn round 4 actions 104 state 9d7fc9bbcbf93d4a actions 88506fe096267856",
+  "seed 1: horde round 1 actions 55 state 1569ec48b7498fce actions 6381c6f09d6607a2",
+  "seed 2: dawn round 3 actions 75 state 5dce31a38e20beca actions 6ea3caf50d85564a",
+  "seed 3: dawn round 4 actions 106 state 2827e1a35d282979 actions 8b02d14bb85d92b4",
 ]
 `;
 
 exports[`golden bot games > coop1 easy short 1`] = `
 [
-  "seed 1: dawn round 5 actions 53 state b8e3ff9f7d162605 actions eae12b4ca7e21b1a",
+  "seed 1: dawn round 5 actions 54 state 42b112234894d641 actions 035d4a4e1881bfd2",
   "seed 2: dawn round 3 actions 25 state 48c62e1bad5bc0a3 actions 06552aaa9a703d7b",
   "seed 3: dawn round 4 actions 34 state 41b2e2f30010bf63 actions f2c13e9e321f5777",
 ]
@@ -56,8 +56,8 @@ exports[`golden bot games > coop1 elixirs only short 1`] = `
 
 exports[`golden bot games > coop1 hard short 1`] = `
 [
-  "seed 1: horde round 1 actions 44 state 599ac711c47548b0 actions d84cb6d2f74f9af8",
-  "seed 2: dawn round 3 actions 78 state 777de4680c1dd3b8 actions d1ade1b408fd0a6e",
+  "seed 1: horde round 1 actions 49 state 2f91debcf0f0895f actions 37d74744d1ff443f",
+  "seed 2: dawn round 3 actions 79 state c1ea6aef07a96137 actions dadd8f3321e25521",
   "seed 3: horde round 2 actions 56 state 7c25f387825344b5 actions 88ac2b6f4ea5424b",
   "seed 4: horde round 2 actions 94 state 00429baf5f95e958 actions 7aae1e2412454886",
 ]
@@ -65,115 +65,115 @@ exports[`golden bot games > coop1 hard short 1`] = `
 
 exports[`golden bot games > coop1 no abilities short 1`] = `
 [
-  "seed 1: horde round 1 actions 40 state dc0aee1b8823f232 actions 1ce06b284a5e7208",
+  "seed 1: horde round 1 actions 45 state 04c90e854cc34d40 actions 66dbefaea06626a6",
   "seed 2: dawn round 3 actions 60 state 8643a44878ecfeb1 actions f9fc13c9b24f2f53",
 ]
 `;
 
 exports[`golden bot games > coop1 normal short 1`] = `
 [
-  "seed 1: horde round 1 actions 40 state 93443c575af19464 actions cd04d4b36d0db999",
+  "seed 1: horde round 1 actions 53 state eb69dda4a0ac8676 actions e43b1529085577db",
   "seed 2: dawn round 3 actions 73 state 743b898f8c9f743d actions 9e37e1ad9a4b4672",
   "seed 3: dawn round 4 actions 107 state d5baf534513278af actions 658a09821bf5511e",
   "seed 4: dawn round 4 actions 105 state efb0c97d4e30a00a actions ec5a411a44b4f734",
-  "seed 5: dawn round 5 actions 138 state 30974a3442691229 actions 52978f1a30e14fd5",
-  "seed 6: horde round 3 actions 51 state 76ab15ed1054bacd actions 5848bf98db0c6193",
+  "seed 5: dawn round 5 actions 135 state aa1898e51f749adb actions e7be34697a875f2f",
+  "seed 6: horde round 3 actions 62 state 195a63abbed36f0c actions cdfbdce579787844",
 ]
 `;
 
 exports[`golden bot games > coop1 normal veryLong 1`] = `
 [
-  "seed 1: horde round 24 actions 272 state 95747d5608387eed actions eee876f98d2c5225",
+  "seed 1: horde round 24 actions 254 state 53af8ebbaa03b908 actions cd7116d77ef83ede",
   "seed 2: dawn round 14 actions 203 state 5a09139081dbdbd0 actions 4a30c972d9955198",
 ]
 `;
 
 exports[`golden bot games > coop1 replacement medium 1`] = `
 [
-  "seed 1: dawn round 7 actions 137 state aaa0888684ed39bd actions 5e3c5df78f354eba",
+  "seed 1: dawn round 7 actions 137 state c74d17a4ab0492fe actions 322ae1f65a7cc706",
   "seed 2: horde round 6 actions 155 state b59edae4a78735e6 actions 13ff6ba99075faef",
 ]
 `;
 
 exports[`golden bot games > coop2 easy medium 1`] = `
 [
-  "seed 1: dawn round 8 actions 100 state 4bd58ffd067ca7ff actions a6ccaa069ada0a26",
+  "seed 1: dawn round 8 actions 101 state 85de882d0985cc3e actions 4c2552281bd1f0ec",
 ]
 `;
 
 exports[`golden bot games > coop2 hard long 1`] = `
 [
-  "seed 1: horde round 18 actions 268 state 84e5a8e8e03e9176 actions 297e036ae42dae5a",
-  "seed 2: horde round 18 actions 300 state 307e9ad3e9f6bba7 actions fb0bc2fab0603e0f",
+  "seed 1: horde round 18 actions 261 state 1027b7929aee8c69 actions 2f75c432aa2dce96",
+  "seed 2: horde round 9 actions 234 state 2db8e928f81011f4 actions f6291108ea71cda0",
 ]
 `;
 
 exports[`golden bot games > coop2 normal medium 1`] = `
 [
-  "seed 1: dawn round 8 actions 192 state 60954e7413ac1660 actions bc0d7d9cb393dd03",
-  "seed 2: dawn round 7 actions 199 state 37206a5fa707418d actions d8743b8cfe9cdc3a",
-  "seed 3: dawn round 6 actions 206 state dd90a51cf1b09813 actions 9bc6cfc9b1fef879",
-  "seed 4: horde round 12 actions 224 state fa46c693f7143da0 actions dc1a7d6c257f0c7a",
+  "seed 1: dawn round 8 actions 183 state 9aff8e874d24116a actions 574892a85096510c",
+  "seed 2: dawn round 7 actions 201 state 9bd7409fdb15f48e actions 5a35344df5969969",
+  "seed 3: dawn round 6 actions 193 state e423e82056788cb8 actions 9f43999b23a04766",
+  "seed 4: dawn round 9 actions 217 state 2a582f70fa4f0cbb actions f0221511c5eb8213",
 ]
 `;
 
 exports[`golden bot games > pvp1 board duels with dice short 1`] = `
 [
-  "seed 1: dawn round 5 actions 43 state 2200f58a166fc37b actions 72832e979a86a35f",
+  "seed 1: dawn round 5 actions 44 state 7b6900e5baf6fce7 actions e5b273400a69ab9a",
   "seed 2: dawn round 3 actions 32 state a9ae789f369e89c9 actions 3ec18fda802058c2",
 ]
 `;
 
 exports[`golden bot games > pvp1 dice medium 1`] = `
 [
-  "seed 1: dawn round 7 actions 121 state 7a7fd4226bc81d8b actions fa85c379ab58b03b",
-  "seed 2: horde round 6 actions 114 state 31eccae3583ac569 actions 37d3748d679b3f44",
+  "seed 1: dawn round 7 actions 122 state bf9d659543b0a39a actions 44c73fbf538f1bb7",
+  "seed 2: horde round 6 actions 112 state ae288cd60528e071 actions 41c4d965595f0997",
 ]
 `;
 
 exports[`golden bot games > pvp1 easy short 1`] = `
 [
-  "seed 1: dawn round 5 actions 37 state b412707cae8bf53a actions 9d8a28ac3453cec8",
-  "seed 2: dawn round 3 actions 25 state b8faf096f90ec33b actions 06552aaa9a703d7b",
+  "seed 1: dawn round 5 actions 38 state 6a57d853dc15de9a actions e41e2bed80b1907d",
+  "seed 2: dawn round 3 actions 26 state 42024c9db8b2e178 actions 9bbc95b35c71bf34",
 ]
 `;
 
 exports[`golden bot games > pvp1 normal long 1`] = `
 [
-  "seed 1: horde round 6 actions 75 state 6b6f0d07e79fd94d actions ab7e3106f2ac78a5",
+  "seed 1: horde round 6 actions 78 state b75653427fc9a5a8 actions 18515b751178b6c8",
   "seed 2: dawn round 11 actions 158 state 40983eff6bb65690 actions 87f31274f98feec0",
 ]
 `;
 
 exports[`golden bot games > pvp1 normal short 1`] = `
 [
-  "seed 1: horde round 1 actions 55 state e8f99c1b8646c501 actions bd9069f3939af396",
-  "seed 2: dawn round 3 actions 73 state f9b1efb80673ec6f actions b4ffd25e29105a6b",
-  "seed 3: horde round 3 actions 102 state 92e2303bb908ca72 actions 071d35eb5d3cad10",
-  "seed 4: horde round 2 actions 75 state cfc7e37ea7e24420 actions 298423e9c3b37ed0",
-  "seed 5: dawn round 5 actions 142 state 6b73e917cc00336b actions ad8a81c93b25d3bd",
+  "seed 1: horde round 1 actions 52 state aee75354704d4657 actions 30a9300d148a1bdf",
+  "seed 2: dawn round 3 actions 73 state 54bbe4543eb5143f actions bb4c9fcb242a96cb",
+  "seed 3: horde round 3 actions 109 state 7b05b72ac7b7b7cc actions b6b8b3d0c7db974a",
+  "seed 4: horde round 2 actions 77 state 250dd30d236c64e2 actions 9cb5a25407c42070",
+  "seed 5: dawn round 5 actions 124 state c86f764e6c8597e7 actions 968e6d9bd2511ea7",
 ]
 `;
 
 exports[`golden bot games > pvp2 easy medium 1`] = `
 [
-  "seed 1: dawn round 8 actions 100 state d5b4025338f420fa actions 817ede9d4cb9c85a",
-  "seed 2: dawn round 10 actions 119 state 181655f2aae0abc0 actions d2dae13ac9394a3f",
+  "seed 1: dawn round 8 actions 101 state 07d9daa64bb820b6 actions 41f4b48e9b95fdb6",
+  "seed 2: dawn round 7 actions 92 state ab008f15f4221b56 actions 5031f1600d85cd2e",
 ]
 `;
 
 exports[`golden bot games > pvp2 normal medium 1`] = `
 [
-  "seed 1: dawn round 8 actions 208 state 36b139b9082de6d1 actions 36555b698f231ef5",
-  "seed 2: horde round 11 actions 252 state 70a4d7266efc8744 actions 4d5a3438609bdc0a",
-  "seed 3: horde round 4 actions 143 state c4a082ec443dd018 actions 2dfc05c360aacb8f",
+  "seed 1: dawn round 8 actions 209 state 9e3d710286a2ea56 actions 77a2f22cb96fa954",
+  "seed 2: horde round 12 actions 242 state 831e472e1b07666a actions c01a87f3f0efac0c",
+  "seed 3: horde round 4 actions 149 state 7faceac5549680e8 actions f455b622e4efdc4e",
 ]
 `;
 
 exports[`golden bot games > pvp2 normal veryLong 1`] = `
 [
-  "seed 1: horde round 9 actions 207 state 17eebe943f0cf5db actions 7852a831f6214bd8",
-  "seed 2: horde round 11 actions 300 state 92ed5648b0a704e8 actions 43f1fd4dc7b32adb",
+  "seed 1: horde round 9 actions 216 state e2dceda21230be0b actions 619ea44e7e7af065",
+  "seed 2: horde round 10 actions 299 state d5c3ea5ae2ec3b40 actions 9403f811d75743dc",
 ]
 `;
 

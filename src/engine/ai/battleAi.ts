@@ -307,9 +307,31 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
         if (UNITS[u.defId].kind === 'hero' && u.hp <= AI_TUNING.shieldHp * hpScaleOf(state)) return { type: 'battleItem', itemId: item.id, targetId: u.id };
         break;
       case 'boots':
-        // Arena only: the coop automaton keeps to the rulebook's list of treasures it uses.
-        if (state.setup.mode === 'arena' && UNITS[u.defId].kind === 'hero' && b.round === 1) return { type: 'battleItem', itemId: item.id, targetId: u.id };
+        // Not the coop automaton: it keeps to the rulebook's list of treasures it uses.
+        if (!followsRulebook(state, u) && UNITS[u.defId].kind === 'hero' && b.round === 1) return { type: 'battleItem', itemId: item.id, targetId: u.id };
         break;
+      case 'courage_horn': {
+        // The next attack of the hero hits harder: blow it when the hero is about to strike this activation.
+        if (followsRulebook(state, u) || UNITS[u.defId].kind !== 'hero' || !planActivation(state, u).target) break;
+        const next = own.find((x) => x.id !== u.id && unitDistance(u, x) === 1);
+        return { type: 'battleItem', itemId: item.id, targetIds: next ? [u.id, next.id] : [u.id] };
+      }
+      case 'hourglass': {
+        // A hero that cannot strike this activation gets a second move to close in.
+        if (followsRulebook(state, u) || UNITS[u.defId].kind !== 'hero' || b.activation!.moved || b.round > 2) break;
+        const plan = planActivation(state, u);
+        if (!plan.target && plan.moveTo) return { type: 'battleItem', itemId: item.id, targetId: u.id };
+        break;
+      }
+      case 'horn': {
+        // A living supporter that can strike now acts once more.
+        if (followsRulebook(state, u)) break;
+        const striker = own
+          .filter((x) => UNITS[x.defId].kind === 'support' && attackTargets(state, x).length > 0)
+          .sort((x, y) => unitAttackBase(y) - unitAttackBase(x))[0];
+        if (striker) return { type: 'battleItem', itemId: item.id, targetId: striker.id, hornMode: 'extra' };
+        break;
+      }
       default:
         break;
     }
