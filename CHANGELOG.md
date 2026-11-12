@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Największe rozmiary map nazywają się teraz po prostu „Ogromna” i „Gigantyczna” (bez dopisków XL i XXL).
+
 - Nowy suwak „Szybkość animacji” w opcjach: normalnie, szybko (1,6×), bardzo szybko (2,5×). Skraca ruchy, ciosy, efekty i pauzy w walce, a wybór zostaje zapamiętany.
 
 - Czytelniejsza podpowiedź walki na mapie: zamiast kilku linii tekstu widać nazwę pola, czerwoną plakietkę z przeciwnikiem i kolorową plakietkę trudności (zielona łatwa, żółta wyrównana, czerwona groźna, czarna niemożliwa). Ta sama plakietka jest w oknie prawego przycisku na polu z przeciwnikiem i w oknie potwierdzenia walki. Bohater bez pomocników dostaje trudniejszą ocenę, bo walka liczy się dla niego naprawdę samotnie.
