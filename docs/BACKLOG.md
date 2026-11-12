@@ -5,6 +5,10 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
 **Jak z tego korzystać:** autor pisze „zrób punkty A2, A3, B1”, a Claude pracuje sam, aż skończy (warunek ukończenia stoi przy każdym punkcie). Kolejność, gdy autor każe zrobić „wszystko z listy”: A → B → C.
 
+## NASTĘPNE ZADANIE (autor): przejrzeć i zaakceptować szkic poziomu 3
+
+**Zanim ruszą jakiekolwiek dalsze prace nad poziomem 3 (sekcja C), autor przegląda `docs/POZIOM_3_KROLESTWO.md` i odpowiada na 11 pytań z jego końca (termin względem premiery, rekrutacja A/B, wielkość drużyny, wspólna kasa itd.).** Do tego czasu Claude **nie zaczyna** żadnego kroku K1–K9 z szkicu ani niczego z sekcji C, a po akceptacji dopisuje decyzje do `DECYZJE.md` i poprawia szkic. Wydanie 2.6.0 też czeka (patrz „Pytania czekające na autora”).
+
 ## Zasady pracy bez nadzoru (decyzje autora, 12.11.2026)
 - Jeden punkt = jeden lub kilka commitów, każdy z wpisem w CHANGELOG.md i `make check` przed commitem; bez pushu gry. Zmiana AI albo liczb przesuwa `golden.test.ts` i tabele: osobny commit z `-u` i opisem w commicie.
 - Grafiki i dźwięki: Claude robi je sam przez Scenario/ElevenLabs, ogląda/odsłuchuje, wybiera najlepsze, wrzuca do repo z wpisem w `assets.json` i commituje. Limit kosztu nie został podany: jeśli jeden punkt wymaga więcej niż ok. 30 generacji, Claude kończy to, co ma, i pyta.
@@ -17,7 +21,7 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 ## B. Średnie
 
 
-## C. Dalej (kolejność; po akceptacji B2)
+## C. Dalej (kolejność; **dopiero po tym, jak autor przejrzy i zaakceptuje szkic poziomu 3**)
 
 1. **Poziom 3 „Królestwo”** według zaakceptowanego szkicu (kroki z B2).
 2. **Zakres premiery (decyzja 12.11):** poziomy 1–2 plus poziom 3; poziom 3 **przed** pakowaniem na Steam. **Premiera ma numer 3.0**, a numeracja 2.x zostaje bez zmian (zmiana wersjonowania skreślona).
@@ -40,8 +44,8 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
 ## Pytania czekające na autora
 
-- **Poziom 3 „Królestwo”** (dawne B2): szkic w `docs/POZIOM_3_KROLESTWO.md`, 11 pytań na jego końcu (termin względem premiery, rekrutacja A/B, wielkość drużyny, wspólna kasa). Sekcja C czeka na odpowiedzi.
-- **Wydanie 2.6.0 i wdrożenie serwera** (B1): zmiany są w commitach lokalnie (gra `05cba8e`, serwer `9b07989`); drugie wydanie wymaga zgody autora (tag, push `master`, wydanie na GitHubie, potem `npm install` pakietu silnika w serwerze, `make deploy`, push serwera).
+- **Poziom 3 „Królestwo”** (dawne B2): szkic w `docs/POZIOM_3_KROLESTWO.md`, 11 pytań na jego końcu. **Autor musi go najpierw przejrzeć i zaakceptować** (patrz „NASTĘPNE ZADANIE” na górze); sekcja C czeka.
+- **Wydanie 2.6.0 i wdrożenie serwera** (B1; **wstrzymane decyzją autora 12.11: na razie bez release'u**, nie wydawać bez jego polecenia): zmiany są w commitach lokalnie (gra `05cba8e`, serwer `9b07989`); drugie wydanie wymaga zgody autora (tag, push `master`, wydanie na GitHubie, potem `npm install` pakietu silnika w serwerze, `make deploy`, push serwera).
 - **Łatwy w wydaniu planszowym** (uzupełnienie do dawnego A8): w edycji planszowej Łatwy 1 na 1 daje 94/91/88/79% (powyżej pasma), a 2 na 2 na bardzo długiej mapie 61%. Dźwignie stroiciela działają tylko w grze cyfrowej, żeby plansza została „jak wydrukowana”. Czy stroić też planszową (zmieniałoby to wydrukowane zasady poziomu Łatwy), czy zostawić? Domyślnie: zostawiam.
 
 ## F. Do sprawdzenia na żywo (autor)
