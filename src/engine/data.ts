@@ -156,6 +156,8 @@ export const DIGITAL_STATS: Record<string, Partial<Pick<UnitDef, 'hp' | 'attack'
   ancientBear: { hp: 12, attack: 4, speed: 3 },
   unicornKing: { hp: 8, attack: 5, speed: 10 },
   blackDragon: { attack: 6 },
+  /** The Pegasus (a two-hex target) lost to the Elf Druid and the Nymph (40% against 54–56%, with growth 34% against 65–83%): 5 Ż and 3 A level it (`make sim-supports`). */
+  pegasus: { hp: 5, attack: 3 },
 };
 
 /**

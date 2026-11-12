@@ -108,6 +108,9 @@ Decyzja autora: każdy bohater Przymierza ma jedną cechę, a wersja cyfrowa mo�
 | Prastary Niedźwiedź | 11/4/4 | 12/4/3 | życie |
 | Król Jednorożców | 8/5/8 | 8/5/10 | prędkość |
 | Czarny Smok | 7/5/5 | 7/6/5 | wyrównanie Hordy |
+| Pegaz (pomocnik) | 4/2/4 | 5/3/4 | wyrównanie do Elfa Druida i Nimfy |
+
+**Pegaz (12.11, `make sim-supports`):** ten sam bohater z jednym pomocnikiem, 100 bitew na komórkę. Wcześniej Pegaz wygrywał 40% (Elf Druid 56%, Nimfa 54%), a z rozwojem 34% (65% i 83%); jest dużym celem na dwóch polach, a atakuje tak słabo jak Nimfa. Po zmianie 55% bez rozwoju i 73% z rozwojem. Normalny w tabelach (`make sim-tabele`) zostaje w paśmie 45–65%.
 
 Arena, `make sim-arena` z `SIM_DIGITAL=1` (150 gier na parę składów): Przymierze 50,0%; Złoty Smok 50,0%, Jednorożec 52,0%, Niedźwiedź 48,1%, Czarny Smok 48,0%,
 Wilkołak 51,4%, Ogr 50,4%. Przygoda (100 gier na wariant): kooperacja Normalny 55–61% na 1 graczu, bez wyraźnej zmiany. Próby: `SIM_OVERRIDE='{"digitalStats":{...}}'`.
