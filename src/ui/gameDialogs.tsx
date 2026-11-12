@@ -2,7 +2,7 @@
 // every screen has, and the small game dialogs (confirm, "since your last turn", a found treasure,
 // a card, the options) and the end-of-game effects.
 
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { ITEMS, UNITS, type ItemKind } from '../engine/data';
 import { ritualFormed } from '../engine/game';
 import { GROWTH, levelOf, skillRank, type SkillId } from '../engine/growth';
@@ -20,6 +20,7 @@ import { RulesDialog } from './RulesDialog';
 import { TreasureCard } from './TreasureCard';
 import { TreasureReveal } from './CardBack';
 import { UnitCard } from './UnitCard';
+import { ANIM_SPEED_NAMES, ANIM_SPEEDS, animSpeedLevel, setAnimSpeedLevel } from './animSpeed';
 import { FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
 
@@ -243,6 +244,7 @@ export function OptionsDialog(props: {
   onLeave: () => void;
 }) {
   const { game, room } = props;
+  const [animLevel, setAnimLevel] = useState(animSpeedLevel());
   const speeds = (value: BotSpeed, onChange: (s: BotSpeed) => void, disabled = false): ReactNode => (
     <select value={value} disabled={disabled} onChange={(e) => onChange(e.target.value as BotSpeed)}>
       {BOT_SPEEDS.map((s) => (
@@ -265,6 +267,11 @@ export function OptionsDialog(props: {
           {!room && <label><input type="checkbox" checked={props.autoplay} onChange={(e) => props.onAutoplay(e.target.checked)} /> Autoplay — boty grają także za ludzi</label>}
           <label title="Na słabszym komputerze albo telefonie możesz wrócić do okrągłych portretów">
             <input type="checkbox" checked={props.figures} onChange={(e) => props.onFigures(e.target.checked)} /> Figurki 3D na planszy
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 10 }} title="Szybsze animacje skracają walki: ruchy, ciosy i efekty trwają krócej">
+            Szybkość animacji
+            <input type="range" min={0} max={ANIM_SPEEDS.length - 1} step={1} value={animLevel} data-anim-speed onChange={(e) => (setAnimLevel(Number(e.target.value)), setAnimSpeedLevel(Number(e.target.value)))} style={{ flex: 1 }} />
+            <b style={{ minWidth: 110 }}>{ANIM_SPEED_NAMES[animLevel]}</b>
           </label>
           <label style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             Muzyka

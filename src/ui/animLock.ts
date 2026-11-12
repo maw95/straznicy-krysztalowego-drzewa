@@ -3,12 +3,14 @@
 // actions at the same moment (a hydra striking while the elf's blow is still landing). This tiny lock tells the bot timer
 // how long to wait: for a fixed time after an action, and for as long as a hold (waiting for a blow to land) lasts.
 
+import { scaledMs } from './animSpeed';
+
 let busyUntil = 0;
 let holds = 0;
 
 /** The next machine action waits at least `ms` more from now. */
 export function holdFor(ms: number) {
-  busyUntil = Math.max(busyUntil, Date.now() + ms);
+  busyUntil = Math.max(busyUntil, Date.now() + scaledMs(ms));
 }
 
 /** The screen is waiting for something (a blow to land, the result of a battle): nothing machine-driven starts until it ends. */

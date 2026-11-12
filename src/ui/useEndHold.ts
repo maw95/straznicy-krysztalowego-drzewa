@@ -7,6 +7,7 @@ import { isDigital, type BattleReport, type GameState } from '../engine/types';
 import { AFTER_KILL_MS, beginHold, endHold } from './animLock';
 import { IMPACT_TIMEOUT_MS, onImpact } from './impact';
 import { hasSprites } from './sprites';
+import { scaledMs } from './animSpeed';
 import type { AttackNow } from './useImpactHold';
 
 /** How long the finished battle stays on screen (the death clip of a large unit takes about two seconds). */
@@ -95,7 +96,7 @@ export function useEndHold(game: GameState | null): EndHold | null {
   const showing = held !== null && waiting === null;
   useEffect(() => {
     if (!showing) return;
-    const timer = window.setTimeout(() => setHeld(null), END_HOLD_MS);
+    const timer = window.setTimeout(() => setHeld(null), scaledMs(END_HOLD_MS));
     return () => window.clearTimeout(timer);
   }, [showing, held]);
   // Nothing machine-driven starts on the adventure map while the finished battle is still on screen.

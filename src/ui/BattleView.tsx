@@ -32,6 +32,7 @@ import { SidePanel } from './BattleSidePanel';
 import { ItemsPanel, type ItemTargeting } from './ItemsPanel';
 import { useBattleAnimations, WALK_STEP_MS } from './useBattleAnimations';
 import { useDeployment } from './useDeployment';
+import { scaledMs } from './animSpeed';
 
 export { WALK_STEP_MS };
 
@@ -319,7 +320,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     }
     if (approach?.targetId === u.id && approachCells(u).includes(approach.cell)) {
       const steps = movePath(state, active, approach.cell).length - 1;
-      pendingAttack.current = { targetId: u.id, useAbility: useAbility && attackAbility, at: Date.now() + steps * WALK_STEP_MS };
+      pendingAttack.current = { targetId: u.id, useAbility: useAbility && attackAbility, at: Date.now() + scaledMs(steps * WALK_STEP_MS) };
       setUseAbility(false);
       setApproach(null);
       onAction({ type: 'battleMove', to: approach.cell });

@@ -8,6 +8,7 @@ import type { HexKey } from '../engine/hex';
 import type { AttackRoll, GameState } from '../engine/types';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { sfx } from './sfx';
+import { scaledMs } from './animSpeed';
 
 /** The Cyclops' boulder leaves his hands 0.62 s after the blow is announced and flies for 0.5 s (styles.css, .projectile.boulder): the hit shows when it lands. */
 const BOULDER_LANDS_MS = 1120;
@@ -38,7 +39,7 @@ export function useBattleAnimations(state: GameState) {
     const t = window.setTimeout(() => {
       timers.current.delete(t);
       f();
-    }, ms);
+    }, scaledMs(ms));
     timers.current.add(t);
   };
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);

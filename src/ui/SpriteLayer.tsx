@@ -3,6 +3,7 @@
 // backwards), attacks, dies (the last frame stays as the corpse) and stands up again (the death played backwards).
 // A hit is a shake and a flash in code. Clicks go to the board below.
 
+import { animClock } from './animSpeed';
 import { useEffect, useRef } from 'react';
 import { emitImpact } from './impact';
 import { sfx } from './sfx';
@@ -114,7 +115,7 @@ class Stage {
   }
 
   private apply(pieces: SpritePiece[]) {
-    const now = performance.now();
+    const now = animClock();
     const keys = new Set(pieces.map((p) => p.key));
     for (const k of this.live.keys()) if (!keys.has(k)) (this.live.delete(k), sfx.walking(k, false));
     for (const p of pieces) {
@@ -196,6 +197,7 @@ class Stage {
   private tick = (now: number) => {
     this.frame = 0;
     if (this.disposed) return;
+    now = animClock(now);
     this.draw(now);
     // Keep drawing while anything moves; a still board needs no frames.
     const busy = [...this.live.values()].some((l) => l.seg || l.queue.length || now - l.hitStart < HIT_MS);

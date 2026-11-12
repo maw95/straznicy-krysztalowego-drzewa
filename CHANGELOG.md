@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowy suwak „Szybkość animacji” w opcjach: normalnie, szybko (1,6×), bardzo szybko (2,5×). Skraca ruchy, ciosy, efekty i pauzy w walce, a wybór zostaje zapamiętany.
+
 - Czytelniejsza podpowiedź walki na mapie: zamiast kilku linii tekstu widać nazwę pola, czerwoną plakietkę z przeciwnikiem i kolorową plakietkę trudności (zielona łatwa, żółta wyrównana, czerwona groźna, czarna niemożliwa). Ta sama plakietka jest w oknie prawego przycisku na polu z przeciwnikiem i w oknie potwierdzenia walki. Bohater bez pomocników dostaje trudniejszą ocenę, bo walka liczy się dla niego naprawdę samotnie.
 
 - Trudność walki na mapie: po najechaniu na strażników lub wrogiego bohatera, do których dojdziesz w tej turze, podpowiedź mówi, jak potoczyłaby się walka: łatwa, wyrównana, groźna albo niemożliwa. Gra rozgrywa taką walkę botami po obu stronach na kopii partii, więc liczą się poziom bohatera, umiejętności, artefakty, skarby, pomocnicy i zdolności jednostek. To ocena orientacyjna: gracz może zagrać lepiej lub gorzej niż bot.
