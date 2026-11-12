@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Ogr Żelazna Pięść ma na figurce kolczastą maczugę z portretu: nosi ją na ramieniu, zamachuje się nią przy ataku i siada z nią, gdy polegnie. Nowe animacje powstały ze Scenario.
+
 - Każda z 26 jednostek ma własny dźwięk ataku i własny dźwięk śmierci (smok ryczy i zieje, golem się kruszy, kaczka kwacze, Kraken ryczy pod wodą i tak dalej). Dźwięki powstały ze Scenario (ElevenLabs); głośność reguluje suwak efektów.
 
 - Największe rozmiary map nazywają się teraz po prostu „Ogromna” i „Gigantyczna” (bez dopisków XL i XXL).
