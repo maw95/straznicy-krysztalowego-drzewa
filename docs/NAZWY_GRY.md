@@ -34,3 +34,25 @@ Dodatek do każdej nazwy: podtytuł opisowy, np. „Crystal Wardens: Dawn agains
 3. **Wardens of the Crystal Tree**. Wierne obecnemu tytułowi, dla autora najbezpieczniejsze, jeśli ważne jest zachowanie Drzewa. Wada: długie, trudno o skrót (można „Crystal Tree”, ale to ogólne).
 
 Moje zdanie: tytuł **Crystal Wardens** z podtytułem „Wardens of the Crystal Tree” na stronie sklepu; „Shardroot” jako drugi wybór, jeśli autor woli markę wymyśloną. Decyzja i tak należy do autora (nazwa to sprawa artystyczna, `DECYZJE.md`).
+
+## Decyzja autora (12.11.2026): marka Shardroot, polska wersja z polskim podtytułem
+
+- Angielska wersja: **Shardroot: Wardens of the Crystal Tree**.
+- Polska wersja: **Shardroot: Strażnicy Kryształowego Drzewa**. Podtytuł to dzisiejszy tytuł gry, więc nic w grze ani w tekstach nie trzeba przerabiać; marka (Shardroot) jest wspólna na całym świecie, a polski gracz widzi swoją nazwę. Na Steamie polska nazwa idzie jako tłumaczenie tytułu w jednym wpisie sklepu, nie osobna gra.
+- Samo „Shardroot” jest znakiem rozpoznawczym (logo, ikona, domena); podtytuł można skrócić do samej marki tam, gdzie brakuje miejsca.
+
+### Sprawdzenie domen i nazw (12.11.2026)
+
+Rejestry RDAP (`rdap.org`, `rdap.dns.pl`) i DNS; „wolna” = brak wpisu w rejestrze i brak rekordów DNS. To nie jest rezerwacja: domenę trzeba kupić u rejestratora.
+
+| Adres | Stan |
+|-------|------|
+| shardroot.com | **zajęta** (zarejestrowana 24.08.2025, aktywna, za ochroną Cloudflare; nie udało się zobaczyć strony) |
+| shardroot.pl | wolna |
+| shardroot.net, .org | wolne |
+| shardroot.io, .gg, .eu, .app, .games | wolne |
+| Steam (sklep PL i US) | brak gry o tej nazwie |
+| itch.io (shardroot.itch.io), GitHub (github.com/shardroot), YouTube (@shardroot) | wolne |
+| X, Instagram | nie dało się rozstrzygnąć automatycznie (serwisy odpowiadają „200” także dla nieistniejących kont); sprawdzić ręcznie |
+
+**Wniosek:** brak `.com` to główny kłopot. Warto sprawdzić, czy właściciel `shardroot.com` używa nazwy jako marki (jeśli to gra, oprogramowanie lub firma w tej samej branży, nazwa jest ryzykowna prawnie), i przejrzeć TMview (EUIPO) oraz WIPO Global Brand Database przed kupnem czegokolwiek. Praktyczne wyjścia, gdy `.com` nie da się odzyskać: **shardroot.games** albo **.io** jako adres główny (typowe dla gier), `.pl` dla polskiej strony, a na Steamie i tak liczy się strona sklepu, nie domena.
