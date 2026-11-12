@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- W oknie „Autorzy” jest trzech autorów gry: Maciej Woźniak (pomysł, zasady, wykonanie), Aleksandra Szestowicka (pomoc przy fabule) i Zuzanna Woźniak (autorka Dzielnej Kaczki).
+
 ## 2.4.0 — 2026-11-12
 
 - Ogr Żelazna Pięść ma na figurce kolczastą maczugę z portretu: nosi ją na ramieniu, zamachuje się nią przy ataku i siada z nią, gdy polegnie. Nowe animacje powstały ze Scenario.

@@ -695,7 +695,7 @@ Bitwa trwa do utraty wszystkich jednostek przez jedną stronę. Po bitwie ocalal
 
 ## Autorzy (wersja cyfrowa)
 
-W menu głównym przycisk „Autorzy” otwiera listę: autorzy muzyki wraz z licencjami (CC BY wymaga podania autora), informacja, że grafika, animacje i efekty dźwiękowe powstały z użyciem narzędzi AI (Scenario), oraz użyte oprogramowanie.
+W menu głównym przycisk „Autorzy” otwiera listę: autorzy gry (Maciej Woźniak, Aleksandra Szestowicka przy fabule, Zuzanna Woźniak jako autorka Dzielnej Kaczki), autorzy muzyki wraz z licencjami (CC BY wymaga podania autora), informacja, że grafika, animacje i efekty dźwiękowe powstały z użyciem narzędzi AI (Scenario), oraz użyte oprogramowanie.
 
 ---
 
