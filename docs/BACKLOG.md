@@ -252,6 +252,27 @@ Zrobione 11.11 (szczegóły w CHANGELOG.md):
 - [x] **14.1. Gra online bez wyboru poziomu gry.** W pokoju nie było poziomu 2 „Wyprawa” (cel, kształt mapy, rozwój bohatera). Zrobione 11.11: stół ma pola `tier`, `objective`, `shape`, `customMapId` (serwer sprawdza je w `parseTable`, silnik składa grę przez `withRuleset` z `presets.ts`, wspólne z grą lokalną). Starsi klienci i zapisane pokoje grają „Przygodę”. Poziom „Własne” (luźne przełączniki zasad) nie jest online, do decyzji autora, czy go potrzeba.
 - Przejrzenie `bug-reports/`: wszystkie zgłoszenia z ziarnami po 9.11 są w sekcjach 8, 9, 11, 12, 13; starsze (21–23.10, `serwer-*`) zamknięte wcześniej, nowych z serwera brak (`make zgloszenia`).
 
+## 15. Zgłoszenia z 12.11.2026 (partie ziaren 903503, 40037, 805567, 640878, 20058)
+
+Pliki w `bug-reports/` są kumulatywne; unikalnych uwag jest 17 (18 zgłoszeń, uwaga o zmniejszaniu się zwłok padła trzy razy). Z serwera nic nowego (`make zgloszenia`).
+
+- [x] **15.1. Opisy zdolności w Wyprawie pokazywały liczby planszówki.** Rozprysk Kruszyńca „1” (naprawdę 3), Kamienna Skóra Golema „o 2” (naprawdę o 6, więc elf z Atakiem 6 zadaje 1, a podpowiedź „1 pkt” była poprawna), Wyładowanie Króla Burzy „1” (naprawdę 3). Przyczyna: `scaleText` skalowało tylko liczby przy słowach „Ż / A / obrażeń”. Poprawione teksty i regex, test w `scaletext.test.ts`.
+- [x] **15.2. Lekkość Wiatru III dawała tyle samo co II (+2).** Teraz +1 / +2 / +3 (`SKILL_RANKS.swift`). **Do decyzji:** Leśny Tropiciel (`pathfinder`, punkty ruchu na mapie) ma tę samą wadę, `[1, 2, 2]`: III stopień nic nie dodaje. Podnieść do 3? (zmienia tempo Wyprawy, trzeba przeliczyć tabele).
+- [x] **15.3. Błąd: Jednorożec przeszedł przez lukę jednego pola między Nimfą a Pełzaczem.** `walkSearch` sprawdzało tylko pola głowy; duża jednostka może teraz wejść tylko na pole, gdzie zmieści się jej ogon. Test `wide.test.ts` (czerwony bez poprawki). Golden bez zmian.
+- [x] **15.4. Cyklop odepchnął Nimfę, ale nie Niedźwiedzia.** To nie błąd: jednostki dwupolowe są za ciężkie do odepchnięcia (zasada z kodu). Dodane komunikaty w dzienniku („jest zbyt ciężki”, „nie ma gdzie się cofnąć”) i dopisek w opisie zdolności. Snapshot golden odświeżony tylko przez nowe linie dziennika.
+- [x] **15.5. Kursor ataku znikał w środku heksa wroga.** `onPointerMove` ramki jednostki czyścił styl kursora (`style.cursor = ''`), który React właśnie ustawił. Sprawdzone w przeglądarce na obu heksach Czarnego Smoka.
+- [x] **15.6. Strzelec zmuszony do walki wręcz pokazywał strzałę** zamiast miecza. Test `ui-cursors` zakodował stare zachowanie, poprawiony.
+- [x] **15.7. „Obejście” wroga jednorożcem (40037).** Jednostka stojąca już obok wroga biła od razu z miejsca, bez wyboru strony. Teraz, gdy się jeszcze nie ruszyła, wskazanie krawędzi heksa po drugiej stronie podświetla pole ataku stamtąd (podejdzie i uderzy); wskazanie strony, z której już stoi, bije od razu. Test + sprawdzone w przeglądarce.
+- [x] **15.8. Dwa żółte heksy dla jednostki dwupolowej** (pole głowy i ogona przy podejściu do ataku). Ogon to ten sam, który silnik wybierze (`footprintAt`).
+- [x] **15.9. Zwłoki zmniejszały się po śmierci** (Cyklop ×0,7, Hydra, prawie wszystkie). Teraz ta sama skala co żywe; małe jednostki mają luźniejszy limit szerokości (120 zamiast 100 px), bo ich leżące obrazki są 2–3 razy szersze niż stojące. Jeśli któreś zwłoki nadal wydadzą się za małe: `CORPSE_MAX_W` w `sprites.ts`.
+- [x] **15.10. Muzyka rytuału grała po pokonaniu smoka.** Licznik `ritual` zeruje się dopiero na końcu rundy; motyw wymaga teraz `ritualFormed`. Test `ui-music.test.ts`.
+- [x] **15.11. Rzut Cyklopa: trafienie i znacznik dopiero po locie kamienia.** Opóźnienie 1,12 s (zwłoka wypuszczenia + lot z CSS), zmierzone w przeglądarce. Zwykłe strzały strzelców bez zmian (autor nie zgłaszał). Przy zabiciu celu rzutem animacja śmierci zaczyna się jeszcze przed lądowaniem kamienia (do sprawdzenia).
+- [x] **15.12. Odrastanie Pełzacza / Hydry jako osobny znacznik.** Silnik zapisuje `battle.heals`, interfejs pokazuje −6, a po ~0,7 s +5, zamiast −1. Test w `neutrals.test.ts`.
+- [ ] **15.13. Król Burzy: teleport i pola po nim (903503).** Teleport ma wyglądać jak teleport (a nie lot), a pola naładowane mają mieć grafikę pola elektrycznego zamiast żółtych heksów.
+- [ ] **15.14. Zwój teleportacji (20058):** animacja (efekt magiczny, zniknięcie, pojawienie się w celu z efektem) zamiast zwykłego przejścia.
+- [ ] **15.15. Wskaźnik trudności walki (640878)** z neutralnymi i z wrogimi bohaterami, z liczby żywych pomocników, poziomu bohatera, artefaktów i skarbów. Pomysł do omówienia z autorem, bez wdrożenia: najpierw ustalić, czy ma to być słowny poziom („łatwa / wyrównana / groźna”), czy liczba, i czy ma uwzględniać zdolności; dopiero potem kod (silnik już liczy siłę stron w botach, `scoring.ts`).
+- [ ] **15.16. Do decyzji autora (balans):** Kamienna Skóra Golema (×3 = o 6 mniej) odbiera cały cios Elfa (6); Golem prawie nie ginie od jednostek ze słabym Atakiem. Zostawić (taki był zamysł: „skóra” do połowy życia), czy zmniejszyć do o 1×3 / o 2 (×1,5)?
+
 ## 10. Decyzje czekające na autora (stan 9.11.2026)
 
 Osiem rzeczy, bez których nie ruszę dalej reszty backlogu. Kiedy autor zdecyduje, odpowiedź wpisać tu i odhaczyć.
