@@ -98,3 +98,7 @@ Ocena: to nie jest konflikt marki (przedmiot w grze to nie tytuł, więc ryzyko 
 1. Obejrzeć znak towarowy w TMview (EUIPO), WIPO Global Brand Database i USPTO pod „Gleamroot” i podobnymi (klasy 9, 41; tu sprawdzono tylko wyszukiwarką ogólną).
 2. Kupić domeny (rekomendacja: **gleamroot.com** jako główna, **.games** albo **.io** jako zapas, **.pl** dla polskiej strony) i zająć nazwę na itch.io, GitHubie, YouTube, X, Instagramie, TikToku, Twitchu, Bluesky.
 3. Dopiero wtedy zmieniać nazwę w grze (menu, `package.json`, CHANGELOG, instrukcja, okładka, `README`).
+
+### Znak towarowy (sprawdził autor, 12.11.2026)
+
+Autor przejrzał bazy znaków towarowych pod „Gleamroot”: brak wpisów. Punkt 1 listy powyżej jest wykonany. To wyszukiwanie sygnalizuje ryzyko i nie jest opinią prawną; przed premierą komercyjną rozważyć rejestrację własnego znaku (UE ok. 850 € za klasę, klasy 9, 41, 28) po konsultacji z rzecznikiem patentowym. Zostają punkty 2 (domeny i konta) i 3 (zmiana nazwy w grze).
