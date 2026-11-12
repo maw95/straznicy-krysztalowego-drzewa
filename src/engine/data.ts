@@ -109,7 +109,7 @@ export const ABILITY = {
   /** Bagienne Odrastanie: Życie regained at the start of each activation (hp scale). */
   bogRegrowthHeal: 1,
   /** Kamienny Golem: damage ignored from every blow while its rune core is covered (small scale), and what the Trzęsienie deals (small scale). */
-  runeSkinIgnore: 2,
+  runeSkinIgnore: 1,
   quakeDamage: 1,
   /** Król Burzy: teleport range, how many rounds the charged field lasts (this one and the next), field and Wyładowanie damage (small scale). */
   stormTeleportRange: 6,

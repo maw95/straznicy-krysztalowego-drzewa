@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Kamienna Skóra Kamiennego Golema jest słabsza: zmniejsza każdy cios o 3 (w Wyprawie), nie o 6. Elf z Atakiem 6 zadaje mu teraz 3 obrażenia zamiast 1.
+
 - Leśny Tropiciel (i odpowiedniki Hordy) na III stopniu daje +3 punkty ruchu na mapie; wcześniej III stopień dawał tyle samo co II (+2).
 
 - Teleportacja wygląda jak teleportacja: jednostka blednie i maleje tam, gdzie stała, po czym pojawia się w nowym miejscu, a w obu miejscach błyska filar światła z pierścieniem i iskrami (niebieskie dla Króla Burzy, fioletowe dla Zwoju Teleportacji). Wcześniej jednostka po prostu przelatywała.

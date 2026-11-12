@@ -84,7 +84,7 @@ describe('neutral encounters: abilities', () => {
     expect(s.battle!.heals).toEqual([{ unitId: 'b', amount: 1 }]);
   });
 
-  it('Kamienny Golem: Kamienna Skóra −2 (min 1) until half its Życie is gone, then Trzęsienie hurts everyone around', () => {
+  it('Kamienny Golem: Kamienna Skóra −1 (min 1) until half its Życie is gone, then Trzęsienie hurts everyone around', () => {
     const s = fight([{ id: 'g', defId: 'stoneGolem', side: 'neutral', cell: here }, hero(near(here, 0))]);
     const g = s.battle!.units.g;
     const d = s.battle!.units.goldDragon;
@@ -92,7 +92,7 @@ describe('neutral encounters: abilities', () => {
     wolf.id = 'w';
     wolf.pos = near(here, 3);
     s.battle!.units.w = wolf;
-    expect(predictDamage(s, d, g, { useAbility: false, movedDistance: 0 }).damage).toBe(3);
+    expect(predictDamage(s, d, g, { useAbility: false, movedDistance: 0 }).damage).toBe(4);
     g.hp = Math.floor(g.maxHp / 2);
     expect(predictDamage(s, d, g, { useAbility: false, movedDistance: 0 }).damage).toBe(5);
     const hp = [d.hp, wolf.hp];
