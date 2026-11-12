@@ -7,7 +7,7 @@
   i modele), `instrukcja_szablon/` (instrukcja A4 w HTML), `Instrukcja_Straznicy.docx` (wersja do edycji)
   i `do_druku/` (gotowe PDF-y, tworzy je `make druk`).
 - `MAPA_DROGOWA.md` — **jedna lista „co dalej” dla wydania cyfrowego** (fazy A–E, zależności); `ROZBUDOWA_CYFROWA.md` (etapy kodu), `DECYZJE.md` (kolejka decyzji), `POTOK_ANIMACJI.md` (animacje z AI), `KARTA_FRAKCJI_SZABLON.md`, `KONKURENCJA_I_FILARY.md`, `POMYSLY_NA_GRY.md`.
-- `BACKLOG.md` — uzgodnione pomysły do wdrożenia (tryb online, figurki 3D w grze).
+- `BACKLOG.md` — otwarte zadania i pomysły (tylko to, co niezrobione).
 - `INFRASTRUKTURA.md` — **gdzie działa gra i serwer gry online i jak wdrażać zmiany** (wydania, silnik na serwerze, Fly.io, sekrety).
 - `zrodla_zasad/` — wcześniejsze źródła zasad: ilustrowana instrukcja (PDF), specyfikacja dla AI i dokument kontekstowy.
 - `grafika/` — projekt graficzny, z którego gra wycina swoje elementy:
