@@ -65,7 +65,7 @@ export const SKILL_RANKS = {
   vigor: [2, 4, 6], // Ż
   swift: [1, 2, 3], // S
   leader: [1, 2, 3], // Ż of the supports
-  pathfinder: [1, 2, 2], // move points on the map
+  pathfinder: [1, 2, 3], // move points on the map
   marksman: [1, 2, 3], // A of the hero's shooters (the hero too, when it shoots)
   tactician: [1, 2, 3], // extra columns the hero's units may be deployed in
   huntPool: [2, 3, 3], // Łowca skarbów: treasures shown after a guardian fight ...
