@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Każda z 26 jednostek ma własny dźwięk ataku i własny dźwięk śmierci (smok ryczy i zieje, golem się kruszy, kaczka kwacze, Kraken ryczy pod wodą i tak dalej). Dźwięki powstały ze Scenario (ElevenLabs); głośność reguluje suwak efektów.
+
 - Największe rozmiary map nazywają się teraz po prostu „Ogromna” i „Gigantyczna” (bez dopisków XL i XXL).
 
 - Nowy suwak „Szybkość animacji” w opcjach: normalnie, szybko (1,6×), bardzo szybko (2,5×). Skraca ruchy, ciosy, efekty i pauzy w walce, a wybór zostaje zapamiętany.

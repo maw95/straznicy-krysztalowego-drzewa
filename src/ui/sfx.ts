@@ -9,6 +9,10 @@ export type Sfx = 'sword_hit' | 'arrow_shot' | 'magic_cast' | 'magic_attack' | '
 /** Relative loudness of each sound (the files are normalised to about the same peak, but a click should be quiet and a fanfare roomy). */
 const GAIN: Record<Sfx, number> = { sword_hit: 0.9, arrow_shot: 0.8, magic_cast: 0.8, magic_attack: 0.8, footstep_walk: 0.45, ui_click: 0.5, treasure_found: 0.8, level_up: 0.8, victory: 0.85, defeat: 0.85, hero_step: 0.6, crystal_pickup: 0.8, tree_deliver: 0.85 };
 
+/** Units with their own attack and death sounds (dzwieki/jednostki/<id>_atak.mp3 and _smierc.mp3). */
+export const UNIT_SOUNDS = new Set(['goldDragon', 'unicornKing', 'ancientBear', 'braveDuck', 'elfDruid', 'nymph', 'pegasus', 'shardling', 'burrower', 'skyEagle', 'harpy', 'pincer', 'bogCrawler', 'stoneGolem', 'stormKing', 'kraken', 'tentacle', 'blackDragon', 'werewolfLord', 'ironFistOgre', 'goblinShaman', 'caveSpider', 'shadowBat', 'cyclops', 'griffin', 'hydra']);
+const UNIT_GAIN = 0.85;
+
 const STORE_KEY = 'skd-sfx';
 
 function load(): { volume: number; muted: boolean } {
@@ -24,7 +28,7 @@ function load(): { volume: number; muted: boolean } {
 class Effects {
   private settings = load();
   private listeners = new Set<() => void>();
-  private cache = new Map<Sfx, HTMLAudioElement>();
+  private cache = new Map<string, HTMLAudioElement>();
   /** The looped steps: on while any walker is moving. */
   private walkers = new Set<string>();
   private loop: HTMLAudioElement | null = null;
@@ -60,7 +64,7 @@ class Effects {
   private level(name: Sfx) {
     return this.settings.muted ? 0 : Math.max(0, Math.min(1, this.settings.volume * GAIN[name]));
   }
-  private audio(name: Sfx): HTMLAudioElement | null {
+  private audio(name: string): HTMLAudioElement | null {
     if (typeof Audio === 'undefined') return null;
     let a = this.cache.get(name);
     if (!a) {
@@ -80,6 +84,25 @@ class Effects {
       const a = base.paused || base.ended ? base : (base.cloneNode() as HTMLAudioElement);
       a.currentTime = 0;
       a.volume = this.level(name);
+      void a.play().catch(() => undefined);
+    } catch {
+      // no audio available
+    }
+  }
+
+  /** The attack or death sound of a unit; a unit without its own sounds gets `fallback` (when given). */
+  unit(defId: string, kind: 'atak' | 'smierc', fallback?: Sfx) {
+    if (!UNIT_SOUNDS.has(defId)) {
+      if (fallback) this.play(fallback);
+      return;
+    }
+    if (this.settings.muted || this.settings.volume <= 0) return;
+    try {
+      const base = this.audio(`jednostki/${defId}_${kind}`);
+      if (!base) return;
+      const a = base.paused || base.ended ? base : (base.cloneNode() as HTMLAudioElement);
+      a.currentTime = 0;
+      a.volume = Math.max(0, Math.min(1, this.settings.volume * UNIT_GAIN));
       void a.play().catch(() => undefined);
     } catch {
       // no audio available

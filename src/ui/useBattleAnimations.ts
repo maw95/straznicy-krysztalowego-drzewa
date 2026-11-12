@@ -161,9 +161,11 @@ export function useBattleAnimations(state: GameState) {
     }
     if (!fresh.length && !newGhosts.length) return;
     // One sound per attacker: a blade for a melee blow, a bowstring for a shot.
-    for (const st of newStrikes.filter((x, i, all) => all.findIndex((o) => o.attacker === x.attacker && o.ranged === x.ranged) === i)) sfx.play(MAGIC_ATTACKERS.has(st.attacker) ? 'magic_attack' : st.ranged ? 'arrow_shot' : 'sword_hit');
+    for (const st of newStrikes.filter((x, i, all) => all.findIndex((o) => o.attacker === x.attacker && o.ranged === x.ranged) === i)) sfx.unit(b.units[st.attacker]?.defId ?? st.attacker, 'atak', MAGIC_ATTACKERS.has(st.attacker) ? 'magic_attack' : st.ranged ? 'arrow_shot' : 'sword_hit');
     setStrikes((x) => [...x, ...newStrikes.filter((st, i, all) => all.findIndex((o) => o.attacker === st.attacker) === i || st.ranged)]);
     setGhosts((g) => [...g, ...newGhosts]);
+    // A fallen unit's own cry, as the blow that killed it lands.
+    whenLanded(() => later(() => newGhosts.forEach((gh) => sfx.unit(gh.defId, 'smierc')), 250));
     whenLanded(() => {
       setFloaters((f) => [...f, ...fresh]);
       setHitIds((ids) => [...ids.filter((id) => !hit.includes(id)), ...hit]);

@@ -2437,6 +2437,734 @@
       "data": "2026-11-11",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/goldDragon_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/goldDragon_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki goldDragon",
+      "prompt": "Golden dragon fire breath: a bright roaring whoosh of flames with a short majestic growl at the start, game sound effect, no music",
+      "scenario_asset": "asset_WxNsrXLSmzFR7kqW2N447YUk",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.8 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/blackDragon_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/blackDragon_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki blackDragon",
+      "prompt": "Black dragon fire breath: a dark, deep, rasping roar followed by a heavy burning whoosh of flames, game sound effect, no music",
+      "scenario_asset": "asset_djNSMJKMVMoSr46SHbFSQWQA",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.8 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/unicornKing_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/unicornKing_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki unicornKing",
+      "prompt": "Unicorn king charge attack: a proud horse whinny with a quick hoof strike and a magical shimmer, game sound effect, no music",
+      "scenario_asset": "asset_eVHNec4PeR8nALBMfocLNHsX",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.3 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/ancientBear_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/ancientBear_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki ancientBear",
+      "prompt": "Giant bear attack: a deep angry bear roar with a heavy claw swipe and thud, game sound effect, no music",
+      "scenario_asset": "asset_j1s4AifeEfW3ww5X6ejx7Tzb",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.3 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/braveDuck_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/braveDuck_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki braveDuck",
+      "prompt": "Brave little duck attack: an angry loud duck quack with a quick flapping wing slap, comic but fierce, game sound effect, no music",
+      "scenario_asset": "asset_9sqDXqsJFV3BrdbgxPTg1gHF",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.0 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/elfDruid_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/elfDruid_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki elfDruid",
+      "prompt": "Elf druid nature magic attack: a staff strike with a rustle of leaves and a bright woody magical burst, game sound effect, no music",
+      "scenario_asset": "asset_ASaZqkHXjBR4fmDzd17RhToH",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/nymph_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/nymph_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki nymph",
+      "prompt": "Water nymph attack: a rushing splash of water with a soft shimmering light chime, game sound effect, no music",
+      "scenario_asset": "asset_5ZcbwFw6MYcypF533a9UkV8t",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/pegasus_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/pegasus_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki pegasus",
+      "prompt": "Pegasus attack: a swift whoosh of large wings with a horse neigh and a hoof strike, game sound effect, no music",
+      "scenario_asset": "asset_7gTPB7fpeXvR65ioMjBxF7Ji",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/shardling_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/shardling_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki shardling",
+      "prompt": "Small crystal creature attack: a sharp glassy crystal shatter and ring, brittle clinking shards, game sound effect, no music",
+      "scenario_asset": "asset_PWfUY12HpNEqHnsZUyDCxF2p",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.0 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/burrower_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/burrower_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki burrower",
+      "prompt": "Burrowing mole creature attack: a scratchy digging claw scrape through dirt with a short snarl, game sound effect, no music",
+      "scenario_asset": "asset_ypsR7wUaxRqNAozHS3SJtmRZ",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.0 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/skyEagle_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/skyEagle_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki skyEagle",
+      "prompt": "Rock eagle attack: a piercing eagle screech with a rapid wing beat and a talon strike, game sound effect, no music",
+      "scenario_asset": "asset_Xgm6q4dwVG12a7WfdGMmRqwN",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/harpy_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/harpy_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki harpy",
+      "prompt": "Harpy attack: a shrill screeching cry with flapping wings and a claw slash, game sound effect, no music",
+      "scenario_asset": "asset_46YbzWEvztaA8gYZGG2AaJ4j",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/pincer_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/pincer_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki pincer",
+      "prompt": "Giant crab claw attack: a hard snapping pincer clack with a clicking chitin rattle, game sound effect, no music",
+      "scenario_asset": "asset_c6oMd4DCUEjiiLjWUXq1Mvu5",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.0 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/bogCrawler_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/bogCrawler_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki bogCrawler",
+      "prompt": "Swamp crawler attack: a wet slimy lash with a gurgling hiss and squelch, game sound effect, no music",
+      "scenario_asset": "asset_znHMxtvydYwShB8hHxkNDsMw",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.1 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/stoneGolem_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/stoneGolem_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki stoneGolem",
+      "prompt": "Stone golem attack: a heavy rumbling boulder fist smash with grinding rock and a deep thud, game sound effect, no music",
+      "scenario_asset": "asset_mnnURhSQZwiK4YBVB4o2WXT3",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.4 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/stormKing_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/stormKing_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki stormKing",
+      "prompt": "Storm king lightning attack: a crackling thunder bolt with a booming thunderclap and electric zap, game sound effect, no music",
+      "scenario_asset": "asset_5SRGW6GoSpcYyXpAGovTbuMz",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/kraken_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/kraken_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki kraken",
+      "prompt": "Kraken attack: a giant wet tentacle slam with a deep underwater bellow and heavy splash, game sound effect, no music",
+      "scenario_asset": "asset_Ne7K2sqA9ASn92HX1HP2eieF",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/tentacle_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/tentacle_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki tentacle",
+      "prompt": "Tentacle attack: a fast wet tentacle whip crack with a slimy slap, game sound effect, no music",
+      "scenario_asset": "asset_YrxUewV2LCq5z6K3xEAP5hez",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.0 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/werewolfLord_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/werewolfLord_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki werewolfLord",
+      "prompt": "Werewolf lord attack: a savage wolf snarl and howl with a fast claw slash, game sound effect, no music",
+      "scenario_asset": "asset_fKVNLJ2dbXxa2PqqWadgBSeD",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.3 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/ironFistOgre_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/ironFistOgre_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki ironFistOgre",
+      "prompt": "Ogre attack: a deep grunting roar and a heavy spiked club swing smashing down with a crunching thud, game sound effect, no music",
+      "scenario_asset": "asset_pdsSy19p6DBW8wQntMTzg5gM",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.4 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/goblinShaman_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/goblinShaman_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki goblinShaman",
+      "prompt": "Goblin shaman attack: a cackling goblin laugh with a crackling dark magic zap, game sound effect, no music",
+      "scenario_asset": "asset_982pmLUSXYhBUc2yPucBzhTT",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/caveSpider_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/caveSpider_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki caveSpider",
+      "prompt": "Cave spider attack: a hissing chittering lunge with fast skittering legs and a fang bite, game sound effect, no music",
+      "scenario_asset": "asset_pa2BLhwhrmf5pDLqj41VwhiJ",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.0 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/shadowBat_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/shadowBat_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki shadowBat",
+      "prompt": "Shadow bat attack: a high-pitched screeching squeak with rapid leathery wing flutter and a quick bite, game sound effect, no music",
+      "scenario_asset": "asset_YwXJTupGTbpPA8UjqfmVwhmi",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.0 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/cyclops_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/cyclops_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki cyclops",
+      "prompt": "Cyclops attack: a huge one-eyed giant's bellowing roar with a heavy club swing and a thundering impact, game sound effect, no music",
+      "scenario_asset": "asset_LpRrECUxyGh6Sw6hDabPLuk1",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/griffin_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/griffin_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki griffin",
+      "prompt": "Griffin attack: an eagle-lion screech with a powerful wing flap and a claw swipe, game sound effect, no music",
+      "scenario_asset": "asset_Y6HoDXSF2dyDRmaiqjpfwejB",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.3 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/hydra_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/hydra_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki hydra",
+      "prompt": "Hydra attack: multiple serpent heads hissing and roaring together with a venomous spitting strike, game sound effect, no music",
+      "scenario_asset": "asset_gSmtbgR7h5ZQX5sNxfjv8nhG",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/goldDragon_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/goldDragon_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki goldDragon",
+      "prompt": "Golden dragon death: a long mournful dying roar fading to a heavy sigh and a thud of a huge body falling, game sound effect, no music",
+      "scenario_asset": "asset_oFs3o6mn4v75TFAvGd2FHSZd",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 2.2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/blackDragon_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/blackDragon_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki blackDragon",
+      "prompt": "Black dragon death: a deep rasping dying roar, a rattling last breath and a heavy body collapsing to the ground, game sound effect, no music",
+      "scenario_asset": "asset_R2QgY87QrxaHp4xQuS7pd8CH",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 2.2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/unicornKing_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/unicornKing_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki unicornKing",
+      "prompt": "Unicorn dying: a sad fading whinny with a soft magical sparkle dissolving and a gentle thud, game sound effect, no music",
+      "scenario_asset": "asset_WUjvRUQ2Ci2w9N6prcLx5v3s",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.8 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/ancientBear_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/ancientBear_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki ancientBear",
+      "prompt": "Giant bear dying: a weak groaning bear roar fading out and a heavy body thudding onto the ground, game sound effect, no music",
+      "scenario_asset": "asset_gU7X9uqkk8UxvTdxjanjkZPR",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.8 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/braveDuck_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/braveDuck_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki braveDuck",
+      "prompt": "Small duck dying: a short sad fading quack and a soft feathery flop, comic but gentle, game sound effect, no music",
+      "scenario_asset": "asset_ttnd76PqmDxDhNc4NCpTUE3o",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.3 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/elfDruid_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/elfDruid_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki elfDruid",
+      "prompt": "Elf falling: a soft pained gasp with a fading magical chime and leaves rustling down, game sound effect, no music",
+      "scenario_asset": "asset_UXuPuZYaTZdVm1kzMMWWmxx2",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.6 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/nymph_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/nymph_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki nymph",
+      "prompt": "Water nymph vanishing: a soft sigh dissolving into a splash of water drops and a fading chime, game sound effect, no music",
+      "scenario_asset": "asset_9GLUQWhaxkX8uH2i8UECpZmg",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.6 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/pegasus_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/pegasus_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki pegasus",
+      "prompt": "Pegasus dying: a weak fading horse neigh with a drooping wing flutter and a soft thud, game sound effect, no music",
+      "scenario_asset": "asset_Ru5fs8oNnjcoCCzgf9ewmoCF",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.7 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/shardling_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/shardling_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki shardling",
+      "prompt": "Small crystal creature breaking: a glassy crack and a cascade of crystal shards tinkling to the ground, game sound effect, no music",
+      "scenario_asset": "asset_Es1RGKL6dtPT4ZoJf1qZxQvh",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/burrower_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/burrower_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki burrower",
+      "prompt": "Burrowing mole creature dying: a short squeal and a muffled thump into the dirt, game sound effect, no music",
+      "scenario_asset": "asset_sbgr3Nb13taNN6BpjuguFB1t",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.4 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/skyEagle_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/skyEagle_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki skyEagle",
+      "prompt": "Eagle dying: a weak fading screech with a few falling feather flaps and a thud, game sound effect, no music",
+      "scenario_asset": "asset_ixSsKeJKxBs1ffxWQ3BrxY48",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/harpy_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/harpy_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki harpy",
+      "prompt": "Harpy dying: a shrill cry cut short, falling wing flutter and a thud, game sound effect, no music",
+      "scenario_asset": "asset_wmS56zirRKTKHQ3kuNyihz1w",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/pincer_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/pincer_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki pincer",
+      "prompt": "Giant crab dying: a cracking shell, weak clicking pincers and a shell clatter flopping down, game sound effect, no music",
+      "scenario_asset": "asset_2RK8hJFSya6Kw5ujfYStt2o7",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/bogCrawler_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/bogCrawler_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki bogCrawler",
+      "prompt": "Swamp crawler dying: a gurgling wet hiss deflating and a slimy squelching collapse, game sound effect, no music",
+      "scenario_asset": "asset_u1KoHsGX6i9QeiPREJLHywfo",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.6 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/stoneGolem_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/stoneGolem_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki stoneGolem",
+      "prompt": "Stone golem crumbling: a deep groan of grinding stone, cracking rock and a heavy crumbling collapse of boulders, game sound effect, no music",
+      "scenario_asset": "asset_UrYJEFQ95BZJnT4FWjFkAHCf",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 2.2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/stormKing_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/stormKing_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki stormKing",
+      "prompt": "Storm king defeated: a final rumble of thunder, a fading electric crackle and wind dying down, game sound effect, no music",
+      "scenario_asset": "asset_UsSyPdKVRF1QsRt1QbBtawVP",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 2.2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/kraken_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/kraken_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki kraken",
+      "prompt": "Kraken defeated: a long deep underwater bellow fading out and a huge slow splash of a giant body sinking, game sound effect, no music",
+      "scenario_asset": "asset_8XbEkHp6tDEYhDeeLQyQGws5",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 2.4 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/tentacle_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/tentacle_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki tentacle",
+      "prompt": "Tentacle defeated: a wet limp slap and a slimy sliding retreat with a faint gurgle, game sound effect, no music",
+      "scenario_asset": "asset_snTjHobNk13Upjor1it3ycRP",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.3 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/werewolfLord_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/werewolfLord_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki werewolfLord",
+      "prompt": "Werewolf dying: a pained wolf howl breaking into a whimper and a heavy body thud, game sound effect, no music",
+      "scenario_asset": "asset_jBzrbZhF2duoxo33RHXHqPnQ",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.8 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/ironFistOgre_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/ironFistOgre_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki ironFistOgre",
+      "prompt": "Ogre dying: a deep groaning roar fading into a gasp and a very heavy thud of a huge body hitting the ground, game sound effect, no music",
+      "scenario_asset": "asset_PKCejXQkWs7Vn2bRNStuxNfH",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 2.0 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/goblinShaman_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/goblinShaman_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki goblinShaman",
+      "prompt": "Goblin dying: a squeaky goblin shriek turning into a wheezing groan and a small thud, game sound effect, no music",
+      "scenario_asset": "asset_twhmcEzpAUuZR6GihxoimzyH",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/caveSpider_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/caveSpider_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki caveSpider",
+      "prompt": "Cave spider dying: a high dry hiss, legs curling and clicking weakly, and a tiny crunch, game sound effect, no music",
+      "scenario_asset": "asset_2Ng71QC2QzxcA2Lr1wbG86KZ",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.4 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/shadowBat_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/shadowBat_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki shadowBat",
+      "prompt": "Bat dying: a thin fading squeak, a last leathery wing flutter and a tiny thud, game sound effect, no music",
+      "scenario_asset": "asset_yPPuA8hrbfzoidsrU5xRxCBU",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.3 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/cyclops_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/cyclops_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki cyclops",
+      "prompt": "Cyclops dying: a long bellowing giant's groan fading out and a massive earth-shaking thud, game sound effect, no music",
+      "scenario_asset": "asset_gZYZTE3kR2XaRq3GADy5qE2c",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 2.2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/griffin_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/griffin_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki griffin",
+      "prompt": "Griffin dying: a weak eagle-lion cry fading out with a drooping wing flap and a heavy thud, game sound effect, no music",
+      "scenario_asset": "asset_LRnM1LxzXVsZL84vLa9PERkB",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1.7 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/hydra_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/hydra_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki hydra",
+      "prompt": "Hydra dying: many serpent heads hissing weakly one after another going silent and a big wet heavy collapse, game sound effect, no music",
+      "scenario_asset": "asset_1NfPyJh7hxMkifNftNoHMeST",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 2.2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
