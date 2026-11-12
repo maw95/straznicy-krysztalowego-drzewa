@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Jednostka walcząca wręcz, która stoi już obok wroga i jeszcze się nie ruszyła, może go „obejść”: wskaż krawędź heksa po drugiej stronie wroga, a podświetli się pole, z którego uderzy (jednostka tam podejdzie i zaatakuje). Wskazanie strony, z której już stoi, bije od razu, jak dotąd.
+
 - Jednostka strzelająca, która musi uderzyć sąsiada, pokazuje kursor miecza zamiast strzały.
 
 - Kursor ataku (miecz lub strzała) widać teraz na całym heksie wroga, także w jego środku. Wcześniej w środku pojawiał się zwykły kursor, a atak „świecił” tylko przy krawędziach.

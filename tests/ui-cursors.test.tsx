@@ -108,6 +108,21 @@ describe('one click: walk up to an enemy and attack it', () => {
     expect(actions).toEqual([{ type: 'battleMove', to: arenaCell(4, 10) }]);
   });
 
+  it('next to the enemy already: a pointer on the far side walks round to it, one on the near side attacks at once (report 40037)', async () => {
+    const mk = () => fight([['goldDragon', 'dawn', 4, 4], ['caveSpider', 'horde', 4, 6]]);
+    const near: Action[] = [];
+    const a = render(<BattleView state={mk()} canAct onAction={(x) => near.push(x)} onShowCard={() => {}} footer={null} />);
+    await act(async () => fireEvent.pointerMove(tokenOf(a.container, 'caveSpider'), { clientX: 0, clientY: -40, pointerType: 'mouse' }));
+    await act(async () => fireEvent.click(tokenOf(a.container, 'caveSpider')));
+    expect(near).toEqual([{ type: 'battleAttack', targetId: 'caveSpider', useAbility: false }]);
+    a.unmount();
+    const far: Action[] = [];
+    const b = render(<BattleView state={mk()} canAct onAction={(x) => far.push(x)} onShowCard={() => {}} footer={null} />);
+    await act(async () => fireEvent.pointerMove(tokenOf(b.container, 'caveSpider'), { clientX: 0, clientY: 40, pointerType: 'mouse' }));
+    await act(async () => fireEvent.click(tokenOf(b.container, 'caveSpider')));
+    expect(far).toEqual([{ type: 'battleMove', to: arenaCell(4, 8) }]);
+  });
+
   it('on a touch screen the first tap shows the cell, the second attacks', async () => {
     const actions: Action[] = [];
     const { container } = render(<BattleView state={fight([['goldDragon', 'dawn', 4, 4], ['caveSpider', 'horde', 4, 10]])} canAct onAction={(a) => actions.push(a)} onShowCard={() => {}} footer={null} />);

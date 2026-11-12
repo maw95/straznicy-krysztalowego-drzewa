@@ -123,7 +123,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
    */
   const approachCellsOf = (u: BattleUnit): HexKey[] => {
     if (!myTurn || !active?.pos || !u.pos || u.side === active.side || act!.moved || act!.attacked || act!.moveOnly || act!.hop || targeting || freeAbility) return [];
-    if (UNITS[active.defId].attackType !== 'melee' || targets.some((t) => t.id === u.id)) return [];
+    // An enemy already in reach is attacked from where the unit stands, unless the pointer aims at another side it can walk to (see aimApproach).
+    if (UNITS[active.defId].attackType !== 'melee') return [];
     // A large unit (target or attacker) lies on two cells: any cell of the attacker's footprint beside any cell of the target counts.
     const theirs = cellsOf(u);
     return [...moves.keys()].filter((k) => footprintAt(state, active, k).some((m) => theirs.some((c) => distanceBetween(m, c) === 1)));
@@ -151,7 +152,13 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
         return Math.abs(Math.atan2(Math.sin(a - aim), Math.cos(a - aim)));
       };
       cell = cells.reduce((best, k) => (off(k) < off(best) ? k : best));
-    } else cell = cells.reduce((best, k) => (moves.get(k)! < moves.get(best)! ? k : best));
+      // Already next to this hex: when the pointer aims at the side the unit attacks from now, the attack stays where it is (no walk).
+      if (targets.some((t) => t.id === u.id)) {
+        const here = cellsOf(active!).filter((c) => distanceBetween(c, origin) === 1);
+        if (here.length && Math.min(...here.map(off)) <= off(cell)) return setApproach(null);
+      }
+    } else if (targets.some((t) => t.id === u.id)) return setApproach(null);
+    else cell = cells.reduce((best, k) => (moves.get(k)! < moves.get(best)! ? k : best));
     if (approach?.targetId !== u.id || approach.cell !== cell) setApproach({ targetId: u.id, cell });
   }
   /** The attack that follows the approach step, once the unit has walked there. */
@@ -304,7 +311,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       reset();
       return;
     }
-    if (targets.some((t) => t.id === u.id)) {
+    const inReach = targets.some((t) => t.id === u.id);
+    if (inReach && !(approach?.targetId === u.id && approachCells(u).includes(approach.cell))) {
       onAction({ type: 'battleAttack', targetId: u.id, useAbility: useAbility && attackAbility });
       setUseAbility(false);
       return;
