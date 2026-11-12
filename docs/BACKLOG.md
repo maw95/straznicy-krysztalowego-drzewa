@@ -15,7 +15,6 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
 - [ ] **A7. Analiza gry botów:** obejrzeć nagrane partie (`make zrzut`, symulacje, zgłoszenia), znaleźć głupie lub nieczytelne decyzje (ruch, wybór celu, rozstawienie, przedmioty, umiejętności, cele mapy) i poprawiać pojedynczo, jedna poprawka = jeden commit z `-u` golden i `make sim-tabele` (pasma w sekcji G; zmiana, która wyrzuca Normalny poza pasmo, jest cofana i opisana). Gotowe, gdy lista znalezionych problemów jest wdrożona albo opisana jako odłożona, z liczbami przed i po. (Znany przykład: bohater stoi bezczynnie przy głowie zasłoniętej mackami; po przeróbce Krakena już niewidoczny.)
 - [ ] **A8. Strojenie poziomu Łatwego:** 1 na 1 jest powyżej pasma 65–85% (94/91/88/79%), 2 na 2 poniżej (61% na bardzo długiej). `scripts/sim/tuneLevels.ts`; Normalny i Trudny muszą zostać w swoich pasmach. Gotowe, gdy `make sim-tabele` pokazuje Łatwy w paśmie albo opisuje, czemu się nie da.
-- [ ] **A9. Kraken w celu „Boss”:** używa tej samej głowy i macek (bez kraba i stwora), więc jest lżejszy niż w spotkaniu. Sprawdzić `make sim-cele` (cel Boss) i, jeśli trzeba, skorygować `BOSS.hpFactor.kraken`. Boss Trudny według autora nie ruszamy.
 
 ## B. Średnie
 

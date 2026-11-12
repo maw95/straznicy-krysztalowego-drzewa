@@ -685,7 +685,7 @@ function bossAction(state: GameState, memo: Memo): Action {
   const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
   const prey = foes.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && (automaton || memo.ratio(hero, e) >= huntRatio(state)));
   if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
-  const paths = memo.paths(hero, 'boss', { goals: new Set([boss.at]), avoidGuardians: true, danger: hero.faction === 'dawn' });
+  const paths = memo.paths(hero, 'boss', { goals: new Set([boss.at]), avoidGuardians: true, danger: hero.faction === 'dawn', encounters: true });
   const p = paths.get(boss.at);
   if (!p || p.path.length < 2) return { type: 'endTurn' };
   return stepToward(state, p.path);

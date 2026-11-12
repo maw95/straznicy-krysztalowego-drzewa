@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Naprawiony cel „Boss” z Krakenem: boty nie wchodziły w jego legowisko (gra stała w miejscu do limitu rund i wygrywała Horda). Teraz Kraken jest tak samo trudnym bossem jak Hydra, Cyklop, Golem i Król Burzy (Przymierze wygrywa z nim w 50–70% gier).
 - Karty jednostek i skarbów otwierają się prawym przyciskiem myszy (na telefonie długim przytrzymaniem) i zostają na ekranie do następnego kliknięcia gdziekolwiek. Samo najechanie pokazuje tylko małą podpowiedź: nazwę i liczby (Życie, Atak, Szybkość) albo nazwę skarbu.
 - Efekty Króla Burzy wyglądają jak prawdziwa błyskawica: Pole Naładowane iskrzy trzeszczącą energią, a teleport (też ze Zwoju Teleportacji) to słup światła z pierścieniem, zamiast rysowanych kresek.
 - Ciosy w walce wręcz brzmią różnie: do miecza doszły trzy nowe dźwięki (cięcie, ciężkie uderzenie, rozdarcie) losowane przy każdym ciosie. Krok bohatera, podniesienie kryształu i oddanie go Drzewu miały już swoje dźwięki.

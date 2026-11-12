@@ -10,7 +10,7 @@ OPTIONS ?= full
 BATTLE ?= arena
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-kraken sim-supports sim-arena sim-tabele report zgloszenia modele figurki druk silnik clean
+.PHONY: help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-kraken sim-bossy sim-supports sim-arena sim-tabele report zgloszenia modele figurki druk silnik clean
 
 help: ## Lista komend
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -76,6 +76,9 @@ sim-battles: node_modules ## Turniej jednostek w równych warunkach (balans boha
 
 sim-kraken: node_modules ## Bohater kontra Kraken z mackami (solo i z pomocnikami); SIM_GROWN=1 daje bohatera na 3. poziomie
 	node --import tsx scripts/sim/kraken.ts 100
+
+sim-bossy: node_modules ## Cel Boss rozbity na bossów (Hydra, Cyklop, Golem, Król Burzy, Kraken): % wygranych Przymierza, np. make sim-bossy GAMES=80
+	node --import tsx scripts/sim/bosses.ts $(or $(GAMES),30) $(or $(SIZES),short,long) $(or $(TABLES),coop1,coop2,pvp1,pvp2)
 
 sim-supports: node_modules ## Pomocnicy Przymierza porównani: ten sam bohater z jednym pomocnikiem (SIM_SUPPORT=pegasus zawęża)
 	node --import tsx scripts/sim/supports.ts 100
