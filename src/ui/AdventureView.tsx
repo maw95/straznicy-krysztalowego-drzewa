@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
 import { activeHero, heroesAt, hordeMayFightGuardian, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots } from '../engine/game';
+import { fightDifficulty, FIGHT_LEVEL_NAMES, type FightLevel } from '../engine/difficulty';
 import { HeroGrowth } from './growthUi';
 import { heroTileCost, SITE } from '../engine/sites';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
@@ -648,6 +649,19 @@ function TileDetails({ state, k }: { state: GameState; k: HexKey }) {
   );
 }
 
+/** The judged difficulty of the fights already worked out (a fight is played through by the bots, a few ms: once per game state, hero and hex). */
+const FIGHT_LEVELS = new Map<string, FightLevel | null>();
+function fightLevelAt(state: GameState, k: HexKey): FightLevel | null {
+  const hero = activeHero(state);
+  if (!hero) return null;
+  const key = `${state.setup.seed}|${state.actionCount}|${hero.id}|${k}`;
+  if (!FIGHT_LEVELS.has(key)) {
+    if (FIGHT_LEVELS.size > 200) FIGHT_LEVELS.clear();
+    FIGHT_LEVELS.set(key, fightDifficulty(state, k));
+  }
+  return FIGHT_LEVELS.get(key) ?? null;
+}
+
 /** The lines describing the hovered hex: terrain, contents, and whether the hero gets there this turn. */
 function tileLines(state: GameState, k: HexKey, reach: { cost: number; hostile: boolean } | undefined, heroName: string): { title: string; lines: string[] } {
   const t = state.tiles[k];
@@ -664,6 +678,9 @@ function tileLines(state: GameState, k: HexKey, reach: { cost: number; hostile: 
     if (state.control?.points.includes(k)) lines.push(controlNote(state, k));
     for (const h of heroesAt(state, k)) lines.push(`${UNITS[h.id].name}${h.crystals.length ? ' · niesie kryształ' : ''}`);
     if (reach) lines.push(reach.hostile ? `${heroName}: wejście za ${reach.cost} pkt rozpocznie walkę` : `${heroName} dojdzie tu za ${reach.cost} pkt`);
+    // How the fight would go (the bots play it out on a copy of the game): the hero's level, artifacts, treasures and abilities all count.
+    const level = reach?.hostile ? fightLevelAt(state, k) : null;
+    if (level) lines.push(`Trudność walki: ${FIGHT_LEVEL_NAMES[level]}`);
   } else lines.push(t.side === 'dawn' ? 'Kraina Przymierza — teren nieznany' : 'Kraina Hordy — teren nieznany');
   return { title: t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole', lines };
 }

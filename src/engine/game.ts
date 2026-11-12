@@ -527,6 +527,28 @@ function moveHero(state: GameState, to: HexKey) {
   arriveAt(state, hero);
 }
 
+/**
+ * A copy of the game in which the active hero has just started the fight on hex `to` (a hero or a guardian there), for judging
+ * how it would go without playing it; null when there is nothing to fight at `to`. Costs and the log of the real move are left out.
+ */
+export function fightAt(state: GameState, to: HexKey): GameState | null {
+  const s = structuredClone(state);
+  const hero = activeHero(s);
+  const tile = s.tiles[to];
+  if (!hero || !tile || s.phase !== 'adventure') return null;
+  const defender = defenderAt(s, to, hero.faction);
+  const crystal = tile.crystalId ? s.crystals[tile.crystalId] : undefined;
+  const from = hero.pos;
+  if (defender) {
+    hero.pos = to;
+    startBattle(s, { kind: 'heroes', attackerHero: hero.id, defenderHero: defender.id, mapHex: to, from });
+  } else if (crystal?.guardian) {
+    hero.pos = to;
+    startBattle(s, { kind: 'neutral', attackerHero: hero.id, neutralId: crystal.guardian, encounter: crystal.encounter, mapHex: to, from });
+  } else return null;
+  return s;
+}
+
 /** A reserve hero steps onto the board at the chosen hex (no movement points spent). */
 function enterBoard(state: GameState, hero: HeroState, to: HexKey) {
   delete hero.entering;
