@@ -23,7 +23,7 @@ function fight(seed: number, heroId: string, supports: number): { won: boolean; 
     seats: [{ name: 'A', faction: 'dawn', controller: 'bot', heroId }],
     rules: { ...DEFAULT_RULES, ruleset: 'digital', heroGrowth: true, abilities: true },
   });
-  s.factions.dawn.supportsAlive = rng.shuffle(FACTION_SUPPORTS.dawn).slice(0, supports);
+  s.factions.dawn.supportsAlive = process.env.SIM_SUPPORTS && supports ? process.env.SIM_SUPPORTS.split(',') : rng.shuffle(FACTION_SUPPORTS.dawn).slice(0, supports);
   s.factions.dawn.supportsDead = [];
   const enc = Object.values(s.crystals).find((c) => c.encounter);
   if (!enc) return null;
@@ -31,8 +31,8 @@ function fight(seed: number, heroId: string, supports: number): { won: boolean; 
   enc.guardian = unit;
   enc.tier = 2;
   const hero = s.heroes[heroId];
-  // SIM_GROWN=1: a hero as the author met the Kraken (partia 236189): level 3, two ranks of Strzelec wyborowy, a buckler and a hunter's blade.
-  if (process.env.SIM_GROWN) Object.assign(hero, { level: 3, skills: ['marksman', 'marksman'], gear: { shield: 'buckler', weapon: 'hunterBlade' } });
+  // SIM_GROWN=1: a hero as the author met the Kraken (partia 236189): level 3, Moc and Wigor (skills that help every hero alike), a buckler and a hunter's blade.
+  if (process.env.SIM_GROWN) Object.assign(hero, { level: 3, skills: ['might', 'vigor'], gear: { shield: 'buckler', weapon: 'hunterBlade' } });
   hero.pos = neighborKeys(enc.at).find((k) => s.tiles[k] && !s.tiles[k].crystalId && !s.tiles[k].home) ?? neighborKeys(enc.at)[0];
   s.turnOrder = [hero.id];
   s.turnIndex = 0;
@@ -49,6 +49,7 @@ function fight(seed: number, heroId: string, supports: number): { won: boolean; 
   const mine = Object.values(b.units).filter((u) => u.side === 'dawn');
   const max = mine.reduce((a, u) => a + u.maxHp, 0);
   const left = mine.reduce((a, u) => a + (u.alive ? Math.max(0, u.hp) : 0), 0);
+  if (process.env.SIM_LOG) console.log(f.log.slice(-60).map((l: any) => l.text ?? JSON.stringify(l)).join('\n'));
   if (process.env.SIM_DEBUG) console.log(b.winner, actions, b.round, Object.values(b.units).map((u) => `${u.defId}:${u.hp}/${u.maxHp}${u.alive ? '' : 'x'}`).join(' '));
   return { won: b.winner === 'dawn', kept: max ? left / max : 0, level: levelOfFight(b), actions };
 }

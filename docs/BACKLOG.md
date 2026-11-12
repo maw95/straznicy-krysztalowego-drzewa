@@ -11,7 +11,7 @@ Zasada: **jeden aktywny temat naraz.** Nowe pomysły autora trafiają do „Pomy
 
 ## 2. Nowe uwagi autora i obserwacje
 
-- [ ] **2.1. Prastary Niedźwiedź przegrywa z Krakenem w 0% nawet z dwoma pomocnikami** (`make sim-kraken`, `SIM_GROWN=1`; Złoty Smok 50–85%, Jednorożec 70–95%). Zabija dwie macki z trzech i ginie. Do zbadania: czy to słabość bota (ustawienie, wybór celu) czy zbyt twarde macki dla wolnego, bijącego wręcz bohatera.
+- [ ] **2.1. Prastary Niedźwiedź nie ma szans z Krakenem** (`make sim-kraken`, `SIM_GROWN=1` = poziom 3, Moc + Wigor, puklerz, Nóż Łowcy; `SIM_SUPPORTS=nymph,elfDruid` ustala pomocników). Z równym zestawem i dobraną drużyną: Złoty Smok 83–100%, Jednorożec 100%, Niedźwiedź 0–13%. To nie błąd bota: Niedźwiedź zadaje ok. 21 na cios (Smok 27–30), a Kraken 8 na rundę z dystansu, więc przy 3 mackach po 30 i głowie 180 nie wyrabia w wyścigu. Ze zwykłymi strażnikami (Cyklop, Gryf, Hydra) Niedźwiedź wygrywa 100%, więc problem dotyczy tylko Krakena. Jednocześnie Smok i Jednorożec z Nimfą i Elfem wygrywają 100%, czyli Kraken jest dla nich nadal łatwy. Do decyzji autora: zostawić (Niedźwiedź to tank, na Krakena potrzebuje mocnej drużyny), osłabić głowę i dać więcej Życia, albo strojenie zależne od bohatera.
 - [ ] **2.2. Pegaz i Kraken: sprawdzić w prawdziwej grze** (autor), czy nowe liczby odpowiadają wrażeniom; stare uwagi z 12.11 (partia 236189) zostały zrealizowane.
 
 ## 3. Dalej (kolejność)
