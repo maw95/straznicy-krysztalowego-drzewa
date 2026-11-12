@@ -13,7 +13,6 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
 ## A. Drobne (gotowe do zrobienia sam)
 
-- [ ] **A7. Analiza gry botów:** obejrzeć nagrane partie (`make zrzut`, symulacje, zgłoszenia), znaleźć głupie lub nieczytelne decyzje (ruch, wybór celu, rozstawienie, przedmioty, umiejętności, cele mapy) i poprawiać pojedynczo, jedna poprawka = jeden commit z `-u` golden i `make sim-tabele` (pasma w sekcji G; zmiana, która wyrzuca Normalny poza pasmo, jest cofana i opisana). Gotowe, gdy lista znalezionych problemów jest wdrożona albo opisana jako odłożona, z liczbami przed i po. (Znany przykład: bohater stoi bezczynnie przy głowie zasłoniętej mackami; po przeróbce Krakena już niewidoczny.)
 
 ## B. Średnie
 
@@ -66,5 +65,10 @@ Poza pasmem (decyzja autora 10.11: zostawiamy, wracać tylko przy okazji):
 - Koop 2 graczy, Normalny, bardzo długa mapa: 75%.
 - Artefakt i Boss z rozwojem na wyspach; Boss Trudny (według autora nie ruszamy).
 - Dźwignie stroiciela (skarby startowe, bohater Hordy) są za grube dla tych komórek; potrzebna nowa dźwignia (liczba strażników albo kryształów).
+
+**Analiza botów (12.11, 180 partii cyfrowych z rozwojem, cele kryształy/kontrola/Boss, długa mapa; dawne A7):**
+- Wdrożone: (1) w celu Boss boty nie wchodziły w legowisko Krakena (ścieżka omijała pola ze spotkaniem), Przymierze miało z nim 0% i gra stała do limitu rund; po poprawce 50–70%, jak przy innych bossach (`make sim-bossy`). (2) Boty nigdy nie używały Rogu Odwagi, Rogu Strażników, Klepsydry Czasu i Butów Wiatru: 194 z ok. 560 zdobytych skarbów szło na marne; teraz użyte 24 z 31 butów, 43 z 56 rogów odwagi, 38 z 40 rogów strażników, 22 z 35 klepsydr; wygrane Przymierza w tabelach wzrosły zwykle o 1–3 pkt (Normalny nadal w paśmie poza dwiema komórkami o 1–2 pkt nad nim: koop 2 graczy długa bez rozwoju 66%, Trudny koop 1 gracz bardzo długa 47%; szum pomiaru ±3).
+- Odłożone: Zwój Teleportacji jest nadal nieużywany (35 z 35 zdobytych): bohater rzadko nie dosięga wroga, a teleport ma sens tylko obok sojusznika w zasięgu ciosu; próba bez efektu, usunięta. Wymaga osobnego pomysłu (np. do ratowania strzelca albo skoku za linię wroga).
+- Zbadane, bez zmian (to nie błąd): „bezczynne tury” w kontroli (31%), przetrwaniu (24%) i artefakcie (12%) to bohaterowie trzymający punkt kontrolny albo czekający przy Drzewie, tak jak każe cel; „bezczynne aktywacje” w bitwie (Elf Druid, Niedźwiedź) to wybór pozostania na miejscu, a przypadki z celem w zasięgu (Nimfa, Pegaz) to 2–3 na ok. 240.
 
 Wartości robocze do akceptacji autora (zmiana w jednym miejscu): `SURVIVAL` (rundy, fale), `MAP_SHAPES`, `SHAPE_ROUND_FACTOR`, `DIGITAL_TUNING`, progi PD i pula umiejętności (`growth.ts`), `FAMILY` (pomoc dla dziecka, `data.ts`), liczby artefaktów i obiektów na mapie, liczby jednostek i bossów neutralnych, liczba spotkań na mapie, progi botów, progi wskaźnika trudności (`levelOfFight`).
