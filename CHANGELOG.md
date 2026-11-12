@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Ciosy w walce wręcz brzmią różnie: do miecza doszły trzy nowe dźwięki (cięcie, ciężkie uderzenie, rozdarcie) losowane przy każdym ciosie. Krok bohatera, podniesienie kryształu i oddanie go Drzewu miały już swoje dźwięki.
 - Macka Krakena ma własną ilustrację karty, portret i ikonę zdolności zamiast pożyczonych od Krakena i Strażnika.
 - Pegaz jest mocniejszy w wersji cyfrowej (5 Życia i 3 Ataku zamiast 4 i 2): symulacje pokazały, że z nim drużyna wygrywała wyraźnie rzadziej niż z Elfem Druidem i Nimfą. Wersja planszowa bez zmian.
 - Kraken nie stoi już bezczynnie: jego głowa strzela strugą wody w każdego wroga w zasięgu wzroku, a obok niego stoją jeszcze dwie macki, krab i błotny stwór (jak obok Króla Burzy Harpia i Orzeł). Walka jest groźna, ale podobnie trudna dla każdego z trzech bohaterów.

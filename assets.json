@@ -3181,6 +3181,26 @@
       "data": "2026-11-12",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/ciosy_warianty",
+      "pliki": [
+        "public/assets/dzwieki/sword_hit_2.mp3",
+        "public/assets/dzwieki/sword_hit_3.mp3",
+        "public/assets/dzwieki/sword_hit_4.mp3"
+      ],
+      "typ": "trzy dodatkowe warianty dźwięku ciosu w walce wręcz",
+      "prompt": "(2) A single quick sword slash hitting an armoured enemy, short metallic clang with a fleshy thud; (3) A heavy blunt club or fist blow landing on a body, dull powerful thump with a small crunch; (4) Claws or a fast stabbing blade ripping across a target, sharp swish followed by a quick slicing hit. Wszystkie: game melee hit sound effect, dry, no music",
+      "scenario_asset": {
+        "sword_hit_2": "asset_4N3DxHsmEsuGjXny9pFn17qB",
+        "sword_hit_3": "asset_iQSDdovoum71nGVS3JnmW5oL",
+        "sword_hit_4": "asset_4nTviPUL84VtEkrdAk6vSHGd"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 0.8 s, promptInfluence 0.6, przycięta cisza, mono mp3 128 kb/s, ffmpeg",
+      "data": "2026-11-12",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

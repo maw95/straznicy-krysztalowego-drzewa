@@ -13,7 +13,6 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
 ## A. Drobne (gotowe do zrobienia sam)
 
-- [ ] **A3. Dźwięki mapy przygody:** krok bohatera (po różnym terenie, jeśli to się opłaca), podniesienie kryształu, Drzewo, więcej wariantów ciosu (`ui/sfx.ts`). ElevenLabs/Scenario, krótkie i ciche. Gotowe, gdy dźwięki grają w grze i obsługuje je suwak efektów.
 - [ ] **A4. Efekty Króla Burzy:** pole elektryczne i teleport jako arkusz klatek (WebP) ze Scenario zamiast SVG + CSS. Gotowe, gdy efekt wygląda dobrze w `BattleView` (sprawdzone zrzutem) i jest w `assets.json`.
 - [ ] **A5. Podglądy kart prawym przyciskiem** (na telefonie: długie przytrzymanie): karta pojawia się po prawym kliknięciu i znika po kliknięciu gdziekolwiek; najechanie myszą pokazuje tylko małą podpowiedź z nazwą i statystykami. Gotowe, gdy działa w menu głównym, bitwie i na mapie (sprawdzone w przeglądarce, także układ telefonu).
 - [ ] **A6. Alternatywne nazwy gry:** „Strażnicy Kryształowego Drzewa” nie brzmi chwytliwie. Claude pisze `docs/NAZWY_GRY.md`: 10–15 krótkich propozycji, dobrze brzmiących także po angielsku, z jednym zdaniem uzasadnienia, sprawdzeniem, czy nazwa nie jest zajęta na Steamie, i rekomendacją trzech. Tylko dokument, bez zmian w grze.

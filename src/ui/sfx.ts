@@ -9,6 +9,10 @@ export type Sfx = 'sword_hit' | 'arrow_shot' | 'magic_cast' | 'magic_attack' | '
 /** Relative loudness of each sound (the files are normalised to about the same peak, but a click should be quiet and a fanfare roomy). */
 const GAIN: Record<Sfx, number> = { sword_hit: 0.9, arrow_shot: 0.8, magic_cast: 0.8, magic_attack: 0.8, footstep_walk: 0.45, ui_click: 0.5, treasure_found: 0.8, level_up: 0.8, victory: 0.85, defeat: 0.85, hero_step: 0.6, crystal_pickup: 0.8, tree_deliver: 0.85 };
 
+/** Extra files a sound may be drawn from (picked at random, so repeated blows do not sound the same). */
+const VARIANTS: Partial<Record<Sfx, string[]>> = { sword_hit: ['sword_hit', 'sword_hit_2', 'sword_hit_3', 'sword_hit_4'] };
+export const sfxFiles = (name: Sfx): string[] => VARIANTS[name] ?? [name];
+
 /** Units with their own attack and death sounds (dzwieki/jednostki/<id>_atak.mp3 and _smierc.mp3). */
 export const UNIT_SOUNDS = new Set(['goldDragon', 'unicornKing', 'ancientBear', 'braveDuck', 'elfDruid', 'nymph', 'pegasus', 'shardling', 'burrower', 'skyEagle', 'harpy', 'pincer', 'bogCrawler', 'stoneGolem', 'stormKing', 'kraken', 'tentacle', 'blackDragon', 'werewolfLord', 'ironFistOgre', 'goblinShaman', 'caveSpider', 'shadowBat', 'cyclops', 'griffin', 'hydra']);
 const UNIT_GAIN = 0.85;
@@ -79,7 +83,8 @@ class Effects {
   play(name: Sfx) {
     if (this.settings.muted || this.settings.volume <= 0) return;
     try {
-      const base = this.audio(name);
+      const files = sfxFiles(name);
+      const base = this.audio(files[Math.floor(Math.random() * files.length)]);
       if (!base) return;
       const a = base.paused || base.ended ? base : (base.cloneNode() as HTMLAudioElement);
       a.currentTime = 0;
