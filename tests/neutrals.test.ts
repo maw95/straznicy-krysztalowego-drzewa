@@ -109,6 +109,11 @@ describe('neutral encounters: abilities', () => {
     expect(targets(s)).toContain('k');
   });
 
+  it('Kraken: the head shoots a hero who stays away from it', () => {
+    const s = fight([{ id: 'k', defId: 'kraken', side: 'neutral', cell: here }, hero(arenaCell(6, 4)), { id: 't', defId: 'tentacle', side: 'neutral', cell: near(here, 5) }]);
+    expect(attackTargets(s, s.battle!.units.k).map((u) => u.id)).toContain('goldDragon');
+  });
+
   it('Podkop: the Podkopnik comes up up to 4 hexes away and its turn ends', () => {
     const s = fight([{ id: 'p', defId: 'burrower', side: 'neutral', cell: here }, hero(arenaCell(12, 10))]);
     const cells = teleportCells(s, s.battle!.units.p);

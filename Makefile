@@ -10,7 +10,7 @@ OPTIONS ?= full
 BATTLE ?= arena
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-arena sim-tabele report zgloszenia modele figurki druk silnik clean
+.PHONY: help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-kraken sim-arena sim-tabele report zgloszenia modele figurki druk silnik clean
 
 help: ## Lista komend
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -73,6 +73,9 @@ sim-matrix: node_modules ## Wszystkie 72 warianty z diagnostyką botów, np. mak
 
 sim-battles: node_modules ## Turniej jednostek w równych warunkach (balans bohaterów, pomocników, strażników)
 	node --import tsx scripts/sim/battles.ts 300
+
+sim-kraken: node_modules ## Bohater kontra Kraken z mackami (solo i z pomocnikami); SIM_GROWN=1 daje bohatera na 3. poziomie
+	node --import tsx scripts/sim/kraken.ts 100
 
 sim-tabele: node_modules ## Tabele: % wygranych Przymierza w każdym trybie, mapie i poziomie oraz jak przegrywa, np. make sim-tabele GAMES=300
 	@mkdir -p .tmp/sim

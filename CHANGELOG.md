@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Kraken nie stoi już bezczynnie: jego głowa strzela strugą wody w każdego wroga w zasięgu wzroku, więc nie da się go bezkarnie ostrzeliwać z dystansu, a walka z nim jest groźniejsza (jak przystało na legendarną nagrodę).
 - W oknie „Autorzy” jest trzech autorów gry: Maciej Woźniak (pomysł, zasady, wykonanie), Aleksandra Szestowicka (pomoc przy fabule) i Zuzanna Woźniak (autorka Dzielnej Kaczki).
 
 ## 2.4.0 — 2026-11-12

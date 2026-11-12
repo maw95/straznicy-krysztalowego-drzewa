@@ -412,7 +412,7 @@ Cel ma „front”: kierunek ostatniego ruchu albo ataku jednostki (stojąca w m
 |---|---|---|---|---|---|---|
 | Kamienny Golem | kamień | 40 | 4 | 2 | chodzi | **Kamienna Skóra:** każdy cios zadaje o 2 mniej (min. 1). **Runiczny Rdzeń:** gdy straci połowę Życia, rdzeń się odsłania: Kamienna Skóra znika, a po każdym jego ataku **Trzęsienie** zadaje 1 obrażenie wszystkim jednostkom wokół niego. |
 | Król Burzy | powietrze (żywiołak burzy) | 30 | 3 | 4 | teleport | Atakuje normalnie z dystansu (strzelec). **Teleport:** zamiast ruchu przenosi się na dowolne wolne pole w odległości do 6. **Pole Naładowane:** w polu, które opuścił, przez 2 rundy każda jednostka, która tam wejdzie, dostaje 1 obrażenie. **Wyładowanie:** każdy, kto uderzy go z bliska, dostaje 1 obrażenie. |
-| Kraken | woda | 36 | 3 | 0 | stoi | **Macki:** wraz z nim stoją 3 macki (osobne słabe jednostki: Ż 6, A 2, S 0, bijące sąsiadów). Głowa jest nietykalna, dopóki żyje choć jedna macka. |
+| Kraken | woda | 36 | 2 | 0 | stoi, strzela | **Macki:** wraz z nim stoją 3 macki (osobne słabe jednostki: Ż 6, A 2, S 0, bijące sąsiadów). Głowa jest nietykalna, dopóki żyje choć jedna macka, i strzela strugą wody (atak dystansowy) w każdego wroga w zasięgu wzroku, więc nie da się go bezkarnie ostrzeliwać z dystansu (12.11: bohater z dwoma pomocnikami wygrywa ok. 50–70%, wcześniej 85–95%). |
 
 Życie bossów liczone jest jak `BOSS.hp` (zależy od długości mapy i liczby bohaterów); liczby wyżej to proporcje względem innych jednostek. Wymaga rozstrzygnięcia przy kodzie: czy Trzęsienie rani też pozostałe jednostki neutralne stojące obok Golema (propozycja: tak, „wszystkich wokół”) i czy Wyładowanie działa na strzały (propozycja: nie, tylko na cios z bliska).
 
