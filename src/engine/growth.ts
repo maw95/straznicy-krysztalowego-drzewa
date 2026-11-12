@@ -63,7 +63,7 @@ export const MAX_RANK = 3;
 export const SKILL_RANKS = {
   might: [1, 2, 3], // A
   vigor: [2, 4, 6], // Ż
-  swift: [1, 2, 2], // S
+  swift: [1, 2, 3], // S
   leader: [1, 2, 3], // Ż of the supports
   pathfinder: [1, 2, 2], // move points on the map
   marksman: [1, 2, 3], // A of the hero's shooters (the hero too, when it shoots)
