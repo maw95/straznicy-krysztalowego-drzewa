@@ -14,7 +14,6 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 ## A. Drobne (gotowe do zrobienia sam)
 
 - [ ] **A7. Analiza gry botów:** obejrzeć nagrane partie (`make zrzut`, symulacje, zgłoszenia), znaleźć głupie lub nieczytelne decyzje (ruch, wybór celu, rozstawienie, przedmioty, umiejętności, cele mapy) i poprawiać pojedynczo, jedna poprawka = jeden commit z `-u` golden i `make sim-tabele` (pasma w sekcji G; zmiana, która wyrzuca Normalny poza pasmo, jest cofana i opisana). Gotowe, gdy lista znalezionych problemów jest wdrożona albo opisana jako odłożona, z liczbami przed i po. (Znany przykład: bohater stoi bezczynnie przy głowie zasłoniętej mackami; po przeróbce Krakena już niewidoczny.)
-- [ ] **A8. Strojenie poziomu Łatwego:** 1 na 1 jest powyżej pasma 65–85% (94/91/88/79%), 2 na 2 poniżej (61% na bardzo długiej). `scripts/sim/tuneLevels.ts`; Normalny i Trudny muszą zostać w swoich pasmach. Gotowe, gdy `make sim-tabele` pokazuje Łatwy w paśmie albo opisuje, czemu się nie da.
 
 ## B. Średnie
 
@@ -44,7 +43,7 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
 ## Pytania czekające na autora
 
-(brak)
+- **Łatwy w wydaniu planszowym** (uzupełnienie do dawnego A8): w edycji planszowej Łatwy 1 na 1 daje 94/91/88/79% (powyżej pasma), a 2 na 2 na bardzo długiej mapie 61%. Dźwignie stroiciela działają tylko w grze cyfrowej, żeby plansza została „jak wydrukowana”. Czy stroić też planszową (zmieniałoby to wydrukowane zasady poziomu Łatwy), czy zostawić? Domyślnie: zostawiam.
 
 ## F. Do sprawdzenia na żywo (autor)
 
@@ -61,6 +60,7 @@ Wszystko zrobione i przetestowane, ale bez potwierdzenia w prawdziwej grze:
 ## G. Balans: znane odchylenia
 
 Pasma autora (wygrane Przymierza): Łatwy 65–85%, Normalny 45–65%, Trudny 30–45%. Stroiciel: `scripts/sim/tuneLevels.ts`; tabele: `make sim-tabele`, `make sim-cele` (trzymać poniżej 3 minut; każdy nowy cel i kształt mnoży tabelę). Stan z 12.11 (po sekcji uwag z tego dnia): Normalny w paśmie niemal wszędzie.
+**Łatwy (12.11, 200 gier na komórkę):** w grze cyfrowej (domyślnej) jest w paśmie 65–85% w każdej komórce: bez rozwoju 70–85%, z rozwojem (`SIM_GROWTH=1`) 67–79%; stroiciel nic nie zmieniał. Liczby 94/91/88/79% i 61% pochodziły z `make sim-tabele` BEZ `SIM_DIGITAL=1`, czyli z wydania planszowego, którego poziomy zostają „jak wydrukowane” (`tuning.ts`: dźwignie dotyczą tylko cyfrowego). Do mierzenia gry używać `SIM_DIGITAL=1 make sim-tabele` (i `SIM_GROWTH=1`). Z rozwojem Normalny jest poniżej pasma w kilku komórkach (kooperacja 39–44% na średniej, długiej i bardzo długiej mapie, 2 na 2 długa 35%) i Trudny w koopie 22–30%: do ewentualnego przestrojenia (`tuneLevels.ts <cel> 1`).
 Poza pasmem (decyzja autora 10.11: zostawiamy, wracać tylko przy okazji):
 - Kryształy na ręcznych mapach: Cieśnina i Dolina (koop 1 gracz Normalny 25–43%, 40 gier 31% na Dolinie).
 - Koop 2 graczy, Normalny, bardzo długa mapa: 75%.
