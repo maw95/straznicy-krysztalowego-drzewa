@@ -326,6 +326,8 @@ function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number
   const range = moveRange(u);
   const obstacles = obstacleSet(b);
   const units = occupancy(b, u);
+  // A large unit drags its tail along: it may only pass cells where some tail cell is free (a gap of one cell between two units is too narrow).
+  const large = isLarge(state, u);
   const dist = new Map<HexKey, number>([[u.pos!, 0]]);
   const parent = new Map<HexKey, HexKey>();
   const queue = [u.pos!];
@@ -336,6 +338,7 @@ function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number
     for (const n of neighborKeys(cur)) {
       if (!inLayout(b, n) || obstacles.has(n) || dist.has(n)) continue;
       if (units.has(n)) continue;
+      if (large && tailOptions(b, u, n, units).length === 0) continue;
       dist.set(n, d + 1);
       parent.set(n, cur);
       queue.push(n);

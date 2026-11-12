@@ -1,6 +1,6 @@
 // Digital ruleset: the wide arena (pointy-topped hexes in rows, 13 × 9).
 import { describe, expect, it } from 'vitest';
-import { WIDE_OBSTACLES, arenaObstacles, battleMove, deployCells, layoutCells, makeBattleUnit, reachableCells, tailOptions, wideCell, wideCellOf, type ArenaId } from '../src/engine/battle';
+import { WIDE_OBSTACLES, arenaObstacles, battleMove, deployCells, layoutCells, makeBattleUnit, movePath, reachableCells, tailOptions, wideCell, wideCellOf, type ArenaId } from '../src/engine/battle';
 import { applyActionInPlace, createGame } from '../src/engine/game';
 import { chooseAction } from '../src/engine/ai';
 import { distance, neighborKeys, parseKey, type HexKey } from '../src/engine/hex';
@@ -67,6 +67,15 @@ describe('wide arena', () => {
     s.battle!.obstacles = [wideCell(7, 2), wideCell(9, 2)];
     expect(reachableCells(s, d).has(wideCell(8, 2))).toBe(false);
     expect(reachableCells(s, d).has(wideCell(8, 3))).toBe(true);
+  });
+
+  it('a walker of two cells does not squeeze through a gap of one cell in a wall', () => {
+    const s = wide([{ id: 'unicornKing', side: 'dawn', col: 8, half: 4 }, { id: 'werewolfLord', side: 'horde', col: 12, half: 8 }]);
+    const u = s.battle!.units.unicornKing;
+    u.tail = wideCell(7, 4);
+    // Row 2 is a wall with one gap, (8,2), the only way north; the neighbours of the gap in its row are walls, so the tail has no room there.
+    s.battle!.obstacles = Array.from({ length: 13 }, (_, c) => c).filter((c) => c !== 8).map((c) => wideCell(c, 2));
+    expect([...reachableCells(s, u).keys()].some((k) => wideCellOf(k).row < 2)).toBe(false);
   });
 
   void makeBattleUnit;

@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Jednostka dwupolowa (np. Jednorożec) nie przechodzi już przez lukę szerokości jednego pola między dwiema jednostkami lub przeszkodami: ogon musi się gdzieś zmieścić na każdym polu trasy, nie tylko na polu docelowym.
+
 - Lekkość Wiatru (i odpowiedniki Hordy) na III stopniu daje +3 do Szybkości bohatera w bitwie; wcześniej III stopień dawał tyle samo co II (+2).
 
 - Opisy zdolności w Wyprawie pokazują prawdziwe liczby: Rozprysk Kruszyńca rani o 3 (nie o 1), Kamienna Skóra Golema zmniejsza cios o 6 (nie o 2), a Wyładowanie Króla Burzy zadaje 3 (nie 1). Silnik liczył dobrze, mylił się tylko opis.
