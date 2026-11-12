@@ -175,7 +175,7 @@ export function ArenaBoard(p: Props) {
     const ring = deploySide && picked === u.id ? ACTIVE_FIGURE_RING : null;
     const lastJump = b.teleports?.[b.teleports.length - 1];
     const blink = lastJump?.unitId === u.id && lastJump.to === u.pos && lastJump.kind !== 'burrow';
-    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, blink, ring, attack: p.attackNow && p.attackNow.unitId === u.id ? { key: p.attackNow.key, melee: b.units[p.attackNow.targetId] ? unitDistance(u, b.units[p.attackNow.targetId]) === 1 : false, towardX: cellCenter(b.units[p.attackNow.targetId]?.pos ?? b.units[p.attackNow.targetId]?.corpse ?? fp.head).x } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy', path }];
+    return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, blink, ring, attack: p.attackNow && p.attackNow.unitId === u.id ? { key: p.attackNow.key, melee: b.units[p.attackNow.targetId] ? unitDistance(u, b.units[p.attackNow.targetId]) === 1 : false, towardX: cellCenter(b.units[p.attackNow.targetId]?.pos ?? b.units[p.attackNow.targetId]?.corpse ?? fp.head).x, towardY: cellCenter(b.units[p.attackNow.targetId]?.pos ?? b.units[p.attackNow.targetId]?.corpse ?? fp.head).y } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy', path }];
   });
   return (
     <Frame crest className="grow arena-frame" innerClass="" innerStyle={{ background: '#14100A' }}>

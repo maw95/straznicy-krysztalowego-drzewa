@@ -21,7 +21,7 @@ export interface SpritePiece {
   /** Outline round the feet (CSS colour) marking the active unit. */
   ring?: string | null;
   /** A melee blow: a new `key` plays the attack once; the unit turns towards `towardX` while it lasts. */
-  attack?: { key: number; towardX: number; /** The target stands next to the attacker: a shooter uses its close-combat clip (`atak_wrecz`) when it has one. */ melee?: boolean } | null;
+  attack?: { key: number; towardX: number; towardY?: number; /** The target stands next to the attacker: a shooter uses its close-combat clip (`atak_wrecz`) when it has one. */ melee?: boolean } | null;
   /** Just hit: a short shake and flash. */
   hit?: boolean;
   /** Stand at the new place at once instead of flying there (setting up units before a battle). */
@@ -43,6 +43,12 @@ const MIN_GLIDE_MS = 250;
 const HIT_MS = 320;
 /** A unit turning round (the picture narrows, hops and leans, then widens on the other side): there is no turn clip yet. */
 const TURN_MS = 300;
+/** Fire breathers: where the mouth is in the attack frame (shares of the frame width and height, while it breathes). */
+const FIRE_MOUTH: Record<string, [number, number]> = { goldDragon: [0.83, 0.66], blackDragon: [0.86, 0.5] };
+/** The flame burns from this far into the attack clip until that far (the clip is 0–1). */
+const FLAME_FROM = 0.2;
+const FLAME_TO = 0.78;
+const FLAME_PUFFS = 46;
 /** The blow of an attack clip lands this far into it. */
 const IMPACT_AT = 0.45;
 
@@ -361,6 +367,43 @@ class Stage {
     if (blend) {
       ctx.globalAlpha = blend.alpha;
       ctx.drawImage(img, blend.sx, blend.sy, sw, sh, -set.cx * dw, -set.feet * dh, dw, dh);
+    }
+    ctx.restore();
+    // The breath of a dragon: a big flame from the mouth to the target, longer than the small one painted in the clip.
+    const mouth = FIRE_MOUTH[l.piece.defId];
+    if (mouth && seg?.kind === 'clip' && seg.clip === 'atak' && !seg.reverse && l.piece.attack?.towardY !== undefined) {
+      const dir = l.flip ? -1 : 1;
+      this.drawFlame(ctx, now, Math.min(1, (now - l.segStart) / seg.ms), x + dir * (mouth[0] - set.cx) * dw, gy + (mouth[1] - set.feet) * dh, l.piece.attack.towardX, l.piece.attack.towardY, dw);
+    }
+  }
+
+  /** A stream of glowing puffs (white-hot at the mouth, orange, then red smoke) that swells and wavers on its way to the target. `t` is how far the attack clip is. */
+  private drawFlame(ctx: CanvasRenderingContext2D, now: number, t: number, mx: number, my: number, tx: number, ty: number, size: number) {
+    const env = Math.min(1, Math.max(0, (t - FLAME_FROM) / 0.08), Math.max(0, (FLAME_TO - t) / 0.1));
+    if (env <= 0) return;
+    const dx = tx - mx;
+    const dy = ty - my;
+    const dist = Math.hypot(dx, dy) || 1;
+    const nx = -dy / dist;
+    const ny = dx / dist;
+    // The flame reaches the target a little after it starts, and goes on a bit past it.
+    const reach = Math.min(1, (t - FLAME_FROM) / 0.12) * (dist + size * 0.15);
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < FLAME_PUFFS; i++) {
+      const u = (i / FLAME_PUFFS + now / 520) % 1;
+      const d = u * reach;
+      const sway = Math.sin(i * 12.9898 + now / 90) * u * size * 0.1;
+      const px = mx + (dx / dist) * d + nx * sway;
+      const py = my + (dy / dist) * d + ny * sway - u * size * 0.05;
+      const r = size * (0.05 + 0.2 * u);
+      const a = env * 0.55 * (1 - u * u);
+      const g = ctx.createRadialGradient(px, py, 0, px, py, r);
+      g.addColorStop(0, `rgba(255,${Math.round(250 - 70 * u)},${Math.round(200 - 190 * u)},${a})`);
+      g.addColorStop(0.45, `rgba(255,${Math.round(150 - 90 * u)},30,${a * 0.7})`);
+      g.addColorStop(1, 'rgba(180,30,0,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(px - r, py - r, r * 2, r * 2);
     }
     ctx.restore();
   }
