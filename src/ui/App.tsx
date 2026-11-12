@@ -21,6 +21,7 @@ import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset } from './commo
 import { SetupScreen } from './SetupScreen';
 import { music } from './music';
 import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
+import { fightLevelAt } from './fightBadges';
 import { DigitalCardsContext, UnitCard } from './UnitCard';
 import { DigitalContext, HeroLevelsContext, HpScaleContext, StatScaleContext } from './statScale';
 import { readAutosave, replay, writeAutosave, type BugReport, type SaveFile } from './saves';
@@ -167,15 +168,18 @@ export function App() {
     if (q.get('level')) for (const h of Object.values(s.heroes)) h.level = Number(q.get('level'));
     // ?encounter=2 (with growth=1) walks the active hero into the first neutral encounter of that tier (0 common, 1 rare, 2 legendary), for looking at the new units.
     if (q.get('encounter')) {
-      const enc = Object.values(s.crystals).find((c) => c.encounter && c.tier === Number(q.get('encounter')));
+      const enc = Object.values(s.crystals).find((c) => c.encounter && c.tier === Number(q.get('encounter'))) ?? (q.get('adjacent') === '1' ? Object.values(s.crystals).find((c) => c.guardian) : undefined);
       const hero = activeHero(s);
       const next = enc && hero ? neighborKeys(enc.at).find((k) => s.tiles[k] && tileCost(s.tiles[k]) !== null && !s.tiles[k].crystalId) : null;
       if (enc && hero && next) {
         hero.pos = next;
         s.tiles[enc.at].revealed = true;
         s.movePoints = 3;
-        s = applyAction(s, { type: 'moveHero', to: enc.at });
-        history.current.push({ type: 'moveHero', to: enc.at });
+        // ?adjacent=1 only stands next to the encounter (to look at the fight note and the confirmation).
+        if (q.get('adjacent') !== '1') {
+          s = applyAction(s, { type: 'moveHero', to: enc.at });
+          history.current.push({ type: 'moveHero', to: enc.at });
+        }
       }
     }
     for (let i = 0; i < Number(q.get('steps')) && s.phase !== 'over'; i++) {
@@ -421,7 +425,7 @@ export function App() {
     const target = path[path.length - 1];
     const guarded = Object.values(g.crystals).find((c) => c.at === target && c.guardian);
     const text = guarded?.encounter ? `Wejście na to pole rozpocznie walkę ze strażnikami: ${guarded.encounter.map((id) => UNITS[id].name).join(', ')}.` : guarded ? `Wejście na to pole rozpocznie walkę ze strażnikiem: ${UNITS[guarded.guardian!].name}.` : 'Wejście na to pole rozpocznie bitwę z wrogim bohaterem.';
-    setConfirm({ text, yes: 'Do walki!', onYes: () => setSteps(path) });
+    setConfirm({ text, level: fightLevelAt(g, target), yes: 'Do walki!', onYes: () => setSteps(path) });
   }, []);
 
   // A freshly found treasure of the viewing faction turns over in front of the player.

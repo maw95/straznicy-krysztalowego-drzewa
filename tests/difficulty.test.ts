@@ -47,3 +47,18 @@ describe('fightDifficulty', () => {
     expect(fightDifficulty(s, Object.keys(s.tiles)[0])).toBeNull();
   });
 });
+
+describe('fightDifficulty without helpers', () => {
+  it('a hero with no helpers left is judged no easier than with them', () => {
+    const order = ['easy', 'even', 'dangerous', 'impossible'];
+    const start = createGame(withRuleset(setup({ mapSize: 'long', seed: 2 }), true, 'crystals', 'triangle', undefined, true));
+    const s = playUntil(start, (x) => x.phase === 'adventure' && legalHeroMoves(x).some((m) => m.kind === 'attackGuardian'), 4000);
+    const move = legalHeroMoves(s).find((m) => m.kind === 'attackGuardian')!;
+    const full = fightDifficulty(s, move.to)!;
+    const alone = structuredClone(s);
+    for (const f of Object.values(alone.factions)) f.supportsAlive = [];
+    const lone = fightDifficulty(alone, move.to);
+    expect(lone).not.toBeNull();
+    expect(order.indexOf(lone!)).toBeGreaterThanOrEqual(order.indexOf(full));
+  });
+});

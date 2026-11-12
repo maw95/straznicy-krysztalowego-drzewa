@@ -1,7 +1,9 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
 import { activeHero, heroesAt, hordeMayFightGuardian, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots } from '../engine/game';
-import { fightDifficulty, FIGHT_LEVEL_NAMES, type FightLevel } from '../engine/difficulty';
+import { fightLevelAt } from './fightBadges';
+import { EnemyPill, FightPill } from './fightBadges';
+import type { FightLevel } from '../engine/difficulty';
 import { HeroGrowth } from './growthUi';
 import { heroTileCost, SITE } from '../engine/sites';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
@@ -321,7 +323,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 const onPath = preview?.includes(t.key);
                 const crystal = t.revealed ? Object.values(state.crystals).find((c) => c.at === t.key) : undefined;
                 const picked = mapPicks?.picks.includes(t.key);
-                const tileDetails = details(() => <TileDetails state={state} k={t.key} />);
+                const tileDetails = details(() => <TileDetails state={state} k={t.key} hostile={Boolean(r?.hostile)} />);
                 const rim = picked || isSel ? 'linear-gradient(135deg,#F2FCFF,#9EE4FF 40%,#2A6FB0)' : 'linear-gradient(135deg,#FFF0B0 0%,#E2B04A 30%,#9A6A18 62%,#F0CF78 100%)';
                 return (
                   <button
@@ -598,12 +600,13 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
 }
 
 /** Right button on a hex: the terrain, what lies there and who stands there. */
-function TileDetails({ state, k }: { state: GameState; k: HexKey }) {
+function TileDetails({ state, k, hostile }: { state: GameState; k: HexKey; hostile: boolean }) {
   const t = state.tiles[k];
   const crystal = t.revealed ? Object.values(state.crystals).find((c) => c.at === k) : undefined;
   const heroes = t.revealed ? heroesAt(state, k) : [];
   const cost = t.revealed ? TERRAIN_COST[t.terrain] : undefined;
   const note = (text: string) => <div style={{ fontSize: 15, lineHeight: 1.3 }}>{text}</div>;
+  const level = hostile && t.revealed ? fightLevelAt(state, k) : null;
   return (
     <div className="plate parch" style={{ width: 300, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -615,6 +618,7 @@ function TileDetails({ state, k }: { state: GameState; k: HexKey }) {
           </div>
         </div>
       </div>
+      {level && <FightPills foes={[]} level={level} size={15} />}
       {!t.revealed && note('Teren i to, co tu leży, są jeszcze ukryte.')}
       {t.tree && objectiveOf(state) === 'crystals' && note(`Kryształowe Drzewo: Przymierze oddaje tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded}).`)}
       {state.control?.points.includes(t.key) && note(controlNote(state, t.key))}
@@ -649,48 +653,58 @@ function TileDetails({ state, k }: { state: GameState; k: HexKey }) {
   );
 }
 
-/** The judged difficulty of the fights already worked out (a fight is played through by the bots, a few ms: once per game state, hero and hex). */
-const FIGHT_LEVELS = new Map<string, FightLevel | null>();
-function fightLevelAt(state: GameState, k: HexKey): FightLevel | null {
-  const hero = activeHero(state);
-  if (!hero) return null;
-  const key = `${state.setup.seed}|${state.actionCount}|${hero.id}|${k}`;
-  if (!FIGHT_LEVELS.has(key)) {
-    if (FIGHT_LEVELS.size > 200) FIGHT_LEVELS.clear();
-    FIGHT_LEVELS.set(key, fightDifficulty(state, k));
-  }
-  return FIGHT_LEVELS.get(key) ?? null;
+/** What a hex holds that stands against the hero: guardians and enemy heroes (each shown as a red pill when a fight is announced). */
+function foesAt(state: GameState, k: HexKey): string[] {
+  const crystal = Object.values(state.crystals).find((c) => c.at === k);
+  const guards = crystal?.guardian ? (crystal.encounter ? crystal.encounter.map((id) => UNITS[id].name) : [UNITS[crystal.guardian].name]) : [];
+  return [...guards, ...heroesAt(state, k).map((h) => UNITS[h.id].name)];
 }
 
-/** The lines describing the hovered hex: terrain, contents, and whether the hero gets there this turn. */
-function tileLines(state: GameState, k: HexKey, reach: { cost: number; hostile: boolean } | undefined, heroName: string): { title: string; lines: string[] } {
+/** The lines describing the hovered hex: terrain, contents, and whether the hero gets there this turn. A fight gets pills instead of lines. */
+function tileLines(state: GameState, k: HexKey, reach: { cost: number; hostile: boolean } | undefined, heroName: string): { title: string; lines: string[]; foes: string[]; level: FightLevel | null } {
   const t = state.tiles[k];
   const lines: string[] = [];
+  let foes: string[] = [];
+  let level: FightLevel | null = null;
   if (t.revealed) {
-    const cost = TERRAIN_COST[t.terrain];
-    lines.push(cost === null ? 'Nieprzechodnie' : `Koszt ruchu: ${cost}${cost === 2 ? ' (teren trudny)' : ''}`);
+    if (reach?.hostile) {
+      // A fight: who is there and how it would go (the bots play it out on a copy of the game; level, artifacts, treasures and abilities count).
+      foes = foesAt(state, k);
+      level = fightLevelAt(state, k);
+    } else {
+      const cost = TERRAIN_COST[t.terrain];
+      lines.push(cost === null ? 'Nieprzechodnie' : `Koszt ruchu: ${cost}${cost === 2 ? ' (teren trudny)' : ''}`);
+    }
     const crystal = Object.values(state.crystals).find((c) => c.at === k);
-    if (crystal?.guardian) lines.push(crystal.encounter ? `Strażnicy: ${crystal.encounter.map((id) => UNITS[id].name).join(', ')}` : `${crystal.decoy ? 'Strażnik' : 'Kryształ pod strażą'}: ${UNITS[crystal.guardian].name}`);
-    else if (crystal && showsCrystal(crystal)) lines.push('Leży tu kryształ');
+    if (crystal?.guardian && !reach?.hostile) lines.push(crystal.encounter ? `Strażnicy: ${crystal.encounter.map((id) => UNITS[id].name).join(', ')}` : `${crystal.decoy ? 'Strażnik' : 'Kryształ pod strażą'}: ${UNITS[crystal.guardian].name}`);
+    else if (crystal && !crystal.guardian && showsCrystal(crystal)) lines.push('Leży tu kryształ');
     if (t.treasureId) lines.push('Leży tu skarb');
     if (t.site && !t.site.used) lines.push(SITE.names[t.site.kind]);
     if (t.tree && objectiveOf(state) === 'crystals') lines.push(`Oddaj tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded})`);
     if (state.control?.points.includes(k)) lines.push(controlNote(state, k));
-    for (const h of heroesAt(state, k)) lines.push(`${UNITS[h.id].name}${h.crystals.length ? ' · niesie kryształ' : ''}`);
-    if (reach) lines.push(reach.hostile ? `${heroName}: wejście za ${reach.cost} pkt rozpocznie walkę` : `${heroName} dojdzie tu za ${reach.cost} pkt`);
-    // How the fight would go (the bots play it out on a copy of the game): the hero's level, artifacts, treasures and abilities all count.
-    const level = reach?.hostile ? fightLevelAt(state, k) : null;
-    if (level) lines.push(`Trudność walki: ${FIGHT_LEVEL_NAMES[level]}`);
+    if (!reach?.hostile) for (const h of heroesAt(state, k)) lines.push(`${UNITS[h.id].name}${h.crystals.length ? ' · niesie kryształ' : ''}`);
+    if (reach && !reach.hostile) lines.push(`${heroName} dojdzie tu za ${reach.cost} pkt`);
   } else lines.push(t.side === 'dawn' ? 'Kraina Przymierza — teren nieznany' : 'Kraina Hordy — teren nieznany');
-  return { title: t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole', lines };
+  return { title: t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole', lines, foes, level };
+}
+
+/** The pills of a hex where a fight would start. */
+function FightPills({ foes, level, size }: { foes: string[]; level: FightLevel | null; size?: number }) {
+  if (!foes.length && !level) return null;
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, margin: '3px 0' }}>
+      {foes.map((f) => <EnemyPill key={f} name={f} size={size} />)}
+      {level && <FightPill level={level} size={size} />}
+    </div>
+  );
 }
 
 /** On a touch screen: the tapped hex in one strip along the bottom of the map, not over the board. */
 function TileStrip({ state, k, reach, heroName }: { state: GameState; k: HexKey; reach?: { cost: number; hostile: boolean }; heroName: string }) {
-  const { title, lines } = tileLines(state, k, reach, heroName);
+  const { title, lines, foes, level } = tileLines(state, k, reach, heroName);
   return (
     <div className="plate parch" style={{ position: 'absolute', left: 8, right: 8, bottom: 8, padding: '4px 10px', fontSize: 14, lineHeight: 1.25, zIndex: 4, pointerEvents: 'none' }}>
-      <b>{title}</b> · {lines.join(' · ')}
+      <b>{title}</b> · {lines.join(' · ')} <FightPills foes={foes} level={level} size={11} />
     </div>
   );
 }
@@ -705,7 +719,7 @@ function HexTooltip({ state, k, reach, heroName, x, y, W, H, boardW }: { state: 
     return () => window.clearTimeout(t);
   }, [k]);
   if (!ready) return null;
-  const { title, lines } = tileLines(state, k, reach, heroName);
+  const { title, lines, foes, level } = tileLines(state, k, reach, heroName);
   const width = 190;
   // Beside the hex rather than over the hexes around it: to the right, or to the left near the right edge.
   const right = x + W + width + 8 <= boardW;
@@ -715,6 +729,7 @@ function HexTooltip({ state, k, reach, heroName, x, y, W, H, boardW }: { state: 
       style={{ position: 'absolute', left: right ? x + W * 0.9 : x + W * 0.1 - width, top: y + H * 0.15, width, padding: '4px 9px', zIndex: 20, pointerEvents: 'none', animation: 'fade-in 0.15s ease-out both' }}
     >
       <div style={{ fontWeight: 800, fontSize: 14 }}>{title}</div>
+      <FightPills foes={foes} level={level} size={11} />
       {lines.map((l) => (
         <div key={l} style={{ fontSize: 13, lineHeight: 1.2 }}>
           {l}

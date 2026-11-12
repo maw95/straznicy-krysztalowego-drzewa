@@ -20,6 +20,8 @@ import { RulesDialog } from './RulesDialog';
 import { TreasureCard } from './TreasureCard';
 import { TreasureReveal } from './CardBack';
 import { UnitCard } from './UnitCard';
+import { FightPill } from './fightBadges';
+import type { FightLevel } from '../engine/difficulty';
 
 /** The music for what is on screen: menu, map, battle, a guardian fight or the ritual (silence at the end of the game). */
 export function musicTheme(game: GameState | null): Theme {
@@ -68,6 +70,8 @@ export function AppChrome({ error, onDismissError, showRules, onCloseRules }: { 
 
 export interface Confirmation {
   text: string;
+  /** How hard the fight announced in `text` is judged to be. */
+  level?: FightLevel | null;
   yes: string;
   onYes: () => void;
 }
@@ -78,6 +82,7 @@ export function ConfirmDialog({ confirm, onClose }: { confirm: Confirmation | nu
       {confirm && (
         <Frame crest style={{ width: 'min(480px, 94vw)' }} innerStyle={{ padding: '24px 22px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, textAlign: 'center' }}>
           <div style={{ fontSize: 20, lineHeight: 1.35 }}>{confirm.text}</div>
+          {confirm.level && <FightPill level={confirm.level} size={17} />}
           <div style={{ display: 'flex', gap: 12 }}>
             <button className="btn plate parch btn-wide" onClick={onClose}>Anuluj</button>
             <button
