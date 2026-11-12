@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Gra online ma poziom „Własne ustawienia”: założyciel pokoju może przełączyć wszystko jak w grze lokalnej: rozwój bohatera, rodzaj bitew (arena albo pojedynek), ułatwienia, utrudnienia, rzut kością, dodatkowego bohatera Hordy i remis inicjatywy, a do tego wybrać cel i kształt mapy. Pozostali gracze widzą te ustawienia w pokoju. Serwer przyjmuje tylko dozwolone przełączniki, a partie na własnych zasadach nie liczą się do rankingu.
 ## 2.5.0 — 2026-11-12
 
 - Gra ma nową nazwę: **Gleamroot: Strażnicy Kryształowego Drzewa**. Nowe logo (to samo kryształowe drzewo, wielki napis „Gleamroot” i pod nim dotychczasowy tytuł) jest na ekranie tytułowym, w menu i na ekranie gry online; nowa nazwa jest też w karcie przeglądarki, w oknach „Autorzy” i „Dla testerów” oraz w instrukcji.

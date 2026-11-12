@@ -3,7 +3,7 @@ import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, MAP_SIZE_NAMES, BOARD_MAP
 import { CUSTOM_MAPS } from '../engine/customMaps';
 import { resolveTier, TIERS, withRuleset, type Tier } from '../engine/presets';
 import { OBJECTIVES } from '../engine/objectives';
-import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type RulesConfig, type SeatSetup, type SetupOptions } from '../engine/types';
+import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
 import { FigurePreview } from './FigurePreview';
@@ -12,6 +12,7 @@ import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
+import { CustomSwitchRows } from './CustomSwitchRows';
 import { SHAPE_NAMES, SHAPE_TIPS, ARENA_HINT, ARENA_LEVEL_TIPS, choice, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
 
 /** Fresh seats: the first player is a person (both players of a two-sided game), the rest are bots. */
@@ -265,51 +266,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
               </Row>
             )}
             {digital && !arena && tier === 'custom' && (
-              <Row label="Rozwój bohatera">
-                <Tip text="Bohaterowie zbierają punkty doświadczenia z bitew i skarbów, awansują i wybierają jedną z trzech umiejętności."><button className={chip(growth)} aria-pressed={growth} onClick={() => setGrowth(true)}>Włączony</button></Tip>
-                <Tip text="Bohaterowie mają stałe liczby przez całą grę."><button className={chip(!growth)} aria-pressed={!growth} onClick={() => setGrowth(false)}>Wyłączony</button></Tip>
-              </Row>
-            )}
-            {digital && !arena && tier === 'custom' && (
-              <>
-                <Row label="Bitwy">
-                  <Tip text={TIPS.arena}><button className={chip(battleMode === 'arena')} onClick={() => setBattleMode('arena')}>Osobna arena (3 na 3)</button></Tip>
-                  <Tip text={TIPS.board}><button className={chip(battleMode === 'board')} onClick={() => setBattleMode('board')}>Na planszy głównej (pojedynek 1 na 1)</button></Tip>
-                </Row>
-                <Row label="Ułatwienia">
-                  {EASES.map(([label, on, patch, tip]) => (
-                    <Tip key={label} text={tip}>
-                      <button className={chip(on(rules))} aria-pressed={on(rules)} onClick={() => setRules({ ...rules, ...patch(!on(rules)) })}>
-                        {label}
-                      </button>
-                    </Tip>
-                  ))}
-                </Row>
-                <Row label="Utrudnienia">
-                  <Tip text={TIPS.dice}>
-                    <button className={chip(rules.useDice)} aria-pressed={rules.useDice} onClick={() => setRules({ ...rules, useDice: !rules.useDice })}>
-                      Rzut kością
-                    </button>
-                  </Tip>
-                  {mode === 'coop' && (
-                    <Tip text={TIPS.extraHero}>
-                      <button className={chip(rules.extraEvilHero)} aria-pressed={rules.extraEvilHero} onClick={() => setRules({ ...rules, extraEvilHero: !rules.extraEvilHero })}>
-                        Dodatkowy bohater Hordy
-                      </button>
-                    </Tip>
-                  )}
-                </Row>
-                <Row label="Remis inicjatywy">
-                  {TIE_MODES.map(([m, label, tip]) => (
-                    <Tip key={m} text={tip}>
-                      <button className={chip(rules.initiativeTie === m)} aria-pressed={rules.initiativeTie === m} onClick={() => setRules({ ...rules, initiativeTie: m })}>
-                        {label}
-                      </button>
-                    </Tip>
-                  ))}
-                </Row>
-                <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>Pełna gra to wszystko wyłączone i obrońca pierwszy. Ułatwienia i utrudnienia można dowolnie łączyć.</div>
-              </>
+              <CustomSwitchRows mode={mode} growth={growth} battleMode={battleMode} rules={rules} onGrowth={setGrowth} onBattleMode={setBattleMode} onRules={(patch) => setRules({ ...rules, ...patch })} />
             )}
             {digital && !arena && tier !== 'adventure' && (
               <Row label="Cel">
@@ -470,16 +427,3 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
     </div>
   );
 }
-
-/** Who strikes first when both units are equally fast: label, mode, explanation. */
-const TIE_MODES: Array<[RulesConfig['initiativeTie'], string, string]> = [
-  ['defender', 'Obrońca pierwszy', 'Przy równej Szybkości pierwsza działa jednostka strony, która została zaatakowana. Tak gra się na każdym poziomie.'],
-  ['rotating', 'Na zmianę', 'Przy równej Szybkości strony zaczynają na zmianę: w nieparzystych rundach bitwy atakujący, w parzystych obrońca.'],
-];
-
-/** Optional simplifications of the full game: label, whether it is on, how to switch it, what it does. */
-const EASES: Array<[string, (r: RulesConfig) => boolean, (on: boolean) => Partial<RulesConfig>, string]> = [
-  ['Bez zdolności', (r) => !r.abilities, (on) => ({ abilities: !on }), 'Nikt nie używa zdolności z kart — także strażnicy kryształów. Mniej zasad do zapamiętania: liczą się tylko Życie, Atak i Szybkość.'],
-  ['Same Eliksiry Odrodzenia', (r) => !r.treasures, (on) => ({ treasures: !on }), 'Zamiast talii różnych skarbów na mapie leżą tylko Eliksiry Odrodzenia (1 / 2 / 3 / 4 zależnie od mapy). Jedna prosta karta: wskrzesza poległą jednostkę. Strażnicy nic nie zostawiają.'],
-  ['Rezerwowy bohater po śmierci', (r) => r.heroReplacement, (on) => ({ heroReplacement: on }), 'Gdy bohater zginie, gracz bierze nowego, nieużywanego bohatera swojej frakcji. Wkracza on na wolne pole najbliżej miejsca, w którym padł poprzednik — nikt nie odpada z gry.'],
-];

@@ -3,10 +3,11 @@ import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, BOARD_MAP_SIZES, UNITS, 
 import type { Level, MapShape, Mode } from '../engine/types';
 import { CUSTOM_MAPS } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
-import { TIERS } from '../engine/presets';
+import { defaultCustom, TIERS } from '../engine/presets';
 import { BOT_SPEEDS, currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
+import { CustomSwitchRows } from './CustomSwitchRows';
 import { SHAPE_NAMES, SHAPE_TIPS, ARENA_HINT, ARENA_LEVEL_TIPS, chip, choice, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
 
 /** Links of the main menu that do not depend on the account. */
@@ -301,6 +302,9 @@ function RankingTable({ me, refreshKey }: { me: User; refreshKey: unknown }) {
   );
 }
 
+/** The custom tier's switches as the level preset sets them (what a table starts from, and what a change of level or mode returns to). */
+const startCustom = (level: Level, mode: Mode, growth = false) => ({ ...defaultCustom(level, mode), growth });
+
 const defaultTable = (mode: Mode, count: number, level: Level, digital: boolean): TableConfig => ({
   mode,
   digital,
@@ -315,7 +319,7 @@ const defaultTable = (mode: Mode, count: number, level: Level, digital: boolean)
 
 function RoomLobby({ session, room, me, online }: { session: OnlineSession; room: RoomView; me: User; online: OnlineState }) {
   const owner = room.ownerId === me.id;
-  const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, tier: room.tier ?? 'adventure', objective: room.objective ?? 'crystals', shape: room.shape ?? 'triangle', ...(room.customMapId ? { customMapId: room.customMapId } : {}), ...(room.noHorde ? { noHorde: true } : {}), seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
+  const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, tier: room.tier ?? 'adventure', objective: room.objective ?? 'crystals', shape: room.shape ?? 'triangle', ...(room.customMapId ? { customMapId: room.customMapId } : {}), ...(room.noHorde ? { noHorde: true } : {}), ...(room.tier === 'custom' ? { growth: room.growth === true, battleMode: room.battleMode ?? 'arena', rules: room.rules ?? defaultCustom(room.level, room.mode).rules } : {}), seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
   const configure = (patch: Partial<TableConfig>) => session.send({ type: 'configure', table: { ...table, ...patch } });
   const updateSeat = (i: number, patch: Partial<TableConfig['seats'][number]>) => configure({ seats: table.seats.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
   const takenBy = (heroId: string, i: number) => table.seats.some((s, j) => j !== i && s.heroId === heroId);
@@ -344,7 +348,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         <Row label="Tryb">
           {(['coop', 'pvp', 'arena'] as Mode[]).map((m) => (
             <Tip key={m} text={m === 'coop' ? TIPS.coop : m === 'pvp' ? TIPS.pvp : TIPS.arenaMode}>
-              <button className={chip(room.mode === m)} disabled={!owner} onClick={() => configure({ ...defaultTable(m, m === 'pvp' ? 2 : 1, room.level, table.digital), tier: table.tier, objective: m !== 'coop' && table.objective === 'survival' ? 'crystals' : table.objective, shape: table.shape, customMapId: table.customMapId })}>
+              <button className={chip(room.mode === m)} disabled={!owner} onClick={() => configure({ ...defaultTable(m, m === 'pvp' ? 2 : 1, room.level, table.digital), tier: table.tier, objective: m !== 'coop' && table.objective === 'survival' ? 'crystals' : table.objective, shape: table.shape, customMapId: table.customMapId, ...(table.tier === 'custom' ? startCustom(room.level === 'hard' && m === 'pvp' ? 'normal' : room.level, m, table.growth === true) : {}) })}>
                 {m === 'coop' ? 'Kooperacja' : m === 'pvp' ? 'Rywalizacja' : 'Arena'}
               </button>
             </Tip>
@@ -372,7 +376,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         <Row label={arena ? 'Komputer' : 'Poziom'}>
           {LEVELS.filter(([l]) => l !== 'custom' && (l !== 'hard' || room.mode !== 'pvp')).map(([l, label]) => (
             <Tip key={l} text={arena ? ARENA_LEVEL_TIPS[l as Level] : LEVEL_TIPS[l]}>
-              <button className={chip(room.level === l)} disabled={!owner} onClick={() => configure({ level: l as Level })}>{label}</button>
+              <button className={chip(room.level === l)} disabled={!owner} onClick={() => configure({ level: l as Level, ...(table.tier === 'custom' && !arena ? startCustom(l as Level, room.mode, table.growth === true) : {}) })}>{label}</button>
             </Tip>
           ))}
         </Row>
@@ -384,13 +388,16 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         {table.digital && !arena && (
           <>
             <Row label="Poziom gry">
-              {(['adventure', 'expedition'] as const).map((t) => (
+              {(['adventure', 'expedition', 'custom'] as const).map((t) => (
                 <Tip key={t} text={TIERS[t].summary}>
-                  <button className={chip(table.tier === t)} aria-pressed={table.tier === t} disabled={!owner} onClick={() => configure(t === 'adventure' ? { tier: t, objective: 'crystals', shape: 'triangle', customMapId: undefined } : { tier: t })}>{TIERS[t].name}</button>
+                  <button className={chip(table.tier === t)} aria-pressed={table.tier === t} disabled={!owner} onClick={() => configure(t === 'adventure' ? { tier: t, objective: 'crystals', shape: 'triangle', customMapId: undefined } : t === 'custom' ? { tier: t, ...startCustom(room.level, room.mode) } : { tier: t })}>{TIERS[t].name}</button>
                 </Tip>
               ))}
             </Row>
-            {table.tier === 'expedition' && (
+            {table.tier === 'custom' && table.rules && (
+              <CustomSwitchRows mode={room.mode} growth={table.growth === true} battleMode={table.battleMode ?? 'arena'} rules={table.rules} disabled={!owner} onGrowth={(growth) => configure({ growth })} onBattleMode={(battleMode) => configure({ battleMode })} onRules={(patch) => configure({ rules: { ...table.rules!, ...patch } })} />
+            )}
+            {(table.tier === 'expedition' || table.tier === 'custom') && (
               <>
                 <Row label="Cel">
                   {(['crystals', 'control', 'survival', 'boss', 'artifact'] as const).filter((o) => o !== 'survival' || room.mode === 'coop').map((o) => (

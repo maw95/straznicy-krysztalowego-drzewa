@@ -3,7 +3,8 @@
 // VITE_SERVER_URL overrides both.
 
 import type { MapSize } from '../engine/data';
-import type { GameState, MapShape, ObjectiveId } from '../engine/types';
+import type { CustomRules } from '../engine/presets';
+import type { BattleMode, GameState, MapShape, ObjectiveId } from '../engine/types';
 
 export const SERVER_URL: string =
   import.meta.env.VITE_SERVER_URL ?? (import.meta.env.DEV ? 'http://localhost:8080' : 'https://straznicy-backend.fly.dev');
@@ -36,12 +37,16 @@ export interface RoomView {
   /** The digital edition at the table (a server that does not know editions leaves it out: the board edition). */
   digital?: boolean;
   /** The digital edition's level and what "Wyprawa" lets the owner pick (a server without levels leaves them out: "Przygoda"). */
-  tier?: 'adventure' | 'expedition';
+  tier?: 'adventure' | 'expedition' | 'custom';
   objective?: ObjectiveId;
   shape?: MapShape;
   customMapId?: string;
   /** Coop, goal Boss: no Horde heroes (an older server leaves it out). */
   noHorde?: boolean;
+  /** Tier "Własne" only (a server without it leaves them out): hero growth, the kind of battles and the rule switches. Games of this tier do not count for the ranking. */
+  growth?: boolean;
+  battleMode?: BattleMode;
+  rules?: CustomRules;
   /** The computer's pace in this room, set by the owner (the same names as in the game's options). */
   botSpeed: BotSpeed;
   seats: SeatView[];
@@ -56,11 +61,14 @@ export interface TableConfig {
   mapSize: RoomView['mapSize'];
   level: RoomView['level'];
   digital: boolean;
-  tier: 'adventure' | 'expedition';
+  tier: 'adventure' | 'expedition' | 'custom';
   objective: ObjectiveId;
   shape: MapShape;
   customMapId?: string;
   noHorde?: boolean;
+  growth?: boolean;
+  battleMode?: BattleMode;
+  rules?: CustomRules;
   seats: Array<{ faction: 'dawn' | 'horde'; heroId: string; bot: boolean }>;
 }
 

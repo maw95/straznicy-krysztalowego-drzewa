@@ -16,7 +16,6 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
 ## B. Średnie
 
-- [ ] **B1. Poziom „Własny” online** (decyzja 12.11: wszystkie przełączniki lokalnego Własnego: ułatwienia, utrudnienia, kość, dodatkowy bohater Hordy, tryb bitew arena/pojedynek, rozwój bohatera). Stolik online dostaje te same przyciski; serwer waliduje każdą wartość z listy dozwolonych (nie przyjmuje dowolnych pól zasad); wyniki gier Własnych nie liczą się do rankingu. Zmiany w silniku, w `src/online/`, `OnlineScreen.tsx` i backendzie (backend: commit, push, `make deploy` wolno robić bez pytania, ale dopiero po wydaniu silnika). Gotowe, gdy dwa przeglądarkowe konta zagrają partię Własną online (skrypt przeglądarkowy na osobnym porcie i bazie, nigdy na serwerach autora), a testy backendu to pokrywają.
 - [ ] **B2. Szkic projektu poziomu 3 „Królestwo”** (osady, złoto, rekrutacja): Claude pisze `docs/POZIOM_3_KROLESTWO.md` (co nowego względem poziomu 2, złoto i osady, rekrutacja, cel gry, wpływ na boty i online, podział na kroki z szacunkiem pracy) i zatrzymuje się z listą pytań do autora. Kodu nie rusza, dopóki autor nie zaakceptuje szkicu.
 
 ## C. Dalej (kolejność; po akceptacji B2)
