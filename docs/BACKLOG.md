@@ -63,7 +63,7 @@ Autor przejrzał szkic poziomu 3 (`docs/poziom_3_krolestwo_uwagi.txt`) i zapisa�
    - e. **Widoki osad:** osobny krajobraz dla Przymierza i dla Hordy.
    - f. **Budynki** w kilku stanach (koszary, targ, szpital, skarbiec; ulepszenia), osobne dla obu frakcji.
 7. **K8 w kodzie** (widok osady z nałożonymi budynkami i dźwiękami zakupu) oraz **K9** (samouczek poziomu 3, rozdział o ekonomii w instrukcji, autopilot).
-8. **Wydanie: autor zgodził się 13.11 na wydanie po ukończeniu punktów 1–7.** Wydanie robi się dopiero wtedy: `make check` zielone, CHANGELOG „W przygotowaniu” zamieniony na numer wydania (numer do ustalenia, następny po 2.6.0), tag, push gry (publikuje grę), serwer razem z grą (tier `kingdom`, zapisy online, kompresja, 6 graczy: `make deploy`). Wcześniej nic nie wydawać.
+8. **(14.11: kroki 1–7 zrobione, commit `Release 2.6.0` i lokalny tag 2.6.0 są gotowe; PUSH BLOKUJE reguła „nie wypychać gry”, więc zostaje: `git push origin master 2.6.0`, `gh release create 2.6.0 --generate-notes`, `make silnik`, w repo serwera `npm install …/2.6.0/straznicy-engine-2.6.0.tgz` i `make deploy`.)** Wydanie: autor zgodził się 13.11 na wydanie po ukończeniu punktów 1–7.** Wydanie robi się dopiero wtedy: `make check` zielone, CHANGELOG „W przygotowaniu” zamieniony na numer wydania (numer do ustalenia, następny po 2.6.0), tag, push gry (publikuje grę), serwer razem z grą (tier `kingdom`, zapisy online, kompresja, 6 graczy: `make deploy`). Wcześniej nic nie wydawać.
 
 Szczegóły poszczególnych punktów są poniżej (K5, K8, K9, zestawy, dochód, porządki, strojenie, wydanie).
 
