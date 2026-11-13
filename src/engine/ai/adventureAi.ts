@@ -2,7 +2,7 @@
 // for player seats. Both only use information visible on the map.
 
 import { FACTION_SUPPORTS, ITEM_EFFECT, UNITS, type FactionId } from '../data';
-import { kingdomBotAction, kingdomWish, supportSlots } from '../kingdom';
+import { KINGDOM_BIG_PILE, kingdomBotAction, kingdomWish, supportSlots } from '../kingdom';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { heroTileCost } from '../sites';
@@ -714,18 +714,20 @@ const ENCOUNTER_BOT = { minLevel: [2, 4, 7], minSupports: [2, 2, 2], maxCost: 4,
 function kingdomDetour(state: GameState, hero: HeroState, memo: Memo): Action | null {
   const k = state.kingdom;
   if (!k || isDesperate(state) || state.turnBattleDone) return null;
-  const goals = new Set<HexKey>();
+  // The goal of the game comes first: a detour is short, except for a big pile of gold early in the game (then the way home is worth it).
+  if (hero.crystals.length || state.round > state.roundLimit * 0.6) return null;
+  const goals = new Map<HexKey, number>();
   const shop = kingdomWish(state, hero.faction);
-  if (shop) goals.add(shop.at);
-  for (const [hex, m] of Object.entries(k.mines)) if (m.owner !== hero.faction && state.tiles[hex].revealed) goals.add(hex);
-  for (const s of Object.values(k.settlements)) if (s.owner === null && !state.tiles[s.at].crystalId) goals.add(s.at);
+  if (shop) goals.set(shop.at, k.gold[hero.faction] >= KINGDOM_BIG_PILE ? 4 : 1);
+  for (const [hex, m] of Object.entries(k.mines)) if (m.owner !== hero.faction && state.tiles[hex].revealed) goals.set(hex, 1);
+  for (const s of Object.values(k.settlements)) if (s.owner === null && !state.tiles[s.at].crystalId) goals.set(s.at, 1);
   goals.delete(hero.pos);
   if (!goals.size) return null;
-  const paths = memo.paths(hero, 'kingdom', { goals, avoidGuardians: true, danger: true, encounters: true });
+  const paths = memo.paths(hero, 'kingdom', { goals: new Set(goals.keys()), avoidGuardians: true, danger: true, encounters: true });
   let best: { cost: number; path: HexKey[] } | null = null;
-  for (const g of goals) {
+  for (const [g, limit] of goals) {
     const p = paths.get(g);
-    if (p && p.path.length >= 2 && p.cost <= 4 && (!best || p.cost < best.cost)) best = { cost: p.cost, path: p.path };
+    if (p && p.path.length >= 2 && p.cost <= limit && (!best || p.cost < best.cost)) best = { cost: p.cost, path: p.path };
   }
   if (!best) return null;
   const next = best.path[1];

@@ -3278,6 +3278,30 @@
       "data": "2026-11-13",
       "ai": false,
       "licencja": "zrzuty własnej gry; grafiki w nich: patrz wpisy poszczególnych zasobów"
+    },
+    {
+      "id": "ikony/mapa/krolestwo",
+      "pliki": [
+        "public/assets/ikony/mapa/osada_dawn.webp",
+        "public/assets/ikony/mapa/osada_horde.webp",
+        "public/assets/ikony/mapa/osada_neutral.webp",
+        "public/assets/ikony/mapa/kopalnia.webp",
+        "public/assets/ikony/mapa/zloto.webp"
+      ],
+      "typ": "ikony poziomu 3 „Królestwo”: osada Przymierza, osada Hordy, osada bez właściciela, kopalnia złota, złoto",
+      "opis": "Okrągłe medale w stylu Heroes III (złoty pierścień), przezroczyste tło, 512 px zmniejszone do 256 px (WebP). Po jednym wariancie na ikonę, wszystkie przyjęte. Prompt wspólny: 'Round fantasy game map icon in the painted style of Heroes of Might and Magic III: a circular medal with a thick antique-gold ring border and a dark bronze inner rim. Inside the medal: …' (osada Przymierza: białe wieże z zielonymi sztandarami; Hordy: czarna palisada z kolcami i czerwone sztandary; neutralna: szara wioska z białą flagą; kopalnia: wejście do kopalni z wózkiem pełnym złota; złoto: stos monet).",
+      "scenario_asset": {
+        "osada_dawn": "asset_KmxjJTBsTrnXrTM7BNkUPE5i",
+        "osada_horde": "asset_GqRrCqfYSBtWTE5U9Cheztuk",
+        "osada_neutral": "asset_icEkp7aLgd6uSt1ftJS3YfJx",
+        "kopalnia": "asset_3SNg482SXvCingjAuS46xGb1",
+        "zloto": "asset_8Aes4nsVW6qV1tzv5wQQfLck"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość high, przezroczyste tło",
+      "data": "2026-11-13",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

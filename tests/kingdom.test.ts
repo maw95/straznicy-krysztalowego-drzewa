@@ -29,7 +29,7 @@ describe('level 3: the map and the start', () => {
     expect(new Set(all.map((x) => x.name)).size).toBe(all.length);
     expect(Object.keys(s.kingdom!.mines)).toHaveLength(KINGDOM.mines.long);
     expect(s.kingdom!.gold).toEqual({ dawn: KINGDOM.startGold, horde: KINGDOM.startGold });
-    expect(s.factions.dawn.supportsAlive).toHaveLength(1);
+    expect(s.factions.dawn.supportsAlive).toHaveLength(3);
     expect(teamSlots(s, 'dawn')).toBe(2);
   });
 
@@ -65,6 +65,8 @@ describe('level 3: services of a settlement', () => {
     const home = ownStart(s);
     stand(s, home.at);
     s.kingdom!.gold.dawn = 40;
+    // The three tier-1 supports are there from the start; recruiting is for the units still to come, so one is taken away to have something to hire.
+    s.factions.dawn.supportsAlive = ['elfDruid'];
     const act = (a: Parameters<typeof applyAction>[1]) => (s = applyAction(s, a));
     // Nothing without the buildings.
     expect(() => act({ type: 'kingdomRecruit', settlementId: home.id, unitId: 'nymph' })).toThrow(/koszary/);

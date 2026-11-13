@@ -48,7 +48,13 @@ Autor przejrzał szkic poziomu 3 (`docs/poziom_3_krolestwo_uwagi.txt`) i zapisa�
 
 ## C. Dalej (kolejność; **po zakończeniu A i B4, zgodnie z Q11**)
 
-1. **Poziom 3 „Królestwo”** według decyzji z 13.11 (sekcja „Decyzje autora do poziomu 3” u góry); kroki K1–K9 z szkicu zostaną przeliczone po odpowiedziach (K3 odpada jako przebudowa na instancje; dochodzi: budynki do kupienia, 4 nowe jednostki na frakcję, widok osady z grafikami, nazwy osad, osady z narzuconą frakcją).
+1. **Poziom 3 „Królestwo”: zrobione 13.11** (silnik, ekran osady, boty, tryb w kreatorze i online; szczegóły w `POZIOM_3_KROLESTWO.md`, „Stan wdrożenia”). **Zostaje:**
+   - [ ] **K5. Nowi pomocnicy poziomów 2–5** (8 jednostek): propozycja w `docs/JEDNOSTKI_POZIOMU_3.md` **czeka na akceptację autora**; potem dane, zdolności, grafika (karty, portrety, ikony zdolności, klipy), ceny z symulacji.
+   - [ ] **K8. Widok osady jak w Heroes III:** krajobraz frakcji z nałożonymi grafikami wybudowanych budynków i ich ulepszeń (dziś: tło z kartami budynków). Grafika Scenario: po jednym tle na frakcję i budynki w kilku stanach, ułożone na stałych kotwicach; dźwięki zakupu i monet (ElevenLabs).
+   - [ ] **K9. Samouczek poziomu 3, rozdział o ekonomii w instrukcji (`INSTRUKCJA.md` i wersja HTML), autopilot dla dziecka** (zakupy automatyczne za zgodą rodzica).
+   - [ ] **Zestawy artefaktów** (3 przedmioty z jednego zestawu = premia; z pierwotnego szkicu, autor się nie wypowiedział).
+   - [ ] **Strojenie:** ceny, dochody, liczby osad i kopalń, siła obrońców osad, posiłki automatu (tabele `make sim-tabele` dla poziomu 3, osobne mapy i tryby, rywalizacja; wskaźnik trudności, punkty rankingowe); po dodaniu jednostek z K5.
+   - [ ] **Wydanie i wdrożenie** (wstrzymane decyzją autora): silnik, serwer (tier `kingdom`, zapisy online, kompresja, 6 graczy) i gra idą razem; patrz „Pytania czekające na autora”.
 2. **Zakres premiery (decyzja 13.11):** premiera dopiero po poziomie 5; poziomy 3, 4 i 5 wchodzą przed pakowaniem na Steam. Do premiery nie wchodzą nowe frakcje, kampania ani Ekspedycja (Q9). Numer wydania premiery do ustalenia przy wydaniu (dawne „3.0” z 12.11 traci sens).
 3. **Premiera na Steamie:** strona sklepu, zrzuty, trailer (wideo: Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri, do wyboru), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Wiele języków: przed premierą tylko inwentaryzacja tekstów.
 

@@ -708,3 +708,25 @@ describe('rules and cards window', () => {
     expect(doc.body.textContent).toContain('Kamienie milowe');
   });
 });
+
+describe('level 3: the settlement window', () => {
+  it('shows the gold, opens the settlement the hero stands in, builds and recruits there', async () => {
+    window.history.replaceState(null, '', '/?steps=0&seed=3&size=long&kingdom=1&gold=30&players=1');
+    vi.useFakeTimers();
+    const { container } = render(<StrictMode><App /></StrictMode>);
+    const doc = container.ownerDocument;
+    const gold = () => Number(doc.querySelector('[data-gold-box] [data-gold]')!.textContent);
+    expect(gold()).toBe(30);
+    await act(async () => fireEvent.click(doc.querySelector('[data-enter-settlement]')!));
+    expect(doc.querySelector('[data-settlement]')).not.toBeNull();
+    await act(async () => fireEvent.click(doc.querySelector('[data-build="barracks"]')!));
+    expect(gold()).toBe(27);
+    // The three supports of the faction are all there: nobody to hire yet (the new tiers are to come).
+    expect(doc.querySelector('[data-recruit]')).toBeNull();
+    await act(async () => fireEvent.click(doc.querySelector('[data-building="market"]')!));
+    await act(async () => fireEvent.click(doc.querySelector('[data-build="market"]')!));
+    expect(doc.querySelectorAll('[data-buy]').length).toBe(3);
+    await act(async () => fireEvent.click(doc.querySelector('[data-buy]')!));
+    expect(gold()).toBeLessThan(24);
+  });
+});

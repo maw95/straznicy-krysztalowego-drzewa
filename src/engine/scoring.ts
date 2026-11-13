@@ -137,6 +137,8 @@ export function levelOf(setup: SetupOptions): LevelName {
   // Arena: the computer's strength (two people at one screen play "Normalny").
   if (setup.mode === 'arena') return setup.seats.some((s) => s.controller === 'bot') ? setup.botLevel ?? 'normal' : 'normal';
   const r = setup.rules;
+  // Level 3 has no measured difficulty yet (the simulations come after the whole level is in): no points, like "Własne".
+  if (r.kingdom) return 'custom';
   // Easy and normal: as many Horde heroes as players, reinforcements in the base; hard: neither.
   const automaton = r.minEvilHeroes === DEFAULT_RULES.minEvilHeroes && Boolean(r.hordeRespawn);
   const hardAutomaton = r.minEvilHeroes === 2 && !r.hordeRespawn;

@@ -4,6 +4,14 @@ Stan na 12.11.2026. **To szkic do akceptacji: kodu nie ruszam, dopóki autor nie
 `ROZBUDOWA_CYFROWA.md` (drabinka poziomów, etap 2), `MECHANIKI_I_POZIOMY.md` (poziom 3), `DECYZJE.md` i na tym, co gra ma dziś
 (`ZASADY_CYFROWE.md`). Liczby są robocze: ustalają je symulacje, tak jak przy poziomie 2.
 
+## Stan wdrożenia (13.11.2026)
+
+Gotowe i działa (silnik `src/engine/kingdom.ts`, ekran `SettlementDialog.tsx`, testy `tests/kingdom.test.ts`): złoto wspólne dla frakcji i dochód co rundę; osady startowe i osady do zdobycia (2 / 4 / 4 / 6 / 6 / 8 według rozmiaru mapy, po równo na obu stronach, tyle ile się zmieści na małych mapach) z neutralnymi obrońcami (grupa „strażnik + dwóch słabych”); kopalnie złota; zajmowanie przez wejście; budynki kupowane (koszary, targ, szpital, skarbiec) z ulepszeniami; targ z artefaktami za złoto (3 albo 5 ofert, nowa co 3 rundy); szpital (wskrzeszenie za 1/2 albo 1/3 ceny); rekrutacja w koszarach własnej frakcji (obca osada daje dochód, targ i szpital); skrzynia do wyboru (artefakt albo 3 zł); drużyna do 5 pomocników (start 2, +1 na 3. i 6. poziomie bohatera, +1 rozbudowane koszary); automat zła w koopie dostaje posiłki zamiast złota (co 3 rundy wracają jego polegli pomocnicy); boty kupują w osadzie, w której stoją, i wracają po zakupy z dużym zapasem złota; tryb dostępny w kreatorze (poziom „Królestwo”) i przy stołach online (serwer: tier `kingdom`); poziom nie daje jeszcze punktów rankingowych.
+
+Pomiar (60 gier botów na komórkę, kooperacja, Normalny, z rozwojem; wygrane Przymierza): bez Królestwa krótka 70 %, średnia 58 %, długa 43 %; z Królestwem 65 %, 53 %, 50 % (w paśmie 45–65 %). Pomiar powtórzyć po dodaniu nowych jednostek.
+
+Czeka: nowe jednostki poziomów 2–5 (propozycja w `JEDNOSTKI_POZIOMU_3.md`, **czeka na akceptację autora**, potem grafika), cena jednostek z symulacji, widok osady z nakładanymi budynkami (dziś tło z kartami budynków), zestawy artefaktów, samouczek i rozdział instrukcji, autopilot dla dziecka, dźwięki zakupu, przegląd ruchu klient-serwer (B13) po dodaniu stanu osad.
+
 ## Decyzje autora z 13.11.2026 (mają pierwszeństwo nad treścią poniżej)
 
 Pełna lista: `BACKLOG.md` (sekcja „STAN”) i `DECYZJE.md`. Najważniejsze zmiany względem szkicu:

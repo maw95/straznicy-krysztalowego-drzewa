@@ -54,6 +54,8 @@ export const KINGDOM = {
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
   offers: [3, 5],
   stockRounds: 3,
+  /** The coop automaton's reinforcements: its fallen supports return every this many rounds. */
+  reinforceRounds: 3,
   /** The hospital brings a fallen support back for this share of its price (rounded up, at least 1): level 1 a half, level 2 a third. */
   heal: [2, 3],
   /** Settlements to conquer and mines on the map, by map size (even, half on each side). */
@@ -88,6 +90,12 @@ export const BUILDING_TEXTS: Record<BuildingId, [string, string?]> = {
   hospital: ['Wskrzesza poległych pomocników za połowę ich ceny.', 'Wskrzesza za jedną trzecią ceny.'],
   treasury: ['Przynosi +1 złota na rundę.'],
 };
+
+/** The coop Horde is steered by the automaton: it earns no gold and shops nowhere; reinforcements come to it instead. */
+export const isAutomaton = (state: GameState, f: FactionId): boolean => state.setup.mode === 'coop' && f === 'horde';
+
+/** A bot with this much gold walks home to spend it. */
+export const KINGDOM_BIG_PILE = 12;
 
 export const kingdomOn = (state: GameState): boolean => Boolean(state.kingdom);
 
@@ -193,13 +201,7 @@ export function initKingdom(state: GameState): void {
       taken.push(t.key);
     }
   }
-  // The faction starts with its first support only: the others are recruited in the barracks.
-  for (const f of ['dawn', 'horde'] as FactionId[]) {
-    const fs = state.factions[f];
-    const keep = fs.supportsAlive.slice(0, 1);
-    fs.supportsAlive = keep;
-    fs.supportsDead = fs.supportsDead.filter((id) => keep.includes(id));
-  }
+  // Every faction starts with its three tier-1 supports, as in the other levels; the recruits are the new tiers (RECRUITS, docs/JEDNOSTKI_POZIOMU_3.md).
 }
 
 /** A hero ends its move on a settlement or a mine: it passes to the hero's faction (a settlement still guarded cannot be stood on). */
@@ -227,6 +229,16 @@ export function collectIncome(state: GameState): void {
   const k = state.kingdom;
   if (!k) return;
   for (const f of ['dawn', 'horde'] as FactionId[]) {
+    if (isAutomaton(state, f)) {
+      // Reinforcements instead of gold: every few rounds the fallen supports of the automaton are back at the base.
+      const fs = state.factions[f];
+      if (state.round % KINGDOM.reinforceRounds === 0 && fs.supportsDead.length) {
+        log(state, 'info', `Posiłki Hordy: wracają ${fs.supportsDead.map((id) => UNITS[id].name).join(', ')}.`);
+        fs.supportsAlive.push(...fs.supportsDead);
+        fs.supportsDead = [];
+      }
+      continue;
+    }
     const income = incomeOf(state, f);
     if (income <= 0) continue;
     k.gold[f] += income;

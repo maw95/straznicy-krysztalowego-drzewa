@@ -24,6 +24,7 @@ import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musi
 import { fightLevelAt } from './fightBadges';
 import { DigitalCardsContext, UnitCard } from './UnitCard';
 import { DigitalContext, HeroLevelsContext, HpScaleContext, StatScaleContext } from './statScale';
+import { supportSlots } from '../engine/kingdom';
 import { readAutosave, replay, saveNamed, writeAutosave, type BugReport, type SaveFile } from './saves';
 import { BugReportDialog } from './BugReportDialog';
 import { TesterDialog } from './TesterDialog';
@@ -156,7 +157,7 @@ export function App() {
       battleMode: q.get('battle') === 'board' ? 'board' : 'arena',
       seed: Number(q.get('seed') ?? 1),
       // ?abilities=0&treasures=0 switch simplifications on, ?dice=1 the die, ?objective=control the control points goal.
-      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1', ...(q.get('growth') === '1' ? { heroGrowth: true } : {}), ...(q.get('ruleset') !== 'board' ? { ruleset: 'digital' as const } : {}), ...(['control', 'survival', 'boss', 'artifact'].includes(q.get('objective') ?? '') ? { objective: q.get('objective') as 'control' | 'survival' | 'boss' | 'artifact' } : {}) },
+      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1', ...(q.get('growth') === '1' || q.get('kingdom') === '1' ? { heroGrowth: true } : {}), ...(q.get('kingdom') === '1' ? { kingdom: true } : {}), ...(q.get('ruleset') !== 'board' ? { ruleset: 'digital' as const } : {}), ...(['control', 'survival', 'boss', 'artifact'].includes(q.get('objective') ?? '') ? { objective: q.get('objective') as 'control' | 'survival' | 'boss' | 'artifact' } : {}) },
       seats:
         mode === 'coop'
           ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon', ...(q.get('child') === '1' ? { child: true } : {}) }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))
@@ -166,6 +167,8 @@ export function App() {
     if (q.get('skills')) for (const h of Object.values(s.heroes)) h.skills = q.get('skills')!.split(',') as SkillId[];
     if (q.get('pack')) for (const h of Object.values(s.heroes)) h.pack = q.get('pack')!.split(',').filter((id) => ARTIFACT_BY_ID[id]);
     if (q.get('gear')) for (const h of Object.values(s.heroes)) h.gear = Object.fromEntries(q.get('gear')!.split(',').filter((id) => ARTIFACT_BY_ID[id]).map((id) => [ARTIFACT_BY_ID[id].slot, id]));
+    // ?kingdom=1 (level 3): ?gold=20 gives the factions that much gold.
+    if (s.kingdom && q.get('gold')) for (const f of ['dawn', 'horde'] as const) s.kingdom.gold[f] = Number(q.get('gold'));
     // ?level=9 puts every hero on that level (for looking at the milestones on the cards).
     if (q.get('level')) for (const h of Object.values(s.heroes)) h.level = Number(q.get('level'));
     // ?encounter=2 (with growth=1) walks the active hero into the first neutral encounter of that tier (0 common, 1 rare, 2 legendary), for looking at the new units.
@@ -982,11 +985,13 @@ function download(name: string, text: string) {
 function SupportSelect({ state, faction, onPick }: { state: GameState; faction: FactionId; onPick: (ids: string[]) => void }) {
   const pool = state.factions[faction].supportsAlive;
   const [picked, setPicked] = useState<string[]>([]);
-  const toggle = (id: string) => setPicked(picked.includes(id) ? picked.filter((x) => x !== id) : [...picked, id].slice(-2));
+  // Two supports in the other levels; the team's places in level 3.
+  const n = Math.min(supportSlots(state, faction), pool.length);
+  const toggle = (id: string) => setPicked(picked.includes(id) ? picked.filter((x) => x !== id) : [...picked, id].slice(-n));
   return (
     <div>
       <Frame crest style={{ width: 'min(760px, 94vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-        <Ribbon side={faction} style={{ width: 'min(420px, 94vw)' }}>Wybierz dwóch pomocników</Ribbon>
+        <Ribbon side={faction} style={{ width: 'min(420px, 94vw)' }}>{n === 2 ? 'Wybierz dwóch pomocników' : `Wybierz pomocników do bitwy (${n})`}</Ribbon>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
           {pool.map((id) => (
             <button key={id} className="btn" onClick={() => toggle(id)} style={{ background: 'none', border: 0, padding: 4, borderRadius: 12, boxShadow: picked.includes(id) ? '0 0 0 3px #9EE4FF, 0 0 16px 4px rgba(158,228,255,0.6)' : 'none' }}>
@@ -994,7 +999,7 @@ function SupportSelect({ state, faction, onPick }: { state: GameState; faction: 
             </button>
           ))}
         </div>
-        <button className="btn prim btn-big" data-enter disabled={picked.length !== 2} onClick={() => onPick(picked)}>
+        <button className="btn prim btn-big" data-enter disabled={picked.length !== n} onClick={() => onPick(picked)}>
           Do bitwy!
         </button>
       </Frame>

@@ -6,6 +6,9 @@ import { EnemyPill, FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
 import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
 import { TreasureButton } from './TreasureButton';
+import { SettlementDialog } from './SettlementDialog';
+import { BUILDING_NAMES, chestPreview, KINGDOM, goldOf, incomeBreakdown, incomeOf, settlementAt } from '../engine/kingdom';
+import { ARTIFACT_BY_ID } from '../engine/sites';
 import { heroTileCost, SITE } from '../engine/sites';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { parseKey, type HexKey } from '../engine/hex';
@@ -94,6 +97,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const [sheet, setSheet] = useState(false);
   const [packOpen, setPackOpen] = useState(false);
   const [treasuresOpen, setTreasuresOpen] = useState(false);
+  /** Level 3: the settlement window. */
+  const [settlementOpen, setSettlementOpen] = useState(false);
   /** A fallen hero being revived: the player picks a free hex next to the active hero. */
   const [revive, setRevive] = useState<{ itemId: string; unitId: string } | null>(null);
 
@@ -375,6 +380,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         <img src={asset(`ikony/mapa/${t.site.kind}.webp`)} alt="" width={W * 0.34} height={W * 0.34} style={{ display: 'block' }} />
                       </div>
                     )}
+                    {t.revealed && t.place && state.kingdom && (
+                      <div style={{ position: 'absolute', left: W * 0.33, top: H * 0.5, zIndex: 2, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)}>
+                        <img src={asset(`ikony/mapa/${placeIcon(state, t.key)}.webp`)} alt="" width={W * 0.36} height={W * 0.36} style={{ display: 'block', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.7))' }} />
+                      </div>
+                    )}
                     {crystal && (
                       <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', display: 'flex', alignItems: 'center' }}>
                         {crystal.guardian && !figureFor(crystal.guardian) && <Portrait unitId={crystal.guardian} size={W * 0.5} ring={SIDE_RING.neutral} title={UNITS[crystal.guardian].name} />}
@@ -495,6 +505,19 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </div>
             </div>
           )}
+          {state.kingdom && viewer && (
+            <div className="plate parch" data-gold-box {...details(() => <GoldDetails state={state} faction={viewer} />)} style={{ padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 10 }}>
+              <img src={asset('ikony/mapa/zloto.webp')} alt="" width={compact ? 28 : 36} height={compact ? 28 : 36} />
+              <b style={{ fontSize: 22 }} data-gold>{goldOf(state, viewer)}</b>
+              <span style={{ fontSize: 14, color: '#6B4A22' }}>zł · +{incomeOf(state, viewer)} na rundę</span>
+            </div>
+          )}
+          {state.kingdom && hero && canAct && hero.faction === viewer && (() => {
+            const here = settlementAt(state, hero.pos);
+            return here && here.owner === viewer ? (
+              <button className="btn prim" data-enter-settlement style={{ padding: '6px 12px', fontSize: 18 }} onClick={() => setSettlementOpen(true)}>Wejdź do osady {here.name}</button>
+            ) : null;
+          })()}
           {hero && state.rules.heroGrowth && <HeroGrowth hero={hero} compact={compact} onOpenPack={() => setPackOpen(true)} />}
           {sel && (
             <div className="plate parch" style={{ padding: '9px 12px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
@@ -593,6 +616,24 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           </div>
         )}
       </Modal>
+      <Modal open={settlementOpen} onClose={() => setSettlementOpen(false)}>
+        {settlementOpen && hero && viewer && settlementAt(state, hero.pos) && (
+          <SettlementDialog state={state} settlementId={settlementAt(state, hero.pos)!.id} faction={viewer} onAction={onAction} onClose={() => setSettlementOpen(false)} />
+        )}
+      </Modal>
+      <Modal open={Boolean(state.kingdom?.chest) && canAct && Boolean(viewer)}>
+        {state.kingdom?.chest && hero && (
+          <div className="hero-sheet" data-chest style={{ width: 'min(520px, 94vw)', alignItems: 'center' }}>
+            <Ribbon style={{ width: 'min(380px, 90vw)' }}>Skrzynia</Ribbon>
+            <div style={{ textAlign: 'center', fontSize: 18 }}>Co bierzesz: artefakt czy złoto?</div>
+            <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
+              <button className="btn prim" data-chest-artifact style={{ padding: '10px 20px', fontSize: 20 }} onClick={() => onAction({ type: 'chestTake', what: 'artifact' })}>Artefakt</button>
+              <button className="btn plate parch" data-chest-gold style={{ padding: '10px 20px', fontSize: 20 }} onClick={() => onAction({ type: 'chestTake', what: 'gold' })}>{KINGDOM.chestGold} zł</button>
+            </div>
+            <div style={{ fontSize: 14, color: '#6B4A22' }}>Artefakt jest losowany: od zwykłego po legendarny (np. {ARTIFACT_BY_ID[chestPreview(state, hero)].name}).</div>
+          </div>
+        )}
+      </Modal>
       <Modal open={sheet} onClose={() => setSheet(false)}>
         {sheet && hero && <HeroSheet hero={hero} state={state} onAction={canAct && hero.faction === viewer ? onAction : undefined} onClose={() => setSheet(false)} />}
       </Modal>
@@ -685,6 +726,7 @@ function tileLines(state: GameState, k: HexKey, reach: { cost: number; hostile: 
     else if (crystal && !crystal.guardian && showsCrystal(crystal)) lines.push('Leży tu kryształ');
     if (t.treasureId) lines.push('Leży tu skarb');
     if (t.site && !t.site.used) lines.push(SITE.names[t.site.kind]);
+    if (t.place && state.kingdom) lines.push(placeTitle(state, k));
     if (t.tree && objectiveOf(state) === 'crystals') lines.push(`Oddaj tu kryształy (${state.factions.dawn.delivered}/${state.crystalsNeeded})`);
     if (state.control?.points.includes(k)) lines.push(controlNote(state, k));
     if (!reach?.hostile) for (const h of heroesAt(state, k)) lines.push(`${UNITS[h.id].name}${h.crystals.length ? ' · niesie kryształ' : ''}`);
@@ -729,5 +771,40 @@ function ControlFlag({ holder, centre, size }: { holder: FactionId | null; centr
       <img src={asset(`ikony/mapa/kontrola_${holder ?? 'none'}.webp`)} alt="" width={w} height={w} style={{ display: 'block' }} />
       {centre && <span style={{ position: 'absolute', inset: -3, borderRadius: '50%', boxShadow: '0 0 0 2px #F3D27A, 0 0 8px 2px rgba(243, 210, 122, 0.7)' }} />}
     </span>
+  );
+}
+
+/** The icon (file name in ikony/mapa) of a settlement (by owner) or a mine. */
+function placeIcon(state: GameState, k: HexKey): string {
+  const place = state.tiles[k].place;
+  if (!place) return 'osada_neutral';
+  if (place.kind === 'mine') return 'kopalnia';
+  const owner = state.kingdom?.settlements[place.id]?.owner;
+  return owner ? `osada_${owner}` : 'osada_neutral';
+}
+
+/** One line about a settlement or a mine: name, holder and buildings. */
+function placeTitle(state: GameState, k: HexKey): string {
+  const place = state.tiles[k].place;
+  if (!place || !state.kingdom) return '';
+  if (place.kind === 'mine') {
+    const owner = state.kingdom.mines[place.id]?.owner;
+    return `Kopalnia złota (+1 zł na rundę): ${owner ? `zajęta przez ${FACTION_NAMES[owner]}` : 'nikt jej nie trzyma'}`;
+  }
+  const s = state.kingdom.settlements[place.id];
+  const built = (['barracks', 'market', 'hospital', 'treasury'] as const).filter((b) => s.buildings[b]).map((b) => BUILDING_NAMES[b][Math.min(s.buildings[b], BUILDING_NAMES[b].length) - 1]);
+  return `Osada ${s.name} (${FACTION_NAMES[s.land]}): ${s.owner ? `należy do ${FACTION_NAMES[s.owner]}` : 'broniona przez neutralnych'}${built.length ? ` · ${built.join(', ')}` : ''}`;
+}
+
+/** Held right button over the gold: where the income comes from. */
+function GoldDetails({ state, faction }: { state: GameState; faction: FactionId }) {
+  const rows = incomeBreakdown(state, faction);
+  return (
+    <div className="plate parch" style={{ width: 280, padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <b style={{ fontSize: 18 }}>Dochód na rundę: +{rows.reduce((s, r) => s + r.gold, 0)} zł</b>
+      {rows.map((r, i) => (
+        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15 }}><span>{r.label}</span><b>+{r.gold}</b></div>
+      ))}
+    </div>
   );
 }
