@@ -48,6 +48,26 @@ Autor przejrzał szkic poziomu 3 (`docs/poziom_3_krolestwo_uwagi.txt`) i zapisa�
 
 ## C. Dalej (kolejność; **po zakończeniu A i B4, zgodnie z Q11**)
 
+### KOLEJNOŚĆ PRAC (autor, 13.11.2026; **wykonywać dokładnie w tej kolejności**, każdy krok osobnym commitem z wpisem w CHANGELOG.md, jeśli widoczny dla gracza)
+
+1. **Porządki w plikach repozytorium** (bez ryzyka dla gry): pomiar rozmiarów i czasu ładowania; duplikaty (np. muzyka w `docs/muzyka` i `public/assets/music`, okładka w dwóch miejscach); nieużywane obrazki; kompresja do WebP/OGG; wpisy `assets.json`; `.gitignore` dla `docs/wersja_planszowa/druk3d` (7,1 GB) i `.tmp`. Nic nie kasować bez sprawdzenia, że to duplikat; duże rzeczy tylko wyłączyć z gita (patrz pytania na końcu).
+2. **Wydajność gry:** rozmiar paczki (bundle), leniwe ładowanie ekranów i modeli 3D, tekstury, render areny; każda zmiana z pomiarem przed i po.
+3. **Porządki w kodzie:** podział największych plików (`tuningAuto.ts`, `battle.ts`, `App.tsx`, `game.ts`), martwy kod, powtórzenia, typy. Wyniki gry bez zmian: `tests/golden.test.ts` musi przejść **bez** `-u`.
+4. **Silnik razem:** K5 (8 jednostek: `docs/JEDNOSTKI_POZIOMU_3.md`) + zestawy artefaktów (`docs/ZESTAWY_ARTEFAKTOW.md`) + dochód (kopalnia 1, osada 2, startowa 3 do potwierdzenia). Potem świadoma aktualizacja golden (`-u`, napisać w commicie).
+5. **Ceny jednostek i strojenie** symulacjami (`make sim-tabele`, stroiciel w `scripts/sim/`).
+6. **Grafika Scenario do wyczerpania kredytów** (przed generowaniem sprawdzić `usage`; przy małym stanie zatrzymać się i opisać, co gotowe; wszystko od razu do repo z wpisem w `assets.json`; model własny, zgodnością stylu się nie przejmować). W tej kolejności:
+   - a. **Portrety i karty** ośmiu jednostek (+ klatki bazowe do animacji).
+   - b. **Ikony zdolności** ośmiu jednostek.
+   - c. **Animacje jednostek** (ruch, atak, śmierć; według `POTOK_ANIMACJI.md`, `PRZEPIS_JEDNOSTKI.md`). *Autorowi bardziej zależy na jednostkach niż na ikonach zestawów.*
+   - d. **Ikony 12 elementów zestawów artefaktów.**
+   - e. **Widoki osad:** osobny krajobraz dla Przymierza i dla Hordy.
+   - f. **Budynki** w kilku stanach (koszary, targ, szpital, skarbiec; ulepszenia), osobne dla obu frakcji.
+7. **K8 w kodzie** (widok osady z nałożonymi budynkami i dźwiękami zakupu) oraz **K9** (samouczek poziomu 3, rozdział o ekonomii w instrukcji, autopilot).
+8. Wydanie: **wstrzymane** decyzją autora, nie ruszać bez polecenia.
+
+Szczegóły poszczególnych punktów są poniżej (K5, K8, K9, zestawy, dochód, porządki, strojenie, wydanie).
+
+
 1. **Poziom 3 „Królestwo”: zrobione 13.11** (silnik, ekran osady, boty, tryb w kreatorze i online; szczegóły w `POZIOM_3_KROLESTWO.md`, „Stan wdrożenia”). **Zostaje:**
    - [ ] **K5. Nowi pomocnicy poziomów 2–5** (8 jednostek): **skład zaakceptowany 13.11** (`docs/JEDNOSTKI_POZIOMU_3.md`); zostaje: dane i zdolności w silniku, grafika (karty, portrety, ikony zdolności, klipy; autor 13.11: „zrób wszystko, aż skończą się kredyty Scenario”, stylem się nie przejmować, model własny), ceny z symulacji.
    - [ ] **K8. Widok osady jak w Heroes III:** krajobraz frakcji z nałożonymi grafikami wybudowanych budynków i ich ulepszeń (dziś: tło z kartami budynków). Grafika Scenario: po jednym tle na frakcję i budynki w kilku stanach, ułożone na stałych kotwicach; dźwięki zakupu i monet (ElevenLabs).
@@ -85,7 +105,9 @@ Autor przejrzał szkic poziomu 3 (`docs/poziom_3_krolestwo_uwagi.txt`) i zapisa�
 
 **Q1–Q18 (13.11.2026) zostały rozstrzygnięte** (decyzje w „STAN” u góry). Nic nowego z nich nie czeka na autora oprócz akceptacji propozycji 8 nowych jednostek (przygotuje Claude przy K5).
 
-- **Propozycja 8 nowych pomocników (poziomy 2–5)** w `docs/JEDNOSTKI_POZIOMU_3.md`: autor akceptuje albo poprawia; do tego czasu Claude nie generuje grafiki jednostek (K5).
+- ~~Propozycja 8 nowych pomocników~~: **zaakceptowana 13.11** (Przymierze: Jeżozwierz, Centaur, Alabastrowy Odyniec, Opiekun Drzewa; Horda: Szczurołak, Piekielny Ogar, Salamandra Popiołu, Herszt Minotaurów); grafika dozwolona.
+- **`docs/wersja_planszowa/druk3d` (7,1 GB):** czy to źródła autora do druku, które zostają na dysku (tylko poza gitem), czy można je przenieść poza repo? Bez odpowiedzi Claude nic z tym nie robi (krok 1).
+- **Dochód osady startowej:** propozycja 3 zł (osada 2, kopalnia 1); autor jeszcze nie potwierdził liczb „2/3”.
 
 - **Wydanie 2.6.0 i wdrożenie serwera** (B1; **wstrzymane decyzją autora 12.11: na razie bez release'u**, nie wydawać bez jego polecenia): zmiany są w commitach lokalnie (gra `05cba8e`, serwer `9b07989`); drugie wydanie wymaga zgody autora (tag, push `master`, wydanie na GitHubie, potem `npm install` pakietu silnika w serwerze, `make deploy`, push serwera).
 - **Łatwy w wydaniu planszowym** (uzupełnienie do dawnego A8): w edycji planszowej Łatwy 1 na 1 daje 94/91/88/79% (powyżej pasma), a 2 na 2 na bardzo długiej mapie 61%. Dźwignie stroiciela działają tylko w grze cyfrowej, żeby plansza została „jak wydrukowana”. Czy stroić też planszową (zmieniałoby to wydrukowane zasady poziomu Łatwy), czy zostawić? Domyślnie: zostawiam.
