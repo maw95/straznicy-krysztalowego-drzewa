@@ -115,14 +115,64 @@ export const SLIDES: Slide[] = [
     title: 'Razem albo przeciwko sobie',
     text: [
       'W kooperacji wszyscy gracie Przymierzem, a Hordę prowadzi automat. W rywalizacji jedni biorą Przymierze, drudzy Hordę.',
-      'Poziom Łatwy da się ogarnąć w kilka minut — nawet z pięciolatkiem. Normalny to pełna gra, a Trudny to wyzwanie dla dorosłych.',
+      'Poziom trudności Łatwy da się ogarnąć w kilka minut, nawet z pięciolatkiem. Normalny to pełna gra, a Trudny to wyzwanie dla dorosłych.',
     ],
     stand: ['cards/art/goldDragon.jpg', 'cards/art/werewolfLord.jpg'],
     pan: ['scale(1.03)', 'scale(1.12)'],
     focus: 'center 25%',
   },
   {
-    id: '09-instrukcja',
+    id: '09-wersje',
+    title: 'Dwie wersje gry',
+    text: [
+      'Wersja cyfrowa jest domyślna: jednostki w nowej grafice 2D z animacjami, arena z poziomymi heksami, duże jednostki na dwóch polach i poziomy złożoności do wyboru.',
+      'Wersja planszowa to wierna planszówka: figurki 3D, zasady bez zmian i szybkie pojedynki. Jest dodatkiem dla tych, którzy chcą zagrać tak, jak przy stole.',
+    ],
+    stand: ['ui/cover.jpg'],
+    pan: ['scale(1.04)', 'scale(1.1)'],
+  },
+  {
+    id: '10-poziomy',
+    title: 'Poziomy złożoności',
+    text: [
+      'Przygoda to zasady z planszówki w wersji cyfrowej, najprostszy start, także dla dzieci. Wyprawa dodaje rozwój bohaterów: doświadczenie, umiejętności, artefakty, obiekty na mapie i neutralnych przeciwników.',
+      'Kolejne poziomy (Królestwo z osadami i złotem, a potem pełna ekonomia i magia) pojawią się niedługo. „Własne ustawienia” pozwalają przełączać zasady osobno.',
+    ],
+    stand: ['ui/cover.jpg'],
+    pan: ['scale(1.04)', 'scale(1.1)'],
+  },
+  {
+    id: '11-cele',
+    title: 'Różne cele gry',
+    text: [
+      'Od poziomu Wyprawa wybierasz cel: Kryształy do Drzewa, Punkty kontrolne, Przetrwanie fal Hordy, Boss w legowisku pośrodku mapy albo Artefakt do zaniesienia do bazy.',
+      'Do tego mapa: losowa w wybranym kształcie (trójkąt, prostokąt, pierścień, wyspy) albo gotowa, ręcznie narysowana, jak Cieśnina i Dolina.',
+    ],
+    stand: ['ui/cover.jpg'],
+    pan: ['scale(1.04)', 'scale(1.1)'],
+  },
+  {
+    id: '12-online',
+    title: 'Online i przy jednym ekranie',
+    text: [
+      'Grasz z botami, z kimś przy jednym ekranie (hot-seat) albo przez internet z kontem: zakładasz stół, zapraszasz znajomych albo podajesz im kod pokoju. Do sześciu graczy w rywalizacji.',
+      'Partię zapiszesz pod własną nazwą i wczytasz później z menu „Wczytaj grę”.',
+    ],
+    stand: ['ui/cover.jpg'],
+    pan: ['scale(1.04)', 'scale(1.1)'],
+  },
+  {
+    id: '13-arena',
+    title: 'Arena',
+    text: [
+      'Szybka bitwa 3 na 3 bez mapy: Przymierze kontra Horda, z komputerem albo z drugim graczem. Każdy wybiera bohatera, dwóch pomocników i dobiera skarby ze wspólnej talii.',
+      'Na jedną partię wystarczy kilka minut: dobry sposób, żeby poznać jednostki i zdolności.',
+    ],
+    stand: ['arena/dawn.jpg'],
+    pan: ['scale(1.1) translate(-3%, 0)', 'scale(1.1) translate(3%, 0)'],
+  },
+  {
+    id: '14-instrukcja',
     title: 'Drzewo czeka',
     text: [
       'To tylko zarys. Pełne zasady, wszystkie karty jednostek i skarbów znajdziesz w instrukcji: w menu głównym kliknij „Zasady i karty”, a potem zakładkę „Instrukcja”.',

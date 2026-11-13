@@ -23,6 +23,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Telefon: po wejściu do partii gra prosi o obrót telefonu poziomo (tam, gdzie przeglądarka pozwala, blokuje ekran w poziomie; mały przycisk „Graj w pionie” zostawia pionowy układ). Panel bohatera po prawej mieści się na niskim ekranie bez przewijania: mniejszy sztandar i portret, pięć miejsc na artefakty w jednym rzędzie, mniejsza tarcza poziomu.
 - Gotowe mapy mogą mieć fabułę: okienka z tekstem otwierają się po wyzwalaczu (numer rundy, tura frakcji, wejście bohatera na pole albo pokonanie jednostki). Silnik pilnuje, żeby każda notatka pokazała się raz, także w grze online i po wczytaniu zapisu; opis formatu jest w dokumentacji zasad.
 - Okna mają ozdobne narożniki (złoto z szafirami i listowiem, namalowane w Scenario) zamiast samej płaskiej złotej ramki.
+- Wprowadzenie ma aktualne obrazy (zrzuty prawdziwej gry zamiast starych grafik z błędami: mapa z równymi kafelkami, arena, menu) i nowe slajdy: dwie wersje gry, poziomy złożoności, cele gry, online i hot-seat oraz arena.
 
 ## 2.5.0 — 2026-11-12
 

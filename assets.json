@@ -3258,6 +3258,26 @@
       "data": "2026-11-13",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "intro/zrzuty_slajdow",
+      "pliki": [
+        "public/assets/intro/05-cel.jpg",
+        "public/assets/intro/06-wedrowka.jpg",
+        "public/assets/intro/07-bitwa.jpg",
+        "public/assets/intro/08-tryby.jpg",
+        "public/assets/intro/09-wersje.jpg",
+        "public/assets/intro/10-poziomy.jpg",
+        "public/assets/intro/11-cele.jpg",
+        "public/assets/intro/12-online.jpg",
+        "public/assets/intro/13-arena.jpg"
+      ],
+      "typ": "obrazy slajdów wprowadzenia 05–13",
+      "opis": "Zrzuty ekranu prawdziwej gry (mapa, arena, strony menu, pokój online), 1600×900 JPEG, żeby wprowadzenie zawsze pokazywało aktualne projekty. Slajdy 03 i 04 pokazują grafiki kart z gry (bez własnego obrazu). Odtworzenie: scripts/browser/intro-slajdy.ts (slajd 12 to zrzut pokoju online ze scripts/browser/wlasny-online.ts).",
+      "narzedzie": "Playwright (scripts/browser/intro-slajdy.ts)",
+      "data": "2026-11-13",
+      "ai": false,
+      "licencja": "zrzuty własnej gry; grafiki w nich: patrz wpisy poszczególnych zasobów"
     }
   ]
 }
