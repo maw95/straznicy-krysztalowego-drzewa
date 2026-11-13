@@ -50,10 +50,10 @@ Autor przejrzał szkic poziomu 3 (`docs/poziom_3_krolestwo_uwagi.txt`) i zapisa�
 
 ### KOLEJNOŚĆ PRAC (autor, 13.11.2026; **wykonywać dokładnie w tej kolejności**, każdy krok osobnym commitem z wpisem w CHANGELOG.md, jeśli widoczny dla gracza)
 
-1. **Porządki w plikach repozytorium** (bez ryzyka dla gry): pomiar rozmiarów i czasu ładowania; duplikaty (np. muzyka w `docs/muzyka` i `public/assets/music`, okładka w dwóch miejscach); nieużywane obrazki; kompresja do WebP/OGG; wpisy `assets.json`; `.gitignore` dla `docs/wersja_planszowa/druk3d` (7,1 GB) i `.tmp`. Nic nie kasować bez sprawdzenia, że to duplikat; duże rzeczy tylko wyłączyć z gita (patrz pytania na końcu).
+1. **Porządki w plikach repozytorium** (bez ryzyka dla gry): pomiar rozmiarów i czasu ładowania; duplikaty (np. muzyka w `docs/muzyka` i `public/assets/music`, okładka w dwóch miejscach); nieużywane obrazki; kompresja do WebP/OGG; wpisy `assets.json`; `.gitignore` dla `docs/wersja_planszowa/druk3d` (7,1 GB; **autor 13.11: może trafić do gitignore**, pliki zostają na dysku) i `.tmp`. Nic nie kasować bez sprawdzenia, że to duplikat; duże rzeczy tylko wyłączyć z gita.
 2. **Wydajność gry:** rozmiar paczki (bundle), leniwe ładowanie ekranów i modeli 3D, tekstury, render areny; każda zmiana z pomiarem przed i po.
 3. **Porządki w kodzie:** podział największych plików (`tuningAuto.ts`, `battle.ts`, `App.tsx`, `game.ts`), martwy kod, powtórzenia, typy. Wyniki gry bez zmian: `tests/golden.test.ts` musi przejść **bez** `-u`.
-4. **Silnik razem:** K5 (8 jednostek: `docs/JEDNOSTKI_POZIOMU_3.md`) + zestawy artefaktów (`docs/ZESTAWY_ARTEFAKTOW.md`) + dochód (kopalnia 1, osada 2, startowa 3 do potwierdzenia). Potem świadoma aktualizacja golden (`-u`, napisać w commicie).
+4. **Silnik razem:** K5 (8 jednostek: `docs/JEDNOSTKI_POZIOMU_3.md`) + zestawy artefaktów (`docs/ZESTAWY_ARTEFAKTOW.md`) + dochód (kopalnia 1, osada 2, osada ze skarbcem 3). Potem świadoma aktualizacja golden (`-u`, napisać w commicie).
 5. **Ceny jednostek i strojenie** symulacjami (`make sim-tabele`, stroiciel w `scripts/sim/`).
 6. **Grafika Scenario do wyczerpania kredytów** (przed generowaniem sprawdzić `usage`; przy małym stanie zatrzymać się i opisać, co gotowe; wszystko od razu do repo z wpisem w `assets.json`; model własny, zgodnością stylu się nie przejmować). W tej kolejności:
    - a. **Portrety i karty** ośmiu jednostek (+ klatki bazowe do animacji).
@@ -73,7 +73,7 @@ Szczegóły poszczególnych punktów są poniżej (K5, K8, K9, zestawy, dochód,
    - [ ] **K8. Widok osady jak w Heroes III:** krajobraz frakcji z nałożonymi grafikami wybudowanych budynków i ich ulepszeń (dziś: tło z kartami budynków). Grafika Scenario: po jednym tle na frakcję i budynki w kilku stanach, ułożone na stałych kotwicach; dźwięki zakupu i monet (ElevenLabs).
    - [ ] **K9. Samouczek poziomu 3, rozdział o ekonomii w instrukcji (`INSTRUKCJA.md` i wersja HTML), autopilot dla dziecka** (zakupy automatyczne za zgodą rodzica).
    - [ ] **Zestawy artefaktów: 4 zestawy zaakceptowane 13.11** (Strój Gajowego, Rynsztunek Brzasku, Pancerz Wartownika, Strój Kupca; elementy, efekty i zasady w `docs/ZESTAWY_ARTEFAKTOW.md`). Zasady: tylko poziom 3 i wyższe; rzadkość „rzadki", cena i szansa dropu jak zwykły rzadki; premia za komplet 3/3; ręczna wymiana w UI. Zostaje: silnik (nowe efekty), UI (karta bohatera „2/3 zestawu”, oznaczenie w Targu), boty, ikony 12 elementów, testy.
-   - [ ] **Dochód: kopalnia 1, osada 2** (autor 13.11: kopalnia ma dawać mniej niż osada; dziś osada 1 i kopalnia 1, startowa 2); osada startowa do ustalenia (propozycja 3); przestroić symulacjami.
+   - [ ] **Dochód (autor 13.11, rozstrzygnięte):** wszystkie osady jednakowe (także startowa). **Kopalnia 1 zł, zwykła osada 2 zł, osada ze skarbcem 3 zł** (skarbiec +1). Dziś w `KINGDOM`: `incomeStart` 2, `incomeSettlement` 1, `incomeMine` 1, `incomeTreasury` 1: zmienić na osadę 2 (bez wyjątku dla startowej), reszta bez zmian; przestroić ceny symulacjami.
    - [ ] **Porządki w kodzie i repozytorium (autor 13.11):** przegląd organizacji i wydajności kodu (`src/`, `scripts/`, `tests/`) oraz plików (dokumenty, obrazki, dźwięki, modele), potem wdrożenie poprawek. Zakres: patrz „Plan porządków” niżej.
    - [ ] **Strojenie:** ceny, dochody, liczby osad i kopalń, siła obrońców osad, posiłki automatu (tabele `make sim-tabele` dla poziomu 3, osobne mapy i tryby, rywalizacja; wskaźnik trudności, punkty rankingowe); po dodaniu jednostek z K5.
    - [ ] **Wydanie i wdrożenie** (autor zgodził się 13.11 na wydanie po punktach 1–7 z kolejności prac): silnik, serwer (tier `kingdom`, zapisy online, kompresja, 6 graczy) i gra idą razem; patrz „Pytania czekające na autora”.
@@ -106,8 +106,8 @@ Szczegóły poszczególnych punktów są poniżej (K5, K8, K9, zestawy, dochód,
 **Q1–Q18 (13.11.2026) zostały rozstrzygnięte** (decyzje w „STAN” u góry). Nic nowego z nich nie czeka na autora oprócz akceptacji propozycji 8 nowych jednostek (przygotuje Claude przy K5).
 
 - ~~Propozycja 8 nowych pomocników~~: **zaakceptowana 13.11** (Przymierze: Jeżozwierz, Centaur, Alabastrowy Odyniec, Opiekun Drzewa; Horda: Szczurołak, Piekielny Ogar, Salamandra Popiołu, Herszt Minotaurów); grafika dozwolona.
-- **`docs/wersja_planszowa/druk3d` (7,1 GB):** czy to źródła autora do druku, które zostają na dysku (tylko poza gitem), czy można je przenieść poza repo? Bez odpowiedzi Claude nic z tym nie robi (krok 1).
-- **Dochód osady startowej:** propozycja 3 zł (osada 2, kopalnia 1); autor jeszcze nie potwierdził liczb „2/3”.
+- ~~`druk3d`~~: rozstrzygnięte 13.11 (do `.gitignore`, pliki zostają na dysku).
+- ~~Dochód osady startowej~~: rozstrzygnięte 13.11 (osady jednakowe: kopalnia 1, osada 2, osada ze skarbcem 3).
 
 - **Wydanie 2.6.0 i wdrożenie serwera** (B1; wstrzymane 12.11; **13.11 autor zgodził się na wydanie po ukończeniu punktów 1–7 z „Kolejności prac” w C**, wcześniej nie wydawać): zmiany są w commitach lokalnie (gra `05cba8e`, serwer `9b07989`); drugie wydanie wymaga zgody autora (tag, push `master`, wydanie na GitHubie, potem `npm install` pakietu silnika w serwerze, `make deploy`, push serwera).
 - **Łatwy w wydaniu planszowym** (uzupełnienie do dawnego A8): w edycji planszowej Łatwy 1 na 1 daje 94/91/88/79% (powyżej pasma), a 2 na 2 na bardzo długiej mapie 61%. Dźwignie stroiciela działają tylko w grze cyfrowej, żeby plansza została „jak wydrukowana”. Czy stroić też planszową (zmieniałoby to wydrukowane zasady poziomu Łatwy), czy zostawić? Domyślnie: zostawiam.
