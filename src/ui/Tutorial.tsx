@@ -76,6 +76,30 @@ const TIPS: Tip[] = [
     when: (s) => s.phase === 'adventure' && Object.values(s.heroes).some((h) => Object.keys(h.gear ?? {}).length > 0),
   },
   {
+    id: 'gold',
+    title: 'Złoto i osady',
+    text: 'Na tym poziomie liczy się złoto. Każda osada daje 2 zł na rundę, kopalnia 1 zł, skarbiec w osadzie jeszcze 1 zł. Osadę lub kopalnię przejmujesz, stając na niej bohaterem; złoto, skarby i pomocnicy są wspólne dla frakcji. Złoto wpada na koniec rundy.',
+    when: (s) => s.phase === 'adventure' && Boolean(s.kingdom),
+  },
+  {
+    id: 'settlement',
+    title: 'W osadzie',
+    text: 'Gdy bohater stoi w osadzie, przycisk „Wejdź do osady” otwiera jej widok. Budynki trzeba kupić: koszary (rekrutacja pomocników), targ (artefakty), szpital (wskrzeszanie poległych) i skarbiec (+1 zł). Kliknij budynek, by zobaczyć, co robi i ile kosztuje. Osada obcej frakcji daje dochód, targ i szpital, ale nie pozwala rekrutować.',
+    when: (s) => s.phase === 'adventure' && Boolean(s.kingdom) && Object.values(s.kingdom!.settlements).some((x) => Object.values(s.heroes).some((h) => h.alive && h.pos === x.at)),
+  },
+  {
+    id: 'team',
+    title: 'Drużyna rośnie',
+    text: 'W bitwę idzie tyle pomocników, ile masz miejsc: na starcie 2, +1 na 3. poziomie bohatera, +1 na 6. i +1 za rozbudowane koszary (najwyżej 5). Nowych pomocników poziomów 2 do 5 rekrutuje się w koszarach; poziomy 4 i 5 wymagają rozbudowy.',
+    when: (s) => s.phase === 'adventure' && Boolean(s.kingdom) && s.round >= 2,
+  },
+  {
+    id: 'sets',
+    title: 'Zestawy artefaktów',
+    text: 'Niektóre rzadkie artefakty należą do zestawów po trzy elementy (np. Strój Gajowego). Komplet 3 z 3 daje premię; licznik „2/3 zestawu” widać na karcie bohatera. Elementy zestawu zakładasz ręcznie, więc nic nie przepadnie, gdy znajdziesz lepszą rzecz.',
+    when: (s) => s.phase === 'adventure' && Boolean(s.kingdom) && Object.values(s.heroes).some((h) => [...Object.values(h.gear ?? {}), ...(h.pack ?? [])].some((id) => /^(grove|moss|bark|dawn(Diadem|Sword|Shield)|sentinel|merchant)/.test(id))),
+  },
+  {
     id: 'deploy',
     title: 'Ustawienie wojsk',
     text: 'Przed walką możesz ustawić swoje jednostki na złotych polach swojej skrajnej kolumny: kliknij jednostkę, potem pole (zajęte pole zamieni je miejscami). Atakujący ustawia się pierwszy.',

@@ -52,6 +52,7 @@ Wybierz stronę. Drzewo czeka.
 14. [Przypadki szczególne](#14-przypadki-szczególne)
 15. [Arena — szybka bitwa](#15-arena--szybka-bitwa)
 16. [Ściągawka](#16-ściągawka)
+17. [Poziom 3: Królestwo — złoto, osady i drużyna (wersja cyfrowa)](#17-poziom-3-królestwo--złoto-osady-i-drużyna-wersja-cyfrowa)
 
 ---
 
@@ -692,6 +693,41 @@ Bitwa trwa do utraty wszystkich jednostek przez jedną stronę. Po bitwie ocalal
 • Bohater Przymierza nie odda kryształów Drzewu, dopóki stoi na nim bohater Hordy.
 • Gdy padnie ostatni bohater Przymierza, wygrywa Horda — także wtedy, gdy w tej samej bitwie padł ostatni bohater Hordy.
 • **Pojedynek na planszy:** tylko dwie jednostki, bez ruchu i pomocników. Pierwszy atakuje szybszy; przy remisie — broniący. Strażnik walczy kartą z błękitnym rewersem.
+
+## 17. Poziom 3: Królestwo — złoto, osady i drużyna (wersja cyfrowa)
+
+Ten rozdział dotyczy tylko wersji cyfrowej, poziomu „Królestwo”. Dochodzi do zasad poziomu „Wyprawa”: złoto, osady, budynki i rekrutacja.
+
+### Złoto
+Jest jedna waluta: złoto. Każda frakcja ma wspólną kasę, a jej gracze dzielą też skarby i pomocników. **Dochód** wpada na koniec rundy:
+- każda osada, którą trzymasz (także startowa): **2 zł**,
+- skarbiec w osadzie: **+1 zł**,
+- kopalnia złota: **1 zł**.
+
+Złoto dają też skrzynie (**wybierasz: artefakt albo 3 zł**). Walki ze strażnikami i spotkaniami dają skarby, ale nie złoto. Po porażce bohatera złoto nie przepada.
+
+### Osady i kopalnie
+Osada ma frakcję narzuconą przez połowę mapy, ale **należy do tego, kto na niej stanął** (pusta osada przechodzi bez walki, strzeżona wymaga najpierw pokonania obrońców). Osada zachowuje budynki. Właściciel z innej frakcji niż osada ma jej dochód, targ i szpital, ale **nie rekrutuje**. Kopalnię trzyma ten, kto na niej stoi.
+
+### Budynki (trzeba je kupić)
+- **Koszary** (3 zł, rozbudowa 6 zł): rekrutacja pomocników; rozbudowane dają dodatkowe miejsce w drużynie i pomocników poziomów 4 i 5.
+- **Targ** (3 zł, duży 5 zł): artefakty za złoto (zwykły 2 zł, rzadki 5 zł, legendarny 10 zł), 3 w ofercie (po rozbudowie 5), nowa oferta co 3 rundy.
+- **Szpital** (3 zł, ulepszony 5 zł): wskrzesza poległego pomocnika za połowę jego ceny (po ulepszeniu za jedną trzecią).
+- **Skarbiec** (4 zł): +1 zł na rundę.
+
+Kupować można bez limitu na turę; ogranicza tylko cena. Budynki pokazuje widok osady (kliknij budynek, żeby go użyć).
+
+### Drużyna i pomocnicy
+Miejsc w drużynie jest na starcie 2, potem +1 na 3. poziomie bohatera, +1 na 6. i +1 z rozbudowanych koszar, razem najwyżej 5. Każda frakcja ma 7 pomocników: trzech obecnych (poziom 1) i po jednym nowym na poziomach 2 do 5 (3, 5, 8 i 12 zł, robocze ceny). W armii jest jeden pomocnik każdego rodzaju. Przymierze: Jeżozwierz (Kolce), Centaur (Strzał i Galop), Alabastrowy Odyniec (Czołowe Natarcie), Opiekun Drzewa (Korzenie Drzewa). Horda: Szczurołak (Zatruty Pazur), Piekielny Ogar (Obława), Salamandra Popiołu (Pożoga), Herszt Minotaurów (Bitewny Szał). Teksty zdolności są na kartach.
+
+### Zestawy artefaktów
+Cztery zestawy po trzy rzadkie elementy (Strój Gajowego, Rynsztunek Brzasku, Pancerz Wartownika, Strój Kupca) wypadają tylko na tym poziomie. Komplet 3 z 3 daje premię; karta bohatera pokazuje „2/3 zestawu”. Elementy zakłada się ręcznie. Szczegóły: `ZESTAWY_ARTEFAKTOW.md`.
+
+### Automat zła w kooperacji
+Horda sterowana przez automat nie zbiera złota: co kilka rund wracają do niej polegli pomocnicy.
+
+### Autopilot dla dziecka
+W trybie rodzinnym (pole „Dziecko” w ustawieniach gry, czyli zgoda rodzica) bohater dziecka sam robi zakupy w osadach: kupuje według zasad botów budynki, pomocników i artefakty, a skrzynię otwiera, biorąc artefakt.
 
 ## Autorzy (wersja cyfrowa)
 

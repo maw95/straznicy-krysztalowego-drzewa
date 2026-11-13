@@ -299,7 +299,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                   <option value="bot">Bot</option>
                 </select>
                 {digital && mode === 'coop' && s.controller === 'human' && (
-                  <label title="Tryb rodzinny: bohater dziecka ma więcej życia i ruchu, a na ekranie jest przycisk Podpowiedź." style={{ display: 'flex', gap: 5, alignItems: 'center', fontSize: 15 }}>
+                  <label title="Tryb rodzinny: bohater dziecka ma więcej życia i ruchu, a na ekranie jest przycisk Podpowiedź. Na poziomie Królestwo zakupy dziecka robi autopilot." style={{ display: 'flex', gap: 5, alignItems: 'center', fontSize: 15 }}>
                     <input type="checkbox" checked={Boolean(s.child)} aria-label="Dziecko" onChange={(e) => update(i, { child: e.target.checked })} /> Dziecko
                   </label>
                 )}

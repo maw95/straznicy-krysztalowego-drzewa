@@ -24,7 +24,7 @@ import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musi
 import { fightLevelAt } from './fightBadges';
 import { DigitalCardsContext, UnitCard } from './UnitCard';
 import { DigitalContext, HeroLevelsContext, HpScaleContext, StatScaleContext } from './statScale';
-import { supportSlots } from '../engine/kingdom';
+import { kingdomBotAction, supportSlots } from '../engine/kingdom';
 import { readAutosave, replay, saveNamed, writeAutosave, type BugReport, type SaveFile } from './saves';
 import { BugReportDialog } from './BugReportDialog';
 import { TesterDialog } from './TesterDialog';
@@ -308,6 +308,17 @@ export function App() {
     t = window.setTimeout(tick, SPEEDS[speed]);
     return () => window.clearTimeout(t);
   }, [game, actor.kind, autoplay, speed, dispatch, needsHandoff, isOnline]);
+
+  // Level 3, family mode: the child's hero shops by itself (the parent chose the "Dziecko" box); the bots' shopping rules decide what to buy.
+  useEffect(() => {
+    if (!game || !humanTurn || game.phase !== 'adventure' || !game.kingdom || actor.kind !== 'human') return;
+    if (!game.players.some((p) => p.id === actor.playerId && p.child)) return;
+    const hero = activeHero(game);
+    const a = hero ? kingdomBotAction(game, hero) : null;
+    if (!a) return;
+    const t = window.setTimeout(() => dispatch(a), 700);
+    return () => window.clearTimeout(t);
+  }, [game, humanTurn, actor, dispatch]);
 
   // Multi-hex moves are played one step at a time.
   useEffect(() => {
