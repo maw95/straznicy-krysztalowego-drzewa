@@ -175,11 +175,11 @@ export function Medal({ fill, glyph, size = 36 }: { fill: string; glyph: string;
   );
 }
 
-export function Portrait({ unitId, size = 50, ring, glow, dim, title, preview = true }: { unitId: string; size?: number; ring?: string; glow?: string; dim?: boolean; title?: string; preview?: boolean }) {
+export function Portrait({ unitId, size = 50, ring, glow, dim, title, preview = true, tip = true }: { unitId: string; size?: number; ring?: string; glow?: string; dim?: boolean; title?: string; preview?: boolean; tip?: boolean }) {
   return (
     <div
       className="medal-ring"
-      {...(preview ? hoverCard(unitId) : {})}
+      {...(preview ? hoverCard(unitId, { tip }) : {})}
       title={preview ? undefined : title}
       style={{ width: size, height: size, boxShadow: glow ?? '0 0 0 1.5px #1E1204', opacity: dim ? 0.45 : 1, filter: dim ? 'grayscale(0.8)' : undefined }}
     >

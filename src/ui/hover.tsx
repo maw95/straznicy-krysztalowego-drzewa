@@ -38,9 +38,10 @@ function ItemTip({ kind }: { kind: ItemKind }) {
 
 /**
  * Props to spread on an element that should preview a unit (`unitId`) or treasure (`item:<kind>`):
- * the card on hover, and the card under the right mouse button (details.tsx).
+ * the card on hover, and the card under the right mouse button (details.tsx). With `tip: false` only the latter.
  */
-export function hoverCard(id: string) {
+export function hoverCard(id: string, opts: { tip?: boolean } = {}) {
+  if (opts.tip === false) return details(() => <CardFor id={id} width={280} />, { pin: true });
   return {
     ...details(() => <CardFor id={id} width={280} />, { pin: true }),
     onMouseEnter: (e: React.MouseEvent) => canHover() && set({ id, x: e.clientX, y: e.clientY }),

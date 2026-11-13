@@ -457,7 +457,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
               <div style={{ display: 'flex', gap: 6 }}>
                 {(owner ? FACTION_HEROES[s.faction] : [s.heroId]).map((h) => (
                   <button key={h} className="btn" title={UNITS[h].name} disabled={!owner || takenBy(h, i)} onClick={() => updateSeat(i, { heroId: h })} style={{ background: 'none', border: 0, padding: 0 }}>
-                    <Portrait unitId={h} size={46} ring={SIDE_RING[s.faction]} glow={s.heroId === h ? '0 0 0 3px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} dim={takenBy(h, i)} />
+                    <Portrait unitId={h} size={46} ring={SIDE_RING[s.faction]} glow={s.heroId === h ? '0 0 0 3px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} dim={takenBy(h, i)} tip={false} />
                   </button>
                 ))}
               </div>

@@ -8,6 +8,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 - Gra online ma poziom „Własne ustawienia”: założyciel pokoju może przełączyć wszystko jak w grze lokalnej: rozwój bohatera, rodzaj bitew (arena albo pojedynek), ułatwienia, utrudnienia, rzut kością, dodatkowego bohatera Hordy i remis inicjatywy, a do tego wybrać cel i kształt mapy. Pozostali gracze widzą te ustawienia w pokoju. Serwer przyjmuje tylko dozwolone przełączniki, a partie na własnych zasadach nie liczą się do rankingu.
 - Okno ze szczegółami pod prawym przyciskiem myszy pokazuje się tylko, dopóki go trzymasz; puszczasz przycisk i okno znika (wcześniej po krótkim kliknięciu zostawało do następnego kliknięcia).
+- Mniej podpowiedzi na wierzchu: nie ma okienka po najechaniu myszą na pole mapy ani na portret bohatera w panelu gry i w wyborze frakcji i bohatera. Szczegóły pokazuje przytrzymany prawy przycisk (na telefonie przytrzymanie palca).
 
 ## 2.5.0 — 2026-11-12
 

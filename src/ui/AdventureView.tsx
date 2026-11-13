@@ -449,7 +449,6 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     </div>
                   );
                 })}
-              {hover && !touch && !mapPicks && !detailsShown && <HexTooltip state={state} k={hover} reach={reach.get(hover)} heroName={hero ? UNITS[hero.id].name : ''} x={pos(state.tiles[hover]).x} y={pos(state.tiles[hover]).y} W={W} H={H} boardW={boardW} />}
             </div>
           </div>
           {compact && (
@@ -473,7 +472,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           {hero && (
             <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
               <button className="btn btn-bare" onClick={() => onShowCard(hero.id)} title="Pokaż kartę">
-                <Portrait unitId={hero.id} size={64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" />
+                <Portrait unitId={hero.id} size={64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
               </button>
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{UNITS[hero.id].name}</div>
@@ -708,37 +707,6 @@ function TileStrip({ state, k, reach, heroName }: { state: GameState; k: HexKey;
     </div>
   );
 }
-
-/** With a mouse: a small note next to the hovered hex, after a short pause (moving across the map shows nothing). */
-
-function HexTooltip({ state, k, reach, heroName, x, y, W, H, boardW }: { state: GameState; k: HexKey; reach?: { cost: number; hostile: boolean }; heroName: string; x: number; y: number; W: number; H: number; boardW: number }) {
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    setReady(false);
-    const t = window.setTimeout(() => setReady(true), 350);
-    return () => window.clearTimeout(t);
-  }, [k]);
-  if (!ready) return null;
-  const { title, lines, foes, level } = tileLines(state, k, reach, heroName);
-  const width = 190;
-  // Beside the hex rather than over the hexes around it: to the right, or to the left near the right edge.
-  const right = x + W + width + 8 <= boardW;
-  return (
-    <div
-      className="plate parch"
-      style={{ position: 'absolute', left: right ? x + W * 0.9 : x + W * 0.1 - width, top: y + H * 0.15, width, padding: '4px 9px', zIndex: 20, pointerEvents: 'none', animation: 'fade-in 0.15s ease-out both' }}
-    >
-      <div style={{ fontWeight: 800, fontSize: 14 }}>{title}</div>
-      <FightPills foes={foes} level={level} size={11} />
-      {lines.map((l) => (
-        <div key={l} style={{ fontSize: 13, lineHeight: 1.2 }}>
-          {l}
-        </div>
-      ))}
-    </div>
-  );
-}
-
 
 /** The text about a control point for the tile description. */
 function controlNote(state: GameState, k: HexKey): string {
