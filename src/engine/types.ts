@@ -365,7 +365,9 @@ export type LogKind = 'info' | 'move' | 'battle' | 'damage' | 'death' | 'item' |
 /** A structured happening behind a log line, for the screen to announce (experience gained, an artifact found). */
 export type LogEvent =
   | { type: 'xp'; heroId: string; amount: number; reason: string }
-  | { type: 'artifact'; heroId: string; artifactId: string; source: string; kept: boolean; packed?: boolean };
+  | { type: 'artifact'; heroId: string; artifactId: string; source: string; kept: boolean; packed?: boolean }
+  /** A story note of a hand-made map (story.ts). */
+  | { type: 'story'; id: string; title?: string; text: string };
 
 export interface LogEntry {
   round: number;
@@ -427,6 +429,8 @@ export interface GameState {
   ritual: number;
   winner: Side | null;
   endReason: string | null;
+  /** Ids of the story notes already shown (story.ts). */
+  storyFired?: string[];
   log: LogEntry[];
   actionCount: number;
   stats: GameStats;

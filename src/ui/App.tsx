@@ -464,6 +464,7 @@ export function App() {
   // gets a card (what it is, where it came from), because it used to go unnoticed.
   const newsSeen = useRef<{ seed: number; n: number } | null>(null);
   const [xpNotes, setXpNotes] = useState<Array<{ key: number; text: string }>>([]);
+  const [storyNews, setStoryNews] = useState<Array<Extract<LogEvent, { type: 'story' }>>>([]);
   const [artifactNews, setArtifactNews] = useState<Array<Extract<LogEvent, { type: 'artifact' }>>>([]);
   useEffect(() => {
     if (!game) {
@@ -474,9 +475,19 @@ export function App() {
     const total = game.log.length;
     newsSeen.current = { seed: game.setup.seed, n: total };
     // A new, loaded or taken-back game: nothing is announced for what was already in it.
-    if (!seen || seen.seed !== game.setup.seed || seen.n > total) return;
+    if (!seen || seen.seed !== game.setup.seed || seen.n > total) {
+      // A story note for the very start of a fresh game opens with it (a loaded game does not repeat its notes).
+      if (game.actionCount === 0) {
+        const opening = game.log.flatMap((l) => (l.event?.type === 'story' ? [l.event] : []));
+        if (opening.length) setStoryNews(opening);
+      }
+      return;
+    }
     const sides = new Set(game.players.filter(atThisScreen).map((p) => p.faction));
-    const fresh = game.log.slice(seen.n).flatMap((l) => (l.event ? [l.event] : [])).filter((ev) => sides.has(game.heroes[ev.heroId]?.faction));
+    const events = game.log.slice(seen.n).flatMap((l) => (l.event ? [l.event] : []));
+    const fresh = events.flatMap((ev) => (ev.type !== 'story' && sides.has(game.heroes[ev.heroId]?.faction) ? [ev] : []));
+    const stories = events.flatMap((ev) => (ev.type === 'story' ? [ev] : []));
+    if (stories.length) setStoryNews((n) => [...n, ...stories]);
     const notes = fresh.flatMap((ev) => (ev.type === 'xp' ? [{ key: Math.random(), text: xpNote(ev) }] : []));
     const arts = fresh.flatMap((ev) => (ev.type === 'artifact' ? [ev] : []));
     if (notes.length) {
@@ -582,6 +593,7 @@ export function App() {
         [confirm, () => setConfirm(null)],
         [card, () => setCard(null)],
         [found, () => setFound(null)],
+        [storyNews.length ? storyNews : null, () => setStoryNews((a) => a.slice(1))],
         [artifactNews.length ? artifactNews : null, () => setArtifactNews((a) => a.slice(1))],
         [digest, () => setDigest(null)],
         [showLog, () => setShowLog(false)],
@@ -599,7 +611,7 @@ export function App() {
       top?.[1]();
       return Boolean(top);
     },
-    anyOpen: Boolean(confirm || card || found || artifactNews.length || digest || showLog || showDebug || showRules || showReport || summary !== null || showStats || showChangelog || showCredits || showTesters || showChat),
+    anyOpen: Boolean(confirm || card || found || storyNews.length || artifactNews.length || digest || showLog || showDebug || showRules || showReport || summary !== null || showStats || showChangelog || showCredits || showTesters || showChat),
     undo,
     fastForward,
     humanAction,
@@ -838,6 +850,15 @@ export function App() {
           <div key={n.key} className="xp-toast">{n.text}</div>
         ))}
       </div>
+      <Modal open={storyNews.length > 0 && !digest && !summary && !held && !found} onClose={() => setStoryNews((a) => a.slice(1))}>
+        {storyNews[0] && (
+          <Frame crest style={{ width: 'min(560px, 94vw)' }} innerStyle={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+            {storyNews[0].title && <Ribbon style={{ width: 'min(420px, 90vw)' }}>{storyNews[0].title}</Ribbon>}
+            <div data-story style={{ fontSize: 19, lineHeight: 1.45, whiteSpace: 'pre-line' }}>{storyNews[0].text}</div>
+            <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20 }} onClick={() => setStoryNews((a) => a.slice(1))}>Dalej</button>
+          </Frame>
+        )}
+      </Modal>
       <Modal open={artifactNews.length > 0 && !digest && !summary && !held && !found} onClose={() => setArtifactNews((a) => a.slice(1))}>
         {artifactNews[0] && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>

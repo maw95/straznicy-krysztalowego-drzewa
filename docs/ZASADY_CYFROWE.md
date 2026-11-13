@@ -442,3 +442,12 @@ Nazwy i opisy wyglądu do zaakceptowania; boty oceniają spotkanie jak strażnik
 - **Symulacje** (`SIM_GROWTH=1 make sim-cele GAMES=40`, trójkąt, kooperacja / rywalizacja, przed zmianami → po): Kryształy 53/57 → 46/50, Punkty kontrolne 57/62 → 52/63, Przetrwanie 55 → 45, Boss 59/59 → ok. 50/53 (po dostrojeniu `hpFactor`; przed nim 40/42), Artefakt 56/62 → 48/62. Wszystko w paśmie Normalnego (45–65), poza Przetrwaniem i Kryształami o kilka punktów na dole (40 gier na wariant: błąd około ±8). Do powtórzenia dłuższą serią.
 - **Seria 120 gier na wariant (11.11, `SIM_GROWTH=1 make sim-cele GAMES=120`, kooperacja / rywalizacja, błąd ok. ±5):** Kryształy 44–50 (Dolina 34 w kooperacji), Punkty kontrolne 47–54, Przetrwanie 41–52, Boss 43–46, Artefakt 44–55. Prawie wszystko na dolnej granicy pasma Normalnego (45–65) albo 1–4 punkty pod nią; wyraźnie poza pasmem tylko Kryształy na Dolinie (znane z 8.3) i Przetrwanie na trójkącie (41).
 - **Jeszcze nie ma:** własnych grafik, sprite’ów i dźwięków (zastępcze: portret strażnika z tego samego motywu, ikona zdolności podobnej), ikon zdolności, własnej grafiki Bossa (10.7).
+
+## Fabuła na gotowych mapach (13.11.2026)
+
+Gotowa mapa (`src/engine/customMaps.ts`, także z pliku JSON przez `parseCustomMap`) może mieć pole `story`: listę notatek, czyli okienek z tekstem, które otwierają się po wyzwalaczu. Notatka: `id` (unikalny w mapie), opcjonalny `title`, `text` (akapity po `\n`) i `when`. Wszystkie podane warunki naraz:
+- `round` – gra doszła do tej rundy (1 = od początku gry),
+- `faction` – trwa tura tej frakcji (w przygodzie), a razem z `enter` – na polu stoi bohater tej frakcji,
+- `enter: [rząd, kolumna]` – bohater stoi na polu o tych współrzędnych w `rows` mapy,
+- `defeated` – ostatnia bitwa skończyła się porażką jednostki o tym `defId` (np. `hydra`, `cyclops`, `stoneGolem`).
+Silnik (`story.ts`, `fireStory` po każdej akcji i przy starcie gry) odpala każdą notatkę najwyżej raz, zapisuje jej id w `state.storyFired` i wpis w dzienniku ze zdarzeniem `story`; ekran pokazuje okienko z przyciskiem „Dalej” (przy wczytaniu zapisu notatki się nie powtarzają). Błędna notatka (brak wyzwalacza, powtórzone id, pole poza mapą) odrzuca całą mapę przy rejestracji.

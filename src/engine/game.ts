@@ -53,6 +53,7 @@ import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } fro
 import { log } from './log';
 import { applyHeroSkills, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
+import { fireStory } from './story';
 import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, placeSites, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
@@ -173,6 +174,8 @@ export function createGame(setup: SetupOptions): GameState {
     return state;
   }
   log(state, 'round', `Runda 1 z ${state.roundLimit}. Przymierze potrzebuje ${state.crystalsNeeded} kryształów.`);
+  // A story note for the very start (round 1) opens with the game.
+  fireStory(state);
   return state;
 }
 
@@ -1123,6 +1126,7 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
   if (state.phase === 'battle' && state.battle && checkBattleEnd(state)) finalizeBattle(state);
   // A free crystal never lies under a Przymierze hero: whoever stands there takes it at once.
   if (state.phase === 'adventure') for (const h of Object.values(state.heroes)) if (h.alive && h.faction === 'dawn') pickUpCrystals(state, h);
+  fireStory(state);
   state.actionCount += 1;
   return state;
 }
