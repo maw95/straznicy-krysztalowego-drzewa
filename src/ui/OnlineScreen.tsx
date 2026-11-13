@@ -24,7 +24,7 @@ export interface MenuLinks {
  * the ranking, players online with "Zaproś" and the general chat; a room shows its table before the start.
  * The game itself is played on the usual screens (App), once the room starts.
  */
-export function OnlineScreen({ session, onSession, onLocalGame, onOffline, links }: { session: OnlineSession | null; onSession: (s: OnlineSession | null) => void; onLocalGame: () => void; onOffline: () => void; links: MenuLinks }) {
+export function OnlineScreen({ intent, session, onSession, onLocalGame, onOffline, links }: { intent: 'new' | 'load'; session: OnlineSession | null; onSession: (s: OnlineSession | null) => void; onLocalGame: () => void; onOffline: () => void; links: MenuLinks }) {
   // Only a saved session needs the server before anything shows; without one the welcome comes at once.
   const [checking, setChecking] = useState(!session && savedToken() !== null);
   const [problem, setProblem] = useState<string | null>(null);
@@ -58,7 +58,7 @@ export function OnlineScreen({ session, onSession, onLocalGame, onOffline, links
         <button className="btn plate parch btn-testers" style={{ padding: '6px 14px', fontSize: 16 }} onClick={links.onTesters} title="Uwagi o grze i zgłoszone błędy — prosto do twórcy">Dla testerów</button>
       </div>
       {session ? (
-        <Home session={session} onSignOut={() => onSession(null)} onLocalGame={onLocalGame} links={links} />
+        <Home intent={intent} session={session} onSignOut={() => onSession(null)} onLocalGame={onLocalGame} links={links} />
       ) : checking ? (
         <Frame crest style={{ width: 'min(420px, 94vw)', position: 'relative' }} innerStyle={{ padding: 26, textAlign: 'center', fontSize: 19 }}>
           Łączenie z serwerem gry…
@@ -129,10 +129,15 @@ function Welcome({ problem, onRetry, onUser, onOffline }: { problem: string | nu
   );
 }
 
-function Home({ session, onSignOut, onLocalGame, links }: { session: OnlineSession; onSignOut: () => void; onLocalGame: () => void; links: MenuLinks }) {
+function Home({ intent, session, onSignOut, onLocalGame, links }: { intent: 'new' | 'load'; session: OnlineSession; onSignOut: () => void; onLocalGame: () => void; links: MenuLinks }) {
   const online = useOnline(session);
   const [code, setCode] = useState('');
   const [joining, setJoining] = useState(false);
+  /** The saved games of this account instead of the table menu ("Wczytaj grę" → "Przez internet"). */
+  const [loading, setLoading] = useState(intent === 'load');
+  useEffect(() => {
+    if (loading && online.connected) session.send({ type: 'listSaves' });
+  }, [loading, online.connected, session]);
   /** The new-game wizard is open; the table it makes is sent once the room it asked for exists. */
   const [wizard, setWizard] = useState(false);
   const pending = useRef<TableConfig | null>(null);
@@ -172,6 +177,27 @@ function Home({ session, onSignOut, onLocalGame, links }: { session: OnlineSessi
       )}
       {room ? (
         <RoomLobby session={session} room={room} me={user} online={online} />
+      ) : loading ? (
+        <Frame crest style={{ width: 'min(900px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>Zapisane gry online</Ribbon>
+          <div data-wizard-page="load-online" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {online.saves === null && <i style={{ color: 'var(--muted)', textAlign: 'center' }}>Wczytywanie…</i>}
+            {online.saves?.length === 0 && <div style={{ textAlign: 'center', color: 'var(--muted)', fontStyle: 'italic' }}>Brak zapisanych gier. W trakcie partii, jako założyciel pokoju, zapiszesz ją w Opcjach („Zapisz grę”) albo przy wyjściu z gry.</div>}
+            {online.saves?.map((n) => (
+              <div key={n.id} className="well" style={{ padding: '8px 14px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: 200 }}>
+                  <b style={{ color: '#F3D27A' }}>{n.name}</b>
+                  <div style={{ fontSize: 14, color: 'var(--muted)' }}>{new Date(n.savedAt.replace(' ', 'T') + 'Z').toLocaleString('pl-PL', { dateStyle: 'short', timeStyle: 'short' })} · {n.summary}</div>
+                </div>
+                <button className="btn prim" style={{ padding: '6px 18px', fontSize: 17 }} disabled={!online.connected} onClick={() => session.send({ type: 'loadSave', id: n.id })}>Wczytaj</button>
+                <button className="btn plate parch" style={{ padding: '6px 12px', fontSize: 15 }} aria-label={`Usuń zapis ${n.name}`} disabled={!online.connected} onClick={() => session.send({ type: 'deleteSave', id: n.id })}>Usuń</button>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <button className="btn prim r" style={{ height: 48, padding: '0 34px', fontSize: 20 }} onClick={() => (intent === 'load' ? onLocalGame() : setLoading(false))}>← Wstecz</button>
+          </div>
+        </Frame>
       ) : wizard ? (
         <NewGameWizard
           online
@@ -192,6 +218,9 @@ function Home({ session, onSignOut, onLocalGame, links }: { session: OnlineSessi
               </button>
               <button className="btn btn-join" style={{ height: 66, padding: '0 44px', fontSize: 26 }} disabled={!online.connected} aria-pressed={joining} onClick={() => setJoining((j) => !j)}>
                 Dołącz do gry
+              </button>
+              <button className="btn plate parch" style={{ height: 66, padding: '0 34px', fontSize: 24 }} disabled={!online.connected} onClick={() => setLoading(true)}>
+                Wczytaj grę
               </button>
             </div>
             <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>Kliknij „Zaproś” przy graczu z listy obok: pokój założy się sam. Albo wpisz kod od znajomego po kliknięciu „Dołącz do gry”.</div>
@@ -347,6 +376,7 @@ function tableSummary(t: TableConfig): string[] {
 
 function RoomLobby({ session, room, me, online }: { session: OnlineSession; room: RoomView; me: User; online: OnlineState }) {
   const owner = room.ownerId === me.id;
+  const locked = room.resumed === true;
   const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, tier: room.tier ?? 'adventure', objective: room.objective ?? 'crystals', shape: room.shape ?? 'triangle', ...(room.customMapId ? { customMapId: room.customMapId } : {}), ...(room.noHorde ? { noHorde: true } : {}), ...(room.tier === 'custom' ? { growth: room.growth === true, battleMode: room.battleMode ?? 'arena', rules: room.rules ?? defaultCustom(room.level, room.mode).rules } : {}), seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
   const configure = (patch: Partial<TableConfig>) => session.send({ type: 'configure', table: { ...table, ...patch } });
   const updateSeat = (i: number, patch: Partial<TableConfig['seats'][number]>) => configure({ seats: table.seats.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
@@ -377,7 +407,8 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         {!owner && <div style={{ fontSize: 15, color: 'var(--muted)' }}>Stół ustawia założyciel pokoju: {room.members.find((m) => m.id === room.ownerId)?.nick}.</div>}
         <div className="well" data-table-summary style={{ padding: '8px 14px', display: 'flex', gap: '4px 16px', flexWrap: 'wrap', alignItems: 'center', fontSize: 16 }}>
           {tableSummary(table).map((p) => <span key={p}>{p}</span>)}
-          {owner && <button className="btn plate parch" style={{ padding: '3px 12px', fontSize: 15, marginLeft: 'auto' }} onClick={() => setEditing(true)}>Zmień ustawienia</button>}
+          {owner && !locked && <button className="btn plate parch" style={{ padding: '3px 12px', fontSize: 15, marginLeft: 'auto' }} onClick={() => setEditing(true)}>Zmień ustawienia</button>}
+          {locked && <b style={{ marginLeft: 'auto', color: '#F3D27A' }} data-resumed>Zapisana gra: ustawień nie można zmienić</b>}
         </div>
         <div className="lbl" style={{ marginTop: 6 }}>Miejsca przy stole</div>
         {room.seats.map((s, i) => {
@@ -385,21 +416,21 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
           return (
             <div key={i} className="well" style={{ padding: '6px 12px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', background: SEAT_TINT[s.faction] }}>
               <img src={asset(`cards/crests/${s.faction}.png`)} alt="" title={FACTION_NAMES[s.faction]} style={{ width: 46, height: 46, objectFit: 'contain', flex: 'none' }} />
-              {owner && room.mode === 'pvp' && (
+              {owner && !locked && room.mode === 'pvp' && (
                 <select value={s.faction} aria-label="Frakcja" onChange={(e) => updateSeat(i, { faction: e.target.value as FactionId, heroId: FACTION_HEROES[e.target.value as FactionId].find((h) => !takenBy(h, i))! })}>
                   <option value="dawn">{FACTION_NAMES.dawn}</option>
                   <option value="horde">{FACTION_NAMES.horde}</option>
                 </select>
               )}
-              {owner && (
+              {owner && !locked && (
                 <select value={s.bot ? 'bot' : 'human'} aria-label="Kto gra" onChange={(e) => updateSeat(i, { bot: e.target.value === 'bot' })}>
                   <option value="human">Gracz</option>
                   <option value="bot">Komputer</option>
                 </select>
               )}
               <div style={{ display: 'flex', gap: 6 }}>
-                {(owner ? FACTION_HEROES[s.faction] : [s.heroId]).map((h) => (
-                  <button key={h} className="btn" title={UNITS[h].name} disabled={!owner || takenBy(h, i)} onClick={() => updateSeat(i, { heroId: h })} style={{ background: 'none', border: 0, padding: 0 }}>
+                {(owner && !locked ? FACTION_HEROES[s.faction] : [s.heroId]).map((h) => (
+                  <button key={h} className="btn" title={UNITS[h].name} disabled={!owner || locked || takenBy(h, i)} onClick={() => updateSeat(i, { heroId: h })} style={{ background: 'none', border: 0, padding: 0 }}>
                     <Portrait unitId={h} size={46} ring={SIDE_RING[s.faction]} glow={s.heroId === h ? '0 0 0 3px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} dim={takenBy(h, i)} tip={false} />
                   </button>
                 ))}

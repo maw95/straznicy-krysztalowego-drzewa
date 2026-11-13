@@ -48,7 +48,6 @@ Autor przejrzał szkic poziomu 3 (`docs/poziom_3_krolestwo_uwagi.txt`) i zapisa�
 
 ## B. Średnie
 
-- [ ] **B5. Zapisy gry online (konto hosta).** Offline zrobione (13.11: „Zapisz grę” w Opcjach, „Zapisz i wyjdź”, lista w „Wczytaj grę”). Zostaje online (Q13: zapis trzyma serwer na koncie hosta; widzi i wznawia go tylko host): serwer (tabela `saves`, wiadomości `saveGame`, `listSaves`, `loadSave`, `deleteSave`), przycisk „Zapisz grę” w Opcjach online, „Wczytaj grę” → „Przez internet” z listą zapisów, wczytanie prowadzi do widoku pokoju (czekanie na graczy; frakcji i bohaterów nie można zmienić), „Zapisz i wyjdź” online.
 
 ## C. Dalej (kolejność; **po zakończeniu A i B4, zgodnie z Q11**)
 

@@ -97,6 +97,7 @@ export function App() {
    * unless the player chose to play without an account; then the local setup screen, as before.
    * The session (once logged in) outlives the screen during a game.
    */
+  const [onlineIntent, setOnlineIntent] = useState<'new' | 'load'>('new');
   const [onlineScreen, setOnlineScreen] = useState(() => !playsOffline());
   const [session, setSession] = useState<OnlineSession | null>(null);
   const online = useOnline(session);
@@ -224,6 +225,7 @@ export function App() {
     [onlineRoom],
   );
   const isOnline = Boolean(session && onlineGame);
+  const isOnlineOwner = Boolean(isOnline && onlineRoom && onlineRoom.ownerId === online?.user.id);
   const defaultSaveName = game ? `Partia ${new Date().toLocaleDateString('pl-PL')}, runda ${game.round}` : 'Zapis';
   // Messages count as read while the chat is open, and in the lobby, where it is always on screen.
   const unread = online && !showChat ? online.chatReceived - chatRead : 0;
@@ -654,6 +656,7 @@ export function App() {
       <>
         {onlineScreen ? (
           <OnlineScreen
+            intent={onlineIntent}
             session={session}
             onSession={setSession}
             onLocalGame={() => setOnlineScreen(false)}
@@ -667,7 +670,8 @@ export function App() {
         <SetupScreen
           session={Boolean(session)}
           online={session ? { label: '← Menu online', title: 'Wróć do menu gry online' } : { label: 'Zaloguj się, żeby grać ze znajomymi', title: 'Gra online i ranking wymagają konta' }}
-          onOnline={() => {
+          onOnline={(intent) => {
+            setOnlineIntent(intent);
             setPlaysOffline(false);
             setOnlineScreen(true);
           }}
@@ -879,7 +883,7 @@ export function App() {
       {game && (
         <LeaveDialog
           open={showLeave}
-          canSave={!isOnline}
+          canSave={!isOnline || isOnlineOwner}
           defaultName={defaultSaveName}
           onClose={() => setShowLeave(false)}
           onLeave={() => {
@@ -887,7 +891,8 @@ export function App() {
             leaveGame();
           }}
           onSaveAndLeave={(name) => {
-            saveNamed(name, saveFile(game));
+            if (isOnline) session!.send({ type: 'saveGame', name });
+            else saveNamed(name, saveFile(game));
             setShowLeave(false);
             leaveGame();
           }}
@@ -945,7 +950,7 @@ export function App() {
           setShowRules(true);
         }}
         defaultSaveName={defaultSaveName}
-        onSaveGame={isOnline ? undefined : (name) => saveNamed(name, saveFile(game))}
+        onSaveGame={isOnline ? (isOnlineOwner ? (name) => session!.send({ type: 'saveGame', name }) : undefined) : (name) => saveNamed(name, saveFile(game))}
         onLeave={() => {
           setShowDebug(false);
           setShowLeave(true);

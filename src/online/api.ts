@@ -49,6 +49,8 @@ export interface RoomView {
   rules?: CustomRules;
   /** The computer's pace in this room, set by the owner (the same names as in the game's options). */
   botSpeed: BotSpeed;
+  /** Opened from a saved game: the table is locked, only the seats are taken (an older server leaves it out). */
+  resumed?: boolean;
   seats: SeatView[];
   members: Array<User & { online: boolean }>;
   /** The disconnected player whose turn it is: their seat and when a bot takes over (ms since epoch). */
@@ -107,6 +109,8 @@ export type ServerMessage =
   | { type: 'game'; state: GameState }
   | { type: 'chat'; from: string; text: string }
   | { type: 'left' }
+  | { type: 'saves'; saves: SavedGameInfo[] }
+  | { type: 'saved'; name: string }
   | { type: 'error'; code: string; message: string };
 
 // ------------------------------------------------------------------ accounts
@@ -188,7 +192,19 @@ export type ClientMessage =
   | { type: 'chat'; text: string }
   | { type: 'generalChat'; text: string }
   | { type: 'invite'; userId: number }
-  | { type: 'inviteReply'; code: string; accept: boolean };
+  | { type: 'inviteReply'; code: string; accept: boolean }
+  | { type: 'saveGame'; name: string }
+  | { type: 'listSaves' }
+  | { type: 'loadSave'; id: number }
+  | { type: 'deleteSave'; id: number };
+
+/** A game saved on this account (the owner's), as the server lists it. */
+export interface SavedGameInfo {
+  id: number;
+  name: string;
+  savedAt: string;
+  summary: string;
+}
 
 export interface OnlineState {
   user: User;
@@ -205,6 +221,8 @@ export interface OnlineState {
   generalChat: Array<{ from: string; text: string }>;
   /** Invitations to this player waiting for an answer. */
   invitations: Invitation[];
+  /** The games saved on this account (newest first); null until the list has been asked for. */
+  saves: SavedGameInfo[] | null;
   /** Short notes for this player (an invitation sent, declined…), each shown for a few seconds. */
   notices: Array<{ id: number; text: string }>;
   /** The server closed the connection after a long time without activity; reconnect() opens it again. */
@@ -226,7 +244,7 @@ export class OnlineSession {
   private closed = false;
 
   constructor(user: User) {
-    this.state = { user, connected: false, reconnecting: false, room: null, game: null, chat: [], chatReceived: 0, players: [], generalChat: [], invitations: [], notices: [], idle: false, error: null };
+    this.state = { user, connected: false, reconnecting: false, room: null, game: null, chat: [], chatReceived: 0, saves: null, players: [], generalChat: [], invitations: [], notices: [], idle: false, error: null };
     this.open();
   }
 
@@ -322,6 +340,10 @@ export class OnlineSession {
         return this.update({ chat: [...this.state.chat.slice(-99), { from: message.from, text: message.text }], chatReceived: this.state.chatReceived + 1 });
       case 'left':
         return this.update({ room: null, game: null, chat: [] });
+      case 'saves':
+        return this.update({ saves: message.saves });
+      case 'saved':
+        return this.notice(`Zapisano: ${message.name}.`);
       case 'error':
         return this.update({ error: message.message });
       case 'players':

@@ -27,7 +27,7 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
 /** The pages of the menu: the first choice, where to play, the new-game wizard, the saved games, the seats at the table. */
 type Step = 'home' | 'where' | 'wizard' | 'load' | 'table';
 
-export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog, onCredits }: { session: boolean; online: { label: string; title: string }; onOnline: () => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void; onCredits: () => void }) {
+export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog, onCredits }: { session: boolean; online: { label: string; title: string }; onOnline: (intent: 'new' | 'load') => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void; onCredits: () => void }) {
   // Both read and replay saved games: once per visit to the menu, not on every hover and keystroke.
   const stats = useMemo(journalStats, []);
   const saveLabel = useMemo(() => autosave && describeSave(autosave), [autosave]);
@@ -115,7 +115,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     </div>
   );
   const pickWhere = (where: 'here' | 'online') => {
-    if (where === 'online') return onOnline();
+    if (where === 'online') return onOnline(intent);
     setStep(intent === 'new' ? 'wizard' : 'load');
   };
   const stepName = step === 'table' ? `Miejsca przy stole · ${digital ? 'wersja cyfrowa' : 'wersja planszowa'}` : '';

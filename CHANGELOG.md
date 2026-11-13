@@ -24,6 +24,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Gotowe mapy mogą mieć fabułę: okienka z tekstem otwierają się po wyzwalaczu (numer rundy, tura frakcji, wejście bohatera na pole albo pokonanie jednostki). Silnik pilnuje, żeby każda notatka pokazała się raz, także w grze online i po wczytaniu zapisu; opis formatu jest w dokumentacji zasad.
 - Okna mają ozdobne narożniki (złoto z szafirami i listowiem, namalowane w Scenario) zamiast samej płaskiej złotej ramki.
 - Wprowadzenie ma aktualne obrazy (zrzuty prawdziwej gry zamiast starych grafik z błędami: mapa z równymi kafelkami, arena, menu) i nowe slajdy: dwie wersje gry, poziomy złożoności, cele gry, online i hot-seat oraz arena.
+- Gra online da się zapisać: założyciel pokoju zapisuje partię pod własną nazwą w Opcjach albo przy wyjściu z gry („Zapisz i wyjdź”). Zapisy leżą na jego koncie (do 20); „Wczytaj grę” → „Przez internet” (albo „Wczytaj grę” w menu online) otwiera nowy pokój z zapisaną partią: ustawień i bohaterów nie da się zmienić, gracze zajmują miejsca i gra idzie dalej od zapisanego momentu.
 
 ## 2.5.0 — 2026-11-12
 
