@@ -691,3 +691,20 @@ describe('saved games under a name', () => {
     expect(listNamedSaves()).toHaveLength(MAX_NAMED_SAVES - 1);
   });
 });
+
+describe('rules and cards window', () => {
+  it('has the neutral units, the artifacts and the map places', async () => {
+    const { container } = startSolo(5);
+    const doc = container.ownerDocument;
+    await act(async () => fireEvent.keyDown(window, { key: 'r' }));
+    await click(doc, 'Jednostki');
+    for (const name of ['Kruszyniec', 'Harpia', 'Bagienny Pełzacz', 'Kamienny Golem', 'Król Burzy', 'Kraken']) expect(doc.body.textContent).toContain(name);
+    await click(doc, 'Artefakty');
+    expect(doc.querySelectorAll('[data-rules-artifacts] .gear-medal').length).toBe(15);
+    expect(doc.body.textContent).toContain('Egida Drzewa');
+    await click(doc, 'Lokacje na mapie');
+    for (const name of ['Kapliczka', 'Obóz najemników', 'Skrzynia', 'Punkt kontrolny']) expect(doc.body.textContent).toContain(name);
+    await click(doc, 'Podstawowe zasady');
+    expect(doc.body.textContent).toContain('Kamienie milowe');
+  });
+});
