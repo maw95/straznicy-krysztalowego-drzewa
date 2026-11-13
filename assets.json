@@ -3358,6 +3358,30 @@
       "data": "2026-11-13",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ikony/artefakty-zestawy",
+      "pliki": [
+        "public/assets/ikony/artefakty/groveWreath.webp",
+        "public/assets/ikony/artefakty/mossCloak.webp",
+        "public/assets/ikony/artefakty/barkShoes.webp",
+        "public/assets/ikony/artefakty/dawnDiadem.webp",
+        "public/assets/ikony/artefakty/dawnSword.webp",
+        "public/assets/ikony/artefakty/dawnShield.webp",
+        "public/assets/ikony/artefakty/sentinelMail.webp",
+        "public/assets/ikony/artefakty/sentinelShield.webp",
+        "public/assets/ikony/artefakty/sentinelBoots.webp",
+        "public/assets/ikony/artefakty/merchantHat.webp",
+        "public/assets/ikony/artefakty/merchantCoat.webp",
+        "public/assets/ikony/artefakty/merchantBoots.webp"
+      ],
+      "typ": "ikony 12 elementów zestawów artefaktów (poziom 3)",
+      "opis": "Okrągłe medaliony ze srebrnym pierścieniem i szafirami (rzadkie), 192 px, wycięte z czarnego tła. Prompt: 'A single round fantasy game item icon medallion, centred, on a plain pure black background. Ornate silver ring with engraved filigree and small blue sapphire gems at the compass points, glossy. Inside the ring a deep sapphire-blue glowing background with <przedmiot>. Rich painterly digital art, high contrast, no text.' Przedmioty: wianek, płaszcz z mchu, trzewiki z kory, diadem, miecz, tarcza ze słońcem, zbroja płytowa, tarcza wieżowa, buty z kotwicą, kapelusz kupca, kaftan poborcy, buty handlarza.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, 512 px, jakość medium",
+      "data": "2026-11-13",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
