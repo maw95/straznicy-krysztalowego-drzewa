@@ -3330,6 +3330,34 @@
       "data": "2026-11-13",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikony-zdolnosci-poziom-3",
+      "pliki": [
+        "public/assets/cards/abilities/quills.png",
+        "public/assets/cards/abilities/quills_inner.png",
+        "public/assets/cards/abilities/gallop.png",
+        "public/assets/cards/abilities/gallop_inner.png",
+        "public/assets/cards/abilities/headlong.png",
+        "public/assets/cards/abilities/headlong_inner.png",
+        "public/assets/cards/abilities/treeRoots.png",
+        "public/assets/cards/abilities/treeRoots_inner.png",
+        "public/assets/cards/abilities/poisonClaw.png",
+        "public/assets/cards/abilities/poisonClaw_inner.png",
+        "public/assets/cards/abilities/packHunt.png",
+        "public/assets/cards/abilities/packHunt_inner.png",
+        "public/assets/cards/abilities/inferno.png",
+        "public/assets/cards/abilities/inferno_inner.png",
+        "public/assets/cards/abilities/bloodRage.png",
+        "public/assets/cards/abilities/bloodRage_inner.png"
+      ],
+      "typ": "ikony zdolności ośmiu pomocników poziomu 3",
+      "opis": "Okrągłe medaliony ze złotym pierścieniem (Kolce, Strzał i Galop, Czołowe Natarcie, Korzenie Drzewa, Zatruty Pazur, Obława, Pożoga, Bitewny Szał); pocięte skryptem scripts/assets/abilities_l3.py (pełny 192 px i sam obraz 160 px). Prompt: 'A single round fantasy game ability icon medallion, centred, on a plain pure black background. Thick ornate antique gold ring with small pointed gold studs, glossy. Inside the ring a painted scene on a deep green (Przymierze) / dark red (Horda) background: <motyw>. Rich painterly digital art, high contrast, no text.'",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, 512 px, jakość medium",
+      "data": "2026-11-13",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
