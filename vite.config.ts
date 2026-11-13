@@ -42,6 +42,18 @@ export default defineConfig({
   // The game version (package.json), shown in the main menu.
   define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [react(), bugReports()],
+  build: {
+    rollupOptions: {
+      output: {
+        // Rarely changing parts get their own files, so a returning player keeps them cached after a release.
+        manualChunks: (id) => {
+          if (id.includes('tuningAuto')) return 'tuning';
+          if (id.includes('node_modules/react')) return 'react';
+          return undefined;
+        },
+      },
+    },
+  },
   test: {
     include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],
     // UI tests play whole games click by click.
