@@ -65,7 +65,7 @@ export const isOver = (state: GameState): boolean => state.phase === 'over';
 
 // ------------------------------------------------------------------ setup
 
-/** Crystals on the map (and needed at the Tree): 2 for one Przymierze hero, 3 for two. */
+/** Crystals on the map (and needed at the Tree): 2 for one Przymierze hero, 3 for two or three (there are three guardian lairs). */
 export function crystalsFor(setup: SetupOptions): number {
   return setup.seats.filter((s) => s.faction === 'dawn').length >= 2 ? 3 : 2;
 }

@@ -15,6 +15,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Skarby frakcji nie zajmują już miejsca w panelu bocznym: w prawym dolnym rogu mapy jest ikona skarbu z licznikiem i podpisem „Skarby”, która otwiera okno do oglądania i używania skarbów. Ta sama ikona zastąpiła przycisk „Skarby” w bitwie.
 - Przycisk „Dla testerów” (dawniej „INFO DLA TESTERÓW”) ma inny kolor niż reszta menu, a okno pod nim ma aktualną treść: zgłoszenia i uwagi idą na serwer same, nic nie trzeba pobierać ani wysyłać ręcznie.
 - Opcje w grze: tempo botów to suwak (także w pokoju online), na dole duży czerwony przycisk „Wyjdź z gry” z pytaniem „Czy na pewno chcesz wyjść z gry?”. Znikły ziarno partii i eksporty partii i dziennika, a tempo botów nie jest już w ustawieniach przed grą.
+- Do 6 graczy: w rywalizacji gra od 2 do 6 osób (po trzech bohaterów na stronę), w kooperacji do 3 bohaterów Przymierza. Boty rozgrywają takie partie do końca na każdej mapie.
 
 ## 2.5.0 — 2026-11-12
 

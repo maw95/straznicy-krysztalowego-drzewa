@@ -87,7 +87,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
   const heroesOf = (f: FactionId) => (duck ? [...FACTION_HEROES[f], ...SECRET_HEROES[f]] : FACTION_HEROES[f]);
 
   const changeMode = (m: Mode) => {
-    const c = m === 'pvp' ? Math.max(2, count) : m === 'arena' ? 2 : Math.min(2, count);
+    const c = m === 'pvp' ? Math.max(2, count) : m === 'arena' ? 2 : Math.min(3, count);
     setMode(m);
     setCount(c);
     setSeats(defaultSeats(m, c));
@@ -106,7 +106,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
   const valid =
     seats.every((s, i) => !takenBy(s.heroId, i)) &&
     (mode === 'coop' || (seats.some((s) => s.faction === 'dawn') && seats.some((s) => s.faction === 'horde'))) &&
-    (['dawn', 'horde'] as FactionId[]).every((f) => seats.filter((s) => s.faction === f).length <= 2);
+    (['dawn', 'horde'] as FactionId[]).every((f) => seats.filter((s) => s.faction === f).length <= 3);
 
 
   const startGame = () => {
@@ -329,8 +329,8 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
             )}
             {!arena && (
               <Row label="Liczba graczy">
-                {/* At most 2 players per faction: coop (all Przymierze) takes 1–2, PvP 2–4. */}
-                {(mode === 'coop' ? [1, 2] : [2, 3, 4]).map((n) => (
+                {/* At most 3 players per faction (its three heroes): coop (all Przymierze) takes 1–3, PvP 2–6. */}
+                {(mode === 'coop' ? [1, 2, 3] : [2, 3, 4, 5, 6]).map((n) => (
                   <button key={n} className={chip(count === n)} onClick={() => changeCount(n)}>{n}</button>
                 ))}
               </Row>

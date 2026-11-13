@@ -357,7 +357,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
         {!arena && (
           <>
             <Row label="Gracze">
-              {(room.mode === 'coop' ? [1, 2] : [2, 3, 4]).map((n) => (
+              {(room.mode === 'coop' ? [1, 2, 3] : [2, 3, 4, 5, 6]).map((n) => (
                 <button key={n} className={chip(room.seats.length === n)} disabled={!owner} onClick={() => configure({ seats: defaultTable(room.mode, n, room.level, table.digital).seats })}>
                   {n}
                 </button>

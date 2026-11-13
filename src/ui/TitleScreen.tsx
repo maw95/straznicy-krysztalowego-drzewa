@@ -84,7 +84,7 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
         <button className="btn prim title-start" onClick={start} autoFocus>
           Start
         </button>
-        <p className="title-sub">Gra przygodowa dla 1–4 graczy od 5 lat · z muzyką, najlepiej na pełnym ekranie</p>
+        <p className="title-sub">Gra przygodowa dla 1–6 graczy od 5 lat · z muzyką, najlepiej na pełnym ekranie</p>
       </div>
       <div className="title-version">Wersja {__APP_VERSION__}</div>
     </div>

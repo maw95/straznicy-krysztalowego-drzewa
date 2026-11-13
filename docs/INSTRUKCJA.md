@@ -1,6 +1,6 @@
 # Gleamroot: Strażnicy Kryształowego Drzewa
 
-*Gra przygodowa dla 1–4 graczy od 5 lat. Partia trwa od kwadransa do godziny.*
+*Gra przygodowa dla 1–6 graczy od 5 lat. Partia trwa od kwadransa do godziny.*
 
 ---
 
@@ -223,7 +223,7 @@ Na poziomie łatwym zasady mieszczą się na jednej kartce: chodzicie po mapie, 
 
 1. **Wybierzcie tryb:**
    - **Kooperacja** (1–2 graczy): wszyscy gracie Przymierzem przeciwko automatowi zła (rozdział 12).
-   - **Rywalizacja** (2–4 graczy): jedni grają Przymierzem, drudzy Hordą; najwyżej 2 graczy na frakcję.
+   - **Rywalizacja** (2–6 graczy): jedni grają Przymierzem, drudzy Hordą; najwyżej 3 graczy na frakcję.
 2. **Wybierzcie długość mapy:**
 
    | Mapa | Rzędy pól | Skarby na mapie | Skarby Przymierza na start | Limit rund |
