@@ -150,3 +150,7 @@ Kolejność: K1 → K2 → K3 → K6 (pierwsza grywalna wersja z ekonomią) → 
 9. **Automat zła w koopie:** posiłki co kilka rund zamiast prawdziwej ekonomii (rekomendacja: tak; prawdziwa ekonomia automatu to osobny, duży projekt).
 10. **Ranking:** czy do czasu zmierzenia trudności poziom 3 nie daje punktów (rekomendacja: tak, jak „Własne”)?
 11. **Nazwa poziomu:** zostaje „Królestwo” (tak w drabince)? W grze obecnie są „Poziom 1: Przygoda”, „Poziom 2: Wyprawa”.
+
+## Strojenie, pomiar z 13.11.2026 (`make sim-krolestwo GAMES=80`)
+
+Poziom Normalny, boty, osady po 2 zł, osiem nowych jednostek (ceny 3/5/8/12), zestawy artefaktów w grze. % wygranych Przymierza: mapa krótka 56–68, średnia 34–49, długa 34–49 (dla porównania ten sam stół bez Królestwa: 39–60 / 39–60 / 45–51). Wniosek: **ekonomia prawie nie wpływa na wynik botów**, bo boty rzadko wracają do osady (średnio 1,1 osady, 0–1,8 awansowanego rekruta na grę, na końcu gry zostaje 8–40 zł niewydanych, poziomów 4 i 5 nie kupują wcale). Próba wydłużenia ich wypraw po zakupy (limit ścieżki 4/8 zamiast 1/4) obniżyła im wygrane o 5–10 punktów, więc ją cofnięto. Ceny zostają robocze (3/5/8/12), bo gracz-człowiek kupuje celowo; właściwe strojenie cen wymaga lepszego bota-kupca albo testów z ludźmi. Punkty rankingowe poziomu 3: do ustalenia po wydaniu z danych graczy.

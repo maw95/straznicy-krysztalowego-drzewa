@@ -10,7 +10,7 @@ OPTIONS ?= full
 BATTLE ?= arena
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-kraken sim-bossy sim-supports sim-arena sim-tabele report zgloszenia modele figurki druk silnik clean
+.PHONY: help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-kraken sim-bossy sim-supports sim-arena sim-tabele sim-krolestwo report zgloszenia modele figurki druk silnik clean
 
 help: ## Lista komend
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -87,6 +87,9 @@ sim-tabele: node_modules ## Tabele: % wygranych Przymierza w każdym trybie, map
 	@mkdir -p .tmp/sim
 	node --import tsx scripts/sim/matrix.ts $(GAMES) tabele > .tmp/sim/tabele.log
 	node --import tsx scripts/sim/tables.ts tabele
+
+sim-krolestwo: node_modules ## Poziom 3: % wygranych Przymierza i ekonomia botów (rekruci, osady, złoto), np. make sim-krolestwo GAMES=80 SIZES=short,medium
+	node --import tsx scripts/sim/kingdom.ts $(or $(GAMES),40) $(or $(SIZES),short,medium,long)
 
 sim-cele: node_modules ## Tabela: % wygranych Przymierza dla każdego celu i kształtu mapy (cele cyfrowe), np. make sim-cele GAMES=40
 	node --import tsx scripts/sim/goals.ts $(or $(GAMES),40)
