@@ -1,6 +1,6 @@
 # Nowi pomocnicy poziomu 3 „Królestwo”: propozycja do akceptacji
 
-Stan na 13.11.2026 (skład wybrany przez autora, liczby i zdolności robocze). **To propozycja Claude'a (decyzja autora z 13.11: „Ty zaproponuj, ja akceptuję”). Dopóki autor jej nie zaakceptuje albo nie poprawi, nie generuję grafiki** (to 8 jednostek po ok. 70–110 CU Scenario każda, patrz `POTOK_ANIMACJI.md`, `PRZEPIS_JEDNOSTKI.md`).
+Stan na 13.11.2026: **skład, nazwy i zdolności zaakceptowane przez autora** (liczby i ceny robocze, do symulacji). **To propozycja Claude'a (decyzja autora z 13.11: „Ty zaproponuj, ja akceptuję”). Dopóki autor jej nie zaakceptuje albo nie poprawi, nie generuję grafiki** (to 8 jednostek po ok. 70–110 CU Scenario każda, patrz `POTOK_ANIMACJI.md`, `PRZEPIS_JEDNOSTKI.md`).
 
 Założenia z decyzji autora: każda frakcja ma docelowo **7 pomocników**: trzech obecnych to **poziom 1**, dochodzą **poziomy 2, 3, 4 i 5**, każdy silniejszy i droższy od poprzedniego; w armii jest po jednej jednostce danego typu; cenę wyznaczą symulacje (użyteczność w walce), nie mnożenie liczb. Rekrutacja jest w koszarach osady własnej frakcji, a poziomy 4 i 5 w koszarach rozbudowanych (silnik: `RECRUITS` w `src/engine/kingdom.ts`, dziś tylko poziom 1).
 
@@ -14,7 +14,7 @@ Skład i nazwy wg autora z 13.11.2026 (liczby robocze). Nazwy jednostek nie musz
 |------|-----------|------|-----------|----------|
 | 2 | **Jeżozwierz** | zwarcie, kara za bicie | 6 / 2 / 3, chodzi | *Kolce* (stała): każdy, kto zaatakuje go wręcz, dostaje 1 obrażenie |
 | 3 | **Centaur** | szybki strzelec | 6 / 3 / 5, chodzi, strzela | *Strzał i Galop* (raz na bitwę): po ataku może się cofnąć o maks. 3 pola (wybór autora) |
-| 4 | **Złotokły Odyniec** (dzik; nazwa w formie „przymiotnik + Dzik/Odyniec”; inne: Świetlisty Dzik, Gromowy Odyniec, Pradawny Odyniec) | napastnik czołowy | 10 / 4 / 5, chodzi | *Czołowe Natarcie* (stała): +2 obrażenia, gdy atakuje cel od przodu (przeciwieństwo ataku z tyłu Harpii) |
+| 4 | **Alabastrowy Odyniec** (dzik; nazwa od koloru, wybór autora) | napastnik czołowy | 10 / 4 / 5, chodzi | *Czołowe Natarcie* (stała): +2 obrażenia, gdy atakuje cel od przodu (przeciwieństwo ataku z tyłu Harpii) |
 | 5 | **Opiekun Drzewa** (żywy ent) | duży obrońca, 2 pola | 14 / 5 / 3, chodzi | *Korzenie Drzewa* (raz na bitwę): na początku rundy leczy sąsiednich sojuszników o 2 Ż |
 
 Odrzucone: Wartownik Kryształowej Straży (człowiek nie pasuje do klimatu), Gryf Przymierza (gryf jest neutralny), Łowczyni Gajów (strzelca gra Centaur).
