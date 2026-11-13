@@ -56,7 +56,6 @@ Autor przejrzał szkic poziomu 3 (`docs/poziom_3_krolestwo_uwagi.txt`) i zapisa�
 - [ ] **B9. Wprowadzenie (slajdy):** podmienić stare projekty i grafiki z błędami AI: slajd 3 (nowa Hydra, pomysł z trzema strażnikami zostaje), 4 (herby jak w grze, nowe projekty postaci; złoty smok zostaje), 5 (spokojniejsza kolorystyka, spójni bohaterowie Hordy), 6 i 8 (kafelki o różnych kształtach: nowe obrazy; 8 możliwe coś innego niż figurka na mapie), 7 (aktualna arena, nowe postacie Hordy i karta Ogra, obrazy 2D zamiast figurek 3D). **Nowe slajdy:** cyfrowy (domyślny) a planszowy (dodatek); online i hot-seat; tryb Arena; poziomy złożoności (na razie 2 i 3, kolejne wkrótce); cele gry (Kryształy do drzewa, Punkty kontrolne, Przetrwanie, Boss, Artefakt).
 - [ ] **B11. Fabuła na gotowych mapach:** okienka z tekstem po wyzwalaczu (frakcja, numer tury, wejście na kafelek, pokonanie przeciwnika). Do zaprojektowania: edytor/format danych w pliku mapy, bez grafik. Powiązane: B12.
 - [ ] **B12. Gotowe mapy w jednym rozmiarze** (Q17: tak, jeden rozmiar na mapę; ekran rozmiaru pomijany dla „Gotowej”).
-- [ ] **B13. Przegląd ruchu klient-serwer** (przed K1 poziomu 3): zmierzyć rozmiar wiadomości `game` i `state` na największej mapie, spisać, co musi iść zawsze, a co można liczyć po obu stronach (z ziarna lub z listy akcji), zaproponować oszczędniejszy protokół. Wynik jako sekcja w `INFRASTRUKTURA.md`.
 
 ## C. Dalej (kolejność; **po zakończeniu A i B4, zgodnie z Q11**)
 

@@ -186,3 +186,29 @@ W repo serwera:
 - `docs/BACKLOG.md`: ustalenia trybu online i co jeszcze zostało.
 - `.github/workflows/`: `pages.yml` w repo gry; `ci.yml` i `deploy.yml` w repo serwera.
 - `scripts/engine-package.sh` w repo gry: jak powstaje pakiet silnika.
+
+## Ruch między klientem a serwerem (przegląd 13.11.2026)
+
+**Co leci dziś:** klient wysyła tylko małe wiadomości (akcja, ustawienia stołu, czat: poniżej kilobajta, limit `MAX_MESSAGE`). Serwer po **każdej** akcji rozsyła **cały stan gry** (`{ type: 'game', state }`, osobno dla zestawu frakcji gracza, bez wpisów dziennika przeznaczonych dla drugiej strony) wszystkim graczom w pokoju. Pokój (`room`) leci tylko przy zmianach w lobby, obecność i czat osobno.
+
+**Pomiar** (skrypt: partia kooperacyjna botów, cyfrowa z rozwojem, 2 bohaterów, ziarno 3; JSON całej wiadomości `game`):
+
+| Mapa | Start | Pod koniec partii (ok. 150–200 akcji) | Po kompresji gzip |
+|------|-------|----------------------------------------|-------------------|
+| krótka | 6 KB | 36 KB | 5 KB |
+| długa | 15 KB | 39 KB | 5,4 KB |
+| bardzo długa | 21 KB | 39 KB | 5,2 KB |
+
+Z czego to się składa: **dziennik gry** (`log`) rośnie do 18–29 KB, **pola mapy** (`tiles`) stałe 3,5 / 11 / 17 KB, reszta (bohaterowie, skarby, ustawienia, kryształy) poniżej 1 KB każda. Poziom 3 doda złoto, osady (kilka–kilkanaście obiektów) i ofertę targu: kilka KB, czyli mniej niż dziennik.
+
+**Zrobione (13.11):** serwer włącza kompresję WebSocket (`permessage-deflate`, próg 1 KB, małe okno, `concurrencyLimit` 5): to samo 40 KB leci jako ok. 5 KB, bez zmiany protokołu i bez zmian w kliencie (przeglądarka negocjuje sama). Wdrożyć razem z następnym wydaniem serwera.
+
+**Co musi iść zawsze:** stan potrzebny do narysowania ekranu po ostatniej akcji: bohaterowie, kryształy, skarby, bitwa, rozstawienie, dziennik w części, której klient jeszcze nie ma (animacje i komunikaty czytają `log.event`).
+
+**Co nie musi iść za każdym razem (do zrobienia przy poziomie 3, kolejność od najtańszego):**
+1. **Pola mapy tylko przy zmianie.** `tiles` zmienia się tylko przy odkryciu pola albo zmianie właściciela osady/punktu kontrolnego; reszta to teren ustalony ziarnem. Klient dostaje pełne `tiles` przy wejściu do pokoju, a potem tylko listę zmienionych pól (oszczędność 3,5–17 KB na wiadomość, najwięcej na dużych mapach).
+2. **Dziennik jako przyrost.** Wiadomość niesie tylko wpisy dopisane po ostatnim, który klient potwierdził (kursor = liczba wpisów), a pełny dziennik tylko przy dołączeniu i wznowieniu połączenia (oszczędność 18–29 KB).
+3. **Ofertę targu liczyć po obu stronach** z ziarna i numeru rundy (stan zawiera tylko ziarno), zamiast wysyłać listy artefaktów.
+4. **Alternatywa radykalna, na później:** wysyłać samą akcję i pozwolić klientom policzyć stan silnikiem (silnik jest deterministyczny). Ryzyko: rozjazd wersji silnika klienta i serwera oraz informacje ukryte przed drugą stroną; nie warto, dopóki kompresja i przyrosty wystarczają (po kroku 1 i 2 wiadomość to kilka KB bez kompresji).
+
+**Założenie dla poziomu 3:** wiadomość `game` po kompresji ma zostać poniżej ok. 8 KB na największej mapie z 6 graczami; sprawdzić tym samym skryptem (`.tmp/size.ts` do odtworzenia z opisu wyżej) po każdym kroku K1–K4.
