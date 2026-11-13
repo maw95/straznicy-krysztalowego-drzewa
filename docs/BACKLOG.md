@@ -63,7 +63,7 @@ Autor przejrzał szkic poziomu 3 (`docs/poziom_3_krolestwo_uwagi.txt`) i zapisa�
    - e. **Widoki osad:** osobny krajobraz dla Przymierza i dla Hordy.
    - f. **Budynki** w kilku stanach (koszary, targ, szpital, skarbiec; ulepszenia), osobne dla obu frakcji.
 7. **K8 w kodzie** (widok osady z nałożonymi budynkami i dźwiękami zakupu) oraz **K9** (samouczek poziomu 3, rozdział o ekonomii w instrukcji, autopilot).
-8. Wydanie: **wstrzymane** decyzją autora, nie ruszać bez polecenia.
+8. **Wydanie: autor zgodził się 13.11 na wydanie po ukończeniu punktów 1–7.** Wydanie robi się dopiero wtedy: `make check` zielone, CHANGELOG „W przygotowaniu” zamieniony na numer wydania (numer do ustalenia, następny po 2.6.0), tag, push gry (publikuje grę), serwer razem z grą (tier `kingdom`, zapisy online, kompresja, 6 graczy: `make deploy`). Wcześniej nic nie wydawać.
 
 Szczegóły poszczególnych punktów są poniżej (K5, K8, K9, zestawy, dochód, porządki, strojenie, wydanie).
 
@@ -76,7 +76,7 @@ Szczegóły poszczególnych punktów są poniżej (K5, K8, K9, zestawy, dochód,
    - [ ] **Dochód: kopalnia 1, osada 2** (autor 13.11: kopalnia ma dawać mniej niż osada; dziś osada 1 i kopalnia 1, startowa 2); osada startowa do ustalenia (propozycja 3); przestroić symulacjami.
    - [ ] **Porządki w kodzie i repozytorium (autor 13.11):** przegląd organizacji i wydajności kodu (`src/`, `scripts/`, `tests/`) oraz plików (dokumenty, obrazki, dźwięki, modele), potem wdrożenie poprawek. Zakres: patrz „Plan porządków” niżej.
    - [ ] **Strojenie:** ceny, dochody, liczby osad i kopalń, siła obrońców osad, posiłki automatu (tabele `make sim-tabele` dla poziomu 3, osobne mapy i tryby, rywalizacja; wskaźnik trudności, punkty rankingowe); po dodaniu jednostek z K5.
-   - [ ] **Wydanie i wdrożenie** (wstrzymane decyzją autora): silnik, serwer (tier `kingdom`, zapisy online, kompresja, 6 graczy) i gra idą razem; patrz „Pytania czekające na autora”.
+   - [ ] **Wydanie i wdrożenie** (autor zgodził się 13.11 na wydanie po punktach 1–7 z kolejności prac): silnik, serwer (tier `kingdom`, zapisy online, kompresja, 6 graczy) i gra idą razem; patrz „Pytania czekające na autora”.
    **Plan porządków (stan 13.11, przegląd wstępny):** repo ma 11 GB na dysku, w git 1,4 GB (`.git`) i 1177 plików; `docs/wersja_planszowa` 7,7 GB (z czego `druk3d` 7,1 GB), `.tmp` 1,5 GB, `dist` 82 MB, `public` 156 MB (assets 133, modele 24). Duże pliki w src: `tuningAuto.ts` 1746 wierszy, `battle.ts` 1301, `App.tsx` 1188, `game.ts` 1174. Kolejność: (1) mierzenie (rozmiary, czas ładowania, bundle), (2) pliki: duplikaty (np. muzyka w `docs/muzyka` i `public/assets/music`, okładka w dwóch miejscach), nieużywane obrazki, kompresja do WebP/OGG, wpisy `assets.json`, `.gitignore` dla druku 3D, (3) wydajność: bundle, leniwe ładowanie ekranów i modeli 3D, tekstury, render areny, (4) kod: podział największych plików, martwy kod, powtórzenia, typy; tylko bez zmiany wyników gry (test golden musi przejść bez `-u`).
 
 2. **Zakres premiery (decyzja 13.11):** premiera dopiero po poziomie 5; poziomy 3, 4 i 5 wchodzą przed pakowaniem na Steam. Do premiery nie wchodzą nowe frakcje, kampania ani Ekspedycja (Q9). Numer wydania premiery do ustalenia przy wydaniu (dawne „3.0” z 12.11 traci sens).
@@ -109,7 +109,7 @@ Szczegóły poszczególnych punktów są poniżej (K5, K8, K9, zestawy, dochód,
 - **`docs/wersja_planszowa/druk3d` (7,1 GB):** czy to źródła autora do druku, które zostają na dysku (tylko poza gitem), czy można je przenieść poza repo? Bez odpowiedzi Claude nic z tym nie robi (krok 1).
 - **Dochód osady startowej:** propozycja 3 zł (osada 2, kopalnia 1); autor jeszcze nie potwierdził liczb „2/3”.
 
-- **Wydanie 2.6.0 i wdrożenie serwera** (B1; **wstrzymane decyzją autora 12.11: na razie bez release'u**, nie wydawać bez jego polecenia): zmiany są w commitach lokalnie (gra `05cba8e`, serwer `9b07989`); drugie wydanie wymaga zgody autora (tag, push `master`, wydanie na GitHubie, potem `npm install` pakietu silnika w serwerze, `make deploy`, push serwera).
+- **Wydanie 2.6.0 i wdrożenie serwera** (B1; wstrzymane 12.11; **13.11 autor zgodził się na wydanie po ukończeniu punktów 1–7 z „Kolejności prac” w C**, wcześniej nie wydawać): zmiany są w commitach lokalnie (gra `05cba8e`, serwer `9b07989`); drugie wydanie wymaga zgody autora (tag, push `master`, wydanie na GitHubie, potem `npm install` pakietu silnika w serwerze, `make deploy`, push serwera).
 - **Łatwy w wydaniu planszowym** (uzupełnienie do dawnego A8): w edycji planszowej Łatwy 1 na 1 daje 94/91/88/79% (powyżej pasma), a 2 na 2 na bardzo długiej mapie 61%. Dźwignie stroiciela działają tylko w grze cyfrowej, żeby plansza została „jak wydrukowana”. Czy stroić też planszową (zmieniałoby to wydrukowane zasady poziomu Łatwy), czy zostawić? Domyślnie: zostawiam.
 
 ## F. Do sprawdzenia na żywo (autor)
