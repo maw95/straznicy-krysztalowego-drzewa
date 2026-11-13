@@ -25,7 +25,7 @@ export function encounterUnits(tier: 0 | 1 | 2, motif: EncounterMotif, rng: Rng)
 }
 
 /** Whether every passable hex without an encounter or an unbeaten guardian can still be reached from the first one. */
-function stillConnected(state: GameState, blocked: Set<string>): boolean {
+export function stillConnected(state: GameState, blocked: Set<string>): boolean {
   const open = Object.values(state.tiles).filter((t) => tileCost(t) !== null && !blocked.has(t.key));
   if (!open.length) return true;
   const seen = new Set<string>([open[0].key]);

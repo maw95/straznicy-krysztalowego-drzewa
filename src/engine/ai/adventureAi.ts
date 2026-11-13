@@ -1,7 +1,8 @@
 // Adventure-map AI: the coop evil automaton (spec section 7) and simple bots
 // for player seats. Both only use information visible on the map.
 
-import { FACTION_SUPPORTS, ITEM_EFFECT, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from '../data';
+import { FACTION_SUPPORTS, ITEM_EFFECT, UNITS, type FactionId } from '../data';
+import { kingdomBotAction, kingdomWish, supportSlots } from '../kingdom';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { heroTileCost } from '../sites';
@@ -176,7 +177,7 @@ function stepToward(state: GameState, path: HexKey[]): Action {
  */
 export function teamStrength(state: GameState, f: FactionId, heroId: string): number {
   // In a duel on the board the heroes fight alone.
-  const supports = state.setup.battleMode === 'board' ? [] : state.factions[f].supportsAlive.slice().sort((a, b) => unitValue(b) - unitValue(a)).slice(0, SUPPORTS_PER_BATTLE);
+  const supports = state.setup.battleMode === 'board' ? [] : state.factions[f].supportsAlive.slice().sort((a, b) => unitValue(b) - unitValue(a)).slice(0, supportSlots(state, f));
   const team = [heroId, ...supports];
   const hp = team.reduce((a, id) => a + UNITS[id].hp, 0);
   const atk = team.reduce((a, id) => a + UNITS[id].attack * (UNITS[id].attackType === 'ranged' ? AI_TUNING.rangedAttack : 1), 0);
@@ -235,7 +236,7 @@ function mapItemAction(state: GameState): Action | null {
       const spots = reviveSpots(state, hero);
       if (dead && spots.length) return { type: 'useMapItem', itemId: id, unitId: dead.id, targets: [spots[0]] };
       const deadSupport = FACTION_SUPPORTS[hero.faction].find((s) => f.supportsDead.includes(s));
-      if (deadSupport && f.supportsAlive.length < SUPPORTS_PER_BATTLE) return { type: 'useMapItem', itemId: id, unitId: deadSupport };
+      if (deadSupport && f.supportsAlive.length < supportSlots(state, hero.faction)) return { type: 'useMapItem', itemId: id, unitId: deadSupport };
     }
     if (item.kind === 'map') {
       const hidden = Object.values(state.tiles)
@@ -709,6 +710,28 @@ function canFightGuardian(state: GameState): boolean {
  */
 const ENCOUNTER_BOT = { minLevel: [2, 4, 7], minSupports: [2, 2, 2], maxCost: 4, lastRounds: 0.5 } as const;
 
+/** Level 3: walk back to a settlement with something to buy, or to a gold mine nobody holds, when it is close. */
+function kingdomDetour(state: GameState, hero: HeroState, memo: Memo): Action | null {
+  const k = state.kingdom;
+  if (!k || isDesperate(state) || state.turnBattleDone) return null;
+  const goals = new Set<HexKey>();
+  const shop = kingdomWish(state, hero.faction);
+  if (shop) goals.add(shop.at);
+  for (const [hex, m] of Object.entries(k.mines)) if (m.owner !== hero.faction && state.tiles[hex].revealed) goals.add(hex);
+  for (const s of Object.values(k.settlements)) if (s.owner === null && !state.tiles[s.at].crystalId) goals.add(s.at);
+  goals.delete(hero.pos);
+  if (!goals.size) return null;
+  const paths = memo.paths(hero, 'kingdom', { goals, avoidGuardians: true, danger: true, encounters: true });
+  let best: { cost: number; path: HexKey[] } | null = null;
+  for (const g of goals) {
+    const p = paths.get(g);
+    if (p && p.path.length >= 2 && p.cost <= 4 && (!best || p.cost < best.cost)) best = { cost: p.cost, path: p.path };
+  }
+  if (!best) return null;
+  const next = best.path[1];
+  return legalHeroMoves(state).some((m) => m.to === next) ? { type: 'moveHero', to: next } : null;
+}
+
 function encounterDetour(state: GameState, hero: HeroState, memo: Memo): Action | null {
   if (!Object.values(state.crystals).some((c) => c.encounter)) return null;
   if (isDesperate(state) || state.round > state.roundLimit * ENCOUNTER_BOT.lastRounds || state.turnBattleDone) return null;
@@ -732,6 +755,11 @@ function encounterDetour(state: GameState, hero: HeroState, memo: Memo): Action 
 
 export function adventureAction(state: GameState): Action {
   const hero = activeHero(state)!;
+  // Level 3: a chest waiting for its choice, shopping in the settlement the hero stands in (not the coop automaton: it gets reinforcements instead).
+  if (state.kingdom && currentActor(state).kind !== 'automaton') {
+    const shopping = kingdomBotAction(state, hero);
+    if (shopping) return shopping;
+  } else if (state.kingdom?.chest) return { type: 'chestTake', what: 'artifact' };
   // A level up first: the skill the bots like best of the three offered.
   if (hero.treasurePick) {
     const best = [...hero.treasurePick.kinds].sort((x, y) => (DRAFT_VALUE[y] ?? 0) - (DRAFT_VALUE[x] ?? 0) || (x < y ? -1 : 1))[0];
@@ -747,7 +775,7 @@ export function adventureAction(state: GameState): Action {
   }
   const memo = new Memo(state);
   if (currentActor(state).kind !== 'automaton') {
-    const detour = encounterDetour(state, hero, memo);
+    const detour = kingdomDetour(state, hero, memo) ?? encounterDetour(state, hero, memo);
     if (detour) return detour;
   }
   if (objectiveOf(state) === 'control') return controlAction(state, memo);

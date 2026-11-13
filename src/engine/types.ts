@@ -1,6 +1,7 @@
 import type { SkillId } from './growth';
 import type { SiteKind, Slot } from './sites';
 import type { HexKey } from './hex';
+import type { BuildingId, KingdomState } from './kingdom';
 import type { AbilityId, FactionId, ItemKind, MapSize, Side, Terrain, TileSide } from './data';
 
 /** coop and pvp play the adventure map; arena is a single 3-on-3 battle with drafted treasures. */
@@ -75,6 +76,8 @@ export interface RulesConfig {
   unitsBlockSight?: boolean;
   /** Digital ruleset: heroes earn experience, reach levels and choose skills (growth.ts). Off = as before. */
   heroGrowth?: boolean;
+  /** Level 3 "Królestwo": gold, settlements and recruitment (kingdom.ts); needs hero growth. */
+  kingdom?: boolean;
 }
 
 export function isDigital(rules: Pick<RulesConfig, 'ruleset'>): boolean {
@@ -220,6 +223,8 @@ export interface Tile {
   tree: boolean;
   /** A site on the hex (shrine, camp, chest) and whether it has been used (sites.ts); only with hero growth. */
   site?: { kind: SiteKind; used: boolean };
+  /** Level 3 "Królestwo": a settlement or a gold mine stands here (kingdom.ts). */
+  place?: { kind: 'settlement' | 'mine'; id: string };
 }
 
 export interface Crystal {
@@ -431,6 +436,8 @@ export interface GameState {
   endReason: string | null;
   /** Ids of the story notes already shown (story.ts). */
   storyFired?: string[];
+  /** Level 3 "Królestwo": gold, settlements, mines (kingdom.ts); absent in the other levels. */
+  kingdom?: KingdomState;
   log: LogEntry[];
   actionCount: number;
   stats: GameStats;
@@ -476,4 +483,10 @@ export type Action =
   | { type: 'battleHop'; to: HexKey }
   | { type: 'battleTeleport'; to: HexKey }
   | { type: 'battleItem'; itemId: string; targetId?: string; targetIds?: string[]; to?: HexKey; hornMode?: 'swap' | 'extra'; reserveId?: string }
-  | { type: 'endActivation' };
+  | { type: 'endActivation' }
+  /** Level 3 "Królestwo": services of the settlement the active hero stands in. */
+  | { type: 'kingdomBuild'; settlementId: string; building: BuildingId }
+  | { type: 'kingdomRecruit'; settlementId: string; unitId: string }
+  | { type: 'kingdomHeal'; settlementId: string; unitId: string }
+  | { type: 'kingdomBuyArtifact'; settlementId: string; artifactId: string }
+  | { type: 'chestTake'; what: 'artifact' | 'gold' };

@@ -1,7 +1,8 @@
 // Heuristic battle AI. It is greedy and deterministic: equal scores are broken
 // by stable ordering, so simulations replay exactly from a seed.
 
-import { ABILITY, ITEM_EFFECT, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from '../data';
+import { ABILITY, ITEM_EFFECT, UNITS, type FactionId } from '../data';
+import { supportSlots } from '../kingdom';
 import {
   abilityActive,
   abilityOf,
@@ -83,9 +84,9 @@ export function chooseSupports(state: GameState, faction: FactionId): Action {
   let picked: string[];
   if (automaton || careless) {
     // Spec: coop evil supports are chosen at random among the living.
-    picked = pool.slice().sort((a, b) => hashPick(state, a) - hashPick(state, b)).slice(0, SUPPORTS_PER_BATTLE);
+    picked = pool.slice().sort((a, b) => hashPick(state, a) - hashPick(state, b)).slice(0, supportSlots(state, faction));
   } else {
-    picked = pool.slice().sort((a, b) => supportValue(b) - supportValue(a)).slice(0, SUPPORTS_PER_BATTLE);
+    picked = pool.slice().sort((a, b) => supportValue(b) - supportValue(a)).slice(0, supportSlots(state, faction));
   }
   return { type: 'selectSupports', faction, supportIds: picked };
 }

@@ -83,7 +83,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
 
   const startGame = () => {
     const r = resolveTier(tier, { objective, shape, customMapId: customId, growth });
-    onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero, ...(noHorde && mode === 'coop' && r.objective === 'boss' ? { noHorde: true } : {}) } }, digital, r.objective, r.shape, r.customMapId, r.growth));
+    onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero, ...(noHorde && mode === 'coop' && r.objective === 'boss' ? { noHorde: true } : {}) } }, digital, r.objective, r.shape, r.customMapId, r.growth, r.kingdom));
   };
   /** The wizard is done: its choices become this screen's state, and the seats come next. */
   const applyWizard = (t: TableConfig) => {

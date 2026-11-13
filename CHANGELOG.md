@@ -25,6 +25,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Okna mają ozdobne narożniki (złoto z szafirami i listowiem, namalowane w Scenario) zamiast samej płaskiej złotej ramki.
 - Wprowadzenie ma aktualne obrazy (zrzuty prawdziwej gry zamiast starych grafik z błędami: mapa z równymi kafelkami, arena, menu) i nowe slajdy: dwie wersje gry, poziomy złożoności, cele gry, online i hot-seat oraz arena.
 - Gra online da się zapisać: założyciel pokoju zapisuje partię pod własną nazwą w Opcjach albo przy wyjściu z gry („Zapisz i wyjdź”). Zapisy leżą na jego koncie (do 20); „Wczytaj grę” → „Przez internet” (albo „Wczytaj grę” w menu online) otwiera nowy pokój z zapisaną partią: ustawień i bohaterów nie da się zmienić, gracze zajmują miejsca i gra idzie dalej od zapisanego momentu.
+- Poziom 3 „Królestwo”, silnik: złoto wspólne dla frakcji, osady (startowa na bazie i do zdobycia z neutralnymi obrońcami, po równo na obu stronach mapy), kopalnie złota, dochód co rundę, budynki (koszary, targ, szpital, skarbiec), rekrutacja pomocników, targ z artefaktami, wskrzeszanie w szpitalu, skrzynia do wyboru (artefakt albo złoto) i drużyna do pięciu pomocników; boty kupują i wracają do osad. Ekran osady dojdzie w następnym kroku.
 
 ## 2.5.0 — 2026-11-12
 

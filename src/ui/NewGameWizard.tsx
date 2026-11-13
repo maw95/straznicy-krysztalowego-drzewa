@@ -196,7 +196,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
         <div className="opt-grid" data-wizard-page="tier">
           <Card on={d.tier === 'adventure'} title="Przygoda" text="Poziom 1. Zasady z planszówki w wersji cyfrowej: kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start, także dla dzieci." img={pic(asset('ui/ico_polana.png'))} onClick={() => choose({ tier: 'adventure' })} />
           <Card on={d.tier === 'expedition'} title="Wyprawa" text="Poziom 2. Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ikony/mapa/camp.webp'))} onClick={() => choose({ tier: 'expedition' })} />
-          <Card on={false} title="Królestwo" text="Poziom 3. Osady, złoto i rekrutacja jednostek. Już wkrótce." img={pic(asset('ikony/mapa/treasure.webp'))} disabled onClick={() => {}} />
+          <Card on={d.tier === 'kingdom'} title="Królestwo" text="Poziom 3. Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ikony/mapa/treasure.webp'))} onClick={() => choose({ tier: 'kingdom' })} />
           <Card on={d.tier === 'custom'} title="Własne ustawienia" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/ico_gory.png'))} onClick={() => choose({ tier: 'custom', custom: null })} />
         </div>
       )}

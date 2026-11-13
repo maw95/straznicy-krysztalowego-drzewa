@@ -37,7 +37,7 @@ export interface RoomView {
   /** The digital edition at the table (a server that does not know editions leaves it out: the board edition). */
   digital?: boolean;
   /** The digital edition's level and what "Wyprawa" lets the owner pick (a server without levels leaves them out: "Przygoda"). */
-  tier?: 'adventure' | 'expedition' | 'custom';
+  tier?: 'adventure' | 'expedition' | 'kingdom' | 'custom';
   objective?: ObjectiveId;
   shape?: MapShape;
   customMapId?: string;
@@ -63,7 +63,7 @@ export interface TableConfig {
   mapSize: RoomView['mapSize'];
   level: RoomView['level'];
   digital: boolean;
-  tier: 'adventure' | 'expedition' | 'custom';
+  tier: 'adventure' | 'expedition' | 'kingdom' | 'custom';
   objective: ObjectiveId;
   shape: MapShape;
   customMapId?: string;

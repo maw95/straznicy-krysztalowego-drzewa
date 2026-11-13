@@ -126,6 +126,10 @@ export function visitSite(state: GameState, hero: HeroState, tile: Tile): void {
       log(state, 'info', `${name} zagląda do obozu najemników, ale nikt nie poległ.`);
       awardXp(state, hero, 1, 'obóz najemników');
     }
+  } else if (state.kingdom) {
+    // Level 3: the player chooses what the chest gives, an artifact or gold (kingdom.ts, action chestTake).
+    state.kingdom.chest = { heroId: hero.id };
+    log(state, 'info', `${name} otwiera skrzynię: artefakt albo złoto?`);
   } else {
     giveArtifact(state, hero, drawArtifact(state, hero, ARTIFACT_ODDS.chest, 0x2545f491), 'skrzynia');
   }

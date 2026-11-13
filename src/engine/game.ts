@@ -23,7 +23,6 @@ import {
   STAT_SCALE,
   HP_SCALE,
   RESURRECTION_CARDS,
-  SUPPORTS_PER_BATTLE,
   TERRAIN_NAMES,
   UNITS,
   type FactionId,
@@ -54,6 +53,7 @@ import { log } from './log';
 import { applyHeroSkills, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { fireStory } from './story';
+import { collectIncome, enterPlace, initKingdom, kingdomAction, supportSlots } from './kingdom';
 import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, placeSites, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
@@ -167,6 +167,7 @@ export function createGame(setup: SetupOptions): GameState {
   state.rng = rng.state;
   placeSites(state);
   placeEncounters(state);
+  if (state.rules.kingdom && state.rules.heroGrowth && setup.mode !== 'arena' && setup.battleMode === 'arena') initKingdom(state);
   state.turnOrder = computeTurnOrder(state);
   state.turnIndex = 0;
   if (setup.mode === 'arena') {
@@ -591,6 +592,7 @@ function arriveAt(state: GameState, hero: HeroState) {
     log(state, 'item', `Skarb (${UNITS[hero.id].name}): ${itemDef(item.kind, isDigital(state.rules)).name}.`, hero.faction);
   }
   if (state.rules.heroGrowth) visitSite(state, hero, tile);
+  enterPlace(state, hero);
   if (hero.faction === 'dawn') {
     pickUpCrystals(state, hero);
     // The artifact is never given to the Tree (it is carried to a base, see objectives.ts).
@@ -669,6 +671,7 @@ export function moveBreakdown(state: GameState): Array<{ label: string; points: 
 
 function endRound(state: GameState) {
   if (state.rules.heroGrowth) for (const h of Object.values(state.heroes)) if (h.faction === 'horde') awardXp(state, h, GROWTH.hordeRoundXp);
+  collectIncome(state);
   const objective = OBJECTIVES[objectiveOf(state)];
   if (objective.onRoundEnd(state)) return;
   if (state.round >= state.roundLimit) {
@@ -820,7 +823,7 @@ function startBattle(state: GameState, s: BattleStart) {
   for (const f of [attacker.faction, defenderHero?.faction].filter(Boolean) as FactionId[]) {
     if (b.duel) break;
     const pool = state.factions[f].supportsAlive;
-    if (pool.length <= SUPPORTS_PER_BATTLE) addSupports(state, f, [...pool]);
+    if (pool.length <= supportSlots(state, f)) addSupports(state, f, [...pool]);
     else b.needsSelection.push(f);
   }
   if (!b.needsSelection.length) startBattleFight(state);
@@ -845,7 +848,7 @@ function selectSupports(state: GameState, faction: FactionId, ids: string[]) {
   if (!b || b.stage !== 'select' || b.needsSelection[0] !== faction) throw new Error('Teraz nie wybiera ta frakcja.');
   const pool = state.factions[faction].supportsAlive;
   const unique = [...new Set(ids)];
-  if (unique.length !== Math.min(SUPPORTS_PER_BATTLE, pool.length) || unique.some((id) => !pool.includes(id))) throw new Error('Wybierz dwóch żyjących pomocników.');
+  if (unique.length !== Math.min(supportSlots(state, faction), pool.length) || unique.some((id) => !pool.includes(id))) throw new Error(`Wybierz pomocników do bitwy (${Math.min(supportSlots(state, faction), pool.length)}).`);
   addSupports(state, faction, unique);
   b.needsSelection.shift();
   if (!b.needsSelection.length) afterSelection(state);
@@ -1082,7 +1085,16 @@ export function applyAction(prev: GameState, action: Action): GameState {
  */
 export function applyActionInPlace(state: GameState, action: Action): GameState {
   if (state.phase === 'over') throw new Error('Gra się zakończyła.');
+  // A chest opened: the choice (artifact or gold) comes first.
+  if (state.kingdom?.chest && action.type !== 'chestTake' && state.phase === 'adventure') throw new Error('Najpierw wybierz zawartość skrzyni.');
   switch (action.type) {
+    case 'kingdomBuild':
+    case 'kingdomRecruit':
+    case 'kingdomHeal':
+    case 'kingdomBuyArtifact':
+    case 'chestTake':
+      kingdomAction(state, action);
+      break;
     case 'moveHero':
       moveHero(state, action.to);
       break;
