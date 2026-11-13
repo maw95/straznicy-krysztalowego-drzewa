@@ -36,16 +36,13 @@ describe('hero growth: what the player is told', () => {
     expect(s.log.slice(before).filter((l) => l.event)).toHaveLength(0);
   });
 
-  it('an artifact is announced with its source; one that goes into the backpack or turns into a treasure is told apart', () => {
+  it('an artifact is announced with its source; one that goes into the backpack is told apart', () => {
     const s = grown();
     const h = activeHero(s)!;
     giveArtifact(s, h, ARTIFACT_BY_ID.blade1, 'skrzynia');
     expect(s.log[s.log.length - 1].event).toMatchObject({ type: 'artifact', artifactId: 'blade1', source: 'skrzynia', kept: true });
     giveArtifact(s, h, ARTIFACT_BY_ID.blade1, 'łup po pokonanym strażniku');
     expect(s.log[s.log.length - 1].event).toMatchObject({ type: 'artifact', source: 'łup po pokonanym strażniku', kept: true, packed: true });
-    h.pack = ['blade1', 'blade1', 'blade1', 'blade1'];
-    giveArtifact(s, h, ARTIFACT_BY_ID.blade1, 'skrzynia');
-    expect(s.log[s.log.length - 1].event).toMatchObject({ type: 'artifact', source: 'skrzynia', kept: false });
   });
 
   it('a treasure card named after gear shows its digital name and picture in a digital game', () => {

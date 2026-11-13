@@ -1,10 +1,10 @@
 // Hero gear (artifacts in five slots, three rarities, a backpack for the ones not worn) and sites on the adventure map (shrines, mercenary camps, chests); both belong to hero growth
 // (rule `heroGrowth`, growth.ts) and are off without it. A site is used once, by the first hero that steps on it.
 
-import { FACTION_NAMES, NON_RESURRECTION_ITEMS, STAT_SCALE, UNITS } from './data';
+import { STAT_SCALE, UNITS } from './data';
 import { distance, parseKey } from './hex';
 import { awardXp, growthOn } from './growth';
-import { activeHero, grantTreasure, scoutAround } from './game';
+import { activeHero, scoutAround } from './game';
 import { log } from './log';
 import { Rng } from './rng';
 import { tileCost } from './map';
@@ -152,23 +152,20 @@ export function improves(hero: Pick<HeroState, 'gear'>, art: ArtifactDef): boole
   return !current || current.rarity < art.rarity;
 }
 
-/** How many artifacts a hero can carry in the backpack besides the five it wears. */
-export const PACK_SIZE = 4;
+/** The backpack holds any number of artifacts besides the five a hero wears. */
 export const packOf = (hero: Pick<HeroState, 'pack'>): ArtifactDef[] => (hero.pack ?? []).map((id) => ARTIFACT_BY_ID[id]).filter(Boolean);
-const packRoom = (hero: Pick<HeroState, 'pack'>) => (hero.pack?.length ?? 0) < PACK_SIZE;
 
-/** Puts the artifact on; what sat in the slot goes into the backpack (or is left behind when the backpack is full). */
-function wear(state: GameState, hero: HeroState, art: ArtifactDef): void {
+/** Puts the artifact on; what sat in the slot goes into the backpack. */
+function wear(hero: HeroState, art: ArtifactDef): void {
   const old = hero.gear?.[art.slot];
   hero.gear = { ...hero.gear, [art.slot]: art.id };
   if (!old) return;
-  if (packRoom(hero)) hero.pack = [...(hero.pack ?? []), old];
-  else log(state, 'item', `${UNITS[hero.id].name} zostawia artefakt ${ARTIFACT_BY_ID[old].name}: plecak jest pełny.`, hero.faction);
+  hero.pack = [...(hero.pack ?? []), old];
 }
 
 /** A found artifact goes onto the hero (`worn`) or into its backpack; the screen shows it either way. */
 function take(state: GameState, hero: HeroState, art: ArtifactDef, source: string, worn: boolean): void {
-  if (worn) wear(state, hero, art);
+  if (worn) wear(hero, art);
   else hero.pack = [...(hero.pack ?? []), art.id];
   log(state, 'item', `${UNITS[hero.id].name} ${worn ? 'zakłada artefakt' : 'chowa do plecaka artefakt'}: ${art.name} (${art.text}) — źródło: ${source}.`, hero.faction, { type: 'artifact', heroId: hero.id, artifactId: art.id, source, kept: true, ...(worn ? {} : { packed: true }) });
   // What works on the map counts at once on the hero's own turn.
@@ -178,33 +175,21 @@ function take(state: GameState, hero: HeroState, art: ArtifactDef, source: strin
   }
 }
 
-/**
- * The hero puts the artifact on if it beats what sits in its slot (a rarer one); otherwise it goes into the backpack, and when the backpack
- * is full the faction gets a treasure card instead.
- */
+/** The hero puts the artifact on if it beats what sits in its slot (a rarer one); otherwise it goes into the backpack. */
 export function giveArtifact(state: GameState, hero: HeroState, art: ArtifactDef, source: string): void {
-  const name = UNITS[hero.id].name;
-  if (improves(hero, art)) return take(state, hero, art, source, true);
-  if (packRoom(hero)) return take(state, hero, art, source, false);
-  const used = new Set(Object.values(state.items).map((i) => i.kind));
-  const rng = new Rng((state.setup.seed ^ 0x1b873593 ^ Object.keys(state.items).length) | 0);
-  const kinds = NON_RESURRECTION_ITEMS.filter((k) => !used.has(k));
-  if (kinds.length) {
-    grantTreasure(state, rng.pick(kinds), hero.faction, hero.id);
-    log(state, 'item', `${FACTION_NAMES[hero.faction]}: ${name} nie ma już miejsca na ${art.name} (${source}), więc zamiast niego jest skarb.`, hero.faction, { type: 'artifact', heroId: hero.id, artifactId: art.id, source, kept: false });
-  }
+  take(state, hero, art, source, improves(hero, art));
 }
 
 /**
  * The winner of a fight between heroes takes the beaten hero's artifacts, worn and carried: those that improve its gear are put on, the
- * rest go into the backpack while there is room; what does not fit stays with the loser. Returns how many changed hands.
+ * rest go into the backpack. Returns how many changed hands.
  */
 export function captureGear(state: GameState, winner: HeroState, loser: HeroState): number {
   let taken = 0;
   const source = `zdobycz: ${UNITS[loser.id].name}`;
   for (const slot of SLOTS) {
     const art = loser.gear?.[slot] ? ARTIFACT_BY_ID[loser.gear[slot]!] : null;
-    if (!art || !(improves(winner, art) || packRoom(winner))) continue;
+    if (!art) continue;
     const rest = { ...loser.gear };
     delete rest[slot];
     loser.gear = rest;
@@ -212,7 +197,6 @@ export function captureGear(state: GameState, winner: HeroState, loser: HeroStat
     taken++;
   }
   for (const art of packOf(loser)) {
-    if (!(improves(winner, art) || packRoom(winner))) continue;
     loser.pack = removeOne(loser.pack ?? [], art.id);
     take(state, winner, art, source, improves(winner, art));
     taken++;
@@ -230,7 +214,7 @@ export function equipArtifact(state: GameState, hero: HeroState, artifactId: str
   const art = ARTIFACT_BY_ID[artifactId];
   if (!art || !hero.pack?.includes(artifactId)) throw new Error('Tego artefaktu nie ma w plecaku.');
   hero.pack = removeOne(hero.pack, artifactId);
-  wear(state, hero, art);
+  wear(hero, art);
   log(state, 'item', `${UNITS[hero.id].name} zakłada z plecaka: ${art.name}.`, hero.faction);
   if (art.reveal && activeHero(state)?.id === hero.id) scoutAround(state, hero);
 }
@@ -239,7 +223,6 @@ export function equipArtifact(state: GameState, hero: HeroState, artifactId: str
 export function unequipArtifact(state: GameState, hero: HeroState, slot: Slot): void {
   const id = hero.gear?.[slot];
   if (!id) throw new Error('To miejsce jest puste.');
-  if (!packRoom(hero)) throw new Error('Plecak jest pełny.');
   const rest = { ...hero.gear };
   delete rest[slot];
   hero.gear = rest;
@@ -254,7 +237,6 @@ export function passTargets(state: GameState, hero: HeroState): HeroState[] {
 }
 
 /** Whether `to` can take the artifact: an empty slot (it is put on at once) or room in the backpack. */
-export const canReceive = (to: Pick<HeroState, 'gear' | 'pack'>, art: ArtifactDef) => !to.gear?.[art.slot] || packRoom(to);
 
 /** The active hero hands an artifact (worn or from the backpack) to an ally next to it: put on at once when the ally's slot is empty, otherwise into the ally's backpack. */
 export function passArtifact(state: GameState, hero: HeroState, artifactId: string, toHeroId: string): void {
@@ -263,7 +245,6 @@ export function passArtifact(state: GameState, hero: HeroState, artifactId: stri
   if (!to) throw new Error('Artefakt można przekazać tylko sojusznikowi na sąsiednim polu.');
   const worn = art && hero.gear?.[art.slot] === artifactId;
   if (!art || !(worn || hero.pack?.includes(artifactId))) throw new Error('Bohater nie ma tego artefaktu.');
-  if (!canReceive(to, art)) throw new Error('Sojusznik nie ma miejsca na ten artefakt.');
   if (hero.pack?.includes(artifactId)) hero.pack = removeOne(hero.pack, artifactId);
   else {
     const rest = { ...hero.gear };

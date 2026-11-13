@@ -3,7 +3,7 @@ import { makeBattleUnit, predictDamage } from '../src/engine/battle';
 import { activeHero, applyAction, createGame, legalHeroMoves } from '../src/engine/game';
 import { itemDef } from '../src/engine/data';
 import { tileCost } from '../src/engine/map';
-import { applyGear, applySupportGear, ARTIFACT_BY_ID, ARTIFACTS, captureGear, PACK_SIZE, passTargets, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, SITE, SLOTS, visitSite } from '../src/engine/sites';
+import { applyGear, applySupportGear, ARTIFACT_BY_ID, ARTIFACTS, captureGear, passTargets, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, SITE, SLOTS, visitSite } from '../src/engine/sites';
 import { playOut, setup } from './helpers/engine';
 
 const grown = (over: Parameters<typeof setup>[0] = {}, growth = true) => createGame(setup(over, { ruleset: 'digital', ...(growth ? { heroGrowth: true } : {}) }));
@@ -48,15 +48,12 @@ describe('sites on the map and hero gear (hero growth)', () => {
     giveArtifact(s, hero, ARTIFACT_BY_ID.blade2, 'test');
     expect(hero.gear?.weapon).toBe('blade2');
     const treasures = s.factions[hero.faction].inventory.length;
-    // The one it replaced and every one that is no better go into the backpack; a treasure comes instead only when the backpack is full.
+    // The one it replaced and every one that is no better go into the backpack, which has no limit.
     expect(hero.pack).toEqual(['blade1']);
-    for (let i = 1; i < PACK_SIZE; i++) giveArtifact(s, hero, ARTIFACT_BY_ID.blade1, 'test');
-    expect(hero.pack).toHaveLength(PACK_SIZE);
-    expect(s.factions[hero.faction].inventory.length).toBe(treasures);
-    giveArtifact(s, hero, ARTIFACT_BY_ID.blade1, 'test');
+    for (let i = 0; i < 6; i++) giveArtifact(s, hero, ARTIFACT_BY_ID.blade1, 'test');
+    expect(hero.pack).toHaveLength(7);
     expect(hero.gear?.weapon).toBe('blade2');
-    expect(hero.pack).toHaveLength(PACK_SIZE);
-    expect(s.factions[hero.faction].inventory.length).toBe(treasures + 1);
+    expect(s.factions[hero.faction].inventory.length).toBe(treasures);
   });
 
   it('gear gives its bonuses in battle and on the map', () => {
@@ -122,7 +119,7 @@ describe('sites on the map and hero gear (hero growth)', () => {
     for (const m of legalHeroMoves(s)) expect(m.cost).toBeLessThanOrEqual(1);
   });
 
-  it('the winner of a fight between heroes takes the artifacts that improve its gear; the loser keeps the rest', () => {
+  it('the winner of a fight between heroes takes the artifacts: the better ones are put on, the rest go into the backpack', () => {
     const s = grown();
     const winner = activeHero(s)!;
     const loser = Object.values(s.heroes).find((h) => h.id !== winner.id)!;
@@ -134,12 +131,13 @@ describe('sites on the map and hero gear (hero growth)', () => {
     expect(winner.pack).toEqual(['blade1', 'boots1']);
     expect(loser.gear).toEqual({});
     expect(loser.pack).toEqual([]);
-    // A full backpack: only what improves the winner's gear changes hands.
+    // The backpack has no limit: everything changes hands.
     winner.pack = ['mail1', 'mail1', 'mail1', 'mail1'];
     loser.gear = { armor: 'thornMail', weapon: 'blade1' };
-    expect(captureGear(s, winner, loser)).toBe(1);
+    expect(captureGear(s, winner, loser)).toBe(2);
     expect(winner.gear?.armor).toBe('thornMail');
-    expect(loser.gear).toEqual({ weapon: 'blade1' });
+    expect(winner.pack).toHaveLength(5);
+    expect(loser.gear).toEqual({});
   });
 
   it('the active hero swaps gear with its backpack and hands artifacts to an ally on a neighbouring hex', () => {
