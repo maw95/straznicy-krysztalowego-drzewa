@@ -137,10 +137,14 @@ class Stage {
       const was = l.piece;
       l.piece = p;
       // Dying and standing up again.
-      if (!was.dead && p.dead) l.queue.push({ kind: 'clip', clip: 'smierc', reverse: false, ms: clipMs(set, 'smierc'), then: 'corpse' });
+      // A unit without a death clip (Herszt Minotaurów) just lies down.
+      if (!was.dead && p.dead) {
+        if (set.frames.smierc) l.queue.push({ kind: 'clip', clip: 'smierc', reverse: false, ms: clipMs(set, 'smierc'), then: 'corpse' });
+        else l.rest = 'corpse';
+      }
       if (was.dead && !p.dead) {
         l.rest = 'stand';
-        l.queue.push({ kind: 'clip', clip: 'smierc', reverse: true, ms: clipMs(set, 'smierc'), then: 'stand' });
+        if (set.frames.smierc) l.queue.push({ kind: 'clip', clip: 'smierc', reverse: true, ms: clipMs(set, 'smierc'), then: 'stand' });
       }
       // A move: take off where it stood, glide, land. A corpse never moves.
       if (p.snap) {

@@ -3382,6 +3382,39 @@
       "data": "2026-11-13",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/pomocnicy-poziomu-3-animacje",
+      "pliki": [
+        "public/assets/jednostki/jezozwierz/",
+        "public/assets/jednostki/centaur/",
+        "public/assets/jednostki/alabastrowy_odyniec/",
+        "public/assets/jednostki/opiekun_drzewa/",
+        "public/assets/jednostki/szczurolak/",
+        "public/assets/jednostki/piekielny_ogar/",
+        "public/assets/jednostki/salamandra_popiolu/",
+        "public/assets/jednostki/herszt_minotaurow/"
+      ],
+      "typ": "obrazy i animacje 2D ośmiu pomocników poziomu 3",
+      "opis": "Arkusze klatek (WebP, zmniejszone shrink_unit.py 0.75/2): stoi, martwy, chod, atak, smierc, trafienie według docs/PRZEPIS_JEDNOSTKI.md. Bez klipu śmierci: Herszt Minotaurów; bez klipu trafienia: Centaur, Piekielny Ogar, Salamandra Popiołu (kod używa drgnięcia). Prompty i ID zasobów Scenario: .tmp/zrodla/<id>/manifest.json (poza gitem).",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (obrazy), P-Video 2 (klipy 720p)",
+      "data": "2026-11-13",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "osady/widoki-i-budynki",
+      "pliki": [
+        "public/assets/osady/"
+      ],
+      "typ": "krajobrazy osad (2) i budynki (16, w stanach: plac, poziom 1, poziom 2) dla Przymierza i Hordy",
+      "opis": "Krajobrazy 1280x600 JPG; budynki izometryczne na czarnym tle wycięte do WebP z przezroczystością skryptem scripts/assets/osady.py. Prompty: 'A single fantasy game building, painterly realistic, three-quarter isometric view, isolated on a plain pure black background, no text. <styl frakcji>. <budynek>.'",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium",
+      "data": "2026-11-13",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

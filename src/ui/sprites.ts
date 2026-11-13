@@ -45,6 +45,15 @@ export const SPRITES: Record<string, SpriteSpec> = {
   // The Black Dragon now stands on the ground (a long body with a tail): a wider box keeps it as big on screen as the Golden Dragon (report 674974).
   blackDragon: { dir: 'jednostki/czarny_smok', box: [200, 150] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // The throw is played fast so that the boulder (a projectile drawn by the arena, styles.css) leaves his hands with the blow.
+  // Level 3 recruits (Królestwo).
+  hedgehog: { dir: 'jednostki/jezozwierz', box: [84, 70] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  centaur: { dir: 'jednostki/centaur', box: [92, 110] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  boar: { dir: 'jednostki/alabastrowy_odyniec', box: [96, 80] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  treeGuardian: { dir: 'jednostki/opiekun_drzewa', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  ratman: { dir: 'jednostki/szczurolak', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  hellhound: { dir: 'jednostki/piekielny_ogar', box: [100, 80] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  salamander: { dir: 'jednostki/salamandra_popiolu', box: [100, 70] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  minotaurChief: { dir: 'jednostki/herszt_minotaurow', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   cyclops: { dir: 'jednostki/cyklop', box: LARGE, speed: { chod: 1.4, atak: 2.2, atak_wrecz: 1.5, smierc: 1.5, trafienie: 1.4 } },
   hydra: { dir: 'jednostki/hydra', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   griffin: { dir: 'jednostki/gryf', box: [172, 140] as const, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
