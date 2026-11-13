@@ -5,9 +5,34 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
 **Jak z tego korzystać:** autor pisze „zrób punkty A2, A3, B1”, a Claude pracuje sam, aż skończy (warunek ukończenia stoi przy każdym punkcie). Kolejność, gdy autor każe zrobić „wszystko z listy”: A → B → C.
 
-## NASTĘPNE ZADANIE (autor): przejrzeć i zaakceptować szkic poziomu 3
+## STAN (13.11.2026): uwagi autora przeanalizowane, odpowiedzi na Q1–Q18 zebrane
 
-**Zanim ruszą jakiekolwiek dalsze prace nad poziomem 3 (sekcja C), autor przegląda `docs/POZIOM_3_KROLESTWO.md` i odpowiada na 11 pytań z jego końca (termin względem premiery, rekrutacja A/B, wielkość drużyny, wspólna kasa itd.).** Do tego czasu Claude **nie zaczyna** żadnego kroku K1–K9 z szkicu ani niczego z sekcji C, a po akceptacji dopisuje decyzje do `DECYZJE.md` i poprawia szkic. Wydanie 2.6.0 też czeka (patrz „Pytania czekające na autora”).
+Autor przejrzał szkic poziomu 3 (`docs/poziom_3_krolestwo_uwagi.txt`) i zapisał propozycje zmian menu i interfejsu (`docs/menu_i_interfejs_propozycje.txt`). Wszystkie decyzje są niżej. **Kolejność prac (Q11): drobne UI (A) i karta bohatera → przebudowa menu (B4, od razu z ekranem poziomu „Królestwo”) → poziom 3 (K1–K9).** Do zrobienia przed startem poziomu 3: przepisać `POZIOM_3_KROLESTWO.md` według decyzji niżej (zrobione 13.11: nagłówek z decyzjami; pełne przeliczenie kroków K1–K9 i szacunków robi Claude na początku K1). Wydanie 2.6.0 nadal wstrzymane.
+
+### Decyzje autora do poziomu 3 (13.11.2026, już rozstrzygnięte)
+- **Premiera dopiero po poziomie 5** (zmiana względem DECYZJE.md 4.11 i 12.11). Poziom 3 wchodzi przed premierą, tak samo 4 i 5.
+- **Waluta:** tylko złoto. Skala mała: najtańsza rzecz kosztuje 1 złota, dochód osady to 1–2 złota na rundę. Ceny w całych złotych (uwaga: gruba skala utrudnia strojenie; stroić liczbą osad, cenami i cenami artefaktów, nie ułamkami).
+- **Brak utraty złota po porażce bohatera** (skreślone). Gracze tej samej frakcji (także w rywalizacji) dzielą **skarby, złoto i pomocników**; kasa jest per frakcja.
+- **Osada ma narzuconą frakcję** według połowy mapy (heksy Przymierza = osady Przymierza, heksy Hordy = osady Hordy). Kto wejdzie na osadę, staje się jej właścicielem; osada zachowuje budynki i ulepszenia. Właściciel z innej frakcji niż osada: ma jej **dochód, targ i szpital, ale nie rekrutuje** (ani swoich, ani jej jednostek).
+- **Budynki trzeba kupić** (koszary, targ, szpital nie stoją od razu). Dochodzi budynek zwiększający dochód złota. Pomysł autora: ulepszenie szpitala (treść → Q6).
+- **Okno osady jak w Heroes III:** każda osada ma losową, unikalną nazwę pasującą do frakcji; widok osady to krajobraz z nałożonymi grafikami wybudowanych budynków i ich ulepszeń; klik w budynek otwiera jego funkcję (koszary → rekrutacja itd.).
+- **Rekrutacja bez kopii jednostek:** w armii jest tylko jedna jednostka danego typu, więc **odpada przebudowa na instancje** (dawny ryzykowny K3). Neutralni nie są rekrutowani. Każda frakcja ma docelowo **7 pomocników: trzech obecnych = poziom 1, plus nowi poziomów 2, 3, 4, 5** (każdy silniejszy i droższy od poprzedniego). **Maksimum 5 pomocników w drużynie.** Pomocnicy wspólni dla drużyny jak dziś.
+- **Cena jednostki z symulacji** (użyteczność w walce), nie z mnożenia statystyk. **Bez limitu zakupów na turę** i bez cyklu tygodniowego: hamulcem jest tylko cena.
+- **Cel „Podbój” dopiero na poziomie 4.**
+- **Automat zła w koopie:** posiłki co kilka rund, na tyle duże, by realnie zagrażały graczom (do wybalansowania).
+- **Ranking:** trudność poziomu 3 mierzymy symulacjami po wdrożeniu całości i z tego ustalamy punkty.
+- **Strojenie balansu:** zaplanować tak, żeby zużywać mało tokenów (obciążenie komputera może być duże): długie symulacje w tle, do rozmowy tylko skrót wyników.
+- **Ruch klient-serwer ma być oszczędny:** przed K1 zrobić przegląd, co musi iść w każdej wiadomości, a co nie (np. różnice/akcje zamiast pełnego stanu, oferta targu liczona po obu stronach z ziarna).
+- **Nagrody (Q1):** złoto **tylko z osad, kopalń i skrzyń**; walki ze strażnikami i spotkaniami dają skarby jak w poziomie 2 (bez złota). W skrzyni gracz **wybiera: artefakt albo złoto**. Walka z bohaterem wroga: nic. Ilość złota ze skrzyni zależy od poziomu skrzyni (do strojenia).
+- **Kopalnie złota zostają** (Q2): trzyma ją ten, kto stoi na polu, +1 na rundę.
+- **Obrońcy osad (Q3):** neutralni **trochę silniejsi niż strażnicy kryształów**.
+- **Obrona osady (Q4):** tylko stanie na kafelku (wrogi bohater wchodzący na pustą osadę przejmuje ją bez walki). Garnizony i budynek obronny: parking, do rozważenia po strojeniu, jeśli przejmowanie okaże się zbyt łatwe.
+- **Liczba osad (Q5):** parzyste, po równo na połowę mapy: 2 / 4 / 4 / 6 (krótka / średnia / długa / bardzo długa); dobór końcowy przez symulacje.
+- **Szpital (Q6):** ulepszenie = tańsze wskrzeszanie (1/3 ceny jednostki zamiast 1/2).
+- **Miejsca w drużynie (Q7):** start 2, +1 na 3. poziomie bohatera, +1 na 6., +1 z ulepszonych koszar; razem maks. 5.
+- **Nowe jednostki (Q8):** Claude przygotowuje propozycję 8 jednostek (po 4 na frakcję, poziomy 2–5: nazwa, rola, zdolność, miejsce w krzywej siły), autor akceptuje, dopiero potem grafika.
+- **Zakres premiery (Q9):** poziomy 1–5 i dwie obecne frakcje; nowe frakcje, kampania i Ekspedycja po premierze.
+- **Nazwy poziomów (Q10):** Przygoda, Wyprawa, Królestwo, Imperium, Legenda; tryb roguelike nazywa się **„Ekspedycja”** (nie „Wyprawa”). Dla ewentualnego poziomu 6 zostaje miejsce (np. „Mit”).
 
 ## Zasady pracy bez nadzoru (decyzje autora, 12.11.2026)
 - Jeden punkt = jeden lub kilka commitów, każdy z wpisem w CHANGELOG.md i `make check` przed commitem; bez pushu gry. Zmiana AI albo liczb przesuwa `golden.test.ts` i tabele: osobny commit z `-u` i opisem w commicie.
@@ -15,27 +40,50 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 - Gdy trzeba decyzji autora, Claude nie zgaduje: dopisuje pytanie do sekcji „Pytania czekające na autora” (na końcu), robi następny punkt i wraca do tamtego po odpowiedzi.
 - Po skończeniu punktów: dźwięk `complete.oga`, krótkie podsumowanie po polsku, uwaga o `/clear`.
 
-## A. Drobne (gotowe do zrobienia sam)
+## A. Drobne (źródło: `docs/menu_i_interfejs_propozycje.txt`; warunek ukończenia: zmiana + test + sprawdzenie w przeglądarce + CHANGELOG)
 
+- [ ] **A1. Prawy przycisk = podgląd tylko przy trzymaniu.** Dziś okno dodatkowych informacji znika dopiero po kliknięciu gdzie indziej; ma znikać po puszczeniu przycisku. Na telefonie odpowiednik: przytrzymanie palca.
+- [ ] **A2. Usunąć niepotrzebne podpowiedzi:** najechanie na portret bohatera w grze (kliknięcie lewym otwiera Kartę bohatera, prawym trzymanym pokazuje kartę), podpowiedzi ze statystykami nad portretami w menu wyboru frakcji i bohatera, podpowiedzi na kafelkach mapy świata (info tylko przez trzymanie prawego).
+- [ ] **A3. Plecak bez limitu** (dziś 4 miejsca; skasować ograniczenie w silniku i UI, sprawdzić zapisy i serwer).
+- [ ] **A4. Prawy panel w grze:** skasować wstążkę z nazwą frakcji (sztandar po lewej od portretu zostaje), „Umiejętności” bez żadnej: napis „brak”, skasować rząd portretów bohaterów w grze.
+- [ ] **A5. Okno „INFO DLA TESTERÓW”:** nazwa „Dla testerów”, odróżniający kolor, nowa treść (nic się nie ściąga ani nie wysyła do autora: zgłoszenia lecą na serwer same).
+- [ ] **A6. Okno Opcje w grze** (Q14 rozstrzygnięte): na górze suwak „Tempo botów” (zamiast listy), niżej szybkość animacji, muzyka, efekty, potem pola Autoplay i Figurki 3D; skasować „Ziarno partii…”, „Eksport partii”, „Eksport dziennika”; „Nowa gra” → duży, widoczny „Wyjdź z gry”; po kliknięciu pytanie „Czy na pewno chcesz wyjść z gry?” z trzema przyciskami (patrz Q14). „Tempo botów” znika z ekranów ustawień przed grą.
 
 ## B. Średnie
 
+- [ ] **B1. Karta bohatera (lewy klik na portret) po zmianach:** lewa sekcja = prawdziwa karta bohatera (ta z prawego przycisku), nad nią tarcza z poziomem i pasek doświadczenia, tekst „Poziom 1 · PD 0 / 3”; środek: wyposażenie i plecak (bez limitu); prawa: umiejętności i nowa sekcja **„Kamienie milowe”** (4 elementy: umiejętność specjalna + ulepszenia na poziomach 3, 6, 9; ikona taka sama z cyfrą II/III/IV w prawym dolnym rogu; strzałki między nimi; niezdobyte wyszarzone z podpisem „Wymagany poziom: X”; na dole krótka informacja, że to ulepszenia umiejętności rosnące z doświadczeniem). Skasować sekcję „Artefakty” z karty.
+- [ ] **B2. Sekcja artefaktów w prawym panelu:** nagłówek „Artefakty”, po lewej podgląd 5 miejsc, po prawej ikona plecaka otwierająca okno samego wyposażenia i plecaka (bez portretu, statystyk, PD i umiejętności).
+- [ ] **B3. Skarby frakcji:** skasować sekcję „Wspólne skarby frakcji” z prawego panelu; ikona skarbu z licznikiem dostępnych skarbów i podpisem „Skarby” otwiera okno do oglądania i używania (Q15: jedna ikona w prawym dolnym rogu mapy świata, zastępuje też przycisk „Skarby”).
+- [ ] **B4. Menu: przebudowa** (Q12: „Ten komputer” / „Przez internet”; Q17: gotowa mapa ma jeden rozmiar, więc ekran rozmiaru jest dla niej pomijany). Górne przyciski zostają tylko: „Zasady i karty”, „Wprowadzenie”, „Dla testerów” (inny kolor); pod logo na każdym ekranie menu. Przepływ: **Nowa gra / Wczytaj grę** (duże przyciski z ikonami) → **Ten komputer / Przez internet** (+ „Wstecz”) → dalej: Online: logowanie → lobby (bez „gra na tym komputerze”, czerwony „Wstecz” na dole, „Nowa gra” i „Dołącz do gry” w różnych kolorach). **Nowa gra** = ekrany po kolei, każdy z dużymi, różnymi graficznie przyciskami i krótkim opisem: (1) wersja cyfrowa (domyślna) / planszowa, (2) poziom (Przygoda, Wyprawa, Królestwo), (3) tryb (Kooperacja, Rywalizacja, Arena), (4) dla poziomu ≥ 2: cel gry, potem „Mapa”: Losowa (wybór kształtu) lub Gotowa (Cieśnina, Dolina), (5) liczba graczy, rozmiar mapy, poziom trudności, (6) pokój: czekanie na graczy, wybór frakcji i bohatera. Offline analogicznie. Arena pomija ekrany mapy. Grafiki ikon przez Scenario.
+- [ ] **B5. Zapisy gry pod własną nazwą** (Q13: zapis online trzyma serwer **na koncie hosta**, widzi i wznawia go tylko host; offline: przeglądarka; Q14: „Zapisz i wyjdź” pyta o nazwę). „Wczytaj grę” pokazuje listę zapisów; wybór prowadzi od razu do pokoju (czekanie na graczy, frakcji i bohatera nie można zmienić). Dziś jest tylko „Kontynuuj zapisaną partię”.
+- [ ] **B6. „Zasady i karty” w menu:** dodać 9 nowych jednostek neutralnych, zaktualizować skarby, dodać zakładki **Artefakty** i **Lokacje na mapie**, odświeżyć „Podstawowe zasady”.
+- [ ] **B7. Telefon** (Q16): w partii wymuszony układ poziomy (komunikat „Obróć telefon”), menu i lobby w obu pozycjach; i przeskalowanie interfejsu tak, żeby nic nie zasłaniało i było jak najmniej przewijania.
+- [ ] **B8. Ramki okien:** złote obramówki zastąpić ładniejszymi, bardziej ozdobnymi; Claude generuje 3 próbki stylu w Scenario do wyboru autora, potem wdraża i dopisuje do `assets.json`.
+- [ ] **B9. Wprowadzenie (slajdy):** podmienić stare projekty i grafiki z błędami AI: slajd 3 (nowa Hydra, pomysł z trzema strażnikami zostaje), 4 (herby jak w grze, nowe projekty postaci; złoty smok zostaje), 5 (spokojniejsza kolorystyka, spójni bohaterowie Hordy), 6 i 8 (kafelki o różnych kształtach: nowe obrazy; 8 możliwe coś innego niż figurka na mapie), 7 (aktualna arena, nowe postacie Hordy i karta Ogra, obrazy 2D zamiast figurek 3D). **Nowe slajdy:** cyfrowy (domyślny) a planszowy (dodatek); online i hot-seat; tryb Arena; poziomy złożoności (na razie 2 i 3, kolejne wkrótce); cele gry (Kryształy do drzewa, Punkty kontrolne, Przetrwanie, Boss, Artefakt).
+- [ ] **B10. Maksymalnie 6 graczy** (dziś 4; łączy się z D7, które mówiło o 8) — Q18: **6 graczy w rywalizacji, 3 w koopie** (w koopie limit to 3 bohaterów Przymierza; sprawdzić, czy easter-egg bohater ma wejść do puli).
+- [ ] **B11. Fabuła na gotowych mapach:** okienka z tekstem po wyzwalaczu (frakcja, numer tury, wejście na kafelek, pokonanie przeciwnika). Do zaprojektowania: edytor/format danych w pliku mapy, bez grafik. Powiązane: B12.
+- [ ] **B12. Gotowe mapy w jednym rozmiarze** (Q17: tak, jeden rozmiar na mapę; ekran rozmiaru pomijany dla „Gotowej”).
+- [ ] **B13. Przegląd ruchu klient-serwer** (przed K1 poziomu 3): zmierzyć rozmiar wiadomości `game` i `state` na największej mapie, spisać, co musi iść zawsze, a co można liczyć po obu stronach (z ziarna lub z listy akcji), zaproponować oszczędniejszy protokół. Wynik jako sekcja w `INFRASTRUKTURA.md`.
 
-## C. Dalej (kolejność; **dopiero po tym, jak autor przejrzy i zaakceptuje szkic poziomu 3**)
+## C. Dalej (kolejność; **po zakończeniu A i B4, zgodnie z Q11**)
 
-1. **Poziom 3 „Królestwo”** według zaakceptowanego szkicu (kroki z B2).
-2. **Zakres premiery (decyzja 12.11):** poziomy 1–2 plus poziom 3; poziom 3 **przed** pakowaniem na Steam. **Premiera ma numer 3.0**, a numeracja 2.x zostaje bez zmian (zmiana wersjonowania skreślona).
+1. **Poziom 3 „Królestwo”** według decyzji z 13.11 (sekcja „Decyzje autora do poziomu 3” u góry); kroki K1–K9 z szkicu zostaną przeliczone po odpowiedziach (K3 odpada jako przebudowa na instancje; dochodzi: budynki do kupienia, 4 nowe jednostki na frakcję, widok osady z grafikami, nazwy osad, osady z narzuconą frakcją).
+2. **Zakres premiery (decyzja 13.11):** premiera dopiero po poziomie 5; poziomy 3, 4 i 5 wchodzą przed pakowaniem na Steam. Do premiery nie wchodzą nowe frakcje, kampania ani Ekspedycja (Q9). Numer wydania premiery do ustalenia przy wydaniu (dawne „3.0” z 12.11 traci sens).
 3. **Premiera na Steamie:** strona sklepu, zrzuty, trailer (wideo: Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri, do wyboru), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Wiele języków: przed premierą tylko inwentaryzacja tekstów.
 
-## D. Po premierze (w tej kolejności)
+## D. Przed i po premierze (premiera dopiero po poziomie 5, decyzja 13.11)
 
-1. **Ekonomia** (poziomy 3–4): złoto + osady + rekrutacja, potem drewno, ruda, Gwiezdny Pył, budynki, cykl tygodniowy.
+**Przed premierą (w tej kolejności, po poziomie 3):**
+1. **Poziom 4 „Imperium”:** pełna ekonomia: drewno, ruda, Gwiezdny Pył, budynki jeden na rundę, cykl tygodniowy; cel „Podbój”.
 2. **Autopilot warstw** dla dzieci (wymaga ekonomii).
-3. **Nowe frakcje:** Dzikie Stada → Królestwo Umarłych → Żelazne Klany (karta frakcji, grafika, symulacje 10 par), potem DLC. Grafika idzie frakcjami (nowa frakcja = pełen zestaw naraz). Przed startem: próbka jednej jednostki w nowym stylu ze Scenario (trening modelu się skończył) i decyzja autora.
-4. **Kampania fabularna** (mapy ręczne już są) i **wyprawa roguelike** (8–10 map, nagrody po bitwie, profil trwały, seed dnia z rankingiem).
-5. **Poziom 5 „Legenda”:** magia, specjalności bohaterów; razem z nim **drzewka umiejętności bohatera** z rozgałęzieniami (dziś wspólna pula 6); poziom 4.
-6. **Wiele języków** (polski i angielski: interfejs, dane jednostek i zasad, instrukcja, CHANGELOG, serwer) po poziomie 3.
-7. Do 8 graczy (dziś 4; patrz `MECHANIKI_I_POZIOMY.md`), mechanika „cios od tyłu / z flanki” dla innych jednostek.
+3. **Poziom 5 „Legenda”:** magia, specjalności bohaterów; razem z nim **drzewka umiejętności bohatera** z rozgałęzieniami (dziś wspólna pula 6).
+4. Inwentaryzacja tekstów pod wiele języków, potem punkt C3 (Steam).
+
+**Po premierze:**
+5. **Nowe frakcje:** Dzikie Stada → Królestwo Umarłych → Żelazne Klany (karta frakcji, grafika, symulacje 10 par), potem DLC. Grafika frakcjami (nowa frakcja = pełen zestaw naraz). Przed startem: próbka jednej jednostki w nowym stylu ze Scenario i decyzja autora.
+6. **Kampania fabularna** (mapy ręczne już są; fabuła przez wyzwalacze, B11) i **Ekspedycja** (dawna „wyprawa roguelike”: 8–10 map, nagrody po bitwie, profil trwały, seed dnia z rankingiem).
+7. **Wiele języków** (polski i angielski: interfejs, dane jednostek i zasad, instrukcja, CHANGELOG, serwer).
+8. Więcej niż 6 graczy (do 8, patrz `MECHANIKI_I_POZIOMY.md`), mechanika „cios od tyłu / z flanki” dla innych jednostek.
 
 ## E. Pomysły na później (Parking)
 
@@ -44,7 +92,8 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
 ## Pytania czekające na autora
 
-- **Poziom 3 „Królestwo”** (dawne B2): szkic w `docs/POZIOM_3_KROLESTWO.md`, 11 pytań na jego końcu. **Autor musi go najpierw przejrzeć i zaakceptować** (patrz „NASTĘPNE ZADANIE” na górze); sekcja C czeka.
+**Q1–Q18 (13.11.2026) zostały rozstrzygnięte** (decyzje w „STAN” u góry). Nic nowego z nich nie czeka na autora oprócz akceptacji propozycji 8 nowych jednostek (przygotuje Claude przy K5).
+
 - **Wydanie 2.6.0 i wdrożenie serwera** (B1; **wstrzymane decyzją autora 12.11: na razie bez release'u**, nie wydawać bez jego polecenia): zmiany są w commitach lokalnie (gra `05cba8e`, serwer `9b07989`); drugie wydanie wymaga zgody autora (tag, push `master`, wydanie na GitHubie, potem `npm install` pakietu silnika w serwerze, `make deploy`, push serwera).
 - **Łatwy w wydaniu planszowym** (uzupełnienie do dawnego A8): w edycji planszowej Łatwy 1 na 1 daje 94/91/88/79% (powyżej pasma), a 2 na 2 na bardzo długiej mapie 61%. Dźwignie stroiciela działają tylko w grze cyfrowej, żeby plansza została „jak wydrukowana”. Czy stroić też planszową (zmieniałoby to wydrukowane zasady poziomu Łatwy), czy zostawić? Domyślnie: zostawiam.
 

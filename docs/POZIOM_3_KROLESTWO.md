@@ -4,6 +4,16 @@ Stan na 12.11.2026. **To szkic do akceptacji: kodu nie ruszam, dopóki autor nie
 `ROZBUDOWA_CYFROWA.md` (drabinka poziomów, etap 2), `MECHANIKI_I_POZIOMY.md` (poziom 3), `DECYZJE.md` i na tym, co gra ma dziś
 (`ZASADY_CYFROWE.md`). Liczby są robocze: ustalają je symulacje, tak jak przy poziomie 2.
 
+## Decyzje autora z 13.11.2026 (mają pierwszeństwo nad treścią poniżej)
+
+Pełna lista: `BACKLOG.md` (sekcja „STAN”) i `DECYZJE.md`. Najważniejsze zmiany względem szkicu:
+- **Termin:** poziom 3 przed premierą, premiera po poziomie 5. Odpowiedzi na pytania z sekcji 12: 1 przed premierą, 2 tak (tylko złoto), 3 patrz niżej, 4 maks. 5, 5 kasa per frakcja, 6 „Podbój” na poziom 4, 7 patrz niżej, 8 bez utraty złota, 9 tak (posiłki, realne zagrożenie), 10 trudność z symulacji po wdrożeniu, 11 nazwy bez zmian.
+- **Złoto:** mała skala (najtańsze 1, dochód osady 1–2, kopalnia +1); złoto tylko z osad, kopalń i skrzyń (artefakt albo złoto); bez łupów z pokonanego bohatera i bez nagród złotem ze strażników.
+- **Osady:** frakcja narzucona połową mapy (2/4/4/6 osad); wejście = przejęcie, budynki zostają; obcy właściciel: dochód, targ, szpital, bez rekrutacji; obrońcy trochę silniejsi niż strażnicy kryształów; obrona tylko stojąc na polu. Każda osada ma nazwę i widok z krajobrazem i budynkami (jak Heroes III).
+- **Budynki kupowane:** koszary (poziomy dają miejsca), targ, szpital (ulepszenie: wskrzeszanie za 1/3), budynek dochodu.
+- **Rekrutacja:** bez kopii (odpada droga A z instancjami i krok K3 jako przebudowa); 7 pomocników na frakcję w poziomach 1–5, maks. 5 w drużynie (miejsca: start 2, +1 na 3. i 6. poziomie bohatera, +1 koszary); cena z symulacji; bez limitu zakupów na turę.
+- **Online:** oszczędny ruch (przegląd B13 przed K1).
+
 ## 1. Skąd startujemy
 
 Poziom 2 „Wyprawa” (cyfrowa) daje: rozwój bohatera (PD, poziomy 1–10, umiejętności), artefakty w 5 miejscach i 3 rzadkościach, plecak,

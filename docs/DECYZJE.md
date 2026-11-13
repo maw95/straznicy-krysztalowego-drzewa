@@ -97,3 +97,11 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
 
 - Zasoby na mapie: kopalnie dają dochód co rundę; cykl tygodniowy = 7 rund (etap 2 w `ROZBUDOWA_CYFROWA.md`).
 - Kolejność prac: etap 0 (pole `ruleset`) → pierwszy cel (punkty kontrolne) → generator map (prostokąt).
+
+## Podjęte (13.11.2026): poziom 3, premiera, menu
+
+Źródła: `poziom_3_krolestwo_uwagi.txt`, `menu_i_interfejs_propozycje.txt`; pełna lista w `BACKLOG.md` (sekcja „STAN”).
+- **Premiera dopiero po poziomie 5** (zastępuje „poziomy 1–2” z 4.11 i „poziomy 1–3” z 12.11). Na premierę: poziomy 1–5 i dwie obecne frakcje; nowe frakcje, kampania i Ekspedycja (dawna „wyprawa roguelike”) po premierze.
+- **Poziom 3:** tylko złoto w małej skali (najtańsze 1, dochód osady 1–2); złoto tylko z osad, kopalń i skrzyń (w skrzyni: artefakt albo złoto); brak utraty złota po porażce; kasa, skarby i pomocnicy wspólni dla frakcji; osady z narzuconą frakcją (połowa mapy), przejęcie przez wejście, zachowują budynki, obcy właściciel ma dochód, targ i szpital bez rekrutacji; budynki kupowane; 7 pomocników na frakcję (poziomy 1–5), maks. 5 w drużynie, bez kopii jednostek; ceny z symulacji, bez limitu zakupów; „Podbój” na poziomie 4.
+- **Interfejs:** przebudowa menu (Nowa gra / Wczytaj grę → Ten komputer / Przez internet), zapisy pod nazwą (online na koncie hosta), 6 graczy w rywalizacji i 3 w koopie, poziomy układ telefonu w partii, gotowe mapy w jednym rozmiarze.
+- **Nazwy poziomów:** bez zmian (Przygoda, Wyprawa, Królestwo, Imperium, Legenda).
