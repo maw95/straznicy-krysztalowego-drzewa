@@ -24,7 +24,7 @@ Odrzucone: Wartownik Kryształowej Straży (człowiek nie pasuje do klimatu), Gr
 | Poz. | Jednostka | Rola | Ż / A / S | Zdolność |
 |------|-----------|------|-----------|----------|
 | 2 | **Szczurołak** | szybki, podstępny, trucizna | 5 / 2 / 5, chodzi | *Zatruty Pazur* (raz na bitwę): trafiony wróg traci 1 Ż na początku swoich dwóch następnych aktywacji |
-| 3 | **Piekielny Ogar** | szybki napastnik | 7 / 3 / 6, chodzi | *Płonący Ślad* (raz na bitwę): pola, przez które przebiegł, płoną do końca rundy i ranią o 1 **każdego**, kto na nie wejdzie, także Hordę (decyzja autora: taktyczne ryzyko; ogar musi uważać, którędy biegnie) |
+| 3 | **Piekielny Ogar** | szybki napastnik | 7 / 3 / 6, chodzi | *Obława* (stała): +1 A, gdy cel sąsiaduje z innym sojusznikiem Ogara (sfora poluje razem; wybór autora) |
 | 4 | **Salamandra Popiołu** | strzelec, obszar | 9 / 3 / 3, chodzi, strzela | *Pożoga* (raz na bitwę): trafiony cel i jego sąsiedzi dostają 1 obrażenie |
 | 5 | **Herszt Minotaurów** | duży, pancerny, krwiożerczy, 2 pola | 15 / 5 / 4, chodzi | *Bitewny Szał* (nazwa wg autora): pancerz (stale −1 obrażeń z każdego ciosu); po zabiciu wroga jego następny cios zadaje +2 A |
 
