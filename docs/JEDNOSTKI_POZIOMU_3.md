@@ -8,27 +8,26 @@ Skala liczb jak na kartach pomocników (Życie / Atak / Szybkość; silnik mnoż
 
 ## Przymierze Świtu (zieleń i złoto, światło, las, niebo)
 
-Skład wybrany przez autora 13.11.2026 (nazwy i liczby robocze; zdolności mogą się zmienić przy stroju silnika).
+Skład i nazwy wg autora z 13.11.2026 (liczby robocze). Nazwy jednostek nie muszą mieć dwóch słów.
 
-| Poz. | Jednostka | Rola | Ż / A / S | Zdolność (raz na bitwę) |
-|------|-----------|------|-----------|-------------------------|
-| 2 | **Jeżozwierz Kryształowy** | zwarcie, kary za bicie | 6 / 2 / 3, chodzi | *Kolczasty Pancerz*: do końca następnej rundy każdy, kto uderzy go z bliska, dostaje 2 obrażenia |
-| 3 | **Centaur Leśny** | szybki strzelec | 6 / 3 / 5, chodzi, strzela | *Strzała Świtu*: trafiony wróg ma −2 Szybkości w swoich dwóch następnych aktywacjach |
-| 4 | **Dzik Kryształoszczeki** | napastnik, mści się za rany | 10 / 4 / 5, chodzi | *Szał Odyńca*: po otrzymaniu obrażeń jego następny cios zadaje +2 A |
-| 5 | **Opiekun Drzewa** (żywy ent) | duży obrońca, 2 pola | 14 / 5 / 3, chodzi | *Korzenie Drzewa*: na początku rundy leczy sąsiednich sojuszników o 2 Ż |
+| Poz. | Jednostka | Rola | Ż / A / S | Zdolność |
+|------|-----------|------|-----------|----------|
+| 2 | **Jeżozwierz** | zwarcie, kara za bicie | 6 / 2 / 3, chodzi | *Kolce* (stała): każdy, kto zaatakuje go wręcz, dostaje 1 obrażenie |
+| 3 | **Centaur** | szybki strzelec | 6 / 3 / 5, chodzi, strzela | *Strzał i Galop* (raz na bitwę): po ataku może się cofnąć o maks. 3 pola. Alternatywa: *Przeszywający Strzał* (pocisk trafia też wroga stojącego za celem) |
+| 4 | **Kłowładca** (dzik; inne: Burzorył, Odyniec Zorzy, Ostępołam) | napastnik czołowy | 10 / 4 / 5, chodzi | *Czołowe Natarcie* (stała): +2 obrażenia, gdy atakuje cel od przodu (przeciwieństwo ataku z tyłu Harpii) |
+| 5 | **Opiekun Drzewa** (żywy ent) | duży obrońca, 2 pola | 14 / 5 / 3, chodzi | *Korzenie Drzewa* (raz na bitwę): na początku rundy leczy sąsiednich sojuszników o 2 Ż |
 
-Odrzucone: Wartownik Kryształowej Straży (człowiek nie pasuje do klimatu), Gryf Przymierza (gryf jest neutralny). Łuczniczka/Łowczyni Gajów odłożona (strzelca gra Centaur).
+Odrzucone: Wartownik Kryształowej Straży (człowiek nie pasuje do klimatu), Gryf Przymierza (gryf jest neutralny), Łowczyni Gajów (strzelca gra Centaur).
 
 ## Mroczna Horda (czerwień i żelazo, ogień, ciemność)
 
-| Poz. | Jednostka | Rola | Ż / A / S | Zdolność (raz na bitwę) |
-|------|-----------|------|-----------|-------------------------|
-| 2 | **Szczurołak** | szybki, podstępny, trucizna | 5 / 2 / 5, chodzi | *Zatruty Pazur*: trafiony wróg traci 1 Ż na początku swoich dwóch następnych aktywacji |
-| 3 | **Piekielny Ogar** | szybki napastnik | 7 / 3 / 6, chodzi | *Płonący Ślad*: pola, przez które przebiegł w tej aktywacji, płoną do końca rundy (1 obrażenie dla wchodzącego) |
-| 4 | **Salamandra Popiołu** | strzelec, obszar | 9 / 3 / 3, chodzi, strzela | *Plwocina Żaru*: trafiony cel i jego sąsiedzi dostają 1 obrażenie |
-| 5 | **Żelaznorogi Rzeźnik** (opancerzony minotaur) | duży, pancerny, krwiożerczy, 2 pola | 15 / 5 / 4, chodzi | *Szał Krwi*: pancerz (−1 obrażeń z każdego ciosu, stale); po zabiciu wroga jego następny cios zadaje +2 A |
+| Poz. | Jednostka | Rola | Ż / A / S | Zdolność |
+|------|-----------|------|-----------|----------|
+| 2 | **Szczurołak** | szybki, podstępny, trucizna | 5 / 2 / 5, chodzi | *Zatruty Pazur* (raz na bitwę): trafiony wróg traci 1 Ż na początku swoich dwóch następnych aktywacji |
+| 3 | **Piekielny Ogar** | szybki napastnik | 7 / 3 / 6, chodzi | *Płonący Ślad* (raz na bitwę): pola, przez które przebiegł, płoną do końca rundy i ranią 1 **tylko wrogów Hordy** (sojusznicy bezpieczni). Alternatywa bez pól: *Gryzący Pościg*, +2 A po przebiegnięciu min. 4 pól |
+| 4 | **Salamandra Popiołu** | strzelec, obszar | 9 / 3 / 3, chodzi, strzela | *Pożoga* (raz na bitwę): trafiony cel i jego sąsiedzi dostają 1 obrażenie |
+| 5 | **Herszt Minotaurów** | duży, pancerny, krwiożerczy, 2 pola | 15 / 5 / 4, chodzi | *Żniwo Krwi*: pancerz (stale −1 obrażeń z każdego ciosu); po zabiciu wroga jego następny cios zadaje +2 A |
 
-Alternatywne nazwy minotaura: Krwawy Rogacz, Kat Labiryntu, Rzeźnik z Czarnego Labiryntu.
 Odrzucone: Ogrzy Najemnik (ogr jest w hordzie), Wilczy Jeździec (kopia z Heroesów), Troll Bagienny i Wywerna Popiołów (rezerwa).
 
 ## Ceny (robocze, do symulacji)
