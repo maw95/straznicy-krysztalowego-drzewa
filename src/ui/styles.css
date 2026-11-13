@@ -805,8 +805,11 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 }
 
 /* Settlement window */
-.settlement-scene { position: relative; width: 100%; height: 260px; border-radius: 10px; background-size: cover; background-position: center; box-shadow: inset 0 0 0 2px #B88A35, inset 0 0 40px rgba(0, 0, 0, 0.6); overflow: hidden; }
+.settlement-scene { position: relative; width: 100%; height: 320px; border-radius: 10px; background-size: cover; background-position: center; box-shadow: inset 0 0 0 2px #B88A35, inset 0 0 40px rgba(0, 0, 0, 0.6); overflow: hidden; }
 .settlement-bld { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 2px; width: 120px; padding: 6px; border: 0; border-radius: 10px; background: rgba(8, 14, 14, 0.55); color: #F4EAD0; font: inherit; font-size: 13px; line-height: 1.15; text-align: center; cursor: pointer; filter: grayscale(0.85); opacity: 0.8; transition: transform 0.12s, filter 0.12s; }
 .settlement-bld.built { filter: none; opacity: 1; }
+.settlement-pic { height: 118px; width: auto; max-width: 150px; object-fit: contain; filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.65)); }
+.settlement-bld { background: rgba(8, 14, 14, 0.25); }
+.settlement-bld:not(.built) .settlement-pic { opacity: 0.8; height: 80px; }
 .settlement-bld:hover { transform: translate(-50%, -52%) scale(1.05); }
 .settlement-bld.on { box-shadow: 0 0 0 3px #9EE4FF, 0 0 14px rgba(158, 228, 255, 0.6); }

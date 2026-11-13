@@ -3415,6 +3415,20 @@
       "data": "2026-11-13",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/osada-zakupy",
+      "pliki": [
+        "public/assets/dzwieki/coins_buy.mp3",
+        "public/assets/dzwieki/build.mp3"
+      ],
+      "typ": "dźwięki zakupu w osadzie (monety, budowa)",
+      "opis": "Prompty: 'A few gold coins dropped and jingling onto a wooden table, short bright purchase sound, clean, no music' (1,5 s); 'Wooden hammer hitting a nail three times and a plank being set down, short medieval construction sound, clean, no music' (2 s).",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3",
+      "data": "2026-11-14",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

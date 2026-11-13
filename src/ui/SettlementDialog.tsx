@@ -10,6 +10,7 @@ import type { Action, GameState } from '../engine/types';
 import { asset, Portrait, Ribbon } from './common';
 import { ArtifactMedal } from './growthUi';
 import { RuleText } from './statScale';
+import { sfx } from './sfx';
 
 const ORDER: BuildingId[] = ['barracks', 'market', 'hospital', 'treasury'];
 /** Where the building stands in the landscape (percent of the picture). */
@@ -19,12 +20,8 @@ const SPOT: Record<BuildingId, { left: number; top: number }> = {
   hospital: { left: 64, top: 52 },
   treasury: { left: 84, top: 28 },
 };
-const ICON: Record<BuildingId, string> = {
-  barracks: 'ikony/mapa/camp.webp',
-  market: 'ikony/mapa/chest.webp',
-  hospital: 'ikony/mapa/shrine.webp',
-  treasury: 'ikony/mapa/zloto.webp',
-};
+/** The picture of a building in the landscape: the faction's plot while it is not built, then its level (the treasury has one). */
+const buildingPicture = (land: FactionId, b: BuildingId, level: number) => (level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${Math.min(level, 2)}.webp`));
 
 export function SettlementDialog({ state, settlementId, faction, onAction, onClose }: { state: GameState; settlementId: string; faction: FactionId; onAction: (a: Action) => void; onClose: () => void }) {
   const s = state.kingdom!.settlements[settlementId];
@@ -34,7 +31,11 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const fs = state.factions[faction];
   const buyer = Object.values(state.heroes).find((h) => h.id === state.turnOrder[state.turnIndex] && h.faction === faction);
   const price = (b: BuildingId) => nextCost(s, b);
-  const act = (a: Action) => onAction(a);
+  const act = (a: Action) => {
+    // Purchases ring: a building goes up with hammering, everything else with coins.
+    sfx.play(a.type === 'kingdomBuild' ? 'build' : 'coins_buy');
+    onAction(a);
+  };
   const buildButton = (b: BuildingId) => {
     const cost = price(b);
     const level = s.buildings[b];
@@ -147,12 +148,12 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       <div style={{ textAlign: 'center', fontSize: 15, color: '#6B4A22' }}>
         Osada {FACTION_NAMES[s.land]}{s.owner !== s.land ? ` (zajęta przez: ${FACTION_NAMES[s.owner!]})` : ''} · złoto: <b data-gold>{gold}</b> · dochód: +{incomeOf(state, faction)} na rundę
       </div>
-      <div className="settlement-scene" style={{ backgroundImage: `url(${asset('ui/landscape.jpg')})` }}>
+      <div className="settlement-scene" style={{ backgroundImage: `url(${asset(`osady/land_${s.land}.jpg`)})` }}>
         {ORDER.map((b) => {
           const level = s.buildings[b];
           return (
             <button key={b} className={`settlement-bld ${open === b ? 'on' : ''} ${level ? 'built' : ''}`} style={{ left: `${SPOT[b].left}%`, top: `${SPOT[b].top}%` }} onClick={() => setOpen(b)} aria-pressed={open === b} data-building={b} data-level={level}>
-              <img src={asset(ICON[b])} alt="" width={64} height={64} />
+              <img src={asset(buildingPicture(s.land, b, level))} alt="" className="settlement-pic" />
               <span>{level ? BUILDING_NAMES[b][Math.min(level, BUILDING_NAMES[b].length) - 1] : `${BUILDING_NAMES[b][0]} (do zbudowania)`}</span>
             </button>
           );
