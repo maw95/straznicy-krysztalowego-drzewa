@@ -14,3 +14,5 @@ STRAZNICY KRYSZTALOWEGO DRZEWA - PRZYGOTOWANE AUDIO
 Zalecenie: przejscia pomiedzy odrebnymi utworami (Sylvan Waltz <-> Maddies Mirror; Fantasy Choir 3 <-> Determined Pursuit) zrealizuj w silniku gry przez crossfade ok. 2-4 s. Samodzielne pliki nie gwarantuja idealnego przejscia utwor-do-utworu.
 
 Uwaga: punkty ciecia zgodne z opisem uzytkownika, wybrane czasowo, bez analizy harmonicznej. Obrobka nie oznacza gwarancji idealnej petli muzycznej dla kazdego utworu.
+
+UWAGA (13.11.2026): pliki utworów zostały usunięte stąd jako duplikaty. Używane kopie leżą w public/assets/music/ (nazwy: menu-sylvan-waltz.mp3 itd.; mapowanie w src/ui/music.ts). Zostaje tu tylko wersja 08_Defeat_RYTUAL_przyciete.mp3 (nie ma jej w grze).
