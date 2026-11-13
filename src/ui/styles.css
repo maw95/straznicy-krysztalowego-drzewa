@@ -788,3 +788,15 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .btn-join[aria-pressed="true"] { box-shadow: inset 0 0 0 3px #9EE4FF, 0 0 0 2px #1E1204 !important; }
 .menu-links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .home-big { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
+
+/* "Turn your phone" prompt over a game held upright */
+.rotate-prompt { position: fixed; inset: 0; z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px; text-align: center; background: rgba(8, 14, 14, 0.94); color: #F4EAD0; }
+.rotate-icon { animation: rotate-hint 2.4s ease-in-out infinite; transform-origin: 50% 50%; }
+@keyframes rotate-hint { 0%, 25% { transform: rotate(0deg); } 60%, 100% { transform: rotate(-90deg); } }
+@media (prefers-reduced-motion: reduce) { .rotate-icon { animation: none; } }
+@media (max-height: 560px) and (max-width: 1100px) and (orientation: landscape) {
+  .play-row .side-adv > .gi { gap: 6px !important; }
+  .play-row .xpbar-level { width: 40px; height: 40px; }
+  .play-row .xpbar-level span { font-size: 16px; }
+  .play-row .xpbar-text { font-size: 12px; }
+}

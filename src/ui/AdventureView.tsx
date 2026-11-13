@@ -479,10 +479,10 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
         <Frame className="side side-adv" innerStyle={{ padding: '16px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
           {!hero && <div style={{ fontWeight: 800, fontSize: 20, textAlign: 'center' }}>Koniec gry</div>}
           {hero && (
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-              <img src={asset(`cards/crests/${hero.faction}.png`)} alt={FACTION_NAMES[hero.faction]} title={FACTION_NAMES[hero.faction]} style={{ height: 64, width: 'auto', flex: 'none' }} />
+            <div style={{ display: 'flex', gap: compact ? 8 : 12, alignItems: 'center', paddingRight: compact ? 56 : 0 }}>
+              <img src={asset(`cards/crests/${hero.faction}.png`)} alt={FACTION_NAMES[hero.faction]} title={FACTION_NAMES[hero.faction]} style={{ height: compact ? 44 : 64, width: 'auto', flex: 'none' }} />
               <button className="btn btn-bare" onClick={() => (state.rules.heroGrowth ? setSheet(true) : onShowCard(hero.id))} title={state.rules.heroGrowth ? 'Karta bohatera' : 'Pokaż kartę'} data-hero-portrait>
-                <Portrait unitId={hero.id} size={64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
+                <Portrait unitId={hero.id} size={compact ? 48 : 64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
               </button>
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{UNITS[hero.id].name}</div>
@@ -495,7 +495,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </div>
             </div>
           )}
-          {hero && state.rules.heroGrowth && <HeroGrowth hero={hero} onOpenPack={() => setPackOpen(true)} />}
+          {hero && state.rules.heroGrowth && <HeroGrowth hero={hero} compact={compact} onOpenPack={() => setPackOpen(true)} />}
           {sel && (
             <div className="plate parch" style={{ padding: '9px 12px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
               <img className="hex-clip" src={tileImage(sel)} alt="" style={{ width: 48, height: 55, flex: 'none', objectFit: 'cover' }} />

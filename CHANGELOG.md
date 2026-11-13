@@ -20,6 +20,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Gra online: w menu są „Nowa gra” (ten sam kreator co na komputerze, na końcu powstaje stół) i „Dołącz do gry” (kod pokoju), a na dole czerwony przycisk „Wstecz”; zniknął przycisk „Gra na tym komputerze”. W pokoju widać podsumowanie ustawień stołu, a założyciel może je zmienić przyciskiem „Zmień ustawienia”, po czym wybiera się frakcję i bohatera.
 - Zapisy gry pod własną nazwą (na tym komputerze): „Zapisz grę” w Opcjach, „Zapisz i wyjdź” przy wyjściu z gry (obok „Wyjdź bez zapisu” i „Anuluj”) i lista zapisów w „Wczytaj grę” z przyciskami „Wczytaj” i „Usuń” (do 20 zapisów, ten sam zapis nazywa się raz).
 - „Zasady i karty” są aktualne: karty dziewięciu neutralnych jednostek (słabi i bossowie), skarby w nazwach wersji cyfrowej, nowe zakładki „Artefakty” (wszystkie 15 z opisami) i „Lokacje na mapie” oraz odświeżone „Podstawowe zasady” (wersje i poziomy, cele, kamienie milowe, plecak bez limitu, przytrzymany prawy przycisk).
+- Telefon: po wejściu do partii gra prosi o obrót telefonu poziomo (tam, gdzie przeglądarka pozwala, blokuje ekran w poziomie; mały przycisk „Graj w pionie” zostawia pionowy układ). Panel bohatera po prawej mieści się na niskim ekranie bez przewijania: mniejszy sztandar i portret, pięć miejsc na artefakty w jednym rzędzie, mniejsza tarcza poziomu.
 
 ## 2.5.0 — 2026-11-12
 

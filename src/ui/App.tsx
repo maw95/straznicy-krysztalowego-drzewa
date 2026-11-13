@@ -17,7 +17,7 @@ import type { SkillId } from '../engine/growth';
 import { sfx } from './sfx';
 import { animationWait, ATTACK_SHOW_MS, holdFor, resetAnimLock } from './animLock';
 import { DuelView } from './DuelView';
-import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset } from './common';
+import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset, useMedia } from './common';
 import { SetupScreen } from './SetupScreen';
 import { music } from './music';
 import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, LeaveDialog, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
@@ -830,6 +830,7 @@ export function App() {
         </div>
       )}
       <VictoryEffects game={game} />
+      <RotatePrompt />
       <FoundTreasure kind={found} open={Boolean(found) && !digest && !summary && !held} onClose={() => setFound(null)} />
 
       <div className="xp-toasts" aria-live="polite">
@@ -1123,4 +1124,34 @@ function setPlaysOffline(on: boolean) {
   } catch {
     // No storage: the choice holds for this visit only.
   }
+}
+
+/** A phone held upright in a game: asks to turn it sideways (the map, the arena and the panels need the width). A small link plays on anyway. */
+function RotatePrompt() {
+  const upright = useMedia('(orientation: portrait) and (pointer: coarse) and (max-width: 700px)');
+  const [ignored, setIgnored] = useState(false);
+  // Where the browser allows it (Android in full screen), keep the screen sideways while the game is on.
+  useEffect(() => {
+    try {
+      void (screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> }).lock?.('landscape')?.catch(() => {});
+    } catch {
+      /* not supported: the prompt below does the job */
+    }
+    return () => {
+      try { screen.orientation?.unlock?.(); } catch { /* ignore */ }
+    };
+  }, []);
+  if (!upright || ignored) return null;
+  return (
+    <div className="rotate-prompt" role="alert" data-rotate-prompt>
+      <svg aria-hidden="true" width="96" height="96" viewBox="0 0 96 96" className="rotate-icon">
+        <rect x="30" y="12" width="36" height="64" rx="7" fill="none" stroke="#F3D27A" strokeWidth="4" />
+        <circle cx="48" cy="68" r="3" fill="#F3D27A" />
+        <path d="M70 30c10 6 14 16 12 26M82 56l-2-9m2 9l8-5" fill="none" stroke="#9EE4FF" strokeWidth="4" strokeLinecap="round" />
+      </svg>
+      <div style={{ fontSize: 24, fontWeight: 800, color: '#F3D27A' }}>Obróć telefon poziomo</div>
+      <div style={{ fontSize: 17 }}>Mapa i plansza bitwy potrzebują szerokiego ekranu: wszystko zmieści się bez przewijania.</div>
+      <button className="btn plate parch" style={{ padding: '6px 16px', fontSize: 16 }} onClick={() => setIgnored(true)}>Graj w pionie</button>
+    </div>
+  );
 }

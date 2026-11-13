@@ -22,26 +22,28 @@ export function ArtifactMedal({ art, size = 40 }: { art: ArtifactDef; size?: num
   return <img className={`gear-medal r${art.rarity}`} src={asset(`ikony/artefakty/${art.id}.webp`)} alt="" width={size} height={size} style={{ flex: 'none', display: 'block' }} />;
 }
 
+const SLOTS_ORDER: Slot[] = ['helmet', 'weapon', 'armor', 'shield', 'boots'];
 const artTitle = (art: ArtifactDef, scale: [number, number]) => `${SLOT_NAMES[art.slot]}: ${art.name} (${RARITY_NAMES[art.rarity]}). ${scaleText(art.text, scale[0], scale[1])}`;
 
 /** The five gear slots laid out like a hero's sheet: the helmet on top, weapon - armour - shield in the middle, the boots below. */
-export function GearDoll({ hero, size = 40, picked, onPick }: { hero: HeroState; size?: number; picked?: string | null; onPick?: (art: ArtifactDef) => void }) {
+export function GearDoll({ hero, size = 40, picked, onPick, row = false }: { hero: HeroState; size?: number; picked?: string | null; onPick?: (art: ArtifactDef) => void; row?: boolean }) {
   const scale = useScales();
   const gear = gearOf(hero);
-  const cell = (slot: Slot, col: number, row: number) => {
+  const cell = (slot: Slot, col: number, rowNo: number) => {
     const art = gear.find((a) => a.slot === slot);
     return art ? (
-      <span key={slot} className={`gear-slot ${picked === art.id ? 'picked' : ''} ${onPick ? 'pickable' : ''}`} style={{ gridColumn: col, gridRow: row }} title={artTitle(art, scale)} data-gear={art.id} onClick={onPick ? () => onPick(art) : undefined}>
+      <span key={slot} className={`gear-slot ${picked === art.id ? 'picked' : ''} ${onPick ? 'pickable' : ''}`} style={row ? { gridColumn: SLOTS_ORDER.indexOf(slot) + 1, gridRow: 1 } : { gridColumn: col, gridRow: rowNo }} title={artTitle(art, scale)} data-gear={art.id} onClick={onPick ? () => onPick(art) : undefined}>
         <ArtifactMedal art={art} size={size} />
       </span>
     ) : (
-      <span key={slot} className="gear-slot gear-empty" style={{ gridColumn: col, gridRow: row }} title={`${SLOT_NAMES[slot]}: puste miejsce. Artefakty leżą w skrzyniach na mapie, wypadają ze strażników i przechodzą na zwycięzcę walki bohaterów.`} data-gear-empty={slot}>
+      <span key={slot} className="gear-slot gear-empty" style={row ? { gridColumn: SLOTS_ORDER.indexOf(slot) + 1, gridRow: 1 } : { gridColumn: col, gridRow: rowNo }} title={`${SLOT_NAMES[slot]}: puste miejsce. Artefakty leżą w skrzyniach na mapie, wypadają ze strażników i przechodzą na zwycięzcę walki bohaterów.`} data-gear-empty={slot}>
         <img src={asset(`ikony/sloty/${slot}.webp`)} alt="" width={size} height={size} style={{ display: 'block', opacity: 0.9 }} />
       </span>
     );
   };
+  // `row`: the five slots in one line (a low phone screen has no room for the figure).
   return (
-    <div className="gear-doll" style={{ gridTemplateColumns: `repeat(3, ${size}px)`, gridTemplateRows: `repeat(3, ${size}px)` }} data-gear-doll>
+    <div className="gear-doll" style={row ? { gridTemplateColumns: `repeat(5, ${size}px)`, gridTemplateRows: `${size}px` } : { gridTemplateColumns: `repeat(3, ${size}px)`, gridTemplateRows: `repeat(3, ${size}px)` }} data-gear-doll>
       {cell('helmet', 2, 1)}
       {cell('weapon', 1, 2)}
       {cell('armor', 2, 2)}
@@ -121,7 +123,7 @@ function BackpackIcon({ size = 40 }: { size?: number }) {
 }
 
 /** The hero's level and experience, skills (icons) and gear slots (filled or empty) with a hover text each; the backpack icon opens the gear window. */
-export function HeroGrowth({ hero, onOpenPack }: { hero: HeroState; onOpenPack?: () => void }) {
+export function HeroGrowth({ hero, compact = false, onOpenPack }: { hero: HeroState; compact?: boolean; onOpenPack?: () => void }) {
   const scale = useScales();
   const skills = [...new Set(hero.skills ?? [])];
   const packCount = hero.pack?.length ?? 0;
@@ -140,9 +142,9 @@ export function HeroGrowth({ hero, onOpenPack }: { hero: HeroState; onOpenPack?:
       </div>
       <span className="lbl" title="Artefakty to stałe wyposażenie bohatera, po jednym na miejsce. Skarby to jednorazowe karty frakcji.">Artefakty</span>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
-        <GearDoll hero={hero} size={40} />
+        <GearDoll hero={hero} size={compact ? 26 : 40} row={compact} />
         <button className="btn btn-bare backpack-btn" onClick={onOpenPack} title="Wyposażenie i plecak" aria-label="Wyposażenie i plecak" data-hero-sheet-open style={{ position: 'relative' }}>
-          <BackpackIcon size={48} />
+          <BackpackIcon size={compact ? 36 : 48} />
           {packCount > 0 && <span className="pack-count" data-pack-count title={`W plecaku: ${packOf(hero).map((a) => a.name).join(', ')}`} style={{ position: 'absolute', right: -6, top: -4 }}>{packCount}</span>}
         </button>
       </div>
