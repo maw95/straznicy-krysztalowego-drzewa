@@ -1,13 +1,11 @@
 // Details under the right mouse button, as in Heroes: holding the right button over a unit, a treasure or
 // a map hex shows a window with its details, and letting go hides it. A short right click (a touchpad's
-// two-finger click cannot be held) leaves the window open until the next click; on a touch screen holding
-// a finger does what holding the right button does. The browser's own menu never opens (main.tsx).
+// two-finger click cannot be held) shows it only for that moment; on a touch screen holding a finger does
+// what holding the right button does. The browser's own menu never opens (main.tsx).
 
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { hideHoverCard } from './hover';
 
-/** Held longer than this (ms), the window closes with the button; a shorter click leaves it open. */
-const HOLD_MS = 300;
 /** A finger held this long (ms) opens the window. */
 const LONG_PRESS_MS = 450;
 /** A finger moving further than this (px) is scrolling, not holding. */
@@ -35,7 +33,8 @@ let candidate: { render: () => ReactNode; touch: boolean; pin: boolean } | null 
 
 /**
  * Props for an element that has details: `render` builds the window's content when it opens. With `pin` (the unit and treasure
- * cards) the window stays open after the right button or the finger comes up and closes on the next press anywhere.
+ * cards) the window stays open after a finger comes up on a touch screen and closes on the next press anywhere;
+ * with the mouse it always closes when the right button is released.
  */
 export function details(render: () => ReactNode, opts: { pin?: boolean } = {}) {
   return {
@@ -94,14 +93,12 @@ export function DetailsLayer() {
       }
       hideHoverCard();
       show({ content: c.render(), x: e.clientX, y: e.clientY });
-      const opened = Date.now();
       if (rightUp) window.removeEventListener('pointerup', rightUp);
       const onUp = (up: PointerEvent) => {
         if (up.button !== 2) return;
         window.removeEventListener('pointerup', onUp);
         rightUp = null;
-        if (!c.pin && Date.now() - opened >= HOLD_MS) show(null);
-        else pinned = true;
+        show(null);
       };
       rightUp = onUp;
       window.addEventListener('pointerup', onUp);

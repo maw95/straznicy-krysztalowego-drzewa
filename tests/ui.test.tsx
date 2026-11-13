@@ -278,7 +278,7 @@ describe('intro', () => {
 describe('details under the right mouse button', () => {
   const details = (doc: Document) => doc.querySelector('[aria-label="Szczegóły"]');
 
-  it('shows a hex while the button is held, and keeps it after a short click until the next one', async () => {
+  it('shows a hex only while the button is held, even after a short click', async () => {
     const { container } = startSolo(5);
     const doc = container.ownerDocument;
     const hex = container.querySelector('button.hexbtn span.hex-clip:last-child') as HTMLElement;
@@ -293,8 +293,6 @@ describe('details under the right mouse button', () => {
 
     await act(async () => fireEvent.pointerDown(hex, { button: 2, pointerType: 'mouse' }));
     await act(async () => fireEvent.pointerUp(window, { button: 2, pointerType: 'mouse' }));
-    expect(details(doc)).not.toBeNull();
-    await act(async () => fireEvent.pointerDown(doc.body, { button: 0, pointerType: 'mouse' }));
     expect(details(doc)).toBeNull();
   });
 
