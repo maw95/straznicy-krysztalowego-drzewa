@@ -1,6 +1,6 @@
 {
   "name": "straznicy-krysztalowego-drzewa",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "Gleamroot: Strażnicy Kryształowego Drzewa — cyfrowy prototyp gry planszowej",
   "scripts": {
     "dev": "vite",

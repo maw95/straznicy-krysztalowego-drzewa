@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 2.6.0 — 2026-11-14
+
 - Poziom „Królestwo”: samouczek tłumaczy złoto, osady, drużynę i zestawy artefaktów, w instrukcji jest nowy rozdział 17 o ekonomii, a w trybie rodzinnym zakupy dziecka robi autopilot (zaznaczenie „Dziecko” oznacza zgodę rodzica).
 - Okno osady wygląda jak w Heroes III: krajobraz frakcji (Przymierze albo Horda) z obrazkami budynków. Niezbudowane stoją jako place budowy, koszary, targ i szpital mają dwa stany (zwykły i rozbudowany), skarbiec jeden. Zakupy brzmią: monety przy kupnie, stukot młotka przy budowie. Osiem nowych pomocników ma karty, ikony zdolności i animacje; dwanaście elementów zestawów artefaktów ma ikony.
 - Poziom „Królestwo”: cztery zestawy artefaktów po trzy elementy (Strój Gajowego, Rynsztunek Brzasku, Pancerz Wartownika, Strój Kupca), rzadkie, wypadają ze skrzyń i z Targu tylko na tym poziomie. Pełny komplet (3 z 3) daje premię; karta bohatera pokazuje „2/3 zestawu”, a Targ oznacza elementy zestawu. Boty też zbierają zestawy.
