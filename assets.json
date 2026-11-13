@@ -3302,6 +3302,34 @@
       "data": "2026-11-13",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/pomocnicy-poziomu-3-ilustracje",
+      "pliki": [
+        "public/assets/cards/portraits/hedgehog.jpg",
+        "public/assets/cards/portraits/centaur.jpg",
+        "public/assets/cards/portraits/boar.jpg",
+        "public/assets/cards/portraits/treeGuardian.jpg",
+        "public/assets/cards/portraits/ratman.jpg",
+        "public/assets/cards/portraits/hellhound.jpg",
+        "public/assets/cards/portraits/salamander.jpg",
+        "public/assets/cards/portraits/minotaurChief.jpg",
+        "public/assets/cards/art/hedgehog.jpg",
+        "public/assets/cards/art/centaur.jpg",
+        "public/assets/cards/art/boar.jpg",
+        "public/assets/cards/art/treeGuardian.jpg",
+        "public/assets/cards/art/ratman.jpg",
+        "public/assets/cards/art/hellhound.jpg",
+        "public/assets/cards/art/salamander.jpg",
+        "public/assets/cards/art/minotaurChief.jpg"
+      ],
+      "typ": "ilustracje kart i portrety ośmiu pomocników poziomu 3 (Królestwo)",
+      "opis": "1024x1024: portret 256 px (cały kadr), ilustracja karty 640x442 (wycinek). Jednostki: Jeżozwierz, Centaur, Alabastrowy Odyniec, Opiekun Drzewa, Szczurołak, Piekielny Ogar, Salamandra Popiołu, Herszt Minotaurów. Prompty: 'Dark fantasy game card illustration, painterly realistic, serious tone, muted tones. <opis jednostki>. Square composition, figure fills the frame, no text, no border.'",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium",
+      "data": "2026-11-13",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
