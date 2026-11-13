@@ -13,8 +13,8 @@ Skład i nazwy wg autora z 13.11.2026 (liczby robocze). Nazwy jednostek nie musz
 | Poz. | Jednostka | Rola | Ż / A / S | Zdolność |
 |------|-----------|------|-----------|----------|
 | 2 | **Jeżozwierz** | zwarcie, kara za bicie | 6 / 2 / 3, chodzi | *Kolce* (stała): każdy, kto zaatakuje go wręcz, dostaje 1 obrażenie |
-| 3 | **Centaur** | szybki strzelec | 6 / 3 / 5, chodzi, strzela | *Strzał i Galop* (raz na bitwę): po ataku może się cofnąć o maks. 3 pola. Alternatywa: *Przeszywający Strzał* (pocisk trafia też wroga stojącego za celem) |
-| 4 | **Kłowładca** (dzik; inne: Burzorył, Odyniec Zorzy, Ostępołam) | napastnik czołowy | 10 / 4 / 5, chodzi | *Czołowe Natarcie* (stała): +2 obrażenia, gdy atakuje cel od przodu (przeciwieństwo ataku z tyłu Harpii) |
+| 3 | **Centaur** | szybki strzelec | 6 / 3 / 5, chodzi, strzela | *Strzał i Galop* (raz na bitwę): po ataku może się cofnąć o maks. 3 pola (wybór autora) |
+| 4 | **Złotokły Odyniec** (dzik; nazwa w formie „przymiotnik + Dzik/Odyniec”; inne: Świetlisty Dzik, Gromowy Odyniec, Pradawny Odyniec) | napastnik czołowy | 10 / 4 / 5, chodzi | *Czołowe Natarcie* (stała): +2 obrażenia, gdy atakuje cel od przodu (przeciwieństwo ataku z tyłu Harpii) |
 | 5 | **Opiekun Drzewa** (żywy ent) | duży obrońca, 2 pola | 14 / 5 / 3, chodzi | *Korzenie Drzewa* (raz na bitwę): na początku rundy leczy sąsiednich sojuszników o 2 Ż |
 
 Odrzucone: Wartownik Kryształowej Straży (człowiek nie pasuje do klimatu), Gryf Przymierza (gryf jest neutralny), Łowczyni Gajów (strzelca gra Centaur).
@@ -24,9 +24,9 @@ Odrzucone: Wartownik Kryształowej Straży (człowiek nie pasuje do klimatu), Gr
 | Poz. | Jednostka | Rola | Ż / A / S | Zdolność |
 |------|-----------|------|-----------|----------|
 | 2 | **Szczurołak** | szybki, podstępny, trucizna | 5 / 2 / 5, chodzi | *Zatruty Pazur* (raz na bitwę): trafiony wróg traci 1 Ż na początku swoich dwóch następnych aktywacji |
-| 3 | **Piekielny Ogar** | szybki napastnik | 7 / 3 / 6, chodzi | *Płonący Ślad* (raz na bitwę): pola, przez które przebiegł, płoną do końca rundy i ranią 1 **tylko wrogów Hordy** (sojusznicy bezpieczni). Alternatywa bez pól: *Gryzący Pościg*, +2 A po przebiegnięciu min. 4 pól |
+| 3 | **Piekielny Ogar** | szybki napastnik | 7 / 3 / 6, chodzi | *Płonący Ślad* (raz na bitwę): pola, przez które przebiegł, płoną do końca rundy i ranią o 1 **każdego**, kto na nie wejdzie, także Hordę (decyzja autora: taktyczne ryzyko; ogar musi uważać, którędy biegnie) |
 | 4 | **Salamandra Popiołu** | strzelec, obszar | 9 / 3 / 3, chodzi, strzela | *Pożoga* (raz na bitwę): trafiony cel i jego sąsiedzi dostają 1 obrażenie |
-| 5 | **Herszt Minotaurów** | duży, pancerny, krwiożerczy, 2 pola | 15 / 5 / 4, chodzi | *Żniwo Krwi*: pancerz (stale −1 obrażeń z każdego ciosu); po zabiciu wroga jego następny cios zadaje +2 A |
+| 5 | **Herszt Minotaurów** | duży, pancerny, krwiożerczy, 2 pola | 15 / 5 / 4, chodzi | *Bitewny Szał* (nazwa wg autora): pancerz (stale −1 obrażeń z każdego ciosu); po zabiciu wroga jego następny cios zadaje +2 A |
 
 Odrzucone: Ogrzy Najemnik (ogr jest w hordzie), Wilczy Jeździec (kopia z Heroesów), Troll Bagienny i Wywerna Popiołów (rezerwa).
 
