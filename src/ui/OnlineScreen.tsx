@@ -4,7 +4,7 @@ import type { Level, MapShape, Mode } from '../engine/types';
 import { CUSTOM_MAPS } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
 import { defaultCustom, TIERS } from '../engine/presets';
-import { BOT_SPEEDS, currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
+import { currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { CustomSwitchRows } from './CustomSwitchRows';
@@ -184,7 +184,7 @@ function Home({ session, onSignOut, onLocalGame, links }: { session: OnlineSessi
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: 'auto' }}>
               <button className="btn plate parch btn-small" onClick={links.onRules}>Zasady i karty</button>
               <button className="btn plate parch btn-small" onClick={links.onIntro}>Wprowadzenie</button>
-              <button className="btn plate parch btn-small" onClick={links.onTesters} title="Uwagi o grze i zgłoszone błędy — prosto do twórcy">Dla testerów</button>
+              <button className="btn plate parch btn-small btn-testers" onClick={links.onTesters} title="Uwagi o grze i zgłoszone błędy — prosto do twórcy">Dla testerów</button>
               <button className="app-version" title="Historia zmian" onClick={links.onChangelog}>Wersja {__APP_VERSION__}</button>
               <button className="app-version" title="Autorzy muzyki, grafiki i gry" onClick={links.onCredits}>Autorzy</button>
             </div>
@@ -428,14 +428,6 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
             )}
           </>
         )}
-        <Row label="Tempo botów">
-          {BOT_SPEEDS.map((speed) => (
-            <button key={speed} className={chip(room.botSpeed === speed)} disabled={!owner} onClick={() => session.send({ type: 'botSpeed', speed })}>
-              {speed}
-            </button>
-          ))}
-        </Row>
-
         <div className="lbl" style={{ marginTop: 6 }}>Miejsca przy stole</div>
         {room.seats.map((s, i) => {
           const mine = s.player?.id === me.id;

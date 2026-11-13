@@ -13,6 +13,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Panel po prawej stronie mapy jest uporządkowany: znika wstążka z nazwą frakcji (sztandar stoi obok portretu bohatera), rząd portretów wszystkich bohaterów i napis „jeszcze żadnej (pierwsza na poziomie 2)” (jest „brak”). Kliknięcie portretu bohatera otwiera Kartę bohatera, a pod „Artefakty” jest podgląd pięciu miejsc i ikona plecaka, która otwiera okno z samym wyposażeniem i plecakiem.
 - Karta bohatera ma nowy układ: z lewej prawdziwa karta bohatera z tarczą poziomu i paskiem doświadczenia nad nią (tekst „Poziom 1 · PD 0 / 3”), pośrodku wyposażenie i plecak, z prawej umiejętności, a na dole „Kamienie milowe”: zdolność specjalna i jej ulepszenia na poziomach 3, 6 i 9 (cyfry II–IV na ikonie, strzałki, wyszarzone do czasu zdobycia poziomu).
 - Skarby frakcji nie zajmują już miejsca w panelu bocznym: w prawym dolnym rogu mapy jest ikona skarbu z licznikiem i podpisem „Skarby”, która otwiera okno do oglądania i używania skarbów. Ta sama ikona zastąpiła przycisk „Skarby” w bitwie.
+- Przycisk „Dla testerów” (dawniej „INFO DLA TESTERÓW”) ma inny kolor niż reszta menu, a okno pod nim ma aktualną treść: zgłoszenia i uwagi idą na serwer same, nic nie trzeba pobierać ani wysyłać ręcznie.
+- Opcje w grze: tempo botów to suwak (także w pokoju online), na dole duży czerwony przycisk „Wyjdź z gry” z pytaniem „Czy na pewno chcesz wyjść z gry?”. Znikły ziarno partii i eksporty partii i dziennika, a tempo botów nie jest już w ustawieniach przed grą.
 
 ## 2.5.0 — 2026-11-12
 

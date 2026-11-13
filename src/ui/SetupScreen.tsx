@@ -153,8 +153,8 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
               <button className="btn plate parch" style={{ padding: '6px 14px', fontSize: 16 }} onClick={onIntro}>
                 Wprowadzenie
               </button>
-              <button className="btn plate parch" style={{ padding: '6px 14px', fontSize: 16 }} onClick={onTesters} title="Informacje dla testerów, statystyki i plik z uwagami dla twórcy">
-                INFO DLA TESTERÓW
+              <button className="btn plate parch btn-testers" style={{ padding: '6px 14px', fontSize: 16 }} onClick={onTesters} title="Informacje dla testerów, statystyki i uwagi dla twórcy">
+                Dla testerów
               </button>
               <input
                 ref={fileRef}

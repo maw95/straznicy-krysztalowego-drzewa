@@ -239,35 +239,29 @@ export function OptionsDialog(props: {
   figures: boolean;
   onFigures: (on: boolean) => void;
   onRules: () => void;
-  onExportGame: () => void;
-  onExportLog: () => void;
   onLeave: () => void;
 }) {
-  const { game, room } = props;
+  const { room } = props;
   const [animLevel, setAnimLevel] = useState(animSpeedLevel());
+  /** The bot pace as a slider over the three speeds (slow, normal, fast). */
   const speeds = (value: BotSpeed, onChange: (s: BotSpeed) => void, disabled = false): ReactNode => (
-    <select value={value} disabled={disabled} onChange={(e) => onChange(e.target.value as BotSpeed)}>
-      {BOT_SPEEDS.map((s) => (
-        <option key={s} value={s}>{s}</option>
-      ))}
-    </select>
+    <>
+      <input type="range" min={0} max={BOT_SPEEDS.length - 1} step={1} value={BOT_SPEEDS.indexOf(value)} disabled={disabled} data-bot-speed onChange={(e) => onChange(BOT_SPEEDS[Number(e.target.value)])} style={{ flex: 1 }} />
+      <b style={{ minWidth: 80 }}>{value}</b>
+    </>
   );
   return (
     <Modal open={props.open} onClose={props.onClose}>
       <div>
         <Frame crest style={{ width: 'min(560px, 94vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12, fontSize: 17 }}>
-          <Ribbon>Opcje i narzędzia testowe</Ribbon>
+          <Ribbon>Opcje</Ribbon>
           {room ? (
-            <label title={props.isOwner ? 'Tempo ruchów komputera dla wszystkich w pokoju' : 'Tempo ustawia założyciel pokoju'}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 10 }} title={props.isOwner ? 'Tempo ruchów komputera dla wszystkich w pokoju' : 'Tempo ustawia założyciel pokoju'}>
               Tempo botów (dla całego pokoju) {speeds(room.botSpeed, props.onRoomSpeed, !props.isOwner)}
             </label>
           ) : (
-            <label>Tempo botów {speeds(props.speed, props.onSpeed)}</label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 10 }}>Tempo botów {speeds(props.speed, props.onSpeed)}</label>
           )}
-          {!room && <label><input type="checkbox" checked={props.autoplay} onChange={(e) => props.onAutoplay(e.target.checked)} /> Autoplay — boty grają także za ludzi</label>}
-          <label title="Na słabszym komputerze albo telefonie możesz wrócić do okrągłych portretów">
-            <input type="checkbox" checked={props.figures} onChange={(e) => props.onFigures(e.target.checked)} /> Figurki 3D na planszy
-          </label>
           <label style={{ display: 'flex', alignItems: 'center', gap: 10 }} title="Szybsze animacje skracają walki: ruchy, ciosy i efekty trwają krócej">
             Szybkość animacji
             <input type="range" min={0} max={ANIM_SPEEDS.length - 1} step={1} value={animLevel} data-anim-speed onChange={(e) => (setAnimLevel(Number(e.target.value)), setAnimSpeedLevel(Number(e.target.value)))} style={{ flex: 1 }} />
@@ -283,14 +277,13 @@ export function OptionsDialog(props: {
             <input type="range" min={0} max={1} step={0.05} value={sfx.volume} onChange={(e) => sfx.setVolume(Number(e.target.value))} onPointerUp={() => sfx.play('sword_hit')} style={{ flex: 1 }} />
             <input type="checkbox" checked={!sfx.muted} onChange={() => sfx.toggleMute()} /> włączone
           </label>
-          <div>Ziarno partii: <b>{game.setup.seed}</b> · akcji: {game.actionCount} · gra zapisuje się automatycznie</div>
+          {!room && <label><input type="checkbox" checked={props.autoplay} onChange={(e) => props.onAutoplay(e.target.checked)} /> Autoplay: boty grają także za ludzi</label>}
+          <label title="Na słabszym komputerze albo telefonie możesz wrócić do okrągłych portretów">
+            <input type="checkbox" checked={props.figures} onChange={(e) => props.onFigures(e.target.checked)} /> Figurki 3D na planszy
+          </label>
           <div style={{ fontSize: 14, color: 'var(--muted)' }}>Skróty: Spacja — koniec tury/aktywacji · U — cofnij · F — przewiń boty · D — dziennik · R — zasady · Z — zdolność · S — skarby · Ctrl na jednostce — jej zasięg · Esc — zamknij</div>
           <button className="btn plate parch" style={{ padding: '6px 14px', alignSelf: 'flex-start' }} onClick={props.onRules}>Zasady i karty</button>
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <button className="btn prim" style={{ padding: '6px 14px' }} onClick={props.onExportGame}>Eksport partii (JSON)</button>
-            <button className="btn prim" style={{ padding: '6px 14px' }} onClick={props.onExportLog}>Eksport dziennika</button>
-            <button className="btn prim r" style={{ padding: '6px 14px' }} onClick={props.onLeave}>{room ? 'Wyjdź z gry' : 'Nowa gra'}</button>
-          </div>
+          <button className="btn prim r" data-leave style={{ padding: '12px 20px', fontSize: 22, width: '100%' }} onClick={props.onLeave}>Wyjdź z gry</button>
           <button className="btn plate parch" data-enter style={{ padding: '6px 14px', alignSelf: 'flex-end' }} onClick={props.onClose}>Zamknij</button>
         </Frame>
       </div>

@@ -45,8 +45,8 @@ export function BugReportDialog({ game, save, onSaved, onClose, roomCode }: Prop
     } else if (sent) {
       setDone('Zgłoszenie poszło prosto do twórcy gry.');
     } else {
-      // Hosted game: the report waits in this browser's tester journal ("DLA TESTERÓW").
-      setDone('Zgłoszenie zapisało się w tej przeglądarce. Wyślesz je razem z resztą: w menu głównym kliknij „INFO DLA TESTERÓW” i pobierz plik dla twórcy.');
+      // No connection to the server: the report waits in this browser's tester journal ("Dla testerów").
+      setDone('Zgłoszenie zapisało się w tej przeglądarce. Wyślesz je później: w menu głównym kliknij „Dla testerów” i „Wyślij do twórcy”.');
     }
     setBusy(false);
   }

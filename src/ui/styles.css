@@ -767,3 +767,5 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .hero-sheet-wide { width: min(980px, 96vw); }
 .hero-sheet-wide .milestones { justify-content: center; }
 .hero-sheet-wide .milestone { width: 150px; }
+/* "Dla testerów" stands out from the other menu buttons */
+.btn-testers { background: linear-gradient(180deg, #CFE0F4, #8FB0DA) !important; color: #10243F !important; box-shadow: 0 0 0 2px #1E3A66, 0 0 0 3px #0A1626 !important; }

@@ -902,11 +902,9 @@ export function App() {
           setShowDebug(false);
           setShowRules(true);
         }}
-        onExportGame={() => download(`partia-${game.setup.seed}.json`, JSON.stringify(saveFile(game), null, 1))}
-        onExportLog={() => download(`dziennik-${game.setup.seed}.txt`, game.log.map((l) => `[${l.round}] ${l.text}`).join('\n'))}
         onLeave={() => {
           setShowDebug(false);
-          leaveGame();
+          setConfirm({ text: 'Czy na pewno chcesz wyjść z gry?', yes: 'Wyjdź z gry', onYes: leaveGame });
         }}
       />
     </HeroLevelsContext.Provider>

@@ -1,5 +1,5 @@
-// "INFO DLA TESTERÓW": what testers should know, their game statistics, a feedback box and one
-// download with everything (games, bug reports, feedback) to send to the designer.
+// "Dla testerów": what testers should know, their game statistics and a feedback box; bug reports and feedback
+// go to the game server by themselves (a file to download is only the fallback without a connection).
 
 import { useState } from 'react';
 import { MAP_SIZE_NAMES } from '../engine/data';
@@ -66,20 +66,20 @@ export function TesterDialog({ onClose, download }: { onClose: () => void; downl
       <Frame crest style={{ width: 'min(760px, 96vw)' }} innerClass="slate scroll" innerStyle={{ padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 12, fontSize: 17, maxHeight: '86vh' }}>
         <Ribbon>Dla testerów</Ribbon>
         <div>
-          Dziękuję, że testujesz grę <b>Gleamroot: Strażnicy Kryształowego Drzewa</b>! To wczesna wersja gry planszowej — każda uwaga pomoże.
+          Dziękuję, że testujesz grę <b>Gleamroot: Strażnicy Kryształowego Drzewa</b>! Każda uwaga pomoże.
         </div>
         <ul style={{ margin: 0, paddingLeft: 22, display: 'flex', flexDirection: 'column', gap: 6 }}>
           <li>
-            <b>Coś nie działa albo dziwnie wygląda?</b> Od razu kliknij <b>„Zgłoś błąd”</b> na dolnym pasku gry i opisz, co się stało. Zgłoszenie zapamięta dokładny moment partii.
+            <b>Coś nie działa albo dziwnie wygląda?</b> Od razu kliknij <b>„Zgłoś błąd”</b> na dolnym pasku gry i opisz, co się stało. Zgłoszenie idzie prosto do twórcy razem z całą partią, więc da się dokładnie odtworzyć ten moment.
           </li>
           <li>
-            <b>Graj normalnie</b> — różne tryby, mapy i poziomy. Gra sama zapisuje Twoje partie i wyniki w tej przeglądarce.
+            <b>Graj normalnie</b>: różne tryby, mapy i poziomy. Statystyki partii poniżej zapisują się w tej przeglądarce.
           </li>
           <li>
-            <b>Na koniec</b> wpisz poniżej swoje wrażenia i kliknij <b>„Wyślij do twórcy”</b> — pójdą prosto do mnie razem z Twoimi partiami i zgłoszonymi błędami. Bez internetu możesz pobrać plik i wysłać go, jak Ci wygodnie.
+            <b>Ogólne wrażenia</b> (co się podobało, co było niejasne, za łatwe, za trudne) wpisz poniżej i kliknij <b>„Wyślij do twórcy”</b>. Nic nie musisz pobierać ani przesyłać ręcznie.
           </li>
           <li style={{ color: 'var(--muted)', fontSize: 15 }}>
-            Wszystko zostaje na Twoim komputerze, dopóki sam tego nie wyślesz. Graj w tej samej przeglądarce i nie czyść jej danych, żeby nic nie zginęło.
+            Plik do pobrania jest tylko zapasem na wypadek braku połączenia z serwerem.
           </li>
         </ul>
 

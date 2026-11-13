@@ -45,8 +45,6 @@ Autor przejrzał szkic poziomu 3 (`docs/poziom_3_krolestwo_uwagi.txt`) i zapisa�
 - [ ] **A1. Prawy przycisk = podgląd tylko przy trzymaniu.** Dziś okno dodatkowych informacji znika dopiero po kliknięciu gdzie indziej; ma znikać po puszczeniu przycisku. Na telefonie odpowiednik: przytrzymanie palca.
 - [ ] **A2. Usunąć niepotrzebne podpowiedzi:** najechanie na portret bohatera w grze (kliknięcie lewym otwiera Kartę bohatera, prawym trzymanym pokazuje kartę), podpowiedzi ze statystykami nad portretami w menu wyboru frakcji i bohatera, podpowiedzi na kafelkach mapy świata (info tylko przez trzymanie prawego).
 - [ ] **A3. Plecak bez limitu** (dziś 4 miejsca; skasować ograniczenie w silniku i UI, sprawdzić zapisy i serwer).
-- [ ] **A5. Okno „INFO DLA TESTERÓW”:** nazwa „Dla testerów”, odróżniający kolor, nowa treść (nic się nie ściąga ani nie wysyła do autora: zgłoszenia lecą na serwer same).
-- [ ] **A6. Okno Opcje w grze** (Q14 rozstrzygnięte): na górze suwak „Tempo botów” (zamiast listy), niżej szybkość animacji, muzyka, efekty, potem pola Autoplay i Figurki 3D; skasować „Ziarno partii…”, „Eksport partii”, „Eksport dziennika”; „Nowa gra” → duży, widoczny „Wyjdź z gry”; po kliknięciu pytanie „Czy na pewno chcesz wyjść z gry?” z trzema przyciskami (patrz Q14). „Tempo botów” znika z ekranów ustawień przed grą.
 
 ## B. Średnie
 

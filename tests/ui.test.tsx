@@ -135,7 +135,7 @@ describe('bug reports', () => {
 });
 
 describe('tester journal', () => {
-  it('keeps games in the browser and exports them with feedback from "DLA TESTERÓW"', async () => {
+  it('keeps games in the browser and exports them with feedback from "Dla testerów"', async () => {
     // A finished coop game and one still running, as the game itself records them.
     const setup = (seed: number) => ({ mode: 'coop' as const, mapSize: 'short' as const, battleMode: 'arena' as const, seed, seats: [{ name: 'Ala', faction: 'dawn' as const, controller: 'human' as const, heroId: 'goldDragon' }], rules: { ...DEFAULT_RULES } });
     const won = { ...createGame(setup(1)), phase: 'over' as const, winner: 'dawn' as const, endReason: 'test' };
@@ -155,7 +155,7 @@ describe('tester journal', () => {
     expect(box).toContain('Procent wygranych100%');
     expect(box).toContain('Punkty9');
     const btn = (t: string) => button(doc, t)!;
-    await act(async () => fireEvent.click(btn('INFO DLA TESTERÓW')));
+    await act(async () => fireEvent.click(btn('Dla testerów')));
     expect(doc.body.textContent).toContain('Zgłoszone błędy: 1');
     await act(async () => fireEvent.change(doc.querySelector('input[aria-label="Twoje imię"]')!, { target: { value: 'Ola' } }));
     await act(async () => fireEvent.change(doc.querySelector('textarea[aria-label="Twoje uwagi"]')!, { target: { value: 'Fajne smoki' } }));
