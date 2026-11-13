@@ -41,7 +41,16 @@ export type AbilityId =
   | 'bogRegrowth' // Bagienne Odrastanie (Bagienny Pełzacz)
   | 'runeGolem' // Kamienna Skóra, Runiczny Rdzeń and Trzęsienie (Kamienny Golem)
   | 'stormKing' // Teleport, Pole Naładowane and Wyładowanie (Król Burzy)
-  | 'tentacles'; // Macki (Kraken)
+  | 'tentacles' // Macki (Kraken)
+  // Level 3 recruits (docs/JEDNOSTKI_POZIOMU_3.md).
+  | 'quills' // Kolce (Jeżozwierz, passive)
+  | 'gallop' // Strzał i Galop (Centaur, hop after the attack)
+  | 'headlong' // Czołowe Natarcie (Alabastrowy Odyniec, passive)
+  | 'treeRoots' // Korzenie Drzewa (Opiekun Drzewa)
+  | 'poisonClaw' // Zatruty Pazur (Szczurołak)
+  | 'packHunt' // Obława (Piekielny Ogar, passive)
+  | 'inferno' // Pożoga (Salamandra Popiołu)
+  | 'bloodRage'; // Bitewny Szał (Herszt Minotaurów, passive)
 
 export interface UnitDef {
   id: string;
@@ -116,6 +125,24 @@ export const ABILITY = {
   chargedFieldRounds: 2,
   chargedFieldDamage: 1,
   dischargeDamage: 1,
+  /** Kolce: damage dealt to whoever hits the Jeżozwierz in melee (small scale). */
+  quillsDamage: 1,
+  /** Strzał i Galop: how far the Centaur may fall back after its shot. */
+  gallopRange: 3,
+  /** Czołowe Natarcie: bonus for a blow at the target's front (small scale). */
+  headlongBonus: 2,
+  /** Korzenie Drzewa: Życie each neighbouring ally regains (hp scale). */
+  treeRootsHeal: 2,
+  /** Zatruty Pazur: Życie lost at the start of each of the next `poisonTicks` activations (small scale). */
+  poisonDamage: 1,
+  poisonTicks: 2,
+  /** Obława: bonus when the target stands next to another ally of the Ogar (small scale). */
+  packHuntBonus: 1,
+  /** Pożoga: damage to the target's neighbours (small scale; the target takes the blow itself). */
+  infernoDamage: 1,
+  /** Bitewny Szał: damage ignored from every blow (small scale, a blow that lands takes at least 1) and the bonus after a kill (small scale). */
+  bloodRageArmor: 1,
+  bloodRageBonus: 2,
 };
 
 /**
@@ -257,6 +284,15 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'goblinShaman', name: 'Goblin Szaman', side: 'horde', kind: 'support', hp: 5, attack: 1, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'curse', abilityName: 'Złowroga Klątwa', abilityText: `Raz na bitwę: trafiony cel ma −${ABILITY.curseMinus} A przy następnym ataku.` }),
     u({ id: 'caveSpider', name: 'Pająk Jaskiniowy', side: 'horde', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'web', abilityName: 'Pajęcze Sidła', abilityText: `Raz na bitwę: wróg do ${ABILITY.webRange} pól nie rusza się w następnej aktywacji.` }),
     u({ id: 'shadowBat', name: 'Nietoperz Cienia', side: 'horde', kind: 'support', hp: 5, attack: 2, speed: 3, movement: 'fly', attackType: 'melee', ability: 'nightAmbush', abilityName: 'Nocna Zasadzka', abilityText: `Raz na bitwę: atak zadaje +${ABILITY.nightAmbushBonus} obrażenia.` }),
+    // Level 3 recruits (tiers 2-5), digital ruleset only: they are not in FACTION_SUPPORTS but in RECRUITS (kingdom.ts).
+    u({ id: 'hedgehog', name: 'Jeżozwierz', side: 'dawn', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'quills', abilityName: 'Kolce', abilityText: `Stała: każdy, kto zaatakuje go wręcz, dostaje ${ABILITY.quillsDamage} obrażenie.` }),
+    u({ id: 'centaur', name: 'Centaur', side: 'dawn', kind: 'support', hp: 6, attack: 3, speed: 5, movement: 'walk', attackType: 'ranged', ability: 'gallop', abilityName: 'Strzał i Galop', abilityText: `Raz na bitwę: po ataku może się cofnąć o maks. ${ABILITY.gallopRange} pola.` }),
+    u({ id: 'boar', name: 'Alabastrowy Odyniec', side: 'dawn', kind: 'support', hp: 10, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'headlong', abilityName: 'Czołowe Natarcie', abilityText: `Stała: +${ABILITY.headlongBonus} obrażenia, gdy atakuje cel od przodu.` }),
+    u({ id: 'treeGuardian', name: 'Opiekun Drzewa', side: 'dawn', kind: 'support', size: 2, hp: 14, attack: 5, speed: 3, movement: 'walk', attackType: 'melee', ability: 'treeRoots', abilityName: 'Korzenie Drzewa', abilityText: `Raz na bitwę: na początku swojej aktywacji leczy sąsiednich sojuszników o ${ABILITY.treeRootsHeal} Ż.` }),
+    u({ id: 'ratman', name: 'Szczurołak', side: 'horde', kind: 'support', hp: 5, attack: 2, speed: 5, movement: 'walk', attackType: 'melee', ability: 'poisonClaw', abilityName: 'Zatruty Pazur', abilityText: `Raz na bitwę: trafiony wróg traci ${ABILITY.poisonDamage} Ż na początku swoich dwóch następnych aktywacji.` }),
+    u({ id: 'hellhound', name: 'Piekielny Ogar', side: 'horde', kind: 'support', hp: 7, attack: 3, speed: 6, movement: 'walk', attackType: 'melee', ability: 'packHunt', abilityName: 'Obława', abilityText: `Stała: +${ABILITY.packHuntBonus} A, gdy cel sąsiaduje z innym sojusznikiem Ogara.` }),
+    u({ id: 'salamander', name: 'Salamandra Popiołu', side: 'horde', kind: 'support', hp: 9, attack: 3, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'inferno', abilityName: 'Pożoga', abilityText: `Raz na bitwę: trafiony cel i jego sąsiedzi dostają ${ABILITY.infernoDamage} obrażenie.` }),
+    u({ id: 'minotaurChief', name: 'Herszt Minotaurów', side: 'horde', kind: 'support', size: 2, hp: 15, attack: 5, speed: 4, movement: 'walk', attackType: 'melee', ability: 'bloodRage', abilityName: 'Bitewny Szał', abilityText: `Stała: pancerz (−${ABILITY.bloodRageArmor} obrażeń z każdego ciosu); po zabiciu wroga jego następny cios zadaje +${ABILITY.bloodRageBonus} A.` }),
     u({ id: 'cyclops', name: 'Cyklop Błyskotek', side: 'neutral', kind: 'neutral', size: 2, hp: 23, attack: 2, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'boulder', abilityName: 'Miażdżący Głaz', abilityText: 'Po każdym ataku odpycha trafionego przeciwnika o 1 pole, jeśli to możliwe (jednostek dwupolowych nie da się odepchnąć).', duel: { hp: 14, ability: 'stoneSkin', abilityName: 'Kamienna Skóra', abilityText: `Każdy cios w Cyklopa zadaje o ${ABILITY.stoneSkinIgnore} mniej obrażeń.` } }),
     u({ id: 'griffin', name: 'Gryf Złodziej Skarbów', side: 'neutral', kind: 'neutral', size: 2, hp: 18, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nestLeap', abilityName: 'Łupieżczy Nalot', abilityText: `Po każdym ataku może odlecieć o maks. ${ABILITY.nestLeapRange} pola.`, duel: { hp: 10, ability: 'thiefClaw', abilityName: 'Złodziejski Szpon', abilityText: `Gdy zada obrażenia, odzyskuje ${ABILITY.thiefClawHeal} Ż.` } }),
     u({ id: 'hydra', name: 'Hydra z Zatopionych Ruin', side: 'neutral', kind: 'neutral', size: 2, hp: 21, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Paszcze Otchłani', abilityText: 'Każdym atakiem może trafić dwóch sąsiadujących przeciwników.', duel: { hp: 12, ability: 'regrowth', abilityName: 'Odrastające Głowy', abilityText: `Na początku każdej swojej aktywacji odzyskuje ${ABILITY.regrowthHeal} Ż.` } }),

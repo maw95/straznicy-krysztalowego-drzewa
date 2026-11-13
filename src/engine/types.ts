@@ -257,6 +257,8 @@ export interface UnitStatus {
   battleSpeedBonus: number;
   damageReduction: number;
   shieldArmed: boolean;
+  /** Zatruty Pazur: activations left in which the unit loses life at the start. */
+  poisoned?: number;
 }
 
 export interface BattleUnit {

@@ -342,6 +342,22 @@ export function fromBehind(state: GameState, att: BattleUnit, target: BattleUnit
   return f.x * d.x + f.y * d.y < -1e-9;
 }
 
+/** Czołowe Natarcie: whether the attacker stands in the half-plane in front of the target (the opposite of `fromBehind`). */
+export function fromFront(state: GameState, att: BattleUnit, target: BattleUnit): boolean {
+  if (!att.pos || !target.pos) return false;
+  const front = frontOf(state, target);
+  if (!front) return false;
+  const a = parseKey(att.pos);
+  const t = parseKey(target.pos);
+  const f = cartesian(front);
+  const d = cartesian({ q: a.q - t.q, r: a.r - t.r });
+  return f.x * d.x + f.y * d.y > 1e-9;
+}
+
+/** Obława: whether another ally of the attacker stands next to the target. */
+const packNearby = (state: GameState, att: BattleUnit, target: BattleUnit) =>
+  livingUnits(state.battle!, att.side).some((x) => x.id !== att.id && unitsAdjacent(x, target));
+
 /** Kamienny Golem: its rune core is bare once it has lost half its Życie. */
 export const coreExposed = (u: BattleUnit) => abilityOf(u) === 'runeGolem' && u.hp * 2 <= u.maxHp;
 
@@ -358,14 +374,16 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
     if (useAbility && ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus * scaleOf(state);
     if (ab === 'dive' && movedDistance >= ABILITY.diveMinMove) dmg += ABILITY.diveBonus * scaleOf(state);
     if (ab === 'backstab' && fromBehind(state, att, target)) dmg += ABILITY.backstabBonus * scaleOf(state);
+    if (ab === 'headlong' && fromFront(state, att, target)) dmg += ABILITY.headlongBonus * scaleOf(state);
+    if (ab === 'packHunt' && packNearby(state, att, target)) dmg += ABILITY.packHuntBonus * scaleOf(state);
   }
   return Math.max(0, dmg);
 }
 
 /** Abilities that are switched on for a single attack. */
-export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush'];
+export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
@@ -552,6 +570,25 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
   const b = state.battle!;
   b.activation = { unitId, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly, hop: 0 };
   const u = b.units[unitId];
+  // Zatruty Pazur: the poison bites at the start of the activation; a unit that dies of it loses its turn.
+  if (u.status.poisoned) {
+    u.status.poisoned -= 1;
+    dealDamage(state, u, ABILITY.poisonDamage * scaleOf(state), 'Trucizna');
+    if (!u.alive) return endActivation(state);
+  }
+  // Korzenie Drzewa: once per battle the Opiekun heals its wounded neighbours.
+  if (abilityOf(u) === 'treeRoots' && !u.abilityUsed && abilityActive(state)) {
+    const hurt = livingUnits(b, u.side).filter((x) => x.id !== u.id && x.hp < x.maxHp && unitsAdjacent(u, x));
+    if (hurt.length) {
+      u.abilityUsed = true;
+      for (const x of hurt) {
+        const healed = Math.min(ABILITY.treeRootsHeal * hpScaleOf(state), x.maxHp - x.hp);
+        x.hp += healed;
+        log(state, 'ability', `${unitName(x)} odzyskuje ${healed} Ż (Korzenie Drzewa).`);
+        (b.heals ??= []).push({ unitId: x.id, amount: healed });
+      }
+    }
+  }
   if (abilityOf(u) === 'regrowth' && abilityActive(state) && u.hp < u.maxHp) {
     const healed = Math.min(ABILITY.regrowthHeal * hpScaleOf(state), u.maxHp - u.hp);
     u.hp += healed;
@@ -699,6 +736,8 @@ export function predictDamage(
   dmg = Math.max(0, dmg - victim.status.damageReduction);
   // Kamienna Skóra of the Golem boss: a blow that lands takes at least 1.
   if (abilityOf(victim) === 'runeGolem' && abilityActive(state) && !coreExposed(victim) && dmg > 0) dmg = Math.max(1, dmg - ABILITY.runeSkinIgnore * scaleOf(state));
+  // Bitewny Szał: the Herszt's armour takes a bit off every blow that lands (at least 1 gets through).
+  if (abilityOf(victim) === 'bloodRage' && abilityActive(state) && dmg > 0) dmg = Math.max(1, dmg - ABILITY.bloodRageArmor * scaleOf(state));
   // The hero's shield (artifacts): the first blow of the battle is halved, every blow is weaker by its defence, but a blow that lands takes at least 1.
   if (victim.gear && dmg > 0) {
     if (victim.gear.firstHit) dmg = Math.ceil(dmg / 2);
@@ -741,6 +780,10 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   dealDamage(state, victim, p.damage, unitName(att));
   // Wyładowanie: whoever strikes the Król Burzy from close by is shocked.
   if (abilityOf(victim) === 'stormKing' && abilityActive(state) && att.alive && unitsAdjacent(att, victim)) dealDamage(state, att, ABILITY.dischargeDamage * scaleOf(state), 'Wyładowanie');
+  // Kolce: whoever hits a Jeżozwierz in melee is pricked.
+  if (abilityOf(victim) === 'quills' && abilityActive(state) && att.alive && UNITS[att.defId].attackType === 'melee' && unitsAdjacent(att, victim)) {
+    dealDamage(state, att, ABILITY.quillsDamage * scaleOf(state), `Kolce (${unitName(victim)})`);
+  }
   // Kolczuga Cierni: whoever hits the hero in melee is pricked itself.
   if (victim.gear?.thorns && p.damage > 0 && att.alive && UNITS[att.defId].attackType === 'melee') dealDamage(state, att, victim.gear.thorns, 'Ciernie zbroi');
 }
@@ -831,10 +874,19 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       t.status.rootedNext = true;
       log(state, 'ability', `${unitName(t)} zostaje schwytany i nie ruszy się w swojej następnej aktywacji (${UNITS[u.defId].abilityName}).`);
     }
+    if (canUse && ab === 'inferno' && t.pos) {
+      // Pożoga: the flames spread to the target's neighbours on its side (the shooter's own side is spared).
+      const burn = Object.values(b.units).filter((x) => x.alive && x.id !== t.id && x.side === t.side && unitsAdjacent(x, t));
+      for (const x of burn) dealDamage(state, x, ABILITY.infernoDamage * scaleOf(state), `Pożoga (${unitName(u)})`);
+    }
     if (canUse && t.alive) {
       if (ab === 'entanglingRoots') {
         t.status.slowNext += ABILITY.rootsSlow;
         log(state, 'ability', `${unitName(t)}: −${ABILITY.rootsSlow} S w następnej aktywacji.`);
+      }
+      if (ab === 'poisonClaw') {
+        t.status.poisoned = ABILITY.poisonTicks;
+        log(state, 'ability', `${unitName(t)} zostaje zatruty: straci ${ABILITY.poisonDamage * scaleOf(state)} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji.`);
       }
       if (ab === 'curse') {
         t.status.cursedNext += ABILITY.curseMinus * scaleOf(state);
@@ -861,6 +913,11 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   }
   u.status.nextAttackBonus = 0;
   u.status.cursedNext = 0;
+  // Bitewny Szał: a kill feeds the next blow.
+  if (ab === 'bloodRage' && abilityActive(state) && u.alive && targets.some((t) => !t.alive)) {
+    u.status.nextAttackBonus += ABILITY.bloodRageBonus * scaleOf(state);
+    log(state, 'ability', `${unitName(u)} wpada w szał: następny cios +${ABILITY.bloodRageBonus * scaleOf(state)} A (${UNITS[u.defId].abilityName}).`);
+  }
   act.attacked = true;
   act.acted = true;
   if (checkBattleEnd(state)) return;
@@ -877,9 +934,9 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       log(state, 'ability', `${unitName(u)} odzyskuje ${heal} Ż po zabiciu wroga.`);
     }
   }
-  const hopAbility = ab === 'airDash' || ab === 'nestLeap';
+  const hopAbility = ab === 'airDash' || ab === 'nestLeap' || ab === 'gallop';
   if (hopAbility && !b.duel && (!u.abilityUsed || ab === 'nestLeap') && abilityActive(state) && u.alive) {
-    act.hop = ab === 'airDash' ? ABILITY.airDashRange : ABILITY.nestLeapRange;
+    act.hop = ab === 'airDash' ? ABILITY.airDashRange : ab === 'gallop' ? ABILITY.gallopRange : ABILITY.nestLeapRange;
     return;
   }
   endActivation(state);

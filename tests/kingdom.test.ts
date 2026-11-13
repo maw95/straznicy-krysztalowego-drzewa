@@ -51,11 +51,11 @@ describe('level 3: income, mines and capture', () => {
     s.tiles[mine].revealed = true;
     s = applyAction(s, { type: 'moveHero', to: mine });
     expect(s.kingdom!.mines[mine].owner).toBe('dawn');
-    expect(incomeOf(s, 'dawn')).toBe(KINGDOM.incomeStart + KINGDOM.incomeMine);
+    expect(incomeOf(s, 'dawn')).toBe(KINGDOM.incomeSettlement + KINGDOM.incomeMine);
     const before = goldOf(s, 'dawn');
     const round = s.round;
     while (s.round === round) s = applyAction(s, { type: 'endTurn' });
-    expect(goldOf(s, 'dawn')).toBe(before + KINGDOM.incomeStart + KINGDOM.incomeMine);
+    expect(goldOf(s, 'dawn')).toBe(before + KINGDOM.incomeSettlement + KINGDOM.incomeMine);
   });
 });
 
@@ -120,7 +120,7 @@ describe('level 3: services of a settlement', () => {
     s.tiles[foreign.at].revealed = true;
     s = applyAction(s, { type: 'moveHero', to: foreign.at });
     expect(settlementsOf(s, 'dawn').map((x) => x.id)).toContain(foreign.id);
-    expect(incomeOf(s, 'dawn')).toBe(KINGDOM.incomeStart + KINGDOM.incomeSettlement);
+    expect(incomeOf(s, 'dawn')).toBe(KINGDOM.incomeSettlement + KINGDOM.incomeSettlement);
     s.kingdom!.settlements[foreign.id].buildings.barracks = 1;
     s.kingdom!.gold.dawn = 20;
     expect(() => (s = applyAction(s, { type: 'kingdomRecruit', settlementId: foreign.id, unitId: 'nymph' }))).toThrow(/rekrutować/);

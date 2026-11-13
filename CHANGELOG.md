@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Poziom „Królestwo”: osiem nowych pomocników do wykupienia w koszarach, po czterech na frakcję (poziomy 2–5; poziomy 4 i 5 w rozbudowanych koszarach). Przymierze: Jeżozwierz (Kolce), Centaur (Strzał i Galop), Alabastrowy Odyniec (Czołowe Natarcie), Opiekun Drzewa (Korzenie Drzewa). Horda: Szczurołak (Zatruty Pazur), Piekielny Ogar (Obława), Salamandra Popiołu (Pożoga), Herszt Minotaurów (Bitewny Szał). Ceny na razie robocze (3, 5, 8 i 12 zł). Dochód: każda osada, także startowa, daje 2 zł na rundę (skarbiec +1).
 - Gra szybciej startuje przy kolejnych wejściach: rzadko zmieniane części programu (tabele strojenia, biblioteka React) są w osobnych plikach, które przeglądarka zachowuje po wydaniu nowej wersji. Główny plik programu zmalał z 1089 do 565 kB.
 - Gra online ma poziom „Własne ustawienia”: założyciel pokoju może przełączyć wszystko jak w grze lokalnej: rozwój bohatera, rodzaj bitew (arena albo pojedynek), ułatwienia, utrudnienia, rzut kością, dodatkowego bohatera Hordy i remis inicjatywy, a do tego wybrać cel i kształt mapy. Pozostali gracze widzą te ustawienia w pokoju. Serwer przyjmuje tylko dozwolone przełączniki, a partie na własnych zasadach nie liczą się do rankingu.
 - Okno ze szczegółami pod prawym przyciskiem myszy pokazuje się tylko, dopóki go trzymasz; puszczasz przycisk i okno znika (wcześniej po krótkim kliknięciu zostawało do następnego kliknięcia).

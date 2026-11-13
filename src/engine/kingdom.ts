@@ -40,9 +40,8 @@ export interface KingdomState {
 
 export const KINGDOM = {
   startGold: 2,
-  /** Income per round: from the faction's starting settlement, from every other settlement it holds, from a mine, from a treasury. */
-  incomeStart: 2,
-  incomeSettlement: 1,
+  /** Income per round: from every settlement it holds (the starting one too), from a mine, from a treasury. */
+  incomeSettlement: 2,
   incomeMine: 1,
   incomeTreasury: 1,
   /** Gold in a chest chosen instead of the artifact. */
@@ -66,10 +65,17 @@ export const KINGDOM = {
   slotsMax: 5,
 };
 
-/** The supports a faction can recruit, by tier (1 = the supports it starts the game with in the other levels). Tiers 2–5 wait for the new units (docs/JEDNOSTKI_POZIOMU_3.md). */
+/** Prices of the recruits by tier (provisional: tuned with the simulations, docs/JEDNOSTKI_POZIOMU_3.md). */
+export const RECRUIT_COSTS = [2, 3, 5, 8, 12];
+const TIER_UNITS: Record<FactionId, string[]> = {
+  dawn: ['hedgehog', 'centaur', 'boar', 'treeGuardian'],
+  horde: ['ratman', 'hellhound', 'salamander', 'minotaurChief'],
+};
+
+/** The supports a faction can recruit, by tier: tier 1 are the supports it starts the game with in the other levels, tiers 2–5 are the new units (tiers 4–5 need upgraded barracks). */
 export const RECRUITS: Record<FactionId, Array<{ id: string; tier: number; cost: number }>> = {
-  dawn: FACTION_SUPPORTS.dawn.map((id) => ({ id, tier: 1, cost: 2 })),
-  horde: FACTION_SUPPORTS.horde.map((id) => ({ id, tier: 1, cost: 2 })),
+  dawn: [...FACTION_SUPPORTS.dawn.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })), ...TIER_UNITS.dawn.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] }))],
+  horde: [...FACTION_SUPPORTS.horde.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })), ...TIER_UNITS.horde.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] }))],
 };
 
 const NAMES: Record<FactionId, string[]> = {
@@ -116,7 +122,7 @@ export function incomeBreakdown(state: GameState, f: FactionId): Array<{ label: 
   const rows: Array<{ label: string; gold: number }> = [];
   for (const s of Object.values(k.settlements)) {
     if (s.owner !== f) continue;
-    rows.push({ label: s.name, gold: s.id === `start-${f}` ? KINGDOM.incomeStart : KINGDOM.incomeSettlement });
+    rows.push({ label: s.name, gold: KINGDOM.incomeSettlement });
     if (s.buildings.treasury) rows.push({ label: `Skarbiec (${s.name})`, gold: KINGDOM.incomeTreasury });
   }
   for (const [hex, m] of Object.entries(k.mines)) if (m.owner === f) rows.push({ label: `Kopalnia (${hex})`, gold: KINGDOM.incomeMine });

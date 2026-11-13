@@ -721,8 +721,9 @@ describe('level 3: the settlement window', () => {
     expect(doc.querySelector('[data-settlement]')).not.toBeNull();
     await act(async () => fireEvent.click(doc.querySelector('[data-build="barracks"]')!));
     expect(gold()).toBe(27);
-    // The three supports of the faction are all there: nobody to hire yet (the new tiers are to come).
-    expect(doc.querySelector('[data-recruit]')).toBeNull();
+    // The three tier-1 supports are already in the team: the first one to hire is tier 2 (3 gold).
+    await act(async () => fireEvent.click(doc.querySelector('[data-recruit]:not([disabled])')!));
+    expect(gold()).toBe(24);
     await act(async () => fireEvent.click(doc.querySelector('[data-building="market"]')!));
     await act(async () => fireEvent.click(doc.querySelector('[data-build="market"]')!));
     expect(doc.querySelectorAll('[data-buy]').length).toBe(3);
