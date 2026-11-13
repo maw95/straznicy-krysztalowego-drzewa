@@ -1,8 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
-import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, MAP_SIZE_NAMES, BOARD_MAP_SIZES, UNITS, type FactionId, type MapSize } from '../engine/data';
+import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import { CUSTOM_MAPS } from '../engine/customMaps';
-import { resolveTier, TIERS, withRuleset, type Tier } from '../engine/presets';
-import { OBJECTIVES } from '../engine/objectives';
+import { resolveTier, withRuleset, type Tier } from '../engine/presets';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
@@ -12,8 +11,10 @@ import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
-import { CustomSwitchRows } from './CustomSwitchRows';
-import { SHAPE_NAMES, SHAPE_TIPS, ARENA_HINT, ARENA_LEVEL_TIPS, choice, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
+import { defaultHeroes, SEAT_TINT } from './setupShared';
+import { NewGameWizard, savedDigital } from './NewGameWizard';
+import { deleteNamedSave, listNamedSaves, type NamedSave } from './saves';
+import type { TableConfig } from '../online/api';
 
 /** Fresh seats: the first player is a person (both players of a two-sided game), the rest are bots. */
 const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
@@ -23,16 +24,10 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
   });
 
 
-/** The pages of the new-game wizard: the edition, the game's options, the seats at the table. */
-type Step = 'start' | 'options' | 'table';
+/** The pages of the menu: the first choice, where to play, the new-game wizard, the saved games, the seats at the table. */
+type Step = 'home' | 'where' | 'wizard' | 'load' | 'table';
 
-const EDITION_KEY = 'skd-edition';
-/** The edition picked last time in this browser: digital unless the board edition was chosen. */
-function savedDigital(): boolean {
-  try { return localStorage.getItem(EDITION_KEY) !== 'board'; } catch { return true; }
-}
-
-export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog, onCredits }: { online: { label: string; title: string }; onOnline: () => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void; onCredits: () => void }) {
+export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog, onCredits }: { session: boolean; online: { label: string; title: string }; onOnline: () => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void; onCredits: () => void }) {
   // Both read and replay saved games: once per visit to the menu, not on every hover and keystroke.
   const stats = useMemo(journalStats, []);
   const saveLabel = useMemo(() => autosave && describeSave(autosave), [autosave]);
@@ -41,13 +36,17 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
   const [tutorial, setTutorial] = useState(tutorialEnabled());
   const [fullscreen, setFullscreen] = useState(autoFullscreen);
   const [mode, setMode] = useState<Mode>('coop');
-  const [count, setCount] = useState(1);
+  const [, setCount] = useState(1);
   const [seats, setSeats] = useState<SeatSetup[]>(defaultSeats('coop', 1));
   const [mapSize, setMapSize] = useState<MapSize>('short');
   const [battleMode, setBattleMode] = useState<BattleMode>('arena');
   // The shuffle seed is no longer a menu choice: every game gets a fresh random one.
   const [seed] = useState(() => Math.floor(Math.random() * 1e6));
-  const [step, setStep] = useState<Step>('start');
+  const [step, setStep] = useState<Step>('home');
+  /** What the first page was clicked for: a new game or a saved one (both then ask where to play). */
+  const [intent, setIntent] = useState<'new' | 'load'>('new');
+  const [lastTable, setLastTable] = useState<TableConfig | null>(null);
+  const [named, setNamed] = useState<NamedSave[]>(listNamedSaves);
   const [rules, setRules] = useState({ ...DEFAULT_RULES });
   const [level, setLevel] = useState<Level | 'custom'>('normal');
   /** The digital edition (2D units, its rules) or the board edition (3D figures, the board game's rules); remembered in this browser. */
@@ -60,19 +59,6 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
   /** The complexity level of a digital adventure (presets.ts): decides which of the switches below the player may change. */
   const [tier, setTier] = useState<Tier>('adventure');
   const [customId, setCustomId] = useState(Object.keys(CUSTOM_MAPS)[0]);
-  const setDigital = (on: boolean) => {
-    setDigitalState(on);
-    // The XL and XXL maps are the digital edition's.
-    if (!on && !BOARD_MAP_SIZES.includes(mapSize)) setMapSize('veryLong');
-    try { localStorage.setItem(EDITION_KEY, on ? 'digital' : 'board'); } catch { /* private mode: only for this visit */ }
-  };
-  const pickLevel = (l: Level, m: Mode = mode) => {
-    const preset = levelSettings(l, m);
-    setLevel(l);
-    setBattleMode(preset.battleMode);
-    // The levels play the default tie rule; another one is a custom setup.
-    setRules({ ...preset.rules });
-  };
   const [preview, setPreview] = useState<string>('goldDragon');
   // Easter egg: five clicks on a Dawn crest wake up the Brave Duck (remembered in this browser).
   const [duck, setDuck] = useState(() => { try { return localStorage.getItem('skd-duck') === '1'; } catch { return false; } });
@@ -86,21 +72,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
   };
   const heroesOf = (f: FactionId) => (duck ? [...FACTION_HEROES[f], ...SECRET_HEROES[f]] : FACTION_HEROES[f]);
 
-  const changeMode = (m: Mode) => {
-    const c = m === 'pvp' ? Math.max(2, count) : m === 'arena' ? 2 : Math.min(3, count);
-    setMode(m);
-    setCount(c);
-    setSeats(defaultSeats(m, c));
-    // "Trudny" exists for coop only; in the arena the level is the computer's strength (no "Własny").
-    if (level === 'hard' && m === 'pvp') pickLevel('normal', m);
-    if (level === 'custom' && m === 'arena') pickLevel('normal', m);
-  };
   const arena = mode === 'arena';
-  const versusBot = seats.some((s) => s.controller === 'bot');
-  const changeCount = (c: number) => {
-    setCount(c);
-    setSeats(defaultSeats(mode, c));
-  };
   const update = (i: number, patch: Partial<SeatSetup>) => setSeats(seats.map((s, j) => (j === i ? { ...s, ...patch } : s)));
   const takenBy = (heroId: string, i: number) => seats.some((s, j) => j !== i && s.heroId === heroId);
   const valid =
@@ -113,8 +85,40 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
     const r = resolveTier(tier, { objective, shape, customMapId: customId, growth });
     onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero, ...(noHorde && mode === 'coop' && r.objective === 'boss' ? { noHorde: true } : {}) } }, digital, r.objective, r.shape, r.customMapId, r.growth));
   };
+  /** The wizard is done: its choices become this screen's state, and the seats come next. */
+  const applyWizard = (t: TableConfig) => {
+    const preset = levelSettings(t.level, t.mode);
+    const count = t.seats.length;
+    setLastTable(t);
+    setDigitalState(t.digital);
+    setMode(t.mode);
+    setCount(count);
+    setSeats(defaultSeats(t.mode, count));
+    setMapSize(t.mapSize);
+    setLevel(t.level);
+    setBattleMode(t.battleMode ?? preset.battleMode);
+    setRules({ ...preset.rules, ...(t.rules ?? {}) });
+    setTier(t.tier);
+    setObjective(t.objective);
+    setShape(t.shape);
+    if (t.customMapId) setCustomId(t.customMapId);
+    setGrowth(t.growth === true);
+    setNoHorde(t.noHorde === true);
+    setStep('table');
+  };
   const backBtn = (to: Step) => <button className="btn plate parch" style={{ height: 52, padding: '0 28px', fontSize: 20 }} onClick={() => setStep(to)}>← Wstecz</button>;
-  const stepName = step === 'start' ? '' : `Krok ${step === 'options' ? 2 : 3} z 3: ${step === 'options' ? 'Ustawienia gry' : 'Miejsca przy stole'} · ${digital ? 'wersja cyfrowa' : 'wersja planszowa'}`;
+  const menuLinks = (
+    <div className="menu-links" data-menu-links>
+      <button className="btn plate parch" style={{ padding: '6px 14px', fontSize: 16 }} onClick={onRules}>Zasady i karty</button>
+      <button className="btn plate parch" style={{ padding: '6px 14px', fontSize: 16 }} onClick={onIntro}>Wprowadzenie</button>
+      <button className="btn plate parch btn-testers" style={{ padding: '6px 14px', fontSize: 16 }} onClick={onTesters} title="Informacje dla testerów, statystyki i uwagi dla twórcy">Dla testerów</button>
+    </div>
+  );
+  const pickWhere = (where: 'here' | 'online') => {
+    if (where === 'online') return onOnline();
+    setStep(intent === 'new' ? 'wizard' : 'load');
+  };
+  const stepName = step === 'table' ? `Miejsca przy stole · ${digital ? 'wersja cyfrowa' : 'wersja planszowa'}` : '';
 
   return (
     <div className="screen slate screen-enter" style={{ alignItems: 'center', paddingTop: 16, gap: 18 }}>
@@ -129,75 +133,30 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
           />
         ))}
       </div>
-      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
         <h1 style={{ margin: 0, lineHeight: 0 }}>
-          <img className="logo-glow" src={asset('ui/logo.png')} alt="Gleamroot: Strażnicy Kryształowego Drzewa" style={{ height: step === 'start' ? 'clamp(90px, 15vh, 150px)' : 'clamp(60px, 10vh, 100px)' }} />
+          <img className="logo-glow" src={asset('ui/logo.png')} alt="Gleamroot: Strażnicy Kryształowego Drzewa" style={{ height: step === 'home' ? 'clamp(90px, 15vh, 150px)' : 'clamp(60px, 10vh, 100px)' }} />
         </h1>
-        {step === 'start' && (
-          <>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: 6 }}>
-              {autosave && (
-                <button className="btn prim" style={{ padding: '6px 18px', fontSize: 17 }} title={saveLabel ?? undefined} onClick={() => onLoad(autosave)}>
-                  Kontynuuj zapisaną partię
-                </button>
-              )}
-              <button className="btn prim" style={{ padding: '6px 18px', fontSize: 17 }} onClick={onOnline} title={online.title}>
-                {online.label}
-              </button>
-              <button className="btn plate parch" style={{ padding: '6px 14px', fontSize: 16 }} onClick={() => fileRef.current?.click()}>
-                Wczytaj z pliku
-              </button>
-              <button className="btn plate parch" style={{ padding: '6px 14px', fontSize: 16 }} onClick={onRules}>
-                Zasady i karty
-              </button>
-              <button className="btn plate parch" style={{ padding: '6px 14px', fontSize: 16 }} onClick={onIntro}>
-                Wprowadzenie
-              </button>
-              <button className="btn plate parch btn-testers" style={{ padding: '6px 14px', fontSize: 16 }} onClick={onTesters} title="Informacje dla testerów, statystyki i uwagi dla twórcy">
-                Dla testerów
-              </button>
-              <input
-                ref={fileRef}
-                type="file"
-                accept=".json,application/json"
-                style={{ display: 'none' }}
-                onChange={async (e) => {
-                  const f = e.target.files?.[0];
-                  e.target.value = '';
-                  if (!f) return;
-                  try {
-                    onLoad(parseSave(await f.text()));
-                  } catch (err) {
-                    setLoadError((err as Error).message);
-                  }
-                }}
-              />
-            </div>
-            {autosave && <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 4 }}>{saveLabel}</div>}
-            {loadError && <div style={{ fontSize: 15, color: '#F08A7A', marginTop: 4 }}>{loadError}</div>}
-          </>
-        )}
-        {stepName && <div style={{ fontSize: 16, color: '#F3D27A', marginTop: 6, letterSpacing: '0.04em' }}>{stepName}</div>}
+        {step !== 'table' && menuLinks}
+        {stepName && <div style={{ fontSize: 16, color: '#F3D27A', marginTop: 2, letterSpacing: '0.04em' }}>{stepName}</div>}
       </div>
 
-      {step === 'start' && (
+      {step === 'home' && (
         <div className="main-row setup-row" style={{ position: 'relative', width: '100%', maxWidth: 1100 }}>
-          <Frame crest className="grow" innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div className="lbl">Krok 1 z 3: w którą wersję gramy?</div>
-            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-              {([
-                [false, 'Planszowa', 'Wierna planszówka: zasady bez zmian, malowana arena i figurki 3D. Do grania przy jednym ekranie tak, jakby karty i plansza leżały na stole.'],
-                [true, 'Cyfrowa', TIPS.digital],
-              ] as const).map(([on, label, text]) => (
-                <div key={label} className="well" onClick={() => setDigital(on)} style={{ flex: '1 1 300px', padding: '14px 18px', display: 'flex', flexDirection: 'column', gap: 8, cursor: 'pointer', boxShadow: digital === on ? '0 0 0 3px #9EE4FF' : undefined }}>
-                  <button className={choice(digital === on)} aria-pressed={digital === on} onClick={() => setDigital(on)} style={{ fontSize: 24, fontWeight: 800, alignSelf: 'flex-start' }}>{label}</button>
-                  <span style={{ fontSize: 15, lineHeight: 1.4 }}>{text}</span>
-                </div>
-              ))}
+          <Frame crest className="grow" innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 18 }}>
+            <div className="home-big" data-wizard-page="home">
+              <button className="opt-card wide" onClick={() => { setIntent('new'); setStep('where'); }}>
+                <span className="opt-card-img"><img src={asset('ikony/mapa/shrine.webp')} alt="" /></span>
+                <span className="opt-card-title">Nowa gra</span>
+                <span className="opt-card-text">Wybierz wersję, poziom i tryb, a potem frakcje i bohaterów.</span>
+              </button>
+              <button className="opt-card wide" onClick={() => { setIntent('load'); setStep('where'); }}>
+                <span className="opt-card-img"><img src={asset('ikony/mapa/chest.webp')} alt="" /></span>
+                <span className="opt-card-title">Wczytaj grę</span>
+                <span className="opt-card-text">Wróć do zapisanej partii.</span>
+              </button>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
-              <button className="btn prim" style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={() => setStep('options')}>Dalej →</button>
-            </div>
+            {loadError && <div style={{ fontSize: 15, color: '#F08A7A', textAlign: 'center' }}>{loadError}</div>}
             {/* The tester's record in this browser sits on the first page: it is the place a returning player lands on. */}
             <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 16, flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
@@ -249,99 +208,77 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
         </div>
       )}
 
-      {step === 'options' && (
-        <div className="main-row setup-row" style={{ position: 'relative', width: '100%', maxWidth: 1000 }}>
-          <Frame crest className="grow" innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <Row label="Tryb">
-              <Tip text={TIPS.coop}><button className={chip(mode === 'coop')} onClick={() => changeMode('coop')}>Kooperacja (wszyscy przeciw AI)</button></Tip>
-              <Tip text={TIPS.pvp}><button className={chip(mode === 'pvp')} onClick={() => changeMode('pvp')}>Rywalizacja (dobro kontra zło)</button></Tip>
-              <Tip text={TIPS.arenaMode}><button className={chip(arena)} onClick={() => changeMode('arena')}>Arena (jedna bitwa)</button></Tip>
-            </Row>
-            {arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>{ARENA_HINT}</div>}
-            {digital && !arena && (
-              <Row label="Poziom">
-                {(Object.keys(TIERS) as Tier[]).map((t) => (
-                  <Tip key={t} text={TIERS[t].summary}><button className={chip(tier === t)} aria-pressed={tier === t} onClick={() => setTier(t)}>{TIERS[t].name}</button></Tip>
-                ))}
-              </Row>
-            )}
-            {digital && !arena && tier === 'custom' && (
-              <CustomSwitchRows mode={mode} growth={growth} battleMode={battleMode} rules={rules} onGrowth={setGrowth} onBattleMode={setBattleMode} onRules={(patch) => setRules({ ...rules, ...patch })} />
-            )}
-            {digital && !arena && tier !== 'adventure' && (
-              <Row label="Cel">
-                {(['crystals', 'control', 'survival', 'boss', 'artifact'] as const).filter((o) => o !== 'survival' || mode === 'coop').map((o) => (
-                  <Tip key={o} text={OBJECTIVES[o].summary}><button className={chip(objective === o)} aria-pressed={objective === o} onClick={() => setObjective(o)}>{OBJECTIVES[o].name}</button></Tip>
-                ))}
-              </Row>
-            )}
-            {digital && !arena && tier !== 'adventure' && mode === 'coop' && objective === 'boss' && (
-              <Row label="Horda">
-                <Tip text="Horda prowadzi swoich bohaterów i też atakuje Bossa."><button className={chip(!noHorde)} aria-pressed={!noHorde} onClick={() => setNoHorde(false)}>Gra przeciw nam</button></Tip>
-                <Tip text="Wszyscy gracze razem przeciw samemu Bossowi: Horda nie ma bohaterów, a Boss ma trochę więcej Życia."><button className={chip(noHorde)} aria-pressed={noHorde} onClick={() => setNoHorde(true)}>Bez Hordy, wszyscy przeciw Bossowi</button></Tip>
-              </Row>
-            )}
-            {digital && !arena && tier !== 'adventure' && (
-              <Row label="Kształt mapy">
-                {(Object.keys(SHAPE_NAMES) as MapShape[]).map((sh) => (
-                  <Tip key={sh} text={SHAPE_TIPS[sh]}><button className={chip(shape === sh)} aria-pressed={shape === sh} onClick={() => setShape(sh)}>{SHAPE_NAMES[sh]}</button></Tip>
-                ))}
-              </Row>
-            )}
-            {digital && !arena && tier !== 'adventure' && shape === 'custom' && (
-              <Row label="Własna mapa">
-                {Object.values(CUSTOM_MAPS).map((m) => (
-                  <Tip key={m.id} text={m.summary}><button className={chip(customId === m.id)} aria-pressed={customId === m.id} onClick={() => setCustomId(m.id)}>{m.name}</button></Tip>
-                ))}
-              </Row>
-            )}
-            {!arena && (
-              <Row label="Wielkość mapy">
-                {(Object.keys(MAP_SIZE_NAMES) as MapSize[]).filter((m) => digital || BOARD_MAP_SIZES.includes(m)).map((m) => (
-                  <Tip key={m} text={mapTip(m)}><button className={chip(mapSize === m)} onClick={() => setMapSize(m)}>{MAP_SIZE_NAMES[m]}</button></Tip>
-                ))}
-              </Row>
-            )}
-            {arena && versusBot && (
-              <Row label="Trudność">
-                {LEVELS.filter(([l]) => l !== 'custom').map(([l, label]) => (
-                  <Tip key={l} text={ARENA_LEVEL_TIPS[l as Level]}>
-                    <button className={chip(level === l)} aria-pressed={level === l} onClick={() => pickLevel(l as Level)}>
-                      {label}
-                    </button>
-                  </Tip>
-                ))}
-              </Row>
-            )}
-            {!arena && (
-              <>
-                <Row label="Trudność">
-                  {LEVELS.filter(([l]) => l !== 'custom' && (l !== 'hard' || mode === 'coop')).map(([l, label]) => (
-                    <Tip key={l} text={LEVEL_TIPS[l]}>
-                      <button className={chip(level === l)} aria-pressed={level === l} onClick={() => pickLevel(l as Level)}>
-                        {label}
-                      </button>
-                    </Tip>
-                  ))}
-                </Row>
-                <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>{LEVEL_HINT[level]}</div>
-              </>
-            )}
-            {!arena && (
-              <Row label="Liczba graczy">
-                {/* At most 3 players per faction (its three heroes): coop (all Przymierze) takes 1–3, PvP 2–6. */}
-                {(mode === 'coop' ? [1, 2, 3] : [2, 3, 4, 5, 6]).map((n) => (
-                  <button key={n} className={chip(count === n)} onClick={() => changeCount(n)}>{n}</button>
-                ))}
-              </Row>
-            )}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginTop: 8 }}>
-              {backBtn('start')}
-              <button className="btn prim" style={{ height: 52, padding: '0 40px', fontSize: 22 }} onClick={() => setStep('table')}>Dalej →</button>
-            </div>
-          </Frame>
-        </div>
+      {step === 'where' && (
+        <Frame crest style={{ width: 'min(900px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{intent === 'new' ? 'Gdzie grasz?' : 'Skąd wczytać grę?'}</Ribbon>
+          <div className="opt-grid" data-wizard-page="where">
+            <button className="opt-card" onClick={() => pickWhere('here')}>
+              <span className="opt-card-img"><img src={asset('ui/landscape.jpg')} alt="" /></span>
+              <span className="opt-card-title">Ten komputer</span>
+              <span className="opt-card-text">Z botami albo z kimś przy jednym ekranie. Bez konta.</span>
+            </button>
+            <button className="opt-card" onClick={() => pickWhere('online')} title={online.title}>
+              <span className="opt-card-img"><img src={asset('ui/ico_most.png')} alt="" /></span>
+              <span className="opt-card-title">Przez internet</span>
+              <span className="opt-card-text">{session ? 'Z innymi graczami, z rankingiem i zapisami na koncie.' : 'Wymaga konta: zalogujesz się albo założysz konto.'}</span>
+            </button>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>{backBtn('home')}</div>
+        </Frame>
       )}
+
+      {step === 'wizard' && (
+        <NewGameWizard online={false} initial={lastTable ?? undefined} onBack={() => setStep('where')} onFinish={applyWizard} />
+      )}
+
+      {step === 'load' && (
+        <Frame crest style={{ width: 'min(900px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>Zapisane gry</Ribbon>
+          <div data-wizard-page="load" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {autosave && (
+              <div className="well" style={{ padding: '8px 14px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: 200 }}>
+                  <b style={{ color: '#F3D27A' }}>Ostatnia partia (autozapis)</b>
+                  <div style={{ fontSize: 14, color: 'var(--muted)' }}>{saveLabel}</div>
+                </div>
+                <button className="btn prim" style={{ padding: '6px 18px', fontSize: 17 }} onClick={() => onLoad(autosave)}>Wczytaj</button>
+              </div>
+            )}
+            {named.map((n) => (
+              <div key={n.id} className="well" style={{ padding: '8px 14px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: 200 }}>
+                  <b style={{ color: '#F3D27A' }}>{n.name}</b>
+                  <div style={{ fontSize: 14, color: 'var(--muted)' }}>{new Date(n.savedAt).toLocaleString('pl-PL', { dateStyle: 'short', timeStyle: 'short' })} · {describeSave(n.save)}</div>
+                </div>
+                <button className="btn prim" style={{ padding: '6px 18px', fontSize: 17 }} onClick={() => onLoad(n.save)}>Wczytaj</button>
+                <button className="btn plate parch" style={{ padding: '6px 12px', fontSize: 15 }} aria-label={`Usuń zapis ${n.name}`} onClick={() => { deleteNamedSave(n.id); setNamed(listNamedSaves()); }}>Usuń</button>
+              </div>
+            ))}
+            {!autosave && named.length === 0 && <div style={{ textAlign: 'center', color: 'var(--muted)', fontStyle: 'italic' }}>Brak zapisanych gier. W trakcie partii zapiszesz ją w Opcjach („Zapisz grę”) albo przy wyjściu z gry.</div>}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
+            {backBtn('where')}
+            <button className="btn plate parch" style={{ height: 52, padding: '0 24px', fontSize: 18 }} onClick={() => fileRef.current?.click()}>Wczytaj z pliku</button>
+          </div>
+          {loadError && <div style={{ fontSize: 15, color: '#F08A7A', textAlign: 'center' }}>{loadError}</div>}
+        </Frame>
+      )}
+      <input
+        ref={fileRef}
+        type="file"
+        accept=".json,application/json"
+        style={{ display: 'none' }}
+        onChange={async (e) => {
+          const f = e.target.files?.[0];
+          e.target.value = '';
+          if (!f) return;
+          try {
+            onLoad(parseSave(await f.text()));
+          } catch (err) {
+            setLoadError((err as Error).message);
+          }
+        }}
+      />
 
       {step === 'table' && (
         <div className="main-row setup-row" style={{ position: 'relative', width: '100%', maxWidth: 1400 }}>
@@ -408,7 +345,7 @@ export function SetupScreen({ online, onOnline, onStart, onLoad, autosave, onRul
               </label>
             )}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginTop: 8 }}>
-              {backBtn('options')}
+              {backBtn('wizard')}
               <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={startGame}>
                 Rozpocznij grę
               </button>

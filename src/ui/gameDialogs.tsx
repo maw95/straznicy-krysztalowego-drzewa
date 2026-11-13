@@ -2,7 +2,7 @@
 // every screen has, and the small game dialogs (confirm, "since your last turn", a found treasure,
 // a card, the options) and the end-of-game effects.
 
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { ITEMS, UNITS, type ItemKind } from '../engine/data';
 import { ritualFormed } from '../engine/game';
 import { GROWTH, levelOf, skillRank, type SkillId } from '../engine/growth';
@@ -196,6 +196,31 @@ export function TreasureDialog({ hero, onChoose }: { hero: HeroState | null; onC
   );
 }
 
+/** "Wyjdź z gry": save under a name and leave, leave without saving, or stay. Online games cannot be saved yet, so they only get leave / stay. */
+export function LeaveDialog({ open, canSave, defaultName, onSaveAndLeave, onLeave, onClose }: { open: boolean; canSave: boolean; defaultName: string; onSaveAndLeave: (name: string) => void; onLeave: () => void; onClose: () => void }) {
+  const [name, setName] = useState(defaultName);
+  useEffect(() => {
+    if (open) setName(defaultName);
+  }, [open, defaultName]);
+  return (
+    <Modal open={open} onClose={onClose}>
+      {open && (
+        <Frame crest style={{ width: 'min(520px, 94vw)' }} innerStyle={{ padding: '24px 22px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center' }}>
+          <div style={{ fontSize: 22, lineHeight: 1.35 }}>Czy na pewno chcesz wyjść z gry?</div>
+          {canSave && (
+            <input type="text" value={name} maxLength={40} aria-label="Nazwa zapisu" onChange={(e) => setName(e.target.value)} style={{ width: '100%', fontSize: 18, padding: '6px 10px', boxSizing: 'border-box' }} />
+          )}
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <button className="btn plate parch btn-wide" onClick={onClose}>Anuluj</button>
+            <button className="btn prim r" style={{ padding: '8px 18px', fontSize: 18 }} onClick={onLeave} data-leave-nosave>Wyjdź bez zapisu</button>
+            {canSave && <button className="btn prim" data-enter autoFocus style={{ padding: '8px 18px', fontSize: 18 }} onClick={() => onSaveAndLeave(name)} data-leave-save>Zapisz i wyjdź</button>}
+          </div>
+        </Frame>
+      )}
+    </Modal>
+  );
+}
+
 /** A unit's card, or a treasure's (`item:<kind>`), large; a click closes it. */
 export function CardDialog({ card, onClose }: { card: string | null; onClose: () => void }) {
   return (
@@ -239,10 +264,15 @@ export function OptionsDialog(props: {
   figures: boolean;
   onFigures: (on: boolean) => void;
   onRules: () => void;
+  /** Keeps the game under a name (offline games only; undefined online). */
+  onSaveGame?: (name: string) => void;
+  defaultSaveName: string;
   onLeave: () => void;
 }) {
   const { room } = props;
   const [animLevel, setAnimLevel] = useState(animSpeedLevel());
+  const [saveName, setSaveName] = useState('');
+  const [saved, setSaved] = useState<string | null>(null);
   /** The bot pace as a slider over the three speeds (slow, normal, fast). */
   const speeds = (value: BotSpeed, onChange: (s: BotSpeed) => void, disabled = false): ReactNode => (
     <>
@@ -282,6 +312,13 @@ export function OptionsDialog(props: {
             <input type="checkbox" checked={props.figures} onChange={(e) => props.onFigures(e.target.checked)} /> Figurki 3D na planszy
           </label>
           <div style={{ fontSize: 14, color: 'var(--muted)' }}>Skróty: Spacja — koniec tury/aktywacji · U — cofnij · F — przewiń boty · D — dziennik · R — zasady · Z — zdolność · S — skarby · Ctrl na jednostce — jej zasięg · Esc — zamknij</div>
+          {props.onSaveGame && (
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+              <input type="text" value={saveName} maxLength={40} placeholder={props.defaultSaveName} aria-label="Nazwa zapisu" onChange={(e) => { setSaveName(e.target.value); setSaved(null); }} style={{ flex: 1, minWidth: 160, fontSize: 17, padding: '5px 10px' }} />
+              <button className="btn plate parch" style={{ padding: '6px 14px' }} data-save-game onClick={() => { const n = saveName.trim() || props.defaultSaveName; props.onSaveGame!(n); setSaved(n); }}>Zapisz grę</button>
+              {saved && <span style={{ color: '#8FE3A0', fontSize: 15 }}>Zapisano: {saved}</span>}
+            </div>
+          )}
           <button className="btn plate parch" style={{ padding: '6px 14px', alignSelf: 'flex-start' }} onClick={props.onRules}>Zasady i karty</button>
           <button className="btn prim r" data-leave style={{ padding: '12px 20px', fontSize: 22, width: '100%' }} onClick={props.onLeave}>Wyjdź z gry</button>
           <button className="btn plate parch" data-enter style={{ padding: '6px 14px', alignSelf: 'flex-end' }} onClick={props.onClose}>Zamknij</button>

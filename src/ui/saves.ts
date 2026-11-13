@@ -52,6 +52,48 @@ export function readAutosave(): SaveFile | null {
   }
 }
 
+/** A game kept under a name the player chose (several can be kept; saving under the same name replaces it). */
+export interface NamedSave {
+  id: string;
+  name: string;
+  savedAt: string;
+  save: SaveFile;
+}
+
+const NAMED_KEY = 'skd-saves';
+/** More than this and the oldest save goes (the browser's storage is small). */
+export const MAX_NAMED_SAVES = 20;
+
+/** The named saves, newest first. */
+export function listNamedSaves(): NamedSave[] {
+  try {
+    const list = JSON.parse(localStorage.getItem(NAMED_KEY) ?? '[]');
+    return (Array.isArray(list) ? (list as NamedSave[]) : []).filter((x) => x && typeof x.name === 'string' && x.save?.setup && Array.isArray(x.save.actions)).sort((a, b) => b.savedAt.localeCompare(a.savedAt));
+  } catch {
+    return [];
+  }
+}
+
+function writeNamed(list: NamedSave[]) {
+  try {
+    localStorage.setItem(NAMED_KEY, JSON.stringify(list.slice(0, MAX_NAMED_SAVES)));
+  } catch {
+    // storage unavailable or full: the save is simply not kept
+  }
+}
+
+/** Keeps the game under `name` (an empty name becomes "Zapis"); returns the stored save. */
+export function saveNamed(name: string, save: SaveFile): NamedSave {
+  const clean = name.trim().slice(0, 40) || 'Zapis';
+  const entry: NamedSave = { id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`, name: clean, savedAt: new Date().toISOString(), save };
+  writeNamed([entry, ...listNamedSaves().filter((x) => x.name.toLowerCase() !== clean.toLowerCase())]);
+  return entry;
+}
+
+export function deleteNamedSave(id: string) {
+  writeNamed(listNamedSaves().filter((x) => x.id !== id));
+}
+
 /** Validates the shape of a save before replaying it. */
 export function parseSave(text: string): SaveFile {
   const data = JSON.parse(text);

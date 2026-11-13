@@ -55,3 +55,18 @@ export async function clearDialogs(c: HTMLElement) {
     await act(async () => fireEvent.click(btn));
   }
 }
+
+/** A button of the menu: a big choice (found by its title) or a plain button (by its whole text). */
+export const pick = (c: ParentNode, label: string) => buttons(c).find((b) => b.querySelector('.opt-card-title')?.textContent === label) ?? button(c, label);
+
+/** Clicks the menu buttons in turn; a missing one fails the test with its name. */
+export async function click(c: ParentNode, ...labels: string[]) {
+  for (const l of labels) {
+    const b = pick(c, l);
+    if (!b) throw new Error(`No menu button "${l}"`);
+    await act(async () => fireEvent.click(b));
+  }
+}
+
+/** From the first page of the menu into the new-game wizard on this computer, then through the given pages. */
+export const newGame = (c: ParentNode, ...labels: string[]) => click(c, 'Nowa gra', 'Ten komputer', ...labels);

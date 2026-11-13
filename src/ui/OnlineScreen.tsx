@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, BOARD_MAP_SIZES, UNITS, type FactionId, type MapSize } from '../engine/data';
-import type { Level, MapShape, Mode } from '../engine/types';
+import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type FactionId } from '../engine/data';
 import { CUSTOM_MAPS } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
 import { defaultCustom, TIERS } from '../engine/presets';
 import { currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
-import { CustomSwitchRows } from './CustomSwitchRows';
-import { SHAPE_NAMES, SHAPE_TIPS, ARENA_HINT, ARENA_LEVEL_TIPS, chip, choice, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SEAT_TINT, Tip, TIPS } from './setupShared';
+import { choice, LEVELS, SEAT_TINT, SHAPE_NAMES } from './setupShared';
+import { NewGameWizard } from './NewGameWizard';
 
 /** Links of the main menu that do not depend on the account. */
 export interface MenuLinks {
@@ -53,6 +52,11 @@ export function OnlineScreen({ session, onSession, onLocalGame, onOffline, links
       <h1 style={{ margin: 0, lineHeight: 0, position: 'relative' }}>
         <img className="logo-glow" src={asset('ui/logo.png')} alt="Gleamroot: Strażnicy Kryształowego Drzewa" style={{ height: 'clamp(70px, 11vh, 110px)' }} />
       </h1>
+      <div className="menu-links" data-menu-links style={{ position: 'relative' }}>
+        <button className="btn plate parch" style={{ padding: '6px 14px', fontSize: 16 }} onClick={links.onRules}>Zasady i karty</button>
+        <button className="btn plate parch" style={{ padding: '6px 14px', fontSize: 16 }} onClick={links.onIntro}>Wprowadzenie</button>
+        <button className="btn plate parch btn-testers" style={{ padding: '6px 14px', fontSize: 16 }} onClick={links.onTesters} title="Uwagi o grze i zgłoszone błędy — prosto do twórcy">Dla testerów</button>
+      </div>
       {session ? (
         <Home session={session} onSignOut={() => onSession(null)} onLocalGame={onLocalGame} links={links} />
       ) : checking ? (
@@ -128,7 +132,17 @@ function Welcome({ problem, onRetry, onUser, onOffline }: { problem: string | nu
 function Home({ session, onSignOut, onLocalGame, links }: { session: OnlineSession; onSignOut: () => void; onLocalGame: () => void; links: MenuLinks }) {
   const online = useOnline(session);
   const [code, setCode] = useState('');
+  const [joining, setJoining] = useState(false);
+  /** The new-game wizard is open; the table it makes is sent once the room it asked for exists. */
+  const [wizard, setWizard] = useState(false);
+  const pending = useRef<TableConfig | null>(null);
   const { room, user } = online;
+  useEffect(() => {
+    if (pending.current && room && room.ownerId === user.id) {
+      session.send({ type: 'configure', table: pending.current });
+      pending.current = null;
+    }
+  }, [room, user.id, session]);
 
   return (
     <div style={{ position: 'relative', width: '100%', maxWidth: 1300, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
@@ -158,35 +172,49 @@ function Home({ session, onSignOut, onLocalGame, links }: { session: OnlineSessi
       )}
       {room ? (
         <RoomLobby session={session} room={room} me={user} online={online} />
+      ) : wizard ? (
+        <NewGameWizard
+          online
+          onBack={() => setWizard(false)}
+          onFinish={(table) => {
+            pending.current = table;
+            setWizard(false);
+            session.send({ type: 'createRoom' });
+          }}
+        />
       ) : (
         <div className="main-row setup-row" style={{ width: '100%', gap: 16 }}>
           <Frame crest className="grow" innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'center' }}>
             <Ribbon style={{ width: 'min(380px, 80vw)' }}>Graj ze znajomymi</Ribbon>
-            <button className="btn prim" style={{ height: 58, padding: '0 40px', fontSize: 24 }} disabled={!online.connected} onClick={() => session.send({ type: 'createRoom' })}>
-              Nowy pokój
-            </button>
-            <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>…i zaproś graczy z listy obok — albo kliknij „Zaproś” od razu, pokój założy się sam.</div>
-            <form
-              style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}
-              onSubmit={(e) => {
-                e.preventDefault();
-                session.send({ type: 'joinRoom', code });
-              }}
-            >
-              <span className="lbl">Masz kod pokoju?</span>
-              <input type="text" value={code} placeholder="np. SMOK-4821" aria-label="Kod pokoju" onChange={(e) => setCode(e.target.value.toUpperCase())} style={{ fontSize: 18, padding: '5px 10px', width: 160, letterSpacing: 1 }} />
-              <button type="submit" className="btn plate parch" disabled={!online.connected || !code.trim()} style={{ padding: '5px 16px', fontSize: 17 }}>Dołącz</button>
-            </form>
-            <button className="btn plate parch" style={{ padding: '7px 20px', fontSize: 18 }} onClick={onLocalGame} title="Z botami albo z kimś przy jednym ekranie — gry przeciw komputerowi liczą się do rankingu">
-              Gra na tym komputerze
-            </button>
+            <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', justifyContent: 'center' }}>
+              <button className="btn prim" style={{ height: 66, padding: '0 44px', fontSize: 26 }} disabled={!online.connected} onClick={() => setWizard(true)}>
+                Nowa gra
+              </button>
+              <button className="btn btn-join" style={{ height: 66, padding: '0 44px', fontSize: 26 }} disabled={!online.connected} aria-pressed={joining} onClick={() => setJoining((j) => !j)}>
+                Dołącz do gry
+              </button>
+            </div>
+            <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -6 }}>Kliknij „Zaproś” przy graczu z listy obok: pokój założy się sam. Albo wpisz kod od znajomego po kliknięciu „Dołącz do gry”.</div>
+            {joining && (
+              <form
+                style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  session.send({ type: 'joinRoom', code });
+                }}
+              >
+                <span className="lbl">Kod pokoju</span>
+                <input type="text" autoFocus value={code} placeholder="np. SMOK-4821" aria-label="Kod pokoju" onChange={(e) => setCode(e.target.value.toUpperCase())} style={{ fontSize: 18, padding: '5px 10px', width: 160, letterSpacing: 1 }} />
+                <button type="submit" className="btn plate parch" disabled={!online.connected || !code.trim()} style={{ padding: '5px 16px', fontSize: 17 }}>Dołącz</button>
+              </form>
+            )}
             <RankingTable me={user} refreshKey={room === null && online.connected} />
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', marginTop: 'auto' }}>
-              <button className="btn plate parch btn-small" onClick={links.onRules}>Zasady i karty</button>
-              <button className="btn plate parch btn-small" onClick={links.onIntro}>Wprowadzenie</button>
-              <button className="btn plate parch btn-small btn-testers" onClick={links.onTesters} title="Uwagi o grze i zgłoszone błędy — prosto do twórcy">Dla testerów</button>
-              <button className="app-version" title="Historia zmian" onClick={links.onChangelog}>Wersja {__APP_VERSION__}</button>
-              <button className="app-version" title="Autorzy muzyki, grafiki i gry" onClick={links.onCredits}>Autorzy</button>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', width: '100%' }}>
+              <button className="btn prim r" style={{ height: 48, padding: '0 34px', fontSize: 20 }} onClick={onLocalGame}>← Wstecz</button>
+              <div style={{ display: 'flex', gap: 14 }}>
+                <button className="app-version" title="Historia zmian" onClick={links.onChangelog}>Wersja {__APP_VERSION__}</button>
+                <button className="app-version" title="Autorzy muzyki, grafiki i gry" onClick={links.onCredits}>Autorzy</button>
+              </div>
             </div>
           </Frame>
           <Frame className="side" style={{ width: 'min(360px, 94vw)', flex: 'none' }} innerClass="slate" innerStyle={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10, height: '100%' }}>
@@ -302,20 +330,20 @@ function RankingTable({ me, refreshKey }: { me: User; refreshKey: unknown }) {
   );
 }
 
-/** The custom tier's switches as the level preset sets them (what a table starts from, and what a change of level or mode returns to). */
-const startCustom = (level: Level, mode: Mode, growth = false) => ({ ...defaultCustom(level, mode), growth });
-
-const defaultTable = (mode: Mode, count: number, level: Level, digital: boolean): TableConfig => ({
-  mode,
-  digital,
-  tier: 'adventure',
-  objective: 'crystals',
-  shape: 'triangle',
-  mapSize: 'short',
-  level: mode === 'pvp' && level === 'hard' ? 'normal' : level,
-  // Online every seat waits for a player, except the arena's opponent.
-  seats: defaultHeroes(mode, count).map((seat, i) => ({ ...seat, bot: mode === 'arena' && i === 1 })),
-});
+/** One line about each setting of the table, for the room's header. */
+function tableSummary(t: TableConfig): string[] {
+  const parts = [t.digital ? 'Wersja cyfrowa' : 'Wersja planszowa'];
+  if (t.digital && t.mode !== 'arena') parts.push(TIERS[t.tier].name);
+  parts.push(t.mode === 'coop' ? 'Kooperacja' : t.mode === 'pvp' ? 'Rywalizacja' : 'Arena');
+  if (t.digital && t.mode !== 'arena' && t.tier !== 'adventure') {
+    parts.push(`Cel: ${OBJECTIVES[t.objective].name}`);
+    parts.push(t.shape === 'custom' ? `Mapa gotowa: ${CUSTOM_MAPS[t.customMapId ?? '']?.name ?? '?'}` : `Mapa losowa: ${SHAPE_NAMES[t.shape]}`);
+  }
+  if (t.mode !== 'arena' && !(t.shape === 'custom' && t.tier !== 'adventure')) parts.push(`Wielkość: ${MAP_SIZE_NAMES[t.mapSize]}`);
+  parts.push(`Gracze: ${t.seats.length}`);
+  parts.push(`${t.mode === 'arena' ? 'Komputer' : 'Trudność'}: ${LEVELS.find(([l]) => l === t.level)?.[1] ?? t.level}`);
+  return parts;
+}
 
 function RoomLobby({ session, room, me, online }: { session: OnlineSession; room: RoomView; me: User; online: OnlineState }) {
   const owner = room.ownerId === me.id;
@@ -324,8 +352,10 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
   const updateSeat = (i: number, patch: Partial<TableConfig['seats'][number]>) => configure({ seats: table.seats.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
   const takenBy = (heroId: string, i: number) => table.seats.some((s, j) => j !== i && s.heroId === heroId);
   const ready = room.seats.every((s) => s.bot || s.player);
-  const arena = room.mode === 'arena';
   const [copied, setCopied] = useState(false);
+  const [editing, setEditing] = useState(false);
+
+  if (editing) return <NewGameWizard online initial={table} onBack={() => setEditing(false)} onFinish={(t) => { session.send({ type: 'configure', table: t }); setEditing(false); }} />;
 
   return (
     <div className="main-row setup-row" style={{ width: '100%', gap: 16 }}>
@@ -342,92 +372,13 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
           >
             {copied ? 'Skopiowano' : 'Kopiuj'}
           </button>
-          <span style={{ fontSize: 15, color: 'var(--muted)' }}>Zaproś graczy z listy obok albo podaj im ten kod („Masz kod pokoju?” w menu).</span>
+          <span style={{ fontSize: 15, color: 'var(--muted)' }}>Zaproś graczy z listy obok albo podaj im ten kod (w menu: „Dołącz do gry”).</span>
         </div>
         {!owner && <div style={{ fontSize: 15, color: 'var(--muted)' }}>Stół ustawia założyciel pokoju: {room.members.find((m) => m.id === room.ownerId)?.nick}.</div>}
-        <Row label="Tryb">
-          {(['coop', 'pvp', 'arena'] as Mode[]).map((m) => (
-            <Tip key={m} text={m === 'coop' ? TIPS.coop : m === 'pvp' ? TIPS.pvp : TIPS.arenaMode}>
-              <button className={chip(room.mode === m)} disabled={!owner} onClick={() => configure({ ...defaultTable(m, m === 'pvp' ? 2 : 1, room.level, table.digital), tier: table.tier, objective: m !== 'coop' && table.objective === 'survival' ? 'crystals' : table.objective, shape: table.shape, customMapId: table.customMapId, ...(table.tier === 'custom' ? startCustom(room.level === 'hard' && m === 'pvp' ? 'normal' : room.level, m, table.growth === true) : {}) })}>
-                {m === 'coop' ? 'Kooperacja' : m === 'pvp' ? 'Rywalizacja' : 'Arena'}
-              </button>
-            </Tip>
-          ))}
-        </Row>
-        {!arena && (
-          <>
-            <Row label="Gracze">
-              {(room.mode === 'coop' ? [1, 2, 3] : [2, 3, 4, 5, 6]).map((n) => (
-                <button key={n} className={chip(room.seats.length === n)} disabled={!owner} onClick={() => configure({ seats: defaultTable(room.mode, n, room.level, table.digital).seats })}>
-                  {n}
-                </button>
-              ))}
-            </Row>
-            <Row label="Mapa">
-              {(Object.keys(MAP_SIZE_NAMES) as MapSize[]).filter((m) => table.digital || BOARD_MAP_SIZES.includes(m)).map((m) => (
-                <Tip key={m} text={mapTip(m)}>
-                  <button className={chip(room.mapSize === m)} disabled={!owner} onClick={() => configure({ mapSize: m })}>{MAP_SIZE_NAMES[m]}</button>
-                </Tip>
-              ))}
-            </Row>
-          </>
-        )}
-        {arena && <div style={{ fontSize: 15, color: 'var(--muted)' }}>{ARENA_HINT}</div>}
-        <Row label={arena ? 'Komputer' : 'Poziom'}>
-          {LEVELS.filter(([l]) => l !== 'custom' && (l !== 'hard' || room.mode !== 'pvp')).map(([l, label]) => (
-            <Tip key={l} text={arena ? ARENA_LEVEL_TIPS[l as Level] : LEVEL_TIPS[l]}>
-              <button className={chip(room.level === l)} disabled={!owner} onClick={() => configure({ level: l as Level, ...(table.tier === 'custom' && !arena ? startCustom(l as Level, room.mode, table.growth === true) : {}) })}>{label}</button>
-            </Tip>
-          ))}
-        </Row>
-        {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4 }}>{LEVEL_HINT[room.level]}</div>}
-        <Row label="Wersja">
-          <Tip text={TIPS.digital}><button className={chip(table.digital)} aria-pressed={table.digital} disabled={!owner} onClick={() => configure({ digital: true })}>Cyfrowa</button></Tip>
-          <Tip text="Zasady planszówki, bez zmian: malowana arena i figurki 3D."><button className={chip(!table.digital)} aria-pressed={!table.digital} disabled={!owner} onClick={() => configure({ digital: false, ...(BOARD_MAP_SIZES.includes(table.mapSize) ? {} : { mapSize: 'veryLong' as const }) })}>Planszowa</button></Tip>
-        </Row>
-        {table.digital && !arena && (
-          <>
-            <Row label="Poziom gry">
-              {(['adventure', 'expedition', 'custom'] as const).map((t) => (
-                <Tip key={t} text={TIERS[t].summary}>
-                  <button className={chip(table.tier === t)} aria-pressed={table.tier === t} disabled={!owner} onClick={() => configure(t === 'adventure' ? { tier: t, objective: 'crystals', shape: 'triangle', customMapId: undefined } : t === 'custom' ? { tier: t, ...startCustom(room.level, room.mode) } : { tier: t })}>{TIERS[t].name}</button>
-                </Tip>
-              ))}
-            </Row>
-            {table.tier === 'custom' && table.rules && (
-              <CustomSwitchRows mode={room.mode} growth={table.growth === true} battleMode={table.battleMode ?? 'arena'} rules={table.rules} disabled={!owner} onGrowth={(growth) => configure({ growth })} onBattleMode={(battleMode) => configure({ battleMode })} onRules={(patch) => configure({ rules: { ...table.rules!, ...patch } })} />
-            )}
-            {(table.tier === 'expedition' || table.tier === 'custom') && (
-              <>
-                <Row label="Cel">
-                  {(['crystals', 'control', 'survival', 'boss', 'artifact'] as const).filter((o) => o !== 'survival' || room.mode === 'coop').map((o) => (
-                    <Tip key={o} text={OBJECTIVES[o].summary}><button className={chip(table.objective === o)} aria-pressed={table.objective === o} disabled={!owner} onClick={() => configure({ objective: o })}>{OBJECTIVES[o].name}</button></Tip>
-                  ))}
-                </Row>
-                {table.objective === 'boss' && room.mode === 'coop' && (
-                  <Row label="Horda">
-                    <Tip text="Horda prowadzi swoich bohaterów i też atakuje Bossa."><button className={chip(!table.noHorde)} aria-pressed={!table.noHorde} disabled={!owner} onClick={() => configure({ noHorde: false })}>Gra przeciw nam</button></Tip>
-                    <Tip text="Wszyscy gracze razem przeciw samemu Bossowi: Horda nie ma bohaterów, a Boss ma trochę więcej Życia."><button className={chip(table.noHorde === true)} aria-pressed={table.noHorde === true} disabled={!owner} onClick={() => configure({ noHorde: true })}>Bez Hordy, wszyscy przeciw Bossowi</button></Tip>
-                  </Row>
-                )}
-                <Row label="Kształt mapy">
-                  {(Object.keys(SHAPE_NAMES) as MapShape[]).map((sh) => (
-                    <Tip key={sh} text={SHAPE_TIPS[sh]}>
-                      <button className={chip(table.shape === sh)} aria-pressed={table.shape === sh} disabled={!owner} onClick={() => configure(sh === 'custom' ? { shape: sh, customMapId: Object.keys(CUSTOM_MAPS)[0] } : { shape: sh, customMapId: undefined })}>{SHAPE_NAMES[sh]}</button>
-                    </Tip>
-                  ))}
-                </Row>
-                {table.shape === 'custom' && (
-                  <Row label="Własna mapa">
-                    {Object.values(CUSTOM_MAPS).map((m) => (
-                      <Tip key={m.id} text={m.summary}><button className={chip(table.customMapId === m.id)} aria-pressed={table.customMapId === m.id} disabled={!owner} onClick={() => configure({ customMapId: m.id })}>{m.name}</button></Tip>
-                    ))}
-                  </Row>
-                )}
-              </>
-            )}
-          </>
-        )}
+        <div className="well" data-table-summary style={{ padding: '8px 14px', display: 'flex', gap: '4px 16px', flexWrap: 'wrap', alignItems: 'center', fontSize: 16 }}>
+          {tableSummary(table).map((p) => <span key={p}>{p}</span>)}
+          {owner && <button className="btn plate parch" style={{ padding: '3px 12px', fontSize: 15, marginLeft: 'auto' }} onClick={() => setEditing(true)}>Zmień ustawienia</button>}
+        </div>
         <div className="lbl" style={{ marginTop: 6 }}>Miejsca przy stole</div>
         {room.seats.map((s, i) => {
           const mine = s.player?.id === me.id;

@@ -20,11 +20,11 @@ import { DuelView } from './DuelView';
 import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset } from './common';
 import { SetupScreen } from './SetupScreen';
 import { music } from './music';
-import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
+import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, LeaveDialog, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
 import { fightLevelAt } from './fightBadges';
 import { DigitalCardsContext, UnitCard } from './UnitCard';
 import { DigitalContext, HeroLevelsContext, HpScaleContext, StatScaleContext } from './statScale';
-import { readAutosave, replay, writeAutosave, type BugReport, type SaveFile } from './saves';
+import { readAutosave, replay, saveNamed, writeAutosave, type BugReport, type SaveFile } from './saves';
 import { BugReportDialog } from './BugReportDialog';
 import { TesterDialog } from './TesterDialog';
 import { isTestRun, recordGame } from './journal';
@@ -60,6 +60,7 @@ export function App() {
   const [autoplay, setAutoplay] = useState(false);
   const [showLog, setShowLog] = useState(false);
   const [showDebug, setShowDebug] = useState(false);
+  const [showLeave, setShowLeave] = useState(false);
   const [confirmedFaction, setConfirmedFaction] = useState<FactionId | null>(null);
   const history = useRef<Action[]>([]);
   const [showRules, setShowRules] = useState(false);
@@ -223,6 +224,7 @@ export function App() {
     [onlineRoom],
   );
   const isOnline = Boolean(session && onlineGame);
+  const defaultSaveName = game ? `Partia ${new Date().toLocaleDateString('pl-PL')}, runda ${game.round}` : 'Zapis';
   // Messages count as read while the chat is open, and in the lobby, where it is always on screen.
   const unread = online && !showChat ? online.chatReceived - chatRead : 0;
   useEffect(() => {
@@ -651,6 +653,7 @@ export function App() {
           />
         ) : (
         <SetupScreen
+          session={Boolean(session)}
           online={session ? { label: '← Menu online', title: 'Wróć do menu gry online' } : { label: 'Zaloguj się, żeby grać ze znajomymi', title: 'Gra online i ranking wymagają konta' }}
           onOnline={() => {
             setPlaysOffline(false);
@@ -851,6 +854,23 @@ export function App() {
       <CardDialog card={card} onClose={() => setCard(null)} />
 
       <ConfirmDialog confirm={confirm} onClose={() => setConfirm(null)} />
+      {game && (
+        <LeaveDialog
+          open={showLeave}
+          canSave={!isOnline}
+          defaultName={defaultSaveName}
+          onClose={() => setShowLeave(false)}
+          onLeave={() => {
+            setShowLeave(false);
+            leaveGame();
+          }}
+          onSaveAndLeave={(name) => {
+            saveNamed(name, saveFile(game));
+            setShowLeave(false);
+            leaveGame();
+          }}
+        />
+      )}
 
       <Modal open={summary !== null && game.lastBattle?.id === summary && !held} onClose={() => setSummary(null)}>
         {game.lastBattle && <BattleSummary report={game.lastBattle} onClose={() => setSummary(null)} />}
@@ -902,9 +922,11 @@ export function App() {
           setShowDebug(false);
           setShowRules(true);
         }}
+        defaultSaveName={defaultSaveName}
+        onSaveGame={isOnline ? undefined : (name) => saveNamed(name, saveFile(game))}
         onLeave={() => {
           setShowDebug(false);
-          setConfirm({ text: 'Czy na pewno chcesz wyjść z gry?', yes: 'Wyjdź z gry', onYes: leaveGame });
+          setShowLeave(true);
         }}
       />
     </HeroLevelsContext.Provider>

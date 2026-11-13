@@ -769,3 +769,22 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .hero-sheet-wide .milestone { width: 150px; }
 /* "Dla testerów" stands out from the other menu buttons */
 .btn-testers { background: linear-gradient(180deg, #CFE0F4, #8FB0DA) !important; color: #10243F !important; box-shadow: 0 0 0 2px #1E3A66, 0 0 0 3px #0A1626 !important; }
+
+/* New-game wizard: big choice buttons */
+.opt-grid { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
+.opt-card { flex: 1 1 220px; max-width: 320px; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 16px 16px; border-radius: 14px; cursor: pointer; font: inherit; color: inherit; text-align: center; background: linear-gradient(180deg, rgba(60, 46, 26, 0.55), rgba(24, 18, 10, 0.7)); border: 0; box-shadow: inset 0 0 0 2px #7A5A22, 0 0 0 2px #1E1204, 0 6px 14px rgba(0, 0, 0, 0.45); transition: transform 0.12s, box-shadow 0.12s; }
+.opt-card:hover:not(:disabled) { transform: translateY(-3px); box-shadow: inset 0 0 0 2px #F3D27A, 0 0 0 2px #1E1204, 0 10px 20px rgba(0, 0, 0, 0.55); }
+.opt-card.on { box-shadow: inset 0 0 0 3px #9EE4FF, 0 0 0 2px #1E1204, 0 0 18px rgba(158, 228, 255, 0.45); }
+.opt-card:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.6); }
+.opt-card.wide { flex-basis: 300px; max-width: 420px; }
+.opt-card-img { display: flex; align-items: center; justify-content: center; width: 100%; height: 120px; border-radius: 10px; overflow: hidden; background: radial-gradient(ellipse at 50% 40%, #2C3F3F, #101A1A); box-shadow: inset 0 0 0 2px rgba(243, 210, 122, 0.4); }
+.opt-card-img > img { max-width: 100%; max-height: 100%; width: auto; height: 100%; object-fit: cover; }
+.opt-card-title { font-size: 24px; font-weight: 800; color: #F3D27A; }
+.opt-card-text { font-size: 15px; line-height: 1.35; }
+.opt-crests { display: flex; gap: 14px; align-items: center; justify-content: center; height: 100%; }
+.opt-crests img { height: 92%; width: auto; object-fit: contain; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.6)); }
+.btn-join { background: linear-gradient(180deg, #E0C080, #A87A2C) !important; color: #2A1802 !important; border: 0; border-radius: 12px; cursor: pointer; font-weight: 800; box-shadow: inset 0 0 0 2px #F3D27A, 0 0 0 2px #1E1204 !important; }
+.btn-join:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-join[aria-pressed="true"] { box-shadow: inset 0 0 0 3px #9EE4FF, 0 0 0 2px #1E1204 !important; }
+.menu-links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.home-big { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
