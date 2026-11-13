@@ -3237,6 +3237,27 @@
       "data": "2026-11-12",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/ramka_naroznik",
+      "pliki": [
+        "docs/grafika/ramka/ramka_zrodlo.webp",
+        "public/assets/ui/ramka/tl.webp",
+        "public/assets/ui/ramka/tr.webp",
+        "public/assets/ui/ramka/bl.webp",
+        "public/assets/ui/ramka/br.webp"
+      ],
+      "typ": "ozdobne narożniki ramek okien (nakładka na złotą ramkę CSS, `.gf::after` w styles.css)",
+      "opis": "Kwadratowa ramka w złocie z szafirami i listowiem, 1024 px, przezroczyste tło (źródło). Z lewego górnego rogu wycięty narożnik 240 px, zmniejszony do 120 px i odbity w trzech wariantach. Wybrany 1 z 2 wariantów. Prompt: 'A square ornate fantasy UI window frame in the style of Heroes of Might and Magic III: a thick carved antique-gold border with fine filigree, leaf and crystal-tree motifs, small sapphire gems in the four corners and at the middle of each side, dark bronze inner edge. Perfectly symmetrical, center empty and transparent. No text.'",
+      "scenario_asset": {
+        "wybrany": "asset_sRjWcXN137zbSFAHBJtBYgRJ",
+        "drugi": "asset_ZMH65ewibgXqGUVfTToY29sF"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość high, przezroczyste tło",
+      "data": "2026-11-13",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

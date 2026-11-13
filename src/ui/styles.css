@@ -55,6 +55,9 @@ button { font-family: inherit; }
   overflow: hidden;
   box-shadow: 0 0 0 2px #1e1204, inset 0 0 0 1px rgba(255, 226, 150, 0.45), inset 0 0 46px rgba(0, 0, 0, 0.55);
 }
+/* Ornate corners over the gold frame (Scenario, docs: assets.json "ramka") */
+.gf::after { content: ''; position: absolute; inset: -9px; pointer-events: none; z-index: 2; background: url('/assets/ui/ramka/tl.webp') left top / 60px 60px no-repeat, url('/assets/ui/ramka/tr.webp') right top / 60px 60px no-repeat, url('/assets/ui/ramka/bl.webp') left bottom / 60px 60px no-repeat, url('/assets/ui/ramka/br.webp') right bottom / 60px 60px no-repeat; }
+.gf.no-corners::after { display: none; }
 /* The crest's setting line (y=52 of 66) lands on the frame's top band. */
 .crest { position: absolute; left: 50%; top: -48px; width: 140px; height: 66px; margin-left: -70px; pointer-events: none; z-index: 3; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.5)); }
 
