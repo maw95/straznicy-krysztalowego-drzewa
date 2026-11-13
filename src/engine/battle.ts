@@ -1,7 +1,7 @@
 // Battle engine: the painted arena (13 columns, 85 cells), initiative, movement, attacks,
 // abilities and items. Functions change the GameState passed in.
 
-import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, battleStats, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, itemDef, ITEMS, UNITS, type AbilityId, type FactionId, type ItemKind, type Side } from './data';
+import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, STAT_SCALE, battleStats, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, itemDef, ITEMS, UNITS, type AbilityId, type FactionId, type ItemKind, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
@@ -366,6 +366,7 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
   let dmg = unitAttackBase(att) + att.status.nextAttackBonus - att.status.cursedNext;
   if (isDigital(state.rules) && UNITS[att.defId].attackType === 'ranged') dmg += DIGITAL_RANGED_BONUS * scaleOf(state);
   if (att.gear?.vsWounded && target.hp < target.maxHp) dmg += att.gear.vsWounded;
+  if (att.gear?.firstStrike) dmg += att.gear.firstStrike;
   if (abilityActive(state)) {
     const ab = abilityOf(att);
     if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += abilityNum(att, 'lightChargeBonus') * scaleOf(state);
@@ -563,6 +564,14 @@ function beginRound(state: GameState, round: number) {
     .map((u) => u.id);
   b.index = 0;
   log(state, 'battle', `Runda bitwy ${round}.`);
+  // Płaszcz z Mchu: the hero regains Życie at the start of every round.
+  for (const x of livingUnits(b)) {
+    if (!x.gear?.regen || x.hp >= x.maxHp) continue;
+    const healed = Math.min(x.gear.regen, x.maxHp - x.hp);
+    x.hp += healed;
+    log(state, 'ability', `${unitName(x)} odzyskuje ${healed} Ż (Płaszcz z Mchu).`);
+    (b.heals ??= []).push({ unitId: x.id, amount: healed });
+  }
   beginActivation(state, b.order[0], false);
 }
 
@@ -570,6 +579,11 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
   const b = state.battle!;
   b.activation = { unitId, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly, hop: 0 };
   const u = b.units[unitId];
+  if (u.status.slowLater) {
+    u.status.slowNext += u.status.slowLater;
+    u.status.slowLater = 0;
+  }
+  u.status.anchored = false;
   // Zatruty Pazur: the poison bites at the start of the activation; a unit that dies of it loses its turn.
   if (u.status.poisoned) {
     u.status.poisoned -= 1;
@@ -612,6 +626,8 @@ export function endActivation(state: GameState) {
     // Effects that applied to "the next activation" are now spent.
     u.status.slowNext = 0;
     u.status.rootedNext = false;
+    // Buty Wartownika (Zakotwiczenie): standing still hardens the hero until its next activation.
+    if (u.gear?.anchor && u.alive && !act.moved) u.status.anchored = true;
   }
   if (checkBattleEnd(state)) return;
   if (b.extra.length) {
@@ -659,6 +675,12 @@ function rollDie(state: GameState): number {
 export function dealDamage(state: GameState, target: BattleUnit, amount: number, source: string) {
   const dmg = Math.max(0, amount);
   target.hp -= dmg;
+  // Zbroja Wartownika: once per battle the hero is left with 1 Życie instead of falling.
+  if (target.hp <= 0 && dmg > 0 && target.gear?.lastStand) {
+    delete target.gear.lastStand;
+    target.hp = 1;
+    log(state, 'ability', `${unitName(target)} zostaje przy 1 Ż (Ostatnia Szansa).`);
+  }
   log(state, 'damage', `${source} → ${unitName(target)}: ${dmg} obrażeń (Ż ${Math.max(0, target.hp)}/${target.maxHp}).`);
   if (target.hp <= 0) {
     target.hp = 0;
@@ -743,6 +765,16 @@ export function predictDamage(
     if (victim.gear.firstHit) dmg = Math.ceil(dmg / 2);
     if (victim.gear.defense) dmg = Math.max(1, dmg - victim.gear.defense);
   }
+  // Set pieces (docs/ZESTAWY_ARTEFAKTOW.md): a blow that lands takes at least 1.
+  if (dmg > 0) {
+    const weaker = (points: number) => Math.max(1, Math.round((points * scaleOf(state)) / STAT_SCALE));
+    if (victim.gear?.rangedDefense && UNITS[att.defId].attackType === 'ranged') dmg = Math.max(1, dmg - victim.gear.rangedDefense);
+    if (victim.status.anchored) dmg = Math.max(1, dmg - weaker(1));
+    if (UNITS[victim.defId].kind === 'support') {
+      const guard = livingUnits(b, victim.side).find((x) => x.gear?.guardAura && unitsAdjacent(x, victim));
+      if (guard) dmg = Math.max(1, dmg - guard.gear!.guardAura!);
+    }
+  }
   return { base, victim, damage: dmg, bearGuard, hardHead, shield: false, lethal: dmg >= victim.hp };
 }
 
@@ -783,6 +815,11 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   // Kolce: whoever hits a Jeżozwierz in melee is pricked.
   if (abilityOf(victim) === 'quills' && abilityActive(state) && att.alive && UNITS[att.defId].attackType === 'melee' && unitsAdjacent(att, victim)) {
     dealDamage(state, att, ABILITY.quillsDamage * scaleOf(state), `Kolce (${unitName(victim)})`);
+  }
+  // Tarcza Wartownika: whoever hits the hero in melee is slowed in its next activation.
+  if (victim.gear?.slowAttacker && p.damage > 0 && att.alive && UNITS[att.defId].attackType === 'melee' && !att.gear?.unbound) {
+    att.status.slowLater = (att.status.slowLater ?? 0) + victim.gear.slowAttacker;
+    log(state, 'ability', `${unitName(att)} będzie wolniejszy o ${victim.gear.slowAttacker} S (${unitName(victim)}).`);
   }
   // Kolczuga Cierni: whoever hits the hero in melee is pricked itself.
   if (victim.gear?.thorns && p.damage > 0 && att.alive && UNITS[att.defId].attackType === 'melee') dealDamage(state, att, victim.gear.thorns, 'Ciernie zbroi');
@@ -865,12 +902,18 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   for (const t of targets) {
     if (!t.alive || !u.alive) continue;
     const before = t.hp;
+    const tCells = cellsOf(t);
     resolveAttack(state, u, t, canUse, act.movedDistance);
+    // Miecz Jutrzenki (Fala Ostrza): the blow also cuts one more enemy next to the target.
+    if (u.gear?.cleave && u.alive && (!t.alive || t.hp < before)) {
+      const other = Object.values(b.units).find((x) => x.alive && x.side !== u.side && x.id !== t.id && !targets.includes(x) && cellsOf(x).some((c) => tCells.some((k) => adjacent(k, c))));
+      if (other) dealDamage(state, other, u.gear.cleave, `Fala Ostrza (${unitName(u)})`);
+    }
     if (ab === 'thiefClaw' && abilityActive(state) && u.alive && t.hp < before && u.hp < u.maxHp) {
       u.hp = Math.min(u.maxHp, u.hp + ABILITY.thiefClawHeal * hpScaleOf(state));
       log(state, 'ability', `${unitName(u)} odzyskuje ${ABILITY.thiefClawHeal * hpScaleOf(state)} Ż (Złodziejski Szpon).`);
     }
-    if (ab === 'grab' && abilityActive(state) && t.alive && t.hp < before) {
+    if (ab === 'grab' && abilityActive(state) && t.alive && t.hp < before && !t.gear?.unbound) {
       t.status.rootedNext = true;
       log(state, 'ability', `${unitName(t)} zostaje schwytany i nie ruszy się w swojej następnej aktywacji (${UNITS[u.defId].abilityName}).`);
     }
@@ -881,8 +924,11 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     }
     if (canUse && t.alive) {
       if (ab === 'entanglingRoots') {
-        t.status.slowNext += ABILITY.rootsSlow;
-        log(state, 'ability', `${unitName(t)}: −${ABILITY.rootsSlow} S w następnej aktywacji.`);
+        if (t.gear?.unbound) log(state, 'ability', `${unitName(t)} jest odporny na korzenie.`);
+        else {
+          t.status.slowNext += ABILITY.rootsSlow;
+          log(state, 'ability', `${unitName(t)}: −${ABILITY.rootsSlow} S w następnej aktywacji.`);
+        }
       }
       if (ab === 'poisonClaw') {
         t.status.poisoned = ABILITY.poisonTicks;
@@ -913,6 +959,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   }
   u.status.nextAttackBonus = 0;
   u.status.cursedNext = 0;
+  if (u.gear?.firstStrike) delete u.gear.firstStrike;
   // Bitewny Szał: a kill feeds the next blow.
   if (ab === 'bloodRage' && abilityActive(state) && u.alive && targets.some((t) => !t.alive)) {
     u.status.nextAttackBonus += ABILITY.bloodRageBonus * scaleOf(state);
@@ -1025,8 +1072,11 @@ export function battleAbility(state: GameState, targetId?: string) {
   } else if (ab === 'web') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side === u.side || unitDistance(u, t) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);
-    t.status.rootedNext = true;
-    log(state, 'ability', `${unitName(t)} zostaje unieruchomiony do swojej następnej aktywacji.`);
+    if (t.gear?.unbound) log(state, 'ability', `${unitName(t)} jest odporny na sidła.`);
+    else {
+      t.status.rootedNext = true;
+      log(state, 'ability', `${unitName(t)} zostaje unieruchomiony do swojej następnej aktywacji.`);
+    }
   }
   u.abilityUsed = true;
   log(state, 'ability', `${unitName(u)} używa zdolności: ${UNITS[u.defId].abilityName}.`);

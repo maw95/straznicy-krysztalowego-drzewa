@@ -700,7 +700,7 @@ describe('rules and cards window', () => {
     await click(doc, 'Jednostki');
     for (const name of ['Kruszyniec', 'Harpia', 'Bagienny Pełzacz', 'Kamienny Golem', 'Król Burzy', 'Kraken']) expect(doc.body.textContent).toContain(name);
     await click(doc, 'Artefakty');
-    expect(doc.querySelectorAll('[data-rules-artifacts] .gear-medal').length).toBe(15);
+    expect(doc.querySelectorAll('[data-rules-artifacts] .gear-medal').length).toBe(27);
     expect(doc.body.textContent).toContain('Egida Drzewa');
     await click(doc, 'Lokacje na mapie');
     for (const name of ['Kapliczka', 'Obóz najemników', 'Skrzynia', 'Punkt kontrolny']) expect(doc.body.textContent).toContain(name);

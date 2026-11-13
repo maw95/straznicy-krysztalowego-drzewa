@@ -8,7 +8,7 @@ import { activeHero, scoutAround } from './game';
 import { log } from './log';
 import { Rng } from './rng';
 import { tileCost } from './map';
-import type { BattleUnit, GameState, HeroState, Tile } from './types';
+import type { BattleGear, BattleUnit, GameState, HeroState, Tile } from './types';
 
 export type Slot = 'helmet' | 'weapon' | 'armor' | 'shield' | 'boots';
 /** The five places of a hero's gear, in the order of the hero's sheet: the helmet on top, weapon - armour - shield in the middle, the boots below. */
@@ -49,7 +49,57 @@ export interface ArtifactDef {
   firstHit?: true;
   /** Every hex of the map costs the hero 1 move point. */
   trapper?: true;
+  /** Set pieces (level 3 and higher, docs/ZESTAWY_ARTEFAKTOW.md): the set this artifact belongs to; its bonus works with all three pieces worn. */
+  set?: SetId;
+  /** Set effects of the single piece. Pomocnicy +S (Wianek Gajowy). */
+  supportSpeed?: number;
+  /** The hero regains this much Życie at the start of every round (Płaszcz z Mchu). */
+  regen?: number;
+  /** Immune to being rooted or slowed (Trzewiki z Kory). */
+  unbound?: true;
+  /** The hero's first attack in a battle deals this much more (Diadem Brzasku). */
+  firstStrike?: number;
+  /** A blow of the hero also hurts one more enemy next to the target by this much (Miecz Jutrzenki). */
+  cleave?: number;
+  /** Ranged attacks on the hero are this much weaker, in digital Expedition points (Tarcza Zorzy). */
+  rangedDefense?: number;
+  /** Once per battle the hero is left with 1 Życie instead of falling (Zbroja Wartownika). */
+  lastStand?: true;
+  /** An enemy that hits the hero in melee has this much less S in its next activation (Tarcza Wartownika). */
+  slowAttacker?: number;
+  /** After an activation without moving, blows on the hero are 1 weaker until its next activation (Buty Wartownika). */
+  anchor?: true;
+  /** Market artifacts cost this much less (Kapelusz Kupca), a chest gives this much gold on top (Kaftan Poborcy), the first place taken pays this (Buty Handlarza). */
+  marketDiscount?: number;
+  chestGold?: number;
+  firstPlaceGold?: number;
 }
+
+export type SetId = 'grove' | 'dawnArms' | 'sentinel' | 'merchant';
+
+/** The set bonus (all three pieces worn); the numbers are small-scale like the rest of the gear. */
+export interface SetDef {
+  id: SetId;
+  name: string;
+  pieces: string[];
+  bonusText: string;
+  /** Sight +1 and supports +2 Życie. */
+  reveal?: number;
+  supportHp?: number;
+  /** The first attack of every unit of the team deals this much more. */
+  teamFirstStrike?: number;
+  /** Supports next to the hero take blows this much weaker (min 1), while the hero stands. */
+  guardAura?: number;
+  /** Income of the faction, once. */
+  income?: number;
+}
+
+export const SETS: Record<SetId, SetDef> = {
+  grove: { id: 'grove', name: 'Strój Gajowego', pieces: ['groveWreath', 'mossCloak', 'barkShoes'], bonusText: 'Komplet: pole widzenia +1, a pomocnicy mają +2 Ż.', reveal: 1, supportHp: 2 },
+  dawnArms: { id: 'dawnArms', name: 'Rynsztunek Brzasku', pieces: ['dawnDiadem', 'dawnSword', 'dawnShield'], bonusText: 'Komplet: pierwszy atak każdej jednostki drużyny w bitwie zadaje +1 A.', teamFirstStrike: 1 },
+  sentinel: { id: 'sentinel', name: 'Pancerz Wartownika', pieces: ['sentinelMail', 'sentinelShield', 'sentinelBoots'], bonusText: 'Komplet: sąsiedni pomocnicy dostają ciosy o 1 słabsze (min. 1), dopóki bohater stoi.', guardAura: 1 },
+  merchant: { id: 'merchant', name: 'Strój Kupca', pieces: ['merchantHat', 'merchantCoat', 'merchantBoots'], bonusText: 'Komplet: dochód frakcji +1 zł na rundę (raz na frakcję).', income: 1 },
+};
 
 export const ARTIFACTS: ArtifactDef[] = [
   { id: 'helm1', slot: 'helmet', rarity: 1, name: 'Hełm Dowódcy', supportHp: 1, text: 'Pomocnicy bohatera mają +1 Ż w bitwie.' },
@@ -67,7 +117,28 @@ export const ARTIFACTS: ArtifactDef[] = [
   { id: 'boots1', slot: 'boots', rarity: 1, name: 'Buty Wędrowca', speed: 1, text: '+1 S bohatera w bitwie.' },
   { id: 'trapperBoots', slot: 'boots', rarity: 2, name: 'Trzewiki Trapera', trapper: true, text: 'Na mapie każde pole kosztuje bohatera 1 punkt ruchu: trudny teren go nie spowalnia.' },
   { id: 'boots2', slot: 'boots', rarity: 3, name: 'Skrzydlate Sandały', speed: 1, move: 1, text: '+1 S w bitwie i +1 punkt ruchu na mapie.' },
+  // Set pieces (rare; only in the Królestwo level and higher). Bonuses for three of three: SETS.
+  { id: 'groveWreath', slot: 'helmet', rarity: 2, set: 'grove', name: 'Wianek Gajowy', supportSpeed: 1, text: 'Pomocnicy bohatera mają +1 S w bitwie.' },
+  { id: 'mossCloak', slot: 'armor', rarity: 2, set: 'grove', name: 'Płaszcz z Mchu', regen: 1, text: 'Na początku każdej rundy bitwy bohater odzyskuje 1 Ż.' },
+  { id: 'barkShoes', slot: 'boots', rarity: 2, set: 'grove', name: 'Trzewiki z Kory', unbound: true, text: 'Bohater jest odporny na korzenie (Elf Druid), sidła (Pająk) i chwyt (Szczypiec).' },
+  { id: 'dawnDiadem', slot: 'helmet', rarity: 2, set: 'dawnArms', name: 'Diadem Brzasku', firstStrike: 2, text: 'Pierwszy atak bohatera w bitwie zadaje +2 A.' },
+  { id: 'dawnSword', slot: 'weapon', rarity: 2, set: 'dawnArms', name: 'Miecz Jutrzenki', cleave: 1, text: 'Fala Ostrza: cios rani też o 1 Ż jednego innego wroga sąsiadującego z celem.' },
+  { id: 'dawnShield', slot: 'shield', rarity: 2, set: 'dawnArms', name: 'Tarcza Zorzy', rangedDefense: 2, text: 'Ataki z dystansu zadają bohaterowi o 2 mniej (ale co najmniej 1).' },
+  { id: 'sentinelMail', slot: 'armor', rarity: 2, set: 'sentinel', name: 'Zbroja Wartownika', lastStand: true, text: 'Ostatnia Szansa: raz na bitwę, gdy bohater miałby paść, zostaje mu 1 Ż.' },
+  { id: 'sentinelShield', slot: 'shield', rarity: 2, set: 'sentinel', name: 'Tarcza Wartownika', slowAttacker: 1, text: 'Wróg, który trafi bohatera w zwarciu, ma −1 S w swojej następnej aktywacji.' },
+  { id: 'sentinelBoots', slot: 'boots', rarity: 2, set: 'sentinel', name: 'Buty Wartownika', anchor: true, text: 'Zakotwiczenie: jeśli bohater nie ruszał się w swojej aktywacji, otrzymuje ciosy o 1 słabsze do swojej następnej aktywacji.' },
+  { id: 'merchantHat', slot: 'helmet', rarity: 2, set: 'merchant', name: 'Kapelusz Kupca', marketDiscount: 1, text: 'Artefakty w Targu są o 1 zł tańsze (nie mniej niż 1 zł).' },
+  { id: 'merchantCoat', slot: 'armor', rarity: 2, set: 'merchant', name: 'Kaftan Poborcy', chestGold: 1, text: 'Otwarcie skrzyni daje dodatkowo +1 zł, także gdy gracz wybiera artefakt.' },
+  { id: 'merchantBoots', slot: 'boots', rarity: 2, set: 'merchant', name: 'Buty Handlarza', firstPlaceGold: 1, text: 'Za pierwsze zajęcie osady lub kopalni bohater dostaje jednorazowo +1 zł.' },
 ];
+
+/** The artifacts that can turn up in a chest, a market or as a trophy of this rarity: set pieces only in the Królestwo level. */
+export const artifactPool = (state: Pick<GameState, 'kingdom'>, rarity: number): ArtifactDef[] => ARTIFACTS.filter((a) => a.rarity === rarity && (!a.set || Boolean(state.kingdom)));
+
+/** How many pieces of the set the hero wears. */
+export const setCount = (hero: Pick<HeroState, 'gear'> | undefined, id: SetId): number => (hero ? gearOf(hero).filter((a) => a.set === id).length : 0);
+/** The sets the hero wears complete (three of three). */
+export const completeSets = (hero: Pick<HeroState, 'gear'> | undefined): SetDef[] => (Object.values(SETS) as SetDef[]).filter((d) => setCount(hero, d.id) >= d.pieces.length);
 export const ARTIFACT_BY_ID: Record<string, ArtifactDef> = Object.fromEntries(ARTIFACTS.map((a) => [a.id, a]));
 
 /** How often each rarity turns up (common, rare, legendary), by where the artifact comes from. Provisional: tune with the simulations. */
@@ -147,7 +218,7 @@ export function drawArtifact(state: GameState, hero: HeroState, odds: readonly n
     }
     roll -= odds[i];
   }
-  return rng.pick(ARTIFACTS.filter((a) => a.rarity === rarity));
+  return rng.pick(artifactPool(state, rarity));
 }
 
 /** Whether `art` is worth putting on: the slot is empty or holds something of a lower rarity. */
@@ -275,7 +346,19 @@ export function applyGear(hero: HeroState | undefined, unit: BattleUnit): void {
   unit.status.battleSpeedBonus = Math.max(unit.status.battleSpeedBonus, 1 - UNITS[unit.defId].speed);
   const sum = (f: (a: ArtifactDef) => number | undefined) => worn.reduce((s, a) => s + (f(a) ?? 0), 0);
   const defense = sum((a) => a.defense);
-  const gear = {
+  const sets = completeSets(hero);
+  const gear: BattleGear = {
+    ...(sum((a) => a.regen) ? { regen: sum((a) => a.regen) * (unit.hpScale ?? k) } : {}),
+    ...(worn.some((a) => a.unbound) ? { unbound: true as const } : {}),
+    ...(sum((a) => a.firstStrike) || sets.some((d) => d.teamFirstStrike)
+      ? { firstStrike: (sum((a) => a.firstStrike) + sets.reduce((s, d) => s + (d.teamFirstStrike ?? 0), 0)) * k }
+      : {}),
+    ...(sum((a) => a.cleave) ? { cleave: sum((a) => a.cleave) * k } : {}),
+    ...(sum((a) => a.rangedDefense) ? { rangedDefense: defenseOf(sum((a) => a.rangedDefense), k) } : {}),
+    ...(worn.some((a) => a.lastStand) ? { lastStand: true as const } : {}),
+    ...(sum((a) => a.slowAttacker) ? { slowAttacker: sum((a) => a.slowAttacker) } : {}),
+    ...(worn.some((a) => a.anchor) ? { anchor: true as const } : {}),
+    ...(sets.some((d) => d.guardAura) ? { guardAura: defenseOf(sets.reduce((s, d) => s + (d.guardAura ?? 0), 0), k) } : {}),
     ...(defense ? { defense: defenseOf(defense, k) } : {}),
     ...(sum((a) => a.thorns) ? { thorns: sum((a) => a.thorns) * k } : {}),
     ...(sum((a) => a.vsWounded) ? { vsWounded: sum((a) => a.vsWounded) * k } : {}),
@@ -287,13 +370,25 @@ export function applyGear(hero: HeroState | undefined, unit: BattleUnit): void {
 /** A hero's helmet may strengthen its supports. */
 export function applySupportGear(hero: HeroState | undefined, unit: BattleUnit): void {
   if (!hero) return;
-  const hp = gearOf(hero).reduce((s, a) => s + (a.supportHp ?? 0), 0) * (unit.hpScale ?? unit.scale ?? 1);
+  const worn = gearOf(hero);
+  const sets = completeSets(hero);
+  const hp = (worn.reduce((s, a) => s + (a.supportHp ?? 0), 0) + sets.reduce((s, d) => s + (d.supportHp ?? 0), 0)) * (unit.hpScale ?? unit.scale ?? 1);
   unit.hp += hp;
   unit.maxHp += hp;
+  unit.status.battleSpeedBonus += worn.reduce((s, a) => s + (a.supportSpeed ?? 0), 0);
+  // Rynsztunek Brzasku: the whole team strikes harder with its first blow.
+  const strike = sets.reduce((s, d) => s + (d.teamFirstStrike ?? 0), 0) * (unit.scale ?? 1);
+  if (strike) unit.gear = { ...unit.gear, firstStrike: strike };
+  // Pancerz Wartownika: supports next to the hero take weaker blows (the hero's own gear carries the aura, see battle.ts).
 }
 
 /** Radius of the hexes the hero's gear reveals (0 = none). */
-export const gearReveal = (hero: HeroState | undefined) => (hero ? gearOf(hero).reduce((s, a) => Math.max(s, a.reveal ?? 0), 0) : 0);
+export const gearReveal = (hero: HeroState | undefined) => {
+  if (!hero) return 0;
+  const base = gearOf(hero).reduce((s, a) => Math.max(s, a.reveal ?? 0), 0);
+  const bonus = completeSets(hero).reduce((s, d) => s + (d.reveal ?? 0), 0);
+  return base || bonus ? base + bonus : 0;
+};
 
 /** What a step onto `tile` costs this hero: the terrain's cost, or 1 everywhere in Trzewiki Trapera (null = impassable). */
 export function heroTileCost(hero: Pick<HeroState, 'gear'> | undefined, tile: Tile): number | null {

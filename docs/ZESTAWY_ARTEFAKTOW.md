@@ -56,6 +56,8 @@ Stan na 13.11.2026: **4 zestawy zaakceptowane przez autora** (nazwy, elementy i 
 
 ## Do zrobienia
 
+(Stan 13.11: punkty 1–3 zrobione w kodzie: silnik, UI, boty; zostają ikony i strojenie.)
+
 1. Silnik: pole `set` w `ArtifactDef`, nowe efekty (pomocnicy +S, regeneracja, odporność na spowolnienia, pierwszy atak +A, zadawanie obrażeń sąsiadowi celu, Obrona przed dystansem, Ostatnia Szansa, −S po trafieniu, Zakotwiczenie, pole widzenia +1, efekty złota), premie 3/3, losowanie elementów tylko na poziomie 3+, testy.
 2. UI: licznik zestawu na karcie bohatera, znacznik w Targu i przy skrzyni.
 3. Boty: `DRAFT_VALUE` i zakupy w Targu rozumieją zestawy.

@@ -9,7 +9,7 @@ import { levelOf } from './growth';
 import { log } from './log';
 import { mapNeighbors, tileCost } from './map';
 import { Rng } from './rng';
-import { ARTIFACT_BY_ID, ARTIFACT_ODDS, ARTIFACTS, drawArtifact, giveArtifact, type Rarity } from './sites';
+import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import type { Action, Crystal, GameState, HeroState } from './types';
 
@@ -64,6 +64,10 @@ export const KINGDOM = {
   slotsBase: 2,
   slotsMax: 5,
 };
+
+/** What the hero pays for an artifact in the market: the rarity's price, less the Kapelusz Kupca discount (never below 1). */
+export const artifactCost = (hero: HeroState, art: ArtifactDef): number =>
+  Math.max(1, KINGDOM.artifactPrice[art.rarity - 1] - gearOf(hero).reduce((n, a) => n + (a.marketDiscount ?? 0), 0));
 
 /** Prices of the recruits by tier (provisional: tuned with the simulations, docs/JEDNOSTKI_POZIOMU_3.md). */
 export const RECRUIT_COSTS = [2, 3, 5, 8, 12];
@@ -126,6 +130,9 @@ export function incomeBreakdown(state: GameState, f: FactionId): Array<{ label: 
     if (s.buildings.treasury) rows.push({ label: `Skarbiec (${s.name})`, gold: KINGDOM.incomeTreasury });
   }
   for (const [hex, m] of Object.entries(k.mines)) if (m.owner === f) rows.push({ label: `Kopalnia (${hex})`, gold: KINGDOM.incomeMine });
+  // Strój Kupca (three of three): +1 gold a round, once for the faction.
+  const merchants = Object.values(state.heroes).filter((h) => h.faction === f && h.alive && completeSets(h).some((d) => d.income));
+  if (merchants.length) rows.push({ label: SETS.merchant.name, gold: SETS.merchant.income! });
   return rows;
 }
 
@@ -222,12 +229,23 @@ export function enterPlace(state: GameState, hero: HeroState): void {
     const before = s.owner;
     s.owner = hero.faction;
     log(state, 'info', `${name} zajmuje osadę ${s.name}${before ? ` (należała do: ${FACTION_NAMES[before]})` : ''}.`);
+    firstPlaceGold(state, hero);
   } else {
     const m = k.mines[place.id];
     if (m.owner === hero.faction) return;
     m.owner = hero.faction;
     log(state, 'info', `${name} zajmuje kopalnię złota.`);
+    firstPlaceGold(state, hero);
   }
+}
+
+/** Buty Handlarza: the first place the hero takes pays a gold coin, once. */
+function firstPlaceGold(state: GameState, hero: HeroState): void {
+  const gold = gearOf(hero).reduce((n, a) => n + (a.firstPlaceGold ?? 0), 0);
+  if (!gold || hero.placeGoldPaid) return;
+  hero.placeGoldPaid = true;
+  state.kingdom!.gold[hero.faction] += gold;
+  log(state, 'info', `${UNITS[hero.id].name} dostaje ${gold} zł za pierwsze zajęcie miejsca (Buty Handlarza).`);
 }
 
 /** The end of a round: every faction collects its income. */
@@ -265,7 +283,7 @@ export function marketStock(state: GameState, s: Settlement): string[] {
   while (picks.length < n) {
     const roll = rng.int(10);
     const rarity: Rarity = roll < 6 ? 1 : roll < 9 ? 2 : 3;
-    const art = rng.pick(ARTIFACTS.filter((x) => x.rarity === rarity));
+    const art = rng.pick(artifactPool(state, rarity));
     if (!picks.includes(art.id)) picks.push(art.id);
   }
   return s.boughtEpoch === epoch ? picks.filter((id) => !s.bought.includes(id)) : picks;
@@ -343,7 +361,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       const stock = marketStock(state, s);
       if (!stock.includes(action.artifactId)) throw new Error('Tego artefaktu nie ma dziś w ofercie.');
       const art = ARTIFACT_BY_ID[action.artifactId];
-      pay(state, hero.faction, KINGDOM.artifactPrice[art.rarity - 1]);
+      pay(state, hero.faction, artifactCost(hero, art));
       const epoch = marketEpoch(state);
       if (s.boughtEpoch !== epoch) s.bought = [];
       s.boughtEpoch = epoch;
@@ -361,6 +379,12 @@ export function kingdomAction(state: GameState, action: Action): void {
         log(state, 'info', `${UNITS[hero.id].name} bierze ze skrzyni ${KINGDOM.chestGold} zł.`);
       } else {
         giveArtifact(state, hero, drawArtifact(state, hero, ARTIFACT_ODDS.chest, 0x2545f491), 'skrzynia');
+      }
+      // Kaftan Poborcy: the chest gives gold on top, whatever the player chose.
+      const extra = gearOf(hero).reduce((n, a) => n + (a.chestGold ?? 0), 0);
+      if (extra) {
+        k.gold[hero.faction] += extra;
+        log(state, 'info', `${UNITS[hero.id].name} dostaje jeszcze ${extra} zł (Kaftan Poborcy).`);
       }
       break;
     }
@@ -398,7 +422,12 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   if (s.buildings.treasury < 1 && afford(nextCost(s, 'treasury'))) return { type: 'kingdomBuild', settlementId: id, building: 'treasury' };
   if (s.buildings.hospital < 1 && fs.supportsDead.length && afford(nextCost(s, 'hospital'))) return { type: 'kingdomBuild', settlementId: id, building: 'hospital' };
   if (s.buildings.market >= 1) {
-    const best = marketStock(state, s).map((a) => ARTIFACT_BY_ID[a]).filter((a) => gold >= KINGDOM.artifactPrice[a.rarity - 1]).sort((a, b) => b.rarity - a.rarity)[0];
+    const buyer = state.heroes[state.turnOrder[state.turnIndex]];
+    const who = buyer?.faction === f ? buyer : undefined;
+    const cost = (a: ArtifactDef) => (who ? artifactCost(who, a) : KINGDOM.artifactPrice[a.rarity - 1]);
+    // A bot prefers the rarer artifact, and a piece of a set it is already collecting above the others.
+    const worth = (a: ArtifactDef) => a.rarity * 10 + (a.set && who ? setCount(who, a.set) * 6 : 0);
+    const best = marketStock(state, s).map((a) => ARTIFACT_BY_ID[a]).filter((a) => gold >= cost(a)).sort((a, b) => worth(b) - worth(a))[0];
     if (best) return { type: 'kingdomBuyArtifact', settlementId: id, artifactId: best.id };
   } else if (afford(nextCost(s, 'market'))) return { type: 'kingdomBuild', settlementId: id, building: 'market' };
   if (own && s.buildings.barracks === 1 && s.buildings.market >= 1 && afford(nextCost(s, 'barracks'))) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
@@ -410,6 +439,12 @@ export function kingdomBotAction(state: GameState, hero: HeroState): Action | nu
   const k = state.kingdom;
   if (!k) return null;
   if (k.chest) return { type: 'chestTake', what: 'artifact' };
+  // Set pieces in the backpack: wear one when it brings the best set a piece closer (strictly, so the bot never swaps back and forth).
+  const best = (h: HeroState) => Math.max(0, ...(Object.keys(SETS) as Array<keyof typeof SETS>).map((id) => setCount(h, id)));
+  for (const art of (hero.pack ?? []).map((id) => ARTIFACT_BY_ID[id]).filter((a) => a?.set)) {
+    const trial = { gear: { ...hero.gear, [art.slot]: art.id } };
+    if (best(trial as HeroState) > best(hero)) return { type: 'equipArtifact', artifactId: art.id };
+  }
   const s = settlementAt(state, hero.pos);
   return s ? botPurchase(state, hero.faction, s) : null;
 }

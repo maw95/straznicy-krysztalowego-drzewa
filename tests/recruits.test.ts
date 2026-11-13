@@ -149,3 +149,101 @@ describe('recruits', () => {
     expect(m.status.nextAttackBonus).toBe(2 * one(s));
   });
 });
+
+// ------------------------------------------------------------------ artifact sets (docs/ZESTAWY_ARTEFAKTOW.md)
+import { applyGear, applySupportGear, ARTIFACTS, artifactPool, completeSets, gearReveal, SETS } from '../src/engine/sites';
+import { artifactCost, incomeOf, KINGDOM } from '../src/engine/kingdom';
+import { dealDamage } from '../src/engine/battle';
+
+const grown = () => createGame(setup({}, { ruleset: 'digital', heroGrowth: true }));
+const wear = (s: GameState, ids: string[]) => {
+  const h = Object.values(s.heroes)[0];
+  h.gear = Object.fromEntries(ids.map((id) => [ARTIFACTS.find((a) => a.id === id)!.slot, id]));
+  return h;
+};
+
+describe('artifact sets', () => {
+  it('have three rare pieces in different slots each, and appear only in the Królestwo level', () => {
+    for (const d of Object.values(SETS)) {
+      const pieces = d.pieces.map((id) => ARTIFACTS.find((a) => a.id === id)!);
+      expect(pieces.every((a) => a.rarity === 2 && a.set === d.id)).toBe(true);
+      expect(new Set(pieces.map((a) => a.slot)).size).toBe(3);
+    }
+    expect(artifactPool({ kingdom: undefined }, 2).some((a) => a.set)).toBe(false);
+    const k = createGame(setup({}, { ruleset: 'digital', heroGrowth: true, kingdom: true } as never));
+    expect(artifactPool(k, 2).filter((a) => a.set)).toHaveLength(12);
+  });
+
+  it('Strój Gajowego: supports +1 S, regeneration, immunity; the full set adds sight and +2 Ż for supports', () => {
+    const s = grown();
+    const h = wear(s, ['groveWreath', 'mossCloak', 'barkShoes']);
+    const hero = makeBattleUnit(h.id, h.faction, true, 1);
+    applyGear(h, hero);
+    expect(hero.gear).toMatchObject({ regen: 1, unbound: true });
+    const sup = makeBattleUnit('elfDruid', 'dawn', true, 1);
+    const hp = sup.maxHp;
+    applySupportGear(h, sup);
+    expect(sup.status.battleSpeedBonus).toBe(1);
+    expect(sup.maxHp).toBe(hp + 2);
+    expect(completeSets(h)).toHaveLength(1);
+    const base = gearReveal(wear(s, ['groveWreath', 'mossCloak']));
+    expect(gearReveal(wear(s, ['groveWreath', 'mossCloak', 'barkShoes'])) - base).toBe(1);
+  });
+
+  it('Rynsztunek Brzasku: the first attack hits harder, once; the full set gives the supports +1 for theirs', () => {
+    const s = fight([
+      { id: 'a', defId: 'goldDragon', side: 'dawn', cell: near(here) },
+      { id: 'e', defId: 'caveSpider', side: 'horde', cell: here },
+      { id: 'o', defId: 'shadowBat', side: 'horde', cell: near(here, 2) },
+    ]);
+    const a = s.battle!.units.a;
+    const e = s.battle!.units.e;
+    const plain = predictDamage(s, a, e, { useAbility: false, movedDistance: 0 }).damage;
+    a.gear = { firstStrike: 2 * one(s), cleave: one(s) };
+    expect(predictDamage(s, a, e, { useAbility: false, movedDistance: 0 }).damage).toBe(plain + 2 * one(s));
+    const bat = s.battle!.units.o.hp;
+    const spider = e.hp;
+    battleAttack(s, 'e', false);
+    expect(a.gear?.firstStrike).toBeUndefined();
+    expect(e.hp).toBeLessThan(spider);
+    // Fala Ostrza hurt the bat only when it stands next to the target; here it does not.
+    expect(s.battle!.units.o.hp).toBeLessThanOrEqual(bat);
+  });
+
+  it('Pancerz Wartownika: Ostatnia Szansa leaves 1 Ż once; Zakotwiczenie and the aura weaken blows', () => {
+    const s = fight([
+      { id: 'h', defId: 'goldDragon', side: 'dawn', cell: here },
+      { id: 'p', defId: 'nymph', side: 'dawn', cell: near(here, 4) },
+      { id: 'e', defId: 'caveSpider', side: 'horde', cell: near(here, 1) },
+    ]);
+    const h = s.battle!.units.h;
+    h.gear = { lastStand: true, guardAura: 1, slowAttacker: 1, anchor: true };
+    dealDamage(s, h, 999, 'test');
+    expect(h.alive).toBe(true);
+    expect(h.hp).toBe(1);
+    dealDamage(s, h, 999, 'test');
+    expect(h.alive).toBe(false);
+    const s2 = fight([
+      { id: 'h', defId: 'goldDragon', side: 'dawn', cell: here },
+      { id: 'p', defId: 'nymph', side: 'dawn', cell: near(here, 4) },
+      { id: 'e', defId: 'caveSpider', side: 'horde', cell: near(near(here, 4), 4) },
+    ]);
+    const open = predictDamage(s2, s2.battle!.units.e, s2.battle!.units.p, { useAbility: false, movedDistance: 0 }).damage;
+    s2.battle!.units.h.gear = { guardAura: 1 };
+    expect(predictDamage(s2, s2.battle!.units.e, s2.battle!.units.p, { useAbility: false, movedDistance: 0 }).damage).toBeLessThan(open);
+  });
+
+  it('Strój Kupca: market discount, chest gold and the income of the full set', () => {
+    const k = createGame(setup({}, { ruleset: 'digital', heroGrowth: true, kingdom: true } as never));
+    const h = Object.values(k.heroes)[0];
+    const hat = ARTIFACTS.find((a) => a.id === 'merchantHat')!;
+    const rare = ARTIFACTS.find((a) => a.rarity === 2 && !a.set)!;
+    expect(artifactCost(h, rare)).toBe(KINGDOM.artifactPrice[1]);
+    h.gear = { helmet: 'merchantHat' };
+    expect(artifactCost(h, rare)).toBe(KINGDOM.artifactPrice[1] - 1);
+    expect(hat.marketDiscount).toBe(1);
+    const before = incomeOf(k, h.faction);
+    h.gear = { helmet: 'merchantHat', armor: 'merchantCoat', boots: 'merchantBoots' };
+    expect(incomeOf(k, h.faction)).toBe(before + 1);
+  });
+});

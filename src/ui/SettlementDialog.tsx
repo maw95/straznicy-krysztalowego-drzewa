@@ -4,8 +4,8 @@
 
 import { useState } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
-import { BUILDING_NAMES, BUILDING_TEXTS, goldOf, incomeOf, KINGDOM, marketStock, mayRecruit, nextCost, RECRUITS, type BuildingId } from '../engine/kingdom';
-import { ARTIFACT_BY_ID, RARITY_NAMES } from '../engine/sites';
+import { artifactCost, BUILDING_NAMES, BUILDING_TEXTS, goldOf, incomeOf, KINGDOM, marketStock, mayRecruit, nextCost, RECRUITS, type BuildingId } from '../engine/kingdom';
+import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
 import type { Action, GameState } from '../engine/types';
 import { asset, Portrait, Ribbon } from './common';
 import { ArtifactMedal } from './growthUi';
@@ -32,6 +32,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const gold = goldOf(state, faction);
   const own = s.land === faction;
   const fs = state.factions[faction];
+  const buyer = Object.values(state.heroes).find((h) => h.id === state.turnOrder[state.turnIndex] && h.faction === faction);
   const price = (b: BuildingId) => nextCost(s, b);
   const act = (a: Action) => onAction(a);
   const buildButton = (b: BuildingId) => {
@@ -95,12 +96,12 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           {stock.length === 0 && <i>Wyprzedane do następnej oferty (co {KINGDOM.stockRounds} rundy).</i>}
           {stock.map((id) => {
             const art = ARTIFACT_BY_ID[id];
-            const cost = KINGDOM.artifactPrice[art.rarity - 1];
+            const cost = buyer ? artifactCost(buyer, art) : KINGDOM.artifactPrice[art.rarity - 1];
             return (
               <div key={id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                 <ArtifactMedal art={art} size={46} />
                 <div style={{ flex: 1, fontSize: 15, lineHeight: 1.25 }}>
-                  <b>{art.name}</b> <span className={`rarity r${art.rarity}`}>{RARITY_NAMES[art.rarity]}</span>
+                  <b>{art.name}</b> <span className={`rarity r${art.rarity}`}>{RARITY_NAMES[art.rarity]}</span>{art.set && <span style={{ marginLeft: 6, color: '#7A4EA0' }}>zestaw: {SETS[art.set].name}</span>}
                   <div><RuleText text={art.text} /></div>
                 </div>
                 <button className="btn prim" disabled={gold < cost} data-buy={id} onClick={() => act({ type: 'kingdomBuyArtifact', settlementId: s.id, artifactId: id })} style={{ padding: '3px 14px', fontSize: 16 }}>

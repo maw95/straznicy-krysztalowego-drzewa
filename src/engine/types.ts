@@ -195,6 +195,8 @@ export interface HeroState {
   gear?: Partial<Record<Slot, string>>;
   /** Artifacts carried but not worn (the backpack, at most `PACK_SIZE`; sites.ts). */
   pack?: string[];
+  /** Buty Handlarza: the one-off gold for the first place taken has been paid. */
+  placeGoldPaid?: true;
 }
 
 export interface FactionState {
@@ -259,6 +261,36 @@ export interface UnitStatus {
   shieldArmed: boolean;
   /** Zatruty Pazur: activations left in which the unit loses life at the start. */
   poisoned?: number;
+  /** Buty Wartownika: set after an activation without moving; blows are 1 weaker until the unit's next activation. */
+  anchored?: boolean;
+  /** Tarcza Wartownika: S this unit loses in its next activation (it takes effect when that activation begins). */
+  slowLater?: number;
+}
+
+/** What the artifacts do for a unit in this battle (sites.ts `applyGear`); numbers are in this battle's scale. */
+export interface BattleGear {
+  defense?: number;
+  thorns?: number;
+  vsWounded?: number;
+  firstHit?: true;
+  /** Regains this much Życie at the start of every round. */
+  regen?: number;
+  /** Cannot be rooted or slowed. */
+  unbound?: true;
+  /** The unit's first attack deals this much more (spent with the attack). */
+  firstStrike?: number;
+  /** A blow also hurts one more enemy next to the target by this much. */
+  cleave?: number;
+  /** Ranged attacks on the unit are this much weaker. */
+  rangedDefense?: number;
+  /** Once per battle the unit is left with 1 Życie instead of falling (spent when it fires). */
+  lastStand?: true;
+  /** An enemy that hits the unit in melee has this much less S in its next activation. */
+  slowAttacker?: number;
+  /** After an activation without moving the unit takes weaker blows until its next one. */
+  anchor?: true;
+  /** Supports next to this unit take blows this much weaker (min 1) while it stands. */
+  guardAura?: number;
 }
 
 export interface BattleUnit {
@@ -290,7 +322,7 @@ export interface BattleUnit {
   swappedOut: boolean;
   status: UnitStatus;
   /** What the hero's artifacts do in this battle (sites.ts): blows on it are `defense` weaker (never below 1), a melee attacker loses `thorns` Życie, its attacks on a wounded enemy are `vsWounded` stronger, the first blow on it is halved. */
-  gear?: { defense?: number; thorns?: number; vsWounded?: number; firstHit?: true };
+  gear?: BattleGear;
   /** The ability of the card it fights with, when not its usual one (a guardian's duel card). */
   ability?: AbilityId;
   /** Digital ruleset: the direction (axial vector) the unit last moved or attacked in: its front (Zajście od tyłu). */

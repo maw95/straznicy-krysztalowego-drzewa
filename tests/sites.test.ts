@@ -72,7 +72,7 @@ describe('sites on the map and hero gear (hero growth)', () => {
 
   it('has five slots with a common, a rare and a legendary artifact each, under one name for every faction', () => {
     expect(SLOTS).toEqual(['helmet', 'weapon', 'armor', 'shield', 'boots']);
-    for (const slot of SLOTS) expect(ARTIFACTS.filter((a) => a.slot === slot).map((a) => a.rarity).sort()).toEqual([1, 2, 3]);
+    for (const slot of SLOTS) expect(ARTIFACTS.filter((a) => a.slot === slot && !a.set).map((a) => a.rarity).sort()).toEqual([1, 2, 3]);
     expect(new Set(ARTIFACTS.map((a) => a.name)).size).toBe(ARTIFACTS.length);
   });
 

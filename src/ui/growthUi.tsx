@@ -4,7 +4,7 @@
 import { useContext, useState } from 'react';
 import { abilityTextFor, FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data';
 import { GROWTH, levelOf, MILESTONE_LEVELS, milestoneText, skillRank, skillText, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
-import { ARTIFACT_BY_ID, gearOf, packOf, passTargets, RARITY_NAMES, type ArtifactDef, type Slot } from '../engine/sites';
+import { ARTIFACT_BY_ID, gearOf, packOf, passTargets, RARITY_NAMES, SETS, setCount, type ArtifactDef, type Slot } from '../engine/sites';
 import type { Action, GameState, HeroState, LogEvent } from '../engine/types';
 import { abilityArt, asset, Ribbon } from './common';
 import { DigitalContext, RuleText, useScales } from './statScale';
@@ -23,7 +23,7 @@ export function ArtifactMedal({ art, size = 40 }: { art: ArtifactDef; size?: num
 }
 
 const SLOTS_ORDER: Slot[] = ['helmet', 'weapon', 'armor', 'shield', 'boots'];
-const artTitle = (art: ArtifactDef, scale: [number, number]) => `${SLOT_NAMES[art.slot]}: ${art.name} (${RARITY_NAMES[art.rarity]}). ${scaleText(art.text, scale[0], scale[1])}`;
+const artTitle = (art: ArtifactDef, scale: [number, number]) => `${SLOT_NAMES[art.slot]}: ${art.name} (${RARITY_NAMES[art.rarity]}${art.set ? `, zestaw: ${SETS[art.set].name}` : ''}). ${scaleText(art.text, scale[0], scale[1])}${art.set ? ` ${SETS[art.set].bonusText}` : ''}`;
 
 /** The five gear slots laid out like a hero's sheet: the helmet on top, weapon - armour - shield in the middle, the boots below. */
 export function GearDoll({ hero, size = 40, picked, onPick, row = false }: { hero: HeroState; size?: number; picked?: string | null; onPick?: (art: ArtifactDef) => void; row?: boolean }) {
@@ -170,6 +170,11 @@ export function GearPanel({ hero, state, onAction }: { hero: HeroState; state?: 
       <div className="hero-sheet-doll">
         <GearDoll hero={hero} size={68} picked={pickedId} onPick={onAction ? (a) => setPicked(pickedId === a.id ? null : a.id) : undefined} />
       </div>
+      {Object.values(SETS).filter((d) => setCount(hero, d.id) > 0).map((d) => (
+        <div key={d.id} data-set-progress={d.id} title={d.bonusText} style={{ fontSize: 14, color: setCount(hero, d.id) >= d.pieces.length ? '#2E7A32' : '#6B4A22', fontWeight: setCount(hero, d.id) >= d.pieces.length ? 700 : 400 }}>
+          {setCount(hero, d.id)}/{d.pieces.length} zestawu: {d.name}
+        </div>
+      ))}
       <div className="lbl" style={{ color: '#6B4A22' }}>Plecak ({pack.length})</div>
       <div className="pack-row" data-pack>
         {(pack.length ? pack : [undefined]).map((a, i) =>
