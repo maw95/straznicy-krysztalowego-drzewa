@@ -4,7 +4,8 @@ import { activeHero, heroesAt, hordeMayFightGuardian, legalHeroMoves, moveAllowa
 import { fightLevelAt } from './fightBadges';
 import { EnemyPill, FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
-import { HeroGrowth } from './growthUi';
+import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
+import { TreasureButton } from './TreasureButton';
 import { heroTileCost, SITE } from '../engine/sites';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { parseKey, type HexKey } from '../engine/hex';
@@ -17,7 +18,7 @@ import { aimedCursor } from './cursors';
 import { figureFor, FigureLayer, type Piece } from './FigureLayer';
 import { StatIcon, StatText } from './markers';
 import { RoundTrack } from './RoundTrack';
-import { ACTIVE_FIGURE_RING, asset, COMPACT_QUERY, Frame, Medal, Pips, Portrait, Ribbon, SIDE_RING, tileImage, useMedia } from './common';
+import { ACTIVE_FIGURE_RING, asset, COMPACT_QUERY, Frame, Medal, Modal, Pips, Portrait, Ribbon, SIDE_RING, tileImage, useMedia } from './common';
 
 interface Props {
   state: GameState;
@@ -89,6 +90,10 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const [touched, setTouched] = useState<HexKey | null>(null);
   const [mapPicks, setMapPicks] = useState<{ itemId: string; picks: HexKey[] } | null>(null);
   const [resPick, setResPick] = useState<string | null>(null);
+  /** The hero's sheet (left click on the portrait), the gear and backpack window, and the treasure list. */
+  const [sheet, setSheet] = useState(false);
+  const [packOpen, setPackOpen] = useState(false);
+  const [treasuresOpen, setTreasuresOpen] = useState(false);
   /** A fallen hero being revived: the player picks a free hex next to the active hero. */
   const [revive, setRevive] = useState<{ itemId: string; unitId: string } | null>(null);
 
@@ -248,7 +253,6 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     );
   const sel = selected ? state.tiles[selected] : hero ? state.tiles[hero.pos] : null;
   const selInfo = sel && tileLines(state, sel.key, undefined, '');
-  const faction = hero?.faction ?? 'dawn';
   const inventory = viewer ? state.factions[viewer].inventory.map((id) => state.items[id]) : [];
 
   /** The cursor over a hex says what a click does: walk there, start a fight, or pick it (map, revival). */
@@ -457,6 +461,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               <button className="btn plate parch zoom-btn" aria-label="Oddal mapę" disabled={W <= fitW + 0.5} onClick={() => zoomTo(W / 1.3)}>−</button>
             </div>
           )}
+          {viewer && (
+            <div style={{ position: 'absolute', right: 10, bottom: 10, zIndex: 5 }}>
+              <TreasureButton count={inventory.length} onClick={() => setTreasuresOpen(true)} open={treasuresOpen} />
+            </div>
+          )}
           {touch && touched && !mapPicks && !detailsShown && <TileStrip state={state} k={touched} reach={reach.get(touched)} heroName={hero ? UNITS[hero.id].name : ''} />}
           {mapPicks && (
             <div className="plate parch" style={{ position: 'absolute', left: '50%', bottom: 16, transform: 'translateX(-50%)', padding: '8px 14px', display: 'flex', gap: 12, alignItems: 'center', zIndex: 4 }}>
@@ -468,10 +477,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
         </Frame>
 
         <Frame className="side side-adv" innerStyle={{ padding: '16px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <Ribbon side={faction}>{hero ? FACTION_NAMES[hero.faction] : 'Koniec gry'}</Ribbon>
+          {!hero && <div style={{ fontWeight: 800, fontSize: 20, textAlign: 'center' }}>Koniec gry</div>}
           {hero && (
             <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-              <button className="btn btn-bare" onClick={() => onShowCard(hero.id)} title="Pokaż kartę">
+              <img src={asset(`cards/crests/${hero.faction}.png`)} alt={FACTION_NAMES[hero.faction]} title={FACTION_NAMES[hero.faction]} style={{ height: 64, width: 'auto', flex: 'none' }} />
+              <button className="btn btn-bare" onClick={() => (state.rules.heroGrowth ? setSheet(true) : onShowCard(hero.id))} title={state.rules.heroGrowth ? 'Karta bohatera' : 'Pokaż kartę'} data-hero-portrait>
                 <Portrait unitId={hero.id} size={64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
               </button>
               <div style={{ minWidth: 0 }}>
@@ -485,24 +495,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </div>
             </div>
           )}
-          {hero && state.rules.heroGrowth && <HeroGrowth hero={hero} state={state} onAction={canAct && hero.faction === viewer ? onAction : undefined} />}
-          <div className="well" style={{ padding: '8px 10px', display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {Object.values(state.heroes).map((h) => (
-              <button key={h.id} className="btn btn-bare" onClick={() => onShowCard(h.id)} title={`${UNITS[h.id].name}${h.alive ? '' : ' (poległ)'}`}>
-                <Portrait unitId={h.id} size={42} ring={SIDE_RING[h.faction]} dim={!h.alive} />
-              </button>
-            ))}
-            <div style={{ width: '100%', display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-              {(['dawn', 'horde'] as FactionId[]).flatMap((f) =>
-                [...state.factions[f].supportsAlive, ...state.factions[f].supportsDead].map((id) => (
-                  <button key={id} className="btn btn-bare" onClick={() => onShowCard(id)} title={UNITS[id].name}>
-                    <Portrait unitId={id} size={30} ring={SIDE_RING[f]} dim={state.factions[f].supportsDead.includes(id)} />
-                  </button>
-                )),
-              )}
-            </div>
-          </div>
-
+          {hero && state.rules.heroGrowth && <HeroGrowth hero={hero} onOpenPack={() => setPackOpen(true)} />}
           {sel && (
             <div className="plate parch" style={{ padding: '9px 12px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
               <img className="hex-clip" src={tileImage(sel)} alt="" style={{ width: 48, height: 55, flex: 'none', objectFit: 'cover' }} />
@@ -531,31 +524,6 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
             {state.ritual > 0 && <div style={{ color: '#F08A7A', fontWeight: 700 }}>Rytuał przy Drzewie: {state.ritual}/{state.rules.ritualRounds}</div>}
           </div>
 
-          <div className="lbl" style={{ marginTop: 2 }}>Wspólne skarby frakcji {viewer ? `· ${FACTION_NAMES[viewer]}` : ''}</div>
-          <div className="scroll" style={{ flex: 1, minHeight: 60, display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {inventory.length === 0 && <div style={{ fontSize: 15, color: 'var(--muted)', fontStyle: 'italic' }}>Brak skarbów.</div>}
-            {inventory.map((it) => {
-              const def = itemDef(it.kind, isDigital(state.rules));
-              const usable = canAct && hero?.faction === viewer && def.usableIn.includes('map') && (it.kind !== 'resurrection' || deadUnits.length > 0);
-              return (
-                <div key={it.id} className="plate parch" style={{ padding: '6px 9px', display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <button className="btn" title="Pokaż kartę skarbu" onClick={() => onShowCard(`item:${it.kind}`)} style={{ background: 'none', border: 0, padding: 0, flex: 'none' }}>
-                    <img {...hoverCard(`item:${it.kind}`)} src={itemArt(it.kind, isDigital(state.rules))} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
-                  </button>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 800, fontSize: 15, lineHeight: 1.1 }}>{def.name}</div>
-                    <div style={{ fontSize: 13, lineHeight: 1.15 }}><StatText rule text={def.text} /></div>
-                    {it.foundBy && <div style={{ fontSize: 12, fontStyle: 'italic', color: '#6B5233' }}>Znalazł(a): {UNITS[it.foundBy].name}</div>}
-                  </div>
-                  {usable && (
-                    <button className="btn prim" style={{ padding: '3px 10px', fontSize: 14 }} onClick={() => (it.kind === 'map' ? setMapPicks({ itemId: it.id, picks: [] }) : setResPick(it.id))}>
-                      Użyj
-                    </button>
-                  )}
-                </div>
-              );
-            })}
-          </div>
           {resPick && (
             <div className="plate parch" style={{ padding: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
               <b>Kogo wskrzesić?</b>
@@ -593,6 +561,44 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           </button>
         </Frame>
       </div>
+      <Modal open={treasuresOpen} onClose={() => setTreasuresOpen(false)}>
+        {treasuresOpen && (
+          <div className="hero-sheet" data-treasures style={{ width: 'min(460px, 94vw)' }}>
+            <div className="lbl" style={{ color: '#6B4A22', textAlign: 'center' }}>Wspólne skarby frakcji {viewer ? `· ${FACTION_NAMES[viewer]}` : ''}</div>
+            <div className="scroll" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {inventory.length === 0 && <div style={{ fontSize: 15, color: '#6B4A22', fontStyle: 'italic' }}>Brak skarbów.</div>}
+              {inventory.map((it) => {
+                const def = itemDef(it.kind, isDigital(state.rules));
+                const usable = canAct && hero?.faction === viewer && def.usableIn.includes('map') && (it.kind !== 'resurrection' || deadUnits.length > 0);
+                return (
+                  <div key={it.id} className="plate parch" style={{ padding: '6px 9px', display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <button className="btn" title="Pokaż kartę skarbu" onClick={() => onShowCard(`item:${it.kind}`)} style={{ background: 'none', border: 0, padding: 0, flex: 'none' }}>
+                      <img {...hoverCard(`item:${it.kind}`)} src={itemArt(it.kind, isDigital(state.rules))} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
+                    </button>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 800, fontSize: 15, lineHeight: 1.1 }}>{def.name}</div>
+                      <div style={{ fontSize: 13, lineHeight: 1.15 }}><StatText rule text={def.text} /></div>
+                      {it.foundBy && <div style={{ fontSize: 12, fontStyle: 'italic', color: '#6B5233' }}>Znalazł(a): {UNITS[it.foundBy].name}</div>}
+                    </div>
+                    {usable && (
+                      <button className="btn prim" style={{ padding: '3px 10px', fontSize: 14 }} onClick={() => { setTreasuresOpen(false); if (it.kind === 'map') setMapPicks({ itemId: it.id, picks: [] }); else setResPick(it.id); }}>
+                        Użyj
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20, alignSelf: 'center' }} onClick={() => setTreasuresOpen(false)}>Zamknij</button>
+          </div>
+        )}
+      </Modal>
+      <Modal open={sheet} onClose={() => setSheet(false)}>
+        {sheet && hero && <HeroSheet hero={hero} state={state} onAction={canAct && hero.faction === viewer ? onAction : undefined} onClose={() => setSheet(false)} />}
+      </Modal>
+      <Modal open={packOpen} onClose={() => setPackOpen(false)}>
+        {packOpen && hero && <PackDialog hero={hero} state={state} onAction={canAct && hero.faction === viewer ? onAction : undefined} onClose={() => setPackOpen(false)} />}
+      </Modal>
       {footer}
     </div>
   );

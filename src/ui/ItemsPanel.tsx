@@ -7,6 +7,7 @@ import { itemArt } from './statScale';
 import { hoverCard } from './hover';
 import { StatText } from './markers';
 import { reserveOf } from './BattleSidePanel';
+import { TreasureButton } from './TreasureButton';
 
 export type ItemTargeting =
   | { kind: 'ownLiving' | 'ownDead' | 'enemy'; itemId: string }
@@ -91,9 +92,7 @@ export function ItemsPanel({ state, side, active, targeting, setTargeting, freeA
         </div>
       )}
       {freeAbility && <div className="plate parch" style={{ padding: '6px 12px', fontSize: 15 }}>{ab === 'giftOfLife' ? 'Wybierz sojusznika do uleczenia.' : 'Wybierz wroga w zasięgu 4 pól.'}</div>}
-      <button className="btn plate parch btn-small" onClick={() => setShowItems(!showItems)}>
-        {showItems ? 'Ukryj skarby' : `Skarby (${state.factions[side].inventory.length})`}
-      </button>
+      <TreasureButton count={state.factions[side].inventory.length} onClick={() => setShowItems(!showItems)} open={showItems} />
       {showItems &&
         state.factions[side].inventory.map((id) => {
           const def = itemDef(state.items[id].kind, isDigital(state.rules));

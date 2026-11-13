@@ -10,6 +10,9 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 - Okno ze szczegółami pod prawym przyciskiem myszy pokazuje się tylko, dopóki go trzymasz; puszczasz przycisk i okno znika (wcześniej po krótkim kliknięciu zostawało do następnego kliknięcia).
 - Mniej podpowiedzi na wierzchu: nie ma okienka po najechaniu myszą na pole mapy ani na portret bohatera w panelu gry i w wyborze frakcji i bohatera. Szczegóły pokazuje przytrzymany prawy przycisk (na telefonie przytrzymanie palca).
 - Plecak bohatera nie ma już limitu miejsc (dotąd 4): każdy artefakt, który nie trafia na bohatera, ląduje w plecaku, a zdobycz po pokonanym bohaterze przechodzi w całości.
+- Panel po prawej stronie mapy jest uporządkowany: znika wstążka z nazwą frakcji (sztandar stoi obok portretu bohatera), rząd portretów wszystkich bohaterów i napis „jeszcze żadnej (pierwsza na poziomie 2)” (jest „brak”). Kliknięcie portretu bohatera otwiera Kartę bohatera, a pod „Artefakty” jest podgląd pięciu miejsc i ikona plecaka, która otwiera okno z samym wyposażeniem i plecakiem.
+- Karta bohatera ma nowy układ: z lewej prawdziwa karta bohatera z tarczą poziomu i paskiem doświadczenia nad nią (tekst „Poziom 1 · PD 0 / 3”), pośrodku wyposażenie i plecak, z prawej umiejętności, a na dole „Kamienie milowe”: zdolność specjalna i jej ulepszenia na poziomach 3, 6 i 9 (cyfry II–IV na ikonie, strzałki, wyszarzone do czasu zdobycia poziomu).
+- Skarby frakcji nie zajmują już miejsca w panelu bocznym: w prawym dolnym rogu mapy jest ikona skarbu z licznikiem i podpisem „Skarby”, która otwiera okno do oglądania i używania skarbów. Ta sama ikona zastąpiła przycisk „Skarby” w bitwie.
 
 ## 2.5.0 — 2026-11-12
 

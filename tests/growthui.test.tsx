@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { activeHero, createGame } from '../src/engine/game';
 import { awardXp, GROWTH } from '../src/engine/growth';
 import { giveArtifact, ARTIFACT_BY_ID } from '../src/engine/sites';
-import { ArtifactFound, HeroGrowth, SkillCard, XpBar } from '../src/ui/growthUi';
+import { ArtifactFound, HeroGrowth, HeroSheet, PackDialog, SkillCard, XpBar } from '../src/ui/growthUi';
 import { setup } from './helpers/engine';
 
 const grown = () => createGame(setup({}, { ruleset: 'digital', heroGrowth: true }));
@@ -71,7 +71,7 @@ describe('hero growth: what the player is told', () => {
     expect(container.querySelector('[data-gear="mail1"]')).not.toBeNull();
     expect(container.querySelector('[data-gear-empty="weapon"]')).not.toBeNull();
     expect(container.querySelector('[data-gear-empty="boots"]')).not.toBeNull();
-    expect(container.textContent).toContain('jeszcze żadnej');
+    expect(container.textContent).toContain('brak');
   });
 
   it('skill cards and the artifact card carry names and effects', () => {
@@ -82,5 +82,32 @@ describe('hero growth: what the player is told', () => {
     expect(found.textContent).toContain('Skrzydlate Sandały');
     expect(found.textContent).toContain('skrzynia');
     expect(found.textContent).toContain('W odróżnieniu od skarbów');
+  });
+
+  it('the hero sheet shows the card, the gear, the skills and the milestones of the special ability, greyed out until reached', () => {
+    const s = grown();
+    const h = activeHero(s)!;
+    h.xp = 0;
+    h.level = 1;
+    const { container } = render(<HeroSheet hero={h} onClose={() => {}} />);
+    expect(container.querySelector('[data-hero-sheet]')).not.toBeNull();
+    expect(container.textContent).toContain('Poziom 1 · PD 0 /');
+    expect(container.textContent).not.toMatch(/do następnego \d/);
+    expect(container.textContent).toContain('Kamienie milowe');
+    const reached = [...container.querySelectorAll('[data-milestone]')].map((m) => m.getAttribute('data-reached'));
+    expect(reached).toEqual(['1', '0', '0', '0']);
+    expect(container.textContent).toContain('Wymagany poziom: 3');
+    expect(container.textContent).toContain('Wymagany poziom: 9');
+    expect(container.querySelector('[data-gear-doll]')).not.toBeNull();
+  });
+
+  it('the backpack window shows only the gear and the backpack', () => {
+    const s = grown();
+    const h = activeHero(s)!;
+    const { container } = render(<PackDialog hero={h} onClose={() => {}} />);
+    expect(container.querySelector('[data-gear-doll]')).not.toBeNull();
+    expect(container.querySelector('[data-pack]')).not.toBeNull();
+    expect(container.textContent).not.toContain('Umiejętności');
+    expect(container.querySelector('.xpbar')).toBeNull();
   });
 });

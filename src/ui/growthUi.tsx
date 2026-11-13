@@ -1,15 +1,14 @@
 // Hero growth on the screen (digital ruleset, "Wyprawa"): the level and experience bar, the skills as cards with icons, the five
 // gear slots laid out like a hero's sheet (helmet on top, weapon - armour - shield, boots below), the hero sheet itself, and the notices that tell the player what just happened (experience gained, an artifact found).
 
-import { useState } from 'react';
-import { FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data';
-import { GROWTH, levelOf, skillRank, skillText, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
-import { makeBattleUnit, unitAttackBase, unitSpeed } from '../engine/battle';
-import { applyHeroSkills, applyMilestones } from '../engine/growth';
-import { applyGear, ARTIFACT_BY_ID, gearOf, packOf, passTargets, RARITY_NAMES, type ArtifactDef, type Slot } from '../engine/sites';
+import { useContext, useState } from 'react';
+import { abilityTextFor, FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data';
+import { GROWTH, levelOf, MILESTONE_LEVELS, milestoneText, skillRank, skillText, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
+import { ARTIFACT_BY_ID, gearOf, packOf, passTargets, RARITY_NAMES, type ArtifactDef, type Slot } from '../engine/sites';
 import type { Action, GameState, HeroState, LogEvent } from '../engine/types';
-import { asset, Modal, Portrait, Ribbon, SIDE_RING } from './common';
-import { RuleText, useScales } from './statScale';
+import { abilityArt, asset, Ribbon } from './common';
+import { DigitalContext, RuleText, useScales } from './statScale';
+import { UnitCard } from './UnitCard';
 
 /** The painted icon of a skill (public/assets/ikony/umiejetnosci, made with Scenario). */
 export function SkillIcon({ skill, size = 40 }: { skill: SkillId; size?: number }) {
@@ -79,7 +78,7 @@ export function SkillCard({ faction, skill, rank = 1, raise = false, onChoose, w
 }
 
 /** Level badge and the experience bar: how many points the hero has, how many the next level needs. */
-export function XpBar({ hero }: { hero: HeroState }) {
+export function XpBar({ hero, short = false }: { hero: HeroState; short?: boolean }) {
   const level = levelOf(hero);
   const next = xpToNext(hero);
   const xp = hero.xp ?? 0;
@@ -98,7 +97,7 @@ export function XpBar({ hero }: { hero: HeroState }) {
           <div className="xpbar-fill" style={{ width: `${pct * 100}%` }} />
         </div>
         <div className="xpbar-text">
-          {next === null ? `Poziom ${level} (maksymalny) · ${xp} PD` : `Poziom ${level} · PD ${xp} / ${next} · do następnego ${Math.max(0, next - xp)}`}
+          {next === null ? `Poziom ${level} (maksymalny) · ${xp} PD` : short ? `Poziom ${level} · PD ${xp} / ${next}` : `Poziom ${level} · PD ${xp} / ${next} · do następnego ${Math.max(0, next - xp)}`}
         </div>
       </div>
     </div>
@@ -108,17 +107,30 @@ export function XpBar({ hero }: { hero: HeroState }) {
 /** Experience at which a level starts (the thresholds are cumulative). */
 const levelStart = (level: number) => (level <= 1 ? 0 : GROWTH.thresholds[level - 2] ?? 0);
 
-/** The hero's skills (icons) and the gear slots (filled or empty), with a hover text for each; a click on the gear opens the hero's sheet. */
-export function HeroGrowth({ hero, state, onAction }: { hero: HeroState; state?: GameState; onAction?: (a: Action) => void }) {
+/** A backpack drawn as a small icon (the button that opens the gear and backpack window). */
+function BackpackIcon({ size = 40 }: { size?: number }) {
+  return (
+    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 40 40" style={{ display: 'block' }}>
+      <path d="M13 9c0-3 3-5 7-5s7 2 7 5v2H13z" fill="none" stroke="#1E1204" strokeWidth="2.4" />
+      <rect x="7" y="9" width="26" height="27" rx="8" fill="#B3772E" stroke="#1E1204" strokeWidth="2" />
+      <rect x="11" y="21" width="18" height="10" rx="3" fill="#8A5A1F" stroke="#1E1204" strokeWidth="1.6" />
+      <rect x="17" y="24" width="6" height="4" rx="1" fill="#F3D27A" stroke="#1E1204" strokeWidth="1" />
+      <path d="M11 17h18" stroke="#1E1204" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
+/** The hero's level and experience, skills (icons) and gear slots (filled or empty) with a hover text each; the backpack icon opens the gear window. */
+export function HeroGrowth({ hero, onOpenPack }: { hero: HeroState; onOpenPack?: () => void }) {
   const scale = useScales();
-  const [sheet, setSheet] = useState(false);
   const skills = [...new Set(hero.skills ?? [])];
+  const packCount = hero.pack?.length ?? 0;
   return (
     <div className="well" style={{ padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 8 }} data-growth>
       <XpBar hero={hero} />
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
         <span className="lbl" style={{ width: 108, flex: 'none' }}>Umiejętności</span>
-        {skills.length === 0 && <span style={{ fontSize: 13, color: 'var(--muted)' }}>jeszcze żadnej (pierwsza na poziomie 2)</span>}
+        {skills.length === 0 && <span style={{ fontSize: 13, color: 'var(--muted)' }}>brak</span>}
         {skills.map((s) => (
           <span key={s} title={`${SKILL_NAMES[hero.faction][s]} ${ROMAN[skillRank(hero, s)]}: ${scaleText(skillText(s, skillRank(hero, s)), scale[0], scale[1])}`} style={{ position: 'relative' }}>
             <SkillIcon skill={s} size={36} />
@@ -126,27 +138,21 @@ export function HeroGrowth({ hero, state, onAction }: { hero: HeroState; state?:
           </span>
         ))}
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{ width: 104, flex: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <span className="lbl" title="Artefakty to stałe wyposażenie bohatera, po jednym na miejsce. Skarby to jednorazowe karty frakcji.">Artefakty</span>
-          <button className="btn plate parch" style={{ padding: '3px 8px', fontSize: 14 }} onClick={() => setSheet(true)} data-hero-sheet-open>Karta bohatera</button>
-        </div>
-        <button className="btn btn-bare" onClick={() => setSheet(true)} title="Karta bohatera: wyposażenie, umiejętności i liczby w bitwie" style={{ padding: 0 }}>
-          <GearDoll hero={hero} size={40} />
+      <span className="lbl" title="Artefakty to stałe wyposażenie bohatera, po jednym na miejsce. Skarby to jednorazowe karty frakcji.">Artefakty</span>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+        <GearDoll hero={hero} size={40} />
+        <button className="btn btn-bare backpack-btn" onClick={onOpenPack} title="Wyposażenie i plecak" aria-label="Wyposażenie i plecak" data-hero-sheet-open style={{ position: 'relative' }}>
+          <BackpackIcon size={48} />
+          {packCount > 0 && <span className="pack-count" data-pack-count title={`W plecaku: ${packOf(hero).map((a) => a.name).join(', ')}`} style={{ position: 'absolute', right: -6, top: -4 }}>{packCount}</span>}
         </button>
-        {(hero.pack?.length ?? 0) > 0 && <span className="pack-count" title={`W plecaku: ${packOf(hero).map((a) => a.name).join(', ')}`} data-pack-count>plecak {hero.pack!.length}</span>}
       </div>
-      <Modal open={sheet} onClose={() => setSheet(false)}>
-        {sheet && <HeroSheet hero={hero} state={state} onAction={onAction} onClose={() => setSheet(false)} />}
-      </Modal>
     </div>
   );
 }
 
-/** The hero's sheet: portrait, level, the numbers it enters a battle with, the gear on a figure-like layout, and what every artifact and skill does. */
-export function HeroSheet({ hero, state, onAction, onClose }: { hero: HeroState; state?: GameState; onAction?: (a: Action) => void; onClose: () => void }) {
+/** The gear on a figure-like layout, the backpack, and the buttons for the clicked artifact (put on, take off, hand to an ally). Buttons only with `onAction` (the hero's own turn). */
+export function GearPanel({ hero, state, onAction }: { hero: HeroState; state?: GameState; onAction?: (a: Action) => void }) {
   const scale = useScales();
-  // The artifact the player has clicked (worn or in the backpack): the buttons below act on it. Only with `onAction` (the hero's own turn).
   const [pickedId, setPicked] = useState<string | null>(null);
   const pack = packOf(hero);
   const picked = pickedId ? [...gearOf(hero), ...pack].find((a) => a.id === pickedId) ?? null : null;
@@ -156,84 +162,109 @@ export function HeroSheet({ hero, state, onAction, onClose }: { hero: HeroState;
     onAction?.(a);
     setPicked(null);
   };
-  // The hero's unit as a battle would make it: card numbers plus skills, milestones and gear.
-  const plain = makeBattleUnit(hero.id, hero.faction, true, scale[0], scale[1]);
-  const unit = makeBattleUnit(hero.id, hero.faction, true, scale[0], scale[1]);
-  applyHeroSkills(hero, unit);
-  applyMilestones(hero, unit);
-  applyGear(hero, unit);
-  const stat = (label: string, now: number, base: number) => (
-    <div className="sheet-stat" title={now === base ? undefined : `Karta: ${base}, z umiejętnościami i artefaktami: ${now}`}>
-      <span>{label}</span>
-      <b style={{ color: now > base ? '#2E7A32' : now < base ? '#A03020' : undefined }}>{now}</b>
+  return (
+    <div className="hero-sheet-col" style={{ alignItems: 'center' }}>
+      <div className="lbl" style={{ color: '#6B4A22' }}>Wyposażenie</div>
+      <div className="hero-sheet-doll">
+        <GearDoll hero={hero} size={68} picked={pickedId} onPick={onAction ? (a) => setPicked(pickedId === a.id ? null : a.id) : undefined} />
+      </div>
+      <div className="lbl" style={{ color: '#6B4A22' }}>Plecak ({pack.length})</div>
+      <div className="pack-row" data-pack>
+        {(pack.length ? pack : [undefined]).map((a, i) =>
+          a ? (
+            <span key={i} className={`gear-slot ${pickedId === a.id ? 'picked' : ''} ${onAction ? 'pickable' : ''}`} title={artTitle(a, scale)} data-pack-item={a.id} onClick={onAction ? () => setPicked(pickedId === a.id ? null : a.id) : undefined}>
+              <ArtifactMedal art={a} size={46} />
+            </span>
+          ) : (
+            <span key={i} className="pack-empty" />
+          ),
+        )}
+      </div>
+      {picked && onAction ? (
+        <div className="sheet-actions" data-sheet-actions>
+          <b>{picked.name}</b>
+          {pickedWorn ? (
+            <button className="btn plate parch" onClick={() => act({ type: 'unequipArtifact', slot: picked.slot })} data-unequip>Zdejmij do plecaka</button>
+          ) : (
+            <button className="btn plate parch" onClick={() => act({ type: 'equipArtifact', artifactId: picked.id })} data-equip>Załóż{hero.gear?.[picked.slot] ? ` (zamiast: ${ARTIFACT_BY_ID[hero.gear[picked.slot]!]?.name})` : ''}</button>
+          )}
+          {allies.map((h) => (
+            <button key={h.id} className="btn plate parch" onClick={() => act({ type: 'passArtifact', artifactId: picked.id, toHeroId: h.id })} data-pass={h.id}>Przekaż: {UNITS[h.id].name}</button>
+          ))}
+          {allies.length === 0 && <span style={{ fontSize: 13, color: '#6B4A22' }}>Przekazać artefakt można sojusznikowi na sąsiednim polu.</span>}
+        </div>
+      ) : (
+        <div style={{ fontSize: 13, color: '#6B4A22', maxWidth: 250, textAlign: 'center', lineHeight: 1.3 }}>
+          Po jednym artefakcie na miejsce; rzadszy sam zastępuje pospolitszy, reszta trafia do plecaka.{onAction ? ' Kliknij artefakt, żeby go założyć, zdjąć albo przekazać sojusznikowi obok.' : ''}
+        </div>
+      )}
     </div>
   );
-  const gear = gearOf(hero);
+}
+
+/** The window the backpack icon opens: only the gear and the backpack. */
+export function PackDialog({ hero, state, onAction, onClose }: { hero: HeroState; state?: GameState; onAction?: (a: Action) => void; onClose: () => void }) {
+  return (
+    <div className="hero-sheet" data-pack-dialog style={{ width: 'min(520px, 94vw)' }}>
+      <Ribbon side={hero.faction} style={{ width: 'min(420px, 88vw)', alignSelf: 'center' }}>Wyposażenie i plecak</Ribbon>
+      <GearPanel hero={hero} state={state} onAction={onAction} />
+      <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20, alignSelf: 'center' }} onClick={onClose}>Zamknij</button>
+    </div>
+  );
+}
+
+/** The special ability and its three upgrades (levels 3, 6, 9): the icon (with a Roman numeral on the upgrades), the text, greyed out until the level is reached. */
+function Milestones({ hero }: { hero: HeroState }) {
+  const [k, hp] = useScales();
+  const digital = useContext(DigitalContext);
+  const def = UNITS[hero.id];
+  const level = levelOf(hero);
+  const steps = [
+    { need: 1, tier: 0, label: 'Zdolność' },
+    ...MILESTONE_LEVELS.map((need, i) => ({ need: need as number, tier: i + 1, label: ['II', 'III', 'IV'][i] })),
+  ];
+  return (
+    <div data-milestones>
+      <div className="lbl" style={{ color: '#6B4A22' }}>Kamienie milowe</div>
+      <div className="milestones">
+        {steps.map((st, i) => {
+          const text = st.tier === 0 ? scaleText(abilityTextFor(hero.id, digital), k, hp) : milestoneText(hero.id, st.tier, k);
+          const reached = level >= st.need;
+          return (
+            <div key={st.tier} className="milestones-item">
+              {i > 0 && <span className="milestones-arrow" aria-hidden="true">→</span>}
+              <div className={`milestone ${reached ? 'on' : 'off'}`} data-milestone={st.tier} data-reached={reached ? '1' : '0'}>
+                <span className="milestone-icon">
+                  <img src={asset(`cards/abilities/${abilityArt(def.ability)}_inner.png`)} alt="" width={44} height={44} />
+                  {st.tier > 0 && <span className="milestone-num">{st.label}</span>}
+                </span>
+                <div className="milestone-text"><b>{st.tier === 0 ? def.abilityName : ''}</b> {text}</div>
+                <div className="milestone-need">{st.tier === 0 ? 'Od początku' : `Wymagany poziom: ${st.need}`}</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ fontSize: 12, color: '#6B4A22', lineHeight: 1.3 }}>Kamienie milowe to ulepszenia umiejętności specjalnej, które odblokowują się wraz z doświadczeniem bohatera.</div>
+    </div>
+  );
+}
+
+/** The hero's sheet: level and experience over the hero's card, the gear and backpack, the skills and the milestones of the special ability. */
+export function HeroSheet({ hero, state, onAction, onClose }: { hero: HeroState; state?: GameState; onAction?: (a: Action) => void; onClose: () => void }) {
   const skills = [...new Set(hero.skills ?? [])];
   return (
-    <div className="hero-sheet" data-hero-sheet>
+    <div className="hero-sheet hero-sheet-wide" data-hero-sheet>
       <Ribbon side={hero.faction} style={{ width: 'min(420px, 88vw)', alignSelf: 'center' }}>{UNITS[hero.id].name}</Ribbon>
       <div className="hero-sheet-body">
         <div className="hero-sheet-col" style={{ alignItems: 'center' }}>
-          <Portrait unitId={hero.id} size={112} ring={SIDE_RING[hero.faction]} preview={false} />
-          <div style={{ fontSize: 15, color: '#6B4A22' }}>{FACTION_NAMES[hero.faction]}</div>
-          <div className="sheet-stats">
-            {stat('Życie', unit.maxHp, plain.maxHp)}
-            {stat('Atak', unitAttackBase(unit), unitAttackBase(plain))}
-            {stat('Szybkość', unitSpeed(unit), unitSpeed(plain))}
-            {unit.gear?.defense ? stat('Obrona', unit.gear.defense, 0) : null}
-          </div>
+          <div style={{ width: 300, maxWidth: '86vw' }}><XpBar hero={hero} short /></div>
+          <UnitCard unitId={hero.id} width={300} />
         </div>
-        <div className="hero-sheet-col" style={{ alignItems: 'center' }}>
-          <div className="lbl" style={{ color: '#6B4A22' }}>Wyposażenie</div>
-          <div className="hero-sheet-doll">
-            <GearDoll hero={hero} size={68} picked={pickedId} onPick={onAction ? (a) => setPicked(pickedId === a.id ? null : a.id) : undefined} />
-          </div>
-          <div className="lbl" style={{ color: '#6B4A22' }}>Plecak ({pack.length})</div>
-          <div className="pack-row" data-pack>
-            {(pack.length ? pack : [undefined]).map((a, i) => {
-              return a ? (
-                <span key={i} className={`gear-slot ${pickedId === a.id ? 'picked' : ''} ${onAction ? 'pickable' : ''}`} title={artTitle(a, scale)} data-pack-item={a.id} onClick={onAction ? () => setPicked(pickedId === a.id ? null : a.id) : undefined}>
-                  <ArtifactMedal art={a} size={46} />
-                </span>
-              ) : (
-                <span key={i} className="pack-empty" />
-              );
-            })}
-          </div>
-          {picked && onAction ? (
-            <div className="sheet-actions" data-sheet-actions>
-              <b>{picked.name}</b>
-              {pickedWorn ? (
-                <button className="btn plate parch" onClick={() => act({ type: 'unequipArtifact', slot: picked.slot })} data-unequip>Zdejmij do plecaka</button>
-              ) : (
-                <button className="btn plate parch" onClick={() => act({ type: 'equipArtifact', artifactId: picked.id })} data-equip>Załóż{hero.gear?.[picked.slot] ? ` (zamiast: ${ARTIFACT_BY_ID[hero.gear[picked.slot]!]?.name})` : ''}</button>
-              )}
-              {allies.map((h) => (
-                <button key={h.id} className="btn plate parch" onClick={() => act({ type: 'passArtifact', artifactId: picked.id, toHeroId: h.id })} data-pass={h.id}>Przekaż: {UNITS[h.id].name}</button>
-              ))}
-              {allies.length === 0 && <span style={{ fontSize: 13, color: '#6B4A22' }}>Przekazać artefakt można sojusznikowi na sąsiednim polu.</span>}
-            </div>
-          ) : (
-            <div style={{ fontSize: 13, color: '#6B4A22', maxWidth: 250, textAlign: 'center', lineHeight: 1.3 }}>
-              Po jednym artefakcie na miejsce; rzadszy sam zastępuje pospolitszy, reszta trafia do plecaka.{onAction ? ' Kliknij artefakt, żeby go założyć, zdjąć albo przekazać sojusznikowi obok.' : ''}
-            </div>
-          )}
-        </div>
-        <div className="hero-sheet-col" style={{ flex: 1, minWidth: 220 }}>
-          <div className="lbl" style={{ color: '#6B4A22' }}>Artefakty</div>
-          {gear.length === 0 && <div style={{ fontSize: 15, color: '#6B4A22' }}>Jeszcze żadnego. Leżą w skrzyniach, wypadają ze strażników i przechodzą na zwycięzcę walki bohaterów.</div>}
-          {gear.map((a) => (
-            <div key={a.id} className="sheet-line">
-              <ArtifactMedal art={a} size={38} />
-              <div>
-                <b>{a.name}</b> <span className={`rarity r${a.rarity}`}>{RARITY_NAMES[a.rarity]}</span>
-                <div><RuleText text={a.text} /></div>
-              </div>
-            </div>
-          ))}
-          <div className="lbl" style={{ color: '#6B4A22', marginTop: 6 }}>Umiejętności</div>
-          {skills.length === 0 && <div style={{ fontSize: 15, color: '#6B4A22' }}>Pierwsza na poziomie 2.</div>}
+        <GearPanel hero={hero} state={state} onAction={onAction} />
+        <div className="hero-sheet-col" style={{ flex: 1, minWidth: 220, maxWidth: 300 }}>
+          <div className="lbl" style={{ color: '#6B4A22' }}>Umiejętności</div>
+          {skills.length === 0 && <div style={{ fontSize: 15, color: '#6B4A22' }}>brak</div>}
           {skills.map((s) => (
             <div key={s} className="sheet-line">
               <SkillIcon skill={s} size={38} />
@@ -245,7 +276,7 @@ export function HeroSheet({ hero, state, onAction, onClose }: { hero: HeroState;
           ))}
         </div>
       </div>
-      <div style={{ maxWidth: 520, alignSelf: 'center', width: '100%' }}><XpBar hero={hero} /></div>
+      <Milestones hero={hero} />
       <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20, alignSelf: 'center' }} onClick={onClose}>Zamknij</button>
     </div>
   );
