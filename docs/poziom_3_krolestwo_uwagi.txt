@@ -1,0 +1,74 @@
+2.4 - czym jest rozwój  osady?
+
+3. zmniejszyłbym skalę złota - niech najtańsza rzecz kosztuje 1 złota. w związku z tym, pewnie dochód osady to byłoby 1 albo 2 złota.
+
+"nagrody: strażnik daje złoto obok skarbu (wartość rośnie z jego poziomem), skrzynia może dać złoto zamiast artefaktu"
+ustalmy jasne zasady co mogą dać walki - złoto, skarby, artefakty. Które walki mogą co dać, w jakiej ilości i od czego to zależy
+
+"pokonany bohater wroga zostawia część swojego złota (nie całe, żeby wygrana nie była lawiną)" - zrezygnowałbym z tego.
+
+4.
+"Osady do zdobycia: kilka pól na mapie (2 / 3 / 4 / 5 na krótkiej, średniej, długiej, bardzo długiej), każda bronią neutralni (strażnik albo spotkanie jak dziś, słabsze niż przy kryształach). Zdobyta zmienia właściciela, daje dochód i usługi; wróg może ją odbić, wchodząc na nią z wygraną walką."
+Ustalmy kto broni tych osad. Walki ze strażnikami kryształów i tak są dość łatwe, raczej nie robiłbym walk o osady jeszcze łatwiejszymi
+
+Kolejna rzecz - gracz A przejął osadę i oddalił się od niej, gracz B (z innej frakcji) wchodzi na tą osadę. W moim rozumieniu ta osada powinna teraz stać się własnością gracza B.
+Czy jedynym sposobem na obronę osady powinno być stanie na kafelku osady? Jakie są alternatywy?
+
+Swoją drogą, według mnie osada powinna mieć z góry narzuconą frakcję. To, do jakiej frakcji należy osada, będzie zależało od jej umiejscowienia na mapie - obecnie mapa jest podzielona na heksy przymierza i heksy hordy.
+Chcę, żeby osady na heksach przymierza należały do przymierza i na odwrót.
+Jeśli gracz B odbije osadę graczowi A, osada zachowuje swoje ulepszenia/budynki. Ta osada zapewnia graczowi B przychód złota, oprócz tego może korzystać z targu i szpitala, ALE nie może rekrutować tam jednostek - ani ze swojej frakcji, ani z frakcji do której należy osada.
+
+5.
+"Ulepszenia osady" - dodałbym  jeszcze ulepszanie szpitala, ale nie mam pomysłu co by mogło  dawać takie ulepszenie.
+Poza tym, podstawowe budynki (koszary, targ, szpital) nie powinny być wybudowane od razu, trzeba jeszcze je kupić.
+I dodałbym budynek, który zwiększa przychód złota.
+
+"A. Bez nowej grafiki: rekrutacja = odkupienie i uzupełnienie tego, co frakcja już ma (3 pomocników swoich + neutralni, których dziś widać tylko jako strażników). Problem: potrzeba kopii jednostki (dwa Elfy Druidy), czyli w silniku bitew identyfikator instancji zamiast id typu jednostki (zmiana w BattleUnit, supportsAlive/Dead, interfejsie wyboru i botach). Koszt: jednorazowa przebudowa, ale potem każda jednostka z poziomu 4 i frakcje DLC z niej korzystają."
+- neutralni są neutralni, nie można ich rekrutować. nie widzę scenariusza w którym potrzeba by kopii jednostki - ustalamy, że w armii mamy jedynie jedną jednostkę danego typu.
+przecież nie dojdzie do walk przymierze vs przymierze, więc jednostki nie będą się dublować.
+
+"B. Z nowymi jednostkami" - tak, chciałbym żeby każda frakcja miała 7 różnych pomocników. Obecnie ma 3 pomocników, którzy mają bardzo zbliżoną do siebie siłę.
+Nazwijmy je jednostkami pierwszego poziomu. Potrzeba jeszcze 4 pomocników - nazwijmy je jednostkami odpowiednio 2, 3, 4 i 5 poziomu. Każda z nich będzie silniejsza od jednostek pierwszego poziomu.
+Jednostka 3 poziomu będzie silniejsza (i droższa) od jednostki 2 poziomu, jednostka  4 poziomu będzie silniejsza i droższa od jednostki 3  poziomu i  tak dalej.
+
+"Cena jednostki zależy od siły (Życie × Atak × Szybkość z UNITS), a koszary podnoszą limit miejsc, nie obniżają ceny. Początkowo bez cyklu tygodniowego: jednostka jest do kupienia od razu, w limicie 1 zakupu jednostki na bohatera na turę (żeby kasa nie zamieniała się w armię w jedną turę)."
+cena jednostki powinna zależeć od jej użyteczności w walce,  co trzeba będzie obliczyć symulacjami, a nie mnożeniem statystyk.
+na tym etapie nie będziemy mieli cyklu tygodniowego,  ale nie wprowadzałbym limitu zakupu 1 jednostki na bohatera na turę.
+Rzeczą, która ma powstrzymywać gracza przed wykupieniem wszystkich jednostek od razu, jest koszt jednostek, a nie odgórne sztywne reguły.
+I jeszcze jedna rzecz dla jasności - wykupieni pomocnicy będą współdzieleni między graczami z jednej drużyny, tak jak jest teraz.
+
+6. Cel "podbój" dodałbym dopiero w 4 etapie
+
+7.
+rozumiem że symulacje się wydłużą. dla jasności - chciałbym, żebyś tak zaplanował strojenie balansu, żeby zużywać mało tokenów. obciążenie komputera może być duże, nie przeszkadza mi to.
+
+8.
+"Stan gry rośnie (złoto, osady, drużyny, oferta targu): sprawdzić rozmiar wiadomości game przy największej mapie (dziś cały stan idzie do klienta)."
+Chcę, żebyś porządnie się zastanowił jakie informacje muszą być wysyłane za każdym razem na serwer, a jakie niekoniecznie. Chcę, żeby ruch między klientem a serwerem był oszczędny.
+
+"w koopie wspólna kasa." - raczej rozumiałbym to tak, że kasa jest per frakcja. Wielu graczy może grać tą samą frakcją, również w trybie rywalizacji.
+Niezależnie czy koop czy rywalizacja, gracze z tej samej frakcji mają współdzielić skarby, złoto i pomocników.
+
+9.
+"Okno osady (modalne, na telefonie pełnoekranowe): trzy karty usług (Koszary, Targ, Szpital), na dole ulepszenia. W Koszarach lista jednostek z ceną i przyciskiem; w Targu 3 artefakty w ramce rzadkości (te same karty co dziś)"
+Chciałbym tutaj trochę ściągnać z Heroes III. Każda osada powinna mieć swoją losową, unikalną nazwę, pasującą do frakcji do której należy osada.
+Po drugie, chcę żeby w widoku osady był jej podgląd, tak jak w heroes III. Ten podgląd to ma być taki jakby krajobraz, na który są nałożone grafiki wybudowanych budynków i ich ulepszeń.
+Kliknięcie na budynek aktywuje jego funkcję - kliknięcie na koszary pokazuje okno rekrutacji itp.
+
+11. "Rozjazd z zasadą „premiera = poziomy 1–2” (DECYZJE.md 4.11), a w MECHANIKI_I_POZIOMY.md poziom 3 ma opis „decyzja autora: wchodzi do premiery”. Do rozstrzygnięcia (pytanie 1)."
+zmieniam założenia, najchętniej zrobiłbym premierę jak już będziemy mieli poziom 5.
+
+
+12.
+
+1. Termin - wchodzi przed premierą. Umówmy się, że premiera będzie dopiero po poziomie 5.
+2. Waluta - potwierdzam
+3. Rekrutacja - opisałem wyżej
+4. Wielkość drużyny - maksimum 5 pomocników.
+5. Wspólna kasa - tak, wspólna dla frakcji
+6. Cel "Podbój" - opisałem wyżej
+7. Osady do zdobycia - opisałem wyżej
+8. Strata złota po porażce bohatera - opisałem wyżej, rezygnujemy z tego
+9. Automat zła w koopie - zgadzam się. Trzeba będzie to wybalansować, te posiłki powinny być na tyle duże zeby być realnym zagrożeniem dla graczy
+10. Ranking - wydaje mi się, że zmierzysz trudność swoimi symulacjami od razu po wdrożeniu tych wszystkich funkcjonalności, na tej podstawie ustalisz liczbę punktów w rankingu.
+11. Nazwa poziomu - jestem otwarty na propozycje. Przypomnij mi jakie nazwy wymyśliliśmy do tej pory, i zastanówmy się czy widzimy przestrzeń na kolejne poziomy po poziomie 5. Zaproponuj tez swoje nazwy dla wszystkich poziomów.

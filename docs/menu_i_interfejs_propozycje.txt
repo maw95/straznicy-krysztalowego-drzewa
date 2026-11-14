@@ -1,0 +1,75 @@
+--Wprowadzenie:
+Slajd 3 - stary design hydry, trzeba podmienić na nowy. Sam pomysł na wizerunki 3 strażników jest dobry.
+Slajd 4 - herby przymierza i hordy na sztandarach nie wyglądają jak w grze. Wszystkie postacie poza złotym smokiem mają stary design, trzeba podmienić na nowy.
+Slajd 5 - bardziej jaskrawa kolorystyka niż na pozostałych, dobrze by było to zmienić. Designy bohaterów hordy nie są spójne z aktualnymi designami.
+Slajd 6 - na grafice są błędy wynikające z generowania AI, kafelki mapy mają różne wielkości i kształty.
+Slajd 7 - obrazek wygląda źle. Nieaktualna wersja areny bitwy.  Nieaktualne designy postaci Hordy, i nieaktualna karta z Ogrem. Figurki  3D też średnio mi tu pasują - dałbym obrazy 2D,  jak w wersji cyfrowej gry.
+Slajd 8 - podobny problem z grafiką. Kafelki mają różne kształty i rozmiary. Zastanowiłbym się nad alternatywą tego obrazka, to może być coś zupełnie innego niż figurka poruszająca się po heksach mapy.
+
+Zastanowiłbym się nad dodaniem kilku slajdów z najpotrzebniejszymi informacjami, bo od czasu w którym robiliśmy to wprowadzenie sporo się zmieniło.
+Między innymi:
+- rozróżnienie na tryb cyfrowy i planszowy. Obecnie powinniśmy zakładać, że domyślny jest tryb cyfrowy, a tryb planszowy jest dodatkiem.
+- gra online i hot-seat
+- tryb "Arena"
+- dodatkowe poziomy skomplikowania rozgrywki - na razie możemy napisać o poziomach 2 i 3, z informacją że kolejne poziomy niedługo się pojawią
+- różne cele gry (Kryształy do drzewa, Punkty kontrolne, Przetrwanie, Boss, Artefakt)
+
+-- Menu:
+Myślę, że całe menu trzeba przebudować, bo obecnie jest nieczytelne i nieintuicyjne.
+Z przycisków na górze można zostawić tylko "Zasady i karty", "Wprowadzenie", "INFO DLA TESTERÓW". Przycisk "INFO DLA TESTERÓW" powinien się nazywać "Dla testerów" i powinien się odróżniać kolorem od pozostałych
+
+Niech w głównym menu na początku pojawiają się ładne przyciski/ikony - nowa gra, wczytaj grę.
+po kliknięciu któregoś z nich powinniśmy mieć ikony z przyciskami "Offline" lub "Online" - nie jestem przekonany do tych nazw, ale wiesz o co mi chodzi. No i przycisk "Wstecz".
+Następnie:
+  - w przypadku gry online:
+     - okno logowania
+     - lobby - skasujmy  przycisk "gra na tym komputerze", dodajmy na dole czerwony przycisk 'wstecz'. Przyciski "Zasady i karty",  "Wprowadzenie", "Dla testerów" powinny być nad okienkiem,  pod logo, tak jak w przypadku pierwszego ekranu menu
+       zamiast przycisku "Nowy pokój" powinniśmy mieć przyciski "Nowa gra" i "Dołącz do gry", w różnych kolorach.
+     - "nowa gra" - konfiguracja powinna składać się z kilku ekranów. na pierwszym ekranie wybieramy wersję cyfrową lub planszową. Cyfrowa jest domyślna.
+       To powinny być dwa duże, osobne przyciski, z różnymi grafikami/ikonami i kolorystyką, i jedno-dwuzdaniowym wyjaśnieniem co oznacza dana wersja.
+       Na drugim  ekranie wybieramy poziom - "Przygoda", "Wyprawa", "Królestwo". Tutaj też niech to będą duże, odróżniające się od siebie przyciski z różnymi grafikami i krótkim opisem co oznacza dany poziom.
+       Na trzecim ekranie wybieramy tryb - "Kooperacja", "Rywalizacja", "Arena". Stylistyka i zawartość analogiczna do poprzednich ekranów.
+       W przypadku wyboru poziomu innego niż 1, na następnym ekranie wybieramy cel i kształt mapy. Stylistyka i zawartość analogiczna do poprzednich ekranów.
+       Jedno zastrzeżenie co do kształtu mapy - niech to ustawienie nazywa się po prostu "Mapa". Można wybrać takie opcje: "Losowa" i "Gotowa".
+       Kiedy klikamy "Losowa",  możemy sobie wybrać jej kształt. Kiedy klikamy "Gotowa", pokazują nam się gotowe mapy - obecnie "Cieśnina" i "Dolina"
+       Na następnym ekranie wybieramy liczbę graczy, rozmiar mapy i poziom trudności.
+       Ustawienie "Tempo botów" wyrzucamy - niech będzie dostępne tylko w ekranie "opcje" podczas gry.
+       Następnie przechodzimy do właściwego widoku pokoju, w którym czekamy na pozostałych graczy i wybieramy sobie frakcję i bohatera.
+     - "wczytaj grę" - obecnie mamy taką możliwość klikając "Kontynuuj zapisaną partię" w grze offline. Trzeba dorobić możliwość własnoręcznego zapisywania stanu gry pod wybraną przez siebie nazwą. To dotyczy również trybu online.
+       jak klikniemy "wczytaj grę" to powinna nam się pokazać lista zapisanych rozgrywek. wybieramy zapisaną grę, i przeskakujemy od razu do właściwego widoku pokoju. Czekamy na pozostałych graczy, ale nie możemy zmienić frakcji ani bohatera.
+  - w przypadku gry offline
+    - analogicznie jak opisałem wyżej, ufam że ogarniesz szczegóły
+
+--Interfejs podczas gry:
+
+  - Opcje - Na górze powinno być Tempo botów w postaci suwaka, nie selecta jak obecnie. Niżej szybkość animacji,  muzyka, efekty.
+    Niżej checkboxy z Autoplay i Figurkami 3D. Skasowałbym linijkę z tekstem "Ziarno partii...", "Eksport partii" i "Eksport dziennika". Przycisk "Nowa gra" powinien być większy, bardziej widoczny, i nazywać się "Wyjdź z gry".
+     Po jego kliknięciu powinniśmy zobaczyć okienko z prośbą o potwierdzenie "Czy na pewno chcesz wyjść z gry?"
+  - zamiast przycisku "Skarby" powinniśmy mieć ładną ikonę skarbu z malutkim podpisem "Skarby". W prawym górnym rogu tej ikony powinna być widoczna liczba obecnie dostępnych skarbów.
+  - mapa świata - tooltipy (te po najechaniu myszką) nie powinny się wyświetlać na kafelkach. jak gracz chce zyskać dodatkowe informacje to powinien sobie przytrzymać prawy przycisk myszy.
+  - prawa strona interfejsu:
+      - można skasować ribbon z nazwą frakcji. Wystarczy że po lewej stronie portretu bohatera będzie widoczny sztandar jego frakcji.
+      - kiedy gracz jest na 1 poziomie, to pod napisem "Umiejętności" jest napis "jeszcze żadnej (pierwsza na poziomie 2)". zastąpmy ten napis tekstem "brak"
+      - ustawienie sekcji z artefaktami można zmienić. Na górze napis "Artefakty". Pod nim, z lewej strony podgląd 5 miejsc na artefakty, tak jak obecnie. Z prawej strony przycisk/ikona z plecakiem - po jej kliknięciu powinno się pokazać okno z wyposażeniem i plecakiem,
+        tak jak obecnie w karcie bohatera. nie potrzebujemy pozostałych informacji - portretu, statystyk, doświadczenia, umiejętności. Wystarczy wyposażenie i plecak.
+      - po najechaniu myszką na portret aktualnego bohatera nie powinniśmy pokazywać tooltipa z jego statystykami. Kliknięcie lewym przyciskiem powinno otworzyć "Kartę bohatera", taką jak mamy obecnie, z kilkoma zmianami:
+           - w lewej sekcji zamiast portretu i statystyk pokażmy rzeczywistą kartę (tą, którą widać po kliknięciu prawym przyciskiem na portret bohatera). Nad kartą powinniśmy pokazać informacje o doświadczeniu, które obecnie są na dole - ikona z tarczą i numerem poziomu, pasek doświadczenia. Co do informacji tekstowej, wystarczy (Poziom 1 · PD 0 / 3).
+           - w środkowej sekcji może być wyposażenie i plecak tak jak teraz, ale skasujmy ograniczenie liczby miejsc w plecaku
+           - w prawej sekcji - skasujmy "Artefakty" bo nic nie wnoszą. umiejętności - ok. Pod umiejętnościami zróbmy sekcje "Kamienie milowe". Chodzi o ulepszenia umiejętności specjalnej na poziomach 3, 6 i 9.
+             Niech w tej sekcji będą 4 elementy. W każdym elemencie będzie ikona umiejętności, a pod nią opis. Ikona ulepszonej umiejętności będzie taka sama jak zwykłej umiejętności, ale będzie miała rzymską cyfrę w prawym dolnym roku - II, III lub IV.
+             Między tymi elementami będą strzałki. Nieodblokowane kamienie milowe będą wyszarzone. Pod każdym kamieniem milowym będzie informacja "Wymagany poziom: X". I na dole mała informacja, że kamienie milowe to ulepszenia umiejętności, które są nabywane wraz z wzrostem doświadczenia.
+      - pod sekcją z artefaktami są portrety bohaterów, którzy są obecnie w grze - to nie jest potrzebne, skasujmy to.
+      - mamy też sekcję "Wspólne skarby frakcji". Nie jest potrzebna, zastąpiłbym ją ikoną skarbów w prawym dolnym rogu mapy świata. Kliknięcie w nią otwierałoby okno/modal, w którym można obejrzeć i użyć skarbów.
+
+---DODATKOWE RZECZY
+- nie rozumiem dlaczego plecak na artefakty ma ograniczenie do 4 miejsc, skasujmy to ograniczenie
+- działanie prawego przycisku myszy trzeba zmienić. obecnie naciśnięcie na coś prawym przyciskiem pokazuje dodatkowe informacje, i to jest dobre. Problem jest taki, że żeby te dodatkowe informacje zniknęły, musimy kliknąć myszą w jakieś inne miejsce.
+  chcę, żeby te dodatkowe informacje wyświetlały się tylko podczas trzymania prawego przycisku myszy. Kiedy puścimy prawy przycisk myszy, okno z dodatkowymi informacjami powinno zniknąć.
+- menu, wybór frakcji i bohatera - niepotrzebne są tooltipy wyświetlające się nad portretem bohatera (te tooltipy ze statystykami), skasujmy je
+- główne menu, zasady i karty - zaktualizujmy karty jednostek. Brakuje tu 9 nowych jednostek neutralnych. Skarby też są niezaktualizowane. Dobrze by było dodać też zakładkę z artefaktami, i zakładkę z lokacjami na mapie. "Podstawowe zasady" też zaktualizujmy.
+- myślę że możemy już spokojnie zwiększyć maksymalną liczbę graczy do 6 (mamy po 3 bohaterów dla każdej frakcji + 1 easter eggowy)
+- w przypadku grania na komórce zastanówmy się czy nie lepiej byłoby wymusić na graczach pozycję horyzontalną telefonu. oprócz tego przeskalujmy wszystkie elementy interfejsu, żeby nic nie zasłaniały, i było jak najmniej scrollowania.
+- okno INFO DLA TESTERÓW - informacje w nim są nieaktualne. Przecież już nie muszą nic sami ściągać i do mnie wysyłać, to samo się uploaduje na serwer.
+- te złote obramówki wokół okienek nie są zbyt ładne - można je zastąpić czymś ładniejszym, nieco bardziej ozdobnym. Pewnie trzeba będzie wygenerować grafiki w Scenario.
+- dodajmy do backlogu możliwość dodawania fabuły do gotowych map. Na razie moim jedynym pomysłem jest to, że będą wyskakiwały okienka z tekstem po określonym triggerze - frakcja, numer tury, wejście na jakiś kafelek, pokonanie jakiegoś przeciwnika.
+- zastanawiam się czy przypadkiem gotowe mapy nie powinny występować tylko w jednym, określonym rozmiarze - do przemyślenia.
