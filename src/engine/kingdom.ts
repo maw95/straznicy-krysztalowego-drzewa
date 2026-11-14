@@ -297,7 +297,7 @@ function serviceSettlement(state: GameState, id: string): { s: Settlement; hero:
   const s = k?.settlements[id];
   if (!k || !s) throw new Error('Nie ma takiej osady.');
   if (!hero?.alive) throw new Error('Teraz nie ma bohatera w turze.');
-  if (hero.pos !== s.at) throw new Error('Bohater musi stać w osadzie.');
+  // Shopping needs no walk: the settlement only has to be the faction's (the active hero is the buyer of artifacts).
   if (s.owner !== hero.faction) throw new Error('Ta osada nie należy do twojej frakcji.');
   return { s, hero };
 }

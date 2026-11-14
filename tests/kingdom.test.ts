@@ -60,7 +60,7 @@ describe('level 3: income, mines and capture', () => {
 });
 
 describe('level 3: services of a settlement', () => {
-  it('builds, recruits, buys at the market and heals for the right prices, only where the hero stands', () => {
+  it('builds, recruits, buys at the market and heals for the right prices, only for the faction that owns the settlement', () => {
     let s = kingdom();
     const home = ownStart(s);
     stand(s, home.at);
@@ -99,11 +99,16 @@ describe('level 3: services of a settlement', () => {
     // Poor: refused.
     s.kingdom!.gold.dawn = 0;
     expect(() => act({ type: 'kingdomBuild', settlementId: home.id, building: 'treasury' })).toThrow(/Za mało złota/);
-    // Away from the settlement: refused.
+    // Away from the settlement: shopping needs no walk (author, 14.11).
     const other = Object.values(s.tiles).find((t) => !t.place && !t.crystalId && t.key !== home.at && t.terrain !== 'bridge')!;
     s.kingdom!.gold.dawn = 40;
     stand(s, other.key);
-    expect(() => act({ type: 'kingdomBuild', settlementId: home.id, building: 'treasury' })).toThrow(/stać w osadzie/);
+    const before = goldOf(s, 'dawn');
+    act({ type: 'kingdomBuild', settlementId: home.id, building: 'treasury' });
+    expect(goldOf(s, 'dawn')).toBeLessThan(before);
+    // A settlement of another faction's hand is still refused.
+    const foreign = Object.values(s.kingdom!.settlements).find((x) => x.owner !== 'dawn')!;
+    expect(() => act({ type: 'kingdomBuild', settlementId: foreign.id, building: 'market' })).toThrow(/nie należy/);
   });
 
   it('a captured foreign settlement gives income, but its barracks do not recruit for the captor', () => {

@@ -731,3 +731,17 @@ describe('level 3: the settlement window', () => {
     expect(gold()).toBeLessThan(24);
   });
 });
+
+describe('level 3: shopping from afar', () => {
+  it('opens a settlement from the list when the hero stands elsewhere (first click selects, second opens)', async () => {
+    window.history.replaceState(null, '', '/?steps=0&seed=3&size=long&kingdom=1&gold=30&players=1');
+    vi.useFakeTimers();
+    const { container } = render(<StrictMode><App /></StrictMode>);
+    const doc = container.ownerDocument;
+    const link = doc.querySelector('[data-settlement-link]') as HTMLElement;
+    expect(link).not.toBeNull();
+    await act(async () => fireEvent.click(link));
+    await act(async () => fireEvent.click(link));
+    expect(doc.querySelector('[data-settlement]')).not.toBeNull();
+  });
+});

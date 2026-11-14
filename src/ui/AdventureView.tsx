@@ -98,7 +98,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const [packOpen, setPackOpen] = useState(false);
   const [treasuresOpen, setTreasuresOpen] = useState(false);
   /** Level 3: the settlement window. */
-  const [settlementOpen, setSettlementOpen] = useState(false);
+  const [settlementOpen, setSettlementOpen] = useState<string | null>(null);
+  const [flash, setFlash] = useState<HexKey | null>(null);
   /** A fallen hero being revived: the player picks a free hex next to the active hero. */
   const [revive, setRevive] = useState<{ itemId: string; unitId: string } | null>(null);
 
@@ -549,11 +550,34 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </div>
             </div>
           )}
-          {state.kingdom && hero && canAct && hero.faction === viewer && (() => {
-            const here = settlementAt(state, hero.pos);
-            return here && here.owner === viewer ? (
-              <button className="btn prim" data-enter-settlement style={{ padding: '6px 12px', fontSize: 18 }} onClick={() => setSettlementOpen(true)}>Wejdź do osady {here.name}</button>
-            ) : null;
+          {state.kingdom && viewer && (() => {
+            const mine = Object.values(state.kingdom.settlements).filter((x) => x.owner === viewer && state.tiles[x.at]?.revealed);
+            const here = hero && hero.faction === viewer ? settlementAt(state, hero.pos) : undefined;
+            if (!mine.length) return null;
+            return (
+              <div className="plate parch" data-settlements style={{ padding: '6px 10px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {here && here.owner === viewer && canAct && (
+                  <button className="btn prim" data-enter-settlement style={{ padding: '6px 12px', fontSize: 18 }} onClick={() => setSettlementOpen(here.id)}>Wejdź do osady {here.name}</button>
+                )}
+                <b style={{ fontSize: 14, color: '#6B4A22', letterSpacing: 1 }}>OSADY (klik: pokaż, drugi klik: otwórz)</b>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {mine.map((x) => (
+                    <button key={x.id} className="btn plate parch" data-settlement-link={x.id} style={{ padding: '3px 10px', fontSize: 15, outline: flash === x.at ? '2px solid #F3D27A' : undefined }} onClick={() => {
+                      if (selected === x.at && canAct) return setSettlementOpen(x.id);
+                      setSelected(x.at);
+                      setFlash(x.at);
+                      window.setTimeout(() => setFlash((f) => (f === x.at ? null : f)), 1800);
+                      const el = boardRef.current;
+                      const inner = el?.firstElementChild as HTMLElement | null;
+                      if (el && inner) {
+                        const p = pos(state.tiles[x.at]);
+                        el.scrollTo({ left: inner.offsetLeft + p.x + W / 2 - el.clientWidth / 2, top: inner.offsetTop + p.y + H / 2 - el.clientHeight / 2, behavior: 'smooth' });
+                      }
+                    }}>{x.name}</button>
+                  ))}
+                </div>
+              </div>
+            );
           })()}
           {hero && state.rules.heroGrowth && <HeroGrowth hero={hero} compact={compact} onOpenPack={() => setPackOpen(true)} />}
           {sel && (
@@ -653,9 +677,9 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           </div>
         )}
       </Modal>
-      <Modal open={settlementOpen} onClose={() => setSettlementOpen(false)}>
-        {settlementOpen && hero && viewer && settlementAt(state, hero.pos) && (
-          <SettlementDialog state={state} settlementId={settlementAt(state, hero.pos)!.id} faction={viewer} onAction={onAction} onClose={() => setSettlementOpen(false)} />
+      <Modal open={settlementOpen !== null} onClose={() => setSettlementOpen(null)}>
+        {settlementOpen && viewer && state.kingdom?.settlements[settlementOpen] && (
+          <SettlementDialog state={state} settlementId={settlementOpen} faction={viewer} onAction={onAction} onClose={() => setSettlementOpen(null)} />
         )}
       </Modal>
       <Modal open={Boolean(state.kingdom?.chest) && canAct && Boolean(viewer)}>
