@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 2.7.0 — 2026-11-14
+
 - Królestwo: osady znalezione na mapie mają własne kafelki (osada Przymierza i osada Hordy), a nie wzór zwykłego terenu.
 - Nowa grafika menu i kreatora: ikony dla „Ten komputer”, „Przez internet”, „Cyfrowa”, „Planszowa”, „Kooperacja”, „Rywalizacja”, „Arena”, „Przygoda”, „Własne ustawienia”, „Kryształy”, „Przetrwanie”, „Boss”, „Losowa” i „Gotowa”. Poziomy trudności mają zwierzęta: królik (Łatwy), wilk (Normalny), smok (Trudny). Ikona plecaka bohatera jest nowa.
 - Licznik skarbów w rogu mapy jest ozdobnym medalionem (złota obwódka, czerwona emalia, czytelna czcionka szeryfowa) zamiast płaskiego czerwonego kółka.
