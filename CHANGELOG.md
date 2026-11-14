@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Walka: Centaur strzela strzałą (lecącą w stronę celu), a nie kulą energii jak czarodzieje.
 - Portrety Centaura i Opiekuna Drzewa mają już widoczne twarze (nowy kadr z oryginałów).
 - Królestwo: do osady nie trzeba już dochodzić. W prawym panelu jest lista własnych osad: pierwsze kliknięcie pokazuje osadę na mapie, drugie otwiera jej okno, w którym można budować, rekrutować i kupować z dowolnego miejsca (w turze bohatera).
 - Dolny pasek: zniknął podgląd dziennika (przycisk „Dziennik” jest teraz w „Opcjach”, skrót D działa jak dawniej), a w Królestwie stoi tam złoto w skrócie, np. „2 (+2)”; prawy przycisk myszy pokazuje, skąd bierze się dochód.

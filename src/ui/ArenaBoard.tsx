@@ -22,6 +22,9 @@ import type { Deployment } from './useDeployment';
 
 /** The painted boards draw each hex with its own gold rim, and neighbouring rims do not always lie on
  *  each other (doubled, overlapping edges). One even gold grid on top covers them. */
+/** Units whose ranged attack is an arrow, not a ball of energy (the rest of the ranged ones are magic users). */
+const ARROW_SHOOTERS = new Set(['centaur']);
+
 const GoldGrid = memo(function GoldGrid({ cells, points, wide }: { cells: readonly HexKey[]; points: Map<HexKey, string>; wide: boolean }) {
   // The digital arena has no painted grid: a quiet one is drawn over the plain picture.
   const dark = wide ? { stroke: 'rgba(20,14,6,0.45)', width: 2.6 } : { stroke: 'rgba(52,34,8,0.85)', width: 3.4 };
@@ -449,8 +452,8 @@ export function ArenaBoard(p: Props) {
               return (
                 <div
                   key={st.key}
-                  className={st.attacker === 'cyclops' ? 'projectile boulder' : 'projectile'}
-                  style={{ left: a.x + W / 2 - 7, top: a.y + H / 2 - 20, ['--px' as string]: `${t.x - a.x}px`, ['--py' as string]: `${t.y - a.y}px` } as React.CSSProperties}
+                  className={st.attacker === 'cyclops' ? 'projectile boulder' : ARROW_SHOOTERS.has(b.units[st.attacker]?.defId ?? st.attacker) ? 'projectile arrow' : 'projectile'}
+                  style={{ left: a.x + W / 2 - 7, top: a.y + H / 2 - 20, ['--px' as string]: `${t.x - a.x}px`, ['--py' as string]: `${t.y - a.y}px`, ['--ang' as string]: `${Math.atan2(t.y - a.y, t.x - a.x)}rad` } as React.CSSProperties}
                 />
               );
             })}

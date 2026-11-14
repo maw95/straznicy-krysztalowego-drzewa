@@ -216,6 +216,19 @@ button { font-family: inherit; }
   box-shadow: 0 0 12px 4px rgba(255, 220, 120, 0.7);
   animation: fly-shot 0.45s ease-in both;
 }
+/* An arrow (Centaur): a thin shaft with a head and fletching, turned towards the target (--ang), flying straight. */
+.projectile.arrow {
+  width: 44px; height: 5px; margin: 4px 0 0 -14px; border-radius: 2px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(90deg, #d8d8c8 0 14%, #7a5a2a 14% 86%, #cfcfcf 86%);
+  clip-path: polygon(0 0, 14% 0, 14% 20%, 88% 20%, 88% 0, 100% 50%, 88% 100%, 88% 80%, 14% 80%, 14% 100%, 0 100%);
+  animation: fly-arrow 0.4s ease-in both;
+}
+@keyframes fly-arrow {
+  0% { transform: translate(0, 0) rotate(var(--ang)); opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { transform: translate(var(--px), var(--py)) rotate(var(--ang)); opacity: 0; }
+}
 /* The Cyclops hurls a boulder: it leaves his hands when the throw of the attack clip lets go (sprites.ts: clip speed 2.2), flies in an arc and spins. */
 .projectile.boulder {
   width: 46px; height: 46px; margin: -62px 0 0 -16px; border-radius: 0; box-shadow: none; opacity: 0;
