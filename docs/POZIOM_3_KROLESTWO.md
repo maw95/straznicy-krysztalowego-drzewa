@@ -154,3 +154,14 @@ Kolejność: K1 → K2 → K3 → K6 (pierwsza grywalna wersja z ekonomią) → 
 ## Strojenie, pomiar z 13.11.2026 (`make sim-krolestwo GAMES=80`)
 
 Poziom Normalny, boty, osady po 2 zł, osiem nowych jednostek (ceny 3/5/8/12), zestawy artefaktów w grze. % wygranych Przymierza: mapa krótka 56–68, średnia 34–49, długa 34–49 (dla porównania ten sam stół bez Królestwa: 39–60 / 39–60 / 45–51). Wniosek: **ekonomia prawie nie wpływa na wynik botów**, bo boty rzadko wracają do osady (średnio 1,1 osady, 0–1,8 awansowanego rekruta na grę, na końcu gry zostaje 8–40 zł niewydanych, poziomów 4 i 5 nie kupują wcale). Próba wydłużenia ich wypraw po zakupy (limit ścieżki 4/8 zamiast 1/4) obniżyła im wygrane o 5–10 punktów, więc ją cofnięto. Ceny zostają robocze (3/5/8/12), bo gracz-człowiek kupuje celowo; właściwe strojenie cen wymaga lepszego bota-kupca albo testów z ludźmi. Punkty rankingowe poziomu 3: do ustalenia po wydaniu z danych graczy.
+
+
+## Strojenie trudności, pomiar z 14.11.2026 (`make sim-krolestwo`, `scripts/sim/tuneKingdom.ts`)
+
+**Znaleziona usterka:** `levelOf` zwraca dla Królestwa `custom` (bez punktów rankingowych), a `digitalRules` nie stroi poziomu `custom`, więc dotąd żaden wpis stroiciela nie działał na stole Królestwa. Teraz `digitalRules` liczy poziom tak, jakby Królestwa nie było (ranking bez zmian), a wpisy stroiciela mają pole `kingdom`. Po włączeniu starych wpisów bez korekty Normalny spadał do 21–49%, a Trudny do 16–49%.
+
+Stroiciel przeszukuje drabinkę skarbów startowych (Horda 4…0, potem Przymierze 1…6) i wybiera krok najbliższy środkowi pasma (Normalny 55%, Trudny 38%). Wpisy: 12 komórek Normalnego i 6 komórek Trudnego (tylko koop; PvP nie ma Trudnego), tylko cel „Kryształy”. Weryfikacja na innych ziarnach, 150 gier:
+- Normalny: krótka 53–63%, średnia 44–54%, długa 44–51% (pasmo 45–65).
+- Trudny, koop: krótka 36–41%, średnia 32–33%, długa 40–45% (pasmo 30–45).
+
+**Poziom Łatwy:** stół „Królestwo” na Łatwym nie ma ekonomii wcale, bo Łatwy gra pojedynki planszowe, a `initKingdom` wymaga areny (osady, złoto i rekruci = 0). Z areną i regułami Łatwego (`SIM_ARENA=1 SIM_LEVEL=kids`) Przymierze wygrywa tylko 35–67% (pasmo 65–85), więc potrzebna decyzja autora (patrz BACKLOG).

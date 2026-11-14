@@ -24,6 +24,7 @@ for (const size of sizes) {
     for (let g = 1; g <= games; g++) {
       const setup = setupWith(size, table, option, g);
       setup.rules = { ...setup.rules, kingdom: !process.env.SIM_NOKINGDOM };
+      if (process.env.SIM_ARENA) setup.battleMode = 'arena'; // Easy has board duels by preset, and the kingdom needs the arena
       const s = createGame(setup);
       for (let i = 0; i < 30000 && s.phase !== 'over'; i++) {
         const a = chooseAction(s);

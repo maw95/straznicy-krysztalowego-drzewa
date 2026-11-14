@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Poziom „Królestwo”: strojenie trudności. Dotąd poziom Normalny i Trudny w Królestwie grały bez żadnych poprawek trudności; teraz Horda i Przymierze dostają skarby startowe dobrane z symulacji (cel „Kryształy”), tak że Przymierze wygrywa na Normalnym około 45–65% gier, a na Trudnym około 30–45%.
+
 ## 2.6.0 — 2026-11-14
 
 - Poziom „Królestwo”: samouczek tłumaczy złoto, osady, drużynę i zestawy artefaktów, w instrukcji jest nowy rozdział 17 o ekonomii, a w trybie rodzinnym zakupy dziecka robi autopilot (zaznaczenie „Dziecko” oznacza zgodę rodzica).
