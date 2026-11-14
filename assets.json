@@ -3479,6 +3479,24 @@
       "data": "2026-11-14",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "tiles/osada",
+      "pliki": [
+        "public/assets/tiles/osadaDawn_1.jpg",
+        "public/assets/tiles/osadaHorde_1.jpg"
+      ],
+      "typ": "kafelki osad poziomu 3 (osada Przymierza, osada Hordy)",
+      "opis": "Ilustracje 512×592 zmniejszone do 260×300 (JPG), po jednym wariancie, przyjęte. Prompt: 'Fantasy game map tile art in the same painted high-fantasy style as a Heroes of Might and Magic III town screen, full-bleed rectangular illustration, no border: a lively small town of the Alliance of Dawn … / a menacing small settlement of the Dark Horde …'.",
+      "scenario_asset": {
+        "osadaDawn": "asset_WxfaiT8BbP8ej4kWDDiLuvNc",
+        "osadaHorde": "asset_jG9CegYmEJj5NrSFhmaC4YyM"
+      },
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.6 Flare, 512×592, jakość medium",
+      "data": "2026-11-14",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

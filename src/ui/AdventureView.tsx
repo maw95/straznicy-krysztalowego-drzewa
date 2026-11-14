@@ -401,7 +401,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     <div className="hex-clip" style={{ position: 'absolute', inset: 2, background: rim }} />
                     <div className="hex-clip" style={{ position: 'absolute', inset: W * 0.055, background: '#1E1204' }} />
                     <div key={t.revealed ? 'r' : 'h'} className={`hex-clip ${freshlyRevealed.has(t.key) ? 'flip-in' : ''}`} style={{ position: 'absolute', inset: W * 0.065, overflow: 'hidden', background: '#10201F' }}>
-                      <img src={tileImage(t)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transform: 'scale(1.08)' }} />
+                      <img src={tileImage(t, landOf(state, t))} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transform: 'scale(1.08)' }} />
                       {!t.revealed && <div className="fog" style={{ opacity: 0.18, animationDelay: `${-((t.row * 7 + t.col * 13) % 60)}s` }} />}
                       {(r || onPath) && <div style={{ position: 'absolute', inset: 0, background: onPath ? 'rgba(158,228,255,0.35)' : 'rgba(158,228,255,0.18)', boxShadow: 'inset 0 0 18px rgba(158,228,255,0.7)' }} />}
                     </div>
@@ -582,7 +582,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           {hero && state.rules.heroGrowth && <HeroGrowth hero={hero} compact={compact} onOpenPack={() => setPackOpen(true)} />}
           {sel && (
             <div className="plate parch" style={{ padding: '9px 12px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-              <img className="hex-clip" src={tileImage(sel)} alt="" style={{ width: 48, height: 55, flex: 'none', objectFit: 'cover' }} />
+              <img className="hex-clip" src={tileImage(sel, landOf(state, sel))} alt="" style={{ width: 48, height: 55, flex: 'none', objectFit: 'cover' }} />
               <div>
                 <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{selInfo!.title}</div>
                 {selInfo!.lines.map((l) => (
@@ -717,7 +717,7 @@ function TileDetails({ state, k, hostile }: { state: GameState; k: HexKey; hosti
   return (
     <div className="plate parch" style={{ width: 300, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-        <img className="hex-clip" src={tileImage(t)} alt="" style={{ width: 70, height: 80, flex: 'none', objectFit: 'cover' }} />
+        <img className="hex-clip" src={tileImage(t, landOf(state, t))} alt="" style={{ width: 70, height: 80, flex: 'none', objectFit: 'cover' }} />
         <div>
           <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole'}</div>
           <div style={{ fontWeight: 600, fontSize: 15, marginTop: 3 }}>
@@ -833,6 +833,11 @@ function ControlFlag({ holder, centre, size }: { holder: FactionId | null; centr
       {centre && <span style={{ position: 'absolute', inset: -3, borderRadius: '50%', boxShadow: '0 0 0 2px #F3D27A, 0 0 8px 2px rgba(243, 210, 122, 0.7)' }} />}
     </span>
   );
+}
+
+/** The land (faction) of the settlement standing on a tile: it picks the settlement's own tile picture. */
+function landOf(state: GameState, t: Tile): 'dawn' | 'horde' | undefined {
+  return t.place?.kind === 'settlement' ? state.kingdom?.settlements[t.place.id]?.land : undefined;
 }
 
 /** The icon (file name in ikony/mapa) of a settlement (by owner) or a mine. */

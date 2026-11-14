@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Królestwo: osady znalezione na mapie mają własne kafelki (osada Przymierza i osada Hordy), a nie wzór zwykłego terenu.
 - Nowa grafika menu i kreatora: ikony dla „Ten komputer”, „Przez internet”, „Cyfrowa”, „Planszowa”, „Kooperacja”, „Rywalizacja”, „Arena”, „Przygoda”, „Własne ustawienia”, „Kryształy”, „Przetrwanie”, „Boss”, „Losowa” i „Gotowa”. Poziomy trudności mają zwierzęta: królik (Łatwy), wilk (Normalny), smok (Trudny). Ikona plecaka bohatera jest nowa.
 - Licznik skarbów w rogu mapy jest ozdobnym medalionem (złota obwódka, czerwona emalia, czytelna czcionka szeryfowa) zamiast płaskiego czerwonego kółka.
 - Kreator nowej gry: bez ramek wokół ikon przy dużych przyciskach; wybór kształtu mapy jest wycentrowany („Wybierz kształt”, „Wybierz mapę”), a kształty mają obrazki ułożone z heksów. Rozmiar mapy to większe, wycentrowane przyciski z dużym skrótem (S, M, L, XL, XXL, 3XL) nad nazwą. Zmiana nazw: Krótka → Mała, Długa → Duża, Bardzo długa → Bardzo duża.

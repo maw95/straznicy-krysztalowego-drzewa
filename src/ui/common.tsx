@@ -12,7 +12,8 @@ export const artId = (unitId: string) => unitId;
 export const abilityArt = (ability: string) => ability;
 export const portrait = (unitId: string) => asset(`cards/portraits/${artId(unitId)}.jpg`);
 /** Face of a map tile (one of the art variants), or its green/red back while hidden. */
-export const tileImage = (t: Tile) => asset(t.revealed ? `tiles/${t.terrain}_${t.variant}.jpg` : `tiles/back_${t.side}.jpg`);
+export const tileImage = (t: Tile, settlementLand?: 'dawn' | 'horde') =>
+  asset(t.revealed ? (settlementLand ? `tiles/osada${settlementLand === 'dawn' ? 'Dawn' : 'Horde'}_1.jpg` : `tiles/${t.terrain}_${t.variant}.jpg`) : `tiles/back_${t.side}.jpg`);
 
 export const SIDE_RING: Record<Side, string> = { dawn: '#2C7048', horde: '#9A2226', neutral: '#2A5E9A' };
 /** The thin outline round the base of the active 3D figure (the only mark a figure gets). */
