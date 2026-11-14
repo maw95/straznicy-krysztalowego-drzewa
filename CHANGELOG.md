@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Licznik skarbów w rogu mapy jest ozdobnym medalionem (złota obwódka, czerwona emalia, czytelna czcionka szeryfowa) zamiast płaskiego czerwonego kółka.
 - Kreator nowej gry: bez ramek wokół ikon przy dużych przyciskach; wybór kształtu mapy jest wycentrowany („Wybierz kształt”, „Wybierz mapę”), a kształty mają obrazki ułożone z heksów. Rozmiar mapy to większe, wycentrowane przyciski z dużym skrótem (S, M, L, XL, XXL, 3XL) nad nazwą. Zmiana nazw: Krótka → Mała, Długa → Duża, Bardzo długa → Bardzo duża.
 - Walka: Centaur strzela strzałą (lecącą w stronę celu), a nie kulą energii jak czarodzieje.
 - Portrety Centaura i Opiekuna Drzewa mają już widoczne twarze (nowy kadr z oryginałów).
