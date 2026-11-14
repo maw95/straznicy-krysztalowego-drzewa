@@ -3,11 +3,11 @@
 Tylko to, co jeszcze **nie jest zrobione**. Zrobione punkty są usuwane: ich ślad zostaje w CHANGELOG.md, historii gita i w opisach zasad (`ZASADY_CYFROWE.md`, `NOTATKI_DLA_AGENTA_PLANSZOWKI.md`).
 Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
-**Jak z tego korzystać:** autor pisze „zrób punkty A2, A3, B1”, a Claude pracuje sam, aż skończy (warunek ukończenia stoi przy każdym punkcie). Kolejność, gdy autor każe zrobić „wszystko z listy”: A → B → C.
+**Jak z tego korzystać:** autor pisze „zrób punkty A2, A3, B1”, a Claude pracuje sam, aż skończy (warunek ukończenia stoi przy każdym punkcie). Kolejność, gdy autor każe zrobić „wszystko z listy”: C → D.
 
-## STAN (13.11.2026): uwagi autora przeanalizowane, odpowiedzi na Q1–Q18 zebrane
+## STAN (14.11.2026): poziom 3 „Królestwo” zbudowany, wydanie 2.6.0 przygotowane lokalnie
 
-Autor przejrzał szkic poziomu 3 (`docs/poziom_3_krolestwo_uwagi.txt`) i zapisał propozycje zmian menu i interfejsu (`docs/menu_i_interfejs_propozycje.txt`). Wszystkie decyzje są niżej. **Kolejność prac (Q11): drobne UI (A) i karta bohatera → przebudowa menu (B4, od razu z ekranem poziomu „Królestwo”) → poziom 3 (K1–K9).** Do zrobienia przed startem poziomu 3: przepisać `POZIOM_3_KROLESTWO.md` według decyzji niżej (zrobione 13.11: nagłówek z decyzjami; pełne przeliczenie kroków K1–K9 i szacunków robi Claude na początku K1). Wydanie 2.6.0 nadal wstrzymane.
+W nocy 13/14.11 zrobione kroki 1–7 z kolejności prac: porządki w repo i kodzie, wydajność (główna paczka 1089 → 565 kB), silnik poziomu 3 z 8 nowymi pomocnikami i 4 zestawami artefaktów, dochód 1/2/3, cała grafika Scenario (portrety, karty, ikony zdolności i zestawów, animacje jednostek, krajobrazy i budynki osad), widok osady (K8), samouczek, rozdział o ekonomii i autopilot dziecka (K9). `make check` zielone (413 testów), commit `Release 2.6.0` i lokalny tag `2.6.0` gotowe, **nic nie wypchnięte** (45 commitów przed `origin/master`). Zostaje: wydanie (push zależy od autora), strojenie ekonomii, poziomy 4 i 5 przed premierą. Decyzje autora niżej są nadal obowiązujące.
 
 ### Decyzje autora do poziomu 3 (13.11.2026, już rozstrzygnięte)
 - **Premiera dopiero po poziomie 5** (zmiana względem DECYZJE.md 4.11 i 12.11). Poziom 3 wchodzi przed premierą, tak samo 4 i 5.
@@ -40,47 +40,22 @@ Autor przejrzał szkic poziomu 3 (`docs/poziom_3_krolestwo_uwagi.txt`) i zapisa�
 - Gdy trzeba decyzji autora, Claude nie zgaduje: dopisuje pytanie do sekcji „Pytania czekające na autora” (na końcu), robi następny punkt i wraca do tamtego po odpowiedzi.
 - Po skończeniu punktów: dźwięk `complete.oga`, krótkie podsumowanie po polsku, uwaga o `/clear`.
 
-## A. Drobne (źródło: `docs/menu_i_interfejs_propozycje.txt`; warunek ukończenia: zmiana + test + sprawdzenie w przeglądarce + CHANGELOG)
+## C. Dalej
 
+### Wydanie 2.6.0 (jedyny otwarty krok z kolejności prac z 13.11; kroki 1–7 zrobione 14.11)
 
-## B. Średnie
+- [ ] **Wydanie** czeka na autora, bo push publikuje grę: `git push origin master 2.6.0`, `gh release create 2.6.0 --generate-notes`, `make silnik`, w repo serwera `npm install …/2.6.0/straznicy-engine-2.6.0.tgz`, `make deploy`, push serwera. Serwer idzie razem z grą (tier `kingdom`, zapisy online, kompresja, 6 graczy). Autor zgodził się na wydanie 13.11.
+- [ ] Przed wydaniem autor może obejrzeć poziom 3 na żywo (sekcja F), bo nic z nocnej pracy nie było sprawdzane przez człowieka.
 
+### Poziom 3 „Królestwo”: co zostało po nocy 13/14.11
 
-## C. Dalej (kolejność; **po zakończeniu A i B4, zgodnie z Q11**)
+Zrobione i usunięte z listy: K5 (8 jednostek w silniku, grafika, animacje), K8 (widok osady), K9 (samouczek, instrukcja, autopilot), zestawy artefaktów (silnik, UI, boty, 12 ikon), dochód 1/2/3, porządki repo i kodu, wydajność. Zostaje:
+- [ ] **Strojenie ekonomii** (pomiar 14.11, `make sim-krolestwo GAMES=80`, szczegóły w `POZIOM_3_KROLESTWO.md`): ekonomia prawie nie wpływa na wynik botów, bo rzadko wracają do osady (średnio 1,1 osady, 0–1,8 awansowanego rekruta na grę, na końcu zostaje 8–40 zł, poziomów 4 i 5 nie kupują wcale). Wygrane Przymierza na Normalnym: mapa krótka 56–68%, średnia 34–49%, długa 34–49% (pasmo 45–65%). Ceny jednostek (3/5/8/12) są robocze. Potrzebny **lepszy bot-kupiec** (próba wydłużenia wypraw po zakupy obniżyła wygrane o 5–10 pkt i została cofnięta) albo testy z ludźmi. Dopiero potem: ceny z symulacji, liczba osad i kopalń, siła obrońców osad, posiłki automatu zła w koopie, punkty rankingowe.
+- [ ] **Poziomy Łatwy i Trudny dla Królestwa:** pomiar był tylko dla Normalnego.
+- [ ] **Do sprawdzenia na żywo:** patrz sekcja F (dopisane punkty poziomu 3).
 
-### KOLEJNOŚĆ PRAC (autor, 13.11.2026; **wykonywać dokładnie w tej kolejności**, każdy krok osobnym commitem z wpisem w CHANGELOG.md, jeśli widoczny dla gracza)
-
-1. **Porządki w plikach repozytorium** (bez ryzyka dla gry): pomiar rozmiarów i czasu ładowania; duplikaty (np. muzyka w `docs/muzyka` i `public/assets/music`, okładka w dwóch miejscach); nieużywane obrazki; kompresja do WebP/OGG; wpisy `assets.json`; `.gitignore` dla `docs/wersja_planszowa/druk3d` (7,1 GB; **autor 13.11: może trafić do gitignore**, pliki zostają na dysku) i `.tmp`. Nic nie kasować bez sprawdzenia, że to duplikat; duże rzeczy tylko wyłączyć z gita.
-2. **Wydajność gry:** rozmiar paczki (bundle), leniwe ładowanie ekranów i modeli 3D, tekstury, render areny; każda zmiana z pomiarem przed i po.
-3. **Porządki w kodzie:** podział największych plików (`tuningAuto.ts`, `battle.ts`, `App.tsx`, `game.ts`), martwy kod, powtórzenia, typy. Wyniki gry bez zmian: `tests/golden.test.ts` musi przejść **bez** `-u`.
-4. **Silnik razem:** K5 (8 jednostek: `docs/JEDNOSTKI_POZIOMU_3.md`) + zestawy artefaktów (`docs/ZESTAWY_ARTEFAKTOW.md`) + dochód (kopalnia 1, osada 2, osada ze skarbcem 3). Potem świadoma aktualizacja golden (`-u`, napisać w commicie).
-5. **Ceny jednostek i strojenie** symulacjami (`make sim-tabele`, stroiciel w `scripts/sim/`).
-6. **Grafika Scenario do wyczerpania kredytów** (przed generowaniem sprawdzić `usage`; przy małym stanie zatrzymać się i opisać, co gotowe; wszystko od razu do repo z wpisem w `assets.json`; model własny, zgodnością stylu się nie przejmować). W tej kolejności:
-   - a. **Portrety i karty** ośmiu jednostek (+ klatki bazowe do animacji).
-   - b. **Ikony zdolności** ośmiu jednostek.
-   - c. **Animacje jednostek** (ruch, atak, śmierć; według `POTOK_ANIMACJI.md`, `PRZEPIS_JEDNOSTKI.md`). *Autorowi bardziej zależy na jednostkach niż na ikonach zestawów.*
-   - d. **Ikony 12 elementów zestawów artefaktów.**
-   - e. **Widoki osad:** osobny krajobraz dla Przymierza i dla Hordy.
-   - f. **Budynki** w kilku stanach (koszary, targ, szpital, skarbiec; ulepszenia), osobne dla obu frakcji.
-7. **K8 w kodzie** (widok osady z nałożonymi budynkami i dźwiękami zakupu) oraz **K9** (samouczek poziomu 3, rozdział o ekonomii w instrukcji, autopilot).
-8. **(14.11: kroki 1–7 zrobione, commit `Release 2.6.0` i lokalny tag 2.6.0 są gotowe; PUSH BLOKUJE reguła „nie wypychać gry”, więc zostaje: `git push origin master 2.6.0`, `gh release create 2.6.0 --generate-notes`, `make silnik`, w repo serwera `npm install …/2.6.0/straznicy-engine-2.6.0.tgz` i `make deploy`.)** Wydanie: autor zgodził się 13.11 na wydanie po ukończeniu punktów 1–7.** Wydanie robi się dopiero wtedy: `make check` zielone, CHANGELOG „W przygotowaniu” zamieniony na numer wydania (numer do ustalenia, następny po 2.6.0), tag, push gry (publikuje grę), serwer razem z grą (tier `kingdom`, zapisy online, kompresja, 6 graczy: `make deploy`). Wcześniej nic nie wydawać.
-
-Szczegóły poszczególnych punktów są poniżej (K5, K8, K9, zestawy, dochód, porządki, strojenie, wydanie).
-
-
-1. **Poziom 3 „Królestwo”: zrobione 13.11** (silnik, ekran osady, boty, tryb w kreatorze i online; szczegóły w `POZIOM_3_KROLESTWO.md`, „Stan wdrożenia”). **Zostaje:**
-   - [ ] **K5. Nowi pomocnicy poziomów 2–5** (8 jednostek): **skład zaakceptowany 13.11** (`docs/JEDNOSTKI_POZIOMU_3.md`); zostaje: dane i zdolności w silniku, grafika (karty, portrety, ikony zdolności, klipy; autor 13.11: „zrób wszystko, aż skończą się kredyty Scenario”, stylem się nie przejmować, model własny), ceny z symulacji.
-   - [ ] **K8. Widok osady jak w Heroes III:** krajobraz frakcji z nałożonymi grafikami wybudowanych budynków i ich ulepszeń (dziś: tło z kartami budynków). Grafika Scenario: po jednym tle na frakcję i budynki w kilku stanach, ułożone na stałych kotwicach; dźwięki zakupu i monet (ElevenLabs).
-   - [ ] **K9. Samouczek poziomu 3, rozdział o ekonomii w instrukcji (`INSTRUKCJA.md` i wersja HTML), autopilot dla dziecka** (zakupy automatyczne za zgodą rodzica).
-   - [ ] **Zestawy artefaktów: 4 zestawy zaakceptowane 13.11** (Strój Gajowego, Rynsztunek Brzasku, Pancerz Wartownika, Strój Kupca; elementy, efekty i zasady w `docs/ZESTAWY_ARTEFAKTOW.md`). Zasady: tylko poziom 3 i wyższe; rzadkość „rzadki", cena i szansa dropu jak zwykły rzadki; premia za komplet 3/3; ręczna wymiana w UI. Zostaje: silnik (nowe efekty), UI (karta bohatera „2/3 zestawu”, oznaczenie w Targu), boty, ikony 12 elementów, testy.
-   - [ ] **Dochód (autor 13.11, rozstrzygnięte):** wszystkie osady jednakowe (także startowa). **Kopalnia 1 zł, zwykła osada 2 zł, osada ze skarbcem 3 zł** (skarbiec +1). Dziś w `KINGDOM`: `incomeStart` 2, `incomeSettlement` 1, `incomeMine` 1, `incomeTreasury` 1: zmienić na osadę 2 (bez wyjątku dla startowej), reszta bez zmian; przestroić ceny symulacjami.
-   - [ ] **Porządki w kodzie i repozytorium (autor 13.11):** przegląd organizacji i wydajności kodu (`src/`, `scripts/`, `tests/`) oraz plików (dokumenty, obrazki, dźwięki, modele), potem wdrożenie poprawek. Zakres: patrz „Plan porządków” niżej.
-   - [ ] **Strojenie:** ceny, dochody, liczby osad i kopalń, siła obrońców osad, posiłki automatu (tabele `make sim-tabele` dla poziomu 3, osobne mapy i tryby, rywalizacja; wskaźnik trudności, punkty rankingowe); po dodaniu jednostek z K5.
-   - [ ] **Wydanie i wdrożenie** (autor zgodził się 13.11 na wydanie po punktach 1–7 z kolejności prac): silnik, serwer (tier `kingdom`, zapisy online, kompresja, 6 graczy) i gra idą razem; patrz „Pytania czekające na autora”.
-   **Plan porządków (stan 13.11, przegląd wstępny):** repo ma 11 GB na dysku, w git 1,4 GB (`.git`) i 1177 plików; `docs/wersja_planszowa` 7,7 GB (z czego `druk3d` 7,1 GB), `.tmp` 1,5 GB, `dist` 82 MB, `public` 156 MB (assets 133, modele 24). Duże pliki w src: `tuningAuto.ts` 1746 wierszy, `battle.ts` 1301, `App.tsx` 1188, `game.ts` 1174. Kolejność: (1) mierzenie (rozmiary, czas ładowania, bundle), (2) pliki: duplikaty (np. muzyka w `docs/muzyka` i `public/assets/music`, okładka w dwóch miejscach), nieużywane obrazki, kompresja do WebP/OGG, wpisy `assets.json`, `.gitignore` dla druku 3D, (3) wydajność: bundle, leniwe ładowanie ekranów i modeli 3D, tekstury, render areny, (4) kod: podział największych plików, martwy kod, powtórzenia, typy; tylko bez zmiany wyników gry (test golden musi przejść bez `-u`).
-
-2. **Zakres premiery (decyzja 13.11):** premiera dopiero po poziomie 5; poziomy 3, 4 i 5 wchodzą przed pakowaniem na Steam. Do premiery nie wchodzą nowe frakcje, kampania ani Ekspedycja (Q9). Numer wydania premiery do ustalenia przy wydaniu (dawne „3.0” z 12.11 traci sens).
-3. **Premiera na Steamie:** strona sklepu, zrzuty, trailer (wideo: Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri, do wyboru), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Wiele języków: przed premierą tylko inwentaryzacja tekstów.
+1. **Zakres premiery (decyzja 13.11):** premiera dopiero po poziomie 5; poziomy 3, 4 i 5 wchodzą przed pakowaniem na Steam. Do premiery nie wchodzą nowe frakcje, kampania ani Ekspedycja (Q9). Numer wydania premiery do ustalenia przy wydaniu (dawne „3.0” z 12.11 traci sens).
+2. **Premiera na Steamie:** strona sklepu, zrzuty, trailer (wideo: Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri, do wyboru), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Wiele języków: przed premierą tylko inwentaryzacja tekstów.
 
 ## D. Przed i po premierze (premiera dopiero po poziomie 5, decyzja 13.11)
 
@@ -103,18 +78,19 @@ Szczegóły poszczególnych punktów są poniżej (K5, K8, K9, zestawy, dochód,
 
 ## Pytania czekające na autora
 
-**Q1–Q18 (13.11.2026) zostały rozstrzygnięte** (decyzje w „STAN” u góry). Nic nowego z nich nie czeka na autora oprócz akceptacji propozycji 8 nowych jednostek (przygotuje Claude przy K5).
+**Q1–Q18 (13.11.2026) zostały rozstrzygnięte** (decyzje w „STAN” u góry). Nic z nich nie czeka na autora.
 
 - ~~Propozycja 8 nowych pomocników~~: **zaakceptowana 13.11** (Przymierze: Jeżozwierz, Centaur, Alabastrowy Odyniec, Opiekun Drzewa; Horda: Szczurołak, Piekielny Ogar, Salamandra Popiołu, Herszt Minotaurów); grafika dozwolona.
 - ~~`druk3d`~~: rozstrzygnięte 13.11 (do `.gitignore`, pliki zostają na dysku).
 - ~~Dochód osady startowej~~: rozstrzygnięte 13.11 (osady jednakowe: kopalnia 1, osada 2, osada ze skarbcem 3).
 
-- **Wydanie 2.6.0 i wdrożenie serwera** (B1; wstrzymane 12.11; **13.11 autor zgodził się na wydanie po ukończeniu punktów 1–7 z „Kolejności prac” w C**, wcześniej nie wydawać): zmiany są w commitach lokalnie (gra `05cba8e`, serwer `9b07989`); drugie wydanie wymaga zgody autora (tag, push `master`, wydanie na GitHubie, potem `npm install` pakietu silnika w serwerze, `make deploy`, push serwera).
+- **Push gry i wydanie 2.6.0:** gotowe lokalnie (tag `2.6.0`), czekam na „wypchnij” od autora (kroki w sekcji C).
 - **Łatwy w wydaniu planszowym** (uzupełnienie do dawnego A8): w edycji planszowej Łatwy 1 na 1 daje 94/91/88/79% (powyżej pasma), a 2 na 2 na bardzo długiej mapie 61%. Dźwignie stroiciela działają tylko w grze cyfrowej, żeby plansza została „jak wydrukowana”. Czy stroić też planszową (zmieniałoby to wydrukowane zasady poziomu Łatwy), czy zostawić? Domyślnie: zostawiam.
 
 ## F. Do sprawdzenia na żywo (autor)
 
 Wszystko zrobione i przetestowane, ale bez potwierdzenia w prawdziwej grze:
+- **Poziom 3 (noc 13/14.11):** widok osady z budynkami na krajobrazie obu frakcji, dźwięki zakupu, animacje i portrety 8 nowych pomocników (sprite'y bez klipu śmierci), ikony zestawów artefaktów i licznik „2/3 zestawu”, samouczek poziomu 3, autopilot dziecka (zakupy za zgodą rodzica), zapisy online (B5), szósty gracz.
 - Kraken (głowa strzela, 2 macki, krab i błotny stwór) i Pegaz (5 Ż, 3 A): czy walka z Krakenem jest groźna, ale uczciwa dla każdego bohatera, i czy sześć jednostek wroga mieści się czytelnie na arenie.
 - Klikalność jednostek zasłoniętych przez inne (Pegaz kontra Hydra, partia 114857, akcja 60); poprawka 10.11 (`behind` w `ArenaBoard.tsx`) nie była sprawdzona na tej samej partii.
 - Błysk zakrytych kafelków (zgłoszenie 9.11): poprawiony szew animacji mgły `fog-drift`; jeśli błyski wrócą, zrzut lub opis, który kafelek.
