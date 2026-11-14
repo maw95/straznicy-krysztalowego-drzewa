@@ -65,8 +65,8 @@ describe('setup screen simplifications', () => {
     expect(btn('Same Eliksiry Odrodzenia')).toBeUndefined();
     // Every option explains itself in a hover tooltip next to its button.
     const tip = (t: string) => btn(t).parentElement!.querySelector('[role="tooltip"]')?.textContent ?? '';
-    for (const t of ['Krótka', 'Bardzo długa', 'Łatwy', 'Normalny', 'Trudny']) expect(tip(t).length).toBeGreaterThan(40);
-    expect(tip('Krótka')).toContain('limit 8 rund');
+    for (const t of ['Mała', 'Bardzo duża', 'Łatwy', 'Normalny', 'Trudny']) expect(tip(t).length).toBeGreaterThan(40);
+    expect(tip('Mała')).toContain('limit 8 rund');
     await click(container, 'Dalej →');
     for (const t of ['Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Dodatkowy bohater Hordy']) expect(btn(t).getAttribute('aria-pressed')).toBe('false');
     for (const t of ['Osobna arena (3 na 3)', 'Na planszy głównej (pojedynek 1 na 1)', 'Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Dodatkowy bohater Hordy']) expect(tip(t).length).toBeGreaterThan(40);
@@ -215,8 +215,8 @@ describe('win rate and points', () => {
     const rows = [...doc.querySelectorAll('table[aria-label="Dokładne dane"] tr')].map((tr) => [...tr.children].map((c) => c.textContent));
     expect(rows).toEqual([
       ['Tryb', 'Mapa', 'Poziom', 'Rozegrane', 'Wygrane', 'Przegrane', '% zwycięstw', 'Punkty'],
-      ['Kooperacja', 'Krótka', 'Łatwy', '1', '0', '1', '0%', '0'],
-      ['', 'Krótka', 'Normalny', '1', '1', '0', '100%', '9'],
+      ['Kooperacja', 'Mała', 'Łatwy', '1', '0', '1', '0%', '0'],
+      ['', 'Mała', 'Normalny', '1', '1', '0', '100%', '9'],
       ['Razem', '2', '1', '1', '50%', '9'],
     ]);
   });

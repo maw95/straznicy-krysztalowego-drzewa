@@ -605,7 +605,7 @@ export const MAP_VARIANTS: Record<MapSize, MapVariant> = {
   giant: { rows: 20, resurrections: 5, otherTreasures: 8, onlyResurrections: 6, roundLimit: 36, startTreasures: { resurrections: 2, others: 2 } },
 };
 
-export const MAP_SIZE_NAMES: Record<MapSize, string> = { short: 'Krótka', medium: 'Średnia', long: 'Długa', veryLong: 'Bardzo długa', huge: 'Ogromna', giant: 'Gigantyczna' };
+export const MAP_SIZE_NAMES: Record<MapSize, string> = { short: 'Mała', medium: 'Średnia', long: 'Duża', veryLong: 'Bardzo duża', huge: 'Ogromna', giant: 'Gigantyczna' };
 
 /** Digital Expedition and higher: Życie and Atak (and every bonus to them) are this many times the board game's, so that small bonuses and defence have room. */
 export const STAT_SCALE = 3;

@@ -100,6 +100,44 @@ export function Row({ label, children }: { label: string; children: React.ReactN
   );
 }
 
+/** A centred block: a heading line over a row of choices (map page of the wizard). */
+export function CentredChoice({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+      <div className="lbl" style={{ fontSize: 20, fontWeight: 800 }}>{label}</div>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>{children}</div>
+    </div>
+  );
+}
+
+/** Which cells (col, row of a 9×9 hex grid) a map shape fills; the pictures of the shape buttons. */
+const SHAPE_FILL: Record<string, (c: number, r: number) => boolean> = {
+  triangle: (c, r) => Math.abs(c - 4) <= r / 2 + 0.3,
+  rectangle: () => true,
+  ring: (c, r) => Math.hypot(c - 4, (r - 4) * 0.9) > 1.7 && Math.hypot(c - 4, (r - 4) * 0.9) < 4.6,
+  islands: (c, r) => [[1.5, 1.5], [6.5, 2.2], [3.5, 6.8], [7, 6.5]].some(([x, y]) => Math.hypot(c - x, (r - y) * 0.9) < 1.9),
+};
+
+/** A map shape drawn from hexes. */
+export function ShapeIcon({ shape, width = 64 }: { shape: string; width?: number }) {
+  const fill = SHAPE_FILL[shape] ?? SHAPE_FILL.rectangle;
+  const R = 6;
+  const cells: React.ReactNode[] = [];
+  for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) {
+    if (!fill(c, r)) continue;
+    const x = (c + (r % 2 ? 0.5 : 0)) * Math.sqrt(3) * R + R;
+    const y = r * 1.5 * R + R;
+    const pts = [0, 1, 2, 3, 4, 5].map((i) => `${(x + R * 0.92 * Math.cos(Math.PI / 6 + (i * Math.PI) / 3)).toFixed(1)},${(y + R * 0.92 * Math.sin(Math.PI / 6 + (i * Math.PI) / 3)).toFixed(1)}`).join(' ');
+    cells.push(<polygon key={`${c}-${r}`} points={pts} fill="#6FB07A" stroke="#1E3A24" strokeWidth={0.8} />);
+  }
+  const w = 9.5 * Math.sqrt(3) * R + R;
+  const h = 8 * 1.5 * R + 2 * R;
+  return <svg width={width} height={(width * h) / w} viewBox={`0 0 ${w} ${h}`} aria-hidden="true">{cells}</svg>;
+}
+
+/** A two-line size button: a big letter code over the name. */
+export const SIZE_CODES: Record<string, string> = { short: 'S', medium: 'M', long: 'L', veryLong: 'XL', huge: 'XXL', giant: '3XL' };
+
 export const SHAPE_NAMES: Record<MapShape, string> = { triangle: 'Trójkąt', rectangle: 'Prostokąt', ring: 'Pierścień', islands: 'Wyspy', custom: 'Własna mapa' };
 export const SHAPE_TIPS: Record<MapShape, string> = {
   triangle: 'Mapa z planszówki: trójkąt, Drzewo na szczycie, bazy w dolnych rogach.',

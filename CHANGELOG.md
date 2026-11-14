@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Kreator nowej gry: bez ramek wokół ikon przy dużych przyciskach; wybór kształtu mapy jest wycentrowany („Wybierz kształt”, „Wybierz mapę”), a kształty mają obrazki ułożone z heksów. Rozmiar mapy to większe, wycentrowane przyciski z dużym skrótem (S, M, L, XL, XXL, 3XL) nad nazwą. Zmiana nazw: Krótka → Mała, Długa → Duża, Bardzo długa → Bardzo duża.
 - Walka: Centaur strzela strzałą (lecącą w stronę celu), a nie kulą energii jak czarodzieje.
 - Portrety Centaura i Opiekuna Drzewa mają już widoczne twarze (nowy kadr z oryginałów).
 - Królestwo: do osady nie trzeba już dochodzić. W prawym panelu jest lista własnych osad: pierwsze kliknięcie pokazuje osadę na mapie, drugie otwiera jej okno, w którym można budować, rekrutować i kupować z dowolnego miejsca (w turze bohatera).

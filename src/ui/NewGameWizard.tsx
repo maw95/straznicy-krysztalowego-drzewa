@@ -11,7 +11,7 @@ import type { Level, MapShape, Mode, ObjectiveId } from '../engine/types';
 import type { TableConfig } from '../online/api';
 import { asset, Frame, portrait, Ribbon } from './common';
 import { CustomSwitchRows } from './CustomSwitchRows';
-import { ARENA_HINT, ARENA_LEVEL_TIPS, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, SHAPE_NAMES, SHAPE_TIPS, Tip, TIPS } from './setupShared';
+import { ARENA_HINT, ARENA_LEVEL_TIPS, CentredChoice, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, ShapeIcon, SHAPE_NAMES, SHAPE_TIPS, SIZE_CODES, Tip, TIPS } from './setupShared';
 
 export const EDITION_KEY = 'skd-edition';
 /** The edition picked last time in this browser: digital unless the board edition was chosen. */
@@ -232,17 +232,22 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
             <Card on={ready} disabled={READY_MAPS().length === 0} title="Gotowa" text="Ręcznie narysowana mapa, zawsze taka sama, w jednym rozmiarze." img={pic(asset('ui/landscape.jpg'))} onClick={() => patch({ shape: 'custom' })} />
           </div>
           {!ready ? (
-            <Row label="Kształt">
+            <CentredChoice label="Wybierz kształt">
               {(Object.keys(SHAPE_NAMES) as MapShape[]).filter((sh) => sh !== 'custom').map((sh) => (
-                <Tip key={sh} text={SHAPE_TIPS[sh]}><button className={chip(d.shape === sh)} aria-pressed={d.shape === sh} onClick={() => patch({ shape: sh })}>{SHAPE_NAMES[sh]}</button></Tip>
+                <Tip key={sh} text={SHAPE_TIPS[sh]}>
+                  <button className={`${chip(d.shape === sh)} shape-btn`} aria-pressed={d.shape === sh} onClick={() => patch({ shape: sh })}>
+                    <ShapeIcon shape={sh} width={92} />
+                    <span>{SHAPE_NAMES[sh]}</span>
+                  </button>
+                </Tip>
               ))}
-            </Row>
+            </CentredChoice>
           ) : (
-            <Row label="Mapa gotowa">
+            <CentredChoice label="Wybierz mapę">
               {READY_MAPS().map((m) => (
-                <Tip key={m.id} text={m.summary}><button className={chip(d.customMapId === m.id)} aria-pressed={d.customMapId === m.id} onClick={() => patch({ customMapId: m.id })}>{m.name}</button></Tip>
+                <Tip key={m.id} text={m.summary}><button className={`${chip(d.customMapId === m.id)} shape-btn`} aria-pressed={d.customMapId === m.id} onClick={() => patch({ customMapId: m.id })}>{m.name}</button></Tip>
               ))}
-            </Row>
+            </CentredChoice>
           )}
         </>
       )}
@@ -260,11 +265,16 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
             </Row>
           )}
           {!arena && !(d.digital && d.tier !== 'adventure' && ready) && (
-            <Row label="Wielkość mapy">
+            <CentredChoice label="Wielkość mapy">
               {sizes.map((m) => (
-                <Tip key={m} text={mapTip(m)}><button className={chip(d.mapSize === m)} aria-pressed={d.mapSize === m} onClick={() => patch({ mapSize: m })}>{MAP_SIZE_NAMES[m]}</button></Tip>
+                <Tip key={m} text={mapTip(m)}>
+                  <button className={`${chip(d.mapSize === m)} size-btn`} aria-pressed={d.mapSize === m} onClick={() => patch({ mapSize: m })}>
+                    <b className="size-code">{SIZE_CODES[m]}</b>
+                    <span>{MAP_SIZE_NAMES[m]}</span>
+                  </button>
+                </Tip>
               ))}
-            </Row>
+            </CentredChoice>
           )}
           <Row label={arena ? 'Komputer' : 'Trudność'}>
             {LEVELS.filter(([l]) => l !== 'custom' && (l !== 'hard' || d.mode !== 'pvp')).map(([l, label]) => (

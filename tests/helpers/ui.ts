@@ -57,7 +57,7 @@ export async function clearDialogs(c: HTMLElement) {
 }
 
 /** A button of the menu: a big choice (found by its title) or a plain button (by its whole text). */
-export const pick = (c: ParentNode, label: string) => buttons(c).find((b) => b.querySelector('.opt-card-title')?.textContent === label) ?? button(c, label);
+export const pick = (c: ParentNode, label: string) => buttons(c).find((b) => b.querySelector('.opt-card-title')?.textContent === label || b.querySelector('.size-btn > span, span:last-child')?.textContent === label && b.classList.contains('size-btn')) ?? button(c, label);
 
 /** Clicks the menu buttons in turn; a missing one fails the test with its name. */
 export async function click(c: ParentNode, ...labels: string[]) {
