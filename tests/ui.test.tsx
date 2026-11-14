@@ -510,8 +510,8 @@ describe('event log', () => {
     window.addEventListener('error', onError);
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const { container } = startSolo(1);
-    const btn = [...container.querySelectorAll('button')].find((b) => b.textContent === 'Dziennik')!;
-    await act(async () => fireEvent.click(btn));
+    await act(async () => fireEvent.click([...container.querySelectorAll('button')].find((b) => b.textContent === 'Opcje')!));
+    await act(async () => fireEvent.click(container.ownerDocument.querySelector('[data-open-log]')!));
     expect(scroll).toHaveBeenCalled();
     let thrown: unknown = null;
     try {

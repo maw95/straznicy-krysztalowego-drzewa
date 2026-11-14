@@ -264,6 +264,7 @@ export function OptionsDialog(props: {
   figures: boolean;
   onFigures: (on: boolean) => void;
   onRules: () => void;
+  onLog: () => void;
   /** Keeps the game under a name (offline games only; undefined online). */
   onSaveGame?: (name: string) => void;
   defaultSaveName: string;
@@ -319,7 +320,10 @@ export function OptionsDialog(props: {
               {saved && <span style={{ color: '#8FE3A0', fontSize: 15 }}>Zapisano: {saved}</span>}
             </div>
           )}
-          <button className="btn plate parch" style={{ padding: '6px 14px', alignSelf: 'flex-start' }} onClick={props.onRules}>Zasady i karty</button>
+          <div style={{ display: 'flex', gap: 10, alignSelf: 'flex-start' }}>
+            <button className="btn plate parch" style={{ padding: '6px 14px' }} onClick={props.onRules}>Zasady i karty</button>
+            <button className="btn plate parch" data-open-log title="Dziennik zdarzeń (D)" style={{ padding: '6px 14px' }} onClick={props.onLog}>Dziennik</button>
+          </div>
           <button className="btn prim r" data-leave style={{ padding: '12px 20px', fontSize: 22, width: '100%' }} onClick={props.onLeave}>Wyjdź z gry</button>
           <button className="btn plate parch" data-enter style={{ padding: '6px 14px', alignSelf: 'flex-end' }} onClick={props.onClose}>Zamknij</button>
         </Frame>

@@ -8,7 +8,7 @@ import { neighborKeys, type HexKey } from '../engine/hex';
 import { tileCost } from '../engine/map';
 import { controlCounts, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { arenaSetup, DEFAULT_RULES, isDigital, type Action, type GameState, type LogEntry, type LogEvent, type SetupOptions } from '../engine/types';
-import { AdventureView } from './AdventureView';
+import { AdventureView, GoldBox } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
 import { usePresentation } from './usePresentation';
 import { ArtifactFound, xpNote } from './growthUi';
@@ -734,10 +734,8 @@ export function App() {
 
   const footer = (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
-      <div className="plate parch hide-mobile" style={{ flex: 1, minWidth: 0, padding: '6px 12px', fontSize: 15, lineHeight: 1.25, overflow: 'hidden' }}>
-        {visibleLog.slice(-2).map((l, i) => (
-          <div key={i} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: i === 1 ? 700 : 500, color: i === 1 ? '#2B1D10' : '#6B5233' }}>{l.text}</div>
-        ))}
+      <div style={{ flex: 1, minWidth: 0, display: 'flex' }}>
+        {game?.kingdom && viewer && <GoldBox state={game} faction={viewer} />}
       </div>
       {humanTurn && game.players.some((p) => p.child) && (
         <button className="btn plate parch btn-bar" title="Podpowiedź: co zrobiłby komputer" onClick={showHint}>
@@ -764,7 +762,6 @@ export function App() {
           ⏩ Przewiń
         </button>
       )}
-      <button className="btn plate parch btn-bar" title="Dziennik (D)" onClick={() => setShowLog(true)}>Dziennik</button>
       <button className="btn plate parch hide-mobile btn-bar" title="Zasady i karty (R)" onClick={() => setShowRules(true)}>Zasady</button>
       <button className="btn plate parch btn-bar" title="Opcje (O)" onClick={() => setShowDebug(true)}>Opcje</button>
       <button className="btn plate parch btn-bar" title="Opisz błąd — zapisze się razem z partią (B)" onClick={() => setShowReport(true)}>Zgłoś błąd</button>
@@ -962,6 +959,10 @@ export function App() {
         onRules={() => {
           setShowDebug(false);
           setShowRules(true);
+        }}
+        onLog={() => {
+          setShowDebug(false);
+          setShowLog(true);
         }}
         defaultSaveName={defaultSaveName}
         onSaveGame={isOnline ? (isOnlineOwner ? (name) => session!.send({ type: 'saveGame', name }) : undefined) : (name) => saveNamed(name, saveFile(game))}

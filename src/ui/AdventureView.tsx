@@ -549,13 +549,6 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </div>
             </div>
           )}
-          {state.kingdom && viewer && (
-            <div className="plate parch" data-gold-box {...details(() => <GoldDetails state={state} faction={viewer} />)} style={{ padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 10 }}>
-              <img src={asset('ikony/mapa/zloto.webp')} alt="" width={compact ? 28 : 36} height={compact ? 28 : 36} />
-              <b style={{ fontSize: 22 }} data-gold>{goldOf(state, viewer)}</b>
-              <span style={{ fontSize: 14, color: '#6B4A22' }}>zł · +{incomeOf(state, viewer)} na rundę</span>
-            </div>
-          )}
           {state.kingdom && hero && canAct && hero.faction === viewer && (() => {
             const here = settlementAt(state, hero.pos);
             return here && here.owner === viewer ? (
@@ -838,6 +831,16 @@ function placeTitle(state: GameState, k: HexKey): string {
   const s = state.kingdom.settlements[place.id];
   const built = (['barracks', 'market', 'hospital', 'treasury'] as const).filter((b) => s.buildings[b]).map((b) => BUILDING_NAMES[b][Math.min(s.buildings[b], BUILDING_NAMES[b].length) - 1]);
   return `Osada ${s.name} (${FACTION_NAMES[s.land]}): ${s.owner ? `należy do ${FACTION_NAMES[s.owner]}` : 'broniona przez neutralnych'}${built.length ? ` · ${built.join(', ')}` : ''}`;
+}
+
+/** The gold in the bottom bar: stock and income per round in short ("2 (+2)"); the right button shows where the income comes from. */
+export function GoldBox({ state, faction }: { state: GameState; faction: FactionId }) {
+  return (
+    <div className="plate parch" data-gold-box title="Złoto (zapas i dochód na rundę); prawy przycisk: skąd dochód" {...details(() => <GoldDetails state={state} faction={faction} />)} style={{ padding: '4px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+      <img src={asset('ikony/mapa/zloto.webp')} alt="" width={32} height={32} />
+      <b style={{ fontSize: 22 }}><span data-gold>{goldOf(state, faction)}</span> <span style={{ fontSize: 16, color: '#6B4A22' }}>(+{incomeOf(state, faction)})</span></b>
+    </div>
+  );
 }
 
 /** Held right button over the gold: where the income comes from. */
