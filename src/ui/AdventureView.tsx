@@ -149,7 +149,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const boardH = H + (rows - 1) * 0.75 * H;
 
   // Zooming keeps the point in the middle of the view where it was.
-  const zoomAnchor = useRef<{ fx: number; fy: number } | null>(null);
+  const zoomAnchor = useRef<{ fx: number; fy: number; cursor?: { x: number; y: number } } | null>(null);
+  const dragged = useRef(false);
   const zoomTo = (w: number) => {
     const el = boardRef.current;
     if (el) zoomAnchor.current = { fx: (el.scrollLeft + el.clientWidth / 2) / Math.max(1, el.scrollWidth), fy: (el.scrollTop + el.clientHeight / 2) / Math.max(1, el.scrollHeight) };
@@ -160,8 +161,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     const a = zoomAnchor.current;
     if (!el || !a) return;
     zoomAnchor.current = null;
-    el.scrollLeft = a.fx * el.scrollWidth - el.clientWidth / 2;
-    el.scrollTop = a.fy * el.scrollHeight - el.clientHeight / 2;
+    el.scrollLeft = a.fx * el.scrollWidth - (a.cursor?.x ?? el.clientWidth / 2);
+    el.scrollTop = a.fy * el.scrollHeight - (a.cursor?.y ?? el.clientHeight / 2);
   }, [W]);
   // Two fingers on the map zoom it (the page itself does not zoom there).
   const pinch = useRef<{ d: number; w: number } | null>(null);
@@ -184,11 +185,54 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     const end = (e: TouchEvent) => {
       if (e.touches.length < 2) pinch.current = null;
     };
+    // Mouse wheel zooms around the cursor; dragging with the left button scrolls (a drag never counts as a click).
+    const wheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const rect = el.getBoundingClientRect();
+      const before = { x: el.scrollLeft + e.clientX - rect.left, y: el.scrollTop + e.clientY - rect.top, w: el.scrollWidth, h: el.scrollHeight };
+      zoomRef.current(wRef.current * (e.deltaY < 0 ? 1.15 : 1 / 1.15));
+      zoomAnchor.current = { fx: before.x / Math.max(1, before.w), fy: before.y / Math.max(1, before.h), cursor: { x: e.clientX - rect.left, y: e.clientY - rect.top } };
+    };
+    let drag: { x: number; y: number; sl: number; st: number; moved: boolean } | null = null;
+    const down = (e: MouseEvent) => {
+      if (e.button !== 0) return;
+      dragged.current = false;
+      drag = { x: e.clientX, y: e.clientY, sl: el.scrollLeft, st: el.scrollTop, moved: false };
+    };
+    const drive = (e: MouseEvent) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x;
+      const dy = e.clientY - drag.y;
+      if (!drag.moved && Math.hypot(dx, dy) < 6) return;
+      drag.moved = true;
+      el.scrollLeft = drag.sl - dx;
+      el.scrollTop = drag.st - dy;
+    };
+    const up = () => {
+      if (drag?.moved) dragged.current = true;
+      drag = null;
+    };
+    const swallow = (e: MouseEvent) => {
+      if (!dragged.current) return;
+      dragged.current = false;
+      e.stopPropagation();
+      e.preventDefault();
+    };
+    el.addEventListener('wheel', wheel, { passive: false });
+    el.addEventListener('mousedown', down);
+    window.addEventListener('mousemove', drive);
+    window.addEventListener('mouseup', up);
+    el.addEventListener('click', swallow, true);
     el.addEventListener('touchstart', start, { passive: true });
     el.addEventListener('touchmove', move, { passive: false });
     el.addEventListener('touchend', end);
     el.addEventListener('touchcancel', end);
     return () => {
+      el.removeEventListener('wheel', wheel);
+      el.removeEventListener('mousedown', down);
+      window.removeEventListener('mousemove', drive);
+      window.removeEventListener('mouseup', up);
+      el.removeEventListener('click', swallow, true);
       el.removeEventListener('touchstart', start);
       el.removeEventListener('touchmove', move);
       el.removeEventListener('touchend', end);
@@ -381,8 +425,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                       </div>
                     )}
                     {t.revealed && t.place && state.kingdom && (
-                      <div style={{ position: 'absolute', left: W * 0.33, top: H * 0.5, zIndex: 2, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)}>
-                        <img src={asset(`ikony/mapa/${placeIcon(state, t.key)}.webp`)} alt="" width={W * 0.36} height={W * 0.36} style={{ display: 'block', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.7))' }} />
+                      <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, zIndex: 2, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)}>
+                        <img src={asset(`ikony/mapa/${placeIcon(state, t.key)}.webp`)} alt="" width={W * 0.46} height={W * 0.46} style={{ display: 'block', filter: t.place.kind === 'mine' ? 'drop-shadow(0 0 3px #F3D27A) drop-shadow(0 2px 2px rgba(0,0,0,0.8))' : 'drop-shadow(0 2px 2px rgba(0,0,0,0.7))' }} />
                       </div>
                     )}
                     {crystal && (

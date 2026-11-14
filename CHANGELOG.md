@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Mapa świata: kółko myszy przybliża i oddala (wokół kursora), a przeciąganie lewym przyciskiem przewija mapę; przeciągnięcie nie jest kliknięciem heksa. Ikony osad i kopalń są większe, kopalnie mają złotą poświatę (były słabo widoczne na drobnej mapie).
 - Poziom „Królestwo”: strojenie trudności. Dotąd poziom Normalny i Trudny w Królestwie grały bez żadnych poprawek trudności; teraz Horda i Przymierze dostają skarby startowe dobrane z symulacji (cel „Kryształy”), tak że Przymierze wygrywa na Normalnym około 45–65% gier, a na Trudnym około 30–45%.
 
 ## 2.6.0 — 2026-11-14
