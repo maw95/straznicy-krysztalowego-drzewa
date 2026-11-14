@@ -5,7 +5,7 @@ Szerszy plan wydania cyfrowego: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`.
 
 **Jak z tego korzystać:** autor pisze „zrób punkty A2, A3, B1”, a Claude pracuje sam, aż skończy (warunek ukończenia stoi przy każdym punkcie). Kolejność, gdy autor każe zrobić „wszystko z listy”: C → D.
 
-## STAN (14.11.2026): poziom 3 „Królestwo” zbudowany, wydanie 2.6.0 przygotowane lokalnie
+## STAN (14.11.2026): poziom 3 „Królestwo” zbudowany i wydany (2.7.0)
 
 W nocy 13/14.11 zrobione kroki 1–7 z kolejności prac: porządki w repo i kodzie, wydajność (główna paczka 1089 → 565 kB), silnik poziomu 3 z 8 nowymi pomocnikami i 4 zestawami artefaktów, dochód 1/2/3, cała grafika Scenario (portrety, karty, ikony zdolności i zestawów, animacje jednostek, krajobrazy i budynki osad), widok osady (K8), samouczek, rozdział o ekonomii i autopilot dziecka (K9). `make check` zielone (413 testów), commit `Release 2.6.0` i lokalny tag `2.6.0` gotowe, **nic nie wypchnięte** (45 commitów przed `origin/master`). Zostaje: wydanie (push zależy od autora), strojenie ekonomii, poziomy 4 i 5 przed premierą. Decyzje autora niżej są nadal obowiązujące.
 
@@ -42,10 +42,9 @@ W nocy 13/14.11 zrobione kroki 1–7 z kolejności prac: porządki w repo i kodz
 
 ## C. Dalej
 
-### Wydanie 2.6.0 (jedyny otwarty krok z kolejności prac z 13.11; kroki 1–7 zrobione 14.11)
+### Wydanie
 
-- [ ] **Wydanie** czeka na autora, bo push publikuje grę: `git push origin master 2.6.0`, `gh release create 2.6.0 --generate-notes`, `make silnik`, w repo serwera `npm install …/2.6.0/straznicy-engine-2.6.0.tgz`, `make deploy`, push serwera. Serwer idzie razem z grą (tier `kingdom`, zapisy online, kompresja, 6 graczy). Autor zgodził się na wydanie 13.11.
-- [ ] Przed wydaniem autor może obejrzeć poziom 3 na żywo (sekcja F), bo nic z nocnej pracy nie było sprawdzane przez człowieka.
+- [x] **Wydane 14.11.2026 jako 2.7.0** (obejmuje 2.6.0): gra na Pages, wydanie na GitHubie, pakiet silnika, serwer na Fly zaktualizowany do silnika 2.7.0 i wypchnięty. Do sprawdzenia przez autora: sekcja F (poziom 3 na żywo).
 
 ### Poziom 3 „Królestwo”: co zostało po nocy 13/14.11
 
