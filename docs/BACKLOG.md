@@ -58,6 +58,36 @@ Zrobione i usunięte z listy: K5 (8 jednostek w silniku, grafika, animacje), K8 
 1. **Zakres premiery (decyzja 13.11):** premiera dopiero po poziomie 5; poziomy 3, 4 i 5 wchodzą przed pakowaniem na Steam. Do premiery nie wchodzą nowe frakcje, kampania ani Ekspedycja (Q9). Numer wydania premiery do ustalenia przy wydaniu (dawne „3.0” z 12.11 traci sens).
 2. **Premiera na Steamie:** strona sklepu, zrzuty, trailer (wideo: Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri, do wyboru), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Wiele języków: przed premierą tylko inwentaryzacja tekstów.
 
+## C2. Uwagi autora po ogrywaniu poziomu 3 (14.11.2026, do zrobienia)
+
+**Osady i mapa świata**
+- [ ] **Wejście do osady spoza osady:** dziś okno osady otwiera się tylko, gdy bohater na niej stoi; autor chce kupować także z daleka. Propozycja: lista osad w rogu mapy albo w prawym kontenerze (tam, gdzie „Zakończ turę”); pierwsze kliknięcie zaznacza heks osady (kamera/podświetlenie), drugie otwiera okno osady.
+- [ ] **Osobne kafelki osad:** bazy obu frakcji zostają jak są; osady znalezione na mapie dostają własny wzór kafelka (dwa nowe: osada Przymierza, osada Hordy), oprócz ikony.
+- [ ] **Przybliżanie i przewijanie mapy świata:** kółko myszy przybliża i oddala, przeciąganie lewym przyciskiem przewija mapę (duże mapy mają dziś bardzo małe kafelki). Sprawdzić zgodność z kliknięciem heksa (przeciągnięcie nie może być kliknięciem), z telefonem (szczypanie) i z `FigureLayer`.
+- [ ] **Kopalnie niewidoczne na mapie:** zgłoszenie od autora przez „Zgłoś błąd” (`make zgloszenia`): kopalnie istnieją w stanie gry (są liczone), ale ich nie widać. Zbadać render ikony kopalni w `AdventureView`.
+
+**Dolny pasek i interfejs**
+- [ ] **Dolny kontener (opcje, zasady, zgłoś błąd):** skasować podgląd dziennika; przycisk „Dziennik” przenieść do „Opcji”. Do dolnej sekcji dać ikonę złota, zapas i dochód na rundę w skrócie (np. „2 (+2)”); prawy klik na tej sekcji pokazuje to, co dziś pokazuje klik w złoto: szczegóły źródeł dochodu.
+- [ ] **Licznik skarbów w prawym dolnym rogu:** dziś płaskie czerwone kółko z czarną obwódką i białą, mało ozdobną czcionką; zrobić ozdobny (w stylu HoMM3, serif czytelny, bez Cinzela).
+- [ ] **Ikona plecaka** w sekcji artefaktów jest brzydka: wygenerować nową w Scenario (zasada z `assets.json`: do repo, mały rozmiar, wpis z promptem).
+- [ ] **Ozdobne narożniki ramek** (zrobione 13/14.11) nie pasują do reszty ramki. Trudność: ramki mają różne kształty i wymiary. Do rozważenia: narożniki jako osobne elementy dopasowane do stylu ramki (9-slice / `border-image`), generowane razem z ramką w Scenario, albo odwrotnie: prostsze, ale spójne narożniki zrobione w CSS/SVG.
+
+**Menu główne i kreator (ikony i układ)**
+- [ ] Ikony przy przyciskach („Nowa gra” itd.): **usunąć ramki wokół ikon**.
+- [ ] **Wymienić brzydkie grafiki** przy: „Ten komputer”, „Przez internet”, „Cyfrowa”, „Planszowa”, „Kooperacja”, „Rywalizacja”, „Arena”, „Przygoda”, „Własne ustawienia”, „Przetrwanie”, „Boss”, „Kryształy do drzewa”, „Losowa”, „Gotowa”.
+- [ ] **Wybór kształtu mapy:** wycentrowany. Po „Losowa” pod spodem „Wybierz kształt” i cztery podłużne, prostokątne przyciski z narysowanym kształtem mapy **złożonym z heksów** (nie zwykły trójkąt/prostokąt). Po „Gotowa” ten sam układ z napisem „Wybierz mapę” i wyborem „Cieśnina” albo „Dolina”. Dziś „Losowa”/„Gotowa” są na środku, a „Kształt” i jego przyciski przy lewej krawędzi.
+- [ ] **Rozmiar mapy:** większe przyciski o dwóch linijkach, wycentrowane poziomo: duży, pogrubiony skrót w innym kolorze (S, M, L, XL, XXL), pod nim nazwa („mała”, „Ogromna”). **Zmiana nazw:** Krótka → Mała, Długa → Duża, Bardzo długa → Bardzo duża (i konsekwentnie w instrukcji, zrzutach, serwerze/lobby).
+- [ ] **Poziomy trudności:** dodać ikony/grafiki sugerujące wyzwanie (pomysł autora: brak). Propozycje do wyboru: (1) tarcze/herby rosnące w stopniu ozdobności (drewniana, srebrna, złota z koroną); (2) liczba kryształów lub ostrzy (1/2/3); (3) zwierzę-symbol (zajączek, wilk, smok); (4) czaszki na kształt oceny. Rekomendacja: (1) albo (3), bo pasują do świata i nie straszą dzieci przy Łatwym.
+
+**Postacie i animacje**
+- [ ] **Portret Centaura ucięty** (nie widać twarzy): poprawić kadr (`object-position` albo ponowne wycięcie portretu).
+- [ ] **Portret Opiekuna Drzewa** ucięty tak samo.
+- [ ] **Atak Centaura:** ma lecieć strzała, nie kula energii jak u Elfa Druida (nowy pocisk w `useBattleAnimations`/efektach, dźwięk strzały).
+
+**Poziom Łatwy na poziomach 2 i 3: do przemyślenia** (decyzja autora, zob. też wpis o Królestwie na Łatwym wyżej)
+- Fakty: Łatwy to dziś pojedynki planszowe (bez zdolności i kości, z zastępowaniem bohatera, bez rytuału), więc Królestwo (arena) na nim w ogóle nie działa; poziom 2 (Wyprawa) działa z rozwojem bohatera. Z areną i regułami Łatwego w Królestwie Przymierze wygrywa tylko 35–67% (pasmo 65–85%).
+- Moja opinia do dyskusji: na poziomach 2–3 „Łatwy” jako *inny typ bitwy* ma sens tylko jako tryb rodzinny/dla dzieci; lepiej oddzielić dwie rzeczy: **poziom trudności** (siła Hordy, skarby, ekonomia: dźwignie stroiciela) od **trybu bitwy** (arena/plansza). Wtedy Łatwy w Królestwie = arena + słabsza Horda + więcej złota, a pojedynki planszowe zostają opcją „Tryb rodzinny” na poziomie 1. Do rozstrzygnięcia z autorem przy następnej rozmowie.
+
 ## D. Przed i po premierze (premiera dopiero po poziomie 5, decyzja 13.11)
 
 **Przed premierą (w tej kolejności, po poziomie 3):**
