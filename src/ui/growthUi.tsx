@@ -111,15 +111,7 @@ const levelStart = (level: number) => (level <= 1 ? 0 : GROWTH.thresholds[level 
 
 /** A backpack drawn as a small icon (the button that opens the gear and backpack window). */
 function BackpackIcon({ size = 40 }: { size?: number }) {
-  return (
-    <svg aria-hidden="true" width={size} height={size} viewBox="0 0 40 40" style={{ display: 'block' }}>
-      <path d="M13 9c0-3 3-5 7-5s7 2 7 5v2H13z" fill="none" stroke="#1E1204" strokeWidth="2.4" />
-      <rect x="7" y="9" width="26" height="27" rx="8" fill="#B3772E" stroke="#1E1204" strokeWidth="2" />
-      <rect x="11" y="21" width="18" height="10" rx="3" fill="#8A5A1F" stroke="#1E1204" strokeWidth="1.6" />
-      <rect x="17" y="24" width="6" height="4" rx="1" fill="#F3D27A" stroke="#1E1204" strokeWidth="1" />
-      <path d="M11 17h18" stroke="#1E1204" strokeWidth="1.6" />
-    </svg>
-  );
+  return <img aria-hidden="true" src={asset('ui/menu/plecak.webp')} alt="" width={size} height={size} style={{ display: 'block' }} />;
 }
 
 /** The hero's level and experience, skills (icons) and gear slots (filled or empty) with a hover text each; the backpack icon opens the gear window. */

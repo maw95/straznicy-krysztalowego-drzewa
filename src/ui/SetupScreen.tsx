@@ -213,12 +213,12 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
           <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{intent === 'new' ? 'Gdzie grasz?' : 'Skąd wczytać grę?'}</Ribbon>
           <div className="opt-grid" data-wizard-page="where">
             <button className="opt-card" onClick={() => pickWhere('here')}>
-              <span className="opt-card-img"><img src={asset('ui/landscape.jpg')} alt="" /></span>
+              <span className="opt-card-img"><img src={asset('ui/menu/komputer.webp')} alt="" /></span>
               <span className="opt-card-title">Ten komputer</span>
               <span className="opt-card-text">Z botami albo z kimś przy jednym ekranie. Bez konta.</span>
             </button>
             <button className="opt-card" onClick={() => pickWhere('online')} title={online.title}>
-              <span className="opt-card-img"><img src={asset('ui/ico_most.png')} alt="" /></span>
+              <span className="opt-card-img"><img src={asset('ui/menu/internet.webp')} alt="" /></span>
               <span className="opt-card-title">Przez internet</span>
               <span className="opt-card-text">{session ? 'Z innymi graczami, z rankingiem i zapisami na koncie.' : 'Wymaga konta: zalogujesz się albo założysz konto.'}</span>
             </button>

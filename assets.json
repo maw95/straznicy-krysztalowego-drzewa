@@ -3429,6 +3429,56 @@
       "data": "2026-11-14",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/menu",
+      "pliki": [
+        "public/assets/ui/menu/plecak.webp",
+        "public/assets/ui/menu/krolik.webp",
+        "public/assets/ui/menu/wilk.webp",
+        "public/assets/ui/menu/smok.webp",
+        "public/assets/ui/menu/komputer.webp",
+        "public/assets/ui/menu/internet.webp",
+        "public/assets/ui/menu/cyfrowa.webp",
+        "public/assets/ui/menu/planszowa.webp",
+        "public/assets/ui/menu/koop.webp",
+        "public/assets/ui/menu/rywal.webp",
+        "public/assets/ui/menu/arena.webp",
+        "public/assets/ui/menu/przygoda.webp",
+        "public/assets/ui/menu/wlasne.webp",
+        "public/assets/ui/menu/przetrwanie.webp",
+        "public/assets/ui/menu/boss.webp",
+        "public/assets/ui/menu/krysztaly.webp",
+        "public/assets/ui/menu/losowa.webp",
+        "public/assets/ui/menu/gotowa.webp"
+      ],
+      "typ": "ikony menu i kreatora (komputer, internet, cyfrowa, planszowa, kooperacja, rywalizacja, arena, przygoda, własne ustawienia, przetrwanie, boss, kryształy, losowa, gotowa), plecak oraz zwierzęta poziomów trudności (królik, wilk, smok)",
+      "opis": "Okrągłe medale w stylu Heroes III (złoty pierścień), przezroczyste tło, 512 px zmniejszone do 256 px (WebP). Po jednym wariancie na ikonę, wszystkie przyjęte. Prompt wspólny: 'Round fantasy game icon in the painted style of Heroes of Might and Magic III: a circular medal with a thick antique-gold ring border and a dark bronze inner rim, fully transparent outside the circle. Inside the medal: …' (treść: odpowiednio plecak z kryształem, biały królik na łące, głowa szarego wilka, czerwony smok ziejący ogniem, stół z planszą, globus ze złotymi nićmi, kryształowa kula z runami, plansza z pionkami i kośćmi, dwaj bohaterowie ramię w ramię, skrzyżowane miecze między zielonym i czerwonym sztandarem, kolosseum, droga do lasu ze drogowskazem, złote tryby i suwaki, ognisko w palisadzie, hydra w jaskini, drzewo z kryształami, kości na mapie z heksów, zwój z mapą skarbu).",
+      "scenario_asset": {
+        "plecak": "asset_8kNJzT1RAVLxUvaonqT24AeQ",
+        "krolik": "asset_ZHQWdbWLDvW6sadRkT7iX5dv",
+        "wilk": "asset_pzue6Y6h7gz8bY9bDWYKYGh6",
+        "smok": "asset_htdfygRCUaxxhGQnZAbV5g9x",
+        "komputer": "asset_dGttaVJRiwo3xxS85FBeUCYL",
+        "internet": "asset_KK7FVc3hUy7u8u1n9AVG49ot",
+        "cyfrowa": "asset_G1hfB4BgkSANuLoki4tXpiva",
+        "planszowa": "asset_e9CKiUQGx3mdFoH198fFZ4Nf",
+        "koop": "asset_AStJ6TXSbm7Nz7X52Jebp14q",
+        "rywal": "asset_UM565WTqRL1BLHSrR4uQaxtA",
+        "arena": "asset_ii1vWyiCeZpRRfJmk6P1qPCs",
+        "przygoda": "asset_UGpRmj2NNER6ueMCerd3Udjg",
+        "wlasne": "asset_eTatvmWURmn8y8op7q7MiDVi",
+        "przetrwanie": "asset_HoATDuZWwgJ7wSEPEag9rraa",
+        "boss": "asset_GzWn8ke6cWwQzdB2tkuTi38a",
+        "krysztaly": "asset_6UeUvMfduGwjnP6Fy59Bk4VD",
+        "losowa": "asset_DARStWF6ieAXftJFhGoyGLRR",
+        "gotowa": "asset_augEeYhZfsyTN97PNsso9iFK"
+      },
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.6 Flare, 512 px, jakość medium, tło przezroczyste",
+      "data": "2026-11-14",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

@@ -9,7 +9,7 @@ import { OBJECTIVES } from '../engine/objectives';
 import { defaultCustom } from '../engine/presets';
 import type { Level, MapShape, Mode, ObjectiveId } from '../engine/types';
 import type { TableConfig } from '../online/api';
-import { asset, Frame, portrait, Ribbon } from './common';
+import { asset, Frame, Ribbon } from './common';
 import { CustomSwitchRows } from './CustomSwitchRows';
 import { ARENA_HINT, ARENA_LEVEL_TIPS, CentredChoice, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, ShapeIcon, SHAPE_NAMES, SHAPE_TIPS, SIZE_CODES, Tip, TIPS } from './setupShared';
 
@@ -89,14 +89,16 @@ function Card({ img, title, text, on, onClick, disabled, wide }: { img: React.Re
   );
 }
 
+/** The animal that shows how hard a difficulty level is: a rabbit, a wolf, a dragon. */
+const LEVEL_ANIMAL: Record<string, string> = { kids: 'krolik', normal: 'wilk', hard: 'smok' };
+
 const pic = (src: string) => <img src={src} alt="" />;
-const crests = (...f: Array<'dawn' | 'horde'>) => <span className="opt-crests">{f.map((x) => <img key={x} src={asset(`cards/crests/${x}.png`)} alt="" />)}</span>;
 
 const OBJECTIVE_ICON: Record<ObjectiveId, string> = {
-  crystals: 'ui/ico_krysztal.png',
+  crystals: 'ui/menu/krysztaly.webp',
   control: 'ikony/mapa/kontrola_dawn.webp',
-  survival: 'ui/ico_drzewo.png',
-  boss: 'ui/ico_jama.png',
+  survival: 'ui/menu/przetrwanie.webp',
+  boss: 'ui/menu/boss.webp',
   artifact: 'ikony/artefakty/blade2.webp',
 };
 
@@ -187,25 +189,25 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
 
       {page === 'edition' && (
         <div className="opt-grid" data-wizard-page="edition">
-          <Card on={d.digital} title="Cyfrowa" text={TIPS.digital} img={pic(portrait('goldDragon'))} onClick={() => setEdition(true)} />
-          <Card on={!d.digital} title="Planszowa" text="Wierna planszówka: zasady bez zmian, malowana arena i figurki 3D. Do grania tak, jakby karty i plansza leżały na stole." img={pic(asset('ui/cover.jpg'))} onClick={() => setEdition(false)} />
+          <Card on={d.digital} title="Cyfrowa" text={TIPS.digital} img={pic(asset('ui/menu/cyfrowa.webp'))} onClick={() => setEdition(true)} />
+          <Card on={!d.digital} title="Planszowa" text="Wierna planszówka: zasady bez zmian, malowana arena i figurki 3D. Do grania tak, jakby karty i plansza leżały na stole." img={pic(asset('ui/menu/planszowa.webp'))} onClick={() => setEdition(false)} />
         </div>
       )}
 
       {page === 'tier' && (
         <div className="opt-grid" data-wizard-page="tier">
-          <Card on={d.tier === 'adventure'} title="Przygoda" text="Poziom 1. Zasady z planszówki w wersji cyfrowej: kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start, także dla dzieci." img={pic(asset('ui/ico_polana.png'))} onClick={() => choose({ tier: 'adventure' })} />
+          <Card on={d.tier === 'adventure'} title="Przygoda" text="Poziom 1. Zasady z planszówki w wersji cyfrowej: kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start, także dla dzieci." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure' })} />
           <Card on={d.tier === 'expedition'} title="Wyprawa" text="Poziom 2. Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ikony/mapa/camp.webp'))} onClick={() => choose({ tier: 'expedition' })} />
           <Card on={d.tier === 'kingdom'} title="Królestwo" text="Poziom 3. Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ikony/mapa/treasure.webp'))} onClick={() => choose({ tier: 'kingdom' })} />
-          <Card on={d.tier === 'custom'} title="Własne ustawienia" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/ico_gory.png'))} onClick={() => choose({ tier: 'custom', custom: null })} />
+          <Card on={d.tier === 'custom'} title="Własne ustawienia" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', custom: null })} />
         </div>
       )}
 
       {page === 'mode' && (
         <div className="opt-grid" data-wizard-page="mode">
-          <Card on={d.mode === 'coop'} title="Kooperacja" text={TIPS.coop} img={crests('dawn')} onClick={() => setMode('coop')} />
-          <Card on={d.mode === 'pvp'} title="Rywalizacja" text={TIPS.pvp} img={crests('dawn', 'horde')} onClick={() => setMode('pvp')} />
-          <Card on={arena} title="Arena" text={TIPS.arenaMode} img={pic(asset('arena/dawn.jpg'))} onClick={() => setMode('arena')} />
+          <Card on={d.mode === 'coop'} title="Kooperacja" text={TIPS.coop} img={pic(asset('ui/menu/koop.webp'))} onClick={() => setMode('coop')} />
+          <Card on={d.mode === 'pvp'} title="Rywalizacja" text={TIPS.pvp} img={pic(asset('ui/menu/rywal.webp'))} onClick={() => setMode('pvp')} />
+          <Card on={arena} title="Arena" text={TIPS.arenaMode} img={pic(asset('ui/menu/arena.webp'))} onClick={() => setMode('arena')} />
         </div>
       )}
 
@@ -228,8 +230,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
       {page === 'map' && (
         <>
           <div className="opt-grid" data-wizard-page="map">
-            <Card on={!ready} title="Losowa" text="Mapa zrobiona na nowo przy każdej partii, w wybranym kształcie i rozmiarze." img={pic(asset('ui/ico_most.png'))} onClick={() => patch({ shape: !ready ? d.shape : 'triangle' })} />
-            <Card on={ready} disabled={READY_MAPS().length === 0} title="Gotowa" text="Ręcznie narysowana mapa, zawsze taka sama, w jednym rozmiarze." img={pic(asset('ui/landscape.jpg'))} onClick={() => patch({ shape: 'custom' })} />
+            <Card on={!ready} title="Losowa" text="Mapa zrobiona na nowo przy każdej partii, w wybranym kształcie i rozmiarze." img={pic(asset('ui/menu/losowa.webp'))} onClick={() => patch({ shape: !ready ? d.shape : 'triangle' })} />
+            <Card on={ready} disabled={READY_MAPS().length === 0} title="Gotowa" text="Ręcznie narysowana mapa, zawsze taka sama, w jednym rozmiarze." img={pic(asset('ui/menu/gotowa.webp'))} onClick={() => patch({ shape: 'custom' })} />
           </div>
           {!ready ? (
             <CentredChoice label="Wybierz kształt">
@@ -279,7 +281,12 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
           <Row label={arena ? 'Komputer' : 'Trudność'}>
             {LEVELS.filter(([l]) => l !== 'custom' && (l !== 'hard' || d.mode !== 'pvp')).map(([l, label]) => (
               <Tip key={l} text={arena ? ARENA_LEVEL_TIPS[l as Level] : LEVEL_TIPS[l]}>
-                <button className={chip(d.level === l)} aria-pressed={d.level === l} onClick={() => patch({ level: l as Level, custom: null })}>{label}</button>
+                <button className={chip(d.level === l)} aria-pressed={d.level === l} onClick={() => patch({ level: l as Level, custom: null })}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                    {LEVEL_ANIMAL[l as string] && <img src={asset(`ui/menu/${LEVEL_ANIMAL[l as string]}.webp`)} alt="" width={36} height={36} />}
+                    {label}
+                  </span>
+                </button>
               </Tip>
             ))}
           </Row>
