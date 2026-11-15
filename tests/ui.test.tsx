@@ -78,7 +78,7 @@ describe('setup screen simplifications', () => {
     expect(Object.values(game.items).map((i: any) => i.kind)).toEqual(['resurrection']);
   });
 
-  it('sets up the levels: hard adds a Horde hero in coop, Zerówka plays duels without abilities, Łatwy is the full game', async () => {
+  it('sets up the levels: hard adds a Horde hero in coop, Spacer plays duels without abilities, Łatwy is the full game', async () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<StrictMode><App /></StrictMode>);
     await newGame(container, 'Cyfrowa', 'Przygoda', 'Kooperacja');
@@ -98,7 +98,7 @@ describe('setup screen simplifications', () => {
     expect(game.setup.rules).toMatchObject({ abilities: true, easy: true });
     cleanup();
     const third = render(<StrictMode><App /></StrictMode>).container;
-    await newGame(third, 'Cyfrowa', 'Zerówka', 'Rywalizacja');
+    await newGame(third, 'Cyfrowa', 'Spacer', 'Rywalizacja');
     expect(pick(third, 'Łatwy')).toBeUndefined();
     await click(third, 'Dalej →', 'Rozpocznij grę');
     game = (window as any).__game;

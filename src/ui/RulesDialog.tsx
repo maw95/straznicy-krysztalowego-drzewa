@@ -25,7 +25,7 @@ const TABS: Array<[Tab, string]> = [
 const RULES: Array<[string, string[]]> = [
   ['Wersje i poziomy', [
     'Wersja cyfrowa jest domyślna: jednostki w grafice 2D z animacjami, arena z poziomymi heksami, duże jednostki na dwóch polach. Wersja planszowa to wierna planszówka (figurki 3D, zasady bez zmian).',
-    'Poziom 1 „Przygoda”: zasady z planszówki. Poziom 2 „Wyprawa”: rozwój bohatera, artefakty, obiekty na mapie, neutralni i wybór celu oraz mapy. Poziom 3 „Królestwo” (osady, złoto, rekrutacja) i kolejne dopiero się pojawią. „Własne ustawienia” pozwalają przełączać zasady osobno.',
+    'Poziom 1 „Przygoda”: zasady z planszówki. Poziom 2 „Wyprawa”: rozwój bohatera, artefakty, obiekty na mapie, neutralni i wybór celu oraz mapy. Poziom 3 „Osada” (osady, złoto, rekrutacja) i kolejne dopiero się pojawią. „Własne ustawienia” pozwalają przełączać zasady osobno.',
     'Tryby: kooperacja (do 3 graczy przeciw automatowi zła), rywalizacja (2–6 graczy, najwyżej 3 na stronę) i arena (jedna bitwa 3 na 3). Gra lokalna z botami, hot-seat przy jednym ekranie albo online z kontem.',
   ]],
   ['Cel gry', [

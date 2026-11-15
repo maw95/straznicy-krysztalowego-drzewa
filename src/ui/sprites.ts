@@ -45,7 +45,7 @@ export const SPRITES: Record<string, SpriteSpec> = {
   // The Black Dragon now stands on the ground (a long body with a tail): a wider box keeps it as big on screen as the Golden Dragon (report 674974).
   blackDragon: { dir: 'jednostki/czarny_smok', box: [200, 150] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // The throw is played fast so that the boulder (a projectile drawn by the arena, styles.css) leaves his hands with the blow.
-  // Level 3 recruits (Królestwo).
+  // Level 3 recruits (Osada).
   hedgehog: { dir: 'jednostki/jezozwierz', box: [84, 70] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   centaur: { dir: 'jednostki/centaur', box: [92, 110] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   boar: { dir: 'jednostki/alabastrowy_odyniec', box: [96, 80] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },

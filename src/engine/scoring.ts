@@ -143,7 +143,7 @@ export function levelOf(setup: SetupOptions): LevelName {
   // Arena: the computer's strength (two people at one screen play "Normalny").
   if (setup.mode === 'arena') return setup.seats.some((s) => s.controller === 'bot') ? setup.botLevel ?? 'normal' : 'normal';
   const r = setup.rules;
-  // Level 3 ("Królestwo") scores like the difficulty it is built on (measured 15.11: Przymierza win about as often as in level 2), see KINGDOM_POINTS_FACTOR.
+  // Level 3 ("Osada") scores like the difficulty it is built on (measured 15.11: Przymierza win about as often as in level 2), see KINGDOM_POINTS_FACTOR.
   // Easy and normal: as many Horde heroes as players, reinforcements in the base; hard: neither.
   const automaton = r.minEvilHeroes === DEFAULT_RULES.minEvilHeroes && Boolean(r.hordeRespawn);
   const hardAutomaton = r.minEvilHeroes === 2 && !r.hordeRespawn;

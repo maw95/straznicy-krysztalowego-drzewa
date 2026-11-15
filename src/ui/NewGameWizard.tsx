@@ -199,10 +199,10 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
 
       {page === 'tier' && (
         <div className="opt-grid" data-wizard-page="tier">
-          <Card on={d.tier === 'adventure' && d.level === 'zero'} title="Zerówka" text="Poziom 0. Dla najmłodszych (od 5 lat): krótkie pojedynki bohaterów na planszy, bez zdolności i kości, bez rytuału. Zasady do ogarnięcia w kilka minut." img={pic(asset('ui/menu/krolik.webp'))} onClick={() => choose({ tier: 'adventure', level: 'zero' })} />
+          <Card on={d.tier === 'adventure' && d.level === 'zero'} title="Spacer" text="Poziom 0. Dla najmłodszych (od 5 lat): krótkie pojedynki bohaterów na planszy, bez zdolności i kości, bez rytuału. Zasady do ogarnięcia w kilka minut." img={pic(asset('ui/menu/krolik.webp'))} onClick={() => choose({ tier: 'adventure', level: 'zero' })} />
           <Card on={d.tier === 'adventure' && d.level !== 'zero'} title="Przygoda" text="Poziom 1. Pełne bitwy na arenie, kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start z pełną grą." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure', level: notZero })} />
           <Card on={d.tier === 'expedition'} title="Wyprawa" text="Poziom 2. Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ikony/mapa/camp.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
-          <Card on={d.tier === 'kingdom'} title="Królestwo" text="Poziom 3. Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ikony/mapa/treasure.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
+          <Card on={d.tier === 'kingdom'} title="Osada" text="Poziom 3. Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ikony/mapa/treasure.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
           <Card on={d.tier === 'custom'} title="Własne ustawienia" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', level: notZero, custom: null })} />
         </div>
       )}

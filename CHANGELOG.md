@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowe nazwy poziomów w grze, instrukcji i opisach: poziom 0 to „Spacer” (dawniej Zerówka), poziom 3 to „Osada” (dawniej Królestwo). Nazwa „Królestwo” przejdzie na poziom 5. Wcześniejsze wpisy tej historii zostają ze starymi nazwami.
+
 - Królestwo liczy się do rankingu i do „Twoich partii”: punkty jak na poziomie 2 (ta sama trudność, zmierzona symulacjami), powiększone o jedną czwartą, bo partie trwają dłużej.
 
 - Królestwo: Normalny i Trudny przestrojone po zmianie zachowania komputera (zakupy z dowolnego miejsca), a bardzo długa mapa dostała własne strojenie. Normalny: Przymierze wygrywa 51–67%, Trudny (kooperacja): 34–45%.

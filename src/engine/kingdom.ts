@@ -1,4 +1,4 @@
-// Level 3 "Królestwo" (digital, rule `kingdom`, built on hero growth): gold, settlements with buildings, gold mines, a market of artifacts, a hospital,
+// Level 3 "Osada" (digital, rule `kingdom`, built on hero growth): gold, settlements with buildings, gold mines, a market of artifacts, a hospital,
 // recruitment of supports and a team that grows. Design: docs/POZIOM_3_KROLESTWO.md (the author's decisions of 13.11.2026). Every number here is
 // provisional: the simulations tune them. Gold is small (the cheapest thing costs 1) and shared by the whole faction.
 
@@ -318,7 +318,7 @@ export const mayRecruit = (s: Settlement, f: FactionId) => s.land === f && s.own
 
 export function kingdomAction(state: GameState, action: Action): void {
   const k = state.kingdom;
-  if (!k) throw new Error('To nie jest poziom Królestwo.');
+  if (!k) throw new Error('To nie jest poziom Osada.');
   switch (action.type) {
     case 'kingdomBuild': {
       const { s, hero } = serviceSettlement(state, action.settlementId);
@@ -391,7 +391,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       break;
     }
     default:
-      throw new Error('Nieznane polecenie Królestwa.');
+      throw new Error('Nieznane polecenie Osady.');
   }
 }
 

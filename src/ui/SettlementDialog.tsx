@@ -1,4 +1,4 @@
-// The settlement window (level 3 "Królestwo"): a landscape of the faction with the buildings of the settlement as clickable cards, and under it
+// The settlement window (level 3 "Osada"): a landscape of the faction with the buildings of the settlement as clickable cards, and under it
 // the service of the chosen building: recruitment (barracks), artifacts for gold (market), healing the fallen (hospital), the treasury. Actions go to
 // the engine (kingdom.ts); the window only asks and shows what the engine allows.
 

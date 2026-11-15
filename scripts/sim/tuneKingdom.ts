@@ -1,4 +1,4 @@
-// Tuner for level 3 "Królestwo": per level, map size and table finds the start-treasure step that puts the Przymierza win rate nearest the middle of the band.
+// Tuner for level 3 "Osada": per level, map size and table finds the start-treasure step that puts the Przymierza win rate nearest the middle of the band.
 // Usage: node --import tsx scripts/sim/tuneKingdom.ts <kids|normal|hard> [games per probe=60] [sizes=short,medium,long]
 // Prints DIGITAL_TUNING entries (paste them into the Kingdom block of src/engine/tuning.ts). Probes a binary search over LADDER (weakest Przymierza first).
 

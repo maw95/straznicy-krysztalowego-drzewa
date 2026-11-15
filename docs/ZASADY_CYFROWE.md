@@ -452,9 +452,9 @@ Gotowa mapa (`src/engine/customMaps.ts`, także z pliku JSON przez `parseCustomM
 - `defeated` – ostatnia bitwa skończyła się porażką jednostki o tym `defId` (np. `hydra`, `cyclops`, `stoneGolem`).
 Silnik (`story.ts`, `fireStory` po każdej akcji i przy starcie gry) odpala każdą notatkę najwyżej raz, zapisuje jej id w `state.storyFired` i wpis w dzienniku ze zdarzeniem `story`; ekran pokazuje okienko z przyciskiem „Dalej” (przy wczytaniu zapisu notatki się nie powtarzają). Błędna notatka (brak wyzwalacza, powtórzone id, pole poza mapą) odrzuca całą mapę przy rejestracji.
 
-## Poziom 3 „Królestwo” (13.11.2026)
+## Poziom 3 „Osada” (13.11.2026)
 
-Włącza go reguła `kingdom` (poziom w kreatorze „Królestwo”, `tier: 'kingdom'` przy stołach online; wymaga rozwoju bohatera i bitew na arenie). Silnik: `src/engine/kingdom.ts`, stan: `GameState.kingdom`, pole mapy: `Tile.place`. Liczby robocze są w `KINGDOM` (jeden plik do strojenia).
+Włącza go reguła `kingdom` (poziom w kreatorze „Osada”, `tier: 'kingdom'` przy stołach online; wymaga rozwoju bohatera i bitew na arenie). Silnik: `src/engine/kingdom.ts`, stan: `GameState.kingdom`, pole mapy: `Tile.place`. Liczby robocze są w `KINGDOM` (jeden plik do strojenia).
 - **Złoto:** wspólne dla frakcji, start 2 zł, najtańsza rzecz kosztuje 1. **Dochód** na koniec rundy: osada startowa +2, każda zdobyta osada +1, kopalnia +1, skarbiec +1. Walki nie dają złota; źródła to dochód i skrzynie (do wyboru artefakt albo 3 zł; do czasu wyboru nic innego nie działa).
 - **Osady:** startowa na bazie każdej frakcji i osady do zdobycia (2 / 4 / 4 / 6 / 6 / 8 według rozmiaru mapy, po równo po stronie Przymierza i Hordy, na małych mapach tyle, ile się zmieści), każda z neutralnymi obrońcami (strażnik i dwóch słabych). Kto stanie na osadzie albo kopalni, przejmuje ją (osada zachowuje budynki); obrona to stanie na polu. Nazwa osady jest losowa z listy frakcji, na której ziemi leży.
 - **Budynki** (trzeba kupić, bohater stoi w osadzie własnej frakcji; ceny: koszary 3 i 6, targ 3 i 5, szpital 3 i 5, skarbiec 4): *Koszary* (rekrutacja pomocników; rozbudowane: +1 miejsce w drużynie i jednostki poziomów 4–5), *Targ* (3 artefakty w ofercie, po rozbudowie 5, nowa oferta co 3 rundy; ceny 2 / 5 / 10 zł według rzadkości), *Szpital* (wskrzeszenie poległego pomocnika za 1/2 ceny, po ulepszeniu 1/3), *Skarbiec* (+1 zł na rundę). Osada zdobyta przez inną frakcję daje dochód, targ i szpital, ale **nie rekrutuje**.
@@ -467,7 +467,7 @@ Włącza go reguła `kingdom` (poziom w kreatorze „Królestwo”, `tier: 'king
 ## Poziom 0 i trudność jako warunki startowe (15.11.2026)
 
 Decyzja autora (14.11): poziom trudności nie zmienia mechanik, tylko warunki startowe komputera.
-- **Poziom 0 „Zerówka”** to dawny Łatwy: pojedynki na planszy, bez zdolności, kości i rytuału, z zastępowaniem bohatera (w silniku `Level = 'zero'`, `LEVEL_RULES.zero`). Ma własną kolumnę punktów (`scoring.ts`, kolumna `zero`) i własne wpisy strojenia (`level: 'zero'`, przeniesione ze starego Łatwego bez zmiany liczb). W wersji planszowej kreator nadal pokazuje ten poziom jako „Łatwy”.
+- **Poziom 0 „Spacer”** to dawny Łatwy: pojedynki na planszy, bez zdolności, kości i rytuału, z zastępowaniem bohatera (w silniku `Level = 'zero'`, `LEVEL_RULES.zero`). Ma własną kolumnę punktów (`scoring.ts`, kolumna `zero`) i własne wpisy strojenia (`level: 'zero'`, przeniesione ze starego Łatwego bez zmiany liczb). W wersji planszowej kreator nadal pokazuje ten poziom jako „Łatwy”.
 - **Łatwy na poziomach 1–3** (`Level = 'kids'`) gra pełne bitwy na arenie jak Normalny; zasady są te same, a flaga `rules.easy` tylko wskazuje poziom i włącza dźwignie startowe (`tuning.ts`, `tuningAuto.ts`: skarby startowe, brak posiłków Hordy, ruch, limit rund). Pasmo: 65–85% wygranych Przymierza.
 - Stare zapisy partii ze starym Łatwym nie są migrowane (decyzja autora).
 - Punkty Łatwego na poziomach 1–3: ocena trudności = Normalny − 1 (pomiar 15.11: Łatwy wygrywa 65–76%, Normalny 51–66%).

@@ -21,7 +21,7 @@ export interface DigitalTune {
   customMapId?: string;
   /** Map shape (missing = any; the triangle is what a setup without `mapShape` plays). */
   shape?: MapShape;
-  /** Level 3 "Królestwo" switched on (missing = any). */
+  /** Level 3 "Osada" switched on (missing = any). */
   kingdom?: boolean;
   /** Changes to the rules; applied in order, later entries win. */
   rules: Partial<RulesConfig>;
@@ -89,7 +89,7 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   // Generated entries (scripts/sim/tune.ts), last: they win over everything above on the triangle map.
   ...AUTO_TUNING,
 
-  // --- Level 3 "Królestwo" (after everything; scripts/sim/tuneKingdom.ts, 120 games per probe). levelOf says 'custom' for it, so digitalRules tunes it as the level it is built on.
+  // --- Level 3 "Osada" (after everything; scripts/sim/tuneKingdom.ts, 120 games per probe). levelOf says 'custom' for it, so digitalRules tunes it as the level it is built on.
   // Only the goal 'crystals' is tuned. Easy has no entries: its board duels switch the kingdom off (see BACKLOG); PvP has no Hard level.
   { kingdom: true, objective: 'crystals', level: 'normal', mode: 'coop', players: 1, maps: ['short'], rules: {hordeStartTreasures: {resurrections: 0, others: 0, random: 0}, dawnStartTreasures: {resurrections: 0, others: 0, random: 1}} },
   { kingdom: true, objective: 'crystals', level: 'normal', mode: 'coop', players: 2, maps: ['short'], rules: {hordeStartTreasures: {resurrections: 0, others: 0, random: 1}, dawnStartTreasures: {resurrections: 0, others: 0, random: 0}} },

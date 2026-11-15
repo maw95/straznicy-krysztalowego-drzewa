@@ -1,4 +1,4 @@
-// Level 3 "Królestwo" for bots: Przymierze win rate and the economy (recruits, gold, settlements) per map size and table.
+// Level 3 "Osada" for bots: Przymierze win rate and the economy (recruits, gold, settlements) per map size and table.
 // Usage: node --import tsx scripts/sim/kingdom.ts [games per cell=30] [sizes=short,medium] [tables=coop1,coop2,pvp1,pvp2]
 // SIM_LEVEL=kids|hard picks the level (default normal).
 
@@ -16,7 +16,7 @@ const sizes = (process.argv[3] ?? 'short,medium').split(',') as MapSize[];
 const tables = (process.argv[4] ?? 'coop1,coop2,pvp1,pvp2').split(',') as Table[];
 const option: Option[] = process.env.SIM_LEVEL === 'kids' ? ['kids'] : process.env.SIM_LEVEL === 'hard' ? ['hard'] : [];
 
-console.log(`Królestwo, ${games} gier na komórkę, poziom ${process.env.SIM_LEVEL ?? 'normal'}`);
+console.log(`Osada, ${games} gier na komórkę, poziom ${process.env.SIM_LEVEL ?? 'normal'}`);
 console.log('mapa·tryb'.padEnd(18) + 'Świt%'.padStart(8) + 'rundy'.padStart(8) + 'wyższe'.padStart(8) + 'osady'.padStart(8) + 'złoto'.padStart(8) + 'poz.≥4'.padStart(8));
 for (const size of sizes) {
   for (const table of tables) {

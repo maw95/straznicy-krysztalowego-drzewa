@@ -78,7 +78,7 @@ export interface RulesConfig {
   unitsBlockSight?: boolean;
   /** Digital ruleset: heroes earn experience, reach levels and choose skills (growth.ts). Off = as before. */
   heroGrowth?: boolean;
-  /** Level 3 "Królestwo": gold, settlements and recruitment (kingdom.ts); needs hero growth. */
+  /** Level 3 "Osada": gold, settlements and recruitment (kingdom.ts); needs hero growth. */
   kingdom?: boolean;
   /** Difficulty "Łatwy" on levels 1-3: no rule differs, the flag only tells the level and selects the digital start-condition levers (tuning.ts). */
   easy?: boolean;
@@ -233,7 +233,7 @@ export interface Tile {
   tree: boolean;
   /** A site on the hex (shrine, camp, chest) and whether it has been used (sites.ts); only with hero growth. */
   site?: { kind: SiteKind; used: boolean };
-  /** Level 3 "Królestwo": a settlement or a gold mine stands here (kingdom.ts). */
+  /** Level 3 "Osada": a settlement or a gold mine stands here (kingdom.ts). */
   place?: { kind: 'settlement' | 'mine'; id: string };
 }
 
@@ -478,7 +478,7 @@ export interface GameState {
   endReason: string | null;
   /** Ids of the story notes already shown (story.ts). */
   storyFired?: string[];
-  /** Level 3 "Królestwo": gold, settlements, mines (kingdom.ts); absent in the other levels. */
+  /** Level 3 "Osada": gold, settlements, mines (kingdom.ts); absent in the other levels. */
   kingdom?: KingdomState;
   log: LogEntry[];
   actionCount: number;
@@ -526,7 +526,7 @@ export type Action =
   | { type: 'battleTeleport'; to: HexKey }
   | { type: 'battleItem'; itemId: string; targetId?: string; targetIds?: string[]; to?: HexKey; hornMode?: 'swap' | 'extra'; reserveId?: string }
   | { type: 'endActivation' }
-  /** Level 3 "Królestwo": services of the settlement the active hero stands in. */
+  /** Level 3 "Osada": services of the settlement the active hero stands in. */
   | { type: 'kingdomBuild'; settlementId: string; building: BuildingId }
   | { type: 'kingdomRecruit'; settlementId: string; unitId: string }
   | { type: 'kingdomHeal'; settlementId: string; unitId: string }

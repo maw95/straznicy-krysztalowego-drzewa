@@ -52,7 +52,7 @@ Wybierz stronę. Drzewo czeka.
 14. [Przypadki szczególne](#14-przypadki-szczególne)
 15. [Arena — szybka bitwa](#15-arena--szybka-bitwa)
 16. [Ściągawka](#16-ściągawka)
-17. [Poziom 3: Królestwo — złoto, osady i drużyna (wersja cyfrowa)](#17-poziom-3-królestwo--złoto-osady-i-drużyna-wersja-cyfrowa)
+17. [Poziom 3: Osada — złoto, osady i drużyna (wersja cyfrowa)](#17-poziom-3-osada--złoto-osady-i-drużyna-wersja-cyfrowa)
 
 ---
 
@@ -216,9 +216,9 @@ Wybierzcie jeden z trzech poziomów. Nic więcej nie trzeba ustawiać.
 
 Na żadnym poziomie nie rzuca się kością: cios zadaje zawsze tyle obrażeń, ile wynosi Atak. Kość to dodatkowe utrudnienie dla chętnych (rozdział 13).
 
-**Wersja cyfrowa** ma poziomy złożoności 0–3 (Zerówka, Przygoda, Wyprawa, Królestwo), a trudność (Łatwy, Normalny, Trudny) wybiera się osobno na poziomach 1–3. „Łatwy” z tabeli powyżej to w wersji cyfrowej **poziom 0, Zerówka**: pojedynki na planszy, bez zdolności i rytuału, z własną kolumną punktów. Na poziomach 1–3 wszystkie trudności grają pełnymi bitwami na arenie, a różnią się tylko warunkami startowymi komputera (liczbą skarbów, siłą Hordy): na Łatwym komputer zaczyna słabszy, na Trudnym mocniejszy.
+**Wersja cyfrowa** ma poziomy złożoności 0–3 (Spacer, Przygoda, Wyprawa, Osada), a trudność (Łatwy, Normalny, Trudny) wybiera się osobno na poziomach 1–3. „Łatwy” z tabeli powyżej to w wersji cyfrowej **poziom 0, Spacer**: pojedynki na planszy, bez zdolności i rytuału, z własną kolumną punktów. Na poziomach 1–3 wszystkie trudności grają pełnymi bitwami na arenie, a różnią się tylko warunkami startowymi komputera (liczbą skarbów, siłą Hordy): na Łatwym komputer zaczyna słabszy, na Trudnym mocniejszy.
 
-Na poziomie łatwym (w wersji planszowej: Łatwy, w cyfrowej: Zerówka) zasady mieszczą się na jednej kartce: chodzicie po mapie, odkrywacie kafelki, a w walce na zmianę zadajecie sobie ciosy.
+Na poziomie łatwym (w wersji planszowej: Łatwy, w cyfrowej: Spacer) zasady mieszczą się na jednej kartce: chodzicie po mapie, odkrywacie kafelki, a w walce na zmianę zadajecie sobie ciosy.
 
 ---
 
@@ -696,9 +696,9 @@ Bitwa trwa do utraty wszystkich jednostek przez jedną stronę. Po bitwie ocalal
 • Gdy padnie ostatni bohater Przymierza, wygrywa Horda — także wtedy, gdy w tej samej bitwie padł ostatni bohater Hordy.
 • **Pojedynek na planszy:** tylko dwie jednostki, bez ruchu i pomocników. Pierwszy atakuje szybszy; przy remisie — broniący. Strażnik walczy kartą z błękitnym rewersem.
 
-## 17. Poziom 3: Królestwo — złoto, osady i drużyna (wersja cyfrowa)
+## 17. Poziom 3: Osada — złoto, osady i drużyna (wersja cyfrowa)
 
-Ten rozdział dotyczy tylko wersji cyfrowej, poziomu „Królestwo”. Dochodzi do zasad poziomu „Wyprawa”: złoto, osady, budynki i rekrutacja.
+Ten rozdział dotyczy tylko wersji cyfrowej, poziomu „Osada”. Dochodzi do zasad poziomu „Wyprawa”: złoto, osady, budynki i rekrutacja.
 
 ### Złoto
 Jest jedna waluta: złoto. Każda frakcja ma wspólną kasę, a jej gracze dzielą też skarby i pomocników. **Dochód** wpada na koniec rundy:

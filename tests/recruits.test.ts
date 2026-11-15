@@ -163,7 +163,7 @@ const wear = (s: GameState, ids: string[]) => {
 };
 
 describe('artifact sets', () => {
-  it('have three rare pieces in different slots each, and appear only in the Królestwo level', () => {
+  it('have three rare pieces in different slots each, and appear only in the Osada level', () => {
     for (const d of Object.values(SETS)) {
       const pieces = d.pieces.map((id) => ARTIFACTS.find((a) => a.id === id)!);
       expect(pieces.every((a) => a.rarity === 2 && a.set === d.id)).toBe(true);

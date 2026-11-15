@@ -117,7 +117,7 @@ export const ARTIFACTS: ArtifactDef[] = [
   { id: 'boots1', slot: 'boots', rarity: 1, name: 'Buty Wędrowca', speed: 1, text: '+1 S bohatera w bitwie.' },
   { id: 'trapperBoots', slot: 'boots', rarity: 2, name: 'Trzewiki Trapera', trapper: true, text: 'Na mapie każde pole kosztuje bohatera 1 punkt ruchu: trudny teren go nie spowalnia.' },
   { id: 'boots2', slot: 'boots', rarity: 3, name: 'Skrzydlate Sandały', speed: 1, move: 1, text: '+1 S w bitwie i +1 punkt ruchu na mapie.' },
-  // Set pieces (rare; only in the Królestwo level and higher). Bonuses for three of three: SETS.
+  // Set pieces (rare; only in the Osada level and higher). Bonuses for three of three: SETS.
   { id: 'groveWreath', slot: 'helmet', rarity: 2, set: 'grove', name: 'Wianek Gajowy', supportSpeed: 1, text: 'Pomocnicy bohatera mają +1 S w bitwie.' },
   { id: 'mossCloak', slot: 'armor', rarity: 2, set: 'grove', name: 'Płaszcz z Mchu', regen: 1, text: 'Na początku każdej rundy bitwy bohater odzyskuje 1 Ż.' },
   { id: 'barkShoes', slot: 'boots', rarity: 2, set: 'grove', name: 'Trzewiki z Kory', unbound: true, text: 'Bohater jest odporny na korzenie (Elf Druid), sidła (Pająk) i chwyt (Szczypiec).' },
@@ -132,7 +132,7 @@ export const ARTIFACTS: ArtifactDef[] = [
   { id: 'merchantBoots', slot: 'boots', rarity: 2, set: 'merchant', name: 'Buty Handlarza', firstPlaceGold: 1, text: 'Za pierwsze zajęcie osady lub kopalni bohater dostaje jednorazowo +1 zł.' },
 ];
 
-/** The artifacts that can turn up in a chest, a market or as a trophy of this rarity: set pieces only in the Królestwo level. */
+/** The artifacts that can turn up in a chest, a market or as a trophy of this rarity: set pieces only in the Osada level. */
 export const artifactPool = (state: Pick<GameState, 'kingdom'>, rarity: number): ArtifactDef[] => ARTIFACTS.filter((a) => a.rarity === rarity && (!a.set || Boolean(state.kingdom)));
 
 /** How many pieces of the set the hero wears. */

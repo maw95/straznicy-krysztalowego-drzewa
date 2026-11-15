@@ -1,4 +1,4 @@
-// Level 3 "Królestwo": gold, settlements, mines, the market, the hospital, recruitment, the chest choice, and bots that play it to the end.
+// Level 3 "Osada": gold, settlements, mines, the market, the hospital, recruitment, the chest choice, and bots that play it to the end.
 
 import { describe, expect, it } from 'vitest';
 import { activeHero, applyAction, createGame } from '../src/engine/game';
