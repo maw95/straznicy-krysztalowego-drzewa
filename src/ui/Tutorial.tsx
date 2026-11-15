@@ -98,6 +98,18 @@ const TIPS: Tip[] = [
     when: (s) => s.phase === 'adventure' && Boolean(s.kingdom?.res),
   },
   {
+    id: 'realm',
+    title: 'Dowódca i czary',
+    text: 'Na tym poziomie możesz mieć drugiego bohatera: zbuduj w osadzie karczmę i najmij dowódcę (wojownika, łucznika albo mędrca). Rusza po Twoim bohaterze głównym, od następnej rundy. Bohaterowie mają też manę i czary: w bitwie wybierz czar z paska „Czary” i wskaż cel (jeden czar na aktywację), a na mapie użyj przycisków pod imieniem bohatera. Nowych czarów uczy wieża maga. Typ i specjalność bohatera zobaczysz na jego karcie.',
+    when: (s) => s.phase === 'adventure' && Boolean(s.rules.realm),
+  },
+  {
+    id: 'empire',
+    title: 'Odłamki, frakcje i siedliska',
+    text: 'Świecące kryształy na mapie to Odłamki Pierwotnej Iskry: wejdź na pole, żeby zabrać Odłamek, i pilnuj się, bo zwycięzca bitwy bohaterów zabiera Odłamki pokonanego. Z kompletem Odłamków stań we własnej osadzie i wznieś budynek Pierwotnej Iskry. W oknie osady rozwiniesz też drzewko swojej frakcji, a w koszarach wybierzesz siedliska: na każdym poziomie jednostek jedną z dwóch, druga odpada do końca gry.',
+    when: (s) => s.phase === 'adventure' && Boolean(s.rules.empire),
+  },
+  {
     id: 'team',
     title: 'Drużyna rośnie',
     text: 'W bitwę idzie tyle pomocników, ile masz miejsc: na starcie 2, +1 na 3. poziomie bohatera, +1 na 6. i +1 za rozbudowane koszary (najwyżej 5). Nowych pomocników poziomów 2 do 5 rekrutuje się w koszarach; poziomy 4 i 5 wymagają rozbudowy.',

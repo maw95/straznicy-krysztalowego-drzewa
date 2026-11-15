@@ -22,7 +22,6 @@ Opis zasad: `ZASADY_CYFROWE.md` (sekcje „Poziom 4”, „Poziom 5”, „Pozio
 10. **Decyzje autora do poziomów 4–6** (S, autor): lista w sekcji 8.
 11. **Strojenie Łatwego i Trudnego dla poziomów 4–6 i celów Podbój i Relikt** (M): dziś strojony tylko Normalny (pasma i odchylenia w sekcji 6); potrzebne przebiegi stroiciela z regułami `economy`, `realm`, `empire`.
 12. **Animacje 16 jednostek poziomów 5–6 i efekty czarów, oblężenia i Reliktu** (L, grafika): lista w sekcji 2a.
-13. **Samouczek poziomów 5 i 6** (S): kroki o karczmie, czarach, Odłamkach i siedliskach (dziś jest tylko krok poziomu 4 i tekst powitalny celów).
 14. **Ranking dla poziomów 5–6** (S): dziś liczone jak poziom 4 (`ECONOMY_POINTS_FACTOR`); zmierzyć i ewentualnie dodać własne mnożniki.
 
 ### Etap E. Przed premierą

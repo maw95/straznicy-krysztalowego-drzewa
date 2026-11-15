@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Samouczek ma kroki dla poziomów Królestwo (dowódca, czary) i Imperium (Odłamki, drzewko frakcji, siedliska).
+
 - Dowódcy, jednostki legendarne i alternatywne (16 jednostek poziomów 5–6) stoją na arenie jako malowane postacie zamiast żetonów z portretem. Na razie bez animacji: postać przesuwa się, cios trafia od razu.
 
 - Poziomy 4–6: nowe dźwięki (katapulta, strzał wieżyczki, fosa, podniesienie Odłamka, wzniesienie Pierwotnej Iskry, Wrota, najem dowódcy), własne karty w kreatorze dla Podboju, Reliktu, Królestwa i Imperium, ikony mechanik frakcji, garnizonu i siedlisk, obrazek rozbudowanej wieży maga oraz pełne ilustracje Feniksa Świtu i Behemota Zagłady.
