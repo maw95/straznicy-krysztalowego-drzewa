@@ -367,6 +367,7 @@ export function canPay(state: GameState, f: FactionId, c: Cost): boolean {
 export function payCost(state: GameState, f: FactionId, c: Cost): void {
   const k = state.kingdom!;
   const missing = [...(k.gold[f] < c.gold ? [`${c.gold - k.gold[f]} zł`] : []), ...RESOURCE_IDS.filter((r) => resOf(state, f)[r] < (c[r] ?? 0)).map((r) => `${c[r]! - resOf(state, f)[r]} × ${RESOURCE_NAMES[r]}`)];
+  if (k.gold[f] < c.gold && missing.length === 1) throw new Error(`Za mało złota (potrzeba ${c.gold}).`);
   if (missing.length) throw new Error(`Brakuje: ${missing.join(', ')}.`);
   k.gold[f] -= c.gold;
   for (const r of RESOURCE_IDS) if (c[r]) k.res![f][r] -= c[r]!;
