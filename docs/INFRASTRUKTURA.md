@@ -212,3 +212,7 @@ Z czego to się składa: **dziennik gry** (`log`) rośnie do 18–29 KB, **pola 
 4. **Alternatywa radykalna, na później:** wysyłać samą akcję i pozwolić klientom policzyć stan silnikiem (silnik jest deterministyczny). Ryzyko: rozjazd wersji silnika klienta i serwera oraz informacje ukryte przed drugą stroną; nie warto, dopóki kompresja i przyrosty wystarczają (po kroku 1 i 2 wiadomość to kilka KB bez kompresji).
 
 **Założenie dla poziomu 3:** wiadomość `game` po kompresji ma zostać poniżej ok. 8 KB na największej mapie z 6 graczami; sprawdzić tym samym skryptem (`.tmp/size.ts` do odtworzenia z opisu wyżej) po każdym kroku K1–K4.
+
+## Ruch klient–serwer: przegląd (15.11.2026)
+
+Klient wysyła do serwera tylko akcję (ok. 30 B). Serwer odsyła **pełny stan gry** każdemu graczowi po każdym ruchu. Pomiar na grze z poziomem Osada (botowa partia, 2 na 2): start 7 kB (krótka mapa) do 17 kB (długa), w środku partii na długiej mapie 56 kB, w bitwie 26 kB; po kompresji `permessage-deflate` (włączona w `server.ts` backendu) 2–8 kB na wiadomość. Wniosek: różnice zamiast pełnego stanu nie są potrzebne (ruch jest rzędu kilku kB na ruch), a stan poziomu 4 (surowce, flagi właścicieli kopalń, budynki) doda najwyżej kilka kB. Oferta targu jest już liczona z ziarna. Do ponownego pomiaru po poziomie 5 (drugi bohater podwaja dane bohaterów).

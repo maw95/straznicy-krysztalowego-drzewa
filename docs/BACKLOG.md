@@ -15,8 +15,6 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids`) i w rankingu online zostaj
 ## 1. Kolejka prac (w tej kolejności)
 
 ### Etap A. Domknięcie poziomów 0–3 (przed budową poziomu 4)
-1. **Nazwy poziomów w UI** (S): w grze wciąż „Zerówka” i „Królestwo” (poziom 3); przemianować na Spacer / Osada według drabinki, w instrukcji, samouczku, CHANGELOG-u i `ZASADY_CYFROWE.md`. Gotowe, gdy `grep -ri "zerówk"` w `src/` i `docs/INSTRUKCJA.md` nie zwraca nazw poziomu.
-3. **Przegląd ruchu klient–serwer** (S): co musi iść w każdej wiadomości, a co można liczyć po obu stronach z ziarna (oferta targu, różnice zamiast pełnego stanu); wynik w `docs/INFRASTRUKTURA.md`, poprawki tylko oczywiste. Warunek przed poziomem 4 (więcej stanu: surowce, budynki).
 4. **Wdrożenie serwera przy następnym wydaniu** (S, razem z wydaniem): repo backendu ma niewdrożony commit z rankingiem; poziom 0 i Łatwy na arenie zmieniają znaczenie `kids` (stary klient dostałby arenę zamiast pojedynków).
 
 ### Etap B. Poziom 4 „Księstwo” (gospodarka i osady), kolejność wewnątrz poziomu
