@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Królestwo: Normalny i Trudny przestrojone po zmianie zachowania komputera (zakupy z dowolnego miejsca), a bardzo długa mapa dostała własne strojenie. Normalny: Przymierze wygrywa 51–67%, Trudny (kooperacja): 34–45%.
+
 - Królestwo na Łatwym: komputer zaczyna słabszy, a Przymierze dostaje na Łatwym dodatkowe złoto na rundę („Pomoc na Łatwym poziomie” w rozbiciu dochodu). Przymierze wygrywa tam ok. 65–80% partii (dwóch graczy na średniej mapie nieco poniżej pasma).
 
 - Łatwy na poziomach 1–3 jest wystrojony na arenie: komputer zaczyna słabszy (mniej skarbów, a w koopie bez posiłków Hordy), Przymierze wygrywa na nim ok. 65–76% partii. Punkty za wygraną na Łatwym są o jeden stopień trudności niższe niż na Normalnym.
