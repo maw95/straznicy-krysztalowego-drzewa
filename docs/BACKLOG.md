@@ -109,4 +109,4 @@ Pasma autora (wygrane Przymierza): Łatwy 65–85%, Normalny 45–65%, Trudny 30
 **Podział poziomów 4–6 (15.11):** na 4 gospodarka i osady, na 5 bohaterowie i magia, na 6 frakcje i Relikt: wyrównana liczba i złożoność nowości dla gracza.
 
 ## 8. Pytania czekające na autora
-- **Statystyki Jeżozwierza i Odyńca (Przymierze):** Jeżozwierz (poziom 2, 3 zł) jest słabszy od pomocników poziomu 1, a Odyniec (8 zł) i Opiekun Drzewa (12 zł) niewiele mocniejsi od Centaura (5 zł): pomiar w `ZASADY_CYFROWE.md`, sekcja „Pomiar siły rekrutów”. Poprawić statystyki (wymaga Twojej akceptacji, bo przesunie Osadę)?
+Brak.

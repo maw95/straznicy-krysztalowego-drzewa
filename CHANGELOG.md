@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Osada: wyrównana siła pomocników Przymierza. Jeżozwierz (8 Ż, 3 A) jest teraz mocniejszy od pomocników poziomu 1, Alabastrowy Odyniec (12 Ż, 5 A) i Opiekun Drzewa (15 Ż, 6 A) wyraźnie mocniejsi od Centaura, więc ceny 3/5/8/12 zł odpowiadają sile.
+
 - Poziom 4 „Księstwo”: chatki z zadaniami. Bohater stojący w chatce może oddać złoto, surowiec albo artefakt z plecaka i dostać więcej: złoto, surowiec, doświadczenie albo artefakt (raz na chatkę). Komputer też je załatwia. Nowa ikona chatki; rozdział 18 instrukcji opisuje poziom 4.
 
 - Poziom 4 „Księstwo” (początek): drewno, ruda i Gwiezdny Pył obok złota. Surowce dają tartaki, kopalnie rudy i źródła Pyłu rozsiane po mapie (kto wejdzie, trzyma je, póki ktoś inny nie przejmie); budynki kosztują złoto i surowce, drugi poziom budynku i legendarny artefakt na targu także Gwiezdny Pył, a w rundzie można zbudować tylko jeden budynek. Komputer to rozumie i gra na poziomie 4 do końca. W dolnym pasku i w oknie osady widać zapasy i dochód surowców, a ceny budynków i artefaktów pokazują, czego brakuje. Nowe ikony: tartak, kopalnia rudy, źródło Gwiezdnego Pyłu, drewno, ruda i Pył.
