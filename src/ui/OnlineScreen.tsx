@@ -6,7 +6,7 @@ import { defaultCustom, TIERS } from '../engine/presets';
 import { currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
-import { choice, LEVELS, SEAT_TINT, SHAPE_NAMES } from './setupShared';
+import { BOARD_LEVELS, choice, LEVELS, SEAT_TINT, SHAPE_NAMES } from './setupShared';
 import { NewGameWizard } from './NewGameWizard';
 
 /** Links of the main menu that do not depend on the account. */
@@ -370,7 +370,8 @@ function tableSummary(t: TableConfig): string[] {
   }
   if (t.mode !== 'arena' && !(t.shape === 'custom' && t.tier !== 'adventure')) parts.push(`Wielkość: ${MAP_SIZE_NAMES[t.mapSize]}`);
   parts.push(`Gracze: ${t.seats.length}`);
-  parts.push(`${t.mode === 'arena' ? 'Komputer' : 'Trudność'}: ${LEVELS.find(([l]) => l === t.level)?.[1] ?? t.level}`);
+  if (t.level === 'zero' && t.digital) parts.push('Poziom 0');
+  else parts.push(`${t.mode === 'arena' ? 'Komputer' : 'Trudność'}: ${(t.digital ? LEVELS : BOARD_LEVELS).find(([l]) => l === t.level)?.[1] ?? t.level}`);
   return parts;
 }
 

@@ -571,7 +571,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                       const inner = el?.firstElementChild as HTMLElement | null;
                       if (el && inner) {
                         const p = pos(state.tiles[x.at]);
-                        el.scrollTo({ left: inner.offsetLeft + p.x + W / 2 - el.clientWidth / 2, top: inner.offsetTop + p.y + H / 2 - el.clientHeight / 2, behavior: 'smooth' });
+                        el.scrollTo?.({ left: inner.offsetLeft + p.x + W / 2 - el.clientWidth / 2, top: inner.offsetTop + p.y + H / 2 - el.clientHeight / 2, behavior: 'smooth' });
                       }
                     }}>{x.name}</button>
                   ))}

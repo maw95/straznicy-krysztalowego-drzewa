@@ -13,6 +13,9 @@ export type LevelName = Level | 'custom';
 /** One map's ratings: the levels, then the full game with one custom option switched on. */
 interface Ratings {
   normal: number;
+  /** Level 0 (the old Easy: board duels). */
+  zero: number;
+  /** Difficulty Łatwy of levels 1-3 (arena). Provisional until measured: `normal` minus 2. */
   kids: number;
   hard?: number;
   /** The normal level's rating when the single options were measured: their effect is counted from it. */
@@ -27,14 +30,14 @@ interface Ratings {
 type Table = Record<MapSize, Ratings>;
 
 /** One map's Ratings as a row of numbers, in this order (null: not measured). */
-type Row = [normal: number, kids: number, hard: number | null, optionBase: number, noAbilities: number, elixirs: number, reserve: number, duels: number, dice: number];
+type Row = [normal: number, zero: number, hard: number | null, optionBase: number, noAbilities: number, elixirs: number, reserve: number, duels: number, dice: number];
 
 /** Ratings rows, one per map. */
 function table(rows: Record<MapSize, Row>): Table {
   const out = {} as Table;
   for (const size of Object.keys(rows) as MapSize[]) {
-    const [normal, kids, hard, optionBase, noAbilities, elixirs, reserve, duels, dice] = rows[size];
-    out[size] = { normal, kids, hard: hard ?? undefined, optionBase, noAbilities, elixirs, reserve, duels, dice };
+    const [normal, zero, hard, optionBase, noAbilities, elixirs, reserve, duels, dice] = rows[size];
+    out[size] = { normal, zero, kids: Math.max(1, normal - 2), hard: hard ?? undefined, optionBase, noAbilities, elixirs, reserve, duels, dice };
   }
   return out;
 }
@@ -45,7 +48,7 @@ function table(rows: Record<MapSize, Row>): Table {
  * (duels re-measured on 2026-10-28, notes section 13: the change against the normal level, added to optionBase).
  */
 const COOP: Record<1 | 2, Table> = {
-  // normal, kids, hard, optionBase, noAbilities, elixirs, reserve, duels, dice (see Row)
+  // normal, zero, hard, optionBase, noAbilities, elixirs, reserve, duels, dice (see Row)
   1: table({
     short:    [5, 2, 7, 5, 7, 5, 5, 4, 5],
     medium:   [4, 2, 8, 5, 7, 6, 4, 4, 5],
@@ -66,7 +69,7 @@ const COOP: Record<1 | 2, Table> = {
 
 /** Difficulty for Przymierze in PvP (the Horde's is 11 minus it), 1 on 1 and 2 on 2. There is no hard level. */
 const PVP: Record<1 | 2, Table> = {
-  // normal, kids, hard, optionBase, noAbilities, elixirs, reserve, duels, dice (see Row)
+  // normal, zero, hard, optionBase, noAbilities, elixirs, reserve, duels, dice (see Row)
   1: table({
     short:    [5, 2, null, 5, 5, 6, 5, 3, 5],
     medium:   [6, 2, null, 6, 5, 6, 5, 4, 6],
@@ -124,7 +127,7 @@ export function difficultyRating(setup: SetupOptions, level: LevelName, side: Fa
  * Arena: one battle (5–10 minutes) instead of a whole game with 3–5 battles, so a win against the
  * computer scores little — per hour of play no more than an ordinary game on an easy setting.
  */
-export const ARENA_POINTS: Record<Level, number> = { kids: 1, normal: 2, hard: 3 };
+export const ARENA_POINTS: Record<Level, number> = { zero: 1, kids: 1, normal: 2, hard: 3 };
 
 export function pointsFor(setup: SetupOptions, level: LevelName, side: FactionId): number {
   if (setup.mode === 'arena') return ARENA_POINTS[level === 'custom' ? 'normal' : level];
@@ -143,11 +146,11 @@ export function levelOf(setup: SetupOptions): LevelName {
   const automaton = r.minEvilHeroes === DEFAULT_RULES.minEvilHeroes && Boolean(r.hordeRespawn);
   const hardAutomaton = r.minEvilHeroes === 2 && !r.hordeRespawn;
   const base = r.treasures && !r.heroReplacement && r.initiativeTie === DEFAULT_RULES.initiativeTie;
-  const easy = r.treasures && r.heroReplacement && r.ritual === false && r.initiativeTie === DEFAULT_RULES.initiativeTie;
-  if (easy && automaton && setup.battleMode === 'board' && !r.abilities && !r.useDice && !r.extraEvilHero) return 'kids';
+  const zero = r.treasures && r.heroReplacement && r.ritual === false && r.initiativeTie === DEFAULT_RULES.initiativeTie;
+  if (zero && automaton && setup.battleMode === 'board' && !r.abilities && !r.useDice && !r.extraEvilHero) return 'zero';
   if (base && setup.battleMode === 'arena' && r.abilities && !r.useDice) {
     if (r.extraEvilHero) return setup.mode === 'coop' && hardAutomaton ? 'hard' : 'custom';
-    if (automaton) return 'normal';
+    if (automaton) return r.easy ? 'kids' : 'normal';
   }
   return 'custom';
 }

@@ -33,7 +33,7 @@ export interface RoomView {
   status: 'lobby' | 'playing' | 'over';
   mode: 'coop' | 'pvp' | 'arena';
   mapSize: MapSize;
-  level: 'kids' | 'normal' | 'hard';
+  level: 'zero' | 'kids' | 'normal' | 'hard';
   /** The digital edition at the table (a server that does not know editions leaves it out: the board edition). */
   digital?: boolean;
   /** The digital edition's level and what "Wyprawa" lets the owner pick (a server without levels leaves them out: "Przygoda"). */

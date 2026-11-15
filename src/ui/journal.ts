@@ -38,7 +38,7 @@ export interface TesterExport {
   games: JournalGame[];
 }
 
-export const LEVEL_NAMES: Record<LevelName, string> = { kids: 'Łatwy', normal: 'Normalny', hard: 'Trudny', custom: 'Własny' };
+export const LEVEL_NAMES: Record<LevelName, string> = { zero: 'Poziom 0', kids: 'Łatwy', normal: 'Normalny', hard: 'Trudny', custom: 'Własny' };
 
 const gameId = (setup: SetupOptions) => `${setup.seed}:${setup.mode}:${setup.mapSize}:${setup.seats.map((s) => `${s.faction}/${s.heroId}/${s.controller}`).join(',')}`;
 
@@ -163,7 +163,7 @@ export interface BreakdownRow {
 }
 
 const MAP_ORDER: MapSize[] = ['short', 'medium', 'long', 'veryLong', 'huge', 'giant'];
-const LEVEL_ORDER: LevelName[] = ['kids', 'normal', 'hard', 'custom'];
+const LEVEL_ORDER: LevelName[] = ['zero', 'kids', 'normal', 'hard', 'custom'];
 
 /** Finished games per mode × map × level (only combinations played at least once), in menu order. */
 export function journalBreakdown(j: Journal = readJournal()): BreakdownRow[] {

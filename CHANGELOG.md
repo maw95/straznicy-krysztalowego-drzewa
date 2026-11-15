@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Poziom 0 „Zerówka”: dawny Łatwy (krótkie pojedynki na planszy, bez zdolności i kości, bez rytuału) jest teraz osobnym poziomem dla najmłodszych, ze swoją kolumną punktów. Na poziomach 1–3 „Łatwy” gra się już pełnymi bitwami na arenie, a o trudności decydują warunki startowe komputera. Stare zapisy partii z dawnym Łatwym nie wczytają się jako poziom 0.
+
 ## 2.7.0 — 2026-11-14
 
 - Królestwo: osady znalezione na mapie mają własne kafelki (osada Przymierza i osada Hordy), a nie wzór zwykłego terenu.

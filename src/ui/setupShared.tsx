@@ -24,6 +24,14 @@ export const defaultHeroes = (mode: Mode, count: number): Array<{ faction: Facti
         return { faction, heroId: FACTION_HEROES[faction][mode === 'coop' ? i % FACTION_HEROES.dawn.length : Math.floor(i / 2)] };
       });
 
+/** The board edition keeps the printed levels: its "Łatwy" is level 0 (duels on the board). */
+export const BOARD_LEVELS: Array<[Level | 'custom', string]> = [
+  ['zero', 'Łatwy'],
+  ['normal', 'Normalny'],
+  ['hard', 'Trudny'],
+  ['custom', 'Własny'],
+];
+
 export const LEVELS: Array<[Level | 'custom', string]> = [
   ['kids', 'Łatwy'],
   ['normal', 'Normalny'],
@@ -32,7 +40,8 @@ export const LEVELS: Array<[Level | 'custom', string]> = [
 ];
 
 export const LEVEL_HINT: Record<Level | 'custom', string> = {
-  kids: 'Krótkie pojedynki na planszy, bez zdolności, bez kości i bez rytuału, a poległego bohatera zastępuje rezerwowy — zasady do ogarnięcia w kilka minut.',
+  zero: 'Krótkie pojedynki na planszy, bez zdolności, bez kości i bez rytuału, a poległego bohatera zastępuje rezerwowy — zasady do ogarnięcia w kilka minut.',
+  kids: 'Te same zasady co na Normalnym, ale komputer zaczyna słabszy: mniej skarbów i słabsza Horda. Dobry na pierwsze partie.',
   normal: 'Pełna gra: bitwy 3 na 3 na arenie, zdolności i skarby.',
   hard: 'Pełna gra, a automat zła ma o jednego bohatera więcej (co najmniej trzech) i 2 losowe skarby na start, ale nie dostaje posiłków. Wyzwanie dla dorosłych.',
   custom: 'Wybierz sam: rodzaj bitew, ułatwienia i utrudnienia, które można dowolnie łączyć.',
@@ -41,6 +50,7 @@ export const LEVEL_HINT: Record<Level | 'custom', string> = {
 export const ARENA_HINT = 'Jedna bitwa 3 na 3: każdy wybiera bohatera, dwóch pomocników i na zmianę dobiera 2 skarby ze wspólnej talii. Ok. 5–10 minut.';
 
 export const ARENA_LEVEL_TIPS: Record<Level, string> = {
+  zero: 'Komputer wybiera pomocników i skarby na chybił trafił.',
   kids: 'Komputer wybiera pomocników i skarby na chybił trafił.',
   normal: 'Komputer wybiera rozsądnie, ale nie zawsze najlepszy skarb.',
   hard: 'Komputer zawsze bierze najmocniejszych pomocników i najlepsze skarby.',
@@ -59,7 +69,8 @@ export const TIPS = {
 };
 
 export const LEVEL_TIPS: Record<Level | 'custom', string> = {
-  kids: 'Dla najmłodszych (od 5 lat): bitwy to szybkie pojedynki bohaterów na planszy, bez zdolności i bez kości — wystarczy porównać liczby na kartach. Nie ma rytuału, a gdy bohater polegnie, gracz bierze rezerwowego.',
+  kids: 'Pełna gra jak na Normalnym (arena, zdolności, skarby), ale komputer ma łatwiej przegrać: zaczyna z mniejszą liczbą skarbów, a Horda jest słabsza. Dla początkujących i rodzin.',
+  zero: 'Dla najmłodszych (od 5 lat): bitwy to szybkie pojedynki bohaterów na planszy, bez zdolności i bez kości — wystarczy porównać liczby na kartach. Nie ma rytuału, a gdy bohater polegnie, gracz bierze rezerwowego.',
   normal: 'Pełna gra: bitwy 3 na 3 na osobnej arenie, zdolności jednostek i skarby. Obrażenia zawsze równe Atakowi.',
   hard: 'Pełna gra, a automat zła dostaje jednego bohatera więcej (co najmniej trzech) i 2 losowe skarby na start, ale nie dostaje posiłków. Wyzwanie dla dorosłych (tylko kooperacja).',
   custom: 'Sami składacie zasady: rodzaj bitew, ułatwienia i utrudnienia — wszystko można łączyć.',

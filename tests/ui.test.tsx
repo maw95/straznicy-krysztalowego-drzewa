@@ -78,7 +78,7 @@ describe('setup screen simplifications', () => {
     expect(Object.values(game.items).map((i: any) => i.kind)).toEqual(['resurrection']);
   });
 
-  it('sets up the levels: hard adds a Horde hero in coop, kids play duels without abilities', async () => {
+  it('sets up the levels: hard adds a Horde hero in coop, Zerówka plays duels without abilities, Łatwy is the full game', async () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<StrictMode><App /></StrictMode>);
     await newGame(container, 'Cyfrowa', 'Przygoda', 'Kooperacja');
@@ -93,6 +93,14 @@ describe('setup screen simplifications', () => {
     await newGame(second, 'Cyfrowa', 'Przygoda', 'Rywalizacja');
     expect(pick(second, 'Trudny')).toBeUndefined();
     await click(second, 'Łatwy', 'Dalej →', 'Rozpocznij grę');
+    game = (window as any).__game;
+    expect(game.setup.battleMode).toBe('arena');
+    expect(game.setup.rules).toMatchObject({ abilities: true, easy: true });
+    cleanup();
+    const third = render(<StrictMode><App /></StrictMode>).container;
+    await newGame(third, 'Cyfrowa', 'Zerówka', 'Rywalizacja');
+    expect(pick(third, 'Łatwy')).toBeUndefined();
+    await click(third, 'Dalej →', 'Rozpocznij grę');
     game = (window as any).__game;
     expect(game.setup.battleMode).toBe('board');
     expect(game.setup.rules).toMatchObject({ abilities: false, useDice: false, extraEvilHero: false, heroReplacement: true, ritual: false });
@@ -167,12 +175,12 @@ describe('tester journal', () => {
 
 describe('win rate and points', () => {
   const seat = (faction: 'dawn' | 'horde', controller: 'human' | 'bot', heroId: string) => ({ name: heroId, faction, controller, heroId });
-  const coop = (seed: number, mapSize: 'short' | 'long' | 'veryLong', level: 'kids' | 'normal' | 'hard') => ({ mode: 'coop' as const, mapSize, seed, seats: [seat('dawn', 'human', 'goldDragon')], ...levelSettings(level, 'coop') });
+  const coop = (seed: number, mapSize: 'short' | 'long' | 'veryLong', level: 'zero' | 'kids' | 'normal' | 'hard') => ({ mode: 'coop' as const, mapSize, seed, seats: [seat('dawn', 'human', 'goldDragon')], ...levelSettings(level, 'coop') });
   const finish = (setup: ReturnType<typeof coop>, winner: 'dawn' | 'horde') => recordGame({ setup, actions: [] }, { ...createGame(setup), phase: 'over', winner, endReason: 'test' });
 
   it('scores a win by map length × measured difficulty, 30 at most', () => {
-    expect(['kids', 'normal', 'hard'].map((l) => pointsFor(coop(1, 'veryLong', l as never), l as never, 'dawn'))).toEqual([13, 17, 30]);
-    expect(pointsFor(coop(1, 'short', 'kids'), 'kids', 'dawn')).toBe(3);
+    expect(['zero', 'normal', 'hard'].map((l) => pointsFor(coop(1, 'veryLong', l as never), l as never, 'dawn'))).toEqual([13, 17, 30]);
+    expect(pointsFor(coop(1, 'short', 'zero'), 'zero', 'dawn')).toBe(3);
     // PvP: the Horde's difficulty is 11 minus Przymierze's.
     const pvp = { ...coop(1, 'short', 'normal'), mode: 'pvp' as const, seats: [seat('dawn', 'human', 'goldDragon'), seat('horde', 'bot', 'blackDragon')] };
     expect([difficultyRating(pvp, 'normal', 'dawn'), difficultyRating(pvp, 'normal', 'horde')]).toEqual([5, 6]);
@@ -206,7 +214,7 @@ describe('win rate and points', () => {
   it('opens the detailed table from the menu', async () => {
     window.history.replaceState(null, '', '/');
     finish(coop(1, 'short', 'normal'), 'dawn');
-    finish(coop(2, 'short', 'kids'), 'horde');
+    finish(coop(2, 'short', 'zero'), 'horde');
     recordGame({ setup: coop(3, 'long', 'hard'), actions: [] }, createGame(coop(3, 'long', 'hard')));
     const { container } = render(<App />);
     const doc = container.ownerDocument;
@@ -215,7 +223,7 @@ describe('win rate and points', () => {
     const rows = [...doc.querySelectorAll('table[aria-label="Dokładne dane"] tr')].map((tr) => [...tr.children].map((c) => c.textContent));
     expect(rows).toEqual([
       ['Tryb', 'Mapa', 'Poziom', 'Rozegrane', 'Wygrane', 'Przegrane', '% zwycięstw', 'Punkty'],
-      ['Kooperacja', 'Mała', 'Łatwy', '1', '0', '1', '0%', '0'],
+      ['Kooperacja', 'Mała', 'Poziom 0', '1', '0', '1', '0%', '0'],
       ['', 'Mała', 'Normalny', '1', '1', '0', '100%', '9'],
       ['Razem', '2', '1', '1', '50%', '9'],
     ]);

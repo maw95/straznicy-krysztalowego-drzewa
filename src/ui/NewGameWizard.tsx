@@ -11,7 +11,7 @@ import type { Level, MapShape, Mode, ObjectiveId } from '../engine/types';
 import type { TableConfig } from '../online/api';
 import { asset, Frame, Ribbon } from './common';
 import { CustomSwitchRows } from './CustomSwitchRows';
-import { ARENA_HINT, ARENA_LEVEL_TIPS, CentredChoice, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, ShapeIcon, SHAPE_NAMES, SHAPE_TIPS, SIZE_CODES, Tip, TIPS } from './setupShared';
+import { ARENA_HINT, ARENA_LEVEL_TIPS, BOARD_LEVELS, CentredChoice, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, ShapeIcon, SHAPE_NAMES, SHAPE_TIPS, SIZE_CODES, Tip, TIPS } from './setupShared';
 
 export const EDITION_KEY = 'skd-edition';
 /** The edition picked last time in this browser: digital unless the board edition was chosen. */
@@ -90,7 +90,7 @@ function Card({ img, title, text, on, onClick, disabled, wide }: { img: React.Re
 }
 
 /** The animal that shows how hard a difficulty level is: a rabbit, a wolf, a dragon. */
-const LEVEL_ANIMAL: Record<string, string> = { kids: 'krolik', normal: 'wilk', hard: 'smok' };
+const LEVEL_ANIMAL: Record<string, string> = { zero: 'krolik', kids: 'krolik', normal: 'wilk', hard: 'smok' };
 
 const pic = (src: string) => <img src={src} alt="" />;
 
@@ -134,17 +134,20 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
   const back = () => (at <= 0 ? onBack() : setPage(pages[at - 1]));
 
   const arena = d.mode === 'arena';
+  /** Level 0 belongs to the first card only: every other tier plays a difficulty of the full game. */
+  const notZero: Level = d.level === 'zero' ? 'kids' : d.level;
   const ready = d.shape === 'custom';
   const sizes = (Object.keys(MAP_SIZE_NAMES) as MapSize[]).filter((m) => d.digital || BOARD_MAP_SIZES.includes(m));
 
   const setEdition = (digital: boolean) => {
     try { localStorage.setItem(EDITION_KEY, digital ? 'digital' : 'board'); } catch { /* private mode: only for this visit */ }
     // The board edition has no levels and fewer map sizes.
-    choose({ digital, ...(digital ? {} : { tier: 'adventure' as Tier, objective: 'crystals' as ObjectiveId, shape: 'triangle' as MapShape, ...(BOARD_MAP_SIZES.includes(d.mapSize) ? {} : { mapSize: 'veryLong' as MapSize }) }) });
+    // Board edition: its "Łatwy" is level 0 (the printed duels); the digital one has "Łatwy" on the arena.
+    choose({ digital, level: digital ? (d.level === 'zero' && d.tier !== 'adventure' ? 'kids' : d.level) : d.level === 'kids' ? 'zero' : d.level, ...(digital ? {} : { tier: 'adventure' as Tier, objective: 'crystals' as ObjectiveId, shape: 'triangle' as MapShape, ...(BOARD_MAP_SIZES.includes(d.mapSize) ? {} : { mapSize: 'veryLong' as MapSize }) }) });
   };
   const setMode = (mode: Mode) => {
     const count = mode === 'pvp' ? Math.max(2, d.count) : mode === 'arena' ? 2 : Math.min(3, d.count);
-    const level = mode === 'pvp' && d.level === 'hard' ? 'normal' : d.level;
+    const level = mode === 'pvp' && d.level === 'hard' ? 'normal' : mode === 'arena' && d.level === 'zero' ? 'kids' : d.level;
     choose({ mode, count, level, custom: null, ...(mode !== 'coop' && d.objective === 'survival' ? { objective: 'crystals' as ObjectiveId } : {}) });
   };
 
@@ -196,10 +199,11 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
 
       {page === 'tier' && (
         <div className="opt-grid" data-wizard-page="tier">
-          <Card on={d.tier === 'adventure'} title="Przygoda" text="Poziom 1. Zasady z planszówki w wersji cyfrowej: kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start, także dla dzieci." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure' })} />
-          <Card on={d.tier === 'expedition'} title="Wyprawa" text="Poziom 2. Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ikony/mapa/camp.webp'))} onClick={() => choose({ tier: 'expedition' })} />
-          <Card on={d.tier === 'kingdom'} title="Królestwo" text="Poziom 3. Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ikony/mapa/treasure.webp'))} onClick={() => choose({ tier: 'kingdom' })} />
-          <Card on={d.tier === 'custom'} title="Własne ustawienia" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', custom: null })} />
+          <Card on={d.tier === 'adventure' && d.level === 'zero'} title="Zerówka" text="Poziom 0. Dla najmłodszych (od 5 lat): krótkie pojedynki bohaterów na planszy, bez zdolności i kości, bez rytuału. Zasady do ogarnięcia w kilka minut." img={pic(asset('ui/menu/krolik.webp'))} onClick={() => choose({ tier: 'adventure', level: 'zero' })} />
+          <Card on={d.tier === 'adventure' && d.level !== 'zero'} title="Przygoda" text="Poziom 1. Pełne bitwy na arenie, kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start z pełną grą." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure', level: notZero })} />
+          <Card on={d.tier === 'expedition'} title="Wyprawa" text="Poziom 2. Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ikony/mapa/camp.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
+          <Card on={d.tier === 'kingdom'} title="Królestwo" text="Poziom 3. Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ikony/mapa/treasure.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
+          <Card on={d.tier === 'custom'} title="Własne ustawienia" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', level: notZero, custom: null })} />
         </div>
       )}
 
@@ -278,8 +282,9 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
               ))}
             </CentredChoice>
           )}
+          {(arena || d.level !== 'zero' || !d.digital) && (
           <Row label={arena ? 'Komputer' : 'Trudność'}>
-            {LEVELS.filter(([l]) => l !== 'custom' && (l !== 'hard' || d.mode !== 'pvp')).map(([l, label]) => (
+            {(arena || d.digital ? LEVELS : BOARD_LEVELS).filter(([l]) => l !== 'custom' && (l !== 'hard' || d.mode !== 'pvp')).map(([l, label]) => (
               <Tip key={l} text={arena ? ARENA_LEVEL_TIPS[l as Level] : LEVEL_TIPS[l]}>
                 <button className={chip(d.level === l)} aria-pressed={d.level === l} onClick={() => patch({ level: l as Level, custom: null })}>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -290,6 +295,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
               </Tip>
             ))}
           </Row>
+          )}
           {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4 }}>{LEVEL_HINT[d.level]}</div>}
         </div>
       )}

@@ -78,6 +78,8 @@ export interface RulesConfig {
   heroGrowth?: boolean;
   /** Level 3 "Królestwo": gold, settlements and recruitment (kingdom.ts); needs hero growth. */
   kingdom?: boolean;
+  /** Difficulty "Łatwy" on levels 1-3: no rule differs, the flag only tells the level and selects the digital start-condition levers (tuning.ts). */
+  easy?: boolean;
 }
 
 export function isDigital(rules: Pick<RulesConfig, 'ruleset'>): boolean {
@@ -99,16 +101,18 @@ export const DEFAULT_RULES: RulesConfig = {
 };
 
 /** Ready-made levels: the setup screen offers these first, single switches only under "Własne". */
-export type Level = 'kids' | 'normal' | 'hard';
+export type Level = 'zero' | 'kids' | 'normal' | 'hard';
 
 /**
- * What each level changes against DEFAULT_RULES. Easy ("kids"): few rules to remember (duels on
+ * What each level changes against DEFAULT_RULES. Level 0 ("zero", the old Easy): few rules to remember (duels on
  * the board, no abilities, no die, no ritual) and a fallen hero's player takes a reserve hero.
+ * Easy ("kids"), Normal and Hard are difficulties of levels 1-3: the same rules, only the starting conditions differ (tuning.ts).
  * Hard exists for coop only: the automaton fields one Horde hero more (at least three), starts with two
  * random treasures and gets no reinforcements in its base.
  */
 export const LEVEL_RULES: Record<Level, { battleMode: BattleMode; rules: Partial<RulesConfig> }> = {
-  kids: { battleMode: 'board', rules: { abilities: false, useDice: false, heroReplacement: true, ritual: false } },
+  zero: { battleMode: 'board', rules: { abilities: false, useDice: false, heroReplacement: true, ritual: false } },
+  kids: { battleMode: 'arena', rules: { easy: true } },
   normal: { battleMode: 'arena', rules: {} },
   hard: { battleMode: 'arena', rules: { extraEvilHero: true, minEvilHeroes: 2, hordeRespawn: false, hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
 };
@@ -150,6 +154,8 @@ export interface SetupOptions {
  * initiative taken in turn (there is no attacker or defender in an arena match).
  */
 export function arenaSetup(seats: SeatSetup[], seed: number, botLevel: Level = 'normal'): SetupOptions {
+  // The arena has no level 0: its easy computer is "kids".
+  if (botLevel === 'zero') botLevel = 'kids';
   return { mode: 'arena', mapSize: 'short', battleMode: 'arena', seed, seats, botLevel, rules: { ...DEFAULT_RULES, initiativeTie: 'rotating' } };
 }
 

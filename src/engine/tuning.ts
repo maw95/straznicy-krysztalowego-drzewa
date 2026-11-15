@@ -10,7 +10,7 @@ import { AUTO_TUNING } from './tuningAuto';
 export interface DigitalTune {
   /** Where it applies; a missing field matches everything. */
   objective?: 'crystals' | 'control' | 'survival' | 'boss' | 'artifact';
-  level?: 'kids' | 'normal' | 'hard';
+  level?: 'kids' | 'normal' | 'hard';  // level 0 ('zero') is not tuned: it is the printed duels
   mode?: 'coop' | 'pvp';
   /** Przymierza seats (players on the good side). */
   players?: number;

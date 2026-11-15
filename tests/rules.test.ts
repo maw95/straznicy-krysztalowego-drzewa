@@ -505,7 +505,7 @@ describe('difficulty and balance settings', () => {
   });
 
   it('plays the easy level without the ritual and with reserve heroes', () => {
-    const { rules } = levelSettings('kids', 'coop');
+    const { rules } = levelSettings('zero', 'coop');
     expect(rules).toMatchObject({ ritual: false, heroReplacement: true, abilities: false });
     const s = createGame(setup({}, rules));
     for (const h of Object.values(s.heroes)) if (h.faction === 'horde') h.pos = treeKey();

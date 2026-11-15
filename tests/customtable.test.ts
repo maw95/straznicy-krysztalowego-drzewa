@@ -4,7 +4,7 @@ import { customSettings, defaultCustom, parseCustom } from '../src/engine/preset
 describe('custom table switches', () => {
   it('start from the level preset', () => {
     expect(defaultCustom('normal', 'coop')).toEqual({ growth: false, battleMode: 'arena', rules: { abilities: true, treasures: true, heroReplacement: false, useDice: false, extraEvilHero: false, initiativeTie: 'defender' } });
-    expect(defaultCustom('kids', 'coop')).toMatchObject({ battleMode: 'board', rules: { abilities: false, heroReplacement: true } });
+    expect(defaultCustom('zero', 'coop')).toMatchObject({ battleMode: 'board', rules: { abilities: false, heroReplacement: true } });
   });
 
   it('take the allowed switches and nothing else', () => {

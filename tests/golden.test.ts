@@ -40,8 +40,8 @@ const CASES: Array<[string, (seed: number) => SetupOptions, number[]]> = [
   ['coop1 normal veryLong', (s) => levelGame('coop1', 'veryLong', 'normal', s), [1, 2]],
   ['coop1 hard short', (s) => levelGame('coop1', 'short', 'hard', s), [1, 2, 3, 4]],
   ['coop2 hard long', (s) => levelGame('coop2', 'long', 'hard', s), [1, 2]],
-  ['coop1 easy short', (s) => levelGame('coop1', 'short', 'kids', s), [1, 2, 3]],
-  ['coop2 easy medium', (s) => levelGame('coop2', 'medium', 'kids', s), [1]],
+  ['coop1 level0 short', (s) => levelGame('coop1', 'short', 'zero', s), [1, 2, 3]],
+  ['coop2 level0 medium', (s) => levelGame('coop2', 'medium', 'zero', s), [1]],
   ['coop1 dice short', (s) => levelGame('coop1', 'short', 'normal', s, { useDice: true }), [1, 2, 3]],
   ['coop1 no abilities short', (s) => levelGame('coop1', 'short', 'normal', s, { abilities: false }), [1, 2]],
   ['coop1 elixirs only short', (s) => levelGame('coop1', 'short', 'normal', s, { treasures: false }), [1, 2]],
@@ -49,10 +49,10 @@ const CASES: Array<[string, (seed: number) => SetupOptions, number[]]> = [
   ['pvp1 normal short', (s) => levelGame('pvp1', 'short', 'normal', s), [1, 2, 3, 4, 5]],
   ['pvp1 normal long', (s) => levelGame('pvp1', 'long', 'normal', s), [1, 2]],
   ['pvp1 dice medium', (s) => levelGame('pvp1', 'medium', 'normal', s, { useDice: true }), [1, 2]],
-  ['pvp1 easy short', (s) => levelGame('pvp1', 'short', 'kids', s), [1, 2]],
+  ['pvp1 level0 short', (s) => levelGame('pvp1', 'short', 'zero', s), [1, 2]],
   ['pvp1 board duels with dice short', (s) => ({ ...levelGame('pvp1', 'short', 'normal', s, { useDice: true }), battleMode: 'board' }), [1, 2]],
   ['pvp2 normal medium', (s) => levelGame('pvp2', 'medium', 'normal', s), [1, 2, 3]],
-  ['pvp2 easy medium', (s) => levelGame('pvp2', 'medium', 'kids', s), [1, 2]],
+  ['pvp2 level0 medium', (s) => levelGame('pvp2', 'medium', 'zero', s), [1, 2]],
   ['pvp2 normal veryLong', (s) => levelGame('pvp2', 'veryLong', 'normal', s), [1, 2]],
   ['arena easy', (s) => arenaGame('kids', s), [1, 2, 3]],
   ['arena normal', (s) => arenaGame('normal', s), [1, 2, 3]],
@@ -93,7 +93,7 @@ describe('golden bot games', () => {
   });
 
   it('plays the same games when actions change the state in place', () => {
-    for (const [, make, seeds] of CASES.filter(([name]) => /coop1 normal short|pvp2 normal medium|arena normal|coop1 easy/.test(name))) {
+    for (const [, make, seeds] of CASES.filter(([name]) => /coop1 normal short|pvp2 normal medium|arena normal|coop1 level0/.test(name))) {
       for (const seed of seeds) {
         const a = play(make(seed));
         const b = play(make(seed), applyActionInPlace);
