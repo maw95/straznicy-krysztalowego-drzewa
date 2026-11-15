@@ -9,7 +9,7 @@ import { awardXp, levelOf } from './growth';
 import { log } from './log';
 import { mapNeighbors, tileCost } from './map';
 import { Rng } from './rng';
-import { costText, ECONOMY, thingsText, type Hut, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
+import { costText, ECONOMY, OBJECTS, OBJECT_NAMES, objectReady, thingsText, type Hut, type MapObject, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import type { Action, Crystal, GameState, HeroState } from './types';
@@ -40,6 +40,8 @@ export interface KingdomState {
   res?: Record<FactionId, Resources>;
   /** Level 4: huts with a quest, by hex. */
   huts?: Record<HexKey, Hut>;
+  /** Level 4: mills, wells and stores, by hex. */
+  objects?: Record<HexKey, MapObject>;
   built?: Record<FactionId, number>;
   /** A hero opened a chest and has to choose: its contents (an artifact) or gold. */
   chest: { heroId: string } | null;
@@ -266,6 +268,23 @@ export function initKingdom(state: GameState): void {
       }
     }
   }
+  // Level 4: the map's own objects (a mill, a store of a resource, a well), placed like the huts.
+  if (k.res) {
+    k.objects = {};
+    const want = OBJECTS.count[state.setup.mapSize] ?? 1;
+    for (const [clear, gap] of [[1, 1], [0, 1], [0, 0]] as const) {
+      for (const t of free(clear)) {
+        const n = Object.keys(k.objects).length;
+        if (n >= want) break;
+        if (taken.some((c) => distance(parseKey(c), parseKey(t.key)) <= gap) || (gap > 0 && mapNeighbors(state.tiles, t.key).some((x) => state.tiles[x].crystalId))) continue;
+        const kind = OBJECTS.order[n % OBJECTS.order.length];
+        const res = kind === 'store' ? rng.pick(RESOURCE_IDS) : undefined;
+        k.objects[t.key] = kind === 'store' ? { kind, res, amount: OBJECTS.store[res!] } : { kind };
+        state.tiles[t.key].place = { kind: 'object', id: t.key };
+        taken.push(t.key);
+      }
+    }
+  }
   // Every faction starts with its three tier-1 supports, as in the other levels; the recruits are the new tiers (RECRUITS, docs/JEDNOSTKI_POZIOMU_3.md).
 }
 
@@ -301,6 +320,24 @@ export function enterPlace(state: GameState, hero: HeroState): void {
     m.owner = hero.faction;
     log(state, 'info', `${name} zajmuje: ${MINE_NAMES[m.res ?? 'gold'].toLowerCase()}.`);
     firstPlaceGold(state, hero);
+  } else if (place.kind === 'object') {
+    const o = k.objects?.[place.id];
+    if (!o || !objectReady(o, state.round)) return;
+    if (o.kind === 'mill') {
+      o.used = state.round;
+      k.gold[hero.faction] += OBJECTS.millGold;
+      log(state, 'info', `${name} zabiera z młyna ${OBJECTS.millGold} zł (młyn miele znów za ${OBJECTS.millRounds} rundy).`);
+    } else if (o.kind === 'well') {
+      // Only the hero whose turn it is can use the extra steps.
+      if (state.heroes[state.turnOrder[state.turnIndex]]?.id !== hero.id) return;
+      o.used = state.round;
+      state.movePoints += OBJECTS.wellMove;
+      log(state, 'info', `${name} pije ze Studni Wędrowców: +${OBJECTS.wellMove} do ruchu w tej turze.`);
+    } else if (k.res) {
+      o.done = true;
+      k.res[hero.faction][o.res!] += o.amount!;
+      log(state, 'info', `${name} opróżnia ${OBJECT_NAMES.store.toLowerCase()}: ${o.amount} × ${RESOURCE_NAMES[o.res!]}.`);
+    }
   }
 }
 
@@ -637,6 +674,14 @@ function botTrade(state: GameState, f: FactionId, s: Settlement): Action | null 
     if (k.gold[f] >= bill) return { type: 'kingdomTrade', settlementId: s.id, res: missing[0], dir: 'buy' };
   }
   return null;
+}
+
+/** Whether the hero can pay what the hut on its hex asks for now. */
+export function hutPayable(state: GameState, hero: HeroState): boolean {
+  const hut = state.kingdom?.huts?.[hero.pos];
+  if (!hut || hut.done) return false;
+  if (hut.want.artifact) return Boolean(hero.pack?.length);
+  return canPay(state, hero.faction, { gold: hut.want.gold ?? 0, wood: hut.want.wood, ore: hut.want.ore, dust: hut.want.dust });
 }
 
 /** Whether a bot is willing to do this hut's quest now: it can pay and keeps a reserve for its buildings and recruits. */

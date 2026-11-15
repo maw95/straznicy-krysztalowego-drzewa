@@ -54,6 +54,36 @@ export const ECONOMY = {
   legendaryDust: 1,
 };
 
+/** Level 4: the map's own objects. A mill pays gold again and again, a well gives the hero more movement once a round, a store gives resources once. */
+export type ObjectKind = 'mill' | 'well' | 'store';
+export interface MapObject {
+  kind: ObjectKind;
+  /** A store: what it holds. */
+  res?: ResourceId;
+  amount?: number;
+  /** The round it was last used in (a mill, a well). */
+  used?: number;
+  /** A store already emptied. */
+  done?: boolean;
+}
+export const OBJECT_NAMES: Record<ObjectKind, string> = { mill: 'Młyn', well: 'Studnia Wędrowców', store: 'Leśna składnica' };
+export const OBJECTS = {
+  /** Objects on the map by map size; the kinds go round in this order. */
+  count: { short: 1, medium: 2, long: 3, veryLong: 4, huge: 5, giant: 6 } as Record<string, number>,
+  order: ['mill', 'store', 'well'] as ObjectKind[],
+  /** The mill pays this much gold to whoever steps in, then grinds for this many rounds. */
+  millGold: 2,
+  millRounds: 3,
+  /** The well gives the hero this many movement points, once a round. */
+  wellMove: 2,
+  /** What a store holds. */
+  store: { wood: 3, ore: 3, dust: 1 } as Resources,
+};
+
+/** Whether the object has something to give in this round. */
+export const objectReady = (o: MapObject, round: number): boolean =>
+  o.kind === 'store' ? !o.done : o.kind === 'mill' ? o.used === undefined || round - o.used >= OBJECTS.millRounds : o.used !== round;
+
 export const emptyResources = (): Resources => ({ wood: 0, ore: 0, dust: 0 });
 
 /** The resources of a price, without gold (for lists and checks). */

@@ -7,8 +7,8 @@ import type { FightLevel } from '../engine/difficulty';
 import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
 import { TreasureButton } from './TreasureButton';
 import { SettlementDialog } from './SettlementDialog';
-import { BUILDING_NAMES, chestPreview, KINGDOM, goldOf, incomeBreakdown, incomeOf, resourceIncomeBreakdown, settlementAt } from '../engine/kingdom';
-import { ECONOMY, MINE_NAMES, RESOURCE_NAMES, thingsText } from '../engine/economy';
+import { BUILDING_NAMES, chestPreview, hutPayable, KINGDOM, goldOf, incomeBreakdown, incomeOf, resourceIncomeBreakdown, settlementAt } from '../engine/kingdom';
+import { ECONOMY, MINE_NAMES, OBJECT_NAMES, OBJECTS, objectReady, RESOURCE_NAMES, thingsText } from '../engine/economy';
 import { ResourceStrip } from './resources';
 import { sfx } from './sfx';
 import { ARTIFACT_BY_ID } from '../engine/sites';
@@ -430,7 +430,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     )}
                     {t.revealed && t.place && state.kingdom && (
                       <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, zIndex: 2, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)}>
-                        <img src={asset(`ikony/mapa/${placeIcon(state, t.key)}.webp`)} alt="" width={W * 0.46} height={W * 0.46} style={{ display: 'block', filter: t.place.kind === 'mine' ? 'drop-shadow(0 0 3px #F3D27A) drop-shadow(0 2px 2px rgba(0,0,0,0.8))' : 'drop-shadow(0 2px 2px rgba(0,0,0,0.7))' }} />
+                        <img src={asset(`ikony/mapa/${placeIcon(state, t.key)}.webp`)} alt="" width={W * 0.46} height={W * 0.46} style={{ display: 'block', filter: t.place.kind === 'mine' ? 'drop-shadow(0 0 3px #F3D27A) drop-shadow(0 2px 2px rgba(0,0,0,0.8))' : 'drop-shadow(0 2px 2px rgba(0,0,0,0.7))', opacity: t.place.kind === 'object' && !objectReady(state.kingdom.objects?.[t.key] ?? { kind: 'mill' }, state.round) ? 0.55 : 1 }} />
                       </div>
                     )}
                     {crystal && (
@@ -559,7 +559,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               <div className="plate parch" data-hut style={{ padding: '6px 10px', display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <b style={{ fontSize: 14, color: '#6B4A22', letterSpacing: 1 }}>CHATKA: ZADANIE</b>
                 <div style={{ fontSize: 15 }}>Przynieś: <b>{thingsText(hut.want)}</b>. Nagroda: <b>{thingsText(hut.reward)}</b>.</div>
-                <button className="btn prim" data-hut-deliver style={{ padding: '4px 12px', fontSize: 16 }} onClick={() => { sfx.play('coins_buy'); onAction({ type: 'hutDeliver' }); }}>Wykonaj zadanie</button>
+                <button className="btn prim" data-hut-deliver disabled={!hutPayable(state, hero)} title={hutPayable(state, hero) ? undefined : hut.want.artifact ? 'Chatka chce artefaktu z plecaka, a plecak jest pusty.' : 'Nie masz jeszcze tego, o co prosi chatka.'} style={{ padding: '4px 12px', fontSize: 16 }} onClick={() => { sfx.play('coins_buy'); onAction({ type: 'hutDeliver' }); }}>Wykonaj zadanie</button>
               </div>
             );
           })()}
@@ -858,6 +858,7 @@ function placeIcon(state: GameState, k: HexKey): string {
   const place = state.tiles[k].place;
   if (!place) return 'osada_neutral';
   if (place.kind === 'hut') return 'chatka';
+  if (place.kind === 'object') return ({ mill: 'mlyn', well: 'studnia', store: 'skladnica' } as const)[state.kingdom?.objects?.[place.id]?.kind ?? 'mill'];
   if (place.kind === 'mine') return ({ wood: 'tartak', ore: 'kopalnia_ruda', dust: 'zrodlo_pylu' } as Record<string, string>)[state.kingdom?.mines[place.id]?.res ?? ''] ?? 'kopalnia';
   const owner = state.kingdom?.settlements[place.id]?.owner;
   return owner ? `osada_${owner}` : 'osada_neutral';
@@ -870,6 +871,14 @@ function placeTitle(state: GameState, k: HexKey): string {
   if (place.kind === 'hut') {
     const hut = state.kingdom.huts?.[place.id];
     return hut ? (hut.done ? 'Chatka: zadanie wykonane' : `Chatka: przynieś ${thingsText(hut.want)}, dostaniesz ${thingsText(hut.reward)}`) : 'Chatka';
+  }
+  if (place.kind === 'object') {
+    const o = state.kingdom.objects?.[place.id];
+    if (!o) return '';
+    const ready = objectReady(o, state.round);
+    if (o.kind === 'mill') return `${OBJECT_NAMES.mill}: ${ready ? `daje ${OBJECTS.millGold} zł temu, kto wejdzie` : `miele, gotowy w rundzie ${(o.used ?? 0) + OBJECTS.millRounds}`} (co ${OBJECTS.millRounds} rundy)`;
+    if (o.kind === 'well') return `${OBJECT_NAMES.well}: ${ready ? `+${OBJECTS.wellMove} do ruchu dla bohatera, który wejdzie` : 'w tej rundzie już z niej pito'} (raz na rundę)`;
+    return `${OBJECT_NAMES.store}: ${o.done ? 'pusta' : `${o.amount} × ${RESOURCE_NAMES[o.res!]} dla tego, kto wejdzie pierwszy`}`;
   }
   if (place.kind === 'mine') {
     const mine = state.kingdom.mines[place.id];

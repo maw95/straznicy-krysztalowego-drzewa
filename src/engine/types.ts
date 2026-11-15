@@ -236,7 +236,7 @@ export interface Tile {
   /** A site on the hex (shrine, camp, chest) and whether it has been used (sites.ts); only with hero growth. */
   site?: { kind: SiteKind; used: boolean };
   /** Level 3 "Osada": a settlement or a gold mine stands here (kingdom.ts). */
-  place?: { kind: 'settlement' | 'mine' | 'hut'; id: string };
+  place?: { kind: 'settlement' | 'mine' | 'hut' | 'object'; id: string };
 }
 
 export interface Crystal {

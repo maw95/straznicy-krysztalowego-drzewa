@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Księstwo: nowe miejsca na mapie. **Młyn** daje 2 zł co 3 rundy, **Leśna składnica** oddaje raz zapas surowca, **Studnia Wędrowców** dodaje bohaterowi 2 punkty ruchu (raz na rundę). Przycisk zadania w chatce jest wyszarzony, gdy nie masz tego, o co chatka prosi.
+
 - Księstwo: nowy budynek **Kuźnia** (za rudę; pomocnicy całej frakcji dostają +1 do Ataku, po rozbudowie także +1 do Życia) i **wymiana surowców** w osadzie (brakujący surowiec kupisz za złoto, z targiem taniej; targ skupuje nadwyżki). Komputer też z nich korzysta, więc nie siedzi już na stosie złota, gdy brakuje mu drewna. Wygrana w Księstwie daje nieco więcej punktów rankingu niż w Osadzie.
 
 - Osada: wyrównana siła pomocników Przymierza. Jeżozwierz (8 Ż, 3 A) jest teraz mocniejszy od pomocników poziomu 1, Alabastrowy Odyniec (12 Ż, 5 A) i Opiekun Drzewa (15 Ż, 6 A) wyraźnie mocniejsi od Centaura, więc ceny 3/5/8/12 zł odpowiadają sile.

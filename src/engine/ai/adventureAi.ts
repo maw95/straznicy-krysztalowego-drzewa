@@ -3,6 +3,7 @@
 
 import { FACTION_SUPPORTS, ITEM_EFFECT, UNITS, type FactionId } from '../data';
 import { botWantsHut, kingdomBotAction, supportSlots } from '../kingdom';
+import { objectReady } from '../economy';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { heroTileCost } from '../sites';
@@ -720,6 +721,8 @@ function kingdomDetour(state: GameState, hero: HeroState, memo: Memo): Action | 
   for (const [hex, m] of Object.entries(k.mines)) if (m.owner !== hero.faction && state.tiles[hex].revealed) goals.set(hex, 1);
   for (const s of Object.values(k.settlements)) if (s.owner === null && !state.tiles[s.at].crystalId) goals.set(s.at, 1);
   for (const hex of Object.keys(k.huts ?? {})) if (state.tiles[hex].revealed && botWantsHut(state, hero, hex)) goals.set(hex, 2);
+  // Level 4: a mill that has ground, a store still full, a well not drunk from in this round.
+  for (const [hex, o] of Object.entries(k.objects ?? {})) if (state.tiles[hex].revealed && objectReady(o, state.round)) goals.set(hex, o.kind === 'store' ? 2 : 1);
   goals.delete(hero.pos);
   if (!goals.size) return null;
   const paths = memo.paths(hero, 'kingdom', { goals: new Set(goals.keys()), avoidGuardians: true, danger: true, encounters: true });

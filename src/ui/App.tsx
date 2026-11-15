@@ -171,6 +171,19 @@ export function App() {
     if (s.kingdom && q.get('gold')) for (const f of ['dawn', 'horde'] as const) s.kingdom.gold[f] = Number(q.get('gold'));
     // ?economy=1 (level 4): ?res=9 gives the factions that much of every resource.
     if (s.kingdom?.res && q.get('res')) for (const f of ['dawn', 'horde'] as const) s.kingdom.res[f] = { wood: Number(q.get('res')), ore: Number(q.get('res')), dust: Number(q.get('res')) };
+    // ?economy=1&near=hut|mill|well|store stands the active hero next to the first such place (to walk in by a click).
+    if (s.kingdom && q.get('near')) {
+      const want = q.get('near')!;
+      const hex = want === 'hut' ? Object.keys(s.kingdom.huts ?? {})[0] : Object.entries(s.kingdom.objects ?? {}).find(([, o]) => o.kind === want)?.[0];
+      const hero = activeHero(s);
+      const next = hex && hero ? neighborKeys(hex).find((k) => s.tiles[k] && tileCost(s.tiles[k]) !== null && !s.tiles[k].crystalId && !s.tiles[k].place) : null;
+      if (hex && hero && next) {
+        hero.pos = next;
+        s.tiles[hex].revealed = true;
+        s.tiles[next].revealed = true;
+        s.movePoints = 3;
+      }
+    }
     // ?level=9 puts every hero on that level (for looking at the milestones on the cards).
     if (q.get('level')) for (const h of Object.values(s.heroes)) h.level = Number(q.get('level'));
     // ?encounter=2 (with growth=1) walks the active hero into the first neutral encounter of that tier (0 common, 1 rare, 2 legendary), for looking at the new units.

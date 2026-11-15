@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { activeHero, applyAction, createGame } from '../src/engine/game';
-import { ECONOMY } from '../src/engine/economy';
+import { ECONOMY, OBJECTS } from '../src/engine/economy';
 import { artifactBill, botPurchase, buildCost, buildingsOf, canPay, forgeLevel, resOf, resourceIncomeOf, settlementAt, tradeBuyPrice } from '../src/engine/kingdom';
 import { pointsFor } from '../src/engine/scoring';
 import { ARTIFACTS } from '../src/engine/sites';
@@ -195,5 +195,57 @@ describe('level 4: the forge and the exchange', () => {
     const l3 = setup({ mapSize: 'veryLong' }, { ruleset: 'digital', heroGrowth: true, kingdom: true });
     const l4 = setup({ mapSize: 'veryLong' }, rules);
     expect(pointsFor(l4, 'normal', 'dawn')).toBeGreaterThan(pointsFor(l3, 'normal', 'dawn'));
+  });
+});
+
+describe('level 4: mills, stores and wells', () => {
+  const walkIn = (s: GameState, hex: string): GameState => {
+    const from = neighbours(s, hex).find((k) => !s.tiles[k].crystalId && !s.tiles[k].place && !s.tiles[k].home)!;
+    stand(s, from);
+    s.tiles[hex].revealed = true;
+    s.movePoints = 9;
+    return applyAction(s, { type: 'moveHero', to: hex });
+  };
+  const find = (s: GameState, kind: string) => Object.entries(s.kingdom!.objects!).find(([, o]) => o.kind === kind)![0];
+
+  it('puts objects on the map by map size, of every kind on a long map', () => {
+    const s = economy({ mapSize: 'long' });
+    const objects = Object.values(s.kingdom!.objects!);
+    expect(objects).toHaveLength(OBJECTS.count.long);
+    expect(new Set(objects.map((o) => o.kind))).toEqual(new Set(['mill', 'store', 'well']));
+    const l3 = createGame(setup({ mapSize: 'long', seed: 3 }, { ruleset: 'digital', heroGrowth: true, kingdom: true }));
+    expect(l3.kingdom!.objects).toBeUndefined();
+  });
+
+  it('a mill pays gold and then grinds for a few rounds', () => {
+    let s = economy({ mapSize: 'long' });
+    const mill = find(s, 'mill');
+    const gold = s.kingdom!.gold.dawn;
+    s = walkIn(s, mill);
+    expect(s.kingdom!.gold.dawn).toBe(gold + OBJECTS.millGold);
+    // Stepping out and in again in the same round gives nothing.
+    s = walkIn(s, mill);
+    expect(s.kingdom!.gold.dawn).toBe(gold + OBJECTS.millGold);
+    s.round += OBJECTS.millRounds;
+    s = walkIn(s, mill);
+    expect(s.kingdom!.gold.dawn).toBe(gold + 2 * OBJECTS.millGold);
+  });
+
+  it('a store gives its resource once and a well gives movement once a round', () => {
+    let s = economy({ mapSize: 'long' });
+    const store = find(s, 'store');
+    const o = s.kingdom!.objects![store];
+    const before = resOf(s, 'dawn')[o.res!];
+    s = walkIn(s, store);
+    expect(resOf(s, 'dawn')[o.res!]).toBe(before + o.amount!);
+    s = walkIn(s, store);
+    expect(resOf(s, 'dawn')[o.res!]).toBe(before + o.amount!);
+    const well = find(s, 'well');
+    s = walkIn(s, well);
+    const left = s.movePoints;
+    s = walkIn(s, well);
+    // The first visit added the well's points on top of what the step cost; the second one only costs.
+    expect(left).toBeGreaterThan(s.movePoints);
+    expect(s.kingdom!.objects![well].used).toBe(s.round);
   });
 });

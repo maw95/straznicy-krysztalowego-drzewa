@@ -90,7 +90,7 @@ const TIPS: Tip[] = [
   {
     id: 'resources',
     title: 'Surowce i chatki',
-    text: 'Na tym poziomie oprócz złota liczą się drewno, ruda i Gwiezdny Pył (dolny pasek). Daje je tartak, kopalnia rudy i źródło Pyłu: wejdź na nie, a będą Twoje, dopóki ktoś ich nie przejmie. Budynki kosztują złoto i surowce, a w rundzie można zbudować tylko jeden. W chatkach wykonujesz zadania: oddajesz coś, dostajesz więcej.',
+    text: 'Na tym poziomie oprócz złota liczą się drewno, ruda i Gwiezdny Pył (dolny pasek). Daje je tartak, kopalnia rudy i źródło Pyłu: wejdź na nie, a będą Twoje, dopóki ktoś ich nie przejmie. Budynki kosztują złoto i surowce, a w rundzie można zbudować tylko jeden. W chatkach wykonujesz zadania: oddajesz coś, dostajesz więcej. Brakujący surowiec kupisz za złoto w osadzie (zakładka Targ), Kuźnia wzmacnia pomocników, a młyn, składnica i studnia na mapie pomagają temu, kto na nie wejdzie.',
     when: (s) => s.phase === 'adventure' && Boolean(s.kingdom?.res),
   },
   {

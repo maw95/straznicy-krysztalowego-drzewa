@@ -18,7 +18,6 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids`) i w rankingu online zostaj
 4. **Wdrożenie serwera przy następnym wydaniu** (S, razem z wydaniem): repo backendu ma niewdrożony commit z rankingiem; poziom 0 i Łatwy na arenie zmieniają znaczenie `kids` (stary klient dostałby arenę zamiast pojedynków).
 
 ### Etap B. Poziom 4 „Księstwo” (gospodarka i osady), kolejność wewnątrz poziomu
-6. **4b. Obiekty na mapie, reszta** (S): chatki z zadaniami zrobione 15.11. Zostają obiekty własne (młyn, studnia, kapliczki surowców) i sprawdzenie w prawdziwej grze ścieżki „stań w chatce, wykonaj zadanie” (panel `data-hut`; test silnika jest, ścieżki klikalnej w przeglądarce nie zweryfikowałem).
 7. **4c. Obrona osady** (L): garnizon (jednostki zostawione bronią osady po odejściu bohatera), oblężenie z katapultą (mury, brama, 2 wieżyczki strzeleckie obrońcy; katapulta jeden strzał na rundę, robocze), fosa (wejście kończy turę i zadaje 2 obrażeń, też na końcu tury; duża jednostka raz). Jeśli za ciężki: garnizon i przejmowanie zostają na 4, mury i katapulta przechodzą na 5.
 8. **4d. Cel „Podbój”** (M): wygrywa ten, kto zdobędzie osady wroga; strojenie symulacjami.
 9. **4e. Autopilot warstw dla dzieci** (M): rodzic na wyższym poziomie, dziecko na tej samej mapie z automatycznie zarządzanymi warstwami (wymaga 4a).

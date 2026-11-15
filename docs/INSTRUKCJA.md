@@ -759,6 +759,12 @@ Gdy brakuje jednego surowca, można go **kupić za złoto** w każdej własnej o
 ### Chatki z zadaniami
 Na mapie stoją chatki. Bohater, który stanie w chatce, może wykonać jej **zadanie**: chatka prosi o złoto, surowiec albo artefakt z plecaka, a w zamian daje więcej (około półtora raza tyle, w innej walucie): złoto, surowiec, doświadczenie albo artefakt. Każda chatka daje zadanie raz na grę.
 
+### Młyn, składnica i studnia
+Na mapie stoją też trzy rodzaje miejsc, które pomagają temu, kto na nie wejdzie:
+- **Młyn** daje 2 zł, a potem przez 3 rundy miele (ikona jest wtedy przygaszona).
+- **Leśna składnica** oddaje swój zapas raz: 3 drewna, 3 rudy albo 1 Gwiezdny Pył.
+- **Studnia Wędrowców** dodaje bohaterowi 2 punkty ruchu w tej turze; działa raz na rundę, dla pierwszego, kto z niej wypije.
+
 ## Autorzy (wersja cyfrowa)
 
 W menu głównym przycisk „Autorzy” otwiera listę: autorzy gry (Maciej Woźniak, Aleksandra Szestowicka przy fabule, Zuzanna Woźniak jako autorka Dzielnej Kaczki), autorzy muzyki wraz z licencjami (CC BY wymaga podania autora), informacja, że grafika, animacje i efekty dźwiękowe powstały z użyciem narzędzi AI (Scenario), oraz użyte oprogramowanie.

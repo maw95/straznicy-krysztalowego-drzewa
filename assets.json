@@ -3542,6 +3542,25 @@
       "data": "2026-11-15",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ikony/mapa/obiekty-ksiestwa",
+      "pliki": [
+        "public/assets/ikony/mapa/mlyn.webp",
+        "public/assets/ikony/mapa/studnia.webp",
+        "public/assets/ikony/mapa/skladnica.webp",
+        "public/assets/ikony/mapa/odlamek.webp",
+        "public/assets/ikony/mapa/karczma.webp",
+        "public/assets/ikony/mapa/wieza_maga.webp"
+      ],
+      "typ": "ikony mapy: młyn, Studnia Wędrowców, Leśna składnica (poziom 4) oraz na zapas: Odłamek Pierwotnej Iskry (poziom 6), karczma i wieża maga (poziom 5)",
+      "opis": "Jeden arkusz 1536x1024 z sześcioma medalami w siatce 3x2 na czarnym tle, referencja stylu: ikona tartaku; pocięty skryptem scripts/assets/arkusz.py (256 px, WebP z przezroczystością). Prompt: 'A sheet of six separate round medal icons for a fantasy strategy game map ... inside the same thick ornate golden ring as the reference icon': wiatrak z workami mąki, kamienna studnia z daszkiem, wiata z kłodami i workami rudy, świetlisty odłamek kryształu nad postumentem, karczma z szyldem kufla, wieża maga z runą i księgą.",
+      "scenario_asset": { "arkusz": "asset_ED1Fxrbx7tjW2hPdsMEDJ5Pa" },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.6 Flare, jakość medium, obraz referencyjny",
+      "data": "2026-11-15",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
