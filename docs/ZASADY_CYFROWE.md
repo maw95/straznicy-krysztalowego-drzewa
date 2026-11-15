@@ -513,7 +513,7 @@ Reguła `realm` (poziom w kreatorze „Królestwo”, `tier: 'realm'`; wymaga re
 - **Śmierć dowódcy:** zachowuje poziom i umiejętności, traci artefakty (zwycięski bohater przejmuje, co poprawia jego wyposażenie; po przegranej ze strażnikiem lub garnizonem przepadają). Od następnej rundy gracz może go **wykupić** w karczmie (akcja `kingdomRansom`): 3 zł + 2 zł za każdy poziom; wraca do osady i rusza od kolejnej rundy. Wykup jest możliwy tylko, gdy żyje bohater główny gracza. **Śmierć głównego jest ostateczna**; gracz z żywym dowódcą gra dalej.
 - **Komputer:** buduje jedną karczmę na własnej ziemi (po koszarach), najmuje pierwszego wolnego dowódcę, gdy ma 10 zł, i wykupuje poległego. Automat Hordy w kooperacji nie najmuje dowódców.
 - **Wyniki** (40 gier na komórkę, Normalny, cel Kryształy): Przymierze 45–68% (pasmo 45–65%; powyżej: kooperacja 1 gracz na krótkiej i długiej 68%, 2 graczy na bardzo długiej 68%, 1 na 1 na krótkiej 68%).
-- **Grafika:** portrety i ilustracje kart sześciu dowódców, karczma obu frakcji. Dowódcy nie mają jeszcze sprite'ów ani figurek: na arenie stoją jako żetony z portretem (lista w `BACKLOG.md`, sekcja „Grafiki i dźwięki do wygenerowania”).
+- **Grafika:** portrety i ilustracje kart sześciu dowódców, karczma obu frakcji. Dowódcy mają statyczne figurki na arenie (bez animacji; lista brakujących klipów w `BACKLOG.md`, sekcja 2a).
 
 ### Magia (15.11.2026, poziom 5, `src/engine/magic.ts`, liczby `MAGIC`, testy `tests/magic.test.ts`)
 - **Mana:** każdy bohater ma 3 + poziom many (mędrcy, czyli Mędrzec Gaju i Szaman Cieni, o 3 więcej); +1 na koniec każdej rundy. **Moc czarów:** +1 do obrażeń i leczenia za każde 3 poziomy bohatera, +1 dla mędrca.
@@ -547,7 +547,7 @@ Reguła `empire` (karta „Imperium” w kreatorze, `tier: 'empire'`; wymaga reg
 - **Jednostka poziomu 6** (`RECRUITS`, poziom 6, lista oferty przez `recruitsOf`): jedna legendarna na frakcję, 20 zł + 3 Gwiezdne Pyły, w rozbudowanych koszarach. **Feniks Świtu** (14 Ż, 6 A, 6 S, lata, dwupolowy; „Odrodzenie z Popiołów”: raz na bitwę po śmierci wstaje z połową Życia, zdolność `rebirth`). **Behemot Zagłady** (20 Ż, 7 A, 3 S, dwupolowy; „Rozdzierające Szpony”: każdym atakiem może trafić dwóch sąsiadujących wrogów, zdolność `manyHeads` Hydry).
 - **Komputer:** rozwija drzewko, gdy ma złoto i Pył z zapasem 2 zł; legendarną jednostkę kupuje jak każdego rekruta (najsilniejszy, na którego go stać).
 - **Wyniki** (40–60 gier na komórkę, Normalny, Kryształy, poziom 6): Przymierze 52–68% po dwóch dźwigniach `empire: true`.
-- **Grafika:** pełne ilustracje kart i portrety obu jednostek; brak sprite'ów i własnej ikony zdolności Feniksa (lista w `BACKLOG.md`, sekcja 2a).
+- **Grafika:** pełne ilustracje kart, portrety i statyczne figurki obu jednostek; brak animacji i własnej ikony zdolności Feniksa (lista w `BACKLOG.md`, sekcja 2a).
 
 ### Alternatywne jednostki poziomów 2–5 i siedliska (15.11.2026, poziom 6, `kingdom.ts` `ALT_UNITS`, `DWELLING_*`, testy `tests/factions.test.ts`)
 - Na poziomie 6 każdy z poziomów jednostek 2–5 ma **dwie jednostki** do wyboru. Każda ma własne **siedlisko** (akcja `kingdomDwelling`, budowane w osadzie własnej frakcji z koszarami; liczy się jako budynek rundy). Frakcja buduje **jedno siedlisko na poziom**: wybór wyklucza drugą jednostkę tego poziomu do końca gry (`KingdomState.dwellings`). Bez siedliska jednostki poziomów 2–5 nie da się zrekrutować; poziom 1 i jednostka legendarna siedlisk nie mają. Poległą jednostkę wskrzesza się tę samą (szpital działa po staremu). Ceny siedlisk: poziom 2: 2 zł + 1 drewno, 3: 3 zł + 2 drewna, 4: 4 zł + 2 rudy, 5: 5 zł + 2 rudy + 1 Pył. Ceny jednostek jak dotąd (3 / 5 / 8 / 12 zł).
@@ -556,4 +556,4 @@ Reguła `empire` (karta „Imperium” w kreatorze, `tier: 'empire'`; wymaga reg
 - Nowe jednostki używają istniejących zdolności (bez nowego kodu bitwy). **Skład, nazwy i liczby to propozycja Claude'a do akceptacji autora** (autor prosił o samodzielne decyzje; przy jednostkach poziomu 3 obowiązywała zasada „Ty zaproponuj, ja akceptuję”).
 - **Komputer:** buduje siedlisko najniższego poziomu, który go nie ma, gdy stać go na siedlisko razem z jednostką; którą z dwóch jednostek wybiera, zależy od ziarna gry i frakcji.
 - **Wyniki** (40 gier na komórkę, Normalny, Kryształy, poziom 6 w całości): Przymierze 45–73% (powyżej pasma: 2 na 2 na krótkiej 73%, 2 na 2 na długiej 68%).
-- **Grafika:** ilustracje kart i portrety ośmiu jednostek (jeden arkusz); bez sprite'ów (lista w `BACKLOG.md`, sekcja 2a). Siedliska nie mają własnych obrazków: są pozycjami na liście koszar.
+- **Grafika:** ilustracje kart, portrety i statyczne figurki ośmiu jednostek; bez animacji (lista w `BACKLOG.md`, sekcja 2a). Siedliska nie mają własnych obrazków: są pozycjami na liście koszar.

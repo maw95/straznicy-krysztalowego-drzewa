@@ -70,6 +70,24 @@ export const SPRITES: Record<string, SpriteSpec> = {
   stormKing: { dir: 'jednostki/krol_burzy', box: [150, 130] as const, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   tentacle: { dir: 'jednostki/macka_krakena', box: [70, 100] as const, corpseMax: CORPSE_MAX_W, speed: { atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   kraken: { dir: 'jednostki/kraken', box: [184, 144] as const, speed: { atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  // Levels 5 and 6 (15.11): static stand-ins made by scripts/assets/figurki_statyczne.py: a standing and a lying picture, no clips yet
+  // (the unit glides, its blow lands at once, a hit is a shake). The clips are on the list in docs/BACKLOG.md, section 2a.
+  dawnKnight: { dir: 'jednostki/rycerz_switu', box: [70, 104] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  dawnHuntress: { dir: 'jednostki/lowczyni_gaju', box: [70, 100] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  dawnSage: { dir: 'jednostki/medrzec_gaju', box: [70, 104] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  hordeWarlord: { dir: 'jednostki/wodz_hordy', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  hordeCrossbow: { dir: 'jednostki/kapitan_kusznikow', box: [80, 78] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  hordeShadow: { dir: 'jednostki/szaman_cieni', box: [80, 100] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  dawnPhoenix: { dir: 'jednostki/feniks_switu', box: [170, 140] as const, speed: {} },
+  doomBehemoth: { dir: 'jednostki/behemot_zaglady', box: [170, 130] as const, speed: {} },
+  silverFox: { dir: 'jednostki/srebrny_lis', box: [92, 70] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  dawnOwl: { dir: 'jednostki/sowa_switu', box: [92, 92] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  dryadArcher: { dir: 'jednostki/driada_luczniczka', box: [70, 100] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  whiteStag: { dir: 'jednostki/bialy_jelen', box: [130, 130] as const, speed: {} },
+  goblinSlinger: { dir: 'jednostki/goblin_procarz', box: [84, 76] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  gargoyle: { dir: 'jednostki/gargulec', box: [92, 96] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  caveTroll: { dir: 'jednostki/troll_jaskiniowy', box: [92, 100] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  shadowWyvern: { dir: 'jednostki/wiwerna_cienia', box: [160, 130] as const, speed: {} },
 };
 
 /** Whether the unit is drawn from sprites in the digital ruleset (otherwise: 3D figure or portrait token). */

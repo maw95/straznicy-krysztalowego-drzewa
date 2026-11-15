@@ -3677,6 +3677,22 @@
       "data": "2026-11-15",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/statyczne-figurki-poziomow-5-6",
+      "pliki": [
+        "public/assets/jednostki/rycerz_switu/", "public/assets/jednostki/lowczyni_gaju/", "public/assets/jednostki/medrzec_gaju/", "public/assets/jednostki/wodz_hordy/", "public/assets/jednostki/kapitan_kusznikow/", "public/assets/jednostki/szaman_cieni/",
+        "public/assets/jednostki/feniks_switu/", "public/assets/jednostki/behemot_zaglady/",
+        "public/assets/jednostki/srebrny_lis/", "public/assets/jednostki/sowa_switu/", "public/assets/jednostki/driada_luczniczka/", "public/assets/jednostki/bialy_jelen/", "public/assets/jednostki/goblin_procarz/", "public/assets/jednostki/gargulec/", "public/assets/jednostki/troll_jaskiniowy/", "public/assets/jednostki/wiwerna_cienia/"
+      ],
+      "typ": "statyczne figurki zastępcze 16 jednostek poziomów 5-6 (stoi.webp, martwy.webp, anim.json bez klipów): dowódcy, jednostki legendarne, jednostki alternatywne",
+      "opis": "Dwa arkusze 1536x1024 całych postaci stojących bokiem w prawo na czarnym tle (siatka 4x2: osiem jednostek alternatywnych; siatka 3x2: sześciu dowódców), pocięte scripts/assets/arkusz.py; Feniks i Behemot z arkusza budynku Pierwotnej Iskry (Behemot odbity w poziomie). Figurki złożone skryptem scripts/assets/figurki_statyczne.py: kadr 320x320, stopy na 95% wysokości, leżąca postać to obrócona, przyciemniona kopia. Wersja zastępcza do czasu animacji.",
+      "scenario_asset": { "alternatywne": "asset_XzYfukTrjuwonu3cTTHgfqv2", "dowodcy": "asset_WsrWWwZfyvHf7Z4h3QHCEpNh", "legendarne": "asset_Q6H9ZaqRW344oQWV1d4DzHdJ" },
+      "narzedzie": "Scenario (plan płatny) + Pillow",
+      "model": "GPT Image 2.6 Flare, jakość medium",
+      "data": "2026-11-15",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

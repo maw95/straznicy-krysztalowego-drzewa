@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Dowódcy, jednostki legendarne i alternatywne (16 jednostek poziomów 5–6) stoją na arenie jako malowane postacie zamiast żetonów z portretem. Na razie bez animacji: postać przesuwa się, cios trafia od razu.
+
 - Poziomy 4–6: nowe dźwięki (katapulta, strzał wieżyczki, fosa, podniesienie Odłamka, wzniesienie Pierwotnej Iskry, Wrota, najem dowódcy), własne karty w kreatorze dla Podboju, Reliktu, Królestwa i Imperium, ikony mechanik frakcji, garnizonu i siedlisk, obrazek rozbudowanej wieży maga oraz pełne ilustracje Feniksa Świtu i Behemota Zagłady.
 
 - Imperium: **dwie jednostki na każdym z poziomów 2–5 i siedliska**. Frakcja wybiera, którą jednostkę danego poziomu chce mieć, budując jej siedlisko w koszarach; drugie siedlisko tego poziomu jest wtedy wykluczone do końca gry. Osiem nowych jednostek: Srebrny Lis, Sowa Świtu, Driada Łuczniczka i Biały Jeleń u Przymierza; Goblin Procarz, Gargulec, Troll Jaskiniowy i Wiwerna Cienia u Hordy. Komputer też wybiera siedliska.
