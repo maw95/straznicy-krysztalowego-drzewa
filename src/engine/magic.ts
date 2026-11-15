@@ -9,6 +9,7 @@ import { levelOf } from './growth';
 import { log } from './log';
 import { revealAround } from './map';
 import type { BattleUnit, GameState, HeroState } from './types';
+import { specialtyOf, typeMana } from './heroTypes';
 
 export type SpellId = 'bolt' | 'mend' | 'slow' | 'stoneskin' | 'fireball' | 'haste' | 'vision' | 'portal';
 
@@ -57,12 +58,13 @@ export const SPELL_IDS = Object.keys(SPELLS) as SpellId[];
 /** The spells a main hero knows from the start of a level 5 game (a commander learns in a tower). */
 export const START_SPELLS: SpellId[] = ['bolt'];
 
+/** The commanders of the sage archetype are born casters (in level 5 every sage-type hero also gains mana with its levels, heroTypes.ts). */
 const isSage = (heroId: string) => heroId === 'dawnSage' || heroId === 'hordeShadow';
 
-export const maxMana = (hero: HeroState): number => MAGIC.manaBase + MAGIC.manaPerLevel * levelOf(hero) + (isSage(hero.id) ? MAGIC.sageMana : 0);
+export const maxMana = (hero: HeroState): number => MAGIC.manaBase + MAGIC.manaPerLevel * levelOf(hero) + (isSage(hero.id) ? MAGIC.sageMana : 0) + typeMana(hero);
 export const manaOf = (hero: HeroState): number => hero.mana ?? maxMana(hero);
 /** Extra damage and healing of the hero's spells. */
-export const spellPower = (hero: HeroState): number => Math.floor(levelOf(hero) / MAGIC.powerLevels) + (isSage(hero.id) ? 1 : 0);
+export const spellPower = (hero: HeroState): number => Math.floor(levelOf(hero) / MAGIC.powerLevels) + (hero.kind === 'sage' || isSage(hero.id) ? 1 : 0) + (specialtyOf(hero)?.spellPower ?? 0);
 
 /** The spells a mage tower of this level teaches. */
 export const towerSpells = (level: number): SpellId[] => SPELL_IDS.filter((id) => SPELLS[id].circle <= level);
@@ -70,7 +72,7 @@ export const towerSpells = (level: number): SpellId[] => SPELL_IDS.filter((id) =
 /** The end of a round: every living hero gets some mana back. */
 export function regenMana(state: GameState): void {
   if (!state.rules.realm) return;
-  for (const h of Object.values(state.heroes)) if (h.alive && h.mana !== undefined) h.mana = Math.min(maxMana(h), h.mana + MAGIC.regen);
+  for (const h of Object.values(state.heroes)) if (h.alive && h.mana !== undefined) h.mana = Math.min(maxMana(h), h.mana + MAGIC.regen + (specialtyOf(h)?.regen ?? 0));
 }
 
 function spend(state: GameState, hero: HeroState, spell: SpellId): SpellDef {

@@ -8,6 +8,7 @@ import { scaleOf } from './battle';
 import { log } from './log';
 import { Rng } from './rng';
 import { isDigital, type BattleUnit, type GameState, type HeroState } from './types';
+import { specialtyOf, typeAttack, typeHp } from './heroTypes';
 
 export const GROWTH = {
   /** Experience needed for level 2 ... 10 (cumulative); the curve steepens after level 5, so level 10 stays rare. Provisional: tune with the simulations. */
@@ -54,7 +55,27 @@ export function applyMilestones(hero: HeroState | undefined, unit: BattleUnit): 
   if (tier >= MILESTONE_TIER.breathTwice && UNITS[unit.defId].ability === 'fireBreath') unit.abilityExtra = true;
 }
 
-export type SkillId = 'might' | 'vigor' | 'swift' | 'leader' | 'pathfinder' | 'fortune' | 'marksman' | 'tactician' | 'scout' | 'treasureHunter' | 'scholar';
+export type SkillId = 'might' | 'vigor' | 'swift' | 'leader' | 'pathfinder' | 'fortune' | 'marksman' | 'tactician' | 'scout' | 'treasureHunter' | 'scholar' | BranchId;
+
+/**
+ * Level 5: four skills branch at their last rank. A hero with the skill at rank II is offered rank III and, next to it, the other way to finish the
+ * skill (a branch): it is taken instead of rank III and closes the skill. In `skills` a branch stands once, after the two ranks of its skill.
+ */
+export type BranchId = 'mightB' | 'vigorB' | 'swiftB' | 'leaderB';
+export const BRANCH_OF: Record<BranchId, Exclude<SkillId, BranchId>> = { mightB: 'might', vigorB: 'vigor', swiftB: 'swift', leaderB: 'leader' };
+export const BRANCHES = Object.keys(BRANCH_OF) as BranchId[];
+export const isBranch = (s: SkillId): s is BranchId => s in BRANCH_OF;
+/** What a branch gives on top of rank II of its skill (board game's scale). */
+export const BRANCH = {
+  /** Wspólna Moc: the supports strike harder instead of the hero's last point of Atak. */
+  mightSupportAttack: 1,
+  /** Niezłomność: the hero regains Życie at the start of every battle round, instead of the last 2 Ż. */
+  vigorRegen: 1,
+  /** Zwinny Szyk: one more start column instead of the last point of Szybkość. */
+  swiftDeploy: 1,
+  /** Bojowa Drużyna: the supports get Atak instead of the last point of Życie. */
+  leaderSupportAttack: 1,
+};
 
 /** A skill has ranks I-III; taking a skill the hero already has raises its rank (the list `skills` holds it once per rank). */
 export const MAX_RANK = 3;
@@ -87,15 +108,20 @@ export const SKILL_EFFECT: Record<SkillId, { texts: [string, string, string] }> 
   treasureHunter: { texts: [0, 1, 2].map((i) => `Po walce ze strażnikiem: ${SKILL_RANKS.huntTake[i] === 1 ? 'jeden skarb' : `${SKILL_RANKS.huntTake[i]} skarby`} do wyboru spośród ${SKILL_RANKS.huntPool[i]} (zamiast losu).`) as [string, string, string] },
   scholar: { texts: SKILL_RANKS.scholar.map((n) => `+${n} PD za każdą wygraną walkę.`) as [string, string, string] },
   fortune: { texts: ['Od razu: losowy skarb dla frakcji.', 'Od razu: kolejny losowy skarb dla frakcji.', 'Od razu: jeszcze jeden losowy skarb dla frakcji.'] },
+  mightB: { texts: Array(3).fill(`Zamiast trzeciego stopnia: pomocnicy bohatera mają +${BRANCH.mightSupportAttack} A w bitwie (bohater zostaje przy +${SKILL_RANKS.might[1]} A).`) as [string, string, string] },
+  vigorB: { texts: Array(3).fill(`Zamiast trzeciego stopnia: na początku każdej rundy bitwy bohater odzyskuje ${BRANCH.vigorRegen} Ż (zostaje przy +${SKILL_RANKS.vigor[1]} Ż).`) as [string, string, string] },
+  swiftB: { texts: Array(3).fill(`Zamiast trzeciego stopnia: jednostki bohatera mogą stanąć o ${BRANCH.swiftDeploy} kolumnę dalej (bohater zostaje przy +${SKILL_RANKS.swift[1]} S).`) as [string, string, string] },
+  leaderB: { texts: Array(3).fill(`Zamiast trzeciego stopnia: pomocnicy bohatera mają +${BRANCH.leaderSupportAttack} A w bitwie (zostają przy +${SKILL_RANKS.leader[1]} Ż).`) as [string, string, string] },
 };
 export const skillText = (skill: SkillId, rank: number) => SKILL_EFFECT[skill].texts[Math.min(Math.max(rank, 1), MAX_RANK) - 1];
 
 export const SKILL_NAMES: Record<FactionId, Record<SkillId, string>> = {
-  dawn: { might: 'Moc Świtu', vigor: 'Hart Gaju', swift: 'Lekkość Wiatru', leader: 'Opieka nad Drużyną', pathfinder: 'Leśny Tropiciel', fortune: 'Dar Strażników', marksman: 'Oko Łucznika', tactician: 'Sztuka Wojny', scout: 'Orle Oko', treasureHunter: 'Skarbnik Gaju', scholar: 'Mądrość Drzewa' },
-  horde: { might: 'Furia Hordy', vigor: 'Pancerz z Kości', swift: 'Pęd Ciemności', leader: 'Okrzyk Wodza', pathfinder: 'Nocny Zwiadowca', fortune: 'Łupieżca', marksman: 'Krzywy Łuk', tactician: 'Zasadzka', scout: 'Ślepia Wilka', treasureHunter: 'Nos Hieny', scholar: 'Pamięć Przodków' },
+  dawn: { might: 'Moc Świtu', vigor: 'Hart Gaju', swift: 'Lekkość Wiatru', leader: 'Opieka nad Drużyną', pathfinder: 'Leśny Tropiciel', fortune: 'Dar Strażników', marksman: 'Oko Łucznika', tactician: 'Sztuka Wojny', mightB: 'Wspólna Moc', vigorB: 'Niezłomność', swiftB: 'Zwinny Szyk', leaderB: 'Bojowa Drużyna', scout: 'Orle Oko', treasureHunter: 'Skarbnik Gaju', scholar: 'Mądrość Drzewa' },
+  horde: { might: 'Furia Hordy', vigor: 'Pancerz z Kości', swift: 'Pęd Ciemności', leader: 'Okrzyk Wodza', pathfinder: 'Nocny Zwiadowca', fortune: 'Łupieżca', marksman: 'Krzywy Łuk', tactician: 'Zasadzka', mightB: 'Wspólna Furia', vigorB: 'Twarda Skóra', swiftB: 'Szybka Sfora', leaderB: 'Bojowa Wataha', scout: 'Ślepia Wilka', treasureHunter: 'Nos Hieny', scholar: 'Pamięć Przodków' },
 };
 
-export const ALL_SKILLS = Object.keys(SKILL_EFFECT) as SkillId[];
+/** The skills that are drawn at a level up (the branches are offered next to the third rank of their skill, see drawOffer). */
+export const ALL_SKILLS = (Object.keys(SKILL_EFFECT) as SkillId[]).filter((s) => !isBranch(s));
 /** The order bots prefer: strength first, then Życie, speed, the squad, the roads. */
 export const BOT_SKILL_ORDER: SkillId[] = ['might', 'vigor', 'leader', 'swift', 'marksman', 'pathfinder', 'tactician', 'scout', 'treasureHunter', 'scholar', 'fortune'];
 
@@ -114,7 +140,8 @@ export const xpToNext = (h: HeroState): number | null => (levelOf(h) >= MAX_LEVE
  * hero has not got and the ones it has below rank III. When the hero has any skill it can still raise, at least one such raise is among the offers.
  */
 export function drawOffer(state: GameState, hero: HeroState): SkillId[] {
-  const raise = ALL_SKILLS.filter((s) => skillRank(hero, s) > 0 && skillRank(hero, s) < MAX_RANK);
+  const closed = (s: SkillId) => BRANCHES.some((b) => BRANCH_OF[b] === s && hasSkill(hero, b));
+  const raise = ALL_SKILLS.filter((s) => skillRank(hero, s) > 0 && skillRank(hero, s) < MAX_RANK && !closed(s));
   const fresh = ALL_SKILLS.filter((s) => skillRank(hero, s) === 0);
   let h = (state.setup.seed ^ 0x9e3779b1) | 0;
   for (const ch of `${hero.id}:${levelOf(hero)}`) h = (Math.imul(h, 31) + ch.charCodeAt(0)) | 0;
@@ -122,7 +149,10 @@ export function drawOffer(state: GameState, hero: HeroState): SkillId[] {
   const raises = rng.shuffle(raise);
   const first = raises.slice(0, 1);
   const rest = rng.shuffle([...fresh, ...raises.slice(1)]);
-  return [...first, ...rest].slice(0, GROWTH.offer);
+  const offer: SkillId[] = [...first, ...rest].slice(0, GROWTH.offer);
+  // Level 5: next to the third rank of a branching skill stands its branch (one more card to choose from).
+  if (state.rules.realm) for (const b of BRANCHES) if (offer.includes(BRANCH_OF[b]) && skillRank(hero, BRANCH_OF[b]) === MAX_RANK - 1) offer.push(b);
+  return offer;
 }
 
 /** Gives experience; a hero that reaches a level gets three skills to choose from (one choice at a time). */
@@ -181,7 +211,19 @@ export function applyHeroSkills(hero: HeroState | undefined, unit: BattleUnit): 
   const hp = rankValue(SKILL_RANKS.vigor, hero, 'vigor') * (unit.hpScale ?? k);
   unit.hp += hp;
   unit.maxHp += hp;
+  if (hasSkill(hero, 'vigorB')) (unit.gear ??= {}).regen = (unit.gear.regen ?? 0) + BRANCH.vigorRegen * (unit.hpScale ?? k);
   addMarksman(hero, unit);
+}
+
+/** Level 5: what the hero's type has added by its level goes onto its unit when a battle starts (nothing in the other levels: the hero has no type). */
+export function applyHeroType(hero: HeroState | undefined, unit: BattleUnit): void {
+  if (!hero?.kind) return;
+  const k = unit.scale ?? 1;
+  unit.status.battleAttackBonus += typeAttack(hero) * k;
+  const hp = typeHp(hero) * (unit.hpScale ?? k);
+  unit.hp += hp;
+  unit.maxHp += hp;
+  if (UNITS[unit.defId].attackType === 'ranged') unit.status.battleAttackBonus += (specialtyOf(hero)?.marksman ?? 0) * k;
 }
 
 /** Szkoła strzelecka: a ranged unit of the hero gets the attack bonus. */
@@ -192,9 +234,14 @@ function addMarksman(hero: Pick<HeroState, 'skills'>, unit: BattleUnit): void {
 /** Pomocnicy of a hero with the skill Dowódca. */
 export function applySupportSkill(hero: HeroState | undefined, unit: BattleUnit): void {
   if (!hero) return;
-  const hp = rankValue(SKILL_RANKS.leader, hero, 'leader') * (unit.hpScale ?? unit.scale ?? 1);
+  const spec = specialtyOf(hero);
+  const hp = (rankValue(SKILL_RANKS.leader, hero, 'leader') + (spec?.supportHp ?? 0)) * (unit.hpScale ?? unit.scale ?? 1);
   unit.hp += hp;
   unit.maxHp += hp;
+  // Level 5: the branches of Moc and Dowódca arm the supports; a master archer's speciality arms the shooters.
+  const k = unit.scale ?? 1;
+  unit.status.battleAttackBonus += ((hasSkill(hero, 'mightB') ? BRANCH.mightSupportAttack : 0) + (hasSkill(hero, 'leaderB') ? BRANCH.leaderSupportAttack : 0)) * k;
+  if (UNITS[unit.defId].attackType === 'ranged') unit.status.battleAttackBonus += (spec?.marksman ?? 0) * k;
   addMarksman(hero, unit);
 }
 
@@ -205,7 +252,7 @@ export function huntOf(hero: HeroState | undefined): { pool: number; take: numbe
 }
 
 /** Uczony: extra experience for a won battle. */
-export const scholarXp = (hero: HeroState | undefined) => (hero ? rankValue(SKILL_RANKS.scholar, hero, 'scholar') : 0);
+export const scholarXp = (hero: HeroState | undefined) => (hero ? rankValue(SKILL_RANKS.scholar, hero, 'scholar') + (specialtyOf(hero)?.xp ?? 0) : 0);
 
 /** The hero keeps one of the shown treasures (the rest of the pool is never made). */
 export function chooseTreasure(state: GameState, heroId: string, kind: ItemKind): void {
@@ -221,10 +268,10 @@ export function chooseTreasure(state: GameState, heroId: string, kind: ItemKind)
 }
 
 /** Extra columns a hero's units may be deployed in. */
-export const deployDepthOf = (hero: HeroState | undefined) => (hero ? rankValue(SKILL_RANKS.tactician, hero, 'tactician') : 0);
+export const deployDepthOf = (hero: HeroState | undefined) => (hero ? rankValue(SKILL_RANKS.tactician, hero, 'tactician') + (hasSkill(hero, 'swiftB') ? BRANCH.swiftDeploy : 0) : 0);
 
 /** Radius of the hexes a hero reveals (0 = no Zwiadowca; the step itself always reveals the neighbours). */
 export const scoutRadiusOf = (hero: HeroState | undefined) => (hero ? rankValue(SKILL_RANKS.scout, hero, 'scout') : 0);
 
 /** Extra move points on the map. */
-export const moveBonus = (hero: HeroState | undefined) => (hero ? rankValue(SKILL_RANKS.pathfinder, hero, 'pathfinder') : 0);
+export const moveBonus = (hero: HeroState | undefined) => (hero ? rankValue(SKILL_RANKS.pathfinder, hero, 'pathfinder') + (specialtyOf(hero)?.move ?? 0) : 0);

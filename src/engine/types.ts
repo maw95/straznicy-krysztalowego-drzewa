@@ -1,5 +1,6 @@
 import type { SkillId } from './growth';
 import type { SpellId } from './magic';
+import type { HeroType } from './heroTypes';
 import type { SiteKind, Slot } from './sites';
 import type { HexKey } from './hex';
 import type { BuildingId, KingdomState } from './kingdom';
@@ -219,6 +220,8 @@ export interface HeroState {
   /** Level 5: the spells the hero knows and the mana it has left (missing: full, see magic.ts `manaOf`). */
   spells?: SpellId[];
   mana?: number;
+  /** Level 5: the hero's type (heroTypes.ts): it grows by itself with the levels and switches the hero's speciality on. Missing in every other level. */
+  kind?: HeroType;
 }
 
 export interface FactionState {

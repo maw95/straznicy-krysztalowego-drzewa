@@ -4,7 +4,8 @@
 import { heroLabel } from '../engine/realm';
 import { useContext, useState } from 'react';
 import { abilityTextFor, FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data';
-import { GROWTH, levelOf, MILESTONE_LEVELS, milestoneText, skillRank, skillText, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
+import { HERO_TYPE_NAMES, specialtyOf, TYPE_TEXTS } from '../engine/heroTypes';
+import { BRANCH_OF, isBranch, GROWTH, levelOf, MILESTONE_LEVELS, milestoneText, skillRank, skillText, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
 import { ARTIFACT_BY_ID, gearOf, packOf, passTargets, RARITY_NAMES, SETS, setCount, type ArtifactDef, type Slot } from '../engine/sites';
 import type { Action, GameState, HeroState, LogEvent } from '../engine/types';
 import { abilityArt, asset, Ribbon } from './common';
@@ -13,7 +14,8 @@ import { UnitCard } from './UnitCard';
 
 /** The painted icon of a skill (public/assets/ikony/umiejetnosci, made with Scenario). */
 export function SkillIcon({ skill, size = 40 }: { skill: SkillId; size?: number }) {
-  return <img src={asset(`ikony/umiejetnosci/${skill}.webp`)} alt="" width={size} height={size} style={{ flex: 'none', display: 'block' }} />;
+  // A branch (level 5) is drawn with the medal of the skill it finishes.
+  return <img src={asset(`ikony/umiejetnosci/${isBranch(skill) ? BRANCH_OF[skill] : skill}.webp`)} alt="" width={size} height={size} style={{ flex: 'none', display: 'block' }} />;
 }
 
 export const SLOT_NAMES: Record<Slot, string> = { helmet: 'Hełm', weapon: 'Broń', armor: 'Zbroja', shield: 'Tarcza', boots: 'Buty' };
@@ -63,8 +65,8 @@ export function SkillCard({ faction, skill, rank = 1, raise = false, onChoose, w
       <div className="skill-card-art">
         <SkillIcon skill={skill} size={104} />
       </div>
-      <div className="skill-card-name">{SKILL_NAMES[faction][skill]} {ROMAN[rank]}</div>
-      {raise && <div className="skill-card-raise">Rozwinięcie: stopień {ROMAN[rank]}</div>}
+      <div className="skill-card-name">{SKILL_NAMES[faction][skill]} {isBranch(skill) ? '' : ROMAN[rank]}</div>
+      {isBranch(skill) ? <div className="skill-card-raise">Rozgałęzienie: {SKILL_NAMES[faction][BRANCH_OF[skill]]}</div> : raise && <div className="skill-card-raise">Rozwinięcie: stopień {ROMAN[rank]}</div>}
       <div className="skill-card-text"><RuleText text={skillText(skill, rank)} /></div>
       {onChoose && <div className="skill-card-pick">Wybierz</div>}
     </>
@@ -263,13 +265,20 @@ export function HeroSheet({ hero, state, onAction, onClose }: { hero: HeroState;
         </div>
         <GearPanel hero={hero} state={state} onAction={onAction} />
         <div className="hero-sheet-col" style={{ flex: 1, minWidth: 220, maxWidth: 300 }}>
+          {hero.kind && (
+            <div data-hero-kind style={{ fontSize: 15, lineHeight: 1.3, marginBottom: 6 }}>
+              <div className="lbl" style={{ color: '#6B4A22' }}>Typ i specjalność</div>
+              <div><b style={{ textTransform: 'capitalize' }}>{HERO_TYPE_NAMES[hero.kind]}</b>: <RuleText text={TYPE_TEXTS[hero.kind]} /></div>
+              {specialtyOf(hero) && <div><b>{specialtyOf(hero)!.name}</b>: <RuleText text={specialtyOf(hero)!.text} /></div>}
+            </div>
+          )}
           <div className="lbl" style={{ color: '#6B4A22' }}>Umiejętności</div>
           {skills.length === 0 && <div style={{ fontSize: 15, color: '#6B4A22' }}>brak</div>}
           {skills.map((s) => (
             <div key={s} className="sheet-line">
               <SkillIcon skill={s} size={38} />
               <div>
-                <b>{SKILL_NAMES[hero.faction][s]} {ROMAN[skillRank(hero, s)]}</b>
+                <b>{SKILL_NAMES[hero.faction][s]} {isBranch(s) ? '' : ROMAN[skillRank(hero, s)]}</b>
                 <div><RuleText text={skillText(s, skillRank(hero, s))} /></div>
               </div>
             </div>

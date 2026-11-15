@@ -808,6 +808,17 @@ Każdy bohater ma **manę**: 3 i jeszcze 1 za każdy swój poziom (mędrcy o 3 w
 
 Czary rosną z bohaterem: co 3 poziomy zadają i leczą o 1 więcej; mędrzec ma +1 od początku.
 
+### Typ bohatera i specjalność
+Na poziomie Królestwo każdy bohater ma **typ**, który sam go wzmacnia przy każdym awansie:
+- **wojownik** (Prastary Niedźwiedź, Ogr Żelazna Pięść, dowódcy-wojownicy): +1 Życia za każdy poziom,
+- **łowca** (Król Jednorożców, Władca Wilkołaków, dowódcy-łucznicy): +1 Ataku co dwa poziomy,
+- **mędrzec** (Złoty Smok, Czarny Smok, dowódcy-mędrcy): +1 many za każdy poziom i mocniejsze czary.
+
+Każdy bohater ma też **specjalność**, czyli jedną własną premię (na przykład Król Jednorożców ma +1 punkt ruchu na mapie, a Ogr dostaje 1 zł za każdą wygraną bitwę). Typ i specjalność widać na karcie bohatera.
+
+### Rozgałęzienia umiejętności
+Cztery umiejętności (Moc, Hart, Lekkość i Dowódca) można dokończyć na dwa sposoby. Gdy masz taką umiejętność na II stopniu i przy awansie pojawia się jej III stopień, obok leży dodatkowa karta, **rozgałęzienie**: zamiast ostatniego punktu dla bohatera dostajesz coś innego (premię dla pomocników, leczenie co rundę albo dalsze rozstawienie). Wybór jest ostateczny.
+
 ## Autorzy (wersja cyfrowa)
 
 W menu głównym przycisk „Autorzy” otwiera listę: autorzy gry (Maciej Woźniak, Aleksandra Szestowicka przy fabule, Zuzanna Woźniak jako autorka Dzielnej Kaczki), autorzy muzyki wraz z licencjami (CC BY wymaga podania autora), informacja, że grafika, animacje i efekty dźwiękowe powstały z użyciem narzędzi AI (Scenario), oraz użyte oprogramowanie.

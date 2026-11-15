@@ -23,6 +23,8 @@ export interface DigitalTune {
   shape?: MapShape;
   /** Level 3 "Osada" switched on (missing = any). */
   kingdom?: boolean;
+  /** Level 5 "Królestwo" switched on (missing = any). */
+  realm?: boolean;
   /** Changes to the rules; applied in order, later entries win. */
   rules: Partial<RulesConfig>;
 }
@@ -140,6 +142,12 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   { objective: 'conquest', level: 'normal', mode: 'pvp', players: 2, maps: ['short', 'long', 'veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
   { objective: 'conquest', level: 'normal', mode: 'coop', players: 2, maps: ['medium'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
   { objective: 'conquest', level: 'normal', mode: 'coop', players: 1, maps: ['veryLong'], rules: { roundLimitBonus: 2, dawnStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  // --- Level 5 "Królestwo" (15.11; SIM_ECONOMY=1 SIM_REALM=1 scripts/sim/kingdom.ts, 60 games a cell): the second hero, the starting spell and the
+  // growth by type help the Przymierza more where one hero plays; the Horde start with treasures on top.
+  { realm: true, objective: 'crystals', level: 'normal', mode: 'coop', players: 1, rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { realm: true, objective: 'crystals', level: 'normal', mode: 'pvp', players: 1, maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
+  { realm: true, objective: 'crystals', level: 'normal', mode: 'pvp', players: 1, maps: ['medium'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { realm: true, objective: 'crystals', level: 'normal', mode: 'coop', players: 2, maps: ['long', 'veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
 ];
 
 /** The rules a game is played with: the setup's, plus the digital levers that match it. */
@@ -161,6 +169,7 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
     if (t.maps && !t.maps.includes(setup.mapSize)) continue;
     if (t.growth !== undefined && t.growth !== Boolean(base.heroGrowth)) continue;
     if (t.kingdom !== undefined && t.kingdom !== Boolean(base.kingdom)) continue;
+    if (t.realm !== undefined && t.realm !== Boolean(base.realm)) continue;
     if (t.shape && t.shape !== (setup.mapShape ?? 'triangle')) continue;
     if (t.customMapId && t.customMapId !== setup.customMapId) continue;
     rules = { ...rules, ...t.rules };

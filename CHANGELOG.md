@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Królestwo: **typy bohaterów, specjalności i rozgałęzienia umiejętności**. Wojownik zyskuje Życie z każdym poziomem, łowca Atak co dwa poziomy, mędrzec manę i moc czarów. Każdy bohater ma własną specjalność (np. dodatkowy ruch, złoto za wygrane bitwy, mocniejsze czary). Moc, Hart, Lekkość i Dowódcę można dokończyć na dwa sposoby: przy trzecim stopniu pojawia się dodatkowa karta rozgałęzienia. Poziomy 1–4 bez zmian.
+
 - Królestwo: **magia**. Bohaterowie mają manę i rzucają czary: w bitwie jeden na aktywację (Magiczny Pocisk, Leczenie, Spowolnienie, Kamienna Skóra, Kula Ognia, Zryw), na mapie Wizję i Wrota do własnej osady. Czarów uczy nowy budynek, wieża maga; bohaterowie główni znają Magiczny Pocisk od początku, a mędrcy czarują mocniej. Komputer też czaruje.
 
 - Nowy poziom 5 **„Królestwo”** (początek): **drugi bohater**. W karczmie (nowy budynek) każdy gracz najmuje jednego dowódcę: wojownika, łucznika albo mędrca z własnym imieniem. Dowódca ma własny pionek, turę, doświadczenie, umiejętności i artefakty. Gdy polegnie, traci artefakty, ale można go wykupić w karczmie; śmierć bohatera głównego pozostaje ostateczna. Komputer też najmuje dowódców. W kreatorze gry są karty „Królestwo” i (na razie pusta) „Imperium”.

@@ -11,7 +11,7 @@ import { playOut, pvpSeats, setup } from './helpers/engine';
 
 const rules = { ruleset: 'digital', heroGrowth: true, kingdom: true, economy: true, realm: true } as const;
 const game = (): GameState => {
-  const s = createGame(setup({ mode: 'pvp', mapSize: 'medium', seed: 3, seats: pvpSeats('goldDragon', 'werewolfLord') }, rules));
+  const s = createGame(setup({ mode: 'pvp', mapSize: 'medium', seed: 3, seats: pvpSeats('ancientBear', 'werewolfLord') }, rules));
   s.kingdom!.gold.dawn = 60;
   s.kingdom!.res!.dawn = { wood: 9, ore: 9, dust: 9 };
   return s;
@@ -60,7 +60,7 @@ describe('level 5: mana and the mage tower', () => {
     const hero = activeHero(s)!;
     expect(maxMana(hero)).toBe(MAGIC.manaBase + MAGIC.manaPerLevel);
     expect(manaOf(hero)).toBe(maxMana(hero));
-    const sage = { ...hero, id: 'dawnSage' };
+    const sage = { ...hero, id: 'dawnSage', kind: 'sage' as const };
     expect(maxMana(sage)).toBe(maxMana(hero) + MAGIC.sageMana);
     expect(spellPower(sage)).toBe(spellPower(hero) + 1);
   });
@@ -76,32 +76,32 @@ describe('level 5: mana and the mage tower', () => {
 describe('level 5: spells in a battle', () => {
   it('a bolt hurts an enemy anywhere, costs mana, and only one spell goes in an activation', () => {
     let s = battle(['bolt', 'slow']);
-    const hero = s.heroes.goldDragon;
+    const hero = s.heroes.ancientBear;
     expect(castableInBattle(s)).toEqual(['bolt', 'slow']);
     const foe = s.battle!.units.werewolfLord;
     const hp = foe.hp;
     const mana = manaOf(hero);
     s = applyAction(s, { type: 'battleSpell', spell: 'bolt', targetId: 'werewolfLord' });
     expect(s.battle!.units.werewolfLord.hp).toBe(hp - MAGIC.boltDamage * (s.rules.statScale ?? 1));
-    expect(manaOf(s.heroes.goldDragon)).toBe(mana - SPELLS.bolt.mana);
+    expect(manaOf(s.heroes.ancientBear)).toBe(mana - SPELLS.bolt.mana);
     expect(castableInBattle(s)).toEqual([]);
     expect(() => applyAction(s, { type: 'battleSpell', spell: 'slow', targetId: 'werewolfLord' })).toThrow(/już czarował/);
     // The hero still moves and attacks after the spell.
-    expect(s.battle!.activation!.unitId).toBe('goldDragon');
+    expect(s.battle!.activation!.unitId).toBe('ancientBear');
   });
 
   it('needs a proper target and enough mana', () => {
     const s = battle(['bolt', 'mend']);
-    expect(() => applyAction(s, { type: 'battleSpell', spell: 'bolt', targetId: 'goldDragon' })).toThrow(/cel/);
-    s.heroes.goldDragon.mana = 1;
+    expect(() => applyAction(s, { type: 'battleSpell', spell: 'bolt', targetId: 'ancientBear' })).toThrow(/cel/);
+    s.heroes.ancientBear.mana = 1;
     expect(() => applyAction(s, { type: 'battleSpell', spell: 'bolt', targetId: 'werewolfLord' })).toThrow(/many/);
   });
 
   it('healing, stone skin, slow and haste do what they say', () => {
     let s = battle(['mend', 'stoneskin', 'slow', 'haste']);
-    s.heroes.goldDragon.mana = 20;
+    s.heroes.ancientBear.mana = 20;
     const b = () => s.battle!;
-    const ally = Object.values(b().units).find((u) => u.side === 'dawn' && u.id !== 'goldDragon')!;
+    const ally = Object.values(b().units).find((u) => u.side === 'dawn' && u.id !== 'ancientBear')!;
     ally.hp -= 2;
     const scale = s.rules.statScale ?? 1;
     const before = ally.hp;
@@ -110,15 +110,15 @@ describe('level 5: spells in a battle', () => {
     // Each next spell in a fresh activation of the hero.
     const again = () => { b().activation!.spell = false; };
     again();
-    s = applyAction(s, { type: 'battleSpell', spell: 'stoneskin', targetId: 'goldDragon' });
-    expect(b().units.goldDragon.status.damageReduction).toBe(MAGIC.stoneskin * scale);
+    s = applyAction(s, { type: 'battleSpell', spell: 'stoneskin', targetId: 'ancientBear' });
+    expect(b().units.ancientBear.status.damageReduction).toBe(MAGIC.stoneskin * scale);
     again();
     s = applyAction(s, { type: 'battleSpell', spell: 'slow', targetId: 'werewolfLord' });
     expect(b().units.werewolfLord.status.slowNext).toBe(MAGIC.slowSpeed);
     again();
     s = applyAction(s, { type: 'battleSpell', spell: 'haste', targetId: ally.id });
     expect(b().extra[0]).toEqual({ unitId: ally.id, moveOnly: false });
-    expect(() => { again(); applyAction(s, { type: 'battleSpell', spell: 'haste', targetId: 'goldDragon' }); }).toThrow(/cel/);
+    expect(() => { again(); applyAction(s, { type: 'battleSpell', spell: 'haste', targetId: 'ancientBear' }); }).toThrow(/cel/);
   });
 
   it('a fireball burns the target and everybody next to it', () => {
@@ -176,7 +176,7 @@ describe('level 5: spells on the map and mana coming back', () => {
   it('bots build the tower, learn spells and play whole games to the end', () => {
     let learnt = 0;
     for (const seed of [2, 5, 8]) {
-      const s = playOut(createGame(setup({ mode: 'pvp', mapSize: 'long', seed, seats: pvpSeats('goldDragon', 'werewolfLord') }, rules)));
+      const s = playOut(createGame(setup({ mode: 'pvp', mapSize: 'long', seed, seats: pvpSeats('ancientBear', 'werewolfLord') }, rules)));
       expect(s.phase).toBe('over');
       learnt += Object.values(s.heroes).reduce((n, h) => n + (h.spells?.length ?? 0), 0);
     }

@@ -53,13 +53,14 @@ import { distance, parseKey, type HexKey } from './hex';
 import { placeEncounters } from './encounters';
 import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { log } from './log';
-import { applyHeroSkills, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
+import { applyHeroSkills, applyHeroType, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { fireStory } from './story';
 import { buildingLevel, collectIncome, enterPlace, forgeLevel, garrisonAt, initKingdom, kingdomAction, supportSlots } from './kingdom';
 import { ECONOMY } from './economy';
 import { commanderFalls } from './realm';
 import { battleSpell, mapSpell, regenMana, START_SPELLS } from './magic';
+import { HERO_TYPES, specialtyOf } from './heroTypes';
 import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, placeSites, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
@@ -309,7 +310,7 @@ export function grantTreasure(state: GameState, kind: ItemKind, faction: Faction
 
 function addHero(state: GameState, heroId: string, faction: FactionId, playerId: string | null) {
   // Level 5: every main hero knows one spell from the start, so magic is in the game from the first battle.
-  state.heroes[heroId] = { id: heroId, faction, playerId, pos: homeOf(state, faction), alive: true, crystals: [], ...(state.rules.realm ? { spells: [...START_SPELLS] } : {}) };
+  state.heroes[heroId] = { id: heroId, faction, playerId, pos: homeOf(state, faction), alive: true, crystals: [], ...(state.rules.realm ? { spells: [...START_SPELLS], kind: HERO_TYPES[heroId] } : {}) };
   const unused = state.factions[faction].unusedHeroes;
   if (unused.includes(heroId)) unused.splice(unused.indexOf(heroId), 1);
 }
@@ -813,6 +814,7 @@ function startBattle(state: GameState, s: BattleStart) {
   if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital, scale, hpScale);
   for (const h of [attacker, defenderHero]) if (h && state.rules.heroGrowth) {
     applyHeroSkills(h, b.units[h.id]);
+    applyHeroType(h, b.units[h.id]);
     applyMilestones(h, b.units[h.id]);
     applyGear(h, b.units[h.id]);
     if (deployDepthOf(h)) (b.deployDepth ??= {})[h.faction] = deployDepthOf(h);
@@ -931,6 +933,12 @@ function awardBattleXp(state: GameState, b: BattleState) {
     const scholar = won ? scholarXp(hero) : 0;
     const reason = won ? (b.kind === 'neutral' ? 'pokonany strażnik' : b.defenderHero ? 'wygrana walka z bohaterem' : 'zdobyta osada z garnizonem') : 'przegrana walka, którą bohater przeżył';
     awardXp(state, hero, (won ? (b.kind === 'neutral' ? GROWTH.xp.guardian : GROWTH.xp.hero) : GROWTH.xp.lost) + scholar, scholar ? `${reason}, w tym ${scholar} od Uczonego` : reason);
+    // Level 5: a looter's speciality pays gold for every won battle.
+    const loot = won ? specialtyOf(hero)?.gold ?? 0 : 0;
+    if (loot && state.kingdom) {
+      state.kingdom.gold[hero.faction] += loot;
+      log(state, 'info', `${UNITS[hero.id].name} zdobywa ${loot} zł łupu (${specialtyOf(hero)!.name}).`, hero.faction);
+    }
     // Spoils: the winner of a fight between heroes takes the beaten hero's artifacts (those that improve its own gear); when there is nothing
     // to take it still finds a common one (the Horde meet guardians rarely, so this evens it out).
     if (won && b.kind === 'heroes' && b.defenderHero) {

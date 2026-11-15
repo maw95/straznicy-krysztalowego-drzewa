@@ -22,7 +22,7 @@ Poziom 4 zbudowany 15.11 (Kuźnia, wymiana, obiekty mapy, obrona osady, Podbój,
 
 ### Etap C. Poziom 5 „Królestwo” (bohaterowie i magia)
 10. **5a. Drugi bohater, reszta** (M): zrobione 15.11 (karczma, najem, tura, PD i artefakty dowódcy, śmierć i wykup, boty, UI). Zostaje do decyzji autora: osobna drużyna dowódcy (dziś wspólna pula pomocników frakcji), własna krzywa wzrostu archetypów (wchodzi z 5c), sprite'y dowódców (sekcja 2a).
-12. **5c. Specjalności i drzewka bohatera** + automatyczny wzrost statystyk zależny od typu bohatera (M–L; przesuwa `golden.test.ts`).
+Poziom 5 zbudowany 15.11 (drugi bohater, magia, typy i specjalności, rozgałęzienia umiejętności); czeka na ogranie przez autora. Łatwy i Trudny dla poziomów 4–5 jadą na strojeniu poziomu 3 (osobno niemierzone).
 
 ### Etap D. Poziom 6 „Imperium” (frakcje i Relikt)
 13. **6a. Cel „Relikt”** (L): Odłamki Pierwotnej Iskry na mapie, licznik „3/6”, budynek Pierwotnej Iskry (wygrywa grę).

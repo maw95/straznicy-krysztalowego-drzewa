@@ -14,6 +14,7 @@ import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import type { Action, Crystal, GameState, HeroState } from './types';
 import { MAGIC, SPELLS, towerSpells, type SpellId } from './magic';
+import { HERO_TYPES } from './heroTypes';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
 export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic';
@@ -611,7 +612,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (commanderOf(state, hero.playerId)) throw new Error('Masz już dowódcę: gracz prowadzi jednego.');
       if (!freeCommanders(state, hero.faction).includes(action.unitId)) throw new Error('Tego dowódcy nie ma w karczmie.');
       pay(state, hero.faction, REALM.hireGold);
-      const fresh: HeroState = { id: action.unitId, faction: hero.faction, playerId: hero.playerId, pos: s.at, alive: true, crystals: [], secondary: true, name: commanderName(state, action.unitId) };
+      const fresh: HeroState = { id: action.unitId, faction: hero.faction, playerId: hero.playerId, pos: s.at, alive: true, crystals: [], secondary: true, name: commanderName(state, action.unitId), kind: HERO_TYPES[action.unitId] };
       state.heroes[fresh.id] = fresh;
       standIn(state, fresh, s.at);
       log(state, 'info', `${FACTION_NAMES[hero.faction]} najmuje dowódcę: ${heroLabel(fresh)} (${REALM.hireGold} zł). Rusza od następnej rundy.`);
