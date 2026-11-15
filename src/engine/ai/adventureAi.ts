@@ -2,7 +2,7 @@
 // for player seats. Both only use information visible on the map.
 
 import { FACTION_SUPPORTS, ITEM_EFFECT, UNITS, type FactionId } from '../data';
-import { KINGDOM_BIG_PILE, kingdomBotAction, kingdomWish, supportSlots } from '../kingdom';
+import { kingdomBotAction, supportSlots } from '../kingdom';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { heroTileCost } from '../sites';
@@ -710,15 +710,13 @@ function canFightGuardian(state: GameState): boolean {
  */
 const ENCOUNTER_BOT = { minLevel: [2, 4, 7], minSupports: [2, 2, 2], maxCost: 4, lastRounds: 0.5 } as const;
 
-/** Level 3: walk back to a settlement with something to buy, or to a gold mine nobody holds, when it is close. */
+/** Level 3: walk to a gold mine nobody holds or to an empty settlement when it is close (shopping needs no walk: kingdomBotAction buys from anywhere). */
 function kingdomDetour(state: GameState, hero: HeroState, memo: Memo): Action | null {
   const k = state.kingdom;
   if (!k || isDesperate(state) || state.turnBattleDone) return null;
-  // The goal of the game comes first: a detour is short, except for a big pile of gold early in the game (then the way home is worth it).
+  // The goal of the game comes first: a detour is short.
   if (hero.crystals.length || state.round > state.roundLimit * 0.6) return null;
   const goals = new Map<HexKey, number>();
-  const shop = kingdomWish(state, hero.faction);
-  if (shop) goals.set(shop.at, k.gold[hero.faction] >= KINGDOM_BIG_PILE ? 4 : 1);
   for (const [hex, m] of Object.entries(k.mines)) if (m.owner !== hero.faction && state.tiles[hex].revealed) goals.set(hex, 1);
   for (const s of Object.values(k.settlements)) if (s.owner === null && !state.tiles[s.at].crystalId) goals.set(s.at, 1);
   goals.delete(hero.pos);

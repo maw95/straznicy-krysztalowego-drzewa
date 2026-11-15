@@ -18,7 +18,8 @@ const shape = process.env.SIM_SHAPE ?? 'triangle';
 const map = process.env.SIM_MAP;
 const SIZES = process.env.SIM_SIZES ? process.env.SIM_SIZES.split(',') : ['short', 'medium', 'long', 'veryLong'];
 // Other sizes than the board game's go to a file of their own, so that the merge keeps both.
-const tag = `${shape}${map ? `-${map}` : ''}-${objective}-g${growthArg}${process.env.SIM_SIZES ? '-xl' : ''}`;
+const ONLY = process.env.SIM_ONLY; // e.g. kids: tune that level alone (into a file of its own, the other levels' entries stay)
+const tag = `${shape}${map ? `-${map}` : ''}-${objective}-g${growthArg}${process.env.SIM_SIZES ? '-xl' : ''}${ONLY ? `-only-${ONLY}` : ''}`;
 const LEVEL: Record<string, string> = { kids: 'kids', full: 'normal', hard: 'hard' };
 
 type Patch = Record<string, unknown>;
@@ -99,7 +100,7 @@ const coop = (t: string) => t.startsWith('coop');
 const all: Cell[] = [];
 for (const size of SIZES) {
   for (const table of ['coop1', 'coop2', 'pvp1', 'pvp2']) {
-    for (const option of coop(table) ? ['kids', 'full', 'hard'] : ['kids', 'full']) {
+    for (const option of (coop(table) ? ['kids', 'full', 'hard'] : ['kids', 'full']).filter((o) => !ONLY || o === ONLY)) {
       if (objective === 'survival' && !coop(table)) continue;
       const c = { size, table, option };
       all.push({ ...c, name: names(c), step: 0, rate: 0, best: null, tried: new Set(), done: false });

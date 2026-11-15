@@ -411,8 +411,12 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   const own = s.land === f;
   if (own && s.buildings.barracks < 1 && afford(nextCost(s, 'barracks'))) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
   if (own && s.buildings.barracks >= 1) {
-    const missing = RECRUITS[f].filter((r) => !fs.supportsAlive.includes(r.id) && !fs.supportsDead.includes(r.id) && (r.tier < 4 || s.buildings.barracks >= 2)).sort((a, b) => a.cost - b.cost || b.tier - a.tier)[0];
-    if (missing && afford(missing.cost)) return { type: 'kingdomRecruit', settlementId: id, unitId: missing.id };
+    // Like a player: the strongest recruit it can pay for now.
+    const missing = RECRUITS[f].filter((r) => !fs.supportsAlive.includes(r.id) && !fs.supportsDead.includes(r.id) && (r.tier < 4 || s.buildings.barracks >= 2) && afford(r.cost)).sort((a, b) => b.tier - a.tier)[0];
+    if (missing) return { type: 'kingdomRecruit', settlementId: id, unitId: missing.id };
+    // Every cheaper recruit is in the team and the strongest ones wait behind the bigger barracks: build them.
+    const waiting = RECRUITS[f].some((r) => r.tier >= 4 && !fs.supportsAlive.includes(r.id) && !fs.supportsDead.includes(r.id));
+    if (waiting && s.buildings.barracks === 1 && RECRUITS[f].every((r) => r.tier >= 4 || fs.supportsAlive.includes(r.id) || fs.supportsDead.includes(r.id)) && afford(nextCost(s, 'barracks'))) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
   }
   if (s.buildings.hospital >= 1 && fs.supportsDead.length) {
     const dead = fs.supportsDead[0];
@@ -445,8 +449,12 @@ export function kingdomBotAction(state: GameState, hero: HeroState): Action | nu
     const trial = { gear: { ...hero.gear, [art.slot]: art.id } };
     if (best(trial as HeroState) > best(hero)) return { type: 'equipArtifact', artifactId: art.id };
   }
-  const s = settlementAt(state, hero.pos);
-  return s ? botPurchase(state, hero.faction, s) : null;
+  // Shopping needs no walk (a human opens the settlement list from anywhere), so a bot shops from where it stands too.
+  for (const s of settlementsOf(state, hero.faction)) {
+    const buy = botPurchase(state, hero.faction, s);
+    if (buy) return buy;
+  }
+  return null;
 }
 
 /** Whether a bot of this faction has something to buy in one of its settlements (a reason to walk back to it). */

@@ -10,7 +10,7 @@ import { AUTO_TUNING } from './tuningAuto';
 export interface DigitalTune {
   /** Where it applies; a missing field matches everything. */
   objective?: 'crystals' | 'control' | 'survival' | 'boss' | 'artifact';
-  level?: 'kids' | 'normal' | 'hard';  // level 0 ('zero') is not tuned: it is the printed duels
+  level?: 'zero' | 'kids' | 'normal' | 'hard';
   mode?: 'coop' | 'pvp';
   /** Przymierza seats (players on the good side). */
   players?: number;
@@ -36,12 +36,12 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   { growth: true, objective: 'crystals', rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
   // --- Goal 'crystals' ---
   // Easy: a dead hero is replaced in the board duels, which made 1-hero games on medium maps too easy and 1 against 1 on short ones too.
-  { objective: 'crystals', level: 'kids', mode: 'coop', players: 1, maps: ['medium'], rules: { heroReplacement: false } },
-  { objective: 'crystals', level: 'kids', mode: 'pvp', players: 1, maps: ['short', 'medium'], rules: { heroReplacement: false } },
-  { objective: 'crystals', level: 'kids', mode: 'pvp', players: 2, maps: ['long'], rules: { heroMovePoints: 4, roundLimitBonus: 6 } },
-  { objective: 'crystals', level: 'kids', mode: 'pvp', players: 2, maps: ['veryLong'], rules: { heroMovePoints: 4, roundLimitBonus: 6, dawnStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
-  { growth: true, objective: 'crystals', level: 'kids', mode: 'pvp', players: 1, maps: ['veryLong'], rules: { heroMovePoints: 4, roundLimitBonus: 6 } },
-  { growth: true, objective: 'crystals', level: 'kids', mode: 'coop', players: 1, maps: ['short'], rules: { heroReplacement: false } },
+  { objective: 'crystals', level: 'zero', mode: 'coop', players: 1, maps: ['medium'], rules: { heroReplacement: false } },
+  { objective: 'crystals', level: 'zero', mode: 'pvp', players: 1, maps: ['short', 'medium'], rules: { heroReplacement: false } },
+  { objective: 'crystals', level: 'zero', mode: 'pvp', players: 2, maps: ['long'], rules: { heroMovePoints: 4, roundLimitBonus: 6 } },
+  { objective: 'crystals', level: 'zero', mode: 'pvp', players: 2, maps: ['veryLong'], rules: { heroMovePoints: 4, roundLimitBonus: 6, dawnStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { growth: true, objective: 'crystals', level: 'zero', mode: 'pvp', players: 1, maps: ['veryLong'], rules: { heroMovePoints: 4, roundLimitBonus: 6 } },
+  { growth: true, objective: 'crystals', level: 'zero', mode: 'coop', players: 1, maps: ['short'], rules: { heroReplacement: false } },
   // Normal and Hard, two players: the second hero made the largest maps too easy.
   { objective: 'crystals', level: 'normal', mode: 'coop', players: 2, maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
   { objective: 'crystals', level: 'normal', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
@@ -59,11 +59,11 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   { objective: 'control', level: 'normal', mode: 'pvp', players: 2, maps: ['long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
   { objective: 'control', level: 'normal', mode: 'pvp', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
   // --- Goal 'survival' (coop only): Easy plays board duels with a replacement hero, which made it nearly unlosable; two players made Normal too easy.
-  { objective: 'survival', level: 'kids', mode: 'coop', players: 1, maps: ['short'], rules: { heroReplacement: false, dawnStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
-  { objective: 'survival', level: 'kids', mode: 'coop', players: 1, maps: ['medium', 'long', 'veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
-  { growth: true, objective: 'survival', level: 'kids', mode: 'coop', players: 1, maps: ['medium', 'long', 'veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 0 }, dawnStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
-  { objective: 'survival', level: 'kids', mode: 'coop', players: 2, rules: { heroReplacement: false } },
-  { growth: true, objective: 'survival', level: 'kids', mode: 'coop', players: 2, rules: { heroReplacement: true } },
+  { objective: 'survival', level: 'zero', mode: 'coop', players: 1, maps: ['short'], rules: { heroReplacement: false, dawnStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  { objective: 'survival', level: 'zero', mode: 'coop', players: 1, maps: ['medium', 'long', 'veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  { growth: true, objective: 'survival', level: 'zero', mode: 'coop', players: 1, maps: ['medium', 'long', 'veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 0 }, dawnStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  { objective: 'survival', level: 'zero', mode: 'coop', players: 2, rules: { heroReplacement: false } },
+  { growth: true, objective: 'survival', level: 'zero', mode: 'coop', players: 2, rules: { heroReplacement: true } },
   { objective: 'survival', level: 'normal', mode: 'coop', players: 2, rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
   { objective: 'survival', level: 'hard', mode: 'coop', players: 2, rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
   { objective: 'survival', level: 'hard', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
@@ -73,7 +73,7 @@ export const DIGITAL_TUNING: DigitalTune[] = [
 
   // --- Hero growth on the triangle map (after the cells above, so they win): the growth entry above gave the Horde treasures at every level, which made Easy too hard
   // and left two-player Hard too easy, so these cells are set again.
-  { growth: true, shape: 'triangle', objective: 'crystals', level: 'kids', rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 0 } } },
+  { growth: true, shape: 'triangle', objective: 'crystals', level: 'zero', rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 0 } } },
   { growth: true, shape: 'triangle', objective: 'crystals', level: 'normal', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
   { growth: true, shape: 'triangle', objective: 'crystals', level: 'hard', mode: 'coop', players: 2, maps: ['short', 'medium', 'long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
   { growth: true, shape: 'triangle', objective: 'crystals', level: 'hard', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 5 } } },
