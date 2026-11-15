@@ -7,7 +7,9 @@ import type { FightLevel } from '../engine/difficulty';
 import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
 import { TreasureButton } from './TreasureButton';
 import { SettlementDialog } from './SettlementDialog';
-import { BUILDING_NAMES, chestPreview, KINGDOM, goldOf, incomeBreakdown, incomeOf, settlementAt } from '../engine/kingdom';
+import { BUILDING_NAMES, chestPreview, KINGDOM, goldOf, incomeBreakdown, incomeOf, resourceIncomeBreakdown, settlementAt } from '../engine/kingdom';
+import { ECONOMY, MINE_NAMES, RESOURCE_NAMES } from '../engine/economy';
+import { ResourceStrip } from './resources';
 import { ARTIFACT_BY_ID } from '../engine/sites';
 import { heroTileCost, SITE } from '../engine/sites';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
@@ -844,7 +846,7 @@ function landOf(state: GameState, t: Tile): 'dawn' | 'horde' | undefined {
 function placeIcon(state: GameState, k: HexKey): string {
   const place = state.tiles[k].place;
   if (!place) return 'osada_neutral';
-  if (place.kind === 'mine') return 'kopalnia';
+  if (place.kind === 'mine') return ({ wood: 'tartak', ore: 'kopalnia_ruda', dust: 'zrodlo_pylu' } as Record<string, string>)[state.kingdom?.mines[place.id]?.res ?? ''] ?? 'kopalnia';
   const owner = state.kingdom?.settlements[place.id]?.owner;
   return owner ? `osada_${owner}` : 'osada_neutral';
 }
@@ -854,8 +856,9 @@ function placeTitle(state: GameState, k: HexKey): string {
   const place = state.tiles[k].place;
   if (!place || !state.kingdom) return '';
   if (place.kind === 'mine') {
-    const owner = state.kingdom.mines[place.id]?.owner;
-    return `Kopalnia złota (+1 zł na rundę): ${owner ? `zajęta przez ${FACTION_NAMES[owner]}` : 'nikt jej nie trzyma'}`;
+    const mine = state.kingdom.mines[place.id];
+    const gives = mine?.res ? `+${ECONOMY.incomeMine[mine.res]} ${RESOURCE_NAMES[mine.res]} na rundę` : '+1 zł na rundę';
+    return `${MINE_NAMES[mine?.res ?? 'gold']} (${gives}): ${mine?.owner ? `zajęta przez ${FACTION_NAMES[mine.owner]}` : 'nikt jej nie trzyma'}`;
   }
   const s = state.kingdom.settlements[place.id];
   const built = (['barracks', 'market', 'hospital', 'treasury'] as const).filter((b) => s.buildings[b]).map((b) => BUILDING_NAMES[b][Math.min(s.buildings[b], BUILDING_NAMES[b].length) - 1]);
@@ -868,6 +871,7 @@ export function GoldBox({ state, faction }: { state: GameState; faction: Faction
     <div className="plate parch" data-gold-box title="Złoto (zapas i dochód na rundę); prawy przycisk: skąd dochód" {...details(() => <GoldDetails state={state} faction={faction} />)} style={{ padding: '4px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
       <img src={asset('ikony/mapa/zloto.webp')} alt="" width={32} height={32} />
       <b style={{ fontSize: 22 }}><span data-gold>{goldOf(state, faction)}</span> <span style={{ fontSize: 16, color: '#6B4A22' }}>(+{incomeOf(state, faction)})</span></b>
+      {state.kingdom?.res && <span style={{ display: 'inline-flex', gap: 10, marginLeft: 6 }}><ResourceStrip state={state} faction={faction} /></span>}
     </div>
   );
 }
@@ -880,6 +884,9 @@ function GoldDetails({ state, faction }: { state: GameState; faction: FactionId 
       <b style={{ fontSize: 18 }}>Dochód na rundę: +{rows.reduce((s, r) => s + r.gold, 0)} zł</b>
       {rows.map((r, i) => (
         <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15 }}><span>{r.label}</span><b>+{r.gold}</b></div>
+      ))}
+      {resourceIncomeBreakdown(state, faction).map((r, i) => (
+        <div key={`r${i}`} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15 }}><span>{r.label}</span><b>+{r.amount} {RESOURCE_NAMES[r.res]}</b></div>
       ))}
     </div>
   );

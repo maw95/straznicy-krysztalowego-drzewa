@@ -3497,6 +3497,32 @@
       "data": "2026-11-14",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ikony/mapa/ksiestwo",
+      "pliki": [
+        "public/assets/ikony/mapa/tartak.webp",
+        "public/assets/ikony/mapa/kopalnia_ruda.webp",
+        "public/assets/ikony/mapa/zrodlo_pylu.webp",
+        "public/assets/ikony/mapa/drewno.webp",
+        "public/assets/ikony/mapa/ruda.webp",
+        "public/assets/ikony/mapa/pyl.webp"
+      ],
+      "typ": "ikony poziomu 4 „Księstwo”: tartak, kopalnia rudy, źródło Gwiezdnego Pyłu (mapa) oraz drewno, ruda, Gwiezdny Pył (zasoby)",
+      "opis": "Okrągłe medale jak ikony poziomu 3 (złoty pierścień), przezroczyste tło, 512 px zmniejszone do 256 px (WebP). Referencja stylu: ikona kopalni złota i złota (poziom 3). Po 2 warianty na ikonę, wybrany pierwszy. Prompty: tartak w sosnowym lesie z piłą i kłodami; kopalnia rudy z wózkiem pełnym szarej i rdzawej rudy; kamienna fontanna ze strumieniem fioletowo-niebieskiego pyłu; stos trzech kłód; stos surowej rudy żelaza; błyszczący stos pyłu gwiezdnego z gwiazdkami.",
+      "scenario_asset": {
+        "tartak": "asset_oDMU9q94xxQdAUVEdSx6gX6P",
+        "kopalnia_ruda": "asset_644ErMPfdNKdtujvHgfAEuNX",
+        "zrodlo_pylu": "asset_88yqREvBLMPHm9K56QDZBSva",
+        "drewno": "asset_ycwYQ2XhgdYXp7ibu2z2XXTu",
+        "ruda": "asset_kmZbJutF6831BXhQJBhsPY1A",
+        "pyl": "asset_RGYUc6sRRzuCd5uN2KPfszHv"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość high, przezroczyste tło, obraz referencyjny",
+      "data": "2026-11-15",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

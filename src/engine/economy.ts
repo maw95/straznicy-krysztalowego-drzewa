@@ -45,5 +45,5 @@ export const emptyResources = (): Resources => ({ wood: 0, ore: 0, dust: 0 });
 /** The resources of a price, without gold (for lists and checks). */
 export const resourcesOf = (c: Cost): Array<[ResourceId, number]> => RESOURCE_IDS.filter((r) => (c[r] ?? 0) > 0).map((r) => [r, c[r]!]);
 
-/** Price as text: "6 zł, 2 drewna, 1 Gwiezdny Pył" in short ("6 zł · 2 dr · 2 rd · 1 GP"). */
-export const costText = (c: Cost): string => [`${c.gold} zł`, ...resourcesOf(c).map(([r, n]) => `${n} ${{ wood: 'dr', ore: 'rd', dust: 'GP' }[r]}`)].join(' · ');
+/** Price as text, e.g. "6 zł · 2× drewno · 1× Pył". */
+export const costText = (c: Cost): string => [`${c.gold} zł`, ...resourcesOf(c).map(([r, n]) => `${n}× ${{ wood: 'drewno', ore: 'ruda', dust: 'Pył' }[r]}`)].join(' · ');

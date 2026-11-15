@@ -6,7 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
-- Poziom 4 „Księstwo” (początek, silnik): drewno, ruda i Gwiezdny Pył obok złota. Surowce dają tartaki, kopalnie rudy i źródła Pyłu rozsiane po mapie (kto wejdzie, trzyma je, póki ktoś inny nie przejmie); budynki kosztują złoto i surowce, drugi poziom budynku i legendarny artefakt na targu także Gwiezdny Pył, a w rundzie można zbudować tylko jeden budynek. Komputer to rozumie i gra na poziomie 4 do końca. Interfejs jeszcze nie pokazuje surowców.
+- Poziom 4 „Księstwo” (początek): drewno, ruda i Gwiezdny Pył obok złota. Surowce dają tartaki, kopalnie rudy i źródła Pyłu rozsiane po mapie (kto wejdzie, trzyma je, póki ktoś inny nie przejmie); budynki kosztują złoto i surowce, drugi poziom budynku i legendarny artefakt na targu także Gwiezdny Pył, a w rundzie można zbudować tylko jeden budynek. Komputer to rozumie i gra na poziomie 4 do końca. W dolnym pasku i w oknie osady widać zapasy i dochód surowców, a ceny budynków i artefaktów pokazują, czego brakuje. Nowe ikony: tartak, kopalnia rudy, źródło Gwiezdnego Pyłu, drewno, ruda i Pył.
 
 - Osada: pomiar siły rekrutów obu frakcji i ceny sprawdzone symulacjami (zostają bez zmian); wyniki Łatwego, Normalnego i Trudnego mieszczą się w pasmach.
 

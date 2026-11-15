@@ -4,11 +4,13 @@
 
 import { useState } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
-import { artifactCost, BUILDING_NAMES, BUILDING_TEXTS, goldOf, incomeOf, KINGDOM, marketStock, mayRecruit, nextCost, RECRUITS, type BuildingId } from '../engine/kingdom';
+import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildCost, canPay, goldOf, incomeOf, KINGDOM, marketStock, mayBuildNow, mayRecruit, RECRUITS, type BuildingId } from '../engine/kingdom';
+import { costText, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
 import type { Action, GameState } from '../engine/types';
 import { asset, Portrait, Ribbon } from './common';
 import { ArtifactMedal } from './growthUi';
+import { ResourceStrip } from './resources';
 import { RuleText } from './statScale';
 import { sfx } from './sfx';
 
@@ -30,7 +32,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const own = s.land === faction;
   const fs = state.factions[faction];
   const buyer = Object.values(state.heroes).find((h) => h.id === state.turnOrder[state.turnIndex] && h.faction === faction);
-  const price = (b: BuildingId) => nextCost(s, b);
+  const price = (b: BuildingId) => buildCost(state, s, b);
   const act = (a: Action) => {
     // Purchases ring: a building goes up with hammering, everything else with coins.
     sfx.play(a.type === 'kingdomBuild' ? 'build' : 'coins_buy');
@@ -41,9 +43,11 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     const level = s.buildings[b];
     if (cost === null) return <b style={{ color: '#2E7A32' }}>Gotowe</b>;
     const blocked = b === 'barracks' && !own;
+    const poor = !canPay(state, faction, cost);
+    const late = !mayBuildNow(state, faction);
     return (
-      <button className="btn prim" disabled={gold < cost || blocked} title={blocked ? 'Koszary buduje się tylko w osadzie własnej frakcji.' : gold < cost ? `Brakuje ${cost - gold} zł.` : undefined} data-build={b} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: b })} style={{ padding: '4px 16px', fontSize: 17 }}>
-        {level === 0 ? 'Zbuduj' : 'Rozbuduj'}: {BUILDING_NAMES[b][level]} ({cost} zł)
+      <button className="btn prim" disabled={poor || blocked || late} title={blocked ? 'Koszary buduje się tylko w osadzie własnej frakcji.' : late ? 'W tej rundzie budowaliście już: jeden budynek na rundę.' : poor ? `Za mało: potrzeba ${costText(cost)}.` : undefined} data-build={b} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: b })} style={{ padding: '4px 16px', fontSize: 17 }}>
+        {level === 0 ? 'Zbuduj' : 'Rozbuduj'}: {BUILDING_NAMES[b][level]} ({costText(cost)})
       </button>
     );
   };
@@ -97,7 +101,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           {stock.length === 0 && <i>Wyprzedane do następnej oferty (co {KINGDOM.stockRounds} rundy).</i>}
           {stock.map((id) => {
             const art = ARTIFACT_BY_ID[id];
-            const cost = buyer ? artifactCost(buyer, art) : KINGDOM.artifactPrice[art.rarity - 1];
+            const cost: Cost = buyer ? artifactBill(state, buyer, art) : { gold: KINGDOM.artifactPrice[art.rarity - 1] };
             return (
               <div key={id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                 <ArtifactMedal art={art} size={46} />
@@ -105,8 +109,8 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                   <b>{art.name}</b> <span className={`rarity r${art.rarity}`}>{RARITY_NAMES[art.rarity]}</span>{art.set && <span style={{ marginLeft: 6, color: '#7A4EA0' }}>zestaw: {SETS[art.set].name}</span>}
                   <div><RuleText text={art.text} /></div>
                 </div>
-                <button className="btn prim" disabled={gold < cost} data-buy={id} onClick={() => act({ type: 'kingdomBuyArtifact', settlementId: s.id, artifactId: id })} style={{ padding: '3px 14px', fontSize: 16 }}>
-                  Kup ({cost} zł)
+                <button className="btn prim" disabled={!canPay(state, faction, cost)} data-buy={id} onClick={() => act({ type: 'kingdomBuyArtifact', settlementId: s.id, artifactId: id })} style={{ padding: '3px 14px', fontSize: 16 }}>
+                  Kup ({costText(cost)})
                 </button>
               </div>
             );
@@ -147,6 +151,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       <Ribbon side={faction} style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{s.name}</Ribbon>
       <div style={{ textAlign: 'center', fontSize: 15, color: '#6B4A22' }}>
         Osada {FACTION_NAMES[s.land]}{s.owner !== s.land ? ` (zajęta przez: ${FACTION_NAMES[s.owner!]})` : ''} · złoto: <b data-gold>{gold}</b> · dochód: +{incomeOf(state, faction)} na rundę
+        {state.kingdom!.res && <span style={{ marginLeft: 12, display: 'inline-flex', gap: 10, verticalAlign: 'middle' }}><ResourceStrip state={state} faction={faction} size={22} /></span>}
       </div>
       <div className="settlement-scene" style={{ backgroundImage: `url(${asset(`osady/land_${s.land}.jpg`)})` }}>
         {ORDER.map((b) => {
