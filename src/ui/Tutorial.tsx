@@ -88,6 +88,12 @@ const TIPS: Tip[] = [
     when: (s) => s.phase === 'adventure' && Boolean(s.kingdom) && Object.values(s.kingdom!.settlements).some((x) => Object.values(s.heroes).some((h) => h.alive && h.pos === x.at)),
   },
   {
+    id: 'resources',
+    title: 'Surowce i chatki',
+    text: 'Na tym poziomie oprócz złota liczą się drewno, ruda i Gwiezdny Pył (dolny pasek). Daje je tartak, kopalnia rudy i źródło Pyłu: wejdź na nie, a będą Twoje, dopóki ktoś ich nie przejmie. Budynki kosztują złoto i surowce, a w rundzie można zbudować tylko jeden. W chatkach wykonujesz zadania: oddajesz coś, dostajesz więcej.',
+    when: (s) => s.phase === 'adventure' && Boolean(s.kingdom?.res),
+  },
+  {
     id: 'team',
     title: 'Drużyna rośnie',
     text: 'W bitwę idzie tyle pomocników, ile masz miejsc: na starcie 2, +1 na 3. poziomie bohatera, +1 na 6. i +1 za rozbudowane koszary (najwyżej 5). Nowych pomocników poziomów 2 do 5 rekrutuje się w koszarach; poziomy 4 i 5 wymagają rozbudowy.',

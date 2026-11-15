@@ -18,8 +18,8 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids`) i w rankingu online zostaj
 4. **Wdrożenie serwera przy następnym wydaniu** (S, razem z wydaniem): repo backendu ma niewdrożony commit z rankingiem; poziom 0 i Łatwy na arenie zmieniają znaczenie `kids` (stary klient dostałby arenę zamiast pojedynków).
 
 ### Etap B. Poziom 4 „Księstwo” (gospodarka i osady), kolejność wewnątrz poziomu
-5. **4a. Zasoby i budynki** (L): drewno, ruda/kamień, Gwiezdny Pył; kopalnie surowców; budynki osady, jeden na rundę (bez cyklu tygodniowego; przyrost rekrutów co N rund tylko jeśli symulacje pokażą potrzebę). Gotowe: silnik + UI osady + boty kupują surowce i budynki + testy + symulacje w paśmie.
-6. **4b. Obiekty na mapie i zadania „chatki”** (M): młyn, tartak, studnia, kapliczki itp. (własne, nie kopie H3); zadania z nagrodami: surowce i artefakty (czary i umiejętności dopiero od poziomu 5).
+5. **4a. Zasoby i budynki, reszta** (S): zrobione 15.11 (zasoby, kopalnie, ceny, jeden budynek na rundę, boty, UI, samouczek). Zostaje: nowy budynek zależny od surowców (np. warsztat/kuźnia), jeśli symulacje pokażą, że surowce są za mało ważne (komputer kończy z 25–30 zł na dużych mapach), osobny pomiar punktów rankingu dla Księstwa (dziś jak Osada).
+6. **4b. Obiekty na mapie, reszta** (S): chatki z zadaniami zrobione 15.11. Zostają obiekty własne (młyn, studnia, kapliczki surowców) i sprawdzenie w prawdziwej grze ścieżki „stań w chatce, wykonaj zadanie” (panel `data-hut`; test silnika jest, ścieżki klikalnej w przeglądarce nie zweryfikowałem).
 7. **4c. Obrona osady** (L): garnizon (jednostki zostawione bronią osady po odejściu bohatera), oblężenie z katapultą (mury, brama, 2 wieżyczki strzeleckie obrońcy; katapulta jeden strzał na rundę, robocze), fosa (wejście kończy turę i zadaje 2 obrażeń, też na końcu tury; duża jednostka raz). Jeśli za ciężki: garnizon i przejmowanie zostają na 4, mury i katapulta przechodzą na 5.
 8. **4d. Cel „Podbój”** (M): wygrywa ten, kto zdobędzie osady wroga; strojenie symulacjami.
 9. **4e. Autopilot warstw dla dzieci** (M): rodzic na wyższym poziomie, dziecko na tej samej mapie z automatycznie zarządzanymi warstwami (wymaga 4a).
@@ -36,7 +36,6 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids`) i w rankingu online zostaj
 
 ### Etap E. Przed premierą
 16. **Inwentaryzacja tekstów pod wiele języków** (M): tylko spis, tłumaczenia po premierze.
-17. **Ekran „Autorzy”** (S): wymóg licencji CC BY dla części muzyki; dane z `assets.json`.
 18. **Premiera na Steamie** (L, głównie autor): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery do ustalenia (dawne „3.0” traci sens).
 
 ### Po premierze
@@ -53,6 +52,7 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids`) i w rankingu online zostaj
 
 ## 3. Do sprawdzenia na żywo (autor)
 Zrobione i przetestowane, bez potwierdzenia w prawdziwej grze:
+- **Poziom 4 (15.11):** surowce w dolnym pasku, ceny z surowcami w oknie osady, ikony tartaku, kopalni rudy, źródła Pyłu i chatki, panel zadania chatki (nie sprawdzony kliknięciem), karta „Księstwo” w kreatorze, samouczek.
 - **Poziom 3:** widok osady z budynkami obu frakcji, dźwięki zakupu, animacje i portrety 8 pomocników (sprite'y bez klipu śmierci), ikony zestawów artefaktów i licznik „2/3 zestawu”, samouczek, autopilot dziecka, zapisy online, szósty gracz. Nowe 15.11: poziom 0, Łatwy na arenie, bot-kupiec.
 - Kraken (czy groźny, ale uczciwy; czy sześć jednostek mieści się na arenie) i Pegaz.
 - Klikalność jednostek zasłoniętych (Pegaz kontra Hydra, partia 114857, akcja 60; poprawka `behind` w `ArenaBoard.tsx`).
