@@ -1,4 +1,5 @@
 import type { SkillId } from './growth';
+import type { SpellId } from './magic';
 import type { SiteKind, Slot } from './sites';
 import type { HexKey } from './hex';
 import type { BuildingId, KingdomState } from './kingdom';
@@ -215,6 +216,9 @@ export interface HeroState {
   secondary?: true;
   name?: string;
   fallen?: number;
+  /** Level 5: the spells the hero knows and the mana it has left (missing: full, see magic.ts `manaOf`). */
+  spells?: SpellId[];
+  mana?: number;
 }
 
 export interface FactionState {
@@ -356,6 +360,8 @@ export interface Activation {
   moveOnly: boolean;
   /** Post-attack hop allowance (Powietrzny Zryw / Łupieżczy Nalot). */
   hop: number;
+  /** Level 5: the hero has cast a spell in this activation (one a turn). */
+  spell?: boolean;
   /** Siege: the unit was already hurt by the moat in this activation (it is hurt once, on entering or at the end of its turn). */
   moat?: boolean;
 }
@@ -396,6 +402,8 @@ export interface BattleState {
   attackerFrom: HexKey;
   defenderHero: string | null;
   neutralId: string | null;
+  /** Level 5: the spells cast in this battle, newest last (the screen plays them). */
+  spells?: Array<{ spell: SpellId; casterId: string; targetId: string }>;
   /** Level 4: the battle is fought for this settlement (its garrison fights on the defender's side, with or without a hero). */
   garrison?: string;
   /** Level 4: the settlement's defences (moat, walls, gate, towers). */
@@ -566,6 +574,10 @@ export type Action =
   | { type: 'kingdomBuyArtifact'; settlementId: string; artifactId: string }
   /** Level 4: one unit of a resource bought for gold in an own settlement, or sold on its market. */
   | { type: 'kingdomTrade'; settlementId: string; res: 'wood' | 'ore' | 'dust'; dir: 'buy' | 'sell' }
+  /** Level 5: a spell learnt in the mage tower of an own settlement, cast in a battle by the active hero, cast on the map in the hero's turn. */
+  | { type: 'kingdomLearn'; settlementId: string; spell: SpellId }
+  | { type: 'battleSpell'; spell: SpellId; targetId?: string }
+  | { type: 'mapSpell'; spell: SpellId }
   /** Level 5: a commander hired in the tavern of an own settlement, and a fallen commander bought back there. */
   | { type: 'kingdomHire'; settlementId: string; unitId: string }
   | { type: 'kingdomRansom'; settlementId: string; heroId: string }

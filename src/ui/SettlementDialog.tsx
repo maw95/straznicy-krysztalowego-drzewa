@@ -4,11 +4,12 @@
 
 import { useState } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
-import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildCost, buildingLevel, buildingsOf, canPay, forgeLevel, goldOf, hasUnit, incomeOf, KINGDOM, marketStock, mayBuildNow, mayRecruit, RECRUITS, resOf, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
+import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildCost, buildingLevel, buildingsOf, canPay, forgeLevel, goldOf, hasUnit, incomeOf, KINGDOM, marketStock, mayBuildNow, mayRecruit, RECRUITS, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
 import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
 import { ARCHETYPE_NAMES, archetypeOf, commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from '../engine/realm';
 import { levelOf } from '../engine/growth';
+import { MAGIC, manaOf, maxMana, SPELLS, towerSpells } from '../engine/magic';
 import type { Action, GameState } from '../engine/types';
 import { asset, Portrait, Ribbon } from './common';
 import { ArtifactMedal } from './growthUi';
@@ -16,37 +17,21 @@ import { RESOURCE_ICON, ResourceStrip } from './resources';
 import { RuleText } from './statScale';
 import { sfx } from './sfx';
 
-/** Where the building stands in the landscape (percent of the picture): four buildings in level 3, five (with the forge) in level 4. */
-const SPOT: Record<BuildingId, { left: number; top: number }> = {
+/** Where the building stands in the landscape (percent of the picture): four buildings in level 3. */
+const SPOT: Partial<Record<BuildingId, { left: number; top: number }>> = {
   barracks: { left: 16, top: 52 },
   market: { left: 40, top: 30 },
   hospital: { left: 64, top: 52 },
   treasury: { left: 84, top: 28 },
-  forge: { left: 50, top: 50 },
-  walls: { left: 50, top: 50 },
-  tavern: { left: 50, top: 50 },
 };
-/** Level 5: seven buildings in two rows. */
-const SPOT7: Record<BuildingId, { left: number; top: number }> = {
-  barracks: { left: 9, top: 64 },
-  market: { left: 23, top: 30 },
-  hospital: { left: 37, top: 66 },
-  treasury: { left: 50, top: 30 },
-  forge: { left: 63, top: 66 },
-  walls: { left: 77, top: 30 },
-  tavern: { left: 91, top: 64 },
-};
-const SPOT5: Record<BuildingId, { left: number; top: number }> = {
-  barracks: { left: 10, top: 62 },
-  market: { left: 26, top: 30 },
-  hospital: { left: 42, top: 64 },
-  treasury: { left: 58, top: 30 },
-  forge: { left: 74, top: 64 },
-  walls: { left: 90, top: 30 },
-  tavern: { left: 50, top: 50 },
+/** Levels 4 and up have more buildings: they stand in two rows, spread evenly across the picture. */
+const spotOf = (order: BuildingId[], b: BuildingId): { left: number; top: number } => {
+  if (order.length <= 4) return SPOT[b] ?? { left: 50, top: 50 };
+  const i = order.indexOf(b);
+  return { left: 8 + (i * 84) / (order.length - 1), top: i % 2 ? 30 : 64 };
 };
 /** The picture of a building in the landscape: the faction's plot while it is not built, then its level (the treasury has one). */
-const buildingPicture = (land: FactionId, b: BuildingId, level: number) => (level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${Math.min(level, 2)}.webp`));
+const buildingPicture = (land: FactionId, b: BuildingId, level: number) => (level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${b === 'tavern' || b === 'magic' ? 1 : Math.min(level, 2)}.webp`));
 
 export function SettlementDialog({ state, settlementId, faction, onAction, onClose }: { state: GameState; settlementId: string; faction: FactionId; onAction: (a: Action) => void; onClose: () => void }) {
   const s = state.kingdom!.settlements[settlementId];
@@ -57,7 +42,6 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const buyer = Object.values(state.heroes).find((h) => h.id === state.turnOrder[state.turnIndex] && h.faction === faction);
   const price = (b: BuildingId) => buildCost(state, s, b);
   const ORDER = buildingsOf(state);
-  const spots = ORDER.length > 6 ? SPOT7 : ORDER.length > 4 ? SPOT5 : SPOT;
   const act = (a: Action) => {
     // Purchases ring: a building goes up with hammering, everything else with coins.
     sfx.play(a.type === 'kingdomBuild' ? 'build' : 'coins_buy');
@@ -198,6 +182,33 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         </div>
       );
     }
+    if (b === 'magic') {
+      const teach = towerSpells(buildingLevel(s, 'magic'));
+      return (
+        <div data-panel="magic" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {buyer ? <span style={{ fontSize: 14, color: '#6B4A22' }}>Uczy się {heroLabel(buyer)} (bohater, którego jest tura). Mana: <b data-mana>{manaOf(buyer)}</b> / {maxMana(buyer)}, wraca po {MAGIC.regen} na rundę.</span> : <i>Czarów uczy się bohater w swojej turze.</i>}
+          {teach.map((id) => {
+            const known = Boolean(buyer?.spells?.includes(id));
+            const cost = spellPrice(id);
+            return (
+              <div key={id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                <img src={asset(`ikony/czary/${id}.webp`)} alt="" width={46} height={46} />
+                <div style={{ flex: 1, fontSize: 15, lineHeight: 1.25 }}>
+                  <b>{SPELLS[id].name}</b> <span style={{ fontSize: 13, color: '#6B4A22' }}>krąg {SPELLS[id].circle} · mana {SPELLS[id].mana} · {SPELLS[id].where === 'map' ? 'na mapie' : 'w bitwie'}</span>
+                  <div><RuleText text={SPELLS[id].text} /></div>
+                </div>
+                {known ? <b style={{ color: '#2E7A32' }}>Znany</b> : (
+                  <button className="btn prim" data-learn={id} disabled={!buyer || !canPay(state, faction, cost)} onClick={() => { sfx.play('magic_cast'); onAction({ type: 'kingdomLearn', settlementId: s.id, spell: id }); }} style={{ padding: '3px 14px', fontSize: 16 }}>
+                    Naucz się ({costText(cost)})
+                  </button>
+                )}
+              </div>
+            );
+          })}
+          {upgrade}
+        </div>
+      );
+    }
     if (b === 'tavern') {
       const mine = commanderOf(state, buyer?.playerId ?? null);
       return (
@@ -283,7 +294,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         {ORDER.map((b) => {
           const level = buildingLevel(s, b);
           return (
-            <button key={b} className={`settlement-bld ${open === b ? 'on' : ''} ${level ? 'built' : ''}`} style={{ left: `${spots[b].left}%`, top: `${spots[b].top}%` }} onClick={() => setOpen(b)} aria-pressed={open === b} data-building={b} data-level={level}>
+            <button key={b} className={`settlement-bld ${open === b ? 'on' : ''} ${level ? 'built' : ''}`} style={{ left: `${spotOf(ORDER, b).left}%`, top: `${spotOf(ORDER, b).top}%`, ...(ORDER.length > 6 ? { width: 104 } : {}) }} onClick={() => setOpen(b)} aria-pressed={open === b} data-building={b} data-level={level}>
               <img src={asset(buildingPicture(s.land, b, level))} alt="" className="settlement-pic" />
               <span>{level ? BUILDING_NAMES[b][Math.min(level, BUILDING_NAMES[b].length) - 1] : `${BUILDING_NAMES[b][0]} (do zbudowania)`}</span>
             </button>

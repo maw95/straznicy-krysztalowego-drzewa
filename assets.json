@@ -3598,6 +3598,18 @@
       "data": "2026-11-15",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ikony/czary",
+      "pliki": [ "public/assets/ikony/czary/" ],
+      "typ": "ikony ośmiu czarów poziomu 5: bolt (Magiczny Pocisk), mend (Leczenie), slow (Spowolnienie), stoneskin (Kamienna Skóra), fireball (Kula Ognia), haste (Zryw), vision (Wizja), portal (Wrota)",
+      "opis": "Jeden arkusz 1536x1024 z ośmioma medalami w siatce 4x2 na czarnym tle, referencja stylu: ikona tartaku; pocięty skryptem scripts/assets/arkusz.py (192 px, WebP z przezroczystością). Prompt: 'A sheet of eight separate round medal icons of magic spells ...': pocisk energii, zielone serce z liśćmi, ślimak na klepsydrze w łańcuchach, ramię w kamiennej zbroi, eksplozja kuli ognia, skrzydlaty but z błyskawicami, magiczne oko nad mapą, portal z zamkiem.",
+      "scenario_asset": { "arkusz": "asset_UtR1LcNTMs51jXBLUK2fh9gF" },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.6 Flare, jakość medium, obraz referencyjny",
+      "data": "2026-11-15",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

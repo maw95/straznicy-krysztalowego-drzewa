@@ -35,6 +35,7 @@ import {
 } from '../battle';
 import { distance, neighborKeys, parseKey, type HexKey } from '../hex';
 import { wideCellOf } from '../arenaLayout';
+import { botSpell } from '../magic';
 import { SIEGE } from '../economy';
 import type { Action, BattleUnit, GameState } from '../types';
 import type { ItemKind } from '../data';
@@ -525,6 +526,9 @@ export function chooseBattleAction(state: GameState): Action {
     const target = b.siege.gate ?? b.siege.towers[0];
     if (target) return { type: 'battleCatapult', cell: target };
   }
+  // Level 5: the hero's spell, when one is worth its mana.
+  const cast = botSpell(state);
+  if (cast) return { type: 'battleSpell', spell: cast.spell, targetId: cast.targetId };
   if (u.side !== 'neutral' && !act.acted) {
     const item = itemToUse(state, u);
     if (item) return item;

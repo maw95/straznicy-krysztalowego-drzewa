@@ -21,10 +21,12 @@ import {
   unitDistance,
   catapultTargets,
 } from '../engine/battle';
+import { castableInBattle, manaOf, SPELLS, spellTargets, type SpellId } from '../engine/magic';
+import { scaleText } from '../engine/data';
 import { sfx } from './sfx';
 import { distance, parseKey, type HexKey } from '../engine/hex';
 import type { Action, BattleUnit, GameState } from '../engine/types';
-import { COMPACT_QUERY, useMedia } from './common';
+import { asset, COMPACT_QUERY, useMedia } from './common';
 import { useImpactHold, type AttackNow } from './useImpactHold';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { aimedCursor, preloadAimedCursors, type AimedCursor } from './cursors';
@@ -118,6 +120,11 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const moves = useMemo(() => (myTurn && active && !act!.moved && !act!.attacked && !targeting ? reachableCells(state, active) : new Map<HexKey, number>()), [state, myTurn, active, act, targeting]);
   const targets = useMemo(() => (myTurn && active && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility ? attackTargets(state, active) : []), [state, myTurn, active, act, targeting, freeAbility]);
   const hops = myTurn && active && act!.hop ? hopCells(state, active, act!.hop) : [];
+  // Level 5: the spells the active hero may cast now, and the one picked (the next click on a unit is its target).
+  const castable = myTurn && !targeting ? castableInBattle(state) : [];
+  const [spell, setSpell] = useState<SpellId | null>(null);
+  const spellNow = spell && castable.includes(spell) ? spell : null;
+  const spellAims = useMemo(() => (spellNow ? spellTargets(state, spellNow) : []), [state, spellNow]);
   // Siege: what the viewer's catapult may shoot now.
   const catapult = myTurn && !targeting ? catapultTargets(state) : [];
 
@@ -310,6 +317,13 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       onShowCard(u.defId);
       return;
     }
+    if (spellNow) {
+      if (!spellAims.some((t) => t.id === u.id)) return;
+      sfx.play(SPELLS[spellNow].target === 'enemy' ? 'magic_attack' : 'magic_cast');
+      onAction({ type: 'battleSpell', spell: spellNow, targetId: u.id });
+      setSpell(null);
+      return;
+    }
     if (targeting) return pickForItem(u);
     if (freeAbility) {
       onAction({ type: 'battleAbility', targetId: u.id });
@@ -422,7 +436,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
           living={living}
           moves={moves}
           hops={hops}
-          targets={targets}
+          targets={spellNow ? spellAims : targets}
           hoverPreview={hoverPreview}
           moveCursor={moveCursor}
           approach={approach}
@@ -446,10 +460,21 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
         <SidePanel s={sides[1]} state={state} active={active} onUnit={clickUnit} />
       </div>
 
+      {castable.length > 0 && active && (
+        <div className="plate parch" data-spells style={{ position: 'fixed', left: '50%', transform: 'translateX(-50%)', bottom: 122, zIndex: 20, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <b style={{ fontSize: 14 }}>Czary · mana <span data-mana>{manaOf(state.heroes[active.id])}</span></b>
+          {castable.map((id) => (
+            <button key={id} className={`btn plate parch ${spellNow === id ? 'on' : ''}`} data-spell={id} title={`${SPELLS[id].name} (mana ${SPELLS[id].mana}): ${scaleText(SPELLS[id].text, state.rules.statScale ?? 1, state.rules.hpScale)}`} onClick={() => setSpell(spellNow === id ? null : id)} style={{ padding: 2, display: 'flex', alignItems: 'center', gap: 4, outline: spellNow === id ? '3px solid #9EE4FF' : undefined }}>
+              <img src={asset(`ikony/czary/${id}.webp`)} alt={SPELLS[id].name} width={38} height={38} />
+              <span className="hide-mobile" style={{ fontSize: 13, paddingRight: 4 }}>{SPELLS[id].name}</span>
+            </button>
+          ))}
+        </div>
+      )}
       <ActivationBar
         state={state}
         active={active}
-        hint={(catapult.length ? 'Katapulta gotowa: wskaż mur, bramę lub wieżyczkę · ' : '') + activationHint(b, { deploySide, picked, myTurn, moves: moves.size, targets: targets.length })}
+        hint={(spellNow ? `Czar ${SPELLS[spellNow].name}: wskaż ${SPELLS[spellNow].target === 'enemy' ? 'wroga' : 'sojusznika'} · ` : '') + (catapult.length ? 'Katapulta gotowa: wskaż mur, bramę lub wieżyczkę · ' : '') + activationHint(b, { deploySide, picked, myTurn, moves: moves.size, targets: targets.length })}
         myTurn={myTurn}
         deploySide={deploySide}
         placing={deploy.placing}

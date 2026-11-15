@@ -59,6 +59,7 @@ import { fireStory } from './story';
 import { buildingLevel, collectIncome, enterPlace, forgeLevel, garrisonAt, initKingdom, kingdomAction, supportSlots } from './kingdom';
 import { ECONOMY } from './economy';
 import { commanderFalls } from './realm';
+import { battleSpell, mapSpell, regenMana, START_SPELLS } from './magic';
 import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, placeSites, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
@@ -307,7 +308,8 @@ export function grantTreasure(state: GameState, kind: ItemKind, faction: Faction
 }
 
 function addHero(state: GameState, heroId: string, faction: FactionId, playerId: string | null) {
-  state.heroes[heroId] = { id: heroId, faction, playerId, pos: homeOf(state, faction), alive: true, crystals: [] };
+  // Level 5: every main hero knows one spell from the start, so magic is in the game from the first battle.
+  state.heroes[heroId] = { id: heroId, faction, playerId, pos: homeOf(state, faction), alive: true, crystals: [], ...(state.rules.realm ? { spells: [...START_SPELLS] } : {}) };
   const unused = state.factions[faction].unusedHeroes;
   if (unused.includes(heroId)) unused.splice(unused.indexOf(heroId), 1);
 }
@@ -691,6 +693,7 @@ export function moveBreakdown(state: GameState): Array<{ label: string; points: 
 function endRound(state: GameState) {
   if (state.rules.heroGrowth) for (const h of Object.values(state.heroes)) if (h.faction === 'horde') awardXp(state, h, GROWTH.hordeRoundXp);
   collectIncome(state);
+  regenMana(state);
   const objective = OBJECTIVES[objectiveOf(state)];
   if (objective.onRoundEnd(state)) return;
   if (state.round >= state.roundLimit) {
@@ -1143,6 +1146,7 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'kingdomHeal':
     case 'kingdomBuyArtifact':
     case 'kingdomTrade':
+    case 'kingdomLearn':
     case 'kingdomHire':
     case 'kingdomRansom':
     case 'kingdomGarrison':
@@ -1177,6 +1181,13 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'useMapItem':
       useMapItem(state, action.itemId, action.targets, action.unitId);
       break;
+    case 'mapSpell': {
+      const hero = activeHero(state);
+      if (state.phase !== 'adventure' || !hero?.alive || hero.entering) throw new Error('Czarów na mapie używa się w swojej turze.');
+      mapSpell(state, hero, action.spell);
+      arriveAt(state, hero);
+      break;
+    }
     case 'selectSupports':
       selectSupports(state, action.faction, action.supportIds);
       break;
@@ -1222,6 +1233,9 @@ function applyBattleAction(state: GameState, action: Action) {
       break;
     case 'battleCatapult':
       battleCatapult(state, action.cell);
+      break;
+    case 'battleSpell':
+      battleSpell(state, action.spell, action.targetId);
       break;
     case 'endActivation':
       endActivation(state);

@@ -22,7 +22,6 @@ Poziom 4 zbudowany 15.11 (Kuźnia, wymiana, obiekty mapy, obrona osady, Podbój,
 
 ### Etap C. Poziom 5 „Królestwo” (bohaterowie i magia)
 10. **5a. Drugi bohater, reszta** (M): zrobione 15.11 (karczma, najem, tura, PD i artefakty dowódcy, śmierć i wykup, boty, UI). Zostaje do decyzji autora: osobna drużyna dowódcy (dziś wspólna pula pomocników frakcji), własna krzywa wzrostu archetypów (wchodzi z 5c), sprite'y dowódców (sekcja 2a).
-11. **5b. Magia** (L): czary jako mechanika bitwy i mapy.
 12. **5c. Specjalności i drzewka bohatera** + automatyczny wzrost statystyk zależny od typu bohatera (M–L; przesuwa `golden.test.ts`).
 
 ### Etap D. Poziom 6 „Imperium” (frakcje i Relikt)
@@ -61,6 +60,9 @@ Lista rzeczy, które w grze działają na zastępczej grafice albo bez własnego
 - Sześciu dowódców (`dawnKnight`, `dawnHuntress`, `dawnSage`, `hordeWarlord`, `hordeCrossbow`, `hordeShadow`) nie ma sprite'ów ani figurek 3D: na arenie i mapie stoją jako żetony z portretem. Potrzebne dla każdego: arkusze klatek `stoi`, `ruch`, `atak`, `trafienie`, `smierc` w `public/assets/jednostki/<nazwa>/` (potok: `docs/POTOK_ANIMACJI.md`, wpis w `src/ui/sprites.ts`) oraz dźwięki ataku `dzwieki/jednostki/<id>_atak.mp3`.
 - Karty kreatora „Królestwo” i „Imperium” używają ikon mapy (`karczma.webp`, `odlamek.webp`) zamiast kart 512×592 (`ui/menu/krolestwo.webp`, `ui/menu/imperium.webp`).
 - Najem i wykup dowódcy: gra `coins_buy.mp3`; do rozważenia własny `dzwieki/najem.mp3`.
+- Czary w bitwie nie mają animacji: widać tylko skutek (spadek lub wzrost Życia, znacznik) i słychać `magic_cast` / `magic_attack`. Potrzebne efekty na arenie w `public/assets/efekty/` (jak istniejące efekty zdolności): pocisk lecący do celu (`czar_bolt`), zielona poświata leczenia (`czar_mend`), fioletowe łańcuchy (`czar_slow`), kamienna powłoka (`czar_stoneskin`), wybuch na polu celu i sąsiadach (`czar_fireball`), złote smugi (`czar_haste`); dane do odtworzenia są w `BattleState.spells`.
+- Wizja i Wrota na mapie: brak animacji (odkrycie pól, błysk portalu); do rozważenia dźwięk `dzwieki/portal.mp3`.
+- Wieża maga: jeden obraz na oba poziomy (`osady/<frakcja>_magic1.webp`); potrzebny `osady/dawn_magic2.webp` i `osady/horde_magic2.webp` (rozbudowana wieża), potem zmiana w `buildingPicture` (`SettlementDialog.tsx`).
 
 ## 3. Do sprawdzenia na żywo (autor)
 Zrobione i przetestowane, bez potwierdzenia w prawdziwej grze:

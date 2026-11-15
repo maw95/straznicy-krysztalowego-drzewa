@@ -20,7 +20,7 @@ console.log(`Osada, ${games} gier na komórkę, poziom ${process.env.SIM_LEVEL ?
 console.log('mapa·tryb'.padEnd(18) + 'Świt%'.padStart(8) + 'rundy'.padStart(8) + 'wyższe'.padStart(8) + 'osady'.padStart(8) + 'złoto'.padStart(8) + 'poz.≥4'.padStart(8) + (process.env.SIM_ECONOMY ? 'dr/rd/GP'.padStart(14) + 'budynki'.padStart(9) + 'chatki'.padStart(8) : ''));
 for (const size of sizes) {
   for (const table of tables) {
-    let wood = 0, ore = 0, dust = 0, built = 0, huts = 0, wins = 0, rounds = 0, recruits = 0, settlements = 0, gold = 0, high = 0, stuck = 0;
+    let spells = 0, casts = 0, wood = 0, ore = 0, dust = 0, built = 0, huts = 0, wins = 0, rounds = 0, recruits = 0, settlements = 0, gold = 0, high = 0, stuck = 0;
     for (let g = 1; g <= games; g++) {
       const setup = setupWith(size, table, option, g);
       setup.rules = { ...setup.rules, kingdom: !process.env.SIM_NOKINGDOM, ...(process.env.SIM_ECONOMY ? { economy: true } : {}), ...(process.env.SIM_REALM ? { economy: true, realm: true } : {}), ...(process.env.SIM_OBJECTIVE === 'conquest' ? { objective: 'conquest' as const } : {}) };
@@ -40,11 +40,13 @@ for (const size of sizes) {
       settlements += settlementsOf(s, 'dawn').length;
       gold += s.kingdom?.gold.dawn ?? 0;
       huts += Object.values(s.kingdom?.huts ?? {}).filter((h) => h.done).length;
+      spells += Object.values(s.heroes).filter((h) => h.faction === 'dawn').reduce((a, h) => a + (h.spells?.length ?? 0), 0);
+      casts += s.log.filter((l) => l.text.includes('rzuca czar')).length;
       const rs = s.kingdom?.res?.dawn;
       if (rs) { wood += rs.wood; ore += rs.ore; dust += rs.dust; }
       built += settlementsOf(s, 'dawn').reduce((a, x) => a + Object.values(x.buildings).reduce((p, q) => p + q, 0), 0);
     }
     const n = games;
-    console.log(`${size}·${table}`.padEnd(18) + ((wins / n) * 100).toFixed(0).padStart(8) + (rounds / n).toFixed(1).padStart(8) + (recruits / n).toFixed(1).padStart(8) + (settlements / n).toFixed(1).padStart(8) + (gold / n).toFixed(1).padStart(8) + (high / n).toFixed(1).padStart(8) + (process.env.SIM_ECONOMY ? `${(wood / n).toFixed(1)}/${(ore / n).toFixed(1)}/${(dust / n).toFixed(1)}`.padStart(14) + (built / n).toFixed(1).padStart(9) + (huts / n).toFixed(1).padStart(8) : '') + (stuck ? `  (niedokończone: ${stuck})` : ''));
+    console.log(`${size}·${table}`.padEnd(18) + ((wins / n) * 100).toFixed(0).padStart(8) + (rounds / n).toFixed(1).padStart(8) + (recruits / n).toFixed(1).padStart(8) + (settlements / n).toFixed(1).padStart(8) + (gold / n).toFixed(1).padStart(8) + (high / n).toFixed(1).padStart(8) + (process.env.SIM_ECONOMY ? `${(wood / n).toFixed(1)}/${(ore / n).toFixed(1)}/${(dust / n).toFixed(1)}`.padStart(14) + (built / n).toFixed(1).padStart(9) + (huts / n).toFixed(1).padStart(8) : '') + (process.env.SIM_REALM ? `  czary ${(spells / n).toFixed(1)}, rzucone ${(casts / n).toFixed(1)}` : '') + (stuck ? `  (niedokończone: ${stuck})` : ''));
   }
 }

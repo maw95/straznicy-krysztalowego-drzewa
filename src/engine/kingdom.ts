@@ -13,9 +13,10 @@ import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsTex
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import type { Action, Crystal, GameState, HeroState } from './types';
+import { MAGIC, SPELLS, towerSpells, type SpellId } from './magic';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
-export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern';
+export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic';
 
 export interface Settlement {
   id: string;
@@ -59,7 +60,7 @@ export const KINGDOM = {
   /** Gold in a chest chosen instead of the artifact. */
   chestGold: 3,
   /** Cost of each level of a building. */
-  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4], forge: [], walls: [], tavern: [] } as Record<BuildingId, number[]>,
+  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4], forge: [], walls: [], tavern: [], magic: [] } as Record<BuildingId, number[]>,
   /** Price of an artifact in the market, by rarity (zwykły, rzadki, legendarny). */
   artifactPrice: [2, 5, 10],
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
@@ -107,10 +108,11 @@ export const BUILDING_NAMES: Record<BuildingId, [string, string?]> = {
   forge: ['Kuźnia', 'Wielka kuźnia'],
   walls: ['Fosa', 'Mury z wieżyczkami'],
   tavern: ['Karczma'],
+  magic: ['Wieża maga', 'Wielka wieża maga'],
 };
 
 /** The buildings a settlement may have in this game, in the order of the screen (the forge comes with level 4). */
-export const buildingsOf = (state: GameState): BuildingId[] => ['barracks', 'market', 'hospital', 'treasury', ...(state.rules.economy ? ['forge' as const, 'walls' as const] : []), ...(state.rules.realm ? ['tavern' as const] : [])];
+export const buildingsOf = (state: GameState): BuildingId[] => ['barracks', 'market', 'hospital', 'treasury', ...(state.rules.economy ? ['forge' as const, 'walls' as const] : []), ...(state.rules.realm ? ['tavern' as const, 'magic' as const] : [])];
 
 export const buildingLevel = (s: Settlement, b: BuildingId): number => s.buildings[b] ?? 0;
 
@@ -123,6 +125,7 @@ export const BUILDING_TEXTS: Record<BuildingId, [string, string?]> = {
   hospital: ['Wskrzesza poległych pomocników za połowę ich ceny.', 'Wskrzesza za jedną trzecią ceny.'],
   treasury: ['Przynosi +1 złota na rundę.'],
   forge: ['Pomocnicy całej frakcji walczą z +1 A.', 'Pomocnicy dostają też +1 Ż.'],
+  magic: ['Uczy bohaterów czarów pierwszego kręgu: Magiczny Pocisk, Leczenie, Spowolnienie i Wizja.', 'Uczy też czarów drugiego kręgu: Kamienna Skóra, Kula Ognia, Zryw i Wrota.'],
   tavern: ['Tu najmiesz dowódcę: drugiego bohatera z własnym pionkiem, doświadczeniem i artefaktami. Tu też wykupisz dowódcę, który poległ.'],
   walls: ['W bitwie o osadę wroga zatrzymuje fosa z kolcami: kto w nią wejdzie, traci turę i dostaje 2 obrażenia. Przejście jest tylko po moście.', 'Za fosą staje mur z bramą i dwie wieżyczki, które co rundę strzelają do napastników. Mur burzy tylko katapulta atakującego.'],
 };
@@ -200,7 +203,7 @@ export function initKingdom(state: GameState): void {
   if (state.rules.economy) k.res = { dawn: { ...ECONOMY.start }, horde: { ...ECONOMY.start } };
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag: Record<FactionId, string[]> = { dawn: rng.shuffle([...NAMES.dawn]), horde: rng.shuffle([...NAMES.horde]) };
-  const empty = (): Record<BuildingId, number> => ({ barracks: 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0 } : {}) }) as Record<BuildingId, number>;
+  const empty = (): Record<BuildingId, number> => ({ barracks: 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}) }) as Record<BuildingId, number>;
   const add = (id: string, at: HexKey, land: FactionId, owner: FactionId | null) => {
     k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[land]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
     state.tiles[at].place = { kind: 'settlement', id };
@@ -431,6 +434,9 @@ function serviceSettlement(state: GameState, id: string): { s: Settlement; hero:
   return { s, hero };
 }
 
+/** What learning a spell costs. */
+export const spellPrice = (spell: SpellId): Cost => MAGIC.price[SPELLS[spell].circle - 1];
+
 /** Puts a hero that appears in a settlement on its hex, or on the nearest free one when somebody stands there (one hero per hex outside the bases). */
 function standIn(state: GameState, hero: HeroState, at: HexKey): void {
   const taken = (k: HexKey) => Object.values(state.heroes).some((h) => h.alive && !h.entering && h.id !== hero.id && h.pos === k);
@@ -587,6 +593,16 @@ export function kingdomAction(state: GameState, action: Action): void {
       }
       break;
     }
+    case 'kingdomLearn': {
+      const { s, hero } = serviceSettlement(state, action.settlementId);
+      if (!state.rules.realm) throw new Error('Czary są dopiero na poziomie Królestwo.');
+      if (!towerSpells(buildingLevel(s, 'magic')).includes(action.spell)) throw new Error('Tego czaru nie uczy wieża maga tej osady.');
+      if (hero.spells?.includes(action.spell)) throw new Error('Bohater zna już ten czar.');
+      payCost(state, hero.faction, spellPrice(action.spell));
+      (hero.spells ??= []).push(action.spell);
+      log(state, 'info', `${UNITS[hero.id].name} uczy się czaru: ${SPELLS[action.spell].name} (${costText(spellPrice(action.spell))}).`);
+      break;
+    }
     case 'kingdomHire': {
       const { s, hero } = serviceSettlement(state, action.settlementId);
       if (!state.rules.realm) throw new Error('Dowódców najmuje się dopiero na poziomie Królestwo.');
@@ -731,6 +747,8 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   if (state.rules.economy && buildingLevel(s, 'forge') === 1 && forgeLevel(state, f) === 1 && buildable('forge')) return { type: 'kingdomBuild', settlementId: id, building: 'forge' };
   // Level 5: a tavern on own land, once the barracks stand (a second hero is worth more than the last buildings).
   if (state.rules.realm && own && s.buildings.barracks >= 1 && buildingLevel(s, 'tavern') < 1 && !settlementsOf(state, f).some((x) => buildingLevel(x, 'tavern') >= 1) && buildable('tavern')) return { type: 'kingdomBuild', settlementId: id, building: 'tavern' };
+  // Level 5: one mage tower for the faction, and its upgrade once there is Gwiezdny Pył to spare.
+  if (state.rules.realm && own && s.buildings.barracks >= 1 && !settlementsOf(state, f).some((x) => x.id !== s.id && buildingLevel(x, 'magic') >= 1) && buildCost(state, s, 'magic') && buildable('magic')) return { type: 'kingdomBuild', settlementId: id, building: 'magic' };
   // Defences last, and only where somebody stands guard.
   if (state.rules.economy && s.garrison?.length && buildCost(state, s, 'walls') && buildable('walls')) return { type: 'kingdomBuild', settlementId: id, building: 'walls' };
   return botTrade(state, f, s);
@@ -751,6 +769,10 @@ function botTrade(state: GameState, f: FactionId, s: Settlement): Action | null 
   if (s.buildings.market < 1) wanted.push('market');
   if (forgeLevel(state, f) < 1) wanted.push('forge');
   if (s.buildings.hospital < 1 && fs.supportsDead.length) wanted.push('hospital');
+  if (state.rules.realm && own && s.buildings.barracks >= 1) {
+    if (!settlementsOf(state, f).some((x) => buildingLevel(x, 'tavern') >= 1)) wanted.push('tavern');
+    if (!settlementsOf(state, f).some((x) => buildingLevel(x, 'magic') >= 1)) wanted.push('magic');
+  }
   if (own && s.buildings.barracks === 1) wanted.push('barracks');
   if (buildingLevel(s, 'forge') === 1) wanted.push('forge');
   for (const b of wanted) {
@@ -809,6 +831,15 @@ export function kingdomBotAction(state: GameState, hero: HeroState): Action | nu
     if (fs.supportsAlive.length < slots && here.garrison?.length) {
       const strongest = [...here.garrison].sort((a, b) => worth(b) - worth(a) || (a < b ? -1 : 1))[0];
       return { type: 'kingdomGarrison', settlementId: here.id, unitId: strongest, dir: 'out' };
+    }
+  }
+  // Level 5: learn the spells of the faction's towers, the fighting ones first (a few coins stay for recruits).
+  if (state.rules.realm && hero.playerId) {
+    const order: SpellId[] = ['bolt', 'mend', 'fireball', 'stoneskin', 'slow'];
+    for (const s of settlementsOf(state, hero.faction)) {
+      const teach = towerSpells(buildingLevel(s, 'magic'));
+      const spell = order.find((id) => teach.includes(id) && !hero.spells?.includes(id));
+      if (spell && canPay(state, hero.faction, { ...spellPrice(spell), gold: spellPrice(spell).gold + 2 })) return { type: 'kingdomLearn', settlementId: s.id, spell };
     }
   }
   // Level 5: buy the fallen commander back, hire one (the first free archetype; a reserve of gold stays for recruits).

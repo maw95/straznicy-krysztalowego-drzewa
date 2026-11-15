@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Królestwo: **magia**. Bohaterowie mają manę i rzucają czary: w bitwie jeden na aktywację (Magiczny Pocisk, Leczenie, Spowolnienie, Kamienna Skóra, Kula Ognia, Zryw), na mapie Wizję i Wrota do własnej osady. Czarów uczy nowy budynek, wieża maga; bohaterowie główni znają Magiczny Pocisk od początku, a mędrcy czarują mocniej. Komputer też czaruje.
+
 - Nowy poziom 5 **„Królestwo”** (początek): **drugi bohater**. W karczmie (nowy budynek) każdy gracz najmuje jednego dowódcę: wojownika, łucznika albo mędrca z własnym imieniem. Dowódca ma własny pionek, turę, doświadczenie, umiejętności i artefakty. Gdy polegnie, traci artefakty, ale można go wykupić w karczmie; śmierć bohatera głównego pozostaje ostateczna. Komputer też najmuje dowódców. W kreatorze gry są karty „Królestwo” i (na razie pusta) „Imperium”.
 
 - Tryb rodzinny na poziomach Osada i Księstwo: **autopilot warstw**. Dziecko wędruje i walczy, a gospodarką zajmuje się dorosły z tej samej frakcji (autopilot nie wydaje już wspólnego złota za jego plecami) albo, gdy dorosłego nie ma, autopilot. W turze dziecka okno osady jest zamknięte i widać, kto nią zarządza.

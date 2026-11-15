@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { heroLabel } from '../engine/realm';
+import { MAGIC, manaOf, maxMana, portalTarget, SPELLS } from '../engine/magic';
 import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
 import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots } from '../engine/game';
 import { fightLevelAt } from './fightBadges';
@@ -550,6 +551,17 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </button>
               <div style={{ minWidth: 0 }}>
                 <div data-hero-name style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{heroLabel(hero)}</div>
+                {state.rules.realm && (hero.spells?.length ?? 0) > 0 && (
+                  <div data-map-spells style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', fontSize: 14 }}>
+                    <span title={`Mana wraca po ${MAGIC.regen} na rundę`}>Mana <b data-mana>{manaOf(hero)}</b>/{maxMana(hero)}</span>
+                    {canAct && hero.faction === viewer && hero.spells!.filter((id) => SPELLS[id].where === 'map').map((id) => (
+                      <button key={id} className="btn plate parch" data-map-spell={id} disabled={manaOf(hero) < SPELLS[id].mana || (id === 'portal' && !portalTarget(state, hero))} title={`${SPELLS[id].name} (mana ${SPELLS[id].mana}): ${SPELLS[id].text}`} onClick={() => { sfx.play('magic_cast'); onAction({ type: 'mapSpell', spell: id }); }} style={{ padding: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <img src={asset(`ikony/czary/${id}.webp`)} alt="" width={30} height={30} />
+                        <span style={{ paddingRight: 4 }}>{SPELLS[id].name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
                 <div style={{ fontSize: 15, color: 'var(--muted)' }}>{hero.playerId ? state.players.find((p) => p.id === hero.playerId)?.name : 'Automat zła'}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3, fontSize: 15 }}>
                   <span title={`Punkty ruchu w tej turze: ${moveBreakdown(state).map((p) => `${p.points > 0 && p.label !== 'podstawa' ? '+' : ''}${p.points} ${p.label}`).join(', ')} = ${moveAllowance(state)}.`}>Ruch <Pips total={Math.max(state.rules.heroMovePoints, moveAllowance(state), state.movePoints)} left={state.movePoints} /></span>

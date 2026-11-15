@@ -780,7 +780,7 @@ Na poziomie Księstwo można grać o **Podbój**. Wygrywa strona, która na koni
 ### Tryb rodzinny: autopilot
 Gdy przy bohaterze zaznaczono „Dziecko”, młodszy gracz **wędruje i walczy**, a osadami i surowcami nie musi się zajmować. Jeśli tą samą frakcją gra dorosły, to on buduje, rekrutuje i handluje (złoto i surowce są wspólne). Jeśli dorosłego nie ma, robi to **autopilot**, tak jak zrobiłby komputer. Skrzynie dziecka otwierają się same.
 
-## 19. Poziom 5: Królestwo — drugi bohater (wersja cyfrowa)
+## 19. Poziom 5: Królestwo — drugi bohater i magia (wersja cyfrowa)
 
 Poziom „Królestwo” dodaje do zasad Księstwa **dowódcę**, czyli drugiego bohatera gracza.
 
@@ -792,6 +792,21 @@ Dowódca jest pełnym bohaterem: ma własny pionek na mapie, własną turę (zar
 
 ### Gdy dowódca polegnie
 Dowódca nie ginie na zawsze. Traci artefakty (zabiera je zwycięski bohater), ale zachowuje poziom i umiejętności. Od następnej rundy możesz go **wykupić w karczmie**: 3 zł i 2 zł za każdy jego poziom. Wykup działa tylko, gdy żyje Twój bohater główny. **Śmierć bohatera głównego jest ostateczna**, ale jeśli żyje dowódca, grasz dalej i możesz wygrać.
+
+### Magia
+Każdy bohater ma **manę**: 3 i jeszcze 1 za każdy swój poziom (mędrcy o 3 więcej). Na koniec rundy wraca 1 punkt many. Bohaterowie główni od początku znają **Magiczny Pocisk**; kolejnych czarów uczy **wieża maga** (budynek w osadzie: 5 zł + 2 rudy + 1 Pył; rozbudowana uczy też czarów drugiego kręgu). Czar pierwszego kręgu kosztuje 3 zł, drugiego 5 zł i 1 Gwiezdny Pył. Uczy się bohater, którego jest tura.
+
+**W bitwie** bohater może w swojej aktywacji rzucić **jeden czar**, oprócz ruchu i ataku: wybierz czar z paska „Czary”, a potem wskaż cel.
+- **Magiczny Pocisk** (2 many): 3 obrażenia w dowolnego wroga.
+- **Leczenie** (2): sojusznik odzyskuje 4 Życia.
+- **Spowolnienie** (1): wróg ma −2 do Szybkości w następnej aktywacji.
+- **Kamienna Skóra** (2, drugi krąg): do końca bitwy ciosy w sojusznika są o 1 słabsze.
+- **Kula Ognia** (3, drugi krąg): 2 obrażenia w cel i wszystkich stojących obok, także Twoich.
+- **Zryw** (3, drugi krąg): sojusznik od razu dostaje dodatkową aktywację.
+
+**Na mapie**, w turze bohatera (przyciski pod jego imieniem): **Wizja** (2 many) odkrywa pola w promieniu 3, a **Wrota** (4, drugi krąg) przenoszą bohatera do najbliższej własnej osady i kończą jego ruch.
+
+Czary rosną z bohaterem: co 3 poziomy zadają i leczą o 1 więcej; mędrzec ma +1 od początku.
 
 ## Autorzy (wersja cyfrowa)
 
