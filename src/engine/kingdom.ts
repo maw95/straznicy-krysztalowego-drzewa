@@ -9,6 +9,7 @@ import { levelOf } from './growth';
 import { log } from './log';
 import { mapNeighbors, tileCost } from './map';
 import { Rng } from './rng';
+import { costText, ECONOMY, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import type { Action, Crystal, GameState, HeroState } from './types';
@@ -33,7 +34,11 @@ export interface Settlement {
 export interface KingdomState {
   gold: Record<FactionId, number>;
   settlements: Record<string, Settlement>;
-  mines: Record<HexKey, { owner: FactionId | null }>;
+  /** `res`: the resource a mine gives (missing: gold). */
+  mines: Record<HexKey, { owner: FactionId | null; res?: ResourceId }>;
+  /** Level 4 (rule `economy`): wood, ore and Gwiezdny Pył of each faction, and the round of the last building (one a round per faction). */
+  res?: Record<FactionId, Resources>;
+  built?: Record<FactionId, number>;
   /** A hero opened a chest and has to choose: its contents (an artifact) or gold. */
   chest: { heroId: string } | null;
 }
@@ -158,6 +163,7 @@ export function teamSlots(state: GameState, f: FactionId): number {
 export function initKingdom(state: GameState): void {
   const k: KingdomState = { gold: { dawn: KINGDOM.startGold, horde: KINGDOM.startGold }, settlements: {}, mines: {}, chest: null };
   state.kingdom = k;
+  if (state.rules.economy) k.res = { dawn: { ...ECONOMY.start }, horde: { ...ECONOMY.start } };
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag: Record<FactionId, string[]> = { dawn: rng.shuffle([...NAMES.dawn]), horde: rng.shuffle([...NAMES.horde]) };
   const empty = (): Record<BuildingId, number> => ({ barracks: 0, market: 0, hospital: 0, treasury: 0 });
@@ -216,6 +222,24 @@ export function initKingdom(state: GameState): void {
       taken.push(t.key);
     }
   }
+  // Level 4: mines of wood, ore and Gwiezdny Pył, placed like the gold ones.
+  if (k.res) {
+    for (const res of RESOURCE_IDS) {
+      const want = ECONOMY.mines[res][state.setup.mapSize] ?? 1;
+      let placed = 0;
+      // Three passes, looser each time: the small maps hold few free hexes.
+      for (const [clear, gap] of [[1, 1], [0, 1], [0, 0]] as const) {
+        for (const t of free(clear)) {
+          if (placed >= want) break;
+          if (taken.some((c) => distance(parseKey(c), parseKey(t.key)) <= gap) || (gap > 0 && mapNeighbors(state.tiles, t.key).some((n) => state.tiles[n].crystalId))) continue;
+          k.mines[t.key] = { owner: null, res };
+          state.tiles[t.key].place = { kind: 'mine', id: t.key };
+          taken.push(t.key);
+          placed++;
+        }
+      }
+    }
+  }
   // Every faction starts with its three tier-1 supports, as in the other levels; the recruits are the new tiers (RECRUITS, docs/JEDNOSTKI_POZIOMU_3.md).
 }
 
@@ -236,7 +260,7 @@ export function enterPlace(state: GameState, hero: HeroState): void {
     const m = k.mines[place.id];
     if (m.owner === hero.faction) return;
     m.owner = hero.faction;
-    log(state, 'info', `${name} zajmuje kopalnię złota.`);
+    log(state, 'info', `${name} zajmuje: ${MINE_NAMES[m.res ?? 'gold'].toLowerCase()}.`);
     firstPlaceGold(state, hero);
   }
 }
@@ -264,6 +288,12 @@ export function collectIncome(state: GameState): void {
         fs.supportsDead = [];
       }
       continue;
+    }
+    if (k.res) {
+      const got = resourceIncomeOf(state, f);
+      const parts = RESOURCE_IDS.filter((r) => got[r] > 0).map((r) => `${got[r]} × ${RESOURCE_NAMES[r]}`);
+      for (const r of RESOURCE_IDS) k.res[f][r] += got[r];
+      if (parts.length) log(state, 'info', `${FACTION_NAMES[f]}: surowce ${parts.join(', ')}.`, f);
     }
     const income = incomeOf(state, f);
     if (income <= 0) continue;
@@ -313,6 +343,57 @@ function pay(state: GameState, f: FactionId, price: number) {
 /** What it costs to build or upgrade a building next (null: it is complete). */
 export const nextCost = (s: Settlement, b: BuildingId): number | null => KINGDOM.cost[b][s.buildings[b]] ?? null;
 
+/** The full price of the next level of a building: gold only in level 3, gold and resources in level 4 (null: it is complete). */
+export function buildCost(state: GameState, s: Settlement, b: BuildingId): Cost | null {
+  const gold = nextCost(s, b);
+  if (gold === null) return null;
+  return state.rules.economy ? ECONOMY.cost[b][s.buildings[b]] : { gold };
+}
+
+/** What an artifact costs in the market for this hero: gold, and Gwiezdny Pył for a legendary one in level 4. */
+export const artifactBill = (state: GameState, hero: HeroState, art: ArtifactDef): Cost => ({
+  gold: artifactCost(hero, art),
+  ...(state.rules.economy && art.rarity === 3 ? { dust: ECONOMY.legendaryDust } : {}),
+});
+
+export const resOf = (state: GameState, f: FactionId): Resources => state.kingdom?.res?.[f] ?? emptyResources();
+
+export function canPay(state: GameState, f: FactionId, c: Cost): boolean {
+  const k = state.kingdom;
+  return Boolean(k) && k!.gold[f] >= c.gold && RESOURCE_IDS.every((r) => resOf(state, f)[r] >= (c[r] ?? 0));
+}
+
+/** Pays a price from the faction's stock (throws, naming what is missing). */
+export function payCost(state: GameState, f: FactionId, c: Cost): void {
+  const k = state.kingdom!;
+  const missing = [...(k.gold[f] < c.gold ? [`${c.gold - k.gold[f]} zł`] : []), ...RESOURCE_IDS.filter((r) => resOf(state, f)[r] < (c[r] ?? 0)).map((r) => `${c[r]! - resOf(state, f)[r]} × ${RESOURCE_NAMES[r]}`)];
+  if (missing.length) throw new Error(`Brakuje: ${missing.join(', ')}.`);
+  k.gold[f] -= c.gold;
+  for (const r of RESOURCE_IDS) if (c[r]) k.res![f][r] -= c[r]!;
+}
+
+/** Level 4 allows one building (or upgrade) a round per faction. */
+export const mayBuildNow = (state: GameState, f: FactionId): boolean => !state.rules.economy || state.kingdom?.built?.[f] !== state.round;
+
+/** Resources per round the faction earns now, with where they come from. */
+export function resourceIncomeBreakdown(state: GameState, f: FactionId): Array<{ label: string; res: ResourceId; amount: number }> {
+  const k = state.kingdom;
+  if (!k?.res) return [];
+  const rows: Array<{ label: string; res: ResourceId; amount: number }> = [];
+  for (const s of Object.values(k.settlements)) {
+    if (s.owner !== f) continue;
+    for (const r of RESOURCE_IDS) if (ECONOMY.incomeSettlement[r]) rows.push({ label: s.name, res: r, amount: ECONOMY.incomeSettlement[r] });
+  }
+  for (const [hex, m] of Object.entries(k.mines)) if (m.owner === f && m.res) rows.push({ label: `${MINE_NAMES[m.res]} (${hex})`, res: m.res, amount: ECONOMY.incomeMine[m.res] });
+  return rows;
+}
+
+export const resourceIncomeOf = (state: GameState, f: FactionId): Resources => {
+  const out = emptyResources();
+  for (const row of resourceIncomeBreakdown(state, f)) out[row.res] += row.amount;
+  return out;
+};
+
 /** Recruiting, healing and trading are for the land's own faction: a captured foreign settlement gives income, the market and the hospital only. */
 export const mayRecruit = (s: Settlement, f: FactionId) => s.land === f && s.owner === f;
 
@@ -323,12 +404,14 @@ export function kingdomAction(state: GameState, action: Action): void {
     case 'kingdomBuild': {
       const { s, hero } = serviceSettlement(state, action.settlementId);
       const b = action.building;
-      const price = nextCost(s, b);
+      const price = buildCost(state, s, b);
       if (price === null) throw new Error('Ten budynek jest już w pełni rozbudowany.');
       if (b === 'barracks' && s.land !== hero.faction) throw new Error('Obcej osady nie rozbudujesz o koszary.');
-      pay(state, hero.faction, price);
+      if (!mayBuildNow(state, hero.faction)) throw new Error('W tej rundzie budowaliście już: jeden budynek na rundę.');
+      payCost(state, hero.faction, price);
+      if (state.rules.economy) (k.built ??= { dawn: 0, horde: 0 })[hero.faction] = state.round;
       s.buildings[b] += 1;
-      log(state, 'info', `${FACTION_NAMES[hero.faction]}: ${BUILDING_NAMES[b][s.buildings[b] - 1]} w osadzie ${s.name} (${price} zł).`);
+      log(state, 'info', `${FACTION_NAMES[hero.faction]}: ${BUILDING_NAMES[b][s.buildings[b] - 1]} w osadzie ${s.name} (${costText(price)}).`);
       break;
     }
     case 'kingdomRecruit': {
@@ -363,7 +446,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       const stock = marketStock(state, s);
       if (!stock.includes(action.artifactId)) throw new Error('Tego artefaktu nie ma dziś w ofercie.');
       const art = ARTIFACT_BY_ID[action.artifactId];
-      pay(state, hero.faction, artifactCost(hero, art));
+      payCost(state, hero.faction, artifactBill(state, hero, art));
       const epoch = marketEpoch(state);
       if (s.boughtEpoch !== epoch) s.bought = [];
       s.boughtEpoch = epoch;
@@ -410,33 +493,35 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   const fs = state.factions[f];
   const id = s.id;
   const afford = (price: number | null) => price !== null && gold >= price;
+  // A building needs its whole price (level 4: resources too) and the round's one build still free.
+  const buildable = (b: BuildingId) => { const c = buildCost(state, s, b); return c !== null && canPay(state, f, c) && mayBuildNow(state, f); };
   const own = s.land === f;
-  if (own && s.buildings.barracks < 1 && afford(nextCost(s, 'barracks'))) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
+  if (own && s.buildings.barracks < 1 && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
   if (own && s.buildings.barracks >= 1) {
     // Like a player: the strongest recruit it can pay for now.
     const missing = RECRUITS[f].filter((r) => !fs.supportsAlive.includes(r.id) && !fs.supportsDead.includes(r.id) && (r.tier < 4 || s.buildings.barracks >= 2) && afford(r.cost)).sort((a, b) => b.tier - a.tier)[0];
     if (missing) return { type: 'kingdomRecruit', settlementId: id, unitId: missing.id };
     // Every cheaper recruit is in the team and the strongest ones wait behind the bigger barracks: build them.
     const waiting = RECRUITS[f].some((r) => r.tier >= 4 && !fs.supportsAlive.includes(r.id) && !fs.supportsDead.includes(r.id));
-    if (waiting && s.buildings.barracks === 1 && RECRUITS[f].every((r) => r.tier >= 4 || fs.supportsAlive.includes(r.id) || fs.supportsDead.includes(r.id)) && afford(nextCost(s, 'barracks'))) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
+    if (waiting && s.buildings.barracks === 1 && RECRUITS[f].every((r) => r.tier >= 4 || fs.supportsAlive.includes(r.id) || fs.supportsDead.includes(r.id)) && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
   }
   if (s.buildings.hospital >= 1 && fs.supportsDead.length) {
     const dead = fs.supportsDead[0];
     const base = RECRUITS[f].find((r) => r.id === dead)?.cost ?? 2;
     if (afford(Math.max(1, Math.ceil(base / KINGDOM.heal[s.buildings.hospital >= 2 ? 1 : 0])))) return { type: 'kingdomHeal', settlementId: id, unitId: dead };
   }
-  if (s.buildings.treasury < 1 && afford(nextCost(s, 'treasury'))) return { type: 'kingdomBuild', settlementId: id, building: 'treasury' };
-  if (s.buildings.hospital < 1 && fs.supportsDead.length && afford(nextCost(s, 'hospital'))) return { type: 'kingdomBuild', settlementId: id, building: 'hospital' };
+  if (s.buildings.treasury < 1 && buildable('treasury')) return { type: 'kingdomBuild', settlementId: id, building: 'treasury' };
+  if (s.buildings.hospital < 1 && fs.supportsDead.length && buildable('hospital')) return { type: 'kingdomBuild', settlementId: id, building: 'hospital' };
   if (s.buildings.market >= 1) {
     const buyer = state.heroes[state.turnOrder[state.turnIndex]];
     const who = buyer?.faction === f ? buyer : undefined;
-    const cost = (a: ArtifactDef) => (who ? artifactCost(who, a) : KINGDOM.artifactPrice[a.rarity - 1]);
+    const bill = (a: ArtifactDef): Cost => (who ? artifactBill(state, who, a) : { gold: KINGDOM.artifactPrice[a.rarity - 1] });
     // A bot prefers the rarer artifact, and a piece of a set it is already collecting above the others.
     const worth = (a: ArtifactDef) => a.rarity * 10 + (a.set && who ? setCount(who, a.set) * 6 : 0);
-    const best = marketStock(state, s).map((a) => ARTIFACT_BY_ID[a]).filter((a) => gold >= cost(a)).sort((a, b) => worth(b) - worth(a))[0];
+    const best = marketStock(state, s).map((a) => ARTIFACT_BY_ID[a]).filter((a) => canPay(state, f, bill(a))).sort((a, b) => worth(b) - worth(a))[0];
     if (best) return { type: 'kingdomBuyArtifact', settlementId: id, artifactId: best.id };
-  } else if (afford(nextCost(s, 'market'))) return { type: 'kingdomBuild', settlementId: id, building: 'market' };
-  if (own && s.buildings.barracks === 1 && s.buildings.market >= 1 && afford(nextCost(s, 'barracks'))) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
+  } else if (buildable('market')) return { type: 'kingdomBuild', settlementId: id, building: 'market' };
+  if (own && s.buildings.barracks === 1 && s.buildings.market >= 1 && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
   return null;
 }
 

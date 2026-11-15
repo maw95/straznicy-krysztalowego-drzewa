@@ -140,7 +140,7 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
   const base = setup.rules;
   if (!isDigital(base) || setup.mode === 'arena') return base;
   // The Kingdom table has no ranking level (levelOf says 'custom'), but its difficulty is tuned like the level it is built on.
-  const level = levelOf(base.kingdom ? { ...setup, rules: { ...base, kingdom: false } } : setup);
+  const level = levelOf(base.kingdom ? { ...setup, rules: { ...base, kingdom: false, economy: false } } : setup);
   // Only the ready-made levels are tuned; "Własny" is exactly what the player switched on.
   if (level === 'custom') return base;
   const players = setup.seats.filter((s) => s.faction === 'dawn').length;

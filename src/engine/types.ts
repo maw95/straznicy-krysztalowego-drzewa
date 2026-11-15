@@ -80,6 +80,8 @@ export interface RulesConfig {
   heroGrowth?: boolean;
   /** Level 3 "Osada": gold, settlements and recruitment (kingdom.ts); needs hero growth. */
   kingdom?: boolean;
+  /** Level 4 "Księstwo": wood, ore and Gwiezdny Pył, one building a round (economy.ts); needs `kingdom`. */
+  economy?: boolean;
   /** Difficulty "Łatwy" on levels 1-3: no rule differs, the flag only tells the level and selects the digital start-condition levers (tuning.ts). */
   easy?: boolean;
 }
