@@ -216,7 +216,9 @@ Wybierzcie jeden z trzech poziomów. Nic więcej nie trzeba ustawiać.
 
 Na żadnym poziomie nie rzuca się kością: cios zadaje zawsze tyle obrażeń, ile wynosi Atak. Kość to dodatkowe utrudnienie dla chętnych (rozdział 13).
 
-Na poziomie łatwym zasady mieszczą się na jednej kartce: chodzicie po mapie, odkrywacie kafelki, a w walce na zmianę zadajecie sobie ciosy.
+**Wersja cyfrowa** ma poziomy złożoności 0–3 (Zerówka, Przygoda, Wyprawa, Królestwo), a trudność (Łatwy, Normalny, Trudny) wybiera się osobno na poziomach 1–3. „Łatwy” z tabeli powyżej to w wersji cyfrowej **poziom 0, Zerówka**: pojedynki na planszy, bez zdolności i rytuału, z własną kolumną punktów. Na poziomach 1–3 wszystkie trudności grają pełnymi bitwami na arenie, a różnią się tylko warunkami startowymi komputera (liczbą skarbów, siłą Hordy): na Łatwym komputer zaczyna słabszy, na Trudnym mocniejszy.
+
+Na poziomie łatwym (w wersji planszowej: Łatwy, w cyfrowej: Zerówka) zasady mieszczą się na jednej kartce: chodzicie po mapie, odkrywacie kafelki, a w walce na zmianę zadajecie sobie ciosy.
 
 ---
 

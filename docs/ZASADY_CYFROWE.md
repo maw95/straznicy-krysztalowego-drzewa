@@ -462,3 +462,12 @@ Włącza go reguła `kingdom` (poziom w kreatorze „Królestwo”, `tier: 'king
 - **Automat zła w koopie** nie zbiera złota ani nie kupuje: co 3 rundy wracają jego polegli pomocnicy (posiłki).
 - **Boty** kupują w osadzie, w której stoją (koszary, rekrutacja, szpital, skarbiec, targ), a po zakupy wracają dopiero z dużym zapasem złota (12 zł); kopalnie i osady zajmują, gdy leżą tuż obok.
 - **Punkty rankingowe:** poziom nie daje ich, dopóki jego trudność nie jest zmierzona (jak „Własne ustawienia”).
+
+
+## Poziom 0 i trudność jako warunki startowe (15.11.2026)
+
+Decyzja autora (14.11): poziom trudności nie zmienia mechanik, tylko warunki startowe komputera.
+- **Poziom 0 „Zerówka”** to dawny Łatwy: pojedynki na planszy, bez zdolności, kości i rytuału, z zastępowaniem bohatera (w silniku `Level = 'zero'`, `LEVEL_RULES.zero`). Ma własną kolumnę punktów (`scoring.ts`, kolumna `zero`) i własne wpisy strojenia (`level: 'zero'`, przeniesione ze starego Łatwego bez zmiany liczb). W wersji planszowej kreator nadal pokazuje ten poziom jako „Łatwy”.
+- **Łatwy na poziomach 1–3** (`Level = 'kids'`) gra pełne bitwy na arenie jak Normalny; zasady są te same, a flaga `rules.easy` tylko wskazuje poziom i włącza dźwignie startowe (`tuning.ts`, `tuningAuto.ts`: skarby startowe, brak posiłków Hordy, ruch, limit rund). Pasmo: 65–85% wygranych Przymierza.
+- Stare zapisy partii ze starym Łatwym nie są migrowane (decyzja autora).
+- Punkty Łatwego na poziomach 1–3 są tymczasowe (`normal − 2`) do czasu pomiaru.

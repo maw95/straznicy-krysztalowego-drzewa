@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Instrukcja, okno zasad i wstęp opisują poziom 0 (Zerówkę) oraz trudność jako warunki startowe komputera.
+
 - Królestwo: komputer kupuje i rekrutuje z dowolnego miejsca, tak jak człowiek (wcześniej robił zakupy tylko stojąc w osadzie, więc prawie nie korzystał z ekonomii). Kupuje najsilniejszego rekruta, na którego go stać, a gdy ma już wszystkich słabszych, rozbudowuje koszary po najmocniejszych. Na długich mapach komputer ma teraz średnio 2–3 awansowanych rekrutów na grę i wygrywa o kilka punktów procentowych rzadziej.
 
 - Poziom 0 „Zerówka”: dawny Łatwy (krótkie pojedynki na planszy, bez zdolności i kości, bez rytuału) jest teraz osobnym poziomem dla najmłodszych, ze swoją kolumną punktów. Na poziomach 1–3 „Łatwy” gra się już pełnymi bitwami na arenie, a o trudności decydują warunki startowe komputera. Stare zapisy partii z dawnym Łatwym nie wczytają się jako poziom 0.

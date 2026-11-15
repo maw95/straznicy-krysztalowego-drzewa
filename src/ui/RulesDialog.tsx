@@ -64,7 +64,7 @@ const RULES: Array<[string, string[]]> = [
     'Każda jednostka atakuje wroga z najmniejszą liczbą Życia: najpierw spośród tych, których sięga bez ruchu, potem spośród tych, do których dojdzie. Przy remisie wybiera bohatera. Skarby automat zużywa przy pierwszej okazji.',
   ]],
   ['Trudność', [
-    'Łatwy: krótkie pojedynki na planszy, bez zdolności i rytuału, poległego bohatera zastępuje rezerwowy. Normalny: pełna gra (arena 3 na 3, zdolności, skarby). Trudny (kooperacja): automat zła ma o jednego bohatera więcej i zaczyna z dwoma skarbami, ale bez posiłków.',
+    'Poziom 0 (w wersji planszowej „Łatwy”): krótkie pojedynki na planszy, bez zdolności i rytuału, poległego bohatera zastępuje rezerwowy. Na poziomach 1–3 wszystkie trudności to pełna gra (arena 3 na 3, zdolności, skarby), a różnią się startem komputera: Łatwy zaczyna słabszy, Normalny jak w zasadach, Trudny (kooperacja) ma o jednego bohatera Hordy więcej i dwa skarby, ale bez posiłków.',
   ]],
   ['Arena', [
     'Jedna bitwa 3 na 3 bez mapy: Przymierze kontra Horda, z komputerem albo z drugim graczem. Każdy wybiera bohatera i 2 z 3 pomocników.',

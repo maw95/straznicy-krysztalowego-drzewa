@@ -36,6 +36,10 @@ const UP: Array<(hard: boolean) => Patch> = [
   (h) => ({ hordeStartTreasures: treasures(0), dawnStartTreasures: treasures(8), ...(h ? { extraEvilHero: false, minEvilHeroes: 1 } : {}) }),
   (h) => ({ hordeStartTreasures: treasures(0), dawnStartTreasures: treasures(10), ...(h ? { extraEvilHero: false, minEvilHeroes: 1 } : {}) }),
   (h) => ({ hordeStartTreasures: treasures(0), dawnStartTreasures: treasures(13), ...(h ? { extraEvilHero: false, minEvilHeroes: 1 } : {}) }),
+  // Beyond the treasures (Easy of the arena levels): no reinforcements for the coop automaton, then a hero that walks one hex further and more rounds.
+  () => ({ hordeStartTreasures: treasures(0), dawnStartTreasures: treasures(13), hordeRespawn: false }),
+  () => ({ hordeStartTreasures: treasures(0), dawnStartTreasures: treasures(13), hordeRespawn: false, heroMovePoints: 4 }),
+  () => ({ hordeStartTreasures: treasures(0), dawnStartTreasures: treasures(13), hordeRespawn: false, heroMovePoints: 4, roundLimitBonus: 6 }),
 ];
 /** Lowering them. */
 const DOWN: Array<(coop: boolean) => Patch> = [
