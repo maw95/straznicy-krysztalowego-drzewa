@@ -1,7 +1,7 @@
 # Mechaniki wersji cyfrowej według poziomów drabinki
 
 Stan z 10.11.2026. Wszystkie mechaniki (zbudowane i wymyślone) w jednym miejscu, posortowane według poziomu drabinki z `ROZBUDOWA_CYFROWA.md`:
-1 Przygoda, 2 Wyprawa, 3 Królestwo, a od 15.11.2026 sześć poziomów (podział 4–6 niżej; nazwy do ustalenia). Przypisanie do poziomów jest **propozycją do dyskusji**, o ile nie napisano „decyzja autora”.
+0 Spacer, 1 Przygoda, 2 Wyprawa, 3 Osada, 4 Księstwo, 5 Królestwo, 6 Imperium (nazwy i podział 4–6 ustalone 15.11.2026, niżej). Przypisanie do poziomów jest **propozycją do dyskusji**, o ile nie napisano „decyzja autora”.
 Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): poziomy 1, 2 i 3.
 
 ## Poziom 1 — Przygoda (od 5 lat)
@@ -69,7 +69,7 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 - [ ] Autopilot warstw (rodzic na wyższym poziomie, dziecko na tej samej mapie z automatycznie zarządzanymi warstwami).
 - [ ] Kość obrażeń i zasłanianie strzału zostają opcjami „Własnymi”.
 
-## Poziom 3 — Królestwo (decyzja autora: wchodzi do premiery)
+## Poziom 3 — Osada (dawniej „Królestwo”; decyzja autora: wchodzi do premiery)
 
 - [ ] Osady (startowa + do zdobycia), jedna waluta (złoto), rekrutacja jednostek.
 - [ ] Drużyna: bohater prowadzi do N pojedynczych jednostek (N rośnie z poziomem bohatera i budynkami).
@@ -78,31 +78,33 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 
 ## Poziomy 4, 5 i 6 — ustalenia z 15.11.2026 (decyzje autora)
 
-Drabinka ma **sześć poziomów** (plus poziom 0). **Nazwy poziomów 3–6 jeszcze nieustalone**: „Królestwo” nie pasuje do poziomu 3 (zmienia się tylko ekonomia); pomysły: Osada / Państwo / Imperium / Legenda, albo schemat czasowników. Poniżej robocze nazwy: 4 Gospodarka, 5 Bohater i magia, 6 Wojna i twierdze.
+Drabinka ma **siedem stopni** (poziom 0 plus sześć). **Nazwy to ranga zmagań, skala władzy** (decyzja autora, 15.11): 0 Spacer, 1 Przygoda, 2 Wyprawa, 3 Osada, 4 Księstwo, 5 Królestwo, 6 Imperium. Podział funkcji między 4, 5 i 6 ma wyrównywać liczbę i złożoność nowości **dla gracza** (nie dla implementacji): na 4 gospodarka i osady, na 5 bohaterowie i magia, na 6 frakcje i Relikt.
 Odrzucone: machiny wojenne (poza katapultą), morale i szczęście, neutralne stwory do przekonania, dyplomacja, mgła wojny, tereny, jednostki poziomów 7+, cykl tygodniowy (porzucony 15.11).
 
-### Poziom 4 (robocza nazwa: Gospodarka)
+### Poziom 4 — Księstwo (gospodarka i osady)
 - [ ] Zasoby: drewno, ruda/kamień, Gwiezdny Pył; kopalnie; budynki, jeden na rundę (bez cyklu tygodniowego; ewentualny przyrost rekrutów co N rund tylko jeśli symulacje pokażą potrzebę).
-- [ ] **Alternatywne jednostki poziomów 2–5:** każda jednostka ma własny budynek, a dwa budynki tego samego poziomu wykluczają się wzajemnie (np. Lisia Nora albo Legowisko Jeżozwierzy; kupienie jednego odblokowuje zakup tylko jego jednostki). Po śmierci jednostki trzeba wskrzesić **dokładnie tę samą** (nie można kupić alternatywnej w jej miejsce). 8 nowych jednostek (4 poziomy × 2 frakcje) wymaga grafiki, animacji i zdolności.
-- [ ] Obiekty na mapie (młyn, tartak, studnia, kapliczki itp.), własne, nie kopie H3.
+- [ ] Obiekty na mapie (młyn, tartak, studnia, kapliczki itp.), własne, nie kopie H3, oraz **zadania („chatki”) z nagrodami** (przeniesione z poziomu 5, 15.11): nagrody to surowce i artefakty; czary i umiejętności dojdą jako nagrody dopiero od poziomu 5.
+- [ ] **Obrona osady** (przeniesiona z poziomu 6, 15.11; Podbój ma dzięki temu co zdobywać):
+  - **Garnizon:** jednostki zostawione w osadzie bronią jej, gdy bohater odejdzie (bohater w garnizonie dojdzie z drugim bohaterem na poziomie 5).
+  - **Oblężenie z katapultą:** mury, brama, **dwie wieżyczki strzeleckie** obrońcy. Mury i wieżyczki niszczy **tylko katapulta** (atakujący dostaje ją w bitwie automatycznie, jeden strzał na rundę w wybrany mur lub wieżyczkę; robocze). **Fosa/palisada/kolce:** wejście na pole kończy turę i zadaje obrażenia (robocze: 2), dostaje je też postać stojąca tam na końcu swojej tury (też 2); działa na wszystkich, duża jednostka raz; katapulta jej nie niszczy.
+  - Jeśli poziom 4 okaże się za ciężki: garnizon i przejmowanie zostają na 4, mury i katapulta przechodzą na 5.
 - [ ] Cel „Podbój”.
 - [ ] Autopilot warstw dla dzieci (wymaga ekonomii).
 
-### Poziom 5 (robocza nazwa: Bohater i magia)
-- [ ] Magia (czary), specjalności bohaterów, drzewka umiejętności bohatera z rozgałęzieniami.
-- [ ] **Automatyczny wzrost statystyk przy awansie zależny od typu bohatera** (np. wojownik +Ż, łucznik +A, mędrzec +magia), niezależnie od wybranej umiejętności. Wymaga ponownego strojenia i aktualizacji `golden.test.ts`.
-- [ ] Drzewka frakcji, mechaniki wyróżniające frakcję.
-- [ ] Zadania („chatki”) z nagrodami (artefakty, czary, umiejętności).
-- [ ] Zaawansowane scenariusze (na końcu).
-
-### Poziom 6 (robocza nazwa: Wojna i twierdze)
-- [ ] **Drugi bohater** (jeden na gracza, najęty w karczmie osady za złoto):
+### Poziom 5 — Królestwo (bohaterowie i magia)
+- [ ] **Drugi bohater** (przeniesiony z poziomu 6, 15.11; jeden na gracza, najęty w karczmie osady za złoto):
   - pełny bohater: osobny pionek na mapie, własna drużyna, własne PD, umiejętności i sloty artefaktów; start na poziomie 1; wymiana jednostek i artefaktów z głównym na sąsiednich polach lub w tej samej osadzie;
   - drugi bohater jest **archetypem-dowódcą** (wojownik, łucznik, mędrzec) z losowanym imieniem i własną krzywą wzrostu; główni bohaterowie są nazwani, ewentualnie 1–2 nowych na frakcję;
   - **śmierć pomocniczego:** wraca do osady po 1 rundzie za wykup rosnący z poziomem (robocze), zachowuje poziom i umiejętności, **traci drużynę i wszystkie artefakty (zabiera je zwycięzca)**, **fragmenty reliktu** zabiera zwycięzca; jeśli zwyciężył strażnik albo automat, artefakty znikają;
-  - **śmierć głównego jest ostateczna** (bez zmian względem poziomów 1–5). Jeśli główny nie żyje, a pomocniczy tak, gracz gra dalej i może wygrać; gdy pada pomocniczy po śmierci głównego, nie ma wykupu (to ostatni bohater), gracz odpada.
-- [ ] **Garnizon** w osadzie: jednostki lub bohater zostawieni w osadzie bronią jej, gdy bohater odejdzie.
-- [ ] **Oblężenie z katapultą:** mury, brama, **dwie wieżyczki strzeleckie** obrońcy. Mury i wieżyczki niszczy **tylko katapulta** (atakujący dostaje ją w bitwie automatycznie, jeden strzał na rundę w wybrany mur lub wieżyczkę; robocze). **Fosa/palisada/kolce:** wejście na pole kończy turę i zadaje obrażenia (robocze: 2), dostaje je też postać stojąca tam na końcu swojej tury (też 2); działa na wszystkich, duża jednostka raz; katapulta jej nie niszczy.
+  - **śmierć głównego jest ostateczna** (bez zmian względem poziomów 1–4). Jeśli główny nie żyje, a pomocniczy tak, gracz gra dalej i może wygrać; gdy pada pomocniczy po śmierci głównego, nie ma wykupu (to ostatni bohater), gracz odpada.
+- [ ] Magia (czary).
+- [ ] Specjalności bohaterów, drzewka umiejętności bohatera z rozgałęzieniami.
+- [ ] **Automatyczny wzrost statystyk przy awansie zależny od typu bohatera** (np. wojownik +Ż, łucznik +A, mędrzec +magia), niezależnie od wybranej umiejętności; łączy się z archetypami drugiego bohatera. Wymaga ponownego strojenia i aktualizacji `golden.test.ts`.
+- Zaawansowane scenariusze to zawartość, nie mechanika: powstają na końcu, na dowolnym poziomie.
+
+### Poziom 6 — Imperium (frakcje i Relikt)
+- [ ] **Alternatywne jednostki poziomów 2–5** (przeniesione z poziomu 4, 15.11): każda jednostka ma własny budynek, a dwa budynki tego samego poziomu wykluczają się wzajemnie (np. Lisia Nora albo Legowisko Jeżozwierzy; kupienie jednego odblokowuje zakup tylko jego jednostki). Po śmierci jednostki trzeba wskrzesić **dokładnie tę samą** (nie można kupić alternatywnej w jej miejsce). 8 nowych jednostek (4 poziomy × 2 frakcje) wymaga grafiki, animacji i zdolności. Budynki i surowce są już na poziomie 4. Przy cięciach czasowych to pierwszy kandydat do przesunięcia (najdroższy w produkcji).
+- [ ] Drzewka frakcji, mechaniki wyróżniające frakcję (przeniesione z poziomu 5; spotykają się tu z bonusem Reliktu zależnym od frakcji).
 - [ ] Jednostka poziomu 6: jedna legendarna, bardzo droga.
 - [ ] **Cel „Relikt”** (poszukiwanie Pierwotnej Iskry):
   - **Odłamki Pierwotnej Iskry** leżą na specjalnych kafelkach mapy; liczba zależy od rozmiaru mapy (robocze); gracz widzi licznik „3/6”;

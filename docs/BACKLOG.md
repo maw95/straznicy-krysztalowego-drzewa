@@ -32,7 +32,7 @@ W nocy 13/14.11 zrobione kroki 1–7 z kolejności prac: porządki w repo i kodz
 - **Miejsca w drużynie (Q7):** start 2, +1 na 3. poziomie bohatera, +1 na 6., +1 z ulepszonych koszar; razem maks. 5.
 - **Nowe jednostki (Q8):** Claude przygotowuje propozycję 8 jednostek (po 4 na frakcję, poziomy 2–5: nazwa, rola, zdolność, miejsce w krzywej siły), autor akceptuje, dopiero potem grafika.
 - **Zakres premiery (Q9):** poziomy 1–5 i dwie obecne frakcje; nowe frakcje, kampania i Ekspedycja po premierze.
-- **Nazwy poziomów (Q10):** Przygoda, Wyprawa, Królestwo, Imperium, Legenda; tryb roguelike nazywa się **„Ekspedycja”** (nie „Wyprawa”). Dla ewentualnego poziomu 6 zostaje miejsce (np. „Mit”).
+- **Nazwy poziomów (Q10):** Przygoda, Wyprawa, Królestwo, Imperium, Legenda; tryb roguelike nazywa się **„Ekspedycja”** (nie „Wyprawa”). Nazwy poziomów zmienione 15.11 (patrz sekcja D): Spacer, Przygoda, Wyprawa, Osada, Księstwo, Królestwo, Imperium.
 
 ## Zasady pracy bez nadzoru (decyzje autora, 12.11.2026)
 - Jeden punkt = jeden lub kilka commitów, każdy z wpisem w CHANGELOG.md i `make check` przed commitem; bez pushu gry. Zmiana AI albo liczb przesuwa `golden.test.ts` i tabele: osobny commit z `-u` i opisem w commicie.
@@ -67,10 +67,10 @@ Zrobione 14.11 (szczegóły w CHANGELOG.md i historii gita): wejście do osady s
 ## D. Przed i po premierze (premiera dopiero po poziomie 6, decyzje 13.11 i 15.11)
 
 **Przed premierą (w tej kolejności, po poziomie 3):**
-Podział na sześć poziomów (15.11.2026), szczegóły i zasady w `MECHANIKI_I_POZIOMY.md`; **nazwy poziomów 3–6 jeszcze do ustalenia** („Królestwo” nie opisuje poziomu 3):
-1. **Poziom 4 (Gospodarka):** drewno, ruda, Gwiezdny Pył, kopalnie, budynki jeden na rundę (bez cyklu tygodniowego), **alternatywne jednostki** poziomów 2–5 (wykluczające się budynki, wskrzeszenie tej samej jednostki), obiekty na mapie, cel „Podbój”, autopilot warstw dla dzieci.
-2. **Poziom 5 (Bohater i magia):** magia, specjalności i drzewka bohatera, automatyczny wzrost statystyk zależny od typu bohatera, drzewka i mechaniki frakcji, zadania z nagrodami, zaawansowane scenariusze.
-3. **Poziom 6 (Wojna i twierdze):** drugi bohater (wykup po śmierci, główny ginie na stałe), garnizon, oblężenie z katapultą (mury, brama, 2 wieżyczki, fosa), jednostka poziomu 6, cel „Relikt” (Odłamki Pierwotnej Iskry, budynek warunkiem zwycięstwa).
+Drabinka (15.11.2026, nazwy = ranga zmagań): 0 Spacer, 1 Przygoda, 2 Wyprawa, 3 Osada, 4 Księstwo, 5 Królestwo, 6 Imperium. Szczegóły i zasady w `MECHANIKI_I_POZIOMY.md`. Nazwy w UI (dziś „Zerówka” i „Królestwo” dla poziomu 3) do przemianowania; nazwy techniczne w kodzie (`kingdom`, `zero`) i w rankingu online zostają.
+1. **Poziom 4 (Księstwo, gospodarka i osady):** drewno, ruda, Gwiezdny Pył, kopalnie, budynki jeden na rundę (bez cyklu tygodniowego), obiekty na mapie i zadania („chatki”), **obrona osady** (garnizon, oblężenie z katapultą, mury, 2 wieżyczki, fosa), cel „Podbój”, autopilot warstw dla dzieci.
+2. **Poziom 5 (Królestwo, bohaterowie i magia):** **drugi bohater** (archetyp-dowódca, wykup po śmierci, główny ginie na stałe), magia, specjalności i drzewka bohatera, automatyczny wzrost statystyk zależny od typu bohatera.
+3. **Poziom 6 (Imperium, frakcje i Relikt):** **alternatywne jednostki** poziomów 2–5 (wykluczające się budynki, wskrzeszenie tej samej jednostki; pierwszy kandydat do cięcia, bo najdroższy w produkcji), drzewka i mechaniki frakcji, jednostka poziomu 6, cel „Relikt” (Odłamki Pierwotnej Iskry, budynek warunkiem zwycięstwa).
 4. Inwentaryzacja tekstów pod wiele języków, potem punkt C3 (Steam).
 
 **Po premierze:**
