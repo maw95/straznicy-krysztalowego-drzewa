@@ -169,6 +169,8 @@ export function App() {
     if (q.get('gear')) for (const h of Object.values(s.heroes)) h.gear = Object.fromEntries(q.get('gear')!.split(',').filter((id) => ARTIFACT_BY_ID[id]).map((id) => [ARTIFACT_BY_ID[id].slot, id]));
     // ?kingdom=1 (level 3): ?gold=20 gives the factions that much gold.
     if (s.kingdom && q.get('gold')) for (const f of ['dawn', 'horde'] as const) s.kingdom.gold[f] = Number(q.get('gold'));
+    // ?economy=1 (level 4): ?res=9 gives the factions that much of every resource.
+    if (s.kingdom?.res && q.get('res')) for (const f of ['dawn', 'horde'] as const) s.kingdom.res[f] = { wood: Number(q.get('res')), ore: Number(q.get('res')), dust: Number(q.get('res')) };
     // ?level=9 puts every hero on that level (for looking at the milestones on the cards).
     if (q.get('level')) for (const h of Object.values(s.heroes)) h.level = Number(q.get('level'));
     // ?encounter=2 (with growth=1) walks the active hero into the first neutral encounter of that tier (0 common, 1 rare, 2 legendary), for looking at the new units.

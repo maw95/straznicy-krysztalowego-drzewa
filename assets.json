@@ -3525,6 +3525,23 @@
       "data": "2026-11-15",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "osady/kuznia",
+      "pliki": [
+        "public/assets/osady/dawn_forge1.webp",
+        "public/assets/osady/dawn_forge2.webp",
+        "public/assets/osady/horde_forge1.webp",
+        "public/assets/osady/horde_forge2.webp"
+      ],
+      "typ": "budynek Kuźnia (poziom 4) w dwóch stopniach dla Przymierza i Hordy",
+      "opis": "Jeden arkusz 1536x1536 z czterema budynkami w siatce 2x2 na czarnym tle (oszczędność kredytów), pocięty skryptem scripts/assets/arkusz.py do WebP z przezroczystością (wysokość 380 px). Prompt: 'A sprite sheet of four separate fantasy game buildings arranged in a clean 2x2 grid ... painterly realistic, three-quarter isometric view, fully isolated on a plain pure black background': elficka kuźnia z kowadłem, jej rozbudowana wersja z dwoma kominami i miechem, mroczna kuźnia Hordy z czaszkami, wielka kuźnia wojenna z lawą.",
+      "scenario_asset": { "arkusz": "asset_46fucUPmjdEPL6ywJgckrKtH" },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.6 Flare, jakość medium",
+      "data": "2026-11-15",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

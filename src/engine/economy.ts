@@ -35,7 +35,15 @@ export const ECONOMY = {
     market: [{ gold: 3, wood: 2 }, { gold: 5, ore: 2, dust: 1 }],
     hospital: [{ gold: 3, wood: 2 }, { gold: 5, ore: 2, dust: 1 }],
     treasury: [{ gold: 4, ore: 2 }],
+    forge: [{ gold: 4, ore: 3 }, { gold: 6, ore: 3, dust: 2 }],
   } as Record<string, Cost[]>,
+  /** The forge (Kuźnia): the faction's supports fight with this much more Atak (level 1) and Życie (level 2), in the board game's scale. */
+  forgeAttack: 1,
+  forgeHp: 1,
+  /** Exchange in an own settlement: gold for one unit of a resource, by the level of the market there (none, market, big market). */
+  tradeBuy: { wood: [4, 3, 2], ore: [4, 3, 2], dust: [10, 8, 6] } as Record<ResourceId, number[]>,
+  /** Gold for one unit of a resource sold (a market is needed). */
+  tradeSell: { wood: 1, ore: 1, dust: 3 } as Resources,
   /** Huts with a quest on the map, by map size. */
   huts: { short: 1, medium: 2, long: 3, veryLong: 4, huge: 5, giant: 6 } as Record<string, number>,
   /** What a quest is worth, in gold: a reward is worth this much more than what the hut asks for. */

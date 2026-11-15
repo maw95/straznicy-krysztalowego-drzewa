@@ -877,7 +877,7 @@ function placeTitle(state: GameState, k: HexKey): string {
     return `${MINE_NAMES[mine?.res ?? 'gold']} (${gives}): ${mine?.owner ? `zajęta przez ${FACTION_NAMES[mine.owner]}` : 'nikt jej nie trzyma'}`;
   }
   const s = state.kingdom.settlements[place.id];
-  const built = (['barracks', 'market', 'hospital', 'treasury'] as const).filter((b) => s.buildings[b]).map((b) => BUILDING_NAMES[b][Math.min(s.buildings[b], BUILDING_NAMES[b].length) - 1]);
+  const built = (['barracks', 'market', 'hospital', 'treasury', 'forge'] as const).filter((b) => s.buildings[b]).map((b) => BUILDING_NAMES[b][Math.min(s.buildings[b], BUILDING_NAMES[b].length) - 1]);
   return `Osada ${s.name} (${FACTION_NAMES[s.land]}): ${s.owner ? `należy do ${FACTION_NAMES[s.owner]}` : 'broniona przez neutralnych'}${built.length ? ` · ${built.join(', ')}` : ''}`;
 }
 

@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Księstwo: nowy budynek **Kuźnia** (za rudę; pomocnicy całej frakcji dostają +1 do Ataku, po rozbudowie także +1 do Życia) i **wymiana surowców** w osadzie (brakujący surowiec kupisz za złoto, z targiem taniej; targ skupuje nadwyżki). Komputer też z nich korzysta, więc nie siedzi już na stosie złota, gdy brakuje mu drewna. Wygrana w Księstwie daje nieco więcej punktów rankingu niż w Osadzie.
+
 - Osada: wyrównana siła pomocników Przymierza. Jeżozwierz (8 Ż, 3 A) jest teraz mocniejszy od pomocników poziomu 1, Alabastrowy Odyniec (12 Ż, 5 A) i Opiekun Drzewa (15 Ż, 6 A) wyraźnie mocniejsi od Centaura, więc ceny 3/5/8/12 zł odpowiadają sile.
 
 - Poziom 4 „Księstwo”: chatki z zadaniami. Bohater stojący w chatce może oddać złoto, surowiec albo artefakt z plecaka i dostać więcej: złoto, surowiec, doświadczenie albo artefakt (raz na chatkę). Komputer też je załatwia. Nowa ikona chatki; rozdział 18 instrukcji opisuje poziom 4.

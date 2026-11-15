@@ -14,7 +14,7 @@ import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import type { Action, Crystal, GameState, HeroState } from './types';
 
-export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury';
+export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge';
 
 export interface Settlement {
   id: string;
@@ -24,7 +24,7 @@ export interface Settlement {
   name: string;
   /** Who holds it now (null: still held by neutrals, the fight for it is on). */
   owner: FactionId | null;
-  /** Level of each building: 0 not built, 1 built, 2 upgraded (the treasury has only 1). */
+  /** Level of each building: 0 not built, 1 built, 2 upgraded (the treasury has only 1). The forge exists in level 4 only (missing = 0: read it with `buildingLevel`). */
   buildings: Record<BuildingId, number>;
   /** Offers of the current market period already bought (the offer itself is drawn from the seed, see `marketStock`). */
   bought: string[];
@@ -54,7 +54,7 @@ export const KINGDOM = {
   /** Gold in a chest chosen instead of the artifact. */
   chestGold: 3,
   /** Cost of each level of a building. */
-  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4] } as Record<BuildingId, number[]>,
+  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4], forge: [] } as Record<BuildingId, number[]>,
   /** Price of an artifact in the market, by rarity (zwykły, rzadki, legendarny). */
   artifactPrice: [2, 5, 10],
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
@@ -99,13 +99,23 @@ export const BUILDING_NAMES: Record<BuildingId, [string, string?]> = {
   market: ['Targ', 'Duży targ'],
   hospital: ['Szpital', 'Ulepszony szpital'],
   treasury: ['Skarbiec'],
+  forge: ['Kuźnia', 'Wielka kuźnia'],
 };
+
+/** The buildings a settlement may have in this game, in the order of the screen (the forge comes with level 4). */
+export const buildingsOf = (state: GameState): BuildingId[] => ['barracks', 'market', 'hospital', 'treasury', ...(state.rules.economy ? ['forge' as const] : [])];
+
+export const buildingLevel = (s: Settlement, b: BuildingId): number => s.buildings[b] ?? 0;
+
+/** The best forge among the faction's settlements (0: none). */
+export const forgeLevel = (state: GameState, f: FactionId): number => (state.rules.economy ? Math.max(0, ...settlementsOf(state, f).map((s) => buildingLevel(s, 'forge'))) : 0);
 
 export const BUILDING_TEXTS: Record<BuildingId, [string, string?]> = {
   barracks: ['Pozwalają rekrutować pomocników.', 'Dodatkowe miejsce w drużynie i dostęp do najmocniejszych jednostek.'],
   market: ['Trzy artefakty w ofercie, nowa oferta co 3 rundy.', 'Pięć artefaktów w ofercie.'],
   hospital: ['Wskrzesza poległych pomocników za połowę ich ceny.', 'Wskrzesza za jedną trzecią ceny.'],
   treasury: ['Przynosi +1 złota na rundę.'],
+  forge: ['Pomocnicy całej frakcji walczą z +1 do Ataku.', 'Pomocnicy dostają też +1 do Życia.'],
 };
 
 /** The coop Horde is steered by the automaton: it earns no gold and shops nowhere; reinforcements come to it instead. */
@@ -168,7 +178,7 @@ export function initKingdom(state: GameState): void {
   if (state.rules.economy) k.res = { dawn: { ...ECONOMY.start }, horde: { ...ECONOMY.start } };
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag: Record<FactionId, string[]> = { dawn: rng.shuffle([...NAMES.dawn]), horde: rng.shuffle([...NAMES.horde]) };
-  const empty = (): Record<BuildingId, number> => ({ barracks: 0, market: 0, hospital: 0, treasury: 0 });
+  const empty = (): Record<BuildingId, number> => ({ barracks: 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0 } : {}) }) as Record<BuildingId, number>;
   const add = (id: string, at: HexKey, land: FactionId, owner: FactionId | null) => {
     k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[land]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
     state.tiles[at].place = { kind: 'settlement', id };
@@ -370,14 +380,17 @@ function pay(state: GameState, f: FactionId, price: number) {
 }
 
 /** What it costs to build or upgrade a building next (null: it is complete). */
-export const nextCost = (s: Settlement, b: BuildingId): number | null => KINGDOM.cost[b][s.buildings[b]] ?? null;
+export const nextCost = (s: Settlement, b: BuildingId): number | null => KINGDOM.cost[b][buildingLevel(s, b)] ?? null;
 
 /** The full price of the next level of a building: gold only in level 3, gold and resources in level 4 (null: it is complete). */
 export function buildCost(state: GameState, s: Settlement, b: BuildingId): Cost | null {
+  if (state.rules.economy) return ECONOMY.cost[b][buildingLevel(s, b)] ?? null;
   const gold = nextCost(s, b);
-  if (gold === null) return null;
-  return state.rules.economy ? ECONOMY.cost[b][s.buildings[b]] : { gold };
+  return gold === null ? null : { gold };
 }
+
+/** Gold for one unit of a resource bought in this settlement (the market there makes it cheaper). */
+export const tradeBuyPrice = (s: Settlement, res: ResourceId): number => ECONOMY.tradeBuy[res][Math.min(2, buildingLevel(s, 'market'))];
 
 /** What an artifact costs in the market for this hero: gold, and Gwiezdny Pył for a legendary one in level 4. */
 export const artifactBill = (state: GameState, hero: HeroState, art: ArtifactDef): Cost => ({
@@ -440,7 +453,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (!mayBuildNow(state, hero.faction)) throw new Error('W tej rundzie budowaliście już: jeden budynek na rundę.');
       payCost(state, hero.faction, price);
       if (state.rules.economy) (k.built ??= { dawn: 0, horde: 0 })[hero.faction] = state.round;
-      s.buildings[b] += 1;
+      s.buildings[b] = buildingLevel(s, b) + 1;
       log(state, 'info', `${FACTION_NAMES[hero.faction]}: ${BUILDING_NAMES[b][s.buildings[b] - 1]} w osadzie ${s.name} (${costText(price)}).`);
       break;
     }
@@ -482,6 +495,24 @@ export function kingdomAction(state: GameState, action: Action): void {
       s.boughtEpoch = epoch;
       s.bought.push(art.id);
       giveArtifact(state, hero, art, `targ w osadzie ${s.name}`);
+      break;
+    }
+    case 'kingdomTrade': {
+      const { s, hero } = serviceSettlement(state, action.settlementId);
+      if (!k.res) throw new Error('Wymiana surowców jest dopiero na poziomie Księstwo.');
+      const f = hero.faction;
+      if (action.dir === 'buy') {
+        const price = tradeBuyPrice(s, action.res);
+        pay(state, f, price);
+        k.res[f][action.res] += 1;
+        log(state, 'info', `${FACTION_NAMES[f]} kupuje: ${RESOURCE_NAMES[action.res]} (${price} zł).`, f);
+      } else {
+        if (buildingLevel(s, 'market') < 1) throw new Error('Surowce sprzedaje się na targu.');
+        if (k.res[f][action.res] < 1) throw new Error(`Brakuje: 1 × ${RESOURCE_NAMES[action.res]}.`);
+        k.res[f][action.res] -= 1;
+        k.gold[f] += ECONOMY.tradeSell[action.res];
+        log(state, 'info', `${FACTION_NAMES[f]} sprzedaje: ${RESOURCE_NAMES[action.res]} (${ECONOMY.tradeSell[action.res]} zł).`, f);
+      }
       break;
     }
     case 'hutDeliver': {
@@ -564,6 +595,7 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
     if (afford(Math.max(1, Math.ceil(base / KINGDOM.heal[s.buildings.hospital >= 2 ? 1 : 0])))) return { type: 'kingdomHeal', settlementId: id, unitId: dead };
   }
   if (s.buildings.treasury < 1 && buildable('treasury')) return { type: 'kingdomBuild', settlementId: id, building: 'treasury' };
+  if (state.rules.economy && buildingLevel(s, 'forge') < 1 && forgeLevel(state, f) < 1 && buildable('forge')) return { type: 'kingdomBuild', settlementId: id, building: 'forge' };
   if (s.buildings.hospital < 1 && fs.supportsDead.length && buildable('hospital')) return { type: 'kingdomBuild', settlementId: id, building: 'hospital' };
   if (s.buildings.market >= 1) {
     const buyer = state.heroes[state.turnOrder[state.turnIndex]];
@@ -575,6 +607,35 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
     if (best) return { type: 'kingdomBuyArtifact', settlementId: id, artifactId: best.id };
   } else if (buildable('market')) return { type: 'kingdomBuild', settlementId: id, building: 'market' };
   if (own && s.buildings.barracks === 1 && s.buildings.market >= 1 && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
+  if (state.rules.economy && buildingLevel(s, 'forge') === 1 && forgeLevel(state, f) === 1 && buildable('forge')) return { type: 'kingdomBuild', settlementId: id, building: 'forge' };
+  return botTrade(state, f, s);
+}
+
+/**
+ * Level 4: a bot that sits on gold while a building waits for one resource buys that resource (one unit an action). It keeps the gold of the
+ * building itself and never trades in a round in which it has already built.
+ */
+function botTrade(state: GameState, f: FactionId, s: Settlement): Action | null {
+  const k = state.kingdom!;
+  if (!k.res || !mayBuildNow(state, f)) return null;
+  const fs = state.factions[f];
+  const own = s.land === f;
+  const wanted: BuildingId[] = [];
+  if (own && s.buildings.barracks < 1) wanted.push('barracks');
+  if (s.buildings.treasury < 1) wanted.push('treasury');
+  if (s.buildings.market < 1) wanted.push('market');
+  if (forgeLevel(state, f) < 1) wanted.push('forge');
+  if (s.buildings.hospital < 1 && fs.supportsDead.length) wanted.push('hospital');
+  if (own && s.buildings.barracks === 1) wanted.push('barracks');
+  if (buildingLevel(s, 'forge') === 1) wanted.push('forge');
+  for (const b of wanted) {
+    const c = buildCost(state, s, b);
+    if (!c) continue;
+    const missing = RESOURCE_IDS.filter((r) => k.res![f][r] < (c[r] ?? 0));
+    if (!missing.length) continue;
+    const bill = c.gold + missing.reduce((n, r) => n + (c[r]! - k.res![f][r]) * tradeBuyPrice(s, r), 0);
+    if (k.gold[f] >= bill) return { type: 'kingdomTrade', settlementId: s.id, res: missing[0], dir: 'buy' };
+  }
   return null;
 }
 

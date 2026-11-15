@@ -533,5 +533,7 @@ export type Action =
   | { type: 'kingdomRecruit'; settlementId: string; unitId: string }
   | { type: 'kingdomHeal'; settlementId: string; unitId: string }
   | { type: 'kingdomBuyArtifact'; settlementId: string; artifactId: string }
+  /** Level 4: one unit of a resource bought for gold in an own settlement, or sold on its market. */
+  | { type: 'kingdomTrade'; settlementId: string; res: 'wood' | 'ore' | 'dust'; dir: 'buy' | 'sell' }
   | { type: 'hutDeliver' }
   | { type: 'chestTake'; what: 'artifact' | 'gold' };

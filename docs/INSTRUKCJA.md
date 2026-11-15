@@ -745,9 +745,16 @@ Złoto płaci za jednostki; drewno i ruda za budynki, a Gwiezdny Pył tylko za r
 - **Targ:** 3 zł + 2 drewna; duży 5 zł + 2 rudy + 1 Pył.
 - **Szpital:** 3 zł + 2 drewna; ulepszony 5 zł + 2 rudy + 1 Pył.
 - **Skarbiec:** 4 zł + 2 rudy.
+- **Kuźnia** (nowy budynek poziomu 4): 4 zł + 3 rudy; Wielka kuźnia 6 zł + 3 rudy + 2 Pyłu.
 - **Legendarny artefakt na targu:** 10 zł + 1 Pył.
 
 **W rundzie frakcja może zbudować lub rozbudować tylko jeden budynek** (przycisk pokazuje, kiedy to już zrobiliście). Zapasy i dochód surowców widać w dolnym pasku, a cenę w przycisku budowy.
+
+### Kuźnia
+**Kuźnia** zbroi pomocników całej frakcji: walczą z **+1 do Ataku**, a po rozbudowie do Wielkiej kuźni także z **+1 do Życia**. Liczy się najlepsza kuźnia, jaką ma frakcja (dwie kuźnie nie dają podwójnej premii). Kto straci osadę z kuźnią, traci też premię.
+
+### Wymiana surowców
+Gdy brakuje jednego surowca, można go **kupić za złoto** w każdej własnej osadzie (zakładka Targ): drewno i ruda po 4 zł, Gwiezdny Pył 10 zł. Zbudowany **targ** obniża ceny (3 zł i 8 zł, duży targ 2 zł i 6 zł) i pozwala **sprzedawać** nadwyżki: drewno i rudę po 1 zł, Pył po 3 zł.
 
 ### Chatki z zadaniami
 Na mapie stoją chatki. Bohater, który stanie w chatce, może wykonać jej **zadanie**: chatka prosi o złoto, surowiec albo artefakt z plecaka, a w zamian daje więcej (około półtora raza tyle, w innej walucie): złoto, surowiec, doświadczenie albo artefakt. Każda chatka daje zadanie raz na grę.

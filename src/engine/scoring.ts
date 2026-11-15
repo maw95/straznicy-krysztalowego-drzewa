@@ -131,10 +131,15 @@ export const ARENA_POINTS: Record<Level, number> = { zero: 1, kids: 1, normal: 2
 
 /** Level 3 games last longer (the economy between the fights): a win counts a quarter more than the same win of level 2. */
 export const KINGDOM_POINTS_FACTOR = 1.25;
+/**
+ * Level 4 ("Księstwo"): measured 15.11 (40 games a cell, Normal, with the forge and the exchange): Przymierza win 48-70 percent, a few points
+ * less often than in level 3 on the same maps, and there is more to run (resources, one building a round). A win counts a little more again.
+ */
+export const ECONOMY_POINTS_FACTOR = 1.35;
 
 export function pointsFor(setup: SetupOptions, level: LevelName, side: FactionId): number {
   if (setup.mode === 'arena') return ARENA_POINTS[level === 'custom' ? 'normal' : level];
-  const raw = (BOARD_TOP_POINTS * MAP_WEIGHT[setup.mapSize] * difficultyRating(setup, level, side) * (setup.rules.kingdom ? KINGDOM_POINTS_FACTOR : 1)) / TOP_RATING;
+  const raw = (BOARD_TOP_POINTS * MAP_WEIGHT[setup.mapSize] * difficultyRating(setup, level, side) * (setup.rules.economy ? ECONOMY_POINTS_FACTOR : setup.rules.kingdom ? KINGDOM_POINTS_FACTOR : 1)) / TOP_RATING;
   return Math.min(MAX_POINTS, Math.max(1, Math.round(raw)));
 }
 

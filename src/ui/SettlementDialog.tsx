@@ -4,23 +4,30 @@
 
 import { useState } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
-import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildCost, canPay, goldOf, incomeOf, KINGDOM, marketStock, mayBuildNow, mayRecruit, RECRUITS, type BuildingId } from '../engine/kingdom';
-import { costText, type Cost } from '../engine/economy';
+import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildCost, buildingLevel, buildingsOf, canPay, forgeLevel, goldOf, incomeOf, KINGDOM, marketStock, mayBuildNow, mayRecruit, RECRUITS, resOf, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
+import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
 import type { Action, GameState } from '../engine/types';
 import { asset, Portrait, Ribbon } from './common';
 import { ArtifactMedal } from './growthUi';
-import { ResourceStrip } from './resources';
+import { RESOURCE_ICON, ResourceStrip } from './resources';
 import { RuleText } from './statScale';
 import { sfx } from './sfx';
 
-const ORDER: BuildingId[] = ['barracks', 'market', 'hospital', 'treasury'];
-/** Where the building stands in the landscape (percent of the picture). */
+/** Where the building stands in the landscape (percent of the picture): four buildings in level 3, five (with the forge) in level 4. */
 const SPOT: Record<BuildingId, { left: number; top: number }> = {
   barracks: { left: 16, top: 52 },
   market: { left: 40, top: 30 },
   hospital: { left: 64, top: 52 },
   treasury: { left: 84, top: 28 },
+  forge: { left: 50, top: 50 },
+};
+const SPOT5: Record<BuildingId, { left: number; top: number }> = {
+  barracks: { left: 11, top: 60 },
+  market: { left: 30, top: 32 },
+  hospital: { left: 50, top: 62 },
+  treasury: { left: 70, top: 32 },
+  forge: { left: 89, top: 60 },
 };
 /** The picture of a building in the landscape: the faction's plot while it is not built, then its level (the treasury has one). */
 const buildingPicture = (land: FactionId, b: BuildingId, level: number) => (level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${Math.min(level, 2)}.webp`));
@@ -33,6 +40,8 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const fs = state.factions[faction];
   const buyer = Object.values(state.heroes).find((h) => h.id === state.turnOrder[state.turnIndex] && h.faction === faction);
   const price = (b: BuildingId) => buildCost(state, s, b);
+  const ORDER = buildingsOf(state);
+  const spots = ORDER.length > 4 ? SPOT5 : SPOT;
   const act = (a: Action) => {
     // Purchases ring: a building goes up with hammering, everything else with coins.
     sfx.play(a.type === 'kingdomBuild' ? 'build' : 'coins_buy');
@@ -40,7 +49,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   };
   const buildButton = (b: BuildingId) => {
     const cost = price(b);
-    const level = s.buildings[b];
+    const level = buildingLevel(s, b);
     if (cost === null) return <b style={{ color: '#2E7A32' }}>Gotowe</b>;
     const blocked = b === 'barracks' && !own;
     const poor = !canPay(state, faction, cost);
@@ -52,16 +61,34 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     );
   };
 
+  // Level 4: one unit of a resource for gold (cheaper with a market), and surplus sold on the market.
+  const res = resOf(state, faction);
+  const trade = state.kingdom!.res ? (
+    <div data-trade style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6, alignSelf: 'stretch' }}>
+      <b>Wymiana surowców</b>
+      <span style={{ fontSize: 14, color: '#6B4A22' }}>{buildingLevel(s, 'market') ? 'Targ kupuje i sprzedaje surowce.' : 'Bez targu surowce kupisz drożej, a sprzedać ich nie można.'}</span>
+      {RESOURCE_IDS.map((r) => (
+        <div key={r} style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <img src={asset(RESOURCE_ICON[r])} alt="" width={30} height={30} />
+          <span style={{ flex: 1, minWidth: 110 }}><b>{RESOURCE_NAMES[r]}</b>: {res[r]}</span>
+          <button className="btn prim" data-trade-buy={r} disabled={gold < tradeBuyPrice(s, r)} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'buy' })} style={{ padding: '3px 12px', fontSize: 15 }}>Kup 1 ({tradeBuyPrice(s, r)} zł)</button>
+          <button className="btn" data-trade-sell={r} disabled={buildingLevel(s, 'market') < 1 || res[r] < 1} title={buildingLevel(s, 'market') < 1 ? 'Sprzedaż wymaga targu.' : undefined} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'sell' })} style={{ padding: '3px 12px', fontSize: 15 }}>Sprzedaj 1 (+{ECONOMY.tradeSell[r]} zł)</button>
+        </div>
+      ))}
+    </div>
+  ) : null;
+
   const panel = (b: BuildingId) => {
-    if (s.buildings[b] === 0) {
+    if (buildingLevel(s, b) === 0) {
       return (
         <div data-panel={b} style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
           <div>{BUILDING_TEXTS[b][0]}</div>
           {buildButton(b)}
+          {b === 'market' && trade}
         </div>
       );
     }
-    const upgrade = s.buildings[b] < KINGDOM.cost[b].length ? (
+    const upgrade = price(b) !== null ? (
       <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
         <span style={{ fontSize: 14, color: '#6B4A22' }}>{BUILDING_TEXTS[b][1]}</span>
         {buildButton(b)}
@@ -116,6 +143,17 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
             );
           })}
           {upgrade}
+          {trade}
+        </div>
+      );
+    }
+    if (b === 'forge') {
+      const best = forgeLevel(state, faction);
+      return (
+        <div data-panel="forge" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <b style={{ color: '#2E7A32' }}>Kuźnia pracuje: pomocnicy frakcji mają +{ECONOMY.forgeAttack} do Ataku{best >= 2 ? ` i +${ECONOMY.forgeHp} do Życia` : ''}.</b>
+          <span style={{ fontSize: 14, color: '#6B4A22' }}>Liczy się najlepsza kuźnia frakcji; premie z kilku kuźni się nie sumują.</span>
+          {upgrade}
         </div>
       );
     }
@@ -155,9 +193,9 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       </div>
       <div className="settlement-scene" style={{ backgroundImage: `url(${asset(`osady/land_${s.land}.jpg`)})` }}>
         {ORDER.map((b) => {
-          const level = s.buildings[b];
+          const level = buildingLevel(s, b);
           return (
-            <button key={b} className={`settlement-bld ${open === b ? 'on' : ''} ${level ? 'built' : ''}`} style={{ left: `${SPOT[b].left}%`, top: `${SPOT[b].top}%` }} onClick={() => setOpen(b)} aria-pressed={open === b} data-building={b} data-level={level}>
+            <button key={b} className={`settlement-bld ${open === b ? 'on' : ''} ${level ? 'built' : ''}`} style={{ left: `${spots[b].left}%`, top: `${spots[b].top}%` }} onClick={() => setOpen(b)} aria-pressed={open === b} data-building={b} data-level={level}>
               <img src={asset(buildingPicture(s.land, b, level))} alt="" className="settlement-pic" />
               <span>{level ? BUILDING_NAMES[b][Math.min(level, BUILDING_NAMES[b].length) - 1] : `${BUILDING_NAMES[b][0]} (do zbudowania)`}</span>
             </button>

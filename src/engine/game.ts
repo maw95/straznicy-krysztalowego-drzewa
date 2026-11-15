@@ -53,7 +53,8 @@ import { log } from './log';
 import { applyHeroSkills, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { fireStory } from './story';
-import { collectIncome, enterPlace, initKingdom, kingdomAction, supportSlots } from './kingdom';
+import { collectIncome, enterPlace, forgeLevel, initKingdom, kingdomAction, supportSlots } from './kingdom';
+import { ECONOMY } from './economy';
 import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, placeSites, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
@@ -840,6 +841,13 @@ function addSupports(state: GameState, faction: FactionId, ids: string[]) {
       applySupportSkill(leader, b.units[id]);
       applySupportGear(leader, b.units[id]);
     }
+    // Level 4: the faction's forge arms its supports.
+    const forge = forgeLevel(state, faction);
+    if (forge >= 1) b.units[id].status.battleAttackBonus += ECONOMY.forgeAttack * scaleOf(state);
+    if (forge >= 2) {
+      b.units[id].hp += ECONOMY.forgeHp * hpScaleOf(state);
+      b.units[id].maxHp += ECONOMY.forgeHp * hpScaleOf(state);
+    }
   }
 }
 
@@ -1092,6 +1100,7 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'kingdomRecruit':
     case 'kingdomHeal':
     case 'kingdomBuyArtifact':
+    case 'kingdomTrade':
     case 'hutDeliver':
     case 'chestTake':
       kingdomAction(state, action);

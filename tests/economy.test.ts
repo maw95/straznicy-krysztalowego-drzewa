@@ -3,9 +3,13 @@
 import { describe, expect, it } from 'vitest';
 import { activeHero, applyAction, createGame } from '../src/engine/game';
 import { ECONOMY } from '../src/engine/economy';
-import { artifactBill, buildCost, canPay, resOf, resourceIncomeOf, settlementAt } from '../src/engine/kingdom';
+import { artifactBill, botPurchase, buildCost, buildingsOf, canPay, forgeLevel, resOf, resourceIncomeOf, settlementAt, tradeBuyPrice } from '../src/engine/kingdom';
+import { pointsFor } from '../src/engine/scoring';
 import { ARTIFACTS } from '../src/engine/sites';
+import { mapNeighbors } from '../src/engine/map';
 import type { GameState, SetupOptions } from '../src/engine/types';
+
+const neighbours = (s: GameState, hex: string) => mapNeighbors(s.tiles, hex);
 import { playOut, setup } from './helpers/engine';
 
 const rules = { ruleset: 'digital', heroGrowth: true, kingdom: true, economy: true } as const;
@@ -112,5 +116,84 @@ describe('level 4: huts with a quest', () => {
     s = applyAction(s, { type: 'hutDeliver' });
     expect(s.heroes[hero.id].pack).toHaveLength(0);
     expect((s.heroes[hero.id].xp ?? 0) + (s.heroes[hero.id].level ?? 1) * 100).toBeGreaterThan(xp);
+  });
+});
+
+describe('level 4: the forge and the exchange', () => {
+  it('builds a forge for ore; the faction\'s supports then fight with more Atak, and with more Życie after the upgrade', () => {
+    let s = economy();
+    const home = ownStart(s);
+    expect(buildingsOf(s)).toContain('forge');
+    s.kingdom!.gold.dawn = 40;
+    s.kingdom!.res!.dawn = { wood: 0, ore: 6, dust: 2 };
+    s = applyAction(s, { type: 'kingdomBuild', settlementId: home.id, building: 'forge' });
+    expect(forgeLevel(s, 'dawn')).toBe(1);
+    expect(resOf(s, 'dawn').ore).toBe(3);
+    const support = s.factions.dawn.supportsAlive[0];
+    const scale = s.rules.statScale ?? 1;
+    const hpScale = s.rules.hpScale ?? scale;
+    const unitOf = (g: GameState) => {
+      const c = structuredClone(g);
+      const guardian = Object.values(c.crystals).find((x) => x.guardian && c.tiles[x.at])!;
+      const from = Object.values(c.tiles).find((t) => t.key !== guardian.at && !t.crystalId && !t.home && neighbours(c, guardian.at).includes(t.key))!;
+      const hero = activeHero(c)!;
+      c.heroes[hero.id].pos = from.key;
+      c.tiles[guardian.at].revealed = true;
+      c.movePoints = 9;
+      let after = applyAction(c, { type: 'moveHero', to: guardian.at });
+      if (after.battle!.stage === 'select') after = applyAction(after, { type: 'selectSupports', faction: 'dawn', supportIds: after.factions.dawn.supportsAlive.slice(0, 2) });
+      return after.battle!.units[support];
+    };
+    const plain = unitOf(economy());
+    const armed = unitOf(s);
+    expect(armed.status.battleAttackBonus - plain.status.battleAttackBonus).toBe(ECONOMY.forgeAttack * scale);
+    expect(armed.maxHp).toBe(plain.maxHp);
+    const round = s.round;
+    while (s.round === round) s = applyAction(s, { type: 'endTurn' });
+    s = applyAction(s, { type: 'kingdomBuild', settlementId: home.id, building: 'forge' });
+    expect(forgeLevel(s, 'dawn')).toBe(2);
+    expect(unitOf(s).maxHp - plain.maxHp).toBe(ECONOMY.forgeHp * hpScale);
+    expect(buildCost(s, ownStart(s), 'forge')).toBeNull();
+  });
+
+  it('has no forge in level 3', () => {
+    const s = createGame(setup({ mapSize: 'medium', seed: 3 }, { ruleset: 'digital', heroGrowth: true, kingdom: true }));
+    expect(buildingsOf(s)).not.toContain('forge');
+    expect(buildCost(s, ownStart(s), 'forge')).toBeNull();
+    expect(() => applyAction(s, { type: 'kingdomTrade', settlementId: ownStart(s).id, res: 'wood', dir: 'buy' })).toThrow(/Księstwo/);
+  });
+
+  it('sells a resource for gold anywhere at home (cheaper with a market) and buys surplus back only on a market', () => {
+    let s = economy();
+    const home = ownStart(s);
+    s.kingdom!.gold.dawn = 20;
+    expect(tradeBuyPrice(home, 'ore')).toBe(ECONOMY.tradeBuy.ore[0]);
+    s = applyAction(s, { type: 'kingdomTrade', settlementId: home.id, res: 'ore', dir: 'buy' });
+    expect(s.kingdom!.gold.dawn).toBe(20 - ECONOMY.tradeBuy.ore[0]);
+    expect(resOf(s, 'dawn').ore).toBe(1);
+    expect(() => applyAction(s, { type: 'kingdomTrade', settlementId: home.id, res: 'ore', dir: 'sell' })).toThrow(/targu/);
+    ownStart(s).buildings.market = 1;
+    expect(tradeBuyPrice(ownStart(s), 'ore')).toBe(ECONOMY.tradeBuy.ore[1]);
+    s = applyAction(s, { type: 'kingdomTrade', settlementId: home.id, res: 'ore', dir: 'sell' });
+    expect(resOf(s, 'dawn').ore).toBe(0);
+    expect(() => applyAction(s, { type: 'kingdomTrade', settlementId: home.id, res: 'ore', dir: 'sell' })).toThrow(/Brakuje/);
+    s.kingdom!.gold.dawn = 0;
+    expect(() => applyAction(s, { type: 'kingdomTrade', settlementId: home.id, res: 'dust', dir: 'buy' })).toThrow(/Za mało złota/);
+  });
+
+  it('a bot short of one resource for the building it wants buys it instead of sitting on gold', () => {
+    const s = economy();
+    const home = ownStart(s);
+    s.kingdom!.gold.dawn = 30;
+    s.kingdom!.res!.dawn = { wood: 0, ore: 0, dust: 0 };
+    expect(botPurchase(s, 'dawn', home)).toEqual({ type: 'kingdomTrade', settlementId: home.id, res: 'wood', dir: 'buy' });
+    s.kingdom!.gold.dawn = 4;
+    expect(botPurchase(s, 'dawn', home)).toBeNull();
+  });
+
+  it('scores a little more than level 3', () => {
+    const l3 = setup({ mapSize: 'veryLong' }, { ruleset: 'digital', heroGrowth: true, kingdom: true });
+    const l4 = setup({ mapSize: 'veryLong' }, rules);
+    expect(pointsFor(l4, 'normal', 'dawn')).toBeGreaterThan(pointsFor(l3, 'normal', 'dawn'));
   });
 });
