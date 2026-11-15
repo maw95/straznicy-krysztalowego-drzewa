@@ -4,8 +4,8 @@
 
 import { useState } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
-import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildCost, buildingLevel, buildingsOf, canPay, forgeLevel, goldOf, incomeOf, KINGDOM, marketStock, mayBuildNow, mayRecruit, RECRUITS, resOf, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
-import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, type Cost } from '../engine/economy';
+import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildCost, buildingLevel, buildingsOf, canPay, forgeLevel, goldOf, hasUnit, incomeOf, KINGDOM, marketStock, mayBuildNow, mayRecruit, RECRUITS, resOf, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
+import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
 import type { Action, GameState } from '../engine/types';
 import { asset, Portrait, Ribbon } from './common';
@@ -21,13 +21,15 @@ const SPOT: Record<BuildingId, { left: number; top: number }> = {
   hospital: { left: 64, top: 52 },
   treasury: { left: 84, top: 28 },
   forge: { left: 50, top: 50 },
+  walls: { left: 50, top: 50 },
 };
 const SPOT5: Record<BuildingId, { left: number; top: number }> = {
-  barracks: { left: 11, top: 60 },
-  market: { left: 30, top: 32 },
-  hospital: { left: 50, top: 62 },
-  treasury: { left: 70, top: 32 },
-  forge: { left: 89, top: 60 },
+  barracks: { left: 10, top: 62 },
+  market: { left: 26, top: 30 },
+  hospital: { left: 42, top: 64 },
+  treasury: { left: 58, top: 30 },
+  forge: { left: 74, top: 64 },
+  walls: { left: 90, top: 30 },
 };
 /** The picture of a building in the landscape: the faction's plot while it is not built, then its level (the treasury has one). */
 const buildingPicture = (land: FactionId, b: BuildingId, level: number) => (level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${Math.min(level, 2)}.webp`));
@@ -78,19 +80,44 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     </div>
   ) : null;
 
+  // Level 4: the garrison. The hero standing in the settlement leaves supports to guard it or takes them back.
+  const garrison = s.garrison ?? [];
+  const heroHere = Boolean(buyer && buyer.pos === s.at);
+  const garrisonPanel = state.rules.economy ? (
+    <div data-garrison style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6, alignSelf: 'stretch' }}>
+      <b>Garnizon ({garrison.length}/{SIEGE.garrisonMax})</b>
+      <span style={{ fontSize: 14, color: '#6B4A22' }}>{heroHere ? 'Jednostki zostawione w garnizonie bronią osady, gdy bohater odejdzie. Wróg musi je pokonać, żeby ją zająć.' : 'Garnizon zmienia bohater stojący w tej osadzie.'}</span>
+      {garrison.map((id) => (
+        <div key={id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <Portrait unitId={id} size={40} />
+          <b style={{ flex: 1 }}>{UNITS[id].name}</b>
+          <button className="btn" data-garrison-out={id} disabled={!heroHere} onClick={() => onAction({ type: 'kingdomGarrison', settlementId: s.id, unitId: id, dir: 'out' })} style={{ padding: '3px 12px', fontSize: 15 }}>Zabierz do drużyny</button>
+        </div>
+      ))}
+      {heroHere && garrison.length < SIEGE.garrisonMax && fs.supportsAlive.map((id) => (
+        <div key={id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <Portrait unitId={id} size={40} />
+          <span style={{ flex: 1 }}>{UNITS[id].name} <span style={{ fontSize: 13, color: '#6B4A22' }}>w drużynie</span></span>
+          <button className="btn prim" data-garrison-in={id} onClick={() => onAction({ type: 'kingdomGarrison', settlementId: s.id, unitId: id, dir: 'in' })} style={{ padding: '3px 12px', fontSize: 15 }}>Zostaw w garnizonie</button>
+        </div>
+      ))}
+    </div>
+  ) : null;
+
   const panel = (b: BuildingId) => {
     if (buildingLevel(s, b) === 0) {
       return (
         <div data-panel={b} style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
-          <div>{BUILDING_TEXTS[b][0]}</div>
+          <div><RuleText text={BUILDING_TEXTS[b][0]} /></div>
           {buildButton(b)}
           {b === 'market' && trade}
+          {b === 'walls' && garrisonPanel}
         </div>
       );
     }
     const upgrade = price(b) !== null ? (
       <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
-        <span style={{ fontSize: 14, color: '#6B4A22' }}>{BUILDING_TEXTS[b][1]}</span>
+        <span style={{ fontSize: 14, color: '#6B4A22' }}><RuleText text={BUILDING_TEXTS[b][1] ?? ''} /></span>
         {buildButton(b)}
       </div>
     ) : null;
@@ -100,7 +127,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         <div data-panel="barracks" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {!mayHire && <i>Ta osada należy do obcej frakcji: nie rekrutujesz tu jednostek.</i>}
           {RECRUITS[faction].map((r) => {
-            const have = fs.supportsAlive.includes(r.id) || fs.supportsDead.includes(r.id);
+            const have = hasUnit(state, faction, r.id);
             const locked = r.tier >= 4 && s.buildings.barracks < 2;
             return (
               <div key={r.id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -109,7 +136,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                   <b>{UNITS[r.id].name}</b> <span style={{ fontSize: 13, color: '#6B4A22' }}>poziom {r.tier}</span>
                   <div style={{ fontSize: 14 }}>Życie {UNITS[r.id].hp} · Atak {UNITS[r.id].attack} · Szybkość {UNITS[r.id].speed}</div>
                 </div>
-                {have ? <b style={{ color: '#2E7A32' }}>W drużynie</b> : (
+                {have ? <b style={{ color: '#2E7A32' }}>{garrison.includes(r.id) || !(fs.supportsAlive.includes(r.id) || fs.supportsDead.includes(r.id)) ? 'W garnizonie' : 'W drużynie'}</b> : (
                   <button className="btn prim" disabled={!mayHire || locked || gold < r.cost} data-recruit={r.id} title={locked ? 'Potrzebne rozbudowane koszary.' : undefined} onClick={() => act({ type: 'kingdomRecruit', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 14px', fontSize: 16 }}>
                     Rekrutuj ({r.cost} zł)
                   </button>
@@ -151,9 +178,19 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       const best = forgeLevel(state, faction);
       return (
         <div data-panel="forge" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <b style={{ color: '#2E7A32' }}>Kuźnia pracuje: pomocnicy frakcji mają +{ECONOMY.forgeAttack} do Ataku{best >= 2 ? ` i +${ECONOMY.forgeHp} do Życia` : ''}.</b>
+          <b style={{ color: '#2E7A32' }}><RuleText text={`Kuźnia pracuje: pomocnicy frakcji mają +${ECONOMY.forgeAttack} A${best >= 2 ? ` i +${ECONOMY.forgeHp} Ż` : ''}.`} /></b>
           <span style={{ fontSize: 14, color: '#6B4A22' }}>Liczy się najlepsza kuźnia frakcji; premie z kilku kuźni się nie sumują.</span>
           {upgrade}
+        </div>
+      );
+    }
+    if (b === 'walls') {
+      return (
+        <div data-panel="walls" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <b style={{ color: '#2E7A32' }}>{buildingLevel(s, 'walls') >= 2 ? 'Fosa, mur z bramą i dwie wieżyczki bronią osady.' : 'Fosa z kolcami broni osady.'}</b>
+          <span style={{ fontSize: 14, color: '#6B4A22' }}>Umocnienia działają w bitwie o osadę, gdy broni jej garnizon albo bohater właściciela.</span>
+          {upgrade}
+          {garrisonPanel}
         </div>
       );
     }

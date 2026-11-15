@@ -13,6 +13,8 @@ import {
   canAttackAfterMove,
   canHitTwo,
   canUseBattleItem,
+  catapultTargets,
+  layoutCells,
   cellsOf,
   deployCells,
   deployHeads,
@@ -31,13 +33,53 @@ import {
   unitDistance,
   unitSpeed,
 } from '../battle';
-import { distance, parseKey, type HexKey } from '../hex';
+import { distance, neighborKeys, parseKey, type HexKey } from '../hex';
+import { wideCellOf } from '../arenaLayout';
+import { SIEGE } from '../economy';
 import type { Action, BattleUnit, GameState } from '../types';
 import type { ItemKind } from '../data';
 
 const dist = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));
 /** Shortest distance between two sets of cells: a large unit lies on two, so it is as near as its nearer cell. */
 const dist2 = (a: readonly HexKey[], b: readonly HexKey[]) => Math.min(...a.flatMap((x) => b.map((y) => dist(x, y))));
+
+/**
+ * Siege: how many steps a walker needs from each cell to the nearest enemy, around the walls still standing (units are ignored, a moat cell
+ * costs three steps more: it stops the unit and hurts it). Null outside a siege and for flyers: the straight distance is right there.
+ */
+function siegeField(state: GameState, u: BattleUnit): Map<HexKey, number> | null {
+  const b = state.battle!;
+  if (!b.siege || UNITS[u.defId].movement === 'fly') return null;
+  const blocked = new Set(b.obstacles);
+  const moat = new Set(b.siege.moat);
+  const cells = new Set(layoutCells(b));
+  const field = new Map<HexKey, number>();
+  let frontier: HexKey[] = enemiesOf(b, u).flatMap(cellsOf);
+  for (const k of frontier) field.set(k, 0);
+  // Dijkstra with small whole costs: a plain loop over growing distances is enough on 117 cells.
+  for (let guard = 0; frontier.length && guard < 400; guard++) {
+    const next: HexKey[] = [];
+    for (const cur of frontier) {
+      const d = field.get(cur)!;
+      for (const n of neighborKeys(cur)) {
+        if (!cells.has(n) || blocked.has(n)) continue;
+        const cost = d + 1 + (moat.has(n) ? 3 : 0);
+        if (cost < (field.get(n) ?? Infinity)) {
+          field.set(n, cost);
+          next.push(n);
+        }
+      }
+    }
+    frontier = next;
+  }
+  return field;
+}
+
+/** How near the enemy the cells `mine` are: steps around the walls in a siege, the straight distance otherwise. */
+function nearness(field: Map<HexKey, number> | null, enemies: BattleUnit[], mine: readonly HexKey[]): number {
+  if (!field) return Math.min(...enemies.map((e) => dist2(cellsOf(e), mine)));
+  return Math.min(...mine.map((k) => field.get(k) ?? 99));
+}
 
 /** The battle bot's judgement in numbers (tuned with simulations; changing one changes the games). */
 const AI_TUNING = {
@@ -187,6 +229,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   const enemies = enemiesOf(b, u);
   const ranged = UNITS[u.defId].attackType === 'ranged';
   const threats = threatsTo(state, u);
+  const field = siegeField(state, u);
   // Caution fades as the battle drags on, so nobody kites forever.
   const caution = Math.max(0, 1 - (b.round - 1) / AI_TUNING.cautionRounds);
   let best: Plan = { moveTo: null, target: null, second: null, useAbility: false, score: -Infinity };
@@ -219,9 +262,13 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
       }
     }
     // Positional value when not attacking from this cell.
-    const nearest = Math.min(...enemies.map((e) => dist2(cellsOf(e), mine)));
+    const nearest = nearness(field, enemies, mine);
     let pos = ranged ? -Math.abs(nearest - AI_TUNING.rangedDistance) * AI_TUNING.rangedDistanceWeight : -nearest * AI_TUNING.meleeClosing;
     pos -= risk * (ranged ? AI_TUNING.moveRiskRanged : AI_TUNING.moveRiskMelee);
+    // Siege: the moat hurts and ends the turn, so a unit stops there only when it is the way in.
+    if (b.siege && cell !== u.pos && mine.some((k) => b.siege!.moat.includes(k))) pos -= 2;
+    // Siege: the defenders hold the wall line while it stands (they go out only to strike), so the towers and the gate work for them.
+    if (b.siege?.walls.length && u.side === b.defender && mine.some((k) => wideCellOf(k).col <= SIEGE.wallColumn)) pos -= 4;
     if (pos > best.score) best = { moveTo: cell === u.pos ? null : cell, target: null, second: null, useAbility: false, score: pos };
   }
   return best;
@@ -420,7 +467,8 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
     if (cell) return moveTo(state, u, cell[0]);
   }
   const enemies = enemiesOf(b, u);
-  const gap = (cell: HexKey) => Math.min(...enemies.map((e) => dist2(cellsOf(e), plannedFootprint(state, u, cell))));
+  const field = siegeField(state, u);
+  const gap = (cell: HexKey) => nearness(field, enemies, plannedFootprint(state, u, cell));
   const closer = cells.filter(([c]) => gap(c) < gap(u.pos!)).sort((x, y) => gap(x[0]) - gap(y[0]) || x[1] - y[1] || (x[0] < y[0] ? -1 : 1))[0];
   return closer ? moveTo(state, u, closer[0]) : { type: 'endActivation' };
 }
@@ -471,6 +519,11 @@ export function chooseBattleAction(state: GameState): Action {
     const threats = threatsTo(state, u);
     const cells = hopCells(state, u, act.hop).sort((x, y) => danger(threats, footprintAt(state, u, x)) - danger(threats, footprintAt(state, u, y)) || (x < y ? -1 : 1));
     return cells.length ? { type: 'battleHop', to: cells[0] } : { type: 'endActivation' };
+  }
+  // Siege: the catapult shoots as soon as it may: the gate first (the way in), then the towers.
+  if (b.siege && catapultTargets(state).length) {
+    const target = b.siege.gate ?? b.siege.towers[0];
+    if (target) return { type: 'battleCatapult', cell: target };
   }
   if (u.side !== 'neutral' && !act.acted) {
     const item = itemToUse(state, u);

@@ -5,9 +5,10 @@ import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, STAT_SCALE, battleStats, DIGITA
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
-import { ARENA_COLUMNS, MIDDLE_HALF, arenaCell, cellOf, columnCells, inArena, WIDE_COLUMNS, WIDE_MIDDLE_ROW, wideCell, layoutCells, inLayout, wideColumnCells, WIDE_SET } from './arenaLayout';
+import { ARENA_COLUMNS, MIDDLE_HALF, arenaCell, cellOf, columnCells, inArena, WIDE_COLUMNS, WIDE_MIDDLE_ROW, WIDE_ROWS, wideCell, layoutCells, inLayout, wideColumnCells, WIDE_SET } from './arenaLayout';
 export * from './arenaLayout';
-import { isDigital, type BattleState, type BattleUnit, type GameState, type UnitStatus } from './types';
+import { isDigital, type BattleState, type BattleUnit, type GameState, type SiegeState, type UnitStatus } from './types';
+import { SIEGE } from './economy';
 
 
 const OBSTACLE_SETS = new WeakMap<HexKey[], Set<HexKey>>();
@@ -209,6 +210,8 @@ function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number
     const cur = queue[head];
     const d = dist.get(cur)!;
     if (d >= range) continue;
+    // Siege: a walker that steps into the moat stops there.
+    if (head > 0 && b.siege?.moat.includes(cur)) continue;
     for (const n of neighborKeys(cur)) {
       if (!inLayout(b, n) || obstacles.has(n) || dist.has(n)) continue;
       if (units.has(n)) continue;
@@ -266,7 +269,8 @@ export function hasLineOfSight(state: GameState, from: HexKey, to: HexKey): bool
   const b = state.battle!;
   const obstacles = obstacleSet(b);
   const between = cellsBetween(from, to);
-  if (between.some((k) => obstacles.has(k))) return false;
+  // A siege has no other obstacles than the walls, and shots fly over walls.
+  if (!b.siege && between.some((k) => obstacles.has(k))) return false;
   if (!state.rules.unitsBlockSight) return true;
   // A unit's own cells (a large unit's tail) never hide it from itself, so cells of the shooter and target are ignored.
   const all = Object.values(b.units);
@@ -564,6 +568,17 @@ function beginRound(state: GameState, round: number) {
     .map((u) => u.id);
   b.index = 0;
   log(state, 'battle', `Runda bitwy ${round}.`);
+  // Siege: every tower still standing shoots the weakest attacker.
+  for (const tower of b.siege?.towers ?? []) {
+    const target = livingUnits(b, b.attacker).sort((x, y) => x.hp - y.hp || ids.indexOf(x.id) - ids.indexOf(y.id))[0];
+    if (!target) break;
+    void tower;
+    dealDamage(state, target, SIEGE.towerDamage * scaleOf(state), 'Wieżyczka');
+  }
+  if (b.siege?.towers.length) {
+    if (checkBattleEnd(state)) return;
+    b.order = b.order.filter((id) => b.units[id].alive);
+  }
   // Płaszcz z Mchu: the hero regains Życie at the start of every round.
   for (const x of livingUnits(b)) {
     if (!x.gear?.regen || x.hp >= x.maxHp) continue;
@@ -626,6 +641,8 @@ export function endActivation(state: GameState) {
     // Effects that applied to "the next activation" are now spent.
     u.status.slowNext = 0;
     u.status.rootedNext = false;
+    // Siege: a unit that ends its turn standing in the moat is hurt (once per activation: not again when it has just walked in).
+    if (u.alive && inMoat(b, u)) moatHurts(state, u);
     // Buty Wartownika (Zakotwiczenie): standing still hardens the hero until its next activation.
     if (u.gear?.anchor && u.alive && !act.moved) u.status.anchored = true;
   }
@@ -660,6 +677,64 @@ export function checkBattleEnd(state: GameState): boolean {
   b.activation = null;
   b.winner = a > 0 ? b.attacker : d > 0 ? b.defender : 'draw';
   return true;
+}
+
+// ---------------------------------------------------------------- siege
+
+/** The defences of a settlement for a battle on the wide arena: `level` 1 is the moat with a bridge, 2 adds the wall with a gate and two towers. */
+export function makeSiege(level: number): SiegeState | undefined {
+  if (level < 1) return undefined;
+  const rows = Array.from({ length: WIDE_ROWS }, (_, r) => r);
+  const moat = rows.filter((r) => r !== SIEGE.gateRow).map((r) => wideCell(SIEGE.moatColumn, r));
+  if (level < 2) return { level: 1, walls: [], gate: null, gateHp: 0, towers: [], moat, shot: 0 };
+  return {
+    level: 2,
+    walls: rows.filter((r) => r !== SIEGE.gateRow).map((r) => wideCell(SIEGE.wallColumn, r)),
+    gate: wideCell(SIEGE.wallColumn, SIEGE.gateRow),
+    gateHp: SIEGE.gateHits,
+    towers: SIEGE.towerRows.map((r) => wideCell(SIEGE.wallColumn, r)),
+    moat,
+    shot: 0,
+  };
+}
+
+/** The obstacles of a siege: the walls and the gate still standing (a new list every time, so the cached set follows). */
+export const siegeObstacles = (s: SiegeState): HexKey[] => [...s.walls, ...(s.gate ? [s.gate] : [])];
+
+const inMoat = (b: BattleState, u: BattleUnit): boolean => Boolean(b.siege?.moat.length) && cellsOf(u).some((c) => b.siege!.moat.includes(c));
+
+function moatHurts(state: GameState, u: BattleUnit) {
+  const act = state.battle!.activation;
+  if (!act || act.unitId !== u.id || act.moat) return;
+  act.moat = true;
+  dealDamage(state, u, SIEGE.moatDamage * scaleOf(state), 'Fosa');
+}
+
+/** What the catapult may shoot now: nothing when it has shot in this round or it is not the attacker's activation. */
+export function catapultTargets(state: GameState): HexKey[] {
+  const b = state.battle;
+  if (!b?.siege || b.stage !== 'fight' || !b.activation || b.units[b.activation.unitId].side !== b.attacker || b.siege.shot === b.round) return [];
+  return siegeObstacles(b.siege);
+}
+
+/** The attacker's catapult: one shot a round, at any time in an activation of the attacker; the wall segment, gate or tower it hits falls. */
+export function battleCatapult(state: GameState, cell: HexKey) {
+  const b = state.battle!;
+  if (!b.siege) throw new Error('To nie jest oblężenie.');
+  if (!catapultTargets(state).includes(cell)) throw new Error(b.siege.shot === b.round ? 'Katapulta strzelała już w tej rundzie.' : 'Katapulta strzela w mur, bramę albo wieżyczkę.');
+  const s = b.siege;
+  s.shot = b.round;
+  if (s.gate === cell && s.gateHp > 1) {
+    s.gateHp -= 1;
+    log(state, 'battle', 'Katapulta trafia w bramę: brama pęka, ale jeszcze stoi.');
+    return;
+  }
+  const what = s.gate === cell ? 'bramę' : s.towers.includes(cell) ? 'wieżyczkę' : 'mur';
+  if (s.gate === cell) s.gate = null;
+  s.walls = s.walls.filter((k) => k !== cell);
+  s.towers = s.towers.filter((k) => k !== cell);
+  b.obstacles = siegeObstacles(s);
+  log(state, 'battle', `Katapulta burzy ${what}.`);
 }
 
 // ---------------------------------------------------------------- damage
@@ -854,6 +929,11 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   act.movedDistance = steps;
   stepOnFields(state, u);
   if (!u.alive) return endActivation(state);
+  // Siege: entering the moat hurts and ends the turn.
+  if (inMoat(b, u)) {
+    moatHurts(state, u);
+    return endActivation(state);
+  }
   // Digital ruleset: moving without attacking ends the turn, so a shooter cannot move and shoot, and a melee unit keeps its turn
   // only when its move brought an enemy within reach (the attack that follows is the other half of the same click).
   if (act.moveOnly || !canAttackAfterMove(state, u) || (isDigital(state.rules) && attackTargets(state, u).length === 0)) endActivation(state);

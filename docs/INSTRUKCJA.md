@@ -734,7 +734,7 @@ W trybie rodzinnym (pole „Dziecko” w ustawieniach gry, czyli zgoda rodzica) 
 
 ## 18. Poziom 4: Księstwo — surowce i chatki (wersja cyfrowa)
 
-Ten rozdział dotyczy tylko wersji cyfrowej, poziomu „Księstwo”. Dochodzi do zasad poziomu „Osada”: trzy surowce, droższe budynki i zadania w chatkach. (Obrona osad, cel „Podbój” i autopilot warstw dla dzieci dojdą w dalszej części poziomu 4.)
+Ten rozdział dotyczy tylko wersji cyfrowej, poziomu „Księstwo”. Dochodzi do zasad poziomu „Osada”: trzy surowce, droższe budynki, zadania w chatkach, nowe miejsca na mapie i obrona osad.
 
 ### Surowce
 Obok złota są **drewno**, **ruda** i **Gwiezdny Pył**. Wszystkie są wspólne dla frakcji, tak jak złoto. Daje je mapa: **tartak** (+1 drewna na rundę), **kopalnia rudy** (+1 rudy) i rzadkie **źródło Gwiezdnego Pyłu** (+1 Pyłu). Kopalnie przejmuje się jak kopalnie złota: kto wejdzie, ten je trzyma, dopóki ktoś inny nie wejdzie na to samo pole (bez walki, chyba że stoi na nim właściciel). Na starcie frakcja ma 3 drewna.
@@ -764,6 +764,15 @@ Na mapie stoją też trzy rodzaje miejsc, które pomagają temu, kto na nie wejd
 - **Młyn** daje 2 zł, a potem przez 3 rundy miele (ikona jest wtedy przygaszona).
 - **Leśna składnica** oddaje swój zapas raz: 3 drewna, 3 rudy albo 1 Gwiezdny Pył.
 - **Studnia Wędrowców** dodaje bohaterowi 2 punkty ruchu w tej turze; działa raz na rundę, dla pierwszego, kto z niej wypije.
+
+### Obrona osady: garnizon i umocnienia
+Bohater stojący we własnej osadzie może zostawić w niej do **trzech pomocników** jako **garnizon** (okno osady, zakładka Fosa) i zabrać ich, gdy wróci. Osady z garnizonem wróg nie zajmie samym wejściem: musi stoczyć **bitwę o osadę**. Garnizonem bez bohatera dowodzi komputer; jeśli w osadzie stoi też Twój bohater, garnizon walczy razem z nim.
+
+Budynek **Fosa** (4 zł + 3 drewna) i jego rozbudowa **Mury z wieżyczkami** (6 zł + 4 rudy + 1 Pył) działają w bitwie o osadę:
+- **Fosa z kolcami:** kto w nią wejdzie, kończy turę i dostaje 2 obrażenia (tyle samo, jeśli skończy w niej następną turę). Suchą nogą przechodzi się tylko po moście pośrodku. Jednostki latające przelatują nad fosą.
+- **Mur z bramą:** nikt przez niego nie przejdzie (latające przelatują), ale strzały lecą nad murem.
+- **Dwie wieżyczki:** na początku każdej rundy każda strzela do najsłabszego napastnika (1 obrażenie).
+- **Katapulta:** atakujący ma ją zawsze. Raz na rundę, w turze dowolnej swojej jednostki, wskazuje podświetlony mur, wieżyczkę albo bramę: mur i wieżyczka padają od razu, brama po dwóch trafieniach.
 
 ## Autorzy (wersja cyfrowa)
 

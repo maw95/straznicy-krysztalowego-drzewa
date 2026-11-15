@@ -184,6 +184,27 @@ export function App() {
         s.movePoints = 3;
       }
     }
+    // ?economy=1&mode=pvp&siege=2 (walls level 0-2, &garrison=2 units): the first hero storms the enemy's home settlement held by a garrison.
+    if (s.kingdom && q.get('siege') !== null) {
+      const hero = activeHero(s);
+      const foe = hero ? Object.values(s.heroes).find((h) => h.faction !== hero.faction) : undefined;
+      const home = hero ? Object.values(s.kingdom.settlements).find((x) => x.owner && x.owner !== hero.faction) : undefined;
+      const next = home ? neighborKeys(home.at).find((k) => s.tiles[k] && tileCost(s.tiles[k]) !== null && !s.tiles[k].crystalId) : null;
+      if (hero && home && next) {
+        const fs = s.factions[home.owner!];
+        home.garrison = fs.supportsAlive.splice(0, Number(q.get('garrison') ?? 2));
+        home.buildings.walls = Number(q.get('siege'));
+        if (foe && q.get('defender') !== '1') foe.pos = Object.values(s.tiles).find((t) => t.home === hero.faction)!.key;
+        hero.pos = next;
+        s.tiles[home.at].revealed = true;
+        s.tiles[next].revealed = true;
+        s.movePoints = 3;
+        if (q.get('adjacent') !== '1') {
+          s = applyAction(s, { type: 'moveHero', to: home.at });
+          history.current.push({ type: 'moveHero', to: home.at });
+        }
+      }
+    }
     // ?level=9 puts every hero on that level (for looking at the milestones on the cards).
     if (q.get('level')) for (const h of Object.values(s.heroes)) h.level = Number(q.get('level'));
     // ?encounter=2 (with growth=1) walks the active hero into the first neutral encounter of that tier (0 common, 1 rare, 2 legendary), for looking at the new units.

@@ -11,7 +11,7 @@ export function BattleSummary({ report, onClose }: { report: BattleReport; onClo
         {title}
       </Ribbon>
       <div style={{ textAlign: 'center', fontSize: 16, color: 'var(--muted)' }}>
-        {report.kind === 'neutral' ? 'Walka ze strażnikiem kryształu' : 'Starcie bohaterów'}
+        {report.kind === 'neutral' ? 'Walka ze strażnikiem kryształu' : report.units.some((u) => UNITS[u.defId].kind === 'hero' && u.side === report.defender) ? 'Starcie bohaterów' : 'Szturm osady'}
         {report.duel ? ' · pojedynek' : ''} · rund: {report.rounds}
       </div>
       <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>

@@ -7,7 +7,7 @@ import type { FightLevel } from '../engine/difficulty';
 import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
 import { TreasureButton } from './TreasureButton';
 import { SettlementDialog } from './SettlementDialog';
-import { BUILDING_NAMES, chestPreview, hutPayable, KINGDOM, goldOf, incomeBreakdown, incomeOf, resourceIncomeBreakdown, settlementAt } from '../engine/kingdom';
+import { BUILDING_NAMES, chestPreview, garrisonAt, hutPayable, KINGDOM, goldOf, incomeBreakdown, incomeOf, resourceIncomeBreakdown, settlementAt } from '../engine/kingdom';
 import { ECONOMY, MINE_NAMES, OBJECT_NAMES, OBJECTS, objectReady, RESOURCE_NAMES, thingsText } from '../engine/economy';
 import { ResourceStrip } from './resources';
 import { sfx } from './sfx';
@@ -68,7 +68,7 @@ function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: Hex
       const foes = heroesAt(state, n).some((h) => h.faction !== hero.faction);
       const guarded = Boolean(t.crystalId && state.crystals[t.crystalId].guardian);
       if (guarded && hero.faction === 'horde' && !hordeMayFightGuardian(state, t.crystalId!)) continue;
-      const hostile = foes || guarded;
+      const hostile = foes || guarded || Boolean(garrisonAt(state, n, hero.faction));
       // A fight is entered like any hex, at its terrain cost; the walk stops there.
       const cost = base.cost + c;
       if (cost > state.movePoints) continue;
@@ -431,6 +431,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     {t.revealed && t.place && state.kingdom && (
                       <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, zIndex: 2, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)}>
                         <img src={asset(`ikony/mapa/${placeIcon(state, t.key)}.webp`)} alt="" width={W * 0.46} height={W * 0.46} style={{ display: 'block', filter: t.place.kind === 'mine' ? 'drop-shadow(0 0 3px #F3D27A) drop-shadow(0 2px 2px rgba(0,0,0,0.8))' : 'drop-shadow(0 2px 2px rgba(0,0,0,0.7))', opacity: t.place.kind === 'object' && !objectReady(state.kingdom.objects?.[t.key] ?? { kind: 'mill' }, state.round) ? 0.55 : 1 }} />
+                        {t.place.kind === 'settlement' && (state.kingdom.settlements[t.place.id]?.garrison?.length ?? 0) > 0 && (
+                          <span data-garrison-badge title="Garnizon broni tej osady" style={{ position: 'absolute', right: -W * 0.06, top: -W * 0.04, minWidth: W * 0.17, height: W * 0.17, borderRadius: W * 0.1, background: '#3B2A12', border: '2px solid #F3D27A', color: '#F7EDD2', fontWeight: 800, fontSize: W * 0.11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            {state.kingdom.settlements[t.place.id].garrison!.length}
+                          </span>
+                        )}
                       </div>
                     )}
                     {crystal && (
@@ -886,8 +891,8 @@ function placeTitle(state: GameState, k: HexKey): string {
     return `${MINE_NAMES[mine?.res ?? 'gold']} (${gives}): ${mine?.owner ? `zajęta przez ${FACTION_NAMES[mine.owner]}` : 'nikt jej nie trzyma'}`;
   }
   const s = state.kingdom.settlements[place.id];
-  const built = (['barracks', 'market', 'hospital', 'treasury', 'forge'] as const).filter((b) => s.buildings[b]).map((b) => BUILDING_NAMES[b][Math.min(s.buildings[b], BUILDING_NAMES[b].length) - 1]);
-  return `Osada ${s.name} (${FACTION_NAMES[s.land]}): ${s.owner ? `należy do ${FACTION_NAMES[s.owner]}` : 'broniona przez neutralnych'}${built.length ? ` · ${built.join(', ')}` : ''}`;
+  const built = (['barracks', 'market', 'hospital', 'treasury', 'forge', 'walls'] as const).filter((b) => s.buildings[b]).map((b) => BUILDING_NAMES[b][Math.min(s.buildings[b], BUILDING_NAMES[b].length) - 1]);
+  return `Osada ${s.name} (${FACTION_NAMES[s.land]}): ${s.owner ? `należy do ${FACTION_NAMES[s.owner]}` : 'broniona przez neutralnych'}${built.length ? ` · ${built.join(', ')}` : ''}${s.garrison?.length ? ` · garnizon: ${s.garrison.map((id) => UNITS[id].name).join(', ')}` : ''}`;
 }
 
 /** The gold in the bottom bar: stock and income per round in short ("2 (+2)"); the right button shows where the income comes from. */

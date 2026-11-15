@@ -15,6 +15,13 @@ try {
   const gold = await num('[data-gold]');
   await p.locator('[data-trade-buy="ore"]').click();
   console.log('gold after buying ore', gold, '->', await num('[data-gold]'), 'sell disabled without market:', await p.locator('[data-trade-sell="ore"]').isDisabled());
+  // The garrison: leave one support in the settlement, then take it back.
+  await p.locator('[data-building="walls"]').click();
+  await p.locator('[data-garrison-in]').first().click();
+  console.log('garrison after leaving one:', await p.locator('[data-garrison-out]').count());
+  await p.locator('[data-garrison-out]').first().click();
+  console.log('garrison after taking it back:', await p.locator('[data-garrison-out]').count());
+  await p.locator('[data-garrison-in]').first().click();
   await p.evaluate(() => Promise.all([...document.images].map((i) => (i.complete ? null : new Promise((ok) => (i.onload = i.onerror = ok))))));
   await p.waitForTimeout(300);
   await p.locator('[data-settlement]').screenshot({ path: '.tmp/kuznia.png' });

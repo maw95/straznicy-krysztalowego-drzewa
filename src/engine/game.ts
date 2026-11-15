@@ -36,6 +36,9 @@ import {
   battleTeleport,
   battleItem,
   battleMove,
+  battleCatapult,
+  makeSiege,
+  siegeObstacles,
   checkBattleEnd,
   deployUnits,
   consumeItem,
@@ -53,7 +56,7 @@ import { log } from './log';
 import { applyHeroSkills, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { fireStory } from './story';
-import { collectIncome, enterPlace, forgeLevel, initKingdom, kingdomAction, supportSlots } from './kingdom';
+import { buildingLevel, collectIncome, enterPlace, forgeLevel, garrisonAt, initKingdom, kingdomAction, supportSlots } from './kingdom';
 import { ECONOMY } from './economy';
 import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, placeSites, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
@@ -393,6 +396,8 @@ export function canStand(state: GameState, k: HexKey, faction: FactionId, heroId
   if (tileCost(t) === null || (t.crystalId && state.crystals[t.crystalId].guardian)) return false;
   const others = heroesAt(state, k).filter((h) => h.id !== heroId);
   if (others.some((h) => h.faction !== faction)) return false;
+  // An enemy garrison holds its settlement: nobody of the other side just appears there.
+  if (garrisonAt(state, k, faction)) return false;
   return !others.length || t.home === faction;
 }
 
@@ -406,7 +411,7 @@ export function nearestFreeHexes(state: GameState, from: HexKey, faction: Factio
   return free.filter((f) => f.d === best).map((f) => f.k);
 }
 
-export type MoveKind = 'move' | 'attackHero' | 'attackGuardian' | 'enter';
+export type MoveKind = 'move' | 'attackHero' | 'attackGuardian' | 'attackGarrison' | 'enter';
 
 export interface HeroMove {
   to: HexKey;
@@ -440,7 +445,7 @@ export function legalHeroMoves(state: GameState): HeroMove[] {
       if (cost <= state.movePoints) out.push({ to: n, cost, kind: 'attackGuardian' });
       continue;
     }
-    if (cost <= state.movePoints) out.push({ to: n, cost, kind: 'move' });
+    if (cost <= state.movePoints) out.push({ to: n, cost, kind: garrisonAt(state, n, hero.faction) ? 'attackGarrison' : 'move' });
   }
   return out;
 }
@@ -517,6 +522,15 @@ function moveHero(state: GameState, to: HexKey) {
     startBattle(state, { kind: 'heroes', attackerHero: hero.id, defenderHero: defender.id, mapHex: to, from });
     return;
   }
+  if (move.kind === 'attackGarrison') {
+    const s = garrisonAt(state, to, hero.faction)!;
+    log(state, 'battle', `${name} szturmuje osadę ${s.name}: broni jej garnizon (${s.garrison!.map((id) => UNITS[id].name).join(', ')}).`);
+    const from = hero.pos;
+    hero.pos = to;
+    revealAround(state, to);
+    startBattle(state, { kind: 'heroes', attackerHero: hero.id, mapHex: to, from });
+    return;
+  }
   if (move.kind === 'attackGuardian') {
     const crystal = state.crystals[state.tiles[to].crystalId!];
     log(state, 'battle', crystal.encounter ? `${name} wyzywa strażników: ${crystal.encounter.map((id) => UNITS[id].name).join(', ')}.` : `${name} wyzywa strażnika kryształu: ${UNITS[crystal.guardian!].name}.`);
@@ -550,6 +564,9 @@ export function fightAt(state: GameState, to: HexKey): GameState | null {
   } else if (crystal?.guardian) {
     hero.pos = to;
     startBattle(s, { kind: 'neutral', attackerHero: hero.id, neutralId: crystal.guardian, encounter: crystal.encounter, mapHex: to, from });
+  } else if (garrisonAt(s, to, hero.faction)) {
+    hero.pos = to;
+    startBattle(s, { kind: 'heroes', attackerHero: hero.id, mapHex: to, from });
   } else return null;
   return s;
 }
@@ -752,12 +769,18 @@ interface BattleStart {
 function startBattle(state: GameState, s: BattleStart) {
   const attacker = state.heroes[s.attackerHero];
   const defenderHero = s.defenderHero ? state.heroes[s.defenderHero] : null;
+  // Level 4: a fight on a settlement held by the defender is a fight for the settlement: its garrison joins in and its defences stand.
+  const place = state.tiles[s.mapHex].place;
+  const town = state.rules.economy && s.kind === 'heroes' && place?.kind === 'settlement' ? state.kingdom?.settlements[place.id] : undefined;
+  const held = town && town.owner && town.owner !== attacker.faction && (!defenderHero || defenderHero.faction === town.owner) ? town : undefined;
+  if (!defenderHero && !s.neutralId && !held?.garrison?.length) throw new Error('Nie ma z kim walczyć.');
+  const siege = held && isDigital(state.rules) && state.setup.battleMode !== 'board' ? makeSiege(buildingLevel(held, 'walls')) : undefined;
   const b: BattleState = {
     kind: s.kind,
     mapHex: s.mapHex,
     arena: state.tiles[s.mapHex].side,
     attacker: attacker.faction,
-    defender: defenderHero ? defenderHero.faction : 'neutral',
+    defender: defenderHero ? defenderHero.faction : held ? held.owner! : 'neutral',
     attackerHero: attacker.id,
     attackerFrom: s.from,
     defenderHero: defenderHero?.id ?? null,
@@ -767,7 +790,9 @@ function startBattle(state: GameState, s: BattleStart) {
     needsDeploy: [],
     needsSelection: [],
     ...(isDigital(state.rules) ? { layout: 'wide' as const } : {}),
-    obstacles: state.setup.battleMode === 'board' ? [] : arenaObstacles(state.tiles[s.mapHex].side, isDigital(state.rules) ? 'wide' : undefined),
+    obstacles: state.setup.battleMode === 'board' ? [] : siege ? siegeObstacles(siege) : arenaObstacles(state.tiles[s.mapHex].side, isDigital(state.rules) ? 'wide' : undefined),
+    ...(held ? { garrison: held.id } : {}),
+    ...(siege ? { siege } : {}),
     units: {},
     round: 0,
     order: [],
@@ -826,6 +851,12 @@ function startBattle(state: GameState, s: BattleStart) {
     const pool = state.factions[f].supportsAlive;
     if (pool.length <= supportSlots(state, f)) addSupports(state, f, [...pool]);
     else b.needsSelection.push(f);
+  }
+  // The garrison stands with the defender (in a duel on the board only when there is no hero to fight).
+  if (held?.garrison?.length && (!b.duel || !defenderHero)) {
+    addSupports(state, held.owner!, b.duel ? held.garrison.slice(0, 1) : [...held.garrison]);
+    // More units than a start column holds: the defenders of a settlement get one column more.
+    if (!b.duel) (b.deployDepth ??= {})[held.owner!] = Math.max(1, b.deployDepth?.[held.owner!] ?? 0);
   }
   if (!b.needsSelection.length) startBattleFight(state);
 }
@@ -889,11 +920,11 @@ function awardBattleXp(state: GameState, b: BattleState) {
     if (!hero?.alive) continue;
     const won = b.winner === hero.faction;
     const scholar = won ? scholarXp(hero) : 0;
-    const reason = won ? (b.kind === 'neutral' ? 'pokonany strażnik' : 'wygrana walka z bohaterem') : 'przegrana walka, którą bohater przeżył';
+    const reason = won ? (b.kind === 'neutral' ? 'pokonany strażnik' : b.defenderHero ? 'wygrana walka z bohaterem' : 'zdobyta osada z garnizonem') : 'przegrana walka, którą bohater przeżył';
     awardXp(state, hero, (won ? (b.kind === 'neutral' ? GROWTH.xp.guardian : GROWTH.xp.hero) : GROWTH.xp.lost) + scholar, scholar ? `${reason}, w tym ${scholar} od Uczonego` : reason);
     // Spoils: the winner of a fight between heroes takes the beaten hero's artifacts (those that improve its own gear); when there is nothing
     // to take it still finds a common one (the Horde meet guardians rarely, so this evens it out).
-    if (won && b.kind === 'heroes') {
+    if (won && b.kind === 'heroes' && b.defenderHero) {
       const loser = state.heroes[(id === b.attackerHero ? b.defenderHero : b.attackerHero) ?? ''];
       const common = ARTIFACTS.filter((a) => a.rarity === 1);
       if (!loser || !captureGear(state, hero, loser)) giveArtifact(state, hero, common[(state.round + hero.id.length) % common.length], 'łup z pokonanego bohatera');
@@ -908,7 +939,12 @@ function applyCasualties(state: GameState, b: BattleState) {
     const f = u.side as FactionId;
     if (UNITS[u.defId].kind === 'support') {
       const fs = state.factions[f];
-      if (fs.supportsAlive.includes(u.defId)) {
+      const garrison = b.garrison ? state.kingdom?.settlements[b.garrison]?.garrison : undefined;
+      if (garrison?.includes(u.defId) && f === b.defender) {
+        garrison.splice(garrison.indexOf(u.defId), 1);
+        fs.supportsDead.push(u.defId);
+        state.stats.supportDeaths[f] += 1;
+      } else if (fs.supportsAlive.includes(u.defId)) {
         fs.supportsAlive.splice(fs.supportsAlive.indexOf(u.defId), 1);
         fs.supportsDead.push(u.defId);
         state.stats.supportDeaths[f] += 1;
@@ -1101,6 +1137,7 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'kingdomHeal':
     case 'kingdomBuyArtifact':
     case 'kingdomTrade':
+    case 'kingdomGarrison':
     case 'hutDeliver':
     case 'chestTake':
       kingdomAction(state, action);
@@ -1174,6 +1211,9 @@ function applyBattleAction(state: GameState, action: Action) {
       break;
     case 'battleItem':
       battleItem(state, action);
+      break;
+    case 'battleCatapult':
+      battleCatapult(state, action.cell);
       break;
     case 'endActivation':
       endActivation(state);

@@ -3561,6 +3561,24 @@
       "data": "2026-11-15",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "osady/umocnienia-i-oblezenie",
+      "pliki": [
+        "public/assets/osady/dawn_walls1.webp",
+        "public/assets/osady/dawn_walls2.webp",
+        "public/assets/osady/horde_walls1.webp",
+        "public/assets/osady/horde_walls2.webp",
+        "public/assets/arena/oblezenie/"
+      ],
+      "typ": "budynek Umocnienia (fosa, mury z wieżyczkami) dla obu frakcji oraz elementy oblężenia na arenie: mur, brama, wieżyczka, gruzy, fosa z kolcami, katapulta",
+      "opis": "Dwa arkusze na czarnym tle pocięte skryptem scripts/assets/arkusz.py. Budynki (1536x1536, siatka 2x2, wysokość 380 px): elficka fosa z mostkiem, elficki mur ze złotą bramą i dwiema wieżyczkami, fosa Hordy z kolcami i kośćmi, palisada Hordy z bramą i wieżyczkami. Arena (1536x1024, siatka 3x2, wysokość 240 px): 'six separate game props for a hex-grid tactical battle arena ... seen from the front slightly from above': segment muru z blankami, drewniana brama w kamiennym łuku, okrągła wieża strzelnicza, gruzy, dół z zaostrzonymi palami, katapulta.",
+      "scenario_asset": { "budynki": "asset_PHz7JwPwZsu9kDppP3yLweNA", "arena": "asset_rxaXbaosHownA5tdC9iJWGmp" },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.6 Flare, jakość medium",
+      "data": "2026-11-15",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

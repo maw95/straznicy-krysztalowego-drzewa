@@ -36,6 +36,7 @@ export const ECONOMY = {
     hospital: [{ gold: 3, wood: 2 }, { gold: 5, ore: 2, dust: 1 }],
     treasury: [{ gold: 4, ore: 2 }],
     forge: [{ gold: 4, ore: 3 }, { gold: 6, ore: 3, dust: 2 }],
+    walls: [{ gold: 4, wood: 3 }, { gold: 6, ore: 4, dust: 1 }],
   } as Record<string, Cost[]>,
   /** The forge (Kuźnia): the faction's supports fight with this much more Atak (level 1) and Życie (level 2), in the board game's scale. */
   forgeAttack: 1,
@@ -83,6 +84,22 @@ export const OBJECTS = {
 /** Whether the object has something to give in this round. */
 export const objectReady = (o: MapObject, round: number): boolean =>
   o.kind === 'store' ? !o.done : o.kind === 'mill' ? o.used === undefined || round - o.used >= OBJECTS.millRounds : o.used !== round;
+
+/** Level 4: the defence of a settlement. Columns are those of the wide arena (the defender deploys in the last ones). */
+export const SIEGE = {
+  /** Supports a settlement's garrison holds at most. */
+  garrisonMax: 3,
+  moatColumn: 8,
+  wallColumn: 9,
+  /** Rows of the gate (and of the bridge over the moat) and of the two towers. */
+  gateRow: 4,
+  towerRows: [1, 7],
+  /** Damage of the moat and of one tower's shot, in the board game's scale. */
+  moatDamage: 2,
+  towerDamage: 1,
+  /** Catapult hits the gate takes (a wall segment and a tower fall with one). */
+  gateHits: 2,
+};
 
 export const emptyResources = (): Resources => ({ wood: 0, ore: 0, dust: 0 });
 

@@ -19,7 +19,9 @@ import {
   tailOptions,
   unitAt,
   unitDistance,
+  catapultTargets,
 } from '../engine/battle';
+import { sfx } from './sfx';
 import { distance, parseKey, type HexKey } from '../engine/hex';
 import type { Action, BattleUnit, GameState } from '../engine/types';
 import { COMPACT_QUERY, useMedia } from './common';
@@ -116,6 +118,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const moves = useMemo(() => (myTurn && active && !act!.moved && !act!.attacked && !targeting ? reachableCells(state, active) : new Map<HexKey, number>()), [state, myTurn, active, act, targeting]);
   const targets = useMemo(() => (myTurn && active && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility ? attackTargets(state, active) : []), [state, myTurn, active, act, targeting, freeAbility]);
   const hops = myTurn && active && act!.hop ? hopCells(state, active, act!.hop) : [];
+  // Siege: what the viewer's catapult may shoot now.
+  const catapult = myTurn && !targeting ? catapultTargets(state) : [];
 
   // ---------------------------------------------------------------- one click: walk up and attack
   /**
@@ -436,6 +440,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
           previewTail={previewTail}
           approachTail={approachTail}
           onUnit={clickUnit}
+          catapult={catapult}
+          onCatapult={(cell) => { sfx.play('build'); onAction({ type: 'battleCatapult', cell }); }}
         />
         <SidePanel s={sides[1]} state={state} active={active} onUnit={clickUnit} />
       </div>
@@ -443,7 +449,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       <ActivationBar
         state={state}
         active={active}
-        hint={activationHint(b, { deploySide, picked, myTurn, moves: moves.size, targets: targets.length })}
+        hint={(catapult.length ? 'Katapulta gotowa: wskaż mur, bramę lub wieżyczkę · ' : '') + activationHint(b, { deploySide, picked, myTurn, moves: moves.size, targets: targets.length })}
         myTurn={myTurn}
         deploySide={deploySide}
         placing={deploy.placing}

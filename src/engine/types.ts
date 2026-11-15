@@ -348,6 +348,25 @@ export interface Activation {
   moveOnly: boolean;
   /** Post-attack hop allowance (Powietrzny Zryw / Łupieżczy Nalot). */
   hop: number;
+  /** Siege: the unit was already hurt by the moat in this activation (it is hurt once, on entering or at the end of its turn). */
+  moat?: boolean;
+}
+
+/** A settlement's defences in a battle fought for it (level 4, wide arena): everything stands in front of the defender's side. */
+export interface SiegeState {
+  /** Level of the walls building: 1 the moat, 2 the wall as well (the screen draws rubble where a wall stood). */
+  level: number;
+  /** Wall cells still standing (the towers stand on two of them). Nobody stands on or walks through a wall; shots fly over it. */
+  walls: HexKey[];
+  /** The gate (a wall segment in the middle row) while it stands, and the catapult hits it still takes. */
+  gate: HexKey | null;
+  gateHp: number;
+  /** Wall cells with an arrow tower still standing: each shoots an attacker at the start of every round. */
+  towers: HexKey[];
+  /** Moat cells: entering one ends the unit's turn and hurts it; so does ending a turn there. The catapult cannot destroy them. */
+  moat: HexKey[];
+  /** The battle round of the catapult's last shot (one a round). */
+  shot: number;
 }
 
 export interface BattleState {
@@ -369,6 +388,10 @@ export interface BattleState {
   attackerFrom: HexKey;
   defenderHero: string | null;
   neutralId: string | null;
+  /** Level 4: the battle is fought for this settlement (its garrison fights on the defender's side, with or without a hero). */
+  garrison?: string;
+  /** Level 4: the settlement's defences (moat, walls, gate, towers). */
+  siege?: SiegeState;
   /** Króla Burzy's charged fields (digital ruleset): a unit that steps on `cell` takes damage while `round` <= `until`. */
   fields?: Array<{ cell: HexKey; until: number }>;
   /** Arena only: 'draft' (treasures) comes between choosing the supports and deploying. */
@@ -535,5 +558,9 @@ export type Action =
   | { type: 'kingdomBuyArtifact'; settlementId: string; artifactId: string }
   /** Level 4: one unit of a resource bought for gold in an own settlement, or sold on its market. */
   | { type: 'kingdomTrade'; settlementId: string; res: 'wood' | 'ore' | 'dust'; dir: 'buy' | 'sell' }
+  /** Level 4: a support left in the settlement the active hero stands in (or taken back into the team). */
+  | { type: 'kingdomGarrison'; settlementId: string; unitId: string; dir: 'in' | 'out' }
+  /** Siege: the attacker's catapult shoots a wall, the gate or a tower (once a round). */
+  | { type: 'battleCatapult'; cell: HexKey }
   | { type: 'hutDeliver' }
   | { type: 'chestTake'; what: 'artifact' | 'gold' };

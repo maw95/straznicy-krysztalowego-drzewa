@@ -2,7 +2,7 @@
 // for player seats. Both only use information visible on the map.
 
 import { FACTION_SUPPORTS, ITEM_EFFECT, UNITS, type FactionId } from '../data';
-import { botWantsHut, kingdomBotAction, supportSlots } from '../kingdom';
+import { botWantsHut, garrisonAt, kingdomBotAction, supportSlots } from '../kingdom';
 import { objectReady } from '../economy';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
@@ -154,6 +154,8 @@ function walkCost(memo: Memo, hero: HeroState, opts: WalkOptions): (k: HexKey) =
     if (!goal && opts.avoid?.(k)) return null;
     const t = state.tiles[k];
     if (opts.avoidGuardians && !goal && t.crystalId && state.crystals[t.crystalId].guardian) return null;
+    // A settlement with an enemy garrison is a fight: only a walk that means it goes there.
+    if (!goal && garrisonAt(state, k, hero.faction)) return null;
     // Neutral encounters are fought only on purpose (encounterDetour): no other walk goes through them.
     if (t.crystalId && state.crystals[t.crystalId].encounter && !(goal && opts.encounters)) return null;
     const c = knownCost(state, k, hero);

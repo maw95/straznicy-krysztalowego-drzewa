@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Księstwo: **obrona osady**. Bohater może zostawić w swojej osadzie do trzech pomocników jako garnizon; wróg musi ich pokonać, żeby osadę zająć. Nowy budynek **Fosa** (kolce: kto wejdzie, traci turę i Życie) rozbudowuje się w **Mury z wieżyczkami**: mur z bramą zatrzymuje piechotę, a dwie wieżyczki co rundę strzelają do napastników. Atakujący dostaje **katapultę**: jeden strzał na rundę burzy mur, wieżyczkę albo (po dwóch trafieniach) bramę. Komputer zostawia w osadach nadwyżkę pomocników i umie szturmować mury.
+
 - Księstwo: nowe miejsca na mapie. **Młyn** daje 2 zł co 3 rundy, **Leśna składnica** oddaje raz zapas surowca, **Studnia Wędrowców** dodaje bohaterowi 2 punkty ruchu (raz na rundę). Przycisk zadania w chatce jest wyszarzony, gdy nie masz tego, o co chatka prosi.
 
 - Księstwo: nowy budynek **Kuźnia** (za rudę; pomocnicy całej frakcji dostają +1 do Ataku, po rozbudowie także +1 do Życia) i **wymiana surowców** w osadzie (brakujący surowiec kupisz za złoto, z targiem taniej; targ skupuje nadwyżki). Komputer też z nich korzysta, więc nie siedzi już na stosie złota, gdy brakuje mu drewna. Wygrana w Księstwie daje nieco więcej punktów rankingu niż w Osadzie.

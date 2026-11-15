@@ -2,10 +2,11 @@
 // and the animations over them.
 
 import { memo, useRef } from 'react';
-import { cellsOf, deployHeads, movePath, scaleOf, unitAt, unitDistance } from '../engine/battle';
+import { cellsOf, deployHeads, movePath, scaleOf, unitAt, unitDistance, wideCell, WIDE_ROWS } from '../engine/battle';
+import { SIEGE } from '../engine/economy';
 import { ABILITY } from '../engine/data';
 import type { HexKey } from '../engine/hex';
-import { isDigital, type BattleUnit, type GameState } from '../engine/types';
+import { isDigital, type BattleState, type BattleUnit, type GameState } from '../engine/types';
 import { abilityArt, asset, Frame, Portrait, ACTIVE_FIGURE_RING, Ribbon, SIDE_RING } from './common';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { wideObstacleGroups } from '../engine/battle';
@@ -94,6 +95,9 @@ interface Props {
   /** The tail cell of a large attacker that walks up to its target (next to the lit approach cell). */
   approachTail: HexKey | null;
   onUnit: (u: BattleUnit) => void;
+  /** Siege: the cells the catapult may shoot now (empty when it is not the viewer's shot). */
+  catapult: HexKey[];
+  onCatapult: (k: HexKey) => void;
 }
 
 /** Rim of the blocked cells on both arenas (scripts/assets/arenas.py paints the same one). */
@@ -199,7 +203,8 @@ export function ArenaBoard(p: Props) {
           {/* The painted board of the half of the map where the fight broke out. */}
           <img src={asset(wide ? `arena/cyfrowa/${b.arena}.webp` : `arena/${b.arena}.jpg`)} alt="" style={{ position: 'absolute', left: 0, top: 0, width: ART_SIZE.w, height: ART_SIZE.h }} />
           {/* Digital arena: obstacles are pictures standing on their cells. */}
-          {wide &&
+          {wide && b.siege && <SiegeArt b={b} cellCenter={cellCenter} scale={scaleOf(state)} />}
+          {wide && !b.siege &&
             wideObstacleGroups(b.arena).map((g) => {
               const cs = g.cells.map(cellCenter);
               const box = g.cells.length > 1 ? OBSTACLE_BOX_DOUBLE : OBSTACLE_BOX;
@@ -259,6 +264,11 @@ export function ArenaBoard(p: Props) {
                 />
               );
             })}
+            {p.catapult.map((k) => (
+              <polygon key={`cat${k}`} data-catapult={k} points={hexPoints(k, 2)} fill={hover === k ? 'rgba(255,170,60,0.5)' : 'rgba(255,170,60,0.22)'} stroke="#FFAA3C" strokeWidth="3" strokeDasharray="7 4" className="cur-pointer" onMouseEnter={() => setHover(k)} onMouseLeave={() => setHover(null)} onClick={() => p.onCatapult(k)}>
+                <title>Strzał katapulty (jeden na rundę): {b.siege?.gate === k ? `brama, wytrzyma jeszcze ${b.siege.gateHp}` : b.siege?.towers.includes(k) ? 'wieżyczka' : 'mur'}</title>
+              </polygon>
+            ))}
             {active &&
               cellsOf(active).map((k) => <polygon key={`ac${k}`} points={hexPoints(k, 2)} fill="rgba(158,228,255,0.15)" stroke="#9EE4FF" strokeWidth="3" pointerEvents="none" />)}
             {(b.fields ?? []).map((f) => {
@@ -475,11 +485,41 @@ export function ArenaBoard(p: Props) {
             </div>
           )}
           <div className="hide-mobile" style={{ position: 'absolute', left: '50%', top: 14, transform: 'translateX(-50%)' }}>
-            <Ribbon style={{ width: 340 }}>{`${b.kind === 'neutral' ? 'Bitwa o kryształ' : 'Starcie bohaterów'} · ${b.stage === 'deploy' ? 'ustawienie' : `runda ${b.round}`}`}</Ribbon>
+            <Ribbon style={{ width: 340 }}>{`${b.kind === 'neutral' ? 'Bitwa o kryształ' : b.garrison ? 'Szturm osady' : 'Starcie bohaterów'} · ${b.stage === 'deploy' ? 'ustawienie' : `runda ${b.round}`}`}</Ribbon>
           </div>
         </div>
         </div>
       </div>
     </Frame>
+  );
+}
+
+/** Siege: the moat, the wall with its gate and towers (rubble where the catapult hit), and the attacker's catapult by its edge of the board. */
+function SiegeArt({ b, cellCenter, scale }: { b: BattleState; cellCenter: (k: HexKey) => { x: number; y: number }; scale: number }) {
+  const s = b.siege!;
+  const rows = Array.from({ length: WIDE_ROWS }, (_, r) => r);
+  const wallCells = s.level >= 2 ? rows.map((r) => wideCell(SIEGE.wallColumn, r)) : [];
+  const piece = (k: HexKey, art: string, w: number, h: number, base: number, title: string) => {
+    const c = cellCenter(k);
+    return (
+      <div key={`sg${art}${k}`} title={title} data-siege={art} style={{ position: 'absolute', left: c.x - w / 2, top: c.y + base - h, width: w, height: h, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', pointerEvents: 'none' }}>
+        <img src={asset(`arena/oblezenie/${art}.webp`)} alt="" style={{ maxWidth: '100%', maxHeight: '100%', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.55))' }} />
+      </div>
+    );
+  };
+  const first = cellCenter(wideCell(0, WIDE_ROWS - 1));
+  return (
+    <>
+      {s.moat.map((k) => piece(k, 'fosa', 78, 62, 30, `Fosa: wejście kończy turę jednostki i zadaje ${SIEGE.moatDamage * scale} obrażeń`))}
+      {wallCells.map((k) =>
+        s.gate === k ? piece(k, 'brama', 84, 70, 30, 'Brama: burzy ją tylko katapulta')
+          : s.towers.includes(k) ? piece(k, 'wieza', 64, 112, 30, `Wieżyczka: co rundę strzela do najsłabszego napastnika (${SIEGE.towerDamage * scale} obrażeń)`)
+          : s.walls.includes(k) ? piece(k, 'mur', 84, 56, 30, 'Mur: burzy go tylko katapulta')
+          : piece(k, 'gruz', 70, 36, 26, 'Gruzy: przejście wolne'),
+      )}
+      <div title="Katapulta atakującego: jeden strzał na rundę w mur, bramę albo wieżyczkę" data-siege="katapulta" style={{ position: 'absolute', left: first.x - 118, top: first.y - 30, width: 84, pointerEvents: 'none', display: s.level >= 2 ? 'block' : 'none' }}>
+        <img src={asset('arena/oblezenie/katapulta.webp')} alt="" style={{ width: '100%', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.55))' }} />
+      </div>
+    </>
   );
 }
