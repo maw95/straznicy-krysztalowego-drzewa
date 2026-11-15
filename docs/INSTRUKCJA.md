@@ -777,6 +777,9 @@ Budynek **Fosa** (4 zł + 3 drewna) i jego rozbudowa **Mury z wieżyczkami** (6 
 ### Cel „Podbój”
 Na poziomie Księstwo można grać o **Podbój**. Wygrywa strona, która na koniec rundy trzyma **wszystkie osady na ziemi wroga**: jego stolicę (osadę, z której zaczyna) i osady do zdobycia na jego połowie mapy. Licznik w panelu celu pokazuje, ile ich już macie. Gdy minie limit rund, wygrywa strona trzymająca ponad połowę osad wroga; jeśli nikt albo obie strony, wygrywa Horda. Pamiętaj o obronie: zostawiaj garnizony i buduj umocnienia, bo przeciwnik idzie po Twoje osady.
 
+### Tryb rodzinny: autopilot
+Gdy przy bohaterze zaznaczono „Dziecko”, młodszy gracz **wędruje i walczy**, a osadami i surowcami nie musi się zajmować. Jeśli tą samą frakcją gra dorosły, to on buduje, rekrutuje i handluje (złoto i surowce są wspólne). Jeśli dorosłego nie ma, robi to **autopilot**, tak jak zrobiłby komputer. Skrzynie dziecka otwierają się same.
+
 ## Autorzy (wersja cyfrowa)
 
 W menu głównym przycisk „Autorzy” otwiera listę: autorzy gry (Maciej Woźniak, Aleksandra Szestowicka przy fabule, Zuzanna Woźniak jako autorka Dzielnej Kaczki), autorzy muzyki wraz z licencjami (CC BY wymaga podania autora), informacja, że grafika, animacje i efekty dźwiękowe powstały z użyciem narzędzi AI (Scenario), oraz użyte oprogramowanie.

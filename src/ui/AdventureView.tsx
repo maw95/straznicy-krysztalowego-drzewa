@@ -1,13 +1,13 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
-import { activeHero, heroesAt, hordeMayFightGuardian, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots } from '../engine/game';
+import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots } from '../engine/game';
 import { fightLevelAt } from './fightBadges';
 import { EnemyPill, FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
 import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
 import { TreasureButton } from './TreasureButton';
 import { SettlementDialog } from './SettlementDialog';
-import { BUILDING_NAMES, chestPreview, garrisonAt, hutPayable, KINGDOM, goldOf, incomeBreakdown, incomeOf, resourceIncomeBreakdown, settlementAt } from '../engine/kingdom';
+import { BUILDING_NAMES, chestPreview, garrisonAt, hasParent, hutPayable, KINGDOM, goldOf, incomeBreakdown, incomeOf, resourceIncomeBreakdown, settlementAt } from '../engine/kingdom';
 import { ECONOMY, MINE_NAMES, OBJECT_NAMES, OBJECTS, objectReady, RESOURCE_NAMES, thingsText } from '../engine/economy';
 import { ResourceStrip } from './resources';
 import { sfx } from './sfx';
@@ -571,17 +571,20 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           {state.kingdom && viewer && (() => {
             const mine = Object.values(state.kingdom.settlements).filter((x) => x.owner === viewer && state.tiles[x.at]?.revealed);
             const here = hero && hero.faction === viewer ? settlementAt(state, hero.pos) : undefined;
+            // Family mode: in a child's turn the economy is run for it (the autopilot or the adult), so the settlement window stays shut.
+            const childTurn = Boolean(hero && canAct && isChildHero(state, hero));
             if (!mine.length) return null;
             return (
               <div className="plate parch" data-settlements style={{ padding: '6px 10px', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                {here && here.owner === viewer && canAct && (
+                {childTurn && <i data-autopilot style={{ fontSize: 14, color: '#6B4A22' }}>{hasParent(state, hero!) ? 'Osadami i surowcami zarządza dorosły z Twojej drużyny.' : 'Osadami i surowcami zarządza autopilot.'}</i>}
+                {here && here.owner === viewer && canAct && !childTurn && (
                   <button className="btn prim" data-enter-settlement style={{ padding: '6px 12px', fontSize: 18 }} onClick={() => setSettlementOpen(here.id)}>Wejdź do osady {here.name}</button>
                 )}
                 <b style={{ fontSize: 14, color: '#6B4A22', letterSpacing: 1 }}>OSADY (klik: pokaż, drugi klik: otwórz)</b>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {mine.map((x) => (
                     <button key={x.id} className="btn plate parch" data-settlement-link={x.id} style={{ padding: '3px 10px', fontSize: 15, outline: flash === x.at ? '2px solid #F3D27A' : undefined }} onClick={() => {
-                      if (selected === x.at && canAct) return setSettlementOpen(x.id);
+                      if (selected === x.at && canAct && !childTurn) return setSettlementOpen(x.id);
                       setSelected(x.at);
                       setFlash(x.at);
                       window.setTimeout(() => setFlash((f) => (f === x.at ? null : f)), 1800);

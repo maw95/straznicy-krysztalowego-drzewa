@@ -18,7 +18,7 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids`) i w rankingu online zostaj
 4. **Wdrożenie serwera przy następnym wydaniu** (S, razem z wydaniem): repo backendu ma niewdrożony commit z rankingiem; poziom 0 i Łatwy na arenie zmieniają znaczenie `kids` (stary klient dostałby arenę zamiast pojedynków).
 
 ### Etap B. Poziom 4 „Księstwo” (gospodarka i osady), kolejność wewnątrz poziomu
-9. **4e. Autopilot warstw dla dzieci** (M): rodzic na wyższym poziomie, dziecko na tej samej mapie z automatycznie zarządzanymi warstwami (wymaga 4a).
+Poziom 4 zbudowany 15.11 (Kuźnia, wymiana, obiekty mapy, obrona osady, Podbój, autopilot warstw); czeka na ogranie przez autora (sekcja 3).
 
 ### Etap C. Poziom 5 „Królestwo” (bohaterowie i magia)
 10. **5a. Drugi bohater** (L): archetyp-dowódca (wojownik, łucznik, mędrzec), wynajem w karczmie osady, własny pionek, drużyna, PD i sloty; śmierć pomocniczego = wykup po 1 rundzie, traci drużynę i artefakty; śmierć głównego ostateczna (szczegóły: `MECHANIKI_I_POZIOMY.md`).

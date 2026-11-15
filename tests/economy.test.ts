@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { activeHero, applyAction, createGame } from '../src/engine/game';
 import { ECONOMY, OBJECTS } from '../src/engine/economy';
-import { artifactBill, botPurchase, buildCost, buildingsOf, canPay, forgeLevel, resOf, resourceIncomeOf, settlementAt, tradeBuyPrice } from '../src/engine/kingdom';
+import { artifactBill, autopilotAction, botPurchase, hasParent, buildCost, buildingsOf, canPay, forgeLevel, resOf, resourceIncomeOf, settlementAt, tradeBuyPrice } from '../src/engine/kingdom';
 import { pointsFor } from '../src/engine/scoring';
 import { ARTIFACTS } from '../src/engine/sites';
 import { mapNeighbors } from '../src/engine/map';
@@ -247,5 +247,35 @@ describe('level 4: mills, stores and wells', () => {
     // The first visit added the well's points on top of what the step cost; the second one only costs.
     expect(left).toBeGreaterThan(s.movePoints);
     expect(s.kingdom!.objects![well].used).toBe(s.round);
+  });
+});
+
+describe('family mode: the autopilot of the layers', () => {
+  const family = (adult: boolean): GameState => {
+    const s = createGame(setup({ mapSize: 'medium', seed: 3, seats: [
+      { name: 'Dziecko', faction: 'dawn', controller: 'human', heroId: 'goldDragon', child: true },
+      { name: 'Rodzic', faction: 'dawn', controller: adult ? 'human' : 'bot', heroId: 'unicornKing' },
+    ] }, rules));
+    s.kingdom!.gold.dawn = 30;
+    s.kingdom!.res!.dawn = { wood: 9, ore: 9, dust: 9 };
+    return s;
+  };
+
+  it('runs the whole economy for a child who plays without an adult', () => {
+    const s = family(false);
+    const hero = activeHero(s)!;
+    expect(hasParent(s, hero)).toBe(false);
+    expect(autopilotAction(s, hero)?.type).toMatch(/^kingdom/);
+  });
+
+  it('leaves the shared gold and resources to the adult of the same faction, and still opens the child\'s chest', () => {
+    const s = family(true);
+    const hero = activeHero(s)!;
+    expect(hasParent(s, hero)).toBe(true);
+    expect(autopilotAction(s, hero)).toBeNull();
+    s.kingdom!.chest = { heroId: hero.id };
+    expect(autopilotAction(s, hero)).toEqual({ type: 'chestTake', what: 'artifact' });
+    // The adult's own hero is never on autopilot.
+    expect(autopilotAction(s, s.heroes.unicornKing)).toBeNull();
   });
 });

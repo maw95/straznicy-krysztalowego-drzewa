@@ -771,5 +771,26 @@ export function kingdomBotAction(state: GameState, hero: HeroState): Action | nu
   return null;
 }
 
+/** Family mode: an adult (a human who is not a child) plays the same faction as this hero's player. */
+export function hasParent(state: GameState, hero: HeroState): boolean {
+  const me = state.players.find((p) => p.id === hero.playerId);
+  return Boolean(me?.child) && state.players.some((p) => p.id !== me!.id && p.faction === hero.faction && p.controller === 'human' && !p.child);
+}
+
+/**
+ * Family mode, levels 3 and 4: what the autopilot does for a child's hero in its turn (null: nothing). The child walks and fights; the layers
+ * above that are run for it. With an adult of the same faction at the table the economy is the adult's (gold and resources are shared, so the
+ * autopilot must not spend them): only the child's own things are done (a chest, a set piece from the backpack). Without one the autopilot
+ * runs everything, like a bot.
+ */
+export function autopilotAction(state: GameState, hero: HeroState): Action | null {
+  const k = state.kingdom;
+  if (!k || !state.players.find((p) => p.id === hero.playerId)?.child) return null;
+  if (!hasParent(state, hero)) return kingdomBotAction(state, hero);
+  if (k.chest) return { type: 'chestTake', what: 'artifact' };
+  const a = kingdomBotAction(state, hero);
+  return a?.type === 'equipArtifact' ? a : null;
+}
+
 /** Whether a bot of this faction has something to buy in one of its settlements (a reason to walk back to it). */
 export const kingdomWish = (state: GameState, f: FactionId): Settlement | null => settlementsOf(state, f).find((s) => botPurchase(state, f, s)) ?? null;
