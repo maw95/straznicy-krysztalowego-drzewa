@@ -464,6 +464,15 @@ Włącza go reguła `kingdom` (poziom w kreatorze „Osada”, `tier: 'kingdom'`
 - **Punkty rankingowe:** poziom nie daje ich, dopóki jego trudność nie jest zmierzona (jak „Własne ustawienia”).
 
 
+### Pomiar siły rekrutów i ceny (15.11.2026)
+
+Skrypt (bez celu w Makefile): `node --import tsx scripts/sim/recruitValue.ts 120` (20 s). Każdy rekrut (jedyny pomocnik) Przymierza walczy z każdym rekrutem Hordy, bohaterowie na 3. poziomie. Wynik (% wygranych przeciw rosterowi drugiej frakcji; bohaterowie Przymierza są w tym pomiarze mocniejsi, więc skale frakcji porównujemy tylko wewnątrz frakcji):
+- Przymierze: Elf Druid 57, Nimfa 62, Pegaz 65 (poziom 1, 2 zł); **Jeżozwierz 52 (poziom 2, 3 zł)**; Centaur 79 (5 zł); Odyniec 80 (8 zł); Opiekun Drzewa 84 (12 zł).
+- Horda: Goblin 12, Pająk 10, Nietoperz 11 (2 zł); Szczurołak 15 (3 zł); Ogar 31 (5 zł); Salamandra 51 (8 zł); Herszt Minotaurów 91 (12 zł).
+- Wnioski: u Hordy ceny 2/3/5/8/12 dobrze odpowiadają krzywej siły. U Przymierza **Jeżozwierz jest słabszy od pomocników poziomu 1**, a poziomy 3–5 są niemal równe (79/80/84%), więc Odyniec i Opiekun są za drogie względem Centaura. To kwestia statystyk jednostek (zmieniłaby wyniki gier z Osadą), więc ceny zostają, a decyzję o poprawie statystyk Jeżozwierza i Odyńca zostawiam autorowi (patrz BACKLOG, sekcja 8).
+- Symulacje Osady 15.11 (40 gier na komórkę, krótka, średnia i długa): Łatwy 50–90%, Normalny 40–68%, Trudny 25–45%: w paśmie z dokładnością do szumu pomiaru (±8 pkt). „Nadwyżka” złota botów na Łatwym to ok. 1,5 rundy dochodu na koniec gry, nie zastój: bez zmian.
+
+
 ## Poziom 0 i trudność jako warunki startowe (15.11.2026)
 
 Decyzja autora (14.11): poziom trudności nie zmienia mechanik, tylko warunki startowe komputera.

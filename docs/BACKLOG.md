@@ -16,7 +16,6 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids`) i w rankingu online zostaj
 
 ### Etap A. Domknięcie poziomów 0–3 (przed budową poziomu 4)
 1. **Nazwy poziomów w UI** (S): w grze wciąż „Zerówka” i „Królestwo” (poziom 3); przemianować na Spacer / Osada według drabinki, w instrukcji, samouczku, CHANGELOG-u i `ZASADY_CYFROWE.md`. Gotowe, gdy `grep -ri "zerówk"` w `src/` i `docs/INSTRUKCJA.md` nie zwraca nazw poziomu.
-2. **Strojenie ekonomii poziomu 3, reszta** (M): ceny jednostek z symulacji użyteczności w walce (dziś robocze 3/5/8/12), liczba osad i kopalń, siła obrońców osad (trochę silniejsi niż strażnicy kryształów), posiłki automatu zła w koopie (co kilka rund, realnie groźne). Gotowe, gdy tabele `make sim-tabele` dla Osady mieszczą się w pasmach (sekcja 6) i `make check` zielone. Zauważone: przy dodatkowym złocie Łatwego boty kończą z 15–20 zł (nie mają co kupić): zdecydować, na co wydają nadwyżkę (np. artefakty na targu).
 3. **Przegląd ruchu klient–serwer** (S): co musi iść w każdej wiadomości, a co można liczyć po obu stronach z ziarna (oferta targu, różnice zamiast pełnego stanu); wynik w `docs/INFRASTRUKTURA.md`, poprawki tylko oczywiste. Warunek przed poziomem 4 (więcej stanu: surowce, budynki).
 4. **Wdrożenie serwera przy następnym wydaniu** (S, razem z wydaniem): repo backendu ma niewdrożony commit z rankingiem; poziom 0 i Łatwy na arenie zmieniają znaczenie `kids` (stary klient dostałby arenę zamiast pojedynków).
 
@@ -112,4 +111,4 @@ Pasma autora (wygrane Przymierza): Łatwy 65–85%, Normalny 45–65%, Trudny 30
 **Podział poziomów 4–6 (15.11):** na 4 gospodarka i osady, na 5 bohaterowie i magia, na 6 frakcje i Relikt: wyrównana liczba i złożoność nowości dla gracza.
 
 ## 8. Pytania czekające na autora
-- Brak otwartych (stan 15.11). Nowe pytania dopisywać tutaj.
+- **Statystyki Jeżozwierza i Odyńca (Przymierze):** Jeżozwierz (poziom 2, 3 zł) jest słabszy od pomocników poziomu 1, a Odyniec (8 zł) i Opiekun Drzewa (12 zł) niewiele mocniejsi od Centaura (5 zł): pomiar w `ZASADY_CYFROWE.md`, sekcja „Pomiar siły rekrutów”. Poprawić statystyki (wymaga Twojej akceptacji, bo przesunie Osadę)?
