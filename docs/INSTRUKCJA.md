@@ -53,6 +53,7 @@ Wybierz stronę. Drzewo czeka.
 15. [Arena — szybka bitwa](#15-arena--szybka-bitwa)
 16. [Ściągawka](#16-ściągawka)
 17. [Poziom 3: Osada — złoto, osady i drużyna (wersja cyfrowa)](#17-poziom-3-osada--złoto-osady-i-drużyna-wersja-cyfrowa)
+18. [Poziom 4: Księstwo — surowce i chatki (wersja cyfrowa)](#18-poziom-4-księstwo--surowce-i-chatki-wersja-cyfrowa)
 
 ---
 
@@ -730,6 +731,26 @@ Horda sterowana przez automat nie zbiera złota: co kilka rund wracają do niej 
 
 ### Autopilot dla dziecka
 W trybie rodzinnym (pole „Dziecko” w ustawieniach gry, czyli zgoda rodzica) bohater dziecka sam robi zakupy w osadach: kupuje według zasad botów budynki, pomocników i artefakty, a skrzynię otwiera, biorąc artefakt.
+
+## 18. Poziom 4: Księstwo — surowce i chatki (wersja cyfrowa)
+
+Ten rozdział dotyczy tylko wersji cyfrowej, poziomu „Księstwo”. Dochodzi do zasad poziomu „Osada”: trzy surowce, droższe budynki i zadania w chatkach. (Obrona osad, cel „Podbój” i autopilot warstw dla dzieci dojdą w dalszej części poziomu 4.)
+
+### Surowce
+Obok złota są **drewno**, **ruda** i **Gwiezdny Pył**. Wszystkie są wspólne dla frakcji, tak jak złoto. Daje je mapa: **tartak** (+1 drewna na rundę), **kopalnia rudy** (+1 rudy) i rzadkie **źródło Gwiezdnego Pyłu** (+1 Pyłu). Kopalnie przejmuje się jak kopalnie złota: kto wejdzie, ten je trzyma, dopóki ktoś inny nie wejdzie na to samo pole (bez walki, chyba że stoi na nim właściciel). Na starcie frakcja ma 3 drewna.
+
+### Co kosztuje surowce
+Złoto płaci za jednostki; drewno i ruda za budynki, a Gwiezdny Pył tylko za rzadkie rzeczy.
+- **Koszary:** 3 zł + 2 drewna; rozbudowa 6 zł + 2 drewna + 2 rudy + 1 Pył.
+- **Targ:** 3 zł + 2 drewna; duży 5 zł + 2 rudy + 1 Pył.
+- **Szpital:** 3 zł + 2 drewna; ulepszony 5 zł + 2 rudy + 1 Pył.
+- **Skarbiec:** 4 zł + 2 rudy.
+- **Legendarny artefakt na targu:** 10 zł + 1 Pył.
+
+**W rundzie frakcja może zbudować lub rozbudować tylko jeden budynek** (przycisk pokazuje, kiedy to już zrobiliście). Zapasy i dochód surowców widać w dolnym pasku, a cenę w przycisku budowy.
+
+### Chatki z zadaniami
+Na mapie stoją chatki. Bohater, który stanie w chatce, może wykonać jej **zadanie**: chatka prosi o złoto, surowiec albo artefakt z plecaka, a w zamian daje więcej (około półtora raza tyle, w innej walucie): złoto, surowiec, doświadczenie albo artefakt. Każda chatka daje zadanie raz na grę.
 
 ## Autorzy (wersja cyfrowa)
 

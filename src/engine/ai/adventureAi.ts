@@ -2,7 +2,7 @@
 // for player seats. Both only use information visible on the map.
 
 import { FACTION_SUPPORTS, ITEM_EFFECT, UNITS, type FactionId } from '../data';
-import { kingdomBotAction, supportSlots } from '../kingdom';
+import { botWantsHut, kingdomBotAction, supportSlots } from '../kingdom';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { heroTileCost } from '../sites';
@@ -719,6 +719,7 @@ function kingdomDetour(state: GameState, hero: HeroState, memo: Memo): Action | 
   const goals = new Map<HexKey, number>();
   for (const [hex, m] of Object.entries(k.mines)) if (m.owner !== hero.faction && state.tiles[hex].revealed) goals.set(hex, 1);
   for (const s of Object.values(k.settlements)) if (s.owner === null && !state.tiles[s.at].crystalId) goals.set(s.at, 1);
+  for (const hex of Object.keys(k.huts ?? {})) if (state.tiles[hex].revealed && botWantsHut(state, hero, hex)) goals.set(hex, 2);
   goals.delete(hero.pos);
   if (!goals.size) return null;
   const paths = memo.paths(hero, 'kingdom', { goals: new Set(goals.keys()), avoidGuardians: true, danger: true, encounters: true });

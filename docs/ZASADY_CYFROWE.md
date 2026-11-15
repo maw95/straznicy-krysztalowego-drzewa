@@ -480,3 +480,14 @@ Decyzja autora (14.11): poziom trudności nie zmienia mechanik, tylko warunki st
 - **Łatwy na poziomach 1–3** (`Level = 'kids'`) gra pełne bitwy na arenie jak Normalny; zasady są te same, a flaga `rules.easy` tylko wskazuje poziom i włącza dźwignie startowe (`tuning.ts`, `tuningAuto.ts`: skarby startowe, brak posiłków Hordy, ruch, limit rund). Pasmo: 65–85% wygranych Przymierza.
 - Stare zapisy partii ze starym Łatwym nie są migrowane (decyzja autora).
 - Punkty Łatwego na poziomach 1–3: ocena trudności = Normalny − 1 (pomiar 15.11: Łatwy wygrywa 65–76%, Normalny 51–66%).
+
+## Poziom 4 „Księstwo” (15.11.2026, część pierwsza)
+
+Reguła `economy` (poziom w kreatorze „Księstwo”, `tier: 'economy'` przy stołach online; wymaga reguł poziomu 3, czyli `kingdom` i rozwoju bohatera). Dane i liczby: `src/engine/economy.ts`, zasady: `kingdom.ts`. Wszystkie liczby robocze (strojone symulacjami: `SIM_ECONOMY=1 node --import tsx scripts/sim/kingdom.ts`). Decyzje autora: surowce wspólne na frakcję; kopalnie złota i surowców zostają właścicielowi na stałe, przejęcie bez walki (chyba że na polu stoi właściciel); chatki: zadanie „przynieś”, nagroda w złocie, surowcu, artefakcie lub doświadczeniu.
+- **Surowce:** drewno, ruda, Gwiezdny Pył; start 3 drewna; dochód tylko z kopalń (po 1 na rundę). Liczba kopalń każdego surowca zależy od rozmiaru mapy (`ECONOMY.mines`; Pył: 1 na krótkiej do 3 na największej).
+- **Ceny** (`ECONOMY.cost`): koszary 3 zł + 2 drewna / 6 zł + 2 drewna + 2 rudy + 1 Pył; targ 3 zł + 2 drewna / 5 zł + 2 rudy + 1 Pył; szpital jak targ; skarbiec 4 zł + 2 rudy; legendarny artefakt +1 Pył. Jednostki za samo złoto.
+- **Jeden budynek na rundę na frakcję** (`KingdomState.built`).
+- **Chatki** (`KingdomState.huts`, akcja `hutDeliver`): 1 na krótkiej, 2, 3, 4, 5, 6 na największej mapie. Zadanie: 4–7 zł albo 3–5 drewna/rudy albo 1–2 Pyłu albo artefakt z plecaka; nagroda warta `hutProfit` = 1,5 raza tyle w innej rzeczy (wartości: zł 1, drewno i ruda 1,5, Pył 4, PD 2, artefakt 6).
+- **Komputer:** kupuje budynki za surowce (jeden na rundę), chodzi do kopalni rzeczy i do chatek, gdy stać go na zadanie z zapasem (po zadaniu zostaje mu 4 zł lub 2 sztuki surowca).
+- **Wyniki symulacji** (40 gier na komórkę, Normalny, 15.11): Przymierze 48–73% (pasmo 45–65%, szum ±8); na dużych mapach komputer kończy z 25–30 zł, czyli złoto nie jest tu hamulcem, tylko surowce i limit „jeden budynek na rundę”. Ranking: punkty jak na poziomie 3 (`KINGDOM_POINTS_FACTOR`) do czasu osobnego pomiaru.
+- **Jeszcze nie ma:** obrony osady (garnizon, mury, katapulta, fosa), celu „Podbój”, autopilota warstw dla dzieci, nowych obiektów mapy poza kopalniami i chatkami (młyn, studnia), samouczka poziomu 4.

@@ -8,8 +8,9 @@ import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
 import { TreasureButton } from './TreasureButton';
 import { SettlementDialog } from './SettlementDialog';
 import { BUILDING_NAMES, chestPreview, KINGDOM, goldOf, incomeBreakdown, incomeOf, resourceIncomeBreakdown, settlementAt } from '../engine/kingdom';
-import { ECONOMY, MINE_NAMES, RESOURCE_NAMES } from '../engine/economy';
+import { ECONOMY, MINE_NAMES, RESOURCE_NAMES, thingsText } from '../engine/economy';
 import { ResourceStrip } from './resources';
+import { sfx } from './sfx';
 import { ARTIFACT_BY_ID } from '../engine/sites';
 import { heroTileCost, SITE } from '../engine/sites';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
@@ -552,6 +553,16 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </div>
             </div>
           )}
+          {state.kingdom?.huts && viewer && hero && hero.faction === viewer && canAct && state.kingdom.huts[hero.pos] && !state.kingdom.huts[hero.pos].done && (() => {
+            const hut = state.kingdom!.huts![hero.pos];
+            return (
+              <div className="plate parch" data-hut style={{ padding: '6px 10px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <b style={{ fontSize: 14, color: '#6B4A22', letterSpacing: 1 }}>CHATKA: ZADANIE</b>
+                <div style={{ fontSize: 15 }}>Przynieś: <b>{thingsText(hut.want)}</b>. Nagroda: <b>{thingsText(hut.reward)}</b>.</div>
+                <button className="btn prim" data-hut-deliver style={{ padding: '4px 12px', fontSize: 16 }} onClick={() => { sfx.play('coins_buy'); onAction({ type: 'hutDeliver' }); }}>Wykonaj zadanie</button>
+              </div>
+            );
+          })()}
           {state.kingdom && viewer && (() => {
             const mine = Object.values(state.kingdom.settlements).filter((x) => x.owner === viewer && state.tiles[x.at]?.revealed);
             const here = hero && hero.faction === viewer ? settlementAt(state, hero.pos) : undefined;
@@ -846,6 +857,7 @@ function landOf(state: GameState, t: Tile): 'dawn' | 'horde' | undefined {
 function placeIcon(state: GameState, k: HexKey): string {
   const place = state.tiles[k].place;
   if (!place) return 'osada_neutral';
+  if (place.kind === 'hut') return 'chatka';
   if (place.kind === 'mine') return ({ wood: 'tartak', ore: 'kopalnia_ruda', dust: 'zrodlo_pylu' } as Record<string, string>)[state.kingdom?.mines[place.id]?.res ?? ''] ?? 'kopalnia';
   const owner = state.kingdom?.settlements[place.id]?.owner;
   return owner ? `osada_${owner}` : 'osada_neutral';
@@ -855,6 +867,10 @@ function placeIcon(state: GameState, k: HexKey): string {
 function placeTitle(state: GameState, k: HexKey): string {
   const place = state.tiles[k].place;
   if (!place || !state.kingdom) return '';
+  if (place.kind === 'hut') {
+    const hut = state.kingdom.huts?.[place.id];
+    return hut ? (hut.done ? 'Chatka: zadanie wykonane' : `Chatka: przynieś ${thingsText(hut.want)}, dostaniesz ${thingsText(hut.reward)}`) : 'Chatka';
+  }
   if (place.kind === 'mine') {
     const mine = state.kingdom.mines[place.id];
     const gives = mine?.res ? `+${ECONOMY.incomeMine[mine.res]} ${RESOURCE_NAMES[mine.res]} na rundę` : '+1 zł na rundę';

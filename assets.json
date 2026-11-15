@@ -3506,17 +3506,19 @@
         "public/assets/ikony/mapa/zrodlo_pylu.webp",
         "public/assets/ikony/mapa/drewno.webp",
         "public/assets/ikony/mapa/ruda.webp",
-        "public/assets/ikony/mapa/pyl.webp"
+        "public/assets/ikony/mapa/pyl.webp",
+        "public/assets/ikony/mapa/chatka.webp"
       ],
-      "typ": "ikony poziomu 4 „Księstwo”: tartak, kopalnia rudy, źródło Gwiezdnego Pyłu (mapa) oraz drewno, ruda, Gwiezdny Pył (zasoby)",
-      "opis": "Okrągłe medale jak ikony poziomu 3 (złoty pierścień), przezroczyste tło, 512 px zmniejszone do 256 px (WebP). Referencja stylu: ikona kopalni złota i złota (poziom 3). Po 2 warianty na ikonę, wybrany pierwszy. Prompty: tartak w sosnowym lesie z piłą i kłodami; kopalnia rudy z wózkiem pełnym szarej i rdzawej rudy; kamienna fontanna ze strumieniem fioletowo-niebieskiego pyłu; stos trzech kłód; stos surowej rudy żelaza; błyszczący stos pyłu gwiezdnego z gwiazdkami.",
+      "typ": "ikony poziomu 4 „Księstwo”: tartak, kopalnia rudy, źródło Gwiezdnego Pyłu (mapa) oraz drewno, ruda, Gwiezdny Pył (zasoby), chatka z zadaniem",
+      "opis": "Okrągłe medale jak ikony poziomu 3 (złoty pierścień), przezroczyste tło, 512 px zmniejszone do 256 px (WebP). Referencja stylu: ikona kopalni złota i złota (poziom 3). Po 2 warianty na ikonę, wybrany pierwszy. Prompty: tartak w sosnowym lesie z piłą i kłodami; kopalnia rudy z wózkiem pełnym szarej i rdzawej rudy; kamienna fontanna ze strumieniem fioletowo-niebieskiego pyłu; stos trzech kłód; stos surowej rudy żelaza; błyszczący stos pyłu gwiezdnego z gwiazdkami. Chatka: chata pustelnika ze strzechą i tabliczką z wykrzyknikiem (3 warianty, wybrany pierwszy).",
       "scenario_asset": {
         "tartak": "asset_oDMU9q94xxQdAUVEdSx6gX6P",
         "kopalnia_ruda": "asset_644ErMPfdNKdtujvHgfAEuNX",
         "zrodlo_pylu": "asset_88yqREvBLMPHm9K56QDZBSva",
         "drewno": "asset_ycwYQ2XhgdYXp7ibu2z2XXTu",
         "ruda": "asset_kmZbJutF6831BXhQJBhsPY1A",
-        "pyl": "asset_RGYUc6sRRzuCd5uN2KPfszHv"
+        "pyl": "asset_RGYUc6sRRzuCd5uN2KPfszHv",
+        "chatka": "asset_AgKvL2xr13aBnPcEx71XkR2v"
       },
       "narzedzie": "Scenario (plan płatny)",
       "model": "GPT Image 2.5 Flare, jakość high, przezroczyste tło, obraz referencyjny",

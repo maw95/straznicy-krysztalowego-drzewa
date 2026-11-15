@@ -1092,6 +1092,7 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'kingdomRecruit':
     case 'kingdomHeal':
     case 'kingdomBuyArtifact':
+    case 'hutDeliver':
     case 'chestTake':
       kingdomAction(state, action);
       break;

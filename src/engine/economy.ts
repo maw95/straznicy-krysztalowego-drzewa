@@ -36,6 +36,12 @@ export const ECONOMY = {
     hospital: [{ gold: 3, wood: 2 }, { gold: 5, ore: 2, dust: 1 }],
     treasury: [{ gold: 4, ore: 2 }],
   } as Record<string, Cost[]>,
+  /** Huts with a quest on the map, by map size. */
+  huts: { short: 1, medium: 2, long: 3, veryLong: 4, huge: 5, giant: 6 } as Record<string, number>,
+  /** What a quest is worth, in gold: a reward is worth this much more than what the hut asks for. */
+  hutProfit: 1.5,
+  /** Gold value of the things a hut deals in. */
+  value: { gold: 1, wood: 1.5, ore: 1.5, dust: 4, xp: 2, artifact: 6 },
   /** Gwiezdny Pył a legendary artifact costs on top of its gold in the market. */
   legendaryDust: 1,
 };
@@ -47,3 +53,18 @@ export const resourcesOf = (c: Cost): Array<[ResourceId, number]> => RESOURCE_ID
 
 /** Price as text, e.g. "6 zł · 2× drewno · 1× Pył". */
 export const costText = (c: Cost): string => [`${c.gold} zł`, ...resourcesOf(c).map(([r, n]) => `${n}× ${{ wood: 'drewno', ore: 'ruda', dust: 'Pył' }[r]}`)].join(' · ');
+
+/** What a hut asks for (artifact: any artifact from the hero's backpack) and what it gives; the hut is used up once. */
+export interface Hut {
+  want: { gold?: number; wood?: number; ore?: number; dust?: number; artifact?: boolean };
+  reward: { gold?: number; wood?: number; ore?: number; dust?: number; xp?: number; artifact?: boolean };
+  done: boolean;
+}
+
+const THING_NAMES = { gold: 'zł', wood: 'drewno', ore: 'ruda', dust: 'Gwiezdny Pył', xp: 'PD', artifact: 'artefakt' } as const;
+/** "4 zł, 2× ruda, artefakt" for a want or a reward. */
+export const thingsText = (t: Hut['want'] | Hut['reward']): string =>
+  (Object.entries(t) as Array<[keyof typeof THING_NAMES, number | boolean]>)
+    .filter(([, v]) => v)
+    .map(([k, v]) => (k === 'artifact' ? 'artefakt' : k === 'gold' ? `${v} zł` : k === 'xp' ? `${v} PD` : `${v}× ${THING_NAMES[k]}`))
+    .join(', ');

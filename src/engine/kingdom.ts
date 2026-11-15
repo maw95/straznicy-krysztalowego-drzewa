@@ -5,11 +5,11 @@
 import { FACTION_NAMES, FACTION_SUPPORTS, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from './data';
 import { distance, parseKey, type HexKey } from './hex';
 import { encounterUnits, stillConnected } from './encounters';
-import { levelOf } from './growth';
+import { awardXp, levelOf } from './growth';
 import { log } from './log';
 import { mapNeighbors, tileCost } from './map';
 import { Rng } from './rng';
-import { costText, ECONOMY, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
+import { costText, ECONOMY, thingsText, type Hut, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import type { Action, Crystal, GameState, HeroState } from './types';
@@ -38,6 +38,8 @@ export interface KingdomState {
   mines: Record<HexKey, { owner: FactionId | null; res?: ResourceId }>;
   /** Level 4 (rule `economy`): wood, ore and Gwiezdny Pył of each faction, and the round of the last building (one a round per faction). */
   res?: Record<FactionId, Resources>;
+  /** Level 4: huts with a quest, by hex. */
+  huts?: Record<HexKey, Hut>;
   built?: Record<FactionId, number>;
   /** A hero opened a chest and has to choose: its contents (an artifact) or gold. */
   chest: { heroId: string } | null;
@@ -240,7 +242,34 @@ export function initKingdom(state: GameState): void {
       }
     }
   }
+  // Level 4: huts with a quest (bring something, get something worth half as much again), placed like the mines.
+  if (k.res) {
+    k.huts = {};
+    const want = ECONOMY.huts[state.setup.mapSize] ?? 1;
+    for (const [clear, gap] of [[1, 1], [0, 1], [0, 0]] as const) {
+      for (const t of free(clear)) {
+        if (Object.keys(k.huts).length >= want) break;
+        if (taken.some((c) => distance(parseKey(c), parseKey(t.key)) <= gap) || (gap > 0 && mapNeighbors(state.tiles, t.key).some((n) => state.tiles[n].crystalId))) continue;
+        k.huts[t.key] = makeHut(rng);
+        state.tiles[t.key].place = { kind: 'hut', id: t.key };
+        taken.push(t.key);
+      }
+    }
+  }
   // Every faction starts with its three tier-1 supports, as in the other levels; the recruits are the new tiers (RECRUITS, docs/JEDNOSTKI_POZIOMU_3.md).
+}
+
+/** A quest: what the hut asks for and what it pays (about `hutProfit` times as much, in a different thing). */
+function makeHut(rng: Rng): Hut {
+  const V = ECONOMY.value;
+  const kinds = ['gold', 'gold', 'gold', 'wood', 'wood', 'ore', 'ore', 'dust', 'artifact'] as const;
+  const ask = rng.pick([...kinds]);
+  const amount = ask === 'gold' ? 4 + rng.int(4) : ask === 'dust' ? 1 + rng.int(2) : ask === 'artifact' ? 1 : 3 + rng.int(3);
+  const worth = amount * V[ask];
+  const gives = rng.pick((['gold', 'wood', 'ore', 'dust', 'xp', 'artifact'] as const).filter((r) => r !== ask));
+  const pay = worth * ECONOMY.hutProfit;
+  const reward: Hut['reward'] = gives === 'artifact' ? { artifact: true } : { [gives]: Math.max(1, Math.round(pay / V[gives])) };
+  return { want: ask === 'artifact' ? { artifact: true } : { [ask]: amount }, reward, done: false };
 }
 
 /** A hero ends its move on a settlement or a mine: it passes to the hero's faction (a settlement still guarded cannot be stood on). */
@@ -256,7 +285,7 @@ export function enterPlace(state: GameState, hero: HeroState): void {
     s.owner = hero.faction;
     log(state, 'info', `${name} zajmuje osadę ${s.name}${before ? ` (należała do: ${FACTION_NAMES[before]})` : ''}.`);
     firstPlaceGold(state, hero);
-  } else {
+  } else if (place.kind === 'mine') {
     const m = k.mines[place.id];
     if (m.owner === hero.faction) return;
     m.owner = hero.faction;
@@ -455,6 +484,29 @@ export function kingdomAction(state: GameState, action: Action): void {
       giveArtifact(state, hero, art, `targ w osadzie ${s.name}`);
       break;
     }
+    case 'hutDeliver': {
+      const hero = state.phase === 'adventure' ? state.heroes[state.turnOrder[state.turnIndex]] : undefined;
+      const hut = hero ? k.huts?.[hero.pos] : undefined;
+      if (!hero?.alive || !hut) throw new Error('Tu nie ma chatki.');
+      if (hut.done) throw new Error('Ta chatka dostała już, czego chciała.');
+      const f = hero.faction;
+      const cost: Cost = { gold: hut.want.gold ?? 0, wood: hut.want.wood, ore: hut.want.ore, dust: hut.want.dust };
+      const pickArtifact = () => [...(hero.pack ?? [])].sort((a, b) => ARTIFACT_BY_ID[a].rarity - ARTIFACT_BY_ID[b].rarity)[0];
+      if (hut.want.artifact && !pickArtifact()) throw new Error('Chatka chce artefaktu z plecaka, a plecak jest pusty.');
+      payCost(state, f, cost);
+      if (hut.want.artifact) {
+        const id = pickArtifact();
+        hero.pack!.splice(hero.pack!.indexOf(id), 1);
+      }
+      const r = hut.reward;
+      k.gold[f] += r.gold ?? 0;
+      for (const res of RESOURCE_IDS) if (r[res]) k.res![f][res] += r[res]!;
+      if (r.artifact) giveArtifact(state, hero, drawArtifact(state, hero, ARTIFACT_ODDS.chest, 0x7a3f1c5d), 'chatka');
+      if (r.xp) awardXp(state, hero, r.xp, 'zadanie z chatki');
+      hut.done = true;
+      log(state, 'info', `${UNITS[hero.id].name} załatwia zadanie chatki: oddaje ${thingsText(hut.want)}, dostaje ${thingsText(hut.reward)}.`);
+      break;
+    }
     case 'chestTake': {
       const chest = k.chest;
       const hero = chest ? state.heroes[chest.heroId] : undefined;
@@ -526,11 +578,23 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   return null;
 }
 
+/** Whether a bot is willing to do this hut's quest now: it can pay and keeps a reserve for its buildings and recruits. */
+export function botWantsHut(state: GameState, hero: HeroState, hex: HexKey): boolean {
+  const hut = state.kingdom?.huts?.[hex];
+  if (!hut || hut.done) return false;
+  const f = hero.faction;
+  const w = hut.want;
+  if (w.artifact) return Boolean(hero.pack?.length);
+  const res = resOf(state, f);
+  return state.kingdom!.gold[f] >= (w.gold ?? 0) + (w.gold ? 4 : 0) && RESOURCE_IDS.every((r) => res[r] >= (w[r] ?? 0) + (w[r] ? 2 : 0));
+}
+
 /** The kingdom's part of a bot's turn: open a chest, then shop where the hero stands. */
 export function kingdomBotAction(state: GameState, hero: HeroState): Action | null {
   const k = state.kingdom;
   if (!k) return null;
   if (k.chest) return { type: 'chestTake', what: 'artifact' };
+  if (botWantsHut(state, hero, hero.pos)) return { type: 'hutDeliver' };
   // Set pieces in the backpack: wear one when it brings the best set a piece closer (strictly, so the bot never swaps back and forth).
   const best = (h: HeroState) => Math.max(0, ...(Object.keys(SETS) as Array<keyof typeof SETS>).map((id) => setCount(h, id)));
   for (const art of (hero.pack ?? []).map((id) => ARTIFACT_BY_ID[id]).filter((a) => a?.set)) {

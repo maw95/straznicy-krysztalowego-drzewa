@@ -80,3 +80,37 @@ describe('level 4: bots', () => {
     }
   });
 });
+
+describe('level 4: huts with a quest', () => {
+  it('puts huts on the map, takes what they ask for and pays more, once', () => {
+    let s = economy({ mapSize: 'long' });
+    const huts = s.kingdom!.huts!;
+    expect(Object.keys(huts)).toHaveLength(ECONOMY.huts.long);
+    const hex = Object.keys(huts)[0];
+    // A plain quest of known content: 4 gold for 2 wood.
+    huts[hex] = { want: { gold: 4 }, reward: { wood: 2 }, done: false };
+    stand(s, hex);
+    s.kingdom!.gold.dawn = 3;
+    expect(() => applyAction(s, { type: 'hutDeliver' })).toThrow(/Za mało złota/);
+    s.kingdom!.gold.dawn = 10;
+    const wood = resOf(s, 'dawn').wood;
+    s = applyAction(s, { type: 'hutDeliver' });
+    expect(s.kingdom!.gold.dawn).toBe(6);
+    expect(resOf(s, 'dawn').wood).toBe(wood + 2);
+    expect(() => applyAction(s, { type: 'hutDeliver' })).toThrow(/już/);
+  });
+
+  it('wants an artifact from the backpack and gives experience', () => {
+    let s = economy();
+    const hex = Object.keys(s.kingdom!.huts!)[0];
+    s.kingdom!.huts![hex] = { want: { artifact: true }, reward: { xp: 3 }, done: false };
+    stand(s, hex);
+    expect(() => applyAction(s, { type: 'hutDeliver' })).toThrow(/plecak/);
+    const hero = activeHero(s)!;
+    s.heroes[hero.id].pack = [ARTIFACTS.find((a) => !a.set)!.id];
+    const xp = s.heroes[hero.id].xp ?? 0;
+    s = applyAction(s, { type: 'hutDeliver' });
+    expect(s.heroes[hero.id].pack).toHaveLength(0);
+    expect((s.heroes[hero.id].xp ?? 0) + (s.heroes[hero.id].level ?? 1) * 100).toBeGreaterThan(xp);
+  });
+});
