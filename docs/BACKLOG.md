@@ -64,12 +64,13 @@ Zrobione 14.11 (szczegóły w CHANGELOG.md i historii gita): wejście do osady s
 
 - [ ] **Ozdobne narożniki ramek** nie pasują do reszty ramki (pominięte 14.11: wymaga decyzji o stylu). Do rozważenia: narożniki jako osobne elementy dopasowane do stylu ramki (9-slice / `border-image`), generowane razem z ramką w Scenario, albo prostsze, spójne narożniki w CSS/SVG.
 
-## D. Przed i po premierze (premiera dopiero po poziomie 5, decyzja 13.11)
+## D. Przed i po premierze (premiera dopiero po poziomie 6, decyzje 13.11 i 15.11)
 
 **Przed premierą (w tej kolejności, po poziomie 3):**
-1. **Poziom 4 „Imperium”:** pełna ekonomia: drewno, ruda, Gwiezdny Pył, budynki jeden na rundę, cykl tygodniowy; cel „Podbój”.
-2. **Autopilot warstw** dla dzieci (wymaga ekonomii).
-3. **Poziom 5 „Legenda”:** magia, specjalności bohaterów; razem z nim **drzewka umiejętności bohatera** z rozgałęzieniami (dziś wspólna pula 6).
+Podział na sześć poziomów (15.11.2026), szczegóły i zasady w `MECHANIKI_I_POZIOMY.md`; **nazwy poziomów 3–6 jeszcze do ustalenia** („Królestwo” nie opisuje poziomu 3):
+1. **Poziom 4 (Gospodarka):** drewno, ruda, Gwiezdny Pył, kopalnie, budynki jeden na rundę (bez cyklu tygodniowego), **alternatywne jednostki** poziomów 2–5 (wykluczające się budynki, wskrzeszenie tej samej jednostki), obiekty na mapie, cel „Podbój”, autopilot warstw dla dzieci.
+2. **Poziom 5 (Bohater i magia):** magia, specjalności i drzewka bohatera, automatyczny wzrost statystyk zależny od typu bohatera, drzewka i mechaniki frakcji, zadania z nagrodami, zaawansowane scenariusze.
+3. **Poziom 6 (Wojna i twierdze):** drugi bohater (wykup po śmierci, główny ginie na stałe), garnizon, oblężenie z katapultą (mury, brama, 2 wieżyczki, fosa), jednostka poziomu 6, cel „Relikt” (Odłamki Pierwotnej Iskry, budynek warunkiem zwycięstwa).
 4. Inwentaryzacja tekstów pod wiele języków, potem punkt C3 (Steam).
 
 **Po premierze:**

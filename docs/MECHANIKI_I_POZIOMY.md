@@ -1,7 +1,7 @@
 # Mechaniki wersji cyfrowej według poziomów drabinki
 
 Stan z 10.11.2026. Wszystkie mechaniki (zbudowane i wymyślone) w jednym miejscu, posortowane według poziomu drabinki z `ROZBUDOWA_CYFROWA.md`:
-1 Przygoda, 2 Wyprawa, 3 Królestwo, 4 Imperium, 5 Legenda. Przypisanie do poziomów jest **propozycją do dyskusji**, o ile nie napisano „decyzja autora”.
+1 Przygoda, 2 Wyprawa, 3 Królestwo, a od 15.11.2026 sześć poziomów (podział 4–6 niżej; nazwy do ustalenia). Przypisanie do poziomów jest **propozycją do dyskusji**, o ile nie napisano „decyzja autora”.
 Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): poziomy 1, 2 i 3.
 
 ## Poziom 1 — Przygoda (od 5 lat)
@@ -76,14 +76,39 @@ Znaczniki: [x] zbudowane, [ ] do zbudowania. Zakres premiery (decyzja autora): p
 - [ ] Zakup artefaktów za złoto w osadzie.
 - [ ] Zestawy artefaktów (3 przedmioty = bonus).
 
-## Poziom 4 — Imperium
+## Poziomy 4, 5 i 6 — ustalenia z 15.11.2026 (decyzje autora)
 
-- [ ] Zasoby: drewno, ruda/kamień, Gwiezdny Pył; kopalnie; budynki, jeden na rundę; cykl tygodniowy (7 rund).
-- [ ] Drzewka umiejętności frakcji, mechaniki wyróżniające frakcję.
+Drabinka ma **sześć poziomów** (plus poziom 0). **Nazwy poziomów 3–6 jeszcze nieustalone**: „Królestwo” nie pasuje do poziomu 3 (zmienia się tylko ekonomia); pomysły: Osada / Państwo / Imperium / Legenda, albo schemat czasowników. Poniżej robocze nazwy: 4 Gospodarka, 5 Bohater i magia, 6 Wojna i twierdze.
+Odrzucone: machiny wojenne (poza katapultą), morale i szczęście, neutralne stwory do przekonania, dyplomacja, mgła wojny, tereny, jednostki poziomów 7+, cykl tygodniowy (porzucony 15.11).
 
-## Poziom 5 — Legenda
+### Poziom 4 (robocza nazwa: Gospodarka)
+- [ ] Zasoby: drewno, ruda/kamień, Gwiezdny Pył; kopalnie; budynki, jeden na rundę (bez cyklu tygodniowego; ewentualny przyrost rekrutów co N rund tylko jeśli symulacje pokażą potrzebę).
+- [ ] **Alternatywne jednostki poziomów 2–5:** każda jednostka ma własny budynek, a dwa budynki tego samego poziomu wykluczają się wzajemnie (np. Lisia Nora albo Legowisko Jeżozwierzy; kupienie jednego odblokowuje zakup tylko jego jednostki). Po śmierci jednostki trzeba wskrzesić **dokładnie tę samą** (nie można kupić alternatywnej w jej miejsce). 8 nowych jednostek (4 poziomy × 2 frakcje) wymaga grafiki, animacji i zdolności.
+- [ ] Obiekty na mapie (młyn, tartak, studnia, kapliczki itp.), własne, nie kopie H3.
+- [ ] Cel „Podbój”.
+- [ ] Autopilot warstw dla dzieci (wymaga ekonomii).
 
-- [ ] Magia (czary), pełne specjalności bohaterów, zaawansowane scenariusze.
+### Poziom 5 (robocza nazwa: Bohater i magia)
+- [ ] Magia (czary), specjalności bohaterów, drzewka umiejętności bohatera z rozgałęzieniami.
+- [ ] **Automatyczny wzrost statystyk przy awansie zależny od typu bohatera** (np. wojownik +Ż, łucznik +A, mędrzec +magia), niezależnie od wybranej umiejętności. Wymaga ponownego strojenia i aktualizacji `golden.test.ts`.
+- [ ] Drzewka frakcji, mechaniki wyróżniające frakcję.
+- [ ] Zadania („chatki”) z nagrodami (artefakty, czary, umiejętności).
+- [ ] Zaawansowane scenariusze (na końcu).
+
+### Poziom 6 (robocza nazwa: Wojna i twierdze)
+- [ ] **Drugi bohater** (jeden na gracza, najęty w karczmie osady za złoto):
+  - pełny bohater: osobny pionek na mapie, własna drużyna, własne PD, umiejętności i sloty artefaktów; start na poziomie 1; wymiana jednostek i artefaktów z głównym na sąsiednich polach lub w tej samej osadzie;
+  - drugi bohater jest **archetypem-dowódcą** (wojownik, łucznik, mędrzec) z losowanym imieniem i własną krzywą wzrostu; główni bohaterowie są nazwani, ewentualnie 1–2 nowych na frakcję;
+  - **śmierć pomocniczego:** wraca do osady po 1 rundzie za wykup rosnący z poziomem (robocze), zachowuje poziom i umiejętności, **traci drużynę i wszystkie artefakty (zabiera je zwycięzca)**, **fragmenty reliktu** zabiera zwycięzca; jeśli zwyciężył strażnik albo automat, artefakty znikają;
+  - **śmierć głównego jest ostateczna** (bez zmian względem poziomów 1–5). Jeśli główny nie żyje, a pomocniczy tak, gracz gra dalej i może wygrać; gdy pada pomocniczy po śmierci głównego, nie ma wykupu (to ostatni bohater), gracz odpada.
+- [ ] **Garnizon** w osadzie: jednostki lub bohater zostawieni w osadzie bronią jej, gdy bohater odejdzie.
+- [ ] **Oblężenie z katapultą:** mury, brama, **dwie wieżyczki strzeleckie** obrońcy. Mury i wieżyczki niszczy **tylko katapulta** (atakujący dostaje ją w bitwie automatycznie, jeden strzał na rundę w wybrany mur lub wieżyczkę; robocze). **Fosa/palisada/kolce:** wejście na pole kończy turę i zadaje obrażenia (robocze: 2), dostaje je też postać stojąca tam na końcu swojej tury (też 2); działa na wszystkich, duża jednostka raz; katapulta jej nie niszczy.
+- [ ] Jednostka poziomu 6: jedna legendarna, bardzo droga.
+- [ ] **Cel „Relikt”** (poszukiwanie Pierwotnej Iskry):
+  - **Odłamki Pierwotnej Iskry** leżą na specjalnych kafelkach mapy; liczba zależy od rozmiaru mapy (robocze); gracz widzi licznik „3/6”;
+  - odłamek działa jak artefakt, ale jest tylko w plecaku (nie da się go założyć); wygrywając z bohaterem, zabierasz mu jego odłamki;
+  - po zebraniu wszystkich gracz dostaje komunikat i idzie z nimi do osady, gdzie może wybudować **budynek Pierwotnej Iskry** (kosztem są wszystkie odłamki; nazwa zależna od frakcji, np. Sanktuarium u Przymierza, Czarna Kuźnia u Hordy); budynek daje duży bonus zależny od frakcji (pole „Bonus Reliktu” w `KARTA_FRAKCJI_SZABLON.md`);
+  - **w celu „Relikt” zbudowanie tego budynku wygrywa grę.**
 
 ## Do przypisania do poziomu
 
