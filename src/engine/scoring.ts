@@ -15,7 +15,7 @@ interface Ratings {
   normal: number;
   /** Level 0 (the old Easy: board duels). */
   zero: number;
-  /** Difficulty Łatwy of levels 1-3 (arena). Provisional until measured: `normal` minus 2. */
+  /** Difficulty Łatwy of levels 1-3 (arena). Measured 15.11 (Easy wins 65-76 percent, Normal 51-66): about `normal` minus 1. */
   kids: number;
   hard?: number;
   /** The normal level's rating when the single options were measured: their effect is counted from it. */
@@ -37,7 +37,7 @@ function table(rows: Record<MapSize, Row>): Table {
   const out = {} as Table;
   for (const size of Object.keys(rows) as MapSize[]) {
     const [normal, zero, hard, optionBase, noAbilities, elixirs, reserve, duels, dice] = rows[size];
-    out[size] = { normal, zero, kids: Math.max(1, normal - 2), hard: hard ?? undefined, optionBase, noAbilities, elixirs, reserve, duels, dice };
+    out[size] = { normal, zero, kids: Math.max(1, normal - 1), hard: hard ?? undefined, optionBase, noAbilities, elixirs, reserve, duels, dice };
   }
   return out;
 }

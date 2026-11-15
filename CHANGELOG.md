@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Łatwy na poziomach 1–3 jest wystrojony na arenie: komputer zaczyna słabszy (mniej skarbów, a w koopie bez posiłków Hordy), Przymierze wygrywa na nim ok. 65–76% partii. Punkty za wygraną na Łatwym są o jeden stopień trudności niższe niż na Normalnym.
+
 - Instrukcja, okno zasad i wstęp opisują poziom 0 (Zerówkę) oraz trudność jako warunki startowe komputera.
 
 - Królestwo: komputer kupuje i rekrutuje z dowolnego miejsca, tak jak człowiek (wcześniej robił zakupy tylko stojąc w osadzie, więc prawie nie korzystał z ekonomii). Kupuje najsilniejszego rekruta, na którego go stać, a gdy ma już wszystkich słabszych, rozbudowuje koszary po najmocniejszych. Na długich mapach komputer ma teraz średnio 2–3 awansowanych rekrutów na grę i wygrywa o kilka punktów procentowych rzadziej.

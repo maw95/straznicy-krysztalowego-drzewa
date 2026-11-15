@@ -470,4 +470,4 @@ Decyzja autora (14.11): poziom trudności nie zmienia mechanik, tylko warunki st
 - **Poziom 0 „Zerówka”** to dawny Łatwy: pojedynki na planszy, bez zdolności, kości i rytuału, z zastępowaniem bohatera (w silniku `Level = 'zero'`, `LEVEL_RULES.zero`). Ma własną kolumnę punktów (`scoring.ts`, kolumna `zero`) i własne wpisy strojenia (`level: 'zero'`, przeniesione ze starego Łatwego bez zmiany liczb). W wersji planszowej kreator nadal pokazuje ten poziom jako „Łatwy”.
 - **Łatwy na poziomach 1–3** (`Level = 'kids'`) gra pełne bitwy na arenie jak Normalny; zasady są te same, a flaga `rules.easy` tylko wskazuje poziom i włącza dźwignie startowe (`tuning.ts`, `tuningAuto.ts`: skarby startowe, brak posiłków Hordy, ruch, limit rund). Pasmo: 65–85% wygranych Przymierza.
 - Stare zapisy partii ze starym Łatwym nie są migrowane (decyzja autora).
-- Punkty Łatwego na poziomach 1–3 są tymczasowe (`normal − 2`) do czasu pomiaru.
+- Punkty Łatwego na poziomach 1–3: ocena trudności = Normalny − 1 (pomiar 15.11: Łatwy wygrywa 65–76%, Normalny 51–66%).
