@@ -562,7 +562,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                   <div data-map-spells style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', fontSize: 14 }}>
                     <span title={`Mana wraca po ${MAGIC.regen} na rundę`}>Mana <b data-mana>{manaOf(hero)}</b>/{maxMana(hero)}</span>
                     {canAct && hero.faction === viewer && hero.spells!.filter((id) => SPELLS[id].where === 'map').map((id) => (
-                      <button key={id} className="btn plate parch" data-map-spell={id} disabled={manaOf(hero) < SPELLS[id].mana || (id === 'portal' && !portalTarget(state, hero))} title={`${SPELLS[id].name} (mana ${SPELLS[id].mana}): ${SPELLS[id].text}`} onClick={() => { sfx.play('magic_cast'); onAction({ type: 'mapSpell', spell: id }); }} style={{ padding: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <button key={id} className="btn plate parch" data-map-spell={id} disabled={manaOf(hero) < SPELLS[id].mana || (id === 'portal' && !portalTarget(state, hero))} title={`${SPELLS[id].name} (mana ${SPELLS[id].mana}): ${SPELLS[id].text}`} onClick={() => { sfx.play(id === 'portal' ? 'portal' : 'magic_cast'); onAction({ type: 'mapSpell', spell: id }); }} style={{ padding: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
                         <img src={asset(`ikony/czary/${id}.webp`)} alt="" width={30} height={30} />
                         <span style={{ paddingRight: 4 }}>{SPELLS[id].name}</span>
                       </button>

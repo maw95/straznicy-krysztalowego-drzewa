@@ -44,30 +44,28 @@ Poziom 6 zbudowany 15.11 (Relikt, mechaniki i drzewka frakcji, jednostka legenda
 
 ## 2a. Grafiki i dźwięki do wygenerowania i podmiany (placeholdery)
 
-Lista rzeczy, które w grze działają na zastępczej grafice albo bez własnego dźwięku. Po wygenerowaniu podmienić plik i dopisać wpis w `assets.json`.
+Lista rzeczy, które w grze działają na zastępczej grafice albo bez własnej animacji czy dźwięku (stan po 15.11.2026). Po wygenerowaniu podmienić plik i dopisać wpis w `assets.json`. Kredyty Scenario nie skończyły się: lista obejmuje to, co jest za drogie na jeden arkusz (animacje) albo wymaga decyzji autora.
 
-**Poziom 4 (Księstwo)**
-- Strzał katapulty: brak własnego dźwięku, gra `public/assets/dzwieki/build.mp3` (uderzenia młotka). Potrzebny: `dzwieki/katapulta.mp3` (świst i huk kamienia w mur), podmiana w `BattleView.tsx` (`sfx.play('build')` przy `battleCatapult`).
-- Strzał wieżyczki i wejście w fosę: brak animacji i dźwięku (tylko spadek Życia i wpis w dzienniku). Potrzebne: `dzwieki/wiezyczka.mp3` (strzała), `dzwieki/fosa.mp3` (kolce) oraz krótka animacja strzały z wieżyczki do celu.
-- Wymiana surowców, garnizon: gra dźwięk monet `coins_buy.mp3` (do zostawienia albo własny `dzwieki/wymiana.mp3`).
-- Ikona celu „Podbój” w kreatorze: zastępczo `ikony/mapa/osada_neutral.webp`. Potrzebna własna: `ui/menu/podboj.webp` (512×592 jak pozostałe karty kreatora; np. sztandar na murach zdobytej osady).
-- Elementy oblężenia (`arena/oblezenie/`: mur, brama, wieża, gruzy, fosa, katapulta) są neutralne (szary kamień) dla obu frakcji; do rozważenia wersje frakcyjne.
+**Sprite'y i animacje jednostek (największa pozycja; potok: `docs/POTOK_ANIMACJI.md`, wpis w `src/ui/sprites.ts`)**
+Te jednostki mają ilustrację karty i portret, ale na arenie i mapie stoją jako **żetony z portretem** (bez klatek `stoi`, `ruch`, `atak`, `trafienie`, `smierc` w `public/assets/jednostki/<nazwa>/`) i nie mają własnych dźwięków ataku (`dzwieki/jednostki/<id>_atak.mp3`, `_smierc.mp3`):
+- poziom 5, dowódcy (6): `dawnKnight` Rycerz Świtu, `dawnHuntress` Łowczyni Gaju, `dawnSage` Mędrzec Gaju, `hordeWarlord` Wódz Hordy, `hordeCrossbow` Kapitan Kuszników, `hordeShadow` Szaman Cieni;
+- poziom 6, jednostki legendarne (2): `dawnPhoenix` Feniks Świtu (dodatkowo klip `odrodzenie`), `doomBehemoth` Behemot Zagłady;
+- poziom 6, jednostki alternatywne (8): `silverFox` Srebrny Lis, `dawnOwl` Sowa Świtu, `dryadArcher` Driada Łuczniczka, `whiteStag` Biały Jeleń, `goblinSlinger` Goblin Procarz, `gargoyle` Gargulec, `caveTroll` Troll Jaskiniowy, `shadowWyvern` Wiwerna Cienia.
 
-**Poziom 5 (Królestwo)**
-- Sześciu dowódców (`dawnKnight`, `dawnHuntress`, `dawnSage`, `hordeWarlord`, `hordeCrossbow`, `hordeShadow`) nie ma sprite'ów ani figurek 3D: na arenie i mapie stoją jako żetony z portretem. Potrzebne dla każdego: arkusze klatek `stoi`, `ruch`, `atak`, `trafienie`, `smierc` w `public/assets/jednostki/<nazwa>/` (potok: `docs/POTOK_ANIMACJI.md`, wpis w `src/ui/sprites.ts`) oraz dźwięki ataku `dzwieki/jednostki/<id>_atak.mp3`.
-- Karty kreatora „Królestwo” i „Imperium” używają ikon mapy (`karczma.webp`, `odlamek.webp`) zamiast kart 512×592 (`ui/menu/krolestwo.webp`, `ui/menu/imperium.webp`).
-- Najem i wykup dowódcy: gra `coins_buy.mp3`; do rozważenia własny `dzwieki/najem.mp3`.
-- Czary w bitwie nie mają animacji: widać tylko skutek (spadek lub wzrost Życia, znacznik) i słychać `magic_cast` / `magic_attack`. Potrzebne efekty na arenie w `public/assets/efekty/` (jak istniejące efekty zdolności): pocisk lecący do celu (`czar_bolt`), zielona poświata leczenia (`czar_mend`), fioletowe łańcuchy (`czar_slow`), kamienna powłoka (`czar_stoneskin`), wybuch na polu celu i sąsiadach (`czar_fireball`), złote smugi (`czar_haste`); dane do odtworzenia są w `BattleState.spells`.
-- Wizja i Wrota na mapie: brak animacji (odkrycie pól, błysk portalu); do rozważenia dźwięk `dzwieki/portal.mp3`.
-- Wieża maga: jeden obraz na oba poziomy (`osady/<frakcja>_magic1.webp`); potrzebny `osady/dawn_magic2.webp` i `osady/horde_magic2.webp` (rozbudowana wieża), potem zmiana w `buildingPicture` (`SettlementDialog.tsx`).
+**Efekty na arenie i mapie (dziś widać tylko skutek i wpis w dzienniku)**
+- Czary bitewne: pocisk lecący do celu (`czar_bolt`), poświata leczenia (`czar_mend`), łańcuchy spowolnienia (`czar_slow`), kamienna powłoka (`czar_stoneskin`), wybuch na polu celu i sąsiadach (`czar_fireball`), złote smugi (`czar_haste`) w `public/assets/efekty/`; dane do odtworzenia są w `BattleState.spells`. Dźwięk jest (`magic_cast`, `magic_attack`).
+- Czary mapy: odkrycie pól przy Wizji i błysk portalu przy Wrotach (dźwięk `portal.mp3` jest).
+- Oblężenie: lot kamienia z katapulty i rozsypanie muru, strzała z wieżyczki do celu, ukłucie fosy (dźwięki `catapult.mp3`, `tower_shot.mp3`, `moat.mp3` są).
+- Poziom 6: błysk przy podniesieniu Odłamka i wzniesieniu Pierwotnej Iskry (dźwięki `shard_pickup.mp3`, `spark.mp3` są); efekty mechanik frakcji `efekty/blask_switu` i `efekty/zadza_krwi`; efekt odrodzenia Feniksa.
 
-**Poziom 6 (Imperium)**
-- Podnoszenie Odłamka i wzniesienie Pierwotnej Iskry: brak własnego dźwięku i animacji (gra dźwięk budowy `build.mp3`). Potrzebne: `dzwieki/odlamek.mp3` (kryształowy dzwon), `dzwieki/iskra.mp3` (fanfara mocy), błysk na kafelku przy podniesieniu.
-- Feniks Świtu (`dawnPhoenix`) i Behemot Zagłady (`doomBehemoth`): ilustracje kart i portrety są zastępcze (postać na gradiencie, `scripts/assets/legendy.py`); potrzebne pełne ilustracje 451×332 z tłem (`cards/art/<id>.jpg`) i portrety 256×256, a także sprite'y (`stoi`, `ruch`, `atak`, `trafienie`, `smierc`; Feniks dodatkowo `odrodzenie`) i dźwięki ataku.
-- Osiem alternatywnych jednostek (`silverFox`, `dawnOwl`, `dryadArcher`, `whiteStag`, `goblinSlinger`, `gargoyle`, `caveTroll`, `shadowWyvern`): mają ilustracje kart i portrety, nie mają sprite'ów (`stoi`, `ruch`, `atak`, `trafienie`, `smierc`) ani dźwięków ataku; na arenie stoją jako żetony z portretem. Siedliska (16 nazw w `DWELLING_NAMES`) nie mają obrazków: do rozważenia małe ikony przy liście koszar albo budynki w krajobrazie osady.
-- Zdolność Feniksa „Odrodzenie z Popiołów” (`rebirth`) pożycza ikonę Daru Życia (`cards/abilities/giftOfLife.png`, mapowanie `ABILITY_ART` w `src/ui/common.tsx`); potrzebne `cards/abilities/rebirth.png` i `rebirth_inner.png` oraz efekt odrodzenia na arenie.
-- Blask Świtu i Żądza Krwi: brak efektów na arenie i dźwięków (widać tylko zmianę Życia i wpis w dzienniku); potrzebne krótkie efekty `efekty/blask_switu` i `efekty/zadza_krwi` oraz ikony mechanik i trzech stopni drzewka każdej frakcji (dziś sam tekst w oknie osady).
-- Karta celu „Relikt” w kreatorze używa ikony mapy `odlamek.webp` (docelowo `ui/menu/relikt.webp`, 512×592).
+**Ikony i obrazki zastępcze**
+- Zdolność Feniksa „Odrodzenie z Popiołów” (`rebirth`) pożycza ikonę Daru Życia (`cards/abilities/giftOfLife.png`, mapowanie `ABILITY_ART` w `src/ui/common.tsx`); potrzebne `cards/abilities/rebirth.png` i `rebirth_inner.png` w ramce ikon zdolności.
+- Trzy stopnie drzewka każdej frakcji nie mają ikon (sam tekst w oknie osady); mechaniki mają (`ikony/frakcje/blask_switu.webp`, `zadza_krwi.webp`).
+- Siedliska jednostek (16 nazw w `DWELLING_NAMES`) mają jedną wspólną ikonę (`ikony/frakcje/siedlisko.webp`) i nie stoją w krajobrazie osady; do rozważenia osobne budynki.
+- Elementy oblężenia (`arena/oblezenie/`) są neutralne (szary kamień) dla obu frakcji; do rozważenia wersje frakcyjne.
+- Wymiana surowców i garnizon grają dźwięk monet `coins_buy.mp3` (do zostawienia albo własny).
+
+**Dźwięki wygenerowane 15.11 bez odsłuchu** (Claude nie ma jak ich odsłuchać: autor powinien je przesłuchać i ewentualnie wymienić): `catapult.mp3`, `tower_shot.mp3`, `moat.mp3`, `shard_pickup.mp3`, `spark.mp3`, `portal.mp3`, `tavern_hire.mp3` w `public/assets/dzwieki/`.
 
 ## 3. Do sprawdzenia na żywo (autor)
 Zrobione i przetestowane, bez potwierdzenia w prawdziwej grze:

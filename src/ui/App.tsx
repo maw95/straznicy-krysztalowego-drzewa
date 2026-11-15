@@ -506,8 +506,14 @@ export function App() {
     if (!game) return;
     const prev = soundedLog.current;
     soundedLog.current = { seed: game.setup.seed, n: game.log.length };
-    if (!prev || prev.seed !== game.setup.seed || game.phase !== 'adventure') return;
+    if (!prev || prev.seed !== game.setup.seed) return;
     const fresh = game.log.slice(prev.n);
+    // Siege: a tower's shot and the moat are heard wherever they happen (they have no animation of their own).
+    if (fresh.some((l) => l.kind === 'damage' && l.text.startsWith('Wieżyczka →'))) sfx.play('tower_shot');
+    if (fresh.some((l) => l.kind === 'damage' && l.text.startsWith('Fosa →'))) sfx.play('moat');
+    if (fresh.some((l) => l.kind === 'crystal' && /wznosi w osadzie/.test(l.text))) sfx.play('spark');
+    if (game.phase !== 'adventure') return;
+    if (fresh.some((l) => l.kind === 'crystal' && l.text.includes('Odłam'))) return void sfx.play('shard_pickup');
     if (fresh.some((l) => l.kind === 'crystal' && l.text.includes('oddaje'))) sfx.play('tree_deliver');
     else if (fresh.some((l) => l.kind === 'crystal' && l.text.includes('podnosi'))) sfx.play('crystal_pickup');
     else if (fresh.some((l) => l.kind === 'move' && /wchodzi na pole|wkracza na pole/.test(l.text))) sfx.play('hero_step');

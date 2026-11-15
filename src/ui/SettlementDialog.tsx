@@ -32,7 +32,7 @@ const spotOf = (order: BuildingId[], b: BuildingId): { left: number; top: number
   return { left: 8 + (i * 84) / (order.length - 1), top: i % 2 ? 30 : 64 };
 };
 /** The picture of a building in the landscape: the faction's plot while it is not built, then its level (the treasury has one). */
-const buildingPicture = (land: FactionId, b: BuildingId, level: number) => (level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${b === 'tavern' || b === 'magic' || b === 'spark' ? 1 : Math.min(level, 2)}.webp`));
+const buildingPicture = (land: FactionId, b: BuildingId, level: number) => (level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${b === 'tavern' || b === 'spark' ? 1 : Math.min(level, 2)}.webp`));
 
 export function SettlementDialog({ state, settlementId, faction, onAction, onClose }: { state: GameState; settlementId: string; faction: FactionId; onAction: (a: Action) => void; onClose: () => void }) {
   const s = state.kingdom!.settlements[settlementId];
@@ -45,7 +45,9 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const ORDER = buildingsOf(state);
   const act = (a: Action) => {
     // Purchases ring: a building goes up with hammering, everything else with coins.
-    sfx.play(a.type === 'kingdomBuild' ? 'build' : 'coins_buy');
+    // The Iskra has its own fanfare (played from the log, App.tsx); a commander is hired over a mug.
+    if (a.type === 'kingdomBuild' && a.building === 'spark') return onAction(a);
+    sfx.play(a.type === 'kingdomBuild' || a.type === 'kingdomDwelling' ? 'build' : a.type === 'kingdomHire' || a.type === 'kingdomRansom' ? 'tavern_hire' : 'coins_buy');
     onAction(a);
   };
   const buildButton = (b: BuildingId) => {
@@ -84,7 +86,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const heroHere = Boolean(buyer && buyer.pos === s.at);
   const garrisonPanel = state.rules.economy ? (
     <div data-garrison style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6, alignSelf: 'stretch' }}>
-      <b>Garnizon ({garrison.length}/{SIEGE.garrisonMax})</b>
+      <b style={{ display: 'flex', alignItems: 'center', gap: 8 }}><img src={asset('ikony/frakcje/garnizon.webp')} alt="" width={34} height={34} />Garnizon ({garrison.length}/{SIEGE.garrisonMax})</b>
       <span style={{ fontSize: 14, color: '#6B4A22' }}>{heroHere ? 'Jednostki zostawione w garnizonie bronią osady, gdy bohater odejdzie. Wróg musi je pokonać, żeby ją zająć.' : 'Garnizon zmienia bohater stojący w tej osadzie.'}</span>
       {garrison.map((id) => (
         <div key={id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -137,7 +139,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                 </div>
                 {have ? <b style={{ color: '#2E7A32' }}>{garrison.includes(r.id) || !(fs.supportsAlive.includes(r.id) || fs.supportsDead.includes(r.id)) ? 'W garnizonie' : 'W drużynie'}</b> : needsDwelling(state, r) && dwellingOf(state, faction, r.tier) === undefined ? (
                   <button className="btn" disabled={!mayHire || locked || !mayBuildNow(state, faction) || !canPay(state, faction, DWELLING_COST[r.tier - 2])} data-dwelling={r.id} title={locked ? 'Potrzebne rozbudowane koszary.' : 'Siedlisko jednej jednostki wyklucza drugą jednostkę tego poziomu do końca gry.'} onClick={() => act({ type: 'kingdomDwelling', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 12px', fontSize: 15 }}>
-                    Zbuduj: {DWELLING_NAMES[r.id]} ({costText(DWELLING_COST[r.tier - 2])})
+                    <img src={asset('ikony/frakcje/siedlisko.webp')} alt="" width={22} height={22} style={{ verticalAlign: 'middle', marginRight: 6 }} />Zbuduj: {DWELLING_NAMES[r.id]} ({costText(DWELLING_COST[r.tier - 2])})
                   </button>
                 ) : !dwellingReady(state, faction, r) ? <i data-excluded={r.id} style={{ color: '#8A5A3A' }}>wykluczone: wybrano {DWELLING_NAMES[dwellingOf(state, faction, r.tier)!]}</i> : (
                   <button className="btn prim" disabled={!mayHire || locked || gold < r.cost || res.dust < (r.dust ?? 0)} data-recruit={r.id} title={locked ? 'Potrzebne rozbudowane koszary.' : undefined} onClick={() => act({ type: 'kingdomRecruit', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 14px', fontSize: 16 }}>
@@ -330,6 +332,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         const next = FACTION_MECHANICS.treeCost[rank];
         return (
           <div className="plate parch" data-tree data-rank={rank} style={{ flex: 'none', padding: '8px 14px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+            <img src={asset(`ikony/frakcje/${faction === 'dawn' ? 'blask_switu' : 'zadza_krwi'}.webp`)} alt="" width={64} height={64} style={{ flex: 'none' }} />
             <div style={{ flex: 1, minWidth: 260, fontSize: 14, lineHeight: 1.3 }}>
               <b style={{ fontSize: 16 }}>{MECHANIC_NAMES[faction]}</b> <span style={{ color: '#6B4A22' }}>mechanika frakcji · drzewko {rank}/3</span>
               <div><RuleText text={MECHANIC_TEXTS[faction]} /></div>

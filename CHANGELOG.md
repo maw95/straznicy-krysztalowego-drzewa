@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Poziomy 4–6: nowe dźwięki (katapulta, strzał wieżyczki, fosa, podniesienie Odłamka, wzniesienie Pierwotnej Iskry, Wrota, najem dowódcy), własne karty w kreatorze dla Podboju, Reliktu, Królestwa i Imperium, ikony mechanik frakcji, garnizonu i siedlisk, obrazek rozbudowanej wieży maga oraz pełne ilustracje Feniksa Świtu i Behemota Zagłady.
+
 - Imperium: **dwie jednostki na każdym z poziomów 2–5 i siedliska**. Frakcja wybiera, którą jednostkę danego poziomu chce mieć, budując jej siedlisko w koszarach; drugie siedlisko tego poziomu jest wtedy wykluczone do końca gry. Osiem nowych jednostek: Srebrny Lis, Sowa Świtu, Driada Łuczniczka i Biały Jeleń u Przymierza; Goblin Procarz, Gargulec, Troll Jaskiniowy i Wiwerna Cienia u Hordy. Komputer też wybiera siedliska.
 
 - Imperium: **mechaniki frakcji, drzewko frakcji i legendarne jednostki**. Przymierze ma Blask Świtu (co rundę bitwy leczy najciężej ranną jednostkę), Horda Żądzę Krwi (po śmierci wroga wszystkie jej jednostki biją mocniej). Obie mechaniki rozwija trzystopniowe drzewko frakcji kupowane w osadzie za złoto i Gwiezdny Pył. W rozbudowanych koszarach czeka jedna legendarna jednostka: Feniks Świtu (odradza się raz na bitwę) albo Behemot Zagłady (trafia dwóch wrogów naraz).

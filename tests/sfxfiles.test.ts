@@ -8,4 +8,8 @@ describe('sound variants', () => {
     expect(files.length).toBeGreaterThan(1);
     for (const f of files) expect(existsSync(`public/assets/dzwieki/${f}.mp3`), f).toBe(true);
   });
+
+  it('the sounds of levels 4-6 have their files', () => {
+    for (const name of ['catapult', 'tower_shot', 'moat', 'shard_pickup', 'spark', 'portal', 'tavern_hire'] as const) for (const f of sfxFiles(name)) expect(existsSync(`public/assets/dzwieki/${f}.mp3`), f).toBe(true);
+  });
 });

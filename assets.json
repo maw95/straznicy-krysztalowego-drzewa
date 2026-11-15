@@ -3626,9 +3626,9 @@
     {
       "id": "poziom6/legendarne-jednostki",
       "pliki": [ "public/assets/cards/art/dawnPhoenix.jpg", "public/assets/cards/portraits/dawnPhoenix.jpg", "public/assets/cards/art/doomBehemoth.jpg", "public/assets/cards/portraits/doomBehemoth.jpg" ],
-      "typ": "poziom 6: ilustracje kart i portrety legendarnych jednostek: Feniks Świtu, Behemot Zagłady (wersja zastępcza: postać na gradiencie)",
-      "opis": "Postacie z arkusza budynku Pierwotnej Iskry (dolny rząd siatki 2x2 na czarnym tle: feniks ze złotobiałymi płonącymi skrzydłami, kolosalny behemot w kościanym pancerzu), wycięte skryptem scripts/assets/arkusz.py i nałożone na gradient w barwach frakcji skryptem scripts/assets/legendy.py (ilustracja 451x332, portret 256x256). Docelowo pełne ilustracje z tłem.",
-      "scenario_asset": { "arkusz": "asset_Q6H9ZaqRW344oQWV1d4DzHdJ" },
+      "typ": "poziom 6: ilustracje kart i portrety legendarnych jednostek: Feniks Świtu, Behemot Zagłady",
+      "opis": "Postacie z arkusza budynku Pierwotnej Iskry (dolny rząd siatki 2x2 na czarnym tle: feniks ze złotobiałymi płonącymi skrzydłami, kolosalny behemot w kościanym pancerzu), wycięte skryptem scripts/assets/arkusz.py i nałożone na gradient (scripts/assets/legendy.py) były wersją zastępczą; zastąpione tego samego dnia pełnymi ilustracjami z tłem z arkusza 1536x1024 (dwie ilustracje kart obok siebie: feniks nad słonecznym lasem, behemot na wulkanicznym polu bitwy), pociętego skryptem scripts/assets/dowodcy.py (ilustracja 451x332, portret 256x256).",
+      "scenario_asset": { "arkusz": "asset_zQh7CLm6E4ifxxrKq5pNBaNT", "pierwsza_wersja": "asset_Q6H9ZaqRW344oQWV1d4DzHdJ" },
       "narzedzie": "Scenario (plan płatny) + Pillow",
       "model": "GPT Image 2.6 Flare, jakość medium",
       "data": "2026-11-15",
@@ -3643,6 +3643,37 @@
       "scenario_asset": { "arkusz": "asset_S49wKDjZjWV8TWTkCCWnkKWp" },
       "narzedzie": "Scenario (plan płatny)",
       "model": "GPT Image 2.6 Flare, jakość medium",
+      "data": "2026-11-15",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "poziomy4-6/ikony-i-wieze",
+      "pliki": [
+        "public/assets/ui/menu/podboj.webp", "public/assets/ui/menu/krolestwo.webp", "public/assets/ui/menu/imperium.webp", "public/assets/ui/menu/relikt.webp",
+        "public/assets/ikony/frakcje/blask_switu.webp", "public/assets/ikony/frakcje/zadza_krwi.webp", "public/assets/ikony/frakcje/garnizon.webp", "public/assets/ikony/frakcje/siedlisko.webp",
+        "public/assets/osady/dawn_magic2.webp", "public/assets/osady/horde_magic2.webp"
+      ],
+      "typ": "karty kreatora (cel Podbój, poziom Królestwo, poziom Imperium, cel Relikt), ikony mechanik frakcji, garnizonu i siedliska, rozbudowana wieża maga obu frakcji",
+      "opis": "Medale: jeden arkusz 1536x1024 (siatka 4x2 na czarnym tle, referencja stylu: ikona tartaku), pocięty scripts/assets/arkusz.py (256 px dla kreatora, 192 px dla ikon): sztandar na zdobytym murze, korona z rycerzem i smokiem, cesarska cytadela z gwiazdą, dłonie łączące odłamki w iskrę, promień świtu leczący pegaza, warczący wilk w czerwonej mgle, tarcza i włócznie przed bramą, nora pod korzeniami. Wieże: arkusz 1536x1024 z dwoma budynkami na czarnym tle (wielka elficka wieża arcymaga, wielka wieża czarnoksiężnika Hordy), wysokość 380 px.",
+      "scenario_asset": { "medale": "asset_48niek5s5xxtREtatcDYy3bR", "wieze": "asset_WfwKrYNtttN83vBaqM1JZ4Wb" },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.6 Flare, jakość medium",
+      "data": "2026-11-15",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/poziomy4-6",
+      "pliki": [
+        "public/assets/dzwieki/catapult.mp3", "public/assets/dzwieki/tower_shot.mp3", "public/assets/dzwieki/moat.mp3", "public/assets/dzwieki/shard_pickup.mp3",
+        "public/assets/dzwieki/spark.mp3", "public/assets/dzwieki/portal.mp3", "public/assets/dzwieki/tavern_hire.mp3"
+      ],
+      "typ": "dźwięki poziomów 4-6: katapulta, strzał wieżyczki, fosa, podniesienie Odłamka, wzniesienie Pierwotnej Iskry, Wrota, najem dowódcy",
+      "opis": "Po jednym wariancie, bez odsłuchu (do sprawdzenia przez autora). Prompty: 'A medieval catapult releases with a wooden creak and whoosh, then a heavy stone crashes into a stone wall with crumbling rubble' (2,5 s); 'A crossbow bolt shot from a castle tower: sharp twang, fast whistle through the air and a thud of impact' (1,5 s); 'Someone stumbles into a pit of sharpened wooden stakes: wooden crack, a short splash of mud and a muffled thud' (1,5 s); 'Picking up a magical crystal shard: a bright crystalline bell chime with a shimmering sparkle tail' (2 s); 'A great magical relic awakens: deep rising hum, a burst of radiant power and a choir-like shimmering swell' (3 s); 'A magic portal opens and someone teleports through it: whooshing swirl of energy, a soft pop and fading sparkle' (2 s); 'A tavern deal is struck: a wooden mug slams on a table, a small pouch of coins is tossed and caught' (2 s).",
+      "scenario_asset": { "catapult": "asset_jsBhNEWk8q4iXAyYDXqXY9nv", "tower_shot": "asset_aJZV6GEFTX5Fme3E1EuariVh", "moat": "asset_Ems5o5746BFe5m9izwx3HmYK", "shard_pickup": "asset_vejLrwRXtEnUM4bfj8jUniFq", "spark": "asset_LAZN4ZJhDZwJ5zFphMkDio5f", "portal": "asset_iWzREgyhWigbmR8UHyVTjwZa", "tavern_hire": "asset_uTYpdAsCQLFJYLHkVPqkcUCG" },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, mp3 128 kbps",
       "data": "2026-11-15",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"

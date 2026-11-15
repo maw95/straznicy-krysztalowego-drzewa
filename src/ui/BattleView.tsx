@@ -455,7 +455,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
           approachTail={approachTail}
           onUnit={clickUnit}
           catapult={catapult}
-          onCatapult={(cell) => { sfx.play('build'); onAction({ type: 'battleCatapult', cell }); }}
+          onCatapult={(cell) => { sfx.play('catapult'); onAction({ type: 'battleCatapult', cell }); }}
         />
         <SidePanel s={sides[1]} state={state} active={active} onUnit={clickUnit} />
       </div>
