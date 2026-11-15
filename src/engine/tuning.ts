@@ -9,7 +9,7 @@ import { AUTO_TUNING } from './tuningAuto';
 
 export interface DigitalTune {
   /** Where it applies; a missing field matches everything. */
-  objective?: 'crystals' | 'control' | 'survival' | 'boss' | 'artifact';
+  objective?: 'crystals' | 'control' | 'survival' | 'boss' | 'artifact' | 'conquest';
   level?: 'zero' | 'kids' | 'normal' | 'hard';
   mode?: 'coop' | 'pvp';
   /** Przymierza seats (players on the good side). */
@@ -133,6 +133,13 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   { kingdom: true, objective: 'crystals', level: 'kids', mode: 'coop', players: 2, maps: ['long'], rules: {hordeStartTreasures: {resurrections: 0, others: 0, random: 0}, dawnStartTreasures: {resurrections: 0, others: 0, random: 13}, dawnGoldBonus: 3, hordeRespawn: false, heroMovePoints: 4} },
   { kingdom: true, objective: 'crystals', level: 'kids', mode: 'pvp', players: 1, maps: ['long'], rules: {hordeStartTreasures: {resurrections: 0, others: 0, random: 0}, dawnStartTreasures: {resurrections: 0, others: 0, random: 6}} },
   { kingdom: true, objective: 'crystals', level: 'kids', mode: 'pvp', players: 2, maps: ['long'], rules: {hordeStartTreasures: {resurrections: 0, others: 0, random: 0}, dawnStartTreasures: {resurrections: 0, others: 0, random: 13}, dawnGoldBonus: 4, hordeRespawn: false, heroMovePoints: 4, roundLimitBonus: 6} },
+  // --- Goal 'conquest' (level 4, 15.11; scripts/sim/kingdom.ts with SIM_ECONOMY=1 SIM_OBJECTIVE=conquest, 60 games a cell): one hero alone is short of
+  // time and strength against the automaton, two heroes are too many for the Horde.
+  { objective: 'conquest', level: 'normal', mode: 'coop', players: 1, rules: { roundLimitBonus: 2, dawnStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  { objective: 'conquest', level: 'normal', mode: 'coop', players: 2, rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { objective: 'conquest', level: 'normal', mode: 'pvp', players: 2, maps: ['short', 'long', 'veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { objective: 'conquest', level: 'normal', mode: 'coop', players: 2, maps: ['medium'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  { objective: 'conquest', level: 'normal', mode: 'coop', players: 1, maps: ['veryLong'], rules: { roundLimitBonus: 2, dawnStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
 ];
 
 /** The rules a game is played with: the setup's, plus the digital levers that match it. */
@@ -144,7 +151,7 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
   // Only the ready-made levels are tuned; "Własny" is exactly what the player switched on.
   if (level === 'custom') return base;
   const players = setup.seats.filter((s) => s.faction === 'dawn').length;
-  const objective = base.objective === 'control' || base.objective === 'survival' || base.objective === 'boss' || base.objective === 'artifact' ? base.objective : 'crystals';
+  const objective = base.objective === 'control' || base.objective === 'survival' || base.objective === 'boss' || base.objective === 'artifact' || base.objective === 'conquest' ? base.objective : 'crystals';
   let rules = base;
   for (const t of DIGITAL_TUNING) {
     if (t.objective && t.objective !== objective) continue;

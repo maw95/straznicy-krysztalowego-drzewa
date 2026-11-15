@@ -66,6 +66,8 @@ export function setupWith(size: MapSize, table: Table, options: Option[], seed: 
   if (process.env.SIM_OBJECTIVE === 'boss') rules.objective = 'boss';
   if (process.env.SIM_NOHORDE && mode === 'coop') rules.noHorde = true;
   if (process.env.SIM_OBJECTIVE === 'artifact') rules.objective = 'artifact';
+  // SIM_OBJECTIVE=conquest: level 4's goal (needs the kingdom and economy rules: scripts/sim/kingdom.ts with SIM_ECONOMY=1 sets them).
+  if (process.env.SIM_OBJECTIVE === 'conquest') rules.objective = 'conquest';
   // SIM_GROWTH=1: hero growth (experience, levels, skills).
   if (process.env.SIM_GROWTH) rules.heroGrowth = true;
   const mapShape = ['rectangle', 'ring', 'islands', 'custom'].includes(process.env.SIM_SHAPE ?? '') ? (process.env.SIM_SHAPE as 'rectangle' | 'ring' | 'islands' | 'custom') : undefined;

@@ -2,7 +2,7 @@
 // for player seats. Both only use information visible on the map.
 
 import { FACTION_SUPPORTS, ITEM_EFFECT, UNITS, type FactionId } from '../data';
-import { botWantsHut, garrisonAt, kingdomBotAction, supportSlots } from '../kingdom';
+import { botWantsHut, buildingLevel, garrisonAt, kingdomBotAction, supportSlots, type Settlement } from '../kingdom';
 import { objectReady } from '../economy';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
@@ -46,6 +46,11 @@ const AI_TUNING = {
   centreBonus: 3,
   /** Control points: a side that is behind (the enemy has the lead) attacks at this strength ratio instead of waiting for a clear edge. */
   behindRatio: 0.7,
+  /** Conquest: a garrison (with its defences counted in) is stormed at this strength ratio. */
+  stormRatio: 1.2,
+  /** Conquest: the hero's level and living supports needed to fight a settlement's neutral defenders (the goal is worth more risk than a detour). */
+  conquestLevel: 3,
+  conquestSupports: 1,
 };
 
 function knownCost(state: GameState, k: HexKey, hero?: HeroState): number | null {
@@ -670,6 +675,63 @@ function artifactAction(state: GameState, memo: Memo): Action {
   return stepToward(state, p.path);
 }
 
+// ------------------------------------------------------------------ conquest
+
+/** Rough strength of a settlement's garrison behind its defences, on the scale of teamStrength (Życie × Atak; a moat and walls count on top). */
+function garrisonStrength(s: Settlement): number {
+  const g = s.garrison ?? [];
+  const hp = g.reduce((a, id) => a + UNITS[id].hp, 0);
+  const atk = g.reduce((a, id) => a + UNITS[id].attack * (UNITS[id].attackType === 'ranged' ? AI_TUNING.rangedAttack : 1), 0);
+  return hp * atk * [1, 1.4, 1.8][Math.min(2, buildingLevel(s, 'walls'))];
+}
+
+/**
+ * Objective 'conquest' (both sides and the automaton): strike a beatable enemy next to the hero, then walk to the nearest settlement it does
+ * not hold and can take: an empty one, one whose guards (neutral defenders, a garrison, an enemy hero) it can beat. With nothing to take
+ * it plays its side's usual game, which makes it stronger (guardians, treasures).
+ */
+function conquestAction(state: GameState, memo: Memo): Action {
+  const hero = activeHero(state)!;
+  const usual = () => (currentActor(state).kind === 'automaton' ? evilAction(state, memo) : hero.faction === 'dawn' ? goodAction(state, memo) : hordeBotAction(state, memo));
+  if (!state.kingdom) return usual();
+  const item = mapItemAction(state);
+  if (item) return item;
+  if (state.movePoints <= 0) return { type: 'endTurn' };
+  const automaton = currentActor(state).kind === 'automaton';
+  const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
+  const beatable = (e: HeroState) => automaton || memo.ratio(hero, e) >= huntRatio(state);
+  const prey = foes.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && beatable(e));
+  if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
+  const supports = state.factions[hero.faction].supportsAlive.length;
+  const mine = memo.teamStrength(hero.faction, hero.id);
+  const takeable = (s: Settlement): boolean => {
+    const t = state.tiles[s.at];
+    // Everybody knows where the enemy's capital lies (its base); the other settlements have to be found first.
+    if (!t.revealed && !t.home) return false;
+    const crystal = t.crystalId ? state.crystals[t.crystalId] : undefined;
+    // Neutral defenders are an encounter of the middle tier: the hero has to be grown and in company.
+    if (crystal?.guardian) return (hero.faction === 'dawn' || hordeMayFightGuardian(state, crystal.id)) && levelOf(hero) >= AI_TUNING.conquestLevel && supports >= AI_TUNING.conquestSupports;
+    const on = foes.find((e) => e.pos === s.at);
+    if (on) return beatable(on);
+    if (s.garrison?.length) return automaton || mine / Math.max(1, garrisonStrength(s)) >= AI_TUNING.stormRatio;
+    return true;
+  };
+  const allies = livingHeroes(state, hero.faction).filter((a) => a.id !== hero.id && !a.entering);
+  // What counts: the enemy's land (the goal of the game) and whatever the enemy holds of ours.
+  const enemy = other(hero.faction);
+  const goals = new Set(Object.values(state.kingdom.settlements).filter((s) => s.owner !== hero.faction && (s.land === enemy || s.owner === enemy) && !allies.some((a) => a.pos === s.at) && takeable(s)).map((s) => s.at));
+  goals.delete(hero.pos);
+  if (!goals.size) return usual();
+  const paths = memo.paths(hero, 'conquest', { goals, avoidGuardians: true, danger: !automaton, encounters: true });
+  let best: { cost: number; path: HexKey[] } | null = null;
+  for (const g of goals) {
+    const p = paths.get(g);
+    if (p && p.path.length >= 2 && (!best || p.cost < best.cost)) best = { cost: p.cost, path: p.path };
+  }
+  if (!best) return usual();
+  return stepToward(state, best.path);
+}
+
 // ------------------------------------------------------------------ boss
 
 /**
@@ -788,6 +850,7 @@ export function adventureAction(state: GameState): Action {
   if (objectiveOf(state) === 'survival') return survivalAction(state, memo);
   if (objectiveOf(state) === 'boss') return bossAction(state, memo);
   if (objectiveOf(state) === 'artifact') return artifactAction(state, memo);
+  if (objectiveOf(state) === 'conquest') return conquestAction(state, memo);
   if (hero.faction === 'dawn') return goodAction(state, memo);
   // The coop automaton follows the rulebook; a Horde player's bot chooses its fights.
   return currentActor(state).kind === 'automaton' ? evilAction(state, memo) : hordeBotAction(state, memo);

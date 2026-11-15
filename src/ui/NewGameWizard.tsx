@@ -100,6 +100,7 @@ const OBJECTIVE_ICON: Record<ObjectiveId, string> = {
   survival: 'ui/menu/przetrwanie.webp',
   boss: 'ui/menu/boss.webp',
   artifact: 'ikony/artefakty/blade2.webp',
+  conquest: 'ikony/mapa/osada_neutral.webp',
 };
 
 export function NewGameWizard({ online, onBack, onFinish, links, initial }: { online: boolean; onBack: () => void; onFinish: (table: TableConfig) => void; links?: React.ReactNode; initial?: TableConfig }) {
@@ -219,7 +220,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
       {page === 'objective' && (
         <>
           <div className="opt-grid" data-wizard-page="objective">
-            {(['crystals', 'control', 'survival', 'boss', 'artifact'] as const).filter((o) => o !== 'survival' || d.mode === 'coop').map((o) => (
+            {(['crystals', 'control', 'survival', 'boss', 'artifact', 'conquest'] as const).filter((o) => (o !== 'survival' || d.mode === 'coop') && (o !== 'conquest' || d.tier === 'economy')).map((o) => (
               <Card key={o} on={d.objective === o} title={OBJECTIVES[o].name} text={OBJECTIVES[o].summary} img={pic(asset(OBJECTIVE_ICON[o]))} onClick={() => patch({ objective: o })} />
             ))}
           </div>

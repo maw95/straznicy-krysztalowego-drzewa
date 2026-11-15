@@ -40,6 +40,8 @@ export interface Objective {
 /** The objective of a game: 'control' and 'survival' only in the digital ruleset, otherwise the crystals goal. */
 export const objectiveOf = (state: Pick<GameState, 'rules'>): ObjectiveId => {
   const o = state.rules.objective;
+  // Conquest is played for settlements: it needs level 4 (settlements, garrisons, walls).
+  if (o === 'conquest') return isDigital(state.rules) && state.rules.kingdom && state.rules.economy ? o : 'crystals';
   return (o === 'control' || o === 'survival' || o === 'boss' || o === 'artifact') && isDigital(state.rules) ? o : 'crystals';
 };
 
@@ -404,4 +406,46 @@ const artifact: Objective = {
   },
 };
 
-export const OBJECTIVES: Record<ObjectiveId, Objective> = { crystals, control, survival, boss, artifact };
+// ------------------------------------------------------------------ conquest (level 4)
+
+/** The settlements `side` has to hold to win: every one on the enemy's land (its capital and the ones to conquer there). */
+export function conquestTargets(state: GameState, side: FactionId): string[] {
+  const enemy: FactionId = side === 'dawn' ? 'horde' : 'dawn';
+  return Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.land === enemy).map((s) => s.id);
+}
+
+/** How many of its targets `side` holds now. */
+export const conquestHeld = (state: GameState, side: FactionId): number => conquestTargets(state, side).filter((id) => state.kingdom!.settlements[id].owner === side).length;
+
+const conquest: Objective = {
+  id: 'conquest',
+  name: 'Podbój',
+  summary: 'Wygrywa ten, kto na koniec rundy trzyma wszystkie osady na ziemi wroga: jego stolicę i osady do zdobycia na jego połowie mapy. Garnizony i mury bronią ich, gdy bohater odejdzie.',
+  init() {},
+  checkVictory() {},
+  onRoundEnd(state) {
+    if (!state.kingdom) return false;
+    for (const side of ['dawn', 'horde'] as const) {
+      const need = conquestTargets(state, side).length;
+      if (need > 0 && conquestHeld(state, side) === need) {
+        finish(state, side, `${FACTION_NAMES[side]} trzyma wszystkie osady na ziemi wroga.`);
+        return true;
+      }
+    }
+    return false;
+  },
+  onRoundLimit(state) {
+    // Time is up: a side that holds most of the enemy's land (more than half of its settlements) has won the war, unless the enemy did the same;
+    // otherwise the limit goes to the Horde, as in the crystals game.
+    const most = (f: FactionId) => conquestHeld(state, f) * 2 > conquestTargets(state, f).length;
+    const [dawn, horde] = [most('dawn'), most('horde')];
+    if (dawn && !horde) finish(state, 'dawn', `Upłynął limit rund: Przymierze trzyma większość osad na ziemi Hordy (${conquestHeld(state, 'dawn')} z ${conquestTargets(state, 'dawn').length}).`);
+    else finish(state, 'horde', horde && !dawn ? `Upłynął limit rund: Horda trzyma większość osad na ziemi Przymierza (${conquestHeld(state, 'horde')} z ${conquestTargets(state, 'horde').length}).` : 'Upłynął limit rund: nikt nie zdobył większości ziemi wroga.');
+  },
+  progress(state) {
+    if (!state.kingdom) return [];
+    return (['dawn', 'horde'] as const).map((side) => ({ label: `${FACTION_NAMES[side]}: osady wroga`, value: `${conquestHeld(state, side)} / ${conquestTargets(state, side).length}`, tone: side }));
+  },
+};
+
+export const OBJECTIVES: Record<ObjectiveId, Objective> = { crystals, control, survival, boss, artifact, conquest };

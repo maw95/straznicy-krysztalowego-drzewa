@@ -26,7 +26,7 @@ export type Ruleset = 'classic' | 'digital';
 /** Shape of the adventure map: the board game's triangle, or (digital ruleset) a rectangle or a ring around a lake. */
 export type MapShape = 'triangle' | 'rectangle' | 'ring' | 'islands' | 'custom';
 
-export type ObjectiveId = 'crystals' | 'control' | 'survival' | 'boss' | 'artifact';
+export type ObjectiveId = 'crystals' | 'control' | 'survival' | 'boss' | 'artifact' | 'conquest';
 
 export interface RulesConfig {
   /** Missing = classic. Read it only through `isDigital`. */

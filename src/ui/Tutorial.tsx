@@ -24,6 +24,8 @@ function welcomeText(s: GameState): string {
       return `Twoim celem jest Boss: ${OBJECTIVES.boss.summary}`;
     case 'artifact':
       return `Twoim celem jest Artefakt: ${OBJECTIVES.artifact.summary}`;
+    case 'conquest':
+      return `Twoim celem jest Podbój: zajmij wszystkie osady na ziemi Hordy (jej stolicę i osady na jej połowie mapy) i utrzymaj je do końca rundy. Pilnuj własnych: zostaw w nich garnizon (okno osady, zakładka Fosa), bo Horda chce tego samego.`;
     default:
       return 'Twoim celem jest odnaleźć kryształy, odebrać je strażnikom i zanieść do Drzewa na szczycie mapy, zanim minie limit rund.';
   }

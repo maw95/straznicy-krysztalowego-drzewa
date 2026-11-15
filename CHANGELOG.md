@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Księstwo: nowy cel gry **Podbój**. Wygrywa strona, która na koniec rundy trzyma wszystkie osady na ziemi wroga (jego stolicę i osady na jego połowie mapy); przy limicie rund liczy się, kto trzyma ponad połowę. Komputer zdobywa osady, szturmuje garnizony i broni swoich. Cel wybiera się w kreatorze gry przy poziomie Księstwo.
+
 - Księstwo: **obrona osady**. Bohater może zostawić w swojej osadzie do trzech pomocników jako garnizon; wróg musi ich pokonać, żeby osadę zająć. Nowy budynek **Fosa** (kolce: kto wejdzie, traci turę i Życie) rozbudowuje się w **Mury z wieżyczkami**: mur z bramą zatrzymuje piechotę, a dwie wieżyczki co rundę strzelają do napastników. Atakujący dostaje **katapultę**: jeden strzał na rundę burzy mur, wieżyczkę albo (po dwóch trafieniach) bramę. Komputer zostawia w osadach nadwyżkę pomocników i umie szturmować mury.
 
 - Księstwo: nowe miejsca na mapie. **Młyn** daje 2 zł co 3 rundy, **Leśna składnica** oddaje raz zapas surowca, **Studnia Wędrowców** dodaje bohaterowi 2 punkty ruchu (raz na rundę). Przycisk zadania w chatce jest wyszarzony, gdy nie masz tego, o co chatka prosi.
