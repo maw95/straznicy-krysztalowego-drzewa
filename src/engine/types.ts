@@ -28,7 +28,7 @@ export type Ruleset = 'classic' | 'digital';
 /** Shape of the adventure map: the board game's triangle, or (digital ruleset) a rectangle or a ring around a lake. */
 export type MapShape = 'triangle' | 'rectangle' | 'ring' | 'islands' | 'custom';
 
-export type ObjectiveId = 'crystals' | 'control' | 'survival' | 'boss' | 'artifact' | 'conquest';
+export type ObjectiveId = 'crystals' | 'control' | 'survival' | 'boss' | 'artifact' | 'conquest' | 'relic';
 
 export interface RulesConfig {
   /** Missing = classic. Read it only through `isDigital`. */
@@ -220,6 +220,8 @@ export interface HeroState {
   /** Level 5: the spells the hero knows and the mana it has left (missing: full, see magic.ts `manaOf`). */
   spells?: SpellId[];
   mana?: number;
+  /** Level 6: Odłamki Pierwotnej Iskry the hero carries (empire.ts). */
+  shards?: number;
   /** Level 5: the hero's type (heroTypes.ts): it grows by itself with the levels and switches the hero's speciality on. Missing in every other level. */
   kind?: HeroType;
 }
@@ -251,7 +253,7 @@ export interface Tile {
   /** A site on the hex (shrine, camp, chest) and whether it has been used (sites.ts); only with hero growth. */
   site?: { kind: SiteKind; used: boolean };
   /** Level 3 "Osada": a settlement or a gold mine stands here (kingdom.ts). */
-  place?: { kind: 'settlement' | 'mine' | 'hut' | 'object'; id: string };
+  place?: { kind: 'settlement' | 'mine' | 'hut' | 'object' | 'shard'; id: string };
 }
 
 export interface Crystal {

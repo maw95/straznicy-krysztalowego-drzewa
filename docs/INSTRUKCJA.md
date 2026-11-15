@@ -819,6 +819,21 @@ Każdy bohater ma też **specjalność**, czyli jedną własną premię (na przy
 ### Rozgałęzienia umiejętności
 Cztery umiejętności (Moc, Hart, Lekkość i Dowódca) można dokończyć na dwa sposoby. Gdy masz taką umiejętność na II stopniu i przy awansie pojawia się jej III stopień, obok leży dodatkowa karta, **rozgałęzienie**: zamiast ostatniego punktu dla bohatera dostajesz coś innego (premię dla pomocników, leczenie co rundę albo dalsze rozstawienie). Wybór jest ostateczny.
 
+## 20. Poziom 6: Imperium — Relikt (wersja cyfrowa)
+
+Poziom „Imperium” dodaje do zasad Królestwa **Odłamki Pierwotnej Iskry**.
+
+### Odłamki
+Na mapie, na widocznych od początku polach, leżą świecące **Odłamki Pierwotnej Iskry** (od 2 na najmniejszej mapie do 6 na największych). Bohater, który wejdzie na takie pole, zabiera Odłamek. Odłamka nie zakłada się jak artefaktu: bohater po prostu go niesie, a licznik pod jego imieniem pokazuje, ile niesie on sam, ile ma cała frakcja i ile jest w grze.
+
+**Kto pokona bohatera, zabiera mu wszystkie jego Odłamki.** Jeśli bohater polegnie w walce ze strażnikiem albo garnizonem, jego Odłamki upadają na pole obok i może je podnieść każdy.
+
+### Budynek Pierwotnej Iskry
+Gdy bohaterowie jednej frakcji niosą razem **wszystkie Odłamki**, jeden z nich może stanąć we własnej osadzie i wznieść tam budynek Pierwotnej Iskry: **Sanktuarium** (Przymierze) albo **Czarną Kuźnię** (Horda). Ceną są wszystkie Odłamki. Sanktuarium daje wszystkim jednostkom Przymierza +2 Życia w każdej bitwie, Czarna Kuźnia wszystkim jednostkom Hordy +1 Ataku.
+
+### Cel „Relikt”
+W grze o Relikt **wzniesienie budynku Pierwotnej Iskry od razu wygrywa**. Gdy minie limit rund, wygrywa strona, która niesie więcej Odłamków (przy równej liczbie Horda).
+
 ## Autorzy (wersja cyfrowa)
 
 W menu głównym przycisk „Autorzy” otwiera listę: autorzy gry (Maciej Woźniak, Aleksandra Szestowicka przy fabule, Zuzanna Woźniak jako autorka Dzielnej Kaczki), autorzy muzyki wraz z licencjami (CC BY wymaga podania autora), informacja, że grafika, animacje i efekty dźwiękowe powstały z użyciem narzędzi AI (Scenario), oraz użyte oprogramowanie.

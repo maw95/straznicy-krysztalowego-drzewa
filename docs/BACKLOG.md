@@ -25,7 +25,6 @@ Poziom 4 zbudowany 15.11 (Kuźnia, wymiana, obiekty mapy, obrona osady, Podbój,
 Poziom 5 zbudowany 15.11 (drugi bohater, magia, typy i specjalności, rozgałęzienia umiejętności); czeka na ogranie przez autora. Łatwy i Trudny dla poziomów 4–5 jadą na strojeniu poziomu 3 (osobno niemierzone).
 
 ### Etap D. Poziom 6 „Imperium” (frakcje i Relikt)
-13. **6a. Cel „Relikt”** (L): Odłamki Pierwotnej Iskry na mapie, licznik „3/6”, budynek Pierwotnej Iskry (wygrywa grę).
 14. **6b. Drzewka i mechaniki frakcji** + jednostka poziomu 6 (L).
 15. **6c. Alternatywne jednostki poziomów 2–5** (L; 8 jednostek, grafika, animacje; pierwszy kandydat do cięcia).
 
@@ -64,6 +63,10 @@ Lista rzeczy, które w grze działają na zastępczej grafice albo bez własnego
 - Wizja i Wrota na mapie: brak animacji (odkrycie pól, błysk portalu); do rozważenia dźwięk `dzwieki/portal.mp3`.
 - Wieża maga: jeden obraz na oba poziomy (`osady/<frakcja>_magic1.webp`); potrzebny `osady/dawn_magic2.webp` i `osady/horde_magic2.webp` (rozbudowana wieża), potem zmiana w `buildingPicture` (`SettlementDialog.tsx`).
 
+**Poziom 6 (Imperium)**
+- Podnoszenie Odłamka i wzniesienie Pierwotnej Iskry: brak własnego dźwięku i animacji (gra dźwięk budowy `build.mp3`). Potrzebne: `dzwieki/odlamek.mp3` (kryształowy dzwon), `dzwieki/iskra.mp3` (fanfara mocy), błysk na kafelku przy podniesieniu.
+- Karta celu „Relikt” w kreatorze używa ikony mapy `odlamek.webp` (docelowo `ui/menu/relikt.webp`, 512×592).
+
 ## 3. Do sprawdzenia na żywo (autor)
 Zrobione i przetestowane, bez potwierdzenia w prawdziwej grze:
 - **Poziom 4 (15.11):** surowce w dolnym pasku, ceny z surowcami w oknie osady, ikony tartaku, kopalni rudy, źródła Pyłu i chatki, panel zadania chatki (nie sprawdzony kliknięciem), karta „Księstwo” w kreatorze, samouczek.
@@ -92,6 +95,7 @@ Pasma autora (wygrane Przymierza): Łatwy 65–85%, Normalny 45–65%, Trudny 30
 - Stan: Łatwy w paśmie w każdej komórce; Normalny w paśmie niemal wszędzie (z rozwojem poniżej pasma: kooperacja 39–44% na średniej, długiej i bardzo długiej, 2 na 2 długa 35%; Trudny w koopie 22–30%: ewentualnie `tuneLevels.ts <cel> 1`). Osada: Normalny 51–67%, Trudny koop 34–45%; cele inne niż „Kryształy” bez strojenia.
 - Poza pasmem, zostawiamy (decyzja 10.11): Kryształy na ręcznych mapach (Cieśnina, Dolina), koop 2 graczy Normalny bardzo długa 75%, Artefakt i Boss z rozwojem na wyspach, Boss Trudny. Dźwignie stroiciela (skarby startowe, bohater Hordy) za grube; potrzebna nowa (liczba strażników lub kryształów).
 - **Księstwo, cel „Podbój”** (15.11): Normalny 43–65% po strojeniu; poza pasmem kooperacja 1 gracz na bardzo długiej mapie (33–35%, dźwignie skarbów i limitu rund za słabe: potrzebna inna, np. słabsi obrońcy osad Hordy). Łatwy i Trudny dla Podboju niestrojone. Szturmy: garnizon 1–2 jednostek nie zatrzymuje bohatera, 3 jednostki bronią w połowie przypadków (`scripts/sim/siege.ts`).
+- **Imperium, cel „Relikt”** (15.11): Normalny 43–72% po strojeniu; powyżej pasma 2 graczy na krótkiej mapie (72%) i bardzo długa mapa 2 graczy (70–72%). Łatwy i Trudny niestrojone.
 - Wartości robocze do akceptacji autora (zmiana w jednym miejscu): `SURVIVAL`, `MAP_SHAPES`, `SHAPE_ROUND_FACTOR`, `DIGITAL_TUNING`, progi PD i pula umiejętności (`growth.ts`), `FAMILY` (`data.ts`), liczby artefaktów, obiektów, jednostek i bossów neutralnych, spotkań na mapie, progi botów, progi `levelOfFight`.
 - Boty, zbadane i bez zmian: „bezczynne tury” w kontroli, przetrwaniu i artefakcie to trzymanie punktu, zgodnie z celem; „bezczynne aktywacje” w bitwie to wybór pozostania.
 

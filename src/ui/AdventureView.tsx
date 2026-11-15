@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { heroLabel } from '../engine/realm';
+import { shardsOf, shardTotal } from '../engine/empire';
 import { MAGIC, manaOf, maxMana, portalTarget, SPELLS } from '../engine/magic';
 import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
 import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots } from '../engine/game';
@@ -432,7 +433,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     )}
                     {t.revealed && t.place && state.kingdom && (
                       <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, zIndex: 2, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)}>
-                        <img src={asset(`ikony/mapa/${placeIcon(state, t.key)}.webp`)} alt="" width={W * 0.46} height={W * 0.46} style={{ display: 'block', filter: t.place.kind === 'mine' ? 'drop-shadow(0 0 3px #F3D27A) drop-shadow(0 2px 2px rgba(0,0,0,0.8))' : 'drop-shadow(0 2px 2px rgba(0,0,0,0.7))', opacity: t.place.kind === 'object' && !objectReady(state.kingdom.objects?.[t.key] ?? { kind: 'mill' }, state.round) ? 0.55 : 1 }} />
+                        <img src={asset(`ikony/mapa/${placeIcon(state, t.key)}.webp`)} alt="" width={W * 0.46} height={W * 0.46} style={{ display: 'block', filter: t.place.kind === 'shard' ? 'drop-shadow(0 0 6px #FFF3B0) drop-shadow(0 2px 2px rgba(0,0,0,0.8))' : t.place.kind === 'mine' ? 'drop-shadow(0 0 3px #F3D27A) drop-shadow(0 2px 2px rgba(0,0,0,0.8))' : 'drop-shadow(0 2px 2px rgba(0,0,0,0.7))', opacity: t.place.kind === 'object' && !objectReady(state.kingdom.objects?.[t.key] ?? { kind: 'mill' }, state.round) ? 0.55 : 1 }} />
                         {t.place.kind === 'settlement' && (state.kingdom.settlements[t.place.id]?.garrison?.length ?? 0) > 0 && (
                           <span data-garrison-badge title="Garnizon broni tej osady" style={{ position: 'absolute', right: -W * 0.06, top: -W * 0.04, minWidth: W * 0.17, height: W * 0.17, borderRadius: W * 0.1, background: '#3B2A12', border: '2px solid #F3D27A', color: '#F7EDD2', fontWeight: 800, fontSize: W * 0.11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {state.kingdom.settlements[t.place.id].garrison!.length}
@@ -551,6 +552,12 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </button>
               <div style={{ minWidth: 0 }}>
                 <div data-hero-name style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{heroLabel(hero)}</div>
+                {state.rules.empire && (
+                  <div data-shards title="Odłamki Pierwotnej Iskry: niesione przez tego bohatera, razem u frakcji i wszystkich w grze" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
+                    <img src={asset('ikony/mapa/odlamek.webp')} alt="" width={26} height={26} />
+                    <span>Odłamki: niesie <b>{hero.shards ?? 0}</b> · frakcja <b>{shardsOf(state, hero.faction)}</b> / {shardTotal(state)}</span>
+                  </div>
+                )}
                 {state.rules.realm && (hero.spells?.length ?? 0) > 0 && (
                   <div data-map-spells style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', fontSize: 14 }}>
                     <span title={`Mana wraca po ${MAGIC.regen} na rundę`}>Mana <b data-mana>{manaOf(hero)}</b>/{maxMana(hero)}</span>
@@ -879,6 +886,7 @@ function placeIcon(state: GameState, k: HexKey): string {
   const place = state.tiles[k].place;
   if (!place) return 'osada_neutral';
   if (place.kind === 'hut') return 'chatka';
+  if (place.kind === 'shard') return 'odlamek';
   if (place.kind === 'object') return ({ mill: 'mlyn', well: 'studnia', store: 'skladnica' } as const)[state.kingdom?.objects?.[place.id]?.kind ?? 'mill'];
   if (place.kind === 'mine') return ({ wood: 'tartak', ore: 'kopalnia_ruda', dust: 'zrodlo_pylu' } as Record<string, string>)[state.kingdom?.mines[place.id]?.res ?? ''] ?? 'kopalnia';
   const owner = state.kingdom?.settlements[place.id]?.owner;
@@ -893,6 +901,7 @@ function placeTitle(state: GameState, k: HexKey): string {
     const hut = state.kingdom.huts?.[place.id];
     return hut ? (hut.done ? 'Chatka: zadanie wykonane' : `Chatka: przynieś ${thingsText(hut.want)}, dostaniesz ${thingsText(hut.reward)}`) : 'Chatka';
   }
+  if (place.kind === 'shard') return `Odłamek Pierwotnej Iskry: bohater, który tu wejdzie, zabiera go (w grze jest ich ${shardTotal(state)})`;
   if (place.kind === 'object') {
     const o = state.kingdom.objects?.[place.id];
     if (!o) return '';

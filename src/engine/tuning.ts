@@ -9,7 +9,7 @@ import { AUTO_TUNING } from './tuningAuto';
 
 export interface DigitalTune {
   /** Where it applies; a missing field matches everything. */
-  objective?: 'crystals' | 'control' | 'survival' | 'boss' | 'artifact' | 'conquest';
+  objective?: 'crystals' | 'control' | 'survival' | 'boss' | 'artifact' | 'conquest' | 'relic';
   level?: 'zero' | 'kids' | 'normal' | 'hard';
   mode?: 'coop' | 'pvp';
   /** Przymierza seats (players on the good side). */
@@ -148,6 +148,15 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   { realm: true, objective: 'crystals', level: 'normal', mode: 'pvp', players: 1, maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
   { realm: true, objective: 'crystals', level: 'normal', mode: 'pvp', players: 1, maps: ['medium'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
   { realm: true, objective: 'crystals', level: 'normal', mode: 'coop', players: 2, maps: ['long', 'veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  // --- Goal 'relic' (level 6, 15.11; SIM_ECONOMY=1 SIM_EMPIRE=1 SIM_OBJECTIVE=relic scripts/sim/kingdom.ts, 40-60 games a cell): the Przymierza move first
+  // and reach the shards first; the Horde start with treasures.
+  { objective: 'relic', level: 'normal', rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
+  { objective: 'relic', level: 'normal', maps: ['long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  { objective: 'relic', level: 'normal', players: 2, maps: ['long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { objective: 'relic', level: 'normal', maps: ['veryLong', 'huge', 'giant'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  { objective: 'relic', level: 'normal', mode: 'coop', players: 2, maps: ['short', 'medium'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  { objective: 'relic', level: 'normal', mode: 'coop', maps: ['veryLong', 'huge', 'giant'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 5 } } },
+  { objective: 'relic', level: 'normal', mode: 'pvp', players: 2, maps: ['veryLong', 'huge', 'giant'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 5 } } },
 ];
 
 /** The rules a game is played with: the setup's, plus the digital levers that match it. */
@@ -159,7 +168,7 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
   // Only the ready-made levels are tuned; "Własny" is exactly what the player switched on.
   if (level === 'custom') return base;
   const players = setup.seats.filter((s) => s.faction === 'dawn').length;
-  const objective = base.objective === 'control' || base.objective === 'survival' || base.objective === 'boss' || base.objective === 'artifact' || base.objective === 'conquest' ? base.objective : 'crystals';
+  const objective = base.objective === 'control' || base.objective === 'survival' || base.objective === 'boss' || base.objective === 'artifact' || base.objective === 'conquest' || base.objective === 'relic' ? base.objective : 'crystals';
   let rules = base;
   for (const t of DIGITAL_TUNING) {
     if (t.objective && t.objective !== objective) continue;

@@ -3610,6 +3610,18 @@
       "data": "2026-11-15",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "osady/pierwotna-iskra",
+      "pliki": [ "public/assets/osady/dawn_spark1.webp", "public/assets/osady/horde_spark1.webp" ],
+      "typ": "poziom 6: budynek Pierwotnej Iskry: Sanktuarium (Przymierze) i Czarna Kuźnia (Horda)",
+      "opis": "Arkusz 1536x1536 (siatka 2x2 na czarnym tle; dwa pozostałe pola to legendarne jednostki poziomu 6), pocięty skryptem scripts/assets/arkusz.py (wysokość 380 px): elficka świątynia z kopułą na złotych drzewach i białozłotym kryształem światła w środku; kuźnia Hordy z czarnego żelaza z tym samym kryształem w klatce.",
+      "scenario_asset": { "arkusz": "asset_Q6H9ZaqRW344oQWV1d4DzHdJ" },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.6 Flare, jakość medium",
+      "data": "2026-11-15",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

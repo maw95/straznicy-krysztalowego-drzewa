@@ -9,6 +9,7 @@ import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } fro
 import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
 import { ARCHETYPE_NAMES, archetypeOf, commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from '../engine/realm';
 import { levelOf } from '../engine/growth';
+import { mayBuildSpark, shardsOf, shardTotal, SPARK_NAMES, SPARK_TEXTS } from '../engine/empire';
 import { MAGIC, manaOf, maxMana, SPELLS, towerSpells } from '../engine/magic';
 import type { Action, GameState } from '../engine/types';
 import { asset, Portrait, Ribbon } from './common';
@@ -31,7 +32,7 @@ const spotOf = (order: BuildingId[], b: BuildingId): { left: number; top: number
   return { left: 8 + (i * 84) / (order.length - 1), top: i % 2 ? 30 : 64 };
 };
 /** The picture of a building in the landscape: the faction's plot while it is not built, then its level (the treasury has one). */
-const buildingPicture = (land: FactionId, b: BuildingId, level: number) => (level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${b === 'tavern' || b === 'magic' ? 1 : Math.min(level, 2)}.webp`));
+const buildingPicture = (land: FactionId, b: BuildingId, level: number) => (level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${b === 'tavern' || b === 'magic' || b === 'spark' ? 1 : Math.min(level, 2)}.webp`));
 
 export function SettlementDialog({ state, settlementId, faction, onAction, onClose }: { state: GameState; settlementId: string; faction: FactionId; onAction: (a: Action) => void; onClose: () => void }) {
   const s = state.kingdom!.settlements[settlementId];
@@ -103,7 +104,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   ) : null;
 
   const panel = (b: BuildingId) => {
-    if (buildingLevel(s, b) === 0) {
+    if (buildingLevel(s, b) === 0 && b !== 'spark') {
       return (
         <div data-panel={b} style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
           <div><RuleText text={BUILDING_TEXTS[b][0]} /></div>
@@ -179,6 +180,24 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           <b style={{ color: '#2E7A32' }}><RuleText text={`Kuźnia pracuje: pomocnicy frakcji mają +${ECONOMY.forgeAttack} A${best >= 2 ? ` i +${ECONOMY.forgeHp} Ż` : ''}.`} /></b>
           <span style={{ fontSize: 14, color: '#6B4A22' }}>Liczy się najlepsza kuźnia frakcji; premie z kilku kuźni się nie sumują.</span>
           {upgrade}
+        </div>
+      );
+    }
+    if (b === 'spark') {
+      const built = buildingLevel(s, 'spark') > 0;
+      const ready = mayBuildSpark(state, faction);
+      return (
+        <div data-panel="spark" style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
+          <b>{SPARK_NAMES[faction]}</b>
+          <div><RuleText text={SPARK_TEXTS[faction]} /> {state.rules.objective === 'relic' ? 'W tej grze jego wzniesienie wygrywa.' : ''}</div>
+          {built ? <b style={{ color: '#2E7A32' }}>Iskra płonie w tej osadzie.</b> : (
+            <>
+              <span style={{ fontSize: 14, color: '#6B4A22' }}>Cena: wszystkie Odłamki Pierwotnej Iskry (frakcja ma {shardsOf(state, faction)} z {shardTotal(state)}). Buduje bohater stojący w tej osadzie.</span>
+              <button className="btn prim" data-build="spark" disabled={!ready || !buyer || buyer.pos !== s.at} title={!ready ? 'Bohaterowie frakcji muszą nieść wszystkie Odłamki.' : buyer?.pos !== s.at ? 'Bohater musi stać w tej osadzie.' : undefined} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: 'spark' })} style={{ padding: '4px 16px', fontSize: 17 }}>
+                Wznieś: {SPARK_NAMES[faction]}
+              </button>
+            </>
+          )}
         </div>
       );
     }

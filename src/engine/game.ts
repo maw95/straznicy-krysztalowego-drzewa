@@ -61,6 +61,7 @@ import { ECONOMY } from './economy';
 import { commanderFalls } from './realm';
 import { battleSpell, mapSpell, regenMana, START_SPELLS } from './magic';
 import { HERO_TYPES, specialtyOf } from './heroTypes';
+import { EMPIRE, hasSpark, loseShards } from './empire';
 import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, placeSites, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
@@ -819,6 +820,8 @@ function startBattle(state: GameState, s: BattleStart) {
     applyGear(h, b.units[h.id]);
     if (deployDepthOf(h)) (b.deployDepth ??= {})[h.faction] = deployDepthOf(h);
   }
+  // Level 6: the building of the Pierwotna Iskra strengthens every unit of its faction.
+  for (const h of [attacker, defenderHero]) if (h && hasSpark(state, h.faction)) sparkBonus(state, b.units[h.id]);
   for (const h of [attacker, defenderHero]) if (h && isChildHero(state, h)) {
     b.units[h.id].hp += FAMILY.extraHp * hpScale;
     b.units[h.id].maxHp += FAMILY.extraHp * hpScale;
@@ -867,6 +870,13 @@ function startBattle(state: GameState, s: BattleStart) {
   if (!b.needsSelection.length) startBattleFight(state);
 }
 
+function sparkBonus(state: GameState, unit: BattleState['units'][string]) {
+  if (unit.side === 'dawn') {
+    unit.hp += EMPIRE.sparkHp * hpScaleOf(state);
+    unit.maxHp += EMPIRE.sparkHp * hpScaleOf(state);
+  } else unit.status.battleAttackBonus += EMPIRE.sparkAttack * scaleOf(state);
+}
+
 function addSupports(state: GameState, faction: FactionId, ids: string[]) {
   const b = state.battle!;
   const digital = isDigital(state.rules) && !b.duel;
@@ -878,6 +888,7 @@ function addSupports(state: GameState, faction: FactionId, ids: string[]) {
       applySupportSkill(leader, b.units[id]);
       applySupportGear(leader, b.units[id]);
     }
+    if (hasSpark(state, faction)) sparkBonus(state, b.units[id]);
     // Level 4: the faction's forge arms its supports.
     const forge = forgeLevel(state, faction);
     if (forge >= 1) b.units[id].status.battleAttackBonus += ECONOMY.forgeAttack * scaleOf(state);
@@ -908,6 +919,13 @@ function finalizeBattle(state: GameState) {
   log(state, 'battle', `Bitwa zakończona: ${resultText}.`);
   if (b.kind === 'neutral') resolveGuardianFight(state, b);
   awardBattleXp(state, b);
+  // Level 6: a fallen hero's shards go to the hero that beat it, or fall onto the map.
+  if (state.rules.empire) for (const id of [b.attackerHero, b.defenderHero]) {
+    const h = id ? state.heroes[id] : null;
+    if (!h || h.alive || !h.shards) continue;
+    const rival = state.heroes[(id === b.attackerHero ? b.defenderHero : b.attackerHero) ?? ''] ?? null;
+    loseShards(state, h, rival, b.mapHex);
+  }
   // Level 5: a commander that fell keeps its level but loses what it carried (the winner has taken its share above).
   for (const id of [b.attackerHero, b.defenderHero]) {
     const h = id ? state.heroes[id] : null;
@@ -1161,6 +1179,8 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'hutDeliver':
     case 'chestTake':
       kingdomAction(state, action);
+      // A building may be what the game is played for (the Pierwotna Iskra in the Relic goal).
+      if (action.type === 'kingdomBuild') checkVictory(state);
       break;
     case 'moveHero':
       moveHero(state, action.to);

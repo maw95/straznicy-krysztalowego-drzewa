@@ -11,6 +11,7 @@ import { log } from './log';
 import { homeOf, mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { Rng } from './rng';
 import { isDigital, type GameState, type ObjectiveId } from './types';
+import { shardsOf, shardTotal, SPARK_NAMES, sparkOwner } from './empire';
 
 /** One line of the progress panel: what, how far, and whose it is (for the colour). */
 export interface ProgressLine {
@@ -41,6 +42,8 @@ export interface Objective {
 export const objectiveOf = (state: Pick<GameState, 'rules'>): ObjectiveId => {
   const o = state.rules.objective;
   // Conquest is played for settlements: it needs level 4 (settlements, garrisons, walls).
+  // The Relic is the goal of level 6 (shards and the building of the Pierwotna Iskra).
+  if (o === 'relic') return isDigital(state.rules) && state.rules.kingdom && state.rules.empire ? o : 'crystals';
   if (o === 'conquest') return isDigital(state.rules) && state.rules.kingdom && state.rules.economy ? o : 'crystals';
   return (o === 'control' || o === 'survival' || o === 'boss' || o === 'artifact') && isDigital(state.rules) ? o : 'crystals';
 };
@@ -448,4 +451,35 @@ const conquest: Objective = {
   },
 };
 
-export const OBJECTIVES: Record<ObjectiveId, Objective> = { crystals, control, survival, boss, artifact, conquest };
+// ------------------------------------------------------------------ relic (level 6)
+
+const relic: Objective = {
+  id: 'relic',
+  name: 'Relikt',
+  summary: 'Na mapie leżą Odłamki Pierwotnej Iskry. Kto zbierze wszystkie i wzniesie w swojej osadzie budynek Pierwotnej Iskry, wygrywa. Pokonany bohater oddaje swoje Odłamki zwycięzcy.',
+  init() {},
+  checkVictory(state) {
+    const owner = sparkOwner(state);
+    if (owner) finish(state, owner, `${FACTION_NAMES[owner]} wzniosło budynek: ${SPARK_NAMES[owner]}.`);
+  },
+  onRoundEnd() {
+    return false;
+  },
+  onRoundLimit(state) {
+    // More shards in hand wins; level goes to the Horde, as the limit does in the crystals game.
+    const [dawn, horde] = [shardsOf(state, 'dawn'), shardsOf(state, 'horde')];
+    if (dawn > horde) finish(state, 'dawn', `Upłynął limit rund: Przymierze ma więcej Odłamków (${dawn} do ${horde}).`);
+    else finish(state, 'horde', horde > dawn ? `Upłynął limit rund: Horda ma więcej Odłamków (${horde} do ${dawn}).` : 'Upłynął limit rund: Odłamków po równo.');
+  },
+  progress(state) {
+    const total = shardTotal(state);
+    const lying = Object.values(state.kingdom?.shards ?? {}).reduce((a, n) => a + n, 0);
+    return [
+      { label: 'Odłamki: Przymierze', value: `${shardsOf(state, 'dawn')} / ${total}`, tone: 'dawn' },
+      { label: 'Odłamki: Horda', value: `${shardsOf(state, 'horde')} / ${total}`, tone: 'horde' },
+      { label: 'Odłamki na mapie', value: `${lying}` },
+    ];
+  },
+};
+
+export const OBJECTIVES: Record<ObjectiveId, Objective> = { crystals, control, survival, boss, artifact, conquest, relic };

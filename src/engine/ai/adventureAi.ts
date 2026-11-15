@@ -4,6 +4,7 @@
 import { FACTION_SUPPORTS, ITEM_EFFECT, UNITS, type FactionId } from '../data';
 import { botWantsHut, buildingLevel, garrisonAt, kingdomBotAction, supportSlots, type Settlement } from '../kingdom';
 import { objectReady } from '../economy';
+import { mayBuildSpark } from '../empire';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { heroTileCost } from '../sites';
@@ -732,6 +733,49 @@ function conquestAction(state: GameState, memo: Memo): Action {
   return stepToward(state, best.path);
 }
 
+// ------------------------------------------------------------------ relic
+
+/**
+ * Objective 'relic' (both sides and the automaton): strike a beatable enemy next to the hero (one that carries shards even at even odds), then
+ * walk to the nearest shard no ally is nearer to, or hunt a beatable carrier; with every shard in the faction's hands go to the nearest own
+ * settlement, where the Iskra is raised (kingdomBotAction builds it). With nothing to do it plays its side's usual game.
+ */
+function relicAction(state: GameState, memo: Memo): Action {
+  const hero = activeHero(state)!;
+  const automaton = currentActor(state).kind === 'automaton';
+  const usual = () => (automaton ? evilAction(state, memo) : hero.faction === 'dawn' ? goodAction(state, memo) : hordeBotAction(state, memo));
+  const k = state.kingdom;
+  if (!k) return usual();
+  const item = mapItemAction(state);
+  if (item) return item;
+  if (state.movePoints <= 0) return { type: 'endTurn' };
+  const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
+  const allies = livingHeroes(state, hero.faction).filter((a) => a.id !== hero.id && !a.entering);
+  const beatable = (e: HeroState) => automaton || memo.ratio(hero, e) >= (e.shards ? 1 : huntRatio(state));
+  const prey = foes.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && beatable(e));
+  if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
+  const dist = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));
+  const goals = new Set<HexKey>();
+  if (mayBuildSpark(state, hero.faction)) {
+    // The automaton owns no settlements worth the walk: only players' sides build.
+    for (const s of Object.values(k.settlements)) if (s.owner === hero.faction) goals.add(s.at);
+    if (goals.has(hero.pos)) return { type: 'endTurn' };
+  } else {
+    for (const hex of Object.keys(k.shards ?? {})) if (!allies.some((a) => dist(a.pos, hex) < dist(hero.pos, hex))) goals.add(hex);
+    for (const e of foes) if (e.shards && beatable(e)) goals.add(e.pos);
+  }
+  goals.delete(hero.pos);
+  if (!goals.size) return usual();
+  const paths = memo.paths(hero, 'relic', { goals, avoidGuardians: true, danger: !automaton });
+  let best: { cost: number; path: HexKey[] } | null = null;
+  for (const g of goals) {
+    const p = paths.get(g);
+    if (p && p.path.length >= 2 && (!best || p.cost < best.cost)) best = { cost: p.cost, path: p.path };
+  }
+  if (!best) return usual();
+  return stepToward(state, best.path);
+}
+
 // ------------------------------------------------------------------ boss
 
 /**
@@ -851,6 +895,7 @@ export function adventureAction(state: GameState): Action {
   if (objectiveOf(state) === 'boss') return bossAction(state, memo);
   if (objectiveOf(state) === 'artifact') return artifactAction(state, memo);
   if (objectiveOf(state) === 'conquest') return conquestAction(state, memo);
+  if (objectiveOf(state) === 'relic') return relicAction(state, memo);
   if (hero.faction === 'dawn') return goodAction(state, memo);
   // The coop automaton follows the rulebook; a Horde player's bot chooses its fights.
   return currentActor(state).kind === 'automaton' ? evilAction(state, memo) : hordeBotAction(state, memo);

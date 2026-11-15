@@ -15,9 +15,10 @@ import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import type { Action, Crystal, GameState, HeroState } from './types';
 import { MAGIC, SPELLS, towerSpells, type SpellId } from './magic';
 import { HERO_TYPES } from './heroTypes';
+import { mayBuildSpark, pickUpShard, placeShards, SPARK_NAMES, spendShards } from './empire';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
-export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic';
+export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark';
 
 export interface Settlement {
   id: string;
@@ -47,6 +48,9 @@ export interface KingdomState {
   huts?: Record<HexKey, Hut>;
   /** Level 4: mills, wells and stores, by hex. */
   objects?: Record<HexKey, MapObject>;
+  /** Level 6: Odłamki Pierwotnej Iskry lying on the map (how many on a hex) and how many the game has in all (empire.ts). */
+  shards?: Record<HexKey, number>;
+  shardTotal?: number;
   built?: Record<FactionId, number>;
   /** A hero opened a chest and has to choose: its contents (an artifact) or gold. */
   chest: { heroId: string } | null;
@@ -61,7 +65,7 @@ export const KINGDOM = {
   /** Gold in a chest chosen instead of the artifact. */
   chestGold: 3,
   /** Cost of each level of a building. */
-  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4], forge: [], walls: [], tavern: [], magic: [] } as Record<BuildingId, number[]>,
+  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4], forge: [], walls: [], tavern: [], magic: [], spark: [] } as Record<BuildingId, number[]>,
   /** Price of an artifact in the market, by rarity (zwykły, rzadki, legendarny). */
   artifactPrice: [2, 5, 10],
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
@@ -110,10 +114,11 @@ export const BUILDING_NAMES: Record<BuildingId, [string, string?]> = {
   walls: ['Fosa', 'Mury z wieżyczkami'],
   tavern: ['Karczma'],
   magic: ['Wieża maga', 'Wielka wieża maga'],
+  spark: ['Pierwotna Iskra'],
 };
 
 /** The buildings a settlement may have in this game, in the order of the screen (the forge comes with level 4). */
-export const buildingsOf = (state: GameState): BuildingId[] => ['barracks', 'market', 'hospital', 'treasury', ...(state.rules.economy ? ['forge' as const, 'walls' as const] : []), ...(state.rules.realm ? ['tavern' as const, 'magic' as const] : [])];
+export const buildingsOf = (state: GameState): BuildingId[] => ['barracks', 'market', 'hospital', 'treasury', ...(state.rules.economy ? ['forge' as const, 'walls' as const] : []), ...(state.rules.realm ? ['tavern' as const, 'magic' as const] : []), ...(state.rules.empire ? ['spark' as const] : [])];
 
 export const buildingLevel = (s: Settlement, b: BuildingId): number => s.buildings[b] ?? 0;
 
@@ -126,6 +131,7 @@ export const BUILDING_TEXTS: Record<BuildingId, [string, string?]> = {
   hospital: ['Wskrzesza poległych pomocników za połowę ich ceny.', 'Wskrzesza za jedną trzecią ceny.'],
   treasury: ['Przynosi +1 złota na rundę.'],
   forge: ['Pomocnicy całej frakcji walczą z +1 A.', 'Pomocnicy dostają też +1 Ż.'],
+  spark: ['Budynek Pierwotnej Iskry: jego ceną są wszystkie Odłamki z mapy. Daje frakcji wielką premię, a w celu „Relikt” wygrywa grę.'],
   magic: ['Uczy bohaterów czarów pierwszego kręgu: Magiczny Pocisk, Leczenie, Spowolnienie i Wizja.', 'Uczy też czarów drugiego kręgu: Kamienna Skóra, Kula Ognia, Zryw i Wrota.'],
   tavern: ['Tu najmiesz dowódcę: drugiego bohatera z własnym pionkiem, doświadczeniem i artefaktami. Tu też wykupisz dowódcę, który poległ.'],
   walls: ['W bitwie o osadę wroga zatrzymuje fosa z kolcami: kto w nią wejdzie, traci turę i dostaje 2 obrażenia. Przejście jest tylko po moście.', 'Za fosą staje mur z bramą i dwie wieżyczki, które co rundę strzelają do napastników. Mur burzy tylko katapulta atakującego.'],
@@ -204,7 +210,7 @@ export function initKingdom(state: GameState): void {
   if (state.rules.economy) k.res = { dawn: { ...ECONOMY.start }, horde: { ...ECONOMY.start } };
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag: Record<FactionId, string[]> = { dawn: rng.shuffle([...NAMES.dawn]), horde: rng.shuffle([...NAMES.horde]) };
-  const empty = (): Record<BuildingId, number> => ({ barracks: 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}) }) as Record<BuildingId, number>;
+  const empty = (): Record<BuildingId, number> => ({ barracks: 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0 } : {}) }) as Record<BuildingId, number>;
   const add = (id: string, at: HexKey, land: FactionId, owner: FactionId | null) => {
     k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[land]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
     state.tiles[at].place = { kind: 'settlement', id };
@@ -247,6 +253,9 @@ export function initKingdom(state: GameState): void {
     state.crystals[id] = crystal;
     state.tiles[hex].crystalId = id;
   });
+
+  // Level 6: the shards of the Pierwotna Iskra come before the mines and huts, so the smaller maps still have room for them.
+  placeShards(state);
 
   // Gold mines: free hexes, not next to a settlement or a guardian.
   const wantMines = KINGDOM.mines[state.setup.mapSize] ?? 2;
@@ -330,6 +339,7 @@ export function enterPlace(state: GameState, hero: HeroState): void {
   const k = state.kingdom;
   const place = state.tiles[hero.pos]?.place;
   if (!k || !place) return;
+  if (place.kind === 'shard') return pickUpShard(state, hero);
   const name = UNITS[hero.id].name;
   if (place.kind === 'settlement') {
     const s = k.settlements[place.id];
@@ -463,7 +473,7 @@ export const nextCost = (s: Settlement, b: BuildingId): number | null => KINGDOM
 
 /** The full price of the next level of a building: gold only in level 3, gold and resources in level 4 (null: it is complete). */
 export function buildCost(state: GameState, s: Settlement, b: BuildingId): Cost | null {
-  if (state.rules.economy) return ECONOMY.cost[b][buildingLevel(s, b)] ?? null;
+  if (state.rules.economy) return ECONOMY.cost[b]?.[buildingLevel(s, b)] ?? null;
   const gold = nextCost(s, b);
   return gold === null ? null : { gold };
 }
@@ -526,6 +536,17 @@ export function kingdomAction(state: GameState, action: Action): void {
     case 'kingdomBuild': {
       const { s, hero } = serviceSettlement(state, action.settlementId);
       const b = action.building;
+      if (b === 'spark') {
+        // Level 6: the Iskra costs every shard of the game, carried by the faction's heroes; the builder stands in the settlement.
+        if (!state.rules.empire) throw new Error('Pierwotna Iskra jest dopiero na poziomie Imperium.');
+        if (buildingLevel(s, 'spark') > 0) throw new Error('Ten budynek jest już w pełni rozbudowany.');
+        if (hero.pos !== s.at) throw new Error('Pierwotną Iskrę wznosi bohater stojący w osadzie.');
+        if (!mayBuildSpark(state, hero.faction)) throw new Error('Do Pierwotnej Iskry potrzeba wszystkich Odłamków z mapy.');
+        spendShards(state, hero.faction);
+        s.buildings.spark = 1;
+        log(state, 'crystal', `${FACTION_NAMES[hero.faction]} wznosi w osadzie ${s.name} budynek: ${SPARK_NAMES[hero.faction]}.`);
+        break;
+      }
       const price = buildCost(state, s, b);
       if (price === null) throw new Error('Ten budynek jest już w pełni rozbudowany.');
       if (b === 'barracks' && s.land !== hero.faction) throw new Error('Obcej osady nie rozbudujesz o koszary.');
@@ -817,6 +838,11 @@ export function kingdomBotAction(state: GameState, hero: HeroState): Action | nu
   for (const art of (hero.pack ?? []).map((id) => ARTIFACT_BY_ID[id]).filter((a) => a?.set)) {
     const trial = { gear: { ...hero.gear, [art.slot]: art.id } };
     if (best(trial as HeroState) > best(hero)) return { type: 'equipArtifact', artifactId: art.id };
+  }
+  // Level 6: all the shards in hand and the hero in its own settlement: the Iskra goes up.
+  if (state.rules.empire && mayBuildSpark(state, hero.faction)) {
+    const at = settlementAt(state, hero.pos);
+    if (at && at.owner === hero.faction) return { type: 'kingdomBuild', settlementId: at.id, building: 'spark' };
   }
   // Level 4: supports that do not fit into the team (more alive than places) stay to guard the settlement the hero stands in; a team with
   // a free place takes them back.

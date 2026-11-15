@@ -24,6 +24,8 @@ function welcomeText(s: GameState): string {
       return `Twoim celem jest Boss: ${OBJECTIVES.boss.summary}`;
     case 'artifact':
       return `Twoim celem jest Artefakt: ${OBJECTIVES.artifact.summary}`;
+    case 'relic':
+      return 'Twoim celem jest Relikt: zbierz wszystkie Odłamki Pierwotnej Iskry (świecące kryształy na mapie), a potem stań bohaterem w swojej osadzie i wznieś tam budynek Pierwotnej Iskry. Bohater, który pokona innego, zabiera mu jego Odłamki.';
     case 'conquest':
       return `Twoim celem jest Podbój: zajmij wszystkie osady na ziemi Hordy (jej stolicę i osady na jej połowie mapy) i utrzymaj je do końca rundy. Pilnuj własnych: zostaw w nich garnizon (okno osady, zakładka Fosa), bo Horda chce tego samego.`;
     default:
