@@ -53,6 +53,8 @@ export interface KingdomState {
   shardTotal?: number;
   /** Level 6: the rank of each faction's tree (0-3, empire.ts). */
   tree?: Record<FactionId, number>;
+  /** Level 6: the units of tiers 2-5 whose dwelling each faction has built (one per tier). */
+  dwellings?: Record<FactionId, string[]>;
   built?: Record<FactionId, number>;
   /** A hero opened a chest and has to choose: its contents (an artifact) or gold. */
   chest: { heroId: string } | null;
@@ -100,16 +102,36 @@ const TIER_UNITS: Record<FactionId, string[]> = {
 /** The legendary unit of level 6: gold and Gwiezdny Pył, one per faction, in upgraded barracks. */
 export const LEGEND = { gold: 20, dust: 3 };
 const LEGENDS: Record<FactionId, string> = { dawn: 'dawnPhoenix', horde: 'doomBehemoth' };
-export interface Recruit { id: string; tier: number; cost: number; /** Gwiezdny Pył on top of the gold (the level 6 unit). */ dust?: number }
+export interface Recruit { id: string; tier: number; cost: number; /** Gwiezdny Pył on top of the gold (the level 6 unit). */ dust?: number; /** The other unit of its tier (level 6 only). */ alt?: true }
 
-/** Every recruit of a faction by tier; tier 6 belongs to level 6 only (list the offer of a game with `recruitsOf`). */
+/** Level 6: the second unit of tiers 2-5. Each unit of those tiers has a dwelling; a faction builds one dwelling per tier, which shuts the other out for the whole game. */
+export const ALT_UNITS: Record<FactionId, string[]> = {
+  dawn: ['silverFox', 'dawnOwl', 'dryadArcher', 'whiteStag'],
+  horde: ['goblinSlinger', 'gargoyle', 'caveTroll', 'shadowWyvern'],
+};
+export const DWELLING_NAMES: Record<string, string> = {
+  hedgehog: 'Legowisko Jeżozwierzy', silverFox: 'Lisia Nora', centaur: 'Stajnie Centaurów', dawnOwl: 'Sowia Dziupla', boar: 'Dębowa Zagroda', dryadArcher: 'Gaj Driad', treeGuardian: 'Prastary Zagajnik', whiteStag: 'Polana Jeleni',
+  ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern',
+};
+/** Price of a dwelling, by the tier of its unit (2-5). */
+export const DWELLING_COST: Cost[] = [{ gold: 2, wood: 1 }, { gold: 3, wood: 2 }, { gold: 4, ore: 2 }, { gold: 5, ore: 2, dust: 1 }];
+
+/** Every recruit of a faction by tier; tier 6 and the alternative units belong to level 6 only (list the offer of a game with `recruitsOf`). */
 export const RECRUITS: Record<FactionId, Recruit[]> = {
-  dawn: [...FACTION_SUPPORTS.dawn.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })), ...TIER_UNITS.dawn.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] })), { id: LEGENDS.dawn, tier: 6, cost: LEGEND.gold, dust: LEGEND.dust }],
-  horde: [...FACTION_SUPPORTS.horde.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })), ...TIER_UNITS.horde.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] })), { id: LEGENDS.horde, tier: 6, cost: LEGEND.gold, dust: LEGEND.dust }],
+  dawn: [...FACTION_SUPPORTS.dawn.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })), ...TIER_UNITS.dawn.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] })), ...ALT_UNITS.dawn.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1], alt: true as const })), { id: LEGENDS.dawn, tier: 6, cost: LEGEND.gold, dust: LEGEND.dust }],
+  horde: [...FACTION_SUPPORTS.horde.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })), ...TIER_UNITS.horde.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] })), ...ALT_UNITS.horde.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1], alt: true as const })), { id: LEGENDS.horde, tier: 6, cost: LEGEND.gold, dust: LEGEND.dust }],
 };
 
-/** The recruits a faction may buy in this game. */
-export const recruitsOf = (state: GameState, f: FactionId): Recruit[] => RECRUITS[f].filter((r) => r.tier < 6 || Boolean(state.rules.empire));
+/** The recruits a faction may buy in this game, by tier (level 6: both units of tiers 2-5; which one can be recruited is `dwellingOf`). */
+export const recruitsOf = (state: GameState, f: FactionId): Recruit[] => RECRUITS[f].filter((r) => (r.tier < 6 && !r.alt) || Boolean(state.rules.empire)).sort((a, b) => a.tier - b.tier);
+
+/** Level 6: whether tiers 2-5 need a dwelling in this game. */
+export const needsDwelling = (state: GameState, r: Recruit): boolean => Boolean(state.rules.empire) && r.tier >= 2 && r.tier <= 5;
+/** Level 6: the unit whose dwelling the faction has built for this tier (undefined: none yet). */
+export const dwellingOf = (state: GameState, f: FactionId, tier: number): string | undefined =>
+  (state.kingdom?.dwellings?.[f] ?? []).find((id) => RECRUITS[f].find((r) => r.id === id)?.tier === tier);
+/** Whether the faction may recruit this unit as far as dwellings go. */
+export const dwellingReady = (state: GameState, f: FactionId, r: Recruit): boolean => !needsDwelling(state, r) || dwellingOf(state, f, r.tier) === r.id;
 
 const NAMES: Record<FactionId, string[]> = {
   dawn: ['Świtogaj', 'Srebrzysty Bród', 'Złotolist', 'Jasna Polana', 'Perłowa Wieża', 'Kryształowa Przystań', 'Wiosenny Gród', 'Miodowy Dwór', 'Zorzyca', 'Białe Mosty', 'Rosogród', 'Słonecznik', 'Lazurowa Zatoka', 'Skrzydlata Przystań', 'Malwowa Dolina', 'Wierzbowy Gaj'],
@@ -574,6 +596,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       const entry = recruitsOf(state, hero.faction).find((r) => r.id === action.unitId);
       if (!entry) throw new Error('Tej jednostki nie ma w ofercie.');
       if (entry.tier >= 4 && s.buildings.barracks < 2) throw new Error('Tę jednostkę rekrutuje się w rozbudowanych koszarach.');
+      if (!dwellingReady(state, hero.faction, entry)) throw new Error(dwellingOf(state, hero.faction, entry.tier) ? 'Frakcja wybrała już inne siedlisko tego poziomu.' : 'Najpierw zbuduj siedlisko tej jednostki.');
       const fs = state.factions[hero.faction];
       if (hasUnit(state, hero.faction, entry.id)) throw new Error('Ta jednostka jest już w twojej drużynie.');
       payCost(state, hero.faction, { gold: entry.cost, ...(entry.dust ? { dust: entry.dust } : {}) });
@@ -624,6 +647,21 @@ export function kingdomAction(state: GameState, action: Action): void {
         k.gold[f] += ECONOMY.tradeSell[action.res];
         log(state, 'info', `${FACTION_NAMES[f]} sprzedaje: ${RESOURCE_NAMES[action.res]} (${ECONOMY.tradeSell[action.res]} zł).`, f);
       }
+      break;
+    }
+    case 'kingdomDwelling': {
+      const { s, hero } = serviceSettlement(state, action.settlementId);
+      const f = hero.faction;
+      const entry = recruitsOf(state, f).find((r) => r.id === action.unitId);
+      if (!state.rules.empire || !entry || !needsDwelling(state, entry)) throw new Error('Siedliska jednostek są dopiero na poziomie Imperium.');
+      if (!mayRecruit(s, f) || s.buildings.barracks < 1) throw new Error('Siedlisko buduje się w osadzie własnej frakcji, przy koszarach.');
+      if (dwellingOf(state, f, entry.tier)) throw new Error('Frakcja ma już siedlisko tego poziomu: drugie jest wykluczone.');
+      if (!mayBuildNow(state, f)) throw new Error('W tej rundzie budowaliście już: jeden budynek na rundę.');
+      const price = DWELLING_COST[entry.tier - 2];
+      payCost(state, f, price);
+      (k.built ??= { dawn: 0, horde: 0 })[f] = state.round;
+      ((k.dwellings ??= { dawn: [], horde: [] })[f]).push(entry.id);
+      log(state, 'info', `${FACTION_NAMES[f]} buduje siedlisko: ${DWELLING_NAMES[entry.id]} (${costText(price)}). Od teraz rekrutuje: ${UNITS[entry.id].name}.`);
       break;
     }
     case 'kingdomTree': {
@@ -762,13 +800,24 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   const buildable = (b: BuildingId) => { const c = buildCost(state, s, b); return c !== null && canPay(state, f, c) && mayBuildNow(state, f); };
   const own = s.land === f;
   if (own && s.buildings.barracks < 1 && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
+  if (own && s.buildings.barracks >= 1 && state.rules.empire) {
+    // Level 6: the dwelling of the lowest tier that has none (which of the two units: by the game's seed, so the games differ), when it and its unit can be paid for.
+    for (const tier of [2, 3, 4, 5]) {
+      if (dwellingOf(state, f, tier) || (tier >= 4 && s.buildings.barracks < 2)) continue;
+      const options = recruitsOf(state, f).filter((r) => r.tier === tier);
+      const pick = options[(state.setup.seed + tier + (f === 'dawn' ? 0 : 1)) % options.length];
+      const price = DWELLING_COST[tier - 2];
+      if (pick && mayBuildNow(state, f) && canPay(state, f, { ...price, gold: price.gold + pick.cost })) return { type: 'kingdomDwelling', settlementId: id, unitId: pick.id };
+      break;
+    }
+  }
   if (own && s.buildings.barracks >= 1) {
     // Like a player: the strongest recruit it can pay for now.
-    const missing = recruitsOf(state, f).filter((r) => !hasUnit(state, f, r.id) && (r.tier < 4 || s.buildings.barracks >= 2) && afford(r.cost) && resOf(state, f).dust >= (r.dust ?? 0)).sort((a, b) => b.tier - a.tier)[0];
+    const missing = recruitsOf(state, f).filter((r) => !hasUnit(state, f, r.id) && dwellingReady(state, f, r) && (r.tier < 4 || s.buildings.barracks >= 2) && afford(r.cost) && resOf(state, f).dust >= (r.dust ?? 0)).sort((a, b) => b.tier - a.tier)[0];
     if (missing) return { type: 'kingdomRecruit', settlementId: id, unitId: missing.id };
     // Every cheaper recruit is in the team and the strongest ones wait behind the bigger barracks: build them.
-    const waiting = recruitsOf(state, f).some((r) => r.tier >= 4 && !hasUnit(state, f, r.id));
-    if (waiting && s.buildings.barracks === 1 && recruitsOf(state, f).every((r) => r.tier >= 4 || hasUnit(state, f, r.id)) && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
+    const waiting = recruitsOf(state, f).some((r) => r.tier >= 4 && !hasUnit(state, f, r.id) && (!needsDwelling(state, r) || dwellingOf(state, f, r.tier) === undefined || dwellingReady(state, f, r)));
+    if (waiting && s.buildings.barracks === 1 && recruitsOf(state, f).every((r) => r.tier >= 4 || hasUnit(state, f, r.id) || (needsDwelling(state, r) && dwellingOf(state, f, r.tier) !== r.id && dwellingOf(state, f, r.tier) !== undefined)) && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
   }
   if (s.buildings.hospital >= 1 && fs.supportsDead.length) {
     const dead = fs.supportsDead[0];

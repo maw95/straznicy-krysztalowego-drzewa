@@ -3634,6 +3634,18 @@
       "data": "2026-11-15",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "poziom6/alternatywne-jednostki",
+      "pliki": [ "public/assets/cards/art/silverFox.jpg", "public/assets/cards/portraits/silverFox.jpg", "public/assets/cards/art/dawnOwl.jpg", "public/assets/cards/portraits/dawnOwl.jpg", "public/assets/cards/art/dryadArcher.jpg", "public/assets/cards/portraits/dryadArcher.jpg", "public/assets/cards/art/whiteStag.jpg", "public/assets/cards/portraits/whiteStag.jpg", "public/assets/cards/art/goblinSlinger.jpg", "public/assets/cards/portraits/goblinSlinger.jpg", "public/assets/cards/art/gargoyle.jpg", "public/assets/cards/portraits/gargoyle.jpg", "public/assets/cards/art/caveTroll.jpg", "public/assets/cards/portraits/caveTroll.jpg", "public/assets/cards/art/shadowWyvern.jpg", "public/assets/cards/portraits/shadowWyvern.jpg" ],
+      "typ": "poziom 6: ilustracje kart i portrety ośmiu alternatywnych jednostek poziomów 2-5 (Srebrny Lis, Sowa Świtu, Driada Łuczniczka, Biały Jeleń, Goblin Procarz, Gargulec, Troll Jaskiniowy, Wiwerna Cienia)",
+      "opis": "Jeden arkusz 1536x1024 (siatka 4x2 ilustracji kart: górny rząd na tle słonecznego lasu Przymierza, dolny na wulkanicznym tle Hordy), pocięty skryptem scripts/assets/dowodcy.py (ilustracje 451x332, portrety 256x256).",
+      "scenario_asset": { "arkusz": "asset_S49wKDjZjWV8TWTkCCWnkKWp" },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.6 Flare, jakość medium",
+      "data": "2026-11-15",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

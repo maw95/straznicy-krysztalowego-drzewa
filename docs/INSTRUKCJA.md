@@ -838,6 +838,11 @@ Na poziomie Imperium każda frakcja walczy po swojemu:
 
 W oknie każdej własnej osady można rozwijać **drzewko frakcji** (trzy stopnie za złoto i Gwiezdny Pył): Przymierze leczy mocniej, potem dwie jednostki naraz, a na końcu wszystkie jego jednostki zaczynają bitwę z +1 Życia; Żądza Krwi Hordy działa dwa, potem trzy razy w bitwie, a na końcu także leczy.
 
+### Dwie jednostki na poziom i siedliska
+Na poziomie Imperium każdy z poziomów jednostek 2–5 ma **dwie jednostki do wyboru**. Zanim zrekrutujesz jednostkę takiego poziomu, zbuduj w koszarach jej **siedlisko** (to budynek, więc jeden na rundę). **Siedlisko jednej jednostki wyklucza drugą jednostkę tego poziomu do końca gry**, więc wybierz tę, która pasuje do Twojej drużyny.
+- Przymierze: Jeżozwierz albo Srebrny Lis; Centaur albo Sowa Świtu; Alabastrowy Odyniec albo Driada Łuczniczka; Opiekun Drzewa albo Biały Jeleń.
+- Horda: Szczurołak albo Goblin Procarz; Piekielny Ogar albo Gargulec; Salamandra Popiołu albo Troll Jaskiniowy; Herszt Minotaurów albo Wiwerna Cienia.
+
 ### Legendarna jednostka
 W rozbudowanych koszarach, za 20 zł i 3 Gwiezdne Pyły, frakcja może zrekrutować jedną legendarną jednostkę: **Feniksa Świtu** (lata; raz na bitwę po śmierci wstaje z połową Życia) albo **Behemota Zagłady** (każdym atakiem może trafić dwóch sąsiadujących wrogów).
 

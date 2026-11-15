@@ -25,7 +25,7 @@ Poziom 4 zbudowany 15.11 (Kuźnia, wymiana, obiekty mapy, obrona osady, Podbój,
 Poziom 5 zbudowany 15.11 (drugi bohater, magia, typy i specjalności, rozgałęzienia umiejętności); czeka na ogranie przez autora. Łatwy i Trudny dla poziomów 4–5 jadą na strojeniu poziomu 3 (osobno niemierzone).
 
 ### Etap D. Poziom 6 „Imperium” (frakcje i Relikt)
-15. **6c. Alternatywne jednostki poziomów 2–5** (L; 8 jednostek, grafika, animacje; pierwszy kandydat do cięcia).
+Poziom 6 zbudowany 15.11 (Relikt, mechaniki i drzewka frakcji, jednostka legendarna, alternatywne jednostki z siedliskami); czeka na ogranie i akceptację składu jednostek przez autora.
 
 ### Etap E. Przed premierą
 16. **Inwentaryzacja tekstów pod wiele języków** (M): tylko spis, tłumaczenia po premierze.
@@ -65,6 +65,7 @@ Lista rzeczy, które w grze działają na zastępczej grafice albo bez własnego
 **Poziom 6 (Imperium)**
 - Podnoszenie Odłamka i wzniesienie Pierwotnej Iskry: brak własnego dźwięku i animacji (gra dźwięk budowy `build.mp3`). Potrzebne: `dzwieki/odlamek.mp3` (kryształowy dzwon), `dzwieki/iskra.mp3` (fanfara mocy), błysk na kafelku przy podniesieniu.
 - Feniks Świtu (`dawnPhoenix`) i Behemot Zagłady (`doomBehemoth`): ilustracje kart i portrety są zastępcze (postać na gradiencie, `scripts/assets/legendy.py`); potrzebne pełne ilustracje 451×332 z tłem (`cards/art/<id>.jpg`) i portrety 256×256, a także sprite'y (`stoi`, `ruch`, `atak`, `trafienie`, `smierc`; Feniks dodatkowo `odrodzenie`) i dźwięki ataku.
+- Osiem alternatywnych jednostek (`silverFox`, `dawnOwl`, `dryadArcher`, `whiteStag`, `goblinSlinger`, `gargoyle`, `caveTroll`, `shadowWyvern`): mają ilustracje kart i portrety, nie mają sprite'ów (`stoi`, `ruch`, `atak`, `trafienie`, `smierc`) ani dźwięków ataku; na arenie stoją jako żetony z portretem. Siedliska (16 nazw w `DWELLING_NAMES`) nie mają obrazków: do rozważenia małe ikony przy liście koszar albo budynki w krajobrazie osady.
 - Zdolność Feniksa „Odrodzenie z Popiołów” (`rebirth`) pożycza ikonę Daru Życia (`cards/abilities/giftOfLife.png`, mapowanie `ABILITY_ART` w `src/ui/common.tsx`); potrzebne `cards/abilities/rebirth.png` i `rebirth_inner.png` oraz efekt odrodzenia na arenie.
 - Blask Świtu i Żądza Krwi: brak efektów na arenie i dźwięków (widać tylko zmianę Życia i wpis w dzienniku); potrzebne krótkie efekty `efekty/blask_switu` i `efekty/zadza_krwi` oraz ikony mechanik i trzech stopni drzewka każdej frakcji (dziś sam tekst w oknie osady).
 - Karta celu „Relikt” w kreatorze używa ikony mapy `odlamek.webp` (docelowo `ui/menu/relikt.webp`, 512×592).

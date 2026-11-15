@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Imperium: **dwie jednostki na każdym z poziomów 2–5 i siedliska**. Frakcja wybiera, którą jednostkę danego poziomu chce mieć, budując jej siedlisko w koszarach; drugie siedlisko tego poziomu jest wtedy wykluczone do końca gry. Osiem nowych jednostek: Srebrny Lis, Sowa Świtu, Driada Łuczniczka i Biały Jeleń u Przymierza; Goblin Procarz, Gargulec, Troll Jaskiniowy i Wiwerna Cienia u Hordy. Komputer też wybiera siedliska.
+
 - Imperium: **mechaniki frakcji, drzewko frakcji i legendarne jednostki**. Przymierze ma Blask Świtu (co rundę bitwy leczy najciężej ranną jednostkę), Horda Żądzę Krwi (po śmierci wroga wszystkie jej jednostki biją mocniej). Obie mechaniki rozwija trzystopniowe drzewko frakcji kupowane w osadzie za złoto i Gwiezdny Pył. W rozbudowanych koszarach czeka jedna legendarna jednostka: Feniks Świtu (odradza się raz na bitwę) albo Behemot Zagłady (trafia dwóch wrogów naraz).
 
 - Nowy poziom 6 **„Imperium”** (początek): **Odłamki Pierwotnej Iskry** i cel **Relikt**. Odłamki leżą na mapie, bohater zabiera je wejściem na pole, a zwycięzca bitwy bohaterów przejmuje Odłamki pokonanego. Frakcja z kompletem Odłamków wznosi w swojej osadzie Sanktuarium (Przymierze: +2 Życia dla wszystkich jednostek) albo Czarną Kuźnię (Horda: +1 Ataku). W celu „Relikt” ten budynek wygrywa grę. Komputer zbiera Odłamki, poluje na niosących i buduje.

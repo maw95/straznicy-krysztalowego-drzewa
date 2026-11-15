@@ -36,7 +36,8 @@ const one = (s: GameState) => scaleOf(s);
 describe('recruits', () => {
   it('every faction has seven recruits: three tier-1 and one each of tiers 2-5, priced rising, and the legendary one of level 6 on top', () => {
     for (const f of ['dawn', 'horde'] as const) {
-      expect(RECRUITS[f].filter((r) => r.tier < 6)).toHaveLength(7);
+      expect(RECRUITS[f].filter((r) => r.tier < 6 && !r.alt)).toHaveLength(7);
+      expect(RECRUITS[f].filter((r) => r.alt).map((r) => r.tier)).toEqual([2, 3, 4, 5]);
       expect(RECRUITS[f].filter((r) => r.tier === 6)).toHaveLength(1);
       const costs = [1, 2, 3, 4, 5, 6].map((t) => RECRUITS[f].find((r) => r.tier === t)!.cost);
       expect(costs).toEqual([...costs].sort((a, b) => a - b));

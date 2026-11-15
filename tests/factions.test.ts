@@ -5,7 +5,8 @@ import { chooseAction } from '../src/engine/ai';
 import { dealDamage, makeBattleUnit } from '../src/engine/battle';
 import { FACTION_MECHANICS } from '../src/engine/empire';
 import { activeHero, applyAction, createGame } from '../src/engine/game';
-import { LEGEND, recruitsOf, settlementAt } from '../src/engine/kingdom';
+import { ALT_UNITS, DWELLING_COST, dwellingOf, LEGEND, recruitsOf, settlementAt } from '../src/engine/kingdom';
+import { UNITS } from '../src/engine/data';
 import { mapNeighbors, tileCost } from '../src/engine/map';
 import type { GameState } from '../src/engine/types';
 import { playOut, pvpSeats, setup } from './helpers/engine';
@@ -143,5 +144,51 @@ describe('level 6: the legendary recruit', () => {
       const s = playOut(createGame(setup({ mode: 'pvp', mapSize: 'long', seed, seats: pvpSeats('goldDragon', 'werewolfLord') }, rules)));
       expect(s.phase).toBe('over');
     }
+  });
+});
+
+describe('level 6: alternative units and their dwellings', () => {
+  it('every tier 2-5 has two units in level 6 and one below it', () => {
+    const s = game();
+    for (const f of ['dawn', 'horde'] as const) for (const tier of [2, 3, 4, 5]) expect(recruitsOf(s, f).filter((r) => r.tier === tier)).toHaveLength(2);
+    for (const tier of [2, 3, 4, 5]) expect(recruitsOf(game(l5), 'dawn').filter((r) => r.tier === tier)).toHaveLength(1);
+    for (const id of [...ALT_UNITS.dawn, ...ALT_UNITS.horde]) expect(UNITS[id].kind).toBe('support');
+  });
+
+  it('a unit of tiers 2-5 needs its dwelling; building one shuts the other unit of the tier out', () => {
+    let s = game();
+    home(s).buildings.barracks = 1;
+    expect(() => applyAction(s, { type: 'kingdomRecruit', settlementId: home(s).id, unitId: 'hedgehog' })).toThrow(/siedlisko/);
+    s = applyAction(s, { type: 'kingdomDwelling', settlementId: home(s).id, unitId: 'silverFox' });
+    expect(dwellingOf(s, 'dawn', 2)).toBe('silverFox');
+    expect(s.kingdom!.gold.dawn).toBe(80 - DWELLING_COST[0].gold);
+    expect(() => applyAction(s, { type: 'kingdomRecruit', settlementId: home(s).id, unitId: 'hedgehog' })).toThrow(/inne siedlisko/);
+    s = applyAction(s, { type: 'kingdomRecruit', settlementId: home(s).id, unitId: 'silverFox' });
+    expect(s.factions.dawn.supportsAlive).toContain('silverFox');
+    // A dwelling is a building: one a round, and the second of a tier is refused for good.
+    expect(() => applyAction(s, { type: 'kingdomDwelling', settlementId: home(s).id, unitId: 'centaur' })).toThrow(/jeden budynek na rundę/);
+    const round = s.round;
+    while (s.round === round) s = applyAction(s, { type: 'endTurn' });
+    while (s.heroes[s.turnOrder[s.turnIndex]].faction !== 'dawn') s = applyAction(s, { type: 'endTurn' });
+    expect(() => applyAction(s, { type: 'kingdomDwelling', settlementId: home(s).id, unitId: 'hedgehog' })).toThrow(/wykluczone/);
+    // Tier 1 needs no dwelling, and level 5 needs none at all.
+    const low = game(l5);
+    home(low).buildings.barracks = 1;
+    expect(applyAction(low, { type: 'kingdomRecruit', settlementId: home(low).id, unitId: 'hedgehog' }).factions.dawn.supportsAlive).toContain('hedgehog');
+    expect(() => applyAction(low, { type: 'kingdomDwelling', settlementId: home(low).id, unitId: 'silverFox' })).toThrow(/Imperium/);
+  });
+
+  it('bots build dwellings and recruit from them', () => {
+    let alt = 0, any = 0;
+    for (const seed of [1, 2, 3, 4]) {
+      const s = playOut(createGame(setup({ mode: 'pvp', mapSize: 'veryLong', seed, seats: pvpSeats('goldDragon', 'werewolfLord') }, rules)));
+      expect(s.phase).toBe('over');
+      for (const f of ['dawn', 'horde'] as const) {
+        any += (s.kingdom!.dwellings?.[f] ?? []).length;
+        alt += [...s.factions[f].supportsAlive, ...s.factions[f].supportsDead].filter((id) => ALT_UNITS[f].includes(id)).length;
+      }
+    }
+    expect(any).toBeGreaterThan(0);
+    expect(alt).toBeGreaterThan(0);
   });
 });

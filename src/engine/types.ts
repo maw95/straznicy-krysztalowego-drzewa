@@ -583,6 +583,8 @@ export type Action =
   | { type: 'kingdomTrade'; settlementId: string; res: 'wood' | 'ore' | 'dust'; dir: 'buy' | 'sell' }
   /** Level 6: the next rank of the faction's tree, bought in an own settlement. */
   | { type: 'kingdomTree'; settlementId: string }
+  /** Level 6: the dwelling of one of the two units of a tier (it shuts the other out). */
+  | { type: 'kingdomDwelling'; settlementId: string; unitId: string }
   /** Level 5: a spell learnt in the mage tower of an own settlement, cast in a battle by the active hero, cast on the map in the hero's turn. */
   | { type: 'kingdomLearn'; settlementId: string; spell: SpellId }
   | { type: 'battleSpell'; spell: SpellId; targetId?: string }
