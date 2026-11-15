@@ -44,14 +44,15 @@ W nocy 13/14.11 zrobione kroki 1–7 z kolejności prac: porządki w repo i kodz
 
 ### Wydanie
 
+- [ ] **Przy następnym wydaniu wdrożyć serwer** (repo backendu ma niewdrożony commit z rankingiem Królestwa, a poziom 0 i Łatwy na arenie zmieniają znaczenie poziomu `kids`: stary klient wysyłający `kids` dostałby arenę zamiast pojedynków). Zrobione 15.11 i czeka na wydanie: poziom 0 „Zerówka” (nazwa do zatwierdzenia), Łatwy na arenie dla poziomów 1–3 (strojenie), bot-kupiec, Królestwo w rankingu.
+
 - [x] **Wydane 14.11.2026 jako 2.7.0** (obejmuje 2.6.0): gra na Pages, wydanie na GitHubie, pakiet silnika, serwer na Fly zaktualizowany do silnika 2.7.0 i wypchnięty. Do sprawdzenia przez autora: sekcja F (poziom 3 na żywo).
 
 ### Poziom 3 „Królestwo”: co zostało po nocy 13/14.11
 
 Zrobione i usunięte z listy: K5 (8 jednostek w silniku, grafika, animacje), K8 (widok osady), K9 (samouczek, instrukcja, autopilot), zestawy artefaktów (silnik, UI, boty, 12 ikon), dochód 1/2/3, porządki repo i kodu, wydajność. Zostaje:
-- [ ] **Strojenie ekonomii** (pomiar 14.11, `make sim-krolestwo GAMES=80`, szczegóły w `POZIOM_3_KROLESTWO.md`): ekonomia prawie nie wpływa na wynik botów, bo rzadko wracają do osady (średnio 1,1 osady, 0–1,8 awansowanego rekruta na grę, na końcu zostaje 8–40 zł, poziomów 4 i 5 nie kupują wcale). Wygrane Przymierza na Normalnym: mapa krótka 56–68%, średnia 34–49%, długa 34–49% (pasmo 45–65%). Ceny jednostek (3/5/8/12) są robocze. Potrzebny **lepszy bot-kupiec** (próba wydłużenia wypraw po zakupy obniżyła wygrane o 5–10 pkt i została cofnięta) albo testy z ludźmi. Dopiero potem: ceny z symulacji, liczba osad i kopalń, siła obrońców osad, posiłki automatu zła w koopie, punkty rankingowe.
+- [ ] **Strojenie ekonomii, reszta** (15.11): bot-kupiec zrobiony (kupuje z dowolnego miejsca jak człowiek, najsilniejszego rekruta, rozbudowuje koszary; na długich mapach 2,4–3,1 awansowanego rekruta na grę, poziomy 4–5 ok. 0,6–1,2). Normalny i Trudny przestrojone (Normalny 51–67%, Trudny koop 34–45%). Zostają: ceny jednostek z symulacji (3/5/8/12 są robocze), liczba osad i kopalń, siła obrońców osad, posiłki automatu zła w koopie. Zauważone: przy dodatkowym złocie Łatwego boty kończą z 15–20 zł (nie mają już co kupić): do rozważenia, na co mają wydawać nadwyżkę (np. artefakty na targu).
 - [x] **Poziom Trudny i Normalny dla Królestwa (14.11):** wystrojone (`scripts/sim/tuneKingdom.ts`, wpisy w `tuning.ts`; usterka: stroiciel dotąd nie działał na Królestwie). Zostały kryształowe tylko cele „Kryształy”; inne cele (kontrola, przetrwanie, boss, artefakt) bez strojenia.
-- [ ] **Poziom Łatwy dla Królestwa:** rozstrzygnięte 14.11 (sekcja C2: poziom trudności nie zmienia mechanik; dzisiejszy Łatwy staje się poziomem 0). Dawny opis problemu: Łatwy ma pojedynki planszowe, a ekonomia wymaga areny, więc na Łatwym Królestwo dziś nie robi nic. Opcje: (a) Królestwo wymusza arenę także na Łatwym i dostaje strojenie (z areną Przymierze wygrywa tylko 35–67%, trzeba je wzmocnić), (b) Królestwo niedostępne na Łatwym.
 - [ ] **Do sprawdzenia na żywo:** patrz sekcja F (dopisane punkty poziomu 3).
 
 1. **Zakres premiery (decyzja 13.11):** premiera dopiero po poziomie 5; poziomy 3, 4 i 5 wchodzą przed pakowaniem na Steam. Do premiery nie wchodzą nowe frakcje, kampania ani Ekspedycja (Q9). Numer wydania premiery do ustalenia przy wydaniu (dawne „3.0” z 12.11 traci sens).
@@ -62,8 +63,6 @@ Zrobione i usunięte z listy: K5 (8 jednostek w silniku, grafika, animacje), K8 
 Zrobione 14.11 (szczegóły w CHANGELOG.md i historii gita): wejście do osady spoza osady (lista osad w prawym panelu, zakupy z dowolnego miejsca), własne kafelki osad, zoom kółkiem i przeciąganie mapy, widoczniejsze ikony kopalń (nie powtórzyło się w silniku: kopalnie były odkryte, ale ikona była za mała), dolny pasek (złoto „2 (+2)”, dziennik w Opcjach), ozdobny licznik skarbów, nowa ikona plecaka, kreator (bez ramek wokół ikon, wycentrowany wybór kształtu z heksów i rozmiaru z kodami S–3XL, nowe nazwy rozmiarów), 14 nowych ikon menu, zwierzęta poziomów trudności, portrety Centaura i Opiekuna Drzewa, strzała Centaura.
 
 - [ ] **Ozdobne narożniki ramek** nie pasują do reszty ramki (pominięte 14.11: wymaga decyzji o stylu). Do rozważenia: narożniki jako osobne elementy dopasowane do stylu ramki (9-slice / `border-image`), generowane razem z ramką w Scenario, albo prostsze, spójne narożniki w CSS/SVG.
-- [ ] **Poziom 0 i poziom trudności jako warunki startowe** (decyzja autora 14.11): plan i koszt w `POZIOM_0_PLAN.md`, czeka na odpowiedzi na dwa pytania z tego dokumentu.
-  - Poziom trudności nie zmienia mechanik gry ani ich braku, tylko warunki startowe graczy komputerowych; dzisiejszy „Łatwy” z poziomu 1 staje się poziomem 0 (liczy się do rankingu własną kolumną punktów; cele i mapy jak na poziomie 1: tylko mapa trójkątna i cel „zbieranie kryształów”).
 
 ## D. Przed i po premierze (premiera dopiero po poziomie 5, decyzja 13.11)
 
