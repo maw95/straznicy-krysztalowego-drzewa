@@ -129,9 +129,12 @@ export function difficultyRating(setup: SetupOptions, level: LevelName, side: Fa
  */
 export const ARENA_POINTS: Record<Level, number> = { zero: 1, kids: 1, normal: 2, hard: 3 };
 
+/** Level 3 games last longer (the economy between the fights): a win counts a quarter more than the same win of level 2. */
+export const KINGDOM_POINTS_FACTOR = 1.25;
+
 export function pointsFor(setup: SetupOptions, level: LevelName, side: FactionId): number {
   if (setup.mode === 'arena') return ARENA_POINTS[level === 'custom' ? 'normal' : level];
-  const raw = (BOARD_TOP_POINTS * MAP_WEIGHT[setup.mapSize] * difficultyRating(setup, level, side)) / TOP_RATING;
+  const raw = (BOARD_TOP_POINTS * MAP_WEIGHT[setup.mapSize] * difficultyRating(setup, level, side) * (setup.rules.kingdom ? KINGDOM_POINTS_FACTOR : 1)) / TOP_RATING;
   return Math.min(MAX_POINTS, Math.max(1, Math.round(raw)));
 }
 
@@ -140,8 +143,7 @@ export function levelOf(setup: SetupOptions): LevelName {
   // Arena: the computer's strength (two people at one screen play "Normalny").
   if (setup.mode === 'arena') return setup.seats.some((s) => s.controller === 'bot') ? setup.botLevel ?? 'normal' : 'normal';
   const r = setup.rules;
-  // Level 3 has no measured difficulty yet (the simulations come after the whole level is in): no points, like "Własne".
-  if (r.kingdom) return 'custom';
+  // Level 3 ("Królestwo") scores like the difficulty it is built on (measured 15.11: Przymierza win about as often as in level 2), see KINGDOM_POINTS_FACTOR.
   // Easy and normal: as many Horde heroes as players, reinforcements in the base; hard: neither.
   const automaton = r.minEvilHeroes === DEFAULT_RULES.minEvilHeroes && Boolean(r.hordeRespawn);
   const hardAutomaton = r.minEvilHeroes === 2 && !r.hordeRespawn;

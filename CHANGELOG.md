@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Królestwo liczy się do rankingu i do „Twoich partii”: punkty jak na poziomie 2 (ta sama trudność, zmierzona symulacjami), powiększone o jedną czwartą, bo partie trwają dłużej.
+
 - Królestwo: Normalny i Trudny przestrojone po zmianie zachowania komputera (zakupy z dowolnego miejsca), a bardzo długa mapa dostała własne strojenie. Normalny: Przymierze wygrywa 51–67%, Trudny (kooperacja): 34–45%.
 
 - Królestwo na Łatwym: komputer zaczyna słabszy, a Przymierze dostaje na Łatwym dodatkowe złoto na rundę („Pomoc na Łatwym poziomie” w rozbiciu dochodu). Przymierze wygrywa tam ok. 65–80% partii (dwóch graczy na średniej mapie nieco poniżej pasma).
