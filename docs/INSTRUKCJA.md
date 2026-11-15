@@ -780,6 +780,19 @@ Na poziomie Księstwo można grać o **Podbój**. Wygrywa strona, która na koni
 ### Tryb rodzinny: autopilot
 Gdy przy bohaterze zaznaczono „Dziecko”, młodszy gracz **wędruje i walczy**, a osadami i surowcami nie musi się zajmować. Jeśli tą samą frakcją gra dorosły, to on buduje, rekrutuje i handluje (złoto i surowce są wspólne). Jeśli dorosłego nie ma, robi to **autopilot**, tak jak zrobiłby komputer. Skrzynie dziecka otwierają się same.
 
+## 19. Poziom 5: Królestwo — drugi bohater (wersja cyfrowa)
+
+Poziom „Królestwo” dodaje do zasad Księstwa **dowódcę**, czyli drugiego bohatera gracza.
+
+### Karczma i najem
+W osadzie można postawić **karczmę** (5 zł + 3 drewna). W karczmie każdy gracz najmuje **jednego dowódcę** za 8 zł. Do wyboru są trzy typy: **wojownik** (twardy, walczy wręcz), **łucznik** (strzela z daleka) i **mędrzec** (słabiej bije, ale leczy albo osłabia). Dowódca dostaje własne imię.
+
+### Co potrafi dowódca
+Dowódca jest pełnym bohaterem: ma własny pionek na mapie, własną turę (zaraz po Twoim bohaterze głównym, od następnej rundy po najęciu), zdobywa doświadczenie i poziomy, wybiera umiejętności i nosi artefakty. Do bitwy bierze pomocników z tej samej wspólnej drużyny frakcji. Bohaterowie stojący obok siebie mogą przekazywać sobie artefakty.
+
+### Gdy dowódca polegnie
+Dowódca nie ginie na zawsze. Traci artefakty (zabiera je zwycięski bohater), ale zachowuje poziom i umiejętności. Od następnej rundy możesz go **wykupić w karczmie**: 3 zł i 2 zł za każdy jego poziom. Wykup działa tylko, gdy żyje Twój bohater główny. **Śmierć bohatera głównego jest ostateczna**, ale jeśli żyje dowódca, grasz dalej i możesz wygrać.
+
 ## Autorzy (wersja cyfrowa)
 
 W menu głównym przycisk „Autorzy” otwiera listę: autorzy gry (Maciej Woźniak, Aleksandra Szestowicka przy fabule, Zuzanna Woźniak jako autorka Dzielnej Kaczki), autorzy muzyki wraz z licencjami (CC BY wymaga podania autora), informacja, że grafika, animacje i efekty dźwiękowe powstały z użyciem narzędzi AI (Scenario), oraz użyte oprogramowanie.

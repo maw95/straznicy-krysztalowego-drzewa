@@ -21,7 +21,7 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids`) i w rankingu online zostaj
 Poziom 4 zbudowany 15.11 (Kuźnia, wymiana, obiekty mapy, obrona osady, Podbój, autopilot warstw); czeka na ogranie przez autora (sekcja 3).
 
 ### Etap C. Poziom 5 „Królestwo” (bohaterowie i magia)
-10. **5a. Drugi bohater** (L): archetyp-dowódca (wojownik, łucznik, mędrzec), wynajem w karczmie osady, własny pionek, drużyna, PD i sloty; śmierć pomocniczego = wykup po 1 rundzie, traci drużynę i artefakty; śmierć głównego ostateczna (szczegóły: `MECHANIKI_I_POZIOMY.md`).
+10. **5a. Drugi bohater, reszta** (M): zrobione 15.11 (karczma, najem, tura, PD i artefakty dowódcy, śmierć i wykup, boty, UI). Zostaje do decyzji autora: osobna drużyna dowódcy (dziś wspólna pula pomocników frakcji), własna krzywa wzrostu archetypów (wchodzi z 5c), sprite'y dowódców (sekcja 2a).
 11. **5b. Magia** (L): czary jako mechanika bitwy i mapy.
 12. **5c. Specjalności i drzewka bohatera** + automatyczny wzrost statystyk zależny od typu bohatera (M–L; przesuwa `golden.test.ts`).
 
@@ -45,6 +45,22 @@ Poziom 4 zbudowany 15.11 (Kuźnia, wymiana, obiekty mapy, obrona osady, Podbój,
 - [ ] **Okładka do druku** (`docs/grafika/okladka/okladka.png`, `ui/cover.jpg`): ma stare logo wypalone u góry (w grze niewidoczne, na wydruku tak). Wygenerować bez logo i nałożyć nowe (`ui/logo.png`), potem `python3 scripts/assets/menu.py` i `druk.py`.
 - [ ] Pliki w `docs/wersja_planszowa/` (`logo_zolte_*`, `okladki_przod_tyl_grzbiet.pdf`, `Instrukcja_Straznicy.docx`) mają starą nazwę (binarne, po ostatecznym potwierdzeniu nazwy).
 - [ ] Domeny i konta, znak towarowy (brak wpisów), tytuł w sklepie Steam (autor).
+
+## 2a. Grafiki i dźwięki do wygenerowania i podmiany (placeholdery)
+
+Lista rzeczy, które w grze działają na zastępczej grafice albo bez własnego dźwięku. Po wygenerowaniu podmienić plik i dopisać wpis w `assets.json`.
+
+**Poziom 4 (Księstwo)**
+- Strzał katapulty: brak własnego dźwięku, gra `public/assets/dzwieki/build.mp3` (uderzenia młotka). Potrzebny: `dzwieki/katapulta.mp3` (świst i huk kamienia w mur), podmiana w `BattleView.tsx` (`sfx.play('build')` przy `battleCatapult`).
+- Strzał wieżyczki i wejście w fosę: brak animacji i dźwięku (tylko spadek Życia i wpis w dzienniku). Potrzebne: `dzwieki/wiezyczka.mp3` (strzała), `dzwieki/fosa.mp3` (kolce) oraz krótka animacja strzały z wieżyczki do celu.
+- Wymiana surowców, garnizon: gra dźwięk monet `coins_buy.mp3` (do zostawienia albo własny `dzwieki/wymiana.mp3`).
+- Ikona celu „Podbój” w kreatorze: zastępczo `ikony/mapa/osada_neutral.webp`. Potrzebna własna: `ui/menu/podboj.webp` (512×592 jak pozostałe karty kreatora; np. sztandar na murach zdobytej osady).
+- Elementy oblężenia (`arena/oblezenie/`: mur, brama, wieża, gruzy, fosa, katapulta) są neutralne (szary kamień) dla obu frakcji; do rozważenia wersje frakcyjne.
+
+**Poziom 5 (Królestwo)**
+- Sześciu dowódców (`dawnKnight`, `dawnHuntress`, `dawnSage`, `hordeWarlord`, `hordeCrossbow`, `hordeShadow`) nie ma sprite'ów ani figurek 3D: na arenie i mapie stoją jako żetony z portretem. Potrzebne dla każdego: arkusze klatek `stoi`, `ruch`, `atak`, `trafienie`, `smierc` w `public/assets/jednostki/<nazwa>/` (potok: `docs/POTOK_ANIMACJI.md`, wpis w `src/ui/sprites.ts`) oraz dźwięki ataku `dzwieki/jednostki/<id>_atak.mp3`.
+- Karty kreatora „Królestwo” i „Imperium” używają ikon mapy (`karczma.webp`, `odlamek.webp`) zamiast kart 512×592 (`ui/menu/krolestwo.webp`, `ui/menu/imperium.webp`).
+- Najem i wykup dowódcy: gra `coins_buy.mp3`; do rozważenia własny `dzwieki/najem.mp3`.
 
 ## 3. Do sprawdzenia na żywo (autor)
 Zrobione i przetestowane, bez potwierdzenia w prawdziwej grze:

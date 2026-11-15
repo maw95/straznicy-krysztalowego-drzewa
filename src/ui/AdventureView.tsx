@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { heroLabel } from '../engine/realm';
 import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
 import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots } from '../engine/game';
 import { fightLevelAt } from './fightBadges';
@@ -548,7 +549,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 <Portrait unitId={hero.id} size={compact ? 48 : 64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
               </button>
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{UNITS[hero.id].name}</div>
+                <div data-hero-name style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{heroLabel(hero)}</div>
                 <div style={{ fontSize: 15, color: 'var(--muted)' }}>{hero.playerId ? state.players.find((p) => p.id === hero.playerId)?.name : 'Automat zła'}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3, fontSize: 15 }}>
                   <span title={`Punkty ruchu w tej turze: ${moveBreakdown(state).map((p) => `${p.points > 0 && p.label !== 'podstawa' ? '+' : ''}${p.points} ${p.label}`).join(', ')} = ${moveAllowance(state)}.`}>Ruch <Pips total={Math.max(state.rules.heroMovePoints, moveAllowance(state), state.movePoints)} left={state.movePoints} /></span>
@@ -769,7 +770,7 @@ function TileDetails({ state, k, hostile }: { state: GameState; k: HexKey; hosti
         <div key={h.id} className="well" style={{ padding: '6px 8px', display: 'flex', gap: 10, alignItems: 'center' }}>
           <Portrait unitId={h.id} size={44} ring={SIDE_RING[h.faction]} preview={false} />
           <div style={{ fontSize: 15, color: '#F7EDD2' }}>
-            <div style={{ fontWeight: 700 }}>{UNITS[h.id].name}</div>
+            <div style={{ fontWeight: 700 }}>{heroLabel(h)}</div>
             <div style={{ color: 'var(--muted)' }}>
               {h.playerId ? state.players.find((p) => p.id === h.playerId)?.name : 'Automat zła'} · {FACTION_NAMES[h.faction]}
             </div>

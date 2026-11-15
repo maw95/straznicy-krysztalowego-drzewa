@@ -37,6 +37,7 @@ export const ECONOMY = {
     treasury: [{ gold: 4, ore: 2 }],
     forge: [{ gold: 4, ore: 3 }, { gold: 6, ore: 3, dust: 2 }],
     walls: [{ gold: 4, wood: 3 }, { gold: 6, ore: 4, dust: 1 }],
+    tavern: [{ gold: 5, wood: 3 }],
   } as Record<string, Cost[]>,
   /** The forge (Kuźnia): the faction's supports fight with this much more Atak (level 1) and Życie (level 2), in the board game's scale. */
   forgeAttack: 1,

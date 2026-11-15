@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowy poziom 5 **„Królestwo”** (początek): **drugi bohater**. W karczmie (nowy budynek) każdy gracz najmuje jednego dowódcę: wojownika, łucznika albo mędrca z własnym imieniem. Dowódca ma własny pionek, turę, doświadczenie, umiejętności i artefakty. Gdy polegnie, traci artefakty, ale można go wykupić w karczmie; śmierć bohatera głównego pozostaje ostateczna. Komputer też najmuje dowódców. W kreatorze gry są karty „Królestwo” i (na razie pusta) „Imperium”.
+
 - Tryb rodzinny na poziomach Osada i Księstwo: **autopilot warstw**. Dziecko wędruje i walczy, a gospodarką zajmuje się dorosły z tej samej frakcji (autopilot nie wydaje już wspólnego złota za jego plecami) albo, gdy dorosłego nie ma, autopilot. W turze dziecka okno osady jest zamknięte i widać, kto nią zarządza.
 
 - Księstwo: nowy cel gry **Podbój**. Wygrywa strona, która na koniec rundy trzyma wszystkie osady na ziemi wroga (jego stolicę i osady na jego połowie mapy); przy limicie rund liczy się, kto trzyma ponad połowę. Komputer zdobywa osady, szturmuje garnizony i broni swoich. Cel wybiera się w kreatorze gry przy poziomie Księstwo.

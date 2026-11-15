@@ -82,6 +82,10 @@ export interface RulesConfig {
   kingdom?: boolean;
   /** Level 4 "Księstwo": wood, ore and Gwiezdny Pył, one building a round (economy.ts); needs `kingdom`. */
   economy?: boolean;
+  /** Level 5 "Królestwo": a second hero hired in a tavern, magic, hero specialities (realm.ts); needs `economy`. */
+  realm?: boolean;
+  /** Level 6 "Imperium": the Relic goal, faction mechanics (empire.ts); needs `realm`. */
+  empire?: boolean;
   /** Difficulty "Łatwy" on levels 1-3: no rule differs, the flag only tells the level and selects the digital start-condition levers (tuning.ts). */
   easy?: boolean;
 }
@@ -207,6 +211,10 @@ export interface HeroState {
   pack?: string[];
   /** Buty Handlarza: the one-off gold for the first place taken has been paid. */
   placeGoldPaid?: true;
+  /** Level 5: a commander hired in a tavern (the player's second hero), with its own name; `fallen` is the round it fell in (it can be ransomed later). */
+  secondary?: true;
+  name?: string;
+  fallen?: number;
 }
 
 export interface FactionState {
@@ -558,6 +566,9 @@ export type Action =
   | { type: 'kingdomBuyArtifact'; settlementId: string; artifactId: string }
   /** Level 4: one unit of a resource bought for gold in an own settlement, or sold on its market. */
   | { type: 'kingdomTrade'; settlementId: string; res: 'wood' | 'ore' | 'dust'; dir: 'buy' | 'sell' }
+  /** Level 5: a commander hired in the tavern of an own settlement, and a fallen commander bought back there. */
+  | { type: 'kingdomHire'; settlementId: string; unitId: string }
+  | { type: 'kingdomRansom'; settlementId: string; heroId: string }
   /** Level 4: a support left in the settlement the active hero stands in (or taken back into the team). */
   | { type: 'kingdomGarrison'; settlementId: string; unitId: string; dir: 'in' | 'out' }
   /** Siege: the attacker's catapult shoots a wall, the gate or a tower (once a round). */

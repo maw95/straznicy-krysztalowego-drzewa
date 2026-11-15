@@ -23,7 +23,7 @@ for (const size of sizes) {
     let wood = 0, ore = 0, dust = 0, built = 0, huts = 0, wins = 0, rounds = 0, recruits = 0, settlements = 0, gold = 0, high = 0, stuck = 0;
     for (let g = 1; g <= games; g++) {
       const setup = setupWith(size, table, option, g);
-      setup.rules = { ...setup.rules, kingdom: !process.env.SIM_NOKINGDOM, ...(process.env.SIM_ECONOMY ? { economy: true } : {}), ...(process.env.SIM_OBJECTIVE === 'conquest' ? { objective: 'conquest' as const } : {}) };
+      setup.rules = { ...setup.rules, kingdom: !process.env.SIM_NOKINGDOM, ...(process.env.SIM_ECONOMY ? { economy: true } : {}), ...(process.env.SIM_REALM ? { economy: true, realm: true } : {}), ...(process.env.SIM_OBJECTIVE === 'conquest' ? { objective: 'conquest' as const } : {}) };
       const s = createGame(setup);
       for (let i = 0; i < 30000 && s.phase !== 'over'; i++) {
         const a = chooseAction(s);

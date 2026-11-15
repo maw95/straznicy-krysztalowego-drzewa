@@ -7,6 +7,8 @@ import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
 import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildCost, buildingLevel, buildingsOf, canPay, forgeLevel, goldOf, hasUnit, incomeOf, KINGDOM, marketStock, mayBuildNow, mayRecruit, RECRUITS, resOf, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
 import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
+import { ARCHETYPE_NAMES, archetypeOf, commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from '../engine/realm';
+import { levelOf } from '../engine/growth';
 import type { Action, GameState } from '../engine/types';
 import { asset, Portrait, Ribbon } from './common';
 import { ArtifactMedal } from './growthUi';
@@ -22,6 +24,17 @@ const SPOT: Record<BuildingId, { left: number; top: number }> = {
   treasury: { left: 84, top: 28 },
   forge: { left: 50, top: 50 },
   walls: { left: 50, top: 50 },
+  tavern: { left: 50, top: 50 },
+};
+/** Level 5: seven buildings in two rows. */
+const SPOT7: Record<BuildingId, { left: number; top: number }> = {
+  barracks: { left: 9, top: 64 },
+  market: { left: 23, top: 30 },
+  hospital: { left: 37, top: 66 },
+  treasury: { left: 50, top: 30 },
+  forge: { left: 63, top: 66 },
+  walls: { left: 77, top: 30 },
+  tavern: { left: 91, top: 64 },
 };
 const SPOT5: Record<BuildingId, { left: number; top: number }> = {
   barracks: { left: 10, top: 62 },
@@ -30,6 +43,7 @@ const SPOT5: Record<BuildingId, { left: number; top: number }> = {
   treasury: { left: 58, top: 30 },
   forge: { left: 74, top: 64 },
   walls: { left: 90, top: 30 },
+  tavern: { left: 50, top: 50 },
 };
 /** The picture of a building in the landscape: the faction's plot while it is not built, then its level (the treasury has one). */
 const buildingPicture = (land: FactionId, b: BuildingId, level: number) => (level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${Math.min(level, 2)}.webp`));
@@ -43,7 +57,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const buyer = Object.values(state.heroes).find((h) => h.id === state.turnOrder[state.turnIndex] && h.faction === faction);
   const price = (b: BuildingId) => buildCost(state, s, b);
   const ORDER = buildingsOf(state);
-  const spots = ORDER.length > 4 ? SPOT5 : SPOT;
+  const spots = ORDER.length > 6 ? SPOT7 : ORDER.length > 4 ? SPOT5 : SPOT;
   const act = (a: Action) => {
     // Purchases ring: a building goes up with hammering, everything else with coins.
     sfx.play(a.type === 'kingdomBuild' ? 'build' : 'coins_buy');
@@ -181,6 +195,43 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           <b style={{ color: '#2E7A32' }}><RuleText text={`Kuźnia pracuje: pomocnicy frakcji mają +${ECONOMY.forgeAttack} A${best >= 2 ? ` i +${ECONOMY.forgeHp} Ż` : ''}.`} /></b>
           <span style={{ fontSize: 14, color: '#6B4A22' }}>Liczy się najlepsza kuźnia frakcji; premie z kilku kuźni się nie sumują.</span>
           {upgrade}
+        </div>
+      );
+    }
+    if (b === 'tavern') {
+      const mine = commanderOf(state, buyer?.playerId ?? null);
+      return (
+        <div data-panel="tavern" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {mine ? (
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <Portrait unitId={mine.id} size={52} dim={!mine.alive} />
+              <div style={{ flex: 1 }}>
+                <b>{heroLabel(mine)}</b> <span style={{ fontSize: 13, color: '#6B4A22' }}>poziom {levelOf(mine)} · {ARCHETYPE_NAMES[archetypeOf(mine.id) ?? 'warrior']}</span>
+                <div style={{ fontSize: 14 }}>{mine.alive ? 'Twój dowódca jest w drodze. Gracz prowadzi jednego dowódcę.' : mayRansom(state, mine) ? 'Poległ. Możesz go wykupić: zachowa poziom i umiejętności, artefakty stracił.' : 'Poległ. Wykup będzie możliwy od następnej rundy, o ile żyje Twój główny bohater.'}</div>
+              </div>
+              {!mine.alive && (
+                <button className="btn prim" data-ransom={mine.id} disabled={!mayRansom(state, mine) || gold < ransomPrice(mine)} onClick={() => act({ type: 'kingdomRansom', settlementId: s.id, heroId: mine.id })} style={{ padding: '3px 14px', fontSize: 16 }}>
+                  Wykup ({ransomPrice(mine)} zł)
+                </button>
+              )}
+            </div>
+          ) : (
+            <>
+              <i>Dowódca to Twój drugi bohater: własny pionek, doświadczenie, umiejętności i artefakty. Walczy z pomocnikami frakcji tak jak bohater główny i rusza od następnej rundy.</i>
+              {freeCommanders(state, faction).map((id) => (
+                <div key={id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                  <Portrait unitId={id} size={52} />
+                  <div style={{ flex: 1 }}>
+                    <b>{commanderName(state, id)}, {UNITS[id].name}</b> <span style={{ fontSize: 13, color: '#6B4A22' }}>{ARCHETYPE_NAMES[archetypeOf(id) ?? 'warrior']}</span>
+                    <div style={{ fontSize: 14 }}>Życie {UNITS[id].hp} · Atak {UNITS[id].attack} · Szybkość {UNITS[id].speed} · {UNITS[id].abilityName}</div>
+                  </div>
+                  <button className="btn prim" data-hire={id} disabled={!buyer?.playerId || gold < REALM.hireGold} onClick={() => act({ type: 'kingdomHire', settlementId: s.id, unitId: id })} style={{ padding: '3px 14px', fontSize: 16 }}>
+                    Najmij ({REALM.hireGold} zł)
+                  </button>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       );
     }

@@ -3579,6 +3579,25 @@
       "data": "2026-11-15",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "poziom5/dowodcy-i-karczma",
+      "pliki": [
+        "public/assets/cards/art/dawnKnight.jpg", "public/assets/cards/art/dawnHuntress.jpg", "public/assets/cards/art/dawnSage.jpg",
+        "public/assets/cards/art/hordeWarlord.jpg", "public/assets/cards/art/hordeCrossbow.jpg", "public/assets/cards/art/hordeShadow.jpg",
+        "public/assets/cards/portraits/dawnKnight.jpg", "public/assets/cards/portraits/dawnHuntress.jpg", "public/assets/cards/portraits/dawnSage.jpg",
+        "public/assets/cards/portraits/hordeWarlord.jpg", "public/assets/cards/portraits/hordeCrossbow.jpg", "public/assets/cards/portraits/hordeShadow.jpg",
+        "public/assets/osady/dawn_tavern1.webp", "public/assets/osady/horde_tavern1.webp",
+        "public/assets/osady/dawn_magic1.webp", "public/assets/osady/horde_magic1.webp"
+      ],
+      "typ": "poziom 5: ilustracje kart i portrety sześciu dowódców (Rycerz Świtu, Łowczyni Gaju, Mędrzec Gaju, Wódz Hordy, Kapitan Kuszników, Szaman Cieni) oraz budynki: karczma i wieża maga obu frakcji",
+      "opis": "Dowódcy: jeden arkusz 1536x1024 (siatka 3x2 ilustracji kart, półpostacie na tle lasu Przymierza i wulkanicznym tle Hordy), pocięty skryptem scripts/assets/dowodcy.py na ilustracje 451x332 i portrety 256x256. Budynki: arkusz 1536x1536 (siatka 2x2 na czarnym tle), pocięty scripts/assets/arkusz.py: elficka karczma z szyldem kufla, elficka wieża maga z niebieskim kryształem, karczma Hordy z szyldem czaszki, wieża czarnoksiężnika Hordy z czerwoną kulą.",
+      "scenario_asset": { "dowodcy": "asset_6fh87UzaPZJ5Z3Vf7cEhaZh2", "budynki": "asset_sfLEcDsqdQcCVmqNMWLjSqg4" },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.6 Flare, jakość medium",
+      "data": "2026-11-15",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

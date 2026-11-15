@@ -1,6 +1,7 @@
 // Hero growth on the screen (digital ruleset, "Wyprawa"): the level and experience bar, the skills as cards with icons, the five
 // gear slots laid out like a hero's sheet (helmet on top, weapon - armour - shield, boots below), the hero sheet itself, and the notices that tell the player what just happened (experience gained, an artifact found).
 
+import { heroLabel } from '../engine/realm';
 import { useContext, useState } from 'react';
 import { abilityTextFor, FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data';
 import { GROWTH, levelOf, MILESTONE_LEVELS, milestoneText, skillRank, skillText, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
@@ -254,7 +255,7 @@ export function HeroSheet({ hero, state, onAction, onClose }: { hero: HeroState;
   const skills = [...new Set(hero.skills ?? [])];
   return (
     <div className="hero-sheet hero-sheet-wide" data-hero-sheet>
-      <Ribbon side={hero.faction} style={{ width: 'min(420px, 88vw)', alignSelf: 'center' }}>{UNITS[hero.id].name}</Ribbon>
+      <Ribbon side={hero.faction} style={{ width: 'min(420px, 88vw)', alignSelf: 'center' }}>{heroLabel(hero)}</Ribbon>
       <div className="hero-sheet-body">
         <div className="hero-sheet-col" style={{ alignItems: 'center' }}>
           <div style={{ width: 300, maxWidth: '86vw' }}><XpBar hero={hero} short /></div>

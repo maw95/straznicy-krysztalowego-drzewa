@@ -58,6 +58,7 @@ import { objectiveOf, OBJECTIVES } from './objectives';
 import { fireStory } from './story';
 import { buildingLevel, collectIncome, enterPlace, forgeLevel, garrisonAt, initKingdom, kingdomAction, supportSlots } from './kingdom';
 import { ECONOMY } from './economy';
+import { commanderFalls } from './realm';
 import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, placeSites, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
@@ -902,6 +903,11 @@ function finalizeBattle(state: GameState) {
   log(state, 'battle', `Bitwa zakończona: ${resultText}.`);
   if (b.kind === 'neutral') resolveGuardianFight(state, b);
   awardBattleXp(state, b);
+  // Level 5: a commander that fell keeps its level but loses what it carried (the winner has taken its share above).
+  for (const id of [b.attackerHero, b.defenderHero]) {
+    const h = id ? state.heroes[id] : null;
+    if (h?.secondary && !h.alive && h.fallen === undefined) commanderFalls(state, h);
+  }
   state.lastBattle = battleReport(state, b);
   state.battle = null;
   state.phase = 'adventure';
@@ -1071,7 +1077,7 @@ function killHero(state: GameState, heroId: string, at: HexKey) {
   // The coop automaton keeps as many heroes as there are good players (spec 10), so in the
   // replacement variant it brings in a reserve hero just like the players do.
   const automaton = state.setup.mode === 'coop' && hero.faction === 'horde';
-  if (state.rules.heroReplacement && (hero.playerId || automaton) && f.unusedHeroes.length) {
+  if (state.rules.heroReplacement && !hero.secondary && (hero.playerId || automaton) && f.unusedHeroes.length) {
     const next = f.unusedHeroes[0];
     addHero(state, next, hero.faction, hero.playerId);
     // The reserve comes in near where the fallen hero died: on the nearest free hex,
@@ -1137,6 +1143,8 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'kingdomHeal':
     case 'kingdomBuyArtifact':
     case 'kingdomTrade':
+    case 'kingdomHire':
+    case 'kingdomRansom':
     case 'kingdomGarrison':
     case 'hutDeliver':
     case 'chestTake':

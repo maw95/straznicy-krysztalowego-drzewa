@@ -205,6 +205,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
           <Card on={d.tier === 'expedition'} title="Wyprawa" text="Poziom 2. Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ikony/mapa/camp.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
           <Card on={d.tier === 'kingdom'} title="Osada" text="Poziom 3. Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ikony/mapa/treasure.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
           <Card on={d.tier === 'economy'} title="Księstwo" text="Poziom 4. Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył." img={pic(asset('ikony/mapa/tartak.webp'))} onClick={() => choose({ tier: 'economy', level: notZero })} />
+          <Card on={d.tier === 'realm'} title="Królestwo" text="Poziom 5. Księstwo plus bohaterowie i magia: drugi bohater-dowódca najęty w karczmie, czary w bitwie i na mapie, specjalności bohaterów." img={pic(asset('ikony/mapa/karczma.webp'))} onClick={() => choose({ tier: 'realm', level: notZero })} />
+          <Card on={d.tier === 'empire'} title="Imperium" text="Poziom 6. Królestwo plus frakcje i Relikt: Odłamki Pierwotnej Iskry, budynek Pierwotnej Iskry, mechaniki i legendarna jednostka frakcji." img={pic(asset('ikony/mapa/odlamek.webp'))} onClick={() => choose({ tier: 'empire', level: notZero })} />
           <Card on={d.tier === 'custom'} title="Własne ustawienia" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', level: notZero, custom: null })} />
         </div>
       )}
@@ -220,7 +222,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
       {page === 'objective' && (
         <>
           <div className="opt-grid" data-wizard-page="objective">
-            {(['crystals', 'control', 'survival', 'boss', 'artifact', 'conquest'] as const).filter((o) => (o !== 'survival' || d.mode === 'coop') && (o !== 'conquest' || d.tier === 'economy')).map((o) => (
+            {(['crystals', 'control', 'survival', 'boss', 'artifact', 'conquest'] as const).filter((o) => (o !== 'survival' || d.mode === 'coop') && (o !== 'conquest' || ['economy', 'realm', 'empire'].includes(d.tier))).map((o) => (
               <Card key={o} on={d.objective === o} title={OBJECTIVES[o].name} text={OBJECTIVES[o].summary} img={pic(asset(OBJECTIVE_ICON[o]))} onClick={() => patch({ objective: o })} />
             ))}
           </div>

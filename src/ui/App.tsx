@@ -1,4 +1,5 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { heroLabel } from '../engine/realm';
 import { chooseAction } from '../engine/ai';
 import { describeAction } from './hint';
 import { FACTION_NAMES, UNITS, type FactionId, type ItemKind } from '../engine/data';
@@ -157,7 +158,7 @@ export function App() {
       battleMode: q.get('battle') === 'board' ? 'board' : 'arena',
       seed: Number(q.get('seed') ?? 1),
       // ?abilities=0&treasures=0 switch simplifications on, ?dice=1 the die, ?objective=control the control points goal.
-      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1', ...(q.get('growth') === '1' || q.get('kingdom') === '1' || q.get('economy') === '1' ? { heroGrowth: true } : {}), ...(q.get('kingdom') === '1' || q.get('economy') === '1' ? { kingdom: true } : {}), ...(q.get('economy') === '1' ? { economy: true } : {}), ...(q.get('ruleset') !== 'board' ? { ruleset: 'digital' as const } : {}), ...(['control', 'survival', 'boss', 'artifact', 'conquest'].includes(q.get('objective') ?? '') ? { objective: q.get('objective') as 'control' | 'survival' | 'boss' | 'artifact' | 'conquest' } : {}) },
+      rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1', ...(['growth', 'kingdom', 'economy', 'realm', 'empire'].some((k) => q.get(k) === '1') ? { heroGrowth: true } : {}), ...(['kingdom', 'economy', 'realm', 'empire'].some((k) => q.get(k) === '1') ? { kingdom: true } : {}), ...(q.get('economy') === '1' || q.get('realm') === '1' || q.get('empire') === '1' ? { economy: true } : {}), ...(q.get('realm') === '1' || q.get('empire') === '1' ? { realm: true } : {}), ...(q.get('empire') === '1' ? { empire: true } : {}), ...(q.get('ruleset') !== 'board' ? { ruleset: 'digital' as const } : {}), ...(['control', 'survival', 'boss', 'artifact', 'conquest'].includes(q.get('objective') ?? '') ? { objective: q.get('objective') as 'control' | 'survival' | 'boss' | 'artifact' | 'conquest' } : {}) },
       seats:
         mode === 'coop'
           ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon', ...(q.get('child') === '1' ? { child: true } : {}) }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))
@@ -1073,7 +1074,7 @@ function Handoff({ state, playerId, onConfirm }: { state: GameState; playerId: s
         <Portrait unitId={hero.id} size={124} ring={SIDE_RING[player.faction]} glow="0 0 0 2px #1E1204, 0 0 34px 10px rgba(158,228,255,0.28)" />
         <div>
           <div style={{ fontSize: 18, color: 'var(--muted)' }}>Teraz tura</div>
-          <div style={{ fontWeight: 800, fontSize: 28, color: '#F3D27A', textShadow: '0 2px 0 #1E1204' }}>{player.name} — {UNITS[hero.id].name}</div>
+          <div style={{ fontWeight: 800, fontSize: 28, color: '#F3D27A', textShadow: '0 2px 0 #1E1204' }}>{player.name} — {heroLabel(hero)}</div>
         </div>
         <div style={{ fontSize: 18, lineHeight: 1.35, maxWidth: 360 }}>Pozostali gracze, odwróćcie wzrok. Na ekranie pojawią się ukryte skarby frakcji: {FACTION_NAMES[player.faction]}.</div>
         <button className="btn prim" style={{ height: 54, padding: '0 26px', fontSize: 20, marginTop: 6 }} onClick={onConfirm}>

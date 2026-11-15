@@ -13,8 +13,9 @@ import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsTex
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import type { Action, Crystal, GameState, HeroState } from './types';
+import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
-export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls';
+export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern';
 
 export interface Settlement {
   id: string;
@@ -58,7 +59,7 @@ export const KINGDOM = {
   /** Gold in a chest chosen instead of the artifact. */
   chestGold: 3,
   /** Cost of each level of a building. */
-  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4], forge: [], walls: [] } as Record<BuildingId, number[]>,
+  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4], forge: [], walls: [], tavern: [] } as Record<BuildingId, number[]>,
   /** Price of an artifact in the market, by rarity (zwykły, rzadki, legendarny). */
   artifactPrice: [2, 5, 10],
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
@@ -105,10 +106,11 @@ export const BUILDING_NAMES: Record<BuildingId, [string, string?]> = {
   treasury: ['Skarbiec'],
   forge: ['Kuźnia', 'Wielka kuźnia'],
   walls: ['Fosa', 'Mury z wieżyczkami'],
+  tavern: ['Karczma'],
 };
 
 /** The buildings a settlement may have in this game, in the order of the screen (the forge comes with level 4). */
-export const buildingsOf = (state: GameState): BuildingId[] => ['barracks', 'market', 'hospital', 'treasury', ...(state.rules.economy ? ['forge' as const, 'walls' as const] : [])];
+export const buildingsOf = (state: GameState): BuildingId[] => ['barracks', 'market', 'hospital', 'treasury', ...(state.rules.economy ? ['forge' as const, 'walls' as const] : []), ...(state.rules.realm ? ['tavern' as const] : [])];
 
 export const buildingLevel = (s: Settlement, b: BuildingId): number => s.buildings[b] ?? 0;
 
@@ -121,6 +123,7 @@ export const BUILDING_TEXTS: Record<BuildingId, [string, string?]> = {
   hospital: ['Wskrzesza poległych pomocników za połowę ich ceny.', 'Wskrzesza za jedną trzecią ceny.'],
   treasury: ['Przynosi +1 złota na rundę.'],
   forge: ['Pomocnicy całej frakcji walczą z +1 A.', 'Pomocnicy dostają też +1 Ż.'],
+  tavern: ['Tu najmiesz dowódcę: drugiego bohatera z własnym pionkiem, doświadczeniem i artefaktami. Tu też wykupisz dowódcę, który poległ.'],
   walls: ['W bitwie o osadę wroga zatrzymuje fosa z kolcami: kto w nią wejdzie, traci turę i dostaje 2 obrażenia. Przejście jest tylko po moście.', 'Za fosą staje mur z bramą i dwie wieżyczki, które co rundę strzelają do napastników. Mur burzy tylko katapulta atakującego.'],
 };
 
@@ -197,7 +200,7 @@ export function initKingdom(state: GameState): void {
   if (state.rules.economy) k.res = { dawn: { ...ECONOMY.start }, horde: { ...ECONOMY.start } };
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag: Record<FactionId, string[]> = { dawn: rng.shuffle([...NAMES.dawn]), horde: rng.shuffle([...NAMES.horde]) };
-  const empty = (): Record<BuildingId, number> => ({ barracks: 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}) }) as Record<BuildingId, number>;
+  const empty = (): Record<BuildingId, number> => ({ barracks: 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0 } : {}) }) as Record<BuildingId, number>;
   const add = (id: string, at: HexKey, land: FactionId, owner: FactionId | null) => {
     k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[land]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
     state.tiles[at].place = { kind: 'settlement', id };
@@ -428,6 +431,20 @@ function serviceSettlement(state: GameState, id: string): { s: Settlement; hero:
   return { s, hero };
 }
 
+/** Puts a hero that appears in a settlement on its hex, or on the nearest free one when somebody stands there (one hero per hex outside the bases). */
+function standIn(state: GameState, hero: HeroState, at: HexKey): void {
+  const taken = (k: HexKey) => Object.values(state.heroes).some((h) => h.alive && !h.entering && h.id !== hero.id && h.pos === k);
+  const open = (k: HexKey) => tileCost(state.tiles[k]) !== null && !(state.tiles[k].crystalId && state.crystals[state.tiles[k].crystalId!].guardian) && (!taken(k) || (state.tiles[k].home === hero.faction && !Object.values(state.heroes).some((h) => h.alive && h.pos === k && h.faction !== hero.faction)));
+  if (open(at)) {
+    hero.pos = at;
+    return;
+  }
+  const origin = parseKey(at);
+  const free = Object.keys(state.tiles).filter(open).sort((a, b) => distance(origin, parseKey(a)) - distance(origin, parseKey(b)) || (a < b ? -1 : 1));
+  hero.pos = free[0] ?? at;
+  state.tiles[hero.pos].revealed = true;
+}
+
 function pay(state: GameState, f: FactionId, price: number) {
   const k = state.kingdom!;
   if (k.gold[f] < price) throw new Error(`Za mało złota (potrzeba ${price}).`);
@@ -570,6 +587,35 @@ export function kingdomAction(state: GameState, action: Action): void {
       }
       break;
     }
+    case 'kingdomHire': {
+      const { s, hero } = serviceSettlement(state, action.settlementId);
+      if (!state.rules.realm) throw new Error('Dowódców najmuje się dopiero na poziomie Królestwo.');
+      if (buildingLevel(s, 'tavern') < 1) throw new Error('W tej osadzie nie ma karczmy.');
+      if (!hero.playerId) throw new Error('Dowódców najmują gracze.');
+      if (commanderOf(state, hero.playerId)) throw new Error('Masz już dowódcę: gracz prowadzi jednego.');
+      if (!freeCommanders(state, hero.faction).includes(action.unitId)) throw new Error('Tego dowódcy nie ma w karczmie.');
+      pay(state, hero.faction, REALM.hireGold);
+      const fresh: HeroState = { id: action.unitId, faction: hero.faction, playerId: hero.playerId, pos: s.at, alive: true, crystals: [], secondary: true, name: commanderName(state, action.unitId) };
+      state.heroes[fresh.id] = fresh;
+      standIn(state, fresh, s.at);
+      log(state, 'info', `${FACTION_NAMES[hero.faction]} najmuje dowódcę: ${heroLabel(fresh)} (${REALM.hireGold} zł). Rusza od następnej rundy.`);
+      break;
+    }
+    case 'kingdomRansom': {
+      const { s, hero } = serviceSettlement(state, action.settlementId);
+      if (buildingLevel(s, 'tavern') < 1) throw new Error('W tej osadzie nie ma karczmy.');
+      const fallen = state.heroes[action.heroId];
+      if (!fallen?.secondary || fallen.playerId !== hero.playerId) throw new Error('To nie jest twój dowódca.');
+      if (!mayRansom(state, fallen)) throw new Error(fallen.alive ? 'Ten dowódca żyje.' : 'Tego dowódcy nie da się teraz wykupić.');
+      const price = ransomPrice(fallen);
+      pay(state, hero.faction, price);
+      fallen.alive = true;
+      delete fallen.fallen;
+      fallen.crystals = [];
+      standIn(state, fallen, s.at);
+      log(state, 'info', `${FACTION_NAMES[hero.faction]} wykupuje dowódcę: ${heroLabel(fallen)} (${price} zł). Rusza od następnej rundy.`);
+      break;
+    }
     case 'kingdomGarrison': {
       const { s, hero } = serviceSettlement(state, action.settlementId);
       if (!state.rules.economy) throw new Error('Garnizon jest dopiero na poziomie Księstwo.');
@@ -683,6 +729,8 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   } else if (buildable('market')) return { type: 'kingdomBuild', settlementId: id, building: 'market' };
   if (own && s.buildings.barracks === 1 && s.buildings.market >= 1 && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
   if (state.rules.economy && buildingLevel(s, 'forge') === 1 && forgeLevel(state, f) === 1 && buildable('forge')) return { type: 'kingdomBuild', settlementId: id, building: 'forge' };
+  // Level 5: a tavern on own land, once the barracks stand (a second hero is worth more than the last buildings).
+  if (state.rules.realm && own && s.buildings.barracks >= 1 && buildingLevel(s, 'tavern') < 1 && !settlementsOf(state, f).some((x) => buildingLevel(x, 'tavern') >= 1) && buildable('tavern')) return { type: 'kingdomBuild', settlementId: id, building: 'tavern' };
   // Defences last, and only where somebody stands guard.
   if (state.rules.economy && s.garrison?.length && buildCost(state, s, 'walls') && buildable('walls')) return { type: 'kingdomBuild', settlementId: id, building: 'walls' };
   return botTrade(state, f, s);
@@ -762,6 +810,14 @@ export function kingdomBotAction(state: GameState, hero: HeroState): Action | nu
       const strongest = [...here.garrison].sort((a, b) => worth(b) - worth(a) || (a < b ? -1 : 1))[0];
       return { type: 'kingdomGarrison', settlementId: here.id, unitId: strongest, dir: 'out' };
     }
+  }
+  // Level 5: buy the fallen commander back, hire one (the first free archetype; a reserve of gold stays for recruits).
+  if (state.rules.realm && hero.playerId) {
+    const tavern = settlementsOf(state, hero.faction).find((s) => buildingLevel(s, 'tavern') >= 1);
+    const mine = commanderOf(state, hero.playerId);
+    if (tavern && mine && mayRansom(state, mine) && k.gold[hero.faction] >= ransomPrice(mine)) return { type: 'kingdomRansom', settlementId: tavern.id, heroId: mine.id };
+    const free = freeCommanders(state, hero.faction);
+    if (tavern && !mine && !hero.secondary && free.length && k.gold[hero.faction] >= REALM.hireGold + 2) return { type: 'kingdomHire', settlementId: tavern.id, unitId: free[(state.setup.seed + state.players.findIndex((p) => p.id === hero.playerId)) % free.length] };
   }
   // Shopping needs no walk (a human opens the settlement list from anywhere), so a bot shops from where it stands too.
   for (const s of settlementsOf(state, hero.faction)) {
