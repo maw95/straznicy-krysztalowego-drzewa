@@ -28,13 +28,12 @@ Poziom 5 zbudowany 15.11 (drugi bohater, magia, typy i specjalności, rozgałęz
 Poziom 6 zbudowany 15.11 (Relikt, mechaniki i drzewka frakcji, jednostka legendarna, alternatywne jednostki z siedliskami); czeka na ogranie i akceptację składu jednostek przez autora.
 
 ### Etap E. Przed premierą
-16. **Inwentaryzacja tekstów pod wiele języków** (M): tylko spis, tłumaczenia po premierze.
 18. **Premiera na Steamie** (L, głównie autor): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery do ustalenia (dawne „3.0” traci sens).
 
 ### Po premierze
 19. Nowe frakcje: Dzikie Stada → Królestwo Umarłych → Żelazne Klany (karta frakcji, grafika, symulacje 10 par), potem DLC. Przed startem: próbka jednej jednostki w nowym stylu i decyzja autora.
 20. Kampania fabularna (mapy ręczne są; fabuła przez wyzwalacze) i Ekspedycja (8–10 map, nagrody po bitwie, profil trwały, seed dnia z rankingiem).
-21. Wiele języków (PL + EN: interfejs, dane, instrukcja, CHANGELOG, serwer).
+21. Wiele języków (PL + EN: interfejs, dane, instrukcja, CHANGELOG, serwer). Spis tekstów i trudności: `TEKSTY_DO_TLUMACZENIA.md` (ok. 1300 napisów i 71 tys. znaków w kodzie, plus instrukcja i serwer).
 22. Więcej niż 6 graczy (do 8), „cios od tyłu / z flanki” dla innych jednostek.
 
 ## 2. Grafika i prezentacja (do wzięcia, gdy autor zdecyduje)
