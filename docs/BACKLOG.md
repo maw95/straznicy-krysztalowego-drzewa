@@ -5,27 +5,25 @@ Plan wydania: `MAPA_DROGOWA.md`. Decyzje autora: `DECYZJE.md`. Mechaniki według
 
 **Jak z tego korzystać:** autor pisze „zrób punkty 2, 3, 5”, a Claude pracuje sam, aż skończy. „Zrób wszystko” = idź po numerach od góry. Każdy punkt ma numer (stały, żeby dało się go przywoływać), warunek ukończenia i rozmiar (S ≈ godzina, M ≈ kilka godzin, L ≈ dzień+).
 
-## Stan (15.11.2026)
+## Stan (15.11.2026, wieczór)
 
-Wydane: **2.7.0** (14.11, poziom 3 „Osada”). Niewydane, ale zrobione i wepchnięte do mastera lokalnie (10 commitów przed `origin/master`): poziom 0 „Spacer”, Łatwy na arenie dla poziomów 1–3, bot-kupiec, Królestwo w rankingu, przestrojone Normalny i Trudny. `make check` zielone. **Nic nie wypchnięte** (push gry robi tylko autor).
+Wydane: **2.7.0** (14.11, poziom 3 „Osada”). Niewydane, zrobione lokalnie w masterze: poziom 0 „Spacer”, Łatwy na arenie, bot-kupiec, Królestwo w rankingu, a 15.11 w jednej sesji **poziomy 4, 5 i 6 w całości** (Księstwo: Kuźnia, wymiana surowców, młyn/składnica/studnia, garnizon, fosa i mury z katapultą, cel Podbój, autopilot warstw; Królestwo: drugi bohater, magia, typy i specjalności, rozgałęzienia umiejętności; Imperium: Relikt, mechaniki i drzewka frakcji, jednostki legendarne i alternatywne z siedliskami). `make check` zielone (490 testów). **Nic nie wypchnięte** (push gry robi tylko autor). Repo serwera: commit z poziomami 5–6, celami i nowymi akcjami, **niewypchnięty i niewdrożony** (czeka na wydanie gry).
 
 Drabinka (nazwy = ranga zmagań): 0 Spacer, 1 Przygoda, 2 Wyprawa, 3 Osada, 4 Księstwo, 5 Królestwo, 6 Imperium. Premiera dopiero po poziomie 6.
-Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids`) i w rankingu online zostają.
+Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids`, `economy`, `realm`, `empire`) i w rankingu online zostają.
 
 ## 1. Kolejka prac (w tej kolejności)
 
 ### Etap A. Domknięcie poziomów 0–3 (przed budową poziomu 4)
 4. **Wdrożenie serwera przy następnym wydaniu** (S, razem z wydaniem): repo backendu ma niewdrożony commit z rankingiem; poziom 0 i Łatwy na arenie zmieniają znaczenie `kids` (stary klient dostałby arenę zamiast pojedynków).
 
-### Etap B. Poziom 4 „Księstwo” (gospodarka i osady), kolejność wewnątrz poziomu
-Poziom 4 zbudowany 15.11 (Kuźnia, wymiana, obiekty mapy, obrona osady, Podbój, autopilot warstw); czeka na ogranie przez autora (sekcja 3).
-
-### Etap C. Poziom 5 „Królestwo” (bohaterowie i magia)
-10. **5a. Drugi bohater, reszta** (M): zrobione 15.11 (karczma, najem, tura, PD i artefakty dowódcy, śmierć i wykup, boty, UI). Zostaje do decyzji autora: osobna drużyna dowódcy (dziś wspólna pula pomocników frakcji), własna krzywa wzrostu archetypów (wchodzi z 5c), sprite'y dowódców (sekcja 2a).
-Poziom 5 zbudowany 15.11 (drugi bohater, magia, typy i specjalności, rozgałęzienia umiejętności); czeka na ogranie przez autora. Łatwy i Trudny dla poziomów 4–5 jadą na strojeniu poziomu 3 (osobno niemierzone).
-
-### Etap D. Poziom 6 „Imperium” (frakcje i Relikt)
-Poziom 6 zbudowany 15.11 (Relikt, mechaniki i drzewka frakcji, jednostka legendarna, alternatywne jednostki z siedliskami); czeka na ogranie i akceptację składu jednostek przez autora.
+### Etapy B, C, D. Poziomy 4–6: zbudowane 15.11
+Opis zasad: `ZASADY_CYFROWE.md` (sekcje „Poziom 4”, „Poziom 5”, „Poziom 6”) i rozdziały 18–20 instrukcji. Zostaje z nich:
+10. **Decyzje autora do poziomów 4–6** (S, autor): lista w sekcji 8.
+11. **Strojenie Łatwego i Trudnego dla poziomów 4–6 i celów Podbój i Relikt** (M): dziś strojony tylko Normalny (pasma i odchylenia w sekcji 6); potrzebne przebiegi stroiciela z regułami `economy`, `realm`, `empire`.
+12. **Animacje 16 jednostek poziomów 5–6 i efekty czarów, oblężenia i Reliktu** (L, grafika): lista w sekcji 2a.
+13. **Samouczek poziomów 5 i 6** (S): kroki o karczmie, czarach, Odłamkach i siedliskach (dziś jest tylko krok poziomu 4 i tekst powitalny celów).
+14. **Ranking dla poziomów 5–6** (S): dziś liczone jak poziom 4 (`ECONOMY_POINTS_FACTOR`); zmierzyć i ewentualnie dodać własne mnożniki.
 
 ### Etap E. Przed premierą
 18. **Premiera na Steamie** (L, głównie autor): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery do ustalenia (dawne „3.0” traci sens).
@@ -70,6 +68,7 @@ Na mapie przygody dowódcy stoją jako żetony z portretem (figurki 3D mają tyl
 
 ## 3. Do sprawdzenia na żywo (autor)
 Zrobione i przetestowane, bez potwierdzenia w prawdziwej grze:
+- **Poziomy 4–6 (15.11, cała sesja):** sprawdzone testami silnika i skryptami klikającymi w przeglądarce (`scripts/browser/kuznia.ts`, `chatka.ts`, `oblezenie.ts`, `karczma.ts`, `czary.ts`, `relikt.ts`), nie w pełnej partii człowieka. Do ogrania: szturm murów (czy katapulta i fosa są czytelne), garnizon, Podbój, tura dowódcy, pasek czarów w bitwie (na telefonie jest przyklejony nad paskiem aktywacji: nie sprawdzałem w widoku telefonu), okno osady z 9 budynkami i drzewkiem frakcji (przewija się), Relikt, siedliska, statyczne figurki nowych jednostek, nowe dźwięki (nieodsłuchane). Stoły online poziomów 5–6: tylko typy i testy serwera, bez gry na żywo.
 - **Poziom 4 (15.11):** surowce w dolnym pasku, ceny z surowcami w oknie osady, ikony tartaku, kopalni rudy, źródła Pyłu i chatki, panel zadania chatki (nie sprawdzony kliknięciem), karta „Księstwo” w kreatorze, samouczek.
 - **Poziom 3:** widok osady z budynkami obu frakcji, dźwięki zakupu, animacje i portrety 8 pomocników (sprite'y bez klipu śmierci), ikony zestawów artefaktów i licznik „2/3 zestawu”, samouczek, autopilot dziecka, zapisy online, szósty gracz. Nowe 15.11: poziom 0, Łatwy na arenie, bot-kupiec.
 - Kraken (czy groźny, ale uczciwy; czy sześć jednostek mieści się na arenie) i Pegaz.
@@ -129,4 +128,17 @@ Pasma autora (wygrane Przymierza): Łatwy 65–85%, Normalny 45–65%, Trudny 30
 **Podział poziomów 4–6 (15.11):** na 4 gospodarka i osady, na 5 bohaterowie i magia, na 6 frakcje i Relikt: wyrównana liczba i złożoność nowości dla gracza.
 
 ## 8. Pytania czekające na autora
-Brak.
+
+Decyzje podjęte przez Claude'a 15.11 (autor prosił o pracę bez pytań); każdą można zmienić w jednym miejscu:
+1. **Garnizonem bez bohatera dowodzi komputer** (nie właściciel osady). Alternatywa: właściciel steruje obroną.
+2. **Brama wytrzymuje 2 trafienia katapulty, mur i wieżyczka 1**; wieżyczka zadaje 1 obrażenie, fosa 2 (`SIEGE`).
+3. **Podbój:** wygrywa się na koniec rundy, trzymając wszystkie osady na ziemi wroga; przy limicie rund liczy się „ponad połowa”, inaczej Horda.
+4. **Drugi bohater dzieli pulę pomocników frakcji** z bohaterem głównym (bez osobnej drużyny); wykup 3 zł + 2 zł za poziom; najem 8 zł.
+5. **Magia:** lista 8 czarów, mana 3 + poziom, bohaterowie główni znają od początku Magiczny Pocisk; nauka za złoto w wieży maga bez podchodzenia.
+6. **Typy bohaterów:** smoki jako mędrcy, Jednorożec i Wilkołak jako łowcy, Niedźwiedź i Ogr jako wojownicy; specjalności według `SPECIALTIES`.
+7. **Rozgałęzienia** tylko dla czterech umiejętności (Moc, Hart, Lekkość, Dowódca), jako czwarta karta przy III stopniu.
+8. **Relikt:** Odłamki są w każdej grze poziomu 6 (także w innych celach), budynek wymaga wszystkich Odłamków u żywych bohaterów jednej frakcji; premie: Przymierze +2 Ż, Horda +1 A.
+9. **Mechaniki frakcji:** Blask Świtu (leczenie co rundę bitwy) i Żądza Krwi (premia Ataku po śmierci wroga); drzewko frakcji liniowe, 3 stopnie.
+10. **Skład nowych jednostek** (do akceptacji jak przy poziomie 3): dowódcy (Rycerz Świtu, Łowczyni Gaju, Mędrzec Gaju, Wódz Hordy, Kapitan Kuszników, Szaman Cieni), legendarne (Feniks Świtu, Behemot Zagłady), alternatywne (Srebrny Lis, Sowa Świtu, Driada Łuczniczka, Biały Jeleń, Goblin Procarz, Gargulec, Troll Jaskiniowy, Wiwerna Cienia) oraz ich grafiki.
+11. **Siedliska** to pozycje na liście koszar (bez 16 osobnych budynków w krajobrazie osady); liczą się do limitu „jeden budynek na rundę”.
+12. **Serwer:** commit z poziomami 5–6 leży lokalnie w repo backendu, bez pushu i wdrożenia (zmienia zestaw akcji i poziomów; idzie razem z wydaniem gry).
