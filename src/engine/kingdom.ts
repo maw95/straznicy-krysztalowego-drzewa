@@ -133,6 +133,8 @@ export function incomeBreakdown(state: GameState, f: FactionId): Array<{ label: 
   // Strój Kupca (three of three): +1 gold a round, once for the faction.
   const merchants = Object.values(state.heroes).filter((h) => h.faction === f && h.alive && completeSets(h).some((d) => d.income));
   if (merchants.length) rows.push({ label: SETS.merchant.name, gold: SETS.merchant.income! });
+  // Easy: the help the level gives the Przymierza (tuning.ts).
+  if (f === 'dawn' && state.rules.dawnGoldBonus) rows.push({ label: 'Pomoc na Łatwym poziomie', gold: state.rules.dawnGoldBonus });
   return rows;
 }
 

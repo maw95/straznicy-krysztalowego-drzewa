@@ -1,5 +1,5 @@
 // Tuner for level 3 "Królestwo": per level, map size and table finds the start-treasure step that puts the Przymierza win rate nearest the middle of the band.
-// Usage: node --import tsx scripts/sim/tuneKingdom.ts <normal|hard> [games per probe=60] [sizes=short,medium,long]
+// Usage: node --import tsx scripts/sim/tuneKingdom.ts <kids|normal|hard> [games per probe=60] [sizes=short,medium,long]
 // Prints DIGITAL_TUNING entries (paste them into the Kingdom block of src/engine/tuning.ts). Probes a binary search over LADDER (weakest Przymierza first).
 
 import './override';
@@ -12,10 +12,11 @@ import { setupWith, type Option, type Table } from './core';
 
 process.env.SIM_DIGITAL = '1';
 process.env.SIM_GROWTH = '1';
-const level = (process.argv[2] ?? 'normal') as 'normal' | 'hard';
+const level = (process.argv[2] ?? 'normal') as 'kids' | 'normal' | 'hard';
 const games = Number(process.argv[3] ?? 60);
+// The ends of the ladder are noisy at few games: a bigger sample (200) is needed to place a cell near the edge of the band.
 const sizes = (process.argv[4] ?? 'short,medium,long').split(',') as MapSize[];
-const TARGET = level === 'hard' ? 38 : 55;
+const TARGET = level === 'hard' ? 38 : level === 'kids' ? 75 : 55;
 const tr = (n: number) => ({ resurrections: 0, others: 0, random: n });
 const LADDER: Array<Partial<RulesConfig>> = [
   { hordeStartTreasures: tr(4), dawnStartTreasures: tr(0) },
@@ -28,8 +29,14 @@ const LADDER: Array<Partial<RulesConfig>> = [
   { hordeStartTreasures: tr(0), dawnStartTreasures: tr(3) },
   { hordeStartTreasures: tr(0), dawnStartTreasures: tr(4) },
   { hordeStartTreasures: tr(0), dawnStartTreasures: tr(6) },
+  // Beyond that (Easy only): more treasures, then no reinforcements for the coop automaton, a faster hero, more rounds.
+  { hordeStartTreasures: tr(0), dawnStartTreasures: tr(8), dawnGoldBonus: 1 },
+  { hordeStartTreasures: tr(0), dawnStartTreasures: tr(10), dawnGoldBonus: 2 },
+  { hordeStartTreasures: tr(0), dawnStartTreasures: tr(13), dawnGoldBonus: 2, hordeRespawn: false },
+  { hordeStartTreasures: tr(0), dawnStartTreasures: tr(13), dawnGoldBonus: 3, hordeRespawn: false, heroMovePoints: 4 },
+  { hordeStartTreasures: tr(0), dawnStartTreasures: tr(13), dawnGoldBonus: 4, hordeRespawn: false, heroMovePoints: 4, roundLimitBonus: 6 },
 ];
-const option: Option[] = level === 'hard' ? ['hard'] : [];
+const option: Option[] = level === 'hard' ? ['hard'] : level === 'kids' ? ['kids'] : [];
 const TABLES: Array<[Table, 'coop' | 'pvp', number]> = [['coop1', 'coop', 1], ['coop2', 'coop', 2], ['pvp1', 'pvp', 1], ['pvp2', 'pvp', 2]];
 
 function winRate(size: MapSize, table: Table, step: number, base: number): number {

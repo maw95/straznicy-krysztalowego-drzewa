@@ -63,6 +63,8 @@ export interface RulesConfig {
   roundLimitBonus?: number;
   /** Digital tuning: the treasures the Przymierza hold from the start instead of the map's (MapVariant.startTreasures). */
   dawnStartTreasures?: { resurrections: number; others: number; random?: number };
+  /** Digital tuning, level 3: extra gold per round for the Przymierza (a start condition of Easy). */
+  dawnGoldBonus?: number;
   /** Rounds that all living evil heroes must spend on the Tree to complete the ritual. */
   ritualRounds: number;
   /** The Horde's ritual at the Tree; off on the easy level (the Horde wins by the limit or by beating the heroes). */
