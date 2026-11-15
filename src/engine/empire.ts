@@ -19,6 +19,33 @@ export const EMPIRE = {
   sparkAttack: 1,
 };
 
+/** The factions' own mechanics (they work in every level 6 battle) and their trees: three ranks bought with gold and Gwiezdny Pył. */
+export const FACTION_MECHANICS = {
+  /** Blask Świtu: Życie the most wounded unit of the Przymierza regains at the start of a battle round. */
+  dawnHeal: 1,
+  /** Rank III of the Przymierza's tree: Życie every unit of the Przymierza starts a battle with on top. */
+  dawnStartHp: 1,
+  /** Żądza Krwi: Atak every unit of the Horde gains when an enemy falls; Życie regained with it at rank III. */
+  hordeAttack: 1,
+  hordeHeal: 1,
+  /** Price of each rank of a tree. */
+  treeCost: [{ gold: 4, dust: 2 }, { gold: 6, dust: 3 }, { gold: 8, dust: 5 }],
+};
+export const MECHANIC_NAMES: Record<FactionId, string> = { dawn: 'Blask Świtu', horde: 'Żądza Krwi' };
+export const MECHANIC_TEXTS: Record<FactionId, string> = {
+  dawn: `Na początku każdej rundy bitwy najciężej ranna jednostka Przymierza odzyskuje ${FACTION_MECHANICS.dawnHeal} Ż.`,
+  horde: `Gdy w bitwie ginie wróg Hordy, wszystkie jej jednostki dostają +${FACTION_MECHANICS.hordeAttack} A do końca bitwy (raz na bitwę).`,
+};
+/** What each rank of a tree adds. */
+export const TREE_TEXTS: Record<FactionId, [string, string, string]> = {
+  dawn: [`Blask Świtu leczy o ${FACTION_MECHANICS.dawnHeal + 1} Ż.`, 'Blask Świtu leczy dwie najciężej ranne jednostki.', `Każda jednostka Przymierza zaczyna bitwę z +${FACTION_MECHANICS.dawnStartHp} Ż.`],
+  horde: ['Żądza Krwi działa dwa razy w bitwie.', 'Żądza Krwi działa trzy razy w bitwie.', `Przy Żądzy Krwi jednostki Hordy odzyskują też ${FACTION_MECHANICS.hordeHeal} Ż.`],
+};
+export const TREE_NAMES: Record<FactionId, [string, string, string]> = {
+  dawn: ['Ciepły Świt', 'Dwa Promienie', 'Złoty Poranek'],
+  horde: ['Zapach Krwi', 'Szał Bitewny', 'Uczta Zwycięzców'],
+};
+
 export const SPARK_NAMES: Record<FactionId, string> = { dawn: 'Sanktuarium Pierwotnej Iskry', horde: 'Czarna Kuźnia Pierwotnej Iskry' };
 export const SPARK_TEXTS: Record<FactionId, string> = {
   dawn: `Wszystkie jednostki Przymierza (bohaterowie i pomocnicy) mają +${EMPIRE.sparkHp} Ż w każdej bitwie.`,

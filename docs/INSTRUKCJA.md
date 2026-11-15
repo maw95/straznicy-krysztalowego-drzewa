@@ -819,7 +819,7 @@ Każdy bohater ma też **specjalność**, czyli jedną własną premię (na przy
 ### Rozgałęzienia umiejętności
 Cztery umiejętności (Moc, Hart, Lekkość i Dowódca) można dokończyć na dwa sposoby. Gdy masz taką umiejętność na II stopniu i przy awansie pojawia się jej III stopień, obok leży dodatkowa karta, **rozgałęzienie**: zamiast ostatniego punktu dla bohatera dostajesz coś innego (premię dla pomocników, leczenie co rundę albo dalsze rozstawienie). Wybór jest ostateczny.
 
-## 20. Poziom 6: Imperium — Relikt (wersja cyfrowa)
+## 20. Poziom 6: Imperium — Relikt i frakcje (wersja cyfrowa)
 
 Poziom „Imperium” dodaje do zasad Królestwa **Odłamki Pierwotnej Iskry**.
 
@@ -830,6 +830,16 @@ Na mapie, na widocznych od początku polach, leżą świecące **Odłamki Pierwo
 
 ### Budynek Pierwotnej Iskry
 Gdy bohaterowie jednej frakcji niosą razem **wszystkie Odłamki**, jeden z nich może stanąć we własnej osadzie i wznieść tam budynek Pierwotnej Iskry: **Sanktuarium** (Przymierze) albo **Czarną Kuźnię** (Horda). Ceną są wszystkie Odłamki. Sanktuarium daje wszystkim jednostkom Przymierza +2 Życia w każdej bitwie, Czarna Kuźnia wszystkim jednostkom Hordy +1 Ataku.
+
+### Mechaniki frakcji i drzewko frakcji
+Na poziomie Imperium każda frakcja walczy po swojemu:
+- **Blask Świtu (Przymierze):** na początku każdej rundy bitwy najciężej ranna jednostka Przymierza odzyskuje 1 Życie.
+- **Żądza Krwi (Horda):** gdy w bitwie ginie wróg Hordy, wszystkie jej jednostki dostają +1 Ataku do końca bitwy (raz na bitwę).
+
+W oknie każdej własnej osady można rozwijać **drzewko frakcji** (trzy stopnie za złoto i Gwiezdny Pył): Przymierze leczy mocniej, potem dwie jednostki naraz, a na końcu wszystkie jego jednostki zaczynają bitwę z +1 Życia; Żądza Krwi Hordy działa dwa, potem trzy razy w bitwie, a na końcu także leczy.
+
+### Legendarna jednostka
+W rozbudowanych koszarach, za 20 zł i 3 Gwiezdne Pyły, frakcja może zrekrutować jedną legendarną jednostkę: **Feniksa Świtu** (lata; raz na bitwę po śmierci wstaje z połową Życia) albo **Behemota Zagłady** (każdym atakiem może trafić dwóch sąsiadujących wrogów).
 
 ### Cel „Relikt”
 W grze o Relikt **wzniesienie budynku Pierwotnej Iskry od razu wygrywa**. Gdy minie limit rund, wygrywa strona, która niesie więcej Odłamków (przy równej liczbie Horda).

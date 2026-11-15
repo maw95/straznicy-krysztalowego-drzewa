@@ -61,7 +61,7 @@ import { ECONOMY } from './economy';
 import { commanderFalls } from './realm';
 import { battleSpell, mapSpell, regenMana, START_SPELLS } from './magic';
 import { HERO_TYPES, specialtyOf } from './heroTypes';
-import { EMPIRE, hasSpark, loseShards } from './empire';
+import { EMPIRE, FACTION_MECHANICS, hasSpark, loseShards } from './empire';
 import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, placeSites, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
@@ -822,6 +822,7 @@ function startBattle(state: GameState, s: BattleStart) {
   }
   // Level 6: the building of the Pierwotna Iskra strengthens every unit of its faction.
   for (const h of [attacker, defenderHero]) if (h && hasSpark(state, h.faction)) sparkBonus(state, b.units[h.id]);
+  for (const h of [attacker, defenderHero]) if (h) dawnTreeBonus(state, b.units[h.id]);
   for (const h of [attacker, defenderHero]) if (h && isChildHero(state, h)) {
     b.units[h.id].hp += FAMILY.extraHp * hpScale;
     b.units[h.id].maxHp += FAMILY.extraHp * hpScale;
@@ -870,6 +871,13 @@ function startBattle(state: GameState, s: BattleStart) {
   if (!b.needsSelection.length) startBattleFight(state);
 }
 
+/** Level 6, rank III of the Przymierza's tree: every unit of the Przymierza starts a battle with more Życie. */
+function dawnTreeBonus(state: GameState, unit: BattleState['units'][string]) {
+  if (!state.rules.empire || unit.side !== 'dawn' || (state.kingdom?.tree?.dawn ?? 0) < 3) return;
+  unit.hp += FACTION_MECHANICS.dawnStartHp * hpScaleOf(state);
+  unit.maxHp += FACTION_MECHANICS.dawnStartHp * hpScaleOf(state);
+}
+
 function sparkBonus(state: GameState, unit: BattleState['units'][string]) {
   if (unit.side === 'dawn') {
     unit.hp += EMPIRE.sparkHp * hpScaleOf(state);
@@ -889,6 +897,7 @@ function addSupports(state: GameState, faction: FactionId, ids: string[]) {
       applySupportGear(leader, b.units[id]);
     }
     if (hasSpark(state, faction)) sparkBonus(state, b.units[id]);
+    dawnTreeBonus(state, b.units[id]);
     // Level 4: the faction's forge arms its supports.
     const forge = forgeLevel(state, faction);
     if (forge >= 1) b.units[id].status.battleAttackBonus += ECONOMY.forgeAttack * scaleOf(state);
@@ -1172,6 +1181,7 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'kingdomHeal':
     case 'kingdomBuyArtifact':
     case 'kingdomTrade':
+    case 'kingdomTree':
     case 'kingdomLearn':
     case 'kingdomHire':
     case 'kingdomRansom':

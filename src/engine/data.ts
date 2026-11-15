@@ -50,7 +50,8 @@ export type AbilityId =
   | 'poisonClaw' // Zatruty Pazur (Szczurołak)
   | 'packHunt' // Obława (Piekielny Ogar, passive)
   | 'inferno' // Pożoga (Salamandra Popiołu)
-  | 'bloodRage'; // Bitewny Szał (Herszt Minotaurów, passive)
+  | 'bloodRage' // Bitewny Szał (Herszt Minotaurów, passive)
+  | 'rebirth'; // Odrodzenie z Popiołów (Feniks Świtu, reaction, level 6)
 
 export interface UnitDef {
   id: string;
@@ -293,6 +294,9 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'hellhound', name: 'Piekielny Ogar', side: 'horde', kind: 'support', hp: 7, attack: 3, speed: 6, movement: 'walk', attackType: 'melee', ability: 'packHunt', abilityName: 'Obława', abilityText: `Stała: +${ABILITY.packHuntBonus} A, gdy cel sąsiaduje z innym sojusznikiem Ogara.` }),
     u({ id: 'salamander', name: 'Salamandra Popiołu', side: 'horde', kind: 'support', hp: 9, attack: 3, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'inferno', abilityName: 'Pożoga', abilityText: `Raz na bitwę: trafiony cel i jego sąsiedzi dostają ${ABILITY.infernoDamage} obrażenie.` }),
     u({ id: 'minotaurChief', name: 'Herszt Minotaurów', side: 'horde', kind: 'support', size: 2, hp: 15, attack: 5, speed: 4, movement: 'walk', attackType: 'melee', ability: 'bloodRage', abilityName: 'Bitewny Szał', abilityText: `Stała: pancerz (−${ABILITY.bloodRageArmor} obrażeń z każdego ciosu); po zabiciu wroga jego następny cios zadaje +${ABILITY.bloodRageBonus} A.` }),
+    // Level 6 legendary recruits (digital ruleset, rule `empire`): one per faction, very expensive (kingdom.ts RECRUITS, tier 6).
+    u({ id: 'dawnPhoenix', name: 'Feniks Świtu', side: 'dawn', kind: 'support', size: 2, hp: 14, attack: 6, speed: 6, movement: 'fly', attackType: 'melee', ability: 'rebirth', abilityName: 'Odrodzenie z Popiołów', abilityText: 'Raz na bitwę: gdy zginie, od razu wstaje na tym samym polu z połową Życia.' }),
+    u({ id: 'doomBehemoth', name: 'Behemot Zagłady', side: 'horde', kind: 'support', size: 2, hp: 20, attack: 7, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Rozdzierające Szpony', abilityText: 'Każdym atakiem może trafić dwóch sąsiadujących przeciwników.' }),
     // Level 5 commanders (digital ruleset): the second hero a player hires in a tavern, one of three archetypes per faction (realm.ts). They reuse abilities of the game.
     u({ id: 'dawnKnight', name: 'Rycerz Świtu', side: 'dawn', kind: 'hero', hp: 7, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Tarcza Świtu', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
     u({ id: 'dawnHuntress', name: 'Łowczyni Gaju', side: 'dawn', kind: 'hero', hp: 5, attack: 3, speed: 5, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Strzała z Pnączy', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),

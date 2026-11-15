@@ -15,7 +15,7 @@ import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import type { Action, Crystal, GameState, HeroState } from './types';
 import { MAGIC, SPELLS, towerSpells, type SpellId } from './magic';
 import { HERO_TYPES } from './heroTypes';
-import { mayBuildSpark, pickUpShard, placeShards, SPARK_NAMES, spendShards } from './empire';
+import { FACTION_MECHANICS, mayBuildSpark, pickUpShard, placeShards, SPARK_NAMES, spendShards, TREE_NAMES } from './empire';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
 export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark';
@@ -51,6 +51,8 @@ export interface KingdomState {
   /** Level 6: Odłamki Pierwotnej Iskry lying on the map (how many on a hex) and how many the game has in all (empire.ts). */
   shards?: Record<HexKey, number>;
   shardTotal?: number;
+  /** Level 6: the rank of each faction's tree (0-3, empire.ts). */
+  tree?: Record<FactionId, number>;
   built?: Record<FactionId, number>;
   /** A hero opened a chest and has to choose: its contents (an artifact) or gold. */
   chest: { heroId: string } | null;
@@ -95,10 +97,19 @@ const TIER_UNITS: Record<FactionId, string[]> = {
 };
 
 /** The supports a faction can recruit, by tier: tier 1 are the supports it starts the game with in the other levels, tiers 2–5 are the new units (tiers 4–5 need upgraded barracks). */
-export const RECRUITS: Record<FactionId, Array<{ id: string; tier: number; cost: number }>> = {
-  dawn: [...FACTION_SUPPORTS.dawn.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })), ...TIER_UNITS.dawn.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] }))],
-  horde: [...FACTION_SUPPORTS.horde.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })), ...TIER_UNITS.horde.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] }))],
+/** The legendary unit of level 6: gold and Gwiezdny Pył, one per faction, in upgraded barracks. */
+export const LEGEND = { gold: 20, dust: 3 };
+const LEGENDS: Record<FactionId, string> = { dawn: 'dawnPhoenix', horde: 'doomBehemoth' };
+export interface Recruit { id: string; tier: number; cost: number; /** Gwiezdny Pył on top of the gold (the level 6 unit). */ dust?: number }
+
+/** Every recruit of a faction by tier; tier 6 belongs to level 6 only (list the offer of a game with `recruitsOf`). */
+export const RECRUITS: Record<FactionId, Recruit[]> = {
+  dawn: [...FACTION_SUPPORTS.dawn.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })), ...TIER_UNITS.dawn.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] })), { id: LEGENDS.dawn, tier: 6, cost: LEGEND.gold, dust: LEGEND.dust }],
+  horde: [...FACTION_SUPPORTS.horde.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })), ...TIER_UNITS.horde.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] })), { id: LEGENDS.horde, tier: 6, cost: LEGEND.gold, dust: LEGEND.dust }],
 };
+
+/** The recruits a faction may buy in this game. */
+export const recruitsOf = (state: GameState, f: FactionId): Recruit[] => RECRUITS[f].filter((r) => r.tier < 6 || Boolean(state.rules.empire));
 
 const NAMES: Record<FactionId, string[]> = {
   dawn: ['Świtogaj', 'Srebrzysty Bród', 'Złotolist', 'Jasna Polana', 'Perłowa Wieża', 'Kryształowa Przystań', 'Wiosenny Gród', 'Miodowy Dwór', 'Zorzyca', 'Białe Mosty', 'Rosogród', 'Słonecznik', 'Lazurowa Zatoka', 'Skrzydlata Przystań', 'Malwowa Dolina', 'Wierzbowy Gaj'],
@@ -560,14 +571,14 @@ export function kingdomAction(state: GameState, action: Action): void {
     case 'kingdomRecruit': {
       const { s, hero } = serviceSettlement(state, action.settlementId);
       if (!mayRecruit(s, hero.faction) || s.buildings.barracks < 1) throw new Error('Tu nie da się rekrutować: potrzebne koszary w osadzie własnej frakcji.');
-      const entry = RECRUITS[hero.faction].find((r) => r.id === action.unitId);
+      const entry = recruitsOf(state, hero.faction).find((r) => r.id === action.unitId);
       if (!entry) throw new Error('Tej jednostki nie ma w ofercie.');
       if (entry.tier >= 4 && s.buildings.barracks < 2) throw new Error('Tę jednostkę rekrutuje się w rozbudowanych koszarach.');
       const fs = state.factions[hero.faction];
       if (hasUnit(state, hero.faction, entry.id)) throw new Error('Ta jednostka jest już w twojej drużynie.');
-      pay(state, hero.faction, entry.cost);
+      payCost(state, hero.faction, { gold: entry.cost, ...(entry.dust ? { dust: entry.dust } : {}) });
       fs.supportsAlive.push(entry.id);
-      log(state, 'info', `${FACTION_NAMES[hero.faction]} rekrutuje: ${UNITS[entry.id].name} (${entry.cost} zł).`);
+      log(state, 'info', `${FACTION_NAMES[hero.faction]} rekrutuje: ${UNITS[entry.id].name} (${costText({ gold: entry.cost, ...(entry.dust ? { dust: entry.dust } : {}) })}).`);
       break;
     }
     case 'kingdomHeal': {
@@ -613,6 +624,17 @@ export function kingdomAction(state: GameState, action: Action): void {
         k.gold[f] += ECONOMY.tradeSell[action.res];
         log(state, 'info', `${FACTION_NAMES[f]} sprzedaje: ${RESOURCE_NAMES[action.res]} (${ECONOMY.tradeSell[action.res]} zł).`, f);
       }
+      break;
+    }
+    case 'kingdomTree': {
+      const { hero } = serviceSettlement(state, action.settlementId);
+      if (!state.rules.empire) throw new Error('Drzewko frakcji jest dopiero na poziomie Imperium.');
+      const tree = (k.tree ??= { dawn: 0, horde: 0 });
+      const price = FACTION_MECHANICS.treeCost[tree[hero.faction]];
+      if (!price) throw new Error('Drzewko frakcji jest już w pełni rozwinięte.');
+      payCost(state, hero.faction, price);
+      tree[hero.faction] += 1;
+      log(state, 'info', `${FACTION_NAMES[hero.faction]} rozwija drzewko frakcji: ${TREE_NAMES[hero.faction][tree[hero.faction] - 1]} (${costText(price)}).`);
       break;
     }
     case 'kingdomLearn': {
@@ -742,11 +764,11 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   if (own && s.buildings.barracks < 1 && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
   if (own && s.buildings.barracks >= 1) {
     // Like a player: the strongest recruit it can pay for now.
-    const missing = RECRUITS[f].filter((r) => !hasUnit(state, f, r.id) && (r.tier < 4 || s.buildings.barracks >= 2) && afford(r.cost)).sort((a, b) => b.tier - a.tier)[0];
+    const missing = recruitsOf(state, f).filter((r) => !hasUnit(state, f, r.id) && (r.tier < 4 || s.buildings.barracks >= 2) && afford(r.cost) && resOf(state, f).dust >= (r.dust ?? 0)).sort((a, b) => b.tier - a.tier)[0];
     if (missing) return { type: 'kingdomRecruit', settlementId: id, unitId: missing.id };
     // Every cheaper recruit is in the team and the strongest ones wait behind the bigger barracks: build them.
-    const waiting = RECRUITS[f].some((r) => r.tier >= 4 && !hasUnit(state, f, r.id));
-    if (waiting && s.buildings.barracks === 1 && RECRUITS[f].every((r) => r.tier >= 4 || hasUnit(state, f, r.id)) && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
+    const waiting = recruitsOf(state, f).some((r) => r.tier >= 4 && !hasUnit(state, f, r.id));
+    if (waiting && s.buildings.barracks === 1 && recruitsOf(state, f).every((r) => r.tier >= 4 || hasUnit(state, f, r.id)) && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
   }
   if (s.buildings.hospital >= 1 && fs.supportsDead.length) {
     const dead = fs.supportsDead[0];
@@ -771,6 +793,11 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   if (state.rules.realm && own && s.buildings.barracks >= 1 && buildingLevel(s, 'tavern') < 1 && !settlementsOf(state, f).some((x) => buildingLevel(x, 'tavern') >= 1) && buildable('tavern')) return { type: 'kingdomBuild', settlementId: id, building: 'tavern' };
   // Level 5: one mage tower for the faction, and its upgrade once there is Gwiezdny Pył to spare.
   if (state.rules.realm && own && s.buildings.barracks >= 1 && !settlementsOf(state, f).some((x) => x.id !== s.id && buildingLevel(x, 'magic') >= 1) && buildCost(state, s, 'magic') && buildable('magic')) return { type: 'kingdomBuild', settlementId: id, building: 'magic' };
+  // Level 6: the faction's tree, when the gold and the Gwiezdny Pył are there (after the buildings that need the Pył).
+  if (state.rules.empire) {
+    const price = FACTION_MECHANICS.treeCost[k.tree?.[f] ?? 0];
+    if (price && canPay(state, f, { ...price, gold: price.gold + 2 })) return { type: 'kingdomTree', settlementId: id };
+  }
   // Defences last, and only where somebody stands guard.
   if (state.rules.economy && s.garrison?.length && buildCost(state, s, 'walls') && buildable('walls')) return { type: 'kingdomBuild', settlementId: id, building: 'walls' };
   return botTrade(state, f, s);

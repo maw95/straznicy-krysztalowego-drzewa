@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Imperium: **mechaniki frakcji, drzewko frakcji i legendarne jednostki**. Przymierze ma Blask Świtu (co rundę bitwy leczy najciężej ranną jednostkę), Horda Żądzę Krwi (po śmierci wroga wszystkie jej jednostki biją mocniej). Obie mechaniki rozwija trzystopniowe drzewko frakcji kupowane w osadzie za złoto i Gwiezdny Pył. W rozbudowanych koszarach czeka jedna legendarna jednostka: Feniks Świtu (odradza się raz na bitwę) albo Behemot Zagłady (trafia dwóch wrogów naraz).
+
 - Nowy poziom 6 **„Imperium”** (początek): **Odłamki Pierwotnej Iskry** i cel **Relikt**. Odłamki leżą na mapie, bohater zabiera je wejściem na pole, a zwycięzca bitwy bohaterów przejmuje Odłamki pokonanego. Frakcja z kompletem Odłamków wznosi w swojej osadzie Sanktuarium (Przymierze: +2 Życia dla wszystkich jednostek) albo Czarną Kuźnię (Horda: +1 Ataku). W celu „Relikt” ten budynek wygrywa grę. Komputer zbiera Odłamki, poluje na niosących i buduje.
 
 - Królestwo: **typy bohaterów, specjalności i rozgałęzienia umiejętności**. Wojownik zyskuje Życie z każdym poziomem, łowca Atak co dwa poziomy, mędrzec manę i moc czarów. Każdy bohater ma własną specjalność (np. dodatkowy ruch, złoto za wygrane bitwy, mocniejsze czary). Moc, Hart, Lekkość i Dowódcę można dokończyć na dwa sposoby: przy trzecim stopniu pojawia się dodatkowa karta rozgałęzienia. Poziomy 1–4 bez zmian.

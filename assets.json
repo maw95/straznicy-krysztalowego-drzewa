@@ -3622,6 +3622,18 @@
       "data": "2026-11-15",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "poziom6/legendarne-jednostki",
+      "pliki": [ "public/assets/cards/art/dawnPhoenix.jpg", "public/assets/cards/portraits/dawnPhoenix.jpg", "public/assets/cards/art/doomBehemoth.jpg", "public/assets/cards/portraits/doomBehemoth.jpg" ],
+      "typ": "poziom 6: ilustracje kart i portrety legendarnych jednostek: Feniks Świtu, Behemot Zagłady (wersja zastępcza: postać na gradiencie)",
+      "opis": "Postacie z arkusza budynku Pierwotnej Iskry (dolny rząd siatki 2x2 na czarnym tle: feniks ze złotobiałymi płonącymi skrzydłami, kolosalny behemot w kościanym pancerzu), wycięte skryptem scripts/assets/arkusz.py i nałożone na gradient w barwach frakcji skryptem scripts/assets/legendy.py (ilustracja 451x332, portret 256x256). Docelowo pełne ilustracje z tłem.",
+      "scenario_asset": { "arkusz": "asset_Q6H9ZaqRW344oQWV1d4DzHdJ" },
+      "narzedzie": "Scenario (plan płatny) + Pillow",
+      "model": "GPT Image 2.6 Flare, jakość medium",
+      "data": "2026-11-15",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

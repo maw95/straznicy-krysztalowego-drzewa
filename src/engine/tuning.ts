@@ -25,6 +25,8 @@ export interface DigitalTune {
   kingdom?: boolean;
   /** Level 5 "Królestwo" switched on (missing = any). */
   realm?: boolean;
+  /** Level 6 "Imperium" switched on (missing = any). */
+  empire?: boolean;
   /** Changes to the rules; applied in order, later entries win. */
   rules: Partial<RulesConfig>;
 }
@@ -157,6 +159,9 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   { objective: 'relic', level: 'normal', mode: 'coop', players: 2, maps: ['short', 'medium'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
   { objective: 'relic', level: 'normal', mode: 'coop', maps: ['veryLong', 'huge', 'giant'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 5 } } },
   { objective: 'relic', level: 'normal', mode: 'pvp', players: 2, maps: ['veryLong', 'huge', 'giant'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 5 } } },
+  // --- Level 6 "Imperium", goal 'crystals' (15.11, 40-60 games a cell): Blask Świtu helps the Przymierza from the first round, Żądza Krwi only after a kill.
+  { empire: true, objective: 'crystals', level: 'normal', mode: 'pvp', players: 1, maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { empire: true, objective: 'crystals', level: 'normal', mode: 'coop', players: 1, maps: ['medium'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 5 } } },
 ];
 
 /** The rules a game is played with: the setup's, plus the digital levers that match it. */
@@ -179,6 +184,7 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
     if (t.growth !== undefined && t.growth !== Boolean(base.heroGrowth)) continue;
     if (t.kingdom !== undefined && t.kingdom !== Boolean(base.kingdom)) continue;
     if (t.realm !== undefined && t.realm !== Boolean(base.realm)) continue;
+    if (t.empire !== undefined && t.empire !== Boolean(base.empire)) continue;
     if (t.shape && t.shape !== (setup.mapShape ?? 'triangle')) continue;
     if (t.customMapId && t.customMapId !== setup.customMapId) continue;
     rules = { ...rules, ...t.rules };

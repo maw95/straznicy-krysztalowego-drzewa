@@ -9,6 +9,7 @@ import { ARENA_COLUMNS, MIDDLE_HALF, arenaCell, cellOf, columnCells, inArena, WI
 export * from './arenaLayout';
 import { isDigital, type BattleState, type BattleUnit, type GameState, type SiegeState, type UnitStatus } from './types';
 import { SIEGE } from './economy';
+import { FACTION_MECHANICS } from './empire';
 
 
 const OBSTACLE_SETS = new WeakMap<HexKey[], Set<HexKey>>();
@@ -568,6 +569,7 @@ function beginRound(state: GameState, round: number) {
     .map((u) => u.id);
   b.index = 0;
   log(state, 'battle', `Runda bitwy ${round}.`);
+  dawnLight(state);
   // Siege: every tower still standing shoots the weakest attacker.
   for (const tower of b.siege?.towers ?? []) {
     const target = livingUnits(b, b.attacker).sort((x, y) => x.hp - y.hp || ids.indexOf(x.id) - ids.indexOf(y.id))[0];
@@ -679,6 +681,48 @@ export function checkBattleEnd(state: GameState): boolean {
   return true;
 }
 
+// ---------------------------------------------------------------- faction mechanics (level 6)
+
+/** Rank of a faction's tree (0-3), 0 below level 6. */
+const treeRank = (state: GameState, f: FactionId): number => (state.rules.empire ? state.kingdom?.tree?.[f] ?? 0 : 0);
+
+/**
+ * Blask Świtu, the Przymierza's mechanic: at the start of every battle round the most wounded unit of the Przymierza regains Życie
+ * (rank I of the tree: more of it; rank II: two units; rank III is applied when the battle starts, see game.ts).
+ */
+function dawnLight(state: GameState) {
+  const b = state.battle!;
+  if (!state.rules.empire) return;
+  const rank = treeRank(state, 'dawn');
+  const heal = (FACTION_MECHANICS.dawnHeal + (rank >= 1 ? 1 : 0)) * hpScaleOf(state);
+  const hurt = livingUnits(b, 'dawn').filter((u) => u.hp < u.maxHp && u.pos).sort((x, y) => (y.maxHp - y.hp) - (x.maxHp - x.hp) || (x.id < y.id ? -1 : 1));
+  for (const u of hurt.slice(0, rank >= 2 ? 2 : 1)) {
+    const got = Math.min(heal, u.maxHp - u.hp);
+    u.hp += got;
+    (b.heals ??= []).push({ unitId: u.id, amount: got });
+    log(state, 'ability', `${unitName(u)} odzyskuje ${got} Ż (Blask Świtu).`);
+  }
+}
+
+/**
+ * Żądza Krwi, the Horde's mechanic: when an enemy of the Horde falls, every living unit of the Horde strikes harder until the end of the battle
+ * (once at rank 0, up to the rank's limit; at rank III they also regain Życie).
+ */
+function bloodlust(state: GameState, fallen: BattleUnit) {
+  const b = state.battle!;
+  if (!state.rules.empire || fallen.side === 'horde' || (b.attacker !== 'horde' && b.defender !== 'horde')) return;
+  const rank = treeRank(state, 'horde');
+  const cap = 1 + Math.min(rank, 2);
+  if ((b.bloodlust ?? 0) >= cap) return;
+  b.bloodlust = (b.bloodlust ?? 0) + 1;
+  const horde = livingUnits(b, 'horde');
+  for (const u of horde) {
+    u.status.battleAttackBonus += FACTION_MECHANICS.hordeAttack * scaleOf(state);
+    if (rank >= 3 && u.hp < u.maxHp) u.hp = Math.min(u.maxHp, u.hp + FACTION_MECHANICS.hordeHeal * hpScaleOf(state));
+  }
+  if (horde.length) log(state, 'ability', `Żądza Krwi: jednostki Hordy mają +${FACTION_MECHANICS.hordeAttack * scaleOf(state)} A do końca bitwy (${b.bloodlust}/${cap}).`);
+}
+
 // ---------------------------------------------------------------- siege
 
 /** The defences of a settlement for a battle on the wide arena: `level` 1 is the moat with a bridge, 2 adds the wall with a gate and two towers. */
@@ -757,6 +801,14 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
     log(state, 'ability', `${unitName(target)} zostaje przy 1 Ż (Ostatnia Szansa).`);
   }
   log(state, 'damage', `${source} → ${unitName(target)}: ${dmg} obrażeń (Ż ${Math.max(0, target.hp)}/${target.maxHp}).`);
+  // Odrodzenie z Popiołów (Feniks Świtu): once per battle it rises where it stood, with half its Życie.
+  if (target.hp <= 0 && dmg > 0 && abilityOf(target) === 'rebirth' && !target.abilityUsed && abilityActive(state)) {
+    target.abilityUsed = true;
+    target.hp = Math.ceil(target.maxHp / 2);
+    log(state, 'ability', `${unitName(target)} odradza się z popiołów (Ż ${target.hp}/${target.maxHp}).`);
+    if (state.battle) (state.battle.heals ??= []).push({ unitId: target.id, amount: target.hp });
+    return;
+  }
   if (target.hp <= 0) {
     target.hp = 0;
     target.alive = false;
@@ -769,6 +821,7 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
       const hit = Object.values(state.battle.units).filter((x) => x.alive && x.id !== target.id && cellsOf(x).some((c) => cells.some((k) => adjacent(k, c))));
       for (const x of hit) if (x.alive) dealDamage(state, x, ABILITY.shardBurstDamage * scaleOf(state), `Rozprysk (${unitName(target)})`);
     }
+    if (state.battle) bloodlust(state, target);
   }
 }
 

@@ -407,6 +407,8 @@ export interface BattleState {
   attackerFrom: HexKey;
   defenderHero: string | null;
   neutralId: string | null;
+  /** Level 6: how many times the Horde's Żądza Krwi has fired in this battle. */
+  bloodlust?: number;
   /** Level 5: the spells cast in this battle, newest last (the screen plays them). */
   spells?: Array<{ spell: SpellId; casterId: string; targetId: string }>;
   /** Level 4: the battle is fought for this settlement (its garrison fights on the defender's side, with or without a hero). */
@@ -579,6 +581,8 @@ export type Action =
   | { type: 'kingdomBuyArtifact'; settlementId: string; artifactId: string }
   /** Level 4: one unit of a resource bought for gold in an own settlement, or sold on its market. */
   | { type: 'kingdomTrade'; settlementId: string; res: 'wood' | 'ore' | 'dust'; dir: 'buy' | 'sell' }
+  /** Level 6: the next rank of the faction's tree, bought in an own settlement. */
+  | { type: 'kingdomTree'; settlementId: string }
   /** Level 5: a spell learnt in the mage tower of an own settlement, cast in a battle by the active hero, cast on the map in the hero's turn. */
   | { type: 'kingdomLearn'; settlementId: string; spell: SpellId }
   | { type: 'battleSpell'; spell: SpellId; targetId?: string }
