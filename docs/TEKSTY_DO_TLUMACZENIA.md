@@ -12,7 +12,7 @@ Stan: 15.11.2026 (backlog, punkt 16). To tylko **spis**: tłumaczenia i mechaniz
    - **Teksty z liczbami w skali** (`scaleText` w `data.ts`): wyrażenie regularne rozpoznaje polskie „N Ż”, „N A”, „N obrażeń”, „N punktów obrażeń”; inny język potrzebuje własnego wzorca albo liczb jako parametrów.
 2. **Instrukcja gracza** `docs/INSTRUKCJA.md` (ok. 64 tys. znaków, 20 rozdziałów) i jej wersje: PDF, DOCX (`scripts/assets/manual*.py`, `manual_docx.cjs`).
 3. **Historia zmian** `CHANGELOG.md` (ok. 76 tys. znaków; gra czyta ten plik i pokazuje go w oknie „Co nowego”). Do tłumaczenia sensownie tylko od wersji premierowej.
-4. **Serwer online** (repo `straznicy-krysztalowego-drzewa-backend`): komunikaty błędów i odmów po polsku w ok. 15 plikach (`src/errors.ts`, `rooms/`, `auth/`), ok. 200 napisów. Klient pokazuje je bez zmian.
+4. **Serwer online** (repo `straznicy-krysztalowego-drzewa-backend`): komunikaty błędów i odmów po polsku w 12 plikach (`src/errors.ts`, `rooms/`, `auth/`), ok. 45 napisów. Klient pokazuje je bez zmian.
 5. **Grafiki z napisami:** logo i okładka (`ui/logo.png`, `ui/cover.jpg`), slajdy wstępu (`public/assets/intro/`: do sprawdzenia, czy napisy są na obrazie, czy nakładane przez `Intro.tsx`), strony instrukcji (`public/assets/manual/`), tor rund i znaczniki, jeśli mają słowa. Ramki kart nie mają napisów (tekst kładzie `UnitCard.tsx`).
 6. **Dźwięk:** brak nagrań głosowych; muzyka i efekty bez słów.
 7. **Nazwy własne do decyzji (tłumaczyć czy zostawić):** Gleamroot, Strażnicy Kryształowego Drzewa, Przymierze Świtu, Mroczna Horda, imiona bohaterów i dowódców, nazwy osad, Gwiezdny Pył, Pierwotna Iskra, nazwy poziomów (Spacer … Imperium).

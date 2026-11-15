@@ -4,65 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89252fbb-bb1d-425f-a087-9550b0de05f0" name="Changes" comment="fixed pages config">
-      <change afterPath="$PROJECT_DIR$/docs/INSTRUKCJA.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/grafika/areny/arena_walki_horda_przeszkody.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/grafika/areny/arena_walki_przymierze_przeszkody.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/grafika/ikony/tor_rund.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/grafika/ikony/znacznik_obrazen_pusty.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/pages.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/pages.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="89252fbb-bb1d-425f-a087-9550b0de05f0" name="Changes" comment="v1.0">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/grafika/areny/arena_walki_horda.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/areny/arena_walki_horda.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/grafika/areny/arena_walki_przymierze.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/grafika/areny/arena_walki_przymierze.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/muzyka/01_mapa_przygody.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/muzyka/02_bitwa.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/muzyka/03_walka_ze_straznikiem.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/muzyka/04_menu_glowne.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/muzyka/05_rytual_przy_drzewie.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/muzyka/06_wygrana_przymierza.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/muzyka/07_wygrana_hordy.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/arena/dawn.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/arena/dawn.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/arena/horde.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/arena/horde.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/music/adventure.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/music/battle.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/music/dawn-victory.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/music/guardian.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/music/horde-victory.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/music/menu.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/assets/music/ritual.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/assets/arenas.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/assets/arenas.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/sim/battles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/sim/battles.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/sim/brief.ts" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/sim/brief.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/sim/core.ts" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/sim/core.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/sim/matrix.ts" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/sim/matrix.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/engine/ai/adventureAi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/ai/adventureAi.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/engine/ai/battleAi.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/ai/battleAi.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/engine/battle.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/battle.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/engine/data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/data.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/engine/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/game.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/engine/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/AdventureView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/AdventureView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/BattleView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/BattleView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/BugReportDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/BugReportDialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/DuelView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/DuelView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/RulesDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/RulesDialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/SetupScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/SetupScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/UnitCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/UnitCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/common.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/common.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/music.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/music.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/engine.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tests/engine.test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/rules.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tests/rules.test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/ui.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/tests/ui.test.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+      <option value="repository" />
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -75,7 +29,7 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/maw95/straznicy-krysztalowego-drzewa.git&quot;,
+    &quot;url&quot;: &quot;git@github.com:maw95/straznicy-krysztalowego-drzewa.git&quot;,
     &quot;accountId&quot;: &quot;6e717dc8-ab36-48f0-be4b-0204778d8d72&quot;
   }
 }</component>
@@ -85,23 +39,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0575117281640547" />
-      <entry key="MS500" value="1.5648736072850618" />
-      <entry key="S2" value="1.8669375635146865" />
-      <entry key="S5" value="1.9444851378072516" />
-      <entry key="S10" value="1.9718462521444695" />
-      <entry key="S30" value="1.9905259430837285" />
-      <entry key="S60" value="1.9952516983576207" />
-      <entry key="M2" value="1.9976230241717663" />
-      <entry key="M5" value="1.9990485308061692" />
-      <entry key="M10" value="1.9995241528097205" />
-      <entry key="M15" value="1.9996850582262853" />
-      <entry key="M30" value="2.0091156229362266" />
-      <entry key="H1" value="2.6045821277491656" />
-      <entry key="H2" value="7.0768366057095795" />
-      <entry key="H4" value="18.98506930307009" />
-      <entry key="D1" value="75.47668099488853" />
-      <entry key="W1" value="104.77767295527828" />
+      <entry key="MS100" value="1.523125527059067" />
+      <entry key="MS500" value="3.7856877031321075" />
+      <entry key="S2" value="5.87915374613834" />
+      <entry key="S5" value="9.821676483695631" />
+      <entry key="S10" value="15.99189671062805" />
+      <entry key="S30" value="33.950726888541844" />
+      <entry key="S60" value="56.12514174084154" />
+      <entry key="M2" value="95.8662241055678" />
+      <entry key="M5" value="198.72857053703083" />
+      <entry key="M10" value="346.42128796610467" />
+      <entry key="M15" value="481.816370411733" />
+      <entry key="M30" value="843.2048697650545" />
+      <entry key="H1" value="1394.7702026204156" />
+      <entry key="H2" value="2011.0359760560386" />
+      <entry key="H4" value="2512.8581402903974" />
+      <entry key="D1" value="3162.317332431048" />
+      <entry key="W1" value="3389.571066012423" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -109,37 +63,37 @@
       <entry key="S2" value="0.0" />
       <entry key="S5" value="0.0" />
       <entry key="S10" value="0.0" />
-      <entry key="S30" value="0.0" />
-      <entry key="S60" value="0.0" />
-      <entry key="M2" value="0.0" />
-      <entry key="M5" value="0.0" />
-      <entry key="M10" value="0.0" />
-      <entry key="M15" value="0.0" />
-      <entry key="M30" value="0.0" />
-      <entry key="H1" value="0.0" />
-      <entry key="H2" value="0.0" />
-      <entry key="H4" value="0.0" />
-      <entry key="D1" value="0.0" />
-      <entry key="W1" value="0.0" />
+      <entry key="S30" value="8.089949053061556E-209" />
+      <entry key="S60" value="1.2719378996901867E-104" />
+      <entry key="M2" value="1.5949330430358403E-52" />
+      <entry key="M5" value="2.895433937808273E-21" />
+      <entry key="M10" value="7.609771358267968E-11" />
+      <entry key="M15" value="2.2625126800896897E-7" />
+      <entry key="M30" value="6.72683049520932E-4" />
+      <entry key="H1" value="0.03667924446125155" />
+      <entry key="H2" value="0.2709711102859789" />
+      <entry key="H4" value="0.7500754295935037" />
+      <entry key="D1" value="2.5517418777766996" />
+      <entry key="W1" value="3.7245162514476915" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.0301860723591916" />
-      <entry key="MS500" value="1.5468023110327633" />
-      <entry key="S2" value="1.86050697926354" />
-      <entry key="S5" value="1.9417154720660277" />
-      <entry key="S10" value="1.9704265472342655" />
-      <entry key="S30" value="1.9900447682593878" />
-      <entry key="S60" value="1.9950101063427867" />
-      <entry key="M2" value="1.997501976096485" />
-      <entry key="M5" value="1.9990000509620247" />
-      <entry key="M10" value="1.9994999027754665" />
-      <entry key="M15" value="1.9996688892484396" />
-      <entry key="M30" value="2.0091074590225553" />
-      <entry key="H1" value="2.604575585939966" />
-      <entry key="H2" value="7.076824457378171" />
-      <entry key="H4" value="18.985052985943145" />
-      <entry key="D1" value="75.47667177189857" />
-      <entry key="W1" value="104.77767116464905" />
+      <entry key="MS100" value="1.484806200249808" />
+      <entry key="MS500" value="3.767890819207589" />
+      <entry key="S2" value="5.862812233828666" />
+      <entry key="S5" value="9.799041500368817" />
+      <entry key="S10" value="15.972968971939313" />
+      <entry key="S30" value="33.94094521207569" />
+      <entry key="S60" value="56.11900491949041" />
+      <entry key="M2" value="95.86221048933592" />
+      <entry key="M5" value="198.7260875128244" />
+      <entry key="M10" value="346.41948024533207" />
+      <entry key="M15" value="481.8148439739059" />
+      <entry key="M30" value="843.2043694055255" />
+      <entry key="H1" value="1394.805980000117" />
+      <entry key="H2" value="2011.306307676856" />
+      <entry key="H4" value="2513.607808166149" />
+      <entry key="D1" value="3164.8689704244757" />
+      <entry key="W1" value="3393.2955638791113" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -155,43 +109,47 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
-    "javascript.preferred.runtime.type.id": "node",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/home/maciek/WebstormProjects/straznicy-krysztalowego-drzewa/docs/grafika/ikony",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.jshint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.jshint": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_interpreter_path": "/home/maciek/.config/JetBrains/WebStorm2026.2/node/versions/24.22.0/bin/node",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/home/maciek/WebstormProjects/straznicy-krysztalowego-drzewa/node_modules/typescript/lib"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Git.Working.Tree.Tab.closed.by.user&quot;: &quot;closed&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/maciek/WebstormProjects/straznicy-krysztalowego-drzewa&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;/home/maciek/.config/JetBrains/WebStorm2026.2/node/versions/24.22.0/bin/node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/maciek/WebstormProjects/straznicy-krysztalowego-drzewa/node_modules/typescript/lib&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/docs/grafika/ikony" />
-      <recent name="$PROJECT_DIR$/docs/grafika/areny" />
-      <recent name="$PROJECT_DIR$/docs/assets" />
-      <recent name="$PROJECT_DIR$/docs/assets/images" />
-      <recent name="$PROJECT_DIR$/docs/assets/images/kafelki_mapy" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/docs/grafika/portrety" />
+      <recent name="$PROJECT_DIR$/docs/wersja_planszowa/druk3d/figurki/z_teksturami" />
+      <recent name="$PROJECT_DIR$/docs/grafika/karty" />
+      <recent name="$PROJECT_DIR$/docs/wersja_planszowa" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/docs/assets/images" />
-      <recent name="$PROJECT_DIR$/docs/assets" />
+      <recent name="$PROJECT_DIR$/docs/druk3d/figurki/z_teksturami" />
+      <recent name="$PROJECT_DIR$/docs/druk3d/figurki/z_teksturami/straznicy/cyklop" />
+      <recent name="$PROJECT_DIR$/docs/druk3d/figurki/z_teksturami/straznicy/gryf" />
+      <recent name="$PROJECT_DIR$/docs/druk3d/figurki/z_teksturami/horda/pajak" />
+      <recent name="$PROJECT_DIR$/docs/druk3d/figurki/z_teksturami/przymierze/zloty_smok" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -209,7 +167,28 @@
       <option name="presentableId" value="Default" />
       <updated>1792446544535</updated>
       <workItem from="1792446545535" duration="57692000" />
-      <workItem from="1792568638538" duration="22543000" />
+      <workItem from="1792568638538" duration="47519000" />
+      <workItem from="1792655430308" duration="27029000" />
+      <workItem from="1792739761653" duration="34412000" />
+      <workItem from="1792839960140" duration="38000" />
+      <workItem from="1792844964139" duration="1933000" />
+      <workItem from="1793004901944" duration="3234000" />
+      <workItem from="1793171391896" duration="25397000" />
+      <workItem from="1793261758704" duration="11349000" />
+      <workItem from="1793343145760" duration="3361000" />
+      <workItem from="1793710543086" duration="5936000" />
+      <workItem from="1793723723431" duration="2350000" />
+      <workItem from="1793786896661" duration="23803000" />
+      <workItem from="1793869736560" duration="6254000" />
+      <workItem from="1793948954819" duration="4787000" />
+      <workItem from="1794212597091" duration="14866000" />
+      <workItem from="1794289949980" duration="30809000" />
+      <workItem from="1794387204639" duration="2046000" />
+      <workItem from="1794405032500" duration="7542000" />
+      <workItem from="1794467868685" duration="3389000" />
+      <workItem from="1794558507640" duration="25761000" />
+      <workItem from="1794635738678" duration="3269000" />
+      <workItem from="1794725764434" duration="502000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -251,18 +230,39 @@
       <option name="project" value="LOCAL" />
       <updated>1792531285412</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="v1.0">
+      <option name="closed" value="true" />
+      <created>1792591473570</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1792591473570</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="initial commit" />
     <MESSAGE value="UI improvements" />
     <MESSAGE value="many changes" />
     <MESSAGE value="added pages hosting" />
     <MESSAGE value="fixed pages config" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed pages config" />
+    <MESSAGE value="v1.0" />
+    <option name="LAST_COMMIT_MESSAGE" value="v1.0" />
   </component>
 </project>
