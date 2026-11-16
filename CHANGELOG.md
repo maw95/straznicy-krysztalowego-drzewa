@@ -6,7 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
-- Rycerz Świtu ma prawdziwe animacje (chód, atak, trafienie, śmierć), a zdolność Odrodzenie z Popiołów Feniksa własną ikonę.
+- Rycerz Świtu i Wódz Hordy mają prawdziwe animacje (Wódz bez ataku; chód, trafienie, śmierć), a zdolność Odrodzenie z Popiołów Feniksa własną ikonę.
 
 - Dowódcy, jednostki legendarne i alternatywne z poziomów 5–6 mają własne dźwięki ataku i śmierci (16 jednostek, 32 nagrania).
 

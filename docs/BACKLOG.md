@@ -73,7 +73,7 @@ Lista rzeczy, które w grze działają na zastępczej grafice albo bez własnej 
 
 **Animacje jednostek (największa pozycja; potok: `docs/POTOK_ANIMACJI.md`, wpis w `src/ui/sprites.ts`)**
 Te jednostki mają ilustrację karty, portret i **statyczną figurkę** (`stoi.webp` i `martwy.webp` w `public/assets/jednostki/<folder>/`, zrobione skryptem `scripts/assets/figurki_statyczne.py`; `anim.json` ma pustą listę klipów i znacznik `"static": true`). Na arenie postać stoi i przesuwa się bez animacji, cios trafia od razu, trafienie to drgnięcie, a po śmierci leży obrócona i przyciemniona kopia figurki. **Do wygenerowania dla każdej (dźwięki `_atak` i `_smierc` wszystkich 16 jednostek są od 16.11, bez odsłuchu):** klipy `chod` (albo `wzbicie` i `lot` dla latających), `atak`, `trafienie`, `smierc`, prawdziwy `martwy.webp`, oraz dźwięki `dzwieki/jednostki/<id>_atak.mp3` i `_smierc.mp3` (po dodaniu wpisać id do `UNIT_SOUNDS` w `src/ui/sfx.ts`):
-- poziom 5, dowódcy (6; Rycerz Świtu ma już animacje i dźwięki od 16.11): `dawnKnight` Rycerz Świtu (`rycerz_switu`), `dawnHuntress` Łowczyni Gaju (`lowczyni_gaju`), `dawnSage` Mędrzec Gaju (`medrzec_gaju`), `hordeWarlord` Wódz Hordy (`wodz_hordy`), `hordeCrossbow` Kapitan Kuszników (`kapitan_kusznikow`), `hordeShadow` Szaman Cieni (`szaman_cieni`);
+- poziom 5, dowódcy (6; Rycerz Świtu ma pełne animacje od 16.11, Wódz Hordy ma chód, trafienie i śmierć, **brakuje mu ataku**; filtr treści zablokował dwa podejścia z toporem): `dawnKnight` Rycerz Świtu (`rycerz_switu`), `dawnHuntress` Łowczyni Gaju (`lowczyni_gaju`), `dawnSage` Mędrzec Gaju (`medrzec_gaju`), `hordeWarlord` Wódz Hordy (`wodz_hordy`), `hordeCrossbow` Kapitan Kuszników (`kapitan_kusznikow`), `hordeShadow` Szaman Cieni (`szaman_cieni`);
 - poziom 6, jednostki legendarne (2): `dawnPhoenix` Feniks Świtu (`feniks_switu`; dodatkowo klip `odrodzenie`), `doomBehemoth` Behemot Zagłady (`behemot_zaglady`);
 - poziom 6, jednostki alternatywne (8): `silverFox` Srebrny Lis (`srebrny_lis`), `dawnOwl` Sowa Świtu (`sowa_switu`), `dryadArcher` Driada Łuczniczka (`driada_luczniczka`), `whiteStag` Biały Jeleń (`bialy_jelen`), `goblinSlinger` Goblin Procarz (`goblin_procarz`), `gargoyle` Gargulec (`gargulec`), `caveTroll` Troll Jaskiniowy (`troll_jaskiniowy`), `shadowWyvern` Wiwerna Cienia (`wiwerna_cienia`).
 Na mapie przygody dowódcy stoją jako żetony z portretem (figurki 3D mają tylko bohaterowie główni): do decyzji, czy robić modele.
@@ -92,6 +92,30 @@ Na mapie przygody dowódcy stoją jako żetony z portretem (figurki 3D mają tyl
 - Wymiana surowców i garnizon grają dźwięk monet `coins_buy.mp3` (do zostawienia albo własny).
 
 **Dźwięki wygenerowane 15.11 bez odsłuchu** (Claude nie ma jak ich odsłuchać: autor powinien je przesłuchać i ewentualnie wymienić): `catapult.mp3`, `tower_shot.mp3`, `moat.mp3`, `shard_pickup.mp3`, `spark.mp3`, `portal.mp3`, `tavern_hire.mp3` w `public/assets/dzwieki/`.
+
+**Kredyty Scenario: ile jeszcze potrzeba (stan 16.11.2026, po wydaniu 239 CU)**
+Ceny z faktur: dźwięk (ElevenLabs SFX) 1 CU; obraz Flare `medium` 3 CU, `high` 14 CU; wideo P-Video 2 po 5 CU za sekundę (klip 3 s = 15 CU, 2 s = 10 CU); muzyka ok. 30 CU za utwór. Zablokowane lub nieudane zadania wideo **też kosztują**: 16.11 padło 6 z 14 klipów (ok. 90 CU), więc do kosztu „czystego” (ok. 72 CU na jednostkę) doliczam ok. 40% zapasu (ok. 105 CU na jednostkę).
+| Pozycja | Bez porażek | Z zapasem na porażki |
+|---|---:|---:|
+| Animacje 14 jednostek (Łowczyni, Mędrzec, Kapitan Kuszników, Szaman Cieni, Feniks, Behemot, Lis, Sowa, Driada, Jeleń, Procarz, Gargulec, Troll, Wiwerna; latające dodatkowo klip `wzbicie`, Feniks klip `odrodzenie`) | ok. 1 050 | ok. 1 470 |
+| Brakujący atak Wodza Hordy | 15 | 30 |
+| Efekty czarów, oblężenia, Odłamka, Iskry i mechanik frakcji (ok. 14 efektów po ok. 13 CU: obraz + krótki klip) i ich dźwięki | ok. 180 | ok. 250 |
+| Ikony drzewka frakcji (6), siedliska jednostek (16 ikon), frakcyjne elementy oblężenia (ok. 6 obrazów) | ok. 100 | ok. 130 |
+| Dźwięki (własny dźwięk monet, poprawki po odsłuchu autora) | ok. 20 | ok. 30 |
+| **Razem** | **ok. 1 350** | **ok. 1 900** |
+Zrobione 16.11 i nie wchodzą już do sumy: 32 dźwięki ataku i śmierci wszystkich 16 jednostek poziomów 5–6, ikona Odrodzenia, animacje Rycerza Świtu i Wodza Hordy (bez ataku). Plan Starter pozwala na 2 równoległe zadania wideo.
+
+**Kredyty Scenario: koszt jednej nowej frakcji (wszystkie grafiki i dźwięki; szacunek)**
+Frakcja to ok. 3 bohaterów i 7 jednostek (`DECYZJE.md`): 10 postaci.
+| Pozycja | Bez porażek | Z zapasem |
+|---|---:|---:|
+| 10 postaci: ilustracja karty (obraz `high` 14 CU, portret wycinany lokalnie za 0) + pełny zestaw animacji (obraz bazowy 14, trup 3, klipy chodu, ataku i śmierci 15 + 15 + 15, trafienie 10; latające +10) + dźwięki ataku i śmierci (2 CU) — ok. 88 CU na postać | ok. 880 | ok. 1 230 |
+| Dodatkowe klipy: wzbicie i lot dla postaci latających (ok. 3), skrzydła i inne efekty | ok. 60 | ok. 90 |
+| Osada: widok, budynki, siedliska 7 + drzewko (3 ikony) + garnizon i wieża maga (ok. 14 obrazów po 3–14 CU) | ok. 100 | ok. 140 |
+| Arena frakcji (plansza bitwy, 1–2 duże obrazy), kafle mapy, herb, ikona mechaniki frakcji i jej efekt | ok. 70 | ok. 100 |
+| Muzyka frakcji (2–3 utwory po ok. 30 CU) i dźwięki interfejsu frakcji | ok. 90 | ok. 100 |
+| **Razem** | **ok. 1 200** | **ok. 1 650** |
+Do tego ok. 3–4 h pracy nad pakowaniem, kontrolą i wpisami (`PRZEPIS_JEDNOSTKI.md`). Przy braku limitu jednej jednostki (100 CU) wychodzi ok. 1 000 CU samych postaci. Szacunek do aktualizacji po pierwszej nowej frakcji (Dzikie Stada), kiedy będzie znany koszt rzeczywisty.
 
 ## 3. Do sprawdzenia na żywo (autor)
 Zrobione i przetestowane, bez potwierdzenia w prawdziwej grze:

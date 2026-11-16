@@ -4211,6 +4211,27 @@
       "data": "2026-11-16",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/wodz_hordy-animacje",
+      "pliki": [
+        "public/assets/jednostki/wodz_hordy/"
+      ],
+      "typ": "Wódz Hordy (hordeWarlord): figurka i animacje chodu, trafienia i śmierci (bez ataku)",
+      "prompt": "Obraz bazowy: huge muscular orc warlord, greenish-grey skin, tusks, red war paint, long black braided hair, dark spiked iron armour with skull ornament, heavy two-handed axe; strict side view facing right, solid blue #0000FF background. Klipy (P-Video 2, 720p, 24 kl./s): chód w miejscu, trafienie (drgnięcie), śmierć (kładzie się i zasypia; bez klatki końcowej).",
+      "scenario_asset": {
+        "stoi": "asset_wVRqVwLPh8eTxY5SM2hGaMSr",
+        "martwy": "asset_JDYMfWV4WiXT9V17Ft1d3TNA",
+        "chod": "asset_86h8Kq5M8LVh6aHhCKQWpEzd",
+        "trafienie": "asset_gACqo6SndkuZpXS8MfU7CYyK",
+        "smierc": "asset_omxrx7F7CjAgba8qvC12bWee"
+      },
+      "model": "GPT Image 2.5 Flare (stoi high, martwy medium) + P-Video 2",
+      "uwagi": "brak klipu ataku: filtr treści zablokował dwa podejścia (topór); do zrobienia, np. po zmianie obrazu bazowego (topór bez śladów krwi); zastępuje statyczną figurkę z 15.11",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
