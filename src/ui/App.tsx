@@ -778,7 +778,7 @@ export function App() {
   const footer = (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
       <div style={{ flex: 1, minWidth: 0, display: 'flex' }}>
-        {game?.kingdom && viewer && <GoldBox state={game} faction={viewer} />}
+        {game?.kingdom && viewer && game.phase !== 'battle' && <GoldBox state={game} faction={viewer} />}
       </div>
       {humanTurn && game.players.some((p) => p.child) && (
         <button className="btn plate parch btn-bar" title="Podpowiedź: co zrobiłby komputer" onClick={showHint}>
