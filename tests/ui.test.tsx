@@ -89,9 +89,18 @@ describe('setup screen simplifications', () => {
     expect(Object.values(game.heroes).filter((h: any) => h.faction === 'horde')).toHaveLength(3);
     expect(game.factions.horde.inventory).toHaveLength(2);
     cleanup();
+    const vh = render(<StrictMode><App /></StrictMode>).container;
+    await newGame(vh, 'Cyfrowa', 'Przygoda', 'Kooperacja');
+    await click(vh, 'Bardzo trudny', 'Dalej →', 'Rozpocznij grę');
+    game = (window as any).__game;
+    expect(game.setup.rules).toMatchObject({ veryHard: true, computerHp: 0.2 });
+    expect(game.factions.horde.inventory).toHaveLength(4);
+    cleanup();
     const second = render(<StrictMode><App /></StrictMode>).container;
     await newGame(second, 'Cyfrowa', 'Przygoda', 'Rywalizacja');
-    expect(pick(second, 'Trudny')).toBeUndefined();
+    // Every mode offers all four levels now (the computer's advantages work at a PvP table too).
+    expect(pick(second, 'Trudny')).toBeDefined();
+    expect(pick(second, 'Bardzo trudny')).toBeDefined();
     await click(second, 'Łatwy', 'Dalej →', 'Rozpocznij grę');
     game = (window as any).__game;
     expect(game.setup.battleMode).toBe('arena');
