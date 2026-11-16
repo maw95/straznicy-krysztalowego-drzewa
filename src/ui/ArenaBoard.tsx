@@ -508,11 +508,14 @@ function SiegeArt({ b, cellCenter, scale }: { b: BattleState; cellCenter: (k: He
   const s = b.siege!;
   const rows = Array.from({ length: WIDE_ROWS }, (_, r) => r);
   const wallCells = s.level >= 2 ? rows.map((r) => wideCell(SIEGE.wallColumn, r)) : [];
+  // The wall, gate and tower are drawn in the defender's style (the Alliance's pale marble and gold, the Horde's black iron); the rest is neutral.
+  const style = b.defender === 'dawn' || b.defender === 'horde' ? b.defender : null;
   const piece = (k: HexKey, art: string, w: number, h: number, base: number, title: string) => {
     const c = cellCenter(k);
+    const file = style && ['mur', 'brama', 'wieza'].includes(art) ? `${art}_${style}` : art;
     return (
-      <div key={`sg${art}${k}`} title={title} data-siege={art} style={{ position: 'absolute', left: c.x - w / 2, top: c.y + base - h, width: w, height: h, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', pointerEvents: 'none' }}>
-        <img src={asset(`arena/oblezenie/${art}.webp`)} alt="" style={{ maxWidth: '100%', maxHeight: '100%', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.55))' }} />
+      <div key={`sg${art}${k}`} title={title} data-siege={art} data-siege-style={style ?? undefined} style={{ position: 'absolute', left: c.x - w / 2, top: c.y + base - h, width: w, height: h, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', pointerEvents: 'none' }}>
+        <img src={asset(`arena/oblezenie/${file}.webp`)} alt="" style={{ maxWidth: '100%', maxHeight: '100%', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.55))' }} />
       </div>
     );
   };

@@ -3579,6 +3579,22 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
+      "id": "osady/oblezenie-frakcyjne",
+      "pliki": [
+        "public/assets/arena/oblezenie/mur_dawn.webp", "public/assets/arena/oblezenie/brama_dawn.webp", "public/assets/arena/oblezenie/wieza_dawn.webp",
+        "public/assets/arena/oblezenie/mur_horde.webp", "public/assets/arena/oblezenie/brama_horde.webp", "public/assets/arena/oblezenie/wieza_horde.webp"
+      ],
+      "typ": "elementy oblężenia na arenie w stylu frakcji obrońcy: mur, brama, wieżyczka Przymierza (biały marmur, złoto, zieleń) i Hordy (czarne żelazo, kolce, czerwień)",
+      "opis": "Dwa arkusze 1536x512 (trzy rekwizyty w rzędzie na czarnym tle), pocięte scripts/assets/arkusz.py (1x3, wysokość 240 px). Odniesienie stylu: arkusz neutralnych elementów oblężenia z 15.11. Arena wybiera wersję według b.defender (ArenaBoard.tsx, SiegeArt); gruz, fosa i katapulta zostają neutralne.",
+      "prompt": "Use the reference image only for the art style, the camera angle (seen from the front, slightly from above) and the size and proportions of each prop. Draw three separate game props for a hex-grid tactical battle arena in a row on a plain pure black background, evenly spaced with a wide empty margin: on the left a straight segment of castle wall with battlements, in the middle a double gate in a stone arch, on the right a round archer tower. They belong to the elven Alliance of the Dawn: pale cream-white marble stone, golden trim and gold-capped crenellations, deep forest-green banners and roofs, carved leaf motifs, a gate of polished pale wood with golden hinges. Serious painterly realistic style, same level of detail as the reference. No text, no ground, no shadow, no characters. (Horda: ten sam szablon; fortress wall, heavy double gate in a rough stone arch, goblin Horde: black riveted iron plates and dark rough stone, rusty spikes along the top, crimson-red cloth banners and glowing red slits, bone and skull ornaments, a gate of blackened planks bound with iron straps.)",
+      "scenario_asset": { "dawn": "asset_BRA1b8RPiahYA2EtiNQBJH4d", "horde": "asset_JLbnNrX9Rc4pWMgdGp9jzfBT", "odniesienie": "asset_rxaXbaosHownA5tdC9iJWGmp" },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
       "id": "poziom5/dowodcy-i-karczma",
       "pliki": [
         "public/assets/cards/art/dawnKnight.jpg", "public/assets/cards/art/dawnHuntress.jpg", "public/assets/cards/art/dawnSage.jpg",
