@@ -6,6 +6,10 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Mapa przygody: kapliczki, obozy najemników, skrzynie, kopalnie (złota, rudy, Pyłu), tartak, chatki, młyny, studnie, składy i Odłamki Iskry mają własne kafelki z unikalnymi grafikami zamiast okrągłych ikon na polu.
+
+- Właściciela kopalni lub osady pokazuje duży proporzec jego frakcji (zielono-złoty Przymierza, czerwono-żelazny Hordy); obiekt bez właściciela nie ma żadnego znaku.
+
 - Nowe ikony poziomów trudności (królik, wilk, niedźwiedź, smok): rysunki od autora zamiast prostych sylwetek.
 
 ## 2.8.0 — 2026-11-16

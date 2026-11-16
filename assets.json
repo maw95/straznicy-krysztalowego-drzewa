@@ -4880,6 +4880,44 @@
       "data": "2026-11-16",
       "ai": null,
       "licencja": "do potwierdzenia przez autora (pochodzenie arkusza)"
+    },
+    {
+      "id": "tiles/obiekty",
+      "pliki": [
+        "public/assets/tiles/obj_shrine.jpg",
+        "public/assets/tiles/obj_camp.jpg",
+        "public/assets/tiles/obj_chest.jpg",
+        "public/assets/tiles/obj_kopalnia.jpg",
+        "public/assets/tiles/obj_tartak.jpg",
+        "public/assets/tiles/obj_kopalnia_ruda.jpg",
+        "public/assets/tiles/obj_zrodlo_pylu.jpg",
+        "public/assets/tiles/obj_chatka.jpg",
+        "public/assets/tiles/obj_mlyn.jpg",
+        "public/assets/tiles/obj_studnia.jpg",
+        "public/assets/tiles/obj_skladnica.jpg",
+        "public/assets/tiles/obj_odlamek.jpg"
+      ],
+      "typ": "kafelki obiektów na mapie przygody (kapliczka, obóz najemników, skrzynia, kopalnia złota, tartak, kopalnia rudy, źródło Pyłu, chatka, młyn, studnia, skład, Odłamek Iskry)",
+      "opis": "Ilustracje 512×592 zmniejszone do 260×300 (JPG), po jednym wariancie, wszystkie przyjęte za pierwszym razem. Wspólny początek promptu: 'Fantasy game map tile art in the same painted high-fantasy style as a Heroes of Might and Magic III adventure map location, full-bleed rectangular illustration, no border, no text, no frame, seen from a high three-quarter top-down view so the whole place fits in the picture and fills it edge to edge: …', dalej opis miejsca (np. 'a small ancient forest shrine on a green meadow, a weathered white stone altar with a softly glowing purple-blue crystal on it, a ring of mossy standing stones around it …'). Proporce właścicieli rysowane w SVG (AdventureView.tsx, OwnerBanner), bez Scenario.",
+      "scenario_asset": {
+        "shrine": "asset_SkkFC1h1F4bZda4k5JPucPGv",
+        "camp": "asset_o5gHhG72sr9frE67bMRMuyLh",
+        "chest": "asset_z1sJx41TU4TQ4yHo637kQM9E",
+        "kopalnia": "asset_eYv9aFMn6viZa1pYTdSjdGwy",
+        "tartak": "asset_RUsZNBixGncY9dFHqmFff5dR",
+        "kopalnia_ruda": "asset_1sCkRUh9dK3z3cNX6gUWGmKE",
+        "zrodlo_pylu": "asset_afXSY7QrvB3k4v2JTY2oKdMm",
+        "chatka": "asset_16UDVShhAwCj9e9FEFTK9Jkr",
+        "mlyn": "asset_1VH4UeuVEUTSwLJ3Kvf2gdHN",
+        "studnia": "asset_4vpNiX44w8XEHYjwv7J4wTPn",
+        "skladnica": "asset_Wdg2hxFP8bhd1bkN8ctHiNgr",
+        "odlamek": "asset_pdq8cmdaEdteBk9N1TsMx3TF"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, 512×592, jakość medium (3 CU za obraz, razem 36 CU)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

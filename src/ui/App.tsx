@@ -208,6 +208,7 @@ export function App() {
     }
     // ?level=9 puts every hero on that level (for looking at the milestones on the cards).
     if (q.get('level')) for (const h of Object.values(s.heroes)) h.level = Number(q.get('level'));
+    if (q.get('reveal') === '1') for (const t of Object.values(s.tiles)) t.revealed = true;
     // ?encounter=2 (with growth=1) walks the active hero into the first neutral encounter of that tier (0 common, 1 rare, 2 legendary), for looking at the new units.
     if (q.get('encounter')) {
       const enc = Object.values(s.crystals).find((c) => c.encounter && c.tier === Number(q.get('encounter'))) ?? (q.get('adjacent') === '1' ? Object.values(s.crystals).find((c) => c.guardian) : undefined);

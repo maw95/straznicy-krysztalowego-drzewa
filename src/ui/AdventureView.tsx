@@ -418,7 +418,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     <div className="hex-clip" style={{ position: 'absolute', inset: 2, background: rim }} />
                     <div className="hex-clip" style={{ position: 'absolute', inset: W * 0.055, background: '#1E1204' }} />
                     <div key={t.revealed ? 'r' : 'h'} className={`hex-clip ${freshlyRevealed.has(t.key) ? 'flip-in' : ''}`} style={{ position: 'absolute', inset: W * 0.065, overflow: 'hidden', background: '#10201F' }}>
-                      <img src={tileImage(t, landOf(state, t))} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transform: 'scale(1.08)' }} />
+                      <img src={tileImage(t, tileArt(state, t))} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transform: 'scale(1.08)', ...(t.revealed && t.place?.kind === 'object' && state.kingdom && !objectReady(state.kingdom.objects?.[t.place.id] ?? { kind: 'mill' }, state.round) ? { filter: 'saturate(0.4) brightness(0.7)' } : {}) }} />
                       {!t.revealed && <div className="fog" style={{ opacity: 0.18, animationDelay: `${-((t.row * 7 + t.col * 13) % 60)}s` }} />}
                       {(r || onPath) && <div style={{ position: 'absolute', inset: 0, background: onPath ? 'rgba(158,228,255,0.35)' : 'rgba(158,228,255,0.18)', boxShadow: 'inset 0 0 18px rgba(158,228,255,0.7)' }} />}
                     </div>
@@ -432,28 +432,28 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     )}
                     {state.control?.points.includes(t.key) && <ControlFlag holder={controlHolder(state, t.key)} centre={state.control.points[0] === t.key} size={W} />}
                     {t.revealed && t.treasureId && (
-                      <div className="glint" style={{ position: 'absolute', right: W * 0.12, top: H * 0.24 }} title="Skarb">
+                      <div className="glint" style={{ position: 'absolute', left: W * 0.12, top: H * 0.24 }} title="Skarb">
                         <img src={asset('ikony/mapa/treasure.webp')} alt="" width={W * 0.34} height={W * 0.34} style={{ display: 'block' }} />
                       </div>
                     )}
                     {hintHex === t.key && <div className="hint-ring" data-hint="hex" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 5 }} />}
-                    {t.revealed && t.site && !t.site.used && (
-                      <div className="glint" style={{ position: 'absolute', left: W * 0.12, top: H * 0.24 }} title={`${SITE.names[t.site.kind]}: ${SITE.texts[t.site.kind]}`} data-site={t.site.kind}>
-                        <img src={asset(`ikony/mapa/${t.site.kind}.webp`)} alt="" width={W * 0.34} height={W * 0.34} style={{ display: 'block' }} />
-                      </div>
+                    {t.revealed && t.site && !t.site.used && !t.place && (
+                      <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, width: W * 0.46, height: W * 0.46, pointerEvents: 'none' }} title={`${SITE.names[t.site.kind]}: ${SITE.texts[t.site.kind]}`} data-site={t.site.kind} />
                     )}
                     {t.revealed && t.place && state.kingdom && (
-                      <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, zIndex: 2, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)}>
-                        <img src={asset(`ikony/mapa/${placeIcon(state, t.key)}.webp`)} alt="" width={W * 0.46} height={W * 0.46} style={{ display: 'block', filter: t.place.kind === 'shard' ? 'drop-shadow(0 0 6px #FFF3B0) drop-shadow(0 2px 2px rgba(0,0,0,0.8))' : t.place.kind === 'mine' ? 'drop-shadow(0 0 3px #F3D27A) drop-shadow(0 2px 2px rgba(0,0,0,0.8))' : 'drop-shadow(0 2px 2px rgba(0,0,0,0.7))', opacity: t.place.kind === 'object' && !objectReady(state.kingdom.objects?.[t.key] ?? { kind: 'mill' }, state.round) ? 0.55 : 1 }} />
-                        {t.place.kind === 'mine' && state.kingdom.mines[t.place.id]?.owner && (
-                          <img data-mine-owner={state.kingdom.mines[t.place.id].owner} src={asset(`ikony/mapa/kontrola_${state.kingdom.mines[t.place.id].owner}.webp`)} alt="" width={W * 0.26} height={W * 0.26} title={`Kopalnię trzyma: ${FACTION_NAMES[state.kingdom.mines[t.place.id].owner!]}`} style={{ position: 'absolute', right: -W * 0.1, top: -W * 0.08, display: 'block', filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.6))' }} />
+                      <>
+                        <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, width: W * 0.46, height: W * 0.46, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)} />
+                        {placeOwner(state, t) && (
+                          <div style={{ position: 'absolute', left: W * 0.56, top: H * 0.05, zIndex: 3, pointerEvents: 'none' }} data-mine-owner={t.place.kind === 'mine' ? placeOwner(state, t) : undefined} data-settlement-owner={t.place.kind === 'settlement' ? placeOwner(state, t) : undefined}>
+                            <OwnerBanner owner={placeOwner(state, t)!} w={H * 0.72 * 0.44} h={H * 0.72} />
+                          </div>
                         )}
                         {t.place.kind === 'settlement' && (state.kingdom.settlements[t.place.id]?.garrison?.length ?? 0) > 0 && (
-                          <span data-garrison-badge title="Garnizon broni tej osady" style={{ position: 'absolute', right: -W * 0.06, top: -W * 0.04, minWidth: W * 0.17, height: W * 0.17, borderRadius: W * 0.1, background: '#3B2A12', border: '2px solid #F3D27A', color: '#F7EDD2', fontWeight: 800, fontSize: W * 0.11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <span data-garrison-badge title="Garnizon broni tej osady" style={{ position: 'absolute', left: W * 0.12, bottom: H * 0.16, zIndex: 3, minWidth: W * 0.17, height: W * 0.17, borderRadius: W * 0.1, background: '#3B2A12', border: '2px solid #F3D27A', color: '#F7EDD2', fontWeight: 800, fontSize: W * 0.11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {state.kingdom.settlements[t.place.id].garrison!.length}
                           </span>
                         )}
-                      </div>
+                      </>
                     )}
                     {crystal && (
                       <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', display: 'flex', alignItems: 'center' }}>
@@ -656,7 +656,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           {hero && state.rules.heroGrowth && <HeroGrowth hero={hero} compact={compact} onOpenPack={() => setPackOpen(true)} />}
           {sel && (
             <div className="plate parch" style={{ padding: '9px 12px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-              <img className="hex-clip" src={tileImage(sel, landOf(state, sel))} alt="" style={{ width: 48, height: 55, flex: 'none', objectFit: 'cover' }} />
+              <img className="hex-clip" src={tileImage(sel, tileArt(state, sel))} alt="" style={{ width: 48, height: 55, flex: 'none', objectFit: 'cover' }} />
               <div>
                 <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{selInfo!.title}</div>
                 {selInfo!.lines.map((l) => (
@@ -791,7 +791,7 @@ function TileDetails({ state, k, hostile }: { state: GameState; k: HexKey; hosti
   return (
     <div className="plate parch" style={{ width: 300, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-        <img className="hex-clip" src={tileImage(t, landOf(state, t))} alt="" style={{ width: 70, height: 80, flex: 'none', objectFit: 'cover' }} />
+        <img className="hex-clip" src={tileImage(t, tileArt(state, t))} alt="" style={{ width: 70, height: 80, flex: 'none', objectFit: 'cover' }} />
         <div>
           <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole'}</div>
           <div style={{ fontWeight: 600, fontSize: 15, marginTop: 3 }}>
@@ -915,9 +915,61 @@ function ControlFlag({ holder, centre, size }: { holder: FactionId | null; centr
   );
 }
 
-/** The land (faction) of the settlement standing on a tile: it picks the settlement's own tile picture. */
-function landOf(state: GameState, t: Tile): 'dawn' | 'horde' | undefined {
-  return t.place?.kind === 'settlement' ? state.kingdom?.settlements[t.place.id]?.land : undefined;
+/** The picture of what stands on a tile, instead of its terrain: a settlement (by its land), a site, a mine, a hut or another object. Each has its own tile in tiles/. */
+function tileArt(state: GameState, t: Tile): string | undefined {
+  if (!t.revealed) return undefined;
+  if (t.place?.kind === 'settlement') {
+    const land = state.kingdom?.settlements[t.place.id]?.land;
+    return land ? `osada${land === 'dawn' ? 'Dawn' : 'Horde'}_1` : undefined;
+  }
+  if (t.place && state.kingdom) return `obj_${placeIcon(state, t.key)}`;
+  if (t.site && !t.site.used) return `obj_${t.site.kind}`;
+  return undefined;
+}
+
+/** Who holds a mine or a settlement; nobody for an unclaimed one (it then gets no banner). */
+function placeOwner(state: GameState, t: Tile): FactionId | undefined {
+  const place = t.place;
+  if (!place || !state.kingdom) return undefined;
+  if (place.kind === 'mine') return state.kingdom.mines[place.id]?.owner ?? undefined;
+  if (place.kind === 'settlement') return state.kingdom.settlements[place.id]?.owner ?? undefined;
+  return undefined;
+}
+
+/** A big banner of the faction that holds a mine or a settlement: a pennant on a pole (green and gold for the Przymierze, red and iron for the Horda). */
+function OwnerBanner({ owner, w, h }: { owner: FactionId; w: number; h: number }) {
+  const dawn = owner === 'dawn';
+  const id = `ban-${owner}`;
+  return (
+    <svg data-owner-banner={owner} viewBox="0 0 40 90" width={w} height={h} style={{ position: 'absolute', left: w * 0.0, top: 0, pointerEvents: 'none', overflow: 'visible', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.75))' }}>
+      <title>{`Trzyma: ${FACTION_NAMES[owner]}`}</title>
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor={dawn ? '#3F9A5E' : '#C8353A'} />
+          <stop offset="1" stopColor={dawn ? '#1B5232' : '#6A1417'} />
+        </linearGradient>
+      </defs>
+      <rect x="5" y="3" width="3" height="86" rx="1.2" fill="#4A3418" stroke="#2A1C0A" strokeWidth="0.6" />
+      <circle cx="6.5" cy="3" r="3" fill="#F3D27A" stroke="#8A5E12" strokeWidth="0.8" />
+      <path d="M8 8 H38 V66 L23 55 L8 66 Z" fill={`url(#${id})`} stroke="#F3D27A" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M11.5 11.5 H34.5 V59 L23 50.5 L11.5 59 Z" fill="none" stroke={dawn ? '#F3D27A' : '#B9B9C2'} strokeWidth="0.9" opacity="0.8" />
+      {dawn ? (
+        // A crystal over a small tree: the Przymierze's sign.
+        <>
+          <path d="M23 16 L29 25 L23 36 L17 25 Z" fill="#BFEFFF" stroke="#F3D27A" strokeWidth="1" />
+          <path d="M23 16 L23 36 M17 25 H29" stroke="#F3D27A" strokeWidth="0.6" opacity="0.8" />
+          <path d="M23 52 V43 M23 47 L18 42 M23 47 L28 42" stroke="#F3D27A" strokeWidth="1.4" strokeLinecap="round" fill="none" />
+        </>
+      ) : (
+        // Horns over a spiked iron crown: the Horda's sign.
+        <>
+          <path d="M13 31 C12 23 15 17 19 15 C17 20 18 25 21 29 Z" fill="#D8D8DE" stroke="#2A2A30" strokeWidth="0.7" />
+          <path d="M33 31 C34 23 31 17 27 15 C29 20 28 25 25 29 Z" fill="#D8D8DE" stroke="#2A2A30" strokeWidth="0.7" />
+          <path d="M14 46 L16 36 L19 43 L23 33 L27 43 L30 36 L32 46 Z" fill="#B9B9C2" stroke="#2A2A30" strokeWidth="0.8" strokeLinejoin="round" />
+        </>
+      )}
+    </svg>
+  );
 }
 
 /** The icon (file name in ikony/mapa) of a settlement (by owner) or a mine. */
