@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wybór trudności: ikony poziomów (królik, wilk, niedźwiedź) są teraz jednokolorowymi rysunkami wektorowymi, większymi, nad nazwą poziomu (jak litery S, M przy wyborze mapy). Poziom Trudny ma niedźwiedzia zamiast smoka.
+
 - Arena: czary rzuca się teraz z okna „Magia” (fioletowa ikona różdżki obok „Skarbów” w prawym dolnym rogu; pokazuje manę). W oknie widać wszystkie czary bohatera, a te, na które brakuje many, są wyszarzone.
 - Arena: przy wyborze celu czaru znika zasięg ruchu i ataku jednostki; możliwe cele mają fioletową obwódkę, a nad nimi kursor zmienia się w różdżkę. Esc anuluje wybór czaru.
 

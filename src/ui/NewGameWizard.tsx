@@ -2,6 +2,7 @@
 // buttons (a picture, a name, a sentence), and a "Wstecz" below. Single choices (edition, level, mode) move on by themselves;
 // the pages with several settings have "Dalej →". It ends with a `TableConfig` (the same shape the online tables use).
 
+import { LevelIcon, type LevelIconKind } from './LevelIcons';
 import { useState } from 'react';
 import { BOARD_MAP_SIZES, MAP_SIZE_NAMES, type MapSize } from '../engine/data';
 import { CUSTOM_MAPS } from '../engine/customMaps';
@@ -89,8 +90,8 @@ function Card({ img, title, text, on, onClick, disabled, wide }: { img: React.Re
   );
 }
 
-/** The animal that shows how hard a difficulty level is: a rabbit, a wolf, a dragon. */
-const LEVEL_ANIMAL: Record<string, string> = { zero: 'krolik', kids: 'krolik', normal: 'wilk', hard: 'smok' };
+/** The animal that shows how hard a difficulty level is: a rabbit, a wolf, a bear, a dragon (one-colour SVG icons, see LevelIcons.tsx). */
+const LEVEL_ANIMAL: Record<string, LevelIconKind> = { zero: 'rabbit', kids: 'rabbit', normal: 'wolf', hard: 'bear', veryHard: 'dragon' };
 
 const pic = (src: string) => <img src={src} alt="" />;
 
@@ -291,11 +292,9 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
           <Row label={arena ? 'Komputer' : 'Trudność'}>
             {(arena || d.digital ? LEVELS : BOARD_LEVELS).filter(([l]) => l !== 'custom' && (l !== 'hard' || d.mode !== 'pvp')).map(([l, label]) => (
               <Tip key={l} text={arena ? ARENA_LEVEL_TIPS[l as Level] : LEVEL_TIPS[l]}>
-                <button className={chip(d.level === l)} aria-pressed={d.level === l} onClick={() => patch({ level: l as Level, custom: null })}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                    {LEVEL_ANIMAL[l as string] && <img src={asset(`ui/menu/${LEVEL_ANIMAL[l as string]}.webp`)} alt="" width={36} height={36} />}
-                    {label}
-                  </span>
+                <button className={`${chip(d.level === l)} size-btn level-btn`} aria-pressed={d.level === l} data-level={l} onClick={() => patch({ level: l as Level, custom: null })}>
+                  {LEVEL_ANIMAL[l as string] && <span className="level-btn-icon"><LevelIcon kind={LEVEL_ANIMAL[l as string]} size="100%" /></span>}
+                  <span>{label}</span>
                 </button>
               </Tip>
             ))}

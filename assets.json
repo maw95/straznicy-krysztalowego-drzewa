@@ -3435,9 +3435,7 @@
       "pliki": [
         "public/assets/ui/menu/plecak.webp",
         "public/assets/ui/menu/krolik.webp",
-        "public/assets/ui/menu/wilk.webp",
-        "public/assets/ui/menu/smok.webp",
-        "public/assets/ui/menu/komputer.webp",
+                        "public/assets/ui/menu/komputer.webp",
         "public/assets/ui/menu/internet.webp",
         "public/assets/ui/menu/cyfrowa.webp",
         "public/assets/ui/menu/planszowa.webp",

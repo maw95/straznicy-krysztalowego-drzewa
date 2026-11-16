@@ -843,5 +843,8 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 /* Wizard: map shape buttons (a picture of hexes over the name) and size buttons (a big code over the name). */
 .shape-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 120px; padding: 10px 14px; font-size: 17px; font-weight: 700; }
 .size-btn { display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 118px; padding: 10px 16px; font-size: 17px; line-height: 1.15; }
+.level-btn { min-width: 112px; }
+.level-btn-icon { display: block; width: 56px; height: 56px; color: #8A3B12; margin-bottom: 2px; }
+.level-btn.on .level-btn-icon { color: #124F7A; }
 .size-btn .size-code { font-size: 34px; font-weight: 900; color: #8A3B12; letter-spacing: 1px; }
 .size-btn.on .size-code { color: #124F7A; }
