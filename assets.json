@@ -3221,6 +3221,22 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
+      "id": "ui/okladka_bez_logo",
+      "pliki": [
+        "docs/grafika/okladka/okladka.png",
+        "public/assets/ui/cover.jpg"
+      ],
+      "typ": "okładka (plakat z frakcjami i Kryształowym Drzewem) bez starego napisu 'Strażnicy Kryształowego Drzewa', z nałożonym aktualnym logo Gleamroot",
+      "opis": "Poprzednia okładka miała stare logo wypalone u góry. Obszar logo (x 600-1880, y 0-760 przy 2480x3508) zamaskowany i wypełniony edycją ze Scenario (obraz 1536x2176 z maską: przezroczysty prostokąt = do uzupełnienia), wynik przeskalowany i wklejony tylko w tym prostokącie z rozmytym brzegiem (28 px) w oryginał w pełnej rozdzielczości, na wierzch aktualne logo docs/grafika/okladka/logo.png (szerokość 1100 px, środek, 10 px od góry). Dalej scripts/assets/menu.py (cover.jpg) i druk.py pudelko (PDF-y w do_druku/, poza gitem).",
+      "prompt": "Fill the masked area at the top of this fantasy poster with the scenery that would be there without any logo: the crown of the giant glowing blue crystal tree rising at the top centre, with its crystal branches spreading up and to both sides, a bright blue sky with soft white clouds on the left half and a dramatic red stormy sky on the right half, white elven towers in the distance on the left. Match the painterly style, lighting and detail of the rest of the picture exactly and continue everything that crosses the edge of the masked area. No text, no letters, no logo, no banner, no frame.",
+      "scenario_asset": { "odniesienie": "asset_s8KG3B7t5u41ez4NL6Cwk6z2", "maska": "asset_1hAWsPo89dYZWNHCYc5PGyiz", "wynik": "asset_8wpvzrKj2uM5kCMVgBSS53K4" },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość high, edycja z maską",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
       "id": "ui/logo_gleamroot",
       "pliki": [
         "docs/grafika/okladka/logo.png",
