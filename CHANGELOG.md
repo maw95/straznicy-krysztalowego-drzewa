@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowe ikony poziomów trudności (królik, wilk, niedźwiedź, smok): rysunki od autora zamiast prostych sylwetek.
+
 ## 2.8.0 — 2026-11-16
 
 - Okno osady (poziom Imperium): każde siedlisko jednostki ma własną ikonę, a trzy stopnie drzewka frakcji (Przymierza i Hordy) mają ikony.

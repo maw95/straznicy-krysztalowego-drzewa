@@ -865,3 +865,5 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .level-btn.on .level-btn-icon { color: #124F7A; }
 .size-btn .size-code { font-size: 34px; font-weight: 900; color: #8A3B12; letter-spacing: 1px; }
 .size-btn.on .size-code { color: #124F7A; }
+
+.level-icon { display: inline-block; background-color: currentColor; -webkit-mask: center / contain no-repeat; mask: center / contain no-repeat; }

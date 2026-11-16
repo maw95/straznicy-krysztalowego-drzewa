@@ -4865,6 +4865,21 @@
       "data": "2026-11-16",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ikony/trudnosc",
+      "pliki": [
+        "public/assets/ikony/trudnosc/rabbit.webp",
+        "public/assets/ikony/trudnosc/wolf.webp",
+        "public/assets/ikony/trudnosc/bear.webp",
+        "public/assets/ikony/trudnosc/dragon.webp"
+      ],
+      "typ": "ikony poziomów trudności (królik, wilk, niedźwiedź, smok): czarne sylwetki z przezroczystością, w grze jako maska CSS w kolorze tekstu",
+      "opis": "Cztery ikony wycięte z arkusza od autora (ikony_poziomow_trudnosci.png, 2172x724), kadr do sylwetki, kwadrat 192 px, WebP.",
+      "narzedzie": "dostarczone przez autora",
+      "data": "2026-11-16",
+      "ai": null,
+      "licencja": "do potwierdzenia przez autora (pochodzenie arkusza)"
     }
   ]
 }
