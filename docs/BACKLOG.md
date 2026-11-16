@@ -67,6 +67,8 @@ Zrobione i przetestowane, bez potwierdzenia w prawdziwej grze:
 - Nowe z 16.11 (wieczór, punkty 16, 24–26): odrodzenie Feniksa gra klip na arenie (trzeba bitwy, w której Feniks ginie; zwróć uwagę, czy klip startuje przy błysku `odrodzenie` i czy nie zostaje w pozie trafienia); atak Trolla Jaskiniowego, trafienia Driady i Feniksa; mur, brama i wieżyczki oblężenia w stylu frakcji obrońcy (Hordy na ciemnej arenie lawy mają mniejszy kontrast niż poprzedni szary kamień; sprawdź też obrońcę Przymierza); nowe narożniki ramek rysowane w SVG (desktop sprawdzony zrzutem, telefon: zrzut wyszedł ciemny, do obejrzenia na żywo); okładka z logo Gleamroot bez starego napisu (szew wokół logo niewidoczny na podglądzie, obejrzyj PDF do druku `docs/wersja_planszowa/do_druku/10_okladka_A4_pokrywa_i_segregator.pdf`).
 - Nowe z 16.11: animacje Rycerza Świtu (chód, atak, trafienie, śmierć) i Wodza Hordy (bez ataku) w prawdziwej bitwie (czy rozmiar i linia stóp pasują do reszty jednostek, czy `speed` w `sprites.ts` nie wymaga korekty); ikona Odrodzenia Feniksa w karcie jednostki.
 
+- Nowe z 16.11 (wieczór, mapa i bitwa): kafelki obiektów na mapie (12 grafik, `tiles/obj_*.jpg`) i herby właścicieli kopalń i osad (`cards/crests/`); herb Hordy na osadzie, na której stoi figurka 3D, bywa częściowo zasłonięty; okno „Księga czarów” i okno skarbów w stylu skrzyni w bitwie (na telefonie nie sprawdzone kliknięciem, tylko zrzutem poziomo); ikona księgi czarów (`ikony/mapa/ksiega.webp`); rząd „Drugi bohater” w panelu bocznym mapy (klik otwiera kartę, tylko do podglądu).
+
 ## 4. Parking (pomysły bez terminu)
 - Pierwsza strona instrukcji planszowej: imienna wiadomość autora (pisze autor).
 - Kąt kamery i wielkość figurek 3D (autor, po obejrzeniu na żywo).
@@ -149,6 +151,11 @@ Decyzje podjęte przez Claude'a bez pytania autora (autor prosi o pracę bez pyt
 23. **(16.11, punkt 15)** Mnożniki punktów rankingu: Królestwo ×1,45, Imperium ×1,55 (Księstwo 1,35); poziomy 5–6 nie są trudniejsze od 4 (wygrane 55%/54% wobec 57%), ale wymagają więcej gry.
 24. **(16.11, punkt 8)** Wymiana surowców to osobna akcja `kingdomSwap` (serwer: dopisana w `src/rooms/actions.ts`, czeka na wydanie).
 25. **(16.11, punkty 6, 7)** Zdarzenie dziennika `loot` (złoto/surowce) niesie napis nad bohaterem; chorągiewka właściciela kopalni to medalion kontroli `kontrola_<frakcja>.webp`.
+
+26. **(16.11, kafelki obiektów)** Każdy obiekt (kapliczka, obóz, skrzynia, 4 kopalnie, chatka, młyn, studnia, skład, Odłamek) ma jeden kafelek niezależnie od terenu; zużyta kapliczka, obóz lub skrzynia wracają do zwykłego terenu; młyn i studnia „w odpoczynku” są wyszarzone. Skarby leżące na polu zostają małą ikoną.
+27. **(16.11, właściciele)** Właściciela kopalni i osady pokazuje herb frakcji z kart bohaterów (nie osobny proporzec); bez właściciela nic. Garnizon osady: plakietka z liczbą w lewym dolnym rogu kafelka.
+28. **(16.11, okna)** Okno skarbów w stylu skrzyni jest też na mapie; „Użyj” w bitwie zamyka okno, żeby można było wskazać cel na arenie. Okna „Księga czarów” i skrzynia rysowane w CSS (skóra, drewno, pergamin), bez nowych grafik poza ikoną księgi.
+29. **(16.11, drugi bohater)** Karta drugiego bohatera otwiera się z rzędu portretów w panelu bocznym mapy; akcje na karcie (np. wybór umiejętności) tylko dla aktywnego bohatera. Przełączanie aktywnego bohatera nie istnieje w silniku: do rozważenia osobno.
 
 ## 8. Kredyty Scenario
 

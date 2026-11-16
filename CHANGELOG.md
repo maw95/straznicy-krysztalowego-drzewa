@@ -8,7 +8,11 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 - Mapa przygody: kapliczki, obozy najemników, skrzynie, kopalnie (złota, rudy, Pyłu), tartak, chatki, młyny, studnie, składy i Odłamki Iskry mają własne kafelki z unikalnymi grafikami zamiast okrągłych ikon na polu.
 
-- Właściciela kopalni lub osady pokazuje duży proporzec jego frakcji (zielono-złoty Przymierza, czerwono-żelazny Hordy); obiekt bez właściciela nie ma żadnego znaku.
+- Właściciela kopalni lub osady pokazuje duży herb jego frakcji (ten sam co na karcie bohatera); obiekt bez właściciela nie ma żadnego znaku.
+
+- Bitwa: przyciski „Magia” i „Skarby” mają ten sam rozmiar, obwódkę i kolory; „Magia” ma malowaną księgę czarów zamiast różdżki. „Magia” otwiera duże okno w stylu księgi czarów (ikony, nazwy, koszt i opis czarów), a „Skarby” okno w stylu drewnianej skrzyni (to samo okno jest teraz na mapie).
+
+- Mapa: w panelu bocznym jest rząd „Drugi bohater”: klik w jego portret otwiera jego kartę.
 
 - Nowe ikony poziomów trudności (królik, wilk, niedźwiedź, smok): rysunki od autora zamiast prostych sylwetek.
 

@@ -4918,6 +4918,18 @@
       "data": "2026-11-16",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ikony/mapa/ksiega",
+      "pliki": ["public/assets/ikony/mapa/ksiega.webp"],
+      "typ": "ikona przycisku „Magia” w bitwie (księga czarów w złotym medalu, w stylu ikony Skarbów)",
+      "prompt": "Game map marker icon, a single round medallion emblem centered on a transparent background: ornate gold ring rim with fine filigree, a warm dark brown enamel disc inside, and in the centre an open ancient spell book with glowing violet runes rising from its two pages and a small bright blue magic sparkle above it, leather cover with gold corners. Dark-fantasy hand-painted style like Heroes of Might and Magic III, rich painterly shading, top-left lighting, bold simple silhouette readable at 48 px. No text.",
+      "scenario_asset": "asset_SomuQw1zXKgYuxSoVShBSHMS",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, 1024x1024, jakość medium, tło przezroczyste (3 CU); kadr i zmniejszenie do 128 px (WebP)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

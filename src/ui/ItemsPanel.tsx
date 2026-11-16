@@ -7,8 +7,9 @@ import { itemArt } from './statScale';
 import { hoverCard } from './hover';
 import { StatText } from './markers';
 import { reserveOf } from './BattleSidePanel';
-import { TreasureButton } from './TreasureButton';
-import { SpellButton, SpellList } from './SpellBook';
+import { Modal } from './common';
+import { ChestFrame, TreasureButton } from './TreasureButton';
+import { SpellBookDialog, SpellButton } from './SpellBook';
 import { manaOf, type SpellId } from '../engine/magic';
 
 export type ItemTargeting =
@@ -97,31 +98,37 @@ export function ItemsPanel({ state, side, active, targeting, setTargeting, freeA
       )}
       {freeAbility && <div className="plate parch" style={{ padding: '6px 12px', fontSize: 15 }}>{ab === 'giftOfLife' ? 'Wybierz sojusznika do uleczenia.' : 'Wybierz wroga w zasięgu 4 pól.'}</div>}
       {magic && state.heroes[active.id] && (
-        <>
-          {magic.open && <SpellList state={state} hero={state.heroes[active.id]} castable={magic.castable} onPick={(id) => { magic.setOpen(false); magic.onPick(id); }} />}
-        </>
+        <Modal open={magic.open} onClose={() => magic.setOpen(false)}>
+          {magic.open && <SpellBookDialog state={state} hero={state.heroes[active.id]} castable={magic.castable} onPick={(id) => { magic.setOpen(false); magic.onPick(id); }} onClose={() => magic.setOpen(false)} />}
+        </Modal>
       )}
       <div style={{ display: 'flex', gap: 14, alignItems: 'flex-end' }}>
         {magic && state.heroes[active.id] && <SpellButton mana={manaOf(state.heroes[active.id])} open={magic.open} onClick={() => { setShowItems(false); magic.setOpen(!magic.open); }} />}
         <TreasureButton count={state.factions[side].inventory.length} onClick={() => { magic?.setOpen(false); setShowItems(!showItems); }} open={showItems} />
       </div>
-      {showItems &&
-        state.factions[side].inventory.map((id) => {
-          const def = itemDef(state.items[id].kind, isDigital(state.rules));
-          const ok = itemsAllowed && def.usableIn.includes('battle') && !(def.kind === 'resurrection' && !deadOwn.length) && !(def.kind === 'horn' && !alliesOf(b, active).concat(active).some((x) => UNITS[x.defId].kind === 'support'));
-          return (
-            <div key={id} className="plate parch" style={{ width: 'min(330px, calc(100vw - 24px))', padding: '5px 9px', display: 'flex', gap: 8, alignItems: 'center' }}>
-              <button className="btn" title="Pokaż kartę skarbu" onClick={() => onShowCard(`item:${def.kind}`)} style={{ background: 'none', border: 0, padding: 0, flex: 'none' }}>
-                <img {...hoverCard(`item:${def.kind}`)} src={itemArt(def.kind, isDigital(state.rules))} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
-              </button>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 800, fontSize: 15 }}>{def.name}</div>
-                <div style={{ fontSize: 13, lineHeight: 1.15 }}><StatText rule text={def.text} /></div>
-              </div>
-              <button className="btn prim" disabled={!ok} style={{ padding: '3px 10px', fontSize: 14 }} onClick={() => startItem(id)}>Użyj</button>
-            </div>
-          );
-        })}
+      <Modal open={showItems} onClose={() => setShowItems(false)}>
+        {showItems && (
+          <ChestFrame title="Skarby frakcji" onClose={() => setShowItems(false)}>
+            {state.factions[side].inventory.length === 0 && <div style={{ fontSize: 15, color: '#6B4A22', fontStyle: 'italic' }}>Brak skarbów.</div>}
+            {state.factions[side].inventory.map((id) => {
+              const def = itemDef(state.items[id].kind, isDigital(state.rules));
+              const ok = itemsAllowed && def.usableIn.includes('battle') && !(def.kind === 'resurrection' && !deadOwn.length) && !(def.kind === 'horn' && !alliesOf(b, active).concat(active).some((x) => UNITS[x.defId].kind === 'support'));
+              return (
+                <div key={id} className="plate parch" style={{ padding: '6px 9px', display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <button className="btn" title="Pokaż kartę skarbu" onClick={() => onShowCard(`item:${def.kind}`)} style={{ background: 'none', border: 0, padding: 0, flex: 'none' }}>
+                    <img {...hoverCard(`item:${def.kind}`)} src={itemArt(def.kind, isDigital(state.rules))} alt="" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
+                  </button>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 800, fontSize: 16 }}>{def.name}</div>
+                    <div style={{ fontSize: 14, lineHeight: 1.15 }}><StatText rule text={def.text} /></div>
+                  </div>
+                  <button className="btn prim" disabled={!ok} style={{ padding: '3px 10px', fontSize: 14 }} onClick={() => { setShowItems(false); startItem(id); }}>Użyj</button>
+                </div>
+              );
+            })}
+          </ChestFrame>
+        )}
+      </Modal>
     </div>
   );
 }

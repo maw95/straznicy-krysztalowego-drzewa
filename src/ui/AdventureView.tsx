@@ -8,7 +8,7 @@ import { fightLevelAt } from './fightBadges';
 import { EnemyPill, FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
 import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
-import { TreasureButton } from './TreasureButton';
+import { ChestFrame, TreasureButton } from './TreasureButton';
 import { SettlementDialog } from './SettlementDialog';
 import { BUILDING_NAMES, chestPreview, garrisonAt, hasParent, hutPayable, KINGDOM, goldOf, incomeBreakdown, incomeOf, resourceIncomeBreakdown, settlementAt } from '../engine/kingdom';
 import { ECONOMY, MINE_NAMES, OBJECT_NAMES, OBJECTS, objectReady, RESOURCE_NAMES, thingsText, type ResourceId } from '../engine/economy';
@@ -112,6 +112,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const [resPick, setResPick] = useState<string | null>(null);
   /** The hero's sheet (left click on the portrait), the gear and backpack window, and the treasure list. */
   const [sheet, setSheet] = useState(false);
+  /** Whose sheet is open (a hero of the same faction as the active one); the active hero when null. */
+  const [sheetId, setSheetId] = useState<string | null>(null);
   const [packOpen, setPackOpen] = useState(false);
   const [treasuresOpen, setTreasuresOpen] = useState(false);
   /** Level 3: the settlement window. */
@@ -444,8 +446,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                       <>
                         <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, width: W * 0.46, height: W * 0.46, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)} />
                         {placeOwner(state, t) && (
-                          <div style={{ position: 'absolute', left: W * 0.56, top: H * 0.05, zIndex: 3, pointerEvents: 'none' }} data-mine-owner={t.place.kind === 'mine' ? placeOwner(state, t) : undefined} data-settlement-owner={t.place.kind === 'settlement' ? placeOwner(state, t) : undefined}>
-                            <OwnerBanner owner={placeOwner(state, t)!} w={H * 0.72 * 0.44} h={H * 0.72} />
+                          <div style={{ position: 'absolute', left: W * 0.4, top: -H * 0.02, zIndex: 3, pointerEvents: 'none' }} data-mine-owner={t.place.kind === 'mine' ? placeOwner(state, t) : undefined} data-settlement-owner={t.place.kind === 'settlement' ? placeOwner(state, t) : undefined}>
+                            <OwnerBanner owner={placeOwner(state, t)!} size={W * 0.66} />
                           </div>
                         )}
                         {t.place.kind === 'settlement' && (state.kingdom.settlements[t.place.id]?.garrison?.length ?? 0) > 0 && (
@@ -611,6 +613,21 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               </div>
             </div>
           )}
+          {hero && (() => {
+            const mates = Object.values(state.heroes).filter((h) => h.faction === hero.faction && h.id !== hero.id);
+            if (!mates.length) return null;
+            return (
+              <div data-hero-mates style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: 13, letterSpacing: 1, color: '#9FB3B0' }}>DRUGI BOHATER</span>
+                {mates.map((h) => (
+                  <button key={h.id} className="btn btn-bare" data-hero-mate={h.id} title={`Karta bohatera: ${heroLabel(h)}${h.alive ? '' : ' (poległ)'}`} onClick={() => { setSheetId(h.id); if (state.rules.heroGrowth) setSheet(true); else onShowCard(h.id); }} style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: h.alive ? 1 : 0.55 }}>
+                    <Portrait unitId={h.id} size={compact ? 40 : 48} ring={SIDE_RING[h.faction]} tip={false} />
+                    <span style={{ fontWeight: 700, fontSize: 16, color: '#F3D27A' }}>{heroLabel(h)}</span>
+                  </button>
+                ))}
+              </div>
+            );
+          })()}
           {state.kingdom?.huts && viewer && hero && hero.faction === viewer && canAct && state.kingdom.huts[hero.pos] && !state.kingdom.huts[hero.pos].done && (() => {
             const hut = state.kingdom!.huts![hero.pos];
             return (
@@ -721,9 +738,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
       </div>
       <Modal open={treasuresOpen} onClose={() => setTreasuresOpen(false)}>
         {treasuresOpen && (
-          <div className="hero-sheet" data-treasures style={{ width: 'min(460px, 94vw)' }}>
-            <div className="lbl" style={{ color: '#6B4A22', textAlign: 'center' }}>Wspólne skarby frakcji {viewer ? `· ${FACTION_NAMES[viewer]}` : ''}</div>
-            <div className="scroll" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <ChestFrame title={`Wspólne skarby frakcji${viewer ? ` · ${FACTION_NAMES[viewer]}` : ''}`} onClose={() => setTreasuresOpen(false)}>
+            <>
               {inventory.length === 0 && <div style={{ fontSize: 15, color: '#6B4A22', fontStyle: 'italic' }}>Brak skarbów.</div>}
               {inventory.map((it) => {
                 const def = itemDef(it.kind, isDigital(state.rules));
@@ -746,9 +762,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                   </div>
                 );
               })}
-            </div>
-            <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20, alignSelf: 'center' }} onClick={() => setTreasuresOpen(false)}>Zamknij</button>
-          </div>
+            </>
+          </ChestFrame>
         )}
       </Modal>
       <Modal open={settlementOpen !== null} onClose={() => setSettlementOpen(null)}>
@@ -769,8 +784,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           </div>
         )}
       </Modal>
-      <Modal open={sheet} onClose={() => setSheet(false)}>
-        {sheet && hero && <HeroSheet hero={hero} state={state} onAction={canAct && hero.faction === viewer ? onAction : undefined} onClose={() => setSheet(false)} />}
+      <Modal open={sheet} onClose={() => { setSheet(false); setSheetId(null); }}>
+        {sheet && hero && (() => {
+          const shown = (sheetId && state.heroes[sheetId]) || hero;
+          return <HeroSheet hero={shown} state={state} onAction={canAct && shown.id === hero.id && hero.faction === viewer ? onAction : undefined} onClose={() => { setSheet(false); setSheetId(null); }} />;
+        })()}
       </Modal>
       <Modal open={packOpen} onClose={() => setPackOpen(false)}>
         {packOpen && hero && <PackDialog hero={hero} state={state} onAction={canAct && hero.faction === viewer ? onAction : undefined} onClose={() => setPackOpen(false)} />}
@@ -927,7 +945,7 @@ function tileArt(state: GameState, t: Tile): string | undefined {
   return undefined;
 }
 
-/** Who holds a mine or a settlement; nobody for an unclaimed one (it then gets no banner). */
+/** Who holds a mine or a settlement; nobody for an unclaimed one (it then gets no crest). */
 function placeOwner(state: GameState, t: Tile): FactionId | undefined {
   const place = t.place;
   if (!place || !state.kingdom) return undefined;
@@ -936,39 +954,10 @@ function placeOwner(state: GameState, t: Tile): FactionId | undefined {
   return undefined;
 }
 
-/** A big banner of the faction that holds a mine or a settlement: a pennant on a pole (green and gold for the Przymierze, red and iron for the Horda). */
-function OwnerBanner({ owner, w, h }: { owner: FactionId; w: number; h: number }) {
-  const dawn = owner === 'dawn';
-  const id = `ban-${owner}`;
+/** The sign of the faction that holds a mine or a settlement: its big crest from the hero cards (nothing for an unclaimed one). */
+function OwnerBanner({ owner, size }: { owner: FactionId; size: number }) {
   return (
-    <svg data-owner-banner={owner} viewBox="0 0 40 90" width={w} height={h} style={{ position: 'absolute', left: w * 0.0, top: 0, pointerEvents: 'none', overflow: 'visible', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.75))' }}>
-      <title>{`Trzyma: ${FACTION_NAMES[owner]}`}</title>
-      <defs>
-        <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor={dawn ? '#3F9A5E' : '#C8353A'} />
-          <stop offset="1" stopColor={dawn ? '#1B5232' : '#6A1417'} />
-        </linearGradient>
-      </defs>
-      <rect x="5" y="3" width="3" height="86" rx="1.2" fill="#4A3418" stroke="#2A1C0A" strokeWidth="0.6" />
-      <circle cx="6.5" cy="3" r="3" fill="#F3D27A" stroke="#8A5E12" strokeWidth="0.8" />
-      <path d="M8 8 H38 V66 L23 55 L8 66 Z" fill={`url(#${id})`} stroke="#F3D27A" strokeWidth="1.6" strokeLinejoin="round" />
-      <path d="M11.5 11.5 H34.5 V59 L23 50.5 L11.5 59 Z" fill="none" stroke={dawn ? '#F3D27A' : '#B9B9C2'} strokeWidth="0.9" opacity="0.8" />
-      {dawn ? (
-        // A crystal over a small tree: the Przymierze's sign.
-        <>
-          <path d="M23 16 L29 25 L23 36 L17 25 Z" fill="#BFEFFF" stroke="#F3D27A" strokeWidth="1" />
-          <path d="M23 16 L23 36 M17 25 H29" stroke="#F3D27A" strokeWidth="0.6" opacity="0.8" />
-          <path d="M23 52 V43 M23 47 L18 42 M23 47 L28 42" stroke="#F3D27A" strokeWidth="1.4" strokeLinecap="round" fill="none" />
-        </>
-      ) : (
-        // Horns over a spiked iron crown: the Horda's sign.
-        <>
-          <path d="M13 31 C12 23 15 17 19 15 C17 20 18 25 21 29 Z" fill="#D8D8DE" stroke="#2A2A30" strokeWidth="0.7" />
-          <path d="M33 31 C34 23 31 17 27 15 C29 20 28 25 25 29 Z" fill="#D8D8DE" stroke="#2A2A30" strokeWidth="0.7" />
-          <path d="M14 46 L16 36 L19 43 L23 33 L27 43 L30 36 L32 46 Z" fill="#B9B9C2" stroke="#2A2A30" strokeWidth="0.8" strokeLinejoin="round" />
-        </>
-      )}
-    </svg>
+    <img data-owner-banner={owner} src={asset(`cards/crests/${owner}.png`)} alt={`Trzyma: ${FACTION_NAMES[owner]}`} title={`Trzyma: ${FACTION_NAMES[owner]}`} width={size} height={size} style={{ display: 'block', objectFit: 'contain', pointerEvents: 'none', filter: 'drop-shadow(0 3px 4px rgba(0,0,0,0.8))' }} />
   );
 }
 
