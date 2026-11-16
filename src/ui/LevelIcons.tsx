@@ -65,18 +65,21 @@ const SHAPES: Record<LevelIconKind, { body: JSX.Element; cut: JSX.Element; extra
   dragon: {
     body: (
       <>
-        <path d="M22 16C13 14 9 8 10 0c8 4 15 8 18 16z" />
-        <path d="M42 16c9-2 13-8 12-16-8 4-15 8-18 16z" />
-        <path d="M28 14l4-9 4 9z" />
-        <path d="M18 12h28l6 19-6 6 4 7-9 3-4 13H27l-4-13-9-3 4-7-6-6z" />
+        {/* swept-back horns */}
+        <path d="M22 24C10 22 3 14 4 2c6 6 13 9 21 10z" />
+        <path d="M42 24c12-2 19-10 18-22-6 6-13 9-21 10z" />
+        {/* head with spiked cheek frills */}
+        <path d="M20 14h24l4 10 11 3-8 5 7 7-10 1 3 8-10 0-5 15h-8l-5-15-10 0 3-8-10-1 7-7-8-5 11-3z" />
       </>
     ),
     cut: (
       <>
-        <path d="M18 28l11 2.6-8.4 3.4z" />
-        <path d="M46 28l-11 2.6 8.4 3.4z" />
-        <ellipse cx="28" cy="50" rx="1.8" ry="2.6" />
-        <ellipse cx="36" cy="50" rx="1.8" ry="2.6" />
+        <path d="M17 30l12 3-9.4 4.6z" />
+        <path d="M47 30l-12 3 9.4 4.6z" />
+        <path d="M28 20l4 6 4-6z" />
+        <ellipse cx="28" cy="50" rx="1.8" ry="2.8" />
+        <ellipse cx="36" cy="50" rx="1.8" ry="2.8" />
+        <path d="M24 56h16" fill="none" stroke="#000" strokeWidth="1.6" strokeLinecap="round" />
       </>
     ),
   },
