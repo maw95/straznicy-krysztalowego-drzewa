@@ -98,3 +98,12 @@ describe('the arena computer', () => {
     expect(hpOf('veryHard')).toBe(Math.round(base * (1 + COMPUTER_HANDICAP.veryHard.hp)));
   });
 });
+
+describe('points by level of the game', () => {
+  it('a win counts more at each higher level of the game', async () => {
+    const { tierPointsFactor } = await import('../src/engine/scoring');
+    const f = [{}, { kingdom: true }, { kingdom: true, economy: true }, { kingdom: true, economy: true, realm: true }, { kingdom: true, economy: true, realm: true, empire: true }].map(tierPointsFactor);
+    expect(f).toEqual([...f].sort((a, b) => a - b));
+    expect(new Set(f).size).toBe(5);
+  });
+});

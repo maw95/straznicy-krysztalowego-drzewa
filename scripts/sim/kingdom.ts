@@ -1,6 +1,6 @@
 // Level 3 "Osada" for bots: Przymierze win rate and the economy (recruits, gold, settlements) per map size and table.
 // Usage: node --import tsx scripts/sim/kingdom.ts [games per cell=30] [sizes=short,medium] [tables=coop1,coop2,pvp1,pvp2]
-// SIM_LEVEL=kids|hard picks the level (default normal). SIM_ECONOMY=1 plays level 4 (resources); the last columns are then the average end stock of wood/ore/dust and buildings.
+// SIM_LEVEL=kids|hard|veryhard picks the level (default normal). SIM_ECONOMY=1 plays level 4 (resources); the last columns are then the average end stock of wood/ore/dust and buildings.
 
 import './override';
 import { applyActionInPlace, createGame } from '../../src/engine/game';
@@ -14,7 +14,7 @@ process.env.SIM_GROWTH = '1';
 const games = Number(process.argv[2] ?? 30);
 const sizes = (process.argv[3] ?? 'short,medium').split(',') as MapSize[];
 const tables = (process.argv[4] ?? 'coop1,coop2,pvp1,pvp2').split(',') as Table[];
-const option: Option[] = process.env.SIM_LEVEL === 'kids' ? ['kids'] : process.env.SIM_LEVEL === 'hard' ? ['hard'] : [];
+const option: Option[] = process.env.SIM_LEVEL === 'kids' ? ['kids'] : process.env.SIM_LEVEL === 'veryhard' ? ['veryhard'] : process.env.SIM_LEVEL === 'hard' ? ['hard'] : [];
 
 console.log(`Osada, ${games} gier na komórkę, poziom ${process.env.SIM_LEVEL ?? 'normal'}`);
 console.log('mapa·tryb'.padEnd(18) + 'Świt%'.padStart(8) + 'rundy'.padStart(8) + 'wyższe'.padStart(8) + 'osady'.padStart(8) + 'złoto'.padStart(8) + 'poz.≥4'.padStart(8) + (process.env.SIM_ECONOMY ? 'dr/rd/GP'.padStart(14) + 'budynki'.padStart(9) + 'chatki'.padStart(8) : ''));

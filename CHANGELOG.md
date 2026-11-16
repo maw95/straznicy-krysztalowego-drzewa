@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Ranking: wygrana na poziomie Królestwo liczy się z mnożnikiem 1,45, a na poziomie Imperium 1,55 (Księstwo 1,35), bo na wyższych poziomach jest więcej do rozegrania.
+
 - Poziom trudności wybiera się teraz w każdym trybie, także w rywalizacji (Trudny i Bardzo trudny: komputerowi przeciwnicy ze skarbami, większym Życiem i dochodami) i na arenie; w grze online też (stół może mieć Bardzo trudny).
 
 - Nowy poziom trudności „Bardzo trudny”: jak Trudny, ale komputer ma przewagę: jednostki o 20% więcej Życia, o 2 losowe skarby więcej na start i o połowę większe dochody (poziomy z osadami). W kooperacji (Horda) i przy stole z botami; na arenie komputer ma o 20% więcej Życia. Poziom Trudny jest teraz dostępny także w rywalizacji.

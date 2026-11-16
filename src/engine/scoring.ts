@@ -138,10 +138,21 @@ export const KINGDOM_POINTS_FACTOR = 1.25;
  * less often than in level 3 on the same maps, and there is more to run (resources, one building a round). A win counts a little more again.
  */
 export const ECONOMY_POINTS_FACTOR = 1.35;
+/**
+ * Levels 5 ("Królestwo") and 6 ("Imperium"), measured 16.11 (60 games a cell, Normal, 3 map sizes, 4 tables): the Przymierza win 55 and 54 percent against 57 at level 4,
+ * and the games are no longer (8.5 rounds against 9.3), so they are no harder; they only ask for more (a second hero and magic; shards, faction mechanics and
+ * the Relic), so a win counts a tenth more at each step.
+ */
+export const REALM_POINTS_FACTOR = 1.45;
+export const EMPIRE_POINTS_FACTOR = 1.55;
+
+/** How much a win of the level the rules play is worth against level 2 (1 for the levels without a settlement economy). */
+export const tierPointsFactor = (r: { kingdom?: boolean; economy?: boolean; realm?: boolean; empire?: boolean }): number =>
+  r.empire ? EMPIRE_POINTS_FACTOR : r.realm ? REALM_POINTS_FACTOR : r.economy ? ECONOMY_POINTS_FACTOR : r.kingdom ? KINGDOM_POINTS_FACTOR : 1;
 
 export function pointsFor(setup: SetupOptions, level: LevelName, side: FactionId): number {
   if (setup.mode === 'arena') return ARENA_POINTS[level === 'custom' ? 'normal' : level];
-  const raw = (BOARD_TOP_POINTS * MAP_WEIGHT[setup.mapSize] * difficultyRating(setup, level, side) * (setup.rules.economy ? ECONOMY_POINTS_FACTOR : setup.rules.kingdom ? KINGDOM_POINTS_FACTOR : 1)) / TOP_RATING;
+  const raw = (BOARD_TOP_POINTS * MAP_WEIGHT[setup.mapSize] * difficultyRating(setup, level, side) * tierPointsFactor(setup.rules)) / TOP_RATING;
   return Math.min(MAX_POINTS, Math.max(1, Math.round(raw)));
 }
 

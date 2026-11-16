@@ -23,7 +23,7 @@ Autor pisze „zrób punkty 1, 2 i 3” (albo „zrób 9–10”, „zrób wszys
 - Każdy zaakceptowany obraz, animacja, dźwięk lub muzyka trafia do repo w tej samej sesji z wpisem w `assets.json`.
 - Po skończeniu: usuń punkt z tego pliku (albo zaznacz, co zostało), zagraj `complete.oga`, krótkie podsumowanie po polsku, uwaga, że to dobry moment na `/clear`.
 
-## Stan (16.11.2026)
+## Stan (16.11.2026, po punktach 1–15)
 
 Wydane: **2.7.0** (14.11, poziom 3 „Osada”). Niewydane, zrobione lokalnie w masterze: poziom 0 „Spacer”, Łatwy na arenie, bot-kupiec, Królestwo w rankingu, **poziomy 4, 5 i 6 w całości** (Księstwo: Kuźnia, wymiana surowców, młyn/składnica/studnia, garnizon, fosa i mury z katapultą, cel Podbój, autopilot warstw; Królestwo: drugi bohater, magia, typy i specjalności, rozgałęzienia umiejętności; Imperium: Relikt, mechaniki i drzewka frakcji, jednostki legendarne i alternatywne z siedliskami), dźwięki 16 jednostek poziomów 5–6, animacje Rycerza Świtu i Wodza Hordy. `make check` zielone (490 testów). **Nic nie wypchnięte.** Repo serwera: commit z poziomami 5–6, celami i nowymi akcjami, niewypchnięty i niewdrożony (czeka na wydanie gry).
 
@@ -31,103 +31,6 @@ Drabinka (nazwy = ranga zmagań): 0 Spacer, 1 Przygoda, 2 Wyprawa, 3 Osada, 4 Ks
 Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids` = Łatwy, `economy`, `realm`, `empire`) i w rankingu online zostają. Typ `Level` w `src/engine/types.ts`: `zero | kids | normal | hard`.
 
 ## 1. Kolejka prac (w tej kolejności)
-
-### Grupa A. Błędy
-**1. Arena: zasięg jednostek 2-heksowych jest błędny** (M, błąd; zgłoszenie 16.11)
-- Objaw: Czarny Smok stanął poza podświetlonym (niebieskim i czerwonym) polem zasięgu Złotego Smoka, a ten mimo to go zaatakował.
-- Odtworzenie: `bug-reports/2026-11-16-10-24-54-ziarno-550163.json` (setup + akcje; ostatnie zgłoszenie „pokazywanie zasięgu dla jednostek 2-heksowych”); odtwórz przez `scripts/zgloszenia.ts` albo `openGame` z `scripts/browser/game.ts`.
-- Gdzie szukać: reguła zasięgu `unitDistance` i atak w `src/engine/battle.ts`; podświetlenie w `src/ui/BattleView.tsx` (klasy `cur-*`), `ArenaBoard.tsx`, `arenaGeometry.ts`.
-- Decyzja: obowiązująca reguła to **zasięg liczony od najbliższego heksa jednostki** (dla obu stron). Jeśli silnik się z tym zgadza, a podświetlenie kłamie: popraw podświetlenie. Jeśli silnik liczy inaczej: popraw silnik (wtedy `golden.test.ts` wolno zaktualizować `-u`, z adnotacją w commicie).
-- Gotowe, gdy: test w `tests/` odtwarza przypadek z zgłoszenia i przechodzi; podświetlone pola = pola, z których atak naprawdę działa, dla jednostek 1- i 2-heksowych (test + sprawdzenie w przeglądarce).
-
-**2. Mapa przygody: „podobno mam 2 kopalnie, ale nie widzę ich na mapie”** (S, do zbadania; zgłoszenie 14.11)
-- Odtworzenie: `bug-reports/2026-11-14-06-25-08-ziarno-111824.json`.
-- Zadanie: ustal, czy to błąd (licznik kopalń w interfejsie liczy coś innego niż ikony na mapie, kopalnia pod mgłą lub poza widokiem), czy tylko brak oznaczenia właściciela (patrz punkt 7).
-- Decyzja: jeśli licznik pokazuje kopalnie, których gracz nie widzi na mapie, to błąd licznika: licznik ma liczyć tylko kopalnie, które gracz posiada i których pole jest odkryte; dopisz test silnika albo UI.
-- Gotowe, gdy: przyczyna opisana w commicie; błąd poprawiony albo (gdy to brak oznaczenia) punkt 7 pokrywa sprawę i tu nic nie trzeba.
-
-### Grupa B. Poprawki interfejsu (ze zgłoszeń „Zgłoś błąd”, 14–16.11)
-**3. Arena: usunąć licznik zasobów z dolnego paska podczas walki** (S; zgłoszenie 14.11, `bug-reports/2026-11-14-19-55-33-serwer-7.json`)
-- Zakres: w widoku bitwy (też w rozstawieniu) nie pokazuj paska z surowcami i złotem ani jego ramki; na mapie przygody pasek zostaje bez zmian. Pasek jest w dolnej sekcji interfejsu (poziom 4+); znajdź komponent po tekstach „Gwiezdny Pył” lub klasie paska w `styles.css`.
-- Gotowe, gdy: w bitwie (desktop i telefon) licznika nie ma, po powrocie na mapę jest; `make zrzut` obu widoków.
-
-**4. Okno „Wyposażenie i plecak”: prawy klik na artefakcie otwiera opis** (S; zgłoszenie 16.11)
-- Gdzie: `src/ui/growthUi.tsx` (okno z nagłówkiem „Wyposażenie i plecak”, ok. linii 211); opis artefaktów już istnieje w podpowiedziach (`details.tsx`, `ItemsPanel`).
-- Decyzja: prawy klik (i długie przytrzymanie na telefonie) pokazuje to samo okienko z opisem, którego używa reszta gry dla artefaktu (nazwa, rzadkość, tekst, zestaw); `onContextMenu` ma wywołać `preventDefault`.
-- Gotowe, gdy: prawy klik na artefakcie w wyposażeniu i w plecaku pokazuje opis; test klikający w `scripts/browser/` albo test jsdom.
-
-**5. Mapa przygody: prawy klik na kafelku z obiektem pokazuje też obiekt** (S–M; zgłoszenie 16.11)
-- Dziś prawy klik pokazuje tylko typ kafelka i koszt ruchu. Ma pokazać dodatkowo to, co stoi na kafelku: nazwa i krótki opis obiektu (np. składnica drewna: co daje i czy jest czyja), osada, kopalnia (z właścicielem), chatka, strażnik, skrzynia itd.
-- Gdzie: obsługa prawego kliku w `AdventureView.tsx` i okno szczegółów w `details.tsx`; dane obiektów w `src/engine/sites.ts`, `economy.ts`, `kingdom.ts`.
-- Decyzja: pokazuj tylko to, co gracz już widzi (odkryte pola); nie zdradzaj zawartości skrzyń ani siły zakrytych strażników.
-- Gotowe, gdy: prawy klik na każdym rodzaju obiektu pokazuje jego nazwę i opis (lista rodzajów w opisie commita); skrypt klikający w przeglądarce.
-
-**6. Mapa przygody: komunikat o zdobyczy nad bohaterem, z dźwiękiem** (M; zgłoszenie 16.11)
-- Gdy bohater zbiera zasoby, złoto, artefakt lub doświadczenie z obiektu na mapie, nad jego portretem (token na mapie) pojawia się na ok. 2 s unoszący się napis, np. „+2 drewna”, „+5 zł”, z ikoną surowca.
-- Decyzja: dźwięk z istniejących plików w `public/assets/dzwieki/` (monety `coins_buy.mp3` dla złota i surowców, istniejący dźwięk podniesienia artefaktu dla artefaktów); **bez generowania nowych dźwięków**. Kilka zdobyczy naraz: napisy jeden pod drugim z krótkim opóźnieniem. Zdobycze innych graczy pokazuj tylko, gdy ich pole jest odkryte.
-- Gdzie: zdarzenia w dzienniku/`log.ts` albo różnica stanu przed/po akcji w `App.tsx`/`AdventureView.tsx`.
-- Gotowe, gdy: napis i dźwięk przy każdej zdobyczy (kopalnia, składnica, studnia, skrzynia, chatka, młyn); w przeglądarce na desktopie i telefonie.
-
-**7. Mapa przygody: właściciel kopalni oznaczony herbem frakcji** (S; zgłoszenie 16.11)
-- Kopalnia przejęta przez gracza pokazuje nad ikoną herb jego frakcji (herby są w `ikony/` i na flagach osad); kopalnia niczyja bez herbu. Jest powiązana z punktem 2.
-- Gotowe, gdy: po przejęciu kopalni herb pojawia się od razu, a po przejęciu przez drugą frakcję zmienia się; przeglądarka.
-
-**8. Targ: sprzedaż surowców za złoto i wymiana surowców** (M; zgłoszenie 16.11: „na targu można kupować surowce za pieniądze. brakuje mi możliwości wymieniania surowców na złoto lub na inne surowce”)
-- Silnik ma już ceny: `ECONOMY.tradeBuy` (kupno za złoto, wg poziomu targu) i `ECONOMY.tradeSell` (sprzedaż surowca za złoto, wymaga targu) w `src/engine/economy.ts`. Sprawdź, czy w oknie osady (budynek „Targ”) jest akcja sprzedaży i czy jest widoczna; jeśli nie, dodaj ją.
-- Decyzja o wymianie surowiec za surowiec: **bez nowych liczb**. Wymiana to sprzedaż jednej jednostki jednego surowca i kupno drugiego po cenach z `ECONOMY` (efektywnie kurs ze strat), wykonana jednym kliknięciem i jedną akcją silnika (żeby zapis i serwer miały jedną akcję), przy zachowaniu zasady, że handel wymaga targu w osadzie gracza lub sojusznika (jak dziś).
-- Gotowe, gdy: w oknie targu da się (a) kupić, (b) sprzedać za złoto, (c) wymienić surowiec na surowiec, z podglądem kursu; testy silnika dla nowej akcji (też na serwerze: nowa akcja musi przejść walidację w repo backendu, `../straznicy-krysztalowego-drzewa-backend`); `make sim-tabele` bez zmian wyników (gra nie używa handlu w botach) albo opis, co się zmieniło.
-
-**9. Arena: okno „Magia” zamiast obecnego wyboru czaru** (M; zgłoszenie 16.11)
-- Dziś wybór czaru jest paskiem nad paskiem aktywacji (`BattleView.tsx`, stan `spell`, `castable`, `manaOf`, `SPELLS` z `src/engine/magic.ts`). Zamień go na ikonę „Magia” obok ikony „Skarby” w prawym dolnym rogu areny (`BattleSidePanel`/`ItemsPanel`); kliknięcie otwiera okno ze **wszystkimi** czarami bohatera (nazwa, koszt many, krótki opis), czary, na które brakuje many (albo które nie mają celu), są wyszarzone i nieklikalne.
-- Decyzja: ikona „Magia” widoczna tylko od poziomu 5 i tylko gdy bohater zna jakiś czar; ikona różdżki: jeśli w repo nie ma gotowej, zrób ją w SVG (jednokolorowa, jak ikony poziomów trudności); okno zamyka się po wyborze czaru, który przechodzi do trybu wyboru celu (punkt 10).
-- Gotowe, gdy: na desktopie i telefonie (układ przycisków w rogu się mieści) da się obejrzeć wszystkie czary i wybrać czar; stary pasek usunięty; skrypt `scripts/browser/czary.ts` zaktualizowany i przechodzi.
-
-**10. Arena: wybór celu czaru — zaznacz cele, nie zasięg jednostki** (M; zgłoszenie 16.11; po punkcie 9)
-- Przy wyborze celu czaru nie pokazuj zasięgu ruchu i ataku aktywnej jednostki. Zaznacz tylko możliwe cele czaru (`spellTargets(state, spell)`) wyraźną obwódką; pozostałe jednostki przyciemnij; po najechaniu myszką na możliwy cel kursor to ikona różdżki (klasa kursora jak istniejąca `cur-spell`, ale z ikoną różdżki); na telefonie bez najechania: sama obwódka.
-- Esc lub prawy klik anuluje wybór czaru.
-- Gotowe, gdy: dla czarów wrogich i własnych (Magiczny Pocisk, leczenie, spowolnienie itd.) tylko cele są podświetlone, zasięg jednostki znika; przeglądarka (desktop + telefon).
-
-### Grupa C. Poziomy trudności
-**11. Ikony poziomów trudności jako SVG i nowy układ przycisków** (S–M; zgłoszenie 16.11)
-- Komponent `LevelIcon` jest gotowy w `src/ui/LevelIcons.tsx` (jednokolorowe SVG, `currentColor`; `rabbit`, `wolf`, `bear`, `dragon`; zdecydowane: **Łatwy = królik, Normalny = wilk, Trudny = niedźwiedź, Bardzo trudny = smok**). Smok jest najsłabiej narysowany (rogi, kły): popraw go, jeśli wyglądałby źle w większym rozmiarze.
-- Zastąp obrazki `ui/menu/krolik|wilk|smok.webp` w `NewGameWizard.tsx` (`LEVEL_ANIMAL`) i wszędzie, gdzie widać zwierzę poziomu (`grep LEVEL_ANIMAL krolik wilk smok`; ekran online `OnlineScreen.tsx`/`setupShared.tsx`). Poziom `zero` (Spacer) zostaje z królikiem.
-- Układ przycisków: ikona w górnym wierszu (większa, min. 48 px), nazwa pod nią, jak `.size-btn` / `.size-code` (litery S, M przy wyborze mapy, w `styles.css` ok. linii 840).
-- Nieużywane po zmianie pliki `krolik/wilk/smok.webp` usuń z repo (sprawdź `grep`), wpis w `assets.json` zostaje z adnotacją „zastąpione SVG 16.11”.
-- Zależność: czwarty przycisk (Bardzo trudny) pojawia się dopiero po punkcie 12; do tego czasu pokaż trzy (nie zostawiaj nieaktywnego czwartego).
-- Gotowe, gdy: trzy (po punkcie 12: cztery) ikony SVG w kreatorze i online, układ z ikoną nad nazwą, sprawdzone `make zrzut` desktop i telefon (kolor ikony zmienia się z zaznaczeniem przycisku).
-
-**12. Silnik: czwarty poziom „Bardzo trudny” i jedna lista przewag komputera** (L, kod + strojenie; zgłoszenie 16.11)
-- Reguła: poziom decyduje o warunkach **graczy komputerowych** (Horda w kooperacji, boty w rywalizacji i pojedynkach, komputer na arenie). **Łatwy** = utrudnienia, **Normalny** = komputer ma dokładnie takie same zasady jak człowiek (mnożniki 1, zero bonusów i kar), **Trudny** = ułatwienia, **Bardzo trudny** = większe ułatwienia.
-- Nowa wartość `veryHard` w typie `Level` (`src/engine/types.ts`), propagowana przez `tuning.ts`, `tuningAuto.ts`, `scoring.ts`, serwer (`../straznicy-krysztalowego-drzewa-backend`: typy, walidacja ustawień, klucz rankingu).
-- Jedna tabela dźwigni (nowy `COMPUTER_HANDICAP` w `src/engine/tuning.ts`), używana we wszystkich trybach zamiast osobnych poprawek per komórka. **Wartości startowe** (Claude stroi je symulatorem do pasm niżej):
-
-| Dźwignia | Łatwy | Normalny | Trudny | Bardzo trudny |
-|---|---:|---:|---:|---:|
-| mnożnik złota i surowców komputera | ×0,75 | ×1 | ×1,25 | ×1,5 |
-| skarby startowe komputera (losowe, szt.) | −1 | 0 | +1 | +2 |
-| Życie jednostek komputera | −15% | 0 | +10% | +20% |
-| błędne decyzje bota (szansa na zły ruch) | 25% | 0 | 0 | 0 |
-| bohater komputera po śmierci | nie wraca | jak człowiek | jak człowiek | wraca raz |
-
-- Pasma wygranych Przymierza: Łatwy 65–85%, Normalny 45–65%, Trudny 30–45%, **Bardzo trudny 15–30%** (nowe, do zmiany jednym zdaniem). Normalny zachowuje obecne strojenie świata (liczba strażników, skarby Hordy zapisane dziś dla Normalnego w `tuning.ts`): to opis świata, nie przewaga komputera; opis Normalnego w UI: „komputer gra na tych samych zasadach co ty”. Jeśli Normalny wypadnie poza pasmem po przejściu na tabelę, popraw dźwignie świata, nie dodawaj komputerowi bonusu.
-- Miejsca: stroiciele `scripts/sim/tuneLevels.ts`, `tuneKingdom.ts`; tabele `make sim-tabele`, `make sim-cele`; poziom 0 (`zero`) i wydanie planszowe (`SIM_DIGITAL` niewłączone) bez zmian: dźwignie działają tylko w grze cyfrowej.
-- Test: na `normal` dźwignie są neutralne (test porównujący stan startowy i dochód komputera z graczem).
-- Gotowe, gdy: `veryHard` przechodzi przez silnik i serwer, test równych warunków Normalnego przechodzi, `make sim-tabele` mieści się w pasmach (lub odstępstwa zapisane w sekcji „Balans”), `golden.test.ts` zaktualizowany `-u` w osobnym commicie z opisem.
-
-**13. Wybór poziomu trudności w każdym trybie: kreator, online, ranking, instrukcja** (M; po punkcie 12)
-- Kreator (`NewGameWizard.tsx`) i ekran online: wiersz „Trudność” z czterema poziomami dla **każdego** trybu (kooperacja, rywalizacja 1 na 1 i 2 na 2, pojedynki, arena), dziś ukryty dla Spaceru i `hard` w PvP (`l !== 'hard' || d.mode !== 'pvp'`): zdejmij to ograniczenie. Spacer (poziom 0) zostaje bez wyboru.
-- Opisy poziomów (`LEVEL_TIPS`, `LEVEL_HINT`, `ARENA_LEVEL_TIPS`) dla czterech poziomów, w tym zdanie o równych warunkach na Normalnym.
-- Ranking: mnożnik punktów za poziom (`difficultyRating`, `scoring.ts`): Bardzo trudny = mnożnik Trudnego × 1,25 (wartość robocza); stół online z `veryHard` przechodzi przez serwer; wpisz do instrukcji (`INSTRUKCJA.md`, rozdział o poziomach) i CHANGELOG.md.
-- Gotowe, gdy: w każdym trybie można wybrać poziom i partia startuje (lokalnie i online, test na lokalnym serwerze z innym portem i bazą wg CLAUDE.md), ranking liczy nowy poziom, instrukcja zaktualizowana.
-
-**14. Strojenie poziomów Łatwego, Trudnego i Bardzo trudnego dla poziomów 4–6 i celów Podbój i Relikt** (M; po punkcie 12; dawne „11”)
-- Dziś strojony jest tylko Normalny poziomów 4–6 (pasma i odchylenia w sekcji „Balans”). Po punkcie 12 uruchom stroiciele z regułami `economy`, `realm`, `empire` dla Łatwego, Trudnego i Bardzo trudnego; Podbój (poziom 4) i Relikt (poziom 6) osobno.
-- Decyzja: maksymalnie ok. godzina symulacji na poziom i cel (wg sekcji 6, „Poziom 4, decyzje z 15.11”); jeśli nadal poza pasmem, zapisz odchylenie w sekcji „Balans” i idź dalej.
-- Gotowe, gdy: tabela z sekcji „Balans” uzupełniona o te poziomy, odchylenia wpisane.
-
-**15. Ranking dla poziomów 5–6** (S; dawne „14”)
-- Dziś liczone jak poziom 4 (`ECONOMY_POINTS_FACTOR = 1.35` w `scoring.ts`). Zmierz średnią liczbę punktów botów na poziomach 5 i 6 względem 4 (skrypt w `scripts/sim/`) i ustaw własne mnożniki, jeśli różnica > 10%.
-- Gotowe, gdy: stałe `REALM_POINTS_FACTOR` i `EMPIRE_POINTS_FACTOR` (albo uzasadnienie w commicie, że zostają 1,35); serwer używa tych samych wartości (silnik na serwerze: `scripts/engine-package.sh`).
 
 ### Grupa D. Grafika i dźwięk (kredyty Scenario; zasady budżetu na górze)
 Wspólne dla punktów 16–21: potok i przepis `docs/PRZEPIS_JEDNOSTKI.md` (obraz bazowy z portretu karty, obraz „martwy”, klipy `chod`, `atak`, `trafienie`, `smierc`; pakowanie `scripts/animacje/pack_unit.py` + `shrink_unit.py`; wpis w `assets.json`). Jednostka ma już statyczną figurkę i dźwięki ataku/śmierci (od 16.11): animacja podmienia pliki w `public/assets/jednostki/<folder>/`; wpis w `src/ui/sprites.ts` już istnieje (zwykle nic nie trzeba zmieniać, ewentualnie `speed`). Narzędzie ffmpeg: `pip install --target <scratchpad>/ff imageio-ffmpeg`, ścieżka w `.tmp/ffpath` (po restarcie systemu odtwórz). **Lekcje 16.11 (filtr treści):** zablokowane zostały „swings … down”, „rears up with a mighty roar … swings”, „sinks down … knees”, a ostatnia udana śmierć wyszła bez `lastFrameImage` z opisem „puts down … lies on his side and falls asleep”; broń z krwią na obrazie bazowym zwiększa ryzyko blokady (generuj broń bez śladów krwi); „internal error” bez blokady: ponów raz. Szacunek: ok. 105 CU na jednostkę (latająca +10).
@@ -209,6 +112,7 @@ Zrobione i przetestowane, bez potwierdzenia w prawdziwej grze:
 - Klikalność jednostek zasłoniętych (Pegaz kontra Hydra, partia 114857, akcja 60; poprawka `behind` w `ArenaBoard.tsx`).
 - Błysk zakrytych kafelków (`fog-drift`); kursor ataku na wszystkich heksach jednostki; zwłoki (`CORPSE_MAX_W` w `sprites.ts`); rzut Cyklopa (śmierć zaczyna się przed lądowaniem); kolejka stanów online (`usePresentation.ts`).
 - Rozmiar Czarnego Smoka, figurki Szamana, Nietoperza, Jednorożca.
+- Nowe z 16.11 (punkty 1–15 zrobione): okno „Magia” i wybór celu czaru na arenie (też na telefonie), napisy zdobyczy nad bohaterem, chorągiewki kopalń, prawy klik na obiektach mapy i artefaktach, wymiana surowców na targu, Bardzo trudny we wszystkich trybach (w grze online dopiero po wdrożeniu serwera z wydaniem), nowe ikony poziomów (smok jest najsłabiej narysowany), zasięg dwupolowych jednostek po Ctrl.
 - Nowe z 16.11: animacje Rycerza Świtu (chód, atak, trafienie, śmierć) i Wodza Hordy (bez ataku) w prawdziwej bitwie (czy rozmiar i linia stóp pasują do reszty jednostek, czy `speed` w `sprites.ts` nie wymaga korekty); ikona Odrodzenia Feniksa w karcie jednostki.
 
 ## 4. Parking (pomysły bez terminu)
@@ -225,6 +129,15 @@ Pasma autora (wygrane Przymierza): Łatwy 65–85%, Normalny 45–65%, Trudny 30
 - Poza pasmem, zostawiamy (decyzja 10.11): Kryształy na ręcznych mapach (Cieśnina, Dolina), koop 2 graczy Normalny bardzo długa 75%, Artefakt i Boss z rozwojem na wyspach, Boss Trudny. Dźwignie stroiciela (skarby startowe, bohater Hordy) za grube; potrzebna nowa (liczba strażników lub kryształów).
 - **Księstwo, cel „Podbój”** (15.11): Normalny 43–65% po strojeniu; poza pasmem kooperacja 1 gracz na bardzo długiej mapie (33–35%, dźwignie skarbów i limitu rund za słabe: potrzebna inna, np. słabsi obrońcy osad Hordy). Łatwy i Trudny dla Podboju niestrojone. Szturmy: garnizon 1–2 jednostek nie zatrzymuje bohatera, 3 jednostki bronią w połowie przypadków (`scripts/sim/siege.ts`).
 - **Imperium, cel „Relikt”** (15.11): Normalny 43–72% po strojeniu; powyżej pasma 2 graczy na krótkiej mapie (72%) i bardzo długa mapa 2 graczy (70–72%). Łatwy i Trudny niestrojone.
+- **Poziomy 4–6, wszystkie trudności** (16.11, `SIM_ECONOMY|REALM|EMPIRE=1 SIM_LEVEL=kids|normal|hard|veryhard SIM_DAWN_HUMAN=1 scripts/sim/kingdom.ts 60`, cel Kryształy, mapy S/M/L, 4 stoły; przy stołach PvP Przymierze to człowiek, a komputer ma przewagi poziomu; 60 gier na komórkę, błąd ok. ±6 pkt): zakres wygranych Przymierza w komórkach, bez dodatkowego strojenia:
+
+| Poziom gry | Łatwy (65–85) | Normalny (45–65) | Trudny (30–45) | Bardzo trudny (15–30) |
+|---|---|---|---|---|
+| 4 Księstwo | 58–92 | 38–70 | 27–52 | 13–28 |
+| 5 Królestwo | 63–92 | 47–62 | 27–53 | 12–28 |
+| 6 Imperium | 58–87 | 47–68 | 27–60 | 15–43 |
+
+  Odstępstwa (zostawione, decyzja 16.11 po limicie godziny na poziom): Normalny Księstwo średnia kooperacja 2 graczy 38%; Trudny powyżej pasma na krótkich mapach (48–60%) i w kooperacji 2 graczy na długiej (50–52%); Łatwy Księstwo/Królestwo poniżej 65% na kilku średnich i długich mapach (58–60%) i powyżej 85% na krótkiej mapie PvP 2 na 2 (92%); Bardzo trudny Imperium krótka koop 2 graczy 43%. Bardzo trudny (przewagi komputera: Życie +20%, dochód ×1,5, skarby +2) mieści się w paśmie 15–30% w większości komórek.
 - Wartości robocze do akceptacji autora (zmiana w jednym miejscu): `SURVIVAL`, `MAP_SHAPES`, `SHAPE_ROUND_FACTOR`, `DIGITAL_TUNING`, progi PD i pula umiejętności (`growth.ts`), `FAMILY` (`data.ts`), liczby artefaktów, obiektów, jednostek i bossów neutralnych, spotkań na mapie, progi botów, progi `levelOfFight`.
 - Boty, zbadane i bez zmian: „bezczynne tury” w kontroli, przetrwaniu i artefakcie to trzymanie punktu, zgodnie z celem; „bezczynne aktywacje” w bitwie to wybór pozostania.
 
@@ -279,6 +192,11 @@ Decyzje podjęte przez Claude'a bez pytania autora (autor prosi o pracę bez pyt
 18. **(16.11, punkt 26)** Narożniki ramek w CSS/SVG, bez Scenario.
 19. **(16.11, punkt 27)** Numer najbliższego wydania 2.8.0, o ile autor nie poda innego.
 20. **(16.11, ikony poziomów)** Łatwy = królik, Normalny = wilk, Trudny = niedźwiedź, Bardzo trudny = smok (wybór autora).
+21. **(16.11, punkt 12)** Poziomy Łatwy, Normalny i Trudny zostają przy strojeniu per komórka (`tuning.ts`, `tuningAuto.ts`), a w jednej liście przewag komputera (`COMPUTER_HANDICAP`, `types.ts`) mają wartości neutralne (1, 0, 0); niezerowe są tylko przewagi Bardzo trudnego (dochód ×1,5, Życie +20%, +2 skarby na start). Powód: przeliczenie wszystkich 2500 wpisów strojenia na nową tabelę rozjechałoby pasma, które autor zatwierdził. Dźwignie „błędne decyzje bota” i „bohater wraca” nie weszły (bot nie ma miejsca na błąd bez psucia zgodności ze „złotymi” partiami).
+22. **(16.11, punkt 13)** Trudny w rywalizacji (cyfrowa): komputer (strona złożona z samych botów) dostaje skarby Hordy i brak posiłków jak w kooperacji, ale bez dodatkowego bohatera; w wersji planszowej Trudny w rywalizacji zostaje wyłączony. Bardzo trudny tylko w wersji cyfrowej.
+23. **(16.11, punkt 15)** Mnożniki punktów rankingu: Królestwo ×1,45, Imperium ×1,55 (Księstwo 1,35); poziomy 5–6 nie są trudniejsze od 4 (wygrane 55%/54% wobec 57%), ale wymagają więcej gry.
+24. **(16.11, punkt 8)** Wymiana surowców to osobna akcja `kingdomSwap` (serwer: dopisana w `src/rooms/actions.ts`, czeka na wydanie).
+25. **(16.11, punkty 6, 7)** Zdarzenie dziennika `loot` (złoto/surowce) niesie napis nad bohaterem; chorągiewka właściciela kopalni to medalion kontroli `kontrola_<frakcja>.webp`.
 
 ## 8. Kredyty Scenario
 
