@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Prawy przycisk myszy (albo długie przytrzymanie na telefonie) na artefakcie w oknie „Wyposażenie i plecak” i na lalce wyposażenia pokazuje okienko z jego opisem: nazwa, miejsce, rzadkość, tekst i premia zestawu.
+
 - Arena: podczas bitwy nie widać już paska ze złotem i surowcami na dole ekranu (nie jest tam potrzebny); na mapie przygody pasek zostaje.
 
 - Arena: podświetlony zasięg (po przytrzymaniu Ctrl) uwzględnia teraz także ogon jednostek dwupolowych (smoków, niedźwiedzia…), więc pokazuje wszystkie pola, które naprawdę może zaatakować.

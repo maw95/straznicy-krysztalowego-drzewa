@@ -11,6 +11,7 @@ import type { Action, GameState, HeroState, LogEvent } from '../engine/types';
 import { abilityArt, asset, Ribbon } from './common';
 import { DigitalContext, RuleText, useScales } from './statScale';
 import { UnitCard } from './UnitCard';
+import { details } from './details';
 
 /** The painted icon of a skill (public/assets/ikony/umiejetnosci, made with Scenario). */
 export function SkillIcon({ skill, size = 40 }: { skill: SkillId; size?: number }) {
@@ -25,6 +26,22 @@ export function ArtifactMedal({ art, size = 40 }: { art: ArtifactDef; size?: num
   return <img className={`gear-medal r${art.rarity}`} src={asset(`ikony/artefakty/${art.id}.webp`)} alt="" width={size} height={size} style={{ flex: 'none', display: 'block' }} />;
 }
 
+/** The window an artifact opens under the right mouse button (or a long touch): name, slot, rarity, set and the full text. No hooks: the details layer renders it outside the contexts. */
+function artifactDetails(art: ArtifactDef, scale: [number, number]) {
+  const set = art.set ? SETS[art.set] : null;
+  return (
+    <div className="plate parch" data-artifact-details={art.id} style={{ width: 290, padding: '12px 14px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+      <ArtifactMedal art={art} size={64} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 15, lineHeight: 1.3 }}>
+        <b style={{ fontSize: 18 }}>{art.name}</b>
+        <span style={{ color: '#6B4A22' }}>{SLOT_NAMES[art.slot]} · {RARITY_NAMES[art.rarity]}</span>
+        <span>{scaleText(art.text, scale[0], scale[1])}</span>
+        {set && <span style={{ color: '#6B4A22' }}>Zestaw: <b>{set.name}</b>. {set.bonusText}</span>}
+      </div>
+    </div>
+  );
+}
+
 const SLOTS_ORDER: Slot[] = ['helmet', 'weapon', 'armor', 'shield', 'boots'];
 const artTitle = (art: ArtifactDef, scale: [number, number]) => `${SLOT_NAMES[art.slot]}: ${art.name} (${RARITY_NAMES[art.rarity]}${art.set ? `, zestaw: ${SETS[art.set].name}` : ''}). ${scaleText(art.text, scale[0], scale[1])}${art.set ? ` ${SETS[art.set].bonusText}` : ''}`;
 
@@ -35,7 +52,7 @@ export function GearDoll({ hero, size = 40, picked, onPick, row = false }: { her
   const cell = (slot: Slot, col: number, rowNo: number) => {
     const art = gear.find((a) => a.slot === slot);
     return art ? (
-      <span key={slot} className={`gear-slot ${picked === art.id ? 'picked' : ''} ${onPick ? 'pickable' : ''}`} style={row ? { gridColumn: SLOTS_ORDER.indexOf(slot) + 1, gridRow: 1 } : { gridColumn: col, gridRow: rowNo }} title={artTitle(art, scale)} data-gear={art.id} onClick={onPick ? () => onPick(art) : undefined}>
+      <span key={slot} className={`gear-slot ${picked === art.id ? 'picked' : ''} ${onPick ? 'pickable' : ''}`} style={row ? { gridColumn: SLOTS_ORDER.indexOf(slot) + 1, gridRow: 1 } : { gridColumn: col, gridRow: rowNo }} title={artTitle(art, scale)} data-gear={art.id} onClick={onPick ? () => onPick(art) : undefined} {...details(() => artifactDetails(art, scale), { pin: true })}>
         <ArtifactMedal art={art} size={size} />
       </span>
     ) : (
@@ -174,7 +191,7 @@ export function GearPanel({ hero, state, onAction }: { hero: HeroState; state?: 
       <div className="pack-row" data-pack>
         {(pack.length ? pack : [undefined]).map((a, i) =>
           a ? (
-            <span key={i} className={`gear-slot ${pickedId === a.id ? 'picked' : ''} ${onAction ? 'pickable' : ''}`} title={artTitle(a, scale)} data-pack-item={a.id} onClick={onAction ? () => setPicked(pickedId === a.id ? null : a.id) : undefined}>
+            <span key={i} className={`gear-slot ${pickedId === a.id ? 'picked' : ''} ${onAction ? 'pickable' : ''}`} title={artTitle(a, scale)} data-pack-item={a.id} {...details(() => artifactDetails(a, scale), { pin: true })} onClick={onAction ? () => setPicked(pickedId === a.id ? null : a.id) : undefined}>
               <ArtifactMedal art={a} size={46} />
             </span>
           ) : (
