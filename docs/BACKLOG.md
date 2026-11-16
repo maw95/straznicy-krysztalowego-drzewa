@@ -33,6 +33,34 @@ Opis zasad: `ZASADY_CYFROWE.md` (sekcje „Poziom 4”, „Poziom 5”, „Pozio
 21. Wiele języków (PL + EN: interfejs, dane, instrukcja, CHANGELOG, serwer). Spis tekstów i trudności: `TEKSTY_DO_TLUMACZENIA.md` (ok. 1300 napisów i 71 tys. znaków w kodzie, plus instrukcja i serwer).
 22. Więcej niż 6 graczy (do 8), „cios od tyłu / z flanki” dla innych jednostek.
 
+### Dodatkowe prace przed premierą (zgłoszone 16.11.2026, przed punktem 18)
+23. **Poziom trudności jako przewaga komputerowych przeciwników, w każdym trybie gry** (M–L, kod + strojenie): w każdym trybie (kooperacja, rywalizacja, pojedynki, arena, każdy poziom i cel) gracz wybiera Łatwy, Normalny, Trudny albo Bardzo trudny (punkt 24), a od wyboru zależy, jakie warunki mają **gracze komputerowi** (Horda w kooperacji, boty w rywalizacji i w pojedynkach):
+    - **Łatwy** — komputer ma utrudnienia (np. słabsze statystyki lub mniej jednostek, mniej skarbów i zasobów, wolniejszy rozwój, gorsze decyzje bota);
+    - **Normalny** — komputer ma **dokładnie takie same warunki jak żywy gracz** (bez bonusów i kar; to wzorzec odniesienia);
+    - **Trudny** — komputer ma ułatwienia (np. więcej skarbów i zasobów, szybszy rozwój, bonus do statystyk, lepsze decyzje bota);
+    - **Bardzo trudny** — większe ułatwienia niż Trudny (punkt 24).
+    Do ustalenia przy pracy: konkretne dźwignie utrudnień i ułatwień (jedna wspólna lista dla wszystkich trybów zamiast dźwigni per tryb) oraz co dziś robi Łatwy/Trudny w trybach, w których wyboru jeszcze nie ma. Dziś poziomy trudności są strojone osobno dla każdej komórki tabeli (dźwignie w `tuning.ts`, pasma w sekcji 6), a Normalny nie zawsze oznacza równe warunki: ta pozycja ma to ujednolicić. Warunek ukończenia: wybór poziomu w każdym trybie w UI i online, równe warunki na Normalnym potwierdzone testem, `make sim-tabele` w pasmach z sekcji 6, ranking uwzględnia poziom (`golden.test.ts` aktualizować tylko świadomie, z adnotacją w commicie).
+24. **Czwarty poziom trudności „Bardzo trudny” i nowe ikony poziomów** (M, kod + grafika; razem z punktem 23, bo to on określa dźwignie):
+    - Czwarty poziom ponad Trudnym: nowa wartość poziomu w silniku, tabele strojenia (`tuning.ts`, pasmo do ustalenia przez autora, poniżej 30% wygranych Przymierza), ranking i serwer online.
+    - **Ikony jednokolorowe, rysowane jako SVG** (komponent zamiast obrazków `krolik`/`wilk`/`smok` używanych dziś w `NewGameWizard.tsx`, `LEVEL_ANIMAL`): kolor z CSS (`currentColor`), skalują się bez utraty jakości. Smok zarezerwowany dla Bardzo trudnego; króliku i wilkowi zostają Łatwy i Normalny; nowa ikona dla Trudnego pośrednia między wilkiem a smokiem (propozycje do wyboru przez autora).
+    - **Układ przycisków poziomu trudności:** ikona w górnym wierszu, nazwa pod nią (jak litery S, M… przy wyborze wielkości mapy), dzięki czemu ikony mogą być większe. Sprawdzić w przeglądarce na telefonie i na desktopie (`make zrzut`).
+    - Warunek ukończenia: cztery ikony w kreatorze nowej gry, ekranie online i wszędzie, gdzie dziś widać zwierzę poziomu; instrukcja (`INSTRUKCJA.md`) i CHANGELOG opisują czwarty poziom.
+
+### Zgłoszenia z gry „Zgłoś błąd” (14–16.11.2026; opisy autora, do przeanalizowania przed wzięciem się do pracy)
+Pliki: `bug-reports/2026-11-16-*-ziarno-550163.json` i `-ziarno-143502.json`, `2026-11-14-*-serwer-7.json`, `2026-11-14-06-25-08-ziarno-111824.json`. Zgłoszenia o Krakenie i Pegazie z 12.11 są już w sekcji 3.
+25. **Mapa przygody: informacje o obiektach i zdobyczach** (M):
+    - prawy klik na kafelku z obiektem (np. składnica drewna) ma pokazać, że obiekt tam jest, a nie tylko typ kafelka i koszt ruchu;
+    - po zebraniu zasobów bohater pokazuje, co zyskał (napis przy portrecie albo obok niego), z dźwiękiem;
+    - kopalnia przejęta przez gracza ma pokazywać właściciela (herb jego frakcji nad ikoną kopalni);
+    - „podobno mam 2 kopalnie, ale nie widzę ich na mapie” (14.11, ziarno 111824): sprawdzić, czy to błąd (kopalnia poza widokiem lub pod mgłą, zły licznik), czy brak oznaczenia właściciela z poprzedniej pozycji.
+26. **Okno „Wyposażenie i plecak”: prawy klik na artefakcie** otwiera okienko z jego opisem (S).
+27. **Targ: wymiana surowców** (M): dziś tylko kupno surowców za złoto; brak sprzedaży za złoto i wymiany surowiec za surowiec. Sprawdzić zgodność z wymianą surowców z poziomu 4 (jest w kodzie) i ustalić, czemu targ jej nie daje; ceny stroić tak, by nie psuły ekonomii.
+28. **Arena: czary** (M):
+    - ikona „Magia” obok „Skarbów” w prawym dolnym rogu; po kliknięciu okno ze wszystkimi czarami, czary bez wystarczającej many wyszarzone (zastępuje dzisiejszy sposób wyboru czaru);
+    - przy wyborze celu czaru nie pokazywać zasięgu aktywnej jednostki, tylko zaznaczyć możliwe cele czaru, a po najechaniu na cel pokazać ikonę różdżki jako kursor.
+29. **Arena: zasięg jednostek 2-heksowych jest błędny — błąd** (M): Czarny Smok stanął poza podświetlonym (niebieskim i czerwonym) polem zasięgu Złotego Smoka, a ten mimo to go zaatakował. Odtworzyć w `ziarno-550163` (ostatni plik z 16.11 10:24), sprawdzić, czy to silnik (zasięg liczony od drugiego heksa), czy tylko podświetlenie w `ArenaBoard`/`arenaGeometry.ts`; dopisać test.
+30. **Arena: usunąć licznik zasobów z dolnego paska podczas walki** (S, serwer-7, 14.11): licznik jest niepotrzebny w bitwie, a jego ramka wygląda źle; pasek surowców zostaje na mapie przygody.
+
 ## 2. Grafika i prezentacja (do wzięcia, gdy autor zdecyduje)
 - [ ] **Ozdobne narożniki ramek** nie pasują do ramki: narożniki jako osobne elementy (9-slice / `border-image`), generowane razem z ramką w Scenario, albo prostsze narożniki w CSS/SVG (wymaga decyzji o stylu).
 - [ ] **Okładka do druku** (`docs/grafika/okladka/okladka.png`, `ui/cover.jpg`): ma stare logo wypalone u góry (w grze niewidoczne, na wydruku tak). Wygenerować bez logo i nałożyć nowe (`ui/logo.png`), potem `python3 scripts/assets/menu.py` i `druk.py`.

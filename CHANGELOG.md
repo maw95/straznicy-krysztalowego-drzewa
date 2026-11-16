@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Dowódcy, jednostki legendarne i alternatywne z poziomów 5–6 mają własne dźwięki ataku i śmierci (16 jednostek, 32 nagrania).
+
 - Samouczek ma kroki dla poziomów Królestwo (dowódca, czary) i Imperium (Odłamki, drzewko frakcji, siedliska).
 
 - Dowódcy, jednostki legendarne i alternatywne (16 jednostek poziomów 5–6) stoją na arenie jako malowane postacie zamiast żetonów z portretem. Na razie bez animacji: postać przesuwa się, cios trafia od razu.

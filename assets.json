@@ -3693,6 +3693,486 @@
       "data": "2026-11-15",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/dawnKnight_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/dawnKnight_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki dawnKnight (poziomy 5-6)",
+      "prompt": "Human knight in plate armour: a heavy sword slash with a short effort grunt, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_MLp7QK7krMs9Jx1gBb5sACTe",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/dawnKnight_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/dawnKnight_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki dawnKnight (poziomy 5-6)",
+      "prompt": "Human knight in plate armour defeated: a short groan and heavy armour clattering to the ground, fantasy game sound effect, no music",
+      "scenario_asset": "asset_VeaRu1HpWKwX7GJerhhyYqEX",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/dawnHuntress_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/dawnHuntress_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki dawnHuntress (poziomy 5-6)",
+      "prompt": "Elven huntress: a bow string twang and arrow whoosh with a short elven battle cry, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_xcsUJEySbtGfJddH7QWQiQ4C",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/dawnHuntress_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/dawnHuntress_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki dawnHuntress (poziomy 5-6)",
+      "prompt": "Elven huntress defeated: a soft pained cry and a light thud on forest ground, fantasy game sound effect, no music",
+      "scenario_asset": "asset_ZM5GAUwPbfuXUnMrjrDx39S2",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/dawnSage_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/dawnSage_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki dawnSage (poziomy 5-6)",
+      "prompt": "Wise elven sage casting a spell: bright magical chime and shimmering whoosh with a whispered incantation, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_zkw6uGw6rz7rWMpxA2y4Rupn",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/dawnSage_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/dawnSage_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki dawnSage (poziomy 5-6)",
+      "prompt": "Wise elven sage defeated: a weary sigh and fading glassy magical shimmer, fantasy game sound effect, no music",
+      "scenario_asset": "asset_iuDvf6f6DCKhND8mQ9wJu7YP",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/hordeWarlord_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/hordeWarlord_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki hordeWarlord (poziomy 5-6)",
+      "prompt": "Orc warlord: a roaring war cry and a heavy axe chop, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_NuNSeQo5cVnAzi81eBz8HXVm",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/hordeWarlord_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/hordeWarlord_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki hordeWarlord (poziomy 5-6)",
+      "prompt": "Orc warlord defeated: a guttural dying roar and a heavy thud, fantasy game sound effect, no music",
+      "scenario_asset": "asset_NjLrtkhw89hxJnzTxPZce4NM",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/hordeCrossbow_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/hordeCrossbow_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki hordeCrossbow (poziomy 5-6)",
+      "prompt": "Goblin crossbow captain: a crossbow crank, sharp bolt release thunk and a snarl, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_BM41UGfh2qHc78Fzu1YC3Eyn",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/hordeCrossbow_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/hordeCrossbow_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki hordeCrossbow (poziomy 5-6)",
+      "prompt": "Goblin crossbow captain defeated: a raspy wheeze and a crossbow clattering on the ground, fantasy game sound effect, no music",
+      "scenario_asset": "asset_4Zn8xPGiDvVaC5g8CRbU5mnt",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/hordeShadow_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/hordeShadow_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki hordeShadow (poziomy 5-6)",
+      "prompt": "Dark shadow shaman casting: eerie whispered chanting and a low dark magical whoosh, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_YsJNqm3Q8nY7wfgXut4DXYsX",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/hordeShadow_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/hordeShadow_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki hordeShadow (poziomy 5-6)",
+      "prompt": "Dark shadow shaman defeated: a ghostly wail that fades away into silence, fantasy game sound effect, no music",
+      "scenario_asset": "asset_PfJsBewjqq26ro9QaPq2C8f8",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/dawnPhoenix_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/dawnPhoenix_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki dawnPhoenix (poziomy 5-6)",
+      "prompt": "Fire phoenix: a piercing fiery screech and a crackling flame whoosh, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_oH2UC1H8okXkZWJXE6FutscV",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/dawnPhoenix_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/dawnPhoenix_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki dawnPhoenix (poziomy 5-6)",
+      "prompt": "Fire phoenix falling: a burst of crackling flames and a fading bird cry, fantasy game sound effect, no music",
+      "scenario_asset": "asset_UtKFuBSJPsVH9AEd2BSGEhJE",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/doomBehemoth_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/doomBehemoth_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki doomBehemoth (poziomy 5-6)",
+      "prompt": "Colossal behemoth monster: a ground-shaking stomp and a deep thunderous roar, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_HnCPnv7Fc5NEPeaRdxxEWSCu",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/doomBehemoth_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/doomBehemoth_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki doomBehemoth (poziomy 5-6)",
+      "prompt": "Colossal behemoth monster defeated: a long deep groan and a heavy rumbling thud, fantasy game sound effect, no music",
+      "scenario_asset": "asset_3H4JXsmi5oBnKzD3oyN9wFN2",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/silverFox_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/silverFox_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki silverFox (poziomy 5-6)",
+      "prompt": "Small silver fox: a quick sharp yip and a snapping bite, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_oogP9XVSTXd3PTvBX8icMUJU",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/silverFox_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/silverFox_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki silverFox (poziomy 5-6)",
+      "prompt": "Small silver fox defeated: a short whimper fading away, fantasy game sound effect, no music",
+      "scenario_asset": "asset_2A3Lj4JJ7Cn6GXxw884GSG6E",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/dawnOwl_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/dawnOwl_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki dawnOwl (poziomy 5-6)",
+      "prompt": "Large owl: heavy wing flaps and a sharp attacking screech, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_mrexXVAPkiK21ytBGUwUwczo",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/dawnOwl_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/dawnOwl_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki dawnOwl (poziomy 5-6)",
+      "prompt": "Large owl defeated: a soft fading hoot and a flutter of falling feathers, fantasy game sound effect, no music",
+      "scenario_asset": "asset_JByqjgfQzDRPLQmcUcfpG4Fr",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/dryadArcher_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/dryadArcher_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki dryadArcher (poziomy 5-6)",
+      "prompt": "Forest dryad archer: a wooden bow twang and arrow whoosh with a leafy rustle, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_ziLW8eNwQ7RubCHjPgkFkmM2",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/dryadArcher_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/dryadArcher_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki dryadArcher (poziomy 5-6)",
+      "prompt": "Forest dryad defeated: a creaking wooden groan and leaves rustling away on the wind, fantasy game sound effect, no music",
+      "scenario_asset": "asset_MPMTSoudrrqVUL4eJh1B26CL",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/whiteStag_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/whiteStag_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki whiteStag (poziomy 5-6)",
+      "prompt": "White stag: a snorting charge with hooves and an antler clash, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_PxsjJHNq69NsZBbW8W2GrxMC",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/whiteStag_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/whiteStag_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki whiteStag (poziomy 5-6)",
+      "prompt": "White stag defeated: a mournful deer bellow fading away with a soft thud of hooves, fantasy game sound effect, no music",
+      "scenario_asset": "asset_e4JQYoke6WZaRoWMqwg1f2mB",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/goblinSlinger_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/goblinSlinger_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki goblinSlinger (poziomy 5-6)",
+      "prompt": "Goblin slinger: a sling whirling, a stone whistling through the air and a cackling laugh, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_rAE6xNajgBjZsjm182dJFFQu",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/goblinSlinger_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/goblinSlinger_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki goblinSlinger (poziomy 5-6)",
+      "prompt": "Goblin slinger defeated: a high pitched squeal and a small thud, fantasy game sound effect, no music",
+      "scenario_asset": "asset_1e98YEAQ7X4s5bKPCRbRwC5t",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/gargoyle_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/gargoyle_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki gargoyle (poziomy 5-6)",
+      "prompt": "Stone gargoyle: a grinding stone claw swipe and a raspy snarl, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_BosT2DxDhYkFw8LvYvZYHiVd",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/gargoyle_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/gargoyle_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki gargoyle (poziomy 5-6)",
+      "prompt": "Stone gargoyle destroyed: stone cracking and breaking into rubble with a last raspy groan, fantasy game sound effect, no music",
+      "scenario_asset": "asset_5xdp4MXo3dqjtQ8BAkn1gqq1",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/caveTroll_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/caveTroll_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki caveTroll (poziomy 5-6)",
+      "prompt": "Cave troll: a heavy club smash with a deep brutish grunt, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_WJBNp4Fa7gT7NW3qKTYnwUAW",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/caveTroll_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/caveTroll_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki caveTroll (poziomy 5-6)",
+      "prompt": "Cave troll defeated: a long dying groan and a heavy thud on the ground, fantasy game sound effect, no music",
+      "scenario_asset": "asset_iwgV6HiBANZj9ED5AL7P7uyH",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/shadowWyvern_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/shadowWyvern_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki shadowWyvern (poziomy 5-6)",
+      "prompt": "Shadow wyvern: leathery wing flaps and a hissing shrieking attack, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_G6fGByX5Wb4VH9rSANrAUGRV",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
+    },
+    {
+      "id": "dzwieki/jednostki/shadowWyvern_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/shadowWyvern_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki shadowWyvern (poziomy 5-6)",
+      "prompt": "Shadow wyvern defeated: a shriek falling away into silence with a last leathery wing flutter, fantasy game sound effect, no music",
+      "scenario_asset": "asset_pgb7qGkJYzWkzeyXnY2PqL5V",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "uwagi": "bez odsłuchu przez Claude: do sprawdzenia przez autora"
     }
   ]
 }
