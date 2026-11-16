@@ -526,6 +526,7 @@ export function App() {
   const [storyNews, setStoryNews] = useState<Array<Extract<LogEvent, { type: 'story' }>>>([]);
   const [artifactNews, setArtifactNews] = useState<Array<Extract<LogEvent, { type: 'artifact' }>>>([]);
   const [lootFloats, setLootFloats] = useState<LootFloat[]>([]);
+  const [mapFxs, setMapFxs] = useState<Array<{ key: number; kind: string; hex: string }>>([]);
   useEffect(() => {
     if (!game) {
       newsSeen.current = null;
@@ -545,7 +546,14 @@ export function App() {
     }
     const sides = new Set(game.players.filter(atThisScreen).map((p) => p.faction));
     const events = game.log.slice(seen.n).flatMap((l) => (l.event ? [l.event] : []));
-    const fresh = events.flatMap((ev) => (ev.type !== 'story' && sides.has(game.heroes[ev.heroId]?.faction) ? [ev] : []));
+    const fresh = events.flatMap((ev) => (ev.type !== 'story' && ev.type !== 'fx' && sides.has(game.heroes[ev.heroId]?.faction) ? [ev] : []));
+    // Map light effects (spells, shards, the Iskra) play for everybody, whatever their side.
+    const mapFx: Array<{ key: number; kind: string; hex: string }> = events.flatMap((ev) => (ev.type === 'fx' ? [{ key: Math.random(), kind: ev.kind, hex: ev.hex }] : []));
+    if (mapFx.length) {
+      setMapFxs((l) => [...l, ...mapFx].slice(-4));
+      sfx.play(mapFx[0].kind === 'mapa_portal' ? 'portal' : mapFx[0].kind === 'odlamek' ? 'shard_pickup' : mapFx[0].kind === 'iskra' ? 'spark' : 'magic_cast');
+      window.setTimeout(() => setMapFxs((l) => l.filter((x) => !mapFx.includes(x))), 1900);
+    }
     const stories = events.flatMap((ev) => (ev.type === 'story' ? [ev] : []));
     if (stories.length) setStoryNews((n) => [...n, ...stories]);
     const notes = fresh.flatMap((ev) => (ev.type === 'xp' ? [{ key: Math.random(), text: xpNote(ev) }] : []));
@@ -879,7 +887,7 @@ export function App() {
       ) : held || (game.phase === 'battle' && b && !b.duel && b.stage !== 'select') ? (
         <BattleView state={held ? held.view : game} attack={held?.attack ?? null} canAct={humanTurn && !held} onAction={dispatch} onShowCard={setCard} footer={footer} />
       ) : (
-        <AdventureView state={game} loot={lootFloats} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} footer={adventureFooter} />
+        <AdventureView state={game} loot={lootFloats} mapFx={mapFxs} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} footer={adventureFooter} />
       )}
 
       <Modal open={Boolean(selecting)}>{selecting && <SupportSelect state={game} faction={selecting} onPick={(ids) => dispatch({ type: 'selectSupports', faction: selecting, supportIds: ids })} />}</Modal>

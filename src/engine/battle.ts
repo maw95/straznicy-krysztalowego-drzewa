@@ -153,6 +153,11 @@ export function applyComputerHp(state: GameState, u: BattleUnit): void {
   u.hp = u.maxHp;
 }
 
+/** Asks the screen for a light effect on `cell` (see BattleState.fx). */
+export function battleFx(state: GameState, kind: NonNullable<BattleState['fx']>[number]['kind'], cell: HexKey | null | undefined): void {
+  if (state.battle && cell) (state.battle.fx ??= []).push({ kind, cell });
+}
+
 const unitName = (u: BattleUnit) => UNITS[u.defId].name;
 
 // ---------------------------------------------------------------- queries
@@ -780,6 +785,7 @@ function moatHurts(state: GameState, u: BattleUnit) {
   const act = state.battle!.activation;
   if (!act || act.unitId !== u.id || act.moat) return;
   act.moat = true;
+  battleFx(state, 'oblezenie_fosa', u.pos);
   dealDamage(state, u, SIEGE.moatDamage * scaleOf(state), 'Fosa');
 }
 
@@ -797,6 +803,7 @@ export function battleCatapult(state: GameState, cell: HexKey) {
   if (!catapultTargets(state).includes(cell)) throw new Error(b.siege.shot === b.round ? 'Katapulta strzelała już w tej rundzie.' : 'Katapulta strzela w mur, bramę albo wieżyczkę.');
   const s = b.siege;
   s.shot = b.round;
+  battleFx(state, 'oblezenie_kamien', cell);
   if (s.gate === cell && s.gateHp > 1) {
     s.gateHp -= 1;
     log(state, 'battle', 'Katapulta trafia w bramę: brama pęka, ale jeszcze stoi.');
@@ -834,6 +841,7 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
   if (target.hp <= 0 && dmg > 0 && abilityOf(target) === 'rebirth' && !target.abilityUsed && abilityActive(state)) {
     target.abilityUsed = true;
     target.hp = Math.ceil(target.maxHp / 2);
+    battleFx(state, 'odrodzenie', target.pos);
     log(state, 'ability', `${unitName(target)} odradza się z popiołów (Ż ${target.hp}/${target.maxHp}).`);
     if (state.battle) (state.battle.heals ??= []).push({ unitId: target.id, amount: target.hp });
     return;

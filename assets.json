@@ -4322,6 +4322,227 @@
       "data": "2026-11-16",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/czar_bolt",
+      "pliki": [
+        "public/assets/efekty/czar_bolt.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): czar Magiczny Pocisk: błysk uderzenia (niebiesko-biały)",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (czar Magiczny Pocisk: błysk uderzenia (niebiesko-biały)). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_yeCAe6Ck4aVqQgA9eDCL162g",
+        "klip": "asset_te7p2JC68Z5Dn7tR21GUjzRY"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/czar_mend",
+      "pliki": [
+        "public/assets/efekty/czar_mend.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): czar Leczenie: zielono-złota poświata",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (czar Leczenie: zielono-złota poświata). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_1akaUUqhheXqqoBCL291fHbt",
+        "klip": "asset_upxw2MQ3i49ULqfHxLQEQMUR"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/czar_slow",
+      "pliki": [
+        "public/assets/efekty/czar_slow.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): czar Spowolnienie: lodowe łańcuchy",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (czar Spowolnienie: lodowe łańcuchy). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_1tWHvYbsLwdsUXc6McAJYD8V",
+        "klip": "asset_6QBkkFQqBLg9e1mXJHa5JfZQ"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/czar_stoneskin",
+      "pliki": [
+        "public/assets/efekty/czar_stoneskin.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): czar Kamienna Skóra: kamienna powłoka",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (czar Kamienna Skóra: kamienna powłoka). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_HtXf3L5pBxTkMdiWADs5sNqM",
+        "klip": "asset_VnNuYkAFiYVLKJkDc2yb6yJz"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/czar_fireball",
+      "pliki": [
+        "public/assets/efekty/czar_fireball.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): czar Kula Ognia: wybuch płomieni",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (czar Kula Ognia: wybuch płomieni). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_UVNGFJgEVmui2aZ32KTDreXG",
+        "klip": "asset_3xQuCZePATvXHR37xgyBVunK"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/czar_haste",
+      "pliki": [
+        "public/assets/efekty/czar_haste.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): czar Przyspieszenie: złote smugi",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (czar Przyspieszenie: złote smugi). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_y2gUvrGDdf794KbaAok4K7Ui",
+        "klip": "asset_3LXq5tsvwQN9K4VFsiRRgnHu"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/mapa_wizja",
+      "pliki": [
+        "public/assets/efekty/mapa_wizja.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): czar mapy Wizja: błysk oka światła",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (czar mapy Wizja: błysk oka światła). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_MSPA4a3RUvoDBTucQBmaGprj",
+        "klip": "asset_3Zoqj387Dpumn6bkKcq74SZc"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/mapa_portal",
+      "pliki": [
+        "public/assets/efekty/mapa_portal.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): czar mapy Wrota: fioletowy portal",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (czar mapy Wrota: fioletowy portal). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_mn4mVvkCmbYohiRNNS1CrQD5",
+        "klip": "asset_2vBmCtu577zZp3FtaRcQB9BE"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/oblezenie_kamien",
+      "pliki": [
+        "public/assets/efekty/oblezenie_kamien.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): oblężenie: uderzenie kamienia katapulty (pył i odłamki)",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (oblężenie: uderzenie kamienia katapulty (pył i odłamki)). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_tYjQBM7YWDRFDh58KXETTtXW",
+        "klip": "asset_o9gN6EJLaGwXWjKYbVw5n2EW"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/oblezenie_fosa",
+      "pliki": [
+        "public/assets/efekty/oblezenie_fosa.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): oblężenie: ukłucie fosy (bryzg wody)",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (oblężenie: ukłucie fosy (bryzg wody)). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_43tjeeCYbF9dvGSJeL58Fdhf",
+        "klip": "asset_PcJXngLJCb4D51VzE6CXrjyr"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/odlamek",
+      "pliki": [
+        "public/assets/efekty/odlamek.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): poziom 6: błysk przy podniesieniu Odłamka",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (poziom 6: błysk przy podniesieniu Odłamka). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_G79rdhvsyv2MBfhDDfy9B7bD",
+        "klip": "asset_HahHXmqLY5xNVxionSP4YYW8"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/iskra",
+      "pliki": [
+        "public/assets/efekty/iskra.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): poziom 6: filar światła przy wzniesieniu Pierwotnej Iskry",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (poziom 6: filar światła przy wzniesieniu Pierwotnej Iskry). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_mcd4eSraCuesPaDRft86srN9",
+        "klip": "asset_RdU69Cdwfh2W8iRPUvN49yMX"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/odrodzenie",
+      "pliki": [
+        "public/assets/efekty/odrodzenie.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): odrodzenie Feniksa: płomienie i pióra światła",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (odrodzenie Feniksa: płomienie i pióra światła). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_bLtzmcCB3X9Fgbjq2GZkzXr3",
+        "klip": "asset_vqohCP47L9tDd2atBgWFQQjt"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

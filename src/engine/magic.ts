@@ -3,7 +3,7 @@
 // Spells are the same for both factions; the sage commanders are the better casters. Design: docs/ZASADY_CYFROWE.md ("Poziom 5", "Magia").
 
 import { UNITS, type FactionId } from './data';
-import { cellsOf, dealDamage, hpScaleOf, livingUnits, scaleOf } from './battle';
+import { battleFx, cellsOf, dealDamage, hpScaleOf, livingUnits, scaleOf } from './battle';
 import { distance, parseKey } from './hex';
 import { levelOf } from './growth';
 import { log } from './log';
@@ -123,6 +123,7 @@ export function battleSpell(state: GameState, spell: SpellId, targetId?: string)
   const name = (u: BattleUnit) => UNITS[u.defId].name;
   log(state, 'ability', `${who} rzuca czar: ${def.name} (${name(target)}).`);
   (b.spells ??= []).push({ spell, casterId: hero.id, targetId: target.id });
+  battleFx(state, `czar_${spell}` as 'czar_bolt', target.pos);
   switch (spell) {
     case 'bolt':
       dealDamage(state, target, (MAGIC.boltDamage + power) * scaleOf(state), def.name);
@@ -166,12 +167,12 @@ export function mapSpell(state: GameState, hero: HeroState, spell: SpellId): voi
     hero.pos = target;
     state.movePoints = 0;
     revealAround(state, target);
-    log(state, 'ability', `${who} rzuca czar Wrota i staje w swojej osadzie.`);
+    log(state, 'ability', `${who} rzuca czar Wrota i staje w swojej osadzie.`, undefined, { type: 'fx', kind: 'mapa_portal', hex: target });
     return;
   }
   spend(state, hero, spell);
   const revealed = revealAround(state, hero.pos, MAGIC.visionRadius);
-  log(state, 'ability', `${who} rzuca czar Wizja (odkryto ${revealed.length}).`);
+  log(state, 'ability', `${who} rzuca czar Wizja (odkryto ${revealed.length}).`, undefined, { type: 'fx', kind: 'mapa_wizja', hex: hero.pos });
 }
 
 /** Where Wrota would take the hero: the nearest settlement of its faction with no other hero on it (its base may hold several), not the hex it stands on. */

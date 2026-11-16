@@ -124,7 +124,7 @@ export function ArenaBoard(p: Props) {
   const wide = b.layout === 'wide';
   const { cellCenter, cellPos, hexPoints, cells: CELLS, cellPoints: CELL_POINTS, canvasW: CANVAS_W, canvasH: CANVAS_H, art: ART_SIZE } = geo;
   const { deployable, picked, deploySide, posOf } = deploy;
-  const { walk, hitIds, strikes, seals, shards, bursts, ghosts, rollPops, floaters, lastStrike } = anim;
+  const { walk, hitIds, strikes, seals, shards, bursts, fxs, ghosts, rollPops, floaters, lastStrike } = anim;
   const lastRoll = b.rolls?.[b.rolls.length - 1];
 
   // Digital ruleset: units with sprites are drawn by the sprite layer (corpses too), on one hex or two.
@@ -442,6 +442,10 @@ export function ArenaBoard(p: Props) {
           {bursts.map((e) => {
             const { x, y } = cellPos(e.pos);
             return <span key={e.key} className={`fx-sheet fx-teleport ${e.kind} ${e.late ? 'late' : ''}`} style={{ left: x + W / 2, top: y + H / 2 + 4 }} />;
+          })}
+          {fxs.map((e) => {
+            const { x, y } = cellPos(e.cell);
+            return <span key={e.key} data-fx={e.kind} className={`fx-sheet fx-battle ${e.kind}`} style={{ left: x + W / 2, top: y + H / 2 }} />;
           })}
           {shards.map((sh) => {
             const { x, y } = cellPos(sh.pos);

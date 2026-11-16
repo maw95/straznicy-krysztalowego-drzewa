@@ -61,16 +61,6 @@ Wspólne dla punktów 16–21: potok i przepis `docs/PRZEPIS_JEDNOSTKI.md` (obra
 - `goblinSlinger` (`goblin_procarz`; atak: rozkręcenie procy i wyrzut, kamień rysuje kod), `gargoyle` (`gargulec`), `caveTroll` (`troll_jaskiniowy`; atak: maczuga, bez słów z listy blokad), `shadowWyvern` (`wiwerna_cienia`, latająca).
 - Gotowe, gdy: jak w punkcie 20.
 
-**22. Efekty czarów bitewnych: pocisk, leczenie, spowolnienie, kamienna powłoka, kula ognia, przyspieszenie** (L, kredyty ok. 100 CU)
-- Dziś widać tylko skutek i wpis w dzienniku. Efekty to jednowierszowe arkusze WebP z kanałem alfa z jasnego klipu na czarnym tle: `scripts/animacje/pack_fx.py` (użycie w nagłówku skryptu), odtwarzane przez CSS `steps()` (`.fx-sheet` w `styles.css`); istniejące wzory: `public/assets/efekty/pole_burzy.webp`, `teleport.webp` (sprawdź ich użycie `grep -rn "pole_burzy" src`). Dane do odtworzenia: `BattleState.spells` (`src/engine/types.ts`).
-- Efekty: `czar_bolt` (pocisk lecący do celu, lot liczy kod), `czar_mend` (poświata leczenia), `czar_slow` (łańcuchy), `czar_stoneskin` (kamienna powłoka), `czar_fireball` (wybuch na polu celu i sąsiadach), `czar_haste` (złote smugi). Dźwięki są (`magic_cast`, `magic_attack`).
-- Gotowe, gdy: każdy czar bitewny pokazuje efekt na celu (i pocisk dla wrogich), sprawdzone `scripts/browser/czary.ts` i obrazem; wpisy w `assets.json`.
-
-**23. Efekty mapy, oblężenia i poziomu 6** (L, kredyty ok. 130 CU)
-- Mapa: odkrycie pól przy Wizji, błysk portalu przy Wrotach (dźwięk `portal.mp3` jest). Oblężenie: lot kamienia z katapulty i rozsypanie muru, strzała z wieżyczki do celu, ukłucie fosy (dźwięki `catapult.mp3`, `tower_shot.mp3`, `moat.mp3` są). Poziom 6: błysk przy podniesieniu Odłamka i wzniesieniu Pierwotnej Iskry (dźwięki `shard_pickup.mp3`, `spark.mp3` są), efekty mechanik frakcji (`efekty/blask_switu`, `efekty/zadza_krwi` istnieją: sprawdź, czy są podpięte), efekt odrodzenia Feniksa (z punktu 19).
-- Technika i kryteria jak w punkcie 22.
-- Gotowe, gdy: każdy z wymienionych momentów ma efekt widoczny w grze (przeglądarka: `scripts/browser/oblezenie.ts`, `relikt.ts`).
-
 **24. Ikony: drzewko frakcji, siedliska, frakcyjne elementy oblężenia** (M, kredyty ok. 100 CU)
 - Trzy stopnie drzewka każdej z dwóch frakcji (6 ikon) mają dziś sam tekst w oknie osady; mechaniki mają ikony (`ikony/frakcje/blask_switu.webp`, `zadza_krwi.webp`: wzór stylu). Siedliska jednostek (16 nazw w `DWELLING_NAMES`) mają jedną wspólną ikonę `ikony/frakcje/siedlisko.webp`: zrób 16 ikon (jedna na jednostkę, po jednym wspólnym arkuszu 4×4 jeśli się da, pocięte skryptem `scripts/assets/arkusz.py`). Elementy oblężenia (`public/assets/arena/oblezenie/`) są neutralne (szary kamień): zrób wersje Przymierza i Hordy dla muru, bramy i wieżyczki.
 - Decyzja: siedliska nadal nie stoją w krajobrazie osady (tylko ikony na liście koszar; decyzja 11 w sekcji 7).

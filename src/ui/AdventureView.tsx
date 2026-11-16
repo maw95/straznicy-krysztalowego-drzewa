@@ -41,6 +41,8 @@ interface Props {
   hintHex?: HexKey | null;
   /** What heroes just took from the map: floats up over the hero for a moment. */
   loot?: LootFloat[];
+  /** Light effects over hexes (map spells, a shard, the Iskra). */
+  mapFx?: Array<{ key: number; kind: string; hex: HexKey }>;
 }
 
 export interface LootFloat {
@@ -95,7 +97,7 @@ function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: Hex
   return out;
 }
 
-export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowCard, footer, hintHex, loot = [] }: Props) {
+export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowCard, footer, hintHex, loot = [], mapFx = [] }: Props) {
   const detailsShown = useDetailsShown();
   const compact = useMedia(COMPACT_QUERY);
   // A finger has no hover: the tapped hex is described in a strip instead of a note beside it.
@@ -531,6 +533,12 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     </div>
                   );
                 })}
+              {mapFx.map((e) => {
+                const t = state.tiles[e.hex];
+                if (!t) return null;
+                const p = pos(t);
+                return <span key={e.key} data-map-fx={e.kind} className={`fx-sheet fx-map ${e.kind}`} style={{ left: p.x + W / 2, top: p.y + H * 0.5 }} />;
+              })}
               {loot.map((f, n) => {
                 const h = state.heroes[f.heroId];
                 if (!h?.alive || !state.tiles[h.pos]) return null;

@@ -33,7 +33,10 @@ import { openGame } from './game';
     const foe = p.getByRole('button', { name: /Goblin Szaman|Pająk Jaskiniowy|Nietoperz Cienia/ }).first();
     const foeText = await foe.innerText();
     await foe.click();
-    await p.waitForTimeout(800);
+    await p.waitForTimeout(150);
+    console.log('spell fx on the arena:', await p.locator('[data-fx]').evaluateAll((els) => els.map((e) => e.getAttribute('data-fx'))));
+    await p.locator('.arena-frame').screenshot({ path: '.tmp/czar-fx.png' });
+    await p.waitForTimeout(300);
     console.log('mana', before, '->', (await p.locator('[data-spell-btn]').count()) ? await mana() : 'strip gone (one spell an activation)', '| target before:', foeText.replace(/\n/g, ' '), '| after:', (await foe.innerText().catch(() => 'fell')).replace(/\n/g, ' '));
     if (game.errors.length) console.log(game.errors.join('\n'));
   } finally {

@@ -591,7 +591,7 @@ export function kingdomAction(state: GameState, action: Action): void {
         if (!mayBuildSpark(state, hero.faction)) throw new Error('Do Pierwotnej Iskry potrzeba wszystkich Odłamków z mapy.');
         spendShards(state, hero.faction);
         s.buildings.spark = 1;
-        log(state, 'crystal', `${FACTION_NAMES[hero.faction]} wznosi w osadzie ${s.name} budynek: ${SPARK_NAMES[hero.faction]}.`);
+        log(state, 'crystal', `${FACTION_NAMES[hero.faction]} wznosi w osadzie ${s.name} budynek: ${SPARK_NAMES[hero.faction]}.`, undefined, { type: 'fx', kind: 'iskra', hex: s.at });
         break;
       }
       const price = buildCost(state, s, b);

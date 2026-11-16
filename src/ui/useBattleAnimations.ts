@@ -81,6 +81,8 @@ export function useBattleAnimations(state: GameState) {
   const abilitySeen = useRef<Record<string, boolean>>({});
   const healsSeen = useRef(0);
   const teleportsSeen = useRef(0);
+  const fxSeen = useRef(0);
+  const [fxs, setFxs] = useState<Array<{ key: number; cell: HexKey; kind: string }>>([]);
   const [bursts, setBursts] = useState<Array<{ key: number; pos: HexKey; kind: 'storm' | 'scroll'; late: boolean }>>([]);
   useEffect(() => {
     const fresh: Array<{ key: number; amount: number; x: number; y: number }> = [];
@@ -124,6 +126,15 @@ export function useBattleAnimations(state: GameState) {
       sfx.play('magic_cast');
       setBursts((x) => [...x, ...newBursts]);
       later(() => setBursts((x) => x.filter((e) => !newBursts.includes(e))), 1500);
+    }
+    // Light effects of spells, the siege and a rebirth (BattleState.fx).
+    const allFx = b.fx ?? [];
+    if (allFx.length < fxSeen.current) fxSeen.current = 0;
+    const newFx: Array<{ key: number; cell: HexKey; kind: string }> = allFx.slice(fxSeen.current).map((f) => ({ key: Math.random(), cell: f.cell, kind: f.kind }));
+    fxSeen.current = allFx.length;
+    if (newFx.length) {
+      setFxs((x) => [...x, ...newFx]);
+      later(() => setFxs((x) => x.filter((e) => !newFx.includes(e))), 1800);
     }
     prevActive.current = b.activation?.unitId ?? null;
     // Ability seals: a unit's ability flag flipped since the last render.
@@ -204,5 +215,5 @@ export function useBattleAnimations(state: GameState) {
     later(() => setRollPops((p) => p.filter((x) => !pops.includes(x))), 2200);
   }, [b]);
 
-  return { walk, floaters, hitIds, strikes, ghosts, seals, shards, bursts, rollPops, lastStrike };
+  return { walk, floaters, hitIds, strikes, ghosts, seals, shards, bursts, fxs, rollPops, lastStrike };
 }

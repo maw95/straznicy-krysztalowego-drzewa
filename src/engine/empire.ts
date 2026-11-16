@@ -97,7 +97,7 @@ export function pickUpShard(state: GameState, hero: HeroState): void {
   if (state.tiles[hero.pos].place?.kind === 'shard') delete state.tiles[hero.pos].place;
   hero.shards = (hero.shards ?? 0) + n;
   const f = hero.faction;
-  log(state, 'crystal', `${UNITS[hero.id].name} podnosi Odłamek Pierwotnej Iskry (${FACTION_NAMES[f]}: ${shardsOf(state, f)}/${shardTotal(state)}).`);
+  log(state, 'crystal', `${UNITS[hero.id].name} podnosi Odłamek Pierwotnej Iskry (${FACTION_NAMES[f]}: ${shardsOf(state, f)}/${shardTotal(state)}).`, undefined, { type: 'fx', kind: 'odlamek', hex: hero.pos });
   if (mayBuildSpark(state, f)) log(state, 'crystal', `${FACTION_NAMES[f]} ma wszystkie Odłamki: w swojej osadzie może wznieść ${SPARK_NAMES[f]}.`);
 }
 

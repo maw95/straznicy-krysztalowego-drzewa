@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Efekty świetlne: czary bitewne (Magiczny Pocisk, Leczenie, Spowolnienie, Kamienna Skóra, Kula Ognia, Przyspieszenie), uderzenia katapulty i fosa w oblężeniu, odrodzenie Feniksa oraz na mapie czary Wizja i Wrota, podniesienie Odłamka i wzniesienie Pierwotnej Iskry mają teraz własne animowane efekty.
+
 - Dowódcy poziomu 5 (Łowczyni Gaju, Mędrzec Gaju, Kapitan Kuszników, Szaman Cieni) mają prawdziwe animacje chodu, ataku, trafienia i śmierci.
 
 - Ranking: wygrana na poziomie Królestwo liczy się z mnożnikiem 1,45, a na poziomie Imperium 1,55 (Księstwo 1,35), bo na wyższych poziomach jest więcej do rozegrania.
