@@ -8,6 +8,8 @@ import { hoverCard } from './hover';
 import { StatText } from './markers';
 import { reserveOf } from './BattleSidePanel';
 import { TreasureButton } from './TreasureButton';
+import { SpellButton, SpellList } from './SpellBook';
+import { manaOf, type SpellId } from '../engine/magic';
 
 export type ItemTargeting =
   | { kind: 'ownLiving' | 'ownDead' | 'enemy'; itemId: string }
@@ -46,9 +48,11 @@ interface Props {
   onAction: (a: Action) => void;
   onShowCard: (unitId: string) => void;
   reset: () => void;
+  /** Level 5: the active hero's magic (the "Magia" button, the spell window and what can be cast now). */
+  magic?: { open: boolean; setOpen: (v: boolean) => void; castable: SpellId[]; onPick: (id: SpellId) => void };
 }
 
-export function ItemsPanel({ state, side, active, targeting, setTargeting, freeAbility, ab, showItems, setShowItems, onAction, onShowCard, reset }: Props) {
+export function ItemsPanel({ state, side, active, targeting, setTargeting, freeAbility, ab, showItems, setShowItems, onAction, onShowCard, reset, magic }: Props) {
   const b = state.battle!;
   const deadOwn = Object.values(b.units).filter((u) => u.side === side && !u.alive && !u.swappedOut);
   const reserve = reserveOf(state, side);
@@ -92,7 +96,15 @@ export function ItemsPanel({ state, side, active, targeting, setTargeting, freeA
         </div>
       )}
       {freeAbility && <div className="plate parch" style={{ padding: '6px 12px', fontSize: 15 }}>{ab === 'giftOfLife' ? 'Wybierz sojusznika do uleczenia.' : 'Wybierz wroga w zasięgu 4 pól.'}</div>}
-      <TreasureButton count={state.factions[side].inventory.length} onClick={() => setShowItems(!showItems)} open={showItems} />
+      {magic && state.heroes[active.id] && (
+        <>
+          {magic.open && <SpellList state={state} hero={state.heroes[active.id]} castable={magic.castable} onPick={(id) => { magic.setOpen(false); magic.onPick(id); }} />}
+        </>
+      )}
+      <div style={{ display: 'flex', gap: 14, alignItems: 'flex-end' }}>
+        {magic && state.heroes[active.id] && <SpellButton mana={manaOf(state.heroes[active.id])} open={magic.open} onClick={() => { setShowItems(false); magic.setOpen(!magic.open); }} />}
+        <TreasureButton count={state.factions[side].inventory.length} onClick={() => { magic?.setOpen(false); setShowItems(!showItems); }} open={showItems} />
+      </div>
       {showItems &&
         state.factions[side].inventory.map((id) => {
           const def = itemDef(state.items[id].kind, isDigital(state.rules));

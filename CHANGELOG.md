@@ -6,6 +6,9 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Arena: czary rzuca się teraz z okna „Magia” (fioletowa ikona różdżki obok „Skarbów” w prawym dolnym rogu; pokazuje manę). W oknie widać wszystkie czary bohatera, a te, na które brakuje many, są wyszarzone.
+- Arena: przy wyborze celu czaru znika zasięg ruchu i ataku jednostki; możliwe cele mają fioletową obwódkę, a nad nimi kursor zmienia się w różdżkę. Esc anuluje wybór czaru.
+
 - Targ (poziom Księstwo i wyżej): można wymienić 1 surowiec na 1 inny jednym kliknięciem (sprzedaż i kupno po cenach targu, widać dopłatę w złocie). Sprzedaż surowców za złoto i kupno zostają jak były.
 
 - Mapa przygody: kopalnia, tartak i źródło Pyłu przejęte przez frakcję mają przy ikonie jej chorągiewkę (zieloną dla Przymierza, czerwoną dla Hordy). W oknie dochodu kopalnie mają nazwę i „pole” zamiast samych współrzędnych.

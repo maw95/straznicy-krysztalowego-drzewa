@@ -22,12 +22,11 @@ import {
   unitDistance,
   catapultTargets,
 } from '../engine/battle';
-import { castableInBattle, manaOf, SPELLS, spellTargets, type SpellId } from '../engine/magic';
-import { scaleText } from '../engine/data';
+import { castableInBattle, SPELLS, spellTargets, type SpellId } from '../engine/magic';
 import { sfx } from './sfx';
 import { distance, parseKey, type HexKey } from '../engine/hex';
 import type { Action, BattleUnit, GameState } from '../engine/types';
-import { asset, COMPACT_QUERY, useMedia } from './common';
+import { COMPACT_QUERY, useMedia } from './common';
 import { useImpactHold, type AttackNow } from './useImpactHold';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { aimedCursor, preloadAimedCursors, type AimedCursor } from './cursors';
@@ -118,14 +117,15 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const active = act ? b.units[act.unitId] : null;
   const myTurn = canAct && b.stage === 'fight' && Boolean(active);
   const side: FactionId | undefined = active && active.side !== 'neutral' ? active.side : undefined;
-  const moves = useMemo(() => (myTurn && active && !act!.moved && !act!.attacked && !targeting ? reachableCells(state, active) : new Map<HexKey, number>()), [state, myTurn, active, act, targeting]);
-  const targets = useMemo(() => (myTurn && active && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility ? attackTargets(state, active) : []), [state, myTurn, active, act, targeting, freeAbility]);
-  const hops = myTurn && active && act!.hop ? hopCells(state, active, act!.hop) : [];
   // Level 5: the spells the active hero may cast now, and the one picked (the next click on a unit is its target).
   const castable = myTurn && !targeting ? castableInBattle(state) : [];
   const [spell, setSpell] = useState<SpellId | null>(null);
   const spellNow = spell && castable.includes(spell) ? spell : null;
   const spellAims = useMemo(() => (spellNow ? spellTargets(state, spellNow) : []), [state, spellNow]);
+  const [spellsOpen, setSpellsOpen] = useState(false);
+  const moves = useMemo(() => (myTurn && active && !act!.moved && !act!.attacked && !targeting && !spellNow ? reachableCells(state, active) : new Map<HexKey, number>()), [state, myTurn, active, act, targeting, spellNow]);
+  const targets = useMemo(() => (myTurn && active && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility && !spellNow ? attackTargets(state, active) : []), [state, myTurn, active, act, targeting, spellNow, freeAbility]);
+  const hops = myTurn && active && act!.hop ? hopCells(state, active, act!.hop) : [];
   // Siege: what the viewer's catapult may shoot now.
   const catapult = myTurn && !targeting ? catapultTargets(state) : [];
 
@@ -193,6 +193,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
    */
   const unitCursorOf = (u: BattleUnit, approachable: boolean, engaged: boolean): string => {
     if (!active?.pos || !u.pos) return '';
+    // A spell is being aimed: the wand over its possible targets, nothing else reacts.
+    if (spellNow) return myTurn && spellAims.some((t) => t.id === u.id) ? 'cur-spell' : '';
     // A free ability is armed (Dar Życia, Sieć): a wand over every unit it can be cast on.
     if (freeAbility && myTurn && u.alive) {
       const ability = UNITS[active.defId].ability;
@@ -222,7 +224,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, b, myTurn, active, act, moves, targets, targeting, freeAbility]);
+  }, [state, b, myTurn, active, act, moves, targets, targeting, freeAbility, spellNow, spellAims]);
   const approachCells = (u: BattleUnit): HexKey[] => unitInfo.get(u.id)?.approach ?? [];
   const unitCursor = (u: BattleUnit): string => unitInfo.get(u.id)?.cursor ?? '';
   useEffect(preloadAimedCursors, []);
@@ -249,8 +251,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   }
 
   // Battle shortcuts: Space ends the activation, Z ability, S treasures.
-  const keyState = useRef({ myTurn, attackAbility, freeAbilityReady, ab });
-  keyState.current = { myTurn, attackAbility, freeAbilityReady, ab };
+  const keyState = useRef({ myTurn, attackAbility, freeAbilityReady, ab, spellNow });
+  keyState.current = { myTurn, attackAbility, freeAbilityReady, ab, spellNow };
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
@@ -258,6 +260,10 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       const k = e.key.toLowerCase();
       const ks = keyState.current;
       if (!ks.myTurn) return;
+      if (e.key === 'Escape' && ks.spellNow) {
+        setSpell(null);
+        return;
+      }
       if (k === ' ') {
         e.preventDefault();
         reset();
@@ -412,6 +418,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       <div className="main-row battle-row play-row">
         <SidePanel s={sides[0]} state={state} active={active} onUnit={clickUnit} />
         <ArenaBoard
+          aims={spellNow ? spellAims : []}
           state={state}
           wrapRef={wrapRef}
           view={view}
@@ -449,17 +456,6 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
         <SidePanel s={sides[1]} state={state} active={active} onUnit={clickUnit} />
       </div>
 
-      {castable.length > 0 && active && (
-        <div className="plate parch" data-spells style={{ position: 'fixed', left: '50%', transform: 'translateX(-50%)', bottom: 122, zIndex: 20, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <b style={{ fontSize: 14 }}>Czary · mana <span data-mana>{manaOf(state.heroes[active.id])}</span></b>
-          {castable.map((id) => (
-            <button key={id} className={`btn plate parch ${spellNow === id ? 'on' : ''}`} data-spell={id} title={`${SPELLS[id].name} (mana ${SPELLS[id].mana}): ${scaleText(SPELLS[id].text, state.rules.statScale ?? 1, state.rules.hpScale)}`} onClick={() => setSpell(spellNow === id ? null : id)} style={{ padding: 2, display: 'flex', alignItems: 'center', gap: 4, outline: spellNow === id ? '3px solid #9EE4FF' : undefined }}>
-              <img src={asset(`ikony/czary/${id}.webp`)} alt={SPELLS[id].name} width={38} height={38} />
-              <span className="hide-mobile" style={{ fontSize: 13, paddingRight: 4 }}>{SPELLS[id].name}</span>
-            </button>
-          ))}
-        </div>
-      )}
       <ActivationBar
         state={state}
         active={active}
@@ -492,6 +488,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
           onAction={onAction}
           onShowCard={onShowCard}
           reset={reset}
+          magic={state.rules.realm && state.heroes[active!.id] && (state.heroes[active!.id].spells ?? []).some((id) => SPELLS[id].where === 'battle') ? { open: spellsOpen, setOpen: setSpellsOpen, castable, onPick: (id) => setSpell(id) } : undefined}
         />
       )}
     </div>

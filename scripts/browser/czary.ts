@@ -16,21 +16,25 @@ import { openGame } from './game';
     await ready.waitFor({ timeout: 10000 }).catch(() => undefined);
     if (await ready.count()) await ready.first().click();
     const end = p.getByRole('button', { name: 'Koniec', exact: true });
-    for (let i = 0; i < 40 && !(await p.locator('[data-spells]').count()); i++) {
+    for (let i = 0; i < 40 && !(await p.locator('[data-spell-btn]').count()); i++) {
       if ((await end.count()) && (await end.first().isEnabled())) await end.first().click().catch(() => undefined);
       await p.waitForTimeout(1200);
     }
-    if (!(await p.locator('[data-spells]').count())) { await p.screenshot({ path: '.tmp/czary-stan.png' }); console.log('no spell strip; buttons:', (await p.getByRole('button').allInnerTexts()).filter(Boolean).join(' | ').replace(/\n/g, ' ').slice(0, 300)); }
-    const mana = async () => Number(await p.locator('[data-spells] [data-mana]').innerText());
+    if (!(await p.locator('[data-spell-btn]').count())) { await p.screenshot({ path: '.tmp/czary-stan.png' }); console.log('no spell strip; buttons:', (await p.getByRole('button').allInnerTexts()).filter(Boolean).join(' | ').replace(/\n/g, ' ').slice(0, 300)); }
+    const mana = async () => Number(await p.locator('[data-spell-btn] [data-mana]').innerText());
     const before = await mana();
+    await p.locator('[data-spell-btn]').click();
+    await p.locator('[data-spell-list]').waitFor();
+    await p.screenshot({ path: '.tmp/magia-okno.png' });
     await p.locator('[data-spell="bolt"]').click();
     await p.waitForTimeout(300);
+    console.log('window closed', (await p.locator('[data-spell-list]').count()) === 0, '| aims', await p.locator('[data-spell-aim]').count(), '| attack outlines/moves hidden');
     await p.locator('.arena-frame').screenshot({ path: '.tmp/czary.png' });
     const foe = p.getByRole('button', { name: /Goblin Szaman|Pająk Jaskiniowy|Nietoperz Cienia/ }).first();
     const foeText = await foe.innerText();
     await foe.click();
     await p.waitForTimeout(800);
-    console.log('mana', before, '->', (await p.locator('[data-spells]').count()) ? await mana() : 'strip gone (one spell an activation)', '| target before:', foeText.replace(/\n/g, ' '), '| after:', (await foe.innerText().catch(() => 'fell')).replace(/\n/g, ' '));
+    console.log('mana', before, '->', (await p.locator('[data-spell-btn]').count()) ? await mana() : 'strip gone (one spell an activation)', '| target before:', foeText.replace(/\n/g, ' '), '| after:', (await foe.innerText().catch(() => 'fell')).replace(/\n/g, ' '));
     if (game.errors.length) console.log(game.errors.join('\n'));
   } finally {
     await game.close();

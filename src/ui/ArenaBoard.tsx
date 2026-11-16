@@ -72,6 +72,8 @@ interface Props {
   moves: Map<HexKey, number>;
   hops: HexKey[];
   targets: BattleUnit[];
+  /** Possible targets of the spell being aimed (a violet outline); nothing else of the active unit is shown meanwhile. */
+  aims?: BattleUnit[];
   /** The move cell under the pointer. */
   hoverPreview: HexKey | null;
   moveCursor: string;
@@ -293,6 +295,9 @@ export function ArenaBoard(p: Props) {
             {[...p.reach.hit].map((k) => (
               <polygon key={`rh${k}`} points={hexPoints(k, 3)} fill="rgba(224,60,40,0.3)" stroke="rgba(240,100,80,0.85)" strokeWidth="1.5" strokeDasharray="4 3" pointerEvents="none" />
             ))}
+            {(p.aims ?? []).flatMap((t) =>
+              cellsOf(t).map((k) => <polygon key={`aim${t.id}${k}`} data-spell-aim={t.id} points={hexPoints(k, 2)} fill="rgba(170,110,255,0.22)" stroke="#B58CFF" strokeWidth="3.5" pointerEvents="none" />),
+            )}
             {targets.flatMap((t) =>
               cellsOf(t).map((k) => <polygon key={`${t.id}${k}`} points={hexPoints(k, 2)} fill="rgba(224,80,60,0.16)" stroke="#E0503C" strokeWidth="3" pointerEvents="none" />),
             )}
