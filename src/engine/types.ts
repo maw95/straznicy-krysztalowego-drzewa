@@ -583,6 +583,8 @@ export type Action =
   | { type: 'kingdomBuyArtifact'; settlementId: string; artifactId: string }
   /** Level 4: one unit of a resource bought for gold in an own settlement, or sold on its market. */
   | { type: 'kingdomTrade'; settlementId: string; res: 'wood' | 'ore' | 'dust'; dir: 'buy' | 'sell' }
+  /** Level 4: one unit of a resource swapped for one of another on the market (sold and bought at the market's prices, one action). */
+  | { type: 'kingdomSwap'; settlementId: string; from: 'wood' | 'ore' | 'dust'; to: 'wood' | 'ore' | 'dust' }
   /** Level 6: the next rank of the faction's tree, bought in an own settlement. */
   | { type: 'kingdomTree'; settlementId: string }
   /** Level 6: the dwelling of one of the two units of a tier (it shuts the other out). */

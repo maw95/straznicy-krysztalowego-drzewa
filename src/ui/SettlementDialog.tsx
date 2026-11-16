@@ -78,6 +78,25 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           <button className="btn" data-trade-sell={r} disabled={buildingLevel(s, 'market') < 1 || res[r] < 1} title={buildingLevel(s, 'market') < 1 ? 'Sprzedaż wymaga targu.' : undefined} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'sell' })} style={{ padding: '3px 12px', fontSize: 15 }}>Sprzedaj 1 (+{ECONOMY.tradeSell[r]} zł)</button>
         </div>
       ))}
+      {buildingLevel(s, 'market') > 0 && (
+        <div data-swap style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ fontSize: 14, color: '#6B4A22' }}>Wymiana: 1 surowiec na 1 inny (sprzedaż i kupno po cenach targu, dopłata w złocie).</span>
+          {RESOURCE_IDS.map((from) => (
+            <div key={from} style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+              <img src={asset(RESOURCE_ICON[from])} alt="" width={22} height={22} />
+              <span style={{ minWidth: 70 }}>{RESOURCE_NAMES[from]} →</span>
+              {RESOURCE_IDS.filter((to) => to !== from).map((to) => {
+                const extra = tradeBuyPrice(s, to) - ECONOMY.tradeSell[from];
+                return (
+                  <button key={to} className="btn" data-swap-from={from} data-swap-to={to} disabled={res[from] < 1 || gold + ECONOMY.tradeSell[from] < tradeBuyPrice(s, to)} onClick={() => act({ type: 'kingdomSwap', settlementId: s.id, from, to })} style={{ padding: '3px 10px', fontSize: 14 }}>
+                    <img src={asset(RESOURCE_ICON[to])} alt="" width={18} height={18} style={{ verticalAlign: 'middle' }} /> {RESOURCE_NAMES[to]} ({extra > 0 ? `+${extra} zł` : extra < 0 ? `${-extra} zł dla ciebie` : 'bez dopłaty'})
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   ) : null;
 

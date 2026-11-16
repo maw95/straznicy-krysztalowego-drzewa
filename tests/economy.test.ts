@@ -181,6 +181,23 @@ describe('level 4: the forge and the exchange', () => {
     expect(() => applyAction(s, { type: 'kingdomTrade', settlementId: home.id, res: 'dust', dir: 'buy' })).toThrow(/Za mało złota/);
   });
 
+  it('swaps one resource for another on a market: sale and purchase in one action, at the market prices', () => {
+    let s = economy();
+    const home = ownStart(s);
+    s.kingdom!.gold.dawn = 10;
+    s.kingdom!.res!.dawn.wood = 2;
+    expect(() => applyAction(s, { type: 'kingdomSwap', settlementId: home.id, from: 'wood', to: 'ore' })).toThrow(/targu/);
+    home.buildings.market = 1;
+    expect(() => applyAction(s, { type: 'kingdomSwap', settlementId: home.id, from: 'wood', to: 'wood' })).toThrow(/różne/);
+    const price = tradeBuyPrice(ownStart(s), 'ore') - ECONOMY.tradeSell.wood;
+    s = applyAction(s, { type: 'kingdomSwap', settlementId: home.id, from: 'wood', to: 'ore' });
+    expect([resOf(s, 'dawn').wood, resOf(s, 'dawn').ore, s.kingdom!.gold.dawn]).toEqual([1, 1, 10 - price]);
+    s.kingdom!.gold.dawn = 0;
+    expect(() => applyAction(s, { type: 'kingdomSwap', settlementId: home.id, from: 'wood', to: 'dust' })).toThrow(/Za mało złota/);
+    s.kingdom!.res!.dawn.ore = 0;
+    expect(() => applyAction(s, { type: 'kingdomSwap', settlementId: home.id, from: 'ore', to: 'wood' })).toThrow(/Brakuje/);
+  });
+
   it('a bot short of one resource for the building it wants buys it instead of sitting on gold', () => {
     const s = economy();
     const home = ownStart(s);

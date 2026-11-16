@@ -1181,6 +1181,7 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'kingdomHeal':
     case 'kingdomBuyArtifact':
     case 'kingdomTrade':
+    case 'kingdomSwap':
     case 'kingdomDwelling':
     case 'kingdomTree':
     case 'kingdomLearn':

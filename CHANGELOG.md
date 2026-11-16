@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Targ (poziom Księstwo i wyżej): można wymienić 1 surowiec na 1 inny jednym kliknięciem (sprzedaż i kupno po cenach targu, widać dopłatę w złocie). Sprzedaż surowców za złoto i kupno zostają jak były.
+
 - Mapa przygody: kopalnia, tartak i źródło Pyłu przejęte przez frakcję mają przy ikonie jej chorągiewkę (zieloną dla Przymierza, czerwoną dla Hordy). W oknie dochodu kopalnie mają nazwę i „pole” zamiast samych współrzędnych.
 
 - Mapa przygody: gdy bohater weźmie złoto lub surowce (młyn, składnica, skrzynia, chatka, łup), nad jego polem unosi się napis z ikoną, np. „+2 zł”, i gra dźwięk monet.

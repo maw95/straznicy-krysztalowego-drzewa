@@ -660,6 +660,23 @@ export function kingdomAction(state: GameState, action: Action): void {
       }
       break;
     }
+    case 'kingdomSwap': {
+      const { s, hero } = serviceSettlement(state, action.settlementId);
+      if (!k.res) throw new Error('Wymiana surowców jest dopiero na poziomie Księstwo.');
+      const f = hero.faction;
+      if (action.from === action.to) throw new Error('Wybierz dwa różne surowce.');
+      if (buildingLevel(s, 'market') < 1) throw new Error('Surowce wymienia się na targu.');
+      if (k.res[f][action.from] < 1) throw new Error(`Brakuje: 1 × ${RESOURCE_NAMES[action.from]}.`);
+      // One sale and one purchase at the market's prices: the gold from the sale goes toward the price of the other resource.
+      const sell = ECONOMY.tradeSell[action.from];
+      const price = tradeBuyPrice(s, action.to);
+      if (k.gold[f] + sell < price) throw new Error(`Za mało złota (potrzeba ${price - sell}).`);
+      k.res[f][action.from] -= 1;
+      k.gold[f] += sell - price;
+      k.res[f][action.to] += 1;
+      log(state, 'info', `${FACTION_NAMES[f]} wymienia: ${RESOURCE_NAMES[action.from]} na ${RESOURCE_NAMES[action.to]} (${price - sell} zł dopłaty).`, f);
+      break;
+    }
     case 'kingdomDwelling': {
       const { s, hero } = serviceSettlement(state, action.settlementId);
       const f = hero.faction;
