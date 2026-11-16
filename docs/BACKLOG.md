@@ -33,33 +33,14 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids` = Łatwy, `economy`, `realm
 ## 1. Kolejka prac (w tej kolejności)
 
 ### Grupa D. Grafika i dźwięk (kredyty Scenario; zasady budżetu na górze)
+Sesja 16.11: zrobione animacje wszystkich 16 jednostek poziomów 5–6 (z brakami w punkcie 16) i efekty czarów, oblężenia, mapy, Odłamka, Iskry i odrodzenia.
 Wspólne dla punktów 16–21: potok i przepis `docs/PRZEPIS_JEDNOSTKI.md` (obraz bazowy z portretu karty, obraz „martwy”, klipy `chod`, `atak`, `trafienie`, `smierc`; pakowanie `scripts/animacje/pack_unit.py` + `shrink_unit.py`; wpis w `assets.json`). Jednostka ma już statyczną figurkę i dźwięki ataku/śmierci (od 16.11): animacja podmienia pliki w `public/assets/jednostki/<folder>/`; wpis w `src/ui/sprites.ts` już istnieje (zwykle nic nie trzeba zmieniać, ewentualnie `speed`). Narzędzie ffmpeg: `pip install --target <scratchpad>/ff imageio-ffmpeg`, ścieżka w `.tmp/ffpath` (po restarcie systemu odtwórz). **Lekcje 16.11 (filtr treści):** zablokowane zostały „swings … down”, „rears up with a mighty roar … swings”, „sinks down … knees”, a ostatnia udana śmierć wyszła bez `lastFrameImage` z opisem „puts down … lies on his side and falls asleep”; broń z krwią na obrazie bazowym zwiększa ryzyko blokady (generuj broń bez śladów krwi); „internal error” bez blokady: ponów raz. Szacunek: ok. 105 CU na jednostkę (latająca +10).
 
-**16. Atak Wodza Hordy** (S, kredyty ok. 30 CU)
-- `hordeWarlord` (`wodz_hordy`) ma chód, trafienie i śmierć; brakuje `atak` (filtr zablokował dwa podejścia 16.11). Źródła w `.tmp/zrodla/hordeWarlord/` (jeśli ich nie ma, odtwórz z `assets.json`: `scenario_asset` stoi, martwy).
-- Decyzja: najpierw wygeneruj nowy obraz bazowy `stoi` topora **bez śladów krwi** (Flare `medium`, 3 CU, odniesienie: obecny `stoi`), potem klip ataku (3 s) z opisem ruchu bez słów z listy blokad (np. „raises the axe overhead with both hands, then lowers it in front of him and returns to the standing pose”). Jeśli i to padnie: zostaw bez ataku (kod używa drgnięcia) i zanotuj w punkcie.
-- Pakowanie: dołóż `atak.mp4` do `.tmp/zrodla/hordeWarlord/` (są tam już `chod`, `trafienie`, `smierc`, `stoi`, `martwy`) i uruchom `pack_unit.py` na całym katalogu, a potem `shrink_unit.py`. `shrink_unit.py` odmawia ponownego uruchomienia na folderze, który już przeszedł zmniejszenie, więc pack zapisuje wynik do świeżego folderu (`public/assets/jednostki/wodz_hordy`, po usunięciu starego) i dopiero potem shrink.
-- Gotowe, gdy: `anim.json` ma klip `atak`; wpis w `assets.json` uzupełniony; arkusz kontaktowy obejrzany.
-
-**17. Animacje dowódców Przymierza: Łowczyni Gaju i Mędrzec Gaju** (L, kredyty ok. 210 CU)
-- `dawnHuntress` (`lowczyni_gaju`) i `dawnSage` (`medrzec_gaju`): pełny zestaw (`chod`, `atak`, `trafienie`, `smierc`, `martwy`). Atak Łowczyni: strzał z łuku w prawo; atak Mędrzec: gest różdżką/laską i błysk (bez słów „blast”, „kill”).
-- Gotowe, gdy: obie mają `anim.json` z czterema klipami, arkusze kontaktowe obejrzane, w grze (`make zrzut` bitwy z tymi jednostkami: `players`/`seed` w zapytaniu albo skrypt) widać animację.
-
-**18. Animacje dowódców Hordy: Kapitan Kuszników i Szaman Cieni** (L, kredyty ok. 210 CU)
-- `hordeCrossbow` (`kapitan_kusznikow`), `hordeShadow` (`szaman_cieni`): jak punkt 17. Atak Kapitana: wystrzał z kuszy w prawo; Szamana: gest laską i ciemny błysk. Pocisk (bełt) rysuje kod, jeśli klip go nie zawiera (wzór: głaz Cyklopa, `.projectile` w `styles.css`).
-- Gotowe, gdy: jak w punkcie 17.
-
-**19. Animacje jednostek legendarnych: Feniks Świtu i Behemot Zagłady** (L, kredyty ok. 230 CU)
-- `dawnPhoenix` (`feniks_switu`, latający: `stoi` na ziemi, klipy `wzbicie`, `lot`, `atak`, `trafienie`, `smierc`, **dodatkowo `odrodzenie`** = śmierć odtworzona od tyłu/ognisty powrót; zasada „jednostka latająca, która w spoczynku stoi” w `PRZEPIS_JEDNOSTKI.md`), `doomBehemoth` (`behemot_zaglady`, wielki, 2 pola: pełny zestaw jak jednostka chodząca, rozmiar w `sprites.ts` wg istniejących dużych).
-- Gotowe, gdy: jak w punkcie 17; efekt odrodzenia Feniksa gra się w bitwie (sprawdź w `sprites.ts`, jak wywoływane są klipy; jeśli kod odrodzenia nie używa klipu `odrodzenie`, podłącz go).
-
-**20. Animacje jednostek alternatywnych Przymierza: Srebrny Lis, Sowa Świtu, Driada Łuczniczka, Biały Jeleń** (L, kredyty ok. 450 CU; wykonuj po jednej jednostce, w tej kolejności)
-- `silverFox` (`srebrny_lis`), `dawnOwl` (`sowa_switu`, latająca), `dryadArcher` (`driada_luczniczka`), `whiteStag` (`bialy_jelen`; atak: pochylenie głowy i uderzenie porożem w miejscu, bez biegu).
-- Gotowe, gdy: jak w punkcie 17 dla każdej wykonanej jednostki; niewykonane zostają w punkcie z adnotacją.
-
-**21. Animacje jednostek alternatywnych Hordy: Goblin Procarz, Gargulec, Troll Jaskiniowy, Wiwerna Cienia** (L, kredyty ok. 450 CU; po jednej jednostce, w tej kolejności)
-- `goblinSlinger` (`goblin_procarz`; atak: rozkręcenie procy i wyrzut, kamień rysuje kod), `gargoyle` (`gargulec`), `caveTroll` (`troll_jaskiniowy`; atak: maczuga, bez słów z listy blokad), `shadowWyvern` (`wiwerna_cienia`, latająca).
-- Gotowe, gdy: jak w punkcie 20.
+**16. Braki i wady animacji jednostek poziomów 5–6** (M, kredyty ok. 110 CU; zostało po sesji 16.11, w której 16 jednostek dostało animacje)
+- Brakujące klipy: `caveTroll` (Troll Jaskiniowy, `troll_jaskiniowy`): **atak** (filtr zablokował trzy podejścia z maczugą: spróbuj opisu bez broni, jak „leans forward and pushes his weight to the right in a lunge”, który przeszedł u Wodza Hordy; 15 CU); `dryadArcher` (`driada_luczniczka`): **trafienie** (klip wyszedł, ale kończy bez łuku: `asset_DR83dyMoT8fkM6nWePxg2Uu8`, do ponowienia z prośbą o łuk w ręce, 10 CU); `dawnPhoenix` (`feniks_switu`): **trafienie** (odrzucony klip w `.tmp/zrodla/_odrzucone_feniks/`, ptak kończy w innej pozie; 10 CU). Bez tych klipów kod używa drgnięcia i błysku.
+- Klip `odrodzenie` Feniksa jest spakowany (`feniks_switu/odrodzenie.webp`), ale **kod go nie gra**: odrodzenie dzieje się w silniku bez śmierci jednostki (`battle.ts`, `dealDamage`, `rebirth`), więc `SpriteLayer` nie ma kiedy go uruchomić. Podłącz: zdarzenie `BattleState.fx` z kind `odrodzenie` (już jest) ma odtworzyć klip `odrodzenie` na jednostce (nowy segment kolejki w `SpriteLayer.tsx`, jak `smierc` od tyłu).
+- Wady do oceny w grze (z raportów agentów 16.11): Szaman Cieni i Mędrzec mają błysk ataku jaśniejszy/niebieskawy i laska rozmyta; Łowczyni ma rozmyte środkowe klatki trafienia i zajmuje ok. 55% wysokości kadru; Szaman Cieni sięga w kadrze wyżej niż stopy 84% (sprawdź `box` w `sprites.ts`); Driada zajmuje ok. 85% wysokości kadru (sprawdź skalę); Wiwerna ma szeroki `martwy` (możliwe ucięcie przy krawędziach, crop 512 px); Goblin Procarz: kamień z procy słabo widoczny w klipie ataku, dobierz opóźnienie pocisku rysowanego przez kod (`.projectile`, wzór: głaz Cyklopa); Behemot: `stoi` z trzech czwartych i lekka fioletowa obwódka na kolcach; Feniks: fioletowa obwódka w środku `odrodzenie`; Lis: chód jak klus i dryf; Troll: jedna dziwna klatka w śmierci.
+- Gotowe, gdy: braki uzupełnione (albo adnotacja „nie wyszło”), odrodzenie Feniksa gra klip, wady z listy ocenione w grze (`make zrzut` bitwy z tymi jednostkami) i poprawione tam, gdzie wystarczy `box`/skala w `sprites.ts`.
 
 **24. Ikony: drzewko frakcji, siedliska, frakcyjne elementy oblężenia** (M, kredyty ok. 100 CU)
 - Trzy stopnie drzewka każdej z dwóch frakcji (6 ikon) mają dziś sam tekst w oknie osady; mechaniki mają ikony (`ikony/frakcje/blask_switu.webp`, `zadza_krwi.webp`: wzór stylu). Siedliska jednostek (16 nazw w `DWELLING_NAMES`) mają jedną wspólną ikonę `ikony/frakcje/siedlisko.webp`: zrób 16 ikon (jedna na jednostkę, po jednym wspólnym arkuszu 4×4 jeśli się da, pocięte skryptem `scripts/assets/arkusz.py`). Elementy oblężenia (`public/assets/arena/oblezenie/`) są neutralne (szary kamień): zrób wersje Przymierza i Hordy dla muru, bramy i wieżyczki.
