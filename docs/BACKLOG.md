@@ -23,9 +23,9 @@ Autor pisze „zrób punkty 1, 2 i 3” (albo „zrób 9–10”, „zrób wszys
 - Każdy zaakceptowany obraz, animacja, dźwięk lub muzyka trafia do repo w tej samej sesji z wpisem w `assets.json`.
 - Po skończeniu: usuń punkt z tego pliku (albo zaznacz, co zostało), zagraj `complete.oga`, krótkie podsumowanie po polsku, uwaga, że to dobry moment na `/clear`.
 
-## Stan (16.11.2026, po punktach 1–15)
+## Stan (16.11.2026, po punktach 1–15, 24–26 i wydaniu 2.8.0)
 
-Wydane: **2.7.0** (14.11, poziom 3 „Osada”). Niewydane, zrobione lokalnie w masterze: poziom 0 „Spacer”, Łatwy na arenie, bot-kupiec, Królestwo w rankingu, **poziomy 4, 5 i 6 w całości** (Księstwo: Kuźnia, wymiana surowców, młyn/składnica/studnia, garnizon, fosa i mury z katapultą, cel Podbój, autopilot warstw; Królestwo: drugi bohater, magia, typy i specjalności, rozgałęzienia umiejętności; Imperium: Relikt, mechaniki i drzewka frakcji, jednostki legendarne i alternatywne z siedliskami), dźwięki 16 jednostek poziomów 5–6, animacje Rycerza Świtu i Wodza Hordy. `make check` zielone (490 testów). **Nic nie wypchnięte.** Repo serwera: commit z poziomami 5–6, celami i nowymi akcjami, niewypchnięty i niewdrożony (czeka na wydanie gry).
+Wydane: **2.8.0** (16.11: poziomy 0, 4, 5 i 6, Łatwy na arenie, bot-kupiec, animacje i efekty; gra na Pages, serwer 0.2.0 na Fly.io, silnik 2.8.0). Wcześniej **2.7.0** (14.11, poziom 3 „Osada”). Wszystko z poniższej listy jest już wydane, nic nie czeka na push.
 
 Drabinka (nazwy = ranga zmagań): 0 Spacer, 1 Przygoda, 2 Wyprawa, 3 Osada, 4 Księstwo, 5 Królestwo, 6 Imperium. Premiera dopiero po poziomie 6.
 Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids` = Łatwy, `economy`, `realm`, `empire`) i w rankingu online zostają. Typ `Level` w `src/engine/types.ts`: `zero | kids | normal | hard`.
