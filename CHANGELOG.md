@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Poziom trudności wybiera się teraz w każdym trybie, także w rywalizacji (Trudny i Bardzo trudny: komputerowi przeciwnicy ze skarbami, większym Życiem i dochodami) i na arenie; w grze online też (stół może mieć Bardzo trudny).
+
 - Nowy poziom trudności „Bardzo trudny”: jak Trudny, ale komputer ma przewagę: jednostki o 20% więcej Życia, o 2 losowe skarby więcej na start i o połowę większe dochody (poziomy z osadami). W kooperacji (Horda) i przy stole z botami; na arenie komputer ma o 20% więcej Życia. Poziom Trudny jest teraz dostępny także w rywalizacji.
 
 - Wybór trudności: ikony poziomów (królik, wilk, niedźwiedź) są teraz jednokolorowymi rysunkami wektorowymi, większymi, nad nazwą poziomu (jak litery S, M przy wyborze mapy). Poziom Trudny ma niedźwiedzia zamiast smoka.

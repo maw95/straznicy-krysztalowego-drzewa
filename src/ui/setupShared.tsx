@@ -29,7 +29,6 @@ export const BOARD_LEVELS: Array<[Level | 'custom', string]> = [
   ['zero', 'Łatwy'],
   ['normal', 'Normalny'],
   ['hard', 'Trudny'],
-  ['veryHard', 'Bardzo trudny'],
   ['custom', 'Własny'],
 ];
 
@@ -37,6 +36,7 @@ export const LEVELS: Array<[Level | 'custom', string]> = [
   ['kids', 'Łatwy'],
   ['normal', 'Normalny'],
   ['hard', 'Trudny'],
+  ['veryHard', 'Bardzo trudny'],
   ['custom', 'Własny'],
 ];
 

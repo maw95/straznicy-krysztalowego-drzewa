@@ -150,7 +150,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
   };
   const setMode = (mode: Mode) => {
     const count = mode === 'pvp' ? Math.max(2, d.count) : mode === 'arena' ? 2 : Math.min(3, d.count);
-    const level = mode === 'pvp' && d.level === 'hard' ? 'normal' : mode === 'arena' && d.level === 'zero' ? 'kids' : d.level;
+    const level = mode === 'pvp' && d.level === 'hard' && !d.digital ? 'normal' : mode === 'arena' && d.level === 'zero' ? 'kids' : d.level;
     choose({ mode, count, level, custom: null, ...(mode !== 'coop' && d.objective === 'survival' ? { objective: 'crystals' as ObjectiveId } : {}) });
   };
 
@@ -290,7 +290,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
           )}
           {(arena || d.level !== 'zero' || !d.digital) && (
           <Row label={arena ? 'Komputer' : 'Trudność'}>
-            {(arena || d.digital ? LEVELS : BOARD_LEVELS).filter(([l]) => l !== 'custom' && (l !== 'hard' || d.mode !== 'pvp')).map(([l, label]) => (
+            {(arena || d.digital ? LEVELS : BOARD_LEVELS).filter(([l]) => l !== 'custom' && (l !== 'hard' || d.mode !== 'pvp' || d.digital)).map(([l, label]) => (
               <Tip key={l} text={arena ? ARENA_LEVEL_TIPS[l as Level] : LEVEL_TIPS[l]}>
                 <button className={`${chip(d.level === l)} size-btn level-btn`} aria-pressed={d.level === l} data-level={l} onClick={() => patch({ level: l as Level, custom: null })}>
                   {LEVEL_ANIMAL[l as string] && <span className="level-btn-icon"><LevelIcon kind={LEVEL_ANIMAL[l as string]} size="100%" /></span>}
