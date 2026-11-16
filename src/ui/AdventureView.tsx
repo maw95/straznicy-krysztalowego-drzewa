@@ -783,6 +783,12 @@ function TileDetails({ state, k, hostile }: { state: GameState; k: HexKey; hosti
           </div>
         </div>
       )}
+      {t.revealed && t.place && state.kingdom && (
+        <div className="well" data-tile-place={t.place.kind} style={{ padding: '6px 8px', display: 'flex', gap: 10, alignItems: 'center' }}>
+          <img src={asset(`ikony/mapa/${placeIcon(state, k)}.webp`)} alt="" width={44} height={44} style={{ flex: 'none', display: 'block' }} />
+          <div style={{ fontSize: 15, color: '#F7EDD2', lineHeight: 1.3 }}>{placeTitle(state, k)}</div>
+        </div>
+      )}
       {t.revealed && t.treasureId && note('Leży tu skarb.')}
       {t.revealed && t.site && note(t.site.used ? `${SITE.names[t.site.kind]} (już użyta).` : `${SITE.names[t.site.kind]}: ${SITE.texts[t.site.kind]}`)}
       {heroes.map((h) => (
