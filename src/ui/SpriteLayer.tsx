@@ -30,6 +30,8 @@ export interface SpritePiece {
   path?: Array<{ x: number; y: number }> | null;
   /** The move to this place was a teleport: it fades out where it stood and fades in here instead of gliding. */
   blink?: boolean;
+  /** Key of the rebirth light effect on this unit's hex (BattleState.fx 'odrodzenie'): a new key plays the `odrodzenie` clip once. */
+  rebirth?: number;
 }
 
 /** A teleport: half of it fading out where the unit stood, half fading in at its new place. */
@@ -77,6 +79,7 @@ interface Live {
   rest: 'stand' | 'corpse';
   hitStart: number;
   attackKey: number | null;
+  rebirthKey: number | null;
 }
 
 const clipMs = (set: SpriteSet, clip: string) => ((set.frames[clip] ?? 1) / set.fps / (set.spec.speed[clip] ?? 1)) * 1000;
@@ -130,7 +133,7 @@ class Stage {
       let l = this.live.get(p.key);
       if (!l) {
         // A unit that appears with an attack to play (the arena is rebuilt for the last blow of a battle) plays it: the blow must not be skipped.
-        l = { piece: p, x: p.x, y: p.y, flip: p.flip, endFlip: p.flip, endX: p.x, endY: p.y, queue: [], seg: null, segStart: now, rest: p.dead ? 'corpse' : 'stand', hitStart: -1e9, attackKey: null };
+        l = { piece: p, x: p.x, y: p.y, flip: p.flip, endFlip: p.flip, endX: p.x, endY: p.y, queue: [], seg: null, segStart: now, rest: p.dead ? 'corpse' : 'stand', hitStart: -1e9, attackKey: null, rebirthKey: null };
         this.live.set(p.key, l);
         if (!p.attack) continue;
       }
@@ -184,7 +187,16 @@ class Stage {
         if (set.frames[clip]) l.queue.push({ kind: 'clip', clip, reverse: false, ms: clipMs(set, clip), impact: { unit: p.key, done: false } });
         else window.setTimeout(() => emitImpact(p.key), 0); // no clip: the blow lands at once
       }
-      if (p.hit && !was.hit) {
+      // A rebirth (Feniks Świtu): the unit rose from its ashes where it stood, with no death in between: it plays the clip instead of a hit.
+      let rose = false;
+      if (p.rebirth !== undefined && p.rebirth !== l.rebirthKey) {
+        l.rebirthKey = p.rebirth;
+        if (set.frames.odrodzenie && !p.dead) {
+          l.queue.push({ kind: 'clip', clip: 'odrodzenie', reverse: false, ms: clipMs(set, 'odrodzenie') });
+          rose = true;
+        }
+      }
+      if (p.hit && !was.hit && !rose) {
         // A hit clip (when the unit has one) plays after what is running; otherwise a shake and a flash in code.
         if (set.frames.trafienie && !p.dead) l.queue.push({ kind: 'clip', clip: 'trafienie', reverse: false, ms: clipMs(set, 'trafienie') });
         else l.hitStart = now;

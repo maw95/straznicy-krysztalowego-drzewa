@@ -4572,7 +4572,7 @@
       "pliki": [
         "public/assets/jednostki/feniks_switu/"
       ],
-      "typ": "dawnPhoenix: figurka i animacje (lot, wzbicie, atak, smierc, odrodzenie); brak klipów: trafienie",
+      "typ": "dawnPhoenix: figurka i animacje (lot, wzbicie, atak, trafienie, smierc, odrodzenie)",
       "prompt": "{\"stoi\": \"The same phoenix, same artwork and colours, but now it is NOT flying: it stands on the ground on its two legs in a strict side view facing right, wings folded against its body, tail plumes trailing down behind it along the ground, head held high. Same size as in the reference, centred horizontally, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text, no blue on the bird. (ref = pose lotu)\", \"poza_lotu\": \"Use the reference image only for the character design (a majestic golden-orange phoenix with radiant feathers, long flowing fiery tail plumes, a crest on the head and a curved beak, glowing amber light). Draw this same character as a full-body game sprite in a strict side view, hovering in the air with both wings spread wide and raised, facing right, in a serious painterly realistic style with golden, amber, orange and pale yellow tones, no blue anywhere on the character. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 55% of the frame width and 50% of the frame height, centred horizontally and vertically. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text, no glow halo or sparkles outside the bird.\", \"martwy\": \"The same phoenix, same artwork, same size and horizontal position, now lying still on the ground on its belly with wings folded and tucked, head resting low to the right, eyes closed, as if fast asleep, defeated and motionless, its feathers dimmed to a pale ashen gold. Strict side view facing right. The lowest line of the body is on the same horizontal line as the feet in the reference. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text, no blue on the bird.\", \"lot\": \"Side view, locked static camera. The golden phoenix hovers in place in the air, flapping its wings in a steady gentle rhythm, always facing right, tail plumes swaying. Plain solid blue background stays unchanged, no camera movement. (image = poza lotu)\", \"wzbicie\": \"Side view, locked static camera. The golden phoenix standing on the ground spreads its wings and lifts gracefully up into the air, ending hovering with wings spread wide, facing right. Plain solid blue background stays unchanged, no camera movement. (image=stoi, lastFrameImage=poza lotu)\", \"atak\": \"Side view, locked static camera. The golden phoenix standing in place lowers its head, its beak glows with fire and it reaches its head sharply forward to the right with a loud call, then sweeps its right wing out in a wide motion to the right, then folds the wing and returns to the standing pose, feet staying in the same spot, always facing right. Plain solid blue background stays unchanged, no camera movement.\", \"trafienie (odrzucone, nie spakowane)\": \"Side view, locked static camera. The golden phoenix is startled: it flinches and rocks backwards a little, then steadies itself and stands as before, still facing right. Plain solid blue background stays unchanged, no camera movement.\", \"smierc\": \"Side view, locked static camera. The golden phoenix settles down slowly onto the ground, folds its wings, rests, and its glow gently fades as it lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement. (lastFrameImage = martwy)\", \"odrodzenie\": \"Side view, locked static camera. The golden phoenix lies still and pale on the ground, then a warm golden glow begins to shine from within its feathers, its colours return, it slowly lifts its head and rises onto its legs and stands tall in a blaze of radiant golden light, facing right. Plain solid blue background stays unchanged, no camera movement. (image=martwy, lastFrameImage=stoi)\"}",
       "scenario_asset": {
         "portrait_ref": "asset_qbs83pqbTJMeqqCrXTFj37YA",
@@ -4583,11 +4583,12 @@
         "wzbicie": "asset_1Xum3a31N3EttDmfBXs4jaKk",
         "atak": "asset_dJDHmJyQ9sddq3ow5i81psb5",
         "trafienie_odrzucone": "asset_bV4ooA2NVQ4bnG2Ls8q8fBha",
+        "trafienie": "asset_wWpaz2Uw3HxZFYW8C9afonYh",
         "smierc": "asset_FU6C35H1wLfng8ajFVieLTia",
         "odrodzenie": "asset_6TyH6RLZmPstuguDN6RDRrZk"
       },
       "model": "GPT Image 2.5 Flare + P-Video 2",
-      "uwagi": "trafienie odrzucone: ptak w klipie pochyla sie poziomo i konczy w innej pozie niz stoi (kod uzyje drgniecia i bleysku); plik w .tmp/zrodla/_odrzucone_feniks. Odrodzenie: fioletowa obwodka (chromakey) na jasnym blasku w srodkowych klatkach. Szerokosc ciala 56% kadru (skrzydla). Atak: dziob+skrzydlo, w miejscu. Backup statyki w .tmp/feniks_switu_static_backup. Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
+      "uwagi": "Trafienie (17.11, 10 CU): image i lastFrameImage = stoi, \"Side view, locked static camera. The phoenix standing on the ground is startled: it flinches and rocks backwards a little with its wings staying folded against its body, then steadies itself and stands as before, upright, still facing right. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.\" (2 s); pierwszy klip trafienia odrzucony (ptak konczyl w innej pozie), plik w .tmp/zrodla/_odrzucone_feniks. Odrodzenie: fioletowa obwodka (chromakey) na jasnym blasku w srodkowych klatkach. Szerokosc ciala 56% kadru (skrzydla). Atak: dziob+skrzydlo, w miejscu. Backup statyki w .tmp/feniks_switu_static_backup. Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
       "narzedzie": "Scenario (plan płatny)",
       "data": "2026-11-16",
       "ai": true,
@@ -4622,7 +4623,7 @@
       "pliki": [
         "public/assets/jednostki/troll_jaskiniowy/"
       ],
-      "typ": "caveTroll: figurka i animacje (chod, trafienie, smierc); brak klipów: atak",
+      "typ": "caveTroll: figurka i animacje (chod, atak, trafienie, smierc)",
       "prompt": "{\"stoi\": \"see manifest; stoi: Use the reference image only for the character design ... full-body game sprite in a strict side view, standing/hunched pose facing right ... blue #0000FF background\", \"chod\": \"Side view, locked static camera. walks in place with a steady stride as if on a treadmill, always facing right ... Plain solid blue background stays unchanged, no camera movement.\", \"trafienie\": \"Side view, locked static camera. is startled: flinches and rocks backwards a little, then steadies and stands as before, still facing right. The feet stay on the same spot. ...\", \"smierc\": \"Side view, locked static camera. sits down slowly and rests, then settles down onto the ground and lies still. Defeat animation. ...\"}",
       "scenario_asset": {
         "portret": "asset_uqNWary8xHCaFSHpt5qUt2a6",
@@ -4630,10 +4631,11 @@
         "martwy": "asset_mEjXbGEaN6nuuW8V77AaBmF8",
         "chod": "asset_K1z3roVb8VNJzdQD9p8q7aSF",
         "trafienie": "asset_qMnyvY4Nz7ayjCoU6SJb9c1h",
-        "smierc": "asset_RTuEWr3xDgNjBK9ds7vaTAYT"
+        "smierc": "asset_RTuEWr3xDgNjBK9ds7vaTAYT",
+        "atak": "asset_Szc46C2TcjZc2yu8cXTqwK3L"
       },
       "model": "GPT Image 2.5 Flare + P-Video 2",
-      "uwagi": "Atak nie wyszedl: dwie proby zablokowane przez filtr (raising club ... brings it down; lifts ... lowers), po 15 CU; trzeci bylby ponad limit 100 CU. Kod uzyje zastepczego ataku. Smierc: w srodku klipu dziwna poza w skoku z zolta plamka (kolczyk), koniec zgodny z martwy. Trafienie konczy sie z maczuga lekko odchylona od ramienia. Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
+      "uwagi": "Atak (17.11 po 2 blokadach filtra z maczuga, 15 CU): prompt bez broni \"Side view, locked static camera. The troll leans forward and pushes his weight to the right in a lunge, one arm reaching sharply forward in a sweeping motion with a loud roar, then returns to his standing pose, still facing right. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.\" (3 s, 720p, 24 fps). Smierc: w srodku klipu dziwna poza w skoku z zolta plamka (kolczyk), koniec zgodny z martwy. Trafienie konczy sie z maczuga lekko odchylona od ramienia. Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
       "narzedzie": "Scenario (plan płatny)",
       "data": "2026-11-16",
       "ai": true,
@@ -4717,7 +4719,7 @@
       "pliki": [
         "public/assets/jednostki/driada_luczniczka/"
       ],
-      "typ": "dryadArcher: figurka i animacje (chod, atak, smierc); brak klipów: trafienie",
+      "typ": "dryadArcher: figurka i animacje (chod, atak, trafienie, smierc)",
       "prompt": "{\"stoi\": \"Use the reference image only for the character design (young dryad archer, wavy brown hair with white flowers, leaf-and-vine wraps, bow of twisted living wood). Draw this same character as a full-body game sprite in a strict side view, facing right, serious painterly realistic style, whole figure inside frame (max 50% width/height), feet at ~84% height, plain solid pure blue background (#0000FF), no ground, no shadow, no text. Standing upright with bow and arrow.\", \"martwy\": \"Same dryad lying still on her side, head right, eyes closed, bow beside her, as if fast asleep, defeated and motionless.\", \"chod\": \"Side view, locked static camera. The dryad woman walks in place with a steady stride as if on a treadmill, always facing right, holding her bow at her side, the body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.\", \"atak\": \"Side view, locked static camera. The dryad woman draws her bowstring back with an arrow, aims to the right, then releases the arrow, which flies away to the right, and she lowers the bow and returns to the standing pose. Her feet stay in place. Plain solid blue background stays unchanged, no camera movement.\", \"trafienie\": \"Side view, locked static camera. The dryad woman standing in place is startled: she flinches and rocks backwards a little, then steadies herself and stands as before, still facing right. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement. (odrzucony: konczy bez luku)\", \"smierc\": \"Side view, locked static camera. The dryad woman sits down slowly and rests, then settles down onto the ground and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement. (lastFrameImage = martwy)\"}",
       "scenario_asset": {
         "stoi": "asset_ys1TcSXsXR1gkV3zp9rx5GyY",
@@ -4725,11 +4727,12 @@
         "chod": "asset_kKfLXXP4oi6KrzETAoBW6RCk",
         "atak": "asset_NanPzC73Ac393SjGDqheY9Y7",
         "trafienie_odrzucone": "asset_DR83dyMoT8fkM6nWePxg2Uu8",
+        "trafienie": "asset_iEL7r4P6u5gNNccGpZJFMwBK",
         "smierc": "asset_KMZ6LeywSozRPXQnxv5eA8ip",
         "portret": "asset_zSRDeq9c7tkXH3BHzrYTvdr1"
       },
       "model": "GPT Image 2.5 Flare + P-Video 2",
-      "uwagi": "Trafienie pominiete: klip konczy sie bez luku w rece (inna poza niz stoi). Postac wysoka (ok. 85% kadru). Atak (naciag i strzal) wyszedl dobrze, strzala znika w kadrze. Smierc: w polowie klipu klatki z klekaniem, koniec zgodny z martwy. Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
+      "uwagi": "Trafienie (17.11, 10 CU): image i lastFrameImage = stoi, prompt \"Side view, locked static camera. The dryad woman is startled: she flinches and rocks backwards a little while still holding her wooden bow firmly in her hand, then steadies herself and stands as before, still facing right. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.\" (2 s); konczy sie z lukiem w rece, jedna rozmyta klatka w srodku. Pierwsze trafienie (odrzucone) konczylo sie bez luku. Postac wysoka (ok. 85% kadru). Atak (naciag i strzal) wyszedl dobrze, strzala znika w kadrze. Smierc: w polowie klipu klatki z klekaniem, koniec zgodny z martwy. Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
       "narzedzie": "Scenario (plan płatny)",
       "data": "2026-11-16",
       "ai": true,
