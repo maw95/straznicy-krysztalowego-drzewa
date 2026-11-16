@@ -175,7 +175,7 @@ export function App() {
     // ?economy=1&near=hut|mill|well|store stands the active hero next to the first such place (to walk in by a click).
     if (s.kingdom && q.get('near')) {
       const want = q.get('near')!;
-      const hex = want === 'hut' ? Object.keys(s.kingdom.huts ?? {})[0] : Object.entries(s.kingdom.objects ?? {}).find(([, o]) => o.kind === want)?.[0];
+      const hex = want === 'hut' ? Object.keys(s.kingdom.huts ?? {})[0] : want === 'mine' ? Object.keys(s.kingdom.mines)[0] : Object.entries(s.kingdom.objects ?? {}).find(([, o]) => o.kind === want)?.[0];
       const hero = activeHero(s);
       const next = hex && hero ? neighborKeys(hex).find((k) => s.tiles[k] && tileCost(s.tiles[k]) !== null && !s.tiles[k].crystalId && !s.tiles[k].place) : null;
       if (hex && hero && next) {

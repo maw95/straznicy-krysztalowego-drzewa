@@ -211,7 +211,7 @@ export function incomeBreakdown(state: GameState, f: FactionId): Array<{ label: 
     rows.push({ label: s.name, gold: KINGDOM.incomeSettlement });
     if (s.buildings.treasury) rows.push({ label: `Skarbiec (${s.name})`, gold: KINGDOM.incomeTreasury });
   }
-  for (const [hex, m] of Object.entries(k.mines)) if (m.owner === f) rows.push({ label: `Kopalnia (${hex})`, gold: KINGDOM.incomeMine });
+  for (const [hex, m] of Object.entries(k.mines)) if (m.owner === f) rows.push({ label: `${MINE_NAMES.gold} (pole ${hex})`, gold: KINGDOM.incomeMine });
   // Strój Kupca (three of three): +1 gold a round, once for the faction.
   const merchants = Object.values(state.heroes).filter((h) => h.faction === f && h.alive && completeSets(h).some((d) => d.income));
   if (merchants.length) rows.push({ label: SETS.merchant.name, gold: SETS.merchant.income! });
@@ -560,7 +560,7 @@ export function resourceIncomeBreakdown(state: GameState, f: FactionId): Array<{
     if (s.owner !== f) continue;
     for (const r of RESOURCE_IDS) if (ECONOMY.incomeSettlement[r]) rows.push({ label: s.name, res: r, amount: ECONOMY.incomeSettlement[r] });
   }
-  for (const [hex, m] of Object.entries(k.mines)) if (m.owner === f && m.res) rows.push({ label: `${MINE_NAMES[m.res]} (${hex})`, res: m.res, amount: ECONOMY.incomeMine[m.res] });
+  for (const [hex, m] of Object.entries(k.mines)) if (m.owner === f && m.res) rows.push({ label: `${MINE_NAMES[m.res]} (pole ${hex})`, res: m.res, amount: ECONOMY.incomeMine[m.res] });
   return rows;
 }
 

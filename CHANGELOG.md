@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Mapa przygody: kopalnia, tartak i źródło Pyłu przejęte przez frakcję mają przy ikonie jej chorągiewkę (zieloną dla Przymierza, czerwoną dla Hordy). W oknie dochodu kopalnie mają nazwę i „pole” zamiast samych współrzędnych.
+
 - Mapa przygody: gdy bohater weźmie złoto lub surowce (młyn, składnica, skrzynia, chatka, łup), nad jego polem unosi się napis z ikoną, np. „+2 zł”, i gra dźwięk monet.
 
 - Mapa przygody: prawy przycisk myszy na polu z osadą, kopalnią, tartakiem, młynem, składnicą, studnią, chatką albo Odłamkiem pokazuje teraz także ten obiekt (nazwę, co daje i do kogo należy), a nie tylko typ pola i koszt ruchu.
