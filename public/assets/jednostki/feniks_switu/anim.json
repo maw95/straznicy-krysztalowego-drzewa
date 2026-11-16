@@ -1,13 +1,27 @@
 {
- "frame": [
-  320,
-  320
+ "source_frame": 512,
+ "crop": [
+  14,
+  69,
+  497,
+  378
  ],
- "cols": 1,
+ "frame": [
+  373,
+  284
+ ],
+ "cols": 8,
  "fps": 12.0,
- "clips": {},
- "feet": 0.95,
- "cx": 0.5,
- "body": 0.95,
- "static": true
+ "clips": {
+  "atak": 37,
+  "lot": 37,
+  "odrodzenie": 37,
+  "smierc": 37,
+  "wzbicie": 25
+ },
+ "feet": 0.9524,
+ "cx": 0.4286,
+ "body": 0.5634,
+ "step": 2,
+ "scale": 0.75
 }

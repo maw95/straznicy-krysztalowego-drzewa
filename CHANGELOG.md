@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Behemot Zagłady, Feniks Świtu, Goblin Procarz, Troll Jaskiniowy, Gargulec i Wiwerna Cienia mają prawdziwe animacje (chód lub lot, atak, trafienie, śmierć; Troll bez ataku, Feniks bez klipu trafienia).
+
 - Efekty świetlne: czary bitewne (Magiczny Pocisk, Leczenie, Spowolnienie, Kamienna Skóra, Kula Ognia, Przyspieszenie), uderzenia katapulty i fosa w oblężeniu, odrodzenie Feniksa oraz na mapie czary Wizja i Wrota, podniesienie Odłamka i wzniesienie Pierwotnej Iskry mają teraz własne animowane efekty.
 
 - Dowódcy poziomu 5 (Łowczyni Gaju, Mędrzec Gaju, Kapitan Kuszników, Szaman Cieni) mają prawdziwe animacje chodu, ataku, trafienia i śmierci.
