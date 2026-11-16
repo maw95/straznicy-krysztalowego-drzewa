@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Rycerz Świtu ma prawdziwe animacje (chód, atak, trafienie, śmierć), a zdolność Odrodzenie z Popiołów Feniksa własną ikonę.
+
 - Dowódcy, jednostki legendarne i alternatywne z poziomów 5–6 mają własne dźwięki ataku i śmierci (16 jednostek, 32 nagrania).
 
 - Samouczek ma kroki dla poziomów Królestwo (dowódca, czary) i Imperium (Odłamki, drzewko frakcji, siedliska).

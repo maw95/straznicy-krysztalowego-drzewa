@@ -10,7 +10,7 @@ export const asset = (path: string) => `${BASE}assets/${path}`;
 export const artId = (unitId: string) => unitId;
 /** Id of the ability icon files. */
 /** Abilities that have no icon of their own yet borrow one (docs/BACKLOG.md, section 2a). */
-const ABILITY_ART: Record<string, string> = { rebirth: 'giftOfLife' };
+const ABILITY_ART: Record<string, string> = {};
 export const abilityArt = (ability: string) => ABILITY_ART[ability] ?? ability;
 export const portrait = (unitId: string) => asset(`cards/portraits/${artId(unitId)}.jpg`);
 /** Face of a map tile (one of the art variants), or its green/red back while hidden. */
