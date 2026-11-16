@@ -740,6 +740,9 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .sheet-stat { display: flex; justify-content: space-between; gap: 10px; padding: 1px 8px; border-radius: 6px; background: rgba(120, 80, 20, 0.12); }
 .hero-sheet .xpbar-text { color: #6B4A22; }
 .sheet-line { display: flex; gap: 8px; align-items: flex-start; font-size: 15px; line-height: 1.25; }
+.loot-float { position: absolute; z-index: 9; display: flex; gap: 8px; transform: translate(-50%, 0); padding: 3px 10px; border-radius: 12px; font-weight: 800; font-size: 20px; color: #FFF1C2; background: rgba(26, 18, 4, 0.82); box-shadow: 0 0 0 1.5px #F3D27A, 0 4px 10px rgba(0, 0, 0, 0.5); pointer-events: none; white-space: nowrap; animation: loot-rise 2.4s ease-out both; }
+.loot-float span { display: inline-flex; align-items: center; gap: 3px; }
+@keyframes loot-rise { 0% { opacity: 0; transform: translate(-50%, 8px); } 12% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -46px); } }
 .xp-toasts { position: fixed; left: 14px; bottom: 96px; z-index: 48; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
 .xp-toast { padding: 6px 14px; border-radius: 10px; font-size: 16px; font-weight: 700; color: #F6EAD0; background: linear-gradient(180deg, rgba(26, 52, 70, 0.95), rgba(10, 24, 36, 0.95)); box-shadow: 0 0 0 1.5px #9EE4FF, 0 6px 14px rgba(0, 0, 0, 0.55); animation: pop-in 0.3s ease-out both; }
 

@@ -964,7 +964,7 @@ function awardBattleXp(state: GameState, b: BattleState) {
     const loot = won ? specialtyOf(hero)?.gold ?? 0 : 0;
     if (loot && state.kingdom) {
       state.kingdom.gold[hero.faction] += loot;
-      log(state, 'info', `${UNITS[hero.id].name} zdobywa ${loot} zł łupu (${specialtyOf(hero)!.name}).`, hero.faction);
+      log(state, 'info', `${UNITS[hero.id].name} zdobywa ${loot} zł łupu (${specialtyOf(hero)!.name}).`, hero.faction, { type: 'loot', heroId: hero.id, gold: loot });
     }
     // Spoils: the winner of a fight between heroes takes the beaten hero's artifacts (those that improve its own gear); when there is nothing
     // to take it still finds a common one (the Horde meet guardians rarely, so this evens it out).

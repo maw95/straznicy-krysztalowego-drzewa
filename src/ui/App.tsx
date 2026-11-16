@@ -9,7 +9,7 @@ import { neighborKeys, type HexKey } from '../engine/hex';
 import { tileCost } from '../engine/map';
 import { controlCounts, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { arenaSetup, DEFAULT_RULES, isDigital, type Action, type GameState, type LogEntry, type LogEvent, type SetupOptions } from '../engine/types';
-import { AdventureView, GoldBox } from './AdventureView';
+import { AdventureView, GoldBox, type LootFloat } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
 import { usePresentation } from './usePresentation';
 import { ArtifactFound, xpNote } from './growthUi';
@@ -525,6 +525,7 @@ export function App() {
   const [xpNotes, setXpNotes] = useState<Array<{ key: number; text: string }>>([]);
   const [storyNews, setStoryNews] = useState<Array<Extract<LogEvent, { type: 'story' }>>>([]);
   const [artifactNews, setArtifactNews] = useState<Array<Extract<LogEvent, { type: 'artifact' }>>>([]);
+  const [lootFloats, setLootFloats] = useState<LootFloat[]>([]);
   useEffect(() => {
     if (!game) {
       newsSeen.current = null;
@@ -554,6 +555,13 @@ export function App() {
       window.setTimeout(() => setXpNotes((n) => n.filter((x) => !notes.includes(x))), 4500);
     }
     if (arts.length) setArtifactNews((a) => [...a, ...arts]);
+    // Gold and resources taken from the map float over the hero for a moment, with the coins sound.
+    const loots: LootFloat[] = fresh.flatMap((ev) => (ev.type === 'loot' ? [{ key: Math.random(), heroId: ev.heroId, gold: ev.gold, res: ev.res }] : []));
+    if (loots.length) {
+      setLootFloats((l) => [...l, ...loots].slice(-4));
+      sfx.play('coins_buy');
+      window.setTimeout(() => setLootFloats((l) => l.filter((x) => !loots.includes(x))), 2500);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game]);
 
@@ -871,7 +879,7 @@ export function App() {
       ) : held || (game.phase === 'battle' && b && !b.duel && b.stage !== 'select') ? (
         <BattleView state={held ? held.view : game} attack={held?.attack ?? null} canAct={humanTurn && !held} onAction={dispatch} onShowCard={setCard} footer={footer} />
       ) : (
-        <AdventureView state={game} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} footer={adventureFooter} />
+        <AdventureView state={game} loot={lootFloats} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} footer={adventureFooter} />
       )}
 
       <Modal open={Boolean(selecting)}>{selecting && <SupportSelect state={game} faction={selecting} onPick={(ids) => dispatch({ type: 'selectSupports', faction: selecting, supportIds: ids })} />}</Modal>

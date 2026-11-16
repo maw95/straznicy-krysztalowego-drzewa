@@ -395,6 +395,7 @@ export function enterPlace(state: GameState, hero: HeroState): void {
       o.used = state.round;
       k.gold[hero.faction] += OBJECTS.millGold;
       log(state, 'info', `${name} zabiera z młyna ${OBJECTS.millGold} zł (młyn miele znów za ${OBJECTS.millRounds} rundy).`);
+      lootEvent(state, hero, OBJECTS.millGold);
     } else if (o.kind === 'well') {
       // Only the hero whose turn it is can use the extra steps.
       if (state.heroes[state.turnOrder[state.turnIndex]]?.id !== hero.id) return;
@@ -405,8 +406,17 @@ export function enterPlace(state: GameState, hero: HeroState): void {
       o.done = true;
       k.res[hero.faction][o.res!] += o.amount!;
       log(state, 'info', `${name} opróżnia ${OBJECT_NAMES.store.toLowerCase()}: ${o.amount} × ${RESOURCE_NAMES[o.res!]}.`);
+      lootEvent(state, hero, 0, { [o.res!]: o.amount! });
     }
   }
+}
+
+/** Announces gold and resources a hero just took: the event rides on the log line just written (the screen floats it over the hero, with a sound). */
+function lootEvent(state: GameState, hero: HeroState, gold: number, res: Partial<Record<ResourceId, number>> = {}): void {
+  const got = Object.fromEntries(Object.entries(res).filter(([, n]) => n)) as Partial<Record<ResourceId, number>>;
+  const last = state.log[state.log.length - 1];
+  if ((!gold && !Object.keys(got).length) || !last || last.event) return;
+  last.event = { type: 'loot', heroId: hero.id, ...(gold ? { gold } : {}), ...(Object.keys(got).length ? { res: got } : {}) };
 }
 
 /** Buty Handlarza: the first place the hero takes pays a gold coin, once. */
@@ -416,6 +426,7 @@ function firstPlaceGold(state: GameState, hero: HeroState): void {
   hero.placeGoldPaid = true;
   state.kingdom!.gold[hero.faction] += gold;
   log(state, 'info', `${UNITS[hero.id].name} dostaje ${gold} zł za pierwsze zajęcie miejsca (Buty Handlarza).`);
+  lootEvent(state, hero, gold);
 }
 
 /** The end of a round: every faction collects its income. */
@@ -755,6 +766,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (r.xp) awardXp(state, hero, r.xp, 'zadanie z chatki');
       hut.done = true;
       log(state, 'info', `${UNITS[hero.id].name} załatwia zadanie chatki: oddaje ${thingsText(hut.want)}, dostaje ${thingsText(hut.reward)}.`);
+      lootEvent(state, hero, r.gold ?? 0, { wood: r.wood, ore: r.ore, dust: r.dust });
       break;
     }
     case 'chestTake': {
@@ -765,6 +777,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (action.what === 'gold') {
         k.gold[hero.faction] += KINGDOM.chestGold;
         log(state, 'info', `${UNITS[hero.id].name} bierze ze skrzyni ${KINGDOM.chestGold} zł.`);
+        lootEvent(state, hero, KINGDOM.chestGold);
       } else {
         giveArtifact(state, hero, drawArtifact(state, hero, ARTIFACT_ODDS.chest, 0x2545f491), 'skrzynia');
       }
@@ -773,6 +786,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (extra) {
         k.gold[hero.faction] += extra;
         log(state, 'info', `${UNITS[hero.id].name} dostaje jeszcze ${extra} zł (Kaftan Poborcy).`);
+        lootEvent(state, hero, extra);
       }
       break;
     }

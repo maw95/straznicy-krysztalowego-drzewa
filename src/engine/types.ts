@@ -460,6 +460,8 @@ export type LogKind = 'info' | 'move' | 'battle' | 'damage' | 'death' | 'item' |
 /** A structured happening behind a log line, for the screen to announce (experience gained, an artifact found). */
 export type LogEvent =
   | { type: 'xp'; heroId: string; amount: number; reason: string }
+  /** Gold and resources a hero just took from the map (a mill, a store, a chest, a hut): the screen floats them over the hero. */
+  | { type: 'loot'; heroId: string; gold?: number; res?: Partial<Record<'wood' | 'ore' | 'dust', number>> }
   | { type: 'artifact'; heroId: string; artifactId: string; source: string; kept: boolean; packed?: boolean }
   /** A story note of a hand-made map (story.ts). */
   | { type: 'story'; id: string; title?: string; text: string };

@@ -11,8 +11,8 @@ import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
 import { TreasureButton } from './TreasureButton';
 import { SettlementDialog } from './SettlementDialog';
 import { BUILDING_NAMES, chestPreview, garrisonAt, hasParent, hutPayable, KINGDOM, goldOf, incomeBreakdown, incomeOf, resourceIncomeBreakdown, settlementAt } from '../engine/kingdom';
-import { ECONOMY, MINE_NAMES, OBJECT_NAMES, OBJECTS, objectReady, RESOURCE_NAMES, thingsText } from '../engine/economy';
-import { ResourceStrip } from './resources';
+import { ECONOMY, MINE_NAMES, OBJECT_NAMES, OBJECTS, objectReady, RESOURCE_NAMES, thingsText, type ResourceId } from '../engine/economy';
+import { RESOURCE_ICON, ResourceStrip } from './resources';
 import { sfx } from './sfx';
 import { ARTIFACT_BY_ID } from '../engine/sites';
 import { heroTileCost, SITE } from '../engine/sites';
@@ -39,6 +39,15 @@ interface Props {
   footer: React.ReactNode;
   /** Family mode: the hex the hint points at (a pulsing ring). */
   hintHex?: HexKey | null;
+  /** What heroes just took from the map: floats up over the hero for a moment. */
+  loot?: LootFloat[];
+}
+
+export interface LootFloat {
+  key: number;
+  heroId: string;
+  gold?: number;
+  res?: Partial<Record<ResourceId, number>>;
 }
 
 /** The biggest hex a player can zoom the map to (pixels across). */
@@ -86,7 +95,7 @@ function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: Hex
   return out;
 }
 
-export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowCard, footer, hintHex }: Props) {
+export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowCard, footer, hintHex, loot = [] }: Props) {
   const detailsShown = useDetailsShown();
   const compact = useMedia(COMPACT_QUERY);
   // A finger has no hover: the tapped hex is described in a strip instead of a note beside it.
@@ -519,6 +528,19 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     </div>
                   );
                 })}
+              {loot.map((f, n) => {
+                const h = state.heroes[f.heroId];
+                if (!h?.alive || !state.tiles[h.pos]) return null;
+                const p = pos(state.tiles[h.pos]);
+                return (
+                  <div key={f.key} className="loot-float" data-loot-float={f.heroId} style={{ left: p.x + W / 2, top: p.y - H * 0.05 - n * 26 }}>
+                    {f.gold ? <span><img src={asset('ikony/mapa/zloto.webp')} alt="" width={22} height={22} />+{f.gold}</span> : null}
+                    {(Object.entries(f.res ?? {}) as Array<[ResourceId, number]>).map(([r, amount]) => (
+                      <span key={r}><img src={asset(RESOURCE_ICON[r])} alt="" width={22} height={22} />+{amount}</span>
+                    ))}
+                  </div>
+                );
+              })}
             </div>
           </div>
           {compact && (
