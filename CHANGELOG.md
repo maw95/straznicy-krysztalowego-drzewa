@@ -12,6 +12,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 - Behemot Zagłady, Feniks Świtu, Goblin Procarz, Troll Jaskiniowy, Gargulec i Wiwerna Cienia mają prawdziwe animacje (chód lub lot, atak, trafienie, śmierć).
 
+- Ramki okien mają nowe, proste narożniki (złoty łuk z niebieskim kryształkiem) dopasowane do ramki.
+
 - Okładka (menu gry i wydruk): bez starego napisu u góry, z aktualnym logo Gleamroot.
 
 - Oblężenie: mur, brama i wieżyczki mają teraz wygląd frakcji obrońcy: biały marmur ze złotem i zielenią u Przymierza, czarne żelazo z kolcami i czerwonymi sztandarami u Hordy.
