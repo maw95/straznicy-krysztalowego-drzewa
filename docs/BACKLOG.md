@@ -42,10 +42,9 @@ Wspólne dla punktów 16–21: potok i przepis `docs/PRZEPIS_JEDNOSTKI.md` (obra
 - Wady do oceny w grze (z raportów agentów 16.11): Szaman Cieni i Mędrzec mają błysk ataku jaśniejszy/niebieskawy i laska rozmyta; Łowczyni ma rozmyte środkowe klatki trafienia i zajmuje ok. 55% wysokości kadru; Szaman Cieni sięga w kadrze wyżej niż stopy 84% (sprawdź `box` w `sprites.ts`); Driada zajmuje ok. 85% wysokości kadru (sprawdź skalę); Wiwerna ma szeroki `martwy` (możliwe ucięcie przy krawędziach, crop 512 px); Goblin Procarz: kamień z procy słabo widoczny w klipie ataku, dobierz opóźnienie pocisku rysowanego przez kod (`.projectile`, wzór: głaz Cyklopa); Behemot: `stoi` z trzech czwartych i lekka fioletowa obwódka na kolcach; Feniks: fioletowa obwódka w środku `odrodzenie`; Lis: chód jak klus i dryf; Troll: jedna dziwna klatka w śmierci.
 - Gotowe, gdy: braki uzupełnione (albo adnotacja „nie wyszło”), odrodzenie Feniksa gra klip, wady z listy ocenione w grze (`make zrzut` bitwy z tymi jednostkami) i poprawione tam, gdzie wystarczy `box`/skala w `sprites.ts`.
 
-**24. Ikony: drzewko frakcji, siedliska, frakcyjne elementy oblężenia** (M, kredyty ok. 100 CU)
-- Trzy stopnie drzewka każdej z dwóch frakcji (6 ikon) mają dziś sam tekst w oknie osady; mechaniki mają ikony (`ikony/frakcje/blask_switu.webp`, `zadza_krwi.webp`: wzór stylu). Siedliska jednostek (16 nazw w `DWELLING_NAMES`) mają jedną wspólną ikonę `ikony/frakcje/siedlisko.webp`: zrób 16 ikon (jedna na jednostkę, po jednym wspólnym arkuszu 4×4 jeśli się da, pocięte skryptem `scripts/assets/arkusz.py`). Elementy oblężenia (`public/assets/arena/oblezenie/`) są neutralne (szary kamień): zrób wersje Przymierza i Hordy dla muru, bramy i wieżyczki.
-- Decyzja: siedliska nadal nie stoją w krajobrazie osady (tylko ikony na liście koszar; decyzja 11 w sekcji 7).
-- Gotowe, gdy: ikony widoczne w oknie osady i na liście koszar, oblężenie frakcyjne w bitwie; wpisy w `assets.json`.
+**24. Frakcyjne elementy oblężenia** (S, kredyty ok. 40 CU; ikony siedlisk i drzewka zrobione 16.11)
+- Elementy oblężenia (`public/assets/arena/oblezenie/`: mur, brama, wieża, fosa, gruz, katapulta) są neutralne (szary kamień). Zrób wersje Przymierza (jasny kamień, złoto, zieleń) i Hordy (czarne żelazo, czerwień) muru, bramy i wieżyczki (6 obrazów, ten sam kadr i rozmiar co istniejące, `quality medium`) i wybieraj je w arenie według frakcji obrońcy. Siedliska nadal bez własnych budynków w krajobrazie osady (decyzja 11, sekcja 7).
+- Gotowe, gdy: oblężenie pokazuje wersję frakcji obrońcy (`make zrzut` z `siege=2`), wpisy w `assets.json`.
 
 ### Grupa E. Prezentacja i druk
 **25. Okładka do druku bez starego logo** (S, kredyty ok. 14 CU)

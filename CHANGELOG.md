@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Okno osady (poziom Imperium): każde siedlisko jednostki ma własną ikonę, a trzy stopnie drzewka frakcji (Przymierza i Hordy) mają ikony.
+
 - Srebrny Lis, Driada Łuczniczka, Biały Jeleń i Sowa Świtu mają prawdziwe animacje; Wódz Hordy dostał animację ataku.
 
 - Behemot Zagłady, Feniks Świtu, Goblin Procarz, Troll Jaskiniowy, Gargulec i Wiwerna Cienia mają prawdziwe animacje (chód lub lot, atak, trafienie, śmierć; Troll bez ataku, Feniks bez klipu trafienia).

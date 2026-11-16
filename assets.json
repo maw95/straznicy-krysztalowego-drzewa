@@ -4782,6 +4782,54 @@
       "data": "2026-11-16",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ikony/siedliska-poziom6",
+      "pliki": [
+        "public/assets/ikony/siedliska/hedgehog.webp",
+        "public/assets/ikony/siedliska/silverFox.webp",
+        "public/assets/ikony/siedliska/centaur.webp",
+        "public/assets/ikony/siedliska/dawnOwl.webp",
+        "public/assets/ikony/siedliska/boar.webp",
+        "public/assets/ikony/siedliska/dryadArcher.webp",
+        "public/assets/ikony/siedliska/treeGuardian.webp",
+        "public/assets/ikony/siedliska/whiteStag.webp",
+        "public/assets/ikony/siedliska/ratman.webp",
+        "public/assets/ikony/siedliska/goblinSlinger.webp",
+        "public/assets/ikony/siedliska/hellhound.webp",
+        "public/assets/ikony/siedliska/gargoyle.webp",
+        "public/assets/ikony/siedliska/salamander.webp",
+        "public/assets/ikony/siedliska/caveTroll.webp",
+        "public/assets/ikony/siedliska/minotaurChief.webp",
+        "public/assets/ikony/siedliska/shadowWyvern.webp"
+      ],
+      "typ": "ikony 16 siedlisk jednostek poziomu 6 (okrągłe medaliony 96 px, pocięte z arkusza 4×4)",
+      "prompt": "A strict 4 by 4 grid of 16 separate round fantasy game building icons, each an ornate painted medallion with a thin gold ring, painterly style, on a pure solid black background: hedgehog burrow; silver fox den; centaur stables; owl hollow; oak pen with boar; dryad grove; ancient dark grove; sunlit glade with white deer; rat burrows; goblin camp; hellhound kennel; gargoyle perch; ash pit with embers; troll cave; minotaur labyrinth; wyvern nest on a cliff.",
+      "scenario_asset": "asset_VzQ5A9jBUxGmiWmeCte5YCRp",
+      "model": "GPT Image 2.5 Flare, 1024x1024, quality high",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ikony/drzewko-frakcji",
+      "pliki": [
+        "public/assets/ikony/drzewko/dawn_1.webp",
+        "public/assets/ikony/drzewko/dawn_2.webp",
+        "public/assets/ikony/drzewko/dawn_3.webp",
+        "public/assets/ikony/drzewko/horde_1.webp",
+        "public/assets/ikony/drzewko/horde_2.webp",
+        "public/assets/ikony/drzewko/horde_3.webp"
+      ],
+      "typ": "ikony trzech stopni drzewka frakcji (Ciepły Świt, Dwa Promienie, Złoty Poranek; Zapach Krwi, Szał Bitewny, Uczta Zwycięzców), 96 px",
+      "prompt": "A strict 3 by 2 grid of 6 round fantasy upgrade icons with thin gold rings on pure black: top row green and gold (warm sunrise over a tree; two crossing golden sunrays; golden morning sun with a crown of light); bottom row dark red and iron (wolf-like nostril sniffing a red trail; roaring orc with war paint; feast table with goblet and roasted boar under a red banner).",
+      "scenario_asset": "asset_hZoUi8KffreQVV53kyZgh6nA",
+      "model": "GPT Image 2.5 Flare, 1024x1024, quality high",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

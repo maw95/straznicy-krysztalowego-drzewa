@@ -158,7 +158,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                 </div>
                 {have ? <b style={{ color: '#2E7A32' }}>{garrison.includes(r.id) || !(fs.supportsAlive.includes(r.id) || fs.supportsDead.includes(r.id)) ? 'W garnizonie' : 'W drużynie'}</b> : needsDwelling(state, r) && dwellingOf(state, faction, r.tier) === undefined ? (
                   <button className="btn" disabled={!mayHire || locked || !mayBuildNow(state, faction) || !canPay(state, faction, DWELLING_COST[r.tier - 2])} data-dwelling={r.id} title={locked ? 'Potrzebne rozbudowane koszary.' : 'Siedlisko jednej jednostki wyklucza drugą jednostkę tego poziomu do końca gry.'} onClick={() => act({ type: 'kingdomDwelling', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 12px', fontSize: 15 }}>
-                    <img src={asset('ikony/frakcje/siedlisko.webp')} alt="" width={22} height={22} style={{ verticalAlign: 'middle', marginRight: 6 }} />Zbuduj: {DWELLING_NAMES[r.id]} ({costText(DWELLING_COST[r.tier - 2])})
+                    <img src={asset(`ikony/siedliska/${r.id}.webp`)} alt="" width={30} height={30} style={{ verticalAlign: 'middle', marginRight: 6 }} />Zbuduj: {DWELLING_NAMES[r.id]} ({costText(DWELLING_COST[r.tier - 2])})
                   </button>
                 ) : !dwellingReady(state, faction, r) ? <i data-excluded={r.id} style={{ color: '#8A5A3A' }}>wykluczone: wybrano {DWELLING_NAMES[dwellingOf(state, faction, r.tier)!]}</i> : (
                   <button className="btn prim" disabled={!mayHire || locked || gold < r.cost || res.dust < (r.dust ?? 0)} data-recruit={r.id} title={locked ? 'Potrzebne rozbudowane koszary.' : undefined} onClick={() => act({ type: 'kingdomRecruit', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 14px', fontSize: 16 }}>
@@ -356,7 +356,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               <b style={{ fontSize: 16 }}>{MECHANIC_NAMES[faction]}</b> <span style={{ color: '#6B4A22' }}>mechanika frakcji · drzewko {rank}/3</span>
               <div><RuleText text={MECHANIC_TEXTS[faction]} /></div>
               {TREE_NAMES[faction].map((name, i) => (
-                <div key={name} style={{ opacity: i < rank ? 1 : 0.6 }}>{i < rank ? '✓' : '○'} <b>{name}</b>: <RuleText text={TREE_TEXTS[faction][i]} /></div>
+                <div key={name} data-tree-rank={i + 1} style={{ opacity: i < rank ? 1 : 0.6, display: 'flex', gap: 6, alignItems: 'center' }}><img src={asset(`ikony/drzewko/${faction}_${i + 1}.webp`)} alt="" width={30} height={30} style={{ flex: 'none', filter: i < rank ? undefined : 'grayscale(0.7)' }} /><span>{i < rank ? '✓' : '○'} <b>{name}</b>: <RuleText text={TREE_TEXTS[faction][i]} /></span></div>
               ))}
             </div>
             {next ? (
