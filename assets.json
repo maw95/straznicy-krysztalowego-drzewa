@@ -4230,6 +4230,98 @@
       "data": "2026-11-16",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/lowczyni_gaju-animacje",
+      "pliki": [
+        "public/assets/jednostki/lowczyni_gaju/"
+      ],
+      "typ": "dawnHuntress: figurka i animacje (chod, atak, trafienie, smierc)",
+      "prompt": "{\"stoi\": \"Use the reference image only for the character design (young female elf huntress with a green leaf-trimmed hood, copper-red braided hair, pointed ears, green and gold leather armor with gold bracers, wooden longbow). Draw this same character as a full-body game sprite in a strict side view, standing upright holding her longbow in her left hand, no arrow nocked, bow lowered, facing right, ... blue #0000FF background (standard template)\", \"martwy\": \"The same character ... lying still on her side on the ground, head to the right, as if fast asleep, defeated and motionless, bow resting beside her ... (standard template)\", \"chod\": \"Side view, locked static camera. The elf huntress walks in place with a steady stride as if on a treadmill, always facing right, holding her bow at her side. Plain solid blue background stays unchanged, no camera movement.\", \"atak\": \"Side view, locked static camera. The elf huntress takes an arrow from her quiver, draws her longbow smoothly back, then releases the arrow to the right in front of her, feet staying in place, then lowers the bow and returns to the standing pose, facing right. Plain solid blue background stays unchanged, no camera movement.\", \"trafienie\": \"Side view, locked static camera. The elf huntress is startled: she flinches and rocks backwards a little, then steadies herself and stands as before, still facing right. Plain solid blue background stays unchanged, no camera movement.\", \"smierc\": \"Side view, locked static camera. The elf huntress puts down her bow, lowers herself slowly to the ground, lies on her side and falls asleep. Plain solid blue background stays unchanged, no camera movement. (lastFrameImage = martwy; first attempt with 'sits down slowly and rests ... Defeat animation' was blocked by the filter, 15 CU)\"}",
+      "scenario_asset": {
+        "portrait": "asset_W3qANvMHTZaKwH171y27be9w",
+        "stoi": "asset_qdSziATzJuGULWH4WH5Hu1u7",
+        "martwy": "asset_CLX6Mh8KusEuoDLQfG1ivhEp",
+        "chod": "asset_ropt23PueHCEoThJQENY2mg9",
+        "atak": "asset_AD9bDumYz51ASZxMjSU2oMJY",
+        "trafienie": "asset_6NuueoJkAndGPKEYSZM1BX4p",
+        "smierc": "asset_xhjN87sxn9epxyzYDmaJk3d3"
+      },
+      "model": "GPT Image 2.5 Flare + P-Video 2",
+      "uwagi": "Strzala w klipie widoczna jako mala kreska (kod moze rysowac wlasna). Trafienie: srodkowe klatki rozmyte (ruch). Smierc konczy sie jak martwy (lezy na boku, glowa w prawo). Postac nieco wysoka w kadrze (ok. 55% wysokosci). Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/medrzec_gaju-animacje",
+      "pliki": [
+        "public/assets/jednostki/medrzec_gaju/"
+      ],
+      "typ": "dawnSage: figurka i animacje (chod, atak, trafienie, smierc)",
+      "prompt": "{\"stoi\": \"Use the reference image only for the character design (old elf sage with long white beard, crown of antlers and green leaves, green leafy robes with gold trim, gnarled wooden staff with glowing golden-green crystal) ... strict side view, standing upright holding the staff in his right hand planted beside him, facing right ... (standard template)\", \"martwy\": \"The same character ... lying still on his side on the ground, head to the right, as if fast asleep, defeated and motionless, staff resting beside him ... (standard template)\", \"chod\": \"Side view, locked static camera. The elf sage walks in place with a steady stride as if on a treadmill, always facing right, leaning lightly on his staff. Plain solid blue background stays unchanged, no camera movement.\", \"atak\": \"Side view, locked static camera. The elf sage raises his staff high with both hands and makes a casting gesture with it to the right in front of him, the crystal on the staff flashes with a bright light, feet staying in place, then lowers the staff and returns to the standing pose, facing right. Plain solid blue background stays unchanged, no camera movement.\", \"trafienie\": \"Side view, locked static camera. The elf sage is startled: he flinches and rocks backwards a little, then steadies himself and stands as before, still facing right. Plain solid blue background stays unchanged, no camera movement.\", \"smierc\": \"Side view, locked static camera. The elf sage puts down his staff, lowers himself slowly to the ground, lies on his side and falls asleep. Plain solid blue background stays unchanged, no camera movement. (lastFrameImage = martwy)\"}",
+      "scenario_asset": {
+        "portrait": "asset_ZvUz4h4SQ1ByR1mm4iUaGAgG",
+        "stoi": "asset_PTj2aPukHHhMB7KWu2p2W6Jz",
+        "martwy": "asset_qGuE7tXg7ii7XqGBXiZW5bPP",
+        "chod": "asset_4GjBZKWce246E61cTSzhBwXc",
+        "atak": "asset_UvJP13GNiWTzD2xTcqiBZuEt",
+        "trafienie": "asset_dV4rUjuVTizMJPvR82KyEr7c",
+        "smierc": "asset_urKXNRYqj5QKCEqofRxrVtMK"
+      },
+      "model": "GPT Image 2.5 Flare + P-Video 2",
+      "uwagi": "Atak: laska unosi sie w gore (bardziej w gore niz w prawo), blask ma niebieskawa poswiate i jest przyciety przy gornej krawedzi kadru; kod moze dolozyc wlasny blysk. Martwy obejrzany tylko w klatkach konca klipu smierci (OK). Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/kapitan_kusznikow-animacje",
+      "pliki": [
+        "public/assets/jednostki/kapitan_kusznikow/"
+      ],
+      "typ": "hordeCrossbow: figurka i animacje (chod, atak, trafienie, smierc)",
+      "prompt": "{\"stoi\": \"Use the reference image only for the character design (a goblin crossbow captain with olive-green skin, pointed ears, sly grin, dark red hood and scarf, dark iron bolt bandolier across the chest, quiver on the back). Draw this same character as a full-body game sprite in a strict side view, standing upright holding a dark iron crossbow in both hands, facing right, in a serious painterly realistic style with muted dark iron, crimson red and olive tones, no blue anywhere on the character. The weapon and clothing are clean, no blood. [standard frame/background suffix: <=50% of frame, feet at 84%, solid #0000FF background]\", \"martwy\": \"The same goblin as in the reference image, now lying still on his side on the ground in a strict side view with his head to the right, eyes closed, crossbow resting beside him, as if fast asleep, defeated and motionless. [same style/size/line, blue background]\", \"chod\": \"Side view, locked static camera. The goblin walks in place with a steady stride as if on a treadmill, always facing right, holding the crossbow in front of him, his red scarf swaying slightly, the body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.\", \"atak\": \"Side view, locked static camera. The goblin lifts his crossbow with both hands and points it ahead to the right, gives a small jolt as if releasing a shot into the distance, then lowers the crossbow and returns to the standing pose, feet staying in place. Plain solid blue background stays unchanged, no camera movement. (first attempt 'raises the crossbow to his shoulder... fires a bolt' was blocked by the filter)\", \"trafienie\": \"Side view, locked static camera. The goblin is startled: he flinches and rocks backwards a little, then steadies himself and stands as before, still facing right. Plain solid blue background stays unchanged, no camera movement.\", \"smierc\": \"Side view, locked static camera. The goblin sits down slowly and rests, then settles down onto the ground and lies still on his side. Defeat animation. Plain solid blue background stays unchanged, no camera movement. (lastFrameImage = martwy)\"}",
+      "scenario_asset": {
+        "portret": "asset_ic7GiB75uxmueKuCfodsxVd6",
+        "stoi": "asset_VGSKyKPPSmY7gJ8CpqJHM2sg",
+        "martwy": "asset_WCeaSoyJPGEzPA2rNCpyMxgw",
+        "chod": "asset_oNUCmGbY6byKGh12v6UNvYnU",
+        "atak": "asset_pNeG3E6fS5aaC7JfSiZu4pVg",
+        "trafienie": "asset_PockawATEVZ2md18huMGzQnH",
+        "smierc": "asset_wUSYWu6k1sg4j9gYwmRXbAjs"
+      },
+      "model": "GPT Image 2.5 Flare + P-Video 2",
+      "uwagi": "Atak: bolt not in clip, a white muzzle flash appears (code should draw the bolt). Trafienie ends with the crossbow slightly lowered, not exactly as stoi. Atak first try blocked (15 CU lost). Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/szaman_cieni-animacje",
+      "pliki": [
+        "public/assets/jednostki/szaman_cieni/"
+      ],
+      "typ": "hordeShadow: figurka i animacje (chod, atak, trafienie, smierc)",
+      "prompt": "{\"stoi\": \"Use the reference image only for the character design (a dark shaman in a tattered brown hood with a pale bird-skull mask with a long beak and a red mark on the forehead, chains and bone trinkets, dark spiked iron shoulder armor, purple-magenta shadow wisps). Draw this same character as a full-body game sprite in a strict side view, standing upright holding a tall wooden staff topped with a horned bone ornament in one hand, facing right, painterly realistic, muted dark iron, crimson red and olive-brown tones with faint purple wisps, no blue on the character, clean, no blood. [standard frame/background suffix]\", \"martwy\": \"The same shaman as in the reference image, now lying still on his side on the ground in a strict side view with his head to the right, the staff lying beside him, as if fast asleep, defeated and motionless. [same style/size/line, blue background]\", \"chod\": \"Side view, locked static camera. The shaman walks in place with a steady stride as if on a treadmill, always facing right, holding the staff upright, his ragged robe swaying slightly, the body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.\", \"atak\": \"Side view, locked static camera. The shaman raises his staff high and makes a wide sweeping gesture towards the right, a dark purple flash of magic glows at the tip of the staff, then he lowers the staff and returns to the standing pose, feet staying in place. Plain solid blue background stays unchanged, no camera movement.\", \"trafienie\": \"Side view, locked static camera. The shaman is startled: he flinches and rocks backwards a little, then steadies himself and stands as before, still facing right. Plain solid blue background stays unchanged, no camera movement.\", \"smierc\": \"Side view, locked static camera. The shaman sits down slowly and rests, then settles down onto the ground and lies still on his side. Defeat animation. Plain solid blue background stays unchanged, no camera movement. (lastFrameImage = martwy)\"}",
+      "scenario_asset": {
+        "portret": "asset_6zBC3x9bZ8cuynjHGWzrCGtf",
+        "stoi": "asset_yEHFoYc8C6doTuiMKWZ2E44T",
+        "martwy": "asset_61heDj6FzFP8FnCvg8p53ky8",
+        "chod": "asset_fmYYbJF1WZMfBvvzqU9hv316",
+        "atak": "asset_SrgkwEJ35Po35ZkAGzHtRTXt",
+        "trafienie": "asset_uyVS4cXJoZKE65edM39BiqDA",
+        "smierc": "asset_QqLtYU2gPknYnpp2t7quS1F3"
+      },
+      "model": "GPT Image 2.5 Flare + P-Video 2",
+      "uwagi": "Figure is tall (staff reaches ~8% from top, robe hem reaches ~91% of height, feet slightly below 84% line). Atak: the staff is swung wide and flies near-horizontal, glow is purple/blue-ish flash with ring, not a dark flash; the staff in the swing is blurry. Smierc: staff lands in front, slightly lower than martwy pose. Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
