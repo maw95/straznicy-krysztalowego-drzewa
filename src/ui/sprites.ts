@@ -78,16 +78,16 @@ export const SPRITES: Record<string, SpriteSpec> = {
   hordeWarlord: { dir: 'jednostki/wodz_hordy', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, speed: {} },
   hordeCrossbow: { dir: 'jednostki/kapitan_kusznikow', box: [80, 78] as const, corpseMax: CORPSE_MAX_W, speed: {} },
   hordeShadow: { dir: 'jednostki/szaman_cieni', box: [80, 100] as const, corpseMax: CORPSE_MAX_W, speed: {} },
-  dawnPhoenix: { dir: 'jednostki/feniks_switu', box: [170, 140] as const, speed: {} },
+  dawnPhoenix: { dir: 'jednostki/feniks_switu', box: [170, 140] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   doomBehemoth: { dir: 'jednostki/behemot_zaglady', box: [170, 130] as const, speed: {} },
   silverFox: { dir: 'jednostki/srebrny_lis', box: [92, 70] as const, corpseMax: CORPSE_MAX_W, speed: {} },
-  dawnOwl: { dir: 'jednostki/sowa_switu', box: [92, 92] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  dawnOwl: { dir: 'jednostki/sowa_switu', box: [92, 92] as const, corpseMax: CORPSE_MAX_W, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   dryadArcher: { dir: 'jednostki/driada_luczniczka', box: [70, 100] as const, corpseMax: CORPSE_MAX_W, speed: {} },
   whiteStag: { dir: 'jednostki/bialy_jelen', box: [130, 130] as const, speed: {} },
   goblinSlinger: { dir: 'jednostki/goblin_procarz', box: [84, 76] as const, corpseMax: CORPSE_MAX_W, speed: {} },
-  gargoyle: { dir: 'jednostki/gargulec', box: [92, 96] as const, corpseMax: CORPSE_MAX_W, speed: {} },
+  gargoyle: { dir: 'jednostki/gargulec', box: [92, 96] as const, corpseMax: CORPSE_MAX_W, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   caveTroll: { dir: 'jednostki/troll_jaskiniowy', box: [92, 100] as const, corpseMax: CORPSE_MAX_W, speed: {} },
-  shadowWyvern: { dir: 'jednostki/wiwerna_cienia', box: [160, 130] as const, speed: {} },
+  shadowWyvern: { dir: 'jednostki/wiwerna_cienia', box: [160, 130] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
 };
 
 /** Whether the unit is drawn from sprites in the digital ruleset (otherwise: 3D figure or portrait token). */

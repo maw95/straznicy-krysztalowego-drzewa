@@ -4215,7 +4215,7 @@
       "pliki": [
         "public/assets/jednostki/wodz_hordy/"
       ],
-      "typ": "Wódz Hordy (hordeWarlord): figurka i animacje chodu, trafienia i śmierci (bez ataku)",
+      "typ": "Wódz Hordy (hordeWarlord): figurka i animacje chodu, ataku, trafienia i śmierci",
       "prompt": "Obraz bazowy: huge muscular orc warlord, greenish-grey skin, tusks, red war paint, long black braided hair, dark spiked iron armour with skull ornament, heavy two-handed axe; strict side view facing right, solid blue #0000FF background. Klipy (P-Video 2, 720p, 24 kl./s): chód w miejscu, trafienie (drgnięcie), śmierć (kładzie się i zasypia; bez klatki końcowej).",
       "scenario_asset": {
         "stoi": "asset_wVRqVwLPh8eTxY5SM2hGaMSr",
@@ -4225,7 +4225,7 @@
         "smierc": "asset_omxrx7F7CjAgba8qvC12bWee"
       },
       "model": "GPT Image 2.5 Flare (stoi high, martwy medium) + P-Video 2",
-      "uwagi": "brak klipu ataku: filtr treści zablokował dwa podejścia (topór); do zrobienia, np. po zmianie obrazu bazowego (topór bez śladów krwi); zastępuje statyczną figurkę z 15.11",
+      "uwagi": "atak (wymach ciałem w przód, bez topora w opisie) dorobiony 16.11: asset_jMmKD3oY9qqfzmm5rDkp12db; zastępuje statyczną figurkę z 15.11",
       "narzedzie": "Scenario (plan płatny)",
       "data": "2026-11-16",
       "ai": true,
@@ -4684,6 +4684,100 @@
       },
       "model": "GPT Image 2.5 Flare + P-Video 2",
       "uwagi": "Pierwsze podejscie do smierci: blad wewnetrzny (15 CU). martwy zajmuje prawie cala szerokosc kadru (ryzyko uciecia przy krawedziach). Trafienie ma w srodku furkot skrzydel. Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/srebrny_lis-animacje",
+      "pliki": [
+        "public/assets/jednostki/srebrny_lis/"
+      ],
+      "typ": "silverFox: figurka i animacje (chod, atak, trafienie, smierc)",
+      "prompt": "{\"stoi\": \"Use the reference image only for the character design (small silver-grey fox, amber eyes, leaf collar). Draw this same character as a full-body game sprite in a strict side view, facing right, serious painterly realistic style, whole figure inside frame (max 50% width/height), feet at ~84% height, plain solid pure blue background (#0000FF), no ground, no shadow, no text. Standing on all fours.\", \"martwy\": \"Same silver fox lying still on its belly, head on front paws, eyes closed, as if fast asleep, defeated and motionless; same style/size/position.\", \"chod\": \"Side view, locked static camera. The small silver fox walks in place with a steady stride as if on a treadmill, always facing right, tail swaying gently, the body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.\", \"atak\": \"Side view, locked static camera. The small silver fox crouches a little, then leaps up and forward with a playful hop and a gentle bite in the air towards the right, then lands back on the same spot and returns to the standing pose. Its paws stay at the same place on the ground, it does not run. Plain solid blue background stays unchanged, no camera movement.\", \"trafienie\": \"Side view, locked static camera. The small silver fox standing in place is startled: it flinches and rocks backwards a little, its ears flick back, then it steadies itself and stands as before, still facing right. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.\", \"smierc\": \"Side view, locked static camera. The small silver fox sits down slowly and rests, then settles down onto the ground and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement. (lastFrameImage = martwy)\"}",
+      "scenario_asset": {
+        "stoi": "asset_FBKYwJdx8FvktBfLjWANo9mw",
+        "martwy": "asset_shWLphcduVg2teN2mZAvcyYQ",
+        "chod": "asset_epn163NKeTFzz1zfG4nakRcs",
+        "atak": "asset_Tx8A8G4prXZbPArmtrmmE6rr",
+        "trafienie": "asset_NDSSWdMDmW6gKxEjBqrDri3a",
+        "smierc": "asset_AGz217YJNLnpLeFuU7i5uHZ4",
+        "portret": "asset_yP8uu9NP1EAiuQBNCfiZHb16"
+      },
+      "model": "GPT Image 2.5 Flare + P-Video 2",
+      "uwagi": "Chod bardziej klus, pod koniec lekko dryfuje w prawo; w skoku ataku klatki posrednie rozmyte/kolorowe artefakty na lapach (krotko). Reszta czysta, bez niebieskiej obwodki. Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/driada_luczniczka-animacje",
+      "pliki": [
+        "public/assets/jednostki/driada_luczniczka/"
+      ],
+      "typ": "dryadArcher: figurka i animacje (chod, atak, smierc); brak klipów: trafienie",
+      "prompt": "{\"stoi\": \"Use the reference image only for the character design (young dryad archer, wavy brown hair with white flowers, leaf-and-vine wraps, bow of twisted living wood). Draw this same character as a full-body game sprite in a strict side view, facing right, serious painterly realistic style, whole figure inside frame (max 50% width/height), feet at ~84% height, plain solid pure blue background (#0000FF), no ground, no shadow, no text. Standing upright with bow and arrow.\", \"martwy\": \"Same dryad lying still on her side, head right, eyes closed, bow beside her, as if fast asleep, defeated and motionless.\", \"chod\": \"Side view, locked static camera. The dryad woman walks in place with a steady stride as if on a treadmill, always facing right, holding her bow at her side, the body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.\", \"atak\": \"Side view, locked static camera. The dryad woman draws her bowstring back with an arrow, aims to the right, then releases the arrow, which flies away to the right, and she lowers the bow and returns to the standing pose. Her feet stay in place. Plain solid blue background stays unchanged, no camera movement.\", \"trafienie\": \"Side view, locked static camera. The dryad woman standing in place is startled: she flinches and rocks backwards a little, then steadies herself and stands as before, still facing right. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement. (odrzucony: konczy bez luku)\", \"smierc\": \"Side view, locked static camera. The dryad woman sits down slowly and rests, then settles down onto the ground and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement. (lastFrameImage = martwy)\"}",
+      "scenario_asset": {
+        "stoi": "asset_ys1TcSXsXR1gkV3zp9rx5GyY",
+        "martwy": "asset_4PBa5pYQ1DesRVrViFkq6vHv",
+        "chod": "asset_kKfLXXP4oi6KrzETAoBW6RCk",
+        "atak": "asset_NanPzC73Ac393SjGDqheY9Y7",
+        "trafienie_odrzucone": "asset_DR83dyMoT8fkM6nWePxg2Uu8",
+        "smierc": "asset_KMZ6LeywSozRPXQnxv5eA8ip",
+        "portret": "asset_zSRDeq9c7tkXH3BHzrYTvdr1"
+      },
+      "model": "GPT Image 2.5 Flare + P-Video 2",
+      "uwagi": "Trafienie pominiete: klip konczy sie bez luku w rece (inna poza niz stoi). Postac wysoka (ok. 85% kadru). Atak (naciag i strzal) wyszedl dobrze, strzala znika w kadrze. Smierc: w polowie klipu klatki z klekaniem, koniec zgodny z martwy. Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/bialy_jelen-animacje",
+      "pliki": [
+        "public/assets/jednostki/bialy_jelen/"
+      ],
+      "typ": "whiteStag: figurka i animacje (chod, atak, trafienie, smierc)",
+      "prompt": "{\"stoi\": \"Use the reference image only for the character design (majestic white stag, creamy coat, golden antler crown with pink and white flowers). Draw this same character as a full-body game sprite in a strict side view, facing right, serious painterly realistic style, whole figure inside frame (max 50% width/height), feet at ~84% height, plain solid pure blue background (#0000FF), no ground, no shadow, no text. Standing on all four legs, head high (max 56%).\", \"martwy\": \"Same stag lying still on the ground, legs folded, head low, eyes closed, as if fast asleep, defeated and motionless.\", \"chod\": \"Side view, locked static camera. The white stag walks in place with a steady stride as if on a treadmill, always facing right, head carried high, the body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.\", \"atak\": \"Side view, locked static camera. The white stag lowers its head with its antlers and swings its head forward and to the right in a firm sweeping motion, then lifts its head back up and returns to the standing pose. Its hooves stay at the same spot, it does not run or walk forward. Plain solid blue background stays unchanged, no camera movement.\", \"trafienie\": \"Side view, locked static camera. The white stag standing in place is startled: it flinches and rocks backwards a little, its head jerks up, then it steadies itself and stands as before, still facing right. The hooves stay on the same spot. Plain solid blue background stays unchanged, no camera movement.\", \"smierc\": \"Side view, locked static camera. The white stag sits down slowly and rests, folding its legs under it, then settles down onto the ground and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement. (lastFrameImage = martwy)\"}",
+      "scenario_asset": {
+        "stoi": "asset_YvmT2XMnBu44gSmN2vTUs4U8",
+        "martwy": "asset_qnvnwvEWVfM2BfHXHyJmKYj8",
+        "chod": "asset_tKjMG1akx1k4ypgahcMNp8sQ",
+        "atak": "asset_Zxzsurt82RqWW62mzv6LgQ2J",
+        "trafienie": "asset_edY8bV8dWGbN9swzkfVQTubg",
+        "smierc": "asset_hXhxqagewyqWnH5nWEyF1B4F",
+        "portret": "asset_9n3zna8shDeF22uXBGu6uJ6U"
+      },
+      "model": "GPT Image 2.5 Flare + P-Video 2",
+      "uwagi": "Poroze w ruchu ataku lekko rozmyte (kwiaty), reszta czysta. Atak pochyla glowe w miejscu, bez biegu. Trafienie konczy sie z lekko przechylona glowa. Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-16",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "jednostki/sowa_switu-animacje",
+      "pliki": [
+        "public/assets/jednostki/sowa_switu/"
+      ],
+      "typ": "dawnOwl: figurka i animacje (lot, wzbicie, atak, trafienie, smierc)",
+      "prompt": "{\"poza_lotu\": \"Use the reference image only for the character design (large barn owl, heart-shaped face, amber eyes, golden-buff and cream feathers). Draw as game sprite in strict side view, hovering with wings spread wide and raised, facing right, max 50% of frame, blue #0000FF background.\", \"stoi\": \"The same barn owl as in the reference image, but now it is NOT flying: perched standing on the ground on its feet, wings folded, strict side view facing right. Feet at ~84% height, blue #0000FF background.\", \"martwy\": \"Same owl lying still on the ground on its belly, head right, wings folded, eyes closed, as if fast asleep, defeated and motionless.\", \"lot\": \"Side view, locked static camera. The barn owl hovers in the air in the same spot and beats its wings up and down in a steady rhythm, always facing right, the body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement. (pierwsza proba 'flaps its wings steadily in place' dala blad wewnetrzny, 15 CU)\", \"wzbicie\": \"Side view, locked static camera. The barn owl perched on the ground spreads its wings and lifts off, rising into the air and hovering with its wings spread, always facing right. Plain solid blue background stays unchanged, no camera movement. (image = stoi, lastFrameImage = poza_lotu)\", \"atak\": \"Side view, locked static camera. The barn owl perched on the ground spreads both wings wide and sweeps them forward to the right in a sweeping motion with a loud call, then folds its wings and returns to the standing pose. Its feet stay at the same spot, it does not fly or walk forward. Plain solid blue background stays unchanged, no camera movement.\", \"trafienie\": \"Side view, locked static camera. The barn owl standing in place is startled: it flinches and rocks backwards a little, ruffling its feathers, then steadies itself and stands as before, still facing right. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.\", \"smierc\": \"Side view, locked static camera. The barn owl sits down slowly and rests, then settles down onto the ground and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement. (lastFrameImage = martwy)\"}",
+      "scenario_asset": {
+        "poza_lotu": "asset_PC241fJWStXRJ5fnXhGC3Y2F",
+        "stoi": "asset_ZZLkJxbss9jiNwRRj8WzxWAw",
+        "martwy": "asset_cmjhEqQDtWvq4YdZweeWTfyJ",
+        "lot": "asset_NViR8G2W2TMGqsqUu8vbt4kN",
+        "wzbicie": "asset_DmSAx8XTDdFBa4dfgd1ETLp3",
+        "atak": "asset_EZihFfJqNF6JpT4RERBHXT8h",
+        "trafienie": "asset_sKGLm6kKdJnfBVbSyr8aiwF8",
+        "smierc": "asset_hj2zJYPpdyu65LgyhuTUp1XD",
+        "portret": "asset_KNq5w8rCvsjkPk8FGag2ghUQ"
+      },
+      "model": "GPT Image 2.5 Flare + P-Video 2",
+      "uwagi": "Wydano 108 CU z 130 (z tego 15 CU na nieudany klip lot). Martwy: sowa lezy z glowa zwrocona bokiem do widza (nietypowo, ale czytelnie). Atak i trafienie maja klatki posrednie z rozmytymi skrzydlami. Lot: pierwsza klatka to skrzydla wysoko, petla dziala; wzbicie konczy sie jak lot. Zastępuje statyczną figurkę z 15.11; potok: docs/PRZEPIS_JEDNOSTKI.md.",
       "narzedzie": "Scenario (plan płatny)",
       "data": "2026-11-16",
       "ai": true,
