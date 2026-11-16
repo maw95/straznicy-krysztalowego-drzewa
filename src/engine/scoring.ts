@@ -18,6 +18,8 @@ interface Ratings {
   /** Difficulty Łatwy of levels 1-3 (arena). Measured 15.11 (Easy wins 65-76 percent, Normal 51-66): about `normal` minus 1. */
   kids: number;
   hard?: number;
+  /** Difficulty "Bardzo trudny": one above the hard level (not measured; the points scale like the others). */
+  veryHard: number;
   /** The normal level's rating when the single options were measured: their effect is counted from it. */
   optionBase: number;
   noAbilities: number;
@@ -37,7 +39,7 @@ function table(rows: Record<MapSize, Row>): Table {
   const out = {} as Table;
   for (const size of Object.keys(rows) as MapSize[]) {
     const [normal, zero, hard, optionBase, noAbilities, elixirs, reserve, duels, dice] = rows[size];
-    out[size] = { normal, zero, kids: Math.max(1, normal - 1), hard: hard ?? undefined, optionBase, noAbilities, elixirs, reserve, duels, dice };
+    out[size] = { normal, zero, kids: Math.max(1, normal - 1), hard: hard ?? undefined, veryHard: Math.min(10, (hard ?? normal) + 1), optionBase, noAbilities, elixirs, reserve, duels, dice };
   }
   return out;
 }
@@ -127,7 +129,7 @@ export function difficultyRating(setup: SetupOptions, level: LevelName, side: Fa
  * Arena: one battle (5–10 minutes) instead of a whole game with 3–5 battles, so a win against the
  * computer scores little — per hour of play no more than an ordinary game on an easy setting.
  */
-export const ARENA_POINTS: Record<Level, number> = { zero: 1, kids: 1, normal: 2, hard: 3 };
+export const ARENA_POINTS: Record<Level, number> = { zero: 1, kids: 1, normal: 2, hard: 3, veryHard: 4 };
 
 /** Level 3 games last longer (the economy between the fights): a win counts a quarter more than the same win of level 2. */
 export const KINGDOM_POINTS_FACTOR = 1.25;
@@ -156,7 +158,9 @@ export function levelOf(setup: SetupOptions): LevelName {
   const zero = r.treasures && r.heroReplacement && r.ritual === false && r.initiativeTie === DEFAULT_RULES.initiativeTie;
   if (zero && automaton && setup.battleMode === 'board' && !r.abilities && !r.useDice && !r.extraEvilHero) return 'zero';
   if (base && setup.battleMode === 'arena' && r.abilities && !r.useDice) {
-    if (r.extraEvilHero) return setup.mode === 'coop' && hardAutomaton ? 'hard' : 'custom';
+    if (r.extraEvilHero) return setup.mode === 'coop' && hardAutomaton ? (r.veryHard ? 'veryHard' : 'hard') : 'custom';
+    // Hard and Very hard at a PvP table: the bots' advantages (no extra Horde hero there).
+    if (setup.mode === 'pvp' && hardAutomaton && !r.easy) return r.veryHard ? 'veryHard' : 'hard';
     if (automaton) return r.easy ? 'kids' : 'normal';
   }
   return 'custom';

@@ -48,6 +48,7 @@ import {
   hpScaleOf,
   startBattleFight,
   arenaObstacles,
+  applyComputerHp,
 } from './battle';
 import { distance, parseKey, type HexKey } from './hex';
 import { placeEncounters } from './encounters';
@@ -65,7 +66,7 @@ import { EMPIRE, FACTION_MECHANICS, hasSpark, loseShards } from './empire';
 import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, placeSites, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
-import { isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
+import { computerFaction, isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
 
 export const other = (f: FactionId): FactionId => (f === 'dawn' ? 'horde' : 'dawn');
 
@@ -145,8 +146,11 @@ export function createGame(setup: SetupOptions): GameState {
   });
   // Treasures in hand from the start: the Przymierze on larger maps, the Horde on some levels.
   const dealt = new Set<ItemKind>(others);
-  dealStartTreasures(state, rng, 'dawn', rules.dawnStartTreasures ?? variant.startTreasures, dealt, pool);
-  dealStartTreasures(state, rng, 'horde', rules.hordeStartTreasures, dealt, pool);
+  // The computer's advantage of the higher levels: more random treasures from the start (COMPUTER_HANDICAP).
+  const extra = (f: FactionId, start: { resurrections: number; others: number; random?: number } | undefined) =>
+    rules.computerTreasures && computerFaction(state, f) ? { resurrections: 0, others: 0, ...start, random: (start?.random ?? 0) + rules.computerTreasures } : start;
+  dealStartTreasures(state, rng, 'dawn', extra('dawn', rules.dawnStartTreasures ?? variant.startTreasures), dealt, pool);
+  dealStartTreasures(state, rng, 'horde', extra('horde', rules.hordeStartTreasures), dealt, pool);
   map.crystals.forEach((c, i) => {
     const id = `c${i + 1}`;
     state.crystals[id] = { id, guardian: c.guardian, at: c.hex };
@@ -813,6 +817,7 @@ function startBattle(state: GameState, s: BattleStart) {
   const hpScale = hpScaleOf(state);
   b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction, digital, scale, hpScale);
   if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital, scale, hpScale);
+  for (const h of [attacker, defenderHero]) if (h) applyComputerHp(state, b.units[h.id]);
   for (const h of [attacker, defenderHero]) if (h && state.rules.heroGrowth) {
     applyHeroSkills(h, b.units[h.id]);
     applyHeroType(h, b.units[h.id]);
@@ -890,6 +895,7 @@ function addSupports(state: GameState, faction: FactionId, ids: string[]) {
   const digital = isDigital(state.rules) && !b.duel;
   for (const id of ids) {
     b.units[id] = makeBattleUnit(id, faction, digital, scaleOf(state), hpScaleOf(state));
+    applyComputerHp(state, b.units[id]);
     // The leader of the side (the attacking or the defending hero of this faction) strengthens its supports.
     if (state.rules.heroGrowth) {
       const leader = state.heroes[b.attacker === faction ? b.attackerHero : b.defenderHero ?? ''];

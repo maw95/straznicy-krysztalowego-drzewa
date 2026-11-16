@@ -20,6 +20,9 @@ const options = process.env.SIM_ALL ? OPTIONS : OPTIONS.filter((o) => o === 'ful
 for (const size of SIZES) for (const table of TABLES) for (const option of options) variants.push({ size, table, option });
 // Harder coop option: one Horde hero more (coop only).
 for (const size of SIZES) for (const table of ['coop1', 'coop2'] as const) variants.push({ size, table, option: 'hard' });
+// Very hard (the computer's advantages on top of Hard; coop and PvP tables) and Hard at the PvP tables (bots with advantages), 16.11.
+for (const size of SIZES) for (const table of TABLES) variants.push({ size, table, option: 'veryhard' });
+for (const size of SIZES) for (const table of ['pvp1', 'pvp2'] as const) variants.push({ size, table, option: 'hard' });
 const chosen = variants.filter((v) => new RegExp(filter).test(variantName(v)));
 
 const jobs: Array<{ v: Variant; n: number; seed: number }> = [];

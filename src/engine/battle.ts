@@ -7,7 +7,7 @@ import { log } from './log';
 import { Rng } from './rng';
 import { ARENA_COLUMNS, MIDDLE_HALF, arenaCell, cellOf, columnCells, inArena, WIDE_COLUMNS, WIDE_MIDDLE_ROW, WIDE_ROWS, wideCell, layoutCells, inLayout, wideColumnCells, WIDE_SET } from './arenaLayout';
 export * from './arenaLayout';
-import { isDigital, type BattleState, type BattleUnit, type GameState, type SiegeState, type UnitStatus } from './types';
+import { computerFaction, isDigital, type BattleState, type BattleUnit, type GameState, type SiegeState, type UnitStatus } from './types';
 import { SIEGE } from './economy';
 import { FACTION_MECHANICS } from './empire';
 
@@ -143,6 +143,14 @@ export function newStatus(): UnitStatus {
 export function makeBattleUnit(defId: string, side: Side, digital = false, scale = 1, hpScale = scale): BattleUnit {
   const { hp } = battleStats(defId, digital, scale, hpScale);
   return { id: defId, defId, side, hp, maxHp: hp, ...(digital ? { digital: true as const } : {}), ...(scale !== 1 ? { scale } : {}), ...(hpScale !== scale ? { hpScale } : {}), pos: null, alive: true, abilityUsed: false, swappedOut: false, status: newStatus() };
+}
+
+/** The computer's advantage of the higher levels: its units have more Życie (`rules.computerHp`, COMPUTER_HANDICAP). Call it right after a unit is made. */
+export function applyComputerHp(state: GameState, u: BattleUnit): void {
+  const share = state.rules.computerHp;
+  if (!share || u.side === 'neutral' || !computerFaction(state, u.side)) return;
+  u.maxHp = Math.max(u.maxHp, Math.round(u.maxHp * (1 + share)));
+  u.hp = u.maxHp;
 }
 
 const unitName = (u: BattleUnit) => UNITS[u.defId].name;
@@ -1390,6 +1398,7 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     const reserve = args.reserveId;
     if (!reserve || !state.factions[faction].supportsAlive.includes(reserve) || b.units[reserve]) throw new Error('Wybierz żywego pomocnika z rezerwy.');
     const nu = makeBattleUnit(reserve, faction, Boolean(t.digital), t.scale ?? 1, t.hpScale ?? t.scale ?? 1);
+    applyComputerHp(use.state, nu);
     const spot = t.alive ? t.pos : freeCellNear(use.state, faction, nu);
     // The swapped unit leaves first, so a large newcomer may lie on the cells it frees.
     const was = { alive: t.alive, pos: t.pos, tail: t.tail };

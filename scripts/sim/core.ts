@@ -10,7 +10,7 @@ import { levelSettings, type Action, type GameState, type SeatSetup, type SetupO
 /** Player configurations: coop with 1–2 good players, PvP 1 on 1 or 2 on 2. */
 export type Table = 'coop1' | 'coop2' | 'pvp1' | 'pvp2';
 /** The full game or one simplification switched on. */
-export type Option = 'full' | 'noabilities' | 'notreasures' | 'dice' | 'replacement' | 'board' | 'kids' | 'hard';
+export type Option = 'full' | 'noabilities' | 'notreasures' | 'dice' | 'replacement' | 'board' | 'kids' | 'hard' | 'veryhard';
 
 export interface Variant {
   size: MapSize;
@@ -37,7 +37,8 @@ export function setupFor(v: Variant, seed: number): SetupOptions {
 export function setupWith(size: MapSize, table: Table, options: Option[], seed: number): SetupOptions {
   const rng = new Rng(seed * 7919 + 13);
   const pick = (f: FactionId, n: number) => rng.shuffle(FACTION_HEROES[f]).slice(0, n);
-  const seat = (name: string, faction: FactionId, heroId: string): SeatSetup => ({ name, faction, controller: 'bot', heroId });
+  // SIM_DAWN_HUMAN=1: the Przymierza seats count as people (the bot still plays them), so that the Horde is "the computer" and gets the advantages of the higher levels at PvP tables.
+  const seat = (name: string, faction: FactionId, heroId: string): SeatSetup => ({ name, faction, controller: process.env.SIM_DAWN_HUMAN && faction === 'dawn' ? 'human' : 'bot', heroId });
   let seats: SeatSetup[];
   if (table === 'coop1' || table === 'coop2') {
     seats = pick('dawn', table === 'coop1' ? 1 : 2).map((h, i) => seat(`Bot ${i + 1}`, 'dawn', h));
@@ -49,7 +50,7 @@ export function setupWith(size: MapSize, table: Table, options: Option[], seed: 
     for (let i = 0; i < n; i++) seats.push(seat(`Świt ${i + 1}`, 'dawn', dawn[i]), seat(`Horda ${i + 1}`, 'horde', horde[i]));
   }
   const mode = table.startsWith('coop') ? 'coop' : 'pvp';
-  const level = options.includes('kids') ? 'kids' : options.includes('hard') ? 'hard' : 'normal';
+  const level = options.includes('kids') ? 'kids' : options.includes('veryhard') ? 'veryHard' : options.includes('hard') ? 'hard' : 'normal';
   const base = levelSettings(level, mode);
   const rules = { ...base.rules };
   if (options.includes('noabilities')) rules.abilities = false;

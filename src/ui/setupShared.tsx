@@ -29,6 +29,7 @@ export const BOARD_LEVELS: Array<[Level | 'custom', string]> = [
   ['zero', 'Łatwy'],
   ['normal', 'Normalny'],
   ['hard', 'Trudny'],
+  ['veryHard', 'Bardzo trudny'],
   ['custom', 'Własny'],
 ];
 
@@ -44,6 +45,7 @@ export const LEVEL_HINT: Record<Level | 'custom', string> = {
   kids: 'Te same zasady co na Normalnym, ale komputer zaczyna słabszy: mniej skarbów i słabsza Horda. Dobry na pierwsze partie.',
   normal: 'Pełna gra: bitwy 3 na 3 na arenie, zdolności i skarby.',
   hard: 'Pełna gra, a automat zła ma o jednego bohatera więcej (co najmniej trzech) i 2 losowe skarby na start, ale nie dostaje posiłków. Wyzwanie dla dorosłych.',
+  veryHard: 'Jak Trudny, a komputer ma jeszcze przewagę: o 20% więcej Życia jednostek, 2 skarby więcej na start i większe dochody. Dla najlepszych.',
   custom: 'Wybierz sam: rodzaj bitew, ułatwienia i utrudnienia, które można dowolnie łączyć.',
 };
 
@@ -54,6 +56,7 @@ export const ARENA_LEVEL_TIPS: Record<Level, string> = {
   kids: 'Komputer wybiera pomocników i skarby na chybił trafił.',
   normal: 'Komputer wybiera rozsądnie, ale nie zawsze najlepszy skarb.',
   hard: 'Komputer zawsze bierze najmocniejszych pomocników i najlepsze skarby.',
+  veryHard: 'Jak Trudny, a jednostki komputera mają o 20% więcej Życia.',
 };
 
 /** Explanations shown when hovering the setup buttons. */
@@ -72,7 +75,8 @@ export const LEVEL_TIPS: Record<Level | 'custom', string> = {
   kids: 'Pełna gra jak na Normalnym (arena, zdolności, skarby), ale komputer ma łatwiej przegrać: zaczyna z mniejszą liczbą skarbów, a Horda jest słabsza. Dla początkujących i rodzin.',
   zero: 'Dla najmłodszych (od 5 lat): bitwy to szybkie pojedynki bohaterów na planszy, bez zdolności i bez kości — wystarczy porównać liczby na kartach. Nie ma rytuału, a gdy bohater polegnie, gracz bierze rezerwowego.',
   normal: 'Pełna gra: bitwy 3 na 3 na osobnej arenie, zdolności jednostek i skarby. Obrażenia zawsze równe Atakowi.',
-  hard: 'Pełna gra, a automat zła dostaje jednego bohatera więcej (co najmniej trzech) i 2 losowe skarby na start, ale nie dostaje posiłków. Wyzwanie dla dorosłych (tylko kooperacja).',
+  hard: 'Pełna gra, a automat zła dostaje jednego bohatera więcej (co najmniej trzech) i 2 losowe skarby na start, ale nie dostaje posiłków. Wyzwanie dla dorosłych.',
+  veryHard: 'Jak Trudny, a komputer ma przewagę: jednostki o 20% więcej Życia, 2 skarby więcej na start i większe dochody (w kooperacji zło dostaje też dodatkowego bohatera i skarby). Dla najlepszych.',
   custom: 'Sami składacie zasady: rodzaj bitew, ułatwienia i utrudnienia — wszystko można łączyć.',
 };
 

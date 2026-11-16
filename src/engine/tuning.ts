@@ -10,7 +10,7 @@ import { AUTO_TUNING } from './tuningAuto';
 export interface DigitalTune {
   /** Where it applies; a missing field matches everything. */
   objective?: 'crystals' | 'control' | 'survival' | 'boss' | 'artifact' | 'conquest' | 'relic';
-  level?: 'zero' | 'kids' | 'normal' | 'hard';
+  level?: 'zero' | 'kids' | 'normal' | 'hard' | 'veryHard';
   mode?: 'coop' | 'pvp';
   /** Przymierza seats (players on the good side). */
   players?: number;
@@ -177,7 +177,8 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
   let rules = base;
   for (const t of DIGITAL_TUNING) {
     if (t.objective && t.objective !== objective) continue;
-    if (t.level && t.level !== level) continue;
+    // Very hard plays on the Hard cells (and keeps their tuning) with the computer's advantages on top.
+    if (t.level && t.level !== level && !(level === 'veryHard' && t.level === 'hard')) continue;
     if (t.mode && t.mode !== setup.mode) continue;
     if (t.players && t.players !== players) continue;
     if (t.maps && !t.maps.includes(setup.mapSize)) continue;

@@ -12,7 +12,7 @@ import { Rng } from './rng';
 import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsText, type Hut, type MapObject, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
-import type { Action, Crystal, GameState, HeroState } from './types';
+import { computerFaction, type Action, type Crystal, type GameState, type HeroState } from './types';
 import { MAGIC, SPELLS, towerSpells, type SpellId } from './magic';
 import { HERO_TYPES } from './heroTypes';
 import { FACTION_MECHANICS, mayBuildSpark, pickUpShard, placeShards, SPARK_NAMES, spendShards, TREE_NAMES } from './empire';
@@ -444,13 +444,16 @@ export function collectIncome(state: GameState): void {
       }
       continue;
     }
+    // The computer's advantage of the higher levels: its income is multiplied (COMPUTER_HANDICAP); the people's is not.
+    const mult = computerFaction(state, f) ? state.rules.computerGold ?? 1 : 1;
     if (k.res) {
       const got = resourceIncomeOf(state, f);
+      if (mult !== 1) for (const r of RESOURCE_IDS) got[r] = Math.round(got[r] * mult);
       const parts = RESOURCE_IDS.filter((r) => got[r] > 0).map((r) => `${got[r]} × ${RESOURCE_NAMES[r]}`);
       for (const r of RESOURCE_IDS) k.res[f][r] += got[r];
       if (parts.length) log(state, 'info', `${FACTION_NAMES[f]}: surowce ${parts.join(', ')}.`, f);
     }
-    const income = incomeOf(state, f);
+    const income = Math.round(incomeOf(state, f) * mult);
     if (income <= 0) continue;
     k.gold[f] += income;
     log(state, 'info', `${FACTION_NAMES[f]}: dochód ${income} zł (razem ${k.gold[f]}).`, f);

@@ -38,7 +38,7 @@ export interface TesterExport {
   games: JournalGame[];
 }
 
-export const LEVEL_NAMES: Record<LevelName, string> = { zero: 'Poziom 0', kids: 'Łatwy', normal: 'Normalny', hard: 'Trudny', custom: 'Własny' };
+export const LEVEL_NAMES: Record<LevelName, string> = { zero: 'Poziom 0', kids: 'Łatwy', normal: 'Normalny', hard: 'Trudny', veryHard: 'Bardzo trudny', custom: 'Własny' };
 
 const gameId = (setup: SetupOptions) => `${setup.seed}:${setup.mode}:${setup.mapSize}:${setup.seats.map((s) => `${s.faction}/${s.heroId}/${s.controller}`).join(',')}`;
 

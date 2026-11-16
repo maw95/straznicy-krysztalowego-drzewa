@@ -90,6 +90,12 @@ export interface RulesConfig {
   empire?: boolean;
   /** Difficulty "Łatwy" on levels 1-3: no rule differs, the flag only tells the level and selects the digital start-condition levers (tuning.ts). */
   easy?: boolean;
+  /** Difficulty "Bardzo trudny": the Hard level with the computer's extra advantages below (COMPUTER_HANDICAP); the flag also tells the level. */
+  veryHard?: boolean;
+  /** The computer players' advantages (levels above Normal; missing = none, i.e. they play by the same rules as the people): their income is multiplied by `computerGold`, their units have `computerHp` (a share, 0.2 = +20 percent) more Życie, and they start with `computerTreasures` more random treasures. */
+  computerGold?: number;
+  computerHp?: number;
+  computerTreasures?: number;
 }
 
 export function isDigital(rules: Pick<RulesConfig, 'ruleset'>): boolean {
@@ -111,7 +117,7 @@ export const DEFAULT_RULES: RulesConfig = {
 };
 
 /** Ready-made levels: the setup screen offers these first, single switches only under "Własne". */
-export type Level = 'zero' | 'kids' | 'normal' | 'hard';
+export type Level = 'zero' | 'kids' | 'normal' | 'hard' | 'veryHard';
 
 /**
  * What each level changes against DEFAULT_RULES. Level 0 ("zero", the old Easy): few rules to remember (duels on
@@ -120,12 +126,36 @@ export type Level = 'zero' | 'kids' | 'normal' | 'hard';
  * Hard exists for coop only: the automaton fields one Horde hero more (at least three), starts with two
  * random treasures and gets no reinforcements in its base.
  */
+/**
+ * One list of what the level changes for the computer's players (the Horde in coop, bots at a PvP table): income multiplier, extra Życie
+ * (a share) and extra random start treasures. Normal gives the computer exactly the people's conditions (gold 1, hp 0, treasures 0): the
+ * balance of the levels up to Hard lives in the per-cell tuning (tuning.ts, tuningAuto.ts), measured as before, so those rows stay neutral here.
+ * Very hard sits on top of the Hard cells. Tuned with `make sim-tabele` toward 15-30 percent wins of the Przymierza.
+ */
+export const COMPUTER_HANDICAP: Record<Level, { gold: number; hp: number; treasures: number }> = {
+  zero: { gold: 1, hp: 0, treasures: 0 },
+  kids: { gold: 1, hp: 0, treasures: 0 },
+  normal: { gold: 1, hp: 0, treasures: 0 },
+  hard: { gold: 1, hp: 0, treasures: 0 },
+  veryHard: { gold: 1.5, hp: 0.2, treasures: 2 },
+};
+
+const HARD_RULES: Partial<RulesConfig> = { extraEvilHero: true, minEvilHeroes: 2, hordeRespawn: false, hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } };
+
 export const LEVEL_RULES: Record<Level, { battleMode: BattleMode; rules: Partial<RulesConfig> }> = {
   zero: { battleMode: 'board', rules: { abilities: false, useDice: false, heroReplacement: true, ritual: false } },
   kids: { battleMode: 'arena', rules: { easy: true } },
   normal: { battleMode: 'arena', rules: {} },
-  hard: { battleMode: 'arena', rules: { extraEvilHero: true, minEvilHeroes: 2, hordeRespawn: false, hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  hard: { battleMode: 'arena', rules: HARD_RULES },
+  veryHard: { battleMode: 'arena', rules: { ...HARD_RULES, veryHard: true, computerGold: COMPUTER_HANDICAP.veryHard.gold, computerHp: COMPUTER_HANDICAP.veryHard.hp, computerTreasures: COMPUTER_HANDICAP.veryHard.treasures } },
 };
+
+/** Whether the computer plays this faction: the Horde in coop (the automaton) or a PvP side whose seats are all bots. */
+export function computerFaction(state: { setup: Pick<SetupOptions, 'mode' | 'seats'> }, f: FactionId): boolean {
+  if (state.setup.mode === 'coop') return f === 'horde';
+  const seats = state.setup.seats.filter((x) => x.faction === f);
+  return seats.length > 0 && seats.every((x) => x.controller === 'bot');
+}
 
 export function levelSettings(level: Level, mode: Mode): { battleMode: BattleMode; rules: RulesConfig } {
   const { battleMode, rules } = LEVEL_RULES[level];
@@ -166,7 +196,7 @@ export interface SetupOptions {
 export function arenaSetup(seats: SeatSetup[], seed: number, botLevel: Level = 'normal'): SetupOptions {
   // The arena has no level 0: its easy computer is "kids".
   if (botLevel === 'zero') botLevel = 'kids';
-  return { mode: 'arena', mapSize: 'short', battleMode: 'arena', seed, seats, botLevel, rules: { ...DEFAULT_RULES, initiativeTie: 'rotating' } };
+  return { mode: 'arena', mapSize: 'short', battleMode: 'arena', seed, seats, botLevel, rules: { ...DEFAULT_RULES, initiativeTie: 'rotating', ...(botLevel === 'veryHard' ? { veryHard: true, computerHp: COMPUTER_HANDICAP.veryHard.hp } : {}) } };
 }
 
 /** Arena treasure draft: a shared deck, picks in the order A, B, B, A, three cards offered each time. */
