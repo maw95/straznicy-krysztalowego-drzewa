@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Arena: podświetlony zasięg (po przytrzymaniu Ctrl) uwzględnia teraz także ogon jednostek dwupolowych (smoków, niedźwiedzia…), więc pokazuje wszystkie pola, które naprawdę może zaatakować.
+
 - Rycerz Świtu i Wódz Hordy mają prawdziwe animacje (Wódz bez ataku; chód, trafienie, śmierć), a zdolność Odrodzenie z Popiołów Feniksa własną ikonę.
 
 - Dowódcy, jednostki legendarne i alternatywne z poziomów 5–6 mają własne dźwięki ataku i śmierci (16 jednostek, 32 nagrania).

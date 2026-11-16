@@ -308,6 +308,27 @@ export function attackTargets(state: GameState, u: BattleUnit, from: HexKey | nu
 }
 
 /**
+ * What the unit can reach this turn, for the Ctrl-hover display: the cells it can walk to, and the other cells it could hit
+ * from where it stands or from any of them (next to its head or, for a large unit, its tail; shooters: any cell in sight of the
+ * head). It follows `attackTargets`, which counts the whole footprint.
+ */
+export function unitReach(state: GameState, u: BattleUnit): { walk: Set<HexKey>; hit: Set<HexKey> } {
+  const b = state.battle!;
+  const walk = new Set<HexKey>(reachableCells(state, u).keys());
+  const hit = new Set<HexKey>();
+  if (!u.pos) return { walk, hit };
+  const stands = [{ head: u.pos, cells: cellsOf(u) }, ...[...walk].map((k) => ({ head: k, cells: footprintAt(state, u, k) }))];
+  const ranged = UNITS[u.defId].attackType === 'ranged';
+  const obstacles = obstacleSet(b);
+  const own = new Set(cellsOf(u));
+  for (const c of layoutCells(b)) {
+    if (obstacles.has(c) || walk.has(c) || own.has(c)) continue;
+    if (stands.some((s) => s.cells.some((m) => adjacent(m, c)) || (ranged && hasLineOfSight(state, s.head, c)))) hit.add(c);
+  }
+  return { walk, hit };
+}
+
+/**
  * Second target for Ognisty Oddech: the unit standing right behind the first one, in line from the
  * dragon (standing on `from`, its own cell unless a plan tries another).
  */

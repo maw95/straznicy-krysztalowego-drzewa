@@ -16,6 +16,7 @@ import {
   movePath,
   isLarge,
   reachableCells,
+  unitReach,
   tailOptions,
   unitAt,
   unitDistance,
@@ -277,19 +278,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   /** The reach of the unit under the cursor while Ctrl is held: the cells it can walk to, and the ones it can
    *  hit from there (next to them for melee, any cell in sight for shooters). */
   const reachOf = ctrlHeld && hover ? livingUnits(b).find((u) => u.pos === hover) ?? null : null;
-  const reach = useMemo(() => {
-    const walk = new Set<HexKey>();
-    const hit = new Set<HexKey>();
-    if (!reachOf?.pos) return { walk, hit };
-    for (const k of reachableCells(state, reachOf).keys()) walk.add(k);
-    const stand = [reachOf.pos, ...walk];
-    for (const c of geo.cells) {
-      if (b.obstacles.includes(c) || walk.has(c) || c === reachOf.pos) continue;
-      const hits = UNITS[reachOf.defId].attackType === 'ranged' ? stand.some((p) => hasLineOfSight(state, p, c)) : stand.some((p) => distanceBetween(p, c) <= 1);
-      if (hits) hit.add(c);
-    }
-    return { walk, hit };
-  }, [reachOf, b, state]);
+  const reach = useMemo(() => (reachOf?.pos ? unitReach(state, reachOf) : { walk: new Set<HexKey>(), hit: new Set<HexKey>() }), [reachOf, state]);
 
   /** Predicted result of attacking `t` now (shown on hover). */
   function attackPreview(t: BattleUnit, moved = act?.movedDistance ?? 0): { text: string; lethal: boolean } {

@@ -1,6 +1,6 @@
 // Digital ruleset: large units (2 cells, head + tail).
 import { describe, expect, it } from 'vitest';
-import { arenaCell, wideCell, wideCellOf, battleAttack, battleItem, battleMove, cellsOf, dealDamage, reachableCells, tailOptions, unitAt, attackTargets } from '../src/engine/battle';
+import { arenaCell, wideCell, wideCellOf, battleAttack, battleItem, battleMove, cellsOf, dealDamage, reachableCells, tailOptions, unitAt, attackTargets, unitReach } from '../src/engine/battle';
 import { applyActionInPlace, createGame } from '../src/engine/game';
 import { distance, parseKey } from '../src/engine/hex';
 import { chooseAction } from '../src/engine/ai';
@@ -160,5 +160,24 @@ describe('large units in a bot battle', () => {
       }
       expect(s.phase).toBe('over');
     }
+  });
+
+  it('shows the reach of a large unit including its tail (the display and the attack rule agree)', () => {
+    // The report of 16.11: the dragon could hit a unit the highlighted fields did not cover, because the display counted only the head.
+    const s = digital([dragon, { ...wolf, col: 3, half: 7 }]);
+    const d = dragonAt(s, 5, 9); // the wolf on (3,7) touches only the tail on (4,8)
+    const w = s.battle!.units.werewolfLord;
+    const { walk, hit } = unitReach(s, d);
+    expect(hit.has(w.pos!)).toBe(true);
+    // Property: a cell is in `hit` exactly when some stand (now or after a walk) lets attackTargets find a unit there.
+    for (const [col, half] of [[2, 6], [3, 7], [4, 6], [6, 6], [7, 9], [9, 9], [9, 13], [1, 9]] as const) {
+      const t = digital([dragon, { ...wolf, col, half }]);
+      const dd = dragonAt(t, 5, 9);
+      const ww = t.battle!.units.werewolfLord;
+      const r = unitReach(t, dd);
+      const canHit = [dd.pos!, ...r.walk].some((from) => attackTargets(t, dd, from).some((e) => e.id === ww.id));
+      expect(r.hit.has(ww.pos!) || r.walk.has(ww.pos!)).toBe(canHit);
+    }
+    expect(walk.size).toBeGreaterThan(0);
   });
 });
