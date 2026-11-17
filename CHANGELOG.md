@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 2.9.0 — 2026-11-17
+
 - Telefon: kreator przechodzi dalej po wyborze celu i mapy, nowa strona zawsze zaczyna się od góry, przyciski „Wstecz” i „Dalej” oraz przyciski poziomów mają równe rozmiary. Po rozpoczęciu gry na telefonie poziomo pasek i panel boczne są mniejsze, więc mapa i arena mają więcej miejsca.
 
 - Kampania „Powrót Światła”: cztery scenariusze Przymierza Świtu na ręcznie rysowanych mapach, z fabułą, wskazówkami i odblokowywaniem kolejnych (karta „Kampania” w menu nowej gry).
