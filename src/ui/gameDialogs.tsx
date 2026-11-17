@@ -2,6 +2,7 @@
 // every screen has, and the small game dialogs (confirm, "since your last turn", a found treasure,
 // a card, the options) and the end-of-game effects.
 
+import { InstallHint } from './InstallHint';
 import { LanguageSwitch } from './LanguageSwitch';
 import { TouchTitles } from './TouchTitles';
 import { useEffect, useState, type ReactNode } from 'react';
@@ -313,6 +314,7 @@ export function OptionsDialog(props: {
             <input type="checkbox" checked={!sfx.muted} onChange={() => sfx.toggleMute()} /> włączone
           </label>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>Język <LanguageSwitch inline /></div>
+          <InstallHint />
           {!room && <label><input type="checkbox" checked={props.autoplay} onChange={(e) => props.onAutoplay(e.target.checked)} /> Autoplay: boty grają także za ludzi</label>}
           <label title="Na słabszym komputerze albo telefonie możesz wrócić do okrągłych portretów">
             <input type="checkbox" checked={props.figures} onChange={(e) => props.onFigures(e.target.checked)} /> Figurki 3D na planszy

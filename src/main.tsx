@@ -8,6 +8,7 @@ import { SvgDefs } from './ui/common';
 import './ui/styles.css';
 import './i18n/en';
 import { installDomTranslator } from './i18n/dom';
+import { registerPwa } from './pwa';
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state = { error: null as Error | null };
@@ -51,3 +52,4 @@ createRoot(document.getElementById('root')!).render(
 
 // English: the dictionary is put on the screen as React draws it (src/i18n).
 installDomTranslator(document.body);
+registerPwa();

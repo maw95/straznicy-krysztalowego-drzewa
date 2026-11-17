@@ -2,6 +2,9 @@
 import { register } from '../translate';
 
 register({
+  "Aplikacja": "App",
+  "Zainstaluj grę": "Install the game",
+  "Instalacja na iPhonie: w Safari dotknij „Udostępnij”, potem „Dodaj do ekranu początkowego”. Gra otworzy się wtedy na pełnym ekranie i będzie działać także bez internetu (przeciw komputerowi).": "Installing on an iPhone: in Safari tap “Share”, then “Add to Home Screen”. The game then opens full screen and also works without the internet (against the computer).",
   "Brak ustawień stołu.": "The table has no settings.",
   "Coś poszło nie tak na serwerze.": "Something went wrong on the server.",
   "{0} Partia może stać — zgłoś błąd z gry.": "{0} The game may be stuck — report a bug from the game.",

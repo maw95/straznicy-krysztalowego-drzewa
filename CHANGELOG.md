@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Aplikacja (PWA): grę można zainstalować z przeglądarki (Opcje → „Zainstaluj grę”; na iPhonie: Safari → „Udostępnij” → „Dodaj do ekranu początkowego”), otwiera się na pełnym ekranie, a po pierwszej wizycie działa także bez internetu przeciw komputerowi. Nowe wydanie gry podmienia starą kopię samo.
+
 - Arena 6 na 6 działa też online: opcja „Wielkość bitwy” w kreatorze stołu online, napis „Arena 6 na 6” w pokoju i osobny ranking (zakładki pod tabelą rankingu).
 
 ## 2.9.0 — 2026-11-17
