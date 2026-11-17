@@ -92,7 +92,7 @@ describe('level 4: the garrison', () => {
     // Whatever stage the battle is in, the garrison's side belongs to the owner while the attacker's hero is the Horde bot's.
     for (let i = 0; i < 200 && s.phase === 'battle'; i++) {
       const a = currentActor(s);
-      const side = s.battle!.stage === 'fight' ? s.battle!.units[s.battle!.activation!.unitId].side : a.kind === 'none' ? null : a.faction;
+      const side = s.battle!.stage === 'fight' ? s.battle!.units[s.battle!.activation!.unitId].side : a.kind === 'none' ? null : a.kind === 'automaton' ? a.side : a.faction;
       if (side === 'dawn') expect(a).toEqual({ kind: 'human', playerId: owner.id, faction: 'dawn' });
       else expect(a.kind).toBe('bot');
       applyActionInPlace(s, chooseAction(s)!);
