@@ -86,6 +86,8 @@ export interface RulesConfig {
   economy?: boolean;
   /** Level 5 "Królestwo": a second hero hired in a tavern, magic, hero specialities (realm.ts); needs `economy`. */
   realm?: boolean;
+  /** Arena only: 6 = the full match, 6 on 6 (the hero and 5 supports picked from the fixed pool of ARENA_POOL; 3 on 3 when missing). */
+  arenaSize?: 6;
   /** Level 6 "Imperium": the Relic goal, faction mechanics (empire.ts); needs `realm`. */
   empire?: boolean;
   /** Difficulty "Łatwy" on levels 1-3: no rule differs, the flag only tells the level and selects the digital start-condition levers (tuning.ts). */
@@ -195,10 +197,10 @@ export interface SetupOptions {
  * Arena setup: one Przymierze seat and one Horda seat, the full game's battle rules, and ties of
  * initiative taken in turn (there is no attacker or defender in an arena match).
  */
-export function arenaSetup(seats: SeatSetup[], seed: number, botLevel: Level = 'normal'): SetupOptions {
+export function arenaSetup(seats: SeatSetup[], seed: number, botLevel: Level = 'normal', size: 3 | 6 = 3): SetupOptions {
   // The arena has no level 0: its easy computer is "kids".
   if (botLevel === 'zero') botLevel = 'kids';
-  return { mode: 'arena', mapSize: 'short', battleMode: 'arena', seed, seats, botLevel, rules: { ...DEFAULT_RULES, initiativeTie: 'rotating', ...(botLevel === 'veryHard' ? { veryHard: true } : {}) } };
+  return { mode: 'arena', mapSize: 'short', battleMode: 'arena', seed, seats, botLevel, rules: { ...DEFAULT_RULES, initiativeTie: 'rotating', ...(botLevel === 'veryHard' ? { veryHard: true } : {}), ...(size === 6 ? { arenaSize: 6 as const } : {}) } };
 }
 
 /** Arena treasure draft: a shared deck, picks in the order A, B, B, A, three cards offered each time. */

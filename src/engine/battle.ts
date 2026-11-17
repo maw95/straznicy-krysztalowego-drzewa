@@ -552,18 +552,20 @@ function deploy(state: GameState) {
     units.sort((x, y) => (UNITS[x.defId].kind === 'support' ? 1 : 0) - (UNITS[y.defId].kind === 'support' ? 1 : 0));
     const taken = new Set<HexKey>();
     units.forEach((u, i) => {
+      // The first cell nobody holds (with a second start column a large unit's head may lie on a cell of that column).
+      const k = cells.slice(i).find((c) => !taken.has(c)) ?? cells[i];
       if (isLarge(state, u)) {
         // Tail on the deploy cell, head one column towards the enemy (first free of the two).
-        const head = deployHeads(b, side, cells[i]).find((c) => !taken.has(c));
-        u.tail = cells[i];
-        u.pos = head ?? cells[i];
+        const head = deployHeads(b, side, k).find((c) => !taken.has(c));
+        u.tail = k;
+        u.pos = head ?? k;
         if (!head) delete u.tail;
         taken.add(u.pos);
         if (u.tail) taken.add(u.tail);
       } else {
-        u.pos = cells[i];
+        u.pos = k;
         delete u.tail;
-        taken.add(cells[i]);
+        taken.add(k);
       }
     });
   }

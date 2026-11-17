@@ -56,7 +56,7 @@ import { log } from './log';
 import { applyHeroSkills, applyHeroType, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { fireStory } from './story';
-import { buildingLevel, collectIncome, enterPlace, forgeLevel, garrisonAt, initKingdom, kingdomAction, supportSlots } from './kingdom';
+import { ARENA_POOL, buildingLevel, collectIncome, enterPlace, forgeLevel, garrisonAt, initKingdom, kingdomAction, supportSlots } from './kingdom';
 import { ECONOMY } from './economy';
 import { commanderFalls } from './realm';
 import { battleSpell, mapSpell, regenMana, START_SPELLS } from './magic';
@@ -189,6 +189,8 @@ export function createGame(setup: SetupOptions): GameState {
     }
   }
   if (setup.mode === 'arena') {
+    // The 6 on 6 arena: both sides choose from the fixed pool instead of the three starting supports.
+    if (rules.arenaSize === 6) for (const f of ['dawn', 'horde'] as FactionId[]) state.factions[f].supportsAlive = [...ARENA_POOL[f]];
     startArena(state);
     return state;
   }
@@ -245,6 +247,8 @@ function startArena(state: GameState) {
   const b = state.battle!;
   b.arena = arena;
   b.obstacles = arenaObstacles(arena, b.layout);
+  // Six units a side do not fit the one start column of the board: both sides get a second one.
+  if (state.rules.arenaSize === 6) b.deployDepth = { dawn: 1, horde: 1 };
 }
 
 /** The next three cards for the picker: the deck is shuffled and the first three different kinds are shown. */

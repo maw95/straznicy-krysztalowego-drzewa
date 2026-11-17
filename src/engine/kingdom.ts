@@ -228,7 +228,11 @@ export function incomeBreakdown(state: GameState, f: FactionId): Array<{ label: 
 export const incomeOf = (state: GameState, f: FactionId): number => incomeBreakdown(state, f).reduce((s, r) => s + r.gold, 0);
 
 /** How many supports a faction brings into a battle: 2 in the other levels, the team's places here. */
-export const supportSlots = (state: GameState, f: FactionId): number => (state.kingdom ? teamSlots(state, f) : SUPPORTS_PER_BATTLE);
+export const supportSlots = (state: GameState, f: FactionId): number => (state.rules.arenaSize === 6 ? ARENA_SUPPORTS : state.kingdom ? teamSlots(state, f) : SUPPORTS_PER_BATTLE);
+
+/** The 6 on 6 arena: the supports a side brings (with its hero that makes six) and the fixed pool it chooses them from, tiers 2-5 of both unit lines. */
+export const ARENA_SUPPORTS = 5;
+export const ARENA_POOL: Record<FactionId, string[]> = { dawn: [...TIER_UNITS.dawn, ...ALT_UNITS.dawn], horde: [...TIER_UNITS.horde, ...ALT_UNITS.horde] };
 
 /** Places in the team: a hero of this faction at level 3 and 6, and upgraded barracks, each add one. */
 export function teamSlots(state: GameState, f: FactionId): number {

@@ -118,3 +118,35 @@ describe('walking in battle', () => {
     expect(checked).toBeGreaterThan(50);
   });
 });
+
+describe('arena 6 on 6', () => {
+  it('offers the fixed pool of eight units, five are chosen, and six stand on each side', () => {
+    const s = createGame(arenaSetup(seats(), 4, 'normal', 6));
+    expect(s.rules.arenaSize).toBe(6);
+    for (const f of ['dawn', 'horde'] as FactionId[]) expect(s.factions[f].supportsAlive).toHaveLength(8);
+    const after = playUntil(s, (x) => x.battle?.stage !== 'select');
+    const sides = Object.values(after.battle!.units).reduce((n, u) => ({ ...n, [u.side]: (n[u.side] ?? 0) + 1 }), {} as Record<string, number>);
+    expect(sides).toEqual({ dawn: 6, horde: 6 });
+  });
+
+  it('refuses a wrong number of supports', () => {
+    const s = createGame(arenaSetup(seats('human', 'human'), 4, 'normal', 6));
+    const f = s.battle!.needsSelection[0];
+    const pool = s.factions[f].supportsAlive;
+    expect(() => applyAction(s, { type: 'selectSupports', faction: f, supportIds: pool.slice(0, 2) })).toThrow();
+    expect(() => applyAction(s, { type: 'selectSupports', faction: f, supportIds: pool.slice(0, 5) })).not.toThrow();
+  });
+
+  it('bot games end with a winner', () => {
+    for (let seed = 1; seed <= 6; seed++) {
+      const s = playOut(createGame(arenaSetup(seats(), seed, 'normal', 6)), 4000);
+      expect(s.phase).toBe('over');
+    }
+  });
+
+  it('leaves the 3 on 3 arena as it was', () => {
+    const s = createGame(arenaSetup(seats(), 4));
+    expect(s.rules.arenaSize).toBeUndefined();
+    expect(s.factions.dawn.supportsAlive).toHaveLength(3);
+  });
+});
