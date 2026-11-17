@@ -39,7 +39,7 @@ Stan nocnego zadania: zob. `docs/PODSUMOWANIE_NOCNE.md` i `docs/PYTANIA_DO_AUTOR
 
 ### Grupa A. Zasady i silnik (decyzje autora z 17.11; punkty niezależne, kolejność dowolna)
 
-Wspólne dla punktu 33 (zrobiony; zostały zastępcze grafiki z sekcji 2a): zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
+Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
 
 **48. Arena 6 na 6 z elementami nowych poziomów i Bardzo trudny na arenie** (L; zależy od punktów 33 i 35)
 - Decyzje autora (17.11): **Bardzo trudny na arenie: bot bez błędów** (zamiast +1 karty w drafcie; zdjęcie Życia zostaje). Arena dostaje rzeczy z nowych poziomów: **dodatkowi pomocnicy, artefakty i zaklęcia**; docelowo walka **6 na 6**.
@@ -80,13 +80,6 @@ Decyzje autora: całą mechanikę i wygląd brać z Heroes III; jedyna różnica
 - Teksty brać z `ZASADY_CYFROWE.md` i z danych (`OBJECTS`, `ECONOMY`, `SIEGE`), nie przepisywać liczb ręcznie; test w `tests/ui.test.tsx` (`data-rules-places` ma wszystkie rodzaje obiektów z `OBJECT_NAMES` i `MINE_NAMES`).
 - Gotowe, gdy: każda zakładka ma komplet obecnych w grze rzeczy; zrzut każdej zakładki (desktop i telefon); samouczek i `INSTRUKCJA.md` zgodne.
 
-**41. Nowe ikony poziomów „Wyprawa” i „Osada” ze Scenario** (S, kredyty: ok. 2 × 14 CU `high` + próby `medium` 3 CU = ok. 40 CU)
-- **Decyzja autora (17.11):** generujemy trzy medale: Wyprawa, Osada **i Księstwo** (`wyprawa.webp`, `osada.webp`, `ksiestwo.webp`).
-- Dziś karty poziomów w `NewGameWizard.tsx` l. 205–212 używają dla Wyprawy `ikony/mapa/camp.webp` (obóz najemników) i dla Osady `ikony/mapa/treasure.webp` (skarb): to zapożyczone ikony obiektów mapy, pasujące do poziomów 1, 4–6 (`ui/menu/przygoda.webp`, `krolestwo.webp`, `imperium.webp`; Księstwo używa `ikony/mapa/tartak.webp`, też zapożyczona) ani stylem, ani treścią. Wyprawa = rozwój bohatera, artefakty, obiekty na mapie, cel i mapa do wyboru; Osada = osady, złoto, rekrutacja, targ, szpital.
-- Zrobić: dwa nowe medale w stylu istniejących `ui/menu/*.webp` (medalion/okrągła ikona, ten sam rozmiar i obwódka, jak `przygoda`, `krolestwo`, `imperium`): **Wyprawa** (np. bohater z plecakiem i mapą/kompasem, w tle ścieżka, albo miecz i zwój z artefaktem), **Osada** (np. mała wioska z targiem i chatami, sakiewka złota). Zalecane też **Księstwo** (surowce: drewno, ruda, Pył; dziś zapożyczony tartak), jeśli budżet pozwala (+14 CU). Pliki: `public/assets/ui/menu/wyprawa.webp`, `osada.webp`, `ksiestwo.webp`; wzór przepisu: sekcja `poziomy4-6/ikony-i-wieze` w `assets.json` (arkusz 1536×1024, siatka, czarne tło, wycinanie lokalnie), spójność stylu: kolor, obwódka, światło takie jak w 4 istniejących.
-- Podmienić `img=` w trzech `Card` w `NewGameWizard.tsx` i wszędzie, gdzie te ikony reprezentują poziom (grep `ikony/mapa/camp.webp`, `treasure.webp`, `tartak.webp` w `src/ui`: Intro, OnlineScreen, ranking); wpis w `assets.json` (źródło, model, prompt, data, AI tak).
-- Gotowe, gdy: zrzut strony „Jaki poziom złożoności?” pokazuje spójny zestaw ośmiu medali (Spacer, Przygoda, Wyprawa, Osada, Księstwo, Królestwo, Imperium, Własne), autor akceptuje.
-
 **43. Narzędzia do testowania gry (tryb deweloperski / piaskownica)** (M–L)
 - Problem autora: żeby obejrzeć np. księgę czarów, trzeba przejść spory kawałek gry (kupić Wieżę maga, znaleźć przeciwnika). Dziś są tylko parametry adresu w `App.tsx` (l. ~149–245: `?steps`, `reveal`, `seed`, `mode`, `players`, `size`, `until=battle`, `economy|realm|empire=1`, `gold`, `res`, `skills`, `pack`, `gear`, `level`, `near`, `siege`, `garrison`, `encounter`…), znane tylko Claude'owi.
 - Zrobić **panel testowy** (otwierany tylko przy `?dev=1` albo skrótem klawiszowym np. `Ctrl+Shift+D`; **niedostępny w grze online i w buildzie wydania**: sprawdzenie `import.meta.env.DEV` albo flaga, plus serwer odrzuca akcje deweloperskie) z akcjami na bieżącej partii lokalnej:
@@ -126,10 +119,6 @@ Decyzje autora: całą mechanikę i wygląd brać z Heroes III; jedyna różnica
 - Prawdziwe urządzenia: oprócz emulacji headless sprawdzić na prawdziwym telefonie z Androidem i iPhonie (Safari, Chrome), bo emulacja nie pokazuje paska adresu iOS, wycięcia ekranu ani wydajności WebGL. Zrobić do tego adres w sieci lokalnej (Vite `--host`) i listę kontrolną dla autora.
 - Wynik: lista usterek w tym punkcie (zrzuty w `.tmp/`, nie w repo), poprawki jako osobne commity, skrypt `scripts/browser/telefon.ts` przechodzący ekrany i wykrywający przewijanie poziome oraz elementy poza ekranem (można uruchamiać po zmianach UI).
 - Gotowe, gdy: wszystkie ekrany z listy mają zrzut w pionie i poziomie bez usterek, skrypt kontrolny przechodzi, autor sprawdził grę na swoim telefonie.
-
-## 2a. Zastępcze grafiki do wygenerowania (placeholdery w repo)
-- Ikony czarów `public/assets/ikony/czary/{thunder,curse,shield,inspire,quicken}.webp` (192 px, medal jak `bolt.webp`): dziś kopie ikon innych czarów (Grom ← bolt, Klątwa ← slow, Tarcza ← stoneskin, Natchnienie i Przyspieszenie ← haste).
-- Efekty `public/assets/efekty/czar_{thunder,curse,shield,inspire}.webp` i `mapa_przyspieszenie.webp` (arkusz 24 klatek po 192 px, jak `czar_bolt.webp`): dziś kopie efektów innych czarów.
 
 ## 2. Tylko autor (Claude tego nie bierze)
 - **Premiera na Steamie** (L): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery: **3.0** (potwierdzone 17.11).
@@ -250,6 +239,8 @@ Frakcja to ok. 3 bohaterów i 7 jednostek (`DECYZJE.md`): 10 postaci.
 | Muzyka frakcji (2–3 utwory po ok. 30 CU) i dźwięki interfejsu frakcji | ok. 90 | ok. 100 |
 | **Razem** | **ok. 1 200** | **ok. 1 650** |
 Do tego ok. 3–4 h pracy nad pakowaniem, kontrolą i wpisami (`PRZEPIS_JEDNOSTKI.md`). Przy braku limitu jednej jednostki (100 CU) wychodzi ok. 1 000 CU samych postaci. Szacunek do aktualizacji po pierwszej nowej frakcji (Dzikie Stada), kiedy będzie znany koszt rzeczywisty.
+
+**Wydatki 17.11 (nocne zadanie):** ikony 5 czarów kręgu III i Przyspieszenia 7 CU; efekty 5 czarów (obraz 3 + klip 10 CU) 65 CU; medale poziomów Wyprawa, Osada, Księstwo 7 CU. Razem 79 CU.
 
 Wpisy autora z 17.11 (wieczór):
 - **(17.11, czary)** Trzy kręgi, ulepszanie Wieży maga otwiera wyższy krąg; docelowo pięć (punkt 33).

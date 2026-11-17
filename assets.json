@@ -4930,6 +4930,131 @@
       "data": "2026-11-16",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ikony/czary-poziom5b",
+      "pliki": [
+        "public/assets/ikony/czary/thunder.webp",
+        "public/assets/ikony/czary/curse.webp",
+        "public/assets/ikony/czary/shield.webp",
+        "public/assets/ikony/czary/inspire.webp",
+        "public/assets/ikony/czary/quicken.webp"
+      ],
+      "typ": "ikony pięciu nowych czarów: thunder (Grom), curse (Klątwa), shield (Tarcza), inspire (Natchnienie), quicken (Przyspieszenie); zastępują kopie bolt.webp",
+      "opis": "Arkusz 1536x1024 (siatka 4x2, czarne tło, referencja stylu: arkusz ikon czarów asset_UtR1LcNTMs51jXBLUK2fh9gF), 2 warianty, wybrany drugi; cięcie scripts/assets/arkusz.py (192 px). Prompt: 'A sheet of five separate round medal icons of magic spells ...': rozgałęziony niebiesko-biały łańcuch błyskawic uderzający w dwa cele, mroczna fioletowa czaszka ze znakiem osłabienia nad wrogiem, świetlista złoto-błękitna tarcza pochłaniająca cios, złota flaga i promienna dłoń z mieczem, skrzydlaty but z liniami ruchu.",
+      "scenario_asset": {
+        "arkusz": "asset_424pqE579NkV8xYF87qzk5CW",
+        "wariant_odrzucony": "asset_ex9cov7sfAYXKbCQ3hotSfBB"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, obraz referencyjny",
+      "data": "2026-11-17",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/czar_thunder",
+      "pliki": [
+        "public/assets/efekty/czar_thunder.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): Grom: rozgałęziony błysk niebiesko-biały",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (branching blue-white lightning burst striking, forked bolts radiating from the center). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_QyWCEKyNztoQyszkAnV2jZHw",
+        "klip": "asset_YQC8AE9wqHHuuTq6cMMHmdgY"
+      },
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24, potem ponowne zapisanie WebP z niższą jakością (próg alfa 40-45 dla grom/klątwa)",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-17",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/czar_curse",
+      "pliki": [
+        "public/assets/efekty/czar_curse.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): Klątwa: fioletowo-czarny wir z czaszkami",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (purple and black swirling vortex of dark magic with small ghostly skulls circling in it). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_L8cQeFrGhuYqLxob8et8r5H9",
+        "klip": "asset_6Lo49thFJAtkoxX1nTMUJ5D7"
+      },
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24, potem ponowne zapisanie WebP z niższą jakością (próg alfa 40-45 dla grom/klątwa)",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-17",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/czar_shield",
+      "pliki": [
+        "public/assets/efekty/czar_shield.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): Tarcza: złoto-błękitna kopuła blasku",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (a golden and sky-blue dome of radiant light, a translucent protective hemisphere shield glow). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_1Ry3BbyL6FVQNBmnNNDGawN5",
+        "klip": "asset_Es1dPExYBMoLkGsxPdxqPupt"
+      },
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24, potem ponowne zapisanie WebP z niższą jakością (próg alfa 40-45 dla grom/klątwa)",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-17",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/czar_inspire",
+      "pliki": [
+        "public/assets/efekty/czar_inspire.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): Natchnienie: złote promienie i iskry unoszące się w górę",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (golden light rays and glittering sparks rising upward, an uplifting inspiring radiance). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_AnBnvdg8Gc3i5Wd4AXuNsKsB",
+        "klip": "asset_DckCcNTknJAv18N8f8nqmqJK"
+      },
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24, potem ponowne zapisanie WebP z niższą jakością (próg alfa 40-45 dla grom/klątwa)",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-17",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/mapa_przyspieszenie",
+      "pliki": [
+        "public/assets/efekty/mapa_przyspieszenie.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px, mieszanie screen): Przyspieszenie (mapa): zielonkawe smugi wiatru i iskry",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (greenish streaks of wind swirling and sparks of green light, speed lines). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_2RBBmx1i21x8huddrnxnepGm",
+        "klip": "asset_jtgQtXq912VoKPYDSZsoJ8sP"
+      },
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) medium + P-Video 2; pakowanie scripts/animacje/pack_fx.py 192 px, 12 kl./s, klatki 1-24, potem ponowne zapisanie WebP z niższą jakością (próg alfa 40-45 dla grom/klątwa)",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-17",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/menu/poziomy2-4",
+      "pliki": [
+        "public/assets/ui/menu/wyprawa.webp",
+        "public/assets/ui/menu/osada.webp",
+        "public/assets/ui/menu/ksiestwo.webp"
+      ],
+      "typ": "medale kart poziomów kreatora: Wyprawa (poziom 2), Osada (poziom 3), Księstwo (poziom 4); zastępują ikony obiektów mapy",
+      "opis": "Arkusz 1536x1024 (czarne tło, referencja stylu: arkusz medali poziomów asset_48niek5s5xxtREtatcDYy3bR), 2 warianty, wybrany pierwszy; wycięcie scripts/assets/arkusz.py na ręcznych kadrach (256 px wysokości). Wyprawa: bohater z plecakiem, mapą i kompasem; Osada: wioska z targiem i sakiewką złota; Księstwo: kłody, ruda, niebieski kryształ Pyłu, kilof i topór.",
+      "scenario_asset": {
+        "arkusz": "asset_dMpQXzs5aV33gGQG69G8s7zT",
+        "wariant_odrzucony": "asset_T1xq1zxDvZjcKsEeBE4cRP3T"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, obraz referencyjny",
+      "data": "2026-11-17",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

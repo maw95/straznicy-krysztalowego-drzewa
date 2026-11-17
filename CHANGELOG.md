@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowe ikony poziomów Wyprawa, Osada i Księstwo w kreatorze nowej gry (malowane medale w stylu pozostałych) oraz nowe ikony i animacje czarów Grom, Klątwa, Tarcza, Natchnienie i Przyspieszenie.
+
 - Własne ustawienia: ekran pojawia się od razu po wyborze karty (przed trybem) i ma pięć sekcji: poziomy i mechaniki (osady, surowce, magia, Relikt), bohater (ruch 2–5), bitwa, limit rund bitwy oraz horda i skarby; ustawienia zależne od trybu (dodatkowy bohater Hordy) są na stronie graczy. Gry na własnych ustawieniach nie dają punktów rankingu.
 
 - Kreator nowej gry: wszystkie sekcje (liczba graczy, wielkość mapy, trudność, a także ustawienia własne) mają ten sam układ: duży tytuł i pod nim przyciski wyśrodkowane w jednej linii, bez nachodzenia na siebie.
