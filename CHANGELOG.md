@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Balans poziomów 4–6, trudność Trudny: komputer jest silniejszy na krótkich mapach (tam gracz wygrywał za łatwo), a w rywalizacji na średnich i długich mapach nieco słabszy (tam wygrywał za rzadko).
+
 - Rywalizacja dla 7 i 8 graczy (po czterech na stronę): każda frakcja dostaje czwartego bohatera (Przymierze: Dzielna Kaczka, Horda: Wódz Hordy). Stoły na 7–8 graczy są dostępne na poziomach do Księstwa (na poziomach z karczmą ci bohaterowie są dowódcami do wynajęcia), także online.
 
 - Ekspedycja (nowa karta w menu nowej gry): osiem bitew na arenie 6 na 6 pod rząd, jedno życie. Po każdej wygranej wybierasz jedną z trzech relikwii (więcej many, dodatkowy czar, dodatkowy artefakt), a komputer rośnie w siłę z etapu na etap; na końcu czeka Czarny Smok. Wyprawa zapisuje się sama, profil (ukończone wyprawy, najlepszy wynik) odblokowuje kolejnych bohaterów, a „Wyprawa dnia” ma ten sam przebieg dla wszystkich i ranking dla zalogowanych.

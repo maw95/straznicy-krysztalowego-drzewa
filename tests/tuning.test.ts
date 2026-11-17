@@ -35,8 +35,8 @@ describe('digital tuning levers', () => {
       else expect(['zero', 'kids', 'normal', 'hard']).toContain(t.level);
       for (const m of t.maps ?? []) expect(['short', 'medium', 'long', 'veryLong', 'huge', 'giant']).toContain(m);
     }
-    // PvP has no Hard level.
-    expect(DIGITAL_TUNING.some((t) => t.mode === 'pvp' && t.level === 'hard')).toBe(false);
+    // PvP has no Hard level, except at the economy tables of the digital edition (levels 4-6: kingdom).
+    expect(DIGITAL_TUNING.some((t) => t.mode === 'pvp' && t.level === 'hard' && !t.kingdom)).toBe(false);
     expect(pvpSeats('goldDragon', 'blackDragon')).toHaveLength(2);
   });
 });
