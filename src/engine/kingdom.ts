@@ -13,7 +13,7 @@ import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsTex
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, passTargets, SHARDS_ID, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import { computerFaction, type Action, type Crystal, type GameState, type HeroState } from './types';
-import { MAGIC, SPELLS, towerSpells, type SpellId } from './magic';
+import { circleSpells, MAGIC, SPELL_CIRCLES, SPELLS, towerSpells, type SpellId } from './magic';
 import { HERO_TYPES } from './heroTypes';
 import { FACTION_MECHANICS, mayBuildSpark, pickUpShard, placeShards, shardCollector, SPARK_NAMES, spendShards, TREE_NAMES } from './empire';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
@@ -138,7 +138,7 @@ const NAMES: Record<FactionId, string[]> = {
   horde: ['Czarnogrzęd', 'Żelazna Brama', 'Popielisko', 'Krwawy Bród', 'Sadzawa Cieni', 'Kościany Szaniec', 'Węglowisko', 'Gniewogród', 'Smolna Twierdza', 'Ciernisty Gród', 'Ogrza Warownia', 'Czerwony Szaniec', 'Dymiące Wrota', 'Trupia Przełęcz', 'Mglisty Kopiec', 'Wilcza Jama'],
 };
 
-export const BUILDING_NAMES: Record<BuildingId, [string, string?]> = {
+export const BUILDING_NAMES: Record<BuildingId, string[]> = {
   barracks: ['Koszary', 'Rozbudowane koszary'],
   market: ['Targ', 'Duży targ'],
   hospital: ['Szpital', 'Ulepszony szpital'],
@@ -146,7 +146,7 @@ export const BUILDING_NAMES: Record<BuildingId, [string, string?]> = {
   forge: ['Kuźnia', 'Wielka kuźnia'],
   walls: ['Fosa', 'Mury z wieżyczkami'],
   tavern: ['Karczma'],
-  magic: ['Wieża maga', 'Wielka wieża maga'],
+  magic: ['Wieża maga', 'Wielka wieża maga', 'Arcywieża maga'],
   spark: ['Pierwotna Iskra'],
 };
 
@@ -158,14 +158,19 @@ export const buildingLevel = (s: Settlement, b: BuildingId): number => s.buildin
 /** The best forge among the faction's settlements (0: none). */
 export const forgeLevel = (state: GameState, f: FactionId): number => (state.rules.economy ? Math.max(0, ...settlementsOf(state, f).map((s) => buildingLevel(s, 'forge'))) : 0);
 
-export const BUILDING_TEXTS: Record<BuildingId, [string, string?]> = {
+const CIRCLE_WORDS = ['pierwszego', 'drugiego', 'trzeciego', 'czwartego', 'piątego'];
+/** What each level of the mage tower teaches: one circle of spells per level (SPELL_CIRCLES). */
+const circleTexts = (): string[] =>
+  Array.from({ length: SPELL_CIRCLES }, (_, i) => `Uczy ${i ? 'też ' : 'bohaterów '}czarów ${CIRCLE_WORDS[i]} kręgu: ${circleSpells(i + 1).map((id) => SPELLS[id].name).join(', ')}.`);
+
+export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
   barracks: ['Pozwalają rekrutować pomocników.', 'Dodatkowe miejsce w drużynie i dostęp do najmocniejszych jednostek.'],
   market: ['Trzy artefakty w ofercie, nowa oferta co 3 rundy.', 'Pięć artefaktów w ofercie.'],
   hospital: ['Wskrzesza poległych pomocników za połowę ich ceny.', 'Wskrzesza za jedną trzecią ceny.'],
   treasury: ['Przynosi +1 złota na rundę.'],
   forge: ['Pomocnicy całej frakcji walczą z +1 A.', 'Pomocnicy dostają też +1 Ż.'],
   spark: ['Budynek Pierwotnej Iskry: jego ceną są wszystkie Odłamki z mapy. Daje frakcji wielką premię, a w celu „Relikt” wygrywa grę.'],
-  magic: ['Uczy bohaterów czarów pierwszego kręgu: Magiczny Pocisk, Leczenie, Spowolnienie i Wizja.', 'Uczy też czarów drugiego kręgu: Kamienna Skóra, Kula Ognia, Zryw i Wrota.'],
+  magic: circleTexts(),
   tavern: ['Tu najmiesz dowódcę: drugiego bohatera z własnym pionkiem, doświadczeniem i artefaktami. Tu też wykupisz dowódcę, który poległ.'],
   walls: ['W bitwie o osadę wroga zatrzymuje fosa z kolcami: kto w nią wejdzie, traci turę i dostaje 2 obrażenia. Przejście jest tylko po moście.', 'Za fosą staje mur z bramą i dwie wieżyczki, które co rundę strzelają do napastników. Mur burzy tylko katapulta atakującego.'],
 };
@@ -981,7 +986,7 @@ export function kingdomBotAction(state: GameState, hero: HeroState): Action | nu
   }
   // Level 5: learn the spells of the faction's towers, the fighting ones first (a few coins stay for recruits).
   if (state.rules.realm && hero.playerId) {
-    const order: SpellId[] = ['bolt', 'mend', 'fireball', 'stoneskin', 'slow'];
+    const order: SpellId[] = ['bolt', 'mend', 'fireball', 'thunder', 'stoneskin', 'curse', 'shield', 'inspire', 'slow'];
     for (const s of settlementsOf(state, hero.faction)) {
       const teach = towerSpells(buildingLevel(s, 'magic'));
       const spell = order.find((id) => teach.includes(id) && !hero.spells?.includes(id));

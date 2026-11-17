@@ -3,7 +3,7 @@
 // Spells are the same for both factions; the sage commanders are the better casters. Design: docs/ZASADY_CYFROWE.md ("Poziom 5", "Magia").
 
 import { UNITS, type FactionId } from './data';
-import { battleFx, cellsOf, dealDamage, hpScaleOf, livingUnits, scaleOf } from './battle';
+import { battleFx, cellsOf, dealDamage, hpScaleOf, livingUnits, scaleOf, unitAttackBase } from './battle';
 import { distance, parseKey } from './hex';
 import { levelOf } from './growth';
 import { log } from './log';
@@ -11,13 +11,16 @@ import { revealAround } from './map';
 import type { BattleUnit, GameState, HeroState } from './types';
 import { specialtyOf, typeMana } from './heroTypes';
 
-export type SpellId = 'bolt' | 'mend' | 'slow' | 'stoneskin' | 'fireball' | 'haste' | 'vision' | 'portal';
+export type SpellId = 'bolt' | 'mend' | 'slow' | 'stoneskin' | 'fireball' | 'haste' | 'vision' | 'portal' | 'quicken' | 'thunder' | 'curse' | 'shield' | 'inspire';
+
+/** How many circles of spells there are: the mage tower has this many levels (one circle each). Going up to five later is data only (SPELLS, MAGIC.price, the tower's cost and texts). */
+export const SPELL_CIRCLES = 3;
 
 export interface SpellDef {
   id: SpellId;
   name: string;
-  /** Circle I spells are in every mage tower, circle II in an upgraded one. */
-  circle: 1 | 2;
+  /** Circle I spells are in every mage tower, each next circle needs the tower one level higher. */
+  circle: 1 | 2 | 3;
   mana: number;
   where: 'battle' | 'map';
   /** Whom a battle spell is cast on. */
@@ -35,13 +38,22 @@ export const MAGIC = {
   /** A hero's spells grow with it: +1 damage or healing for every this many levels (and +1 for a sage). */
   powerLevels: 3,
   /** Price of learning a spell, by circle (gold; circle II also a Gwiezdny Pył). */
-  price: [{ gold: 3 }, { gold: 5, dust: 1 }],
+  price: [{ gold: 3 }, { gold: 5, dust: 1 }, { gold: 8, dust: 2 }],
   boltDamage: 3,
   mendHeal: 4,
   slowSpeed: 2,
   stoneskin: 1,
   fireballDamage: 2,
   visionRadius: 3,
+  /** Przyspieszenie (map): movement points added for this turn. */
+  quickenPoints: 2,
+  /** Grom: the target's damage, then the damage of the jump to the nearest other enemy. */
+  thunderDamage: 5,
+  thunderJump: 2,
+  /** Klątwa: Atak the enemy loses to the end of the battle (never below 1 point of the board game's scale). */
+  curseAttack: 1,
+  /** Natchnienie: Atak the ally gains in its next activation. */
+  inspireAttack: 2,
 };
 
 export const SPELLS: Record<SpellId, SpellDef> = {
@@ -52,6 +64,11 @@ export const SPELLS: Record<SpellId, SpellDef> = {
   stoneskin: { id: 'stoneskin', name: 'Kamienna Skóra', circle: 2, mana: 2, where: 'battle', target: 'ally', text: `Do końca bitwy każdy cios w wybranego sojusznika zadaje o ${MAGIC.stoneskin} mniej obrażeń (ale co najmniej 1).` },
   fireball: { id: 'fireball', name: 'Kula Ognia', circle: 2, mana: 3, where: 'battle', target: 'enemy', text: `Wybrany wróg i wszyscy stojący obok niego (także twoi) dostają po ${MAGIC.fireballDamage} punktów obrażeń.` },
   haste: { id: 'haste', name: 'Zryw', circle: 2, mana: 3, where: 'battle', target: 'ally', text: 'Wybrany sojusznik (nie sam bohater) dostaje zaraz dodatkową aktywację.' },
+  quicken: { id: 'quicken', name: 'Przyspieszenie', circle: 1, mana: 2, where: 'map', target: 'none', text: `Na mapie: bohater dostaje +${MAGIC.quickenPoints} punkty ruchu w tej turze.` },
+  thunder: { id: 'thunder', name: 'Grom', circle: 3, mana: 4, where: 'battle', target: 'enemy', text: `Wybrany wróg dostaje ${MAGIC.thunderDamage} punktów obrażeń, a piorun przeskakuje na najbliższego innego wroga (${MAGIC.thunderJump} punkty obrażeń).` },
+  curse: { id: 'curse', name: 'Klątwa', circle: 3, mana: 3, where: 'battle', target: 'enemy', text: `Wybrany wróg ma −${MAGIC.curseAttack} A do końca bitwy (nie mniej niż 1).` },
+  shield: { id: 'shield', name: 'Tarcza', circle: 3, mana: 3, where: 'battle', target: 'ally', text: 'Pierwszy cios w wybranego sojusznika zostaje całkowicie pochłonięty.' },
+  inspire: { id: 'inspire', name: 'Natchnienie', circle: 3, mana: 3, where: 'battle', target: 'ally', text: `Wybrany sojusznik ma +${MAGIC.inspireAttack} A w swojej następnej aktywacji.` },
   portal: { id: 'portal', name: 'Wrota', circle: 2, mana: 4, where: 'map', target: 'none', text: 'Na mapie: przenosi bohatera do najbliższej własnej osady. Kończy jego ruch w tej turze.' },
 };
 export const SPELL_IDS = Object.keys(SPELLS) as SpellId[];
@@ -68,6 +85,9 @@ export const spellPower = (hero: HeroState): number => Math.floor(levelOf(hero) 
 
 /** The spells a mage tower of this level teaches. */
 export const towerSpells = (level: number): SpellId[] => SPELL_IDS.filter((id) => SPELLS[id].circle <= level);
+
+/** Spells of one circle, in the order of the book. */
+export const circleSpells = (circle: number): SpellId[] => SPELL_IDS.filter((id) => SPELLS[id].circle === circle);
 
 /** The end of a round: every living hero gets some mana back. */
 export function regenMana(state: GameState): void {
@@ -99,7 +119,7 @@ export function spellTargets(state: GameState, spell: SpellId): BattleUnit[] {
   const caster = b.units[b.activation!.unitId];
   const def = SPELLS[spell];
   if (def.target === 'enemy') return livingUnits(b).filter((u) => u.side !== caster.side && u.pos);
-  if (def.target === 'ally') return livingUnits(b, caster.side).filter((u) => u.pos && (spell !== 'haste' || u.id !== caster.id) && (spell !== 'mend' || u.hp < u.maxHp));
+  if (def.target === 'ally') return livingUnits(b, caster.side).filter((u) => u.pos && (spell !== 'haste' || u.id !== caster.id) && (spell !== 'mend' || u.hp < u.maxHp) && (spell !== 'shield' || !u.status.shieldArmed));
   return [];
 }
 
@@ -151,6 +171,29 @@ export function battleSpell(state: GameState, spell: SpellId, targetId?: string)
     case 'haste':
       b.extra.unshift({ unitId: target.id, moveOnly: false });
       break;
+    case 'thunder': {
+      dealDamage(state, target, (MAGIC.thunderDamage + power) * scaleOf(state), def.name);
+      const from = cellsOf(target);
+      const reach = (u: BattleUnit) => Math.min(...cellsOf(u).flatMap((c) => from.map((x) => distance(parseKey(x), parseKey(c)))));
+      const next = livingUnits(b).filter((u) => u.id !== target.id && u.side === target.side && u.pos).sort((x, y) => reach(x) - reach(y) || (x.id < y.id ? -1 : 1))[0];
+      if (next) {
+        battleFx(state, 'czar_thunder', next.pos);
+        dealDamage(state, next, (MAGIC.thunderJump + power) * scaleOf(state), def.name);
+      }
+      break;
+    }
+    case 'curse': {
+      const cut = Math.min(MAGIC.curseAttack * scaleOf(state), Math.max(0, unitAttackBase(target) - scaleOf(state)));
+      target.status.battleAttackBonus -= cut;
+      if (!cut) log(state, 'ability', `${name(target)} nie może już słabnąć.`);
+      break;
+    }
+    case 'shield':
+      target.status.shieldArmed = true;
+      break;
+    case 'inspire':
+      target.status.nextAttackBonus += MAGIC.inspireAttack * scaleOf(state);
+      break;
     default:
       break;
   }
@@ -168,6 +211,12 @@ export function mapSpell(state: GameState, hero: HeroState, spell: SpellId): voi
     state.movePoints = 0;
     revealAround(state, target);
     log(state, 'ability', `${who} rzuca czar Wrota i staje w swojej osadzie.`, undefined, { type: 'fx', kind: 'mapa_portal', hex: target });
+    return;
+  }
+  if (spell === 'quicken') {
+    spend(state, hero, spell);
+    state.movePoints += MAGIC.quickenPoints;
+    log(state, 'ability', `${who} rzuca czar Przyspieszenie (+${MAGIC.quickenPoints} ruchu).`, undefined, { type: 'fx', kind: 'mapa_przyspieszenie', hex: hero.pos });
     return;
   }
   spend(state, hero, spell);
@@ -209,6 +258,27 @@ export function botSpell(state: GameState): { spell: SpellId; targetId: string }
       .filter((x) => x.friends === 0 && x.foes >= 2)
       .sort((x, y) => y.kills - x.kills || y.foes - x.foes || (x.t.id < y.t.id ? -1 : 1))[0];
     if (best) return { spell: 'fireball', targetId: best.t.id };
+  }
+  if (can.includes('thunder')) {
+    // A kill with the jump counted: the best of the two hits (a leader first), else when the first target is wounded enough to matter.
+    const dmg = (MAGIC.thunderDamage + power) * k;
+    const kill = enemies.filter((u) => u.hp <= dmg).sort((x, y) => leader(y) - leader(x) || y.hp - x.hp || (x.id < y.id ? -1 : 1))[0];
+    if (kill) return { spell: 'thunder', targetId: kill.id };
+    // Mana to spare: the jump makes it worth it against two enemies or more.
+    const t = manaOf(hero) > SPELLS.thunder.mana && enemies.length >= 2 ? enemies.slice().sort((x, y) => leader(y) - leader(x) || x.hp - y.hp || (x.id < y.id ? -1 : 1))[0] : null;
+    if (t) return { spell: 'thunder', targetId: t.id };
+  }
+  if (can.includes('curse') && b.round === 1 && !enemies.some((u) => u.status.battleAttackBonus < 0)) {
+    const strong = enemies.filter((u) => u.status.battleAttackBonus >= 0 && unitAttackBase(u) > k).sort((x, y) => leader(y) - leader(x) || unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (strong) return { spell: 'curse', targetId: strong.id };
+  }
+  if (can.includes('shield') && b.round >= 2 && b.round <= 5) {
+    const guarded = own.filter((u) => !u.status.shieldArmed).sort((x, y) => leader(y) - leader(x) || (x.id < y.id ? -1 : 1))[0];
+    if (guarded) return { spell: 'shield', targetId: guarded.id };
+  }
+  if (can.includes('inspire') && enemies.length) {
+    const best = own.filter((u) => u.id !== me.id && u.status.nextAttackBonus === 0).sort((x, y) => unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (best && b.round <= 6) return { spell: 'inspire', targetId: best.id };
   }
   if (can.includes('bolt')) {
     const dmg = (MAGIC.boltDamage + power) * k;

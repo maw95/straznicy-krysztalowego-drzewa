@@ -17,6 +17,8 @@ import { openGame } from './game';
     if (await ready.count()) await ready.first().click();
     const end = p.getByRole('button', { name: 'Koniec', exact: true });
     for (let i = 0; i < 40 && !(await p.locator('[data-spell-btn]').count()); i++) {
+      // The garrison's owner deploys too (a human commands it since 17.11).
+      if (await ready.count()) await ready.first().click().catch(() => undefined);
       if ((await end.count()) && (await end.first().isEnabled())) await end.first().click().catch(() => undefined);
       await p.waitForTimeout(1200);
     }

@@ -796,7 +796,7 @@ Dowódca jest pełnym bohaterem: ma własny pionek na mapie, własną turę (zar
 Dowódca nie ginie na zawsze. Traci artefakty (zabiera je zwycięski bohater), ale zachowuje poziom i umiejętności. Od następnej rundy możesz go **wykupić w karczmie**: 3 zł i 2 zł za każdy jego poziom. Wykup działa tylko, gdy żyje Twój bohater główny. **Śmierć bohatera głównego jest ostateczna**, ale jeśli żyje dowódca, grasz dalej i możesz wygrać.
 
 ### Magia
-Każdy bohater ma **manę**: 3 i jeszcze 1 za każdy swój poziom (mędrcy o 3 więcej). Na koniec rundy wraca 1 punkt many. Bohaterowie główni od początku znają **Magiczny Pocisk**; kolejnych czarów uczy **wieża maga** (budynek w osadzie: 5 zł + 2 rudy + 1 Pył; rozbudowana uczy też czarów drugiego kręgu). Czar pierwszego kręgu kosztuje 3 zł, drugiego 5 zł i 1 Gwiezdny Pył. Uczy się bohater, którego jest tura.
+Każdy bohater ma **manę**: 3 i jeszcze 1 za każdy swój poziom (mędrcy o 3 więcej). Na koniec rundy wraca 1 punkt many. Bohaterowie główni od początku znają **Magiczny Pocisk**; kolejnych czarów uczy **wieża maga** (budynek w osadzie: 5 zł + 2 rudy + 1 Pył; każde ulepszenie otwiera kolejny **krąg** czarów: Wielka wieża maga (8 zł + 3 rudy + 3 Pyły) drugi, Arcywieża maga (11 zł + 4 rudy + 4 Pyły) trzeci). Czar pierwszego kręgu kosztuje 3 zł, drugiego 5 zł i 1 Gwiezdny Pył, trzeciego 8 zł i 2 Pyły. Uczy się bohater, którego jest tura.
 
 **W bitwie** bohater może w swojej aktywacji rzucić **jeden czar**, oprócz ruchu i ataku: wybierz czar z paska „Czary”, a potem wskaż cel.
 - **Magiczny Pocisk** (2 many): 3 obrażenia w dowolnego wroga.
@@ -805,8 +805,12 @@ Każdy bohater ma **manę**: 3 i jeszcze 1 za każdy swój poziom (mędrcy o 3 w
 - **Kamienna Skóra** (2, drugi krąg): do końca bitwy ciosy w sojusznika są o 1 słabsze.
 - **Kula Ognia** (3, drugi krąg): 2 obrażenia w cel i wszystkich stojących obok, także Twoich.
 - **Zryw** (3, drugi krąg): sojusznik od razu dostaje dodatkową aktywację.
+- **Grom** (4, trzeci krąg): 5 obrażeń w wybranego wroga, a piorun przeskakuje na najbliższego innego wroga (2 obrażenia).
+- **Klątwa** (3, trzeci krąg): wróg ma −1 Ataku do końca bitwy (nie mniej niż 1).
+- **Tarcza** (3, trzeci krąg): pierwszy cios w wybranego sojusznika jest całkowicie pochłonięty.
+- **Natchnienie** (3, trzeci krąg): sojusznik ma +2 Ataku w swojej następnej aktywacji.
 
-**Na mapie**, w turze bohatera (przyciski pod jego imieniem): **Wizja** (2 many) odkrywa pola w promieniu 3, a **Wrota** (4, drugi krąg) przenoszą bohatera do najbliższej własnej osady i kończą jego ruch.
+**Na mapie**, w turze bohatera (przyciski pod jego imieniem): **Wizja** (2 many) odkrywa pola w promieniu 3, **Przyspieszenie** (2) daje bohaterowi +2 punkty ruchu w tej turze, a **Wrota** (4, drugi krąg) przenoszą bohatera do najbliższej własnej osady i kończą jego ruch.
 
 Czary rosną z bohaterem: co 3 poziomy zadają i leczą o 1 więcej; mędrzec ma +1 od początku.
 

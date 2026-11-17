@@ -473,7 +473,7 @@ export interface BattleState {
   heals?: Array<{ unitId: string; amount: number }>;
   /** Jumps over the board (newest last): the screen plays a teleport instead of a walk. `kind`: Król Burzy, Podkop or the Zwój Teleportacji. */
   /** Light effects the screen plays (spells, the siege, a rebirth): `kind` is a sheet of public/assets/efekty, `cell` where it plays. Newest last. */
-  fx?: Array<{ kind: 'czar_bolt' | 'czar_mend' | 'czar_slow' | 'czar_stoneskin' | 'czar_fireball' | 'czar_haste' | 'oblezenie_kamien' | 'oblezenie_fosa' | 'odrodzenie'; cell: HexKey }>;
+  fx?: Array<{ kind: 'czar_bolt' | 'czar_mend' | 'czar_slow' | 'czar_stoneskin' | 'czar_fireball' | 'czar_haste' | 'czar_thunder' | 'czar_curse' | 'czar_shield' | 'czar_inspire' | 'oblezenie_kamien' | 'oblezenie_fosa' | 'odrodzenie'; cell: HexKey }>;
   teleports?: Array<{ unitId: string; from: HexKey; to: HexKey; kind: 'storm' | 'burrow' | 'scroll' }>;
 }
 
@@ -496,7 +496,7 @@ export type LogEvent =
   | { type: 'xp'; heroId: string; amount: number; reason: string }
   /** Gold and resources a hero just took from the map (a mill, a store, a chest, a hut): the screen floats them over the hero. */
   /** A light effect on the adventure map (a map spell, a shard picked up, the Iskra raised): everybody sees it, whatever their side. */
-  | { type: 'fx'; kind: 'mapa_wizja' | 'mapa_portal' | 'odlamek' | 'iskra'; hex: HexKey }
+  | { type: 'fx'; kind: 'mapa_wizja' | 'mapa_portal' | 'mapa_przyspieszenie' | 'odlamek' | 'iskra'; hex: HexKey }
   | { type: 'loot'; heroId: string; gold?: number; res?: Partial<Record<'wood' | 'ore' | 'dust', number>> }
   | { type: 'artifact'; heroId: string; artifactId: string; source: string; kept: boolean; packed?: boolean }
   /** A story note of a hand-made map (story.ts). */

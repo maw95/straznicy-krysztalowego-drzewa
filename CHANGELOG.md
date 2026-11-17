@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Magia: trzy kręgi czarów. Nowa „Arcywieża maga” (trzecie ulepszenie wieży, 11 zł + 4 rudy + 4 Pyły) uczy czarów trzeciego kręgu: Grom, Klątwa, Tarcza i Natchnienie; w pierwszym kręgu pojawia się Przyspieszenie (+2 ruchu na mapie). Komputer też ich używa.
+
 - Bardzo trudny: komputer nie ma już więcej Życia jednostek; zamiast tego zaczyna z dodatkowymi surowcami (3 drewna, 3 rudy, 2 Pyłu) i dwoma artefaktami dla głównego bohatera, nadal z większymi dochodami i 2 skarbami więcej.
 
 - Obrona osady: garnizon bez bohatera prowadzi w bitwie gracz-właściciel (wybór jednostek, rozstawienie i ruchy), a nie komputer; przy kilku graczach tej strony ten, którego bohater ruszał się ostatnio (człowiek przed botem).

@@ -39,16 +39,7 @@ Stan nocnego zadania: zob. `docs/PODSUMOWANIE_NOCNE.md` i `docs/PYTANIA_DO_AUTOR
 
 ### Grupa A. Zasady i silnik (decyzje autora z 17.11; punkty niezależne, kolejność dowolna)
 
-Wspólne dla punktu 33: zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
-
-**33. Więcej czarów, trzy kręgi** (M; kierunek zaakceptowany 17.11)
-- **Akceptacja autora (17.11):** podział na trzy kręgi, koszty robocze (ulepszenie wieży 11 zł + 4 rudy + 4 Pyłu, nauka kręgu III ok. 8 zł + Pył) i lista czarów zatwierdzone; stroić pasmami.
-- Dziś: 8 czarów w `src/engine/magic.ts` (`SpellId`, `SPELLS`, `MAGIC`): krąg I (Magiczny Pocisk, Leczenie, Spowolnienie, Wizja), krąg II (Kamienna Skóra, Kula Ognia, Zryw, Wrota). Mana 3 + poziom, regeneracja 1/rundę, nauka za złoto (krąg I 3 zł, II 5 zł + 1 Pył) w wieży maga (budynek `magic`, poziom budynku = krąg).
-- **Decyzja autora (17.11): trzy kręgi** (w przyszłości do pięciu, ale nie teraz). Dostęp do wyższego kręgu = ulepszenie Wieży maga (poziom budynku = krąg; dziś są 2 poziomy, dodać trzeci: koszt do ustalenia stroicielem, robocza `{ gold: 11, ore: 4, dust: 4 }`). Kod pisać tak, żeby liczba kręgów była jedną stałą (`SPELL_CIRCLES = 3`; `towerSpells(level)`, ceny nauki, `BUILDING_NAMES.magic`, `BUILDING_TEXTS.magic`, księga czarów bez założenia „2 kręgi”), żeby rozszerzenie do 5 było dopisaniem danych. Podział roboczy: krąg I (5): dotychczasowe 4 + Przyspieszenie (mapa); krąg II (4): dotychczasowe 4; **krąg III (4, nowe): Grom, Klątwa, Tarcza, Natchnienie** (mocniejsze liczby, koszt many 3–4, nauka ok. 8 zł + Pył). Autor może przestawić czary między kręgami po obejrzeniu listy.
-- Pierwotna lista nowych czarów: obrażenia (np. Grom, który bije wroga i jego sąsiada z linii), obrona (Tarcza: pierwszy cios pochłonięty), osłabienie (Klątwa: −1 A wroga do końca bitwy), wsparcie (Natchnienie: +1 A sojusznika na jedną aktywację), mapa (Przyspieszenie: +2 pkt ruchu). Liczby w małej skali (przez `statScale`), koszty many 1–4.
-- Dotyka: `magic.ts` (`SpellId`, `SPELLS`, `MAGIC`, funkcja rzucania i `spellPower`), `ai/` (`botSpell` w `magic.ts`: warunki użycia każdego czaru), `ui/SpellBook.tsx` (księga: układ na dwóch stronach, ikony `public/assets/ikony/mapa/` lub czary), `SettlementDialog.tsx` (wieża maga uczy `towerSpells(level)`), efekty graficzne `public/assets/efekty/` (grafiki: Scenario, `kredyty`; do czasu ich powstania ikona zastępcza z wpisem w sekcji 2a placeholderów), dźwięki (1 CU za sztukę), tekst w `ZASADY_CYFROWE.md` („Magia”) i `INSTRUKCJA.md`.
-- Testy: `tests/magic.test.ts` (każdy czar: koszt, cel, efekt, brak many), bot używa nowych czarów w grach (licznik jak w skrypcie z punktu Zwoju).
-- Gotowe, gdy: czary działają w bitwie i na mapie, bot ich używa, golden i pasma poziomów 5–6 przeliczone.
+Wspólne dla punktu 33 (zrobiony; zostały zastępcze grafiki z sekcji 2a): zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
 
 **48. Arena 6 na 6 z elementami nowych poziomów i Bardzo trudny na arenie** (L; zależy od punktów 33 i 35)
 - Decyzje autora (17.11): **Bardzo trudny na arenie: bot bez błędów** (zamiast +1 karty w drafcie; zdjęcie Życia zostaje). Arena dostaje rzeczy z nowych poziomów: **dodatkowi pomocnicy, artefakty i zaklęcia**; docelowo walka **6 na 6**.
@@ -151,6 +142,10 @@ Decyzje autora: całą mechanikę i wygląd brać z Heroes III; jedyna różnica
 - Wynik: lista usterek w tym punkcie (zrzuty w `.tmp/`, nie w repo), poprawki jako osobne commity, skrypt `scripts/browser/telefon.ts` przechodzący ekrany i wykrywający przewijanie poziome oraz elementy poza ekranem (można uruchamiać po zmianach UI).
 - Gotowe, gdy: wszystkie ekrany z listy mają zrzut w pionie i poziomie bez usterek, skrypt kontrolny przechodzi, autor sprawdził grę na swoim telefonie.
 
+## 2a. Zastępcze grafiki do wygenerowania (placeholdery w repo)
+- Ikony czarów `public/assets/ikony/czary/{thunder,curse,shield,inspire,quicken}.webp` (192 px, medal jak `bolt.webp`): dziś kopie ikon innych czarów (Grom ← bolt, Klątwa ← slow, Tarcza ← stoneskin, Natchnienie i Przyspieszenie ← haste).
+- Efekty `public/assets/efekty/czar_{thunder,curse,shield,inspire}.webp` i `mapa_przyspieszenie.webp` (arkusz 24 klatek po 192 px, jak `czar_bolt.webp`): dziś kopie efektów innych czarów.
+
 ## 2. Tylko autor (Claude tego nie bierze)
 - **Premiera na Steamie** (L): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery: **3.0** (potwierdzone 17.11).
 - Domeny i konta, znak towarowy (brak wpisów), tytuł w sklepie Steam.
@@ -242,6 +237,7 @@ Nowe wpisy dopisuj na końcu z datą i numerem punktu:
 5. **(17.11, punkt 34)** Przekazanie Odłamków: `passArtifact` z `artifactId: 'shards'` przekazuje wszystkie Odłamki bohatera (nie po jednym).
 6. **(17.11, punkt 36)** Arena, Bardzo trudny: 5 pkt (3 × 1,5 zaokrąglone w górę); mapy: Trudny × 1,5 z limitem `MAX_POINTS`; serwer liczy z wydanego silnika, więc zmiana dojdzie z wydaniem gry.
 7. **(17.11, punkt 35)** Bardzo trudny: bez bonusu Życia (usunięte `computerHp`, `applyComputerHp`). Przewagi komputera: `computerResources` +3 drewna, +3 rudy, +2 Pyłu na starcie, `computerArtifacts` 2 artefakty (rzadkość 1–2) dla głównego bohatera, `computerGold` 1,5, `computerTreasures` 2 (stałe w `COMPUTER_HANDICAP`). Pomiar 40 gier: poziom 4 koop 18–30%, poziom 6 koop 18–38% (pasmo 15–30%, na krótkich mapach lekko powyżej). Arena na razie bez przewagi poza „bez błędów” (jak Trudny): punkt 48.
+8. **(17.11, punkt 33)** Podział kręgów: I (5): Magiczny Pocisk, Leczenie, Spowolnienie, Wizja, Przyspieszenie; II (4): Kamienna Skóra, Kula Ognia, Zryw, Wrota; III (4): Grom (5 obr. + 2 na skok), Klątwa (−1 A), Tarcza, Natchnienie (+2 A). Koszt Arcywieży 11 zł + 4 rudy + 4 Pyły, nauka III kręgu 8 zł + 2 Pyły (stałe w `magic.ts`, `economy.ts`).
 
 ## 8. Kredyty Scenario
 

@@ -4,7 +4,8 @@ import { describe, expect, it } from 'vitest';
 import { chooseAction } from '../src/engine/ai';
 import { activeHero, applyAction, createGame } from '../src/engine/game';
 import { buildingsOf, settlementAt, spellPrice } from '../src/engine/kingdom';
-import { botSpell, castableInBattle, MAGIC, manaOf, maxMana, SPELLS, spellPower, towerSpells } from '../src/engine/magic';
+import { unitAttackBase } from '../src/engine/battle';
+import { botSpell, castableInBattle, circleSpells, MAGIC, manaOf, maxMana, SPELL_CIRCLES, SPELLS, spellPower, towerSpells } from '../src/engine/magic';
 import { mapNeighbors, tileCost } from '../src/engine/map';
 import type { GameState } from '../src/engine/types';
 import { playOut, pvpSeats, setup } from './helpers/engine';
@@ -42,8 +43,12 @@ describe('level 5: mana and the mage tower', () => {
     expect(buildingsOf(s)).toContain('magic');
     expect(() => applyAction(s, { type: 'kingdomLearn', settlementId: home(s).id, spell: 'bolt' })).toThrow(/wieża maga/);
     home(s).buildings.magic = 1;
-    expect(towerSpells(1)).toEqual(['bolt', 'mend', 'slow', 'vision']);
-    expect(towerSpells(2)).toHaveLength(8);
+    expect(SPELL_CIRCLES).toBe(3);
+    expect(towerSpells(1)).toEqual(['bolt', 'mend', 'slow', 'vision', 'quicken']);
+    expect(towerSpells(2)).toHaveLength(9);
+    expect(towerSpells(3)).toHaveLength(13);
+    expect([1, 2, 3].map((c) => circleSpells(c).length)).toEqual([5, 4, 4]);
+    expect(circleSpells(3)).toEqual(['thunder', 'curse', 'shield', 'inspire']);
     expect(activeHero(s)!.spells).toEqual(['bolt']);
     expect(() => applyAction(s, { type: 'kingdomLearn', settlementId: home(s).id, spell: 'bolt' })).toThrow(/zna już/);
     s = applyAction(s, { type: 'kingdomLearn', settlementId: home(s).id, spell: 'mend' });
@@ -137,6 +142,34 @@ describe('level 5: spells in a battle', () => {
     expect(s.battle!.units[c.id].hp).toBe(hp[1] - dmg);
   });
 
+  it('circle III: thunder jumps, the curse weakens for good, the shield eats a blow, inspiration adds Atak', () => {
+    let s = battle(['thunder', 'curse', 'shield', 'inspire']);
+    s.heroes.ancientBear.mana = 30;
+    const b = () => s.battle!;
+    const scale = s.rules.statScale ?? 1;
+    const again = () => { b().activation!.spell = false; };
+    const foes = Object.values(b().units).filter((u) => u.side === 'horde');
+    const [a, c] = foes;
+    const hp = [a.hp, c.hp];
+    s = applyAction(s, { type: 'battleSpell', spell: 'thunder', targetId: a.id });
+    expect(b().units[a.id].hp).toBe(hp[0] - (MAGIC.thunderDamage + spellPower(s.heroes.ancientBear)) * scale);
+    // The jump hits the nearest other enemy, not a friend.
+    expect(b().units[c.id].hp).toBe(hp[1] - (MAGIC.thunderJump + spellPower(s.heroes.ancientBear)) * scale);
+    again();
+    const attack = unitAttackBase(b().units[c.id]);
+    s = applyAction(s, { type: 'battleSpell', spell: 'curse', targetId: c.id });
+    expect(unitAttackBase(b().units[c.id])).toBe(Math.max(scale, attack - MAGIC.curseAttack * scale));
+    again();
+    s = applyAction(s, { type: 'battleSpell', spell: 'shield', targetId: 'ancientBear' });
+    expect(b().units.ancientBear.status.shieldArmed).toBe(true);
+    expect(() => { again(); applyAction(s, { type: 'battleSpell', spell: 'shield', targetId: 'ancientBear' }); }).toThrow(/cel/);
+    again();
+    const ally = Object.values(b().units).find((u) => u.side === 'dawn' && u.id !== 'ancientBear')!;
+    s = applyAction(s, { type: 'battleSpell', spell: 'inspire', targetId: ally.id });
+    expect(b().units[ally.id].status.nextAttackBonus).toBe(MAGIC.inspireAttack * scale);
+    expect(s.heroes.ancientBear.mana).toBe(30 - 4 - 3 - 3 - 3);
+  });
+
   it('a bot casts a bolt that kills', () => {
     const s = battle(['bolt']);
     s.battle!.units.werewolfLord.hp = 1;
@@ -146,6 +179,17 @@ describe('level 5: spells in a battle', () => {
 });
 
 describe('level 5: spells on the map and mana coming back', () => {
+  it('Przyspieszenie adds movement points on the map', () => {
+    let s = game();
+    const hero = activeHero(s)!;
+    s.heroes[hero.id].spells = ['quicken'];
+    s.heroes[hero.id].mana = 5;
+    const points = s.movePoints;
+    s = applyAction(s, { type: 'mapSpell', spell: 'quicken' });
+    expect(s.movePoints).toBe(points + MAGIC.quickenPoints);
+    expect(s.heroes[hero.id].mana).toBe(5 - SPELLS.quicken.mana);
+  });
+
   it('Wizja uncovers the land around, Wrota takes the hero home and ends its move', () => {
     let s = game();
     const hero = activeHero(s)!;
