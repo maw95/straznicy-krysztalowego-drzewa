@@ -39,7 +39,7 @@ import { StatsDialog } from './StatsDialog';
 import { ChangelogDialog } from './ChangelogDialog';
 import { CreditsDialog } from './CreditsDialog';
 import { markNewsSeen, pendingNews, WhatsNew } from './WhatsNew';
-import { ArenaPrep, DraftDialog, GearDialog } from './ArenaPrep';
+import { ArenaPrep, DraftDialog, GearDialog, SpellPickDialog } from './ArenaPrep';
 import { DEV_TOOLS_ALLOWED, DevPanel } from './DevPanel';
 import { useAutoFullscreen } from './fullscreen';
 import { ChatBox, OnlineOverlay, OnlineScreen } from './OnlineScreen';
@@ -868,10 +868,11 @@ export function App() {
   const b = game.battle;
   const selecting = b && b.stage === 'select' && humanTurn && actor.kind === 'human' ? actor.faction : null;
   const gearing = b && b.stage === 'gear' && game.draft?.gear && humanTurn && actor.kind === 'human' ? actor.faction : null;
+  const spelling = b && b.stage === 'spells' && game.draft?.spells && humanTurn && actor.kind === 'human' ? actor.faction : null;
   const drafting = b && b.stage === 'draft' && game.draft && humanTurn && actor.kind === 'human' ? actor.faction : null;
   // Two people at one screen: each side's cards stay covered until that side uncovers them.
   const bothHuman = game.setup.mode === 'arena' && game.players.every(atThisScreen);
-  const arenaPrep = !held && game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'gear' || b.stage === 'select' || b.stage === 'draft')));
+  const arenaPrep = !held && game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'gear' || b.stage === 'spells' || b.stage === 'select' || b.stage === 'draft')));
 
   return (
     <DigitalCardsContext.Provider value={isDigital(game.rules)}>
@@ -909,6 +910,7 @@ export function App() {
 
       <Modal open={Boolean(selecting)}>{selecting && <SupportSelect state={game} faction={selecting} onPick={(ids) => dispatch({ type: 'selectSupports', faction: selecting, supportIds: ids })} />}</Modal>
       <Modal open={Boolean(gearing)}>{gearing && <GearDialog key={`${gearing}-${game.draft!.gear!.order.length}`} state={game} faction={gearing} onPick={(artifactId) => dispatch({ type: 'pickGear', faction: gearing, artifactId })} />}</Modal>
+      <Modal open={Boolean(spelling)}>{spelling && <SpellPickDialog key={`${spelling}-${game.draft!.spells!.order.length}`} faction={spelling} onPick={(spells) => dispatch({ type: 'pickSpells', faction: spelling, spells })} />}</Modal>
       <Modal open={Boolean(drafting)}>
         {drafting && (
           <DraftDialog

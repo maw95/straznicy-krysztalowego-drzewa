@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Arena: w pełnej 6 na 6 sam wybierasz dwa czary dla bohatera (z sześciu). Łatwy komputer jest trochę mocniejszy w 6 na 6, a na poziomie Bardzo trudny w szybkiej arenie 3 na 3 dobiera o jeden skarb więcej.
+
 - Budynki w osadzie: koniec z limitem „jeden budynek na rundę” na wszystkich poziomach gry. Budować można tyle, na ile starcza złota i surowców.
 
 - Na telefonie trzymanym poziomo dolny pasek mapy nie gubi już przycisków „Opcje” i „Zgłoś błąd” (zawija się do drugiego rzędu), a przyciski muzyki, pełnego ekranu i przybliżania mapy mają 44 px, tyle co palec.

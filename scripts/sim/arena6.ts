@@ -1,6 +1,7 @@
 // 6 on 6 arena balance: the person (Przymierze, played like the normal bot) against the computer (Horda) at one level.
 // Usage: npx tsx scripts/sim/arena6.ts [games = 200] [level = veryHard] [size = 6]
-// ARENA_HANDICAP='{"mana":2,"spells":1,"gear":1,"playerLess":0}' overrides the levers of "Bardzo trudny" (types.ts ARENA_HANDICAP).
+// ARENA_HANDICAP='{"mana":2,"spells":1,"gear":1,"playerLess":0}' overrides the levers of the 6 on 6 arena (types.ts ARENA_HANDICAP, ARENA_HANDICAP_HARD);
+// ARENA_DRAFT='{"picks":1,"offer":1}' those of "Bardzo trudny" in the 3 on 3 arena (ARENA_DRAFT_HANDICAP).
 // Prints the person's win rate (the band of veryHard is 15-30%).
 
 import { FACTION_HEROES } from '../../src/engine/data';
@@ -12,6 +13,7 @@ const games = Number(process.argv[2] ?? 200);
 const level = (process.argv[3] ?? 'veryHard') as Level;
 const size = process.argv[4] === '3' ? 3 : 6;
 const override = process.env.ARENA_HANDICAP ? JSON.parse(process.env.ARENA_HANDICAP) : null;
+const draftOverride = process.env.ARENA_DRAFT ? JSON.parse(process.env.ARENA_DRAFT) : null;
 
 let wins = 0;
 let draws = 0;
@@ -22,6 +24,7 @@ for (let g = 0; g < games; g++) {
   const hordeHero = FACTION_HEROES.horde[Math.floor(g / FACTION_HEROES.dawn.length) % FACTION_HEROES.horde.length];
   const setup = arenaSetup([{ name: 'P', faction: 'dawn', controller: 'human', heroId: dawnHero }, { name: 'H', faction: 'horde', controller: 'bot', heroId: hordeHero }], 1 + g * 7919, level, size);
   if (override && setup.rules.arenaHandicap) setup.rules.arenaHandicap = { ...setup.rules.arenaHandicap, ...override };
+  if (draftOverride && setup.rules.computerDraft) setup.rules.computerDraft = { ...setup.rules.computerDraft, ...draftOverride };
   const s = createGame({ ...setup, rules: { ...setup.rules, ruleset: 'digital' } });
   for (let i = 0; i < 6000 && s.phase !== 'over'; i++) {
     // The person is played like the normal bot; the computer by its level.

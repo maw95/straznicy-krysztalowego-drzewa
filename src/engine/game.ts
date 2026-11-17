@@ -59,7 +59,7 @@ import { fireStory } from './story';
 import { ARENA_POOL, buildingLevel, collectIncome, enterPlace, forgeLevel, garrisonAt, initKingdom, kingdomAction, supportSlots } from './kingdom';
 import { ECONOMY } from './economy';
 import { commanderFalls } from './realm';
-import { battleSpell, mapSpell, regenMana, SPELLS, SPELL_IDS, START_SPELLS, type SpellId } from './magic';
+import { ARENA_SPELL_PICKS, ARENA_SPELL_POOL, battleSpell, mapSpell, regenMana, SPELL_VALUE, START_SPELLS, type SpellId } from './magic';
 import { HERO_TYPES, specialtyOf } from './heroTypes';
 import { EMPIRE, FACTION_MECHANICS, hasSpark, loseShards } from './empire';
 import { applyGear, ARTIFACT_BY_ID, arenaGearOffer, gearOf, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, COMPUTER_ARTIFACT_ODDS, heroTileCost, passArtifact, passShards, placeSites, SHARDS_ID, unequipArtifact, visitSite } from './sites';
@@ -238,7 +238,7 @@ function startArena(state: GameState) {
   const [dawn, horde] = [heroOf('dawn'), heroOf('horde')];
   if (!dawn || !horde) throw new Error('Na arenie walczy jeden bohater Przymierza i jeden Hordy.');
   const hero = (f: FactionId) => (f === 'dawn' ? dawn : horde);
-  const extra = (['dawn', 'horde'] as FactionId[]).flatMap((f) => Array<FactionId>(ARENA_RULES.extraPicks[f]).fill(f));
+  const extra = (['dawn', 'horde'] as FactionId[]).flatMap((f) => Array<FactionId>(ARENA_RULES.extraPicks[f] + (computerFaction(state, f) ? state.rules.computerDraft?.picks ?? 0 : 0)).fill(f));
   // ARENA_PICKS each, snaking: A, B, B, A, A, B, …
   const picks = Array.from({ length: ARENA_PICKS }, (_, i) => (i % 2 ? [second, first] : [first, second])).flat();
   state.draft = { deck: [...ARENA_DECK], order: [...picks, ...extra], offer: [] };
@@ -250,18 +250,9 @@ function startArena(state: GameState) {
   // Six units a side do not fit the one start column of the board: both sides get a second one.
   if (state.rules.arenaSize === 6) {
     b.deployDepth = { dawn: Math.max(1, b.deployDepth?.dawn ?? 0), horde: Math.max(1, b.deployDepth?.horde ?? 0) };
-    // Two spells of circles I-II for each hero (drawn from the game's seed), then the choice of one artifact before the supports.
-    const battleSpells = SPELL_IDS.filter((id) => SPELLS[id].where === 'battle' && SPELLS[id].circle <= 2);
-    for (const f of ['dawn', 'horde'] as FactionId[]) {
-      const spells: SpellId[] = new Rng((state.setup.seed ^ 0x5be11 ^ (f === 'dawn' ? 31 : 977)) | 0).shuffle(battleSpells).slice(0, 2);
-      hero(f).spells = spells;
-      // "Bardzo trudny": the computer's hero holds more mana and knows more spells.
-      const hc = state.rules.arenaHandicap;
-      if (hc && computerFaction(state, f)) {
-        hero(f).manaBonus = hc.mana;
-        hero(f).spells = [...spells, ...battleSpells.filter((id) => !spells.includes(id)).slice(0, hc.spells)];
-      }
-    }
+    // "Bardzo trudny": the computer's hero holds more mana (its extra spells come with its choice of spells).
+    const hc = state.rules.arenaHandicap;
+    for (const f of ['dawn', 'horde'] as FactionId[]) if (hc && computerFaction(state, f)) hero(f).manaBonus = hc.mana;
     state.draft!.gear = { order: [first, second], offer: arenaGearOffer(state, first) };
     b.stage = 'gear';
   }
@@ -289,6 +280,25 @@ function pickGear(state: GameState, faction: FactionId, artifactId: string) {
   if (g.order.length) g.offer = arenaGearOffer(state, g.order[0]);
   else {
     delete state.draft!.gear;
+    const firstSide = b.attacker as FactionId;
+    state.draft!.spells = { order: [firstSide, other(firstSide)] };
+    b.stage = 'spells';
+  }
+}
+
+/** 6 on 6 arena: the side whose turn it is chooses the spells of its hero (the computer's hero at "Bardzo trudny" gets more of them on top). */
+function pickSpells(state: GameState, faction: FactionId, spells: SpellId[]) {
+  const sp = state.draft?.spells;
+  const b = state.battle;
+  if (!sp || !b || b.stage !== 'spells' || sp.order[0] !== faction) throw new Error('Teraz nie wybiera ta frakcja.');
+  const unique = [...new Set(spells)];
+  if (unique.length !== ARENA_SPELL_PICKS || unique.some((id) => !ARENA_SPELL_POOL.includes(id))) throw new Error(`Wybierz ${ARENA_SPELL_PICKS} różne czary z listy.`);
+  const hc = state.rules.arenaHandicap;
+  const extra = hc && computerFaction(state, faction) ? ARENA_SPELL_POOL.filter((id) => !unique.includes(id)).sort((x, y) => SPELL_VALUE[y] - SPELL_VALUE[x]).slice(0, hc.spells) : [];
+  state.heroes[battleHeroOf(b, faction)!].spells = [...unique, ...extra];
+  sp.order.shift();
+  if (!sp.order.length) {
+    delete state.draft!.spells;
     b.stage = 'select';
   }
 }
@@ -297,7 +307,7 @@ function pickGear(state: GameState, faction: FactionId, artifactId: string) {
 function dealOffer(state: GameState) {
   const d = state.draft!;
   const rng = new Rng(state.rng);
-  d.offer = [...new Set(rng.shuffle(d.deck))].slice(0, ARENA_OFFER + ARENA_RULES.extraOffer[d.order[0]]);
+  d.offer = [...new Set(rng.shuffle(d.deck))].slice(0, ARENA_OFFER + ARENA_RULES.extraOffer[d.order[0]] + (computerFaction(state, d.order[0]) ? state.rules.computerDraft?.offer ?? 0 : 0));
   state.rng = rng.state;
 }
 
@@ -574,6 +584,7 @@ export function currentActor(state: GameState): Actor {
       return battleActor(state, b, f);
     }
     if (b.stage === 'gear' && state.draft?.gear) return battleActor(state, b, state.draft.gear.order[0]);
+    if (b.stage === 'spells' && state.draft?.spells) return battleActor(state, b, state.draft.spells.order[0]);
     if (b.stage === 'draft' && state.draft) {
       const f = state.draft.order[0];
       return battleActor(state, b, f);
@@ -1331,6 +1342,9 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'deployUnits':
       if (!state.battle) throw new Error('Nie trwa żadna bitwa.');
       deployUnits(state, action.faction, action.positions);
+      break;
+    case 'pickSpells':
+      pickSpells(state, action.faction, action.spells);
       break;
     case 'pickGear':
       pickGear(state, action.faction, action.artifactId);

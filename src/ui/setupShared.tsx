@@ -53,10 +53,10 @@ export const ARENA_HINT = 'Jedna bitwa. Szybka (3 na 3): bohater, dwóch pomocni
 
 export const ARENA_LEVEL_TIPS: Record<Level, string> = {
   zero: 'Komputer wybiera pomocników i skarby na chybił trafił.',
-  kids: 'Komputer wybiera pomocników i skarby na chybił trafił.',
+  kids: 'Komputer wybiera pomocników i skarby na chybił trafił (w pełnej arenie 6 na 6 ma jeden dodatkowy artefakt).',
   normal: 'Komputer wybiera rozsądnie, ale nie zawsze najlepszy skarb.',
-  hard: 'Komputer zawsze bierze najmocniejszych pomocników i najlepsze skarby.',
-  veryHard: 'Komputer gra bez błędów. W pełnej arenie 6 na 6 jego bohater ma więcej many, jeden czar więcej i dwa dodatkowe artefakty.',
+  hard: 'Komputer zawsze bierze najmocniejszych pomocników i najlepsze skarby (w pełnej arenie 6 na 6 ma jeszcze +1 many).',
+  veryHard: 'Komputer gra bez błędów. W szybkiej arenie dobiera o jeden skarb więcej, a w pełnej 6 na 6 jego bohater ma więcej many, jeden czar więcej i dwa dodatkowe artefakty.',
 };
 
 /** Explanations shown when hovering the setup buttons. */

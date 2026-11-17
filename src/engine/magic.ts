@@ -83,6 +83,12 @@ export const manaOf = (hero: HeroState): number => hero.mana ?? maxMana(hero);
 /** Extra damage and healing of the hero's spells. */
 export const spellPower = (hero: HeroState): number => Math.floor(levelOf(hero) / MAGIC.powerLevels) + (hero.kind === 'sage' || isSage(hero.id) ? 1 : 0) + (specialtyOf(hero)?.spellPower ?? 0);
 
+/** 6 on 6 arena: the battle spells of circles I-II a hero may choose from, and how many it takes. */
+/** What a spell is worth to a bot choosing for an arena battle (and the computer's bonus spell at "Bardzo trudny"). */
+export const SPELL_VALUE: Record<SpellId, number> = { fireball: 6, bolt: 5, haste: 4, stoneskin: 4, mend: 3, slow: 3, thunder: 6, curse: 4, shield: 4, inspire: 4, vision: 0, portal: 0, quicken: 0 };
+export const ARENA_SPELL_POOL: SpellId[] = SPELL_IDS.filter((id) => SPELLS[id].where === 'battle' && SPELLS[id].circle <= 2);
+export const ARENA_SPELL_PICKS = 2;
+
 /** The spells a mage tower of this level teaches. */
 export const towerSpells = (level: number): SpellId[] => SPELL_IDS.filter((id) => SPELLS[id].circle <= level);
 

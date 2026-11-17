@@ -37,6 +37,8 @@ export function describeAction(state: GameState, a: Action | null): string {
       return 'Wybierz pomocników do bitwy.';
     case 'deployUnits':
       return 'Rozstaw jednostki na swoich polach (kliknij pole obok jednostki).';
+    case 'pickSpells':
+      return 'Wybierz dwa czary dla bohatera.';
     case 'pickGear':
       return 'Wybierz artefakt dla bohatera.';
     case 'draftPick':

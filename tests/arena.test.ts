@@ -4,7 +4,7 @@ import { ARENA_DECK, ITEMS, type FactionId } from '../src/engine/data';
 import { chooseAction } from '../src/engine/ai';
 import { applyAction, createGame, currentActor } from '../src/engine/game';
 import { ARTIFACT_BY_ID, gearOf, worksInBattle } from '../src/engine/sites';
-import { SPELLS } from '../src/engine/magic';
+import { ARENA_SPELL_POOL, SPELLS, type SpellId } from '../src/engine/magic';
 import { MAX_POINTS, pointsFor } from '../src/engine/scoring';
 import { supportSlots } from '../src/engine/kingdom';
 import { arenaSetup, type Level, type SeatSetup } from '../src/engine/types';
@@ -136,6 +136,7 @@ describe('arena 6 on 6', () => {
   it('refuses a wrong number of supports', () => {
     let s = createGame(arenaSetup(seats('human', 'human'), 4, 'normal', 6));
     while (s.battle!.stage === 'gear') s = applyAction(s, { type: 'pickGear', faction: s.draft!.gear!.order[0], artifactId: s.draft!.gear!.offer[0] });
+    while (s.battle!.stage === 'spells') s = applyAction(s, { type: 'pickSpells', faction: s.draft!.spells!.order[0], spells: ARENA_SPELL_POOL.slice(0, 2) });
     const f = s.battle!.needsSelection[0];
     const pool = s.factions[f].supportsAlive;
     expect(() => applyAction(s, { type: 'selectSupports', faction: f, supportIds: pool.slice(0, 2) })).toThrow();
@@ -161,12 +162,24 @@ describe('arena 6 on 6', () => {
       picked[g.order[0]] = g.offer[1];
       s = applyAction(s, { type: 'pickGear', faction: g.order[0], artifactId: g.offer[1] });
     }
-    expect(s.battle!.stage).toBe('select');
+    expect(s.battle!.stage).toBe('spells');
     expect(s.draft!.gear).toBeUndefined();
+    // Then each side chooses two spells of circles I-II for its hero (no more, no repeats, only from the pool).
+    const wanted: Record<string, SpellId[]> = { dawn: ['fireball', 'mend'], horde: ['slow', 'haste'] };
+    while (s.battle!.stage === 'spells') {
+      const f = s.draft!.spells!.order[0];
+      expect(() => applyAction(s, { type: 'pickSpells', faction: f === 'dawn' ? 'horde' : 'dawn', spells: wanted.dawn })).toThrow();
+      expect(() => applyAction(s, { type: 'pickSpells', faction: f, spells: ['fireball'] })).toThrow();
+      expect(() => applyAction(s, { type: 'pickSpells', faction: f, spells: ['fireball', 'fireball'] })).toThrow();
+      expect(() => applyAction(s, { type: 'pickSpells', faction: f, spells: ['fireball', 'vision'] })).toThrow();
+      s = applyAction(s, { type: 'pickSpells', faction: f, spells: wanted[f] });
+    }
+    expect(s.battle!.stage).toBe('select');
+    expect(s.draft!.spells).toBeUndefined();
     for (const f of ['dawn', 'horde'] as FactionId[]) {
       const hero = Object.values(s.heroes).find((h) => h.faction === f)!;
       expect(gearOf(hero).map((a) => a.id)).toEqual([picked[f]]);
-      expect(hero.spells).toHaveLength(2);
+      expect(hero.spells).toEqual(wanted[f]);
       expect(hero.spells!.every((id) => SPELLS[id].where === 'battle' && SPELLS[id].circle <= 2)).toBe(true);
     }
   });
@@ -192,6 +205,7 @@ describe('arena 6 on 6 at the highest difficulty', () => {
     const setup = arenaSetup(seats('human', 'bot'), 9, 'veryHard', 6);
     let s = createGame(rules ? { ...setup, rules: { ...setup.rules, ...rules } } : setup);
     while (s.battle!.stage === 'gear') s = applyAction(s, s.draft!.gear!.order[0] === 'dawn' ? { type: 'pickGear', faction: 'dawn', artifactId: s.draft!.gear!.offer[0] } : chooseAction(s)!);
+    while (s.battle!.stage === 'spells') s = applyAction(s, s.draft!.spells!.order[0] === 'dawn' ? { type: 'pickSpells', faction: 'dawn', spells: ARENA_SPELL_POOL.slice(0, 2) } : chooseAction(s)!);
     return s;
   };
 
@@ -213,10 +227,23 @@ describe('arena 6 on 6 at the highest difficulty', () => {
     expect(supportSlots(less, 'horde')).toBe(5);
   });
 
-  it('does not touch the 3 on 3 arena', () => {
+  it('leaves the 3 on 3 arena its own lever: the computer drafts one more treasure (no spells or artifacts there)', () => {
     const s = createGame(arenaSetup(seats('human', 'bot'), 9, 'veryHard'));
     expect(s.rules.arenaHandicap).toBeUndefined();
     expect(s.rules.veryHard).toBe(true);
+    expect(s.rules.computerDraft).toEqual({ picks: 1, offer: 0 });
+    // Four picks in all (A, B, B, A) plus the computer's extra one.
+    expect(s.draft!.order.filter((f) => f === 'horde')).toHaveLength(3);
+    expect(s.draft!.order.filter((f) => f === 'dawn')).toHaveLength(2);
+    const normal = createGame(arenaSetup(seats('human', 'bot'), 9, 'normal'));
+    expect(normal.rules.computerDraft).toBeUndefined();
+    expect(normal.draft!.order).toHaveLength(4);
+  });
+
+  it('gives the lighter levels their light touch in the 6 on 6 arena: one artifact at Łatwy, one mana at Trudny', () => {
+    expect(createGame(arenaSetup(seats('human', 'bot'), 9, 'kids', 6)).rules.arenaHandicap).toEqual({ mana: 0, spells: 0, gear: 1, playerLess: 0 });
+    expect(createGame(arenaSetup(seats('human', 'bot'), 9, 'hard', 6)).rules.arenaHandicap).toEqual({ mana: 1, spells: 0, gear: 0, playerLess: 0 });
+    expect(createGame(arenaSetup(seats('human', 'bot'), 9, 'normal', 6)).rules.arenaHandicap).toBeUndefined();
   });
 });
 

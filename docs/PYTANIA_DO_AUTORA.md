@@ -18,10 +18,9 @@ Uwaga: istniejące `krolestwo.webp` i `imperium.webp` mają okruchy sąsiada na 
 
 ## Arena 6 na 6 (punkt 48): decyzje i pytania
 
-- **Dźwignie Bardzo trudnego (przyjęte samodzielnie, odwracalne: jedna stała `ARENA_HANDICAP` w `types.ts`):** +2 many, +1 czar i +2 artefakty dla bohatera komputera; gracz ma tyle samo jednostek co komputer (dźwignia „mniej pomocników gracza” jest w kodzie, wartość 0). `npx tsx scripts/sim/arena6.ts 1500 veryHard 6` daje wygrane gracza ok. 24% (pasmo 15–30%). Pojedynczo żadna dźwignia nie wystarcza (gear 2: 31%, playerLess 2: 11%), więc wzięte razem.
-- **Pozostałe poziomy 6 na 6 (symulacja 1500 partii):** Łatwy 86,9% (pasmo 65–85: minimalnie nad), Normalny 50,7%, Trudny 44,7% (górny brzeg pasma 30–45). Czy zaostrzyć Łatwy (np. gorszy wybór artefaktu)?
-- **Czary w 6 na 6:** każdy bohater dostaje 2 *losowe* czary bitewne z kręgów I–II (z ziarna gry), bez wyboru. Czy gracz ma je wybierać (jak artefakt)?
-- **Artefakty:** oferta trzech zawsze z różnych miejsc ciała i tylko takich, które działają w bitwie (bez Trzewików Trapera); rzadkości 55/35/10% (pospolity/rzadki/legendarny).
+**Odpowiedzi autora (17.11, wieczór), wdrożone:** (1) gracz **sam wybiera dwa czary** w 6 na 6 (z sześciu czarów bitewnych kręgów I–II; boty wybierają według wartości czaru); (2) **Łatwy w 6 na 6 delikatnie zaostrzony** (komputer dostaje jeden dodatkowy artefakt: 84% → 79% wygranych gracza); (3) **Bardzo trudny w 3 na 3 ma własną dźwignię** (komputer dobiera o jeden skarb więcej: 40% → 23%).
+
+- **Dźwignie, wartości po strojeniu (`npx tsx scripts/sim/arena6.ts 2000 <poziom> <3|6>`, wszystkie w `types.ts`):** 6 na 6: Łatwy `ARENA_HANDICAP_EASY` (+1 artefakt) 79%, Normalny 53%, Trudny `ARENA_HANDICAP_HARD` (+1 mana) 44%, Bardzo trudny `ARENA_HANDICAP` (+2 many, +1 czar, +2 artefakty) 27%. 3 na 3: Łatwy 69%, Normalny 48%, Trudny 40%, Bardzo trudny `ARENA_DRAFT_HANDICAP` (+1 skarb) 23%. Pasma: Łatwy 65–85, Normalny 45–65, Trudny 30–45, Bardzo trudny 15–30.
+- **Artefakty:** oferta trzech zawsze z różnych miejsc ciała i tylko takich, które działają w bitwie (bez Trzewików Trapera); rzadkości 55/35/10%.
 - **Skarby z talii** w 6 na 6 zostają jak w 3 na 3 (2 na stronę).
-- **Gra online: arena 6 na 6 NIE jest dostępna.** Serwer używa silnika z paczki wydania 2.8.0; potrzebne nowe wydanie silnika (decyzja o wydaniu jest Twoja, gry nie pushuję). W kreatorze online opcji nie ma.
-- **Arena 3 na 3, Bardzo trudny:** zostaje jak Trudny (komputer bez błędów, bez dźwigni): ok. 42% wygranych gracza, czyli powyżej pasma 15–30%. Zgodnie z decyzją „3 na 3 bez zmian”. Chcesz tu osobną dźwignię (np. dodatkowy skarb komputera)?
+- **Gra online: arena 6 na 6 NIE jest dostępna.** Serwer używa silnika z paczki wydania 2.8.0; potrzebne nowe wydanie silnika (decyzja o wydaniu jest Twoja, gry nie pushuję). W kreatorze online opcji nie ma. Dźwignia 3 na 3 (`computerDraft`) też trafi online dopiero z nowym silnikiem.

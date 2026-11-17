@@ -6,6 +6,8 @@ import { ARENA_PICKS, FACTION_NAMES, itemDef, UNITS, type FactionId, type ItemKi
 import { isDigital, type GameState } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { ARTIFACT_BY_ID, RARITY_NAMES } from '../engine/sites';
+import { ARENA_SPELL_PICKS, ARENA_SPELL_POOL, SPELLS, type SpellId } from '../engine/magic';
+import { RuleText } from './statScale';
 import { ArtifactMedal, SLOT_NAMES } from './growthUi';
 import { TreasureCard } from './TreasureCard';
 import { UnitCard } from './UnitCard';
@@ -21,6 +23,7 @@ export function ArenaPrep({ state }: { state: GameState }) {
   const status = (() => {
     if (!b) return '';
     if (b.stage === 'gear' && state.draft?.gear) return `${FACTION_NAMES[state.draft.gear.order[0]]} wybiera artefakt…`;
+    if (b.stage === 'spells' && state.draft?.spells) return `${FACTION_NAMES[state.draft.spells.order[0]]} wybiera czary…`;
     if (b.stage === 'select') return `${FACTION_NAMES[b.needsSelection[0]]} wybiera pomocników…`;
     if (b.stage === 'draft' && state.draft) return `${FACTION_NAMES[state.draft.order[0]]} wybiera skarb…`;
     return '';
@@ -108,7 +111,7 @@ export function GearDialog({ state, faction, onPick }: { state: GameState; facti
     <div>
       <Frame crest style={{ width: 'min(820px, 96vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
         <Ribbon side={faction} style={{ width: 'min(460px, 92vw)' }}>Wybierz artefakt bohatera</Ribbon>
-        <div style={{ fontSize: 16, color: 'var(--muted)', textAlign: 'center' }}>Bohater zakłada go do tej bitwy. Dostaje też dwa czary z kręgów I–II (widać je w bitwie).</div>
+        <div style={{ fontSize: 16, color: 'var(--muted)', textAlign: 'center' }}>Bohater zakłada go do tej bitwy. Potem wybierzesz mu dwa czary z kręgów I–II.</div>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
           {offer.map((a) => (
             <button key={a.id} className="btn plate parch" data-gear-offer={a.id} aria-pressed={chosen === a.id} onClick={() => setChosen(a.id)} style={{ width: 220, padding: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, textAlign: 'center', boxShadow: chosen === a.id ? '0 0 0 3px #9EE4FF, 0 0 18px #9EE4FF' : undefined }}>
@@ -121,6 +124,35 @@ export function GearDialog({ state, faction, onPick }: { state: GameState; facti
         </div>
         <button className="btn prim btn-big" data-enter disabled={!chosen} onClick={() => chosen && onPick(chosen)}>
           Biorę ten artefakt
+        </button>
+      </Frame>
+    </div>
+  );
+}
+
+/** 6 on 6 arena: the two spells of the hero (battle spells of circles I-II), chosen after the artifact. */
+export function SpellPickDialog({ faction, onPick }: { faction: FactionId; onPick: (spells: SpellId[]) => void }) {
+  const [chosen, setChosen] = useState<SpellId[]>([]);
+  const toggle = (id: SpellId) => setChosen(chosen.includes(id) ? chosen.filter((x) => x !== id) : [...chosen, id].slice(-ARENA_SPELL_PICKS));
+  return (
+    <div>
+      <Frame crest style={{ width: 'min(900px, 96vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+        <Ribbon side={faction} style={{ width: 'min(460px, 92vw)' }}>Wybierz dwa czary bohatera</Ribbon>
+        <div style={{ fontSize: 16, color: 'var(--muted)', textAlign: 'center' }}>Zaklęcia rzuca się w bitwie w aktywacji bohatera, za manę. Wybrane: {chosen.length} z {ARENA_SPELL_PICKS}.</div>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {ARENA_SPELL_POOL.map((id) => (
+            <button key={id} className="btn plate parch" data-spell-offer={id} aria-pressed={chosen.includes(id)} onClick={() => toggle(id)} style={{ width: 250, padding: 10, display: 'flex', gap: 10, alignItems: 'flex-start', textAlign: 'left', boxShadow: chosen.includes(id) ? '0 0 0 3px #9EE4FF, 0 0 18px #9EE4FF' : undefined }}>
+              <img src={asset(`ikony/czary/${id}.webp`)} alt="" width={56} height={56} style={{ flex: 'none', borderRadius: '50%' }} />
+              <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <b style={{ fontSize: 18 }}>{SPELLS[id].name}</b>
+                <span style={{ fontSize: 13, color: '#5A3A8C', fontWeight: 700 }}>Koszt: {SPELLS[id].mana} many · krąg {SPELLS[id].circle}</span>
+                <span style={{ fontSize: 14, lineHeight: 1.25 }}><RuleText text={SPELLS[id].text} /></span>
+              </span>
+            </button>
+          ))}
+        </div>
+        <button className="btn prim btn-big" data-enter disabled={chosen.length !== ARENA_SPELL_PICKS} onClick={() => onPick(chosen)}>
+          Biorę te czary
         </button>
       </Frame>
     </div>

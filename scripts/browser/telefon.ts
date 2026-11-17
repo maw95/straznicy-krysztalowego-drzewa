@@ -28,7 +28,8 @@ const SCREENS: Screen[] = [
   { id: 'zasady', query: MAP, go: async (p) => { await closeDev(p); await p.keyboard.press('r'); await p.waitForTimeout(400); } },
   { id: 'bitwa-ustawianie', query: `${MAP.replace('&dev=1', '')}&encounter=0`, go: async (p) => { await p.waitForTimeout(1200); } },
   { id: 'arena-artefakt', query: 'steps=0&mode=arena&size=6&seed=5', go: async (p) => { await p.locator('[data-gear-offer]').first().waitFor(); } },
-  { id: 'arena-pomocnicy', query: 'steps=0&mode=arena&size=6&seed=5', go: async (p) => { await p.locator('[data-gear-offer]').first().click(); await p.getByRole('button', { name: 'Biorę ten artefakt' }).click(); await p.getByRole('button', { name: 'Biorę ten artefakt' }).click().catch(() => undefined); await p.getByRole('button', { name: 'Do bitwy!' }).waitFor(); } },
+  { id: 'arena-pomocnicy', query: 'steps=0&mode=arena&size=6&seed=5', go: async (p) => { await p.locator('[data-gear-offer]').first().click(); await p.getByRole('button', { name: 'Biorę ten artefakt' }).click(); await p.locator('[data-spell-offer]').first().waitFor(); await p.locator('[data-spell-offer]').nth(0).click(); await p.locator('[data-spell-offer]').nth(1).click(); await p.getByRole('button', { name: 'Biorę te czary' }).click(); await p.getByRole('button', { name: 'Do bitwy!' }).waitFor(); } },
+  { id: 'arena-czary', query: 'steps=0&mode=arena&size=6&seed=5', go: async (p) => { await p.locator('[data-gear-offer]').first().click(); await p.getByRole('button', { name: 'Biorę ten artefakt' }).click(); await p.locator('[data-spell-offer]').first().waitFor(); } },
 ];
 
 /** What is wrong with the page as it is now: plain JavaScript run in the page (a function of this file would get helpers from the bundler that the page does not have). */

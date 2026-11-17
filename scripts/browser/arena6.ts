@@ -16,6 +16,15 @@ for (const view of ['desktop', 'poziomo'] as View[]) {
       await p.getByRole('button', { name: 'Biorę ten artefakt' }).click();
       await p.waitForTimeout(500);
     }
+    // 1b) the spells: two of six
+    const spellOffers = p.locator('[data-spell-offer]');
+    await spellOffers.first().waitFor({ timeout: 10000 });
+    console.log(view, 'spell offers:', await spellOffers.count());
+    await p.screenshot({ path: `.tmp/arena6-${view}-czary-wybor.png` });
+    await spellOffers.nth(0).click();
+    await spellOffers.nth(1).click();
+    await p.getByRole('button', { name: 'Biorę te czary' }).click();
+    await p.waitForTimeout(400);
     // 2) supports: pick five of eight
     const go = p.getByRole('button', { name: 'Do bitwy!' });
     await go.waitFor({ timeout: 15000 });

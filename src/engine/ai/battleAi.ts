@@ -37,7 +37,7 @@ import {
 } from '../battle';
 import { distance, neighborKeys, parseKey, type HexKey } from '../hex';
 import { wideCellOf } from '../arenaLayout';
-import { botSpell } from '../magic';
+import { ARENA_SPELL_POOL, botSpell, SPELL_VALUE, type SpellId } from '../magic';
 import { SIEGE } from '../economy';
 import type { Action, BattleUnit, GameState } from '../types';
 import type { ItemKind } from '../data';
@@ -157,6 +157,19 @@ export function chooseGearPick(state: GameState, faction: FactionId): Action {
   const ranked = [...offer].sort((x, y) => gearValue(ARTIFACT_BY_ID[y]) - gearValue(ARTIFACT_BY_ID[x]) || (x < y ? -1 : 1));
   const artifactId = level === 'kids' ? offer[hashPick(state, faction) % offer.length] : level === 'normal' && ranked.length > 1 && hashPick(state, faction) % 3 === 0 ? ranked[1] : ranked[0];
   return { type: 'pickGear', faction, artifactId };
+}
+
+/** 6 on 6 arena: the easy bot picks two spells at random, the others the two most valuable (the normal one now and then swaps the second). */
+export function chooseSpellPick(state: GameState, faction: FactionId): Action {
+  const level = state.setup.botLevel ?? 'normal';
+  const pool = [...ARENA_SPELL_POOL];
+  const ranked = pool.sort((x, y) => SPELL_VALUE[y] - SPELL_VALUE[x] || (x < y ? -1 : 1));
+  const h = hashPick(state, faction);
+  let spells: SpellId[];
+  if (level === 'kids') spells = [ranked[h % 3], ranked[3 + (h % 3)]];
+  else if (level === 'normal' && h % 3 === 0) spells = [ranked[0], ranked[2]];
+  else spells = [ranked[0], ranked[1]];
+  return { type: 'pickSpells', faction, spells };
 }
 
 export function chooseDraftPick(state: GameState, faction: FactionId): Action {
@@ -582,6 +595,7 @@ function rulebookFreeAbility(state: GameState, u: BattleUnit): Action | null {
 export function chooseBattleAction(state: GameState): Action {
   const b = state.battle!;
   if (b.stage === 'gear') return chooseGearPick(state, state.draft!.gear!.order[0]);
+  if (b.stage === 'spells') return chooseSpellPick(state, state.draft!.spells!.order[0]);
   if (b.stage === 'select') return chooseSupports(state, b.needsSelection[0]);
   if (b.stage === 'deploy') return chooseDeployment(state, b.needsDeploy[0]);
   if (b.stage === 'draft') return chooseDraftPick(state, state.draft!.order[0]);

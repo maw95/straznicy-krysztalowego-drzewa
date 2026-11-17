@@ -101,6 +101,8 @@ export interface RulesConfig {
   computerArtifacts?: number;
   /** 6 on 6 arena at "Bardzo trudny": what the computer's side gets on top (see ARENA_HANDICAP); missing = nothing. */
   arenaHandicap?: ArenaHandicap;
+  /** 3 on 3 arena at "Bardzo trudny": the computer drafts `picks` more treasures and is shown `offer` more cards at each pick (see ARENA_DRAFT_HANDICAP). */
+  computerDraft?: { picks: number; offer: number };
 }
 
 /** The levers of the arena's highest difficulty: extra mana, spells and artifacts for the computer's hero, and fewer supports for the person. */
@@ -151,6 +153,12 @@ export const COMPUTER_HANDICAP: Record<Level, { gold: number; treasures: number;
 
 /** Tuned with `npx tsx scripts/sim/arena6.ts` to keep the person's wins at 15-30% (the band of the highest difficulty). */
 export const ARENA_HANDICAP: ArenaHandicap = { mana: 2, spells: 1, gear: 2, playerLess: 0 };
+/** The same for "Trudny" in the 6 on 6 arena (a light touch: its band is 30-45%). */
+export const ARENA_HANDICAP_HARD: ArenaHandicap = { mana: 1, spells: 0, gear: 0, playerLess: 0 };
+/** And for "Łatwy" (its band is 65-85%): one more artifact for the computer's hero, so that it is not quite a pushover. */
+export const ARENA_HANDICAP_EASY: ArenaHandicap = { mana: 0, spells: 0, gear: 1, playerLess: 0 };
+/** "Bardzo trudny" in the 3 on 3 arena (no spells or artifacts there): more treasures for the computer. */
+export const ARENA_DRAFT_HANDICAP = { picks: 1, offer: 0 };
 
 const HARD_RULES: Partial<RulesConfig> = { extraEvilHero: true, minEvilHeroes: 2, hordeRespawn: false, hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } };
 
@@ -208,7 +216,7 @@ export interface SetupOptions {
 export function arenaSetup(seats: SeatSetup[], seed: number, botLevel: Level = 'normal', size: 3 | 6 = 3): SetupOptions {
   // The arena has no level 0: its easy computer is "kids".
   if (botLevel === 'zero') botLevel = 'kids';
-  return { mode: 'arena', mapSize: 'short', battleMode: 'arena', seed, seats, botLevel, rules: { ...DEFAULT_RULES, initiativeTie: 'rotating', ...(botLevel === 'veryHard' ? { veryHard: true } : {}), ...(size === 6 ? { arenaSize: 6 as const, heroGrowth: true, realm: true, ...(botLevel === 'veryHard' ? { arenaHandicap: ARENA_HANDICAP } : {}) } : {}) } };
+  return { mode: 'arena', mapSize: 'short', battleMode: 'arena', seed, seats, botLevel, rules: { ...DEFAULT_RULES, initiativeTie: 'rotating', ...(botLevel === 'veryHard' ? { veryHard: true } : {}), ...(size === 6 ? { arenaSize: 6 as const, heroGrowth: true, realm: true, ...(botLevel === 'veryHard' ? { arenaHandicap: ARENA_HANDICAP } : botLevel === 'hard' ? { arenaHandicap: ARENA_HANDICAP_HARD } : botLevel === 'kids' ? { arenaHandicap: ARENA_HANDICAP_EASY } : {}) } : botLevel === 'veryHard' ? { computerDraft: ARENA_DRAFT_HANDICAP } : {}) } };
 }
 
 /** Arena treasure draft: a shared deck, picks in the order A, B, B, A, three cards offered each time. */
@@ -221,6 +229,8 @@ export interface ArenaDraft {
   offer: ItemKind[];
   /** 6 on 6 arena: before the supports each side chooses one of three artifacts for its hero (stage 'gear'); the picker now is `order[0]`. */
   gear?: { order: FactionId[]; offer: string[] };
+  /** 6 on 6 arena: after the artifacts each side chooses its hero's spells (stage 'spells'); the picker now is `order[0]`. */
+  spells?: { order: FactionId[] };
 }
 
 export interface Player {
@@ -464,7 +474,7 @@ export interface BattleState {
   /** Króla Burzy's charged fields (digital ruleset): a unit that steps on `cell` takes damage while `round` <= `until`. */
   fields?: Array<{ cell: HexKey; until: number }>;
   /** Arena only: 'draft' (treasures) comes between choosing the supports and deploying. */
-  stage: 'gear' | 'select' | 'draft' | 'deploy' | 'fight' | 'over';
+  stage: 'gear' | 'spells' | 'select' | 'draft' | 'deploy' | 'fight' | 'over';
   /** Factions still to place their units (attacker first); neutral guardians stay where put. */
   needsDeploy: FactionId[];
   /** Extra columns a side may deploy in (the hero's skill Taktyk). */
@@ -620,6 +630,7 @@ export type Action =
   | { type: 'deployUnits'; faction: FactionId; positions: Record<string, HexKey> }
   | { type: 'draftPick'; faction: FactionId; kind: ItemKind }
   | { type: 'pickGear'; faction: FactionId; artifactId: string }
+  | { type: 'pickSpells'; faction: FactionId; spells: SpellId[] }
   | { type: 'battleMove'; to: HexKey; tail?: HexKey }
   | { type: 'battleAttack'; targetId: string; secondTargetId?: string; useAbility?: boolean }
   | { type: 'battleAbility'; targetId?: string }
