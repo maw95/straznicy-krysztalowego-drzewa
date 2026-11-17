@@ -23,7 +23,7 @@ Autor pisze „zrób punkty 1, 2 i 3” (albo „zrób 9–10”, „zrób wszys
 - Każdy zaakceptowany obraz, animacja, dźwięk lub muzyka trafia do repo w tej samej sesji z wpisem w `assets.json`.
 - Po skończeniu: usuń punkt z tego pliku (albo zaznacz, co zostało), zagraj `complete.oga`, krótkie podsumowanie po polsku, uwaga, że to dobry moment na `/clear`.
 
-## Stan (16.11.2026, po punktach 1–15, 24–26 i wydaniu 2.8.0)
+## Stan (17.11.2026, po wydaniu 2.8.0)
 
 Wydane: **2.8.0** (16.11: poziomy 0, 4, 5 i 6, Łatwy na arenie, bot-kupiec, animacje i efekty; gra na Pages, serwer 0.2.0 na Fly.io, silnik 2.8.0). Wcześniej **2.7.0** (14.11, poziom 3 „Osada”). Wszystko z poniższej listy jest już wydane, nic nie czeka na push.
 
@@ -32,52 +32,52 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids` = Łatwy, `economy`, `realm
 
 ## 1. Kolejka prac (w tej kolejności)
 
-### Grupa D. Grafika i dźwięk (kredyty Scenario; zasady budżetu na górze)
-Sesja 16.11: zrobione animacje wszystkich 16 jednostek poziomów 5–6 (z brakami w punkcie 16) i efekty czarów, oblężenia, mapy, Odłamka, Iskry i odrodzenia.
-Wspólne dla punktów 16–21: potok i przepis `docs/PRZEPIS_JEDNOSTKI.md` (obraz bazowy z portretu karty, obraz „martwy”, klipy `chod`, `atak`, `trafienie`, `smierc`; pakowanie `scripts/animacje/pack_unit.py` + `shrink_unit.py`; wpis w `assets.json`). Jednostka ma już statyczną figurkę i dźwięki ataku/śmierci (od 16.11): animacja podmienia pliki w `public/assets/jednostki/<folder>/`; wpis w `src/ui/sprites.ts` już istnieje (zwykle nic nie trzeba zmieniać, ewentualnie `speed`). Narzędzie ffmpeg: `pip install --target <scratchpad>/ff imageio-ffmpeg`, ścieżka w `.tmp/ffpath` (po restarcie systemu odtwórz). **Lekcje 16.11 (filtr treści):** zablokowane zostały „swings … down”, „rears up with a mighty roar … swings”, „sinks down … knees”, a ostatnia udana śmierć wyszła bez `lastFrameImage` z opisem „puts down … lies on his side and falls asleep”; broń z krwią na obrazie bazowym zwiększa ryzyko blokady (generuj broń bez śladów krwi); „internal error” bez blokady: ponów raz. Szacunek: ok. 105 CU na jednostkę (latająca +10).
+### Grupa A. Zasady i silnik (kolejność dowolna; decyzje autora z 17.11)
 
-**16. Wady animacji jednostek poziomów 5–6 do oceny w grze** (S; braki klipów i odrodzenie Feniksa zrobione 16.11)
-- Zrobione 16.11 (wieczór): atak Trolla Jaskiniowego, trafienie Driady Łuczniczki (z łukiem) i Feniksa Świtu; klip `odrodzenie` Feniksa gra na arenie (`SpritePiece.rebirth` z `ArenaBoard.tsx`, kolejka w `SpriteLayer.tsx`). Podpięcie sprawdzone typami i testami, **nie w prawdziwej bitwie** (patrz sekcja 3).
-- Zostało do oceny w grze (`make zrzut` bitwy z tymi jednostkami; zmieniaj `box`/skalę w `sprites.ts` tam, gdzie wystarczy): Szaman Cieni i Mędrzec mają błysk ataku jaśniejszy/niebieskawy i rozmytą laskę; Łowczyni ma rozmyte środkowe klatki trafienia i zajmuje ok. 55% wysokości kadru; Szaman Cieni sięga w kadrze wyżej niż stopy 84% (sprawdź `box`); Driada zajmuje ok. 85% wysokości kadru (sprawdź skalę); Wiwerna ma szeroki `martwy` (możliwe ucięcie przy krawędziach, crop 512 px); Goblin Procarz: kamień z procy słabo widoczny w klipie ataku, dobierz opóźnienie pocisku rysowanego przez kod (`.projectile`, wzór: głaz Cyklopa); Behemot: `stoi` z trzech czwartych i lekka fioletowa obwódka na kolcach; Feniks: fioletowa obwódka w środku `odrodzenie`; Lis: chód jak klus i dryf; Troll: jedna dziwna klatka w śmierci (maczuga lekko odchylona po trafieniu); Gargulec: jedna rozmyta klatka we wzbiciu.
-- Podgląd klipów: `make sprity` (zrzut do `.tmp/sprity.png`, np. `JEDNOSTKI=troll,feniks`) albo strona `?sprity` / `?sprity=troll,feniks` w przeglądarce (pętle wszystkich klipów, linia stóp, tempo ×0.5/×0.25). Pocisków (`.projectile`) i dopasowania do planszy tu nie widać, to ocena w bitwie.
-- Gotowe, gdy: wady z listy ocenione w grze i poprawione tam, gdzie wystarczy `box`/skala.
+**32. Obrona osady steruje właściciel** (M). Garnizon bez bohatera nie jest już prowadzony przez komputer: w bitwie o osadę jednostkami garnizonu steruje jej właściciel (człowiek lub bot swojej strony). Miejsca: `src/engine/kingdom.ts` (garnizon), `battle.ts` (kto aktywuje), `ui/BattleView`. Gotowe, gdy: test silnika + zrzut bitwy o osadę z garnizonem; zmiana przesuwa golden i strojenie Podboju (osobny commit `-u`).
+
+**33. Więcej czarów** (M). Dziś 8 czarów (mana 3 + poziom, bohaterowie znają Magiczny Pocisk). Zaprojektować dodatkowe (po 2–3 na szkołę: obrażenia, leczenie, wsparcie, osłabienie), dopisać do `data.ts`/`magic.ts`, bota (`botSpell`), księgi czarów i wieży maga; propozycje liczb do akceptacji w sekcji 7.
+
+**34. Relikt: warunek budowy** (S). Budynek Reliktu w osadzie może wybudować tylko bohater stojący na kafelku tej osady, który ma przy sobie **wszystkie** Odłamki (nie „odłamki żywych bohaterów frakcji”). Miejsca: `economy.ts`/`kingdom.ts` (warunek budowy), tekst w oknie osady i w `ZASADY_CYFROWE.md`.
+
+**35. Przemiana trudności Bardzo trudnego: skarby zamiast Życia** (M). Bez manipulowania Życiem jednostek (zdejmujemy +20% Życia i −15% na Łatwym, jeśli jest): przewagi komputera to surowce i artefakty początkowe (dziś: dochód ×1,5, +2 skarby na start; dołożyć startowe surowce i artefakty). Po zmianie ponowne strojenie pasm (`make sim-raport`), golden `-u` osobnym commitem.
+
+**36. Mnożnik rankingu Bardzo trudnego = 1,5** (S), żeby ten poziom był bardziej wynagradzający (dziś Trudny × 1,25). Spacer (poziom 0) zostaje bez wyboru trudności. Miejsce: mnożniki w `src/engine` (ranking) i serwer (`../straznicy-krysztalowego-drzewa-backend`: commit, push, `make deploy`).
+
+### Grupa B. Ekran osady (L)
+
+**37. Osada na pełnym ekranie, wzór: Heroes III** (L). Całą mechanikę i wygląd brać z Heroes III; jedyna różnica to podgląd budynków do wybudowania.
+- Okno osady zajmuje **cały ekran** (nie mały modal).
+- Jeden budynek zawsze wybudowany: **Rada Osady** (nazwa robocza). Klik w niego zmienia ekran na **drzewko budynków do kupienia**.
+- Drzewko (graf, nie lista jak w Heroes III): zależności między budynkami widać od razu liniami; w Heroes III trzeba kliknąć prawym przyciskiem budynek, żeby zobaczyć wymagany.
+- Dziś: `src/ui/SettlementDialog.tsx` (okno z 9 budynkami i drzewkiem frakcji), `kingdom.ts`/`economy.ts` (budynki, koszty). Sprawdzić też na telefonie (poziomo i pionowo). Grafiki krajobrazu osady: `kredyty`, ewentualnie ze Scenario.
+
+### Grupa C. Grafika (kredyty Scenario; zasady budżetu na górze)
+
+**38. Ozdobniki ramek i tła okien ze Scenario** (M, kredyty). Obecne ozdobniki przy ramkach (narożniki SVG, punkt dawniej 26) są brzydkie: wygenerować ze Scenario nowe. Tło okien „Księga czarów” i skrzynia skarbów (dziś CSS: skóra, drewno, pergamin) jest bardzo brzydkie: wygenerować potrzebne grafiki (tło księgi, skrzynia, pergamin). Przepis: wszystko do repo z wpisem w `assets.json`, małe pliki (WebP).
 
 ## 2. Tylko autor (Claude tego nie bierze)
 - **Premiera na Steamie** (L): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery do ustalenia (dawne „3.0” traci sens).
 - Domeny i konta, znak towarowy (brak wpisów), tytuł w sklepie Steam.
 - Pliki w `docs/wersja_planszowa/` (`logo_zolte_*`, `okladki_przod_tyl_grzbiet.pdf`, `Instrukcja_Straznicy.docx`) mają starą nazwę (binarne, po ostatecznym potwierdzeniu nazwy).
 - Odsłuch dźwięków (Claude nie ma jak ich odsłuchać): 7 z 15.11 (`catapult.mp3`, `tower_shot.mp3`, `moat.mp3`, `shard_pickup.mp3`, `spark.mp3`, `portal.mp3`, `tavern_hire.mp3`) i 32 z 16.11 (`public/assets/dzwieki/jednostki/<id>_atak|_smierc.mp3` dla 16 jednostek poziomów 5–6); co się nie podoba, Claude wygeneruje od nowa (1 CU za sztukę).
-- Sprawdzenie na żywo (sekcja 3), przegląd decyzji Claude'a (sekcja 9), pierwsza strona instrukcji planszowej (wiadomość autora), kąt kamery i wielkość figurek 3D.
+- Pierwsza strona instrukcji planszowej (imienna wiadomość autora) i kąt kamery z wielkością figurek 3D: autor, po obejrzeniu na żywo (decyzja 17.11: poza parkingiem, bez terminu).
 
-## Po premierze (nie robić bez wyraźnego polecenia)
+## Przed premierą (decyzja autora 17.11: wchodzą przed Steamem; po punktach z kolejki)
 28. **Nowe frakcje:** Dzikie Stada → Królestwo Umarłych → Żelazne Klany (karta frakcji, grafika, symulacje 10 par), potem DLC. Przed startem: próbka jednej jednostki w nowym stylu i decyzja autora. Koszt grafik i dźwięków jednej frakcji: sekcja „Kredyty Scenario”.
 29. **Kampania fabularna** (mapy ręczne są; fabuła przez wyzwalacze) i **Ekspedycja** (8–10 map, nagrody po bitwie, profil trwały, seed dnia z rankingiem).
-30. **Wiele języków** (PL + EN: interfejs, dane, instrukcja, CHANGELOG, serwer). Spis tekstów i trudności: `TEKSTY_DO_TLUMACZENIA.md` (ok. 1300 napisów i 71 tys. znaków w kodzie, plus instrukcja i serwer).
-31. **Więcej niż 6 graczy** (do 8), „cios od tyłu / z flanki” dla innych jednostek.
+30. **Wiele języków** (PL + EN: interfejs, dane, instrukcja, CHANGELOG, serwer). Spis tekstów i trudności: `TEKSTY_DO_TLUMACZENIA.md` (ok. 1300 napisów i 71 tys. znaków w kodzie, plus instrukcja i serwer). Najlepiej robić ostatnie, gdy teksty się ustalą.
+(Nie robić bez wyraźnego polecenia autora: to duże prace.)
 
-## 3. Do sprawdzenia na żywo (autor)
-Zrobione i przetestowane, bez potwierdzenia w prawdziwej grze:
-- **Poziomy 4–6 (15.11, cała sesja):** sprawdzone testami silnika i skryptami klikającymi w przeglądarce (`scripts/browser/kuznia.ts`, `chatka.ts`, `oblezenie.ts`, `karczma.ts`, `czary.ts`, `relikt.ts`), nie w pełnej partii człowieka. Do ogrania: szturm murów (czy katapulta i fosa są czytelne), garnizon, Podbój, tura dowódcy, pasek czarów w bitwie (na telefonie jest przyklejony nad paskiem aktywacji: nie sprawdzałem w widoku telefonu), okno osady z 9 budynkami i drzewkiem frakcji (przewija się), Relikt, siedliska, statyczne figurki nowych jednostek, nowe dźwięki (nieodsłuchane). Stoły online poziomów 5–6: tylko typy i testy serwera, bez gry na żywo.
-- **Poziom 4 (15.11):** surowce w dolnym pasku, ceny z surowcami w oknie osady, ikony tartaku, kopalni rudy, źródła Pyłu i chatki, panel zadania chatki (nie sprawdzony kliknięciem), karta „Księstwo” w kreatorze, samouczek.
-- **Poziom 3:** widok osady z budynkami obu frakcji, dźwięki zakupu, animacje i portrety 8 pomocników (sprite'y bez klipu śmierci), ikony zestawów artefaktów i licznik „2/3 zestawu”, samouczek, autopilot dziecka, zapisy online, szósty gracz. Nowe 15.11: poziom 0, Łatwy na arenie, bot-kupiec.
-- Kraken (czy groźny, ale uczciwy; czy sześć jednostek mieści się na arenie) i Pegaz.
-- Klikalność jednostek zasłoniętych (Pegaz kontra Hydra, partia 114857, akcja 60; poprawka `behind` w `ArenaBoard.tsx`).
-- Błysk zakrytych kafelków (`fog-drift`); kursor ataku na wszystkich heksach jednostki; zwłoki (`CORPSE_MAX_W` w `sprites.ts`); rzut Cyklopa (śmierć zaczyna się przed lądowaniem); kolejka stanów online (`usePresentation.ts`).
-- Rozmiar Czarnego Smoka, figurki Szamana, Nietoperza, Jednorożca.
-- Nowe z 16.11 (punkty 1–15 zrobione): okno „Magia” i wybór celu czaru na arenie (też na telefonie), napisy zdobyczy nad bohaterem, chorągiewki kopalń, prawy klik na obiektach mapy i artefaktach, wymiana surowców na targu, Bardzo trudny we wszystkich trybach (w grze online dopiero po wdrożeniu serwera z wydaniem), nowe ikony poziomów (smok jest najsłabiej narysowany), zasięg dwupolowych jednostek po Ctrl.
-- Nowe z 16.11 (wieczór, punkty 16, 24–26): odrodzenie Feniksa gra klip na arenie (trzeba bitwy, w której Feniks ginie; zwróć uwagę, czy klip startuje przy błysku `odrodzenie` i czy nie zostaje w pozie trafienia); atak Trolla Jaskiniowego, trafienia Driady i Feniksa; mur, brama i wieżyczki oblężenia w stylu frakcji obrońcy (Hordy na ciemnej arenie lawy mają mniejszy kontrast niż poprzedni szary kamień; sprawdź też obrońcę Przymierza); nowe narożniki ramek rysowane w SVG (desktop sprawdzony zrzutem, telefon: zrzut wyszedł ciemny, do obejrzenia na żywo); okładka z logo Gleamroot bez starego napisu (szew wokół logo niewidoczny na podglądzie, obejrzyj PDF do druku `docs/wersja_planszowa/do_druku/10_okladka_A4_pokrywa_i_segregator.pdf`).
-- Nowe z 16.11: animacje Rycerza Świtu (chód, atak, trafienie, śmierć) i Wodza Hordy (bez ataku) w prawdziwej bitwie (czy rozmiar i linia stóp pasują do reszty jednostek, czy `speed` w `sprites.ts` nie wymaga korekty); ikona Odrodzenia Feniksa w karcie jednostki.
-
-- Nowe z 16.11 (wieczór, mapa i bitwa): kafelki obiektów na mapie (12 grafik, `tiles/obj_*.jpg`) i herby właścicieli kopalń i osad (`cards/crests/`); herb Hordy na osadzie, na której stoi figurka 3D, bywa częściowo zasłonięty; okno „Księga czarów” i okno skarbów w stylu skrzyni w bitwie (na telefonie nie sprawdzone kliknięciem, tylko zrzutem poziomo); ikona księgi czarów (`ikony/mapa/ksiega.webp`); rząd „Drugi bohater” w panelu bocznym mapy (klik otwiera kartę, tylko do podglądu).
+## 3. Sprawdzenie na żywo
+Wyczyszczone 17.11: autor sam sprawdza grę i zgłasza błędy (`make zgloszenia`); nie prowadzimy listy „do sprawdzenia”.
 
 ## 4. Parking (pomysły bez terminu)
-- Pierwsza strona instrukcji planszowej: imienna wiadomość autora (pisze autor).
-- Kąt kamery i wielkość figurek 3D (autor, po obejrzeniu na żywo).
-- Zwój Teleportacji jest nieużywany przez boty (35 z 35): potrzebuje pomysłu (ratowanie strzelca, skok za linię wroga).
-- Garnizony i budynek obronny osady do rozważenia po strojeniu (jeśli przejmowanie okaże się za łatwe; częściowo pokrywa 4c).
-- Łatwy w wydaniu planszowym (94/91/88/79% 1 na 1): domyślnie zostawiony „jak wydrukowany”; dźwignie stroiciela tylko w grze cyfrowej.
+- **Więcej niż 6 graczy** (do 8), „cios od tyłu / z flanki” dla innych jednostek.
 
 ## 5. Balans: pasma i znane odchylenia
+
+**Raport:** `make sim-raport` (np. `GAMES=100`) buduje `docs/BALANS_TABELE.html`: tabele wygranych Przymierza dla każdego poziomu gry, trudności, trybu i mapy (bez ustawień własnych); komórki poza pasmem mają inny kolor tła (czerwony poniżej, niebieski powyżej). Generuj od nowa po każdej zmianie liczb lub AI.
 
 Pasma autora (wygrane Przymierza): Łatwy 65–85%, Normalny 45–65%, Trudny 30–45%. Stroiciele: `scripts/sim/tuneLevels.ts`, `scripts/sim/tuneKingdom.ts` (Osada); tabele: `make sim-tabele`, `make sim-cele` (poniżej 3 minut; każdy nowy cel i kształt mnoży tabelę). Do mierzenia gry cyfrowej: `SIM_DIGITAL=1 make sim-tabele` (i `SIM_GROWTH=1`); bez `SIM_DIGITAL` mierzy wydanie planszowe.
 - Stan: Łatwy w paśmie w każdej komórce; Normalny w paśmie niemal wszędzie (z rozwojem poniżej pasma: kooperacja 39–44% na średniej, długiej i bardzo długiej, 2 na 2 długa 35%; Trudny w koopie 22–30%: ewentualnie `tuneLevels.ts <cel> 1`). Osada: Normalny 51–67%, Trudny koop 34–45%; cele inne niż „Kryształy” bez strojenia.
@@ -124,39 +124,13 @@ Pasma autora (wygrane Przymierza): Łatwy 65–85%, Normalny 45–65%, Trudny 30
 
 **Podział poziomów 4–6 (15.11):** na 4 gospodarka i osady, na 5 bohaterowie i magia, na 6 frakcje i Relikt: wyrównana liczba i złożoność nowości dla gracza.
 
-## 7. Decyzje podjęte przez Claude'a (do akceptacji)
+## 7. Decyzje podjęte przez Claude'a (przejrzane przez autora 17.11)
 
-Decyzje podjęte przez Claude'a bez pytania autora (autor prosi o pracę bez pytań); każdą można zmienić w jednym miejscu. Nowe wpisy dopisuj na końcu z datą i numerem punktu:
-1. **Garnizonem bez bohatera dowodzi komputer** (nie właściciel osady). Alternatywa: właściciel steruje obroną.
-2. **Brama wytrzymuje 2 trafienia katapulty, mur i wieżyczka 1**; wieżyczka zadaje 1 obrażenie, fosa 2 (`SIEGE`).
-3. **Podbój:** wygrywa się na koniec rundy, trzymając wszystkie osady na ziemi wroga; przy limicie rund liczy się „ponad połowa”, inaczej Horda.
-4. **Drugi bohater dzieli pulę pomocników frakcji** z bohaterem głównym (bez osobnej drużyny); wykup 3 zł + 2 zł za poziom; najem 8 zł.
-5. **Magia:** lista 8 czarów, mana 3 + poziom, bohaterowie główni znają od początku Magiczny Pocisk; nauka za złoto w wieży maga bez podchodzenia.
-6. **Typy bohaterów:** smoki jako mędrcy, Jednorożec i Wilkołak jako łowcy, Niedźwiedź i Ogr jako wojownicy; specjalności według `SPECIALTIES`.
-7. **Rozgałęzienia** tylko dla czterech umiejętności (Moc, Hart, Lekkość, Dowódca), jako czwarta karta przy III stopniu.
-8. **Relikt:** Odłamki są w każdej grze poziomu 6 (także w innych celach), budynek wymaga wszystkich Odłamków u żywych bohaterów jednej frakcji; premie: Przymierze +2 Ż, Horda +1 A.
-9. **Mechaniki frakcji:** Blask Świtu (leczenie co rundę bitwy) i Żądza Krwi (premia Ataku po śmierci wroga); drzewko frakcji liniowe, 3 stopnie.
-10. **Skład nowych jednostek** (do akceptacji jak przy poziomie 3): dowódcy (Rycerz Świtu, Łowczyni Gaju, Mędrzec Gaju, Wódz Hordy, Kapitan Kuszników, Szaman Cieni), legendarne (Feniks Świtu, Behemot Zagłady), alternatywne (Srebrny Lis, Sowa Świtu, Driada Łuczniczka, Biały Jeleń, Goblin Procarz, Gargulec, Troll Jaskiniowy, Wiwerna Cienia) oraz ich grafiki.
-11. **Siedliska** to pozycje na liście koszar (bez 16 osobnych budynków w krajobrazie osady); liczą się do limitu „jeden budynek na rundę”.
-12. **Serwer:** commit z poziomami 5–6 leży lokalnie w repo backendu, bez pushu i wdrożenia (zmienia zestaw akcji i poziomów; idzie razem z wydaniem gry).
-13. **(16.11, punkt 1)** Zasięg jednostki wielopolowej liczony od najbliższego jej heksa, dla obu stron.
-14. **(16.11, punkt 12)** Dźwignie komputera: mnożnik złota i surowców ×0,75 / ×1 / ×1,25 / ×1,5; skarby startowe −1 / 0 / +1 / +2; Życie jednostek −15% / 0 / +10% / +20%; błędne decyzje bota 25% na Łatwym; bohater po śmierci: Łatwy nie wraca, Bardzo trudny wraca raz. Pasmo Bardzo trudnego 15–30% wygranych Przymierza. Normalny zachowuje obecne strojenie świata (to nie jest przewaga komputera).
-15. **(16.11, punkt 13)** Mnożnik rankingu Bardzo trudnego = mnożnik Trudnego × 1,25 (robocza wartość); Spacer (poziom 0) bez wyboru trudności.
-16. **(16.11, punkt 8)** Wymiana surowiec za surowiec = sprzedaż i kupno po cenach `ECONOMY`, jedna akcja, bez nowych liczb.
-17. **(16.11, punkty 6, 9)** Dźwięki zdobyczy z istniejących plików, nowych nie generować; ikona „Magia” tylko od poziomu 5 i tylko gdy bohater zna czar.
-18. **(16.11, punkt 26)** Narożniki ramek w CSS/SVG, bez Scenario.
-19. **(16.11, punkt 27)** Numer najbliższego wydania 2.8.0, o ile autor nie poda innego.
-20. **(16.11, ikony poziomów)** Łatwy = królik, Normalny = wilk, Trudny = niedźwiedź, Bardzo trudny = smok (wybór autora).
-21. **(16.11, punkt 12)** Poziomy Łatwy, Normalny i Trudny zostają przy strojeniu per komórka (`tuning.ts`, `tuningAuto.ts`), a w jednej liście przewag komputera (`COMPUTER_HANDICAP`, `types.ts`) mają wartości neutralne (1, 0, 0); niezerowe są tylko przewagi Bardzo trudnego (dochód ×1,5, Życie +20%, +2 skarby na start). Powód: przeliczenie wszystkich 2500 wpisów strojenia na nową tabelę rozjechałoby pasma, które autor zatwierdził. Dźwignie „błędne decyzje bota” i „bohater wraca” nie weszły (bot nie ma miejsca na błąd bez psucia zgodności ze „złotymi” partiami).
-22. **(16.11, punkt 13)** Trudny w rywalizacji (cyfrowa): komputer (strona złożona z samych botów) dostaje skarby Hordy i brak posiłków jak w kooperacji, ale bez dodatkowego bohatera; w wersji planszowej Trudny w rywalizacji zostaje wyłączony. Bardzo trudny tylko w wersji cyfrowej.
-23. **(16.11, punkt 15)** Mnożniki punktów rankingu: Królestwo ×1,45, Imperium ×1,55 (Księstwo 1,35); poziomy 5–6 nie są trudniejsze od 4 (wygrane 55%/54% wobec 57%), ale wymagają więcej gry.
-24. **(16.11, punkt 8)** Wymiana surowców to osobna akcja `kingdomSwap` (serwer: dopisana w `src/rooms/actions.ts`, czeka na wydanie).
-25. **(16.11, punkty 6, 7)** Zdarzenie dziennika `loot` (złoto/surowce) niesie napis nad bohaterem; chorągiewka właściciela kopalni to medalion kontroli `kontrola_<frakcja>.webp`.
-
-26. **(16.11, kafelki obiektów)** Każdy obiekt (kapliczka, obóz, skrzynia, 4 kopalnie, chatka, młyn, studnia, skład, Odłamek) ma jeden kafelek niezależnie od terenu; zużyta kapliczka, obóz lub skrzynia wracają do zwykłego terenu; młyn i studnia „w odpoczynku” są wyszarzone. Skarby leżące na polu zostają małą ikoną.
-27. **(16.11, właściciele)** Właściciela kopalni i osady pokazuje herb frakcji z kart bohaterów (nie osobny proporzec); bez właściciela nic. Garnizon osady: plakietka z liczbą w lewym dolnym rogu kafelka.
-28. **(16.11, okna)** Okno skarbów w stylu skrzyni jest też na mapie; „Użyj” w bitwie zamyka okno, żeby można było wskazać cel na arenie. Okna „Księga czarów” i skrzynia rysowane w CSS (skóra, drewno, pergamin), bez nowych grafik poza ikoną księgi.
-29. **(16.11, drugi bohater)** Karta drugiego bohatera otwiera się z rzędu portretów w panelu bocznym mapy; akcje na karcie (np. wybór umiejętności) tylko dla aktywnego bohatera. Przełączanie aktywnego bohatera nie istnieje w silniku: do rozważenia osobno.
+Autor przejrzał listę 1–29 (17.11). Zaakceptowane bez zmian: 2, 3, 4, 6, 7, 9, 10, 13, 16, 17, 19, 20, 21 (strojenie per komórka musi zostać), 22–27, 29; 5 (z dopisaniem „więcej czarów”, punkt 33); 8 i 11 zmienione (punkty 34 i 37); 1 zmienione (punkt 32); 12 nieaktualne (serwer 0.2.0 jest już wypchnięty i wdrożony); 14 zmienione (punkt 35); 15 zmienione (punkt 36); 18 i 28 zmienione (punkt 38: grafiki ze Scenario).
+Nowe wpisy dopisuj na końcu z datą i numerem punktu:
+1. **(17.11, Zwój Teleportacji)** Boty używają Zwoju: skok do pola obok sojusznika przyciśniętego przez silniejszego wroga lub przynajmniej dwóch (ratunek), albo, gdy nikogo nie da się uderzyć w tej turze, skok przybliżający o co najmniej 3 pola do wroga. Nie używa go automat kooperacji (trzyma się listy z instrukcji). Wartość w dobieraniu skarbów w arenie: 3. Zmiana przesunęła `golden` (osobny commit z `-u`).
+2. **(17.11, Łatwy w wydaniu planszowym)** Zostaje „jak wydrukowany” (94/91/88/79% 1 na 1); dźwignie stroiciela tylko w grze cyfrowej (decyzja autora).
+3. **(17.11, garnizony i budynek obronny osady)** Skreślone z parkingu: jeśli przejmowanie będzie za łatwe, autor zgłosi propozycję.
 
 ## 8. Kredyty Scenario
 

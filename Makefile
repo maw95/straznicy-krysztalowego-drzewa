@@ -10,7 +10,7 @@ OPTIONS ?= full
 BATTLE ?= arena
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-kraken sim-bossy sim-supports sim-arena sim-tabele sim-krolestwo report zgloszenia modele figurki druk silnik clean
+.PHONY: help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-kraken sim-bossy sim-supports sim-arena sim-tabele sim-raport sim-krolestwo report zgloszenia modele figurki druk silnik clean
 
 help: ## Lista komend
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -86,6 +86,9 @@ sim-bossy: node_modules ## Cel Boss rozbity na bossów (Hydra, Cyklop, Golem, Kr
 
 sim-supports: node_modules ## Pomocnicy Przymierza porównani: ten sam bohater z jednym pomocnikiem (SIM_SUPPORT=pegasus zawęża)
 	node --import tsx scripts/sim/supports.ts 100
+
+sim-raport: node_modules ## Raport balansu: kolorowe tabele wygranych Przymierza (poziomy × trudności × tryby × mapy) do docs/BALANS_TABELE.html, np. make sim-raport GAMES=100
+	node --import tsx scripts/sim/raport.ts $(or $(GAMES),100)
 
 sim-tabele: node_modules ## Tabele: % wygranych Przymierza w każdym trybie, mapie i poziomie oraz jak przegrywa, np. make sim-tabele GAMES=300
 	@mkdir -p .tmp/sim
