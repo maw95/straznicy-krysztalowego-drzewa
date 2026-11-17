@@ -1002,11 +1002,19 @@ function placeTitle(state: GameState, k: HexKey): string {
 
 /** The gold in the bottom bar: stock and income per round in short ("2 (+2)"); the right button shows where the income comes from. */
 export function GoldBox({ state, faction }: { state: GameState; faction: FactionId }) {
+  const detail = details(() => <GoldDetails state={state} faction={faction} />);
   return (
-    <div className="plate parch" data-gold-box title="Złoto (zapas i dochód na rundę); prawy przycisk: skąd dochód" {...details(() => <GoldDetails state={state} faction={faction} />)} style={{ padding: '4px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
-      <img src={asset('ikony/mapa/zloto.webp')} alt="" width={32} height={32} />
-      <b style={{ fontSize: 22 }}><span data-gold>{goldOf(state, faction)}</span> <span style={{ fontSize: 16, color: '#6B4A22' }}>(+{incomeOf(state, faction)})</span></b>
-      {state.kingdom?.res && <span style={{ display: 'inline-flex', gap: 10, marginLeft: 6 }}><ResourceStrip state={state} faction={faction} /></span>}
+    <div data-gold-box style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+      <div className="plate parch" title="Złoto (zapas i dochód na rundę); prawy przycisk: skąd dochód" {...detail} style={{ padding: '4px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <img src={asset('ikony/mapa/zloto.webp')} alt="" width={32} height={32} />
+        <b style={{ fontSize: 22 }}><span data-gold>{goldOf(state, faction)}</span> <span style={{ fontSize: 16, color: '#6B4A22' }}>(+{incomeOf(state, faction)})</span></b>
+      </div>
+      {/* Resources sit straight on the map: no plate, bigger icons, a shadow keeps the numbers readable. */}
+      {state.kingdom?.res && (
+        <span {...detail} style={{ display: 'inline-flex', gap: 16, color: '#FFF4D8', textShadow: '0 1px 3px #000, 0 0 6px #000' }}>
+          <ResourceStrip state={state} faction={faction} size={44} light />
+        </span>
+      )}
     </div>
   );
 }
