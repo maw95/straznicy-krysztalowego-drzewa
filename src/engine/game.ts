@@ -59,10 +59,10 @@ import { fireStory } from './story';
 import { ARENA_POOL, buildingLevel, collectIncome, enterPlace, forgeLevel, garrisonAt, initKingdom, kingdomAction, supportSlots } from './kingdom';
 import { ECONOMY } from './economy';
 import { commanderFalls } from './realm';
-import { battleSpell, mapSpell, regenMana, START_SPELLS } from './magic';
+import { battleSpell, mapSpell, regenMana, SPELLS, SPELL_IDS, START_SPELLS, type SpellId } from './magic';
 import { HERO_TYPES, specialtyOf } from './heroTypes';
 import { EMPIRE, FACTION_MECHANICS, hasSpark, loseShards } from './empire';
-import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, COMPUTER_ARTIFACT_ODDS, heroTileCost, passArtifact, passShards, placeSites, SHARDS_ID, unequipArtifact, visitSite } from './sites';
+import { applyGear, ARTIFACT_BY_ID, arenaGearOffer, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, COMPUTER_ARTIFACT_ODDS, heroTileCost, passArtifact, passShards, placeSites, SHARDS_ID, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
 import { computerFaction, isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
@@ -248,7 +248,34 @@ function startArena(state: GameState) {
   b.arena = arena;
   b.obstacles = arenaObstacles(arena, b.layout);
   // Six units a side do not fit the one start column of the board: both sides get a second one.
-  if (state.rules.arenaSize === 6) b.deployDepth = { dawn: 1, horde: 1 };
+  if (state.rules.arenaSize === 6) {
+    b.deployDepth = { dawn: Math.max(1, b.deployDepth?.dawn ?? 0), horde: Math.max(1, b.deployDepth?.horde ?? 0) };
+    // Two spells of circles I-II for each hero (drawn from the game's seed), then the choice of one artifact before the supports.
+    const battleSpells = SPELL_IDS.filter((id) => SPELLS[id].where === 'battle' && SPELLS[id].circle <= 2);
+    for (const f of ['dawn', 'horde'] as FactionId[]) {
+      const spells: SpellId[] = new Rng((state.setup.seed ^ 0x5be11 ^ (f === 'dawn' ? 31 : 977)) | 0).shuffle(battleSpells).slice(0, 2);
+      hero(f).spells = spells;
+    }
+    state.draft!.gear = { order: [first, second], offer: arenaGearOffer(state, first) };
+    b.stage = 'gear';
+  }
+}
+
+/** 6 on 6 arena: the side whose turn it is takes one of the three offered artifacts for its hero. */
+function pickGear(state: GameState, faction: FactionId, artifactId: string) {
+  const g = state.draft?.gear;
+  const b = state.battle;
+  if (!g || !b || b.stage !== 'gear' || g.order[0] !== faction) throw new Error('Teraz nie wybiera ta frakcja.');
+  if (!g.offer.includes(artifactId)) throw new Error('Tego artefaktu nie ma wśród pokazanych.');
+  const hero = state.heroes[battleHeroOf(b, faction)!];
+  giveArtifact(state, hero, ARTIFACT_BY_ID[artifactId], 'arena');
+  applyGear(hero, b.units[hero.id]);
+  g.order.shift();
+  if (g.order.length) g.offer = arenaGearOffer(state, g.order[0]);
+  else {
+    delete state.draft!.gear;
+    b.stage = 'select';
+  }
 }
 
 /** The next three cards for the picker: the deck is shuffled and the first three different kinds are shown. */
@@ -531,6 +558,7 @@ export function currentActor(state: GameState): Actor {
       const f = b.needsDeploy[0];
       return battleActor(state, b, f);
     }
+    if (b.stage === 'gear' && state.draft?.gear) return battleActor(state, b, state.draft.gear.order[0]);
     if (b.stage === 'draft' && state.draft) {
       const f = state.draft.order[0];
       return battleActor(state, b, f);
@@ -1288,6 +1316,9 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'deployUnits':
       if (!state.battle) throw new Error('Nie trwa żadna bitwa.');
       deployUnits(state, action.faction, action.positions);
+      break;
+    case 'pickGear':
+      pickGear(state, action.faction, action.artifactId);
       break;
     case 'draftPick':
       draftPick(state, action.faction, action.kind);

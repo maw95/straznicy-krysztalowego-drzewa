@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { ARENA_DECK, ITEMS, type FactionId } from '../src/engine/data';
 import { chooseAction } from '../src/engine/ai';
 import { applyAction, createGame, currentActor } from '../src/engine/game';
+import { ARTIFACT_BY_ID, gearOf } from '../src/engine/sites';
+import { SPELLS } from '../src/engine/magic';
 import { arenaSetup, type Level, type SeatSetup } from '../src/engine/types';
 import { playOut, playUntil } from './helpers/engine';
 
@@ -124,13 +126,14 @@ describe('arena 6 on 6', () => {
     const s = createGame(arenaSetup(seats(), 4, 'normal', 6));
     expect(s.rules.arenaSize).toBe(6);
     for (const f of ['dawn', 'horde'] as FactionId[]) expect(s.factions[f].supportsAlive).toHaveLength(8);
-    const after = playUntil(s, (x) => x.battle?.stage !== 'select');
+    const after = playUntil(s, (x) => x.battle?.stage === 'draft' || x.battle?.stage === 'deploy' || x.battle?.stage === 'fight');
     const sides = Object.values(after.battle!.units).reduce((n, u) => ({ ...n, [u.side]: (n[u.side] ?? 0) + 1 }), {} as Record<string, number>);
     expect(sides).toEqual({ dawn: 6, horde: 6 });
   });
 
   it('refuses a wrong number of supports', () => {
-    const s = createGame(arenaSetup(seats('human', 'human'), 4, 'normal', 6));
+    let s = createGame(arenaSetup(seats('human', 'human'), 4, 'normal', 6));
+    while (s.battle!.stage === 'gear') s = applyAction(s, { type: 'pickGear', faction: s.draft!.gear!.order[0], artifactId: s.draft!.gear!.offer[0] });
     const f = s.battle!.needsSelection[0];
     const pool = s.factions[f].supportsAlive;
     expect(() => applyAction(s, { type: 'selectSupports', faction: f, supportIds: pool.slice(0, 2) })).toThrow();
@@ -141,6 +144,28 @@ describe('arena 6 on 6', () => {
     for (let seed = 1; seed <= 6; seed++) {
       const s = playOut(createGame(arenaSetup(seats(), seed, 'normal', 6)), 4000);
       expect(s.phase).toBe('over');
+    }
+  });
+
+  it('starts with the choice of one of three artifacts, then both heroes carry it and know two spells of circles I-II', () => {
+    let s = createGame(arenaSetup(seats('human', 'human'), 7, 'normal', 6));
+    expect(s.battle!.stage).toBe('gear');
+    const picked: Record<string, string> = {};
+    while (s.battle!.stage === 'gear') {
+      const g = s.draft!.gear!;
+      expect(g.offer).toHaveLength(3);
+      expect(new Set(g.offer.map((id) => ARTIFACT_BY_ID[id].slot)).size).toBe(3);
+      expect(() => applyAction(s, { type: 'pickGear', faction: g.order[0] === 'dawn' ? 'horde' : 'dawn', artifactId: g.offer[0] })).toThrow();
+      picked[g.order[0]] = g.offer[1];
+      s = applyAction(s, { type: 'pickGear', faction: g.order[0], artifactId: g.offer[1] });
+    }
+    expect(s.battle!.stage).toBe('select');
+    expect(s.draft!.gear).toBeUndefined();
+    for (const f of ['dawn', 'horde'] as FactionId[]) {
+      const hero = Object.values(s.heroes).find((h) => h.faction === f)!;
+      expect(gearOf(hero).map((a) => a.id)).toEqual([picked[f]]);
+      expect(hero.spells).toHaveLength(2);
+      expect(hero.spells!.every((id) => SPELLS[id].where === 'battle' && SPELLS[id].circle <= 2)).toBe(true);
     }
   });
 

@@ -200,7 +200,7 @@ export interface SetupOptions {
 export function arenaSetup(seats: SeatSetup[], seed: number, botLevel: Level = 'normal', size: 3 | 6 = 3): SetupOptions {
   // The arena has no level 0: its easy computer is "kids".
   if (botLevel === 'zero') botLevel = 'kids';
-  return { mode: 'arena', mapSize: 'short', battleMode: 'arena', seed, seats, botLevel, rules: { ...DEFAULT_RULES, initiativeTie: 'rotating', ...(botLevel === 'veryHard' ? { veryHard: true } : {}), ...(size === 6 ? { arenaSize: 6 as const } : {}) } };
+  return { mode: 'arena', mapSize: 'short', battleMode: 'arena', seed, seats, botLevel, rules: { ...DEFAULT_RULES, initiativeTie: 'rotating', ...(botLevel === 'veryHard' ? { veryHard: true } : {}), ...(size === 6 ? { arenaSize: 6 as const, heroGrowth: true, realm: true } : {}) } };
 }
 
 /** Arena treasure draft: a shared deck, picks in the order A, B, B, A, three cards offered each time. */
@@ -211,6 +211,8 @@ export interface ArenaDraft {
   order: FactionId[];
   /** Distinct kinds shown to the picker now. */
   offer: ItemKind[];
+  /** 6 on 6 arena: before the supports each side chooses one of three artifacts for its hero (stage 'gear'); the picker now is `order[0]`. */
+  gear?: { order: FactionId[]; offer: string[] };
 }
 
 export interface Player {
@@ -452,7 +454,7 @@ export interface BattleState {
   /** Króla Burzy's charged fields (digital ruleset): a unit that steps on `cell` takes damage while `round` <= `until`. */
   fields?: Array<{ cell: HexKey; until: number }>;
   /** Arena only: 'draft' (treasures) comes between choosing the supports and deploying. */
-  stage: 'select' | 'draft' | 'deploy' | 'fight' | 'over';
+  stage: 'gear' | 'select' | 'draft' | 'deploy' | 'fight' | 'over';
   /** Factions still to place their units (attacker first); neutral guardians stay where put. */
   needsDeploy: FactionId[];
   /** Extra columns a side may deploy in (the hero's skill Taktyk). */
@@ -607,6 +609,7 @@ export type Action =
   | { type: 'selectSupports'; faction: FactionId; supportIds: string[] }
   | { type: 'deployUnits'; faction: FactionId; positions: Record<string, HexKey> }
   | { type: 'draftPick'; faction: FactionId; kind: ItemKind }
+  | { type: 'pickGear'; faction: FactionId; artifactId: string }
   | { type: 'battleMove'; to: HexKey; tail?: HexKey }
   | { type: 'battleAttack'; targetId: string; secondTargetId?: string; useAbility?: boolean }
   | { type: 'battleAbility'; targetId?: string }

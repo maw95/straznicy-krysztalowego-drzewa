@@ -3,6 +3,7 @@
 
 import { ABILITY, ITEM_EFFECT, UNITS, type FactionId } from '../data';
 import { supportSlots } from '../kingdom';
+import { ARTIFACT_BY_ID, type ArtifactDef } from '../sites';
 import {
   abilityActive,
   abilityOf,
@@ -145,6 +146,19 @@ export const DRAFT_VALUE: Partial<Record<ItemKind, number>> = { resurrection: 9,
  * Arena draft: the hard bot takes the most valuable card, the normal one usually does (now and then
  * the second best), the easy one picks at random.
  */
+/** How much an artifact helps a hero in an arena battle (the 6 on 6 choice of one of three). */
+const gearValue = (a: ArtifactDef): number =>
+  (a.attack ?? 0) * 3 + (a.hp ?? 0) + (a.speed ?? 0) * 2 + (a.supportHp ?? 0) * 2 + (a.thorns ?? 0) * 2 + (a.vsWounded ?? 0) + (a.defense ?? 0) * 3 + a.rarity;
+
+/** 6 on 6 arena: the easy bot picks at random, the normal one usually the best artifact, the hard one always. */
+export function chooseGearPick(state: GameState, faction: FactionId): Action {
+  const offer = state.draft!.gear!.offer;
+  const level = state.setup.botLevel ?? 'normal';
+  const ranked = [...offer].sort((x, y) => gearValue(ARTIFACT_BY_ID[y]) - gearValue(ARTIFACT_BY_ID[x]) || (x < y ? -1 : 1));
+  const artifactId = level === 'kids' ? offer[hashPick(state, faction) % offer.length] : level === 'normal' && ranked.length > 1 && hashPick(state, faction) % 3 === 0 ? ranked[1] : ranked[0];
+  return { type: 'pickGear', faction, artifactId };
+}
+
 export function chooseDraftPick(state: GameState, faction: FactionId): Action {
   const offer = state.draft!.offer;
   const level = state.setup.botLevel ?? 'normal';
@@ -567,6 +581,7 @@ function rulebookFreeAbility(state: GameState, u: BattleUnit): Action | null {
 
 export function chooseBattleAction(state: GameState): Action {
   const b = state.battle!;
+  if (b.stage === 'gear') return chooseGearPick(state, state.draft!.gear!.order[0]);
   if (b.stage === 'select') return chooseSupports(state, b.needsSelection[0]);
   if (b.stage === 'deploy') return chooseDeployment(state, b.needsDeploy[0]);
   if (b.stage === 'draft') return chooseDraftPick(state, state.draft!.order[0]);

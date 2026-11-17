@@ -224,6 +224,25 @@ export function drawArtifact(state: GameState, hero: HeroState, odds: readonly n
   return rng.pick(artifactPool(state, rarity));
 }
 
+/** 6 on 6 arena: how often each rarity is offered for the one artifact a hero chooses (common, rare, legendary). */
+export const ARENA_GEAR_ODDS = [55, 35, 10] as const;
+/** The three artifacts a side's hero may choose from in the 6 on 6 arena: of different slots, drawn from the game's seed (never from its own generator). */
+export function arenaGearOffer(state: Pick<GameState, 'kingdom' | 'setup'>, faction: string): string[] {
+  const rng = new Rng((state.setup.seed ^ 0x4a7e11c3 ^ (faction === 'dawn' ? 7919 : 104729)) | 0);
+  const out: ArtifactDef[] = [];
+  for (let guard = 0; out.length < 3 && guard < 80; guard++) {
+    let roll = rng.int(ARENA_GEAR_ODDS.reduce((a, b) => a + b, 0));
+    let rarity = 1;
+    for (let i = 0; i < ARENA_GEAR_ODDS.length; i++) {
+      if (roll < ARENA_GEAR_ODDS[i]) { rarity = i + 1; break; }
+      roll -= ARENA_GEAR_ODDS[i];
+    }
+    const art = rng.pick(artifactPool(state, rarity));
+    if (!out.some((o) => o.id === art.id || o.slot === art.slot)) out.push(art);
+  }
+  return out.map((a) => a.id);
+}
+
 /** Whether `art` is worth putting on: the slot is empty or holds something of a lower rarity. */
 export function improves(hero: Pick<HeroState, 'gear'>, art: ArtifactDef): boolean {
   const current = hero.gear?.[art.slot] ? ARTIFACT_BY_ID[hero.gear[art.slot]!] : null;
