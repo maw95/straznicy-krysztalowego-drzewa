@@ -5055,6 +5055,31 @@
       "data": "2026-11-17",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/okna-ozdobniki",
+      "pliki": [
+        "public/assets/ui/corner_gold_tl.webp",
+        "public/assets/ui/corner_gold_tr.webp",
+        "public/assets/ui/corner_gold_bl.webp",
+        "public/assets/ui/corner_gold_br.webp",
+        "public/assets/ui/spellbook_bg.webp",
+        "public/assets/ui/chest_bg.webp"
+      ],
+      "typ": "narożniki złotej ramki (szafir), tło okna Księgi czarów (otwarta księga), tło okna skrzyni skarbów (otwarta skrzynia)",
+      "opis": "Trzy obrazy z jednej serii (po jednej próbie, wybrane bez powtórek). Narożnik: oryginał 176x176 przycięty do 112x112 i odbity lustrzanie w trzech wariantach (scripts: PIL). Księga 1536x1024 i skrzynia 1280x1024 rozciągane przez CSS border-image (rogi zachowują kształt). Zastępują narożniki SVG z .gf::after oraz tła CSS .spellbook i .chestbox.",
+      "scenario_asset": {
+        "zadania": [
+          "job_ugtna2uftb4ozBPVk1n25DXd",
+          "job_V2HCWBTzUycnS3qQBppqu6Gq",
+          "job_VoxjCMmJB2E6HwBQuqNZY1bs"
+        ]
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość high, 3 x 6 CU",
+      "data": "2026-11-17",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
