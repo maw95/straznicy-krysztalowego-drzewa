@@ -564,6 +564,19 @@ export function payCost(state: GameState, f: FactionId, c: Cost): void {
   for (const r of RESOURCE_IDS) if (c[r]) k.res![f][r] -= c[r]!;
 }
 
+/**
+ * Which building's first level must stand in the settlement before another can be started (docs/BUDYNKI.md 0a: a tree, one parent each;
+ * the Rada Osady, the root, is always there; the Iskra needs only the shards, the dwellings the barracks, see `kingdomDwelling`).
+ */
+export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market' };
+
+/** Why a building cannot be started here for lack of its parent (null: nothing in the way). Upgrades of a standing building are never blocked. */
+export function buildBlock(s: Settlement, b: BuildingId): string | null {
+  const parent = BUILDING_PARENT[b];
+  if (!parent || buildingLevel(s, b) >= 1 || buildingLevel(s, parent) >= 1) return null;
+  return `Najpierw: ${BUILDING_NAMES[parent][0]}.`;
+}
+
 /** Level 4 allows one building (or upgrade) a round per faction. */
 export const mayBuildNow = (state: GameState, f: FactionId): boolean => !state.rules.economy || state.kingdom?.built?.[f] !== state.round;
 
@@ -610,6 +623,8 @@ export function kingdomAction(state: GameState, action: Action): void {
       const price = buildCost(state, s, b);
       if (price === null) throw new Error('Ten budynek jest już w pełni rozbudowany.');
       if (b === 'barracks' && s.land !== hero.faction) throw new Error('Obcej osady nie rozbudujesz o koszary.');
+      const block = buildBlock(s, b);
+      if (block) throw new Error(block);
       if (!mayBuildNow(state, hero.faction)) throw new Error('W tej rundzie budowaliście już: jeden budynek na rundę.');
       payCost(state, hero.faction, price);
       if (state.rules.economy) (k.built ??= { dawn: 0, horde: 0 })[hero.faction] = state.round;
@@ -844,7 +859,7 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   const id = s.id;
   const afford = (price: number | null) => price !== null && gold >= price;
   // A building needs its whole price (level 4: resources too) and the round's one build still free.
-  const buildable = (b: BuildingId) => { const c = buildCost(state, s, b); return c !== null && canPay(state, f, c) && mayBuildNow(state, f); };
+  const buildable = (b: BuildingId) => { const c = buildCost(state, s, b); return c !== null && !buildBlock(s, b) && canPay(state, f, c) && mayBuildNow(state, f); };
   const own = s.land === f;
   if (own && s.buildings.barracks < 1 && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
   if (own && s.buildings.barracks >= 1 && state.rules.empire) {

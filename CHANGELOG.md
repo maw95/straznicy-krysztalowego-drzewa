@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Budynki osady tworzą drzewo: Kuźnia, Fosa i Mury oraz Szpital wymagają najpierw Koszar, Wieża maga Szpitala, a Karczma Targu (przycisk pokazuje, czego brakuje).
+
 - Statystyki i punkty: pełna arena 6 na 6 liczy się osobno od szybkiej 3 na 3 (własny wiersz w tabeli) i daje o połowę więcej punktów za wygraną.
 
 - Arena 6 na 6, poziom Bardzo trudny: komputer gra bez błędów, a jego bohater ma więcej many, jeden czar więcej i dwa dodatkowe artefakty (wygrane gracza w symulacjach ok. 24%).

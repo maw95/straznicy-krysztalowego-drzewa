@@ -4,7 +4,7 @@
 
 import { useState } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
-import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildCost, buildingLevel, buildingsOf, canPay, forgeLevel, goldOf, hasUnit, incomeOf, KINGDOM, marketStock, mayBuildNow, mayRecruit, RECRUITS, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
+import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsOf, canPay, forgeLevel, goldOf, hasUnit, incomeOf, KINGDOM, marketStock, mayBuildNow, mayRecruit, RECRUITS, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
 import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
 import { ARCHETYPE_NAMES, archetypeOf, commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from '../engine/realm';
@@ -54,11 +54,12 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     const cost = price(b);
     const level = buildingLevel(s, b);
     if (cost === null) return <b style={{ color: '#2E7A32' }}>Gotowe</b>;
-    const blocked = b === 'barracks' && !own;
+    const parentBlock = buildBlock(s, b);
+    const blocked = (b === 'barracks' && !own) || Boolean(parentBlock);
     const poor = !canPay(state, faction, cost);
     const late = !mayBuildNow(state, faction);
     return (
-      <button className="btn prim" disabled={poor || blocked || late} title={blocked ? 'Koszary buduje się tylko w osadzie własnej frakcji.' : late ? 'W tej rundzie budowaliście już: jeden budynek na rundę.' : poor ? `Za mało: potrzeba ${costText(cost)}.` : undefined} data-build={b} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: b })} style={{ padding: '4px 16px', fontSize: 17 }}>
+      <button className="btn prim" disabled={poor || blocked || late} title={parentBlock ? parentBlock : blocked ? 'Koszary buduje się tylko w osadzie własnej frakcji.' : late ? 'W tej rundzie budowaliście już: jeden budynek na rundę.' : poor ? `Za mało: potrzeba ${costText(cost)}.` : undefined} data-build={b} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: b })} style={{ padding: '4px 16px', fontSize: 17 }}>
         {level === 0 ? 'Zbuduj' : 'Rozbuduj'}: {BUILDING_NAMES[b][level]} ({costText(cost)})
       </button>
     );

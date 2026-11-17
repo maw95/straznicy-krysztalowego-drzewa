@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { activeHero, applyAction, createGame } from '../src/engine/game';
 import { ECONOMY, OBJECTS } from '../src/engine/economy';
-import { artifactBill, autopilotAction, botPurchase, hasParent, buildCost, buildingsOf, canPay, forgeLevel, resOf, resourceIncomeOf, settlementAt, tradeBuyPrice } from '../src/engine/kingdom';
+import { artifactBill, buildBlock, autopilotAction, botPurchase, hasParent, buildCost, buildingsOf, canPay, forgeLevel, resOf, resourceIncomeOf, settlementAt, tradeBuyPrice } from '../src/engine/kingdom';
 import { pointsFor } from '../src/engine/scoring';
 import { ARTIFACTS } from '../src/engine/sites';
 import { mapNeighbors } from '../src/engine/map';
@@ -120,12 +120,32 @@ describe('level 4: huts with a quest', () => {
 });
 
 describe('level 4: the forge and the exchange', () => {
+  it('keeps the building tree: each building waits for its one parent (docs/BUDYNKI.md 0a), upgrades are never blocked', () => {
+    const s = economy();
+    const home = ownStart(s);
+    home.buildings.barracks = 0;
+    home.buildings.market = 0;
+    for (const [b, parent] of [['hospital', 'Koszary'], ['forge', 'Koszary'], ['walls', 'Koszary'], ['magic', 'Szpital'], ['tavern', 'Targ']] as const) expect(buildBlock(home, b)).toBe(`Najpierw: ${parent}.`);
+    for (const b of ['barracks', 'market', 'treasury', 'spark'] as const) expect(buildBlock(home, b)).toBeNull();
+    home.buildings.barracks = 1;
+    expect(buildBlock(home, 'hospital')).toBeNull();
+    expect(buildBlock(home, 'magic')).toBe('Najpierw: Szpital.');
+    home.buildings.hospital = 1;
+    expect(buildBlock(home, 'magic')).toBeNull();
+    home.buildings.forge = 1;
+    home.buildings.barracks = 0;
+    expect(buildBlock(home, 'forge')).toBeNull();
+  });
+
   it('builds a forge for ore; the faction\'s supports then fight with more Atak, and with more Życie after the upgrade', () => {
     let s = economy();
     const home = ownStart(s);
     expect(buildingsOf(s)).toContain('forge');
     s.kingdom!.gold.dawn = 40;
     s.kingdom!.res!.dawn = { wood: 0, ore: 6, dust: 2 };
+    // The forge needs the barracks first (docs/BUDYNKI.md 0a).
+    expect(() => applyAction(s, { type: 'kingdomBuild', settlementId: home.id, building: 'forge' })).toThrow('Najpierw: Koszary');
+    home.buildings.barracks = 1;
     s = applyAction(s, { type: 'kingdomBuild', settlementId: home.id, building: 'forge' });
     expect(forgeLevel(s, 'dawn')).toBe(1);
     expect(resOf(s, 'dawn').ore).toBe(3);
