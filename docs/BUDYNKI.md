@@ -11,7 +11,7 @@ dodatkowym, darmowym, zawsze stojącym budynkiem, który otwiera drzewko budowy.
 ## 0. Decyzje autora z 17.11.2026 (wieczór): mają pierwszeństwo przed resztą dokumentu
 
 Poniżej ustalenia z rozmowy; sekcje 2 i 3 niżej są historyczne (propozycje i pytania), gdzie sprzeczne, obowiązuje ta sekcja.
-Graf zależności („co blokuje co”) **jeszcze nieustalony**: dopiero po tej liście.
+Graf zależności („co blokuje co”) jest ustalony w sekcji 0a poniżej.
 
 **Zasady ogólne**
 - **Limit „jeden budynek na rundę” znika, na wszystkich poziomach gry.** Ogranicza złoto i surowce. Skutki: `mayBuildNow` i `KingdomState.built` do usunięcia, komunikat „W tej rundzie budowaliście już” też; boty budują tyle, na ile je stać; **golden, pasma i `tuneLevels.ts` do przestrojenia**; zaktualizować `INSTRUKCJA.md`, `ZASADY_CYFROWE.md` (sekcja o osadach), `ROZBUDOWA_CYFROWA.md`.
@@ -40,6 +40,39 @@ Drzewka frakcji z trzema rangami **znikają** (`kingdom.tree`, akcja kupna rangi
 
 Orientacyjne ceny Kapliczki i Jamy (do strojenia; dziś rangi kosztują 4 zł + 2 Pyły / 6 zł + 3 Pyły / 8 zł + 5 Pyłów): I: 3 zł + 2 drewna + 1 Pył; II: 4 zł + 2 Pyły; III: 6 zł + 3 Pyły; IV: 8 zł + 5 Pyłów. Łącznie 11 Pyłów, a źródeł Pyłu jest 1–3, więc ceny pewnie wymagają obniżenia. Szkółka daje **drewno, nie Pył** (Pył jest najrzadszy; +1 Pył/rundę równałoby się własnemu Źródłu Pyłu).
 Do sprawdzenia po wdrożeniu: Szkółka II w późnej grze (drewno traci znaczenie), siła Szabrowni i Legowiska, wpływ braku efektu frakcji we wczesnych rundach poziomu 6 na pasma.
+
+## 0a. Graf zależności (ustalony 17.11.2026, zatwierdzony przez autora)
+
+Zasady: **każdy budynek ma dokładnie jednego rodzica** (drzewo, bez krzyżowania i drugich wymagań); poziom II+ budynku wymaga jego
+poprzedniego poziomu; wymagany jest rodzic na **poziomie I** (wystarczy wybudowany). **Pierwotna Iskra wymaga wyłącznie Odłamków**:
+nie wymaga żadnego budynku i żaden budynek jej nie wymaga. Rada Osady stoi od początku (korzeń). Koszary od poziomu 6 są
+wybudowane domyślnie (poziom I), więc zależności od nich są wtedy spełnione od początku. Siedliska i budynki unikalne istnieją od
+poziomu 6. Graficzna wersja: artefakt „Graf budynków osady” (drzewa Przymierza i Hordy), źródło generatora poza repo.
+
+```mermaid
+flowchart TB
+  R([Rada Osady]) --> K[Koszary I-II]
+  R --> T[Targ I-II]
+  R --> S[Skarbiec I-II]
+  K --> Ku[Kuźnia I-II]
+  K --> F[Fosa i Mury I-II]
+  K --> Sz[Szpital I-II]
+  K --> D2[Siedliska tier 2: A lub B]
+  D2 --> D3[tier 3: A lub B] --> D4[tier 4: A lub B] --> D5[tier 5: A lub B] --> D6[tier 6: legenda]
+  Sz --> W[Wieża maga I-III]
+  T --> Ka[Karczma]
+  Sz -. Przymierze .-> KS[Kapliczka Świtu I-IV]
+  W -. Przymierze .-> KG[Krąg Gaju]
+  S -. Przymierze .-> SK[Szkółka Drzewa I-II]
+  Ku -. Horda .-> J[Jama Krwi I-IV]
+  F -. Horda .-> WL[Wilcze Legowisko]
+  T -. Horda .-> SB[Szabrownia]
+  O((Odłamki)) --> I[Pierwotna Iskra]
+```
+
+Skutki uboczne uproszczenia (świadomie usunięte drugie wymagania): Koszary II dają tylko tiery 4–5 i +1 miejsce w drużynie (bez
+dodatkowego powodu do ulepszenia przez Kuźnię II); legenda (tier 6) wymaga tylko siedliska tieru 5, nie Koszar II; Skarbiec II
+nie blokuje Iskry. Jeśli testy pokażą, że któreś z nich brakuje, dopisać jako osobną decyzję.
 
 ## 1. Budynki, które już są
 
