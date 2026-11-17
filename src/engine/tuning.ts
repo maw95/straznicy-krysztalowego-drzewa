@@ -166,6 +166,13 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   { objective: 'crystals', level: 'hard', kingdom: true, mode: 'pvp', maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
   { objective: 'crystals', level: 'hard', kingdom: true, mode: 'coop', players: 2, maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
   { objective: 'crystals', level: 'hard', kingdom: true, mode: 'pvp', maps: ['medium', 'long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
+  // --- Conquest and Relic, Normal (measured 18.11, 100 games a cell, band 45-65): the lone hero on the very long map was far below, a few cells above.
+  { objective: 'conquest', level: 'normal', mode: 'coop', players: 1, maps: ['veryLong'], rules: { roundLimitBonus: 5, dawnStartTreasures: { resurrections: 0, others: 0, random: 7 } } },
+  { objective: 'conquest', level: 'normal', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  { objective: 'conquest', level: 'normal', mode: 'pvp', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
+  { objective: 'relic', level: 'normal', mode: 'coop', players: 2, maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
+  { objective: 'relic', level: 'normal', mode: 'pvp', players: 2, maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } } },
+  { objective: 'relic', level: 'normal', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 6 } } },
 ];
 
 /** The rules a game is played with: the setup's, plus the digital levers that match it. */
