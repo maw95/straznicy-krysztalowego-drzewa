@@ -418,6 +418,19 @@ export async function submitResult(setup: unknown, actions: unknown[]): Promise<
   return request('/results', { method: 'POST', headers: { authorization: `Bearer ${token}` }, body: JSON.stringify({ setup, actions }) });
 }
 
+/** The Expedition's run of the day: the ranking of a date (`points` = the run's score, `games` = stages cleared). */
+export async function fetchDaily(day: string): Promise<{ top: RankingRow[]; me: RankingRow | null }> {
+  const token = savedToken();
+  return request(`/daily?day=${encodeURIComponent(day)}`, { headers: token ? { authorization: `Bearer ${token}` } : {} });
+}
+
+/** The end of the run of the day: the stages cleared (the server keeps the player's best of the date). */
+export async function submitDaily(day: string, cleared: number): Promise<{ counted: true }> {
+  const token = savedToken();
+  if (!token) throw new ServerError('Nie jesteś zalogowany.');
+  return request('/daily', { method: 'POST', headers: { authorization: `Bearer ${token}` }, body: JSON.stringify({ day, cleared }) });
+}
+
 // ------------------------------------------------------------------ bug reports and feedback
 
 /**

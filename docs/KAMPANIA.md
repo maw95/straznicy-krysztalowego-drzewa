@@ -21,6 +21,8 @@ Stan: 17.11.2026. Kampania „Powrót Światła” to cztery scenariusze Przymie
 
 Scenariusz ma dziś zawsze gracza po stronie Świtu. Kampania innej frakcji wymaga pola `faction` w scenariuszu i własnej listy; reszta (postęp, ekrany) jest wspólna.
 
-## Co zostało
+## Ekspedycja (tryb roguelike)
 
-Ekspedycja (8–10 map, nagrody po bitwie, profil trwały, seed dnia) — backlog punkt 29.
+Osobny tryb (`src/engine/expedition.ts`, `src/ui/ExpeditionScreen.tsx`, `expeditionRun.ts`): osiem bitew na arenie 6 na 6 pod rząd, jedno życie. Zamiast 8–10 różnych map każdy etap ma innego przeciwnika (boss: Czarny Smok) i rosnące przewagi komputera (`ArenaHandicap`: mana, czary, artefakty), a po wygranej gracz wybiera jedną z trzech relikwii (`rules.arenaBoost`: więcej many, czar, artefakt). Ten sam ziarno daje tych samych przeciwników i oferty, na tym stoi „Wyprawa dnia” (ziarno z daty). Profil i wyprawa w toku w `localStorage` (odblokowywanie bohaterów po wyprawach), wynik dnia na serwerze (`POST/GET /daily`, serwer sprawdza datę i zakres, nie odtwarza gry). Pomiar: bot jako gracz wygrywa etapy w 67–88%.
+
+Pomysły na później: więcej relikwii (zdolności jednostek, premie do Życia), mapy z innymi przeszkodami, wyprawa innymi frakcjami.

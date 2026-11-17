@@ -7,3 +7,4 @@ import './extra';
 import './names';
 import './campaign';
 import './changelog';
+import './expedition';

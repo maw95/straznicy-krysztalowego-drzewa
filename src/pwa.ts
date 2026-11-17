@@ -26,7 +26,7 @@ export function registerPwa(): void {
   });
 }
 
-export const isStandalone = (): boolean => window.matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches || (navigator as { standalone?: boolean }).standalone === true;
+export const isStandalone = (): boolean => (typeof window.matchMedia === 'function' && window.matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches) || (navigator as { standalone?: boolean }).standalone === true;
 export const isIos = (): boolean => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 export const canInstall = (): boolean => deferred !== null;
 

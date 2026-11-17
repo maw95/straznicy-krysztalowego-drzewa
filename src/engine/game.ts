@@ -253,7 +253,11 @@ function startArena(state: GameState) {
     b.deployDepth = { dawn: Math.max(1, b.deployDepth?.dawn ?? 0), horde: Math.max(1, b.deployDepth?.horde ?? 0) };
     // "Bardzo trudny": the computer's hero holds more mana (its extra spells come with its choice of spells).
     const hc = state.rules.arenaHandicap;
-    for (const f of ['dawn', 'horde'] as TeamId[]) if (hc && computerFaction(state, f)) hero(f).manaBonus = hc.mana;
+    for (const f of ['dawn', 'horde'] as TeamId[]) {
+      if (hc && computerFaction(state, f)) hero(f).manaBonus = hc.mana;
+      // Expedition: the relics of the person's hero.
+      else if (state.rules.arenaBoost && !computerFaction(state, f)) hero(f).manaBonus = (hero(f).manaBonus ?? 0) + state.rules.arenaBoost.mana;
+    }
     state.draft!.gear = { order: [first, second], offer: arenaGearOffer(state, first) };
     b.stage = 'gear';
   }
@@ -269,8 +273,9 @@ function pickGear(state: GameState, faction: TeamId, artifactId: string) {
   giveArtifact(state, hero, ARTIFACT_BY_ID[artifactId], 'arena');
   // "Bardzo trudny": the computer's hero also puts on the best of fresh offers (of other slots).
   const hc = state.rules.arenaHandicap;
-  if (hc && hc.gear && computerFaction(state, faction)) {
-    for (let i = 0; i < hc.gear; i++) {
+  const extraGear = computerFaction(state, faction) ? hc?.gear ?? 0 : state.rules.arenaBoost?.gear ?? 0;
+  if (extraGear) {
+    for (let i = 0; i < extraGear; i++) {
       const worn = new Set(gearOf(hero).map((a) => a.slot));
       const extra = arenaGearOffer(state, `${faction}${i}`).map((id) => ARTIFACT_BY_ID[id]).filter((a) => !worn.has(a.slot)).sort((x, y) => y.rarity - x.rarity)[0];
       if (extra) giveArtifact(state, hero, extra, 'arena');
@@ -295,7 +300,8 @@ function pickSpells(state: GameState, faction: TeamId, spells: SpellId[]) {
   const unique = [...new Set(spells)];
   if (unique.length !== ARENA_SPELL_PICKS || unique.some((id) => !ARENA_SPELL_POOL.includes(id))) throw new Error(`Wybierz ${ARENA_SPELL_PICKS} różne czary z listy.`);
   const hc = state.rules.arenaHandicap;
-  const extra = hc && computerFaction(state, faction) ? ARENA_SPELL_POOL.filter((id) => !unique.includes(id)).sort((x, y) => SPELL_VALUE[y] - SPELL_VALUE[x]).slice(0, hc.spells) : [];
+  const extraSpells = computerFaction(state, faction) ? hc?.spells ?? 0 : state.rules.arenaBoost?.spells ?? 0;
+  const extra = extraSpells ? ARENA_SPELL_POOL.filter((id) => !unique.includes(id)).sort((x, y) => SPELL_VALUE[y] - SPELL_VALUE[x]).slice(0, extraSpells) : [];
   state.heroes[battleHeroOf(b, faction)!].spells = [...unique, ...extra];
   sp.order.shift();
   if (!sp.order.length) {

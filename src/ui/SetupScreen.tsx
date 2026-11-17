@@ -1,4 +1,5 @@
 import { CampaignScreen } from './CampaignScreen';
+import { ExpeditionScreen } from './ExpeditionScreen';
 import { useMemo, useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, UNITS, type TeamId, type MapSize } from '../engine/data';
 import { readyMaps } from '../engine/customMaps';
@@ -26,7 +27,7 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
 
 
 /** The pages of the menu: the first choice, where to play, the new-game wizard, the saved games, the seats at the table. */
-type Step = 'home' | 'where' | 'wizard' | 'load' | 'table' | 'campaign';
+type Step = 'home' | 'where' | 'wizard' | 'load' | 'table' | 'campaign' | 'expedition';
 
 export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog, onCredits }: { session: boolean; online: { label: string; title: string }; onOnline: (intent: 'new' | 'load') => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void; onCredits: () => void }) {
   // Both read and replay saved games: once per visit to the menu, not on every hover and keystroke.
@@ -160,6 +161,11 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                 <span className="opt-card-title">Kampania</span>
                 <span className="opt-card-text">Historia Przymierza Świtu w czterech scenariuszach na ręcznie rysowanych mapach.</span>
               </button>
+              <button className="opt-card wide" data-expedition-open onClick={() => setStep('expedition')}>
+                <span className="opt-card-img"><img src={asset('ikony/mapa/shrine.webp')} alt="" /></span>
+                <span className="opt-card-title">Ekspedycja</span>
+                <span className="opt-card-text">Osiem bitew na arenie pod rząd, jedno życie i relikwie po każdej wygranej. Jest też wyprawa dnia z rankingiem.</span>
+              </button>
               <button className="opt-card wide" onClick={() => { setIntent('load'); setStep('where'); }}>
                 <span className="opt-card-img"><img src={asset('ikony/mapa/chest.webp')} alt="" /></span>
                 <span className="opt-card-title">Wczytaj grę</span>
@@ -219,6 +225,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
       )}
 
       {step === 'campaign' && <CampaignScreen onStart={onStart} onBack={() => setStep('home')} />}
+      {step === 'expedition' && <ExpeditionScreen onStart={onStart} onBack={() => setStep('home')} />}
       {step === 'where' && (
         <Frame crest style={{ width: 'min(900px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{intent === 'new' ? 'Gdzie grasz?' : 'Skąd wczytać grę?'}</Ribbon>

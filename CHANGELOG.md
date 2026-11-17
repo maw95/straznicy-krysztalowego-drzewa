@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Ekspedycja (nowa karta w menu nowej gry): osiem bitew na arenie 6 na 6 pod rząd, jedno życie. Po każdej wygranej wybierasz jedną z trzech relikwii (więcej many, dodatkowy czar, dodatkowy artefakt), a komputer rośnie w siłę z etapu na etap; na końcu czeka Czarny Smok. Wyprawa zapisuje się sama, profil (ukończone wyprawy, najlepszy wynik) odblokowuje kolejnych bohaterów, a „Wyprawa dnia” ma ten sam przebieg dla wszystkich i ranking dla zalogowanych.
+
 - Aplikacja (PWA): grę można zainstalować z przeglądarki (Opcje → „Zainstaluj grę”; na iPhonie: Safari → „Udostępnij” → „Dodaj do ekranu początkowego”), otwiera się na pełnym ekranie, a po pierwszej wizycie działa także bez internetu przeciw komputerowi. Nowe wydanie gry podmienia starą kopię samo.
 
 - Arena 6 na 6 działa też online: opcja „Wielkość bitwy” w kreatorze stołu online, napis „Arena 6 na 6” w pokoju i osobny ranking (zakładki pod tabelą rankingu).

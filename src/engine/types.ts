@@ -101,6 +101,8 @@ export interface RulesConfig {
   computerArtifacts?: number;
   /** 6 on 6 arena at "Bardzo trudny": what the computer's side gets on top (see ARENA_HANDICAP); missing = nothing. */
   arenaHandicap?: ArenaHandicap;
+  /** 6 on 6 arena in the Expedition: what the person's hero gets on top from the relics (expedition.ts); missing = nothing. */
+  arenaBoost?: import('./expedition').ArenaBoost;
   /** 3 on 3 arena at "Bardzo trudny": the computer drafts `picks` more treasures and is shown `offer` more cards at each pick (see ARENA_DRAFT_HANDICAP). */
   computerDraft?: { picks: number; offer: number };
 }
@@ -211,6 +213,8 @@ export interface SetupOptions {
   botLevel?: Level;
   /** A game of the story campaign (campaign.ts): which campaign and scenario it is. */
   campaign?: { id: string; scenario: string };
+  /** A game of the Expedition (expedition.ts): the stage (0-based), the seed of the run, the relics held and the date of a run of the day. */
+  expedition?: { stage: number; seed: number; relics: string[]; daily?: string };
 }
 
 /**

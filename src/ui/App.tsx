@@ -1,6 +1,7 @@
 import { raceOf } from '../engine/teams';
 import { scenarioOf } from '../engine/campaign';
 import { CampaignOver } from './CampaignScreen';
+import { ExpeditionOver } from './ExpeditionScreen';
 import { markDone } from './campaignProgress';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { heroLabel } from '../engine/realm';
@@ -655,7 +656,7 @@ export function App() {
   const [rankingNote, setRankingNote] = useState<string | null>(null);
   const scored = useRef<string | null>(null);
   useEffect(() => {
-    if (!game || isOnline || game.phase !== 'over' || !savedToken() || isTestRun()) return;
+    if (!game || isOnline || game.setup.expedition || game.phase !== 'over' || !savedToken() || isTestRun()) return;
     const key = `${game.setup.seed}:${history.current.length}`;
     if (scored.current === key) return;
     scored.current = key;
@@ -974,7 +975,7 @@ export function App() {
       </Modal>
 
       <Modal open={game.phase === 'over' && !held}>
-        {campaignRun ? <CampaignOver state={game} onStart={start} onMenu={leaveGame} /> : <GameOver state={game} online={isOnline} rankingNote={rankingNote} onNew={leaveGame} onLog={() => setShowLog(true)} />}
+        {campaignRun ? <CampaignOver state={game} onStart={start} onMenu={leaveGame} /> : game.setup.expedition ? <ExpeditionOver state={game} onStart={start} onMenu={leaveGame} /> : <GameOver state={game} online={isOnline} rankingNote={rankingNote} onNew={leaveGame} onLog={() => setShowLog(true)} />}
       </Modal>
 
       <CardDialog card={card} onClose={() => setCard(null)} />

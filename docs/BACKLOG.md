@@ -62,7 +62,6 @@ Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.te
 
 ## Przed premierą (decyzja autora 17.11: wchodzą przed Steamem; po punktach z kolejki)
 28. **Nowe frakcje** (plan wdrażania: sekcja „Parking”, ostatni punkt): Dzikie Stada → Królestwo Umarłych → Żelazne Klany (karta frakcji, grafika, symulacje 10 par), potem DLC. Przed startem: próbka jednej jednostki w nowym stylu i decyzja autora. Koszt grafik i dźwięków jednej frakcji: sekcja „Kredyty Scenario”.
-29. **Ekspedycja** (kampania fabularna v1 jest, patrz `KAMPANIA.md`): (8–10 map, nagrody po bitwie, profil trwały, seed dnia z rankingiem).
 30. **Wiele języków** (PL + EN): **zrobione 17.11 dla interfejsu i gry** (słownik angielski `src/i18n/en`, ok. 1 900 wpisów, wykrywanie języka z przeglądarki, flagi, opcje; instrukcja w `CLAUDE.md`). **Zostaje:** instrukcja gracza `docs/INSTRUKCJA.md` (okno zasad, zakładka „Instrukcja”, PDF/DOCX), historia zmian „Co nowego” (CHANGELOG po polsku), komunikaty serwera online (45 napisów w repo serwera), grafiki z napisami (logo, okładka, slajdy), tłumaczenie nazw własnych (bohaterowie, osady: celowo zostają po polsku), kolejne języki (każdy nowy to nowy plik słownika i test pokrycia).
 (Nie robić bez wyraźnego polecenia autora: to duże prace.)
 
