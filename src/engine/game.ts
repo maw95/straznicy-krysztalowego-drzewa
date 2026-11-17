@@ -472,6 +472,36 @@ function actorForFaction(state: GameState, faction: FactionId, heroId: string | 
   return player.controller === 'human' ? { kind: 'human', playerId: player.id, faction } : { kind: 'bot', playerId: player.id, faction };
 }
 
+/**
+ * Who commands the garrison of a settlement when no hero defends it: a player of the owning faction (a human before a bot), the one whose hero
+ * was active last (walking back through the turn order), otherwise the first of that faction. No player (the coop Horde): nobody, the automaton plays.
+ */
+export function garrisonCommander(state: GameState, faction: FactionId): Player | null {
+  const mine = state.players.filter((p) => p.faction === faction);
+  if (!mine.length) return null;
+  const n = state.turnOrder.length;
+  for (const pool of [mine.filter((p) => p.controller === 'human'), mine.filter((p) => p.controller !== 'human')]) {
+    if (!pool.length) continue;
+    for (let i = 1; i <= n; i++) {
+      const h = state.heroes[state.turnOrder[(((state.turnIndex - i) % n) + n) % n]];
+      const p = h?.alive && h.playerId ? pool.find((x) => x.id === h.playerId) : undefined;
+      if (p) return p;
+    }
+    return pool[0];
+  }
+  return null;
+}
+
+/** The actor for one side of a battle: its hero's player; a garrison without a hero is led by the settlement owner's commander. */
+function battleActor(state: GameState, b: BattleState, side: Side): Actor {
+  const heroId = battleHeroOf(b, side);
+  if (!heroId && b.garrison && side === b.defender && side !== 'neutral') {
+    const p = garrisonCommander(state, side);
+    if (p) return p.controller === 'human' ? { kind: 'human', playerId: p.id, faction: side } : { kind: 'bot', playerId: p.id, faction: side };
+  }
+  return actorForFaction(state, side as FactionId, heroId);
+}
+
 export function battleHeroOf(b: BattleState, side: Side): string | null {
   if (side === b.attacker) return b.attackerHero;
   if (side === b.defender) return b.defenderHero;
@@ -485,20 +515,20 @@ export function currentActor(state: GameState): Actor {
     const b = state.battle;
     if (b.stage === 'select') {
       const f = b.needsSelection[0];
-      return actorForFaction(state, f, battleHeroOf(b, f));
+      return battleActor(state, b, f);
     }
     if (b.stage === 'deploy') {
       const f = b.needsDeploy[0];
-      return actorForFaction(state, f, battleHeroOf(b, f));
+      return battleActor(state, b, f);
     }
     if (b.stage === 'draft' && state.draft) {
       const f = state.draft.order[0];
-      return actorForFaction(state, f, battleHeroOf(b, f));
+      return battleActor(state, b, f);
     }
     if (b.stage === 'fight' && b.activation) {
       const u = b.units[b.activation.unitId];
       if (u.side === 'neutral') return { kind: 'automaton', side: 'neutral' };
-      return actorForFaction(state, u.side, battleHeroOf(b, u.side));
+      return battleActor(state, b, u.side);
     }
     return { kind: 'none' };
   }

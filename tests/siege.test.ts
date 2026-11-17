@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { chooseAction } from '../src/engine/ai';
 import { wideCell } from '../src/engine/battle';
 import { SIEGE } from '../src/engine/economy';
-import { activeHero, applyAction, applyActionInPlace, createGame, legalHeroMoves } from '../src/engine/game';
+import { activeHero, applyAction, applyActionInPlace, createGame, currentActor, garrisonCommander, legalHeroMoves } from '../src/engine/game';
 import { garrisonAt, hasUnit, settlementAt } from '../src/engine/kingdom';
 import { mapNeighbors } from '../src/engine/map';
 import type { GameState } from '../src/engine/types';
@@ -80,6 +80,26 @@ describe('level 4: the garrison', () => {
     expect(s.battle!.defenderHero).toBeNull();
     expect(s.battle!.units.elfDruid.side).toBe('dawn');
     expect(s.battle!.siege).toBeUndefined();
+  });
+
+  it('a garrison without a hero is commanded by the owner: a human before a bot, the owner\'s player, not the automaton', () => {
+    const humanOwner = () => createGame(setup({ mode: 'pvp', mapSize: 'medium', seed: 3, seats: pvpSeats('goldDragon', 'werewolfLord').map((x) => (x.faction === 'dawn' ? { ...x, controller: 'human' as const } : x)) }, rules));
+    const { s: start, home } = atTheGates(humanOwner(), ['elfDruid']);
+    const s = applyAction(start, { type: 'moveHero', to: home });
+    const owner = s.players.find((p) => p.faction === 'dawn')!;
+    expect(s.battle!.defenderHero).toBeNull();
+    expect(garrisonCommander(s, 'dawn')!.id).toBe(owner.id);
+    // Whatever stage the battle is in, the garrison's side belongs to the owner while the attacker's hero is the Horde bot's.
+    for (let i = 0; i < 200 && s.phase === 'battle'; i++) {
+      const a = currentActor(s);
+      const side = s.battle!.stage === 'fight' ? s.battle!.units[s.battle!.activation!.unitId].side : a.kind === 'none' ? null : a.faction;
+      if (side === 'dawn') expect(a).toEqual({ kind: 'human', playerId: owner.id, faction: 'dawn' });
+      else expect(a.kind).toBe('bot');
+      applyActionInPlace(s, chooseAction(s)!);
+    }
+    // A bot owner: the bot commands.
+    const { s: b0, home: h2 } = atTheGates(game(), ['elfDruid']);
+    expect(currentActor(applyAction(b0, { type: 'moveHero', to: h2 })).kind).toBe('bot');
   });
 
   it('a beaten garrison falls and the settlement changes hands; the fallen can be healed like any support', () => {

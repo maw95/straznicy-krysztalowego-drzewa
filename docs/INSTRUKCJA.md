@@ -768,7 +768,7 @@ Na mapie stoją też trzy rodzaje miejsc, które pomagają temu, kto na nie wejd
 - **Studnia Wędrowców** dodaje bohaterowi 2 punkty ruchu w tej turze; działa raz na rundę, dla pierwszego, kto z niej wypije.
 
 ### Obrona osady: garnizon i umocnienia
-Bohater stojący we własnej osadzie może zostawić w niej do **trzech pomocników** jako **garnizon** (okno osady, zakładka Fosa) i zabrać ich, gdy wróci. Osady z garnizonem wróg nie zajmie samym wejściem: musi stoczyć **bitwę o osadę**. Garnizonem bez bohatera dowodzi komputer; jeśli w osadzie stoi też Twój bohater, garnizon walczy razem z nim.
+Bohater stojący we własnej osadzie może zostawić w niej do **trzech pomocników** jako **garnizon** (okno osady, zakładka Fosa) i zabrać ich, gdy wróci. Osady z garnizonem wróg nie zajmie samym wejściem: musi stoczyć **bitwę o osadę**. Garnizonem bez bohatera w bitwie dowodzi **gracz, do którego należy osada** (przy kilku graczach tej strony ten, którego bohater ruszał się ostatnio; człowiek ma pierwszeństwo przed botem); jeśli w osadzie stoi też Twój bohater, garnizon walczy razem z nim.
 
 Budynek **Fosa** (4 zł + 3 drewna) i jego rozbudowa **Mury z wieżyczkami** (6 zł + 4 rudy + 1 Pył) działają w bitwie o osadę:
 - **Fosa z kolcami:** kto w nią wejdzie, kończy turę i dostaje 2 obrażenia (tyle samo, jeśli skończy w niej następną turę). Suchą nogą przechodzi się tylko po moście pośrodku. Jednostki latające przelatują nad fosą.

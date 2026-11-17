@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Obrona osady: garnizon bez bohatera prowadzi w bitwie gracz-właściciel (wybór jednostek, rozstawienie i ruchy), a nie komputer; przy kilku graczach tej strony ten, którego bohater ruszał się ostatnio (człowiek przed botem).
+
 - Relikt: Pierwotną Iskrę może wznieść tylko bohater, który sam niesie wszystkie Odłamki i stoi we własnej osadzie. Odłamki można przekazać sojusznikowi na tym samym lub sąsiednim polu (przycisk „Przekaż Odłamki” w panelu bohatera); komputer też je zbiera u jednego bohatera.
 
 - Punkty rankingu za wygraną na poziomie Bardzo trudnym to 1,5 razy punkty za tę samą grę na Trudnym (na arenie 5 zamiast 4).
