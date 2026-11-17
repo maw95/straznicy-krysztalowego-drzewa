@@ -2,6 +2,7 @@
 // full screen and music only after a click or a key press, so START is that first gesture.
 // Once per browser session (a reload in the same tab goes straight to the menu).
 
+import { LanguageSwitch } from './LanguageSwitch';
 import { useEffect } from 'react';
 import { asset } from './common';
 import { autoFullscreen, enterFullscreen } from './fullscreen';
@@ -68,6 +69,7 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
         <img className="ken-burns title-art" src={asset('ui/cover.jpg')} alt="" />
       </picture>
       <div className="title-shade" aria-hidden="true" />
+      <LanguageSwitch />
       {Array.from({ length: 26 }, (_, i) => (
         <span
           key={i}

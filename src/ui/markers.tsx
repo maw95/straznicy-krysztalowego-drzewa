@@ -1,6 +1,8 @@
 // Markers of the board game (docs/grafika/ikony/znaczniki.png and single znacznik_*.png, by scripts/assets/markers.py):
 // the same tokens the players put on the table, shown on the screen.
 
+import { useLang } from '../i18n/lang';
+import { translate } from '../i18n/translate';
 import { scaleText, UNITS } from '../engine/data';
 import type { AttackRoll, BattleState } from '../engine/types';
 import { asset } from './common';
@@ -84,16 +86,20 @@ export function StatIcon({ stat, size = '1.05em', light = false }: { stat: StatL
 /** Text with "+1 A", "−2 S", "Ż 9"… written with the stat symbols instead of the letters. */
 export function StatText({ text: plain, rule = false }: { text: string; /** A rule text of the board game's numbers: shown as the game being played reads it (`statScale`). */ rule?: boolean }) {
   const [k, hpK] = useScales();
-  const text = rule ? scaleText(plain, k, hpK) : plain;
+  const scaled = rule ? scaleText(plain, k, hpK) : plain;
+  // English: the whole text is translated first (the pieces between the symbols are no sentences), and its HP / ATK / SPD become the symbols too.
+  const [lang] = useLang();
+  const text = lang === 'en' ? translate(scaled) ?? scaled : scaled;
   // "+1 A" (number, symbol) or "Ż 9" (symbol, number); each pair stays on one line.
-  const re = /([+−-]?\d+) ?(Ż|A|S)(?=[\s.,;:)/]|$)|(?<![\p{L}\d])(Ż|A|S) (\d+)/gu;
+  const re = /([+−-]?\d+) ?(Ż|A|S|HP|ATK|SPD)(?=[\s.,;:)/]|$)|(?<![\p{L}\d])(Ż|A|S|HP|ATK|SPD) (\d+)/gu;
+  const letter = (t: string): StatLetter => ({ HP: 'Ż', ATK: 'A', SPD: 'S' } as Record<string, StatLetter>)[t] ?? (t as StatLetter);
   const out: React.ReactNode[] = [];
   let last = 0;
   for (const m of text.matchAll(re)) {
     out.push(text.slice(last, m.index));
     out.push(
       <span key={m.index} style={{ whiteSpace: 'nowrap' }}>
-        {m[1] ? <>{m[1]}<StatIcon stat={m[2] as StatLetter} /></> : <><StatIcon stat={m[3] as StatLetter} /> {m[4]}</>}
+        {m[1] ? <>{m[1]}<StatIcon stat={letter(m[2])} /></> : <><StatIcon stat={letter(m[3])} /> {m[4]}</>}
       </span>,
     );
     last = m.index! + m[0].length;

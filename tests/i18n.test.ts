@@ -65,3 +65,50 @@ describe('composed texts', () => {
     expect(translate('3 zł · 2× drewno')).toBe('3 gold · 2× wood');
   });
 });
+
+describe('proper names', () => {
+  it('stay as they are inside a translated sentence', () => {
+    expect(translate('Osada Rosogród (Przymierze Świtu): należy do Przymierze Świtu')).toBe('Settlement Rosogród (Dawn Covenant): belongs to Dawn Covenant');
+  });
+});
+
+describe('scaled numbers and lists', () => {
+  it('translates a sentence whose numbers the game scaled', () => {
+    expect(translate('+5 Ż bohatera w bitwie. Na początku tury odkrywa pola w promieniu 2 od bohatera.')).toBe('+5 hero HP in battle. At the start of the turn it reveals hexes within 2 of the hero.');
+    expect(translate('Na początku każdej rundy bitwy bohater odzyskuje 5 Ż.')).toBe('At the start of each battle round the hero regains 5 HP.');
+  });
+
+  it('translates a list joined by a dot part by part', () => {
+    expect(translate('Centaur: stopień 3, 5 zł · Gargulec: stopień 4, 8 zł')).toBe('Centaur: tier 3, 5 gold · Gargoyle: tier 4, 8 gold');
+  });
+});
+
+describe('the page', () => {
+  it('is translated as it is drawn, follows the language both ways and notices changed text', async () => {
+    const { installDomTranslator } = await import('../src/i18n/dom');
+    const root = document.createElement('div');
+    document.body.appendChild(root);
+    installDomTranslator(root);
+    const wait = () => new Promise((r) => setTimeout(r, 0));
+    root.innerHTML = '<button title="Zamknij">Zasady</button><p>Zupełnie nieznane zdanie.</p>';
+    await wait();
+    expect(root.querySelector('button')!.textContent).toBe('Zasady');
+    setLang('en');
+    expect(root.querySelector('button')!.textContent).toBe('Rules');
+    expect(root.querySelector('button')!.getAttribute('title')).toBe('Close');
+    expect(root.querySelector('p')!.textContent).toBe('Zupełnie nieznane zdanie.');
+    // New text drawn while English is on, and a text that changes (as React does when a number moves).
+    const p = document.createElement('p');
+    p.textContent = 'Opcje';
+    root.appendChild(p);
+    await wait();
+    expect(p.textContent).toBe('Options');
+    p.firstChild!.nodeValue = 'Zamknij';
+    await wait();
+    expect(p.textContent).toBe('Close');
+    setLang('pl');
+    expect(root.querySelector('button')!.textContent).toBe('Zasady');
+    expect(root.querySelector('button')!.getAttribute('title')).toBe('Zamknij');
+    expect(p.textContent).toBe('Zamknij');
+  });
+});

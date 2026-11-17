@@ -22,19 +22,19 @@ const closeDev = async (p: Page) => { await p.locator('[data-dev-panel] button:h
 /** The 6 on 6 arena up to the hero's activation (artifact, spells, supports, deployment, the supports' activations). */
 const toArenaFight = async (p: Page) => {
   await p.locator('[data-gear-offer]').first().click();
-  await p.getByRole('button', { name: 'Biorę ten artefakt' }).click();
+  await p.getByRole('button', { name: /Biorę ten artefakt|I take this artifact/ }).click();
   await p.locator('[data-spell-offer]').nth(0).click();
   await p.locator('[data-spell-offer]').nth(1).click();
-  await p.getByRole('button', { name: 'Biorę te czary' }).click();
-  const go = p.getByRole('button', { name: 'Do bitwy!' });
+  await p.getByRole('button', { name: /Biorę te czary|I take these spells/ }).click();
+  const go = p.getByRole('button', { name: /Do bitwy\!|To battle\!/ });
   await go.waitFor();
   const cards = go.locator('xpath=preceding-sibling::div[1]/button');
   for (let i = 0; i < 5; i++) await cards.nth(i).click();
   await go.click();
-  const ready = p.getByRole('button', { name: /Gotowe/ });
-  const end = p.getByRole('button', { name: 'Koniec', exact: true });
+  const ready = p.getByRole('button', { name: /Gotowe|Ready/ });
+  const end = p.getByRole('button', { name: /^(Koniec|End)$/ });
   for (let i = 0; i < 60 && !(await p.locator('[data-spell-btn]').count()); i++) {
-    const take = p.getByRole('button', { name: 'Biorę ten skarb' });
+    const take = p.getByRole('button', { name: /Biorę ten skarb|I take this treasure/ });
     if (await take.count()) { await p.locator('[aria-pressed]').first().click().catch(() => undefined); await take.click().catch(() => undefined); }
     else if (await ready.count()) await ready.first().click().catch(() => undefined);
     else if ((await end.count()) && (await end.first().isEnabled())) await end.first().click().catch(() => undefined);
@@ -45,7 +45,7 @@ const ARENA = 'steps=0&mode=arena&size=6&seed=5';
 
 const SCREENS: Screen[] = [
   { id: 'menu', query: '', views: [...LANDSCAPE, 'telefon'] },
-  { id: 'kreator-edycja', query: '', go: async (p) => { await p.getByText('Nowa gra', { exact: true }).first().click(); } },
+  { id: 'kreator-edycja', query: '', go: async (p) => { await p.getByText(/^(Nowa gra|New game)$/).first().click(); } },
   { id: 'mapa', query: MAP, go: closeDev },
   { id: 'osada', query: MAP, go: async (p) => { await closeDev(p); await p.locator('[data-enter-settlement]').click(); await p.locator('[data-settlement]').waitFor(); } },
   { id: 'osada-drzewko', query: MAP, go: async (p) => { await closeDev(p); await p.locator('[data-enter-settlement]').click(); await p.locator('[data-building="council"]').click(); await p.locator('[data-building-tree]').waitFor(); } },
@@ -58,8 +58,8 @@ const SCREENS: Screen[] = [
   { id: 'arena-walka', query: ARENA, go: toArenaFight },
   { id: 'arena-ksiega', query: ARENA, go: async (p) => { await toArenaFight(p); await p.locator('[data-spell-btn]').click(); await p.locator('[data-spell-list]').waitFor(); } },
   { id: 'arena-artefakt', query: 'steps=0&mode=arena&size=6&seed=5', go: async (p) => { await p.locator('[data-gear-offer]').first().waitFor(); } },
-  { id: 'arena-pomocnicy', query: 'steps=0&mode=arena&size=6&seed=5', go: async (p) => { await p.locator('[data-gear-offer]').first().click(); await p.getByRole('button', { name: 'Biorę ten artefakt' }).click(); await p.locator('[data-spell-offer]').first().waitFor(); await p.locator('[data-spell-offer]').nth(0).click(); await p.locator('[data-spell-offer]').nth(1).click(); await p.getByRole('button', { name: 'Biorę te czary' }).click(); await p.getByRole('button', { name: 'Do bitwy!' }).waitFor(); } },
-  { id: 'arena-czary', query: 'steps=0&mode=arena&size=6&seed=5', go: async (p) => { await p.locator('[data-gear-offer]').first().click(); await p.getByRole('button', { name: 'Biorę ten artefakt' }).click(); await p.locator('[data-spell-offer]').first().waitFor(); } },
+  { id: 'arena-pomocnicy', query: 'steps=0&mode=arena&size=6&seed=5', go: async (p) => { await p.locator('[data-gear-offer]').first().click(); await p.getByRole('button', { name: /Biorę ten artefakt|I take this artifact/ }).click(); await p.locator('[data-spell-offer]').first().waitFor(); await p.locator('[data-spell-offer]').nth(0).click(); await p.locator('[data-spell-offer]').nth(1).click(); await p.getByRole('button', { name: /Biorę te czary|I take these spells/ }).click(); await p.getByRole('button', { name: /Do bitwy\!|To battle\!/ }).waitFor(); } },
+  { id: 'arena-czary', query: 'steps=0&mode=arena&size=6&seed=5', go: async (p) => { await p.locator('[data-gear-offer]').first().click(); await p.getByRole('button', { name: /Biorę ten artefakt|I take this artifact/ }).click(); await p.locator('[data-spell-offer]').first().waitFor(); } },
 ];
 
 /** What is wrong with the page as it is now: plain JavaScript run in the page (a function of this file would get helpers from the bundler that the page does not have). */
@@ -100,27 +100,37 @@ const INSPECT = `(() => {
   }
   /* Hover-only: information kept in title attributes of things that are not buttons (a phone has no hover). */
   const hover = document.querySelectorAll('[title]:not(button):not(a):not(img)').length;
-  return { hscroll: document.documentElement.scrollWidth - vw, off, small, hover };
+  /* Texts that are still Polish (checked with TEST_LANG=en: what the English dictionary lacks). */
+  const polish = [];
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+    const t = n.data.replace(/\\s+/g, ' ').trim();
+    if (t.length > 2 && /[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/.test(t) && !polish.includes(t)) polish.push(t);
+  }
+  return { hscroll: document.documentElement.scrollWidth - vw, off, small, hover, polish };
 })()`;
 
 const wanted = process.argv[2]?.split(',');
+/** TEST_LANG=en runs every screen in English and lists the texts that stayed Polish. */
+const TEST_LANG = process.env.TEST_LANG;
 const lines: string[] = [];
 let failed = 0;
 for (const screen of SCREENS.filter((s) => !wanted || wanted.includes(s.id))) {
   for (const view of screen.views ?? LANDSCAPE) {
-    const game = await openGame(screen.query, { view, scale: 1 });
+    const game = await openGame(TEST_LANG ? `${screen.query}${screen.query ? '&' : ''}lang=${TEST_LANG}` : screen.query, { view, scale: 1 });
     try {
       const p = game.page;
       await p.waitForTimeout(700);
       await screen.go?.(p);
       await p.evaluate(() => Promise.all([...document.images].map((i) => (i.complete ? null : new Promise((ok) => (i.onload = i.onerror = ok))))));
       await p.waitForTimeout(400);
-      const r = (await p.evaluate(INSPECT)) as { hscroll: number; off: string[]; small: string[]; hover: number };
+      const r = (await p.evaluate(INSPECT)) as { hscroll: number; off: string[]; small: string[]; hover: number; polish: string[] };
       const bad = r.hscroll > 0 || r.off.length > 0;
       if (bad) { failed++; await p.screenshot({ path: `.tmp/telefon-${screen.id}-${view}.png` }); }
       lines.push(`${bad ? 'USTERKA' : 'ok     '} ${screen.id.padEnd(18)} ${view.padEnd(12)} hscroll ${r.hscroll}  poza ekranem ${r.off.length}  za małe ${r.small.length}  tylko-hover ${r.hover}`);
       for (const o of r.off.slice(0, 6)) lines.push(`    poza ekranem: ${o}`);
       for (const o of r.small.slice(0, 4)) lines.push(`    za mały cel: ${o}`);
+      if (TEST_LANG === 'en') for (const o of r.polish) lines.push(`    POLSKI: ${o}`);
       if (game.errors.length) lines.push(`    błędy: ${game.errors.slice(0, 2).join(' | ').slice(0, 200)}`);
     } catch (e) {
       failed++;

@@ -6,6 +6,9 @@ export type Dict = Record<string, string>;
 
 const exact = new Map<string, string>();
 const patterns: Array<{ re: RegExp; to: string; weight: number }> = [];
+/** Exact texts that hold numbers, keyed with the numbers taken out: the game scales its numbers ("+1 Ż" is "+5 Ż" on the big map), the sentence stays the same. */
+const numeric = new Map<string, { en: string; count: number }>();
+const digits = /\d+/g;
 const key = (text: string): string => text.replace(/\s+/g, ' ').trim();
 
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -16,6 +19,8 @@ export function register(dict: Dict): void {
     const k = key(pl);
     if (!/\{\d+\}/.test(k)) {
       exact.set(k, en);
+      const count = (k.match(digits) ?? []).length;
+      if (count > 0 && (en.match(digits) ?? []).length === count) numeric.set(k.replace(digits, '#'), { en, count });
       continue;
     }
     const parts = k.split(/\{\d+\}/);
@@ -47,6 +52,22 @@ export function translate(text: string, depth = 0): string | null {
   const core = key(text);
   if (!core || !/[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]/.test(core)) return null;
   let out = exact.get(core) ?? null;
+  // The same sentence with other numbers.
+  if (out === null && digits.test(core)) {
+    digits.lastIndex = 0;
+    const hit = numeric.get(core.replace(digits, '#'));
+    if (hit) {
+      const nums = core.match(digits) ?? [];
+      let i = 0;
+      if (nums.length === hit.count) out = hit.en.replace(digits, () => nums[i++]);
+    }
+  }
+  digits.lastIndex = 0;
+  // A list joined by " · ": when every part is known, they are translated one by one (a pattern must not swallow the whole list).
+  if (out === null && core.includes(' · ')) {
+    const parts = core.split(' · ').map((x) => translate(x, depth + 1));
+    if (parts.every((x) => x !== null)) out = parts.join(' · ');
+  }
   // A pattern whose holes are all understood wins; one with a hole left in Polish waits until the pieces of the text have been tried.
   let weak: string | null = null;
   if (out === null) {
@@ -57,7 +78,8 @@ export function translate(text: string, depth = 0): string | null {
       const filled = p.to.replace(/\{(\d+)\}/g, (_, i) => {
         const hole = m[Number(i) + 1] ?? '';
         const t = translate(hole, depth + 1);
-        if (t === null && /[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]/.test(hole)) unresolved = true;
+        // A single capitalised word that is not in the dictionary is a proper name (a settlement), not Polish left over.
+        if (t === null && /[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]/.test(hole) && !/^[A-ZĄĆĘŁŃÓŚŹŻ][A-Za-ząćęłńóśźż'’-]+$/.test(hole.trim())) unresolved = true;
         return t ?? hole;
       });
       if (!unresolved) {
