@@ -267,7 +267,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
       {page === 'players' && (
         <div data-wizard-page="players" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {arena ? (
-            <div style={{ fontSize: 15, color: 'var(--muted)' }}>{ARENA_HINT}</div>
+            <div style={{ fontSize: 15, color: 'var(--muted)', textAlign: 'center' }}>{ARENA_HINT}</div>
           ) : (
             <Row label="Liczba graczy">
               {/* At most 3 players per faction (its three heroes): coop (all Przymierze) takes 1–3, PvP 2–6. */}
@@ -300,7 +300,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
             ))}
           </Row>
           )}
-          {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4 }}>{LEVEL_HINT[d.level]}</div>}
+          {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4, textAlign: 'center' }}>{LEVEL_HINT[d.level]}</div>}
         </div>
       )}
 

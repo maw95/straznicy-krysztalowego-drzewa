@@ -96,12 +96,6 @@ Decyzje autora: całą mechanikę i wygląd brać z Heroes III; jedyna różnica
 - Podmienić `img=` w trzech `Card` w `NewGameWizard.tsx` i wszędzie, gdzie te ikony reprezentują poziom (grep `ikony/mapa/camp.webp`, `treasure.webp`, `tartak.webp` w `src/ui`: Intro, OnlineScreen, ranking); wpis w `assets.json` (źródło, model, prompt, data, AI tak).
 - Gotowe, gdy: zrzut strony „Jaki poziom złożoności?” pokazuje spójny zestaw ośmiu medali (Spacer, Przygoda, Wyprawa, Osada, Księstwo, Królestwo, Imperium, Własne), autor akceptuje.
 
-**42. Strona „Gracze, wielkość mapy i trudność”: ten sam układ sekcji** (S)
-- Plik `src/ui/NewGameWizard.tsx` l. 259–294 (`data-wizard-page="players"`) i `src/ui/setupShared.tsx` (`Row` l. 109, `CentredChoice` l. 119). Dziś „Liczba graczy” i „Trudność” to `Row`: mała etykieta (`.lbl`, 13 px, szerokość 118) i przyciski w jednej linii; „Wielkość mapy” to `CentredChoice`: nagłówek nad rzędem przycisków, wyśrodkowany.
-- Zmiana: wszystkie trzy sekcje jako `CentredChoice` z jednym, **dużym** tytułem (rozmiar jak „Wielkość mapy” dziś; ustalić jedną klasę, np. `.section-title`, żeby nie rozjeżdżało się znów) i przyciskami w kolejnej linii; odstępy takie same. Sekcja „Komputer” w arenie też. Podpowiedź poziomu (`LEVEL_HINT`) pod rzędem, wyśrodkowana. Sprawdzić też inne miejsca używające `Row` (`SetupScreen.tsx`, `OnlineScreen.tsx`, `CustomSwitchRows.tsx`: tu też zastosować ten sam układ razem z punktem 40, albo zachować `Row` tylko tam, gdzie etykieta krótka i dane w jednej linii: ustalić jedną regułę).
-- Telefon: `COMPACT_QUERY`, przyciski zawijają się; sprawdzić `.setup-row` (`styles.css` l. 309).
-- Gotowe, gdy: zrzut strony (desktop i telefon) pokazuje trzy sekcje o identycznym układzie.
-
 **43. Narzędzia do testowania gry (tryb deweloperski / piaskownica)** (M–L)
 - Problem autora: żeby obejrzeć np. księgę czarów, trzeba przejść spory kawałek gry (kupić Wieżę maga, znaleźć przeciwnika). Dziś są tylko parametry adresu w `App.tsx` (l. ~149–245: `?steps`, `reveal`, `seed`, `mode`, `players`, `size`, `until=battle`, `economy|realm|empire=1`, `gold`, `res`, `skills`, `pack`, `gear`, `level`, `near`, `siege`, `garrison`, `encounter`…), znane tylko Claude'owi.
 - Zrobić **panel testowy** (otwierany tylko przy `?dev=1` albo skrótem klawiszowym np. `Ctrl+Shift+D`; **niedostępny w grze online i w buildzie wydania**: sprawdzenie `import.meta.env.DEV` albo flaga, plus serwer odrzuca akcje deweloperskie) z akcjami na bieżącej partii lokalnej:

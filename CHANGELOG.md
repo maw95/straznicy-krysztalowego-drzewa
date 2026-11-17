@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Kreator nowej gry: wszystkie sekcje (liczba graczy, wielkość mapy, trudność, a także ustawienia własne) mają ten sam układ: duży tytuł i pod nim przyciski wyśrodkowane w jednej linii, bez nachodzenia na siebie.
+
 - Magia: trzy kręgi czarów. Nowa „Arcywieża maga” (trzecie ulepszenie wieży, 11 zł + 4 rudy + 4 Pyły) uczy czarów trzeciego kręgu: Grom, Klątwa, Tarcza i Natchnienie; w pierwszym kręgu pojawia się Przyspieszenie (+2 ruchu na mapie). Komputer też ich używa.
 
 - Bardzo trudny: komputer nie ma już więcej Życia jednostek; zamiast tego zaczyna z dodatkowymi surowcami (3 drewna, 3 rudy, 2 Pyłu) i dwoma artefaktami dla głównego bohatera, nadal z większymi dochodami i 2 skarbami więcej.

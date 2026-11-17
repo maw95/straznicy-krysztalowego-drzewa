@@ -106,24 +106,20 @@ export const SEAT_TINT: Record<FactionId, string> = {
   horde: 'linear-gradient(100deg, rgba(128, 22, 34, 0.62), rgba(52, 8, 14, 0.58))',
 };
 
-export function Row({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-      <div className="lbl" style={{ width: 118, flex: 'none' }}>{label}</div>
-      {children}
-    </div>
-  );
-}
-
-/** A centred block: a heading line over a row of choices (map page of the wizard). */
+/**
+ * One layout rule for every section of the setup screens: a big centred title (`.section-title`) and under it the choices in a centred,
+ * wrapping line (`.section-choices`). `Row` is the same thing under its old name (it used to put a small label beside the buttons, which
+ * overlapped the next section when the buttons wrapped).
+ */
 export function CentredChoice({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-      <div className="lbl" style={{ fontSize: 20, fontWeight: 800 }}>{label}</div>
-      <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>{children}</div>
+    <div className="section">
+      <div className="section-title">{label}</div>
+      <div className="section-choices">{children}</div>
     </div>
   );
 }
+export const Row = CentredChoice;
 
 /** Which cells (col, row of a 9×9 hex grid) a map shape fills; the pictures of the shape buttons. */
 const SHAPE_FILL: Record<string, (c: number, r: number) => boolean> = {
