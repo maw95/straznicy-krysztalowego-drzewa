@@ -10,17 +10,18 @@ Praca szła w dwóch częściach: zadanie uruchomione automatycznie o 16:00 (com
 | 39 | okno „Zasady i karty”: pomocnicy, dowódcy, legendy, zestawy artefaktów, wszystkie lokacje z poziomem | `10ce88b` |
 | 38 | ozdobniki okien ze Scenario: narożniki ramek, Księga czarów jako otwarta księga, okno skarbów jako skrzynia | `7a2af32`, `c494092` |
 | 48 | **arena 6 na 6 offline**: pula 8 jednostek, wybór 5, artefakt z 3, 2 czary, Bardzo trudny z dźwigniami (wygrane gracza ok. 24%), osobne statystyki i punkty | `f20179e` … `87e8f08` |
-| 37 (część) | graf zależności budynków; osada na całym ekranie; Rada Osady z obrazami (Scenario); drzewko z liniami; limit „jeden budynek na rundę” usunięty | `205fbd2`, `c6c7b96`, `e2cacdd`, `fad0e82` |
+| 37 | graf zależności budynków; osada na całym ekranie z Radą Osady i drzewkiem; limit „jeden budynek na rundę” usunięty; budynki frakcji (Kapliczka Świtu, Jama Krwi, Szkółka, Krąg Gaju, Szabrownia, Wilcze Legowisko) zamiast drzewek, 8 obrazów ze Scenario; Koszary domyślne i siedliska w drzewku; układ jak w Heroes III | `205fbd2` … `3e4e251` |
 | 43 | panel testowy (`?dev=1`, Ctrl+Shift+D): zasoby, bohater, czary, artefakty, skarby, jednostki, sceny | `1b58534` |
-| 47 (część) | skrypt `scripts/browser/telefon.ts`, pasek mapy na niskich telefonach, cele 44 px | `a986a82` |
+| 47 | skrypt `scripts/browser/telefon.ts` (13 ekranów, 3 rozmiary), pasek mapy, cele 44 px, opisy po dotknięciu | `a986a82`, `4bf0002` |
+| 48 (dopiski) | wybór czarów przez gracza w 6 na 6, dźwignie Łatwego i Trudnego, Bardzo trudny w 3 na 3 | `2e56b87` |
 
-Stan na koniec: `make check` zielony (528 testów), golden niezmieniony, balans: 144 komórki z 432 poza pasmem przy 40 partiach (przed zmianami 143), czyli bez wpływu.
+Stan na koniec: `make check` zielony (534 testy), golden niezmieniony, balans: 144 komórki z 432 poza pasmem przy 40 partiach (przed zmianami 143), czyli bez wpływu.
 
 ## Zostaje w backlogu
 
-- **37 (reszta):** budynki unikalne frakcji zamiast drzewek frakcji, budynek Iskry w drzewku, Koszary i siedliska poziomu 6 w drzewku, układ osady jak w Heroes III, nowe obrazy budynków, samouczek i instrukcja.
-- **47 (reszta):** 4 małe cele na mapie, opisy tylko po najechaniu, ekrany nieprzejrzane skryptem, test na prawdziwym telefonie (autor).
-- **48 (reszta):** gra online (wymaga nowego wydania silnika).
+- **47 (reszta):** test na prawdziwych telefonach (autor), chipy kolejki jednostek w bitwie, pasek mapy w dwóch rzędach, ekrany nieprzejrzane skryptem.
+- **48 (reszta):** gra online (wymaga nowego wydania silnika, decyzja autora).
+- **Przed premierą (28–30):** nowe frakcje, kampania i ekspedycja, wiele języków: duże prace, „nie robić bez wyraźnego polecenia autora”.
 
 ## Do zakwestionowania przez autora
 
@@ -28,7 +29,7 @@ Lista przyjętych grafik i pytań jest w `docs/PYTANIA_DO_AUTORA.md` (ikony i ef
 
 ## Kredyty Scenario (17.11)
 
-109 CU w sumie (zob. sekcja 8 backlogu): 79 (zadanie nocne) + 18 (ozdobniki okien) + 12 (Rada Osady).
+145 CU w sumie (zob. sekcja 8 backlogu): 79 (zadanie nocne) + 18 (ozdobniki okien) + 12 (Rada Osady) + 36 (budynki frakcji).
 
 ## Uwagi
 
