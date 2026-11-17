@@ -2,7 +2,7 @@
 // kept in localStorage. "INFO DLA TESTERÓW" turns it into one file the tester sends to the designer;
 // scripts/testers.ts reads such files back (live-player win rates, feedback, bug reports).
 
-import type { FactionId, MapSize } from '../engine/data';
+import type { TeamId, MapSize } from '../engine/data';
 import { levelOf, pointsFor, type LevelName } from '../engine/scoring';
 import type { GameState, SetupOptions } from '../engine/types';
 import type { SaveFile } from './saves';
@@ -117,7 +117,7 @@ export function outcomeOf(g: JournalGame): 'won' | 'lost' | null {
 }
 
 /** The one faction the humans played, or null (bots only, or humans on both sides). */
-function humanSide(g: JournalGame): FactionId | null {
+function humanSide(g: JournalGame): TeamId | null {
   const sides = [...new Set(g.save.setup.seats.filter((s) => s.controller === 'human').map((s) => s.faction))];
   return sides.length === 1 ? sides[0] : null;
 }

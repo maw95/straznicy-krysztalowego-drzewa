@@ -2,7 +2,7 @@
 // in a battle (the hero's unit, once per activation, on top of its move and attack) or on the map (in the hero's turn). Every number is provisional.
 // Spells are the same for both factions; the sage commanders are the better casters. Design: docs/ZASADY_CYFROWE.md ("Poziom 5", "Magia").
 
-import { UNITS, type FactionId } from './data';
+import { UNITS, type TeamId } from './data';
 import { battleFx, cellsOf, dealDamage, hpScaleOf, livingUnits, scaleOf, unitAttackBase } from './battle';
 import { distance, parseKey } from './hex';
 import { levelOf } from './growth';
@@ -234,7 +234,7 @@ export function mapSpell(state: GameState, hero: HeroState, spell: SpellId): voi
 export function portalTarget(state: GameState, hero: HeroState): string | null {
   const k = state.kingdom;
   if (!k) return null;
-  const f: FactionId = hero.faction;
+  const f: TeamId = hero.faction;
   const taken = (hex: string) => Object.values(state.heroes).some((h) => h.alive && !h.entering && h.id !== hero.id && h.pos === hex && (h.faction !== f || state.tiles[hex].home !== f));
   const at = parseKey(hero.pos);
   const open = Object.values(k.settlements).filter((s) => s.owner === f && s.at !== hero.pos && !taken(s.at));

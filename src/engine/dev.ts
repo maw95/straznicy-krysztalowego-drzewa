@@ -2,7 +2,7 @@
 // up to it. They live apart from `applyAction` on purpose: a game that never calls them is exactly the game it was (the golden games, the server).
 // Every function changes the state it is given (the panel gives it a copy); `fightNeutral` and the scenes return the state to show.
 
-import { FACTION_HEROES, ITEMS, UNITS, type FactionId, type ItemKind } from './data';
+import { FACTION_HEROES, ITEMS, UNITS, type FactionId, type TeamId, type ItemKind } from './data';
 import { activeHero, applyAction, giveItem, newItem } from './game';
 import { neighborKeys } from './hex';
 import { tileCost } from './map';
@@ -19,7 +19,7 @@ const heroOf = (state: GameState, heroId: string): HeroState => {
 };
 
 /** Gold and resources of a faction (what is missing in `what` stays). */
-export function setResources(state: GameState, faction: FactionId, what: { gold?: number; wood?: number; ore?: number; dust?: number }): void {
+export function setResources(state: GameState, faction: TeamId, what: { gold?: number; wood?: number; ore?: number; dust?: number }): void {
   const k = state.kingdom;
   if (!k) throw new Error('Złoto i surowce są od poziomu 3.');
   if (what.gold !== undefined) k.gold[faction] = what.gold;
@@ -49,13 +49,13 @@ export function giveArtifactTo(state: GameState, heroId: string, artifactId: str
 }
 
 /** A treasure card for the faction's shared chest. */
-export function giveTreasure(state: GameState, faction: FactionId, kind: ItemKind): void {
+export function giveTreasure(state: GameState, faction: TeamId, kind: ItemKind): void {
   if (!ITEMS[kind]) throw new Error(`Nie ma skarbu: ${kind}.`);
   giveItem(state, newItem(state, kind), faction, null);
 }
 
 /** A unit joins the faction's pool of supports. */
-export function addUnit(state: GameState, faction: FactionId, unitId: string): void {
+export function addUnit(state: GameState, faction: TeamId, unitId: string): void {
   if (!UNITS[unitId]) throw new Error(`Nie ma jednostki: ${unitId}.`);
   const fs = state.factions[faction];
   fs.supportsDead = fs.supportsDead.filter((id) => id !== unitId);
@@ -70,7 +70,7 @@ export function buildAnywhere(state: GameState, settlementId: string, building: 
 }
 
 /** Every building this game has, at its highest level, in every settlement the faction holds. */
-export function buildEverything(state: GameState, faction: FactionId): void {
+export function buildEverything(state: GameState, faction: TeamId): void {
   if (!state.kingdom) throw new Error('Osady są od poziomu 3.');
   for (const s of Object.values(state.kingdom.settlements)) {
     if (s.owner !== faction) continue;
@@ -94,7 +94,7 @@ export function giveAllShards(state: GameState, heroId: string): void {
 }
 
 /** The faction's units are all alive (a battle without losses to start from). */
-export function reviveAll(state: GameState, faction: FactionId): void {
+export function reviveAll(state: GameState, faction: TeamId): void {
   const fs = state.factions[faction];
   fs.supportsAlive.push(...fs.supportsDead);
   fs.supportsDead = [];

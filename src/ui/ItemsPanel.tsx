@@ -1,6 +1,6 @@
 // Treasures in battle: the list of the faction's treasures and, while one is being aimed, what to pick next.
 
-import { itemDef, UNITS, type FactionId, type ItemKind } from '../engine/data';
+import { itemDef, UNITS, type TeamId, type ItemKind } from '../engine/data';
 import { alliesOf, canUseBattleItem } from '../engine/battle';
 import { isDigital, type Action, type BattleUnit, type GameState } from '../engine/types';
 import { itemArt } from './statScale';
@@ -37,7 +37,7 @@ const ITEM_TARGET: Partial<Record<ItemKind, ItemTargeting['kind']>> = {
 
 interface Props {
   state: GameState;
-  side: FactionId;
+  side: TeamId;
   active: BattleUnit;
   targeting: ItemTargeting | null;
   setTargeting: (t: ItemTargeting | null) => void;

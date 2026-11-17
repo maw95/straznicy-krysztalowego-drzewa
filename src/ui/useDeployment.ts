@@ -1,7 +1,7 @@
 // Setting up units before a battle: the faction that deploys picks a unit, then a gold cell in its column.
 
 import { useEffect, useState } from 'react';
-import type { FactionId } from '../engine/data';
+import type { TeamId } from '../engine/data';
 import { deployCellOf, deployCells } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import type { BattleState, BattleUnit } from '../engine/types';
@@ -13,7 +13,7 @@ export type Deployment = ReturnType<typeof useDeployment>;
  * `posOf` is the cell a unit is shown on; while deploying, a large unit's deploy cell is its tail (the head lies one column further).
  */
 export function useDeployment(b: BattleState, canAct: boolean, walk: Record<string, HexKey>) {
-  const deploySide: FactionId | null = b.stage === 'deploy' && canAct ? b.needsDeploy[0] ?? null : null;
+  const deploySide: TeamId | null = b.stage === 'deploy' && canAct ? b.needsDeploy[0] ?? null : null;
   const [placing, setPlacing] = useState<Record<string, HexKey>>({});
   const [picked, setPicked] = useState<string | null>(null);
   useEffect(() => {

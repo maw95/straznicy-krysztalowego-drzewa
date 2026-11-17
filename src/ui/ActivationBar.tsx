@@ -1,13 +1,13 @@
 // The bar under the arena: the active unit and what it can do, its ability and end buttons, the initiative queue.
 
-import { abilityTextFor, FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data';
+import { abilityTextFor, FACTION_NAMES, scaleText, UNITS, type TeamId } from '../engine/data';
 import { abilityOf, livingUnits, unitSpeed } from '../engine/battle';
 import { isDigital, type Action, type BattleState, type BattleUnit, type GameState } from '../engine/types';
 import { abilityArt, asset, Frame, Medal, Portrait, SIDE_RING } from './common';
 import { statusList, StatusBadge } from './battleStatus';
 
 /** The line under the active unit's name: what the player can do now. */
-export function activationHint(b: BattleState, o: { deploySide: FactionId | null; picked: string | null; myTurn: boolean; moves: number; targets: number }): string {
+export function activationHint(b: BattleState, o: { deploySide: TeamId | null; picked: string | null; myTurn: boolean; moves: number; targets: number }): string {
   if (b.stage === 'deploy') {
     if (!o.deploySide) return `${FACTION_NAMES[b.needsDeploy[0]]} ustawia jednostki…`;
     return o.picked ? 'Wskaż złote pole w swojej kolumnie' : 'Kliknij jednostkę, potem pole';
@@ -29,7 +29,7 @@ interface Props {
   active: BattleUnit | null;
   hint: string;
   myTurn: boolean;
-  deploySide: FactionId | null;
+  deploySide: TeamId | null;
   placing: Record<string, string>;
   attackAbility: boolean;
   useAbility: boolean;

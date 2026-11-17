@@ -1,6 +1,6 @@
 // A side of the battle next to the arena: its units with Życie, Atak, Szybkość and effects, and its reserve.
 
-import { FACTION_NAMES, UNITS, type FactionId, type Side } from '../engine/data';
+import { FACTION_NAMES, UNITS, type TeamId, type Side } from '../engine/data';
 import { unitAttackBase, unitSpeed } from '../engine/battle';
 import type { BattleUnit, GameState } from '../engine/types';
 import { Frame, HpBar, Portrait, Ribbon, SIDE_RING } from './common';
@@ -54,4 +54,4 @@ export function SidePanel({ s, state, active, onUnit }: Props) {
 }
 
 /** Supports of a faction still alive but not on the arena. */
-export const reserveOf = (state: GameState, s: FactionId) => state.factions[s].supportsAlive.filter((id) => !state.battle!.units[id]);
+export const reserveOf = (state: GameState, s: TeamId) => state.factions[s].supportsAlive.filter((id) => !state.battle!.units[id]);

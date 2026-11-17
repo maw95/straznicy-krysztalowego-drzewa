@@ -1,7 +1,8 @@
 // Battle engine: the painted arena (13 columns, 85 cells), initiative, movement, attacks,
 // abilities and items. Functions change the GameState passed in.
 
-import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, STAT_SCALE, battleStats, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, itemDef, ITEMS, UNITS, type AbilityId, type FactionId, type ItemKind, type Side } from './data';
+import { raceOf } from './teams';
+import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, STAT_SCALE, battleStats, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, itemDef, ITEMS, UNITS, type AbilityId, type TeamId, type ItemKind, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
@@ -446,7 +447,7 @@ export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web'];
 export function startBattleFight(state: GameState) {
   const b = state.battle!;
   deploy(state);
-  b.needsDeploy = b.duel ? [] : ([b.attacker, b.defender].filter((s) => s !== 'neutral') as FactionId[]);
+  b.needsDeploy = b.duel ? [] : ([b.attacker, b.defender].filter((s) => s !== 'neutral') as TeamId[]);
   if (b.needsDeploy.length) {
     b.stage = 'deploy';
     return;
@@ -500,7 +501,7 @@ export function deployHeads(b: BattleState, side: Side, k: HexKey): HexKey[] {
     .filter((c) => inArena(c) && !b.obstacles.includes(c));
 }
 
-export function deployUnits(state: GameState, faction: FactionId, positions: Record<string, HexKey>) {
+export function deployUnits(state: GameState, faction: TeamId, positions: Record<string, HexKey>) {
   const b = state.battle!;
   if (b.stage !== 'deploy' || b.needsDeploy[0] !== faction) throw new Error('Teraz nie ustawia ta frakcja.');
   const own = Object.values(b.units).filter((u) => u.side === faction);
@@ -534,7 +535,7 @@ export function deployUnits(state: GameState, faction: FactionId, positions: Rec
     else delete u.tail;
   }
   b.needsDeploy.shift();
-  log(state, 'battle', `${FACTION_NAMES[faction]} ustawia swoje jednostki.`);
+  log(state, 'battle', `${FACTION_NAMES[raceOf(state, faction)]} ustawia swoje jednostki.`);
   if (!b.needsDeploy.length) beginFight(state);
 }
 
@@ -712,7 +713,7 @@ export function checkBattleEnd(state: GameState): boolean {
 // ---------------------------------------------------------------- faction mechanics (level 6)
 
 /** Level of a faction's mechanic building (0-4): 0 below level 6 and while the faction has not built it. Level N works as rank N-1 of the old tree. */
-const mechLevel = (state: GameState, f: FactionId): number => (state.rules.empire ? mechanicLevel(state, f) : 0);
+const mechLevel = (state: GameState, f: TeamId): number => (state.rules.empire ? mechanicLevel(state, f) : 0);
 
 /**
  * Blask Świtu, the Przymierza's mechanic: at the start of every battle round the most wounded unit of the Przymierza regains Życie
@@ -1248,7 +1249,7 @@ export function battleAbility(state: GameState, targetId?: string) {
 
 // ---------------------------------------------------------------- items
 
-export function canUseBattleItem(state: GameState, faction: FactionId): boolean {
+export function canUseBattleItem(state: GameState, faction: TeamId): boolean {
   const b = state.battle;
   if (!b || b.stage !== 'fight' || !b.activation) return false;
   const u = b.units[b.activation.unitId];
@@ -1292,7 +1293,7 @@ export interface ItemArgs {
 interface ItemUse {
   state: GameState;
   b: BattleState;
-  faction: FactionId;
+  faction: TeamId;
   args: ItemArgs;
   name: string;
 }
@@ -1439,7 +1440,7 @@ export function scrollCells(state: GameState, t: BattleUnit): HexKey[] {
 export function battleItem(state: GameState, args: ItemArgs) {
   const b = state.battle!;
   const actor = b.units[b.activation!.unitId];
-  const faction = actor.side as FactionId;
+  const faction = actor.side as TeamId;
   const item = state.items[args.itemId];
   if (!item || item.owner !== faction || !state.factions[faction].inventory.includes(item.id)) throw new Error('Nie masz tego skarbu.');
   if (!canUseBattleItem(state, faction)) throw new Error('Skarby używa się przed akcją własnej jednostki.');

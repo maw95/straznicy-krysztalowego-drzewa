@@ -2,6 +2,7 @@
 // one of three offered skills. Skills are small, permanent bonuses; each faction has its own names for the same effects. Off by default (the
 // level presets of the family mode switch it on), so games without it are untouched.
 
+import { raceOf } from './teams';
 import { ABILITY_TIERS, FACTION_NAMES, itemDef, MILESTONE_TIER, NON_RESURRECTION_ITEMS, UNITS, type FactionId, type ItemKind } from './data';
 import { activeHero, grantTreasure, scoutAround } from './game';
 import { scaleOf } from './battle';
@@ -183,7 +184,7 @@ export function chooseSkill(state: GameState, heroId: string, skill: SkillId): v
   hero.skills = [...(hero.skills ?? []), skill];
   hero.offer = undefined;
   const rank = skillRank(hero, skill);
-  log(state, 'info', `${UNITS[hero.id].name} wybiera umiejętność: ${SKILL_NAMES[hero.faction][skill]}${rank > 1 ? ` (stopień ${rank})` : ''}.`, hero.faction);
+  log(state, 'info', `${UNITS[hero.id].name} wybiera umiejętność: ${SKILL_NAMES[raceOf(state, hero.faction)][skill]}${rank > 1 ? ` (stopień ${rank})` : ''}.`, hero.faction);
   if (skill === 'fortune') grantFortune(state, hero);
   if (skill === 'scout' && activeHero(state)?.id === hero.id) scoutAround(state, hero);
   // The extra move point counts at once when it is the hero's own turn, not only from the next one.
@@ -199,7 +200,7 @@ function grantFortune(state: GameState, hero: HeroState): void {
   const rng = new Rng((state.setup.seed ^ 0x51ed270b ^ Object.keys(state.items).length) | 0);
   const kind = rng.pick(left);
   grantTreasure(state, kind, hero.faction, hero.id);
-  log(state, 'item', `${FACTION_NAMES[hero.faction]} dostaje skarb: ${itemDef(kind, isDigital(state.rules)).name}.`, hero.faction);
+  log(state, 'item', `${FACTION_NAMES[raceOf(state, hero.faction)]} dostaje skarb: ${itemDef(kind, isDigital(state.rules)).name}.`, hero.faction);
 }
 
 /** Skill bonuses applied to the hero's unit when a battle starts. */

@@ -2,8 +2,9 @@
 // recruitment of supports and a team that grows. Design: docs/POZIOM_3_KROLESTWO.md (the author's decisions of 13.11.2026). Every number here is
 // provisional: the simulations tune them. Gold is small (the cheapest thing costs 1) and shared by the whole faction.
 
+import { raceOf } from './teams';
 import { byPack } from './factions';
-import { FACTION_NAMES, FACTION_SUPPORTS, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from './data';
+import { FACTION_NAMES, FACTION_SUPPORTS, SUPPORTS_PER_BATTLE, UNITS, type FactionId, type TeamId } from './data';
 import { distance, parseKey, type HexKey } from './hex';
 import { encounterUnits, stillConnected } from './encounters';
 import { awardXp, levelOf } from './growth';
@@ -25,10 +26,10 @@ export interface Settlement {
   id: string;
   at: HexKey;
   /** The faction whose land it lies on (decides the name and who may recruit there). */
-  land: FactionId;
+  land: TeamId;
   name: string;
   /** Who holds it now (null: still held by neutrals, the fight for it is on). */
-  owner: FactionId | null;
+  owner: TeamId | null;
   /** Level of each building: 0 not built, 1 built, 2 upgraded (the treasury has only 1). The forge exists in level 4 only (missing = 0: read it with `buildingLevel`). */
   buildings: Record<BuildingId, number>;
   /** Offers of the current market period already bought (the offer itself is drawn from the seed, see `marketStock`). */
@@ -39,12 +40,12 @@ export interface Settlement {
 }
 
 export interface KingdomState {
-  gold: Record<FactionId, number>;
+  gold: Record<TeamId, number>;
   settlements: Record<string, Settlement>;
   /** `res`: the resource a mine gives (missing: gold). */
-  mines: Record<HexKey, { owner: FactionId | null; res?: ResourceId }>;
+  mines: Record<HexKey, { owner: TeamId | null; res?: ResourceId }>;
   /** Level 4 (rule `economy`): wood, ore and Gwiezdny Pył of each faction, and the round of the last building (one a round per faction). */
-  res?: Record<FactionId, Resources>;
+  res?: Record<TeamId, Resources>;
   /** Level 4: huts with a quest, by hex. */
   huts?: Record<HexKey, Hut>;
   /** Level 4: mills, wells and stores, by hex. */
@@ -53,7 +54,7 @@ export interface KingdomState {
   shards?: Record<HexKey, number>;
   shardTotal?: number;
   /** Level 6: the units of tiers 2-5 whose dwelling each faction has built (one per tier). */
-  dwellings?: Record<FactionId, string[]>;
+  dwellings?: Record<TeamId, string[]>;
   /** A hero opened a chest and has to choose: its contents (an artifact) or gold. */
   chest: { heroId: string } | null;
 }
@@ -115,15 +116,15 @@ export const RECRUITS: Record<FactionId, Recruit[]> = {
 };
 
 /** The recruits a faction may buy in this game, by tier (level 6: both units of tiers 2-5; which one can be recruited is `dwellingOf`). */
-export const recruitsOf = (state: GameState, f: FactionId): Recruit[] => RECRUITS[f].filter((r) => (r.tier < 6 && !r.alt) || Boolean(state.rules.empire)).sort((a, b) => a.tier - b.tier);
+export const recruitsOf = (state: GameState, f: TeamId): Recruit[] => RECRUITS[raceOf(state, f)].filter((r) => (r.tier < 6 && !r.alt) || Boolean(state.rules.empire)).sort((a, b) => a.tier - b.tier);
 
 /** Level 6: whether tiers 2-5 need a dwelling in this game. */
 export const needsDwelling = (state: GameState, r: Recruit): boolean => Boolean(state.rules.empire) && r.tier >= 2 && r.tier <= 5;
 /** Level 6: the unit whose dwelling the faction has built for this tier (undefined: none yet). */
-export const dwellingOf = (state: GameState, f: FactionId, tier: number): string | undefined =>
-  (state.kingdom?.dwellings?.[f] ?? []).find((id) => RECRUITS[f].find((r) => r.id === id)?.tier === tier);
+export const dwellingOf = (state: GameState, f: TeamId, tier: number): string | undefined =>
+  (state.kingdom?.dwellings?.[f] ?? []).find((id) => RECRUITS[raceOf(state, f)].find((r) => r.id === id)?.tier === tier);
 /** Whether the faction may recruit this unit as far as dwellings go. */
-export const dwellingReady = (state: GameState, f: FactionId, r: Recruit): boolean => !needsDwelling(state, r) || dwellingOf(state, f, r.tier) === r.id;
+export const dwellingReady = (state: GameState, f: TeamId, r: Recruit): boolean => !needsDwelling(state, r) || dwellingOf(state, f, r.tier) === r.id;
 
 const NAMES: Record<FactionId, string[]> = byPack((p) => p.settlementNames);
 
@@ -154,12 +155,12 @@ export const MECHANIC_BUILDING: Record<FactionId, BuildingId> = byPack((p) => p.
 export const buildingsOf = (state: GameState): BuildingId[] => ['barracks', 'market', 'hospital', 'treasury', ...(state.rules.economy ? ['forge' as const, 'walls' as const] : []), ...(state.rules.realm ? ['tavern' as const, 'magic' as const] : []), ...(state.rules.empire ? ['spark' as const] : [])];
 
 /** The buildings this faction can build in this game: the common ones and, from level 6, its own three (Kapliczka Świtu, Szkółka Drzewa, Krąg Gaju / Jama Krwi, Szabrownia, Wilcze Legowisko). */
-export const buildingsFor = (state: GameState, f: FactionId): BuildingId[] => [...buildingsOf(state), ...(state.rules.empire ? FACTION_BUILDINGS[f] : [])];
+export const buildingsFor = (state: GameState, f: TeamId): BuildingId[] => [...buildingsOf(state), ...(state.rules.empire ? FACTION_BUILDINGS[raceOf(state, f)] : [])];
 
 export const buildingLevel = (s: Settlement, b: BuildingId): number => s.buildings[b] ?? 0;
 
 /** The best forge among the faction's settlements (0: none). */
-export const forgeLevel = (state: GameState, f: FactionId): number => (state.rules.economy ? Math.max(0, ...settlementsOf(state, f).map((s) => buildingLevel(s, 'forge'))) : 0);
+export const forgeLevel = (state: GameState, f: TeamId): number => (state.rules.economy ? Math.max(0, ...settlementsOf(state, f).map((s) => buildingLevel(s, 'forge'))) : 0);
 
 const CIRCLE_WORDS = ['pierwszego', 'drugiego', 'trzeciego', 'czwartego', 'piątego'];
 /** What each level of the mage tower teaches: one circle of spells per level (SPELL_CIRCLES). */
@@ -195,38 +196,38 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
 };
 
 /** The coop Horde is steered by the automaton: it earns no gold and shops nowhere; reinforcements come to it instead. */
-export const isAutomaton = (state: GameState, f: FactionId): boolean => state.setup.mode === 'coop' && f === 'horde';
+export const isAutomaton = (state: GameState, f: TeamId): boolean => state.setup.mode === 'coop' && f === 'horde';
 
 /** A bot with this much gold walks home to spend it. */
 export const KINGDOM_BIG_PILE = 12;
 
 export const kingdomOn = (state: GameState): boolean => Boolean(state.kingdom);
 
-export const goldOf = (state: GameState, f: FactionId): number => state.kingdom?.gold[f] ?? 0;
+export const goldOf = (state: GameState, f: TeamId): number => state.kingdom?.gold[f] ?? 0;
 
 /** The settlement standing on `hex`, if any. */
 export const settlementAt = (state: GameState, hex: HexKey): Settlement | undefined =>
   state.kingdom ? Object.values(state.kingdom.settlements).find((s) => s.at === hex) : undefined;
 
 /** The faction's settlements. */
-export const settlementsOf = (state: GameState, f: FactionId): Settlement[] =>
+export const settlementsOf = (state: GameState, f: TeamId): Settlement[] =>
   state.kingdom ? Object.values(state.kingdom.settlements).filter((s) => s.owner === f) : [];
 
 /** The supports standing in the faction's garrisons. */
-export const garrisoned = (state: GameState, f: FactionId): string[] => settlementsOf(state, f).flatMap((s) => s.garrison ?? []);
+export const garrisoned = (state: GameState, f: TeamId): string[] => settlementsOf(state, f).flatMap((s) => s.garrison ?? []);
 
 /** Whether the faction has this unit already: in the team, fallen, or in a garrison (one unit of a kind per faction). */
-export const hasUnit = (state: GameState, f: FactionId, id: string): boolean =>
+export const hasUnit = (state: GameState, f: TeamId, id: string): boolean =>
   state.factions[f].supportsAlive.includes(id) || state.factions[f].supportsDead.includes(id) || garrisoned(state, f).includes(id);
 
 /** The enemy settlement on `hex` that somebody defends from inside (a garrison), seen by faction `f`. */
-export function garrisonAt(state: GameState, hex: HexKey, f: FactionId): Settlement | undefined {
+export function garrisonAt(state: GameState, hex: HexKey, f: TeamId): Settlement | undefined {
   const s = settlementAt(state, hex);
   return s && s.owner && s.owner !== f && s.garrison?.length ? s : undefined;
 }
 
 /** Gold per round the faction earns now, with where it comes from. */
-export function incomeBreakdown(state: GameState, f: FactionId): Array<{ label: string; gold: number }> {
+export function incomeBreakdown(state: GameState, f: TeamId): Array<{ label: string; gold: number }> {
   const k = state.kingdom;
   if (!k) return [];
   const rows: Array<{ label: string; gold: number }> = [];
@@ -244,17 +245,17 @@ export function incomeBreakdown(state: GameState, f: FactionId): Array<{ label: 
   return rows;
 }
 
-export const incomeOf = (state: GameState, f: FactionId): number => incomeBreakdown(state, f).reduce((s, r) => s + r.gold, 0);
+export const incomeOf = (state: GameState, f: TeamId): number => incomeBreakdown(state, f).reduce((s, r) => s + r.gold, 0);
 
 /** How many supports a faction brings into a battle: 2 in the other levels, the team's places here. */
-export const supportSlots = (state: GameState, f: FactionId): number => (state.rules.arenaSize === 6 ? ARENA_SUPPORTS - (computerFaction(state, f) ? 0 : state.rules.arenaHandicap?.playerLess ?? 0) : state.kingdom ? teamSlots(state, f) : SUPPORTS_PER_BATTLE);
+export const supportSlots = (state: GameState, f: TeamId): number => (state.rules.arenaSize === 6 ? ARENA_SUPPORTS - (computerFaction(state, f) ? 0 : state.rules.arenaHandicap?.playerLess ?? 0) : state.kingdom ? teamSlots(state, f) : SUPPORTS_PER_BATTLE);
 
 /** The 6 on 6 arena: the supports a side brings (with its hero that makes six) and the fixed pool it chooses them from, tiers 2-5 of both unit lines. */
 export const ARENA_SUPPORTS = 5;
 export const ARENA_POOL: Record<FactionId, string[]> = { dawn: [...TIER_UNITS.dawn, ...ALT_UNITS.dawn], horde: [...TIER_UNITS.horde, ...ALT_UNITS.horde] };
 
 /** Places in the team: a hero of this faction at level 3 and 6, and upgraded barracks, each add one. */
-export function teamSlots(state: GameState, f: FactionId): number {
+export function teamSlots(state: GameState, f: TeamId): number {
   if (!state.kingdom) return 2;
   const heroes = Object.values(state.heroes).filter((h) => h.faction === f);
   const level = Math.max(1, ...heroes.map((h) => levelOf(h)));
@@ -271,14 +272,14 @@ export function initKingdom(state: GameState): void {
   if (state.rules.economy) {
     k.res = { dawn: { ...ECONOMY.start }, horde: { ...ECONOMY.start } };
     // The computer's start advantage of the highest difficulty (COMPUTER_HANDICAP): some resources more.
-    for (const f of ['dawn', 'horde'] as FactionId[]) if (computerFaction(state, f)) for (const r of RESOURCE_IDS) k.res[f][r] += state.rules.computerResources?.[r] ?? 0;
+    for (const f of ['dawn', 'horde'] as TeamId[]) if (computerFaction(state, f)) for (const r of RESOURCE_IDS) k.res[f][r] += state.rules.computerResources?.[r] ?? 0;
   }
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
-  const nameBag: Record<FactionId, string[]> = { dawn: rng.shuffle([...NAMES.dawn]), horde: rng.shuffle([...NAMES.horde]) };
+  const nameBag: Record<TeamId, string[]> = { dawn: rng.shuffle([...NAMES.dawn]), horde: rng.shuffle([...NAMES.horde]) };
   // Level 6: the barracks stand from the start in every settlement (the dwellings of the units are built beside them).
   const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0 } : {}) }) as Record<BuildingId, number>;
-  const add = (id: string, at: HexKey, land: FactionId, owner: FactionId | null) => {
-    k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[land]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
+  const add = (id: string, at: HexKey, land: TeamId, owner: TeamId | null) => {
+    k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[raceOf(state, land)]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
     state.tiles[at].place = { kind: 'settlement', id };
   };
   // The starting settlement stands on the base.
@@ -294,10 +295,10 @@ export function initKingdom(state: GameState): void {
 
   // Settlements to conquer: half on each side's land (the same number on both), spread apart, each guarded by a group a little stronger than a crystal's guardian.
   const want = (KINGDOM.settlements[state.setup.mapSize] ?? 2) / 2;
-  const picked: Record<FactionId, string[]> = { dawn: [], horde: [] };
+  const picked: Record<TeamId, string[]> = { dawn: [], horde: [] };
   const all = () => [...picked.dawn, ...picked.horde];
   for (const [clear, gap] of [[1, 2], [1, 1], [0, 1]] as const) {
-    for (const land of ['dawn', 'horde'] as FactionId[]) {
+    for (const land of ['dawn', 'horde'] as TeamId[]) {
       for (const t of free(clear).filter((x) => x.side === land)) {
         if (picked[land].length >= want) break;
         if (all().some((c) => distance(parseKey(c), parseKey(t.key)) <= gap - 1 + (gap > 1 ? 1 : 0))) continue;
@@ -413,7 +414,7 @@ export function enterPlace(state: GameState, hero: HeroState): void {
     const before = s.owner;
     s.owner = hero.faction;
     s.garrison = [];
-    log(state, 'info', `${name} zajmuje osadę ${s.name}${before ? ` (należała do: ${FACTION_NAMES[before]})` : ''}.`);
+    log(state, 'info', `${name} zajmuje osadę ${s.name}${before ? ` (należała do: ${FACTION_NAMES[raceOf(state, before)]})` : ''}.`);
     firstPlaceGold(state, hero);
   } else if (place.kind === 'mine') {
     const m = k.mines[place.id];
@@ -466,7 +467,7 @@ function firstPlaceGold(state: GameState, hero: HeroState): void {
 export function collectIncome(state: GameState): void {
   const k = state.kingdom;
   if (!k) return;
-  for (const f of ['dawn', 'horde'] as FactionId[]) {
+  for (const f of ['dawn', 'horde'] as TeamId[]) {
     if (isAutomaton(state, f)) {
       // Reinforcements instead of gold: every few rounds the fallen supports of the automaton are back at the base.
       const fs = state.factions[f];
@@ -484,12 +485,12 @@ export function collectIncome(state: GameState): void {
       if (mult !== 1) for (const r of RESOURCE_IDS) got[r] = Math.round(got[r] * mult);
       const parts = RESOURCE_IDS.filter((r) => got[r] > 0).map((r) => `${got[r]} × ${RESOURCE_NAMES[r]}`);
       for (const r of RESOURCE_IDS) k.res[f][r] += got[r];
-      if (parts.length) log(state, 'info', `${FACTION_NAMES[f]}: surowce ${parts.join(', ')}.`, f);
+      if (parts.length) log(state, 'info', `${FACTION_NAMES[raceOf(state, f)]}: surowce ${parts.join(', ')}.`, f);
     }
     const income = Math.round(incomeOf(state, f) * mult);
     if (income <= 0) continue;
     k.gold[f] += income;
-    log(state, 'info', `${FACTION_NAMES[f]}: dochód ${income} zł (razem ${k.gold[f]}).`, f);
+    log(state, 'info', `${FACTION_NAMES[raceOf(state, f)]}: dochód ${income} zł (razem ${k.gold[f]}).`, f);
   }
 }
 
@@ -542,7 +543,7 @@ function standIn(state: GameState, hero: HeroState, at: HexKey): void {
   state.tiles[hero.pos].revealed = true;
 }
 
-function pay(state: GameState, f: FactionId, price: number) {
+function pay(state: GameState, f: TeamId, price: number) {
   const k = state.kingdom!;
   if (k.gold[f] < price) throw new Error(`Za mało złota (potrzeba ${price}).`);
   k.gold[f] -= price;
@@ -567,15 +568,15 @@ export const artifactBill = (state: GameState, hero: HeroState, art: ArtifactDef
   ...(state.rules.economy && art.rarity === 3 ? { dust: ECONOMY.legendaryDust } : {}),
 });
 
-export const resOf = (state: GameState, f: FactionId): Resources => state.kingdom?.res?.[f] ?? emptyResources();
+export const resOf = (state: GameState, f: TeamId): Resources => state.kingdom?.res?.[f] ?? emptyResources();
 
-export function canPay(state: GameState, f: FactionId, c: Cost): boolean {
+export function canPay(state: GameState, f: TeamId, c: Cost): boolean {
   const k = state.kingdom;
   return Boolean(k) && k!.gold[f] >= c.gold && RESOURCE_IDS.every((r) => resOf(state, f)[r] >= (c[r] ?? 0));
 }
 
 /** Pays a price from the faction's stock (throws, naming what is missing). */
-export function payCost(state: GameState, f: FactionId, c: Cost): void {
+export function payCost(state: GameState, f: TeamId, c: Cost): void {
   const k = state.kingdom!;
   const missing = [...(k.gold[f] < c.gold ? [`${c.gold - k.gold[f]} zł`] : []), ...RESOURCE_IDS.filter((r) => resOf(state, f)[r] < (c[r] ?? 0)).map((r) => `${c[r]! - resOf(state, f)[r]} × ${RESOURCE_NAMES[r]}`)];
   if (k.gold[f] < c.gold && missing.length === 1) throw new Error(`Za mało złota (potrzeba ${c.gold}).`);
@@ -598,7 +599,7 @@ export function buildBlock(s: Settlement, b: BuildingId): string | null {
 }
 
 /** Resources per round the faction earns now, with where they come from. */
-export function resourceIncomeBreakdown(state: GameState, f: FactionId): Array<{ label: string; res: ResourceId; amount: number }> {
+export function resourceIncomeBreakdown(state: GameState, f: TeamId): Array<{ label: string; res: ResourceId; amount: number }> {
   const k = state.kingdom;
   if (!k?.res) return [];
   const rows: Array<{ label: string; res: ResourceId; amount: number }> = [];
@@ -613,14 +614,14 @@ export function resourceIncomeBreakdown(state: GameState, f: FactionId): Array<{
   return rows;
 }
 
-export const resourceIncomeOf = (state: GameState, f: FactionId): Resources => {
+export const resourceIncomeOf = (state: GameState, f: TeamId): Resources => {
   const out = emptyResources();
   for (const row of resourceIncomeBreakdown(state, f)) out[row.res] += row.amount;
   return out;
 };
 
 /** Recruiting, healing and trading are for the land's own faction: a captured foreign settlement gives income, the market and the hospital only. */
-export const mayRecruit = (s: Settlement, f: FactionId) => s.land === f && s.owner === f;
+export const mayRecruit = (s: Settlement, f: TeamId) => s.land === f && s.owner === f;
 
 export function kingdomAction(state: GameState, action: Action): void {
   const k = state.kingdom;
@@ -637,7 +638,7 @@ export function kingdomAction(state: GameState, action: Action): void {
         if (!mayBuildSpark(state, hero)) throw new Error('Do Pierwotnej Iskry potrzeba wszystkich Odłamków przy jednym bohaterze.');
         spendShards(state, hero.faction);
         s.buildings.spark = 1;
-        log(state, 'crystal', `${FACTION_NAMES[hero.faction]} wznosi w osadzie ${s.name} budynek: ${SPARK_NAMES[hero.faction]}.`, undefined, { type: 'fx', kind: 'iskra', hex: s.at });
+        log(state, 'crystal', `${FACTION_NAMES[raceOf(state, hero.faction)]} wznosi w osadzie ${s.name} budynek: ${SPARK_NAMES[raceOf(state, hero.faction)]}.`, undefined, { type: 'fx', kind: 'iskra', hex: s.at });
         break;
       }
       if (!buildingsFor(state, hero.faction).includes(b)) throw new Error('Ten budynek nie jest dostępny dla tej frakcji na tym poziomie gry.');
@@ -648,7 +649,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (block) throw new Error(block);
       payCost(state, hero.faction, price);
       s.buildings[b] = buildingLevel(s, b) + 1;
-      log(state, 'info', `${FACTION_NAMES[hero.faction]}: ${BUILDING_NAMES[b][s.buildings[b] - 1]} w osadzie ${s.name} (${costText(price)}).`);
+      log(state, 'info', `${FACTION_NAMES[raceOf(state, hero.faction)]}: ${BUILDING_NAMES[b][s.buildings[b] - 1]} w osadzie ${s.name} (${costText(price)}).`);
       break;
     }
     case 'kingdomRecruit': {
@@ -662,7 +663,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (hasUnit(state, hero.faction, entry.id)) throw new Error('Ta jednostka jest już w twojej drużynie.');
       payCost(state, hero.faction, { gold: entry.cost, ...(entry.dust ? { dust: entry.dust } : {}) });
       fs.supportsAlive.push(entry.id);
-      log(state, 'info', `${FACTION_NAMES[hero.faction]} rekrutuje: ${UNITS[entry.id].name} (${costText({ gold: entry.cost, ...(entry.dust ? { dust: entry.dust } : {}) })}).`);
+      log(state, 'info', `${FACTION_NAMES[raceOf(state, hero.faction)]} rekrutuje: ${UNITS[entry.id].name} (${costText({ gold: entry.cost, ...(entry.dust ? { dust: entry.dust } : {}) })}).`);
       break;
     }
     case 'kingdomHeal': {
@@ -670,12 +671,12 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (s.buildings.hospital < 1) throw new Error('W tej osadzie nie ma szpitala.');
       const fs = state.factions[hero.faction];
       if (!fs.supportsDead.includes(action.unitId)) throw new Error('Ta jednostka nie poległa.');
-      const base = RECRUITS[hero.faction].find((r) => r.id === action.unitId)?.cost ?? 2;
+      const base = RECRUITS[raceOf(state, hero.faction)].find((r) => r.id === action.unitId)?.cost ?? 2;
       const price = Math.max(1, Math.ceil(base / KINGDOM.heal[s.buildings.hospital >= 2 ? 1 : 0]));
       pay(state, hero.faction, price);
       fs.supportsDead = fs.supportsDead.filter((id) => id !== action.unitId);
       fs.supportsAlive.push(action.unitId);
-      log(state, 'info', `${FACTION_NAMES[hero.faction]}: w szpitalu wraca ${UNITS[action.unitId].name} (${price} zł).`);
+      log(state, 'info', `${FACTION_NAMES[raceOf(state, hero.faction)]}: w szpitalu wraca ${UNITS[action.unitId].name} (${price} zł).`);
       break;
     }
     case 'kingdomBuyArtifact': {
@@ -700,13 +701,13 @@ export function kingdomAction(state: GameState, action: Action): void {
         const price = tradeBuyPrice(s, action.res);
         pay(state, f, price);
         k.res[f][action.res] += 1;
-        log(state, 'info', `${FACTION_NAMES[f]} kupuje: ${RESOURCE_NAMES[action.res]} (${price} zł).`, f);
+        log(state, 'info', `${FACTION_NAMES[raceOf(state, f)]} kupuje: ${RESOURCE_NAMES[action.res]} (${price} zł).`, f);
       } else {
         if (buildingLevel(s, 'market') < 1) throw new Error('Surowce sprzedaje się na targu.');
         if (k.res[f][action.res] < 1) throw new Error(`Brakuje: 1 × ${RESOURCE_NAMES[action.res]}.`);
         k.res[f][action.res] -= 1;
         k.gold[f] += ECONOMY.tradeSell[action.res];
-        log(state, 'info', `${FACTION_NAMES[f]} sprzedaje: ${RESOURCE_NAMES[action.res]} (${ECONOMY.tradeSell[action.res]} zł).`, f);
+        log(state, 'info', `${FACTION_NAMES[raceOf(state, f)]} sprzedaje: ${RESOURCE_NAMES[action.res]} (${ECONOMY.tradeSell[action.res]} zł).`, f);
       }
       break;
     }
@@ -724,7 +725,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       k.res[f][action.from] -= 1;
       k.gold[f] += sell - price;
       k.res[f][action.to] += 1;
-      log(state, 'info', `${FACTION_NAMES[f]} wymienia: ${RESOURCE_NAMES[action.from]} na ${RESOURCE_NAMES[action.to]} (${price - sell} zł dopłaty).`, f);
+      log(state, 'info', `${FACTION_NAMES[raceOf(state, f)]} wymienia: ${RESOURCE_NAMES[action.from]} na ${RESOURCE_NAMES[action.to]} (${price - sell} zł dopłaty).`, f);
       break;
     }
     case 'kingdomDwelling': {
@@ -738,7 +739,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       const price = DWELLING_COST[entry.tier - 2];
       payCost(state, f, price);
       ((k.dwellings ??= { dawn: [], horde: [] })[f]).push(entry.id);
-      log(state, 'info', `${FACTION_NAMES[f]} buduje siedlisko: ${DWELLING_NAMES[entry.id]} (${costText(price)}). Od teraz rekrutuje: ${UNITS[entry.id].name}.`);
+      log(state, 'info', `${FACTION_NAMES[raceOf(state, f)]} buduje siedlisko: ${DWELLING_NAMES[entry.id]} (${costText(price)}). Od teraz rekrutuje: ${UNITS[entry.id].name}.`);
       break;
     }
     case 'kingdomLearn': {
@@ -762,7 +763,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       const fresh: HeroState = { id: action.unitId, faction: hero.faction, playerId: hero.playerId, pos: s.at, alive: true, crystals: [], secondary: true, name: commanderName(state, action.unitId), kind: HERO_TYPES[action.unitId] };
       state.heroes[fresh.id] = fresh;
       standIn(state, fresh, s.at);
-      log(state, 'info', `${FACTION_NAMES[hero.faction]} najmuje dowódcę: ${heroLabel(fresh)} (${REALM.hireGold} zł). Rusza od następnej rundy.`);
+      log(state, 'info', `${FACTION_NAMES[raceOf(state, hero.faction)]} najmuje dowódcę: ${heroLabel(fresh)} (${REALM.hireGold} zł). Rusza od następnej rundy.`);
       break;
     }
     case 'kingdomRansom': {
@@ -777,7 +778,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       delete fallen.fallen;
       fallen.crystals = [];
       standIn(state, fallen, s.at);
-      log(state, 'info', `${FACTION_NAMES[hero.faction]} wykupuje dowódcę: ${heroLabel(fallen)} (${price} zł). Rusza od następnej rundy.`);
+      log(state, 'info', `${FACTION_NAMES[raceOf(state, hero.faction)]} wykupuje dowódcę: ${heroLabel(fallen)} (${price} zł). Rusza od następnej rundy.`);
       break;
     }
     case 'kingdomGarrison': {
@@ -858,7 +859,7 @@ export function chestPreview(state: GameState, hero: HeroState): string {
 // ------------------------------------------------------------------ the bots
 
 /** What a bot buys in a settlement it stands in, by priority (null: nothing it wants and can pay for). */
-export function botPurchase(state: GameState, f: FactionId, s: Settlement): Action | null {
+export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action | null {
   const k = state.kingdom;
   if (!k || s.owner !== f) return null;
   const gold = k.gold[f];
@@ -890,7 +891,7 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   }
   if (s.buildings.hospital >= 1 && fs.supportsDead.length) {
     const dead = fs.supportsDead[0];
-    const base = RECRUITS[f].find((r) => r.id === dead)?.cost ?? 2;
+    const base = RECRUITS[raceOf(state, f)].find((r) => r.id === dead)?.cost ?? 2;
     if (afford(Math.max(1, Math.ceil(base / KINGDOM.heal[s.buildings.hospital >= 2 ? 1 : 0])))) return { type: 'kingdomHeal', settlementId: id, unitId: dead };
   }
   if (s.buildings.treasury < 1 && buildable('treasury')) return { type: 'kingdomBuild', settlementId: id, building: 'treasury' };
@@ -914,11 +915,11 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   // Level 6: the faction's own buildings. The mechanic comes first (Kapliczka Świtu / Jama Krwi, one settlement is enough: the best level counts), through its
   // parent building when that is missing; then its levels, then the others (the grove and the den only once, the nursery and the plunder house add up).
   if (state.rules.empire && own) {
-    const mech = MECHANIC_BUILDING[f];
+    const mech = MECHANIC_BUILDING[raceOf(state, f)];
     const best = mechanicLevel(state, f);
     const parent = BUILDING_PARENT[mech];
     if (best < 1 && parent && buildingLevel(s, parent) < 1 && buildable(parent) && canPay(state, f, { ...buildCost(state, s, parent)!, gold: buildCost(state, s, parent)!.gold + 2 })) return { type: 'kingdomBuild', settlementId: id, building: parent };
-    const wanted = FACTION_BUILDINGS[f].filter((x) => {
+    const wanted = FACTION_BUILDINGS[raceOf(state, f)].filter((x) => {
       if (x === mech) return buildingLevel(s, x) >= best && best < 4;
       if (x === 'grove' || x === 'wolfDen') return !settlementsOf(state, f).some((y) => buildingLevel(y, x) >= 1);
       return true;
@@ -937,7 +938,7 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
  * Level 4: a bot that sits on gold while a building waits for one resource buys that resource (one unit an action). It keeps the gold of the
  * building itself and never trades in a round in which it has already built.
  */
-function botTrade(state: GameState, f: FactionId, s: Settlement): Action | null {
+function botTrade(state: GameState, f: TeamId, s: Settlement): Action | null {
   const k = state.kingdom!;
   if (!k.res) return null;
   const fs = state.factions[f];
@@ -1069,4 +1070,4 @@ export function autopilotAction(state: GameState, hero: HeroState): Action | nul
 }
 
 /** Whether a bot of this faction has something to buy in one of its settlements (a reason to walk back to it). */
-export const kingdomWish = (state: GameState, f: FactionId): Settlement | null => settlementsOf(state, f).find((s) => botPurchase(state, f, s)) ?? null;
+export const kingdomWish = (state: GameState, f: TeamId): Settlement | null => settlementsOf(state, f).find((s) => botPurchase(state, f, s)) ?? null;

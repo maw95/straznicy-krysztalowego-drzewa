@@ -1,8 +1,9 @@
 // The tree of the settlement's buildings (the Rada Osady view): a node per building, lines from the building a node waits for. The graph is the
 // engine's BUILDING_PARENT (docs/BUDYNKI.md 0a); the council is its root and always stands. Clicking a node asks the caller to show its price and effect.
 
+import { raceOf } from '../engine/teams';
 import type { ReactNode } from 'react';
-import { FACTION_NAMES, type FactionId } from '../engine/data';
+import { FACTION_NAMES, type TeamId } from '../engine/data';
 import { BUILDING_NAMES, BUILDING_PARENT, buildBlock, buildCost, buildingLevel, canPay, type BuildingId, type Settlement } from '../engine/kingdom';
 import { costText } from '../engine/economy';
 import type { GameState } from '../engine/types';
@@ -23,7 +24,7 @@ export interface ExtraNode { id: string; parent: string; name: string; sub: stri
 export type NodeState = 'built' | 'open' | 'poor' | 'blocked' | 'full';
 
 /** What a node shows: built (with its level), free to buy now, too dear, blocked by its parent, or fully upgraded. */
-export function nodeState(state: GameState, s: Settlement, faction: FactionId, b: BuildingId): NodeState {
+export function nodeState(state: GameState, s: Settlement, faction: TeamId, b: BuildingId): NodeState {
   const level = buildingLevel(s, b);
   const cost = buildCost(state, s, b);
   if (cost === null) return 'full';
@@ -35,7 +36,7 @@ export function nodeState(state: GameState, s: Settlement, faction: FactionId, b
 export function BuildingTree({ state, s, faction, order, picture, selected, onSelect, council, extras }: {
   state: GameState;
   s: Settlement;
-  faction: FactionId;
+  faction: TeamId;
   /** The buildings this game has (the Iskra only comes from the shards and is not in the tree). */
   order: BuildingId[];
   picture: (b: BuildingId, level: number) => string;
@@ -111,7 +112,7 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
         })}
       </div>
       <div style={{ textAlign: 'center', fontSize: 13, color: '#F6EBD0', textShadow: '0 1px 3px #000', marginTop: 6 }}>
-        Osada {FACTION_NAMES[s.land]}: budynek wymaga, by stał ten, od którego prowadzi do niego strzałka. Pierwotna Iskra nie jest w drzewku: wznosi ją bohater z kompletem Odłamków.
+        Osada {FACTION_NAMES[raceOf(state, s.land)]}: budynek wymaga, by stał ten, od którego prowadzi do niego strzałka. Pierwotna Iskra nie jest w drzewku: wznosi ją bohater z kompletem Odłamków.
       </div>
     </div>
   );

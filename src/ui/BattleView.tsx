@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ABILITY, UNITS, type FactionId, type Side } from '../engine/data';
+import { ABILITY, UNITS, type TeamId, type Side } from '../engine/data';
 import {
   abilityActive,
   abilityOf,
@@ -116,7 +116,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const act = b.activation;
   const active = act ? b.units[act.unitId] : null;
   const myTurn = canAct && b.stage === 'fight' && Boolean(active);
-  const side: FactionId | undefined = active && active.side !== 'neutral' ? active.side : undefined;
+  const side: TeamId | undefined = active && active.side !== 'neutral' ? active.side : undefined;
   // Level 5: the spells the active hero may cast now, and the one picked (the next click on a unit is its target).
   const castable = myTurn && !targeting ? castableInBattle(state) : [];
   const [spell, setSpell] = useState<SpellId | null>(null);

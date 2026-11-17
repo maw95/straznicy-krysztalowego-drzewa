@@ -2,7 +2,7 @@
 // Nobody moves; the active unit attacks, uses its ability or a treasure, or passes.
 
 import { useEffect, useRef, useState } from 'react';
-import { abilityTextFor, FACTION_NAMES, itemDef, ITEMS, scaleText, UNITS, type FactionId, type ItemKind } from '../engine/data';
+import { abilityTextFor, FACTION_NAMES, itemDef, ITEMS, scaleText, UNITS, type TeamId, type ItemKind } from '../engine/data';
 import { abilityActive, abilityOf, attackTargets, ATTACK_ABILITIES, canUseBattleItem, FREE_ABILITIES, unitSpeed } from '../engine/battle';
 import { isDigital, type Action, type BattleUnit, type GameState } from '../engine/types';
 import { abilityArt, asset, Frame, HpBar, Medal, Ribbon } from './common';
@@ -76,7 +76,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
   const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state));
   const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab);
   const freeAbility = abilityReady && ab !== null && FREE_ABILITIES.includes(ab);
-  const side: FactionId | null = active && active.side !== 'neutral' ? active.side : null;
+  const side: TeamId | null = active && active.side !== 'neutral' ? active.side : null;
   const items = side && myTurn && canUseBattleItem(state, side) ? state.factions[side].inventory.map((id) => state.items[id]).filter((it) => DUEL_ITEMS[it.kind]) : [];
 
   const useItem = (id: string) => {

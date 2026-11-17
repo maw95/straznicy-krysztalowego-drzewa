@@ -10,12 +10,12 @@ import { CUSTOM_MAPS } from './customMaps';
 import { key } from './hex';
 import { activeHero } from './game';
 import { log } from './log';
-import type { FactionId } from './data';
+import type { TeamId } from './data';
 import type { GameState } from './types';
 
 export interface StoryWhen {
   round?: number;
-  faction?: FactionId;
+  faction?: TeamId;
   enter?: [number, number];
   defeated?: string;
 }

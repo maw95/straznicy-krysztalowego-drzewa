@@ -4,7 +4,7 @@
 // The ratings are the rulebook tables: round(1 + 9 × (1 − Przymierze win rate)) from the balance
 // simulations (docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md, section 7); update them after rebalancing.
 
-import type { FactionId, MapSize } from './data';
+import type { TeamId, MapSize } from './data';
 import { DEFAULT_RULES, type Level, type SetupOptions } from './types';
 
 /** A preset level, or 'custom' for a setup with single options switched on. */
@@ -102,7 +102,7 @@ const TOP_RATING = COOP[1].veryLong.hard!;
  * Measured difficulty (1–10) of a setup for one side. A preset level reads its column; a custom setup
  * starts from the full game and adds what each switched-on option changes on its own.
  */
-export function difficultyRating(setup: SetupOptions, level: LevelName, side: FactionId): number {
+export function difficultyRating(setup: SetupOptions, level: LevelName, side: TeamId): number {
   const pvp = setup.mode === 'pvp';
   const perSide = Math.max(...(['dawn', 'horde'] as const).map((f) => setup.seats.filter((s) => s.faction === f).length));
   const t = (pvp ? PVP : COOP)[perSide >= 2 ? 2 : 1][setup.mapSize];
@@ -156,7 +156,7 @@ export const tierPointsFactor = (r: { kingdom?: boolean; economy?: boolean; real
 /** Points of a win on "Bardzo trudny" = the same setup's points on "Trudny" times this (rounded, capped at MAX_POINTS). */
 export const VERY_HARD_POINTS_FACTOR = 1.5;
 
-export function pointsFor(setup: SetupOptions, level: LevelName, side: FactionId): number {
+export function pointsFor(setup: SetupOptions, level: LevelName, side: TeamId): number {
   // "Własne ustawienia" score nothing: only the ready levels count for the ranking (decision of 17.11).
   if (level === 'custom') return 0;
   if (setup.mode === 'arena') return Math.min(MAX_POINTS, Math.round(ARENA_POINTS[level] * (setup.rules.arenaSize === 6 ? ARENA6_POINTS_FACTOR : 1)));

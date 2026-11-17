@@ -3,7 +3,8 @@
 // progress for the screen. 'crystals' is the board game's goal (carry the crystals to the Tree, the Horde's ritual); the
 // others belong to the digital ruleset. Result of a game under 'crystals' must never change (tests/golden.test.ts).
 
-import { BOSS, CONTROL, ENCOUNTERS, FACTION_NAMES, NEUTRAL_BOSSES, SURVIVAL, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, UNITS, type FactionId, type Terrain } from './data';
+import { raceOf } from './teams';
+import { BOSS, CONTROL, ENCOUNTERS, FACTION_NAMES, NEUTRAL_BOSSES, SURVIVAL, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, UNITS, type TeamId, type Terrain } from './data';
 import { hpScaleOf } from './battle';
 import { finish, finishDraw, heroesAt, ritualFormed, spawnHordeHero } from './game';
 import { distance, key, parseKey, triToHex, type HexKey } from './hex';
@@ -17,7 +18,7 @@ import { shardsOf, shardTotal, SPARK_NAMES, sparkOwner } from './empire';
 export interface ProgressLine {
   label: string;
   value: string;
-  tone?: FactionId | 'warn';
+  tone?: TeamId | 'warn';
 }
 
 export interface Objective {
@@ -83,7 +84,7 @@ const crystals: Objective = {
 // ------------------------------------------------------------------ control points
 
 /** The side whose hero stands on `k` (one hero per hex, so a point is held by whoever is on it), or null. */
-export function controlHolder(state: GameState, k: HexKey): FactionId | null {
+export function controlHolder(state: GameState, k: HexKey): TeamId | null {
   const sides = new Set(heroesAt(state, k).map((h) => h.faction));
   return sides.size === 1 ? [...sides][0] : null;
 }
@@ -92,7 +93,7 @@ export function controlHolder(state: GameState, k: HexKey): FactionId | null {
 export const controlWeight = (state: GameState, k: HexKey): number => (state.control?.points[0] === k ? CONTROL.centreWeight : 1);
 
 /** The worth of the control points each side holds now. */
-export function controlCounts(state: GameState): Record<FactionId, number> {
+export function controlCounts(state: GameState): Record<TeamId, number> {
   const out = { dawn: 0, horde: 0 };
   for (const k of state.control?.points ?? []) {
     const h = controlHolder(state, k);
@@ -102,7 +103,7 @@ export function controlCounts(state: GameState): Record<FactionId, number> {
 }
 
 /** Rounds in a row `side` must lead to win. */
-export const controlRoundsToWin = (state: GameState, side: FactionId): number => CONTROL.roundsToWin[state.setup.mapSize] + (side === 'dawn' ? state.rules.controlDawnExtra ?? CONTROL.dawnExtraRounds : 0);
+export const controlRoundsToWin = (state: GameState, side: TeamId): number => CONTROL.roundsToWin[state.setup.mapSize] + (side === 'dawn' ? state.rules.controlDawnExtra ?? CONTROL.dawnExtraRounds : 0);
 
 /**
  * Three points on unclaimed hexes: one in the middle (on the axis of the triangle) and a pair mirrored over it, so neither side is
@@ -255,7 +256,7 @@ const control: Objective = {
   onRoundEnd(state) {
     const c = state.control!;
     const n = controlCounts(state);
-    const leader: FactionId | null = n.dawn > n.horde ? 'dawn' : n.horde > n.dawn ? 'horde' : null;
+    const leader: TeamId | null = n.dawn > n.horde ? 'dawn' : n.horde > n.dawn ? 'horde' : null;
     c.streak = leader && leader === c.lead ? c.streak + 1 : leader ? 1 : 0;
     c.lead = leader;
     if (leader) c.led[leader] += 1;
@@ -264,9 +265,9 @@ const control: Objective = {
       return false;
     }
     const need = controlRoundsToWin(state, leader);
-    log(state, 'round', `Punkty kontrolne: Przymierze ${n.dawn}, Horda ${n.horde}: przewagę ma ${FACTION_NAMES[leader]} (${c.streak}/${need} rund).`);
+    log(state, 'round', `Punkty kontrolne: Przymierze ${n.dawn}, Horda ${n.horde}: przewagę ma ${FACTION_NAMES[raceOf(state, leader)]} (${c.streak}/${need} rund).`);
     if (c.streak >= need) {
-      finish(state, leader, `${FACTION_NAMES[leader]} utrzymało punkty kontrolne przez ${need} rundy z rzędu.`);
+      finish(state, leader, `${FACTION_NAMES[raceOf(state, leader)]} utrzymało punkty kontrolne przez ${need} rundy z rzędu.`);
       return true;
     }
     return false;
@@ -282,7 +283,7 @@ const control: Objective = {
     const n = controlCounts(state);
     const c = state.control!;
     const lines: ProgressLine[] = [{ label: 'Punkty kontrolne', value: `Przymierze ${n.dawn} · Horda ${n.horde}` }];
-    if (c.lead) lines.push({ label: `Przewaga: ${FACTION_NAMES[c.lead]}`, value: `${c.streak}/${controlRoundsToWin(state, c.lead)} rund`, tone: c.lead });
+    if (c.lead) lines.push({ label: `Przewaga: ${FACTION_NAMES[raceOf(state, c.lead)]}`, value: `${c.streak}/${controlRoundsToWin(state, c.lead)} rund`, tone: c.lead });
     return lines;
   },
 };
@@ -358,7 +359,7 @@ const boss: Objective = {
   },
   checkVictory(state) {
     const b = state.boss!;
-    if (b.slain) finish(state, b.slain, `Boss pokonany: ostatni cios zadała strona „${FACTION_NAMES[b.slain]}”.`);
+    if (b.slain) finish(state, b.slain, `Boss pokonany: ostatni cios zadała strona „${FACTION_NAMES[raceOf(state, b.slain)]}”.`);
   },
   onRoundEnd() {
     return false;
@@ -395,7 +396,7 @@ const artifact: Objective = {
   },
   checkVictory(state) {
     const h = artifactCarrier(state);
-    if (h && state.tiles[h.pos].home === h.faction) finish(state, h.faction, `${FACTION_NAMES[h.faction]} zaniosło Artefakt do swojej bazy.`);
+    if (h && state.tiles[h.pos].home === h.faction) finish(state, h.faction, `${FACTION_NAMES[raceOf(state, h.faction)]} zaniosło Artefakt do swojej bazy.`);
   },
   onRoundEnd() {
     return false;
@@ -417,13 +418,13 @@ const artifact: Objective = {
 // ------------------------------------------------------------------ conquest (level 4)
 
 /** The settlements `side` has to hold to win: every one on the enemy's land (its capital and the ones to conquer there). */
-export function conquestTargets(state: GameState, side: FactionId): string[] {
-  const enemy: FactionId = side === 'dawn' ? 'horde' : 'dawn';
+export function conquestTargets(state: GameState, side: TeamId): string[] {
+  const enemy: TeamId = side === 'dawn' ? 'horde' : 'dawn';
   return Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.land === enemy).map((s) => s.id);
 }
 
 /** How many of its targets `side` holds now. */
-export const conquestHeld = (state: GameState, side: FactionId): number => conquestTargets(state, side).filter((id) => state.kingdom!.settlements[id].owner === side).length;
+export const conquestHeld = (state: GameState, side: TeamId): number => conquestTargets(state, side).filter((id) => state.kingdom!.settlements[id].owner === side).length;
 
 const conquest: Objective = {
   id: 'conquest',
@@ -436,7 +437,7 @@ const conquest: Objective = {
     for (const side of ['dawn', 'horde'] as const) {
       const need = conquestTargets(state, side).length;
       if (need > 0 && conquestHeld(state, side) === need) {
-        finish(state, side, `${FACTION_NAMES[side]} trzyma wszystkie osady na ziemi wroga.`);
+        finish(state, side, `${FACTION_NAMES[raceOf(state, side)]} trzyma wszystkie osady na ziemi wroga.`);
         return true;
       }
     }
@@ -445,7 +446,7 @@ const conquest: Objective = {
   onRoundLimit(state) {
     // Time is up: a side that holds most of the enemy's land (more than half of its settlements) has won the war, unless the enemy did the same;
     // otherwise (neither or both) it is a draw.
-    const most = (f: FactionId) => conquestHeld(state, f) * 2 > conquestTargets(state, f).length;
+    const most = (f: TeamId) => conquestHeld(state, f) * 2 > conquestTargets(state, f).length;
     const [dawn, horde] = [most('dawn'), most('horde')];
     if (dawn && !horde) finish(state, 'dawn', `Upłynął limit rund: Przymierze trzyma większość osad na ziemi Hordy (${conquestHeld(state, 'dawn')} z ${conquestTargets(state, 'dawn').length}).`);
     else if (horde && !dawn) finish(state, 'horde', `Upłynął limit rund: Horda trzyma większość osad na ziemi Przymierza (${conquestHeld(state, 'horde')} z ${conquestTargets(state, 'horde').length}).`);
@@ -453,7 +454,7 @@ const conquest: Objective = {
   },
   progress(state) {
     if (!state.kingdom) return [];
-    return (['dawn', 'horde'] as const).map((side) => ({ label: `${FACTION_NAMES[side]}: osady wroga`, value: `${conquestHeld(state, side)} / ${conquestTargets(state, side).length}`, tone: side }));
+    return (['dawn', 'horde'] as const).map((side) => ({ label: `${FACTION_NAMES[raceOf(state, side)]}: osady wroga`, value: `${conquestHeld(state, side)} / ${conquestTargets(state, side).length}`, tone: side }));
   },
 };
 
@@ -466,7 +467,7 @@ const relic: Objective = {
   init() {},
   checkVictory(state) {
     const owner = sparkOwner(state);
-    if (owner) finish(state, owner, `${FACTION_NAMES[owner]} wzniosło budynek: ${SPARK_NAMES[owner]}.`);
+    if (owner) finish(state, owner, `${FACTION_NAMES[raceOf(state, owner)]} wzniosło budynek: ${SPARK_NAMES[raceOf(state, owner)]}.`);
   },
   onRoundEnd() {
     return false;

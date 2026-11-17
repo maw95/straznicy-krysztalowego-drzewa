@@ -4,7 +4,7 @@ import type { HeroType } from './heroTypes';
 import type { SiteKind, Slot } from './sites';
 import type { HexKey } from './hex';
 import type { BuildingId, KingdomState } from './kingdom';
-import type { AbilityId, FactionId, ItemKind, MapSize, Side, Terrain, TileSide } from './data';
+import type { AbilityId, FactionId, TeamId, ItemKind, MapSize, Side, Terrain, TileSide } from './data';
 
 /** coop and pvp play the adventure map; arena is a single 3-on-3 battle with drafted treasures. */
 export type Mode = 'coop' | 'pvp' | 'arena';
@@ -171,7 +171,7 @@ export const LEVEL_RULES: Record<Level, { battleMode: BattleMode; rules: Partial
 };
 
 /** Whether the computer plays this faction: the Horde in coop (the automaton) or a PvP side whose seats are all bots. */
-export function computerFaction(state: { setup: Pick<SetupOptions, 'mode' | 'seats'> }, f: FactionId): boolean {
+export function computerFaction(state: { setup: Pick<SetupOptions, 'mode' | 'seats'> }, f: TeamId): boolean {
   if (state.setup.mode === 'coop') return f === 'horde';
   const seats = state.setup.seats.filter((x) => x.faction === f);
   return seats.length > 0 && seats.every((x) => x.controller === 'bot');
@@ -186,7 +186,7 @@ export function levelSettings(level: Level, mode: Mode): { battleMode: BattleMod
 
 export interface SeatSetup {
   name: string;
-  faction: FactionId;
+  faction: TeamId;
   controller: Controller;
   heroId: string;
   /** Family mode (coop): the younger player; its hero gets the help of `FAMILY` (data.ts) and the screen offers hints. */
@@ -204,6 +204,8 @@ export interface SetupOptions {
   battleMode: BattleMode;
   seed: number;
   seats: SeatSetup[];
+  /** Race of each team (teams.ts raceOf); missing = the team's own id (dawn plays Przymierze, horde plays Horda). */
+  races?: Partial<Record<TeamId, FactionId>>;
   rules: RulesConfig;
   /** Arena against the computer: how well the bot picks its supports and treasures. */
   botLevel?: Level;
@@ -226,26 +228,26 @@ export interface ArenaDraft {
   /** Cards left (Eliksir Odrodzenia twice, every other battle treasure once). */
   deck: ItemKind[];
   /** Who picks next, front first. */
-  order: FactionId[];
+  order: TeamId[];
   /** Distinct kinds shown to the picker now. */
   offer: ItemKind[];
   /** 6 on 6 arena: before the supports each side chooses one of three artifacts for its hero (stage 'gear'); the picker now is `order[0]`. */
-  gear?: { order: FactionId[]; offer: string[] };
+  gear?: { order: TeamId[]; offer: string[] };
   /** 6 on 6 arena: after the artifacts each side chooses its hero's spells (stage 'spells'); the picker now is `order[0]`. */
-  spells?: { order: FactionId[] };
+  spells?: { order: TeamId[] };
 }
 
 export interface Player {
   id: string;
   name: string;
-  faction: FactionId;
+  faction: TeamId;
   controller: Controller;
   child?: boolean;
 }
 
 export interface HeroState {
   id: string;
-  faction: FactionId;
+  faction: TeamId;
   /** null = controlled by the coop automaton. */
   playerId: string | null;
   pos: HexKey;
@@ -285,7 +287,7 @@ export interface HeroState {
 }
 
 export interface FactionState {
-  id: FactionId;
+  id: TeamId;
   supportsAlive: string[];
   supportsDead: string[];
   inventory: string[];
@@ -306,7 +308,7 @@ export interface Tile {
   revealed: boolean;
   crystalId: string | null;
   treasureId: string | null;
-  home: FactionId | null;
+  home: TeamId | null;
   tree: boolean;
   /** A site on the hex (shrine, camp, chest) and whether it has been used (sites.ts); only with hero growth. */
   site?: { kind: SiteKind; used: boolean };
@@ -330,7 +332,7 @@ export interface Crystal {
 export interface ItemInstance {
   id: string;
   kind: ItemKind;
-  owner: FactionId | null;
+  owner: TeamId | null;
   /** Hero who picked the treasure up (faction inventories are shared). */
   foundBy: string | null;
 }
@@ -478,10 +480,10 @@ export interface BattleState {
   /** Arena only: 'draft' (treasures) comes between choosing the supports and deploying. */
   stage: 'gear' | 'spells' | 'select' | 'draft' | 'deploy' | 'fight' | 'over';
   /** Factions still to place their units (attacker first); neutral guardians stay where put. */
-  needsDeploy: FactionId[];
+  needsDeploy: TeamId[];
   /** Extra columns a side may deploy in (the hero's skill Taktyk). */
   deployDepth?: Partial<Record<Side, number>>;
-  needsSelection: FactionId[];
+  needsSelection: TeamId[];
   obstacles: HexKey[];
   units: Record<string, BattleUnit>;
   round: number;
@@ -535,7 +537,7 @@ export interface LogEntry {
   /** What this line announces, when the screen should say it louder than the log does. */
   event?: LogEvent;
   /** Visible only to this faction (private draws). */
-  privateTo?: FactionId;
+  privateTo?: TeamId;
 }
 
 export interface BattleReport {
@@ -552,9 +554,9 @@ export interface BattleReport {
 
 export interface GameStats {
   battles: number;
-  heroDeaths: Record<FactionId, number>;
-  supportDeaths: Record<FactionId, number>;
-  treasuresCollected: Record<FactionId, number>;
+  heroDeaths: Record<TeamId, number>;
+  supportDeaths: Record<TeamId, number>;
+  treasuresCollected: Record<TeamId, number>;
   neutralBattles: number;
   neutralWipes: number;
   neutralSupportLosses: number;
@@ -571,12 +573,12 @@ export interface GameState {
   phase: 'adventure' | 'battle' | 'over';
   players: Player[];
   heroes: Record<string, HeroState>;
-  factions: Record<FactionId, FactionState>;
+  factions: Record<TeamId, FactionState>;
   tiles: Record<HexKey, Tile>;
   rows: number;
   /** Where the Tree and the two bases lie (missing in old saves = the triangle's corners: read them through treeOf / homeOf). */
   tree?: HexKey;
-  homes?: Record<FactionId, HexKey>;
+  homes?: Record<TeamId, HexKey>;
   crystals: Record<string, Crystal>;
   items: Record<string, ItemInstance>;
   turnOrder: string[];
@@ -606,16 +608,16 @@ export interface GameState {
   /** Objective 'boss': the lair in the middle of the map, the Boss's Życie left (it keeps the wounds between fights) and who struck the last blow. */
   /** Objective 'artifact': the artifact is the crystal 'artifact' (free on a hex or in a hero's hands); this counts the times it changed hands. */
   artifact?: { start: HexKey; handovers: number };
-  boss?: { at: HexKey; guardian: string; hp: number; maxHp: number; slain: FactionId | null; hits: Record<FactionId, number> };
+  boss?: { at: HexKey; guardian: string; hp: number; maxHp: number; slain: TeamId | null; hits: Record<TeamId, number> };
 }
 
 export interface ControlState {
   points: HexKey[];
   /** The side that held more points at the end of the last round(s), and for how many rounds in a row. */
-  lead: FactionId | null;
+  lead: TeamId | null;
   streak: number;
   /** Rounds each side has led in all (decides when the round limit comes first). */
-  led: Record<FactionId, number>;
+  led: Record<TeamId, number>;
 }
 
 export type Action =
@@ -628,11 +630,11 @@ export type Action =
   | { type: 'unequipArtifact'; slot: Slot }
   | { type: 'passArtifact'; artifactId: string; toHeroId: string }
   | { type: 'useMapItem'; itemId: string; targets?: HexKey[]; unitId?: string }
-  | { type: 'selectSupports'; faction: FactionId; supportIds: string[] }
-  | { type: 'deployUnits'; faction: FactionId; positions: Record<string, HexKey> }
-  | { type: 'draftPick'; faction: FactionId; kind: ItemKind }
-  | { type: 'pickGear'; faction: FactionId; artifactId: string }
-  | { type: 'pickSpells'; faction: FactionId; spells: SpellId[] }
+  | { type: 'selectSupports'; faction: TeamId; supportIds: string[] }
+  | { type: 'deployUnits'; faction: TeamId; positions: Record<string, HexKey> }
+  | { type: 'draftPick'; faction: TeamId; kind: ItemKind }
+  | { type: 'pickGear'; faction: TeamId; artifactId: string }
+  | { type: 'pickSpells'; faction: TeamId; spells: SpellId[] }
   | { type: 'battleMove'; to: HexKey; tail?: HexKey }
   | { type: 'battleAttack'; targetId: string; secondTargetId?: string; useAbility?: boolean }
   | { type: 'battleAbility'; targetId?: string }

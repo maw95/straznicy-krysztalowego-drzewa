@@ -1,6 +1,6 @@
 import { CampaignScreen } from './CampaignScreen';
 import { useMemo, useRef, useState } from 'react';
-import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, UNITS, type FactionId, type MapSize } from '../engine/data';
+import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, UNITS, type TeamId, type MapSize } from '../engine/data';
 import { readyMaps } from '../engine/customMaps';
 import { layerSwitches, resolveTier, withRuleset, type CustomLayer, type Tier } from '../engine/presets';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
@@ -66,14 +66,14 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   // Easter egg: five clicks on a Dawn crest wake up the Brave Duck (remembered in this browser).
   const [duck, setDuck] = useState(() => { try { return localStorage.getItem('skd-duck') === '1'; } catch { return false; } });
   const crestClicks = useRef(0);
-  const crestClick = (f: FactionId, i: number) => {
+  const crestClick = (f: TeamId, i: number) => {
     if (f !== 'dawn' || duck || ++crestClicks.current < 5) return;
     try { localStorage.setItem('skd-duck', '1'); } catch { /* private mode: only for this visit */ }
     setDuck(true);
     update(i, { heroId: SECRET_HEROES.dawn[0] });
     setPreview(SECRET_HEROES.dawn[0]);
   };
-  const heroesOf = (f: FactionId) => (duck ? [...FACTION_HEROES[f], ...SECRET_HEROES[f]] : FACTION_HEROES[f]);
+  const heroesOf = (f: TeamId) => (duck ? [...FACTION_HEROES[f], ...SECRET_HEROES[f]] : FACTION_HEROES[f]);
 
   const arena = mode === 'arena';
   const update = (i: number, patch: Partial<SeatSetup>) => setSeats(seats.map((s, j) => (j === i ? { ...s, ...patch } : s)));
@@ -81,7 +81,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const valid =
     seats.every((s, i) => !takenBy(s.heroId, i)) &&
     (mode === 'coop' || (seats.some((s) => s.faction === 'dawn') && seats.some((s) => s.faction === 'horde'))) &&
-    (['dawn', 'horde'] as FactionId[]).every((f) => seats.filter((s) => s.faction === f).length <= 3);
+    (['dawn', 'horde'] as TeamId[]).every((f) => seats.filter((s) => s.faction === f).length <= 3);
 
 
   const startGame = () => {
@@ -300,7 +300,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                 <img src={asset(`cards/crests/${s.faction}.png`)} alt="" title={FACTION_NAMES[s.faction]} onClick={() => crestClick(s.faction, i)} style={{ width: 46, height: 46, objectFit: 'contain', flex: 'none', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.5))' }} />
                 <input type="text" value={s.name} onChange={(e) => update(i, { name: e.target.value })} style={{ width: 130 }} aria-label="Imię gracza" />
                 {mode === 'pvp' && (
-                  <select value={s.faction} aria-label="Frakcja" onChange={(e) => update(i, { faction: e.target.value as FactionId, heroId: FACTION_HEROES[e.target.value as FactionId][0] })}>
+                  <select value={s.faction} aria-label="Frakcja" onChange={(e) => update(i, { faction: e.target.value as TeamId, heroId: FACTION_HEROES[e.target.value as TeamId][0] })}>
                     <option value="dawn">{FACTION_NAMES.dawn}</option>
                     <option value="horde">{FACTION_NAMES.horde}</option>
                   </select>

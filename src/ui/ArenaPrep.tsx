@@ -1,8 +1,9 @@
 // Arena before the fight: the two heroes face each other over the painted arena while both sides
 // choose their supports and draft treasures, and the draft dialog itself.
 
+import { raceOf } from '../engine/teams';
 import { useState } from 'react';
-import { ARENA_PICKS, FACTION_NAMES, itemDef, UNITS, type FactionId, type ItemKind } from '../engine/data';
+import { ARENA_PICKS, FACTION_NAMES, itemDef, UNITS, type TeamId, type ItemKind } from '../engine/data';
 import { isDigital, type GameState } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { ARTIFACT_BY_ID, RARITY_NAMES } from '../engine/sites';
@@ -12,9 +13,9 @@ import { ArtifactMedal, SLOT_NAMES } from './growthUi';
 import { TreasureCard } from './TreasureCard';
 import { UnitCard } from './UnitCard';
 
-const heroOf = (state: GameState, f: FactionId) => Object.values(state.heroes).find((h) => h.faction === f)!.id;
+const heroOf = (state: GameState, f: TeamId) => Object.values(state.heroes).find((h) => h.faction === f)!.id;
 /** Treasures a side drafts in all: those it holds plus its picks still to come. */
-const picksOf = (state: GameState, f: FactionId) => state.factions[f].inventory.length + (state.draft?.order.filter((x) => x === f).length ?? 0) || ARENA_PICKS;
+const picksOf = (state: GameState, f: TeamId) => state.factions[f].inventory.length + (state.draft?.order.filter((x) => x === f).length ?? 0) || ARENA_PICKS;
 
 /** Background while the arena match is being set up (and behind the end screen). */
 export function ArenaPrep({ state }: { state: GameState }) {
@@ -33,10 +34,10 @@ export function ArenaPrep({ state }: { state: GameState }) {
       <img className="ken-burns arena-prep-art" src={asset(`arena/${arena}.jpg`)} alt="" />
       <div className="arena-prep-shade" aria-hidden="true" />
       <div className="arena-prep-row">
-        {(['dawn', 'horde'] as FactionId[]).map((f, i) => (
+        {(['dawn', 'horde'] as TeamId[]).map((f, i) => (
           <div key={f} className="arena-prep-side" style={{ order: i * 2 }}>
             <UnitCard unitId={heroOf(state, f)} width={Math.min(260, window.innerWidth / 3.4)} digital={isDigital(state.rules)} />
-            <div className="arena-prep-supports" aria-label={`Pomocnicy: ${FACTION_NAMES[f]}`}>
+            <div className="arena-prep-supports" aria-label={`Pomocnicy: ${FACTION_NAMES[raceOf(state, f)]}`}>
               {b
                 ? Object.values(b.units)
                     .filter((u) => u.side === f && UNITS[u.defId].kind === 'support')
@@ -61,7 +62,7 @@ export function ArenaPrep({ state }: { state: GameState }) {
  * The picker's three cards. With two people at one screen, the cards stay covered until the
  * picker says the other player is not looking.
  */
-export function DraftDialog({ state, faction, covered, onReveal, onPick }: { state: GameState; faction: FactionId; covered: boolean; onReveal: () => void; onPick: (kind: ItemKind) => void }) {
+export function DraftDialog({ state, faction, covered, onReveal, onPick }: { state: GameState; faction: TeamId; covered: boolean; onReveal: () => void; onPick: (kind: ItemKind) => void }) {
   const d = state.draft!;
   const [chosen, setChosen] = useState<ItemKind | null>(null);
   const mine = state.factions[faction].inventory.map((id) => state.items[id].kind);
@@ -71,7 +72,7 @@ export function DraftDialog({ state, faction, covered, onReveal, onPick }: { sta
     return (
       <div>
         <Frame crest style={{ width: 'min(560px, 94vw)' }} innerStyle={{ padding: 26, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, textAlign: 'center' }}>
-          <Ribbon side={faction} style={{ width: 'min(420px, 90vw)' }}>Kolej: {FACTION_NAMES[faction]}</Ribbon>
+          <Ribbon side={faction} style={{ width: 'min(420px, 90vw)' }}>Kolej: {FACTION_NAMES[raceOf(state, faction)]}</Ribbon>
           <div style={{ fontSize: 19 }}>Skarby są tajne. Przekaż urządzenie graczowi tej strony — drugi gracz niech nie patrzy.</div>
           <button className="btn prim btn-big" data-enter onClick={onReveal} autoFocus>
             Pokaż skarby
@@ -104,7 +105,7 @@ export function DraftDialog({ state, faction, covered, onReveal, onPick }: { sta
 }
 
 /** 6 on 6 arena: one of three artifacts for the hero (chosen before the supports). */
-export function GearDialog({ state, faction, onPick }: { state: GameState; faction: FactionId; onPick: (artifactId: string) => void }) {
+export function GearDialog({ state, faction, onPick }: { state: GameState; faction: TeamId; onPick: (artifactId: string) => void }) {
   const offer = state.draft!.gear!.offer.map((id) => ARTIFACT_BY_ID[id]);
   const [chosen, setChosen] = useState<string | null>(null);
   return (
@@ -131,7 +132,7 @@ export function GearDialog({ state, faction, onPick }: { state: GameState; facti
 }
 
 /** 6 on 6 arena: the two spells of the hero (battle spells of circles I-II), chosen after the artifact. */
-export function SpellPickDialog({ faction, onPick }: { faction: FactionId; onPick: (spells: SpellId[]) => void }) {
+export function SpellPickDialog({ faction, onPick }: { faction: TeamId; onPick: (spells: SpellId[]) => void }) {
   const [chosen, setChosen] = useState<SpellId[]>([]);
   const toggle = (id: SpellId) => setChosen(chosen.includes(id) ? chosen.filter((x) => x !== id) : [...chosen, id].slice(-ARENA_SPELL_PICKS));
   return (

@@ -1,8 +1,9 @@
+import { raceOf } from '../engine/teams';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { heroLabel } from '../engine/realm';
 import { shardsOf, shardTotal } from '../engine/empire';
 import { MAGIC, manaOf, maxMana, portalTarget, SPELLS } from '../engine/magic';
-import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId } from '../engine/data';
+import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type TeamId } from '../engine/data';
 import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots } from '../engine/game';
 import { fightLevelAt } from './fightBadges';
 import { EnemyPill, FightPill } from './fightBadges';
@@ -31,7 +32,7 @@ import { ACTIVE_FIGURE_RING, asset, COMPACT_QUERY, Frame, Medal, Modal, Pips, Po
 
 interface Props {
   state: GameState;
-  viewer: FactionId | null;
+  viewer: TeamId | null;
   canAct: boolean;
   onAction: (a: Action) => void;
   onPath: (steps: HexKey[], hostile: boolean) => void;
@@ -608,7 +609,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           {!hero && <div style={{ fontWeight: 800, fontSize: 20, textAlign: 'center' }}>Koniec gry</div>}
           {hero && (
             <div style={{ display: 'flex', gap: compact ? 8 : 12, alignItems: 'center', paddingRight: compact ? 56 : 0 }}>
-              <img src={asset(`cards/crests/${hero.faction}.png`)} alt={FACTION_NAMES[hero.faction]} title={FACTION_NAMES[hero.faction]} style={{ height: compact ? 44 : 64, width: 'auto', flex: 'none' }} />
+              <img src={asset(`cards/crests/${hero.faction}.png`)} alt={FACTION_NAMES[raceOf(state, hero.faction)]} title={FACTION_NAMES[raceOf(state, hero.faction)]} style={{ height: compact ? 44 : 64, width: 'auto', flex: 'none' }} />
               <button className="btn btn-bare" onClick={() => (state.rules.heroGrowth ? setSheet(true) : onShowCard(hero.id))} title={state.rules.heroGrowth ? 'Karta bohatera' : 'Pokaż kartę'} data-hero-portrait>
                 <Portrait unitId={hero.id} size={compact ? 48 : 64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
               </button>
@@ -771,7 +772,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
       </div>
       <Modal open={treasuresOpen} onClose={() => setTreasuresOpen(false)}>
         {treasuresOpen && (
-          <ChestFrame title={`Wspólne skarby frakcji${viewer ? ` · ${FACTION_NAMES[viewer]}` : ''}`} onClose={() => setTreasuresOpen(false)}>
+          <ChestFrame title={`Wspólne skarby frakcji${viewer ? ` · ${FACTION_NAMES[raceOf(state, viewer)]}` : ''}`} onClose={() => setTreasuresOpen(false)}>
             <>
               {inventory.length === 0 && <div style={{ fontSize: 15, color: '#6B4A22', fontStyle: 'italic' }}>Brak skarbów.</div>}
               {inventory.map((it) => {
@@ -881,7 +882,7 @@ function TileDetails({ state, k, hostile }: { state: GameState; k: HexKey; hosti
           <div style={{ fontSize: 15, color: '#F7EDD2' }}>
             <div style={{ fontWeight: 700 }}>{heroLabel(h)}</div>
             <div style={{ color: 'var(--muted)' }}>
-              {h.playerId ? state.players.find((p) => p.id === h.playerId)?.name : 'Automat zła'} · {FACTION_NAMES[h.faction]}
+              {h.playerId ? state.players.find((p) => p.id === h.playerId)?.name : 'Automat zła'} · {FACTION_NAMES[raceOf(state, h.faction)]}
             </div>
             {h.crystals.length > 0 && <div style={{ color: '#9EE4FF' }}>Niesie {h.crystals.length === 1 ? 'kryształ' : `${h.crystals.length} kryształy`}</div>}
           </div>
@@ -951,12 +952,12 @@ function TileStrip({ state, k, reach, heroName }: { state: GameState; k: HexKey;
 /** The text about a control point for the tile description. */
 function controlNote(state: GameState, k: HexKey): string {
   const holder = controlHolder(state, k);
-  const who = holder ? `trzyma ${FACTION_NAMES[holder]}` : 'nikt go nie trzyma';
+  const who = holder ? `trzyma ${FACTION_NAMES[raceOf(state, holder)]}` : 'nikt go nie trzyma';
   return `Punkt kontrolny (wart ${controlWeight(state, k)}): ${who}. Trzyma go ten, czyj bohater stoi tu na koniec rundy.`;
 }
 
 /** A control point: a painted medallion with a banner (grey while nobody holds it, the Przymierze's green and gold, the Horda's red and iron); the middle one has a second ring. */
-function ControlFlag({ holder, centre, size }: { holder: FactionId | null; centre: boolean; size: number }) {
+function ControlFlag({ holder, centre, size }: { holder: TeamId | null; centre: boolean; size: number }) {
   const w = size * 0.46;
   return (
     <span className="control-flag" title="Punkt kontrolny" data-control={holder ?? 'none'} style={{ position: 'absolute', left: size * 0.27, top: size * 0.02, width: w, height: w, pointerEvents: 'none', display: 'block', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.8))' }}>
@@ -979,7 +980,7 @@ function tileArt(state: GameState, t: Tile): string | undefined {
 }
 
 /** Who holds a mine or a settlement; nobody for an unclaimed one (it then gets no crest). */
-function placeOwner(state: GameState, t: Tile): FactionId | undefined {
+function placeOwner(state: GameState, t: Tile): TeamId | undefined {
   const place = t.place;
   if (!place || !state.kingdom) return undefined;
   if (place.kind === 'mine') return state.kingdom.mines[place.id]?.owner ?? undefined;
@@ -988,7 +989,7 @@ function placeOwner(state: GameState, t: Tile): FactionId | undefined {
 }
 
 /** The sign of the faction that holds a mine or a settlement: its big crest from the hero cards (nothing for an unclaimed one). */
-function OwnerBanner({ owner, size }: { owner: FactionId; size: number }) {
+function OwnerBanner({ owner, size }: { owner: TeamId; size: number }) {
   return (
     <img data-owner-banner={owner} src={asset(`cards/crests/${owner}.png`)} alt={`Trzyma: ${FACTION_NAMES[owner]}`} title={`Trzyma: ${FACTION_NAMES[owner]}`} width={size} height={size} style={{ display: 'block', objectFit: 'contain', pointerEvents: 'none', filter: 'drop-shadow(0 3px 4px rgba(0,0,0,0.8))' }} />
   );
@@ -1026,15 +1027,15 @@ function placeTitle(state: GameState, k: HexKey): string {
   if (place.kind === 'mine') {
     const mine = state.kingdom.mines[place.id];
     const gives = mine?.res ? `+${ECONOMY.incomeMine[mine.res]} ${RESOURCE_NAMES[mine.res]} na rundę` : '+1 zł na rundę';
-    return `${MINE_NAMES[mine?.res ?? 'gold']} (${gives}): ${mine?.owner ? `zajęta przez ${FACTION_NAMES[mine.owner]}` : 'nikt jej nie trzyma'}`;
+    return `${MINE_NAMES[mine?.res ?? 'gold']} (${gives}): ${mine?.owner ? `zajęta przez ${FACTION_NAMES[raceOf(state, mine.owner)]}` : 'nikt jej nie trzyma'}`;
   }
   const s = state.kingdom.settlements[place.id];
   const built = (['barracks', 'market', 'hospital', 'treasury', 'forge', 'walls'] as const).filter((b) => s.buildings[b]).map((b) => BUILDING_NAMES[b][Math.min(s.buildings[b], BUILDING_NAMES[b].length) - 1]);
-  return `Osada ${s.name} (${FACTION_NAMES[s.land]}): ${s.owner ? `należy do ${FACTION_NAMES[s.owner]}` : 'broniona przez neutralnych'}${built.length ? ` · ${built.join(', ')}` : ''}${s.garrison?.length ? ` · garnizon: ${s.garrison.map((id) => UNITS[id].name).join(', ')}` : ''}`;
+  return `Osada ${s.name} (${FACTION_NAMES[raceOf(state, s.land)]}): ${s.owner ? `należy do ${FACTION_NAMES[raceOf(state, s.owner)]}` : 'broniona przez neutralnych'}${built.length ? ` · ${built.join(', ')}` : ''}${s.garrison?.length ? ` · garnizon: ${s.garrison.map((id) => UNITS[id].name).join(', ')}` : ''}`;
 }
 
 /** The gold in the bottom bar: stock and income per round in short ("2 (+2)"); the right button shows where the income comes from. */
-export function GoldBox({ state, faction }: { state: GameState; faction: FactionId }) {
+export function GoldBox({ state, faction }: { state: GameState; faction: TeamId }) {
   const detail = details(() => <GoldDetails state={state} faction={faction} />);
   // Gold counts as a resource: no plate or frame, big icon, a shadow keeps the numbers readable on any background.
   return (
@@ -1049,7 +1050,7 @@ export function GoldBox({ state, faction }: { state: GameState; faction: Faction
 }
 
 /** Held right button over the gold: where the income comes from. */
-function GoldDetails({ state, faction }: { state: GameState; faction: FactionId }) {
+function GoldDetails({ state, faction }: { state: GameState; faction: TeamId }) {
   const rows = incomeBreakdown(state, faction);
   return (
     <div className="plate parch" style={{ width: 280, padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: 3 }}>

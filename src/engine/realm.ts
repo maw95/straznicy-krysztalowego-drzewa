@@ -3,7 +3,8 @@
 // like the main hero does (supports are shared by the faction since level 3). A fallen commander can be bought back; the main hero's death is final.
 // Every number is provisional. Design: docs/MECHANIKI_I_POZIOMY.md ("Poziom 5").
 
-import { FACTION_NAMES, UNITS, type FactionId } from './data';
+import { raceOf } from './teams';
+import { FACTION_NAMES, UNITS, type FactionId, type TeamId } from './data';
 import { levelOf } from './growth';
 import { log } from './log';
 import { Rng } from './rng';
@@ -29,7 +30,7 @@ export const COMMANDERS: Record<FactionId, Record<Archetype, string>> = {
 };
 
 export const archetypeOf = (unitId: string): Archetype | null => {
-  for (const f of ['dawn', 'horde'] as FactionId[]) for (const a of Object.keys(COMMANDERS[f]) as Archetype[]) if (COMMANDERS[f][a] === unitId) return a;
+  for (const f of ['dawn', 'horde'] as TeamId[]) for (const a of Object.keys(COMMANDERS[f]) as Archetype[]) if (COMMANDERS[f][a] === unitId) return a;
   return null;
 };
 
@@ -57,7 +58,7 @@ export const commanderOf = (state: GameState, playerId: string | null): HeroStat
   playerId ? Object.values(state.heroes).find((h) => h.secondary && h.playerId === playerId) : undefined;
 
 /** The commanders a player of this faction may still hire (each archetype serves one player of the faction). */
-export const freeCommanders = (state: GameState, f: FactionId): string[] => Object.values(COMMANDERS[f]).filter((id) => !state.heroes[id]);
+export const freeCommanders = (state: GameState, f: TeamId): string[] => Object.values(COMMANDERS[raceOf(state, f)]).filter((id) => !state.heroes[id]);
 
 export const ransomPrice = (hero: HeroState): number => REALM.ransomBase + REALM.ransomPerLevel * levelOf(hero);
 
@@ -74,5 +75,5 @@ export function commanderFalls(state: GameState, hero: HeroState): void {
   if (Object.keys(hero.gear ?? {}).length || hero.pack?.length) log(state, 'info', `${heroLabel(hero)} traci swoje artefakty.`);
   hero.gear = {};
   hero.pack = [];
-  log(state, 'info', `${FACTION_NAMES[hero.faction]}: ${heroLabel(hero)} może wrócić za wykupem w karczmie (${ransomPrice(hero)} zł, od następnej rundy).`, hero.faction);
+  log(state, 'info', `${FACTION_NAMES[raceOf(state, hero.faction)]}: ${heroLabel(hero)} może wrócić za wykupem w karczmie (${ransomPrice(hero)} zł, od następnej rundy).`, hero.faction);
 }

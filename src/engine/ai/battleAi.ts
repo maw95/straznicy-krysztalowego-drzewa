@@ -1,7 +1,7 @@
 // Heuristic battle AI. It is greedy and deterministic: equal scores are broken
 // by stable ordering, so simulations replay exactly from a seed.
 
-import { ABILITY, ITEM_EFFECT, UNITS, type FactionId } from '../data';
+import { ABILITY, ITEM_EFFECT, UNITS, type TeamId } from '../data';
 import { supportSlots } from '../kingdom';
 import { ARTIFACT_BY_ID, type ArtifactDef } from '../sites';
 import {
@@ -121,7 +121,7 @@ const AI_TUNING = {
   shieldHp: 5,
 };
 
-export function chooseSupports(state: GameState, faction: FactionId): Action {
+export function chooseSupports(state: GameState, faction: TeamId): Action {
   const pool = [...state.factions[faction].supportsAlive];
   const automaton = state.setup.mode === 'coop' && faction === 'horde';
   // The easy arena bot picks its supports at random, as the automaton does.
@@ -151,7 +151,7 @@ const gearValue = (a: ArtifactDef): number =>
   (a.attack ?? 0) * 3 + (a.hp ?? 0) + (a.speed ?? 0) * 2 + (a.supportHp ?? 0) * 2 + (a.thorns ?? 0) * 2 + (a.vsWounded ?? 0) + (a.defense ?? 0) * 3 + a.rarity;
 
 /** 6 on 6 arena: the easy bot picks at random, the normal one usually the best artifact, the hard one always. */
-export function chooseGearPick(state: GameState, faction: FactionId): Action {
+export function chooseGearPick(state: GameState, faction: TeamId): Action {
   const offer = state.draft!.gear!.offer;
   const level = state.setup.botLevel ?? 'normal';
   const ranked = [...offer].sort((x, y) => gearValue(ARTIFACT_BY_ID[y]) - gearValue(ARTIFACT_BY_ID[x]) || (x < y ? -1 : 1));
@@ -160,7 +160,7 @@ export function chooseGearPick(state: GameState, faction: FactionId): Action {
 }
 
 /** 6 on 6 arena: the easy bot picks two spells at random, the others the two most valuable (the normal one now and then swaps the second). */
-export function chooseSpellPick(state: GameState, faction: FactionId): Action {
+export function chooseSpellPick(state: GameState, faction: TeamId): Action {
   const level = state.setup.botLevel ?? 'normal';
   const pool = [...ARENA_SPELL_POOL];
   const ranked = pool.sort((x, y) => SPELL_VALUE[y] - SPELL_VALUE[x] || (x < y ? -1 : 1));
@@ -172,7 +172,7 @@ export function chooseSpellPick(state: GameState, faction: FactionId): Action {
   return { type: 'pickSpells', faction, spells };
 }
 
-export function chooseDraftPick(state: GameState, faction: FactionId): Action {
+export function chooseDraftPick(state: GameState, faction: TeamId): Action {
   const offer = state.draft!.offer;
   const level = state.setup.botLevel ?? 'normal';
   let kind: ItemKind;
@@ -340,7 +340,7 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
 }
 
 function itemToUse(state: GameState, u: BattleUnit): Action | null {
-  const faction = u.side as FactionId;
+  const faction = u.side as TeamId;
   if (!canUseBattleItem(state, faction)) return null;
   const b = state.battle!;
   const inv = state.factions[faction].inventory.map((id) => state.items[id]);
@@ -472,7 +472,7 @@ function attackReachFrom(state: GameState, u: BattleUnit, cell: HexKey): boolean
 }
 
 /** Bots keep heroes central, put shooters on the rows farthest from the enemy's strongest unit. */
-function chooseDeployment(state: GameState, faction: FactionId): Action {
+function chooseDeployment(state: GameState, faction: TeamId): Action {
   const b = state.battle!;
   const own = Object.values(b.units).filter((u) => u.side === faction);
   const cells = deployCells(b, faction).sort((x, y) => middleDistance(b, x) - middleDistance(b, y));

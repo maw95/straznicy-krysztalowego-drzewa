@@ -1,7 +1,8 @@
 // Adventure-map AI: the coop evil automaton (spec section 7) and simple bots
 // for player seats. Both only use information visible on the map.
 
-import { FACTION_SUPPORTS, ITEM_EFFECT, UNITS, type FactionId } from '../data';
+import { raceOf } from '../teams';
+import { FACTION_SUPPORTS, ITEM_EFFECT, UNITS, type TeamId } from '../data';
 import { botWantsHut, buildingLevel, garrisonAt, kingdomBotAction, supportSlots, type Settlement } from '../kingdom';
 import { objectReady } from '../economy';
 import { mayBuildSpark, shardCollector, shardsOf, shardTotal } from '../empire';
@@ -72,7 +73,7 @@ class Memo {
 
   constructor(readonly state: GameState) {}
 
-  teamStrength(f: FactionId, heroId: string): number {
+  teamStrength(f: TeamId, heroId: string): number {
     const k = `${f}:${heroId}`;
     let v = this.strengths.get(k);
     if (v === undefined) this.strengths.set(k, (v = teamStrength(this.state, f, heroId)));
@@ -184,7 +185,7 @@ function stepToward(state: GameState, path: HexKey[]): Action {
  * Rough battle strength of a hero with its two best supports (Lanchester's square law:
  * total Życie × total Atak; shooters count a little more, as they hit from afar).
  */
-export function teamStrength(state: GameState, f: FactionId, heroId: string): number {
+export function teamStrength(state: GameState, f: TeamId, heroId: string): number {
   // In a duel on the board the heroes fight alone.
   const supports = state.setup.battleMode === 'board' ? [] : state.factions[f].supportsAlive.slice().sort((a, b) => unitValue(b) - unitValue(a)).slice(0, supportSlots(state, f));
   const team = [heroId, ...supports];
@@ -244,7 +245,7 @@ function mapItemAction(state: GameState): Action | null {
       const dead = Object.values(state.heroes).find((h) => h.faction === hero.faction && !h.alive);
       const spots = reviveSpots(state, hero);
       if (dead && spots.length) return { type: 'useMapItem', itemId: id, unitId: dead.id, targets: [spots[0]] };
-      const deadSupport = FACTION_SUPPORTS[hero.faction].find((s) => f.supportsDead.includes(s));
+      const deadSupport = FACTION_SUPPORTS[raceOf(state, hero.faction)].find((s) => f.supportsDead.includes(s));
       if (deadSupport && f.supportsAlive.length < supportSlots(state, hero.faction)) return { type: 'useMapItem', itemId: id, unitId: deadSupport };
     }
     if (item.kind === 'map') {

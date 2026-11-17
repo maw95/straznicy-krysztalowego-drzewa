@@ -5,8 +5,12 @@ import { byPack } from './factions';
 // They are TEST values meant to be tuned, so the
 // engine never hard-codes them — it always reads from these tables.
 
+/** A RACE: the key of game data and graphics (heroes, units, buildings, names). */
 export type FactionId = 'dawn' | 'horde';
-export type Side = FactionId | 'neutral';
+/** A TEAM (playing side): the key of game state (gold, treasures, homes, half of the map). Today exactly two teams, each of the race with the same id (see raceOf in teams.ts). */
+export type TeamId = 'dawn' | 'horde';
+/** A team or the neutral creatures. */
+export type Side = TeamId | 'neutral';
 export type UnitKind = 'hero' | 'support' | 'neutral';
 export type MovementType = 'walk' | 'fly';
 export type AttackType = 'melee' | 'ranged';

@@ -4,8 +4,9 @@
 // one of its settlements (the hero whose turn it is has to stand there): the shards are its price, it gives the faction a great bonus, and in the
 // goal 'relic' it wins the game. Every number is provisional. Design: docs/MECHANIKI_I_POZIOMY.md ("Poziom 6").
 
+import { raceOf } from './teams';
 import { byPack } from './factions';
-import { FACTION_NAMES, UNITS, type FactionId } from './data';
+import { FACTION_NAMES, UNITS, type FactionId, type TeamId } from './data';
 import { distance, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import { tileCost } from './map';
@@ -41,12 +42,12 @@ export const MECHANIC_TEXTS: Record<FactionId, string> = {
 };
 
 /** The best level of the faction's mechanic building (Kapliczka Świtu, Jama Krwi) among the settlements it holds: 0 means it has no Blask Świtu or Żądza Krwi at all. */
-export const mechanicLevel = (state: GameState, f: FactionId): number => {
+export const mechanicLevel = (state: GameState, f: TeamId): number => {
   const key = f === 'dawn' ? 'shrine' : 'bloodPit';
   return Math.max(0, ...Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.owner === f).map((s) => s.buildings[key] ?? 0));
 };
 /** The summed level of a faction's building over its settlements (Szkółka Drzewa, Szabrownia). */
-export const summedLevel = (state: GameState, f: FactionId, key: 'nursery' | 'plunder'): number =>
+export const summedLevel = (state: GameState, f: TeamId, key: 'nursery' | 'plunder'): number =>
   Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.owner === f).reduce((n, s) => n + (s.buildings[key] ?? 0), 0);
 
 export const SPARK_NAMES: Record<FactionId, string> = byPack((p) => p.sparkName);
@@ -58,19 +59,19 @@ export const SPARK_TEXTS: Record<FactionId, string> = {
 /** How many shards the game has in all (on the map, carried, or already built into the Iskra). */
 export const shardTotal = (state: GameState): number => state.kingdom?.shardTotal ?? 0;
 /** Shards the living heroes of a faction carry. */
-export const shardsOf = (state: GameState, f: FactionId): number => Object.values(state.heroes).filter((h) => h.faction === f && h.alive).reduce((n, h) => n + (h.shards ?? 0), 0);
+export const shardsOf = (state: GameState, f: TeamId): number => Object.values(state.heroes).filter((h) => h.faction === f && h.alive).reduce((n, h) => n + (h.shards ?? 0), 0);
 /** The faction whose settlement holds the building of the Pierwotna Iskra, if it stands. */
-export const sparkOwner = (state: GameState): FactionId | null => {
+export const sparkOwner = (state: GameState): TeamId | null => {
   const s = Object.values(state.kingdom?.settlements ?? {}).find((x) => (x.buildings.spark ?? 0) > 0);
   return s?.owner ?? null;
 };
-export const hasSpark = (state: GameState, f: FactionId): boolean => Boolean(state.rules.empire) && sparkOwner(state) === f;
+export const hasSpark = (state: GameState, f: TeamId): boolean => Boolean(state.rules.empire) && sparkOwner(state) === f;
 
 /** Whether this hero may raise the Iskra (standing in a settlement of its faction is checked by the build action): it alone carries every shard of the game. */
 export const mayBuildSpark = (state: GameState, hero: HeroState): boolean => Boolean(state.rules.empire) && hero.alive && shardTotal(state) > 0 && !sparkOwner(state) && (hero.shards ?? 0) === shardTotal(state);
 
 /** The hero a faction's shards are gathered at: the one carrying most, then the one nearest to an own settlement, then by id (all bots agree on it). */
-export function shardCollector(state: GameState, f: FactionId): HeroState | null {
+export function shardCollector(state: GameState, f: TeamId): HeroState | null {
   const own = Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.owner === f).map((s) => parseKey(s.at));
   const away = (h: HeroState) => Math.min(99, ...own.map((p) => distance(p, parseKey(h.pos))));
   const carriers = Object.values(state.heroes).filter((h) => h.faction === f && h.alive && h.pos && (h.shards ?? 0) > 0);
@@ -108,8 +109,8 @@ export function pickUpShard(state: GameState, hero: HeroState): void {
   if (state.tiles[hero.pos].place?.kind === 'shard') delete state.tiles[hero.pos].place;
   hero.shards = (hero.shards ?? 0) + n;
   const f = hero.faction;
-  log(state, 'crystal', `${UNITS[hero.id].name} podnosi Odłamek Pierwotnej Iskry (${FACTION_NAMES[f]}: ${shardsOf(state, f)}/${shardTotal(state)}).`, undefined, { type: 'fx', kind: 'odlamek', hex: hero.pos });
-  if (mayBuildSpark(state, hero)) log(state, 'crystal', `${UNITS[hero.id].name} niesie wszystkie Odłamki: w osadzie ${FACTION_NAMES[f]} może wznieść ${SPARK_NAMES[f]}.`);
+  log(state, 'crystal', `${UNITS[hero.id].name} podnosi Odłamek Pierwotnej Iskry (${FACTION_NAMES[raceOf(state, f)]}: ${shardsOf(state, f)}/${shardTotal(state)}).`, undefined, { type: 'fx', kind: 'odlamek', hex: hero.pos });
+  if (mayBuildSpark(state, hero)) log(state, 'crystal', `${UNITS[hero.id].name} niesie wszystkie Odłamki: w osadzie ${FACTION_NAMES[raceOf(state, f)]} może wznieść ${SPARK_NAMES[raceOf(state, f)]}.`);
 }
 
 /** A fallen hero's shards: the hero that beat it takes them, otherwise they fall onto the map near where it fell. */
@@ -120,7 +121,7 @@ export function loseShards(state: GameState, loser: HeroState, winner: HeroState
   if (winner?.alive) {
     winner.shards = (winner.shards ?? 0) + n;
     log(state, 'crystal', `${UNITS[winner.id].name} zabiera pokonanemu Odłamki Pierwotnej Iskry (${n}).`);
-    if (mayBuildSpark(state, winner)) log(state, 'crystal', `${UNITS[winner.id].name} niesie wszystkie Odłamki: w osadzie ${FACTION_NAMES[winner.faction]} może wznieść ${SPARK_NAMES[winner.faction]}.`);
+    if (mayBuildSpark(state, winner)) log(state, 'crystal', `${UNITS[winner.id].name} niesie wszystkie Odłamki: w osadzie ${FACTION_NAMES[raceOf(state, winner.faction)]} może wznieść ${SPARK_NAMES[raceOf(state, winner.faction)]}.`);
     return;
   }
   const k = state.kingdom!;
@@ -138,6 +139,6 @@ export function loseShards(state: GameState, loser: HeroState, winner: HeroState
 }
 
 /** The price of the Iskra is paid: every shard the faction's heroes carry is used up. */
-export function spendShards(state: GameState, f: FactionId): void {
+export function spendShards(state: GameState, f: TeamId): void {
   for (const h of Object.values(state.heroes)) if (h.faction === f) h.shards = 0;
 }

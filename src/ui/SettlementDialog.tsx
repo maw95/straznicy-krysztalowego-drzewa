@@ -2,8 +2,9 @@
 // the service of the chosen building: recruitment (barracks), artifacts for gold (market), healing the fallen (hospital), the treasury. Actions go to
 // the engine (kingdom.ts); the window only asks and shows what the engine allows.
 
+import { raceOf } from '../engine/teams';
 import { useEffect, useState } from 'react';
-import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
+import { FACTION_NAMES, UNITS, type FactionId, type TeamId } from '../engine/data';
 import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, incomeOf, KINGDOM, marketStock, mayRecruit, RECRUITS, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
 import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
@@ -51,7 +52,7 @@ const buildingPicture = (land: FactionId, b: BuildingId, level: number) => {
   return level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${b === 'tavern' || b === 'spark' ? 1 : Math.min(level, 2)}.webp`);
 };
 
-export function SettlementDialog({ state, settlementId, faction, onAction, onClose }: { state: GameState; settlementId: string; faction: FactionId; onAction: (a: Action) => void; onClose: () => void }) {
+export function SettlementDialog({ state, settlementId, faction, onAction, onClose }: { state: GameState; settlementId: string; faction: TeamId; onAction: (a: Action) => void; onClose: () => void }) {
   const s = state.kingdom!.settlements[settlementId];
   const [open, setOpen] = useState<BuildingId>('barracks');
   // The Rada Osady opens the tree of buildings (a second page of the same screen); Esc comes back to the landscape first.
@@ -245,13 +246,13 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       const ready = Boolean(buyer && mayBuildSpark(state, buyer));
       return (
         <div data-panel="spark" style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
-          <b>{SPARK_NAMES[faction]}</b>
-          <div><RuleText text={SPARK_TEXTS[faction]} /> {state.rules.objective === 'relic' ? 'W tej grze jego wzniesienie wygrywa.' : ''}</div>
+          <b>{SPARK_NAMES[raceOf(state, faction)]}</b>
+          <div><RuleText text={SPARK_TEXTS[raceOf(state, faction)]} /> {state.rules.objective === 'relic' ? 'W tej grze jego wzniesienie wygrywa.' : ''}</div>
           {built ? <b style={{ color: '#2E7A32' }}>Iskra płonie w tej osadzie.</b> : (
             <>
               <span style={{ fontSize: 14, color: '#6B4A22' }}>Cena: wszystkie Odłamki Pierwotnej Iskry (frakcja ma {shardsOf(state, faction)} z {shardTotal(state)}). Buduje bohater stojący w tej osadzie, który sam niesie wszystkie Odłamki{buyer ? ` (${heroLabel(buyer)} niesie ${buyer.shards ?? 0})` : ''}: przekaż je sobie wcześniej na mapie.</span>
               <button className="btn prim" data-build="spark" disabled={!ready || !buyer || buyer.pos !== s.at} title={!ready ? 'Jeden bohater musi nieść wszystkie Odłamki.' : buyer?.pos !== s.at ? 'Bohater musi stać w tej osadzie.' : undefined} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: 'spark' })} style={{ padding: '4px 16px', fontSize: 17 }}>
-                Wznieś: {SPARK_NAMES[faction]}
+                Wznieś: {SPARK_NAMES[raceOf(state, faction)]}
               </button>
             </>
           )}
@@ -336,7 +337,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         <div data-panel="hospital" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {fs.supportsDead.length === 0 && <i>Nikt z drużyny nie poległ.</i>}
           {fs.supportsDead.map((id) => {
-            const cost = Math.max(1, Math.ceil((RECRUITS[faction].find((r) => r.id === id)?.cost ?? 2) / KINGDOM.heal[s.buildings.hospital >= 2 ? 1 : 0]));
+            const cost = Math.max(1, Math.ceil((RECRUITS[raceOf(state, faction)].find((r) => r.id === id)?.cost ?? 2) / KINGDOM.heal[s.buildings.hospital >= 2 ? 1 : 0]));
             return (
               <div key={id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                 <Portrait unitId={id} size={44} dim />
@@ -425,7 +426,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       <div className="settlement-top">
         <Ribbon side={faction} style={{ width: 'min(520px, 90vw)' }}>{s.name}</Ribbon>
         <div className="settlement-info">
-        Osada {FACTION_NAMES[s.land]}{s.owner !== s.land ? ` (zajęta przez: ${FACTION_NAMES[s.owner!]})` : ''} · złoto: <b data-gold>{gold}</b> · dochód: +{incomeOf(state, faction)} na rundę
+        Osada {FACTION_NAMES[raceOf(state, s.land)]}{s.owner !== s.land ? ` (zajęta przez: ${FACTION_NAMES[raceOf(state, s.owner!)]})` : ''} · złoto: <b data-gold>{gold}</b> · dochód: +{incomeOf(state, faction)} na rundę
         {state.kingdom!.res && <span style={{ marginLeft: 12, display: 'inline-flex', gap: 10, verticalAlign: 'middle' }}><ResourceStrip state={state} faction={faction} size={22} /></span>}
         </div>
       </div>

@@ -2,14 +2,14 @@
 
 import { RESOURCE_IDS, RESOURCE_NAMES, type ResourceId } from '../engine/economy';
 import { resOf, resourceIncomeOf } from '../engine/kingdom';
-import type { FactionId } from '../engine/data';
+import type { TeamId } from '../engine/data';
 import type { GameState } from '../engine/types';
 import { asset } from './common';
 
 export const RESOURCE_ICON: Record<ResourceId, string> = { wood: 'ikony/mapa/drewno.webp', ore: 'ikony/mapa/ruda.webp', dust: 'ikony/mapa/pyl.webp' };
 
 /** Icon, stock and income per round of each resource; nothing when the level has no resources. */
-export function ResourceStrip({ state, faction, size = 26, light = false }: { state: GameState; faction: FactionId; size?: number; light?: boolean }) {
+export function ResourceStrip({ state, faction, size = 26, light = false }: { state: GameState; faction: TeamId; size?: number; light?: boolean }) {
   if (!state.kingdom?.res) return null;
   const have = resOf(state, faction);
   const income = resourceIncomeOf(state, faction);

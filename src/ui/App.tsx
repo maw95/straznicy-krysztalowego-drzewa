@@ -1,3 +1,4 @@
+import { raceOf } from '../engine/teams';
 import { scenarioOf } from '../engine/campaign';
 import { CampaignOver } from './CampaignScreen';
 import { markDone } from './campaignProgress';
@@ -5,7 +6,7 @@ import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { heroLabel } from '../engine/realm';
 import { chooseAction } from '../engine/ai';
 import { describeAction } from './hint';
-import { FACTION_NAMES, UNITS, type FactionId, type ItemKind } from '../engine/data';
+import { FACTION_NAMES, UNITS, type TeamId, type ItemKind } from '../engine/data';
 import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
 import { movePath } from '../engine/battle';
 import { neighborKeys, type HexKey } from '../engine/hex';
@@ -67,7 +68,7 @@ export function App() {
   const [showLog, setShowLog] = useState(false);
   const [showDebug, setShowDebug] = useState(false);
   const [showLeave, setShowLeave] = useState(false);
-  const [confirmedFaction, setConfirmedFaction] = useState<FactionId | null>(null);
+  const [confirmedFaction, setConfirmedFaction] = useState<TeamId | null>(null);
   const history = useRef<Action[]>([]);
   const [showRules, setShowRules] = useState(false);
   const [showTesters, setShowTesters] = useState(false);
@@ -75,7 +76,7 @@ export function App() {
   const [showChangelog, setShowChangelog] = useState(false);
   const [showCredits, setShowCredits] = useState(false);
   /** Arena draft at one screen: the side whose cards were last uncovered. */
-  const [draftRevealed, setDraftRevealed] = useState<FactionId | null>(null);
+  const [draftRevealed, setDraftRevealed] = useState<TeamId | null>(null);
   // The intro plays on the first launch (never in the ?steps= test games).
   const [showIntro, setShowIntro] = useState(() => !introSeen() && !isTestRun());
   // The title screen opens each visit (its START is the click that allows full screen and music).
@@ -299,7 +300,7 @@ export function App() {
   const humans = game?.players.filter(atThisScreen) ?? [];
   // Hand-off screen only between human players of different factions, and never mid-battle.
   const needsHandoff = Boolean(game && humanTurn && pvp && game.phase === 'adventure' && actor.kind === 'human' && actor.faction !== confirmedFaction && humans.some((p) => p.faction !== actor.faction));
-  const viewer: FactionId | null = actor.kind === 'human' ? actor.faction : humans[0]?.faction ?? (game?.setup.mode === 'coop' ? 'dawn' : null);
+  const viewer: TeamId | null = actor.kind === 'human' ? actor.faction : humans[0]?.faction ?? (game?.setup.mode === 'coop' ? 'dawn' : null);
 
   // The latest state lives in a ref so every action is applied and recorded exactly once
   // (state updater functions may run twice in React's development mode).
@@ -618,7 +619,7 @@ export function App() {
     if (!game?.lastBattle) return;
     const lb = game.lastBattle;
     const humanSides = new Set(game.players.filter(atThisScreen).map((p) => p.faction));
-    if (humanSides.has(lb.attacker as FactionId) || humanSides.has(lb.defender as FactionId)) setSummary(lb.id);
+    if (humanSides.has(lb.attacker as TeamId) || humanSides.has(lb.defender as TeamId)) setSummary(lb.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastBattleId]);
 
@@ -1082,7 +1083,7 @@ function download(name: string, text: string) {
   URL.revokeObjectURL(a.href);
 }
 
-function SupportSelect({ state, faction, onPick }: { state: GameState; faction: FactionId; onPick: (ids: string[]) => void }) {
+function SupportSelect({ state, faction, onPick }: { state: GameState; faction: TeamId; onPick: (ids: string[]) => void }) {
   const pool = state.factions[faction].supportsAlive;
   const [picked, setPicked] = useState<string[]>([]);
   // Two supports in the other levels; the team's places in level 3.
@@ -1127,7 +1128,7 @@ function Handoff({ state, playerId, onConfirm }: { state: GameState; playerId: s
           <div style={{ fontSize: 18, color: 'var(--muted)' }}>Teraz tura</div>
           <div style={{ fontWeight: 800, fontSize: 28, color: '#F3D27A', textShadow: '0 2px 0 #1E1204' }}>{player.name} — {heroLabel(hero)}</div>
         </div>
-        <div style={{ fontSize: 18, lineHeight: 1.35, maxWidth: 360 }}>Pozostali gracze, odwróćcie wzrok. Na ekranie pojawią się ukryte skarby frakcji: {FACTION_NAMES[player.faction]}.</div>
+        <div style={{ fontSize: 18, lineHeight: 1.35, maxWidth: 360 }}>Pozostali gracze, odwróćcie wzrok. Na ekranie pojawią się ukryte skarby frakcji: {FACTION_NAMES[raceOf(state, player.faction)]}.</div>
         <button className="btn prim" style={{ height: 54, padding: '0 26px', fontSize: 20, marginTop: 6 }} onClick={onConfirm}>
           Jestem {player.name} — pokaż turę
         </button>
@@ -1146,9 +1147,9 @@ function GameOver({ state, online, rankingNote, onNew, onLog }: { state: GameSta
         {state.setup.mode === 'arena' ? (
           <div className="well" style={{ padding: '12px 18px', display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '4px 24px', fontSize: 17, textAlign: 'left', width: '100%' }}>
             <span>Rundy bitwy</span><b>{state.lastBattle?.rounds ?? 0}</b>
-            {(['dawn', 'horde'] as FactionId[]).map((f) => (
+            {(['dawn', 'horde'] as TeamId[]).map((f) => (
               <Fragment key={f}>
-                <span>Ocaleli: {FACTION_NAMES[f]}</span>
+                <span>Ocaleli: {FACTION_NAMES[raceOf(state, f)]}</span>
                 <b>{state.lastBattle ? state.lastBattle.units.filter((u) => u.side === f && u.alive).map((u) => UNITS[u.defId].name).join(', ') || '—' : '—'}</b>
               </Fragment>
             ))}
