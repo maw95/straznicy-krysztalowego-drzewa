@@ -283,6 +283,12 @@ button { font-family: inherit; }
 .show-mobile { display: none !important; }
 /* Map zoom on phones; two fingers on the map zoom the map, not the page. */
 .zoom-btn { width: 42px; height: 42px; padding: 0; font-size: 26px; font-weight: 800; line-height: 1; display: inline-flex; align-items: center; justify-content: center; }
+/* A finger needs 44 px: the round buttons of every screen grow on touch screens. */
+@media (pointer: coarse) {
+  .music-btn { width: 44px; height: 44px; }
+  .fullscreen-btn { width: 44px; height: 44px; right: 60px; }
+  .zoom-btn { width: 44px; height: 44px; }
+}
 .map-scroll { touch-action: pan-x pan-y; }
 .bar { flex: none; }
 
@@ -327,6 +333,9 @@ button { font-family: inherit; }
   .play-row .side-battle { display: none; }
   .screen.play .sticky-mobile { position: relative; bottom: auto; }
   .screen.play .bar > .gi { flex-wrap: nowrap; }
+  /* The map's bar holds more than a low screen is wide (the turn, the counters, the gold and the three buttons): it takes a second row instead of losing the buttons. */
+  .screen.play .bar.adv-bar > .gi { flex-wrap: wrap; row-gap: 2px; gap: 8px !important; padding: 4px 10px !important; }
+  .screen.play .bar.adv-bar .footer-slot { flex: 1 1 auto !important; }
   /* Dialogs: less margin and no crest, so more of them fits on the low screen. */
   .overlay { padding: 6px 8px; }
   .overlay .crest { display: none; }

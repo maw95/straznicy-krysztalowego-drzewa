@@ -841,7 +841,7 @@ export function App() {
   );
 
   const adventureFooter = (
-    <Frame className="bar sticky-mobile" style={{ height: 70 }} innerStyle={{ display: 'flex', alignItems: 'center', gap: 18, padding: '0 18px' }}>
+    <Frame className="bar adv-bar sticky-mobile" style={{ height: 70 }} innerStyle={{ display: 'flex', alignItems: 'center', gap: 18, padding: '0 18px' }}>
       <button className="btn prim show-mobile" disabled={!(humanTurn && game.phase === 'adventure' && !steps.length)} style={{ height: 44, padding: '0 16px', alignItems: 'center', gap: 8, fontSize: 18 }} onClick={() => humanAction({ type: 'endTurn' })}>
         <Medal fill="mGreen" glyph="gHourglass" size={28} />
         Zakończ turę

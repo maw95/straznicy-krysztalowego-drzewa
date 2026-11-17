@@ -14,6 +14,9 @@ export const VIEWS = {
   ultraszeroki: { width: 3440, height: 1440, mobile: false },
   telefon: { width: 390, height: 844, mobile: true },
   poziomo: { width: 844, height: 390, mobile: true },
+  /** The smallest phones held sideways (iPhone SE class) and a big one (Pro Max class). */
+  malypoziomo: { width: 667, height: 375, mobile: true },
+  duzypoziomo: { width: 932, height: 430, mobile: true },
 } as const;
 export type View = keyof typeof VIEWS;
 
