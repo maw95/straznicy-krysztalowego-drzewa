@@ -50,7 +50,7 @@ Kolejność prac: interfejs celu → punkty kontrolne (najprostszy) → przetrwa
 ## Etap 2 — ekonomia i rozwój (poziomy 3–4 drabinki)
 
 - **Zasoby:** złoto, drewno, ruda/kamień + jeden rzadki, magiczny zasób (nazwa w `DECYZJE.md`; „kryształy” zostają celem, nie walutą). Kopalnie na mapie dają dochód co rundę.
-- **Osady:** startowa osada frakcji + osady do zdobycia. W osadzie jeden budynek na rundę; budynki odblokowują
+- **Osady:** startowa osada frakcji + osady do zdobycia. W osadzie bez limitu budynków na rundę (od 17.11 ogranicza tylko koszt); budynki odblokowują
   jednostki, bonusy i ulepszenia. Przyrost „puli rekrutów” w cyklu tygodniowym (7 rund).
 - **Armia (uzgodnione):** model *drużyny* zamiast stosów: bohater prowadzi do N pojedynczych jednostek
   (N rośnie z poziomem bohatera i budynkami). Dzięki temu arena i bitwy figurek zostają bez przebudowy; stosy jak w

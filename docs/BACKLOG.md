@@ -48,15 +48,14 @@ Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.te
 ### Grupa B. Ekran osady (L)
 
 **37. Osada na pełnym ekranie (reszta)** (L; punkt był rozbity na etapy, patrz `docs/BUDYNKI.md` sekcje 0 i 0a)
-- **Zrobione 17.11:** graf zależności (`BUILDING_PARENT`, `buildBlock`; boty respektują, balans bez zmian: 144 vs 143 komórek poza pasmem), osada na pełnym ekranie (`SettlementDialog.tsx`, `.settlement-full`; krajobraz jako tło, budynki na nim, usługi na dole, scrolluje na małych ekranach), **Rada Osady** na krajobrazie (klik otwiera drugą stronę ekranu), drzewko z węzłami i liniami (`BuildingTree.tsx`; stany: wybudowany / do kupienia / za drogi / zablokowany; klik pokazuje cenę i efekt; Esc wraca do krajobrazu). Skrypt kontrolny `scripts/browser/osada-pelny.ts`, `?built=barracks,…` w adresie testowym.
+- **Zrobione 17.11:** limit „jeden budynek na rundę” usunięty (pasma bez zmian), graf zależności (`BUILDING_PARENT`, `buildBlock`; boty respektują, balans bez zmian: 144 vs 143 komórek poza pasmem), osada na pełnym ekranie (`SettlementDialog.tsx`, `.settlement-full`; krajobraz jako tło, budynki na nim, usługi na dole, scrolluje na małych ekranach), **Rada Osady** na krajobrazie (klik otwiera drugą stronę ekranu), drzewko z węzłami i liniami (`BuildingTree.tsx`; stany: wybudowany / do kupienia / za drogi / zablokowany; klik pokazuje cenę i efekt; Esc wraca do krajobrazu). Skrypt kontrolny `scripts/browser/osada-pelny.ts`, `?built=barracks,…` w adresie testowym.
 - **Rada Osady:** obrazy wygenerowane 17.11 (`osady/{dawn,horde}_council1.webp`, 12 CU, `assets.json`); autor może je zakwestionować (wariant odrzucony: zob. `assets.json`).
 - **Zostaje:**
-  1. **Usunąć limit „jeden budynek na rundę”** na wszystkich poziomach (`mayBuildNow`, `KingdomState.built`, komunikaty, boty budują tyle, na ile je stać); **przesunie golden i pasma** (`tuneLevels.ts`, `make sim-raport`), osobny commit.
-  2. **Budynki unikalne frakcji** (po 3: Kapliczka Świtu, Szkółka Drzewa, Krąg Gaju / Jama Krwi, Szabrownia, Wilcze Legowisko; efekty i ceny w `docs/BUDYNKI.md` sekcja 0) **zamiast drzewek frakcji** (`kingdom.tree`, `kingdomTree`, `TREE_NAMES`, pas „drzewko” w oknie) oraz budynek Pierwotnej Iskry w drzewku; **także podstawowe efekty Blasku Świtu i Żądzy Krwi mają wymagać budynku**. Nowe obrazy budynków (Scenario, osobno Przymierze i Horda).
-  3. **Koszary od poziomu 6 domyślnie wybudowane**, siedliska w drzewku (dwa na tier, jedno wyklucza drugie), komunikaty „wybrano alternatywne siedlisko” i „siedlisko jeszcze niekupione”.
-  4. **Układ Heroes III:** ręczne pozycje budynków osobno dla Przymierza i Hordy (dziś dwa równe rzędy), portrety bohaterów w osadzie u dołu, garnizon obok.
-  5. Samouczek (`Tutorial.tsx`), `INSTRUKCJA.md` i `ZASADY_CYFROWE.md` (okno osady, drzewko, Rada).
-- Gotowe, gdy: Rada i wszystkie budynki z `BUDYNKI.md` mają obrazy, drzewka frakcji zniknęły, limit rundy zniknął, skrypty `scripts/browser/*` przechodzą, golden i pasma przeliczone osobnym commitem.
+  1. **Budynki unikalne frakcji** (po 3: Kapliczka Świtu, Szkółka Drzewa, Krąg Gaju / Jama Krwi, Szabrownia, Wilcze Legowisko; efekty i ceny w `docs/BUDYNKI.md` sekcja 0) **zamiast drzewek frakcji** (`kingdom.tree`, `kingdomTree`, `TREE_NAMES`, pas „drzewko” w oknie) oraz budynek Pierwotnej Iskry w drzewku; **także podstawowe efekty Blasku Świtu i Żądzy Krwi mają wymagać budynku**. Nowe obrazy budynków (Scenario, osobno Przymierze i Horda).
+  2. **Koszary od poziomu 6 domyślnie wybudowane**, siedliska w drzewku (dwa na tier, jedno wyklucza drugie), komunikaty „wybrano alternatywne siedlisko” i „siedlisko jeszcze niekupione”.
+  3. **Układ Heroes III:** ręczne pozycje budynków osobno dla Przymierza i Hordy (dziś dwa równe rzędy), portrety bohaterów w osadzie u dołu, garnizon obok.
+  4. Samouczek (`Tutorial.tsx`), `INSTRUKCJA.md` i `ZASADY_CYFROWE.md` (okno osady, drzewko, Rada).
+- Gotowe, gdy: Rada i wszystkie budynki z `BUDYNKI.md` mają obrazy, drzewka frakcji zniknęły, limit rundy zniknął, skrypty `scripts/browser/*` przechodzą, golden i pasma sprawdzone po zmianach.
 
 ### Grupa D. Interfejs, kreator i narzędzia (zgłoszenia autora z 17.11)
 

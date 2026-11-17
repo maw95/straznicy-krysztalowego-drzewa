@@ -4,7 +4,7 @@ Dokument do ustalenia zależności między budynkami (backlog, punkt 37, zakres 
 (`src/engine/kingdom.ts`, `economy.ts`, `empire.ts`), część 2 to **propozycje nowych budynków** (nic z tego nie jest
 zrobione), część 3 to pytania do Ciebie. Ceny i liczby są z kodu na 17.11.2026.
 
-Zasady wspólne: w osadzie można budować **jeden budynek na rundę** (cała frakcja). Poziom gry decyduje, które budynki
+Zasady wspólne: w osadzie można budować **dowolnie wiele budynków na rundę** (od 17.11 limit zniknął, ogranicza tylko koszt). Poziom gry decyduje, które budynki
 w ogóle istnieją. Obcej (zdobytej) osady nie rozbudujesz o Koszary. „Rada Osady” (nazwa ustalona 17.11) będzie
 dodatkowym, darmowym, zawsze stojącym budynkiem, który otwiera drzewko budowy.
 

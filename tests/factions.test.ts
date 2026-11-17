@@ -165,8 +165,8 @@ describe('level 6: alternative units and their dwellings', () => {
     expect(() => applyAction(s, { type: 'kingdomRecruit', settlementId: home(s).id, unitId: 'hedgehog' })).toThrow(/inne siedlisko/);
     s = applyAction(s, { type: 'kingdomRecruit', settlementId: home(s).id, unitId: 'silverFox' });
     expect(s.factions.dawn.supportsAlive).toContain('silverFox');
-    // A dwelling is a building: one a round, and the second of a tier is refused for good.
-    expect(() => applyAction(s, { type: 'kingdomDwelling', settlementId: home(s).id, unitId: 'centaur' })).toThrow(/jeden budynek na rundę/);
+    // A dwelling is a building with no limit of a round, but the second unit of a tier is refused for good.
+    expect(() => applyAction(s, { type: 'kingdomDwelling', settlementId: home(s).id, unitId: 'hedgehog' })).toThrow(/drugie jest wykluczone/);
     const round = s.round;
     while (s.round === round) s = applyAction(s, { type: 'endTurn' });
     while (s.heroes[s.turnOrder[s.turnIndex]].faction !== 'dawn') s = applyAction(s, { type: 'endTurn' });

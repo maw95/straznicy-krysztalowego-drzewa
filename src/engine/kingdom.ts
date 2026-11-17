@@ -55,7 +55,6 @@ export interface KingdomState {
   tree?: Record<FactionId, number>;
   /** Level 6: the units of tiers 2-5 whose dwelling each faction has built (one per tier). */
   dwellings?: Record<FactionId, string[]>;
-  built?: Record<FactionId, number>;
   /** A hero opened a chest and has to choose: its contents (an artifact) or gold. */
   chest: { heroId: string } | null;
 }
@@ -577,9 +576,6 @@ export function buildBlock(s: Settlement, b: BuildingId): string | null {
   return `Najpierw: ${BUILDING_NAMES[parent][0]}.`;
 }
 
-/** Level 4 allows one building (or upgrade) a round per faction. */
-export const mayBuildNow = (state: GameState, f: FactionId): boolean => !state.rules.economy || state.kingdom?.built?.[f] !== state.round;
-
 /** Resources per round the faction earns now, with where they come from. */
 export function resourceIncomeBreakdown(state: GameState, f: FactionId): Array<{ label: string; res: ResourceId; amount: number }> {
   const k = state.kingdom;
@@ -625,9 +621,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (b === 'barracks' && s.land !== hero.faction) throw new Error('Obcej osady nie rozbudujesz o koszary.');
       const block = buildBlock(s, b);
       if (block) throw new Error(block);
-      if (!mayBuildNow(state, hero.faction)) throw new Error('W tej rundzie budowaliście już: jeden budynek na rundę.');
       payCost(state, hero.faction, price);
-      if (state.rules.economy) (k.built ??= { dawn: 0, horde: 0 })[hero.faction] = state.round;
       s.buildings[b] = buildingLevel(s, b) + 1;
       log(state, 'info', `${FACTION_NAMES[hero.faction]}: ${BUILDING_NAMES[b][s.buildings[b] - 1]} w osadzie ${s.name} (${costText(price)}).`);
       break;
@@ -715,10 +709,8 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (!state.rules.empire || !entry || !needsDwelling(state, entry)) throw new Error('Siedliska jednostek są dopiero na poziomie Imperium.');
       if (!mayRecruit(s, f) || s.buildings.barracks < 1) throw new Error('Siedlisko buduje się w osadzie własnej frakcji, przy koszarach.');
       if (dwellingOf(state, f, entry.tier)) throw new Error('Frakcja ma już siedlisko tego poziomu: drugie jest wykluczone.');
-      if (!mayBuildNow(state, f)) throw new Error('W tej rundzie budowaliście już: jeden budynek na rundę.');
       const price = DWELLING_COST[entry.tier - 2];
       payCost(state, f, price);
-      (k.built ??= { dawn: 0, horde: 0 })[f] = state.round;
       ((k.dwellings ??= { dawn: [], horde: [] })[f]).push(entry.id);
       log(state, 'info', `${FACTION_NAMES[f]} buduje siedlisko: ${DWELLING_NAMES[entry.id]} (${costText(price)}). Od teraz rekrutuje: ${UNITS[entry.id].name}.`);
       break;
@@ -859,7 +851,7 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   const id = s.id;
   const afford = (price: number | null) => price !== null && gold >= price;
   // A building needs its whole price (level 4: resources too) and the round's one build still free.
-  const buildable = (b: BuildingId) => { const c = buildCost(state, s, b); return c !== null && !buildBlock(s, b) && canPay(state, f, c) && mayBuildNow(state, f); };
+  const buildable = (b: BuildingId) => { const c = buildCost(state, s, b); return c !== null && !buildBlock(s, b) && canPay(state, f, c); };
   const own = s.land === f;
   if (own && s.buildings.barracks < 1 && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
   if (own && s.buildings.barracks >= 1 && state.rules.empire) {
@@ -869,7 +861,7 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
       const options = recruitsOf(state, f).filter((r) => r.tier === tier);
       const pick = options[(state.setup.seed + tier + (f === 'dawn' ? 0 : 1)) % options.length];
       const price = DWELLING_COST[tier - 2];
-      if (pick && mayBuildNow(state, f) && canPay(state, f, { ...price, gold: price.gold + pick.cost })) return { type: 'kingdomDwelling', settlementId: id, unitId: pick.id };
+      if (pick && canPay(state, f, { ...price, gold: price.gold + pick.cost })) return { type: 'kingdomDwelling', settlementId: id, unitId: pick.id };
       break;
     }
   }
@@ -920,7 +912,7 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
  */
 function botTrade(state: GameState, f: FactionId, s: Settlement): Action | null {
   const k = state.kingdom!;
-  if (!k.res || !mayBuildNow(state, f)) return null;
+  if (!k.res) return null;
   const fs = state.factions[f];
   const own = s.land === f;
   const wanted: BuildingId[] = [];

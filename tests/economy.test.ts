@@ -1,4 +1,4 @@
-// Level 4 "Księstwo": wood, ore and Gwiezdny Pył, resource mines, building prices, one building a round, and bots that play it to the end.
+// Level 4 "Księstwo": wood, ore and Gwiezdny Pył, resource mines, building prices, and bots that play it to the end.
 
 import { describe, expect, it } from 'vitest';
 import { activeHero, applyAction, createGame } from '../src/engine/game';
@@ -60,8 +60,9 @@ describe('level 4: income and prices', () => {
     s = applyAction(s, { type: 'kingdomBuild', settlementId: home.id, building: 'barracks' });
     expect(s.kingdom!.gold.dawn).toBe(40 - 3);
     expect(resOf(s, 'dawn').wood).toBe(3);
-    // One building a round.
-    expect(() => applyAction(s, { type: 'kingdomBuild', settlementId: home.id, building: 'market' })).toThrow(/jeden budynek na rundę/);
+    // No limit of one building a round (17.11): the price is the only limit.
+    s = applyAction(s, { type: 'kingdomBuild', settlementId: home.id, building: 'market' });
+    expect(s.kingdom!.res!.dawn.wood).toBe(1);
     const round = s.round;
     while (s.round === round) s = applyAction(s, { type: 'endTurn' });
     stand(s, home.id === home.id ? home.at : home.at);
