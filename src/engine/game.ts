@@ -48,7 +48,6 @@ import {
   hpScaleOf,
   startBattleFight,
   arenaObstacles,
-  applyComputerHp,
 } from './battle';
 import { distance, parseKey, type HexKey } from './hex';
 import { placeEncounters } from './encounters';
@@ -63,7 +62,7 @@ import { commanderFalls } from './realm';
 import { battleSpell, mapSpell, regenMana, START_SPELLS } from './magic';
 import { HERO_TYPES, specialtyOf } from './heroTypes';
 import { EMPIRE, FACTION_MECHANICS, hasSpark, loseShards } from './empire';
-import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, passShards, placeSites, SHARDS_ID, unequipArtifact, visitSite } from './sites';
+import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, COMPUTER_ARTIFACT_ODDS, heroTileCost, passArtifact, passShards, placeSites, SHARDS_ID, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
 import { computerFaction, isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
@@ -182,6 +181,13 @@ export function createGame(setup: SetupOptions): GameState {
   if (state.rules.kingdom && state.rules.heroGrowth && setup.mode !== 'arena' && setup.battleMode === 'arena') initKingdom(state);
   state.turnOrder = computeTurnOrder(state);
   state.turnIndex = 0;
+  // The computer's start advantage of the highest difficulty (COMPUTER_HANDICAP): artifacts of rarity 1-2 for its main hero.
+  if (rules.computerArtifacts && rules.heroGrowth && setup.mode !== 'arena') {
+    for (const f of ['dawn', 'horde'] as FactionId[]) {
+      const main = state.turnOrder.map((id) => state.heroes[id]).find((h) => h?.faction === f && !h.secondary);
+      if (main && computerFaction(state, f)) for (let i = 0; i < rules.computerArtifacts; i++) giveArtifact(state, main, drawArtifact(state, main, COMPUTER_ARTIFACT_ODDS, 0x51ed270b + i * 7919), 'przewaga komputera');
+    }
+  }
   if (setup.mode === 'arena') {
     startArena(state);
     return state;
@@ -856,7 +862,6 @@ function startBattle(state: GameState, s: BattleStart) {
   const hpScale = hpScaleOf(state);
   b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction, digital, scale, hpScale);
   if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital, scale, hpScale);
-  for (const h of [attacker, defenderHero]) if (h) applyComputerHp(state, b.units[h.id]);
   for (const h of [attacker, defenderHero]) if (h && state.rules.heroGrowth) {
     applyHeroSkills(h, b.units[h.id]);
     applyHeroType(h, b.units[h.id]);
@@ -934,7 +939,6 @@ function addSupports(state: GameState, faction: FactionId, ids: string[]) {
   const digital = isDigital(state.rules) && !b.duel;
   for (const id of ids) {
     b.units[id] = makeBattleUnit(id, faction, digital, scaleOf(state), hpScaleOf(state));
-    applyComputerHp(state, b.units[id]);
     // The leader of the side (the attacking or the defending hero of this faction) strengthens its supports.
     if (state.rules.heroGrowth) {
       const leader = state.heroes[b.attacker === faction ? b.attackerHero : b.defenderHero ?? ''];

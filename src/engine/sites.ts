@@ -147,6 +147,9 @@ export const ARTIFACT_ODDS = {
   guardian: [70, 25, 5],
 } as const;
 
+/** Rarity odds of the artifact the highest difficulty gives the computer at the start: common and rare only. */
+export const COMPUTER_ARTIFACT_ODDS = [60, 40, 0] as const;
+
 /** `defense` of an artifact in this battle's numbers: it is written for the digital Expedition (scale 3). */
 export const defenseOf = (points: number, scale: number) => Math.max(1, Math.round((points * scale) / STAT_SCALE));
 

@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Bardzo trudny: komputer nie ma już więcej Życia jednostek; zamiast tego zaczyna z dodatkowymi surowcami (3 drewna, 3 rudy, 2 Pyłu) i dwoma artefaktami dla głównego bohatera, nadal z większymi dochodami i 2 skarbami więcej.
+
 - Obrona osady: garnizon bez bohatera prowadzi w bitwie gracz-właściciel (wybór jednostek, rozstawienie i ruchy), a nie komputer; przy kilku graczach tej strony ten, którego bohater ruszał się ostatnio (człowiek przed botem).
 
 - Relikt: Pierwotną Iskrę może wznieść tylko bohater, który sam niesie wszystkie Odłamki i stoi we własnej osadzie. Odłamki można przekazać sojusznikowi na tym samym lub sąsiednim polu (przycisk „Przekaż Odłamki” w panelu bohatera); komputer też je zbiera u jednego bohatera.

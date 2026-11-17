@@ -1,8 +1,7 @@
 // The computer's advantages by level (COMPUTER_HANDICAP): Normal gives it exactly the people's conditions, Very hard sits on top of Hard.
 
 import { describe, expect, it } from 'vitest';
-import { applyComputerHp, makeBattleUnit } from '../src/engine/battle';
-import { createGame } from '../src/engine/game';
+import { activeHero, createGame } from '../src/engine/game';
 import { collectIncome, goldOf, incomeOf } from '../src/engine/kingdom';
 import { levelOf } from '../src/engine/scoring';
 import { COMPUTER_HANDICAP, computerFaction, levelSettings, type Level } from '../src/engine/types';
@@ -20,15 +19,17 @@ const treasuresOf = (s: ReturnType<typeof createGame>, f: 'dawn' | 'horde') => s
 describe('computer advantages by level', () => {
   it('Normal and the levels below it give the computer no advantage at all', () => {
     for (const level of ['zero', 'kids', 'normal', 'hard'] as Level[]) {
-      expect(COMPUTER_HANDICAP[level]).toEqual({ gold: 1, hp: 0, treasures: 0 });
+      expect(COMPUTER_HANDICAP[level]).toEqual({ gold: 1, treasures: 0, resources: { wood: 0, ore: 0, dust: 0 }, artifacts: 0 });
       const { rules } = levelSettings(level, 'coop');
-      expect([rules.computerGold, rules.computerHp, rules.computerTreasures]).toEqual([undefined, undefined, undefined]);
+      expect([rules.computerGold, rules.computerTreasures, rules.computerResources, rules.computerArtifacts]).toEqual([undefined, undefined, undefined, undefined]);
     }
   });
 
   it('only Very hard sets the advantages, from the one list', () => {
     const { rules } = levelSettings('veryHard', 'coop');
-    expect([rules.veryHard, rules.computerGold, rules.computerHp, rules.computerTreasures]).toEqual([true, COMPUTER_HANDICAP.veryHard.gold, COMPUTER_HANDICAP.veryHard.hp, COMPUTER_HANDICAP.veryHard.treasures]);
+    const h = COMPUTER_HANDICAP.veryHard;
+    expect([rules.veryHard, rules.computerGold, rules.computerTreasures, rules.computerResources, rules.computerArtifacts]).toEqual([true, h.gold, h.treasures, h.resources, h.artifacts]);
+    expect(rules).not.toHaveProperty('computerHp');
   });
 
   it('the level is read back from the rules (coop and PvP), Hard and Very hard apart', () => {
@@ -51,21 +52,25 @@ describe('computer advantages by level', () => {
     expect(treasuresOf(very, 'dawn')).toBe(treasuresOf(hard, 'dawn'));
   });
 
-  it("Very hard gives the computer's units more Życie, and nobody else's", () => {
-    const s = createGame(table('veryHard', 'coop'));
-    const horde = makeBattleUnit('werewolfLord', 'horde');
-    const dawn = makeBattleUnit('goldDragon', 'dawn');
-    const neutral = makeBattleUnit('goblinShaman', 'neutral');
-    const base = [horde.maxHp, dawn.maxHp, neutral.maxHp];
-    for (const u of [horde, dawn, neutral]) applyComputerHp(s, u);
-    expect(horde.maxHp).toBe(Math.round(base[0] * (1 + COMPUTER_HANDICAP.veryHard.hp)));
-    expect(horde.hp).toBe(horde.maxHp);
-    expect([dawn.maxHp, neutral.maxHp]).toEqual([base[1], base[2]]);
-    // On Normal the same call changes nothing.
-    const n = createGame(table('normal', 'coop'));
-    const w = makeBattleUnit('werewolfLord', 'horde');
-    applyComputerHp(n, w);
-    expect(w.maxHp).toBe(base[0]);
+  it('Very hard gives the computer start resources and an artifact for its main hero, the people nothing', () => {
+    const over = { heroGrowth: true, kingdom: true, economy: true };
+    const hard = createGame(table('hard', 'pvp', over));
+    const very = createGame(table('veryHard', 'pvp', over));
+    // pvpSeats are bots on both sides: both are "the computer".
+    for (const f of ['dawn', 'horde'] as const) {
+      for (const r of ['wood', 'ore', 'dust'] as const) expect(very.kingdom!.res![f][r]).toBe(hard.kingdom!.res![f][r] + COMPUTER_HANDICAP.veryHard.resources[r]);
+    }
+    const gear = (s: ReturnType<typeof createGame>, id: string) => Object.keys(s.heroes[id].gear ?? {}).length + (s.heroes[id].pack?.length ?? 0);
+    expect(gear(hard, 'goldDragon')).toBe(0);
+    expect(gear(very, 'goldDragon')).toBe(COMPUTER_HANDICAP.veryHard.artifacts);
+    expect(very.heroes.goldDragon.gear && Object.values(very.heroes.goldDragon.gear).every((id) => id)).toBe(true);
+    // A human side gets neither.
+    const humans = pvpSeats('goldDragon', 'blackDragon').map((x) => (x.faction === 'dawn' ? { ...x, controller: 'human' as const } : x));
+    const mixed = createGame({ ...table('veryHard', 'pvp', over), seats: humans });
+    expect(mixed.kingdom!.res!.dawn).toEqual(hard.kingdom!.res!.dawn);
+    expect(gear(mixed, 'goldDragon')).toBe(0);
+    expect(gear(mixed, 'blackDragon')).toBe(COMPUTER_HANDICAP.veryHard.artifacts);
+    expect(activeHero(very)).toBeTruthy();
   });
 
   it("Very hard multiplies a bot faction's income at a PvP table, and Normal does not", () => {
@@ -81,21 +86,16 @@ describe('computer advantages by level', () => {
 });
 
 describe('the arena computer', () => {
-  it('Very hard gives the bot side more Życie, Hard and Normal do not', async () => {
+  it('Very hard keeps the unit stats of Hard (the arena advantage is a bot without mistakes, not more Życie)', async () => {
     const { arenaSetup } = await import('../src/engine/types');
     const seats = [
       { name: 'A', faction: 'dawn' as const, controller: 'human' as const, heroId: 'goldDragon' },
       { name: 'B', faction: 'horde' as const, controller: 'bot' as const, heroId: 'blackDragon' },
     ];
-    const hpOf = (level: Level) => {
-      const s = createGame(arenaSetup(seats, 5, level));
-      const u = makeBattleUnit('werewolfLord', 'horde');
-      applyComputerHp(s, u);
-      return u.maxHp;
-    };
-    const base = makeBattleUnit('werewolfLord', 'horde').maxHp;
-    expect([hpOf('normal'), hpOf('hard')]).toEqual([base, base]);
-    expect(hpOf('veryHard')).toBe(Math.round(base * (1 + COMPUTER_HANDICAP.veryHard.hp)));
+    const s = createGame(arenaSetup(seats, 5, 'veryHard'));
+    expect(s.setup.rules).toMatchObject({ veryHard: true });
+    expect(s.setup.rules).not.toHaveProperty('computerHp');
+    expect(levelOf(s.setup)).toBe('veryHard');
   });
 });
 

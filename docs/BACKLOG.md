@@ -39,7 +39,7 @@ Stan nocnego zadania: zob. `docs/PODSUMOWANIE_NOCNE.md` i `docs/PYTANIA_DO_AUTOR
 
 ### Grupa A. Zasady i silnik (decyzje autora z 17.11; punkty niezależne, kolejność dowolna)
 
-Wspólne dla 33 i 35: zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
+Wspólne dla punktu 33: zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
 
 **33. Więcej czarów, trzy kręgi** (M; kierunek zaakceptowany 17.11)
 - **Akceptacja autora (17.11):** podział na trzy kręgi, koszty robocze (ulepszenie wieży 11 zł + 4 rudy + 4 Pyłu, nauka kręgu III ok. 8 zł + Pył) i lista czarów zatwierdzone; stroić pasmami.
@@ -49,14 +49,6 @@ Wspólne dla 33 i 35: zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasm
 - Dotyka: `magic.ts` (`SpellId`, `SPELLS`, `MAGIC`, funkcja rzucania i `spellPower`), `ai/` (`botSpell` w `magic.ts`: warunki użycia każdego czaru), `ui/SpellBook.tsx` (księga: układ na dwóch stronach, ikony `public/assets/ikony/mapa/` lub czary), `SettlementDialog.tsx` (wieża maga uczy `towerSpells(level)`), efekty graficzne `public/assets/efekty/` (grafiki: Scenario, `kredyty`; do czasu ich powstania ikona zastępcza z wpisem w sekcji 2a placeholderów), dźwięki (1 CU za sztukę), tekst w `ZASADY_CYFROWE.md` („Magia”) i `INSTRUKCJA.md`.
 - Testy: `tests/magic.test.ts` (każdy czar: koszt, cel, efekt, brak many), bot używa nowych czarów w grach (licznik jak w skrypcie z punktu Zwoju).
 - Gotowe, gdy: czary działają w bitwie i na mapie, bot ich używa, golden i pasma poziomów 5–6 przeliczone.
-
-**35. Bardzo trudny: surowce i artefakty startowe zamiast Życia** (M)
-- **Akceptacja autora (17.11):** liczby startowe robocze (+2 drewna, +2 rudy, +1 Pyłu, 1 artefakt rzadkości 1–2 dla głównego bohatera komputera) zatwierdzone jako kierunek, stroić pasmem 15–30%.
-- Decyzja autora: **nie manipulujemy Życiem jednostek**. Dziś Bardzo trudny to `COMPUTER_HANDICAP.veryHard = { gold: 1.5, hp: 0.2, treasures: 2 }` (`types.ts` l. 135), czytane przez `rules.computerGold|computerHp|computerTreasures` (`kingdom.ts` l. 448, `battle.ts` l. 148–150 `applyComputerHp`, `game.ts` l. 149–153 `extra(...)`), arena też (`arenaSetup`, `types.ts` l. 199).
-- Zmiana: `hp` → 0 (usunąć pole `computerHp` i `applyComputerHp`, albo zostawić nieużywane; czystsze: usunąć wraz z wywołaniami, testami i polem w `RulesConfig`). Dodać przewagi startowe: `computerResources` (np. +2 drewna, +2 rudy, +1 Pyłu na starcie, mnożone w `initKingdom`, `kingdom.ts` l. ~241–243, tylko gdy `computerFaction`) i `computerArtifacts` (np. 1 artefakt rzadkości 1–2 dla głównego bohatera komputera na starcie: `giveArtifact` w `sites.ts` l. 254, losowanie `drawArtifact` z deterministycznym ziarnem). Zostaje `gold: 1.5` i `treasures: 2`. Liczby robocze do strojenia pasmem 15–30%.
-- Dotyka: `types.ts` (`COMPUTER_HANDICAP`, `RulesConfig`, `LEVEL_RULES.veryHard`, `arenaSetup`), `game.ts` (start), `kingdom.ts` (surowce startowe), `battle.ts`, opisy trudności w UI (`src/ui/setupShared.tsx` l. 48, 59 i 79: opisy Bardzo trudnego z „o 20% więcej Życia”, przepisać na nowe przewagi; ten sam opis w `INSTRUKCJA.md`), `ZASADY_CYFROWE.md`, sekcja 7 poz. 14 i 21 w tym pliku, tabele sekcji 5, `scripts/sim/tuneLevels.ts`. Arena: bez surowców, więc tam przewagą zostaje tylko `treasures` (dla Bardzo trudnego Areny **decyzja autora 17.11: bot bez błędów**; dalsze dźwignie i rozbudowa areny: punkt 48).
-- Testy: `tests/difficulty.test.ts`/`computer.test.ts` (Bardzo trudny: bez bonusu Życia, z surowcami i artefaktem komputera; ludzie bez przewag).
-- Gotowe, gdy: Bardzo trudny mieści się w paśmie 15–30% w większości komórek `make sim-raport` (stroić liczbami startowymi i `computerGold`), golden `-u` osobnym commitem.
 
 **48. Arena 6 na 6 z elementami nowych poziomów i Bardzo trudny na arenie** (L; zależy od punktów 33 i 35)
 - Decyzje autora (17.11): **Bardzo trudny na arenie: bot bez błędów** (zamiast +1 karty w drafcie; zdjęcie Życia zostaje). Arena dostaje rzeczy z nowych poziomów: **dodatkowi pomocnicy, artefakty i zaklęcia**; docelowo walka **6 na 6**.
@@ -249,6 +241,7 @@ Nowe wpisy dopisuj na końcu z datą i numerem punktu:
 4. **(17.11, punkt 32)** Garnizon bez bohatera: dowodzi gracz-właściciel wg `garrisonCommander` (tura wstecz od bieżącej, człowiek przed botem). Zmiana: funkcja `garrisonCommander` w `game.ts`.
 5. **(17.11, punkt 34)** Przekazanie Odłamków: `passArtifact` z `artifactId: 'shards'` przekazuje wszystkie Odłamki bohatera (nie po jednym).
 6. **(17.11, punkt 36)** Arena, Bardzo trudny: 5 pkt (3 × 1,5 zaokrąglone w górę); mapy: Trudny × 1,5 z limitem `MAX_POINTS`; serwer liczy z wydanego silnika, więc zmiana dojdzie z wydaniem gry.
+7. **(17.11, punkt 35)** Bardzo trudny: bez bonusu Życia (usunięte `computerHp`, `applyComputerHp`). Przewagi komputera: `computerResources` +3 drewna, +3 rudy, +2 Pyłu na starcie, `computerArtifacts` 2 artefakty (rzadkość 1–2) dla głównego bohatera, `computerGold` 1,5, `computerTreasures` 2 (stałe w `COMPUTER_HANDICAP`). Pomiar 40 gier: poziom 4 koop 18–30%, poziom 6 koop 18–38% (pasmo 15–30%, na krótkich mapach lekko powyżej). Arena na razie bez przewagi poza „bez błędów” (jak Trudny): punkt 48.
 
 ## 8. Kredyty Scenario
 

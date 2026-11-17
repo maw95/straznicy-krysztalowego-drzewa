@@ -93,7 +93,7 @@ describe('setup screen simplifications', () => {
     await newGame(vh, 'Cyfrowa', 'Przygoda', 'Kooperacja');
     await click(vh, 'Bardzo trudny', 'Dalej →', 'Rozpocznij grę');
     game = (window as any).__game;
-    expect(game.setup.rules).toMatchObject({ veryHard: true, computerHp: 0.2 });
+    expect(game.setup.rules).toMatchObject({ veryHard: true });
     expect(game.factions.horde.inventory).toHaveLength(4);
     cleanup();
     const second = render(<StrictMode><App /></StrictMode>).container;

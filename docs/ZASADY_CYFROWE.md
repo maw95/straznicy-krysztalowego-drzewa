@@ -557,3 +557,6 @@ Reguła `empire` (karta „Imperium” w kreatorze, `tier: 'empire'`; wymaga reg
 - **Komputer:** buduje siedlisko najniższego poziomu, który go nie ma, gdy stać go na siedlisko razem z jednostką; którą z dwóch jednostek wybiera, zależy od ziarna gry i frakcji.
 - **Wyniki** (40 gier na komórkę, Normalny, Kryształy, poziom 6 w całości): Przymierze 45–73% (powyżej pasma: 2 na 2 na krótkiej 73%, 2 na 2 na długiej 68%).
 - **Grafika:** ilustracje kart, portrety i statyczne figurki ośmiu jednostek; bez animacji (lista w `BACKLOG.md`, sekcja 2a). Siedliska nie mają własnych obrazków: są pozycjami na liście koszar.
+
+### Bardzo trudny: przewagi komputera (17.11)
+Komputer na Bardzo trudnym (`COMPUTER_HANDICAP.veryHard` w `types.ts`) **nie ma więcej Życia jednostek** (decyzja autora). Ma: dochody ×1,5 (`computerGold`), 2 losowe skarby więcej na start (`computerTreasures`), na poziomach z surowcami +3 drewna, +3 rudy i +2 Pyłu na starcie (`computerResources`, `initKingdom`) i na poziomach z rozwojem bohatera 2 artefakty rzadkości 1–2 dla głównego bohatera (`computerArtifacts`, `createGame`, `COMPUTER_ARTIFACT_ODDS`). Ludzie nie dostają żadnej z tych rzeczy. Arena: bot bez błędów (punkt 48 dołoży dźwignie).

@@ -240,7 +240,11 @@ export function teamSlots(state: GameState, f: FactionId): number {
 export function initKingdom(state: GameState): void {
   const k: KingdomState = { gold: { dawn: KINGDOM.startGold, horde: KINGDOM.startGold }, settlements: {}, mines: {}, chest: null };
   state.kingdom = k;
-  if (state.rules.economy) k.res = { dawn: { ...ECONOMY.start }, horde: { ...ECONOMY.start } };
+  if (state.rules.economy) {
+    k.res = { dawn: { ...ECONOMY.start }, horde: { ...ECONOMY.start } };
+    // The computer's start advantage of the highest difficulty (COMPUTER_HANDICAP): some resources more.
+    for (const f of ['dawn', 'horde'] as FactionId[]) if (computerFaction(state, f)) for (const r of RESOURCE_IDS) k.res[f][r] += state.rules.computerResources?.[r] ?? 0;
+  }
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag: Record<FactionId, string[]> = { dawn: rng.shuffle([...NAMES.dawn]), horde: rng.shuffle([...NAMES.horde]) };
   const empty = (): Record<BuildingId, number> => ({ barracks: 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0 } : {}) }) as Record<BuildingId, number>;
