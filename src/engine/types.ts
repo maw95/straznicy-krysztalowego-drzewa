@@ -99,7 +99,12 @@ export interface RulesConfig {
   computerTreasures?: number;
   computerResources?: { wood?: number; ore?: number; dust?: number };
   computerArtifacts?: number;
+  /** 6 on 6 arena at "Bardzo trudny": what the computer's side gets on top (see ARENA_HANDICAP); missing = nothing. */
+  arenaHandicap?: ArenaHandicap;
 }
+
+/** The levers of the arena's highest difficulty: extra mana, spells and artifacts for the computer's hero, and fewer supports for the person. */
+export interface ArenaHandicap { mana: number; spells: number; gear: number; playerLess: number }
 
 export function isDigital(rules: Pick<RulesConfig, 'ruleset'>): boolean {
   return rules.ruleset === 'digital';
@@ -143,6 +148,9 @@ export const COMPUTER_HANDICAP: Record<Level, { gold: number; treasures: number;
   hard: { gold: 1, treasures: 0, resources: NO_RESOURCES, artifacts: 0 },
   veryHard: { gold: 1.5, treasures: 2, resources: { wood: 3, ore: 3, dust: 2 }, artifacts: 2 },
 };
+
+/** Tuned with `npx tsx scripts/sim/arena6.ts` to keep the person's wins at 15-30% (the band of the highest difficulty). */
+export const ARENA_HANDICAP: ArenaHandicap = { mana: 2, spells: 1, gear: 2, playerLess: 0 };
 
 const HARD_RULES: Partial<RulesConfig> = { extraEvilHero: true, minEvilHeroes: 2, hordeRespawn: false, hordeStartTreasures: { resurrections: 0, others: 0, random: 2 } };
 
@@ -200,7 +208,7 @@ export interface SetupOptions {
 export function arenaSetup(seats: SeatSetup[], seed: number, botLevel: Level = 'normal', size: 3 | 6 = 3): SetupOptions {
   // The arena has no level 0: its easy computer is "kids".
   if (botLevel === 'zero') botLevel = 'kids';
-  return { mode: 'arena', mapSize: 'short', battleMode: 'arena', seed, seats, botLevel, rules: { ...DEFAULT_RULES, initiativeTie: 'rotating', ...(botLevel === 'veryHard' ? { veryHard: true } : {}), ...(size === 6 ? { arenaSize: 6 as const, heroGrowth: true, realm: true } : {}) } };
+  return { mode: 'arena', mapSize: 'short', battleMode: 'arena', seed, seats, botLevel, rules: { ...DEFAULT_RULES, initiativeTie: 'rotating', ...(botLevel === 'veryHard' ? { veryHard: true } : {}), ...(size === 6 ? { arenaSize: 6 as const, heroGrowth: true, realm: true, ...(botLevel === 'veryHard' ? { arenaHandicap: ARENA_HANDICAP } : {}) } : {}) } };
 }
 
 /** Arena treasure draft: a shared deck, picks in the order A, B, B, A, three cards offered each time. */
@@ -256,6 +264,8 @@ export interface HeroState {
   /** Level 5: the spells the hero knows and the mana it has left (missing: full, see magic.ts `manaOf`). */
   spells?: SpellId[];
   mana?: number;
+  /** 6 on 6 arena, "Bardzo trudny": extra most mana the hero can hold. */
+  manaBonus?: number;
   /** Level 6: Odłamki Pierwotnej Iskry the hero carries (empire.ts). */
   shards?: number;
   /** Level 5: the hero's type (heroTypes.ts): it grows by itself with the levels and switches the hero's speciality on. Missing in every other level. */

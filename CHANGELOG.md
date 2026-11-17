@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Arena 6 na 6, poziom Bardzo trudny: komputer gra bez błędów, a jego bohater ma więcej many, jeden czar więcej i dwa dodatkowe artefakty (wygrane gracza w symulacjach ok. 24%).
+
 - Arena „6 na 6 (pełna)” (kreator, tryb Arena, gra bez sieci): każda strona wybiera bohatera i pięciu pomocników z puli ośmiu, bohater bierze artefakt do wyboru z trzech i dostaje dwa czary z kręgów I–II.
 
 - Nowe ozdobniki okien: złote narożniki ramek z szafirem, Księga czarów jako otwarta księga ze skórzaną okładką i dwiema stronami, okno skarbów jako otwarta skrzynia z czerwonym aksamitem.

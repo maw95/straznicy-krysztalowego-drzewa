@@ -78,7 +78,7 @@ export const START_SPELLS: SpellId[] = ['bolt'];
 /** The commanders of the sage archetype are born casters (in level 5 every sage-type hero also gains mana with its levels, heroTypes.ts). */
 const isSage = (heroId: string) => heroId === 'dawnSage' || heroId === 'hordeShadow';
 
-export const maxMana = (hero: HeroState): number => MAGIC.manaBase + MAGIC.manaPerLevel * levelOf(hero) + (isSage(hero.id) ? MAGIC.sageMana : 0) + typeMana(hero);
+export const maxMana = (hero: HeroState): number => MAGIC.manaBase + MAGIC.manaPerLevel * levelOf(hero) + (isSage(hero.id) ? MAGIC.sageMana : 0) + typeMana(hero) + (hero.manaBonus ?? 0);
 export const manaOf = (hero: HeroState): number => hero.mana ?? maxMana(hero);
 /** Extra damage and healing of the hero's spells. */
 export const spellPower = (hero: HeroState): number => Math.floor(levelOf(hero) / MAGIC.powerLevels) + (hero.kind === 'sage' || isSage(hero.id) ? 1 : 0) + (specialtyOf(hero)?.spellPower ?? 0);

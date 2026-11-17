@@ -5,6 +5,7 @@ import { chooseAction } from '../src/engine/ai';
 import { applyAction, createGame, currentActor } from '../src/engine/game';
 import { ARTIFACT_BY_ID, gearOf, worksInBattle } from '../src/engine/sites';
 import { SPELLS } from '../src/engine/magic';
+import { supportSlots } from '../src/engine/kingdom';
 import { arenaSetup, type Level, type SeatSetup } from '../src/engine/types';
 import { playOut, playUntil } from './helpers/engine';
 
@@ -182,5 +183,38 @@ describe('arena 6 on 6 artifact offers', () => {
       const s = createGame(arenaSetup(seats('human', 'human'), seed, 'normal', 6));
       for (const id of s.draft!.gear!.offer) expect(worksInBattle(ARTIFACT_BY_ID[id])).toBe(true);
     }
+  });
+});
+
+describe('arena 6 on 6 at the highest difficulty', () => {
+  const play = (rules?: Partial<ReturnType<typeof arenaSetup>['rules']>) => {
+    const setup = arenaSetup(seats('human', 'bot'), 9, 'veryHard', 6);
+    let s = createGame(rules ? { ...setup, rules: { ...setup.rules, ...rules } } : setup);
+    while (s.battle!.stage === 'gear') s = applyAction(s, s.draft!.gear!.order[0] === 'dawn' ? { type: 'pickGear', faction: 'dawn', artifactId: s.draft!.gear!.offer[0] } : chooseAction(s)!);
+    return s;
+  };
+
+  it('gives the computer extra mana, a spell and two more artifacts; the person gets none of it', () => {
+    const s = play();
+    const [person, computer] = [Object.values(s.heroes).find((h) => h.faction === 'dawn')!, Object.values(s.heroes).find((h) => h.faction === 'horde')!];
+    expect(person.spells).toHaveLength(2);
+    expect(person.manaBonus).toBeUndefined();
+    expect(gearOf(person)).toHaveLength(1);
+    expect(computer.spells).toHaveLength(3);
+    expect(computer.manaBonus).toBe(2);
+    expect(gearOf(computer).length + (computer.pack?.length ?? 0)).toBe(3);
+  });
+
+  it('takes supports from the person only when the lever says so', () => {
+    expect(supportSlots(play(), 'dawn')).toBe(5);
+    const less = play({ arenaHandicap: { mana: 0, spells: 0, gear: 0, playerLess: 1 } });
+    expect(supportSlots(less, 'dawn')).toBe(4);
+    expect(supportSlots(less, 'horde')).toBe(5);
+  });
+
+  it('does not touch the 3 on 3 arena', () => {
+    const s = createGame(arenaSetup(seats('human', 'bot'), 9, 'veryHard'));
+    expect(s.rules.arenaHandicap).toBeUndefined();
+    expect(s.rules.veryHard).toBe(true);
   });
 });

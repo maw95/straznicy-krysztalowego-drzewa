@@ -56,7 +56,7 @@ export const ARENA_LEVEL_TIPS: Record<Level, string> = {
   kids: 'Komputer wybiera pomocników i skarby na chybił trafił.',
   normal: 'Komputer wybiera rozsądnie, ale nie zawsze najlepszy skarb.',
   hard: 'Komputer zawsze bierze najmocniejszych pomocników i najlepsze skarby.',
-  veryHard: 'Jak Trudny: komputer gra bez błędów.',
+  veryHard: 'Komputer gra bez błędów. W pełnej arenie 6 na 6 jego bohater ma więcej many, jeden czar więcej i dwa dodatkowe artefakty.',
 };
 
 /** Explanations shown when hovering the setup buttons. */

@@ -643,6 +643,7 @@ W kreatorze nowej gry, w trybie Arena, można wybrać „6 na 6 (pełna)” zami
 1. Każda strona dostaje **stałą pulę ośmiu pomocników** swojej frakcji (jednostki stopni 2–5, obie linie) i wybiera z niej **pięciu**. Z bohaterem to sześć jednostek na stronę. Strony ustawiają się w dwóch kolumnach startowych.
 2. Zanim wybierzecie pomocników, każdy bohater bierze **jeden artefakt do wyboru z trzech** (zawsze z innych miejsc ciała i z działaniem w bitwie) i dostaje **dwa losowe czary z kręgów I–II** (np. Magiczny Pocisk, Leczenie, Spowolnienie, Kamienna Skóra, Kula Ognia, Zryw). Mana jest taka jak w pełnej grze.
 3. Skarby z talii są dobierane jak w zwykłej arenie. Reszta bitwy bez zmian.
+4. Na poziomie **Bardzo trudny** komputer gra bez błędów, a jego bohater ma dodatkowo **+2 many, jeden czar więcej i dwa dodatkowe artefakty**. Ty masz tyle samo jednostek co on.
 
 ---
 

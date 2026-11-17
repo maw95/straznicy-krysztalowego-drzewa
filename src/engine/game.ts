@@ -62,7 +62,7 @@ import { commanderFalls } from './realm';
 import { battleSpell, mapSpell, regenMana, SPELLS, SPELL_IDS, START_SPELLS, type SpellId } from './magic';
 import { HERO_TYPES, specialtyOf } from './heroTypes';
 import { EMPIRE, FACTION_MECHANICS, hasSpark, loseShards } from './empire';
-import { applyGear, ARTIFACT_BY_ID, arenaGearOffer, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, COMPUTER_ARTIFACT_ODDS, heroTileCost, passArtifact, passShards, placeSites, SHARDS_ID, unequipArtifact, visitSite } from './sites';
+import { applyGear, ARTIFACT_BY_ID, arenaGearOffer, gearOf, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, COMPUTER_ARTIFACT_ODDS, heroTileCost, passArtifact, passShards, placeSites, SHARDS_ID, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
 import { computerFaction, isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
@@ -255,6 +255,12 @@ function startArena(state: GameState) {
     for (const f of ['dawn', 'horde'] as FactionId[]) {
       const spells: SpellId[] = new Rng((state.setup.seed ^ 0x5be11 ^ (f === 'dawn' ? 31 : 977)) | 0).shuffle(battleSpells).slice(0, 2);
       hero(f).spells = spells;
+      // "Bardzo trudny": the computer's hero holds more mana and knows more spells.
+      const hc = state.rules.arenaHandicap;
+      if (hc && computerFaction(state, f)) {
+        hero(f).manaBonus = hc.mana;
+        hero(f).spells = [...spells, ...battleSpells.filter((id) => !spells.includes(id)).slice(0, hc.spells)];
+      }
     }
     state.draft!.gear = { order: [first, second], offer: arenaGearOffer(state, first) };
     b.stage = 'gear';
@@ -269,6 +275,15 @@ function pickGear(state: GameState, faction: FactionId, artifactId: string) {
   if (!g.offer.includes(artifactId)) throw new Error('Tego artefaktu nie ma wśród pokazanych.');
   const hero = state.heroes[battleHeroOf(b, faction)!];
   giveArtifact(state, hero, ARTIFACT_BY_ID[artifactId], 'arena');
+  // "Bardzo trudny": the computer's hero also puts on the best of fresh offers (of other slots).
+  const hc = state.rules.arenaHandicap;
+  if (hc && hc.gear && computerFaction(state, faction)) {
+    for (let i = 0; i < hc.gear; i++) {
+      const worn = new Set(gearOf(hero).map((a) => a.slot));
+      const extra = arenaGearOffer(state, `${faction}${i}`).map((id) => ARTIFACT_BY_ID[id]).filter((a) => !worn.has(a.slot)).sort((x, y) => y.rarity - x.rarity)[0];
+      if (extra) giveArtifact(state, hero, extra, 'arena');
+    }
+  }
   applyGear(hero, b.units[hero.id]);
   g.order.shift();
   if (g.order.length) g.offer = arenaGearOffer(state, g.order[0]);
