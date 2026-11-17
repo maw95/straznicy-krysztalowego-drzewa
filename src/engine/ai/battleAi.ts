@@ -23,6 +23,7 @@ import {
   isLarge,
   tailOptions,
   teleportCells,
+  scrollCells,
   hopCells,
   livingUnits,
   middleDistance,
@@ -138,7 +139,7 @@ export function chooseSupports(state: GameState, faction: FactionId): Action {
  * How much a treasure is worth to the bot in an arena draft. Kinds it cannot use (see itemToUse)
  * are worth nothing, so it never drafts them unless nothing else is offered.
  */
-export const DRAFT_VALUE: Partial<Record<ItemKind, number>> = { resurrection: 9, stone: 8, sword: 7, seed: 7, lightning: 7, heal: 6, damage_scroll: 6, shield: 6, vitality: 6, boots: 4 };
+export const DRAFT_VALUE: Partial<Record<ItemKind, number>> = { resurrection: 9, stone: 8, sword: 7, seed: 7, lightning: 7, heal: 6, damage_scroll: 6, shield: 6, vitality: 6, boots: 4, teleport: 3 };
 
 /**
  * Arena draft: the hard bot takes the most valuable card, the normal one usually does (now and then
@@ -381,11 +382,66 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
         if (striker) return { type: 'battleItem', itemId: item.id, targetId: striker.id, hornMode: 'extra' };
         break;
       }
+      case 'teleport': {
+        // Not the coop automaton, which keeps to the rulebook's list of treasures.
+        if (followsRulebook(state, u)) break;
+        const cell = scrollJump(state, u, own, enemies);
+        if (cell) return { type: 'battleItem', itemId: item.id, targetId: u.id, to: cell };
+        break;
+      }
       default:
         break;
     }
   }
   return null;
+}
+
+/**
+ * Zwój Teleportacji for the acting unit: jump next to an ally that a stronger enemy (or two enemies) is pressing, or, with nobody
+ * to strike this turn, next to the ally nearest the enemy so the unit closes in at once. Null when the jump is not worth the scroll.
+ */
+function scrollJump(state: GameState, u: BattleUnit, own: BattleUnit[], enemies: BattleUnit[]): HexKey | null {
+  if (!enemies.length || u.status.battleSpeedBonus < 0) return null;
+  const cells = scrollCells(state, u);
+  if (!cells.length) return null;
+  const here = Math.min(...enemies.map((e) => unitDistance(e, u)));
+  // The unit already fights (or will after its own move): the scroll stays in the bag.
+  if (here <= unitSpeed(u) + 1) return null;
+  const at = (k: HexKey) => footprintAt(state, u, k);
+  const toEnemy = (k: HexKey, e: BattleUnit) => dist2(at(k), cellsOf(e));
+  // Rescue: an ally pressed by enemies that together hit harder than it can bear, or by one that outguns it.
+  const pressed = own
+    .filter((a) => a.id !== u.id)
+    .map((a) => {
+      const near = enemies.filter((e) => unitDistance(e, a) <= 1);
+      const blow = near.reduce((sum, e) => sum + unitAttackBase(e), 0);
+      return { a, near, hurt: near.length >= 2 || (near.length === 1 && unitAttackBase(near[0]) > unitAttackBase(a)) || blow >= a.hp };
+    })
+    .filter((x) => x.hurt && x.near.length)
+    .sort((x, y) => x.a.hp - y.a.hp)[0];
+  if (pressed) {
+    const foe = pressed.near.slice().sort((x, y) => x.hp - y.hp)[0];
+    const next = cells.filter((k) => toEnemy(k, foe) === 1).sort((x, y) => (x < y ? -1 : 1))[0];
+    if (next && attackReachFrom(state, u, next)) return next;
+  }
+  // Closing in: nobody can be struck this turn, and the jump takes the unit at least three steps nearer the enemy.
+  if (planActivation(state, u).target) return null;
+  let bestCell: HexKey | null = null;
+  let bestGap = here;
+  for (const k of cells) {
+    const gap = Math.min(...enemies.map((e) => toEnemy(k, e)));
+    if (gap < bestGap || (gap === bestGap && bestCell !== null && k < bestCell)) {
+      bestGap = gap;
+      bestCell = k;
+    }
+  }
+  return bestCell && here - bestGap >= 3 ? bestCell : null;
+}
+
+/** Whether a unit put on `cell` could strike an enemy from there without moving (the rescuer must be able to help at once). */
+function attackReachFrom(state: GameState, u: BattleUnit, cell: HexKey): boolean {
+  const b = state.battle!;
+  return enemiesOf(b, u).some((e) => dist2(footprintAt(state, u, cell), cellsOf(e)) === 1) || UNITS[u.defId].attackType === 'ranged';
 }
 
 /** Bots keep heroes central, put shooters on the rows farthest from the enemy's strongest unit. */

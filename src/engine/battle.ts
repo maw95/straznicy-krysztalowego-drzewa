@@ -1429,6 +1429,20 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
   },
 };
 
+/** Free cells where the Zwój Teleportacji may put `t`: next to one of its allies, and big enough for it (the bots pick from these). */
+export function scrollCells(state: GameState, t: BattleUnit): HexKey[] {
+  const b = state.battle!;
+  const out = new Set<HexKey>();
+  for (const a of alliesOf(b, t)) {
+    for (const c of cellsOf(a)) {
+      for (const k of neighborKeys(c)) {
+        if (inLayout(b, k) && !unitAt(b, k) && !b.obstacles.includes(k) && fitsAt(state, t, k)) out.add(k);
+      }
+    }
+  }
+  return [...out];
+}
+
 export function battleItem(state: GameState, args: ItemArgs) {
   const b = state.battle!;
   const actor = b.units[b.activation!.unitId];

@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Komputer używa Zwoju Teleportacji: skacze na pomoc sojusznikowi przyciśniętemu przez silniejszego lub kilku wrogów, a gdy nikt nie jest w zasięgu, skraca sobie drogę do przeciwnika.
+
 - Strona `?sprity` pokazuje wszystkie animacje jednostek (chód, lot, atak, trafienie, śmierć, odrodzenie) w pętli, w rozmiarze z areny, z linią stóp i możliwością zwolnienia; przydatna do oceny klipów bez rozgrywania bitwy.
 
 - Mapa przygody: kapliczki, obozy najemników, skrzynie, kopalnie (złota, rudy, Pyłu), tartak, chatki, młyny, studnie, składy i Odłamki Iskry mają własne kafelki z unikalnymi grafikami zamiast okrągłych ikon na polu.

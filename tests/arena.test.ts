@@ -87,7 +87,7 @@ describe('arena', () => {
       }
       return out;
     };
-    const useless = ['horn', 'hourglass', 'courage_horn', 'teleport'];
+    const useless = ['horn', 'hourglass', 'courage_horn'];
     expect(picks('hard').some((k) => useless.includes(k))).toBe(false);
     expect(picks('kids').some((k) => useless.includes(k))).toBe(true);
   });
