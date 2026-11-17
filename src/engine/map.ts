@@ -1,8 +1,9 @@
 // Adventure map: triangle generation (variant A), costs and path finding.
 
-import { GUARDIAN_LAIRS, MAP_SHAPES, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type MapSize, type Terrain, type TileSide } from './data';
+import { GUARDIAN_LAIRS, MAP_SHAPES, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type MapSize, type TeamId, type Terrain, type TileSide } from './data';
 import { distance, key, neighborKeys, parseKey, triToHex, type HexKey } from './hex';
 import { Rng } from './rng';
+import { TEAM_IDS } from './teams';
 import { CUSTOM_MAPS } from './customMaps';
 import type { GameState, MapShape, Tile } from './types';
 
@@ -18,7 +19,7 @@ export function treeKey(): HexKey {
   return key(triToHex(0, 0));
 }
 
-export function homeKey(rows: number, faction: 'dawn' | 'horde'): HexKey {
+export function homeKey(rows: number, faction: TeamId): HexKey {
   return key(triToHex(rows - 1, faction === 'dawn' ? 0 : rows - 1));
 }
 
@@ -26,7 +27,7 @@ export function homeKey(rows: number, faction: 'dawn' | 'horde'): HexKey {
 export const treeOf = (state: Pick<GameState, 'tree'>): HexKey => state.tree ?? treeKey();
 
 /** The base of `faction` on this game's map. */
-export const homeOf = (state: Pick<GameState, 'homes' | 'rows'>, faction: 'dawn' | 'horde'): HexKey => state.homes?.[faction] ?? homeKey(state.rows, faction);
+export const homeOf = (state: Pick<GameState, 'homes' | 'rows'>, faction: TeamId): HexKey => state.homes?.[faction] ?? homeKey(state.rows, faction);
 
 /** Breadth-first reachability through passable hexes. */
 export function reachableFrom(tiles: Record<HexKey, Tile>, start: HexKey, blocked: (k: HexKey) => boolean = () => false): Set<HexKey> {
@@ -269,6 +270,25 @@ export function sideOf(row: number, col: number): TileSide {
   return (row / 2) % 2 === 1 ? 'dawn' : 'horde';
 }
 
+/** The most start zones a map can have (one per team). */
+export const MAX_START_ZONES = 4;
+
+/**
+ * Splits hexes into N zones, one per start hex: every hex goes to the nearest start; on a tie the hex goes to one of the tied zones by the parity
+ * (row + col) % tied, so the border zigzags and never favours one zone. With two starts this is the old two-halves rule of the non-triangle maps.
+ * Returns the zone index (0..N-1, the order of `starts`) of each cell.
+ */
+export function splitZones(cells: Array<{ row: number; col: number; hex: { q: number; r: number } }>, starts: HexKey[]): number[] {
+  if (starts.length < 1 || starts.length > MAX_START_ZONES) throw new Error(`Map needs 1 to ${MAX_START_ZONES} start zones, got ${starts.length}`);
+  const points = starts.map((k) => parseKey(k));
+  return cells.map(({ row, col, hex }) => {
+    const d = points.map((p) => distance(hex, p));
+    const best = Math.min(...d);
+    const tied = d.flatMap((x, i) => (x === best ? [i] : []));
+    return tied[(row + col) % tied.length];
+  });
+}
+
 function setTerrain(tile: Tile, terrain: Terrain, rng: Rng) {
   tile.terrain = terrain;
   tile.variant = 1 + rng.int(TERRAIN_VARIANTS[terrain]);
@@ -277,17 +297,15 @@ function setTerrain(tile: Tile, terrain: Terrain, rng: Rng) {
 export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crystalCount: number, shape: MapShape = 'triangle', customMapId?: string): GeneratedMap {
   const layout = layoutOf(shape, size, rng, customMapId);
   const { rows } = layout;
-  const sideAt = (row: number, col: number, hex: { q: number; r: number }): TileSide => {
-    if (shape === 'triangle') return sideOf(row, col);
-    const a = distance(hex, parseKey(layout.homes.dawn));
-    const b = distance(hex, parseKey(layout.homes.horde));
-    return a < b ? 'dawn' : a > b ? 'horde' : (row + col) % 2 === 0 ? 'dawn' : 'horde';
-  };
+  // The start zones in team order (up to MAX_START_ZONES; two teams today): zone i belongs to team TEAM_IDS[i].
+  const starts = TEAM_IDS.map((t) => layout.homes[t]);
+  const zones = shape === 'triangle' ? null : splitZones(layout.cells, starts);
+  const sideAt = (i: number, row: number, col: number): TileSide => (zones ? TEAM_IDS[zones[i]] : sideOf(row, col));
   for (let attempt = 0; attempt < 400; attempt++) {
     const tiles: Record<HexKey, Tile> = {};
-    for (const { row, col, hex } of layout.cells) {
+    for (const [i, { row, col, hex }] of layout.cells.entries()) {
       const k = key(hex);
-      const side = sideAt(row, col, hex);
+      const side = sideAt(i, row, col);
       const tile: Tile = { key: k, row, col, terrain: 'meadow', side, variant: 1, revealed: false, crystalId: null, treasureId: null, home: null, tree: false };
       setTerrain(tile, rng.pick(TILE_POOLS[side]), rng);
       const fixed = layout.forced?.[k];
