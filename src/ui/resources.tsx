@@ -14,7 +14,7 @@ export function ResourceStrip({ state, faction, size = 26, light = false }: { st
   const have = resOf(state, faction);
   const income = resourceIncomeOf(state, faction);
   return (
-    <>
+    <span style={{ display: 'inline-flex', gap: light ? 16 : 10 }}>
       {RESOURCE_IDS.map((r) => (
         <span key={r} data-res={r} title={`${RESOURCE_NAMES[r]}: ${have[r]} (+${income[r]} na rundę)`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
           <img src={asset(RESOURCE_ICON[r])} alt={RESOURCE_NAMES[r]} width={size} height={size} style={light ? { filter: 'drop-shadow(0 2px 3px #000)' } : undefined} />
@@ -22,6 +22,6 @@ export function ResourceStrip({ state, faction, size = 26, light = false }: { st
           {income[r] > 0 && <span style={{ fontSize: size * 0.55, color: light ? '#E8D5A8' : '#6B4A22' }}>(+{income[r]})</span>}
         </span>
       ))}
-    </>
+    </span>
   );
 }

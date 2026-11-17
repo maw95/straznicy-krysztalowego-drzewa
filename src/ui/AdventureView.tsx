@@ -1003,18 +1003,14 @@ function placeTitle(state: GameState, k: HexKey): string {
 /** The gold in the bottom bar: stock and income per round in short ("2 (+2)"); the right button shows where the income comes from. */
 export function GoldBox({ state, faction }: { state: GameState; faction: FactionId }) {
   const detail = details(() => <GoldDetails state={state} faction={faction} />);
+  // Gold counts as a resource: no plate or frame, big icon, a shadow keeps the numbers readable on any background.
   return (
-    <div data-gold-box style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-      <div className="plate parch" title="Złoto (zapas i dochód na rundę); prawy przycisk: skąd dochód" {...detail} style={{ padding: '4px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
-        <img src={asset('ikony/mapa/zloto.webp')} alt="" width={32} height={32} />
-        <b style={{ fontSize: 22 }}><span data-gold>{goldOf(state, faction)}</span> <span style={{ fontSize: 16, color: '#6B4A22' }}>(+{incomeOf(state, faction)})</span></b>
-      </div>
-      {/* Resources sit straight on the map: no plate, bigger icons, a shadow keeps the numbers readable. */}
-      {state.kingdom?.res && (
-        <span {...detail} style={{ display: 'inline-flex', gap: 16, color: '#FFF4D8', textShadow: '0 1px 3px #000, 0 0 6px #000' }}>
-          <ResourceStrip state={state} faction={faction} size={44} light />
-        </span>
-      )}
+    <div data-gold-box title="Złoto (zapas i dochód na rundę); prawy przycisk: skąd dochód" {...detail} style={{ display: 'flex', alignItems: 'center', gap: 16, color: '#FFF4D8', textShadow: '0 1px 3px #000, 0 0 6px #000' }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+        <img src={asset('ikony/mapa/zloto.webp')} alt="Złoto" width={44} height={44} style={{ filter: 'drop-shadow(0 2px 3px #000)' }} />
+        <b style={{ fontSize: 33 }}><span data-gold>{goldOf(state, faction)}</span> <span style={{ fontSize: 24, color: '#E8D5A8' }}>(+{incomeOf(state, faction)})</span></b>
+      </span>
+      {state.kingdom?.res && <ResourceStrip state={state} faction={faction} size={44} light />}
     </div>
   );
 }

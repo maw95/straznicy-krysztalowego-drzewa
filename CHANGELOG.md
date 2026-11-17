@@ -8,7 +8,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 - Komputer używa Zwoju Teleportacji: skacze na pomoc sojusznikowi przyciśniętemu przez silniejszego lub kilku wrogów, a gdy nikt nie jest w zasięgu, skraca sobie drogę do przeciwnika.
 
-- Dolny pasek surowców (drewno, ruda, Pył) nie ma już tła ani ramki, a ikony są dużo większe.
+- Dolny pasek złota i surowców (drewno, ruda, Pył) nie ma już tła ani ramki, a ikony i liczby są dużo większe.
 
 - Strona `?sprity` pokazuje wszystkie animacje jednostek (chód, lot, atak, trafienie, śmierć, odrodzenie) w pętli, w rozmiarze z areny, z linią stóp i możliwością zwolnienia; przydatna do oceny klipów bez rozgrywania bitwy.
 
