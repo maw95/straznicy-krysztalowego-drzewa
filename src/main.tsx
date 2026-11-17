@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { App } from './ui/App';
 import { CardGallery } from './ui/CardGallery';
 import { FigureGallery } from './ui/FigureGallery';
+import { SpriteGallery } from './ui/SpriteGallery';
 import { SvgDefs } from './ui/common';
 import './ui/styles.css';
 
@@ -32,6 +33,8 @@ createRoot(document.getElementById('root')!).render(
     <ErrorBoundary>
       {new URLSearchParams(window.location.search).has('figury') ? (
         <FigureGallery />
+      ) : new URLSearchParams(window.location.search).has('sprity') ? (
+        <SpriteGallery />
       ) : new URLSearchParams(window.location.search).has('cards') ? (
         <>
           <SvgDefs />

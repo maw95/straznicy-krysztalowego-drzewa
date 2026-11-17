@@ -60,6 +60,10 @@ zrzut: node_modules ## Zrzut ekranu gry (mały), np. make zrzut Q='steps=400&unt
 	@mkdir -p .tmp
 	npx tsx scripts/browser/zrzut.ts '$(Q)' --widok $(WIDOK) $(if $(ELEMENT),--element '$(ELEMENT)',)
 
+sprity: node_modules ## Galeria klipów 2D jednostek, zrzut do .tmp/sprity.png, np. make sprity JEDNOSTKI=troll,feniks (puste = wszystkie)
+	@mkdir -p .tmp
+	npx tsx scripts/browser/zrzut.ts 'sprity=$(JEDNOSTKI)' --widok wielki --skala 1 --czekaj 6000 --plik .tmp/sprity.png
+
 sim: node_modules ## Symulacje botów (bez kości obrażeń, chyba że OPTIONS ma dice), np. make sim GAMES=500 SIZE=medium MODE=pvp OPTIONS=noabilities,dice BATTLE=board
 	npx tsx scripts/simulate.ts $(GAMES) $(SIZE) $(MODE) $(OPTIONS) $(BATTLE)
 
