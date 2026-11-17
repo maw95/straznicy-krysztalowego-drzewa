@@ -789,6 +789,31 @@ describe('level 3: the settlement window', () => {
   });
 });
 
+describe('level 6: the dwellings in the tree of buildings', () => {
+  it('hang under the barracks (built from the start) one tier after another; the choice of one unit shuts the other out', async () => {
+    window.history.replaceState(null, '', '/?steps=0&seed=3&size=long&empire=1&gold=80&res=9&players=1');
+    vi.useFakeTimers();
+    const { container } = render(<StrictMode><App /></StrictMode>);
+    const doc = container.ownerDocument;
+    await act(async () => fireEvent.click(doc.querySelector('[data-enter-settlement]')!));
+    // The barracks stand from the start.
+    expect(doc.querySelector('[data-building="barracks"]')!.getAttribute('data-level')).toBe('1');
+    await act(async () => fireEvent.click(doc.querySelector('[data-building="council"]')!));
+    const state = (id: string) => doc.querySelector(`[data-tree-node="${id}"]`)!.getAttribute('data-node-state');
+    expect([2, 3, 4, 5].map((t) => state(`dwelling-${t}`))).toEqual(['open', 'blocked', 'blocked', 'blocked']);
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-node="dwelling-3"]')!));
+    expect(doc.querySelector('[data-tree-detail="dwelling-3"]')!.textContent).toContain('Najpierw zbuduj siedlisko poziomu 2');
+    expect((doc.querySelector('[data-tree-detail="dwelling-3"] [data-dwelling]') as HTMLButtonElement).disabled).toBe(true);
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-node="dwelling-2"]')!));
+    const options = [...doc.querySelectorAll('[data-tree-detail="dwelling-2"] [data-dwelling]')] as HTMLButtonElement[];
+    expect(options).toHaveLength(2);
+    await act(async () => fireEvent.click(options[0]));
+    expect(state('dwelling-2')).toBe('built');
+    expect(state('dwelling-3')).toBe('open');
+    expect(doc.querySelector('[data-tree-detail="dwelling-2"] [data-excluded]')!.textContent).toContain('wybrano alternatywne siedlisko tego poziomu');
+  });
+});
+
 describe('the developer panel', () => {
   it('opens with ?dev=1, plays a scene on a copy of the game and closes again', async () => {
     window.history.replaceState(null, '', '/?steps=0&seed=3&size=long&realm=1&players=1&dev=1');

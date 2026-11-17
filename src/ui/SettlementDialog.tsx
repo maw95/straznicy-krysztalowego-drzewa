@@ -17,7 +17,7 @@ import { ArtifactMedal } from './growthUi';
 import { RESOURCE_ICON, ResourceStrip } from './resources';
 import { RuleText } from './statScale';
 import { sfx } from './sfx';
-import { BuildingTree, COUNCIL, nodeState } from './BuildingTree';
+import { BuildingTree, COUNCIL, nodeState, type ExtraNode } from './BuildingTree';
 
 /** Where the building stands in the landscape (percent of the picture): four buildings in level 3. */
 const SPOT: Partial<Record<BuildingId, { left: number; top: number }>> = {
@@ -46,7 +46,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const [open, setOpen] = useState<BuildingId>('barracks');
   // The Rada Osady opens the tree of buildings (a second page of the same screen); Esc comes back to the landscape first.
   const [view, setView] = useState<'town' | 'tree'>('town');
-  const [pick, setPick] = useState<BuildingId | typeof COUNCIL | null>(null);
+  const [pick, setPick] = useState<string | null>(null);
   useEffect(() => {
     if (view !== 'tree') return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); setView('town'); } };
@@ -360,14 +360,51 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   };
 
   const councilPic = `osady/${s.land}_council1.webp`;
-  const detail = pick && pick !== COUNCIL ? (
-    <div className="plate parch" data-tree-detail={pick} style={{ padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
-      <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>{BUILDING_NAMES[pick][Math.min(buildingLevel(s, pick), BUILDING_NAMES[pick].length - 1)]}</div>
-      <div style={{ fontSize: 15, marginBottom: 8 }}><RuleText text={BUILDING_TEXTS[pick][Math.min(buildingLevel(s, pick), BUILDING_TEXTS[pick].length - 1)] ?? ''} /></div>
-      {nodeState(state, s, faction, pick) === 'blocked' && <i style={{ color: '#8A2A18' }}>{buildBlock(s, pick) ?? 'Koszary buduje się tylko w osadzie własnej frakcji.'}</i>}
-      {buildButton(pick)}
+  // Level 6: the dwellings of the unit tiers 2-5 hang in the tree under the barracks, one after another (two units to choose from at each tier, the choice shuts the other out).
+  const mayHireHere = mayRecruit(s, faction);
+  const extras: ExtraNode[] = state.rules.empire ? [2, 3, 4, 5].map((tier) => {
+    const built = dwellingOf(state, faction, tier);
+    const prevOk = tier === 2 || Boolean(dwellingOf(state, faction, tier - 1));
+    const options = recruitsOf(state, faction).filter((r) => r.tier === tier);
+    const price = DWELLING_COST[tier - 2];
+    const st = built ? 'built' : !(mayHireHere && s.buildings.barracks >= 1 && prevOk) ? 'blocked' : canPay(state, faction, price) ? 'open' : 'poor';
+    return { id: `dwelling-${tier}`, parent: tier === 2 ? 'barracks' : `dwelling-${tier - 1}`, name: built ? DWELLING_NAMES[built] : `Siedlisko poziomu ${tier}`, sub: built ? `rekrutuje: ${UNITS[built].name}` : !prevOk ? `Najpierw: siedlisko poziomu ${tier - 1}.` : `${costText(price)} + jednostka`, picture: `ikony/siedliska/${built ?? options[0]?.id}.webp`, state: st };
+  }) : [];
+  const dwellingDetail = (tier: number) => {
+    const built = dwellingOf(state, faction, tier);
+    const prevOk = tier === 2 || Boolean(dwellingOf(state, faction, tier - 1));
+    const price = DWELLING_COST[tier - 2];
+    return (
+      <div className="plate parch" data-tree-detail={`dwelling-${tier}`} style={{ padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
+        <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 4 }}>Siedlisko poziomu {tier}</div>
+        <div style={{ fontSize: 14, color: '#6B4A22', marginBottom: 8 }}>Dwie jednostki do wyboru: zbudowanie siedliska jednej wyklucza drugą do końca gry. {!prevOk ? `Najpierw zbuduj siedlisko poziomu ${tier - 1}.` : !mayHireHere ? 'Siedliska buduje się tylko w osadzie własnej frakcji.' : ''}</div>
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+          {recruitsOf(state, faction).filter((r) => r.tier === tier).map((r) => (
+            <div key={r.id} style={{ display: 'flex', gap: 8, alignItems: 'center', flex: '1 1 260px' }}>
+              <Portrait unitId={r.id} size={44} />
+              <div style={{ flex: 1, fontSize: 14 }}>
+                <b>{UNITS[r.id].name}</b> <span style={{ color: '#6B4A22' }}>({DWELLING_NAMES[r.id]})</span>
+                <div>Życie {UNITS[r.id].hp} · Atak {UNITS[r.id].attack} · Szybkość {UNITS[r.id].speed} · {UNITS[r.id].abilityName}</div>
+              </div>
+              {built === r.id ? <b style={{ color: '#2E7A32' }}>Zbudowane</b> : built ? <i data-excluded={r.id} style={{ color: '#8A5A3A' }}>wybrano alternatywne siedlisko tego poziomu</i> : (
+                <button className="btn prim" data-dwelling={r.id} disabled={!mayHireHere || s.buildings.barracks < 1 || !prevOk || !canPay(state, faction, price)} onClick={() => act({ type: 'kingdomDwelling', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 12px', fontSize: 15 }}>
+                  Zbuduj ({costText(price)})
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+  const detail = pick?.startsWith('dwelling-') ? dwellingDetail(Number(pick.slice(9))) : pick && pick !== COUNCIL ? ((pickId: BuildingId) => (
+    <div className="plate parch" data-tree-detail={pickId} style={{ padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
+      <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>{BUILDING_NAMES[pickId][Math.min(buildingLevel(s, pickId), BUILDING_NAMES[pickId].length - 1)]}</div>
+      <div style={{ fontSize: 15, marginBottom: 8 }}><RuleText text={BUILDING_TEXTS[pickId][Math.min(buildingLevel(s, pickId), BUILDING_TEXTS[pickId].length - 1)] ?? ''} /></div>
+      {nodeState(state, s, faction, pickId) === 'blocked' && <i style={{ color: '#8A2A18' }}>{buildBlock(s, pickId) ?? 'Koszary buduje się tylko w osadzie własnej frakcji.'}</i>}
+      {buildButton(pickId)}
     </div>
-  ) : (
+  ))(pick as BuildingId) : (
     <div className="plate parch" style={{ padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
       <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>Rada Osady</div>
       <div style={{ fontSize: 15 }}>Rada stoi w każdej osadzie od początku i nic nie kosztuje. Z niej wychodzą wszystkie budynki: kliknij budynek w drzewku, żeby zobaczyć jego cenę i działanie, a potem go zbudować.</div>
@@ -400,7 +437,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         </div>
       ) : (
         <div className="settlement-field tree">
-          <BuildingTree state={state} s={s} faction={faction} order={ORDER} picture={(b, level) => buildingPicture(s.land, b, level)} selected={pick} onSelect={setPick} council={{ picture: councilPic, name: 'Rada Osady' }} />
+          <BuildingTree state={state} s={s} faction={faction} order={ORDER} picture={(b, level) => buildingPicture(s.land, b, level)} selected={pick} onSelect={setPick} council={{ picture: councilPic, name: 'Rada Osady' }} extras={extras} />
         </div>
       )}
       <div className="settlement-bottom">

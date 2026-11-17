@@ -856,7 +856,7 @@ Na poziomie Imperium każda frakcja walczy po swojemu, ale **żeby mieć swoją 
 Każda frakcja ma jeszcze po dwa budynki: **Przymierze** Szkółkę Drzewa (+1 drewna na rundę za poziom, sumuje się z osad; wymaga Skarbca) i Krąg Gaju (bohater wchodzący na pole własnej osady odnawia całą manę; wymaga Wieży maga); **Horda** Szabrownię (+2 zł po wygranej z bohaterem lub strażnikiem, sumuje się; wymaga Targu) i Wilcze Legowisko (bohaterowie Hordy mają +1 punkt ruchu; wymaga Fosy). Wszystkie widać w drzewku budynków pod Radą Osady.
 
 ### Dwie jednostki na poziom i siedliska
-Na poziomie Imperium każdy z poziomów jednostek 2–5 ma **dwie jednostki do wyboru**. Zanim zrekrutujesz jednostkę takiego poziomu, zbuduj w koszarach jej **siedlisko** (to budynek). **Siedlisko jednej jednostki wyklucza drugą jednostkę tego poziomu do końca gry**, więc wybierz tę, która pasuje do Twojej drużyny.
+Na poziomie Imperium każdy z poziomów jednostek 2–5 ma **dwie jednostki do wyboru**. Koszary na poziomie Imperium stoją w każdej osadzie od początku. Zanim zrekrutujesz jednostkę takiego poziomu, zbuduj jej **siedlisko** (to budynek; w drzewku pod Radą Osady wiszą pod Koszarami jedno za drugim: siedlisko poziomu 3 wymaga siedliska poziomu 2 i tak dalej). **Siedlisko jednej jednostki wyklucza drugą jednostkę tego poziomu do końca gry**, więc wybierz tę, która pasuje do Twojej drużyny.
 - Przymierze: Jeżozwierz albo Srebrny Lis; Centaur albo Sowa Świtu; Alabastrowy Odyniec albo Driada Łuczniczka; Opiekun Drzewa albo Biały Jeleń.
 - Horda: Szczurołak albo Goblin Procarz; Piekielny Ogar albo Gargulec; Salamandra Popiołu albo Troll Jaskiniowy; Herszt Minotaurów albo Wiwerna Cienia.
 

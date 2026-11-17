@@ -8,17 +8,17 @@ import { costText } from '../engine/economy';
 import type { GameState } from '../engine/types';
 import { asset } from './common';
 
-const NODE_W = 168;
+const NODE_W = 160;
 const NODE_H = 84;
-const GAP_X = 74;
+const GAP_X = 46;
 const GAP_Y = 16;
 
 /** The root of the tree: the council of the settlement. It stands from the start and costs nothing. */
 export const COUNCIL = 'council';
-type NodeId = BuildingId | typeof COUNCIL;
+type NodeId = string;
 
-const parentOf = (b: NodeId): NodeId | null => (b === COUNCIL ? null : BUILDING_PARENT[b] ?? COUNCIL);
-const depthOf = (b: NodeId): number => (b === COUNCIL ? 0 : depthOf(parentOf(b)!) + 1);
+/** A node that is not a building of the engine's graph (level 6: the dwellings of the unit tiers), drawn after its parent. */
+export interface ExtraNode { id: string; parent: string; name: string; sub: string; picture: string; state: NodeState }
 
 export type NodeState = 'built' | 'open' | 'poor' | 'blocked' | 'full';
 
@@ -32,7 +32,7 @@ export function nodeState(state: GameState, s: Settlement, faction: FactionId, b
   return level > 0 ? 'built' : 'open';
 }
 
-export function BuildingTree({ state, s, faction, order, picture, selected, onSelect, council }: {
+export function BuildingTree({ state, s, faction, order, picture, selected, onSelect, council, extras }: {
   state: GameState;
   s: Settlement;
   faction: FactionId;
@@ -43,8 +43,12 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
   onSelect: (b: NodeId) => void;
   /** The council's picture and name. */
   council: { picture: string; name: string };
+  extras?: ExtraNode[];
 }) {
-  const nodes: NodeId[] = [COUNCIL, ...order.filter((b) => b !== 'spark')];
+  const extraOf = (n: NodeId) => (extras ?? []).find((e) => e.id === n);
+  const parentOf = (n: NodeId): NodeId | null => (n === COUNCIL ? null : extraOf(n)?.parent ?? BUILDING_PARENT[n as BuildingId] ?? COUNCIL);
+  const depthOf = (n: NodeId): number => (n === COUNCIL ? 0 : depthOf(parentOf(n)!) + 1);
+  const nodes: NodeId[] = [COUNCIL, ...order.filter((b) => b !== 'spark'), ...(extras ?? []).map((e) => e.id)];
   const columns = new Map<number, NodeId[]>();
   for (const n of nodes) columns.set(depthOf(n), [...(columns.get(depthOf(n)) ?? []), n]);
   const depth = Math.max(...columns.keys());
@@ -66,10 +70,13 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
   });
   const label = (n: NodeId): ReactNode => {
     if (n === COUNCIL) return <span style={{ fontSize: 13, color: '#2E7A32' }}>stoi od początku</span>;
-    const level = buildingLevel(s, n);
-    const st = nodeState(state, s, faction, n);
-    const cost = buildCost(state, s, n);
-    if (st === 'blocked') return <span style={{ fontSize: 13, color: '#8A2A18' }}>{buildBlock(s, n) ?? 'Tylko w osadzie własnej frakcji.'}</span>;
+    const ex = extraOf(n);
+    if (ex) return <span style={{ fontSize: 13, color: ex.state === 'blocked' || ex.state === 'poor' ? '#8A2A18' : ex.state === 'open' ? '#4A3418' : '#2E7A32' }}>{ex.sub}</span>;
+    const bid = n as BuildingId;
+    const level = buildingLevel(s, bid);
+    const st = nodeState(state, s, faction, bid);
+    const cost = buildCost(state, s, bid);
+    if (st === 'blocked') return <span style={{ fontSize: 13, color: '#8A2A18' }}>{buildBlock(s, bid) ?? 'Tylko w osadzie własnej frakcji.'}</span>;
     if (st === 'full') return <span style={{ fontSize: 13, color: '#2E7A32' }}>poziom {level}, gotowe</span>;
     return <span style={{ fontSize: 13, color: st === 'poor' ? '#8A2A18' : '#4A3418' }}>{level ? `poziom ${level} · ` : ''}{costText(cost!)}</span>;
   };
@@ -86,10 +93,12 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
         </svg>
         {nodes.map((n) => {
           const { x, y } = at(n);
-          const st: NodeState = n === COUNCIL ? 'built' : nodeState(state, s, faction, n);
-          const level = n === COUNCIL ? 1 : buildingLevel(s, n);
-          const pic = n === COUNCIL ? council.picture : picture(n, level);
-          const name = n === COUNCIL ? council.name : level ? BUILDING_NAMES[n][Math.min(level, BUILDING_NAMES[n].length) - 1] : BUILDING_NAMES[n][0];
+          const ex = extraOf(n);
+          const bid = n as BuildingId;
+          const st: NodeState = n === COUNCIL ? 'built' : ex ? ex.state : nodeState(state, s, faction, bid);
+          const level = n === COUNCIL || ex ? 1 : buildingLevel(s, bid);
+          const pic = n === COUNCIL ? council.picture : ex ? ex.picture : picture(bid, level);
+          const name = n === COUNCIL ? council.name : ex ? ex.name : level ? BUILDING_NAMES[bid][Math.min(level, BUILDING_NAMES[bid].length) - 1] : BUILDING_NAMES[bid][0];
           return (
             <button key={n} className={`tree-node ${st} ${selected === n ? 'on' : ''}`} data-tree-node={n} data-node-state={st} style={{ left: x, top: y, width: NODE_W, height: NODE_H }} onClick={() => onSelect(n)}>
               <img src={asset(pic)} alt="" width={56} height={56} style={{ flex: 'none', objectFit: 'contain' }} />

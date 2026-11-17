@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Imperium: Koszary stoją w każdej osadzie od początku, a siedliska jednostek wiszą w drzewku pod Koszarami jedno za drugim (siedlisko wyższego poziomu wymaga niższego; wybór jednej jednostki wyklucza drugą).
+
 - Poziom Imperium: zamiast drzewek frakcji każda frakcja ma własne budynki. Przymierze: Kapliczka Świtu (Blask Świtu, 4 poziomy), Szkółka Drzewa (drewno) i Krąg Gaju (pełna mana). Horda: Jama Krwi (Żądza Krwi, 4 poziomy), Szabrownia (złoto z łupów) i Wilcze Legowisko (+1 ruch). Bez Kapliczki lub Jamy frakcja nie ma swojej mechaniki. Wszystko widać w drzewku pod Radą Osady.
 
 - Arena: w pełnej 6 na 6 sam wybierasz dwa czary dla bohatera (z sześciu). Łatwy komputer jest trochę mocniejszy w 6 na 6, a na poziomie Bardzo trudny w szybkiej arenie 3 na 3 dobiera o jeden skarb więcej.
