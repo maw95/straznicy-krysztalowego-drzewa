@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Rada Osady ma własne obrazy: altana z liści i kryształu u Przymierza, warowna sala wojenna z paleniskiem u Hordy.
+
 - Osada otwiera się na cały ekran. Rada Osady na krajobrazie pokazuje drzewko budynków: co jest wybudowane, co można kupić, co jest za drogie i co czeka na inny budynek (z liniami zależności).
 
 - Budynki osady tworzą drzewo: Kuźnia, Fosa i Mury oraz Szpital wymagają najpierw Koszar, Wieża maga Szpitala, a Karczma Targu (przycisk pokazuje, czego brakuje).

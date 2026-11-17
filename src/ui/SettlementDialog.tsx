@@ -377,7 +377,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               </button>
             );
           })}
-          <button className="settlement-bld built council" style={{ left: '50%', top: '13%', ...(ORDER.length > 6 ? { width: 104 } : {}) }} onClick={() => { setView('tree'); setPick(null); }} data-building="council" data-level="1" title="Rada Osady: drzewko budynków">
+          <button className="settlement-bld built council" style={{ left: '50%', top: '19%', ...(ORDER.length > 6 ? { width: 104 } : {}) }} onClick={() => { setView('tree'); setPick(null); }} data-building="council" data-level="1" title="Rada Osady: drzewko budynków">
             <img src={asset(councilPic)} alt="" className="settlement-pic" />
             <span>Rada Osady (drzewko budynków)</span>
           </button>

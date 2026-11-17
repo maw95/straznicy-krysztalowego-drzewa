@@ -5117,6 +5117,28 @@
       "data": "2026-11-17",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "osady/rada-osady",
+      "pliki": [
+        "public/assets/osady/dawn_council1.webp",
+        "public/assets/osady/horde_council1.webp"
+      ],
+      "typ": "Rada Osady: budynek stojący w każdej osadzie od początku (Przymierze: altana z drewna i liści z kryształem; Horda: warowna sala wojenna z paleniskiem)",
+      "opis": "Dwa zadania po 2 warianty, w grze pierwszy wariant (A) obu frakcji; wycięcie scripts/assets/osady.py (czarne tło na przezroczystość, wysokość 380). Prompt jak przy pozostałych budynkach: 'A single fantasy game building, painterly realistic, three-quarter isometric view, isolated on a plain pure black background, no text. <styl frakcji>. A town council hall: <opis>.'",
+      "scenario_asset": {
+        "zadanie_przymierze": "job_DL61gmkZi6aHE6QfmPwGuwtn",
+        "wynik_uzyty_przymierze": "asset_HFFVb2qSS2JnZaX27xcDgi44",
+        "wariant_odrzucony_przymierze": "asset_sGkAxpMbpz5h1rEsf2sNhKqb",
+        "zadanie_horda": "job_2jDyTD4hEUvCrsZM2sYFG36R",
+        "wynik_uzyty_horda": "asset_T5cY1CWyD7q5rUVYxG12s46R",
+        "wariant_odrzucony_horda": "asset_S2aU1st173tvj4dKdXJc8hVf"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 1280x1024, 2 x 6 CU",
+      "data": "2026-11-17",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

@@ -49,7 +49,7 @@ Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.te
 
 **37. Osada na pełnym ekranie (reszta)** (L; punkt był rozbity na etapy, patrz `docs/BUDYNKI.md` sekcje 0 i 0a)
 - **Zrobione 17.11:** graf zależności (`BUILDING_PARENT`, `buildBlock`; boty respektują, balans bez zmian: 144 vs 143 komórek poza pasmem), osada na pełnym ekranie (`SettlementDialog.tsx`, `.settlement-full`; krajobraz jako tło, budynki na nim, usługi na dole, scrolluje na małych ekranach), **Rada Osady** na krajobrazie (klik otwiera drugą stronę ekranu), drzewko z węzłami i liniami (`BuildingTree.tsx`; stany: wybudowany / do kupienia / za drogi / zablokowany; klik pokazuje cenę i efekt; Esc wraca do krajobrazu). Skrypt kontrolny `scripts/browser/osada-pelny.ts`, `?built=barracks,…` w adresie testowym.
-- **Obraz zastępczy do wymiany:** `public/assets/osady/{dawn,horde}_council1.webp` to na razie kopie `_plot.webp`. Do wygenerowania w Scenario: **Rada Osady Przymierza** (zielony, drewniany ratusz-altana z liśćmi i kryształem) i **Rada Osady Hordy** (czarna kamienna sala z czaszkami i żarzącym się paleniskiem), styl jak reszta `osady/`, przezroczyste tło, ok. 14 CU każdy; wpis w `assets.json`.
+- **Rada Osady:** obrazy wygenerowane 17.11 (`osady/{dawn,horde}_council1.webp`, 12 CU, `assets.json`); autor może je zakwestionować (wariant odrzucony: zob. `assets.json`).
 - **Zostaje:**
   1. **Usunąć limit „jeden budynek na rundę”** na wszystkich poziomach (`mayBuildNow`, `KingdomState.built`, komunikaty, boty budują tyle, na ile je stać); **przesunie golden i pasma** (`tuneLevels.ts`, `make sim-raport`), osobny commit.
   2. **Budynki unikalne frakcji** (po 3: Kapliczka Świtu, Szkółka Drzewa, Krąg Gaju / Jama Krwi, Szabrownia, Wilcze Legowisko; efekty i ceny w `docs/BUDYNKI.md` sekcja 0) **zamiast drzewek frakcji** (`kingdom.tree`, `kingdomTree`, `TREE_NAMES`, pas „drzewko” w oknie) oraz budynek Pierwotnej Iskry w drzewku; **także podstawowe efekty Blasku Świtu i Żądzy Krwi mają wymagać budynku**. Nowe obrazy budynków (Scenario, osobno Przymierze i Horda).
@@ -202,7 +202,7 @@ Frakcja to ok. 3 bohaterów i 7 jednostek (`DECYZJE.md`): 10 postaci.
 | **Razem** | **ok. 1 200** | **ok. 1 650** |
 Do tego ok. 3–4 h pracy nad pakowaniem, kontrolą i wpisami (`PRZEPIS_JEDNOSTKI.md`). Przy braku limitu jednej jednostki (100 CU) wychodzi ok. 1 000 CU samych postaci. Szacunek do aktualizacji po pierwszej nowej frakcji (Dzikie Stada), kiedy będzie znany koszt rzeczywisty.
 
-**Wydatki 17.11 (nocne zadanie):** ikony 5 czarów kręgu III i Przyspieszenia 7 CU; efekty 5 czarów (obraz 3 + klip 10 CU) 65 CU; medale poziomów Wyprawa, Osada, Księstwo 7 CU. Ozdobniki okien (narożnik ramki, tło Księgi czarów, tło skrzyni; po 2 warianty, jakość medium) 18 CU. Razem 97 CU.
+**Wydatki 17.11 (nocne zadanie):** ikony 5 czarów kręgu III i Przyspieszenia 7 CU; efekty 5 czarów (obraz 3 + klip 10 CU) 65 CU; medale poziomów Wyprawa, Osada, Księstwo 7 CU. Ozdobniki okien (narożnik ramki, tło Księgi czarów, tło skrzyni; po 2 warianty, jakość medium) 18 CU. Rada Osady (2 frakcje, po 2 warianty) 12 CU. Razem 109 CU.
 
 Wpisy autora z 17.11 (wieczór):
 - **(17.11, czary)** Trzy kręgi, ulepszanie Wieży maga otwiera wyższy krąg; docelowo pięć (punkt 33).
