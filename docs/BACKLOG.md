@@ -23,7 +23,7 @@ Autor pisze „zrób punkty 1, 2 i 3” (albo „zrób 9–10”, „zrób wszys
 - Każdy zaakceptowany obraz, animacja, dźwięk lub muzyka trafia do repo w tej samej sesji z wpisem w `assets.json`.
 - Po skończeniu: usuń punkt z tego pliku (albo zaznacz, co zostało), zagraj `complete.oga`, krótkie podsumowanie po polsku, uwaga, że to dobry moment na `/clear`.
 
-## Stan (17.11.2026, po wydaniu 2.8.0)
+## Stan (17.11.2026, po wydaniu 2.10.0)
 
 Wydane: **2.8.0** (16.11: poziomy 0, 4, 5 i 6, Łatwy na arenie, bot-kupiec, animacje i efekty; gra na Pages, serwer 0.2.0 na Fly.io, silnik 2.8.0). Wcześniej **2.7.0** (14.11, poziom 3 „Osada”). Wszystko z poniższej listy jest już wydane, nic nie czeka na push.
 
@@ -62,7 +62,7 @@ Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.te
 
 ## Przed premierą (decyzja autora 17.11: wchodzą przed Steamem; po punktach z kolejki)
 28. **Nowe frakcje** (plan wdrażania: sekcja „Parking”, ostatni punkt): Dzikie Stada → Królestwo Umarłych → Żelazne Klany (karta frakcji, grafika, symulacje 10 par), potem DLC. Przed startem: próbka jednej jednostki w nowym stylu i decyzja autora. Koszt grafik i dźwięków jednej frakcji: sekcja „Kredyty Scenario”.
-30. **Wiele języków** (PL + EN): **zrobione 17.11 dla interfejsu i gry** (słownik angielski `src/i18n/en`, ok. 1 900 wpisów, wykrywanie języka z przeglądarki, flagi, opcje; instrukcja w `CLAUDE.md`). **Zostaje:** instrukcja gracza `docs/INSTRUKCJA.md` (okno zasad, zakładka „Instrukcja”, PDF/DOCX), historia zmian „Co nowego” (CHANGELOG po polsku), komunikaty serwera online (45 napisów w repo serwera), grafiki z napisami (logo, okładka, slajdy), tłumaczenie nazw własnych (bohaterowie, osady: celowo zostają po polsku), kolejne języki (każdy nowy to nowy plik słownika i test pokrycia).
+30. **Wiele języków** (PL + EN): **zrobione 17.11:** interfejs i gra, instrukcja gracza po angielsku (`docs/INSTRUKCJA.en.md`; skrypty PDF/DOCX nadal czytają tylko polski plik), historia zmian („Co nowego”, `src/i18n/en/changelog.ts`, test pilnuje każdego nowego wpisu), komunikaty serwera online. **Zostaje:** wersja PDF/DOCX angielskiej instrukcji (przeróbka `scripts/assets/manual_*`), grafiki z napisami (logo, okładka, slajdy; kredyty Scenario), kolejne języki (nowy plik słownika i test pokrycia); nazwy własne bohaterów i osad celowo po polsku.
 (Nie robić bez wyraźnego polecenia autora: to duże prace.)
 
 ## 3. Sprawdzenie na żywo
