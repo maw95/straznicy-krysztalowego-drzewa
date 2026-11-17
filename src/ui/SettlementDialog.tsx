@@ -104,9 +104,16 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const garrison = s.garrison ?? [];
   const heroHere = Boolean(buyer && buyer.pos === s.at);
   const garrisonPanel = state.rules.economy ? (
-    <div data-garrison style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6, alignSelf: 'stretch' }}>
+    <div data-garrison style={{ marginTop: 0, display: 'flex', flexDirection: 'column', gap: 6, alignSelf: 'stretch' }}>
       <b style={{ display: 'flex', alignItems: 'center', gap: 8 }}><img src={asset('ikony/frakcje/garnizon.webp')} alt="" width={34} height={34} />Garnizon ({garrison.length}/{SIEGE.garrisonMax})</b>
-      <span style={{ fontSize: 14, color: '#6B4A22' }}>{heroHere ? 'Jednostki zostawione w garnizonie bronią osady, gdy bohater odejdzie. Wróg musi je pokonać, żeby ją zająć.' : 'Garnizon zmienia bohater stojący w tej osadzie.'}</span>
+      <span data-garrison-rule style={{ fontSize: 14, color: '#6B4A22' }}>Garnizon broni osady pod nieobecność bohatera: wróg musi go pokonać, żeby ją zająć, a w bitwie dowodzi nim właściciel osady. Maksymalnie {SIEGE.garrisonMax} jednostki. Zostawiasz je i zabierasz, stojąc w osadzie{heroHere ? '' : ' (teraz nie stoi tu bohater, którego jest tura)'}.</span>
+      <div data-garrison-slots style={{ display: 'flex', gap: 8 }}>
+        {Array.from({ length: SIEGE.garrisonMax }, (_, i) => (
+          <div key={i} title={garrison[i] ? UNITS[garrison[i]].name : 'Puste miejsce garnizonu'} style={{ width: 46, height: 46, borderRadius: 8, border: '2px dashed #9A7A44', display: 'grid', placeItems: 'center', background: 'rgba(0,0,0,0.06)' }}>
+            {garrison[i] ? <Portrait unitId={garrison[i]} size={40} /> : <span style={{ color: '#9A7A44', fontSize: 20 }}>+</span>}
+          </div>
+        ))}
+      </div>
       {garrison.map((id) => (
         <div key={id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <Portrait unitId={id} size={40} />
@@ -131,7 +138,6 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           <div><RuleText text={BUILDING_TEXTS[b][0]} /></div>
           {buildButton(b)}
           {b === 'market' && trade}
-          {b === 'walls' && garrisonPanel}
         </div>
       );
     }
@@ -296,7 +302,6 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           <b style={{ color: '#2E7A32' }}>{buildingLevel(s, 'walls') >= 2 ? 'Fosa, mur z bramą i dwie wieżyczki bronią osady.' : 'Fosa z kolcami broni osady.'}</b>
           <span style={{ fontSize: 14, color: '#6B4A22' }}>Umocnienia działają w bitwie o osadę, gdy broni jej garnizon albo bohater właściciela.</span>
           {upgrade}
-          {garrisonPanel}
         </div>
       );
     }
@@ -367,6 +372,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           </div>
         );
       })()}
+      {garrisonPanel && <div className="plate parch" style={{ padding: '8px 16px' }}>{garrisonPanel}</div>}
       <div className="plate parch" data-service style={{ padding: '12px 16px', minHeight: 120, ...(state.rules.economy ? { maxHeight: '36vh', overflowY: 'auto' as const, flex: 'none' } : {}) }}>
         <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>{BUILDING_NAMES[open][0]}</div>
         {panel(open)}

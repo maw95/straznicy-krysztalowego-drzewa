@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Okno osady: garnizon jest stale widoczny (nie dopiero pod murami): trzy miejsca na jednostki, krótka zasada (broni osady pod nieobecność bohatera, wróg musi go pokonać, w bitwie dowodzi nim właściciel) i przyciski „Zostaw w garnizonie” / „Zabierz do drużyny”.
+
 - Mapa: dwuklik (na telefonie dwa szybkie dotknięcia) na własną osadę otwiera jej okno, także gdy bohater stoi gdzie indziej; pojedynczy klik zaznacza pole i po chwili rusza bohatera jak dotąd.
 
 - Lista osad w panelu bocznym mapy nie ma już beżowego tła: w każdym wierszu miniaturka osady (inna dla Przymierza i Hordy), nazwa i liczba jednostek garnizonu.
