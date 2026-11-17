@@ -52,6 +52,14 @@ Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.te
 - **Zostaje:** (1) małe chipy kolejki jednostek w bitwie (33×40 px, ok. 14 na ekran; kolejka jest przewijana, powiększenie wymaga przeprojektowania paska) i kilka przycisków okna Opcje; (2) dolny pasek mapy w dwóch rzędach zabiera wysokość mapie na niskich telefonach (rozważyć mniejsze ikony zasobów lub przeniesienie ich w górę); (3) ekrany nieprzejrzane skryptem: kreator dalsze strony, ustawienia i lobby online, `Własne ustawienia`, okno bohatera w bitwie; (4) pion: gra pokazuje monit „obróć telefon”, więc pionowo działa tylko menu; (5) **prawdziwe urządzenia (autor):** Android i iPhone (Safari, Chrome): pasek adresu iOS, wycięcie ekranu, wydajność WebGL; do tego adres w sieci lokalnej (`vite --host`).
 - Gotowe, gdy: autor sprawdził grę na swoim telefonie i zgłoszone usterki są naprawione.
 
+**49. Zgłoszenie autora z 17.11 wieczorem (telefon 667×375, kreator i interfejs gry)** (M)
+- **Kreator, krok 4 „Wybór celu” i krok 5 „Jaka mapa?”:** dziś po kliknięciu opcji trzeba zescrollować i kliknąć „Dalej”. Ma być jak w pozostałych krokach z jednym ustawieniem: kliknięcie opcji od razu przechodzi dalej.
+- **Telefon, kreator:** po przejściu na następny ekran kreatora strona ma się **automatycznie przewinąć na górę**.
+- **Przyciski „Wstecz” i „Dalej”** w kreatorze mają mieć **takie same wymiary**; w kroku 6 (poziom trudności) **wszystkie przyciski** mają mieć takie same wymiary.
+- **Telefon, po rozpoczęciu gry:** interfejs jest za duży (przyciski, padding, czcionki). Zmniejszyć zawartość i padding przycisków oraz czcionki wszystkich napisów, żeby **mapa świata i arena walki zajmowały dużą część ekranu**. (Powiązane z punktem 47: pasek dolny, panel boczny.)
+- Źródło: zgłoszenie `bug-reports/2026-11-17-20-34-17-ziarno-406864.json`.
+- Gotowe, gdy: opisane zachowania kreatora działają, a na ekranie 667×375 mapa i arena zajmują wyraźnie większą część ekranu (zrzuty przed i po, `scripts/browser/telefon.ts`).
+
 ## 2. Tylko autor (Claude tego nie bierze)
 - **Premiera na Steamie** (L): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery: **3.0** (potwierdzone 17.11).
 - Domeny i konta, znak towarowy (brak wpisów), tytuł w sklepie Steam.

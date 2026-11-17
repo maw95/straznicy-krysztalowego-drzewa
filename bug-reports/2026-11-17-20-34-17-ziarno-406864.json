@@ -1,0 +1,46 @@
+{
+ "setup": {
+  "mode": "coop",
+  "mapSize": "veryLong",
+  "battleMode": "board",
+  "seed": 406864,
+  "seats": [
+   {
+    "name": "Gracz 1",
+    "faction": "dawn",
+    "controller": "human",
+    "heroId": "goldDragon"
+   }
+  ],
+  "rules": {
+   "heroMovePoints": 3,
+   "abilities": false,
+   "treasures": true,
+   "useDice": false,
+   "extraEvilHero": false,
+   "initiativeTie": "defender",
+   "heroReplacement": true,
+   "minEvilHeroes": 1,
+   "hordeRespawn": true,
+   "ritualRounds": 3,
+   "battleRoundLimit": 40,
+   "ritual": false,
+   "ruleset": "digital"
+  }
+ },
+ "actions": [],
+ "reports": [
+  {
+   "createdAt": "2026-11-17T20:34:17.632Z",
+   "actionIndex": 0,
+   "round": 1,
+   "screen": "adventure",
+   "text": "w wielu krokach formularza, na których jest tylko jedno ustawienie do wybrania, kliknięcie na jakąś opcję skutkuje natychmiastowym przeniesieniem na następny ekran, i to jest dobre. Krok 4 (\"Wybór celu\") jest inny. nawet jak się kliknie jakąś opcję, to i tak trzeba zescrollować na dół i kliknąć \"Dalej\" - poprawmy to.\nTak samo zróbmy w kroku 5 (Jaka mapa?).\nNa telefonie podczas uzupełniania formularza konfiguracji gry, kiedy przechodzimy na następny ekran, powinniśmy automatycznie scrollować na górę strony.\nPrzyciski \"Wstecz\" i \"Dalej\" w formularzu powinny mieć takie same wymiary.\nW kroku 6, przy wyborze poziomu trudności, wszystkie przyciski powinny miec takie same wymiary.\n\nna telefonie po rozpoczęciu gry, interfejs jest bardzo duży. wszystkie przyciski są za duże. zmniejszmy ich zawartość i zmniejszmy padding tych przycisków, zmniejszmy też czcionkę wszystkich napisów - zależy nam na tym, żeby było mapa świata i arena walki zajmowała dużą część ekranu.",
+   "recentLog": [
+    "[1] Runda 1 z 24. Przymierze potrzebuje 2 kryształów."
+   ],
+   "viewport": "667×375",
+   "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1"
+  }
+ ]
+}
