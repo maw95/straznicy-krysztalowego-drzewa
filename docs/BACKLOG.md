@@ -41,12 +41,9 @@ Stan nocnego zadania: zob. `docs/PODSUMOWANIE_NOCNE.md` i `docs/PYTANIA_DO_AUTOR
 
 Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
 
-**48. Arena 6 na 6 z elementami nowych poziomów i Bardzo trudny na arenie** (L; zależy od punktów 33 i 35)
-- Decyzje autora (17.11): **Bardzo trudny na arenie: bot bez błędów** (zamiast +1 karty w drafcie; zdjęcie Życia zostaje). Arena dostaje rzeczy z nowych poziomów: **dodatkowi pomocnicy, artefakty i zaklęcia**; docelowo walka **6 na 6**.
-- Dźwignie Bardzo trudnego na arenie (do wyboru i strojenia pasmem 15–30%): bot ma więcej zaklęć, więcej many, więcej artefaktów albo **gracz ma mniej pomocników niż bot** (5 na 6, 4 na 6). Zrobić jako pola `RulesConfig` (jak `computerTreasures`), odczytywane w `arenaSetup` (`types.ts`), parametry w kreatorze areny (`SetupScreen.tsx`, opisy w `setupShared.tsx` i `INSTRUKCJA.md`).
-- **Decyzje autora (17.11, po pytaniach):** (1) skład 6 na 6: **stała pula do wyboru**, każda strona wybiera bohatera + 5 pomocników z własnej puli (jednostki tierów 2–5), bez rywalizacji o karty; (2) każdy gracz dostaje **1 artefakt (wybór z 3 ofert) i 2 czary z kręgów I–II**, mana jak w grze, zmiany tylko w arenie; (3) dźwignie Bardzo trudnego (więcej many i czarów bota, gracz z mniejszą liczbą pomocników, dodatkowy artefakt bota): **Claude próbuje wszystkich trzech przy strojeniu i sam decyduje, których użyć i w jakim zakresie**, by trzymać pasmo 15–30%; (4) **6 na 6 jest opcją w kreatorze** („3 na 3 (szybka)” / „6 na 6 (pełna)”), 3 na 3 zostaje bez zmian, ranking osobno dla każdego trybu.
-- Testy: `computer.test.ts`/`difficulty.test.ts` (bot bez błędów na arenie, liczba pomocników 6/5/4), golden `-u` osobnym commitem; `make sim-raport` dla areny.
-- Gotowe, gdy: arena 6 na 6 działa lokalnie i online, Bardzo trudny ma opisane i działające dźwignie, pasmo 15–30% trzymane, opisy w UI i instrukcji zaktualizowane.
+**48. Arena 6 na 6 (reszta: tylko online)** (S; wymaga decyzji autora o wydaniu silnika)
+- Zrobione 17.11: arena 6 na 6 offline (pula 8 jednostek, wybór 5, artefakt z 3, 2 czary, Bardzo trudny z `ARENA_HANDICAP`, osobne statystyki i punkty); decyzje i pytania w `docs/PYTANIA_DO_AUTORA.md`.
+- Zostaje: **gra online**. Serwer używa silnika z paczki wydania 2.8.0 (`straznicy-engine-2.8.0.tgz`), więc potrzebne nowe wydanie silnika (gry nie pushuję: decyzja autora). Potem: serwer przyjmuje `arenaSize` w konfiguracji pokoju, kreator online pokazuje opcję (dziś ukryta: `!online` w `NewGameWizard.tsx`), ranking online osobno dla 3 na 3 i 6 na 6.
 
 ### Grupa B. Ekran osady (L)
 
