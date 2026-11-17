@@ -344,8 +344,28 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     return cursor ? { cursor } : {};
   }
 
+  /** The last click on a settlement of the viewer's: a second click (or tap) within this time is a double click and opens the settlement window. */
+  const lastTownClick = useRef<{ k: HexKey; at: number; timer: number } | null>(null);
+  const DOUBLE_CLICK_MS = 380;
+
   function clickTile(k: HexKey) {
     setSelected(k);
+    // The viewer's own settlement: a click selects it, a double click opens its window (whatever the hero stands on); a single click
+    // goes on to move the hero as for any hex, but only after the double-click time has passed, so the first click of a double one moves nothing.
+    const town = state.tiles[k].place?.kind === 'settlement' ? state.kingdom?.settlements[state.tiles[k].place!.id] : undefined;
+    const own = town && viewer && town.owner === viewer && canAct && !mapPicks && !revive && !(hero && isChildHero(state, hero));
+    if (own) {
+      const last = lastTownClick.current;
+      if (last && last.k === k && Date.now() - last.at < DOUBLE_CLICK_MS) {
+        window.clearTimeout(last.timer);
+        lastTownClick.current = null;
+        setSettlementOpen(town.id);
+        return;
+      }
+      if (last) window.clearTimeout(last.timer);
+      lastTownClick.current = { k, at: Date.now(), timer: window.setTimeout(() => { lastTownClick.current = null; stepTo(k); }, DOUBLE_CLICK_MS) };
+      return;
+    }
     if (mapPicks) {
       if (state.tiles[k].revealed) return;
       const picks = mapPicks.picks.includes(k) ? mapPicks.picks.filter((x) => x !== k) : [...mapPicks.picks, k].slice(0, 3);
@@ -358,6 +378,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
       setRevive(null);
       return;
     }
+    stepTo(k);
+  }
+
+  /** A click on a hex of the map that moves the hero there when it can. */
+  function stepTo(k: HexKey) {
     const r = reach.get(k);
     if (r) onPath(r.path.slice(1), r.hostile);
     else if (legal.has(k)) onPath([k], legal.get(k) !== 'move');
@@ -403,6 +428,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     key={t.key}
                     type="button"
                     className="hexbtn"
+                    data-hex={t.key}
+                    {...(t.place?.kind === 'settlement' ? { 'data-settlement-hex': t.place.id } : {})}
                     aria-label={t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole'}
                     onClick={() => clickTile(t.key)}
                     {...tileDetails}
@@ -648,15 +675,14 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
             const childTurn = Boolean(hero && canAct && isChildHero(state, hero));
             if (!mine.length) return null;
             return (
-              <div className="plate parch" data-settlements style={{ padding: '6px 10px', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                {childTurn && <i data-autopilot style={{ fontSize: 14, color: '#6B4A22' }}>{hasParent(state, hero!) ? 'Osadami i surowcami zarządza dorosły z Twojej drużyny.' : 'Osadami i surowcami zarządza autopilot.'}</i>}
+              <div className="settlement-list" data-settlements>
+                {childTurn && <i data-autopilot style={{ fontSize: 14 }}>{hasParent(state, hero!) ? 'Osadami i surowcami zarządza dorosły z Twojej drużyny.' : 'Osadami i surowcami zarządza autopilot.'}</i>}
                 {here && here.owner === viewer && canAct && !childTurn && (
                   <button className="btn prim" data-enter-settlement style={{ padding: '6px 12px', fontSize: 18 }} onClick={() => setSettlementOpen(here.id)}>Wejdź do osady {here.name}</button>
                 )}
-                <b style={{ fontSize: 14, color: '#6B4A22', letterSpacing: 1 }}>OSADY (klik: pokaż, drugi klik: otwórz)</b>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                <div className="settlement-rows" title="Klik: pokaż na mapie, drugi klik: otwórz okno osady">
                   {mine.map((x) => (
-                    <button key={x.id} className="btn plate parch" data-settlement-link={x.id} style={{ padding: '3px 10px', fontSize: 15, outline: flash === x.at ? '2px solid #F3D27A' : undefined }} onClick={() => {
+                    <button key={x.id} className={`settlement-row ${flash === x.at ? 'flash' : ''}`} data-settlement-link={x.id} onClick={() => {
                       if (selected === x.at && canAct && !childTurn) return setSettlementOpen(x.id);
                       setSelected(x.at);
                       setFlash(x.at);
@@ -667,7 +693,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         const p = pos(state.tiles[x.at]);
                         el.scrollTo?.({ left: inner.offsetLeft + p.x + W / 2 - el.clientWidth / 2, top: inner.offsetTop + p.y + H / 2 - el.clientHeight / 2, behavior: 'smooth' });
                       }
-                    }}>{x.name}</button>
+                    }}>
+                      <img src={asset(`ikony/mapa/osada_${viewer}.webp`)} alt="" width={30} height={30} />
+                      <span>{x.name}</span>
+                      {(x.garrison?.length ?? 0) > 0 && <span className="settlement-garrison" title={`Garnizon: ${x.garrison!.length}`}>⚔ {x.garrison!.length}</span>}
+                    </button>
                   ))}
                 </div>
               </div>
