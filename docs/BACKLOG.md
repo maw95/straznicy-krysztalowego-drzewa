@@ -32,6 +32,11 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids` = Łatwy, `economy`, `realm
 
 ## 1. Kolejka prac (w tej kolejności)
 
+**Kolejność wdrażania (ułożona 17.11 w nocnym zadaniu; numery punktów zostają):**
+36 → 34 → 32 → 35 → 33 → 48 (grupa A: małe i niezależne najpierw; 33 i 35 przed 48, 34 rozszerza `passArtifact` o Odłamki) → 41 (grafika, niezależna) → 42 → 40 (wspólny układ sekcji, potem „Własne ustawienia”) → 45 → 37 z 44 (ekran osady; po grafice i grafie z `BUDYNKI.md`) → 46 → 38 (grafika ramek i tła) → 39 (zasady i karty: po 33, 34, 37, żeby opisać stan końcowy) → 43 (panel testowy: sceny po 33 i 37) → 47 (telefon na końcu, sprawdza wszystko).
+Grafiki Scenario (41, 38, 37) nie zależą od kodu: generować przy okazji, budżet ok. 8000 CU/miesiąc.
+Stan nocnego zadania: zob. `docs/PODSUMOWANIE_NOCNE.md` i `docs/PYTANIA_DO_AUTORA.md`.
+
 ### Grupa A. Zasady i silnik (decyzje autora z 17.11; punkty niezależne, kolejność dowolna)
 
 Wspólne dla 32–36: zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
