@@ -5,7 +5,7 @@
 
 import { BOSS, CONTROL, ENCOUNTERS, FACTION_NAMES, NEUTRAL_BOSSES, SURVIVAL, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, UNITS, type FactionId, type Terrain } from './data';
 import { hpScaleOf } from './battle';
-import { finish, heroesAt, ritualFormed, spawnHordeHero } from './game';
+import { finish, finishDraw, heroesAt, ritualFormed, spawnHordeHero } from './game';
 import { distance, key, parseKey, triToHex, type HexKey } from './hex';
 import { log } from './log';
 import { homeOf, mapNeighbors, revealAround, tileCost, treeOf } from './map';
@@ -272,10 +272,11 @@ const control: Objective = {
     return false;
   },
   onRoundLimit(state) {
-    // The side that led for more rounds wins; level (or no leader at all) goes to the Horde, as the limit does in the crystals game.
+    // The side that led for more rounds wins; level (or no leader at all) is a draw.
     const { dawn, horde } = state.control!.led;
     if (dawn > horde) finish(state, 'dawn', 'Upłynął limit rund: Przymierze dłużej miało przewagę w punktach kontrolnych.');
-    else finish(state, 'horde', horde > dawn ? 'Upłynął limit rund: Horda dłużej miała przewagę w punktach kontrolnych.' : 'Upłynął limit rund.');
+    else if (horde > dawn) finish(state, 'horde', 'Upłynął limit rund: Horda dłużej miała przewagę w punktach kontrolnych.');
+    else finishDraw(state, 'Upłynął limit rund: żadna strona nie miała przewagi w punktach kontrolnych.');
   },
   progress(state) {
     const n = controlCounts(state);
@@ -439,11 +440,12 @@ const conquest: Objective = {
   },
   onRoundLimit(state) {
     // Time is up: a side that holds most of the enemy's land (more than half of its settlements) has won the war, unless the enemy did the same;
-    // otherwise the limit goes to the Horde, as in the crystals game.
+    // otherwise (neither or both) it is a draw.
     const most = (f: FactionId) => conquestHeld(state, f) * 2 > conquestTargets(state, f).length;
     const [dawn, horde] = [most('dawn'), most('horde')];
     if (dawn && !horde) finish(state, 'dawn', `Upłynął limit rund: Przymierze trzyma większość osad na ziemi Hordy (${conquestHeld(state, 'dawn')} z ${conquestTargets(state, 'dawn').length}).`);
-    else finish(state, 'horde', horde && !dawn ? `Upłynął limit rund: Horda trzyma większość osad na ziemi Przymierza (${conquestHeld(state, 'horde')} z ${conquestTargets(state, 'horde').length}).` : 'Upłynął limit rund: nikt nie zdobył większości ziemi wroga.');
+    else if (horde && !dawn) finish(state, 'horde', `Upłynął limit rund: Horda trzyma większość osad na ziemi Przymierza (${conquestHeld(state, 'horde')} z ${conquestTargets(state, 'horde').length}).`);
+    else finishDraw(state, 'Upłynął limit rund: nikt nie zdobył przewagi w ziemi wroga.');
   },
   progress(state) {
     if (!state.kingdom) return [];
@@ -466,10 +468,11 @@ const relic: Objective = {
     return false;
   },
   onRoundLimit(state) {
-    // More shards in hand wins; level goes to the Horde, as the limit does in the crystals game.
+    // More shards in hand wins; level is a draw.
     const [dawn, horde] = [shardsOf(state, 'dawn'), shardsOf(state, 'horde')];
     if (dawn > horde) finish(state, 'dawn', `Upłynął limit rund: Przymierze ma więcej Odłamków (${dawn} do ${horde}).`);
-    else finish(state, 'horde', horde > dawn ? `Upłynął limit rund: Horda ma więcej Odłamków (${horde} do ${dawn}).` : 'Upłynął limit rund: Odłamków po równo.');
+    else if (horde > dawn) finish(state, 'horde', `Upłynął limit rund: Horda ma więcej Odłamków (${horde} do ${dawn}).`);
+    else finishDraw(state, 'Upłynął limit rund: Odłamków po równo.');
   },
   progress(state) {
     const total = shardTotal(state);

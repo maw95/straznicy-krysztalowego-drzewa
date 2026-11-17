@@ -127,7 +127,7 @@ Drugi cel obok klasycznego (kryształy do Drzewa i rytuał Hordy). Interfejs cel
 - Na koniec rundy: kto trzyma więcej punktów (według wartości) ma przewagę. Przewaga przez **K rund z rzędu** wygrywa:
   K = 3 (krótka i średnia mapa), 4 (długa), 5 (bardzo długa); Przymierze potrzebuje o 1 rundę więcej, bo w rundzie rusza pierwsze (`CONTROL` w `data.ts`).
   Remis lub zmiana lidera zeruje serię.
-- Limit rund: wygrywa strona, która łącznie dłużej miała przewagę; remis wygrywa Horda (jak limit w grze o kryształy). Polegli wszyscy bohaterowie
+- Limit rund: wygrywa strona, która łącznie dłużej miała przewagę; równa liczba rund to remis (tylko w grze o kryształy limit rund wygrywa Horda). Polegli wszyscy bohaterowie
   Przymierza = wygrywa Horda (jak zawsze). Kryształy i strażnicy zostają na mapie, ale niczego nie dają; rytuał nie działa.
 - Boty (`controlAction` w `adventureAi.ts`, oba obozy i automat): atakują pokonywalnego wroga obok, trzymają punkt, na którym stoją (bocznego puszczają,
   gdy środkowy jest wolny i nikt swój nie jest bliżej), reszta idzie do najbliższego punktu, środkowy liczy się o 3 bliżej; strona, która jest „pod”

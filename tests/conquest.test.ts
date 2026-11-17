@@ -44,7 +44,7 @@ describe('goal: conquest', () => {
     expect(s.winner).toBe('dawn');
   });
 
-  it('at the round limit goes to the side holding most of the enemy land, else to the Horde', () => {
+  it('at the round limit goes to the side holding most of the enemy land, else a draw', () => {
     const limit = (owned: number): GameState => {
       let s = game();
       const targets = conquestTargets(s, 'dawn');
@@ -55,8 +55,8 @@ describe('goal: conquest', () => {
       return s;
     };
     const n = conquestTargets(game(), 'dawn').length;
-    expect(limit(Math.floor(n / 2) + 1 > n - 1 ? n - 1 : Math.floor(n / 2) + 1).winner).toBe(n >= 3 ? 'dawn' : 'horde');
-    expect(limit(0).winner).toBe('horde');
+    expect(limit(Math.floor(n / 2) + 1 > n - 1 ? n - 1 : Math.floor(n / 2) + 1).winner).toBe(n >= 3 ? 'dawn' : null);
+    expect(limit(0).winner).toBe(null);
   });
 
   it('bots play it to the end in coop and against each other', () => {

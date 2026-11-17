@@ -97,7 +97,7 @@ describe('objective control (digital ruleset)', () => {
     expect(OBJECTIVES.control.progress(s).map((l) => l.label)).toContain('Punkty kontrolne');
   });
 
-  it('a level round breaks the streak; at the round limit the side that led longer wins, level goes to the Horde', () => {
+  it('a level round breaks the streak; at the round limit the side that led longer wins, level is a draw', () => {
     const s = control();
     const hero = Object.values(s.heroes).find((h) => h.faction === 'dawn')!;
     hero.pos = s.control!.points[0];
@@ -111,7 +111,7 @@ describe('objective control (digital ruleset)', () => {
     expect(s.winner).toBe('dawn'); // led one round, the Horde none
     const t = control();
     OBJECTIVES.control.onRoundLimit(t);
-    expect(t.winner).toBe('horde');
+    expect(t.winner).toBe(null);
   });
 
   it('bots play control games to the end in every mode, with a winner', () => {

@@ -721,6 +721,15 @@ export function finish(state: GameState, winner: Side, reason: string) {
   log(state, 'victory', `Koniec gry: wygrywa ${FACTION_NAMES[winner]}. ${reason}`);
 }
 
+/** A drawn game (a tie at the round limit): no winner. Only the crystals goal still gives a tie to the Horde. */
+export function finishDraw(state: GameState, reason: string) {
+  state.phase = 'over';
+  state.winner = null;
+  state.endReason = reason;
+  state.battle = null;
+  log(state, 'victory', `Koniec gry: remis. ${reason}`);
+}
+
 function checkVictory(state: GameState) {
   if (state.phase === 'over') return;
   OBJECTIVES[objectiveOf(state)].checkVictory(state);
