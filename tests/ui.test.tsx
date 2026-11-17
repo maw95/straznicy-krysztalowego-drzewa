@@ -3,6 +3,7 @@ import { StrictMode } from 'react';
 import { act, cleanup, fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { App } from '../src/ui/App';
+import { getLang, setLang } from '../src/i18n/lang';
 import { createGame } from '../src/engine/game';
 import { DEFAULT_RULES } from '../src/engine/types';
 import { journalBreakdown, journalStats, recordGame } from '../src/ui/journal';
@@ -423,6 +424,8 @@ describe('changelog', () => {
 
   it('opens from the version number in the menu', async () => {
     window.history.replaceState(null, '', '/');
+    const before = getLang();
+    setLang('pl');
     const { container } = render(<App />);
     const doc = container.ownerDocument;
     const version = [...doc.querySelectorAll('button')].find((b) => b.textContent?.startsWith('Wersja '))!;
@@ -431,6 +434,7 @@ describe('changelog', () => {
     expect(v110.textContent).toContain('22 października 2026');
     expect(v110.textContent).not.toMatch(/51f6d15/);
     expect(doc.querySelector('[aria-label="Wersja 1.0.0"]')).not.toBeNull();
+    setLang(before);
   });
 });
 

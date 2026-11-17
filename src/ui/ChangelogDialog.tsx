@@ -2,6 +2,7 @@
 // dates and changes. Opened by clicking the version number in the main menu.
 
 import changelog from '../../CHANGELOG.md?raw';
+import { useLang, type Lang } from '../i18n/lang';
 import { Frame, Ribbon } from './common';
 
 export interface Release {
@@ -12,9 +13,10 @@ export interface Release {
 }
 
 const MONTHS = ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca', 'lipca', 'sierpnia', 'września', 'października', 'listopada', 'grudnia'];
-const longDate = (iso: string) => {
+const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+export const longDate = (iso: string, lang: Lang = 'pl') => {
   const [y, m, d] = iso.split('-').map(Number);
-  return `${d} ${MONTHS[m - 1]} ${y}`;
+  return lang === 'en' ? `${MONTHS_EN[m - 1]} ${d}, ${y}` : `${d} ${MONTHS[m - 1]} ${y}`;
 };
 
 /** Reads `## 1.1.0 — 2026-10-22` sections and their `- …` entries; commit hashes and Markdown marks are dropped. */
@@ -62,6 +64,7 @@ export function newsSince(text: string, since: string | null, upTo: string): Rel
 }
 
 export function ChangelogDialog({ onClose }: { onClose: () => void }) {
+  const [lang] = useLang();
   const releases = parseChangelog(changelog);
   const latest = releases.find((r) => r.version)?.version;
   return (
@@ -74,7 +77,7 @@ export function ChangelogDialog({ onClose }: { onClose: () => void }) {
               {r.version ? `Wersja ${r.version}` : `Po wersji ${latest ?? __APP_VERSION__} — w przygotowaniu`}
               {r.version === __APP_VERSION__ && <span className="changelog-current">Twoja wersja</span>}
             </h3>
-            {r.date && <div className="changelog-date">{longDate(r.date)}</div>}
+            {r.date && <div className="changelog-date">{longDate(r.date, lang)}</div>}
             <ul>
               {r.changes.map((c, i) => (
                 <li key={i}>{c}</li>

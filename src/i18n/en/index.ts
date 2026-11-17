@@ -6,3 +6,4 @@ import './online';
 import './extra';
 import './names';
 import './campaign';
+import './changelog';
