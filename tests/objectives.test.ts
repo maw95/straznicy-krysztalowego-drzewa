@@ -206,6 +206,23 @@ describe('objective boss (digital ruleset)', () => {
     expect(t.winner).toBe('horde');
   });
 
+  it('at the round limit nobody beating the Boss is a draw in PvP, a loss in coop', () => {
+    const pvp = boss({ mode: 'pvp' });
+    OBJECTIVES.boss.onRoundLimit(pvp);
+    expect(pvp.phase).toBe('over');
+    expect(pvp.winner).toBeNull();
+    const coop = boss({ mode: 'coop' });
+    OBJECTIVES.boss.onRoundLimit(coop);
+    expect(coop.winner).toBe('horde');
+    const art = (mode: 'pvp' | 'coop') => {
+      const s = createGame(setup({ mode }, { ruleset: 'digital', objective: 'artifact' }));
+      OBJECTIVES.artifact.onRoundLimit(s);
+      return s.winner;
+    };
+    expect(art('pvp')).toBeNull();
+    expect(art('coop')).toBe('horde');
+  });
+
   it('bots play it to the end on every shape, and the Boss keeps its wounds', () => {
     for (const shape of [undefined, 'rectangle', 'ring'] as const) {
       const s = playOut(boss({ seed: 5 }, shape));

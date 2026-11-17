@@ -364,7 +364,9 @@ const boss: Objective = {
     return false;
   },
   onRoundLimit(state) {
-    finish(state, 'horde', state.rules.noHorde ? 'Upłynął limit rund: Boss nie został pokonany.' : 'Upłynął limit rund: nikt nie pokonał Bossa.');
+    // PvP: nobody beat the Boss, a draw; in coop the players lose (the Horde is the computer).
+    if (state.setup.mode !== 'coop') finishDraw(state, 'Upłynął limit rund: nikt nie pokonał Bossa.');
+    else finish(state, 'horde', state.rules.noHorde ? 'Upłynął limit rund: Boss nie został pokonany.' : 'Upłynął limit rund: nikt nie pokonał Bossa.');
   },
   progress(state) {
     const b = state.boss!;
@@ -399,7 +401,9 @@ const artifact: Objective = {
     return false;
   },
   onRoundLimit(state) {
-    finish(state, 'horde', 'Upłynął limit rund: nikt nie zaniósł Artefaktu do bazy.');
+    // PvP: nobody carried the Artifact home, a draw; in coop the players lose.
+    if (state.setup.mode !== 'coop') finishDraw(state, 'Upłynął limit rund: nikt nie zaniósł Artefaktu do bazy.');
+    else finish(state, 'horde', 'Upłynął limit rund: nikt nie zaniósł Artefaktu do bazy.');
   },
   progress(state) {
     const h = artifactCarrier(state);

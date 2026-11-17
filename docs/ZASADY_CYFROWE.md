@@ -239,7 +239,7 @@ W środku mapy (pole środkowego punktu kontrolnego, w każdym kształcie) leży
 - wyzywają go **obie strony** (Horda zwykle omija strażników); walka jak ze strażnikiem, bohater plus pomocnicy;
 - **rany zostają** między walkami (`state.boss.hp`): przegrany bohater i tak coś zdziera, a kto zada ostatni cios, **wygrywa grę**;
 - nie ma kryształu ani skarbu strażnika za Bossa; pozostali strażnicy na mapie działają jak zawsze (dają skarby, więc opłaca się najpierw je zdobyć);
-- limit rund wygrywa Horda (cel Boss/Artefakt: do rozstrzygnięcia, patrz BACKLOG), a gdy polegną wszyscy bohaterowie Przymierza, wygrywa Horda.
+- limit rund: w PvP remis, w koopie wygrywa Horda (dotyczy też Bossa), a gdy polegną wszyscy bohaterowie Przymierza, wygrywa Horda.
 Roboty: Horda od razu idzie do legowiska; Przymierze dopiero, gdy jest gotowe (zostaje przynajmniej jeden pomocnik, albo Boss ma ≤ 12 Ż, albo minęła połowa rund), wcześniej gra jak w „Kryształach”.
 Symulacja (`SIM_OBJECTIVE=boss SIM_DIGITAL=1`, 100 gier, Normalny): Przymierze 34–68% (kooperacja 57%, rywalizacja 53% łącznie); mapa krótka jest najtrudniejsza (34–56%), bo Przymierze dochodzi do Bossa w 2 rundach. Wariant kooperacyjny „wszyscy przeciw Bossowi bez Hordy” jest do rozważenia (Do akceptacji autora).
 

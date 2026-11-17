@@ -6,7 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
-- Gdy w celu Kontrola, Podbój lub Relikt upłynie limit rund i żadna strona nie ma przewagi (remis), gra kończy się remisem zamiast wygraną Hordy; w grze o kryształy limit rund nadal wygrywa Horda.
+- Gdy w celu Kontrola, Podbój lub Relikt upłynie limit rund i żadna strona nie ma przewagi (remis), gra kończy się remisem zamiast wygraną Hordy; to samo w celach Boss i Artefakt w PvP (w koopie nadal przegrywacie, gdy upłynie limit rund); w grze o kryształy limit rund nadal wygrywa Horda.
 
 - Komputer używa Zwoju Teleportacji: skacze na pomoc sojusznikowi przyciśniętemu przez silniejszego lub kilku wrogów, a gdy nikt nie jest w zasięgu, skraca sobie drogę do przeciwnika.
 
