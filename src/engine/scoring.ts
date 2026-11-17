@@ -18,7 +18,7 @@ interface Ratings {
   /** Difficulty Łatwy of levels 1-3 (arena). Measured 15.11 (Easy wins 65-76 percent, Normal 51-66): about `normal` minus 1. */
   kids: number;
   hard?: number;
-  /** Difficulty "Bardzo trudny": one above the hard level (not measured; the points scale like the others). */
+  /** Difficulty "Bardzo trudny": one above the hard level (shown in the UI; the points are 1.5 times the hard level's, see pointsFor). */
   veryHard: number;
   /** The normal level's rating when the single options were measured: their effect is counted from it. */
   optionBase: number;
@@ -129,7 +129,7 @@ export function difficultyRating(setup: SetupOptions, level: LevelName, side: Fa
  * Arena: one battle (5–10 minutes) instead of a whole game with 3–5 battles, so a win against the
  * computer scores little — per hour of play no more than an ordinary game on an easy setting.
  */
-export const ARENA_POINTS: Record<Level, number> = { zero: 1, kids: 1, normal: 2, hard: 3, veryHard: 4 };
+export const ARENA_POINTS: Record<Level, number> = { zero: 1, kids: 1, normal: 2, hard: 3, veryHard: 5 };
 
 /** Level 3 games last longer (the economy between the fights): a win counts a quarter more than the same win of level 2. */
 export const KINGDOM_POINTS_FACTOR = 1.25;
@@ -150,8 +150,16 @@ export const EMPIRE_POINTS_FACTOR = 1.55;
 export const tierPointsFactor = (r: { kingdom?: boolean; economy?: boolean; realm?: boolean; empire?: boolean }): number =>
   r.empire ? EMPIRE_POINTS_FACTOR : r.realm ? REALM_POINTS_FACTOR : r.economy ? ECONOMY_POINTS_FACTOR : r.kingdom ? KINGDOM_POINTS_FACTOR : 1;
 
+/** Points of a win on "Bardzo trudny" = the same setup's points on "Trudny" times this (rounded, capped at MAX_POINTS). */
+export const VERY_HARD_POINTS_FACTOR = 1.5;
+
 export function pointsFor(setup: SetupOptions, level: LevelName, side: FactionId): number {
   if (setup.mode === 'arena') return ARENA_POINTS[level === 'custom' ? 'normal' : level];
+  if (level === 'veryHard') {
+    // The hard column (the normal one where no hard level was measured) times 1.5, instead of the rating one step higher.
+    const hard = Math.min(MAX_POINTS, pointsFor(setup, 'hard', side));
+    return Math.min(MAX_POINTS, Math.max(1, Math.round(hard * VERY_HARD_POINTS_FACTOR)));
+  }
   const raw = (BOARD_TOP_POINTS * MAP_WEIGHT[setup.mapSize] * difficultyRating(setup, level, side) * tierPointsFactor(setup.rules)) / TOP_RATING;
   return Math.min(MAX_POINTS, Math.max(1, Math.round(raw)));
 }

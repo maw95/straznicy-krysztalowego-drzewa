@@ -39,7 +39,7 @@ Stan nocnego zadania: zob. `docs/PODSUMOWANIE_NOCNE.md` i `docs/PYTANIA_DO_AUTOR
 
 ### Grupa A. Zasady i silnik (decyzje autora z 17.11; punkty niezależne, kolejność dowolna)
 
-Wspólne dla 32–36: zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
+Wspólne dla 32–35: zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
 
 **32. Obronę osady steruje właściciel** (M)
 - Dziś: gdy osady bez bohatera broni sam garnizon (`BattleState.defenderHero === null`, `startBattle` w `game.ts` ok. l. 782–875), `actorForFaction` (`game.ts` l. 468) nie ma bohatera, więc zwraca `{ kind: 'automaton' }` i jednostkami garnizonu rusza komputer (`chooseBattleAction`). Dotyczy wyboru jednostek (`select`), rozstawienia (`deploy`), draftu i aktywacji (`fight`).
@@ -71,12 +71,6 @@ Wspólne dla 32–36: zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasm
 - Dotyka: `types.ts` (`COMPUTER_HANDICAP`, `RulesConfig`, `LEVEL_RULES.veryHard`, `arenaSetup`), `game.ts` (start), `kingdom.ts` (surowce startowe), `battle.ts`, opisy trudności w UI (`src/ui/setupShared.tsx` l. 48, 59 i 79: opisy Bardzo trudnego z „o 20% więcej Życia”, przepisać na nowe przewagi; ten sam opis w `INSTRUKCJA.md`), `ZASADY_CYFROWE.md`, sekcja 7 poz. 14 i 21 w tym pliku, tabele sekcji 5, `scripts/sim/tuneLevels.ts`. Arena: bez surowców, więc tam przewagą zostaje tylko `treasures` (dla Bardzo trudnego Areny **decyzja autora 17.11: bot bez błędów**; dalsze dźwignie i rozbudowa areny: punkt 48).
 - Testy: `tests/difficulty.test.ts`/`computer.test.ts` (Bardzo trudny: bez bonusu Życia, z surowcami i artefaktem komputera; ludzie bez przewag).
 - Gotowe, gdy: Bardzo trudny mieści się w paśmie 15–30% w większości komórek `make sim-raport` (stroić liczbami startowymi i `computerGold`), golden `-u` osobnym commitem.
-
-**36. Mnożnik punktów rankingu Bardzo trudnego = 1,5** (S)
-- Stan faktyczny (poprawka opisu z sekcji 7): w `scoring.ts` Bardzo trudny ma ocenę trudności `veryHard = min(10, hard + 1)` (l. 42), a w arenie `ARENA_POINTS.veryHard = 4` (Trudny 3). Wzór: `pointsFor` = `BOARD_TOP_POINTS × MAP_WEIGHT × difficultyRating × tierPointsFactor / TOP_RATING`, zaokrąglone, w [1, `MAX_POINTS`].
-- Zmiana: punkty za wygraną na Bardzo trudnym = punkty tej samej konfiguracji na Trudnym × **1,5** (nowa stała `VERY_HARD_POINTS_FACTOR = 1.5` w `scoring.ts`; w `pointsFor` dla `level === 'veryHard'` liczyć z oceną kolumny `hard ?? normal`, potem × 1,5, zaokrąglić, ograniczyć `MAX_POINTS`: sprawdzić, czy limit nie ucina wyniku; arena: 3 × 1,5 = 4,5 → 5, lub zostawić 4: wybrać zaokrąglenie w górę). Ocena trudności widoczna w UI (`difficultyRating`, 1–10) bez zmian. Spacer (poziom 0) bez wyboru trudności: bez zmian.
-- Dotyka: `scoring.ts`, serwer `../straznicy-krysztalowego-drzewa-backend/src/ranking/ranking.ts` (czy liczy własne punkty, czy ufa klientowi: sprawdzić; jeśli liczy, ta sama stała), testy `tests/` (grep `pointsFor`), tekst rankingu/instrukcji (`INSTRUKCJA.md`, tabela punktów), sekcja 7 poz. 15 i 23.
-- Gotowe, gdy: test: Bardzo trudny daje 1,5× punktów Trudnego dla każdej mapy i trybu (z limitem), serwer zsynchronizowany i wdrożony (`make deploy`).
 
 **48. Arena 6 na 6 z elementami nowych poziomów i Bardzo trudny na arenie** (L; zależy od punktów 33 i 35)
 - Decyzje autora (17.11): **Bardzo trudny na arenie: bot bez błędów** (zamiast +1 karty w drafcie; zdjęcie Życia zostaje). Arena dostaje rzeczy z nowych poziomów: **dodatkowi pomocnicy, artefakty i zaklęcia**; docelowo walka **6 na 6**.

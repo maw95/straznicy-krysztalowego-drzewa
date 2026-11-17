@@ -190,6 +190,11 @@ describe('win rate and points', () => {
   it('scores a win by map length × measured difficulty, 30 at most', () => {
     expect(['zero', 'normal', 'hard'].map((l) => pointsFor(coop(1, 'veryLong', l as never), l as never, 'dawn'))).toEqual([13, 17, 30]);
     expect(pointsFor(coop(1, 'short', 'zero'), 'zero', 'dawn')).toBe(3);
+    // Bardzo trudny: 1.5 times the hard level's points on every map (capped at MAX_POINTS).
+    for (const size of ['short', 'long', 'veryLong'] as const) {
+      const hard = pointsFor(coop(1, size, 'hard'), 'hard', 'dawn');
+      expect(pointsFor(coop(1, size, 'hard'), 'veryHard', 'dawn')).toBe(Math.min(40, Math.round(hard * 1.5)));
+    }
     // PvP: the Horde's difficulty is 11 minus Przymierze's.
     const pvp = { ...coop(1, 'short', 'normal'), mode: 'pvp' as const, seats: [seat('dawn', 'human', 'goldDragon'), seat('horde', 'bot', 'blackDragon')] };
     expect([difficultyRating(pvp, 'normal', 'dawn'), difficultyRating(pvp, 'normal', 'horde')]).toEqual([5, 6]);

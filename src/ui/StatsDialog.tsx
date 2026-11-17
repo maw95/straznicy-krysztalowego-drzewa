@@ -65,7 +65,7 @@ export function StatsDialog({ onClose }: { onClose: () => void }) {
             Liczą się tylko dokończone partie. Wygrane i przegrane to partie przeciwko automatowi albo botom — rywalizacja, w której ludzie grają po obu stronach, liczy się tylko do rozegranych.
           </div>
           <div>
-            <b>Punkty</b> dostaje się za każdą wygraną: im dłuższa mapa i im trudniej było wygrać Twoją stroną (według tysięcy partii rozegranych przez komputer, rozdział 13 instrukcji), tym więcej. Najwięcej, {MAX_POINTS}, daje bardzo długa mapa na poziomie Trudnym. Wygrana na Arenie z komputerem daje {ARENA_POINTS.kids} / {ARENA_POINTS.normal} / {ARENA_POINTS.hard} pkt (Łatwy / Normalny / Trudny), bo to tylko jedna bitwa.
+            <b>Punkty</b> dostaje się za każdą wygraną: im dłuższa mapa i im trudniej było wygrać Twoją stroną (według tysięcy partii rozegranych przez komputer, rozdział 13 instrukcji), tym więcej. Najwięcej, {MAX_POINTS}, daje bardzo długa mapa na poziomie Trudnym. Wygrana na Arenie z komputerem daje {ARENA_POINTS.kids} / {ARENA_POINTS.normal} / {ARENA_POINTS.hard} / {ARENA_POINTS.veryHard} pkt (Łatwy / Normalny / Trudny / Bardzo trudny), bo to tylko jedna bitwa.
           </div>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
