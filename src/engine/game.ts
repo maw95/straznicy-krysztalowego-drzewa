@@ -345,13 +345,13 @@ function finishArena(state: GameState) {
  * A new treasure card, owned by nobody yet. Ids follow creation order (it1, it2, …), and the order
  * of state.items is the order bots look at treasures in: keep both when changing this.
  */
-function newItem(state: GameState, kind: ItemKind): ItemInstance {
+export function newItem(state: GameState, kind: ItemKind): ItemInstance {
   const id = `it${Object.keys(state.items).length + 1}`;
   return (state.items[id] = { id, kind, owner: null, foundBy: null });
 }
 
 /** A treasure goes to a faction's shared inventory; `foundBy` is the hero who got it. */
-function giveItem(state: GameState, item: ItemInstance, faction: FactionId, foundBy: string | null) {
+export function giveItem(state: GameState, item: ItemInstance, faction: FactionId, foundBy: string | null) {
   item.owner = faction;
   item.foundBy = foundBy;
   state.factions[faction].inventory.push(item.id);

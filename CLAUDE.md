@@ -23,6 +23,7 @@ answer in Polish; code, comments and commit messages in English; CHANGELOG.md an
   screenshot in `.tmp/` through a headless browser with its own Vite server on :5180. Query hook: App.tsx (`steps`, `reveal=1` (all tiles shown),
   `seed`, `mode`, `players`, `size`, `until=battle`, `battle=board`, `ruleset=board` for the board edition; digital is the default). For clicks/hover checks write a short script
   importing `openGame` from `scripts/browser/game.ts`.
+- **Panel testowy** (tylko build deweloperski, nigdy online): adres `?dev=1` albo Ctrl+Shift+D. Zmienia kopię stanu gry (`src/engine/dev.ts`, `src/ui/DevPanel.tsx`): zasoby, poziom i czary bohatera, artefakty, skarby, jednostki, „wybuduj wszystko”, odkrycie mapy, walka z neutralnymi i gotowe sceny (księga czarów w bitwie, osada z pełnym drzewkiem, legendarni neutralni, komplet Odłamków, okno skrzyni). Sprawdzenie: `npx tsx scripts/browser/panel-testowy.ts`. Funkcje dev są poza `applyAction`, więc golden i serwer ich nie widzą.
 - `make sim-tabele GAMES=300` — Dawn win rates per mode/map/level (~30 s). Keep simulations under 3 minutes.
 - `make zgloszenia` — fetch bug reports from the server ("sprawdź zgłoszenia"): analyse, then consult the author.
 

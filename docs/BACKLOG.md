@@ -60,19 +60,6 @@ Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.te
 
 ### Grupa D. Interfejs, kreator i narzędzia (zgłoszenia autora z 17.11)
 
-**43. Narzędzia do testowania gry (tryb deweloperski / piaskownica)** (M–L)
-- Problem autora: żeby obejrzeć np. księgę czarów, trzeba przejść spory kawałek gry (kupić Wieżę maga, znaleźć przeciwnika). Dziś są tylko parametry adresu w `App.tsx` (l. ~149–245: `?steps`, `reveal`, `seed`, `mode`, `players`, `size`, `until=battle`, `economy|realm|empire=1`, `gold`, `res`, `skills`, `pack`, `gear`, `level`, `near`, `siege`, `garrison`, `encounter`…), znane tylko Claude'owi.
-- Zrobić **panel testowy** (otwierany tylko przy `?dev=1` albo skrótem klawiszowym np. `Ctrl+Shift+D`; **niedostępny w grze online i w buildzie wydania**: sprawdzenie `import.meta.env.DEV` albo flaga, plus serwer odrzuca akcje deweloperskie) z akcjami na bieżącej partii lokalnej:
-  - **Zasoby:** ustaw złoto, drewno, rudę, Pył (`state.kingdom.gold/res`).
-  - **Bohater:** ustaw poziom i PD, dodaj umiejętność, mana pełna, **naucz czaru** (`hero.spells`), daj artefakt (lista `ARTIFACT_BY_ID`, do plecaka lub założony), daj skarb (`ITEMS`), dodaj jednostkę do drużyny (`RECRUITS`, `supportsAlive`), drugi bohater, Odłamki.
-  - **Osada:** wybuduj wybrany budynek na dany poziom bez kosztu i limitu rundy (wieża maga, karczma, mury…), zmień właściciela, wstaw garnizon.
-  - **Mapa:** odkryj całą mapę (`reveal`), teleport bohatera na wybrany kafelek, postaw przeciwnika/strażnika obok bohatera, **„Walka teraz”**: natychmiast zaczyna bitwę wybranym przeciwnikiem (z listą jednostek, w tym neutralnymi i bossami), z wybranymi własnymi jednostkami; kolejna runda/zakończ bitwę wygraną lub przegraną; zapisz/wczytaj ustawienie.
-  - **Gotowe sceny** (lista przycisków): „Księga czarów w bitwie”, „Okno osady z pełnym drzewkiem”, „Szturm osady z garnizonem”, „Bitwa z Krakenem/Bossem”, „Relikt: komplet Odłamków”, „Okno skrzyni”, „Chatka z zadaniem” — każda ustawia stan i pokazuje ekran (można odtworzyć z gotowych parametrów `App.tsx` i skryptów `scripts/browser/*.ts`).
-- Implementacja: nowa akcja silnika `devSet`/mutacje **poza** `applyAction` (osobny moduł `src/engine/dev.ts` z funkcjami na `GameState`, wywoływany tylko z UI deweloperskiego), by nie psuć deterministycznych partii ani `golden`; UI `src/ui/DevPanel.tsx`; wspólne ze skryptami przeglądarkowymi (jedno źródło scen: `src/engine/devScenes.ts`, z którego korzystają i panel, i `scripts/browser/*.ts`, i parametry adresu).
-- Dokument: krótka sekcja „Narzędzia testowe” w `CLAUDE.md` i `docs/` (jak otworzyć panel, lista scen), żeby autor wiedział, że istnieją.
-- Testy: `tests/dev.test.ts` (funkcje dev na stanie: czar nauczony, budynek wybudowany, walka zaczęta; panel nie renderuje się bez flagi).
-- Gotowe, gdy: autor w kilku kliknięciach otwiera księgę czarów w bitwie, okno osady z wieżą maga i bitwę z wybranym przeciwnikiem, bez grania partii.
-
 **47. Gruntowne testy wyświetlania gry na telefonie w przeglądarce** (M–L)
 - Cel: przejść wszystkie ekrany gry na wąskim ekranie (pion i poziom) i spisać oraz naprawić to, co nachodzi na siebie, wychodzi poza ekran, jest za małe do kliknięcia albo nie działa dotykiem. Dziś układ telefonu (`COMPACT_QUERY` w `common.tsx`, media queries w `styles.css`) sprawdzany jest punktowo, przy okazji zmian.
 - Narzędzia: `make zrzut … WIDOK=telefon|poziomo ELEMENT=…`, skrypty `scripts/browser/*.ts` z `openGame` (emulacja dotyku, `hasTouch`, `isMobile`), parametry adresu z `App.tsx` do dojścia do ekranu bez grania. Rozmiary do sprawdzenia: mały telefon pionowy (360×640), typowy (390×844), duży (430×932), poziomo (844×390, 667×375), tablet (768×1024); do tego pasek adresu przeglądarki mobilnej (`100dvh`, `safe-area`).

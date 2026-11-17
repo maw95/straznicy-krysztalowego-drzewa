@@ -40,6 +40,7 @@ import { ChangelogDialog } from './ChangelogDialog';
 import { CreditsDialog } from './CreditsDialog';
 import { markNewsSeen, pendingNews, WhatsNew } from './WhatsNew';
 import { ArenaPrep, DraftDialog, GearDialog } from './ArenaPrep';
+import { DEV_TOOLS_ALLOWED, DevPanel } from './DevPanel';
 import { useAutoFullscreen } from './fullscreen';
 import { ChatBox, OnlineOverlay, OnlineScreen } from './OnlineScreen';
 import { figuresOn, setFiguresOn } from './FigureLayer';
@@ -268,6 +269,14 @@ export function App() {
     [onlineRoom],
   );
   const isOnline = Boolean(session && onlineGame);
+  // The developer panel: ?dev=1 or Ctrl+Shift+D, in the development build and never in an online game.
+  const [devOpen, setDevOpen] = useState(() => DEV_TOOLS_ALLOWED && new URLSearchParams(window.location.search).get('dev') === '1');
+  useEffect(() => {
+    if (!DEV_TOOLS_ALLOWED) return;
+    const onKey = (e: KeyboardEvent) => { if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'd') { e.preventDefault(); setDevOpen((o) => !o); } };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
   const isOnlineOwner = Boolean(isOnline && onlineRoom && onlineRoom.ownerId === online?.user.id);
   const defaultSaveName = game ? `Partia ${new Date().toLocaleDateString('pl-PL')}, runda ${game.round}` : 'Zapis';
   // Messages count as read while the chat is open, and in the lobby, where it is always on screen.
@@ -872,6 +881,9 @@ export function App() {
     <HeroLevelsContext.Provider value={heroLevels}>
       <AppChrome error={error} onDismissError={() => setError(null)} showRules={showRules} onCloseRules={() => setShowRules(false)} />
       {overlay}
+      {DEV_TOOLS_ALLOWED && devOpen && game && !isOnline && (
+        <DevPanel game={game} onClose={() => setDevOpen(false)} onChange={(g) => { gameRef.current = g; setGame(g); }} />
+      )}
       {isOnline && onlineRoom?.waiting && <WaitingBanner room={onlineRoom} canHand={mySeats.size > 0} onHand={(seat) => session!.send({ type: 'handToBot', seat })} />}
       {isOnline && online?.reconnecting && (
         <div className="plate parch" role="status" style={{ position: 'fixed', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 81, fontWeight: 700 }}>

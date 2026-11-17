@@ -789,6 +789,30 @@ describe('level 3: the settlement window', () => {
   });
 });
 
+describe('the developer panel', () => {
+  it('opens with ?dev=1, plays a scene on a copy of the game and closes again', async () => {
+    window.history.replaceState(null, '', '/?steps=0&seed=3&size=long&realm=1&players=1&dev=1');
+    vi.useFakeTimers();
+    const { container } = render(<StrictMode><App /></StrictMode>);
+    const doc = container.ownerDocument;
+    expect(doc.querySelector('[data-dev-panel]')).not.toBeNull();
+    const gold = () => Number(doc.querySelector('[data-gold-box] [data-gold]')?.textContent);
+    await act(async () => fireEvent.click(doc.querySelector('[data-dev="resources"]')!));
+    expect(gold()).toBe(99);
+    await act(async () => fireEvent.click(doc.querySelector('[data-dev-scene="spellbook"]')!));
+    expect(doc.querySelector('[data-dev-note]')!.textContent).toBe('Księga czarów w bitwie');
+    expect(doc.querySelector('[data-dev-scene="shards"]')).not.toBeNull();
+    await act(async () => fireEvent.click(doc.querySelectorAll('[data-dev-panel] button')[1]));
+    expect(doc.querySelector('[data-dev-panel]')).toBeNull();
+  });
+
+  it('is not there without the flag', async () => {
+    window.history.replaceState(null, '', '/?steps=0&seed=3&size=long&realm=1&players=1');
+    const { container } = render(<StrictMode><App /></StrictMode>);
+    expect(container.ownerDocument.querySelector('[data-dev-panel]')).toBeNull();
+  });
+});
+
 describe('level 3: shopping from afar', () => {
   it('opens a settlement from the list when the hero stands elsewhere (first click selects, second opens)', async () => {
     window.history.replaceState(null, '', '/?steps=0&seed=3&size=long&kingdom=1&gold=30&players=1');
