@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Okno „Zasady i karty” jest aktualne: w Jednostkach są pomocnicy z rekrutacji, dowódcy z karczmy i legendarne jednostki poziomów 3–6, w Artefaktach zestawy z premiami, a Lokacje na mapie mają osadę, kopalnie, chatkę, młyn, studnię, składnicę, mury i Odłamek Iskry z informacją, od którego poziomu występują.
+
 - Okno osady: garnizon jest stale widoczny (nie dopiero pod murami): trzy miejsca na jednostki, krótka zasada (broni osady pod nieobecność bohatera, wróg musi go pokonać, w bitwie dowodzi nim właściciel) i przyciski „Zostaw w garnizonie” / „Zabierz do drużyny”.
 
 - Mapa: dwuklik (na telefonie dwa szybkie dotknięcia) na własną osadę otwiera jej okno, także gdy bohater stoi gdzie indziej; pojedynczy klik zaznacza pole i po chwili rusza bohatera jak dotąd.

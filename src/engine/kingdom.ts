@@ -101,7 +101,7 @@ const TIER_UNITS: Record<FactionId, string[]> = {
 /** The supports a faction can recruit, by tier: tier 1 are the supports it starts the game with in the other levels, tiers 2–5 are the new units (tiers 4–5 need upgraded barracks). */
 /** The legendary unit of level 6: gold and Gwiezdny Pył, one per faction, in upgraded barracks. */
 export const LEGEND = { gold: 20, dust: 3 };
-const LEGENDS: Record<FactionId, string> = { dawn: 'dawnPhoenix', horde: 'doomBehemoth' };
+export const LEGENDS: Record<FactionId, string> = { dawn: 'dawnPhoenix', horde: 'doomBehemoth' };
 export interface Recruit { id: string; tier: number; cost: number; /** Gwiezdny Pył on top of the gold (the level 6 unit). */ dust?: number; /** The other unit of its tier (level 6 only). */ alt?: true }
 
 /** Level 6: the second unit of tiers 2-5. Each unit of those tiers has a dwelling; a faction builds one dwelling per tier, which shuts the other out for the whole game. */

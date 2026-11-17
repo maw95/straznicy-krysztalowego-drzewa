@@ -1,8 +1,11 @@
 // In-game rules reference: summary of the rules, all unit cards, all treasure cards, shortcuts.
 
 import { useContext, useState } from 'react';
-import { FACTION_HEROES, FACTION_SUPPORTS, GUARDIANS, ITEMS, NEUTRAL_BOSSES, NEUTRAL_WEAK, type ItemKind } from '../engine/data';
-import { ARTIFACTS, RARITY_NAMES, SITE } from '../engine/sites';
+import { FACTION_HEROES, FACTION_SUPPORTS, GUARDIANS, ITEMS, NEUTRAL_BOSSES, NEUTRAL_WEAK, UNITS, type ItemKind } from '../engine/data';
+import { ARTIFACTS, RARITY_NAMES, SETS, SITE } from '../engine/sites';
+import { ALT_UNITS, KINGDOM, LEGENDS, RECRUIT_COSTS, RECRUITS } from '../engine/kingdom';
+import { COMMANDERS } from '../engine/realm';
+import { MINE_NAMES, OBJECT_NAMES, SIEGE } from '../engine/economy';
 import { asset, Frame, Ribbon } from './common';
 import { ArtifactMedal, SLOT_NAMES } from './growthUi';
 import { DigitalContext, RuleText } from './statScale';
@@ -73,20 +76,34 @@ const RULES: Array<[string, string[]]> = [
   ]],
 ];
 
-/** What can lie on the map: name, picture, what it does. */
-const PLACES: Array<[string, string, string]> = [
-  ['Kryształowe Drzewo', 'ui/ico_drzewo.png', 'Cel Przymierza w grze o kryształy: tu oddaje się zebrane kryształy. Horda odprawia przy nim rytuał.'],
-  ['Baza', 'ui/ico_oboz.png', 'Stąd startują bohaterowie frakcji. W bazie może stać kilku bohaterów naraz; w grze o Artefakt trzeba tu zanieść cel.'],
-  ['Kryształ ze strażnikiem', 'ui/ico_krysztal.png', 'Kryształu pilnuje strażnik: Cyklop, Gryf albo Hydra. Pokonany zostawia kryształ i skarb.'],
-  ['Skarb', 'ikony/mapa/treasure.webp', 'Kto wejdzie na pole, zabiera skarb do wspólnego ekwipunku frakcji. Skarb to jednorazowa karta (zakładka „Skarby”).'],
-  ['Kapliczka', 'ikony/mapa/shrine.webp', SITE.texts.shrine],
-  ['Obóz najemników', 'ikony/mapa/camp.webp', SITE.texts.camp],
-  ['Skrzynia', 'ikony/mapa/chest.webp', SITE.texts.chest],
-  ['Punkt kontrolny', 'ikony/mapa/kontrola_none.webp', 'W grze o punkty kontrolne: punkt trzyma ten, czyj bohater stoi na nim na koniec rundy. Środkowy jest wart 2, boczne po 1.'],
-  ['Neutralni', 'ui/ico_jama.png', 'Grupa neutralnych jednostek strzeże pola. Walka z nimi daje PD i nagrodę; im dalej od baz, tym silniejsi.'],
-  ['Legowisko Bossa', 'ui/ico_gory.png', 'W grze o Bossa: obie strony mogą go wyzywać, a jego rany zostają między walkami.'],
-  ['Teren', 'ui/ico_las.png', 'Łatwy teren (polana, las, droga) kosztuje 1 punkt ruchu, trudny (bagno, jama) 2. Góry, woda i ciernie są nieprzejezdne, a przez wodę prowadzą mosty.'],
-];
+/** What can lie on the map: name, picture, level of the game it appears from, what it does. Sorted by level, then in the order of the list. */
+const PLACES: Array<[string, string, number, string]> = [
+  ['Kryształowe Drzewo', 'ui/ico_drzewo.png', 1, 'Cel Przymierza w grze o kryształy: tu oddaje się zebrane kryształy. Horda odprawia przy nim rytuał.'],
+  ['Baza', 'ui/ico_oboz.png', 1, 'Stąd startują bohaterowie frakcji. W bazie może stać kilku bohaterów naraz; w grze o Artefakt trzeba tu zanieść cel.'],
+  ['Kryształ ze strażnikiem', 'ui/ico_krysztal.png', 1, 'Kryształu pilnuje strażnik: Cyklop, Gryf albo Hydra. Pokonany zostawia kryształ i skarb.'],
+  ['Skarb', 'ikony/mapa/treasure.webp', 1, 'Kto wejdzie na pole, zabiera skarb do wspólnego ekwipunku frakcji. Skarb to jednorazowa karta (zakładka „Skarby”).'],
+  ['Punkt kontrolny', 'ikony/mapa/kontrola_none.webp', 1, 'W grze o punkty kontrolne: punkt trzyma ten, czyj bohater stoi na nim na koniec rundy. Środkowy jest wart 2, boczne po 1.'],
+  ['Neutralni', 'ui/ico_jama.png', 1, 'Grupa neutralnych jednostek strzeże pola. Walka z nimi daje PD i nagrodę; im dalej od baz, tym silniejsi.'],
+  ['Legowisko Bossa', 'ui/ico_gory.png', 1, 'W grze o Bossa: obie strony mogą go wyzywać, a jego rany zostają między walkami.'],
+  ['Teren', 'ui/ico_las.png', 1, 'Łatwy teren (polana, las, droga) kosztuje 1 punkt ruchu, trudny (bagno, jama) 2. Góry, woda i ciernie są nieprzejezdne, a przez wodę prowadzą mosty.'],
+  ['Kapliczka', 'tiles/obj_shrine.jpg', 2, SITE.texts.shrine],
+  ['Obóz najemników', 'tiles/obj_camp.jpg', 2, SITE.texts.camp],
+  ['Skrzynia', 'tiles/obj_chest.jpg', 2, SITE.texts.chest],
+  ['Osada', 'ikony/mapa/osada_neutral.webp', 3, `Daje ${KINGDOM.incomeSettlement} zł dochodu na rundę, jest bazą rekrutacji i budynków (koszary, targ, szpital, skarbiec; od poziomu 4 kuźnia i mury, od 5 karczma i wieża maga). Neutralną osadę strzeże grupa neutralnych; zdobytą broni garnizon (do ${SIEGE.garrisonMax} jednostek).`],
+  [MINE_NAMES.gold, 'tiles/obj_kopalnia.jpg', 3, `Daje ${KINGDOM.incomeMine} zł na rundę temu, kto ją trzyma (stoi na niej jego bohater albo osada obok).`],
+  ['Chatka', 'tiles/obj_chatka.jpg', 3, 'Zadanie: przynieś to, o co prosi (złoto, surowce albo artefakt z plecaka), a dostaniesz nagrodę. Każda chatka tylko raz.'],
+  [MINE_NAMES.wood, 'tiles/obj_tartak.jpg', 4, 'Daje drewno co rundę temu, kto ją trzyma.'],
+  [MINE_NAMES.ore, 'tiles/obj_kopalnia_ruda.jpg', 4, 'Daje rudę co rundę temu, kto ją trzyma.'],
+  [MINE_NAMES.dust, 'tiles/obj_zrodlo_pylu.jpg', 4, 'Daje Gwiezdny Pył co rundę temu, kto je trzyma. Pył kosztują legendarne artefakty, nauka czarów i drogie budynki.'],
+  [OBJECT_NAMES.mill, 'tiles/obj_mlyn.jpg', 4, 'Płaci złoto raz za razem: bohater, który tu staje, dostaje dochód (nie częściej niż raz na rundę).'],
+  [OBJECT_NAMES.well, 'tiles/obj_studnia.jpg', 4, 'Raz na rundę daje bohaterowi dodatkowy ruch.'],
+  [OBJECT_NAMES.store, 'tiles/obj_skladnica.jpg', 4, 'Jednorazowy zapas surowców dla tego, kto pierwszy tu stanie.'],
+  ['Mur, brama i wieżyczki', 'ikony/frakcje/garnizon.webp', 4, 'W bitwie o osadę z budynkiem „Mury” obrońcę chroni fosa, mur z bramą i dwie wieżyczki; napastnik ma katapultę i burzy bramę.'],
+  ['Wieża maga i karczma', 'ikony/mapa/ksiega.webp', 5, 'Budynki osady: wieża maga uczy czarów w trzech kręgach, w karczmie najmuje się drugiego bohatera (dowódcę).'],
+  ['Odłamek Pierwotnej Iskry', 'tiles/obj_odlamek.jpg', 6, 'Leży na mapie od początku, widoczny dla obu stron. Bohater, który go podniesie, niesie go; komplet Odłamków przy jednym bohaterze w jego osadzie wznosi Pierwotną Iskrę.'],
+].sort((a, b) => (a[2] as number) - (b[2] as number)) as Array<[string, string, number, string]>;
+
+const UNITS_NAME = (id: string): string => UNITS[id]?.name ?? id;
 
 const KEYS: Array<[string, string]> = [
   ['Spacja / E', 'zakończ turę (na mapie)'],
@@ -148,6 +165,11 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
           ([
             ['Przymierze Świtu', [...FACTION_HEROES.dawn, ...FACTION_SUPPORTS.dawn]],
             ['Mroczna Horda', [...FACTION_HEROES.horde, ...FACTION_SUPPORTS.horde]],
+            ['Poziom 3 i 4: pomocnicy do rekrutacji w osadzie, Przymierze Świtu (stopnie 2–5)', RECRUITS.dawn.filter((r) => r.tier >= 2 && r.tier <= 5 && !r.alt).map((r) => r.id)],
+            ['Poziom 3 i 4: pomocnicy do rekrutacji w osadzie, Mroczna Horda (stopnie 2–5)', RECRUITS.horde.filter((r) => r.tier >= 2 && r.tier <= 5 && !r.alt).map((r) => r.id)],
+            ['Poziom 5: dowódcy, czyli drudzy bohaterowie najęci w karczmie', [...Object.values(COMMANDERS.dawn), ...Object.values(COMMANDERS.horde)]],
+            ['Poziom 6: legendarne jednostki frakcji (koszary drugiego stopnia, 20 zł i 3 Pyły)', [LEGENDS.dawn, LEGENDS.horde]],
+            ['Poziom 6: alternatywni pomocnicy (jedno siedlisko na stopień, drugie zamyka się na całą grę)', [...ALT_UNITS.dawn, ...ALT_UNITS.horde]],
             ['Strażnicy kryształów', GUARDIANS],
             ['Neutralni: słabi', NEUTRAL_WEAK],
             ['Neutralni: bossowie', NEUTRAL_BOSSES],
@@ -155,6 +177,11 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
           ] as Array<[string, string[], boolean?]>).map(([title, ids, duel]) => (
             <div key={title} style={{ marginBottom: 18 }}>
               <div className="lbl" style={{ textAlign: 'center', margin: '4px 0 10px' }}>{title}</div>
+              {title.startsWith('Poziom 3 i 4') && (
+                <div style={{ textAlign: 'center', fontSize: 14, color: 'var(--muted)', margin: '-4px 0 8px' }} data-rules-recruit-costs>
+                  {ids.map((id) => { const r = RECRUITS[title.includes('Przymierze') ? 'dawn' : 'horde'].find((x) => x.id === id)!; return `${UNITS_NAME(id)}: stopień ${r.tier}, ${RECRUIT_COSTS[r.tier - 1]} zł`; }).join(' · ')}
+                </div>
+              )}
               <div style={{ ...cardRow, maxWidth: cardW * 3 + 28 }}>
                 {ids.map((id) => (
                   <UnitCard key={id} unitId={id} width={cardW} duel={duel} />
@@ -190,13 +217,26 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
             ))}
           </div>
         )}
+        {tab === 'artifacts' && (
+          <div style={{ maxWidth: 860, margin: '14px auto 0', display: 'flex', flexDirection: 'column', gap: 12 }} data-rules-sets>
+            <div style={{ fontSize: 16, textAlign: 'center', color: 'var(--muted)' }}>Zestawy (od poziomu 3 „Osada”): rzadkie części jednego zestawu dają premię za dwie i za trzy założone (licznik „2/3 zestawu” przy bohaterze). Plecak mieści dowolnie wiele artefaktów; założyć można tylko jeden na miejsce, resztę zmienia się na mapie w karcie bohatera.</div>
+            {Object.values(SETS).map((set) => (
+              <div key={set.id} className="plate parch" style={{ padding: '10px 16px' }}>
+                <div style={{ fontWeight: 800, fontSize: 20 }}>{set.name}</div>
+                <div style={{ fontSize: 16 }}>Części: {set.pieces.map((id) => ARTIFACTS.find((a) => a.id === id)?.name ?? id).join(', ')}</div>
+                <div style={{ fontSize: 16 }}><RuleText text={set.bonusText} /></div>
+              </div>
+            ))}
+            <div style={{ fontSize: 16, textAlign: 'center', color: 'var(--muted)' }}>Skąd się biorą: skrzynie na mapie (artefakt zamiast {KINGDOM.chestGold} zł), kapliczki, chatki z zadaniami, łup z pokonanego bohatera i targ w osadzie (ceny {KINGDOM.artifactPrice.join(' / ')} zł według rzadkości; legendarne od poziomu 4 także za Gwiezdny Pył).</div>
+          </div>
+        )}
         {tab === 'places' && (
           <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }} data-rules-places>
-            {PLACES.map(([name, img, text]) => (
+            {PLACES.map(([name, img, level, text]) => (
               <div key={name} className="plate parch" style={{ padding: '10px 16px', display: 'flex', gap: 14, alignItems: 'center' }}>
                 <img src={asset(img)} alt="" width={56} height={56} style={{ flex: 'none', objectFit: 'contain' }} />
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: 20 }}>{name}</div>
+                  <div style={{ fontWeight: 800, fontSize: 20 }}>{name}{level > 1 && <span style={{ fontWeight: 600, fontSize: 14, marginLeft: 8, color: '#6B4A22' }}>od poziomu {level}</span>}</div>
                   <div style={{ fontSize: 16, lineHeight: 1.35 }}>{text}</div>
                 </div>
               </div>

@@ -8,6 +8,9 @@ import { DEFAULT_RULES } from '../src/engine/types';
 import { journalBreakdown, journalStats, recordGame } from '../src/ui/journal';
 import { difficultyRating, pointsFor } from '../src/engine/scoring';
 import { levelSettings } from '../src/engine/types';
+import { MINE_NAMES, OBJECT_NAMES } from '../src/engine/economy';
+import { LEGENDS } from '../src/engine/kingdom';
+import { UNITS } from '../src/engine/data';
 import { button, byText, clearDialogs, click, newGame, pick, setupUiTests } from './helpers/ui';
 
 setupUiTests();
@@ -728,6 +731,12 @@ describe('rules and cards window', () => {
     expect(doc.body.textContent).toContain('Egida Drzewa');
     await click(doc, 'Lokacje na mapie');
     for (const name of ['Kapliczka', 'Obóz najemników', 'Skrzynia', 'Punkt kontrolny']) expect(doc.body.textContent).toContain(name);
+    const places = doc.querySelector('[data-rules-places]')!.textContent!;
+    for (const name of [...Object.values(MINE_NAMES), ...Object.values(OBJECT_NAMES), 'Osada', 'Chatka', 'Odłamek Pierwotnej Iskry']) expect(places).toContain(name);
+    await click(doc, 'Artefakty');
+    expect(doc.querySelector('[data-rules-sets]')!.textContent).toContain('Zestawy');
+    await click(doc, 'Jednostki');
+    for (const id of [LEGENDS.dawn, LEGENDS.horde]) expect(doc.body.textContent).toContain(UNITS[id].name);
     await click(doc, 'Podstawowe zasady');
     expect(doc.body.textContent).toContain('Kamienie milowe');
   });
