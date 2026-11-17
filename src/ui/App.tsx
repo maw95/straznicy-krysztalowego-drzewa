@@ -1,3 +1,6 @@
+import { scenarioOf } from '../engine/campaign';
+import { CampaignOver } from './CampaignScreen';
+import { markDone } from './campaignProgress';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { heroLabel } from '../engine/realm';
 import { chooseAction } from '../engine/ai';
@@ -587,6 +590,11 @@ export function App() {
   }, [game]);
 
   // The end of a game sounds like a win or a loss for the people at this screen; a level-up sounds when the skills are offered.
+  // A won scenario of the campaign opens the next one.
+  useEffect(() => {
+    const run = game ? scenarioOf(game.setup) : null;
+    if (game?.phase === 'over' && run && game.winner === 'dawn') markDone(run.campaign.id, run.scenario.id);
+  }, [game?.phase, game?.winner]);
   const endSound = useRef<string | null>(null);
   useEffect(() => {
     if (!game || game.phase !== 'over' || held) return;
@@ -872,6 +880,7 @@ export function App() {
   const drafting = b && b.stage === 'draft' && game.draft && humanTurn && actor.kind === 'human' ? actor.faction : null;
   // Two people at one screen: each side's cards stay covered until that side uncovers them.
   const bothHuman = game.setup.mode === 'arena' && game.players.every(atThisScreen);
+  const campaignRun = scenarioOf(game.setup);
   const arenaPrep = !held && game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'gear' || b.stage === 'spells' || b.stage === 'select' || b.stage === 'draft')));
 
   return (
@@ -964,7 +973,7 @@ export function App() {
       </Modal>
 
       <Modal open={game.phase === 'over' && !held}>
-        <GameOver state={game} online={isOnline} rankingNote={rankingNote} onNew={leaveGame} onLog={() => setShowLog(true)} />
+        {campaignRun ? <CampaignOver state={game} onStart={start} onMenu={leaveGame} /> : <GameOver state={game} online={isOnline} rankingNote={rankingNote} onNew={leaveGame} onLog={() => setShowLog(true)} />}
       </Modal>
 
       <CardDialog card={card} onClose={() => setCard(null)} />

@@ -15,7 +15,12 @@ export interface CustomMap {
   rows: string[];
   /** Story: windows with text that open when a trigger fires (story.ts). */
   story?: StoryNote[];
+  /** A map of the campaign (campaign.ts): it is not on the lists of ready maps of the new-game wizard. */
+  campaign?: boolean;
 }
+
+/** The maps a player can choose for a game of their own (the campaign's maps are played through the campaign). */
+export const readyMaps = (): CustomMap[] => Object.values(CUSTOM_MAPS).filter((m) => !m.campaign);
 
 export const CUSTOM_MAPS: Record<string, CustomMap> = {};
 
@@ -30,7 +35,7 @@ export function registerCustomMap(map: CustomMap): CustomMap {
 export function parseCustomMap(json: string): CustomMap {
   const m = JSON.parse(json) as Partial<CustomMap>;
   if (typeof m.id !== 'string' || typeof m.name !== 'string' || !Array.isArray(m.rows)) throw new Error('Mapa: potrzebne pola id, name i rows.');
-  return { id: m.id, name: m.name, summary: m.summary ?? '', rows: m.rows.map(String), ...(Array.isArray(m.story) ? { story: m.story } : {}) };
+  return { id: m.id, name: m.name, summary: m.summary ?? '', rows: m.rows.map(String), ...(Array.isArray(m.story) ? { story: m.story } : {}), ...(m.campaign ? { campaign: true } : {}) };
 }
 
 export function validateCustomMap(map: CustomMap): void {

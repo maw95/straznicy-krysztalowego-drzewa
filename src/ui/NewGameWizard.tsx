@@ -5,7 +5,7 @@
 import { LevelIcon, type LevelIconKind } from './LevelIcons';
 import { useEffect, useState } from 'react';
 import { BOARD_MAP_SIZES, MAP_SIZE_NAMES, type MapSize } from '../engine/data';
-import { CUSTOM_MAPS } from '../engine/customMaps';
+import { readyMaps } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
 import { defaultCustom } from '../engine/presets';
 import type { Level, MapShape, Mode, ObjectiveId } from '../engine/types';
@@ -48,7 +48,7 @@ function draftOf(t: TableConfig): Draft {
     mode: t.mode,
     objective: t.objective,
     shape: t.shape,
-    customMapId: t.customMapId ?? Object.keys(CUSTOM_MAPS)[0] ?? '',
+    customMapId: t.customMapId ?? readyMaps()[0]?.id ?? '',
     noHorde: t.noHorde === true,
     mapSize: t.mapSize,
     level: t.level,
@@ -58,7 +58,7 @@ function draftOf(t: TableConfig): Draft {
   };
 }
 
-const READY_MAPS = () => Object.values(CUSTOM_MAPS);
+const READY_MAPS = readyMaps;
 
 /** The pages this draft goes through, in order. */
 function pagesOf(d: Draft): Page[] {
@@ -116,7 +116,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
     mode: 'coop',
     objective: 'crystals',
     shape: 'triangle',
-    customMapId: Object.keys(CUSTOM_MAPS)[0] ?? '',
+    customMapId: readyMaps()[0]?.id ?? '',
     noHorde: false,
     mapSize: 'short',
     level: 'normal',

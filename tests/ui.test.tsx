@@ -838,6 +838,44 @@ describe('the new-game wizard goes on by itself', () => {
   });
 });
 
+describe('the story campaign in the menu', () => {
+  it('lists the scenarios (only the first is open), tells the story and starts the game of a scenario', async () => {
+    localStorage.removeItem('skd-campaign');
+    window.history.replaceState(null, '', '/');
+    vi.useFakeTimers();
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    await act(async () => fireEvent.click(doc.querySelector('[data-campaign-open]')!));
+    const state = (id: string) => doc.querySelector(`[data-scenario="${id}"]`)!.getAttribute('data-state');
+    expect(state('pierwsza-dolina')).toBe('open');
+    expect(state('gryfie-urwisko')).toBe('locked');
+    expect((doc.querySelector('[data-scenario="gryfie-urwisko"]') as HTMLButtonElement).disabled).toBe(true);
+    await act(async () => fireEvent.click(doc.querySelector('[data-scenario="pierwsza-dolina"]')!));
+    expect(doc.querySelector('[data-scenario-intro]')!.textContent).toContain('Złoty Smok');
+    await act(async () => fireEvent.click(doc.querySelector('[data-scenario-start]')!));
+    const g = (window as any).__game;
+    expect(g.setup.campaign).toEqual({ id: 'swit', scenario: 'pierwsza-dolina' });
+    expect(g.setup.customMapId).toBe('kampania-pierwsza-dolina');
+  });
+
+  it('opens the next scenario when one is won, and can start the campaign over', async () => {
+    const { markDone } = await import('../src/ui/campaignProgress');
+    localStorage.removeItem('skd-campaign');
+    markDone('swit', 'pierwsza-dolina');
+    window.history.replaceState(null, '', '/');
+    vi.useFakeTimers();
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    await act(async () => fireEvent.click(doc.querySelector('[data-campaign-open]')!));
+    expect(doc.querySelector('[data-scenario="pierwsza-dolina"]')!.getAttribute('data-state')).toBe('done');
+    expect(doc.querySelector('[data-scenario="gryfie-urwisko"]')!.getAttribute('data-state')).toBe('open');
+    expect(doc.querySelector('[data-scenario="zatopione-ruiny"]')!.getAttribute('data-state')).toBe('locked');
+    await act(async () => fireEvent.click(doc.querySelector('[data-campaign-reset]')!));
+    expect(doc.querySelector('[data-scenario="gryfie-urwisko"]')!.getAttribute('data-state')).toBe('locked');
+    expect(localStorage.getItem('skd-campaign')).not.toContain('pierwsza-dolina');
+  });
+});
+
 describe('the developer panel', () => {
   it('opens with ?dev=1, plays a scene on a copy of the game and closes again', async () => {
     window.history.replaceState(null, '', '/?steps=0&seed=3&size=long&realm=1&players=1&dev=1');

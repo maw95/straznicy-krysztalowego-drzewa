@@ -207,6 +207,8 @@ export interface SetupOptions {
   rules: RulesConfig;
   /** Arena against the computer: how well the bot picks its supports and treasures. */
   botLevel?: Level;
+  /** A game of the story campaign (campaign.ts): which campaign and scenario it is. */
+  campaign?: { id: string; scenario: string };
 }
 
 /**

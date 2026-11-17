@@ -1,6 +1,7 @@
+import { CampaignScreen } from './CampaignScreen';
 import { useMemo, useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, UNITS, type FactionId, type MapSize } from '../engine/data';
-import { CUSTOM_MAPS } from '../engine/customMaps';
+import { readyMaps } from '../engine/customMaps';
 import { layerSwitches, resolveTier, withRuleset, type CustomLayer, type Tier } from '../engine/presets';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
@@ -25,7 +26,7 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
 
 
 /** The pages of the menu: the first choice, where to play, the new-game wizard, the saved games, the seats at the table. */
-type Step = 'home' | 'where' | 'wizard' | 'load' | 'table';
+type Step = 'home' | 'where' | 'wizard' | 'load' | 'table' | 'campaign';
 
 export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog, onCredits }: { session: boolean; online: { label: string; title: string }; onOnline: (intent: 'new' | 'load') => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void; onCredits: () => void }) {
   // Both read and replay saved games: once per visit to the menu, not on every hover and keystroke.
@@ -60,7 +61,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const [arenaSize, setArenaSize] = useState<3 | 6>(3);
   /** The complexity level of a digital adventure (presets.ts): decides which of the switches below the player may change. */
   const [tier, setTier] = useState<Tier>('adventure');
-  const [customId, setCustomId] = useState(Object.keys(CUSTOM_MAPS)[0]);
+  const [customId, setCustomId] = useState(readyMaps()[0]?.id);
   const [preview, setPreview] = useState<string>('goldDragon');
   // Easter egg: five clicks on a Dawn crest wake up the Brave Duck (remembered in this browser).
   const [duck, setDuck] = useState(() => { try { return localStorage.getItem('skd-duck') === '1'; } catch { return false; } });
@@ -154,6 +155,11 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                 <span className="opt-card-title">Nowa gra</span>
                 <span className="opt-card-text">Wybierz wersję, poziom i tryb, a potem frakcje i bohaterów.</span>
               </button>
+              <button className="opt-card wide" data-campaign-open onClick={() => setStep('campaign')}>
+                <span className="opt-card-img"><img src={asset('ikony/mapa/kontrola_none.webp')} alt="" /></span>
+                <span className="opt-card-title">Kampania</span>
+                <span className="opt-card-text">Historia Przymierza Świtu w czterech scenariuszach na ręcznie rysowanych mapach.</span>
+              </button>
               <button className="opt-card wide" onClick={() => { setIntent('load'); setStep('where'); }}>
                 <span className="opt-card-img"><img src={asset('ikony/mapa/chest.webp')} alt="" /></span>
                 <span className="opt-card-title">Wczytaj grę</span>
@@ -212,6 +218,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
         </div>
       )}
 
+      {step === 'campaign' && <CampaignScreen onStart={onStart} onBack={() => setStep('home')} />}
       {step === 'where' && (
         <Frame crest style={{ width: 'min(900px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{intent === 'new' ? 'Gdzie grasz?' : 'Skąd wczytać grę?'}</Ribbon>
