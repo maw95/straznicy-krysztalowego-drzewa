@@ -291,17 +291,19 @@ const PODIUM_COLOR = ['#F3D27A', '#DDE3EA', '#E0A270'];
 
 /** The top 10 by points; places 1–3 bigger, in gold, silver and bronze, with a cup. Your own place below, if lower. */
 function RankingTable({ me, refreshKey }: { me: User; refreshKey: unknown }) {
+  const [arena6, setArena6] = useState(false);
   const [data, setData] = useState<{ top: RankingRow[]; me: RankingRow | null } | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
   useEffect(() => {
     let live = true;
-    fetchRanking()
+    setData(null);
+    fetchRanking(arena6)
       .then((d) => live && setData(d))
       .catch((e: Error) => live && setProblem(e.message));
     return () => {
       live = false;
     };
-  }, [refreshKey]);
+  }, [refreshKey, arena6]);
   const row = (r: RankingRow, own = false) => {
     const podium = r.place <= 3 ? r.place - 1 : -1;
     const style: React.CSSProperties = podium >= 0 ? { color: PODIUM_COLOR[podium], fontWeight: 800, fontSize: 19 } : { fontSize: 17 };
@@ -324,6 +326,10 @@ function RankingTable({ me, refreshKey }: { me: User; refreshKey: unknown }) {
   return (
     <div style={{ width: '100%', maxWidth: 560, display: 'flex', flexDirection: 'column', gap: 6, marginTop: 6 }}>
       <Ribbon style={{ width: 'min(300px, 70vw)', alignSelf: 'center' }}>Ranking</Ribbon>
+      <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+        <button className={`btn${arena6 ? '' : ' prim'}`} aria-pressed={!arena6} onClick={() => setArena6(false)}>Gra i arena 3 na 3</button>
+        <button className={`btn${arena6 ? ' prim' : ''}`} aria-pressed={arena6} onClick={() => setArena6(true)}>Arena 6 na 6</button>
+      </div>
       <div className="well" style={{ padding: '8px 14px' }}>
         {!data ? (
           <i style={{ color: 'var(--muted)' }}>{problem ?? 'Wczytywanie…'}</i>
@@ -363,7 +369,7 @@ function RankingTable({ me, refreshKey }: { me: User; refreshKey: unknown }) {
 function tableSummary(t: TableConfig): string[] {
   const parts = [t.digital ? 'Wersja cyfrowa' : 'Wersja planszowa'];
   if (t.digital && t.mode !== 'arena') parts.push(TIERS[t.tier].name);
-  parts.push(t.mode === 'coop' ? 'Kooperacja' : t.mode === 'pvp' ? 'Rywalizacja' : 'Arena');
+  parts.push(t.mode === 'coop' ? 'Kooperacja' : t.mode === 'pvp' ? 'Rywalizacja' : t.arenaSize === 6 ? 'Arena 6 na 6' : 'Arena');
   if (t.digital && t.mode !== 'arena' && t.tier !== 'adventure') {
     parts.push(`Cel: ${OBJECTIVES[t.objective].name}`);
     parts.push(t.shape === 'custom' ? `Mapa gotowa: ${CUSTOM_MAPS[t.customMapId ?? '']?.name ?? '?'}` : `Mapa losowa: ${SHAPE_NAMES[t.shape]}`);
@@ -378,7 +384,7 @@ function tableSummary(t: TableConfig): string[] {
 function RoomLobby({ session, room, me, online }: { session: OnlineSession; room: RoomView; me: User; online: OnlineState }) {
   const owner = room.ownerId === me.id;
   const locked = room.resumed === true;
-  const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, tier: room.tier ?? 'adventure', objective: room.objective ?? 'crystals', shape: room.shape ?? 'triangle', ...(room.customMapId ? { customMapId: room.customMapId } : {}), ...(room.noHorde ? { noHorde: true } : {}), ...(room.tier === 'custom' ? { growth: room.growth === true, ...(room.layer ? { layer: room.layer } : {}), battleMode: room.battleMode ?? 'arena', rules: room.rules ?? defaultCustom(room.level, room.mode).rules } : {}), seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
+  const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, tier: room.tier ?? 'adventure', objective: room.objective ?? 'crystals', shape: room.shape ?? 'triangle', ...(room.customMapId ? { customMapId: room.customMapId } : {}), ...(room.noHorde ? { noHorde: true } : {}), ...(room.arenaSize === 6 ? { arenaSize: 6 as const } : {}), ...(room.tier === 'custom' ? { growth: room.growth === true, ...(room.layer ? { layer: room.layer } : {}), battleMode: room.battleMode ?? 'arena', rules: room.rules ?? defaultCustom(room.level, room.mode).rules } : {}), seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
   const configure = (patch: Partial<TableConfig>) => session.send({ type: 'configure', table: { ...table, ...patch } });
   const updateSeat = (i: number, patch: Partial<TableConfig['seats'][number]>) => configure({ seats: table.seats.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
   const takenBy = (heroId: string, i: number) => table.seats.some((s, j) => j !== i && s.heroId === heroId);

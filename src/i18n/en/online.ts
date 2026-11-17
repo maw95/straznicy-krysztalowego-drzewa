@@ -2,6 +2,8 @@
 import { register } from '../translate';
 
 register({
+  "Gra i arena 3 na 3": "Game and 3 v 3 arena",
+  "Arena 6 na 6": "6 v 6 arena",
   "Brak połączenia z serwerem gry. Spróbuj za chwilę.": "No connection to the game server. Try again in a moment.",
   "Serwer gry odpowiedział błędem.": "The game server answered with an error.",
   "Brak połączenia z serwerem — łączę ponownie…": "No connection to the server — reconnecting…",

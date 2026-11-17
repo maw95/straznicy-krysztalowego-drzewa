@@ -179,7 +179,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
       ...(tier !== 'adventure' && d.mode === 'coop' && d.objective === 'boss' && d.noHorde ? { noHorde: true } : {}),
       mapSize: d.mapSize,
       level: d.level,
-      ...(arena && !online && d.arenaSize === 6 ? { arenaSize: 6 as const } : {}),
+      ...(arena && d.arenaSize === 6 ? { arenaSize: 6 as const } : {}),
       ...(tier === 'custom' && custom ? { growth: custom.growth, layer: custom.layer, battleMode: custom.battleMode, rules: custom.rules } : {}),
       // Online every seat waits for a player, except the arena's opponent.
       seats: defaultHeroes(d.mode, d.count).map((seat, i) => ({ ...seat, bot: d.mode === 'arena' && i === 1 })),
@@ -276,7 +276,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
           {arena ? (
             <>
               <div style={{ fontSize: 15, color: 'var(--muted)', textAlign: 'center' }}>{ARENA_HINT}</div>
-              {!online && (
+              {(
                 <Row label="Wielkość bitwy">
                   <Tip text="Szybka: bohater i dwóch pomocników, skarby z talii. Pełna: bohater i pięciu pomocników z puli ośmiu, artefakt do wyboru z trzech i dwa czary.">
                     <button className={chip(d.arenaSize === 3)} aria-pressed={d.arenaSize === 3} data-arena-size="3" onClick={() => patch({ arenaSize: 3 })}>3 na 3 (szybka)</button>

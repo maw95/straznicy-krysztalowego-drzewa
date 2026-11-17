@@ -43,6 +43,8 @@ export interface RoomView {
   customMapId?: string;
   /** Coop, goal Boss: no Horde heroes (an older server leaves it out). */
   noHorde?: boolean;
+  /** Arena: 6 = the full 6 on 6 match (a server before 0.3.0 leaves it out: 3 on 3). */
+  arenaSize?: 6;
   /** Tier "Własne" only (a server without it leaves them out): hero growth, the kind of battles and the rule switches. Games of this tier do not count for the ranking. */
   growth?: boolean;
   layer?: CustomLayer;
@@ -73,7 +75,7 @@ export interface TableConfig {
   layer?: CustomLayer;
   battleMode?: BattleMode;
   rules?: CustomRules;
-  /** Arena, offline only (the game server's engine does not know it yet): 6 = the full 6 on 6 match. */
+  /** Arena: 6 = the full 6 on 6 match (the server must know it, else it plays 3 on 3). */
   arenaSize?: 6;
   seats: Array<{ faction: 'dawn' | 'horde'; heroId: string; bot: boolean }>;
 }
@@ -404,9 +406,9 @@ function chime() {
 
 // ------------------------------------------------------------------ ranking
 
-export async function fetchRanking(): Promise<{ top: RankingRow[]; me: RankingRow | null }> {
+export async function fetchRanking(arena6 = false): Promise<{ top: RankingRow[]; me: RankingRow | null }> {
   const token = savedToken();
-  return request('/ranking', { headers: token ? { authorization: `Bearer ${token}` } : {} });
+  return request(arena6 ? '/ranking?arena=6' : '/ranking', { headers: token ? { authorization: `Bearer ${token}` } : {} });
 }
 
 /** A finished offline game, for the ranking: the server replays it and scores it itself. */

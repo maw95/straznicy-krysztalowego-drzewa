@@ -41,10 +41,6 @@ Stan nocnego zadania: zob. `docs/PODSUMOWANIE_NOCNE.md` i `docs/PYTANIA_DO_AUTOR
 
 Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
 
-**48. Arena 6 na 6 (reszta: tylko online)** (S; wymaga decyzji autora o wydaniu silnika)
-- Zrobione 17.11: arena 6 na 6 offline (pula 8 jednostek, wybór 5, artefakt z 3, 2 czary, Bardzo trudny z `ARENA_HANDICAP`, osobne statystyki i punkty); decyzje i pytania w `docs/PYTANIA_DO_AUTORA.md`.
-- Zostaje: **gra online**. Serwer używa silnika z paczki wydania 2.8.0 (`straznicy-engine-2.8.0.tgz`), więc potrzebne nowe wydanie silnika (gry nie pushuję: decyzja autora). Potem: serwer przyjmuje `arenaSize` w konfiguracji pokoju, kreator online pokazuje opcję (dziś ukryta: `!online` w `NewGameWizard.tsx`), ranking online osobno dla 3 na 3 i 6 na 6.
-
 ### Grupa D. Interfejs, kreator i narzędzia (zgłoszenia autora z 17.11)
 
 **47. Testy wyświetlania na telefonie (reszta)** (S; reszta to głównie test na prawdziwych telefonach)

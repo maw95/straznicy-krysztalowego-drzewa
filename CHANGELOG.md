@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Arena 6 na 6 działa też online: opcja „Wielkość bitwy” w kreatorze stołu online, napis „Arena 6 na 6” w pokoju i osobny ranking (zakładki pod tabelą rankingu).
+
 ## 2.9.0 — 2026-11-17
 
 - Telefon: kreator przechodzi dalej po wyborze celu i mapy, nowa strona zawsze zaczyna się od góry, przyciski „Wstecz” i „Dalej” oraz przyciski poziomów mają równe rozmiary. Po rozpoczęciu gry na telefonie poziomo pasek i panel boczne są mniejsze, więc mapa i arena mają więcej miejsca.
