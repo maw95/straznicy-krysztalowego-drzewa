@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { ARENA_DECK, ITEMS, type FactionId } from '../src/engine/data';
 import { chooseAction } from '../src/engine/ai';
 import { applyAction, createGame, currentActor } from '../src/engine/game';
-import { ARTIFACT_BY_ID, gearOf } from '../src/engine/sites';
+import { ARTIFACT_BY_ID, gearOf, worksInBattle } from '../src/engine/sites';
 import { SPELLS } from '../src/engine/magic';
 import { arenaSetup, type Level, type SeatSetup } from '../src/engine/types';
 import { playOut, playUntil } from './helpers/engine';
@@ -173,5 +173,14 @@ describe('arena 6 on 6', () => {
     const s = createGame(arenaSetup(seats(), 4));
     expect(s.rules.arenaSize).toBeUndefined();
     expect(s.factions.dawn.supportsAlive).toHaveLength(3);
+  });
+});
+
+describe('arena 6 on 6 artifact offers', () => {
+  it('never offer an artifact that only works on the map', () => {
+    for (let seed = 1; seed <= 60; seed++) {
+      const s = createGame(arenaSetup(seats('human', 'human'), seed, 'normal', 6));
+      for (const id of s.draft!.gear!.offer) expect(worksInBattle(ARTIFACT_BY_ID[id])).toBe(true);
+    }
   });
 });

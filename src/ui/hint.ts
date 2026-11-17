@@ -34,9 +34,11 @@ export function describeAction(state: GameState, a: Action | null): string {
     case 'endActivation':
       return 'Zakończ aktywację tej jednostki.';
     case 'selectSupports':
-      return 'Wybierz dwóch pomocników do bitwy.';
+      return 'Wybierz pomocników do bitwy.';
     case 'deployUnits':
       return 'Rozstaw jednostki na swoich polach (kliknij pole obok jednostki).';
+    case 'pickGear':
+      return 'Wybierz artefakt dla bohatera.';
     case 'draftPick':
       return 'Wybierz skarb do talii.';
     default:

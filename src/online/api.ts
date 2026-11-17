@@ -73,6 +73,8 @@ export interface TableConfig {
   layer?: CustomLayer;
   battleMode?: BattleMode;
   rules?: CustomRules;
+  /** Arena, offline only (the game server's engine does not know it yet): 6 = the full 6 on 6 match. */
+  arenaSize?: 6;
   seats: Array<{ faction: 'dawn' | 'horde'; heroId: string; bot: boolean }>;
 }
 

@@ -49,7 +49,7 @@ export const LEVEL_HINT: Record<Level | 'custom', string> = {
   custom: 'Wybierz sam: rodzaj bitew, ułatwienia i utrudnienia, które można dowolnie łączyć.',
 };
 
-export const ARENA_HINT = 'Jedna bitwa 3 na 3: każdy wybiera bohatera, dwóch pomocników i na zmianę dobiera 2 skarby ze wspólnej talii. Ok. 5–10 minut.';
+export const ARENA_HINT = 'Jedna bitwa. Szybka (3 na 3): bohater, dwóch pomocników i 2 skarby ze wspólnej talii. Pełna (6 na 6): bohater, pięciu pomocników z puli ośmiu, artefakt i dwa czary. Ok. 5–15 minut.';
 
 export const ARENA_LEVEL_TIPS: Record<Level, string> = {
   zero: 'Komputer wybiera pomocników i skarby na chybił trafił.',

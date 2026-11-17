@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { ARENA_PICKS, FACTION_NAMES, itemDef, UNITS, type FactionId, type ItemKind } from '../engine/data';
 import { isDigital, type GameState } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
+import { ARTIFACT_BY_ID, RARITY_NAMES } from '../engine/sites';
+import { ArtifactMedal, SLOT_NAMES } from './growthUi';
 import { TreasureCard } from './TreasureCard';
 import { UnitCard } from './UnitCard';
 
@@ -18,6 +20,7 @@ export function ArenaPrep({ state }: { state: GameState }) {
   const arena = b?.arena ?? 'dawn';
   const status = (() => {
     if (!b) return '';
+    if (b.stage === 'gear' && state.draft?.gear) return `${FACTION_NAMES[state.draft.gear.order[0]]} wybiera artefakt…`;
     if (b.stage === 'select') return `${FACTION_NAMES[b.needsSelection[0]]} wybiera pomocników…`;
     if (b.stage === 'draft' && state.draft) return `${FACTION_NAMES[state.draft.order[0]]} wybiera skarb…`;
     return '';
@@ -91,6 +94,33 @@ export function DraftDialog({ state, faction, covered, onReveal, onPick }: { sta
         {mine.length > 0 && <div style={{ fontSize: 16 }}>Masz już: {mine.map((k) => itemDef(k, isDigital(state.rules)).name).join(', ')}</div>}
         <button className="btn prim btn-big" data-enter disabled={!chosen} onClick={() => chosen && onPick(chosen)}>
           Biorę ten skarb
+        </button>
+      </Frame>
+    </div>
+  );
+}
+
+/** 6 on 6 arena: one of three artifacts for the hero (chosen before the supports). */
+export function GearDialog({ state, faction, onPick }: { state: GameState; faction: FactionId; onPick: (artifactId: string) => void }) {
+  const offer = state.draft!.gear!.offer.map((id) => ARTIFACT_BY_ID[id]);
+  const [chosen, setChosen] = useState<string | null>(null);
+  return (
+    <div>
+      <Frame crest style={{ width: 'min(820px, 96vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+        <Ribbon side={faction} style={{ width: 'min(460px, 92vw)' }}>Wybierz artefakt bohatera</Ribbon>
+        <div style={{ fontSize: 16, color: 'var(--muted)', textAlign: 'center' }}>Bohater zakłada go do tej bitwy. Dostaje też dwa czary z kręgów I–II (widać je w bitwie).</div>
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {offer.map((a) => (
+            <button key={a.id} className="btn plate parch" data-gear-offer={a.id} aria-pressed={chosen === a.id} onClick={() => setChosen(a.id)} style={{ width: 220, padding: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, textAlign: 'center', boxShadow: chosen === a.id ? '0 0 0 3px #9EE4FF, 0 0 18px #9EE4FF' : undefined }}>
+              <ArtifactMedal art={a} size={72} />
+              <b style={{ fontSize: 19 }}>{a.name}</b>
+              <span style={{ fontSize: 14, color: '#6B4A22' }}>{SLOT_NAMES[a.slot]} · {RARITY_NAMES[a.rarity]}</span>
+              <span style={{ fontSize: 15, lineHeight: 1.3 }}>{a.text}</span>
+            </button>
+          ))}
+        </div>
+        <button className="btn prim btn-big" data-enter disabled={!chosen} onClick={() => chosen && onPick(chosen)}>
+          Biorę ten artefakt
         </button>
       </Frame>
     </div>

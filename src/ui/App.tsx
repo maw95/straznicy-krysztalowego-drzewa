@@ -8,7 +8,7 @@ import { movePath } from '../engine/battle';
 import { neighborKeys, type HexKey } from '../engine/hex';
 import { tileCost } from '../engine/map';
 import { controlCounts, objectiveOf, OBJECTIVES } from '../engine/objectives';
-import { arenaSetup, DEFAULT_RULES, isDigital, type Action, type GameState, type LogEntry, type LogEvent, type SetupOptions } from '../engine/types';
+import { arenaSetup, DEFAULT_RULES, isDigital, type Level, type Action, type GameState, type LogEntry, type LogEvent, type SetupOptions } from '../engine/types';
 import { AdventureView, GoldBox, type LootFloat } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
 import { usePresentation } from './usePresentation';
@@ -39,7 +39,7 @@ import { StatsDialog } from './StatsDialog';
 import { ChangelogDialog } from './ChangelogDialog';
 import { CreditsDialog } from './CreditsDialog';
 import { markNewsSeen, pendingNews, WhatsNew } from './WhatsNew';
-import { ArenaPrep, DraftDialog } from './ArenaPrep';
+import { ArenaPrep, DraftDialog, GearDialog } from './ArenaPrep';
 import { useAutoFullscreen } from './fullscreen';
 import { ChatBox, OnlineOverlay, OnlineScreen } from './OnlineScreen';
 import { figuresOn, setFiguresOn } from './FigureLayer';
@@ -150,7 +150,7 @@ export function App() {
     const human = q.get('human') !== '0';
     const digital = q.get('ruleset') !== 'board';
     // ?mode=arena starts an arena duel (?hero= for Przymierze), e.g. ?mode=arena&ruleset=digital&steps=60&until=battle.
-    const arena = q.get('mode') === 'arena' ? arenaSetup([{ name: 'Gracz 1', faction: 'dawn', controller: human ? 'human' : 'bot', heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'horde', controller: 'bot', heroId: q.get('foe') ?? 'werewolfLord' }], Number(q.get('seed') ?? 1)) : null;
+    const arena = q.get('mode') === 'arena' ? arenaSetup([{ name: 'Gracz 1', faction: 'dawn', controller: human ? 'human' : 'bot', heroId: q.get('hero') ?? 'goldDragon' }, { name: 'Gracz 2', faction: 'horde', controller: 'bot', heroId: q.get('foe') ?? 'werewolfLord' }], Number(q.get('seed') ?? 1), (q.get('level') as Level | null) ?? 'normal', q.get('size') === '6' ? 6 : 3) : null;
     let s = createGame(arena ? { ...arena, rules: { ...arena.rules, ...(digital ? { ruleset: 'digital' as const } : {}) } } : {
       mode,
       mapSize: (q.get('size') as SetupOptions['mapSize']) ?? 'short',
@@ -558,7 +558,8 @@ export function App() {
     const stories = events.flatMap((ev) => (ev.type === 'story' ? [ev] : []));
     if (stories.length) setStoryNews((n) => [...n, ...stories]);
     const notes = fresh.flatMap((ev) => (ev.type === 'xp' ? [{ key: Math.random(), text: xpNote(ev) }] : []));
-    const arts = fresh.flatMap((ev) => (ev.type === 'artifact' ? [ev] : []));
+    // The arena's artifact was chosen by the player a moment ago: no "Artefakt!" notice for it.
+    const arts = game.setup.mode === 'arena' ? [] : fresh.flatMap((ev) => (ev.type === 'artifact' ? [ev] : []));
     if (notes.length) {
       setXpNotes((n) => [...n, ...notes].slice(-4));
       window.setTimeout(() => setXpNotes((n) => n.filter((x) => !notes.includes(x))), 4500);
@@ -855,10 +856,11 @@ export function App() {
 
   const b = game.battle;
   const selecting = b && b.stage === 'select' && humanTurn && actor.kind === 'human' ? actor.faction : null;
+  const gearing = b && b.stage === 'gear' && game.draft?.gear && humanTurn && actor.kind === 'human' ? actor.faction : null;
   const drafting = b && b.stage === 'draft' && game.draft && humanTurn && actor.kind === 'human' ? actor.faction : null;
   // Two people at one screen: each side's cards stay covered until that side uncovers them.
   const bothHuman = game.setup.mode === 'arena' && game.players.every(atThisScreen);
-  const arenaPrep = !held && game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'select' || b.stage === 'draft')));
+  const arenaPrep = !held && game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'gear' || b.stage === 'select' || b.stage === 'draft')));
 
   return (
     <DigitalCardsContext.Provider value={isDigital(game.rules)}>
@@ -892,6 +894,7 @@ export function App() {
       )}
 
       <Modal open={Boolean(selecting)}>{selecting && <SupportSelect state={game} faction={selecting} onPick={(ids) => dispatch({ type: 'selectSupports', faction: selecting, supportIds: ids })} />}</Modal>
+      <Modal open={Boolean(gearing)}>{gearing && <GearDialog key={`${gearing}-${game.draft!.gear!.order.length}`} state={game} faction={gearing} onPick={(artifactId) => dispatch({ type: 'pickGear', faction: gearing, artifactId })} />}</Modal>
       <Modal open={Boolean(drafting)}>
         {drafting && (
           <DraftDialog

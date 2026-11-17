@@ -57,6 +57,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const [growth, setGrowth] = useState(false);
   const [layer, setLayer] = useState<CustomLayer>('none');
   const [noHorde, setNoHorde] = useState(false);
+  const [arenaSize, setArenaSize] = useState<3 | 6>(3);
   /** The complexity level of a digital adventure (presets.ts): decides which of the switches below the player may change. */
   const [tier, setTier] = useState<Tier>('adventure');
   const [customId, setCustomId] = useState(Object.keys(CUSTOM_MAPS)[0]);
@@ -84,7 +85,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
 
   const startGame = () => {
     const r = resolveTier(tier, { objective, shape, customMapId: customId, growth, ...(tier === 'custom' && growth ? layerSwitches(layer) : {}) });
-    onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero, ...(noHorde && mode === 'coop' && r.objective === 'boss' ? { noHorde: true } : {}) } }, digital, r.objective, r.shape, r.customMapId, r.growth, r.kingdom, r.economy, r.realm, r.empire));
+    onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level, arenaSize) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero, ...(noHorde && mode === 'coop' && r.objective === 'boss' ? { noHorde: true } : {}) } }, digital, r.objective, r.shape, r.customMapId, r.growth, r.kingdom, r.economy, r.realm, r.empire));
   };
   /** The wizard is done: its choices become this screen's state, and the seats come next. */
   const applyWizard = (t: TableConfig) => {
@@ -106,6 +107,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     setGrowth(t.growth === true);
     setLayer(t.layer ?? 'none');
     setNoHorde(t.noHorde === true);
+    setArenaSize(t.arenaSize === 6 ? 6 : 3);
     setStep('table');
   };
   const backBtn = (to: Step) => <button className="btn plate parch" style={{ height: 52, padding: '0 28px', fontSize: 20 }} onClick={() => setStep(to)}>← Wstecz</button>;

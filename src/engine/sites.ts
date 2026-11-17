@@ -224,6 +224,10 @@ export function drawArtifact(state: GameState, hero: HeroState, odds: readonly n
   return rng.pick(artifactPool(state, rarity));
 }
 
+/** Whether an artifact does anything in a battle (those that only help on the map, like the Trzewiki Trapera, are no use in the arena). */
+const BATTLE_KEYS = ['attack', 'hp', 'speed', 'supportHp', 'thorns', 'vsWounded', 'defense', 'firstHit', 'regen', 'unbound', 'firstStrike', 'cleave', 'rangedDefense', 'lastStand', 'slowAttacker', 'anchor'] as const;
+export const worksInBattle = (a: ArtifactDef): boolean => BATTLE_KEYS.some((k) => Boolean((a as unknown as Record<string, unknown>)[k]));
+
 /** 6 on 6 arena: how often each rarity is offered for the one artifact a hero chooses (common, rare, legendary). */
 export const ARENA_GEAR_ODDS = [55, 35, 10] as const;
 /** The three artifacts a side's hero may choose from in the 6 on 6 arena: of different slots, drawn from the game's seed (never from its own generator). */
@@ -237,7 +241,7 @@ export function arenaGearOffer(state: Pick<GameState, 'kingdom' | 'setup'>, fact
       if (roll < ARENA_GEAR_ODDS[i]) { rarity = i + 1; break; }
       roll -= ARENA_GEAR_ODDS[i];
     }
-    const art = rng.pick(artifactPool(state, rarity));
+    const art = rng.pick(artifactPool(state, rarity).filter(worksInBattle));
     if (!out.some((o) => o.id === art.id || o.slot === art.slot)) out.push(art);
   }
   return out.map((a) => a.id);
