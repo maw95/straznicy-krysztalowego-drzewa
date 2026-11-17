@@ -154,6 +154,8 @@ export function journalStats(j: Journal = readJournal()): JournalStats {
 export interface BreakdownRow {
   mode: SetupOptions['mode'];
   mapSize: MapSize;
+  /** Arena only: the full 6 on 6 match (counted apart from the quick 3 on 3). */
+  arena6?: boolean;
   level: LevelName;
   played: number;
   won: number;
@@ -172,9 +174,10 @@ export function journalBreakdown(j: Journal = readJournal()): BreakdownRow[] {
     // Unfinished games are not part of the record.
     if (!g.result) continue;
     const { mode, mapSize } = g.save.setup;
-    const key = `${mode}:${mapSize}:${g.level}`;
+    const arena6 = mode === 'arena' && g.save.setup.rules.arenaSize === 6;
+    const key = `${mode}:${mapSize}:${arena6 ? '6:' : ''}${g.level}`;
     let row = rows.get(key);
-    if (!row) rows.set(key, (row = { mode, mapSize, level: g.level, played: 0, won: 0, lost: 0, winRate: null, points: 0 }));
+    if (!row) rows.set(key, (row = { mode, mapSize, ...(arena6 ? { arena6 } : {}), level: g.level, played: 0, won: 0, lost: 0, winRate: null, points: 0 }));
     row.played++;
     const o = outcomeOf(g);
     if (o === 'won') {
@@ -182,7 +185,7 @@ export function journalBreakdown(j: Journal = readJournal()): BreakdownRow[] {
       row.points += gamePoints(g);
     } else if (o === 'lost') row.lost++;
   }
-  const order = (r: BreakdownRow) => ({ coop: 0, pvp: 100, arena: 200 })[r.mode] + MAP_ORDER.indexOf(r.mapSize) * 10 + LEVEL_ORDER.indexOf(r.level);
+  const order = (r: BreakdownRow) => ({ coop: 0, pvp: 100, arena: 200 })[r.mode] + MAP_ORDER.indexOf(r.mapSize) * 10 + (r.arena6 ? 5 : 0) + LEVEL_ORDER.indexOf(r.level);
   return [...rows.values()].map((r) => ({ ...r, winRate: rate(r.won, r.lost) })).sort((a, b) => order(a) - order(b));
 }
 

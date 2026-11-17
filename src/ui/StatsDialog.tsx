@@ -35,9 +35,9 @@ export function StatsDialog({ onClose }: { onClose: () => void }) {
               </thead>
               <tbody>
                 {rows.map((r, i) => (
-                  <tr key={`${r.mode}:${r.mapSize}:${r.level}`} className={i > 0 && rows[i - 1].mode !== r.mode ? 'group' : ''}>
+                  <tr key={`${r.mode}:${r.mapSize}:${r.arena6 ? 6 : 3}:${r.level}`} className={i > 0 && rows[i - 1].mode !== r.mode ? 'group' : ''}>
                     <td>{i === 0 || rows[i - 1].mode !== r.mode ? MODE_NAMES[r.mode] : ''}</td>
-                    <td>{r.mode === 'arena' ? '—' : MAP_SIZE_NAMES[r.mapSize]}</td>
+                    <td>{r.mode === 'arena' ? (r.arena6 ? '6 na 6' : '3 na 3') : MAP_SIZE_NAMES[r.mapSize]}</td>
                     <td>{LEVEL_NAMES[r.level]}</td>
                     <td className="num">{r.played}</td>
                     <td className="num win">{r.won}</td>

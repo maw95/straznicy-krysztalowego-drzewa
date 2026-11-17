@@ -5,6 +5,7 @@ import { chooseAction } from '../src/engine/ai';
 import { applyAction, createGame, currentActor } from '../src/engine/game';
 import { ARTIFACT_BY_ID, gearOf, worksInBattle } from '../src/engine/sites';
 import { SPELLS } from '../src/engine/magic';
+import { MAX_POINTS, pointsFor } from '../src/engine/scoring';
 import { supportSlots } from '../src/engine/kingdom';
 import { arenaSetup, type Level, type SeatSetup } from '../src/engine/types';
 import { playOut, playUntil } from './helpers/engine';
@@ -216,5 +217,16 @@ describe('arena 6 on 6 at the highest difficulty', () => {
     const s = createGame(arenaSetup(seats('human', 'bot'), 9, 'veryHard'));
     expect(s.rules.arenaHandicap).toBeUndefined();
     expect(s.rules.veryHard).toBe(true);
+  });
+});
+
+describe('arena 6 on 6 points', () => {
+  it('count half more than the quick arena, capped like every win', () => {
+    for (const level of ['kids', 'normal', 'hard', 'veryHard'] as Level[]) {
+      const quick = pointsFor(arenaSetup(seats(), 1, level), level, 'dawn');
+      const full = pointsFor(arenaSetup(seats(), 1, level, 6), level, 'dawn');
+      expect(full).toBe(Math.min(MAX_POINTS, Math.round(quick * 1.5)));
+      expect(full).toBeGreaterThan(quick);
+    }
   });
 });

@@ -131,6 +131,9 @@ export function difficultyRating(setup: SetupOptions, level: LevelName, side: Fa
  */
 export const ARENA_POINTS: Record<Level, number> = { zero: 1, kids: 1, normal: 2, hard: 3, veryHard: 5 };
 
+/** The full 6 on 6 arena takes about half as long again as the quick one (more units, an artifact and spells): a win counts half more. */
+export const ARENA6_POINTS_FACTOR = 1.5;
+
 /** Level 3 games last longer (the economy between the fights): a win counts a quarter more than the same win of level 2. */
 export const KINGDOM_POINTS_FACTOR = 1.25;
 /**
@@ -156,7 +159,7 @@ export const VERY_HARD_POINTS_FACTOR = 1.5;
 export function pointsFor(setup: SetupOptions, level: LevelName, side: FactionId): number {
   // "Własne ustawienia" score nothing: only the ready levels count for the ranking (decision of 17.11).
   if (level === 'custom') return 0;
-  if (setup.mode === 'arena') return ARENA_POINTS[level];
+  if (setup.mode === 'arena') return Math.min(MAX_POINTS, Math.round(ARENA_POINTS[level] * (setup.rules.arenaSize === 6 ? ARENA6_POINTS_FACTOR : 1)));
   if (level === 'veryHard') {
     // The hard column (the normal one where no hard level was measured) times 1.5, instead of the rating one step higher.
     const hard = Math.min(MAX_POINTS, pointsFor(setup, 'hard', side));
