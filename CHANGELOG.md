@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Telefon: opisy, które na komputerze widać po najechaniu myszą (mana, punkty ruchu, dochód, pola mapy), pokazują się po dotknięciu. Przyciski na dolnym pasku, lista osad i plecak bohatera mają 44 px.
+
 - Osada wygląda jak miasto z Heroes III: budynki stoją tarasami wokół Rady Osady, a bohater, który jest w osadzie, ma w niej swój portret. Samouczek i instrukcja opisują okno osady i drzewko budynków.
 
 - Imperium: Koszary stoją w każdej osadzie od początku, a siedliska jednostek wiszą w drzewku pod Koszarami jedno za drugim (siedlisko wyższego poziomu wymaga niższego; wybór jednej jednostki wyklucza drugą).

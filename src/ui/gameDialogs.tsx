@@ -2,6 +2,7 @@
 // every screen has, and the small game dialogs (confirm, "since your last turn", a found treasure,
 // a card, the options) and the end-of-game effects.
 
+import { TouchTitles } from './TouchTitles';
 import { useEffect, useState, type ReactNode } from 'react';
 import { ITEMS, UNITS, type ItemKind } from '../engine/data';
 import { ritualFormed } from '../engine/game';
@@ -55,6 +56,7 @@ export function AppChrome({ error, onDismissError, showRules, onCloseRules }: { 
         {music.muted ? '🔇' : '♪'}
       </button>
       <FullscreenButton />
+      <TouchTitles />
       {error && (
         <div className="plate parch" role="alert" style={{ position: 'fixed', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 80, fontWeight: 700, color: '#8A1A1A' }} onClick={onDismissError}>
           {error}

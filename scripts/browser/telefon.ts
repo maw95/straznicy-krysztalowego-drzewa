@@ -19,6 +19,30 @@ const LANDSCAPE: View[] = ['malypoziomo', 'poziomo', 'duzypoziomo'];
 const MAP = 'steps=0&seed=3&size=medium&realm=1&players=1&dev=1';
 const closeDev = async (p: Page) => { await p.locator('[data-dev-panel] button:has-text("Zamknij")').click().catch(() => undefined); };
 
+/** The 6 on 6 arena up to the hero's activation (artifact, spells, supports, deployment, the supports' activations). */
+const toArenaFight = async (p: Page) => {
+  await p.locator('[data-gear-offer]').first().click();
+  await p.getByRole('button', { name: 'Biorę ten artefakt' }).click();
+  await p.locator('[data-spell-offer]').nth(0).click();
+  await p.locator('[data-spell-offer]').nth(1).click();
+  await p.getByRole('button', { name: 'Biorę te czary' }).click();
+  const go = p.getByRole('button', { name: 'Do bitwy!' });
+  await go.waitFor();
+  const cards = go.locator('xpath=preceding-sibling::div[1]/button');
+  for (let i = 0; i < 5; i++) await cards.nth(i).click();
+  await go.click();
+  const ready = p.getByRole('button', { name: /Gotowe/ });
+  const end = p.getByRole('button', { name: 'Koniec', exact: true });
+  for (let i = 0; i < 60 && !(await p.locator('[data-spell-btn]').count()); i++) {
+    const take = p.getByRole('button', { name: 'Biorę ten skarb' });
+    if (await take.count()) { await p.locator('[aria-pressed]').first().click().catch(() => undefined); await take.click().catch(() => undefined); }
+    else if (await ready.count()) await ready.first().click().catch(() => undefined);
+    else if ((await end.count()) && (await end.first().isEnabled())) await end.first().click().catch(() => undefined);
+    await p.waitForTimeout(700);
+  }
+};
+const ARENA = 'steps=0&mode=arena&size=6&seed=5';
+
 const SCREENS: Screen[] = [
   { id: 'menu', query: '', views: [...LANDSCAPE, 'telefon'] },
   { id: 'kreator-edycja', query: '', go: async (p) => { await p.getByText('Nowa gra', { exact: true }).first().click(); } },
@@ -27,6 +51,12 @@ const SCREENS: Screen[] = [
   { id: 'osada-drzewko', query: MAP, go: async (p) => { await closeDev(p); await p.locator('[data-enter-settlement]').click(); await p.locator('[data-building="council"]').click(); await p.locator('[data-building-tree]').waitFor(); } },
   { id: 'zasady', query: MAP, go: async (p) => { await closeDev(p); await p.keyboard.press('r'); await p.waitForTimeout(400); } },
   { id: 'bitwa-ustawianie', query: `${MAP.replace('&dev=1', '')}&encounter=0`, go: async (p) => { await p.waitForTimeout(1200); } },
+  { id: 'bohater-plecak', query: MAP, go: async (p) => { await closeDev(p); await p.locator('[data-hero-sheet-open]').click(); await p.waitForTimeout(400); } },
+  { id: 'opcje', query: MAP, go: async (p) => { await closeDev(p); await p.keyboard.press('o'); await p.waitForTimeout(400); } },
+  { id: 'zglos-blad', query: MAP, go: async (p) => { await closeDev(p); await p.keyboard.press('b'); await p.waitForTimeout(400); } },
+  { id: 'skrzynia', query: 'steps=0&seed=3&size=medium&realm=1&players=1', go: async (p) => { await p.locator('[data-treasure-btn]').first().click(); await p.waitForTimeout(400); } },
+  { id: 'arena-walka', query: ARENA, go: toArenaFight },
+  { id: 'arena-ksiega', query: ARENA, go: async (p) => { await toArenaFight(p); await p.locator('[data-spell-btn]').click(); await p.locator('[data-spell-list]').waitFor(); } },
   { id: 'arena-artefakt', query: 'steps=0&mode=arena&size=6&seed=5', go: async (p) => { await p.locator('[data-gear-offer]').first().waitFor(); } },
   { id: 'arena-pomocnicy', query: 'steps=0&mode=arena&size=6&seed=5', go: async (p) => { await p.locator('[data-gear-offer]').first().click(); await p.getByRole('button', { name: 'Biorę ten artefakt' }).click(); await p.locator('[data-spell-offer]').first().waitFor(); await p.locator('[data-spell-offer]').nth(0).click(); await p.locator('[data-spell-offer]').nth(1).click(); await p.getByRole('button', { name: 'Biorę te czary' }).click(); await p.getByRole('button', { name: 'Do bitwy!' }).waitFor(); } },
   { id: 'arena-czary', query: 'steps=0&mode=arena&size=6&seed=5', go: async (p) => { await p.locator('[data-gear-offer]').first().click(); await p.getByRole('button', { name: 'Biorę ten artefakt' }).click(); await p.locator('[data-spell-offer]').first().waitFor(); } },
