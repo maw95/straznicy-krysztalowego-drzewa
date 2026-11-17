@@ -327,6 +327,14 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
 export const FACTION_HEROES: Record<FactionId, string[]> = byPack((p) => p.heroes);
 
 /** Easter egg heroes: unlocked on the setup screen (click the Dawn crest five times), never drawn by the engine. */
+/** Rivalry for 7-8 players: four heroes a side, so each faction lends a fourth one (Przymierze: the Brave Duck, Horda: the Warlord, who is a tavern commander on level 5 and 6, hence no 7-8 player tables there). */
+export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'braveDuck', horde: 'hordeWarlord' };
+export const MAX_PVP_PLAYERS = 8;
+/** More players than this at a table play with `EXTRA_HEROES` too. */
+export const BASE_PVP_PLAYERS = 6;
+/** The heroes a seat can pick at a table of `seats` players. */
+export const heroPool = (f: FactionId, seats: number): string[] => (seats > BASE_PVP_PLAYERS ? [...FACTION_HEROES[f], EXTRA_HEROES[f]] : FACTION_HEROES[f]);
+
 export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [] };
 
 export const FACTION_SUPPORTS: Record<FactionId, string[]> = byPack((p) => p.supports);

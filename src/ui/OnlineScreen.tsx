@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FACTION_HEROES, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type TeamId } from '../engine/data';
+import { heroPool, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type TeamId } from '../engine/data';
 import { CUSTOM_MAPS } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
 import { defaultCustom, TIERS } from '../engine/presets';
@@ -424,7 +424,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
             <div key={i} className="well" style={{ padding: '6px 12px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', background: SEAT_TINT[s.faction] }}>
               <img src={asset(`cards/crests/${s.faction}.png`)} alt="" title={FACTION_NAMES[s.faction]} style={{ width: 46, height: 46, objectFit: 'contain', flex: 'none' }} />
               {owner && !locked && room.mode === 'pvp' && (
-                <select value={s.faction} aria-label="Frakcja" onChange={(e) => updateSeat(i, { faction: e.target.value as TeamId, heroId: FACTION_HEROES[e.target.value as TeamId].find((h) => !takenBy(h, i))! })}>
+                <select value={s.faction} aria-label="Frakcja" onChange={(e) => updateSeat(i, { faction: e.target.value as TeamId, heroId: heroPool(e.target.value as TeamId, room.seats.length).find((h) => !takenBy(h, i))! })}>
                   <option value="dawn">{FACTION_NAMES.dawn}</option>
                   <option value="horde">{FACTION_NAMES.horde}</option>
                 </select>
@@ -436,7 +436,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
                 </select>
               )}
               <div style={{ display: 'flex', gap: 6 }}>
-                {(owner && !locked ? FACTION_HEROES[s.faction] : [s.heroId]).map((h) => (
+                {(owner && !locked ? heroPool(s.faction, room.seats.length) : [s.heroId]).map((h) => (
                   <button key={h} className="btn" title={UNITS[h].name} disabled={!owner || locked || takenBy(h, i)} onClick={() => updateSeat(i, { heroId: h })} style={{ background: 'none', border: 0, padding: 0 }}>
                     <Portrait unitId={h} size={46} ring={SIDE_RING[s.faction]} glow={s.heroId === h ? '0 0 0 3px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} dim={takenBy(h, i)} tip={false} />
                   </button>

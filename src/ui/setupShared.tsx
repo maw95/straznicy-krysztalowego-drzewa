@@ -1,7 +1,7 @@
 // Pieces of the game setup shared by the local setup screen and the online room: level names and hints,
 // explanations, the faction tint of a seat, labelled rows, the option buttons and the heroes of a fresh table.
 
-import { FACTION_HEROES, MAP_VARIANTS, type FactionId, type TeamId, type MapSize } from '../engine/data';
+import { FACTION_HEROES, heroPool, MAP_VARIANTS, type FactionId, type TeamId, type MapSize } from '../engine/data';
 import type { Level, MapShape, Mode } from '../engine/types';
 
 /** Class of an option button; the chosen one is lit. */
@@ -21,7 +21,7 @@ export const defaultHeroes = (mode: Mode, count: number): Array<{ faction: TeamI
       ]
     : Array.from({ length: count }, (_, i) => {
         const faction: TeamId = mode === 'coop' || i % 2 === 0 ? 'dawn' : 'horde';
-        return { faction, heroId: FACTION_HEROES[faction][mode === 'coop' ? i % FACTION_HEROES.dawn.length : Math.floor(i / 2)] };
+        return { faction, heroId: heroPool(faction, count)[mode === 'coop' ? i % FACTION_HEROES.dawn.length : Math.floor(i / 2)] };
       });
 
 /** The board edition keeps the printed levels: its "Łatwy" is level 0 (duels on the board). */

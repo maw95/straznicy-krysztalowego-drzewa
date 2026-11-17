@@ -289,8 +289,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
             </>
           ) : (
             <Row label="Liczba graczy">
-              {/* At most 3 players per faction (its three heroes): coop (all Przymierze) takes 1–3, PvP 2–6. */}
-              {(d.mode === 'coop' ? [1, 2, 3] : [2, 3, 4, 5, 6]).map((n) => (
+              {/* At most 3 players per faction (its three heroes): coop (all Przymierze) takes 1–3, PvP 2–6; 7–8 players (a fourth hero a side) only on the levels without the tavern commanders. */}
+              {(d.mode === 'coop' ? [1, 2, 3] : d.digital && (d.tier === 'realm' || d.tier === 'empire' || d.tier === 'custom') ? [2, 3, 4, 5, 6] : [2, 3, 4, 5, 6, 7, 8]).map((n) => (
                 <button key={n} className={chip(d.count === n)} aria-pressed={d.count === n} onClick={() => patch({ count: n })}>{n}</button>
               ))}
             </Row>

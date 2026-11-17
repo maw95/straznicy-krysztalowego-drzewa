@@ -1,7 +1,7 @@
 import { CampaignScreen } from './CampaignScreen';
 import { ExpeditionScreen } from './ExpeditionScreen';
 import { useMemo, useRef, useState } from 'react';
-import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, UNITS, type TeamId, type MapSize } from '../engine/data';
+import { FACTION_HEROES, FACTION_NAMES, heroPool, SECRET_HEROES, UNITS, type TeamId, type MapSize } from '../engine/data';
 import { readyMaps } from '../engine/customMaps';
 import { layerSwitches, resolveTier, withRuleset, type CustomLayer, type Tier } from '../engine/presets';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
@@ -74,7 +74,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     update(i, { heroId: SECRET_HEROES.dawn[0] });
     setPreview(SECRET_HEROES.dawn[0]);
   };
-  const heroesOf = (f: TeamId) => (duck ? [...FACTION_HEROES[f], ...SECRET_HEROES[f]] : FACTION_HEROES[f]);
+  const heroesOf = (f: TeamId) => (seats.length > 6 ? heroPool(f, seats.length) : duck ? [...FACTION_HEROES[f], ...SECRET_HEROES[f]] : FACTION_HEROES[f]);
 
   const arena = mode === 'arena';
   const update = (i: number, patch: Partial<SeatSetup>) => setSeats(seats.map((s, j) => (j === i ? { ...s, ...patch } : s)));
