@@ -345,8 +345,18 @@ button { font-family: inherit; }
   .screen.play .sticky-mobile { position: relative; bottom: auto; }
   .screen.play .bar > .gi { flex-wrap: nowrap; }
   /* The map's bar holds more than a low screen is wide (the turn, the counters, the gold and the three buttons): it takes a second row instead of losing the buttons. */
-  .screen.play .bar.adv-bar > .gi { flex-wrap: wrap; row-gap: 2px; gap: 8px !important; padding: 4px 10px !important; }
+  /* A phone held sideways: the map and the arena are what the screen is for, so the bar and the side panel shrink (zoom scales text, icons and padding together). */
+  .screen.play .bar.adv-bar > .gi { flex-wrap: nowrap; gap: 8px !important; padding: 2px 8px !important; zoom: 0.68; }
   .screen.play .bar.adv-bar .footer-slot { flex: 1 1 auto !important; }
+  .screen.play .bar:not(.adv-bar) > .gi { zoom: 0.76; }
+  .play-row .side-adv { width: 172px !important; }
+  .play-row .side-adv > .gi { zoom: 0.72; padding: 40px 8px 8px !important; }
+  /* The round buttons in the corner are smaller too (a finger still reaches them: they stand apart). */
+  .music-btn, .fullscreen-btn { width: 34px !important; height: 30px !important; }
+  .music-btn { right: 6px; top: 4px; }
+  .fullscreen-btn { right: 44px; top: 4px; }
+  .lang-switch { right: 84px; top: 4px; }
+  .lang-flag { width: 34px !important; height: 30px !important; }
   /* Dialogs: less margin and no crest, so more of them fits on the low screen. */
   .overlay { padding: 6px 8px; }
   .overlay .crest { display: none; }
@@ -911,8 +921,10 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 
 /* Wizard: map shape buttons (a picture of hexes over the name) and size buttons (a big code over the name). */
 .shape-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 120px; padding: 10px 14px; font-size: 17px; font-weight: 700; }
-.size-btn { display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 118px; padding: 10px 16px; font-size: 17px; line-height: 1.15; }
-.level-btn { min-width: 112px; }
+.size-btn { width: 124px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 118px; padding: 10px 16px; font-size: 17px; line-height: 1.15; }
+.level-btn { width: 124px; min-width: 124px; height: 126px; box-sizing: border-box; justify-content: center; }
+.level-btn span:not(.level-btn-icon) { text-align: center; }
+.wizard-nav { width: 190px; height: 52px; padding: 0; font-size: 21px; display: inline-flex; align-items: center; justify-content: center; }
 .level-btn-icon { display: block; width: 56px; height: 56px; color: #8A3B12; margin-bottom: 2px; }
 .level-btn.on .level-btn-icon { color: #124F7A; }
 .size-btn .size-code { font-size: 34px; font-weight: 900; color: #8A3B12; letter-spacing: 1px; }

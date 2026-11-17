@@ -3,7 +3,7 @@
 // the pages with several settings have "Dalej →". It ends with a `TableConfig` (the same shape the online tables use).
 
 import { LevelIcon, type LevelIconKind } from './LevelIcons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BOARD_MAP_SIZES, MAP_SIZE_NAMES, type MapSize } from '../engine/data';
 import { CUSTOM_MAPS } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
@@ -127,6 +127,11 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
   const [page, setPage] = useState<Page>(initial ? 'players' : 'edition');
   const pages = pagesOf(d);
   const at = pages.indexOf(page);
+  // On a phone the next page must start at its top, not where the last one was scrolled to.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    for (const el of Array.from(document.querySelectorAll('.scroll'))) el.scrollTop = 0;
+  }, [page]);
   const patch = (p: Partial<Draft>) => setD((cur) => ({ ...cur, ...p }));
   /** The next page of the draft `next` (it may change which pages exist). */
   const goFrom = (cur: Page, next: Draft) => {
@@ -227,7 +232,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
         <>
           <div className="opt-grid" data-wizard-page="objective">
             {(['crystals', 'control', 'survival', 'boss', 'artifact', 'conquest', 'relic'] as const).filter((o) => (o !== 'survival' || d.mode === 'coop') && (o !== 'conquest' || ['economy', 'realm', 'empire'].includes(d.tier)) && (o !== 'relic' || d.tier === 'empire')).map((o) => (
-              <Card key={o} on={d.objective === o} title={OBJECTIVES[o].name} text={OBJECTIVES[o].summary} img={pic(asset(OBJECTIVE_ICON[o]))} onClick={() => patch({ objective: o })} />
+              <Card key={o} on={d.objective === o} title={OBJECTIVES[o].name} text={OBJECTIVES[o].summary} img={pic(asset(OBJECTIVE_ICON[o]))} onClick={() => (d.mode === 'coop' && o === 'boss' ? patch({ objective: o }) : choose({ objective: o }))} />
             ))}
           </div>
           {d.mode === 'coop' && d.objective === 'boss' && (
@@ -249,7 +254,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
             <CentredChoice label="Wybierz kształt">
               {(Object.keys(SHAPE_NAMES) as MapShape[]).filter((sh) => sh !== 'custom').map((sh) => (
                 <Tip key={sh} text={SHAPE_TIPS[sh]}>
-                  <button className={`${chip(d.shape === sh)} shape-btn`} aria-pressed={d.shape === sh} onClick={() => patch({ shape: sh })}>
+                  <button className={`${chip(d.shape === sh)} shape-btn`} aria-pressed={d.shape === sh} data-shape={sh} onClick={() => choose({ shape: sh })}>
                     <ShapeIcon shape={sh} width={92} />
                     <span>{SHAPE_NAMES[sh]}</span>
                   </button>
@@ -259,7 +264,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
           ) : (
             <CentredChoice label="Wybierz mapę">
               {READY_MAPS().map((m) => (
-                <Tip key={m.id} text={m.summary}><button className={`${chip(d.customMapId === m.id)} shape-btn`} aria-pressed={d.customMapId === m.id} onClick={() => patch({ customMapId: m.id })}>{m.name}</button></Tip>
+                <Tip key={m.id} text={m.summary}><button className={`${chip(d.customMapId === m.id)} shape-btn`} aria-pressed={d.customMapId === m.id} data-map={m.id} onClick={() => choose({ customMapId: m.id })}>{m.name}</button></Tip>
               ))}
             </CentredChoice>
           )}
@@ -335,9 +340,10 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
       )}
 
       <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginTop: 6 }}>
-        <button className="btn plate parch" style={{ height: 52, padding: '0 28px', fontSize: 20 }} onClick={back}>← Wstecz</button>
-        {(page === 'objective' || page === 'map' || page === 'players' || page === 'custom') && (
-          <button className="btn prim" style={{ height: 52, padding: '0 40px', fontSize: 22 }} onClick={next} data-wizard-next>{last ? (online ? 'Utwórz stół' : 'Dalej →') : 'Dalej →'}</button>
+        <button className="btn plate parch wizard-nav" onClick={back} data-wizard-back>← Wstecz</button>
+        {/* The objective and the map go on by themselves when one is picked; the coop Boss still needs its Horde choice, so it keeps the button. */}
+        {(page === 'players' || page === 'custom' || (page === 'objective' && d.mode === 'coop' && d.objective === 'boss')) && (
+          <button className="btn prim wizard-nav" onClick={next} data-wizard-next>{last ? (online ? 'Utwórz stół' : 'Dalej →') : 'Dalej →'}</button>
         )}
       </div>
     </Frame>

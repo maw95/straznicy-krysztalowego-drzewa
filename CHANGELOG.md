@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Telefon: kreator przechodzi dalej po wyborze celu i mapy, nowa strona zawsze zaczyna się od góry, przyciski „Wstecz” i „Dalej” oraz przyciski poziomów mają równe rozmiary. Po rozpoczęciu gry na telefonie poziomo pasek i panel boczne są mniejsze, więc mapa i arena mają więcej miejsca.
+
 - Gra mówi po angielsku i po polsku. Język wybiera się klikając flagę w prawym górnym rogu ekranu startowego i menu (albo w Opcjach, także w trakcie gry); na początku jest taki, jak w przeglądarce, a wybór gra zapamiętuje.
 
 - Telefon: opisy, które na komputerze widać po najechaniu myszą (mana, punkty ruchu, dochód, pola mapy), pokazują się po dotknięciu. Przyciski na dolnym pasku, lista osad i plecak bohatera mają 44 px.

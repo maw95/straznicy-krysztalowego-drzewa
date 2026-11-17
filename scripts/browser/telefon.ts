@@ -126,7 +126,7 @@ for (const screen of SCREENS.filter((s) => !wanted || wanted.includes(s.id))) {
       await p.waitForTimeout(400);
       const r = (await p.evaluate(INSPECT)) as { hscroll: number; off: string[]; small: string[]; hover: number; polish: string[] };
       const bad = r.hscroll > 0 || r.off.length > 0;
-      if (bad) { failed++; await p.screenshot({ path: `.tmp/telefon-${screen.id}-${view}.png` }); }
+      if (bad || process.env.SHOT) { if (bad) failed++; await p.screenshot({ path: `.tmp/telefon-${screen.id}-${view}.png` }); }
       lines.push(`${bad ? 'USTERKA' : 'ok     '} ${screen.id.padEnd(18)} ${view.padEnd(12)} hscroll ${r.hscroll}  poza ekranem ${r.off.length}  za małe ${r.small.length}  tylko-hover ${r.hover}`);
       for (const o of r.off.slice(0, 6)) lines.push(`    poza ekranem: ${o}`);
       for (const o of r.small.slice(0, 4)) lines.push(`    za mały cel: ${o}`);

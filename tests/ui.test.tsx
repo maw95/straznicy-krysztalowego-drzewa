@@ -72,7 +72,7 @@ describe('setup screen simplifications', () => {
     expect(btn('Dodatkowy bohater Hordy')).toBeUndefined();
     await click(container, 'Same Eliksiry Odrodzenia', 'Rzut kością');
     expect(btn('Same Eliksiry Odrodzenia').getAttribute('aria-pressed')).toBe('true');
-    await click(container, 'Dalej →', 'Kooperacja', 'Dalej →', 'Dalej →');
+    await click(container, 'Dalej →', 'Kooperacja', 'Kryształy do Drzewa', 'Trójkąt');
     expect(btn('Dodatkowy bohater Hordy').getAttribute('aria-pressed')).toBe('false');
     // Every option explains itself in a hover tooltip next to its button.
     for (const t of ['Mała', 'Bardzo duża', 'Łatwy', 'Normalny', 'Trudny']) expect(tip(t).length).toBeGreaterThan(40);
@@ -611,7 +611,7 @@ describe('arena through the UI', () => {
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
     await click(doc, '← Wstecz', '← Wstecz', 'Cyfrowa', 'Wyprawa', 'Arena');
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
-    await click(doc, '← Wstecz', 'Kooperacja', 'Punkty kontrolne', 'Dalej →', 'Dalej →', 'Dalej →', 'Rozpocznij grę');
+    await click(doc, '← Wstecz', 'Kooperacja', 'Punkty kontrolne', 'Trójkąt', 'Dalej →', 'Rozpocznij grę');
     const g = (window as any).__game;
     expect(g.rules.objective).toBe('control');
     expect(g.rules.heroGrowth).toBe(true);
@@ -811,6 +811,30 @@ describe('level 6: the dwellings in the tree of buildings', () => {
     expect(state('dwelling-2')).toBe('built');
     expect(state('dwelling-3')).toBe('open');
     expect(doc.querySelector('[data-tree-detail="dwelling-2"] [data-excluded]')!.textContent).toContain('wybrano alternatywne siedlisko tego poziomu');
+  });
+});
+
+describe('the new-game wizard goes on by itself', () => {
+  it('after a goal and after a shape, but the coop Boss still asks for the Horde', async () => {
+    window.history.replaceState(null, '', '/');
+    vi.useFakeTimers();
+    const { container } = render(<App />);
+    const doc = container.ownerDocument;
+    const page = () => doc.querySelector('[data-wizard-page]')!.getAttribute('data-wizard-page');
+    await newGame(doc, 'Cyfrowa', 'Wyprawa', 'Kooperacja');
+    expect(page()).toBe('objective');
+    expect(doc.querySelector('[data-wizard-next]')).toBeNull();
+    await click(doc, 'Boss');
+    expect(page()).toBe('objective');
+    expect(doc.querySelector('[data-wizard-next]')).not.toBeNull();
+    await click(doc, 'Punkty kontrolne');
+    expect(page()).toBe('map');
+    expect(doc.querySelector('[data-wizard-next]')).toBeNull();
+    await click(doc, 'Trójkąt');
+    expect(page()).toBe('players');
+    // Back and Next are the same size.
+    const nav = [...doc.querySelectorAll('.wizard-nav')];
+    expect(nav).toHaveLength(2);
   });
 });
 
