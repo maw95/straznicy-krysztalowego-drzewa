@@ -3,7 +3,7 @@
 // progress for the screen. 'crystals' is the board game's goal (carry the crystals to the Tree, the Horde's ritual); the
 // others belong to the digital ruleset. Result of a game under 'crystals' must never change (tests/golden.test.ts).
 
-import { raceOf } from './teams';
+import { TEAM_IDS, raceOf } from './teams';
 import { BOSS, CONTROL, ENCOUNTERS, FACTION_NAMES, NEUTRAL_BOSSES, SURVIVAL, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, UNITS, type TeamId, type Terrain } from './data';
 import { hpScaleOf } from './battle';
 import { finish, finishDraw, heroesAt, ritualFormed, spawnHordeHero } from './game';
@@ -81,6 +81,19 @@ const crystals: Objective = {
   },
 };
 
+/** The team with the strictly best score, or null when the top is shared (a draw for the round limit). Works for any number of teams. */
+export function bestTeam(scores: Record<TeamId, number>, teams: readonly TeamId[] = TEAM_IDS): TeamId | null {
+  const top = Math.max(...teams.map((t) => scores[t]));
+  const leaders = teams.filter((t) => scores[t] === top);
+  return leaders.length === 1 ? leaders[0] : null;
+}
+
+/** Short names of the teams for the logs and progress lines (the two teams of today). */
+const TEAM_SHORT: Record<TeamId, string> = { dawn: 'Przymierze', horde: 'Horda' };
+/** The same in the genitive ("on the land of ..."). */
+const TEAM_OF: Record<TeamId, string> = { dawn: 'Przymierza', horde: 'Hordy' };
+const scoreLine = (n: Record<TeamId, number>, sep: string) => TEAM_IDS.map((t) => `${TEAM_SHORT[t]} ${n[t]}`).join(sep);
+
 // ------------------------------------------------------------------ control points
 
 /** The side whose hero stands on `k` (one hero per hex, so a point is held by whoever is on it), or null. */
@@ -94,7 +107,7 @@ export const controlWeight = (state: GameState, k: HexKey): number => (state.con
 
 /** The worth of the control points each side holds now. */
 export function controlCounts(state: GameState): Record<TeamId, number> {
-  const out = { dawn: 0, horde: 0 };
+  const out = Object.fromEntries(TEAM_IDS.map((t) => [t, 0])) as Record<TeamId, number>;
   for (const k of state.control?.points ?? []) {
     const h = controlHolder(state, k);
     if (h) out[h] += controlWeight(state, k);
@@ -250,22 +263,22 @@ const control: Objective = {
   init(state) {
     const points = placeControlPoints(state);
     for (const k of points) revealAround(state, k);
-    state.control = { points, lead: null, streak: 0, led: { dawn: 0, horde: 0 } };
+    state.control = { points, lead: null, streak: 0, led: Object.fromEntries(TEAM_IDS.map((t) => [t, 0])) as Record<TeamId, number> };
   },
   checkVictory() {},
   onRoundEnd(state) {
     const c = state.control!;
     const n = controlCounts(state);
-    const leader: TeamId | null = n.dawn > n.horde ? 'dawn' : n.horde > n.dawn ? 'horde' : null;
+    const leader: TeamId | null = bestTeam(n);
     c.streak = leader && leader === c.lead ? c.streak + 1 : leader ? 1 : 0;
     c.lead = leader;
     if (leader) c.led[leader] += 1;
     if (!leader) {
-      log(state, 'round', `Punkty kontrolne: Przymierze ${n.dawn}, Horda ${n.horde}: nikt nie ma przewagi.`);
+      log(state, 'round', `Punkty kontrolne: ${scoreLine(n, ', ')}: nikt nie ma przewagi.`);
       return false;
     }
     const need = controlRoundsToWin(state, leader);
-    log(state, 'round', `Punkty kontrolne: Przymierze ${n.dawn}, Horda ${n.horde}: przewagę ma ${FACTION_NAMES[raceOf(state, leader)]} (${c.streak}/${need} rund).`);
+    log(state, 'round', `Punkty kontrolne: ${scoreLine(n, ', ')}: przewagę ma ${FACTION_NAMES[raceOf(state, leader)]} (${c.streak}/${need} rund).`);
     if (c.streak >= need) {
       finish(state, leader, `${FACTION_NAMES[raceOf(state, leader)]} utrzymało punkty kontrolne przez ${need} rundy z rzędu.`);
       return true;
@@ -274,15 +287,14 @@ const control: Objective = {
   },
   onRoundLimit(state) {
     // The side that led for more rounds wins; level (or no leader at all) is a draw.
-    const { dawn, horde } = state.control!.led;
-    if (dawn > horde) finish(state, 'dawn', 'Upłynął limit rund: Przymierze dłużej miało przewagę w punktach kontrolnych.');
-    else if (horde > dawn) finish(state, 'horde', 'Upłynął limit rund: Horda dłużej miała przewagę w punktach kontrolnych.');
+    const best = bestTeam(state.control!.led);
+    if (best) finish(state, best, `Upłynął limit rund: ${TEAM_SHORT[best]} ${best === 'dawn' ? 'dłużej miało' : 'dłużej miała'} przewagę w punktach kontrolnych.`);
     else finishDraw(state, 'Upłynął limit rund: żadna strona nie miała przewagi w punktach kontrolnych.');
   },
   progress(state) {
     const n = controlCounts(state);
     const c = state.control!;
-    const lines: ProgressLine[] = [{ label: 'Punkty kontrolne', value: `Przymierze ${n.dawn} · Horda ${n.horde}` }];
+    const lines: ProgressLine[] = [{ label: 'Punkty kontrolne', value: scoreLine(n, ' · ') }];
     if (c.lead) lines.push({ label: `Przewaga: ${FACTION_NAMES[raceOf(state, c.lead)]}`, value: `${c.streak}/${controlRoundsToWin(state, c.lead)} rund`, tone: c.lead });
     return lines;
   },
@@ -419,8 +431,8 @@ const artifact: Objective = {
 
 /** The settlements `side` has to hold to win: every one on the enemy's land (its capital and the ones to conquer there). */
 export function conquestTargets(state: GameState, side: TeamId): string[] {
-  const enemy: TeamId = side === 'dawn' ? 'horde' : 'dawn';
-  return Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.land === enemy).map((s) => s.id);
+  // The land of every other team is the enemy's.
+  return Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.land !== side).map((s) => s.id);
 }
 
 /** How many of its targets `side` holds now. */
@@ -434,7 +446,7 @@ const conquest: Objective = {
   checkVictory() {},
   onRoundEnd(state) {
     if (!state.kingdom) return false;
-    for (const side of ['dawn', 'horde'] as const) {
+    for (const side of TEAM_IDS) {
       const need = conquestTargets(state, side).length;
       if (need > 0 && conquestHeld(state, side) === need) {
         finish(state, side, `${FACTION_NAMES[raceOf(state, side)]} trzyma wszystkie osady na ziemi wroga.`);
@@ -447,14 +459,16 @@ const conquest: Objective = {
     // Time is up: a side that holds most of the enemy's land (more than half of its settlements) has won the war, unless the enemy did the same;
     // otherwise (neither or both) it is a draw.
     const most = (f: TeamId) => conquestHeld(state, f) * 2 > conquestTargets(state, f).length;
-    const [dawn, horde] = [most('dawn'), most('horde')];
-    if (dawn && !horde) finish(state, 'dawn', `Upłynął limit rund: Przymierze trzyma większość osad na ziemi Hordy (${conquestHeld(state, 'dawn')} z ${conquestTargets(state, 'dawn').length}).`);
-    else if (horde && !dawn) finish(state, 'horde', `Upłynął limit rund: Horda trzyma większość osad na ziemi Przymierza (${conquestHeld(state, 'horde')} z ${conquestTargets(state, 'horde').length}).`);
-    else finishDraw(state, 'Upłynął limit rund: nikt nie zdobył przewagi w ziemi wroga.');
+    const winners = TEAM_IDS.filter(most);
+    if (winners.length === 1) {
+      const w = winners[0];
+      const enemy = TEAM_IDS.filter((t) => t !== w).map((t) => TEAM_OF[t]).join(' i ');
+      finish(state, w, `Upłynął limit rund: ${TEAM_SHORT[w]} trzyma większość osad na ziemi ${enemy} (${conquestHeld(state, w)} z ${conquestTargets(state, w).length}).`);
+    } else finishDraw(state, 'Upłynął limit rund: nikt nie zdobył przewagi w ziemi wroga.');
   },
   progress(state) {
     if (!state.kingdom) return [];
-    return (['dawn', 'horde'] as const).map((side) => ({ label: `${FACTION_NAMES[raceOf(state, side)]}: osady wroga`, value: `${conquestHeld(state, side)} / ${conquestTargets(state, side).length}`, tone: side }));
+    return TEAM_IDS.map((side) => ({ label: `${FACTION_NAMES[raceOf(state, side)]}: osady wroga`, value: `${conquestHeld(state, side)} / ${conquestTargets(state, side).length}`, tone: side }));
   },
 };
 
@@ -474,17 +488,16 @@ const relic: Objective = {
   },
   onRoundLimit(state) {
     // More shards in hand wins; level is a draw.
-    const [dawn, horde] = [shardsOf(state, 'dawn'), shardsOf(state, 'horde')];
-    if (dawn > horde) finish(state, 'dawn', `Upłynął limit rund: Przymierze ma więcej Odłamków (${dawn} do ${horde}).`);
-    else if (horde > dawn) finish(state, 'horde', `Upłynął limit rund: Horda ma więcej Odłamków (${horde} do ${dawn}).`);
+    const shards = Object.fromEntries(TEAM_IDS.map((t) => [t, shardsOf(state, t)])) as Record<TeamId, number>;
+    const best = bestTeam(shards);
+    if (best) finish(state, best, `Upłynął limit rund: ${TEAM_SHORT[best]} ma więcej Odłamków (${shards[best]} do ${TEAM_IDS.filter((t) => t !== best).map((t) => shards[t]).join(' i ')}).`);
     else finishDraw(state, 'Upłynął limit rund: Odłamków po równo.');
   },
   progress(state) {
     const total = shardTotal(state);
     const lying = Object.values(state.kingdom?.shards ?? {}).reduce((a, n) => a + n, 0);
     return [
-      { label: 'Odłamki: Przymierze', value: `${shardsOf(state, 'dawn')} / ${total}`, tone: 'dawn' },
-      { label: 'Odłamki: Horda', value: `${shardsOf(state, 'horde')} / ${total}`, tone: 'horde' },
+      ...TEAM_IDS.map((t) => ({ label: `Odłamki: ${TEAM_SHORT[t]}`, value: `${shardsOf(state, t)} / ${total}`, tone: t })),
       { label: 'Odłamki na mapie', value: `${lying}` },
     ];
   },

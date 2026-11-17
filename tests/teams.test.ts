@@ -70,3 +70,17 @@ describe('splitZones', () => {
     expect(() => splitZones(cells, Array(MAX_START_ZONES + 1).fill(key(cells[0].hex)))).toThrow();
   });
 });
+
+describe('bestTeam (round-limit winner)', () => {
+  it('two teams: higher score wins, a tie is null', async () => {
+    const { bestTeam } = await import('../src/engine/objectives');
+    expect(bestTeam({ dawn: 2, horde: 1 })).toBe('dawn');
+    expect(bestTeam({ dawn: 1, horde: 3 })).toBe('horde');
+    expect(bestTeam({ dawn: 2, horde: 2 })).toBeNull();
+    expect(bestTeam({ dawn: 0, horde: 0 })).toBeNull();
+  });
+  it('a single team in the list wins alone', async () => {
+    const { bestTeam } = await import('../src/engine/objectives');
+    expect(bestTeam({ dawn: 0, horde: 9 }, ['dawn'])).toBe('dawn');
+  });
+});
