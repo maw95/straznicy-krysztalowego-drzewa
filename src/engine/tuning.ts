@@ -162,11 +162,11 @@ export const DIGITAL_TUNING: DigitalTune[] = [
   // --- Level 6 "Imperium", goal 'crystals' (15.11, 40-60 games a cell): Blask Świtu helps the Przymierza from the first round, Żądza Krwi only after a kill.
   { empire: true, objective: 'crystals', level: 'normal', mode: 'pvp', players: 1, maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
   { empire: true, objective: 'crystals', level: 'normal', mode: 'coop', players: 1, maps: ['medium'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 5 } } },
-  // --- Levels 4-6 (the economy tables), goal 'crystals', Hard (measured 18.11, 60 games a cell, band 30-45): the short maps ran above the band, the long and medium PvP ones below.
+  // --- Levels 4-6 (the economy tables), goal 'crystals', Hard (measured 17.11, 60 games a cell, band 30-45): the short maps ran above the band, the long and medium PvP ones below.
   { objective: 'crystals', level: 'hard', kingdom: true, mode: 'pvp', maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 3 } } },
   { objective: 'crystals', level: 'hard', kingdom: true, mode: 'coop', players: 2, maps: ['short'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
   { objective: 'crystals', level: 'hard', kingdom: true, mode: 'pvp', maps: ['medium', 'long'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 1 } } },
-  // --- Conquest and Relic, Normal (measured 18.11, 100 games a cell, band 45-65): the lone hero on the very long map was far below, a few cells above.
+  // --- Conquest and Relic, Normal (measured 17.11, 100 games a cell, band 45-65): the lone hero on the very long map was far below, a few cells above.
   { objective: 'conquest', level: 'normal', mode: 'coop', players: 1, maps: ['veryLong'], rules: { roundLimitBonus: 5, dawnStartTreasures: { resurrections: 0, others: 0, random: 7 } } },
   { objective: 'conquest', level: 'normal', mode: 'coop', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },
   { objective: 'conquest', level: 'normal', mode: 'pvp', players: 2, maps: ['veryLong'], rules: { hordeStartTreasures: { resurrections: 0, others: 0, random: 4 } } },

@@ -37,9 +37,9 @@ describe('ExpeditionOver', () => {
   });
 
   it('after the last stage is won, the run is complete', () => {
-    saveRun({ ...newRun(11, 'goldDragon', '2026-11-18'), cleared: STAGES - 1 });
-    const { container } = render(<ExpeditionOver state={over(STAGES - 1, 'dawn', '2026-11-18')} onStart={() => undefined} onMenu={() => undefined} />);
+    saveRun({ ...newRun(11, 'goldDragon', '2026-11-17'), cleared: STAGES - 1 });
+    const { container } = render(<ExpeditionOver state={over(STAGES - 1, 'dawn', '2026-11-17')} onStart={() => undefined} onMenu={() => undefined} />);
     expect(container.querySelector('[data-expedition-over="complete"]')).not.toBeNull();
-    expect(readProfile()).toMatchObject({ runs: 1, finished: 1, bestCleared: STAGES, daily: { '2026-11-18': STAGES } });
+    expect(readProfile()).toMatchObject({ runs: 1, finished: 1, bestCleared: STAGES, daily: { '2026-11-17': STAGES } });
   });
 });
