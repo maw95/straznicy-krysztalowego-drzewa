@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Osada otwiera się na cały ekran. Rada Osady na krajobrazie pokazuje drzewko budynków: co jest wybudowane, co można kupić, co jest za drogie i co czeka na inny budynek (z liniami zależności).
+
 - Budynki osady tworzą drzewo: Kuźnia, Fosa i Mury oraz Szpital wymagają najpierw Koszar, Wieża maga Szpitala, a Karczma Targu (przycisk pokazuje, czego brakuje).
 
 - Statystyki i punkty: pełna arena 6 na 6 liczy się osobno od szybkiej 3 na 3 (własny wiersz w tabeli) i daje o połowę więcej punktów za wygraną.

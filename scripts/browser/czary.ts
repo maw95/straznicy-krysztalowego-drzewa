@@ -46,7 +46,7 @@ import { openGame } from './game';
   }
 }
 {
-  const game = await openGame('steps=0&seed=3&size=medium&realm=1&gold=60&res=9&players=1', { scale: 1 });
+  const game = await openGame('steps=0&seed=3&size=medium&realm=1&gold=60&res=9&players=1&built=barracks,hospital', { scale: 1 });
   try {
     const p = game.page;
     await p.locator('[data-enter-settlement]').click();

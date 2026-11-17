@@ -2,7 +2,7 @@
 // the service of the chosen building: recruitment (barracks), artifacts for gold (market), healing the fallen (hospital), the treasury. Actions go to
 // the engine (kingdom.ts); the window only asks and shows what the engine allows.
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
 import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsOf, canPay, forgeLevel, goldOf, hasUnit, incomeOf, KINGDOM, marketStock, mayBuildNow, mayRecruit, RECRUITS, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
 import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
@@ -17,6 +17,7 @@ import { ArtifactMedal } from './growthUi';
 import { RESOURCE_ICON, ResourceStrip } from './resources';
 import { RuleText } from './statScale';
 import { sfx } from './sfx';
+import { BuildingTree, COUNCIL, nodeState } from './BuildingTree';
 
 /** Where the building stands in the landscape (percent of the picture): four buildings in level 3. */
 const SPOT: Partial<Record<BuildingId, { left: number; top: number }>> = {
@@ -37,6 +38,15 @@ const buildingPicture = (land: FactionId, b: BuildingId, level: number) => (leve
 export function SettlementDialog({ state, settlementId, faction, onAction, onClose }: { state: GameState; settlementId: string; faction: FactionId; onAction: (a: Action) => void; onClose: () => void }) {
   const s = state.kingdom!.settlements[settlementId];
   const [open, setOpen] = useState<BuildingId>('barracks');
+  // The Rada Osady opens the tree of buildings (a second page of the same screen); Esc comes back to the landscape first.
+  const [view, setView] = useState<'town' | 'tree'>('town');
+  const [pick, setPick] = useState<BuildingId | typeof COUNCIL | null>(null);
+  useEffect(() => {
+    if (view !== 'tree') return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); setView('town'); } };
+    window.addEventListener('keydown', onKey, true);
+    return () => window.removeEventListener('keydown', onKey, true);
+  }, [view]);
   const gold = goldOf(state, faction);
   const own = s.land === faction;
   const fs = state.factions[faction];
@@ -333,52 +343,87 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     );
   };
 
+  const councilPic = `osady/${s.land}_council1.webp`;
+  const detail = pick && pick !== COUNCIL ? (
+    <div className="plate parch" data-tree-detail={pick} style={{ padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
+      <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>{BUILDING_NAMES[pick][Math.min(buildingLevel(s, pick), BUILDING_NAMES[pick].length - 1)]}</div>
+      <div style={{ fontSize: 15, marginBottom: 8 }}><RuleText text={BUILDING_TEXTS[pick][Math.min(buildingLevel(s, pick), BUILDING_TEXTS[pick].length - 1)] ?? ''} /></div>
+      {nodeState(state, s, faction, pick) === 'blocked' && <i style={{ color: '#8A2A18' }}>{buildBlock(s, pick) ?? 'Koszary buduje się tylko w osadzie własnej frakcji.'}</i>}
+      {buildButton(pick)}
+    </div>
+  ) : (
+    <div className="plate parch" style={{ padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
+      <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>Rada Osady</div>
+      <div style={{ fontSize: 15 }}>Rada stoi w każdej osadzie od początku i nic nie kosztuje. Z niej wychodzą wszystkie budynki: kliknij budynek w drzewku, żeby zobaczyć jego cenę i działanie, a potem go zbudować.</div>
+    </div>
+  );
   return (
-    <div className="hero-sheet hero-sheet-wide" data-settlement={s.id}>
-      <Ribbon side={faction} style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{s.name}</Ribbon>
-      <div style={{ textAlign: 'center', fontSize: 15, color: '#6B4A22' }}>
+    <div className="settlement-full" data-settlement={s.id} data-view={view} style={{ backgroundImage: `url(${asset(`osady/land_${s.land}.jpg`)})` }}>
+      <div className="settlement-top">
+        <Ribbon side={faction} style={{ width: 'min(520px, 90vw)' }}>{s.name}</Ribbon>
+        <div className="settlement-info">
         Osada {FACTION_NAMES[s.land]}{s.owner !== s.land ? ` (zajęta przez: ${FACTION_NAMES[s.owner!]})` : ''} · złoto: <b data-gold>{gold}</b> · dochód: +{incomeOf(state, faction)} na rundę
         {state.kingdom!.res && <span style={{ marginLeft: 12, display: 'inline-flex', gap: 10, verticalAlign: 'middle' }}><ResourceStrip state={state} faction={faction} size={22} /></span>}
+        </div>
       </div>
-      <div className="settlement-scene" style={{ flex: 'none', backgroundImage: `url(${asset(`osady/land_${s.land}.jpg`)})` }}>
-        {ORDER.map((b) => {
-          const level = buildingLevel(s, b);
-          return (
-            <button key={b} className={`settlement-bld ${open === b ? 'on' : ''} ${level ? 'built' : ''}`} style={{ left: `${spotOf(ORDER, b).left}%`, top: `${spotOf(ORDER, b).top}%`, ...(ORDER.length > 6 ? { width: 104 } : {}) }} onClick={() => setOpen(b)} aria-pressed={open === b} data-building={b} data-level={level}>
-              <img src={asset(buildingPicture(s.land, b, level))} alt="" className="settlement-pic" />
-              <span>{level ? BUILDING_NAMES[b][Math.min(level, BUILDING_NAMES[b].length) - 1] : `${BUILDING_NAMES[b][0]} (do zbudowania)`}</span>
-            </button>
-          );
-        })}
-      </div>
-      {state.rules.empire && (() => {
-        // Level 6: the faction's own mechanic and its tree of three ranks (bought here, from any own settlement).
-        const rank = state.kingdom!.tree?.[faction] ?? 0;
-        const next = FACTION_MECHANICS.treeCost[rank];
-        return (
-          <div className="plate parch" data-tree data-rank={rank} style={{ flex: 'none', padding: '8px 14px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-            <img src={asset(`ikony/frakcje/${faction === 'dawn' ? 'blask_switu' : 'zadza_krwi'}.webp`)} alt="" width={64} height={64} style={{ flex: 'none' }} />
-            <div style={{ flex: 1, minWidth: 260, fontSize: 14, lineHeight: 1.3 }}>
-              <b style={{ fontSize: 16 }}>{MECHANIC_NAMES[faction]}</b> <span style={{ color: '#6B4A22' }}>mechanika frakcji · drzewko {rank}/3</span>
-              <div><RuleText text={MECHANIC_TEXTS[faction]} /></div>
-              {TREE_NAMES[faction].map((name, i) => (
-                <div key={name} data-tree-rank={i + 1} style={{ opacity: i < rank ? 1 : 0.6, display: 'flex', gap: 6, alignItems: 'center' }}><img src={asset(`ikony/drzewko/${faction}_${i + 1}.webp`)} alt="" width={30} height={30} style={{ flex: 'none', filter: i < rank ? undefined : 'grayscale(0.7)' }} /><span>{i < rank ? '✓' : '○'} <b>{name}</b>: <RuleText text={TREE_TEXTS[faction][i]} /></span></div>
-              ))}
-            </div>
-            {next ? (
-              <button className="btn prim" data-tree-buy disabled={!buyer || !canPay(state, faction, next)} onClick={() => act({ type: 'kingdomTree', settlementId: s.id })} style={{ padding: '4px 14px', fontSize: 16 }}>
-                Rozwiń: {TREE_NAMES[faction][rank]} ({costText(next)})
+      {view === 'town' ? (
+        <div className="settlement-field">
+          {ORDER.map((b) => {
+            const level = buildingLevel(s, b);
+            return (
+              <button key={b} className={`settlement-bld ${open === b ? 'on' : ''} ${level ? 'built' : ''}`} style={{ left: `${spotOf(ORDER, b).left}%`, top: `${spotOf(ORDER, b).top}%`, ...(ORDER.length > 6 ? { width: 104 } : {}) }} onClick={() => setOpen(b)} aria-pressed={open === b} data-building={b} data-level={level}>
+                <img src={asset(buildingPicture(s.land, b, level))} alt="" className="settlement-pic" />
+                <span>{level ? BUILDING_NAMES[b][Math.min(level, BUILDING_NAMES[b].length) - 1] : `${BUILDING_NAMES[b][0]} (do zbudowania)`}</span>
               </button>
-            ) : <b style={{ color: '#2E7A32' }}>Drzewko pełne</b>}
-          </div>
-        );
-      })()}
-      {garrisonPanel && <div className="plate parch" style={{ padding: '8px 16px' }}>{garrisonPanel}</div>}
-      <div className="plate parch" data-service style={{ padding: '12px 16px', minHeight: 120, ...(state.rules.economy ? { maxHeight: '36vh', overflowY: 'auto' as const, flex: 'none' } : {}) }}>
-        <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>{BUILDING_NAMES[open][0]}</div>
-        {panel(open)}
+            );
+          })}
+          <button className="settlement-bld built council" style={{ left: '50%', top: '13%', ...(ORDER.length > 6 ? { width: 104 } : {}) }} onClick={() => { setView('tree'); setPick(null); }} data-building="council" data-level="1" title="Rada Osady: drzewko budynków">
+            <img src={asset(councilPic)} alt="" className="settlement-pic" />
+            <span>Rada Osady (drzewko budynków)</span>
+          </button>
+        </div>
+      ) : (
+        <div className="settlement-field tree">
+          <BuildingTree state={state} s={s} faction={faction} order={ORDER} picture={(b, level) => buildingPicture(s.land, b, level)} selected={pick} onSelect={setPick} council={{ picture: councilPic, name: 'Rada Osady' }} />
+        </div>
+      )}
+      <div className="settlement-bottom">
+        {view === 'tree' ? detail : (
+          <>
+      {state.rules.empire && (() => {
+              // Level 6: the faction's own mechanic and its tree of three ranks (bought here, from any own settlement).
+              const rank = state.kingdom!.tree?.[faction] ?? 0;
+              const next = FACTION_MECHANICS.treeCost[rank];
+              return (
+                <div className="plate parch" data-tree data-rank={rank} style={{ flex: 'none', padding: '8px 14px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <img src={asset(`ikony/frakcje/${faction === 'dawn' ? 'blask_switu' : 'zadza_krwi'}.webp`)} alt="" width={64} height={64} style={{ flex: 'none' }} />
+                  <div style={{ flex: 1, minWidth: 260, fontSize: 14, lineHeight: 1.3 }}>
+                    <b style={{ fontSize: 16 }}>{MECHANIC_NAMES[faction]}</b> <span style={{ color: '#6B4A22' }}>mechanika frakcji · drzewko {rank}/3</span>
+                    <div><RuleText text={MECHANIC_TEXTS[faction]} /></div>
+                    {TREE_NAMES[faction].map((name, i) => (
+                      <div key={name} data-tree-rank={i + 1} style={{ opacity: i < rank ? 1 : 0.6, display: 'flex', gap: 6, alignItems: 'center' }}><img src={asset(`ikony/drzewko/${faction}_${i + 1}.webp`)} alt="" width={30} height={30} style={{ flex: 'none', filter: i < rank ? undefined : 'grayscale(0.7)' }} /><span>{i < rank ? '✓' : '○'} <b>{name}</b>: <RuleText text={TREE_TEXTS[faction][i]} /></span></div>
+                    ))}
+                  </div>
+                  {next ? (
+                    <button className="btn prim" data-tree-buy disabled={!buyer || !canPay(state, faction, next)} onClick={() => act({ type: 'kingdomTree', settlementId: s.id })} style={{ padding: '4px 14px', fontSize: 16 }}>
+                      Rozwiń: {TREE_NAMES[faction][rank]} ({costText(next)})
+                    </button>
+                  ) : <b style={{ color: '#2E7A32' }}>Drzewko pełne</b>}
+                </div>
+              );
+            })()}
+            {garrisonPanel && <div className="plate parch" style={{ padding: '8px 16px', flex: 1, minWidth: 0 }}>{garrisonPanel}</div>}
+            <div className="plate parch" data-service style={{ padding: '12px 16px', minHeight: 120, flex: 1.4, minWidth: 0, ...(state.rules.economy ? { maxHeight: '36vh', overflowY: 'auto' as const } : {}) }}>
+              <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>{BUILDING_NAMES[open][0]}</div>
+              {panel(open)}
+            </div>
+          </>
+        )}
+        <div className="settlement-actions">
+          {view === 'tree' && <button className="btn plate parch" data-tree-back style={{ padding: '6px 20px', fontSize: 18 }} onClick={() => setView('town')}>← Wróć do osady</button>}
+          <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20 }} onClick={onClose}>Wyjdź z osady</button>
+        </div>
       </div>
-      <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20, alignSelf: 'center' }} onClick={onClose}>Wyjdź z osady</button>
     </div>
   );
 }

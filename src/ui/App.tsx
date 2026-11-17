@@ -171,6 +171,8 @@ export function App() {
     // ?kingdom=1 (level 3): ?gold=20 gives the factions that much gold.
     if (s.kingdom && q.get('gold')) for (const f of ['dawn', 'horde'] as const) s.kingdom.gold[f] = Number(q.get('gold'));
     // ?economy=1 (level 4): ?res=9 gives the factions that much of every resource.
+    // ?built=barracks,market puts these buildings (level 1) in the settlements of both factions, for checks that need a ready tree.
+    if (s.kingdom && q.get('built')) for (const st of Object.values(s.kingdom.settlements)) for (const b of q.get('built')!.split(',')) st.buildings[b as keyof typeof st.buildings] = 1;
     if (s.kingdom?.res && q.get('res')) for (const f of ['dawn', 'horde'] as const) s.kingdom.res[f] = { wood: Number(q.get('res')), ore: Number(q.get('res')), dust: Number(q.get('res')) };
     // ?economy=1&near=hut|mill|well|store stands the active hero next to the first such place (to walk in by a click).
     if (s.kingdom && q.get('near')) {

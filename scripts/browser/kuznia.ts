@@ -2,7 +2,7 @@
 // Usage: npx tsx scripts/browser/kuznia.ts
 import { openGame } from './game';
 
-const game = await openGame('steps=0&seed=3&size=long&economy=1&gold=60&res=3&players=1', { scale: 1 });
+const game = await openGame('steps=0&seed=3&size=long&economy=1&gold=60&res=3&players=1&built=barracks', { scale: 1 });
 try {
   const p = game.page;
   const num = async (sel: string) => Number((await p.locator(sel).first().innerText()).replace(/\D+/g, ''));

@@ -3,7 +3,7 @@
 import { openGame } from './game';
 
 for (const near of ['hut', 'mill', 'store', 'well']) {
-  const game = await openGame(`steps=0&seed=3&size=long&economy=1&gold=40&res=9&players=1&near=${near}`, { scale: 1 });
+  const game = await openGame(`steps=0&seed=4&size=long&economy=1&gold=40&res=9&players=1&near=${near}`, { scale: 1 });
   try {
     const p = game.page;
     const gold = async () => Number((await p.locator('[data-gold-bar]').first().innerText()).replace(/\D+/g, ''));

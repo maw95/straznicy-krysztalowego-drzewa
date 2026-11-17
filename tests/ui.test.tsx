@@ -763,6 +763,30 @@ describe('level 3: the settlement window', () => {
     await act(async () => fireEvent.click(doc.querySelector('[data-buy]')!));
     expect(gold()).toBeLessThan(24);
   });
+
+  it('opens the tree of buildings from the Rada Osady: the hospital waits for the barracks, then it can be bought', async () => {
+    window.history.replaceState(null, '', '/?steps=0&seed=3&size=long&kingdom=1&gold=30&players=1');
+    vi.useFakeTimers();
+    const { container } = render(<StrictMode><App /></StrictMode>);
+    const doc = container.ownerDocument;
+    await act(async () => fireEvent.click(doc.querySelector('[data-enter-settlement]')!));
+    expect(doc.querySelector('[data-settlement]')!.getAttribute('data-view')).toBe('town');
+    await act(async () => fireEvent.click(doc.querySelector('[data-building="council"]')!));
+    expect(doc.querySelector('[data-settlement]')!.getAttribute('data-view')).toBe('tree');
+    expect(doc.querySelectorAll('[data-tree-node]').length).toBe(5);
+    expect(doc.querySelectorAll('[data-tree-line]').length).toBe(4);
+    const node = (b: string) => doc.querySelector(`[data-tree-node="${b}"]`) as HTMLElement;
+    expect(node('hospital').getAttribute('data-node-state')).toBe('blocked');
+    await act(async () => fireEvent.click(node('hospital')));
+    expect(doc.querySelector('[data-tree-detail="hospital"]')!.textContent).toContain('Najpierw: Koszary.');
+    expect((doc.querySelector('[data-tree-detail] [data-build="hospital"]') as HTMLButtonElement).disabled).toBe(true);
+    await act(async () => fireEvent.click(node('barracks')));
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-detail] [data-build="barracks"]')!));
+    expect(node('barracks').getAttribute('data-node-state')).not.toBe('open');
+    expect(node('hospital').getAttribute('data-node-state')).not.toBe('blocked');
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-back]')!));
+    expect(doc.querySelector('[data-settlement]')!.getAttribute('data-view')).toBe('town');
+  });
 });
 
 describe('level 3: shopping from afar', () => {

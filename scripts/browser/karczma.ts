@@ -2,7 +2,7 @@
 // Screenshot of the tavern panel -> .tmp/karczma.png. Usage: npx tsx scripts/browser/karczma.ts
 import { openGame } from './game';
 
-const game = await openGame('steps=0&seed=3&size=medium&realm=1&gold=40&res=9&players=1', { scale: 1 });
+const game = await openGame('steps=0&seed=3&size=medium&realm=1&gold=40&res=9&players=1&built=market', { scale: 1 });
 try {
   const p = game.page;
   await p.locator('[data-enter-settlement]').click();
