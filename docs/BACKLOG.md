@@ -152,6 +152,15 @@ Decyzje autora: całą mechanikę i wygląd brać z Heroes III; jedyna różnica
 - Zachować atrybuty `data-settlements`, `data-settlement-link`, `data-enter-settlement` (używają skrypty `scripts/browser/*` i testy).
 - Gotowe, gdy: zrzut panelu bocznego na poziomie 3+ z 2–4 osadami wygląda czysto (desktop i telefon), klik i dwuklik działają.
 
+**47. Gruntowne testy wyświetlania gry na telefonie w przeglądarce** (M–L)
+- Cel: przejść wszystkie ekrany gry na wąskim ekranie (pion i poziom) i spisać oraz naprawić to, co nachodzi na siebie, wychodzi poza ekran, jest za małe do kliknięcia albo nie działa dotykiem. Dziś układ telefonu (`COMPACT_QUERY` w `common.tsx`, media queries w `styles.css`) sprawdzany jest punktowo, przy okazji zmian.
+- Narzędzia: `make zrzut … WIDOK=telefon|poziomo ELEMENT=…`, skrypty `scripts/browser/*.ts` z `openGame` (emulacja dotyku, `hasTouch`, `isMobile`), parametry adresu z `App.tsx` do dojścia do ekranu bez grania. Rozmiary do sprawdzenia: mały telefon pionowy (360×640), typowy (390×844), duży (430×932), poziomo (844×390, 667×375), tablet (768×1024); do tego pasek adresu przeglądarki mobilnej (`100dvh`, `safe-area`).
+- Ekrany do przejścia: menu i intro, kreator nowej gry (wszystkie strony, też „Własne ustawienia”), ustawienia i lobby online, mapa przygody (panel boczny, dolny pasek, lista osad, menu), okno osady, okno bohatera i plecaka, skrzynie i okna zdarzeń, bitwa (arena, pasek aktywacji, panel boczny, księga czarów, skarby), pojedynek, „Zasady i karty”, ranking, zgłoszenie błędu, ekrany końca gry.
+- Sprawdzać: brak poziomego przewijania strony, elementy nie zachodzą na siebie ani nie są ucięte, cele dotykowe ≥ 44 px, brak działań tylko na najechanie myszą (`:hover`, podpowiedzi `Tip`: na dotyk muszą mieć odpowiednik), dwuklik (punkt 45) i prawy przycisk (`placeDetails`) mają zamiennik dotykowy (długie przytrzymanie lub przycisk), przewijanie i przybliżanie mapy gestami (przeciągnięcie, szczypanie) nie konfliktuje z przewijaniem strony, klawiatura ekranowa w polach tekstowych (nazwa, zgłoszenie błędu) nie zasłania pól, zmiana orientacji w trakcie gry nie psuje stanu, wydajność `FigureLayer` (three.js) na słabszym sprzęcie (klatki, pamięć).
+- Prawdziwe urządzenia: oprócz emulacji headless sprawdzić na prawdziwym telefonie z Androidem i iPhonie (Safari, Chrome), bo emulacja nie pokazuje paska adresu iOS, wycięcia ekranu ani wydajności WebGL. Zrobić do tego adres w sieci lokalnej (Vite `--host`) i listę kontrolną dla autora.
+- Wynik: lista usterek w tym punkcie (zrzuty w `.tmp/`, nie w repo), poprawki jako osobne commity, skrypt `scripts/browser/telefon.ts` przechodzący ekrany i wykrywający przewijanie poziome oraz elementy poza ekranem (można uruchamiać po zmianach UI).
+- Gotowe, gdy: wszystkie ekrany z listy mają zrzut w pionie i poziomie bez usterek, skrypt kontrolny przechodzi, autor sprawdził grę na swoim telefonie.
+
 ## 2. Tylko autor (Claude tego nie bierze)
 - **Premiera na Steamie** (L): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery do ustalenia (dawne „3.0” traci sens).
 - Domeny i konta, znak towarowy (brak wpisów), tytuł w sklepie Steam.
@@ -170,6 +179,8 @@ Wyczyszczone 17.11: autor sam sprawdza grę i zgłasza błędy (`make zgloszenia
 
 ## 4. Parking (pomysły bez terminu)
 - **Więcej niż 6 graczy** (do 8), „cios od tyłu / z flanki” dla innych jednostek.
+- **PWA** (instalacja z przeglądarki na ekran główny, pełny ekran, offline przeciw botom): `vite-plugin-pwa` (manifest + service worker), ikony, krótka instrukcja instalacji w grze (iPhone: Safari → „Dodaj do ekranu początkowego”). Najpierw po punkcie 47 (testy telefonu). Uwaga: kontrola wersji protokołu z serwerem, bo service worker trzyma starą wersję gry.
+- **Capacitor** (opakowanie gry do Google Play i App Store, natywny push o ruchu w PvP): dopiero po PWA, gdy gra jest stabilna i wyważona, a autor chce dotrzeć do graczy przez sklepy. Koszty: Google Play 25 USD jednorazowo, Apple 99 USD rocznie (do iOS Mac albo build w chmurze), recenzje sklepów (polityka prywatności, usuwanie konta), zgodność starszych klientów ze sklepu z serwerem na Fly.io, testy WebGL w WebView. React Native odrzucony (przepisanie UI).
 
 ## 5. Balans: pasma i znane odchylenia
 
