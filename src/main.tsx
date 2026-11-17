@@ -6,6 +6,8 @@ import { FigureGallery } from './ui/FigureGallery';
 import { SpriteGallery } from './ui/SpriteGallery';
 import { SvgDefs } from './ui/common';
 import './ui/styles.css';
+import './i18n/en';
+import { installDomTranslator } from './i18n/dom';
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state = { error: null as Error | null };
@@ -46,3 +48,6 @@ createRoot(document.getElementById('root')!).render(
     </ErrorBoundary>
   </StrictMode>,
 );
+
+// English: the dictionary is put on the screen as React draws it (src/i18n).
+installDomTranslator(document.body);

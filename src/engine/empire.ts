@@ -4,6 +4,7 @@
 // one of its settlements (the hero whose turn it is has to stand there): the shards are its price, it gives the faction a great bonus, and in the
 // goal 'relic' it wins the game. Every number is provisional. Design: docs/MECHANIKI_I_POZIOMY.md ("Poziom 6").
 
+import { byPack } from './factions';
 import { FACTION_NAMES, UNITS, type FactionId } from './data';
 import { distance, parseKey, type HexKey } from './hex';
 import { log } from './log';
@@ -33,7 +34,7 @@ export const FACTION_MECHANICS = {
   /** Szkółka Drzewa: wood per round for each level (summed over the settlements). */
   nurseryWood: 1,
 };
-export const MECHANIC_NAMES: Record<FactionId, string> = { dawn: 'Blask Świtu', horde: 'Żądza Krwi' };
+export const MECHANIC_NAMES: Record<FactionId, string> = byPack((p) => p.mechanic.name);
 export const MECHANIC_TEXTS: Record<FactionId, string> = {
   dawn: `Na początku każdej rundy bitwy najciężej ranna jednostka Przymierza odzyskuje ${FACTION_MECHANICS.dawnHeal} Ż.`,
   horde: `Gdy w bitwie ginie wróg Hordy, wszystkie jej jednostki dostają +${FACTION_MECHANICS.hordeAttack} A do końca bitwy (raz na bitwę).`,
@@ -48,7 +49,7 @@ export const mechanicLevel = (state: GameState, f: FactionId): number => {
 export const summedLevel = (state: GameState, f: FactionId, key: 'nursery' | 'plunder'): number =>
   Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.owner === f).reduce((n, s) => n + (s.buildings[key] ?? 0), 0);
 
-export const SPARK_NAMES: Record<FactionId, string> = { dawn: 'Sanktuarium Pierwotnej Iskry', horde: 'Czarna Kuźnia Pierwotnej Iskry' };
+export const SPARK_NAMES: Record<FactionId, string> = byPack((p) => p.sparkName);
 export const SPARK_TEXTS: Record<FactionId, string> = {
   dawn: `Wszystkie jednostki Przymierza (bohaterowie i pomocnicy) mają +${EMPIRE.sparkHp} Ż w każdej bitwie.`,
   horde: `Wszystkie jednostki Hordy (bohaterowie i pomocnicy) mają +${EMPIRE.sparkAttack} A w każdej bitwie.`,

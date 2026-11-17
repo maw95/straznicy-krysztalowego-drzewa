@@ -790,7 +790,7 @@ export function App() {
         </Modal>
         {showIntro && !showTitle && <Intro onClose={() => setShowIntro(false)} />}
         {showTitle && <TitleScreen onStart={() => setShowTitle(false)} />}
-        <AppChrome error={error} onDismissError={() => setError(null)} showRules={showRules} onCloseRules={() => setShowRules(false)} />
+        <AppChrome showLang error={error} onDismissError={() => setError(null)} showRules={showRules} onCloseRules={() => setShowRules(false)} />
       </>
     );
   }

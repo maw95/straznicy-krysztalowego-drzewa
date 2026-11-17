@@ -2,6 +2,7 @@
 // every screen has, and the small game dialogs (confirm, "since your last turn", a found treasure,
 // a card, the options) and the end-of-game effects.
 
+import { LanguageSwitch } from './LanguageSwitch';
 import { TouchTitles } from './TouchTitles';
 import { useEffect, useState, type ReactNode } from 'react';
 import { ITEMS, UNITS, type ItemKind } from '../engine/data';
@@ -40,7 +41,7 @@ export function musicTheme(game: GameState | null): Theme {
 }
 
 /** What every screen has: the music and full-screen buttons, an error note, the rules and the card/details layers. */
-export function AppChrome({ error, onDismissError, showRules, onCloseRules }: { error: string | null; onDismissError: () => void; showRules: boolean; onCloseRules: () => void }) {
+export function AppChrome({ error, onDismissError, showRules, onCloseRules, showLang = false }: { error: string | null; onDismissError: () => void; showRules: boolean; onCloseRules: () => void; showLang?: boolean }) {
   return (
     <>
       <SvgDefs />
@@ -57,6 +58,7 @@ export function AppChrome({ error, onDismissError, showRules, onCloseRules }: { 
       </button>
       <FullscreenButton />
       <TouchTitles />
+      {showLang && <LanguageSwitch />}
       {error && (
         <div className="plate parch" role="alert" style={{ position: 'fixed', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 80, fontWeight: 700, color: '#8A1A1A' }} onClick={onDismissError}>
           {error}
@@ -310,6 +312,7 @@ export function OptionsDialog(props: {
             <input type="range" min={0} max={1} step={0.05} value={sfx.volume} onChange={(e) => sfx.setVolume(Number(e.target.value))} onPointerUp={() => sfx.play('sword_hit')} style={{ flex: 1 }} />
             <input type="checkbox" checked={!sfx.muted} onChange={() => sfx.toggleMute()} /> włączone
           </label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>Język <LanguageSwitch inline /></div>
           {!room && <label><input type="checkbox" checked={props.autoplay} onChange={(e) => props.onAutoplay(e.target.checked)} /> Autoplay: boty grają także za ludzi</label>}
           <label title="Na słabszym komputerze albo telefonie możesz wrócić do okrągłych portretów">
             <input type="checkbox" checked={props.figures} onChange={(e) => props.onFigures(e.target.checked)} /> Figurki 3D na planszy

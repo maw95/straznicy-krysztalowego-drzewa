@@ -1,3 +1,4 @@
+import { byPack } from './factions';
 // Game content: units, guardians, treasures and terrain.
 // Numbers started from docs/zrodla_zasad/Straznicy_Krysztalowego_Drzewa_Specyfikacja_dla_AI.md
 // and were tuned with simulations (docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md, section 7).
@@ -319,18 +320,12 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
   ].map((d) => [d.id, d]),
 );
 
-export const FACTION_HEROES: Record<FactionId, string[]> = {
-  dawn: ['goldDragon', 'unicornKing', 'ancientBear'],
-  horde: ['blackDragon', 'werewolfLord', 'ironFistOgre'],
-};
+export const FACTION_HEROES: Record<FactionId, string[]> = byPack((p) => p.heroes);
 
 /** Easter egg heroes: unlocked on the setup screen (click the Dawn crest five times), never drawn by the engine. */
 export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [] };
 
-export const FACTION_SUPPORTS: Record<FactionId, string[]> = {
-  dawn: ['elfDruid', 'nymph', 'pegasus'],
-  horde: ['goblinShaman', 'caveSpider', 'shadowBat'],
-};
+export const FACTION_SUPPORTS: Record<FactionId, string[]> = byPack((p) => p.supports);
 
 export const GUARDIANS = ['cyclops', 'griffin', 'hydra'];
 /** Weak neutral units of the digital encounters, two per motif (stone, air, water). */
@@ -363,11 +358,7 @@ export const SUPPORTS_PER_BATTLE = 2;
 /** A guardian's Życie in a duel on the board (one hero alone): from its duel card. */
 export const guardianDuelHp = (id: string) => UNITS[id].duel?.hp ?? UNITS[id].hp;
 
-export const FACTION_NAMES: Record<Side, string> = {
-  dawn: 'Przymierze Świtu',
-  horde: 'Mroczna Horda',
-  neutral: 'Neutralni strażnicy',
-};
+export const FACTION_NAMES: Record<Side, string> = { ...byPack((p) => p.name), neutral: 'Neutralni strażnicy' };
 
 export type ItemKind =
   | 'resurrection'

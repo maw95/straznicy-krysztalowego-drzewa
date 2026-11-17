@@ -2,6 +2,7 @@
 // recruitment of supports and a team that grows. Design: docs/POZIOM_3_KROLESTWO.md (the author's decisions of 13.11.2026). Every number here is
 // provisional: the simulations tune them. Gold is small (the cheapest thing costs 1) and shared by the whole faction.
 
+import { byPack } from './factions';
 import { FACTION_NAMES, FACTION_SUPPORTS, SUPPORTS_PER_BATTLE, UNITS, type FactionId } from './data';
 import { distance, parseKey, type HexKey } from './hex';
 import { encounterUnits, stillConnected } from './encounters';
@@ -90,22 +91,16 @@ export const artifactCost = (hero: HeroState, art: ArtifactDef): number =>
 
 /** Prices of the recruits by tier (provisional: tuned with the simulations, docs/JEDNOSTKI_POZIOMU_3.md). */
 export const RECRUIT_COSTS = [2, 3, 5, 8, 12];
-const TIER_UNITS: Record<FactionId, string[]> = {
-  dawn: ['hedgehog', 'centaur', 'boar', 'treeGuardian'],
-  horde: ['ratman', 'hellhound', 'salamander', 'minotaurChief'],
-};
+const TIER_UNITS: Record<FactionId, string[]> = byPack((p) => p.tierUnits);
 
 /** The supports a faction can recruit, by tier: tier 1 are the supports it starts the game with in the other levels, tiers 2–5 are the new units (tiers 4–5 need upgraded barracks). */
 /** The legendary unit of level 6: gold and Gwiezdny Pył, one per faction, in upgraded barracks. */
 export const LEGEND = { gold: 20, dust: 3 };
-export const LEGENDS: Record<FactionId, string> = { dawn: 'dawnPhoenix', horde: 'doomBehemoth' };
+export const LEGENDS: Record<FactionId, string> = byPack((p) => p.legend);
 export interface Recruit { id: string; tier: number; cost: number; /** Gwiezdny Pył on top of the gold (the level 6 unit). */ dust?: number; /** The other unit of its tier (level 6 only). */ alt?: true }
 
 /** Level 6: the second unit of tiers 2-5. Each unit of those tiers has a dwelling; a faction builds one dwelling per tier, which shuts the other out for the whole game. */
-export const ALT_UNITS: Record<FactionId, string[]> = {
-  dawn: ['silverFox', 'dawnOwl', 'dryadArcher', 'whiteStag'],
-  horde: ['goblinSlinger', 'gargoyle', 'caveTroll', 'shadowWyvern'],
-};
+export const ALT_UNITS: Record<FactionId, string[]> = byPack((p) => p.altUnits);
 export const DWELLING_NAMES: Record<string, string> = {
   hedgehog: 'Legowisko Jeżozwierzy', silverFox: 'Lisia Nora', centaur: 'Stajnie Centaurów', dawnOwl: 'Sowia Dziupla', boar: 'Dębowa Zagroda', dryadArcher: 'Gaj Driad', treeGuardian: 'Prastary Zagajnik', whiteStag: 'Polana Jeleni',
   ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern',
@@ -130,10 +125,7 @@ export const dwellingOf = (state: GameState, f: FactionId, tier: number): string
 /** Whether the faction may recruit this unit as far as dwellings go. */
 export const dwellingReady = (state: GameState, f: FactionId, r: Recruit): boolean => !needsDwelling(state, r) || dwellingOf(state, f, r.tier) === r.id;
 
-const NAMES: Record<FactionId, string[]> = {
-  dawn: ['Świtogaj', 'Srebrzysty Bród', 'Złotolist', 'Jasna Polana', 'Perłowa Wieża', 'Kryształowa Przystań', 'Wiosenny Gród', 'Miodowy Dwór', 'Zorzyca', 'Białe Mosty', 'Rosogród', 'Słonecznik', 'Lazurowa Zatoka', 'Skrzydlata Przystań', 'Malwowa Dolina', 'Wierzbowy Gaj'],
-  horde: ['Czarnogrzęd', 'Żelazna Brama', 'Popielisko', 'Krwawy Bród', 'Sadzawa Cieni', 'Kościany Szaniec', 'Węglowisko', 'Gniewogród', 'Smolna Twierdza', 'Ciernisty Gród', 'Ogrza Warownia', 'Czerwony Szaniec', 'Dymiące Wrota', 'Trupia Przełęcz', 'Mglisty Kopiec', 'Wilcza Jama'],
-};
+const NAMES: Record<FactionId, string[]> = byPack((p) => p.settlementNames);
 
 export const BUILDING_NAMES: Record<BuildingId, string[]> = {
   barracks: ['Koszary', 'Rozbudowane koszary'],
@@ -154,9 +146,9 @@ export const BUILDING_NAMES: Record<BuildingId, string[]> = {
 };
 
 /** Level 6: the buildings only one faction has (the faction's mechanic first, then the two others). */
-export const FACTION_BUILDINGS: Record<FactionId, BuildingId[]> = { dawn: ['shrine', 'nursery', 'grove'], horde: ['bloodPit', 'plunder', 'wolfDen'] };
+export const FACTION_BUILDINGS: Record<FactionId, BuildingId[]> = byPack((p) => p.buildings as BuildingId[]);
 /** The faction's mechanic building: Kapliczka Świtu (Blask Świtu) or Jama Krwi (Żądza Krwi), four levels. */
-export const MECHANIC_BUILDING: Record<FactionId, BuildingId> = { dawn: 'shrine', horde: 'bloodPit' };
+export const MECHANIC_BUILDING: Record<FactionId, BuildingId> = byPack((p) => p.mechanic.building as BuildingId);
 
 /** The buildings a settlement may have in this game, in the order of the screen (the forge comes with level 4). */
 export const buildingsOf = (state: GameState): BuildingId[] => ['barracks', 'market', 'hospital', 'treasury', ...(state.rules.economy ? ['forge' as const, 'walls' as const] : []), ...(state.rules.realm ? ['tavern' as const, 'magic' as const] : []), ...(state.rules.empire ? ['spark' as const] : [])];
