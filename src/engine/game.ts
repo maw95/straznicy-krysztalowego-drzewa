@@ -56,12 +56,12 @@ import { log } from './log';
 import { applyHeroSkills, applyHeroType, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { fireStory } from './story';
-import { ARENA_POOL, buildingLevel, collectIncome, enterPlace, forgeLevel, garrisonAt, initKingdom, kingdomAction, supportSlots } from './kingdom';
+import { ARENA_POOL, buildingLevel, collectIncome, isAutomaton, enterPlace, forgeLevel, garrisonAt, initKingdom, kingdomAction, supportSlots } from './kingdom';
 import { ECONOMY } from './economy';
 import { commanderFalls } from './realm';
 import { ARENA_SPELL_PICKS, ARENA_SPELL_POOL, battleSpell, mapSpell, regenMana, SPELL_VALUE, START_SPELLS, type SpellId } from './magic';
 import { HERO_TYPES, specialtyOf } from './heroTypes';
-import { EMPIRE, FACTION_MECHANICS, hasSpark, loseShards } from './empire';
+import { EMPIRE, FACTION_MECHANICS, hasSpark, loseShards, mechanicLevel, summedLevel } from './empire';
 import { applyGear, ARTIFACT_BY_ID, arenaGearOffer, gearOf, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, COMPUTER_ARTIFACT_ODDS, heroTileCost, passArtifact, passShards, placeSites, SHARDS_ID, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
@@ -714,6 +714,8 @@ function arriveAt(state: GameState, hero: HeroState) {
   }
   if (state.rules.heroGrowth) visitSite(state, hero, tile);
   enterPlace(state, hero);
+  // Level 6, the Przymierze: the Krąg Gaju of an own settlement fills the mana of a hero that walks onto its field.
+  if (state.rules.empire && Object.values(state.kingdom?.settlements ?? {}).some((s) => s.at === hero.pos && s.owner === hero.faction && (s.buildings.grove ?? 0) >= 1)) delete hero.mana;
   if (hero.faction === 'dawn') {
     pickUpCrystals(state, hero);
     // The artifact is never given to the Tree (it is carried to a base, see objectives.ts).
@@ -786,6 +788,7 @@ export function moveBreakdown(state: GameState): Array<{ label: string; points: 
   add('Leśny Tropiciel (umiejętność)', moveBonus(hero));
   add('pomoc dla dziecka', hero && isChildHero(state, hero) ? FAMILY.extraMove : 0);
   add('artefakty (buty)', gearMoveBonus(hero));
+  add('Wilcze Legowisko', hero && state.rules.empire && hero.faction === 'horde' && Object.values(state.kingdom?.settlements ?? {}).some((s) => s.owner === 'horde' && (s.buildings.wolfDen ?? 0) >= 1) ? 1 : 0);
   add('niesiony Artefakt', hero?.crystals.includes('artifact') ? -ARTIFACT.carrierSlow : 0);
   return parts;
 }
@@ -980,7 +983,7 @@ function startBattle(state: GameState, s: BattleStart) {
 
 /** Level 6, rank III of the Przymierza's tree: every unit of the Przymierza starts a battle with more Życie. */
 function dawnTreeBonus(state: GameState, unit: BattleState['units'][string]) {
-  if (!state.rules.empire || unit.side !== 'dawn' || (state.kingdom?.tree?.dawn ?? 0) < 3) return;
+  if (!state.rules.empire || unit.side !== 'dawn' || mechanicLevel(state, 'dawn') < 4) return;
   unit.hp += FACTION_MECHANICS.dawnStartHp * hpScaleOf(state);
   unit.maxHp += FACTION_MECHANICS.dawnStartHp * hpScaleOf(state);
 }
@@ -1035,6 +1038,14 @@ function finalizeBattle(state: GameState) {
   log(state, 'battle', `Bitwa zakończona: ${resultText}.`);
   if (b.kind === 'neutral') resolveGuardianFight(state, b);
   awardBattleXp(state, b);
+  // Level 6, the Horde: the Szabrownia pays after a fight against a hero or a guardian that the faction won.
+  if (state.rules.empire && (b.winner === 'dawn' || b.winner === 'horde') && !isAutomaton(state, b.winner)) {
+    const loot = FACTION_MECHANICS.plunderGold * summedLevel(state, b.winner, 'plunder');
+    if (loot > 0) {
+      state.kingdom!.gold[b.winner] += loot;
+      log(state, 'info', `Szabrownia: ${FACTION_NAMES[b.winner]} zgarnia ${loot} zł łupu.`);
+    }
+  }
   // Level 6: a fallen hero's shards go to the hero that beat it, or fall onto the map.
   if (state.rules.empire) for (const id of [b.attackerHero, b.defenderHero]) {
     const h = id ? state.heroes[id] : null;
@@ -1290,7 +1301,6 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'kingdomTrade':
     case 'kingdomSwap':
     case 'kingdomDwelling':
-    case 'kingdomTree':
     case 'kingdomLearn':
     case 'kingdomHire':
     case 'kingdomRansom':

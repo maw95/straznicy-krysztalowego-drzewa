@@ -8,7 +8,7 @@ import { neighborKeys } from './hex';
 import { tileCost } from './map';
 import { ARTIFACT_BY_ID, giveArtifact } from './sites';
 import { SPELL_IDS, type SpellId } from './magic';
-import { buildingsOf, type BuildingId } from './kingdom';
+import { BUILDING_NAMES, buildingsFor, type BuildingId } from './kingdom';
 import { shardTotal } from './empire';
 import type { GameState, HeroState } from './types';
 
@@ -74,7 +74,7 @@ export function buildEverything(state: GameState, faction: FactionId): void {
   if (!state.kingdom) throw new Error('Osady są od poziomu 3.');
   for (const s of Object.values(state.kingdom.settlements)) {
     if (s.owner !== faction) continue;
-    for (const b of buildingsOf(state)) if (b !== 'spark') s.buildings[b] = b === 'treasury' ? 1 : 2;
+    for (const b of buildingsFor(state, faction)) if (b !== 'spark') s.buildings[b] = Math.min(BUILDING_NAMES[b].length, b === 'magic' ? 3 : b === 'shrine' || b === 'bloodPit' ? 4 : 2);
   }
 }
 

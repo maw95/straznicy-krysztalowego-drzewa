@@ -1,11 +1,11 @@
-// Level 6 "Imperium": the factions' own mechanics (Blask Świtu, Żądza Krwi), their trees, and the legendary recruits.
+// Level 6 "Imperium": the factions' own mechanics (Blask Świtu, Żądza Krwi) and the buildings that give them, the other buildings of each faction, and the legendary recruits.
 
 import { describe, expect, it } from 'vitest';
 import { chooseAction } from '../src/engine/ai';
 import { dealDamage, makeBattleUnit } from '../src/engine/battle';
 import { FACTION_MECHANICS } from '../src/engine/empire';
-import { activeHero, applyAction, createGame } from '../src/engine/game';
-import { ALT_UNITS, DWELLING_COST, dwellingOf, LEGEND, recruitsOf, settlementAt } from '../src/engine/kingdom';
+import { activeHero, applyAction, createGame, moveBreakdown } from '../src/engine/game';
+import { ALT_UNITS, DWELLING_COST, dwellingOf, LEGEND, recruitsOf, resourceIncomeOf, settlementAt } from '../src/engine/kingdom';
 import { UNITS } from '../src/engine/data';
 import { mapNeighbors, tileCost } from '../src/engine/map';
 import type { GameState } from '../src/engine/types';
@@ -42,18 +42,32 @@ const endBattleRound = (s: GameState): GameState => {
   return s;
 };
 
-describe('level 6: Blask Świtu', () => {
-  it('heals the most wounded unit of the Przymierza at the start of a battle round; the tree makes it stronger', () => {
-    const hpScale = (s: GameState) => s.rules.hpScale ?? s.rules.statScale ?? 1;
-    let s = battle(game());
-    const bear = s.battle!.units.ancientBear;
-    bear.hp -= 4 * hpScale(s);
-    const hp = bear.hp;
+/** The settlement a faction starts in. */
+const homeOf = (s: GameState, f: 'dawn' | 'horde') => settlementAt(s, Object.values(s.tiles).find((t) => t.home === f)!.key)!;
+const hpScale = (s: GameState) => s.rules.hpScale ?? s.rules.statScale ?? 1;
+
+describe('level 6: Blask Świtu (Kapliczka Świtu)', () => {
+  it('does nothing until the faction builds the shrine, then heals the most wounded unit at the start of a battle round', () => {
+    const wound = (s: GameState) => {
+      const bear = s.battle!.units.ancientBear;
+      bear.hp -= 4 * hpScale(s);
+      return bear.hp;
+    };
+    let none = battle(game());
+    const hp0 = wound(none);
+    none = endBattleRound(none);
+    expect(none.battle!.units.ancientBear.hp).toBe(hp0);
+    const g = game();
+    homeOf(g, 'dawn').buildings.shrine = 1;
+    let s = battle(g);
+    const hp = wound(s);
     s = endBattleRound(s);
     expect(s.battle!.units.ancientBear.hp).toBe(hp + FACTION_MECHANICS.dawnHeal * hpScale(s));
-    // Rank II: stronger and for two units.
+  });
+
+  it('level III heals more and two units; level IV adds Życie at the start of a battle', () => {
     const g = game();
-    g.kingdom!.tree = { dawn: 2, horde: 0 };
+    homeOf(g, 'dawn').buildings.shrine = 3;
     let t = battle(g);
     const [a, b] = Object.values(t.battle!.units).filter((u) => u.side === 'dawn');
     a.hp -= 4 * hpScale(t);
@@ -62,10 +76,19 @@ describe('level 6: Blask Świtu', () => {
     t = endBattleRound(t);
     expect(t.battle!.units[a.id].hp).toBe(before[0] + 2 * hpScale(t));
     expect(t.battle!.units[b.id].hp).toBe(before[1] + 2 * hpScale(t));
+    const plain = battle(game());
+    const top = game();
+    homeOf(top, 'dawn').buildings.shrine = 4;
+    const full = battle(top);
+    for (const id of Object.keys(plain.battle!.units).filter((u) => plain.battle!.units[u].side === 'dawn')) {
+      expect(full.battle!.units[id].maxHp).toBe(plain.battle!.units[id].maxHp + FACTION_MECHANICS.dawnStartHp * hpScale(full));
+    }
   });
 
-  it('does nothing below level 6', () => {
-    let s = battle(game(l5));
+  it('does nothing below level 6, even with the building', () => {
+    const g = game(l5);
+    homeOf(g, 'dawn').buildings.shrine = 4;
+    let s = battle(g);
     const bear = s.battle!.units.ancientBear;
     bear.hp -= 10;
     const hp = bear.hp;
@@ -74,11 +97,11 @@ describe('level 6: Blask Świtu', () => {
   });
 });
 
-describe('level 6: Żądza Krwi', () => {
-  it('arms every unit of the Horde when an enemy falls: once, and up to three times with the tree', () => {
-    const fall = (rank: number) => {
+describe('level 6: Żądza Krwi (Jama Krwi)', () => {
+  it('works only with the pit: once at level I, up to three times at level III', () => {
+    const fall = (level: number) => {
       const g = game();
-      g.kingdom!.tree = { dawn: 0, horde: rank };
+      if (level) homeOf(g, 'horde').buildings.bloodPit = level;
       const s = battle(g);
       const b = s.battle!;
       const wolf = b.units.werewolfLord;
@@ -87,25 +110,68 @@ describe('level 6: Żądza Krwi', () => {
       for (const u of dawn) dealDamage(s, u, 999, 'test');
       return (wolf.status.battleAttackBonus - base) / (s.rules.statScale ?? 1);
     };
-    expect(fall(0)).toBe(FACTION_MECHANICS.hordeAttack);
-    expect(fall(1)).toBe(2 * FACTION_MECHANICS.hordeAttack);
-    expect(fall(2)).toBe(3 * FACTION_MECHANICS.hordeAttack);
+    expect(fall(0)).toBe(0);
+    expect(fall(1)).toBe(FACTION_MECHANICS.hordeAttack);
+    expect(fall(2)).toBe(2 * FACTION_MECHANICS.hordeAttack);
+    expect(fall(3)).toBe(3 * FACTION_MECHANICS.hordeAttack);
   });
 });
 
-describe('level 6: the faction tree', () => {
-  it('is bought rank by rank for gold and Gwiezdny Pył, in level 6 only', () => {
+describe('level 6: the buildings of one faction', () => {
+  it('are built for gold, wood and Gwiezdny Pył after their parent, by their own faction only, in level 6 only', () => {
     let s = game();
-    for (let rank = 0; rank < 3; rank++) {
-      const before = { gold: s.kingdom!.gold.dawn, dust: s.kingdom!.res!.dawn.dust };
-      s = applyAction(s, { type: 'kingdomTree', settlementId: home(s).id });
-      expect(s.kingdom!.tree!.dawn).toBe(rank + 1);
-      expect(s.kingdom!.gold.dawn).toBe(before.gold - FACTION_MECHANICS.treeCost[rank].gold);
-      expect(s.kingdom!.res!.dawn.dust).toBe(before.dust - FACTION_MECHANICS.treeCost[rank].dust);
-    }
-    expect(() => applyAction(s, { type: 'kingdomTree', settlementId: home(s).id })).toThrow(/w pełni/);
+    const at = homeOf(s, 'dawn');
+    expect(() => applyAction(s, { type: 'kingdomBuild', settlementId: at.id, building: 'shrine' })).toThrow('Najpierw: Szpital');
+    at.buildings.barracks = at.buildings.hospital = 1;
+    const dust = s.kingdom!.res!.dawn.dust;
+    s = applyAction(s, { type: 'kingdomBuild', settlementId: at.id, building: 'shrine' });
+    expect(settlementAt(s, at.at)!.buildings.shrine).toBe(1);
+    expect(s.kingdom!.res!.dawn.dust).toBe(dust - 1);
+    for (let level = 2; level <= 4; level++) s = applyAction(s, { type: 'kingdomBuild', settlementId: at.id, building: 'shrine' });
+    expect(settlementAt(s, at.at)!.buildings.shrine).toBe(4);
+    expect(() => applyAction(s, { type: 'kingdomBuild', settlementId: at.id, building: 'shrine' })).toThrow(/w pełni/);
+    expect(() => applyAction(s, { type: 'kingdomBuild', settlementId: at.id, building: 'bloodPit' })).toThrow(/nie jest dostępny/);
     const low = game(l5);
-    expect(() => applyAction(low, { type: 'kingdomTree', settlementId: home(low).id })).toThrow(/Imperium/);
+    expect(() => applyAction(low, { type: 'kingdomBuild', settlementId: homeOf(low, 'dawn').id, building: 'shrine' })).toThrow(/nie jest dostępny/);
+  });
+
+  it('Szkółka Drzewa gives wood each round, summed over the levels of every settlement', () => {
+    const s = game();
+    const before = resourceIncomeOf(s, 'dawn').wood;
+    homeOf(s, 'dawn').buildings.nursery = 2;
+    expect(resourceIncomeOf(s, 'dawn').wood).toBe(before + 2 * FACTION_MECHANICS.nurseryWood);
+    expect(resourceIncomeOf(s, 'horde').wood).toBe(resourceIncomeOf(game(), 'horde').wood);
+  });
+
+  it('Krąg Gaju fills a hero\'s mana when it steps onto an own settlement', () => {
+    const g = game();
+    const hero = activeHero(g)!;
+    const at = homeOf(g, 'dawn');
+    at.buildings.grove = 1;
+    g.heroes[hero.id].mana = 0;
+    const next = mapNeighbors(g.tiles, at.at).find((n) => tileCost(g.tiles[n]) !== null && !g.tiles[n].crystalId && !g.tiles[n].home)!;
+    g.heroes[hero.id].pos = next;
+    g.tiles[next].revealed = true;
+    g.movePoints = 9;
+    const after = applyAction(g, { type: 'moveHero', to: at.at });
+    expect(after.heroes[hero.id].mana).toBeUndefined();
+  });
+
+  it('Szabrownia pays gold after a won fight, Wilcze Legowisko gives the Horde\'s heroes a move point', () => {
+    const g = game();
+    homeOf(g, 'horde').buildings.wolfDen = 1;
+    const moves = (s: GameState) => moveBreakdown(s).reduce((n, p) => n + p.points, 0);
+    const plain = game();
+    // The active hero is the Przymierza's: give the turn to the Horde's hero in both games to compare.
+    const horde = (s: GameState) => { s.turnIndex = s.turnOrder.findIndex((id) => s.heroes[id].faction === 'horde'); return s; };
+    expect(moves(horde(g))).toBe(moves(horde(plain)) + 1);
+    const p = game();
+    homeOf(p, 'horde').buildings.plunder = 2;
+    let s = battle(p);
+    const gold = s.kingdom!.gold.horde;
+    for (const u of Object.values(s.battle!.units).filter((x) => x.side === 'dawn')) dealDamage(s, u, 999, 'test');
+    while (s.phase === 'battle') s = applyAction(s, chooseAction(s)!);
+    expect(s.kingdom!.gold.horde).toBeGreaterThanOrEqual(gold + 2 * FACTION_MECHANICS.plunderGold);
   });
 });
 

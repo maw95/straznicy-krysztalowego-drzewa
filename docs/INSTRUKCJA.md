@@ -848,15 +848,15 @@ Na mapie, na widocznych od początku polach, leżą świecące **Odłamki Pierwo
 ### Budynek Pierwotnej Iskry
 Gdy **jeden bohater niesie wszystkie Odłamki** i stoi we własnej osadzie, może wznieść tam budynek Pierwotnej Iskry: **Sanktuarium** (Przymierze) albo **Czarną Kuźnię** (Horda). Ceną są wszystkie Odłamki. Odłamki rozproszone po kilku bohaterach nie wystarczą: bohater może **przekazać swoje Odłamki** sojusznikowi stojącemu na tym samym lub sąsiednim polu (przycisk w panelu bohatera na mapie). Sanktuarium daje wszystkim jednostkom Przymierza +2 Życia w każdej bitwie, Czarna Kuźnia wszystkim jednostkom Hordy +1 Ataku.
 
-### Mechaniki frakcji i drzewko frakcji
-Na poziomie Imperium każda frakcja walczy po swojemu:
-- **Blask Świtu (Przymierze):** na początku każdej rundy bitwy najciężej ranna jednostka Przymierza odzyskuje 1 Życie.
-- **Żądza Krwi (Horda):** gdy w bitwie ginie wróg Hordy, wszystkie jej jednostki dostają +1 Ataku do końca bitwy (raz na bitwę).
+### Mechaniki frakcji i budynki frakcji
+Na poziomie Imperium każda frakcja walczy po swojemu, ale **żeby mieć swoją mechanikę, trzeba zbudować budynek, który ją daje** (najlepszy poziom w całej frakcji):
+- **Kapliczka Świtu (Przymierze, wymaga Szpitala), 4 poziomy:** I Blask Świtu (na początku każdej rundy bitwy najciężej ranna jednostka odzyskuje 1 Życie); II leczy o 2; III leczy dwie jednostki; IV wszystkie jednostki Przymierza zaczynają bitwę z +1 Życia.
+- **Jama Krwi (Horda, wymaga Kuźni), 4 poziomy:** I Żądza Krwi (gdy w bitwie ginie wróg Hordy, wszystkie jej jednostki dostają +1 Ataku do końca bitwy, raz na bitwę); II dwa razy; III trzy razy; IV przy Żądzy Krwi jednostki Hordy odzyskują też 1 Życie.
 
-W oknie każdej własnej osady można rozwijać **drzewko frakcji** (trzy stopnie za złoto i Gwiezdny Pył): Przymierze leczy mocniej, potem dwie jednostki naraz, a na końcu wszystkie jego jednostki zaczynają bitwę z +1 Życia; Żądza Krwi Hordy działa dwa, potem trzy razy w bitwie, a na końcu także leczy.
+Każda frakcja ma jeszcze po dwa budynki: **Przymierze** Szkółkę Drzewa (+1 drewna na rundę za poziom, sumuje się z osad; wymaga Skarbca) i Krąg Gaju (bohater wchodzący na pole własnej osady odnawia całą manę; wymaga Wieży maga); **Horda** Szabrownię (+2 zł po wygranej z bohaterem lub strażnikiem, sumuje się; wymaga Targu) i Wilcze Legowisko (bohaterowie Hordy mają +1 punkt ruchu; wymaga Fosy). Wszystkie widać w drzewku budynków pod Radą Osady.
 
 ### Dwie jednostki na poziom i siedliska
-Na poziomie Imperium każdy z poziomów jednostek 2–5 ma **dwie jednostki do wyboru**. Zanim zrekrutujesz jednostkę takiego poziomu, zbuduj w koszarach jej **siedlisko** (to budynek, więc jeden na rundę). **Siedlisko jednej jednostki wyklucza drugą jednostkę tego poziomu do końca gry**, więc wybierz tę, która pasuje do Twojej drużyny.
+Na poziomie Imperium każdy z poziomów jednostek 2–5 ma **dwie jednostki do wyboru**. Zanim zrekrutujesz jednostkę takiego poziomu, zbuduj w koszarach jej **siedlisko** (to budynek). **Siedlisko jednej jednostki wyklucza drugą jednostkę tego poziomu do końca gry**, więc wybierz tę, która pasuje do Twojej drużyny.
 - Przymierze: Jeżozwierz albo Srebrny Lis; Centaur albo Sowa Świtu; Alabastrowy Odyniec albo Driada Łuczniczka; Opiekun Drzewa albo Biały Jeleń.
 - Horda: Szczurołak albo Goblin Procarz; Piekielny Ogar albo Gargulec; Salamandra Popiołu albo Troll Jaskiniowy; Herszt Minotaurów albo Wiwerna Cienia.
 

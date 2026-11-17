@@ -19,32 +19,34 @@ export const EMPIRE = {
   sparkAttack: 1,
 };
 
-/** The factions' own mechanics (they work in every level 6 battle) and their trees: three ranks bought with gold and Gwiezdny Pył. */
+/** The factions' own mechanics (Blask Świtu and Żądza Krwi work in a level 6 battle once the faction has the building that gives them: Kapliczka Świtu, Jama Krwi) and the numbers of their buildings. */
 export const FACTION_MECHANICS = {
   /** Blask Świtu: Życie the most wounded unit of the Przymierza regains at the start of a battle round. */
   dawnHeal: 1,
-  /** Rank III of the Przymierza's tree: Życie every unit of the Przymierza starts a battle with on top. */
+  /** Level IV of the Kapliczka Świtu: Życie every unit of the Przymierza starts a battle with on top. */
   dawnStartHp: 1,
-  /** Żądza Krwi: Atak every unit of the Horde gains when an enemy falls; Życie regained with it at rank III. */
+  /** Żądza Krwi: Atak every unit of the Horde gains when an enemy falls; Życie regained with it at level IV of the Jama Krwi. */
   hordeAttack: 1,
   hordeHeal: 1,
-  /** Price of each rank of a tree. */
-  treeCost: [{ gold: 4, dust: 2 }, { gold: 6, dust: 3 }, { gold: 8, dust: 5 }],
+  /** Szabrownia: gold per building after a won fight against a hero or a guardian. */
+  plunderGold: 2,
+  /** Szkółka Drzewa: wood per round for each level (summed over the settlements). */
+  nurseryWood: 1,
 };
 export const MECHANIC_NAMES: Record<FactionId, string> = { dawn: 'Blask Świtu', horde: 'Żądza Krwi' };
 export const MECHANIC_TEXTS: Record<FactionId, string> = {
   dawn: `Na początku każdej rundy bitwy najciężej ranna jednostka Przymierza odzyskuje ${FACTION_MECHANICS.dawnHeal} Ż.`,
   horde: `Gdy w bitwie ginie wróg Hordy, wszystkie jej jednostki dostają +${FACTION_MECHANICS.hordeAttack} A do końca bitwy (raz na bitwę).`,
 };
-/** What each rank of a tree adds. */
-export const TREE_TEXTS: Record<FactionId, [string, string, string]> = {
-  dawn: [`Blask Świtu leczy o ${FACTION_MECHANICS.dawnHeal + 1} Ż.`, 'Blask Świtu leczy dwie najciężej ranne jednostki.', `Każda jednostka Przymierza zaczyna bitwę z +${FACTION_MECHANICS.dawnStartHp} Ż.`],
-  horde: ['Żądza Krwi działa dwa razy w bitwie.', 'Żądza Krwi działa trzy razy w bitwie.', `Przy Żądzy Krwi jednostki Hordy odzyskują też ${FACTION_MECHANICS.hordeHeal} Ż.`],
+
+/** The best level of the faction's mechanic building (Kapliczka Świtu, Jama Krwi) among the settlements it holds: 0 means it has no Blask Świtu or Żądza Krwi at all. */
+export const mechanicLevel = (state: GameState, f: FactionId): number => {
+  const key = f === 'dawn' ? 'shrine' : 'bloodPit';
+  return Math.max(0, ...Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.owner === f).map((s) => s.buildings[key] ?? 0));
 };
-export const TREE_NAMES: Record<FactionId, [string, string, string]> = {
-  dawn: ['Ciepły Świt', 'Dwa Promienie', 'Złoty Poranek'],
-  horde: ['Zapach Krwi', 'Szał Bitewny', 'Uczta Zwycięzców'],
-};
+/** The summed level of a faction's building over its settlements (Szkółka Drzewa, Szabrownia). */
+export const summedLevel = (state: GameState, f: FactionId, key: 'nursery' | 'plunder'): number =>
+  Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.owner === f).reduce((n, s) => n + (s.buildings[key] ?? 0), 0);
 
 export const SPARK_NAMES: Record<FactionId, string> = { dawn: 'Sanktuarium Pierwotnej Iskry', horde: 'Czarna Kuźnia Pierwotnej Iskry' };
 export const SPARK_TEXTS: Record<FactionId, string> = {

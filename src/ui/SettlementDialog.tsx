@@ -4,12 +4,12 @@
 
 import { useEffect, useState } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId } from '../engine/data';
-import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsOf, canPay, forgeLevel, goldOf, hasUnit, incomeOf, KINGDOM, marketStock, mayRecruit, RECRUITS, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
+import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, incomeOf, KINGDOM, marketStock, mayRecruit, RECRUITS, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
 import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
 import { ARCHETYPE_NAMES, archetypeOf, commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from '../engine/realm';
 import { levelOf } from '../engine/growth';
-import { FACTION_MECHANICS, mayBuildSpark, MECHANIC_NAMES, MECHANIC_TEXTS, shardsOf, shardTotal, SPARK_NAMES, SPARK_TEXTS, TREE_NAMES, TREE_TEXTS } from '../engine/empire';
+import { mayBuildSpark, shardsOf, shardTotal, SPARK_NAMES, SPARK_TEXTS } from '../engine/empire';
 import { MAGIC, manaOf, maxMana, SPELLS, towerSpells } from '../engine/magic';
 import type { Action, GameState } from '../engine/types';
 import { asset, Portrait, Ribbon } from './common';
@@ -33,7 +33,13 @@ const spotOf = (order: BuildingId[], b: BuildingId): { left: number; top: number
   return { left: 8 + (i * 84) / (order.length - 1), top: i % 2 ? 30 : 64 };
 };
 /** The picture of a building in the landscape: the faction's plot while it is not built, then its level (the treasury has one). */
-const buildingPicture = (land: FactionId, b: BuildingId, level: number) => (level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${b === 'tavern' || b === 'spark' ? 1 : Math.min(level, 2)}.webp`));
+/** Whose picture a building of one faction has (level 6: Kapliczka, Szkółka, Krąg for the Przymierze; Jama, Szabrownia, Legowisko for the Horde). */
+const UNIQUE_OWNER: Partial<Record<BuildingId, FactionId>> = { shrine: 'dawn', nursery: 'dawn', grove: 'dawn', bloodPit: 'horde', plunder: 'horde', wolfDen: 'horde' };
+const buildingPicture = (land: FactionId, b: BuildingId, level: number) => {
+  const own = UNIQUE_OWNER[b];
+  if (own) return level === 0 ? `osady/${own}_plot.webp` : `osady/${own}_${b}1.webp`;
+  return level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${b === 'tavern' || b === 'spark' ? 1 : Math.min(level, 2)}.webp`);
+};
 
 export function SettlementDialog({ state, settlementId, faction, onAction, onClose }: { state: GameState; settlementId: string; faction: FactionId; onAction: (a: Action) => void; onClose: () => void }) {
   const s = state.kingdom!.settlements[settlementId];
@@ -52,7 +58,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const fs = state.factions[faction];
   const buyer = Object.values(state.heroes).find((h) => h.id === state.turnOrder[state.turnIndex] && h.faction === faction);
   const price = (b: BuildingId) => buildCost(state, s, b);
-  const ORDER = buildingsOf(state);
+  const ORDER = buildingsFor(state, faction);
   const act = (a: Action) => {
     // Purchases ring: a building goes up with hammering, everything else with coins.
     // The Iskra has its own fanfare (played from the log, App.tsx); a commander is hired over a mug.
@@ -335,6 +341,17 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         </div>
       );
     }
+    if (UNIQUE_OWNER[b]) {
+      const lvl = buildingLevel(s, b);
+      return (
+        <div data-panel={b} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {BUILDING_TEXTS[b].slice(0, lvl).map((t, i) => (
+            <div key={i} data-effect-level={i + 1} style={{ display: 'flex', gap: 8 }}><b style={{ color: '#2E7A32' }}>{i + 1}.</b><RuleText text={t} /></div>
+          ))}
+          {upgrade}
+        </div>
+      );
+    }
     return (
       <div data-panel="treasury" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <b style={{ color: '#2E7A32' }}>Skarbiec stoi: +{KINGDOM.incomeTreasury} zł na rundę.</b>
@@ -389,28 +406,6 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       <div className="settlement-bottom">
         {view === 'tree' ? detail : (
           <>
-      {state.rules.empire && (() => {
-              // Level 6: the faction's own mechanic and its tree of three ranks (bought here, from any own settlement).
-              const rank = state.kingdom!.tree?.[faction] ?? 0;
-              const next = FACTION_MECHANICS.treeCost[rank];
-              return (
-                <div className="plate parch" data-tree data-rank={rank} style={{ flex: 'none', padding: '8px 14px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-                  <img src={asset(`ikony/frakcje/${faction === 'dawn' ? 'blask_switu' : 'zadza_krwi'}.webp`)} alt="" width={64} height={64} style={{ flex: 'none' }} />
-                  <div style={{ flex: 1, minWidth: 260, fontSize: 14, lineHeight: 1.3 }}>
-                    <b style={{ fontSize: 16 }}>{MECHANIC_NAMES[faction]}</b> <span style={{ color: '#6B4A22' }}>mechanika frakcji · drzewko {rank}/3</span>
-                    <div><RuleText text={MECHANIC_TEXTS[faction]} /></div>
-                    {TREE_NAMES[faction].map((name, i) => (
-                      <div key={name} data-tree-rank={i + 1} style={{ opacity: i < rank ? 1 : 0.6, display: 'flex', gap: 6, alignItems: 'center' }}><img src={asset(`ikony/drzewko/${faction}_${i + 1}.webp`)} alt="" width={30} height={30} style={{ flex: 'none', filter: i < rank ? undefined : 'grayscale(0.7)' }} /><span>{i < rank ? '✓' : '○'} <b>{name}</b>: <RuleText text={TREE_TEXTS[faction][i]} /></span></div>
-                    ))}
-                  </div>
-                  {next ? (
-                    <button className="btn prim" data-tree-buy disabled={!buyer || !canPay(state, faction, next)} onClick={() => act({ type: 'kingdomTree', settlementId: s.id })} style={{ padding: '4px 14px', fontSize: 16 }}>
-                      Rozwiń: {TREE_NAMES[faction][rank]} ({costText(next)})
-                    </button>
-                  ) : <b style={{ color: '#2E7A32' }}>Drzewko pełne</b>}
-                </div>
-              );
-            })()}
             {garrisonPanel && <div className="plate parch" style={{ padding: '8px 16px', flex: 1, minWidth: 0 }}>{garrisonPanel}</div>}
             <div className="plate parch" data-service style={{ padding: '12px 16px', minHeight: 120, flex: 1.4, minWidth: 0, ...(state.rules.economy ? { maxHeight: '36vh', overflowY: 'auto' as const } : {}) }}>
               <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>{BUILDING_NAMES[open][0]}</div>

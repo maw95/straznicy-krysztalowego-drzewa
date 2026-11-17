@@ -15,10 +15,10 @@ import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import { computerFaction, type Action, type Crystal, type GameState, type HeroState } from './types';
 import { circleSpells, MAGIC, SPELL_CIRCLES, SPELLS, towerSpells, type SpellId } from './magic';
 import { HERO_TYPES } from './heroTypes';
-import { FACTION_MECHANICS, mayBuildSpark, pickUpShard, placeShards, shardCollector, SPARK_NAMES, spendShards, TREE_NAMES } from './empire';
+import { FACTION_MECHANICS, mayBuildSpark, mechanicLevel, pickUpShard, placeShards, shardCollector, SPARK_NAMES, spendShards, summedLevel } from './empire';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
-export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark';
+export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen';
 
 export interface Settlement {
   id: string;
@@ -51,8 +51,6 @@ export interface KingdomState {
   /** Level 6: Odłamki Pierwotnej Iskry lying on the map (how many on a hex) and how many the game has in all (empire.ts). */
   shards?: Record<HexKey, number>;
   shardTotal?: number;
-  /** Level 6: the rank of each faction's tree (0-3, empire.ts). */
-  tree?: Record<FactionId, number>;
   /** Level 6: the units of tiers 2-5 whose dwelling each faction has built (one per tier). */
   dwellings?: Record<FactionId, string[]>;
   /** A hero opened a chest and has to choose: its contents (an artifact) or gold. */
@@ -68,7 +66,7 @@ export const KINGDOM = {
   /** Gold in a chest chosen instead of the artifact. */
   chestGold: 3,
   /** Cost of each level of a building. */
-  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4], forge: [], walls: [], tavern: [], magic: [], spark: [] } as Record<BuildingId, number[]>,
+  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [] } as Record<BuildingId, number[]>,
   /** Price of an artifact in the market, by rarity (zwykły, rzadki, legendarny). */
   artifactPrice: [2, 5, 10],
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
@@ -147,10 +145,24 @@ export const BUILDING_NAMES: Record<BuildingId, string[]> = {
   tavern: ['Karczma'],
   magic: ['Wieża maga', 'Wielka wieża maga', 'Arcywieża maga'],
   spark: ['Pierwotna Iskra'],
+  shrine: ['Kapliczka Świtu', 'Kapliczka Dwóch Promieni', 'Kapliczka Złotego Poranka', 'Wielka Kapliczka Świtu'],
+  nursery: ['Szkółka Drzewa', 'Wielka szkółka Drzewa'],
+  grove: ['Krąg Gaju'],
+  bloodPit: ['Jama Krwi', 'Jama Szału', 'Jama Uczty', 'Wielka Jama Krwi'],
+  plunder: ['Szabrownia'],
+  wolfDen: ['Wilcze Legowisko'],
 };
+
+/** Level 6: the buildings only one faction has (the faction's mechanic first, then the two others). */
+export const FACTION_BUILDINGS: Record<FactionId, BuildingId[]> = { dawn: ['shrine', 'nursery', 'grove'], horde: ['bloodPit', 'plunder', 'wolfDen'] };
+/** The faction's mechanic building: Kapliczka Świtu (Blask Świtu) or Jama Krwi (Żądza Krwi), four levels. */
+export const MECHANIC_BUILDING: Record<FactionId, BuildingId> = { dawn: 'shrine', horde: 'bloodPit' };
 
 /** The buildings a settlement may have in this game, in the order of the screen (the forge comes with level 4). */
 export const buildingsOf = (state: GameState): BuildingId[] => ['barracks', 'market', 'hospital', 'treasury', ...(state.rules.economy ? ['forge' as const, 'walls' as const] : []), ...(state.rules.realm ? ['tavern' as const, 'magic' as const] : []), ...(state.rules.empire ? ['spark' as const] : [])];
+
+/** The buildings this faction can build in this game: the common ones and, from level 6, its own three (Kapliczka Świtu, Szkółka Drzewa, Krąg Gaju / Jama Krwi, Szabrownia, Wilcze Legowisko). */
+export const buildingsFor = (state: GameState, f: FactionId): BuildingId[] => [...buildingsOf(state), ...(state.rules.empire ? FACTION_BUILDINGS[f] : [])];
 
 export const buildingLevel = (s: Settlement, b: BuildingId): number => s.buildings[b] ?? 0;
 
@@ -168,6 +180,22 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
   hospital: ['Wskrzesza poległych pomocników za połowę ich ceny.', 'Wskrzesza za jedną trzecią ceny.'],
   treasury: ['Przynosi +1 złota na rundę.'],
   forge: ['Pomocnicy całej frakcji walczą z +1 A.', 'Pomocnicy dostają też +1 Ż.'],
+  shrine: [
+    `Blask Świtu: na początku każdej rundy bitwy najciężej ranna jednostka Przymierza odzyskuje ${FACTION_MECHANICS.dawnHeal} Ż. Bez tego budynku frakcja nie ma tego efektu.`,
+    `Blask Świtu leczy o ${FACTION_MECHANICS.dawnHeal + 1} Ż.`,
+    'Blask Świtu leczy dwie najciężej ranne jednostki.',
+    `Każda jednostka Przymierza zaczyna bitwę z +${FACTION_MECHANICS.dawnStartHp} Ż.`,
+  ],
+  bloodPit: [
+    `Żądza Krwi: gdy w bitwie ginie wróg Hordy, wszystkie jej jednostki dostają +${FACTION_MECHANICS.hordeAttack} A do końca bitwy (raz na bitwę). Bez tego budynku frakcja nie ma tego efektu.`,
+    'Żądza Krwi działa dwa razy w bitwie.',
+    'Żądza Krwi działa trzy razy w bitwie.',
+    `Przy Żądzy Krwi jednostki Hordy odzyskują też ${FACTION_MECHANICS.hordeHeal} Ż.`,
+  ],
+  nursery: ['+1 drewna na rundę (sumuje się ze wszystkich osad).', '+2 drewna na rundę (sumuje się ze wszystkich osad).'],
+  grove: ['Bohater, który wchodzi na pole własnej osady, odnawia całą manę.'],
+  plunder: [`Po wygranej z bohaterem lub strażnikiem frakcja dostaje +${FACTION_MECHANICS.plunderGold} zł (sumuje się ze wszystkich osad).`],
+  wolfDen: ['Bohaterowie Hordy mają +1 punkt ruchu na mapie.'],
   spark: ['Budynek Pierwotnej Iskry: jego ceną są wszystkie Odłamki z mapy. Daje frakcji wielką premię, a w celu „Relikt” wygrywa grę.'],
   magic: circleTexts(),
   tavern: ['Tu najmiesz dowódcę: drugiego bohatera z własnym pionkiem, doświadczeniem i artefaktami. Tu też wykupisz dowódcę, który poległ.'],
@@ -255,7 +283,7 @@ export function initKingdom(state: GameState): void {
   }
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag: Record<FactionId, string[]> = { dawn: rng.shuffle([...NAMES.dawn]), horde: rng.shuffle([...NAMES.horde]) };
-  const empty = (): Record<BuildingId, number> => ({ barracks: 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0 } : {}) }) as Record<BuildingId, number>;
+  const empty = (): Record<BuildingId, number> => ({ barracks: 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0 } : {}) }) as Record<BuildingId, number>;
   const add = (id: string, at: HexKey, land: FactionId, owner: FactionId | null) => {
     k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[land]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
     state.tiles[at].place = { kind: 'settlement', id };
@@ -567,7 +595,7 @@ export function payCost(state: GameState, f: FactionId, c: Cost): void {
  * Which building's first level must stand in the settlement before another can be started (docs/BUDYNKI.md 0a: a tree, one parent each;
  * the Rada Osady, the root, is always there; the Iskra needs only the shards, the dwellings the barracks, see `kingdomDwelling`).
  */
-export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market' };
+export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market' };
 
 /** Why a building cannot be started here for lack of its parent (null: nothing in the way). Upgrades of a standing building are never blocked. */
 export function buildBlock(s: Settlement, b: BuildingId): string | null {
@@ -586,6 +614,9 @@ export function resourceIncomeBreakdown(state: GameState, f: FactionId): Array<{
     for (const r of RESOURCE_IDS) if (ECONOMY.incomeSettlement[r]) rows.push({ label: s.name, res: r, amount: ECONOMY.incomeSettlement[r] });
   }
   for (const [hex, m] of Object.entries(k.mines)) if (m.owner === f && m.res) rows.push({ label: `${MINE_NAMES[m.res]} (pole ${hex})`, res: m.res, amount: ECONOMY.incomeMine[m.res] });
+  // Level 6, the Przymierze: the Szkółka Drzewa gives wood, a level at a time, from every settlement that has one.
+  const nursery = state.rules.empire ? summedLevel(state, f, 'nursery') : 0;
+  if (nursery) rows.push({ label: 'Szkółka Drzewa', res: 'wood', amount: nursery * FACTION_MECHANICS.nurseryWood });
   return rows;
 }
 
@@ -616,6 +647,7 @@ export function kingdomAction(state: GameState, action: Action): void {
         log(state, 'crystal', `${FACTION_NAMES[hero.faction]} wznosi w osadzie ${s.name} budynek: ${SPARK_NAMES[hero.faction]}.`, undefined, { type: 'fx', kind: 'iskra', hex: s.at });
         break;
       }
+      if (!buildingsFor(state, hero.faction).includes(b)) throw new Error('Ten budynek nie jest dostępny dla tej frakcji na tym poziomie gry.');
       const price = buildCost(state, s, b);
       if (price === null) throw new Error('Ten budynek jest już w pełni rozbudowany.');
       if (b === 'barracks' && s.land !== hero.faction) throw new Error('Obcej osady nie rozbudujesz o koszary.');
@@ -713,17 +745,6 @@ export function kingdomAction(state: GameState, action: Action): void {
       payCost(state, f, price);
       ((k.dwellings ??= { dawn: [], horde: [] })[f]).push(entry.id);
       log(state, 'info', `${FACTION_NAMES[f]} buduje siedlisko: ${DWELLING_NAMES[entry.id]} (${costText(price)}). Od teraz rekrutuje: ${UNITS[entry.id].name}.`);
-      break;
-    }
-    case 'kingdomTree': {
-      const { hero } = serviceSettlement(state, action.settlementId);
-      if (!state.rules.empire) throw new Error('Drzewko frakcji jest dopiero na poziomie Imperium.');
-      const tree = (k.tree ??= { dawn: 0, horde: 0 });
-      const price = FACTION_MECHANICS.treeCost[tree[hero.faction]];
-      if (!price) throw new Error('Drzewko frakcji jest już w pełni rozwinięte.');
-      payCost(state, hero.faction, price);
-      tree[hero.faction] += 1;
-      log(state, 'info', `${FACTION_NAMES[hero.faction]} rozwija drzewko frakcji: ${TREE_NAMES[hero.faction][tree[hero.faction] - 1]} (${costText(price)}).`);
       break;
     }
     case 'kingdomLearn': {
@@ -896,10 +917,22 @@ export function botPurchase(state: GameState, f: FactionId, s: Settlement): Acti
   if (state.rules.realm && own && s.buildings.barracks >= 1 && buildingLevel(s, 'tavern') < 1 && !settlementsOf(state, f).some((x) => buildingLevel(x, 'tavern') >= 1) && buildable('tavern')) return { type: 'kingdomBuild', settlementId: id, building: 'tavern' };
   // Level 5: one mage tower for the faction, and its upgrade once there is Gwiezdny Pył to spare.
   if (state.rules.realm && own && s.buildings.barracks >= 1 && !settlementsOf(state, f).some((x) => x.id !== s.id && buildingLevel(x, 'magic') >= 1) && buildCost(state, s, 'magic') && buildable('magic')) return { type: 'kingdomBuild', settlementId: id, building: 'magic' };
-  // Level 6: the faction's tree, when the gold and the Gwiezdny Pył are there (after the buildings that need the Pył).
-  if (state.rules.empire) {
-    const price = FACTION_MECHANICS.treeCost[k.tree?.[f] ?? 0];
-    if (price && canPay(state, f, { ...price, gold: price.gold + 2 })) return { type: 'kingdomTree', settlementId: id };
+  // Level 6: the faction's own buildings. The mechanic comes first (Kapliczka Świtu / Jama Krwi, one settlement is enough: the best level counts), through its
+  // parent building when that is missing; then its levels, then the others (the grove and the den only once, the nursery and the plunder house add up).
+  if (state.rules.empire && own) {
+    const mech = MECHANIC_BUILDING[f];
+    const best = mechanicLevel(state, f);
+    const parent = BUILDING_PARENT[mech];
+    if (best < 1 && parent && buildingLevel(s, parent) < 1 && buildable(parent) && canPay(state, f, { ...buildCost(state, s, parent)!, gold: buildCost(state, s, parent)!.gold + 2 })) return { type: 'kingdomBuild', settlementId: id, building: parent };
+    const wanted = FACTION_BUILDINGS[f].filter((x) => {
+      if (x === mech) return buildingLevel(s, x) >= best && best < 4;
+      if (x === 'grove' || x === 'wolfDen') return !settlementsOf(state, f).some((y) => buildingLevel(y, x) >= 1);
+      return true;
+    });
+    for (const b of [mech, ...wanted.filter((x) => x !== mech)].filter((x) => wanted.includes(x))) {
+      const price = buildCost(state, s, b);
+      if (price && buildable(b) && canPay(state, f, { ...price, gold: price.gold + 2 })) return { type: 'kingdomBuild', settlementId: id, building: b };
+    }
   }
   // Defences last, and only where somebody stands guard.
   if (state.rules.economy && s.garrison?.length && buildCost(state, s, 'walls') && buildable('walls')) return { type: 'kingdomBuild', settlementId: id, building: 'walls' };

@@ -9,7 +9,7 @@ import { ARENA_COLUMNS, MIDDLE_HALF, arenaCell, cellOf, columnCells, inArena, WI
 export * from './arenaLayout';
 import { isDigital, type BattleState, type BattleUnit, type GameState, type SiegeState, type UnitStatus } from './types';
 import { SIEGE } from './economy';
-import { FACTION_MECHANICS } from './empire';
+import { FACTION_MECHANICS, mechanicLevel } from './empire';
 
 
 const OBSTACLE_SETS = new WeakMap<HexKey[], Set<HexKey>>();
@@ -711,8 +711,8 @@ export function checkBattleEnd(state: GameState): boolean {
 
 // ---------------------------------------------------------------- faction mechanics (level 6)
 
-/** Rank of a faction's tree (0-3), 0 below level 6. */
-const treeRank = (state: GameState, f: FactionId): number => (state.rules.empire ? state.kingdom?.tree?.[f] ?? 0 : 0);
+/** Level of a faction's mechanic building (0-4): 0 below level 6 and while the faction has not built it. Level N works as rank N-1 of the old tree. */
+const mechLevel = (state: GameState, f: FactionId): number => (state.rules.empire ? mechanicLevel(state, f) : 0);
 
 /**
  * Blask Świtu, the Przymierza's mechanic: at the start of every battle round the most wounded unit of the Przymierza regains Życie
@@ -720,8 +720,8 @@ const treeRank = (state: GameState, f: FactionId): number => (state.rules.empire
  */
 function dawnLight(state: GameState) {
   const b = state.battle!;
-  if (!state.rules.empire) return;
-  const rank = treeRank(state, 'dawn');
+  if (mechLevel(state, 'dawn') < 1) return;
+  const rank = mechLevel(state, 'dawn') - 1;
   const heal = (FACTION_MECHANICS.dawnHeal + (rank >= 1 ? 1 : 0)) * hpScaleOf(state);
   const hurt = livingUnits(b, 'dawn').filter((u) => u.hp < u.maxHp && u.pos).sort((x, y) => (y.maxHp - y.hp) - (x.maxHp - x.hp) || (x.id < y.id ? -1 : 1));
   for (const u of hurt.slice(0, rank >= 2 ? 2 : 1)) {
@@ -738,8 +738,8 @@ function dawnLight(state: GameState) {
  */
 function bloodlust(state: GameState, fallen: BattleUnit) {
   const b = state.battle!;
-  if (!state.rules.empire || fallen.side === 'horde' || (b.attacker !== 'horde' && b.defender !== 'horde')) return;
-  const rank = treeRank(state, 'horde');
+  if (mechLevel(state, 'horde') < 1 || fallen.side === 'horde' || (b.attacker !== 'horde' && b.defender !== 'horde')) return;
+  const rank = mechLevel(state, 'horde') - 1;
   const cap = 1 + Math.min(rank, 2);
   if ((b.bloodlust ?? 0) >= cap) return;
   b.bloodlust = (b.bloodlust ?? 0) + 1;

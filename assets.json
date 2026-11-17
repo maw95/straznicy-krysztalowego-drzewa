@@ -5139,6 +5139,50 @@
       "data": "2026-11-17",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "osady/budynki-frakcji",
+      "pliki": [
+        "public/assets/osady/dawn_shrine1.webp",
+        "public/assets/osady/dawn_nursery1.webp",
+        "public/assets/osady/dawn_grove1.webp",
+        "public/assets/osady/horde_bloodPit1.webp",
+        "public/assets/osady/horde_plunder1.webp",
+        "public/assets/osady/horde_wolfDen1.webp"
+      ],
+      "typ": "budynki frakcji poziomu 6: Kapliczka Świtu, Szkółka Drzewa, Krąg Gaju (Przymierze) i Jama Krwi, Szabrownia, Wilcze Legowisko (Horda); jeden obraz na budynek (wszystkie poziomy)",
+      "opis": "Sześć zadań po 2 warianty, w grze pierwszy wariant (A) każdego; wycięcie scripts/assets/osady.py. Prompt jak przy pozostałych budynkach: 'A single fantasy game building, painterly realistic, three-quarter isometric view, isolated on a plain pure black background, no text. <styl frakcji>. <opis budynku>.' (Kapliczka: jasna kamienna kapliczka z tarczą słońca; Szkółka: sadzonki w skrzyniach i szklarnia; Krąg: kamienie z runami wokół zielonego kryształu; Jama: zapadnięta arena z bębnem; Szabrownia: warowny magazyn pełen łupów; Legowisko: jaskinia z czaszkami i wilkami).",
+      "scenario_asset": {
+        "zadania": [
+          "job_c2JQpECFKzS7iBikcEg4unYw",
+          "job_RTcvxY4TN5stkdbLkHLBh5Gy",
+          "job_7nmhPN1QoBp2xMfzihUHBCeW",
+          "job_7nh1aFR9yCzuvhPCVp1sf86C",
+          "job_bzp5L1AiGFx7owRpmY7Qdgrb",
+          "job_snTEuhhYF8brVFUTXkWUza4E"
+        ],
+        "wyniki_uzyte": [
+          "asset_AXUs7RcJX2H4DqHwfSwKugFF",
+          "asset_RhcQdyuJ2L2LrUkc1gXwQQCi",
+          "asset_ahs5jbiDw2KRStD5XMb342XZ",
+          "asset_JJ613a6vetyF7E5okgbfeCkF",
+          "asset_PzArXoMXo2UP1N3Gepd5D5y3",
+          "asset_ogQiXLpXLhkxGdBBw6BcapxC"
+        ],
+        "warianty_odrzucone": [
+          "asset_V4y2DwbX364MNuVv17i8srsC",
+          "asset_c26SiuaoX4H6WaT9gvfCf6zV",
+          "asset_QZbhRvB24Dm2qjgEpzsKA7NW",
+          "asset_ov9MS8qrVBRXTgLsaY2wM8aF",
+          "asset_rku92KjAU133sKdqERkwgt99",
+          "asset_RpgWWCj9BFDzweY3ny2HQmnj"
+        ]
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 1280x1024, 6 x 6 CU",
+      "data": "2026-11-17",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
