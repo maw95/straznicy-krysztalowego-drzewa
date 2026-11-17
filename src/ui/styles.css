@@ -877,12 +877,17 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .settlement-top { position: relative; flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 14px 14px; background: linear-gradient(rgba(4, 8, 8, 0.9), rgba(4, 8, 8, 0)); }
 .settlement-info { text-align: center; font-size: 15px; color: #F6EBD0; text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, 0.7); }
 .settlement-info b { color: #FFE9A8; }
-.settlement-field { position: relative; flex: 1 0 auto; min-height: 330px; }
+.settlement-field { position: relative; flex: 1 0 auto; min-height: max(330px, 58vh); }
+.settlement-field.dense { min-height: max(420px, 74vh); }
+.settlement-field.dense .settlement-pic { height: 88px; }
+.settlement-field.dense .settlement-bld { padding: 3px; }
 .settlement-field.tree { display: flex; align-items: center; justify-content: center; }
 .settlement-bottom { position: relative; flex: none; display: flex; gap: 10px; align-items: stretch; flex-wrap: wrap; padding: 24px 12px 10px; background: linear-gradient(rgba(4, 8, 8, 0), rgba(4, 8, 8, 0.88) 30%); }
 .settlement-bottom > .plate { max-height: 40vh; overflow-y: auto; }
 .settlement-actions { display: flex; flex-direction: column; gap: 8px; justify-content: flex-end; align-items: stretch; flex: none; }
 .settlement-bld.council .settlement-pic { height: 96px; }
+/* On a low screen the buildings are smaller and the field taller (the page scrolls), so the terraces do not overlap. */
+@media (max-height: 560px) and (max-width: 1100px) { .settlement-field, .settlement-field.dense { min-height: 620px; } .settlement-field.dense .settlement-pic { height: 74px; } .settlement-pic { height: 74px; } .settlement-bld.council .settlement-pic { height: 66px; } .settlement-bld { font-size: 11px; width: 92px !important; padding: 3px; } }
 .building-tree { display: flex; flex-direction: column; justify-content: center; width: 100%; max-height: 100%; overflow: auto; padding: 8px 14px; box-sizing: border-box; }
 .tree-node { position: absolute; display: flex; gap: 8px; align-items: center; padding: 6px 8px; border: 2px solid #B88A35; border-radius: 10px; background: linear-gradient(#F3E6C4, #D9C592); color: #3A2508; font: inherit; cursor: pointer; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55); transition: transform 0.12s; box-sizing: border-box; }
 .tree-node:hover { transform: translateY(-2px); }

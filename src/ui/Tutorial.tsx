@@ -88,7 +88,7 @@ const TIPS: Tip[] = [
   {
     id: 'settlement',
     title: 'W osadzie',
-    text: 'Gdy bohater stoi w osadzie, przycisk „Wejdź do osady” otwiera jej widok. Budynki trzeba kupić: koszary (rekrutacja pomocników), targ (artefakty), szpital (wskrzeszanie poległych) i skarbiec (+1 zł). Kliknij budynek, by zobaczyć, co robi i ile kosztuje. Osada obcej frakcji daje dochód, targ i szpital, ale nie pozwala rekrutować.',
+    text: 'Gdy bohater stoi w osadzie, przycisk „Wejdź do osady” otwiera jej widok. Budynki trzeba kupić: koszary (rekrutacja pomocników), targ (artefakty), szpital (wskrzeszanie poległych) i skarbiec (+1 zł). Kliknij budynek, by zobaczyć, co robi i ile kosztuje. Kliknij Radę Osady, żeby zobaczyć drzewko budynków: każdy budynek wymaga najpierw swojego rodzica (np. szpital koszar), a budować można tyle, na ile starcza złota. Osada obcej frakcji daje dochód, targ i szpital, ale nie pozwala rekrutować.',
     when: (s) => s.phase === 'adventure' && Boolean(s.kingdom) && Object.values(s.kingdom!.settlements).some((x) => Object.values(s.heroes).some((h) => h.alive && h.pos === x.at)),
   },
   {

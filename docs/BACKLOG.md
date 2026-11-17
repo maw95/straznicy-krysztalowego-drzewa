@@ -45,16 +45,6 @@ Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.te
 - Zrobione 17.11: arena 6 na 6 offline (pula 8 jednostek, wybór 5, artefakt z 3, 2 czary, Bardzo trudny z `ARENA_HANDICAP`, osobne statystyki i punkty); decyzje i pytania w `docs/PYTANIA_DO_AUTORA.md`.
 - Zostaje: **gra online**. Serwer używa silnika z paczki wydania 2.8.0 (`straznicy-engine-2.8.0.tgz`), więc potrzebne nowe wydanie silnika (gry nie pushuję: decyzja autora). Potem: serwer przyjmuje `arenaSize` w konfiguracji pokoju, kreator online pokazuje opcję (dziś ukryta: `!online` w `NewGameWizard.tsx`), ranking online osobno dla 3 na 3 i 6 na 6.
 
-### Grupa B. Ekran osady (L)
-
-**37. Osada na pełnym ekranie (reszta)** (L; punkt był rozbity na etapy, patrz `docs/BUDYNKI.md` sekcje 0 i 0a)
-- **Zrobione 17.11:** Koszary od poziomu 6 domyślnie wybudowane i siedliska w drzewku (łańcuch tierów), budynki unikalne frakcji (Kapliczka Świtu, Szkółka Drzewa, Krąg Gaju / Jama Krwi, Szabrownia, Wilcze Legowisko; drzewka frakcji usunięte, mechaniki wymagają budynku; 6 obrazów ze Scenario), limit „jeden budynek na rundę” usunięty (pasma bez zmian), graf zależności (`BUILDING_PARENT`, `buildBlock`; boty respektują, balans bez zmian: 144 vs 143 komórek poza pasmem), osada na pełnym ekranie (`SettlementDialog.tsx`, `.settlement-full`; krajobraz jako tło, budynki na nim, usługi na dole, scrolluje na małych ekranach), **Rada Osady** na krajobrazie (klik otwiera drugą stronę ekranu), drzewko z węzłami i liniami (`BuildingTree.tsx`; stany: wybudowany / do kupienia / za drogi / zablokowany; klik pokazuje cenę i efekt; Esc wraca do krajobrazu). Skrypt kontrolny `scripts/browser/osada-pelny.ts`, `?built=barracks,…` w adresie testowym.
-- **Rada Osady:** obrazy wygenerowane 17.11 (`osady/{dawn,horde}_council1.webp`, 12 CU, `assets.json`); autor może je zakwestionować (wariant odrzucony: zob. `assets.json`).
-- **Zostaje:**
-  2. **Układ Heroes III:** ręczne pozycje budynków osobno dla Przymierza i Hordy (dziś dwa równe rzędy), portrety bohaterów w osadzie u dołu, garnizon obok.
-  4. Samouczek (`Tutorial.tsx`), `INSTRUKCJA.md` i `ZASADY_CYFROWE.md` (okno osady, drzewko, Rada).
-- Gotowe, gdy: Rada i wszystkie budynki z `BUDYNKI.md` mają obrazy, drzewka frakcji zniknęły, limit rundy zniknął, skrypty `scripts/browser/*` przechodzą, golden i pasma sprawdzone po zmianach.
-
 ### Grupa D. Interfejs, kreator i narzędzia (zgłoszenia autora z 17.11)
 
 **47. Testy wyświetlania na telefonie (reszta)** (M)

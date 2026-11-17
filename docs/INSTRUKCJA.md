@@ -778,6 +778,11 @@ Na mapie stoją też trzy rodzaje miejsc, które pomagają temu, kto na nie wejd
 - **Leśna składnica** oddaje swój zapas raz: 3 drewna, 3 rudy albo 1 Gwiezdny Pył.
 - **Studnia Wędrowców** dodaje bohaterowi 2 punkty ruchu w tej turze; działa raz na rundę, dla pierwszego, kto z niej wypije.
 
+### Okno osady i drzewko budynków
+Osada otwiera się **na cały ekran**: krajobraz frakcji jest tłem, budynki stoją na nim, pod spodem są usługi wybranego budynku i garnizon, a bohater, który stoi w osadzie, ma tu swój portret. **Rada Osady** (stoi w każdej osadzie od początku i nic nie kosztuje) otwiera **drzewko budynków**: węzły to budynki, strzałki prowadzą od budynku, który musi stać, do tego, który od niego zależy. Węzeł jest wybudowany, do kupienia (zielony), za drogi (czerwony) albo zablokowany (szary, napis mówi, czego brakuje). Kliknij węzeł, żeby zobaczyć cenę i działanie, i zbuduj go przyciskiem pod drzewkiem; Esc wraca do krajobrazu.
+
+Zależności: **Koszary, Targ i Skarbiec** wychodzą prosto z Rady; **Kuźnia, Fosa i Mury oraz Szpital** wymagają Koszar; **Wieża maga** Szpitala; **Karczma** Targu. Budować można **dowolnie wiele budynków na rundę**: ogranicza tylko cena.
+
 ### Obrona osady: garnizon i umocnienia
 Bohater stojący we własnej osadzie może zostawić w niej do **trzech pomocników** jako **garnizon** (okno osady, zakładka Fosa) i zabrać ich, gdy wróci. Osady z garnizonem wróg nie zajmie samym wejściem: musi stoczyć **bitwę o osadę**. Garnizonem bez bohatera w bitwie dowodzi **gracz, do którego należy osada** (przy kilku graczach tej strony ten, którego bohater ruszał się ostatnio; człowiek ma pierwszeństwo przed botem); jeśli w osadzie stoi też Twój bohater, garnizon walczy razem z nim.
 

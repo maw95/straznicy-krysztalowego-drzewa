@@ -26,13 +26,23 @@ const SPOT: Partial<Record<BuildingId, { left: number; top: number }>> = {
   hospital: { left: 64, top: 52 },
   treasury: { left: 84, top: 28 },
 };
-/** Levels 4 and up have more buildings: they stand in two rows, spread evenly across the picture. */
-const spotOf = (order: BuildingId[], b: BuildingId): { left: number; top: number } => {
-  if (order.length <= 4) return SPOT[b] ?? { left: 50, top: 50 };
-  const i = order.indexOf(b);
-  return { left: 8 + (i * 84) / (order.length - 1), top: i % 2 ? 30 : 64 };
+/**
+ * Levels 4 and up have more buildings: they stand on the plain in terraces round the council, like a town in Heroes III (percent of the field; the
+ * horizon lies in the upper third). Both factions use the same terraces; the Horde's landscape has its volcano on the right, so its magic and the
+ * Iskra change sides. The unique buildings of a faction take the same two places of a terrace.
+ */
+const TERRACES: Record<BuildingId, { left: number; top: number }> = {
+  magic: { left: 20, top: 25 }, spark: { left: 80, top: 25 },
+  shrine: { left: 36, top: 35 }, bloodPit: { left: 36, top: 35 }, grove: { left: 64, top: 35 }, wolfDen: { left: 64, top: 35 },
+  nursery: { left: 88, top: 47 }, plunder: { left: 88, top: 47 }, tavern: { left: 12, top: 47 },
+  hospital: { left: 28, top: 53 }, forge: { left: 50, top: 51 }, walls: { left: 72, top: 53 },
+  treasury: { left: 24, top: 71 }, barracks: { left: 50, top: 73 }, market: { left: 76, top: 71 },
 };
-/** The picture of a building in the landscape: the faction's plot while it is not built, then its level (the treasury has one). */
+const spotOf = (order: BuildingId[], b: BuildingId, land: FactionId): { left: number; top: number } => {
+  if (order.length <= 4) return SPOT[b] ?? { left: 50, top: 50 };
+  const t = TERRACES[b] ?? { left: 50, top: 50 };
+  return land === 'horde' && (b === 'magic' || b === 'spark') ? { ...t, left: 100 - t.left } : t;
+};
 /** Whose picture a building of one faction has (level 6: Kapliczka, Szkółka, Krąg for the Przymierze; Jama, Szabrownia, Legowisko for the Horde). */
 const UNIQUE_OWNER: Partial<Record<BuildingId, FactionId>> = { shrine: 'dawn', nursery: 'dawn', grove: 'dawn', bloodPit: 'horde', plunder: 'horde', wolfDen: 'horde' };
 const buildingPicture = (land: FactionId, b: BuildingId, level: number) => {
@@ -420,17 +430,17 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         </div>
       </div>
       {view === 'town' ? (
-        <div className="settlement-field">
+        <div className={`settlement-field ${ORDER.length > 6 ? 'dense' : ''}`}>
           {ORDER.map((b) => {
             const level = buildingLevel(s, b);
             return (
-              <button key={b} className={`settlement-bld ${open === b ? 'on' : ''} ${level ? 'built' : ''}`} style={{ left: `${spotOf(ORDER, b).left}%`, top: `${spotOf(ORDER, b).top}%`, ...(ORDER.length > 6 ? { width: 104 } : {}) }} onClick={() => setOpen(b)} aria-pressed={open === b} data-building={b} data-level={level}>
+              <button key={b} className={`settlement-bld ${open === b ? 'on' : ''} ${level ? 'built' : ''}`} style={{ left: `${spotOf(ORDER, b, s.land).left}%`, top: `${spotOf(ORDER, b, s.land).top}%`, ...(ORDER.length > 6 ? { width: 104 } : {}) }} onClick={() => setOpen(b)} aria-pressed={open === b} data-building={b} data-level={level}>
                 <img src={asset(buildingPicture(s.land, b, level))} alt="" className="settlement-pic" />
                 <span>{level ? BUILDING_NAMES[b][Math.min(level, BUILDING_NAMES[b].length) - 1] : `${BUILDING_NAMES[b][0]} (do zbudowania)`}</span>
               </button>
             );
           })}
-          <button className="settlement-bld built council" style={{ left: '50%', top: '19%', ...(ORDER.length > 6 ? { width: 104 } : {}) }} onClick={() => { setView('tree'); setPick(null); }} data-building="council" data-level="1" title="Rada Osady: drzewko budynków">
+          <button className="settlement-bld built council" style={{ left: '50%', top: ORDER.length > 4 ? '14%' : '19%', ...(ORDER.length > 6 ? { width: 104 } : {}) }} onClick={() => { setView('tree'); setPick(null); }} data-building="council" data-level="1" title="Rada Osady: drzewko budynków">
             <img src={asset(councilPic)} alt="" className="settlement-pic" />
             <span>Rada Osady (drzewko budynków)</span>
           </button>
@@ -441,6 +451,12 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         </div>
       )}
       <div className="settlement-bottom">
+        {view !== 'tree' && heroHere && buyer && (
+          <div className="plate parch" data-hero-here style={{ padding: '8px 12px', flex: 'none', display: 'flex', gap: 10, alignItems: 'center' }}>
+            <Portrait unitId={buyer.id} size={56} />
+            <div style={{ fontSize: 14, lineHeight: 1.25 }}><b style={{ fontSize: 16 }}>{heroLabel(buyer)}</b><div style={{ color: '#6B4A22' }}>bohater w osadzie</div></div>
+          </div>
+        )}
         {view === 'tree' ? detail : (
           <>
             {garrisonPanel && <div className="plate parch" style={{ padding: '8px 16px', flex: 1, minWidth: 0 }}>{garrisonPanel}</div>}

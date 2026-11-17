@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Osada wygląda jak miasto z Heroes III: budynki stoją tarasami wokół Rady Osady, a bohater, który jest w osadzie, ma w niej swój portret. Samouczek i instrukcja opisują okno osady i drzewko budynków.
+
 - Imperium: Koszary stoją w każdej osadzie od początku, a siedliska jednostek wiszą w drzewku pod Koszarami jedno za drugim (siedlisko wyższego poziomu wymaga niższego; wybór jednej jednostki wyklucza drugą).
 
 - Poziom Imperium: zamiast drzewek frakcji każda frakcja ma własne budynki. Przymierze: Kapliczka Świtu (Blask Świtu, 4 poziomy), Szkółka Drzewa (drewno) i Krąg Gaju (pełna mana). Horda: Jama Krwi (Żądza Krwi, 4 poziomy), Szabrownia (złoto z łupów) i Wilcze Legowisko (+1 ruch). Bez Kapliczki lub Jamy frakcja nie ma swojej mechaniki. Wszystko widać w drzewku pod Radą Osady.
