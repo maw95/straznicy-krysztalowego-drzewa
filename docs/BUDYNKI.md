@@ -8,6 +8,39 @@ Zasady wspólne: w osadzie można budować **jeden budynek na rundę** (cała fr
 w ogóle istnieją. Obcej (zdobytej) osady nie rozbudujesz o Koszary. „Rada Osady” (nazwa ustalona 17.11) będzie
 dodatkowym, darmowym, zawsze stojącym budynkiem, który otwiera drzewko budowy.
 
+## 0. Decyzje autora z 17.11.2026 (wieczór): mają pierwszeństwo przed resztą dokumentu
+
+Poniżej ustalenia z rozmowy; sekcje 2 i 3 niżej są historyczne (propozycje i pytania), gdzie sprzeczne, obowiązuje ta sekcja.
+Graf zależności („co blokuje co”) **jeszcze nieustalony**: dopiero po tej liście.
+
+**Zasady ogólne**
+- **Limit „jeden budynek na rundę” znika, na wszystkich poziomach gry.** Ogranicza złoto i surowce. Skutki: `mayBuildNow` i `KingdomState.built` do usunięcia, komunikat „W tej rundzie budowaliście już” też; boty budują tyle, na ile je stać; **golden, pasma i `tuneLevels.ts` do przestrojenia**; zaktualizować `INSTRUKCJA.md`, `ZASADY_CYFROWE.md` (sekcja o osadach), `ROZBUDOWA_CYFROWA.md`.
+- **Dwa systemy rekrutacji zostają:** poziomy 3–5: Koszary I/II z progami tierów (jak dziś); poziom 6: siedliska.
+- **Koszary II dają +1 miejsce pomocnika w drużynie** (już tak jest, maks. 5). Jeśli to za mało, dodatkowy bonus dopiero po testach. Pomysł K1 (pojemność garnizonu zależna od Koszar) odrzucony.
+- **Zasada „najlepszy poziom w całej frakcji”** dla budynków dających efekt bitewny lub globalny (Kuźnia, Kapliczka Świtu, Jama Krwi). **Budynki dające dochód lub zasoby (Skarbiec, Szkółka Drzewa, Szabrownia) sumują efekty ze wszystkich osad.**
+
+**Lista budynków wspólnych (15 miejsc w podglądzie osady)**
+1. Targ (+ulepszenie), 2. Szpital (+ulepszenie), 3. Skarbiec (+ulepszenie), 4. Kuźnia (+ulepszenie), 5. Fosa + wieżyczki, 6. Karczma, 7. Wieża maga (+ulepszenia; **trzy kręgi = trzy poziomy**), 8. budynek Pierwotnej Iskry (poziom 6), 9. Rada Osady, 10. Koszary, 11. Siedliska: po jednym miejscu na tier 2–6 (5 miejsc).
+- **Koszary od poziomu 6 są wybudowane domyślnie w każdej osadzie.** Klik otwiera okno z listą jednostek do kupienia (kupuje się te, do których frakcja ma siedlisko). Dwa komunikaty przy niedostępnych: „wybrano alternatywne siedlisko tego poziomu” oraz „siedlisko jeszcze niekupione (możesz je kupić)”.
+- **Siedliska (poziom 6):** dwa na każdy tier 2–5, wzajemnie się wykluczają; siedlisko 3. tieru wymaga jakiegoś siedliska 2. tieru itd.; tier 6 (legenda) ma jedno siedlisko bez alternatywy. Na krajobrazie siedlisko danego tieru stoi w tym samym miejscu co jego alternatywa.
+- **Zakup jednostki w Koszarach zawsze trafia do wspólnej puli pomocników frakcji** (nie do drużyny konkretnego bohatera; limit miejsc zależy od bohatera).
+- **Garnizon (do 3 pomocników) zmienia się tylko wtedy, gdy któryś bohater frakcji stoi w tej osadzie.** Pomocnik przechodzi między garnizonem a wspólną pulą.
+
+**Unikalne budynki frakcji (po 3, razem 18 miejsc; ciasno, ale bez przejmowania się na razie)**
+Drzewka frakcji z trzema rangami **znikają** (`kingdom.tree`, akcja kupna rangi, `TREE_NAMES`, `TREE_TEXTS`, pas „drzewko” w oknie osady). **Także podstawowe efekty Blasku Świtu i Żądzy Krwi wymagają budynku** (bez budynku frakcja nie ma tego efektu w bitwie).
+
+| Frakcja | Budynek | Poziomy i efekt |
+|---|---|---|
+| Przymierze | **Kapliczka Świtu** (wygląd: kamienna kapliczka z promieniami światła) | 4 poziomy: I Blask Świtu (+1 Ż najciężej rannej jednostce na początku rundy bitwy); II leczy +2 Ż; III leczy dwie jednostki; IV każda jednostka startuje bitwę z +1 Ż |
+| Przymierze | **Szkółka Drzewa** | I: +1 drewna na rundę, II: +2 (sumuje się z osad) |
+| Przymierze | **Krąg Gaju** (wygląd: krąg kamieni z runami i świecącym kryształem) | bohater wchodzący na kafelek osady odnawia **całą manę** (dziś mana wraca +1 na koniec rundy, maks. 3 + poziom bohatera, mędrzec +3) |
+| Horda | **Jama Krwi** | 4 poziomy: I Żądza Krwi (po śmierci wroga wszystkie jednostki Hordy +1 A, raz na bitwę); II dwa razy; III trzy razy; IV przy każdym zadziałaniu leczą 1 Ż |
+| Horda | **Szabrownia** | dodatkowe złoto po wygranej z bohaterem lub strażnikiem (suma z osad) |
+| Horda | **Wilcze Legowisko** | bohaterowie Hordy +1 punkt ruchu na mapie (jeden poziom) |
+
+Orientacyjne ceny Kapliczki i Jamy (do strojenia; dziś rangi kosztują 4 zł + 2 Pyły / 6 zł + 3 Pyły / 8 zł + 5 Pyłów): I: 3 zł + 2 drewna + 1 Pył; II: 4 zł + 2 Pyły; III: 6 zł + 3 Pyły; IV: 8 zł + 5 Pyłów. Łącznie 11 Pyłów, a źródeł Pyłu jest 1–3, więc ceny pewnie wymagają obniżenia. Szkółka daje **drewno, nie Pył** (Pył jest najrzadszy; +1 Pył/rundę równałoby się własnemu Źródłu Pyłu).
+Do sprawdzenia po wdrożeniu: Szkółka II w późnej grze (drewno traci znaczenie), siła Szabrowni i Legowiska, wpływ braku efektu frakcji we wczesnych rundach poziomu 6 na pasma.
+
 ## 1. Budynki, które już są
 
 | Budynek | Od poziomu gry | Poziomy i koszt | Co robi |
