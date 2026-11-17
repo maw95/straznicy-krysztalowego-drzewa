@@ -331,6 +331,19 @@ export function passArtifact(state: GameState, hero: HeroState, artifactId: stri
   log(state, 'item', `${UNITS[hero.id].name} przekazuje artefakt ${art.name}: ${UNITS[to.id].name}.`, hero.faction);
 }
 
+/** `passArtifact` with this id hands over all the shards of the Pierwotna Iskra the hero carries (the Iskra needs them all in one hero's hands). */
+export const SHARDS_ID = 'shards';
+
+export function passShards(state: GameState, hero: HeroState, toHeroId: string): void {
+  const to = passTargets(state, hero).find((h) => h.id === toHeroId);
+  if (!to) throw new Error('Odłamki można przekazać tylko sojusznikowi na sąsiednim polu.');
+  const n = hero.shards ?? 0;
+  if (!n) throw new Error('Bohater nie niesie Odłamków.');
+  hero.shards = 0;
+  to.shards = (to.shards ?? 0) + n;
+  log(state, 'item', `${UNITS[hero.id].name} przekazuje Odłamki Pierwotnej Iskry (${n}): ${UNITS[to.id].name}.`, hero.faction);
+}
+
 /** Gear bonuses in battle (added to the skills' ones). */
 export function applyGear(hero: HeroState | undefined, unit: BattleUnit): void {
   if (!hero) return;

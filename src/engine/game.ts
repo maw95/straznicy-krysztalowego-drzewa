@@ -63,7 +63,7 @@ import { commanderFalls } from './realm';
 import { battleSpell, mapSpell, regenMana, START_SPELLS } from './magic';
 import { HERO_TYPES, specialtyOf } from './heroTypes';
 import { EMPIRE, FACTION_MECHANICS, hasSpark, loseShards } from './empire';
-import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, placeSites, unequipArtifact, visitSite } from './sites';
+import { applyGear, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, heroTileCost, passArtifact, passShards, placeSites, SHARDS_ID, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
 import { computerFaction, isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
@@ -1230,6 +1230,7 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
       if (state.phase !== 'adventure' || !hero?.alive || !state.rules.heroGrowth) throw new Error('Teraz nie można zmieniać wyposażenia.');
       if (action.type === 'equipArtifact') equipArtifact(state, hero, action.artifactId);
       else if (action.type === 'unequipArtifact') unequipArtifact(state, hero, action.slot);
+      else if (action.artifactId === SHARDS_ID) passShards(state, hero, action.toHeroId);
       else passArtifact(state, hero, action.artifactId, action.toHeroId);
       break;
     }

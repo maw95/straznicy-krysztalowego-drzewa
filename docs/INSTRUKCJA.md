@@ -831,7 +831,7 @@ Na mapie, na widocznych od początku polach, leżą świecące **Odłamki Pierwo
 **Kto pokona bohatera, zabiera mu wszystkie jego Odłamki.** Jeśli bohater polegnie w walce ze strażnikiem albo garnizonem, jego Odłamki upadają na pole obok i może je podnieść każdy.
 
 ### Budynek Pierwotnej Iskry
-Gdy bohaterowie jednej frakcji niosą razem **wszystkie Odłamki**, jeden z nich może stanąć we własnej osadzie i wznieść tam budynek Pierwotnej Iskry: **Sanktuarium** (Przymierze) albo **Czarną Kuźnię** (Horda). Ceną są wszystkie Odłamki. Sanktuarium daje wszystkim jednostkom Przymierza +2 Życia w każdej bitwie, Czarna Kuźnia wszystkim jednostkom Hordy +1 Ataku.
+Gdy **jeden bohater niesie wszystkie Odłamki** i stoi we własnej osadzie, może wznieść tam budynek Pierwotnej Iskry: **Sanktuarium** (Przymierze) albo **Czarną Kuźnię** (Horda). Ceną są wszystkie Odłamki. Odłamki rozproszone po kilku bohaterach nie wystarczą: bohater może **przekazać swoje Odłamki** sojusznikowi stojącemu na tym samym lub sąsiednim polu (przycisk w panelu bohatera na mapie). Sanktuarium daje wszystkim jednostkom Przymierza +2 Życia w każdej bitwie, Czarna Kuźnia wszystkim jednostkom Hordy +1 Ataku.
 
 ### Mechaniki frakcji i drzewko frakcji
 Na poziomie Imperium każda frakcja walczy po swojemu:

@@ -210,15 +210,15 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     }
     if (b === 'spark') {
       const built = buildingLevel(s, 'spark') > 0;
-      const ready = mayBuildSpark(state, faction);
+      const ready = Boolean(buyer && mayBuildSpark(state, buyer));
       return (
         <div data-panel="spark" style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
           <b>{SPARK_NAMES[faction]}</b>
           <div><RuleText text={SPARK_TEXTS[faction]} /> {state.rules.objective === 'relic' ? 'W tej grze jego wzniesienie wygrywa.' : ''}</div>
           {built ? <b style={{ color: '#2E7A32' }}>Iskra płonie w tej osadzie.</b> : (
             <>
-              <span style={{ fontSize: 14, color: '#6B4A22' }}>Cena: wszystkie Odłamki Pierwotnej Iskry (frakcja ma {shardsOf(state, faction)} z {shardTotal(state)}). Buduje bohater stojący w tej osadzie.</span>
-              <button className="btn prim" data-build="spark" disabled={!ready || !buyer || buyer.pos !== s.at} title={!ready ? 'Bohaterowie frakcji muszą nieść wszystkie Odłamki.' : buyer?.pos !== s.at ? 'Bohater musi stać w tej osadzie.' : undefined} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: 'spark' })} style={{ padding: '4px 16px', fontSize: 17 }}>
+              <span style={{ fontSize: 14, color: '#6B4A22' }}>Cena: wszystkie Odłamki Pierwotnej Iskry (frakcja ma {shardsOf(state, faction)} z {shardTotal(state)}). Buduje bohater stojący w tej osadzie, który sam niesie wszystkie Odłamki{buyer ? ` (${heroLabel(buyer)} niesie ${buyer.shards ?? 0})` : ''}: przekaż je sobie wcześniej na mapie.</span>
+              <button className="btn prim" data-build="spark" disabled={!ready || !buyer || buyer.pos !== s.at} title={!ready ? 'Jeden bohater musi nieść wszystkie Odłamki.' : buyer?.pos !== s.at ? 'Bohater musi stać w tej osadzie.' : undefined} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: 'spark' })} style={{ padding: '4px 16px', fontSize: 17 }}>
                 Wznieś: {SPARK_NAMES[faction]}
               </button>
             </>

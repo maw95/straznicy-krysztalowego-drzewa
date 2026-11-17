@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Relikt: Pierwotną Iskrę może wznieść tylko bohater, który sam niesie wszystkie Odłamki i stoi we własnej osadzie. Odłamki można przekazać sojusznikowi na tym samym lub sąsiednim polu (przycisk „Przekaż Odłamki” w panelu bohatera); komputer też je zbiera u jednego bohatera.
+
 - Punkty rankingu za wygraną na poziomie Bardzo trudnym to 1,5 razy punkty za tę samą grę na Trudnym (na arenie 5 zamiast 4).
 
 - Gdy w celu Kontrola, Podbój lub Relikt upłynie limit rund i żadna strona nie ma przewagi (remis), gra kończy się remisem zamiast wygraną Hordy; to samo w celach Boss i Artefakt w PvP (w koopie nadal przegrywacie, gdy upłynie limit rund); w grze o kryształy limit rund nadal wygrywa Horda.

@@ -39,7 +39,7 @@ Stan nocnego zadania: zob. `docs/PODSUMOWANIE_NOCNE.md` i `docs/PYTANIA_DO_AUTOR
 
 ### Grupa A. Zasady i silnik (decyzje autora z 17.11; punkty niezależne, kolejność dowolna)
 
-Wspólne dla 32–35: zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
+Wspólne dla 32, 33, 35: zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
 
 **32. Obronę osady steruje właściciel** (M)
 - Dziś: gdy osady bez bohatera broni sam garnizon (`BattleState.defenderHero === null`, `startBattle` w `game.ts` ok. l. 782–875), `actorForFaction` (`game.ts` l. 468) nie ma bohatera, więc zwraca `{ kind: 'automaton' }` i jednostkami garnizonu rusza komputer (`chooseBattleAction`). Dotyczy wyboru jednostek (`select`), rozstawienia (`deploy`), draftu i aktywacji (`fight`).
@@ -56,13 +56,6 @@ Wspólne dla 32–35: zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasm
 - Dotyka: `magic.ts` (`SpellId`, `SPELLS`, `MAGIC`, funkcja rzucania i `spellPower`), `ai/` (`botSpell` w `magic.ts`: warunki użycia każdego czaru), `ui/SpellBook.tsx` (księga: układ na dwóch stronach, ikony `public/assets/ikony/mapa/` lub czary), `SettlementDialog.tsx` (wieża maga uczy `towerSpells(level)`), efekty graficzne `public/assets/efekty/` (grafiki: Scenario, `kredyty`; do czasu ich powstania ikona zastępcza z wpisem w sekcji 2a placeholderów), dźwięki (1 CU za sztukę), tekst w `ZASADY_CYFROWE.md` („Magia”) i `INSTRUKCJA.md`.
 - Testy: `tests/magic.test.ts` (każdy czar: koszt, cel, efekt, brak many), bot używa nowych czarów w grach (licznik jak w skrypcie z punktu Zwoju).
 - Gotowe, gdy: czary działają w bitwie i na mapie, bot ich używa, golden i pasma poziomów 5–6 przeliczone.
-
-**34. Relikt: warunek budowy** (S)
-- Dziś (`empire.ts`: `mayBuildSpark`, `shardsOf`; `kingdom.ts` l. ~587 akcja `kingdomBuild` z `building: 'spark'`; bot l. ~952 w `adventureAi`/`kingdom.ts`): budynek wymaga, by **suma Odłamków żywych bohaterów frakcji** = `shardTotal`, a budowniczy stał w osadzie (`hero.pos === s.at`), w osadzie którą kontroluje własna frakcja.
-- Zmiana: Relikt (budynek Pierwotnej Iskry) może wznieść tylko **ten bohater, który stoi na kafelku osady i sam niesie wszystkie Odłamki** (`hero.shards === shardTotal`). Odłamki rozproszone po kilku bohaterach nie wystarczą (trzeba je zebrać u jednego: dziś **nie ma** akcji przekazania Odłamków, przechodzą tylko przez pokonanie bohatera `loseShards`, więc rozszerzyć istniejące `passArtifact` (sites.ts, ta sama lub sąsiednia kratka) o Odłamki zamiast nowej akcji `passShards`, między bohaterami tej samej frakcji stojącymi na tym samym lub sąsiednim polu, w `types.ts` `Action`, `game.ts`, serwer `src/rooms/actions.ts`; bot przekazuje Odłamki bohaterowi najbliższemu własnej osady; dopisać do sekcji 7).
-- Dotyka: `empire.ts` (`mayBuildSpark(state, f)` → `mayBuildSpark(state, hero)`; zmienić wszystkie wywołania: `kingdom.ts` x3, `loseShards` komunikaty, `adventureAi`), tekst błędu („Do Pierwotnej Iskry potrzeba wszystkich Odłamków przy jednym bohaterze”), `SettlementDialog.tsx` (przycisk budowy i opis warunku, widok „ma n z N Odłamków”), bot (`kingdomBotAction`: bohater z kompletem wraca do własnej osady; bohaterowie z częścią idą do tego z największą częścią), tekst w `ZASADY_CYFROWE.md` (Relikt) i `INSTRUKCJA.md`; sekcja 7, pozycja 8 (decyzja Claude'a) zastąpiona.
-- Testy: `tests/` (relic/empire): dwóch bohaterów z podzielonymi Odłamkami nie zbuduje; jeden z kompletem w osadzie zbuduje; poza osadą nie. Cel „Relikt” w `objectives.ts` bez zmian.
-- Gotowe, gdy: testy zielone; sim `SIM_OBJECTIVE=relic` pokazuje, że boty nadal budują Relikt (wygrane w paśmie 45–65%; ewentualnie korekta liczby Odłamków `EMPIRE.shards`).
 
 **35. Bardzo trudny: surowce i artefakty startowe zamiast Życia** (M)
 - **Akceptacja autora (17.11):** liczby startowe robocze (+2 drewna, +2 rudy, +1 Pyłu, 1 artefakt rzadkości 1–2 dla głównego bohatera komputera) zatwierdzone jako kierunek, stroić pasmem 15–30%.

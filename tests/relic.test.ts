@@ -84,16 +84,33 @@ describe('level 6: the building of the Pierwotna Iskra', () => {
 
   it('costs every shard, is raised by a hero standing in its own settlement, and wins the Relic goal', () => {
     let s = game();
-    expect(mayBuildSpark(s, 'dawn')).toBe(false);
+    expect(mayBuildSpark(s, s.heroes.ancientBear)).toBe(false);
     expect(() => applyAction(s, { type: 'kingdomBuild', settlementId: home(s).id, building: 'spark' })).toThrow(/wszystkich Odłamków/);
     s = allShards(s);
-    expect(mayBuildSpark(s, 'dawn')).toBe(true);
+    expect(mayBuildSpark(s, s.heroes.ancientBear)).toBe(true);
     const away = structuredClone(s);
     away.heroes.ancientBear.pos = mapNeighbors(away.tiles, home(away).at)[0];
     expect(() => applyAction(away, { type: 'kingdomBuild', settlementId: home(away).id, building: 'spark' })).toThrow(/stojący w osadzie/);
     s = applyAction(s, { type: 'kingdomBuild', settlementId: home(s).id, building: 'spark' });
     expect(s.phase).toBe('over');
     expect(s.winner).toBe('dawn');
+  });
+
+  it('shards split between two heroes do not build; handed over to one hero they do', () => {
+    let s = allShards(createGame(setup({ mode: 'pvp', mapSize: 'medium', seed: 3, seats: pvpSeats('ancientBear', 'werewolfLord', 'goldDragon', 'blackDragon') }, rules)));
+    const bear = s.heroes.ancientBear;
+    const ally = s.heroes.goldDragon;
+    ally.pos = bear.pos;
+    bear.shards = shardTotal(s) - 1;
+    ally.shards = 1;
+    expect(shardsOf(s, 'dawn')).toBe(shardTotal(s));
+    expect(mayBuildSpark(s, bear)).toBe(false);
+    expect(() => applyAction(s, { type: 'kingdomBuild', settlementId: home(s).id, building: 'spark' })).toThrow(/przy jednym bohaterze/);
+    expect(activeHero(s)!.id).toBe('ancientBear');
+    s = applyAction(s, { type: 'passArtifact', artifactId: 'shards', toHeroId: ally.id });
+    expect(s.heroes[ally.id].shards).toBe(shardTotal(s));
+    expect(s.heroes.ancientBear.shards).toBe(0);
+    expect(() => applyAction(s, { type: 'passArtifact', artifactId: 'shards', toHeroId: ally.id })).toThrow(/nie niesie/);
   });
 
   it('in another goal it does not end the game but strengthens the faction\'s units', () => {

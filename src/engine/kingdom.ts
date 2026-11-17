@@ -10,12 +10,12 @@ import { log } from './log';
 import { mapNeighbors, tileCost } from './map';
 import { Rng } from './rng';
 import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsText, type Hut, type MapObject, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
-import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, type Rarity } from './sites';
+import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, passTargets, SHARDS_ID, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import { computerFaction, type Action, type Crystal, type GameState, type HeroState } from './types';
 import { MAGIC, SPELLS, towerSpells, type SpellId } from './magic';
 import { HERO_TYPES } from './heroTypes';
-import { FACTION_MECHANICS, mayBuildSpark, pickUpShard, placeShards, SPARK_NAMES, spendShards, TREE_NAMES } from './empire';
+import { FACTION_MECHANICS, mayBuildSpark, pickUpShard, placeShards, shardCollector, SPARK_NAMES, spendShards, TREE_NAMES } from './empire';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
 export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark';
@@ -588,7 +588,7 @@ export function kingdomAction(state: GameState, action: Action): void {
         if (!state.rules.empire) throw new Error('Pierwotna Iskra jest dopiero na poziomie Imperium.');
         if (buildingLevel(s, 'spark') > 0) throw new Error('Ten budynek jest już w pełni rozbudowany.');
         if (hero.pos !== s.at) throw new Error('Pierwotną Iskrę wznosi bohater stojący w osadzie.');
-        if (!mayBuildSpark(state, hero.faction)) throw new Error('Do Pierwotnej Iskry potrzeba wszystkich Odłamków z mapy.');
+        if (!mayBuildSpark(state, hero)) throw new Error('Do Pierwotnej Iskry potrzeba wszystkich Odłamków przy jednym bohaterze.');
         spendShards(state, hero.faction);
         s.buildings.spark = 1;
         log(state, 'crystal', `${FACTION_NAMES[hero.faction]} wznosi w osadzie ${s.name} budynek: ${SPARK_NAMES[hero.faction]}.`, undefined, { type: 'fx', kind: 'iskra', hex: s.at });
@@ -950,9 +950,14 @@ export function kingdomBotAction(state: GameState, hero: HeroState): Action | nu
     if (best(trial as HeroState) > best(hero)) return { type: 'equipArtifact', artifactId: art.id };
   }
   // Level 6: all the shards in hand and the hero in its own settlement: the Iskra goes up.
-  if (state.rules.empire && mayBuildSpark(state, hero.faction)) {
+  if (state.rules.empire && mayBuildSpark(state, hero)) {
     const at = settlementAt(state, hero.pos);
     if (at && at.owner === hero.faction) return { type: 'kingdomBuild', settlementId: at.id, building: 'spark' };
+  }
+  // Shards in several hands: hand them to the ally who collects (the most shards, then the nearest own settlement) when it is next to us.
+  if (state.rules.empire && (hero.shards ?? 0) > 0) {
+    const to = shardCollector(state, hero.faction);
+    if (to && to.id !== hero.id && passTargets(state, hero).some((h) => h.id === to.id)) return { type: 'passArtifact', artifactId: SHARDS_ID, toHeroId: to.id };
   }
   // Level 4: supports that do not fit into the team (more alive than places) stay to guard the settlement the hero stands in; a team with
   // a free place takes them back.

@@ -63,8 +63,16 @@ export const sparkOwner = (state: GameState): FactionId | null => {
 };
 export const hasSpark = (state: GameState, f: FactionId): boolean => Boolean(state.rules.empire) && sparkOwner(state) === f;
 
-/** Whether the faction may raise the Iskra now: every shard of the game is in the hands of its living heroes. */
-export const mayBuildSpark = (state: GameState, f: FactionId): boolean => Boolean(state.rules.empire) && shardTotal(state) > 0 && !sparkOwner(state) && shardsOf(state, f) === shardTotal(state);
+/** Whether this hero may raise the Iskra (standing in a settlement of its faction is checked by the build action): it alone carries every shard of the game. */
+export const mayBuildSpark = (state: GameState, hero: HeroState): boolean => Boolean(state.rules.empire) && hero.alive && shardTotal(state) > 0 && !sparkOwner(state) && (hero.shards ?? 0) === shardTotal(state);
+
+/** The hero a faction's shards are gathered at: the one carrying most, then the one nearest to an own settlement, then by id (all bots agree on it). */
+export function shardCollector(state: GameState, f: FactionId): HeroState | null {
+  const own = Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.owner === f).map((s) => parseKey(s.at));
+  const away = (h: HeroState) => Math.min(99, ...own.map((p) => distance(p, parseKey(h.pos))));
+  const carriers = Object.values(state.heroes).filter((h) => h.faction === f && h.alive && h.pos && (h.shards ?? 0) > 0);
+  return carriers.sort((a, b) => (b.shards ?? 0) - (a.shards ?? 0) || away(a) - away(b) || (a.id < b.id ? -1 : 1))[0] ?? null;
+}
 
 /** Shards go onto the map when the game is made: spread out, away from the bases, on hexes nothing else stands on; every side sees where they lie. */
 export function placeShards(state: GameState): void {
@@ -98,7 +106,7 @@ export function pickUpShard(state: GameState, hero: HeroState): void {
   hero.shards = (hero.shards ?? 0) + n;
   const f = hero.faction;
   log(state, 'crystal', `${UNITS[hero.id].name} podnosi Odłamek Pierwotnej Iskry (${FACTION_NAMES[f]}: ${shardsOf(state, f)}/${shardTotal(state)}).`, undefined, { type: 'fx', kind: 'odlamek', hex: hero.pos });
-  if (mayBuildSpark(state, f)) log(state, 'crystal', `${FACTION_NAMES[f]} ma wszystkie Odłamki: w swojej osadzie może wznieść ${SPARK_NAMES[f]}.`);
+  if (mayBuildSpark(state, hero)) log(state, 'crystal', `${UNITS[hero.id].name} niesie wszystkie Odłamki: w osadzie ${FACTION_NAMES[f]} może wznieść ${SPARK_NAMES[f]}.`);
 }
 
 /** A fallen hero's shards: the hero that beat it takes them, otherwise they fall onto the map near where it fell. */
@@ -109,7 +117,7 @@ export function loseShards(state: GameState, loser: HeroState, winner: HeroState
   if (winner?.alive) {
     winner.shards = (winner.shards ?? 0) + n;
     log(state, 'crystal', `${UNITS[winner.id].name} zabiera pokonanemu Odłamki Pierwotnej Iskry (${n}).`);
-    if (mayBuildSpark(state, winner.faction)) log(state, 'crystal', `${FACTION_NAMES[winner.faction]} ma wszystkie Odłamki: w swojej osadzie może wznieść ${SPARK_NAMES[winner.faction]}.`);
+    if (mayBuildSpark(state, winner)) log(state, 'crystal', `${UNITS[winner.id].name} niesie wszystkie Odłamki: w osadzie ${FACTION_NAMES[winner.faction]} może wznieść ${SPARK_NAMES[winner.faction]}.`);
     return;
   }
   const k = state.kingdom!;

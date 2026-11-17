@@ -4,7 +4,7 @@
 import { FACTION_SUPPORTS, ITEM_EFFECT, UNITS, type FactionId } from '../data';
 import { botWantsHut, buildingLevel, garrisonAt, kingdomBotAction, supportSlots, type Settlement } from '../kingdom';
 import { objectReady } from '../economy';
-import { mayBuildSpark } from '../empire';
+import { mayBuildSpark, shardCollector, shardsOf, shardTotal } from '../empire';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { heroTileCost } from '../sites';
@@ -756,10 +756,15 @@ function relicAction(state: GameState, memo: Memo): Action {
   if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
   const dist = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));
   const goals = new Set<HexKey>();
-  if (mayBuildSpark(state, hero.faction)) {
+  const total = shardTotal(state);
+  const collector = shardCollector(state, hero.faction);
+  if (mayBuildSpark(state, hero)) {
     // The automaton owns no settlements worth the walk: only players' sides build.
     for (const s of Object.values(k.settlements)) if (s.owner === hero.faction) goals.add(s.at);
     if (goals.has(hero.pos)) return { type: 'endTurn' };
+  } else if (collector && shardsOf(state, hero.faction) === total && hero.id !== collector.id && (hero.shards ?? 0) > 0) {
+    // All the shards are ours but split: bring them to the collector (the pass happens when we stand next to it).
+    goals.add(collector.pos);
   } else {
     for (const hex of Object.keys(k.shards ?? {})) if (!allies.some((a) => dist(a.pos, hex) < dist(hero.pos, hex))) goals.add(hex);
     for (const e of foes) if (e.shards && beatable(e)) goals.add(e.pos);

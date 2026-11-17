@@ -15,7 +15,7 @@ import { ECONOMY, MINE_NAMES, OBJECT_NAMES, OBJECTS, objectReady, RESOURCE_NAMES
 import { RESOURCE_ICON, ResourceStrip } from './resources';
 import { sfx } from './sfx';
 import { ARTIFACT_BY_ID } from '../engine/sites';
-import { heroTileCost, SITE } from '../engine/sites';
+import { heroTileCost, passTargets, SHARDS_ID, SITE } from '../engine/sites';
 import { controlHolder, controlWeight, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { parseKey, type HexKey } from '../engine/hex';
 import { mapNeighbors } from '../engine/map';
@@ -591,6 +591,9 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                   <div data-shards title="Odłamki Pierwotnej Iskry: niesione przez tego bohatera, razem u frakcji i wszystkich w grze" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
                     <img src={asset('ikony/mapa/odlamek.webp')} alt="" width={26} height={26} />
                     <span>Odłamki: niesie <b>{hero.shards ?? 0}</b> · frakcja <b>{shardsOf(state, hero.faction)}</b> / {shardTotal(state)}</span>
+                    {(hero.shards ?? 0) > 0 && canAct && passTargets(state, hero).map((h) => (
+                      <button key={h.id} className="btn plate parch" data-pass-shards={h.id} style={{ padding: '1px 8px', fontSize: 13 }} onClick={() => onAction({ type: 'passArtifact', artifactId: SHARDS_ID, toHeroId: h.id })}>Przekaż Odłamki: {UNITS[h.id].name}</button>
+                    ))}
                   </div>
                 )}
                 {state.rules.realm && (hero.spells?.length ?? 0) > 0 && (
