@@ -5057,26 +5057,63 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
-      "id": "ui/okna-ozdobniki",
+      "id": "ui/okno-ksiega-czarow",
+      "pliki": [
+        "public/assets/ui/spellbook_bg.webp"
+      ],
+      "typ": "tło okna Księgi czarów (otwarta księga)",
+      "opis": "1536x1024, wybrany wariant 2 z 2 (potwierdzone porównaniem pikseli). Rozciągane przez CSS border-image (rogi zachowują kształt). Zastępuje tło CSS .spellbook. Prompt zapisany w Scenario jako asset tekstowy; opis wyniku: otwarta księga z pustymi pergaminowymi stronami, ciemnobrązowa skórzana okładka, złote narożniki.",
+      "scenario_asset": {
+        "zadanie": "job_V2HCWBTzUycnS3qQBppqu6Gq",
+        "prompt": "asset_pbySshM4eqsn9UmiK8w923ZW",
+        "wynik_uzyty": "asset_iNRcko1bomxfL2efugHaJw33",
+        "wariant_odrzucony": "asset_Mqsr9kYyeAG3iP666divkGPE"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 2 warianty za 6 CU",
+      "data": "2026-11-17",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/okno-skrzynia-skarbow",
+      "pliki": [
+        "public/assets/ui/chest_bg.webp"
+      ],
+      "typ": "tło okna skarbów (otwarta skrzynia z czerwonym aksamitem)",
+      "opis": "1280x1024, wybrany wariant 2 z 2 (potwierdzone porównaniem pikseli). Rozciągane przez CSS border-image. Zastępuje tło CSS .chestbox. Prompt zapisany w Scenario jako asset tekstowy.",
+      "scenario_asset": {
+        "zadanie": "job_ugtna2uftb4ozBPVk1n25DXd",
+        "prompt": "asset_tYjEKvtAxm4xyXR3ae75b8BH",
+        "wynik_uzyty": "asset_N1eqWb17srvFANDWsNnms4Aa",
+        "wariant_odrzucony": "asset_EsuovBmhrr4gLw8gPgBLjtbD"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 2 warianty za 6 CU",
+      "data": "2026-11-17",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/ramka-narozniki",
       "pliki": [
         "public/assets/ui/corner_gold_tl.webp",
         "public/assets/ui/corner_gold_tr.webp",
         "public/assets/ui/corner_gold_bl.webp",
-        "public/assets/ui/corner_gold_br.webp",
-        "public/assets/ui/spellbook_bg.webp",
-        "public/assets/ui/chest_bg.webp"
+        "public/assets/ui/corner_gold_br.webp"
       ],
-      "typ": "narożniki złotej ramki (szafir), tło okna Księgi czarów (otwarta księga), tło okna skrzyni skarbów (otwarta skrzynia)",
-      "opis": "Trzy obrazy z jednej serii (po jednej próbie, wybrane bez powtórek). Narożnik: oryginał 176x176 przycięty do 112x112 i odbity lustrzanie w trzech wariantach (scripts: PIL). Księga 1536x1024 i skrzynia 1280x1024 rozciągane przez CSS border-image (rogi zachowują kształt). Zastępują narożniki SVG z .gf::after oraz tła CSS .spellbook i .chestbox.",
+      "typ": "narożniki złotej ramki .gf (złote zdobienia z szafirem)",
+      "opis": "Oryginał 512x512 z przezroczystym tłem; w grze 112x112 w czterech wariantach (lustrzane odbicia, PIL), wyświetlane po 54 px. Którego z dwóch wariantów użyto: nieustalone (porównanie pikseli niejednoznaczne). Zastępuje narożniki SVG z .gf::after. Prompt zapisany w Scenario jako asset tekstowy.",
       "scenario_asset": {
-        "zadania": [
-          "job_ugtna2uftb4ozBPVk1n25DXd",
-          "job_V2HCWBTzUycnS3qQBppqu6Gq",
-          "job_VoxjCMmJB2E6HwBQuqNZY1bs"
+        "zadanie": "job_VoxjCMmJB2E6HwBQuqNZY1bs",
+        "prompt": "asset_QbsSboofrTqYdfPHn6f3oWWq",
+        "warianty": [
+          "asset_4xDQvwjBUFMj3swHje2FCo8s",
+          "asset_fnnCiLPPb5jKCzckgznidnvi"
         ]
       },
       "narzedzie": "Scenario (plan płatny)",
-      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość high, 3 x 6 CU",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 2 warianty za 6 CU",
       "data": "2026-11-17",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"

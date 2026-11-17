@@ -204,7 +204,7 @@ Frakcja to ok. 3 bohaterów i 7 jednostek (`DECYZJE.md`): 10 postaci.
 | **Razem** | **ok. 1 200** | **ok. 1 650** |
 Do tego ok. 3–4 h pracy nad pakowaniem, kontrolą i wpisami (`PRZEPIS_JEDNOSTKI.md`). Przy braku limitu jednej jednostki (100 CU) wychodzi ok. 1 000 CU samych postaci. Szacunek do aktualizacji po pierwszej nowej frakcji (Dzikie Stada), kiedy będzie znany koszt rzeczywisty.
 
-**Wydatki 17.11 (nocne zadanie):** ikony 5 czarów kręgu III i Przyspieszenia 7 CU; efekty 5 czarów (obraz 3 + klip 10 CU) 65 CU; medale poziomów Wyprawa, Osada, Księstwo 7 CU. Ozdobniki okien (narożnik ramki, tło Księgi czarów, tło skrzyni) 18 CU. Razem 97 CU.
+**Wydatki 17.11 (nocne zadanie):** ikony 5 czarów kręgu III i Przyspieszenia 7 CU; efekty 5 czarów (obraz 3 + klip 10 CU) 65 CU; medale poziomów Wyprawa, Osada, Księstwo 7 CU. Ozdobniki okien (narożnik ramki, tło Księgi czarów, tło skrzyni; po 2 warianty, jakość medium) 18 CU. Razem 97 CU.
 
 Wpisy autora z 17.11 (wieczór):
 - **(17.11, czary)** Trzy kręgi, ulepszanie Wieży maga otwiera wyższy krąg; docelowo pięć (punkt 33).
