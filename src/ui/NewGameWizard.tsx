@@ -11,7 +11,7 @@ import { defaultCustom } from '../engine/presets';
 import type { Level, MapShape, Mode, ObjectiveId } from '../engine/types';
 import type { TableConfig } from '../online/api';
 import { asset, Frame, Ribbon } from './common';
-import { CustomSwitchRows } from './CustomSwitchRows';
+import { CoopSwitchRows, CustomSwitchRows } from './CustomSwitchRows';
 import { ARENA_HINT, ARENA_LEVEL_TIPS, BOARD_LEVELS, CentredChoice, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, ShapeIcon, SHAPE_NAMES, SHAPE_TIPS, SIZE_CODES, Tip, TIPS } from './setupShared';
 
 export const EDITION_KEY = 'skd-edition';
@@ -51,7 +51,7 @@ function draftOf(t: TableConfig): Draft {
     mapSize: t.mapSize,
     level: t.level,
     count: t.seats.length,
-    custom: t.tier === 'custom' && t.rules && t.battleMode ? { growth: t.growth === true, battleMode: t.battleMode, rules: t.rules } : null,
+    custom: t.tier === 'custom' && t.rules && t.battleMode ? { growth: t.growth === true, layer: t.layer ?? 'none', battleMode: t.battleMode, rules: t.rules } : null,
   };
 }
 
@@ -61,11 +61,12 @@ const READY_MAPS = () => Object.values(CUSTOM_MAPS);
 function pagesOf(d: Draft): Page[] {
   const pages: Page[] = ['edition'];
   if (d.digital) pages.push('tier');
+  // "Własne ustawienia" come right after the card; what depends on the mode waits for the players page.
+  if (d.digital && d.tier === 'custom') pages.push('custom');
   pages.push('mode');
   const adventure = d.digital && d.tier !== 'adventure' && d.mode !== 'arena';
   if (adventure) pages.push('objective', 'map');
   pages.push('players');
-  if (adventure && d.tier === 'custom') pages.push('custom');
   return pages;
 }
 
@@ -131,6 +132,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
   };
   const choose = (p: Partial<Draft>, advance = true) => {
     const next = { ...d, ...p };
+    // The custom page starts from what the level preset sets (the mode is not known yet: the mode-bound switches come on the players page).
+    if (next.tier === 'custom' && !next.custom) next.custom = defaultCustom(next.level, next.mode);
     setD(next);
     if (advance) goFrom(page, next);
   };
@@ -151,7 +154,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
   const setMode = (mode: Mode) => {
     const count = mode === 'pvp' ? Math.max(2, d.count) : mode === 'arena' ? 2 : Math.min(3, d.count);
     const level = mode === 'pvp' && d.level === 'hard' && !d.digital ? 'normal' : mode === 'arena' && d.level === 'zero' ? 'kids' : d.level;
-    choose({ mode, count, level, custom: null, ...(mode !== 'coop' && d.objective === 'survival' ? { objective: 'crystals' as ObjectiveId } : {}) });
+    choose({ mode, count, level, ...(mode !== 'coop' && d.objective === 'survival' ? { objective: 'crystals' as ObjectiveId } : {}) });
   };
 
   /** The finished table: what the online room and the local setup are made from. */
@@ -167,19 +170,13 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
       ...(tier !== 'adventure' && d.mode === 'coop' && d.objective === 'boss' && d.noHorde ? { noHorde: true } : {}),
       mapSize: d.mapSize,
       level: d.level,
-      ...(tier === 'custom' && custom ? { growth: custom.growth, battleMode: custom.battleMode, rules: custom.rules } : {}),
+      ...(tier === 'custom' && custom ? { growth: custom.growth, layer: custom.layer, battleMode: custom.battleMode, rules: custom.rules } : {}),
       // Online every seat waits for a player, except the arena's opponent.
       seats: defaultHeroes(d.mode, d.count).map((seat, i) => ({ ...seat, bot: d.mode === 'arena' && i === 1 })),
     };
     onFinish(table);
   };
   const next = () => {
-    if (page === 'players' && pages.includes('custom')) {
-      const custom = d.custom ?? defaultCustom(d.level, d.mode);
-      patch({ custom });
-      setPage('custom');
-      return;
-    }
     if (at >= pages.length - 1) return finish();
     setPage(pages[at + 1]);
   };
@@ -204,9 +201,9 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
         <div className="opt-grid" data-wizard-page="tier">
           <Card on={d.tier === 'adventure' && d.level === 'zero'} title="Spacer" text="Poziom 0. Dla najmłodszych (od 5 lat): krótkie pojedynki bohaterów na planszy, bez zdolności i kości, bez rytuału. Zasady do ogarnięcia w kilka minut." img={pic(asset('ui/menu/krolik.webp'))} onClick={() => choose({ tier: 'adventure', level: 'zero' })} />
           <Card on={d.tier === 'adventure' && d.level !== 'zero'} title="Przygoda" text="Poziom 1. Pełne bitwy na arenie, kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start z pełną grą." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure', level: notZero })} />
-          <Card on={d.tier === 'expedition'} title="Wyprawa" text="Poziom 2. Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ikony/mapa/camp.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
-          <Card on={d.tier === 'kingdom'} title="Osada" text="Poziom 3. Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ikony/mapa/treasure.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
-          <Card on={d.tier === 'economy'} title="Księstwo" text="Poziom 4. Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył." img={pic(asset('ikony/mapa/tartak.webp'))} onClick={() => choose({ tier: 'economy', level: notZero })} />
+          <Card on={d.tier === 'expedition'} title="Wyprawa" text="Poziom 2. Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ui/menu/wyprawa.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
+          <Card on={d.tier === 'kingdom'} title="Osada" text="Poziom 3. Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ui/menu/osada.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
+          <Card on={d.tier === 'economy'} title="Księstwo" text="Poziom 4. Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył." img={pic(asset('ui/menu/ksiestwo.webp'))} onClick={() => choose({ tier: 'economy', level: notZero })} />
           <Card on={d.tier === 'realm'} title="Królestwo" text="Poziom 5. Księstwo plus bohaterowie i magia: drugi bohater-dowódca najęty w karczmie, czary w bitwie i na mapie, specjalności bohaterów." img={pic(asset('ui/menu/krolestwo.webp'))} onClick={() => choose({ tier: 'realm', level: notZero })} />
           <Card on={d.tier === 'empire'} title="Imperium" text="Poziom 6. Królestwo plus frakcje i Relikt: Odłamki Pierwotnej Iskry, budynek Pierwotnej Iskry, mechaniki i legendarna jednostka frakcji." img={pic(asset('ui/menu/imperium.webp'))} onClick={() => choose({ tier: 'empire', level: notZero })} />
           <Card on={d.tier === 'custom'} title="Własne ustawienia" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', level: notZero, custom: null })} />
@@ -301,17 +298,19 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
           </Row>
           )}
           {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4, textAlign: 'center' }}>{LEVEL_HINT[d.level]}</div>}
+          {d.tier === 'custom' && d.custom && d.mode === 'coop' && !arena && <CoopSwitchRows rules={d.custom.rules} onRules={(r) => patch({ custom: { ...d.custom!, rules: { ...d.custom!.rules, ...r } } })} />}
         </div>
       )}
 
       {page === 'custom' && d.custom && (
         <div data-wizard-page="custom">
           <CustomSwitchRows
-            mode={d.mode}
             growth={d.custom.growth}
+            layer={d.custom.layer}
             battleMode={d.custom.battleMode}
             rules={d.custom.rules}
-            onGrowth={(growth) => patch({ custom: { ...d.custom!, growth } })}
+            onGrowth={(growth) => patch({ custom: { ...d.custom!, growth, ...(growth ? {} : { layer: 'none' as const }) } })}
+            onLayer={(layer) => patch({ custom: { ...d.custom!, layer } })}
             onBattleMode={(battleMode) => patch({ custom: { ...d.custom!, battleMode } })}
             onRules={(r) => patch({ custom: { ...d.custom!, rules: { ...d.custom!.rules, ...r } } })}
           />

@@ -561,3 +561,10 @@ Reguła `empire` (karta „Imperium” w kreatorze, `tier: 'empire'`; wymaga reg
 
 ### Bardzo trudny: przewagi komputera (17.11)
 Komputer na Bardzo trudnym (`COMPUTER_HANDICAP.veryHard` w `types.ts`) **nie ma więcej Życia jednostek** (decyzja autora). Ma: dochody ×1,5 (`computerGold`), 2 losowe skarby więcej na start (`computerTreasures`), na poziomach z surowcami +3 drewna, +3 rudy i +2 Pyłu na starcie (`computerResources`, `initKingdom`) i na poziomach z rozwojem bohatera 2 artefakty rzadkości 1–2 dla głównego bohatera (`computerArtifacts`, `createGame`, `COMPUTER_ARTIFACT_ODDS`). Ludzie nie dostają żadnej z tych rzeczy. Arena: bot bez błędów (punkt 48 dołoży dźwignie).
+
+### „Własne ustawienia” w kreatorze (17.11)
+- **Kolejność kroków:** wersja → poziom → **własne ustawienia** (zaraz po karcie) → tryb → cel → mapa → gracze. Przełączniki zależne od trybu (kooperacja: „Dodatkowy bohater Hordy”, `CoopSwitchRows`) są na stronie graczy. Domyślne wartości strony pochodzą z poziomu „Normalny” (`defaultCustom`); `customSettings` przy starcie dopasowuje je do trybu.
+- **Pięć sekcji** (`CustomSwitchRows`): Poziomy i mechaniki (`layer`: bez osad / osady i złoto / + surowce i oblężenia / + drugi bohater i magia / + Relikt i frakcje; wymaga rozwoju bohatera), Bohater (ruch 2–5, rezerwowy bohater), Bitwa (arena lub plansza, bez zdolności, kość, remis inicjatywy), Limit rund bitwy (20 / 30 / 40 / 60 / 80), Horda i komputer (posiłki Hordy, dodatkowy bohater w koopie), Skarby i start (same Eliksiry).
+- **Walidacja:** `parseCustom` przyjmuje tylko pola z list (`CUSTOM_BOOLEAN_RULES`, `HERO_MOVE_POINTS`, `BATTLE_ROUND_LIMITS`, `CUSTOM_LAYERS`); bez rozwoju bohatera warstwa spada do „bez osad”.
+- **Ranking:** gry na własnych ustawieniach **nie dają punktów** (`pointsFor` zwraca 0 dla `custom`; online już dziś ich nie liczył).
+- **Online:** serwer zna pola z wydanego silnika; nowe pola (`layer`, ruch, limit rund, posiłki) zadziałają online dopiero po wydaniu gry i aktualizacji silnika w serwerze (starszy serwer odrzuci je jako nieznane zasady).

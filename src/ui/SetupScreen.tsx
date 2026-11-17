@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, SECRET_HEROES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import { CUSTOM_MAPS } from '../engine/customMaps';
-import { resolveTier, withRuleset, type Tier } from '../engine/presets';
+import { layerSwitches, resolveTier, withRuleset, type CustomLayer, type Tier } from '../engine/presets';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
@@ -55,6 +55,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const [objective, setObjective] = useState<ObjectiveId>('crystals');
   const [shape, setShape] = useState<MapShape>('triangle');
   const [growth, setGrowth] = useState(false);
+  const [layer, setLayer] = useState<CustomLayer>('none');
   const [noHorde, setNoHorde] = useState(false);
   /** The complexity level of a digital adventure (presets.ts): decides which of the switches below the player may change. */
   const [tier, setTier] = useState<Tier>('adventure');
@@ -82,7 +83,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
 
 
   const startGame = () => {
-    const r = resolveTier(tier, { objective, shape, customMapId: customId, growth });
+    const r = resolveTier(tier, { objective, shape, customMapId: customId, growth, ...(tier === 'custom' && growth ? layerSwitches(layer) : {}) });
     onStart(withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero, ...(noHorde && mode === 'coop' && r.objective === 'boss' ? { noHorde: true } : {}) } }, digital, r.objective, r.shape, r.customMapId, r.growth, r.kingdom, r.economy, r.realm, r.empire));
   };
   /** The wizard is done: its choices become this screen's state, and the seats come next. */
@@ -103,6 +104,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     setShape(t.shape);
     if (t.customMapId) setCustomId(t.customMapId);
     setGrowth(t.growth === true);
+    setLayer(t.layer ?? 'none');
     setNoHorde(t.noHorde === true);
     setStep('table');
   };

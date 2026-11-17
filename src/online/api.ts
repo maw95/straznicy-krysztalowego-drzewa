@@ -3,7 +3,7 @@
 // VITE_SERVER_URL overrides both.
 
 import type { MapSize } from '../engine/data';
-import type { CustomRules } from '../engine/presets';
+import type { CustomLayer, CustomRules } from '../engine/presets';
 import type { BattleMode, GameState, MapShape, ObjectiveId } from '../engine/types';
 
 export const SERVER_URL: string =
@@ -45,6 +45,7 @@ export interface RoomView {
   noHorde?: boolean;
   /** Tier "Własne" only (a server without it leaves them out): hero growth, the kind of battles and the rule switches. Games of this tier do not count for the ranking. */
   growth?: boolean;
+  layer?: CustomLayer;
   battleMode?: BattleMode;
   rules?: CustomRules;
   /** The computer's pace in this room, set by the owner (the same names as in the game's options). */
@@ -69,6 +70,7 @@ export interface TableConfig {
   customMapId?: string;
   noHorde?: boolean;
   growth?: boolean;
+  layer?: CustomLayer;
   battleMode?: BattleMode;
   rules?: CustomRules;
   seats: Array<{ faction: 'dawn' | 'horde'; heroId: string; bot: boolean }>;

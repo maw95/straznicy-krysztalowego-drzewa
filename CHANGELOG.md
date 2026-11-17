@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Własne ustawienia: ekran pojawia się od razu po wyborze karty (przed trybem) i ma pięć sekcji: poziomy i mechaniki (osady, surowce, magia, Relikt), bohater (ruch 2–5), bitwa, limit rund bitwy oraz horda i skarby; ustawienia zależne od trybu (dodatkowy bohater Hordy) są na stronie graczy. Gry na własnych ustawieniach nie dają punktów rankingu.
+
 - Kreator nowej gry: wszystkie sekcje (liczba graczy, wielkość mapy, trudność, a także ustawienia własne) mają ten sam układ: duży tytuł i pod nim przyciski wyśrodkowane w jednej linii, bez nachodzenia na siebie.
 
 - Magia: trzy kręgi czarów. Nowa „Arcywieża maga” (trzecie ulepszenie wieży, 11 zł + 4 rudy + 4 Pyły) uczy czarów trzeciego kręgu: Grom, Klątwa, Tarcza i Natchnienie; w pierwszym kręgu pojawia się Przyspieszenie (+2 ruchu na mapie). Komputer też ich używa.

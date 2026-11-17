@@ -60,18 +60,20 @@ describe('setup screen simplifications', () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<StrictMode><App /></StrictMode>);
     const btn = (t: string) => pick(container, t)!;
-    // Single switches are tucked away under the "Własne ustawienia" level (the last page of the wizard).
-    await newGame(container, 'Cyfrowa', 'Własne ustawienia', 'Kooperacja', 'Dalej →', 'Dalej →');
-    expect(btn('Same Eliksiry Odrodzenia')).toBeUndefined();
-    // Every option explains itself in a hover tooltip next to its button.
+    // Single switches are tucked away under the "Własne ustawienia" level: their page comes right after the card.
+    await newGame(container, 'Cyfrowa', 'Własne ustawienia');
     const tip = (t: string) => btn(t).parentElement!.querySelector('[role="tooltip"]')?.textContent ?? '';
-    for (const t of ['Mała', 'Bardzo duża', 'Łatwy', 'Normalny', 'Trudny']) expect(tip(t).length).toBeGreaterThan(40);
-    expect(tip('Mała')).toContain('limit 8 rund');
-    await click(container, 'Dalej →');
-    for (const t of ['Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Dodatkowy bohater Hordy']) expect(btn(t).getAttribute('aria-pressed')).toBe('false');
-    for (const t of ['Osobna arena (3 na 3)', 'Na planszy głównej (pojedynek 1 na 1)', 'Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Dodatkowy bohater Hordy']) expect(tip(t).length).toBeGreaterThan(40);
+    for (const t of ['Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością']) expect(btn(t).getAttribute('aria-pressed')).toBe('false');
+    for (const t of ['Osobna arena (3 na 3)', 'Na planszy głównej (pojedynek 1 na 1)', 'Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Osady i złoto', 'Ruch 4', '60']) expect(tip(t).length).toBeGreaterThan(20);
+    // What depends on the mode is not on that page: the extra Horde hero comes on the players page, in coop.
+    expect(btn('Dodatkowy bohater Hordy')).toBeUndefined();
     await click(container, 'Same Eliksiry Odrodzenia', 'Rzut kością');
     expect(btn('Same Eliksiry Odrodzenia').getAttribute('aria-pressed')).toBe('true');
+    await click(container, 'Dalej →', 'Kooperacja', 'Dalej →', 'Dalej →');
+    expect(btn('Dodatkowy bohater Hordy').getAttribute('aria-pressed')).toBe('false');
+    // Every option explains itself in a hover tooltip next to its button.
+    for (const t of ['Mała', 'Bardzo duża', 'Łatwy', 'Normalny', 'Trudny']) expect(tip(t).length).toBeGreaterThan(40);
+    expect(tip('Mała')).toContain('limit 8 rund');
     await click(container, 'Dalej →', 'Rozpocznij grę');
     const game = (window as any).__game;
     expect(game.rules).toMatchObject({ abilities: true, treasures: false, useDice: true, heroReplacement: false });
@@ -255,13 +257,13 @@ describe('setup options', () => {
     expect(doc.body.textContent).not.toContain('Remis inicjatywy');
     cleanup();
     const second = render(<App />).container.ownerDocument;
-    await newGame(second, 'Cyfrowa', 'Własne ustawienia', 'Kooperacja', 'Dalej →', 'Dalej →', 'Dalej →');
-    expect(pick(second, 'Obrońca pierwszy')!.getAttribute('aria-pressed')).toBe('true');
-    await click(second, 'Na zmianę');
-    expect(pick(second, 'Na zmianę')!.getAttribute('aria-pressed')).toBe('true');
-    // Going back and picking a difficulty restores its preset, including the default rule.
-    await click(second, '← Wstecz', 'Normalny', 'Dalej →');
-    expect(pick(second, 'Obrońca pierwszy')!.getAttribute('aria-pressed')).toBe('true');
+    await newGame(second, 'Cyfrowa', 'Własne ustawienia');
+    expect(pick(second, 'Remis: Obrońca pierwszy')!.getAttribute('aria-pressed')).toBe('true');
+    await click(second, 'Remis: Na zmianę');
+    expect(pick(second, 'Remis: Na zmianę')!.getAttribute('aria-pressed')).toBe('true');
+    // The custom switches survive going on to the other pages and coming back.
+    await click(second, 'Dalej →', 'Kooperacja', '← Wstecz', '← Wstecz');
+    expect(pick(second, 'Remis: Na zmianę')!.getAttribute('aria-pressed')).toBe('true');
   });
 });
 

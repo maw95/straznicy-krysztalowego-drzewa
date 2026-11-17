@@ -154,7 +154,9 @@ export const tierPointsFactor = (r: { kingdom?: boolean; economy?: boolean; real
 export const VERY_HARD_POINTS_FACTOR = 1.5;
 
 export function pointsFor(setup: SetupOptions, level: LevelName, side: FactionId): number {
-  if (setup.mode === 'arena') return ARENA_POINTS[level === 'custom' ? 'normal' : level];
+  // "Własne ustawienia" score nothing: only the ready levels count for the ranking (decision of 17.11).
+  if (level === 'custom') return 0;
+  if (setup.mode === 'arena') return ARENA_POINTS[level];
   if (level === 'veryHard') {
     // The hard column (the normal one where no hard level was measured) times 1.5, instead of the rating one step higher.
     const hard = Math.min(MAX_POINTS, pointsFor(setup, 'hard', side));

@@ -51,16 +51,31 @@ export function withRuleset(setup: SetupOptions, digital: boolean, objective: Ob
 // ------------------------------------------------------------------ "Własne ustawienia" at a table
 
 /** The loose rule switches of the custom tier: the ones the setup screen shows as "Ułatwienia", "Utrudnienia" and "Remis inicjatywy". */
-export type CustomRules = Pick<RulesConfig, 'abilities' | 'treasures' | 'heroReplacement' | 'useDice' | 'extraEvilHero' | 'initiativeTie'>;
+export type CustomRules = Pick<RulesConfig, 'abilities' | 'treasures' | 'heroReplacement' | 'useDice' | 'extraEvilHero' | 'initiativeTie' | 'heroMovePoints' | 'battleRoundLimit' | 'hordeRespawn'>;
+
+/** The layers of the higher levels a custom game switches on (each includes the ones before it; they need hero growth): none = level 2's rules. */
+export type CustomLayer = 'none' | 'kingdom' | 'economy' | 'realm' | 'empire';
+export const CUSTOM_LAYERS: CustomLayer[] = ['none', 'kingdom', 'economy', 'realm', 'empire'];
+export const CUSTOM_LAYER_NAMES: Record<CustomLayer, string> = { none: 'Bez osad', kingdom: 'Osady i złoto', economy: '+ surowce i oblężenia', realm: '+ drugi bohater i magia', empire: '+ Relikt i frakcje' };
+/** The tier switches of a layer (what `resolveTier` returns for the levels). */
+export const layerSwitches = (layer: CustomLayer): Pick<Switches, 'kingdom' | 'economy' | 'realm' | 'empire'> => {
+  const i = CUSTOM_LAYERS.indexOf(layer);
+  return { kingdom: i >= 1, economy: i >= 2, realm: i >= 3, empire: i >= 4 };
+};
+/** Allowed values of the numeric switches. */
+export const HERO_MOVE_POINTS = [2, 3, 4, 5];
+export const BATTLE_ROUND_LIMITS = [20, 30, 40, 60, 80];
 
 /** Everything the custom tier lets a player change besides the goal and the map (those are `Switches`). */
 export interface CustomTable {
   growth: boolean;
+  /** Settlements, resources, magic and the Relic on top of hero growth (only with `growth`). */
+  layer: CustomLayer;
   battleMode: BattleMode;
   rules: CustomRules;
 }
 
-export const CUSTOM_BOOLEAN_RULES = ['abilities', 'treasures', 'heroReplacement', 'useDice', 'extraEvilHero'] as const;
+export const CUSTOM_BOOLEAN_RULES = ['abilities', 'treasures', 'heroReplacement', 'useDice', 'extraEvilHero', 'hordeRespawn'] as const;
 export const INITIATIVE_TIES: InitiativeTieMode[] = ['defender', 'rotating'];
 const BATTLE_MODES: BattleMode[] = ['arena', 'board'];
 
@@ -69,8 +84,9 @@ export function defaultCustom(level: Level, mode: Mode): CustomTable {
   const { battleMode, rules } = levelSettings(level, mode);
   return {
     growth: false,
+    layer: 'none',
     battleMode,
-    rules: { abilities: rules.abilities, treasures: rules.treasures, heroReplacement: rules.heroReplacement, useDice: rules.useDice, extraEvilHero: rules.extraEvilHero, initiativeTie: rules.initiativeTie },
+    rules: { abilities: rules.abilities, treasures: rules.treasures, heroReplacement: rules.heroReplacement, useDice: rules.useDice, extraEvilHero: rules.extraEvilHero, initiativeTie: rules.initiativeTie, heroMovePoints: rules.heroMovePoints, battleRoundLimit: rules.battleRoundLimit, hordeRespawn: rules.hordeRespawn !== false },
   };
 }
 
@@ -78,11 +94,15 @@ export function defaultCustom(level: Level, mode: Mode): CustomTable {
  * A custom table as a client sends it, checked field by field (a server must not take arbitrary rule fields): the allowed switches only, each
  * with a value from its list; a missing field keeps the level's value. A Polish reason when something is wrong.
  */
-export function parseCustom(input: { growth?: unknown; battleMode?: unknown; rules?: unknown }, level: Level, mode: Mode): CustomTable | string {
+export function parseCustom(input: { growth?: unknown; layer?: unknown; battleMode?: unknown; rules?: unknown }, level: Level, mode: Mode): CustomTable | string {
   const out = defaultCustom(level, mode);
   if (input.growth !== undefined) {
     if (typeof input.growth !== 'boolean') return 'Nieprawidłowe ustawienie rozwoju bohatera.';
     out.growth = input.growth;
+  }
+  if (input.layer !== undefined) {
+    if (!CUSTOM_LAYERS.includes(input.layer as CustomLayer)) return 'Nieznana warstwa mechanik.';
+    out.layer = input.layer as CustomLayer;
   }
   if (input.battleMode !== undefined) {
     if (!BATTLE_MODES.includes(input.battleMode as BattleMode)) return 'Nieznany rodzaj bitew.';
@@ -95,14 +115,21 @@ export function parseCustom(input: { growth?: unknown; battleMode?: unknown; rul
       if ((CUSTOM_BOOLEAN_RULES as readonly string[]).includes(key)) {
         if (typeof value !== 'boolean') return `Nieprawidłowa wartość zasady „${key}”.`;
         (out.rules as unknown as Record<string, unknown>)[key] = value;
+      } else if (key === 'heroMovePoints') {
+        if (!HERO_MOVE_POINTS.includes(value as number)) return 'Nieprawidłowy ruch bohatera.';
+        out.rules.heroMovePoints = value as number;
+      } else if (key === 'battleRoundLimit') {
+        if (!BATTLE_ROUND_LIMITS.includes(value as number)) return 'Nieprawidłowy limit rund bitwy.';
+        out.rules.battleRoundLimit = value as number;
       } else if (key === 'initiativeTie') {
         if (!INITIATIVE_TIES.includes(value as InitiativeTieMode)) return 'Nieznana zasada remisu inicjatywy.';
         out.rules.initiativeTie = value as InitiativeTieMode;
       } else return `Nieznana zasada „${key}”.`;
     }
   }
-  // "Dodatkowy bohater Hordy" exists in coop only.
+  // "Dodatkowy bohater Hordy" exists in coop only; the layers need hero growth.
   if (mode !== 'coop') out.rules.extraEvilHero = false;
+  if (!out.growth) out.layer = 'none';
   return out;
 }
 
