@@ -790,7 +790,8 @@ describe('level IV: the settlement window', () => {
     await act(async () => fireEvent.click(doc.querySelector('[data-building="council"]')!));
     expect(doc.querySelector('[data-settlement]')!.getAttribute('data-view')).toBe('tree');
     expect(doc.querySelectorAll('[data-tree-node]').length).toBe(5);
-    expect(doc.querySelectorAll('[data-tree-line]').length).toBe(4);
+    // One line per family: the children of the council hang on one bar, the children of the barracks on another.
+    expect(doc.querySelectorAll('[data-tree-line]').length).toBe(2);
     const node = (b: string) => doc.querySelector(`[data-tree-node="${b}"]`) as HTMLElement;
     expect(node('hospital').getAttribute('data-node-state')).toBe('blocked');
     await act(async () => fireEvent.click(node('hospital')));

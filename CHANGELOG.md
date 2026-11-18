@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Rada Osady, drzewko: układ jak drzewo rodzinne. Budynek stoi obok swoich dzieci, a rodzic na środku ich rzędu; linie rozgałęziają się z jednej szyny, a pary „lub” (siedliska) łączą się nawiasem na wejściu i jedną wspólną szyną na wyjściu, zamiast czterech krzyżujących się linii. Linie nigdzie na siebie nie nachodzą, w obu frakcjach.
+
 - Podpowiedzi po najechaniu myszą (cena, zdolność, skrót klawiszowy, powód zablokowanego przycisku) pokazują się w pergaminowej dymce w stylu gry, a nie w szarym okienku przeglądarki.
 
 - Eliksir Odrodzenia: każdy bohater może wstać dzięki niemu tylko raz na partię (na mapie i w bitwie); pomocników limit nie dotyczy.
