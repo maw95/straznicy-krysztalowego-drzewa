@@ -4916,7 +4916,7 @@
         "public/assets/ikony/trudnosc/dragon.webp"
       ],
       "typ": "ikony poziomów trudności (królik, wilk, niedźwiedź, smok): czarne sylwetki z przezroczystością, w grze jako maska CSS w kolorze tekstu",
-      "opis": "Cztery ikony wycięte z arkusza od autora (ikony_poziomow_trudnosci.png, 2172x724), kadr do sylwetki, kwadrat 192 px, WebP.",
+      "opis": "Cztery ikony wycięte z arkusza od autora (ikony_poziomow_trudnosci.png, 2172x724), kadr do sylwetki, kwadrat 192 px, WebP. Aktualizacja 18.11.2026: dragon.webp (Bardzo trudny) wymieniony na nową ikonę od autora, 4. z arkusza ikony_poziomow_trudnosci.png (głowa smoka z przodu; poprzednia: smok z profilu).",
       "narzedzie": "dostarczone przez autora",
       "data": "2026-11-16",
       "ai": null,

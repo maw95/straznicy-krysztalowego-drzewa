@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Poziom trudności „Bardzo trudny” ma nową ikonę (głowa smoka z przodu).
 - Wybór poziomu gry: nowa ikona „Księstwa” (dwór z młynem, tartakiem, wozem z rudą i katapultą).
 - Wybór poziomu gry: ikony „Królestwo” i „Imperium” nie pokazują już kawałków sąsiednich ikon na brzegach.
 - Menu główne: nowe ikony przycisków „Nowa gra”, „Kampania”, „Ekspedycja” i „Wczytaj grę”; przyciski mają jednakowy rozmiar i stoją po dwa w rzędzie.
