@@ -34,7 +34,7 @@ export const ECONOMY = {
     barracks: [{ gold: 3, wood: 2 }, { gold: 6, wood: 2, ore: 2, dust: 1 }],
     market: [{ gold: 3, wood: 2 }, { gold: 5, ore: 2, dust: 1 }],
     hospital: [{ gold: 3, wood: 2 }, { gold: 5, ore: 2, dust: 1 }],
-    treasury: [{ gold: 4, ore: 2 }],
+    treasury: [{ gold: 4, ore: 2 }, { gold: 6, ore: 2, dust: 1 }],
     forge: [{ gold: 4, ore: 3 }, { gold: 6, ore: 3, dust: 2 }],
     walls: [{ gold: 4, wood: 3 }, { gold: 6, ore: 4, dust: 1 }],
     tavern: [{ gold: 5, wood: 3 }],

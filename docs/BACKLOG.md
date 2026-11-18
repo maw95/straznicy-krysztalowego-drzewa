@@ -60,6 +60,9 @@ Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.te
 - Odsłuch dźwięków (Claude nie ma jak ich odsłuchać): 7 z 15.11 (`catapult.mp3`, `tower_shot.mp3`, `moat.mp3`, `shard_pickup.mp3`, `spark.mp3`, `portal.mp3`, `tavern_hire.mp3`) i 32 z 16.11 (`public/assets/dzwieki/jednostki/<id>_atak|_smierc.mp3` dla 16 jednostek poziomów 5–6); co się nie podoba, Claude wygeneruje od nowa (1 CU za sztukę).
 - Pierwsza strona instrukcji planszowej (imienna wiadomość autora) i kąt kamery z wielkością figurek 3D: autor, po obejrzeniu na żywo (decyzja 17.11: poza parkingiem, bez terminu).
 
+## 2a. Grafiki zastępcze do wygenerowania (Scenario)
+- **Wielki skarbiec** (Skarbiec II, od 18.11): osobny obrazek budynku dla obu krajobrazów (`osady/dawn_treasury2.webp`, `osady/horde_treasury2.webp`, ten sam rozmiar i styl co `*_treasury.webp`, większy i bogatszy: więcej skrzyń i złota). Na razie oba poziomy używają tego samego obrazka (`buildingPicture` w `SettlementDialog.tsx`).
+
 ## Przed premierą (decyzja autora 17.11: wchodzą przed Steamem; po punktach z kolejki)
 28. **Nowe frakcje** (plan wdrażania: sekcja „Parking”, ostatni punkt): Dzikie Stada → Królestwo Umarłych → Żelazne Klany (karta frakcji, grafika, symulacje 10 par), potem DLC. Przed startem: próbka jednej jednostki w nowym stylu i decyzja autora. Koszt grafik i dźwięków jednej frakcji: sekcja „Kredyty Scenario”.
 30. **Wiele języków** (PL + EN): **zrobione 17.11:** interfejs i gra, instrukcja gracza po angielsku (`docs/INSTRUKCJA.en.md`; skrypty PDF/DOCX nadal czytają tylko polski plik), historia zmian („Co nowego”, `src/i18n/en/changelog.ts`, test pilnuje każdego nowego wpisu), komunikaty serwera online. **Zostaje:** wersja PDF/DOCX angielskiej instrukcji (przeróbka `scripts/assets/manual_*`), grafiki z napisami (logo, okładka, slajdy; kredyty Scenario), kolejne języki (nowy plik słownika i test pokrycia); nazwy własne bohaterów i osad celowo po polsku.

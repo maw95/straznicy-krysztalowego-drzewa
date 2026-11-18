@@ -30,7 +30,7 @@ export interface Settlement {
   name: string;
   /** Who holds it now (null: still held by neutrals, the fight for it is on). */
   owner: TeamId | null;
-  /** Level of each building: 0 not built, 1 built, 2 upgraded (the treasury has only 1). The forge exists in level 4 only (missing = 0: read it with `buildingLevel`). */
+  /** Level of each building: 0 not built, 1 built, 2 upgraded (the treasury has 2 as well). The forge exists in level 4 only (missing = 0: read it with `buildingLevel`). */
   buildings: Record<BuildingId, number>;
   /** Offers of the current market period already bought (the offer itself is drawn from the seed, see `marketStock`). */
   bought: string[];
@@ -64,11 +64,12 @@ export const KINGDOM = {
   /** Income per round: from every settlement it holds (the starting one too), from a mine, from a treasury. */
   incomeSettlement: 2,
   incomeMine: 1,
-  incomeTreasury: 1,
+  /** Gold a round from a treasury, by level (the big treasury brings two). */
+  incomeTreasury: [1, 2],
   /** Gold in a chest chosen instead of the artifact. */
   chestGold: 3,
   /** Cost of each level of a building. */
-  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [] } as Record<BuildingId, number[]>,
+  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [] } as Record<BuildingId, number[]>,
   /** Price of an artifact in the market, by rarity (zwykły, rzadki, legendarny). */
   artifactPrice: [2, 5, 10],
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
@@ -106,6 +107,12 @@ export const DWELLING_NAMES: Record<string, string> = {
   hedgehog: 'Legowisko Jeżozwierzy', silverFox: 'Lisia Nora', centaur: 'Stajnie Centaurów', dawnOwl: 'Sowia Dziupla', boar: 'Dębowa Zagroda', dryadArcher: 'Gaj Driad', treeGuardian: 'Prastary Zagajnik', whiteStag: 'Polana Jeleni', dawnPhoenix: 'Gniazdo Feniksa',
   ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern', doomBehemoth: 'Jaskinia Zagłady',
 };
+/** What a dwelling does, in words (the unit's name in the genitive). */
+const GENITIVE: Record<string, string> = {
+  hedgehog: 'Jeżozwierza', silverFox: 'Srebrnego Lisa', centaur: 'Centaura', dawnOwl: 'Sowy Świtu', boar: 'Alabastrowego Odyńca', dryadArcher: 'Driady Łuczniczki', treeGuardian: 'Opiekuna Drzewa', whiteStag: 'Białego Jelenia', dawnPhoenix: 'Feniksa Świtu',
+  ratman: 'Szczurołaka', goblinSlinger: 'Goblina Procarza', hellhound: 'Piekielnego Ogara', gargoyle: 'Gargulca', salamander: 'Salamandry Popiołu', caveTroll: 'Trolla Jaskiniowego', minotaurChief: 'Herszta Minotaurów', shadowWyvern: 'Wiwerny Cienia', doomBehemoth: 'Behemota Zagłady',
+};
+export const DWELLING_TEXTS: Record<string, string> = Object.fromEntries(Object.entries(GENITIVE).map(([id, g]) => [id, `Umożliwia wykupienie ${g} jako pomocnika.`]));
 /** Price of a dwelling, by the tier of its unit (2-6; the tier 6 unit has one dwelling only, no alternative). */
 export const DWELLING_COST: Cost[] = [{ gold: 2, wood: 1 }, { gold: 3, wood: 2 }, { gold: 4, ore: 2 }, { gold: 5, ore: 2, dust: 1 }, { gold: 6, ore: 3, dust: 2 }];
 
@@ -132,7 +139,7 @@ export const BUILDING_NAMES: Record<BuildingId, string[]> = {
   barracks: ['Koszary', 'Rozbudowane koszary'],
   market: ['Targ', 'Duży targ'],
   hospital: ['Szpital', 'Ulepszony szpital'],
-  treasury: ['Skarbiec'],
+  treasury: ['Skarbiec', 'Wielki skarbiec'],
   forge: ['Kuźnia', 'Wielka kuźnia'],
   walls: ['Fosa', 'Mury z wieżyczkami'],
   tavern: ['Karczma'],
@@ -171,7 +178,7 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
   barracks: ['Pozwalają rekrutować pomocników.', 'Dodatkowe miejsce w drużynie i dostęp do najmocniejszych jednostek.'],
   market: ['Trzy artefakty w ofercie, nowa oferta co 3 rundy.', 'Pięć artefaktów w ofercie.'],
   hospital: ['Wskrzesza poległych pomocników za połowę ich ceny.', 'Wskrzesza za jedną trzecią ceny.'],
-  treasury: ['Przynosi +1 złota na rundę.'],
+  treasury: ['Przynosi +1 złota na rundę.', 'Przynosi +2 złota na rundę (zamiast +1).'],
   forge: ['Pomocnicy całej frakcji walczą z +1 A.', 'Pomocnicy dostają też +1 Ż.'],
   shrine: [
     `Blask Świtu: na początku każdej rundy bitwy najciężej ranna jednostka Przymierza odzyskuje ${FACTION_MECHANICS.dawnHeal} Ż. Bez tego budynku frakcja nie ma tego efektu.`,
@@ -234,7 +241,7 @@ export function incomeBreakdown(state: GameState, f: TeamId): Array<{ label: str
   for (const s of Object.values(k.settlements)) {
     if (s.owner !== f) continue;
     rows.push({ label: s.name, gold: KINGDOM.incomeSettlement });
-    if (s.buildings.treasury) rows.push({ label: `Skarbiec (${s.name})`, gold: KINGDOM.incomeTreasury });
+    if (s.buildings.treasury) rows.push({ label: `${BUILDING_NAMES.treasury[Math.min(s.buildings.treasury, 2) - 1]} (${s.name})`, gold: KINGDOM.incomeTreasury[Math.min(s.buildings.treasury, 2) - 1] });
   }
   for (const [hex, m] of Object.entries(k.mines)) if (m.owner === f) rows.push({ label: `${MINE_NAMES.gold} (pole ${hex})`, gold: KINGDOM.incomeMine });
   // Strój Kupca (three of three): +1 gold a round, once for the faction.

@@ -81,7 +81,7 @@ nie blokuje Iskry. Jeśli testy pokażą, że któreś z nich brakuje, dopisać 
 | **Koszary** | 3 (Osada) | I: 3 zł + 2 drewna; II: 6 zł + 2 drewna + 2 rudy + 1 Pył | I: pozwala rekrutować pomocników (tier 1–3). II: tier 4–5 (najmocniejsze jednostki) i **+1 miejsce w drużynie** (maks. 5). Na poziomie 6 tu też stawia się Siedliska i rekrutuje legendarną jednostkę (II). |
 | **Targ** | 3 | I: 3 zł + 2 drewna; II: 5 zł + 2 rudy + 1 Pył | I: trzy artefakty w ofercie (nowa oferta co 3 rundy), wymiana surowców za złoto. II (Duży targ): pięć artefaktów w ofercie, tańsza wymiana. Ceny artefaktów: 2 / 5 / 10 zł (legendarny dodatkowo 1 Pyłu). |
 | **Szpital** | 3 | I: 3 zł + 2 drewna; II: 5 zł + 2 rudy + 1 Pył | I: wskrzesza poległych pomocników za połowę ceny. II: za jedną trzecią. |
-| **Skarbiec** | 3 | 4 zł + 2 rudy (jeden poziom) | +1 złota na rundę. |
+| **Skarbiec** | 3 | I: 4 zł + 2 rudy; II (Wielki skarbiec): 6 zł + 2 rudy + 1 Pył (decyzja autora 18.11) | I: +1 złota na rundę; II: +2 złota na rundę (zamiast +1, nie dodatkowo). |
 | **Kuźnia** | 4 (Księstwo) | I: 4 zł + 3 rudy; II: 6 zł + 3 rudy + 2 Pyły | I: pomocnicy **całej frakcji** walczą z +1 A. II: także +1 Ż. Liczy się najlepsza kuźnia we frakcji. |
 | **Fosa / Mury z wieżyczkami** | 4 | I: 4 zł + 3 drewna; II: 6 zł + 4 rudy + 1 Pył | Obrona osady w bitwie: I fosa z kolcami (wejście = utrata tury i 2 obrażenia, przejście po moście), II mur z bramą i dwie wieżyczki strzelające co rundę; mur burzy tylko katapulta napastnika. |
 | **Karczma** | 5 (Królestwo) | 5 zł + 3 drewna | Najem **drugiego bohatera** (dowódcy) z własnym pionkiem, doświadczeniem i artefaktami; wykup poległego dowódcy. |

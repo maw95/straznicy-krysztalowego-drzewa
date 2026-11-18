@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Skarbiec można ulepszyć: Wielki skarbiec (6 zł, 2 rudy i 1 Pył) przynosi +2 zł na rundę zamiast +1 zł.
 - Koszary to pełnoekranowy ekran: karty jednostek ustawione według poziomów (od 1 do 6, oba siedliska każdego poziomu obok siebie), pod każdą karta jej stan i przycisk (rekrutuj, zbuduj siedlisko, w drużynie, wykluczone), a po wybraniu karty widać animowaną jednostkę z jej życiem, atakiem, szybkością i zdolnością.
 - Ekran osady: dolny pasek ma ozdobną złotą ramkę ze wszystkich stron (grafika zamiast CSS), a „Wyjdź z osady” to okrągła ikona z drzwiami i strzałką. Wstążki z nazwami (np. nazwa osady) są nowe: malowany jedwab ze złotym haftem, w kolorze frakcji (Przymierze zielony, Horda czerwony, neutralni niebieski, fioletowy czeka na kolejne frakcje).
 - Drzewko Rady Osady przebudowane: linie proste z zaokrąglonymi zgięciami pod kątem prostym zamiast strzałek, kolory stanów (beżowy wybudowany, zielony do zbudowania, bursztynowy brak surowców, szary brak budynku, czerwony zablokowany), koszty jako liczby z ikonami, podgląd tego, jak budynek będzie wyglądał, oba siedliska każdego poziomu obok siebie ze znaczkiem „lub”, a Pierwotna Iskra jest w drzewku od początku (tu ją kupujesz). Siedliska stworzeń mają własne grafiki budynków i stoją w krajobrazie osady. Jednostka 6 poziomu ma teraz swoje siedlisko (Gniazdo Feniksa, Jaskinia Zagłady: 6 zł, 3 rudy, 2 pyły, po siedlisku 5 poziomu); Iskra pojawia się w krajobrazie dopiero po wzniesieniu.

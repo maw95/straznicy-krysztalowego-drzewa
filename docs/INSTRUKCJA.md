@@ -729,7 +729,7 @@ Osada ma frakcję narzuconą przez połowę mapy, ale **należy do tego, kto na 
 - **Koszary** (3 zł, rozbudowa 6 zł): rekrutacja pomocników; rozbudowane dają dodatkowe miejsce w drużynie i pomocników poziomów 4 i 5.
 - **Targ** (3 zł, duży 5 zł): artefakty za złoto (zwykły 2 zł, rzadki 5 zł, legendarny 10 zł), 3 w ofercie (po rozbudowie 5), nowa oferta co 3 rundy.
 - **Szpital** (3 zł, ulepszony 5 zł): wskrzesza poległego pomocnika za połowę jego ceny (po ulepszeniu za jedną trzecią).
-- **Skarbiec** (4 zł): +1 zł na rundę.
+- **Skarbiec** (4 zł, Wielki skarbiec 6 zł): +1 zł na rundę, po ulepszeniu +2 zł.
 
 Kupować można bez limitu na turę; ogranicza tylko cena. Budynki pokazuje widok osady (kliknij budynek, żeby go użyć).
 
@@ -757,7 +757,7 @@ Złoto płaci za jednostki; drewno i ruda za budynki, a Gwiezdny Pył tylko za r
 - **Koszary:** 3 zł + 2 drewna; rozbudowa 6 zł + 2 drewna + 2 rudy + 1 Pył.
 - **Targ:** 3 zł + 2 drewna; duży 5 zł + 2 rudy + 1 Pył.
 - **Szpital:** 3 zł + 2 drewna; ulepszony 5 zł + 2 rudy + 1 Pył.
-- **Skarbiec:** 4 zł + 2 rudy.
+- **Skarbiec:** 4 zł + 2 rudy; Wielki skarbiec 6 zł + 2 rudy + 1 Pył.
 - **Kuźnia** (nowy budynek poziomu 4): 4 zł + 3 rudy; Wielka kuźnia 6 zł + 3 rudy + 2 Pyłu.
 - **Legendarny artefakt na targu:** 10 zł + 1 Pył.
 

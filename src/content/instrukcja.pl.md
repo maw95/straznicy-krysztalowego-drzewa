@@ -216,7 +216,7 @@ Budynki kupuje bohater stojący w osadzie własnej frakcji; klikasz budynek w wi
 - **Koszary:** rekrutacja pomocników; rozbudowane dają dodatkowe miejsce w drużynie i pomocników poziomów 4 i 5.
 - **Targ:** artefakty za złoto (zwykły 2 zł, rzadki 5, legendarny 10 zł i 1 Pył od poziomu Księstwo), 3 w ofercie (po rozbudowie 5), nowa oferta co 3 rundy. Na poziomie Księstwo także wymiana surowców.
 - **Szpital:** wskrzesza poległego pomocnika za połowę ceny (po ulepszeniu za jedną trzecią).
-- **Skarbiec:** +1 zł na rundę.
+- **Skarbiec:** +1 zł na rundę; ulepszony (Wielki skarbiec) przynosi +2 zł na rundę.
 
 Osada otwiera się **na cały ekran**: krajobraz frakcji jest tłem, a **wybudowane** budynki stoją na nim (niewybudowanych nie widać). Najedź na budynek, żeby zobaczyć jego działanie w dolnym pasku; kliknięcie **koszar** otwiera ich ekran na cały ekran (karty jednostek według poziomów, a po wybraniu karty animowana jednostka z jej liczbami i zdolnością; tu rekrutujesz i budujesz siedliska), kliknięcie innego budynku okno z jego usługami. Dolny pasek pokazuje garnizon, bohatera w osadzie, złoto i surowce. **Budować i rozbudowywać można tylko w Radzie Osady** (stoi od początku, nic nie kosztuje): otwiera **drzewko budynków**, w którym węzeł jest wybudowany, do kupienia (zielony), za drogi (czerwony) albo zablokowany (szary, napis mówi, czego brakuje). Kliknij węzeł, żeby zobaczyć cenę i działanie; Esc wraca do krajobrazu.
 

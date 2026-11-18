@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { activeHero, applyAction, createGame } from '../src/engine/game';
 import { ECONOMY, OBJECTS } from '../src/engine/economy';
-import { artifactBill, buildBlock, autopilotAction, botPurchase, hasParent, buildCost, buildingsOf, canPay, forgeLevel, resOf, resourceIncomeOf, settlementAt, tradeBuyPrice } from '../src/engine/kingdom';
+import { artifactBill, buildBlock, autopilotAction, botPurchase, hasParent, buildCost, buildingsOf, canPay, forgeLevel, incomeOf, resOf, resourceIncomeOf, settlementAt, tradeBuyPrice } from '../src/engine/kingdom';
 import { pointsFor } from '../src/engine/scoring';
 import { ARTIFACTS } from '../src/engine/sites';
 import { mapNeighbors } from '../src/engine/map';
@@ -48,6 +48,21 @@ describe('level 4: income and prices', () => {
     const round = s.round;
     while (s.round === round) s = applyAction(s, { type: 'endTurn' });
     expect(resOf(s, 'dawn')).toEqual({ wood: ECONOMY.start.wood, ore: 1, dust: 0 });
+  });
+
+  it('the treasury has two levels: +1 gold a round, upgraded +2 (the author, 18.11)', () => {
+    let s = economy();
+    const home = ownStart(s);
+    stand(s, home.at);
+    s.kingdom!.gold.dawn = 40;
+    s.kingdom!.res!.dawn = { wood: 5, ore: 5, dust: 1 };
+    const base = incomeOf(s, 'dawn');
+    s = applyAction(s, { type: 'kingdomBuild', settlementId: home.id, building: 'treasury' });
+    expect(incomeOf(s, 'dawn')).toBe(base + 1);
+    s = applyAction(s, { type: 'kingdomBuild', settlementId: home.id, building: 'treasury' });
+    expect(s.kingdom!.settlements[home.id].buildings.treasury).toBe(2);
+    expect(incomeOf(s, 'dawn')).toBe(base + 2);
+    expect(() => applyAction(s, { type: 'kingdomBuild', settlementId: home.id, building: 'treasury' })).toThrow();
   });
 
   it('charges resources for buildings, dust for the second level and for a legendary artifact', () => {

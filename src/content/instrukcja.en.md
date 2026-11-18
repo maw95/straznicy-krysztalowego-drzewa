@@ -216,7 +216,7 @@ Buildings are bought by a hero standing in a settlement of their own faction; yo
 - **Barracks:** recruiting supports; upgraded ones give an extra place in the team and supports of ranks 4 and 5.
 - **Market:** artifacts for gold (common 2 gold, rare 5, legendary 10 gold and 1 Dust from the level Principality), 3 on offer (5 after an upgrade), a new offer every 3 rounds. On the level Principality also an exchange of resources.
 - **Hospital:** resurrects a fallen support for half the price (a third after an upgrade).
-- **Treasury:** +1 gold per round.
+- **Treasury:** +1 gold per round; upgraded (Great Treasury) it brings +2 gold per round.
 
 A settlement opens **full screen**: the faction's landscape is the background and the **built** buildings stand on it (unbuilt ones are not shown). Hover a building to see what it does in the bottom bar; clicking the **barracks** opens their full screen (unit cards by tier, and once you pick a card the animated unit with its numbers and ability; recruit and build dwellings here), clicking any other building a window with its services. The bottom bar shows the garrison, the hero in the settlement, gold and resources. **Building and upgrading is done only in the Settlement Council** (it stands from the start and costs nothing): it opens the **building tree**, where a node is built, buyable (green), too expensive (red) or locked (grey, the caption says what is missing). Click a node to see its price and effect; Esc returns to the landscape.
 
