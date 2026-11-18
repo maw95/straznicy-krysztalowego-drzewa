@@ -2,19 +2,33 @@
 // it (tier 1: the three supports; tiers 2-6: the units, two to choose from at the dwellings), under each card its state and button (recruit, build the
 // dwelling, in the team, shut out). Selecting a card shows the animated sprite of the unit with its numbers and ability on the right.
 
-import { useState } from 'react';
-import { abilityTextFor, battleStats, UNITS } from '../engine/data';
+import { useEffect, useRef, useState } from 'react';
+import { UNITS } from '../engine/data';
 import { DWELLING_COST, DWELLING_NAMES, dwellingOf, dwellingReady, hasUnit, mayRecruit, needsDwelling, recruitsOf, resOf, goldOf, canPay } from '../engine/kingdom';
 import type { TeamId } from '../engine/data';
 import type { Settlement } from '../engine/kingdom';
 import type { Action, GameState } from '../engine/types';
 import { CostIcons } from './resources';
-import { RuleText, useScales } from './statScale';
 import { UnitCard } from './UnitCard';
 import { UnitSprite } from './UnitSprite';
 
+/** The widest card of the shelf's cards (px, the card's height is 1.29 of it) and the room the sprite stage and the big card on the right take. */
+const CARD_RATIO = 713 / 551;
+const CTL_H = 54;
+
 export function BarracksScreen({ state, s, faction, act }: { state: GameState; s: Settlement; faction: TeamId; act: (a: Action) => void }) {
-  const [scale, hpScale] = useScales();
+  // The sizes follow the room: the shelf has two cards on top of each other at most (the first tier lies in two columns), the cards are as big as they can be.
+  const box = useRef<HTMLDivElement>(null);
+  const [room, setRoom] = useState({ w: 1300, h: 560 });
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const measure = () => setRoom({ w: el.clientWidth, h: el.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   const recruits = recruitsOf(state, faction);
   const tiers = [...new Set(recruits.map((r) => r.tier))];
   const mayHire = mayRecruit(s, faction);
@@ -24,8 +38,15 @@ export function BarracksScreen({ state, s, faction, act }: { state: GameState; s
   const fs = state.factions[faction];
   const [pick, setPick] = useState<string>(recruits.find((r) => r.tier === 2)?.id ?? recruits[0].id);
   const sel = recruits.find((r) => r.id === pick) ?? recruits[0];
-  const stats = battleStats(sel.id, true, scale, hpScale);
   const have = { gold, res: resOf(state, faction) };
+  const wide = room.w >= 760;
+  // A low window (a phone held sideways) keeps only the animated unit on the right: the big card would not fit, and the shelf scrolls.
+  const low = room.h < 480;
+  const stage = wide ? Math.round(Math.max(low ? 110 : 150, Math.min(room.h * (low ? 0.6 : 0.4), 300))) : Math.round(Math.min(room.w - 40, 200));
+  const bigCard = low || !wide ? 0 : Math.round(Math.max(150, Math.min(280, (room.h - stage - 60) / CARD_RATIO)));
+  const side = wide ? Math.max(bigCard, stage) + 34 : 0;
+  const columns = 2 + tiers.filter((x) => x > 1).length;
+  const cardW = Math.round(Math.max(84, Math.min(180, wide ? Math.min((room.w - side - 40 - columns * 18 - (columns - 1) * 14) / columns, (room.h - 24 - 30 - 2 * CTL_H) / 2 / CARD_RATIO) : 106)));
 
   const control = (r: (typeof recruits)[number]) => {
     const locked = r.tier >= 4 && s.buildings.barracks < 2;
@@ -54,30 +75,31 @@ export function BarracksScreen({ state, s, faction, act }: { state: GameState; s
 
   return (
     <div className="gf barracks-frame" data-panel="barracks">
-      <div className="gi slate barracks-inner">
+      <div className="gi slate barracks-inner" ref={box}>
         {!mayHire && <i className="bk-note">Ta osada należy do obcej frakcji: nie rekrutujesz tu jednostek.</i>}
         <div className="bk-shelf">
           {tiers.map((tier) => (
-            <div key={tier} className="bk-col" data-tier={tier}>
+            <div key={tier} className={`bk-col ${tier === 1 ? 'first' : ''}`} data-tier={tier}>
               <div className="bk-tier">poziom {tier}</div>
+              <div className="bk-units">
               {recruits.filter((r) => r.tier === tier).map((r) => {
                 const out = needsDwelling(state, r) && !dwellingReady(state, faction, r) && dwellingOf(state, faction, r.tier) !== undefined;
                 return (
                   <div key={r.id} className={`bk-unit ${pick === r.id ? 'on' : ''} ${out ? 'out' : ''}`} data-unit={r.id} onClick={() => setPick(r.id)}>
-                    <button className="bk-card" aria-label={UNITS[r.id].name} onClick={() => setPick(r.id)}><UnitCard unitId={r.id} width={106} digital /></button>
-                    <div className="bk-ctl">{control(r)}</div>
+                    <button className="bk-card" aria-label={UNITS[r.id].name} onClick={() => setPick(r.id)}><UnitCard unitId={r.id} width={cardW} digital /></button>
+                    <div className="bk-ctl" style={{ width: cardW + 2 }}>{control(r)}</div>
                   </div>
                 );
               })}
+              </div>
             </div>
           ))}
         </div>
-        <div className="bk-detail" data-bk-detail={sel.id}>
-          <UnitSprite unitId={sel.id} size={230} />
-          <div className="bk-name">{UNITS[sel.id].name}</div>
+        <div className="bk-detail" data-bk-detail={sel.id} style={wide ? { flexBasis: side } : undefined}>
+          <UnitSprite unitId={sel.id} size={wide ? side - 14 : stage} height={stage} zoom={stage / 210} />
+          {bigCard > 0 && <UnitCard unitId={sel.id} width={bigCard} digital />}
+          {bigCard === 0 && <div className="bk-name">{UNITS[sel.id].name}</div>}
           <div className="bk-tier-line">poziom {sel.tier}{needsDwelling(state, sel) ? ` · ${DWELLING_NAMES[sel.id]}` : ''}</div>
-          <div className="bk-stats"><span>Życie <b>{stats.hp}</b></span><span>Atak <b>{stats.attack}</b></span><span>Szybkość <b>{stats.speed}</b></span></div>
-          <div className="bk-ability"><b>{UNITS[sel.id].abilityName}</b><RuleText text={abilityTextFor(sel.id, true)} /></div>
         </div>
       </div>
     </div>
