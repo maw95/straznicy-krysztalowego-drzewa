@@ -6,6 +6,8 @@ import { CUSTOM_MAPS, readyMaps, validateCustomMap } from '../src/engine/customM
 import { createGame } from '../src/engine/game';
 import { UNITS } from '../src/engine/data';
 import { playOut } from './helpers/engine';
+import { describeSave } from '../src/ui/saves';
+import { expeditionSetup, newRun } from '../src/engine/expedition';
 
 describe.each(CAMPAIGNS)('campaign $id', (campaign) => {
   it('has a name, scenarios with unique ids and an ending', () => {
@@ -65,5 +67,14 @@ describe('the campaign list', () => {
     expect(nextScenario(c, c.scenarios[c.scenarios.length - 1])).toBeNull();
     expect(campaignById('nie-ma')).toBeUndefined();
     expect(scenarioOf({})).toBeNull();
+  });
+});
+
+describe('labels of saved games', () => {
+  it('names the scenario of a campaign save and the stage of an Expedition save', () => {
+    const campaign = CAMPAIGNS[0];
+    const scenario = campaign.scenarios[0];
+    expect(describeSave({ setup: scenarioSetup(campaign, scenario, 5), actions: [] })).toContain(`Kampania: ${scenario.title}`);
+    expect(describeSave({ setup: expeditionSetup(newRun(7, 'goldDragon')), actions: [] })).toContain('Ekspedycja: etap 1');
   });
 });

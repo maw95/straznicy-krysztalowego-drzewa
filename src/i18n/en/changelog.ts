@@ -3,7 +3,9 @@
 import { register } from '../translate';
 
 // In preparation
-register({});
+register({
+  "Zapisy Kampanii i Ekspedycji: scenariusz kampanii zapiszesz i wczytasz jak każdą partię, a lista „Zapisane gry” podpisuje go („Kampania: Pierwsza dolina”). Wyprawa w toku ma na liście wpis „Ekspedycja w toku” z przyciskiem „Wznów”. W bitwie Ekspedycji nie ma ręcznego zapisu, bo wyprawa ma jedno życie i sama zapisuje się między bitwami.": "Saves of the Campaign and the Expedition: a campaign scenario can be saved and loaded like any game, and the \"Saved games\" list labels it (\"Campaign: First Valley\"). A run in progress has an \"Expedition in progress\" entry in the list with a \"Resume\" button. There is no manual save in an Expedition battle, because a run has one life and saves itself between battles.",
+});
 
 // 2.13.0
 register({

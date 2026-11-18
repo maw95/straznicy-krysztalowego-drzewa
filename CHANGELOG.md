@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Zapisy Kampanii i Ekspedycji: scenariusz kampanii zapiszesz i wczytasz jak każdą partię, a lista „Zapisane gry” podpisuje go („Kampania: Pierwsza dolina”). Wyprawa w toku ma na liście wpis „Ekspedycja w toku” z przyciskiem „Wznów”. W bitwie Ekspedycji nie ma ręcznego zapisu, bo wyprawa ma jedno życie i sama zapisuje się między bitwami.
+
 ## 2.13.0 — 2026-11-18
 
 - Nowe ikony złota, drewna, rudy i Gwiezdnego Pyłu: malowane w stylu reszty gry, bez okrągłego medalu i konturu, każda z własną sylwetką (stos monet, związane kłody, szara skała, fioletowy pył).

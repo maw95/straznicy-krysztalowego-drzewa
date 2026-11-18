@@ -1,6 +1,7 @@
 // Saved games are the setup plus the action log; replaying them through the
 // engine rebuilds the exact state (the engine is deterministic).
 
+import { scenarioOf } from '../engine/campaign';
 import { applyAction, createGame } from '../engine/game';
 import type { Action, GameState, SetupOptions } from '../engine/types';
 
@@ -108,6 +109,9 @@ export function describeSave(save: SaveFile): string {
   try {
     const s = replay(save);
     const heroes = save.setup.seats.map((x) => x.name).join(', ');
+    const campaign = scenarioOf(save.setup);
+    if (campaign) return `Kampania: ${campaign.scenario.title} · runda ${s.round}`;
+    if (save.setup.expedition) return `Ekspedycja: etap ${save.setup.expedition.stage + 1} · runda ${s.round} · ${heroes}`;
     const mode = save.setup.mode === 'coop' ? 'Kooperacja' : save.setup.mode === 'arena' ? 'Arena' : 'Rywalizacja';
     return `${mode} · runda ${s.round} · ${heroes}`;
   } catch {

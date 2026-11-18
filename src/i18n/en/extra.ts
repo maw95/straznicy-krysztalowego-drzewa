@@ -154,4 +154,10 @@ register({
   ', wygrana walka z bohaterem +': ', a won fight against a hero +',
   'Wybierz': 'Choose',
   'Zdejmij do plecaka': 'Take off into the backpack',
+  'Wznów': 'Resume',
+  'Ekspedycja w toku': 'Expedition in progress',
+  'Ekspedycja: wyprawa dnia {0}': 'Expedition: run of the day {0}',
+  'Etap {0} z {1} · relikwie: {2}': 'Stage {0} of {1} · relics: {2}',
+  'Kampania: {0} · runda {1}': 'Campaign: {0} · round {1}',
+  'Ekspedycja: etap {0} · runda {1} · {2}': 'Expedition: stage {0} · round {1} · {2}',
 });

@@ -19,6 +19,8 @@ import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullsc
 import { defaultHeroes, SEAT_TINT } from './setupShared';
 import { NewGameWizard, savedDigital } from './NewGameWizard';
 import { deleteNamedSave, listNamedSaves, type NamedSave } from './saves';
+import { readRun } from './expeditionRun';
+import { STAGES, stageOf } from '../engine/expedition';
 import type { TableConfig } from '../online/api';
 
 /** Fresh seats: the first player is a person (both players of a two-sided game), the rest are bots. */
@@ -36,6 +38,8 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   // Both read and replay saved games: once per visit to the menu, not on every hover and keystroke.
   const stats = useMemo(journalStats, []);
   const saveLabel = useMemo(() => autosave && describeSave(autosave), [autosave]);
+  /** The Expedition run in progress (it keeps itself between battles; "Wczytaj grę" only leads back to it). */
+  const expeditionRun = useMemo(() => { const r = readRun(); return r && !r.lost ? r : null; }, []);
   const fileRef = useRef<HTMLInputElement>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [tutorial, setTutorial] = useState(tutorialEnabled());
@@ -268,6 +272,15 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
         <Frame crest style={{ width: 'min(900px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 12 }}>
           <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>Zapisane gry</Ribbon>
           <div data-wizard-page="load" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {expeditionRun && (
+              <div className="well" data-load-expedition style={{ padding: '8px 14px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                <div style={{ flex: 1, minWidth: 200 }}>
+                  <b style={{ color: '#F3D27A' }}>{expeditionRun.daily ? `Ekspedycja: wyprawa dnia ${expeditionRun.daily}` : 'Ekspedycja w toku'}</b>
+                  <div style={{ fontSize: 14, color: 'var(--muted)' }}>{`Etap ${stageOf(expeditionRun.cleared).index + 1} z ${STAGES} · relikwie: ${expeditionRun.relics.length}`}</div>
+                </div>
+                <button className="btn prim" style={{ padding: '6px 18px', fontSize: 17 }} onClick={() => setStep('expedition')}>Wznów</button>
+              </div>
+            )}
             {autosave && (
               <div className="well" style={{ padding: '8px 14px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
                 <div style={{ flex: 1, minWidth: 200 }}>
@@ -287,7 +300,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                 <button className="btn plate parch" style={{ padding: '6px 12px', fontSize: 15 }} aria-label={`Usuń zapis ${n.name}`} onClick={() => { deleteNamedSave(n.id); setNamed(listNamedSaves()); }}>Usuń</button>
               </div>
             ))}
-            {!autosave && named.length === 0 && <div style={{ textAlign: 'center', color: 'var(--muted)', fontStyle: 'italic' }}>Brak zapisanych gier. W trakcie partii zapiszesz ją w Opcjach („Zapisz grę”) albo przy wyjściu z gry.</div>}
+            {!autosave && !expeditionRun && named.length === 0 && <div style={{ textAlign: 'center', color: 'var(--muted)', fontStyle: 'italic' }}>Brak zapisanych gier. W trakcie partii zapiszesz ją w Opcjach („Zapisz grę”) albo przy wyjściu z gry.</div>}
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
             {backBtn('where')}

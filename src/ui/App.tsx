@@ -990,7 +990,7 @@ export function App() {
       {game && (
         <LeaveDialog
           open={showLeave}
-          canSave={!isOnline || isOnlineOwner}
+          canSave={(!isOnline || isOnlineOwner) && !game.setup.expedition}
           defaultName={defaultSaveName}
           onClose={() => setShowLeave(false)}
           onLeave={() => {
@@ -1061,7 +1061,7 @@ export function App() {
           setShowLog(true);
         }}
         defaultSaveName={defaultSaveName}
-        onSaveGame={isOnline ? (isOnlineOwner ? (name) => session!.send({ type: 'saveGame', name }) : undefined) : (name) => saveNamed(name, saveFile(game))}
+        onSaveGame={isOnline ? (isOnlineOwner ? (name) => session!.send({ type: 'saveGame', name }) : undefined) : game.setup.expedition ? undefined : (name) => saveNamed(name, saveFile(game))}
         onLeave={() => {
           setShowDebug(false);
           setShowLeave(true);
