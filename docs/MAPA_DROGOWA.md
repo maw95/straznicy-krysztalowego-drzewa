@@ -31,7 +31,7 @@ każdy nowy zasób wpisujemy do manifestu (źródło, narzędzie, prompt, licenc
 - [x] Odniesienia stylu dla mrocznych jednostek: przewodnik `STYL_JEDNOSTEK.md` (do oceny autora); zrobione jednostki Hordy i neutralnych są podstawą oceny.
 - [ ] Trening własnego stylu w Scenario (Pro na jeden miesiąc): najpierw 20–25 obrazów treningowych, potem powrót na Starter.
 - [x] Manifest zasobów (`assets.json`): wszystkie grafiki i animacje z promptami i ID zasobów. Muzyka wpisana do manifestu (6.11), licencje do uzupełnienia przez autora.
-- [x] Przymierze Świtu i Mroczna Horda (oraz strażnicy neutralni) w nowej grafice (obrazy, ruch, atak, trafienie, śmierć, trup) w trybie cyfrowym: 16 jednostek, szczegóły i braki w `RAPORT_NOCNY_5_11_2026.md`. Braki do uzupełnienia: klip śmierci Ogra, ataku Elfa i Cyklopa, trafienia Wilkołaka i Hydry (w grze zastępuje je drgnięcie i błysk).
+- [x] Przymierze Świtu i Mroczna Horda (oraz strażnicy neutralni) w nowej grafice (obrazy, ruch, atak, trafienie, śmierć, trup) w trybie cyfrowym: 16 jednostek. Braki do uzupełnienia: klip śmierci Ogra, ataku Elfa i Cyklopa, trafienia Wilkołaka i Hydry (w grze zastępuje je drgnięcie i błysk).
 - [ ] Trening własnego stylu w Scenario (Pro): nie robiony, bo wymaga zmiany planu (decyzja autora).
 - [ ] Dźwięk: próbka efektów i muzyki z ElevenLabs (przed zakupem planu), spis licencji obecnej muzyki.
 

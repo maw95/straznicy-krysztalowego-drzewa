@@ -1,6 +1,6 @@
 """Inventory of the texts a translation would have to cover (backlog item 16): every string literal and JSX text in src/ that reads as Polish,
 counted per file and sorted into kinds (engine data, engine messages thrown to the player, log lines, interface). Prints a Markdown report.
-Usage: python3 scripts/teksty.py > docs/TEKSTY_DO_TLUMACZENIA.md   (the head of that file is written by hand: keep it when regenerating, see the doc)"""
+Usage: python3 scripts/teksty.py   (prints an inventory of Polish texts in src/ to stdout)"""
 import os
 import re
 import sys
