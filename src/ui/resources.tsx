@@ -27,14 +27,14 @@ export function ResourceStrip({ state, faction, size = 26, light = false }: { st
 }
 
 /** A price as numbers and icons ("2 <gold> 1 <wood>"), not words; with `have` the parts the faction lacks turn red. */
-export function CostIcons({ cost, have, size = 18, light = false }: { cost: Cost; have?: { gold: number; res: Record<ResourceId, number> }; size?: number; light?: boolean }) {
+export function CostIcons({ cost, have, size = 18, light = false, wrap = false, fontSize }: { cost: Cost; have?: { gold: number; res: Record<ResourceId, number> }; size?: number; light?: boolean; /** A long price may continue on a second line. */ wrap?: boolean; fontSize?: number }) {
   const part = (key: string, icon: string, name: string, n: number, lacks: boolean) => (
     <span key={key} title={name} data-cost-part={key} style={{ display: 'inline-flex', alignItems: 'center', gap: 2, color: lacks ? '#B3261E' : undefined, fontWeight: 700 }}>
       {n}<img src={asset(icon)} alt={name} width={size} height={size} style={light ? { filter: 'drop-shadow(0 1px 2px #000)' } : undefined} />
     </span>
   );
   return (
-    <span data-cost style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'nowrap', whiteSpace: 'nowrap', verticalAlign: 'middle' }}>
+    <span data-cost style={{ display: 'inline-flex', alignItems: 'center', gap: wrap ? '2px 8px' : 6, flexWrap: wrap ? 'wrap' : 'nowrap', whiteSpace: 'nowrap', verticalAlign: 'middle', ...(fontSize ? { fontSize } : {}) }}>
       {part('gold', 'ikony/mapa/zloto.webp', 'Złoto', cost.gold, Boolean(have) && have!.gold < cost.gold)}
       {resourcesOf(cost).map(([r, n]) => part(r, RESOURCE_ICON[r], RESOURCE_NAMES[r], n, Boolean(have) && have!.res[r] < n))}
     </span>

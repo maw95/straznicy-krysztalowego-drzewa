@@ -7,7 +7,7 @@ const vite = await createServer({ server: { port: 5181, strictPort: true }, logL
 await vite.listen();
 const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 try {
-  const page = await browser.newPage({ viewport: { width: 1500, height: 780 } });
+  const page = await browser.newPage({ viewport: { width: 1500, height: 880 }, deviceScaleFactor: Number(process.env.SCALE ?? 1) });
   page.on('pageerror', (e) => console.log('page error:', String(e).slice(0, 300)));
   await page.goto(`http://localhost:5181/scripts/browser/harness/drzewko.html?f=${f}`);
   await page.locator('[data-building-tree]').waitFor({ timeout: 20000 });

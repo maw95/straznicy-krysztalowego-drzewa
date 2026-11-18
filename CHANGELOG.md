@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Rada Osady: większa czcionka w kafelkach budynków i dużo większe ikony cen (z liczbą obok); Pierwotna Iskra stoi w wolnym rogu drzewa, więc całe drzewko może być większe. Poprawiony róg szyny przy parach „lub” (znikła wystająca kreska pod zaokrągleniem).
+
 - Ikona gry w karcie przeglądarki i w zainstalowanej aplikacji jest większa (logo wypełnia całą szerokość, bez pustych pasów po bokach) i ma przezroczyste tło.
 
 - Ikony Życia, Ataku i Szybkości mają kolor otaczającego tekstu (jasny w jasnym, ciemny w ciemnym, kolorowy w kolorowym), a nie zawsze czarny.

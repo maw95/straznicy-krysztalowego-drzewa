@@ -20,7 +20,7 @@ const extras: ExtraNode[] = [2, 3, 4, 5, 6].flatMap((tier) => {
 });
 void dwellingOf;
 createRoot(document.getElementById('root')!).render(
-  <div style={{ width: 1500, height: 760, position: 'relative' }}>
+  <div style={{ width: 1500, height: 860, position: 'relative' }}>
     <BuildingTree state={state} s={s} faction={f} order={buildingsFor(state, f)} picture={() => 'osady/dwelling_hedgehog.webp'} selected={null} onSelect={() => {}} council={{ picture: 'osady/dwelling_hedgehog.webp', name: 'Rada Osady' }} extras={extras} />
   </div>,
 );
