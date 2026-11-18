@@ -44,6 +44,8 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
 
 **55. DLC: Wolne Kompanie, Dwór Wiecznego Szronu, Imperium Piasków, Rój Głębin, Władcy Przypływów (L każda; po 54).** Pełna macierz balansu (`make sim-matrix`) raz na kilka frakcji, w tle, nocą.
 
+**56. Rozszerzenie listy utworów i motywów muzycznych (M).** Dziś gra ma 10 plików w `public/assets/music/` (menu, dwie mapy, dwie bitwy, trzy utwory strażników, rytuał Hordy, dwie wygrane; lista w `MUSIC` w `src/ui/CreditsDialog.tsx`), więc motywy szybko się powtarzają. Do zrobienia: (1) rozpisać, czego brakuje (np. osobne motywy frakcji Przymierza i Hordy na mapie i w bitwie, osada i gospodarka od poziomu IV, walka z Bossem, arena, kampania i Ekspedycja, porażka Przymierza, krótkie sygnały: początek tury, zwycięstwo w bitwie); (2) źródło: wolne licencje (OpenGameArt, CC0 lub CC BY, autorzy trafiają do okna „Autorzy”) albo generowanie w Scenario (ElevenLabs Music, ok. 30 CU za utwór, więc budżet z sekcji 8); (3) każdy przyjęty utwór do repo w tej samej sesji (mp3 małe, pętle bez szwu), wpis w `assets.json` i w `MUSIC`, przypisanie do momentów gry w logice odtwarzania; (4) test w przeglądarce, że przejścia między utworami i głośność działają, także na telefonie. Decyzję o liczbie utworów i o tym, które momenty dostają własną muzykę, podejmuje autor.
+
 
 
 ## 2. Tylko autor (Claude tego nie bierze)
