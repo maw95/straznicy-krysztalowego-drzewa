@@ -78,7 +78,7 @@ export function shardCollector(state: GameState, f: TeamId): HeroState | null {
   return carriers.sort((a, b) => (b.shards ?? 0) - (a.shards ?? 0) || away(a) - away(b) || (a.id < b.id ? -1 : 1))[0] ?? null;
 }
 
-/** Shards go onto the map when the game is made: spread out, away from the bases, on hexes nothing else stands on; every side sees where they lie. */
+/** Shards go onto the map when the game is made: spread out, away from the bases, on hexes nothing else stands on; their hexes stay covered like any others until a hero discovers them. */
 export function placeShards(state: GameState): void {
   const k = state.kingdom;
   if (!k || !state.rules.empire) return;
@@ -94,7 +94,6 @@ export function placeShards(state: GameState): void {
       if (Object.keys(k.shards).some((c) => distance(parseKey(c), parseKey(t.key)) <= gap)) continue;
       k.shards[t.key] = 1;
       state.tiles[t.key].place = { kind: 'shard', id: t.key };
-      state.tiles[t.key].revealed = true;
     }
   }
   k.shardTotal = Object.keys(k.shards).length;

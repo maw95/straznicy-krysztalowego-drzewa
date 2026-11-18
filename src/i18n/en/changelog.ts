@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Imperium: kafelki z Odłamkami Pierwotnej Iskry są na początku zakryte jak wszystkie inne (poza Drzewem i polami startowymi); Odłamek widać dopiero po odkryciu pola.": "Empire: the tiles with the Shards of the Primal Spark start covered like all the others (except the Tree and the starting hexes); a Shard shows only once its tile is discovered.",
   "Mantykora Zmierzchu i Srebrna Wilczyca mają własne dźwięki ataku i śmierci.": "The Dusk Manticore and the Silver She-Wolf have their own attack and death sounds.",
   "Wprowadzenie: polskie slajdy 08–11 pokazują nowe menu (kroki, siedem poziomów, cele z Podbojem i Relikt), a slajd o online mówi o ośmiu graczach; obrazy slajdów odświeżone z aktualnej gry.": "Introduction: the Polish slides 08–11 show the new menu (steps, seven levels, goals with Conquest and the Relic), and the online slide speaks of eight players; the slide pictures were refreshed from the current game.",
   "Poprawka wydania 2.15.0: angielskie tłumaczenie wpisu o dopisanych tłumaczeniach w historii zmian.": "Fix for release 2.15.0: the English translation of the changelog entry about the added translations.",

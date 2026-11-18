@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Imperium: kafelki z Odłamkami Pierwotnej Iskry są na początku zakryte jak wszystkie inne (poza Drzewem i polami startowymi); Odłamek widać dopiero po odkryciu pola.
 ## 2.16.0 — 2026-11-18
 
 - Mantykora Zmierzchu i Srebrna Wilczyca mają własne dźwięki ataku i śmierci.

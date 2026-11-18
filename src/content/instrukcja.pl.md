@@ -291,7 +291,7 @@ Każdy bohater ma **manę**: 3 i jeszcze 1 za każdy swój poziom (mędrcy o 3 w
 Poziom Imperium dodaje do Królestwa **Odłamki Pierwotnej Iskry**, mechaniki frakcji i wybór jednostek.
 
 ### Odłamki i Pierwotna Iskra
-Na widocznych od początku polach leżą świecące **Odłamki** (od 2 na najmniejszej mapie do 6 na największych). Bohater, który wejdzie na pole, zabiera Odłamek; nie zakłada go jak artefaktu, tylko niesie. Licznik pod jego imieniem pokazuje, ile niesie sam, ile ma frakcja i ile jest w grze. **Kto pokona bohatera, zabiera mu wszystkie Odłamki**; poległy w walce ze strażnikiem upuszcza je na sąsiednie pole.
+Na polach rozsianych po mapie, zakrytych jak wszystkie inne, leżą świecące **Odłamki** (od 2 na najmniejszej mapie do 6 na największych). Bohater, który wejdzie na pole, zabiera Odłamek; nie zakłada go jak artefaktu, tylko niesie. Licznik pod jego imieniem pokazuje, ile niesie sam, ile ma frakcja i ile jest w grze. **Kto pokona bohatera, zabiera mu wszystkie Odłamki**; poległy w walce ze strażnikiem upuszcza je na sąsiednie pole.
 
 Gdy **jeden bohater niesie wszystkie Odłamki** i stoi we własnej osadzie, może wznieść budynek Pierwotnej Iskry: **Sanktuarium** (Przymierze, wszystkie jednostki +2 Życia w każdej bitwie) albo **Czarną Kuźnię** (Horda, wszystkie jednostki +1 Ataku). Ceną są wszystkie Odłamki. Rozproszone po kilku bohaterach nie wystarczą: bohater może **przekazać swoje Odłamki** sojusznikowi na tym samym lub sąsiednim polu (przycisk w panelu bohatera).
 

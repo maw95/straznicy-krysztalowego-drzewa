@@ -19,18 +19,19 @@ const walkOnto = (s: GameState, hex: string): GameState => {
   const from = mapNeighbors(s.tiles, hex).find((k) => tileCost(s.tiles[k]) !== null && !s.tiles[k].crystalId && !s.tiles[k].place && !s.tiles[k].home)!;
   s.heroes[hero.id].pos = from;
   s.tiles[from].revealed = true;
+  s.tiles[hex].revealed = true; // shards lie covered until a hero discovers them
   s.movePoints = 9;
   return applyAction(s, { type: 'moveHero', to: hex });
 };
 
 describe('level 6: shards', () => {
-  it('lie on the map by map size, seen by everybody, and only in level 6', () => {
+  it('lie on the map by map size, covered like other tiles, and only in level 6', () => {
     const s = game();
     expect(objectiveOf(s)).toBe('relic');
     expect(shardTotal(s)).toBe(EMPIRE.shards.medium);
     for (const hex of Object.keys(s.kingdom!.shards!)) {
       expect(s.tiles[hex].place?.kind).toBe('shard');
-      expect(s.tiles[hex].revealed).toBe(true);
+      expect(s.tiles[hex].revealed).toBe(false);
     }
     const l5 = game({ ruleset: 'digital', heroGrowth: true, kingdom: true, economy: true, realm: true, objective: 'relic' });
     expect(l5.kingdom!.shards).toBeUndefined();

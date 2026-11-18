@@ -291,7 +291,7 @@ Every hero has **mana**: 3 plus 1 for each of their levels (sages 3 more). At th
 The level Empire adds to the Kingdom the **Shards of the Primal Spark**, faction mechanics and a choice of units.
 
 ### Shards and the Primal Spark
-On tiles visible from the start lie glowing **Shards** (from 2 on the smallest map to 6 on the biggest). A hero who steps onto the tile takes a Shard; they do not equip it like an artifact, they carry it. The counter under their name shows how many they carry themselves, how many the faction has and how many are in the game. **Whoever defeats a hero takes all their Shards**; a hero who falls in a fight with a guardian drops them on a neighbouring tile.
+On tiles scattered over the map, covered like all the others, lie glowing **Shards** (from 2 on the smallest map to 6 on the biggest). A hero who steps onto the tile takes a Shard; they do not equip it like an artifact, they carry it. The counter under their name shows how many they carry themselves, how many the faction has and how many are in the game. **Whoever defeats a hero takes all their Shards**; a hero who falls in a fight with a guardian drops them on a neighbouring tile.
 
 When **one hero carries all the Shards** and stands in a settlement of their own, they can raise the Primal Spark building: the **Sanctuary** (Covenant, all units +2 Health in every battle) or the **Black Forge** (Horde, all units +1 Attack). The price is all the Shards. Shards scattered among several heroes are not enough: a hero can **pass their Shards** to an ally on the same or a neighbouring tile (a button in the hero panel).
 
