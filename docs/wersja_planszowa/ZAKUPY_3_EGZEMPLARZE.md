@@ -1,6 +1,6 @@
 # Lista zakupów — 3 egzemplarze gry (wariant oszczędny)
 
-Stan na 18.11.2026. Figurki, kryształy, znacznik rundy, tor rund, krążki znaczników i krople obrażeń są **zlecone do druku 3D**,
+Stan na 18.11.2026 (oferty w punktach 1–5 zaktualizowane tego dnia). Figurki, kryształy, znacznik rundy, tor rund, krążki znaczników i krople obrażeń są **zlecone do druku 3D**,
 więc tu ich nie ma. Ta lista obejmuje papier, tusz, tekturę, kleje i narzędzia do pozostałych elementów
 (instrukcja w segregatorze, karty, kafelki, plansza areny, naklejki, kość) oraz drewniane pudełko.
 Drukarka: **HP DeskJet 2545** (atramentowa, A4, druk jednostronny — dwustronny ręcznie, przez odwrócenie kartek).
@@ -12,9 +12,10 @@ do sprawdzenia, ile tuszu schodzi na pełny zadruk.
 **Decyzje (18.11.2026):** kafelki i arena klejone **klejem Wikol** (na mokro, cienko, z dociśnięciem na noc), karty — **jedną
 tanią puszką kleju w sprayu**; instrukcja na zwykłym papierze w koszulkach; tusz dolewany z butelek do wkładów HP 301.
 
-Linki prowadzą do konkretnych ofert Allegro, gdy udało się je znaleźć; „wyszukiwanie” oznacza, że pasującej pojedynczej
-oferty nie było i link otwiera listę ofert. Ceny z 18.11.2026, bez dostawy — oferty i ceny na Allegro szybko się zmieniają,
-więc przed zakupem sprawdź opis.
+Oferty w punktach 1–5 są ze zwykłych sklepów internetowych (pojedyncze oferty Allegro szybko wygasały). Każdą stronę
+sprawdzono 18.11.2026: cena brutto bez dostawy, „dostępny” = sklep pokazywał towar na stanie; „niesprawdzone” = strona nie
+dała się otworzyć automatycznie, więc dostępność trzeba zobaczyć samemu. Sklepów jest kilka, więc dochodzi kilka dostaw
+(ok. 10–17 zł każda) — patrz „Gdzie kupić razem” na końcu.
 
 ## Ile czego trzeba (na 1 egzemplarz i na 3)
 
@@ -40,9 +41,9 @@ są w drukarce** (głowica jest we wkładzie; jeden wkład zniesie kilka–kilka
 
 | Co | Ile | Cena ok. | Oferta |
 |---|---:|---:|---|
-| Zestaw do napełniania HP 301/302/304 z klipem (tusze 4 kolory, strzykawki, klip do odessania) | 1 | 75 zł | [Allegro — klip + tusze](https://allegro.pl/oferta/zestaw-do-napelniania-hp-301-302-304-klip-tusz-10479501535) |
-| Tusz do napełniania **4 × 100 ml** (czarny, błękitny, purpurowy, żółty) | 1 | 29–38 zł | [Allegro — wyszukiwanie „tusz do napełniania hp”](https://allegro.pl/listing?string=tusz+do+nape%C5%82niania+hp) (szukaj „4x100ml napełniacz HP 301”) |
-| Opcjonalnie, na zapas: zamiennik **HP 301XL kolor** — gdy wkład z drukarki zacznie gubić kolor mimo napełniania | 1 | ok. 75 zł | [Allegro — 301XL kolor](https://allegro.pl/produkt/zamiennik-tuszu-hp-301-xl-color-93352576-9d3f-45d8-85f6-df6d7faed8c2) |
+| **Zestaw tuszy do regeneracji HP 301** (czarny pigment 100 ml, błękitny/purpurowy/żółty po 60 ml, płyn do głowic 60 ml, 4 strzykawki) | **2** (razem 120 ml każdego koloru) | 30 zł/szt. | [mojetonery.pl — zestaw HP](https://mojetonery.pl/p/428/328/zestaw-tuszy-do-regeneracji-hp-21-22-300-301-302-304-305-650-652-703-704-901-tusze-w-butelkach-komponenty-do-regeneracji.html) (dostępny) |
+| **Klip regeneracyjny HP/Canon** (do odessania powietrza po napełnieniu; na liście zgodności jest HP 301) | 1 | 18 zł | [mojetonery.pl — klip](https://mojetonery.pl/p/353/1044/uniwersalny-klip-regeneracyjny-dla-kartridzy-hp-i-canon-akcesoria-komponenty-do-regeneracji.html) (dostępny; ten sam sklep — jedna dostawa) |
+| Opcjonalnie, na zapas: zamiennik **HP 301XL kolor** (ORINK, 18 ml) — gdy wkład z drukarki zacznie gubić kolor mimo napełniania | 1 | 68 zł | [profibiuro.pl — 301XL kolor](https://www.profibiuro.pl/tusz-ch301xlc-or-kolor-do-drukarek-hp-zamiennik-hp-301xl-ch564ee-18ml-p-29060.html) (strona pokazuje i „dostępny”, i „chwilowo niedostępny”) · inne: [printworldsklep.pl](https://printworldsklep.pl/tusz-do-hp-301-xl-zamiennik-ch564ee-kolorowy-p-181.html), [tuszmarkt.pl](https://www.tuszmarkt.pl/zamiennik-tuszu-ch564ee-hp-301xl-kolor-wydajny-21-ml.html) |
 
 Wskazówki:
 
@@ -56,8 +57,9 @@ Wskazówki:
 
 | Co | Ile | Cena ok. | Oferta |
 |---|---:|---:|---|
-| **Papier foto matowy dwustronny A4 200 g, 50 ark.** (Blue Swan, do drukarek atramentowych) — karty, kafelki, arena, okładki | **3 opak.** (150 ark.) | 29 zł/opak. | [Allegro — Blue Swan 200 g](https://allegro.pl/oferta/papier-fotograficzny-matowy-blue-swan-a4-200-g-m2-50-szt-dwustronny-premium-16698335580) |
-| **Papier samoprzylepny biały matowy A4, 50 ark.** (Mazak MS1) — naklejki na znaczniki i kość, etykiety pudełek | 1 opak. | 20 zł | [Allegro — Mazak 50 ark.](https://allegro.pl/produkt/papier-samoprzylepny-bialy-mazak-ms1-50-arkuszy-a4-f7623aa9-69c5-47e4-9612-45e0e369cbd5) |
+| **Papier foto matowy A4 200 g, 50 ark.** (do drukarek atramentowych) — karty, kafelki, arena, okładki | **3 opak.** (150 ark.) | 15,50 zł/opak. | [mabitech.pl — Premium HQ matowy 200 g](https://www.mabitech.pl/?324,papier-foto-premium-hq-matowy-a4-200g-50ark) (stan magazynu nie jest podany) · zapas: [drox.pl — matowy 200 g, 25,90 zł](https://drox.pl/pl/products/papier-fotograficzny-matowy-a4-200g-m2-50-arkuszy-5516) (dostępny) · [dlabiura24.pl — MediaRange 200 g, 28,68 zł](https://dlabiura24.pl/papier-fotograficzny-mediarange-a4-200gsm-matowy-50ark) (dostępny, 35 opak.) |
+| (wersja **dwustronna** matowa 230 g, 50 ark. — w tym samym sklepie; 230 g drukarka też przyjmie) | (3) | 18 zł/opak. | [mabitech.pl — dwustronny 230 g](https://www.mabitech.pl/?418,papier-dwustronny-foto-premium-hq-matowy-a4-230g-50ark) |
+| **Papier samoprzylepny biały matowy A4, 50 ark.** — naklejki na znaczniki i kość, etykiety pudełek | 1 opak. | 16 zł | [shan.pl — samoprzylepny matowy](https://shan.pl/pl/papier-i-folie-samoprzylepne/21391-papier-samoprzylepny-bialy-a4-matowy-50-arkuszy.html) (dostępny; ten sam sklep co tektura) |
 | Zwykły papier A4 80–90 g na instrukcję (jeśli nie masz w domu) | 1 ryza | 12–25 zł | dowolny sklep |
 
 HP DeskJet 2545 przyjmuje **papier fotograficzny do 280 g/m², także w formacie A4** (instrukcja HP DeskJet 2540 series,
@@ -69,11 +71,11 @@ druku w dół; w sterowniku typ „Papier fotograficzny” i jakość „najleps
 
 | Co | Ile | Cena ok. | Oferta |
 |---|---:|---:|---|
-| **Tektura introligatorska 2 mm A4, 20 ark.** | **2 opak.** (40 ark.) | 27 zł/opak. | [Allegro — tektura 2 mm A4 20 ark.](https://allegro.pl/oferta/tektura-introligator-twarda-oprawa-2-mm-a4-20-ark-8992637474) |
-| **Klej Wikol** (introligatorski / PVA), 500 g — kafelki i arena (63 strony A4) | 1 | 25–35 zł | [Allegro — wyszukiwanie „klej introligatorski wikol”](https://allegro.pl/listing?string=klej+introligatorski+wikol) |
+| **Tektura introligatorska 2 mm A4, 20 ark.** | **2 opak.** (40 ark.) | 25 zł/opak. | [shan.pl — tektura 2 mm A4 20 ark.](https://shan.pl/pl/tektura-introligatorska/14970-tektura-introligatorska-a4-2-mm-20-arkuszy.html) (dostępna, 90 opak.) |
+| **Klej Wikol** (introligatorski / PVA), 500 g — kafelki i arena (63 strony A4) | 1 | 22–25 zł | [sklepmatejko.pl — Wikol 500 g](https://sklepmatejko.pl/kleje/4468-klej-wikol) (dostępny) · [invmedia — Wikol Jedność 500 g, 22 zł](https://shop.invmedia.com.pl/kleje-do-papieru-introligatorskie/1103-klej-wikol-500g-butelka-jednosc-5905362061162.html) |
 | Mały wałek gąbkowy 5–10 cm (albo stara karta plastikowa) do rozprowadzania Wikolu | 1 | 5 zł | market budowlany |
-| **Klej w sprayu Boll 400 ml** — tylko karty (24 arkusze) | **1** | 21–28 zł | [Allegro — Boll klej w sprayu 400 ml](https://allegro.pl/oferta/boll-klej-w-sprayu-400ml-folia-metal-papier-szklo-7220276738) |
-| **Taśma tkaninowa (duct tape) czarna 48 mm** — zawias planszy areny | 1 rolka | 9–11 zł | [Allegro — wyszukiwanie „taśma płócienna samoprzylepna”](https://allegro.pl/listing?string=ta%C5%9Bma+p%C5%82%C3%B3cienna+samoprzylepna) (w opisie: „tkaninowa” / „zbrojona”) |
+| **Klej w sprayu Boll Super 400 ml** — tylko karty (24 arkusze) | **1** | 30,50 zł | [metaltech.sklep.pl — Boll 400 ml](https://metaltech.sklep.pl/boll-klej-spray-super-400ml,id2484.html) (dostępny) · albo w markecie budowlanym / sklepie motoryzacyjnym |
+| **Taśma tkaninowa (duct tape) czarna 48 mm × 50 m** — zawias planszy areny | 1 rolka | 16 zł | [elastica.pl — duct tape czarna](https://elastica.pl/tasmy/tasmy-duct/tasma-naprawcza-duct-tape-czarna) (dostępna) · albo dowolny market budowlany |
 
 **Wikol — jak kleić kafelki, żeby tektura się nie wygięła:**
 
@@ -94,21 +96,21 @@ dociśnij górny pasek, a potem powoli wyciągaj papier do pieczenia, wygładzaj
 
 | Co | Ile | Cena ok. | Oferta |
 |---|---:|---:|---|
-| **Mata do cięcia A3 samogojąca** (30 × 45 cm) | 1 | 20–25 zł | [Allegro — mata Bigstren A3](https://allegro.pl/oferta/mata-do-ciecia-samogojaca-a3-modelarska-techniczna-13719050387) |
-| Nóż z łamanym ostrzem **18 mm** (dowolny, z blokadą ostrza) | 1 | 10–15 zł | market / [Allegro — wyszukiwanie](https://allegro.pl/listing?string=n%C3%B3%C5%BC+segmentowy+18+mm) |
-| **Ostrza łamane 18 mm, 10 szt.** (NEO 64-010) — tektura szybko tępi ostrze; 363 kafelki to ponad 2000 cięć | **2 opak.** | 9–14 zł/opak. | [Allegro — ostrza NEO 18 mm](https://allegro.pl/oferta/ostrza-lamane-wymienne-18-mm-10-szt-64-010-neo-17546527679) |
-| **Linijka stalowa 50 cm** — pod spód naklej pasek taśmy malarskiej, żeby się nie ślizgała | 1 | 10–20 zł | [Allegro — wyszukiwanie „liniał stalowy 50 cm”](https://allegro.pl/listing?string=linia%C5%82+stalowy+50+cm) |
-| **Zaokrąglacz narożników R4** (najtańszy, jednopromieniowy) — 114 kart × 4 rogi | 1 | ok. 11 zł | [Allegro — wyszukiwanie „zaokrąglacz narożników 4mm”](https://allegro.pl/listing?string=zaokr%C4%85glacz+naro%C5%BCnik%C3%B3w+4mm) |
+| **Mata do cięcia A3 samogojąca** (30 × 45 cm, 5 warstw, dwustronna) | 1 | 20 zł | [modelekolejowe.pl — mata A3](https://modelekolejowe.pl/product-pol-3428-Mata-do-ciecia-samogojaca-5-warstw-45x30cm-A3.html) (dostępna) · [gotronik.pl — mata A3, 29 zł](https://www.gotronik.pl/mata-dwustronna-do-ciecia-a3-samogojaca-zielona-p-8361.html) |
+| Nóż z łamanym ostrzem **18 mm** z blokadą (np. NEO 63-014 albo Topex 17B128) | 1 | 7–12 zł | najprościej w markecie razem z ostrzami · [fixero.com — NEO 63-014](https://fixero.com/noz-z-ostrzem-lamanym-18-mm-blokada-srubowa-63-014.html) (niesprawdzone) · [Ceneo — Topex 17B128](https://www.ceneo.pl/13979989) |
+| **Ostrza łamane 18 mm, 10 szt.** (NEO 64-010) — tektura szybko tępi ostrze; 363 kafelki to ponad 2000 cięć | **2 opak.** | 10–15 zł/opak. | [Ceneo — NEO 64-010, 5 sklepów od ok. 10 zł](https://www.ceneo.pl/7345050) · albo dowolne ostrza 18 mm w markecie |
+| **Linijka stalowa 50 cm** (nierdzewna, 26 mm szer.) — pod spód naklej pasek taśmy malarskiej, żeby się nie ślizgała | 1 | 10 zł | [modelarnia.pl — linijka 50 cm](https://sklep.modelarnia.pl/p21410,linijka-metalowa-50cm-18278.html) (dostępna; dostawa od 19 zł, więc warto dobrać tam też matę i ostrza) |
+| **Zaokrąglacz narożników R4** — 114 kart × 4 rogi | 1 | 25–45 zł | [Amazon.pl — R4](https://www.amazon.pl/dp/B08NYH64BD) (niesprawdzone) · [Amazon.pl — 3 w 1 R4/R7/R10](https://www.amazon.pl/dp/B0GTWRCYF3) (niesprawdzone) · [pasazbiurowy.pl — Argo AE-3S, 25 zł](https://www.pasazbiurowy.pl/zaokraglacz-naroznikow-argo-ae-3s-19793.html) (promień ok. 5 mm, nie 4) |
 
 ## 5. Instrukcja i drobiazgi
 
 | Co | Ile | Cena ok. | Oferta |
 |---|---:|---:|---|
-| **Segregator ofertowy A4, 4 ringi, 40 mm, z kieszenią na przód i grzbiet** (Elba Panorama) — okładka gry wsuwa się do kieszeni | **3** | 23 zł/szt. | [Allegro — Elba Panorama 40 mm](https://allegro.pl/produkt/segregator-ofertowy-a4-4-ringi-40mm-bialy-elba-panorama-bialy-e208e33b-7c27-49cb-9ac2-1e70b5e4672c) |
-| (taniej, bez kieszeni: VauPe A4 40 mm 4 ringi — okładkę trzeba wtedy nakleić) | (3) | 12 zł/szt. | [Allegro — VauPe 40 mm](https://allegro.pl/produkt/segregator-a4-40mm-4-ringi-vaupe-fioletowy-f4a22368-bebb-4e31-826d-1423c137eccd) |
-| **Koszulki A4 krystaliczne, 100 szt.** (21 na egzemplarz) | 1 opak. | 12–20 zł | [Allegro — wyszukiwanie „koszulki A4 krystaliczne 100 szt”](https://allegro.pl/listing?string=koszulki%20A4%20krystaliczne%20100%20szt) |
-| **Kostka drewniana 16 mm, naturalna, 10 szt.** (kość −1 / 0 / +1; 3 + zapas) | 1 opak. | 15 zł | [Allegro — wyszukiwanie „kostka drewniana 16mm 10szt”](https://allegro.pl/listing?string=kostka+drewniana+16mm+10szt) (sprawdź w opisie: 16 mm, niemalowana) |
-| **Woreczki strunowe 6 × 8 cm, 100 szt.** | 1 opak. | 3 zł | [Allegro — Ironpack 6 × 8](https://allegro.pl/oferta/woreczki-strunowe-60x80-mm-worki-torebki-6x8-cm-mocne-100szt-9524402654) |
+| **Segregator ofertowy A4, 4 ringi D, 40 mm, z kieszenią na przód i grzbiet** (Biurfol Panorama, biały) — okładka gry wsuwa się do kieszeni | **3** | 21 zł/szt. | [komax9.pl — Biurfol Panorama 40 mm](https://www.komax9.pl/pl/segregator-ofertowy-biurfol-a4-40mm-4-ringi-panorama.html) (dostępny, wysyłka 1–3 dni) |
+| (taniej, bez kieszeni: VauPe A4 40 mm 4 ringi — okładkę trzeba wtedy nakleić) | (3) | 12 zł/szt. | [Allegro — VauPe 40 mm](https://allegro.pl/produkt/segregator-a4-40mm-4-ringi-vaupe-fioletowy-f4a22368-bebb-4e31-826d-1423c137eccd) (strona produktu działa) |
+| **Koszulki A4 krystaliczne 50 mic., 100 szt.** (21 na egzemplarz) | 1 opak. | 12,90 zł | [topoffice.pl — koszulki 100 szt.](https://topoffice.pl/koszulki-na-dokumenty/20963-koszulki-krystaliczne-a4-50-mik-100-sztuk-5705831157248) (dostępne, ostatnie 5 opak.) · [czystysklep.pl — Bantex 100 szt., 21 zł](https://www.czystysklep.pl/koszulki-krystaliczne-a4-100szt-w-kartoniku-p21714) |
+| **Kostka drewniana 16 mm, surowa sosna, 10 szt.** (kość −1 / 0 / +1; 3 + zapas) — zwykłe sześciany, nie kości z oczkami | 1 opak. | 5,69 zł | [biurobest.pl — kostka 16 mm 10 szt.](https://biurobest.pl/pl/p/Kostka-kwadrat-klocek-szescian-drewno-16mm-10szt/303) (strona pokazuje i „90 szt.”, i „niedostępny” — sprawdź) |
+| **Woreczki strunowe 6 × 8 cm, 100 szt.** | 1 opak. | 1,80 zł | [patopak.com.pl — woreczki 6 × 8](https://patopak.com.pl/torebki-strunowe/106-torebki-strunowe-6x8-cm-100-szt-worki-strunowe-60x80-mm.html) (dostępne) · albo dowolny sklep papierniczy |
 | Gumki recepturki na talie kart | kilka | — | — |
 
 ## 6. Pudełka z drewna (3 sztuki)
@@ -135,12 +137,22 @@ Klej Wikol z punktu 3 nadaje się też do drewna — wystarczy dokupić drugie o
 
 | Grupa | Ok. |
 |---|---:|
-| Tusz (zestaw z klipem, 4 × 100 ml) | 115 zł (+75 zł za zapasowy wkład) |
-| Papier (3 × foto, samoprzylepny, ewentualnie ryza zwykłego) | 110–130 zł |
-| Tektura, Wikol, wałek, spray Boll, taśma | 125–145 zł |
-| Narzędzia (mata, nóż, ostrza, linijka, zaokrąglacz) | 70–90 zł |
-| Segregatory Panorama, koszulki, kostki, woreczki | 100 zł |
-| **Razem** | **ok. 520–580 zł** (z segregatorami VauPe ok. 35 zł mniej) |
+| Tusz (2 zestawy + klip) | 78 zł (+68 zł za zapasowy wkład) |
+| Papier (3 × foto, samoprzylepny, ewentualnie ryza zwykłego) | 65–90 zł |
+| Tektura, Wikol, wałek, spray Boll, taśma | 125 zł |
+| Narzędzia (mata, nóż, ostrza, linijka, zaokrąglacz) | 85–110 zł |
+| Segregatory Panorama, koszulki, kostki, woreczki | 85 zł |
+| **Razem** | **ok. 440–490 zł** + dostawy (z segregatorami VauPe ok. 27 zł mniej) |
+
+## Gdzie kupić razem (mniej dostaw)
+
+- **mojetonery.pl** — 2 zestawy tuszy + klip.
+- **shan.pl** — 2 × tektura + papier samoprzylepny (darmowa dostawa do paczkomatu od 150 zł).
+- **mabitech.pl** — 3 × papier foto.
+- **modelarnia.pl** albo **modelekolejowe.pl** — linijka i mata (w jednym z nich poszukaj też ostrzy 18 mm).
+- **Market budowlany** (Castorama, Leroy Merlin, OBI) — nóż, ostrza, taśma duct tape, wałek, często też Boll i Wikol; do tego
+  sklejka do pudełek z punktu 6.
+- **komax9.pl** — segregatory; koszulki, kostki i woreczki można dobrać w dowolnym sklepie papierniczym.
 
 ## Kolejność
 
