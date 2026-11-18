@@ -757,3 +757,15 @@ pojedynki sprzyjają Przymierzu. Poziom Łatwy (pojedynki bez zdolności) się n
 - Liczby: Ż 3, A 6, S 10, lata, walka wręcz. Celowo przesadzona.
 - Umiejętność **Kacza Furia** (pasywna, bez limitu na bitwę): gdy atak Kaczki zabije wroga, jej aktywacja zaczyna się od nowa (ruch + atak) — zanim zagra następna jednostka. Zabój kolejnego wroga daje kolejną aktywację.
 - Portret (`docs/grafika/portrety/dzielna_kaczka.png`) i model (`dzielna_kaczka.glb`) są od autora; model jest zwrócony w -Z, więc `figures.ts` obraca go o 180°. Ikony umiejętności `duckFury*.png` są nadal tymczasowe (rysowane z SVG) — do wymiany.
+
+## 15. Strony i rasy: trzy i cztery strony, frakcja na stronę (2026-11-18, backlog 51)
+
+- **Strona** (`TeamId`: `dawn`, `horde`, `third`, `fourth`) jest kluczem stanu gry (złoto, skarby, baza, strefa mapy); **rasa** (`FactionId`) kluczem danych i grafik. `raceOf(state, strona)` czyta rasę z `setup.races` (domyślnie `dawn` i `third` grają Przymierzem, `horde` i `fourth` Hordą). `setup.teams` (2–4) mówi, ile stron gra; `teamsOf(state)` daje je po kolei, `byTeam` buduje rekord tylko dla grających stron.
+- **Trzy i cztery strony:** tylko rywalizacja (PvP) w wersji cyfrowej, na mapie prostokątnej (średniej i większej dla trzech, długiej i większej dla czterech); silnik odmawia startu inaczej (`checkSides` w `game.ts`). Bazy 3 i 4 stoją w górnym i dolnym rzędzie mapy, w odległości od Drzewa zbliżonej do baz 1 i 2; mapa dzieli się na strefy najbliższych baz (`splitZones`).
+- **Cel „Kryształy do Drzewa” zostaje historią Przymierza i Hordy:** zawsze dwie strony z tymi rasami (inaczej błąd „Ta historia jest o Przymierzu i Hordzie…”; test w `tests/multiTeam.test.ts`). To też cel, na który gra spada, gdy poziom nie zna wybranego celu, więc trzy strony nie ruszą też na takim poziomie.
+- **Pozostałe cele na N stron:** Kontrola (punkty: jeden środkowy wart 2 i po jednym na stronę), Podbój i Relikt (`bestTeam`, remis na szczycie to remis), Boss i Artefakt (limit rund = remis w PvP), Przetrwanie (bez fal Hordy; po limicie wygrywa strona z największą liczbą żywych bohaterów, remis na szczycie to remis). Gdy z żywymi bohaterami zostaje jedna strona, wygrywa ona (w grze na dwie strony zasada jest dawna: polegli wszyscy bohaterowie Przymierza, wygrywa Horda).
+- **Dwie strony tej samej rasy** mogą grać ze sobą: pomocnik, którego przynoszą obie strony, dostaje w bitwie własny `id` (`<id>~<strona>`; wszystko inne czyta definicję przez `defId`). Bohaterowie są wspólną pulą rasy: strona nie dostaje bohatera, którego gra inna; komputer w kooperacji gra rasą graczy z tego, co zostało.
+- **Kooperacja** ma zawsze dwie strony (gracze i komputer); komputer może grać dowolną rasą (`races.horde`).
+- **Gra przez internet** zostaje przy dwóch stronach (serwer sprawdza `FACTIONS` i nie zna `teams` ani `races`); trzy i cztery strony online wymagają zmiany serwera po tym wydaniu gry.
+- Mechaniki poziomu 6 w bitwie (Blask Świtu, Żądza Krwi, Iskra, drzewko Przymierza) czytają rasę strony, nie jej id.
+
