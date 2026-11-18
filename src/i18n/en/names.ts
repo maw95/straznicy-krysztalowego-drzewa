@@ -82,4 +82,12 @@ register({
   'Figurki 3D na planszy': '3D figures on the board', 'Zapisano:': 'Saved:', 'Zestaw:': 'Set:', 'W plecaku: {0}': 'In the backpack: {0}', 'Plecak (': 'Backpack (', 'Kamienie milowe': 'Milestones',
   'Artefakt ·': 'Artifact ·', 'Zaatakuj: {0}.': 'Attack: {0}.', 'Normalny': 'Normal', 'Trudny': 'Hard', 'Bardzo trudny': 'Very hard', 'Zapisano: {0}.': 'Saved: {0}.',
   'Muzyka i dźwięki': 'Music and sounds',
+  // fourth heroes for 7-8 players, dwellings of tier 6, the Settlement Council tree
+  'Srebrna Wilczyca': 'Silver She-Wolf', 'Wilcza Rodzina': "She-Wolf's Family", 'Stała: +{0} A, gdy cel sąsiaduje z innym sojusznikiem Wilczycy.': "Constant: +{0} ATK when the target is adjacent to another ally of the She-Wolf.",
+  'Mantykora Zmierzchu': 'Dusk Manticore', 'Jadowity Kolec': 'Venomous Spike', 'Tropicielka': 'Tracker', 'Pan Zmierzchu': 'Lord of Dusk',
+  'Pomocnicy Mantykory mają +1 Ż w bitwie.': "The Manticore's supports have +1 HP in battle.",
+  'Gniazdo Feniksa': 'Phoenix Nest', 'Jaskinia Zagłady': 'Cavern of Doom', 'Rekrutuj': 'Recruit', 'Drewno': 'Wood', 'Ruda': 'Ore', '· poziom': '· tier',
+  'Ten bohater już raz wrócił dzięki Eliksirowi Odrodzenia.': 'This hero has already returned once thanks to the Elixir of Rebirth.',
+  'płonie': 'burns', 'Odłamki:': 'Shards:', 'można zbudować': 'can be built', 'brakuje surowców': 'missing resources',
+  ': budynek wymaga, by stał ten, z którego prowadzi do niego linia.': ': a building needs the one its line leads from to stand.',
 });

@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Angielska wersja gry: dopisane brakujące tłumaczenia (nowi czwarci bohaterowie i ich zdolności, siedliska Gniazdo Feniksa i Jaskinia Zagłady, podpisy w drzewku Rady Osady i w koszarach, komunikat o Eliksirze Odrodzenia).
 - Nowi czwarci bohaterowie przy 7–8 graczach: Srebrna Wilczyca (Przymierze, Wilcza Rodzina: +1 A na cel sąsiadujący z jej sojusznikiem) i Mantykora Zmierzchu (Horda, Jadowity Kolec: trafiony wróg traci Ż przez dwie aktywacje), z ilustracją karty, portretem i animacjami. Dzielna Kaczka zostaje sekretnym bohaterem, a Wódz Hordy dowódcą z karczmy.
 - Angielska wersja gry pokazuje angielską okładkę z logo oraz angielskie obrazy we wprowadzeniu (cel, wędrówka, bitwa, tryby, menu, poziomy, cele, pokój online, arena).
 
