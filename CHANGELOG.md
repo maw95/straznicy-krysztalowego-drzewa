@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Mantykora Zmierzchu ryczy przy śmierci (własny dźwięk); atak Mantykory i dźwięki Srebrnej Wilczycy czekają na sprawną usługę dźwięków.
 ## 2.15.1 — 2026-11-18
 
 - Poprawka wydania 2.15.0: angielskie tłumaczenie wpisu o dopisanych tłumaczeniach w historii zmian.

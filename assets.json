@@ -5593,6 +5593,20 @@
       "data": "2026-11-18",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/duskManticore_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/duskManticore_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki duskManticore (dźwięku ataku nie ma: 3 próby 18.11 skończyły się timeoutem Scenario)",
+      "prompt": "Giant manticore beast defeated: a long deep lion roar that slowly weakens into a low groan and fades away into silence, fantasy game sound effect, no music",
+      "scenario_asset": "asset_XEDCGMLqk361vrLg6Ya3zBxK",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 3,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

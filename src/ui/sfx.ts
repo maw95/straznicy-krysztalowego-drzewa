@@ -15,6 +15,8 @@ export const sfxFiles = (name: Sfx): string[] => VARIANTS[name] ?? [name];
 
 /** Units with their own attack and death sounds (dzwieki/jednostki/<id>_atak.mp3 and _smierc.mp3). */
 export const UNIT_SOUNDS = new Set(['goldDragon', 'unicornKing', 'ancientBear', 'braveDuck', 'elfDruid', 'nymph', 'pegasus', 'shardling', 'burrower', 'skyEagle', 'harpy', 'pincer', 'bogCrawler', 'stoneGolem', 'stormKing', 'kraken', 'tentacle', 'blackDragon', 'werewolfLord', 'ironFistOgre', 'goblinShaman', 'caveSpider', 'shadowBat', 'cyclops', 'griffin', 'hydra', 'dawnKnight', 'dawnHuntress', 'dawnSage', 'hordeWarlord', 'hordeCrossbow', 'hordeShadow', 'dawnPhoenix', 'doomBehemoth', 'silverFox', 'dawnOwl', 'dryadArcher', 'whiteStag', 'goblinSlinger', 'gargoyle', 'caveTroll', 'shadowWyvern']);
+/** Units that have only a death sound so far (the attack falls back to the generic one). */
+const DEATH_ONLY = new Set(['duskManticore']);
 const UNIT_GAIN = 0.85;
 
 const STORE_KEY = 'skd-sfx';
@@ -97,7 +99,7 @@ class Effects {
 
   /** The attack or death sound of a unit; a unit without its own sounds gets `fallback` (when given). */
   unit(defId: string, kind: 'atak' | 'smierc', fallback?: Sfx) {
-    if (!UNIT_SOUNDS.has(defId)) {
+    if (!UNIT_SOUNDS.has(defId) && !(kind === 'smierc' && DEATH_ONLY.has(defId))) {
       if (fallback) this.play(fallback);
       return;
     }
