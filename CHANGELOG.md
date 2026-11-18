@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 2.17.1 — 2026-11-18
+
 - Własne ustawienia: poziom mechanik (Bez osad, Osady i złoto i dalsze) da się wreszcie wybrać; wcześniej przycisk wracał na „Bez rozwoju”.
 - Kreator nowej gry nie wspomina już o wersji cyfrowej w podpisie kroku („Krok 2 z 5”); wersję planszową nadal widać.
 ## 2.17.0 — 2026-11-18
