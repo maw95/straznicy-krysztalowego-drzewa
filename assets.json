@@ -5395,6 +5395,204 @@
       "data": "2026-11-18",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "cards/moonWolf",
+      "pliki": [
+        "public/assets/cards/art/moonWolf.jpg",
+        "public/assets/cards/portraits/moonWolf.jpg"
+      ],
+      "typ": "ilustracja karty i portret: Srebrna Wilczyca",
+      "prompt": "Fantasy card illustration in a detailed painterly realistic style, bright and sunlit. A large, noble silver-white she-wolf with golden eyes and flat, pale grey stripes along her flanks, calm and majestic, shown as a three-quarter portrait with her head and chest in the upper-middle of the frame, looking slightly to the right. She wears elven golden ornaments: a delicate golden necklace with a leaf-shaped green crystal pendant on her chest, and fine golden filigree leaf patterns. Background: a bright elven forest of the Alliance, golden sunlight through green leaves, blue sky and a distant white elven palace with tall spires, matching the style of an ornate heroic fantasy card game (Heroes of Might and Magic style), gold, green and white palette. No text, no frame.",
+      "scenario_asset": "asset_FML2Bk3XBWbzMVG5tCnYtDQz",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare 1536x1024, high",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "srebrna_wilczyca/stoi",
+      "pliki": [
+        "public/assets/jednostki/srebrna_wilczyca/stoi.webp"
+      ],
+      "typ": "grafika jednostki (stoi)",
+      "prompt": "Use the reference image only for the character design (a noble silver-white she-wolf with golden eyes and flat pale grey stripes on her flanks, elven golden leaf-filigree ornaments and a golden necklace with a leaf-shaped green crystal pendant). Draw this same character as a full-body game sprite in a strict side view, standing on all fours, facing right, in a serious painterly realistic style with muted silver, white, pale grey and gold tones, no blue anywhere on the character. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "scenario_asset": "asset_bVxFwa6s8HHjzsuqQRqUPSsb",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare 1024, high, portret jako odniesienie",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "srebrna_wilczyca/martwy",
+      "pliki": [
+        "public/assets/jednostki/srebrna_wilczyca/martwy.webp"
+      ],
+      "typ": "grafika jednostki (trup)",
+      "prompt": "The same she-wolf as in the reference image, now lying still on her belly on the ground in a strict side view facing right, head resting low on her front paws, eyes closed, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with her body bottom on the same horizontal line as the standing wolf's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "scenario_asset": "asset_ghscgMm2rRpFjRMn4gcBL9iM (oryginał); asset_EQope6ZeA6vr7ghmNV74DBfp (wersja przesunięta o 114 px w dół, użyta jako lastFrameImage i martwy.png)",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare 1024, medium, stoi jako odniesienie; post: przesunięcie w dół 114 px, żeby spód ciała = linia łap (y=814)",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "srebrna_wilczyca/chod",
+      "pliki": [
+        "public/assets/jednostki/srebrna_wilczyca/chod.webp"
+      ],
+      "typ": "animacja, pętla chodu",
+      "prompt": "Side view, locked static camera. The silver-white she-wolf walks in place with a steady graceful walking cycle, legs stepping in turn, head carried level and tail swaying slightly, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
+      "scenario_asset": "asset_2BvAmr5raSGi8vrc7x3xn9JH",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "srebrna_wilczyca/atak",
+      "pliki": [
+        "public/assets/jednostki/srebrna_wilczyca/atak.webp"
+      ],
+      "typ": "animacja ataku",
+      "prompt": "Side view, locked static camera. The silver-white she-wolf standing in place lowers her head, bares her teeth with a low growl, then lunges her head forward to the right with a quick snapping motion and returns to her standing pose. The paws stay at the same spot in the frame, she does not run or walk forward. Plain solid blue background stays unchanged, no camera movement.",
+      "scenario_asset": "asset_DtmriGuZvj84DctRGRQG91rD",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "srebrna_wilczyca/smierc",
+      "pliki": [
+        "public/assets/jednostki/srebrna_wilczyca/smierc.webp"
+      ],
+      "typ": "animacja śmierci, koniec = martwy",
+      "prompt": "Side view, locked static camera. The silver-white she-wolf sinks down slowly, her legs fold under her and she settles onto her belly, lowers her head onto her front paws, closes her eyes and lies still facing right. Defeat animation. Plain solid blue background stays unchanged, no camera movement.",
+      "scenario_asset": "asset_KQMt2xSEtTQrdnTXWqnQiUte",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "P-Video 2 720p 3 s, początkowa = stoi, końcowa = martwy (przesunięty)",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "srebrna_wilczyca/trafienie",
+      "pliki": [
+        "public/assets/jednostki/srebrna_wilczyca/trafienie.webp"
+      ],
+      "typ": "animacja trafienia",
+      "prompt": "Side view, locked static camera. The silver-white she-wolf standing in place is startled: she flinches and rocks backwards a little, her head jerks up with a short whimper, then she steadies herself and settles back to her standing pose, facing right. The paws stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
+      "scenario_asset": "asset_GM5pYW7QR4S2GpANdzA1urZe",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "cards/duskManticore",
+      "pliki": [
+        "public/assets/cards/art/duskManticore.jpg",
+        "public/assets/cards/portraits/duskManticore.jpg"
+      ],
+      "typ": "ilustracja karty i portret: Mantykora Zmierzchu",
+      "prompt": "Use the reference image only for the painting style and mood (serious painterly realistic fantasy card illustration, dark volcanic background of the Horde faction with glowing red lava, iron, ash and olive tones). Paint a new character: a fierce manticore, a low lion-bodied beast crouching close to the ground on four paws, with dark grey and dark crimson fur, a shaggy dark mane around a snarling lion face with bared fangs (no human face), folded bat-like wings tucked against its back, and a long segmented scorpion tail curving up over its back ending in a venomous barbed stinger. It wears a spiked iron collar and studded iron shoulder guards. Three-quarter view, the head and face prominent in the upper centre of the frame, menacing glowing amber eyes. Background: dark volcanic wasteland with lava glow and smoke. Wide card illustration composition, no text, no border.",
+      "scenario_asset": "asset_hJ93eqr4LvQXLLk523o2nhen",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare 1536x1024, high, odniesienie: hordeCrossbow.jpg (styl)",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "mantykora_zmierzchu/stoi",
+      "pliki": [
+        "public/assets/jednostki/mantykora_zmierzchu/stoi.webp"
+      ],
+      "typ": "grafika jednostki (stoi)",
+      "prompt": "Use the reference image only for the character design (a manticore: low lion body with dark grey and dark crimson fur, shaggy dark red mane, snarling lion face with fangs, folded bat-like wings tucked against its back, long segmented scorpion tail with a barbed stinger, spiked iron collar and studded iron shoulder guards). Draw this same character as a full-body game sprite in a strict side view, standing low to the ground on all four paws, facing right, the scorpion tail arching up over its back, in a serious painterly realistic style with muted dark grey, dark red, iron and olive tones, no blue anywhere on the creature. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "scenario_asset": "asset_a7z3cy8oYQoCZFP5SkuzTcKg",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "Flare 1024, high, odniesienie = karta",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "mantykora_zmierzchu/martwy",
+      "pliki": [
+        "public/assets/jednostki/mantykora_zmierzchu/martwy.webp"
+      ],
+      "typ": "trup",
+      "prompt": "The same manticore as in the reference image, now lying still on its belly on the ground in a strict side view facing right, head resting low on its front paws, eyes closed, wings folded, tail curled beside it, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on the same horizontal line as the standing manticore's feet. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "scenario_asset": "asset_gzmVLnGQEVaXGPfZrccKgwpT",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "Flare 1024, medium, odniesienie = stoi",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "mantykora_zmierzchu/chod",
+      "pliki": [
+        "public/assets/jednostki/mantykora_zmierzchu/chod.webp"
+      ],
+      "typ": "pętla chodu",
+      "prompt": "Side view, locked static camera. The manticore walks in place with a steady prowling walking cycle, its four paws stepping in turn, head and shoulders swaying slightly, scorpion tail swaying gently, always facing right, the body staying at the same spot in the frame as if on a treadmill. Plain solid blue background stays unchanged, no camera movement.",
+      "scenario_asset": "asset_KQJvNEn9JgUbjHXYSrmpsgnv",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "P-Video 2 720p 3 s, start = stoi",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "mantykora_zmierzchu/atak",
+      "pliki": [
+        "public/assets/jednostki/mantykora_zmierzchu/atak.webp"
+      ],
+      "typ": "atak",
+      "prompt": "Side view, locked static camera. The manticore crouches slightly, then swings its scorpion tail forward over its back with a sweeping motion towards the right and returns it to the raised resting curve, then settles back into its standing pose. Its paws stay at the same spot and the body stays at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "scenario_asset": "asset_1iFWYhKcjw7UAvDCarjHjfpq",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "P-Video 2 720p 3 s, start = stoi",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "mantykora_zmierzchu/smierc",
+      "pliki": [
+        "public/assets/jednostki/mantykora_zmierzchu/smierc.webp"
+      ],
+      "typ": "śmierć, koniec = martwy",
+      "prompt": "Side view, locked static camera. The manticore sinks down heavily, its legs fold under it slowly, its tail droops and it settles onto its belly, lowers its head onto its front paws and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement.",
+      "scenario_asset": "asset_mSfMDLHy2xYhM9ootf3pKZiK",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "P-Video 2 720p 3 s, start = stoi, koniec = martwy",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "mantykora_zmierzchu/trafienie",
+      "pliki": [
+        "public/assets/jednostki/mantykora_zmierzchu/trafienie.webp"
+      ],
+      "typ": "trafienie",
+      "prompt": "Side view, locked static camera. The manticore standing in place is startled: it flinches and rocks backwards a little, its head jerks up with a growl, then it steadies itself and settles back to its standing pose. The paws stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
+      "scenario_asset": "asset_bGBQg3aGRDRxHFghXYU2QhCu",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "P-Video 2 720p 2 s, start = stoi",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

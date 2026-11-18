@@ -270,6 +270,8 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'ancientBear', name: 'Prastary Niedźwiedź', side: 'dawn', kind: 'hero', size: 2, hp: 11, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'guardian', abilityName: 'Opiekun Gaju', abilityText: `Raz na bitwę: przyjmuje cios, który zabiłby jego lub sąsiada, i ignoruje ${ABILITY.guardianIgnore} obrażenia.` }),
     // Easter egg hero (not in FACTION_HEROES): fragile, fast and hits hard; every kill gives her another activation.
     u({ id: 'braveDuck', name: 'Dzielna Kaczka', side: 'dawn', kind: 'hero', hp: 3, attack: 6, speed: 10, movement: 'fly', attackType: 'melee', ability: 'duckFury', abilityName: 'Kacza Furia', abilityText: 'Gdy jej atak zabije wroga, Kaczka od razu aktywuje się jeszcze raz (ruch i atak). Bez limitu na bitwę.' }),
+    // Fourth heroes of the two sides (rivalry for 7-8 players): they reuse abilities of the game.
+    u({ id: 'moonWolf', name: 'Srebrna Wilczyca', side: 'dawn', kind: 'hero', hp: 8, attack: 4, speed: 6, movement: 'walk', attackType: 'melee', ability: 'packHunt', abilityName: 'Wilcza Rodzina', abilityText: `Stała: +${ABILITY.packHuntBonus} A, gdy cel sąsiaduje z innym sojusznikiem Wilczycy.` }),
     u({ id: 'elfDruid', name: 'Elf Druid', side: 'dawn', kind: 'support', hp: 4, attack: 1, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Splątane Korzenie', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
     u({ id: 'nymph', name: 'Nimfa', side: 'dawn', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'giftOfLife', abilityName: 'Dar Życia', abilityText: `Raz na bitwę: +${ABILITY.giftOfLifeHeal} Ż sojusznikowi, do maksimum.` }),
     u({ id: 'pegasus', name: 'Pegaz', side: 'dawn', kind: 'support', size: 2, hp: 4, attack: 2, speed: 4, movement: 'fly', attackType: 'melee', ability: 'airDash', abilityName: 'Powietrzny Zryw', abilityText: `Raz na bitwę: po ataku odskok do ${ABILITY.airDashRange} pól.` }),
@@ -287,6 +289,7 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'blackDragon', name: 'Czarny Smok', side: 'horde', kind: 'hero', size: 2, hp: 7, attack: 5, speed: 5, movement: 'fly', attackType: 'melee', ability: 'fireBreath', abilityName: 'Ognisty Oddech', abilityText: 'Raz na bitwę: pełny atak w dwóch wrogów stojących w jednej linii.' }),
     u({ id: 'werewolfLord', name: 'Władca Wilkołaków', side: 'horde', kind: 'hero', hp: 8, attack: 5, speed: 7, movement: 'walk', attackType: 'melee', ability: 'bloodCall', abilityName: 'Zew Krwi', abilityText: `+${ABILITY.bloodCallBonus} A do każdego ataku na już rannego wroga.` }),
     u({ id: 'ironFistOgre', name: 'Ogr Żelazna Pięść', side: 'horde', kind: 'hero', size: 2, hp: 10, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Twardogłowy', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
+    u({ id: 'duskManticore', name: 'Mantykora Zmierzchu', side: 'horde', kind: 'hero', hp: 8, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'poisonClaw', abilityName: 'Jadowity Kolec', abilityText: `Raz na bitwę: trafiony wróg traci ${ABILITY.poisonDamage} Ż na początku swoich dwóch następnych aktywacji.` }),
     u({ id: 'goblinShaman', name: 'Goblin Szaman', side: 'horde', kind: 'support', hp: 5, attack: 1, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'curse', abilityName: 'Złowroga Klątwa', abilityText: `Raz na bitwę: trafiony cel ma −${ABILITY.curseMinus} A przy następnym ataku.` }),
     u({ id: 'caveSpider', name: 'Pająk Jaskiniowy', side: 'horde', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'web', abilityName: 'Pajęcze Sidła', abilityText: `Raz na bitwę: wróg do ${ABILITY.webRange} pól nie rusza się w następnej aktywacji.` }),
     u({ id: 'shadowBat', name: 'Nietoperz Cienia', side: 'horde', kind: 'support', hp: 5, attack: 2, speed: 3, movement: 'fly', attackType: 'melee', ability: 'nightAmbush', abilityName: 'Nocna Zasadzka', abilityText: `Raz na bitwę: atak zadaje +${ABILITY.nightAmbushBonus} obrażenia.` }),
@@ -327,8 +330,8 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
 export const FACTION_HEROES: Record<FactionId, string[]> = byPack((p) => p.heroes);
 
 /** Easter egg heroes: unlocked on the setup screen (click the Dawn crest five times), never drawn by the engine. */
-/** Rivalry for 7-8 players: four heroes a side, so each faction lends a fourth one (Przymierze: the Brave Duck, Horda: the Warlord, who is a tavern commander on level 5 and 6, hence no 7-8 player tables there). */
-export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'braveDuck', horde: 'hordeWarlord' };
+/** Rivalry for 7-8 players: four heroes a side, so each faction has a fourth one of its own (Przymierze: the Silver She-Wolf, Horda: the Dusk Manticore); the Brave Duck stays a secret hero and the Warlord a tavern commander. */
+export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore' };
 export const MAX_PVP_PLAYERS = 8;
 /** More players than this at a table play with `EXTRA_HEROES` too. */
 export const BASE_PVP_PLAYERS = 6;

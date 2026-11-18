@@ -7,7 +7,7 @@ export const HERO_TYPE_NAMES: Record<HeroType, string> = { warrior: 'wojownik', 
 
 /** The type of every hero: the named heroes by their nature, the commanders by their archetype (an archer is a hunter). */
 export const HERO_TYPES: Record<string, HeroType> = {
-  goldDragon: 'sage', unicornKing: 'hunter', ancientBear: 'warrior', braveDuck: 'hunter',
+  goldDragon: 'sage', unicornKing: 'hunter', ancientBear: 'warrior', braveDuck: 'hunter', moonWolf: 'hunter', duskManticore: 'warrior',
   blackDragon: 'sage', werewolfLord: 'hunter', ironFistOgre: 'warrior',
   dawnKnight: 'warrior', dawnHuntress: 'hunter', dawnSage: 'sage',
   hordeWarlord: 'warrior', hordeCrossbow: 'hunter', hordeShadow: 'sage',
@@ -59,6 +59,8 @@ export const SPECIALTIES: Record<string, Specialty> = {
   dawnKnight: { name: 'Chorąży', text: 'Pomocnicy Rycerza mają +1 Ż w bitwie.', supportHp: 1 },
   dawnHuntress: { name: 'Mistrzyni Łuku', text: 'Strzelcy Łowczyni (i ona sama) mają +1 A w bitwie.', marksman: 1 },
   dawnSage: { name: 'Źródło Mocy', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
+  moonWolf: { name: 'Tropicielka', text: '+1 PD za każdą wygraną walkę.', xp: 1 },
+  duskManticore: { name: 'Pan Zmierzchu', text: 'Pomocnicy Mantykory mają +1 Ż w bitwie.', supportHp: 1 },
   hordeWarlord: { name: 'Zbieracz Łupów', text: '+1 zł dla frakcji za każdą wygraną bitwę.', gold: 1 },
   hordeCrossbow: { name: 'Mistrz Kuszy', text: 'Strzelcy Kapitana (i on sam) mają +1 A w bitwie.', marksman: 1 },
   hordeShadow: { name: 'Studnia Cieni', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
