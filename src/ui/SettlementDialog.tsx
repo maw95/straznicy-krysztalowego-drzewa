@@ -18,6 +18,7 @@ import { ArtifactMedal } from './growthUi';
 import { CostIcons, RESOURCE_ICON, ResourceStrip } from './resources';
 import { RuleText } from './statScale';
 import { sfx } from './sfx';
+import { BarracksScreen } from './BarracksScreen';
 import { BuildingTree, COUNCIL, nodeState, type ExtraNode } from './BuildingTree';
 
 /**
@@ -527,10 +528,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         <div className="settlement-page">
           {header}
           <div className="settlement-field sheet">
-            <div className="plate parch settlement-sheet" data-service>
-              <div style={{ fontWeight: 800, fontSize: 22, marginBottom: 8 }}>{nameOf('barracks')}</div>
-              {panel('barracks')}
-            </div>
+            <BarracksScreen state={state} s={s} faction={faction} act={act} />
           </div>
           <div className="settlement-foot">
             <div className="settlement-actions row">
