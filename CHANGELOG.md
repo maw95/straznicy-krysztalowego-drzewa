@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 2.16.0 — 2026-11-18
+
 - Mantykora Zmierzchu i Srebrna Wilczyca mają własne dźwięki ataku i śmierci.
 - Wprowadzenie: polskie slajdy 08–11 pokazują nowe menu (kroki, siedem poziomów, cele z Podbojem i Relikt), a slajd o online mówi o ośmiu graczach; obrazy slajdów odświeżone z aktualnej gry.
 ## 2.15.1 — 2026-11-18
