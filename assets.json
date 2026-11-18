@@ -5254,6 +5254,24 @@
       "data": "2026-11-18",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "osady/pasek-wstazki-wyjscie",
+      "pliki": [
+        "public/assets/ui/pasek_osady.webp",
+        "public/assets/ui/wstazka_g.webp",
+        "public/assets/ui/wstazka_r.webp",
+        "public/assets/ui/wstazka_b.webp",
+        "public/assets/ui/wstazka_p.webp",
+        "public/assets/ui/wyjscie.webp"
+      ],
+      "typ": "dolny pasek ekranu osady (rama ze wszystkich stron), wstążki nazw w kolorach frakcji (zielona Przymierze, czerwona Horda, niebieska neutralna, fioletowa na kolejne) i okrągła ikona wyjścia z osady",
+      "opis": "Pasek: 2 warianty, w grze A, złożony skryptem scripts/assets/osada_ui.py z dwóch końcówek ramki i lustrzanie kafelkowanego środka. Wstążka: 2 warianty zieleni, w grze A; czerwona, niebieska i fioletowa to ta sama wstążka przemalowana (obraz odniesienia, 12 CU każda). Ikona wyjścia: 2 warianty, w grze A. Prompty: pasek 'A game UI panel frame in the style of Heroes of Might and Magic III, flat front view, perfectly symmetrical, 3:1 wide. A thick carved antique-gold border with fine filigree, leaf and crystal-tree motifs runs along ALL FOUR edges ... sapphire gems ... plain dark brown carved-wood and leather texture inside, no text. Transparent background.'; wstążka 'An ornate fantasy title ribbon banner for a game UI, flat front view, symmetrical, wide 3:1. Rich deep forest-green silk with fabric folds, subtle damask pattern, thin embroidered antique-gold border along the top and bottom edges, two swallowtail ends. Centre smooth and empty. Transparent background.'; ikona 'A round game UI button icon meaning leave: ornate gold ring rim around a dark enamel disc, an open arched wooden door with warm light and a bold golden arrow pointing out through it. Transparent background.'",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość high, 2 x 22 CU (pasek, wstążka), 22 CU (ikona), 3 x 12 CU (kolory wstążki)",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

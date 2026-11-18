@@ -449,6 +449,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       </div>
     </div>
   );
+  const exitButton = <button className="sb-exit" data-enter title="Wyjdź z osady" aria-label="Wyjdź z osady" onClick={onClose}><img src={asset('ui/wyjscie.webp')} alt="" /></button>;
   const goldLine = (
     <div className="sb-treasury">
       <span className="sb-gold" title="Złoto">złoto: <b data-gold>{gold}</b></span>
@@ -502,7 +503,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               {hoverInfo ? <><b>{hoverInfo.name}</b><RuleText text={hoverInfo.text} /></> : <span className="sb-sub">Najedź na budynek, żeby zobaczyć jego działanie; kliknij, żeby go otworzyć. Buduje się w Radzie Osady.</span>}
             </div>
             {goldLine}
-            <button className="btn prim sb-exit" data-enter onClick={onClose}>Wyjdź z osady</button>
+            {exitButton}
           </div>
         </>
       )}
@@ -517,7 +518,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
             <div className="settlement-actions">
               {goldLine}
               <button className="btn plate parch" data-tree-back style={{ padding: '6px 20px', fontSize: 18 }} onClick={() => setView('town')}>← Wróć do osady</button>
-              <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20 }} onClick={onClose}>Wyjdź z osady</button>
+              {exitButton}
             </div>
           </div>
         </div>
@@ -535,7 +536,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
             <div className="settlement-actions row">
               {goldLine}
               <button className="btn plate parch" data-tree-back style={{ padding: '6px 20px', fontSize: 18 }} onClick={() => setView('town')}>← Wróć do osady</button>
-              <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20 }} onClick={onClose}>Wyjdź z osady</button>
+              {exitButton}
             </div>
           </div>
         </div>
@@ -543,8 +544,9 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       <Modal open={modal !== null} onClose={() => setModal(null)}>
         {modal && (
           <div className="settlement-modal" data-service>
-            <div className="gf"><div className="gi parch" style={{ padding: '14px 18px' }}>
+            <div className="gf">
               <button className="modal-x" aria-label="Zamknij" title="Zamknij" data-modal-close onClick={() => setModal(null)}>×</button>
+              <div className="gi parch" style={{ padding: '14px 18px' }}>
               {modal.startsWith('dwelling-') ? dwellingDetail(Number(modal.slice(9)), true) : (
                 <>
                   <div style={{ fontWeight: 800, fontSize: 22, marginBottom: 8, paddingRight: 36 }}>{modalTitle}</div>

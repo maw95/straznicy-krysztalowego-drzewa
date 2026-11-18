@@ -73,25 +73,11 @@ export function Frame(props: {
   );
 }
 
-/** Heraldic ribbon: a cloth band with gilded edges and swallowtail ends folded behind it. */
+/** Heraldic ribbon: a painted silk band with gold embroidery (Scenario), one colour per faction (green Przymierze, red Horda, blue neutral, purple for the next ones). */
 export function Ribbon({ side = 'dawn', children, style }: { side?: Side; children: ReactNode; style?: CSSProperties }) {
   return (
     <div className={`rib ${SIDE_RIBBON[side]}`} style={style}>
-      <svg className="rib-tail l" viewBox="0 0 34 36" aria-hidden="true">
-        <path d="M34 4H2l9 14.5L2 33h32z" className="rib-tail-cloth" />
-        <path d="M34 4H2l9 14.5L2 33h32z" fill="url(#ribShade)" />
-        <path d="M5 6.8h29M5 30.2h29" stroke="#E8C46A" strokeWidth="1.4" />
-        <path d="M26 26h8v10z" fill="#140A02" />
-      </svg>
-      <div className="rib-band">
-        <span className={typeof children === 'string' && children.length > 16 ? 'long' : undefined}>{children}</span>
-      </div>
-      <svg className="rib-tail r" viewBox="0 0 34 36" aria-hidden="true">
-        <path d="M34 4H2l9 14.5L2 33h32z" className="rib-tail-cloth" />
-        <path d="M34 4H2l9 14.5L2 33h32z" fill="url(#ribShade)" />
-        <path d="M5 6.8h29M5 30.2h29" stroke="#E8C46A" strokeWidth="1.4" />
-        <path d="M26 26h8v10z" fill="#140A02" />
-      </svg>
+      <span className={`rib-text ${typeof children === 'string' && children.length > 16 ? 'long' : ''}`}>{children}</span>
     </div>
   );
 }
