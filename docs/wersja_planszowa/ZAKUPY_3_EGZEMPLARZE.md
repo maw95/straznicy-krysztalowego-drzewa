@@ -5,6 +5,10 @@ więc tu ich nie ma. Ta lista obejmuje papier, tusz, tekturę, kleje i narzędzi
 (instrukcja w segregatorze, karty, kafelki, plansza areny, naklejki, kość) oraz drewniane pudełko.
 Drukarka: **HP DeskJet 2545** (atramentowa, A4, druk jednostronny — dwustronny ręcznie, przez odwrócenie kartek).
 
+**Już są u autora:** laminator A4 i ok. 70 folii do laminowania, 24 arkusze papieru foto 10 × 15 cm (lub 9 × 13).
+Mały papier foto nie pasuje do plików do druku (wszystkie są na A4) — przyda się na wydruki próbne kolorów albo
+do sprawdzenia, ile tuszu schodzi na pełny zadruk.
+
 Linki prowadzą do konkretnych ofert Allegro, gdy udało się je znaleźć; „wyszukiwanie” oznacza, że pasującej pojedynczej
 oferty nie było i link otwiera listę ofert. Ceny z 18.11.2026, bez dostawy — oferty i ceny na Allegro szybko się zmieniają,
 więc przed zakupem sprawdź opis (zwłaszcza zgodność z drukarką atramentową i z HP 301).
@@ -82,9 +86,11 @@ matowy” (albo „inny papier foto”) i jakość „najlepsza”.
 |---|---:|---:|---|
 | **Tektura introligatorska 2 mm A4, 20 ark.** | **2 opak.** (40 ark.) | 27 zł/opak. | [Allegro — tektura 2 mm A4 20 ark.](https://allegro.pl/oferta/tektura-introligator-twarda-oprawa-2-mm-a4-20-ark-8992637474) |
 | **Klej w sprayu 3M Spray Mount 400 ml** (ok. 90 A4 do pokrycia na 3 egzemplarze) | **2 puszki** (trzecią dokup, gdyby zabrakło) | 80–136 zł/szt. | [Allegro — 3M Spray Mount](https://allegro.pl/oferta/klej-3m-spray-mount-400ml-15456177558) · [porównaj ceny](https://allegro.pl/listing?string=klej+w+sprayu+3m+spray+mount) |
-| **Laminator A4 do 125 mic** (Fellowes Spectra; sklejone karty są grube, więc lepiej laminator na 125 mic niż tylko na 80) | 1 | 160–196 zł | [Allegro — Fellowes Spectra A4](https://allegro.pl/oferta/laminator-fellowes-spectra-a4-do-domu-biura-5275734170) |
-| **Folia do laminowania A4 80 mic, 100 szt.** | 1 opak. | 16–18 zł | [Allegro — Apex 80 mic 100 szt.](https://allegro.pl/oferta/folia-do-laminowania-a4-laminacyjna-80mic-100szt-9172167387) |
 | **Taśma introligatorska tkaninowa samoprzylepna** czarna (zawias areny; 3 plansze × ok. 60 cm) | 1 rolka | 16–83 zł | [Allegro — wyszukiwanie „taśma introligatorska”](https://allegro.pl/listing?string=ta%C5%9Bma+introligatorska) (np. 50 mm × 10 m) |
+
+**Laminator i folie już są** (ok. 70 folii; potrzeba 24 — po 8 sklejonych arkuszy kart na egzemplarz). Sklejone
+karty (dwa arkusze 200 g) są grube — zalaminuj najpierw jeden arkusz próbny i sprawdź, czy laminator go wciąga i dobrze
+zgrzewa. Gdyby folie się marszczyły, przepuść arkusz dwa razy albo laminuj na ustawieniu dla grubszej folii.
 
 Klej w sprayu: pryskaj na zewnątrz albo przy otwartym oknie, na rozłożoną gazetę/karton; 3 egzemplarze to dużo
 pryskania (ok. 90 arkuszy) — maska przeciwpyłowa FFP2 nie zaszkodzi.
@@ -136,13 +142,12 @@ z kroku 8 w `PLAN_KROK_PO_KROKU.md` (po zmierzeniu segregatora) **razy trzy**. I
 |---|---:|
 | Tusz (2 × 301XL kolor, 301XL czarny, zestaw z klipem, 4 × 100 ml) | 300 zł |
 | Papier (5 × foto dwustronny, samoprzylepny) | 165 zł |
-| Tektura, klej w sprayu (2), folie, taśma | 280–400 zł |
-| Laminator | 160–200 zł |
+| Tektura, klej w sprayu (2), taśma | 270–380 zł |
 | Narzędzia (mata, nóż, ostrza, linijka, zaokrąglacz) | 170–200 zł |
 | Segregatory, koszulki, kostki, woreczki | 100 zł |
-| **Razem** | **ok. 1200–1350 zł** |
+| **Razem** | **ok. 1000–1150 zł** |
 
-Laminator i narzędzia (ok. 350–400 zł) kupuje się raz — przy kolejnych egzemplarzach zostaje papier, tusz, tektura i klej
+Narzędzia (ok. 170–200 zł) kupuje się raz — przy kolejnych egzemplarzach zostaje papier, tusz, tektura i klej
 (ok. 250 zł na egzemplarz).
 
 ## Kolejność
