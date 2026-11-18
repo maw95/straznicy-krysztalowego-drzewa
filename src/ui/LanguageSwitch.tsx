@@ -27,7 +27,7 @@ export function LanguageSwitch({ inline = false }: { inline?: boolean }) {
   return (
     <div className={inline ? 'lang-switch inline' : 'lang-switch'} data-lang-switch role="group" aria-label="Language">
       {LANGS.map((l) => (
-        <button key={l} className={`btn plate parch lang-flag ${lang === l ? 'on' : ''}`} data-lang={l} aria-pressed={lang === l} title={NAMES[l]} aria-label={NAMES[l]} onClick={() => setLang(l)}>
+        <button key={l} className={`lang-flag ${lang === l ? 'on' : ''}`} data-lang={l} aria-pressed={lang === l} title={NAMES[l]} aria-label={NAMES[l]} onClick={() => setLang(l)}>
           <Flag lang={l} />
         </button>
       ))}

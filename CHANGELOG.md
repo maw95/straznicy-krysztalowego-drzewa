@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Przyciski zmiany języka to same flagi, bez beżowego tła i ramki.
+
 ## 2.10.0 — 2026-11-17
 
 - Balans poziomów 4–6, trudność Trudny: komputer jest silniejszy na krótkich mapach (tam gracz wygrywał za łatwo), a w rywalizacji na średnich i długich mapach nieco słabszy (tam wygrywał za rzadko).
