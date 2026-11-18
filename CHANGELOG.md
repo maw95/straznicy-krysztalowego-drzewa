@@ -6,6 +6,10 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 2.15.1 — 2026-11-18
+
+- Poprawka wydania 2.15.0: angielskie tłumaczenie wpisu o dopisanych tłumaczeniach w historii zmian.
+
 ## 2.15.0 — 2026-11-18
 
 - Angielska wersja gry: dopisane brakujące tłumaczenia (nowi czwarci bohaterowie i ich zdolności, siedliska Gniazdo Feniksa i Jaskinia Zagłady, podpisy w drzewku Rady Osady i w koszarach, komunikat o Eliksirze Odrodzenia).
