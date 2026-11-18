@@ -15,7 +15,7 @@ import { MAGIC, manaOf, maxMana, SPELLS, towerSpells } from '../engine/magic';
 import type { Action, GameState } from '../engine/types';
 import { asset, Modal, Portrait, Ribbon } from './common';
 import { ArtifactMedal } from './growthUi';
-import { RESOURCE_ICON, ResourceStrip } from './resources';
+import { CostIcons, RESOURCE_ICON, ResourceStrip } from './resources';
 import { RuleText } from './statScale';
 import { sfx } from './sfx';
 import { BuildingTree, COUNCIL, nodeState, type ExtraNode } from './BuildingTree';
@@ -35,8 +35,8 @@ const SPOTS: Record<BuildingId | 'council', Spot> = {
   hospital: { x: 31, y: 56, h: 13.5 }, forge: { x: 61, y: 56, h: 14 }, walls: { x: 70, y: 58.5, h: 12 },
   treasury: { x: 25.5, y: 72, h: 16.5 }, barracks: { x: 50, y: 74.5, h: 22 }, market: { x: 74, y: 72, h: 16.5 },
 };
-/** The dwellings of the unit tiers 2-5 (level 6) stand in front of the barracks as small pens. */
-const DWELLING_SPOTS: Spot[] = [{ x: 38, y: 71, h: 7.5 }, { x: 41, y: 79, h: 8 }, { x: 59, y: 79, h: 8 }, { x: 62, y: 71, h: 7.5 }];
+/** The dwellings of the unit tiers 2-6 (level 6) stand in front of the barracks as small pens. */
+const DWELLING_SPOTS: Spot[] = [{ x: 36, y: 69, h: 12 }, { x: 38.5, y: 79, h: 13 }, { x: 61.5, y: 79, h: 13 }, { x: 64, y: 69, h: 12 }, { x: 88, y: 66, h: 14 }];
 const spotOf = (b: BuildingId | 'council', land: FactionId): Spot => {
   const t = SPOTS[b];
   return land === 'horde' && (b === 'magic' || b === 'spark') ? { ...t, x: 100 - t.x } : t;
@@ -84,7 +84,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     const poor = !canPay(state, faction, cost);
     return (
       <button className="btn prim" disabled={poor || blocked} title={parentBlock ? parentBlock : blocked ? 'Koszary buduje się tylko w osadzie własnej frakcji.' : poor ? `Za mało: potrzeba ${costText(cost)}.` : undefined} data-build={b} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: b })} style={{ padding: '4px 16px', fontSize: 17 }}>
-        {level === 0 ? 'Zbuduj' : 'Rozbuduj'}: {BUILDING_NAMES[b][level]} ({costText(cost)})
+        {level === 0 ? 'Zbuduj' : 'Rozbuduj'}: {BUILDING_NAMES[b][level]} <CostIcons cost={cost} size={16} light />
       </button>
     );
   };
@@ -365,15 +365,22 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   };
 
   const councilPic = `osady/${s.land}_council1.webp`;
-  // Level 6: the dwellings of the unit tiers 2-5 hang in the tree under the barracks, one after another (two units to choose from at each tier, the choice shuts the other out).
+  // Level 6: the dwellings of the unit tiers 2-6 hang in the tree under the barracks, one tier after another; both units of a tier stand side by side
+  // (the choice of one shuts the other out), a tier waits for the dwelling of the tier before it.
   const mayHireHere = mayRecruit(s, faction);
-  const extras: ExtraNode[] = state.rules.empire ? [2, 3, 4, 5].map((tier) => {
+  const dwellingArt = (id: string) => `osady/dwelling_${id}.webp`;
+  const extras: ExtraNode[] = state.rules.empire ? [2, 3, 4, 5, 6].flatMap((tier) => {
     const built = dwellingOf(state, faction, tier);
     const prevOk = tier === 2 || Boolean(dwellingOf(state, faction, tier - 1));
     const options = recruitsOf(state, faction).filter((r) => r.tier === tier);
     const price = DWELLING_COST[tier - 2];
-    const st = built ? 'built' : !(mayHireHere && s.buildings.barracks >= 1 && prevOk) ? 'blocked' : canPay(state, faction, price) ? 'open' : 'poor';
-    return { id: `dwelling-${tier}`, parent: tier === 2 ? 'barracks' : `dwelling-${tier - 1}`, name: built ? DWELLING_NAMES[built] : `Siedlisko poziomu ${tier}`, sub: built ? `rekrutuje: ${UNITS[built].name}` : !prevOk ? `Najpierw: siedlisko poziomu ${tier - 1}.` : `${costText(price)} + jednostka`, picture: `ikony/siedliska/${built ?? options[0]?.id}.webp`, state: st };
+    const parents = tier === 2 ? ['barracks'] : recruitsOf(state, faction).filter((r) => r.tier === tier - 1).map((r) => `dwelling-${r.id}`);
+    return options.map((r) => {
+      const open = mayHireHere && s.buildings.barracks >= 1 && prevOk;
+      const st = built === r.id ? 'built' : built ? 'excluded' : !open ? 'blocked' : canPay(state, faction, price) ? 'open' : 'poor';
+      const sub = built === r.id ? `rekrutuje: ${UNITS[r.id].name}` : !mayHireHere ? 'Tylko w osadzie własnej frakcji.' : s.buildings.barracks < 1 ? 'Najpierw: Koszary.' : !prevOk ? `Najpierw: siedlisko poziomu ${tier - 1}.` : undefined;
+      return { id: `dwelling-${r.id}`, parents, name: DWELLING_NAMES[r.id], ...(sub ? { sub } : {}), cost: price, picture: dwellingArt(r.id), state: st, ...(options.length > 1 ? { choice: `tier-${tier}` } : {}) } as ExtraNode;
+    });
   }) : [];
   const dwellingDetail = (tier: number, bare = false) => {
     const built = dwellingOf(state, faction, tier);
@@ -382,7 +389,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     return (
       <div className={bare ? '' : 'plate parch'} data-tree-detail={`dwelling-${tier}`} style={bare ? undefined : { padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
         <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 4 }}>Siedlisko poziomu {tier}</div>
-        <div style={{ fontSize: 14, color: '#6B4A22', marginBottom: 8 }}>Dwie jednostki do wyboru: zbudowanie siedliska jednej wyklucza drugą do końca gry. {!prevOk ? `Najpierw zbuduj siedlisko poziomu ${tier - 1}.` : !mayHireHere ? 'Siedliska buduje się tylko w osadzie własnej frakcji.' : ''}</div>
+        <div style={{ fontSize: 14, color: '#6B4A22', marginBottom: 8 }}>{tier === 6 ? 'Jedyna jednostka tego poziomu.' : 'Dwie jednostki do wyboru: zbudowanie siedliska jednej wyklucza drugą do końca gry.'} {!prevOk ? `Najpierw zbuduj siedlisko poziomu ${tier - 1}.` : !mayHireHere ? 'Siedliska buduje się tylko w osadzie własnej frakcji.' : ''}</div>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
           {recruitsOf(state, faction).filter((r) => r.tier === tier).map((r) => (
             <div key={r.id} style={{ display: 'flex', gap: 8, alignItems: 'center', flex: '1 1 260px' }}>
@@ -393,7 +400,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               </div>
               {built === r.id ? <b style={{ color: '#2E7A32' }}>Zbudowane</b> : built ? <i data-excluded={r.id} style={{ color: '#8A5A3A' }}>wybrano alternatywne siedlisko tego poziomu</i> : (
                 <button className="btn prim" data-dwelling={r.id} disabled={!mayHireHere || s.buildings.barracks < 1 || !prevOk || !canPay(state, faction, price)} onClick={() => act({ type: 'kingdomDwelling', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 12px', fontSize: 15 }}>
-                  Zbuduj ({costText(price)})
+                  Zbuduj <CostIcons cost={price} size={16} light />
                 </button>
               )}
             </div>
@@ -402,7 +409,9 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       </div>
     );
   };
-  const detail = pick?.startsWith('dwelling-') ? dwellingDetail(Number(pick.slice(9))) : pick && pick !== COUNCIL ? ((pickId: BuildingId) => (
+  const detail = pick?.startsWith('dwelling-') ? dwellingDetail(RECRUITS[raceOf(state, faction)].find((r) => r.id === pick.slice(9))?.tier ?? 2) : pick === 'spark' ? (
+    <div className="plate parch" data-tree-detail="spark" style={{ padding: '12px 16px', flex: 1.4, minWidth: 0 }}>{panel('spark')}</div>
+  ) : pick && pick !== COUNCIL ? ((pickId: BuildingId) => (
     <div className="plate parch" data-tree-detail={pickId} style={{ padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
       <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>{BUILDING_NAMES[pickId][Math.min(buildingLevel(s, pickId), BUILDING_NAMES[pickId].length - 1)]}</div>
       <div style={{ fontSize: 15, marginBottom: 8 }}><RuleText text={BUILDING_TEXTS[pickId][Math.min(buildingLevel(s, pickId), BUILDING_TEXTS[pickId].length - 1)] ?? ''} /></div>
@@ -416,8 +425,8 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     </div>
   );
   // What the landscape shows: only what stands (the Iskra's plot appears once the faction holds a shard, as it is built by the shards and not from the council).
-  const standing = ORDER.filter((b) => buildingLevel(s, b) > 0 || (b === 'spark' && state.rules.empire && shardsOf(state, faction) > 0));
-  const dwellingsStanding = mayHireHere && state.rules.empire ? [2, 3, 4, 5].filter((tier) => dwellingOf(state, faction, tier)) : [];
+  const standing = ORDER.filter((b) => buildingLevel(s, b) > 0);
+  const dwellingsStanding = mayHireHere && state.rules.empire ? [2, 3, 4, 5, 6].filter((tier) => dwellingOf(state, faction, tier)) : [];
   const nameOf = (b: BuildingId) => { const level = buildingLevel(s, b); return level ? BUILDING_NAMES[b][Math.min(level, BUILDING_NAMES[b].length) - 1] : BUILDING_NAMES[b][0]; };
   const openBuilding = (b: BuildingId | 'council') => {
     setHover(null);
@@ -457,7 +466,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               const level = buildingLevel(s, b);
               const spot = spotOf(b, s.land);
               return (
-                <button key={b} className="settlement-bld" style={{ left: `${spot.x}%`, top: `${spot.y}%` }} onClick={() => openBuilding(b)} aria-label={nameOf(b)} data-building={b} data-level={level} {...hoverProps(b)}>
+                <button key={b} className="settlement-bld" style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: Math.round(spot.y * 10) }} onClick={() => openBuilding(b)} aria-label={nameOf(b)} data-building={b} data-level={level} {...hoverProps(b)}>
                   <img src={asset(buildingPicture(s.land, b, level))} alt="" className="settlement-pic" style={{ height: `${spot.h}cqh` }} />
                 </button>
               );
@@ -466,12 +475,12 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               const id = dwellingOf(state, faction, tier)!;
               const spot = DWELLING_SPOTS[tier - 2];
               return (
-                <button key={`dwelling-${tier}`} className="settlement-bld dwelling" style={{ left: `${spot.x}%`, top: `${spot.y}%` }} onClick={() => { setHover(null); setModal(`dwelling-${tier}`); }} aria-label={DWELLING_NAMES[id]} data-dwelling-site={tier} {...hoverProps(`dwelling-${tier}`)}>
-                  <img src={asset(`ikony/siedliska/${id}.webp`)} alt="" className="settlement-pic" style={{ height: `${spot.h}cqh` }} />
+                <button key={`dwelling-${tier}`} className="settlement-bld dwelling" style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: Math.round(spot.y * 10) }} onClick={() => { setHover(null); setModal(`dwelling-${tier}`); }} aria-label={DWELLING_NAMES[id]} data-dwelling-site={tier} {...hoverProps(`dwelling-${tier}`)}>
+                  <img src={asset(`osady/dwelling_${id}.webp`)} alt="" className="settlement-pic" style={{ height: `${spot.h}cqh` }} />
                 </button>
               );
             })}
-            <button className="settlement-bld" style={{ left: `${SPOTS.council.x}%`, top: `${SPOTS.council.y}%` }} onClick={() => openBuilding('council')} aria-label="Rada Osady" data-building="council" data-level="1" {...hoverProps('council')}>
+            <button className="settlement-bld" style={{ left: `${SPOTS.council.x}%`, top: `${SPOTS.council.y}%`, zIndex: Math.round(SPOTS.council.y * 10) }} onClick={() => openBuilding('council')} aria-label="Rada Osady" data-building="council" data-level="1" {...hoverProps('council')}>
               <img src={asset(councilPic)} alt="" className="settlement-pic" style={{ height: `${SPOTS.council.h}cqh` }} />
             </button>
           </>
@@ -501,7 +510,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         <div className="settlement-page">
           {header}
           <div className="settlement-field tree">
-            <BuildingTree state={state} s={s} faction={faction} order={ORDER} picture={(b, level) => buildingPicture(s.land, b, level)} selected={pick} onSelect={setPick} council={{ picture: councilPic, name: 'Rada Osady' }} extras={extras} />
+            <BuildingTree state={state} s={s} faction={faction} order={ORDER} picture={(b, level) => buildingPicture(s.land, b, Math.max(level, 1))} selected={pick} onSelect={setPick} council={{ picture: councilPic, name: 'Rada Osady' }} extras={extras} />
           </div>
           <div className="settlement-foot">
             {detail}

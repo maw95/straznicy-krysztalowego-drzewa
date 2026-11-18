@@ -891,7 +891,6 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .settlement-pic { display: block; width: auto; max-width: none; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55)); transition: filter 0.15s; }
 .settlement-bld:hover .settlement-pic, .settlement-bld:focus-visible .settlement-pic { filter: brightness(1.18) drop-shadow(0 0 2px #FFE08A) drop-shadow(0 0 6px #F3C24A) drop-shadow(0 0 14px rgba(243, 194, 74, 0.75)); }
 .settlement-bld:focus-visible { outline: none; }
-.settlement-bld.dwelling .settlement-pic { border-radius: 50%; }
 /* The modal wrapper's animation leaves a transform on its body, which would make `fixed` relative to it: the whole-screen settlement drops it. */
 .overlay:has(.settlement-full) { padding: 0; }
 .overlay > .modal-body:has(> .settlement-full) { animation: none; transform: none; margin: 0; max-width: none; width: 100%; height: 100%; }
@@ -944,14 +943,29 @@ button.sb-slot:disabled { cursor: default; }
 .sb-income { color: #BFA66F; font-size: 14px; }
 .sb-exit { flex: none; padding: 8px 22px; font-size: 18px; }
 @media (max-height: 560px) and (max-width: 1100px) { .settlement-page .settlement-top { display: none; } .settlement-foot { padding-top: 8px; } .sb-hero > div, .sb-team .sb-sub { display: none; } .sb-hero, .sb-garrison { padding-right: 8px; } .sb-label { font-size: 13px; } .settlement-bar { gap: 10px; padding: 8px 12px 6px; font-size: 13px; min-height: 76px; } .sb-slot { width: 42px; height: 42px; } .sb-slot.small { width: 32px; height: 32px; } .sb-info { max-height: 64px; } .sb-exit { padding: 6px 14px; font-size: 15px; } .settlement-foot > .plate { max-height: 30vh; } }
-.building-tree { display: flex; flex-direction: column; justify-content: center; width: 100%; max-height: 100%; overflow: auto; padding: 8px 14px; box-sizing: border-box; }
-.tree-node { position: absolute; display: flex; gap: 8px; align-items: center; padding: 6px 8px; border: 2px solid #B88A35; border-radius: 10px; background: linear-gradient(#F3E6C4, #D9C592); color: #3A2508; font: inherit; cursor: pointer; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55); transition: transform 0.12s; box-sizing: border-box; }
+.building-tree { display: flex; flex-direction: column; justify-content: center; width: 100%; height: 100%; overflow: hidden; padding: 8px 14px; box-sizing: border-box; }
+.tree-node { position: absolute; display: flex; gap: 8px; align-items: center; padding: 6px 8px; border: 2px solid #D9B45A; border-radius: 10px; background: linear-gradient(#F3E6C4, #D9C592); color: #3A2508; font: inherit; cursor: pointer; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55); transition: transform 0.12s; box-sizing: border-box; }
 .tree-node:hover { transform: translateY(-2px); }
 .tree-node.on { box-shadow: 0 0 0 3px #9EE4FF, 0 0 16px rgba(158, 228, 255, 0.7); }
-.tree-node.blocked { filter: grayscale(0.9); opacity: 0.7; }
-.tree-node.poor { border-color: #A8452A; }
-.tree-node.open { border-color: #3C9A44; }
-.tree-node.built, .tree-node.full { border-color: #D9B45A; }
+.tn-pic { flex: none; width: 52px; height: 52px; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.4)); }
+.tn-sub { font-size: 13px; color: #6B4A22; }
+/* Node states: built = beige (the base), can be built = green, only resources missing = amber, a required building missing = grey stone, shut out = red and dashed. */
+.tree-node.open { border-color: #1F6B2A; background: linear-gradient(#E3F5CC, #BDE29B); }
+.tree-node.poor { border-color: #C9822B; background: linear-gradient(#F8E7B8, #EBC77A); }
+.tree-node.blocked { border-color: #6F7580; background: linear-gradient(#CFD2D7, #ABB0B8); color: #2C2F35; }
+.tree-node.blocked .tn-pic { filter: grayscale(0.7) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.4)); opacity: 0.85; }
+.tree-node.blocked .tn-sub { color: #3F434A; }
+.tree-node.excluded { border: 2px dashed #8A2A2A; background: linear-gradient(#EBD0CB, #D3A39C); color: #4A1A18; }
+.tree-node.excluded b { text-decoration: line-through; }
+.tree-node.excluded .tn-pic { filter: grayscale(0.6) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.4)); opacity: 0.8; }
+.tree-or { position: absolute; transform: translate(-50%, -50%); z-index: 2; padding: 1px 9px; border-radius: 10px; border: 2px solid #E2B04A; background: linear-gradient(#7A5A22, #3A2508); color: #FFE9A8; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; box-shadow: 0 0 0 1.5px #1E1204; }
+.tree-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 16px; margin-top: 8px; font-size: 13px; color: #F6EBD0; text-shadow: 0 1px 3px #000; }
+.tree-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.tree-swatch { width: 16px; height: 16px; border-radius: 4px; border: 2px solid #D9B45A; background: linear-gradient(#F3E6C4, #D9C592); }
+.tree-swatch.open { border-color: #1F6B2A; background: linear-gradient(#E3F5CC, #BDE29B); }
+.tree-swatch.poor { border-color: #C9822B; background: linear-gradient(#F8E7B8, #EBC77A); }
+.tree-swatch.blocked { border-color: #6F7580; background: linear-gradient(#CFD2D7, #ABB0B8); }
+.tree-swatch.excluded { border: 2px dashed #8A2A2A; background: linear-gradient(#EBD0CB, #D3A39C); }
 
 
 /* Wizard: map shape buttons (a picture of hexes over the name) and size buttons (a big code over the name). */

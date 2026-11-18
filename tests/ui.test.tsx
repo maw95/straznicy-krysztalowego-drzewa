@@ -816,17 +816,22 @@ describe('level VII: the dwellings in the tree of buildings', () => {
     expect(doc.querySelector('[data-building="barracks"]')!.getAttribute('data-level')).toBe('1');
     await act(async () => fireEvent.click(doc.querySelector('[data-building="council"]')!));
     const state = (id: string) => doc.querySelector(`[data-tree-node="${id}"]`)!.getAttribute('data-node-state');
-    expect([2, 3, 4, 5].map((t) => state(`dwelling-${t}`))).toEqual(['open', 'blocked', 'blocked', 'blocked']);
-    await act(async () => fireEvent.click(doc.querySelector('[data-tree-node="dwelling-3"]')!));
+    // Both units of a tier stand side by side in the tree (tier 6: the one), each with its own state.
+    expect(['hedgehog', 'silverFox', 'centaur', 'dawnOwl', 'boar', 'treeGuardian', 'dawnPhoenix'].map((u) => state(`dwelling-${u}`))).toEqual(['open', 'open', 'blocked', 'blocked', 'blocked', 'blocked', 'blocked']);
+    expect(doc.querySelectorAll('[data-tree-or]').length).toBeGreaterThanOrEqual(2);
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-node="dwelling-centaur"]')!));
     expect(doc.querySelector('[data-tree-detail="dwelling-3"]')!.textContent).toContain('Najpierw zbuduj siedlisko poziomu 2');
     expect((doc.querySelector('[data-tree-detail="dwelling-3"] [data-dwelling]') as HTMLButtonElement).disabled).toBe(true);
-    await act(async () => fireEvent.click(doc.querySelector('[data-tree-node="dwelling-2"]')!));
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-node="dwelling-hedgehog"]')!));
     const options = [...doc.querySelectorAll('[data-tree-detail="dwelling-2"] [data-dwelling]')] as HTMLButtonElement[];
     expect(options).toHaveLength(2);
     await act(async () => fireEvent.click(options[0]));
-    expect(state('dwelling-2')).toBe('built');
-    expect(state('dwelling-3')).toBe('open');
+    expect(state('dwelling-hedgehog')).toBe('built');
+    expect(state('dwelling-silverFox')).toBe('excluded');
+    expect(state('dwelling-centaur')).toBe('open');
     expect(doc.querySelector('[data-tree-detail="dwelling-2"] [data-excluded]')!.textContent).toContain('wybrano alternatywne siedlisko tego poziomu');
+    // The Pierwotna Iskra is in the tree from the start (amber: no shards yet), as the only way to buy it.
+    expect(state('spark')).toBe('poor');
   });
 });
 

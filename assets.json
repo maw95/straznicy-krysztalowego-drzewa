@@ -5224,6 +5224,36 @@
       "data": "2026-11-17",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "osady/siedliska-stworzen",
+      "pliki": [
+        "public/assets/osady/dwelling_hedgehog.webp",
+        "public/assets/osady/dwelling_silverFox.webp",
+        "public/assets/osady/dwelling_centaur.webp",
+        "public/assets/osady/dwelling_dawnOwl.webp",
+        "public/assets/osady/dwelling_boar.webp",
+        "public/assets/osady/dwelling_dryadArcher.webp",
+        "public/assets/osady/dwelling_treeGuardian.webp",
+        "public/assets/osady/dwelling_whiteStag.webp",
+        "public/assets/osady/dwelling_dawnPhoenix.webp",
+        "public/assets/osady/dwelling_ratman.webp",
+        "public/assets/osady/dwelling_goblinSlinger.webp",
+        "public/assets/osady/dwelling_hellhound.webp",
+        "public/assets/osady/dwelling_gargoyle.webp",
+        "public/assets/osady/dwelling_salamander.webp",
+        "public/assets/osady/dwelling_caveTroll.webp",
+        "public/assets/osady/dwelling_minotaurChief.webp",
+        "public/assets/osady/dwelling_shadowWyvern.webp",
+        "public/assets/osady/dwelling_doomBehemoth.webp"
+      ],
+      "typ": "siedliska jednostek poziomów 2-6 obu frakcji jako budynki w krajobrazie osady i w drzewku Rady Osady (18 obrazów, po jednym na jednostkę)",
+      "opis": "18 zadań po 1 wariancie (3 CU każde), wycięcie scripts/assets/osady.py (czarne tło na przezroczystość, wysokość 380). Prompt: 'A single fantasy game building, painterly realistic, three-quarter isometric view, isolated on a plain pure black background, no text. <styl frakcji: Przymierze: pale cream-white marble, golden trim, deep forest-green roofs, carved leaf motifs, living trees and ivy; Horda: black riveted iron plates, dark rough stone, rusty spikes, crimson-red cloth banners, bone and skull ornaments, glowing red slits>. A creature dwelling: <opis siedliska, np. a long open timber stable with high arched stalls, hay bales, a hitching rail and a bow rack, for centaurs>.'",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 1280x1024, 18 x 3 CU",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

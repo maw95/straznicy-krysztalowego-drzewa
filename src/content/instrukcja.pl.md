@@ -306,7 +306,7 @@ Każda frakcja ma jeszcze dwa budynki: **Przymierze** Szkółkę Drzewa (+1 drew
 Na poziomie Imperium każdy ze stopni jednostek 2–5 ma **dwie jednostki do wyboru**. Zanim zrekrutujesz taką jednostkę, zbuduj jej **siedlisko**. **Siedlisko jednej jednostki wyklucza drugą jednostkę tego stopnia do końca gry**, więc wybierz tę, która pasuje do drużyny. Przymierze: Jeżozwierz albo Srebrny Lis, Centaur albo Sowa Świtu, Alabastrowy Odyniec albo Driada Łuczniczka, Opiekun Drzewa albo Biały Jeleń. Horda: Szczurołak albo Goblin Procarz, Piekielny Ogar albo Gargulec, Salamandra Popiołu albo Troll Jaskiniowy, Herszt Minotaurów albo Wiwerna Cienia.
 
 ### Legendarna jednostka
-W rozbudowanych koszarach, za 20 zł i 3 Gwiezdne Pyły, frakcja może zrekrutować jedną legendarną jednostkę: **Feniksa Świtu** (lata; raz na bitwę po śmierci wstaje z połową Życia) albo **Behemota Zagłady** (każdym atakiem może trafić dwóch sąsiadujących wrogów).
+Jednostka 6 poziomu też ma swoje **siedlisko** (Gniazdo Feniksa, Jaskinia Zagłady; 6 zł, 3 rudy i 2 pyły, po siedlisku 5 poziomu), ale jest tylko jedna, więc nie ma wyboru. Potem, w rozbudowanych koszarach, za 20 zł i 3 Gwiezdne Pyły, frakcja może zrekrutować jedną legendarną jednostkę: **Feniksa Świtu** (lata; raz na bitwę po śmierci wstaje z połową Życia) albo **Behemota Zagłady** (każdym atakiem może trafić dwóch sąsiadujących wrogów).
 
 ## Automat zła i boty
 @słowa: automat zła, bot, komputer, sztuczna inteligencja, horda, przeciwnik, posiłki, podpowiedź, autoplay

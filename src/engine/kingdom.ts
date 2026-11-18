@@ -103,11 +103,11 @@ export interface Recruit { id: string; tier: number; cost: number; /** Gwiezdny 
 /** Level 6: the second unit of tiers 2-5. Each unit of those tiers has a dwelling; a faction builds one dwelling per tier, which shuts the other out for the whole game. */
 export const ALT_UNITS: Record<FactionId, string[]> = byPack((p) => p.altUnits);
 export const DWELLING_NAMES: Record<string, string> = {
-  hedgehog: 'Legowisko Jeżozwierzy', silverFox: 'Lisia Nora', centaur: 'Stajnie Centaurów', dawnOwl: 'Sowia Dziupla', boar: 'Dębowa Zagroda', dryadArcher: 'Gaj Driad', treeGuardian: 'Prastary Zagajnik', whiteStag: 'Polana Jeleni',
-  ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern',
+  hedgehog: 'Legowisko Jeżozwierzy', silverFox: 'Lisia Nora', centaur: 'Stajnie Centaurów', dawnOwl: 'Sowia Dziupla', boar: 'Dębowa Zagroda', dryadArcher: 'Gaj Driad', treeGuardian: 'Prastary Zagajnik', whiteStag: 'Polana Jeleni', dawnPhoenix: 'Gniazdo Feniksa',
+  ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern', doomBehemoth: 'Jaskinia Zagłady',
 };
-/** Price of a dwelling, by the tier of its unit (2-5). */
-export const DWELLING_COST: Cost[] = [{ gold: 2, wood: 1 }, { gold: 3, wood: 2 }, { gold: 4, ore: 2 }, { gold: 5, ore: 2, dust: 1 }];
+/** Price of a dwelling, by the tier of its unit (2-6; the tier 6 unit has one dwelling only, no alternative). */
+export const DWELLING_COST: Cost[] = [{ gold: 2, wood: 1 }, { gold: 3, wood: 2 }, { gold: 4, ore: 2 }, { gold: 5, ore: 2, dust: 1 }, { gold: 6, ore: 3, dust: 2 }];
 
 /** Every recruit of a faction by tier; tier 6 and the alternative units belong to level 6 only (list the offer of a game with `recruitsOf`). */
 export const RECRUITS: Record<FactionId, Recruit[]> = {
@@ -119,7 +119,7 @@ export const RECRUITS: Record<FactionId, Recruit[]> = {
 export const recruitsOf = (state: GameState, f: TeamId): Recruit[] => RECRUITS[raceOf(state, f)].filter((r) => (r.tier < 6 && !r.alt) || Boolean(state.rules.empire)).sort((a, b) => a.tier - b.tier);
 
 /** Level 6: whether tiers 2-5 need a dwelling in this game. */
-export const needsDwelling = (state: GameState, r: Recruit): boolean => Boolean(state.rules.empire) && r.tier >= 2 && r.tier <= 5;
+export const needsDwelling = (state: GameState, r: Recruit): boolean => Boolean(state.rules.empire) && r.tier >= 2 && r.tier <= 6;
 /** Level 6: the unit whose dwelling the faction has built for this tier (undefined: none yet). */
 export const dwellingOf = (state: GameState, f: TeamId, tier: number): string | undefined =>
   (state.kingdom?.dwellings?.[f] ?? []).find((id) => RECRUITS[raceOf(state, f)].find((r) => r.id === id)?.tier === tier);
@@ -872,7 +872,7 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
   if (own && s.buildings.barracks < 1 && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
   if (own && s.buildings.barracks >= 1 && state.rules.empire) {
     // Level 6: the dwelling of the lowest tier that has none (which of the two units: by the game's seed, so the games differ), when it and its unit can be paid for.
-    for (const tier of [2, 3, 4, 5]) {
+    for (const tier of [2, 3, 4, 5, 6]) {
       if (dwellingOf(state, f, tier) || (tier >= 4 && s.buildings.barracks < 2)) continue;
       const options = recruitsOf(state, f).filter((r) => r.tier === tier);
       const pick = options[(state.setup.seed + tier + (f === 'dawn' ? 0 : 1)) % options.length];

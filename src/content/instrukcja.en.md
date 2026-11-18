@@ -306,7 +306,7 @@ Each faction also has two more buildings: the **Covenant** the Tree Nursery (+1 
 On the level Empire each of the unit ranks 2–5 has **two units to choose from**. Before you recruit such a unit, build its **habitat**. **The habitat of one unit excludes the other unit of that rank until the end of the game**, so choose the one that suits your team. Covenant: Porcupine or Silver Fox, Centaur or Dawn Owl, Alabaster Boar or Dryad Archer, Tree Guardian or White Stag. Horde: Ratman or Goblin Slinger, Hellhound or Gargoyle, Ash Salamander or Cave Troll, Minotaur Chief or Shadow Wyvern.
 
 ### Legendary unit
-In upgraded barracks, for 20 gold and 3 Star Dust, a faction can recruit one legendary unit: the **Phoenix of Dawn** (flies; once per battle after dying it rises with half its Health) or the **Behemoth of Doom** (with every attack it can hit two adjacent enemies).
+The tier 6 unit has a **dwelling** of its own too (Phoenix Nest, Cavern of Doom; 6 gold, 3 ore and 2 dust, after the tier 5 dwelling), but there is only one, so no choice. Then, in upgraded barracks, for 20 gold and 3 Star Dust, a faction can recruit one legendary unit: the **Phoenix of Dawn** (flies; once per battle after dying it rises with half its Health) or the **Behemoth of Doom** (with every attack it can hit two adjacent enemies).
 
 ## Evil automaton and bots
 @words: evil automaton, bot, computer, artificial intelligence, horde, opponent, reinforcements, hint, autoplay
