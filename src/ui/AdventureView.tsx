@@ -391,7 +391,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
 
   const deadUnits = viewer
     ? [
-        ...Object.values(state.heroes).filter((h) => h.faction === viewer && !h.alive).map((h) => h.id),
+        ...Object.values(state.heroes).filter((h) => h.faction === viewer && !h.alive && !h.revived).map((h) => h.id),
         ...state.factions[viewer].supportsDead,
       ]
     : [];

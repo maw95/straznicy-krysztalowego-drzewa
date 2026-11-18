@@ -890,11 +890,13 @@ function useMapItem(state: GameState, itemId: string, targets: HexKey[] | undefi
     const f = state.factions[hero.faction];
     const deadHero = unitId ? state.heroes[unitId] : undefined;
     if (deadHero && deadHero.faction === hero.faction && !deadHero.alive) {
+      if (deadHero.revived) throw new Error('Ten bohater już raz wrócił dzięki Eliksirowi Odrodzenia.');
       // The revived hero stands on a free hex next to the one who drinks the elixir (one hero per hex).
       const spots = reviveSpots(state, hero);
       const to = targets?.[0] ?? spots[0];
       if (!to || !spots.includes(to)) throw new Error(spots.length ? 'Wskrzeszony bohater staje na wolnym polu obok.' : 'Obok nie ma wolnego pola dla wskrzeszonego bohatera.');
       deadHero.alive = true;
+      deadHero.revived = true;
       deadHero.pos = to;
       revealAround(state, to);
       // The revived hero joins the turn order from the next round.

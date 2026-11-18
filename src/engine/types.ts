@@ -254,6 +254,8 @@ export interface HeroState {
   playerId: string | null;
   pos: HexKey;
   alive: boolean;
+  /** An Eliksir Odrodzenia has already brought this hero back once: a fallen hero rises by it only one time per game (map and battle alike). */
+  revived?: true;
   crystals: string[];
   /**
    * A reserve hero not yet on the board: the free hexes nearest to where the fallen hero died.

@@ -6,6 +6,11 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Eliksir Odrodzenia: każdy bohater może wstać dzięki niemu tylko raz na partię (na mapie i w bitwie); pomocników limit nie dotyczy.
+
+- Jeżozwierz i Gargulec: opis Kolców brzmi „każdy, kto zaatakuje go wręcz, traci 3 Ż” (z ikoną życia) zamiast „dostaje 3 obrażenia”.
+
+
 - Podpowiedzi po najechaniu myszą (atrybut title) zniknęły z ekranów gry: opisy czytasz prawym przyciskiem. Zostały tylko te, które tłumaczą, czemu przycisk jest wyłączony, oraz opisy opcji w menu i ustawieniach.
 
 - Rada Osady, kolory: wybudowany budynek, który ma jeszcze wyższy poziom, jest zawsze turkusowy (brakujące surowce pokazuje czerwona cena); beż oznacza budynek w pełni rozbudowany, a pomarańcz nowy budynek, na który brakuje surowców. Linie drzewka: każdy budynek-rodzic ma własny tor w szczelinie między kolumnami, więc linie różnych budynków biegną równolegle i nie nakładają się (np. Legowisko Jeżozwierzy nie wygląda już, jakby wymagało Targu i Skarbca).

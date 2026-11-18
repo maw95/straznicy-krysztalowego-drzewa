@@ -1334,6 +1334,9 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     const { b, faction, args } = use;
     const t = ownUnit(use, args.targetId);
     if (t.alive) throw new Error('Wybierz poległą jednostkę.');
+    // A fallen hero rises by an elixir only once per game (the arena has no heroes of the map, so no limit there).
+    const hero = use.state.heroes[t.defId];
+    if (hero?.revived) throw new Error('Ten bohater już raz wrócił dzięki Eliksirowi Odrodzenia.');
     // Digital ruleset: the fallen unit lies where it fell, so it stands up there (or on the nearest free cell).
     const fallen = isDigital(use.state.rules) && t.corpse ? t.corpse : null;
     const cell =
@@ -1343,6 +1346,7 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
           ? nearestFreeCell(use.state, t, fallen)
           : freeCellNear(use.state, faction, t);
     if (!cell) throw new Error('Brak wolnego pola.');
+    if (hero) hero.revived = true;
     t.alive = true;
     t.hp = t.maxHp;
     placeUnit(use.state, t, cell, cell === fallen ? t.corpseTail : undefined);

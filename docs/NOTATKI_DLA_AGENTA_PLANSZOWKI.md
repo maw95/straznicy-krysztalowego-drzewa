@@ -770,3 +770,10 @@ pojedynki sprzyjają Przymierzu. Poziom Łatwy (pojedynki bez zdolności) się n
 - W kreatorze (`SetupScreen`) miejsce wybiera frakcję z rejestru (`PACK_IDS`); stron jest tyle, ile frakcji przy stole, a przy trzech i więcej mapa przechodzi na prostokątną odpowiednio dużą. Dziś rejestr ma dwie frakcje, więc trzy i cztery strony pojawią się z kolejnymi.
 - Kooperacja zostaje „gracze (Przymierze) kontra komputer (Horda)”; gracze i komputer z dowolnymi frakcjami wymagają uogólnienia tej pary (punkt 51a w backlogu).
 - Gra przez internet zostaje przy dwóch stronach (serwer sprawdza `FACTIONS`).
+
+## 16. Eliksir Odrodzenia: bohater wstaje tylko raz (2026-11-18, uwaga autora z gry na poziomie Imperium)
+
+- **Zgłoszenie:** ciągłe wskrzeszanie bohatera daje ogromną przewagę i męczy przeciwnika.
+- **Decyzja:** każdy bohater może być podniesiony Eliksirem Odrodzenia **tylko raz na partię** (flaga `HeroState.revived`, na mapie `useMapItem` i w bitwie `ITEM_HANDLERS.resurrection`). Pomocników limit nie dotyczy; na arenie (bez bohaterów z mapy) też nie.
+- Interfejs i boty nie oferują już bohatera, który wstał raz (`ItemsPanel`, `AdventureView`, `battleAi`, `adventureAi`); opis skarbu: „Każdy bohater wstaje tak tylko raz.”
+- Skutek dla wyników: `golden.test.ts` zmienia się tam, gdzie boty podnosiły tego samego bohatera drugi raz (snapshot odświeżony świadomie).

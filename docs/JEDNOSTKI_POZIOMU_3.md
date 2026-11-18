@@ -12,7 +12,7 @@ Skład i nazwy wg autora z 13.11.2026 (liczby robocze). Nazwy jednostek nie musz
 
 | Poz. | Jednostka | Rola | Ż / A / S | Zdolność |
 |------|-----------|------|-----------|----------|
-| 2 | **Jeżozwierz** | zwarcie, kara za bicie | 6 / 2 / 3, chodzi | *Kolce* (stała): każdy, kto zaatakuje go wręcz, dostaje 1 obrażenie |
+| 2 | **Jeżozwierz** | zwarcie, kara za bicie | 6 / 2 / 3, chodzi | *Kolce* (stała): każdy, kto zaatakuje go wręcz, traci 1 Ż |
 | 3 | **Centaur** | szybki strzelec | 6 / 3 / 5, chodzi, strzela | *Strzał i Galop* (raz na bitwę): po ataku może się cofnąć o maks. 3 pola (wybór autora) |
 | 4 | **Alabastrowy Odyniec** (dzik; nazwa od koloru, wybór autora) | napastnik czołowy | 10 / 4 / 5, chodzi | *Czołowe Natarcie* (stała): +2 obrażenia, gdy atakuje cel od przodu (przeciwieństwo ataku z tyłu Harpii) |
 | 5 | **Opiekun Drzewa** (żywy ent) | duży obrońca, 2 pola | 14 / 5 / 3, chodzi | *Korzenie Drzewa* (raz na bitwę): na początku rundy leczy sąsiednich sojuszników o 2 Ż |

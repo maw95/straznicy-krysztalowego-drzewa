@@ -245,7 +245,7 @@ function mapItemAction(state: GameState): Action | null {
   for (const id of f.inventory) {
     const item = state.items[id];
     if (item.kind === 'resurrection') {
-      const dead = Object.values(state.heroes).find((h) => h.faction === hero.faction && !h.alive);
+      const dead = Object.values(state.heroes).find((h) => h.faction === hero.faction && !h.alive && !h.revived);
       const spots = reviveSpots(state, hero);
       if (dead && spots.length) return { type: 'useMapItem', itemId: id, unitId: dead.id, targets: [spots[0]] };
       const deadSupport = FACTION_SUPPORTS[raceOf(state, hero.faction)].find((s) => f.supportsDead.includes(s));

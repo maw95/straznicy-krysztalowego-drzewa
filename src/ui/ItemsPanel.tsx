@@ -55,7 +55,7 @@ interface Props {
 
 export function ItemsPanel({ state, side, active, targeting, setTargeting, freeAbility, ab, showItems, setShowItems, onAction, onShowCard, reset, magic }: Props) {
   const b = state.battle!;
-  const deadOwn = Object.values(b.units).filter((u) => u.side === side && !u.alive && !u.swappedOut);
+  const deadOwn = Object.values(b.units).filter((u) => u.side === side && !u.alive && !u.swappedOut && !state.heroes[u.defId]?.revived);
   const reserve = reserveOf(state, side);
   const itemsAllowed = canUseBattleItem(state, side);
 

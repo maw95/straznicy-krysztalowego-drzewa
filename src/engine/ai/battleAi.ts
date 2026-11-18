@@ -349,10 +349,10 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
   for (const item of inv) {
     switch (item.kind) {
       case 'resurrection': {
-        const deadLeader = Object.values(b.units).find((x) => x.side === faction && !x.alive && !x.swappedOut && UNITS[x.defId].kind === 'hero');
+        const deadLeader = Object.values(b.units).find((x) => x.side === faction && !x.alive && !x.swappedOut && UNITS[x.defId].kind === 'hero' && !state.heroes[x.defId]?.revived);
         if (deadLeader) return { type: 'battleItem', itemId: item.id, targetId: deadLeader.id };
         // In the arena the elixir is worth nothing after the battle: a fallen support comes back too.
-        const deadSupport = state.setup.mode === 'arena' && Object.values(b.units).find((x) => x.side === faction && !x.alive && !x.swappedOut);
+        const deadSupport = state.setup.mode === 'arena' && Object.values(b.units).find((x) => x.side === faction && !x.alive && !x.swappedOut && !state.heroes[x.defId]?.revived);
         if (deadSupport) return { type: 'battleItem', itemId: item.id, targetId: deadSupport.id };
         break;
       }

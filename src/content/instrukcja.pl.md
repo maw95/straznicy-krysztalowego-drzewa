@@ -150,7 +150,7 @@ Na poziomie Osada pojawiają się **zestawy artefaktów**: cztery zestawy po trz
 Od Wyprawy na mapie stoją miejsca, z których korzysta **pierwszy bohater, który na nie wejdzie** (potem są puste): **kapliczka** (2 PD), **obóz najemników** (przywraca jednego poległego pomocnika frakcji albo daje 1 PD, gdy nikt nie poległ) i **skrzynia** (artefakt, a od poziomu Osada do wyboru artefakt albo 3 zł). Liczba takich miejsc rośnie z wielkością mapy. Dalsze (młyn, studnia, składnica, chatki) są od poziomu Księstwo.
 
 ### Śmierć bohatera
-Poległy bohater wypada z gry do końca partii, chyba że wypije go z powrotem **Eliksir Odrodzenia** (skarb): na mapie wskrzesza bohatera na wolnym polu obok pijącego albo przywraca pomocnika. Kryształy poległego zostają na polu bitwy. Od poziomu Królestwo dowódca poległy wraca za opłatą ([Królestwo](#krolestwo)).
+Poległy bohater wypada z gry do końca partii, chyba że wypije go z powrotem **Eliksir Odrodzenia** (skarb): na mapie wskrzesza bohatera na wolnym polu obok pijącego albo przywraca pomocnika. **Każdy bohater wstaje tak tylko raz na partię** (na mapie i w bitwie); drugi raz poległego bohatera eliksir już nie podniesie. Kryształy poległego zostają na polu bitwy. Od poziomu Królestwo dowódca poległy wraca za opłatą ([Królestwo](#krolestwo)).
 
 ## Bitwa na arenie
 @słowa: bitwa, arena, walka, jednostka, aktywacja, szybkość, atak, życie, zdolność, strzelec, latający, duża jednostka, ogon, trup, cios od tyłu, przeszkody, kolejność, koniec bitwy, ruch

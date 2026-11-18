@@ -150,7 +150,7 @@ On the level Settlement **artifact sets** appear: four sets of three rare items 
 From Run on, the map has places used by **the first hero who enters them** (afterwards they are empty): a **shrine** (2 XP), a **mercenary camp** (restores one fallen support of the faction, or gives 1 XP when nobody has fallen) and a **chest** (an artifact, and from the level Settlement a choice of an artifact or 3 gold). The number of such places grows with the size of the map. More of them (mill, well, depot, huts) are there from the level Principality.
 
 ### Hero death
-A fallen hero is out of the game until the end of the match, unless the **Elixir of Rebirth** (a treasure) brings them back: on the map it resurrects a hero on a free tile next to the drinker, or restores a support. The fallen hero's crystals stay on the battlefield. From the level Kingdom a fallen commander comes back for a fee ([Kingdom](#kingdom)).
+A fallen hero is out of the game until the end of the match, unless the **Elixir of Rebirth** (a treasure) brings them back: on the map it resurrects a hero on a free tile next to the drinker, or restores a support. **Each hero rises this way only once per match** (on the map and in battle); the elixir will not raise the same hero a second time. The fallen hero's crystals stay on the battlefield. From the level Kingdom a fallen commander comes back for a fee ([Kingdom](#kingdom)).
 
 ## Battle on the arena
 @words: battle, arena, fight, unit, activation, speed, attack, health, ability, shooter, flying, large unit, tail, corpse, backstab, obstacles, order, end of battle, movement
