@@ -5,12 +5,12 @@ więc tu ich nie ma. Ta lista obejmuje papier, tusz, tekturę, kleje i narzędzi
 (instrukcja w segregatorze, karty, kafelki, plansza areny, naklejki, kość) oraz drewniane pudełko.
 Drukarka: **HP DeskJet 2545** (atramentowa, A4, druk jednostronny — dwustronny ręcznie, przez odwrócenie kartek).
 
-**Już są u autora:** laminator A4 i ok. 70 folii do laminowania, 24 arkusze papieru foto 10 × 15 cm (lub 9 × 13).
+**Już są u autora:** laminator A4 i ok. 70 folii do laminowania, segregatory z wbudowanymi koszulkami, drewniane kostki do kości, nóż z łamanym ostrzem i ostrza, wiertarka (brakuje tylko otwornicy), 24 arkusze papieru foto 10 × 15 cm (lub 9 × 13).
 Mały papier foto nie pasuje do plików do druku (wszystkie są na A4) — przyda się na wydruki próbne kolorów albo
 do sprawdzenia, ile tuszu schodzi na pełny zadruk.
 
 **Decyzje (18.11.2026):** kafelki i arena klejone **klejem Wikol** (na mokro, cienko, z dociśnięciem na noc), karty — **jedną
-tanią puszką kleju w sprayu**; instrukcja na zwykłym papierze w koszulkach; tusz dolewany z butelek do wkładów HP 301.
+tanią puszką kleju w sprayu**; instrukcja na zwykłym papierze, wpinana w segregatory z wbudowanymi koszulkami (już są); tusz dolewany z butelek do wkładów HP 301.
 
 Oferty w punktach 1–5 są ze zwykłych sklepów internetowych (pojedyncze oferty Allegro szybko wygasały). Każdą stronę
 sprawdzono 18.11.2026: cena brutto bez dostawy, „dostępny” = sklep pokazywał towar na stanie; „niesprawdzone” = strona nie
@@ -97,8 +97,6 @@ dociśnij górny pasek, a potem powoli wyciągaj papier do pieczenia, wygładzaj
 | Co | Ile | Cena ok. | Oferta |
 |---|---:|---:|---|
 | **Mata do cięcia A3 samogojąca** (30 × 45 cm, 5 warstw, dwustronna) | 1 | 20 zł | [modelekolejowe.pl — mata A3](https://modelekolejowe.pl/product-pol-3428-Mata-do-ciecia-samogojaca-5-warstw-45x30cm-A3.html) (dostępna) · [gotronik.pl — mata A3, 29 zł](https://www.gotronik.pl/mata-dwustronna-do-ciecia-a3-samogojaca-zielona-p-8361.html) |
-| Nóż z łamanym ostrzem **18 mm** z blokadą (np. NEO 63-014 albo Topex 17B128) | 1 | 7–12 zł | najprościej w markecie razem z ostrzami · [fixero.com — NEO 63-014](https://fixero.com/noz-z-ostrzem-lamanym-18-mm-blokada-srubowa-63-014.html) (niesprawdzone) · [Ceneo — Topex 17B128](https://www.ceneo.pl/13979989) |
-| **Ostrza łamane 18 mm, 10 szt.** (NEO 64-010) — tektura szybko tępi ostrze; 363 kafelki to ponad 2000 cięć | **2 opak.** | 10–15 zł/opak. | [Ceneo — NEO 64-010, 5 sklepów od ok. 10 zł](https://www.ceneo.pl/7345050) · albo dowolne ostrza 18 mm w markecie |
 | **Linijka stalowa 50 cm** (nierdzewna, 26 mm szer.) — pod spód naklej pasek taśmy malarskiej, żeby się nie ślizgała | 1 | 10 zł | [modelarnia.pl — linijka 50 cm](https://sklep.modelarnia.pl/p21410,linijka-metalowa-50cm-18278.html) (dostępna; dostawa od 19 zł, więc warto dobrać tam też matę i ostrza) |
 | **Zaokrąglacz narożników R4** — 114 kart × 4 rogi | 1 | 25–45 zł | [Amazon.pl — R4](https://www.amazon.pl/dp/B08NYH64BD) (niesprawdzone) · [Amazon.pl — 3 w 1 R4/R7/R10](https://www.amazon.pl/dp/B0GTWRCYF3) (niesprawdzone) · [pasazbiurowy.pl — Argo AE-3S, 25 zł](https://www.pasazbiurowy.pl/zaokraglacz-naroznikow-argo-ae-3s-19793.html) (promień ok. 5 mm, nie 4) |
 
@@ -108,30 +106,36 @@ dociśnij górny pasek, a potem powoli wyciągaj papier do pieczenia, wygładzaj
 |---|---:|---:|---|
 | **Segregator ofertowy A4, 4 ringi D, 40 mm, z kieszenią na przód i grzbiet** (Biurfol Panorama, biały) — okładka gry wsuwa się do kieszeni | **3** | 21 zł/szt. | [komax9.pl — Biurfol Panorama 40 mm](https://www.komax9.pl/pl/segregator-ofertowy-biurfol-a4-40mm-4-ringi-panorama.html) (dostępny, wysyłka 1–3 dni) |
 | (taniej, bez kieszeni: VauPe A4 40 mm 4 ringi — okładkę trzeba wtedy nakleić) | (3) | 12 zł/szt. | [Allegro — VauPe 40 mm](https://allegro.pl/produkt/segregator-a4-40mm-4-ringi-vaupe-fioletowy-f4a22368-bebb-4e31-826d-1423c137eccd) (strona produktu działa) |
-| **Koszulki A4 krystaliczne 50 mic., 100 szt.** (21 na egzemplarz) | 1 opak. | 12,90 zł | [topoffice.pl — koszulki 100 szt.](https://topoffice.pl/koszulki-na-dokumenty/20963-koszulki-krystaliczne-a4-50-mik-100-sztuk-5705831157248) (dostępne, ostatnie 5 opak.) · [czystysklep.pl — Bantex 100 szt., 21 zł](https://www.czystysklep.pl/koszulki-krystaliczne-a4-100szt-w-kartoniku-p21714) |
-| **Kostka drewniana 16 mm, surowa sosna, 10 szt.** (kość −1 / 0 / +1; 3 + zapas) — zwykłe sześciany, nie kości z oczkami | 1 opak. | 5,69 zł | [biurobest.pl — kostka 16 mm 10 szt.](https://biurobest.pl/pl/p/Kostka-kwadrat-klocek-szescian-drewno-16mm-10szt/303) (strona pokazuje i „90 szt.”, i „niedostępny” — sprawdź) |
 | **Woreczki strunowe 6 × 8 cm, 100 szt.** | 1 opak. | 1,80 zł | [patopak.com.pl — woreczki 6 × 8](https://patopak.com.pl/torebki-strunowe/106-torebki-strunowe-6x8-cm-100-szt-worki-strunowe-60x80-mm.html) (dostępne) · albo dowolny sklep papierniczy |
 | Gumki recepturki na talie kart | kilka | — | — |
 
 ## 6. Pudełka z drewna (3 sztuki)
 
-Sklejka jest docinana na wymiar w markecie albo u sprzedawcy, więc nie ma jednej oferty do kliknięcia — weź listę cięcia
-z kroku 8 w `PLAN_KROK_PO_KROKU.md` (po zmierzeniu segregatora) **razy trzy**. Ilości poniżej są dla trzech pudełek.
-Klej Wikol z punktu 3 nadaje się też do drewna — wystarczy dokupić drugie opakowanie.
+Lista cięcia jest w kroku 8 `PLAN_KROK_PO_KROKU.md` (wymiary dla przykładowego segregatora; po zmierzeniu swojego przelicz wzory).
+Na jedno pudełko wychodzi 11 części ze sklejki 3 mm (łącznie ok. 0,5 m²), 1 dno 4 mm i 14 odcinków listwy 10 × 10; na trzy pudełka:
+**33 części 3 mm, 3 dna 4 mm i ok. 9 m listwy.** Oferty sprawdzone 18.11.2026 (ceny z podanych stron, bez dostawy; Sklejka-Kraków i Dedra
+nie podają kosztu dostawy na samej stronie produktu — zobacz przy koszyku).
 
-| Co | Ile (3 pudełka) | Gdzie |
-|---|---|---|
-| **Sklejka topolowa 3 mm** (ścianki, wieko, półka), docięta wg listy | ok. 2,1 m² | [Castorama](https://www.castorama.pl/) / [Leroy Merlin](https://www.leroymerlin.pl/) (docinanie na miejscu) · [Allegro — wyszukiwanie](https://allegro.pl/listing?string=sklejka%20topolowa%203%20mm%20docinanie%20na%20wymiar) |
-| **Sklejka topolowa 4 mm** (dna) | 3 kawałki ok. 350 × 320 | jak wyżej |
-| Listwa lipowa lub sosnowa **10 × 10 mm** | ok. 9 m (6 × 1,5 m) | dział drewna · [Allegro — wyszukiwanie](https://allegro.pl/listing?string=listwa%20lipowa%2010x10) |
-| **Pianka EVA 10 mm**, arkusz 500 × 500 mm (wkładka na figurki) | 3 | [Allegro — wyszukiwanie](https://allegro.pl/listing?string=pianka%20EVA%2010%20mm%20arkusz) |
-| **Otwornica bimetalowa Ø 35 mm** (+ wiertarka) | 1 | [Allegro — wyszukiwanie](https://allegro.pl/listing?string=otwornica%20bimetalowa%2035%20mm) |
-| Klej kontaktowy do EVA | 1 | [Allegro — wyszukiwanie](https://allegro.pl/listing?string=klej%20kontaktowy%20do%20EVA) |
-| Kątownik stolarski + 4 ściski (albo taśma malarska) | 1 zestaw | [Allegro — wyszukiwanie](https://allegro.pl/listing?string=%C5%9Bciski%20stolarskie%20zestaw) |
-| Papier ścierny 120, 180, 240 | po 4 ark. | [Allegro — wyszukiwanie](https://allegro.pl/listing?string=papier%20%C5%9Bcierny%20zestaw%20120%20180%20240) |
-| Lakier akrylowy bezbarwny, satyna, 0,75 l | 1 | [Allegro — wyszukiwanie](https://allegro.pl/listing?string=lakier%20akrylowy%20bezbarwny%20satyna%20do%20drewna) |
-| Klej-lakier do decoupage (logo, etykiety) | 1 | [Allegro — wyszukiwanie](https://allegro.pl/listing?string=klej%20do%20decoupage%20mod%20podge) |
-| Nóżki filcowe samoprzylepne | 12 | [Allegro — wyszukiwanie](https://allegro.pl/listing?string=filc%20samoprzylepny%20n%C3%B3%C5%BCki) |
+| Co | Ile | Cena ok. | Oferta |
+|---|---|---:|---|
+| **Sklejka topolowa 3 mm, kl. 2, arkusz 1880 × 1220 z darmowym docięciem na 17–20 formatek** — ścianki, wieka, rantów i półki 33 części = 2 arkusze po 17–20 części | **2 arkusze** | 94 zł/szt. | [Sklejka-Kraków — kl. 2, cięcie na 17–20 formatek](https://sklejka-krakow.pl/pl/p/Sklejka-topola-3mm-kl-2-CIECIE-na-17-20-formatek-GRATIS/723) (w opisie wpisz listę części; cięcie gratis, rzaz ok. 3 mm; maks. rozmiar części do wysyłki kurierem 1450 × 1000 mm; zapas materiału zostaje) · lista cen w [kategorii topola 3 mm](https://sklejka-krakow.pl/sklejka-topolowa) |
+| **Dna 4 mm:** nie ma sklejki topolowej 4 mm w tym sklepie, więc brzozowa. Dno 346 × 316 mieści się w formatce 500 × 500; docinasz sam (jedno cięcie) | **3 formatki** | 9,16 zł/szt. | [Sklejka-Kraków — formatka brzozowa 500 × 500 mm, 4 mm, kl. 2](https://sklejka-krakow.pl/pl/p/Formatka-brzozowa-500x500mm-do-lasera-4mm-kl-2/297) (ten sam sklep — jedna dostawa) |
+| **Listwa 10 × 10 mm, długość 1 m** (słupki, szyny, ramki): sosna lub świerk zamiast lipy, 9–10 szt. | 10 szt. | cena na stronie sklepu | [Bricomarche — listwa modelarska sosna/świerk 10 × 10 × 1000 mm](https://www.bricomarche.pl/listwa-modelarska-sosna-swierk-110-g-10-x-10-x-1000-mm) (online „dostępny”, odbiór w sklepie 0 zł; cena nie wyświetliła się przy sprawdzaniu) · sklep modelarski ModelMaking ma tę listwę za ok. 1,12 €, ale **minimalne zamówienie 200 zł**, więc odpada |
+| **Pianka EVA czarna 10 mm, 50 × 50 cm** (wkładka na figurki; 1 arkusz na pudełko) | 3 | 26 zł/szt. | [Cosplay Craft — EVA 10 mm, 120 kg/m³, 50 × 50](https://cosplaycraft.pl/pl/products/pianka-eva-czarna-10-mm-120-kg-m3-50x50-cm-2637.html) (**18.11 niedostępna**, jest przycisk „powiadom”; darmowa dostawa od 120 zł) · zapas: [Tinta dla Plastyków — pianki EVA](https://www.tintadlaplastykow.pl/pianka-eva-10-mm) (strona nie dała się sprawdzić automatycznie; w wyszukiwarce 33,60 zł za czarny arkusz) |
+| **Otwornica bimetalowa Dedra 08W035, Ø 35 mm** (pasuje do wiertarki; do wycinania gniazd w sklejce/EVA) | 1 | 14,49–19,99 zł | [Mrówka — Dedra 35 mm, 19,99 zł](https://mrowka.com.pl/produkt/otwornica-bi-metalowa-35-mm-dedra-5902628080356.html) (można dodać do koszyka; w sklepach z odbiorem) · [OBI — Dedra 35 mm, 14,49 zł](https://www.obi.pl/otwornice/dedra-otwornica-bi-metalowa-sr-35-mm/p/7311707) (cena z wyszukiwarki; strona nie otworzyła się automatycznie) · [kim24.pl, 14 zł](https://kim24.pl/otwornica-dedra-08w035) („na wyczerpaniu”, sklep w trybie podglądu) |
+| Klej do drewna (PVA, Wikol z punktu 3 wystarczy — druga butelka 500 g) | 1 | 22–25 zł | patrz punkt 3 |
+| Klej kontaktowy do EVA (np. tubka 50–125 ml) | 1 | ok. 10–15 zł | market budowlany / Allegro: [wyszukiwanie](https://allegro.pl/listing?string=klej%20kontaktowy%20do%20EVA) |
+| Kątownik stolarski + 4 ściski (albo taśma malarska) | 1 zestaw | ok. 30 zł | market budowlany · [Allegro — wyszukiwanie](https://allegro.pl/listing?string=%C5%9Bciski%20stolarskie%20zestaw) |
+| Papier ścierny 120, 180, 240 | po 4 ark. | ok. 10 zł | market budowlany · [Allegro — wyszukiwanie](https://allegro.pl/listing?string=papier%20%C5%9Bcierny%20zestaw%20120%20180%20240) |
+| Lakier akrylowy bezbarwny, satyna, 0,75 l | 1 | ok. 40 zł | market budowlany · [Allegro — wyszukiwanie](https://allegro.pl/listing?string=lakier%20akrylowy%20bezbarwny%20satyna%20do%20drewna) |
+| Klej-lakier do decoupage (logo, etykiety) | 1 | ok. 15 zł | sklep plastyczny · [Allegro — wyszukiwanie](https://allegro.pl/listing?string=klej%20do%20decoupage%20mod%20podge) |
+| Nóżki filcowe samoprzylepne | 12 | ok. 5 zł | market budowlany · [Allegro — wyszukiwanie](https://allegro.pl/listing?string=filc%20samoprzylepny%20n%C3%B3%C5%BCki) |
+
+Pozycji z drobnymi cenami „ok.” (klej kontaktowy, ściski, papier, lakier, decoupage, nóżki) nie sprawdzałem w konkretnych sklepach
+(tanie, kupowane w markecie na miejscu); pełne oferty podałem dla materiałów, które trzeba zamówić lub zamówić z cięciem.
+
+Razem pudełka: sklejka 188 zł + dna 27 zł + listwa ok. 15 zł + EVA ok. 78 zł + otwornica 15–20 zł = **ok. 325–330 zł** za materiały
+główne, plus ok. 130 zł drobiazgów (kleje, ściski, lakier, papier, nóżki).
 
 ## Koszt (orientacyjnie, bez dostaw i bez pudełek)
 
@@ -140,19 +144,20 @@ Klej Wikol z punktu 3 nadaje się też do drewna — wystarczy dokupić drugie o
 | Tusz (2 zestawy + klip) | 78 zł (+68 zł za zapasowy wkład) |
 | Papier (3 × foto, samoprzylepny, ewentualnie ryza zwykłego) | 65–90 zł |
 | Tektura, Wikol, wałek, spray Boll, taśma | 125 zł |
-| Narzędzia (mata, nóż, ostrza, linijka, zaokrąglacz) | 85–110 zł |
-| Segregatory Panorama, koszulki, kostki, woreczki | 85 zł |
-| **Razem** | **ok. 440–490 zł** + dostawy (z segregatorami VauPe ok. 27 zł mniej) |
+| Narzędzia (mata, linijka, zaokrąglacz) | 55–80 zł |
+| Segregatory Panorama (z kieszenią na okładkę; jeśli masz segregatory z kieszenią, możesz pominąć), woreczki | 65 zł |
+| **Razem** | **ok. 390–440 zł** + dostawy (bez segregatorów Panorama o ok. 63 zł mniej; z VauPe ok. 27 zł mniej) |
 
 ## Gdzie kupić razem (mniej dostaw)
 
 - **mojetonery.pl** — 2 zestawy tuszy + klip.
 - **shan.pl** — 2 × tektura + papier samoprzylepny (darmowa dostawa do paczkomatu od 150 zł).
 - **mabitech.pl** — 3 × papier foto.
-- **modelarnia.pl** albo **modelekolejowe.pl** — linijka i mata (w jednym z nich poszukaj też ostrzy 18 mm).
-- **Market budowlany** (Castorama, Leroy Merlin, OBI) — nóż, ostrza, taśma duct tape, wałek, często też Boll i Wikol; do tego
+- **modelarnia.pl** albo **modelekolejowe.pl** — linijka i mata.
+- **Market budowlany** (Castorama, Leroy Merlin, OBI) — taśma duct tape, otwornica Ø 35, wałek, często też Boll i Wikol; do tego
   sklejka do pudełek z punktu 6.
-- **komax9.pl** — segregatory; koszulki, kostki i woreczki można dobrać w dowolnym sklepie papierniczym.
+- **komax9.pl** — segregatory (jeśli ich jeszcze potrzebujesz); woreczki można dobrać w dowolnym sklepie papierniczym.
+- **sklejka-krakow.pl** — sklejka 3 mm docięta na wymiar i formatki 4 mm na dna (jedno zamówienie).
 
 ## Kolejność
 
