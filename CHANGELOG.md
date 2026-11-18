@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wielki skarbiec ma własny, większy obraz w osadzie: to ten sam skarbiec co zwykły (Przymierze: złota kopuła i zielone sztandary, Horda: czarna warownia z lawą), ale wyższy i bogatszy, z większą górą złota i skrzyń.
 - Rada Osady: budynek, który stoi i który stać cię ulepszyć (np. Targ na Duży targ), ma turkusową ramkę, strzałkę ▲ z nazwą ulepszenia i jego ceną; w legendzie jest „można ulepszyć”. Beżowy to wybudowany, którego nie stać cię jeszcze ulepszyć albo który jest na najwyższym poziomie.
 - Rada Osady: zablokowane budynki mają zwykłą, ciągłą ramkę, ikony surowców w cenach są większe i czytelne, a Pierwotna Iskra stoi osobno w prawym górnym rogu drzewka, niepołączona z niczym. Kliknięte siedlisko pokazuje własną nazwę, opis („Umożliwia wykupienie Sowy Świtu jako pomocnika.”), kartę jednostki, cenę i przycisk „Zbuduj”. Dolny panel z opisem jest mały, ciemny, w złotej ramce z narożnikami, a zamiast „Wyjdź z osady” jest tylko przycisk powrotu do osady: ikona wyjścia obrócona strzałką w lewo.
 - Skarbiec można ulepszyć: Wielki skarbiec (6 zł, 2 rudy i 1 Pył) przynosi +2 zł na rundę zamiast +1 zł.

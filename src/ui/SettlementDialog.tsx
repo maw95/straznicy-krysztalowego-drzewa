@@ -48,7 +48,7 @@ const UNIQUE_OWNER: Partial<Record<BuildingId, FactionId>> = { shrine: 'dawn', n
 const buildingPicture = (land: FactionId, b: BuildingId, level: number) => {
   const own = UNIQUE_OWNER[b];
   if (own) return level === 0 ? `osady/${own}_plot.webp` : `osady/${own}_${b}1.webp`;
-  return level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${b === 'tavern' || b === 'spark' ? 1 : Math.min(level, 2)}.webp`);
+  return level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury${Math.min(level, 2) === 2 ? 2 : ''}.webp` : `osady/${land}_${b}${b === 'tavern' || b === 'spark' ? 1 : Math.min(level, 2)}.webp`);
 };
 
 /** A framed plate with what a building (or a dwelling) is: picture, name, what it does, an optional card, the cost and the button. */
@@ -496,7 +496,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               const spot = spotOf(b, s.land);
               return (
                 <button key={b} className="settlement-bld" style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: Math.round(spot.y * 10) }} onClick={() => openBuilding(b)} aria-label={nameOf(b)} data-building={b} data-level={level} {...hoverProps(b)}>
-                  <img src={asset(buildingPicture(s.land, b, level))} alt="" className="settlement-pic" style={{ height: `${spot.h}cqh` }} />
+                  <img src={asset(buildingPicture(s.land, b, level))} alt="" className="settlement-pic" style={{ height: `${b === 'treasury' && level >= 2 ? spot.h * 1.15 : spot.h}cqh` }} />
                 </button>
               );
             })}

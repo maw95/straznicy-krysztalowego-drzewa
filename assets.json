@@ -5272,6 +5272,28 @@
       "data": "2026-11-18",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "osady/wielki-skarbiec",
+      "pliki": [
+        "public/assets/osady/dawn_treasury2.webp",
+        "public/assets/osady/horde_treasury2.webp"
+      ],
+      "typ": "budynek Wielki skarbiec (Skarbiec poziom 2) dla Przymierza i Hordy",
+      "opis": "Obraz-do-obrazu: istniejący skarbiec obu frakcji (na czarnym tle) jako odniesienie, prompt: 'Draw the GRAND version of the same treasury: same architecture, materials, palette, banners, door, camera angle, but larger, taller and richer (extra tier, bigger dome / more spikes and lava, more chests and gold)'. Wycięcie scripts/assets/osady.py (czarne tło na przezroczystość, wysokość 380); w osadzie rysowany 15% większy niż zwykły skarbiec.",
+      "scenario_asset": {
+        "referencja_przymierze": "asset_oFiFh14Ln4zwdBsLB4RdWoRa",
+        "referencja_horda": "asset_XsmBNRvYyhTM7b5K5c5fkVH2",
+        "zadanie_przymierze": "job_EF3DdEJ3ozqUxYLUPmNNMQj3",
+        "wynik_przymierze": "asset_2e4GFsqC4vds6SzCac6gzE6u",
+        "zadanie_horda": "job_1GvLxsHmzW4kpsVXr9nLgapm",
+        "wynik_horda": "asset_QxMGs1HiVwuBBxCFr1tEfMzi"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 1280x1024, 2 x 4 CU",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
