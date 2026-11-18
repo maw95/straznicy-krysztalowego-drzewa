@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { raceOf, TEAM_IDS, rivalOf } from '../src/engine/teams';
+import { ALL_TEAM_IDS, raceOf, TEAM_IDS, rivalOf } from '../src/engine/teams';
 import { generateMap, MAX_START_ZONES, splitZones } from '../src/engine/map';
 import { distance, key, parseKey, type HexKey } from '../src/engine/hex';
 import { Rng } from '../src/engine/rng';
 import { FACTION_HEROES } from '../src/engine/data';
 
-describe('teams and races', () => {
-  it('two teams, each plays the race of the same id', () => {
+describe('sides and factions', () => {
+  it('the first two sides are the first two factions', () => {
     expect(TEAM_IDS).toEqual(['dawn', 'horde']);
     const state = { setup: {} };
     for (const t of TEAM_IDS) expect(raceOf(state, t)).toBe(t);
@@ -14,10 +14,8 @@ describe('teams and races', () => {
     expect(rivalOf('horde')).toBe('dawn');
   });
 
-  it('raceOf reads the race assigned to a team in the setup', () => {
-    expect(raceOf({ setup: { races: { horde: 'dawn' } } }, 'horde')).toBe('dawn');
-    expect(raceOf({ setup: { races: { horde: 'dawn' } } }, 'dawn')).toBe('dawn');
-    for (const t of TEAM_IDS) expect(FACTION_HEROES[raceOf({ setup: {} }, t)].length).toBeGreaterThan(0);
+  it('every side has the data of a faction (the placeholders of the next factions read the first two)', () => {
+    for (const t of ALL_TEAM_IDS) expect(FACTION_HEROES[raceOf(null, t)].length).toBeGreaterThan(0);
   });
 });
 

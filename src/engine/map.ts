@@ -3,7 +3,7 @@
 import { GUARDIAN_LAIRS, MAP_SHAPES, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type FactionId, type MapSize, type TeamId, type Terrain, type TileSide } from './data';
 import { distance, key, neighborKeys, parseKey, triToHex, type HexKey } from './hex';
 import { Rng } from './rng';
-import { byTeam, TEAM_IDS } from './teams';
+import { byTeam, raceOf, TEAM_IDS } from './teams';
 import { CUSTOM_MAPS } from './customMaps';
 import type { GameState, MapShape, Tile } from './types';
 
@@ -307,15 +307,14 @@ function setTerrain(tile: Tile, terrain: Terrain, rng: Rng) {
 export interface MapTeams {
   /** The teams of the game in order (default: the two teams); zone i of the map belongs to team i. */
   teams?: readonly TeamId[];
-  /** The race whose land a team has (terrain tiles, bases, treasures); default: the race of the team's id. */
-  race?: (team: TeamId) => FactionId;
 }
 
 export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crystalCount: number, shape: MapShape = 'triangle', customMapId?: string, opts: MapTeams = {}): GeneratedMap {
   const layout = layoutOf(shape, size, rng, customMapId);
   const { rows } = layout;
   const teams = opts.teams ?? TEAM_IDS;
-  const race = opts.race ?? ((t: TeamId): FactionId => (t === 'horde' || t === 'fourth' ? 'horde' : 'dawn'));
+  // The land of a side looks like the land of its faction (terrain tiles, bases, treasures).
+  const race = (t: TeamId): FactionId => raceOf(null, t);
   const homes = Object.fromEntries(teams.map((t) => [t, layout.homes[t]])) as Record<TeamId, HexKey>;
   if (teams.some((t) => !homes[t])) throw new Error('Ta mapa ma miejsce tylko dla dwóch stron.');
   if (teams.length > 2 && shape === 'triangle') throw new Error('Mapa trójkątna ma miejsce tylko dla dwóch stron.');

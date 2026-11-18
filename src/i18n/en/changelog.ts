@@ -2,11 +2,6 @@
 // (commit hashes and Markdown marks dropped). Newest first. A new line in CHANGELOG.md needs its English here (tests/changelogEn.test.ts checks every line).
 import { register } from '../translate';
 
-// In preparation
-register({
-  "Strony i frakcje: w wersji cyfrowej, w celu innym niż Kryształy do Drzewa, każda strona wybiera dowolną frakcję (także komputer w kooperacji), a w rywalizacji grają dwie, trzy albo cztery strony (zielona, czerwona, bursztynowa i fioletowa) na prostokątnej mapie; dwie strony tej samej frakcji mogą walczyć ze sobą. Kryształy do Drzewa zostają historią Przymierza i Hordy. Gra przez internet na razie zostaje przy dwóch stronach.": "Sides and factions: in the digital edition, with a goal other than Crystals to the Tree, every side picks any faction (the computer in co-op too), and in rivalry two, three or four sides play (green, red, amber and violet) on a rectangular map; two sides of the same faction may fight each other. Crystals to the Tree stays the story of the Covenant and the Horde. Online play stays with two sides for now.",
-});
-
 // 2.12.0
 register({
   "Telefon, arena walki: widać całą arenę, także dolny rząd heksów; przyciski + i − przybliżają ją (po przybliżeniu arenę przewijasz palcem). Czarne pasy po bokach znikły: tło areny jest rozmytym, przyciemnionym obrazem tej samej areny, a obraz areny łagodnie zanika na brzegach zamiast powielonej kopii.": "Phone, battle arena: the whole arena shows, including the bottom row of hexes; the + and − buttons zoom in (a finger scrolls the arena when zoomed). The black strips at the sides are gone: the backdrop of the arena is a blurred, darkened picture of the same arena, and the arena picture fades out softly at its edges instead of a repeated copy.",

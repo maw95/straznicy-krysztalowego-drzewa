@@ -1,4 +1,4 @@
-// Click check of the sides at the table: the digital rivalry with the control points goal, four sides, a race changed, the game started -> .tmp/sides*.png.
+// Click check of the table of a digital rivalry with the control points goal: one faction per seat (a side is a faction), the game starts -> .tmp/sides*.png.
 // Usage: npx tsx scripts/browser/strony.ts
 import { openGame } from './game';
 const g = await openGame('', { view: 'desktop', scale: 1 });
@@ -20,13 +20,9 @@ try {
   for (let i = 0; i < 4 && !(await p.locator('[data-wizard-page="players"]').count()); i++) { console.log('page', await p.locator('[data-wizard-page]').first().getAttribute('data-wizard-page')); await nextIfAny(); }
   console.log('page players?', await p.locator('[data-wizard-page="players"]').count());
   await p.locator('[data-wizard-next]').click();
-  await p.locator('[data-sides]').waitFor({ timeout: 5000 });
+  await p.locator('select[aria-label="Frakcja"]').first().waitFor({ timeout: 5000 });
   await p.screenshot({ path: '.tmp/sides1.png' });
-  await p.locator('[data-sides-count="4"]').click();
-  await p.locator('[data-race="third:horde"]').click();
-  await p.waitForTimeout(400);
-  await p.screenshot({ path: '.tmp/sides2.png' });
-  console.log('seats', await p.locator('select[aria-label="Frakcja"]').count());
+  console.log('faction options', await p.locator('select[aria-label="Frakcja"]').first().locator('option').allInnerTexts());
   await p.getByRole('button', { name: 'Rozpocznij grę' }).click();
   await p.waitForTimeout(4000);
   await p.screenshot({ path: '.tmp/sides3.png' });

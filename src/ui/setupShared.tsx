@@ -1,7 +1,7 @@
 // Pieces of the game setup shared by the local setup screen and the online room: level names and hints,
 // explanations, the faction tint of a seat, labelled rows, the option buttons and the heroes of a fresh table.
 
-import { FACTION_HEROES, heroPool, MAP_VARIANTS, type FactionId, type TeamId, type MapSize } from '../engine/data';
+import { FACTION_HEROES, heroPool, MAP_VARIANTS, type TeamId, type MapSize } from '../engine/data';
 import type { Level, MapShape, Mode } from '../engine/types';
 
 /** Class of an option button; the chosen one is lit. */
@@ -100,7 +100,7 @@ export function Tip({ text, children }: { text: string; children: React.ReactNod
   );
 }
 
-/** Seat background tinted by side: green (the first side), burgundy (the second), amber and violet (the third and fourth); the colours of SIDE_RING. */
+/** Seat background tinted by side: green for Przymierze, burgundy for Horda, and amber and violet for the next two factions; the colours of SIDE_RING. */
 export const SEAT_TINT: Record<TeamId, string> = {
   dawn: 'linear-gradient(100deg, rgba(36, 112, 64, 0.62), rgba(14, 50, 30, 0.55))',
   horde: 'linear-gradient(100deg, rgba(128, 22, 34, 0.62), rgba(52, 8, 14, 0.58))',
@@ -108,8 +108,6 @@ export const SEAT_TINT: Record<TeamId, string> = {
   fourth: 'linear-gradient(100deg, rgba(92, 52, 138, 0.62), rgba(38, 20, 62, 0.58))',
 };
 
-/** The races of the teams a fresh table has (the third and fourth team start as Przymierze and Horda). */
-export const DEFAULT_RACES: Record<TeamId, FactionId> = { dawn: 'dawn', horde: 'horde', third: 'dawn', fourth: 'horde' };
 
 /**
  * One layout rule for every section of the setup screens: a big centred title (`.section-title`) and under it the choices in a centred,

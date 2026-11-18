@@ -3,7 +3,7 @@
 // action and returns the new state, so every game is a replayable action log.
 // `applyActionInPlace` does the same on the state it is given (simulations, replays).
 
-import { byTeam, raceOf, teamCount, teamsOf } from './teams';
+import { byTeam, raceOf, teamsOf } from './teams';
 import {
   FACTION_HEROES,
   FACTION_NAMES,
@@ -88,11 +88,11 @@ const SIZE_ORDER: MapSize[] = ['short', 'medium', 'long', 'veryLong', 'huge', 'g
 /** What a game may have for sides: the crystals goal is the story of Przymierze against Horda only; three or four teams need a rectangle map that is big enough. */
 function checkSides(setup: SetupOptions, rules: SetupOptions['rules']) {
   if (setup.mode === 'arena') return;
-  const n = teamCount(setup);
-  const pair = n === 2 && raceOf({ setup }, 'dawn') === 'dawn' && raceOf({ setup }, 'horde') === 'horde';
-  if (objectiveOf({ rules }) === 'crystals' && !pair) throw new Error('Ta historia jest o Przymierzu i Hordzie: cel „Kryształy do Drzewa” wymaga tej pary.');
+  const n = teamsOf({ setup }).length;
+  if (setup.mode === 'coop' && setup.seats.some((s) => s.faction !== 'dawn')) throw new Error('Kooperacja ma dwie strony: drużynę graczy i komputer.');
+  // The story of the crystals is about Przymierze and Horda: exactly those two sides.
+  if (objectiveOf({ rules }) === 'crystals' && n > 2) throw new Error('Ta historia jest o Przymierzu i Hordzie: cel „Kryształy do Drzewa” wymaga tej pary.');
   if (n > 2) {
-    if (setup.mode === 'coop') throw new Error('Kooperacja ma dwie strony: drużynę graczy i komputer.');
     if (!isDigital(rules) || setup.mapShape !== 'rectangle') throw new Error('Trzy i cztery strony grają na prostokątnej mapie wersji cyfrowej.');
     if (SIZE_ORDER.indexOf(setup.mapSize) < SIZE_ORDER.indexOf(MAP_SIZE_FOR_TEAMS[n])) throw new Error('Ta mapa jest za mała dla tylu stron.');
   }
@@ -115,7 +115,7 @@ export function createGame(setup: SetupOptions): GameState {
     : Array(variant.onlyResurrections).fill('resurrection');
   const crystals = crystalsFor(setup);
   const teams = teamsOf({ setup });
-  const map = generateMap(setup.mapSize, rng, pool.length, crystals, isDigital(rules) ? setup.mapShape : undefined, setup.customMapId, { teams, race: (t) => raceOf({ setup }, t) });
+  const map = generateMap(setup.mapSize, rng, pool.length, crystals, isDigital(rules) ? setup.mapShape : undefined, setup.customMapId, { teams });
   const digital = isDigital(rules);
 
   const state: GameState = {
@@ -188,16 +188,11 @@ export function createGame(setup: SetupOptions): GameState {
     // As many evil heroes as good heroes at the start (spec section 1), at least rules.minEvilHeroes.
     const goodCount = setup.seats.filter((s) => s.faction === 'dawn').length;
     // Optionally one more, to make the coop game harder (there are 3 Horde heroes at most).
-    // The computer may play the race of the players: it then takes the heroes they left.
-    const held = new Set(setup.seats.map((s) => s.heroId));
-    const evilPool = FACTION_HEROES[raceOf(state, 'horde')].filter((id) => !held.has(id));
-    const evilCount = rules.noHorde && objectiveOf(state) === 'boss' ? 0 : Math.min(evilPool.length, Math.max(goodCount, rules.minEvilHeroes ?? 1) + (rules.extraEvilHero ? 1 : 0));
-    const evil = rng.shuffle(evilPool).slice(0, evilCount);
+    const evilCount = rules.noHorde && objectiveOf(state) === 'boss' ? 0 : Math.min(FACTION_HEROES[raceOf(state, 'horde')].length, Math.max(goodCount, rules.minEvilHeroes ?? 1) + (rules.extraEvilHero ? 1 : 0));
+    const evil = rng.shuffle(FACTION_HEROES[raceOf(state, 'horde')]).slice(0, evilCount);
     for (const id of evil) addHero(state, id, 'horde', null);
   }
 
-  // A hero another side of the same race plays is not in this side's reserve.
-  for (const t of teams) state.factions[t].unusedHeroes = state.factions[t].unusedHeroes.filter((id) => !state.heroes[id]);
   for (const f of teams) revealAround(state, homeOf(state, f));
   state.tiles[treeOf(state)].revealed = true;
   state.rng = rng.state;
@@ -1043,9 +1038,8 @@ function addSupports(state: GameState, faction: TeamId, ids: string[]) {
   const b = state.battle!;
   const digital = isDigital(state.rules) && !b.duel;
   for (const defId of ids) {
-    // Two sides of one race may bring the same support: the second one gets an id of its own (every other lookup goes by `defId`).
-    const id = b.units[defId] ? `${defId}~${faction}` : defId;
-    b.units[id] = { ...makeBattleUnit(defId, faction, digital, scaleOf(state), hpScaleOf(state)), id };
+    const id = defId;
+    b.units[id] = makeBattleUnit(defId, faction, digital, scaleOf(state), hpScaleOf(state));
     // The leader of the side (the attacking or the defending hero of this faction) strengthens its supports.
     if (state.rules.heroGrowth) {
       const leader = state.heroes[b.attacker === faction ? b.attackerHero : b.defenderHero ?? ''];

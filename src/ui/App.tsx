@@ -152,6 +152,7 @@ export function App() {
     if (!q.has('steps')) return;
     // Effects run twice in development: start the log afresh each time.
     history.current = [];
+    // ?sides=3 or 4 (rivalry) adds bot sides of the placeholder factions (the next factions do not exist yet), on a rectangle map of size medium or more.
     const mode = q.get('mode') === 'pvp' ? 'pvp' : 'coop';
     const human = q.get('human') !== '0';
     const digital = q.get('ruleset') !== 'board';
@@ -168,10 +169,7 @@ export function App() {
       seats:
         mode === 'coop'
           ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon', ...(q.get('child') === '1' ? { child: true } : {}) }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))
-          : [{ name: 'Ala', faction: 'dawn', controller: 'human', heroId: 'ancientBear' }, { name: 'Bartek', faction: 'horde', controller: 'human', heroId: 'werewolfLord' }, ...(Number(q.get('teams')) >= 3 ? [{ name: 'Bot 3', faction: 'third' as const, controller: 'bot' as const, heroId: 'goldDragon' }] : []), ...(Number(q.get('teams')) >= 4 ? [{ name: 'Bot 4', faction: 'fourth' as const, controller: 'bot' as const, heroId: 'blackDragon' }] : [])],
-      // ?teams=3 or 4 adds bot sides (rivalry, a rectangle map of size medium or more); ?races=horde,dawn,dawn,horde sets the race of each side.
-      ...(mode === 'pvp' && Number(q.get('teams')) >= 3 ? { teams: Number(q.get('teams')) } : {}),
-      ...(q.get('races') ? { races: Object.fromEntries(q.get('races')!.split(',').map((r, i) => [['dawn', 'horde', 'third', 'fourth'][i], r])) as SetupOptions['races'] } : {}),
+          : [{ name: 'Ala', faction: 'dawn', controller: 'human', heroId: 'ancientBear' }, { name: 'Bartek', faction: 'horde', controller: 'human', heroId: 'werewolfLord' }, ...(Number(q.get('sides')) >= 3 ? [{ name: 'Bot 3', faction: 'third' as const, controller: 'bot' as const, heroId: 'unicornKing' }] : []), ...(Number(q.get('sides')) >= 4 ? [{ name: 'Bot 4', faction: 'fourth' as const, controller: 'bot' as const, heroId: 'blackDragon' }] : [])],
     });
     // ?skills=treasureHunter,treasureHunter gives every hero those skills from the start (for looking at their dialogs).
     if (q.get('skills')) for (const h of Object.values(s.heroes)) h.skills = q.get('skills')!.split(',') as SkillId[];

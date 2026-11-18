@@ -6,7 +6,6 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
-- Strony i frakcje: w wersji cyfrowej, w celu innym niż Kryształy do Drzewa, każda strona wybiera dowolną frakcję (także komputer w kooperacji), a w rywalizacji grają dwie, trzy albo cztery strony (zielona, czerwona, bursztynowa i fioletowa) na prostokątnej mapie; dwie strony tej samej frakcji mogą walczyć ze sobą. Kryształy do Drzewa zostają historią Przymierza i Hordy. Gra przez internet na razie zostaje przy dwóch stronach.
 ## 2.12.0 — 2026-11-18
 
 - Telefon, arena walki: widać całą arenę, także dolny rząd heksów; przyciski + i − przybliżają ją (po przybliżeniu arenę przewijasz palcem). Czarne pasy po bokach znikły: tło areny jest rozmytym, przyciemnionym obrazem tej samej areny, a obraz areny łagodnie zanika na brzegach zamiast powielonej kopii.

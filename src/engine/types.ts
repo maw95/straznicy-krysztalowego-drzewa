@@ -206,10 +206,6 @@ export interface SetupOptions {
   battleMode: BattleMode;
   seed: number;
   seats: SeatSetup[];
-  /** How many teams play (2 to 4, two when missing). More than two teams: PvP on a rectangle or ring map, any goal but "Kryształy do Drzewa". */
-  teams?: number;
-  /** Race of each team (teams.ts raceOf); missing = the team's own id (dawn plays Przymierze, horde plays Horda). */
-  races?: Partial<Record<TeamId, FactionId>>;
   rules: RulesConfig;
   /** Arena against the computer: how well the bot picks its supports and treasures. */
   botLevel?: Level;

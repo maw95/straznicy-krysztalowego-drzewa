@@ -1,8 +1,9 @@
 import { CampaignScreen } from './CampaignScreen';
 import { ExpeditionScreen } from './ExpeditionScreen';
 import { useMemo, useRef, useState } from 'react';
-import { FACTION_HEROES, FACTION_NAMES, heroPool, SECRET_HEROES, UNITS, type FactionId, type TeamId, type MapSize } from '../engine/data';
-import { ALL_TEAM_IDS } from '../engine/teams';
+import { FACTION_HEROES, FACTION_NAMES, heroPool, SECRET_HEROES, UNITS, type TeamId, type MapSize } from '../engine/data';
+import { raceOf, TEAM_IDS, teamsOf } from '../engine/teams';
+import { PACK_IDS } from '../engine/factions';
 import { readyMaps } from '../engine/customMaps';
 import { layerSwitches, resolveTier, withRuleset, type CustomLayer, type Tier } from '../engine/presets';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
@@ -15,7 +16,7 @@ import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
-import { chip, DEFAULT_RACES, defaultHeroes, SEAT_TINT } from './setupShared';
+import { defaultHeroes, SEAT_TINT } from './setupShared';
 import { NewGameWizard, savedDigital } from './NewGameWizard';
 import { deleteNamedSave, listNamedSaves, type NamedSave } from './saves';
 import type { TableConfig } from '../online/api';
@@ -66,80 +67,42 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const [tier, setTier] = useState<Tier>('adventure');
   const [customId, setCustomId] = useState(readyMaps()[0]?.id);
   const [preview, setPreview] = useState<string>('goldDragon');
-  /** How many sides play (two to four; more than two only in a rivalry of the digital edition) and the race each side plays. */
-  const [sides, setSidesState] = useState(2);
-  const [races, setRaces] = useState<Record<TeamId, FactionId>>(DEFAULT_RACES);
   // Easter egg: five clicks on a Dawn crest wake up the Brave Duck (remembered in this browser).
   const [duck, setDuck] = useState(() => { try { return localStorage.getItem('skd-duck') === '1'; } catch { return false; } });
   const crestClicks = useRef(0);
   const crestClick = (f: TeamId, i: number) => {
-    if (races[f] !== 'dawn' || duck || ++crestClicks.current < 5) return;
+    if (f !== 'dawn' || duck || ++crestClicks.current < 5) return;
     try { localStorage.setItem('skd-duck', '1'); } catch { /* private mode: only for this visit */ }
     setDuck(true);
     update(i, { heroId: SECRET_HEROES.dawn[0] });
     setPreview(SECRET_HEROES.dawn[0]);
   };
-  /** The heroes a side may choose from: those of the race it plays. */
+  /** The heroes a side may choose from: those of its faction. */
   const heroesOf = (f: TeamId) => {
-    const race = races[f];
+    const race = raceOf(null, f);
     return seats.length > 6 ? heroPool(race, seats.length) : duck ? [...FACTION_HEROES[race], ...SECRET_HEROES[race]] : FACTION_HEROES[race];
   };
 
   const arena = mode === 'arena';
   const update = (i: number, patch: Partial<SeatSetup>) => setSeats(seats.map((s, j) => (j === i ? { ...s, ...patch } : s)));
   const takenBy = (heroId: string, i: number) => seats.some((s, j) => j !== i && s.heroId === heroId);
-  /** The goal the game will be played for (a tier may force one): the crystals goal is the story of Przymierze and Horda, with no other sides or races. */
+  /** The goal the game will be played for (a tier may force one): the crystals goal is the story of Przymierze and Horda only. */
   const goal = resolveTier(tier, { objective, shape, customMapId: customId, growth, ...(tier === 'custom' && growth ? layerSwitches(layer) : {}) }).objective;
-  const freeSides = digital && !arena && goal !== 'crystals';
-  /** The sides in play: two in coop (the players and the computer) and in the arena, two to four in a rivalry. */
-  const playing: readonly TeamId[] = mode === 'pvp' && freeSides ? ALL_TEAM_IDS.slice(0, sides) : ['dawn', 'horde'];
+  /** The factions a seat may take: every faction there is, the crystals goal only Przymierze and Horda. A side is a faction: players who pick the same one play one side. */
+  const offered: readonly TeamId[] = goal === 'crystals' || arena || !digital ? TEAM_IDS : (PACK_IDS as readonly TeamId[]);
+  /** The sides in play: the factions seated at the table (coop and the arena have two). */
+  const playing = teamsOf({ setup: { mode, seats } });
   const valid =
     seats.every((s, i) => !takenBy(s.heroId, i)) &&
-    (mode === 'coop' || playing.every((f) => seats.some((s) => s.faction === f))) &&
+    (mode === 'coop' || new Set(seats.map((s) => s.faction)).size >= 2) &&
     playing.every((f) => seats.filter((s) => s.faction === f).length <= 3);
-  /** Another race for a side: the seats of that side take the first free hero of the new race. */
-  const setRace = (side: TeamId, race: FactionId) => {
-    setRaces({ ...races, [side]: race });
-    const taken = new Set(seats.map((s) => s.heroId));
-    setSeats(seats.map((s) => {
-      if (s.faction !== side) return s;
-      const hero = FACTION_HEROES[race].find((h) => !taken.has(h)) ?? FACTION_HEROES[race][0];
-      taken.add(hero);
-      return { ...s, heroId: hero };
-    }));
-  };
-  /** Two to four sides: seats of a side that falls away move to the first side, and a side without a seat gets a bot. */
-  const setSides = (n: number) => {
-    setSidesState(n);
-    const next = seats.map((s) => (ALL_TEAM_IDS.indexOf(s.faction) >= n ? { ...s, faction: 'dawn' as TeamId } : s));
-    const taken = new Set(next.map((s) => s.heroId));
-    const pick = (f: TeamId) => FACTION_HEROES[races[f]].find((h) => !taken.has(h)) ?? FACTION_HEROES[races[f]][0];
-    const fixed = next.map((s, i) => (next.findIndex((x) => x.heroId === s.heroId) !== i || seats[i].faction !== s.faction ? { ...s, heroId: pick(s.faction) } : s));
-    fixed.forEach((s) => taken.add(s.heroId));
-    for (const f of ALL_TEAM_IDS.slice(0, n)) {
-      if (fixed.some((s) => s.faction === f)) continue;
-      const heroId = pick(f);
-      taken.add(heroId);
-      fixed.push({ name: `Bot ${fixed.length + 1}`, faction: f, controller: 'bot', heroId });
-    }
-    setSeats(fixed);
-  };
-
-
   const startGame = () => {
     const r = resolveTier(tier, { objective, shape, customMapId: customId, growth, ...(tier === 'custom' && growth ? layerSwitches(layer) : {}) });
     const started = withRuleset(arena ? arenaSetup(seats, seed, level === 'custom' ? 'normal' : level, arenaSize) : { mode, mapSize, battleMode, seed, seats, rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero, ...(noHorde && mode === 'coop' && r.objective === 'boss' ? { noHorde: true } : {}) } }, digital, r.objective, r.shape, r.customMapId, r.growth, r.kingdom, r.economy, r.realm, r.empire);
-    // Sides and races of the digital edition: more than two sides play on a rectangle map big enough for them; races are only written when they are not the usual ones.
-    const teams = ALL_TEAM_IDS.slice(0, playing.length);
-    const chosen = Object.fromEntries(teams.map((t) => [t, races[t]])) as Partial<Record<TeamId, FactionId>>;
-    const unusual = freeSides && teams.some((t) => races[t] !== DEFAULT_RACES[t]);
+    // Three and more sides (when there are enough factions) play on a rectangle map big enough for them.
     const minSize: MapSize = playing.length >= 4 ? 'long' : 'medium';
     const sizes: MapSize[] = ['short', 'medium', 'long', 'veryLong', 'huge', 'giant'];
-    onStart({
-      ...started,
-      ...(playing.length > 2 ? { teams: playing.length, mapShape: 'rectangle' as const, mapSize: sizes[Math.max(sizes.indexOf(started.mapSize), sizes.indexOf(minSize))] } : {}),
-      ...(unusual ? { races: chosen } : {}),
-    });
+    onStart(playing.length > 2 ? { ...started, mapShape: 'rectangle' as const, mapSize: sizes[Math.max(sizes.indexOf(started.mapSize), sizes.indexOf(minSize))] } : started);
   };
   /** The wizard is done: its choices become this screen's state, and the seats come next. */
   const applyWizard = (t: TableConfig) => {
@@ -353,41 +316,14 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
       {step === 'table' && (
         <div className="main-row setup-row" style={{ position: 'relative', width: '100%', maxWidth: 1400 }}>
           <Frame crest className="grow" innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {digital && !arena && (
-              <div className="well" data-sides style={{ padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {freeSides ? (
-                  <>
-                    {mode === 'pvp' && (
-                      <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-                        <span className="lbl" style={{ margin: 0 }}>Liczba stron</span>
-                        {[2, 3, 4].map((n) => (
-                          <button key={n} className={chip(sides === n)} data-sides-count={n} onClick={() => setSides(n)} title={n > 2 ? `${n} strony na prostokątnej mapie (co najmniej ${n === 3 ? 'średniej' : 'długiej'})` : undefined}>{n}</button>
-                        ))}
-                      </div>
-                    )}
-                    {playing.map((t, n) => (
-                      <div key={t} style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }} data-side-race={t}>
-                        <span style={{ width: 12, height: 12, borderRadius: 6, background: SIDE_RING[t], flex: 'none' }} />
-                        <span style={{ minWidth: 90, fontWeight: 700 }}>{mode === 'coop' ? (t === 'dawn' ? 'Gracze' : 'Komputer') : `Strona ${n + 1}`}</span>
-                        {(['dawn', 'horde'] as FactionId[]).map((race) => (
-                          <button key={race} className={chip(races[t] === race)} data-race={`${t}:${race}`} onClick={() => setRace(t, race)}>{FACTION_NAMES[race]}</button>
-                        ))}
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <div style={{ fontSize: 15, color: 'var(--muted)' }}>Cel „Kryształy do Drzewa” to historia Przymierza i Hordy, więc frakcje są ustalone. Inny cel (np. punkty kontrolne) pozwala wybrać frakcję każdej strony i grać w trzy albo cztery strony.</div>
-                )}
-              </div>
-            )}
             <div className="lbl">Miejsca przy stole</div>
             {seats.map((s, i) => (
               <div key={i} className="well" style={{ padding: '6px 12px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', background: SEAT_TINT[s.faction], transition: 'background 0.35s' }}>
-                <img src={asset(`cards/crests/${races[s.faction]}.png`)} alt="" title={FACTION_NAMES[races[s.faction]]} onClick={() => crestClick(s.faction, i)} style={{ width: 46, height: 46, objectFit: 'contain', flex: 'none', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.5))' }} />
+                <img src={asset(`cards/crests/${raceOf(null, s.faction)}.png`)} alt="" title={FACTION_NAMES[raceOf(null, s.faction)]} onClick={() => crestClick(s.faction, i)} style={{ width: 46, height: 46, objectFit: 'contain', flex: 'none', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.5))' }} />
                 <input type="text" value={s.name} onChange={(e) => update(i, { name: e.target.value })} style={{ width: 130 }} aria-label="Imię gracza" />
                 {mode === 'pvp' && (
-                  <select value={s.faction} aria-label="Frakcja" onChange={(e) => { const f = e.target.value as TeamId; update(i, { faction: f, heroId: FACTION_HEROES[races[f]].find((h) => !takenBy(h, i)) ?? FACTION_HEROES[races[f]][0] }); }}>
-                    {playing.map((t, n) => <option key={t} value={t}>{freeSides ? `Strona ${n + 1}: ${FACTION_NAMES[races[t]]}` : FACTION_NAMES[t]}</option>)}
+                  <select value={s.faction} aria-label="Frakcja" onChange={(e) => { const f = e.target.value as TeamId; update(i, { faction: f, heroId: FACTION_HEROES[raceOf(null, f)].find((h) => !takenBy(h, i)) ?? FACTION_HEROES[raceOf(null, f)][0] }); }}>
+                    {offered.map((t) => <option key={t} value={t}>{FACTION_NAMES[t]}</option>)}
                   </select>
                 )}
                 <select value={s.controller} aria-label="Kto gra" onChange={(e) => update(i, { controller: e.target.value as Controller })}>
