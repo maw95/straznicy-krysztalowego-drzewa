@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 2.14.0 — 2026-11-18
+
 - Nowe ikony celów „Punkty kontrolne” (trzy kopce ze sztandarami i złotymi promieniami między nimi) i „Boss” (czarny smok na stosie złota) w kreatorze: malowane medale w stylu pozostałych ikon celów.
 - Menu: pierwsza strona ma po jednym dużym przycisku w rzędzie z większymi ikonami, strona trybów układa się po trzy i dwa przyciski, a na stronach poziomu złożoności i celu gry nic nie jest zaznaczone na starcie. Opisy kształtów i wielkości mapy pokazują się tylko po kliknięciu prawym przyciskiem (na telefonie po przytrzymaniu), nie po zwykłym kliknięciu.
 - Nowy układ menu: po „Nowa gra” wybierasz tryb (Rywalizacja, Kooperacja, Arena, Kampania albo Ekspedycja), potem „Ten komputer” albo „Przez internet”, a dalej poziom złożoności, cel, mapę i graczy. Znika ekran wyboru wersji: wersję planszową uruchomisz małym linkiem „Wersja planszowa” na pierwszej stronie menu. Wielkość mapy wybierasz teraz razem z kształtem mapy, a Arena nie pyta już o poziom złożoności.
