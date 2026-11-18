@@ -48,32 +48,6 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
 
 **57. Grafiki z napisami po angielsku (M + kredyty).** Logo, okładka segregatora, slajdy i inne obrazy z tekstem (lista w `docs/INSTRUKCJA.en.md` i `assets.json`): wersje EN obok polskich, wybór według języka gry i wydania. Wymaga budżetu w poleceniu (ok. 14 CU za obraz `high`, z próbami).
 
-**Zgłoszenia 18.11 (60–71): robione o 11:00, przed punktem 51, razem z 58–59; po nich wydanie 2.12.0.** Telefon sprawdzać w pionie i poziomo (`WIDOK=telefon|poziomo`).
-
-**60. Figurki 3D tylko w wersji planszowej (S).** Widok figurek 3D (arena walki i mapa świata) ma być dostępny wyłącznie w wydaniu planszowym (`ruleset=board`); w cyfrowym ukryć wybór i wymusić widok płaski, bez ładowania three.js tam, gdzie się da.
-
-**61. Telefon, mapa świata: mniejsze przyciski + i − (S).** Przybliżanie i oddalanie mapy.
-
-**62. Telefon, mapa świata: mniejsza ikona „Skarby” (S).**
-
-**63. Telefon, mapa świata: usunąć dolną sekcję z informacjami o poprzednio zaznaczonym kafelku (S).**
-
-**64. Telefon, mapa świata: poprawić układ szczegółów bohatera w prawej sekcji (S).** Portret, mana, ruch itd. są dziś „rozjechane”.
-
-**65. Skrzynia: koszt/nagroda w złocie jako „3 <ikona złota>”, nie „3 zł” (S).** W oknie wyboru artefakt czy złoto; sprawdzić też inne miejsca z „zł” w tekstach (słownik EN: `src/i18n/en/*.ts`).
-
-**66. Telefon poziomo: ekran wyboru pomocników wyższy niż ekran (S).** Dopasować do wysokości, przewijanie wewnątrz okna.
-
-**67. Telefon, arena walki: zoom in/out (M).** Przyciski przybliżenia i oddalenia areny, z przesuwaniem po przybliżeniu.
-
-**68. Telefon, arena walki: ucięty dolny rząd heksów (S).**
-
-**69. Telefon, arena walki: ucięta arena i czarne pasy po bokach z kopią grafiki (M).** Dziś proporcje są zachowane kosztem pasów z powielonym tłem; wymyślić estetyczniejsze rozwiązanie (np. arena wypełniająca szerokość z przewijaniem/zoomem z punktu 67, albo tło dopasowane do ramki bez widocznego powielenia). Zrobić razem z 67–68.
-
-**70. Telefon: ozdobniki w rogach ramek nie mogą zasłaniać tekstu (S).** Widać m.in. w dolnym pasku areny; przejrzeć wszystkie ramki na telefonie.
-
-**71. Telefon, bitwa: mniejsze ikony „Skarby” i „Magia”, niżej, i chowanie dolnego paska (M).** Ikony sporo mniejsze i bliżej dolnej krawędzi, ale bez nachodzenia na ozdobnik dolnej krawędzi ramki. Po wybraniu „Magia” lub „Skarby” dolny pasek się chowa; księga magii i plecak skarbów mają być w pełni widoczne (dziś zasłania je pasek). Sprawdzić skryptem klikającym (`openGame`), nie tylko zrzutem.
-
 ## 2. Tylko autor (Claude tego nie bierze)
 - **Premiera na Steamie** (L): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery: **3.0** (potwierdzone 17.11).
 - Domeny i konta, znak towarowy (brak wpisów), tytuł w sklepie Steam.
