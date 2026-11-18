@@ -1,4 +1,5 @@
-// A unit's animated sprite in a small canvas (the same sheets as the arena): its walk (or flight) loop, then a blow, over and over; a unit with no
+// A unit's animated sprite in a small canvas (the same sheets as the arena): about three seconds of its walk (or flight) loop, a moment of standing, a blow and
+// a moment of recovery, over and over (the melee and the ranged blow one after the other when the unit has both); a unit with no
 // loop stands still between the blows. With `zoom` the unit is drawn at its size on the arena times that factor (a dragon is bigger than a druid, as in
 // a battle); without it the frame is fitted into the canvas by its width.
 // Used where a unit is shown outside a battle (the barracks screen).
@@ -6,8 +7,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { loadSprites, type SpriteSet } from './sprites';
 
-/** How many walk cycles are played before each blow. */
-const WALKS = 2;
+/** About how long the unit moves before each blow (the walk cycle is repeated a whole number of times, so the loop never jumps). */
+const MOVE_SECS = 3;
+/** A breath of standing before the blow (the wind-up) and after it (the recovery), in seconds. */
+const WIND_UP = 0.3;
+const RECOVER = 0.5;
 
 export function UnitSprite({ unitId, size = 220, height = size, zoom }: { unitId: string; size?: number; height?: number; zoom?: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -29,19 +33,21 @@ export function UnitSprite({ unitId, size = 220, height = size, zoom }: { unitId
     const dw = set.frameW * k;
     const dh = set.frameH * k;
     const dy = Math.round(height * 0.9 - set.feet * dh);
-    // One round of the loop: the walk WALKS times, a blow, the next round the other blow.
-    const walkSecs = move ? clipSecs(move) * WALKS : 1.2;
+    // One round of the loop: the walk (a whole number of cycles that comes closest to MOVE_SECS), a breath of standing, the blow, a breath of recovery;
+    // the next round brings the other blow. A unit without a walk stands still for that time.
+    const cycle = move ? clipSecs(move) : 0;
+    const walkSecs = cycle ? Math.max(1, Math.round(MOVE_SECS / cycle)) * cycle : MOVE_SECS;
     let raf = 0;
     const t0 = performance.now();
     const draw = (now: number) => {
       g.clearRect(0, 0, size, height);
       const t = (now - t0) / 1000;
+      const lenOf = (blow: string | null) => walkSecs + (blow ? WIND_UP + clipSecs(blow) + RECOVER : 0);
       // Which round it is depends on the blows' lengths, so walk through them.
       let rest = t;
       let round = 0;
       for (;;) {
-        const blow = blows.length ? blows[round % blows.length] : null;
-        const len = walkSecs + (blow ? clipSecs(blow) : 0);
+        const len = lenOf(blows.length ? blows[round % blows.length] : null);
         if (rest < len) break;
         rest -= len;
         round++;
@@ -49,7 +55,8 @@ export function UnitSprite({ unitId, size = 220, height = size, zoom }: { unitId
       const blow = blows.length ? blows[round % blows.length] : null;
       let clip: string | null = null;
       let at = 0;
-      if (rest < walkSecs) { clip = move; at = rest; } else { clip = blow; at = rest - walkSecs; }
+      if (rest < walkSecs) { clip = move; at = rest; }
+      else if (blow && rest >= walkSecs + WIND_UP && rest < walkSecs + WIND_UP + clipSecs(blow)) { clip = blow; at = rest - walkSecs - WIND_UP; }
       const sheet = clip ? set.sheets[clip] : undefined;
       if (clip && sheet) {
         const n = set.frames[clip];

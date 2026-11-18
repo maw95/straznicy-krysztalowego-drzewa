@@ -42,12 +42,18 @@ export function BarracksScreen({ state, s, faction, act }: { state: GameState; s
   const wide = room.w >= 760;
   // A low window (a phone held sideways) keeps only the animated unit on the right: the big card would not fit, and the shelf scrolls.
   const low = room.h < 480;
-  const stage = wide ? Math.round(Math.max(low ? 110 : 150, Math.min(room.h * (low ? 0.6 : 0.4), 300))) : Math.round(Math.min(room.w - 40, 200));
-  const bigCard = low || !wide ? 0 : Math.round(Math.max(150, Math.min(280, (room.h - stage - 60) / CARD_RATIO)));
+  const stage = wide ? Math.round(Math.max(low ? 110 : 150, Math.min(room.h * (low ? 0.6 : 0.44), 460))) : Math.round(Math.min(room.w - 40, 240));
+  const bigCard = low || !wide ? 0 : Math.round(Math.max(150, Math.min(380, (room.h - stage - 60 - CTL_H) / CARD_RATIO)));
   const side = wide ? Math.max(bigCard, stage) + 34 : 0;
-  const columns = 2 + tiers.filter((x) => x > 1).length;
-  const cardW = Math.round(Math.max(84, Math.min(180, wide ? Math.min((room.w - side - 40 - columns * 18 - (columns - 1) * 14) / columns, (room.h - 24 - 30 - 2 * CTL_H) / 2 / CARD_RATIO) : 106)));
+  // The first tier (three supports) lies in two columns of two rows, or, where the window is tall enough for the bigger cards, in one column of three rows.
+  const later = tiers.filter((x) => x > 1).length;
+  const fit = (columns: number, rows: number) => Math.min((room.w - side - 40 - columns * 18 - (columns - 1) * 14) / columns, (room.h - 24 - 30 - rows * (CTL_H + 14)) / rows / CARD_RATIO);
+  const oneColumn = wide && fit(1 + later, 3) > fit(2 + later, 2);
+  const cardW = Math.round(Math.max(84, Math.min(380, wide ? Math.max(fit(1 + later, 3), fit(2 + later, 2)) : 106)));
 
+  // The buttons under the cards grow with the cards.
+  const ico = Math.round(Math.max(15, Math.min(26, cardW * 0.09)));
+  const ctlFont = Math.round(Math.max(12, Math.min(20, cardW * 0.075)));
   const control = (r: (typeof recruits)[number]) => {
     const locked = r.tier >= 4 && s.buildings.barracks < 2;
     const lockText = 'Potrzebne rozbudowane koszary.';
@@ -60,7 +66,7 @@ export function BarracksScreen({ state, s, faction, act }: { state: GameState; s
       const price = DWELLING_COST[r.tier - 2];
       return (
         <button className="btn prim b" data-dwelling={r.id} disabled={!mayHire || locked || !prevOk || !canPay(state, faction, price)} title={locked ? lockText : !prevOk ? `Najpierw: siedlisko poziomu ${r.tier - 1}.` : 'Siedlisko jednej jednostki wyklucza drugą jednostkę tego poziomu do końca gry.'} onClick={(e) => { e.stopPropagation(); act({ type: 'kingdomDwelling', settlementId: s.id, unitId: r.id }); }}>
-          {DWELLING_NAMES[r.id]} <CostIcons cost={price} have={have} size={15} light />
+          {DWELLING_NAMES[r.id]} <CostIcons cost={price} have={have} size={ico} light />
         </button>
       );
     }
@@ -68,7 +74,7 @@ export function BarracksScreen({ state, s, faction, act }: { state: GameState; s
     const cost = { gold: r.cost, ...(r.dust ? { dust: r.dust } : {}) };
     return (
       <button className="btn prim" data-recruit={r.id} disabled={!mayHire || locked || gold < r.cost || dust < (r.dust ?? 0)} title={locked ? lockText : undefined} onClick={(e) => { e.stopPropagation(); act({ type: 'kingdomRecruit', settlementId: s.id, unitId: r.id }); }}>
-        Rekrutuj <CostIcons cost={cost} have={have} size={15} light />
+        Rekrutuj <CostIcons cost={cost} have={have} size={ico} light />
       </button>
     );
   };
@@ -79,7 +85,7 @@ export function BarracksScreen({ state, s, faction, act }: { state: GameState; s
         {!mayHire && <i className="bk-note">Ta osada należy do obcej frakcji: nie rekrutujesz tu jednostek.</i>}
         <div className="bk-shelf">
           {tiers.map((tier) => (
-            <div key={tier} className={`bk-col ${tier === 1 ? 'first' : ''}`} data-tier={tier}>
+            <div key={tier} className={`bk-col ${tier === 1 ? (oneColumn ? 'first one' : 'first') : ''}`} data-tier={tier}>
               <div className="bk-tier">poziom {tier}</div>
               <div className="bk-units">
               {recruits.filter((r) => r.tier === tier).map((r) => {
@@ -87,7 +93,7 @@ export function BarracksScreen({ state, s, faction, act }: { state: GameState; s
                 return (
                   <div key={r.id} className={`bk-unit ${pick === r.id ? 'on' : ''} ${out ? 'out' : ''}`} data-unit={r.id} onClick={() => setPick(r.id)}>
                     <button className="bk-card" aria-label={UNITS[r.id].name} onClick={() => setPick(r.id)}><UnitCard unitId={r.id} width={cardW} digital /></button>
-                    <div className="bk-ctl" style={{ width: cardW + 2 }}>{control(r)}</div>
+                    <div className="bk-ctl" style={{ width: cardW + 2, fontSize: ctlFont }}>{control(r)}</div>
                   </div>
                 );
               })}
@@ -96,10 +102,11 @@ export function BarracksScreen({ state, s, faction, act }: { state: GameState; s
           ))}
         </div>
         <div className="bk-detail" data-bk-detail={sel.id} style={wide ? { flexBasis: side } : undefined}>
-          <UnitSprite unitId={sel.id} size={wide ? side - 14 : stage} height={stage} zoom={stage / 210} />
+          <UnitSprite unitId={sel.id} size={wide ? side - 14 : stage} height={stage} zoom={stage / 185} />
           {bigCard > 0 && <UnitCard unitId={sel.id} width={bigCard} digital />}
           {bigCard === 0 && <div className="bk-name">{UNITS[sel.id].name}</div>}
-          <div className="bk-tier-line">poziom {sel.tier}{needsDwelling(state, sel) ? ` · ${DWELLING_NAMES[sel.id]}` : ''}</div>
+          <div className="bk-ctl bk-ctl-side" style={{ width: bigCard > 0 ? bigCard + 2 : Math.min(side || room.w - 40, 280) }}>{control(sel)}</div>
+          <div className="bk-tier-line">{s.name} · poziom {sel.tier}{needsDwelling(state, sel) ? ` · ${DWELLING_NAMES[sel.id]}` : ''}</div>
         </div>
       </div>
     </div>

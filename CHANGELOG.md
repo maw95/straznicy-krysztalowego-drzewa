@@ -10,6 +10,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 - Jeżozwierz i Gargulec: opis Kolców brzmi „każdy, kto zaatakuje go wręcz, traci 3 Ż” (z ikoną życia) zamiast „dostaje 3 obrażenia”.
 
+- Koszary: karty po lewej są większe (poziom 1 stoi w jednej kolumnie, gdy okno jest dość wysokie), animowana jednostka po prawej jest większa i gra pętlę „około 3 sekundy ruchu, chwila bez ruchu, atak, chwila odpoczynku”, a pod dużą kartą jest przycisk rekrutacji albo budowy siedliska.
 
 - Podpowiedzi po najechaniu myszą (atrybut title) zniknęły z ekranów gry: opisy czytasz prawym przyciskiem. Zostały tylko te, które tłumaczą, czemu przycisk jest wyłączony, oraz opisy opcji w menu i ustawieniach.
 

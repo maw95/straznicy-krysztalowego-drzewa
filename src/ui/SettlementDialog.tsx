@@ -551,8 +551,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       )}
       {view === 'barracks' && (
         <div className="settlement-page">
-          {header}
-          <div className="settlement-field sheet">
+          <div className="settlement-field sheet wide">
             <BarracksScreen state={state} s={s} faction={faction} act={act} />
           </div>
           <div className="settlement-foot">
