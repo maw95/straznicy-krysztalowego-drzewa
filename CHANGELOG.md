@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowe ikony złota, drewna, rudy i Gwiezdnego Pyłu: bez okrągłego medalu, każda z własną sylwetką i barwą (żółte monety, brązowe kłody, szara skała, fioletowy pył), więc w małym rozmiarze nie mylą się ze sobą.
+
 - Rada Osady: większa czcionka w kafelkach budynków i dużo większe ikony cen (z liczbą obok); Pierwotna Iskra stoi w wolnym rogu drzewa, więc całe drzewko może być większe. Poprawiony róg szyny przy parach „lub” (znikła wystająca kreska pod zaokrągleniem).
 
 - Ikona gry w karcie przeglądarki i w zainstalowanej aplikacji jest większa (logo wypełnia całą szerokość, bez pustych pasów po bokach) i ma przezroczyste tło.

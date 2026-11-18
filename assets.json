@@ -5305,6 +5305,18 @@
       "data": "2026-11-18",
       "ai": true,
       "licencja": "jak logo gry (Scenario, plan płatny: pełna licencja komercyjna bez tantiem)"
+    },
+    {
+      "id": "ikony/mapa/surowce-bez-medalu",
+      "pliki": ["public/assets/ikony/mapa/zloto.webp", "public/assets/ikony/mapa/drewno.webp", "public/assets/ikony/mapa/ruda.webp", "public/assets/ikony/mapa/pyl.webp"],
+      "typ": "ikony zasobów: złoto, drewno, ruda, Gwiezdny Pył jako gołe przedmioty (bez medalu i pierścienia), każda z własną sylwetką i barwą",
+      "opis": "Wymieniają okrągłe medale z wpisów ikony/mapa/krolestwo i ikony/mapa/ksiestwo (te były do siebie zbyt podobne w małej skali). 512x512, przezroczyste tło, po jednym wariancie, wszystkie przyjęte; cięcie do widocznej części i wpasowanie w 256 px: scripts/assets/ikony_surowcow.py. Prompt wspólny: 'Game resource icon in the painted style of Heroes of Might and Magic III, drawn as a bare object with NO circular medal, NO ring, NO frame and NO background ... a thin dark brown outline around the whole silhouette so it reads at 24 pixels. The pile fills about 92% of the square canvas ... the dominant colour is ...'. Złoto: stos żółtych monet z lilijką; drewno: trzy poziome kłody z jasnymi przekrojami i brązową korą; ruda: kanciaste bryły chłodnej szarej rudy z cienkimi rdzawymi żyłkami; pył: świecący fioletowy stożek z błyskami.",
+      "scenario_asset": {"zloto": "asset_zn3C6npx6ruYhfBf6ZxDpuii", "drewno": "asset_twRFjJJLoUYyqwVnob91R8M2", "ruda": "asset_TjkDGVtqUtsXa9tRAwEbsWSf", "pyl": "asset_q1hrwHgJvYTW9h3juTT2NAKX"},
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość high, 512x512, przezroczyste tło, 4 x 11 CU",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
