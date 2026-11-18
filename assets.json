@@ -5359,6 +5359,42 @@
       "data": "2026-11-18",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "intro/zrzuty_slajdow_en",
+      "pliki": [
+        "public/assets/intro/05-cel_en.jpg",
+        "public/assets/intro/06-wedrowka_en.jpg",
+        "public/assets/intro/07-bitwa_en.jpg",
+        "public/assets/intro/08-tryby_en.jpg",
+        "public/assets/intro/09-wersje_en.jpg",
+        "public/assets/intro/10-poziomy_en.jpg",
+        "public/assets/intro/11-cele_en.jpg",
+        "public/assets/intro/12-online_en.jpg",
+        "public/assets/intro/13-arena_en.jpg"
+      ],
+      "typ": "angielskie obrazy slajdów wprowadzenia 05–13",
+      "opis": "Angielskie odpowiedniki zrzutów ekranu z wprowadzenia (interfejs z ?lang=en), 1600×900 JPEG, pokazywane przy angielskim języku gry (src/ui/Intro.tsx, slideArt). Nie generowane w Scenario: to zrzuty prawdziwej gry, więc pisownia pochodzi ze słownika gry (kilka brakujących wpisów łatane w stronie tuż przed zrzutem, zob. englishLeftovers w skrypcie). Odtworzenie: npx tsx scripts/browser/intro-slajdy.ts en; slajd 12 (pokój online) zrzucony na lokalnym serwerze testowym (konto, Nowa gra > Kooperacja > Przygoda > Utwórz stół > Zajmij miejsce). Uwaga: kreator w grze zmienił kolejność stron, więc angielskie slajdy 08–11 pokazują aktualne strony (tryb, menu startowe, cel, poziom), a polskie są starsze.",
+      "prompt": "nie dotyczy (zrzuty ekranu, bez generowania)",
+      "narzedzie": "Playwright (scripts/browser/intro-slajdy.ts)",
+      "model": "brak; grafiki w zrzutach pochodzą z innych wpisów (Scenario, GPT Image 2.5 Flare)",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "zrzuty własnej gry; grafiki w nich: patrz wpisy poszczególnych zasobów"
+    },
+    {
+      "id": "ui/okladka_en",
+      "pliki": [
+        "public/assets/ui/cover_en.jpg"
+      ],
+      "typ": "angielska okładka (tło menu, ekranu tytułowego, ekranu online)",
+      "opis": "Ta sama okładka co ui/cover.jpg, z angielskim logo (docs/grafika/okladka/logo_en.png, GLEAMROOT / WARDENS OF THE CRYSTAL TREE) nałożonym w tym samym miejscu na polskie (szerokość 1100 px, środek, 10 px od góry; baner angielskiego logo w pełni zakrywa stary napis), skala do 1240 px. Składane lokalnie (PIL) w scripts/assets/menu.py, bez nowego generowania; logo EN pochodzi z wpisu ui/logo_en. Gra pokazuje ją przy angielskim języku (useCoverArt w src/ui/Logo.tsx).",
+      "prompt": "nie dotyczy (kompozycja lokalna; prompt logo EN: patrz wpis ui/logo_en)",
+      "narzedzie": "PIL (scripts/assets/menu.py)",
+      "model": "brak; składniki wygenerowane w Scenario (GPT Image 2.5 Flare)",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

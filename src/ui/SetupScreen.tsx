@@ -7,7 +7,7 @@ import { PACK_IDS } from '../engine/factions';
 import { readyMaps } from '../engine/customMaps';
 import { layerSwitches, resolveTier, withRuleset, type CustomLayer, type Tier } from '../engine/presets';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
-import { Logo } from './Logo';
+import { Logo, useCoverArt } from './Logo';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
 import { FigurePreview } from './FigurePreview';
@@ -35,6 +35,7 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
 type Step = 'home' | 'mode' | 'where' | 'wizard' | 'load' | 'table' | 'campaign' | 'expedition';
 
 export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog, onCredits }: { session: boolean; online: { label: string; title: string }; onOnline: (intent: 'new' | 'load', table?: { mode: Mode; digital: boolean }) => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void; onCredits: () => void }) {
+  const cover = useCoverArt();
   // Both read and replay saved games: once per visit to the menu, not on every hover and keystroke.
   const stats = useMemo(journalStats, []);
   const saveLabel = useMemo(() => autosave && describeSave(autosave), [autosave]);
@@ -151,7 +152,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     <div className="screen slate screen-enter" style={{ alignItems: 'center', paddingTop: 16, gap: 18 }}>
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
         {/* The box cover: the Tree in the middle, Przymierze on the left, the Horde on the right. */}
-        <img className="ken-burns" src={asset('ui/cover.jpg')} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 38%', opacity: 0.42 }} />
+        <img className="ken-burns" src={cover} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 38%', opacity: 0.42 }} />
         {Array.from({ length: 22 }, (_, i) => (
           <span
             key={i}

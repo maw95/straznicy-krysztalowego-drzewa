@@ -5,7 +5,7 @@ import { OBJECTIVES } from '../engine/objectives';
 import { defaultCustom, TIERS } from '../engine/presets';
 import { currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
-import { Logo } from './Logo';
+import { Logo, useCoverArt } from './Logo';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { BOARD_LEVELS, choice, LEVELS, SEAT_TINT, SHAPE_NAMES } from './setupShared';
 import { NewGameWizard } from './NewGameWizard';
@@ -27,6 +27,7 @@ export interface MenuLinks {
  * The game itself is played on the usual screens (App), once the room starts.
  */
 export function OnlineScreen({ intent, preset, session, onSession, onLocalGame, onOffline, links }: { intent: 'new' | 'load'; preset?: { mode: Mode; digital: boolean }; session: OnlineSession | null; onSession: (s: OnlineSession | null) => void; onLocalGame: () => void; onOffline: () => void; links: MenuLinks }) {
+  const cover = useCoverArt();
   // Only a saved session needs the server before anything shows; without one the welcome comes at once.
   const [checking, setChecking] = useState(!session && savedToken() !== null);
   const [problem, setProblem] = useState<string | null>(null);
@@ -50,7 +51,7 @@ export function OnlineScreen({ intent, preset, session, onSession, onLocalGame, 
 
   return (
     <div className="screen slate screen-enter" style={{ alignItems: 'center', paddingTop: 16, gap: 14 }}>
-      <img className="ken-burns" src={asset('ui/cover.jpg')} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 38%', opacity: 0.3 }} />
+      <img className="ken-burns" src={cover} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 38%', opacity: 0.3 }} />
       <h1 style={{ margin: 0, lineHeight: 0, position: 'relative' }}>
         <Logo style={{ height: 'clamp(70px, 11vh, 110px)' }} />
       </h1>

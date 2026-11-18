@@ -11,3 +11,9 @@ export function Logo({ style }: { style?: CSSProperties }) {
     <img className="logo-glow" src={asset('ui/logo.png')} alt="Gleamroot: Strażnicy Kryształowego Drzewa" style={style} />
   );
 }
+
+/** The box cover art (it has the logo painted on it): the English cover for English, the Polish one otherwise. */
+export function useCoverArt(): string {
+  const [lang] = useLang();
+  return asset(lang === 'en' ? 'ui/cover_en.jpg' : 'ui/cover.jpg');
+}

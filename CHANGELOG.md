@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Angielska wersja gry pokazuje angielską okładkę z logo oraz angielskie obrazy we wprowadzeniu (cel, wędrówka, bitwa, tryby, menu, poziomy, cele, pokój online, arena).
+
 ## 2.14.0 — 2026-11-18
 
 - Nowe ikony celów „Punkty kontrolne” (trzy kopce ze sztandarami i złotymi promieniami między nimi) i „Boss” (czarny smok na stosie złota) w kreatorze: malowane medale w stylu pozostałych ikon celów.

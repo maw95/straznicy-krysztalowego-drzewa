@@ -4,11 +4,12 @@
 
 import { LanguageSwitch } from './LanguageSwitch';
 import { useEffect } from 'react';
-import { Logo } from './Logo';
+import { Logo, useCoverArt } from './Logo';
 import { asset } from './common';
 import { autoFullscreen, enterFullscreen } from './fullscreen';
 import { firstTrack, music } from './music';
-import { introSeen, SLIDES } from './Intro';
+import { introSeen, SLIDES, slideArt } from './Intro';
+import { getLang } from '../i18n/lang';
 
 const KEY = 'skd-title-done';
 
@@ -34,12 +35,13 @@ function markDone() {
  * to load just loads again when it is needed.
  */
 function preloadNext() {
-  const images = introSeen() ? [] : SLIDES.map((s) => `intro/${s.id}.jpg`);
+  const images = introSeen() ? [] : SLIDES.map((s) => slideArt(s.id, getLang()));
   for (const src of images) new Image().src = asset(src);
   if (typeof fetch === 'function') fetch(asset(firstTrack('menu'))).catch(() => {});
 }
 
 export function TitleScreen({ onStart }: { onStart: () => void }) {
+  const cover = useCoverArt();
   useEffect(preloadNext, []);
 
   const start = () => {
@@ -67,7 +69,7 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
       {/* The box cover carries its own logo at the top, which a tall screen would show: there, the night Tree from the intro. */}
       <picture>
         <source media="(max-aspect-ratio: 1/1)" srcSet={asset('intro/01-drzewo.jpg')} />
-        <img className="ken-burns title-art" src={asset('ui/cover.jpg')} alt="" />
+        <img className="ken-burns title-art" src={cover} alt="" />
       </picture>
       <div className="title-shade" aria-hidden="true" />
       <LanguageSwitch />

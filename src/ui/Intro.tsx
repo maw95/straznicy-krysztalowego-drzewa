@@ -3,6 +3,7 @@
 // exists the slide shows stand-in art that is already in the game.
 
 import { useEffect, useState } from 'react';
+import { useLang, type Lang } from '../i18n/lang';
 import { asset } from './common';
 
 const KEY = 'skd-intro';
@@ -34,6 +35,10 @@ interface Slide {
   /** Which part of the art stays in view (CSS object-position). */
   focus?: string;
 }
+
+/** Slides whose picture is a screenshot of the interface have an English twin, <id>_en.jpg (the Polish text is in the picture). */
+const EN_ART = new Set(['05-cel', '06-wedrowka', '07-bitwa', '08-tryby', '09-wersje', '10-poziomy', '11-cele', '12-online', '13-arena']);
+export const slideArt = (id: string, lang: Lang) => `intro/${id}${lang === 'en' && EN_ART.has(id) ? '_en' : ''}.jpg`;
 
 export const SLIDES: Slide[] = [
   {
@@ -187,6 +192,7 @@ export const SLIDES: Slide[] = [
 const ART_PAN: [string, string] = ['scale(1)', 'scale(1.06)'];
 
 export function Intro({ onClose }: { onClose: () => void }) {
+  const [lang] = useLang();
   const [index, setIndex] = useState(0);
   const [missing, setMissing] = useState<Set<string>>(new Set());
   const last = index === SLIDES.length - 1;
@@ -214,7 +220,7 @@ export function Intro({ onClose }: { onClose: () => void }) {
     <div className="intro" role="dialog" aria-label="Wprowadzenie">
       {SLIDES.map((s, i) => {
         const own = !missing.has(s.id);
-        const art = own ? [`intro/${s.id}.jpg`] : s.stand;
+        const art = own ? [slideArt(s.id, lang)] : s.stand;
         const pan = own ? ART_PAN : s.pan;
         // Only the current slide and its neighbours are in the page: cross-fades without loading everything at once.
         if (Math.abs(i - index) > 1) return null;
