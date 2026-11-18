@@ -12,6 +12,7 @@ const toLoadList = async () => {
 try {
   await p.waitForTimeout(800);
   // Campaign: first scenario, save by hand from the options.
+  await p.locator('[data-new-game]').click();
   await p.locator('[data-campaign-open]').click();
   await p.locator('[data-scenario]').first().click();
   await p.locator('[data-scenario-start]').click();
@@ -34,6 +35,7 @@ try {
   await p.evaluate(() => { localStorage.removeItem('skd-autosave'); });
   await p.reload();
   await p.waitForTimeout(800);
+  await p.locator('[data-new-game]').click();
   await p.locator('[data-expedition-open]').click();
   await p.locator('[data-expedition-new]').click();
   await p.locator('[data-expedition-run]').waitFor();

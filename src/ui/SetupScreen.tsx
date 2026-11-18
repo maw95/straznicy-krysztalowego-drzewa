@@ -16,8 +16,8 @@ import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
-import { defaultHeroes, SEAT_TINT } from './setupShared';
-import { NewGameWizard, savedDigital } from './NewGameWizard';
+import { defaultHeroes, SEAT_TINT, TIPS } from './setupShared';
+import { NewGameWizard } from './NewGameWizard';
 import { deleteNamedSave, listNamedSaves, type NamedSave } from './saves';
 import { readRun } from './expeditionRun';
 import { STAGES, stageOf } from '../engine/expedition';
@@ -31,10 +31,10 @@ const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
   });
 
 
-/** The pages of the menu: the first choice, where to play, the new-game wizard, the saved games, the seats at the table. */
-type Step = 'home' | 'where' | 'wizard' | 'load' | 'table' | 'campaign' | 'expedition';
+/** The pages of the menu: the first choice, the mode, where to play, the new-game wizard, the saved games, the seats at the table. */
+type Step = 'home' | 'mode' | 'where' | 'wizard' | 'load' | 'table' | 'campaign' | 'expedition';
 
-export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog, onCredits }: { session: boolean; online: { label: string; title: string }; onOnline: (intent: 'new' | 'load') => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void; onCredits: () => void }) {
+export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog, onCredits }: { session: boolean; online: { label: string; title: string }; onOnline: (intent: 'new' | 'load', table?: { mode: Mode; digital: boolean }) => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void; onCredits: () => void }) {
   // Both read and replay saved games: once per visit to the menu, not on every hover and keystroke.
   const stats = useMemo(journalStats, []);
   const saveLabel = useMemo(() => autosave && describeSave(autosave), [autosave]);
@@ -59,7 +59,9 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const [rules, setRules] = useState({ ...DEFAULT_RULES });
   const [level, setLevel] = useState<Level | 'custom'>('normal');
   /** The digital edition (2D units, its rules) or the board edition (3D figures, the board game's rules); remembered in this browser. */
-  const [digital, setDigitalState] = useState(savedDigital);
+  const [digital, setDigitalState] = useState(true);
+  /** The mode picked on the menu's second page (the wizard goes on from it); Kampania and Ekspedycja have pages of their own. */
+  const [wizardMode, setWizardMode] = useState<Mode>('coop');
   /** The goal of an adventure game (the digital edition only): the crystals, or the control points. */
   const [objective, setObjective] = useState<ObjectiveId>('crystals');
   const [shape, setShape] = useState<MapShape>('triangle');
@@ -140,7 +142,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     </div>
   );
   const pickWhere = (where: 'here' | 'online') => {
-    if (where === 'online') return onOnline(intent);
+    if (where === 'online') return onOnline(intent, { mode: wizardMode, digital });
     setStep(intent === 'new' ? 'wizard' : 'load');
   };
   const stepName = step === 'table' ? `Miejsca przy stole · ${digital ? 'wersja cyfrowa' : 'wersja planszowa'}` : '';
@@ -170,20 +172,10 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
         <div className="main-row setup-row" style={{ position: 'relative', width: '100%', maxWidth: 1100 }}>
           <Frame crest className="grow" innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 18 }}>
             <div className="home-big" data-wizard-page="home">
-              <button className="opt-card home-card" onClick={() => { setIntent('new'); setStep('where'); }}>
+              <button className="opt-card home-card" data-new-game onClick={() => { setIntent('new'); setDigitalState(true); setLastTable(null); setStep('mode'); }}>
                 <span className="opt-card-img"><img src={asset('ikony/menu/nowa_gra.webp')} alt="" /></span>
                 <span className="opt-card-title">Nowa gra</span>
-                <span className="opt-card-text">Wybierz wersję, poziom i tryb, a potem frakcje i bohaterów.</span>
-              </button>
-              <button className="opt-card home-card" data-campaign-open onClick={() => setStep('campaign')}>
-                <span className="opt-card-img"><img src={asset('ikony/menu/kampania.webp')} alt="" /></span>
-                <span className="opt-card-title">Kampania</span>
-                <span className="opt-card-text">Historia Przymierza Świtu w czterech scenariuszach na ręcznie rysowanych mapach.</span>
-              </button>
-              <button className="opt-card home-card" data-expedition-open onClick={() => setStep('expedition')}>
-                <span className="opt-card-img"><img src={asset('ikony/menu/ekspedycja.webp')} alt="" /></span>
-                <span className="opt-card-title">Ekspedycja</span>
-                <span className="opt-card-text">Osiem bitew na arenie pod rząd, jedno życie i relikwie po każdej wygranej. Jest też wyprawa dnia z rankingiem.</span>
+                <span className="opt-card-text">Wybierz tryb, poziom złożoności i mapę, a potem frakcje i bohaterów.</span>
               </button>
               <button className="opt-card home-card" onClick={() => { setIntent('load'); setStep('where'); }}>
                 <span className="opt-card-img"><img src={asset('ikony/menu/wczytaj.webp')} alt="" /></span>
@@ -200,6 +192,9 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                 </button>
                 <button className="app-version" title="Autorzy muzyki, grafiki i gry" onClick={onCredits} data-credits-open>
                   Autorzy
+                </button>
+                <button className="app-version" data-board-open title="Wierna planszówka: zasady bez zmian, malowana arena i figurki 3D" onClick={() => { setIntent('new'); setDigitalState(false); setLastTable(null); setStep('mode'); }}>
+                  Wersja planszowa
                 </button>
               </div>
               <div className="stats-box" aria-label="Twoje partie">
@@ -243,8 +238,38 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
         </div>
       )}
 
-      {step === 'campaign' && <CampaignScreen onStart={onStart} onBack={() => setStep('home')} />}
-      {step === 'expedition' && <ExpeditionScreen onStart={onStart} onLoad={onLoad} onBack={() => setStep('home')} />}
+      {step === 'campaign' && <CampaignScreen onStart={onStart} onBack={() => setStep('mode')} />}
+      {step === 'expedition' && <ExpeditionScreen onStart={onStart} onLoad={onLoad} onBack={() => setStep('mode')} />}
+      {step === 'mode' && (
+        <Frame crest style={{ width: 'min(1100px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>Jaki tryb gry?</Ribbon>
+          {!digital && <div style={{ fontSize: 14, color: 'var(--muted)', textAlign: 'center', marginTop: -6 }}>Wersja planszowa</div>}
+          <div className={`opt-grid compact${digital ? ' five' : ''}`} data-wizard-page="mode">
+            {([['pvp', 'Rywalizacja', 'rywal', TIPS.pvp], ['coop', 'Kooperacja', 'koop', TIPS.coop], ['arena', 'Arena', 'arena', TIPS.arenaMode]] as const).map(([m, title, img, text]) => (
+              <button key={m} className="opt-card" data-mode={m} onClick={() => { setWizardMode(m); setLastTable(null); setStep('where'); }}>
+                <span className="opt-card-img"><img src={asset(`ui/menu/${img}.webp`)} alt="" /></span>
+                <span className="opt-card-title">{title}</span>
+                <span className="opt-card-text">{text}</span>
+              </button>
+            ))}
+            {digital && (
+              <>
+                <button className="opt-card" data-campaign-open onClick={() => setStep('campaign')}>
+                  <span className="opt-card-img"><img src={asset('ikony/menu/kampania.webp')} alt="" /></span>
+                  <span className="opt-card-title">Kampania</span>
+                  <span className="opt-card-text">Historia Przymierza Świtu w czterech scenariuszach na ręcznie rysowanych mapach.</span>
+                </button>
+                <button className="opt-card" data-expedition-open onClick={() => setStep('expedition')}>
+                  <span className="opt-card-img"><img src={asset('ikony/menu/ekspedycja.webp')} alt="" /></span>
+                  <span className="opt-card-title">Ekspedycja</span>
+                  <span className="opt-card-text">Osiem bitew na arenie pod rząd, jedno życie i relikwie po każdej wygranej. Jest też wyprawa dnia z rankingiem.</span>
+                </button>
+              </>
+            )}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>{backBtn('home')}</div>
+        </Frame>
+      )}
       {step === 'where' && (
         <Frame crest style={{ width: 'min(900px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{intent === 'new' ? 'Gdzie grasz?' : 'Skąd wczytać grę?'}</Ribbon>
@@ -260,12 +285,12 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
               <span className="opt-card-text">{session ? 'Z innymi graczami, z rankingiem i zapisami na koncie.' : 'Wymaga konta: zalogujesz się albo założysz konto.'}</span>
             </button>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>{backBtn('home')}</div>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>{backBtn(intent === 'new' ? 'mode' : 'home')}</div>
         </Frame>
       )}
 
       {step === 'wizard' && (
-        <NewGameWizard online={false} initial={lastTable ?? undefined} onBack={() => setStep('where')} onFinish={applyWizard} />
+        <NewGameWizard online={false} mode={wizardMode} digital={digital} initial={lastTable ?? undefined} onBack={() => setStep('where')} onFinish={applyWizard} />
       )}
 
       {step === 'load' && (

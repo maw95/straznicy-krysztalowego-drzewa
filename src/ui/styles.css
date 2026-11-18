@@ -861,6 +861,12 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .opt-card.wide { flex-basis: 300px; max-width: 420px; }
 .opt-card-img { display: flex; align-items: center; justify-content: center; width: 100%; height: 120px; border-radius: 10px; overflow: hidden; }
 .opt-card-img > img { max-width: 100%; max-height: 100%; width: auto; height: 100%; object-fit: cover; }
+/* A row of big choices that shares its page with other choices (the map page: random or ready, then the shape and the size). */
+.opt-grid.compact { gap: 12px; }
+.opt-grid.compact .opt-card { padding: 8px 14px 10px; gap: 4px; }
+.opt-grid.compact .opt-card-img { height: 64px; }
+/* The five modes in one row (on a phone they wrap as every grid does). */
+.opt-grid.five .opt-card { flex: 1 1 170px; max-width: 192px; }
 .opt-card-title { font-size: 24px; font-weight: 800; color: #F3D27A; }
 .opt-card-text { font-size: 15px; line-height: 1.35; }
 .opt-crests { display: flex; gap: 14px; align-items: center; justify-content: center; height: 100%; }

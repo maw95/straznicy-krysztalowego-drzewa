@@ -7,6 +7,7 @@ for (const daily of [false, true]) {
   const p = game.page;
   try {
     await p.waitForTimeout(800);
+    await p.locator('[data-new-game]').click();
     await p.locator('[data-expedition-open]').click();
     await p.locator(daily ? '[data-expedition-daily]' : '[data-expedition-new]').click();
     await p.locator('[data-expedition-run]').waitFor();
@@ -32,6 +33,7 @@ for (const daily of [false, true]) {
     console.log(daily ? 'daily' : 'run', 'leave note:', (await p.locator('[data-leave-nosave]').locator('xpath=ancestor::div[2]').innerText()).replace(/\n+/g, ' | ').slice(0, 160));
     await p.locator('[data-leave-nosave]').click();
     await p.waitForTimeout(500);
+    await p.locator('[data-new-game]').click();
     await p.locator('[data-expedition-open]').click();
     await p.waitForTimeout(500);
     const onRunPage = (await p.locator('[data-expedition-run]').count()) > 0;

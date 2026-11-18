@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowy układ menu: po „Nowa gra” wybierasz tryb (Rywalizacja, Kooperacja, Arena, Kampania albo Ekspedycja), potem „Ten komputer” albo „Przez internet”, a dalej poziom złożoności, cel, mapę i graczy. Znika ekran wyboru wersji: wersję planszową uruchomisz małym linkiem „Wersja planszowa” na pierwszej stronie menu. Wielkość mapy wybierasz teraz razem z kształtem mapy, a Arena nie pyta już o poziom złożoności.
 - Wyjście z bitwy Ekspedycji nie daje już darmowej powtórki: zwykła wyprawa zachowuje bitwę w stanie, w jakim ją zostawiłeś, a na stronie wyprawy jest przycisk „Wróć do bitwy”. Wyjście z bitwy wyprawy dnia kończy ją, a liczą się etapy przebyte do tej pory. Okno wyjścia mówi, co się stanie.
 - Zapisy Kampanii i Ekspedycji: scenariusz kampanii zapiszesz i wczytasz jak każdą partię, a lista „Zapisane gry” podpisuje go („Kampania: Pierwsza dolina”). Wyprawa w toku ma na liście wpis „Ekspedycja w toku” z przyciskiem „Wznów”. W bitwie Ekspedycji nie ma ręcznego zapisu, bo wyprawa ma jedno życie i sama zapisuje się między bitwami.
 

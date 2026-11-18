@@ -7,6 +7,7 @@ for (const view of ['desktop', 'malypoziomo'] as View[]) {
   const p = game.page;
   try {
     await p.waitForTimeout(800);
+    await p.locator('[data-new-game]').click();
     await p.locator('[data-expedition-open]').click();
     await p.locator('[data-expedition]').waitFor();
     console.log(view, 'heroes:', await p.locator('[data-expedition-heroes] [data-hero]').count());

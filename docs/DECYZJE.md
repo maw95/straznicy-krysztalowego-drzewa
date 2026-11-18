@@ -105,3 +105,9 @@ Pełna lista w `BACKLOG.md`.
 - **Poziom 3:** tylko złoto w małej skali (najtańsze 1, dochód osady 1–2); złoto tylko z osad, kopalń i skrzyń (w skrzyni: artefakt albo złoto); brak utraty złota po porażce; kasa, skarby i pomocnicy wspólni dla frakcji; osady z narzuconą frakcją (połowa mapy), przejęcie przez wejście, zachowują budynki, obcy właściciel ma dochód, targ i szpital bez rekrutacji; budynki kupowane; 7 pomocników na frakcję (poziomy 1–5), maks. 5 w drużynie, bez kopii jednostek; ceny z symulacji, bez limitu zakupów; „Podbój” na poziomie 4.
 - **Interfejs:** przebudowa menu (Nowa gra / Wczytaj grę → Ten komputer / Przez internet), zapisy pod nazwą (online na koncie hosta), 6 graczy w rywalizacji i 3 w koopie, poziomy układ telefonu w partii, gotowe mapy w jednym rozmiarze.
 - **Nazwy poziomów:** bez zmian (Przygoda, Wyprawa, Królestwo, Imperium, Legenda).
+
+## Podjęte (18.11.2026): menu, zapisy Kampanii i Ekspedycji
+
+- **Menu:** strona 1 = Nowa gra / Wczytaj grę (+ mały link „Wersja planszowa”); strona 2 = tryb (Rywalizacja, Kooperacja, Arena, Kampania, Ekspedycja); strona 3 = Ten komputer / Przez internet (tylko dla trzech pierwszych trybów); dalej kreator: poziom złożoności (poza areną), cel (od Wyprawy), mapa z wielkością, gracze i trudność. Ekran wyboru „cyfrowa / planszowa” zniknął: planszówka to bonus, wybierany za każdym razem od nowa (nie jest pamiętana jako domyślna).
+- **Zapisy:** Kampania zapisuje się jak zwykła partia (podpis z nazwą scenariusza na liście). Ekspedycja zapisuje się sama między bitwami; w jej bitwie nie ma ręcznego zapisu (jedno życie).
+- **Wyjście z bitwy Ekspedycji:** zwykła wyprawa zachowuje bitwę w stanie, w jakim ją zostawiono („Wróć do bitwy”, osobny klucz `skd-expedition-battle`), więc nie ma darmowej powtórki; wyjście z wyprawy dnia kończy ją (liczą się dotychczasowe etapy, wynik idzie do rankingu).

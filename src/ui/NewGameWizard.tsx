@@ -1,6 +1,7 @@
 // The new-game wizard, shared by the game on this computer and by a new table online: one page per decision, each with big
-// buttons (a picture, a name, a sentence), and a "Wstecz" below. Single choices (edition, level, mode) move on by themselves;
-// the pages with several settings have "Dalej →". It ends with a `TableConfig` (the same shape the online tables use).
+// buttons (a picture, a name, a sentence), and a "Wstecz" below. The mode and the edition are chosen before it (the menu's second page and the "Wersja
+// planszowa" link); a wizard opened without them (a table online started from its menu) asks for the mode first. Single choices (level, mode) move on by
+// themselves; the pages with several settings have "Dalej →". It ends with a `TableConfig` (the same shape the online tables use).
 
 import { LevelIcon, type LevelIconKind } from './LevelIcons';
 import { useEffect, useState } from 'react';
@@ -20,7 +21,7 @@ export function savedDigital(): boolean {
   try { return localStorage.getItem(EDITION_KEY) !== 'board'; } catch { return true; }
 }
 
-type Page = 'edition' | 'tier' | 'mode' | 'objective' | 'map' | 'players' | 'custom';
+type Page = 'tier' | 'mode' | 'objective' | 'map' | 'players' | 'custom';
 type Tier = TableConfig['tier'];
 
 interface Draft {
@@ -60,26 +61,28 @@ function draftOf(t: TableConfig): Draft {
 
 const READY_MAPS = readyMaps;
 
-/** The pages this draft goes through, in order. */
-function pagesOf(d: Draft): Page[] {
-  const pages: Page[] = ['edition'];
-  if (d.digital) pages.push('tier');
+/** The pages this draft goes through, in order (the mode page only when no mode was chosen before the wizard). */
+function pagesOf(d: Draft, askMode: boolean): Page[] {
+  const pages: Page[] = [];
+  if (askMode) pages.push('mode');
+  // The arena has no levels of complexity: it is always the arena battle.
+  if (d.digital && d.mode !== 'arena') pages.push('tier');
   // "Własne ustawienia" come right after the card; what depends on the mode waits for the players page.
-  if (d.digital && d.tier === 'custom') pages.push('custom');
-  pages.push('mode');
+  if (d.digital && d.tier === 'custom' && d.mode !== 'arena') pages.push('custom');
   const adventure = d.digital && d.tier !== 'adventure' && d.mode !== 'arena';
-  if (adventure) pages.push('objective', 'map');
+  if (adventure) pages.push('objective');
+  // The map page: shape and size of a random map or a ready map (the fuller levels), only the size elsewhere (the arena has no map).
+  if (d.mode !== 'arena') pages.push('map');
   pages.push('players');
   return pages;
 }
 
 const TITLES: Record<Page, string> = {
-  edition: 'W którą wersję gramy?',
   tier: 'Jaki poziom złożoności?',
   mode: 'Jaki tryb gry?',
   objective: 'Jaki cel gry?',
   map: 'Jaka mapa?',
-  players: 'Gracze, wielkość mapy i trudność',
+  players: 'Gracze i trudność',
   custom: 'Własne ustawienia',
 };
 
@@ -110,9 +113,18 @@ const OBJECTIVE_ICON: Record<ObjectiveId, string> = {
   relic: 'ui/menu/relikt.webp',
 };
 
-export function NewGameWizard({ online, onBack, onFinish, links, initial }: { online: boolean; onBack: () => void; onFinish: (table: TableConfig) => void; links?: React.ReactNode; initial?: TableConfig }) {
-  const [d, setD] = useState<Draft>(() => (initial ? draftOf(initial) : {
-    digital: savedDigital(),
+/** The draft with a mode picked: the player count and the level a mode allows. */
+function withMode(d: Draft, mode: Mode): Draft {
+  const count = mode === 'pvp' ? Math.max(2, d.count) : mode === 'arena' ? 2 : Math.min(3, d.count);
+  const level = mode === 'pvp' && d.level === 'hard' && !d.digital ? 'normal' : mode === 'arena' && d.level === 'zero' ? 'kids' : d.level;
+  return { ...d, mode, count, level, ...(mode !== 'coop' && d.objective === 'survival' ? { objective: 'crystals' as ObjectiveId } : {}), ...(mode === 'arena' ? { tier: 'adventure' as Tier } : {}) };
+}
+
+export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: fixedMode, digital: fixedDigital }: { online: boolean; onBack: () => void; onFinish: (table: TableConfig) => void; links?: React.ReactNode; initial?: TableConfig; mode?: Mode; digital?: boolean }) {
+  /** Without a mode chosen before, the wizard starts with the mode page. */
+  const askMode = fixedMode === undefined;
+  const [d, setD] = useState<Draft>(() => (initial ? draftOf(initial) : withMode({
+    digital: fixedDigital ?? true,
     tier: 'adventure',
     mode: 'coop',
     objective: 'crystals',
@@ -124,9 +136,9 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
     count: 1,
     arenaSize: 3,
     custom: null,
-  }));
-  const [page, setPage] = useState<Page>(initial ? 'players' : 'edition');
-  const pages = pagesOf(d);
+  }, fixedMode ?? 'coop')));
+  const [page, setPage] = useState<Page>(() => (initial ? 'players' : pagesOf(d, askMode)[0]));
+  const pages = pagesOf(d, askMode);
   const at = pages.indexOf(page);
   // On a phone the next page must start at its top, not where the last one was scrolled to.
   useEffect(() => {
@@ -136,7 +148,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
   const patch = (p: Partial<Draft>) => setD((cur) => ({ ...cur, ...p }));
   /** The next page of the draft `next` (it may change which pages exist). */
   const goFrom = (cur: Page, next: Draft) => {
-    const list = pagesOf(next);
+    const list = pagesOf(next, askMode);
     const i = list.indexOf(cur);
     setPage(list[Math.min(list.length - 1, i + 1)]);
   };
@@ -153,18 +165,14 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
   /** Level 0 belongs to the first card only: every other tier plays a difficulty of the full game. */
   const notZero: Level = d.level === 'zero' ? 'kids' : d.level;
   const ready = d.shape === 'custom';
+  /** The map page of the fuller levels also picks the map (random of a shape, or a ready one); elsewhere (Spacer, Przygoda, the board edition) only its size. */
+  const fullMap = d.digital && d.tier !== 'adventure';
   const sizes = (Object.keys(MAP_SIZE_NAMES) as MapSize[]).filter((m) => d.digital || BOARD_MAP_SIZES.includes(m));
 
-  const setEdition = (digital: boolean) => {
-    try { localStorage.setItem(EDITION_KEY, digital ? 'digital' : 'board'); } catch { /* private mode: only for this visit */ }
-    // The board edition has no levels and fewer map sizes.
-    // Board edition: its "Łatwy" is level 0 (the printed duels); the digital one has "Łatwy" on the arena.
-    choose({ digital, level: digital ? (d.level === 'zero' && d.tier !== 'adventure' ? 'kids' : d.level) : d.level === 'kids' ? 'zero' : d.level, ...(digital ? {} : { tier: 'adventure' as Tier, objective: 'crystals' as ObjectiveId, shape: 'triangle' as MapShape, ...(BOARD_MAP_SIZES.includes(d.mapSize) ? {} : { mapSize: 'veryLong' as MapSize }) }) });
-  };
   const setMode = (mode: Mode) => {
-    const count = mode === 'pvp' ? Math.max(2, d.count) : mode === 'arena' ? 2 : Math.min(3, d.count);
-    const level = mode === 'pvp' && d.level === 'hard' && !d.digital ? 'normal' : mode === 'arena' && d.level === 'zero' ? 'kids' : d.level;
-    choose({ mode, count, level, ...(mode !== 'coop' && d.objective === 'survival' ? { objective: 'crystals' as ObjectiveId } : {}) });
+    const next = withMode(d, mode);
+    setD(next);
+    goFrom(page, next);
   };
 
   /** The finished table: what the online room and the local setup are made from. */
@@ -185,6 +193,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
       // Online every seat waits for a player, except the arena's opponent.
       seats: defaultHeroes(d.mode, d.count).map((seat, i) => ({ ...seat, bot: d.mode === 'arena' && i === 1 })),
     };
+    // The rules window shows the cards of the edition played last.
+    try { localStorage.setItem(EDITION_KEY, d.digital ? 'digital' : 'board'); } catch { /* private mode: only for this visit */ }
     onFinish(table);
   };
   const next = () => {
@@ -196,17 +206,10 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
   return (
     <Frame crest style={{ width: 'min(1100px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '18px 24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
       {links}
-      <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{TITLES[page]}</Ribbon>
+      <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{page === 'map' && !fullMap ? 'Jak duża mapa?' : TITLES[page]}</Ribbon>
       <div style={{ fontSize: 14, color: 'var(--muted)', textAlign: 'center', marginTop: -6 }}>
         Krok {at + 1} z {pages.length} · {d.digital ? 'wersja cyfrowa' : 'wersja planszowa'}{online ? ' · stół online' : ''}
       </div>
-
-      {page === 'edition' && (
-        <div className="opt-grid" data-wizard-page="edition">
-          <Card on={d.digital} title="Cyfrowa" text={TIPS.digital} img={pic(asset('ui/menu/cyfrowa.webp'))} onClick={() => setEdition(true)} />
-          <Card on={!d.digital} title="Planszowa" text="Wierna planszówka: zasady bez zmian, malowana arena i figurki 3D. Do grania tak, jakby karty i plansza leżały na stole." img={pic(asset('ui/menu/planszowa.webp'))} onClick={() => setEdition(false)} />
-        </div>
-      )}
 
       {page === 'tier' && (
         <div className="opt-grid" data-wizard-page="tier">
@@ -246,30 +249,46 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
       )}
 
       {page === 'map' && (
-        <>
-          <div className="opt-grid" data-wizard-page="map">
-            <Card on={!ready} title="Losowa" text="Mapa zrobiona na nowo przy każdej partii, w wybranym kształcie i rozmiarze." img={pic(asset('ui/menu/losowa.webp'))} onClick={() => patch({ shape: !ready ? d.shape : 'triangle' })} />
-            <Card on={ready} disabled={READY_MAPS().length === 0} title="Gotowa" text="Ręcznie narysowana mapa, zawsze taka sama, w jednym rozmiarze." img={pic(asset('ui/menu/gotowa.webp'))} onClick={() => patch({ shape: 'custom' })} />
-          </div>
-          {!ready ? (
-            <CentredChoice label="Wybierz kształt">
-              {(Object.keys(SHAPE_NAMES) as MapShape[]).filter((sh) => sh !== 'custom').map((sh) => (
-                <Tip key={sh} text={SHAPE_TIPS[sh]}>
-                  <button className={`${chip(d.shape === sh)} shape-btn`} aria-pressed={d.shape === sh} data-shape={sh} onClick={() => choose({ shape: sh })}>
-                    <ShapeIcon shape={sh} width={92} />
-                    <span>{SHAPE_NAMES[sh]}</span>
+        <div data-wizard-page="map" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {fullMap && (
+            <>
+              <div className="opt-grid compact">
+                <Card on={!ready} title="Losowa" text="Mapa zrobiona na nowo przy każdej partii, w wybranym kształcie i rozmiarze." img={pic(asset('ui/menu/losowa.webp'))} onClick={() => patch({ shape: !ready ? d.shape : 'triangle' })} />
+                <Card on={ready} disabled={READY_MAPS().length === 0} title="Gotowa" text="Ręcznie narysowana mapa, zawsze taka sama, w jednym rozmiarze." img={pic(asset('ui/menu/gotowa.webp'))} onClick={() => patch({ shape: 'custom' })} />
+              </div>
+              {!ready ? (
+                <CentredChoice label="Wybierz kształt">
+                  {(Object.keys(SHAPE_NAMES) as MapShape[]).filter((sh) => sh !== 'custom').map((sh) => (
+                    <Tip key={sh} text={SHAPE_TIPS[sh]}>
+                      <button className={`${chip(d.shape === sh)} shape-btn`} aria-pressed={d.shape === sh} data-shape={sh} onClick={() => patch({ shape: sh })}>
+                        <ShapeIcon shape={sh} width={92} />
+                        <span>{SHAPE_NAMES[sh]}</span>
+                      </button>
+                    </Tip>
+                  ))}
+                </CentredChoice>
+              ) : (
+                <CentredChoice label="Wybierz mapę">
+                  {READY_MAPS().map((m) => (
+                    <Tip key={m.id} text={m.summary}><button className={`${chip(d.customMapId === m.id)} shape-btn`} aria-pressed={d.customMapId === m.id} data-map={m.id} onClick={() => patch({ customMapId: m.id })}>{m.name}</button></Tip>
+                  ))}
+                </CentredChoice>
+              )}
+            </>
+          )}
+          {!(fullMap && ready) && (
+            <CentredChoice label="Wielkość mapy">
+              {sizes.map((m) => (
+                <Tip key={m} text={mapTip(m)}>
+                  <button className={`${chip(d.mapSize === m)} size-btn map-size-btn`} aria-pressed={d.mapSize === m} onClick={() => patch({ mapSize: m })}>
+                    <b className="size-code">{SIZE_CODES[m]}</b>
+                    <span>{MAP_SIZE_NAMES[m]}</span>
                   </button>
                 </Tip>
               ))}
             </CentredChoice>
-          ) : (
-            <CentredChoice label="Wybierz mapę">
-              {READY_MAPS().map((m) => (
-                <Tip key={m.id} text={m.summary}><button className={`${chip(d.customMapId === m.id)} shape-btn`} aria-pressed={d.customMapId === m.id} data-map={m.id} onClick={() => choose({ customMapId: m.id })}>{m.name}</button></Tip>
-              ))}
-            </CentredChoice>
           )}
-        </>
+        </div>
       )}
 
       {page === 'players' && (
@@ -295,18 +314,6 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
                 <button key={n} className={`${chip(d.count === n)} count-chip`} aria-pressed={d.count === n} onClick={() => patch({ count: n })}>{n}</button>
               ))}
             </Row>
-          )}
-          {!arena && !(d.digital && d.tier !== 'adventure' && ready) && (
-            <CentredChoice label="Wielkość mapy">
-              {sizes.map((m) => (
-                <Tip key={m} text={mapTip(m)}>
-                  <button className={`${chip(d.mapSize === m)} size-btn map-size-btn`} aria-pressed={d.mapSize === m} onClick={() => patch({ mapSize: m })}>
-                    <b className="size-code">{SIZE_CODES[m]}</b>
-                    <span>{MAP_SIZE_NAMES[m]}</span>
-                  </button>
-                </Tip>
-              ))}
-            </CentredChoice>
           )}
           {(arena || d.level !== 'zero' || !d.digital) && (
           <Row label={arena ? 'Komputer' : 'Trudność'}>
@@ -342,8 +349,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
 
       <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginTop: 6 }}>
         <button className="btn plate parch wizard-nav" onClick={back} data-wizard-back>← Wstecz</button>
-        {/* The objective and the map go on by themselves when one is picked; the coop Boss still needs its Horde choice, so it keeps the button. */}
-        {(page === 'players' || page === 'custom' || (page === 'objective' && d.mode === 'coop' && d.objective === 'boss')) && (
+        {/* The objective goes on by itself when one is picked; the coop Boss still needs its Horde choice, so it keeps the button. */}
+        {(page === 'players' || page === 'custom' || page === 'map' || (page === 'objective' && d.mode === 'coop' && d.objective === 'boss')) && (
           <button className="btn prim wizard-nav" onClick={next} data-wizard-next>{last ? (online ? 'Utwórz stół' : 'Dalej →') : 'Dalej →'}</button>
         )}
       </div>

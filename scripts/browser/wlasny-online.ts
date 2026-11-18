@@ -23,7 +23,7 @@ const nextPage = async (p: typeof pa) => {
 };
 await pa.getByRole('button', { name: 'Nowa gra', exact: true }).click();
 await pa.waitForTimeout(500);
-for (const name of ['Cyfrowa', 'Własne ustawienia', 'Kooperacja']) await pick(pa, name);
+for (const name of ['Kooperacja', 'Własne ustawienia']) await pick(pa, name);
 await nextPage(pa); // goal
 await nextPage(pa); // map
 await pa.getByRole('button', { name: '2', exact: true }).click();

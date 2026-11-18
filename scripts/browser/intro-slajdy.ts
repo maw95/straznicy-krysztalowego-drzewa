@@ -16,8 +16,9 @@ const click = async (p: import('playwright').Page, t: string) => {
   await p.locator('.opt-card-title', { hasText: new RegExp(`^${t}$`) }).first().click();
   await p.waitForTimeout(350);
 };
-const toWizard = async (p: import('playwright').Page, ...labels: string[]) => {
+const toWizard = async (p: import('playwright').Page, mode: string, ...labels: string[]) => {
   await click(p, 'Nowa gra');
+  await click(p, mode);
   await click(p, 'Ten komputer');
   for (const l of labels) await click(p, l);
 };
@@ -25,9 +26,9 @@ const toWizard = async (p: import('playwright').Page, ...labels: string[]) => {
 await shot('steps=40&seed=4&growth=1&size=medium', '05-cel');
 await shot('steps=26&seed=5&growth=1&size=long', '06-wedrowka');
 await shot('steps=400&until=battle&seed=3', '07-bitwa');
-await shot('', '08-tryby', (p) => toWizard(p, 'Cyfrowa', 'Przygoda'));
-await shot('', '09-wersje', (p) => toWizard(p));
-await shot('', '10-poziomy', (p) => toWizard(p, 'Cyfrowa'));
-await shot('', '11-cele', (p) => toWizard(p, 'Cyfrowa', 'Wyprawa', 'Kooperacja'));
+await shot('', '08-tryby', (p) => toWizard(p, 'Kooperacja', 'Przygoda'));
+await shot('', '09-wersje', (p) => toWizard(p, 'Kooperacja'));
+await shot('', '10-poziomy', (p) => toWizard(p, 'Kooperacja'));
+await shot('', '11-cele', (p) => toWizard(p, 'Kooperacja', 'Wyprawa'));
 await shot('mode=arena&steps=60&until=battle&ruleset=digital', '13-arena');
 console.log('done');

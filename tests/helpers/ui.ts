@@ -68,5 +68,5 @@ export async function click(c: ParentNode, ...labels: string[]) {
   }
 }
 
-/** From the first page of the menu into the new-game wizard on this computer, then through the given pages. */
-export const newGame = (c: ParentNode, ...labels: string[]) => click(c, 'Nowa gra', 'Ten komputer', ...labels);
+/** From the first page of the menu through the mode and "Ten komputer" into the new-game wizard, then through the given pages. */
+export const newGame = (c: ParentNode, mode: string, ...labels: string[]) => click(c, 'Nowa gra', mode, 'Ten komputer', ...labels);

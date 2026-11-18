@@ -9,6 +9,7 @@ import { Logo } from './Logo';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { BOARD_LEVELS, choice, LEVELS, SEAT_TINT, SHAPE_NAMES } from './setupShared';
 import { NewGameWizard } from './NewGameWizard';
+import type { Mode } from '../engine/types';
 
 /** Links of the main menu that do not depend on the account. */
 export interface MenuLinks {
@@ -25,7 +26,7 @@ export interface MenuLinks {
  * the ranking, players online with "Zaproś" and the general chat; a room shows its table before the start.
  * The game itself is played on the usual screens (App), once the room starts.
  */
-export function OnlineScreen({ intent, session, onSession, onLocalGame, onOffline, links }: { intent: 'new' | 'load'; session: OnlineSession | null; onSession: (s: OnlineSession | null) => void; onLocalGame: () => void; onOffline: () => void; links: MenuLinks }) {
+export function OnlineScreen({ intent, preset, session, onSession, onLocalGame, onOffline, links }: { intent: 'new' | 'load'; preset?: { mode: Mode; digital: boolean }; session: OnlineSession | null; onSession: (s: OnlineSession | null) => void; onLocalGame: () => void; onOffline: () => void; links: MenuLinks }) {
   // Only a saved session needs the server before anything shows; without one the welcome comes at once.
   const [checking, setChecking] = useState(!session && savedToken() !== null);
   const [problem, setProblem] = useState<string | null>(null);
@@ -59,7 +60,7 @@ export function OnlineScreen({ intent, session, onSession, onLocalGame, onOfflin
         <button className="btn plate parch btn-testers" style={{ padding: '6px 14px', fontSize: 16 }} onClick={links.onTesters} title="Uwagi o grze i zgłoszone błędy — prosto do twórcy">Dla testerów</button>
       </div>
       {session ? (
-        <Home intent={intent} session={session} onSignOut={() => onSession(null)} onLocalGame={onLocalGame} links={links} />
+        <Home intent={intent} preset={preset} session={session} onSignOut={() => onSession(null)} onLocalGame={onLocalGame} links={links} />
       ) : checking ? (
         <Frame crest style={{ width: 'min(420px, 94vw)', position: 'relative' }} innerStyle={{ padding: 26, textAlign: 'center', fontSize: 19 }}>
           Łączenie z serwerem gry…
@@ -130,7 +131,7 @@ function Welcome({ problem, onRetry, onUser, onOffline }: { problem: string | nu
   );
 }
 
-function Home({ intent, session, onSignOut, onLocalGame, links }: { intent: 'new' | 'load'; session: OnlineSession; onSignOut: () => void; onLocalGame: () => void; links: MenuLinks }) {
+function Home({ intent, preset, session, onSignOut, onLocalGame, links }: { intent: 'new' | 'load'; preset?: { mode: Mode; digital: boolean }; session: OnlineSession; onSignOut: () => void; onLocalGame: () => void; links: MenuLinks }) {
   const online = useOnline(session);
   const [code, setCode] = useState('');
   const [joining, setJoining] = useState(false);
@@ -202,6 +203,8 @@ function Home({ intent, session, onSignOut, onLocalGame, links }: { intent: 'new
       ) : wizard ? (
         <NewGameWizard
           online
+          mode={preset?.mode}
+          digital={preset?.digital}
           onBack={() => setWizard(false)}
           onFinish={(table) => {
             pending.current = table;

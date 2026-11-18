@@ -14,7 +14,7 @@ import { movePath } from '../engine/battle';
 import { neighborKeys, type HexKey } from '../engine/hex';
 import { tileCost } from '../engine/map';
 import { controlCounts, objectiveOf, OBJECTIVES } from '../engine/objectives';
-import { arenaSetup, DEFAULT_RULES, isDigital, type Level, type Action, type GameState, type LogEntry, type LogEvent, type SetupOptions } from '../engine/types';
+import { arenaSetup, DEFAULT_RULES, isDigital, type Level, type Mode, type Action, type GameState, type LogEntry, type LogEvent, type SetupOptions } from '../engine/types';
 import { AdventureView, GoldBox, type LootFloat } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
 import { usePresentation } from './usePresentation';
@@ -109,6 +109,8 @@ export function App() {
    * The session (once logged in) outlives the screen during a game.
    */
   const [onlineIntent, setOnlineIntent] = useState<'new' | 'load'>('new');
+  /** The mode and edition picked in the menu before "Przez internet": the online table's wizard goes on from them. */
+  const [onlinePreset, setOnlinePreset] = useState<{ mode: Mode; digital: boolean } | undefined>(undefined);
   const [onlineScreen, setOnlineScreen] = useState(() => !playsOffline());
   const [session, setSession] = useState<OnlineSession | null>(null);
   const online = useOnline(session);
@@ -769,6 +771,7 @@ export function App() {
         {onlineScreen ? (
           <OnlineScreen
             intent={onlineIntent}
+            preset={onlinePreset}
             session={session}
             onSession={setSession}
             onLocalGame={() => setOnlineScreen(false)}
@@ -782,8 +785,9 @@ export function App() {
         <SetupScreen
           session={Boolean(session)}
           online={session ? { label: '← Menu online', title: 'Wróć do menu gry online' } : { label: 'Zaloguj się, żeby grać ze znajomymi', title: 'Gra online i ranking wymagają konta' }}
-          onOnline={(intent) => {
+          onOnline={(intent, preset) => {
             setOnlineIntent(intent);
+            setOnlinePreset(intent === 'new' ? preset : undefined);
             setPlaysOffline(false);
             setOnlineScreen(true);
           }}

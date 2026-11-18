@@ -7,6 +7,7 @@ for (const view of ['desktop', 'malypoziomo'] as View[]) {
   const p = game.page;
   try {
     await p.waitForTimeout(800);
+    await p.locator('[data-new-game]').click();
     await p.locator('[data-campaign-open]').click();
     await p.locator('[data-campaign]').waitFor();
     console.log(view, 'scenarios:', await p.locator('[data-scenario]').count(), 'open:', await p.locator('[data-scenario][data-state="open"]').count());

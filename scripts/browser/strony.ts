@@ -6,13 +6,12 @@ const p = g.page;
 const card = (t: string) => p.locator('.opt-card', { hasText: t }).first();
 try {
   await card('Nowa gra').click();
+  await card('Rywalizacja').click();
   await card('Ten komputer').click();
-  await p.locator('[data-wizard-page="edition"]').waitFor();
+  await p.locator('[data-wizard-page="tier"]').waitFor();
   const nextIfAny = async () => { await p.waitForTimeout(500); const n = p.locator('[data-wizard-next]'); if (await n.count()) await n.click().catch(() => {}); await p.waitForTimeout(300); };
-  await card('Cyfrowa').click(); await nextIfAny();
   await card('Wyprawa').click(); await nextIfAny();
-  await card('Rywalizacja').click(); await nextIfAny();
-  await card('Punkty kontrolne').click(); await nextIfAny();
+  await card('Punkty kontrolne').click();
   await p.locator('[data-wizard-page="map"]').waitFor();
   await p.locator('[data-shape="rectangle"]').click(); await p.waitForTimeout(500);
   console.log('map page buttons:', (await p.getByRole('button').allInnerTexts()).filter(Boolean).slice(0, 25).join(' | '));

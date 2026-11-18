@@ -10,8 +10,9 @@ const p = A.page;
 const pick = async (name: string) => { await p.locator('.opt-card-title', { hasText: new RegExp(`^${name}$`) }).click(); await p.waitForTimeout(250); };
 await p.waitForTimeout(3000);
 await p.getByRole('button', { name: 'Nowa gra', exact: true }).click();
-for (const n of ['Cyfrowa', 'Przygoda', 'Kooperacja']) await pick(n);
-await p.locator('[data-wizard-next]').click();
+for (const n of ['Kooperacja', 'Przygoda']) await pick(n);
+await p.locator('[data-wizard-next]').click(); // map (size)
+await p.locator('[data-wizard-next]').click(); // players
 await p.waitForTimeout(1500);
 await p.getByRole('button', { name: 'Zajmij miejsce' }).first().click();
 await p.waitForTimeout(500);

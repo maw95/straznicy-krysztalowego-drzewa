@@ -65,7 +65,7 @@ describe('setup screen simplifications', () => {
     const { container } = render(<StrictMode><App /></StrictMode>);
     const btn = (t: string) => pick(container, t)!;
     // Single switches are tucked away under the "Własne ustawienia" level: their page comes right after the card.
-    await newGame(container, 'Cyfrowa', 'Własne ustawienia');
+    await newGame(container, 'Kooperacja', 'Własne ustawienia');
     const tip = (t: string) => btn(t).parentElement!.querySelector('[role="tooltip"]')?.textContent ?? '';
     for (const t of ['Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością']) expect(btn(t).getAttribute('aria-pressed')).toBe('false');
     for (const t of ['Osobna arena (3 na 3)', 'Na planszy głównej (pojedynek 1 na 1)', 'Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Osady i złoto', 'Ruch 4', '60']) expect(tip(t).length).toBeGreaterThan(20);
@@ -73,11 +73,13 @@ describe('setup screen simplifications', () => {
     expect(btn('Dodatkowy bohater Hordy')).toBeUndefined();
     await click(container, 'Same Eliksiry Odrodzenia', 'Rzut kością');
     expect(btn('Same Eliksiry Odrodzenia').getAttribute('aria-pressed')).toBe('true');
-    await click(container, 'Dalej →', 'Kooperacja', 'Kryształy do Drzewa', 'Trójkąt');
-    expect(btn('Dodatkowy bohater Hordy').getAttribute('aria-pressed')).toBe('false');
-    // Every option explains itself in a hover tooltip next to its button.
-    for (const t of ['Mała', 'Bardzo duża', 'Łatwy', 'Normalny', 'Trudny']) expect(tip(t).length).toBeGreaterThan(40);
+    await click(container, 'Dalej →', 'Kryształy do Drzewa', 'Trójkąt');
+    // Every option explains itself in a hover tooltip next to its button (the map sizes on the map page, the levels on the players page).
+    for (const t of ['Mała', 'Bardzo duża']) expect(tip(t).length).toBeGreaterThan(40);
     expect(tip('Mała')).toContain('limit 8 rund');
+    await click(container, 'Dalej →');
+    expect(btn('Dodatkowy bohater Hordy').getAttribute('aria-pressed')).toBe('false');
+    for (const t of ['Łatwy', 'Normalny', 'Trudny']) expect(tip(t).length).toBeGreaterThan(40);
     await click(container, 'Dalej →', 'Rozpocznij grę');
     const game = (window as any).__game;
     expect(game.rules).toMatchObject({ abilities: true, treasures: false, useDice: true, heroReplacement: false });
@@ -87,7 +89,7 @@ describe('setup screen simplifications', () => {
   it('sets up the levels: hard adds a Horde hero in coop, Spacer plays duels without abilities, Łatwy is the full game', async () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<StrictMode><App /></StrictMode>);
-    await newGame(container, 'Cyfrowa', 'Przygoda', 'Kooperacja');
+    await newGame(container, 'Kooperacja', 'Przygoda', 'Dalej →');
     await click(container, 'Trudny');
     expect(pick(container, 'Trudny')!.getAttribute('aria-pressed')).toBe('true');
     await click(container, 'Dalej →', 'Rozpocznij grę');
@@ -96,14 +98,14 @@ describe('setup screen simplifications', () => {
     expect(game.factions.horde.inventory).toHaveLength(2);
     cleanup();
     const vh = render(<StrictMode><App /></StrictMode>).container;
-    await newGame(vh, 'Cyfrowa', 'Przygoda', 'Kooperacja');
+    await newGame(vh, 'Kooperacja', 'Przygoda', 'Dalej →');
     await click(vh, 'Bardzo trudny', 'Dalej →', 'Rozpocznij grę');
     game = (window as any).__game;
     expect(game.setup.rules).toMatchObject({ veryHard: true });
     expect(game.factions.horde.inventory).toHaveLength(4);
     cleanup();
     const second = render(<StrictMode><App /></StrictMode>).container;
-    await newGame(second, 'Cyfrowa', 'Przygoda', 'Rywalizacja');
+    await newGame(second, 'Rywalizacja', 'Przygoda', 'Dalej →');
     // Every mode offers all four levels now (the computer's advantages work at a PvP table too).
     expect(pick(second, 'Trudny')).toBeDefined();
     expect(pick(second, 'Bardzo trudny')).toBeDefined();
@@ -113,7 +115,7 @@ describe('setup screen simplifications', () => {
     expect(game.setup.rules).toMatchObject({ abilities: true, easy: true });
     cleanup();
     const third = render(<StrictMode><App /></StrictMode>).container;
-    await newGame(third, 'Cyfrowa', 'Spacer', 'Rywalizacja');
+    await newGame(third, 'Rywalizacja', 'Spacer', 'Dalej →');
     expect(pick(third, 'Łatwy')).toBeUndefined();
     await click(third, 'Dalej →', 'Rozpocznij grę');
     game = (window as any).__game;
@@ -256,17 +258,17 @@ describe('setup options', () => {
     const { container } = render(<App />);
     const doc = container.ownerDocument;
     const btn = (t: string) => pick(doc, t);
-    await newGame(doc, 'Cyfrowa', 'Przygoda', 'Kooperacja');
+    await newGame(doc, 'Kooperacja', 'Przygoda', 'Dalej →');
     expect(btn('Na zmianę')).toBeUndefined();
     expect(doc.body.textContent).not.toContain('Remis inicjatywy');
     cleanup();
     const second = render(<App />).container.ownerDocument;
-    await newGame(second, 'Cyfrowa', 'Własne ustawienia');
+    await newGame(second, 'Kooperacja', 'Własne ustawienia');
     expect(pick(second, 'Remis: Obrońca pierwszy')!.getAttribute('aria-pressed')).toBe('true');
     await click(second, 'Remis: Na zmianę');
     expect(pick(second, 'Remis: Na zmianę')!.getAttribute('aria-pressed')).toBe('true');
     // The custom switches survive going on to the other pages and coming back.
-    await click(second, 'Dalej →', 'Kooperacja', '← Wstecz', '← Wstecz');
+    await click(second, 'Dalej →', '← Wstecz');
     expect(pick(second, 'Remis: Na zmianę')!.getAttribute('aria-pressed')).toBe('true');
   });
 });
@@ -357,15 +359,17 @@ describe('start screen', () => {
     expect(button(doc, 'Dla testerów')).toBeTruthy();
     expect(localStorage.getItem('skd-play-offline')).toBe('1');
     await click(doc, 'Nowa gra');
+    for (const m of ['Rywalizacja', 'Kooperacja', 'Arena', 'Kampania', 'Ekspedycja']) expect(pick(doc, m)).toBeTruthy();
+    await click(doc, 'Kooperacja');
     expect(pick(doc, 'Ten komputer')).toBeTruthy();
     expect(pick(doc, 'Przez internet')).toBeTruthy();
     await click(doc, 'Ten komputer');
-    expect(pick(doc, 'Cyfrowa')).toBeTruthy();
-    expect(pick(doc, 'Planszowa')).toBeTruthy();
-    await click(doc, '← Wstecz', '← Wstecz');
+    expect(doc.querySelector('[data-wizard-page="tier"]')).toBeTruthy();
+    await click(doc, '← Wstecz', '← Wstecz', '← Wstecz');
     expect(pick(doc, 'Nowa gra')).toBeTruthy();
+    expect(pick(doc, 'Wersja planszowa')).toBeTruthy();
 
-    await click(doc, 'Nowa gra', 'Przez internet');
+    await click(doc, 'Nowa gra', 'Kooperacja', 'Przez internet');
     expect(doc.body.textContent).toContain('Witaj, Strażniku!');
     expect(localStorage.getItem('skd-play-offline')).toBeNull();
   });
@@ -487,7 +491,7 @@ describe('full screen', () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<App />);
     const doc = container.ownerDocument;
-    await newGame(doc, 'Cyfrowa', 'Przygoda', 'Kooperacja', 'Dalej →');
+    await newGame(doc, 'Kooperacja', 'Przygoda', 'Dalej →', 'Dalej →');
     const box = [...doc.querySelectorAll('label')].find((l) => l.textContent?.includes('Pełny ekran przy uruchomieniu'))!.querySelector('input')!;
     await act(async () => {
       fireEvent.pointerUp(box);
@@ -567,7 +571,7 @@ describe('arena through the UI', () => {
     const { container } = render(<App />);
     const doc = container.ownerDocument;
     const btn = (t: string) => button(doc, t);
-    await newGame(doc, 'Cyfrowa', 'Przygoda', 'Arena', 'Dalej →');
+    await newGame(doc, 'Arena', 'Dalej →');
     if (bothHuman) {
       const who = doc.querySelectorAll('select[aria-label="Kto gra"]')[1] as HTMLSelectElement;
       await act(async () => fireEvent.change(who, { target: { value: 'human' } }));
@@ -577,22 +581,21 @@ describe('arena through the UI', () => {
   }
   const overlayWith = (doc: Document, text: string) => [...doc.querySelectorAll('.overlay')].find((o) => o.textContent?.includes(text));
 
-  it('the edition page starts the digital edition (wide arena) or the board edition, in the arena and in the adventure, and is remembered', async () => {
-    localStorage.removeItem('skd-edition');
-    for (const [mode, label, digital] of [['Arena', 'Cyfrowa', true], ['Arena', 'Planszowa', false], ['Kooperacja', 'Cyfrowa', true], ['Kooperacja', 'Planszowa', false]] as const) {
+  it('"Nowa gra" starts the digital edition, the "Wersja planszowa" link the board edition, in the arena and in the adventure; the edition is not remembered for the next game', async () => {
+    for (const [mode, board] of [['Arena', false], ['Arena', true], ['Kooperacja', false], ['Kooperacja', true]] as const) {
       window.history.replaceState(null, '', '/');
       vi.useFakeTimers();
       const { container, unmount } = render(<App />);
       const doc = container.ownerDocument;
-      await click(doc, 'Nowa gra', 'Ten komputer');
-      // Digital unless the board edition was picked before (it is remembered in the browser).
-      expect(pick(doc, 'Cyfrowa')!.getAttribute('aria-pressed')).toBe(String(localStorage.getItem('skd-edition') !== 'board'));
-      await click(doc, label);
-      if (digital) await click(doc, 'Przygoda');
-      await click(doc, mode, 'Dalej →', 'Rozpocznij grę');
+      await click(doc, board ? 'Wersja planszowa' : 'Nowa gra', mode, 'Ten komputer');
+      if (mode !== 'Arena') {
+        if (!board) await click(doc, 'Przygoda');
+        await click(doc, 'Dalej →');
+      }
+      await click(doc, 'Dalej →', 'Rozpocznij grę');
       const g = (window as any).__game;
-      expect(g.rules.ruleset === 'digital').toBe(digital);
-      if (mode === 'Arena') expect(g.battle.layout === 'wide').toBe(digital);
+      expect(g.rules.ruleset === 'digital').toBe(!board);
+      if (mode === 'Arena') expect(g.battle.layout === 'wide').toBe(!board);
       unmount();
       vi.useRealTimers();
     }
@@ -605,17 +608,17 @@ describe('arena through the UI', () => {
     const { container, unmount } = render(<App />);
     const doc = container.ownerDocument;
     // Level 1 fixes the goal; level 2 opens the choice.
-    await newGame(doc, 'Cyfrowa', 'Przygoda', 'Kooperacja');
+    await newGame(doc, 'Kooperacja', 'Przygoda');
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
-    await click(doc, '← Wstecz', '← Wstecz', 'Wyprawa', 'Kooperacja');
+    await click(doc, '← Wstecz', 'Wyprawa');
     expect(pick(doc, 'Punkty kontrolne')).toBeTruthy();
     expect(pick(doc, 'Kryształy do Drzewa')!.getAttribute('aria-pressed')).toBe('true');
     // The board edition has no levels and no goal choice; the arena has neither.
-    await click(doc, '← Wstecz', '← Wstecz', '← Wstecz', 'Planszowa', 'Kooperacja');
+    await click(doc, '← Wstecz', '← Wstecz', '← Wstecz', '← Wstecz', 'Wersja planszowa', 'Kooperacja', 'Ten komputer');
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
-    await click(doc, '← Wstecz', '← Wstecz', 'Cyfrowa', 'Wyprawa', 'Arena');
+    await click(doc, '← Wstecz', '← Wstecz', '← Wstecz', 'Nowa gra', 'Arena', 'Ten komputer');
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
-    await click(doc, '← Wstecz', 'Kooperacja', 'Punkty kontrolne', 'Trójkąt', 'Dalej →', 'Rozpocznij grę');
+    await click(doc, '← Wstecz', '← Wstecz', 'Kooperacja', 'Ten komputer', 'Wyprawa', 'Punkty kontrolne', 'Trójkąt', 'Dalej →', 'Dalej →', 'Rozpocznij grę');
     const g = (window as any).__game;
     expect(g.rules.objective).toBe('control');
     expect(g.rules.heroGrowth).toBe(true);
@@ -847,7 +850,7 @@ describe('the new-game wizard goes on by itself', () => {
     const { container } = render(<App />);
     const doc = container.ownerDocument;
     const page = () => doc.querySelector('[data-wizard-page]')!.getAttribute('data-wizard-page');
-    await newGame(doc, 'Cyfrowa', 'Wyprawa', 'Kooperacja');
+    await newGame(doc, 'Kooperacja', 'Wyprawa');
     expect(page()).toBe('objective');
     expect(doc.querySelector('[data-wizard-next]')).toBeNull();
     await click(doc, 'Boss');
@@ -855,8 +858,11 @@ describe('the new-game wizard goes on by itself', () => {
     expect(doc.querySelector('[data-wizard-next]')).not.toBeNull();
     await click(doc, 'Punkty kontrolne');
     expect(page()).toBe('map');
-    expect(doc.querySelector('[data-wizard-next]')).toBeNull();
+    // The map page also asks for the size, so it keeps its button: the shape does not move it on.
+    expect(doc.querySelector('[data-wizard-next]')).not.toBeNull();
     await click(doc, 'Trójkąt');
+    expect(page()).toBe('map');
+    await click(doc, 'Dalej →');
     expect(page()).toBe('players');
     // Back and Next are the same size.
     const nav = [...doc.querySelectorAll('.wizard-nav')];
@@ -871,7 +877,7 @@ describe('the story campaign in the menu', () => {
     vi.useFakeTimers();
     const { container } = render(<App />);
     const doc = container.ownerDocument;
-    await act(async () => fireEvent.click(doc.querySelector('[data-campaign-open]')!));
+    await click(doc, 'Nowa gra', 'Kampania');
     const state = (id: string) => doc.querySelector(`[data-scenario="${id}"]`)!.getAttribute('data-state');
     expect(state('pierwsza-dolina')).toBe('open');
     expect(state('gryfie-urwisko')).toBe('locked');
@@ -892,7 +898,7 @@ describe('the story campaign in the menu', () => {
     vi.useFakeTimers();
     const { container } = render(<App />);
     const doc = container.ownerDocument;
-    await act(async () => fireEvent.click(doc.querySelector('[data-campaign-open]')!));
+    await click(doc, 'Nowa gra', 'Kampania');
     expect(doc.querySelector('[data-scenario="pierwsza-dolina"]')!.getAttribute('data-state')).toBe('done');
     expect(doc.querySelector('[data-scenario="gryfie-urwisko"]')!.getAttribute('data-state')).toBe('open');
     expect(doc.querySelector('[data-scenario="zatopione-ruiny"]')!.getAttribute('data-state')).toBe('locked');

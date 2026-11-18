@@ -10,9 +10,9 @@ Format: `##` to rozdział, `###` to część rozdziału. Linia zaczynająca się
 Ta instrukcja opisuje **wersję komputerową** w jej obecnym kształcie: wszystkie poziomy złożoności (od Spaceru do Imperium), tryby, cele, kampanię, Ekspedycję i grę online. Dotychczasowa instrukcja do druku opisuje **wersję planszową** i zostaje nietknięta: znajdziesz ją na dole tej strony.
 
 ### Pierwsza partia w pięciu krokach
-1. W menu głównym kliknij **Nowa gra** i zostaw wybraną wersję **cyfrową**.
+1. W menu głównym kliknij **Nowa gra**, wybierz tryb **Kooperacja** i miejsce **Ten komputer**.
 2. Wybierz poziom **Przygoda** (pełna gra bez rozwoju bohatera) albo **Spacer** (bardzo proste pojedynki, od 5 lat).
-3. Wybierz tryb **kooperacji** (ty i znajomi przeciw komputerowi), cel **Kryształy do Drzewa**, małą mapę i trudność **Normalny**.
+3. Wybierz małą mapę, liczbę graczy (w kooperacji ty i znajomi grają przeciw komputerowi) i trudność **Normalny**. Celem są **Kryształy do Drzewa**.
 4. Wybierz bohatera. Na mapie klikaj sąsiednie pola, żeby iść, a **Spacją** kończ turę.
 5. Wejdź na pole strażnika. Zacznie się bitwa na arenie: rozstaw jednostki, a potem klikaj jednostkę i pole, na które ma iść albo które ma zaatakować.
 
@@ -26,26 +26,26 @@ W pierwszej partii pojawia się krótki samouczek z podpowiedziami; wyłączysz 
 ## Menu główne
 @słowa: menu, przyciski, nowa gra, kampania, ekspedycja, wczytaj, autorzy, wprowadzenie, dla testerów, ekran startowy, flaga, język
 
-Menu główne ma cztery duże przyciski:
-- **Nowa gra:** kreator partii (rozdział [Kreator nowej gry](#kreator-nowej-gry)).
-- **Kampania:** historia Przymierza Świtu w czterech scenariuszach ([Kampania](#kampania)).
-- **Ekspedycja:** osiem bitew na arenie pod rząd, jedno życie ([Ekspedycja](#ekspedycja)).
-- **Wczytaj grę:** wraca do zapisanej partii: ostatniej (autozapis), zapisanej pod nazwą albo z pliku.
+Menu główne ma dwa duże przyciski:
+- **Nowa gra:** druga strona pyta o **tryb**: rywalizacja, kooperacja, arena ([Tryby gry](#tryby-gry)), **Kampania** (historia Przymierza Świtu w czterech scenariuszach, [Kampania](#kampania)) albo **Ekspedycja** (osiem bitew na arenie pod rząd, jedno życie, [Ekspedycja](#ekspedycja)). Rywalizacja, kooperacja i arena prowadzą dalej do kreatora partii (rozdział [Kreator nowej gry](#kreator-nowej-gry)); Kampania i Ekspedycja mają własne ekrany.
+- **Wczytaj grę:** wraca do zapisanej partii: ostatniej (autozapis), zapisanej pod nazwą albo z pliku. Wyprawa Ekspedycji w toku ma tam wpis „Ekspedycja w toku” z przyciskiem „Wznów”.
+
+U dołu menu jest mały link **Wersja planszowa**: prowadzi tą samą ścieżką (tryb, miejsce, kreator), ale gra się w wersji planszowej ([Kreator nowej gry](#kreator-nowej-gry)).
 
 U góry są trzy mniejsze przyciski: **Zasady i karty** (to okno), **Wprowadzenie** (krótki zarys fabuły i zasad) oraz **Dla testerów** (informacje dla testerów, statystyki twoich gier i okno na uwagi, które trafiają do twórcy). W prawym górnym rogu: **flagi** zmieniające język (polski i angielski), pełny ekran i muzyka. W prawym dolnym rogu menu widać twoje statystyki z tej przeglądarki, a w lewym dolnym numer wersji: kliknięcie otwiera historię zmian. Przycisk **Autorzy** pokazuje twórców gry, autorów muzyki wraz z licencjami i informację, że grafika, animacje i dźwięki powstały z użyciem narzędzi AI.
 
 ## Kreator nowej gry
 @słowa: kreator, nowa gra, ustawienia, wersja, poziom, tryb, cel, mapa, gracze, trudność, kształt mapy, wielkość mapy, boty, hot-seat, podpowiedzi
 
-Kreator prowadzi przez kolejne strony. Przyciskiem **Wstecz** wrócisz do poprzedniej, a część wyborów (cel, mapa) przechodzi dalej od razu po kliknięciu.
+Przed kreatorem wybierasz **tryb** (druga strona menu: rywalizacja, kooperacja albo arena) i **gdzie grasz**: na tym komputerze (z komputerowymi przeciwnikami, albo kilku graczy przy jednym ekranie) albo **online** ze znajomymi ([Gra online i ranking](#gra-online-i-ranking)). Kreator prowadzi potem przez kolejne strony. Przyciskiem **Wstecz** wrócisz do poprzedniej, a część wyborów (poziom, cel) przechodzi dalej od razu po kliknięciu.
 
-1. **Gdzie grasz:** na tym komputerze (z komputerowymi przeciwnikami, albo kilku graczy przy jednym ekranie) albo **online** ze znajomymi ([Gra online i ranking](#gra-online-i-ranking)).
-2. **Wersja:** **cyfrowa** (domyślna: jednostki w grafice 2D z animacjami, heksowa arena, wszystkie poziomy złożoności) albo **planszowa** (wierna planszówka: figurki 3D, zasady bez zmian i cztery rozmiary mapy).
-3. **Poziom złożoności:** od Spaceru do Imperium ([Poziomy złożoności](#poziomy-zlozonosci)) albo **Własne ustawienia** ([Własne ustawienia](#wlasne-ustawienia)).
-4. **Tryb:** kooperacja, rywalizacja albo arena ([Tryby gry](#tryby-gry)).
-5. **Cel gry** ([Cele gry](#cele-gry)) i **mapa**: kształt (trójkąt, prostokąt, pierścień, wyspy albo gotowa mapa) i wielkość ([Mapa przygody](#mapa-przygody)).
-6. **Gracze:** liczba graczy, frakcje, bohaterowie, kto jest człowiekiem, a kto komputerem. Przy graczu-człowieku w kooperacji jest pole **Dziecko** ([Tryb rodzinny](#tryb-rodzinny)).
-7. **Trudność** komputera ([Poziomy trudności](#poziomy-trudnosci)).
+1. **Poziom złożoności** (poza areną): od Spaceru do Imperium ([Poziomy złożoności](#poziomy-zlozonosci)) albo **Własne ustawienia** ([Własne ustawienia](#wlasne-ustawienia)).
+2. **Cel gry** (od poziomu Wyprawa, [Cele gry](#cele-gry)).
+3. **Mapa** (poza areną): na wyższych poziomach kształt (trójkąt, prostokąt, pierścień, wyspy albo gotowa mapa) i **wielkość**; w Spacerze, Przygodzie i wersji planszowej tylko wielkość ([Mapa przygody](#mapa-przygody)).
+4. **Gracze:** liczba graczy, frakcje, bohaterowie, kto jest człowiekiem, a kto komputerem. Przy graczu-człowieku w kooperacji jest pole **Dziecko** ([Tryb rodzinny](#tryb-rodzinny)).
+5. **Trudność** komputera ([Poziomy trudności](#poziomy-trudnosci)).
+
+**Wersja:** domyślnie gra się w wersji **cyfrowej** (jednostki w grafice 2D z animacjami, heksowa arena, wszystkie poziomy złożoności). **Wersja planszowa** (wierna planszówka: figurki 3D, zasady bez zmian i cztery rozmiary mapy; bez poziomów złożoności i wyboru celu) to link na pierwszej stronie menu. Wybór wersji obowiązuje tylko dla tej partii.
 
 Na każdej stronie podpowiedź pod kursorem (na telefonie po dotknięciu) tłumaczy, co robi dany wybór.
 
@@ -329,7 +329,7 @@ Arena to **jedna bitwa bez mapy**: Przymierze kontra Horda, z komputerem albo z 
 
 **Kampania „Powrót Światła”** to historia Przymierza Świtu w **czterech scenariuszach** na ręcznie rysowanych mapach: **Pierwsza dolina**, **Gryfie Urwisko**, **Zatopione Ruiny** i **Cień nad Drzewem**. Każdy scenariusz ma swój poziom zasad, cel, wstęp, wskazówki i notatki fabularne, które otwierają się w ważnych momentach (po rundzie, wejściu na pole albo pokonaniu przeciwnika; przycisk „Dalej” zamyka okienko).
 
-Scenariusze odblokowują się po kolei: ukończenie jednego otwiera następny. Postęp zapisuje się w tej przeglądarce. Po wygranej ekran podsumowania proponuje „Następny scenariusz”.
+Scenariusze odblokowują się po kolei: ukończenie jednego otwiera następny. Postęp zapisuje się w tej przeglądarce. Po wygranej ekran podsumowania proponuje „Następny scenariusz”. Rozgrywany scenariusz możesz zapisać (**Opcje → Zapisz grę**) i wczytać w menu „Wczytaj grę”; na liście zapis ma podpis z nazwą scenariusza.
 
 ## Ekspedycja
 @słowa: ekspedycja, wyprawa dnia, roguelike, relikwie, osiem bitew, jedno życie, boss, czarny smok, ranking dnia, kryształ many, źródło many, zapasowa księga, skrzynia mistrza
@@ -340,10 +340,12 @@ Po każdej wygranej wybierasz jedną z trzech **relikwii**, które zostają do k
 
 **Wyprawa dnia** to ta sama wyprawa dla wszystkich graczy danego dnia (te same przeciwnicy i oferty). Wynik zalogowanych graczy trafia do **rankingu dnia**.
 
+**Zapis:** wyprawa zapisuje się sama między bitwami, więc zamknięcie karty jej nie gubi; w menu „Wczytaj grę” jest wpis „Ekspedycja w toku” z przyciskiem „Wznów”. W bitwie Ekspedycji nie ma ręcznego zapisu, bo wyprawa ma jedno życie. Wyjście z bitwy zwykłej wyprawy nie daje powtórki: bitwa czeka w tym samym stanie, a na stronie wyprawy przycisk zmienia się w „Wróć do bitwy”. Wyjście z bitwy wyprawy dnia kończy ją, a liczą się etapy przebyte do tej pory.
+
 ## Gra online i ranking
 @słowa: online, internet, konto, logowanie, nowe konto, pokój, kod pokoju, zaproszenie, znajomi, ranking, punkty, wygrane, stół, zapisane gry online
 
-Przy pierwszym wyborze w kreatorze („gdzie grasz”) wybierz **online**. Zakładasz **konto** (nick i hasło) albo logujesz się. Dalej:
+Po wyborze trybu w menu („gdzie grasz”) wybierz **online**. Zakładasz **konto** (nick i hasło) albo logujesz się. Dalej:
 - **Graj ze znajomymi:** zakładasz **pokój** (stół). Kod pokoju podajesz znajomym, którzy wybierają w menu „Dołącz do gry”, albo zapraszasz graczy z listy obok. Ustawienia stołu zmienia założyciel i to on rozpoczyna grę. Można zająć kilka miejsc i grać nimi na zmianę przy jednym komputerze, a wolne miejsca zajmie komputer.
 - **Zapisane gry online:** partie zapisane na serwerze można wznowić (ustawień takiej gry nie zmienisz).
 - **Ranking:** punkty za wygrane (patrz [Poziomy trudności](#poziomy-trudnosci)) układają się w tabelę najlepszych graczy; osobny ranking jest dla Areny 6 na 6 i dla Wyprawy dnia. Gry na własnych ustawieniach punktów nie dają.

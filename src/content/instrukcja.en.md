@@ -10,9 +10,9 @@ Format: `##` is a chapter, `###` is a part of a chapter. A line starting with `@
 This manual describes the **computer version** as it is now: all complexity levels (from Walk to Empire), the modes, goals, the campaign, the Roguelike Run and online play. The earlier printable manual describes the **board version** and stays untouched: you will find it at the bottom of this page (it is in Polish only).
 
 ### Your first game in five steps
-1. In the main menu click **New game** and leave the **digital** version selected.
+1. In the main menu click **New game**, choose the **Co-op** mode and the place **This computer**.
 2. Choose the level **Adventure** (the full game without hero development) or **Walk** (very simple duels, from age 5).
-3. Choose the **co-op** mode (you and your friends against the computer), the goal **Crystals to the Tree**, a small map and the difficulty **Normal**.
+3. Choose a small map, the number of players (in co-op you and your friends play against the computer) and the difficulty **Normal**. The goal is **Crystals to the Tree**.
 4. Choose a hero. On the map click neighbouring tiles to walk and press **Space** to end your turn.
 5. Step onto a guardian's tile. A battle on the arena begins: place your units, then click a unit and the tile it should move to or attack.
 
@@ -26,26 +26,26 @@ In your first game a short tutorial with hints appears; you can switch it off wi
 ## Main menu
 @words: menu, buttons, new game, campaign, roguelike run, load, credits, introduction, for testers, start screen, flag, language
 
-The main menu has four big buttons:
-- **New game:** the game wizard (chapter [New game wizard](#new-game-wizard)).
-- **Campaign:** the story of the Dawn Covenant in four scenarios ([Campaign](#campaign)).
-- **Roguelike Run:** eight arena battles in a row, one life ([Roguelike Run](#roguelike-run)).
-- **Load a game:** returns to a saved game: the last one (autosave), one saved under a name, or one from a file.
+The main menu has two big buttons:
+- **New game:** the second page asks for the **mode**: rivalry, co-op, arena ([Game modes](#game-modes)), the **Campaign** (the story of the Dawn Covenant in four scenarios, [Campaign](#campaign)) or the **Roguelike Run** (eight arena battles in a row, one life, [Roguelike Run](#roguelike-run)). Rivalry, co-op and arena lead on to the game wizard (chapter [New game wizard](#new-game-wizard)); the Campaign and the Roguelike Run have screens of their own.
+- **Load a game:** returns to a saved game: the last one (autosave), one saved under a name, or one from a file. A Roguelike Run in progress has an entry there, "Roguelike Run in progress", with a "Resume" button.
+
+At the bottom of the menu there is a small **Board version** link: it follows the same path (mode, place, wizard), but you play the board version ([New game wizard](#new-game-wizard)).
 
 At the top there are three smaller buttons: **Rules and cards** (this window), **Introduction** (a short outline of the story and the rules) and **For testers** (information for testers, statistics of your games and a window for remarks that go to the author). In the top right corner: the **flags** that change the language (Polish and English), full screen and music. In the bottom right corner of the menu you see your statistics from this browser, and in the bottom left the version number: a click opens the history of changes. The **Credits** button shows the creators of the game, the authors of the music with their licences, and a note that the graphics, animations and sounds were made with the help of AI tools.
 
 ## New game wizard
 @words: wizard, new game, settings, version, level, mode, goal, map, players, difficulty, map shape, map size, bots, hot-seat, hints
 
-The wizard leads through consecutive pages. The **Back** button returns to the previous one, and some choices (goal, map) move on at once when clicked.
+Before the wizard you choose the **mode** (the menu's second page: rivalry, co-op or arena) and **where you play**: on this computer (against computer opponents, or several players at one screen) or **online** with friends ([Online play and ranking](#online-play-and-ranking)). The wizard then leads through consecutive pages. The **Back** button returns to the previous one, and some choices (level, goal) move on at once when clicked.
 
-1. **Where you play:** on this computer (against computer opponents, or several players at one screen) or **online** with friends ([Online play and ranking](#online-play-and-ranking)).
-2. **Version:** **digital** (the default: units in 2D graphics with animations, a hex arena, all complexity levels) or **board** (a faithful board game: 3D figures, unchanged rules and four map sizes).
-3. **Complexity level:** from Walk to Empire ([Complexity levels](#complexity-levels)) or **Custom settings** ([Custom settings](#custom-settings)).
-4. **Mode:** co-op, rivalry or arena ([Game modes](#game-modes)).
-5. **Goal of the game** ([Goals of the game](#goals-of-the-game)) and **map**: shape (triangle, rectangle, ring, islands or a ready-made map) and size ([Adventure map](#adventure-map)).
-6. **Players:** the number of players, factions, heroes, who is human and who is the computer. For a human player in co-op there is a **Child** field ([Family mode](#family-mode)).
-7. **Difficulty** of the computer ([Difficulty levels](#difficulty-levels)).
+1. **Complexity level** (except in the arena): from Walk to Empire ([Complexity levels](#complexity-levels)) or **Custom settings** ([Custom settings](#custom-settings)).
+2. **Goal of the game** (from the Expedition level, [Goals of the game](#goals-of-the-game)).
+3. **Map** (except in the arena): on the higher levels the shape (triangle, rectangle, ring, islands or a ready-made map) and the **size**; in Walk, Adventure and the board version only the size ([Adventure map](#adventure-map)).
+4. **Players:** the number of players, factions, heroes, who is human and who is the computer. For a human player in co-op there is a **Child** field ([Family mode](#family-mode)).
+5. **Difficulty** of the computer ([Difficulty levels](#difficulty-levels)).
+
+**Version:** you play the **digital** version by default (units in 2D graphics with animations, a hex arena, all complexity levels). The **board version** (a faithful board game: 3D figures, unchanged rules and four map sizes; no complexity levels and no goal choice) is a link on the menu's first page. The choice of the version holds for that game only.
 
 On every page a tooltip under the cursor (on a phone after a tap) explains what the choice does.
 
@@ -329,7 +329,7 @@ The arena is **one battle without a map**: the Covenant against the Horde, with 
 
 The **campaign "Return of the Light"** is the story of the Dawn Covenant in **four scenarios** on hand-drawn maps: **The First Valley**, **Griffin's Cliff**, **The Sunken Ruins** and **Shadow over the Tree**. Each scenario has its own rules level, goal, introduction, hints and story notes that open at important moments (after a round, on stepping onto a tile or defeating an opponent; the "Next" button closes the small window).
 
-The scenarios unlock one after another: finishing one opens the next. Progress is saved in this browser. After a win the summary screen offers "Next scenario".
+The scenarios unlock one after another: finishing one opens the next. Progress is saved in this browser. After a win the summary screen offers "Next scenario". You can save a scenario in progress (**Options → Save game**) and load it from "Load a game"; the save is labelled with the scenario's name.
 
 ## Roguelike Run
 @words: roguelike run, run of the day, roguelike, relics, eight battles, one life, black dragon, ranking of the day, mana crystal, mana spring, spare book, master's chest
@@ -340,10 +340,12 @@ After each win you choose one of three **relics** that stay until the end of the
 
 The **Run of the day** is the same run for all players on a given day (the same opponents and offers). The result of logged-in players goes to the **ranking of the day**.
 
+**Saving:** the run saves itself between battles, so closing the tab does not lose it; "Load a game" has a "Roguelike Run in progress" entry with a "Resume" button. There is no manual save in a battle, because a run has one life. Leaving a battle of an ordinary run gives no retry: the battle waits in the same state, and the run page's button becomes "Back to the battle". Leaving a battle of the run of the day ends it, and the stages cleared so far count.
+
 ## Online play and ranking
 @words: online, internet, account, login, new account, room, room code, invitation, friends, ranking, points, wins, table, saved online games
 
-At the first choice in the wizard ("where you play") choose **online**. You create an **account** (a nickname and a password) or log in. Then:
+After choosing the mode in the menu ("where you play"), choose **online**. You create an **account** (a nickname and a password) or log in. Then:
 - **Play with friends:** you create a **room** (a table). You give the room code to friends, who choose "Join a game" in the menu, or you invite players from the list next to it. The table's settings are changed by its founder, who also starts the game. You can take several seats and play them in turn at one computer, and the computer fills the free seats.
 - **Saved online games:** games saved on the server can be resumed (you cannot change the settings of such a game).
 - **Ranking:** points for wins (see [Difficulty levels](#difficulty-levels)) form a table of the best players; there is a separate ranking for Arena 6 vs 6 and for the Run of the day. Games with custom settings give no points.
