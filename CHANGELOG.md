@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Menu główne: nowe ikony przycisków „Nowa gra”, „Kampania”, „Ekspedycja” i „Wczytaj grę”; przyciski mają jednakowy rozmiar i stoją po dwa w rzędzie.
 - Angielska wersja gry ma własne logo: „Gleamroot: Wardens of the Crystal Tree” (ekran startowy, menu, kreator i ekran online).
 - Przyciski zmiany języka to same flagi, bez beżowego tła i ramki.
 

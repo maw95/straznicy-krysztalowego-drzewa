@@ -3237,6 +3237,29 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
+      "id": "ikony/menu",
+      "pliki": [
+        "public/assets/ikony/menu/nowa_gra.webp",
+        "public/assets/ikony/menu/kampania.webp",
+        "public/assets/ikony/menu/ekspedycja.webp",
+        "public/assets/ikony/menu/wczytaj.webp"
+      ],
+      "typ": "ikony medalionowe przycisków menu głównego (Nowa gra, Kampania, Ekspedycja, Wczytaj grę)",
+      "opis": "Cztery medaliony 256 px (WebP, przycięte do koła): kryształowy miecz przed Drzewem (niebieski), mapa kampanii z pieczęcią i skrzyżowanymi mieczami (czerwony), kompas i latarnia na ścieżce do areny (zielony), otwarta księga z klepsydrą (fioletowy). Źródła 512 px poza repozytorium (Scenario).",
+      "prompt": "Game UI icon, a single round medallion emblem centered on a transparent background. Ornate gold ring rim with subtle engraved detail, a deep <kolor> glowing enamel disc inside, <symbol>, soft warm glow. Dark-fantasy hand-painted style like Heroes of Might and Magic III, rich painterly shading, top-left lighting, bold simple silhouette readable at 64 px. No text, no shadow outside the medallion, nothing outside the circle.",
+      "scenario_asset": {
+        "nowa_gra": "asset_QzaFpQ6r539xYEAYdsSkYJqs",
+        "kampania": "asset_jfALRg8HzDsYybr1Ek2kWjPH",
+        "ekspedycja": "asset_8MfRbPFDdnGuqUDdWmztAZMx",
+        "wczytaj": "asset_BQi5eKMXZ3fEJTLTTzGYdcM4"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, przezroczyste tło",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
       "id": "ui/logo_gleamroot_en",
       "pliki": [
         "docs/grafika/okladka/logo_en.png",

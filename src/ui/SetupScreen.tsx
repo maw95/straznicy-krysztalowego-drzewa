@@ -152,23 +152,23 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
         <div className="main-row setup-row" style={{ position: 'relative', width: '100%', maxWidth: 1100 }}>
           <Frame crest className="grow" innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 18 }}>
             <div className="home-big" data-wizard-page="home">
-              <button className="opt-card wide" onClick={() => { setIntent('new'); setStep('where'); }}>
-                <span className="opt-card-img"><img src={asset('ikony/mapa/shrine.webp')} alt="" /></span>
+              <button className="opt-card home-card" onClick={() => { setIntent('new'); setStep('where'); }}>
+                <span className="opt-card-img"><img src={asset('ikony/menu/nowa_gra.webp')} alt="" /></span>
                 <span className="opt-card-title">Nowa gra</span>
                 <span className="opt-card-text">Wybierz wersję, poziom i tryb, a potem frakcje i bohaterów.</span>
               </button>
-              <button className="opt-card wide" data-campaign-open onClick={() => setStep('campaign')}>
-                <span className="opt-card-img"><img src={asset('ikony/mapa/kontrola_none.webp')} alt="" /></span>
+              <button className="opt-card home-card" data-campaign-open onClick={() => setStep('campaign')}>
+                <span className="opt-card-img"><img src={asset('ikony/menu/kampania.webp')} alt="" /></span>
                 <span className="opt-card-title">Kampania</span>
                 <span className="opt-card-text">Historia Przymierza Świtu w czterech scenariuszach na ręcznie rysowanych mapach.</span>
               </button>
-              <button className="opt-card wide" data-expedition-open onClick={() => setStep('expedition')}>
-                <span className="opt-card-img"><img src={asset('ikony/mapa/shrine.webp')} alt="" /></span>
+              <button className="opt-card home-card" data-expedition-open onClick={() => setStep('expedition')}>
+                <span className="opt-card-img"><img src={asset('ikony/menu/ekspedycja.webp')} alt="" /></span>
                 <span className="opt-card-title">Ekspedycja</span>
                 <span className="opt-card-text">Osiem bitew na arenie pod rząd, jedno życie i relikwie po każdej wygranej. Jest też wyprawa dnia z rankingiem.</span>
               </button>
-              <button className="opt-card wide" onClick={() => { setIntent('load'); setStep('where'); }}>
-                <span className="opt-card-img"><img src={asset('ikony/mapa/chest.webp')} alt="" /></span>
+              <button className="opt-card home-card" onClick={() => { setIntent('load'); setStep('where'); }}>
+                <span className="opt-card-img"><img src={asset('ikony/menu/wczytaj.webp')} alt="" /></span>
                 <span className="opt-card-title">Wczytaj grę</span>
                 <span className="opt-card-text">Wróć do zapisanej partii.</span>
               </button>
