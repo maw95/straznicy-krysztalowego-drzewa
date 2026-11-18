@@ -245,6 +245,8 @@ export function App() {
       s = applyAction(s, a);
       history.current.push(a);
       if (q.get('until') === 'battle' && s.phase === 'battle' && s.battle?.stage === 'fight') break;
+      // ?until=select stops where the player picks the supports for a battle.
+      if (q.get('until') === 'select' && s.phase === 'battle' && s.battle?.stage === 'select') break;
       // ?until=offer stops when a hero has skills to choose from (for looking at the skill cards).
       if (q.get('until') === 'treasure' && Object.values(s.heroes).some((h) => h.treasurePick)) break;
       if (q.get('until') === 'offer' && Object.values(s.heroes).some((h) => h.offer?.length)) break;
@@ -1092,14 +1094,17 @@ function SupportSelect({ state, faction, onPick }: { state: GameState; faction: 
   // Two supports in the other levels; the team's places in level 3.
   const n = Math.min(supportSlots(state, faction), pool.length);
   const toggle = (id: string) => setPicked(picked.includes(id) ? picked.filter((x) => x !== id) : [...picked, id].slice(-n));
+  // A phone held sideways is lower than the cards: they shrink to the height that is left under the title and above the button (a card is about 1.5 times as tall as wide).
+  const low = useMedia('(max-height: 560px)');
+  const cardW = low ? Math.max(90, Math.min(200, (window.innerHeight - 175) / 1.5)) : Math.min(200, (window.innerWidth - 120) / 2);
   return (
     <div>
-      <Frame crest style={{ width: 'min(760px, 94vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+      <Frame crest={!low} style={{ width: 'min(760px, 94vw)' }} innerStyle={{ padding: low ? '8px 18px' : 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: low ? 8 : 14 }}>
         <Ribbon side={faction} style={{ width: 'min(420px, 94vw)' }}>{n === 2 ? 'Wybierz dwóch pomocników' : `Wybierz pomocników do bitwy (${n})`}</Ribbon>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
           {pool.map((id) => (
             <button key={id} className="btn" onClick={() => toggle(id)} style={{ background: 'none', border: 0, padding: 4, borderRadius: 12, boxShadow: picked.includes(id) ? '0 0 0 3px #9EE4FF, 0 0 16px 4px rgba(158,228,255,0.6)' : 'none' }}>
-              <UnitCard unitId={id} width={Math.min(200, (window.innerWidth - 120) / 2)} />
+              <UnitCard unitId={id} width={cardW} />
             </button>
           ))}
         </div>
