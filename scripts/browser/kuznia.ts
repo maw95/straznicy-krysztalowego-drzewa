@@ -8,15 +8,22 @@ try {
   const num = async (sel: string) => Number((await p.locator(sel).first().innerText()).replace(/\D+/g, ''));
   await p.locator('[data-enter-settlement]').click();
   await p.locator('[data-settlement]').waitFor();
-  await p.locator('[data-building="forge"]').click();
-  await p.locator('[data-build="forge"]').click();
+  await p.locator('[data-building="council"]').click();
+  await p.locator('[data-tree-node="forge"]').click();
+  await p.locator('[data-tree-detail] [data-build="forge"]').click();
+  await p.locator('[data-tree-back]').click();
   console.log('forge level', await p.locator('[data-building="forge"]').getAttribute('data-level'));
+  await p.locator('[data-building="council"]').click();
+  await p.locator('[data-tree-node="market"]').click();
+  await p.locator('[data-tree-detail] [data-build="market"]').click();
+  await p.locator('[data-tree-back]').click();
   await p.locator('[data-building="market"]').click();
   const gold = await num('[data-gold]');
   await p.locator('[data-trade-buy="ore"]').click();
   console.log('gold after buying ore', gold, '->', await num('[data-gold]'), 'sell disabled without market:', await p.locator('[data-trade-sell="ore"]').isDisabled());
+  await p.locator('.settlement-modal [data-enter]').click();
+  await p.waitForTimeout(400);
   // The garrison: leave one support in the settlement, then take it back.
-  await p.locator('[data-building="walls"]').click();
   await p.locator('[data-garrison-in]').first().click();
   console.log('garrison after leaving one:', await p.locator('[data-garrison-out]').count());
   await p.locator('[data-garrison-out]').first().click();

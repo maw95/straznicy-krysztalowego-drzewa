@@ -756,13 +756,25 @@ describe('level IV: the settlement window', () => {
     expect(gold()).toBe(30);
     await act(async () => fireEvent.click(doc.querySelector('[data-enter-settlement]')!));
     expect(doc.querySelector('[data-settlement]')).not.toBeNull();
-    await act(async () => fireEvent.click(doc.querySelector('[data-build="barracks"]')!));
+    // Buildings are built from the Rada Osady only: nothing unbuilt stands in the landscape.
+    expect(doc.querySelector('[data-building="barracks"]')).toBeNull();
+    await act(async () => fireEvent.click(doc.querySelector('[data-building="council"]')!));
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-node="barracks"]')!));
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-detail] [data-build="barracks"]')!));
     expect(gold()).toBe(27);
-    // The three tier-1 supports are already in the team: the first one to hire is tier 2 (3 gold).
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-back]')!));
+    // The barracks open a page of their own: the tier-1 supports are already in the team, the first one to hire is tier 2 (3 gold).
+    await act(async () => fireEvent.click(doc.querySelector('[data-building="barracks"]')!));
+    expect(doc.querySelector('[data-settlement]')!.getAttribute('data-view')).toBe('barracks');
     await act(async () => fireEvent.click(doc.querySelector('[data-recruit]:not([disabled])')!));
     expect(gold()).toBe(24);
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-back]')!));
+    await act(async () => fireEvent.click(doc.querySelector('[data-building="council"]')!));
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-node="market"]')!));
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-detail] [data-build="market"]')!));
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-back]')!));
+    // Any other building opens a modal; the market sells artifacts there.
     await act(async () => fireEvent.click(doc.querySelector('[data-building="market"]')!));
-    await act(async () => fireEvent.click(doc.querySelector('[data-build="market"]')!));
     expect(doc.querySelectorAll('[data-buy]').length).toBe(3);
     await act(async () => fireEvent.click(doc.querySelector('[data-buy]')!));
     expect(gold()).toBeLessThan(24);

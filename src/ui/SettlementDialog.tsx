@@ -13,36 +13,33 @@ import { levelOf } from '../engine/growth';
 import { mayBuildSpark, shardsOf, shardTotal, SPARK_NAMES, SPARK_TEXTS } from '../engine/empire';
 import { MAGIC, manaOf, maxMana, SPELLS, towerSpells } from '../engine/magic';
 import type { Action, GameState } from '../engine/types';
-import { asset, Portrait, Ribbon } from './common';
+import { asset, Modal, Portrait, Ribbon } from './common';
 import { ArtifactMedal } from './growthUi';
 import { RESOURCE_ICON, ResourceStrip } from './resources';
 import { RuleText } from './statScale';
 import { sfx } from './sfx';
 import { BuildingTree, COUNCIL, nodeState, type ExtraNode } from './BuildingTree';
 
-/** Where the building stands in the landscape (percent of the picture): four buildings in level 3. */
-const SPOT: Partial<Record<BuildingId, { left: number; top: number }>> = {
-  barracks: { left: 16, top: 52 },
-  market: { left: 40, top: 30 },
-  hospital: { left: 64, top: 52 },
-  treasury: { left: 84, top: 28 },
-};
 /**
- * Levels 4 and up have more buildings: they stand on the plain in terraces round the council, like a town in Heroes III (percent of the field; the
- * horizon lies in the upper third). Both factions use the same terraces; the Horde's landscape has its volcano on the right, so its magic and the
- * Iskra change sides. The unique buildings of a faction take the same two places of a terrace.
+ * Where each building stands in the landscape. The landscape is a stage of a fixed shape (the picture's own), scaled to cover the screen, so a spot is a
+ * place on the terrain and not on the screen: `x` and `y` (percent of the stage) are the foot of the building, `h` its height (percent of the stage's
+ * height). Buildings behind are smaller and higher, those in front larger; the council stands on the square in the middle. Both lands use the same
+ * layout; the Horde's landscape has its volcano on the right, so its magic and the Iskra change sides. The unique buildings of a faction share two spots.
  */
-const TERRACES: Record<BuildingId, { left: number; top: number }> = {
-  magic: { left: 20, top: 25 }, spark: { left: 80, top: 25 },
-  shrine: { left: 36, top: 35 }, bloodPit: { left: 36, top: 35 }, grove: { left: 64, top: 35 }, wolfDen: { left: 64, top: 35 },
-  nursery: { left: 88, top: 47 }, plunder: { left: 88, top: 47 }, tavern: { left: 12, top: 47 },
-  hospital: { left: 28, top: 53 }, forge: { left: 50, top: 51 }, walls: { left: 72, top: 53 },
-  treasury: { left: 24, top: 71 }, barracks: { left: 50, top: 73 }, market: { left: 76, top: 71 },
+type Spot = { x: number; y: number; h: number };
+const SPOTS: Record<BuildingId | 'council', Spot> = {
+  council: { x: 50, y: 49, h: 19 },
+  magic: { x: 25.5, y: 40, h: 16.5 }, spark: { x: 76, y: 41, h: 14.5 },
+  shrine: { x: 37.5, y: 42, h: 12 }, bloodPit: { x: 37.5, y: 42, h: 12 }, grove: { x: 62.5, y: 42, h: 12 }, wolfDen: { x: 62.5, y: 42, h: 12 },
+  tavern: { x: 18.5, y: 52.5, h: 11 }, nursery: { x: 81.5, y: 50.5, h: 11.5 }, plunder: { x: 81.5, y: 50.5, h: 11.5 },
+  hospital: { x: 31, y: 56, h: 13.5 }, forge: { x: 61, y: 56, h: 14 }, walls: { x: 70, y: 58.5, h: 12 },
+  treasury: { x: 25.5, y: 72, h: 16.5 }, barracks: { x: 50, y: 74.5, h: 22 }, market: { x: 74, y: 72, h: 16.5 },
 };
-const spotOf = (order: BuildingId[], b: BuildingId, land: FactionId): { left: number; top: number } => {
-  if (order.length <= 4) return SPOT[b] ?? { left: 50, top: 50 };
-  const t = TERRACES[b] ?? { left: 50, top: 50 };
-  return land === 'horde' && (b === 'magic' || b === 'spark') ? { ...t, left: 100 - t.left } : t;
+/** The dwellings of the unit tiers 2-5 (level 6) stand in front of the barracks as small pens. */
+const DWELLING_SPOTS: Spot[] = [{ x: 38, y: 71, h: 7.5 }, { x: 41, y: 79, h: 8 }, { x: 59, y: 79, h: 8 }, { x: 62, y: 71, h: 7.5 }];
+const spotOf = (b: BuildingId | 'council', land: FactionId): Spot => {
+  const t = SPOTS[b];
+  return land === 'horde' && (b === 'magic' || b === 'spark') ? { ...t, x: 100 - t.x } : t;
 };
 /** Whose picture a building of one faction has (level 6: Kapliczka, Szkółka, Krąg for the Przymierze; Jama, Szabrownia, Legowisko for the Horde). */
 const UNIQUE_OWNER: Partial<Record<BuildingId, FactionId>> = { shrine: 'dawn', nursery: 'dawn', grove: 'dawn', bloodPit: 'horde', plunder: 'horde', wolfDen: 'horde' };
@@ -54,12 +51,13 @@ const buildingPicture = (land: FactionId, b: BuildingId, level: number) => {
 
 export function SettlementDialog({ state, settlementId, faction, onAction, onClose }: { state: GameState; settlementId: string; faction: TeamId; onAction: (a: Action) => void; onClose: () => void }) {
   const s = state.kingdom!.settlements[settlementId];
-  const [open, setOpen] = useState<BuildingId>('barracks');
-  // The Rada Osady opens the tree of buildings (a second page of the same screen); Esc comes back to the landscape first.
-  const [view, setView] = useState<'town' | 'tree'>('town');
+  // A click on a building opens a page of this screen (the barracks, the Rada Osady with the tree of buildings) or a modal (everything else); Esc comes back to the landscape first.
+  const [view, setView] = useState<'town' | 'tree' | 'barracks'>('town');
+  const [modal, setModal] = useState<string | null>(null);
+  const [hover, setHover] = useState<string | null>(null);
   const [pick, setPick] = useState<string | null>(null);
   useEffect(() => {
-    if (view !== 'tree') return;
+    if (view === 'town') return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); setView('town'); } };
     window.addEventListener('keydown', onKey, true);
     return () => window.removeEventListener('keydown', onKey, true);
@@ -127,34 +125,29 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     </div>
   ) : null;
 
-  // Level 4: the garrison. The hero standing in the settlement leaves supports to guard it or takes them back.
+  // Level 4: the garrison. The hero standing in the settlement leaves supports to guard it or takes them back (the slots in the bottom bar).
   const garrison = s.garrison ?? [];
   const heroHere = Boolean(buyer && buyer.pos === s.at);
+  const garrisonRule = `Garnizon broni osady pod nieobecność bohatera: wróg musi go pokonać, żeby ją zająć, a w bitwie dowodzi nim właściciel osady. Maksymalnie ${SIEGE.garrisonMax} jednostki. Zostawiasz je i zabierasz, stojąc w osadzie${heroHere ? '' : ' (teraz nie stoi tu bohater, którego jest tura)'}.`;
   const garrisonPanel = state.rules.economy ? (
-    <div data-garrison style={{ marginTop: 0, display: 'flex', flexDirection: 'column', gap: 6, alignSelf: 'stretch' }}>
-      <b style={{ display: 'flex', alignItems: 'center', gap: 8 }}><img src={asset('ikony/frakcje/garnizon.webp')} alt="" width={34} height={34} />Garnizon ({garrison.length}/{SIEGE.garrisonMax})</b>
-      <span data-garrison-rule style={{ fontSize: 14, color: '#6B4A22' }}>Garnizon broni osady pod nieobecność bohatera: wróg musi go pokonać, żeby ją zająć, a w bitwie dowodzi nim właściciel osady. Maksymalnie {SIEGE.garrisonMax} jednostki. Zostawiasz je i zabierasz, stojąc w osadzie{heroHere ? '' : ' (teraz nie stoi tu bohater, którego jest tura)'}.</span>
-      <div data-garrison-slots style={{ display: 'flex', gap: 8 }}>
-        {Array.from({ length: SIEGE.garrisonMax }, (_, i) => (
-          <div key={i} title={garrison[i] ? UNITS[garrison[i]].name : 'Puste miejsce garnizonu'} style={{ width: 46, height: 46, borderRadius: 8, border: '2px dashed #9A7A44', display: 'grid', placeItems: 'center', background: 'rgba(0,0,0,0.06)' }}>
-            {garrison[i] ? <Portrait unitId={garrison[i]} size={40} /> : <span style={{ color: '#9A7A44', fontSize: 20 }}>+</span>}
-          </div>
-        ))}
+    <div className="sb-garrison" data-garrison title={garrisonRule}>
+      <div className="sb-label"><img src={asset('ikony/frakcje/garnizon.webp')} alt="" width={26} height={26} />Garnizon ({garrison.length}/{SIEGE.garrisonMax})</div>
+      <div className="sb-slots" data-garrison-slots>
+        {Array.from({ length: SIEGE.garrisonMax }, (_, i) => garrison[i] ? (
+          <button key={i} className="sb-slot full" data-garrison-out={garrison[i]} disabled={!heroHere} title={`${UNITS[garrison[i]].name}${heroHere ? ': zabierz do drużyny' : ''}`} onClick={() => onAction({ type: 'kingdomGarrison', settlementId: s.id, unitId: garrison[i], dir: 'out' })}>
+            <Portrait unitId={garrison[i]} size={44} />
+          </button>
+        ) : <div key={i} className="sb-slot" title="Puste miejsce garnizonu"><span>+</span></div>)}
       </div>
-      {garrison.map((id) => (
-        <div key={id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <Portrait unitId={id} size={40} />
-          <b style={{ flex: 1 }}>{UNITS[id].name}</b>
-          <button className="btn" data-garrison-out={id} disabled={!heroHere} onClick={() => onAction({ type: 'kingdomGarrison', settlementId: s.id, unitId: id, dir: 'out' })} style={{ padding: '3px 12px', fontSize: 15 }}>Zabierz do drużyny</button>
+      {heroHere && garrison.length < SIEGE.garrisonMax && fs.supportsAlive.length > 0 && (
+        <div className="sb-team"><span className="sb-sub">w drużynie, kliknij by zostawić:</span>
+          {fs.supportsAlive.map((id) => (
+            <button key={id} className="sb-slot small" data-garrison-in={id} title={`${UNITS[id].name}: zostaw w garnizonie`} onClick={() => onAction({ type: 'kingdomGarrison', settlementId: s.id, unitId: id, dir: 'in' })}>
+              <Portrait unitId={id} size={32} />
+            </button>
+          ))}
         </div>
-      ))}
-      {heroHere && garrison.length < SIEGE.garrisonMax && fs.supportsAlive.map((id) => (
-        <div key={id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <Portrait unitId={id} size={40} />
-          <span style={{ flex: 1 }}>{UNITS[id].name} <span style={{ fontSize: 13, color: '#6B4A22' }}>w drużynie</span></span>
-          <button className="btn prim" data-garrison-in={id} onClick={() => onAction({ type: 'kingdomGarrison', settlementId: s.id, unitId: id, dir: 'in' })} style={{ padding: '3px 12px', fontSize: 15 }}>Zostaw w garnizonie</button>
-        </div>
-      ))}
+      )}
     </div>
   ) : null;
 
@@ -168,10 +161,11 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         </div>
       );
     }
+    // Building and upgrading belong to the Rada Osady only: here the next level is just described.
     const upgrade = price(b) !== null ? (
-      <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <div data-upgrade-hint style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 4 }}>
         <span style={{ fontSize: 14, color: '#6B4A22' }}><RuleText text={BUILDING_TEXTS[b][1] ?? ''} /></span>
-        {buildButton(b)}
+        <i style={{ fontSize: 14, color: '#8A5A3A' }}>Rozbudowa: w Radzie Osady.</i>
       </div>
     ) : null;
     if (b === 'barracks') {
@@ -421,57 +415,135 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       <div style={{ fontSize: 15 }}>Rada stoi w każdej osadzie od początku i nic nie kosztuje. Z niej wychodzą wszystkie budynki: kliknij budynek w drzewku, żeby zobaczyć jego cenę i działanie, a potem go zbudować.</div>
     </div>
   );
-  return (
-    <div className="settlement-full" data-settlement={s.id} data-view={view} style={{ backgroundImage: `url(${asset(`osady/land_${s.land}.jpg`)})` }}>
-      <div className="settlement-top">
-        <Ribbon side={faction} style={{ width: 'min(520px, 90vw)' }}>{s.name}</Ribbon>
-        <div className="settlement-info">
-        Osada {FACTION_NAMES[raceOf(state, s.land)]}{s.owner !== s.land ? ` (zajęta przez: ${FACTION_NAMES[raceOf(state, s.owner!)]})` : ''} · złoto: <b data-gold>{gold}</b> · dochód: +{incomeOf(state, faction)} na rundę
-        {state.kingdom!.res && <span style={{ marginLeft: 12, display: 'inline-flex', gap: 10, verticalAlign: 'middle' }}><ResourceStrip state={state} faction={faction} size={22} /></span>}
-        </div>
+  // What the landscape shows: only what stands (the Iskra's plot appears once the faction holds a shard, as it is built by the shards and not from the council).
+  const standing = ORDER.filter((b) => buildingLevel(s, b) > 0 || (b === 'spark' && state.rules.empire && shardsOf(state, faction) > 0));
+  const dwellingsStanding = mayHireHere && state.rules.empire ? [2, 3, 4, 5].filter((tier) => dwellingOf(state, faction, tier)) : [];
+  const nameOf = (b: BuildingId) => { const level = buildingLevel(s, b); return level ? BUILDING_NAMES[b][Math.min(level, BUILDING_NAMES[b].length) - 1] : BUILDING_NAMES[b][0]; };
+  const openBuilding = (b: BuildingId | 'council') => {
+    setHover(null);
+    if (b === 'council') { setView('tree'); setPick(null); } else if (b === 'barracks') setView('barracks'); else setModal(b);
+  };
+  const hoverInfo = (() => {
+    if (!hover) return null;
+    if (hover === 'council') return { name: 'Rada Osady', text: 'Tu buduje się i rozbudowuje wszystko: drzewko budynków z cenami i działaniem.' };
+    if (hover.startsWith('dwelling-')) { const id = dwellingOf(state, faction, Number(hover.slice(9))); return id ? { name: DWELLING_NAMES[id], text: `Siedlisko poziomu ${hover.slice(9)}: rekrutuje ${UNITS[id].name}.` } : null; }
+    const b = hover as BuildingId;
+    return { name: nameOf(b), text: BUILDING_TEXTS[b][Math.min(Math.max(buildingLevel(s, b), 1), BUILDING_TEXTS[b].length) - 1] ?? '' };
+  })();
+  const hoverProps = (id: string) => ({ onMouseEnter: () => setHover(id), onMouseLeave: () => setHover((h) => (h === id ? null : h)), onFocus: () => setHover(id), onBlur: () => setHover((h) => (h === id ? null : h)) });
+  const modalTitle = modal && !modal.startsWith('dwelling-') ? nameOf(modal as BuildingId) : '';
+  const header = (
+    <div className="settlement-top">
+      <Ribbon side={faction} style={{ width: 'min(520px, 90vw)' }}>{s.name}</Ribbon>
+      <div className="settlement-info">
+        Osada {FACTION_NAMES[raceOf(state, s.land)]}{s.owner !== s.land ? ` (zajęta przez: ${FACTION_NAMES[raceOf(state, s.owner!)]})` : ''}
       </div>
-      {view === 'town' ? (
-        <div className={`settlement-field ${ORDER.length > 6 ? 'dense' : ''}`}>
-          {ORDER.map((b) => {
-            const level = buildingLevel(s, b);
-            return (
-              <button key={b} className={`settlement-bld ${open === b ? 'on' : ''} ${level ? 'built' : ''}`} style={{ left: `${spotOf(ORDER, b, s.land).left}%`, top: `${spotOf(ORDER, b, s.land).top}%`, ...(ORDER.length > 6 ? { width: 104 } : {}) }} onClick={() => setOpen(b)} aria-pressed={open === b} data-building={b} data-level={level}>
-                <img src={asset(buildingPicture(s.land, b, level))} alt="" className="settlement-pic" />
-                <span>{level ? BUILDING_NAMES[b][Math.min(level, BUILDING_NAMES[b].length) - 1] : `${BUILDING_NAMES[b][0]} (do zbudowania)`}</span>
-              </button>
-            );
-          })}
-          <button className="settlement-bld built council" style={{ left: '50%', top: ORDER.length > 4 ? '14%' : '19%', ...(ORDER.length > 6 ? { width: 104 } : {}) }} onClick={() => { setView('tree'); setPick(null); }} data-building="council" data-level="1" title="Rada Osady: drzewko budynków">
-            <img src={asset(councilPic)} alt="" className="settlement-pic" />
-            <span>Rada Osady (drzewko budynków)</span>
-          </button>
-        </div>
-      ) : (
-        <div className="settlement-field tree">
-          <BuildingTree state={state} s={s} faction={faction} order={ORDER} picture={(b, level) => buildingPicture(s.land, b, level)} selected={pick} onSelect={setPick} council={{ picture: councilPic, name: 'Rada Osady' }} extras={extras} />
-        </div>
-      )}
-      <div className="settlement-bottom">
-        {view !== 'tree' && heroHere && buyer && (
-          <div className="plate parch" data-hero-here style={{ padding: '8px 12px', flex: 'none', display: 'flex', gap: 10, alignItems: 'center' }}>
-            <Portrait unitId={buyer.id} size={56} />
-            <div style={{ fontSize: 14, lineHeight: 1.25 }}><b style={{ fontSize: 16 }}>{heroLabel(buyer)}</b><div style={{ color: '#6B4A22' }}>bohater w osadzie</div></div>
-          </div>
-        )}
-        {view === 'tree' ? detail : (
+    </div>
+  );
+  const goldLine = (
+    <div className="sb-treasury">
+      <span className="sb-gold" title="Złoto">złoto: <b data-gold>{gold}</b></span>
+      <span className="sb-income">+{incomeOf(state, faction)} na rundę</span>
+      {state.kingdom!.res && <span className="sb-res"><ResourceStrip state={state} faction={faction} size={22} /></span>}
+    </div>
+  );
+  return (
+    <div className="settlement-full" data-settlement={s.id} data-view={view}>
+      <div className="settlement-view">
+      <div className="settlement-stage" style={{ backgroundImage: `url(${asset(`osady/land_${s.land}.jpg`)})` }}>
+        {view === 'town' && (
           <>
-            {garrisonPanel && <div className="plate parch" style={{ padding: '8px 16px', flex: 1, minWidth: 0 }}>{garrisonPanel}</div>}
-            <div className="plate parch" data-service style={{ padding: '12px 16px', minHeight: 120, flex: 1.4, minWidth: 0, ...(state.rules.economy ? { maxHeight: '36vh', overflowY: 'auto' as const } : {}) }}>
-              <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>{BUILDING_NAMES[open][0]}</div>
-              {panel(open)}
-            </div>
+            {standing.map((b) => {
+              const level = buildingLevel(s, b);
+              const spot = spotOf(b, s.land);
+              return (
+                <button key={b} className="settlement-bld" style={{ left: `${spot.x}%`, top: `${spot.y}%` }} onClick={() => openBuilding(b)} aria-label={nameOf(b)} data-building={b} data-level={level} {...hoverProps(b)}>
+                  <img src={asset(buildingPicture(s.land, b, level))} alt="" className="settlement-pic" style={{ height: `${spot.h}cqh` }} />
+                </button>
+              );
+            })}
+            {dwellingsStanding.map((tier) => {
+              const id = dwellingOf(state, faction, tier)!;
+              const spot = DWELLING_SPOTS[tier - 2];
+              return (
+                <button key={`dwelling-${tier}`} className="settlement-bld dwelling" style={{ left: `${spot.x}%`, top: `${spot.y}%` }} onClick={() => { setHover(null); setModal(`dwelling-${tier}`); }} aria-label={DWELLING_NAMES[id]} data-dwelling-site={tier} {...hoverProps(`dwelling-${tier}`)}>
+                  <img src={asset(`ikony/siedliska/${id}.webp`)} alt="" className="settlement-pic" style={{ height: `${spot.h}cqh` }} />
+                </button>
+              );
+            })}
+            <button className="settlement-bld" style={{ left: `${SPOTS.council.x}%`, top: `${SPOTS.council.y}%` }} onClick={() => openBuilding('council')} aria-label="Rada Osady" data-building="council" data-level="1" {...hoverProps('council')}>
+              <img src={asset(councilPic)} alt="" className="settlement-pic" style={{ height: `${SPOTS.council.h}cqh` }} />
+            </button>
           </>
         )}
-        <div className="settlement-actions">
-          {view === 'tree' && <button className="btn plate parch" data-tree-back style={{ padding: '6px 20px', fontSize: 18 }} onClick={() => setView('town')}>← Wróć do osady</button>}
-          <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20 }} onClick={onClose}>Wyjdź z osady</button>
-        </div>
       </div>
+      {view === 'town' && header}
+      </div>
+      {view === 'town' && (
+        <>
+          <div className="settlement-bar" data-service-bar>
+            {heroHere && buyer && (
+              <div className="sb-hero" data-hero-here>
+                <Portrait unitId={buyer.id} size={56} />
+                <div><b>{heroLabel(buyer)}</b><span className="sb-sub">bohater w osadzie</span></div>
+              </div>
+            )}
+            {garrisonPanel}
+            <div className="sb-info" data-hover-info>
+              {hoverInfo ? <><b>{hoverInfo.name}</b><RuleText text={hoverInfo.text} /></> : <span className="sb-sub">Najedź na budynek, żeby zobaczyć jego działanie; kliknij, żeby go otworzyć. Buduje się w Radzie Osady.</span>}
+            </div>
+            {goldLine}
+            <button className="btn prim sb-exit" data-enter onClick={onClose}>Wyjdź z osady</button>
+          </div>
+        </>
+      )}
+      {view === 'tree' && (
+        <div className="settlement-page">
+          {header}
+          <div className="settlement-field tree">
+            <BuildingTree state={state} s={s} faction={faction} order={ORDER} picture={(b, level) => buildingPicture(s.land, b, level)} selected={pick} onSelect={setPick} council={{ picture: councilPic, name: 'Rada Osady' }} extras={extras} />
+          </div>
+          <div className="settlement-foot">
+            {detail}
+            <div className="settlement-actions">
+              {goldLine}
+              <button className="btn plate parch" data-tree-back style={{ padding: '6px 20px', fontSize: 18 }} onClick={() => setView('town')}>← Wróć do osady</button>
+              <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20 }} onClick={onClose}>Wyjdź z osady</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {view === 'barracks' && (
+        <div className="settlement-page">
+          {header}
+          <div className="settlement-field sheet">
+            <div className="plate parch settlement-sheet" data-service>
+              <div style={{ fontWeight: 800, fontSize: 22, marginBottom: 8 }}>{nameOf('barracks')}</div>
+              {panel('barracks')}
+            </div>
+          </div>
+          <div className="settlement-foot">
+            <div className="settlement-actions row">
+              {goldLine}
+              <button className="btn plate parch" data-tree-back style={{ padding: '6px 20px', fontSize: 18 }} onClick={() => setView('town')}>← Wróć do osady</button>
+              <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20 }} onClick={onClose}>Wyjdź z osady</button>
+            </div>
+          </div>
+        </div>
+      )}
+      <Modal open={modal !== null} onClose={() => setModal(null)}>
+        {modal && (
+          <div className="settlement-modal" data-service>
+            {modal.startsWith('dwelling-') ? dwellingDetail(Number(modal.slice(9))) : (
+              <div className="plate parch" style={{ padding: '14px 18px' }}>
+                <div style={{ fontWeight: 800, fontSize: 22, marginBottom: 8 }}>{modalTitle}</div>
+                {panel(modal as BuildingId)}
+              </div>
+            )}
+            <div style={{ textAlign: 'right' }}><button className="btn prim" data-enter onClick={() => setModal(null)} style={{ padding: '4px 24px', fontSize: 17 }}>Zamknij</button></div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }

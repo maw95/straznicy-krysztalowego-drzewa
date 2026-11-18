@@ -218,7 +218,7 @@ Budynki kupuje bohater stojący w osadzie własnej frakcji; klikasz budynek w wi
 - **Szpital:** wskrzesza poległego pomocnika za połowę ceny (po ulepszeniu za jedną trzecią).
 - **Skarbiec:** +1 zł na rundę.
 
-Osada otwiera się **na cały ekran**: krajobraz frakcji jest tłem, budynki stoją na nim, pod spodem są usługi wybranego budynku i garnizon, a bohater w osadzie ma tu swój portret. **Rada Osady** (stoi od początku, nic nie kosztuje) otwiera **drzewko budynków**: węzeł jest wybudowany, do kupienia (zielony), za drogi (czerwony) albo zablokowany (szary, napis mówi, czego brakuje). Kliknij węzeł, żeby zobaczyć cenę i działanie; Esc wraca do krajobrazu.
+Osada otwiera się **na cały ekran**: krajobraz frakcji jest tłem, a **wybudowane** budynki stoją na nim (niewybudowanych nie widać). Najedź na budynek, żeby zobaczyć jego działanie w dolnym pasku; kliknięcie **koszar** otwiera ich ekran (rekrutacja), kliknięcie innego budynku okno z jego usługami. Dolny pasek pokazuje garnizon, bohatera w osadzie, złoto i surowce. **Budować i rozbudowywać można tylko w Radzie Osady** (stoi od początku, nic nie kosztuje): otwiera **drzewko budynków**, w którym węzeł jest wybudowany, do kupienia (zielony), za drogi (czerwony) albo zablokowany (szary, napis mówi, czego brakuje). Kliknij węzeł, żeby zobaczyć cenę i działanie; Esc wraca do krajobrazu.
 
 ### Drużyna i pomocnicy
 Miejsc w drużynie jest na starcie 2, potem +1 na 3. poziomie bohatera, +1 na 6. i +1 z rozbudowanych koszar, razem najwyżej 5. W armii jest jeden pomocnik każdego rodzaju. Każda frakcja ma siedmiu pomocników: trzech startowych i po jednym nowym na stopniach 2–5 do rekrutacji w koszarach (3, 5, 8 i 12 zł).

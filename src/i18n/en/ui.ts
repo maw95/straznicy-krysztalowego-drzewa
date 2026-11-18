@@ -778,4 +778,12 @@ register({
   "wersji planszowej": "of the board edition",
   "do wydrukowania:": "to print:",
   "Instrukcja jest na razie tylko po polsku. Instrukcję planszówki do druku (też po polsku) znajdziesz na dole strony.": "The manual is only in Polish for now. The printable board-edition manual (also in Polish) is at the bottom of the page.",
+  ": zabierz do drużyny": ": take to the team",
+  "w drużynie, kliknij by zostawić:": "in the team, click to leave:",
+  "Tu buduje się i rozbudowuje wszystko: drzewko budynków z cenami i działaniem.": "Everything is built and upgraded here: the tree of buildings with prices and effects.",
+  "złoto:": "gold:",
+  "Najedź na budynek, żeby zobaczyć jego działanie; kliknij, żeby go otworzyć. Buduje się w Radzie Osady.": "Hover a building to see what it does; click to open it. Building is done in the Settlement Council.",
+  "Garnizon broni osady pod nieobecność bohatera: wróg musi go pokonać, żeby ją zająć, a w bitwie dowodzi nim właściciel osady. Maksymalnie {0} jednostki. Zostawiasz je i zabierasz, stojąc w osadzie{1}.": "The garrison defends the settlement while the hero is away: the enemy has to defeat it to take the settlement, and in battle the settlement's owner commands it. At most {0} units. You leave them and take them back while standing in the settlement{1}.",
+  "Rozbudowa: w Radzie Osady.": "Upgrading: in the Settlement Council.",
+  ": rekrutuje": ": recruits",
 });

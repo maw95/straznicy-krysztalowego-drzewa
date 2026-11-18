@@ -886,33 +886,62 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 
 /* Settlement window */
 .settlement-scene { position: relative; width: 100%; height: 320px; border-radius: 10px; background-size: cover; background-position: center; box-shadow: inset 0 0 0 2px #B88A35, inset 0 0 40px rgba(0, 0, 0, 0.6); overflow: hidden; }
-.settlement-bld { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 2px; width: 120px; padding: 6px; border: 0; border-radius: 10px; background: rgba(8, 14, 14, 0.55); color: #F4EAD0; font: inherit; font-size: 13px; line-height: 1.15; text-align: center; cursor: pointer; filter: grayscale(0.85); opacity: 0.8; transition: transform 0.12s, filter 0.12s; }
-.settlement-bld.built { filter: none; opacity: 1; }
-.settlement-pic { height: 118px; width: auto; max-width: 150px; object-fit: contain; filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.65)); }
-.settlement-bld { background: rgba(8, 14, 14, 0.25); }
-.settlement-bld:not(.built) .settlement-pic { opacity: 0.8; height: 80px; }
-.settlement-bld:hover { transform: translate(-50%, -52%) scale(1.05); }
-.settlement-bld.on { box-shadow: 0 0 0 3px #9EE4FF, 0 0 14px rgba(158, 228, 255, 0.6); }
+/* A building is a piece of the landscape: just its picture, no frame and no caption; hovering lights its silhouette with a golden glow. */
+.settlement-bld { position: absolute; transform: translate(-50%, -100%); display: block; padding: 0; border: 0; background: none; line-height: 0; cursor: pointer; }
+.settlement-pic { display: block; width: auto; max-width: none; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55)); transition: filter 0.15s; }
+.settlement-bld:hover .settlement-pic, .settlement-bld:focus-visible .settlement-pic { filter: brightness(1.18) drop-shadow(0 0 2px #FFE08A) drop-shadow(0 0 6px #F3C24A) drop-shadow(0 0 14px rgba(243, 194, 74, 0.75)); }
+.settlement-bld:focus-visible { outline: none; }
+.settlement-bld.dwelling .settlement-pic { border-radius: 50%; }
 /* The modal wrapper's animation leaves a transform on its body, which would make `fixed` relative to it: the whole-screen settlement drops it. */
 .overlay:has(.settlement-full) { padding: 0; }
 .overlay > .modal-body:has(> .settlement-full) { animation: none; transform: none; margin: 0; max-width: none; width: 100%; height: 100%; }
-/* The settlement as a whole screen (backlog 37): the landscape is the background, the buildings stand on it, the services lie below. */
-.settlement-full { position: fixed; inset: 0; z-index: 70; display: flex; flex-direction: column; background-size: cover; background-position: center; overflow-x: hidden; overflow-y: auto; color: #3A2508; }
-.settlement-full::before { content: ''; position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 45%, rgba(0, 0, 0, 0) 40%, rgba(2, 6, 6, 0.7) 100%); }
-.settlement-top { position: relative; flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 14px 14px; background: linear-gradient(rgba(4, 8, 8, 0.9), rgba(4, 8, 8, 0)); }
+/* The settlement as a whole screen: a stage with the landscape's own shape (1280:600) scaled to cover the screen, so buildings keep their place on the terrain. */
+.settlement-full { position: fixed; inset: 0; z-index: 70; display: flex; flex-direction: column; overflow: hidden; background: #06100c; color: #3A2508; }
+.settlement-view { position: relative; flex: 1 1 0; min-height: 0; overflow: hidden; container-type: size; }
+.settlement-stage { position: absolute; left: 50%; top: 50%; width: max(100cqw, calc(100cqh * 1280 / 600)); aspect-ratio: 1280 / 600; transform: translate(-50%, -50%); background-size: 100% 100%; container-type: size; }
+.settlement-full:not([data-view='town']) .settlement-stage { filter: brightness(0.5) blur(2px); }
+.settlement-view::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 45%, rgba(0, 0, 0, 0) 40%, rgba(2, 6, 6, 0.7) 100%); }
+.settlement-top { position: relative; z-index: 2; flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 14px 14px; background: linear-gradient(rgba(4, 8, 8, 0.9), rgba(4, 8, 8, 0)); pointer-events: none; }
+.settlement-view > .settlement-top { position: absolute; left: 0; right: 0; top: 0; z-index: 2; }
 .settlement-info { text-align: center; font-size: 15px; color: #F6EBD0; text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, 0.7); }
 .settlement-info b { color: #FFE9A8; }
-.settlement-field { position: relative; flex: 1 0 auto; min-height: max(330px, 58vh); }
-.settlement-field.dense { min-height: max(420px, 74vh); }
-.settlement-field.dense .settlement-pic { height: 88px; }
-.settlement-field.dense .settlement-bld { padding: 3px; }
+/* The tree and the barracks are pages of the same screen: header, a field that scrolls on its own, a foot. Nothing can push the exit button off the screen. */
+.settlement-page { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; }
+.settlement-field { position: relative; flex: 1 1 0; min-height: 0; overflow: auto; }
 .settlement-field.tree { display: flex; align-items: center; justify-content: center; }
-.settlement-bottom { position: relative; flex: none; display: flex; gap: 10px; align-items: stretch; flex-wrap: wrap; padding: 24px 12px 10px; background: linear-gradient(rgba(4, 8, 8, 0), rgba(4, 8, 8, 0.88) 30%); }
-.settlement-bottom > .plate { max-height: 40vh; overflow-y: auto; }
-.settlement-actions { display: flex; flex-direction: column; gap: 8px; justify-content: flex-end; align-items: stretch; flex: none; }
-.settlement-bld.council .settlement-pic { height: 96px; }
-/* On a low screen the buildings are smaller and the field taller (the page scrolls), so the terraces do not overlap. */
-@media (max-height: 560px) and (max-width: 1100px) { .settlement-field, .settlement-field.dense { min-height: 620px; } .settlement-field.dense .settlement-pic { height: 74px; } .settlement-pic { height: 74px; } .settlement-bld.council .settlement-pic { height: 66px; } .settlement-bld { font-size: 11px; width: 92px !important; padding: 3px; } }
+.settlement-field.sheet { display: flex; align-items: flex-start; justify-content: center; padding: 6px 12px; }
+.settlement-sheet { width: min(900px, 100%); padding: 14px 18px; }
+.settlement-foot { flex: none; display: flex; gap: 10px; align-items: stretch; flex-wrap: wrap; padding: 24px 12px 10px; background: linear-gradient(rgba(4, 8, 8, 0), rgba(4, 8, 8, 0.88) 30%); }
+.settlement-foot > .plate { max-height: 36vh; overflow-y: auto; }
+.settlement-actions { display: flex; flex-direction: column; gap: 8px; justify-content: flex-end; align-items: stretch; flex: none; margin-left: auto; }
+.settlement-actions.row { flex-direction: row; align-items: center; flex-wrap: wrap; }
+.settlement-modal { display: flex; flex-direction: column; gap: 10px; width: min(760px, 94vw); max-height: 88vh; overflow-y: auto; color: #3A2508; }
+/* The bottom bar: one ornate strip glued to the lower edge, like in Heroes III (dark wood, a gold rail with studs, corner ornaments). */
+.settlement-bar { position: relative; flex: none; z-index: 4; min-height: clamp(86px, 13vh, 124px); display: flex; align-items: center; gap: 16px; padding: 12px 20px 8px; color: #F4E3B8; font-size: 15px; line-height: 1.25;
+  background: repeating-linear-gradient(92deg, rgba(255, 220, 150, 0.035) 0 2px, rgba(0, 0, 0, 0) 2px 7px), linear-gradient(#4A331A, #2A1B0D 55%, #170F07);
+  border-top: 3px solid #C79A3F; box-shadow: 0 -2px 0 #4A3210, 0 -10px 26px rgba(0, 0, 0, 0.65), inset 0 2px 0 rgba(255, 228, 160, 0.3); }
+.settlement-bar::before { content: ''; position: absolute; left: 0; right: 0; top: 5px; height: 6px; pointer-events: none; background: radial-gradient(circle at 50% 50%, #E9C46A 0 2px, rgba(0, 0, 0, 0) 2.5px) 0 0 / 22px 6px repeat-x; opacity: 0.8; }
+.settlement-bar::after { content: ''; position: absolute; inset: -3px 0 0; pointer-events: none; background: url('/assets/ui/corner_gold_tl.webp') left top / 44px 44px no-repeat, url('/assets/ui/corner_gold_tr.webp') right top / 44px 44px no-repeat; }
+.settlement-bar b { color: #FFE9A8; }
+.settlement-bar > * { position: relative; z-index: 1; }
+.sb-sub { display: block; font-size: 13px; color: #BFA66F; }
+.sb-hero { flex: none; display: flex; align-items: center; gap: 10px; padding-right: 14px; border-right: 1px solid rgba(199, 154, 63, 0.4); }
+.sb-garrison { flex: none; display: flex; flex-direction: column; gap: 4px; padding-right: 14px; border-right: 1px solid rgba(199, 154, 63, 0.4); }
+.sb-label { display: flex; align-items: center; gap: 6px; font-weight: 700; color: #FFE9A8; }
+.sb-slots, .sb-team { display: flex; align-items: center; gap: 6px; }
+.sb-slot { display: grid; place-items: center; width: 52px; height: 52px; padding: 0; border-radius: 6px; border: 2px solid #8A6A2C; background: radial-gradient(#0C0804, #2A1C0C); box-shadow: inset 0 0 8px #000, 0 0 0 1px #3A280E; color: #8A6A2C; font-size: 20px; }
+.sb-slot.small { width: 38px; height: 38px; cursor: pointer; }
+button.sb-slot.full { cursor: pointer; }
+button.sb-slot:hover:not(:disabled) { border-color: #F3C24A; box-shadow: inset 0 0 8px #000, 0 0 8px rgba(243, 194, 74, 0.8); }
+button.sb-slot:disabled { cursor: default; }
+.sb-info { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 2px; max-height: 100px; overflow: hidden; }
+.sb-treasury { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+/* Outside the bar (the tree and the barracks pages) the strip lies on the dark foot of the screen. */
+.settlement-foot .sb-treasury, .settlement-actions .sb-treasury { color: #F4E3B8; text-shadow: 0 1px 3px #000; }
+.sb-gold b { color: #FFE9A8; font-size: 20px; }
+.sb-income { color: #BFA66F; font-size: 14px; }
+.sb-exit { flex: none; padding: 8px 22px; font-size: 18px; }
+@media (max-height: 560px) and (max-width: 1100px) { .settlement-page .settlement-top { display: none; } .settlement-foot { padding-top: 8px; } .sb-hero > div, .sb-team .sb-sub { display: none; } .sb-hero, .sb-garrison { padding-right: 8px; } .sb-label { font-size: 13px; } .settlement-bar { gap: 10px; padding: 8px 12px 6px; font-size: 13px; min-height: 76px; } .sb-slot { width: 42px; height: 42px; } .sb-slot.small { width: 32px; height: 32px; } .sb-info { max-height: 64px; } .sb-exit { padding: 6px 14px; font-size: 15px; } .settlement-foot > .plate { max-height: 30vh; } }
 .building-tree { display: flex; flex-direction: column; justify-content: center; width: 100%; max-height: 100%; overflow: auto; padding: 8px 14px; box-sizing: border-box; }
 .tree-node { position: absolute; display: flex; gap: 8px; align-items: center; padding: 6px 8px; border: 2px solid #B88A35; border-radius: 10px; background: linear-gradient(#F3E6C4, #D9C592); color: #3A2508; font: inherit; cursor: pointer; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55); transition: transform 0.12s; box-sizing: border-box; }
 .tree-node:hover { transform: translateY(-2px); }

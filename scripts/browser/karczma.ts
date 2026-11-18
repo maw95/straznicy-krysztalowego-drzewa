@@ -6,15 +6,21 @@ const game = await openGame('steps=0&seed=3&size=medium&realm=1&gold=40&res=9&pl
 try {
   const p = game.page;
   await p.locator('[data-enter-settlement]').click();
+  // Buildings are built from the Rada Osady (the tree); the built tavern then stands in the landscape and opens a modal.
+  await p.locator('[data-building="council"]').click();
+  await p.locator('[data-tree-node="tavern"]').click();
+  await p.locator('[data-tree-detail] [data-build="tavern"]').click();
+  await p.locator('[data-tree-back]').click();
   await p.locator('[data-building="tavern"]').click();
-  await p.locator('[data-build="tavern"]').click();
   await p.locator('[data-hire]').first().waitFor();
   console.log('commanders on offer:', await p.locator('[data-hire]').count());
   await p.evaluate(() => Promise.all([...document.images].map((i) => (i.complete ? null : new Promise((ok) => (i.onload = i.onerror = ok))))));
   await p.locator('[data-settlement]').screenshot({ path: '.tmp/karczma.png' });
   await p.locator('[data-hire]').first().click();
   console.log('after hiring:', (await p.locator('[data-panel="tavern"]').innerText()).replace(/\n/g, ' / ').slice(0, 160));
-  await p.locator('[data-enter]').click();
+  await p.locator('.settlement-modal [data-enter]').click();
+  await p.waitForTimeout(400);
+  await p.locator('.settlement-bar [data-enter]').click();
   // End turns until a hero with a personal name (a commander) is the active one.
   let label = '';
   for (let i = 0; i < 12; i++) {

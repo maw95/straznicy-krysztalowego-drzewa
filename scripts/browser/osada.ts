@@ -6,11 +6,14 @@ try {
   const p = game.page;
   await p.locator('[data-enter-settlement]').click();
   await p.locator('[data-settlement]').waitFor();
-  for (const b of ['barracks', 'barracks', 'market', 'hospital', 'treasury']) {
-    await p.locator(`[data-building="${b}"]`).click();
-    const btn = p.locator(`[data-build="${b}"]`);
+  // Everything is built from the Rada Osady (the tree); the landscape shows only what stands.
+  await p.locator('[data-building="council"]').click();
+  for (const b of ['barracks', 'market', 'hospital', 'treasury']) {
+    await p.locator(`[data-tree-node="${b}"]`).click();
+    const btn = p.locator(`[data-tree-detail] [data-build="${b}"]`);
     if (await btn.count()) await btn.first().click();
   }
+  await p.locator('[data-tree-back]').click();
   await p.evaluate(() => Promise.all([...document.images].map((i) => (i.complete ? null : new Promise((ok) => (i.onload = i.onerror = ok))))));
   await p.waitForTimeout(300);
   await p.locator('[data-settlement]').screenshot({ path: '.tmp/osada.png' });

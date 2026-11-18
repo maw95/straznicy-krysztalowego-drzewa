@@ -11,8 +11,10 @@ try {
   console.log(body.split('\n').filter((l) => /Odłamki/.test(l)).slice(0, 4).join(' | '));
   await p.screenshot({ path: '.tmp/relikt-mapa.png' });
   await p.locator('[data-enter-settlement]').click();
-  await p.locator('[data-building="spark"]').click();
-  console.log('spark panel:', (await p.locator('[data-panel="spark"]').innerText()).replace(/\n/g, ' / '), '| button disabled:', await p.locator('[data-build="spark"]').isDisabled());
+  // The Iskra's plot stands in the landscape only once the faction holds a shard.
+  if (!(await p.locator('[data-building="spark"]').count())) console.log('no shard held yet: the Iskra plot is not shown');
+  else await p.locator('[data-building="spark"]').click();
+  if (await p.locator('[data-panel="spark"]').count()) console.log('spark panel:', (await p.locator('[data-panel="spark"]').innerText()).replace(/\n/g, ' / '), '| button disabled:', await p.locator('[data-build="spark"]').isDisabled());
   await p.evaluate(() => Promise.all([...document.images].map((i) => (i.complete ? null : new Promise((ok) => (i.onload = i.onerror = ok))))));
   await p.locator('[data-settlement]').screenshot({ path: '.tmp/relikt-osada.png' });
   if (game.errors.length) console.log(game.errors.join('\n'));

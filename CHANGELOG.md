@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Ekran osady przebudowany na wzór Heroes III: wybudowane budynki stoją w krajobrazie jak jego część (różnej wielkości, na swoich miejscach, bez podpisów i ramek), po najechaniu świeci złota poświata wzdłuż ich sylwetki, a niewybudowanych nie widać. Wybudowane siedliska stworzeń też stoją w krajobrazie. Budować i rozbudowywać można tylko w Radzie Osady. Kliknięcie koszar i Rady otwiera osobny ekran, a pozostałych budynków okno. Dolna część ekranu to jeden ozdobny pasek przy krawędzi z garnizonem, bohaterem, złotem i opisem budynku pod myszką; okno osady mieści się już w ekranie, więc „Wyjdź z osady” zawsze widać.
 - Instrukcja gry komputerowej ma pełne tłumaczenie na angielski: przy angielskim języku gry „Zasady i karty” → „Instrukcja” pokazuje angielski tekst z tym samym spisem treści i wyszukiwarką; nazwy poziomów, jednostek i budynków są takie same jak w grze.
 - Poziomy złożoności są numerowane cyframi rzymskimi (Spacer I … Imperium VII) wszędzie: w nazwach poziomów, oknie zasad, podpowiedziach „Własnych ustawień”, dzienniku, instrukcji i na liście stołów online.
 - Kreator: poziomy złożoności zamiast „Poziom 0…6” w opisie mają ozdobną cyfrę rzymską w rogu karty (Spacer I, Przygoda II, … Imperium VII), a „Własne ustawienia” znak zapytania. Wszystkie odznaki są tej samej wielkości i okrągłe (także „VII”).
