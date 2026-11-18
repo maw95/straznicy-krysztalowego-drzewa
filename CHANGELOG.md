@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 2.11.0 — 2026-11-18
+
 - Czary w bitwie: gdy celujesz czarem (Magiczny Pocisk, Kula Ognia, Grom, Leczenie), nad wrogiem albo sojusznikiem widać wynik czaru (np. „−18 → 22 Ż”, „pokona”, „+3 → 10 Ż”), a nie obrażenia zwykłego ataku aktywnej jednostki. Czary nie liczą pancerza, więc liczba jest dokładnie tą, którą czar zdejmie.
 - Wielki skarbiec ma własny, większy obraz w osadzie: to ten sam skarbiec co zwykły (Przymierze: złota kopuła i zielone sztandary, Horda: czarna warownia z lawą), ale wyższy i bogatszy, z większą górą złota i skrzyń.
 - Rada Osady: budynek, który stoi i który stać cię ulepszyć (np. Targ na Duży targ), ma turkusową ramkę, strzałkę ▲ z nazwą ulepszenia i jego ceną; w legendzie jest „można ulepszyć”. Beżowy to wybudowany, którego nie stać cię jeszcze ulepszyć albo który jest na najwyższym poziomie.

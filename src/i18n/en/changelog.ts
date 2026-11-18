@@ -2,7 +2,7 @@
 // (commit hashes and Markdown marks dropped). Newest first. A new line in CHANGELOG.md needs its English here (tests/changelogEn.test.ts checks every line).
 import { register } from '../translate';
 
-// In preparation
+// 2.11.0
 register({
   "Czary w bitwie: gdy celujesz czarem (Magiczny Pocisk, Kula Ognia, Grom, Leczenie), nad wrogiem albo sojusznikiem widać wynik czaru (np. „−18 → 22 Ż”, „pokona”, „+3 → 10 Ż”), a nie obrażenia zwykłego ataku aktywnej jednostki. Czary nie liczą pancerza, więc liczba jest dokładnie tą, którą czar zdejmie.": "Battle spells: when you aim a spell (Magic Bolt, Fireball, Thunder, Mend), the note over the enemy or ally shows the spell's result (e.g. “−18 → 22 HP”, “defeats”, “+3 → 10 HP”) instead of the damage of the active unit's ordinary attack. Spells ignore armour, so the number is exactly what the spell takes off.",
   "Rada Osady: budynek, który stoi i który stać cię ulepszyć (np. Targ na Duży targ), ma turkusową ramkę, strzałkę ▲ z nazwą ulepszenia i jego ceną; w legendzie jest „można ulepszyć”. Beżowy to wybudowany, którego nie stać cię jeszcze ulepszyć albo który jest na najwyższym poziomie.": "Settlement Council: a building that stands and that you can afford to upgrade (e.g. the Market to the Big Market) has a turquoise frame, a ▲ arrow with the name and price of the upgrade; the legend has \"can be upgraded\". Beige means built, either not yet affordable to upgrade or already at the top level.",
