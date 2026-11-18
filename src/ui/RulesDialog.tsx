@@ -7,6 +7,7 @@ import { ALT_UNITS, KINGDOM, LEGENDS, RECRUIT_COSTS, RECRUITS } from '../engine/
 import { COMMANDERS } from '../engine/realm';
 import { MINE_NAMES, OBJECT_NAMES, SIEGE } from '../engine/economy';
 import { asset, Frame, Ribbon } from './common';
+import { ManualView } from './ManualView';
 import { ArtifactMedal, SLOT_NAMES } from './growthUi';
 import { DigitalContext, RuleText } from './statScale';
 import { savedDigital } from './NewGameWizard';
@@ -128,9 +129,9 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
   // Cards sit at most three to a row.
   const cardRow = { display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center', margin: '0 auto' } as const;
   return (
-    <Frame crest style={{ width: 'min(1080px, 96vw)', height: '86vh' }} innerStyle={{ padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <Frame crest className={tab === 'manual' ? 'rules-manual' : undefined} style={{ width: 'min(1080px, 96vw)', height: '86vh' }} innerStyle={{ padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
       <Ribbon style={{ width: 'min(420px, 100%)', alignSelf: 'center' }}>Zasady i karty</Ribbon>
-      <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
+      <div className="rules-tabs" style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
         {TABS.map(([id, label]) => (
           <button key={id} className={`btn plate parch ${tab === id ? 'on' : ''}`} style={{ padding: '4px 16px', fontSize: 17 }} onClick={() => setTab(id)}>
             {label}
@@ -152,15 +153,7 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
             ))}
           </div>
         )}
-        {tab === 'manual' && (
-          // The printable rulebook (docs/wersja_planszowa/instrukcja_szablon, copied by scripts/assets/manual.py).
-          <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 6 }}>
-            <iframe title="Instrukcja" src={asset('manual/index.html?embed')} style={{ flex: 1, minHeight: 0, width: '100%', border: 0, borderRadius: 6, background: 'transparent' }} />
-            <a href={asset('manual/index.html')} target="_blank" rel="noreferrer" style={{ alignSelf: 'center', color: '#F3D27A', fontSize: 15 }}>
-              Otwórz instrukcję w nowej karcie (do druku)
-            </a>
-          </div>
-        )}
+        {tab === 'manual' && <ManualView />}
         {tab === 'units' &&
           ([
             ['Przymierze Świtu', [...FACTION_HEROES.dawn, ...FACTION_SUPPORTS.dawn]],

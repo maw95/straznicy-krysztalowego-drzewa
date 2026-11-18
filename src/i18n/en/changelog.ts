@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Nowa instrukcja gry komputerowej w „Zasady i karty” → „Instrukcja”: opisuje wszystkie poziomy (od Spaceru do Imperium), tryby, cele, kampanię, Ekspedycję i grę online. Ma spis treści z linkami do rozdziałów i wyszukiwarkę po słowach kluczowych (pomija polskie litery i końcówki). Instrukcja planszówki do druku zostaje dostępna na dole strony. Na razie tylko po polsku.": "New manual of the computer game in \"Rules and cards\" → \"Manual\": it describes all the levels (from Walk to Empire), modes, goals, the campaign, the Expedition and online play. It has a table of contents with links to the chapters and a keyword search (it ignores Polish letters and endings). The printable board-edition manual stays at the bottom of the page. Polish only for now.",
   "Kreator: przyciski liczby graczy mają większe cyfry w tych samych kolorach co kody wielkości mapy (S, M, L).": "Wizard: the player count buttons have bigger numerals in the same colours as the map size codes (S, M, L).",
   "Kreator: przyciski wielkości mapy mają jednakowy rozmiar, a „Bardzo duża” mieści się w jednej linii.": "Wizard: the map size buttons are all the same size, and \"Very large\" fits on one line.",
   "Poziom trudności „Bardzo trudny” ma nową ikonę (głowa smoka z przodu).": "The \"Very hard\" difficulty has a new icon (a front-facing dragon head).",

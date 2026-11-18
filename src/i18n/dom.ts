@@ -7,6 +7,8 @@ import { translate } from './translate';
 
 const ATTRS = ['title', 'aria-label', 'placeholder', 'alt'];
 const SKIP = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'NOSCRIPT']);
+/** Text that is only in Polish on purpose (the manual) carries `translate="no"`: neither it nor anything inside it is touched. */
+const kept = (n: Node): boolean => ((n.nodeType === Node.ELEMENT_NODE ? (n as Element) : n.parentElement)?.closest('[translate="no"]') ?? null) !== null;
 /** What a node said in Polish, and what we wrote over it (a change that is not our own write is a new Polish text). */
 const original = new WeakMap<Node, string>();
 const written = new WeakMap<Node, string>();
@@ -45,10 +47,10 @@ function doAttrs(el: Element, en: boolean): void {
 }
 
 function walk(root: Node, en: boolean): void {
-  if (root.nodeType === Node.TEXT_NODE) return doText(root as Text, en);
+  if (root.nodeType === Node.TEXT_NODE) return kept(root) ? undefined : doText(root as Text, en);
   if (root.nodeType !== Node.ELEMENT_NODE) return;
   const el = root as Element;
-  if (SKIP.has(el.tagName)) return;
+  if (SKIP.has(el.tagName) || el.getAttribute('translate') === 'no') return;
   doAttrs(el, en);
   for (const child of Array.from(el.childNodes)) walk(child, en);
 }
@@ -81,9 +83,9 @@ export function installDomTranslator(root: HTMLElement = document.body): void {
   const observer = new MutationObserver((records) => {
     const e = en();
     for (const r of records) {
-      if (r.type === 'characterData') doText(r.target as Text, e);
-      else if (r.type === 'attributes') doAttrs(r.target as Element, e);
-      else for (const n of Array.from(r.addedNodes)) walk(n, e);
+      if (r.type === 'characterData') kept(r.target) || doText(r.target as Text, e);
+      else if (r.type === 'attributes') kept(r.target) || doAttrs(r.target as Element, e);
+      else for (const n of Array.from(r.addedNodes)) kept(n) || walk(n, e);
     }
   });
   observer.observe(root, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ATTRS });

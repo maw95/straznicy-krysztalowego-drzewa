@@ -106,9 +106,22 @@ describe('the page', () => {
     p.firstChild!.nodeValue = 'Zamknij';
     await wait();
     expect(p.textContent).toBe('Close');
+    // Text inside translate="no" (the Polish manual) is left alone, also when it is drawn later.
+    const keep = document.createElement('div');
+    keep.setAttribute('translate', 'no');
+    keep.innerHTML = '<p>Opcje</p>';
+    root.appendChild(keep);
+    await wait();
+    expect(keep.textContent).toBe('Opcje');
+    const late = document.createElement('p');
+    late.textContent = 'Zamknij';
+    keep.appendChild(late);
+    await wait();
+    expect(late.textContent).toBe('Zamknij');
     setLang('pl');
     expect(root.querySelector('button')!.textContent).toBe('Zasady');
     expect(root.querySelector('button')!.getAttribute('title')).toBe('Zamknij');
     expect(p.textContent).toBe('Zamknij');
   });
+
 });
