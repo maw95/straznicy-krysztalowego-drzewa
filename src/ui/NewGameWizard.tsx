@@ -84,9 +84,10 @@ const TITLES: Record<Page, string> = {
 };
 
 /** A big choice: a picture, a name and a sentence. */
-function Card({ img, title, text, on, onClick, disabled, wide }: { img: React.ReactNode; title: string; text: string; on?: boolean; onClick: () => void; disabled?: boolean; wide?: boolean }) {
+function Card({ img, title, text, on, onClick, disabled, wide, badge }: { img: React.ReactNode; title: string; badge?: string; text: string; on?: boolean; onClick: () => void; disabled?: boolean; wide?: boolean }) {
   return (
     <button className={`opt-card ${on ? 'on' : ''} ${wide ? 'wide' : ''}`} aria-pressed={on} disabled={disabled} onClick={onClick}>
+      {badge && <span className="opt-card-badge" aria-hidden="true">{badge}</span>}
       <span className="opt-card-img">{img}</span>
       <span className="opt-card-title">{title}</span>
       <span className="opt-card-text">{text}</span>
@@ -209,14 +210,14 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
 
       {page === 'tier' && (
         <div className="opt-grid" data-wizard-page="tier">
-          <Card on={d.tier === 'adventure' && d.level === 'zero'} title="Spacer" text="Poziom 0. Dla najmłodszych (od 5 lat): krótkie pojedynki bohaterów na planszy, bez zdolności i kości, bez rytuału. Zasady do ogarnięcia w kilka minut." img={pic(asset('ui/menu/krolik.webp'))} onClick={() => choose({ tier: 'adventure', level: 'zero' })} />
-          <Card on={d.tier === 'adventure' && d.level !== 'zero'} title="Przygoda" text="Poziom 1. Pełne bitwy na arenie, kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start z pełną grą." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure', level: notZero })} />
-          <Card on={d.tier === 'expedition'} title="Wyprawa" text="Poziom 2. Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ui/menu/wyprawa.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
-          <Card on={d.tier === 'kingdom'} title="Osada" text="Poziom 3. Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ui/menu/osada.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
-          <Card on={d.tier === 'economy'} title="Księstwo" text="Poziom 4. Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył." img={pic(asset('ui/menu/ksiestwo.webp'))} onClick={() => choose({ tier: 'economy', level: notZero })} />
-          <Card on={d.tier === 'realm'} title="Królestwo" text="Poziom 5. Księstwo plus bohaterowie i magia: drugi bohater-dowódca najęty w karczmie, czary w bitwie i na mapie, specjalności bohaterów." img={pic(asset('ui/menu/krolestwo.webp'))} onClick={() => choose({ tier: 'realm', level: notZero })} />
-          <Card on={d.tier === 'empire'} title="Imperium" text="Poziom 6. Królestwo plus frakcje i Relikt: Odłamki Pierwotnej Iskry, budynek Pierwotnej Iskry, mechaniki i legendarna jednostka frakcji." img={pic(asset('ui/menu/imperium.webp'))} onClick={() => choose({ tier: 'empire', level: notZero })} />
-          <Card on={d.tier === 'custom'} title="Własne ustawienia" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', level: notZero, custom: null })} />
+          <Card on={d.tier === 'adventure' && d.level === 'zero'} title="Spacer" badge="I" text="Dla najmłodszych (od 5 lat): krótkie pojedynki bohaterów na planszy, bez zdolności i kości, bez rytuału. Zasady do ogarnięcia w kilka minut." img={pic(asset('ui/menu/krolik.webp'))} onClick={() => choose({ tier: 'adventure', level: 'zero' })} />
+          <Card on={d.tier === 'adventure' && d.level !== 'zero'} title="Przygoda" badge="II" text="Pełne bitwy na arenie, kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start z pełną grą." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure', level: notZero })} />
+          <Card on={d.tier === 'expedition'} title="Wyprawa" badge="III" text="Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ui/menu/wyprawa.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
+          <Card on={d.tier === 'kingdom'} title="Osada" badge="IV" text="Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ui/menu/osada.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
+          <Card on={d.tier === 'economy'} title="Księstwo" badge="V" text="Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył." img={pic(asset('ui/menu/ksiestwo.webp'))} onClick={() => choose({ tier: 'economy', level: notZero })} />
+          <Card on={d.tier === 'realm'} title="Królestwo" badge="VI" text="Księstwo plus bohaterowie i magia: drugi bohater-dowódca najęty w karczmie, czary w bitwie i na mapie, specjalności bohaterów." img={pic(asset('ui/menu/krolestwo.webp'))} onClick={() => choose({ tier: 'realm', level: notZero })} />
+          <Card on={d.tier === 'empire'} title="Imperium" badge="VII" text="Królestwo plus frakcje i Relikt: Odłamki Pierwotnej Iskry, budynek Pierwotnej Iskry, mechaniki i legendarna jednostka frakcji." img={pic(asset('ui/menu/imperium.webp'))} onClick={() => choose({ tier: 'empire', level: notZero })} />
+          <Card on={d.tier === 'custom'} title="Własne ustawienia" badge="?" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', level: notZero, custom: null })} />
         </div>
       )}
 
