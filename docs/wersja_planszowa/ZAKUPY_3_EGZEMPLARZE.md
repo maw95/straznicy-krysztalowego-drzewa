@@ -76,7 +76,7 @@ o druk **bez skalowania** i sprawdzić linię kontrolną 50 mm na pierwszym arku
 | zamiennik: KVADER matowy dwustronny 220 g, 50 ark. | jw. | 50–55 zł/opak. | [Allegro — KVADER 220 g](https://allegro.pl/oferta/papier-fotograficzny-dwustronny-a4-matowy-220g-drukarki-atramentowe-50szt-15911973962) |
 | **Papier samoprzylepny biały matowy A4, 50 ark.** (Mazak MS1, atrament i laser) | 1 opak. | 20 zł | [Allegro — Mazak 50 ark.](https://allegro.pl/produkt/papier-samoprzylepny-bialy-mazak-ms1-50-arkuszy-a4-f7623aa9-69c5-47e4-9612-45e0e369cbd5) |
 
-HP DeskJet 2545 przyjmuje papier foto do ok. 280–300 g, więc 200–220 g jest bezpieczne. Grubszy papier wkładaj
+HP DeskJet 2545 przyjmuje **papier fotograficzny do 280 g/m², także w formacie A4** (instrukcja HP DeskJet 2540 series, „Paper weights”; limit nie zależy od formatu, a HP sam poleca do tej drukarki swój papier foto A4), więc 200–220 g jest bezpieczne. Uwaga: zwykły gruby karton/kreda bez powłoki foto to dla drukarki „Cards” — tylko do 200 g/m². Podajnik mieści do 20 arkuszy foto, odbiornik 10. Grubszy papier wkładaj
 **po kilka arkuszy** (najlepiej po jednym), stroną do druku w dół, i ustaw w sterowniku typ „Papier fotograficzny HP,
 matowy” (albo „inny papier foto”) i jakość „najlepsza”.
 
