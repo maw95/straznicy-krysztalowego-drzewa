@@ -6,7 +6,7 @@ import { InstallHint } from './InstallHint';
 import { LanguageSwitch } from './LanguageSwitch';
 import { TouchTitles } from './TouchTitles';
 import { useEffect, useState, type ReactNode } from 'react';
-import { ITEMS, UNITS, type ItemKind } from '../engine/data';
+import { ITEMS, raceOfHero, UNITS, type ItemKind } from '../engine/data';
 import { ritualFormed } from '../engine/game';
 import { GROWTH, levelOf, skillRank, type SkillId } from '../engine/growth';
 import { isDigital, type GameState, type HeroState, type LogEntry } from '../engine/types';
@@ -169,7 +169,7 @@ export function SkillDialog({ hero, onChoose, earned = [] }: { hero: HeroState |
           </div>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
             {hero.offer.map((s) => (
-              <SkillCard key={s} faction={hero.faction} skill={s} rank={skillRank(hero, s) + 1} raise={skillRank(hero, s) > 0} onChoose={onChoose} />
+              <SkillCard key={s} faction={raceOfHero(hero.id)} skill={s} rank={skillRank(hero, s) + 1} raise={skillRank(hero, s) > 0} onChoose={onChoose} />
             ))}
           </div>
           <div style={{ fontSize: 14, color: 'var(--muted)' }}>Umiejętność zostaje bohaterowi do końca gry.</div>

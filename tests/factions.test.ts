@@ -184,7 +184,7 @@ describe('level 6: the legendary recruit', () => {
     expect(() => applyAction(s, { type: 'kingdomRecruit', settlementId: home(s).id, unitId: 'dawnPhoenix' })).toThrow(/rozbudowanych/);
     home(s).buildings.barracks = 2;
     // Like every unit of tier 2 and up it needs its dwelling (tier 6: one dwelling, no alternative), which waits for the dwelling of tier 5.
-    s.kingdom!.dwellings = { dawn: ['hedgehog', 'centaur', 'boar'], horde: [] };
+    s.kingdom!.dwellings = { dawn: ['hedgehog', 'centaur', 'boar'], horde: [], third: [], fourth: [] };
     expect(() => applyAction(s, { type: 'kingdomDwelling', settlementId: home(s).id, unitId: 'dawnPhoenix' })).toThrow(/poziomu 5/);
     s.kingdom!.dwellings.dawn.push('treeGuardian');
     expect(() => applyAction(s, { type: 'kingdomRecruit', settlementId: home(s).id, unitId: 'dawnPhoenix' })).toThrow();

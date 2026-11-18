@@ -18,6 +18,7 @@ export const COLUMN_SPAN: ReadonlyArray<readonly [number, number]> = [
 /** Half-row of the middle of a start column. */
 export const MIDDLE_HALF = 8;
 
+/** An arena picture: the land of a race (a battle on a team's land is fought on the arena of the race it plays). */
 export type ArenaId = 'dawn' | 'horde';
 
 /** Obstacles painted on each arena, as [col, half]: 7 pieces, two of them 2 cells wide. Start columns stay free. */

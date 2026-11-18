@@ -1,0 +1,35 @@
+// Click check of the sides at the table: the digital rivalry with the control points goal, four sides, a race changed, the game started -> .tmp/sides*.png.
+// Usage: npx tsx scripts/browser/strony.ts
+import { openGame } from './game';
+const g = await openGame('', { view: 'desktop', scale: 1 });
+const p = g.page;
+const card = (t: string) => p.locator('.opt-card', { hasText: t }).first();
+try {
+  await card('Nowa gra').click();
+  await card('Ten komputer').click();
+  await p.locator('[data-wizard-page="edition"]').waitFor();
+  const nextIfAny = async () => { await p.waitForTimeout(500); const n = p.locator('[data-wizard-next]'); if (await n.count()) await n.click().catch(() => {}); await p.waitForTimeout(300); };
+  await card('Cyfrowa').click(); await nextIfAny();
+  await card('Wyprawa').click(); await nextIfAny();
+  await card('Rywalizacja').click(); await nextIfAny();
+  await card('Punkty kontrolne').click(); await nextIfAny();
+  await p.locator('[data-wizard-page="map"]').waitFor();
+  await p.locator('[data-shape="rectangle"]').click(); await p.waitForTimeout(500);
+  console.log('map page buttons:', (await p.getByRole('button').allInnerTexts()).filter(Boolean).slice(0, 25).join(' | '));
+  await p.screenshot({ path: '.tmp/sides-map.png' });
+  for (let i = 0; i < 4 && !(await p.locator('[data-wizard-page="players"]').count()); i++) { console.log('page', await p.locator('[data-wizard-page]').first().getAttribute('data-wizard-page')); await nextIfAny(); }
+  console.log('page players?', await p.locator('[data-wizard-page="players"]').count());
+  await p.locator('[data-wizard-next]').click();
+  await p.locator('[data-sides]').waitFor({ timeout: 5000 });
+  await p.screenshot({ path: '.tmp/sides1.png' });
+  await p.locator('[data-sides-count="4"]').click();
+  await p.locator('[data-race="third:horde"]').click();
+  await p.waitForTimeout(400);
+  await p.screenshot({ path: '.tmp/sides2.png' });
+  console.log('seats', await p.locator('select[aria-label="Frakcja"]').count());
+  await p.getByRole('button', { name: 'Rozpocznij grę' }).click();
+  await p.waitForTimeout(4000);
+  await p.screenshot({ path: '.tmp/sides3.png' });
+  console.log('errors', g.errors.join('|'));
+} catch (e) { console.log('FAIL', String(e).slice(0, 400)); await p.screenshot({ path: '.tmp/sides-fail.png' }); }
+await g.close();

@@ -1,6 +1,6 @@
 // Arena: one 3-on-3 battle, supports chosen and two treasures drafted per side from a shared deck.
 import { describe, expect, it } from 'vitest';
-import { ARENA_DECK, ITEMS, type FactionId } from '../src/engine/data';
+import { ARENA_DECK, ITEMS, type FactionId, type TeamId } from '../src/engine/data';
 import { chooseAction } from '../src/engine/ai';
 import { applyAction, createGame, currentActor } from '../src/engine/game';
 import { ARTIFACT_BY_ID, gearOf, worksInBattle } from '../src/engine/sites';
@@ -41,7 +41,7 @@ describe('arena', () => {
     const first = s.battle!.attacker as FactionId;
     const second = s.battle!.defender as FactionId;
     expect(s.draft!.order).toEqual([first, second, second, first]);
-    const pickers: FactionId[] = [];
+    const pickers: TeamId[] = [];
     while (s.battle?.stage === 'draft') {
       const d = s.draft!;
       // The Horde is shown 4 cards (an arena-only handicap), Przymierze 3.

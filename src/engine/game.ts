@@ -3,7 +3,7 @@
 // action and returns the new state, so every game is a replayable action log.
 // `applyActionInPlace` does the same on the state it is given (simulations, replays).
 
-import { raceOf } from './teams';
+import { byTeam, raceOf, teamCount, teamsOf } from './teams';
 import {
   FACTION_HEROES,
   FACTION_NAMES,
@@ -28,6 +28,7 @@ import {
   UNITS,
   type TeamId,
   type ItemKind,
+  type MapSize,
   type Side,
 } from './data';
 import {
@@ -80,12 +81,30 @@ export function crystalsFor(setup: SetupOptions): number {
   return setup.seats.filter((s) => s.faction === 'dawn').length >= 2 ? 3 : 2;
 }
 
+/** The smallest map (by size) with room for three and for four teams. */
+const MAP_SIZE_FOR_TEAMS: Record<number, MapSize> = { 3: 'medium', 4: 'long' };
+const SIZE_ORDER: MapSize[] = ['short', 'medium', 'long', 'veryLong', 'huge', 'giant'];
+
+/** What a game may have for sides: the crystals goal is the story of Przymierze against Horda only; three or four teams need a rectangle map that is big enough. */
+function checkSides(setup: SetupOptions, rules: SetupOptions['rules']) {
+  if (setup.mode === 'arena') return;
+  const n = teamCount(setup);
+  const pair = n === 2 && raceOf({ setup }, 'dawn') === 'dawn' && raceOf({ setup }, 'horde') === 'horde';
+  if (objectiveOf({ rules }) === 'crystals' && !pair) throw new Error('Ta historia jest o Przymierzu i Hordzie: cel „Kryształy do Drzewa” wymaga tej pary.');
+  if (n > 2) {
+    if (setup.mode === 'coop') throw new Error('Kooperacja ma dwie strony: drużynę graczy i komputer.');
+    if (!isDigital(rules) || setup.mapShape !== 'rectangle') throw new Error('Trzy i cztery strony grają na prostokątnej mapie wersji cyfrowej.');
+    if (SIZE_ORDER.indexOf(setup.mapSize) < SIZE_ORDER.indexOf(MAP_SIZE_FOR_TEAMS[n])) throw new Error('Ta mapa jest za mała dla tylu stron.');
+  }
+}
+
 export function createGame(setup: SetupOptions): GameState {
   const tuned = digitalRules(setup);
   // Hero growth (the Expedition level and higher) plays with the larger numbers; an explicit `statScale` (tests, simulations) wins.
   const rules = isDigital(tuned) && tuned.heroGrowth && setup.mode !== 'arena' && tuned.statScale === undefined ? { ...tuned, statScale: STAT_SCALE, hpScale: HP_SCALE } : tuned;
   const rng = new Rng(setup.seed);
   const variant = MAP_VARIANTS[setup.mapSize];
+  checkSides(setup, rules);
 
   // Treasure pool: all Eliksiry Odrodzenia are set aside, then exactly the required
   // number goes back together with random other treasures (spec section 4).
@@ -95,7 +114,8 @@ export function createGame(setup: SetupOptions): GameState {
     ? rng.shuffle([...Array(variant.resurrections).fill('resurrection'), ...others])
     : Array(variant.onlyResurrections).fill('resurrection');
   const crystals = crystalsFor(setup);
-  const map = generateMap(setup.mapSize, rng, pool.length, crystals, isDigital(rules) ? setup.mapShape : undefined, setup.customMapId);
+  const teams = teamsOf({ setup });
+  const map = generateMap(setup.mapSize, rng, pool.length, crystals, isDigital(rules) ? setup.mapShape : undefined, setup.customMapId, { teams, race: (t) => raceOf({ setup }, t) });
   const digital = isDigital(rules);
 
   const state: GameState = {
@@ -109,10 +129,7 @@ export function createGame(setup: SetupOptions): GameState {
     phase: 'adventure',
     players: [],
     heroes: {},
-    factions: {
-      dawn: { id: 'dawn', supportsAlive: [...FACTION_SUPPORTS.dawn], supportsDead: [], inventory: [], delivered: 0, unusedHeroes: [...FACTION_HEROES.dawn] },
-      horde: { id: 'horde', supportsAlive: [...FACTION_SUPPORTS.horde], supportsDead: [], inventory: [], delivered: 0, unusedHeroes: [...FACTION_HEROES.horde] },
-    },
+    factions: byTeam(teams, (t) => ({ id: t, supportsAlive: [...FACTION_SUPPORTS[raceOf({ setup }, t)]], supportsDead: [], inventory: [], delivered: 0, unusedHeroes: [...FACTION_HEROES[raceOf({ setup }, t)]] })),
     tiles: map.tiles,
     rows: map.rows,
     // Only a map of another shape stores them (the triangle's corners are the default), so a triangle game's state is as before.
@@ -132,9 +149,9 @@ export function createGame(setup: SetupOptions): GameState {
     lastBattle: null,
     stats: {
       battles: 0,
-      heroDeaths: { dawn: 0, horde: 0 },
-      supportDeaths: { dawn: 0, horde: 0 },
-      treasuresCollected: { dawn: 0, horde: 0 },
+      heroDeaths: byTeam(teams, () => 0),
+      supportDeaths: byTeam(teams, () => 0),
+      treasuresCollected: byTeam(teams, () => 0),
       neutralBattles: 0,
       neutralWipes: 0,
       neutralSupportLosses: 0,
@@ -151,6 +168,8 @@ export function createGame(setup: SetupOptions): GameState {
     rules.computerTreasures && computerFaction(state, f) ? { resurrections: 0, others: 0, ...start, random: (start?.random ?? 0) + rules.computerTreasures } : start;
   dealStartTreasures(state, rng, 'dawn', extra('dawn', rules.dawnStartTreasures ?? variant.startTreasures), dealt, pool);
   dealStartTreasures(state, rng, 'horde', extra('horde', rules.hordeStartTreasures), dealt, pool);
+  // The third and fourth team start as the second one does (nothing, unless the computer's advantage adds some).
+  for (const t of teams.slice(2)) dealStartTreasures(state, rng, t, extra(t, rules.hordeStartTreasures), dealt, pool);
   map.crystals.forEach((c, i) => {
     const id = `c${i + 1}`;
     state.crystals[id] = { id, guardian: c.guardian, at: c.hex };
@@ -169,12 +188,17 @@ export function createGame(setup: SetupOptions): GameState {
     // As many evil heroes as good heroes at the start (spec section 1), at least rules.minEvilHeroes.
     const goodCount = setup.seats.filter((s) => s.faction === 'dawn').length;
     // Optionally one more, to make the coop game harder (there are 3 Horde heroes at most).
-    const evilCount = rules.noHorde && objectiveOf(state) === 'boss' ? 0 : Math.min(FACTION_HEROES.horde.length, Math.max(goodCount, rules.minEvilHeroes ?? 1) + (rules.extraEvilHero ? 1 : 0));
-    const evil = rng.shuffle(FACTION_HEROES.horde).slice(0, evilCount);
+    // The computer may play the race of the players: it then takes the heroes they left.
+    const held = new Set(setup.seats.map((s) => s.heroId));
+    const evilPool = FACTION_HEROES[raceOf(state, 'horde')].filter((id) => !held.has(id));
+    const evilCount = rules.noHorde && objectiveOf(state) === 'boss' ? 0 : Math.min(evilPool.length, Math.max(goodCount, rules.minEvilHeroes ?? 1) + (rules.extraEvilHero ? 1 : 0));
+    const evil = rng.shuffle(evilPool).slice(0, evilCount);
     for (const id of evil) addHero(state, id, 'horde', null);
   }
 
-  for (const f of ['dawn', 'horde'] as TeamId[]) revealAround(state, homeOf(state, f));
+  // A hero another side of the same race plays is not in this side's reserve.
+  for (const t of teams) state.factions[t].unusedHeroes = state.factions[t].unusedHeroes.filter((id) => !state.heroes[id]);
+  for (const f of teams) revealAround(state, homeOf(state, f));
   state.tiles[treeOf(state)].revealed = true;
   state.rng = rng.state;
   placeSites(state);
@@ -184,7 +208,7 @@ export function createGame(setup: SetupOptions): GameState {
   state.turnIndex = 0;
   // The computer's start advantage of the highest difficulty (COMPUTER_HANDICAP): artifacts of rarity 1-2 for its main hero.
   if (rules.computerArtifacts && rules.heroGrowth && setup.mode !== 'arena') {
-    for (const f of ['dawn', 'horde'] as TeamId[]) {
+    for (const f of teams) {
       const main = state.turnOrder.map((id) => state.heroes[id]).find((h) => h?.faction === f && !h.secondary);
       if (main && computerFaction(state, f)) for (let i = 0; i < rules.computerArtifacts; i++) giveArtifact(state, main, drawArtifact(state, main, COMPUTER_ARTIFACT_ODDS, 0x51ed270b + i * 7919), 'przewaga komputera');
     }
@@ -239,7 +263,7 @@ function startArena(state: GameState) {
   const [dawn, horde] = [heroOf('dawn'), heroOf('horde')];
   if (!dawn || !horde) throw new Error('Na arenie walczy jeden bohater Przymierza i jeden Hordy.');
   const hero = (f: TeamId) => (f === 'dawn' ? dawn : horde);
-  const extra = (['dawn', 'horde'] as TeamId[]).flatMap((f) => Array<TeamId>(ARENA_RULES.extraPicks[f] + (computerFaction(state, f) ? state.rules.computerDraft?.picks ?? 0 : 0)).fill(f));
+  const extra = (['dawn', 'horde'] as TeamId[]).flatMap((f) => Array<TeamId>(ARENA_RULES.extraPicks[raceOf(state, f)] + (computerFaction(state, f) ? state.rules.computerDraft?.picks ?? 0 : 0)).fill(f));
   // ARENA_PICKS each, snaking: A, B, B, A, A, B, …
   const picks = Array.from({ length: ARENA_PICKS }, (_, i) => (i % 2 ? [second, first] : [first, second])).flat();
   state.draft = { deck: [...ARENA_DECK], order: [...picks, ...extra], offer: [] };
@@ -314,7 +338,7 @@ function pickSpells(state: GameState, faction: TeamId, spells: SpellId[]) {
 function dealOffer(state: GameState) {
   const d = state.draft!;
   const rng = new Rng(state.rng);
-  d.offer = [...new Set(rng.shuffle(d.deck))].slice(0, ARENA_OFFER + ARENA_RULES.extraOffer[d.order[0]] + (computerFaction(state, d.order[0]) ? state.rules.computerDraft?.offer ?? 0 : 0));
+  d.offer = [...new Set(rng.shuffle(d.deck))].slice(0, ARENA_OFFER + ARENA_RULES.extraOffer[raceOf(state, d.order[0])] + (computerFaction(state, d.order[0]) ? state.rules.computerDraft?.offer ?? 0 : 0));
   state.rng = rng.state;
 }
 
@@ -395,14 +419,11 @@ const AUTOMATON_SEAT = 100;
 export function computeTurnOrder(state: GameState): string[] {
   const heroes = Object.values(state.heroes);
   const seatOrder = (h: HeroState) => (h.playerId ? state.players.findIndex((p) => p.id === h.playerId) : AUTOMATON_SEAT);
-  const dawn = heroes.filter((h) => h.faction === 'dawn' && h.alive).sort((a, b) => seatOrder(a) - seatOrder(b));
-  const horde = heroes.filter((h) => h.faction === 'horde' && h.alive).sort((a, b) => seatOrder(a) - seatOrder(b));
-  if (state.setup.mode === 'coop') return [...dawn, ...horde].map((h) => h.id);
+  const sides = teamsOf(state).map((t) => heroes.filter((h) => h.faction === t && h.alive).sort((a, b) => seatOrder(a) - seatOrder(b)));
+  if (state.setup.mode === 'coop') return sides.flat().map((h) => h.id);
+  // Turns alternate between the teams: the first hero of each, then the second of each, and so on.
   const out: string[] = [];
-  for (let i = 0; i < Math.max(dawn.length, horde.length); i++) {
-    if (dawn[i]) out.push(dawn[i].id);
-    if (horde[i]) out.push(horde[i].id);
-  }
+  for (let i = 0; i < Math.max(...sides.map((s) => s.length)); i++) for (const side of sides) if (side[i]) out.push(side[i].id);
   return out;
 }
 
@@ -417,6 +438,11 @@ export function activeHero(state: GameState): HeroState | null {
 /** A faction's living heroes (a reserve still to come in included), in the order of state.heroes. */
 export function livingHeroes(state: GameState, faction: TeamId): HeroState[] {
   return Object.values(state.heroes).filter((h) => h.faction === faction && h.alive);
+}
+
+/** The living heroes of every team but `team`. */
+export function livingEnemies(state: GameState, team: TeamId): HeroState[] {
+  return Object.values(state.heroes).filter((h) => h.faction !== team && h.alive);
 }
 
 export function heroesAt(state: GameState, k: HexKey): HeroState[] {
@@ -795,7 +821,7 @@ export function moveBreakdown(state: GameState): Array<{ label: string; points: 
   add('Leśny Tropiciel (umiejętność)', moveBonus(hero));
   add('pomoc dla dziecka', hero && isChildHero(state, hero) ? FAMILY.extraMove : 0);
   add('artefakty (buty)', gearMoveBonus(hero));
-  add('Wilcze Legowisko', hero && state.rules.empire && hero.faction === 'horde' && Object.values(state.kingdom?.settlements ?? {}).some((s) => s.owner === 'horde' && (s.buildings.wolfDen ?? 0) >= 1) ? 1 : 0);
+  add('Wilcze Legowisko', hero && state.rules.empire && raceOf(state, hero.faction) === 'horde' && Object.values(state.kingdom?.settlements ?? {}).some((s) => s.owner === hero.faction && (s.buildings.wolfDen ?? 0) >= 1) ? 1 : 0);
   add('niesiony Artefakt', hero?.crystals.includes('artifact') ? -ARTIFACT.carrierSlow : 0);
   return parts;
 }
@@ -814,7 +840,10 @@ function endRound(state: GameState) {
   state.turnOrder = computeTurnOrder(state);
   state.turnIndex = 0;
   log(state, 'round', `Runda ${state.round} z ${state.roundLimit}.`);
-  if (!state.turnOrder.length) finish(state, 'horde', 'Nikt nie może już grać.');
+  if (!state.turnOrder.length) {
+    if (teamsOf(state).length > 2) finishDraw(state, 'Nikt nie może już grać.');
+    else finish(state, 'horde', 'Nikt nie może już grać.');
+  }
 }
 
 export function finish(state: GameState, winner: Side, reason: string) {
@@ -838,6 +867,14 @@ function checkVictory(state: GameState) {
   if (state.phase === 'over') return;
   OBJECTIVES[objectiveOf(state)].checkVictory(state);
   if ((state.phase as GameState['phase']) === 'over') return; // the objective may have finished the game
+  // More than two teams: the last team with a living hero wins (a team without one is out; an Eliksir Odrodzenia needs a living hero to drink it).
+  const teams = teamsOf(state);
+  if (teams.length > 2) {
+    const standing = teams.filter((t) => Object.values(state.heroes).some((h) => h.faction === t && h.alive));
+    if (standing.length === 1) finish(state, standing[0], 'Wszyscy pozostali bohaterowie polegli.');
+    else if (!standing.length) finishDraw(state, 'Wszyscy bohaterowie polegli.');
+    return;
+  }
   // Przymierze wins only with its goal. When all its heroes are dead it can no longer
   // carry crystals or hold points, so the Horde wins (an Eliksir Odrodzenia needs a living hero to drink it).
   const dawn = Object.values(state.heroes).filter((h) => h.faction === 'dawn');
@@ -901,7 +938,7 @@ function startBattle(state: GameState, s: BattleStart) {
   const b: BattleState = {
     kind: s.kind,
     mapHex: s.mapHex,
-    arena: state.tiles[s.mapHex].side,
+    arena: raceOf(state, state.tiles[s.mapHex].side),
     attacker: attacker.faction,
     defender: defenderHero ? defenderHero.faction : held ? held.owner! : 'neutral',
     attackerHero: attacker.id,
@@ -913,7 +950,7 @@ function startBattle(state: GameState, s: BattleStart) {
     needsDeploy: [],
     needsSelection: [],
     ...(isDigital(state.rules) ? { layout: 'wide' as const } : {}),
-    obstacles: state.setup.battleMode === 'board' ? [] : siege ? siegeObstacles(siege) : arenaObstacles(state.tiles[s.mapHex].side, isDigital(state.rules) ? 'wide' : undefined),
+    obstacles: state.setup.battleMode === 'board' ? [] : siege ? siegeObstacles(siege) : arenaObstacles(raceOf(state, state.tiles[s.mapHex].side), isDigital(state.rules) ? 'wide' : undefined),
     ...(held ? { garrison: held.id } : {}),
     ...(siege ? { siege } : {}),
     units: {},
@@ -990,13 +1027,13 @@ function startBattle(state: GameState, s: BattleStart) {
 
 /** Level 6, rank III of the Przymierza's tree: every unit of the Przymierza starts a battle with more Życie. */
 function dawnTreeBonus(state: GameState, unit: BattleState['units'][string]) {
-  if (!state.rules.empire || unit.side !== 'dawn' || mechanicLevel(state, 'dawn') < 4) return;
+  if (!state.rules.empire || unit.side === 'neutral' || raceOf(state, unit.side) !== 'dawn' || mechanicLevel(state, unit.side) < 4) return;
   unit.hp += FACTION_MECHANICS.dawnStartHp * hpScaleOf(state);
   unit.maxHp += FACTION_MECHANICS.dawnStartHp * hpScaleOf(state);
 }
 
 function sparkBonus(state: GameState, unit: BattleState['units'][string]) {
-  if (unit.side === 'dawn') {
+  if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'dawn') {
     unit.hp += EMPIRE.sparkHp * hpScaleOf(state);
     unit.maxHp += EMPIRE.sparkHp * hpScaleOf(state);
   } else unit.status.battleAttackBonus += EMPIRE.sparkAttack * scaleOf(state);
@@ -1005,8 +1042,10 @@ function sparkBonus(state: GameState, unit: BattleState['units'][string]) {
 function addSupports(state: GameState, faction: TeamId, ids: string[]) {
   const b = state.battle!;
   const digital = isDigital(state.rules) && !b.duel;
-  for (const id of ids) {
-    b.units[id] = makeBattleUnit(id, faction, digital, scaleOf(state), hpScaleOf(state));
+  for (const defId of ids) {
+    // Two sides of one race may bring the same support: the second one gets an id of its own (every other lookup goes by `defId`).
+    const id = b.units[defId] ? `${defId}~${faction}` : defId;
+    b.units[id] = { ...makeBattleUnit(defId, faction, digital, scaleOf(state), hpScaleOf(state)), id };
     // The leader of the side (the attacking or the defending hero of this faction) strengthens its supports.
     if (state.rules.heroGrowth) {
       const leader = state.heroes[b.attacker === faction ? b.attackerHero : b.defenderHero ?? ''];
@@ -1046,7 +1085,7 @@ function finalizeBattle(state: GameState) {
   if (b.kind === 'neutral') resolveGuardianFight(state, b);
   awardBattleXp(state, b);
   // Level 6, the Horde: the Szabrownia pays after a fight against a hero or a guardian that the faction won.
-  if (state.rules.empire && (b.winner === 'dawn' || b.winner === 'horde') && !isAutomaton(state, b.winner)) {
+  if (state.rules.empire && b.winner && b.winner !== 'neutral' && b.winner !== 'draw' && !isAutomaton(state, b.winner)) {
     const loot = FACTION_MECHANICS.plunderGold * summedLevel(state, b.winner, 'plunder');
     if (loot > 0) {
       state.kingdom!.gold[b.winner] += loot;
@@ -1272,7 +1311,7 @@ export function spawnHordeHero(state: GameState, fallenId: string | null = null)
   let id = f.unusedHeroes[0];
   if (id) addHero(state, id, 'horde', null);
   else {
-    const dead = FACTION_HEROES.horde.filter((h) => state.heroes[h] && !state.heroes[h].alive);
+    const dead = FACTION_HEROES[raceOf(state, 'horde')].filter((h) => state.heroes[h] && !state.heroes[h].alive);
     id = dead.find((h) => h !== fallenId) ?? dead[0] ?? fallenId!;
     if (!id) return false;
     Object.assign(state.heroes[id], { alive: true, crystals: [], pos: homeOf(state, 'horde') });

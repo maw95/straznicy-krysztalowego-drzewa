@@ -43,7 +43,7 @@ export const MECHANIC_TEXTS: Record<FactionId, string> = {
 
 /** The best level of the faction's mechanic building (Kapliczka Świtu, Jama Krwi) among the settlements it holds: 0 means it has no Blask Świtu or Żądza Krwi at all. */
 export const mechanicLevel = (state: GameState, f: TeamId): number => {
-  const key = f === 'dawn' ? 'shrine' : 'bloodPit';
+  const key = raceOf(state, f) === 'dawn' ? 'shrine' : 'bloodPit';
   return Math.max(0, ...Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.owner === f).map((s) => s.buildings[key] ?? 0));
 };
 /** The summed level of a faction's building over its settlements (Szkółka Drzewa, Szabrownia). */

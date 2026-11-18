@@ -1,4 +1,5 @@
 // Rules agreed with the designer in docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md (section "Zasady obowiązujące").
+import { raceOf } from '../src/engine/teams';
 import { describe, expect, it } from 'vitest';
 import { ABILITY, RESURRECTION_CARDS, TERRAIN_COST, TILE_POOLS, UNITS } from '../src/engine/data';
 import { activeHero, applyAction, createGame, legalHeroMoves, ritualFormed } from '../src/engine/game';
@@ -44,7 +45,7 @@ describe('default game and simplifications', () => {
 describe('map halves and terrain', () => {
   it('splits the map by a fixed border into halves of (almost) equal size', () => {
     for (const rows of [6, 8, 11]) {
-      const count = { dawn: 0, horde: 0 };
+      const count: Record<string, number> = { dawn: 0, horde: 0 };
       for (let row = 1; row < rows; row++) for (let col = 0; col <= row; col++) count[sideOf(row, col)]++;
       expect(Math.abs(count.dawn - count.horde)).toBeLessThanOrEqual(1);
     }
@@ -190,7 +191,7 @@ describe('painted arenas', () => {
       let s = createGame(setup({ seed }));
       for (let i = 0; i < 600 && s.phase !== 'over'; i++) {
         if (s.battle && s.battle.stage !== 'select' && !s.battle.duel) {
-          expect(s.battle.arena).toBe(s.tiles[s.battle.mapHex].side);
+          expect(s.battle.arena).toBe(raceOf(s, s.tiles[s.battle.mapHex].side));
           expect(s.battle.obstacles).toEqual(arenaObstacles(s.battle.arena));
           seen.add(s.battle.arena);
         }

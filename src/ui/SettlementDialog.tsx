@@ -88,6 +88,8 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   }, [view]);
   const gold = goldOf(state, faction);
   const own = s.land === faction;
+  /** The race whose land the settlement stands on (the pictures and the building names are the race's). */
+  const landRace = raceOf(state, s.land);
   const fs = state.factions[faction];
   const buyer = Object.values(state.heroes).find((h) => h.id === state.turnOrder[state.turnIndex] && h.faction === faction);
   const price = (b: BuildingId) => buildCost(state, s, b);
@@ -389,7 +391,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     );
   };
 
-  const councilPic = `osady/${s.land}_council1.webp`;
+  const councilPic = `osady/${landRace}_council1.webp`;
   // Level 6: the dwellings of the unit tiers 2-6 hang in the tree under the barracks, one tier after another; both units of a tier stand side by side
   // (the choice of one shuts the other out), a tier waits for the dwelling of the tier before it.
   const mayHireHere = mayRecruit(s, faction);
@@ -431,7 +433,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     const action = built ? <b className="td-ok">Iskra płonie w tej osadzie</b> : (
       <button className="btn prim" data-build="spark" disabled={!ready || !buyer || buyer.pos !== s.at} title={!ready ? 'Jeden bohater musi nieść wszystkie Odłamki.' : buyer?.pos !== s.at ? 'Bohater musi stać w tej osadzie.' : undefined} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: 'spark' })}>Wznieś</button>
     );
-    return <DetailPlate id="spark" picture={buildingPicture(s.land, 'spark', 1)} title={SPARK_NAMES[race]} text={`${SPARK_TEXTS[race]}${state.rules.objective === 'relic' ? ' W tej grze jego wzniesienie wygrywa.' : ''}`} note={note} action={action} />;
+    return <DetailPlate id="spark" picture={buildingPicture(landRace, 'spark', 1)} title={SPARK_NAMES[race]} text={`${SPARK_TEXTS[race]}${state.rules.objective === 'relic' ? ' W tej grze jego wzniesienie wygrywa.' : ''}`} note={note} action={action} />;
   };
   const buildingDetail = (b: BuildingId) => {
     const level = buildingLevel(s, b);
@@ -445,7 +447,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     const action = cost === null ? <b className="td-ok">Gotowe</b> : (
       <button className="btn prim" disabled={poor || blocked} title={poor && !blocked ? `Za mało: potrzeba ${costText(cost)}.` : undefined} data-build={b} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: b })}>{level === 0 ? 'Zbuduj' : 'Rozbuduj'}</button>
     );
-    return <DetailPlate id={b} picture={buildingPicture(s.land, b, Math.max(level, 1))} title={BUILDING_NAMES[b][shown]} text={BUILDING_TEXTS[b][shown] ?? ''} note={note} blocked={blocked} cost={cost === null ? undefined : <CostIcons cost={cost} have={{ gold, res: resOf(state, faction) }} size={26} />} action={action} />;
+    return <DetailPlate id={b} picture={buildingPicture(landRace, b, Math.max(level, 1))} title={BUILDING_NAMES[b][shown]} text={BUILDING_TEXTS[b][shown] ?? ''} note={note} blocked={blocked} cost={cost === null ? undefined : <CostIcons cost={cost} have={{ gold, res: resOf(state, faction) }} size={26} />} action={action} />;
   };
   const detail = pick?.startsWith('dwelling-') ? dwellingDetail(pick.slice(9)) : pick === 'spark' ? sparkDetail() : pick && pick !== COUNCIL ? buildingDetail(pick as BuildingId) : (
     <DetailPlate id="council" picture={councilPic} title="Rada Osady" text="Rada stoi w każdej osadzie od początku i nic nie kosztuje. Z niej wychodzą wszystkie budynki: kliknij budynek w drzewku, żeby zobaczyć jego cenę i działanie, a potem go zbudować." />
@@ -488,15 +490,15 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   return (
     <div className="settlement-full" data-settlement={s.id} data-view={view}>
       <div className="settlement-view">
-      <div className="settlement-stage" style={{ backgroundImage: `url(${asset(`osady/land_${s.land}.jpg`)})` }}>
+      <div className="settlement-stage" style={{ backgroundImage: `url(${asset(`osady/land_${landRace}.jpg`)})` }}>
         {view === 'town' && (
           <>
             {standing.map((b) => {
               const level = buildingLevel(s, b);
-              const spot = spotOf(b, s.land);
+              const spot = spotOf(b, landRace);
               return (
                 <button key={b} className="settlement-bld" style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: Math.round(spot.y * 10) }} onClick={() => openBuilding(b)} aria-label={nameOf(b)} data-building={b} data-level={level} {...hoverProps(b)}>
-                  <img src={asset(buildingPicture(s.land, b, level))} alt="" className="settlement-pic" style={{ height: `${b === 'treasury' && level >= 2 ? spot.h * 1.15 : spot.h}cqh` }} />
+                  <img src={asset(buildingPicture(landRace, b, level))} alt="" className="settlement-pic" style={{ height: `${b === 'treasury' && level >= 2 ? spot.h * 1.15 : spot.h}cqh` }} />
                 </button>
               );
             })}
@@ -539,7 +541,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         <div className="settlement-page">
           {header}
           <div className="settlement-field tree">
-            <BuildingTree state={state} s={s} faction={faction} order={ORDER} picture={(b, level) => buildingPicture(s.land, b, Math.max(level, 1))} selected={pick} onSelect={setPick} council={{ picture: councilPic, name: 'Rada Osady' }} extras={extras} />
+            <BuildingTree state={state} s={s} faction={faction} order={ORDER} picture={(b, level) => buildingPicture(landRace, b, Math.max(level, 1))} selected={pick} onSelect={setPick} council={{ picture: councilPic, name: 'Rada Osady' }} extras={extras} />
           </div>
           <div className="settlement-foot">
             {detail}

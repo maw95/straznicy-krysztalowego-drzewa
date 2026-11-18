@@ -15,12 +15,14 @@ export const abilityArt = (ability: string) => ABILITY_ART[ability] ?? ability;
 export const portrait = (unitId: string) => asset(`cards/portraits/${artId(unitId)}.jpg`);
 /** Face of a map tile (one of the art variants, or `art`: the picture of a settlement or an object standing on it), or its green/red back while hidden. */
 export const tileImage = (t: Tile, art?: string) =>
-  asset(t.revealed ? (art ? `tiles/${art}.jpg` : `tiles/${t.terrain}_${t.variant}.jpg`) : `tiles/back_${t.side}.jpg`);
+  asset(t.revealed ? (art ? `tiles/${art}.jpg` : `tiles/${t.terrain}_${t.variant}.jpg`) : `tiles/back_${t.side === 'third' ? 'dawn' : t.side === 'fourth' ? 'horde' : t.side}.jpg`);
 
-export const SIDE_RING: Record<Side, string> = { dawn: '#2C7048', horde: '#9A2226', neutral: '#2A5E9A' };
+/** The colour of each side (also of the seats in the setup): green, red, amber and violet; the neutral creatures are blue. */
+export const SIDE_RING: Record<Side, string> = { dawn: '#2C7048', horde: '#9A2226', third: '#B9801A', fourth: '#6A3E98', neutral: '#2A5E9A' };
 /** The thin outline round the base of the active 3D figure (the only mark a figure gets). */
 export const ACTIVE_FIGURE_RING = '#F3C842';
-export const SIDE_RIBBON: Record<Side, 'g' | 'r' | 'b'> = { dawn: 'g', horde: 'r', neutral: 'b' };
+/** The ribbons are painted in three colours only: the third and fourth team borrow the green and the red ones. */
+export const SIDE_RIBBON: Record<Side, 'g' | 'r' | 'b'> = { dawn: 'g', horde: 'r', third: 'g', fourth: 'r', neutral: 'b' };
 
 /** The phone layout (the same condition as the media query in styles.css). */
 export const COMPACT_QUERY = '(max-width: 900px), (max-height: 560px) and (max-width: 1100px)';

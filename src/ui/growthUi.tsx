@@ -3,7 +3,7 @@
 
 import { heroLabel } from '../engine/realm';
 import { useContext, useState } from 'react';
-import { abilityTextFor, FACTION_NAMES, scaleText, UNITS, type FactionId } from '../engine/data';
+import { abilityTextFor, FACTION_NAMES, raceOfHero, scaleText, UNITS, type FactionId } from '../engine/data';
 import { HERO_TYPE_NAMES, specialtyOf, TYPE_TEXTS } from '../engine/heroTypes';
 import { BRANCH_OF, isBranch, GROWTH, levelOf, MILESTONE_LEVELS, milestoneText, skillRank, skillText, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
 import { ARTIFACT_BY_ID, gearOf, packOf, passTargets, RARITY_NAMES, SETS, setCount, type ArtifactDef, type Slot } from '../engine/sites';
@@ -146,7 +146,7 @@ export function HeroGrowth({ hero, compact = false, onOpenPack }: { hero: HeroSt
         <span className="lbl" style={{ width: 108, flex: 'none' }}>Umiejętności</span>
         {skills.length === 0 && <span style={{ fontSize: 13, color: 'var(--muted)' }}>brak</span>}
         {skills.map((s) => (
-          <span key={s} title={`${SKILL_NAMES[hero.faction][s]} ${ROMAN[skillRank(hero, s)]}: ${scaleText(skillText(s, skillRank(hero, s)), scale[0], scale[1])}`} style={{ position: 'relative' }}>
+          <span key={s} title={`${SKILL_NAMES[raceOfHero(hero.id)][s]} ${ROMAN[skillRank(hero, s)]}: ${scaleText(skillText(s, skillRank(hero, s)), scale[0], scale[1])}`} style={{ position: 'relative' }}>
             <SkillIcon skill={s} size={36} />
             {skillRank(hero, s) > 1 && <span className="skill-rank">{ROMAN[skillRank(hero, s)]}</span>}
           </span>
@@ -295,7 +295,7 @@ export function HeroSheet({ hero, state, onAction, onClose }: { hero: HeroState;
             <div key={s} className="sheet-line">
               <SkillIcon skill={s} size={38} />
               <div>
-                <b>{SKILL_NAMES[hero.faction][s]} {isBranch(s) ? '' : ROMAN[skillRank(hero, s)]}</b>
+                <b>{SKILL_NAMES[raceOfHero(hero.id)][s]} {isBranch(s) ? '' : ROMAN[skillRank(hero, s)]}</b>
                 <div><RuleText text={skillText(s, skillRank(hero, s))} /></div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 // "Podpowiedź" for the younger player (family mode): what the bot would do now, in words.
 
-import { itemDef, TERRAIN_NAMES, UNITS } from '../engine/data';
+import { itemDef, raceOfHero, TERRAIN_NAMES, UNITS } from '../engine/data';
 import { activeHero } from '../engine/game';
 import { SKILL_NAMES } from '../engine/growth';
 import { isDigital, type Action, type GameState } from '../engine/types';
@@ -20,7 +20,7 @@ export function describeAction(state: GameState, a: Action | null): string {
     case 'endTurn':
       return 'Zakończ turę: nic więcej się teraz nie opłaca.';
     case 'chooseSkill':
-      return `Wybierz umiejętność: ${SKILL_NAMES[Object.values(state.heroes).find((h) => h.offer?.includes(a.skill))?.faction ?? 'dawn'][a.skill]}.`;
+      return `Wybierz umiejętność: ${SKILL_NAMES[raceOfHero(Object.values(state.heroes).find((h) => h.offer?.includes(a.skill))?.id ?? 'goldDragon')][a.skill]}.`;
     case 'chooseTreasure':
       return `Wybierz skarb: ${itemDef(a.kind, isDigital(state.rules)).name}.`;
     case 'battleAttack':

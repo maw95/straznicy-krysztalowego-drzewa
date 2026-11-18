@@ -206,6 +206,8 @@ export interface SetupOptions {
   battleMode: BattleMode;
   seed: number;
   seats: SeatSetup[];
+  /** How many teams play (2 to 4, two when missing). More than two teams: PvP on a rectangle or ring map, any goal but "Kryształy do Drzewa". */
+  teams?: number;
   /** Race of each team (teams.ts raceOf); missing = the team's own id (dawn plays Przymierze, horde plays Horda). */
   races?: Partial<Record<TeamId, FactionId>>;
   rules: RulesConfig;
@@ -463,7 +465,7 @@ export interface BattleState {
   duel: boolean;
   mapHex: HexKey;
   /** Which painted arena is used: the half of the map where the fight broke out. */
-  arena: TileSide;
+  arena: FactionId;
   attacker: Side;
   defender: Side;
   attackerHero: string;

@@ -9,7 +9,7 @@ import { mayBuildSpark, shardCollector, shardsOf, shardTotal } from '../empire';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { heroTileCost } from '../sites';
-import { activeHero, currentActor, defenderAt, heroesAt, hordeMayFightGuardian, legalHeroMoves, livingHeroes, other, reviveSpots, ritualFormed, ritualSpot } from '../game';
+import { activeHero, currentActor, defenderAt, heroesAt, hordeMayFightGuardian, legalHeroMoves, livingEnemies, livingHeroes, reviveSpots, ritualFormed, ritualSpot } from '../game';
 import { hpScaleOf } from '../battle';
 import { BOT_SKILL_ORDER, levelOf } from '../growth';
 import { DRAFT_VALUE } from './battleAi';
@@ -204,6 +204,9 @@ const huntRatio = (state: GameState) => (state.setup.battleMode === 'board' ? AI
 
 // ------------------------------------------------------------------ evil
 
+/** Bots play the Przymierze's way (collect, hold, hunt carefully) when their team plays that race, the Horda's way otherwise. */
+const isGood = (state: GameState, hero: HeroState): boolean => raceOf(state, hero.faction) === 'dawn';
+
 function evilAction(state: GameState, memo: Memo): Action {
   const hero = activeHero(state)!;
   // Treasures are shared by the faction, the automaton's included: it revives its fallen.
@@ -292,8 +295,8 @@ class GoodContext {
     readonly hero: HeroState,
   ) {
     this.treeK = treeOf(state);
-    this.allies = livingHeroes(state, 'dawn').filter((h) => h.id !== hero.id);
-    this.enemies = livingHeroes(state, other(hero.faction)).filter((h) => !h.entering);
+    this.allies = livingHeroes(state, hero.faction === 'horde' ? 'dawn' : hero.faction).filter((h) => h.id !== hero.id);
+    this.enemies = livingEnemies(state, hero.faction).filter((h) => !h.entering);
     this.desperate = isDesperate(state);
     this.mp = state.rules.heroMovePoints;
     this.roundsLeft = state.roundLimit - state.round + 1;
@@ -437,8 +440,9 @@ function explore(c: GoodContext): Action | null {
   const { hero, state } = c;
   const foundLairs = Object.values(state.crystals).filter((x) => !x.encounter && x.at === 'tree' || x.at.startsWith('hero:') || state.tiles[x.at]?.revealed).length;
   if (foundLairs >= state.crystalsNeeded && c.known.length) return null;
-  const hiddenOn = (side: 'dawn' | 'horde') => Object.values(state.tiles).filter((t) => !t.revealed && t.side === side).length;
-  const sideWeight = { dawn: hiddenOn('dawn') > 0 ? 1 : 0, horde: hiddenOn('horde') > 0 ? 2 : 0 };
+  const hiddenOn = (side: TeamId) => Object.values(state.tiles).filter((t) => !t.revealed && t.side === side).length;
+  // The guardians' lairs lie on Przymierze and Horda land only.
+  const sideWeight: Record<TeamId, number> = { dawn: hiddenOn('dawn') > 0 ? 1 : 0, horde: hiddenOn('horde') > 0 ? 2 : 0, third: 0, fourth: 0 };
   const frontier = new Set<HexKey>();
   const score = new Map<HexKey, number>();
   for (const t of Object.values(state.tiles)) {
@@ -514,7 +518,7 @@ function goodAction(state: GameState, memo: Memo): Action {
 function hordeBotAction(state: GameState, memo: Memo): Action {
   const hero = activeHero(state)!;
   const tree = treeOf(state);
-  const foes = livingHeroes(state, other(hero.faction));
+  const foes = livingEnemies(state, hero.faction);
   const own = livingHeroes(state, hero.faction);
   const item = mapItemAction(state);
   if (item) return item;
@@ -572,7 +576,7 @@ function controlAction(state: GameState, memo: Memo): Action {
   if (state.movePoints <= 0) return { type: 'endTurn' };
   const automaton = currentActor(state).kind === 'automaton';
   const points = state.control!.points;
-  const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
+  const foes = livingEnemies(state, hero.faction).filter((e) => !e.entering);
   const allies = livingHeroes(state, hero.faction).filter((a) => a.id !== hero.id && !a.entering);
   // The automaton follows the rulebook and always attacks; a player's bot picks its fights.
   const behind = state.control!.lead !== null && state.control!.lead !== hero.faction;
@@ -624,19 +628,19 @@ function survivalAction(state: GameState, memo: Memo): Action {
   if (item) return item;
   if (state.movePoints <= 0) return { type: 'endTurn' };
   const automaton = currentActor(state).kind === 'automaton';
-  const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
-  const beatable = (e: HeroState) => hero.faction === 'horde' || automaton || memo.ratio(hero, e) >= huntRatio(state);
+  const foes = livingEnemies(state, hero.faction).filter((e) => !e.entering);
+  const beatable = (e: HeroState) => !isGood(state, hero) || automaton || memo.ratio(hero, e) >= huntRatio(state);
   const prey = foes.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && beatable(e));
   if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
   const goals = new Set<HexKey>();
-  if (hero.faction === 'horde') for (const e of foes) goals.add(e.pos);
+  if (!isGood(state, hero)) for (const e of foes) goals.add(e.pos);
   else {
     const tree = treeOf(state);
     if (hero.pos === tree) return { type: 'endTurn' };
     goals.add(tree);
   }
   if (!goals.size) return { type: 'endTurn' };
-  const paths = memo.paths(hero, 'survival', { goals, avoidGuardians: true, danger: hero.faction === 'dawn' });
+  const paths = memo.paths(hero, 'survival', { goals, avoidGuardians: true, danger: isGood(state, hero) });
   let best: { cost: number; path: HexKey[] } | null = null;
   for (const g of goals) {
     const p = paths.get(g);
@@ -658,7 +662,7 @@ function artifactAction(state: GameState, memo: Memo): Action {
   if (item) return item;
   if (state.movePoints <= 0) return { type: 'endTurn' };
   const automaton = currentActor(state).kind === 'automaton';
-  const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
+  const foes = livingEnemies(state, hero.faction).filter((e) => !e.entering);
   const carrier = artifactCarrier(state);
   const carrying = carrier?.id === hero.id;
   const beatable = (e: HeroState) => automaton || memo.ratio(hero, e) >= huntRatio(state);
@@ -668,7 +672,7 @@ function artifactAction(state: GameState, memo: Memo): Action {
   if (carrying) goal = homeOf(state, hero.faction);
   else if (carrier) goal = carrier.pos;
   else goal = state.crystals.artifact.at;
-  const paths = memo.paths(hero, 'artifact', { goals: new Set([goal]), avoidGuardians: true, danger: carrying || hero.faction === 'dawn' });
+  const paths = memo.paths(hero, 'artifact', { goals: new Set([goal]), avoidGuardians: true, danger: carrying || isGood(state, hero) });
   const p = paths.get(goal);
   if (!p || p.path.length < 2) return { type: 'endTurn' };
   const next = p.path[1];
@@ -694,13 +698,13 @@ function garrisonStrength(s: Settlement): number {
  */
 function conquestAction(state: GameState, memo: Memo): Action {
   const hero = activeHero(state)!;
-  const usual = () => (currentActor(state).kind === 'automaton' ? evilAction(state, memo) : hero.faction === 'dawn' ? goodAction(state, memo) : hordeBotAction(state, memo));
+  const usual = () => (currentActor(state).kind === 'automaton' ? evilAction(state, memo) : isGood(state, hero) ? goodAction(state, memo) : hordeBotAction(state, memo));
   if (!state.kingdom) return usual();
   const item = mapItemAction(state);
   if (item) return item;
   if (state.movePoints <= 0) return { type: 'endTurn' };
   const automaton = currentActor(state).kind === 'automaton';
-  const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
+  const foes = livingEnemies(state, hero.faction).filter((e) => !e.entering);
   const beatable = (e: HeroState) => automaton || memo.ratio(hero, e) >= huntRatio(state);
   const prey = foes.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && beatable(e));
   if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
@@ -712,7 +716,7 @@ function conquestAction(state: GameState, memo: Memo): Action {
     if (!t.revealed && !t.home) return false;
     const crystal = t.crystalId ? state.crystals[t.crystalId] : undefined;
     // Neutral defenders are an encounter of the middle tier: the hero has to be grown and in company.
-    if (crystal?.guardian) return (hero.faction === 'dawn' || hordeMayFightGuardian(state, crystal.id)) && levelOf(hero) >= AI_TUNING.conquestLevel && supports >= AI_TUNING.conquestSupports;
+    if (crystal?.guardian) return (isGood(state, hero) || hordeMayFightGuardian(state, crystal.id)) && levelOf(hero) >= AI_TUNING.conquestLevel && supports >= AI_TUNING.conquestSupports;
     const on = foes.find((e) => e.pos === s.at);
     if (on) return beatable(on);
     if (s.garrison?.length) return automaton || mine / Math.max(1, garrisonStrength(s)) >= AI_TUNING.stormRatio;
@@ -720,8 +724,7 @@ function conquestAction(state: GameState, memo: Memo): Action {
   };
   const allies = livingHeroes(state, hero.faction).filter((a) => a.id !== hero.id && !a.entering);
   // What counts: the enemy's land (the goal of the game) and whatever the enemy holds of ours.
-  const enemy = other(hero.faction);
-  const goals = new Set(Object.values(state.kingdom.settlements).filter((s) => s.owner !== hero.faction && (s.land === enemy || s.owner === enemy) && !allies.some((a) => a.pos === s.at) && takeable(s)).map((s) => s.at));
+  const goals = new Set(Object.values(state.kingdom.settlements).filter((s) => s.owner !== hero.faction && (s.land !== hero.faction || s.owner !== null) && !allies.some((a) => a.pos === s.at) && takeable(s)).map((s) => s.at));
   goals.delete(hero.pos);
   if (!goals.size) return usual();
   const paths = memo.paths(hero, 'conquest', { goals, avoidGuardians: true, danger: !automaton, encounters: true });
@@ -744,13 +747,13 @@ function conquestAction(state: GameState, memo: Memo): Action {
 function relicAction(state: GameState, memo: Memo): Action {
   const hero = activeHero(state)!;
   const automaton = currentActor(state).kind === 'automaton';
-  const usual = () => (automaton ? evilAction(state, memo) : hero.faction === 'dawn' ? goodAction(state, memo) : hordeBotAction(state, memo));
+  const usual = () => (automaton ? evilAction(state, memo) : isGood(state, hero) ? goodAction(state, memo) : hordeBotAction(state, memo));
   const k = state.kingdom;
   if (!k) return usual();
   const item = mapItemAction(state);
   if (item) return item;
   if (state.movePoints <= 0) return { type: 'endTurn' };
-  const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
+  const foes = livingEnemies(state, hero.faction).filter((e) => !e.entering);
   const allies = livingHeroes(state, hero.faction).filter((a) => a.id !== hero.id && !a.entering);
   const beatable = (e: HeroState) => automaton || memo.ratio(hero, e) >= (e.shards ? 1 : huntRatio(state));
   const prey = foes.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && beatable(e));
@@ -792,16 +795,16 @@ function relicAction(state: GameState, memo: Memo): Action {
 function bossAction(state: GameState, memo: Memo): Action {
   const hero = activeHero(state)!;
   const boss = state.boss!;
-  const ready = hero.faction === 'horde' || state.factions.dawn.supportsAlive.length >= 1 || boss.hp <= BOSS_FINISH_HP * hpScaleOf(state) || state.round > state.roundLimit / 2;
+  const ready = !isGood(state, hero) || state.factions[hero.faction].supportsAlive.length >= 1 || boss.hp <= BOSS_FINISH_HP * hpScaleOf(state) || state.round > state.roundLimit / 2;
   if (!ready) return goodAction(state, memo);
   const item = mapItemAction(state);
   if (item) return item;
   if (state.movePoints <= 0) return { type: 'endTurn' };
   const automaton = currentActor(state).kind === 'automaton';
-  const foes = livingHeroes(state, other(hero.faction)).filter((e) => !e.entering);
+  const foes = livingEnemies(state, hero.faction).filter((e) => !e.entering);
   const prey = foes.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && (automaton || memo.ratio(hero, e) >= huntRatio(state)));
   if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
-  const paths = memo.paths(hero, 'boss', { goals: new Set([boss.at]), avoidGuardians: true, danger: hero.faction === 'dawn', encounters: true });
+  const paths = memo.paths(hero, 'boss', { goals: new Set([boss.at]), avoidGuardians: true, danger: isGood(state, hero), encounters: true });
   const p = paths.get(boss.at);
   if (!p || p.path.length < 2) return { type: 'endTurn' };
   return stepToward(state, p.path);
@@ -816,7 +819,7 @@ const isDesperate = (state: GameState) => state.round > state.roundLimit * AI_TU
 /** Guardians are tough but beatable with company: go with at least one support (alone only when time runs out). */
 function canFightGuardian(state: GameState): boolean {
   if (state.setup.battleMode === 'board' || isDesperate(state)) return true;
-  return state.factions.dawn.supportsAlive.length >= 1;
+  return state.factions[activeHero(state)?.faction ?? 'dawn'].supportsAlive.length >= 1;
 }
 
 /**
@@ -856,7 +859,7 @@ function encounterDetour(state: GameState, hero: HeroState, memo: Memo): Action 
   const supports = state.factions[hero.faction].supportsAlive.length;
   const goals = new Set(
     Object.values(state.crystals)
-      .filter((c) => c.encounter && state.tiles[c.at]?.revealed && levelOf(hero) >= ENCOUNTER_BOT.minLevel[c.tier ?? 0] && supports >= ENCOUNTER_BOT.minSupports[c.tier ?? 0] && (hero.faction === 'dawn' || hordeMayFightGuardian(state, c.id)))
+      .filter((c) => c.encounter && state.tiles[c.at]?.revealed && levelOf(hero) >= ENCOUNTER_BOT.minLevel[c.tier ?? 0] && supports >= ENCOUNTER_BOT.minSupports[c.tier ?? 0] && (isGood(state, hero) || hordeMayFightGuardian(state, c.id)))
       .map((c) => c.at),
   );
   if (!goals.size) return null;
@@ -902,7 +905,7 @@ export function adventureAction(state: GameState): Action {
   if (objectiveOf(state) === 'artifact') return artifactAction(state, memo);
   if (objectiveOf(state) === 'conquest') return conquestAction(state, memo);
   if (objectiveOf(state) === 'relic') return relicAction(state, memo);
-  if (hero.faction === 'dawn') return goodAction(state, memo);
+  if (isGood(state, hero)) return goodAction(state, memo);
   // The coop automaton follows the rulebook; a Horde player's bot chooses its fights.
   return currentActor(state).kind === 'automaton' ? evilAction(state, memo) : hordeBotAction(state, memo);
 }

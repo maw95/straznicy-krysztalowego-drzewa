@@ -30,7 +30,7 @@ export const COMMANDERS: Record<FactionId, Record<Archetype, string>> = {
 };
 
 export const archetypeOf = (unitId: string): Archetype | null => {
-  for (const f of ['dawn', 'horde'] as TeamId[]) for (const a of Object.keys(COMMANDERS[f]) as Archetype[]) if (COMMANDERS[f][a] === unitId) return a;
+  for (const f of ['dawn', 'horde'] as FactionId[]) for (const a of Object.keys(COMMANDERS[f]) as Archetype[]) if (COMMANDERS[f][a] === unitId) return a;
   return null;
 };
 

@@ -723,7 +723,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               OBJECTIVES[objectiveOf(state)].progress(state).map((l) => (
                 <div key={l.label} style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', columnGap: 8 }}>
                   <span>{l.label}</span>
-                  <b style={{ color: l.tone === 'horde' ? '#F08A7A' : '#F3D27A' }}>{l.value}</b>
+                  <b style={{ color: ({ horde: '#F08A7A', third: '#E8B04A', fourth: '#B58CE8' } as Record<string, string>)[l.tone ?? ''] ?? '#F3D27A' }}>{l.value}</b>
                 </div>
               ))
             ) : (

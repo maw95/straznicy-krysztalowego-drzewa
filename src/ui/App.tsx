@@ -1,4 +1,4 @@
-import { raceOf } from '../engine/teams';
+import { raceOf, teamsOf } from '../engine/teams';
 import { scenarioOf } from '../engine/campaign';
 import { CampaignOver } from './CampaignScreen';
 import { ExpeditionOver } from './ExpeditionScreen';
@@ -168,7 +168,10 @@ export function App() {
       seats:
         mode === 'coop'
           ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon', ...(q.get('child') === '1' ? { child: true } : {}) }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))
-          : [{ name: 'Ala', faction: 'dawn', controller: 'human', heroId: 'ancientBear' }, { name: 'Bartek', faction: 'horde', controller: 'human', heroId: 'werewolfLord' }],
+          : [{ name: 'Ala', faction: 'dawn', controller: 'human', heroId: 'ancientBear' }, { name: 'Bartek', faction: 'horde', controller: 'human', heroId: 'werewolfLord' }, ...(Number(q.get('teams')) >= 3 ? [{ name: 'Bot 3', faction: 'third' as const, controller: 'bot' as const, heroId: 'goldDragon' }] : []), ...(Number(q.get('teams')) >= 4 ? [{ name: 'Bot 4', faction: 'fourth' as const, controller: 'bot' as const, heroId: 'blackDragon' }] : [])],
+      // ?teams=3 or 4 adds bot sides (rivalry, a rectangle map of size medium or more); ?races=horde,dawn,dawn,horde sets the race of each side.
+      ...(mode === 'pvp' && Number(q.get('teams')) >= 3 ? { teams: Number(q.get('teams')) } : {}),
+      ...(q.get('races') ? { races: Object.fromEntries(q.get('races')!.split(',').map((r, i) => [['dawn', 'horde', 'third', 'fourth'][i], r])) as SetupOptions['races'] } : {}),
     });
     // ?skills=treasureHunter,treasureHunter gives every hero those skills from the start (for looking at their dialogs).
     if (q.get('skills')) for (const h of Object.values(s.heroes)) h.skills = q.get('skills')!.split(',') as SkillId[];
@@ -972,7 +975,7 @@ export function App() {
         {artifactNews[0] && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
             <Ribbon style={{ width: 'min(380px, 90vw)' }}>Artefakt!</Ribbon>
-            <ArtifactFound event={artifactNews[0]} faction={game.heroes[artifactNews[0].heroId]?.faction ?? 'dawn'} />
+            <ArtifactFound event={artifactNews[0]} faction={raceOf(game, game.heroes[artifactNews[0].heroId]?.faction ?? 'dawn')} />
             <button className="btn prim" style={{ padding: '6px 28px', fontSize: 20 }} onClick={() => setArtifactNews((a) => a.slice(1))}>Rozumiem</button>
           </div>
         )}
@@ -1145,12 +1148,17 @@ function Handoff({ state, playerId, onConfirm }: { state: GameState; playerId: s
   );
 }
 
+/** The name of a side: its race, numbered for the third and fourth side so two sides of one race can be told apart. */
+const teamLabel = (state: GameState, t: TeamId) => `${FACTION_NAMES[raceOf(state, t)]}${t === 'third' ? ' (3)' : t === 'fourth' ? ' (4)' : ''}`;
+
 function GameOver({ state, online, rankingNote, onNew, onLog }: { state: GameState; online: boolean; rankingNote: string | null; onNew: () => void; onLog: () => void }) {
   const s = state.stats;
+  /** With more than two sides the figures are given in the order of the sides; with two it is "Świtu / Hordy" as before. */
+  const many = teamsOf(state).length > 2;
   return (
     <div className={state.winner === 'horde' ? 'quake' : undefined}>
       <Frame crest style={{ width: 'min(620px, 94vw)' }} innerStyle={{ padding: 26, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center' }}>
-        <Ribbon side={state.winner ?? 'dawn'} style={{ width: 460, height: 50 }}>{state.winner ? `Wygrywa: ${FACTION_NAMES[state.winner]}` : 'Remis'}</Ribbon>
+        <Ribbon side={state.winner ?? 'dawn'} style={{ width: 460, height: 50 }}>{state.winner ? `Wygrywa: ${state.winner === 'neutral' ? FACTION_NAMES.neutral : teamLabel(state, state.winner)}` : 'Remis'}</Ribbon>
         <div style={{ fontSize: 20 }}>{state.endReason}</div>
         {state.setup.mode === 'arena' ? (
           <div className="well" style={{ padding: '12px 18px', display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '4px 24px', fontSize: 17, textAlign: 'left', width: '100%' }}>
@@ -1166,10 +1174,10 @@ function GameOver({ state, online, rankingNote, onNew, onLog }: { state: GameSta
         <div className="well" style={{ padding: '12px 18px', display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '4px 24px', fontSize: 17, textAlign: 'left', width: '100%' }}>
           <span>Rundy</span><b>{state.round}</b>
           <span>Bitwy (w tym ze strażnikami)</span><b>{s.battles} ({s.neutralBattles})</b>
-          <span>Polegli bohaterowie Świtu / Hordy</span><b>{s.heroDeaths.dawn} / {s.heroDeaths.horde}</b>
-          <span>Polegli pomocnicy Świtu / Hordy</span><b>{s.supportDeaths.dawn} / {s.supportDeaths.horde}</b>
-          <span>Znalezione skarby Świtu / Hordy</span><b>{s.treasuresCollected.dawn} / {s.treasuresCollected.horde}</b>
-          {state.control ? <><span>Punkty kontrolne (Świt / Horda)</span><b>{controlCounts(state).dawn} / {controlCounts(state).horde}</b></> : objectiveOf(state) !== 'crystals' ? <><span>{OBJECTIVES[objectiveOf(state)].progress(state)[0]?.label}</span><b>{OBJECTIVES[objectiveOf(state)].progress(state)[0]?.value}</b></> : <><span>Kryształy przy Drzewie</span><b>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b></>}
+          <span>{many ? 'Polegli bohaterowie (strony po kolei)' : 'Polegli bohaterowie Świtu / Hordy'}</span><b>{teamsOf(state).map((t) => s.heroDeaths[t]).join(' / ')}</b>
+          <span>{many ? 'Polegli pomocnicy (strony po kolei)' : 'Polegli pomocnicy Świtu / Hordy'}</span><b>{teamsOf(state).map((t) => s.supportDeaths[t]).join(' / ')}</b>
+          <span>{many ? 'Znalezione skarby (strony po kolei)' : 'Znalezione skarby Świtu / Hordy'}</span><b>{teamsOf(state).map((t) => s.treasuresCollected[t]).join(' / ')}</b>
+          {state.control ? <><span>{many ? 'Punkty kontrolne (strony po kolei)' : 'Punkty kontrolne (Świt / Horda)'}</span><b>{teamsOf(state).map((t) => controlCounts(state)[t]).join(' / ')}</b></> : objectiveOf(state) !== 'crystals' ? <><span>{OBJECTIVES[objectiveOf(state)].progress(state)[0]?.label}</span><b>{OBJECTIVES[objectiveOf(state)].progress(state)[0]?.value}</b></> : <><span>Kryształy przy Drzewie</span><b>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b></>}
         </div>
         )}
         {rankingNote && <div style={{ fontSize: 17, color: '#F3D27A' }}>{rankingNote}</div>}

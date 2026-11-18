@@ -1,9 +1,9 @@
 // Adventure map: triangle generation (variant A), costs and path finding.
 
-import { GUARDIAN_LAIRS, MAP_SHAPES, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type MapSize, type TeamId, type Terrain, type TileSide } from './data';
+import { GUARDIAN_LAIRS, MAP_SHAPES, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type FactionId, type MapSize, type TeamId, type Terrain, type TileSide } from './data';
 import { distance, key, neighborKeys, parseKey, triToHex, type HexKey } from './hex';
 import { Rng } from './rng';
-import { TEAM_IDS } from './teams';
+import { byTeam, TEAM_IDS } from './teams';
 import { CUSTOM_MAPS } from './customMaps';
 import type { GameState, MapShape, Tile } from './types';
 
@@ -20,6 +20,7 @@ export function treeKey(): HexKey {
 }
 
 export function homeKey(rows: number, faction: TeamId): HexKey {
+  // The triangle has two corners for bases: the left one is the first team's, the right one every other team's (a triangle game has two teams).
   return key(triToHex(rows - 1, faction === 'dawn' ? 0 : rows - 1));
 }
 
@@ -159,7 +160,7 @@ export interface GeneratedMap {
   crystals: Array<{ hex: HexKey; guardian: string }>;
   treasureHexes: HexKey[];
   tree: HexKey;
-  homes: Record<'dawn' | 'horde', HexKey>;
+  homes: Record<TeamId, HexKey>;
 }
 
 /** The hexes of a map shape in the order they are generated, with the Tree and the bases (the triangle's order is what the golden test hashes). */
@@ -167,7 +168,8 @@ interface Layout {
   cells: Array<{ row: number; col: number; hex: { q: number; r: number } }>;
   rows: number;
   tree: HexKey;
-  homes: Record<'dawn' | 'horde', HexKey>;
+  /** Bases of the first two teams; a shape for more teams also has 'third' and 'fourth'. */
+  homes: Pick<Record<TeamId, HexKey>, 'dawn' | 'horde'> & Partial<Record<TeamId, HexKey>>;
   /** Hexes whose terrain is fixed by the map ('#' impassable, '=' bridge); the others are drawn from the side's tile pool. */
   forced?: Record<HexKey, 'wall' | 'bridge'>;
   /** What the '#' hexes are: water (always visible, so the islands can be seen) instead of the side's own obstacle tile. */
@@ -184,11 +186,19 @@ function triangleLayout(size: MapSize): Layout {
 /** Pointy-topped rows, odd rows shifted half a hex to the right: (col, row) is the hex {q: col - floor(row / 2), r: row}. */
 function rectangleLayout(size: MapSize): Layout {
   const { width, height } = MAP_SHAPES.rectangle[size];
-  const cells = [];
+  const cells: Layout['cells'] = [];
   for (let row = 0; row < height; row++) for (let col = 0; col < width; col++) cells.push({ row, col, hex: { q: col - Math.floor(row / 2), r: row } });
   const mid = Math.floor(height / 2);
   const at = (col: number) => key({ q: col - Math.floor(mid / 2), r: mid });
-  return { cells, rows: height, tree: at(Math.floor(width / 2)), homes: { dawn: at(0), horde: at(width - 1) } };
+  const tree = at(Math.floor(width / 2));
+  // Teams three and four: on the top and the bottom row, at the column whose distance to the Tree is nearest the distance of the first two bases
+  // (so all four bases are about as far from the Tree).
+  const want = distance(parseKey(tree), parseKey(at(0)));
+  const onRow = (row: number) => {
+    const best = cells.filter((c) => c.row === row).map((c) => ({ k: key(c.hex), d: Math.abs(distance(parseKey(tree), c.hex) - want) + Math.abs(c.col - Math.floor(width / 2)) / 1000 })).sort((a, b) => a.d - b.d)[0];
+    return best.k;
+  };
+  return { cells, rows: height, tree, homes: { dawn: at(0), horde: at(width - 1), third: onRow(0), fourth: onRow(height - 1) } };
 }
 
 /** The ring of hexes at distance radius-1 and radius from the middle; the Tree, the Przymierze and the Horda stand on three corners of it. */
@@ -294,54 +304,64 @@ function setTerrain(tile: Tile, terrain: Terrain, rng: Rng) {
   tile.variant = 1 + rng.int(TERRAIN_VARIANTS[terrain]);
 }
 
-export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crystalCount: number, shape: MapShape = 'triangle', customMapId?: string): GeneratedMap {
+export interface MapTeams {
+  /** The teams of the game in order (default: the two teams); zone i of the map belongs to team i. */
+  teams?: readonly TeamId[];
+  /** The race whose land a team has (terrain tiles, bases, treasures); default: the race of the team's id. */
+  race?: (team: TeamId) => FactionId;
+}
+
+export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crystalCount: number, shape: MapShape = 'triangle', customMapId?: string, opts: MapTeams = {}): GeneratedMap {
   const layout = layoutOf(shape, size, rng, customMapId);
   const { rows } = layout;
-  // The start zones in team order (up to MAX_START_ZONES; two teams today): zone i belongs to team TEAM_IDS[i].
-  const starts = TEAM_IDS.map((t) => layout.homes[t]);
+  const teams = opts.teams ?? TEAM_IDS;
+  const race = opts.race ?? ((t: TeamId): FactionId => (t === 'horde' || t === 'fourth' ? 'horde' : 'dawn'));
+  const homes = Object.fromEntries(teams.map((t) => [t, layout.homes[t]])) as Record<TeamId, HexKey>;
+  if (teams.some((t) => !homes[t])) throw new Error('Ta mapa ma miejsce tylko dla dwóch stron.');
+  if (teams.length > 2 && shape === 'triangle') throw new Error('Mapa trójkątna ma miejsce tylko dla dwóch stron.');
+  // The start zones in team order (up to MAX_START_ZONES): zone i belongs to team teams[i].
+  const starts = teams.map((t) => homes[t]);
   const zones = shape === 'triangle' ? null : splitZones(layout.cells, starts);
-  const sideAt = (i: number, row: number, col: number): TileSide => (zones ? TEAM_IDS[zones[i]] : sideOf(row, col));
+  const sideAt = (i: number, row: number, col: number): TileSide => (zones ? teams[zones[i]] : sideOf(row, col));
   for (let attempt = 0; attempt < 400; attempt++) {
     const tiles: Record<HexKey, Tile> = {};
     for (const [i, { row, col, hex }] of layout.cells.entries()) {
       const k = key(hex);
       const side = sideAt(i, row, col);
       const tile: Tile = { key: k, row, col, terrain: 'meadow', side, variant: 1, revealed: false, crystalId: null, treasureId: null, home: null, tree: false };
-      setTerrain(tile, rng.pick(TILE_POOLS[side]), rng);
+      setTerrain(tile, rng.pick(TILE_POOLS[race(side)]), rng);
       const fixed = layout.forced?.[k];
-      if (fixed) setTerrain(tile, fixed === 'bridge' ? 'bridge' : layout.wallTerrain ?? (side === 'dawn' ? 'chasm' : 'deadThicket'), rng);
+      if (fixed) setTerrain(tile, fixed === 'bridge' ? 'bridge' : layout.wallTerrain ?? (race(side) === 'dawn' ? 'chasm' : 'deadThicket'), rng);
       // Water has nothing hidden under it: it is on the map from the start, which is what shows the islands.
       if (tile.terrain === 'water') tile.revealed = true;
       tiles[k] = tile;
     }
     const tree = layout.tree;
-    const dawn = layout.homes.dawn;
-    const horde = layout.homes.horde;
+    const baseList = teams.map((t) => homes[t]);
     setTerrain(tiles[tree], 'tree', rng);
     tiles[tree].tree = true;
-    setTerrain(tiles[dawn], 'baseDawn', rng);
-    tiles[dawn].home = 'dawn';
-    tiles[dawn].side = 'dawn';
-    setTerrain(tiles[horde], 'baseHorde', rng);
-    tiles[horde].home = 'horde';
-    tiles[horde].side = 'horde';
+    for (const t of teams) {
+      setTerrain(tiles[homes[t]], race(t) === 'dawn' ? 'baseDawn' : 'baseHorde', rng);
+      tiles[homes[t]].home = t;
+      tiles[homes[t]].side = t;
+    }
     // Starting neighbourhoods stay passable so nobody is walled in on turn one.
-    for (const base of [dawn, horde]) {
-      for (const n of mapNeighbors(tiles, base)) if (tileCost(tiles[n]) === null && !layout.forced?.[n]) setTerrain(tiles[n], tiles[n].side === 'dawn' ? 'meadow' : 'scorched', rng);
+    for (const base of baseList) {
+      for (const n of mapNeighbors(tiles, base)) if (tileCost(tiles[n]) === null && !layout.forced?.[n]) setTerrain(tiles[n], race(tiles[n].side) === 'dawn' ? 'meadow' : 'scorched', rng);
     }
 
-    const reach = reachableFrom(tiles, dawn);
-    if (!reach.has(tree) || !reach.has(horde)) continue;
+    const reach = reachableFrom(tiles, homes.dawn);
+    if (!reach.has(tree) || baseList.some((b) => !reach.has(b))) continue;
 
     // Guardians: Cyclops and Hydra live on Horda land, the Griffin on Przymierze land.
     const guardians = rng.shuffle(Object.keys(GUARDIAN_LAIRS)).slice(0, crystalCount);
     // Bridges stay bridges (a guardian or a treasure there would also block the road).
-    const reserved = new Set<HexKey>([tree, dawn, horde, ...mapNeighbors(tiles, dawn), ...mapNeighbors(tiles, horde), ...Object.keys(layout.forced ?? {})]);
+    const reserved = new Set<HexKey>([tree, ...baseList, ...baseList.flatMap((b) => mapNeighbors(tiles, b)), ...Object.keys(layout.forced ?? {})]);
     const crystals: Array<{ hex: HexKey; guardian: string }> = [];
     for (const g of guardians) {
       const lair = GUARDIAN_LAIRS[g];
       const options = [...reach].filter((k) => !reserved.has(k) && tiles[k].side === lair.side && tileCost(tiles[k]) !== null);
-      const spot = pickSpread(options, rng, (k) => (shape === 'triangle' ? tiles[k].row >= rows - 2 : distance(parseKey(k), parseKey(dawn)) <= 2 || distance(parseKey(k), parseKey(horde)) <= 2), crystals.map((c) => c.hex));
+      const spot = pickSpread(options, rng, (k) => (shape === 'triangle' ? tiles[k].row >= rows - 2 : baseList.some((b) => distance(parseKey(k), parseKey(b)) <= 2)), crystals.map((c) => c.hex));
       if (!spot) break;
       crystals.push({ hex: spot, guardian: g });
       reserved.add(spot);
@@ -350,13 +370,13 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
     for (const c of crystals) setTerrain(tiles[c.hex], GUARDIAN_LAIRS[c.guardian].terrain, rng);
     // Evil cannot cross guarded hexes, so the Tree must stay reachable around them.
     const guarded = new Set(crystals.map((c) => c.hex));
-    const hordeReach = reachableFrom(tiles, horde, (k) => guarded.has(k));
+    const hordeReach = reachableFrom(tiles, homes.horde, (k) => guarded.has(k));
     if (!hordeReach.has(tree)) continue;
     const rest = rng.shuffle([...reach].filter((k) => !reserved.has(k) && tileCost(tiles[k]) !== null));
     if (rest.length < treasureCount) continue;
     const treasureHexes = rest.slice(0, treasureCount);
-    for (const k of treasureHexes) setTerrain(tiles[k], tiles[k].side === 'dawn' ? 'treasureDawn' : 'treasureHorde', rng);
-    return { rows, tiles, crystals, treasureHexes, tree, homes: { dawn, horde } };
+    for (const k of treasureHexes) setTerrain(tiles[k], race(tiles[k].side) === 'dawn' ? 'treasureDawn' : 'treasureHorde', rng);
+    return { rows, tiles, crystals, treasureHexes, tree, homes: byTeam(teams, (t) => homes[t]) };
   }
   throw new Error('Nie udało się wygenerować poprawnej mapy');
 }

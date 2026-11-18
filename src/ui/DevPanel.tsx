@@ -8,6 +8,7 @@ import { ARTIFACTS } from '../engine/sites';
 import { SPELL_IDS } from '../engine/magic';
 import { addUnit, buildEverything, DEV_SCENES, fightNeutral, giveAllShards, giveArtifactTo, giveTreasure, learnSpell, reviveAll, revealAll, setHeroLevel, setResources } from '../engine/dev';
 import { RECRUITS } from '../engine/kingdom';
+import { raceOf } from '../engine/teams';
 import type { GameState } from '../engine/types';
 
 /** Whether the panel may exist at all: the development build only. */
@@ -18,11 +19,12 @@ export function DevPanel({ game, onChange, onClose }: { game: GameState; onChang
   const [min, setMin] = useState(false);
   const hero = activeHero(game);
   const faction = hero?.faction ?? 'dawn';
+  const race = raceOf(game, faction);
   const [gold, setGold] = useState(99);
   const [level, setLevel] = useState(5);
   const [artifact, setArtifact] = useState(ARTIFACTS[0].id);
   const [treasure, setTreasure] = useState<ItemKind>('heal');
-  const [unit, setUnit] = useState(RECRUITS[faction][0].id);
+  const [unit, setUnit] = useState(RECRUITS[race][0].id);
   const run = (what: string, fn: (s: GameState) => GameState | void) => {
     try {
       const copy = structuredClone(game);
@@ -45,7 +47,7 @@ export function DevPanel({ game, onChange, onClose }: { game: GameState; onChang
         </span>
       </div>
       {min ? null : (<>
-      <i>{hero ? `${UNITS[hero.id].name}, ${FACTION_NAMES[faction]}` : 'Brak aktywnego bohatera (ruch po mapie niedostępny).'}</i>
+      <i>{hero ? `${UNITS[hero.id].name}, ${FACTION_NAMES[race]}` : 'Brak aktywnego bohatera (ruch po mapie niedostępny).'}</i>
       {note && <span data-dev-note style={{ color: note.startsWith('Błąd') ? '#8A2A18' : '#2E7A32' }}>{note}</span>}
 
       <b>Sceny</b>
@@ -85,7 +87,7 @@ export function DevPanel({ game, onChange, onClose }: { game: GameState; onChang
       </div>
       <div style={row}>
         <select value={unit} onChange={(e) => setUnit(e.target.value)} style={{ maxWidth: 200 }} aria-label="Jednostka">
-          {RECRUITS[faction].map((r) => <option key={r.id} value={r.id}>{UNITS[r.id].name}</option>)}
+          {RECRUITS[race].map((r) => <option key={r.id} value={r.id}>{UNITS[r.id].name}</option>)}
         </select>
         <button className="btn" style={btn} data-dev="unit" onClick={() => run('Jednostka dodana', (s) => addUnit(s, faction, unit))}>Dodaj do drużyny</button>
         <button className="btn" style={btn} onClick={() => run('Poległych wskrzeszono', (s) => reviveAll(s, faction))}>Wskrześ</button>

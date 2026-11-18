@@ -232,7 +232,7 @@ export const worksInBattle = (a: ArtifactDef): boolean => BATTLE_KEYS.some((k) =
 export const ARENA_GEAR_ODDS = [55, 35, 10] as const;
 /** The three artifacts a side's hero may choose from in the 6 on 6 arena: of different slots, drawn from the game's seed (never from its own generator). */
 export function arenaGearOffer(state: Pick<GameState, 'kingdom' | 'setup'>, faction: string): string[] {
-  const rng = new Rng((state.setup.seed ^ 0x4a7e11c3 ^ (faction === 'dawn' ? 7919 : 104729)) | 0);
+  const rng = new Rng((state.setup.seed ^ 0x4a7e11c3 ^ (({ dawn: 7919, horde: 104729, third: 15485863, fourth: 32452843 } as Record<string, number>)[faction] ?? 104729)) | 0);
   const out: ArtifactDef[] = [];
   for (let guard = 0; out.length < 3 && guard < 80; guard++) {
     let roll = rng.int(ARENA_GEAR_ODDS.reduce((a, b) => a + b, 0));

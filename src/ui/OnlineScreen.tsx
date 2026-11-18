@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { heroPool, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type TeamId } from '../engine/data';
+import { heroPool, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type FactionId } from '../engine/data';
 import { CUSTOM_MAPS } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
 import { defaultCustom, TIERS } from '../engine/presets';
@@ -425,7 +425,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
             <div key={i} className="well" style={{ padding: '6px 12px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', background: SEAT_TINT[s.faction] }}>
               <img src={asset(`cards/crests/${s.faction}.png`)} alt="" title={FACTION_NAMES[s.faction]} style={{ width: 46, height: 46, objectFit: 'contain', flex: 'none' }} />
               {owner && !locked && room.mode === 'pvp' && (
-                <select value={s.faction} aria-label="Frakcja" onChange={(e) => updateSeat(i, { faction: e.target.value as TeamId, heroId: heroPool(e.target.value as TeamId, room.seats.length).find((h) => !takenBy(h, i))! })}>
+                <select value={s.faction} aria-label="Frakcja" onChange={(e) => updateSeat(i, { faction: e.target.value as 'dawn' | 'horde', heroId: heroPool(e.target.value as FactionId, room.seats.length).find((h) => !takenBy(h, i))! })}>
                   <option value="dawn">{FACTION_NAMES.dawn}</option>
                   <option value="horde">{FACTION_NAMES.horde}</option>
                 </select>

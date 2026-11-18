@@ -8,7 +8,7 @@ import { byPack } from './factions';
 /** A RACE: the key of game data and graphics (heroes, units, buildings, names). */
 export type FactionId = 'dawn' | 'horde';
 /** A TEAM (playing side): the key of game state (gold, treasures, homes, half of the map). Today exactly two teams, each of the race with the same id (see raceOf in teams.ts). */
-export type TeamId = 'dawn' | 'horde';
+export type TeamId = 'dawn' | 'horde' | 'third' | 'fourth';
 /** A team or the neutral creatures. */
 export type Side = TeamId | 'neutral';
 export type UnitKind = 'hero' | 'support' | 'neutral';
@@ -370,7 +370,12 @@ export const SUPPORTS_PER_BATTLE = 2;
 /** A guardian's Życie in a duel on the board (one hero alone): from its duel card. */
 export const guardianDuelHp = (id: string) => UNITS[id].duel?.hp ?? UNITS[id].hp;
 
-export const FACTION_NAMES: Record<Side, string> = { ...byPack((p) => p.name), neutral: 'Neutralni strażnicy' };
+/** The race a hero belongs to (its skills, name tables and pictures are the race's), whichever team plays it. */
+export const raceOfHero = (heroId: string): FactionId => (UNITS[heroId]?.side === 'horde' ? 'horde' : 'dawn');
+
+const RACE_NAMES = byPack((p) => p.name);
+/** The name of a race (and, for the sides, of the race they play by default; read a game's own names through raceOf). */
+export const FACTION_NAMES: Record<Side, string> = { ...RACE_NAMES, third: RACE_NAMES.dawn, fourth: RACE_NAMES.horde, neutral: 'Neutralni strażnicy' };
 
 export type ItemKind =
   | 'resurrection'
@@ -520,7 +525,8 @@ export type Terrain =
   | 'treasureDawn'
   | 'treasureHorde';
 
-export type TileSide = 'dawn' | 'horde';
+/** The team whose land a tile is (the zone it lies in). */
+export type TileSide = TeamId;
 
 export const TERRAIN_NAMES: Record<Terrain, string> = {
   meadow: 'Polana Przymierza',
@@ -588,7 +594,7 @@ export const TERRAIN_VARIANTS: Record<Terrain, number> = {
  * equally likely. The share of difficult ground is not fixed — it follows from the types
  * (2 difficult types on the Przymierze side, 3 on the Horda side).
  */
-export const TILE_POOLS: Record<TileSide, Terrain[]> = {
+export const TILE_POOLS: Record<FactionId, Terrain[]> = {
   dawn: ['meadow', 'forest', 'river', 'bridge', 'hill', 'mountain', 'chasm'],
   horde: ['scorched', 'barren', 'swamp', 'darkCave', 'ruins', 'deadThicket', 'thorns'],
 };

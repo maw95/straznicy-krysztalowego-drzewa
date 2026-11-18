@@ -104,7 +104,7 @@ const TOP_RATING = COOP[1].veryLong.hard!;
  */
 export function difficultyRating(setup: SetupOptions, level: LevelName, side: TeamId): number {
   const pvp = setup.mode === 'pvp';
-  const perSide = Math.max(...(['dawn', 'horde'] as const).map((f) => setup.seats.filter((s) => s.faction === f).length));
+  const perSide = Math.max(...(['dawn', 'horde', 'third', 'fourth'] as const).map((f) => setup.seats.filter((s) => s.faction === f).length));
   const t = (pvp ? PVP : COOP)[perSide >= 2 ? 2 : 1][setup.mapSize];
   let dawn: number;
   if (level !== 'custom') dawn = t[level] ?? t.normal;

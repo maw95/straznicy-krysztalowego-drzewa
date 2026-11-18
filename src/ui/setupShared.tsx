@@ -13,14 +13,14 @@ export const chip = (active: boolean) => `${choice(active)} chip`;
  * Factions and heroes of a fresh table, the same locally and online: the arena pits the first hero of each side,
  * coop seats the Przymierze heroes in turn, and rivalry alternates the sides (Przymierze first).
  */
-export const defaultHeroes = (mode: Mode, count: number): Array<{ faction: TeamId; heroId: string }> =>
+export const defaultHeroes = (mode: Mode, count: number): Array<{ faction: 'dawn' | 'horde'; heroId: string }> =>
   mode === 'arena'
     ? [
         { faction: 'dawn', heroId: FACTION_HEROES.dawn[0] },
         { faction: 'horde', heroId: FACTION_HEROES.horde[0] },
       ]
     : Array.from({ length: count }, (_, i) => {
-        const faction: TeamId = mode === 'coop' || i % 2 === 0 ? 'dawn' : 'horde';
+        const faction = mode === 'coop' || i % 2 === 0 ? ('dawn' as const) : ('horde' as const);
         return { faction, heroId: heroPool(faction, count)[mode === 'coop' ? i % FACTION_HEROES.dawn.length : Math.floor(i / 2)] };
       });
 
@@ -100,11 +100,16 @@ export function Tip({ text, children }: { text: string; children: React.ReactNod
   );
 }
 
-/** Seat background tinted by faction: green for Przymierze Świtu, burgundy for Mroczna Horda. */
-export const SEAT_TINT: Record<FactionId, string> = {
+/** Seat background tinted by side: green (the first side), burgundy (the second), amber and violet (the third and fourth); the colours of SIDE_RING. */
+export const SEAT_TINT: Record<TeamId, string> = {
   dawn: 'linear-gradient(100deg, rgba(36, 112, 64, 0.62), rgba(14, 50, 30, 0.55))',
   horde: 'linear-gradient(100deg, rgba(128, 22, 34, 0.62), rgba(52, 8, 14, 0.58))',
+  third: 'linear-gradient(100deg, rgba(150, 104, 18, 0.62), rgba(62, 42, 6, 0.58))',
+  fourth: 'linear-gradient(100deg, rgba(92, 52, 138, 0.62), rgba(38, 20, 62, 0.58))',
 };
+
+/** The races of the teams a fresh table has (the third and fourth team start as Przymierze and Horda). */
+export const DEFAULT_RACES: Record<TeamId, FactionId> = { dawn: 'dawn', horde: 'horde', third: 'dawn', fourth: 'horde' };
 
 /**
  * One layout rule for every section of the setup screens: a big centred title (`.section-title`) and under it the choices in a centred,

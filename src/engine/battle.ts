@@ -721,10 +721,16 @@ const mechLevel = (state: GameState, f: TeamId): number => (state.rules.empire ?
  */
 function dawnLight(state: GameState) {
   const b = state.battle!;
-  if (mechLevel(state, 'dawn') < 1) return;
-  const rank = mechLevel(state, 'dawn') - 1;
+  // Every side in the battle that plays Przymierze has the light (a side's mechanic is its own).
+  for (const side of [b.attacker, b.defender]) if (side !== 'neutral' && raceOf(state, side) === 'dawn') dawnLightOf(state, side);
+}
+
+function dawnLightOf(state: GameState, side: TeamId) {
+  const b = state.battle!;
+  if (mechLevel(state, side) < 1) return;
+  const rank = mechLevel(state, side) - 1;
   const heal = (FACTION_MECHANICS.dawnHeal + (rank >= 1 ? 1 : 0)) * hpScaleOf(state);
-  const hurt = livingUnits(b, 'dawn').filter((u) => u.hp < u.maxHp && u.pos).sort((x, y) => (y.maxHp - y.hp) - (x.maxHp - x.hp) || (x.id < y.id ? -1 : 1));
+  const hurt = livingUnits(b, side).filter((u) => u.hp < u.maxHp && u.pos).sort((x, y) => (y.maxHp - y.hp) - (x.maxHp - x.hp) || (x.id < y.id ? -1 : 1));
   for (const u of hurt.slice(0, rank >= 2 ? 2 : 1)) {
     const got = Math.min(heal, u.maxHp - u.hp);
     u.hp += got;
@@ -739,12 +745,14 @@ function dawnLight(state: GameState) {
  */
 function bloodlust(state: GameState, fallen: BattleUnit) {
   const b = state.battle!;
-  if (mechLevel(state, 'horde') < 1 || fallen.side === 'horde' || (b.attacker !== 'horde' && b.defender !== 'horde')) return;
-  const rank = mechLevel(state, 'horde') - 1;
+  // The first side of the battle that plays Horda has the lust (one counter per battle).
+  const side = ([b.attacker, b.defender] as Side[]).find((x) => x !== 'neutral' && raceOf(state, x) === 'horde');
+  if (!side || side === 'neutral' || fallen.side === side || mechLevel(state, side) < 1) return;
+  const rank = mechLevel(state, side) - 1;
   const cap = 1 + Math.min(rank, 2);
   if ((b.bloodlust ?? 0) >= cap) return;
   b.bloodlust = (b.bloodlust ?? 0) + 1;
-  const horde = livingUnits(b, 'horde');
+  const horde = livingUnits(b, side);
   for (const u of horde) {
     u.status.battleAttackBonus += FACTION_MECHANICS.hordeAttack * scaleOf(state);
     if (rank >= 3 && u.hp < u.maxHp) u.hp = Math.min(u.maxHp, u.hp + FACTION_MECHANICS.hordeHeal * hpScaleOf(state));

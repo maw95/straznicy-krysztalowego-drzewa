@@ -2,7 +2,7 @@
 // recruitment of supports and a team that grows. Design: docs/POZIOM_3_KROLESTWO.md (the author's decisions of 13.11.2026). Every number here is
 // provisional: the simulations tune them. Gold is small (the cheapest thing costs 1) and shared by the whole faction.
 
-import { raceOf } from './teams';
+import { ALL_TEAM_IDS, byTeam, raceOf, teamsOf } from './teams';
 import { byPack } from './factions';
 import { FACTION_NAMES, FACTION_SUPPORTS, SUPPORTS_PER_BATTLE, UNITS, type FactionId, type TeamId } from './data';
 import { distance, parseKey, type HexKey } from './hex';
@@ -274,15 +274,17 @@ export function teamSlots(state: GameState, f: TeamId): number {
 
 /** Settlements (the starting ones and the ones to conquer, each with its neutral defenders) and gold mines; called when a game is made. */
 export function initKingdom(state: GameState): void {
-  const k: KingdomState = { gold: { dawn: KINGDOM.startGold, horde: KINGDOM.startGold }, settlements: {}, mines: {}, chest: null };
+  const teams = teamsOf(state);
+  const k: KingdomState = { gold: byTeam(teams, () => KINGDOM.startGold), settlements: {}, mines: {}, chest: null };
   state.kingdom = k;
   if (state.rules.economy) {
-    k.res = { dawn: { ...ECONOMY.start }, horde: { ...ECONOMY.start } };
+    const res = byTeam(teams, () => ({ ...ECONOMY.start }));
+    k.res = res;
     // The computer's start advantage of the highest difficulty (COMPUTER_HANDICAP): some resources more.
-    for (const f of ['dawn', 'horde'] as TeamId[]) if (computerFaction(state, f)) for (const r of RESOURCE_IDS) k.res[f][r] += state.rules.computerResources?.[r] ?? 0;
+    for (const f of teams) if (computerFaction(state, f)) for (const r of RESOURCE_IDS) res[f][r] += state.rules.computerResources?.[r] ?? 0;
   }
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
-  const nameBag: Record<TeamId, string[]> = { dawn: rng.shuffle([...NAMES.dawn]), horde: rng.shuffle([...NAMES.horde]) };
+  const nameBag = byTeam(teams, (t) => rng.shuffle([...NAMES[raceOf(state, t)]]));
   // Level 6: the barracks stand from the start in every settlement (the dwellings of the units are built beside them).
   const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0 } : {}) }) as Record<BuildingId, number>;
   const add = (id: string, at: HexKey, land: TeamId, owner: TeamId | null) => {
@@ -302,10 +304,10 @@ export function initKingdom(state: GameState): void {
 
   // Settlements to conquer: half on each side's land (the same number on both), spread apart, each guarded by a group a little stronger than a crystal's guardian.
   const want = (KINGDOM.settlements[state.setup.mapSize] ?? 2) / 2;
-  const picked: Record<TeamId, string[]> = { dawn: [], horde: [] };
-  const all = () => [...picked.dawn, ...picked.horde];
+  const picked = byTeam(teams, (): string[] => []);
+  const all = () => teams.flatMap((t) => picked[t]);
   for (const [clear, gap] of [[1, 2], [1, 1], [0, 1]] as const) {
-    for (const land of ['dawn', 'horde'] as TeamId[]) {
+    for (const land of teams) {
       for (const t of free(clear).filter((x) => x.side === land)) {
         if (picked[land].length >= want) break;
         if (all().some((c) => distance(parseKey(c), parseKey(t.key)) <= gap - 1 + (gap > 1 ? 1 : 0))) continue;
@@ -315,8 +317,8 @@ export function initKingdom(state: GameState): void {
     }
   }
   // Both sides get the same number.
-  const each = Math.min(picked.dawn.length, picked.horde.length);
-  const chosen = [...picked.dawn.slice(0, each), ...picked.horde.slice(0, each)];
+  const each = Math.min(...teams.map((t) => picked[t].length));
+  const chosen = teams.flatMap((t) => picked[t].slice(0, each));
   const motifs = Object.keys(ENCOUNTER_MOTIFS) as EncounterMotif[];
   chosen.forEach((hex, i) => {
     const land = state.tiles[hex].side;
@@ -474,7 +476,7 @@ function firstPlaceGold(state: GameState, hero: HeroState): void {
 export function collectIncome(state: GameState): void {
   const k = state.kingdom;
   if (!k) return;
-  for (const f of ['dawn', 'horde'] as TeamId[]) {
+  for (const f of teamsOf(state)) {
     if (isAutomaton(state, f)) {
       // Reinforcements instead of gold: every few rounds the fallen supports of the automaton are back at the base.
       const fs = state.factions[f];
@@ -745,7 +747,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (entry.tier > 2 && !dwellingOf(state, f, entry.tier - 1)) throw new Error(`Najpierw zbuduj siedlisko jednostki poziomu ${entry.tier - 1}.`);
       const price = DWELLING_COST[entry.tier - 2];
       payCost(state, f, price);
-      ((k.dwellings ??= { dawn: [], horde: [] })[f]).push(entry.id);
+      ((k.dwellings ??= byTeam(teamsOf(state), (): string[] => []))[f]).push(entry.id);
       log(state, 'info', `${FACTION_NAMES[raceOf(state, f)]} buduje siedlisko: ${DWELLING_NAMES[entry.id]} (${costText(price)}). Od teraz rekrutuje: ${UNITS[entry.id].name}.`);
       break;
     }
@@ -882,7 +884,7 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
     for (const tier of [2, 3, 4, 5, 6]) {
       if (dwellingOf(state, f, tier) || (tier >= 4 && s.buildings.barracks < 2)) continue;
       const options = recruitsOf(state, f).filter((r) => r.tier === tier);
-      const pick = options[(state.setup.seed + tier + (f === 'dawn' ? 0 : 1)) % options.length];
+      const pick = options[(state.setup.seed + tier + ALL_TEAM_IDS.indexOf(f)) % options.length];
       const price = DWELLING_COST[tier - 2];
       if (pick && canPay(state, f, { ...price, gold: price.gold + pick.cost })) return { type: 'kingdomDwelling', settlementId: id, unitId: pick.id };
       break;
