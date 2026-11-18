@@ -43,9 +43,33 @@ const toArenaFight = async (p: Page) => {
 };
 const ARENA = 'steps=0&mode=arena&size=6&seed=5';
 
+/** Walks the new-game wizard (Rywalizacja, this computer, Wyprawa, the first goal) up to the page `page`. */
+const wizardTo = async (p: Page, page: string) => {
+  const here = (id: string) => p.locator(`[data-wizard-page="${id}"]`).waitFor();
+  const next = async () => { await p.waitForTimeout(400); const n = p.locator('[data-wizard-next]'); if (await n.count()) await n.click().catch(() => undefined); await p.waitForTimeout(300); };
+  await p.locator('[data-new-game]').click();
+  await p.locator('[data-mode="pvp"]').click();
+  if (page === 'where') return here('where');
+  await p.locator('[data-wizard-page="where"] .opt-card').first().click();
+  if (page === 'tier') return here('tier');
+  await p.locator('[data-wizard-page="tier"] .opt-card', { hasText: 'Wyprawa' }).click();
+  if (page === 'objective') return here('objective');
+  await p.locator('[data-wizard-page="objective"] .opt-card', { hasText: 'Punkty kontrolne' }).click();
+  if (page === 'map') return here('map');
+  await p.locator('[data-shape]').first().click(); await next();
+  for (let i = 0; i < 4 && !(await p.locator('[data-wizard-page="players"]').count()); i++) await next();
+  await here('players');
+};
+
 const SCREENS: Screen[] = [
   { id: 'menu', query: '', views: [...LANDSCAPE, 'telefon'] },
-  { id: 'kreator-edycja', query: '', go: async (p) => { await p.getByText(/^(Nowa gra|New game)$/).first().click(); } },
+  { id: 'kreator-tryby', query: '', go: async (p) => { await p.locator('[data-new-game]').click(); await p.locator('[data-wizard-page="mode"]').waitFor(); } },
+  { id: 'kreator-gdzie', query: '', go: async (p) => { await wizardTo(p, 'where'); } },
+  { id: 'kreator-poziom', query: '', go: async (p) => { await wizardTo(p, 'tier'); } },
+  { id: 'kreator-cel', query: '', go: async (p) => { await wizardTo(p, 'objective'); } },
+  { id: 'kreator-mapa', query: '', go: async (p) => { await wizardTo(p, 'map'); } },
+  { id: 'kreator-gracze', query: '', go: async (p) => { await wizardTo(p, 'players'); } },
+  { id: 'kreator-zapisy', query: '', go: async (p) => { await p.locator('.opt-card', { hasText: 'Wczytaj grę' }).click(); await p.locator('[data-wizard-page="where"] .opt-card').first().click(); await p.locator('[data-wizard-page="load"]').waitFor(); } },
   { id: 'mapa', query: MAP, go: closeDev },
   { id: 'osada', query: MAP, go: async (p) => { await closeDev(p); await p.locator('[data-enter-settlement]').click(); await p.locator('[data-settlement]').waitFor(); } },
   { id: 'osada-drzewko', query: MAP, go: async (p) => { await closeDev(p); await p.locator('[data-enter-settlement]').click(); await p.locator('[data-building="council"]').click(); await p.locator('[data-building-tree]').waitFor(); } },
