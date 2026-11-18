@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 2.13.0 — 2026-11-18
+
 - Nowe ikony złota, drewna, rudy i Gwiezdnego Pyłu: malowane w stylu reszty gry, bez okrągłego medalu i konturu, każda z własną sylwetką (stos monet, związane kłody, szara skała, fioletowy pył).
 
 - Rada Osady: większa czcionka w kafelkach budynków i dużo większe ikony cen (z liczbą obok); Pierwotna Iskra stoi w wolnym rogu drzewa, więc całe drzewko może być większe. Poprawiony róg szyny przy parach „lub” (znikła wystająca kreska pod zaokrągleniem).

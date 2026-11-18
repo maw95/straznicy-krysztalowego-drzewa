@@ -3,6 +3,9 @@
 import { register } from '../translate';
 
 // In preparation
+register({});
+
+// 2.13.0
 register({
   "Nowe ikony złota, drewna, rudy i Gwiezdnego Pyłu: malowane w stylu reszty gry, bez okrągłego medalu i konturu, każda z własną sylwetką (stos monet, związane kłody, szara skała, fioletowy pył).": "New icons for gold, wood, ore and Star Dust: painted in the style of the rest of the game, with no round medal and no outline, each with a silhouette of its own (a heap of coins, bound logs, a grey rock, purple dust).",
   "Rada Osady: większa czcionka w kafelkach budynków i dużo większe ikony cen (z liczbą obok); Pierwotna Iskra stoi w wolnym rogu drzewa, więc całe drzewko może być większe. Poprawiony róg szyny przy parach „lub” (znikła wystająca kreska pod zaokrągleniem).": "Council: a bigger font in the building tiles and much bigger price icons (with the number beside them); the Primal Spark stands in the free corner of the tree, so the whole tree can be bigger. The corner of the bar at the \"or\" pairs is fixed (the stray line under the rounding is gone).",
