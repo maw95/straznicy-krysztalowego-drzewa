@@ -66,7 +66,7 @@ Poziom wybiera, **ile mechanik** ma gra. Każdy kolejny dodaje nowe do poprzedni
 
 Wersja planszowa ma jeden poziom odpowiadający Przygodzie (w kreatorze planszowym najłatwiejszy poziom nazywa się „Łatwy”, a w cyfrowej to Spacer).
 
-Od poziomu 2 liczby Życia i Ataku na kartach są **trzy razy większe** niż w planszówce, żeby małe premie z umiejętności i artefaktów miały sens. Samo tempo i balans gry są takie same jak przy małych liczbach.
+Od poziomu 2 liczby Życia i Ataku na kartach są **trzy razy większe** niż w planszówce, żeby małe premie z umiejętności i artefaktów miały sens. Tempo i balans gry są takie same jak przy małych liczbach. **Uwaga:** liczby Życia, Ataku i obrażeń w tej instrukcji (na przykład „+1 do Ataku”, „2 obrażenia”) podano w skali planszówki; od poziomu Wyprawa na ekranie zobaczysz je pomnożone przez 3 (w tych przykładach +3 i 6). Szybkość, zasięgi, punkty ruchu i mana nie są mnożone.
 
 ## Poziomy trudności
 @słowa: trudność, łatwy, normalny, trudny, bardzo trudny, królik, wilk, niedźwiedź, smok, punkty, ranking, komputer, handicap
@@ -95,11 +95,11 @@ Kilku graczy przy **jednym ekranie** (hot-seat) przekazuje sobie urządzenie. W 
 Cel wybierasz w kreatorze; od poziomu Wyprawa jest do wyboru, na Przygodzie jest tylko pierwszy.
 
 - **Kryształy do Drzewa** (domyślny). Przymierze wygrywa, gdy zaniesie do Kryształowego Drzewa wszystkie kryształy (2 przy jednym bohaterze, 3 przy dwóch albo trzech). Horda wygrywa, gdy minie limit rund, gdy polegną wszyscy bohaterowie Przymierza albo gdy odprawi **rytuał**: na koniec trzech kolejnych rund jeden jej bohater stoi na Drzewie, a wszyscy pozostali żyjący obok niego. Pokonanie bohaterów Hordy nie wystarczy. Limit rund to 8 / 12 / 18 / 24 (mała / średnia / duża / bardzo duża mapa), a na większych mapach i innych kształtach więcej.
-- **Punkty kontrolne.** Na mapie leżą trzy punkty: środkowy wart 2 i dwa boczne po 1. Stronę, która ma na koniec rundy więcej punktów (jej bohater stoi na punkcie), czeka przewaga; **kilka rund z rzędu** przewagi daje wygraną. Po limicie rund wygrywa strona, która dłużej miała przewagę; remis to remis.
-- **Przetrwanie** (tylko kooperacja). Przymierze wygrywa, gdy minie ustalona liczba rund (6 / 9 / 14 / 18), a choć jeden bohater żyje. Co dwie rundy w bazie Hordy pojawia się nowy bohater. Kryształów i Drzewa nie ma.
+- **Punkty kontrolne.** Na mapie leżą trzy punkty: środkowy wart 2 i dwa boczne po 1. Stronę, która ma na koniec rundy więcej punktów (jej bohater stoi na punkcie), czeka przewaga; **kilka rund z rzędu** przewagi daje wygraną (3 rundy na małej i średniej mapie, 4 na dużej, 5 na bardzo dużej, więcej na największych; Przymierze, które rusza pierwsze, potrzebuje o jedną więcej). Po limicie rund wygrywa strona, która dłużej miała przewagę; remis to remis.
+- **Przetrwanie** (tylko kooperacja). Przymierze wygrywa, gdy minie ustalona liczba rund (6 / 9 / 14 / 18 na mapach S–XL, więcej na największych), a choć jeden bohater żyje. Co dwie rundy w bazie Hordy pojawia się nowy bohater. Kryształów i Drzewa nie ma.
 - **Boss.** Pośrodku mapy leży legowisko Bossa. Wyzywają go obie strony, a jego rany zostają między walkami. Wygrywa ten, kto zada ostatni cios. W kooperacji jest też wariant „wszyscy przeciw Bossowi”, bez Hordy.
 - **Artefakt.** Na środku mapy leży Artefakt. Kto zaniesie go do **własnej bazy**, wygrywa. Niosący jest o 1 punkt ruchu wolniejszy, a poległy upuszcza Artefakt, który podnosi następny.
-- **Podbój** (od poziomu Księstwo). Wygrywa strona, która na koniec rundy trzyma **wszystkie osady na ziemi wroga**: jego stolicę i osady na jego połowie mapy. Po limicie rund wygrywa strona trzymająca ponad połowę osad wroga.
+- **Podbój** (od poziomu Księstwo). Wygrywa strona, która na koniec rundy trzyma **wszystkie osady na ziemi wroga**: jego stolicę i osady na jego połowie mapy. Po limicie rund wygrywa strona trzymająca ponad połowę osad wroga; jeśli żadna albo obie, jest remis.
 - **Relikt** (poziom Imperium). Wzniesienie budynku Pierwotnej Iskry od razu wygrywa; po limicie rund wygrywa strona, która niesie więcej Odłamków ([Imperium](#imperium)).
 
 W celach innych niż Kryształy remis w limicie rund to remis; w Bossie i Artefakcie „nikt nie wygrał” w kooperacji oznacza zwycięstwo Hordy.
@@ -147,7 +147,7 @@ Artefakt to stałe wyposażenie jednego bohatera, po jednym na miejsce: **hełm,
 Na poziomie Osada pojawiają się **zestawy artefaktów**: cztery zestawy po trzy rzadkie elementy (Strój Gajowego, Rynsztunek Brzasku, Pancerz Wartownika, Strój Kupca). Komplet trzech daje premię, a karta bohatera pokazuje „2/3 zestawu”.
 
 ### Miejsca z nagrodami
-Od Wyprawy na mapie stoją miejsca, które pomagają temu, kto na nie wejdzie: **kapliczka** (doświadczenie), **obóz najemników**, **skrzynia** (do wyboru artefakt albo 3 zł od poziomu Osada). Dalsze (młyn, studnia, składnica, chatki) są od poziomu Księstwo.
+Od Wyprawy na mapie stoją miejsca, z których korzysta **pierwszy bohater, który na nie wejdzie** (potem są puste): **kapliczka** (2 PD), **obóz najemników** (przywraca jednego poległego pomocnika frakcji albo daje 1 PD, gdy nikt nie poległ) i **skrzynia** (artefakt, a od poziomu Osada do wyboru artefakt albo 3 zł). Liczba takich miejsc rośnie z wielkością mapy. Dalsze (młyn, studnia, składnica, chatki) są od poziomu Księstwo.
 
 ### Śmierć bohatera
 Poległy bohater wypada z gry do końca partii, chyba że wypije go z powrotem **Eliksir Odrodzenia** (skarb): na mapie wskrzesza bohatera na wolnym polu obok pijącego albo przywraca pomocnika. Kryształy poległego zostają na polu bitwy. Od poziomu Królestwo dowódca poległy wraca za opłatą ([Królestwo](#krolestwo)).
@@ -207,14 +207,14 @@ Na arenie skarby ze wspólnej talii wybiera się na zmianę: strona wybiera jede
 @słowa: osada, złoto, dochód, budynki, koszary, targ, szpital, skarbiec, kuźnia, rekrutacja, pomocnicy, drużyna, garnizon, fosa, mury, katapulta, surowce, drewno, ruda, gwiezdny pył, pył, kopalnia, tartak, młyn, studnia, składnica, chatka, rada osady, drzewko budynków, wymiana
 
 ### Złoto i osady (od Osady)
-Jest jedna waluta: **złoto**, wspólne dla frakcji. **Dochód** wpada na koniec rundy: 2 zł za osadę (także startową), +1 zł za skarbiec w osadzie, 1 zł za kopalnię złota. Złoto dają też skrzynie (wybierasz: artefakt albo 3 zł). Walki skarbów nie zamieniają w złoto, a po porażce bohatera złoto nie przepada.
+Jest jedna waluta: **złoto**, wspólne dla frakcji (na start masz 2 zł). **Dochód** wpada na koniec rundy: 2 zł za osadę (także startową), +1 zł za skarbiec w osadzie, 1 zł za kopalnię złota. Złoto dają też skrzynie (wybierasz: artefakt albo 3 zł). Walki skarbów nie zamieniają w złoto, a po porażce bohatera złoto nie przepada.
 
 Osada **należy do tego, kto na niej stanął**: pusta przechodzi bez walki, strzeżona wymaga pokonania obrońców. Zachowuje budynki. Właściciel innej frakcji niż osada ma jej dochód, targ i szpital, ale **nie rekrutuje**. Kopalnię trzyma ten, kto na niej stoi.
 
 ### Budynki
 Budynki kupuje bohater stojący w osadzie własnej frakcji; klikasz budynek w widoku osady, żeby go użyć:
 - **Koszary:** rekrutacja pomocników; rozbudowane dają dodatkowe miejsce w drużynie i pomocników poziomów 4 i 5.
-- **Targ:** artefakty za złoto (zwykły 2 zł, rzadki 5, legendarny 10), 3 w ofercie (po rozbudowie 5), nowa oferta co 3 rundy. Na poziomie Księstwo także wymiana surowców.
+- **Targ:** artefakty za złoto (zwykły 2 zł, rzadki 5, legendarny 10 zł i 1 Pył od poziomu Księstwo), 3 w ofercie (po rozbudowie 5), nowa oferta co 3 rundy. Na poziomie Księstwo także wymiana surowców.
 - **Szpital:** wskrzesza poległego pomocnika za połowę ceny (po ulepszeniu za jedną trzecią).
 - **Skarbiec:** +1 zł na rundę.
 
@@ -224,7 +224,7 @@ Osada otwiera się **na cały ekran**: krajobraz frakcji jest tłem, budynki sto
 Miejsc w drużynie jest na starcie 2, potem +1 na 3. poziomie bohatera, +1 na 6. i +1 z rozbudowanych koszar, razem najwyżej 5. W armii jest jeden pomocnik każdego rodzaju. Każda frakcja ma siedmiu pomocników: trzech startowych i po jednym nowym na stopniach 2–5 do rekrutacji w koszarach (3, 5, 8 i 12 zł).
 
 ### Surowce (od Księstwa)
-Obok złota są **drewno**, **ruda** i **Gwiezdny Pył**, wspólne dla frakcji. Daje je mapa: **tartak** (+1 drewna na rundę), **kopalnia rudy** (+1 rudy) i rzadkie **źródło Gwiezdnego Pyłu** (+1 Pyłu). Kopalnię przejmuje się, wchodząc na pole. Złoto płaci za jednostki; drewno i ruda za budynki; Pył tylko za rzeczy rzadkie (legendarne artefakty, czary, drogie budynki). Zapasy i dochód widać w dolnym pasku.
+Obok złota są **drewno**, **ruda** i **Gwiezdny Pył**, wspólne dla frakcji. Frakcja zaczyna z 3 drewnami. Surowce daje mapa: **tartak** (+1 drewna na rundę), **kopalnia rudy** (+1 rudy) i rzadkie **źródło Gwiezdnego Pyłu** (+1 Pyłu). Kopalnię przejmuje się, wchodząc na pole. Złoto płaci za jednostki; drewno i ruda za budynki; Pył tylko za rzeczy rzadkie (legendarne artefakty, czary, drogie budynki). Zapasy i dochód widać w dolnym pasku.
 
 Gdy brakuje surowca, możesz go **kupić za złoto** w każdej własnej osadzie (zakładka Targ): drewno i ruda po 4 zł, Pył 10 zł. Zbudowany **targ** obniża ceny i pozwala **sprzedawać** nadwyżki: drewno i rudę po 1 zł, Pył po 3 zł.
 
