@@ -32,7 +32,23 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids` = Łatwy, `economy`, `realm
 
 ## 1. Kolejka prac (w tej kolejności)
 
-**Kolejka jest pusta** (stan 18.11): wszystkie punkty 32–49 z przeglądu 17.11 są zrobione. Wspólna zasada dla zmian liczb lub AI: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
+Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery od 50). Wspólna zasada dla zmian liczb lub AI: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
+
+**50. Podgląd obrażeń przy celowaniu czarem (S).** Zgłoszenie 16.11: przy namierzaniu „Magicznego Pocisku” nad wrogiem widać obrażenia zwykłego ataku aktywnej jednostki, nie obrażenia czaru. Miejsce: `previewOf` w `src/ui/BattleView.tsx` (używa `targets`, czyli celów ataku, także gdy `spellNow` jest ustawione; cele czaru to `spellAims`). Zakres: gdy wybrany jest czar, notatka nad celem pokazuje obrażenia (albo leczenie) tego czaru z `src/engine/magic.ts` i znak śmierci, jeśli cios zabija; bez wybranego czaru nic się nie zmienia. Gotowe, gdy: test jednostkowy liczby z podglądu równej wynikowi rzutu czaru oraz sprawdzenie w przeglądarce (`make zrzut` z bitwą poziomu 5 lub Panel testowy, scena „księga czarów w bitwie”).
+
+**51. Refaktor „strona kontra rasa”, dokończenie fazy 1 (L).** Zob. „Plan wdrażania nowych frakcji” w Parkingu (faza 1, stan 17.11 wieczór) i „Notatki techniczne” w `docs/FRAKCJE_MACIERZ_I_PRYMITYWY.md`. Zakres: cele Kryształy, Przetrwanie, Boss i Artefakt na N drużyn, `generateMap` (strony, siedliska, `homes`), osady i `Settlement.land`, arena, `isAutomaton`; w UI wybór frakcji (dowolna na stronę, do 4 stron) i kolory miejsc; koop z dowolną frakcją komputera. Cel „Kryształy do Drzewa” zostaje tylko dla pary Przymierze kontra Horda (komunikat „ta historia jest o Przymierzu i Hordzie”, test: nie startuje bez tej pary). Zależności: brak (fazy 0 i część 1 i 2 zrobione). Siatka bezpieczeństwa: `tests/golden.test.ts` bez zmian (Przymierze i Horda), mechanicznie, w 2–3 commitach, zero zmian dla gracza. Gotowe, gdy: `make check` zielony, golden bez `-u`, gra z 3 i 4 stronami (testowa rasa) startuje i kończy się w testach silnika.
+
+**52. Dzikie Stada, pilot procesu nowych frakcji (L; czeka na autora).** Bramki z Parkingu: G0 karta `docs/frakcje/<id>.md` (szablon `docs/KARTA_FRAKCJI_SZABLON.md`, autor) → G1 dane i paczka ze zastępczymi grafikami → G2 balans 45–55% → G3 próbka jednej jednostki w nowym stylu (autor) → G4 pełna grafika, osada, arena, muzyka (`PRZEPIS_JEDNOSTKI.md`) → G5 instrukcja PL i EN, CHANGELOG, `assets.json`, zrzut. Zależność: punkt 51. Claude startuje od G1 po karcie i próbce; po frakcji aktualizuje szacunek kredytów (sekcja 8). Koszt grafik i dźwięków: ok. 1 200–1 650 CU na frakcję, więc kredyty dopiero od G4 i z budżetem podanym przez autora.
+
+**53. Królestwo Umarłych (L; po 52, te same bramki).**
+
+**54. Żelazne Klany (L; po 53, te same bramki).** Symulacje 10 par po trzech frakcjach.
+
+**55. DLC: Wolne Kompanie, Dwór Wiecznego Szronu, Imperium Piasków, Rój Głębin, Władcy Przypływów (L każda; po 54).** Pełna macierz balansu (`make sim-matrix`) raz na kilka frakcji, w tle, nocą.
+
+**56. Własni czwarci bohaterowie dla obu frakcji (M + kredyty).** Dziś czwartymi bohaterami stron (gra 7–8 graczy) są Dzielna Kaczka i Wódz Hordy. Zakres: po jednym nowym bohaterze dla Przymierza i Hordy (nazwa, zdolność z klocków silnika, karta, portret, pełny zestaw animacji, dźwięki ataku i śmierci wg `PRZEPIS_JEDNOSTKI.md`), podmiana dotychczasowych w `src/engine/factions/dawn.ts` i `horde.ts`, test kontraktowy, symulacje 7–8 graczy. Decyzje: nazwy i zdolności proponuje Claude (wpis do sekcji 7, autor poprawia); kredyty: ok. 100–120 CU na bohatera, więc wymaga budżetu w poleceniu.
+
+**57. Grafiki z napisami po angielsku (M + kredyty).** Logo, okładka segregatora, slajdy i inne obrazy z tekstem (lista w `docs/INSTRUKCJA.en.md` i `assets.json`): wersje EN obok polskich, wybór według języka gry i wydania. Wymaga budżetu w poleceniu (ok. 14 CU za obraz `high`, z próbami).
 
 ## 2. Tylko autor (Claude tego nie bierze)
 - **Premiera na Steamie** (L): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery: **3.0** (potwierdzone 17.11).
@@ -43,15 +59,15 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids` = Łatwy, `economy`, `realm
 - Pierwsza strona instrukcji planszowej (imienna wiadomość autora) i kąt kamery z wielkością figurek 3D: autor, po obejrzeniu na żywo (decyzja 17.11: poza parkingiem, bez terminu).
 
 ## Przed premierą (decyzja autora 17.11: wchodzą przed Steamem; po punktach z kolejki)
-28. **Nowe frakcje** (plan wdrażania: sekcja „Parking”, ostatni punkt): Dzikie Stada → Królestwo Umarłych → Żelazne Klany (karta frakcji, grafika, symulacje 10 par), potem DLC. Przed startem: próbka jednej jednostki w nowym stylu i decyzja autora. Koszt grafik i dźwięków jednej frakcji: sekcja „Kredyty Scenario”.
-30. **Wiele języków** (PL + EN): **zrobione 17.11:** interfejs i gra, instrukcja gracza po angielsku (`docs/INSTRUKCJA.en.md`; skrypty PDF/DOCX nadal czytają tylko polski plik), historia zmian („Co nowego”, `src/i18n/en/changelog.ts`, test pilnuje każdego nowego wpisu), komunikaty serwera online. Instrukcja w grze (`instrukcja.en.md`) też jest przetłumaczona. **Zostaje:** wersja PDF/DOCX angielskiej instrukcji (przeróbka `scripts/assets/manual_*`), grafiki z napisami (logo, okładka, slajdy; kredyty Scenario), kolejne języki (nowy plik słownika i test pokrycia); nazwy własne bohaterów i osad celowo po polsku.
-(Nie robić bez wyraźnego polecenia autora: to duże prace.)
+28. **Nowe frakcje:** przeniesione do kolejki (punkty 51–55, decyzja autora 18.11).
+30. **Wiele języków (PL + EN):** gra, instrukcja gracza, historia zmian i komunikaty serwera są po polsku i angielsku. **Decyzja autora 18.11:** wersja PDF/DOCX angielskiej instrukcji **odpuszczona na stałe**; grafiki z napisami w kolejce (punkt 57); kolejne języki zaparkowane (Parking); na razie wystarczą PL i EN. Nazwy własne bohaterów i osad celowo po polsku.
 
 ## 3. Sprawdzenie na żywo
 Wyczyszczone 17.11: autor sam sprawdza grę i zgłasza błędy (`make zgloszenia`); nie prowadzimy listy „do sprawdzenia”.
 
 ## 4. Parking (pomysły bez terminu)
-- „Cios od tyłu / z flanki” dla innych jednostek. (Więcej niż 6 graczy, do 8: zrobione 17.11, czwarty bohater na stronę to Dzielna Kaczka i Wódz Hordy; docelowo własni czwarci bohaterowie z grafiką i dźwiękami, do wygenerowania.)
+- „Cios od tyłu / z flanki” dla innych jednostek. (Więcej niż 6 graczy, do 8: zrobione 17.11; własni czwarci bohaterowie: kolejka, punkt 56.)
+- **Kolejne języki** poza PL i EN (nowy plik słownika `src/i18n/<kod>/` i test pokrycia): zaparkowane 18.11, na razie nie potrzeba.
 - **PWA: zrobione 17.11** (ręczny service worker `public/sw.js`: kod siecią najpierw, zasoby z pamięci; manifest, ikony, podpowiedź instalacji w Opcjach). Zostaje test na prawdziwych telefonach i, gdy będzie potrzeba, kontrola wersji protokołu z serwerem.
 - **Capacitor** (opakowanie gry do Google Play i App Store, natywny push o ruchu w PvP): dopiero po PWA, gdy gra jest stabilna i wyważona, a autor chce dotrzeć do graczy przez sklepy. Koszty: Google Play 25 USD jednorazowo, Apple 99 USD rocznie (do iOS Mac albo build w chmurze), recenzje sklepów (polityka prywatności, usuwanie konta), zgodność starszych klientów ze sklepu z serwerem na Fly.io, testy WebGL w WebView. React Native odrzucony (przepisanie UI).
 - **Plan wdrażania nowych frakcji (ustalony 17.11; do rozpoczęcia po wydaniu z Przymierzem i Hordą; rozwija punkt 28).**
