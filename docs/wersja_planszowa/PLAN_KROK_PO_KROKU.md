@@ -12,6 +12,7 @@ drukujemy na zwykłej drukarce (papier fotograficzny), pudełko robimy ręcznie 
 | `do_druku/` | **gotowe PDF-y do druku** (tworzy je `make druk`; pliki nie są w gicie, można je zawsze zrobić od nowa) |
 | `okladki_przod_tyl_grzbiet.pdf` | **okładka segregatora** autora: 3 strony — przód (A4), tył (A4) i **grzbiet 10 × 297 mm** |
 | `logo_zolte_120mm.pdf`, `logo_zolte_przezroczyste.png` | **żółte logo na przezroczystym tle** na pudełko: PDF 140 × 110 mm z logo szerokim na 120 mm, PNG 1448 × 1086 px (RGBA) |
+| `ZAKUPY_3_EGZEMPLARZE.md` | lista zakupów na 3 egzemplarze z linkami do ofert, tusz do HP DeskJet 2545 |
 | `WYMIARY_ELEMENTOW.md` | wymiary wszystkich elementów i zasady druku |
 | `FIGURKI_SPECYFIKACJA.md`, `druk3d/` | figurki, podstawki, kryształy, znacznik rundy — pliki do druku 3D |
 | `instrukcja_szablon/` | instrukcja A4 w HTML (źródło PDF-a); strona 1 (po okładce) to wiadomość od autora |
@@ -33,15 +34,15 @@ Pliki w `do_druku/`:
 | `logo_zolte_120mm.pdf` (plik autora, kopiowany przez `make druk`) | 1 | logo na wieko pudełka (patrz krok 8, „Grafiki”) |
 
 **Razem ok. 40 arkuszy papieru fotograficznego, 2 arkusze samoprzylepnego i 20–40 kartek na instrukcję.**
-Z zapasem na pomyłki kupcie 50–60 arkuszy fotograficznego.
+Z zapasem na pomyłki kupcie 50–60 arkuszy fotograficznego na egzemplarz (ilości na 3 egzemplarze: `ZAKUPY_3_EGZEMPLARZE.md`).
 
 ---
 
 ## Krok 0. Zanim zaczniesz (15 min)
 
 - [ ] **Zmierz segregator** (szerokość × wysokość × grzbiet) — od niego zależy wnętrze pudełka (krok 8).
-- [ ] **Sprawdź drukarkę:** atramentowa czy laserowa? Papier fotograficzny musi być do **tego** rodzaju drukarki
-      (do laserowej: „papier fotograficzny do drukarek laserowych” albo kreda 200–250 g).
+- [ ] **Drukarka: HP DeskJet 2545** (atramentowa, wkłady HP 301 / 301XL) — papier fotograficzny do drukarek
+      **atramentowych**. Druk dwustronny instrukcji ręcznie (najpierw strony nieparzyste, potem odwrócony stos).
 - [ ] **Wydruk próbny:** wydrukuj **jedną** stronę z `06_kafelki_mapy_awersy.pdf` na zwykłym papierze.
       W ustawieniach druku: **skala 100% / „rozmiar rzeczywisty”**, nigdy „dopasuj do strony”.
       Na dole każdego arkusza jest odcinek — zmierz linijką: **musi mieć 50 mm**. Kafelek musi mieć 50 mm między
@@ -50,57 +51,9 @@ Z zapasem na pomyłki kupcie 50–60 arkuszy fotograficznego.
 
 ## Krok 1. Zakupy
 
-Linki prowadzą do wyszukiwania w sklepie (konkretne oferty szybko znikają) — wybierz ofertę z dobrymi opiniami.
-Ceny orientacyjne.
-
-### Papier i druk
-
-| Co | Ile | Gdzie |
-|---|---|---|
-| Papier fotograficzny A4, **matowy lub satynowy**, 180–230 g (mniej odblasków niż błyszczący) | 50–60 ark. | [Allegro](https://allegro.pl/listing?string=papier%20fotograficzny%20A4%20matowy%20230g) |
-| Papier samoprzylepny A4 do drukarki (błyszczący albo matowy) | 5 ark. | [Allegro](https://allegro.pl/listing?string=papier%20samoprzylepny%20A4%20do%20drukarki) |
-| Papier matowy 160–200 g na instrukcję (albo zwykły 100 g + koszulki) | 20–40 ark. | [Allegro](https://allegro.pl/listing?string=papier%20matowy%20A4%20160g) |
-| Koszulki na dokumenty A4 (jeśli instrukcja ma być w koszulkach) | 20–40 szt. | [Allegro](https://allegro.pl/listing?string=koszulki%20A4%20krystaliczne%20100%20szt) |
-
-### Tektura, klej, cięcie
-
-| Co | Ile | Gdzie |
-|---|---|---|
-| **Tektura introligatorska 2 mm**, arkusze A4 (albo duży arkusz 70 × 100 cm do pocięcia) | 15–20 ark. A4 | [Allegro](https://allegro.pl/listing?string=tektura%20introligatorska%202%20mm%20A4) |
-| Klej w sprayu do papieru (np. 3M Spray Mount / Photo Mount) — równo klei duże powierzchnie | 1–2 puszki | [Allegro](https://allegro.pl/listing?string=klej%20w%20sprayu%203M%20spray%20mount) |
-| Nożyk z łamanym ostrzem albo skalpel + zapas ostrzy | 1 | [Allegro](https://allegro.pl/listing?string=no%C5%BCyk%20modelarski%20skalpel%20ostrza) |
-| Mata do cięcia A3 (samogojąca) | 1 | [Allegro](https://allegro.pl/listing?string=mata%20do%20ci%C4%99cia%20A3) |
-| Linijka metalowa 50 cm (z antypoślizgiem) | 1 | [Allegro](https://allegro.pl/listing?string=linijka%20metalowa%2050%20cm%20antypo%C5%9Blizgowa) |
-| Zaokrąglacz narożników R3–R4 | 1 | [Allegro](https://allegro.pl/listing?string=zaokr%C4%85glacz%20naro%C5%BCnik%C3%B3w%20R4) |
-| Laminator A4 + folie do laminowania A4 80 mic (karty) | 1 + 20 folii | [Allegro](https://allegro.pl/listing?string=laminator%20A4) · [folie](https://allegro.pl/listing?string=folia%20do%20laminowania%20A4%2080%20mic) |
-| Taśma introligatorska płócienna 25–38 mm (zawias planszy areny) | 1 rolka | [Allegro](https://allegro.pl/listing?string=ta%C5%9Bma%20introligatorska%20p%C5%82%C3%B3cienna) |
-| Opcjonalnie: dziurkacz ozdobny koło 20 mm (naklejki na znaczniki Ø 23 mm) | 1 | [Allegro](https://allegro.pl/listing?string=dziurkacz%20ozdobny%20ko%C5%82o%2020%20mm) |
-
-### Pudełko z drewna
-
-| Co | Ile | Gdzie |
-|---|---|---|
-| **Sklejka topolowa 3 mm** (ścianki, wieko, półka) — docięta w sklepie na wymiar z listy w kroku 8; topola jest jedną z najlżejszych sklejek (ok. 450 kg/m³), unikaj brzozowej, MDF i HDF (ok. 700+) | ok. 0,7 m² | [Castorama](https://www.castorama.pl/) / [Leroy Merlin](https://www.leroymerlin.pl/) (dział drewna: docinanie płyt na miejscu — zapytaj, czy tną sklejkę 3 mm) · [Allegro](https://allegro.pl/listing?string=sklejka%20topolowa%203%20mm%20docinanie%20na%20wymiar) |
-| **Sklejka topolowa 4 mm** (tylko dno) | ok. 0,11 m² (kawałek 600 × 400) | jak wyżej |
-| Listwa lipowa lub sosnowa **10 × 10 mm** (słupki narożne, szyny półki, ramka wieka) | ok. 3 m (2 × 1,5 m) | dział drewna · [Allegro](https://allegro.pl/listing?string=listwa%20lipowa%2010x10) |
-| **Pianka EVA 10 mm** (wkładka z gniazdami na figurki; albo 2 × 5 mm sklejone) — arkusz 500 × 500 mm wystarczy | 1 | [Allegro](https://allegro.pl/listing?string=pianka%20EVA%2010%20mm%20arkusz) · sklepy cosplay |
-| **Otwornica bimetalowa Ø 35 mm** (gniazda w EVA; patrz krok 8 — dlaczego 35, a nie 30) + wiertarka | 1 | [Allegro](https://allegro.pl/listing?string=otwornica%20bimetalowa%2035%20mm) |
-| Klej do EVA (kontaktowy, np. do pianek i gumy) albo taśma dwustronna — przyklejenie EVA do dna | 1 mały | [Allegro](https://allegro.pl/listing?string=klej%20kontaktowy%20do%20EVA) |
-| Klej do drewna D2/D3 (np. Wikol) | 1 | [Allegro](https://allegro.pl/listing?string=klej%20do%20drewna%20wikol) |
-| Kątownik stolarski + ściski stolarskie albo taśma malarska do trzymania ścianek | 1 + 4 | [Allegro](https://allegro.pl/listing?string=%C5%9Bciski%20stolarskie%20zestaw) |
-| Papier ścierny 120, 180, 240 | po 2 ark. | [Allegro](https://allegro.pl/listing?string=papier%20%C5%9Bcierny%20zestaw%20120%20180%20240) |
-| Lakier akrylowy bezbarwny (satyna) albo bejca | 1 | [Allegro](https://allegro.pl/listing?string=lakier%20akrylowy%20bezbarwny%20satyna%20do%20drewna) |
-| Klej-lakier do decoupage (np. Mod Podge, Magic) — do przyklejenia okładki i logo | 1 | [Allegro](https://allegro.pl/listing?string=klej%20do%20decoupage%20mod%20podge) |
-| Nóżki filcowe samoprzylepne | 4 | [Allegro](https://allegro.pl/listing?string=filc%20samoprzylepny%20n%C3%B3%C5%BCki) |
-
-### Drobiazgi
-
-| Co | Ile | Gdzie |
-|---|---|---|
-| Kostka drewniana surowa **16 mm** (na kość −1 / 0 / +1) | 1 (+ zapas) | [Allegro](https://allegro.pl/listing?string=kostka%20drewniana%2016%20mm%20surowa) |
-| Woreczki strunowe 6 × 8 cm (znaczniki, krople, kryształy) | 10 | [Allegro](https://allegro.pl/listing?string=woreczki%20strunowe%206x8) |
-| Gumki recepturki / opaski na karty | kilka | — |
-| Opcjonalnie: pianka do walizek „pick and pluck” na figurki | 1 arkusz | [Allegro](https://allegro.pl/listing?string=pianka%20pick%20and%20pluck) |
+Lista zakupów z linkami do konkretnych ofert Allegro, ilościami na **3 egzemplarze** i tuszem do HP DeskJet 2545:
+**[`ZAKUPY_3_EGZEMPLARZE.md`](ZAKUPY_3_EGZEMPLARZE.md)** (papier, tusz, tektura, kleje, laminowanie, narzędzia, segregatory,
+drobiazgi i materiały na pudełka). Na jeden egzemplarz podziel ilości papieru, tektury i folii przez trzy.
 
 ## Krok 2. Instrukcja do segregatora (1 h)
 
