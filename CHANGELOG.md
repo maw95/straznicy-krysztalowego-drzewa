@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Skrzynia: przycisk wyboru złota pokazuje „3” z ikoną złota zamiast „3 zł”.
 - Telefon, mapa świata: przyciski + i − oraz ikona „Skarby” są mniejsze; dolny pasek z opisem ostatnio dotkniętego pola zniknął (opis pola zostaje w panelu bohatera); szczegóły bohatera (imię obok portretu, mana, gracz i ruch pod spodem na całą szerokość) nie rozjeżdżają się już w wąskim panelu.
 - Figurki 3D (arena walki i mapa świata) są tylko w wydaniu planszowym; wydanie cyfrowe zostaje przy swoich animowanych jednostkach i portretach, a przełącznik „Figurki 3D” w Opcjach pokazuje się tylko w planszowym.
 - Telefon: ikony pełnego ekranu i muzyki w prawym górnym rogu są dużo mniejsze i bez tła oraz obwódek (jasny znak z cieniem, czytelny na każdym obrazie).

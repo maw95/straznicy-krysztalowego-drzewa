@@ -812,7 +812,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
             <div style={{ textAlign: 'center', fontSize: 18 }}>Co bierzesz: artefakt czy złoto?</div>
             <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
               <button className="btn prim" data-chest-artifact style={{ padding: '10px 20px', fontSize: 20 }} onClick={() => onAction({ type: 'chestTake', what: 'artifact' })}>Artefakt</button>
-              <button className="btn plate parch" data-chest-gold style={{ padding: '10px 20px', fontSize: 20 }} onClick={() => onAction({ type: 'chestTake', what: 'gold' })}>{KINGDOM.chestGold} zł</button>
+              <button className="btn plate parch" data-chest-gold aria-label={`${KINGDOM.chestGold} złota`} style={{ padding: '10px 20px', fontSize: 20, display: 'inline-flex', alignItems: 'center', gap: 6 }} onClick={() => onAction({ type: 'chestTake', what: 'gold' })}>{KINGDOM.chestGold} <img src={asset('ikony/mapa/zloto.webp')} alt="" width={28} height={28} /></button>
             </div>
             <div style={{ fontSize: 14, color: '#6B4A22' }}>Artefakt jest losowany: od zwykłego po legendarny (np. {ARTIFACT_BY_ID[chestPreview(state, hero)].name}).</div>
           </div>
