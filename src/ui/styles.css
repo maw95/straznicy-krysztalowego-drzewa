@@ -977,3 +977,6 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 /* Map size buttons: one line of text each, so every button has the same size (the name "Bardzo duża" used to wrap and made XL taller). */
 .map-size-btn { width: 128px; padding: 10px 4px; white-space: nowrap; }
 .map-size-btn > span:not(.size-code) { font-size: 16px; }
+/* Player count buttons: big numerals in the colours of the map size codes (S, M, L). */
+.count-chip { min-width: 54px; padding: 2px 12px; font-size: 30px; font-weight: 900; line-height: 1.2; letter-spacing: 1px; color: #8A3B12; }
+.count-chip.on { color: #124F7A; }

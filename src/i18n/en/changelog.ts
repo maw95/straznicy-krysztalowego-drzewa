@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Kreator: przyciski liczby graczy mają większe cyfry w tych samych kolorach co kody wielkości mapy (S, M, L).": "Wizard: the player count buttons have bigger numerals in the same colours as the map size codes (S, M, L).",
   "Kreator: przyciski wielkości mapy mają jednakowy rozmiar, a „Bardzo duża” mieści się w jednej linii.": "Wizard: the map size buttons are all the same size, and \"Very large\" fits on one line.",
   "Poziom trudności „Bardzo trudny” ma nową ikonę (głowa smoka z przodu).": "The \"Very hard\" difficulty has a new icon (a front-facing dragon head).",
   "Wybór poziomu gry: nowa ikona „Księstwa” (dwór z młynem, tartakiem, wozem z rudą i katapultą).": "Game level choice: new icon for the \"Principality\" level (a manor with a mill, sawmill, ore cart and catapult).",

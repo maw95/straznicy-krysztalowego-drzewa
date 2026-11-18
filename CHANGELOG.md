@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Kreator: przyciski liczby graczy mają większe cyfry w tych samych kolorach co kody wielkości mapy (S, M, L).
 - Kreator: przyciski wielkości mapy mają jednakowy rozmiar, a „Bardzo duża” mieści się w jednej linii.
 - Poziom trudności „Bardzo trudny” ma nową ikonę (głowa smoka z przodu).
 - Wybór poziomu gry: nowa ikona „Księstwa” (dwór z młynem, tartakiem, wozem z rudą i katapultą).
