@@ -595,7 +595,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               <TreasureButton count={inventory.length} onClick={() => setTreasuresOpen(true)} open={treasuresOpen} />
             </div>
           )}
-          {touch && touched && !mapPicks && !detailsShown && <TileStrip state={state} k={touched} reach={reach.get(touched)} heroName={hero ? UNITS[hero.id].name : ''} />}
+          {touch && !compact && touched && !mapPicks && !detailsShown && <TileStrip state={state} k={touched} reach={reach.get(touched)} heroName={hero ? UNITS[hero.id].name : ''} />}
           {mapPicks && (
             <div className="plate parch" style={{ position: 'absolute', left: '50%', bottom: 16, transform: 'translateX(-50%)', padding: '8px 14px', display: 'flex', gap: 12, alignItems: 'center', zIndex: 4 }}>
               <b>Magiczna Mapa:</b> wybierz do 3 zakrytych pól ({mapPicks.picks.length}/3)
@@ -608,12 +608,12 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
         <Frame className="side side-adv" innerStyle={{ padding: '16px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
           {!hero && <div style={{ fontWeight: 800, fontSize: 20, textAlign: 'center' }}>Koniec gry</div>}
           {hero && (
-            <div style={{ display: 'flex', gap: compact ? 8 : 12, alignItems: 'center', paddingRight: compact ? 56 : 0 }}>
+            <div className="hero-head" style={{ display: 'flex', gap: compact ? 8 : 12, alignItems: 'center' }}>
               <img src={asset(`cards/crests/${hero.faction}.png`)} alt={FACTION_NAMES[raceOf(state, hero.faction)]} title={FACTION_NAMES[raceOf(state, hero.faction)]} style={{ height: compact ? 44 : 64, width: 'auto', flex: 'none' }} />
               <button className="btn btn-bare" onClick={() => (state.rules.heroGrowth ? setSheet(true) : onShowCard(hero.id))} title={state.rules.heroGrowth ? 'Karta bohatera' : 'Pokaż kartę'} data-hero-portrait>
                 <Portrait unitId={hero.id} size={compact ? 48 : 64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
               </button>
-              <div style={{ minWidth: 0 }}>
+              <div className="hero-info" style={{ minWidth: 0 }}>
                 <div data-hero-name style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{heroLabel(hero)}</div>
                 {state.rules.empire && (
                   <div data-shards title="Odłamki Pierwotnej Iskry: niesione przez tego bohatera, razem u frakcji i wszystkich w grze" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
