@@ -175,8 +175,8 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
             </div>
             {loadError && <div style={{ fontSize: 15, color: '#F08A7A', textAlign: 'center' }}>{loadError}</div>}
             {/* The tester's record in this browser sits on the first page: it is the place a returning player lands on. */}
-            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 16, flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
+            <div className="home-foot">
+              <div className="home-foot-links">
                 <button className="app-version" title="Historia zmian" onClick={onChangelog}>
                   Wersja {__APP_VERSION__}
                 </button>

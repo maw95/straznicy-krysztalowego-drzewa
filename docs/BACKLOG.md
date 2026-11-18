@@ -48,10 +48,6 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
 
 **57. Grafiki z napisami po angielsku (M + kredyty).** Logo, okładka segregatora, slajdy i inne obrazy z tekstem (lista w `docs/INSTRUKCJA.en.md` i `assets.json`): wersje EN obok polskich, wybór według języka gry i wydania. Wymaga budżetu w poleceniu (ok. 14 CU za obraz `high`, z próbami).
 
-**58. Mniejsze ikony pełnego ekranu i muzyki na telefonie (S).** W prawym górnym rogu na telefonie ikony pełnego ekranu i muzyki mają być dużo mniejsze. Można zrezygnować z tła i obwódek, o ile nie pogorszy to bardzo ich widoczności (sprawdzić na jasnym i ciemnym tle ekranów). Weryfikacja: `make zrzut WIDOK=telefon`, także w bitwie i na mapie.
-
-**59. Menu główne na telefonie: kolejność sekcji (S).** Sekcja „Twoje partie” ma być nad „Wersja X.X.X” i „Autorzy”. Tylko układ telefonu (media query w `styles.css`), bez zmian na komputerze. Weryfikacja: `make zrzut WIDOK=telefon`.
-
 **Zgłoszenia 18.11 (60–71): robione o 11:00, przed punktem 51, razem z 58–59; po nich wydanie 2.12.0.** Telefon sprawdzać w pionie i poziomo (`WIDOK=telefon|poziomo`).
 
 **60. Figurki 3D tylko w wersji planszowej (S).** Widok figurek 3D (arena walki i mapa świata) ma być dostępny wyłącznie w wydaniu planszowym (`ruleset=board`); w cyfrowym ukryć wybór i wymusić widok płaski, bez ładowania three.js tam, gdzie się da.

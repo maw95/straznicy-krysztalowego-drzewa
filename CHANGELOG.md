@@ -6,6 +6,9 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Telefon: ikony pełnego ekranu i muzyki w prawym górnym rogu są dużo mniejsze i bez tła oraz obwódek (jasny znak z cieniem, czytelny na każdym obrazie).
+- Telefon, menu główne: sekcja „Twoje partie” stoi nad linkami „Wersja” i „Autorzy”.
+
 ## 2.11.0 — 2026-11-18
 
 - Czary w bitwie: gdy celujesz czarem (Magiczny Pocisk, Kula Ognia, Grom, Leczenie), nad wrogiem albo sojusznikiem widać wynik czaru (np. „−18 → 22 Ż”, „pokona”, „+3 → 10 Ż”), a nie obrażenia zwykłego ataku aktywnej jednostki. Czary nie liczą pancerza, więc liczba jest dokładnie tą, którą czar zdejmie.
