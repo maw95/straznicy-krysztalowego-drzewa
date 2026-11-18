@@ -23,7 +23,7 @@ Autor pisze „zrób punkty 1, 2 i 3” (albo „zrób 9–10”, „zrób wszys
 - Każdy zaakceptowany obraz, animacja, dźwięk lub muzyka trafia do repo w tej samej sesji z wpisem w `assets.json`.
 - Po skończeniu: usuń punkt z tego pliku (albo zaznacz, co zostało), zagraj `complete.oga`, krótkie podsumowanie po polsku, uwaga, że to dobry moment na `/clear`.
 
-## Stan (17.11.2026, po wydaniu 2.10.0)
+## Stan (po wydaniu 2.10.0, 17.11.2026)
 
 Wydane: **2.8.0** (16.11: poziomy 0, 4, 5 i 6, Łatwy na arenie, bot-kupiec, animacje i efekty; gra na Pages, serwer 0.2.0 na Fly.io, silnik 2.8.0). Wcześniej **2.7.0** (14.11, poziom 3 „Osada”). Wszystko z poniższej listy jest już wydane, nic nie czeka na push.
 
@@ -32,32 +32,14 @@ Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids` = Łatwy, `economy`, `realm
 
 ## 1. Kolejka prac (w tej kolejności)
 
-**Kolejność wdrażania (ułożona 17.11 w nocnym zadaniu; numery punktów zostają):**
-36 → 34 → 32 → 35 → 33 → 48 (grupa A: małe i niezależne najpierw; 33 i 35 przed 48, 34 rozszerza `passArtifact` o Odłamki) → 41 (grafika, niezależna) → 42 → 40 (wspólny układ sekcji, potem „Własne ustawienia”) → 45 → 37 z 44 (ekran osady; po grafice i grafie z `BUDYNKI.md`) → 46 → 38 (grafika ramek i tła) → 39 (zasady i karty: po 33, 34, 37, żeby opisać stan końcowy) → 43 (panel testowy: sceny po 33 i 37) → 47 (telefon na końcu, sprawdza wszystko).
-Grafiki Scenario (41, 38, 37) nie zależą od kodu: generować przy okazji, budżet ok. 8000 CU/miesiąc.
-Stan nocnego zadania: zob. `docs/PODSUMOWANIE_NOCNE.md` i `docs/PYTANIA_DO_AUTORA.md`.
-
-### Grupa A. Zasady i silnik (decyzje autora z 17.11; punkty niezależne, kolejność dowolna)
-
-Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.test.ts` i pasma: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
-
-### Grupa D. Interfejs, kreator i narzędzia (zgłoszenia autora z 17.11)
-
-**47. Testy wyświetlania na telefonie (reszta)** (S; reszta to głównie test na prawdziwych telefonach)
-- **Zrobione 17.11:** skrypt kontrolny `scripts/browser/telefon.ts` (menu, kreator, mapa, osada i drzewko, zasady, plecak bohatera, opcje, zgłoszenie błędu, skrzynia, arena: artefakt, czary, pomocnicy, walka, księga czarów; rozmiary 667×375, 844×390, 932×430 poziomo i 390×844 pionowo dla menu): **żaden ekran nie przewija się poziomo i nic nie wychodzi poza ekran**. Naprawione: dolny pasek mapy (zawija się do drugiego rzędu), cele dotykowe 44 px (przyciski muzyki, pełnego ekranu, przybliżania, paska dolnego, lista osad, plecak), **opisy z `title` pokazują się po dotknięciu** (`TouchTitles`, tylko ekrany bez hovera).
-- **Decyzje Claude'a (17.11):** chipy kolejki w bitwie to tylko podgląd (nie przyciski), a ich opis pokazuje się po dotknięciu (`TouchTitles`), więc zostają w obecnym rozmiarze; dolny pasek mapy ma już `zoom` na niskim telefonie poziomo. Wpis do „Decyzje podjęte przez Claude'a”.
-- **Zostaje (tylko autor):** (1) ekrany nieprzejrzane skryptem: dalsze strony kreatora, lobby online, `Własne ustawienia`, okno bohatera w bitwie; (2) pion: gra pokazuje monit „obróć telefon”; (3) **prawdziwe urządzenia:** Android i iPhone (Safari, Chrome): pasek adresu iOS, wycięcie ekranu, wydajność WebGL; adres w sieci lokalnej (`vite --host`); po instalacji PWA sprawdzić pełny ekran.
-- Gotowe, gdy: autor sprawdził grę na swoim telefonie i zgłoszone usterki są naprawione.
-
-**49. Zgłoszenie autora z 17.11 wieczorem: zrobione** (telefon 667×375, kreator i interfejs gry)
-- Zrobione 17.11: cel gry i mapa w kreatorze przechodzą dalej po kliknięciu (zostaje przycisk „Dalej” tylko dla bossa w koopie, który wymaga wyboru Hordy), kolejna strona kreatora przewija się na górę, „Wstecz” i „Dalej” mają po 190×52 px, wszystkie przyciski poziomów trudności po 124×126 px (rozmiary mapy też po 124 px szerokości), na telefonie poziomo pasek dolny i panel boczny są zmniejszone (`zoom`), a przyciski w rogu mniejsze: mapa 403×237 → 471×288 px na ekranie 667×375, arena zajmuje prawie cały ekran. Zrzuty: `SHOT=1 npx tsx scripts/browser/telefon.ts mapa,arena-walka`.
-- Możliwe dalsze strojenie po obejrzeniu na prawdziwym telefonie (punkt 47).
+**Kolejka jest pusta** (stan 18.11): wszystkie punkty 32–49 z przeglądu 17.11 są zrobione. Wspólna zasada dla zmian liczb lub AI: po zmianie `make sim-raport GAMES=100` (zob. sekcja 5), poprawki strojenia, golden `-u` w **osobnym commicie** z opisem. Serwer (`../straznicy-krysztalowego-drzewa-backend`) dzieli silnik: po zmianie reguł lub akcji zsynchronizować, `make deploy` (backend wolno pushować i wdrażać); gra (push) tylko autor.
 
 ## 2. Tylko autor (Claude tego nie bierze)
 - **Premiera na Steamie** (L): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery: **3.0** (potwierdzone 17.11).
 - Domeny i konta, znak towarowy (brak wpisów), tytuł w sklepie Steam.
 - Pliki w `docs/wersja_planszowa/` (`logo_zolte_*`, `okladki_przod_tyl_grzbiet.pdf`, `Instrukcja_Straznicy.docx`) mają starą nazwę (binarne, po ostatecznym potwierdzeniu nazwy).
 - Odsłuch dźwięków (Claude nie ma jak ich odsłuchać): 7 z 15.11 (`catapult.mp3`, `tower_shot.mp3`, `moat.mp3`, `shard_pickup.mp3`, `spark.mp3`, `portal.mp3`, `tavern_hire.mp3`) i 32 z 16.11 (`public/assets/dzwieki/jednostki/<id>_atak|_smierc.mp3` dla 16 jednostek poziomów 5–6); co się nie podoba, Claude wygeneruje od nowa (1 CU za sztukę).
+- **Test na telefonach (dawny punkt 47):** skrypt `scripts/browser/telefon.ts` nie wykazał przewijania poziomego ani elementów poza ekranem. Zostaje: ekrany nieprzejrzane skryptem (dalsze strony kreatora, lobby online, `Własne ustawienia`, okno bohatera w bitwie), monit „obróć telefon” w pionie oraz **prawdziwe urządzenia** (Android i iPhone: pasek adresu iOS, wycięcie ekranu, wydajność WebGL; `vite --host`; pełny ekran po instalacji PWA). Usterki zgłasza autor.
 - Pierwsza strona instrukcji planszowej (imienna wiadomość autora) i kąt kamery z wielkością figurek 3D: autor, po obejrzeniu na żywo (decyzja 17.11: poza parkingiem, bez terminu).
 
 ## 2a. Grafiki zastępcze do wygenerowania (Scenario)
@@ -65,7 +47,7 @@ Wspólne dla punktu 33 (zrobiony): zmiana liczb lub AI przesuwa `tests/golden.te
 
 ## Przed premierą (decyzja autora 17.11: wchodzą przed Steamem; po punktach z kolejki)
 28. **Nowe frakcje** (plan wdrażania: sekcja „Parking”, ostatni punkt): Dzikie Stada → Królestwo Umarłych → Żelazne Klany (karta frakcji, grafika, symulacje 10 par), potem DLC. Przed startem: próbka jednej jednostki w nowym stylu i decyzja autora. Koszt grafik i dźwięków jednej frakcji: sekcja „Kredyty Scenario”.
-30. **Wiele języków** (PL + EN): **zrobione 17.11:** interfejs i gra, instrukcja gracza po angielsku (`docs/INSTRUKCJA.en.md`; skrypty PDF/DOCX nadal czytają tylko polski plik), historia zmian („Co nowego”, `src/i18n/en/changelog.ts`, test pilnuje każdego nowego wpisu), komunikaty serwera online. **Zostaje:** wersja PDF/DOCX angielskiej instrukcji (przeróbka `scripts/assets/manual_*`), grafiki z napisami (logo, okładka, slajdy; kredyty Scenario), kolejne języki (nowy plik słownika i test pokrycia); nazwy własne bohaterów i osad celowo po polsku.
+30. **Wiele języków** (PL + EN): **zrobione 17.11:** interfejs i gra, instrukcja gracza po angielsku (`docs/INSTRUKCJA.en.md`; skrypty PDF/DOCX nadal czytają tylko polski plik), historia zmian („Co nowego”, `src/i18n/en/changelog.ts`, test pilnuje każdego nowego wpisu), komunikaty serwera online. Instrukcja w grze (`instrukcja.en.md`) też jest przetłumaczona. **Zostaje:** wersja PDF/DOCX angielskiej instrukcji (przeróbka `scripts/assets/manual_*`), grafiki z napisami (logo, okładka, slajdy; kredyty Scenario), kolejne języki (nowy plik słownika i test pokrycia); nazwy własne bohaterów i osad celowo po polsku.
 (Nie robić bez wyraźnego polecenia autora: to duże prace.)
 
 ## 3. Sprawdzenie na żywo
