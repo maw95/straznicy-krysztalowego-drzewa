@@ -22,7 +22,7 @@ Pliki w `do_druku/`:
 
 | Plik | Arkuszy A4 | Na czym drukować |
 |---|---:|---|
-| `01_instrukcja_A4.pdf` | 41 stron (okładka + 40 numerowanych) | papier matowy 160–200 g (dwustronnie) albo jednostronnie do koszulek |
+| `01_instrukcja_A4.pdf` | 41 stron (okładka + 40 numerowanych) | zwykły papier 80–90 g, jednostronnie do koszulek |
 | `02_karty_jednostek_awersy.pdf` + `03_…_rewersy.pdf` | 5 + 5 | papier fotograficzny |
 | `04_karty_skarbow_awersy.pdf` + `05_…_rewersy.pdf` | 3 + 3 | papier fotograficzny |
 | `06_kafelki_mapy_awersy.pdf` + `07_…_rewersy.pdf` | 9 + 8 | papier fotograficzny |
@@ -33,7 +33,7 @@ Pliki w `do_druku/`:
 | `okladki_przod_tyl_grzbiet.pdf` (plik autora, kopiowany przez `make druk`) | 2 + pasek | papier fotograficzny — okładka segregatora: przód i tył A4 oraz pasek grzbietu 10 mm |
 | `logo_zolte_120mm.pdf` (plik autora, kopiowany przez `make druk`) | 1 | logo na wieko pudełka (patrz krok 8, „Grafiki”) |
 
-**Razem ok. 40 arkuszy papieru fotograficznego, 2 arkusze samoprzylepnego i 20–40 kartek na instrukcję.**
+**Razem ok. 42 arkusze papieru fotograficznego, 2 arkusze samoprzylepnego i 41 kartek zwykłego papieru na instrukcję.**
 Z zapasem na pomyłki kupcie 50–60 arkuszy fotograficznego na egzemplarz (ilości na 3 egzemplarze: `ZAKUPY_3_EGZEMPLARZE.md`).
 
 ---
@@ -59,8 +59,8 @@ drobiazgi i materiały na pudełka). Na jeden egzemplarz podziel ilości papieru
 
 1. Plik: `01_instrukcja_A4.pdf` (41 stron A4: okładka i 40 numerowanych). **Strona 1 jest na wiadomość od autora** — przed drukiem wpisz ją
    w `instrukcja_szablon/index.html` (opis w `instrukcja_szablon/README.md`) albo wydrukuj stronę z liniami i napisz ręcznie.
-2. Druk: skala 100%. Dwustronnie (41 stron = 21 kartek) na papierze matowym 160–200 g albo jednostronnie do koszulek
-   (dwie strony plecami do siebie w jednej koszulce).
+2. Druk: skala 100%, jednostronnie na zwykłym papierze 80–90 g; do koszulek wkładaj po dwie kartki plecami do siebie
+   (41 stron = 21 koszulek).
 3. Strony wpinamy po kolei. Okładka segregatora: `okladki_przod_tyl_grzbiet.pdf` (plik autora; oryginał w `wersja_planszowa/`, kopia w `do_druku/`) — **strona 1 to przód** (do przezroczystej kieszeni na przodzie), **strona 2 to tył**, **strona 3 to
    pasek grzbietu 10 × 297 mm** (do kieszeni na grzbiecie). Wydrukuj w skali 100%. Grzbiet ma 10 mm szerokości, więc
    **sprawdź, czy tyle ma grzbiet Twojego segregatora** (zmierzony w kroku 0). Jeśli grzbiet jest szerszy, weź etykietę
@@ -73,8 +73,10 @@ spad 1,5 mm i znaczniki cięcia na marginesach.
 
 1. Wydrukuj awersy (`02`, `04`) i rewersy (`03`, `05`) na papierze fotograficznym. Rewersy są ułożone w lustrze —
    arkusz rewersów przyłożony tyłem do arkusza awersów trafia kartą na kartę.
-2. **Sklejanie:** cały arkusz rewersów spryskaj klejem (cienko, z 25 cm), połóż na nim arkusz awersów tyłem do tyłu,
-   wyrównaj **pod światło** (szyba okna) i dociśnij. Dla sztywności można włożyć między nie kartkę 160–200 g.
+2. **Sklejanie (klej w sprayu, jedna puszka na 3 egzemplarze):** cienko spryskaj arkusz rewersów (z 25–30 cm, przy otwartym
+   oknie). Klej kontaktowy łapie od razu, więc połóż na nim papier do pieczenia, zostawiając odsłonięty pasek ok. 1 cm
+   u góry, wyrównaj arkusz awersów tyłem do tyłu **pod światło** (szyba okna), dociśnij górny pasek i powoli wyciągaj
+   papier do pieczenia, wygładzając arkusz od góry do dołu.
 3. Opcjonalnie zalaminuj cały sklejony arkusz (folia 80 mic) — karty będą odporne na palce i krople.
 4. Tnij nożykiem przy metalowej linijce: łącz parami znaczniki cięcia po przeciwnych stronach arkusza
    (najpierw wszystkie cięcia pionowe, potem poziome).
@@ -89,9 +91,11 @@ Arkusze 1–4 to talia Przymierza (zielony rewers), 5–8 talia Hordy (bordowy),
 
 1. Wydrukuj awersy (`06`, 9 arkuszy) i rewersy (`07`, 8 arkuszy; Drzewo nie ma rewersu).
 2. Przytnij tekturę 2 mm na **arkusze A4 (210 × 297 mm)** — dokładnie na wymiar kartki.
-3. Na każdy arkusz tektury naklej klejem w sprayu: z jednej strony **rewersy**, z drugiej **awersy z tym samym numerem
-   arkusza**, oba wyrównane do krawędzi tektury. Rewersy mają większy spad, więc 1–2 mm przesunięcia nie widać.
-4. Docisnąć i zostawić pod stosem książek na kilka godzin (żeby tektura się nie wygięła).
+3. Na każdy arkusz tektury naklej **klejem Wikol** (nierozcieńczonym, cienko i równo, wałkiem albo kartą, na tekturę):
+   z jednej strony **rewersy**, z drugiej **awersy z tym samym numerem arkusza**, oba wyrównane do krawędzi tektury —
+   **obie strony od razu**, żeby tektura się nie wygięła. Rewersy mają większy spad, więc 1–2 mm przesunięcia nie widać.
+   Wygładź suchą ściereczką od środka do brzegów. Pierwszy arkusz zrób na próbę.
+4. Przełóż papierem do pieczenia i zostaw pod stosem książek **na całą noc**.
 5. Wycinaj od strony awersu wzdłuż białej linii każdego sześciokąta (6 prostych cięć na kafelek). Tekturę 2 mm tnie się
    w 2–3 przejściach — nie na siłę.
 6. Krawędzie można przyciemnić czarnym/brązowym markerem — kafelki wyglądają wtedy jak ze sklepu.
@@ -111,7 +115,8 @@ Plik `08_…pdf` ma 4 arkusze: arena Przymierza lewa i prawa połowa, arena Hord
    - tektura A: **Przymierze — lewa połowa** z jednej strony, **Horda — prawa połowa** z drugiej;
    - tektura B: **Przymierze — prawa połowa** z jednej strony, **Horda — lewa połowa** z drugiej.
    Przed klejeniem połóż obie tektury obok siebie i sprawdź, że po obu stronach obrazy się łączą.
-5. Połącz połówki zawiasem z taśmy płóciennej (z jednej strony, ze szczeliną 2–3 mm, żeby plansza się składała;
+   Klej Wikolem jak kafelki (obie strony od razu, noc pod książkami).
+5. Połącz połówki zawiasem z taśmy tkaninowej (duct tape) (z jednej strony, ze szczeliną 2–3 mm, żeby plansza się składała;
    z drugiej strony cienki pasek taśmy albo nic).
 6. Sprawdź: podstawka figurki (30 mm) mieści się w polu z zapasem.
 
