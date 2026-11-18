@@ -18,11 +18,11 @@ describe('hero growth: what the player is told', () => {
     expect(container.textContent).toContain('Rozwinięcie: stopień II');
     // Stats are icons now ("+2" and the sword symbol), not the letter.
     expect(container.textContent).toContain('+2');
-    expect(container.querySelector('img[alt="Atak"]')).not.toBeNull();
+    expect(container.querySelector('[aria-label="Atak"]')).not.toBeNull();
     const fresh = render(<SkillCard faction="dawn" skill="might" />);
     expect(fresh.container.textContent).not.toContain('Rozwinięcie');
     expect(fresh.container.textContent).toContain('+1');
-    expect(fresh.container.querySelector('img[alt="Atak"]')).not.toBeNull();
+    expect(fresh.container.querySelector('[aria-label="Atak"]')).not.toBeNull();
   });
 
   it('experience comes with the reason, as a log line and a structured event', () => {
@@ -81,7 +81,7 @@ describe('hero growth: what the player is told', () => {
     const card = render(<SkillCard faction="dawn" skill="vigor" onChoose={() => {}} />).container;
     expect(card.textContent).toContain('Hart Gaju');
     expect(card.textContent).toContain('+2');
-    expect(card.querySelector('img[alt="Życie"]')).not.toBeNull();
+    expect(card.querySelector('[aria-label="Życie"]')).not.toBeNull();
     const found = render(<ArtifactFound faction="dawn" event={{ type: 'artifact', heroId: 'goldDragon', artifactId: 'boots2', source: 'skrzynia', kept: true }} />).container;
     expect(found.textContent).toContain('Skrzydlate Sandały');
     expect(found.textContent).toContain('skrzynia');

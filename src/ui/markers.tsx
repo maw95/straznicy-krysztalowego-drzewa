@@ -77,10 +77,20 @@ const STAT_ICONS = { Ż: 'hp', A: 'attack', S: 'speed' } as const;
 const STAT_NAMES = { Ż: 'Życie', A: 'Atak', S: 'Szybkość' } as const;
 type StatLetter = keyof typeof STAT_ICONS;
 
-/** The stat symbol used on the cards (heart, swords, bolt), sized to the surrounding text. */
-/** A stat symbol (black, as on the cards); `light` turns it white for dark backgrounds. */
-export function StatIcon({ stat, size = '1.05em', light = false }: { stat: StatLetter; size?: string | number; light?: boolean }) {
-  return <img src={asset(`cards/stats/${STAT_ICONS[stat]}.png`)} alt={STAT_NAMES[stat]} title={STAT_NAMES[stat]} style={{ width: size, height: size, objectFit: 'contain', verticalAlign: '-0.18em', margin: '0 0.06em', filter: light ? 'brightness(0) invert(1)' : undefined }} />;
+/**
+ * A stat symbol (heart, swords, bolt), sized to the surrounding text and drawn in its colour: the picture is only the shape (a mask), filled with `currentColor`,
+ * so it is dark in dark text and light in light text. (`light` is kept for old callers; the colour of the text decides now.)
+ */
+export function StatIcon({ stat, size = '1.05em' }: { stat: StatLetter; size?: string | number; light?: boolean }) {
+  const url = `url(${asset(`cards/stats/${STAT_ICONS[stat]}.png`)})`;
+  return (
+    <span
+      role="img"
+      aria-label={STAT_NAMES[stat]}
+      title={STAT_NAMES[stat]}
+      style={{ display: 'inline-block', width: size, height: size, verticalAlign: '-0.18em', margin: '0 0.06em', backgroundColor: 'currentColor', WebkitMask: `${url} center / contain no-repeat`, mask: `${url} center / contain no-repeat` }}
+    />
+  );
 }
 
 /** Gold and resources as the icons the bottom bar uses; keyed by the word as the text (Polish or English) says it. */

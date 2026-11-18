@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Ikony Życia, Ataku i Szybkości mają kolor otaczającego tekstu (jasny w jasnym, ciemny w ciemnym, kolorowy w kolorowym), a nie zawsze czarny.
+
 - Rada Osady, drzewko: układ jak drzewo rodzinne. Budynek stoi obok swoich dzieci, a rodzic na środku ich rzędu; linie rozgałęziają się z jednej szyny, a pary „lub” (siedliska) łączą się nawiasem na wejściu i jedną wspólną szyną na wyjściu, zamiast czterech krzyżujących się linii. Linie nigdzie na siebie nie nachodzą, w obu frakcjach.
 
 - Podpowiedzi po najechaniu myszą (cena, zdolność, skrót klawiszowy, powód zablokowanego przycisku) pokazują się w pergaminowej dymce w stylu gry, a nie w szarym okienku przeglądarki.
