@@ -5310,10 +5310,34 @@
       "id": "ikony/mapa/surowce-bez-medalu",
       "pliki": ["public/assets/ikony/mapa/zloto.webp", "public/assets/ikony/mapa/drewno.webp", "public/assets/ikony/mapa/ruda.webp", "public/assets/ikony/mapa/pyl.webp"],
       "typ": "ikony zasobów: złoto, drewno, ruda, Gwiezdny Pył jako gołe przedmioty (bez medalu i pierścienia), każda z własną sylwetką i barwą",
-      "opis": "Wymieniają okrągłe medale z wpisów ikony/mapa/krolestwo i ikony/mapa/ksiestwo (te były do siebie zbyt podobne w małej skali). 512x512, przezroczyste tło, po jednym wariancie, wszystkie przyjęte; cięcie do widocznej części i wpasowanie w 256 px: scripts/assets/ikony_surowcow.py. Prompt wspólny: 'Game resource icon in the painted style of Heroes of Might and Magic III, drawn as a bare object with NO circular medal, NO ring, NO frame and NO background ... a thin dark brown outline around the whole silhouette so it reads at 24 pixels. The pile fills about 92% of the square canvas ... the dominant colour is ...'. Złoto: stos żółtych monet z lilijką; drewno: trzy poziome kłody z jasnymi przekrojami i brązową korą; ruda: kanciaste bryły chłodnej szarej rudy z cienkimi rdzawymi żyłkami; pył: świecący fioletowy stożek z błyskami.",
+      "opis": "ZASTĄPIONE tego samego dnia wpisem ikony/mapa/surowce-malowane (te wyszły czytelne, ale płaskie i konturowe, niepasujące stylem do reszty gry). Wymieniają okrągłe medale z wpisów ikony/mapa/krolestwo i ikony/mapa/ksiestwo (te były do siebie zbyt podobne w małej skali). 512x512, przezroczyste tło, po jednym wariancie, wszystkie przyjęte; cięcie do widocznej części i wpasowanie w 256 px: scripts/assets/ikony_surowcow.py. Prompt wspólny: 'Game resource icon in the painted style of Heroes of Might and Magic III, drawn as a bare object with NO circular medal, NO ring, NO frame and NO background ... a thin dark brown outline around the whole silhouette so it reads at 24 pixels. The pile fills about 92% of the square canvas ... the dominant colour is ...'. Złoto: stos żółtych monet z lilijką; drewno: trzy poziome kłody z jasnymi przekrojami i brązową korą; ruda: kanciaste bryły chłodnej szarej rudy z cienkimi rdzawymi żyłkami; pył: świecący fioletowy stożek z błyskami.",
       "scenario_asset": {"zloto": "asset_zn3C6npx6ruYhfBf6ZxDpuii", "drewno": "asset_twRFjJJLoUYyqwVnob91R8M2", "ruda": "asset_TjkDGVtqUtsXa9tRAwEbsWSf", "pyl": "asset_q1hrwHgJvYTW9h3juTT2NAKX"},
       "narzedzie": "Scenario (plan płatny)",
       "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość high, 512x512, przezroczyste tło, 4 x 11 CU",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ikony/mapa/surowce-malowane",
+      "pliki": [
+        "public/assets/ikony/mapa/zloto.webp",
+        "public/assets/ikony/mapa/drewno.webp",
+        "public/assets/ikony/mapa/ruda.webp",
+        "public/assets/ikony/mapa/pyl.webp"
+      ],
+      "typ": "ikony zasobów: złoto, drewno, ruda, Gwiezdny Pył jako gołe, malarskie przedmioty w stylu Heroes III (bez medalu, konturu i ramki)",
+      "opis": "Obecne ikony zasobów. Wymieniają okrągłe medale (ikony/mapa/krolestwo, ksiestwo) i wersję konturową (surowce-bez-medalu): malarskie pociągnięcia pędzla, ciepłe światło z lewej góry, miękki cień pod spodem, widok 3/4 z góry, bez konturu. 512x512 medium, przezroczyste tło; cięcie do widocznej części i wpasowanie w 256 px (WebP): scripts/assets/ikony_surowcow.py. Złoto i drewno po 2 warianty, ruda i pył po 1; przyjęte: złoto B (jaśniejsze, monety wyraźniej oddzielone), drewno A (wyraźne przekroje i lina). Wspólny początek promptu: 'Painted fantasy game resource icon in the style of Heroes of Might and Magic III artwork: rich painterly brushwork, smooth gradients, warm key light from the upper left, deep warm shadows, soft bright rim highlights, a soft translucent contact shadow beneath the object, NO outline, NO frame, NO ring, NO medal, transparent background. Three-quarter view from slightly above. Large readable forms, no tiny noisy grain. The object fills about 90% of the square canvas.' Dalej: złoto 'A heap of gold coins spilling over a small mound, the coins slightly worn with embossed rims, glowing warm orange shadows between the coins and cream-yellow highlights on their edges, a soft golden glint, a few coins standing on edge at the front'; drewno 'A neat bundle of five thick chopped logs bound together with a coil of rope, stacked as a compact pile with the sawn ends facing the viewer, pale honey-coloured wood with warm growth rings and rich dark-brown ridged bark'; ruda 'A cluster of raw iron ore chunks, faceted dark slate-grey and blue-grey rock with warm orange rim light, thin rusty-orange veins, rounded painterly facets'; pył 'A soft glowing mound of magical Star Dust, violet and magenta, with a gentle luminous halo and a few small soft sparkles, painterly rather than grainy'.",
+      "scenario_asset": {
+        "zloto_przyjete_B": "asset_PMLv2WHxWgWvT2QkiHyFZXzd",
+        "zloto_odrzucone_A": "asset_Y68bKpax8hD65E2f17UXsKUB",
+        "drewno_przyjete_A": "asset_ZMbnHLCxRA2KkccBF2i9JBwj",
+        "drewno_odrzucone_B": "asset_zSRuT1hixQ7337vq83wkBfQr",
+        "ruda": "asset_xFpP5uM1pcjcih7t2N2f5yPB",
+        "pyl": "asset_ebXRAjhDUsdwBqBChnCut7VX"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 512x512, przezroczyste tło, 3 CU za obraz (6 obrazów, 18 CU)",
       "data": "2026-11-18",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
