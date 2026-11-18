@@ -2,9 +2,11 @@
 // lasts between runs (best result, runs finished, the heroes unlocked by them, the best of each day's run).
 
 import { STAGES, today, unlockedHeroes, type Run } from '../engine/expedition';
+import type { SaveFile } from './saves';
 
 const RUN_KEY = 'skd-expedition-run';
 const PROFILE_KEY = 'skd-expedition-profile';
+const BATTLE_KEY = 'skd-expedition-battle';
 
 export interface Profile {
   runs: number;
@@ -47,6 +49,16 @@ export const readRun = (): Run | null => {
 
 export const saveRun = (run: Run | null): void => write(RUN_KEY, run);
 
+/** The battle of the run in progress, kept as it stands (the ordinary autosave is shared with every other game): leaving a battle must not give a fresh try. */
+export const saveBattle = (save: SaveFile | null): void => write(BATTLE_KEY, save);
+
+/** The kept battle of this run's current stage, or null. */
+export function readBattle(run: Run): SaveFile | null {
+  const b = read<SaveFile>(BATTLE_KEY);
+  const e = b?.setup?.expedition;
+  return b && Array.isArray(b.actions) && e && e.seed === run.seed && e.stage === run.cleared ? b : null;
+}
+
 /** A run ended (lost, or all stages cleared): the profile takes its result, the run in progress is dropped. */
 export function finishRun(run: Run): Profile {
   const p = readProfile();
@@ -58,6 +70,7 @@ export function finishRun(run: Run): Profile {
   };
   write(PROFILE_KEY, next);
   saveRun(null);
+  saveBattle(null);
   return next;
 }
 

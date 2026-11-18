@@ -205,7 +205,7 @@ export function TreasureDialog({ hero, onChoose }: { hero: HeroState | null; onC
 }
 
 /** "Wyjdź z gry": save under a name and leave, leave without saving, or stay. Online games cannot be saved yet, so they only get leave / stay. */
-export function LeaveDialog({ open, canSave, defaultName, onSaveAndLeave, onLeave, onClose }: { open: boolean; canSave: boolean; defaultName: string; onSaveAndLeave: (name: string) => void; onLeave: () => void; onClose: () => void }) {
+export function LeaveDialog({ open, canSave, note, defaultName, onSaveAndLeave, onLeave, onClose }: { open: boolean; canSave: boolean; note?: string; defaultName: string; onSaveAndLeave: (name: string) => void; onLeave: () => void; onClose: () => void }) {
   const [name, setName] = useState(defaultName);
   useEffect(() => {
     if (open) setName(defaultName);
@@ -215,6 +215,7 @@ export function LeaveDialog({ open, canSave, defaultName, onSaveAndLeave, onLeav
       {open && (
         <Frame crest style={{ width: 'min(520px, 94vw)' }} innerStyle={{ padding: '24px 22px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center' }}>
           <div style={{ fontSize: 22, lineHeight: 1.35 }}>Czy na pewno chcesz wyjść z gry?</div>
+          {note && <div style={{ fontSize: 16, lineHeight: 1.35, color: 'var(--muted)' }}>{note}</div>}
           {canSave && (
             <input type="text" value={name} maxLength={40} aria-label="Nazwa zapisu" onChange={(e) => setName(e.target.value)} style={{ width: '100%', fontSize: 18, padding: '6px 10px', boxSizing: 'border-box' }} />
           )}

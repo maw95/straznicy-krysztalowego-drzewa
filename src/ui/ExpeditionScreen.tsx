@@ -5,15 +5,16 @@ import { useEffect, useRef, useState } from 'react';
 import { UNITS } from '../engine/data';
 import { expeditionSetup, newRun, RELIC_BY_ID, relicOffer, runOf, runScore, STAGES, stageOf, today, dailySeed, type Run } from '../engine/expedition';
 import type { GameState, SetupOptions } from '../engine/types';
+import type { SaveFile } from './saves';
 import { fetchDaily, savedToken, submitDaily } from '../online/api';
 import type { RankingRow } from '../online/api';
 import { Frame, Portrait, Ribbon } from './common';
-import { dailyDone, finishRun, heroesOf, readProfile, readRun, saveRun } from './expeditionRun';
+import { dailyDone, finishRun, heroesOf, readBattle, readProfile, readRun, saveRun } from './expeditionRun';
 
 const heroName = (id: string) => UNITS[id]?.name ?? id;
 const seedNow = () => Math.floor(Math.random() * 900000) + 1000;
 
-export function ExpeditionScreen({ onStart, onBack }: { onStart: (setup: SetupOptions) => void; onBack: () => void }) {
+export function ExpeditionScreen({ onStart, onLoad, onBack }: { onStart: (setup: SetupOptions) => void; onLoad: (save: SaveFile) => void; onBack: () => void }) {
   const [profile] = useState(readProfile);
   const [run, setRun] = useState<Run | null>(readRun);
   const [hero, setHero] = useState('goldDragon');
@@ -25,9 +26,14 @@ export function ExpeditionScreen({ onStart, onBack }: { onStart: (setup: SetupOp
     saveRun(r);
     setRun(r);
   };
-  const fight = (r: Run) => onStart(expeditionSetup(r));
+  /** A battle left half-way goes on from where it stood (no fresh try); otherwise the stage starts. */
+  const fight = (r: Run) => {
+    const kept = readBattle(r);
+    if (kept) onLoad(kept);
+    else onStart(expeditionSetup(r));
+  };
 
-  if (run && !run.lost) return <RunPage run={run} onFight={() => fight(run)} onAbandon={() => { finishRun(run); setRun(null); }} onBack={onBack} />;
+  if (run && !run.lost) return <RunPage run={run} battleKept={readBattle(run) !== null} onFight={() => fight(run)} onAbandon={() => { finishRun(run); setRun(null); }} onBack={onBack} />;
 
   return (
     <div data-expedition>
@@ -65,7 +71,7 @@ export function ExpeditionScreen({ onStart, onBack }: { onStart: (setup: SetupOp
   );
 }
 
-function RunPage({ run, onFight, onAbandon, onBack }: { run: Run; onFight: () => void; onAbandon: () => void; onBack: () => void }) {
+function RunPage({ run, battleKept, onFight, onAbandon, onBack }: { run: Run; battleKept: boolean; onFight: () => void; onAbandon: () => void; onBack: () => void }) {
   const stage = stageOf(run.cleared);
   return (
     <div data-expedition-run>
@@ -91,7 +97,7 @@ function RunPage({ run, onFight, onAbandon, onBack }: { run: Run; onFight: () =>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
           <button className="btn plate parch wizard-nav" onClick={onBack}>← Do menu</button>
           <button className="btn plate parch" data-expedition-abandon style={{ padding: '6px 18px' }} onClick={onAbandon}>Porzuć wyprawę</button>
-          <button className="btn prim btn-big" data-enter data-expedition-fight onClick={onFight}>Walcz</button>
+          <button className="btn prim btn-big" data-enter data-expedition-fight onClick={onFight}>{battleKept ? 'Wróć do bitwy' : 'Walcz'}</button>
         </div>
       </Frame>
     </div>

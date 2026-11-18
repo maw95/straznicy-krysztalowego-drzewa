@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wyjście z bitwy Ekspedycji nie daje już darmowej powtórki: zwykła wyprawa zachowuje bitwę w stanie, w jakim ją zostawiłeś, a na stronie wyprawy jest przycisk „Wróć do bitwy”. Wyjście z bitwy wyprawy dnia kończy ją, a liczą się etapy przebyte do tej pory. Okno wyjścia mówi, co się stanie.
 - Zapisy Kampanii i Ekspedycji: scenariusz kampanii zapiszesz i wczytasz jak każdą partię, a lista „Zapisane gry” podpisuje go („Kampania: Pierwsza dolina”). Wyprawa w toku ma na liście wpis „Ekspedycja w toku” z przyciskiem „Wznów”. W bitwie Ekspedycji nie ma ręcznego zapisu, bo wyprawa ma jedno życie i sama zapisuje się między bitwami.
 
 ## 2.13.0 — 2026-11-18

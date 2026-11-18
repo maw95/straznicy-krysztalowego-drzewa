@@ -244,7 +244,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
       )}
 
       {step === 'campaign' && <CampaignScreen onStart={onStart} onBack={() => setStep('home')} />}
-      {step === 'expedition' && <ExpeditionScreen onStart={onStart} onBack={() => setStep('home')} />}
+      {step === 'expedition' && <ExpeditionScreen onStart={onStart} onLoad={onLoad} onBack={() => setStep('home')} />}
       {step === 'where' && (
         <Frame crest style={{ width: 'min(900px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{intent === 'new' ? 'Gdzie grasz?' : 'Skąd wczytać grę?'}</Ribbon>

@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Wyjście z bitwy Ekspedycji nie daje już darmowej powtórki: zwykła wyprawa zachowuje bitwę w stanie, w jakim ją zostawiłeś, a na stronie wyprawy jest przycisk „Wróć do bitwy”. Wyjście z bitwy wyprawy dnia kończy ją, a liczą się etapy przebyte do tej pory. Okno wyjścia mówi, co się stanie.": "Leaving an Expedition battle no longer gives a free retry: an ordinary run keeps the battle as you left it, and the run page has a \"Back to the battle\" button. Leaving a battle of the run of the day ends it, and the stages cleared so far count. The leave window says what will happen.",
   "Zapisy Kampanii i Ekspedycji: scenariusz kampanii zapiszesz i wczytasz jak każdą partię, a lista „Zapisane gry” podpisuje go („Kampania: Pierwsza dolina”). Wyprawa w toku ma na liście wpis „Ekspedycja w toku” z przyciskiem „Wznów”. W bitwie Ekspedycji nie ma ręcznego zapisu, bo wyprawa ma jedno życie i sama zapisuje się między bitwami.": "Saves of the Campaign and the Expedition: a campaign scenario can be saved and loaded like any game, and the \"Saved games\" list labels it (\"Campaign: First Valley\"). A run in progress has an \"Expedition in progress\" entry in the list with a \"Resume\" button. There is no manual save in an Expedition battle, because a run has one life and saves itself between battles.",
 });
 

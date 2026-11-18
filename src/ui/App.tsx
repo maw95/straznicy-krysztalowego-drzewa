@@ -32,6 +32,8 @@ import { fightLevelAt } from './fightBadges';
 import { DigitalCardsContext, UnitCard } from './UnitCard';
 import { DigitalContext, HeroLevelsContext, HpScaleContext, StatScaleContext } from './statScale';
 import { autopilotAction, supportSlots } from '../engine/kingdom';
+import { finishRun, saveBattle } from './expeditionRun';
+import { runOf } from '../engine/expedition';
 import { readAutosave, replay, saveNamed, writeAutosave, type BugReport, type SaveFile } from './saves';
 import { BugReportDialog } from './BugReportDialog';
 import { TesterDialog } from './TesterDialog';
@@ -50,7 +52,7 @@ import { DEV_TOOLS_ALLOWED, DevPanel } from './DevPanel';
 import { useAutoFullscreen } from './fullscreen';
 import { ChatBox, OnlineOverlay, OnlineScreen } from './OnlineScreen';
 import { figuresOn, setFiguresEdition, setFiguresOn } from './FigureLayer';
-import { savedToken, submitResult, type BotSpeed, type Invitation, type OnlineSession, type OnlineState } from '../online/api';
+import { savedToken, submitDaily, submitResult, type BotSpeed, type Invitation, type OnlineSession, type OnlineState } from '../online/api';
 import { useOnline } from '../online/useOnline';
 
 /** Milliseconds between two bot moves at each pace. */
@@ -432,6 +434,7 @@ export function App() {
     if (isOnline) return;
     const save = saveFile(game);
     writeAutosave(game.phase === 'over' ? null : save);
+    if (game.setup.expedition) saveBattle(game.phase === 'over' ? null : save);
     const last = journaled.current;
     const fresh = last.game?.setup.seed !== game.setup.seed;
     if (fresh || game.phase !== last.phase || game.phase === 'over' || save.actions.length - last.actions >= 10 || save.actions.length < last.actions) {
@@ -746,6 +749,15 @@ export function App() {
 
   /** "Nowa gra": online it also leaves the room (the game goes on for the others, a bot takes the seats). */
   const leaveGame = () => {
+    // Leaving a battle of the run of the day ends the run (one life, one ranking result); an ordinary run keeps its battle to go back to.
+    if (game?.setup.expedition?.daily && game.phase !== 'over') {
+      const run = runOf(game.setup);
+      if (run) {
+        finishRun(run);
+        if (savedToken()) submitDaily(run.daily!, run.cleared).catch(() => undefined);
+      }
+      writeAutosave(null);
+    }
     if (isOnline) session!.send({ type: 'leaveRoom' });
     forgetSeen();
     setGame(null);
@@ -991,6 +1003,7 @@ export function App() {
         <LeaveDialog
           open={showLeave}
           canSave={(!isOnline || isOnlineOwner) && !game.setup.expedition}
+          note={game.setup.expedition && game.phase !== 'over' ? (game.setup.expedition.daily ? 'Wyjście z wyprawy dnia kończy ją: liczą się etapy przebyte do tej pory.' : 'Bitwa Ekspedycji zapisuje się sama: wrócisz do niej z ekranu wyprawy.') : undefined}
           defaultName={defaultSaveName}
           onClose={() => setShowLeave(false)}
           onLeave={() => {

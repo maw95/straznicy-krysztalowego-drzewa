@@ -160,4 +160,7 @@ register({
   'Etap {0} z {1} · relikwie: {2}': 'Stage {0} of {1} · relics: {2}',
   'Kampania: {0} · runda {1}': 'Campaign: {0} · round {1}',
   'Ekspedycja: etap {0} · runda {1} · {2}': 'Expedition: stage {0} · round {1} · {2}',
+  'Wróć do bitwy': 'Back to the battle',
+  'Wyjście z wyprawy dnia kończy ją: liczą się etapy przebyte do tej pory.': 'Leaving the run of the day ends it: the stages cleared so far count.',
+  'Bitwa Ekspedycji zapisuje się sama: wrócisz do niej z ekranu wyprawy.': 'An Expedition battle saves itself: you can return to it from the run page.',
 });
