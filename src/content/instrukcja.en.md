@@ -84,7 +84,7 @@ For a win you get **ranking points**; the harder the difficulty, the more. On Ve
 @words: mode, co-op, rivalry, arena, hot-seat, one screen, bots, evil automaton, 8 players, factions, team
 
 - **Co-op** (1–3 players): everyone plays the Dawn Covenant against the **evil automaton**, that is the computer-controlled Horde ([Evil automaton and bots](#evil-automaton-and-bots)).
-- **Rivalry** (2–8 players): some play the Covenant, others the Horde, at most three players per faction. With seven and eight players each side has a fourth hero (the Brave Duck on the Covenant's side and the Warchief of the Horde). From level VI rivalry is limited to six players, because the second hero (the commander) takes a seat. You set who is human and who is the computer at each seat.
+- **Rivalry** (2–8 players): some play the Covenant, others the Horde, at most three players per faction. With seven and eight players each side has a fourth hero (the Silver She-Wolf on the Covenant's side and the Dusk Manticore on the Horde's). From level VI rivalry is limited to six players, because the second hero (the commander) takes a seat. You set who is human and who is the computer at each seat.
 - **Arena**: one battle without a map ([Arena](#arena)).
 
 Several players at **one screen** (hot-seat) pass the device around. In rivalry the hand-over screen hides the faction's treasures between players; in co-op the treasures are shared and nothing is hidden. One person can take several seats and play them in turn. The **Autoplay** option lets bots play for humans as well (useful for watching a game).

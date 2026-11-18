@@ -84,7 +84,7 @@ Za wygraną dostajesz **punkty rankingu**; im trudniej, tym więcej. Na Bardzo t
 @słowa: tryb, kooperacja, rywalizacja, arena, hot-seat, jeden ekran, boty, automat zła, 8 graczy, frakcje, drużyna
 
 - **Kooperacja** (1–3 graczy): wszyscy grają Przymierzem Świtu przeciw **automatowi zła**, czyli komputerowej Hordzie ([Automat zła i boty](#automat-zla-i-boty)).
-- **Rywalizacja** (2–8 graczy): jedni grają Przymierzem, drudzy Hordą, najwyżej trzech graczy na frakcję. Przy siedmiu i ośmiu graczach każda strona ma czwartego bohatera (Dzielną Kaczkę po stronie Przymierza i Wodza Hordy). Od poziomu VI w rywalizacji zostaje do sześciu graczy, bo drugi bohater (dowódca) zajmuje miejsce. Kto jest człowiekiem, a kto komputerem, ustawiasz przy każdym miejscu.
+- **Rywalizacja** (2–8 graczy): jedni grają Przymierzem, drudzy Hordą, najwyżej trzech graczy na frakcję. Przy siedmiu i ośmiu graczach każda strona ma czwartego bohatera (Srebrną Wilczycę po stronie Przymierza i Mantykorę Zmierzchu po stronie Hordy). Od poziomu VI w rywalizacji zostaje do sześciu graczy, bo drugi bohater (dowódca) zajmuje miejsce. Kto jest człowiekiem, a kto komputerem, ustawiasz przy każdym miejscu.
 - **Arena**: jedna bitwa bez mapy ([Arena](#arena)).
 
 Kilku graczy przy **jednym ekranie** (hot-seat) przekazuje sobie urządzenie. W rywalizacji ekran przekazania ukrywa skarby frakcji między graczami; w kooperacji skarby są wspólne i niczego się nie ukrywa. Jedna osoba może zająć kilka miejsc i grać nimi na zmianę. Opcja **Autoplay** pozwala botom grać także za ludzi (przydaje się do oglądania gry).

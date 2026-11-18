@@ -44,9 +44,7 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
 
 **55. DLC: Wolne Kompanie, Dwór Wiecznego Szronu, Imperium Piasków, Rój Głębin, Władcy Przypływów (L każda; po 54).** Pełna macierz balansu (`make sim-matrix`) raz na kilka frakcji, w tle, nocą.
 
-**56a. Dźwięki czwartych bohaterów (S + kredyty).** Mantykora Zmierzchu ma dźwięk śmierci (18.11, `duskManticore_smierc.mp3`, tylko śmierć: `DEATH_ONLY` w `src/ui/sfx.ts`, atak gra zwykły dźwięk walki). Brakuje: dźwięku ataku Mantykory (ElevenLabs SFX przez Scenario kończy się timeoutem po ok. 4 min: 4 próby 18.11, razem ok. 18 CU strat; prompt w `.tmp/zrodla/duskManticore/manifest.json`) oraz ataku i śmierci Srebrnej Wilczycy (`moonWolf`; 5 prób bez skutku). Po wygenerowaniu: `public/assets/dzwieki/jednostki/<id>_atak|_smierc.mp3`, id do `UNIT_SOUNDS` w `src/ui/sfx.ts` (z `DEATH_ONLY` usunąć), wpisy w `assets.json`. Do oceny autora: atak Mantykory (ogon zwija się nad grzbietem, słabo „do przodu”), chód Wilczycy (dryf w prawo na zawinięciu pętli), trafienie Mantykory (skok na końcu: ewentualnie pominąć klip).
 
-**57a. Slajdy wprowadzenia PL 08–11 są nieaktualne** (strona „wersje” zniknęła, poziomów jest 8). Odświeża je `npx tsx scripts/browser/intro-slajdy.ts` (wersje EN już są aktualne); do zrobienia po Twojej zgodzie na zmianę polskich zasobów, razem z poprawą tekstów slajdów.
 
 ## 2. Tylko autor (Claude tego nie bierze)
 - **Premiera na Steamie** (L): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery: **3.0** (potwierdzone 17.11).

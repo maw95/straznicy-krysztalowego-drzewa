@@ -128,10 +128,10 @@ export const SLIDES: Slide[] = [
   },
   {
     id: '09-wersje',
-    title: 'Dwie wersje gry',
+    title: 'Menu krok po kroku',
     text: [
-      'Wersja cyfrowa jest domyślna: jednostki w nowej grafice 2D z animacjami, arena z poziomymi heksami, duże jednostki na dwóch polach i poziomy złożoności do wyboru.',
-      'Wersja planszowa to wierna planszówka: figurki 3D, zasady bez zmian i szybkie pojedynki. Jest dodatkiem dla tych, którzy chcą zagrać tak, jak przy stole.',
+      'Nowa gra prowadzi przez kilka stron: tryb (Rywalizacja, Kooperacja, Arena, Kampania albo Ekspedycja), potem „Ten komputer” albo „Przez internet”, poziom złożoności, cel, mapa i gracze.',
+      'Wersja planszowa (figurki 3D, zasady bez zmian i szybkie pojedynki) czeka pod małym linkiem „Wersja planszowa” na pierwszej stronie menu.',
     ],
     stand: ['ui/cover.jpg'],
     pan: ['scale(1.04)', 'scale(1.1)'],
@@ -140,8 +140,8 @@ export const SLIDES: Slide[] = [
     id: '10-poziomy',
     title: 'Poziomy złożoności',
     text: [
-      'Przygoda to zasady z planszówki w wersji cyfrowej, najprostszy start, także dla dzieci. Wyprawa dodaje rozwój bohaterów: doświadczenie, umiejętności, artefakty, obiekty na mapie i neutralnych przeciwników.',
-      'Kolejne poziomy (Księstwo z pełną gospodarką, potem bohaterowie z magią i frakcje) pojawią się niedługo. „Własne ustawienia” pozwalają przełączać zasady osobno.',
+      'Siedem poziomów, od I do VII: Spacer, Przygoda, Wyprawa, Osada, Księstwo, Królestwo i Imperium. Każdy dodaje mechaniki do poprzedniego: od prostych pojedynków dla najmłodszych, przez rozwój bohaterów i gospodarkę, po magię, frakcje i Relikt.',
+      'Poziom wybierasz w kreatorze Nowej gry. „Własne ustawienia” pozwalają przełączać zasady osobno.',
     ],
     stand: ['ui/cover.jpg'],
     pan: ['scale(1.04)', 'scale(1.1)'],
@@ -150,7 +150,7 @@ export const SLIDES: Slide[] = [
     id: '11-cele',
     title: 'Różne cele gry',
     text: [
-      'Od poziomu Wyprawa wybierasz cel: Kryształy do Drzewa, Punkty kontrolne, Przetrwanie fal Hordy, Boss w legowisku pośrodku mapy albo Artefakt do zaniesienia do bazy.',
+      'Od poziomu Wyprawa wybierasz cel: Kryształy do Drzewa, Punkty kontrolne, Przetrwanie fal Hordy, Boss w legowisku pośrodku mapy albo Artefakt do zaniesienia do bazy. Na wyższych poziomach dochodzą Podbój i Relikt.',
       'Do tego mapa: losowa w wybranym kształcie (trójkąt, prostokąt, pierścień, wyspy) albo gotowa, ręcznie narysowana, jak Cieśnina i Dolina.',
     ],
     stand: ['ui/cover.jpg'],
@@ -160,7 +160,7 @@ export const SLIDES: Slide[] = [
     id: '12-online',
     title: 'Online i przy jednym ekranie',
     text: [
-      'Grasz z botami, z kimś przy jednym ekranie (hot-seat) albo przez internet z kontem: zakładasz stół, zapraszasz znajomych albo podajesz im kod pokoju. Do sześciu graczy w rywalizacji.',
+      'Grasz z botami, z kimś przy jednym ekranie (hot-seat) albo przez internet z kontem: zakładasz stół, zapraszasz znajomych albo podajesz im kod pokoju. Do ośmiu graczy w rywalizacji.',
       'Partię zapiszesz pod własną nazwą i wczytasz później z menu „Wczytaj grę”.',
     ],
     stand: ['ui/cover.jpg'],

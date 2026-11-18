@@ -5599,9 +5599,51 @@
       "pliki": [
         "public/assets/dzwieki/jednostki/duskManticore_smierc.mp3"
       ],
-      "typ": "dźwięk śmierci jednostki duskManticore (dźwięku ataku nie ma: 3 próby 18.11 skończyły się timeoutem Scenario)",
+      "typ": "dźwięk śmierci jednostki duskManticore",
       "prompt": "Giant manticore beast defeated: a long deep lion roar that slowly weakens into a low groan and fades away into silence, fantasy game sound effect, no music",
       "scenario_asset": "asset_XEDCGMLqk361vrLg6Ya3zBxK",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 3,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/duskManticore_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/duskManticore_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki duskManticore",
+      "prompt": "Fierce beast roar and a sharp tail whip swish, fantasy monster attack, no music",
+      "scenario_asset": "asset_nQKyY9DCW8PS8i74t2igYCr7",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/moonWolf_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/moonWolf_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki moonWolf",
+      "prompt": "Silver she-wolf attacking: a sharp aggressive wolf snarl and a quick snap of jaws, fantasy game attack sound effect, no music",
+      "scenario_asset": "asset_oijZdgcJLjY6kWsbPK2XGBh1",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 2 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/moonWolf_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/moonWolf_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki moonWolf",
+      "prompt": "Wolf defeated: a mournful long wolf howl that breaks into a weak whimper and fades into silence, fantasy game sound effect, no music",
+      "scenario_asset": "asset_4ZrMwtn8BkXF49uAtTUMsqTb",
       "narzedzie": "Scenario (plan płatny)",
       "model": "ElevenLabs Sound Effects v3, 3,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
       "data": "2026-11-18",
