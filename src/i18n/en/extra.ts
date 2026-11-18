@@ -12,6 +12,7 @@ register({
   'Jeżozwierza': 'the Porcupine', 'Srebrnego Lisa': 'the Silver Fox', 'Centaura': 'the Centaur', 'Sowy Świtu': 'the Dawn Owl', 'Alabastrowego Odyńca': 'the Alabaster Boar', 'Driady Łuczniczki': 'the Dryad Archer', 'Opiekuna Drzewa': 'the Tree Guardian', 'Białego Jelenia': 'the White Stag', 'Feniksa Świtu': 'the Dawn Phoenix',
   'Szczurołaka': 'the Ratman', 'Goblina Procarza': 'the Goblin Slinger', 'Piekielnego Ogara': 'the Hellhound', 'Gargulca': 'the Gargoyle', 'Salamandry Popiołu': 'the Ash Salamander', 'Trolla Jaskiniowego': 'the Cave Troll', 'Herszta Minotaurów': 'the Minotaur Chief', 'Wiwerny Cienia': 'the Shadow Wyvern', 'Behemota Zagłady': 'the Doom Behemoth',
   'Rozbudowa na „{0}”: {1}': 'Upgrade to "{0}": {1}',
+  'można ulepszyć': 'can be upgraded',
   'Najpierw zbuduj Koszary.': 'Build the Barracks first.',
   'Zbudowanie tego siedliska wyklucza drugie siedlisko tego poziomu do końca gry.': 'Building this dwelling shuts out the other dwelling of this tier for the rest of the game.',
   'Cena: wszystkie Odłamki Pierwotnej Iskry (frakcja ma {0} z {1}). Buduje bohater stojący w tej osadzie, który sam niesie wszystkie Odłamki{2}: przekaż je sobie wcześniej na mapie.': 'Price: all the Shards of the Primal Spark (the faction has {0} of {1}). It is built by the hero standing in this settlement who carries all the Shards himself{2}: pass them to him earlier on the map.',

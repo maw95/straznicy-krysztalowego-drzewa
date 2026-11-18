@@ -1,7 +1,7 @@
 // The tree of the settlement's buildings (the Rada Osady view): a node per building, joined by lines that run straight and bend at right angles with
 // rounded corners (like Heroes: Olden Era). The graph is the engine's BUILDING_PARENT (docs/BUDYNKI.md 0a); the council is its root and always stands.
 // Level 6: both dwellings of a tier stand side by side with a "lub" badge between them (one excludes the other). The colour of a node says its state:
-// built (beige), can be built now (green), only resources missing (amber), a required building missing (grey stone), shut out for good (red).
+// built (beige), can be upgraded now (turquoise, with the next level's name and price), can be built now (green), only resources missing (amber), a required building missing (grey stone), shut out for good (red).
 
 import { raceOf } from '../engine/teams';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
@@ -28,7 +28,7 @@ type NodeId = string;
 /** A node that is not a building of the engine's graph (level 6: the dwellings), drawn after its parents. `choice` joins the nodes of one tier (one excludes the other). */
 export interface ExtraNode { id: string; parents: string[]; name: string; sub?: string; cost?: Cost; picture: string; state: NodeState; choice?: string }
 
-export type NodeState = 'built' | 'open' | 'poor' | 'blocked' | 'full' | 'excluded';
+export type NodeState = 'built' | 'open' | 'upgrade' | 'poor' | 'blocked' | 'full' | 'excluded';
 
 /** What a node shows: built (with its level), free to buy now, only resources missing, a required building missing, or fully upgraded. */
 export function nodeState(state: GameState, s: Settlement, faction: TeamId, b: BuildingId): NodeState {
@@ -42,7 +42,7 @@ export function nodeState(state: GameState, s: Settlement, faction: TeamId, b: B
   if (cost === null) return 'full';
   if (buildBlock(s, b) || (b === 'barracks' && s.land !== faction)) return 'blocked';
   if (!canPay(state, faction, cost)) return level > 0 ? 'built' : 'poor';
-  return level > 0 ? 'built' : 'open';
+  return level > 0 ? 'upgrade' : 'open';
 }
 
 /** A line from the right edge of a parent to the left edge of a child: straight, bending at right angles with rounded corners (the bend sits in the gap between the columns). */
@@ -115,6 +115,7 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
     const cost = buildCost(state, s, bid);
     if (st === 'blocked') return <span className="tn-sub">{buildBlock(s, bid) ?? 'Tylko w osadzie własnej frakcji.'}</span>;
     if (st === 'full') return <span className="tn-sub">poziom {level}, gotowe</span>;
+    if (level > 0) return <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="tn-sub tn-up">▲ {BUILDING_NAMES[bid][level]}</span><CostIcons cost={cost!} have={have} size={23} /></span>;
     return <span><CostIcons cost={cost!} have={have} size={23} /></span>;
   };
   const renderNode = (n: NodeId, { x, y }: { x: number; y: number }) => {
@@ -146,7 +147,7 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
     ro.observe(el);
     return () => ro.disconnect();
   }, [width, height, sparkAside]);
-  const legend: Array<[string, string]> = [['built', 'wybudowany'], ['open', 'można zbudować'], ['poor', 'brakuje surowców'], ['blocked', 'brakuje budynku'], ['excluded', 'zablokowany']];
+  const legend: Array<[string, string]> = [['built', 'wybudowany'], ['upgrade', 'można ulepszyć'], ['open', 'można zbudować'], ['poor', 'brakuje surowców'], ['blocked', 'brakuje budynku'], ['excluded', 'zablokowany']];
   return (
     <div className="building-tree" data-building-tree ref={outer}>
       <div style={{ display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'flex-start' }}>

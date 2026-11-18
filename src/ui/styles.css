@@ -942,6 +942,8 @@ button.sb-slot:disabled { cursor: default; }
 .tn-sub { font-size: 13px; color: #6B4A22; }
 /* Node states: built = beige (the base), can be built = green, only resources missing = amber, a required building missing = grey stone, shut out = red and dashed. */
 .tree-node.open { border-color: #1F6B2A; background: linear-gradient(#E3F5CC, #BDE29B); }
+.tree-node.upgrade { border-color: #1D7F8C; background: linear-gradient(#D9F2F0, #A7D9D8); }
+.tn-up { font-weight: 700; color: #11606B; }
 .tree-node.poor { border-color: #C9822B; background: linear-gradient(#F8E7B8, #EBC77A); }
 .tree-node.blocked { border-color: #6F7580; background: linear-gradient(#CFD2D7, #ABB0B8); color: #2C2F35; }
 .tree-node.blocked .tn-pic { filter: grayscale(0.7) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.4)); opacity: 0.85; }
@@ -954,6 +956,7 @@ button.sb-slot:disabled { cursor: default; }
 .tree-legend span { display: inline-flex; align-items: center; gap: 6px; }
 .tree-swatch { width: 16px; height: 16px; border-radius: 4px; border: 2px solid #D9B45A; background: linear-gradient(#F3E6C4, #D9C592); }
 .tree-swatch.open { border-color: #1F6B2A; background: linear-gradient(#E3F5CC, #BDE29B); }
+.tree-swatch.upgrade { border-color: #1D7F8C; background: linear-gradient(#D9F2F0, #A7D9D8); }
 .tree-swatch.poor { border-color: #C9822B; background: linear-gradient(#F8E7B8, #EBC77A); }
 .tree-swatch.blocked { border-color: #6F7580; background: linear-gradient(#CFD2D7, #ABB0B8); }
 .tree-swatch.excluded { border-color: #8A2A2A; background: linear-gradient(#EBD0CB, #D3A39C); }

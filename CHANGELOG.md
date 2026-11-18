@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Rada Osady: budynek, który stoi i który stać cię ulepszyć (np. Targ na Duży targ), ma turkusową ramkę, strzałkę ▲ z nazwą ulepszenia i jego ceną; w legendzie jest „można ulepszyć”. Beżowy to wybudowany, którego nie stać cię jeszcze ulepszyć albo który jest na najwyższym poziomie.
 - Rada Osady: zablokowane budynki mają zwykłą, ciągłą ramkę, ikony surowców w cenach są większe i czytelne, a Pierwotna Iskra stoi osobno w prawym górnym rogu drzewka, niepołączona z niczym. Kliknięte siedlisko pokazuje własną nazwę, opis („Umożliwia wykupienie Sowy Świtu jako pomocnika.”), kartę jednostki, cenę i przycisk „Zbuduj”. Dolny panel z opisem jest mały, ciemny, w złotej ramce z narożnikami, a zamiast „Wyjdź z osady” jest tylko przycisk powrotu do osady: ikona wyjścia obrócona strzałką w lewo.
 - Skarbiec można ulepszyć: Wielki skarbiec (6 zł, 2 rudy i 1 Pył) przynosi +2 zł na rundę zamiast +1 zł.
 - Koszary: karty jednostek są większe (rosną razem z oknem), po prawej stronie widać kartę wybranej jednostki i jej animację, w której ruch i atak następują po sobie w pętli, a jednostka ma na niej swój prawdziwy rozmiar z pola bitwy (smok jest większy od druida).
