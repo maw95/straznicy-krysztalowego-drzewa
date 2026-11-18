@@ -299,7 +299,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial }: { on
             <CentredChoice label="Wielkość mapy">
               {sizes.map((m) => (
                 <Tip key={m} text={mapTip(m)}>
-                  <button className={`${chip(d.mapSize === m)} size-btn`} aria-pressed={d.mapSize === m} onClick={() => patch({ mapSize: m })}>
+                  <button className={`${chip(d.mapSize === m)} size-btn map-size-btn`} aria-pressed={d.mapSize === m} onClick={() => patch({ mapSize: m })}>
                     <b className="size-code">{SIZE_CODES[m]}</b>
                     <span>{MAP_SIZE_NAMES[m]}</span>
                   </button>

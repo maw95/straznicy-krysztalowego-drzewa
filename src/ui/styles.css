@@ -974,3 +974,6 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
   .home-card .opt-card-title { font-size: 20px; }
   .home-card .opt-card-text { font-size: 13px; line-height: 1.25; }
 }
+/* Map size buttons: one line of text each, so every button has the same size (the name "Bardzo duża" used to wrap and made XL taller). */
+.map-size-btn { width: 128px; padding: 10px 4px; white-space: nowrap; }
+.map-size-btn > span:not(.size-code) { font-size: 16px; }
