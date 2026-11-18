@@ -377,7 +377,7 @@ function tableSummary(t: TableConfig): string[] {
   }
   if (t.mode !== 'arena' && !(t.shape === 'custom' && t.tier !== 'adventure')) parts.push(`Wielkość: ${MAP_SIZE_NAMES[t.mapSize]}`);
   parts.push(`Gracze: ${t.seats.length}`);
-  if (t.level === 'zero' && t.digital) parts.push('Poziom 0');
+  if (t.level === 'zero' && t.digital) parts.push('Poziom I');
   else parts.push(`${t.mode === 'arena' ? 'Komputer' : 'Trudność'}: ${(t.digital ? LEVELS : BOARD_LEVELS).find(([l]) => l === t.level)?.[1] ?? t.level}`);
   return parts;
 }

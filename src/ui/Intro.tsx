@@ -115,7 +115,7 @@ export const SLIDES: Slide[] = [
     title: 'Razem albo przeciwko sobie',
     text: [
       'W kooperacji wszyscy gracie Przymierzem, a Hordę prowadzi automat. W rywalizacji jedni biorą Przymierze, drudzy Hordę.',
-      'Spacer (poziom 0) da się ogarnąć w kilka minut, nawet z pięciolatkiem. Od poziomu 1 gra się pełnymi bitwami: Łatwy daje komputerowi słabszy start, Normalny to zasady jak w instrukcji, a Trudny to wyzwanie dla dorosłych.',
+      'Spacer (poziom I) da się ogarnąć w kilka minut, nawet z pięciolatkiem. Od poziomu II gra się pełnymi bitwami: Łatwy daje komputerowi słabszy start, Normalny to zasady jak w instrukcji, a Trudny to wyzwanie dla dorosłych.',
     ],
     stand: ['cards/art/goldDragon.jpg', 'cards/art/werewolfLord.jpg'],
     pan: ['scale(1.03)', 'scale(1.12)'],

@@ -27,11 +27,11 @@ interface Props {
 }
 
 const LAYER_TIPS: Record<CustomLayer, string> = {
-  none: 'Poziom 2: bohaterowie rosną, ale nie ma osad ani gospodarki.',
-  kingdom: 'Poziom 3: osady, złoto, rekrutacja, targ z artefaktami.',
-  economy: 'Poziom 4: drewno, ruda i Pył, budynki za surowce, oblężenia osad.',
-  realm: 'Poziom 5: drugi bohater najęty w karczmie, czary w bitwie i na mapie.',
-  empire: 'Poziom 6: Odłamki i budynek Pierwotnej Iskry, mechaniki frakcji, Relikt.',
+  none: 'Poziom III: bohaterowie rosną, ale nie ma osad ani gospodarki.',
+  kingdom: 'Poziom IV: osady, złoto, rekrutacja, targ z artefaktami.',
+  economy: 'Poziom V: drewno, ruda i Pył, budynki za surowce, oblężenia osad.',
+  realm: 'Poziom VI: drugi bohater najęty w karczmie, czary w bitwie i na mapie.',
+  empire: 'Poziom VII: Odłamki i budynek Pierwotnej Iskry, mechaniki frakcji, Relikt.',
 };
 
 /** A button with a tip, the same in every section. */
@@ -52,7 +52,7 @@ export function CustomSwitchRows({ mode, growth, layer, battleMode, rules, disab
   return (
     <>
       <Row label="Poziomy i mechaniki">
-        <Choice on={!growth} disabled={disabled} tip="Poziom 1: bohaterowie mają stałe liczby przez całą grę." onClick={() => onGrowth(false)}>Bez rozwoju</Choice>
+        <Choice on={!growth} disabled={disabled} tip="Poziom II: bohaterowie mają stałe liczby przez całą grę." onClick={() => onGrowth(false)}>Bez rozwoju</Choice>
         {CUSTOM_LAYERS.map((l) => (
           <Choice key={l} on={growth && layer === l} disabled={disabled} tip={LAYER_TIPS[l]} onClick={() => { onGrowth(true); onLayer(l); }}>{CUSTOM_LAYER_NAMES[l]}</Choice>
         ))}

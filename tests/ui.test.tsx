@@ -243,7 +243,7 @@ describe('win rate and points', () => {
     const rows = [...doc.querySelectorAll('table[aria-label="Dokładne dane"] tr')].map((tr) => [...tr.children].map((c) => c.textContent));
     expect(rows).toEqual([
       ['Tryb', 'Mapa', 'Poziom', 'Rozegrane', 'Wygrane', 'Przegrane', '% zwycięstw', 'Punkty'],
-      ['Kooperacja', 'Mała', 'Poziom 0', '1', '0', '1', '0%', '0'],
+      ['Kooperacja', 'Mała', 'Poziom I', '1', '0', '1', '0%', '0'],
       ['', 'Mała', 'Normalny', '1', '1', '0', '100%', '9'],
       ['Razem', '2', '1', '1', '50%', '9'],
     ]);
@@ -598,7 +598,7 @@ describe('arena through the UI', () => {
     }
   });
 
-  it('the goal page appears only for the digital edition outside the arena and from level 2; control points start a game with points and a progress line', async () => {
+  it('the goal page appears only for the digital edition outside the arena and from level III; control points start a game with points and a progress line', async () => {
     localStorage.removeItem('skd-edition');
     window.history.replaceState(null, '', '/');
     vi.useFakeTimers();
@@ -746,7 +746,7 @@ describe('rules and cards window', () => {
   });
 });
 
-describe('level 3: the settlement window', () => {
+describe('level IV: the settlement window', () => {
   it('shows the gold, opens the settlement the hero stands in, builds and recruits there', async () => {
     window.history.replaceState(null, '', '/?steps=0&seed=3&size=long&kingdom=1&gold=30&players=1');
     vi.useFakeTimers();
@@ -793,7 +793,7 @@ describe('level 3: the settlement window', () => {
   });
 });
 
-describe('level 6: the dwellings in the tree of buildings', () => {
+describe('level VII: the dwellings in the tree of buildings', () => {
   it('hang under the barracks (built from the start) one tier after another; the choice of one unit shuts the other out', async () => {
     window.history.replaceState(null, '', '/?steps=0&seed=3&size=long&empire=1&gold=80&res=9&players=1');
     vi.useFakeTimers();
@@ -904,7 +904,7 @@ describe('the developer panel', () => {
   });
 });
 
-describe('level 3: shopping from afar', () => {
+describe('level IV: shopping from afar', () => {
   it('opens a settlement from the list when the hero stands elsewhere (first click selects, second opens)', async () => {
     window.history.replaceState(null, '', '/?steps=0&seed=3&size=long&kingdom=1&gold=30&players=1');
     vi.useFakeTimers();

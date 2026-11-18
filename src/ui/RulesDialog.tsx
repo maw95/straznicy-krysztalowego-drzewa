@@ -29,13 +29,13 @@ const TABS: Array<[Tab, string]> = [
 const RULES: Array<[string, string[]]> = [
   ['Wersje i poziomy', [
     'Wersja cyfrowa jest domyślna: jednostki w grafice 2D z animacjami, arena z poziomymi heksami, duże jednostki na dwóch polach. Wersja planszowa to wierna planszówka (figurki 3D, zasady bez zmian).',
-    'Poziom 1 „Przygoda”: zasady z planszówki. Poziom 2 „Wyprawa”: rozwój bohatera, artefakty, obiekty na mapie, neutralni i wybór celu oraz mapy. Poziom 3 „Osada” (osady, złoto, rekrutacja) i kolejne dopiero się pojawią. „Własne ustawienia” pozwalają przełączać zasady osobno.',
+    'Poziom II „Przygoda”: zasady z planszówki. Poziom III „Wyprawa”: rozwój bohatera, artefakty, obiekty na mapie, neutralni i wybór celu oraz mapy. Poziom IV „Osada” (osady, złoto, rekrutacja) i kolejne dopiero się pojawią. „Własne ustawienia” pozwalają przełączać zasady osobno.',
     'Tryby: kooperacja (do 3 graczy przeciw automatowi zła), rywalizacja (2–6 graczy, najwyżej 3 na stronę) i arena (jedna bitwa 3 na 3). Gra lokalna z botami, hot-seat przy jednym ekranie albo online z kontem.',
   ]],
   ['Cel gry', [
     'Kryształy do Drzewa (domyślny): Przymierze Świtu wygrywa, gdy zaniesie do Kryształowego Drzewa wszystkie potrzebne kryształy (2 przy jednym bohaterze, 3 przy dwóch lub trzech). Pokonanie bohaterów Hordy nie wystarczy.',
     'Mroczna Horda wygrywa, gdy minie limit rund (8 / 12 / 18 / 24 i więcej na największych mapach), gdy polegną wszyscy bohaterowie Przymierza albo gdy ukończy rytuał przy Drzewie.',
-    'Od poziomu 2 do wyboru: Punkty kontrolne (kto utrzyma więcej punktów przez kilka rund), Przetrwanie (fale Hordy, kooperacja), Boss (legowisko pośrodku mapy, wygrywa zadający ostatni cios) i Artefakt (kto zaniesie go do swojej bazy).',
+    'Od poziomu III do wyboru: Punkty kontrolne (kto utrzyma więcej punktów przez kilka rund), Przetrwanie (fale Hordy, kooperacja), Boss (legowisko pośrodku mapy, wygrywa zadający ostatni cios) i Artefakt (kto zaniesie go do swojej bazy).',
   ]],
   ['Runda i ruch', [
     'W każdej rundzie każdy żyjący bohater ma jedną turę: 3 punkty ruchu (rozwój, artefakty i umiejętności mogą je zwiększyć). Teren łatwy kosztuje 1, trudny 2; góry, woda, przepaści, martwy gąszcz i ciernie są nieprzejezdne. Niewykorzystane punkty przepadają.',
@@ -68,7 +68,7 @@ const RULES: Array<[string, string[]]> = [
     'Każda jednostka atakuje wroga z najmniejszą liczbą Życia: najpierw spośród tych, których sięga bez ruchu, potem spośród tych, do których dojdzie. Przy remisie wybiera bohatera. Skarby automat zużywa przy pierwszej okazji.',
   ]],
   ['Trudność', [
-    'Poziom 0 (w wersji planszowej „Łatwy”): krótkie pojedynki na planszy, bez zdolności i rytuału, poległego bohatera zastępuje rezerwowy. Na poziomach 1–3 wszystkie trudności to pełna gra (arena 3 na 3, zdolności, skarby), a różnią się startem komputera: Łatwy zaczyna słabszy, Normalny jak w zasadach, Trudny (kooperacja) ma o jednego bohatera Hordy więcej i dwa skarby, ale bez posiłków.',
+    'Poziom I (w wersji planszowej „Łatwy”): krótkie pojedynki na planszy, bez zdolności i rytuału, poległego bohatera zastępuje rezerwowy. Na poziomach II–IV wszystkie trudności to pełna gra (arena 3 na 3, zdolności, skarby), a różnią się startem komputera: Łatwy zaczyna słabszy, Normalny jak w zasadach, Trudny (kooperacja) ma o jednego bohatera Hordy więcej i dwa skarby, ale bez posiłków.',
   ]],
   ['Arena', [
     'Jedna bitwa 3 na 3 bez mapy: Przymierze kontra Horda, z komputerem albo z drugim graczem. Każdy wybiera bohatera i 2 z 3 pomocników.',
@@ -90,7 +90,7 @@ const PLACES: Array<[string, string, number, string]> = [
   ['Kapliczka', 'tiles/obj_shrine.jpg', 2, SITE.texts.shrine],
   ['Obóz najemników', 'tiles/obj_camp.jpg', 2, SITE.texts.camp],
   ['Skrzynia', 'tiles/obj_chest.jpg', 2, SITE.texts.chest],
-  ['Osada', 'ikony/mapa/osada_neutral.webp', 3, `Daje ${KINGDOM.incomeSettlement} zł dochodu na rundę, jest bazą rekrutacji i budynków (koszary, targ, szpital, skarbiec; od poziomu 4 kuźnia i mury, od 5 karczma i wieża maga). Neutralną osadę strzeże grupa neutralnych; zdobytą broni garnizon (do ${SIEGE.garrisonMax} jednostek).`],
+  ['Osada', 'ikony/mapa/osada_neutral.webp', 3, `Daje ${KINGDOM.incomeSettlement} zł dochodu na rundę, jest bazą rekrutacji i budynków (koszary, targ, szpital, skarbiec; od poziomu V kuźnia i mury, od VI karczma i wieża maga). Neutralną osadę strzeże grupa neutralnych; zdobytą broni garnizon (do ${SIEGE.garrisonMax} jednostek).`],
   [MINE_NAMES.gold, 'tiles/obj_kopalnia.jpg', 3, `Daje ${KINGDOM.incomeMine} zł na rundę temu, kto ją trzyma (stoi na niej jego bohater albo osada obok).`],
   ['Chatka', 'tiles/obj_chatka.jpg', 3, 'Zadanie: przynieś to, o co prosi (złoto, surowce albo artefakt z plecaka), a dostaniesz nagrodę. Każda chatka tylko raz.'],
   [MINE_NAMES.wood, 'tiles/obj_tartak.jpg', 4, 'Daje drewno co rundę temu, kto ją trzyma.'],
@@ -158,11 +158,11 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
           ([
             ['Przymierze Świtu', [...FACTION_HEROES.dawn, ...FACTION_SUPPORTS.dawn]],
             ['Mroczna Horda', [...FACTION_HEROES.horde, ...FACTION_SUPPORTS.horde]],
-            ['Poziom 3 i 4: pomocnicy do rekrutacji w osadzie, Przymierze Świtu (stopnie 2–5)', RECRUITS.dawn.filter((r) => r.tier >= 2 && r.tier <= 5 && !r.alt).map((r) => r.id)],
-            ['Poziom 3 i 4: pomocnicy do rekrutacji w osadzie, Mroczna Horda (stopnie 2–5)', RECRUITS.horde.filter((r) => r.tier >= 2 && r.tier <= 5 && !r.alt).map((r) => r.id)],
-            ['Poziom 5: dowódcy, czyli drudzy bohaterowie najęci w karczmie', [...Object.values(COMMANDERS.dawn), ...Object.values(COMMANDERS.horde)]],
-            ['Poziom 6: legendarne jednostki frakcji (koszary drugiego stopnia, 20 zł i 3 Pyły)', [LEGENDS.dawn, LEGENDS.horde]],
-            ['Poziom 6: alternatywni pomocnicy (jedno siedlisko na stopień, drugie zamyka się na całą grę)', [...ALT_UNITS.dawn, ...ALT_UNITS.horde]],
+            ['Poziom IV i V: pomocnicy do rekrutacji w osadzie, Przymierze Świtu (stopnie 2–5)', RECRUITS.dawn.filter((r) => r.tier >= 2 && r.tier <= 5 && !r.alt).map((r) => r.id)],
+            ['Poziom IV i V: pomocnicy do rekrutacji w osadzie, Mroczna Horda (stopnie 2–5)', RECRUITS.horde.filter((r) => r.tier >= 2 && r.tier <= 5 && !r.alt).map((r) => r.id)],
+            ['Poziom VI: dowódcy, czyli drudzy bohaterowie najęci w karczmie', [...Object.values(COMMANDERS.dawn), ...Object.values(COMMANDERS.horde)]],
+            ['Poziom VII: legendarne jednostki frakcji (koszary drugiego stopnia, 20 zł i 3 Pyły)', [LEGENDS.dawn, LEGENDS.horde]],
+            ['Poziom VII: alternatywni pomocnicy (jedno siedlisko na stopień, drugie zamyka się na całą grę)', [...ALT_UNITS.dawn, ...ALT_UNITS.horde]],
             ['Strażnicy kryształów', GUARDIANS],
             ['Neutralni: słabi', NEUTRAL_WEAK],
             ['Neutralni: bossowie', NEUTRAL_BOSSES],
@@ -170,7 +170,7 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
           ] as Array<[string, string[], boolean?]>).map(([title, ids, duel]) => (
             <div key={title} style={{ marginBottom: 18 }}>
               <div className="lbl" style={{ textAlign: 'center', margin: '4px 0 10px' }}>{title}</div>
-              {title.startsWith('Poziom 3 i 4') && (
+              {title.startsWith('Poziom IV i V') && (
                 <div style={{ textAlign: 'center', fontSize: 14, color: 'var(--muted)', margin: '-4px 0 8px' }} data-rules-recruit-costs>
                   {ids.map((id) => { const r = RECRUITS[title.includes('Przymierze') ? 'dawn' : 'horde'].find((x) => x.id === id)!; return `${UNITS_NAME(id)}: stopień ${r.tier}, ${RECRUIT_COSTS[r.tier - 1]} zł`; }).join(' · ')}
                 </div>
@@ -212,7 +212,7 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
         )}
         {tab === 'artifacts' && (
           <div style={{ maxWidth: 860, margin: '14px auto 0', display: 'flex', flexDirection: 'column', gap: 12 }} data-rules-sets>
-            <div style={{ fontSize: 16, textAlign: 'center', color: 'var(--muted)' }}>Zestawy (od poziomu 3 „Osada”): rzadkie części jednego zestawu dają premię za dwie i za trzy założone (licznik „2/3 zestawu” przy bohaterze). Plecak mieści dowolnie wiele artefaktów; założyć można tylko jeden na miejsce, resztę zmienia się na mapie w karcie bohatera.</div>
+            <div style={{ fontSize: 16, textAlign: 'center', color: 'var(--muted)' }}>Zestawy (od poziomu IV „Osada”): rzadkie części jednego zestawu dają premię za dwie i za trzy założone (licznik „2/3 zestawu” przy bohaterze). Plecak mieści dowolnie wiele artefaktów; założyć można tylko jeden na miejsce, resztę zmienia się na mapie w karcie bohatera.</div>
             {Object.values(SETS).map((set) => (
               <div key={set.id} className="plate parch" style={{ padding: '10px 16px' }}>
                 <div style={{ fontWeight: 800, fontSize: 20 }}>{set.name}</div>
@@ -220,7 +220,7 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
                 <div style={{ fontSize: 16 }}><RuleText text={set.bonusText} /></div>
               </div>
             ))}
-            <div style={{ fontSize: 16, textAlign: 'center', color: 'var(--muted)' }}>Skąd się biorą: skrzynie na mapie (artefakt zamiast {KINGDOM.chestGold} zł), kapliczki, chatki z zadaniami, łup z pokonanego bohatera i targ w osadzie (ceny {KINGDOM.artifactPrice.join(' / ')} zł według rzadkości; legendarne od poziomu 4 także za Gwiezdny Pył).</div>
+            <div style={{ fontSize: 16, textAlign: 'center', color: 'var(--muted)' }}>Skąd się biorą: skrzynie na mapie (artefakt zamiast {KINGDOM.chestGold} zł), kapliczki, chatki z zadaniami, łup z pokonanego bohatera i targ w osadzie (ceny {KINGDOM.artifactPrice.join(' / ')} zł według rzadkości; legendarne od poziomu V także za Gwiezdny Pył).</div>
           </div>
         )}
         {tab === 'places' && (

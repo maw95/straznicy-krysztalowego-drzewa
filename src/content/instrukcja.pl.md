@@ -50,9 +50,9 @@ Kreator prowadzi przez kolejne strony. Przyciskiem **Wstecz** wrócisz do poprze
 Na każdej stronie podpowiedź pod kursorem (na telefonie po dotknięciu) tłumaczy, co robi dany wybór.
 
 ## Poziomy złożoności
-@słowa: poziom, spacer, przygoda, wyprawa, osada, księstwo, królestwo, imperium, poziom 0, poziom 1, poziom 2, poziom 3, poziom 4, poziom 5, poziom 6, złożoność, drabinka
+@słowa: poziom, spacer, przygoda, wyprawa, osada, księstwo, królestwo, imperium, poziom I, poziom II, poziom III, poziom IV, poziom V, poziom VI, poziom VII, złożoność, drabinka
 
-Poziom wybiera, **ile mechanik** ma gra. Każdy kolejny dodaje nowe do poprzedniego. Poziomy 1–6 grają pełnymi bitwami na arenie; Spacer jest pojedynkami na planszy.
+Poziom wybiera, **ile mechanik** ma gra. Każdy kolejny dodaje nowe do poprzedniego. Poziomy II–VII grają pełnymi bitwami na arenie; Spacer jest pojedynkami na planszy.
 
 | Poziom | Nazwa | Co dochodzi |
 |---|---|---|
@@ -66,14 +66,14 @@ Poziom wybiera, **ile mechanik** ma gra. Każdy kolejny dodaje nowe do poprzedni
 
 Wersja planszowa ma jeden poziom odpowiadający Przygodzie (w kreatorze planszowym najłatwiejszy poziom nazywa się „Łatwy”, a w cyfrowej to Spacer).
 
-Od poziomu 2 liczby Życia i Ataku na kartach są **trzy razy większe** niż w planszówce, żeby małe premie z umiejętności i artefaktów miały sens. Tempo i balans gry są takie same jak przy małych liczbach. **Uwaga:** liczby Życia, Ataku i obrażeń w tej instrukcji (na przykład „+1 do Ataku”, „2 obrażenia”) podano w skali planszówki; od poziomu Wyprawa na ekranie zobaczysz je pomnożone przez 3 (w tych przykładach +3 i 6). Szybkość, zasięgi, punkty ruchu i mana nie są mnożone.
+Od poziomu III liczby Życia i Ataku na kartach są **trzy razy większe** niż w planszówce, żeby małe premie z umiejętności i artefaktów miały sens. Tempo i balans gry są takie same jak przy małych liczbach. **Uwaga:** liczby Życia, Ataku i obrażeń w tej instrukcji (na przykład „+1 do Ataku”, „2 obrażenia”) podano w skali planszówki; od poziomu Wyprawa na ekranie zobaczysz je pomnożone przez 3 (w tych przykładach +3 i 6). Szybkość, zasięgi, punkty ruchu i mana nie są mnożone.
 
 ## Poziomy trudności
 @słowa: trudność, łatwy, normalny, trudny, bardzo trudny, królik, wilk, niedźwiedź, smok, punkty, ranking, komputer, handicap
 
 Trudność wybierasz osobno od poziomu złożoności, także na arenie. **Nie zmienia zasad**, tylko to, z jakimi warunkami startuje komputer.
 
-- **Łatwy** (królik): komputer zaczyna słabszy, na przykład z mniejszą liczbą skarbów i słabszą Hordą. Na poziomach 1–6 to wciąż pełne bitwy.
+- **Łatwy** (królik): komputer zaczyna słabszy, na przykład z mniejszą liczbą skarbów i słabszą Hordą. Na poziomach II–VII to wciąż pełne bitwy.
 - **Normalny** (wilk): komputer gra na tych samych zasadach co ty.
 - **Trudny** (niedźwiedź): komputer ma ułatwienia: dodatkowego bohatera i skarby, a w kooperacji nie ma posiłków dla Hordy.
 - **Bardzo trudny** (smok): jeszcze większa przewaga komputera: o 2 losowe skarby więcej na start, o połowę większe dochody, a na poziomach z osadami dodatkowe surowce na start (3 drewna, 3 rudy, 2 Pyły) i 2 artefakty dla głównego bohatera. Jednostki komputera mają tyle samo Życia co twoje. Na arenie to komputer bez błędów w wyborach.
@@ -84,7 +84,7 @@ Za wygraną dostajesz **punkty rankingu**; im trudniej, tym więcej. Na Bardzo t
 @słowa: tryb, kooperacja, rywalizacja, arena, hot-seat, jeden ekran, boty, automat zła, 8 graczy, frakcje, drużyna
 
 - **Kooperacja** (1–3 graczy): wszyscy grają Przymierzem Świtu przeciw **automatowi zła**, czyli komputerowej Hordzie ([Automat zła i boty](#automat-zla-i-boty)).
-- **Rywalizacja** (2–8 graczy): jedni grają Przymierzem, drudzy Hordą, najwyżej trzech graczy na frakcję. Przy siedmiu i ośmiu graczach każda strona ma czwartego bohatera (Dzielną Kaczkę po stronie Przymierza i Wodza Hordy). Od poziomu 5 w rywalizacji zostaje do sześciu graczy, bo drugi bohater (dowódca) zajmuje miejsce. Kto jest człowiekiem, a kto komputerem, ustawiasz przy każdym miejscu.
+- **Rywalizacja** (2–8 graczy): jedni grają Przymierzem, drudzy Hordą, najwyżej trzech graczy na frakcję. Przy siedmiu i ośmiu graczach każda strona ma czwartego bohatera (Dzielną Kaczkę po stronie Przymierza i Wodza Hordy). Od poziomu VI w rywalizacji zostaje do sześciu graczy, bo drugi bohater (dowódca) zajmuje miejsce. Kto jest człowiekiem, a kto komputerem, ustawiasz przy każdym miejscu.
 - **Arena**: jedna bitwa bez mapy ([Arena](#arena)).
 
 Kilku graczy przy **jednym ekranie** (hot-seat) przekazuje sobie urządzenie. W rywalizacji ekran przekazania ukrywa skarby frakcji między graczami; w kooperacji skarby są wspólne i niczego się nie ukrywa. Jedna osoba może zająć kilka miejsc i grać nimi na zmianę. Opcja **Autoplay** pozwala botom grać także za ludzi (przydaje się do oglądania gry).
@@ -286,7 +286,7 @@ Każdy bohater ma **manę**: 3 i jeszcze 1 za każdy swój poziom (mędrcy o 3 w
 **Na mapie**, w turze bohatera: **Wizja** (2 many) odkrywa pola w promieniu 3, **Przyspieszenie** (2) daje +2 punkty ruchu w tej turze, **Wrota** (4, drugi krąg) przenoszą bohatera do najbliższej własnej osady i kończą jego ruch. Czary rosną z bohaterem: co 3 poziomy zadają i leczą o 1 więcej.
 
 ## Imperium
-@słowa: imperium, poziom 6, odłamki, pierwotna iskra, sanktuarium, czarna kuźnia, relikt, mechanika frakcji, kapliczka świtu, jama krwi, siedlisko, legendarna jednostka, feniks, behemot, szkółka drzewa, krąg gaju, szabrownia, wilcze legowisko
+@słowa: imperium, poziom VII, odłamki, pierwotna iskra, sanktuarium, czarna kuźnia, relikt, mechanika frakcji, kapliczka świtu, jama krwi, siedlisko, legendarna jednostka, feniks, behemot, szkółka drzewa, krąg gaju, szabrownia, wilcze legowisko
 
 Poziom Imperium dodaje do Królestwa **Odłamki Pierwotnej Iskry**, mechaniki frakcji i wybór jednostek.
 
@@ -354,7 +354,7 @@ W lobby jest **czat ogólny**, w pokoju **czat pokoju** (wiadomości żyją tylk
 @słowa: dziecko, rodzic, rodzinny, autopilot, spacer, dzieci, mały gracz, pomoc dla dziecka, podpowiedź
 
 Gra jest przygotowana także do grania z dzieckiem (od 5 lat):
-- **Spacer** (poziom 0) to krótkie pojedynki na planszy bez zdolności i rytuału, z własną tabelą punktów.
+- **Spacer** (poziom I) to krótkie pojedynki na planszy bez zdolności i rytuału, z własną tabelą punktów.
 - W kooperacji przy graczu-człowieku zaznacz **Dziecko**. Jego bohater ma w bitwie o 2 Życia więcej i o 1 punkt ruchu więcej na mapie, a rodzic gra bez zmian. Przycisk **podpowiedzi** podpowiada dziecku ruch.
 - Na poziomach z osadami dziecko **wędruje i walczy**, a rodzic buduje, rekrutuje i handluje (złoto i surowce są wspólne). Jeśli dorosłego nie ma, osadami zajmuje się **autopilot** jak komputer, a skrzynie dziecka otwierają się same.
 

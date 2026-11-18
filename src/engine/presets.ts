@@ -22,12 +22,12 @@ export interface Switches {
 }
 
 export const TIERS: Record<Tier, { name: string; summary: string }> = {
-  adventure: { name: 'Poziom 1: Przygoda', summary: 'Zasady z planszówki w wersji cyfrowej: kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start, także dla dzieci.' },
-  expedition: { name: 'Poziom 2: Wyprawa', summary: 'Do wyboru cel (punkty kontrolne, przetrwanie, boss, artefakt) i kształt mapy; bohaterowie zdobywają doświadczenie, artefakty i umiejętności.' },
-  kingdom: { name: 'Poziom 3: Osada', summary: 'Wyprawa plus osady, złoto i rekrutacja: dochód z osad i kopalni, budynki (koszary, targ, szpital, skarbiec), artefakty na targu i drużyna, która rośnie do pięciu pomocników.' },
-  economy: { name: 'Poziom 4: Księstwo', summary: 'Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył.' },
-  realm: { name: 'Poziom 5: Królestwo', summary: 'Księstwo plus bohaterowie i magia: drugi bohater-dowódca najęty w karczmie, czary w bitwie i na mapie, specjalności bohaterów.' },
-  empire: { name: 'Poziom 6: Imperium', summary: 'Królestwo plus frakcje i Relikt: Odłamki Pierwotnej Iskry, budynek Pierwotnej Iskry, mechaniki i legendarna jednostka frakcji.' },
+  adventure: { name: 'Poziom II: Przygoda', summary: 'Zasady z planszówki w wersji cyfrowej: kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start, także dla dzieci.' },
+  expedition: { name: 'Poziom III: Wyprawa', summary: 'Do wyboru cel (punkty kontrolne, przetrwanie, boss, artefakt) i kształt mapy; bohaterowie zdobywają doświadczenie, artefakty i umiejętności.' },
+  kingdom: { name: 'Poziom IV: Osada', summary: 'Wyprawa plus osady, złoto i rekrutacja: dochód z osad i kopalni, budynki (koszary, targ, szpital, skarbiec), artefakty na targu i drużyna, która rośnie do pięciu pomocników.' },
+  economy: { name: 'Poziom V: Księstwo', summary: 'Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył.' },
+  realm: { name: 'Poziom VI: Królestwo', summary: 'Księstwo plus bohaterowie i magia: drugi bohater-dowódca najęty w karczmie, czary w bitwie i na mapie, specjalności bohaterów.' },
+  empire: { name: 'Poziom VII: Imperium', summary: 'Królestwo plus frakcje i Relikt: Odłamki Pierwotnej Iskry, budynek Pierwotnej Iskry, mechaniki i legendarna jednostka frakcji.' },
   custom: { name: 'Własne ustawienia', summary: 'Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia, utrudnienia i remis inicjatywy, a do tego cel i kształt mapy.' },
 };
 

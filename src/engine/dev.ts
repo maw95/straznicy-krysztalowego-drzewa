@@ -21,7 +21,7 @@ const heroOf = (state: GameState, heroId: string): HeroState => {
 /** Gold and resources of a faction (what is missing in `what` stays). */
 export function setResources(state: GameState, faction: TeamId, what: { gold?: number; wood?: number; ore?: number; dust?: number }): void {
   const k = state.kingdom;
-  if (!k) throw new Error('Złoto i surowce są od poziomu 3.');
+  if (!k) throw new Error('Złoto i surowce są od poziomu IV.');
   if (what.gold !== undefined) k.gold[faction] = what.gold;
   if (k.res) for (const r of ['wood', 'ore', 'dust'] as const) if (what[r] !== undefined) k.res[faction][r] = what[r]!;
 }
@@ -71,7 +71,7 @@ export function buildAnywhere(state: GameState, settlementId: string, building: 
 
 /** Every building this game has, at its highest level, in every settlement the faction holds. */
 export function buildEverything(state: GameState, faction: TeamId): void {
-  if (!state.kingdom) throw new Error('Osady są od poziomu 3.');
+  if (!state.kingdom) throw new Error('Osady są od poziomu IV.');
   for (const s of Object.values(state.kingdom.settlements)) {
     if (s.owner !== faction) continue;
     for (const b of buildingsFor(state, faction)) if (b !== 'spark') s.buildings[b] = Math.min(BUILDING_NAMES[b].length, b === 'magic' ? 3 : b === 'shrine' || b === 'bloodPit' ? 4 : 2);
