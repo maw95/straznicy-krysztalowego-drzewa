@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Wybór poziomu gry: nowa ikona „Księstwa” (dwór z młynem, tartakiem, wozem z rudą i katapultą).": "Game level choice: new icon for the \"Principality\" level (a manor with a mill, sawmill, ore cart and catapult).",
   "Wybór poziomu gry: ikony „Królestwo” i „Imperium” nie pokazują już kawałków sąsiednich ikon na brzegach.": "Game level choice: the \"Kingdom\" and \"Empire\" icons no longer show slivers of neighbouring icons at their edges.",
   "Menu główne: nowe ikony przycisków „Nowa gra”, „Kampania”, „Ekspedycja” i „Wczytaj grę”; przyciski mają jednakowy rozmiar i stoją po dwa w rzędzie.": "Main menu: new icons for the \"New game\", \"Campaign\", \"Expedition\" and \"Load a game\" buttons; the buttons are the same size and sit two to a row.",
   "Angielska wersja gry ma własne logo: „Gleamroot: Wardens of the Crystal Tree” (ekran startowy, menu, kreator i ekran online).": "The English version of the game has its own logo: \"Gleamroot: Wardens of the Crystal Tree\" (title screen, menu, setup and online screen).",
