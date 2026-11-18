@@ -225,7 +225,7 @@ export function ArenaBoard(p: Props) {
           {/* The painted board of the half of the map where the fight broke out. */}
           <img src={asset(wide ? `arena/cyfrowa/${b.arena}.webp` : `arena/${b.arena}.jpg`)} alt="" style={{ position: 'absolute', left: 0, top: 0, width: ART_SIZE.w, height: ART_SIZE.h }} />
           {/* Digital arena: obstacles are pictures standing on their cells. */}
-          {wide && b.siege && <SiegeArt b={b} cellCenter={cellCenter} scale={scaleOf(state)} />}
+          {wide && b.siege && <SiegeArt b={b} cellCenter={cellCenter} />}
           {wide && !b.siege &&
             wideObstacleGroups(b.arena).map((g) => {
               const cs = g.cells.map(cellCenter);
@@ -425,7 +425,7 @@ export function ArenaBoard(p: Props) {
                 )}
                 {isDigital(state.rules) ? (
                   // Digital ruleset: a slim life bar (green → red) with the number inside, instead of the big plate.
-                  <div title={`Życie ${u.hp}/${u.maxHp}`} style={{ position: 'absolute', left: '50%', bottom: sprite ? -4 : 2, transform: 'translateX(-50%)', width: 42, height: 9, borderRadius: 5, background: 'rgba(12,8,4,0.78)', border: '1px solid rgba(228,193,110,0.7)', overflow: 'hidden', pointerEvents: 'none' }}>
+                  <div style={{ position: 'absolute', left: '50%', bottom: sprite ? -4 : 2, transform: 'translateX(-50%)', width: 42, height: 9, borderRadius: 5, background: 'rgba(12,8,4,0.78)', border: '1px solid rgba(228,193,110,0.7)', overflow: 'hidden', pointerEvents: 'none' }}>
                     <div style={{ width: `${Math.max(0, Math.min(1, u.hp / u.maxHp)) * 100}%`, height: '100%', background: u.hp / u.maxHp > 0.5 ? '#6FB45A' : u.hp / u.maxHp > 0.25 ? '#D9A93A' : '#C8452E' }} />
                     <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 800, color: '#FFF6DC', textShadow: '0 0 2px #000, 0 0 2px #000' }}>{u.hp}</span>
                   </div>
@@ -525,17 +525,17 @@ export function ArenaBoard(p: Props) {
 }
 
 /** Siege: the moat, the wall with its gate and towers (rubble where the catapult hit), and the attacker's catapult by its edge of the board. */
-function SiegeArt({ b, cellCenter, scale }: { b: BattleState; cellCenter: (k: HexKey) => { x: number; y: number }; scale: number }) {
+function SiegeArt({ b, cellCenter }: { b: BattleState; cellCenter: (k: HexKey) => { x: number; y: number } }) {
   const s = b.siege!;
   const rows = Array.from({ length: WIDE_ROWS }, (_, r) => r);
   const wallCells = s.level >= 2 ? rows.map((r) => wideCell(SIEGE.wallColumn, r)) : [];
   // The wall, gate and tower are drawn in the defender's style (the Alliance's pale marble and gold, the Horde's black iron); the rest is neutral.
   const style = b.defender === 'dawn' || b.defender === 'horde' ? b.defender : null;
-  const piece = (k: HexKey, art: string, w: number, h: number, base: number, title: string) => {
+  const piece = (k: HexKey, art: string, w: number, h: number, base: number) => {
     const c = cellCenter(k);
     const file = style && ['mur', 'brama', 'wieza'].includes(art) ? `${art}_${style}` : art;
     return (
-      <div key={`sg${art}${k}`} title={title} data-siege={art} data-siege-style={style ?? undefined} style={{ position: 'absolute', left: c.x - w / 2, top: c.y + base - h, width: w, height: h, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', pointerEvents: 'none' }}>
+      <div key={`sg${art}${k}`} data-siege={art} data-siege-style={style ?? undefined} style={{ position: 'absolute', left: c.x - w / 2, top: c.y + base - h, width: w, height: h, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', pointerEvents: 'none' }}>
         <img src={asset(`arena/oblezenie/${file}.webp`)} alt="" style={{ maxWidth: '100%', maxHeight: '100%', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.55))' }} />
       </div>
     );
@@ -543,14 +543,14 @@ function SiegeArt({ b, cellCenter, scale }: { b: BattleState; cellCenter: (k: He
   const first = cellCenter(wideCell(0, WIDE_ROWS - 1));
   return (
     <>
-      {s.moat.map((k) => piece(k, 'fosa', 78, 62, 30, `Fosa: wejście kończy turę jednostki i zadaje ${SIEGE.moatDamage * scale} obrażeń`))}
+      {s.moat.map((k) => piece(k, 'fosa', 78, 62, 30))}
       {wallCells.map((k) =>
-        s.gate === k ? piece(k, 'brama', 84, 70, 30, 'Brama: burzy ją tylko katapulta')
-          : s.towers.includes(k) ? piece(k, 'wieza', 64, 112, 30, `Wieżyczka: co rundę strzela do najsłabszego napastnika (${SIEGE.towerDamage * scale} obrażeń)`)
-          : s.walls.includes(k) ? piece(k, 'mur', 84, 56, 30, 'Mur: burzy go tylko katapulta')
-          : piece(k, 'gruz', 70, 36, 26, 'Gruzy: przejście wolne'),
+        s.gate === k ? piece(k, 'brama', 84, 70, 30)
+          : s.towers.includes(k) ? piece(k, 'wieza', 64, 112, 30)
+          : s.walls.includes(k) ? piece(k, 'mur', 84, 56, 30)
+          : piece(k, 'gruz', 70, 36, 26),
       )}
-      <div title="Katapulta atakującego: jeden strzał na rundę w mur, bramę albo wieżyczkę" data-siege="katapulta" style={{ position: 'absolute', left: first.x - 118, top: first.y - 30, width: 84, pointerEvents: 'none', display: s.level >= 2 ? 'block' : 'none' }}>
+      <div data-siege="katapulta" style={{ position: 'absolute', left: first.x - 118, top: first.y - 30, width: 84, pointerEvents: 'none', display: s.level >= 2 ? 'block' : 'none' }}>
         <img src={asset('arena/oblezenie/katapulta.webp')} alt="" style={{ width: '100%', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.55))' }} />
       </div>
     </>

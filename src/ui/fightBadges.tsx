@@ -1,7 +1,7 @@
 // The two "pills" shown where a fight is announced (hover note, right-click details, confirmation): who is there and how hard the fight is.
 
 import type { CSSProperties } from 'react';
-import { fightDifficulty, FIGHT_LEVEL_NAMES, type FightLevel } from '../engine/difficulty';
+import { fightDifficulty, type FightLevel } from '../engine/difficulty';
 import { activeHero } from '../engine/game';
 import type { HexKey } from '../engine/hex';
 import type { GameState } from '../engine/types';
@@ -48,5 +48,5 @@ export function EnemyPill({ name, size = 13 }: { name: string; size?: number }) 
 /** How the fight would go: green easy, yellow even, red dangerous, black impossible. */
 export function FightPill({ level, size = 13 }: { level: FightLevel; size?: number }) {
   const c = LEVEL_COLORS[level];
-  return <span data-pill="fight" data-level={level} title={`Trudność walki: ${FIGHT_LEVEL_NAMES[level]}`} style={{ ...PILL, fontSize: size, background: c.bg, borderColor: c.border, color: c.text }}>{LEVEL_TEXT[level]}</span>;
+  return <span data-pill="fight" data-level={level} style={{ ...PILL, fontSize: size, background: c.bg, borderColor: c.border, color: c.text }}>{LEVEL_TEXT[level]}</span>;
 }

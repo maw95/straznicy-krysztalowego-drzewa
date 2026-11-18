@@ -33,7 +33,7 @@ export function SpellBookDialog({ state, hero, castable, onPick, onClose }: { st
           const ok = castable.includes(id);
           const why = ok ? undefined : cast ? 'W tej aktywacji czar już rzucono.' : mana < SPELLS[id].mana ? `Za mało many (potrzeba ${SPELLS[id].mana}).` : 'Teraz nie można go rzucić.';
           return (
-            <div key={id} className={`spell-row ${ok ? '' : 'off'}`} data-spell-row={id} title={why}>
+            <div key={id} className={`spell-row ${ok ? '' : 'off'}`} data-spell-row={id}>
               <img src={asset(`ikony/czary/${id}.webp`)} alt="" width={64} height={64} />
               <div className="spell-body">
                 <div className="spell-name">{SPELLS[id].name}</div>

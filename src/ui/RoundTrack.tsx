@@ -26,7 +26,6 @@ export function RoundTrack({ round, limit, ritual, ritualRounds, size = 150 }: {
     <div
       role="img"
       aria-label={`Runda ${round} z ${limit}`}
-      title={`Runda ${round} z ${limit}${ritual ? ` · rytuał ${ritual}/${ritualRounds}` : ''}`}
       style={{ position: 'relative', width: size, height: h, flex: 'none', pointerEvents: 'none', filter: 'drop-shadow(0 6px 10px rgba(0,0,0,0.7))' }}
     >
       <img src={asset('ui/round_track.png')} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />

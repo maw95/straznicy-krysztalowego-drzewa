@@ -11,7 +11,7 @@ import { useScales } from './statScale';
 export type MarkerName = 'ability_used' | 'rooted' | 'slowed' | 'cursed' | 'attack_up' | 'attack_3' | 'speed_up' | 'shield' | 'vitality' | 'damage_empty';
 
 export function Marker({ name, size = 22, title }: { name: MarkerName; size?: number; title?: string }) {
-  return <img src={asset(`markers/${name}.png`)} alt={title ?? ''} title={title} style={{ width: size, height: size, objectFit: 'contain', flex: 'none', verticalAlign: 'middle', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.55))' }} />;
+  return <img src={asset(`markers/${name}.png`)} alt={title ?? ''} style={{ width: size, height: size, objectFit: 'contain', flex: 'none', verticalAlign: 'middle', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.55))' }} />;
 }
 
 /** Damage as one empty drop with the number written on it. */
@@ -39,7 +39,6 @@ export function DieFace({ value, size = 30 }: { value: number; size?: number }) 
   const label = value > 0 ? '+1' : value < 0 ? '−1' : '0';
   return (
     <span
-      title={`Rzut kością: ${label}`}
       style={{
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flex: 'none',
         width: size, height: size, borderRadius: size * 0.22, verticalAlign: 'middle',
@@ -80,7 +79,7 @@ type StatLetter = keyof typeof STAT_ICONS;
 /** The stat symbol used on the cards (heart, swords, bolt), sized to the surrounding text. */
 /** A stat symbol (black, as on the cards); `light` turns it white for dark backgrounds. */
 export function StatIcon({ stat, size = '1.05em', light = false }: { stat: StatLetter; size?: string | number; light?: boolean }) {
-  return <img src={asset(`cards/stats/${STAT_ICONS[stat]}.png`)} alt={STAT_NAMES[stat]} title={STAT_NAMES[stat]} style={{ width: size, height: size, objectFit: 'contain', verticalAlign: '-0.18em', margin: '0 0.06em', filter: light ? 'brightness(0) invert(1)' : undefined }} />;
+  return <img src={asset(`cards/stats/${STAT_ICONS[stat]}.png`)} alt={STAT_NAMES[stat]} style={{ width: size, height: size, objectFit: 'contain', verticalAlign: '-0.18em', margin: '0 0.06em', filter: light ? 'brightness(0) invert(1)' : undefined }} />;
 }
 
 /** Gold and resources as the icons the bottom bar uses; keyed by the word as the text (Polish or English) says it. */
@@ -95,7 +94,7 @@ const THING_ICON: Array<[RegExp, string, string]> = [
 export function ThingIcon({ word, size = '1.2em' }: { word: string; size?: string | number }) {
   const t = THING_ICON.find(([re]) => re.test(word));
   if (!t) return <>{word}</>;
-  return <img src={asset(t[1])} alt={t[2]} title={t[2]} style={{ width: size, height: size, objectFit: 'contain', verticalAlign: '-0.28em', margin: '0 0.06em' }} />;
+  return <img src={asset(t[1])} alt={t[2]} style={{ width: size, height: size, objectFit: 'contain', verticalAlign: '-0.28em', margin: '0 0.06em' }} />;
 }
 
 /**

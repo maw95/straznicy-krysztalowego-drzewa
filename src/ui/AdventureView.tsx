@@ -2,9 +2,9 @@ import { raceOf } from '../engine/teams';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { heroLabel } from '../engine/realm';
 import { shardsOf, shardTotal } from '../engine/empire';
-import { MAGIC, manaOf, maxMana, portalTarget, SPELLS } from '../engine/magic';
+import { manaOf, maxMana, portalTarget, SPELLS } from '../engine/magic';
 import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type TeamId } from '../engine/data';
-import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots } from '../engine/game';
+import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMoves, moveAllowance, reviveSpots } from '../engine/game';
 import { fightLevelAt } from './fightBadges';
 import { EnemyPill, FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
@@ -462,24 +462,24 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     )}
                     {state.control?.points.includes(t.key) && <ControlFlag holder={controlHolder(state, t.key)} centre={state.control.points[0] === t.key} size={W} />}
                     {t.revealed && t.treasureId && (
-                      <div className="glint" style={{ position: 'absolute', left: W * 0.12, top: H * 0.24 }} title="Skarb">
+                      <div className="glint" style={{ position: 'absolute', left: W * 0.12, top: H * 0.24 }}>
                         <img src={asset('ikony/mapa/treasure.webp')} alt="" width={W * 0.34} height={W * 0.34} style={{ display: 'block' }} />
                       </div>
                     )}
                     {hintHex === t.key && <div className="hint-ring" data-hint="hex" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 5 }} />}
                     {t.revealed && t.site && !t.site.used && !t.place && (
-                      <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, width: W * 0.46, height: W * 0.46, pointerEvents: 'none' }} title={`${SITE.names[t.site.kind]}: ${SITE.texts[t.site.kind]}`} data-site={t.site.kind} />
+                      <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, width: W * 0.46, height: W * 0.46, pointerEvents: 'none' }} data-site={t.site.kind} />
                     )}
                     {t.revealed && t.place && state.kingdom && (
                       <>
-                        <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, width: W * 0.46, height: W * 0.46, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)} />
+                        <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, width: W * 0.46, height: W * 0.46, pointerEvents: 'none' }} data-place={t.place.kind} />
                         {placeOwner(state, t) && (
                           <div style={{ position: 'absolute', left: W * 0.4, top: -H * 0.02, zIndex: 3, pointerEvents: 'none' }} data-mine-owner={t.place.kind === 'mine' ? placeOwner(state, t) : undefined} data-settlement-owner={t.place.kind === 'settlement' ? placeOwner(state, t) : undefined}>
                             <OwnerBanner owner={placeOwner(state, t)!} size={W * 0.66} />
                           </div>
                         )}
                         {t.place.kind === 'settlement' && (state.kingdom.settlements[t.place.id]?.garrison?.length ?? 0) > 0 && (
-                          <span data-garrison-badge title="Garnizon broni tej osady" style={{ position: 'absolute', left: W * 0.12, bottom: H * 0.16, zIndex: 3, minWidth: W * 0.17, height: W * 0.17, borderRadius: W * 0.1, background: '#3B2A12', border: '2px solid #F3D27A', color: '#F7EDD2', fontWeight: 800, fontSize: W * 0.11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <span data-garrison-badge style={{ position: 'absolute', left: W * 0.12, bottom: H * 0.16, zIndex: 3, minWidth: W * 0.17, height: W * 0.17, borderRadius: W * 0.1, background: '#3B2A12', border: '2px solid #F3D27A', color: '#F7EDD2', fontWeight: 800, fontSize: W * 0.11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {state.kingdom.settlements[t.place.id].garrison!.length}
                           </span>
                         )}
@@ -489,7 +489,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                       <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', display: 'flex', alignItems: 'center' }}>
                         {crystal.guardian && !figureFor(crystal.guardian) && <Portrait unitId={crystal.guardian} size={W * 0.5} ring={SIDE_RING.neutral} title={UNITS[crystal.guardian].name} />}
                         {showsCrystal(crystal) && (
-                          <div className="twinkle" style={{ marginLeft: crystal.guardian && !figureFor(crystal.guardian) ? -W * 0.12 : 0 }} title="Kryształ">
+                          <div className="twinkle" style={{ marginLeft: crystal.guardian && !figureFor(crystal.guardian) ? -W * 0.12 : 0 }}>
                             <Medal fill="mBlue" glyph="gCrystal" size={W * 0.28} />
                           </div>
                         )}
@@ -609,14 +609,14 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           {!hero && <div style={{ fontWeight: 800, fontSize: 20, textAlign: 'center' }}>Koniec gry</div>}
           {hero && (
             <div className="hero-head" style={{ display: 'flex', gap: compact ? 8 : 12, alignItems: 'center' }}>
-              <img src={asset(`cards/crests/${hero.faction}.png`)} alt={FACTION_NAMES[raceOf(state, hero.faction)]} title={FACTION_NAMES[raceOf(state, hero.faction)]} style={{ height: compact ? 44 : 64, width: 'auto', flex: 'none' }} />
-              <button className="btn btn-bare" onClick={() => (state.rules.heroGrowth ? setSheet(true) : onShowCard(hero.id))} title={state.rules.heroGrowth ? 'Karta bohatera' : 'Pokaż kartę'} data-hero-portrait>
+              <img src={asset(`cards/crests/${hero.faction}.png`)} alt={FACTION_NAMES[raceOf(state, hero.faction)]} style={{ height: compact ? 44 : 64, width: 'auto', flex: 'none' }} />
+              <button className="btn btn-bare" onClick={() => (state.rules.heroGrowth ? setSheet(true) : onShowCard(hero.id))} data-hero-portrait>
                 <Portrait unitId={hero.id} size={compact ? 48 : 64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
               </button>
               <div className="hero-info" style={{ minWidth: 0 }}>
                 <div data-hero-name style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{heroLabel(hero)}</div>
                 {state.rules.empire && (
-                  <div data-shards title="Odłamki Pierwotnej Iskry: niesione przez tego bohatera, razem u frakcji i wszystkich w grze" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
+                  <div data-shards style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
                     <img src={asset('ikony/mapa/odlamek.webp')} alt="" width={26} height={26} />
                     <span>Odłamki: niesie <b>{hero.shards ?? 0}</b> · frakcja <b>{shardsOf(state, hero.faction)}</b> / {shardTotal(state)}</span>
                     {(hero.shards ?? 0) > 0 && canAct && passTargets(state, hero).map((h) => (
@@ -626,7 +626,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 )}
                 {state.rules.realm && (hero.spells?.length ?? 0) > 0 && (
                   <div data-map-spells style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', fontSize: 14 }}>
-                    <span title={`Mana wraca po ${MAGIC.regen} na rundę`}>Mana <b data-mana>{manaOf(hero)}</b>/{maxMana(hero)}</span>
+                    <span>Mana <b data-mana>{manaOf(hero)}</b>/{maxMana(hero)}</span>
                     {canAct && hero.faction === viewer && hero.spells!.filter((id) => SPELLS[id].where === 'map').map((id) => (
                       <button key={id} className="btn plate parch" data-map-spell={id} disabled={manaOf(hero) < SPELLS[id].mana || (id === 'portal' && !portalTarget(state, hero))} title={`${SPELLS[id].name} (mana ${SPELLS[id].mana}): ${SPELLS[id].text}`} onClick={() => { sfx.play(id === 'portal' ? 'portal' : 'magic_cast'); onAction({ type: 'mapSpell', spell: id }); }} style={{ padding: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
                         <img src={asset(`ikony/czary/${id}.webp`)} alt="" width={30} height={30} />
@@ -637,7 +637,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 )}
                 <div style={{ fontSize: 15, color: 'var(--muted)' }}>{hero.playerId ? state.players.find((p) => p.id === hero.playerId)?.name : 'Automat zła'}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3, fontSize: 15 }}>
-                  <span title={`Punkty ruchu w tej turze: ${moveBreakdown(state).map((p) => `${p.points > 0 && p.label !== 'podstawa' ? '+' : ''}${p.points} ${p.label}`).join(', ')} = ${moveAllowance(state)}.`}>Ruch <Pips total={Math.max(state.rules.heroMovePoints, moveAllowance(state), state.movePoints)} left={state.movePoints} /></span>
+                  <span>Ruch <Pips total={Math.max(state.rules.heroMovePoints, moveAllowance(state), state.movePoints)} left={state.movePoints} /></span>
                   {hero.crystals.includes('artifact') && <span style={{ color: '#F3D27A' }} data-carrier-slow>· Artefakt spowalnia: −1 ruchu</span>}
                   {hero.crystals.length > 0 && <span style={{ color: '#9EE4FF' }}>· niesie {hero.crystals.length} kryształ(y)</span>}
                 </div>
@@ -651,7 +651,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               <div data-hero-mates style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
                 <span style={{ fontSize: 13, letterSpacing: 1, color: '#9FB3B0' }}>DRUGI BOHATER</span>
                 {mates.map((h) => (
-                  <button key={h.id} className="btn btn-bare" data-hero-mate={h.id} title={`Karta bohatera: ${heroLabel(h)}${h.alive ? '' : ' (poległ)'}`} onClick={() => { setSheetId(h.id); if (state.rules.heroGrowth) setSheet(true); else onShowCard(h.id); }} style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: h.alive ? 1 : 0.55 }}>
+                  <button key={h.id} className="btn btn-bare" data-hero-mate={h.id} onClick={() => { setSheetId(h.id); if (state.rules.heroGrowth) setSheet(true); else onShowCard(h.id); }} style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: h.alive ? 1 : 0.55 }}>
                     <Portrait unitId={h.id} size={compact ? 40 : 48} ring={SIDE_RING[h.faction]} tip={false} />
                     <span style={{ fontWeight: 700, fontSize: 16, color: '#F3D27A' }}>{heroLabel(h)}</span>
                   </button>
@@ -681,7 +681,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 {here && here.owner === viewer && canAct && !childTurn && (
                   <button className="btn prim" data-enter-settlement style={{ padding: '6px 12px', fontSize: 18 }} onClick={() => setSettlementOpen(here.id)}>Wejdź do osady {here.name}</button>
                 )}
-                <div className="settlement-rows" title="Klik: pokaż na mapie, drugi klik: otwórz okno osady">
+                <div className="settlement-rows">
                   {mine.map((x) => (
                     <button key={x.id} className={`settlement-row ${flash === x.at ? 'flash' : ''}`} data-settlement-link={x.id} onClick={() => {
                       if (selected === x.at && canAct && !childTurn) return setSettlementOpen(x.id);
@@ -697,7 +697,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     }}>
                       <img src={asset(`ikony/mapa/osada_${viewer}.webp`)} alt="" width={30} height={30} />
                       <span>{x.name}</span>
-                      {(x.garrison?.length ?? 0) > 0 && <span className="settlement-garrison" title={`Garnizon: ${x.garrison!.length}`}>⚔ {x.garrison!.length}</span>}
+                      {(x.garrison?.length ?? 0) > 0 && <span className="settlement-garrison">⚔ {x.garrison!.length}</span>}
                     </button>
                   ))}
                 </div>
@@ -741,8 +741,6 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                   <button
                     key={id}
                     className="btn btn-bare"
-                   
-                    title={UNITS[id].name}
                     onClick={() => {
                       // A hero comes back on a free hex next to the active hero; a support joins at once.
                       if (state.heroes[id]) setRevive({ itemId: resPick, unitId: id });
@@ -780,7 +778,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 const usable = canAct && hero?.faction === viewer && def.usableIn.includes('map') && (it.kind !== 'resurrection' || deadUnits.length > 0);
                 return (
                   <div key={it.id} className="plate parch" style={{ padding: '6px 9px', display: 'flex', gap: 8, alignItems: 'center' }}>
-                    <button className="btn" title="Pokaż kartę skarbu" onClick={() => onShowCard(`item:${it.kind}`)} style={{ background: 'none', border: 0, padding: 0, flex: 'none' }}>
+                    <button className="btn" onClick={() => onShowCard(`item:${it.kind}`)} style={{ background: 'none', border: 0, padding: 0, flex: 'none' }}>
                       <img {...hoverCard(`item:${it.kind}`)} src={itemArt(it.kind, isDigital(state.rules))} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
                     </button>
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -960,7 +958,7 @@ function controlNote(state: GameState, k: HexKey): string {
 function ControlFlag({ holder, centre, size }: { holder: TeamId | null; centre: boolean; size: number }) {
   const w = size * 0.46;
   return (
-    <span className="control-flag" title="Punkt kontrolny" data-control={holder ?? 'none'} style={{ position: 'absolute', left: size * 0.27, top: size * 0.02, width: w, height: w, pointerEvents: 'none', display: 'block', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.8))' }}>
+    <span className="control-flag" data-control={holder ?? 'none'} style={{ position: 'absolute', left: size * 0.27, top: size * 0.02, width: w, height: w, pointerEvents: 'none', display: 'block', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.8))' }}>
       <img src={asset(`ikony/mapa/kontrola_${holder ?? 'none'}.webp`)} alt="" width={w} height={w} style={{ display: 'block' }} />
       {centre && <span style={{ position: 'absolute', inset: -3, borderRadius: '50%', boxShadow: '0 0 0 2px #F3D27A, 0 0 8px 2px rgba(243, 210, 122, 0.7)' }} />}
     </span>
@@ -991,7 +989,7 @@ function placeOwner(state: GameState, t: Tile): TeamId | undefined {
 /** The sign of the faction that holds a mine or a settlement: its big crest from the hero cards (nothing for an unclaimed one). */
 function OwnerBanner({ owner, size }: { owner: TeamId; size: number }) {
   return (
-    <img data-owner-banner={owner} src={asset(`cards/crests/${owner}.png`)} alt={`Trzyma: ${FACTION_NAMES[owner]}`} title={`Trzyma: ${FACTION_NAMES[owner]}`} width={size} height={size} style={{ display: 'block', objectFit: 'contain', pointerEvents: 'none', filter: 'drop-shadow(0 3px 4px rgba(0,0,0,0.8))' }} />
+    <img data-owner-banner={owner} src={asset(`cards/crests/${owner}.png`)} alt={`Trzyma: ${FACTION_NAMES[owner]}`} width={size} height={size} style={{ display: 'block', objectFit: 'contain', pointerEvents: 'none', filter: 'drop-shadow(0 3px 4px rgba(0,0,0,0.8))' }} />
   );
 }
 
@@ -1039,7 +1037,7 @@ export function GoldBox({ state, faction }: { state: GameState; faction: TeamId 
   const detail = details(() => <GoldDetails state={state} faction={faction} />);
   // Gold counts as a resource: no plate or frame, big icon, a shadow keeps the numbers readable on any background.
   return (
-    <div data-gold-box title="Złoto (zapas i dochód na rundę); prawy przycisk: skąd dochód" {...detail} style={{ display: 'flex', alignItems: 'center', gap: 16, color: '#FFF4D8', textShadow: '0 1px 3px #000, 0 0 6px #000' }}>
+    <div data-gold-box {...detail} style={{ display: 'flex', alignItems: 'center', gap: 16, color: '#FFF4D8', textShadow: '0 1px 3px #000, 0 0 6px #000' }}>
       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
         <img src={asset('ikony/mapa/zloto.webp')} alt="Złoto" width={44} height={44} style={{ filter: 'drop-shadow(0 2px 3px #000)' }} />
         <b style={{ fontSize: 33 }}><span data-gold>{goldOf(state, faction)}</span> <span style={{ fontSize: 24, color: '#E8D5A8' }}>(+{incomeOf(state, faction)})</span></b>

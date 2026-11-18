@@ -43,7 +43,7 @@ export function statusList(u: BattleUnit): StatusInfo[] {
 /** Small gilded medallion: green for buffs, crimson for debuffs, value on a parchment tab. */
 export function StatusBadge({ st, size = 22 }: { st: StatusInfo; size?: number }) {
   return (
-    <span title={st.label} style={{ position: 'relative', width: size, height: size, flex: 'none', display: 'inline-block', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.55))', animation: 'pop-in 0.3s ease-out both' }}>
+    <span style={{ position: 'relative', width: size, height: size, flex: 'none', display: 'inline-block', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.55))', animation: 'pop-in 0.3s ease-out both' }}>
       {st.marker ? (
         <img src={asset(`markers/${st.marker}.png`)} alt="" style={{ width: size, height: size, objectFit: 'contain', display: 'block' }} />
       ) : (

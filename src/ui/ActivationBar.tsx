@@ -1,8 +1,8 @@
 // The bar under the arena: the active unit and what it can do, its ability and end buttons, the initiative queue.
 
-import { abilityTextFor, FACTION_NAMES, scaleText, UNITS, type TeamId } from '../engine/data';
+import { FACTION_NAMES, UNITS, type TeamId } from '../engine/data';
 import { abilityOf, livingUnits, unitSpeed } from '../engine/battle';
-import { isDigital, type Action, type BattleState, type BattleUnit, type GameState } from '../engine/types';
+import { type Action, type BattleState, type BattleUnit, type GameState } from '../engine/types';
 import { abilityArt, asset, Frame, Medal, Portrait, SIDE_RING } from './common';
 import { statusList, StatusBadge } from './battleStatus';
 
@@ -84,7 +84,7 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
       {myTurn && active && (
         <div style={{ display: 'flex', gap: 8 }}>
           {attackAbility && (
-            <button className={`btn plate parch act-btn ${useAbility ? 'on' : ''}`} style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }} onClick={() => setUseAbility(!useAbility)} title={scaleText(abilityTextFor(active.defId, isDigital(state.rules)), state.rules.statScale ?? 1, state.rules.hpScale)}>
+            <button className={`btn plate parch act-btn ${useAbility ? 'on' : ''}`} style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }} onClick={() => setUseAbility(!useAbility)}>
               <img src={asset(`cards/abilities/${abilityArt(abilityOf(active))}.png`)} alt="" style={{ width: 34, height: 34 }} />
               <span style={{ fontSize: 13, lineHeight: 1.05, textAlign: 'center' }}>{UNITS[active.defId].abilityName}{useAbility ? ' ✓' : ''}</span>
             </button>
@@ -93,7 +93,6 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
             <button
               className={`btn plate parch act-btn ${freeAbility ? 'on' : ''}`}
               style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}
-              title={scaleText(abilityTextFor(active.defId, isDigital(state.rules)), state.rules.statScale ?? 1, state.rules.hpScale)}
               onClick={() => (ab === 'sunburst' ? onAction({ type: 'battleAbility' }) : setFreeAbility(!freeAbility))}
             >
               <img src={asset(`cards/abilities/${abilityArt(abilityOf(active))}.png`)} alt="" style={{ width: 34, height: 34 }} />
@@ -111,16 +110,16 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
         {queue
           .filter((q) => !q.done || q.current)
           .map((q) => (
-            <div key={q.id} style={{ position: 'relative', flex: 'none' }} title={UNITS[b.units[q.id].defId].name}>
+            <div key={q.id} style={{ position: 'relative', flex: 'none' }}>
               <Portrait unitId={b.units[q.id].defId} size={q.current ? 48 : 38} ring={SIDE_RING[b.units[q.id].side]} glow={q.current ? '0 0 0 2.5px #9EE4FF' : undefined} />
               <div className="plate parch" style={{ position: 'absolute', right: -6, bottom: -6, width: 20, height: 18, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 12 }}>{unitSpeed(b.units[q.id])}</div>
             </div>
           ))}
-        <div title="Następna runda" style={{ flex: 'none', alignSelf: 'stretch', display: 'flex', alignItems: 'center', gap: 4, margin: '0 2px', color: '#E7CF8F', fontWeight: 800, fontSize: 13 }}>
+        <div style={{ flex: 'none', alignSelf: 'stretch', display: 'flex', alignItems: 'center', gap: 4, margin: '0 2px', color: '#E7CF8F', fontWeight: 800, fontSize: 13 }}>
           <div style={{ width: 2, height: '60%', background: 'linear-gradient(#0000, #B88A35, #0000)' }} />R{b.round + 1}
         </div>
         {nextRound.map((id) => (
-          <div key={`n${id}`} style={{ flex: 'none', opacity: 0.6 }} title={`${UNITS[b.units[id].defId].name} — następna runda`}>
+          <div key={`n${id}`} style={{ flex: 'none', opacity: 0.6 }}>
             <Portrait unitId={b.units[id].defId} size={30} ring={SIDE_RING[b.units[id].side]} />
           </div>
         ))}

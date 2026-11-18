@@ -171,7 +171,6 @@ export function Portrait({ unitId, size = 50, ring, glow, dim, title, preview = 
     <div
       className="medal-ring"
       {...(preview ? hoverCard(unitId, { tip }) : {})}
-      title={preview ? undefined : title}
       style={{ width: size, height: size, boxShadow: glow ?? '0 0 0 1.5px #1E1204', opacity: dim ? 0.45 : 1, filter: dim ? 'grayscale(0.8)' : undefined }}
     >
       <img src={portrait(unitId)} alt={title ?? ''} style={ring ? { boxShadow: `0 0 0 2.5px ${ring}` } : undefined} />
