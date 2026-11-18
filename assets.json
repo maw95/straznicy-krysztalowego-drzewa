@@ -5341,6 +5341,24 @@
       "data": "2026-11-18",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/menu/cele-kontrola-boss",
+      "pliki": [
+        "public/assets/ui/menu/kontrola.webp",
+        "public/assets/ui/menu/boss.webp"
+      ],
+      "typ": "ikony kart celu gry w kreatorze: Punkty kontrolne i Boss (okrągłe malowane medale w złotym pierścieniu)",
+      "opis": "Wymieniają mały znaczek z mapy (kontrola_dawn.webp użyty jako ikona celu) i hydrę (boss.webp), które nie pasowały stylem do reszty ikon celów. 512x512 przezroczyste tło, po 2 warianty każdej, przyjęte: kontrola B (zielone sztandary z białym drzewem na trzech kopcach i złote promienie między nimi), boss A (czarny smok na stosie złota w jaskini z lawą, rycerz dla skali); zmniejszone do 256 px (WebP). Prompt wspólny: 'Round fantasy game icon in the painted style of Heroes of Might and Magic III: a circular medal with a thick antique-gold ring border and a dark bronze inner rim, fully transparent outside the circle. Inside the medal: ...' (treść: zielona dolina o wschodzie słońca z trzema kamiennymi kopcami ze sztandarami i złotymi promieniami między nimi; wielki czarny smok ze świecącymi oczami zwinięty na stosie złota i kryształów w ciemnej jaskini, lawa za nim, mały rycerz na pierwszym planie).",
+      "scenario_asset": {
+        "kontrola": "asset_1uXkQggXjw47fitTLyEkL1Jm",
+        "boss": "asset_Eap65j77LVJpuiD5wyPrtMLQ"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

@@ -105,7 +105,7 @@ const pic = (src: string) => <img src={src} alt="" />;
 
 const OBJECTIVE_ICON: Record<ObjectiveId, string> = {
   crystals: 'ui/menu/krysztaly.webp',
-  control: 'ikony/mapa/kontrola_dawn.webp',
+  control: 'ui/menu/kontrola.webp',
   survival: 'ui/menu/przetrwanie.webp',
   boss: 'ui/menu/boss.webp',
   artifact: 'ikony/artefakty/blade2.webp',
