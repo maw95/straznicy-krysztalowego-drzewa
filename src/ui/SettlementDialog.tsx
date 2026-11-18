@@ -155,20 +155,21 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   // Level 4: the garrison. The hero standing in the settlement leaves supports to guard it or takes them back (the slots in the bottom bar).
   const garrison = s.garrison ?? [];
   const heroHere = Boolean(buyer && buyer.pos === s.at);
+  const garrisonRule = `Garnizon broni osady pod nieobecność bohatera: wróg musi go pokonać, żeby ją zająć, a w bitwie dowodzi nim właściciel osady. Maksymalnie ${SIEGE.garrisonMax} jednostki. Zostawiasz je i zabierasz, stojąc w osadzie${heroHere ? '' : ' (teraz nie stoi tu bohater, którego jest tura)'}.`;
   const garrisonPanel = state.rules.economy ? (
-    <div className="sb-garrison" data-garrison>
+    <div className="sb-garrison" data-garrison title={garrisonRule}>
       <div className="sb-label"><img src={asset('ikony/frakcje/garnizon.webp')} alt="" width={26} height={26} />Garnizon ({garrison.length}/{SIEGE.garrisonMax})</div>
       <div className="sb-slots" data-garrison-slots>
         {Array.from({ length: SIEGE.garrisonMax }, (_, i) => garrison[i] ? (
           <button key={i} className="sb-slot full" data-garrison-out={garrison[i]} disabled={!heroHere} title={`${UNITS[garrison[i]].name}${heroHere ? ': zabierz do drużyny' : ''}`} onClick={() => onAction({ type: 'kingdomGarrison', settlementId: s.id, unitId: garrison[i], dir: 'out' })}>
             <Portrait unitId={garrison[i]} size={44} />
           </button>
-        ) : <div key={i} className="sb-slot"><span>+</span></div>)}
+        ) : <div key={i} className="sb-slot" title="Puste miejsce garnizonu"><span>+</span></div>)}
       </div>
       {heroHere && garrison.length < SIEGE.garrisonMax && fs.supportsAlive.length > 0 && (
         <div className="sb-team"><span className="sb-sub">w drużynie, kliknij by zostawić:</span>
           {fs.supportsAlive.map((id) => (
-            <button key={id} className="sb-slot small" data-garrison-in={id} onClick={() => onAction({ type: 'kingdomGarrison', settlementId: s.id, unitId: id, dir: 'in' })}>
+            <button key={id} className="sb-slot small" data-garrison-in={id} title={`${UNITS[id].name}: zostaw w garnizonie`} onClick={() => onAction({ type: 'kingdomGarrison', settlementId: s.id, unitId: id, dir: 'in' })}>
               <Portrait unitId={id} size={32} />
             </button>
           ))}
@@ -477,12 +478,12 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       </div>
     </div>
   );
-  const exitButton = <button className="sb-exit" data-enter aria-label="Wyjdź z osady" onClick={onClose}><img src={asset('ui/wyjscie.webp')} alt="" /></button>;
+  const exitButton = <button className="sb-exit" data-enter title="Wyjdź z osady" aria-label="Wyjdź z osady" onClick={onClose}><img src={asset('ui/wyjscie.webp')} alt="" /></button>;
   // The way back from a page to the landscape: the exit button turned the other way round.
-  const backButton = <button className="sb-exit back" data-tree-back aria-label="Wróć do osady" onClick={() => setView('town')}><img src={asset('ui/wyjscie.webp')} alt="" /></button>;
+  const backButton = <button className="sb-exit back" data-tree-back title="Wróć do osady" aria-label="Wróć do osady" onClick={() => setView('town')}><img src={asset('ui/wyjscie.webp')} alt="" /></button>;
   const goldLine = (
     <div className="sb-treasury">
-      <span className="sb-gold"><ThingIcon word="zł" /> <b data-gold>{gold}</b></span>
+      <span className="sb-gold" title="Złoto"><ThingIcon word="zł" /> <b data-gold>{gold}</b></span>
       <span className="sb-income">+{incomeOf(state, faction)} na rundę</span>
       {state.kingdom!.res && <span className="sb-res"><ResourceStrip state={state} faction={faction} size={22} /></span>}
     </div>
@@ -566,7 +567,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         {modal && (
           <div className="settlement-modal" data-service>
             <div className="gf">
-              <button className="modal-x" aria-label="Zamknij" data-modal-close onClick={() => setModal(null)}>×</button>
+              <button className="modal-x" aria-label="Zamknij" title="Zamknij" data-modal-close onClick={() => setModal(null)}>×</button>
               <div className="gi parch" style={{ padding: '14px 18px' }}>
               {modal.startsWith('dwelling-') ? dwellingDetail(dwellingOf(state, faction, Number(modal.slice(9))) ?? '', true) : (
                 <>

@@ -227,6 +227,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false,
         <img
           src={asset(`cards/types/${typeIcon(unitId)}.png`)}
           alt=""
+          title={def.movement === 'fly' ? 'Latający' : def.attackType === 'ranged' ? 'Strzelec' : 'Walka wręcz'}
           style={{ ...circle(L.type.cx, L.type.cy, L.type.r * 0.78), objectFit: 'contain' }}
         />
 

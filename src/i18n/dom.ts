@@ -5,7 +5,7 @@
 import { getLang, subscribeLang } from './lang';
 import { translate } from './translate';
 
-const ATTRS = ['title', 'aria-label', 'placeholder', 'alt'];
+const ATTRS = ['title', 'data-title', 'aria-label', 'placeholder', 'alt'];
 const SKIP = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'NOSCRIPT']);
 /** Text that is only in Polish on purpose (the manual) carries `translate="no"`: neither it nor anything inside it is touched. */
 const kept = (n: Node): boolean => ((n.nodeType === Node.ELEMENT_NODE ? (n as Element) : n.parentElement)?.closest('[translate="no"]') ?? null) !== null;

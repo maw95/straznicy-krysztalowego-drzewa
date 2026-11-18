@@ -16,7 +16,7 @@ export function ResourceStrip({ state, faction, size = 26, light = false }: { st
   return (
     <span style={{ display: 'inline-flex', gap: light ? 16 : 10 }}>
       {RESOURCE_IDS.map((r) => (
-        <span key={r} data-res={r} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+        <span key={r} data-res={r} title={`${RESOURCE_NAMES[r]}: ${have[r]} (+${income[r]} na rundę)`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
           <img src={asset(RESOURCE_ICON[r])} alt={RESOURCE_NAMES[r]} width={size} height={size} style={light ? { filter: 'drop-shadow(0 2px 3px #000)' } : undefined} />
           <b style={{ fontSize: size * 0.75 }}>{have[r]}</b>
           {income[r] > 0 && <span style={{ fontSize: size * 0.55, color: light ? '#E8D5A8' : '#6B4A22' }}>(+{income[r]})</span>}
@@ -29,7 +29,7 @@ export function ResourceStrip({ state, faction, size = 26, light = false }: { st
 /** A price as numbers and icons ("2 <gold> 1 <wood>"), not words; with `have` the parts the faction lacks turn red. */
 export function CostIcons({ cost, have, size = 18, light = false }: { cost: Cost; have?: { gold: number; res: Record<ResourceId, number> }; size?: number; light?: boolean }) {
   const part = (key: string, icon: string, name: string, n: number, lacks: boolean) => (
-    <span key={key} data-cost-part={key} style={{ display: 'inline-flex', alignItems: 'center', gap: 2, color: lacks ? '#B3261E' : undefined, fontWeight: 700 }}>
+    <span key={key} title={name} data-cost-part={key} style={{ display: 'inline-flex', alignItems: 'center', gap: 2, color: lacks ? '#B3261E' : undefined, fontWeight: 700 }}>
       {n}<img src={asset(icon)} alt={name} width={size} height={size} style={light ? { filter: 'drop-shadow(0 1px 2px #000)' } : undefined} />
     </span>
   );

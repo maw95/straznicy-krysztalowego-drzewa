@@ -824,17 +824,17 @@ export function App() {
         {game?.kingdom && viewer && game.phase !== 'battle' && <GoldBox state={game} faction={viewer} />}
       </div>
       {humanTurn && game.players.some((p) => p.child) && (
-        <button className="btn plate parch btn-bar" onClick={showHint}>
+        <button className="btn plate parch btn-bar" title="Podpowiedź: co zrobiłby komputer" onClick={showHint}>
           💡 Podpowiedź
         </button>
       )}
       {undoStack.current.length > 0 && humanTurn && (
-        <button className="btn plate parch btn-bar" onClick={undo}>
+        <button className="btn plate parch btn-bar" title="Cofnij ostatni krok (U)" onClick={undo}>
           ↶ Cofnij
         </button>
       )}
       {isOnline && (
-        <button className="btn plate parch" style={{ padding: '6px 12px', fontSize: 15, position: 'relative' }} onClick={() => setShowChat(true)}>
+        <button className="btn plate parch" title={unread ? `Czat z graczami — nowe wiadomości: ${unread}` : 'Czat z graczami'} style={{ padding: '6px 12px', fontSize: 15, position: 'relative' }} onClick={() => setShowChat(true)}>
           Czat
           {unread > 0 && (
             <span aria-label={`nowe wiadomości: ${unread}`} style={{ position: 'absolute', top: -8, right: -8, minWidth: 20, height: 20, padding: '0 5px', borderRadius: 10, background: '#B0262B', color: '#FFF', fontSize: 13, fontWeight: 800, lineHeight: '20px', boxShadow: '0 0 0 2px #1E1204' }}>
@@ -844,13 +844,13 @@ export function App() {
         </button>
       )}
       {!isOnline && (actor.kind === 'bot' || actor.kind === 'automaton') && (
-        <button className="btn plate parch btn-bar" onClick={fastForward}>
+        <button className="btn plate parch btn-bar" title="Przewiń ruchy botów (F)" onClick={fastForward}>
           ⏩ Przewiń
         </button>
       )}
-      <button className="btn plate parch hide-mobile btn-bar" onClick={() => setShowRules(true)}>Zasady</button>
-      <button className="btn plate parch btn-bar" onClick={() => setShowDebug(true)}>Opcje</button>
-      <button className="btn plate parch btn-bar" onClick={() => setShowReport(true)}>Zgłoś błąd</button>
+      <button className="btn plate parch hide-mobile btn-bar" title="Zasady i karty (R)" onClick={() => setShowRules(true)}>Zasady</button>
+      <button className="btn plate parch btn-bar" title="Opcje (O)" onClick={() => setShowDebug(true)}>Opcje</button>
+      <button className="btn plate parch btn-bar" title="Opisz błąd — zapisze się razem z partią (B)" onClick={() => setShowReport(true)}>Zgłoś błąd</button>
     </div>
   );
 

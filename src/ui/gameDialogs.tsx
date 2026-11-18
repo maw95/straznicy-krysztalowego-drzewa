@@ -6,6 +6,7 @@ import { StatText } from './markers';
 import { InstallHint } from './InstallHint';
 import { LanguageSwitch } from './LanguageSwitch';
 import { TouchTitles } from './TouchTitles';
+import { TitleBubbles } from './TitleBubbles';
 import { useEffect, useState, type ReactNode } from 'react';
 import { ITEMS, raceOfHero, UNITS, type ItemKind } from '../engine/data';
 import { ritualFormed } from '../engine/game';
@@ -49,6 +50,7 @@ export function AppChrome({ error, onDismissError, showRules, onCloseRules, show
       <SvgDefs />
       <button
         className="btn plate parch music-btn"
+        title={music.muted ? 'Włącz muzykę' : 'Wycisz muzykę'}
         aria-label={music.muted ? 'Włącz muzykę' : 'Wycisz muzykę'}
         onClick={() => {
           music.unlock();
@@ -59,6 +61,7 @@ export function AppChrome({ error, onDismissError, showRules, onCloseRules, show
       </button>
       <FullscreenButton />
       <TouchTitles />
+      <TitleBubbles />
       {showLang && <LanguageSwitch />}
       {error && (
         <div className="plate parch" role="alert" style={{ position: 'fixed', left: '50%', top: 18, transform: 'translateX(-50%)', padding: '8px 16px', zIndex: 80, fontWeight: 700, color: '#8A1A1A' }} onClick={onDismissError}>
@@ -292,13 +295,13 @@ export function OptionsDialog(props: {
         <Frame crest style={{ width: 'min(560px, 94vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12, fontSize: 17 }}>
           <Ribbon>Opcje</Ribbon>
           {room ? (
-            <label style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 10 }} title={props.isOwner ? 'Tempo ruchów komputera dla wszystkich w pokoju' : 'Tempo ustawia założyciel pokoju'}>
               Tempo botów (dla całego pokoju) {speeds(room.botSpeed, props.onRoomSpeed, !props.isOwner)}
             </label>
           ) : (
             <label style={{ display: 'flex', alignItems: 'center', gap: 10 }}>Tempo botów {speeds(props.speed, props.onSpeed)}</label>
           )}
-          <label style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 10 }} title="Szybsze animacje skracają walki: ruchy, ciosy i efekty trwają krócej">
             Szybkość animacji
             <input type="range" min={0} max={ANIM_SPEEDS.length - 1} step={1} value={animLevel} data-anim-speed onChange={(e) => (setAnimLevel(Number(e.target.value)), setAnimSpeedLevel(Number(e.target.value)))} style={{ flex: 1 }} />
             <b style={{ minWidth: 110 }}>{ANIM_SPEED_NAMES[animLevel]}</b>
@@ -317,7 +320,7 @@ export function OptionsDialog(props: {
           <InstallHint />
           {!room && <label><input type="checkbox" checked={props.autoplay} onChange={(e) => props.onAutoplay(e.target.checked)} /> Autoplay: boty grają także za ludzi</label>}
           {!isDigital(props.game.rules) && (
-            <label>
+            <label title="Na słabszym komputerze albo telefonie możesz wrócić do okrągłych portretów">
               <input type="checkbox" checked={props.figures} onChange={(e) => props.onFigures(e.target.checked)} /> Figurki 3D na planszy
             </label>
           )}
@@ -331,7 +334,7 @@ export function OptionsDialog(props: {
           )}
           <div style={{ display: 'flex', gap: 10, alignSelf: 'flex-start' }}>
             <button className="btn plate parch" style={{ padding: '6px 14px' }} onClick={props.onRules}>Zasady i karty</button>
-            <button className="btn plate parch" data-open-log style={{ padding: '6px 14px' }} onClick={props.onLog}>Dziennik</button>
+            <button className="btn plate parch" data-open-log title="Dziennik zdarzeń (D)" style={{ padding: '6px 14px' }} onClick={props.onLog}>Dziennik</button>
           </div>
           <button className="btn prim r" data-leave style={{ padding: '12px 20px', fontSize: 22, width: '100%' }} onClick={props.onLeave}>Wyjdź z gry</button>
           <button className="btn plate parch" data-enter style={{ padding: '6px 14px', alignSelf: 'flex-end' }} onClick={props.onClose}>Zamknij</button>

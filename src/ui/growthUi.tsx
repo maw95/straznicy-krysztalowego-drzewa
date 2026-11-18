@@ -44,6 +44,7 @@ function artifactDetails(art: ArtifactDef, scale: [number, number]) {
 }
 
 const SLOTS_ORDER: Slot[] = ['helmet', 'weapon', 'armor', 'shield', 'boots'];
+const artTitle = (art: ArtifactDef, scale: [number, number]) => `${SLOT_NAMES[art.slot]}: ${art.name} (${RARITY_NAMES[art.rarity]}${art.set ? `, zestaw: ${SETS[art.set].name}` : ''}). ${scaleText(art.text, scale[0], scale[1])}${art.set ? ` ${SETS[art.set].bonusText}` : ''}`;
 
 /** The five gear slots laid out like a hero's sheet: the helmet on top, weapon - armour - shield in the middle, the boots below. */
 export function GearDoll({ hero, size = 40, picked, onPick, row = false }: { hero: HeroState; size?: number; picked?: string | null; onPick?: (art: ArtifactDef) => void; row?: boolean }) {
@@ -52,11 +53,11 @@ export function GearDoll({ hero, size = 40, picked, onPick, row = false }: { her
   const cell = (slot: Slot, col: number, rowNo: number) => {
     const art = gear.find((a) => a.slot === slot);
     return art ? (
-      <span key={slot} className={`gear-slot ${picked === art.id ? 'picked' : ''} ${onPick ? 'pickable' : ''}`} style={row ? { gridColumn: SLOTS_ORDER.indexOf(slot) + 1, gridRow: 1 } : { gridColumn: col, gridRow: rowNo }} data-gear={art.id} onClick={onPick ? () => onPick(art) : undefined} {...details(() => artifactDetails(art, scale), { pin: true })}>
+      <span key={slot} className={`gear-slot ${picked === art.id ? 'picked' : ''} ${onPick ? 'pickable' : ''}`} style={row ? { gridColumn: SLOTS_ORDER.indexOf(slot) + 1, gridRow: 1 } : { gridColumn: col, gridRow: rowNo }} title={artTitle(art, scale)} data-gear={art.id} onClick={onPick ? () => onPick(art) : undefined} {...details(() => artifactDetails(art, scale), { pin: true })}>
         <ArtifactMedal art={art} size={size} />
       </span>
     ) : (
-      <span key={slot} className="gear-slot gear-empty" style={row ? { gridColumn: SLOTS_ORDER.indexOf(slot) + 1, gridRow: 1 } : { gridColumn: col, gridRow: rowNo }} data-gear-empty={slot}>
+      <span key={slot} className="gear-slot gear-empty" style={row ? { gridColumn: SLOTS_ORDER.indexOf(slot) + 1, gridRow: 1 } : { gridColumn: col, gridRow: rowNo }} title={`${SLOT_NAMES[slot]}: puste miejsce. Artefakty leżą w skrzyniach na mapie, wypadają ze strażników i przechodzą na zwycięzcę walki bohaterów.`} data-gear-empty={slot}>
         <img src={asset(`ikony/sloty/${slot}.webp`)} alt="" width={size} height={size} style={{ display: 'block', opacity: 0.9 }} />
       </span>
     );
@@ -108,7 +109,7 @@ export function XpBar({ hero, short = false }: { hero: HeroState; short?: boolea
   const from = level > 1 ? levelStart(level) : 0;
   const pct = next === null ? 1 : Math.max(0, Math.min(1, (xp - from) / (next - from)));
   return (
-    <div className="xpbar">
+    <div className="xpbar" title={next === null ? 'Najwyższy poziom.' : `Do poziomu ${level + 1} brakuje ${Math.max(0, next - xp)} PD. PD dają bitwy, skarby i kapliczki.`}>
       {/* A shield that grows richer with the level: plain iron, bronze, silver, gold with sapphires, winged gold with crystals. */}
       <div className={`xpbar-level lvl${Math.min(level, 5)}`} aria-label={`Poziom ${level}`}>
         <img src={asset(`ikony/poziom/${Math.min(Math.max(level, 1), 5)}.webp`)} alt="" width={56} height={56} />
@@ -136,6 +137,7 @@ function BackpackIcon({ size = 40 }: { size?: number }) {
 
 /** The hero's level and experience, skills (icons) and gear slots (filled or empty) with a hover text each; the backpack icon opens the gear window. */
 export function HeroGrowth({ hero, compact = false, onOpenPack }: { hero: HeroState; compact?: boolean; onOpenPack?: () => void }) {
+  const scale = useScales();
   const skills = [...new Set(hero.skills ?? [])];
   const packCount = hero.pack?.length ?? 0;
   return (
@@ -145,18 +147,18 @@ export function HeroGrowth({ hero, compact = false, onOpenPack }: { hero: HeroSt
         <span className="lbl" style={{ width: 108, flex: 'none' }}>Umiejętności</span>
         {skills.length === 0 && <span style={{ fontSize: 13, color: 'var(--muted)' }}>brak</span>}
         {skills.map((s) => (
-          <span key={s} style={{ position: 'relative' }}>
+          <span key={s} title={`${SKILL_NAMES[raceOfHero(hero.id)][s]} ${ROMAN[skillRank(hero, s)]}: ${scaleText(skillText(s, skillRank(hero, s)), scale[0], scale[1])}`} style={{ position: 'relative' }}>
             <SkillIcon skill={s} size={36} />
             {skillRank(hero, s) > 1 && <span className="skill-rank">{ROMAN[skillRank(hero, s)]}</span>}
           </span>
         ))}
       </div>
-      <span className="lbl">Artefakty</span>
+      <span className="lbl" title="Artefakty to stałe wyposażenie bohatera, po jednym na miejsce. Skarby to jednorazowe karty frakcji.">Artefakty</span>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
         <GearDoll hero={hero} size={compact ? 26 : 40} row={compact} />
-        <button className="btn btn-bare backpack-btn" onClick={onOpenPack} aria-label="Wyposażenie i plecak" data-hero-sheet-open style={{ position: 'relative' }}>
+        <button className="btn btn-bare backpack-btn" onClick={onOpenPack} title="Wyposażenie i plecak" aria-label="Wyposażenie i plecak" data-hero-sheet-open style={{ position: 'relative' }}>
           <BackpackIcon size={compact ? 36 : 48} />
-          {packCount > 0 && <span className="pack-count" data-pack-count style={{ position: 'absolute', right: -6, top: -4 }}>{packCount}</span>}
+          {packCount > 0 && <span className="pack-count" data-pack-count title={`W plecaku: ${packOf(hero).map((a) => a.name).join(', ')}`} style={{ position: 'absolute', right: -6, top: -4 }}>{packCount}</span>}
         </button>
       </div>
     </div>
@@ -182,7 +184,7 @@ export function GearPanel({ hero, state, onAction }: { hero: HeroState; state?: 
         <GearDoll hero={hero} size={68} picked={pickedId} onPick={onAction ? (a) => setPicked(pickedId === a.id ? null : a.id) : undefined} />
       </div>
       {Object.values(SETS).filter((d) => setCount(hero, d.id) > 0).map((d) => (
-        <div key={d.id} data-set-progress={d.id} style={{ fontSize: 14, color: setCount(hero, d.id) >= d.pieces.length ? '#2E7A32' : '#6B4A22', fontWeight: setCount(hero, d.id) >= d.pieces.length ? 700 : 400 }}>
+        <div key={d.id} data-set-progress={d.id} title={d.bonusText} style={{ fontSize: 14, color: setCount(hero, d.id) >= d.pieces.length ? '#2E7A32' : '#6B4A22', fontWeight: setCount(hero, d.id) >= d.pieces.length ? 700 : 400 }}>
           {setCount(hero, d.id)}/{d.pieces.length} zestawu: {d.name}
         </div>
       ))}
@@ -190,7 +192,7 @@ export function GearPanel({ hero, state, onAction }: { hero: HeroState; state?: 
       <div className="pack-row" data-pack>
         {(pack.length ? pack : [undefined]).map((a, i) =>
           a ? (
-            <span key={i} className={`gear-slot ${pickedId === a.id ? 'picked' : ''} ${onAction ? 'pickable' : ''}`} data-pack-item={a.id} {...details(() => artifactDetails(a, scale), { pin: true })} onClick={onAction ? () => setPicked(pickedId === a.id ? null : a.id) : undefined}>
+            <span key={i} className={`gear-slot ${pickedId === a.id ? 'picked' : ''} ${onAction ? 'pickable' : ''}`} title={artTitle(a, scale)} data-pack-item={a.id} {...details(() => artifactDetails(a, scale), { pin: true })} onClick={onAction ? () => setPicked(pickedId === a.id ? null : a.id) : undefined}>
               <ArtifactMedal art={a} size={46} />
             </span>
           ) : (
