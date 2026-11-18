@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Okna w osadzie (targ, szpital, kuźnia i inne) mają ozdobną złotą ramkę z narożnikami zamiast beżowej z brązową obwódką, krzyżyk w rogu i zamykają się też kliknięciem poza oknem. Przyciski wymiany, sprzedaży i budowy siedlisk mają złotą obwódkę i niebieski gradient zamiast szarego tła z czarną ramką.
 - Ekran osady przebudowany na wzór Heroes III: wybudowane budynki stoją w krajobrazie jak jego część (różnej wielkości, na swoich miejscach, bez podpisów i ramek), po najechaniu świeci złota poświata wzdłuż ich sylwetki, a niewybudowanych nie widać. Wybudowane siedliska stworzeń też stoją w krajobrazie. Budować i rozbudowywać można tylko w Radzie Osady. Kliknięcie koszar i Rady otwiera osobny ekran, a pozostałych budynków okno. Dolna część ekranu to jeden ozdobny pasek przy krawędzi z garnizonem, bohaterem, złotem i opisem budynku pod myszką; okno osady mieści się już w ekranie, więc „Wyjdź z osady” zawsze widać.
 - Instrukcja gry komputerowej ma pełne tłumaczenie na angielski: przy angielskim języku gry „Zasady i karty” → „Instrukcja” pokazuje angielski tekst z tym samym spisem treści i wyszukiwarką; nazwy poziomów, jednostek i budynków są takie same jak w grze.
 - Poziomy złożoności są numerowane cyframi rzymskimi (Spacer I … Imperium VII) wszędzie: w nazwach poziomów, oknie zasad, podpowiedziach „Własnych ustawień”, dzienniku, instrukcji i na liście stołów online.

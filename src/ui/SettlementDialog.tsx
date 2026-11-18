@@ -100,7 +100,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           <img src={asset(RESOURCE_ICON[r])} alt="" width={30} height={30} />
           <span style={{ flex: 1, minWidth: 110 }}><b>{RESOURCE_NAMES[r]}</b>: {res[r]}</span>
           <button className="btn prim" data-trade-buy={r} disabled={gold < tradeBuyPrice(s, r)} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'buy' })} style={{ padding: '3px 12px', fontSize: 15 }}>Kup 1 ({tradeBuyPrice(s, r)} zł)</button>
-          <button className="btn" data-trade-sell={r} disabled={buildingLevel(s, 'market') < 1 || res[r] < 1} title={buildingLevel(s, 'market') < 1 ? 'Sprzedaż wymaga targu.' : undefined} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'sell' })} style={{ padding: '3px 12px', fontSize: 15 }}>Sprzedaj 1 (+{ECONOMY.tradeSell[r]} zł)</button>
+          <button className="btn prim b" data-trade-sell={r} disabled={buildingLevel(s, 'market') < 1 || res[r] < 1} title={buildingLevel(s, 'market') < 1 ? 'Sprzedaż wymaga targu.' : undefined} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'sell' })} style={{ padding: '3px 12px', fontSize: 15 }}>Sprzedaj 1 (+{ECONOMY.tradeSell[r]} zł)</button>
         </div>
       ))}
       {buildingLevel(s, 'market') > 0 && (
@@ -113,7 +113,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               {RESOURCE_IDS.filter((to) => to !== from).map((to) => {
                 const extra = tradeBuyPrice(s, to) - ECONOMY.tradeSell[from];
                 return (
-                  <button key={to} className="btn" data-swap-from={from} data-swap-to={to} disabled={res[from] < 1 || gold + ECONOMY.tradeSell[from] < tradeBuyPrice(s, to)} onClick={() => act({ type: 'kingdomSwap', settlementId: s.id, from, to })} style={{ padding: '3px 10px', fontSize: 14 }}>
+                  <button key={to} className="btn prim b" data-swap-from={from} data-swap-to={to} disabled={res[from] < 1 || gold + ECONOMY.tradeSell[from] < tradeBuyPrice(s, to)} onClick={() => act({ type: 'kingdomSwap', settlementId: s.id, from, to })} style={{ padding: '3px 10px', fontSize: 14 }}>
                     <img src={asset(RESOURCE_ICON[to])} alt="" width={18} height={18} style={{ verticalAlign: 'middle' }} /> {RESOURCE_NAMES[to]} ({extra > 0 ? `+${extra} zł` : extra < 0 ? `${-extra} zł dla ciebie` : 'bez dopłaty'})
                   </button>
                 );
@@ -184,7 +184,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                   <div style={{ fontSize: 14 }}>Życie {UNITS[r.id].hp} · Atak {UNITS[r.id].attack} · Szybkość {UNITS[r.id].speed}{state.rules.empire ? ` · ${UNITS[r.id].abilityName}` : ''}</div>
                 </div>
                 {have ? <b style={{ color: '#2E7A32' }}>{garrison.includes(r.id) || !(fs.supportsAlive.includes(r.id) || fs.supportsDead.includes(r.id)) ? 'W garnizonie' : 'W drużynie'}</b> : needsDwelling(state, r) && dwellingOf(state, faction, r.tier) === undefined ? (
-                  <button className="btn" disabled={!mayHire || locked || !canPay(state, faction, DWELLING_COST[r.tier - 2])} data-dwelling={r.id} title={locked ? 'Potrzebne rozbudowane koszary.' : 'Siedlisko jednej jednostki wyklucza drugą jednostkę tego poziomu do końca gry.'} onClick={() => act({ type: 'kingdomDwelling', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 12px', fontSize: 15 }}>
+                  <button className="btn prim b" disabled={!mayHire || locked || !canPay(state, faction, DWELLING_COST[r.tier - 2])} data-dwelling={r.id} title={locked ? 'Potrzebne rozbudowane koszary.' : 'Siedlisko jednej jednostki wyklucza drugą jednostkę tego poziomu do końca gry.'} onClick={() => act({ type: 'kingdomDwelling', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 12px', fontSize: 15 }}>
                     <img src={asset(`ikony/siedliska/${r.id}.webp`)} alt="" width={30} height={30} style={{ verticalAlign: 'middle', marginRight: 6 }} />Zbuduj: {DWELLING_NAMES[r.id]} ({costText(DWELLING_COST[r.tier - 2])})
                   </button>
                 ) : !dwellingReady(state, faction, r) ? <i data-excluded={r.id} style={{ color: '#8A5A3A' }}>wykluczone: wybrano {DWELLING_NAMES[dwellingOf(state, faction, r.tier)!]}</i> : (
@@ -375,12 +375,12 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     const st = built ? 'built' : !(mayHireHere && s.buildings.barracks >= 1 && prevOk) ? 'blocked' : canPay(state, faction, price) ? 'open' : 'poor';
     return { id: `dwelling-${tier}`, parent: tier === 2 ? 'barracks' : `dwelling-${tier - 1}`, name: built ? DWELLING_NAMES[built] : `Siedlisko poziomu ${tier}`, sub: built ? `rekrutuje: ${UNITS[built].name}` : !prevOk ? `Najpierw: siedlisko poziomu ${tier - 1}.` : `${costText(price)} + jednostka`, picture: `ikony/siedliska/${built ?? options[0]?.id}.webp`, state: st };
   }) : [];
-  const dwellingDetail = (tier: number) => {
+  const dwellingDetail = (tier: number, bare = false) => {
     const built = dwellingOf(state, faction, tier);
     const prevOk = tier === 2 || Boolean(dwellingOf(state, faction, tier - 1));
     const price = DWELLING_COST[tier - 2];
     return (
-      <div className="plate parch" data-tree-detail={`dwelling-${tier}`} style={{ padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
+      <div className={bare ? '' : 'plate parch'} data-tree-detail={`dwelling-${tier}`} style={bare ? undefined : { padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
         <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 4 }}>Siedlisko poziomu {tier}</div>
         <div style={{ fontSize: 14, color: '#6B4A22', marginBottom: 8 }}>Dwie jednostki do wyboru: zbudowanie siedliska jednej wyklucza drugą do końca gry. {!prevOk ? `Najpierw zbuduj siedlisko poziomu ${tier - 1}.` : !mayHireHere ? 'Siedliska buduje się tylko w osadzie własnej frakcji.' : ''}</div>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
@@ -534,12 +534,15 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       <Modal open={modal !== null} onClose={() => setModal(null)}>
         {modal && (
           <div className="settlement-modal" data-service>
-            {modal.startsWith('dwelling-') ? dwellingDetail(Number(modal.slice(9))) : (
-              <div className="plate parch" style={{ padding: '14px 18px' }}>
-                <div style={{ fontWeight: 800, fontSize: 22, marginBottom: 8 }}>{modalTitle}</div>
-                {panel(modal as BuildingId)}
-              </div>
-            )}
+            <div className="gf"><div className="gi parch" style={{ padding: '14px 18px' }}>
+              <button className="modal-x" aria-label="Zamknij" title="Zamknij" data-modal-close onClick={() => setModal(null)}>×</button>
+              {modal.startsWith('dwelling-') ? dwellingDetail(Number(modal.slice(9)), true) : (
+                <>
+                  <div style={{ fontWeight: 800, fontSize: 22, marginBottom: 8, paddingRight: 36 }}>{modalTitle}</div>
+                  {panel(modal as BuildingId)}
+                </>
+              )}
+            </div></div>
             <div style={{ textAlign: 'right' }}><button className="btn prim" data-enter onClick={() => setModal(null)} style={{ padding: '4px 24px', fontSize: 17 }}>Zamknij</button></div>
           </div>
         )}

@@ -915,6 +915,8 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .settlement-foot > .plate { max-height: 36vh; overflow-y: auto; }
 .settlement-actions { display: flex; flex-direction: column; gap: 8px; justify-content: flex-end; align-items: stretch; flex: none; margin-left: auto; }
 .settlement-actions.row { flex-direction: row; align-items: center; flex-wrap: wrap; }
+.modal-x { position: absolute; top: 6px; right: 8px; z-index: 3; width: 30px; height: 30px; padding: 0 0 3px; border-radius: 50%; border: 2px solid #E2B04A; background: linear-gradient(#7A2A33, #3E1218); color: #FFE9A8; font-size: 22px; line-height: 1; cursor: pointer; box-shadow: 0 0 0 1.5px #1E1204, 0 2px 4px rgba(0, 0, 0, 0.5); }
+.modal-x:hover { filter: brightness(1.2); }
 .settlement-modal { display: flex; flex-direction: column; gap: 10px; width: min(760px, 94vw); max-height: 88vh; overflow-y: auto; color: #3A2508; }
 /* The bottom bar: one ornate strip glued to the lower edge, like in Heroes III (dark wood, a gold rail with studs, corner ornaments). */
 .settlement-bar { position: relative; flex: none; z-index: 4; min-height: clamp(86px, 13vh, 124px); display: flex; align-items: center; gap: 16px; padding: 12px 20px 8px; color: #F4E3B8; font-size: 15px; line-height: 1.25;
