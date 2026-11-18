@@ -137,6 +137,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
     arenaSize: 3,
     custom: null,
   }, fixedMode ?? 'coop')));
+  /** The level and the goal start with nothing lit (there is no "Dalej" on those pages: a lit default would look like a choice already made); editing a table has both. */
+  const [picked, setPicked] = useState({ tier: initial !== undefined, objective: initial !== undefined });
   const [page, setPage] = useState<Page>(() => (initial ? 'players' : pagesOf(d, askMode)[0]));
   const pages = pagesOf(d, askMode);
   const at = pages.indexOf(page);
@@ -145,7 +147,13 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
     window.scrollTo(0, 0);
     for (const el of Array.from(document.querySelectorAll('.scroll'))) el.scrollTop = 0;
   }, [page]);
-  const patch = (p: Partial<Draft>) => setD((cur) => ({ ...cur, ...p }));
+  const markPicked = (p: Partial<Draft>) => {
+    if ('tier' in p || 'objective' in p) setPicked((cur) => ({ tier: cur.tier || 'tier' in p, objective: cur.objective || 'objective' in p }));
+  };
+  const patch = (p: Partial<Draft>) => {
+    markPicked(p);
+    setD((cur) => ({ ...cur, ...p }));
+  };
   /** The next page of the draft `next` (it may change which pages exist). */
   const goFrom = (cur: Page, next: Draft) => {
     const list = pagesOf(next, askMode);
@@ -153,6 +161,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
     setPage(list[Math.min(list.length - 1, i + 1)]);
   };
   const choose = (p: Partial<Draft>, advance = true) => {
+    markPicked(p);
     const next = { ...d, ...p };
     // The custom page starts from what the level preset sets (the mode is not known yet: the mode-bound switches come on the players page).
     if (next.tier === 'custom' && !next.custom) next.custom = defaultCustom(next.level, next.mode);
@@ -213,14 +222,14 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
 
       {page === 'tier' && (
         <div className="opt-grid" data-wizard-page="tier">
-          <Card on={d.tier === 'adventure' && d.level === 'zero'} title="Spacer" badge="I" text="Dla najmłodszych (od 5 lat): krótkie pojedynki bohaterów na planszy, bez zdolności i kości, bez rytuału. Zasady do ogarnięcia w kilka minut." img={pic(asset('ui/menu/krolik.webp'))} onClick={() => choose({ tier: 'adventure', level: 'zero' })} />
-          <Card on={d.tier === 'adventure' && d.level !== 'zero'} title="Przygoda" badge="II" text="Pełne bitwy na arenie, kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start z pełną grą." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure', level: notZero })} />
-          <Card on={d.tier === 'expedition'} title="Wyprawa" badge="III" text="Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ui/menu/wyprawa.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
-          <Card on={d.tier === 'kingdom'} title="Osada" badge="IV" text="Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ui/menu/osada.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
-          <Card on={d.tier === 'economy'} title="Księstwo" badge="V" text="Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył." img={pic(asset('ui/menu/ksiestwo.webp'))} onClick={() => choose({ tier: 'economy', level: notZero })} />
-          <Card on={d.tier === 'realm'} title="Królestwo" badge="VI" text="Księstwo plus bohaterowie i magia: drugi bohater-dowódca najęty w karczmie, czary w bitwie i na mapie, specjalności bohaterów." img={pic(asset('ui/menu/krolestwo.webp'))} onClick={() => choose({ tier: 'realm', level: notZero })} />
-          <Card on={d.tier === 'empire'} title="Imperium" badge="VII" text="Królestwo plus frakcje i Relikt: Odłamki Pierwotnej Iskry, budynek Pierwotnej Iskry, mechaniki i legendarna jednostka frakcji." img={pic(asset('ui/menu/imperium.webp'))} onClick={() => choose({ tier: 'empire', level: notZero })} />
-          <Card on={d.tier === 'custom'} title="Własne ustawienia" badge="?" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', level: notZero, custom: null })} />
+          <Card on={picked.tier && d.tier === 'adventure' && d.level === 'zero'} title="Spacer" badge="I" text="Dla najmłodszych (od 5 lat): krótkie pojedynki bohaterów na planszy, bez zdolności i kości, bez rytuału. Zasady do ogarnięcia w kilka minut." img={pic(asset('ui/menu/krolik.webp'))} onClick={() => choose({ tier: 'adventure', level: 'zero' })} />
+          <Card on={picked.tier && d.tier === 'adventure' && d.level !== 'zero'} title="Przygoda" badge="II" text="Pełne bitwy na arenie, kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start z pełną grą." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure', level: notZero })} />
+          <Card on={picked.tier && d.tier === 'expedition'} title="Wyprawa" badge="III" text="Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ui/menu/wyprawa.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
+          <Card on={picked.tier && d.tier === 'kingdom'} title="Osada" badge="IV" text="Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ui/menu/osada.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
+          <Card on={picked.tier && d.tier === 'economy'} title="Księstwo" badge="V" text="Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył." img={pic(asset('ui/menu/ksiestwo.webp'))} onClick={() => choose({ tier: 'economy', level: notZero })} />
+          <Card on={picked.tier && d.tier === 'realm'} title="Królestwo" badge="VI" text="Księstwo plus bohaterowie i magia: drugi bohater-dowódca najęty w karczmie, czary w bitwie i na mapie, specjalności bohaterów." img={pic(asset('ui/menu/krolestwo.webp'))} onClick={() => choose({ tier: 'realm', level: notZero })} />
+          <Card on={picked.tier && d.tier === 'empire'} title="Imperium" badge="VII" text="Królestwo plus frakcje i Relikt: Odłamki Pierwotnej Iskry, budynek Pierwotnej Iskry, mechaniki i legendarna jednostka frakcji." img={pic(asset('ui/menu/imperium.webp'))} onClick={() => choose({ tier: 'empire', level: notZero })} />
+          <Card on={picked.tier && d.tier === 'custom'} title="Własne ustawienia" badge="?" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', level: notZero, custom: null })} />
         </div>
       )}
 
@@ -236,7 +245,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
         <>
           <div className="opt-grid" data-wizard-page="objective">
             {(['crystals', 'control', 'survival', 'boss', 'artifact', 'conquest', 'relic'] as const).filter((o) => (o !== 'survival' || d.mode === 'coop') && (o !== 'conquest' || ['economy', 'realm', 'empire'].includes(d.tier)) && (o !== 'relic' || d.tier === 'empire')).map((o) => (
-              <Card key={o} on={d.objective === o} title={OBJECTIVES[o].name} text={OBJECTIVES[o].summary} img={pic(asset(OBJECTIVE_ICON[o]))} onClick={() => (d.mode === 'coop' && o === 'boss' ? patch({ objective: o }) : choose({ objective: o }))} />
+              <Card key={o} on={picked.objective && d.objective === o} title={OBJECTIVES[o].name} text={OBJECTIVES[o].summary} img={pic(asset(OBJECTIVE_ICON[o]))} onClick={() => (d.mode === 'coop' && o === 'boss' ? patch({ objective: o }) : choose({ objective: o }))} />
             ))}
           </div>
           {d.mode === 'coop' && d.objective === 'boss' && (
@@ -259,7 +268,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
               {!ready ? (
                 <CentredChoice label="Wybierz kształt">
                   {(Object.keys(SHAPE_NAMES) as MapShape[]).filter((sh) => sh !== 'custom').map((sh) => (
-                    <Tip key={sh} text={SHAPE_TIPS[sh]}>
+                    <Tip key={sh} text={SHAPE_TIPS[sh]} rightClick>
                       <button className={`${chip(d.shape === sh)} shape-btn`} aria-pressed={d.shape === sh} data-shape={sh} onClick={() => patch({ shape: sh })}>
                         <ShapeIcon shape={sh} width={92} />
                         <span>{SHAPE_NAMES[sh]}</span>
@@ -270,7 +279,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
               ) : (
                 <CentredChoice label="Wybierz mapę">
                   {READY_MAPS().map((m) => (
-                    <Tip key={m.id} text={m.summary}><button className={`${chip(d.customMapId === m.id)} shape-btn`} aria-pressed={d.customMapId === m.id} data-map={m.id} onClick={() => patch({ customMapId: m.id })}>{m.name}</button></Tip>
+                    <Tip key={m.id} text={m.summary} rightClick><button className={`${chip(d.customMapId === m.id)} shape-btn`} aria-pressed={d.customMapId === m.id} data-map={m.id} onClick={() => patch({ customMapId: m.id })}>{m.name}</button></Tip>
                   ))}
                 </CentredChoice>
               )}
@@ -279,7 +288,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
           {!(fullMap && ready) && (
             <CentredChoice label="Wielkość mapy">
               {sizes.map((m) => (
-                <Tip key={m} text={mapTip(m)}>
+                <Tip key={m} text={mapTip(m)} rightClick>
                   <button className={`${chip(d.mapSize === m)} size-btn map-size-btn`} aria-pressed={d.mapSize === m} onClick={() => patch({ mapSize: m })}>
                     <b className="size-code">{SIZE_CODES[m]}</b>
                     <span>{MAP_SIZE_NAMES[m]}</span>

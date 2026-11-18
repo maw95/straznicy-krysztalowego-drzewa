@@ -608,11 +608,21 @@ describe('arena through the UI', () => {
     const { container, unmount } = render(<App />);
     const doc = container.ownerDocument;
     // Level 1 fixes the goal; level 2 opens the choice.
-    await newGame(doc, 'Kooperacja', 'Przygoda');
+    await newGame(doc, 'Kooperacja');
+    expect([...doc.querySelectorAll('[data-wizard-page="tier"] .opt-card')].some((b) => b.getAttribute('aria-pressed') === 'true')).toBe(false);
+    await click(doc, 'Przygoda');
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
+    // The map page explains its shapes and sizes only after a right click.
+    const sizeTip = pick(doc, 'Mała')!.closest('.tip')!;
+    expect(sizeTip.classList.contains('open')).toBe(false);
+    await act(async () => fireEvent.contextMenu(pick(doc, 'Mała')!));
+    expect(sizeTip.classList.contains('open')).toBe(true);
+    await act(async () => fireEvent.pointerDown(doc.body));
+    expect(sizeTip.classList.contains('open')).toBe(false);
     await click(doc, '← Wstecz', 'Wyprawa');
     expect(pick(doc, 'Punkty kontrolne')).toBeTruthy();
-    expect(pick(doc, 'Kryształy do Drzewa')!.getAttribute('aria-pressed')).toBe('true');
+    // Nothing is lit on the goal page before a choice (there is no "Dalej" there).
+    expect(pick(doc, 'Kryształy do Drzewa')!.getAttribute('aria-pressed')).toBe('false');
     // The board edition has no levels and no goal choice; the arena has neither.
     await click(doc, '← Wstecz', '← Wstecz', '← Wstecz', '← Wstecz', 'Wersja planszowa', 'Kooperacja', 'Ten komputer');
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();

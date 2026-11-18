@@ -1,6 +1,7 @@
 // Pieces of the game setup shared by the local setup screen and the online room: level names and hints,
 // explanations, the faction tint of a seat, labelled rows, the option buttons and the heroes of a fresh table.
 
+import { useEffect, useState } from 'react';
 import { FACTION_HEROES, heroPool, MAP_VARIANTS, type TeamId, type MapSize } from '../engine/data';
 import type { Level, MapShape, Mode } from '../engine/types';
 
@@ -90,8 +91,27 @@ export function mapTip(m: MapSize): string {
   return `${v.rows} rzędów (${(v.rows * (v.rows + 1)) / 2} pól) · kryształy do zebrania: 2 przy jednym bohaterze Przymierza, 3 przy dwóch · skarby: ${v.resurrections} × Eliksir Odrodzenia + ${v.otherTreasures} inne${start} · limit ${v.roundLimit} rund · ok. ${MAP_TIME[m]} minut przy stole.`;
 }
 
-/** A button with an explanation that appears on hover (or keyboard focus). */
-export function Tip({ text, children }: { text: string; children: React.ReactNode }) {
+/** A button with an explanation that appears on hover (or keyboard focus), or with `rightClick` only after a right click (a long press on a phone). */
+export function Tip({ text, children, rightClick = false }: { text: string; children: React.ReactNode; rightClick?: boolean }) {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (!open) return;
+    const close = () => setOpen(false);
+    document.addEventListener('pointerdown', close, true);
+    document.addEventListener('keydown', close, true);
+    return () => {
+      document.removeEventListener('pointerdown', close, true);
+      document.removeEventListener('keydown', close, true);
+    };
+  }, [open]);
+  if (rightClick) {
+    return (
+      <span className={`tip tip-rc${open ? ' open' : ''}`} onContextMenu={(e) => { e.preventDefault(); setOpen(true); }}>
+        {children}
+        <span className="tip-pop" role="tooltip">{text}</span>
+      </span>
+    );
+  }
   return (
     <span className="tip">
       {children}

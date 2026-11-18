@@ -244,7 +244,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
         <Frame crest style={{ width: 'min(1100px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>Jaki tryb gry?</Ribbon>
           {!digital && <div style={{ fontSize: 14, color: 'var(--muted)', textAlign: 'center', marginTop: -6 }}>Wersja planszowa</div>}
-          <div className={`opt-grid compact${digital ? ' five' : ''}`} data-wizard-page="mode">
+          <div className="opt-grid compact three" data-wizard-page="mode">
             {([['pvp', 'Rywalizacja', 'rywal', TIPS.pvp], ['coop', 'Kooperacja', 'koop', TIPS.coop], ['arena', 'Arena', 'arena', TIPS.arenaMode]] as const).map(([m, title, img, text]) => (
               <button key={m} className="opt-card" data-mode={m} onClick={() => { setWizardMode(m); setLastTable(null); setStep('where'); }}>
                 <span className="opt-card-img"><img src={asset(`ui/menu/${img}.webp`)} alt="" /></span>
