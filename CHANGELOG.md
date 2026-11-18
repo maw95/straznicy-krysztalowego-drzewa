@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 2.12.0 — 2026-11-18
+
 - Telefon, arena walki: widać całą arenę, także dolny rząd heksów; przyciski + i − przybliżają ją (po przybliżeniu arenę przewijasz palcem). Czarne pasy po bokach znikły: tło areny jest rozmytym, przyciemnionym obrazem tej samej areny, a obraz areny łagodnie zanika na brzegach zamiast powielonej kopii.
 - Telefon, ramki: ozdobniki w rogach dolnych pasków nie zasłaniają już pierwszych i ostatnich słów.
 - Telefon, bitwa: przyciski „Magia” i „Skarby” są sporo mniejsze i leżą niżej, tuż nad dolnym paskiem; gdy otwierasz księgę czarów albo plecak skarbów, dolny pasek się chowa, a księga i plecak mieszczą się w całości na niskim ekranie.
