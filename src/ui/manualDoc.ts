@@ -1,6 +1,6 @@
 // The in-game manual (src/content/instrukcja.pl.md) as data: the Markdown is cut into chapters (`##`) and parts (`###`), each with plain text for the search.
 // Pure functions, no React; the view is ManualView.tsx. Only the Markdown the manual uses is understood: headings, paragraphs, bullet and numbered lists, tables,
-// quotes, **bold**, *italic*, `code` and [links](#id) to other places of the manual. A line `@słowa: a, b` adds hidden keywords to the chapter.
+// quotes, **bold**, *italic*, `code` and [links](#id) to other places of the manual. A line `@słowa: a, b` (`@words:` in the English file) adds hidden keywords to the chapter.
 
 export type Inline = { t: 'text'; v: string } | { t: 'b' | 'i' | 'code'; v: string } | { t: 'link'; v: string; to: string };
 
@@ -131,7 +131,7 @@ export function parseManual(md: string): ManualDoc {
       flush();
       current = { level: h[1] === '##' ? 2 : 3, title: h[2].trim(), lines: [], keywords: [] };
     } else if (current) {
-      const kw = /^@słowa:\s*(.*)$/.exec(raw);
+      const kw = /^@(?:słowa|words):\s*(.*)$/.exec(raw);
       if (kw) current.keywords.push(...kw[1].split(',').map((k) => k.trim()).filter(Boolean));
       else current.lines.push(raw);
     }

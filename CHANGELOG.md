@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Instrukcja gry komputerowej ma pełne tłumaczenie na angielski: przy angielskim języku gry „Zasady i karty” → „Instrukcja” pokazuje angielski tekst z tym samym spisem treści i wyszukiwarką; nazwy poziomów, jednostek i budynków są takie same jak w grze.
 - Poziomy złożoności są numerowane cyframi rzymskimi (Spacer I … Imperium VII) wszędzie: w nazwach poziomów, oknie zasad, podpowiedziach „Własnych ustawień”, dzienniku, instrukcji i na liście stołów online.
 - Kreator: poziomy złożoności zamiast „Poziom 0…6” w opisie mają ozdobną cyfrę rzymską w rogu karty (Spacer I, Przygoda II, … Imperium VII), a „Własne ustawienia” znak zapytania. Wszystkie odznaki są tej samej wielkości i okrągłe (także „VII”).
 - Nowa instrukcja gry komputerowej w „Zasady i karty” → „Instrukcja”: opisuje wszystkie poziomy (od Spaceru do Imperium), tryby, cele, kampanię, Ekspedycję i grę online. Ma spis treści z linkami do rozdziałów i wyszukiwarkę po słowach kluczowych (pomija polskie litery i końcówki). Instrukcja planszówki do druku zostaje dostępna na dole strony. Na razie tylko po polsku.

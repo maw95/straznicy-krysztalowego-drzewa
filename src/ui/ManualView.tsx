@@ -1,13 +1,14 @@
 // The manual of the computer game ("Zasady i karty" → "Instrukcja"): a table of contents with links, a small search by keywords, and the text itself.
-// The text is src/content/instrukcja.pl.md (Polish only for now); manualDoc.ts cuts it into chapters.
+// The text is src/content/instrukcja.pl.md or instrukcja.en.md (the translation, same chapters), chosen by the language; manualDoc.ts cuts it into chapters.
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
-import md from '../content/instrukcja.pl.md?raw';
+import mdEn from '../content/instrukcja.en.md?raw';
+import mdPl from '../content/instrukcja.pl.md?raw';
 import { useLang } from '../i18n/lang';
 import { asset } from './common';
 import { highlightParts, parseManual, searchManual, type Block, type Entry, type Inline } from './manualDoc';
 
-const DOC = parseManual(md);
+const DOCS = { pl: parseManual(mdPl), en: parseManual(mdEn) };
 const anchor = (id: string) => `man-${id}`;
 
 function Text({ v, query }: { v: string; query: string }) {
@@ -75,11 +76,12 @@ function Blocks({ blocks, query, go }: { blocks: Block[]; query: string; go: (id
 
 export function ManualView() {
   const [lang] = useLang();
+  const DOC = DOCS[lang];
   const [query, setQuery] = useState('');
   const [tocOpen, setTocOpen] = useState(false);
   const [active, setActive] = useState(DOC.entries[0]?.id ?? '');
   const bodyRef = useRef<HTMLDivElement>(null);
-  const hits = useMemo(() => searchManual(DOC, query), [query]);
+  const hits = useMemo(() => searchManual(DOC, query), [DOC, query]);
   const searching = query.trim().length > 0;
   // A new search shows its results from the top, not from where the text was scrolled to.
   useEffect(() => {
@@ -112,7 +114,7 @@ export function ManualView() {
     );
     root.querySelectorAll('section[data-chapter]').forEach((s) => io.observe(s));
     return () => io.disconnect();
-  }, [searching]);
+  }, [searching, DOC]);
 
   const chapters = DOC.entries.filter((e) => e.level === 2);
   const partsOf = (c: Entry) => DOC.entries.filter((e) => e.level === 3 && e.chapter === c.id);
@@ -135,7 +137,7 @@ export function ManualView() {
         <button className="manual-toc-toggle" aria-expanded={tocOpen} onClick={() => setTocOpen(!tocOpen)}>
           Spis treści {tocOpen ? '▴' : '▾'}
         </button>
-        <nav className="manual-toc" aria-label="Spis treści" data-manual-toc translate="no" lang="pl">
+        <nav className="manual-toc" aria-label="Spis treści" data-manual-toc translate="no" lang={lang}>
           {chapters.map((c) => (
             <div key={c.id}>
               <a href={`#${anchor(c.id)}`} className={`manual-toc-ch ${active === c.id ? 'on' : ''}`} onClick={(e) => { e.preventDefault(); go(c.id); }}>{c.title}</a>
@@ -151,9 +153,10 @@ export function ManualView() {
         {searching ? (
           <div data-manual-results>
             <h2 className="manual-results-title">{hits.length ? `Wyniki dla „${query.trim()}”: ${hits.length}` : `Brak wyników dla „${query.trim()}”`}</h2>
-            {!hits.length && <p>Spróbuj krótszego słowa albo innej formy (na przykład „kuźn” zamiast „kuźnia”). Spis treści zawsze prowadzi do całego rozdziału.</p>}
+            {!hits.length && lang === 'en' && <p translate="no">Try a shorter word or another form (for example "forg" instead of "forge"). The contents always lead to the whole chapter.</p>}
+            {!hits.length && lang !== 'en' && <p>Spróbuj krótszego słowa albo innej formy (na przykład „kuźn” zamiast „kuźnia”). Spis treści zawsze prowadzi do całego rozdziału.</p>}
             {hits.map(({ entry, snippet }) => (
-              <a key={entry.id} href={`#${anchor(entry.id)}`} className="manual-hit" translate="no" lang="pl" onClick={(e) => { e.preventDefault(); go(entry.id); }}>
+              <a key={entry.id} href={`#${anchor(entry.id)}`} className="manual-hit" translate="no" lang={lang} onClick={(e) => { e.preventDefault(); go(entry.id); }}>
                 <span className="manual-hit-crumb">{entry.level === 3 ? `${entry.chapterTitle} › ` : ''}<b><Text v={entry.title} query={query} /></b></span>
                 <span className="manual-hit-text"><Text v={snippet} query={query} /></span>
               </a>
@@ -161,9 +164,8 @@ export function ManualView() {
           </div>
         ) : (
           <>
-            {lang !== 'pl' && <p className="manual-note">Instrukcja jest na razie tylko po polsku. Instrukcję planszówki do druku (też po polsku) znajdziesz na dole strony.</p>}
             {chapters.map((c) => (
-              <section key={c.id} data-chapter id={anchor(c.id)} translate="no" lang="pl">
+              <section key={c.id} data-chapter id={anchor(c.id)} translate="no" lang={lang}>
                 <h2>{c.title}</h2>
                 <Blocks blocks={c.blocks} query="" go={go} />
                 {partsOf(c).map((p) => (
@@ -172,12 +174,13 @@ export function ManualView() {
                     <Blocks blocks={p.blocks} query="" go={go} />
                   </div>
                 ))}
-                <a href="#top" className="manual-up" onClick={(e) => { e.preventDefault(); bodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' }); setTocOpen(true); }}>↑ do spisu treści</a>
+                <a href="#top" className="manual-up" onClick={(e) => { e.preventDefault(); bodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' }); setTocOpen(true); }}>{lang === 'en' ? '↑ back to the contents' : '↑ do spisu treści'}</a>
               </section>
             ))}
             <p className="manual-print">
               Instrukcja <b>wersji planszowej</b> do wydrukowania:{' '}
-              <a href={asset('manual/index.html')} target="_blank" rel="noreferrer">otwórz w nowej karcie</a>.
+              <a href={asset('manual/index.html')} target="_blank" rel="noreferrer">otwórz w nowej karcie</a>
+              {lang === 'en' ? <span translate="no"> (Polish only)</span> : null}.
             </p>
           </>
         )}

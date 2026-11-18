@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import mdEn from '../src/content/instrukcja.en.md?raw';
 import md from '../src/content/instrukcja.pl.md?raw';
 import { brokenLinks, fold, highlightParts, parseManual, searchManual, slugify } from '../src/ui/manualDoc';
 
@@ -64,5 +65,31 @@ describe('manual: search', () => {
     const parts = highlightParts('Kuźnia zbroi', 'kuznia');
     expect(parts[0]).toEqual({ v: 'Kuźnia', hit: true });
     expect(parts.map((p) => p.v).join('')).toBe('Kuźnia zbroi');
+  });
+});
+
+describe('manual: English translation', () => {
+  const en = parseManual(mdEn);
+
+  it('has the same chapters and parts in the same order as the Polish one', () => {
+    const shape = (d: typeof doc) => d.entries.map((e) => `${e.level}:${e.blocks.map((b) => b.t).join(',')}`);
+    expect(shape(en)).toEqual(shape(doc));
+  });
+
+  it('has unique anchors, working links and keywords everywhere', () => {
+    expect(en.ids.size).toBe(en.entries.length);
+    expect(brokenLinks(en)).toEqual([]);
+    expect(en.entries.filter((e) => e.level === 2 && !e.keywords.length)).toEqual([]);
+  });
+
+  it('keeps every number of the Polish text', () => {
+    const nums = (m: string) => (m.replace(/@(słowa|words):.*/g, '').match(/\d+/g) ?? []).sort();
+    expect(nums(mdEn)).toEqual(nums(md));
+  });
+
+  it('searches in English', () => {
+    expect(searchManual(en, 'forge')[0].entry.text).toMatch(/Forge/);
+    expect(searchManual(en, 'moat catapult').length).toBeGreaterThan(0);
+    expect(searchManual(en, 'hot-seat')[0].entry.chapter).toBe('game-modes');
   });
 });

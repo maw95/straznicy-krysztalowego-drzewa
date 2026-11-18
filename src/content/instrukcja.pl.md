@@ -388,7 +388,7 @@ Gra jest przygotowana także do grania z dzieckiem (od 5 lat):
 - **Zapis:** gra zapisuje się sama (**autozapis**) i możesz zapisać ją pod własną nazwą (**Opcje → Zapisz grę**). Wczytujesz w menu głównym („Wczytaj grę”): ostatnią partię, zapis pod nazwą albo grę z pliku. Zapis to ustawienia plus lista ruchów, więc po wczytaniu stan jest dokładnie taki sam.
 - **Opcje** (klawisz **O**): szybkość animacji (szybsze skracają walki), język, tryb Autoplay, wygląd portretów (można wrócić do okrągłych na słabszym urządzeniu), zasady i karty, dziennik oraz wyjście z gry.
 - **Dziennik** (klawisz **D**): lista zdarzeń gry, ułatwiająca zrozumienie, co się stało.
-- **Język:** polski i angielski. Gra wybiera go z ustawień przeglądarki, a ty możesz zmienić flagami w prawym górnym rogu menu albo w opcjach; wybór jest zapamiętywany. Angielska wersja ma własne logo, a tekst tej instrukcji jest na razie tylko po polsku.
+- **Język:** polski i angielski. Gra wybiera go z ustawień przeglądarki, a ty możesz zmienić flagami w prawym górnym rogu menu albo w opcjach; wybór jest zapamiętywany. Angielska wersja ma własne logo i własny tekst tej instrukcji (instrukcja do druku jest tylko po polsku).
 - **Telefon i instalacja:** grę można zainstalować jak aplikację (opcje pokazują podpowiedź instalacji), a po instalacji działa na pełnym ekranie.
 - **Zgłoszenie błędu:** w trakcie gry możesz opisać problem; zgłoszenie dostaje ostatnie linie dziennika i stan gry. Bez połączenia z serwerem zgłoszenie czeka w przeglądarce („Dla testerów” → „Wyślij do twórcy”).
 
