@@ -22,7 +22,7 @@ import {
   unitDistance,
   catapultTargets,
 } from '../engine/battle';
-import { castableInBattle, SPELLS, spellTargets, type SpellId } from '../engine/magic';
+import { castableInBattle, SPELLS, spellPreview, spellTargets, type SpellId } from '../engine/magic';
 import { sfx } from './sfx';
 import { distance, parseKey, type HexKey } from '../engine/hex';
 import type { Action, BattleUnit, GameState } from '../engine/types';
@@ -406,6 +406,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const previewOf = (u: BattleUnit): { text: string; lethal: boolean } | null => {
     const approaching = approach?.targetId === u.id && active ? approach.cell : null;
     if (hover !== u.pos && !approaching) return null;
+    // Aiming a spell: the spell's own result, never the active unit's weapon blow.
+    if (spellNow) return spellAims.some((t) => t.id === u.id) ? spellPreview(state, spellNow, u) : null;
     if (targets.some((t) => t.id === u.id)) return attackPreview(u);
     if (approaching) return attackPreview(u, movePath(state, active!, approaching).length - 1);
     return unitCursor(u) === 'cur-blocked' ? { text: 'Przeszkoda zasłania cel', lethal: false } : null;

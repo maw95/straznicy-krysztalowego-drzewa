@@ -129,6 +129,37 @@ export function spellTargets(state: GameState, spell: SpellId): BattleUnit[] {
   return [];
 }
 
+/**
+ * Damage (or healing, for Leczenie) a battle spell deals to its target on the screen's scale; `jump` is Grom's second blow.
+ * The one place the number comes from, so the cast and the preview over the target always agree.
+ */
+export function spellAmount(state: GameState, spell: SpellId, power: number, jump = false): number {
+  switch (spell) {
+    case 'bolt': return (MAGIC.boltDamage + power) * scaleOf(state);
+    case 'fireball': return (MAGIC.fireballDamage + power) * scaleOf(state);
+    case 'thunder': return ((jump ? MAGIC.thunderJump : MAGIC.thunderDamage) + power) * scaleOf(state);
+    case 'mend': return (MAGIC.mendHeal + power) * hpScaleOf(state);
+    default: return 0;
+  }
+}
+
+/** What the spell would do to `target` now (shown over it while aiming); null for spells without a number. Spells ignore armour and reductions. */
+export function spellPreview(state: GameState, spell: SpellId, target: BattleUnit): { text: string; lethal: boolean } | null {
+  const b = state.battle;
+  const hero = b?.activation ? state.heroes[b.activation.unitId] : undefined;
+  if (!hero) return null;
+  const amount = spellAmount(state, spell, spellPower(hero));
+  if (spell === 'mend') {
+    const healed = Math.min(amount, target.maxHp - target.hp);
+    return { text: `+${healed} → ${target.hp + healed} Ż`, lethal: false };
+  }
+  if (spell !== 'bolt' && spell !== 'fireball' && spell !== 'thunder') return null;
+  const tail = spell === 'fireball' ? ' · i sąsiedzi' : spell === 'thunder' ? ` · skok −${spellAmount(state, spell, spellPower(hero), true)}` : '';
+  return target.hp <= amount
+    ? { text: `−${amount} · pokona${tail}`, lethal: true }
+    : { text: `−${amount} → ${target.hp - amount} Ż${tail}`, lethal: false };
+}
+
 /** The active hero casts a spell in the battle: once per activation, before or after its move and attack. */
 export function battleSpell(state: GameState, spell: SpellId, targetId?: string): void {
   const b = state.battle!;
@@ -152,10 +183,10 @@ export function battleSpell(state: GameState, spell: SpellId, targetId?: string)
   battleFx(state, `czar_${spell}` as 'czar_bolt', target.pos);
   switch (spell) {
     case 'bolt':
-      dealDamage(state, target, (MAGIC.boltDamage + power) * scaleOf(state), def.name);
+      dealDamage(state, target, spellAmount(state, spell, power), def.name);
       break;
     case 'mend': {
-      const healed = Math.min((MAGIC.mendHeal + power) * hpScaleOf(state), target.maxHp - target.hp);
+      const healed = Math.min(spellAmount(state, spell, power), target.maxHp - target.hp);
       target.hp += healed;
       (b.heals ??= []).push({ unitId: target.id, amount: healed });
       log(state, 'ability', `${name(target)} odzyskuje ${healed} Ż.`);
@@ -171,20 +202,20 @@ export function battleSpell(state: GameState, spell: SpellId, targetId?: string)
     case 'fireball': {
       const centre = cellsOf(target);
       const near = livingUnits(b).filter((u) => u.id !== target.id && u.pos && cellsOf(u).some((c) => centre.some((k) => distance(parseKey(k), parseKey(c)) === 1)));
-      for (const u of [target, ...near]) if (u.alive) dealDamage(state, u, (MAGIC.fireballDamage + power) * scaleOf(state), def.name);
+      for (const u of [target, ...near]) if (u.alive) dealDamage(state, u, spellAmount(state, spell, power), def.name);
       break;
     }
     case 'haste':
       b.extra.unshift({ unitId: target.id, moveOnly: false });
       break;
     case 'thunder': {
-      dealDamage(state, target, (MAGIC.thunderDamage + power) * scaleOf(state), def.name);
+      dealDamage(state, target, spellAmount(state, spell, power), def.name);
       const from = cellsOf(target);
       const reach = (u: BattleUnit) => Math.min(...cellsOf(u).flatMap((c) => from.map((x) => distance(parseKey(x), parseKey(c)))));
       const next = livingUnits(b).filter((u) => u.id !== target.id && u.side === target.side && u.pos).sort((x, y) => reach(x) - reach(y) || (x.id < y.id ? -1 : 1))[0];
       if (next) {
         battleFx(state, 'czar_thunder', next.pos);
-        dealDamage(state, next, (MAGIC.thunderJump + power) * scaleOf(state), def.name);
+        dealDamage(state, next, spellAmount(state, spell, power, true), def.name);
       }
       break;
     }

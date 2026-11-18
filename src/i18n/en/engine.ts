@@ -2,6 +2,9 @@
 import { register } from '../translate';
 
 register({
+  "+{0} → {1} Ż": "+{0} → {1} HP",
+  "· i sąsiedzi": "· and its neighbours",
+  "· skok −{0}": "· jump −{0}",
   "Bitwa się rozpoczyna.": "The battle begins.",
   "Teraz nie ustawia ta frakcja.": "It is not this faction's turn to deploy.",
   "Jednostki można ustawić tylko w swoich kolumnach startowych.": "Units can only be placed in your own starting columns.",

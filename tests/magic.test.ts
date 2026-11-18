@@ -5,7 +5,7 @@ import { chooseAction } from '../src/engine/ai';
 import { activeHero, applyAction, createGame } from '../src/engine/game';
 import { buildingsOf, settlementAt, spellPrice } from '../src/engine/kingdom';
 import { unitAttackBase } from '../src/engine/battle';
-import { botSpell, castableInBattle, circleSpells, MAGIC, manaOf, maxMana, SPELL_CIRCLES, SPELLS, spellPower, towerSpells } from '../src/engine/magic';
+import { botSpell, castableInBattle, circleSpells, MAGIC, manaOf, maxMana, SPELL_CIRCLES, SPELLS, spellPower, spellPreview, towerSpells } from '../src/engine/magic';
 import { mapNeighbors, tileCost } from '../src/engine/map';
 import type { GameState } from '../src/engine/types';
 import { playOut, pvpSeats, setup } from './helpers/engine';
@@ -175,6 +175,30 @@ describe('level 5: spells in a battle', () => {
     s.battle!.units.werewolfLord.hp = 1;
     expect(botSpell(s)).toEqual({ spell: 'bolt', targetId: 'werewolfLord' });
     expect(chooseAction(s)).toEqual({ type: 'battleSpell', spell: 'bolt', targetId: 'werewolfLord' });
+  });
+});
+
+describe('level 5: the preview while aiming a spell', () => {
+  it('shows the spell\'s own damage, which is what the cast then takes off', () => {
+    let s = battle(['bolt', 'mend', 'fireball', 'thunder']);
+    s.heroes.ancientBear.mana = 30;
+    const foe = Object.values(s.battle!.units).find((u) => u.side === 'horde')!;
+    const hp = foe.hp;
+    const p = spellPreview(s, 'bolt', foe)!;
+    const dmg = (MAGIC.boltDamage + spellPower(s.heroes.ancientBear)) * (s.rules.statScale ?? 1);
+    expect(p.text).toBe(`−${dmg} → ${hp - dmg} Ż`);
+    expect(p.lethal).toBe(false);
+    // A weaker foe is shown as beaten.
+    foe.hp = dmg;
+    expect(spellPreview(s, 'bolt', foe)).toEqual({ text: `−${dmg} · pokona`, lethal: true });
+    foe.hp = hp;
+    s = applyAction(s, { type: 'battleSpell', spell: 'bolt', targetId: foe.id });
+    expect(s.battle!.units[foe.id].hp).toBe(hp - dmg);
+    // A spell without a number has no note; healing shows what is restored, capped by the missing Życie.
+    expect(spellPreview(s, 'slow', foe)).toBeNull();
+    const ally = Object.values(s.battle!.units).find((u) => u.side === 'dawn' && u.alive && u.id !== 'ancientBear')!;
+    ally.hp = ally.maxHp - 1;
+    expect(spellPreview(s, 'mend', ally)).toEqual({ text: `+1 → ${ally.maxHp} Ż`, lethal: false });
   });
 });
 
