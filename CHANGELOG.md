@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Figurki 3D (arena walki i mapa świata) są tylko w wydaniu planszowym; wydanie cyfrowe zostaje przy swoich animowanych jednostkach i portretach, a przełącznik „Figurki 3D” w Opcjach pokazuje się tylko w planszowym.
 - Telefon: ikony pełnego ekranu i muzyki w prawym górnym rogu są dużo mniejsze i bez tła oraz obwódek (jasny znak z cieniem, czytelny na każdym obrazie).
 - Telefon, menu główne: sekcja „Twoje partie” stoi nad linkami „Wersja” i „Autorzy”.
 

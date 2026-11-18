@@ -48,7 +48,7 @@ import { ArenaPrep, DraftDialog, GearDialog, SpellPickDialog } from './ArenaPrep
 import { DEV_TOOLS_ALLOWED, DevPanel } from './DevPanel';
 import { useAutoFullscreen } from './fullscreen';
 import { ChatBox, OnlineOverlay, OnlineScreen } from './OnlineScreen';
-import { figuresOn, setFiguresOn } from './FigureLayer';
+import { figuresOn, setFiguresEdition, setFiguresOn } from './FigureLayer';
 import { savedToken, submitResult, type BotSpeed, type Invitation, type OnlineSession, type OnlineState } from '../online/api';
 import { useOnline } from '../online/useOnline';
 
@@ -885,6 +885,8 @@ export function App() {
   const campaignRun = scenarioOf(game.setup);
   const arenaPrep = !held && game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'gear' || b.stage === 'spells' || b.stage === 'select' || b.stage === 'draft')));
 
+  // 3D figures only exist in the board edition: the views below ask `figureFor` while they render.
+  setFiguresEdition(!isDigital(game.rules));
   return (
     <DigitalCardsContext.Provider value={isDigital(game.rules)}>
     <DigitalContext.Provider value={isDigital(game.rules)}>

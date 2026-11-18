@@ -371,9 +371,16 @@ export function setFiguresOn(on: boolean) {
   }
 }
 
-/** Whether a unit is drawn as a 3D figure (it has a model, they are switched on, and the browser can draw them). */
+let boardEdition = false;
+
+/** 3D figures belong to the board edition only (the digital game has its own 2D clips and portraits). The app tells which one is on. */
+export function setFiguresEdition(board: boolean) {
+  boardEdition = board;
+}
+
+/** Whether a unit is drawn as a 3D figure (board edition, it has a model, they are switched on, and the browser can draw them). */
 export function figureFor(unitId: string): boolean {
-  return hasFigure(unitId) && figuresOn() && webgl();
+  return boardEdition && hasFigure(unitId) && figuresOn() && webgl();
 }
 
 let webglOk: boolean | null = null;

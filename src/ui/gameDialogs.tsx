@@ -9,7 +9,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { ITEMS, UNITS, type ItemKind } from '../engine/data';
 import { ritualFormed } from '../engine/game';
 import { GROWTH, levelOf, skillRank, type SkillId } from '../engine/growth';
-import type { GameState, HeroState, LogEntry } from '../engine/types';
+import { isDigital, type GameState, type HeroState, type LogEntry } from '../engine/types';
 import type { BotSpeed, RoomView } from '../online/api';
 import { BOT_SPEEDS } from '../online/api';
 import { Frame, Modal, Ribbon, SvgDefs } from './common';
@@ -316,9 +316,11 @@ export function OptionsDialog(props: {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>Język <LanguageSwitch inline /></div>
           <InstallHint />
           {!room && <label><input type="checkbox" checked={props.autoplay} onChange={(e) => props.onAutoplay(e.target.checked)} /> Autoplay: boty grają także za ludzi</label>}
-          <label title="Na słabszym komputerze albo telefonie możesz wrócić do okrągłych portretów">
-            <input type="checkbox" checked={props.figures} onChange={(e) => props.onFigures(e.target.checked)} /> Figurki 3D na planszy
-          </label>
+          {!isDigital(props.game.rules) && (
+            <label title="Na słabszym komputerze albo telefonie możesz wrócić do okrągłych portretów">
+              <input type="checkbox" checked={props.figures} onChange={(e) => props.onFigures(e.target.checked)} /> Figurki 3D na planszy
+            </label>
+          )}
           <div style={{ fontSize: 14, color: 'var(--muted)' }}>Skróty: Spacja — koniec tury/aktywacji · U — cofnij · F — przewiń boty · D — dziennik · R — zasady · Z — zdolność · S — skarby · Ctrl na jednostce — jej zasięg · Esc — zamknij</div>
           {props.onSaveGame && (
             <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
