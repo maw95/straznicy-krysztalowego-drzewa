@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Rada Osady, kolory: wybudowany budynek, który ma jeszcze wyższy poziom, jest zawsze turkusowy (brakujące surowce pokazuje czerwona cena); beż oznacza budynek w pełni rozbudowany, a pomarańcz nowy budynek, na który brakuje surowców. Linie drzewka: każdy budynek-rodzic ma własny tor w szczelinie między kolumnami, więc linie różnych budynków biegną równolegle i nie nakładają się (np. Legowisko Jeżozwierzy nie wygląda już, jakby wymagało Targu i Skarbca).
+
 - Złoto, surowce i statystyki są wszędzie ikonami, a nie słowami: zamiast „3 zł”, „2 drewna”, „+1 A”, „Życie 5 · Atak 4” widać liczbę z ikoną. Dotyczy dziennika, podpowiedzi, samouczka, okna osady (ceny na przyciskach, opisy budynków), chatek, Zasad i instrukcji w grze.
 
 ## 2.12.0 — 2026-11-18

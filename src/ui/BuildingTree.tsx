@@ -1,7 +1,8 @@
 // The tree of the settlement's buildings (the Rada Osady view): a node per building, joined by lines that run straight and bend at right angles with
 // rounded corners (like Heroes: Olden Era). The graph is the engine's BUILDING_PARENT (docs/BUDYNKI.md 0a); the council is its root and always stands.
 // Level 6: both dwellings of a tier stand side by side with a "lub" badge between them (one excludes the other). The colour of a node says its state:
-// built (beige), can be upgraded now (turquoise, with the next level's name and price), can be built now (green), only resources missing (amber), a required building missing (grey stone), shut out for good (red).
+// fully upgraded (beige), has a next level (turquoise, with its name and price; the price turns red where something is missing), can be built now (green),
+// only resources missing for a new building (orange), a required building missing (grey stone), shut out for good (red).
 
 import { raceOf } from '../engine/teams';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
@@ -41,16 +42,16 @@ export function nodeState(state: GameState, s: Settlement, faction: TeamId, b: B
   const cost = buildCost(state, s, b);
   if (cost === null) return 'full';
   if (buildBlock(s, b) || (b === 'barracks' && s.land !== faction)) return 'blocked';
-  if (!canPay(state, faction, cost)) return level > 0 ? 'built' : 'poor';
-  return level > 0 ? 'upgrade' : 'open';
+  // A built house that has a next level is turquoise whether or not the next level can be paid for (the price turns red where something is missing).
+  if (level > 0) return 'upgrade';
+  return canPay(state, faction, cost) ? 'open' : 'poor';
 }
 
-/** A line from the right edge of a parent to the left edge of a child: straight, bending at right angles with rounded corners (the bend sits in the gap between the columns). */
-function elbow(x1: number, y1: number, x2: number, y2: number): string {
-  const bx = x2 - GAP_X / 2;
+/** A line from the right edge of a parent to the left edge of a child: straight, bending at right angles with rounded corners (the bend sits in its own lane of the gap before the child's column). */
+function elbow(x1: number, y1: number, x2: number, y2: number, bx: number, lanes: number): string {
   const dy = y2 - y1;
   if (Math.abs(dy) < 1) return `M ${x1} ${y1} H ${x2}`;
-  const r = Math.min(RADIUS, Math.abs(dy) / 2, GAP_X / 2 - 1);
+  const r = Math.min(RADIUS, Math.abs(dy) / 2, GAP_X / (lanes + 1) - 1);
   const s = Math.sign(dy);
   return `M ${x1} ${y1} H ${bx - r} Q ${bx} ${y1} ${bx} ${y1 + s * r} V ${y2 - s * r} Q ${bx} ${y2} ${bx + r} ${y2} H ${x2}`;
 }
@@ -94,10 +95,26 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
     });
   }
   const at = (n: NodeId) => pos.get(n)!;
-  const lines = nodes.flatMap((n) => parentsOf(n).filter((p) => nodes.includes(p)).map((p) => {
+  // Every parent that needs a bend gets a lane of its own in the gap before the child's column, so vertical runs of different parents never lie on one another
+  // (the children of one parent share its lane: a fork). Lanes are ordered so that the runs cross as little as possible: going down, the higher parent is
+  // the one further right (the lower parent's horizontal stops before it); going up, the other way round.
+  const edges = nodes.flatMap((n) => parentsOf(n).filter((p) => nodes.includes(p)).map((p) => ({ p, n, dy: at(n).y - at(p).y })));
+  const laneOf = new Map<string, { i: number; of: number }>();
+  const byDepth = new Map<number, typeof edges>();
+  for (const e of edges.filter((e) => Math.abs(e.dy) >= 1)) byDepth.set(depthOf(e.n), [...(byDepth.get(depthOf(e.n)) ?? []), e]);
+  for (const [d, list] of byDepth) {
+    const sum = new Map<NodeId, number>();
+    for (const e of list) sum.set(e.p, (sum.get(e.p) ?? 0) + e.dy);
+    const up = [...sum].filter(([, v]) => v < 0).map(([p]) => p).sort((a, b) => at(a).y - at(b).y);
+    const down = [...sum].filter(([, v]) => v >= 0).map(([p]) => p).sort((a, b) => at(b).y - at(a).y);
+    [...up, ...down].forEach((p, i, all) => laneOf.set(`${p}@${d}`, { i, of: all.length }));
+  }
+  const lines = edges.map(({ p, n }) => {
     const [a, b] = [at(p), at(n)];
-    return { key: `${p}-${n}`, d: elbow(a.x + NODE_W, a.y + NODE_H / 2, b.x, b.y + NODE_H / 2), on: selected === n || selected === p };
-  }));
+    const lane = laneOf.get(`${p}@${depthOf(n)}`) ?? { i: 0, of: 1 };
+    const bx = b.x - GAP_X + ((lane.i + 1) * GAP_X) / (lane.of + 1);
+    return { key: `${p}-${n}`, d: elbow(a.x + NODE_W, a.y + NODE_H / 2, b.x, b.y + NODE_H / 2, bx, lane.of), on: selected === n || selected === p };
+  });
   const label = (n: NodeId): ReactNode => {
     const have = { gold: goldOf(state, faction), res: resOf(state, faction) };
     if (n === COUNCIL) return <span className="tn-sub">stoi od początku</span>;
@@ -147,7 +164,7 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
     ro.observe(el);
     return () => ro.disconnect();
   }, [width, height, sparkAside]);
-  const legend: Array<[string, string]> = [['built', 'wybudowany'], ['upgrade', 'można ulepszyć'], ['open', 'można zbudować'], ['poor', 'brakuje surowców'], ['blocked', 'brakuje budynku'], ['excluded', 'zablokowany']];
+  const legend: Array<[string, string]> = [['built', 'w pełni rozbudowany'], ['upgrade', 'można ulepszyć'], ['open', 'można zbudować'], ['poor', 'brakuje surowców'], ['blocked', 'brakuje budynku'], ['excluded', 'zablokowany']];
   return (
     <div className="building-tree" data-building-tree ref={outer}>
       <div style={{ display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'flex-start' }}>
@@ -165,7 +182,7 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
           ))}
         </svg>
         {badges.map((b) => (
-          <span key={b.key} className="tree-or" data-tree-or style={{ left: b.x, top: b.y }} title="Jedno albo drugie: zbudowanie jednego wyklucza drugie do końca gry">lub</span>
+          <span key={b.key} className="tree-or" data-tree-or style={{ left: b.x, top: b.y }}>lub</span>
         ))}
         {nodes.map((n) => renderNode(n, at(n)))}
       </div>
