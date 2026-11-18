@@ -6,16 +6,18 @@ import mdEn from '../content/instrukcja.en.md?raw';
 import mdPl from '../content/instrukcja.pl.md?raw';
 import { useLang } from '../i18n/lang';
 import { asset } from './common';
+import { StatText } from './markers';
 import { highlightParts, parseManual, searchManual, type Block, type Entry, type Inline } from './manualDoc';
 
 const DOCS = { pl: parseManual(mdPl), en: parseManual(mdEn) };
 const anchor = (id: string) => `man-${id}`;
 
 function Text({ v, query }: { v: string; query: string }) {
-  if (!query) return <>{v}</>;
+  // Gold, resources and stats are shown as their icons ("3 zł", "2 drewna", "+1 A").
+  if (!query) return <StatText text={v} />;
   return (
     <>
-      {highlightParts(v, query).map((p, i) => (p.hit ? <mark key={i}>{p.v}</mark> : <Fragment key={i}>{p.v}</Fragment>))}
+      {highlightParts(v, query).map((p, i) => (p.hit ? <mark key={i}>{p.v}</mark> : <Fragment key={i}><StatText text={p.v} /></Fragment>))}
     </>
   );
 }

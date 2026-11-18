@@ -60,7 +60,7 @@ export function LastAttack({ roll, units, size = 22 }: { roll: AttackRoll; units
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
       <span>{name(roll.attackerId)} → {name(roll.targetId)}:</span>
-      <span>Atak {roll.attack}</span>
+      <span><StatIcon stat="A" /> {roll.attack}</span>
       {roll.die !== null && (
         <>
           <span>+ kość</span>
@@ -83,7 +83,25 @@ export function StatIcon({ stat, size = '1.05em', light = false }: { stat: StatL
   return <img src={asset(`cards/stats/${STAT_ICONS[stat]}.png`)} alt={STAT_NAMES[stat]} title={STAT_NAMES[stat]} style={{ width: size, height: size, objectFit: 'contain', verticalAlign: '-0.18em', margin: '0 0.06em', filter: light ? 'brightness(0) invert(1)' : undefined }} />;
 }
 
-/** Text with "+1 A", "−2 S", "Ż 9"… written with the stat symbols instead of the letters. */
+/** Gold and resources as the icons the bottom bar uses; keyed by the word as the text (Polish or English) says it. */
+const THING_ICON: Array<[RegExp, string, string]> = [
+  [/^(zł|złot\w*|gold)$/i, 'ikony/mapa/zloto.webp', 'Złoto'],
+  [/^(drewn\w*|wood)$/i, 'ikony/mapa/drewno.webp', 'Drewno'],
+  [/^(rud\w*|ore)$/i, 'ikony/mapa/ruda.webp', 'Ruda'],
+  [/^(gwiezdn\w* pył\w*|pył\w*|star dust|dust)$/i, 'ikony/mapa/pyl.webp', 'Gwiezdny Pył'],
+];
+
+/** A gold or resource symbol, sized to the surrounding text (the same pictures as `CostIcons` and the bottom bar). */
+export function ThingIcon({ word, size = '1.2em' }: { word: string; size?: string | number }) {
+  const t = THING_ICON.find(([re]) => re.test(word));
+  if (!t) return <>{word}</>;
+  return <img src={asset(t[1])} alt={t[2]} title={t[2]} style={{ width: size, height: size, objectFit: 'contain', verticalAlign: '-0.28em', margin: '0 0.06em' }} />;
+}
+
+/**
+ * Text with "+1 A", "−2 S", "Ż 9", "3 zł", "2× drewno", "+1 złota"… written with the stat, gold and resource symbols
+ * instead of the words or letters (the pieces of a sentence stay text).
+ */
 export function StatText({ text: plain, rule = false }: { text: string; /** A rule text of the board game's numbers: shown as the game being played reads it (`statScale`). */ rule?: boolean }) {
   const [k, hpK] = useScales();
   const scaled = rule ? scaleText(plain, k, hpK) : plain;
@@ -91,7 +109,8 @@ export function StatText({ text: plain, rule = false }: { text: string; /** A ru
   const [lang] = useLang();
   const text = lang === 'en' ? translate(scaled) ?? scaled : scaled;
   // "+1 A" (number, symbol) or "Ż 9" (symbol, number); each pair stays on one line.
-  const re = /([+−-]?\d+) ?(Ż|A|S|HP|ATK|SPD)(?=[\s.,;:)/]|$)|(?<![\p{L}\d])(Ż|A|S|HP|ATK|SPD) (\d+)/gu;
+  // "3 zł", "2× drewno", "1 Pył", "+1 gold": a number, an optional ×, a gold or resource word.
+  const re = /([+−-]?\d+) ?(Ż|A|S|HP|ATK|SPD)(?=[\s.,;:)/]|$)|(?<![\p{L}\d])(Ż|A|S|HP|ATK|SPD) (\d+)|(?<![\p{L}\d])([+−-]?\d+) ?[×x]? ?(Gwiezdn\p{L}* [Pp]ył\p{L}*|Star Dust|zł|złot[ao]|drewn\p{L}*|rud(?:a|y|ę|ą|zie|ami)?|[Pp]ył\p{L}*|gold|wood|ore|Dust)(?![\p{L}\d])/gu;
   const letter = (t: string): StatLetter => ({ HP: 'Ż', ATK: 'A', SPD: 'S' } as Record<string, StatLetter>)[t] ?? (t as StatLetter);
   const out: React.ReactNode[] = [];
   let last = 0;
@@ -99,7 +118,7 @@ export function StatText({ text: plain, rule = false }: { text: string; /** A ru
     out.push(text.slice(last, m.index));
     out.push(
       <span key={m.index} style={{ whiteSpace: 'nowrap' }}>
-        {m[1] ? <>{m[1]}<StatIcon stat={letter(m[2])} /></> : <><StatIcon stat={letter(m[3])} /> {m[4]}</>}
+        {m[1] ? <>{m[1]}<StatIcon stat={letter(m[2])} /></> : m[3] ? <><StatIcon stat={letter(m[3])} /> {m[4]}</> : <>{m[5]}<ThingIcon word={m[6]} /></>}
       </span>,
     );
     last = m.index! + m[0].length;
@@ -107,4 +126,9 @@ export function StatText({ text: plain, rule = false }: { text: string; /** A ru
   out.push(text.slice(last));
   // One inline box, so flex containers (card descriptions) do not split it into columns.
   return <span>{out}</span>;
+}
+
+/** A rule text of the board game's numbers as the game being played reads it, with the stat, gold and resource icons. */
+export function RuleText({ text }: { text: string }) {
+  return <StatText rule text={text} />;
 }

@@ -1,6 +1,7 @@
 // Hero growth on the screen (digital ruleset, "Wyprawa"): the level and experience bar, the skills as cards with icons, the five
 // gear slots laid out like a hero's sheet (helmet on top, weapon - armour - shield, boots below), the hero sheet itself, and the notices that tell the player what just happened (experience gained, an artifact found).
 
+import { RuleText } from './markers';
 import { heroLabel } from '../engine/realm';
 import { useContext, useState } from 'react';
 import { abilityTextFor, FACTION_NAMES, raceOfHero, scaleText, UNITS, type FactionId } from '../engine/data';
@@ -9,7 +10,7 @@ import { BRANCH_OF, isBranch, GROWTH, levelOf, MILESTONE_LEVELS, milestoneText, 
 import { ARTIFACT_BY_ID, gearOf, packOf, passTargets, RARITY_NAMES, SETS, setCount, type ArtifactDef, type Slot } from '../engine/sites';
 import type { Action, GameState, HeroState, LogEvent } from '../engine/types';
 import { abilityArt, asset, Ribbon } from './common';
-import { DigitalContext, RuleText, useScales } from './statScale';
+import { DigitalContext, useScales } from './statScale';
 import { UnitCard } from './UnitCard';
 import { details } from './details';
 

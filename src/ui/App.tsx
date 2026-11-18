@@ -1,4 +1,5 @@
 import { raceOf, teamsOf } from '../engine/teams';
+import { StatText } from './markers';
 import { scenarioOf } from '../engine/campaign';
 import { CampaignOver } from './CampaignScreen';
 import { ExpeditionOver } from './ExpeditionScreen';
@@ -948,7 +949,7 @@ export function App() {
       <SkillDialog hero={humanTurn && !held && game.phase === 'adventure' && !steps.length ? activeHero(game) : null} earned={game.log.flatMap((e) => (e.event?.type === 'xp' && e.event.heroId === activeHero(game)?.id ? [`+${e.event.amount} PD (${e.event.reason})`] : [])).slice(-4)} onChoose={(skill) => dispatch({ type: 'chooseSkill', skill })} />
       {hintNow && (
         <div className="plate parch" role="status" style={{ position: 'fixed', top: 12, left: '50%', transform: 'translateX(-50%)', zIndex: 50, padding: '8px 16px', fontSize: 18, maxWidth: 'min(640px, 92vw)', cursor: 'pointer' }} onClick={() => setHint(null)}>
-          💡 {hintNow.text}
+          💡 <StatText text={hintNow.text} />
         </div>
       )}
       <VictoryEffects game={game} />
@@ -957,7 +958,7 @@ export function App() {
 
       <div className="xp-toasts" aria-live="polite">
         {xpNotes.map((n) => (
-          <div key={n.key} className="xp-toast">{n.text}</div>
+          <div key={n.key} className="xp-toast"><StatText text={n.text} /></div>
         ))}
       </div>
       <Modal open={storyNews.length > 0 && !digest && !summary && !held && !found} onClose={() => setStoryNews((a) => a.slice(1))}>
@@ -1217,7 +1218,7 @@ function LogDialog({ entries }: { entries: LogEntry[] }) {
             <div key={i} className={`log-line ${l.kind}`} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '2px 0' }}>
               <Medal fill={LOG_ICON[l.kind][0]} glyph={LOG_ICON[l.kind][1]} size={20} />
               <span style={{ color: '#9FB8BC', flex: 'none' }}>[{l.round}]</span>
-              <span>{l.text}</span>
+              <span><StatText text={l.text} /></span>
             </div>
           ))}
           <div ref={end} />

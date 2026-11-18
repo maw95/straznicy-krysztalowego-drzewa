@@ -1,6 +1,7 @@
 import { FACTION_NAMES, UNITS, type Side } from '../engine/data';
 import type { BattleReport } from '../engine/types';
 import { Frame, HpBar, Portrait, Ribbon, SIDE_RING } from './common';
+import { StatIcon } from './markers';
 
 export function BattleSummary({ report, onClose }: { report: BattleReport; onClose: () => void }) {
   const sides: Side[] = [report.attacker, report.defender];
@@ -33,7 +34,7 @@ export function BattleSummary({ report, onClose }: { report: BattleReport; onClo
                     </div>
                     <HpBar hp={u.hp} max={u.maxHp} />
                     <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 2 }}>
-                      Ż {u.hp}/{u.maxHp} · zadane obrażenia: <b style={{ color: '#F3D27A' }}>{u.damage}</b>
+                      <StatIcon stat="Ż" /> {u.hp}/{u.maxHp} · zadane obrażenia: <b style={{ color: '#F3D27A' }}>{u.damage}</b>
                     </div>
                   </div>
                 </div>

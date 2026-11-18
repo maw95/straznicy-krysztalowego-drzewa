@@ -34,8 +34,3 @@ export function useScaledText(text: string): string {
   const [k, hp] = useScales();
   return scaleText(text, k, hp);
 }
-
-/** The same, as an element (for rule texts inside a component that is not itself a hook user). */
-export function RuleText({ text }: { text: string }) {
-  return <>{useScaledText(text)}</>;
-}

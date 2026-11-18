@@ -15,8 +15,9 @@ import { MAGIC, manaOf, maxMana, SPELLS, towerSpells } from '../engine/magic';
 import type { Action, GameState } from '../engine/types';
 import { asset, Modal, Portrait, Ribbon } from './common';
 import { ArtifactMedal } from './growthUi';
+import { StatIcon, StatText, ThingIcon, RuleText } from './markers';
 import { CostIcons, RESOURCE_ICON, ResourceStrip } from './resources';
-import { RuleText } from './statScale';
+
 import { sfx } from './sfx';
 import { BarracksScreen } from './BarracksScreen';
 import { UnitCard } from './UnitCard';
@@ -125,8 +126,8 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         <div key={r} style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
           <img src={asset(RESOURCE_ICON[r])} alt="" width={30} height={30} />
           <span style={{ flex: 1, minWidth: 110 }}><b>{RESOURCE_NAMES[r]}</b>: {res[r]}</span>
-          <button className="btn prim" data-trade-buy={r} disabled={gold < tradeBuyPrice(s, r)} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'buy' })} style={{ padding: '3px 12px', fontSize: 15 }}>Kup 1 ({tradeBuyPrice(s, r)} zł)</button>
-          <button className="btn prim b" data-trade-sell={r} disabled={buildingLevel(s, 'market') < 1 || res[r] < 1} title={buildingLevel(s, 'market') < 1 ? 'Sprzedaż wymaga targu.' : undefined} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'sell' })} style={{ padding: '3px 12px', fontSize: 15 }}>Sprzedaj 1 (+{ECONOMY.tradeSell[r]} zł)</button>
+          <button className="btn prim" data-trade-buy={r} disabled={gold < tradeBuyPrice(s, r)} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'buy' })} style={{ padding: '3px 12px', fontSize: 15 }}>Kup 1 (<StatText text={`${tradeBuyPrice(s, r)} zł`} />)</button>
+          <button className="btn prim b" data-trade-sell={r} disabled={buildingLevel(s, 'market') < 1 || res[r] < 1} title={buildingLevel(s, 'market') < 1 ? 'Sprzedaż wymaga targu.' : undefined} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'sell' })} style={{ padding: '3px 12px', fontSize: 15 }}>Sprzedaj 1 (<StatText text={`+${ECONOMY.tradeSell[r]} zł`} />)</button>
         </div>
       ))}
       {buildingLevel(s, 'market') > 0 && (
@@ -140,7 +141,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                 const extra = tradeBuyPrice(s, to) - ECONOMY.tradeSell[from];
                 return (
                   <button key={to} className="btn prim b" data-swap-from={from} data-swap-to={to} disabled={res[from] < 1 || gold + ECONOMY.tradeSell[from] < tradeBuyPrice(s, to)} onClick={() => act({ type: 'kingdomSwap', settlementId: s.id, from, to })} style={{ padding: '3px 10px', fontSize: 14 }}>
-                    <img src={asset(RESOURCE_ICON[to])} alt="" width={18} height={18} style={{ verticalAlign: 'middle' }} /> {RESOURCE_NAMES[to]} ({extra > 0 ? `+${extra} zł` : extra < 0 ? `${-extra} zł dla ciebie` : 'bez dopłaty'})
+                    <img src={asset(RESOURCE_ICON[to])} alt="" width={18} height={18} style={{ verticalAlign: 'middle' }} /> {RESOURCE_NAMES[to]} (<StatText text={extra > 0 ? `+${extra} zł` : extra < 0 ? `${-extra} zł dla ciebie` : 'bez dopłaty'} />)
                   </button>
                 );
               })}
@@ -207,7 +208,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                 <Portrait unitId={r.id} size={44} />
                 <div style={{ flex: 1 }}>
                   <b>{UNITS[r.id].name}</b> <span style={{ fontSize: 13, color: '#6B4A22' }}>poziom {r.tier}</span>
-                  <div style={{ fontSize: 14 }}>Życie {UNITS[r.id].hp} · Atak {UNITS[r.id].attack} · Szybkość {UNITS[r.id].speed}{state.rules.empire ? ` · ${UNITS[r.id].abilityName}` : ''}</div>
+                  <div style={{ fontSize: 14 }}><StatIcon stat="Ż" /> {UNITS[r.id].hp} · <StatIcon stat="A" /> {UNITS[r.id].attack} · <StatIcon stat="S" /> {UNITS[r.id].speed}{state.rules.empire ? ` · ${UNITS[r.id].abilityName}` : ''}</div>
                 </div>
                 {have ? <b style={{ color: '#2E7A32' }}>{garrison.includes(r.id) || !(fs.supportsAlive.includes(r.id) || fs.supportsDead.includes(r.id)) ? 'W garnizonie' : 'W drużynie'}</b> : needsDwelling(state, r) && dwellingOf(state, faction, r.tier) === undefined ? (
                   <button className="btn prim b" disabled={!mayHire || locked || !canPay(state, faction, DWELLING_COST[r.tier - 2])} data-dwelling={r.id} title={locked ? 'Potrzebne rozbudowane koszary.' : 'Siedlisko jednej jednostki wyklucza drugą jednostkę tego poziomu do końca gry.'} onClick={() => act({ type: 'kingdomDwelling', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 12px', fontSize: 15 }}>
@@ -215,7 +216,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                   </button>
                 ) : !dwellingReady(state, faction, r) ? <i data-excluded={r.id} style={{ color: '#8A5A3A' }}>wykluczone: wybrano {DWELLING_NAMES[dwellingOf(state, faction, r.tier)!]}</i> : (
                   <button className="btn prim" disabled={!mayHire || locked || gold < r.cost || res.dust < (r.dust ?? 0)} data-recruit={r.id} title={locked ? 'Potrzebne rozbudowane koszary.' : undefined} onClick={() => act({ type: 'kingdomRecruit', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 14px', fontSize: 16 }}>
-                    Rekrutuj ({costText({ gold: r.cost, ...(r.dust ? { dust: r.dust } : {}) })})
+                    Rekrutuj (<StatText text={costText({ gold: r.cost, ...(r.dust ? { dust: r.dust } : {}) })} />)
                   </button>
                 )}
               </div>
@@ -241,7 +242,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                   <div><RuleText text={art.text} /></div>
                 </div>
                 <button className="btn prim" disabled={!canPay(state, faction, cost)} data-buy={id} onClick={() => act({ type: 'kingdomBuyArtifact', settlementId: s.id, artifactId: id })} style={{ padding: '3px 14px', fontSize: 16 }}>
-                  Kup ({costText(cost)})
+                  Kup (<StatText text={costText(cost)} />)
                 </button>
               </div>
             );
@@ -296,7 +297,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                 </div>
                 {known ? <b style={{ color: '#2E7A32' }}>Znany</b> : (
                   <button className="btn prim" data-learn={id} disabled={!buyer || !canPay(state, faction, cost)} onClick={() => { sfx.play('magic_cast'); onAction({ type: 'kingdomLearn', settlementId: s.id, spell: id }); }} style={{ padding: '3px 14px', fontSize: 16 }}>
-                    Naucz się ({costText(cost)})
+                    Naucz się (<StatText text={costText(cost)} />)
                   </button>
                 )}
               </div>
@@ -319,7 +320,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               </div>
               {!mine.alive && (
                 <button className="btn prim" data-ransom={mine.id} disabled={!mayRansom(state, mine) || gold < ransomPrice(mine)} onClick={() => act({ type: 'kingdomRansom', settlementId: s.id, heroId: mine.id })} style={{ padding: '3px 14px', fontSize: 16 }}>
-                  Wykup ({ransomPrice(mine)} zł)
+                  Wykup (<StatText text={`${ransomPrice(mine)} zł`} />)
                 </button>
               )}
             </div>
@@ -331,10 +332,10 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                   <Portrait unitId={id} size={52} />
                   <div style={{ flex: 1 }}>
                     <b>{commanderName(state, id)}, {UNITS[id].name}</b> <span style={{ fontSize: 13, color: '#6B4A22' }}>{ARCHETYPE_NAMES[archetypeOf(id) ?? 'warrior']}</span>
-                    <div style={{ fontSize: 14 }}>Życie {UNITS[id].hp} · Atak {UNITS[id].attack} · Szybkość {UNITS[id].speed} · {UNITS[id].abilityName}</div>
+                    <div style={{ fontSize: 14 }}><StatIcon stat="Ż" /> {UNITS[id].hp} · <StatIcon stat="A" /> {UNITS[id].attack} · <StatIcon stat="S" /> {UNITS[id].speed} · {UNITS[id].abilityName}</div>
                   </div>
                   <button className="btn prim" data-hire={id} disabled={!buyer?.playerId || gold < REALM.hireGold} onClick={() => act({ type: 'kingdomHire', settlementId: s.id, unitId: id })} style={{ padding: '3px 14px', fontSize: 16 }}>
-                    Najmij ({REALM.hireGold} zł)
+                    Najmij (<StatText text={`${REALM.hireGold} zł`} />)
                   </button>
                 </div>
               ))}
@@ -363,7 +364,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                 <Portrait unitId={id} size={44} dim />
                 <div style={{ flex: 1 }}><b>{UNITS[id].name}</b> <span style={{ fontSize: 13, color: '#6B4A22' }}>poległ</span></div>
                 <button className="btn prim" disabled={gold < cost} data-heal={id} onClick={() => act({ type: 'kingdomHeal', settlementId: s.id, unitId: id })} style={{ padding: '3px 14px', fontSize: 16 }}>
-                  Wskrześ ({cost} zł)
+                  Wskrześ (<StatText text={`${cost} zł`} />)
                 </button>
               </div>
             );
@@ -385,7 +386,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     }
     return (
       <div data-panel="treasury" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <b style={{ color: '#2E7A32' }}>{BUILDING_NAMES.treasury[Math.min(buildingLevel(s, 'treasury'), 2) - 1]} stoi: +{KINGDOM.incomeTreasury[Math.min(buildingLevel(s, 'treasury'), 2) - 1]} zł na rundę.</b>
+        <b style={{ color: '#2E7A32' }}>{BUILDING_NAMES.treasury[Math.min(buildingLevel(s, 'treasury'), 2) - 1]} stoi: <StatText text={`+${KINGDOM.incomeTreasury[Math.min(buildingLevel(s, 'treasury'), 2) - 1]} zł`} /> na rundę.</b>
         {upgrade}
       </div>
     );
@@ -482,7 +483,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const backButton = <button className="sb-exit back" data-tree-back title="Wróć do osady" aria-label="Wróć do osady" onClick={() => setView('town')}><img src={asset('ui/wyjscie.webp')} alt="" /></button>;
   const goldLine = (
     <div className="sb-treasury">
-      <span className="sb-gold" title="Złoto">złoto: <b data-gold>{gold}</b></span>
+      <span className="sb-gold" title="Złoto"><ThingIcon word="zł" /> <b data-gold>{gold}</b></span>
       <span className="sb-income">+{incomeOf(state, faction)} na rundę</span>
       {state.kingdom!.res && <span className="sb-res"><ResourceStrip state={state} faction={faction} size={22} /></span>}
     </div>

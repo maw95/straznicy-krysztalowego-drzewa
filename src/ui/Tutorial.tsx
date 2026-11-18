@@ -1,6 +1,7 @@
 // First-game tutorial: short tips that appear once, when the situation they explain
 // first comes up. Progress is remembered in the browser; it can be switched off in setup.
 
+import { StatText } from './markers';
 import { useEffect, useState } from 'react';
 import { controlRoundsToWin, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import type { GameState } from '../engine/types';
@@ -187,7 +188,7 @@ export function Tutorial({ state, active }: { state: GameState; active: boolean 
       style={{ position: 'fixed', left: '50%', bottom: 110, transform: 'translateX(-50%)', zIndex: 45, width: 'min(520px, 92vw)', padding: '12px 16px', animation: 'pop-in 0.3s ease-out both', boxShadow: '0 0 0 2px #9EE4FF, 0 12px 30px rgba(0,0,0,0.6)' }}
     >
       <div style={{ fontWeight: 800, fontSize: 19, marginBottom: 4 }}>{tip.title}</div>
-      <div style={{ fontSize: 16, lineHeight: 1.35 }}>{typeof tip.text === 'function' ? tip.text(state) : tip.text}</div>
+      <div style={{ fontSize: 16, lineHeight: 1.35 }}><StatText text={typeof tip.text === 'function' ? tip.text(state) : tip.text} /></div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
         <button className="btn" style={{ background: 'none', border: 0, color: '#6B5233', fontSize: 14, textDecoration: 'underline', padding: 0 }} onClick={() => setStore({ enabled: false, seen: store.seen })}>
           Wyłącz samouczek

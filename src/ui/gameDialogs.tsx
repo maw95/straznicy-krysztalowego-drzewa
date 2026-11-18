@@ -2,6 +2,7 @@
 // every screen has, and the small game dialogs (confirm, "since your last turn", a found treasure,
 // a card, the options) and the end-of-game effects.
 
+import { StatText } from './markers';
 import { InstallHint } from './InstallHint';
 import { LanguageSwitch } from './LanguageSwitch';
 import { TouchTitles } from './TouchTitles';
@@ -87,7 +88,7 @@ export function ConfirmDialog({ confirm, onClose }: { confirm: Confirmation | nu
     <Modal open={Boolean(confirm)} onClose={onClose}>
       {confirm && (
         <Frame crest style={{ width: 'min(480px, 94vw)' }} innerStyle={{ padding: '24px 22px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, textAlign: 'center' }}>
-          <div style={{ fontSize: 20, lineHeight: 1.35 }}>{confirm.text}</div>
+          <div style={{ fontSize: 20, lineHeight: 1.35 }}><StatText text={confirm.text} /></div>
           {confirm.level && <FightPill level={confirm.level} size={17} />}
           <div style={{ display: 'flex', gap: 12 }}>
             <button className="btn plate parch btn-wide" onClick={onClose}>Anuluj</button>
@@ -123,7 +124,7 @@ export function DigestDialog({ entries, open, onClose }: { entries: LogEntry[] |
               {entries.map((l, i) => (
                 <div key={i} className={`log-line ${l.kind}`} style={{ fontSize: 17 }}>
                   <span style={{ color: '#9FB8BC', marginRight: 6 }}>[{l.round}]</span>
-                  {l.text}
+                  <StatText text={l.text} />
                 </div>
               ))}
             </div>

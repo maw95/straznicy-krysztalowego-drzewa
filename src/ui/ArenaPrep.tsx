@@ -1,6 +1,7 @@
 // Arena before the fight: the two heroes face each other over the painted arena while both sides
 // choose their supports and draft treasures, and the draft dialog itself.
 
+import { RuleText } from './markers';
 import { raceOf } from '../engine/teams';
 import { useState } from 'react';
 import { ARENA_PICKS, FACTION_NAMES, itemDef, UNITS, type TeamId, type ItemKind } from '../engine/data';
@@ -8,7 +9,7 @@ import { isDigital, type GameState } from '../engine/types';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { ARTIFACT_BY_ID, RARITY_NAMES } from '../engine/sites';
 import { ARENA_SPELL_PICKS, ARENA_SPELL_POOL, SPELLS, type SpellId } from '../engine/magic';
-import { RuleText } from './statScale';
+
 import { ArtifactMedal, SLOT_NAMES } from './growthUi';
 import { TreasureCard } from './TreasureCard';
 import { UnitCard } from './UnitCard';

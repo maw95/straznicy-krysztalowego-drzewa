@@ -2,6 +2,11 @@
 // (commit hashes and Markdown marks dropped). Newest first. A new line in CHANGELOG.md needs its English here (tests/changelogEn.test.ts checks every line).
 import { register } from '../translate';
 
+// In preparation
+register({
+  "Złoto, surowce i statystyki są wszędzie ikonami, a nie słowami: zamiast „3 zł”, „2 drewna”, „+1 A”, „Życie 5 · Atak 4” widać liczbę z ikoną. Dotyczy dziennika, podpowiedzi, samouczka, okna osady (ceny na przyciskach, opisy budynków), chatek, Zasad i instrukcji w grze.": "Gold, resources and stats are icons everywhere instead of words: instead of \"3 zl\", \"2 wood\", \"+1 A\", \"Life 5 · Attack 4\" you see a number with an icon. This covers the log, hints, the tutorial, the settlement window (prices on buttons, building descriptions), huts, the Rules and the in-game manual.",
+});
+
 // 2.12.0
 register({
   "Telefon, arena walki: widać całą arenę, także dolny rząd heksów; przyciski + i − przybliżają ją (po przybliżeniu arenę przewijasz palcem). Czarne pasy po bokach znikły: tło areny jest rozmytym, przyciemnionym obrazem tej samej areny, a obraz areny łagodnie zanika na brzegach zamiast powielonej kopii.": "Phone, battle arena: the whole arena shows, including the bottom row of hexes; the + and − buttons zoom in (a finger scrolls the arena when zoomed). The black strips at the sides are gone: the backdrop of the arena is a blurred, darkened picture of the same arena, and the arena picture fades out softly at its edges instead of a repeated copy.",

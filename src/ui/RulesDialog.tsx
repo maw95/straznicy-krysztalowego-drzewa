@@ -1,5 +1,6 @@
 // In-game rules reference: summary of the rules, all unit cards, all treasure cards, shortcuts.
 
+import { StatText, RuleText } from './markers';
 import { useContext, useState } from 'react';
 import { FACTION_HEROES, FACTION_SUPPORTS, GUARDIANS, ITEMS, NEUTRAL_BOSSES, NEUTRAL_WEAK, UNITS, type ItemKind } from '../engine/data';
 import { ARTIFACTS, RARITY_NAMES, SETS, SITE } from '../engine/sites';
@@ -9,7 +10,7 @@ import { MINE_NAMES, OBJECT_NAMES, SIEGE } from '../engine/economy';
 import { asset, Frame, Ribbon } from './common';
 import { ManualView } from './ManualView';
 import { ArtifactMedal, SLOT_NAMES } from './growthUi';
-import { DigitalContext, RuleText } from './statScale';
+import { DigitalContext } from './statScale';
 import { savedDigital } from './NewGameWizard';
 import { TreasureCard } from './TreasureCard';
 import { UnitCard } from './UnitCard';
@@ -146,7 +147,7 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
                 <div style={{ fontWeight: 800, fontSize: 21, marginBottom: 6 }}>{title}</div>
                 {lines.map((l) => (
                   <p key={l} style={{ margin: '0 0 6px', fontSize: 17, lineHeight: 1.35 }}>
-                    {l}
+                    <StatText text={l} />
                   </p>
                 ))}
               </div>
@@ -169,10 +170,10 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
             ['Strażnicy w pojedynku na planszy (karty z błękitnym rewersem)', GUARDIANS, true],
           ] as Array<[string, string[], boolean?]>).map(([title, ids, duel]) => (
             <div key={title} style={{ marginBottom: 18 }}>
-              <div className="lbl" style={{ textAlign: 'center', margin: '4px 0 10px' }}>{title}</div>
+              <div className="lbl" style={{ textAlign: 'center', margin: '4px 0 10px' }}><StatText text={title} /></div>
               {title.startsWith('Poziom IV i V') && (
                 <div style={{ textAlign: 'center', fontSize: 14, color: 'var(--muted)', margin: '-4px 0 8px' }} data-rules-recruit-costs>
-                  {ids.map((id) => { const r = RECRUITS[title.includes('Przymierze') ? 'dawn' : 'horde'].find((x) => x.id === id)!; return `${UNITS_NAME(id)}: stopień ${r.tier}, ${RECRUIT_COSTS[r.tier - 1]} zł`; }).join(' · ')}
+                  <StatText text={ids.map((id) => { const r = RECRUITS[title.includes('Przymierze') ? 'dawn' : 'horde'].find((x) => x.id === id)!; return `${UNITS_NAME(id)}: stopień ${r.tier}, ${RECRUIT_COSTS[r.tier - 1]} zł`; }).join(' · ')} />
                 </div>
               )}
               <div style={{ ...cardRow, maxWidth: cardW * 3 + 28 }}>
@@ -220,7 +221,7 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
                 <div style={{ fontSize: 16 }}><RuleText text={set.bonusText} /></div>
               </div>
             ))}
-            <div style={{ fontSize: 16, textAlign: 'center', color: 'var(--muted)' }}>Skąd się biorą: skrzynie na mapie (artefakt zamiast {KINGDOM.chestGold} zł), kapliczki, chatki z zadaniami, łup z pokonanego bohatera i targ w osadzie (ceny {KINGDOM.artifactPrice.join(' / ')} zł według rzadkości; legendarne od poziomu V także za Gwiezdny Pył).</div>
+            <div style={{ fontSize: 16, textAlign: 'center', color: 'var(--muted)' }}><StatText text={`Skąd się biorą: skrzynie na mapie (artefakt zamiast ${KINGDOM.chestGold} zł), kapliczki, chatki z zadaniami, łup z pokonanego bohatera i targ w osadzie (ceny ${KINGDOM.artifactPrice.map((n) => `${n} zł`).join(' / ')} według rzadkości; legendarne od poziomu V także za Gwiezdny Pył).`} /></div>
           </div>
         )}
         {tab === 'places' && (
@@ -230,7 +231,7 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
                 <img src={asset(img)} alt="" width={56} height={56} style={{ flex: 'none', objectFit: 'contain' }} />
                 <div>
                   <div style={{ fontWeight: 800, fontSize: 20 }}>{name}{level > 1 && <span style={{ fontWeight: 600, fontSize: 14, marginLeft: 8, color: '#6B4A22' }}>od poziomu {level}</span>}</div>
-                  <div style={{ fontSize: 16, lineHeight: 1.35 }}>{text}</div>
+                  <div style={{ fontSize: 16, lineHeight: 1.35 }}><StatText text={text} /></div>
                 </div>
               </div>
             ))}

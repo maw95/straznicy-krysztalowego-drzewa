@@ -6,7 +6,7 @@
 import { createContext, useContext } from 'react';
 import { abilityTextFor, battleStats, DIGITAL_RANGED_BONUS, UNITS } from '../engine/data';
 import { abilityArt, artId, asset } from './common';
-import { StatText } from './markers';
+import { StatIcon, StatText } from './markers';
 import { abilityTextAt, milestoneTier } from '../engine/growth';
 import { HeroLevelsContext, useScales } from './statScale';
 
@@ -187,7 +187,7 @@ export function UnitTip({ unitId }: { unitId: string }) {
     <>
       <b>{base.name}</b>
       <span style={{ marginLeft: 8 }}>
-        Życie {stats.hp} · Atak {stats.attack + bonus} · Szybkość {stats.speed}
+        <StatIcon stat="Ż" /> {stats.hp} · <StatIcon stat="A" /> {stats.attack + bonus} · <StatIcon stat="S" /> {stats.speed}
       </span>
     </>
   );

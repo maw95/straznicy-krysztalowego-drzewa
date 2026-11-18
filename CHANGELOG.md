@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Złoto, surowce i statystyki są wszędzie ikonami, a nie słowami: zamiast „3 zł”, „2 drewna”, „+1 A”, „Życie 5 · Atak 4” widać liczbę z ikoną. Dotyczy dziennika, podpowiedzi, samouczka, okna osady (ceny na przyciskach, opisy budynków), chatek, Zasad i instrukcji w grze.
+
 ## 2.12.0 — 2026-11-18
 
 - Telefon, arena walki: widać całą arenę, także dolny rząd heksów; przyciski + i − przybliżają ją (po przybliżeniu arenę przewijasz palcem). Czarne pasy po bokach znikły: tło areny jest rozmytym, przyciemnionym obrazem tej samej areny, a obraz areny łagodnie zanika na brzegach zamiast powielonej kopii.

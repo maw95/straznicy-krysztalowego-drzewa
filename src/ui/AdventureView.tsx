@@ -26,7 +26,7 @@ import { hoverCard } from './hover';
 import { details, useDetailsShown } from './details';
 import { aimedCursor } from './cursors';
 import { figureFor, FigureLayer, type Piece } from './FigureLayer';
-import { StatIcon, StatText } from './markers';
+import { StatIcon, StatText, ThingIcon } from './markers';
 import { RoundTrack } from './RoundTrack';
 import { ACTIVE_FIGURE_RING, asset, COMPACT_QUERY, Frame, Medal, Modal, Pips, Portrait, Ribbon, SIDE_RING, tileImage, useMedia } from './common';
 
@@ -664,7 +664,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
             return (
               <div className="plate parch" data-hut style={{ padding: '6px 10px', display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <b style={{ fontSize: 14, color: '#6B4A22', letterSpacing: 1 }}>CHATKA: ZADANIE</b>
-                <div style={{ fontSize: 15 }}>Przynieś: <b>{thingsText(hut.want)}</b>. Nagroda: <b>{thingsText(hut.reward)}</b>.</div>
+                <div style={{ fontSize: 15 }}>Przynieś: <b><StatText text={thingsText(hut.want)} /></b>. Nagroda: <b><StatText text={thingsText(hut.reward)} /></b>.</div>
                 <button className="btn prim" data-hut-deliver disabled={!hutPayable(state, hero)} title={hutPayable(state, hero) ? undefined : hut.want.artifact ? 'Chatka chce artefaktu z plecaka, a plecak jest pusty.' : 'Nie masz jeszcze tego, o co prosi chatka.'} style={{ padding: '4px 12px', fontSize: 16 }} onClick={() => { sfx.play('coins_buy'); onAction({ type: 'hutDeliver' }); }}>Wykonaj zadanie</button>
               </div>
             );
@@ -1054,7 +1054,7 @@ function GoldDetails({ state, faction }: { state: GameState; faction: TeamId }) 
   const rows = incomeBreakdown(state, faction);
   return (
     <div className="plate parch" style={{ width: 280, padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <b style={{ fontSize: 18 }}>Dochód na rundę: +{rows.reduce((s, r) => s + r.gold, 0)} zł</b>
+      <b style={{ fontSize: 18 }}>Dochód na rundę: +{rows.reduce((s, r) => s + r.gold, 0)}<ThingIcon word="zł" /></b>
       {rows.map((r, i) => (
         <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15 }}><span>{r.label}</span><b>+{r.gold}</b></div>
       ))}
