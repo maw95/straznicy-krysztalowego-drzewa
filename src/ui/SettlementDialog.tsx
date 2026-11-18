@@ -3,9 +3,9 @@
 // the engine (kingdom.ts); the window only asks and shows what the engine allows.
 
 import { raceOf } from '../engine/teams';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId, type TeamId } from '../engine/data';
-import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, incomeOf, KINGDOM, marketStock, mayRecruit, RECRUITS, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
+import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, incomeOf, KINGDOM, marketStock, mayRecruit, RECRUITS, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, DWELLING_TEXTS, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
 import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
 import { ARCHETYPE_NAMES, archetypeOf, commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from '../engine/realm';
@@ -19,7 +19,8 @@ import { CostIcons, RESOURCE_ICON, ResourceStrip } from './resources';
 import { RuleText } from './statScale';
 import { sfx } from './sfx';
 import { BarracksScreen } from './BarracksScreen';
-import { BuildingTree, COUNCIL, nodeState, type ExtraNode } from './BuildingTree';
+import { UnitCard } from './UnitCard';
+import { BuildingTree, COUNCIL, type ExtraNode } from './BuildingTree';
 
 /**
  * Where each building stands in the landscape. The landscape is a stage of a fixed shape (the picture's own), scaled to cover the screen, so a spot is a
@@ -49,6 +50,28 @@ const buildingPicture = (land: FactionId, b: BuildingId, level: number) => {
   if (own) return level === 0 ? `osady/${own}_plot.webp` : `osady/${own}_${b}1.webp`;
   return level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury.webp` : `osady/${land}_${b}${b === 'tavern' || b === 'spark' ? 1 : Math.min(level, 2)}.webp`);
 };
+
+/** A framed plate with what a building (or a dwelling) is: picture, name, what it does, an optional card, the cost and the button. */
+function DetailPlate({ id, picture, title, text, note, card, cost, action, modal = false, blocked = false }: { id: string; picture?: string; title: string; text: string; note?: string; card?: ReactNode; cost?: ReactNode; action?: ReactNode; modal?: boolean; blocked?: boolean }) {
+  const body = (
+    <>
+      {picture && !modal && <img className="td-pic" src={asset(picture)} alt="" />}
+      <div className="td-text">
+        <div className="td-title">{title}</div>
+        <div className="td-desc"><RuleText text={text} /></div>
+        {note && <div className={`td-note ${blocked ? 'bad' : ''}`}>{note}</div>}
+      </div>
+      {card && <div className="td-card">{card}</div>}
+      {(cost || action) && <div className="td-buy">{cost}{action}</div>}
+    </>
+  );
+  if (modal) return <div className="td-modal" data-tree-detail={id}>{body}</div>;
+  return (
+    <div className="gf tree-detail" data-tree-detail={id}>
+      <div className="gi slate tree-detail-in">{body}</div>
+    </div>
+  );
+}
 
 export function SettlementDialog({ state, settlementId, faction, onAction, onClose }: { state: GameState; settlementId: string; faction: TeamId; onAction: (a: Action) => void; onClose: () => void }) {
   const s = state.kingdom!.settlements[settlementId];
@@ -360,7 +383,8 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     }
     return (
       <div data-panel="treasury" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <b style={{ color: '#2E7A32' }}>Skarbiec stoi: +{KINGDOM.incomeTreasury} zł na rundę.</b>
+        <b style={{ color: '#2E7A32' }}>{BUILDING_NAMES.treasury[Math.min(buildingLevel(s, 'treasury'), 2) - 1]} stoi: +{KINGDOM.incomeTreasury[Math.min(buildingLevel(s, 'treasury'), 2) - 1]} zł na rundę.</b>
+        {upgrade}
       </div>
     );
   };
@@ -383,47 +407,48 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       return { id: `dwelling-${r.id}`, parents, name: DWELLING_NAMES[r.id], ...(sub ? { sub } : {}), cost: price, picture: dwellingArt(r.id), state: st, ...(options.length > 1 ? { choice: `tier-${tier}` } : {}) } as ExtraNode;
     });
   }) : [];
-  const dwellingDetail = (tier: number, bare = false) => {
+  // The detail under the tree (and in the modal of a dwelling): the name, what it does, the card of the unit, the cost and the button.
+  const dwellingDetail = (unitId: string, modal = false) => {
+    const r = recruitsOf(state, faction).find((x) => x.id === unitId)!;
+    const tier = r.tier;
     const built = dwellingOf(state, faction, tier);
     const prevOk = tier === 2 || Boolean(dwellingOf(state, faction, tier - 1));
     const price = DWELLING_COST[tier - 2];
+    const note = built ? undefined : !mayHireHere ? 'Siedliska buduje się tylko w osadzie własnej frakcji.' : s.buildings.barracks < 1 ? 'Najpierw zbuduj Koszary.' : !prevOk ? `Najpierw zbuduj siedlisko poziomu ${tier - 1}.` : tier === 6 ? undefined : 'Zbudowanie tego siedliska wyklucza drugie siedlisko tego poziomu do końca gry.';
+    const action = built === unitId ? <b className="td-ok">Zbudowane</b> : built ? <i data-excluded={unitId} className="td-no">wybrano alternatywne siedlisko tego poziomu</i> : (
+      <button className="btn prim" data-dwelling={unitId} disabled={!mayHireHere || s.buildings.barracks < 1 || !prevOk || !canPay(state, faction, price)} onClick={() => act({ type: 'kingdomDwelling', settlementId: s.id, unitId })}>Zbuduj</button>
+    );
     return (
-      <div className={bare ? '' : 'plate parch'} data-tree-detail={`dwelling-${tier}`} style={bare ? undefined : { padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
-        <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 4 }}>Siedlisko poziomu {tier}</div>
-        <div style={{ fontSize: 14, color: '#6B4A22', marginBottom: 8 }}>{tier === 6 ? 'Jedyna jednostka tego poziomu.' : 'Dwie jednostki do wyboru: zbudowanie siedliska jednej wyklucza drugą do końca gry.'} {!prevOk ? `Najpierw zbuduj siedlisko poziomu ${tier - 1}.` : !mayHireHere ? 'Siedliska buduje się tylko w osadzie własnej frakcji.' : ''}</div>
-        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
-          {recruitsOf(state, faction).filter((r) => r.tier === tier).map((r) => (
-            <div key={r.id} style={{ display: 'flex', gap: 8, alignItems: 'center', flex: '1 1 260px' }}>
-              <Portrait unitId={r.id} size={44} />
-              <div style={{ flex: 1, fontSize: 14 }}>
-                <b>{UNITS[r.id].name}</b> <span style={{ color: '#6B4A22' }}>({DWELLING_NAMES[r.id]})</span>
-                <div>Życie {UNITS[r.id].hp} · Atak {UNITS[r.id].attack} · Szybkość {UNITS[r.id].speed} · {UNITS[r.id].abilityName}</div>
-              </div>
-              {built === r.id ? <b style={{ color: '#2E7A32' }}>Zbudowane</b> : built ? <i data-excluded={r.id} style={{ color: '#8A5A3A' }}>wybrano alternatywne siedlisko tego poziomu</i> : (
-                <button className="btn prim" data-dwelling={r.id} disabled={!mayHireHere || s.buildings.barracks < 1 || !prevOk || !canPay(state, faction, price)} onClick={() => act({ type: 'kingdomDwelling', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 12px', fontSize: 15 }}>
-                  Zbuduj <CostIcons cost={price} size={16} light />
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+      <DetailPlate id={`dwelling-${unitId}`} modal={modal} picture={dwellingArt(unitId)} title={DWELLING_NAMES[unitId]} text={DWELLING_TEXTS[unitId]} note={note}
+        card={<UnitCard unitId={unitId} width={modal ? 190 : 104} digital />} cost={built ? undefined : <CostIcons cost={price} have={{ gold, res: resOf(state, faction) }} size={26} />} action={action} />
     );
   };
-  const detail = pick?.startsWith('dwelling-') ? dwellingDetail(RECRUITS[raceOf(state, faction)].find((r) => r.id === pick.slice(9))?.tier ?? 2) : pick === 'spark' ? (
-    <div className="plate parch" data-tree-detail="spark" style={{ padding: '12px 16px', flex: 1.4, minWidth: 0 }}>{panel('spark')}</div>
-  ) : pick && pick !== COUNCIL ? ((pickId: BuildingId) => (
-    <div className="plate parch" data-tree-detail={pickId} style={{ padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
-      <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>{BUILDING_NAMES[pickId][Math.min(buildingLevel(s, pickId), BUILDING_NAMES[pickId].length - 1)]}</div>
-      <div style={{ fontSize: 15, marginBottom: 8 }}><RuleText text={BUILDING_TEXTS[pickId][Math.min(buildingLevel(s, pickId), BUILDING_TEXTS[pickId].length - 1)] ?? ''} /></div>
-      {nodeState(state, s, faction, pickId) === 'blocked' && <i style={{ color: '#8A2A18' }}>{buildBlock(s, pickId) ?? 'Koszary buduje się tylko w osadzie własnej frakcji.'}</i>}
-      {buildButton(pickId)}
-    </div>
-  ))(pick as BuildingId) : (
-    <div className="plate parch" style={{ padding: '12px 16px', flex: 1.4, minWidth: 0 }}>
-      <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 6 }}>Rada Osady</div>
-      <div style={{ fontSize: 15 }}>Rada stoi w każdej osadzie od początku i nic nie kosztuje. Z niej wychodzą wszystkie budynki: kliknij budynek w drzewku, żeby zobaczyć jego cenę i działanie, a potem go zbudować.</div>
-    </div>
+  const sparkDetail = () => {
+    const built = buildingLevel(s, 'spark') > 0;
+    const ready = Boolean(buyer && mayBuildSpark(state, buyer));
+    const race = raceOf(state, faction);
+    const note = built ? undefined : `Cena: wszystkie Odłamki Pierwotnej Iskry (frakcja ma ${shardsOf(state, faction)} z ${shardTotal(state)}). Buduje bohater stojący w tej osadzie, który sam niesie wszystkie Odłamki${buyer ? ` (${heroLabel(buyer)} niesie ${buyer.shards ?? 0})` : ''}: przekaż je sobie wcześniej na mapie.`;
+    const action = built ? <b className="td-ok">Iskra płonie w tej osadzie</b> : (
+      <button className="btn prim" data-build="spark" disabled={!ready || !buyer || buyer.pos !== s.at} title={!ready ? 'Jeden bohater musi nieść wszystkie Odłamki.' : buyer?.pos !== s.at ? 'Bohater musi stać w tej osadzie.' : undefined} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: 'spark' })}>Wznieś</button>
+    );
+    return <DetailPlate id="spark" picture={buildingPicture(s.land, 'spark', 1)} title={SPARK_NAMES[race]} text={`${SPARK_TEXTS[race]}${state.rules.objective === 'relic' ? ' W tej grze jego wzniesienie wygrywa.' : ''}`} note={note} action={action} />;
+  };
+  const buildingDetail = (b: BuildingId) => {
+    const level = buildingLevel(s, b);
+    const cost = price(b);
+    const parentBlock = buildBlock(s, b);
+    const blocked = (b === 'barracks' && !own) || Boolean(parentBlock);
+    const poor = cost !== null && !canPay(state, faction, cost);
+    // A building that stands is shown as it stands now, with its upgrade described in the note; one that does not yet, as it will be.
+    const shown = Math.max(0, Math.min(level, BUILDING_NAMES[b].length) - 1);
+    const note = blocked ? (parentBlock ?? 'Koszary buduje się tylko w osadzie własnej frakcji.') : cost !== null && level > 0 ? `Rozbudowa na „${BUILDING_NAMES[b][level]}”: ${BUILDING_TEXTS[b][level] ?? ''}` : undefined;
+    const action = cost === null ? <b className="td-ok">Gotowe</b> : (
+      <button className="btn prim" disabled={poor || blocked} title={poor && !blocked ? `Za mało: potrzeba ${costText(cost)}.` : undefined} data-build={b} onClick={() => act({ type: 'kingdomBuild', settlementId: s.id, building: b })}>{level === 0 ? 'Zbuduj' : 'Rozbuduj'}</button>
+    );
+    return <DetailPlate id={b} picture={buildingPicture(s.land, b, Math.max(level, 1))} title={BUILDING_NAMES[b][shown]} text={BUILDING_TEXTS[b][shown] ?? ''} note={note} blocked={blocked} cost={cost === null ? undefined : <CostIcons cost={cost} have={{ gold, res: resOf(state, faction) }} size={26} />} action={action} />;
+  };
+  const detail = pick?.startsWith('dwelling-') ? dwellingDetail(pick.slice(9)) : pick === 'spark' ? sparkDetail() : pick && pick !== COUNCIL ? buildingDetail(pick as BuildingId) : (
+    <DetailPlate id="council" picture={councilPic} title="Rada Osady" text="Rada stoi w każdej osadzie od początku i nic nie kosztuje. Z niej wychodzą wszystkie budynki: kliknij budynek w drzewku, żeby zobaczyć jego cenę i działanie, a potem go zbudować." />
   );
   // What the landscape shows: only what stands (the Iskra's plot appears once the faction holds a shard, as it is built by the shards and not from the council).
   const standing = ORDER.filter((b) => buildingLevel(s, b) > 0);
@@ -451,6 +476,8 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     </div>
   );
   const exitButton = <button className="sb-exit" data-enter title="Wyjdź z osady" aria-label="Wyjdź z osady" onClick={onClose}><img src={asset('ui/wyjscie.webp')} alt="" /></button>;
+  // The way back from a page to the landscape: the exit button turned the other way round.
+  const backButton = <button className="sb-exit back" data-tree-back title="Wróć do osady" aria-label="Wróć do osady" onClick={() => setView('town')}><img src={asset('ui/wyjscie.webp')} alt="" /></button>;
   const goldLine = (
     <div className="sb-treasury">
       <span className="sb-gold" title="Złoto">złoto: <b data-gold>{gold}</b></span>
@@ -516,11 +543,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           </div>
           <div className="settlement-foot">
             {detail}
-            <div className="settlement-actions">
-              {goldLine}
-              <button className="btn plate parch" data-tree-back style={{ padding: '6px 20px', fontSize: 18 }} onClick={() => setView('town')}>← Wróć do osady</button>
-              {exitButton}
-            </div>
+            <div className="settlement-actions row">{goldLine}{backButton}</div>
           </div>
         </div>
       )}
@@ -533,8 +556,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           <div className="settlement-foot">
             <div className="settlement-actions row">
               {goldLine}
-              <button className="btn plate parch" data-tree-back style={{ padding: '6px 20px', fontSize: 18 }} onClick={() => setView('town')}>← Wróć do osady</button>
-              {exitButton}
+              {backButton}
             </div>
           </div>
         </div>
@@ -545,7 +567,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
             <div className="gf">
               <button className="modal-x" aria-label="Zamknij" title="Zamknij" data-modal-close onClick={() => setModal(null)}>×</button>
               <div className="gi parch" style={{ padding: '14px 18px' }}>
-              {modal.startsWith('dwelling-') ? dwellingDetail(Number(modal.slice(9)), true) : (
+              {modal.startsWith('dwelling-') ? dwellingDetail(dwellingOf(state, faction, Number(modal.slice(9))) ?? '', true) : (
                 <>
                   <div style={{ fontWeight: 800, fontSize: 22, marginBottom: 8, paddingRight: 36 }}>{modalTitle}</div>
                   {panel(modal as BuildingId)}

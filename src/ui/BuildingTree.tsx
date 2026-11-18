@@ -13,8 +13,8 @@ import type { GameState } from '../engine/types';
 import { asset } from './common';
 import { CostIcons } from './resources';
 
-const NODE_W = 190;
-const NODE_H = 84;
+const NODE_W = 226;
+const NODE_H = 92;
 const GAP_X = 54;
 const GAP_Y = 16;
 /** Two nodes of one choice stand further apart: the "lub" badge sits in the gap. */
@@ -71,7 +71,9 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
   const extraOf = (n: NodeId) => (extras ?? []).find((e) => e.id === n);
   const parentsOf = (n: NodeId): NodeId[] => (n === COUNCIL ? [] : extraOf(n)?.parents ?? [BUILDING_PARENT[n as BuildingId] ?? COUNCIL]);
   const depthOf = (n: NodeId): number => (n === COUNCIL ? 0 : Math.max(...parentsOf(n).map(depthOf)) + 1);
-  const nodes: NodeId[] = [COUNCIL, ...order, ...(extras ?? []).map((e) => e.id)];
+  // The Primal Spark hangs on nothing (it is bought with the Shards, not from a parent building): it stands aside, in the top right corner, joined by no line.
+  const sparkAside = order.includes('spark');
+  const nodes: NodeId[] = [COUNCIL, ...order.filter((b) => b !== 'spark'), ...(extras ?? []).map((e) => e.id)];
   const columns = new Map<number, NodeId[]>();
   for (const n of nodes) columns.set(depthOf(n), [...(columns.get(depthOf(n)) ?? []), n]);
   const depth = Math.max(...columns.keys());
@@ -104,7 +106,7 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
       if (ex.state === 'excluded') return <span className="tn-sub">wybrano drugie siedlisko</span>;
       if (ex.state === 'built' || ex.state === 'full') return <span className="tn-sub">{ex.sub ?? 'gotowe'}</span>;
       if (ex.state === 'blocked') return <span className="tn-sub">{ex.sub ?? ''}</span>;
-      return ex.cost ? <CostIcons cost={ex.cost} have={have} size={15} /> : <span className="tn-sub">{ex.sub}</span>;
+      return ex.cost ? <CostIcons cost={ex.cost} have={have} size={23} /> : <span className="tn-sub">{ex.sub}</span>;
     }
     const bid = n as BuildingId;
     const level = buildingLevel(s, bid);
@@ -113,7 +115,24 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
     const cost = buildCost(state, s, bid);
     if (st === 'blocked') return <span className="tn-sub">{buildBlock(s, bid) ?? 'Tylko w osadzie własnej frakcji.'}</span>;
     if (st === 'full') return <span className="tn-sub">poziom {level}, gotowe</span>;
-    return <span><CostIcons cost={cost!} have={have} size={15} /></span>;
+    return <span><CostIcons cost={cost!} have={have} size={23} /></span>;
+  };
+  const renderNode = (n: NodeId, { x, y }: { x: number; y: number }) => {
+    const ex = extraOf(n);
+    const bid = n as BuildingId;
+    const st: NodeState = n === COUNCIL ? 'built' : ex ? ex.state : nodeState(state, s, faction, bid);
+    const level = n === COUNCIL || ex ? 1 : buildingLevel(s, bid);
+    const pic = n === COUNCIL ? council.picture : ex ? ex.picture : picture(bid, level);
+    const name = n === COUNCIL ? council.name : ex ? ex.name : level ? BUILDING_NAMES[bid][Math.min(level, BUILDING_NAMES[bid].length) - 1] : BUILDING_NAMES[bid][0];
+    return (
+      <button key={n} className={`tree-node ${st} ${selected === n ? 'on' : ''}`} data-tree-node={n} data-node-state={st} style={{ left: x, top: y, width: NODE_W, height: NODE_H }} onClick={() => onSelect(n)}>
+        <img src={asset(pic)} alt="" className="tn-pic" />
+        <span style={{ display: 'flex', flexDirection: 'column', gap: 3, textAlign: 'left', minWidth: 0 }}>
+          <b style={{ fontSize: 15, lineHeight: 1.1 }}>{name}</b>
+          {label(n)}
+        </span>
+      </button>
+    );
   };
   // The whole tree is scaled down to fit the field (the screen must not scroll): measured on the outer box, not on the window.
   const outer = useRef<HTMLDivElement>(null);
@@ -121,16 +140,17 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
   useEffect(() => {
     const el = outer.current;
     if (!el) return;
-    const measure = () => setFit(Math.min(1, (el.clientWidth - 28) / width, (el.clientHeight - 70) / height));
+    const measure = () => setFit(Math.min(1, (el.clientWidth - 28 - (sparkAside ? NODE_W + 24 : 0)) / width, (el.clientHeight - 70) / height));
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [width, height]);
+  }, [width, height, sparkAside]);
   const legend: Array<[string, string]> = [['built', 'wybudowany'], ['open', 'można zbudować'], ['poor', 'brakuje surowców'], ['blocked', 'brakuje budynku'], ['excluded', 'zablokowany']];
   return (
     <div className="building-tree" data-building-tree ref={outer}>
-      <div style={{ width: width * fit, height: height * fit, margin: '0 auto', flex: 'none' }}>
+      <div style={{ display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'flex-start' }}>
+      <div style={{ width: width * fit, height: height * fit, flex: 'none' }}>
       <div style={{ position: 'relative', width, height, transform: `scale(${fit})`, transformOrigin: 'top left' }}>
         <svg width={width} height={height} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'visible' }} aria-hidden="true">
           <defs>
@@ -146,30 +166,19 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
         {badges.map((b) => (
           <span key={b.key} className="tree-or" data-tree-or style={{ left: b.x, top: b.y }} title="Jedno albo drugie: zbudowanie jednego wyklucza drugie do końca gry">lub</span>
         ))}
-        {nodes.map((n) => {
-          const { x, y } = at(n);
-          const ex = extraOf(n);
-          const bid = n as BuildingId;
-          const st: NodeState = n === COUNCIL ? 'built' : ex ? ex.state : nodeState(state, s, faction, bid);
-          const level = n === COUNCIL || ex ? 1 : buildingLevel(s, bid);
-          const pic = n === COUNCIL ? council.picture : ex ? ex.picture : picture(bid, level);
-          const name = n === COUNCIL ? council.name : ex ? ex.name : level ? BUILDING_NAMES[bid][Math.min(level, BUILDING_NAMES[bid].length) - 1] : BUILDING_NAMES[bid][0];
-          return (
-            <button key={n} className={`tree-node ${st} ${selected === n ? 'on' : ''}`} data-tree-node={n} data-node-state={st} style={{ left: x, top: y, width: NODE_W, height: NODE_H }} onClick={() => onSelect(n)}>
-              <img src={asset(pic)} alt="" className="tn-pic" />
-              <span style={{ display: 'flex', flexDirection: 'column', gap: 2, textAlign: 'left', minWidth: 0 }}>
-                <b style={{ fontSize: 15, lineHeight: 1.1 }}>{name}</b>
-                {label(n)}
-              </span>
-            </button>
-          );
-        })}
+        {nodes.map((n) => renderNode(n, at(n)))}
       </div>
+      </div>
+      {sparkAside && (
+        <div data-tree-aside style={{ width: NODE_W * fit, height: NODE_H * fit, flex: 'none' }}>
+          <div style={{ position: 'relative', width: NODE_W, height: NODE_H, transform: `scale(${fit})`, transformOrigin: 'top left' }}>{renderNode('spark', { x: 0, y: 0 })}</div>
+        </div>
+      )}
       </div>
       <div className="tree-legend" data-tree-legend>
         {legend.map(([st, text]) => <span key={st}><i className={`tree-swatch ${st}`} />{text}</span>)}
       </div>
-      <div style={{ textAlign: 'center', fontSize: 13, color: '#F6EBD0', textShadow: '0 1px 3px #000', marginTop: 4 }}>
+      <div className="tree-hint" style={{ textAlign: 'center', fontSize: 13, color: '#F6EBD0', textShadow: '0 1px 3px #000', marginTop: 4 }}>
         Osada {FACTION_NAMES[raceOf(state, s.land)]}: budynek wymaga, by stał ten, z którego prowadzi do niego linia.
       </div>
     </div>

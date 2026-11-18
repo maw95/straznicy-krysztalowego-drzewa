@@ -820,16 +820,20 @@ describe('level VII: the dwellings in the tree of buildings', () => {
     expect(['hedgehog', 'silverFox', 'centaur', 'dawnOwl', 'boar', 'treeGuardian', 'dawnPhoenix'].map((u) => state(`dwelling-${u}`))).toEqual(['open', 'open', 'blocked', 'blocked', 'blocked', 'blocked', 'blocked']);
     expect(doc.querySelectorAll('[data-tree-or]').length).toBeGreaterThanOrEqual(2);
     await act(async () => fireEvent.click(doc.querySelector('[data-tree-node="dwelling-centaur"]')!));
-    expect(doc.querySelector('[data-tree-detail="dwelling-3"]')!.textContent).toContain('Najpierw zbuduj siedlisko poziomu 2');
-    expect((doc.querySelector('[data-tree-detail="dwelling-3"] [data-dwelling]') as HTMLButtonElement).disabled).toBe(true);
+    // The detail is of the one dwelling clicked: its name, what it does, the unit's card and one button.
+    expect(doc.querySelector('[data-tree-detail="dwelling-centaur"]')!.textContent).toContain('Stajnie Centaurów');
+    expect(doc.querySelector('[data-tree-detail="dwelling-centaur"]')!.textContent).toContain('Umożliwia wykupienie Centaura jako pomocnika.');
+    expect(doc.querySelector('[data-tree-detail="dwelling-centaur"]')!.textContent).toContain('Najpierw zbuduj siedlisko poziomu 2');
+    expect((doc.querySelector('[data-tree-detail="dwelling-centaur"] [data-dwelling]') as HTMLButtonElement).disabled).toBe(true);
     await act(async () => fireEvent.click(doc.querySelector('[data-tree-node="dwelling-hedgehog"]')!));
-    const options = [...doc.querySelectorAll('[data-tree-detail="dwelling-2"] [data-dwelling]')] as HTMLButtonElement[];
-    expect(options).toHaveLength(2);
+    const options = [...doc.querySelectorAll('[data-tree-detail="dwelling-hedgehog"] [data-dwelling]')] as HTMLButtonElement[];
+    expect(options).toHaveLength(1);
     await act(async () => fireEvent.click(options[0]));
     expect(state('dwelling-hedgehog')).toBe('built');
     expect(state('dwelling-silverFox')).toBe('excluded');
     expect(state('dwelling-centaur')).toBe('open');
-    expect(doc.querySelector('[data-tree-detail="dwelling-2"] [data-excluded]')!.textContent).toContain('wybrano alternatywne siedlisko tego poziomu');
+    await act(async () => fireEvent.click(doc.querySelector('[data-tree-node="dwelling-silverFox"]')!));
+    expect(doc.querySelector('[data-tree-detail="dwelling-silverFox"] [data-excluded]')!.textContent).toContain('wybrano alternatywne siedlisko tego poziomu');
     // The Pierwotna Iskra is in the tree from the start (amber: no shards yet), as the only way to buy it.
     expect(state('spark')).toBe('poor');
   });

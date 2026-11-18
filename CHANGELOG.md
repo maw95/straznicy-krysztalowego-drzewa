@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Rada Osady: zablokowane budynki mają zwykłą, ciągłą ramkę, ikony surowców w cenach są większe i czytelne, a Pierwotna Iskra stoi osobno w prawym górnym rogu drzewka, niepołączona z niczym. Kliknięte siedlisko pokazuje własną nazwę, opis („Umożliwia wykupienie Sowy Świtu jako pomocnika.”), kartę jednostki, cenę i przycisk „Zbuduj”. Dolny panel z opisem jest mały, ciemny, w złotej ramce z narożnikami, a zamiast „Wyjdź z osady” jest tylko przycisk powrotu do osady: ikona wyjścia obrócona strzałką w lewo.
 - Skarbiec można ulepszyć: Wielki skarbiec (6 zł, 2 rudy i 1 Pył) przynosi +2 zł na rundę zamiast +1 zł.
 - Koszary to pełnoekranowy ekran: karty jednostek ustawione według poziomów (od 1 do 6, oba siedliska każdego poziomu obok siebie), pod każdą karta jej stan i przycisk (rekrutuj, zbuduj siedlisko, w drużynie, wykluczone), a po wybraniu karty widać animowaną jednostkę z jej życiem, atakiem, szybkością i zdolnością.
 - Ekran osady: dolny pasek ma ozdobną złotą ramkę ze wszystkich stron (grafika zamiast CSS), a „Wyjdź z osady” to okrągła ikona z drzwiami i strzałką. Wstążki z nazwami (np. nazwa osady) są nowe: malowany jedwab ze złotym haftem, w kolorze frakcji (Przymierze zielony, Horda czerwony, neutralni niebieski, fioletowy czeka na kolejne frakcje).

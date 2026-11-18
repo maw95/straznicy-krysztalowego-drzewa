@@ -6,6 +6,16 @@ register({
   // pieces of composed texts
   'do zbudowania': 'to be built', 'drewno': 'wood', 'ruda': 'ore', 'Gwiezdny Pył': 'Star Dust', 'Pył': 'Dust', '{0}× drewno': '{0}× wood', '{0}× ruda': '{0}× ore', '{0}× Pył': '{0}× Dust',
   '{0}× Gwiezdny Pył': '{0}× Star Dust',
+  // treasury, dwellings, the detail plates (level VI)
+  'Wielki skarbiec': 'Great Treasury', 'Przynosi +2 złota na rundę (zamiast +1).': 'Brings +2 gold per round (instead of +1).',
+  'Umożliwia wykupienie {0} jako pomocnika.': 'Lets you buy {0} as a support.',
+  'Jeżozwierza': 'the Porcupine', 'Srebrnego Lisa': 'the Silver Fox', 'Centaura': 'the Centaur', 'Sowy Świtu': 'the Dawn Owl', 'Alabastrowego Odyńca': 'the Alabaster Boar', 'Driady Łuczniczki': 'the Dryad Archer', 'Opiekuna Drzewa': 'the Tree Guardian', 'Białego Jelenia': 'the White Stag', 'Feniksa Świtu': 'the Dawn Phoenix',
+  'Szczurołaka': 'the Ratman', 'Goblina Procarza': 'the Goblin Slinger', 'Piekielnego Ogara': 'the Hellhound', 'Gargulca': 'the Gargoyle', 'Salamandry Popiołu': 'the Ash Salamander', 'Trolla Jaskiniowego': 'the Cave Troll', 'Herszta Minotaurów': 'the Minotaur Chief', 'Wiwerny Cienia': 'the Shadow Wyvern', 'Behemota Zagłady': 'the Doom Behemoth',
+  'Rozbudowa na „{0}”: {1}': 'Upgrade to "{0}": {1}',
+  'Najpierw zbuduj Koszary.': 'Build the Barracks first.',
+  'Zbudowanie tego siedliska wyklucza drugie siedlisko tego poziomu do końca gry.': 'Building this dwelling shuts out the other dwelling of this tier for the rest of the game.',
+  'Cena: wszystkie Odłamki Pierwotnej Iskry (frakcja ma {0} z {1}). Buduje bohater stojący w tej osadzie, który sam niesie wszystkie Odłamki{2}: przekaż je sobie wcześniej na mapie.': 'Price: all the Shards of the Primal Spark (the faction has {0} of {1}). It is built by the hero standing in this settlement who carries all the Shards himself{2}: pass them to him earlier on the map.',
+  'Iskra płonie w tej osadzie': 'The Spark burns in this settlement', 'Wznieś': 'Raise', 'Wróć do osady': 'Back to the settlement',
   // engine
   'Brak wolnego pola.': 'No free hex.',
   'Mapa: potrzebne pola id, name i rows.': 'Map: the fields id, name and rows are required.',
