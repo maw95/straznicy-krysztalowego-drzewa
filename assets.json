@@ -5294,6 +5294,17 @@
       "data": "2026-11-18",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "pwa/ikony-przegladarki",
+      "pliki": ["public/pwa/icon-192.png", "public/pwa/icon-512.png", "public/pwa/apple-touch-icon.png"],
+      "typ": "ikona karty przeglądarki i aplikacji (PWA): logo Gleamroot",
+      "opis": "Z istniejącego logo (public/assets/ui/logo.png) skryptem scripts/assets/pwa_ikony.py: przycięte do widocznej części, wpasowane w kwadrat z marginesem 1%, przezroczyste tło (192, 512 i 180 px). Ikona maskable (icon-maskable-512.png) zostaje osobno, bo system wymaga pełnego tła i bezpiecznego pola.",
+      "narzedzie": "scripts/assets/pwa_ikony.py (Pillow)",
+      "model": "bez modelu: przetworzenie istniejącej grafiki",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "jak logo gry (Scenario, plan płatny: pełna licencja komercyjna bez tantiem)"
     }
   ]
 }
