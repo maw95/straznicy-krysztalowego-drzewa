@@ -100,6 +100,10 @@ interface Props {
   /** Siege: the cells the catapult may shoot now (empty when it is not the viewer's shot). */
   catapult: HexKey[];
   onCatapult: (k: HexKey) => void;
+  /** Phones: the board is zoomed in (it scrolls then). */
+  zoomed?: boolean;
+  /** Phones: the zoom buttons laid over the frame. */
+  zoomControls?: React.ReactNode;
 }
 
 /** Rim of the blocked cells on both arenas (scripts/assets/arenas.py paints the same one). */
@@ -124,6 +128,9 @@ export function ArenaBoard(p: Props) {
   const wide = b.layout === 'wide';
   const { cellCenter, cellPos, hexPoints, cells: CELLS, cellPoints: CELL_POINTS, canvasW: CANVAS_W, canvasH: CANVAS_H, art: ART_SIZE } = geo;
   const { deployable, picked, deploySide, posOf } = deploy;
+  const artSrc = asset(wide ? `arena/cyfrowa/${b.arena}.webp` : `arena/${b.arena}.jpg`);
+  /** Phones show only the cells and a little of the painting (see arenaGeometry), and the rest of the frame gets a soft backdrop. */
+  const phone = view !== geo.fullView;
   const { walk, hitIds, strikes, seals, shards, bursts, fxs, ghosts, rollPops, floaters, lastStrike } = anim;
   const lastRoll = b.rolls?.[b.rolls.length - 1];
 
@@ -191,13 +198,26 @@ export function ArenaBoard(p: Props) {
       {/* On a wide screen the board does not fill the window: the picture goes on past its edges as mirror images of itself
           (the seams match, the frame of trees and rocks simply continues), laid out like the board so they line up with it. */}
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
-        <div style={{ position: 'absolute', left: '50%', top: '50%', width: CANVAS_W, height: CANVAS_H, transformOrigin: '0 0', transform: `translate(${-(view.w * scale) / 2 - view.x * scale}px, ${-(view.h * scale) / 2 - view.y * scale}px) scale(${scale})` }}>
-          {MIRRORS.map(([dx, dy]) => (
-            <div key={`${dx},${dy}`} style={{ position: 'absolute', left: dx * CANVAS_W, top: dy * CANVAS_H, width: CANVAS_W, height: CANVAS_H, overflow: 'hidden', transform: `scale(${dx % 2 ? -1 : 1}, ${dy % 2 ? -1 : 1})` }}>
-              <img src={asset(wide ? `arena/cyfrowa/${b.arena}.webp` : `arena/${b.arena}.jpg`)} alt="" style={{ width: ART_SIZE.w, height: ART_SIZE.h, display: 'block' }} />
-            </div>
-          ))}
-        </div>
+        {phone ? (
+          <>
+            {/* A phone: the painting, blurred and darkened, fills what the board leaves free; the painting itself fades out at its sides
+                (a mirrored copy of it looked like a seam). It fills the strip the board's view cuts off too, while the board is not zoomed. */}
+            <img src={artSrc} alt="" style={{ position: 'absolute', inset: -20, width: 'calc(100% + 40px)', height: 'calc(100% + 40px)', objectFit: 'cover', filter: 'blur(7px) brightness(0.85) saturate(1.05)' }} />
+            {!p.zoomed && (
+              <div style={{ position: 'absolute', left: '50%', top: '50%', width: CANVAS_W, height: CANVAS_H, transformOrigin: '0 0', transform: `translate(${-(view.w * scale) / 2 - view.x * scale}px, ${-(view.h * scale) / 2 - view.y * scale}px) scale(${scale})` }}>
+                <img src={artSrc} alt="" style={{ width: ART_SIZE.w, height: ART_SIZE.h, display: 'block', maskImage: 'linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%)' }} />
+              </div>
+            )}
+          </>
+        ) : (
+          <div style={{ position: 'absolute', left: '50%', top: '50%', width: CANVAS_W, height: CANVAS_H, transformOrigin: '0 0', transform: `translate(${-(view.w * scale) / 2 - view.x * scale}px, ${-(view.h * scale) / 2 - view.y * scale}px) scale(${scale})` }}>
+            {MIRRORS.map(([dx, dy]) => (
+              <div key={`${dx},${dy}`} style={{ position: 'absolute', left: dx * CANVAS_W, top: dy * CANVAS_H, width: CANVAS_W, height: CANVAS_H, overflow: 'hidden', transform: `scale(${dx % 2 ? -1 : 1}, ${dy % 2 ? -1 : 1})` }}>
+                <img src={artSrc} alt="" style={{ width: ART_SIZE.w, height: ART_SIZE.h, display: 'block' }} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div ref={p.wrapRef} className="scroll" style={{ position: 'absolute', inset: 0, overflow: 'auto', display: 'flex' }}>
         <div style={{ position: 'relative', flex: 'none', margin: 'auto', width: view.w * scale, height: view.h * scale, overflow: 'hidden' }}>
@@ -499,6 +519,7 @@ export function ArenaBoard(p: Props) {
         </div>
         </div>
       </div>
+      {p.zoomControls}
     </Frame>
   );
 }

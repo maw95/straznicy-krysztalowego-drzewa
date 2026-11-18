@@ -51,6 +51,9 @@ interface Props {
   attack?: AttackNow | null;
 }
 
+/** How far the arena zooms in on a phone, as a multiple of the scale that shows all of it. */
+const MAX_ARENA_ZOOM = 2.6;
+
 export function BattleView({ state: liveState, canAct: canActNow, onAction, onShowCard, footer, attack: heldAttack }: Props) {
   // The blow of a unit with sprites lands when its attack animation does: until then the state before it stays on screen.
   const impact = useImpactHold(liveState);
@@ -61,9 +64,13 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const geo = geometryOf(b.layout);
   const { cellPos } = geo;
   // On phones only the cells and a little of the painting round them are shown, so the hexes come out bigger.
-  const view = useMedia(COMPACT_QUERY) ? geo.phoneView : geo.fullView;
+  const phone = useMedia(COMPACT_QUERY);
+  const view = phone ? geo.phoneView : geo.fullView;
   const wrapRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
+  // The scale that shows the whole arena (what fits the frame), and the phone player's zoom on top of it.
+  const [fitScale, setFitScale] = useState(1);
+  const [zoom, setZoom] = useState(1);
+  const scale = fitScale * zoom;
   const [useAbility, setUseAbility] = useState(false);
   const [freeAbility, setFreeAbility] = useState(false);
   const [targeting, setTargeting] = useState<ItemTargeting | null>(null);
@@ -101,12 +108,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   useLayoutEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
-    // On phones the whole width always shows; a low screen (held sideways) keeps the hexes finger-sized
-    // and scrolls up and down instead of shrinking the arena further.
-    const fit = () => {
-      const whole = Math.min(el.clientWidth / view.w, el.clientHeight / view.h);
-      setScale(view === geo.phoneView ? Math.min(el.clientWidth / view.w, Math.max(whole, 0.62)) : whole);
-    };
+    // The whole arena always shows (no row is cut off); on phones the + and − buttons zoom in, and the arena scrolls then.
+    const fit = () => setFitScale(Math.min(el.clientWidth / view.w, el.clientHeight / view.h));
     const ro = new ResizeObserver(fit);
     ro.observe(el);
     fit();
@@ -425,6 +428,13 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
           wrapRef={wrapRef}
           view={view}
           scale={scale}
+          zoomed={zoom > 1.01}
+          zoomControls={phone ? (
+            <div style={{ position: 'absolute', left: 8, top: 8, display: 'flex', flexDirection: 'column', gap: 6, zIndex: 5 }}>
+              <button className="btn plate parch zoom-btn" aria-label="Przybliż arenę" data-arena-zoom-in disabled={zoom >= MAX_ARENA_ZOOM - 0.01} onClick={() => setZoom((z) => Math.min(MAX_ARENA_ZOOM, z * 1.3))}>+</button>
+              <button className="btn plate parch zoom-btn" aria-label="Oddal arenę" data-arena-zoom-out disabled={zoom <= 1.01} onClick={() => setZoom((z) => Math.max(1, z / 1.3))}>−</button>
+            </div>
+          ) : null}
           anim={anim}
           deploy={deploy}
           targeting={targeting}
