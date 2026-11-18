@@ -217,7 +217,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
       {links}
       <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{page === 'map' && !fullMap ? 'Jak duża mapa?' : TITLES[page]}</Ribbon>
       <div style={{ fontSize: 14, color: 'var(--muted)', textAlign: 'center', marginTop: -6 }}>
-        Krok {at + 1} z {pages.length} · {d.digital ? 'wersja cyfrowa' : 'wersja planszowa'}{online ? ' · stół online' : ''}
+        Krok {at + 1} z {pages.length}{d.digital ? '' : ' · wersja planszowa'}{online ? ' · stół online' : ''}
       </div>
 
       {page === 'tier' && (
@@ -349,7 +349,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
             battleMode={d.custom.battleMode}
             rules={d.custom.rules}
             onGrowth={(growth) => patch({ custom: { ...d.custom!, growth, ...(growth ? {} : { layer: 'none' as const }) } })}
-            onLayer={(layer) => patch({ custom: { ...d.custom!, layer } })}
+            // A layer button also switches growth on (onGrowth(true) runs just before, from the same stale `d.custom`), so it has to set growth itself.
+            onLayer={(layer) => patch({ custom: { ...d.custom!, growth: true, layer } })}
             onBattleMode={(battleMode) => patch({ custom: { ...d.custom!, battleMode } })}
             onRules={(r) => patch({ custom: { ...d.custom!, rules: { ...d.custom!.rules, ...r } } })}
           />

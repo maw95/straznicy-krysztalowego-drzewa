@@ -146,7 +146,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     if (where === 'online') return onOnline(intent, { mode: wizardMode, digital });
     setStep(intent === 'new' ? 'wizard' : 'load');
   };
-  const stepName = step === 'table' ? `Miejsca przy stole · ${digital ? 'wersja cyfrowa' : 'wersja planszowa'}` : '';
+  const stepName = step === 'table' ? `Miejsca przy stole${digital ? '' : ' · wersja planszowa'}` : '';
 
   return (
     <div className="screen slate screen-enter" style={{ alignItems: 'center', paddingTop: 16, gap: 18 }}>

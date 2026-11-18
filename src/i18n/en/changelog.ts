@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Własne ustawienia: poziom mechanik (Bez osad, Osady i złoto i dalsze) da się wreszcie wybrać; wcześniej przycisk wracał na „Bez rozwoju”.": "Custom settings: the level of mechanics (No settlements, Settlements and gold and the rest) can finally be picked; before, the button snapped back to \"No growth\".",
+  "Kreator nowej gry nie wspomina już o wersji cyfrowej w podpisie kroku („Krok 2 z 5”); wersję planszową nadal widać.": "The new game wizard no longer mentions the digital version in the step line (\"Step 2 of 5\"); the board version is still shown.",
   "Imperium: kafelki z Odłamkami Pierwotnej Iskry są na początku zakryte jak wszystkie inne (poza Drzewem i polami startowymi); Odłamek widać dopiero po odkryciu pola.": "Empire: the tiles with the Shards of the Primal Spark start covered like all the others (except the Tree and the starting hexes); a Shard shows only once its tile is discovered.",
   "Mantykora Zmierzchu i Srebrna Wilczyca mają własne dźwięki ataku i śmierci.": "The Dusk Manticore and the Silver She-Wolf have their own attack and death sounds.",
   "Wprowadzenie: polskie slajdy 08–11 pokazują nowe menu (kroki, siedem poziomów, cele z Podbojem i Relikt), a slajd o online mówi o ośmiu graczach; obrazy slajdów odświeżone z aktualnej gry.": "Introduction: the Polish slides 08–11 show the new menu (steps, seven levels, goals with Conquest and the Relic), and the online slide speaks of eight players; the slide pictures were refreshed from the current game.",

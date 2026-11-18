@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Własne ustawienia: poziom mechanik (Bez osad, Osady i złoto i dalsze) da się wreszcie wybrać; wcześniej przycisk wracał na „Bez rozwoju”.
+- Kreator nowej gry nie wspomina już o wersji cyfrowej w podpisie kroku („Krok 2 z 5”); wersję planszową nadal widać.
 ## 2.17.0 — 2026-11-18
 
 - Imperium: kafelki z Odłamkami Pierwotnej Iskry są na początku zakryte jak wszystkie inne (poza Drzewem i polami startowymi); Odłamek widać dopiero po odkryciu pola.
