@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Angielska wersja gry ma własne logo: „Gleamroot: Wardens of the Crystal Tree” (ekran startowy, menu, kreator i ekran online).": "The English version of the game has its own logo: \"Gleamroot: Wardens of the Crystal Tree\" (title screen, menu, setup and online screen).",
   "Przyciski zmiany języka to same flagi, bez beżowego tła i ramki.": "The language buttons are just the flags, without the beige background and frame.",
   "Arena 6 na 6 działa też online: opcja „Wielkość bitwy” w kreatorze stołu online, napis „Arena 6 na 6” w pokoju i osobny ranking (zakładki pod tabelą rankingu).": "6 vs 6 Arena works online too: a \"Battle size\" option in the online table wizard, an \"Arena 6 vs 6\" label in the room and a separate ranking (tabs under the ranking table).",
 });

@@ -5,6 +5,7 @@ import { FACTION_HEROES, FACTION_NAMES, heroPool, SECRET_HEROES, UNITS, type Tea
 import { readyMaps } from '../engine/customMaps';
 import { layerSwitches, resolveTier, withRuleset, type CustomLayer, type Tier } from '../engine/presets';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
+import { Logo } from './Logo';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
 import { FigurePreview } from './FigurePreview';
@@ -141,7 +142,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
       </div>
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
         <h1 style={{ margin: 0, lineHeight: 0 }}>
-          <img className="logo-glow" src={asset('ui/logo.png')} alt="Gleamroot: Strażnicy Kryształowego Drzewa" style={{ height: step === 'home' ? 'clamp(90px, 15vh, 150px)' : 'clamp(60px, 10vh, 100px)' }} />
+          <Logo style={{ height: step === 'home' ? 'clamp(90px, 15vh, 150px)' : 'clamp(60px, 10vh, 100px)' }} />
         </h1>
         {step !== 'table' && menuLinks}
         {stepName && <div style={{ fontSize: 16, color: '#F3D27A', marginTop: 2, letterSpacing: '0.04em' }}>{stepName}</div>}

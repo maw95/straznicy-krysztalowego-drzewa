@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Angielska wersja gry ma własne logo: „Gleamroot: Wardens of the Crystal Tree” (ekran startowy, menu, kreator i ekran online).
 - Przyciski zmiany języka to same flagi, bez beżowego tła i ramki.
 
 ## 2.10.0 — 2026-11-17

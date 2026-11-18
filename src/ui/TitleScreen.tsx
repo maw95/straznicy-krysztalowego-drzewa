@@ -4,6 +4,7 @@
 
 import { LanguageSwitch } from './LanguageSwitch';
 import { useEffect } from 'react';
+import { Logo } from './Logo';
 import { asset } from './common';
 import { autoFullscreen, enterFullscreen } from './fullscreen';
 import { firstTrack, music } from './music';
@@ -80,7 +81,7 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
       ))}
       <div className="title-body">
         <h1>
-          <img className="logo-glow" src={asset('ui/logo.png')} alt="Gleamroot: Strażnicy Kryształowego Drzewa" />
+          <Logo />
         </h1>
         <p className="title-motto">Wybierz stronę. Drzewo czeka.</p>
         <button className="btn prim title-start" onClick={start} autoFocus>

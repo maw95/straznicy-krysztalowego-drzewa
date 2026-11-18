@@ -3237,6 +3237,24 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
+      "id": "ui/logo_gleamroot_en",
+      "pliki": [
+        "docs/grafika/okladka/logo_en.png",
+        "public/assets/ui/logo_en.png"
+      ],
+      "typ": "logo gry po angielsku „Gleamroot: Wardens of the Crystal Tree”",
+      "opis": "Edycja polskiego logo (obraz odniesienia ui/logo_gleamroot): zostaje drzewo, ramka i napis GLEAMROOT, zmienia się dolny napis na 'WARDENS OF THE CRYSTAL TREE'. 1440 px (źródło) i 720 px (gra, scripts/assets/menu.py). Wybrany 1 z 2 wariantów, pisownia sprawdzona. Gra pokazuje je przy angielskim interfejsie (src/ui/Logo.tsx). Prompt: 'Edit this game logo. Keep exactly the same style, the glowing blue crystal tree on top, the golden branches and the ornate golden and dark-blue banner shape. Replace only the lettering: keep the big golden embossed word GLEAMROOT in a single line exactly as it is, and replace the smaller golden line below it with the English text WARDENS OF THE CRYSTAL TREE, in the same golden embossed style, clearly smaller than GLEAMROOT, centered, fitting inside the banner. Spell every letter correctly. Transparent background.'",
+      "scenario_asset": {
+        "odniesienie": "asset_9qUejsgjGYftbWwVExiHRMxk",
+        "wybrany": "asset_WfEXXXsps9W8Vvdxe97x4933"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość high, przezroczyste tło",
+      "data": "2026-11-18",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
       "id": "ui/logo_gleamroot",
       "pliki": [
         "docs/grafika/okladka/logo.png",
