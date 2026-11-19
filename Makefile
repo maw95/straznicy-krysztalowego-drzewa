@@ -10,7 +10,7 @@ OPTIONS ?= full
 BATTLE ?= arena
 
 .DEFAULT_GOAL := help
-.PHONY: placeholders frakcja-lista help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-kraken sim-bossy sim-supports sim-arena sim-tabele sim-raport sim-krolestwo report zgloszenia modele figurki druk silnik clean
+.PHONY: placeholders frakcja-lista help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-kraken sim-bossy sim-supports sim-arena sim-tabele sim-raport sim-krolestwo sim-nowe report zgloszenia modele figurki druk silnik clean
 
 help: ## Lista komend
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -100,6 +100,9 @@ sim-tabele: node_modules ## Tabele: % wygranych Przymierza w każdym trybie, map
 	@mkdir -p .tmp/sim
 	node --import tsx scripts/sim/matrix.ts $(GAMES) tabele > .tmp/sim/tabele.log
 	node --import tsx scripts/sim/tables.ts tabele
+
+sim-nowe: node_modules ## G2 nowych frakcji: macierz 14 par (Stada, Umarli, Klany, Szron), np. make sim-nowe GAMES=600 PAIRS=herds:dawn,clans:frost GOALS=control,conquest,relic
+	node --import tsx scripts/sim/nowe-frakcje.ts $(or $(GAMES),200) $(or $(GOALS),control,conquest) $(or $(PAIRS),all)
 
 sim-krolestwo: node_modules ## Poziom 3: % wygranych Przymierza i ekonomia botów (rekruci, osady, złoto), np. make sim-krolestwo GAMES=80 SIZES=short,medium
 	node --import tsx scripts/sim/kingdom.ts $(or $(GAMES),40) $(or $(SIZES),short,medium,long)
