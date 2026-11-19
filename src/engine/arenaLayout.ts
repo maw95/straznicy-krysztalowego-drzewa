@@ -30,6 +30,8 @@ export const ARENA_OBSTACLES: Record<ArenaId, Array<[number, number]>> = {
   herds: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
   // Same stand-in for the Kingdom of the Dead (backlog 2a).
   undead: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
+  // And for the Iron Clans (a mountain pass with statues of the ancestors wants its own arena).
+  clans: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
 };
 
 export const arenaCell = (col: number, half: number): HexKey => key({ q: col, r: (half - col) / 2 });
@@ -138,6 +140,17 @@ export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
     { art: 'boulders', cells: [[10, 5]] },
     { art: 'pine', cells: [[7, 1]] },
     { art: 'brambles', cells: [[6, 7]] },
+  ],
+  // Placeholder (docs/BACKLOG.md 2a): a mountain pass with statues of the ancestors and a stone bridge; until then the pictures of Przymierze, rearranged.
+  clans: [
+    { art: 'wall', cells: [[4, 1], [5, 1]] },
+    { art: 'ridge', cells: [[8, 5], [8, 6]] },
+    { art: 'statue', cells: [[3, 4]] },
+    { art: 'statue', cells: [[10, 2]] },
+    { art: 'ruin', cells: [[6, 6]] },
+    { art: 'boulders', cells: [[9, 7]] },
+    { art: 'log', cells: [[5, 3], [6, 3]] },
+    { art: 'brambles', cells: [[7, 1]] },
   ],
 };
 

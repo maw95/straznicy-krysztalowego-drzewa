@@ -14,6 +14,7 @@ export const HERO_TYPES: Record<string, HeroType> = {
   greatAurochs: 'warrior', satyrHornlord: 'sage', windAntelope: 'hunter', thunderRam: 'warrior',
   aurochsScout: 'warrior', faunJavelin: 'hunter', satyrSeer: 'sage',
   barrowKing: 'warrior', lanternWraith: 'sage', headlessKnight: 'hunter', bellKeeper: 'sage',
+  ironThane: 'warrior', runeMatron: 'sage', passWarden: 'hunter', oldMiner: 'warrior', clanWarrior: 'warrior', mountainCrossbow: 'hunter', forgePriest: 'sage',
   wardCaptain: 'warrior', spectralArcher: 'hunter', penitentMonk: 'sage',
 };
 
@@ -77,6 +78,13 @@ export const SPECIALTIES: Record<string, Specialty> = {
   lanternWraith: { name: 'Wieczny Płomyk', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
   headlessKnight: { name: 'Nocny Gościniec', text: '+1 punkt ruchu na mapie.', move: 1 },
   bellKeeper: { name: 'Głos Dzwonu', text: 'Czary Dzwonnika zadają i leczą o 1 więcej.', spellPower: 1 },
+  ironThane: { name: 'Tarcza Rodu', text: 'Pomocnicy Tana mają +1 Ż w bitwie.', supportHp: 1 },
+  runeMatron: { name: 'Wiedza Przodków', text: 'Czary Matki Run zadają i leczą o 1 więcej.', spellPower: 1 },
+  passWarden: { name: 'Oko Celownika', text: 'Strzelcy Strażniczki (i ona sama) mają +1 A w bitwie.', marksman: 1 },
+  oldMiner: { name: 'Znawca Sztolni', text: '+1 punkt ruchu na mapie.', move: 1 },
+  clanWarrior: { name: 'Stary Wojownik', text: 'Pomocnicy Wojownika mają +1 Ż w bitwie.', supportHp: 1 },
+  mountainCrossbow: { name: 'Celne Oko Gór', text: 'Strzelcy Kusznika (i on sam) mają +1 A w bitwie.', marksman: 1 },
+  forgePriest: { name: 'Ogień Kuźni', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
   wardCaptain: { name: 'Stary Wartownik', text: 'Pomocnicy Kapitana mają +1 Ż w bitwie.', supportHp: 1 },
   spectralArcher: { name: 'Upiorny Strzał', text: 'Strzelcy Łuczniczki (i ona sama) mają +1 A w bitwie.', marksman: 1 },
   penitentMonk: { name: 'Cicha Modlitwa', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },

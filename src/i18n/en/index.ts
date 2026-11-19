@@ -6,6 +6,7 @@ import './online';
 import './extra';
 import './herds';
 import './undead';
+import './clans';
 import './names';
 import './campaign';
 import './changelog';

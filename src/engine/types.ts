@@ -309,7 +309,17 @@ export interface FactionState {
   unusedHeroes: string[];
   /** Dzwonnica Zaduszna (the Kingdom of the Dead): the round a fallen support last came back to the team after a win over the neutrals (once a round). */
   bellRound?: number;
+  /**
+   * Runiczna Kuźnia (the Iron Clans): the runes forged on the faction's supports, by the id of the unit (a faction has one unit of a kind), kept for good: a rune stays
+   * with its unit when it falls and comes back to the pool. Plain JSON, so it survives a save.
+   */
+  runes?: Record<string, Rune[]>;
+  /** The round a rune was last forged (the Runiczna Kuźnia forges one a round for the whole faction). */
+  runeRound?: number;
 }
+
+/** A rune of the Runiczna Kuźnia: +1 A, +1 Ż or armour 1 in every battle of the unit. */
+export type Rune = 'attack' | 'life' | 'armour';
 
 export interface Tile {
   key: HexKey;
@@ -379,6 +389,14 @@ export interface UnitStatus {
   reassemble?: true;
   /** The unit has already risen in this battle (the Wieczna Warta, a call, the bones): a Resurrection treasure does not raise it again. */
   risen?: true;
+  /** Żelazne Klany. Przysięga Tarczy: armour until the end of this round (the number of the round). */
+  oathRound?: number;
+  /** Runa Kamienia: the unit cannot be pushed, pulled or moved. */
+  unmovable?: true;
+  /** Młot Przodków: the unit loses its next activation. */
+  stunned?: true;
+  /** Skok po Turniach: the unit has already used its leap in this battle (kept apart from `abilityUsed`, which the leap sets only when it has really jumped). */
+  leapUsed?: true;
 }
 
 /** What the artifacts do for a unit in this battle (sites.ts `applyGear`); numbers are in this battle's scale. */
@@ -498,6 +516,8 @@ export interface BattleState {
   bloodlust?: number;
   /** Wieczna Warta: how many times each side's Kurhan has raised a fallen support in this battle. */
   ward?: Record<string, number>;
+  /** Fortyfikacja: the cells of wall the Kolos Kuźni has put up in this battle (they are in `obstacles` as well; the screen draws them). */
+  raised?: HexKey[];
   /** Level 5: the spells cast in this battle, newest last (the screen plays them). */
   spells?: Array<{ spell: SpellId; casterId: string; targetId: string }>;
   /** Level 4: the battle is fought for this settlement (its garrison fights on the defender's side, with or without a hero). */
@@ -677,6 +697,8 @@ export type Action =
   | { type: 'kingdomHeal'; settlementId: string; unitId: string }
   /** Level 6, the Herds' Ostoja Wędrówek: the active hero jumps from the settlement it stands in to another own one with an Ostoja (`settlementId` is where to). */
   | { type: 'kingdomRefuge'; settlementId: string }
+  /** Level 6, the Iron Clans' Runiczna Kuźnia: a rune forged on a support of the faction's pool (in a settlement with the forge). */
+  | { type: 'kingdomForgeRune'; settlementId: string; unitId: string; rune: Rune }
   | { type: 'kingdomBuyArtifact'; settlementId: string; artifactId: string }
   /** Level 4: one unit of a resource bought for gold in an own settlement, or sold on its market. */
   | { type: 'kingdomTrade'; settlementId: string; res: 'wood' | 'ore' | 'dust'; dir: 'buy' | 'sell' }

@@ -45,6 +45,8 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
   - **Zostaje:** G2 balans (jak u Stad; Kurhan w grach botów budowany rzadko) · G3 próbka jednostki (autor) · G4 pełna grafika, arena, kafle, muzyka, ikony zdolności, wybór poległego w Wezwaniu i Ponownym Oddechu, przenikanie Jeźdźca · G5 instrukcja PL i EN · 51a koop i online.
 
 **54. Żelazne Klany (L; po 53, te same bramki).** Symulacje 10 par po trzech frakcjach.
+  - **Stan 19.11 (G1 zrobiona, bez autora):** paczka `src/engine/factions/clans.ts` (3 bohaterów, 3 dowódców, czwarty bohater Stary Górmistrz, 12 jednostek z układem A/B, legenda Kolos Kuźni), nowe prymitywy (pancerz z wielu źródeł i Mur Tarcz, premia za brak ruchu i przeciw rozmiarowi, ogłuszenie, przestawienie wroga, stawianie muru, przeskok jednorazowy, trwałe runy w stanie frakcji), budynki Sala Tarcz (4 poziomy), **Runiczna Kuźnia** (akcja `kingdomForgeRune`, przycisk run w oknie osady, bot kuje runy) i Głęboka Sztolnia, Iskra (pancerz 1), bot, angielski w `src/i18n/en/clans.ts`, zastępcza grafika (`make placeholders`), `tests/clans.test.ts`, `scripts/sim/klany.ts`, `scripts/browser/klany.ts`; test kontraktowy zielony, golden bez zmian. Karta z decyzjami i listą uproszczeń: `docs/frakcje/clans.md`. Szybki pomiar (100 gier na komórkę, poziom Imperium): Klany wygrywają z Przymierzem 44% / 50% (Kontrola / Podbój), z Hordą 57% / 53%.
+  - **Zostaje:** G2 balans (Sala Tarcz w botach rzadko budowana; liczby karty to propozycja) · G3 próbka jednostki (autor) · G4 pełna grafika, arena, kafle, muzyka, ikony zdolności, obraz muru Fortyfikacji, wybór pola w Błędnym Świetle, zwarty szyk bota przy rozstawieniu · G5 instrukcja PL i EN · 51a koop i online (serwer musi poznać akcję `kingdomForgeRune`) · Symulacje 10 par po trzech frakcjach.
 
 **55. DLC: Wolne Kompanie, Dwór Wiecznego Szronu, Imperium Piasków, Rój Głębin, Władcy Przypływów (L każda; po 54).** Pełna macierz balansu (`make sim-matrix`) raz na kilka frakcji, w tle, nocą.
 
@@ -87,6 +89,18 @@ Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.t
 - kafle ziemi Umarłych (wrzosowisko, kurhany, cmentarz), zakryty rewers `tiles/back_undead.jpg`, baza i skarbiec (dziś kafle Przymierza w `undead.ts`, pole `terrain`);
 - osada: tło ziemi `osady/land_undead.jpg`, obrazy budynków Kurhan Wiecznej Warty (poziomy 1–4), Ossuarium (1–2), Dzwonnica Zaduszna oraz siedlisk 9 jednostek (dziś zdjęcia osady i budynków Przymierza, `BORROWED` w `SettlementDialog.tsx`);
 - muzyka frakcji (2–3 utwory: dzwony, chór bez słów, lira korbowa, cichy werbel).
+
+**Żelazne Klany (`clans`)** (paleta: polerowana stal, mosiądz, miedź, szary kamień, ciepła skóra, złote runy; bez żaru, lawy i rdzy Hordy, runy złote lub pomarańczowe, nie niebieskie):
+- karta (`cards/art/<id>.jpg`, 452×314) i portret (`cards/portraits/<id>.jpg`, 256×256) dla 19 jednostek: `ironThane`, `runeMatron`, `passWarden`, `oldMiner` (4. bohater), `clanWarrior`, `mountainCrossbow`, `forgePriest` (dowódcy), `shieldDwarf`, `bronzeMole`, `clanCrossbow`, `armoredBear`, `battleSmith`, `bronzeSentinel`, `goatRider`, `giantSlayer`, `skarbnik`, `hammerGuard`, `dwarfCannon`, `clanColossus`;
+- animacje 2D (`public/assets/jednostki/<folder>`, zestaw jak w `PRZEPIS_JEDNOSTKI.md`) dla tych samych 19; do czasu ich powstania w bitwie są żetony z portretami;
+- herb `cards/crests/clans.png`: młot na kowadle w kole z run;
+- ramki kart `cards/frames/clans_hero.png`, `clans_support.png` (dziś pożyczone z Przymierza w `UnitCard.tsx`);
+- ikony 12 zdolności (`cards/abilities/<id>.png` i `<id>_inner.png`): `shieldOath`, `stoneRune`, `bulwark`, `standShot`, `temper`, `bronzeQuills`, `goatLeap`, `giantBane`, `misleadLight`, `stunBlow`, `cannonFire`, `fortify` (dziś pożyczone w `ABILITY_ART` w `common.tsx`);
+- ikony run (`+1 A`, `+1 Ż`, pancerz 1) w oknie Runicznej Kuźni (dziś tekst na przyciskach);
+- arena cyfrowa `arena/cyfrowa/clans.webp` (górska przełęcz z posągami przodków i kamiennym mostem) i jej przeszkody: posągi, głazy, skalne mury (dziś obrazy Przymierza w innym układzie, `WIDE_OBSTACLES.clans`); obraz muru Fortyfikacji (dziś `wall.webp`);
+- kafle ziemi Klanów (skały, sztolnie, kamienne mosty), zakryty rewers `tiles/back_clans.jpg`, baza i skarbiec (dziś kafle Przymierza w `clans.ts`, pole `terrain`);
+- osada: tło ziemi `osady/land_clans.jpg`, obrazy budynków Sala Tarcz (poziomy 1–4), Runiczna Kuźnia (1–2), Głęboka Sztolnia (1–2) oraz siedlisk 9 jednostek (dziś zdjęcia osady i budynków Przymierza, `BORROWED` w `SettlementDialog.tsx`);
+- muzyka frakcji (2–3 utwory: kowadła w rytmie, niski chór męski, rogi).
 
 ## Przed premierą (decyzja autora 17.11: wchodzą przed Steamem; po punktach z kolejki)
 28. **Nowe frakcje:** przeniesione do kolejki (punkty 51–55, decyzja autora 18.11).

@@ -240,6 +240,15 @@ export function ArenaBoard(p: Props) {
                 </div>
               );
             })}
+          {/* Fortyfikacja (Kolos Kuźni): the cells of wall put up in the battle. */}
+          {wide && (b.raised ?? []).map((k) => {
+            const c = cellCenter(k);
+            return (
+              <div key={`raised${k}`} data-raised-wall={k} style={{ position: 'absolute', left: c.x - OBSTACLE_BOX.w / 2, top: c.y + OBSTACLE_BOX.base - OBSTACLE_BOX.h, width: OBSTACLE_BOX.w, height: OBSTACLE_BOX.h, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', pointerEvents: 'none' }}>
+                <img src={asset('arena/cyfrowa/wall.webp')} alt="" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+              </div>
+            );
+          })}
           <svg width={CANVAS_W} height={CANVAS_H} style={{ position: 'absolute', left: 0, top: 0 }}>
             <g pointerEvents="none">
               <GoldGrid cells={CELLS} points={CELL_POINTS} wide={wide} />

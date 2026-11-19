@@ -4,7 +4,7 @@
 // slow, root...) stay where they are until `golden.test.ts` can watch a mechanical refactor. The Dzikie Stada use the push with a collision, the resistance to being moved, the bonus for the target's state and the taunt (docs/frakcje/herds.md).
 
 import { distance, key, line, parseKey, type HexKey } from './hex';
-import { abilityActive, abilityOf, battleFx, cellsOf, dealDamage, fitsAt, freeCellNear, inLayout, nearestFreeCell, placeUnit, pushCell, scaleOf, stepOnFields, unitAt } from './battle';
+import { abilityActive, abilityOf, battleFx, cellsOf, dealDamage, fitsAt, formationAnchored, freeCellNear, inLayout, nearestFreeCell, placeUnit, pushCell, scaleOf, stepOnFields, unitAt } from './battle';
 import { log } from './log';
 import { supportTier, UNITS, type AbilityId, type Side } from './data';
 import { manaOf } from './magic';
@@ -127,12 +127,14 @@ export const groundAt = (b: BattleState & { ground?: GroundEffect[] }, cell: Hex
 // ---------------------------------------------------------------- the Herds: push with a collision, resistance, a bonus for the target's state, taunt
 
 /** Abilities of units that cannot be pushed, pulled or moved (Niewzruszony, Ziemia Drży). */
-export const IMMOVABLE_ABILITIES: readonly AbilityId[] = ['unmoved', 'tremor'];
+export const IMMOVABLE_ABILITIES: readonly AbilityId[] = ['unmoved', 'tremor', 'fortify'];
 
 /** Whether the unit may be moved against its will: not a large one, not in a duel, not an immovable one. */
 export function canBeMoved(state: GameState, u: BattleUnit): boolean {
   const b = state.battle;
   if (!b || b.duel || u.tail || !u.pos || !u.alive) return false;
+  // Runa Kamienia and the Sala Tarcz (level III, in formation) hold a unit in place as well.
+  if (u.status.unmovable || formationAnchored(state, u)) return false;
   return !(abilityActive(state) && IMMOVABLE_ABILITIES.includes(abilityOf(u)));
 }
 
@@ -169,7 +171,7 @@ function pushStep(state: GameState, from: HexKey, target: HexKey): { cell: HexKe
 export function pushWithCollision(state: GameState, target: BattleUnit, source: BattleUnit, steps: number, damage: number, label: string): PushOutcome {
   const b = state.battle!;
   if (!canBeMoved(state, target)) {
-    if (target.alive && abilityActive(state) && IMMOVABLE_ABILITIES.includes(abilityOf(target))) log(state, 'ability', `${UNITS[target.defId].name} stoi niewzruszenie (${label}).`);
+    if (target.alive && (target.status.unmovable || formationAnchored(state, target) || (abilityActive(state) && IMMOVABLE_ABILITIES.includes(abilityOf(target))))) log(state, 'ability', `${UNITS[target.defId].name} stoi niewzruszenie (${label}).`);
     return { moved: 0, stoppedBy: 'immovable' };
   }
   let moved = 0;

@@ -5,12 +5,12 @@
 import { raceOf } from '../engine/teams';
 import { useEffect, useState, type ReactNode } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId, type TeamId } from '../engine/data';
-import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, healPrice, incomeOf, KINGDOM, marketStock, mayRecruit, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, DWELLING_TEXTS, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
+import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, healPrice, incomeOf, RUNE_NAMES, RUNES, runeBlock, runesOf, KINGDOM, marketStock, mayRecruit, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, DWELLING_TEXTS, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
 import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
 import { ARCHETYPE_NAMES, archetypeOf, commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from '../engine/realm';
 import { levelOf } from '../engine/growth';
-import { mayBuildSpark, shardsOf, shardTotal, SPARK_NAMES, SPARK_TEXTS } from '../engine/empire';
+import { FACTION_MECHANICS, mayBuildSpark, shardsOf, shardTotal, SPARK_NAMES, SPARK_TEXTS } from '../engine/empire';
 import { MAGIC, manaOf, maxMana, SPELLS, towerSpells } from '../engine/magic';
 import type { Action, GameState } from '../engine/types';
 import { asset, Modal, Portrait, Ribbon } from './common';
@@ -33,8 +33,8 @@ type Spot = { x: number; y: number; h: number };
 const SPOTS: Record<BuildingId | 'council', Spot> = {
   council: { x: 50, y: 49, h: 19 },
   magic: { x: 25.5, y: 40, h: 16.5 }, spark: { x: 76, y: 41, h: 14.5 },
-  shrine: { x: 37.5, y: 42, h: 12 }, bloodPit: { x: 37.5, y: 42, h: 12 }, grove: { x: 62.5, y: 42, h: 12 }, wolfDen: { x: 62.5, y: 42, h: 12 }, hoofStone: { x: 37.5, y: 42, h: 12 }, refuge: { x: 62.5, y: 42, h: 12 }, barrow: { x: 37.5, y: 42, h: 12 }, bellTower: { x: 62.5, y: 42, h: 12 },
-  tavern: { x: 18.5, y: 52.5, h: 11 }, nursery: { x: 81.5, y: 50.5, h: 11.5 }, plunder: { x: 81.5, y: 50.5, h: 11.5 }, pastures: { x: 81.5, y: 50.5, h: 11.5 }, ossuary: { x: 81.5, y: 50.5, h: 11.5 },
+  shrine: { x: 37.5, y: 42, h: 12 }, bloodPit: { x: 37.5, y: 42, h: 12 }, grove: { x: 62.5, y: 42, h: 12 }, wolfDen: { x: 62.5, y: 42, h: 12 }, hoofStone: { x: 37.5, y: 42, h: 12 }, refuge: { x: 62.5, y: 42, h: 12 }, barrow: { x: 37.5, y: 42, h: 12 }, bellTower: { x: 62.5, y: 42, h: 12 }, shieldHall: { x: 37.5, y: 42, h: 12 }, runeForge: { x: 62.5, y: 42, h: 12 },
+  tavern: { x: 18.5, y: 52.5, h: 11 }, nursery: { x: 81.5, y: 50.5, h: 11.5 }, plunder: { x: 81.5, y: 50.5, h: 11.5 }, pastures: { x: 81.5, y: 50.5, h: 11.5 }, ossuary: { x: 81.5, y: 50.5, h: 11.5 }, deepMine: { x: 81.5, y: 50.5, h: 11.5 },
   hospital: { x: 31, y: 56, h: 13.5 }, forge: { x: 61, y: 56, h: 14 }, walls: { x: 70, y: 58.5, h: 12 },
   treasury: { x: 25.5, y: 72, h: 16.5 }, barracks: { x: 50, y: 74.5, h: 22 }, market: { x: 74, y: 72, h: 16.5 },
 };
@@ -47,9 +47,9 @@ const spotOf = (b: BuildingId | 'council', land: FactionId): Spot => {
 /** Whose picture a building of one faction has (level 6: Kapliczka, Szkółka, Krąg for the Przymierze; Jama, Szabrownia, Legowisko for the Horde). */
 const UNIQUE_OWNER: Partial<Record<BuildingId, FactionId>> = { shrine: 'dawn', nursery: 'dawn', grove: 'dawn', bloodPit: 'horde', plunder: 'horde', wolfDen: 'horde' };
 /** Placeholders (docs/BACKLOG.md 2a): the Herds have no pictures of their own yet, they borrow the land of Przymierze and its three unique buildings. */
-const BORROWED: Partial<Record<BuildingId, BuildingId>> = { hoofStone: 'shrine', pastures: 'nursery', refuge: 'grove', barrow: 'shrine', ossuary: 'nursery', bellTower: 'grove' };
+const BORROWED: Partial<Record<BuildingId, BuildingId>> = { hoofStone: 'shrine', pastures: 'nursery', refuge: 'grove', barrow: 'shrine', ossuary: 'nursery', bellTower: 'grove', shieldHall: 'shrine', runeForge: 'grove', deepMine: 'nursery' };
 const buildingPicture = (landOf: FactionId, building: BuildingId, level: number) => {
-  const land: FactionId = landOf === 'herds' || landOf === 'undead' ? 'dawn' : landOf;
+  const land: FactionId = landOf === 'herds' || landOf === 'undead' || landOf === 'clans' ? 'dawn' : landOf;
   const b = BORROWED[building] ?? building;
   const own = UNIQUE_OWNER[b];
   if (own) return level === 0 ? `osady/${own}_plot.webp` : `osady/${own}_${b}1.webp`;
@@ -377,7 +377,35 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         </div>
       );
     }
-    if (UNIQUE_OWNER[b]) {
+    // Level 6, the Iron Clans: the Runiczna Kuźnia forges a rune on a support of the pool, once a round for the faction.
+    if (b === 'runeForge') {
+      const pool = [...fs.supportsAlive, ...fs.supportsDead];
+      const done = fs.runeRound === state.round;
+      return (
+        <div data-panel="runeForge" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <RuleText text={BUILDING_TEXTS.runeForge[Math.min(buildingLevel(s, 'runeForge'), 2) - 1]} />
+          {done && <i data-rune-done>Kuźnia wybiła już w tej rundzie runę.</i>}
+          {pool.length === 0 && <i>W drużynie nie ma pomocników.</i>}
+          {pool.map((id) => (
+            <div key={id} data-rune-unit={id} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <Portrait unitId={id} size={44} dim={fs.supportsDead.includes(id)} />
+              <div style={{ flex: 1 }}><b>{UNITS[id].name}</b> <span style={{ fontSize: 13, color: '#6B4A22' }}>{runesOf(state, faction, id).map((r) => RUNE_NAMES[r]).join(', ') || 'bez run'}</span></div>
+              {RUNES.map((r) => {
+                const why = runeBlock(state, faction, s, id, r);
+                return (
+                  <button key={r} className="btn prim" disabled={Boolean(why)} title={why ?? `Wybij runę: ${RUNE_NAMES[r]}`} data-rune-forge={`${id}:${r}`} onClick={() => act({ type: 'kingdomForgeRune', settlementId: s.id, unitId: id, rune: r })} style={{ padding: '3px 10px', fontSize: 15 }}>
+                    <StatText text={RUNE_NAMES[r]} />
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+          <span style={{ fontSize: 14, color: '#6B4A22' }}>Cena runy: <StatText text={costText({ gold: FACTION_MECHANICS.runePrice.gold, ore: FACTION_MECHANICS.runePrice.ore })} />.</span>
+          {upgrade}
+        </div>
+      );
+    }
+    if (UNIQUE_OWNER[b] || BORROWED[b]) {
       const lvl = buildingLevel(s, b);
       return (
         <div data-panel={b} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>

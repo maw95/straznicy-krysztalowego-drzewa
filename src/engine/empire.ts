@@ -50,11 +50,25 @@ export const FACTION_MECHANICS = {
   /** Ossuarium: gold less for a recruit's resurrection in the hospital (first level); the second level raises the units of tiers 1-2 free. */
   ossuaryDiscount: 1,
   ossuaryFreeTier: 2,
+  /** Sala Tarcz (Żelazne Klany): damage taken less from every blow (small scale), how many neighbours a unit needs by level (I-IV), the level at which a unit in formation cannot be moved, and the one at which a melee attacker loses Życie. */
+  shieldArmor: 1,
+  shieldMates: [2, 1, 1, 1],
+  shieldAnchorLevel: 3,
+  shieldThornsLevel: 4,
+  /** Runiczna Kuźnia: the price of a rune, runes a unit may carry by level (I, II), how many a faction forges in a round. */
+  runePrice: { gold: 1, ore: 1 },
+  runesPerUnit: [1, 2],
+  runesPerRound: 1,
+  /** Głęboka Sztolnia: ore a round per settlement with one (I), dust every few rounds per settlement with the second level (II). */
+  mineOre: 1,
+  mineDust: 1,
+  mineDustEvery: 3,
 };
 export const MECHANIC_NAMES: Record<FactionId, string> = byPack((p) => p.mechanic.name);
 export const MECHANIC_TEXTS: Record<FactionId, string> = {
   dawn: `Na początku każdej rundy bitwy najciężej ranna jednostka Przymierza odzyskuje ${FACTION_MECHANICS.dawnHeal} Ż.`,
   horde: `Gdy w bitwie ginie wróg Hordy, wszystkie jej jednostki dostają +${FACTION_MECHANICS.hordeAttack} A do końca bitwy (raz na bitwę).`,
+  clans: `Jednostka Klanów, która stoi obok co najmniej ${FACTION_MECHANICS.shieldMates[0]} sojuszników, ma −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu; kolejne poziomy Sali Tarcz osłabiają ten warunek, a w szyku nie da się jej odepchnąć i kto uderza ją wręcz, traci Ż.`,
   undead: `Na końcu każdej rundy bitwy poległy pomocnik Umarłych wstaje na arenie (jego najtańszy; bohaterowie nie wstają); liczba wstań i Ż, z którym wracają, rosną z poziomem Kurhanu.`,
   herds: `Jednostka Stad, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole; cel, który w coś uderzy, dostaje obrażenia.`,
 };
@@ -73,6 +87,7 @@ export const SPARK_TEXTS: Record<FactionId, string> = {
   dawn: `Wszystkie jednostki Przymierza (bohaterowie i pomocnicy) mają +${EMPIRE.sparkHp} Ż w każdej bitwie.`,
   horde: `Wszystkie jednostki Hordy (bohaterowie i pomocnicy) mają +${EMPIRE.sparkAttack} A w każdej bitwie.`,
   herds: `Wszystkie jednostki Stad (bohaterowie i pomocnicy) mają +${EMPIRE.sparkSpeed} S w każdej bitwie.`,
+  clans: `Wszystkie jednostki Klanów (bohaterowie i pomocnicy) mają pancerz ${FACTION_MECHANICS.shieldArmor}: −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu.`,
   undead: 'Wszystkie jednostki Umarłych (bohaterowie i pomocnicy) są odporne na truciznę, klątwy, spowolnienia i unieruchomienie.',
 };
 

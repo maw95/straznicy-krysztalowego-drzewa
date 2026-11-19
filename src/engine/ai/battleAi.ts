@@ -23,6 +23,7 @@ import {
   deployCells,
   deployHeads,
   enemiesOf,
+  fortifyCells,
   footprintAt,
   isLarge,
   tailOptions,
@@ -267,6 +268,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   // Caution fades as the battle drags on, so nobody kites forever.
   const caution = Math.max(0, 1 - (b.round - 1) / AI_TUNING.cautionRounds);
   let best: Plan = { moveTo: null, target: null, second: null, useAbility: false, score: -Infinity };
+  const mates = (cell: HexKey) => livingUnits(b, u.side).filter((x) => x.id !== u.id && dist2(cellsOf(x), plannedFootprint(state, u, cell)) === 1).length;
   for (const [cell, steps] of options) {
     const moved = act.movedDistance + steps;
     // A large unit standing on `cell` also lies on the cell of its tail.
@@ -299,6 +301,9 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
         // The Kingdom of the Dead plays for time: it does not throw its heroes forward (they do not rise), its shooters go for the enemy leaders with mana.
         if (UNITS[u.defId].side === 'undead' && UNITS[u.defId].kind === 'hero') score -= risk * 0.5;
         if (UNITS[u.defId].side === 'undead' && ['manaReap', 'dimLight'].includes(abilityOf(u)) && UNITS[t.defId].kind === 'hero') score += 0.5;
+        // The Iron Clans fight in formation: a cell next to allies is worth more (the Mur Tarcz), and a cannonade hits the neighbours of the target as well.
+        if (UNITS[u.defId].side === 'clans') score += Math.min(2, mates(cell)) * 0.4;
+        if (abilityOf(u) === 'cannonFire') score += targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(t)) === 1).reduce((n, x) => n + scoreHit(x, dmg), 0);
         score -= risk * (ranged ? AI_TUNING.attackRiskRanged : AI_TUNING.attackRiskMelee);
         if (ranged && targets.some((x) => dist2(cellsOf(x), mine) === 1)) score -= AI_TUNING.rangedCrowded;
         if (score > best.score) best = { moveTo: cell === u.pos ? null : cell, target: t, second, useAbility, score };
@@ -308,6 +313,8 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
     const nearest = nearness(field, enemies, mine);
     let pos = ranged ? -Math.abs(nearest - AI_TUNING.rangedDistance) * AI_TUNING.rangedDistanceWeight : -nearest * AI_TUNING.meleeClosing;
     pos -= risk * (ranged ? AI_TUNING.moveRiskRanged : AI_TUNING.moveRiskMelee);
+    // The Iron Clans wait in formation: they step to a cell next to their allies, and not far from where they stand.
+    if (UNITS[u.defId].side === 'clans') pos += Math.min(2, mates(cell)) * 0.5 - steps * 0.2;
     // Siege: the moat hurts and ends the turn, so a unit stops there only when it is the way in.
     if (b.siege && cell !== u.pos && mine.some((k) => b.siege!.moat.includes(k))) pos -= 2;
     // Siege: the defenders hold the wall line while it stands (they go out only to strike), so the towers and the gate work for them.
@@ -370,6 +377,24 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
       .sort((x, y) => unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
     if (t) return { type: 'battleAbility', targetId: t.id };
   }
+  // Żelazne Klany: the oath and the hardening when the line is in contact, the stone rune on the sturdiest ally at the front, the Skarbnik's light on a shooter, the wall in front of the Colossus.
+  const foesNear = (r: number) => enemiesOf(b, u).some((e) => unitDistance(e, u) <= r);
+  if (ab === 'shieldOath' && foesNear(3) && livingUnits(b, u.side).some((x) => x.id !== u.id && unitDistance(x, u) === 1)) return { type: 'battleAbility' };
+  if (ab === 'stoneRune' && foesNear(5)) {
+    const ally = livingUnits(b, u.side).filter((x) => x.id !== u.id && !x.status.unmovable).sort((x, y) => y.maxHp - x.maxHp || (x.id < y.id ? -1 : 1))[0];
+    if (ally) return { type: 'battleAbility', targetId: ally.id };
+  }
+  if (ab === 'temper' && foesNear(4)) {
+    const ally = livingUnits(b, u.side).filter((x) => x.id !== u.id && unitDistance(x, u) === 1).sort((x, y) => unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (ally) return { type: 'battleAbility', targetId: ally.id };
+  }
+  if (ab === 'misleadLight') {
+    const t = enemiesOf(b, u)
+      .filter((e) => unitDistance(e, u) <= ABILITY.misleadRange && canBeMoved(state, e))
+      .sort((x, y) => Number(UNITS[y.defId].attackType === 'ranged') - Number(UNITS[x.defId].attackType === 'ranged') || unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (t) return { type: 'battleAbility', targetId: t.id };
+  }
+  if (ab === 'fortify' && foesNear(4) && fortifyCells(state, u)) return { type: 'battleAbility' };
   if (ab === 'web') {
     const t = enemiesOf(b, u)
       .filter((e) => unitDistance(e, u) <= ABILITY.webRange)

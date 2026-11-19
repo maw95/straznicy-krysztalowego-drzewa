@@ -14,13 +14,13 @@ import { Rng } from './rng';
 import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsText, type Hut, type MapObject, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, passTargets, SHARDS_ID, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
-import { computerFaction, type Action, type Crystal, type GameState, type HeroState } from './types';
+import { computerFaction, type Action, type Crystal, type GameState, type HeroState, type Rune } from './types';
 import { circleSpells, MAGIC, SPELL_CIRCLES, SPELLS, towerSpells, type SpellId } from './magic';
 import { HERO_TYPES } from './heroTypes';
 import { FACTION_MECHANICS, mayBuildSpark, mechanicLevel, pickUpShard, placeShards, shardCollector, SPARK_NAMES, spendShards, summedLevel } from './empire';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
-export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen' | 'hoofStone' | 'pastures' | 'refuge' | 'barrow' | 'ossuary' | 'bellTower';
+export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen' | 'hoofStone' | 'pastures' | 'refuge' | 'barrow' | 'ossuary' | 'bellTower' | 'shieldHall' | 'runeForge' | 'deepMine';
 
 export interface Settlement {
   id: string;
@@ -69,7 +69,7 @@ export const KINGDOM = {
   /** Gold in a chest chosen instead of the artifact. */
   chestGold: 3,
   /** Cost of each level of a building. */
-  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [], hoofStone: [], pastures: [], refuge: [], barrow: [], ossuary: [], bellTower: [] } as Record<BuildingId, number[]>,
+  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [], hoofStone: [], pastures: [], refuge: [], barrow: [], ossuary: [], bellTower: [], shieldHall: [], runeForge: [], deepMine: [] } as Record<BuildingId, number[]>,
   /** Price of an artifact in the market, by rarity (zwykły, rzadki, legendarny). */
   artifactPrice: [2, 5, 10],
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
@@ -105,6 +105,7 @@ export const ALT_UNITS: Record<FactionId, string[]> = byPack((p) => p.altUnits);
 export const DWELLING_NAMES: Record<string, string> = {
   hedgehog: 'Legowisko Jeżozwierzy', silverFox: 'Lisia Nora', centaur: 'Stajnie Centaurów', dawnOwl: 'Sowia Dziupla', boar: 'Dębowa Zagroda', dryadArcher: 'Gaj Driad', treeGuardian: 'Prastary Zagajnik', whiteStag: 'Polana Jeleni', dawnPhoenix: 'Gniazdo Feniksa',
   skeletonArcher: 'Zbrojownia Kości', scarecrow: 'Opuszczone Pole', hauntedArmor: 'Rycerska Krypta', banshee: 'Wieża Płaczek', viy: 'Wielki Kurhan', boneOracle: 'Kaplica Wróżb', lich: 'Biblioteka Umarłych', kostucha: 'Kaplica Tańca Śmierci', boneDragon: 'Smocze Cmentarzysko',
+  armoredBear: 'Gawra Zbrojna', battleSmith: 'Polowa Kuźnia', bronzeSentinel: 'Warsztat Mechanizmów', goatRider: 'Koźla Zagroda', giantSlayer: 'Sala Pogromców', skarbnik: 'Stary Szyb', hammerGuard: 'Sala Gwardii', dwarfCannon: 'Ludwisarnia', clanColossus: 'Wielka Kuźnia Kolosa',
   faunSlinger: 'Fauni Zagajnik', tarpan: 'Tarpanie Błonia', forestBison: 'Żubrza Ostoja', satyrLancer: 'Obóz Kopijników', steppeHippogriff: 'Gniazdo na Urwisku', drumElephant: 'Krąg Bębnów', warRhino: 'Błotne Brody', bullMoose: 'Łosie Mokradło', indrik: 'Źródło Indrika',
   ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern', doomBehemoth: 'Jaskinia Zagłady',
 };
@@ -112,6 +113,7 @@ export const DWELLING_NAMES: Record<string, string> = {
 const GENITIVE: Record<string, string> = {
   hedgehog: 'Jeżozwierza', silverFox: 'Srebrnego Lisa', centaur: 'Centaura', dawnOwl: 'Sowy Świtu', boar: 'Alabastrowego Odyńca', dryadArcher: 'Driady Łuczniczki', treeGuardian: 'Opiekuna Drzewa', whiteStag: 'Białego Jelenia', dawnPhoenix: 'Feniksa Świtu',
   skeletonArcher: 'Szkieletu Łucznika', scarecrow: 'Strachu Polnego', hauntedArmor: 'Nawiedzonej Zbroi', banshee: 'Płaczki', viy: 'Wija Podziemnego', boneOracle: 'Kościanej Wróżki', lich: 'Lisza', kostucha: 'Kostuchy', boneDragon: 'Kościanego Smoka',
+  armoredBear: 'Niedźwiedzia w Zbroi', battleSmith: 'Kowala Bitewnego', bronzeSentinel: 'Wartownika z Brązu', goatRider: 'Jeźdźca na Koźle', giantSlayer: 'Pogromcy Olbrzymów', skarbnik: 'Skarbnika', hammerGuard: 'Gwardii Młota', dwarfCannon: 'Armaty Klanów', clanColossus: 'Kolosa Kuźni',
   faunSlinger: 'Fauna Procarza', tarpan: 'Tarpana', forestBison: 'Żubra Puszczańskiego', satyrLancer: 'Satyra Kopijnika', steppeHippogriff: 'Hipogryfa Stepowego', drumElephant: 'Słonia z Bębnem', warRhino: 'Nosorożca Bojowego', bullMoose: 'Łosia Rogacza', indrik: 'Indrika',
   ratman: 'Szczurołaka', goblinSlinger: 'Goblina Procarza', hellhound: 'Piekielnego Ogara', gargoyle: 'Gargulca', salamander: 'Salamandry Popiołu', caveTroll: 'Trolla Jaskiniowego', minotaurChief: 'Herszta Minotaurów', shadowWyvern: 'Wiwerny Cienia', doomBehemoth: 'Behemota Zagłady',
 };
@@ -147,6 +149,42 @@ export function healPrice(state: GameState, f: TeamId, s: Settlement, unitId: st
   return price;
 }
 
+/** The runes of the Runiczna Kuźnia (the Iron Clans): names and what each does in a battle. */
+export const RUNE_NAMES: Record<Rune, string> = { attack: '+1 A', life: '+1 Ż', armour: 'pancerz 1' };
+export const RUNES: Rune[] = ['attack', 'life', 'armour'];
+
+/** The runes a faction's unit carries. */
+export const runesOf = (state: GameState, f: TeamId, unitId: string): Rune[] => state.factions[f].runes?.[unitId] ?? [];
+
+/** The level of the best Runiczna Kuźnia of the faction (0: none). */
+export const runeForgeLevel = (state: GameState, f: TeamId): number => (state.rules.empire ? Math.max(0, ...settlementsOf(state, f).map((s) => buildingLevel(s, 'runeForge'))) : 0);
+
+/** Why a rune cannot be forged now (null: it can). The unit must be one of the faction's pool (alive or fallen: the rune waits for its return). */
+export function runeBlock(state: GameState, f: TeamId, s: Settlement, unitId: string, rune: Rune): string | null {
+  const fs = state.factions[f];
+  if (buildingLevel(s, 'runeForge') < 1) return 'W tej osadzie nie ma Runicznej Kuźni.';
+  if (!RUNES.includes(rune)) return 'Nie ma takiej runy.';
+  if (!fs.supportsAlive.includes(unitId) && !fs.supportsDead.includes(unitId)) return 'Tej jednostki nie ma w drużynie.';
+  if (fs.runeRound === state.round) return 'Kuźnia wybija jedną runę na rundę.';
+  const cap = FACTION_MECHANICS.runesPerUnit[Math.min(runeForgeLevel(state, f), 2) - 1];
+  const have = runesOf(state, f, unitId);
+  if (have.length >= cap) return cap > 1 ? 'Ta jednostka ma już komplet run.' : 'Ta jednostka ma już runę (druga runa na jednostkę wymaga drugiego poziomu Kuźni).';
+  if (have.includes(rune)) return 'Ta jednostka ma już taką runę.';
+  if (!canPay(state, f, FACTION_MECHANICS.runePrice)) return 'Brakuje zasobów na runę.';
+  return null;
+}
+
+/** What a bot forges now: the strongest unit of the pool that can take a rune, and the rune that suits it (shooters strike harder, the rest keep their skin). */
+export function botRune(state: GameState, f: TeamId, s: Settlement): { unitId: string; rune: Rune } | null {
+  const fs = state.factions[f];
+  const pool = [...fs.supportsAlive, ...fs.supportsDead].sort((a, b) => supportTier(b) - supportTier(a) || (a < b ? -1 : 1));
+  for (const unitId of pool) {
+    const ranged = UNITS[unitId].attackType === 'ranged';
+    for (const rune of ranged ? (['attack', 'life', 'armour'] as Rune[]) : (['armour', 'life', 'attack'] as Rune[])) if (!runeBlock(state, f, s, unitId, rune)) return { unitId, rune };
+  }
+  return null;
+}
+
 /** Level 6: whether tiers 2-5 need a dwelling in this game. */
 export const needsDwelling = (state: GameState, r: Recruit): boolean => Boolean(state.rules.empire) && r.tier >= 2 && r.tier <= 6;
 /** Level 6: the unit whose dwelling the faction has built for this tier (undefined: none yet). */
@@ -179,6 +217,9 @@ export const BUILDING_NAMES: Record<BuildingId, string[]> = {
   barrow: ['Kurhan Wiecznej Warty', 'Kurhan Północnej Warty', 'Kurhan Dwóch Straży', 'Wielki Kurhan Wiecznej Warty'],
   ossuary: ['Ossuarium', 'Wielkie Ossuarium'],
   bellTower: ['Dzwonnica Zaduszna'],
+  shieldHall: ['Sala Tarcz', 'Wielka Sala Tarcz', 'Sala Nieruchomych Tarcz', 'Sala Tarcz Przodków'],
+  runeForge: ['Runiczna Kuźnia', 'Wielka Runiczna Kuźnia'],
+  deepMine: ['Głęboka Sztolnia', 'Najgłębsza Sztolnia'],
 };
 
 /** Level 6: the buildings only one faction has (the faction's mechanic first, then the two others). */
@@ -239,6 +280,17 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
     'Pomocnik wstaje z pełnym Ż.',
   ],
   ossuary: [`Wskrzeszenie w szpitalu jest tańsze o ${FACTION_MECHANICS.ossuaryDiscount} zł.`, `Pomocnicy poziomów 1–${FACTION_MECHANICS.ossuaryFreeTier} wracają ze szpitala za darmo.`],
+  shieldHall: [
+    `Mur Tarcz: jednostka Klanów z co najmniej ${FACTION_MECHANICS.shieldMates[0]} sąsiednimi sojusznikami ma −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu. Bez tego budynku frakcja nie ma tego efektu.`,
+    `Wystarczy ${FACTION_MECHANICS.shieldMates[1]} sąsiad.`,
+    'Jednostki w szyku nie da się odepchnąć ani przyciągnąć.',
+    `Kto atakuje wręcz jednostkę w szyku, traci ${FACTION_MECHANICS.shieldArmor} Ż.`,
+  ],
+  runeForge: [
+    `Raz na rundę jeden pomocnik w drużynie dostaje trwałą runę (+1 A, +1 Ż albo pancerz 1; ${costText({ gold: FACTION_MECHANICS.runePrice.gold, ore: FACTION_MECHANICS.runePrice.ore })}). Jedna runa na jednostkę; runa zostaje po śmierci pomocnika i jego powrocie do drużyny.`,
+    'Pomocnik może nosić dwie runy.',
+  ],
+  deepMine: [`+${FACTION_MECHANICS.mineOre} rudy na rundę z każdej osady z Głęboką Sztolnią.`, `Także +${FACTION_MECHANICS.mineDust} Gwiezdnego Pyłu co ${FACTION_MECHANICS.mineDustEvery} rundy z każdej osady z drugim poziomem.`],
   bellTower: ['Po wygranej bitwie z neutralnymi jeden poległy pomocnik poziomu 1–2 wraca do drużyny bez szpitala (raz na rundę).'],
   spark: ['Budynek Pierwotnej Iskry: jego ceną są wszystkie Odłamki z mapy. Daje frakcji wielką premię, a w celu „Relikt” wygrywa grę.'],
   magic: circleTexts(),
@@ -330,7 +382,7 @@ export function initKingdom(state: GameState): void {
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag = byTeam(teams, (t) => rng.shuffle([...NAMES[raceOf(state, t)]]));
   // Level 6: the barracks stand from the start in every settlement (the dwellings of the units are built beside them).
-  const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0, hoofStone: 0, pastures: 0, refuge: 0, barrow: 0, ossuary: 0, bellTower: 0 } : {}) }) as Record<BuildingId, number>;
+  const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0, hoofStone: 0, pastures: 0, refuge: 0, barrow: 0, ossuary: 0, bellTower: 0, shieldHall: 0, runeForge: 0, deepMine: 0 } : {}) }) as Record<BuildingId, number>;
   const add = (id: string, at: HexKey, land: TeamId, owner: TeamId | null) => {
     k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[raceOf(state, land)]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
     state.tiles[at].place = { kind: 'settlement', id };
@@ -655,7 +707,7 @@ export function payCost(state: GameState, f: TeamId, c: Cost): void {
  * Which building's first level must stand in the settlement before another can be started (docs/BUDYNKI.md 0a: a tree, one parent each;
  * the Rada Osady, the root, is always there; the Iskra needs only the shards, the dwellings the barracks, see `kingdomDwelling`).
  */
-export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market', hoofStone: 'barracks', pastures: 'market', refuge: 'tavern', barrow: 'hospital', ossuary: 'treasury', bellTower: 'barracks' };
+export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market', hoofStone: 'barracks', pastures: 'market', refuge: 'tavern', barrow: 'hospital', ossuary: 'treasury', bellTower: 'barracks', shieldHall: 'walls', runeForge: 'forge', deepMine: 'treasury' };
 
 /** Why a building cannot be started here for lack of its parent (null: nothing in the way). Upgrades of a standing building are never blocked. */
 export function buildBlock(s: Settlement, b: BuildingId): string | null {
@@ -677,6 +729,13 @@ export function resourceIncomeBreakdown(state: GameState, f: TeamId): Array<{ la
   // Level 6, the Przymierze: the Szkółka Drzewa gives wood, a level at a time, from every settlement that has one.
   const nursery = state.rules.empire ? summedLevel(state, f, 'nursery') : 0;
   if (nursery) rows.push({ label: 'Szkółka Drzewa', res: 'wood', amount: nursery * FACTION_MECHANICS.nurseryWood });
+  // Level 6, the Iron Clans: the Głęboka Sztolnia gives ore from every settlement that has one, and with its second level Pył every few rounds.
+  if (state.rules.empire) {
+    const mines = settlementsOf(state, f).filter((x) => buildingLevel(x, 'deepMine') >= 1);
+    if (mines.length) rows.push({ label: BUILDING_NAMES.deepMine[0], res: 'ore', amount: mines.length * FACTION_MECHANICS.mineOre });
+    const deep = mines.filter((x) => buildingLevel(x, 'deepMine') >= 2).length;
+    if (deep && state.round % FACTION_MECHANICS.mineDustEvery === 0) rows.push({ label: BUILDING_NAMES.deepMine[1], res: 'dust', amount: deep * FACTION_MECHANICS.mineDust });
+  }
   return rows;
 }
 
@@ -844,6 +903,17 @@ export function kingdomAction(state: GameState, action: Action): void {
       log(state, 'info', `${heroLabel(hero)} przenosi się przez Ostoję Wędrówek do osady ${to.name}.`, hero.faction);
       break;
     }
+    case 'kingdomForgeRune': {
+      const { s, hero } = serviceSettlement(state, action.settlementId);
+      const why = runeBlock(state, hero.faction, s, action.unitId, action.rune);
+      if (why) throw new Error(why);
+      payCost(state, hero.faction, FACTION_MECHANICS.runePrice);
+      const fs = state.factions[hero.faction];
+      (fs.runes ??= {})[action.unitId] = [...(fs.runes[action.unitId] ?? []), action.rune];
+      fs.runeRound = state.round;
+      log(state, 'info', `${FACTION_NAMES[raceOf(state, hero.faction)]}: kowal wybija runę (${RUNE_NAMES[action.rune]}) na jednostce ${UNITS[action.unitId].name} (${costText(FACTION_MECHANICS.runePrice)}).`);
+      break;
+    }
     case 'kingdomRansom': {
       const { s, hero } = serviceSettlement(state, action.settlementId);
       if (buildingLevel(s, 'tavern') < 1) throw new Error('W tej osadzie nie ma karczmy.');
@@ -948,6 +1018,10 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
   const buildable = (b: BuildingId) => { const c = buildCost(state, s, b); return c !== null && !buildBlock(s, b) && canPay(state, f, c); };
   const own = s.land === f;
   if (own && s.buildings.barracks < 1 && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
+  if (state.rules.empire && buildingLevel(s, 'runeForge') >= 1) {
+    const forged = botRune(state, f, s);
+    if (forged) return { type: 'kingdomForgeRune', settlementId: id, ...forged };
+  }
   if (own && s.buildings.barracks >= 1 && state.rules.empire) {
     // Level 6: the dwelling of the lowest tier that has none (which of the two units: by the game's seed, so the games differ), when it and its unit can be paid for.
     for (const tier of [2, 3, 4, 5, 6]) {
@@ -973,6 +1047,11 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
   }
   if (s.buildings.treasury < 1 && buildable('treasury')) return { type: 'kingdomBuild', settlementId: id, building: 'treasury' };
   if (state.rules.economy && buildingLevel(s, 'forge') < 1 && forgeLevel(state, f) < 1 && buildable('forge')) return { type: 'kingdomBuild', settlementId: id, building: 'forge' };
+  // The Iron Clans live by their mine and their forge of runes: the Sztolnia first (it pays the ore), the Runiczna Kuźnia as soon as the forge stands.
+  if (state.rules.empire && own && raceOf(state, f) === 'clans' && s.buildings.treasury >= 1) {
+    if (buildingLevel(s, 'deepMine') < 1 && buildable('deepMine')) return { type: 'kingdomBuild', settlementId: id, building: 'deepMine' };
+    if (forgeLevel(state, f) >= 1 && buildingLevel(s, 'forge') >= 1 && !settlementsOf(state, f).some((x) => buildingLevel(x, 'runeForge') >= 1) && buildable('runeForge')) return { type: 'kingdomBuild', settlementId: id, building: 'runeForge' };
+  }
   // The Kingdom of the Dead builds the hospital at once (the Kurhan Wiecznej Warty stands on it), the others only when somebody has fallen.
   const wardRoad = state.rules.empire && own && raceOf(state, f) === 'undead' && s.buildings.barracks >= 1;
   if (s.buildings.hospital < 1 && (fs.supportsDead.length || wardRoad) && buildable('hospital')) return { type: 'kingdomBuild', settlementId: id, building: 'hospital' };
@@ -1005,7 +1084,9 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
       if (x === 'grove' || x === 'wolfDen') return !settlementsOf(state, f).some((y) => buildingLevel(y, x) >= 1);
       return true;
     });
-    for (const b of [mech, ...wanted.filter((x) => x !== mech)].filter((x) => wanted.includes(x))) {
+    // The Clans build the mine and the rune forge first (the forge is what makes them strong over the long run), the shield hall after them.
+    const order = raceOf(state, f) === 'clans' ? ['deepMine', 'runeForge', mech, ...wanted] : [mech, ...wanted];
+    for (const b of [...new Set(order)].filter((x) => wanted.includes(x as BuildingId)) as BuildingId[]) {
       const price = buildCost(state, s, b);
       if (price && buildable(b) && canPay(state, f, { ...price, gold: price.gold + 2 })) return { type: 'kingdomBuild', settlementId: id, building: b };
     }
@@ -1029,6 +1110,7 @@ function botTrade(state: GameState, f: TeamId, s: Settlement): Action | null {
   if (s.buildings.treasury < 1) wanted.push('treasury');
   if (s.buildings.market < 1) wanted.push('market');
   if (forgeLevel(state, f) < 1) wanted.push('forge');
+  if (state.rules.empire && own && raceOf(state, f) === 'clans' && s.buildings.treasury >= 1) wanted.push(buildingLevel(s, 'deepMine') < 1 ? 'deepMine' : 'runeForge');
   if (s.buildings.hospital < 1 && fs.supportsDead.length) wanted.push('hospital');
   if (state.rules.realm && own && s.buildings.barracks >= 1) {
     if (!settlementsOf(state, f).some((x) => buildingLevel(x, 'tavern') >= 1)) wanted.push('tavern');

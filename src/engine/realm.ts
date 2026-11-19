@@ -29,6 +29,7 @@ export const COMMANDERS: Record<FactionId, Record<Archetype, string>> = {
   horde: { warrior: 'hordeWarlord', archer: 'hordeCrossbow', sage: 'hordeShadow' },
   herds: { warrior: 'aurochsScout', archer: 'faunJavelin', sage: 'satyrSeer' },
   undead: { warrior: 'wardCaptain', archer: 'spectralArcher', sage: 'penitentMonk' },
+  clans: { warrior: 'clanWarrior', archer: 'mountainCrossbow', sage: 'forgePriest' },
 };
 
 export const archetypeOf = (unitId: string): Archetype | null => {
@@ -47,6 +48,9 @@ const NAMES: Record<string, string[]> = {
   aurochsScout: ['Turzysław', 'Rogoń', 'Kopytko', 'Burzan'],
   faunJavelin: ['Faunek', 'Oszczepnik Lis', 'Kozioł', 'Strzałka'],
   wardCaptain: ['Gedymin Cichy', 'Stróż Bram', 'Rycerz Mgły', 'Wartownik Cichy'],
+  clanWarrior: ['Dobromir Młot', 'Stalbrody', 'Kamienna Pięść', 'Brodacz Zbrojny'],
+  mountainCrossbow: ['Kusznik Skała', 'Celnooki Durin', 'Bełt', 'Strzelec Przełęczy'],
+  forgePriest: ['Kapłan Żar', 'Mistrz Miechów', 'Brat Kowadło', 'Węglarz Święty'],
   spectralArcher: ['Łuczniczka Zmierzchu', 'Cień Strzały', 'Srebrna Cięciwa', 'Dziewanna'],
   penitentMonk: ['Brat Milczek', 'Pokutnik Wawrzyn', 'Mnich Latarnik', 'Zaduszny'],
   satyrSeer: ['Dudarz Mądry', 'Pieśniarz', 'Wróżbiarz Wiatru', 'Trzcinowy'],

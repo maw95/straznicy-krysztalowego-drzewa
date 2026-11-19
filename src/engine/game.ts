@@ -1033,13 +1033,25 @@ function dawnTreeBonus(state: GameState, unit: BattleState['units'][string]) {
   unit.maxHp += FACTION_MECHANICS.dawnStartHp * hpScaleOf(state);
 }
 
-function sparkBonus(state: GameState, unit: BattleState['units'][string]) {
+export function sparkBonus(state: GameState, unit: BattleState['units'][string]) {
   if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'dawn') {
     unit.hp += EMPIRE.sparkHp * hpScaleOf(state);
     unit.maxHp += EMPIRE.sparkHp * hpScaleOf(state);
   } else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'herds') unit.status.battleSpeedBonus += EMPIRE.sparkSpeed;
   else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'undead') unit.status.immune = true;
+  else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'clans') unit.status.damageReduction += FACTION_MECHANICS.shieldArmor * scaleOf(state);
   else unit.status.battleAttackBonus += EMPIRE.sparkAttack * scaleOf(state);
+}
+
+/** Runiczna Kuźnia (the Iron Clans): the runes forged on the support, in every battle it fights: +1 A, +1 Ż, armour 1. */
+export function runeBonus(state: GameState, faction: TeamId, unit: BattleState['units'][string]) {
+  for (const rune of state.factions[faction].runes?.[unit.defId] ?? []) {
+    if (rune === 'attack') unit.status.battleAttackBonus += scaleOf(state);
+    else if (rune === 'life') {
+      unit.hp += hpScaleOf(state);
+      unit.maxHp += hpScaleOf(state);
+    } else unit.status.damageReduction += scaleOf(state);
+  }
 }
 
 function addSupports(state: GameState, faction: TeamId, ids: string[]) {
@@ -1055,6 +1067,7 @@ function addSupports(state: GameState, faction: TeamId, ids: string[]) {
       applySupportGear(leader, b.units[id]);
     }
     if (hasSpark(state, faction)) sparkBonus(state, b.units[id]);
+    runeBonus(state, faction, b.units[id]);
     dawnTreeBonus(state, b.units[id]);
     // Level 4: the faction's forge arms its supports.
     const forge = forgeLevel(state, faction);
@@ -1362,6 +1375,7 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'kingdomRecruit':
     case 'kingdomHeal':
     case 'kingdomRefuge':
+    case 'kingdomForgeRune':
     case 'kingdomBuyArtifact':
     case 'kingdomTrade':
     case 'kingdomSwap':

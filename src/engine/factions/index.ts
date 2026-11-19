@@ -3,13 +3,14 @@
 import { DAWN } from './dawn';
 import { HERDS } from './herds';
 import { UNDEAD } from './undead';
+import { CLANS } from './clans';
 import { HORDE } from './horde';
 import type { Terrain } from '../data';
 import type { FactionPack } from './types';
 
 export type { FactionPack };
 
-export const FACTION_PACKS = { dawn: DAWN, horde: HORDE, herds: HERDS, undead: UNDEAD } as const;
+export const FACTION_PACKS = { dawn: DAWN, horde: HORDE, herds: HERDS, undead: UNDEAD, clans: CLANS } as const;
 export type PackId = keyof typeof FACTION_PACKS;
 export const PACK_IDS = Object.keys(FACTION_PACKS) as PackId[];
 

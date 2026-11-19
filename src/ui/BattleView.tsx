@@ -208,6 +208,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       if (ability === 'web' && u.side !== active.side && unitDistance(active, u) <= ABILITY.webRange) return 'cur-spell';
       if (ability === 'rhythm' && u.side === active.side && u.id !== active.id) return 'cur-spell';
       if (ability === 'roar' && u.side !== active.side && unitDistance(active, u) <= ABILITY.roarRange) return 'cur-spell';
+      if ((ability === 'stoneRune' || ability === 'temper') && u.side === active.side && u.id !== active.id && (ability === 'stoneRune' || unitDistance(active, u) === 1)) return 'cur-spell';
+      if (ability === 'misleadLight' && u.side !== active.side && unitDistance(active, u) <= ABILITY.misleadRange) return 'cur-spell';
       if (ability === 'viyGaze' && u.side !== active.side && unitDistance(active, u) <= ABILITY.gazeRange) return 'cur-spell';
     }
     // A treasure is being aimed (Eliksir, Zwój, Róg...): the same wand as for an ability, over every unit it can be used on.

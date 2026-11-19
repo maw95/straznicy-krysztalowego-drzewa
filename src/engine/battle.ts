@@ -10,7 +10,7 @@ import { ARENA_COLUMNS, MIDDLE_HALF, arenaCell, cellOf, columnCells, inArena, WI
 export * from './arenaLayout';
 import { isDigital, type BattleState, type BattleUnit, type GameState, type SiegeState, type UnitStatus } from './types';
 import { SIEGE } from './economy';
-import { pushWithCollision, previewPush, pushedThisRound, taunter, canBeMoved, raiseUnit, fallenSupports, drainMana } from './primitives';
+import { pushWithCollision, previewPush, pushedThisRound, taunter, canBeMoved, raiseUnit, fallenSupports, drainMana, pushAway } from './primitives';
 import { FACTION_MECHANICS, mechanicLevel } from './empire';
 
 
@@ -217,14 +217,14 @@ export function moveRange(u: BattleUnit): number {
  * Breadth-first search over the cells a walker can pass: not through obstacles nor any other unit
  * (allies included, since 2026-10-22: the user's decision).
  */
-function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number>; parent: Map<HexKey, HexKey> } {
+function walkSearch(state: GameState, u: BattleUnit, leaping = canLeap(state, u)): { dist: Map<HexKey, number>; parent: Map<HexKey, HexKey> } {
   const b = state.battle!;
   const range = moveRange(u);
   const obstacles = obstacleSet(b);
   const units = occupancy(b, u);
   // A large unit drags its tail along: it may only pass cells where some tail cell is free (a gap of one cell between two units is too narrow).
   const large = isLarge(state, u);
-  const leaps = canLeap(state, u);
+  const leaps = leaping;
   const dist = new Map<HexKey, number>([[u.pos!, 0]]);
   const parent = new Map<HexKey, HexKey>();
   const queue = [u.pos!];
@@ -249,6 +249,9 @@ function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number
 /** Skok po Turniach: the unit walks through obstacles and units (it cannot stop on them), except over the walls of a siege. */
 export const canLeap = (state: GameState, u: BattleUnit): boolean => abilityOf(u) === 'mountainLeap' && abilityActive(state) && !state.battle?.siege && !isLarge(state, u);
 
+/** Skok po Turniach (Jeździec na Koźle): once per battle one move goes over units and obstacles; the leap is spent only when the move really needs it. */
+export const goatLeapReady = (state: GameState, u: BattleUnit): boolean => abilityOf(u) === 'goatLeap' && abilityActive(state) && !u.status.leapUsed && !state.battle?.siege && !isLarge(state, u);
+
 /** Cells the unit can end its move on, with the number of steps used. */
 export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, number> {
   const b = state.battle!;
@@ -269,7 +272,10 @@ export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, num
     }
     return out;
   }
-  for (const [k, d] of walkSearch(state, u).dist) if (d > 0 && !occupant(k) && !obstacles.has(k) && roomy(k)) out.set(k, d);
+  const walked = walkSearch(state, u);
+  for (const [k, d] of walked.dist) if (d > 0 && !occupant(k) && !obstacles.has(k) && roomy(k)) out.set(k, d);
+  // The leap adds the cells that can be reached only over something (a cell that can be walked to keeps its walking distance).
+  if (goatLeapReady(state, u)) for (const [k, d] of walkSearch(state, u, true).dist) if (d > 0 && !out.has(k) && !occupant(k) && !obstacles.has(k) && roomy(k)) out.set(k, d);
   return out;
 }
 
@@ -282,7 +288,8 @@ export function movePath(state: GameState, u: BattleUnit, to: HexKey): HexKey[] 
   if (!u.pos) return [to];
   if (u.pos === to) return [to];
   if (state.battle!.duel || UNITS[u.defId].movement === 'fly') return [u.pos, to];
-  const { parent } = walkSearch(state, u);
+  let { parent } = walkSearch(state, u);
+  if (!parent.has(to) && goatLeapReady(state, u)) parent = walkSearch(state, u, true).parent;
   if (!parent.has(to)) return [u.pos, to];
   const path = [to];
   while (path[0] !== u.pos) path.unshift(parent.get(path[0])!);
@@ -425,6 +432,8 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
     if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += abilityNum(att, 'lightChargeBonus') * scaleOf(state);
     if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += abilityNum(att, 'bloodCallBonus') * scaleOf(state);
     if (useAbility && ab === 'fireBreath') dmg += abilityNum(att, 'breathBonus') * scaleOf(state);
+    if (ab === 'standShot' && movedDistance === 0) dmg += ABILITY.standShotBonus * scaleOf(state);
+    if (ab === 'giantBane' && isLarge(state, target)) dmg += ABILITY.giantBonus * scaleOf(state);
     if (useAbility && ab === 'spectralCharge') dmg += (ABILITY.spectralBonus + (fromBehind(state, att, target) ? ABILITY.spectralBehind : 0)) * scaleOf(state);
     if (useAbility && ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus * scaleOf(state);
     if (ab === 'dive' && movedDistance >= ABILITY.diveMinMove) dmg += ABILITY.diveBonus * scaleOf(state);
@@ -440,9 +449,9 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
 }
 
 /** Abilities that are switched on for a single attack. */
-export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath'];
+export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
@@ -465,9 +474,9 @@ export function pushCell(state: GameState, from: HexKey, target: HexKey): HexKey
   return k;
 }
 /** Abilities used as a free action during the unit's activation. */
-export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze'];
+export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify'];
 /** The free abilities that need no target (one click fires them); the others ask the player to pick a unit. */
-export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll'];
+export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify'];
 
 // ---------------------------------------------------------------- lifecycle
 
@@ -673,6 +682,12 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
     u.status.slowLater = 0;
   }
   u.status.anchored = false;
+  // Młot Przodków: a stunned unit loses its activation.
+  if (u.status.stunned) {
+    delete u.status.stunned;
+    log(state, 'ability', `${unitName(u)} jest ogłuszony i traci aktywację.`);
+    return endActivation(state);
+  }
   // Zatruty Pazur: the poison bites at the start of the activation; a unit that dies of it loses its turn.
   if (u.status.poisoned) {
     u.status.poisoned -= 1;
@@ -807,6 +822,20 @@ function bloodlust(state: GameState, fallen: BattleUnit) {
 /** The level of the Kurhan Wiecznej Warty a side has (0: another faction, or no Kurhan built). */
 export const wardLevel = (state: GameState, side: Side): number => (side !== 'neutral' && raceOf(state, side) === 'undead' ? mechLevel(state, side) : 0);
 
+/** The level of the Sala Tarcz a side has (0: another faction, or no hall built). */
+export const shieldLevel = (state: GameState, side: Side): number => (side !== 'neutral' && raceOf(state, side) === 'clans' ? mechLevel(state, side) : 0);
+
+/** Mur Tarcz: whether the unit of the Clans stands in formation (enough living allies next to it for the level of its Sala Tarcz). */
+export function inFormation(state: GameState, u: BattleUnit): boolean {
+  const level = shieldLevel(state, u.side);
+  if (level < 1 || !abilityActive(state) || !u.alive || !u.pos || state.battle?.duel) return false;
+  const mates = livingUnits(state.battle!, u.side).filter((x) => x.id !== u.id && unitsAdjacent(u, x)).length;
+  return mates >= FACTION_MECHANICS.shieldMates[Math.min(level, 4) - 1];
+}
+
+/** Mur Tarcz, level III: a unit in formation cannot be pushed or pulled. */
+export const formationAnchored = (state: GameState, u: BattleUnit): boolean => shieldLevel(state, u.side) >= FACTION_MECHANICS.shieldAnchorLevel && inFormation(state, u);
+
 /** The Życie a fallen support rises with by the Kurhan's level (I: 1 Ż, II and III: half, IV: all). */
 const wardHp = (state: GameState, u: BattleUnit, level: number): number => {
   const share = FACTION_MECHANICS.wardShare[Math.min(level, 4) - 1];
@@ -884,7 +913,7 @@ export function battleCatapult(state: GameState, cell: HexKey) {
   s.shot = b.round;
   battleFx(state, 'oblezenie_kamien', cell);
   // Taran: with a Nosorożec Bojowy in the attacking army the gate falls to one hit.
-  const rammed = abilityActive(state) && livingUnits(b, b.attacker).some((x) => abilityOf(x) === 'ram');
+  const rammed = abilityActive(state) && livingUnits(b, b.attacker).some((x) => abilityOf(x) === 'ram' || abilityOf(x) === 'cannonFire');
   if (s.gate === cell && s.gateHp > 1 && !rammed) {
     s.gateHp -= 1;
     log(state, 'battle', 'Katapulta trafia w bramę: brama pęka, ale jeszcze stoi.');
@@ -1021,6 +1050,12 @@ export function predictDamage(
   if (armour && abilityOf(victim) === 'unmoved' && abilityActive(state) && dmg > 0) dmg = Math.max(1, dmg - ABILITY.unmovedArmor * scaleOf(state));
   // Pusta w Środku: the empty armour takes a bit off every blow that lands (at least 1 gets through).
   if (armour && abilityOf(victim) === 'hollow' && abilityActive(state) && dmg > 0) dmg = Math.max(1, dmg - ABILITY.hollowArmor * scaleOf(state));
+  // Żelazne Klany: Pawęż and Kolczuga (and the Kolos), Przysięga Tarczy until the end of the round, the Mur Tarcz in formation: each takes a bit off every blow that lands.
+  if (armour && dmg > 0 && abilityActive(state)) {
+    if (['bulwark', 'fortify'].includes(abilityOf(victim))) dmg = Math.max(1, dmg - ABILITY.bulwarkArmor * scaleOf(state));
+    if (victim.status.oathRound === b.round) dmg = Math.max(1, dmg - ABILITY.oathArmor * scaleOf(state));
+    if (inFormation(state, victim)) dmg = Math.max(1, dmg - FACTION_MECHANICS.shieldArmor * scaleOf(state));
+  }
   // The hero's shield (artifacts): the first blow of the battle is halved, every blow is weaker by its defence, but a blow that lands takes at least 1.
   if (victim.gear && dmg > 0) {
     if (victim.gear.firstHit) dmg = Math.ceil(dmg / 2);
@@ -1080,9 +1115,11 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   // Wyładowanie: whoever strikes the Król Burzy from close by is shocked.
   if (abilityOf(victim) === 'stormKing' && abilityActive(state) && att.alive && unitsAdjacent(att, victim)) dealDamage(state, att, ABILITY.dischargeDamage * scaleOf(state), 'Wyładowanie');
   // Kolce: whoever hits a Jeżozwierz in melee is pricked.
-  if (abilityOf(victim) === 'quills' && abilityActive(state) && att.alive && UNITS[att.defId].attackType === 'melee' && unitsAdjacent(att, victim)) {
+  if ((abilityOf(victim) === 'quills' || abilityOf(victim) === 'bronzeQuills') && abilityActive(state) && att.alive && UNITS[att.defId].attackType === 'melee' && unitsAdjacent(att, victim)) {
     dealDamage(state, att, ABILITY.quillsDamage * scaleOf(state), `Kolce (${unitName(victim)})`);
   }
+  // Mur Tarcz, level IV: whoever hits a unit in formation in melee loses Życie.
+  if (p.damage > 0 && att.alive && UNITS[att.defId].attackType === 'melee' && shieldLevel(state, victim.side) >= FACTION_MECHANICS.shieldThornsLevel && inFormation(state, victim)) dealDamage(state, att, FACTION_MECHANICS.shieldArmor * scaleOf(state), `Mur Tarcz (${unitName(victim)})`);
   // Tarcza Wartownika: whoever hits the hero in melee is slowed in its next activation.
   if (victim.gear?.slowAttacker && p.damage > 0 && att.alive && UNITS[att.defId].attackType === 'melee' && !resistsStatus(state, att, true)) {
     att.status.slowLater = (att.status.slowLater ?? 0) + victim.gear.slowAttacker;
@@ -1113,6 +1150,10 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   const steps = cells.get(to);
   if (steps === undefined) throw new Error('Pole poza zasięgiem ruchu.');
   if (tail && isLarge(state, u) && !tailOptions(b, u, to).includes(tail)) throw new Error('Ogon nie zmieści się na tym polu.');
+  if (goatLeapReady(state, u) && !walkSearch(state, u).dist.has(to)) {
+    u.status.leapUsed = true;
+    log(state, 'ability', `${unitName(u)} przeskakuje po turniach (${UNITS[u.defId].abilityName}).`);
+  }
   const from = u.pos ? parseKey(u.pos) : null;
   placeUnit(state, u, to, tail);
   if (from) u.facing = { q: parseKey(to).q - from.q, r: parseKey(to).r - from.r };
@@ -1206,6 +1247,12 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       log(state, 'ability', `${unitName(u)}: ${UNITS[u.defId].abilityName}.`);
     }
   }
+  // Ostrzał: the cannon's shot hits the target and every enemy next to it.
+  if (ab === 'cannonFire' && abilityActive(state)) {
+    const tc = cellsOf(target);
+    for (const e of enemiesOf(b, u)) if (e.id !== target.id && cellsOf(e).some((c) => tc.some((k) => adjacent(k, c)))) targets.push(e);
+    if (targets.length > 1) log(state, 'ability', `${unitName(u)}: ${UNITS[u.defId].abilityName}.`);
+  }
   if (secondTargetId && !(canUse && isBreath(ab))) {
     const second = b.units[secondTargetId];
     if (!canHitTwo(state, u)) throw new Error('Ta jednostka atakuje jeden cel.');
@@ -1265,7 +1312,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
         }
       }
       if (ab === 'poisonClaw') {
-        if (resistsStatus(state, t, false)) log(state, 'ability', `${unitName(t)} jest odporny na truciznę.`);
+        if (resistsStatus(state, t, false) || abilityOf(t) === 'bronzeQuills') log(state, 'ability', `${unitName(t)} jest odporny na truciznę.`);
         else {
           t.status.poisoned = ABILITY.poisonTicks;
           log(state, 'ability', `${unitName(t)} zostaje zatruty: straci ${ABILITY.poisonDamage * scaleOf(state)} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji.`);
@@ -1277,6 +1324,11 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
           t.status.cursedNext += ABILITY.curseMinus * scaleOf(state);
           log(state, 'ability', `${unitName(t)}: −${ABILITY.curseMinus * scaleOf(state)} A przy następnym ataku.`);
         }
+      }
+      // Młot Przodków: the one hit loses its next activation.
+      if (ab === 'stunBlow') {
+        t.status.stunned = true;
+        log(state, 'ability', `${unitName(t)} traci następną aktywację (${UNITS[u.defId].abilityName}).`);
       }
       // Zgaszone Światło: the lantern also puts out the enemy hero's mana.
       if (ab === 'dimLight') {
@@ -1417,6 +1469,25 @@ export function stepOnFields(state: GameState, u: BattleUnit) {
   if (b.fields.some((f) => f.until >= b.round && here.includes(f.cell))) dealDamage(state, u, ABILITY.chargedFieldDamage * scaleOf(state), 'Pole Naładowane');
 }
 
+/**
+ * Fortyfikacja: the two cells next to each other where the Kolos puts up its wall: free cells within 2 of it, the pair closest to the nearest enemy first (null: no room).
+ * The wall never shuts a unit in (only free cells are used), and it lasts to the end of the battle.
+ */
+export function fortifyCells(state: GameState, u: BattleUnit): [HexKey, HexKey] | null {
+  const b = state.battle!;
+  if (b.duel || !u.pos) return null;
+  const mine = cellsOf(u);
+  const foes = enemiesOf(b, u).flatMap(cellsOf);
+  const gap = (k: HexKey) => Math.min(...foes.map((f) => distance(parseKey(f), parseKey(k))), 99);
+  const obstacles = obstacleSet(b);
+  const open = layoutCells(b).filter((k) => !obstacles.has(k) && !unitAt(b, k) && mine.some((m) => distance(parseKey(m), parseKey(k)) <= ABILITY.fortifyCells)).sort((x, y) => gap(x) - gap(y) || (x < y ? -1 : 1));
+  for (const c of open) {
+    const mate = open.find((o) => o !== c && adjacent(o, c));
+    if (mate) return [c, mate];
+  }
+  return null;
+}
+
 export function battleAbility(state: GameState, targetId?: string) {
   const b = state.battle!;
   const u = b.units[b.activation!.unitId];
@@ -1477,6 +1548,36 @@ export function battleAbility(state: GameState, targetId?: string) {
       t.status.rootedNext = true;
       log(state, 'ability', `${unitName(t)} zostaje unieruchomiony do swojej następnej aktywacji.`);
     }
+  } else if (ab === 'shieldOath') {
+    const near = livingUnits(b, u.side).filter((x) => x.id !== u.id && unitsAdjacent(u, x));
+    for (const x of near) x.status.oathRound = b.round;
+    log(state, 'ability', `${unitName(u)}: ${UNITS[u.defId].abilityName} (osłoniętych: ${near.length}).`);
+  } else if (ab === 'stoneRune') {
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side !== u.side || t.id === u.id) throw new Error('Wybierz żyjącego sojusznika.');
+    t.status.damageReduction += ABILITY.runeStoneArmor * scaleOf(state);
+    t.status.unmovable = true;
+    log(state, 'ability', `${unitName(t)} dostaje runę kamienia: pancerz ${ABILITY.runeStoneArmor * scaleOf(state)} i nie da się go odepchnąć.`);
+  } else if (ab === 'temper') {
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side !== u.side || t.id === u.id || !unitsAdjacent(u, t)) throw new Error('Wybierz sąsiedniego sojusznika.');
+    t.status.battleAttackBonus += ABILITY.temperBonus * scaleOf(state);
+    log(state, 'ability', `${unitName(t)} ma +${ABILITY.temperBonus * scaleOf(state)} A do końca bitwy (${UNITS[u.defId].abilityName}).`);
+  } else if (ab === 'misleadLight') {
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side === u.side || !t.pos || unitDistance(u, t) > ABILITY.misleadRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.misleadRange} pól.`);
+    if (!canBeMoved(state, t)) log(state, 'ability', `${unitName(t)} nie da się przestawić.`);
+    else {
+      const out = pushAway(state, t, u, ABILITY.misleadSteps);
+      log(state, 'ability', `${unitName(t)} błądzi za światłem i ląduje ${out.moved} ${out.moved === 1 ? 'pole' : 'pola'} dalej (${UNITS[u.defId].abilityName}).`);
+      if (out.moved > 0) stepOnFields(state, t);
+    }
+  } else if (ab === 'fortify') {
+    const cells = fortifyCells(state, u);
+    if (!cells) throw new Error('Brak miejsca na mur.');
+    b.obstacles = [...b.obstacles, ...cells];
+    b.raised = [...(b.raised ?? []), ...cells];
+    log(state, 'ability', `${unitName(u)} stawia mur (${UNITS[u.defId].abilityName}).`);
   } else if (ab === 'web') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side === u.side || unitDistance(u, t) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);
