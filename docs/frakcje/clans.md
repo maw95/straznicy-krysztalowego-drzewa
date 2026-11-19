@@ -52,7 +52,26 @@ Paleta: polerowana stal, mosiądz, miedź, szary kamień, ciepła skóra, złote
 - **Powtórki istniejących zdolności:** Podkop (Podkopnik, `burrow`), Kolce (Jeżozwierz, `quills`, plus odporność na truciznę), Bełt Przeszywający (Przebicie, `pierce`), Twardy Łeb (Twardogłowy), Żar Kuźni (Dar Życia), brama oblężenia od jednego trafienia (Taran Nosorożca).
 
 ## Balans (G2)
-Cel 45–55% w każdej parze z Przymierzem i Hordą (`make sim-tabele`). Szybki pomiar G1 (`npx tsx scripts/sim/klany.ts 100`, 100 gier na komórkę, poziom Imperium, mapa długa prostokątna, miejsca na zmianę): Klany wygrywają z Przymierzem 44% (Kontrola) i 50% (Podbój), z Hordą 57% i 53%. Bez strojenia liczb (decyzja autora). Obserwacja z 40 gier Podboju z Hordą: Sztolnia stoi na koniec w 19 grach, Runiczna Kuźnia w 15, Sala Tarcz tylko w 5, a runy zostały wykute w 17 (bot przed Salą Tarcz buduje Sztolnię i Kuźnię; partie botów trwają 6–12 rund). Do G2: tańszy lub wcześniejszy dostęp do Sali Tarcz (jej rodzic to Fosa i Mury).
+Cel autora: 45–55% w każdej parze (przyjmowane 42–58% przy niepewności). Pomiar: `make sim-nowe GAMES=600` (`scripts/sim/nowe-frakcje.ts`): 600 gier na komórkę (±4 pkt), poziom Imperium, mapa długa prostokątna, miejsca na zmianę, cele Kontrola / Podbój / Relikt. Pierwsza liczba to wygrane tej frakcji w %.
+
+Zmierzone 19.11.2026, przed strojeniem i po (Kontrola / Podbój / Relikt):
+
+| Para | Przed | Po |
+|---|---|---|
+| Klany – Przymierze | 49 / 49 / 49 | 46 / 47 / 46 |
+| Klany – Horda | 62 / 62 / 64 | 61 / 60 / 62 |
+| Klany – Stada | 57 / 62 / 60 | 48 / 52 / 51 |
+| Klany – Umarli | 60 / 65 / 64 | 52 / 53 / 57 |
+| Klany – Szron | 40 / 41 / 44 | 41 / 42 / 45 |
+
+**Sufit pomiaru:** Przymierze wygrywa z Hordą 65% (Kontrola 65, Podbój 66, Relikt 65; obu frakcji nie wolno ruszać), więc frakcja, która ma 42–45% z Przymierzem, ma z Hordą ok. 58–62%. Oba końce pasma naraz (≥45% z Przymierzem i ≤55% z Hordą) są przy tej różnicy nieosiągalne; wybrałem środek: ok. 42–46% z Przymierzem i ok. 60% z Hordą (kilka punktów nad pasmem akceptowalnym, nie do usunięcia bez ruszania Hordy).
+
+**Zmienione liczby (w `src/engine/data.ts`; tabele jednostek powyżej to nadal propozycja z karty):**
+- **Tan Żelaznobrody: Ż 11→10, Matka Run: Ż 5→4.** Klany były na starcie najsilniejsze (49% z Przymierzem, 62% z Hordą) i dominowały nad Stadami i Umarłymi. Najmocniej reaguje Kusznik Klanu (Ż 4→3 zbijało wynik o 14 pkt, więc go nie ruszałem: to on niesie Ogień z Miejsca), dlatego nerf poszedł w bohaterów.
+
+**Obserwacja o botach:** w grach botów liczą się bohaterowie i trzej pomocnicy startowi; zmiana Ż jednostek rekrutowanych (poziomy 2–5) nie zmieniła wyniku ani jednej gry (sprawdzone na Klanach: 4 jednostki naraz, identyczne liczby wygranych; przypuszczalnie nie są rekrutowane w krótkich partiach botów), więc liczby tych jednostek zostają z karty, a strojenie dotyczy bohaterów i pomocników startowych.
+
+**Zostaje do decyzji autora:** Klany przegrywają ze Szronem (41–45%) i są na pograniczu pasma; Sala Tarcz nadal jest budowana późno (zob. G1), więc „wytrzymałość” Klanów to w botach głównie pancerz i Ogień z Miejsca, a nie szyk. Tańszy lub wcześniejszy dostęp do Sali Tarcz nie był potrzebny do wejścia w pasmo i nie został zmieniony.
 
 ## Decyzje implementacyjne (G1, 19.11.2026; autor nieobecny, wybrane najprostsze rozwiązania zgodne z kartą)
 Rozstrzygnięcia z rozmowy: Jeździec na Koźle na 3B, Kret z Brązu, Strażniczka Przełęczy, Armata zamiast Tarana, Skarbnik na 4B, Runiczna Kuźnia trwała, runa przy `id` jednostki w stanie frakcji, bez wymagania pełnej tożsamości jednostek; 3 jednostki poziomu 1 (Tarczownik, Kret, Kusznik) są pomocnikami startowymi.

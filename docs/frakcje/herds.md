@@ -56,7 +56,27 @@ Paleta: płowa sierść, ochra, brąz, kość rogów, zgaszona zieleń, czerwone
 10 postaci × ok. 88 CU (3 bohaterów + 7 jednostek; w tabeli powyżej są 12 jednostek, bo tiery mają A/B, patrz „Pytania”), osada z 3 unikalnymi budynkami i siedliskami, arena, kafle, herb, 2–3 utwory muzyki. Szacunek i procedura: `BACKLOG.md` (sekcja 8) i `PRZEPIS_JEDNOSTKI.md`.
 
 ## Balans (G2)
-Cel 45–55% w każdej parze z Przymierzem i Hordą (`make sim-tabele`).
+Cel autora: 45–55% w każdej parze (przyjmowane 42–58% przy niepewności). Pomiar: `make sim-nowe GAMES=600` (`scripts/sim/nowe-frakcje.ts`): 600 gier na komórkę (±4 pkt), poziom Imperium, mapa długa prostokątna, miejsca na zmianę, cele Kontrola / Podbój / Relikt. Pierwsza liczba to wygrane tej frakcji w %.
+
+Zmierzone 19.11.2026, przed strojeniem i po (Kontrola / Podbój / Relikt):
+
+| Para | Przed | Po |
+|---|---|---|
+| Stada – Przymierze | 36 / 30 / 33 | 47 / 41 / 40 |
+| Stada – Horda | 55 / 50 / 53 | 64 / 59 / 62 |
+| Stada – Umarli | 43 / 43 / 43 | 44 / 44 / 45 |
+| Stada – Klany | 43 / 38 / 40 | 52 / 48 / 49 |
+| Stada – Szron | 37 / 33 / 38 | 51 / 48 / 49 |
+
+**Sufit pomiaru:** Przymierze wygrywa z Hordą 65% (Kontrola 65, Podbój 66, Relikt 65; obu frakcji nie wolno ruszać), więc frakcja, która ma 42–45% z Przymierzem, ma z Hordą ok. 58–62%. Oba końce pasma naraz (≥45% z Przymierzem i ≤55% z Hordą) są przy tej różnicy nieosiągalne; wybrałem środek: ok. 42–46% z Przymierzem i ok. 60% z Hordą (kilka punktów nad pasmem akceptowalnym, nie do usunięcia bez ruszania Hordy).
+
+**Zmienione liczby (w `src/engine/data.ts`; tabele jednostek powyżej to nadal propozycja z karty):**
+- Wszyscy bohaterowie i pomocnicy Stad (także dowódcy, wersje B i legenda) mają **+1 Ż** (Wielki Tur 12, Satyr Rogogłos 6, Pędziwiatr 8, Baran 9, Dudziarz 5, Młody Tur 6, Kozica 6, Indrik 21 itd.). Powód: pierwszy pomiar dawał 30–36% z Przymierzem; +1 Ż było najtańszym pokrętłem (+1 A wszystkim dawało już 47/40 z Przymierzem, ale 68/60 z Hordą, czyli za dużo).
+- **Młody Tur: A 2→3** (Byczy Łeb, odpychający pomocnik startowy). Najlepszy pojedynczy ruch w skanie: +3–4 pkt z Przymierzem i tożsamość frakcji (rozpęd i odpychanie) bez zmiany mechaniki. Test `tests/herds.test.ts` (obrażenia Byczego Łba) czyta teraz 3 A.
+
+**Obserwacja o botach:** w grach botów liczą się bohaterowie i trzej pomocnicy startowi; zmiana Ż jednostek rekrutowanych (poziomy 2–5) nie zmieniła wyniku ani jednej gry (sprawdzone na Klanach: 4 jednostki naraz, identyczne liczby wygranych; przypuszczalnie nie są rekrutowane w krótkich partiach botów), więc liczby tych jednostek zostają z karty, a strojenie dotyczy bohaterów i pomocników startowych.
+
+**Zostaje do decyzji autora:** Podbój jest u Stad stale 5–6 pkt słabszy od Kontroli (z Przymierzem 41 wobec 47); przyczyny nie badałem (karta zapowiada słabość wobec murów osad bez Nosorożca). Bot nie ustawia jednostek pod rozpęd (G4), więc Tętent działa tylko przy przypadkowych biegach; kolejny zysk tożsamości dałoby dopiero to ustawianie, a nie liczby. Próg rozpędu (`herdsRun` 3→2) nie zmienił wyniku ani o jedną grę: przypuszczalnie dlatego, że Kamień Tętentu w grach botów praktycznie nie powstaje (nie sprawdzałem tego osobno).
 
 ## Pytania do autora (decyzje potrzebne do G1)
 1. Satyrowie, tury i faun: zostają, czy wolisz centaury i minotaury z pomysłu z 3.11 (kolizja z Centaurem Przymierza i Herszta Minotaurów Hordy; propozycje zastępcze w `FRAKCJE_PROPOZYCJE.md`)?

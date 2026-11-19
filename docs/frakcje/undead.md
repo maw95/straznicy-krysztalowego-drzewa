@@ -53,7 +53,26 @@ Paleta: kość, popiel, mech, wosk świec, stare srebro, rdza; poświata duchów
 - **Nie dublowane:** `slow`, `root`, `poison`, `curse` zostają w silniku; odporność sprawdza się w miejscach, gdzie status jest nakładany.
 
 ## Balans (G2)
-Cel 45–55% w każdej parze z Przymierzem i Hordą (`make sim-tabele`). Szybki pomiar G1 (`npx tsx scripts/sim/umarli.ts 100`, 100 gier na komórkę, poziom Imperium, mapa długa prostokątna, miejsca na zmianę): Umarli wygrywają z Przymierzem 29% (Kontrola) i 40% (Podbój), z Hordą 57% i 47%. Jak u Stad (34/30 i 55/47): Przymierze na tym poziomie leczy i wygrywa za często, a o wyniku gry decyduje mapa i bohaterowie, nie jednostki. Bez strojenia liczb (decyzja autora). Obserwacja: w grach botów (ok. 10 rund) Kurhan jest budowany rzadko (6–8 gier na 40: koszt w Pyle i Szpital jako rodzic), więc Wieczna Warta w botach działa głównie przez Wezwanie, Kości i Wróżkę; do G2: tańszy Kurhan albo wcześniejsza ścieżka budowy.
+Cel autora: 45–55% w każdej parze (przyjmowane 42–58% przy niepewności). Pomiar: `make sim-nowe GAMES=600` (`scripts/sim/nowe-frakcje.ts`): 600 gier na komórkę (±4 pkt), poziom Imperium, mapa długa prostokątna, miejsca na zmianę, cele Kontrola / Podbój / Relikt. Pierwsza liczba to wygrane tej frakcji w %.
+
+Zmierzone 19.11.2026, przed strojeniem i po (Kontrola / Podbój / Relikt):
+
+| Para | Przed | Po |
+|---|---|---|
+| Umarli – Przymierze | 34 / 35 / 33 | 44 / 41 / 44 |
+| Umarli – Horda | 55 / 53 / 55 | 60 / 62 / 62 |
+| Umarli – Stada | 57 / 57 / 57 | 56 / 56 / 55 |
+| Umarli – Klany | 40 / 35 / 36 | 48 / 47 / 43 |
+| Umarli – Szron | 39 / 37 / 41 | 47 / 47 / 50 |
+
+**Sufit pomiaru:** Przymierze wygrywa z Hordą 65% (Kontrola 65, Podbój 66, Relikt 65; obu frakcji nie wolno ruszać), więc frakcja, która ma 42–45% z Przymierzem, ma z Hordą ok. 58–62%. Oba końce pasma naraz (≥45% z Przymierzem i ≤55% z Hordą) są przy tej różnicy nieosiągalne; wybrałem środek: ok. 42–46% z Przymierzem i ok. 60% z Hordą (kilka punktów nad pasmem akceptowalnym, nie do usunięcia bez ruszania Hordy).
+
+**Zmienione liczby (w `src/engine/data.ts`; tabele jednostek powyżej to nadal propozycja z karty):**
+- **+1 A dla wszystkich pomocników Umarłych oprócz legendy** (Szkielet Halabardnik 3, Błędny Ognik 2, Zjawa Pokutnika 3, Łucznik 3, Zbroja 4, Wij 5, Lisz 6, Strach 3, Płaczka 4, Kościana Wróżka 4, Kostucha 6; Kościany Smok bez zmian). Powód: wolne, kruche szkielety bez zębów nie zabijały dość szybko, żeby Wieczna Warta w ogóle miała co podnosić; +1 Ż dla wszystkich dawało tylko 38% z Przymierzem, a +1 A dla wszystkich i +1 Ż bohaterom razem 46/66, więc wybrałem sam atak pomocników (43/61).
+
+**Obserwacja o botach:** w grach botów liczą się bohaterowie i trzej pomocnicy startowi; zmiana Ż jednostek rekrutowanych (poziomy 2–5) nie zmieniła wyniku ani jednej gry (sprawdzone na Klanach: 4 jednostki naraz, identyczne liczby wygranych; przypuszczalnie nie są rekrutowane w krótkich partiach botów), więc liczby tych jednostek zostają z karty, a strojenie dotyczy bohaterów i pomocników startowych.
+
+**Zostaje do decyzji autora:** Kurhan Wiecznej Warty w grach botów nadal jest budowany rzadko (koszt w Pyle, Szpital jako rodzic), więc „wygrywa długą bitwą” zachodzi głównie przez Wezwanie, Kości i Wróżkę. Nie przesuwałem kosztów Kurhanu (zmiana ekonomii osady to już coś więcej niż strojenie); jeśli autor chce, by Wieczna Warta działała w krótkich partiach botów, trzeba obniżyć jego cenę albo zmienić rodzica.
 
 ## Decyzje implementacyjne (G1, 19.11.2026; autor nieobecny, wybrane najprostsze rozwiązania zgodne z kartą)
 Rozstrzygnięcia z rozmowy: Wij na 4A, Lisz na 5A, Kostucha na 5B (zamiast Jeźdźca na Zmorze), bez Kurhanowego Olbrzyma i Wilkołaka-widma; 3 jednostki poziomu 1 (Szkielet Halabardnik, Błędny Ognik, Zjawa Pokutnika) są pomocnikami startowymi.

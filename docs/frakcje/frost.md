@@ -52,7 +52,26 @@ Paleta: biel, srebro, perłowa szarość, zimne złoto, ciemna zieleń świerkó
 - **Powtórki:** Zajście od tyłu (Harpia), Złowroga Klątwa, Twardogłowy, Lament, dochód Sztolni (Grota).
 
 ## Balans (G2)
-Cel 45–55% w każdej parze z Przymierzem i Hordą (`make sim-tabele`). Szybki pomiar G1 (`npx tsx scripts/sim/szron.ts 100`, 100 gier na komórkę, poziom Imperium, mapa długa prostokątna, miejsca na zmianę): Szron wygrywa z Przymierzem 44% (Kontrola) i 43% (Podbój), z Hordą 59% i 51%. Jedna korekta liczb po pierwszym pomiarze (35–39% z Przymierzem): +1 Ż pomocnikom poziomu 1, więcej Ż wyższym jednostkom i bohaterom, Jarl 5 A. Dalej bez strojenia (decyzja autora). Uwaga: partie botów trwają 4–6 rund, więc Pałac Szronu (a z nim szron od zwykłych ciosów) bywa budowany rzadko; do G2: tańszy lub wcześniejszy dostęp (jego rodzic to Wieża maga).
+Cel autora: 45–55% w każdej parze (przyjmowane 42–58% przy niepewności). Pomiar: `make sim-nowe GAMES=600` (`scripts/sim/nowe-frakcje.ts`): 600 gier na komórkę (±4 pkt), poziom Imperium, mapa długa prostokątna, miejsca na zmianę, cele Kontrola / Podbój / Relikt. Pierwsza liczba to wygrane tej frakcji w %.
+
+Zmierzone 19.11.2026, przed strojeniem i po (Kontrola / Podbój / Relikt):
+
+| Para | Przed | Po |
+|---|---|---|
+| Szron – Przymierze | 47 / 42 / 44 | 44 / 41 / 41 |
+| Szron – Horda | 63 / 61 / 61 | 62 / 58 / 59 |
+| Szron – Stada | 63 / 67 / 62 | 49 / 52 / 51 |
+| Szron – Umarli | 61 / 63 / 59 | 53 / 53 / 50 |
+| Szron – Klany | 60 / 59 / 56 | 59 / 58 / 55 |
+
+**Sufit pomiaru:** Przymierze wygrywa z Hordą 65% (Kontrola 65, Podbój 66, Relikt 65; obu frakcji nie wolno ruszać), więc frakcja, która ma 42–45% z Przymierzem, ma z Hordą ok. 58–62%. Oba końce pasma naraz (≥45% z Przymierzem i ≤55% z Hordą) są przy tej różnicy nieosiągalne; wybrałem środek: ok. 42–46% z Przymierzem i ok. 60% z Hordą (kilka punktów nad pasmem akceptowalnym, nie do usunięcia bez ruszania Hordy).
+
+**Zmienione liczby (w `src/engine/data.ts`; tabele jednostek powyżej to nadal propozycja z karty):**
+- **Wszyscy czterej bohaterowie Szronu: Ż −1** (Marzanna 5, Jarl 11, Ryś 6, Stary Gradowy 4). Szron wygrywał ze wszystkimi nowymi frakcjami (56–67%); lekki nerf bohaterów zbliżył go do reszty, a wynik z Przymierzem (ok. 42%) zostaje na dolnej granicy pasma.
+
+**Obserwacja o botach:** w grach botów liczą się bohaterowie i trzej pomocnicy startowi; zmiana Ż jednostek rekrutowanych (poziomy 2–5) nie zmieniła wyniku ani jednej gry (sprawdzone na Klanach: 4 jednostki naraz, identyczne liczby wygranych; przypuszczalnie nie są rekrutowane w krótkich partiach botów), więc liczby tych jednostek zostają z karty, a strojenie dotyczy bohaterów i pomocników startowych.
+
+**Zostaje do decyzji autora:** Pałac Szronu (szron od zwykłych ciosów) w krótkich partiach botów bywa budowany rzadko, więc „kontrola” to w botach głównie Chochlik, Lodowa Ściana i Ślad; progi Szronu (`frostThreshold`) nie były ruszane. Jeśli autor chce Szronu z pełną mechaniką w krótkich partiach, trzeba obniżyć koszt Pałacu albo zmienić rodzica (Wieża maga).
 
 ## Decyzje implementacyjne (G1, 19.11.2026; autor nieobecny, wybrane najprostsze rozwiązania zgodne z kartą)
 - **Szron:** licznik do końca bitwy (nie opada). Zwykłe ciosy nakładają szron tylko gdy strona ma Pałac Szronu (poziom ≥ 1); zdolności (Mroźna Zbroja, Grad Głazów, Zmrażający Uścisk, Długa Noc) nakładają go zawsze. Próg (3, od II poziomu 2) liczy się wg Pałacu strony, która nakłada szron (bez Pałacu: 3). Cios nakłada szron, gdy cel przeżył i stracił Ż.
