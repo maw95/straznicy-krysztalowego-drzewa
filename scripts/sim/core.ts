@@ -1,7 +1,7 @@
 // Shared simulation code: variants, bot-only games with diagnostics, aggregated stats.
 import './override';
 
-import { FACTION_HEROES, type FactionId, type MapSize } from '../../src/engine/data';
+import { FACTION_HEROES, type MapSize } from '../../src/engine/data';
 import { applyActionInPlace, activeHero, createGame, currentActor, legalHeroMoves } from '../../src/engine/game';
 import { chooseAction } from '../../src/engine/ai';
 import { Rng } from '../../src/engine/rng';
@@ -36,9 +36,9 @@ export function setupFor(v: Variant, seed: number): SetupOptions {
  */
 export function setupWith(size: MapSize, table: Table, options: Option[], seed: number): SetupOptions {
   const rng = new Rng(seed * 7919 + 13);
-  const pick = (f: FactionId, n: number) => rng.shuffle(FACTION_HEROES[f]).slice(0, n);
+  const pick = (f: 'dawn' | 'horde', n: number) => rng.shuffle(FACTION_HEROES[f]).slice(0, n);
   // SIM_DAWN_HUMAN=1: the Przymierza seats count as people (the bot still plays them), so that the Horde is "the computer" and gets the advantages of the higher levels at PvP tables.
-  const seat = (name: string, faction: FactionId, heroId: string): SeatSetup => ({ name, faction, controller: process.env.SIM_DAWN_HUMAN && faction === 'dawn' ? 'human' : 'bot', heroId });
+  const seat = (name: string, faction: 'dawn' | 'horde', heroId: string): SeatSetup => ({ name, faction, controller: process.env.SIM_DAWN_HUMAN && faction === 'dawn' ? 'human' : 'bot', heroId });
   let seats: SeatSetup[];
   if (table === 'coop1' || table === 'coop2') {
     seats = pick('dawn', table === 'coop1' ? 1 : 2).map((h, i) => seat(`Bot ${i + 1}`, 'dawn', h));

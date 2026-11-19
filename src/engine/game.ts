@@ -3,7 +3,7 @@
 // action and returns the new state, so every game is a replayable action log.
 // `applyActionInPlace` does the same on the state it is given (simulations, replays).
 
-import { byTeam, raceOf, teamsOf } from './teams';
+import { byTeam, raceOf, sideName, teamsOf } from './teams';
 import {
   FACTION_HEROES,
   FACTION_NAMES,
@@ -849,7 +849,7 @@ export function finish(state: GameState, winner: Side, reason: string) {
   state.winner = winner;
   state.endReason = reason;
   state.battle = null;
-  log(state, 'victory', `Koniec gry: wygrywa ${FACTION_NAMES[winner]}. ${reason}`);
+  log(state, 'victory', `Koniec gry: wygrywa ${sideName(state, winner)}. ${reason}`);
 }
 
 /** A drawn game (a tie at the round limit): no winner. Only the crystals goal still gives a tie to the Horde. */
@@ -1036,7 +1036,8 @@ function sparkBonus(state: GameState, unit: BattleState['units'][string]) {
   if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'dawn') {
     unit.hp += EMPIRE.sparkHp * hpScaleOf(state);
     unit.maxHp += EMPIRE.sparkHp * hpScaleOf(state);
-  } else unit.status.battleAttackBonus += EMPIRE.sparkAttack * scaleOf(state);
+  } else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'herds') unit.status.battleSpeedBonus += EMPIRE.sparkSpeed;
+  else unit.status.battleAttackBonus += EMPIRE.sparkAttack * scaleOf(state);
 }
 
 function addSupports(state: GameState, faction: TeamId, ids: string[]) {
@@ -1079,7 +1080,7 @@ function finalizeBattle(state: GameState) {
   if (state.setup.mode === 'arena') return finishArena(state);
   const b = state.battle!;
   applyCasualties(state, b);
-  const resultText = b.winner === 'draw' ? 'remis — obie strony poległy' : `wygrywa ${FACTION_NAMES[b.winner!]}`;
+  const resultText = b.winner === 'draw' ? 'remis — obie strony poległy' : `wygrywa ${sideName(state, b.winner!)}`;
   log(state, 'battle', `Bitwa zakończona: ${resultText}.`);
   if (b.kind === 'neutral') resolveGuardianFight(state, b);
   awardBattleXp(state, b);
@@ -1172,7 +1173,7 @@ function resolveGuardianFight(state: GameState, b: BattleState) {
     boss.hp = Math.max(0, unit.hp);
     if (b.winner === b.attacker && !unit.alive) {
       boss.slain = b.attacker as TeamId;
-      log(state, 'crystal', `${FACTION_NAMES[b.attacker]} zadaje Bossowi ostatni cios.`);
+      log(state, 'crystal', `${sideName(state, b.attacker)} zadaje Bossowi ostatni cios.`);
     } else {
       state.stats.neutralWipes += 1;
       log(state, 'info', `Boss ma jeszcze ${boss.hp}/${boss.maxHp} Ż.`);
@@ -1342,6 +1343,7 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'kingdomBuild':
     case 'kingdomRecruit':
     case 'kingdomHeal':
+    case 'kingdomRefuge':
     case 'kingdomBuyArtifact':
     case 'kingdomTrade':
     case 'kingdomSwap':

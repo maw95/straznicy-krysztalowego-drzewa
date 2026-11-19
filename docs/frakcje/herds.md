@@ -63,3 +63,22 @@ Cel 45–55% w każdej parze z Przymierzem i Hordą (`make sim-tabele`).
 2. Czy każda frakcja ma 7 jednostek rekrutowanych (1 + 4 poziomy po jednej + legenda) w wersji podstawowej, a drugi z pary A/B tylko na poziomie 6, tak jak Przymierze i Horda? (Tak jest w tej tabeli: 2A/3A/4A/5A to wersja podstawowa, B to alternatywa poziomu 6.)
 3. Czy 3 jednostki poziomu 1 (Dudziarz, Młody Tur, Kozica) są dobre jako „pomocnicy startowi”?
 4. Czy zderzenie ma ranić także własne jednostki, o które uderzy odepchnięty wróg (proponuję: tak, jednostkę w którą uderza)?
+
+## Decyzje implementacyjne (G1, 19.11.2026; autor nieobecny, wybrane najprostsze rozwiązania zgodne z kartą)
+Odpowiedzi na „Pytania”: 1) satyrowie, tury i faun zostają; 2) A/B jak w Przymierzu i Hordzie: do rekrutacji idzie pierwsza jednostka pary (`tierUnits`), druga (`altUnits`) tylko na poziomie 6; 3) trzy jednostki poziomu 1 są pomocnikami startowymi; 4) zderzenie rani też jednostkę, w którą uderza odepchnięty (swoją i cudzą).
+- **Zderzenie:** odepchnięty cel, który zatrzyma krawędź areny, głaz albo jednostka, dostaje 1 obrażenie (skala małych liczb, mnożone przez `scaleOf`; Taran: 2). Cel przyparty do głazu (odepchnięcie o 0 pól) też się zderza. Jednostka dwupolowa, Żubr i Indrik nie są przesuwane i się nie zderzają. Odepchnięcie zaznacza cel jako „odepchnięty w tej rundzie” (Hipogryf).
+- **Rogi Przodków (Wielki Tur):** uproszczenie karty: zamiast szarży w linii do 4 pól z zepchnięciem małych wrogów na bok, jest to zdolność ataku raz na bitwę: cios odpycha cel o 2 pola (zderzenie rani). Szarża i spychanie na bok wymagałyby nowej akcji bitwy (UI, bot, serwer); do rozważenia przy G2/G4.
+- **Skoczny Rytm, Róg Wędrówki:** +2 S w następnej aktywacji sojusznika (zapisane jako ujemne spowolnienie `slowNext`, więc znosi się z korzeniami). Skoczny Rytm: dowolny sojusznik poza Dudziarzem.
+- **W Biegu (Pędziwiatr):** po ataku skok (jak Powietrzny Zryw) o tyle pól, ile zostało z Szybkości po biegu przed atakiem; bez zapasu aktywacja się kończy.
+- **Skok po Turniach (Kozica):** przechodzi przez przeszkody i jednostki, nie staje na nich; nie działa w oblężeniu (mury).
+- **Przebicie (Satyr Kopijnik):** trafia też wroga stojącego tuż za celem w jednej linii (sojusznika nie rani, inaczej niż Oddech Smoka).
+- **Rykowisko (Łoś):** wzywany wróg w swojej następnej aktywacji może atakować tylko Łosia (jeśli nie sięga, nie atakuje wcale i może tylko iść); znika po jego aktywacji.
+- **Bęben Wędrówki (Słoń):** aura +1 S liczona na początku rundy i aktywacji (nie sumuje się, nie dotyczy samego Słonia).
+- **Taran (Nosorożec):** „podwójne obrażenia bramom” wykonane jako: gdy w armii atakującego żyje Nosorożec, brama oblężonej osady pęka od jednego trafienia katapulty (zwykle dwa).
+- **Kamień Tętentu:** poziomy I–IV jak na karcie; działa dla każdej jednostki Stad w walce wręcz (poza własnymi odepchnięciami jednostek), a zderzenie poziomu II dodaje 1 obrażenie każdemu zderzeniu Stad (też Byczemu Łbowi i Taranowi).
+- **Wielkie Pastwiska:** poziom I obniża o 1 zł ceny pomocników poziomów 1–3, poziom II poziomów 1–5 (legenda bez zniżki).
+- **Ostoja Wędrówek:** nowa akcja `kingdomRefuge` (cel: inna własna osada z Ostoją, raz na rundę na bohatera); przycisk w oknie osady dopiero w G4 (bot z niej korzysta, gracz jeszcze nie ma przycisku).
+- **Ziemia (mapa):** zastępczo ziemia Stad wygląda jak łąki Przymierza (te same kafle, baza, skarbiec, ściana „Przepaść”), talia kafli: łąka, jałowa równina, wzgórza, rzeka, most, góry, przepaść. Arena: zastępcza (obrazy Przymierza, inne ułożenie, nowe tło `arena/cyfrowa/herds.webp`).
+- **Dowódcy z karczmy:** Turzy Zagończyk (Kark Tura jak Twardogłowy), Faun Oszczepnik (Oszczep w Kolano jak Korzenie), Satyr Wróżbita (Pieśń Stepu jak Skoczny Rytm). Czwarty bohater: Baran Gromowładny (Byczy Łeb).
+- **Bot:** wybiera cele, których odepchnięcie kończy się zderzeniem (premia za obrażenia zderzenia), lubi strzelców (jednostki wręcz Stad) i bieg o ≥3 pola; używa Rogu, Rytmu, Rykowiska i Ziemi Drży od razu; na mapie gra jak Horda (podbój), Ostoją przerzuca bohatera bliżej Drzewa. NIE zrobione: ustawianie jednostek daleko od wroga pod rozpęd.
+- **Cele i tryby:** nowe frakcje tylko w rywalizacji cyfrowej w celach Kontrola, Podbój, Relikt; koop, arena i gra online ich odrzucają (czytelny błąd; online nie oferuje frakcji). Backlog 51a.

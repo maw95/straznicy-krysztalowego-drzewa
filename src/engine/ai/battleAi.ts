@@ -5,6 +5,7 @@ import { ABILITY, ITEM_EFFECT, UNITS, type TeamId } from '../data';
 import { supportSlots } from '../kingdom';
 import { ARTIFACT_BY_ID, type ArtifactDef } from '../sites';
 import {
+  pushValue,
   abilityActive,
   abilityOf,
   attackDamage,
@@ -38,6 +39,7 @@ import {
 import { distance, neighborKeys, parseKey, type HexKey } from '../hex';
 import { wideCellOf } from '../arenaLayout';
 import { ARENA_SPELL_POOL, botSpell, SPELL_VALUE, type SpellId } from '../magic';
+import { canBeMoved } from '../primitives';
 import { SIEGE } from '../economy';
 import type { Action, BattleUnit, GameState } from '../types';
 import type { ItemKind } from '../data';
@@ -285,6 +287,12 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
           if (second) score += scoreHit(second, dmg);
         }
         if (useAbility && ['entanglingRoots', 'curse'].includes(abilityOf(u))) score += AI_TUNING.debuffBonus;
+        // The Herds: a push that ends in a boulder, the edge or another unit hurts (and the others hurt more when they run, and reach the shooters).
+        const collision = pushValue(state, u, t, useAbility, moved);
+        if (collision > 0) score += scoreHit(t, collision) * 0.6;
+        else if (collision < 0) score -= scoreHit(t, -collision) * 0.6;
+        if (UNITS[u.defId].side === 'herds' && UNITS[t.defId].attackType === 'ranged' && UNITS[u.defId].attackType === 'melee') score += 1;
+        if (UNITS[u.defId].side === 'herds' && moved >= 3) score += 0.5;
         score -= risk * (ranged ? AI_TUNING.attackRiskRanged : AI_TUNING.attackRiskMelee);
         if (ranged && targets.some((x) => dist2(cellsOf(x), mine) === 1)) score -= AI_TUNING.rangedCrowded;
         if (score > best.score) best = { moveTo: cell === u.pos ? null : cell, target: t, second, useAbility, score };
@@ -330,6 +338,19 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
       .sort((x, y) => (UNITS[y.defId].kind === 'support' ? 0 : 1) - (UNITS[x.defId].kind === 'support' ? 0 : 1))[0];
     if (hurt) return { type: 'battleAbility', targetId: hurt.id };
   }
+  // Dzikie Stada: the horn and the drum when the herd is together, the roar at the strongest shooter, the tremor when it shakes something loose.
+  if (ab === 'wanderHorn' && livingUnits(b, u.side).length >= 2) return { type: 'battleAbility' };
+  if (ab === 'rhythm') {
+    const ally = livingUnits(b, u.side).filter((x) => x.id !== u.id).sort((x, y) => unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (ally) return { type: 'battleAbility', targetId: ally.id };
+  }
+  if (ab === 'roar') {
+    const t = enemiesOf(b, u)
+      .filter((e) => unitDistance(e, u) <= ABILITY.roarRange)
+      .sort((x, y) => Number(UNITS[y.defId].attackType === 'ranged') - Number(UNITS[x.defId].attackType === 'ranged') || unitAttackBase(y) - unitAttackBase(x))[0];
+    if (t) return { type: 'battleAbility', targetId: t.id };
+  }
+  if (ab === 'tremor' && enemiesOf(b, u).some((e) => canBeMoved(state, e) && unitDistance(e, u) <= ABILITY.tremorRadius)) return { type: 'battleAbility' };
   if (ab === 'web') {
     const t = enemiesOf(b, u)
       .filter((e) => unitDistance(e, u) <= ABILITY.webRange)

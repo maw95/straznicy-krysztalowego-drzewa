@@ -4,6 +4,7 @@ import type { HeroType } from './heroTypes';
 import type { SiteKind, Slot } from './sites';
 import type { HexKey } from './hex';
 import type { BuildingId, KingdomState } from './kingdom';
+import type { ArenaId } from './arenaLayout';
 import type { AbilityId, FactionId, TeamId, ItemKind, MapSize, Side, Terrain, TileSide } from './data';
 
 /** coop and pvp play the adventure map; arena is a single 3-on-3 battle with drafted treasures. */
@@ -285,6 +286,8 @@ export interface HeroState {
   secondary?: true;
   name?: string;
   fallen?: number;
+  /** Ostoja Wędrówek (the Herds): the round the hero last jumped between settlements (once a round). */
+  refugeRound?: number;
   /** Level 5: the spells the hero knows and the mana it has left (missing: full, see magic.ts `manaOf`). */
   spells?: SpellId[];
   mana?: number;
@@ -362,6 +365,12 @@ export interface UnitStatus {
   anchored?: boolean;
   /** Tarcza Wartownika: S this unit loses in its next activation (it takes effect when that activation begins). */
   slowLater?: number;
+  /** Dzikie Stada: the round the unit was last pushed in (Lot na Strzelców). */
+  pushedRound?: number;
+  /** Rykowisko: the unit that challenged this one; its next attack may only be at that unit. */
+  tauntedBy?: string;
+  /** Bęben Wędrówki: S the unit has from a drum in its neighbourhood (recounted at the start of every round and activation). */
+  auraSpeed?: number;
 }
 
 /** What the artifacts do for a unit in this battle (sites.ts `applyGear`); numbers are in this battle's scale. */
@@ -469,7 +478,7 @@ export interface BattleState {
   duel: boolean;
   mapHex: HexKey;
   /** Which painted arena is used: the half of the map where the fight broke out. */
-  arena: FactionId;
+  arena: ArenaId;
   attacker: Side;
   defender: Side;
   attackerHero: string;
@@ -656,6 +665,8 @@ export type Action =
   | { type: 'kingdomBuild'; settlementId: string; building: BuildingId }
   | { type: 'kingdomRecruit'; settlementId: string; unitId: string }
   | { type: 'kingdomHeal'; settlementId: string; unitId: string }
+  /** Level 6, the Herds' Ostoja Wędrówek: the active hero jumps from the settlement it stands in to another own one with an Ostoja (`settlementId` is where to). */
+  | { type: 'kingdomRefuge'; settlementId: string }
   | { type: 'kingdomBuyArtifact'; settlementId: string; artifactId: string }
   /** Level 4: one unit of a resource bought for gold in an own settlement, or sold on its market. */
   | { type: 'kingdomTrade'; settlementId: string; res: 'wood' | 'ore' | 'dust'; dir: 'buy' | 'sell' }

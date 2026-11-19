@@ -9,7 +9,7 @@ import { distance, parseKey, type HexKey } from './hex';
 import { encounterUnits, stillConnected } from './encounters';
 import { awardXp, levelOf } from './growth';
 import { log } from './log';
-import { mapNeighbors, tileCost } from './map';
+import { mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { Rng } from './rng';
 import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsText, type Hut, type MapObject, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, passTargets, SHARDS_ID, type Rarity } from './sites';
@@ -20,7 +20,7 @@ import { HERO_TYPES } from './heroTypes';
 import { FACTION_MECHANICS, mayBuildSpark, mechanicLevel, pickUpShard, placeShards, shardCollector, SPARK_NAMES, spendShards, summedLevel } from './empire';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
-export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen';
+export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen' | 'hoofStone' | 'pastures' | 'refuge';
 
 export interface Settlement {
   id: string;
@@ -69,7 +69,7 @@ export const KINGDOM = {
   /** Gold in a chest chosen instead of the artifact. */
   chestGold: 3,
   /** Cost of each level of a building. */
-  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [] } as Record<BuildingId, number[]>,
+  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [], hoofStone: [], pastures: [], refuge: [] } as Record<BuildingId, number[]>,
   /** Price of an artifact in the market, by rarity (zwykły, rzadki, legendarny). */
   artifactPrice: [2, 5, 10],
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
@@ -104,11 +104,13 @@ export interface Recruit { id: string; tier: number; cost: number; /** Gwiezdny 
 export const ALT_UNITS: Record<FactionId, string[]> = byPack((p) => p.altUnits);
 export const DWELLING_NAMES: Record<string, string> = {
   hedgehog: 'Legowisko Jeżozwierzy', silverFox: 'Lisia Nora', centaur: 'Stajnie Centaurów', dawnOwl: 'Sowia Dziupla', boar: 'Dębowa Zagroda', dryadArcher: 'Gaj Driad', treeGuardian: 'Prastary Zagajnik', whiteStag: 'Polana Jeleni', dawnPhoenix: 'Gniazdo Feniksa',
+  faunSlinger: 'Fauni Zagajnik', tarpan: 'Tarpanie Błonia', forestBison: 'Żubrza Ostoja', satyrLancer: 'Obóz Kopijników', steppeHippogriff: 'Gniazdo na Urwisku', drumElephant: 'Krąg Bębnów', warRhino: 'Błotne Brody', bullMoose: 'Łosie Mokradło', indrik: 'Źródło Indrika',
   ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern', doomBehemoth: 'Jaskinia Zagłady',
 };
 /** What a dwelling does, in words (the unit's name in the genitive). */
 const GENITIVE: Record<string, string> = {
   hedgehog: 'Jeżozwierza', silverFox: 'Srebrnego Lisa', centaur: 'Centaura', dawnOwl: 'Sowy Świtu', boar: 'Alabastrowego Odyńca', dryadArcher: 'Driady Łuczniczki', treeGuardian: 'Opiekuna Drzewa', whiteStag: 'Białego Jelenia', dawnPhoenix: 'Feniksa Świtu',
+  faunSlinger: 'Fauna Procarza', tarpan: 'Tarpana', forestBison: 'Żubra Puszczańskiego', satyrLancer: 'Satyra Kopijnika', steppeHippogriff: 'Hipogryfa Stepowego', drumElephant: 'Słonia z Bębnem', warRhino: 'Nosorożca Bojowego', bullMoose: 'Łosia Rogacza', indrik: 'Indrika',
   ratman: 'Szczurołaka', goblinSlinger: 'Goblina Procarza', hellhound: 'Piekielnego Ogara', gargoyle: 'Gargulca', salamander: 'Salamandry Popiołu', caveTroll: 'Trolla Jaskiniowego', minotaurChief: 'Herszta Minotaurów', shadowWyvern: 'Wiwerny Cienia', doomBehemoth: 'Behemota Zagłady',
 };
 export const DWELLING_TEXTS: Record<string, string> = Object.fromEntries(Object.entries(GENITIVE).map(([id, g]) => [id, `Umożliwia wykupienie ${g} jako pomocnika.`]));
@@ -124,7 +126,14 @@ export const RECRUITS: Record<FactionId, Recruit[]> = byPack((p): Recruit[] => [
 ]);
 
 /** The recruits a faction may buy in this game, by tier (level 6: both units of tiers 2-5; which one can be recruited is `dwellingOf`). */
-export const recruitsOf = (state: GameState, f: TeamId): Recruit[] => RECRUITS[raceOf(state, f)].filter((r) => (r.tier < 6 && !r.alt) || Boolean(state.rules.empire)).sort((a, b) => a.tier - b.tier);
+export const recruitsOf = (state: GameState, f: TeamId): Recruit[] => {
+  const pastures = state.rules.empire ? Math.max(0, ...settlementsOf(state, f).map((s) => buildingLevel(s, 'pastures'))) : 0;
+  return RECRUITS[raceOf(state, f)]
+    .filter((r) => (r.tier < 6 && !r.alt) || Boolean(state.rules.empire))
+    // Wielkie Pastwiska (the Herds): the recruits are cheaper by a gold piece (tiers 1-3, with the second level 1-5).
+    .map((r) => (pastures >= 1 && r.tier <= (pastures >= 2 ? 5 : 3) ? { ...r, cost: Math.max(1, r.cost - FACTION_MECHANICS.pastureDiscount) } : r))
+    .sort((a, b) => a.tier - b.tier);
+};
 
 /** Level 6: whether tiers 2-5 need a dwelling in this game. */
 export const needsDwelling = (state: GameState, r: Recruit): boolean => Boolean(state.rules.empire) && r.tier >= 2 && r.tier <= 6;
@@ -152,6 +161,9 @@ export const BUILDING_NAMES: Record<BuildingId, string[]> = {
   bloodPit: ['Jama Krwi', 'Jama Szału', 'Jama Uczty', 'Wielka Jama Krwi'],
   plunder: ['Szabrownia'],
   wolfDen: ['Wilcze Legowisko'],
+  hoofStone: ['Kamień Tętentu', 'Kamień Grzmiących Kopyt', 'Kamień Stu Stad', 'Wielki Kamień Tętentu'],
+  pastures: ['Wielkie Pastwiska', 'Pastwiska bez Granic'],
+  refuge: ['Ostoja Wędrówek'],
 };
 
 /** Level 6: the buildings only one faction has (the faction's mechanic first, then the two others). */
@@ -197,6 +209,14 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
   grove: ['Bohater, który wchodzi na pole własnej osady, odnawia całą manę.'],
   plunder: [`Po wygranej z bohaterem lub strażnikiem frakcja dostaje +${FACTION_MECHANICS.plunderGold} zł (sumuje się ze wszystkich osad).`],
   wolfDen: ['Bohaterowie Hordy mają +1 punkt ruchu na mapie.'],
+  hoofStone: [
+    `Tętent: jednostka Stad, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole (zderzenie rani). Bez tego budynku frakcja nie ma tego efektu.`,
+    `Zderzenia Stad ranią o ${FACTION_MECHANICS.herdsCollision} więcej.`,
+    `Wystarczy rozbieg o ${FACTION_MECHANICS.herdsRunShort} pola.`,
+    `Cel, który uderzył w coś po zderzeniu, ma −${FACTION_MECHANICS.herdsSlow} S w swojej następnej aktywacji.`,
+  ],
+  pastures: [`Rekrutacja pomocników poziomów 1–3 jest tańsza o ${FACTION_MECHANICS.pastureDiscount} zł.`, `Rekrutacja pomocników poziomów 1–5 jest tańsza o ${FACTION_MECHANICS.pastureDiscount} zł.`],
+  refuge: ['Bohater stojący w osadzie z Ostoją może raz na rundę przenieść się do innej własnej osady z Ostoją.'],
   spark: ['Budynek Pierwotnej Iskry: jego ceną są wszystkie Odłamki z mapy. Daje frakcji wielką premię, a w celu „Relikt” wygrywa grę.'],
   magic: circleTexts(),
   tavern: ['Tu najmiesz dowódcę: drugiego bohatera z własnym pionkiem, doświadczeniem i artefaktami. Tu też wykupisz dowódcę, który poległ.'],
@@ -287,7 +307,7 @@ export function initKingdom(state: GameState): void {
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag = byTeam(teams, (t) => rng.shuffle([...NAMES[raceOf(state, t)]]));
   // Level 6: the barracks stand from the start in every settlement (the dwellings of the units are built beside them).
-  const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0 } : {}) }) as Record<BuildingId, number>;
+  const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0, hoofStone: 0, pastures: 0, refuge: 0 } : {}) }) as Record<BuildingId, number>;
   const add = (id: string, at: HexKey, land: TeamId, owner: TeamId | null) => {
     k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[raceOf(state, land)]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
     state.tiles[at].place = { kind: 'settlement', id };
@@ -539,6 +559,19 @@ function serviceSettlement(state: GameState, id: string): { s: Settlement; hero:
 /** What learning a spell costs. */
 export const spellPrice = (spell: SpellId): Cost => MAGIC.price[SPELLS[spell].circle - 1];
 
+/** The own settlement with an Ostoja Wędrówek the hero stands in (null: there is none). */
+export function refugeHere(state: GameState, hero: HeroState): Settlement | null {
+  if (!state.rules.empire) return null;
+  return Object.values(state.kingdom?.settlements ?? {}).find((s) => s.at === hero.pos && s.owner === hero.faction && buildingLevel(s, 'refuge') >= 1) ?? null;
+}
+
+/** The own settlements with an Ostoja the hero could jump to now (empty when it cannot jump this round). */
+export function refugeTargets(state: GameState, hero: HeroState): Settlement[] {
+  const from = refugeHere(state, hero);
+  if (!from || hero.refugeRound === state.round) return [];
+  return settlementsOf(state, hero.faction).filter((s) => s.id !== from.id && buildingLevel(s, 'refuge') >= 1);
+}
+
 /** Puts a hero that appears in a settlement on its hex, or on the nearest free one when somebody stands there (one hero per hex outside the bases). */
 function standIn(state: GameState, hero: HeroState, at: HexKey): void {
   const taken = (k: HexKey) => Object.values(state.heroes).some((h) => h.alive && !h.entering && h.id !== hero.id && h.pos === k);
@@ -599,7 +632,7 @@ export function payCost(state: GameState, f: TeamId, c: Cost): void {
  * Which building's first level must stand in the settlement before another can be started (docs/BUDYNKI.md 0a: a tree, one parent each;
  * the Rada Osady, the root, is always there; the Iskra needs only the shards, the dwellings the barracks, see `kingdomDwelling`).
  */
-export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market' };
+export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market', hoofStone: 'barracks', pastures: 'market', refuge: 'tavern' };
 
 /** Why a building cannot be started here for lack of its parent (null: nothing in the way). Upgrades of a standing building are never blocked. */
 export function buildBlock(s: Settlement, b: BuildingId): string | null {
@@ -776,6 +809,19 @@ export function kingdomAction(state: GameState, action: Action): void {
       log(state, 'info', `${FACTION_NAMES[raceOf(state, hero.faction)]} najmuje dowódcę: ${heroLabel(fresh)} (${REALM.hireGold} zł). Rusza od następnej rundy.`);
       break;
     }
+    case 'kingdomRefuge': {
+      // Ostoja Wędrówek: from a settlement with an Ostoja to another own one, once a round (the hero keeps its move points).
+      const { s: to, hero } = serviceSettlement(state, action.settlementId);
+      const from = refugeHere(state, hero);
+      if (!from) throw new Error('Bohater musi stać w własnej osadzie z Ostoją Wędrówek.');
+      if (to.id === from.id || buildingLevel(to, 'refuge') < 1) throw new Error('Cel skoku musi być inną własną osadą z Ostoją Wędrówek.');
+      if (hero.refugeRound === state.round) throw new Error('Ostoja przenosi bohatera raz na rundę.');
+      hero.refugeRound = state.round;
+      standIn(state, hero, to.at);
+      revealAround(state, hero.pos);
+      log(state, 'info', `${heroLabel(hero)} przenosi się przez Ostoję Wędrówek do osady ${to.name}.`, hero.faction);
+      break;
+    }
     case 'kingdomRansom': {
       const { s, hero } = serviceSettlement(state, action.settlementId);
       if (buildingLevel(s, 'tavern') < 1) throw new Error('W tej osadzie nie ma karczmy.');
@@ -931,6 +977,7 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
     if (best < 1 && parent && buildingLevel(s, parent) < 1 && buildable(parent) && canPay(state, f, { ...buildCost(state, s, parent)!, gold: buildCost(state, s, parent)!.gold + 2 })) return { type: 'kingdomBuild', settlementId: id, building: parent };
     const wanted = FACTION_BUILDINGS[raceOf(state, f)].filter((x) => {
       if (x === mech) return buildingLevel(s, x) >= best && best < 4;
+      if (x === 'refuge') return buildingLevel(s, x) < 1 && settlementsOf(state, f).filter((y) => buildingLevel(y, x) >= 1).length < 2;
       if (x === 'grove' || x === 'wolfDen') return !settlementsOf(state, f).some((y) => buildingLevel(y, x) >= 1);
       return true;
     });
@@ -1016,6 +1063,14 @@ export function kingdomBotAction(state: GameState, hero: HeroState): Action | nu
   if (state.rules.empire && (hero.shards ?? 0) > 0) {
     const to = shardCollector(state, hero.faction);
     if (to && to.id !== hero.id && passTargets(state, hero).some((h) => h.id === to.id)) return { type: 'passArtifact', artifactId: SHARDS_ID, toHeroId: to.id };
+  }
+  // The Herds' Ostoja Wędrówek: jump to the other Ostoja when it lies nearer the Tree (where the game is decided), once a round.
+  const jumps = refugeTargets(state, hero);
+  if (jumps.length) {
+    const tree = parseKey(state.control ? state.control.points[0] : treeOf(state));
+    const toTree = (k: HexKey) => distance(parseKey(k), tree);
+    const to = jumps.sort((a, b) => toTree(a.at) - toTree(b.at) || (a.id < b.id ? -1 : 1))[0];
+    if (toTree(to.at) + 2 <= toTree(hero.pos)) return { type: 'kingdomRefuge', settlementId: to.id };
   }
   // Level 4: supports that do not fit into the team (more alive than places) stay to guard the settlement the hero stands in; a team with
   // a free place takes them back.

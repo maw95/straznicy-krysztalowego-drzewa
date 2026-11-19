@@ -132,7 +132,9 @@ const STAT_ICON = ['hp', 'attack', 'speed'];
 function frameFor(unitId: string): FrameLayout {
   const def = UNITS[unitId];
   if (def.side === 'neutral') return FRAMES.neutral_hero;
-  return FRAMES[`${def.side}_${def.kind === 'support' ? 'support' : 'hero'}`];
+  // A faction without frames of its own (placeholders, docs/BACKLOG.md 2a) borrows the frame of Przymierze.
+  const kind = def.kind === 'support' ? 'support' : 'hero';
+  return FRAMES[`${def.side}_${kind}`] ?? FRAMES[`dawn_${kind}`];
 }
 
 /** One type per unit: a flyer shows only the wing, a shooter only the bow. */

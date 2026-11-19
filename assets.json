@@ -5649,6 +5649,98 @@
       "data": "2026-11-18",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "herds/zastepcze/art",
+      "pliki": [
+        "public/assets/cards/art/aurochsScout.jpg",
+        "public/assets/cards/art/bullMoose.jpg",
+        "public/assets/cards/art/drumElephant.jpg",
+        "public/assets/cards/art/faunJavelin.jpg",
+        "public/assets/cards/art/faunSlinger.jpg",
+        "public/assets/cards/art/forestBison.jpg",
+        "public/assets/cards/art/greatAurochs.jpg",
+        "public/assets/cards/art/indrik.jpg",
+        "public/assets/cards/art/rockGoat.jpg",
+        "public/assets/cards/art/satyrHornlord.jpg",
+        "public/assets/cards/art/satyrLancer.jpg",
+        "public/assets/cards/art/satyrPiper.jpg",
+        "public/assets/cards/art/satyrSeer.jpg",
+        "public/assets/cards/art/steppeHippogriff.jpg",
+        "public/assets/cards/art/tarpan.jpg",
+        "public/assets/cards/art/thunderRam.jpg",
+        "public/assets/cards/art/warRhino.jpg",
+        "public/assets/cards/art/windAntelope.jpg",
+        "public/assets/cards/art/youngAurochs.jpg"
+      ],
+      "typ": "karta jednostki (zastępcza)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-19",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "herds/zastepcze/portraits",
+      "pliki": [
+        "public/assets/cards/portraits/aurochsScout.jpg",
+        "public/assets/cards/portraits/bullMoose.jpg",
+        "public/assets/cards/portraits/drumElephant.jpg",
+        "public/assets/cards/portraits/faunJavelin.jpg",
+        "public/assets/cards/portraits/faunSlinger.jpg",
+        "public/assets/cards/portraits/forestBison.jpg",
+        "public/assets/cards/portraits/greatAurochs.jpg",
+        "public/assets/cards/portraits/indrik.jpg",
+        "public/assets/cards/portraits/rockGoat.jpg",
+        "public/assets/cards/portraits/satyrHornlord.jpg",
+        "public/assets/cards/portraits/satyrLancer.jpg",
+        "public/assets/cards/portraits/satyrPiper.jpg",
+        "public/assets/cards/portraits/satyrSeer.jpg",
+        "public/assets/cards/portraits/steppeHippogriff.jpg",
+        "public/assets/cards/portraits/tarpan.jpg",
+        "public/assets/cards/portraits/thunderRam.jpg",
+        "public/assets/cards/portraits/warRhino.jpg",
+        "public/assets/cards/portraits/windAntelope.jpg",
+        "public/assets/cards/portraits/youngAurochs.jpg"
+      ],
+      "typ": "portret jednostki (zastępczy)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-19",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "herds/zastepcze/crests",
+      "pliki": [
+        "public/assets/cards/crests/herds.png"
+      ],
+      "typ": "herb frakcji (zastępczy)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-19",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "herds/zastepcze/arena",
+      "pliki": [
+        "public/assets/arena/cyfrowa/herds.webp"
+      ],
+      "typ": "arena frakcji (zastępcza)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-19",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
     }
   ]
 }

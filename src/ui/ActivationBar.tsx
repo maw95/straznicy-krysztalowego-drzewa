@@ -1,15 +1,15 @@
 // The bar under the arena: the active unit and what it can do, its ability and end buttons, the initiative queue.
 
 import { abilityTextFor, FACTION_NAMES, scaleText, UNITS, type TeamId } from '../engine/data';
-import { abilityOf, livingUnits, unitSpeed } from '../engine/battle';
+import { abilityOf, livingUnits, unitSpeed, UNTARGETED_ABILITIES } from '../engine/battle';
 import { isDigital, type Action, type BattleState, type BattleUnit, type GameState } from '../engine/types';
 import { abilityArt, asset, Frame, Medal, Portrait, SIDE_RING } from './common';
 import { statusList, StatusBadge } from './battleStatus';
 
 /** The line under the active unit's name: what the player can do now. */
-export function activationHint(b: BattleState, o: { deploySide: TeamId | null; picked: string | null; myTurn: boolean; moves: number; targets: number }): string {
+export function activationHint(b: BattleState, o: { deploySide: TeamId | null; picked: string | null; myTurn: boolean; moves: number; targets: number; sideName?: (t: TeamId) => string }): string {
   if (b.stage === 'deploy') {
-    if (!o.deploySide) return `${FACTION_NAMES[b.needsDeploy[0]]} ustawia jednostki…`;
+    if (!o.deploySide) return `${o.sideName ? o.sideName(b.needsDeploy[0]) : FACTION_NAMES[b.needsDeploy[0]]} ustawia jednostki…`;
     return o.picked ? 'Wskaż złote pole w swojej kolumnie' : 'Kliknij jednostkę, potem pole';
   }
   if (!o.myTurn) return 'Ruch przeciwnika…';
@@ -94,7 +94,7 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
               className={`btn plate parch act-btn ${freeAbility ? 'on' : ''}`}
               style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}
               title={scaleText(abilityTextFor(active.defId, isDigital(state.rules)), state.rules.statScale ?? 1, state.rules.hpScale)}
-              onClick={() => (ab === 'sunburst' ? onAction({ type: 'battleAbility' }) : setFreeAbility(!freeAbility))}
+              onClick={() => (ab && UNTARGETED_ABILITIES.includes(ab) ? onAction({ type: 'battleAbility' }) : setFreeAbility(!freeAbility))}
             >
               <img src={asset(`cards/abilities/${abilityArt(abilityOf(active))}.png`)} alt="" style={{ width: 34, height: 34 }} />
               <span style={{ fontSize: 13, lineHeight: 1.05, textAlign: 'center' }}>{UNITS[active.defId].abilityName}</span>

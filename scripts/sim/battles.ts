@@ -8,7 +8,7 @@
 // 3. Every Przymierze hero with two random supports against each guardian.
 
 import './override';
-import { FACTION_HEROES, FACTION_SUPPORTS, GUARDIANS, UNITS, type FactionId } from '../../src/engine/data';
+import { FACTION_HEROES, FACTION_SUPPORTS, GUARDIANS, UNITS } from '../../src/engine/data';
 import { applyActionInPlace, createGame } from '../../src/engine/game';
 import { chooseAction } from '../../src/engine/ai';
 import { mapNeighbors } from '../../src/engine/map';
@@ -36,13 +36,13 @@ let lastReport: GameState['lastBattle'] = null;
 function battle(seed: number, dawnHero: string, opponent: string, duel: boolean, guardian: boolean): Outcome {
   const rng = new Rng(seed * 104729 + 7);
   const seats = guardian
-    ? [{ name: 'A', faction: 'dawn' as FactionId, controller: 'bot' as const, heroId: dawnHero }]
+    ? [{ name: 'A', faction: 'dawn' as 'dawn' | 'horde', controller: 'bot' as const, heroId: dawnHero }]
     : [
-        { name: 'A', faction: 'dawn' as FactionId, controller: 'bot' as const, heroId: dawnHero },
-        { name: 'B', faction: 'horde' as FactionId, controller: 'bot' as const, heroId: opponent },
+        { name: 'A', faction: 'dawn' as 'dawn' | 'horde', controller: 'bot' as const, heroId: dawnHero },
+        { name: 'B', faction: 'horde' as 'dawn' | 'horde', controller: 'bot' as const, heroId: opponent },
       ];
   const s: GameState = createGame({ mode: guardian ? 'coop' : 'pvp', mapSize: 'medium', battleMode: duel ? 'board' : 'arena', seed, seats, rules });
-  for (const f of ['dawn', 'horde'] as FactionId[]) {
+  for (const f of ['dawn', 'horde'] as Array<'dawn' | 'horde'>) {
     s.factions[f].supportsAlive = rng.shuffle(FACTION_SUPPORTS[f]).slice(0, 2);
     s.factions[f].supportsDead = [];
   }

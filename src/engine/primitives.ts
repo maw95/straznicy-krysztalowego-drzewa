@@ -1,10 +1,12 @@
 // The library of rule primitives for the new factions (docs/FRAKCJE_MACIERZ_I_PRYMITYWY.md, section 1): small, parametrised rules that the abilities of a
 // faction pack are built from. Each one changes the state passed in (like the rest of the battle engine) and returns what it did, so that the caller can log
 // it. Only primitives the engine did not have are here (pull, swap, group bonus, exhaustion, ground effects); the old abilities (push of the Cyclops, poison,
-// slow, root...) stay where they are until `golden.test.ts` can watch a mechanical refactor. Nothing here is used by the two playable factions yet.
+// slow, root...) stay where they are until `golden.test.ts` can watch a mechanical refactor. The Dzikie Stada use the push with a collision, the resistance to being moved, the bonus for the target's state and the taunt (docs/frakcje/herds.md).
 
 import { distance, key, line, parseKey, type HexKey } from './hex';
-import { cellsOf, inLayout, pushCell, unitAt } from './battle';
+import { abilityActive, abilityOf, cellsOf, dealDamage, inLayout, pushCell, scaleOf, stepOnFields, unitAt } from './battle';
+import { log } from './log';
+import { UNITS, type AbilityId } from './data';
 import { manaOf } from './magic';
 import type { BattleState, BattleUnit, GameState } from './types';
 
@@ -121,3 +123,108 @@ export function placeGround(b: BattleState & { ground?: GroundEffect[] }, effect
 }
 
 export const groundAt = (b: BattleState & { ground?: GroundEffect[] }, cell: HexKey): GroundEffect[] => (b.ground ?? []).filter((g) => g.cell === cell && (g.until === undefined || g.until >= b.round));
+
+// ---------------------------------------------------------------- the Herds: push with a collision, resistance, a bonus for the target's state, taunt
+
+/** Abilities of units that cannot be pushed, pulled or moved (Niewzruszony, Ziemia Drży). */
+export const IMMOVABLE_ABILITIES: readonly AbilityId[] = ['unmoved', 'tremor'];
+
+/** Whether the unit may be moved against its will: not a large one, not in a duel, not an immovable one. */
+export function canBeMoved(state: GameState, u: BattleUnit): boolean {
+  const b = state.battle;
+  if (!b || b.duel || u.tail || !u.pos || !u.alive) return false;
+  return !(abilityActive(state) && IMMOVABLE_ABILITIES.includes(abilityOf(u)));
+}
+
+/** What a push did: the cells moved and what stopped it (null: it went the whole way). */
+export interface PushOutcome {
+  moved: number;
+  /** 'edge' (the arena ends), 'obstacle' (a boulder, a wall) or 'unit' (another unit stands there); null when nothing stopped the push. */
+  stoppedBy: 'edge' | 'obstacle' | 'unit' | 'immovable' | null;
+  /** The unit that was hit, when `stoppedBy` is 'unit'. */
+  hit?: BattleUnit;
+}
+
+/** The cell one step straight away from `from` through `target`, and what is there. */
+function pushStep(state: GameState, from: HexKey, target: HexKey): { cell: HexKey | null; stoppedBy: PushOutcome['stoppedBy']; hit?: BattleUnit } {
+  const b = state.battle!;
+  const a = parseKey(from);
+  const t = parseKey(target);
+  const cell = line(a, { q: 2 * t.q - a.q, r: 2 * t.r - a.r })[distance(a, t) + 1];
+  if (!cell) return { cell: null, stoppedBy: 'edge' };
+  const k = key(cell);
+  if (!inLayout(b, k)) return { cell: null, stoppedBy: 'edge' };
+  if (b.obstacles.includes(k)) return { cell: null, stoppedBy: 'obstacle' };
+  const hit = unitAt(b, k);
+  if (hit) return { cell: null, stoppedBy: 'unit', hit };
+  return { cell: k, stoppedBy: null };
+}
+
+/**
+ * Tętent: pushes the target up to `steps` cells straight away from `source`. A target that is stopped (by the edge of the arena, an obstacle or another
+ * unit) COLLIDES: it takes `damage` (a damage already in the battle's scale; 0 = a plain push) and so does the unit it hits. A unit that cannot be moved
+ * (large, immovable, in a duel) does not move and does not collide. The target is marked as pushed in this round (Lot na Strzelców reads it), steps on
+ * charged fields on the way, and a living target keeps its place; a unit that dies of the collision leaves the board (the caller checks the battle's end).
+ */
+export function pushWithCollision(state: GameState, target: BattleUnit, source: BattleUnit, steps: number, damage: number, label: string): PushOutcome {
+  const b = state.battle!;
+  if (!canBeMoved(state, target)) {
+    if (target.alive && abilityActive(state) && IMMOVABLE_ABILITIES.includes(abilityOf(target))) log(state, 'ability', `${UNITS[target.defId].name} stoi niewzruszenie (${label}).`);
+    return { moved: 0, stoppedBy: 'immovable' };
+  }
+  let moved = 0;
+  let stoppedBy: PushOutcome['stoppedBy'] = null;
+  let hit: BattleUnit | undefined;
+  for (let i = 0; i < steps; i++) {
+    const step = pushStep(state, nearestCell(source, target.pos!), target.pos!);
+    if (!step.cell) {
+      stoppedBy = step.stoppedBy;
+      hit = step.hit;
+      break;
+    }
+    target.pos = step.cell;
+    moved++;
+  }
+  if (moved > 0) {
+    target.status.pushedRound = b.round;
+    stepOnFields(state, target);
+    log(state, 'ability', `${UNITS[target.defId].name} zostaje odepchnięty (pól: ${moved}; ${label}).`);
+  }
+  if (stoppedBy && target.alive) {
+    if (moved === 0) target.status.pushedRound = b.round;
+    const where = stoppedBy === 'edge' ? 'w krawędź areny' : stoppedBy === 'obstacle' ? 'w głaz' : `w jednostkę ${hit ? UNITS[hit.defId].name : ''}`;
+    if (damage > 0) {
+      log(state, 'ability', `${UNITS[target.defId].name} uderza ${where}: zderzenie (${label}).`);
+      dealDamage(state, target, damage, `Zderzenie (${label})`);
+      if (hit && hit.alive) dealDamage(state, hit, damage, `Zderzenie (${label})`);
+    }
+  }
+  return { moved, stoppedBy, ...(hit ? { hit } : {}) };
+}
+
+/** What a push would do, without doing it (the bots weigh a blow by it): the cells it would move and what would stop it. */
+export function previewPush(state: GameState, target: BattleUnit, source: BattleUnit, steps: number): PushOutcome {
+  if (!canBeMoved(state, target)) return { moved: 0, stoppedBy: 'immovable' };
+  let pos = target.pos!;
+  let moved = 0;
+  for (let i = 0; i < steps; i++) {
+    const step = pushStep(state, nearestCell(source, pos), pos);
+    if (!step.cell) return { moved, stoppedBy: step.stoppedBy, ...(step.hit ? { hit: step.hit } : {}) };
+    pos = step.cell;
+    moved++;
+  }
+  return { moved, stoppedBy: null };
+}
+
+/** Premia za stan celu: whether the unit was pushed in the round that is going on. */
+export const pushedThisRound = (state: GameState, u: BattleUnit): boolean => state.battle !== null && u.status.pushedRound === state.battle.round;
+
+/** Prowokacja: whether `u` is forced to attack only its challenger now (the challenger lives and stands on the board). */
+export function taunter(state: GameState, u: BattleUnit): BattleUnit | null {
+  const id = u.status.tauntedBy;
+  const t = id ? state.battle?.units[id] : undefined;
+  return t && t.alive && t.pos ? t : null;
+}
+
+/** The scale of a collision's damage in this battle (the numbers of `ABILITY` are small-scale). */
+export const collisionOf = (state: GameState, smallScale: number): number => smallScale * scaleOf(state);

@@ -156,7 +156,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
                   className="btn plate parch"
                   style={{ padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 15 }}
                   title={scaleText(abilityTextFor(active.defId, isDigital(state.rules)), state.rules.statScale ?? 1)}
-                  onClick={() => onAction({ type: 'battleAbility', targetId: ab === 'web' ? enemy!.id : active.id })}
+                  onClick={() => onAction({ type: 'battleAbility', targetId: ab === 'web' || ab === 'roar' ? enemy!.id : active.id })}
                 >
                   <img src={asset(`cards/abilities/${abilityArt(abilityOf(active))}.png`)} alt="" style={{ width: 30, height: 30 }} />
                   {UNITS[active.defId].abilityName}

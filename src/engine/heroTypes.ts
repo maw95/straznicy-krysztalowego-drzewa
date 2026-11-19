@@ -11,6 +11,8 @@ export const HERO_TYPES: Record<string, HeroType> = {
   blackDragon: 'sage', werewolfLord: 'hunter', ironFistOgre: 'warrior',
   dawnKnight: 'warrior', dawnHuntress: 'hunter', dawnSage: 'sage',
   hordeWarlord: 'warrior', hordeCrossbow: 'hunter', hordeShadow: 'sage',
+  greatAurochs: 'warrior', satyrHornlord: 'sage', windAntelope: 'hunter', thunderRam: 'warrior',
+  aurochsScout: 'warrior', faunJavelin: 'hunter', satyrSeer: 'sage',
 };
 
 /** What a type gives by itself as the hero grows (board game's scale): a warrior Życie every level, a hunter Atak every second level, a sage mana every level. */
@@ -63,6 +65,13 @@ export const SPECIALTIES: Record<string, Specialty> = {
   duskManticore: { name: 'Pan Zmierzchu', text: 'Pomocnicy Mantykory mają +1 Ż w bitwie.', supportHp: 1 },
   hordeWarlord: { name: 'Zbieracz Łupów', text: '+1 zł dla frakcji za każdą wygraną bitwę.', gold: 1 },
   hordeCrossbow: { name: 'Mistrz Kuszy', text: 'Strzelcy Kapitana (i on sam) mają +1 A w bitwie.', marksman: 1 },
+  greatAurochs: { name: 'Przewodnik Stada', text: 'Pomocnicy Wielkiego Tura mają +1 Ż w bitwie.', supportHp: 1 },
+  satyrHornlord: { name: 'Dzika Pieśń', text: 'Czary Satyra zadają i leczą o 1 więcej.', spellPower: 1 },
+  windAntelope: { name: 'Wędrowiec Stepu', text: '+1 punkt ruchu na mapie.', move: 1 },
+  thunderRam: { name: 'Grzmot Stada', text: '+1 PD za każdą wygraną walkę.', xp: 1 },
+  aurochsScout: { name: 'Zagończyk', text: 'Pomocnicy Zagończyka mają +1 Ż w bitwie.', supportHp: 1 },
+  faunJavelin: { name: 'Mistrz Oszczepu', text: 'Strzelcy Fauna (i on sam) mają +1 A w bitwie.', marksman: 1 },
+  satyrSeer: { name: 'Pieśń Przyszłości', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
   hordeShadow: { name: 'Studnia Cieni', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
 };
 

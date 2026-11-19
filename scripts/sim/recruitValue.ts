@@ -4,7 +4,7 @@
 // Columns: share of wins and the Życie kept, per tier; the "none" row is the baseline (hero alone).
 
 import './override';
-import { FACTION_HEROES, FACTION_SUPPORTS, UNITS, type FactionId } from '../../src/engine/data';
+import { FACTION_HEROES, FACTION_SUPPORTS, UNITS } from '../../src/engine/data';
 import { applyActionInPlace, createGame } from '../../src/engine/game';
 import { chooseAction } from '../../src/engine/ai';
 import { RECRUITS } from '../../src/engine/kingdom';
@@ -14,8 +14,8 @@ import { DEFAULT_RULES, type GameState } from '../../src/engine/types';
 
 const per = Number(process.argv[2] ?? 120);
 
-function battle(seed: number, faction: FactionId, heroId: string, recruit: string | null, enemyRecruit?: string): { won: boolean; kept: number } {
-  const enemy: FactionId = faction === 'dawn' ? 'horde' : 'dawn';
+function battle(seed: number, faction: 'dawn' | 'horde', heroId: string, recruit: string | null, enemyRecruit?: string): { won: boolean; kept: number } {
+  const enemy: 'dawn' | 'horde' = faction === 'dawn' ? 'horde' : 'dawn';
   const rng = new Rng(seed * 104729 + 11);
   const opponent = rng.pick(FACTION_HEROES[enemy]);
   const s: GameState = createGame({

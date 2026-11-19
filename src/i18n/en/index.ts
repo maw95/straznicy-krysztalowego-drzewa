@@ -4,6 +4,7 @@ import './engine';
 import './ui';
 import './online';
 import './extra';
+import './herds';
 import './names';
 import './campaign';
 import './changelog';

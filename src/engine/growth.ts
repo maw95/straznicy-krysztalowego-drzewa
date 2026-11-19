@@ -118,6 +118,7 @@ export const skillText = (skill: SkillId, rank: number) => SKILL_EFFECT[skill].t
 
 export const SKILL_NAMES: Record<FactionId, Record<SkillId, string>> = {
   dawn: { might: 'Moc Świtu', vigor: 'Hart Gaju', swift: 'Lekkość Wiatru', leader: 'Opieka nad Drużyną', pathfinder: 'Leśny Tropiciel', fortune: 'Dar Strażników', marksman: 'Oko Łucznika', tactician: 'Sztuka Wojny', mightB: 'Wspólna Moc', vigorB: 'Niezłomność', swiftB: 'Zwinny Szyk', leaderB: 'Bojowa Drużyna', scout: 'Orle Oko', treasureHunter: 'Skarbnik Gaju', scholar: 'Mądrość Drzewa' },
+  herds: { might: 'Siła Stada', vigor: 'Gruba Skóra', swift: 'Szybki Galop', leader: 'Przewodnik Stada', pathfinder: 'Stepowy Tropiciel', fortune: 'Dar Wędrowców', marksman: 'Celna Proca', tactician: 'Zwód Stada', mightB: 'Wspólny Pęd', vigorB: 'Twarde Rogi', swiftB: 'Pędzące Stado', leaderB: 'Bojowe Stado', scout: 'Wzrok Antylopy', treasureHunter: 'Nos Tropiciela', scholar: 'Pieśń Wędrówki' },
   horde: { might: 'Furia Hordy', vigor: 'Pancerz z Kości', swift: 'Pęd Ciemności', leader: 'Okrzyk Wodza', pathfinder: 'Nocny Zwiadowca', fortune: 'Łupieżca', marksman: 'Krzywy Łuk', tactician: 'Zasadzka', mightB: 'Wspólna Furia', vigorB: 'Twarda Skóra', swiftB: 'Szybka Sfora', leaderB: 'Bojowa Wataha', scout: 'Ślepia Wilka', treasureHunter: 'Nos Hieny', scholar: 'Pamięć Przodków' },
 };
 

@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowa frakcja w rywalizacji (wersja robocza): Dzikie Stada, wędrowne stada stepów, które walczą rozpędem: odpychają wrogów, a ten, kto uderzy w głaz, krawędź areny albo inną jednostkę, dostaje obrażenia. Mają bohaterów, jednostki, budynki osady (Kamień Tętentu, Wielkie Pastwiska, Ostoja Wędrówek) i własną Iskrę; grafika jest na razie zastępcza, a liczby nie są jeszcze zrównoważone. Przy stole mogą siedzieć dowolne dwie do czterech frakcji w celach Kontrola, Podbój i Relikt.
+
 ## 2.17.1 — 2026-11-18
 
 - Własne ustawienia: poziom mechanik (Bez osad, Osady i złoto i dalsze) da się wreszcie wybrać; wcześniej przycisk wracał na „Bez rozwoju”.

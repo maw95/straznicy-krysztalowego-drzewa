@@ -27,10 +27,11 @@ export const ARCHETYPE_NAMES: Record<Archetype, string> = { warrior: 'wojownik',
 export const COMMANDERS: Record<FactionId, Record<Archetype, string>> = {
   dawn: { warrior: 'dawnKnight', archer: 'dawnHuntress', sage: 'dawnSage' },
   horde: { warrior: 'hordeWarlord', archer: 'hordeCrossbow', sage: 'hordeShadow' },
+  herds: { warrior: 'aurochsScout', archer: 'faunJavelin', sage: 'satyrSeer' },
 };
 
 export const archetypeOf = (unitId: string): Archetype | null => {
-  for (const f of ['dawn', 'horde'] as FactionId[]) for (const a of Object.keys(COMMANDERS[f]) as Archetype[]) if (COMMANDERS[f][a] === unitId) return a;
+  for (const f of Object.keys(COMMANDERS) as FactionId[]) for (const a of Object.keys(COMMANDERS[f]) as Archetype[]) if (COMMANDERS[f][a] === unitId) return a;
   return null;
 };
 
@@ -42,6 +43,9 @@ const NAMES: Record<string, string[]> = {
   hordeWarlord: ['Grumosz', 'Burczygniew', 'Ostrokieł', 'Gnatosz'],
   hordeCrossbow: ['Zgrzyt', 'Szpon', 'Krzywe Oko', 'Smyk'],
   hordeShadow: ['Mroczysław', 'Popielec', 'Szept', 'Kruk'],
+  aurochsScout: ['Turzysław', 'Rogoń', 'Kopytko', 'Burzan'],
+  faunJavelin: ['Faunek', 'Oszczepnik Lis', 'Kozioł', 'Strzałka'],
+  satyrSeer: ['Dudarz Mądry', 'Pieśniarz', 'Wróżbiarz Wiatru', 'Trzcinowy'],
 };
 
 /** The name a commander gets: drawn from the game's seed, so a replay names it the same. */

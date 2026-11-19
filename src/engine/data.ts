@@ -56,12 +56,28 @@ export type AbilityId =
   | 'packHunt' // Obława (Piekielny Ogar, passive)
   | 'inferno' // Pożoga (Salamandra Popiołu)
   | 'bloodRage' // Bitewny Szał (Herszt Minotaurów, passive)
-  | 'rebirth'; // Odrodzenie z Popiołów (Feniks Świtu, reaction, level 6)
+  | 'rebirth' // Odrodzenie z Popiołów (Feniks Świtu, reaction, level 6)
+  // Dzikie Stada (docs/frakcje/herds.md): pushing and colliding, leaping, taunting, an aura.
+  | 'headbutt' // Byczy Łeb (Młody Tur, Baran Gromowładny, passive): every attack pushes the target 1 cell
+  | 'rhythm' // Skoczny Rytm (Satyr Dudziarz, free action, once): an ally has +S in its next activation
+  | 'mountainLeap' // Skok po Turniach (Kozica Skalna, passive): moves through obstacles and units
+  | 'momentum' // Rozpęd (Tarpan, passive): +A after a run
+  | 'unmoved' // Niewzruszony (Żubr Puszczański, passive): armour, cannot be pushed
+  | 'pierce' // Przebicie (Satyr Kopijnik, passive): the blow also hits the enemy behind the target
+  | 'hippoStrike' // Lot na Strzelców (Hipogryf Stepowy, passive): +A against a target pushed this round
+  | 'drumBeat' // Bęben Wędrówki (Słoń z Bębnem, passive aura): allies nearby have +S
+  | 'ram' // Taran (Nosorożec Bojowy, passive): after a run pushes the target 2 cells and the collision hurts more
+  | 'roar' // Rykowisko (Łoś Rogacz, free action, once): an enemy may attack only the moose in its next activation
+  | 'tremor' // Ziemia Drży (Indrik, free action, once): small enemies nearby are pushed 1 cell; cannot be pushed
+  | 'ancestralHorns' // Rogi Przodków (Wielki Tur, attack ability, once): the blow pushes the target 2 cells
+  | 'wanderHorn' // Róg Wędrówki (Satyr Rogogłos, free action, once): all allies have +S in their next activation
+  | 'runOn'; // W Biegu (Pędziwiatr, once): after the attack finishes the move with the remaining cells
 
 export interface UnitDef {
   id: string;
   name: string;
-  side: Side;
+  /** The faction the unit belongs to (the key of its data and graphics: not the side that plays it), or 'neutral'. */
+  side: FactionId | 'neutral';
   kind: UnitKind;
   hp: number;
   attack: number;
@@ -149,6 +165,33 @@ export const ABILITY = {
   /** Bitewny Szał: damage ignored from every blow (small scale, a blow that lands takes at least 1) and the bonus after a kill (small scale). */
   bloodRageArmor: 1,
   bloodRageBonus: 2,
+  /** Dzikie Stada. Zderzenie: damage a pushed unit takes when it hits an obstacle, the edge of the arena or another unit (small scale; the unit it hits takes it too). */
+  collisionDamage: 1,
+  /** Byczy Łeb: cells the target is pushed. */
+  headbuttPush: 1,
+  /** Skoczny Rytm and Róg Wędrówki: S an ally gets in its next activation. */
+  rhythmHaste: 2,
+  hornHaste: 2,
+  /** Rozpęd: bonus after a run of at least `momentumMinMove` cells (small scale). */
+  momentumBonus: 1,
+  momentumMinMove: 3,
+  /** Niewzruszony: damage ignored from every blow (small scale, a blow that lands takes at least 1). */
+  unmovedArmor: 1,
+  /** Lot na Strzelców: bonus against a target pushed in the same round (small scale). */
+  hippoBonus: 2,
+  /** Bęben Wędrówki: radius of the aura and S the allies in it have. */
+  drumRadius: 2,
+  drumHaste: 1,
+  /** Taran: the run it needs, cells the target is pushed and the collision damage (small scale). */
+  ramMinMove: 3,
+  ramPush: 2,
+  ramCollisionDamage: 2,
+  /** Rykowisko: how far the moose may call out an enemy. */
+  roarRange: 3,
+  /** Ziemia Drży: radius of the shock (small enemies in it are pushed 1 cell). */
+  tremorRadius: 2,
+  /** Rogi Przodków: cells the target is pushed. */
+  hornsPush: 2,
 };
 
 /**
@@ -321,6 +364,28 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'hordeWarlord', name: 'Wódz Hordy', side: 'horde', kind: 'hero', hp: 8, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Żelazny Kark', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
     u({ id: 'hordeCrossbow', name: 'Kapitan Kuszników', side: 'horde', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'poisonClaw', abilityName: 'Zatruty Bełt', abilityText: `Raz na bitwę: trafiony wróg traci ${ABILITY.poisonDamage} Ż na początku swoich dwóch następnych aktywacji.` }),
     u({ id: 'hordeShadow', name: 'Szaman Cieni', side: 'horde', kind: 'hero', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'curse', abilityName: 'Klątwa Cieni', abilityText: `Raz na bitwę: trafiony cel ma −${ABILITY.curseMinus} A przy następnym ataku.` }),
+    // Dzikie Stada (`herds`, docs/frakcje/herds.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero.
+    u({ id: 'greatAurochs', name: 'Wielki Tur, Ojciec Stada', side: 'herds', kind: 'hero', size: 2, hp: 11, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'ancestralHorns', abilityName: 'Rogi Przodków', abilityText: `Raz na bitwę: cios odpycha cel o ${ABILITY.hornsPush} pola; jeśli cel w coś uderzy, zderzenie rani.` }),
+    u({ id: 'satyrHornlord', name: 'Satyr Rogogłos', side: 'herds', kind: 'hero', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'wanderHorn', abilityName: 'Róg Wędrówki', abilityText: `Raz na bitwę: wszyscy sojusznicy mają +${ABILITY.hornHaste} S w swojej następnej aktywacji.` }),
+    u({ id: 'windAntelope', name: 'Pędziwiatr, Wódz Antylop', side: 'herds', kind: 'hero', hp: 7, attack: 4, speed: 7, movement: 'walk', attackType: 'melee', ability: 'runOn', abilityName: 'W Biegu', abilityText: 'Raz na bitwę: po ataku dokańcza ruch pozostałymi polami.' }),
+    u({ id: 'thunderRam', name: 'Baran Gromowładny', side: 'herds', kind: 'hero', hp: 8, attack: 4, speed: 6, movement: 'walk', attackType: 'melee', ability: 'headbutt', abilityName: 'Grzmiący Łeb', abilityText: `Stała: po każdym ataku odpycha cel o ${ABILITY.headbuttPush} pole; zderzenie rani.` }),
+    u({ id: 'satyrPiper', name: 'Satyr Dudziarz', side: 'herds', kind: 'support', hp: 4, attack: 1, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'rhythm', abilityName: 'Skoczny Rytm', abilityText: `Raz na bitwę: sojusznik ma +${ABILITY.rhythmHaste} S w swojej następnej aktywacji.` }),
+    u({ id: 'youngAurochs', name: 'Młody Tur', side: 'herds', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'headbutt', abilityName: 'Byczy Łeb', abilityText: `Stała: po każdym ataku odpycha cel o ${ABILITY.headbuttPush} pole (jednostek dwupolowych nie da się odepchnąć); zderzenie rani.` }),
+    u({ id: 'rockGoat', name: 'Kozica Skalna', side: 'herds', kind: 'support', hp: 5, attack: 2, speed: 5, movement: 'walk', attackType: 'melee', ability: 'mountainLeap', abilityName: 'Skok po Turniach', abilityText: 'Stała: porusza się przez przeszkody i jednostki (nie może na nich stanąć).' }),
+    u({ id: 'faunSlinger', name: 'Faun Procarz', side: 'herds', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Kamień w Kolano', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
+    u({ id: 'forestBison', name: 'Żubr Puszczański', side: 'herds', kind: 'support', hp: 9, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'unmoved', abilityName: 'Niewzruszony', abilityText: `Stała: pancerz (−${ABILITY.unmovedArmor} obrażeń z każdego ciosu); nie da się go odepchnąć.` }),
+    u({ id: 'steppeHippogriff', name: 'Hipogryf Stepowy', side: 'herds', kind: 'support', size: 2, hp: 9, attack: 4, speed: 7, movement: 'fly', attackType: 'melee', ability: 'hippoStrike', abilityName: 'Lot na Strzelców', abilityText: `Stała: +${ABILITY.hippoBonus} A przeciw celowi odepchniętemu w tej samej rundzie.` }),
+    u({ id: 'warRhino', name: 'Nosorożec Bojowy', side: 'herds', kind: 'support', size: 2, hp: 14, attack: 5, speed: 5, movement: 'walk', attackType: 'melee', ability: 'ram', abilityName: 'Taran', abilityText: `Stała: po biegu o co najmniej ${ABILITY.ramMinMove} pola cios odpycha cel o ${ABILITY.ramPush} pola, a zderzenie zadaje ${ABILITY.ramCollisionDamage} obrażenia. Oblężona brama pęka od jednego trafienia katapulty.` }),
+    // Level 6 alternatives of the Herds (tiers 2-5).
+    u({ id: 'tarpan', name: 'Tarpan', side: 'herds', kind: 'support', hp: 6, attack: 3, speed: 6, movement: 'walk', attackType: 'melee', ability: 'momentum', abilityName: 'Rozpęd', abilityText: `Stała: +${ABILITY.momentumBonus} A do ataku po biegu o co najmniej ${ABILITY.momentumMinMove} pola.` }),
+    u({ id: 'satyrLancer', name: 'Satyr Kopijnik', side: 'herds', kind: 'support', hp: 7, attack: 3, speed: 5, movement: 'walk', attackType: 'melee', ability: 'pierce', abilityName: 'Przebicie', abilityText: 'Stała: cios trafia cel i wroga stojącego tuż za nim.' }),
+    u({ id: 'drumElephant', name: 'Słoń z Bębnem', side: 'herds', kind: 'support', size: 2, hp: 12, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'drumBeat', abilityName: 'Bęben Wędrówki', abilityText: `Stała: sojusznicy w promieniu ${ABILITY.drumRadius} pól mają +${ABILITY.drumHaste} S.` }),
+    u({ id: 'bullMoose', name: 'Łoś Rogacz', side: 'herds', kind: 'support', size: 2, hp: 15, attack: 5, speed: 3, movement: 'walk', attackType: 'melee', ability: 'roar', abilityName: 'Rykowisko', abilityText: `Raz na bitwę: wyzywa wroga w zasięgu ${ABILITY.roarRange} pól; ten w swojej następnej aktywacji może atakować tylko Łosia.` }),
+    u({ id: 'indrik', name: 'Indrik, Pan Zwierząt', side: 'herds', kind: 'support', size: 2, hp: 20, attack: 7, speed: 4, movement: 'walk', attackType: 'melee', ability: 'tremor', abilityName: 'Ziemia Drży', abilityText: `Raz na bitwę: mali wrogowie w promieniu ${ABILITY.tremorRadius} pól zostają odepchnięci o 1 pole, zderzenia ranią. Indrika nie da się odepchnąć.` }),
+    // Commanders of the Herds.
+    u({ id: 'aurochsScout', name: 'Turzy Zagończyk', side: 'herds', kind: 'hero', hp: 8, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Kark Tura', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
+    u({ id: 'faunJavelin', name: 'Faun Oszczepnik', side: 'herds', kind: 'hero', hp: 5, attack: 3, speed: 5, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Oszczep w Kolano', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
+    u({ id: 'satyrSeer', name: 'Satyr Wróżbita', side: 'herds', kind: 'hero', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'rhythm', abilityName: 'Pieśń Stepu', abilityText: `Raz na bitwę: sojusznik ma +${ABILITY.rhythmHaste} S w swojej następnej aktywacji.` }),
     u({ id: 'cyclops', name: 'Cyklop Błyskotek', side: 'neutral', kind: 'neutral', size: 2, hp: 23, attack: 2, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'boulder', abilityName: 'Miażdżący Głaz', abilityText: 'Po każdym ataku odpycha trafionego przeciwnika o 1 pole, jeśli to możliwe (jednostek dwupolowych nie da się odepchnąć).', duel: { hp: 14, ability: 'stoneSkin', abilityName: 'Kamienna Skóra', abilityText: `Każdy cios w Cyklopa zadaje o ${ABILITY.stoneSkinIgnore} mniej obrażeń.` } }),
     u({ id: 'griffin', name: 'Gryf Złodziej Skarbów', side: 'neutral', kind: 'neutral', size: 2, hp: 18, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nestLeap', abilityName: 'Łupieżczy Nalot', abilityText: `Po każdym ataku może odlecieć o maks. ${ABILITY.nestLeapRange} pola.`, duel: { hp: 10, ability: 'thiefClaw', abilityName: 'Złodziejski Szpon', abilityText: `Gdy zada obrażenia, odzyskuje ${ABILITY.thiefClawHeal} Ż.` } }),
     u({ id: 'hydra', name: 'Hydra z Zatopionych Ruin', side: 'neutral', kind: 'neutral', size: 2, hp: 21, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Paszcze Otchłani', abilityText: 'Każdym atakiem może trafić dwóch sąsiadujących przeciwników.', duel: { hp: 12, ability: 'regrowth', abilityName: 'Odrastające Głowy', abilityText: `Na początku każdej swojej aktywacji odzyskuje ${ABILITY.regrowthHeal} Ż.` } }),
@@ -331,14 +396,14 @@ export const FACTION_HEROES: Record<FactionId, string[]> = byPack((p) => p.heroe
 
 /** Easter egg heroes: unlocked on the setup screen (click the Dawn crest five times), never drawn by the engine. */
 /** Rivalry for 7-8 players: four heroes a side, so each faction has a fourth one of its own (Przymierze: the Silver She-Wolf, Horda: the Dusk Manticore); the Brave Duck stays a secret hero and the Warlord a tavern commander. */
-export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore' };
+export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore', herds: 'thunderRam' };
 export const MAX_PVP_PLAYERS = 8;
 /** More players than this at a table play with `EXTRA_HEROES` too. */
 export const BASE_PVP_PLAYERS = 6;
 /** The heroes a seat can pick at a table of `seats` players. */
 export const heroPool = (f: FactionId, seats: number): string[] => (seats > BASE_PVP_PLAYERS ? [...FACTION_HEROES[f], EXTRA_HEROES[f]] : FACTION_HEROES[f]);
 
-export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [] };
+export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [], herds: [] };
 
 export const FACTION_SUPPORTS: Record<FactionId, string[]> = byPack((p) => p.supports);
 
@@ -381,7 +446,7 @@ export const raceOfHero = (heroId: string): FactionId => {
 
 const RACE_NAMES = byPack((p) => p.name);
 /** The name of a race (and, for the sides, of the race they play by default; read a game's own names through raceOf). */
-export const FACTION_NAMES: Record<Side, string> = { ...RACE_NAMES, third: RACE_NAMES.dawn, fourth: RACE_NAMES.horde, neutral: 'Neutralni strażnicy' };
+export const FACTION_NAMES: Record<Side | FactionId, string> = { ...RACE_NAMES, third: RACE_NAMES.dawn, fourth: RACE_NAMES.horde, neutral: 'Neutralni strażnicy' };
 
 export type ItemKind =
   | 'resurrection'
@@ -490,14 +555,14 @@ export const ARENA_OFFER = 3;
  * Arena-only handicaps (they do not touch the adventure game): who picks first ('random' = a coin)
  * and extra treasures a side drafts after the A, B, B, A picks.
  */
-export const ARENA_RULES: { firstPicker: 'random' | FactionId; extraPicks: Record<FactionId, number>; extraOffer: Record<FactionId, number> } = {
+export const ARENA_RULES: { firstPicker: 'random' | TeamId; extraPicks: Record<FactionId, number>; extraOffer: Record<FactionId, number> } = {
   firstPicker: 'random',
-  extraPicks: { dawn: 0, horde: 0 },
+  extraPicks: { dawn: 0, horde: 0, herds: 0 },
   /**
    * More cards shown to that side at each pick (the choice gets better, the number of treasures stays).
    * The Horde sees 4: in the arena Przymierze otherwise wins about 55% (simulations, notes section 9).
    */
-  extraOffer: { dawn: 0, horde: 1 },
+  extraOffer: { dawn: 0, horde: 1, herds: 0 },
 };
 
 // Map tiles. The left half of the triangle is built from Przymierze tiles (green back),

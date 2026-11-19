@@ -1,6 +1,7 @@
 // Treasures in battle: the list of the faction's treasures and, while one is being aimed, what to pick next.
 
 import { itemDef, UNITS, type TeamId, type ItemKind } from '../engine/data';
+import { ABILITY } from '../engine/data';
 import { alliesOf, canUseBattleItem } from '../engine/battle';
 import { isDigital, type Action, type BattleUnit, type GameState } from '../engine/types';
 import { itemArt } from './statScale';
@@ -96,7 +97,7 @@ export function ItemsPanel({ state, side, active, targeting, setTargeting, freeA
           <button className="btn plate parch" style={{ padding: '2px 8px' }} onClick={reset}>Anuluj</button>
         </div>
       )}
-      {freeAbility && <div className="plate parch" style={{ padding: '6px 12px', fontSize: 15 }}>{ab === 'giftOfLife' ? 'Wybierz sojusznika do uleczenia.' : 'Wybierz wroga w zasięgu 4 pól.'}</div>}
+      {freeAbility && <div className="plate parch" style={{ padding: '6px 12px', fontSize: 15 }}>{ab === 'giftOfLife' ? 'Wybierz sojusznika do uleczenia.' : ab === 'rhythm' ? 'Wybierz sojusznika, który ma przyspieszyć.' : ab === 'roar' ? `Wybierz wroga w zasięgu ${ABILITY.roarRange} pól.` : 'Wybierz wroga w zasięgu 4 pól.'}</div>}
       {magic && state.heroes[active.id] && (
         <Modal open={magic.open} onClose={() => magic.setOpen(false)}>
           {magic.open && <SpellBookDialog state={state} hero={state.heroes[active.id]} castable={magic.castable} onPick={(id) => { magic.setOpen(false); magic.onPick(id); }} onClose={() => magic.setOpen(false)} />}

@@ -20,6 +20,8 @@ export const EMPIRE = {
   /** The building's bonus: the Sanktuarium gives every unit of the Przymierza Życie, the Czarna Kuźnia every unit of the Horde Atak (board game's scale). */
   sparkHp: 2,
   sparkAttack: 1,
+  /** Ołtarz Rogów, the Herds' building: every unit of the Herds has this much more Szybkość. */
+  sparkSpeed: 1,
 };
 
 /** The factions' own mechanics (Blask Świtu and Żądza Krwi work in a level 6 battle once the faction has the building that gives them: Kapliczka Świtu, Jama Krwi) and the numbers of their buildings. */
@@ -35,11 +37,19 @@ export const FACTION_MECHANICS = {
   plunderGold: 2,
   /** Szkółka Drzewa: wood per round for each level (summed over the settlements). */
   nurseryWood: 1,
+  /** Kamień Tętentu (Dzikie Stada): the run (cells before a melee attack) that makes a unit push its target, the shorter run of the third level, the collision damage the second level adds, S the fourth level takes from a collided target. */
+  herdsRun: 3,
+  herdsRunShort: 2,
+  herdsCollision: 1,
+  herdsSlow: 1,
+  /** Wielkie Pastwiska: gold less for a recruit of tiers 1-3 (first level) and of every tier (second level). */
+  pastureDiscount: 1,
 };
 export const MECHANIC_NAMES: Record<FactionId, string> = byPack((p) => p.mechanic.name);
 export const MECHANIC_TEXTS: Record<FactionId, string> = {
   dawn: `Na początku każdej rundy bitwy najciężej ranna jednostka Przymierza odzyskuje ${FACTION_MECHANICS.dawnHeal} Ż.`,
   horde: `Gdy w bitwie ginie wróg Hordy, wszystkie jej jednostki dostają +${FACTION_MECHANICS.hordeAttack} A do końca bitwy (raz na bitwę).`,
+  herds: `Jednostka Stad, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole; cel, który w coś uderzy, dostaje obrażenia.`,
 };
 
 /** The best level of the faction's mechanic building (Kapliczka Świtu, Jama Krwi) among the settlements it holds: 0 means it has no Blask Świtu or Żądza Krwi at all. */
@@ -55,6 +65,7 @@ export const SPARK_NAMES: Record<FactionId, string> = byPack((p) => p.sparkName)
 export const SPARK_TEXTS: Record<FactionId, string> = {
   dawn: `Wszystkie jednostki Przymierza (bohaterowie i pomocnicy) mają +${EMPIRE.sparkHp} Ż w każdej bitwie.`,
   horde: `Wszystkie jednostki Hordy (bohaterowie i pomocnicy) mają +${EMPIRE.sparkAttack} A w każdej bitwie.`,
+  herds: `Wszystkie jednostki Stad (bohaterowie i pomocnicy) mają +${EMPIRE.sparkSpeed} S w każdej bitwie.`,
 };
 
 /** How many shards the game has in all (on the map, carried, or already built into the Iskra). */

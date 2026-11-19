@@ -2,6 +2,7 @@
 
 import type { HexKey } from './hex';
 import { key, parseKey } from './hex';
+import type { FactionId } from './data';
 import type { BattleState } from './types';
 
 /**
@@ -19,12 +20,14 @@ export const COLUMN_SPAN: ReadonlyArray<readonly [number, number]> = [
 export const MIDDLE_HALF = 8;
 
 /** An arena picture: the land of a race (a battle on a team's land is fought on the arena of the race it plays). */
-export type ArenaId = 'dawn' | 'horde';
+export type ArenaId = FactionId;
 
 /** Obstacles painted on each arena, as [col, half]: 7 pieces, two of them 2 cells wide. Start columns stay free. */
 export const ARENA_OBSTACLES: Record<ArenaId, Array<[number, number]>> = {
   dawn: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
   horde: [[3, 3], [9, 3], [3, 7], [2, 8], [6, 8], [9, 9], [10, 10], [3, 13], [9, 13]],
+  // The painted arena of the Herds does not exist yet: the board edition's arena is not played with them (digital only), the picture of Przymierze stands in.
+  herds: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
 };
 
 export const arenaCell = (col: number, half: number): HexKey => key({ q: col, r: (half - col) / 2 });
@@ -111,6 +114,17 @@ export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
     { art: 'deadtree', cells: [[2, 6]] },
     { art: 'crystals', cells: [[6, 2]] },
     { art: 'totem', cells: [[10, 5]] },
+  ],
+  // Placeholder (docs/BACKLOG.md 2a): the pictures of Przymierze's arena in another order; the Herds want their own steppe with many boulders.
+  herds: [
+    { art: 'ridge', cells: [[3, 1], [4, 1]] },
+    { art: 'log', cells: [[8, 6], [8, 7]] },
+    { art: 'wall', cells: [[5, 4], [6, 4]] },
+    { art: 'boulders', cells: [[9, 2]] },
+    { art: 'pine', cells: [[3, 6]] },
+    { art: 'ruin', cells: [[10, 5]] },
+    { art: 'statue', cells: [[7, 1]] },
+    { art: 'brambles', cells: [[6, 7]] },
   ],
 };
 

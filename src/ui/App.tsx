@@ -1,4 +1,4 @@
-import { raceOf, teamsOf } from '../engine/teams';
+import { raceOf, sideName, teamsOf } from '../engine/teams';
 import { StatText } from './markers';
 import { scenarioOf } from '../engine/campaign';
 import { CampaignOver } from './CampaignScreen';
@@ -1024,7 +1024,7 @@ export function App() {
       )}
 
       <Modal open={summary !== null && game.lastBattle?.id === summary && !held} onClose={() => setSummary(null)}>
-        {game.lastBattle && <BattleSummary report={game.lastBattle} onClose={() => setSummary(null)} />}
+        {game.lastBattle && <BattleSummary report={game.lastBattle} name={(s) => sideName(game, s)} onClose={() => setSummary(null)} />}
       </Modal>
 
       <Tutorial state={game} active={humanTurn && !needsHandoff && !digest && !summary && !confirm && !held} />
@@ -1096,7 +1096,7 @@ function turnLabel(game: GameState, actor: ReturnType<typeof currentActor>): str
   if (actor.kind === 'none') return 'Koniec gry';
   if (actor.kind === 'automaton') return 'Ruch automatu zła…';
   const p = game.players.find((x) => x.id === actor.playerId);
-  return `${p?.name ?? ''}${actor.kind === 'bot' ? ' (bot)' : ''} — ${FACTION_NAMES[actor.faction]}`;
+  return `${p?.name ?? ''}${actor.kind === 'bot' ? ' (bot)' : ''} — ${sideName(game, actor.faction)}`;
 }
 
 function download(name: string, text: string) {
@@ -1144,7 +1144,7 @@ function Handoff({ state, playerId, onConfirm }: { state: GameState; playerId: s
       <div style={{ position: 'absolute', inset: 0, boxShadow: 'inset 0 0 220px 80px rgba(4,8,10,0.92)' }} />
       {[-1, 1].map((d) => (
         <svg key={d} className="hide-mobile" aria-hidden="true" width="120" height="120" viewBox="0 0 60 60" style={{ position: 'absolute', top: -6, left: `calc(50% + ${d * 360}px - 48px)`, filter: 'drop-shadow(0 10px 14px rgba(0,0,0,0.7))' }}>
-          <image href={asset(`cards/crests/${player.faction}.png`)} x="0" y="0" width="60" height="60" />
+          <image href={asset(`cards/crests/${raceOf(state, player.faction)}.png`)} x="0" y="0" width="60" height="60" />
         </svg>
       ))}
       <Frame crest style={{ width: 'min(480px, 94vw)' }} innerStyle={{ padding: '26px 30px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 12 }}>

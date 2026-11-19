@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import type { Side } from '../engine/data';
+import type { FactionId, Side } from '../engine/data';
 import type { Tile } from '../engine/types';
 import { SVG_DEFS } from './svgDefs';
 import { hoverCard } from './hover';
@@ -10,7 +10,11 @@ export const asset = (path: string) => `${BASE}assets/${path}`;
 export const artId = (unitId: string) => unitId;
 /** Id of the ability icon files. */
 /** Abilities that have no icon of their own yet borrow one (docs/BACKLOG.md, section 2a). */
-const ABILITY_ART: Record<string, string> = {};
+const ABILITY_ART: Record<string, string> = {
+  // Dzikie Stada (placeholders until the faction's own icons: docs/BACKLOG.md 2a).
+  headbutt: 'boulder', rhythm: 'giftOfLife', mountainLeap: 'airDash', momentum: 'lightCharge', unmoved: 'bloodRage', pierce: 'fireBreath', hippoStrike: 'dive',
+  drumBeat: 'sunburst', ram: 'headlong', roar: 'curse', tremor: 'runeGolem', ancestralHorns: 'boulder', wanderHorn: 'sunburst', runOn: 'airDash',
+};
 export const abilityArt = (ability: string) => ABILITY_ART[ability] ?? ability;
 export const portrait = (unitId: string) => asset(`cards/portraits/${artId(unitId)}.jpg`);
 /** Face of a map tile (one of the art variants, or `art`: the picture of a settlement or an object standing on it), or its green/red back while hidden. */
@@ -22,7 +26,7 @@ export const SIDE_RING: Record<Side, string> = { dawn: '#2C7048', horde: '#9A222
 /** The thin outline round the base of the active 3D figure (the only mark a figure gets). */
 export const ACTIVE_FIGURE_RING = '#F3C842';
 /** The ribbons are painted in three colours only: the third and fourth team borrow the green and the red ones. */
-export const SIDE_RIBBON: Record<Side, 'g' | 'r' | 'b'> = { dawn: 'g', horde: 'r', third: 'g', fourth: 'r', neutral: 'b' };
+export const SIDE_RIBBON: Record<Side | FactionId, 'g' | 'r' | 'b'> = { dawn: 'g', horde: 'r', third: 'g', fourth: 'r', neutral: 'b', herds: 'g' };
 
 /** The phone layout (the same condition as the media query in styles.css). */
 export const COMPACT_QUERY = '(max-width: 900px), (max-height: 560px) and (max-width: 1100px)';
@@ -76,7 +80,7 @@ export function Frame(props: {
 }
 
 /** Heraldic ribbon: a painted silk band with gold embroidery (Scenario), one colour per faction (green Przymierze, red Horda, blue neutral, purple for the next ones). */
-export function Ribbon({ side = 'dawn', children, style }: { side?: Side; children: ReactNode; style?: CSSProperties }) {
+export function Ribbon({ side = 'dawn', children, style }: { side?: Side | FactionId; children: ReactNode; style?: CSSProperties }) {
   return (
     <div className={`rib ${SIDE_RIBBON[side]}`} style={style}>
       <span className={`rib-text ${typeof children === 'string' && children.length > 16 ? 'long' : ''}`}>{children}</span>

@@ -7,7 +7,7 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { chooseAction } from '../src/engine/ai';
-import { FACTION_HEROES, type FactionId, type MapSize } from '../src/engine/data';
+import { FACTION_HEROES, type MapSize } from '../src/engine/data';
 import { applyAction, applyActionInPlace, createGame } from '../src/engine/game';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type Action, type GameState, type Level, type RulesConfig, type SeatSetup, type SetupOptions } from '../src/engine/types';
 
@@ -15,8 +15,8 @@ type Table = 'coop1' | 'coop2' | 'pvp1' | 'pvp2';
 
 /** Seats for a table; heroes rotate with the seed so every hero plays. */
 function seats(table: Table, seed: number): SeatSetup[] {
-  const hero = (f: FactionId, i: number) => FACTION_HEROES[f][(seed + i) % 3];
-  const seat = (name: string, faction: FactionId, i: number): SeatSetup => ({ name, faction, controller: 'bot', heroId: hero(faction, i) });
+  const hero = (f: 'dawn' | 'horde', i: number) => FACTION_HEROES[f][(seed + i) % 3];
+  const seat = (name: string, faction: 'dawn' | 'horde', i: number): SeatSetup => ({ name, faction, controller: 'bot', heroId: hero(faction, i) });
   if (table === 'coop1') return [seat('A', 'dawn', 0)];
   if (table === 'coop2') return [seat('A', 'dawn', 0), seat('B', 'dawn', 1)];
   if (table === 'pvp1') return [seat('A', 'dawn', 0), seat('B', 'horde', 0)];

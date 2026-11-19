@@ -9,6 +9,7 @@ import {
   breathSecondTarget,
   hasLineOfSight,
   FREE_ABILITIES,
+  UNTARGETED_ABILITIES,
   cellsOf,
   footprintAt,
   hopCells,
@@ -31,6 +32,7 @@ import { useImpactHold, type AttackNow } from './useImpactHold';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { aimedCursor, preloadAimedCursors, type AimedCursor } from './cursors';
 import { ArenaBoard } from './ArenaBoard';
+import { sideName } from '../engine/teams';
 import { ActivationBar, activationHint } from './ActivationBar';
 import { SidePanel } from './BattleSidePanel';
 import { ItemsPanel, type ItemTargeting } from './ItemsPanel';
@@ -203,6 +205,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       const ability = UNITS[active.defId].ability;
       if (ability === 'giftOfLife' && u.side === active.side) return 'cur-spell';
       if (ability === 'web' && u.side !== active.side && unitDistance(active, u) <= ABILITY.webRange) return 'cur-spell';
+      if (ability === 'rhythm' && u.side === active.side && u.id !== active.id) return 'cur-spell';
+      if (ability === 'roar' && u.side !== active.side && unitDistance(active, u) <= ABILITY.roarRange) return 'cur-spell';
     }
     // A treasure is being aimed (Eliksir, Zwój, Róg...): the same wand as for an ability, over every unit it can be used on.
     if (targeting && myTurn && u.alive) {
@@ -274,7 +278,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       } else if (k === 'z') {
         if (ks.attackAbility) setUseAbility((v) => !v);
         else if (ks.freeAbilityReady) {
-          if (ks.ab === 'sunburst') onAction({ type: 'battleAbility' });
+          if (ks.ab && UNTARGETED_ABILITIES.includes(ks.ab)) onAction({ type: 'battleAbility' });
           else setFreeAbility((v) => !v);
         }
       } else if (k === 's') setShowItems((v) => !v);
@@ -471,7 +475,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       <ActivationBar
         state={state}
         active={active}
-        hint={(spellNow ? `Czar ${SPELLS[spellNow].name}: wskaż ${SPELLS[spellNow].target === 'enemy' ? 'wroga' : 'sojusznika'} · ` : '') + (catapult.length ? 'Katapulta gotowa: wskaż mur, bramę lub wieżyczkę · ' : '') + activationHint(b, { deploySide, picked, myTurn, moves: moves.size, targets: targets.length })}
+        hint={(spellNow ? `Czar ${SPELLS[spellNow].name}: wskaż ${SPELLS[spellNow].target === 'enemy' ? 'wroga' : 'sojusznika'} · ` : '') + (catapult.length ? 'Katapulta gotowa: wskaż mur, bramę lub wieżyczkę · ' : '') + activationHint(b, { deploySide, picked, myTurn, moves: moves.size, targets: targets.length, sideName: (t) => sideName(state, t) })}
         myTurn={myTurn}
         deploySide={deploySide}
         placing={deploy.placing}

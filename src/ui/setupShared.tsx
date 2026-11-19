@@ -126,6 +126,8 @@ export const SEAT_TINT: Record<TeamId | FactionId, string> = {
   horde: 'linear-gradient(100deg, rgba(128, 22, 34, 0.62), rgba(52, 8, 14, 0.58))',
   third: 'linear-gradient(100deg, rgba(150, 104, 18, 0.62), rgba(62, 42, 6, 0.58))',
   fourth: 'linear-gradient(100deg, rgba(92, 52, 138, 0.62), rgba(38, 20, 62, 0.58))',
+  // Dzikie Stada: ochre and straw.
+  herds: 'linear-gradient(100deg, rgba(176, 136, 48, 0.62), rgba(84, 60, 18, 0.58))',
 };
 
 

@@ -1,8 +1,9 @@
 // A side of the battle next to the arena: its units with Życie, Atak, Szybkość and effects, and its reserve.
 
-import { FACTION_NAMES, UNITS, type TeamId, type Side } from '../engine/data';
+import { UNITS, type TeamId, type Side } from '../engine/data';
 import { unitAttackBase, unitSpeed } from '../engine/battle';
 import type { BattleUnit, GameState } from '../engine/types';
+import { sideName } from '../engine/teams';
 import { Frame, HpBar, Portrait, Ribbon, SIDE_RING } from './common';
 import { Marker, StatIcon } from './markers';
 import { details } from './details';
@@ -20,7 +21,7 @@ export function SidePanel({ s, state, active, onUnit }: Props) {
   const units = Object.values(b.units).filter((u) => u.side === s && !u.swappedOut);
   return (
     <Frame className="side side-battle" innerStyle={{ padding: '16px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <Ribbon side={s}>{FACTION_NAMES[s]}</Ribbon>
+      <Ribbon side={s}>{sideName(state, s)}</Ribbon>
       {units.map((u) => {
         const isActive = active?.id === u.id;
         return (

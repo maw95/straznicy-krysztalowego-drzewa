@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { heroLabel } from '../engine/realm';
 import { shardsOf, shardTotal } from '../engine/empire';
 import { MAGIC, manaOf, maxMana, portalTarget, SPELLS } from '../engine/magic';
-import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type TeamId } from '../engine/data';
+import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId, type TeamId } from '../engine/data';
 import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots } from '../engine/game';
 import { fightLevelAt } from './fightBadges';
 import { EnemyPill, FightPill } from './fightBadges';
@@ -475,7 +475,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, width: W * 0.46, height: W * 0.46, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)} />
                         {placeOwner(state, t) && (
                           <div style={{ position: 'absolute', left: W * 0.4, top: -H * 0.02, zIndex: 3, pointerEvents: 'none' }} data-mine-owner={t.place.kind === 'mine' ? placeOwner(state, t) : undefined} data-settlement-owner={t.place.kind === 'settlement' ? placeOwner(state, t) : undefined}>
-                            <OwnerBanner owner={placeOwner(state, t)!} size={W * 0.66} />
+                            <OwnerBanner owner={placeOwner(state, t)!} race={raceOf(state, placeOwner(state, t)!)} size={W * 0.66} />
                           </div>
                         )}
                         {t.place.kind === 'settlement' && (state.kingdom.settlements[t.place.id]?.garrison?.length ?? 0) > 0 && (
@@ -609,7 +609,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           {!hero && <div style={{ fontWeight: 800, fontSize: 20, textAlign: 'center' }}>Koniec gry</div>}
           {hero && (
             <div className="hero-head" style={{ display: 'flex', gap: compact ? 8 : 12, alignItems: 'center' }}>
-              <img src={asset(`cards/crests/${hero.faction}.png`)} alt={FACTION_NAMES[raceOf(state, hero.faction)]} title={FACTION_NAMES[raceOf(state, hero.faction)]} style={{ height: compact ? 44 : 64, width: 'auto', flex: 'none' }} />
+              <img src={asset(`cards/crests/${raceOf(state, hero.faction)}.png`)} alt={FACTION_NAMES[raceOf(state, hero.faction)]} title={FACTION_NAMES[raceOf(state, hero.faction)]} style={{ height: compact ? 44 : 64, width: 'auto', flex: 'none' }} />
               <button className="btn btn-bare" onClick={() => (state.rules.heroGrowth ? setSheet(true) : onShowCard(hero.id))} title={state.rules.heroGrowth ? 'Karta bohatera' : 'Pokaż kartę'} data-hero-portrait>
                 <Portrait unitId={hero.id} size={compact ? 48 : 64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
               </button>
@@ -989,9 +989,9 @@ function placeOwner(state: GameState, t: Tile): TeamId | undefined {
 }
 
 /** The sign of the faction that holds a mine or a settlement: its big crest from the hero cards (nothing for an unclaimed one). */
-function OwnerBanner({ owner, size }: { owner: TeamId; size: number }) {
+function OwnerBanner({ owner, race, size }: { owner: TeamId; race: FactionId; size: number }) {
   return (
-    <img data-owner-banner={owner} src={asset(`cards/crests/${owner}.png`)} alt={`Trzyma: ${FACTION_NAMES[owner]}`} title={`Trzyma: ${FACTION_NAMES[owner]}`} width={size} height={size} style={{ display: 'block', objectFit: 'contain', pointerEvents: 'none', filter: 'drop-shadow(0 3px 4px rgba(0,0,0,0.8))' }} />
+    <img data-owner-banner={owner} src={asset(`cards/crests/${race}.png`)} alt={`Trzyma: ${FACTION_NAMES[owner]}`} title={`Trzyma: ${FACTION_NAMES[owner]}`} width={size} height={size} style={{ display: 'block', objectFit: 'contain', pointerEvents: 'none', filter: 'drop-shadow(0 3px 4px rgba(0,0,0,0.8))' }} />
   );
 }
 

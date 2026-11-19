@@ -33,8 +33,8 @@ type Spot = { x: number; y: number; h: number };
 const SPOTS: Record<BuildingId | 'council', Spot> = {
   council: { x: 50, y: 49, h: 19 },
   magic: { x: 25.5, y: 40, h: 16.5 }, spark: { x: 76, y: 41, h: 14.5 },
-  shrine: { x: 37.5, y: 42, h: 12 }, bloodPit: { x: 37.5, y: 42, h: 12 }, grove: { x: 62.5, y: 42, h: 12 }, wolfDen: { x: 62.5, y: 42, h: 12 },
-  tavern: { x: 18.5, y: 52.5, h: 11 }, nursery: { x: 81.5, y: 50.5, h: 11.5 }, plunder: { x: 81.5, y: 50.5, h: 11.5 },
+  shrine: { x: 37.5, y: 42, h: 12 }, bloodPit: { x: 37.5, y: 42, h: 12 }, grove: { x: 62.5, y: 42, h: 12 }, wolfDen: { x: 62.5, y: 42, h: 12 }, hoofStone: { x: 37.5, y: 42, h: 12 }, refuge: { x: 62.5, y: 42, h: 12 },
+  tavern: { x: 18.5, y: 52.5, h: 11 }, nursery: { x: 81.5, y: 50.5, h: 11.5 }, plunder: { x: 81.5, y: 50.5, h: 11.5 }, pastures: { x: 81.5, y: 50.5, h: 11.5 },
   hospital: { x: 31, y: 56, h: 13.5 }, forge: { x: 61, y: 56, h: 14 }, walls: { x: 70, y: 58.5, h: 12 },
   treasury: { x: 25.5, y: 72, h: 16.5 }, barracks: { x: 50, y: 74.5, h: 22 }, market: { x: 74, y: 72, h: 16.5 },
 };
@@ -46,7 +46,11 @@ const spotOf = (b: BuildingId | 'council', land: FactionId): Spot => {
 };
 /** Whose picture a building of one faction has (level 6: Kapliczka, Szkółka, Krąg for the Przymierze; Jama, Szabrownia, Legowisko for the Horde). */
 const UNIQUE_OWNER: Partial<Record<BuildingId, FactionId>> = { shrine: 'dawn', nursery: 'dawn', grove: 'dawn', bloodPit: 'horde', plunder: 'horde', wolfDen: 'horde' };
-const buildingPicture = (land: FactionId, b: BuildingId, level: number) => {
+/** Placeholders (docs/BACKLOG.md 2a): the Herds have no pictures of their own yet, they borrow the land of Przymierze and its three unique buildings. */
+const BORROWED: Partial<Record<BuildingId, BuildingId>> = { hoofStone: 'shrine', pastures: 'nursery', refuge: 'grove' };
+const buildingPicture = (landOf: FactionId, building: BuildingId, level: number) => {
+  const land: FactionId = landOf === 'herds' ? 'dawn' : landOf;
+  const b = BORROWED[building] ?? building;
   const own = UNIQUE_OWNER[b];
   if (own) return level === 0 ? `osady/${own}_plot.webp` : `osady/${own}_${b}1.webp`;
   return level === 0 ? `osady/${land}_plot.webp` : (b === 'treasury' ? `osady/${land}_treasury${Math.min(level, 2) === 2 ? 2 : ''}.webp` : `osady/${land}_${b}${b === 'tavern' || b === 'spark' ? 1 : Math.min(level, 2)}.webp`);

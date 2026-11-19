@@ -1,11 +1,11 @@
-import { FACTION_NAMES, UNITS, type Side } from '../engine/data';
+import { UNITS, type Side } from '../engine/data';
 import type { BattleReport } from '../engine/types';
 import { Frame, HpBar, Portrait, Ribbon, SIDE_RING } from './common';
 import { StatIcon } from './markers';
 
-export function BattleSummary({ report, onClose }: { report: BattleReport; onClose: () => void }) {
+export function BattleSummary({ report, onClose, name }: { report: BattleReport; onClose: () => void; name: (side: Side) => string }) {
   const sides: Side[] = [report.attacker, report.defender];
-  const title = report.winner === 'draw' ? 'Remis — obie strony poległy' : `Zwycięstwo: ${FACTION_NAMES[report.winner]}`;
+  const title = report.winner === 'draw' ? 'Remis — obie strony poległy' : `Zwycięstwo: ${name(report.winner)}`;
   return (
     <Frame crest style={{ width: 'min(720px, 94vw)' }} innerStyle={{ padding: '22px 20px', display: 'flex', flexDirection: 'column', gap: 14 }}>
       <Ribbon side={report.winner === 'draw' ? 'neutral' : report.winner} style={{ width: 'min(460px, 100%)', alignSelf: 'center' }}>
@@ -19,7 +19,7 @@ export function BattleSummary({ report, onClose }: { report: BattleReport; onClo
         {sides.map((side) => (
           <div key={side} className="well" style={{ flex: '1 1 280px', padding: '12px 12px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div className="lbl" style={{ textAlign: 'center' }}>
-              {FACTION_NAMES[side]}
+              {name(side)}
               {report.winner === side ? ' · zwycięzca' : ''}
             </div>
             {report.units

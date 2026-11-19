@@ -6,7 +6,7 @@
 // fills the slots: the first two factions at a table take dawn and horde, whatever they are). Seats without a race are the old settings: a side then
 // reads the data of its own id ('third' and 'fourth' read Przymierze and Horda). Adding a faction means: its pack in src/engine/factions/ and the
 // tables the compiler then asks for; nothing else assumes which faction is on a side.
-import type { FactionId, TeamId } from './data';
+import { FACTION_NAMES, type FactionId, type Side, type TeamId } from './data';
 
 /** The two sides of a game that has only the first two factions (the default; coop and the arena always have these two). */
 export const TEAM_IDS: readonly TeamId[] = ['dawn', 'horde'];
@@ -56,6 +56,9 @@ export const teamsOf = (state: { setup: { mode?: string; seats: Array<{ faction:
   if (hasRaces(state)) return ALL_TEAM_IDS.filter((t) => state.setup.seats.some((s) => s.faction === t));
   return ALL_TEAM_IDS.filter((t) => TEAM_IDS.includes(t) || state.setup.seats.some((s) => s.faction === t));
 };
+
+/** The name of a side on the screen and in the log: the name of the faction it plays (or the neutrals'). */
+export const sideName = (state: unknown, side: Side): string => (side === 'neutral' ? FACTION_NAMES.neutral : FACTION_NAMES[raceOf(state, side)]);
 
 /** The rival of a side (two-sided games only). */
 export const rivalOf = (team: TeamId): TeamId => (team === 'dawn' ? 'horde' : 'dawn');

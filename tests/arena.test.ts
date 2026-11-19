@@ -1,6 +1,6 @@
 // Arena: one 3-on-3 battle, supports chosen and two treasures drafted per side from a shared deck.
 import { describe, expect, it } from 'vitest';
-import { ARENA_DECK, ITEMS, type FactionId, type TeamId } from '../src/engine/data';
+import { ARENA_DECK, ITEMS, type TeamId } from '../src/engine/data';
 import { chooseAction } from '../src/engine/ai';
 import { applyAction, createGame, currentActor } from '../src/engine/game';
 import { ARTIFACT_BY_ID, gearOf, worksInBattle } from '../src/engine/sites';
@@ -38,8 +38,8 @@ describe('arena', () => {
     expect(ARENA_DECK.every((k) => ITEMS[k].usableIn.includes('battle'))).toBe(true);
     let s = toDraft(3);
     expect(s.battle!.stage).toBe('draft');
-    const first = s.battle!.attacker as FactionId;
-    const second = s.battle!.defender as FactionId;
+    const first = s.battle!.attacker as 'dawn' | 'horde';
+    const second = s.battle!.defender as 'dawn' | 'horde';
     expect(s.draft!.order).toEqual([first, second, second, first]);
     const pickers: TeamId[] = [];
     while (s.battle?.stage === 'draft') {
@@ -127,7 +127,7 @@ describe('arena 6 on 6', () => {
   it('offers the fixed pool of eight units, five are chosen, and six stand on each side', () => {
     const s = createGame(arenaSetup(seats(), 4, 'normal', 6));
     expect(s.rules.arenaSize).toBe(6);
-    for (const f of ['dawn', 'horde'] as FactionId[]) expect(s.factions[f].supportsAlive).toHaveLength(8);
+    for (const f of ['dawn', 'horde'] as Array<'dawn' | 'horde'>) expect(s.factions[f].supportsAlive).toHaveLength(8);
     const after = playUntil(s, (x) => x.battle?.stage === 'draft' || x.battle?.stage === 'deploy' || x.battle?.stage === 'fight');
     const sides = Object.values(after.battle!.units).reduce((n, u) => ({ ...n, [u.side]: (n[u.side] ?? 0) + 1 }), {} as Record<string, number>);
     expect(sides).toEqual({ dawn: 6, horde: 6 });
@@ -176,7 +176,7 @@ describe('arena 6 on 6', () => {
     }
     expect(s.battle!.stage).toBe('select');
     expect(s.draft!.spells).toBeUndefined();
-    for (const f of ['dawn', 'horde'] as FactionId[]) {
+    for (const f of ['dawn', 'horde'] as Array<'dawn' | 'horde'>) {
       const hero = Object.values(s.heroes).find((h) => h.faction === f)!;
       expect(gearOf(hero).map((a) => a.id)).toEqual([picked[f]]);
       expect(hero.spells).toEqual(wanted[f]);

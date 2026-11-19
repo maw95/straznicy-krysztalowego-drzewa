@@ -74,7 +74,7 @@ export function buildEverything(state: GameState, faction: TeamId): void {
   if (!state.kingdom) throw new Error('Osady są od poziomu IV.');
   for (const s of Object.values(state.kingdom.settlements)) {
     if (s.owner !== faction) continue;
-    for (const b of buildingsFor(state, faction)) if (b !== 'spark') s.buildings[b] = Math.min(BUILDING_NAMES[b].length, b === 'magic' ? 3 : b === 'shrine' || b === 'bloodPit' ? 4 : 2);
+    for (const b of buildingsFor(state, faction)) if (b !== 'spark') s.buildings[b] = Math.min(BUILDING_NAMES[b].length, b === 'magic' ? 3 : b === 'shrine' || b === 'bloodPit' || b === 'hoofStone' ? 4 : 2);
   }
 }
 

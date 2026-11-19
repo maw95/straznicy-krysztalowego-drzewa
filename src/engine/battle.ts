@@ -10,6 +10,7 @@ import { ARENA_COLUMNS, MIDDLE_HALF, arenaCell, cellOf, columnCells, inArena, WI
 export * from './arenaLayout';
 import { isDigital, type BattleState, type BattleUnit, type GameState, type SiegeState, type UnitStatus } from './types';
 import { SIEGE } from './economy';
+import { pushWithCollision, previewPush, pushedThisRound, taunter, canBeMoved } from './primitives';
 import { FACTION_MECHANICS, mechanicLevel } from './empire';
 
 
@@ -187,7 +188,7 @@ export function activeUnit(b: BattleState): BattleUnit | null {
 }
 
 export function unitSpeed(u: BattleUnit): number {
-  return battleStats(u.defId, u.digital, u.scale, u.hpScale).speed + u.status.battleSpeedBonus;
+  return battleStats(u.defId, u.digital, u.scale, u.hpScale).speed + u.status.battleSpeedBonus + (u.status.auraSpeed ?? 0);
 }
 
 export function unitAttackBase(u: BattleUnit): number {
@@ -210,6 +211,7 @@ function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number
   const units = occupancy(b, u);
   // A large unit drags its tail along: it may only pass cells where some tail cell is free (a gap of one cell between two units is too narrow).
   const large = isLarge(state, u);
+  const leaps = canLeap(state, u);
   const dist = new Map<HexKey, number>([[u.pos!, 0]]);
   const parent = new Map<HexKey, HexKey>();
   const queue = [u.pos!];
@@ -220,8 +222,8 @@ function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number
     // Siege: a walker that steps into the moat stops there.
     if (head > 0 && b.siege?.moat.includes(cur)) continue;
     for (const n of neighborKeys(cur)) {
-      if (!inLayout(b, n) || obstacles.has(n) || dist.has(n)) continue;
-      if (units.has(n)) continue;
+      if (!inLayout(b, n) || dist.has(n)) continue;
+      if (!leaps && (obstacles.has(n) || units.has(n))) continue;
       if (large && tailOptions(b, u, n, units).length === 0) continue;
       dist.set(n, d + 1);
       parent.set(n, cur);
@@ -230,6 +232,9 @@ function walkSearch(state: GameState, u: BattleUnit): { dist: Map<HexKey, number
   }
   return { dist, parent };
 }
+
+/** Skok po Turniach: the unit walks through obstacles and units (it cannot stop on them), except over the walls of a siege. */
+export const canLeap = (state: GameState, u: BattleUnit): boolean => abilityOf(u) === 'mountainLeap' && abilityActive(state) && !state.battle?.siege && !isLarge(state, u);
 
 /** Cells the unit can end its move on, with the number of steps used. */
 export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, number> {
@@ -251,7 +256,7 @@ export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, num
     }
     return out;
   }
-  for (const [k, d] of walkSearch(state, u).dist) if (d > 0 && !occupant(k) && roomy(k)) out.set(k, d);
+  for (const [k, d] of walkSearch(state, u).dist) if (d > 0 && !occupant(k) && !obstacles.has(k) && roomy(k)) out.set(k, d);
   return out;
 }
 
@@ -308,9 +313,12 @@ export function attackTargets(state: GameState, u: BattleUnit, from: HexKey | nu
   const enemies = enemiesOf(b, u).filter((e) => !headCovered(state, e));
   const mine = footprintAt(state, u, from);
   const near = enemies.filter((e) => cellsOf(e).some((c) => mine.some((m) => adjacent(m, c))));
-  if (UNITS[u.defId].attackType === 'melee') return near;
-  if (near.length) return near;
-  return enemies.filter((e) => cellsOf(e).some((c) => hasLineOfSight(state, from, c)));
+  // Rykowisko: a challenged unit may attack only the one that called it out.
+  const challenger = taunter(state, u);
+  const only = (list: BattleUnit[]) => (challenger ? list.filter((e) => e.id === challenger.id) : list);
+  if (UNITS[u.defId].attackType === 'melee') return only(near);
+  if (near.length) return only(near);
+  return only(enemies.filter((e) => cellsOf(e).some((c) => hasLineOfSight(state, from, c))));
 }
 
 /**
@@ -409,14 +417,16 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
     if (ab === 'backstab' && fromBehind(state, att, target)) dmg += ABILITY.backstabBonus * scaleOf(state);
     if (ab === 'headlong' && fromFront(state, att, target)) dmg += ABILITY.headlongBonus * scaleOf(state);
     if (ab === 'packHunt' && packNearby(state, att, target)) dmg += ABILITY.packHuntBonus * scaleOf(state);
+    if (ab === 'momentum' && movedDistance >= ABILITY.momentumMinMove) dmg += ABILITY.momentumBonus * scaleOf(state);
+    if (ab === 'hippoStrike' && pushedThisRound(state, target)) dmg += ABILITY.hippoBonus * scaleOf(state);
   }
   return Math.max(0, dmg);
 }
 
 /** Abilities that are switched on for a single attack. */
-export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno'];
+export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
@@ -439,7 +449,9 @@ export function pushCell(state: GameState, from: HexKey, target: HexKey): HexKey
   return k;
 }
 /** Abilities used as a free action during the unit's activation. */
-export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web'];
+export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor'];
+/** The free abilities that need no target (one click fires them); the others ask the player to pick a unit. */
+export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor'];
 
 // ---------------------------------------------------------------- lifecycle
 
@@ -592,6 +604,7 @@ function beginRound(state: GameState, round: number) {
   }
   b.round = round;
   if (b.fields) b.fields = b.fields.filter((f) => f.until >= round);
+  refreshAuras(state);
   const ids = Object.keys(b.units);
   b.order = livingUnits(b)
     .sort((x, y) => unitSpeed(y) - unitSpeed(x) || sidePriority(state, b, x.side) - sidePriority(state, b, y.side) || ids.indexOf(x.id) - ids.indexOf(y.id))
@@ -621,8 +634,21 @@ function beginRound(state: GameState, round: number) {
   beginActivation(state, b.order[0], false);
 }
 
+/** Bęben Wędrówki: every unit with a drum of its side nearby has the aura's S (it does not add up). Counted when a round and an activation begin. */
+export function refreshAuras(state: GameState) {
+  const b = state.battle!;
+  const drums = abilityActive(state) ? livingUnits(b).filter((x) => abilityOf(x) === 'drumBeat') : [];
+  for (const x of Object.values(b.units)) {
+    if (!x.alive || !x.pos) continue;
+    const near = drums.some((d) => d.side === x.side && d.id !== x.id && unitDistance(d, x) <= ABILITY.drumRadius);
+    if (near) x.status.auraSpeed = ABILITY.drumHaste;
+    else delete x.status.auraSpeed;
+  }
+}
+
 function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
   const b = state.battle!;
+  refreshAuras(state);
   b.activation = { unitId, moved: false, movedDistance: 0, attacked: false, acted: false, moveOnly, hop: 0 };
   const u = b.units[unitId];
   if (u.status.slowLater) {
@@ -672,6 +698,7 @@ export function endActivation(state: GameState) {
     // Effects that applied to "the next activation" are now spent.
     u.status.slowNext = 0;
     u.status.rootedNext = false;
+    delete u.status.tauntedBy;
     // Siege: a unit that ends its turn standing in the moat is hurt (once per activation: not again when it has just walked in).
     if (u.alive && inMoat(b, u)) moatHurts(state, u);
     // Buty Wartownika (Zakotwiczenie): standing still hardens the hero until its next activation.
@@ -807,7 +834,9 @@ export function battleCatapult(state: GameState, cell: HexKey) {
   const s = b.siege;
   s.shot = b.round;
   battleFx(state, 'oblezenie_kamien', cell);
-  if (s.gate === cell && s.gateHp > 1) {
+  // Taran: with a Nosorożec Bojowy in the attacking army the gate falls to one hit.
+  const rammed = abilityActive(state) && livingUnits(b, b.attacker).some((x) => abilityOf(x) === 'ram');
+  if (s.gate === cell && s.gateHp > 1 && !rammed) {
     s.gateHp -= 1;
     log(state, 'battle', 'Katapulta trafia w bramę: brama pęka, ale jeszcze stoi.');
     return;
@@ -928,6 +957,8 @@ export function predictDamage(
   if (abilityOf(victim) === 'runeGolem' && abilityActive(state) && !coreExposed(victim) && dmg > 0) dmg = Math.max(1, dmg - ABILITY.runeSkinIgnore * scaleOf(state));
   // Bitewny Szał: the Herszt's armour takes a bit off every blow that lands (at least 1 gets through).
   if (abilityOf(victim) === 'bloodRage' && abilityActive(state) && dmg > 0) dmg = Math.max(1, dmg - ABILITY.bloodRageArmor * scaleOf(state));
+  // Niewzruszony: the Żubr's hide takes a bit off every blow that lands (at least 1 gets through).
+  if (abilityOf(victim) === 'unmoved' && abilityActive(state) && dmg > 0) dmg = Math.max(1, dmg - ABILITY.unmovedArmor * scaleOf(state));
   // The hero's shield (artifacts): the first blow of the battle is halved, every blow is weaker by its defence, but a blow that lands takes at least 1.
   if (victim.gear && dmg > 0) {
     if (victim.gear.firstHit) dmg = Math.ceil(dmg / 2);
@@ -1037,6 +1068,50 @@ export function canAttackAfterMove(state: GameState, u: BattleUnit): boolean {
   return !isDigital(state.rules) || UNITS[u.defId].attackType !== 'ranged';
 }
 
+/** The level of the Herds' mechanic building (Kamień Tętentu) a side has: 0 for any other faction or without the building. */
+const herdsLevel = (state: GameState, side: Side): number => (side !== 'neutral' && raceOf(state, side) === 'herds' ? mechLevel(state, side) : 0);
+
+/** A push of the Herds: its collision hurts one more with the second level of the Kamień Tętentu, and at the fourth the collided target is slowed. */
+function herdsPush(state: GameState, att: BattleUnit, target: BattleUnit, steps: number, damage: number, label: string) {
+  const level = herdsLevel(state, att.side);
+  const out = pushWithCollision(state, target, att, steps, (damage + (level >= 2 ? FACTION_MECHANICS.herdsCollision : 0)) * scaleOf(state), label);
+  if (level >= 4 && target.alive && out.stoppedBy && out.stoppedBy !== 'immovable' && !target.gear?.unbound) {
+    target.status.slowNext += FACTION_MECHANICS.herdsSlow;
+    log(state, 'ability', `${unitName(target)}: −${FACTION_MECHANICS.herdsSlow} S w następnej aktywacji (Kamień Tętentu).`);
+  }
+  return out;
+}
+
+/** The push a blow of the unit makes after its damage (null: none), in the small scale: how many cells and the collision damage before the level's extra. */
+export function plannedPush(state: GameState, att: BattleUnit, usedAbility: boolean, moved: number): { steps: number; damage: number; label: string } | null {
+  if (!abilityActive(state) || state.battle?.duel) return null;
+  const ab = abilityOf(att);
+  const name = UNITS[att.defId].abilityName;
+  if (ab === 'headbutt') return { steps: ABILITY.headbuttPush, damage: ABILITY.collisionDamage, label: name };
+  if (ab === 'ram' && moved >= ABILITY.ramMinMove) return { steps: ABILITY.ramPush, damage: ABILITY.ramCollisionDamage, label: name };
+  if (ab === 'ancestralHorns' && usedAbility) return { steps: ABILITY.hornsPush, damage: ABILITY.collisionDamage, label: name };
+  const level = herdsLevel(state, att.side);
+  if (level >= 1 && UNITS[att.defId].attackType === 'melee' && moved >= (level >= 3 ? FACTION_MECHANICS.herdsRunShort : FACTION_MECHANICS.herdsRun)) return { steps: 1, damage: ABILITY.collisionDamage, label: 'Kamień Tętentu' };
+  return null;
+}
+
+/** What a blow of a unit of the Herds does to the target after the damage: pushes it (and the collision hurts). */
+function herdsBlow(state: GameState, att: BattleUnit, t: BattleUnit, usedAbility: boolean, moved: number) {
+  const push = plannedPush(state, att, usedAbility, moved);
+  if (push) herdsPush(state, att, t, push.steps, push.damage, push.label);
+}
+
+/** The damage a push of the unit would add to this blow, by the collision it would end in (0: it ends in a free cell or the target cannot be moved); for the bots. */
+export function pushValue(state: GameState, att: BattleUnit, t: BattleUnit, usedAbility: boolean, moved: number): number {
+  const push = plannedPush(state, att, usedAbility, moved);
+  if (!push || !t.pos) return 0;
+  const out = previewPush(state, t, att, push.steps);
+  if (!out.stoppedBy || out.stoppedBy === 'immovable') return 0;
+  const damage = (push.damage + (herdsLevel(state, att.side) >= 2 ? FACTION_MECHANICS.herdsCollision : 0)) * scaleOf(state);
+  // The unit that is hit takes it too: good for the pusher when it is an enemy, bad when it is an ally.
+  return damage - (out.hit ? (out.hit.side === att.side ? damage : -damage) : 0);
+}
+
 export function battleAttack(state: GameState, targetId: string, useAbility: boolean, secondTargetId?: string) {
   const b = state.battle!;
   const act = b.activation!;
@@ -1054,6 +1129,14 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   if (canUse && ab === 'fireBreath') {
     const second = breathSecondTarget(state, u, target);
     if (second) targets.push(second);
+  }
+  // Przebicie: the lance goes through the target into the enemy right behind it.
+  if (ab === 'pierce' && abilityActive(state) && !secondTargetId) {
+    const behind = breathSecondTarget(state, u, target);
+    if (behind && behind.side !== u.side) {
+      targets.push(behind);
+      log(state, 'ability', `${unitName(u)}: ${UNITS[u.defId].abilityName}.`);
+    }
   }
   if (secondTargetId && !(canUse && ab === 'fireBreath')) {
     const second = b.units[secondTargetId];
@@ -1124,6 +1207,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
         log(state, 'ability', `${unitName(t)} zostaje odepchnięty o 1 pole (${UNITS[u.defId].abilityName}).`);
       } else log(state, 'ability', `${unitName(t)} nie ma gdzie się cofnąć (${UNITS[u.defId].abilityName}).`);
     }
+    // Dzikie Stada: the blows that push (Byczy Łeb, Taran, Rogi Przodków, and the Kamień Tętentu after a run).
+    if (t.alive && u.alive && !b.duel && abilityActive(state)) herdsBlow(state, u, t, canUse, act.movedDistance);
   }
   // Trzęsienie: the Golem with its rune core bare shakes everything around it after each attack.
   if (ab === 'runeGolem' && abilityActive(state) && u.alive && coreExposed(u)) {
@@ -1154,10 +1239,14 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       log(state, 'ability', `${unitName(u)} odzyskuje ${heal} Ż po zabiciu wroga.`);
     }
   }
-  const hopAbility = ab === 'airDash' || ab === 'nestLeap' || ab === 'gallop';
+  const hopAbility = ab === 'airDash' || ab === 'nestLeap' || ab === 'gallop' || ab === 'runOn';
   if (hopAbility && !b.duel && (!u.abilityUsed || ab === 'nestLeap') && abilityActive(state) && u.alive) {
-    act.hop = ab === 'airDash' ? ABILITY.airDashRange : ab === 'gallop' ? ABILITY.gallopRange : ABILITY.nestLeapRange;
-    return;
+    // W Biegu: the move is finished with the cells the unit did not use before the attack.
+    const range = ab === 'airDash' ? ABILITY.airDashRange : ab === 'gallop' ? ABILITY.gallopRange : ab === 'runOn' ? Math.max(0, moveRange(u) - act.movedDistance) : ABILITY.nestLeapRange;
+    if (range > 0) {
+      act.hop = range;
+      return;
+    }
   }
   endActivation(state);
 }
@@ -1224,7 +1313,7 @@ export function battleTeleport(state: GameState, to: HexKey) {
 }
 
 /** Pola Naładowane: a unit that has stepped on a charged field takes damage. */
-function stepOnFields(state: GameState, u: BattleUnit) {
+export function stepOnFields(state: GameState, u: BattleUnit) {
   const b = state.battle!;
   if (!b.fields?.length || !u.alive) return;
   const here = cellsOf(u);
@@ -1242,6 +1331,26 @@ export function battleAbility(state: GameState, targetId?: string) {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side !== u.side) throw new Error('Wybierz żyjącego sojusznika.');
     t.hp = Math.min(t.maxHp, t.hp + ABILITY.giftOfLifeHeal * hpScaleOf(state));
+  } else if (ab === 'rhythm') {
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side !== u.side || t.id === u.id) throw new Error('Wybierz żyjącego sojusznika.');
+    t.status.slowNext -= ABILITY.rhythmHaste;
+    log(state, 'ability', `${unitName(t)}: +${ABILITY.rhythmHaste} S w następnej aktywacji.`);
+  } else if (ab === 'wanderHorn') {
+    for (const ally of livingUnits(b, u.side)) {
+      ally.status.slowNext -= ABILITY.hornHaste;
+      log(state, 'ability', `${unitName(ally)}: +${ABILITY.hornHaste} S w następnej aktywacji.`);
+    }
+  } else if (ab === 'roar') {
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side === u.side || t.side === undefined || unitDistance(u, t) > ABILITY.roarRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.roarRange} pól.`);
+    t.status.tauntedBy = u.id;
+    log(state, 'ability', `${unitName(t)} jest wyzwany: w swojej następnej aktywacji może atakować tylko ${unitName(u)}.`);
+  } else if (ab === 'tremor') {
+    const shaken = Object.values(b.units).filter((x) => x.alive && x.pos && x.side !== u.side && canBeMoved(state, x) && unitDistance(u, x) <= ABILITY.tremorRadius);
+    log(state, 'ability', `${unitName(u)}: ziemia drży.`);
+    for (const x of shaken) if (x.alive) herdsPush(state, u, x, 1, ABILITY.collisionDamage, UNITS[u.defId].abilityName);
+    checkBattleEnd(state);
   } else if (ab === 'web') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side === u.side || unitDistance(u, t) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);
