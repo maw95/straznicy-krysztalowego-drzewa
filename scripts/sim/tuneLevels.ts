@@ -2,6 +2,7 @@
 // the smallest change of the levers (start treasures of the two sides, hero replacement, an extra Horde hero) that brings the Przymierza's
 // win rate into the band of its level. Results (DigitalTune entries for the triangle map) go to .tmp/sim/auto-<objective>-g<growth>.json;
 // scripts/sim/tuneMerge.ts turns all of them into src/engine/tuningAuto.ts.
+// SIM_TABLES=pvp1,pvp2 tunes only those tables (the digital game has no coop any more).
 // Usage: [SIM_SHAPE=rectangle|ring|islands|custom SIM_MAP=ciesnina|dolina] node --import tsx scripts/sim/tuneLevels.ts <objective> <growth 0|1> [games=120] [rounds=8]
 // SIM_SIZES=huge,giant tunes the XL and XXL maps (into auto-<tag>-xl.json). Without SIM_SHAPE the triangle map. The entries of the old hand-made tuning stay in force while measuring; the generated ones of an earlier run do not (noAuto).
 // Bands (the author, 9.11.2026): Easy 65-85, Normal 45-65, Hard 30-45 percent wins of the Przymierza. About 1 minute per objective and shape.
@@ -103,9 +104,8 @@ const ALREADY: unknown[] = [];
 const coop = (t: string) => t.startsWith('coop');
 const all: Cell[] = [];
 for (const size of SIZES) {
-  for (const table of ['coop1', 'coop2', 'pvp1', 'pvp2']) {
-    for (const option of (coop(table) ? ['kids', 'full', 'hard'] : ['kids', 'full']).filter((o) => !ONLY || o === ONLY)) {
-      if (objective === 'survival' && !coop(table)) continue;
+  for (const table of (process.env.SIM_TABLES ?? 'coop1,coop2,pvp1,pvp2').split(',')) {
+    for (const option of ['kids', 'full', 'hard'].filter((o) => !ONLY || o === ONLY)) {
       const c = { size, table, option };
       all.push({ ...c, name: names(c), step: 0, rate: 0, best: null, tried: new Set(), done: false });
     }
