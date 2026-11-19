@@ -5,7 +5,7 @@
 import { raceOf } from '../engine/teams';
 import { useEffect, useState, type ReactNode } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId, type TeamId } from '../engine/data';
-import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, healPrice, incomeOf, RUNE_NAMES, RUNES, runeBlock, runesOf, KINGDOM, marketStock, mayRecruit, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, DWELLING_TEXTS, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
+import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, healPrice, incomeOf, refugeHere, refugeTargets, RUNE_NAMES, RUNES, runeBlock, runesOf, KINGDOM, marketStock, mayRecruit, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, DWELLING_TEXTS, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
 import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
 import { ARCHETYPE_NAMES, archetypeOf, commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from '../engine/realm';
@@ -373,6 +373,22 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               </div>
             );
           })}
+          {upgrade}
+        </div>
+      );
+    }
+    // Level 6, the Wild Herds: the Ostoja Wędrówek jumps the hero standing here to another own settlement with an Ostoja, once a round.
+    if (b === 'refuge') {
+      const targets = buyer ? refugeTargets(state, buyer) : [];
+      const here = Boolean(buyer && refugeHere(state, buyer)?.id === s.id);
+      return (
+        <div data-panel="refuge" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <RuleText text={BUILDING_TEXTS.refuge[0]} />
+          {!here && <i>Bohater musi stać w tej osadzie, żeby się przenieść.</i>}
+          {here && targets.length === 0 && <i>{buyer?.refugeRound === state.round ? 'Bohater przeniósł się już w tej rundzie.' : 'Nie ma drugiej własnej osady z Ostoją Wędrówek.'}</i>}
+          {here && targets.map((t) => (
+            <button key={t.id} className="btn prim" data-refuge-to={t.id} onClick={() => act({ type: 'kingdomRefuge', settlementId: t.id })} style={{ padding: '3px 14px', fontSize: 16 }}>Przenieś bohatera do osady {t.name}</button>
+          ))}
           {upgrade}
         </div>
       );

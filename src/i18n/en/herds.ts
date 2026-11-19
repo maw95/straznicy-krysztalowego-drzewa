@@ -60,4 +60,7 @@ register({
   'Mistrz Oszczepu': 'Javelin Master', 'Strzelcy Fauna (i on sam) mają +1 A w bitwie.': "The Faun's shooters (and the Faun himself) have +1 ATK in battle.", 'Pieśń Przyszłości': 'Song of the Future',
   'Nowe frakcje grają na razie tylko w rywalizacji (nie w kooperacji ani na arenie).': 'The new factions play only in rivalry for now (not in co-op or on the arena).',
   'Przy stole muszą być co najmniej dwie różne frakcje.': 'There must be at least two different factions at the table.', 'Przy stole może być najwyżej {0} frakcji.': 'There can be at most {0} factions at the table.',
+  // Refuge of the Wanderings (button in the settlement window)
+  'Bohater musi stać w tej osadzie, żeby się przenieść.': 'The hero must stand in this settlement to move.', 'Bohater przeniósł się już w tej rundzie.': 'The hero has already moved this round.',
+  'Nie ma drugiej własnej osady z Ostoją Wędrówek.': 'There is no other own settlement with a Refuge of the Wanderings.', 'Przenieś bohatera do osady {0}': 'Move the hero to the settlement {0}',
 });
