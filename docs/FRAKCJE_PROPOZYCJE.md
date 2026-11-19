@@ -5,6 +5,10 @@ kolizje) i pomysły autora z `ROZBUDOWA_CYFROWA.md` (3.11) w pełne karty frakcj
 (Ż, A, S): te ustalają symulacje balansu przy bramce G2. Każda frakcja ma też sekcję **Alternatywy** (inne jednostki, budynki,
 mechanika), a na końcu są **frakcje zapasowe**, gdyby któraś z ośmiu nie przypadła do gustu.
 
+**19.11.2026: naniesione uwagi autora** (zmiany składu w Stadach, Umarłych, Klanach, Kompaniach, Szronie i Przypływach;
+otwarte sprawy w punkcie 14). Odrzucone jednostki, nazwy i mechaniki trafiają do `docs/frakcje/ODRZUCONE_POMYSLY.md`, bo
+mogą się przydać później. **Zasada: żadnych nowych wilków ani psów** (wilki mają już Przymierze i Horda).
+
 Kolejność wdrażania zostaje jak w backlogu (punkty 52–55): **Dzikie Stada → Królestwo Umarłych → Żelazne Klany → DLC**.
 
 **Jak czytać tabele**
@@ -96,13 +100,18 @@ Frakcje z **ukrytą informacją** (Wolne Kompanie: ukryte pułapki; Imperium Pia
 przekazania w hotseacie, ukrywania stanu przed przeciwnikiem w grze przez internet (serwer) i bota, który nie podgląda.
 To osobne zadanie, liczone przy tych frakcjach.
 
+**Decyzja 19.11 (hot-seat):** robimy ukrytą informację. Zasłona „przekaż urządzenie” tylko wtedy, gdy właściciel robi coś ukrytego:
+(1) przy rozstawianiu, (2) przy użyciu zdolności w trakcie bitwy (Fortel Atamanki, Lustro Wydm Tancerki), (3) przyciskiem „Podejrzyj”
+dla własnych pułapek i mirażów. W turach przeciwnika zasłon nie ma, a dziennik walki nie podaje pól ukrytych obiektów. Trafiona
+pułapka i rozbity miraż są jawne.
+
 ---
 
 ## 3. Dzikie Stada (`herds`)
 
 **EN:** Wild Herds · **Rola:** agresja + mobilność · **Kolejność:** pierwsza (pilot procesu)
 
-**Klimat.** Wędrowne stada stepów i puszcz: tury, żubry, nosorożce i mamuty, prowadzone przez satyrów z rogami i dudami.
+**Klimat.** Wędrowne stada stepów i puszcz: tury, żubry, nosorożce i łosie, prowadzone przez satyrów z rogami i dudami.
 Nie mają osad w naszym rozumieniu: ich osady to obozowiska przy wodopojach i kamiennych kręgach. Walczą rozpędem: kto
 stoi na drodze stada, ląduje na skale.
 
@@ -111,7 +120,7 @@ Stada różnią się **odepchnięciem i zderzeniem**: rozpędzona jednostka spyc
 areny albo inną jednostkę, dostaje dodatkowe obrażenia. Arena Stad ma dużo głazów.
 
 **Mocne strony:** inicjatywa, szybkie dojście do strzelców, rozbijanie szyków, podbój mapy.
-**Słabości:** brak leczenia, słabi strzelcy, mury osad (potrzebują Nosorożca albo Mamuta), jednostki niewzruszone (Klany).
+**Słabości:** brak leczenia, słabi strzelcy, mury osad (potrzebują Nosorożca), jednostki niewzruszone (Klany).
 
 ### Bohaterowie
 | `id` | Bohater | Typ | Rozm. | Ruch | Walka | Zdolność | Specjalność |
@@ -133,10 +142,10 @@ areny albo inną jednostkę, dostaje dodatkowe obrażenia. Arena Stad ma dużo g
 | 2B | Tarpan (`tarpan`) | dziki koń stepowy | 1 | chód | wręcz | Rozpęd: +N A po przebiegnięciu ≥M pól | premia za ruch | Tarpanie Błonia |
 | 3A | Żubr Puszczański (`forestBison`) | żubr | 1 | chód | wręcz | Niewzruszony: pancerz; nie da się go odepchnąć, przyciągnąć ani przestawić | pancerz, ★ odporność na przesunięcie | Żubrza Ostoja |
 | 3B | Satyr Kopijnik (`satyrLancer`) | satyr z długą kopią | 1 | chód | wręcz | Przebicie: cios trafia cel i jednostkę za nim | reuse: Ognisty Oddech (linia 2 pól) | Obóz Kopijników |
-| 4A | Nosorożec Bojowy (`warRhino`) | nosorożec w skórzanym rzędzie | 2 | chód | wręcz | Taran: po ≥N polach odepchnięcie o 2, zderzenie +N obrażeń; podwójne obrażenia bramom | odpychanie + ★ zderzenie | Błotne Brody |
-| 4B | Bawół z Bębnem (`drumBuffalo`) | bawół niosący wielki bęben | 2 | chód | wręcz | Bęben Wędrówki: aura, sojusznicy w promieniu 2 mają +1 S | aura | Krąg Bębnów |
-| 5A | Mamut Wojenny (`warMammoth`) | mamut z kłami w brązie | 2 | chód | wręcz | Stratowanie: idzie przez pola małych wrogów, każdego spycha na bok i rani o N | ★ przejście z odepchnięciem | Mamucie Wzgórze |
-| 5B | Tygrys Szablozęby (`sabertooth`) | drapieżnik stepu | 1 | chód | wręcz | Skok na Kark: skacze do celu w zasięgu N nad jednostkami; +N A, jeśli cel był w tej rundzie odepchnięty | ★ przeskok, ★ premia za stan celu | Skalna Pieczara |
+| 4A | Hipogryf Stepowy (`steppeHippogriff`) | pół koń, pół orzeł, płowy jak step | 2 | lot | wręcz | Lot na Strzelców: +N A, jeśli cel był w tej rundzie odepchnięty; jedyny lotnik Stad, przejmuje rolę Tygrysa (dopada strzelców) | ★ premia za stan celu | Gniazdo na Urwisku |
+| 4B | Słoń z Bębnem (`drumElephant`) | słoń niosący wielki bęben (decyzja 19.11: mniej bydła) | 2 | chód | wręcz | Bęben Wędrówki: aura, sojusznicy w promieniu 2 mają +1 S | aura | Krąg Bębnów |
+| 5A | Nosorożec Bojowy (`warRhino`) | nosorożec w skórzanym rzędzie | 2 | chód | wręcz | Taran: po ≥N polach odepchnięcie o 2, zderzenie +N obrażeń; podwójne obrażenia bramom | odpychanie + ★ zderzenie | Błotne Brody |
+| 5B | Łoś Rogacz (`bullMoose`) | olbrzymi łoś z łopatami rogów | 2 | chód | wręcz | Rykowisko: raz na bitwę wyzywa wroga w zasięgu N; ten w swojej następnej aktywacji może atakować tylko Łosia | ★ prowokacja | Łosie Mokradło |
 | 6 | Indrik, Pan Zwierząt (`indrik`) | słowiański Indrik-zwierz, olbrzymi róg | 2 | chód | wręcz | Ziemia Drży: raz na bitwę wszyscy mali wrogowie w promieniu 2 odepchnięci o 1, zderzenia ranią; nie do odepchnięcia | odpychanie obszarowe | Źródło Indrika |
 
 ### Osada
@@ -158,7 +167,7 @@ Słone Lizawisko, Dudniąca Dolina, Wodopój Trzech Rogów, Trawiaste Morze.
 ### Bot
 Ustawia jednostki daleko od wroga, żeby mieć rozpęd; wybiera cele stojące przy głazach i krawędzi; szybcy idą po strzelców.
 Na mapie: podbój kopalń i osad, Ostoja do przerzutu. **Nie wolno mu:** stać w miejscu (marnuje Tętent), szturmować murów bez
-Nosorożca albo Mamuta.
+Nosorożca.
 
 ### Kolizje
 - **Centaury i minotaury** z pomysłu autora już są: Centaur w Przymierzu, Herszt Minotaurów w Hordzie. Proponuję Stada bez
@@ -168,7 +177,8 @@ Nosorożca albo Mamuta.
 
 ### Alternatywy
 - **Jednostki:** Centaurzyca Stepu (zamiast Fauna Procarza, jeśli autor chce centaurów; wtedy Centaura Przymierza przemianować
-  na Centaura Gaju), Minotaur Pasterz (zamiast Żubra), Łoś Rogacz (zamiast Tarpana), Hipogryf Stepowy (lot, zamiast Tygrysa).
+  na Centaura Gaju), Minotaur Pasterz (zamiast Żubra), Bawół z Bębnem (zamiast Słonia, jeśli słoń nie pasuje do stepu), Młody Nosorożec
+  (zamiast Młodego Tura, mniej bydła). Mamut przeszedł do Dworu Wiecznego Szronu (legenda).
 - **Mechanika:** *Panika* — zderzony cel ucieka o 1 pole na początku swojej aktywacji (kontrola zamiast obrażeń).
 - **Budynek mapy:** Ujeżdżalnia — bohaterowie +1 ruchu w rundzie po wygranej bitwie.
 
@@ -207,16 +217,16 @@ podnoszą innych, ale słabszych, a bohaterowie nie wstają. Jednostki mają do 
 | 2B | Strach Polny (`scarecrow`) | ożywiony strach na wróble | 1 | chód | wręcz | Postrach: sąsiedni wrogowie −1 A | aura osłabiająca | Opuszczone Pole |
 | 3A | Nawiedzona Zbroja (`hauntedArmor`) | pusta zbroja rycerza | 1 | chód | wręcz | Pusta w Środku: pancerz; trucizna i klątwy nie działają | pancerz, ★ odporność na statusy | Rycerska Krypta |
 | 3B | Płaczka (`banshee`) | zawodząca zjawa | 1 | lot | dyst. | Lament: raz na bitwę wrogowie w promieniu 2 −1 A do końca następnej aktywacji | aura osłabiająca | Wieża Płaczek |
-| 4A | Kurhanowy Olbrzym (`barrowGiant`) | olbrzym z kamieni i darni | 2 | chód | wręcz | Ciężar Ziemi: raz na bitwę trafiony unieruchomiony | unieruchomienie | Wielki Kurhan |
+| 4A | Wij Podziemny (`viy`) | słowiański demon ziemi, powieki do samej ziemi, podnoszą je słudzy | 2 | chód | wręcz | Podnieście Mi Powieki: raz na bitwę wróg w zasięgu N, na którego spojrzy, zostaje unieruchomiony | unieruchomienie | Wielki Kurhan |
 | 4B | Kościana Wróżka (`boneOracle`) | wróżka z koroną z kości | 1 | chód | dyst. | Ponowny Oddech: raz na bitwę wskrzesza poległego pomocnika tieru ≤3 na sąsiednim polu z połową Ż | ★ wskrzeszenie w polu | Kaplica Wróżb |
-| 5A | Licz (`lich`) | czarnoksiężnik w koronie | 1 | chód | dyst. | Żniwo Many: każde trafienie zabiera bohaterowi wroga 1 many i leczy Licza o 1 | ★ wyczerpanie many | Biblioteka Umarłych |
-| 5B | Jeździec na Zmorze (`nightmareRider`) | widmowy rycerz na czarnym koniu | 2 | chód | wręcz | Strach Nocy: trafiony cofa się o 1 i ma −1 A | odpychanie + osłabienie | Stajnia Zmór |
+| 5A | Lisz (`lich`) | czarnoksiężnik w koronie | 1 | chód | dyst. | Żniwo Many: każde trafienie zabiera bohaterowi wroga 1 many i leczy Lisza o 1 | ★ wyczerpanie many | Biblioteka Umarłych |
+| 5B | Kostucha (`kostucha`) | śmierć z kosą jak z ludowego drzeworytu: baśniowa, nie straszna | 1 | chód | wręcz | Kośba: każdy atak trafia cel i jednego jego sąsiada (zamach kosą) | reuse: Paszcze Otchłani | Kaplica Tańca Śmierci |
 | 6 | Kościany Smok (`boneDragon`) | szkielet smoka z mchem i latarniami | 2 | lot | wręcz | Oddech Grobu: raz na bitwę linia 3 pól, obrażenia i −1 S | reuse: Ognisty Oddech + spowolnienie | Smocze Cmentarzysko |
 
 ### Osada
 | Budynek | Rodzic | Poziomy i efekt |
 |---|---|---|
-| **Kurhan Wiecznej Warty** (mechanika) | Szpital | I: raz na bitwę na końcu rundy najtańszy poległy pomocnik wstaje z 1 Ż (na swoim polu albo najbliższym wolnym) · II: wstaje z połową Ż · III: dwa razy na bitwę · IV: wskrzeszony +1 A do końca bitwy. Bohaterowie nie wstają |
+| **Kurhan Wiecznej Warty** (mechanika) | Szpital | I: raz na bitwę na końcu rundy najtańszy poległy pomocnik wstaje z 1 Ż (na swoim polu albo najbliższym wolnym) · II: wstaje z połową Ż · III: dwa razy na bitwę · IV: wstaje z pełnym Ż. Bohaterowie nie wstają |
 | **Ossuarium** (gospodarka) | Skarbiec | I: wskrzeszenie w Szpitalu tańsze o 1 zł · II: tiery 1–2 wskrzeszane za darmo |
 | **Dzwonnica Zaduszna** (mapa) | Koszary | po wygranej bitwie z neutralnymi jeden poległy pomocnik tieru 1–2 wraca do puli bez Szpitala (raz na rundę) |
 
@@ -231,7 +241,7 @@ Srebrny Całun, Cmentarne Sady, Siedem Kopców, Stary Dzwon, Wieczna Cisza, Kruc
 - Prompty: unikać słów *corpse, blood, kill*; pisać *ancient guardian, spectral, barrow*.
 
 ### Bot
-Gra na czas: chroni Licza i Kościaną Wróżkę z tyłu, wystawia tanie szkielety na pierwszą linię (i tak wstaną), celuje Liczem
+Gra na czas: chroni Lisza i Kościaną Wróżkę z tyłu, wystawia tanie szkielety na pierwszą linię (i tak wstaną), celuje Liszem
 i Latarniczką w bohatera z maną. **Nie wolno mu:** rzucać bohaterów na pierwszą linię (oni nie wstają).
 
 ### Kolizje
@@ -242,7 +252,8 @@ i Latarniczką w bohatera z maną. **Nie wolno mu:** rzucać bohaterów na pierw
 
 ### Alternatywy
 - **Jednostki:** Topielica (zamiast Płaczki, przyciąga), Kościej Nieśmiertelny (legenda zamiast Smoka: wstaje, dopóki żyje
-  któryś z jego sług), Wilkołak-widmo (zamiast Jeźdźca, jeśli Jeździec za duży w produkcji).
+  któryś z jego sług), Ćma Trupia Główka (zamiast Kostuchy: wielka ćma z czaszką na grzbiecie, lot, usypiający pył;
+  wtedy Rój traci Ćmę Pyłową), Bazyliszek (warszawska legenda, wzrok kamienieje; blisko Wija).
 - **Mechanika:** *Chłód Grobu* — każdy cios Umarłych −1 S do końca następnej aktywacji, kumuluje się (czyste wyczerpanie,
   bez wskrzeszania; prostsze, ale bliskie Szronowi).
 - **Budynek mapy:** Mgła Kurhanów — wrodzy bohaterowie w promieniu 2 od osady nie widzą jej garnizonu.
@@ -253,21 +264,22 @@ i Latarniczką w bohatera z maną. **Nie wolno mu:** rzucać bohaterów na pierw
 
 **EN:** Iron Clans · **Rola:** obrona · **Kolejność:** trzecia
 
-**Klimat.** Krasnoludy z gór, ich mechanizmy z brązu i opancerzone niedźwiedzie bojowe. Każdy klan ma kuźnię i salę przodków,
+**Klimat.** Krasnoludy z gór, ich mechanizmy z brązu, opancerzone niedźwiedzie bojowe i duchy kopalń (Skarbnik). Krasnoludów
+nie więcej niż połowa składu, reszta to mechanizmy i stworzenia gór. Każdy klan ma kuźnię i salę przodków,
 a każdy wojownik nosi runy wybite przez kowala. Powolni, ale gdzie stanęli, tam się nie przejdzie.
 
-**Mechanika wyróżniająca: Mur Tarcz** (w bitwie) i **Kuźnia Run** (trwałe ulepszanie wyposażenia pomocników, jedyna taka
+**Mechanika wyróżniająca: Mur Tarcz** (w bitwie) i **Runiczna Kuźnia** (trwałe ulepszanie wyposażenia pomocników, jedyna taka
 frakcja). Pancerz rośnie, gdy jednostki stoją obok siebie.
 
-**Mocne strony:** odporność, obrona osad, oblężenia (Taran, Armata), kontrują szarże Stad.
-**Słabości:** mała mobilność na mapie i w bitwie, jeden latający; kontrola (Szron) i wyczerpanie (Umarli) ich rozbierają.
+**Mocne strony:** odporność, obrona osad, oblężenia (Armata), kontrują szarże Stad.
+**Słabości:** mała mobilność na mapie i w bitwie, bez jednostek latających; kontrola (Szron) i wyczerpanie (Umarli) ich rozbierają.
 
 ### Bohaterowie
 | `id` | Bohater | Typ | Rozm. | Ruch | Walka | Zdolność | Specjalność |
 |---|---|---|---|---|---|---|---|
 | `ironThane` | Tan Żelaznobrody | wojownik | 1 | chód | wręcz | **Przysięga Tarczy:** raz na bitwę do końca rundy sąsiedni sojusznicy mają +N pancerza | Tarcza Rodu: pomocnicy +1 Ż (`supportHp`) |
 | `runeMatron` | Matka Run | mędrzec | 1 | chód | dyst. | **Runa Kamienia:** raz na bitwę sojusznik +1 pancerza do końca bitwy i nie da się go odepchnąć | Wiedza Przodków: czary +1 (`spellPower`) |
-| `ballistaMaster` | Mistrz Balisty | łowca | 1 | chód | dyst. | **Bełt Przeszywający:** cios trafia cel i jednostkę za nim w linii | Oko Celownika: strzelcy +1 A (`marksman`) |
+| `passWarden` | Strażniczka Przełęczy | łowca | 1 | chód | dyst. | **Bełt Przeszywający:** cios trafia cel i jednostkę za nim w linii | Oko Celownika: strzelcy +1 A (`marksman`) |
 
 **Dowódcy:** Wojownik Klanu (wojownik), Kusznik Gór (łowca), Kapłan Kuźni (mędrzec).
 **Czwarty bohater:** Stary Górmistrz (wojownik, Podkop).
@@ -276,23 +288,23 @@ frakcja). Pancerz rośnie, gdy jednostki stoją obok siebie.
 | Tier | Jednostka (`id`) | Kim jest | Rozm. | Ruch | Walka | Zdolność | Prymityw | Siedlisko |
 |---|---|---|---|---|---|---|---|---|
 | 1 | Krasnoludzki Tarczownik (`shieldDwarf`) | krasnolud z pawężą | 1 | chód | wręcz | Pawęż: pancerz | pancerz | — |
-| 1 | Górnik (`dwarfMiner`) | krasnolud z kilofem | 1 | chód | wręcz | Podkop: zamiast ruchu wyłania się na dowolnym polu w zasięgu | reuse: Podkop (Podkopnik) | — |
+| 1 | Kret z Brązu (`bronzeMole`) | mechaniczny kret z wiertłem zamiast nosa | 1 | chód | wręcz | Podkop: zamiast ruchu wyłania się na dowolnym polu w zasięgu | reuse: Podkop (Podkopnik) | — |
 | 1 | Kusznik Klanu (`clanCrossbow`) | krasnolud z kuszą | 1 | chód | dyst. | Salwa z Miejsca: +N A, gdy w tej aktywacji się nie ruszał | ★ premia za brak ruchu | — |
 | 2A | Niedźwiedź w Zbroi (`armoredBear`) | niedźwiedź bojowy w blachach | 1 | chód | wręcz | Kolczuga: pancerz; bez osłaniania (to robi Prastary Niedźwiedź) | pancerz | Gawra Zbrojna |
 | 2B | Kowal Bitewny (`battleSmith`) | krasnolud z młotem i kowadłem na plecach | 1 | chód | wręcz | Hartowanie: raz na bitwę sąsiad +1 A do końca bitwy | ★ wzmocnienie sąsiada | Polowa Kuźnia |
 | 3A | Wartownik z Brązu (`bronzeSentinel`) | mechaniczny strażnik | 1 | chód | wręcz | Kolce Mechanizmu: atakujący wręcz traci N Ż; odporny na truciznę | reuse: Kolce | Warsztat Mechanizmów |
-| 3B | Wiropłat (`gyrocopter`) | maszyna z wirnikiem i krasnoludem | 1 | lot | dyst. | Zrzut: raz na bitwę cel i jego sąsiedzi po N | reuse: Pożoga | Lądowisko Wiropłatów |
+| 3B | Jeździec na Koźle (`goatRider`) | krasnolud na górskim koźle (decyzja 19.11, zamiast Wiropłatu) | 1 | chód | wręcz | Skok po Turniach: raz na bitwę przeskakuje nad jednostką lub przeszkodą w zasięgu N (propozycja zdolności, do potwierdzenia) | reuse: przeskok (Kozica Stad) | Koźla Zagroda |
 | 4A | Pogromca Olbrzymów (`giantSlayer`) | krasnolud z dwuręcznym toporem | 1 | chód | wręcz | Na Duże Cele: +N A przeciw dużym jednostkom | ★ premia przeciw rozmiarowi | Sala Pogromców |
-| 4B | Taran Klanów (`siegeRam`) | taran na kołach pod dachem | 2 | chód | wręcz | Burzyciel: podwójne obrażenia murom i bramom; pancerz | pancerz, oblężenie | Wozownia Oblężnicza |
+| 4B | Skarbnik (`skarbnik`) | śląski duch kopalni: stary sztygar z lampką | 1 | chód | dyst. | Błędne Światło: raz na bitwę wróg w zasięgu N zostaje przestawiony o 2 pola (Skarbnik wodzi go po chodnikach) | ★ przestawienie wroga | Stary Szyb |
 | 5A | Gwardia Młota (`hammerGuard`) | elitarny krasnolud w pełnej zbroi | 1 | chód | wręcz | Młot Przodków: raz na bitwę trafiony traci następną aktywację | ★ ogłuszenie | Sala Gwardii |
-| 5B | Armata Klanów (`dwarfCannon`) | brązowa armata z obsługą | 2 | chód | dyst. | Ostrzał: cios w cel i sąsiadów; nie strzela w aktywacji, w której się ruszyła | ★ obszar + premia za brak ruchu | Ludwisarnia |
+| 5B | Armata Klanów (`dwarfCannon`) | brązowa armata z obsługą | 2 | chód | dyst. | Ostrzał: cios w cel i sąsiadów; nie strzela w aktywacji, w której się ruszyła; podwójne obrażenia murom i bramom (przejęła rolę Tarana) | ★ obszar + premia za brak ruchu | Ludwisarnia |
 | 6 | Kolos Kuźni (`clanColossus`) | olbrzymi mechanizm z kotłem | 2 | chód | wręcz | Fortyfikacja: raz na bitwę stawia 2 pola muru obok siebie; pancerz; nie do odepchnięcia | ★ stawianie przeszkody | Wielka Kuźnia Kolosa |
 
 ### Osada
 | Budynek | Rodzic | Poziomy i efekt |
 |---|---|---|
 | **Sala Tarcz** (mechanika) | Fosa i Mury | I: jednostka Klanów z ≥2 sąsiednimi sojusznikami ma −1 obrażeń z każdego ciosu · II: wystarczy 1 sąsiad · III: w szyku nie da się jej odepchnąć ani przyciągnąć · IV: kto atakuje wręcz jednostkę w szyku, traci 1 Ż |
-| **Kuźnia Run** (wyposażenie) | Kuźnia | I: raz na rundę jeden pomocnik dostaje trwałą runę (+1 A, +1 Ż albo pancerz 1; jedna na jednostkę) · II: dwie runy na jednostkę. ★ nowy stan: runy na pomocniku w puli |
+| **Runiczna Kuźnia** (wyposażenie) | Kuźnia | I: raz na rundę jeden pomocnik dostaje trwałą runę (+1 A, +1 Ż albo pancerz 1; jedna na jednostkę) · II: dwie runy na jednostkę. ★ nowy stan: runy na pomocniku w puli. **Decyzja 19.11:** runa zostaje przy jednostce także po jej śmierci i powrocie do puli; trzymana w stanie frakcji pod `id` jednostki (jednostka danego rodzaju jest we frakcji tylko jedna, `kingdom.ts`) |
 | **Głęboka Sztolnia** (gospodarka) | Skarbiec | I: +1 rudy na rundę (suma z osad) · II: także +1 Pyłu co 3 rundy |
 
 **Iskra:** Kowadło Pierwotnej Iskry — **pancerz 1 (−1 obrażeń z każdego ciosu) wszystkim jednostkom Klanów.**
@@ -306,19 +318,20 @@ Szara Grań, Brązowe Wrota, Dymny Komin, Runiczna Przełęcz, Ojcowski Kamień,
 - **Muzyka:** kowadła w rytmie, niski chór męski, rogi.
 
 ### Bot
-Stoi w szyku (sąsiedzi), czeka na wroga na swojej połowie, strzela z miejsca. Na mapie: buduje Sztolnię i Kuźnię Run, broni
-osad, szturmuje z Taranem. **Nie wolno mu:** rozdzielać jednostek pojedynczo, ruszać Armatą i Kusznikami bez potrzeby.
+Stoi w szyku (sąsiedzi), czeka na wroga na swojej połowie, strzela z miejsca. Na mapie: buduje Sztolnię i Runiczną Kuźnię, broni
+osad, szturmuje z Armatą. **Nie wolno mu:** rozdzielać jednostek pojedynczo, ruszać Armatą i Kusznikami bez potrzeby.
 
 ### Kolizje
 - **Prastary Niedźwiedź (Przymierze):** niedźwiedź Klanów jest jednostką z pancerzem, bez „przyjmij cios za sąsiada” (decyzja
   z macierzy).
 - **Kamienny Golem (neutralny):** mechanizmy Klanów są z brązu i mają kotły, nie z kamienia z runami.
-- Kuźnia (wspólna) daje +1 A pomocnikom całej frakcji; Kuźnia Run daje ulepszenia pojedynczym jednostkom, na stałe.
+- Kuźnia (wspólna) daje +1 A pomocnikom całej frakcji; Runiczna Kuźnia daje ulepszenia pojedynczym jednostkom, na stałe.
 
 ### Alternatywy
-- **Jednostki:** Jeźdźcy Kozłów Górskich (zamiast Niedźwiedzia, trochę mobilności), Mechaniczny Pająk (zamiast Wiropłatu, jeśli
-  maszyny latające nie pasują), Golem Parowy (legenda zamiast Kolosa).
-- **Mechanika:** *Runy Bitewne* — przed bitwą każdy pomocnik dostaje jedną runę do wyboru (bez budynku Kuźni Run; prościej
+- **Jednostki:** Wiropłat (`gyrocopter`; maszyna z wirnikiem i krasnoludem, lot, dyst., Zrzut: raz na bitwę cel i sąsiedzi po N; zamiast Jeźdźca, daje Klanom lotnika),
+  Mechaniczny Pająk (zamiast Jeźdźca, jeśli maszyny pasują; uwaga: Horda ma Pająka Jaskiniowego),
+  Golem Parowy (legenda zamiast Kolosa).
+- **Mechanika:** *Runy Bitewne* — przed bitwą każdy pomocnik dostaje jedną runę do wyboru (bez budynku Runicznej Kuźni; prościej
   w stanie gry, więcej klikania).
 - **Budynek:** Kolej Górska — bohater w osadzie Klanów przenosi się do innej osady Klanów (zamiast Sztolni; łata mobilność).
 
@@ -328,8 +341,12 @@ osad, szturmuje z Taranem. **Nie wolno mu:** rozdzielać jednostek pojedynczo, r
 
 **EN:** Free Companies · **Rola:** kontrola + mobilność · **DLC**
 
-**Klimat.** Bractwo zwierząt z lasów i rzek: lisy, borsuki, kruki, wydry, kuny. Trochę zbójnicy spod Tatr, trochę najemnicy,
-zawsze z planem. Każdy jest specjalistą: jeden zastawia sidła, drugi oznacza cel, trzeci wchodzi od tyłu.
+**Klimat.** Bractwo zwierzoludzi z lasów, rzek i obejść: koty, borsuki, kruki, wydry, kuny, ropuchy. Trochę zbójnicy spod
+Tatr, trochę najemnicy, zawsze z planem. Każdy jest specjalistą: jeden zastawia sidła, drugi oznacza cel, trzeci wchodzi od tyłu.
+
+**Odróżnienie od Przymierza (decyzja 19.11):** Przymierze to zwierzęta dzikie, magiczne i świetliste, bez ubrań. Kompanie to
+**zwierzoludzie**: chodzą na dwóch nogach, noszą ubrania, mają narzędzia, sidła i **proch** (Borsuk Petardnik, Ropuch
+z Hakownicą). Bez magii natury. Paleta ciepła i rdzawa, Przymierze srebrno-zielone.
 
 **Mechanika wyróżniająca: Sidła** (ukryte pułapki przed bitwą) i **kombinacje specjalistów** przez *oznaczenie* celu
 (Kruk oznacza, reszta bije mocniej). Skarby: Kompanie mają z nich więcej (Paserka).
@@ -344,7 +361,7 @@ zawsze z planem. Każdy jest specjalistą: jeden zastawia sidła, drugi oznacza 
 | `badgerSapper` | Borsuk Saper | wojownik | 1 | chód | wręcz | **Okop:** raz na bitwę do końca następnej aktywacji +N pancerza i nie da się go odepchnąć | Stary Wiarus: pomocnicy +1 Ż (`supportHp`) |
 | `ravenSeer` | Kruk Wieszczek | mędrzec | 1 | lot | dyst. | **Oko Kruka:** oznacza wroga (do końca rundy każdy atak w niego +1) i odsłania pułapki oraz miraże w promieniu 2 | Wróżba: +1 PD za wygraną (`xp`) |
 
-**Dowódcy:** Kuna Rębajło (wojownik), Wiewiórka Łuczniczka (łowca), Ropucha Zielarka (mędrzec).
+**Dowódcy:** Kuna Rębajło (wojownik), **Bajka** (`bajka`, łowca; zwierzak autora: młoda, energiczna, głupiutka, wygląda jak żbik; decyzja 19.11, zamiast Wiewiórki Łuczniczki jako dowódcy), Ropucha Zielarka (mędrzec).
 **Czwarty bohater:** Wydra Przemytniczka (łowca, odskok).
 
 ### Jednostki
@@ -356,12 +373,12 @@ zawsze z planem. Każdy jest specjalistą: jeden zastawia sidła, drugi oznacza 
 | 2A | Łasica Nożowniczka (`weaselKnife`) | łasica z dwoma nożami | 1 | chód | wręcz | Cios w Plecy: +N, gdy atakuje od tyłu | reuse: Zajście od tyłu | Kryjówka w Żywopłocie |
 | 2B | Bóbr Inżynier (`beaverEngineer`) | bóbr z siekierką i planem | 1 | chód | wręcz | Tama: raz na bitwę stawia przeszkodę na sąsiednim polu | ★ stawianie przeszkody | Żeremie |
 | 3A | Ropucha Truciciel (`toadPoisoner`) | ropucha z flaszkami | 1 | chód | dyst. | Mętna Mikstura: raz na bitwę cel i sąsiedzi zatruci | trucizna (obszar) | Warzelnia |
-| 3B | Ryś Skrytobójca (`lynxAssassin`) | ryś w ciemnym płaszczu | 1 | chód | wręcz | Ukryty: zaczyna bitwę niewidoczny dla wroga; pierwszy atak +N | ★ ukrycie | Leśna Czatownia |
+| 3B | Jenot Szpieg (`raccoonDogSpy`) | jenot w masce i ciemnym płaszczu | 1 | chód | wręcz | Ukryty: zaczyna bitwę niewidoczny dla wroga; pierwszy atak +N | ★ ukrycie | Leśna Czatownia |
 | 4A | Rosomak Zabijaka (`wolverine`) | rosomak z blizną | 1 | chód | wręcz | Furia Ran: +1 A za każde N brakujących Ż | ★ premia za rany | Rosomacza Nora |
 | 4B | Borsuk Petardnik (`badgerBomber`) | borsuk z beczułką prochu | 1 | chód | wręcz | Ładunek: raz na bitwę zamienia własną pułapkę w wybuch (pole i sąsiedzi) | pułapka + obszar | Prochownia |
-| 5A | Wóz Taborowy (`wagonFort`) | wóz z palisadą ciągnięty przez woły | 2 | chód | dyst. | Tabor: sąsiedni sojusznicy mają pancerz 1 | aura | Obóz Taborowy |
+| 5A | Ropuch z Hakownicą (`toadGunner`) | wielka ropucha z hakownicą na podpórce | 2 | chód | dyst. | Huk Hakownicy: raz na bitwę trafiony traci następną aktywację (ogłuszony hukiem) | ★ ogłuszenie | Rusznikarnia |
 | 5B | Kocur Fechmistrz (`catFencer`) | stary kocur z rapierem | 1 | chód | wręcz | Riposta: oddaje N każdemu, kto zaatakuje go wręcz i przeżyje | ★ kontratak | Fechtownia |
-| 6 | Łoś Wieżowy (`towerMoose`) | olbrzymi łoś z wieżyczką łuczników | 2 | chód | wręcz | Ruchoma Twierdza: atakuje wręcz, a raz na rundę dodatkowo strzela wieżyczka | ★ drugi atak (dystansowy) | Wielka Stajnia Kompanii |
+| 6 | Waran Wieżowy (`towerMonitor`) | olbrzymi waran z wieżyczką łuczników na grzbiecie | 2 | chód | wręcz | Ruchoma Twierdza: atakuje wręcz, a raz na rundę dodatkowo strzela wieżyczka | ★ drugi atak (dystansowy) | Wielka Stajnia Kompanii |
 
 ### Osada
 | Budynek | Rodzic | Poziomy i efekt |
@@ -390,7 +407,7 @@ omijania strażników, zbiera skrzynie. **Nie wolno mu:** znać pułapek i mira�
 - Ukryta informacja: patrz punkt 2.
 
 ### Alternatywy
-- **Jednostki:** Jenot Szpieg (zamiast Rysia), Sokolnik z Sokołem (zamiast Wiewiórki), Niedźwiadek Bartnik z rojem pszczół
+- **Jednostki:** Sokolnik z Sokołem (zamiast Wiewiórki), Niedźwiadek Bartnik z rojem pszczół
   (zamiast Wozu; uwaga na niedźwiedzie w innych frakcjach).
 - **Mechanika:** *Kontrakt* — przed bitwą wybierasz jedną wrogą jednostkę jako cel kontraktu; jej zabicie daje złoto i +A
   wszystkim (bez ukrytej informacji, łatwiej online).
@@ -402,7 +419,7 @@ omijania strażników, zbiera skrzynie. **Nie wolno mu:** znać pułapek i mira�
 
 **EN:** Court of Everfrost · **Rola:** kontrola · **DLC**
 
-**Klimat.** Dwór Marzanny, Pani Zimy, w lodowych salach na północy. Olbrzymi jarlowie, wiedźmy zamieci, białe wilki i strzygi
+**Klimat.** Dwór Marzanny, Pani Zimy, w lodowych salach na północy. Olbrzymi jarlowie, wiedźmy zamieci, śnieżne rysie, mamuty i strzygi
 wichru. Zima nie jest tu zła, tylko nieubłagana: wszystko zwalnia i w końcu staje.
 
 **Mechanika wyróżniająca: Szron.** Każdy cios jednostki Dworu nakłada szron; przy progu cel zamarza (traci aktywację).
@@ -417,7 +434,7 @@ i przenoszenie wrogów z dala od sojuszników.
 |---|---|---|---|---|---|---|---|
 | `marzanna` | Marzanna, Pani Zimy | mędrzec | 1 | chód | dyst. | **Lodowa Ściana:** raz na bitwę 3 pola muru z lodu w linii na 2 rundy | Oddech Zimy: czary +1 (`spellPower`) |
 | `frostJarl` | Jarl Szronu | wojownik | 2 | chód | wręcz | **Lodowy Cios:** raz na bitwę trafiony zamarza (traci następną aktywację) | Dwór Olbrzymów: pomocnicy +1 Ż (`supportHp`) |
-| `blizzardWolf` | Wilczyca Zamieci | łowca | 1 | chód | wręcz | **Ślad Zamieci:** pola, przez które przebiegła, do końca rundy dają wrogom −1 S | Biegnąca z Wiatrem: +1 ruchu (`move`) |
+| `snowLynx` | Ryś Śnieżny | łowca | 1 | chód | wręcz | **Ślad Zamieci:** pola, przez które przebiegł, do końca rundy dają wrogom −1 S | Biegnąca z Wiatrem: +1 ruchu (`move`) |
 
 **Dowódcy:** Rycerz Lodowej Gwardii (wojownik), Łowczyni z Gronostajem (łowca), Szronowa Wiedźma (mędrzec).
 **Czwarty bohater:** Stary Gradowy (mędrzec, grad w obszarze).
@@ -436,7 +453,7 @@ i przenoszenie wrogów z dala od sojuszników.
 | 4B | Strzyga Wichru (`windStrzyga`) | słowiańska strzyga z wichru | 1 | lot | wręcz | Porwanie: raz na bitwę unosi małego wroga i stawia go 2–3 pola dalej, z dala od jego sojuszników | ★ przestawienie wroga | Wichrowy Szczyt |
 | 5A | Olbrzym Gradu (`elderGiant`) | stary olbrzym z bryłami lodu | 2 | chód | dyst. | Grad Głazów: cel i sąsiedzi po N, każdy dostaje szron | obszar | Gradowa Turnia |
 | 5B | Duch Zorzy (`auroraSpirit`) | świetlista postać z zorzy | 1 | lot | dyst. | Zimne Światło: aura, wrogowie w promieniu 2 mają −1 S | aura osłabiająca | Wieża Zorzy |
-| 6 | Biały Wilk Zimy (`winterWolf`) | olbrzymi biały wilk | 2 | chód | wręcz | Długa Noc: raz na bitwę każdy wróg dostaje szron | szron (globalnie) | Jaskinia Zimy |
+| 6 | Mamut Wiecznej Zimy (`frostMammoth`) | mamut z kłami w szronie i sopli w sierści | 2 | chód | wręcz | Długa Noc: raz na bitwę każdy wróg dostaje szron; nie do odepchnięcia | szron (globalnie) | Mamucia Grań |
 
 ### Osada
 | Budynek | Rodzic | Poziomy i efekt |
@@ -461,13 +478,14 @@ Trzyma dystans. **Nie wolno mu:** rozpraszać szronu po wielu celach, pchać si�
 
 ### Kolizje
 - **Śnieżne sowy** z pomysłu autora usunięte (Sowa Świtu w Przymierzu); w ich miejsce Rusałka Szronu i Duch Zorzy.
-- **Białe wilki** a Horda (Władca Wilkołaków, Piekielny Ogar): wilki Dworu są białe, smukłe, dworskie, bez ognia. Jeśli to za
-  blisko, Wilczycę zastępuje Ryś Śnieżny, a legendę Lodowy Tur.
+- **Bez wilków (decyzja 19.11):** wilki są już w Przymierzu (Srebrna Wilczyca) i Hordzie (Władca Wilkołaków, Piekielny Ogar).
+  Wilczycę Zamieci zastąpił Ryś Śnieżny (Kompanie oddały swojego rysia, mają Jenota), Białego Wilka Mamut ze Stad.
+- **Mamut** pasuje do zimy bardziej niż do stepu; Stada dostały w zamian Łosia, a Nosorożec awansował na poziom 5.
 - **Spowolnienie** jest w grze (Splątane Korzenie, czar); Szron to narastanie i zamrożenie.
 
 ### Alternatywy
 - **Jednostki:** Mroźny Niedźwiedź Polarny (zamiast Jaka; kolizja z niedźwiedziami), Lodowy Golem (zamiast Rycerza; kolizja
-  z Golemem), Królowa Śniegu w Saniach (legenda zamiast Wilka).
+  z Golemem), Królowa Śniegu w Saniach (legenda zamiast Mamuta; blisko Marzanny).
 - **Mechanika:** *Zamieć* — co 3 rundy cała arena: wszyscy poza jednostkami Dworu −1 S na rundę (globalna, prostsza).
 - **Bohaterka:** Królowa Lodu (bez słowiańskiego kostiumu), jeśli Marzanna za mocno kojarzy się z topieniem kukły.
 
@@ -493,7 +511,7 @@ przepada. Do tego **przestawianie własnych jednostek** (Dżin, Rok, Czerw) i za
 | `sphinxWarden` | Sfinks Strażnik | wojownik | 2 | chód | wręcz | **Zagadka:** raz na bitwę wybrany wróg w zasięgu N nie atakuje w następnej aktywacji | Mądrość Wieków: +1 PD za wygraną (`xp`) |
 | `scorpionQueen` | Królowa Skorpionów | łowca | 1 | chód | wręcz | **Zasadzka Spod Piasku:** zaczyna bitwę zakopana na dowolnym polu swojej połowy, niewidoczna do pierwszego ruchu; trafienie zatruwa | Szlaki Wydm: +1 ruchu (`move`) |
 
-**Dowódcy:** Gwardzista Szakal (wojownik), Łuczniczka Karawany (łowca), Astrolog Pustyni (mędrzec).
+**Dowódcy:** **Brytania** (`brytania`, wojownik; zwierzak autora: gruba, leniwa, kocha jedzenie, czarna pantera; decyzja 19.11, zamiast Gwardzisty Szakala), Łuczniczka Karawany (łowca), Astrolog Pustyni (mędrzec).
 **Czwarty bohater:** Wielbłądzi Książę (łowca, Strzał i Galop).
 
 ### Jednostki
@@ -642,23 +660,23 @@ i przyciąganie wrogów. Rozdzielenie ze Stadami: Przypływy nie szarżują, prz
 | `sirenSinger` | Syrena Pieśniarka | mędrzec | 1 | chód | dyst. | **Pieśń Syreny:** raz na bitwę wróg w zasięgu przyciągnięty o N pól ku niej | Głos Głębin: czary +1 (`spellPower`) |
 | `seaSerpent` | Wąż Morski | łowca | 2 | chód | wręcz | **Oplot Głębin:** przyciąga cel o 1 i unieruchamia (raz na bitwę) | Prąd Morski: +1 ruchu (`move`) |
 
-**Dowódcy:** Trytoński Strażnik (wojownik), Harpunniczka (łowca), Kapłan Pływów (mędrzec).
+**Dowódcy:** Trytoński Strażnik (wojownik), Harpunniczka (łowca), **Stefan** (`stefan`, mędrzec; zwierzak autora: wąż zbożowy, szary z czarnymi plamami na grzbiecie jak paski, lubi wodę, płochliwy, chyba że chodzi o jedzenie, sympatyczny; decyzja 19.11, zamiast Kapłana Pływów).
 **Czwarty bohater:** Stary Mors Kapitan (wojownik, odpychanie).
 
 ### Jednostki
 | Tier | Jednostka (`id`) | Kim jest | Rozm. | Ruch | Walka | Zdolność | Prymityw | Siedlisko |
 |---|---|---|---|---|---|---|---|---|
-| 1 | Krabolud Tarczownik (`crabShield`) | krab z ludzkim tułowiem | 1 | chód | wręcz | Twarda Skorupa: pancerz | pancerz | — |
+| 1 | Mewa Rozbójniczka (`gullRaider`) | mewa w opasce rozbójnika (decyzja 19.11, zamiast Kraboluda Tarczownika) | 1 | lot | wręcz | Nalot: raz na bitwę po ataku odlatuje o N pól (propozycja zdolności, do potwierdzenia) | reuse: Powietrzny Zryw | — |
 | 1 | Trytoński Harpunnik (`tritonHarpoon`) | tryton z harpunem na linie | 1 | chód | dyst. | Harpun: raz na bitwę trafiony przyciągnięty o 2 | przyciąganie | — |
-| 1 | Konik Morski (`seahorse`) | wielki konik morski | 1 | chód | wręcz | Fala Odpływu: raz na bitwę odskok po ataku | reuse: Powietrzny Zryw | — |
+| 1 | Żabi Skoczek (`frogLeaper`) | żabolud z krótką włócznią (z frakcji zapasowej) | 1 | chód | wręcz | Susem w Tył: raz na bitwę odskok po ataku | reuse: Powietrzny Zryw | — |
 | 2A | Żółw Skorupiak (`shellTurtle`) | żółw z rafą na skorupie | 1 | chód | wręcz | Skorupa: raz na bitwę chowa się — 0 obrażeń do swojej następnej aktywacji, nie atakuje | ★ pełna osłona czasowa | Żółwia Plaża |
-| 2B | Meduza Parząca (`jellyfish`) | unosząca się meduza | 1 | lot | wręcz | Parzące Nici: kto atakuje ją wręcz, traci N Ż i ma −1 S | reuse: Kolce + spowolnienie | Laguna Meduz |
+| 2B | Ośmiornica Atramentowa (`inkOctopus`) | mała ośmiornica, która w odpływie przełazi po kamieniach rafy | 1 | chód | dyst. | Atrament: raz na bitwę cel i jego sąsiedzi −N A do końca następnej aktywacji (zalani atramentem) | aura osłabiająca (obszar) | Atramentowa Grota |
 | 3A | Rekinołak (`sharkman`) | wojownik z głową rekina | 1 | chód | wręcz | Wir: raz na bitwę po ataku zamienia się miejscami z celem | zamiana miejsc (z wrogiem) | Rekinia Grota |
 | 3B | Kapłanka Pereł (`pearlPriestess`) | trytonka z perłowym kosturem | 1 | chód | dyst. | Perłowa Tarcza: raz na bitwę sojusznik dostaje tarczę pochłaniającą N obrażeń | ★ tarcza punktowa | Perłowy Ołtarz |
 | 4A | Homar Pancerny (`lobsterKnight`) | homar w pozie rycerza | 1 | chód | wręcz | Szczypce: trafiony nie rusza się do końca swojej następnej aktywacji; pancerz | reuse: Chwyt | Homarza Rafa |
 | 4B | Mors Kłowy (`walrus`) | mors z okutymi kłami | 2 | chód | wręcz | Natarcie Kłów: po ataku odpycha cel o 1 (bez zderzenia) | odpychanie | Morsowa Ławica |
 | 5A | Żółw-Wyspa (`islandTurtle`) | żółw z wysepką na grzbiecie | 2 | chód | wręcz | Schronienie: sąsiedni sojusznicy mają pancerz 1; nie do odepchnięcia | aura | Wyspa Żółwia |
-| 5B | Morska Wiedźma (`seaWitch`) | wiedźma z mackami zamiast nóg | 1 | chód | dyst. | Odpływ: raz na bitwę zamienia miejscami dwie dowolne jednostki w zasięgu N | zamiana miejsc | Zatopiona Chata |
+| 5B | Morska Wiedźma (`seaWitch`) | stara wiedźma w płaszczu z sieci i muszli | 1 | chód | dyst. | Odpływ: raz na bitwę zamienia miejscami dwie dowolne jednostki w zasięgu N | zamiana miejsc | Zatopiona Chata |
 | 6 | Lewiatan (`leviathan`) | pradawny potwór morski | 2 | chód | wręcz | Wir Głębin: raz na bitwę wszyscy wrogowie w promieniu 3 przyciągnięci o 2 ku niemu | przyciąganie obszarowe | Rów Głębinowy |
 
 ### Osada
@@ -684,14 +702,15 @@ Trzyma szyk wokół żółwi, harpunami i Syreną ściąga strzelców wroga, ran
 się na pola obok pułapek i grzybni (jeśli je widzi), wysuwać Syreny na przód.
 
 ### Kolizje
-- **Szczypiec (neutralny, Chwyt)** to krab: Krabolud ma tylko pancerz, chwyt ma Homar (inny wygląd).
-- **Kraken i Hydra z Zatopionych Ruin (neutralni):** Przypływy bez macek i wielogłowych.
+- **Szczypiec (neutralny, Chwyt)** to krab: Homar ma chwyt (inny wygląd); Krabolud Tarczownik odpadł (patrz `ODRZUCONE_POMYSLY.md`).
+- **Kraken i Hydra z Zatopionych Ruin (neutralni):** Przypływy bez wielogłowych; jedyne macki ma mała
+  Ośmiornica (poziom 2), wyraźnie inna niż olbrzymi Kraken. Morska Wiedźma bez macek.
 - **Wydra** jest w Kompaniach; Przypływy bez wydr.
 - Odpychanie u Stad: patrz Stada.
 
 ### Alternatywy
-- **Jednostki:** Delfin Zwiadowca (zamiast Konika; kolor!), Ośmiornica Atramentowa (zamiast Meduzy, atrament −A strzelcom),
-  Wieloryb Wojenny (legenda zamiast Lewiatana).
+- **Jednostki:** Mewa Rozbójniczka (autor: dobry pomysł, dałaby Przypływom latającą jednostkę; miejsce do ustalenia,
+  punkt 14).
 - **Mechanika:** *Fala* — co 3 rundy fala przyciąga wszystkich wrogów o 1 pole w stronę Przypływów (globalna, efektowna,
   zmienia całą arenę; łatwa do pokazania animacją).
 - **Budynek mapy:** Przystań — bohater w osadzie przenosi się do innej osady Przypływów leżącej przy wodzie.
@@ -713,7 +732,8 @@ spowolnienie, unieruchomienie, trucizna, wyczerpanie many, pola z efektem). Każ
 | Ignorowanie pancerza | Umarli, Rój | mała | |
 | Tarcza jednorazowa / punktowa (pochłania N, typ ciosu) | Umarli, Przypływy, Szron | mała | |
 | Premia za brak ruchu | Klany | mała | |
-| Ogłuszenie (utrata aktywacji) | Klany, Szron | mała | zamrożenie to ta sama logika |
+| Ogłuszenie (utrata aktywacji) | Klany, Szron, Kompanie | mała | zamrożenie to ta sama logika |
+| Prowokacja (cel może atakować tylko prowokującego) | Stada (Łoś) | mała | filtr celów w AI i UI |
 | Stawianie przeszkody (mur, tama, lodowa ściana) | Klany, Kompanie, Szron | średnia | `placeGround` z blokowaniem ruchu |
 | Premia przeciw rozmiarowi | Klany | mała | |
 | Oznaczenie celu | Kompanie | mała | status na jednostce do końca rundy |
@@ -723,7 +743,7 @@ spowolnienie, unieruchomienie, trucizna, wyczerpanie many, pola z efektem). Każ
 | Premia za rany | Kompanie | mała | |
 | Drugi atak (dystansowy) | Kompanie | średnia | |
 | Szron (stosy i zamrożenie) | Szron | średnia | licznik na jednostce |
-| Przestawienie wroga | Szron | mała | `swapPlaces` / teleport celu |
+| Przestawienie wroga | Szron, Klany (Skarbnik) | mała | `swapPlaces` / teleport celu |
 | Miraż (atrapa) | Piaski | **duża** | ukryta informacja |
 | Reakcja na wejście obok | Piaski | średnia | wymaga przerwania ruchu |
 | Uśpienie do bodźca | Piaski | mała | |
@@ -750,13 +770,35 @@ Gdyby któraś z ośmiu odpadła, tu są zamienniki z inną rolą lub innym klim
 
 ---
 
-## 13. Decyzje do podjęcia
+## 13. Decyzje (stan 19.11.2026)
 
-1. **Skład ośmiu**: zostają te z pomysłów autora, czy któraś wymiana na frakcję zapasową (punkt 12)?
-2. **Kolizje stworów**: Stada bez centaurów i minotaurów? Kompanie z rudą lisicą obok Srebrnego Lisa? Białe wilki w Szronie?
-3. **Ukryta informacja** (pułapki Kompanii, miraże Piasków): robimy (duży koszt w online i bocie) czy wersje jawne z Alternatyw?
-4. **Tło kluczowe** dla Szronu i Przypływów: zostaje niebieskie (lód biały, morze zielone) czy inne tło dla tych frakcji?
-5. **Kuźnia Run** Klanów to nowy stan gry (runy na pomocnikach): zgoda, czy prostsza wersja „runa przed bitwą”?
-6. **Bonusy Reliktu**: czy mogą być różnej natury (S, pancerz, odporność, pułapki), czy wolisz proste liczby jak +2 Ż / +1 A?
-7. **Czwarci bohaterowie** od razu z frakcją, czy dopiero gdy wejdzie gra 7–8 graczy na poziomach 5–6?
-8. Po akceptacji karty: przenoszę kartę do `docs/frakcje/<id>.md` (bramka G0) i ruszam z G1 dla Dzikich Stad.
+Rozstrzygnięte:
+1. **Skład ośmiu** zostaje (frakcje zapasowe czekają w rezerwie).
+2. **Kolizje stworów:** Stada bez centaurów i minotaurów; bez nowych wilków i psów.
+3. **Ukryta informacja:** robimy (pułapki, miraże, ukrycie), hot-seat z zasłonami w trzech momentach (punkt 2).
+4. **Tło kluczowe** zostaje niebieskie; w postaciach Szronu i Przypływów bez błękitów (lód biały/szary, morze zielone).
+5. **Runiczna Kuźnia** Klanów (trwała), runa zostaje przy jednostce po śmierci.
+6. **Bonusy Reliktu** mogą być różnej natury (jak w kartach).
+7. **Czwarci bohaterowie** wdrażamy razem z frakcją.
+8. **Układ jednostek:** tiery 2–5 z wersjami A i B; na poziomie 6 siedlisko jednego wyklucza drugie (jak Przymierze i Horda).
+9. Po akceptacji kart: przenoszę karty do `docs/frakcje/<id>.md` (bramka G0) i ruszam z G1 dla Dzikich Stad.
+
+---
+
+## 14. Rozstrzygnięte i otwarte po uwagach z 19.11
+
+**Rozstrzygnięte:**
+- Zwierzaki autora jako **dowódcy z karczmy**, po jednym w trzech frakcjach: Bajka (łowca) w Kompaniach, Brytania (wojownik) w Piaskach,
+  Stefan (mędrzec, wąż zbożowy lubiący wodę) w Przypływach. Uwaga: Przypływy mają już bohatera Węża Morskiego (łowca, 2 pola); Stefan jest mały, szary, w plamach, więc odróżnienie jest w rozmiarze i wyglądzie.
+- Wij: **Wij Podziemny**.
+- Jeździec na Koźle: Klany 3B zamiast Wiropłatu (Wiropłat do alternatyw).
+- Mewa Rozbójniczka: Przypływy, tier 1, zamiast Kraboluda Tarczownika (Twarda Skorupa/pancerz poziomu 1 do przemyślenia).
+- Stada: bydła mniej (Słoń z Bębnem zamiast Bawołu); satyrowie, tury i faun zostają; zderzenie rani też jednostkę, w którą uderza.
+
+**Otwarte:**
+1. **Zdolności trzech zwierzaków** (Bajka, Brytania, Stefan): karty nie mają jeszcze zdolności bohaterów, trzeba je wymyślić z charakterów.
+2. **Trzy ropuchy w Kompaniach** (Ropucha Truciciel, Ropucha Zielarka w karczmie, Ropuch z Hakownicą): przerzedzić?
+3. **Zdolności do potwierdzenia:** Jeździec na Koźle (Skok po Turniach) i Mewa Rozbójniczka (Nalot) to propozycje.
+4. **Pancerz poziomu 1 w Przypływach:** po odejściu Kraboluda nikt go nie ma; zostawić (przejmuje ktoś inny) czy świadomie zrezygnować?
+5. **Stada:** trzech pomocników startowych (Dudziarz, Młody Tur, Kozica): zatwierdzić?
+6. **Imperium Piasków i Rój Głębin** nie przeszły jeszcze przeglądu autora (uwagi z 19.11 dotyczyły sześciu pozostałych frakcji).

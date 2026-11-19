@@ -1,19 +1,19 @@
 # Karta frakcji: Dzikie Stada (`herds`) — szkic G0 do zatwierdzenia
 
-Stan: 18.11.2026. **Szkic Claude'a na bazie `FRAKCJE_PROPOZYCJE.md` (sekcja 3)**: liczby są propozycją na skali Przymierza i Hordy
+Stan: 18.11.2026, zsynchronizowane z `FRAKCJE_PROPOZYCJE.md` po uwagach autora z 19.11 (mamut do Szronu, Hipogryf, Łoś, Nosorożec na poziom 5). **Szkic Claude'a na bazie `FRAKCJE_PROPOZYCJE.md` (sekcja 3)**: liczby są propozycją na skali Przymierza i Hordy
 i zostaną dostrojone symulacjami przy bramce G2. Do decyzji autora: sekcja „Pytania” na końcu. Szablon: `KARTA_FRAKCJI_SZABLON.md`.
 
 ## Tożsamość
 - **Nazwa / id:** Dzikie Stada / `herds` (EN: Wild Herds).
-- **Klimat:** wędrowne stada stepów i puszcz: tury, żubry, nosorożce i mamuty, prowadzone przez satyrów z rogami i dudami. Ich osady to obozowiska
+- **Klimat:** wędrowne stada stepów i puszcz: tury, żubry, nosorożce i łosie, prowadzone przez satyrów z rogami i dudami. Ich osady to obozowiska
   przy wodopojach i kamiennych kręgach. Walczą rozpędem: kto stoi na drodze stada, ląduje na skale.
 - **Rola w grze:** agresja + mobilność (inicjatywa, rozbijanie szyków, szybkie dojście do strzelców).
 - **Mechanika wyróżniająca: Tętent.** Rozpędzona jednostka spycha cel; cel, który uderzy w głaz, krawędź areny albo inną jednostkę,
   dostaje dodatkowe obrażenia (zderzenie). Przymierze ma premie za bieg, Stada mają odepchnięcie i zderzenie. Arena Stad ma dużo głazów.
 - **Mocne strony / słabości:** mocne: inicjatywa, dojście do strzelców, podbój mapy. Słabe: brak leczenia, słabi strzelcy, mury osad
-  (potrzeba Nosorożca albo Mamuta), jednostki, których nie da się odepchnąć.
+  (potrzeba Nosorożca), jednostki, których nie da się odepchnąć.
 - **Jak gra bot:** ustawia jednostki daleko od wroga (rozpęd), wybiera cele przy głazach i krawędzi, szybcy idą po strzelców. Na mapie podbija kopalnie i
-  osady, używa Ostoi do przerzutu. **Nie wolno mu:** stać w miejscu, szturmować murów bez Nosorożca lub Mamuta.
+  osady, używa Ostoi do przerzutu. **Nie wolno mu:** stać w miejscu, szturmować murów bez Nosorożca.
 
 ## Bohaterowie (3) — propozycja liczb (skala jak Przymierze: Ż 8–11, A 4–5, S 4–8)
 | Id | Nazwa | Ż | A | S | Ruch | Zasięg | Zdolność |
@@ -35,13 +35,13 @@ Dowódcy z karczmy: Turzy Zagończyk (wojownik), Faun Oszczepnik (łowca, dyst.)
 | 2B | `tarpan` | Tarpan | 6 | 3 | 6 | chód | wręcz | Rozpęd: +1 A po przebiegnięciu ≥3 pól |
 | 3A | `forestBison` | Żubr Puszczański | 9 | 3 | 3 | chód | wręcz | Niewzruszony: pancerz 1, nie da się go odepchnąć |
 | 3B | `satyrLancer` | Satyr Kopijnik | 7 | 3 | 5 | chód | wręcz | Przebicie: cios trafia cel i jednostkę za nim |
-| 4A | `warRhino` | Nosorożec Bojowy (2 pola) | 13 | 5 | 5 | chód | wręcz | Taran: po ≥3 polach odepchnięcie o 2, zderzenie +2; podwójne obrażenia bramom |
-| 4B | `drumBuffalo` | Bawół z Bębnem (2 pola) | 12 | 4 | 4 | chód | wręcz | Bęben Wędrówki: sojusznicy w promieniu 2 mają +1 S |
-| 5A | `warMammoth` | Mamut Wojenny (2 pola) | 16 | 6 | 3 | chód | wręcz | Stratowanie: przechodzi przez pola małych wrogów, spychając i raniąc o 2 |
-| 5B | `sabertooth` | Tygrys Szablozęby | 8 | 5 | 7 | chód | wręcz | Skok na Kark: skok nad jednostkami do 3 pól; +2 A na cel odepchnięty w tej rundzie |
+| 4A | `steppeHippogriff` | Hipogryf Stepowy (2 pola) | 9 | 4 | 7 | lot | wręcz | Lot na Strzelców: +2 A na cel odepchnięty w tej rundzie; jedyny lotnik Stad |
+| 4B | `drumElephant` | Słoń z Bębnem (2 pola; zamiast Bawołu, decyzja 19.11) | 12 | 4 | 4 | chód | wręcz | Bęben Wędrówki: sojusznicy w promieniu 2 mają +1 S |
+| 5A | `warRhino` | Nosorożec Bojowy (2 pola) | 14 | 5 | 5 | chód | wręcz | Taran: po ≥3 polach odepchnięcie o 2, zderzenie +2; podwójne obrażenia bramom |
+| 5B | `bullMoose` | Łoś Rogacz (2 pola) | 15 | 5 | 3 | chód | wręcz | Rykowisko: raz na bitwę wyzywa wroga w zasięgu 3; ten w swojej następnej aktywacji może atakować tylko Łosia |
 | 6 | `indrik` | Indrik, Pan Zwierząt (2 pola) | 20 | 7 | 4 | chód | wręcz | Ziemia Drży: raz na bitwę mali wrogowie w promieniu 2 odepchnięci o 1; sam nie do odepchnięcia |
 
-Nowe prymitywy silnika do zrobienia przy G1: odepchnięcie (zbudować na `boulder`), zderzenie, przeskok (Kozica, Tygrys), odporność na przesunięcie, przejście z odepchnięciem (Mamut). Reszta to powtórki istniejących zdolności.
+Nowe prymitywy silnika do zrobienia przy G1: odepchnięcie (zbudować na `boulder`), zderzenie, przeskok (Kozica), odporność na przesunięcie, prowokacja (Łoś). Reszta to powtórki istniejących zdolności.
 
 ## Osada
 - **Budynki:** Kamień Tętentu (mechanika, rodzic: Koszary; I: rozpęd ≥3 pola odpycha o 1, II: zderzenie +1, III: próg 2 pola, IV: zderzony cel −1 S), Wielkie Pastwiska
