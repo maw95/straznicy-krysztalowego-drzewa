@@ -5833,6 +5833,98 @@
       "ai": false,
       "placeholder": true,
       "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "clans/zastepcze/art",
+      "pliki": [
+        "public/assets/cards/art/armoredBear.jpg",
+        "public/assets/cards/art/battleSmith.jpg",
+        "public/assets/cards/art/bronzeMole.jpg",
+        "public/assets/cards/art/bronzeSentinel.jpg",
+        "public/assets/cards/art/clanColossus.jpg",
+        "public/assets/cards/art/clanCrossbow.jpg",
+        "public/assets/cards/art/clanWarrior.jpg",
+        "public/assets/cards/art/dwarfCannon.jpg",
+        "public/assets/cards/art/forgePriest.jpg",
+        "public/assets/cards/art/giantSlayer.jpg",
+        "public/assets/cards/art/goatRider.jpg",
+        "public/assets/cards/art/hammerGuard.jpg",
+        "public/assets/cards/art/ironThane.jpg",
+        "public/assets/cards/art/mountainCrossbow.jpg",
+        "public/assets/cards/art/oldMiner.jpg",
+        "public/assets/cards/art/passWarden.jpg",
+        "public/assets/cards/art/runeMatron.jpg",
+        "public/assets/cards/art/shieldDwarf.jpg",
+        "public/assets/cards/art/skarbnik.jpg"
+      ],
+      "typ": "karta jednostki (zastępcza)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-19",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "clans/zastepcze/portraits",
+      "pliki": [
+        "public/assets/cards/portraits/armoredBear.jpg",
+        "public/assets/cards/portraits/battleSmith.jpg",
+        "public/assets/cards/portraits/bronzeMole.jpg",
+        "public/assets/cards/portraits/bronzeSentinel.jpg",
+        "public/assets/cards/portraits/clanColossus.jpg",
+        "public/assets/cards/portraits/clanCrossbow.jpg",
+        "public/assets/cards/portraits/clanWarrior.jpg",
+        "public/assets/cards/portraits/dwarfCannon.jpg",
+        "public/assets/cards/portraits/forgePriest.jpg",
+        "public/assets/cards/portraits/giantSlayer.jpg",
+        "public/assets/cards/portraits/goatRider.jpg",
+        "public/assets/cards/portraits/hammerGuard.jpg",
+        "public/assets/cards/portraits/ironThane.jpg",
+        "public/assets/cards/portraits/mountainCrossbow.jpg",
+        "public/assets/cards/portraits/oldMiner.jpg",
+        "public/assets/cards/portraits/passWarden.jpg",
+        "public/assets/cards/portraits/runeMatron.jpg",
+        "public/assets/cards/portraits/shieldDwarf.jpg",
+        "public/assets/cards/portraits/skarbnik.jpg"
+      ],
+      "typ": "portret jednostki (zastępczy)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-19",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "clans/zastepcze/crests",
+      "pliki": [
+        "public/assets/cards/crests/clans.png"
+      ],
+      "typ": "herb frakcji (zastępczy)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-19",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "clans/zastepcze/arena",
+      "pliki": [
+        "public/assets/arena/cyfrowa/clans.webp"
+      ],
+      "typ": "arena frakcji (zastępcza)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-19",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
     }
   ]
 }
