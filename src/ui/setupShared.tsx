@@ -64,6 +64,7 @@ export const ARENA_LEVEL_TIPS: Record<Level, string> = {
 export const TIPS = {
   arenaMode: 'Szybka bitwa bez mapy: Przymierze Świtu kontra Mroczna Horda, z komputerem albo z drugim graczem. Bohater, dwóch pomocników i 2 skarby dobierane ze wspólnej talii — na zmianę jeden z kilku pokazanych (Przymierze widzi 3, Horda 4).',
   coop: 'Wszyscy gracie razem Przymierzem Świtu, a Hordę prowadzi automat według prostych zasad. Dobry wybór na pierwsze partie i do gry z dziećmi.',
+  skirmish: 'Pełna gra na mapie, w której sam wybierasz cel, poziom, mapę, frakcje i graczy. Sam albo ze znajomymi prowadzisz Przymierze Świtu przeciw Hordzie prowadzonej przez komputer, możecie też grać przeciw sobie, a do gry mogą dojść inne frakcje.',
   pvp: 'Jedni prowadzą Przymierze Świtu, drudzy Mroczną Hordę (najwyżej 3 graczy na stronę, razem do 6). Przymierze zbiera kryształy dla Drzewa, Horda poluje na jego bohaterów albo odprawia rytuał.',
   arena: 'Bitwa przenosi się na osobną planszę areny: każda strona wystawia bohatera i dwóch pomocników, jednostki chodzą, strzelają i używają zdolności. Ok. 5–10 minut na bitwę.',
   board: 'Szybki pojedynek bez ruchu: walczą tylko dwaj bohaterowie (albo bohater ze strażnikiem, który ma wtedy mniej Życia) i na zmianę zadają ciosy. Ok. 1–2 minut.',
@@ -79,6 +80,12 @@ export const LEVEL_TIPS: Record<Level | 'custom', string> = {
   hard: 'Pełna gra, a automat zła dostaje jednego bohatera więcej (co najmniej trzech) i 2 losowe skarby na start, ale nie dostaje posiłków. Wyzwanie dla dorosłych.',
   veryHard: 'Jak Trudny, a komputer ma przewagę: 2 skarby więcej na start, dodatkowe surowce (drewno, ruda, Pył), artefakt dla głównego bohatera i większe dochody (w kooperacji zło dostaje też dodatkowego bohatera i skarby). Dla najlepszych.',
   custom: 'Sami składacie zasady: rodzaj bitew, ułatwienia i utrudnienia — wszystko można łączyć.',
+};
+
+/** The digital game has no automaton (the Horde is an ordinary bot), so its two hardest levels read differently from the board edition's. */
+export const DIGITAL_LEVEL_TIPS: Partial<Record<Level | 'custom', string>> = {
+  hard: 'Pełna gra, a komputer dostaje 2 losowe skarby na start. Wyzwanie dla dorosłych.',
+  veryHard: 'Jak Trudny, a komputer ma jeszcze przewagę: 2 skarby więcej na start, dodatkowe surowce (drewno, ruda, Pył), artefakt dla głównego bohatera i większe dochody. Dla najlepszych.',
 };
 
 /** Approximate time at the table with one hero per side (simulated game length). */

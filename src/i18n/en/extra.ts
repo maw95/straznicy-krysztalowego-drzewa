@@ -109,6 +109,7 @@ register({
   'Jaka mapa?': 'Which map?',
   'Kooperacja': 'Co-op',
   'Rywalizacja': 'Rivalry',
+  'Potyczka': 'Skirmish',
   '← Wstecz': '← Back',
   'Dalej →': 'Next →',
   'Nowe konto': 'New account',

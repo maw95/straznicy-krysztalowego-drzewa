@@ -13,7 +13,7 @@ import type { Level, MapShape, Mode, ObjectiveId } from '../engine/types';
 import type { TableConfig } from '../online/api';
 import { asset, Frame, Ribbon } from './common';
 import { CoopSwitchRows, CustomSwitchRows } from './CustomSwitchRows';
-import { ARENA_HINT, ARENA_LEVEL_TIPS, BOARD_LEVELS, CentredChoice, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, ShapeIcon, SHAPE_NAMES, SHAPE_TIPS, SIZE_CODES, Tip, TIPS } from './setupShared';
+import { DIGITAL_LEVEL_TIPS, ARENA_HINT, ARENA_LEVEL_TIPS, BOARD_LEVELS, CentredChoice, chip, defaultHeroes, LEVEL_HINT, LEVEL_TIPS, LEVELS, mapTip, Row, ShapeIcon, SHAPE_NAMES, SHAPE_TIPS, SIZE_CODES, Tip, TIPS } from './setupShared';
 
 export const EDITION_KEY = 'skd-edition';
 /** The edition picked last time in this browser: digital unless the board edition was chosen. */
@@ -114,10 +114,11 @@ const OBJECTIVE_ICON: Record<ObjectiveId, string> = {
 };
 
 /** The draft with a mode picked: the player count and the level a mode allows. */
-function withMode(d: Draft, mode: Mode): Draft {
-  const count = mode === 'pvp' ? Math.max(2, d.count) : mode === 'arena' ? 2 : Math.min(3, d.count);
+function withMode(d: Draft, mode: Mode, online: boolean): Draft {
+  // One player against the Horde's computer is a table of its own in the digital game (the online game needs two people at least).
+  const count = mode === 'pvp' ? Math.max(d.digital && !online ? 1 : 2, d.count) : mode === 'arena' ? 2 : Math.min(3, d.count);
   const level = mode === 'pvp' && d.level === 'hard' && !d.digital ? 'normal' : mode === 'arena' && d.level === 'zero' ? 'kids' : d.level;
-  return { ...d, mode, count, level, ...(mode !== 'coop' && d.objective === 'survival' ? { objective: 'crystals' as ObjectiveId } : {}), ...(mode === 'arena' ? { tier: 'adventure' as Tier } : {}) };
+  return { ...d, mode, count, level, ...(mode === 'arena' ? { tier: 'adventure' as Tier } : {}) };
 }
 
 export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: fixedMode, digital: fixedDigital }: { online: boolean; onBack: () => void; onFinish: (table: TableConfig) => void; links?: React.ReactNode; initial?: TableConfig; mode?: Mode; digital?: boolean }) {
@@ -126,7 +127,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   const [d, setD] = useState<Draft>(() => (initial ? draftOf(initial) : withMode({
     digital: fixedDigital ?? true,
     tier: 'adventure',
-    mode: 'coop',
+    mode: 'pvp',
     objective: 'crystals',
     shape: 'triangle',
     customMapId: readyMaps()[0]?.id ?? '',
@@ -136,7 +137,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
     count: 1,
     arenaSize: 3,
     custom: null,
-  }, fixedMode ?? 'coop')));
+  }, fixedMode ?? ((fixedDigital ?? true) ? 'pvp' : 'coop'), online)));
   /** The level and the goal start with nothing lit (there is no "Dalej" on those pages: a lit default would look like a choice already made); editing a table has both. */
   const [picked, setPicked] = useState({ tier: initial !== undefined, objective: initial !== undefined });
   const [page, setPage] = useState<Page>(() => (initial ? 'players' : pagesOf(d, askMode)[0]));
@@ -179,7 +180,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   const sizes = (Object.keys(MAP_SIZE_NAMES) as MapSize[]).filter((m) => d.digital || BOARD_MAP_SIZES.includes(m));
 
   const setMode = (mode: Mode) => {
-    const next = withMode(d, mode);
+    const next = withMode(d, mode, online);
     setD(next);
     goFrom(page, next);
   };
@@ -235,8 +236,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
 
       {page === 'mode' && (
         <div className="opt-grid" data-wizard-page="mode">
-          <Card on={d.mode === 'coop'} title="Kooperacja" text={TIPS.coop} img={pic(asset('ui/menu/koop.webp'))} onClick={() => setMode('coop')} />
-          <Card on={d.mode === 'pvp'} title="Rywalizacja" text={TIPS.pvp} img={pic(asset('ui/menu/rywal.webp'))} onClick={() => setMode('pvp')} />
+          {!d.digital && <Card on={d.mode === 'coop'} title="Kooperacja" text={TIPS.coop} img={pic(asset('ui/menu/koop.webp'))} onClick={() => setMode('coop')} />}
+          <Card on={d.mode === 'pvp'} title={d.digital ? 'Potyczka' : 'Rywalizacja'} text={d.digital ? TIPS.skirmish : TIPS.pvp} img={pic(asset('ui/menu/rywal.webp'))} onClick={() => setMode('pvp')} />
           <Card on={arena} title="Arena" text={TIPS.arenaMode} img={pic(asset('ui/menu/arena.webp'))} onClick={() => setMode('arena')} />
         </div>
       )}
@@ -244,7 +245,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
       {page === 'objective' && (
         <>
           <div className="opt-grid" data-wizard-page="objective">
-            {(['crystals', 'control', 'survival', 'boss', 'artifact', 'conquest', 'relic'] as const).filter((o) => (o !== 'survival' || d.mode === 'coop') && (o !== 'conquest' || ['economy', 'realm', 'empire'].includes(d.tier)) && (o !== 'relic' || d.tier === 'empire')).map((o) => (
+            {(['crystals', 'control', 'survival', 'boss', 'artifact', 'conquest', 'relic'] as const).filter((o) => (o !== 'conquest' || ['economy', 'realm', 'empire'].includes(d.tier)) && (o !== 'relic' || d.tier === 'empire')).map((o) => (
               <Card key={o} on={picked.objective && d.objective === o} title={OBJECTIVES[o].name} text={OBJECTIVES[o].summary} img={pic(asset(OBJECTIVE_ICON[o]))} onClick={() => (d.mode === 'coop' && o === 'boss' ? patch({ objective: o }) : choose({ objective: o }))} />
             ))}
           </div>
@@ -319,7 +320,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
           ) : (
             <Row label="Liczba graczy">
               {/* At most 3 players per faction (its three heroes): coop (all Przymierze) takes 1–3, PvP 2–6; 7–8 players (a fourth hero a side) only on the levels without the tavern commanders. */}
-              {(d.mode === 'coop' ? [1, 2, 3] : d.digital && (d.tier === 'realm' || d.tier === 'empire' || d.tier === 'custom') ? [2, 3, 4, 5, 6] : [2, 3, 4, 5, 6, 7, 8]).map((n) => (
+              {(d.mode === 'coop' ? [1, 2, 3] : d.digital && (d.tier === 'realm' || d.tier === 'empire' || d.tier === 'custom') ? [...(online ? [] : [1]), 2, 3, 4, 5, 6] : [...(d.digital && !online ? [1] : []), 2, 3, 4, 5, 6, 7, 8]).map((n) => (
                 <button key={n} className={`${chip(d.count === n)} count-chip`} aria-pressed={d.count === n} onClick={() => patch({ count: n })}>{n}</button>
               ))}
             </Row>
@@ -327,7 +328,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
           {(arena || d.level !== 'zero' || !d.digital) && (
           <Row label={arena ? 'Komputer' : 'Trudność'}>
             {(arena || d.digital ? LEVELS : BOARD_LEVELS).filter(([l]) => l !== 'custom' && (l !== 'hard' || d.mode !== 'pvp' || d.digital)).map(([l, label]) => (
-              <Tip key={l} text={arena ? ARENA_LEVEL_TIPS[l as Level] : LEVEL_TIPS[l]}>
+              <Tip key={l} text={arena ? ARENA_LEVEL_TIPS[l as Level] : (d.digital && DIGITAL_LEVEL_TIPS[l]) || LEVEL_TIPS[l]}>
                 <button className={`${chip(d.level === l)} size-btn level-btn`} aria-pressed={d.level === l} data-level={l} onClick={() => patch({ level: l as Level, custom: null })}>
                   {LEVEL_ANIMAL[l as string] && <span className="level-btn-icon"><LevelIcon kind={LEVEL_ANIMAL[l as string]} size="100%" /></span>}
                   <span>{label}</span>
@@ -336,7 +337,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
             ))}
           </Row>
           )}
-          {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4, textAlign: 'center' }}>{LEVEL_HINT[d.level]}</div>}
+          {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4, textAlign: 'center' }}>{(d.digital && DIGITAL_LEVEL_TIPS[d.level]) || LEVEL_HINT[d.level]}</div>}
           {d.tier === 'custom' && d.custom && d.mode === 'coop' && !arena && <CoopSwitchRows rules={d.custom.rules} onRules={(r) => patch({ custom: { ...d.custom!, rules: { ...d.custom!.rules, ...r } } })} />}
         </div>
       )}

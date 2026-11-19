@@ -360,7 +360,7 @@ export const CONTROL = {
 };
 
 /**
- * Objective 'survival' (digital ruleset, coop): the Przymierze win when `rounds` rounds have passed with at least one hero alive;
+ * Objective 'survival' (digital ruleset): the Przymierze win when `rounds` rounds have passed with at least one hero alive;
  * the Horde win when every hero falls. Every `waveEvery` rounds the automaton's reserves arrive (a new hero in the Horde base)
  * while it fields fewer heroes than the Przymierze have alive plus `extra`. Tuned with simulations (docs/ZASADY_CYFROWE.md).
  */
@@ -410,7 +410,7 @@ export const ARTIFACT = {
 };
 
 /**
- * Family mode (digital ruleset, coop): the hero of a seat marked as a child is a little stronger, so a parent and a child can play on one team
+ * Family mode (digital ruleset): the hero of a seat marked as a child is a little stronger, so a parent and a child can play on one team
  * without the child holding the team back: `extraHp` more Życie in battle and `extraMove` more move points on the map.
  */
 export const FAMILY = { extraHp: 2, extraMove: 1 };

@@ -65,11 +65,11 @@ describe('setup screen simplifications', () => {
     const { container } = render(<StrictMode><App /></StrictMode>);
     const btn = (t: string) => pick(container, t)!;
     // Single switches are tucked away under the "Własne ustawienia" level: their page comes right after the card.
-    await newGame(container, 'Kooperacja', 'Własne ustawienia');
+    await newGame(container, 'Potyczka', 'Własne ustawienia');
     const tip = (t: string) => btn(t).parentElement!.querySelector('[role="tooltip"]')?.textContent ?? '';
     for (const t of ['Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością']) expect(btn(t).getAttribute('aria-pressed')).toBe('false');
     for (const t of ['Osobna arena (3 na 3)', 'Na planszy głównej (pojedynek 1 na 1)', 'Bez zdolności', 'Same Eliksiry Odrodzenia', 'Rezerwowy bohater po śmierci', 'Rzut kością', 'Osady i złoto', 'Ruch 4', '60']) expect(tip(t).length).toBeGreaterThan(20);
-    // What depends on the mode is not on that page: the extra Horde hero comes on the players page, in coop.
+    // The extra Horde hero belongs to the coop of the board edition: the digital game does not offer it.
     expect(btn('Dodatkowy bohater Hordy')).toBeUndefined();
     await click(container, 'Same Eliksiry Odrodzenia', 'Rzut kością');
     expect(btn('Same Eliksiry Odrodzenia').getAttribute('aria-pressed')).toBe('true');
@@ -78,7 +78,7 @@ describe('setup screen simplifications', () => {
     for (const t of ['Mała', 'Bardzo duża']) expect(tip(t).length).toBeGreaterThan(40);
     expect(tip('Mała')).toContain('limit 8 rund');
     await click(container, 'Dalej →');
-    expect(btn('Dodatkowy bohater Hordy').getAttribute('aria-pressed')).toBe('false');
+    expect(btn('Dodatkowy bohater Hordy')).toBeUndefined();
     for (const t of ['Łatwy', 'Normalny', 'Trudny']) expect(tip(t).length).toBeGreaterThan(40);
     await click(container, 'Dalej →', 'Rozpocznij grę');
     const game = (window as any).__game;
@@ -86,26 +86,27 @@ describe('setup screen simplifications', () => {
     expect(Object.values(game.items).map((i: any) => i.kind)).toEqual(['resurrection']);
   });
 
-  it('sets up the levels: hard adds a Horde hero in coop, Spacer plays duels without abilities, Łatwy is the full game', async () => {
+  it('sets up the levels: one player plays against the Horde bot, Spacer plays duels without abilities, Łatwy is the full game', async () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<StrictMode><App /></StrictMode>);
-    await newGame(container, 'Kooperacja', 'Przygoda', 'Dalej →');
+    await newGame(container, 'Potyczka', 'Przygoda', 'Dalej →');
     await click(container, 'Trudny');
     expect(pick(container, 'Trudny')!.getAttribute('aria-pressed')).toBe('true');
     await click(container, 'Dalej →', 'Rozpocznij grę');
     let game = (window as any).__game;
-    expect(Object.values(game.heroes).filter((h: any) => h.faction === 'horde')).toHaveLength(3);
+    expect(game.setup.mode).toBe('pvp');
+    expect(game.setup.seats.map((x: any) => [x.faction, x.controller])).toEqual([['dawn', 'human'], ['horde', 'bot']]);
     expect(game.factions.horde.inventory).toHaveLength(2);
     cleanup();
     const vh = render(<StrictMode><App /></StrictMode>).container;
-    await newGame(vh, 'Kooperacja', 'Przygoda', 'Dalej →');
+    await newGame(vh, 'Potyczka', 'Przygoda', 'Dalej →');
     await click(vh, 'Bardzo trudny', 'Dalej →', 'Rozpocznij grę');
     game = (window as any).__game;
     expect(game.setup.rules).toMatchObject({ veryHard: true });
     expect(game.factions.horde.inventory).toHaveLength(4);
     cleanup();
     const second = render(<StrictMode><App /></StrictMode>).container;
-    await newGame(second, 'Rywalizacja', 'Przygoda', 'Dalej →');
+    await newGame(second, 'Potyczka', 'Przygoda', 'Dalej →');
     // Every mode offers all four levels now (the computer's advantages work at a PvP table too).
     expect(pick(second, 'Trudny')).toBeDefined();
     expect(pick(second, 'Bardzo trudny')).toBeDefined();
@@ -115,7 +116,7 @@ describe('setup screen simplifications', () => {
     expect(game.setup.rules).toMatchObject({ abilities: true, easy: true });
     cleanup();
     const third = render(<StrictMode><App /></StrictMode>).container;
-    await newGame(third, 'Rywalizacja', 'Spacer', 'Dalej →');
+    await newGame(third, 'Potyczka', 'Spacer', 'Dalej →');
     expect(pick(third, 'Łatwy')).toBeUndefined();
     await click(third, 'Dalej →', 'Rozpocznij grę');
     game = (window as any).__game;
@@ -258,12 +259,12 @@ describe('setup options', () => {
     const { container } = render(<App />);
     const doc = container.ownerDocument;
     const btn = (t: string) => pick(doc, t);
-    await newGame(doc, 'Kooperacja', 'Przygoda', 'Dalej →');
+    await newGame(doc, 'Potyczka', 'Przygoda', 'Dalej →');
     expect(btn('Na zmianę')).toBeUndefined();
     expect(doc.body.textContent).not.toContain('Remis inicjatywy');
     cleanup();
     const second = render(<App />).container.ownerDocument;
-    await newGame(second, 'Kooperacja', 'Własne ustawienia');
+    await newGame(second, 'Potyczka', 'Własne ustawienia');
     expect(pick(second, 'Remis: Obrońca pierwszy')!.getAttribute('aria-pressed')).toBe('true');
     await click(second, 'Remis: Na zmianę');
     expect(pick(second, 'Remis: Na zmianę')!.getAttribute('aria-pressed')).toBe('true');
@@ -359,8 +360,8 @@ describe('start screen', () => {
     expect(button(doc, 'Dla testerów')).toBeTruthy();
     expect(localStorage.getItem('skd-play-offline')).toBe('1');
     await click(doc, 'Nowa gra');
-    for (const m of ['Rywalizacja', 'Kooperacja', 'Arena', 'Kampania', 'Ekspedycja']) expect(pick(doc, m)).toBeTruthy();
-    await click(doc, 'Kooperacja');
+    for (const m of ['Potyczka', 'Arena', 'Kampania', 'Ekspedycja']) expect(pick(doc, m)).toBeTruthy();
+    await click(doc, 'Potyczka');
     expect(pick(doc, 'Ten komputer')).toBeTruthy();
     expect(pick(doc, 'Przez internet')).toBeTruthy();
     await click(doc, 'Ten komputer');
@@ -369,7 +370,7 @@ describe('start screen', () => {
     expect(pick(doc, 'Nowa gra')).toBeTruthy();
     expect(pick(doc, 'Wersja planszowa')).toBeTruthy();
 
-    await click(doc, 'Nowa gra', 'Kooperacja', 'Przez internet');
+    await click(doc, 'Nowa gra', 'Potyczka', 'Przez internet');
     expect(doc.body.textContent).toContain('Witaj, Strażniku!');
     expect(localStorage.getItem('skd-play-offline')).toBeNull();
   });
@@ -491,7 +492,7 @@ describe('full screen', () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<App />);
     const doc = container.ownerDocument;
-    await newGame(doc, 'Kooperacja', 'Przygoda', 'Dalej →', 'Dalej →');
+    await newGame(doc, 'Potyczka', 'Przygoda', 'Dalej →', 'Dalej →');
     const box = [...doc.querySelectorAll('label')].find((l) => l.textContent?.includes('Pełny ekran przy uruchomieniu'))!.querySelector('input')!;
     await act(async () => {
       fireEvent.pointerUp(box);
@@ -582,7 +583,7 @@ describe('arena through the UI', () => {
   const overlayWith = (doc: Document, text: string) => [...doc.querySelectorAll('.overlay')].find((o) => o.textContent?.includes(text));
 
   it('"Nowa gra" starts the digital edition, the "Wersja planszowa" link the board edition, in the arena and in the adventure; the edition is not remembered for the next game', async () => {
-    for (const [mode, board] of [['Arena', false], ['Arena', true], ['Kooperacja', false], ['Kooperacja', true]] as const) {
+    for (const [mode, board] of [['Arena', false], ['Arena', true], ['Potyczka', false], ['Kooperacja', true]] as const) {
       window.history.replaceState(null, '', '/');
       vi.useFakeTimers();
       const { container, unmount } = render(<App />);
@@ -608,7 +609,7 @@ describe('arena through the UI', () => {
     const { container, unmount } = render(<App />);
     const doc = container.ownerDocument;
     // Level 1 fixes the goal; level 2 opens the choice.
-    await newGame(doc, 'Kooperacja');
+    await newGame(doc, 'Potyczka');
     expect([...doc.querySelectorAll('[data-wizard-page="tier"] .opt-card')].some((b) => b.getAttribute('aria-pressed') === 'true')).toBe(false);
     await click(doc, 'Przygoda');
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
@@ -628,7 +629,7 @@ describe('arena through the UI', () => {
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
     await click(doc, '← Wstecz', '← Wstecz', '← Wstecz', 'Nowa gra', 'Arena', 'Ten komputer');
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
-    await click(doc, '← Wstecz', '← Wstecz', 'Kooperacja', 'Ten komputer', 'Wyprawa', 'Punkty kontrolne', 'Trójkąt', 'Dalej →', 'Dalej →', 'Rozpocznij grę');
+    await click(doc, '← Wstecz', '← Wstecz', 'Potyczka', 'Ten komputer', 'Wyprawa', 'Punkty kontrolne', 'Trójkąt', 'Dalej →', 'Dalej →', 'Rozpocznij grę');
     const g = (window as any).__game;
     expect(g.rules.objective).toBe('control');
     expect(g.rules.heroGrowth).toBe(true);
@@ -854,18 +855,15 @@ describe('level VII: the dwellings in the tree of buildings', () => {
 });
 
 describe('the new-game wizard goes on by itself', () => {
-  it('after a goal and after a shape, but the coop Boss still asks for the Horde', async () => {
+  it('after a goal and after a shape', async () => {
     window.history.replaceState(null, '', '/');
     vi.useFakeTimers();
     const { container } = render(<App />);
     const doc = container.ownerDocument;
     const page = () => doc.querySelector('[data-wizard-page]')!.getAttribute('data-wizard-page');
-    await newGame(doc, 'Kooperacja', 'Wyprawa');
+    await newGame(doc, 'Potyczka', 'Wyprawa');
     expect(page()).toBe('objective');
     expect(doc.querySelector('[data-wizard-next]')).toBeNull();
-    await click(doc, 'Boss');
-    expect(page()).toBe('objective');
-    expect(doc.querySelector('[data-wizard-next]')).not.toBeNull();
     await click(doc, 'Punkty kontrolne');
     expect(page()).toBe('map');
     // The map page also asks for the size, so it keeps its button: the shape does not move it on.

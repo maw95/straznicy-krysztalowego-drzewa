@@ -27,11 +27,15 @@ import type { TableConfig } from '../online/api';
 const SIDES_GOALS: readonly ObjectiveId[] = ['control', 'conquest', 'relic'];
 
 /** Fresh seats: the first player is a person (both players of a two-sided game), the rest are bots. */
-const defaultSeats = (mode: Mode, count: number): SeatSetup[] =>
-  defaultHeroes(mode, count).map(({ faction, heroId }, i) => {
+const defaultSeats = (mode: Mode, count: number): SeatSetup[] => {
+  const seats: SeatSetup[] = defaultHeroes(mode, count).map(({ faction, heroId }, i) => {
     const human = mode === 'pvp' ? i < 2 : i === 0;
     return { name: mode === 'arena' && !human ? 'Komputer' : `Gracz ${i + 1}`, faction, race: faction, controller: human ? 'human' : 'bot', heroId };
   });
+  // One player alone: the Horde plays against them, led by the computer.
+  if (mode === 'pvp' && count === 1) seats.push({ name: 'Komputer', faction: 'horde', race: 'horde', controller: 'bot', heroId: FACTION_HEROES.horde[0] });
+  return seats;
+};
 
 
 /** The pages of the menu: the first choice, the mode, where to play, the new-game wizard, the saved games, the seats at the table. */
@@ -256,7 +260,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
           <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>Jaki tryb gry?</Ribbon>
           {!digital && <div style={{ fontSize: 14, color: 'var(--muted)', textAlign: 'center', marginTop: -6 }}>Wersja planszowa</div>}
           <div className="opt-grid compact three" data-wizard-page="mode">
-            {([['pvp', 'Rywalizacja', 'rywal', TIPS.pvp], ['coop', 'Kooperacja', 'koop', TIPS.coop], ['arena', 'Arena', 'arena', TIPS.arenaMode]] as const).map(([m, title, img, text]) => (
+            {((digital ? [['pvp', 'Potyczka', 'rywal', TIPS.skirmish], ['arena', 'Arena', 'arena', TIPS.arenaMode]] : [['pvp', 'Rywalizacja', 'rywal', TIPS.pvp], ['coop', 'Kooperacja', 'koop', TIPS.coop], ['arena', 'Arena', 'arena', TIPS.arenaMode]]) as ReadonlyArray<readonly [Mode, string, string, string]>).map(([m, title, img, text]) => (
               <button key={m} className="opt-card" data-mode={m} onClick={() => { setWizardMode(m); setLastTable(null); setStep('where'); }}>
                 <span className="opt-card-img"><img src={asset(`ui/menu/${img}.webp`)} alt="" /></span>
                 <span className="opt-card-title">{title}</span>
@@ -379,7 +383,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                   <option value="human">Człowiek</option>
                   <option value="bot">Bot</option>
                 </select>
-                {digital && mode === 'coop' && s.controller === 'human' && (
+                {digital && mode === 'pvp' && s.controller === 'human' && (
                   <label title="Tryb rodzinny: bohater dziecka ma więcej życia i ruchu, a na ekranie jest przycisk Podpowiedź. Na poziomach Osada i Księstwo gospodarką dziecka zajmuje się autopilot, a gdy tą samą frakcją gra też dorosły, zarządza nią dorosły." style={{ display: 'flex', gap: 5, alignItems: 'center', fontSize: 15 }}>
                     <input type="checkbox" checked={Boolean(s.child)} aria-label="Dziecko" onChange={(e) => update(i, { child: e.target.checked })} /> Dziecko
                   </label>

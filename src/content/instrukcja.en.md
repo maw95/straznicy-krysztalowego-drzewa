@@ -10,9 +10,9 @@ Format: `##` is a chapter, `###` is a part of a chapter. A line starting with `@
 This manual describes the **computer version** as it is now: all complexity levels (from Walk to Empire), the modes, goals, the campaign, the Roguelike Run and online play. The earlier printable manual describes the **board version** and stays untouched: you will find it at the bottom of this page (it is in Polish only).
 
 ### Your first game in five steps
-1. In the main menu click **New game**, choose the **Co-op** mode and the place **This computer**.
+1. In the main menu click **New game**, choose the **Skirmish** mode and the place **This computer**.
 2. Choose the level **Adventure** (the full game without hero development) or **Walk** (very simple duels, from age 5).
-3. Choose a small map, the number of players (in co-op you and your friends play against the computer) and the difficulty **Normal**. The goal is **Crystals to the Tree**.
+3. Choose a small map, the number of players (with one player the computer leads the Horde) and the difficulty **Normal**. The goal is **Crystals to the Tree**.
 4. Choose a hero. On the map click neighbouring tiles to walk and press **Space** to end your turn.
 5. Step onto a guardian's tile. A battle on the arena begins: place your units, then click a unit and the tile it should move to or attack.
 
@@ -27,7 +27,7 @@ In your first game a short tutorial with hints appears; you can switch it off wi
 @words: menu, buttons, new game, campaign, roguelike run, load, credits, introduction, for testers, start screen, flag, language
 
 The main menu has two big buttons:
-- **New game:** the second page asks for the **mode**: rivalry, co-op, arena ([Game modes](#game-modes)), the **Campaign** (the story of the Dawn Covenant in four scenarios, [Campaign](#campaign)) or the **Roguelike Run** (eight arena battles in a row, one life, [Roguelike Run](#roguelike-run)). Rivalry, co-op and arena lead on to the game wizard (chapter [New game wizard](#new-game-wizard)); the Campaign and the Roguelike Run have screens of their own.
+- **New game:** the second page asks for the **mode**: skirmish, arena ([Game modes](#game-modes)), the **Campaign** (the story of the Dawn Covenant in four scenarios, [Campaign](#campaign)) or the **Roguelike Run** (eight arena battles in a row, one life, [Roguelike Run](#roguelike-run)). Skirmish and arena lead on to the game wizard (chapter [New game wizard](#new-game-wizard)); the Campaign and the Roguelike Run have screens of their own.
 - **Load a game:** returns to a saved game: the last one (autosave), one saved under a name, or one from a file. A Roguelike Run in progress has an entry there, "Roguelike Run in progress", with a "Resume" button.
 
 At the bottom of the menu there is a small **Board version** link: it follows the same path (mode, place, wizard), but you play the board version ([New game wizard](#new-game-wizard)).
@@ -37,12 +37,12 @@ At the top there are three smaller buttons: **Rules and cards** (this window), *
 ## New game wizard
 @words: wizard, new game, settings, version, level, mode, goal, map, players, difficulty, map shape, map size, bots, hot-seat, hints
 
-Before the wizard you choose the **mode** (the menu's second page: rivalry, co-op or arena) and **where you play**: on this computer (against computer opponents, or several players at one screen) or **online** with friends ([Online play and ranking](#online-play-and-ranking)). The wizard then leads through consecutive pages. The **Back** button returns to the previous one, and some choices (level, goal) move on at once when clicked.
+Before the wizard you choose the **mode** (the menu's second page: skirmish or arena) and **where you play**: on this computer (against computer opponents, or several players at one screen) or **online** with friends ([Online play and ranking](#online-play-and-ranking)). The wizard then leads through consecutive pages. The **Back** button returns to the previous one, and some choices (level, goal) move on at once when clicked.
 
 1. **Complexity level** (except in the arena): from Walk to Empire ([Complexity levels](#complexity-levels)) or **Custom settings** ([Custom settings](#custom-settings)).
 2. **Goal of the game** (from the Expedition level, [Goals of the game](#goals-of-the-game)).
 3. **Map** (except in the arena): on the higher levels the shape (triangle, rectangle, ring, islands or a ready-made map) and the **size**; in Walk, Adventure and the board version only the size ([Adventure map](#adventure-map)).
-4. **Players:** the number of players, factions, heroes, who is human and who is the computer. For a human player in co-op there is a **Child** field ([Family mode](#family-mode)).
+4. **Players:** the number of players, factions, heroes, who is human and who is the computer. For a human player there is a **Child** field ([Family mode](#family-mode)).
 5. **Difficulty** of the computer ([Difficulty levels](#difficulty-levels)).
 
 **Version:** you play the **digital** version by default (units in 2D graphics with animations, a hex arena, all complexity levels). The **board version** (a faithful board game: 3D figures, unchanged rules and four map sizes; no complexity levels and no goal choice) is a link on the menu's first page. The choice of the version holds for that game only.
@@ -75,19 +75,20 @@ You choose the difficulty separately from the complexity level, also on the aren
 
 - **Easy** (rabbit): the computer starts weaker, for example with fewer treasures and a weaker Horde. On levels II–VII these are still full battles.
 - **Normal** (wolf): the computer plays by the same rules as you.
-- **Hard** (bear): the computer gets help: an extra hero and treasures, and in co-op the Horde gets no reinforcements.
+- **Hard** (bear): the computer gets help: 2 random treasures at the start.
 - **Very hard** (dragon): an even bigger advantage for the computer: 2 more random treasures at the start, income one and a half times larger, and on levels with settlements extra resources at the start (3 wood, 3 ore, 2 Dust) and 2 artifacts for the main hero. The computer's units have the same Health as yours. On the arena the computer makes no mistakes in its choices.
 
 For a win you get **ranking points**; the harder the difficulty, the more. On Very hard there are one and a half times as many as on Hard. Games with custom settings give no points.
 
 ## Game modes
-@words: mode, co-op, rivalry, arena, hot-seat, one screen, bots, evil automaton, 8 players, factions, team
+@words: mode, skirmish, co-op, rivalry, arena, hot-seat, one screen, bots, computer, 8 players, factions, team
 
-- **Co-op** (1–3 players): everyone plays the Dawn Covenant against the **evil automaton**, that is the computer-controlled Horde ([Evil automaton and bots](#evil-automaton-and-bots)).
-- **Rivalry** (2–8 players): some play the Covenant, others the Horde, at most three players per faction. With seven and eight players each side has a fourth hero (the Silver She-Wolf on the Covenant's side and the Dusk Manticore on the Horde's). From level VI rivalry is limited to six players, because the second hero (the commander) takes a seat. You set who is human and who is the computer at each seat.
+- **Skirmish** (1–8 players): a full game on the map in which you choose the goal, the level, the map, the factions and the players. Some play the Covenant, others the Horde, at most three players per faction; you set who is human and who is the computer at each seat. With one player the computer leads the Horde. So you and your friends can play together against the computer (one side, a shared purse and treasures) or against each other. With seven and eight players each side has a fourth hero (the Silver She-Wolf on the Covenant's side and the Dusk Manticore on the Horde's). From level VI it is limited to six players, because the second hero (the commander) takes a seat. The computer player is the same everywhere ([Bots](#evil-automaton-and-bots)).
 - **Arena**: one battle without a map ([Arena](#arena)).
 
-Several players at **one screen** (hot-seat) pass the device around. In rivalry the hand-over screen hides the faction's treasures between players; in co-op the treasures are shared and nothing is hidden. One person can take several seats and play them in turn. The **Autoplay** option lets bots play for humans as well (useful for watching a game).
+The **board edition** keeps the modes of the printed rulebook, including **Co-op** against the evil automaton.
+
+Several players at **one screen** (hot-seat) pass the device around. When opposing sides sit at the table, the hand-over screen hides the faction's treasures; players of one side share their treasures. One person can take several seats and play them in turn. The **Autoplay** option lets bots play for humans as well (useful for watching a game).
 
 ## Goals of the game
 @words: goal, crystals to the tree, control points, survival, boss, artifact, conquest, relic, win, ritual, round limit, draw
@@ -96,13 +97,13 @@ You choose the goal in the wizard; from the level Run on there is a choice, on A
 
 - **Crystals to the Tree** (the default). The Covenant wins when it brings all the crystals to the Crystal Tree (2 with one hero, 3 with two or three). The Horde wins when the round limit runs out, when all the Covenant's heroes fall, or when it performs the **ritual**: at the end of three consecutive rounds one of its heroes stands on the Tree and all the other living ones next to him. Defeating the Horde's heroes is not enough. The round limit is 8 / 12 / 18 / 24 (small / medium / large / very large map), and more on bigger maps and other shapes.
 - **Control points.** Three points lie on the map: the middle one worth 2 and two side ones worth 1 each. The side that has more points at the end of a round (its hero stands on the point) gets the advantage; **several rounds in a row** of advantage give the win (3 rounds on a small and medium map, 4 on a large one, 5 on a very large one, more on the biggest; the Covenant, which moves first, needs one more). After the round limit the side that held the advantage longer wins; a tie is a draw.
-- **Survival** (co-op only). The Covenant wins when a set number of rounds passes (6 / 9 / 14 / 18 on maps S–XL, more on the biggest) and at least one hero is alive. Every two rounds a new hero appears in the Horde's base. There are no crystals and no Tree.
-- **Boss.** The Boss's lair lies in the middle of the map. Both sides challenge it, and its wounds stay between fights. The one who deals the last blow wins. In co-op there is also a variant "everyone against the Boss", without the Horde.
+- **Survival.** The Covenant wins when a set number of rounds passes (6 / 9 / 14 / 18 on maps S–XL, more on the biggest) and at least one hero is alive. Every two rounds a new hero appears in the Horde's base. There are no crystals and no Tree.
+- **Boss.** The Boss's lair lies in the middle of the map. Both sides challenge it, and its wounds stay between fights. The one who deals the last blow wins.
 - **Artifact.** An Artifact lies in the middle of the map. Whoever brings it to their **own base** wins. The carrier is 1 movement point slower, and a fallen carrier drops the Artifact, which the next one picks up.
 - **Conquest** (from the level Principality). The side that at the end of a round holds **all the settlements on the enemy's land** wins: his capital and the settlements on his half of the map. After the round limit the side holding more than half of the enemy's settlements wins; if neither does or both do, it is a draw.
 - **Relic** (the level Empire). Raising the Primal Spark building wins at once; after the round limit the side carrying more Shards wins ([Empire](#empire)).
 
-In goals other than Crystals a draw at the round limit is a draw; in Boss and Artifact "nobody won" in co-op means a win for the Horde.
+In goals other than Crystals a draw at the round limit is a draw; in Boss and Artifact "nobody won" is a draw too.
 
 ## Adventure map
 @words: map, shape, triangle, rectangle, ring, islands, bridge, size, XL, XXL, giant, terrain, movement, movement points, discovering, fog, base, tree, round, turn, round track
@@ -311,11 +312,9 @@ The tier 6 unit has a **dwelling** of its own too (Phoenix Nest, Cavern of Doom;
 ## Evil automaton and bots
 @words: evil automaton, bot, computer, artificial intelligence, horde, opponent, reinforcements, hint, autoplay
 
-In co-op the Horde is controlled by the **evil automaton**. It has as many heroes as there are players (on Hard one more, at least three). When all of them fall, another hero appears in the Horde's base (except on the Hard level). On higher complexity levels the automaton does not collect gold; every few rounds its fallen supports come back.
+The computer leads the Horde (or any other side without a human) the same way in every game mode: it picks its fights, collects gold, builds up its settlements and hunts heroes.
 
-In battle every unit of the automaton attacks the enemy with the **lowest Health**: first among those it reaches without moving, then among those it can walk to; on a tie it picks the hero. It uses treasures at the first opportunity.
-
-Computer players in rivalry and on the arena play in a similarly sensible way. In family mode the **hint** button in the bottom bar asks the bot "what would you do" and shows the answer in a sentence at the top of the screen and highlights the target tile.
+On the arena the computer plays in a similarly sensible way. In family mode the **hint** button in the bottom bar asks the bot "what would you do" and shows the answer in a sentence at the top of the screen and highlights the target tile.
 
 ## Arena
 @words: arena, 3 vs 3, 6 vs 6, quick battle, duel, treasures, draw, computer
@@ -357,7 +356,7 @@ In the lobby there is a **general chat**, in a room a **room chat** (messages li
 
 The game is also prepared for playing with a child (from age 5):
 - **Walk** (level I) means short duels on a board without abilities and the ritual, with its own table of points.
-- In co-op, tick **Child** next to a human player. Their hero has 2 more Health in battle and 1 more movement point on the map, while the parent plays unchanged. The **hint** button suggests a move to the child.
+- In a skirmish, tick **Child** next to a human player. Their hero has 2 more Health in battle and 1 more movement point on the map, while the parent plays unchanged. The **hint** button suggests a move to the child.
 - On levels with settlements the child **walks and fights**, while the parent builds, recruits and trades (gold and resources are shared). If there is no adult, the settlements are handled by the **autopilot** like a computer, and the child's chests open by themselves.
 
 ## Custom settings

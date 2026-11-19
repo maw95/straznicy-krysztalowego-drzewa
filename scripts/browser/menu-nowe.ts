@@ -12,7 +12,7 @@ for (const view of ['desktop', 'telefon'] as View[]) {
     await p.locator('[data-wizard-page="mode"]').waitFor();
     console.log(view, 'modes:', await p.locator('[data-wizard-page="mode"] .opt-card-title').allInnerTexts());
     await p.screenshot({ path: `.tmp/menu-${view}-2.png` });
-    await p.locator('[data-mode="coop"]').click();
+    await p.locator('[data-mode="pvp"]').click();
     await p.locator('[data-wizard-page="where"] .opt-card').first().click();
     await p.locator('[data-wizard-page="tier"]').waitFor();
     console.log(view, 'lit on the level page:', await p.locator('[data-wizard-page="tier"] .opt-card[aria-pressed="true"]').count());

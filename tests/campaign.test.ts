@@ -33,14 +33,15 @@ describe.each(CAMPAIGNS)('campaign $id', (campaign) => {
       expect((scenario.map.story ?? []).length).toBeGreaterThanOrEqual(1);
     });
 
-    it('makes the set-up of an ordinary digital co-op game on its map, marked with the scenario', () => {
+    it('makes the set-up of an ordinary digital game on its map: the player against the Horde bot, marked with the scenario', () => {
       const setup = scenarioSetup(campaign, scenario, 7);
-      expect(setup.mode).toBe('coop');
+      expect(setup.mode).toBe('pvp');
       expect(setup.mapShape).toBe('custom');
       expect(setup.customMapId).toBe(scenario.map.id);
       expect(setup.rules.ruleset).toBe('digital');
-      expect(setup.seats).toHaveLength(1);
-      expect(setup.seats[0]).toMatchObject({ faction: 'dawn', heroId: scenario.hero });
+      expect(setup.seats).toHaveLength(2);
+      expect(setup.seats[0]).toMatchObject({ faction: 'dawn', controller: 'human', heroId: scenario.hero });
+      expect(setup.seats[1]).toMatchObject({ faction: 'horde', controller: 'bot' });
       expect(setup.campaign).toEqual({ id: campaign.id, scenario: scenario.id });
       expect(scenarioOf(setup)).toEqual({ campaign, scenario });
       if (scenario.objective !== 'crystals') expect(setup.rules.objective).toBe(scenario.objective);

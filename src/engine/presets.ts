@@ -45,7 +45,7 @@ export function resolveTier(tier: Tier, picks: Switches): Switches {
 /** The set-up with the digital edition's rules switched on when asked (the arena battles; the board duels of the easy level are the same), and its objective, map and hero growth. */
 export function withRuleset(setup: SetupOptions, digital: boolean, objective: ObjectiveId = 'crystals', shape: MapShape = 'triangle', customMapId?: string, growth = false, kingdom = false, economy = false, realm = false, empire = false): SetupOptions {
   if (!digital) return setup;
-  return { ...setup, ...(shape !== 'triangle' && setup.mode !== 'arena' ? { mapShape: shape, ...(shape === 'custom' ? { customMapId } : {}) } : {}), rules: { ...setup.rules, ruleset: 'digital', ...(growth && setup.mode !== 'arena' ? { heroGrowth: true } : {}), ...(kingdom && growth && setup.mode !== 'arena' ? { kingdom: true, ...(economy ? { economy: true, ...(realm ? { realm: true, ...(empire ? { empire: true } : {}) } : {}) } : {}) } : {}), ...(objective !== 'crystals' && (objective !== 'survival' || setup.mode === 'coop') && setup.mode !== 'arena' ? { objective } : {}) } };
+  return { ...setup, ...(shape !== 'triangle' && setup.mode !== 'arena' ? { mapShape: shape, ...(shape === 'custom' ? { customMapId } : {}) } : {}), rules: { ...setup.rules, ruleset: 'digital', ...(growth && setup.mode !== 'arena' ? { heroGrowth: true } : {}), ...(kingdom && growth && setup.mode !== 'arena' ? { kingdom: true, ...(economy ? { economy: true, ...(realm ? { realm: true, ...(empire ? { empire: true } : {}) } : {}) } : {}) } : {}), ...(objective !== 'crystals' && setup.mode !== 'arena' ? { objective } : {}) } };
 }
 
 // ------------------------------------------------------------------ "Własne ustawienia" at a table

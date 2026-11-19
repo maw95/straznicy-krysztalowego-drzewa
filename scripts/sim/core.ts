@@ -62,7 +62,7 @@ export function setupWith(size: MapSize, table: Table, options: Option[], seed: 
   // SIM_OBJECTIVE=control: the control-points goal (digital ruleset only).
   if (process.env.SIM_OBJECTIVE === 'control') rules.objective = 'control';
   // SIM_OBJECTIVE=survival: waves of the Horde (digital ruleset, coop tables only).
-  if (process.env.SIM_OBJECTIVE === 'survival' && mode === 'coop') rules.objective = 'survival';
+  if (process.env.SIM_OBJECTIVE === 'survival') rules.objective = 'survival';
   // SIM_OBJECTIVE=boss: the race for the Boss's last blow.
   if (process.env.SIM_OBJECTIVE === 'boss') rules.objective = 'boss';
   if (process.env.SIM_NOHORDE && mode === 'coop') rules.noHorde = true;

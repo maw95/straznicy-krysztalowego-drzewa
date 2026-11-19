@@ -374,7 +374,7 @@ function RankingTable({ me, refreshKey }: { me: User; refreshKey: unknown }) {
 function tableSummary(t: TableConfig): string[] {
   const parts = [t.digital ? 'Wersja cyfrowa' : 'Wersja planszowa'];
   if (t.digital && t.mode !== 'arena') parts.push(TIERS[t.tier].name);
-  parts.push(t.mode === 'coop' ? 'Kooperacja' : t.mode === 'pvp' ? 'Rywalizacja' : t.arenaSize === 6 ? 'Arena 6 na 6' : 'Arena');
+  parts.push(t.mode === 'coop' ? 'Kooperacja' : t.mode === 'pvp' ? (t.digital ? 'Potyczka' : 'Rywalizacja') : t.arenaSize === 6 ? 'Arena 6 na 6' : 'Arena');
   if (t.digital && t.mode !== 'arena' && t.tier !== 'adventure') {
     parts.push(`Cel: ${OBJECTIVES[t.objective].name}`);
     parts.push(t.shape === 'custom' ? `Mapa gotowa: ${CUSTOM_MAPS[t.customMapId ?? '']?.name ?? '?'}` : `Mapa losowa: ${SHAPE_NAMES[t.shape]}`);

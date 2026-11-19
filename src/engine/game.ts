@@ -184,7 +184,7 @@ export function createGame(setup: SetupOptions): GameState {
   OBJECTIVES[objectiveOf(state)].init(state);
 
   setup.seats.forEach((seat, i) => {
-    const player: Player = { id: `p${i + 1}`, name: seat.name, faction: seat.faction, controller: seat.controller, ...(seat.child && setup.mode === 'coop' && isDigital(rules) ? { child: true } : {}) };
+    const player: Player = { id: `p${i + 1}`, name: seat.name, faction: seat.faction, controller: seat.controller, ...(seat.child && setup.mode !== 'arena' && isDigital(rules) ? { child: true } : {}) };
     state.players.push(player);
     addHero(state, seat.heroId, seat.faction, player.id);
   });

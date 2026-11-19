@@ -10,9 +10,9 @@ Format: `##` to rozdział, `###` to część rozdziału. Linia zaczynająca się
 Ta instrukcja opisuje **wersję komputerową** w jej obecnym kształcie: wszystkie poziomy złożoności (od Spaceru do Imperium), tryby, cele, kampanię, Ekspedycję i grę online. Dotychczasowa instrukcja do druku opisuje **wersję planszową** i zostaje nietknięta: znajdziesz ją na dole tej strony.
 
 ### Pierwsza partia w pięciu krokach
-1. W menu głównym kliknij **Nowa gra**, wybierz tryb **Kooperacja** i miejsce **Ten komputer**.
+1. W menu głównym kliknij **Nowa gra**, wybierz tryb **Potyczka** i miejsce **Ten komputer**.
 2. Wybierz poziom **Przygoda** (pełna gra bez rozwoju bohatera) albo **Spacer** (bardzo proste pojedynki, od 5 lat).
-3. Wybierz małą mapę, liczbę graczy (w kooperacji ty i znajomi grają przeciw komputerowi) i trudność **Normalny**. Celem są **Kryształy do Drzewa**.
+3. Wybierz małą mapę, liczbę graczy (przy jednym graczu Hordę prowadzi komputer) i trudność **Normalny**. Celem są **Kryształy do Drzewa**.
 4. Wybierz bohatera. Na mapie klikaj sąsiednie pola, żeby iść, a **Spacją** kończ turę.
 5. Wejdź na pole strażnika. Zacznie się bitwa na arenie: rozstaw jednostki, a potem klikaj jednostkę i pole, na które ma iść albo które ma zaatakować.
 
@@ -27,7 +27,7 @@ W pierwszej partii pojawia się krótki samouczek z podpowiedziami; wyłączysz 
 @słowa: menu, przyciski, nowa gra, kampania, ekspedycja, wczytaj, autorzy, wprowadzenie, dla testerów, ekran startowy, flaga, język
 
 Menu główne ma dwa duże przyciski:
-- **Nowa gra:** druga strona pyta o **tryb**: rywalizacja, kooperacja, arena ([Tryby gry](#tryby-gry)), **Kampania** (historia Przymierza Świtu w czterech scenariuszach, [Kampania](#kampania)) albo **Ekspedycja** (osiem bitew na arenie pod rząd, jedno życie, [Ekspedycja](#ekspedycja)). Rywalizacja, kooperacja i arena prowadzą dalej do kreatora partii (rozdział [Kreator nowej gry](#kreator-nowej-gry)); Kampania i Ekspedycja mają własne ekrany.
+- **Nowa gra:** druga strona pyta o **tryb**: potyczka, arena ([Tryby gry](#tryby-gry)), **Kampania** (historia Przymierza Świtu w czterech scenariuszach, [Kampania](#kampania)) albo **Ekspedycja** (osiem bitew na arenie pod rząd, jedno życie, [Ekspedycja](#ekspedycja)). Potyczka i arena prowadzą dalej do kreatora partii (rozdział [Kreator nowej gry](#kreator-nowej-gry)); Kampania i Ekspedycja mają własne ekrany.
 - **Wczytaj grę:** wraca do zapisanej partii: ostatniej (autozapis), zapisanej pod nazwą albo z pliku. Wyprawa Ekspedycji w toku ma tam wpis „Ekspedycja w toku” z przyciskiem „Wznów”.
 
 U dołu menu jest mały link **Wersja planszowa**: prowadzi tą samą ścieżką (tryb, miejsce, kreator), ale gra się w wersji planszowej ([Kreator nowej gry](#kreator-nowej-gry)).
@@ -37,12 +37,12 @@ U góry są trzy mniejsze przyciski: **Zasady i karty** (to okno), **Wprowadzeni
 ## Kreator nowej gry
 @słowa: kreator, nowa gra, ustawienia, wersja, poziom, tryb, cel, mapa, gracze, trudność, kształt mapy, wielkość mapy, boty, hot-seat, podpowiedzi
 
-Przed kreatorem wybierasz **tryb** (druga strona menu: rywalizacja, kooperacja albo arena) i **gdzie grasz**: na tym komputerze (z komputerowymi przeciwnikami, albo kilku graczy przy jednym ekranie) albo **online** ze znajomymi ([Gra online i ranking](#gra-online-i-ranking)). Kreator prowadzi potem przez kolejne strony. Przyciskiem **Wstecz** wrócisz do poprzedniej, a część wyborów (poziom, cel) przechodzi dalej od razu po kliknięciu.
+Przed kreatorem wybierasz **tryb** (druga strona menu: potyczka albo arena) i **gdzie grasz**: na tym komputerze (z komputerowymi przeciwnikami, albo kilku graczy przy jednym ekranie) albo **online** ze znajomymi ([Gra online i ranking](#gra-online-i-ranking)). Kreator prowadzi potem przez kolejne strony. Przyciskiem **Wstecz** wrócisz do poprzedniej, a część wyborów (poziom, cel) przechodzi dalej od razu po kliknięciu.
 
 1. **Poziom złożoności** (poza areną): od Spaceru do Imperium ([Poziomy złożoności](#poziomy-zlozonosci)) albo **Własne ustawienia** ([Własne ustawienia](#wlasne-ustawienia)).
 2. **Cel gry** (od poziomu Wyprawa, [Cele gry](#cele-gry)).
 3. **Mapa** (poza areną): na wyższych poziomach kształt (trójkąt, prostokąt, pierścień, wyspy albo gotowa mapa) i **wielkość**; w Spacerze, Przygodzie i wersji planszowej tylko wielkość ([Mapa przygody](#mapa-przygody)).
-4. **Gracze:** liczba graczy, frakcje, bohaterowie, kto jest człowiekiem, a kto komputerem. Przy graczu-człowieku w kooperacji jest pole **Dziecko** ([Tryb rodzinny](#tryb-rodzinny)).
+4. **Gracze:** liczba graczy, frakcje, bohaterowie, kto jest człowiekiem, a kto komputerem. Przy graczu-człowieku jest pole **Dziecko** ([Tryb rodzinny](#tryb-rodzinny)).
 5. **Trudność** komputera ([Poziomy trudności](#poziomy-trudnosci)).
 
 **Wersja:** domyślnie gra się w wersji **cyfrowej** (jednostki w grafice 2D z animacjami, heksowa arena, wszystkie poziomy złożoności). **Wersja planszowa** (wierna planszówka: figurki 3D, zasady bez zmian i cztery rozmiary mapy; bez poziomów złożoności i wyboru celu) to link na pierwszej stronie menu. Wybór wersji obowiązuje tylko dla tej partii.
@@ -75,19 +75,20 @@ Trudność wybierasz osobno od poziomu złożoności, także na arenie. **Nie zm
 
 - **Łatwy** (królik): komputer zaczyna słabszy, na przykład z mniejszą liczbą skarbów i słabszą Hordą. Na poziomach II–VII to wciąż pełne bitwy.
 - **Normalny** (wilk): komputer gra na tych samych zasadach co ty.
-- **Trudny** (niedźwiedź): komputer ma ułatwienia: dodatkowego bohatera i skarby, a w kooperacji nie ma posiłków dla Hordy.
+- **Trudny** (niedźwiedź): komputer ma ułatwienia: 2 losowe skarby na start.
 - **Bardzo trudny** (smok): jeszcze większa przewaga komputera: o 2 losowe skarby więcej na start, o połowę większe dochody, a na poziomach z osadami dodatkowe surowce na start (3 drewna, 3 rudy, 2 Pyły) i 2 artefakty dla głównego bohatera. Jednostki komputera mają tyle samo Życia co twoje. Na arenie to komputer bez błędów w wyborach.
 
 Za wygraną dostajesz **punkty rankingu**; im trudniej, tym więcej. Na Bardzo trudnym jest ich półtora raza tyle co na Trudnym. Gry na własnych ustawieniach punktów nie dają.
 
 ## Tryby gry
-@słowa: tryb, kooperacja, rywalizacja, arena, hot-seat, jeden ekran, boty, automat zła, 8 graczy, frakcje, drużyna
+@słowa: tryb, potyczka, kooperacja, rywalizacja, arena, hot-seat, jeden ekran, boty, komputer, 8 graczy, frakcje, drużyna
 
-- **Kooperacja** (1–3 graczy): wszyscy grają Przymierzem Świtu przeciw **automatowi zła**, czyli komputerowej Hordzie ([Automat zła i boty](#automat-zla-i-boty)).
-- **Rywalizacja** (2–8 graczy): jedni grają Przymierzem, drudzy Hordą, najwyżej trzech graczy na frakcję. Przy siedmiu i ośmiu graczach każda strona ma czwartego bohatera (Srebrną Wilczycę po stronie Przymierza i Mantykorę Zmierzchu po stronie Hordy). Od poziomu VI w rywalizacji zostaje do sześciu graczy, bo drugi bohater (dowódca) zajmuje miejsce. Kto jest człowiekiem, a kto komputerem, ustawiasz przy każdym miejscu.
+- **Potyczka** (1–8 graczy): pełna gra na mapie, w której sam wybierasz cel, poziom, mapę, frakcje i graczy. Jedni grają Przymierzem, drudzy Hordą, najwyżej trzech graczy na frakcję; kto jest człowiekiem, a kto komputerem, ustawiasz przy każdym miejscu. Przy jednym graczu Hordę prowadzi komputer. Ty i znajomi możecie więc grać razem przeciw komputerowi (jedna strona, wspólna kasa i skarby) albo przeciw sobie. Przy siedmiu i ośmiu graczach każda strona ma czwartego bohatera (Srebrną Wilczycę po stronie Przymierza i Mantykorę Zmierzchu po stronie Hordy). Od poziomu VI zostaje do sześciu graczy, bo drugi bohater (dowódca) zajmuje miejsce. Komputerowy gracz jest wszędzie ten sam ([Boty](#automat-zla-i-boty)).
 - **Arena**: jedna bitwa bez mapy ([Arena](#arena)).
 
-Kilku graczy przy **jednym ekranie** (hot-seat) przekazuje sobie urządzenie. W rywalizacji ekran przekazania ukrywa skarby frakcji między graczami; w kooperacji skarby są wspólne i niczego się nie ukrywa. Jedna osoba może zająć kilka miejsc i grać nimi na zmianę. Opcja **Autoplay** pozwala botom grać także za ludzi (przydaje się do oglądania gry).
+W **wersji planszowej** zostają tryby z wydrukowanej instrukcji, w tym **Kooperacja** przeciw automatowi zła.
+
+Kilku graczy przy **jednym ekranie** (hot-seat) przekazuje sobie urządzenie. Gdy przy stole są przeciwne strony, ekran przekazania ukrywa skarby frakcji; gracze jednej strony mają skarby wspólne. Jedna osoba może zająć kilka miejsc i grać nimi na zmianę. Opcja **Autoplay** pozwala botom grać także za ludzi (przydaje się do oglądania gry).
 
 ## Cele gry
 @słowa: cel, kryształy do drzewa, punkty kontrolne, przetrwanie, boss, artefakt, podbój, relikt, wygrana, rytuał, limit rund, remis
@@ -96,13 +97,13 @@ Cel wybierasz w kreatorze; od poziomu Wyprawa jest do wyboru, na Przygodzie jest
 
 - **Kryształy do Drzewa** (domyślny). Przymierze wygrywa, gdy zaniesie do Kryształowego Drzewa wszystkie kryształy (2 przy jednym bohaterze, 3 przy dwóch albo trzech). Horda wygrywa, gdy minie limit rund, gdy polegną wszyscy bohaterowie Przymierza albo gdy odprawi **rytuał**: na koniec trzech kolejnych rund jeden jej bohater stoi na Drzewie, a wszyscy pozostali żyjący obok niego. Pokonanie bohaterów Hordy nie wystarczy. Limit rund to 8 / 12 / 18 / 24 (mała / średnia / duża / bardzo duża mapa), a na większych mapach i innych kształtach więcej.
 - **Punkty kontrolne.** Na mapie leżą trzy punkty: środkowy wart 2 i dwa boczne po 1. Stronę, która ma na koniec rundy więcej punktów (jej bohater stoi na punkcie), czeka przewaga; **kilka rund z rzędu** przewagi daje wygraną (3 rundy na małej i średniej mapie, 4 na dużej, 5 na bardzo dużej, więcej na największych; Przymierze, które rusza pierwsze, potrzebuje o jedną więcej). Po limicie rund wygrywa strona, która dłużej miała przewagę; remis to remis.
-- **Przetrwanie** (tylko kooperacja). Przymierze wygrywa, gdy minie ustalona liczba rund (6 / 9 / 14 / 18 na mapach S–XL, więcej na największych), a choć jeden bohater żyje. Co dwie rundy w bazie Hordy pojawia się nowy bohater. Kryształów i Drzewa nie ma.
-- **Boss.** Pośrodku mapy leży legowisko Bossa. Wyzywają go obie strony, a jego rany zostają między walkami. Wygrywa ten, kto zada ostatni cios. W kooperacji jest też wariant „wszyscy przeciw Bossowi”, bez Hordy.
+- **Przetrwanie.** Przymierze wygrywa, gdy minie ustalona liczba rund (6 / 9 / 14 / 18 na mapach S–XL, więcej na największych), a choć jeden bohater żyje. Co dwie rundy w bazie Hordy pojawia się nowy bohater. Kryształów i Drzewa nie ma.
+- **Boss.** Pośrodku mapy leży legowisko Bossa. Wyzywają go obie strony, a jego rany zostają między walkami. Wygrywa ten, kto zada ostatni cios.
 - **Artefakt.** Na środku mapy leży Artefakt. Kto zaniesie go do **własnej bazy**, wygrywa. Niosący jest o 1 punkt ruchu wolniejszy, a poległy upuszcza Artefakt, który podnosi następny.
 - **Podbój** (od poziomu Księstwo). Wygrywa strona, która na koniec rundy trzyma **wszystkie osady na ziemi wroga**: jego stolicę i osady na jego połowie mapy. Po limicie rund wygrywa strona trzymająca ponad połowę osad wroga; jeśli żadna albo obie, jest remis.
 - **Relikt** (poziom Imperium). Wzniesienie budynku Pierwotnej Iskry od razu wygrywa; po limicie rund wygrywa strona, która niesie więcej Odłamków ([Imperium](#imperium)).
 
-W celach innych niż Kryształy remis w limicie rund to remis; w Bossie i Artefakcie „nikt nie wygrał” w kooperacji oznacza zwycięstwo Hordy.
+W celach innych niż Kryształy remis w limicie rund to remis; w Bossie i Artefakcie „nikt nie wygrał” też jest remisem.
 
 ## Mapa przygody
 @słowa: mapa, kształt, trójkąt, prostokąt, pierścień, wyspy, most, rozmiar, wielkość, XL, XXL, gigantyczna, teren, ruch, punkty ruchu, odkrywanie, mgła, baza, drzewo, runda, tura, tor rund
@@ -311,11 +312,9 @@ Jednostka 6 poziomu też ma swoje **siedlisko** (Gniazdo Feniksa, Jaskinia Zagł
 ## Automat zła i boty
 @słowa: automat zła, bot, komputer, sztuczna inteligencja, horda, przeciwnik, posiłki, podpowiedź, autoplay
 
-W kooperacji Horda jest sterowana przez **automat zła**. Ma tylu bohaterów, ilu jest graczy (na Trudnym o jednego więcej, co najmniej trzech). Gdy polegną wszyscy, w bazie Hordy pojawia się kolejny bohater (poza poziomem Trudnym). Na wyższych poziomach złożoności automat nie zbiera złota; co kilka rund wracają do niego polegli pomocnicy.
+Komputer prowadzi Hordę (albo inną stronę bez człowieka) tak samo w każdym trybie gry: wybiera walki, zbiera złoto, rozbudowuje osady i poluje na bohaterów.
 
-W bitwie każda jednostka automatu atakuje wroga z **najmniejszą liczbą Życia**: najpierw spośród tych, których sięga bez ruchu, potem spośród tych, do których dojdzie; przy remisie wybiera bohatera. Skarby zużywa przy pierwszej okazji.
-
-Komputerowi gracze w rywalizacji i na arenie grają podobnie rozsądnie. W trybie rodzinnym przycisk **podpowiedzi** w dolnym pasku pyta bota „co byś zrobił” i pokazuje odpowiedź zdaniem u góry ekranu oraz podświetla pole docelowe.
+Na arenie komputer gra podobnie rozsądnie. W trybie rodzinnym przycisk **podpowiedzi** w dolnym pasku pyta bota „co byś zrobił” i pokazuje odpowiedź zdaniem u góry ekranu oraz podświetla pole docelowe.
 
 ## Arena
 @słowa: arena, 3 na 3, 6 na 6, szybka bitwa, pojedynek, skarby, losowanie, komputer
@@ -357,7 +356,7 @@ W lobby jest **czat ogólny**, w pokoju **czat pokoju** (wiadomości żyją tylk
 
 Gra jest przygotowana także do grania z dzieckiem (od 5 lat):
 - **Spacer** (poziom I) to krótkie pojedynki na planszy bez zdolności i rytuału, z własną tabelą punktów.
-- W kooperacji przy graczu-człowieku zaznacz **Dziecko**. Jego bohater ma w bitwie o 2 Życia więcej i o 1 punkt ruchu więcej na mapie, a rodzic gra bez zmian. Przycisk **podpowiedzi** podpowiada dziecku ruch.
+- Przy graczu-człowieku w potyczce zaznacz **Dziecko**. Jego bohater ma w bitwie o 2 Życia więcej i o 1 punkt ruchu więcej na mapie, a rodzic gra bez zmian. Przycisk **podpowiedzi** podpowiada dziecku ruch.
 - Na poziomach z osadami dziecko **wędruje i walczy**, a rodzic buduje, rekrutuje i handluje (złoto i surowce są wspólne). Jeśli dorosłego nie ma, osadami zajmuje się **autopilot** jak komputer, a skrzynie dziecka otwierają się same.
 
 ## Własne ustawienia

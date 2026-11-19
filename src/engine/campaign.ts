@@ -4,6 +4,7 @@
 // the progress. The engine plays the game exactly as it plays any other: nothing in the rules knows about the campaign.
 
 import { registerCustomMap, type CustomMap } from './customMaps';
+import { FACTION_HEROES } from './data';
 import { createGame } from './game';
 import { levelSettings, type Level, type ObjectiveId, type SetupOptions } from './types';
 import { resolveTier, withRuleset, type Tier } from './presets';
@@ -162,15 +163,19 @@ export const campaignById = (id: string): Campaign | undefined => CAMPAIGNS.find
 
 /** The set-up of the game of a scenario: the rules of its level of the ladder on its own map, with the hero of the story. */
 export function scenarioSetup(campaign: Campaign, scenario: Scenario, seed: number): SetupOptions {
-  const preset = levelSettings(scenario.difficulty, 'coop');
+  const preset = levelSettings(scenario.difficulty, 'pvp');
   // The first level of the ladder has no hero growth and a fixed map; the campaign keeps its own map there, so the tier's picks are taken by hand.
   const sw = scenario.tier === 'adventure' ? { objective: scenario.objective, growth: false } : resolveTier(scenario.tier, { objective: scenario.objective, shape: 'custom', customMapId: scenario.map.id, growth: true });
   const base: SetupOptions = {
-    mode: 'coop',
+    mode: 'pvp',
     mapSize: 'short',
     battleMode: preset.battleMode,
     seed,
-    seats: [{ name: 'Gracz', faction: 'dawn', controller: 'human', heroId: scenario.hero }],
+    // The Horde is the computer: the same bot as at every other table (a hero of the faction by the seed).
+    seats: [
+      { name: 'Gracz', faction: 'dawn', controller: 'human', heroId: scenario.hero },
+      { name: 'Horda', faction: 'horde', controller: 'bot', heroId: FACTION_HEROES.horde[seed % FACTION_HEROES.horde.length] },
+    ],
     rules: preset.rules,
   };
   const setup = withRuleset(base, true, sw.objective, 'custom', scenario.map.id, sw.growth, 'kingdom' in sw && sw.kingdom, 'economy' in sw && sw.economy, 'realm' in sw && sw.realm, 'empire' in sw && sw.empire);

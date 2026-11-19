@@ -12,7 +12,7 @@ const seats = (child: boolean): SeatSetup[] => [
 ];
 const family = (over: Parameters<typeof setup>[1] = {}, childFlag = true, mode: 'coop' | 'pvp' = 'coop') => createGame(setup({ mode, seats: seats(childFlag) }, { ruleset: 'digital', ...over }));
 
-describe('family mode (digital ruleset, coop)', () => {
+describe('family mode (digital ruleset)', () => {
   it('marks the child\'s player and hero; the parent is not marked', () => {
     const s = family();
     expect(s.players.map((p) => Boolean(p.child))).toEqual([false, true]);
@@ -20,10 +20,11 @@ describe('family mode (digital ruleset, coop)', () => {
     expect(isChildHero(s, s.heroes.unicornKing)).toBe(true);
   });
 
-  it('is ignored in the board edition and outside coop', () => {
+  it('is ignored in the board edition; a skirmish table (pvp) has it too', () => {
     expect(family({ ruleset: 'classic' }).players.some((p) => p.child)).toBe(false);
-    expect(createGame(setup({ mode: 'pvp', seats: [{ ...seats(true)[0] }, { name: 'H', faction: 'horde', controller: 'human', heroId: 'blackDragon', child: true }] }, { ruleset: 'digital' })).players.some((p) => p.child)).toBe(false);
+    expect(family({}, true, 'pvp').players.map((p) => Boolean(p.child))).toEqual([false, true]);
   });
+
 
   it('the child\'s hero gets an extra move point at the start of its turn, the parent\'s does not', () => {
     let s = family();
