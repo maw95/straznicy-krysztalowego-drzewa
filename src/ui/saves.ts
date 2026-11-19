@@ -112,7 +112,7 @@ export function describeSave(save: SaveFile): string {
     const campaign = scenarioOf(save.setup);
     if (campaign) return `Kampania: ${campaign.scenario.title} · runda ${s.round}`;
     if (save.setup.expedition) return `Ekspedycja: etap ${save.setup.expedition.stage + 1} · runda ${s.round} · ${heroes}`;
-    const mode = save.setup.mode === 'coop' ? 'Kooperacja' : save.setup.mode === 'arena' ? 'Arena' : 'Rywalizacja';
+    const mode = save.setup.mode === 'coop' ? 'Kooperacja' : save.setup.mode === 'arena' ? 'Arena' : save.setup.rules?.ruleset === 'digital' ? 'Potyczka' : 'Rywalizacja';
     return `${mode} · runda ${s.round} · ${heroes}`;
   } catch {
     return 'Zapis nie daje się odtworzyć';

@@ -31,12 +31,12 @@ const RULES: Array<[string, string[]]> = [
   ['Wersje i poziomy', [
     'Wersja cyfrowa jest domyślna: jednostki w grafice 2D z animacjami, arena z poziomymi heksami, duże jednostki na dwóch polach. Wersja planszowa to wierna planszówka (figurki 3D, zasady bez zmian).',
     'Poziom II „Przygoda”: zasady z planszówki. Poziom III „Wyprawa”: rozwój bohatera, artefakty, obiekty na mapie, neutralni i wybór celu oraz mapy. Poziom IV „Osada” (osady, złoto, rekrutacja) i kolejne dopiero się pojawią. „Własne ustawienia” pozwalają przełączać zasady osobno.',
-    'Tryby: kooperacja (do 3 graczy przeciw automatowi zła), rywalizacja (2–6 graczy, najwyżej 3 na stronę) i arena (jedna bitwa 3 na 3). Gra lokalna z botami, hot-seat przy jednym ekranie albo online z kontem.',
+    'Tryby: potyczka (pełna gra na mapie, 1–8 graczy, najwyżej 3 na stronę; Hordę może prowadzić komputer) i arena (jedna bitwa 3 na 3). Gra lokalna z botami, hot-seat przy jednym ekranie albo online z kontem.',
   ]],
   ['Cel gry', [
     'Kryształy do Drzewa (domyślny): Przymierze Świtu wygrywa, gdy zaniesie do Kryształowego Drzewa wszystkie potrzebne kryształy (2 przy jednym bohaterze, 3 przy dwóch lub trzech). Pokonanie bohaterów Hordy nie wystarczy.',
     'Mroczna Horda wygrywa, gdy minie limit rund (8 / 12 / 18 / 24 i więcej na największych mapach), gdy polegną wszyscy bohaterowie Przymierza albo gdy ukończy rytuał przy Drzewie.',
-    'Od poziomu III do wyboru: Punkty kontrolne (kto utrzyma więcej punktów przez kilka rund), Przetrwanie (fale Hordy, kooperacja), Boss (legowisko pośrodku mapy, wygrywa zadający ostatni cios) i Artefakt (kto zaniesie go do swojej bazy).',
+    'Od poziomu III do wyboru: Punkty kontrolne (kto utrzyma więcej punktów przez kilka rund), Przetrwanie (fale Hordy), Boss (legowisko pośrodku mapy, wygrywa zadający ostatni cios) i Artefakt (kto zaniesie go do swojej bazy).',
   ]],
   ['Runda i ruch', [
     'W każdej rundzie każdy żyjący bohater ma jedną turę: 3 punkty ruchu (rozwój, artefakty i umiejętności mogą je zwiększyć). Teren łatwy kosztuje 1, trudny 2; góry, woda, przepaści, martwy gąszcz i ciernie są nieprzejezdne. Niewykorzystane punkty przepadają.',
@@ -65,7 +65,7 @@ const RULES: Array<[string, string[]]> = [
     'Bitwa trwa, aż polegną wszystkie jednostki jednej strony. Ocalali odzyskują pełne Życie, polegli pomocnicy odpadają z gry, a poległego bohatera przywraca tylko Eliksir Odrodzenia.',
   ]],
   ['Automat zła', [
-    'W kooperacji automat zła ma tylu bohaterów, ilu jest graczy (na poziomie trudnym o jednego więcej, co najmniej trzech). Gdy polegną wszyscy, w bazie Hordy pojawia się kolejny bohater, poza poziomem trudnym.',
+    'Komputer prowadzi Hordę tak samo w każdym trybie: wybiera walki, zbiera złoto, rozbudowuje osady i poluje na bohaterów.',
     'Każda jednostka atakuje wroga z najmniejszą liczbą Życia: najpierw spośród tych, których sięga bez ruchu, potem spośród tych, do których dojdzie. Przy remisie wybiera bohatera. Skarby automat zużywa przy pierwszej okazji.',
   ]],
   ['Trudność', [

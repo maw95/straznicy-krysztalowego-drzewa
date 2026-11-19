@@ -221,7 +221,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                   <b>
                     <span className="win">{stats.coop.won} wygr.</span> · <span className="loss">{stats.coop.lost} przegr.</span>
                   </b>
-                  <span>Rywalizacja</span>
+                  <span>Potyczka</span>
                   <b>
                     <span className="win">Przymierze {stats.pvp.dawn}</span> · <span className="loss">Horda {stats.pvp.horde}</span>
                   </b>

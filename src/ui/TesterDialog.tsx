@@ -86,14 +86,14 @@ export function TesterDialog({ onClose, download }: { onClose: () => void; downl
         <div className="plate parch" style={{ padding: '10px 14px', display: 'flex', flexWrap: 'wrap', gap: '6px 22px', fontSize: 16 }}>
           <span>Rozegrane partie: <b>{stats.played}</b> (ukończone: {stats.finished})</span>
           <span>Kooperacja: <b>{stats.coop.won}</b> wygranych · <b>{stats.coop.lost}</b> przegranych</span>
-          <span>Rywalizacja: Przymierze <b>{stats.pvp.dawn}</b> · Horda <b>{stats.pvp.horde}</b></span>
+          <span>Potyczka: Przymierze <b>{stats.pvp.dawn}</b> · Horda <b>{stats.pvp.horde}</b></span>
           <span>Zgłoszone błędy: <b>{stats.reports}</b></span>
         </div>
         {recent.length > 0 && (
           <div style={{ fontSize: 15, color: 'var(--muted)', display: 'flex', flexDirection: 'column', gap: 2 }}>
             {recent.map((g) => (
               <div key={g.id}>
-                {new Date(g.updatedAt).toLocaleString('pl-PL', { dateStyle: 'short', timeStyle: 'short' })} · {g.save.setup.mode === 'coop' ? 'Kooperacja' : 'Rywalizacja'} · {MAP_SIZE_NAMES[g.save.setup.mapSize]} · {LEVEL_NAMES[g.level]} ·{' '}
+                {new Date(g.updatedAt).toLocaleString('pl-PL', { dateStyle: 'short', timeStyle: 'short' })} · {g.save.setup.mode === 'coop' ? 'Kooperacja' : g.save.setup.rules?.ruleset === 'digital' ? 'Potyczka' : 'Rywalizacja'} · {MAP_SIZE_NAMES[g.save.setup.mapSize]} · {LEVEL_NAMES[g.level]} ·{' '}
                 {g.result ? (g.result.winner === 'dawn' ? 'wygrywa Przymierze' : 'wygrywa Horda') : 'w trakcie'}
               </div>
             ))}

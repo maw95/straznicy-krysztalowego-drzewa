@@ -119,7 +119,7 @@ export const SLIDES: Slide[] = [
     id: '08-tryby',
     title: 'Razem albo przeciwko sobie',
     text: [
-      'W kooperacji wszyscy gracie Przymierzem, a Hordę prowadzi automat. W rywalizacji jedni biorą Przymierze, drudzy Hordę.',
+      'W potyczce sami albo ze znajomymi prowadzicie Przymierze przeciw Hordzie prowadzonej przez komputer, a jeśli wolicie, gracie przeciw sobie: jedni biorą Przymierze, drudzy Hordę.',
       'Spacer (poziom I) da się ogarnąć w kilka minut, nawet z pięciolatkiem. Od poziomu II gra się pełnymi bitwami: Łatwy daje komputerowi słabszy start, Normalny to zasady jak w instrukcji, a Trudny to wyzwanie dla dorosłych.',
     ],
     stand: ['cards/art/goldDragon.jpg', 'cards/art/werewolfLord.jpg'],
@@ -130,7 +130,7 @@ export const SLIDES: Slide[] = [
     id: '09-wersje',
     title: 'Menu krok po kroku',
     text: [
-      'Nowa gra prowadzi przez kilka stron: tryb (Rywalizacja, Kooperacja, Arena, Kampania albo Ekspedycja), potem „Ten komputer” albo „Przez internet”, poziom złożoności, cel, mapa i gracze.',
+      'Nowa gra prowadzi przez kilka stron: tryb (Potyczka, Arena, Kampania albo Ekspedycja), potem „Ten komputer” albo „Przez internet”, poziom złożoności, cel, mapa i gracze.',
       'Wersja planszowa (figurki 3D, zasady bez zmian i szybkie pojedynki) czeka pod małym linkiem „Wersja planszowa” na pierwszej stronie menu.',
     ],
     stand: ['ui/cover.jpg'],
@@ -160,7 +160,7 @@ export const SLIDES: Slide[] = [
     id: '12-online',
     title: 'Online i przy jednym ekranie',
     text: [
-      'Grasz z botami, z kimś przy jednym ekranie (hot-seat) albo przez internet z kontem: zakładasz stół, zapraszasz znajomych albo podajesz im kod pokoju. Do ośmiu graczy w rywalizacji.',
+      'Grasz z botami, z kimś przy jednym ekranie (hot-seat) albo przez internet z kontem: zakładasz stół, zapraszasz znajomych albo podajesz im kod pokoju. Do ośmiu graczy w potyczce.',
       'Partię zapiszesz pod własną nazwą i wczytasz później z menu „Wczytaj grę”.',
     ],
     stand: ['ui/cover.jpg'],

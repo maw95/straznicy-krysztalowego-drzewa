@@ -142,6 +142,7 @@ register({
   'Graj normalnie': 'Play normally',
   'Kooperacja:': 'Co-op:',
   'Rywalizacja: Przymierze': 'Rivalry: Covenant',
+  'Potyczka: Przymierze': 'Skirmish: Covenant',
   'Start': 'Start',
   'Skarby: {0}': 'Treasures: {0}',
   'Skarb · reakcja': 'Treasure · reaction',
