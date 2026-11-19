@@ -10,7 +10,7 @@ OPTIONS ?= full
 BATTLE ?= arena
 
 .DEFAULT_GOAL := help
-.PHONY: frakcja-lista help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-kraken sim-bossy sim-supports sim-arena sim-tabele sim-raport sim-krolestwo report zgloszenia modele figurki druk silnik clean
+.PHONY: placeholders frakcja-lista help install dev build preview test test-engine test-ui test-slow test-watch typecheck check sim sim-all sim-matrix sim-battles sim-kraken sim-bossy sim-supports sim-arena sim-tabele sim-raport sim-krolestwo report zgloszenia modele figurki druk silnik clean
 
 help: ## Lista komend
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[33m%-12s\033[0m %s\n", $$1, $$2}'
@@ -59,6 +59,9 @@ WIDOK ?= desktop
 zrzut: node_modules ## Zrzut ekranu gry (mały), np. make zrzut Q='steps=400&until=battle&mode=pvp&seed=3' WIDOK=telefon ELEMENT=.arena-frame
 	@mkdir -p .tmp
 	npx tsx scripts/browser/zrzut.ts '$(Q)' --widok $(WIDOK) $(if $(ELEMENT),--element '$(ELEMENT)',)
+
+placeholders: node_modules ## Zastępcze grafiki dla jednostek frakcji bez grafiki (scripts/placeholders.ts)
+	npx tsx scripts/placeholders.ts
 
 frakcja-lista: node_modules ## Czego brakuje frakcji (karta, paczka, grafiki, wpisy), np. make frakcja-lista ID=horde
 	npx tsx scripts/frakcja-lista.ts $(ID)
