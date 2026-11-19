@@ -36,6 +36,11 @@ export function statusList(u: BattleUnit): StatusInfo[] {
   if (u.maxHp > baseHp) out.push({ label: `+${u.maxHp - baseHp} maks. Ż do końca bitwy (Eliksir Żywotności)`, glyph: 'sGuard', marker: 'vitality', buff: true, value: u.maxHp - baseHp !== 4 ? `+${u.maxHp - baseHp}` : undefined });
   if (s.battleAttackBonus) out.push({ label: `+${s.battleAttackBonus} A do końca bitwy`, glyph: 'sBlade', buff: true, value: `+${s.battleAttackBonus}` });
   if (s.battleSpeedBonus) out.push({ label: `+${s.battleSpeedBonus} S do końca bitwy`, glyph: 'sBoltG', marker: 'speed_up', buff: true, value: s.battleSpeedBonus !== 3 ? `+${s.battleSpeedBonus}` : undefined });
+  // Dwór Wiecznego Szronu: frost builds up and freezes, a frozen unit loses an activation (and cracks with the third level of the Pałac Szronu).
+  if (s.stunned) out.push({ label: 'Traci następną aktywację (zamrożony lub ogłuszony)', glyph: 'sRoot', buff: false });
+  if (s.frost) out.push({ label: `Szron: ${s.frost} (po zebraniu progu szronu jednostka zamarza)`, glyph: 'sRoot', buff: false, value: String(s.frost) });
+  if (s.brittle) out.push({ label: 'Kruchy lód: następny cios zada o 1 więcej obrażeń', glyph: 'sSkull', buff: false });
+  if (s.auraChill) out.push({ label: `−${s.auraChill} S (Zimne Światło)`, glyph: 'sRoot', buff: false, value: `−${s.auraChill}` });
   if (s.damageReduction) out.push({ label: `−${s.damageReduction} otrzymanych obrażeń`, glyph: 'sStone', buff: true, value: `−${s.damageReduction}` });
   return out;
 }

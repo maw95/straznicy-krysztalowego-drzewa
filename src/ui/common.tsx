@@ -19,6 +19,9 @@ const ABILITY_ART: Record<string, string> = {
   // Żelazne Klany (placeholders: docs/BACKLOG.md 2a).
   shieldOath: 'hardHead', stoneRune: 'runeGolem', bulwark: 'hardHead', standShot: 'fireBreath', temper: 'sunburst', bronzeQuills: 'quills', goatLeap: 'airDash', giantBane: 'headlong',
   misleadLight: 'web', stunBlow: 'boulder', cannonFire: 'fireBreath', fortify: 'runeGolem',
+  // Dwór Wiecznego Szronu (placeholders: docs/BACKLOG.md 2a).
+  iceWall: 'runeGolem', iceBlow: 'boulder', blizzardTrail: 'airDash', frostSlow: 'entanglingRoots', crystalArrow: 'fireBreath', thickFur: 'hardHead', frostArmor: 'quills',
+  bellOfGlass: 'web', frostGrip: 'web', abduct: 'airDash', hailStones: 'fireBreath', coldLight: 'curse', longNight: 'sunburst',
   wail: 'curse', viyGaze: 'web', breathAgain: 'giftOfLife', manaReap: 'giftOfLife', graveBreath: 'fireBreath', toll: 'sunburst',
 };
 export const abilityArt = (ability: string) => ABILITY_ART[ability] ?? ability;
@@ -32,7 +35,7 @@ export const SIDE_RING: Record<Side, string> = { dawn: '#2C7048', horde: '#9A222
 /** The thin outline round the base of the active 3D figure (the only mark a figure gets). */
 export const ACTIVE_FIGURE_RING = '#F3C842';
 /** The ribbons are painted in three colours only: the third and fourth team borrow the green and the red ones. */
-export const SIDE_RIBBON: Record<Side | FactionId, 'g' | 'r' | 'b'> = { dawn: 'g', horde: 'r', third: 'g', fourth: 'r', neutral: 'b', herds: 'g', undead: 'g', clans: 'r' };
+export const SIDE_RIBBON: Record<Side | FactionId, 'g' | 'r' | 'b'> = { dawn: 'g', horde: 'r', third: 'g', fourth: 'r', neutral: 'b', herds: 'g', undead: 'g', clans: 'r', frost: 'g' };
 
 /** The phone layout (the same condition as the media query in styles.css). */
 export const COMPACT_QUERY = '(max-width: 900px), (max-height: 560px) and (max-width: 1100px)';

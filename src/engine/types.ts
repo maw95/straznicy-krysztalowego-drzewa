@@ -397,6 +397,14 @@ export interface UnitStatus {
   stunned?: true;
   /** Skok po Turniach: the unit has already used its leap in this battle (kept apart from `abilityUsed`, which the leap sets only when it has really jumped). */
   leapUsed?: true;
+  /** Dwór Wiecznego Szronu. Szron: how many frosts the unit has (at the Court's threshold it freezes: `stunned`, and the frost goes). */
+  frost?: number;
+  /** S the unit loses for each frost (set by a source with the fourth level of the Pałac Szronu). */
+  frostSlow?: number;
+  /** A frozen unit takes one more damage from the next blow (third level of the Pałac Szronu), until its lost activation passes. */
+  brittle?: true;
+  /** Zimne Światło: S the unit loses from an aura of the enemy next to it (recounted at the start of every round and activation). */
+  auraChill?: number;
 }
 
 /** What the artifacts do for a unit in this battle (sites.ts `applyGear`); numbers are in this battle's scale. */
@@ -518,6 +526,10 @@ export interface BattleState {
   ward?: Record<string, number>;
   /** Fortyfikacja: the cells of wall the Kolos Kuźni has put up in this battle (they are in `obstacles` as well; the screen draws them). */
   raised?: HexKey[];
+  /** Lodowa Ściana: the cells of ice wall (also in `obstacles` and `raised`) and the last round each stands in. */
+  ice?: Array<{ cell: HexKey; until: number }>;
+  /** Ślad Zamieci: the cells the Ryś Śnieżny has run through, the side whose enemies they slow and the round they last in. */
+  trail?: Array<{ cell: HexKey; side: Side; until: number }>;
   /** Level 5: the spells cast in this battle, newest last (the screen plays them). */
   spells?: Array<{ spell: SpellId; casterId: string; targetId: string }>;
   /** Level 4: the battle is fought for this settlement (its garrison fights on the defender's side, with or without a hero). */

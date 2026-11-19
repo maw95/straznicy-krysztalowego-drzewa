@@ -812,6 +812,17 @@ export function moveAllowance(state: GameState): number {
   return moveBreakdown(state).reduce((sum, p) => sum + p.points, 0);
 }
 
+/** Wieża Zamieci (the Court of Everfrost): the move points an enemy hero loses standing near a settlement of the Court that has the tower (1 at most, the radius grows with the tower's level). */
+function blizzardSlow(state: GameState, hero: HeroState): number {
+  if (!hero.pos) return 0;
+  const here = parseKey(hero.pos);
+  const slowed = Object.values(state.kingdom?.settlements ?? {}).some((s) => {
+    const level = s.buildings.blizzardTower ?? 0;
+    return s.owner !== null && s.owner !== hero.faction && level >= 1 && raceOf(state, s.owner) === 'frost' && distance(here, parseKey(s.at)) <= FACTION_MECHANICS.blizzardRadius[Math.min(level, 2) - 1];
+  });
+  return slowed ? FACTION_MECHANICS.blizzardMove : 0;
+}
+
 /** What the move points of the active hero's turn are made of (for the screen: a player who counts them must be able to see where each went). */
 export function moveBreakdown(state: GameState): Array<{ label: string; points: number }> {
   const hero = activeHero(state) ?? undefined;
@@ -821,6 +832,7 @@ export function moveBreakdown(state: GameState): Array<{ label: string; points: 
   add('pomoc dla dziecka', hero && isChildHero(state, hero) ? FAMILY.extraMove : 0);
   add('artefakty (buty)', gearMoveBonus(hero));
   add('Wilcze Legowisko', hero && state.rules.empire && raceOf(state, hero.faction) === 'horde' && Object.values(state.kingdom?.settlements ?? {}).some((s) => s.owner === hero.faction && (s.buildings.wolfDen ?? 0) >= 1) ? 1 : 0);
+  add('Wieża Zamieci (wróg)', hero && state.rules.empire ? -blizzardSlow(state, hero) : 0);
   add('niesiony Artefakt', hero?.crystals.includes('artifact') ? -ARTIFACT.carrierSlow : 0);
   return parts;
 }
@@ -1040,6 +1052,8 @@ export function sparkBonus(state: GameState, unit: BattleState['units'][string])
   } else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'herds') unit.status.battleSpeedBonus += EMPIRE.sparkSpeed;
   else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'undead') unit.status.immune = true;
   else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'clans') unit.status.damageReduction += FACTION_MECHANICS.shieldArmor * scaleOf(state);
+  // The Court's Iskra works on the enemy (they start the battle with frost: `beginFight`), not on its own units.
+  else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'frost') return;
   else unit.status.battleAttackBonus += EMPIRE.sparkAttack * scaleOf(state);
 }
 

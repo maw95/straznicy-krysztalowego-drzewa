@@ -99,7 +99,21 @@ export type AbilityId =
   | 'misleadLight' // Błędne Światło (Skarbnik, free action, once): an enemy in range is moved 2 cells away
   | 'stunBlow' // Młot Przodków (Gwardia Młota, attack ability, once): the target loses its next activation
   | 'cannonFire' // Ostrzał (Armata Klanów, passive): the shot hits the target and its neighbours; no shot after a move; double damage to walls and gates
-  | 'fortify'; // Fortyfikacja (Kolos Kuźni, free action, once): puts up 2 cells of wall; armour; cannot be moved
+  | 'fortify' // Fortyfikacja (Kolos Kuźni, free action, once): puts up 2 cells of wall; armour; cannot be moved
+  // Dwór Wiecznego Szronu (docs/frakcje/frost.md): frost that builds up on a unit and freezes it, a bonus for the target's state, a wall of ice, a displaced enemy.
+  | 'iceWall' // Lodowa Ściana (Marzanna, free action, once): 3 cells of ice wall in a line for 2 rounds
+  | 'iceBlow' // Lodowy Cios (Jarl Szronu, attack ability, once): the target freezes (loses its next activation)
+  | 'blizzardTrail' // Ślad Zamieci (Ryś Śnieżny, passive): the cells it has run through slow the enemies that step on them until the end of the round
+  | 'frostSlow' // Lodowa Igła (Chochlik Szronu, attack ability, once): the target has -S in its next activation
+  | 'crystalArrow' // Kryształowa Strzała (Szronowy Paź, passive): + damage against a target that has frost
+  | 'thickFur' // Gęste Futro (Jak Lodowcowy, passive): -1 damage from arrows and bolts
+  | 'frostArmor' // Mroźna Zbroja (Rycerz Lodowej Zbroi, passive): whoever hits it in melee gets frost
+  | 'bellOfGlass' // Szklany Dzwoneczek (Rusałka Szronu, free action, once): an enemy that has frost freezes
+  | 'frostGrip' // Zmrażający Uścisk (Młody Olbrzym Szronu, attack ability, once): the target cannot move in its next activation and gets frost
+  | 'abduct' // Porwanie (Strzyga Wichru, free action, once): a small enemy is lifted and put 2-3 cells away, away from its allies
+  | 'hailStones' // Grad Głazów (Olbrzym Gradu, Stary Gradowy, passive): the shot hits the target and its neighbours, each gets frost
+  | 'coldLight' // Zimne Światło (Duch Zorzy, passive aura): enemies within 2 cells have -1 S
+  | 'longNight'; // Długa Noc (Mamut Wiecznej Zimy, free action, once): every enemy gets frost; cannot be moved
 
 export interface UnitDef {
   id: string;
@@ -258,6 +272,28 @@ export const ABILITY = {
   misleadSteps: 2,
   /** Fortyfikacja: cells of wall put up. */
   fortifyCells: 2,
+  /** Dwór Wiecznego Szronu. Lodowa Ściana: cells of the wall, how many rounds it stands (the round it is raised in and the next) and how far from Marzanna it may be put. */
+  iceWallCells: 3,
+  iceWallRounds: 2,
+  iceWallReach: 3,
+  /** Lodowa Igła: S the target loses in its next activation. */
+  needleSlow: 2,
+  /** Kryształowa Strzała: bonus against a target that has frost (small scale). Gęste Futro: damage ignored from arrows and bolts (small scale, a blow that lands takes at least 1). */
+  crystalBonus: 1,
+  furArmor: 1,
+  /** Szklany Dzwoneczek: how far Rusałka looks. */
+  bellRange: 4,
+  /** Porwanie: how far the Strzyga reaches for a small enemy, and how far (at least, at most) she puts it from where it stood. */
+  abductRange: 2,
+  abductMin: 2,
+  abductMax: 3,
+  /** Zimne Światło: radius of the aura and S the enemies in it lose. */
+  chillRadius: 2,
+  chillSlow: 1,
+  /** Ślad Zamieci: S an enemy that steps on the trail loses in its next activation. */
+  trailSlow: 1,
+  /** Mroźna Zbroja, Grad Głazów, Długa Noc, Zmrażający Uścisk: frost put on the unit. */
+  frostPut: 1,
 };
 
 /**
@@ -495,6 +531,27 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'clanWarrior', name: 'Wojownik Klanu', side: 'clans', kind: 'hero', hp: 8, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Twardy Łeb', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
     u({ id: 'mountainCrossbow', name: 'Kusznik Gór', side: 'clans', kind: 'hero', hp: 5, attack: 3, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'standShot', abilityName: 'Salwa z Miejsca', abilityText: `Stała: +${ABILITY.standShotBonus} A, gdy w tej aktywacji się nie ruszał.` }),
     u({ id: 'forgePriest', name: 'Kapłan Kuźni', side: 'clans', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'giftOfLife', abilityName: 'Żar Kuźni', abilityText: `Raz na bitwę: sojusznik odzyskuje ${ABILITY.giftOfLifeHeal} Ż.` }),
+    // Dwór Wiecznego Szronu (`frost`, docs/frakcje/frost.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero.
+    u({ id: 'marzanna', name: 'Marzanna, Pani Zimy', side: 'frost', kind: 'hero', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'iceWall', abilityName: 'Lodowa Ściana', abilityText: `Raz na bitwę: ${ABILITY.iceWallCells} pola muru z lodu w linii na ${ABILITY.iceWallRounds} rundy.` }),
+    u({ id: 'frostJarl', name: 'Jarl Szronu', side: 'frost', kind: 'hero', size: 2, hp: 12, attack: 5, speed: 3, movement: 'walk', attackType: 'melee', ability: 'iceBlow', abilityName: 'Lodowy Cios', abilityText: 'Raz na bitwę: trafiony zamarza (traci następną aktywację).' }),
+    u({ id: 'snowLynx', name: 'Ryś Śnieżny', side: 'frost', kind: 'hero', hp: 7, attack: 3, speed: 5, movement: 'walk', attackType: 'melee', ability: 'blizzardTrail', abilityName: 'Ślad Zamieci', abilityText: `Stała: wróg, który wejdzie na pole, przez które Ryś przebiegł w tej rundzie, ma −${ABILITY.trailSlow} S w swojej następnej aktywacji.` }),
+    u({ id: 'oldHailer', name: 'Stary Gradowy', side: 'frost', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'hailStones', abilityName: 'Grad Głazów', abilityText: 'Stała: strzał trafia cel i jego sąsiadów (wrogów); każdy trafiony dostaje szron.' }),
+    u({ id: 'frostImp', name: 'Chochlik Szronu', side: 'frost', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'fly', attackType: 'ranged', ability: 'frostSlow', abilityName: 'Lodowa Igła', abilityText: `Raz na bitwę: trafiony ma −${ABILITY.needleSlow} S w swojej następnej aktywacji.` }),
+    u({ id: 'ermine', name: 'Gronostaj Dworski', side: 'frost', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'backstab', abilityName: 'Zza Zaspy', abilityText: `Stała: +${ABILITY.backstabBonus} A, gdy atakuje od tyłu.` }),
+    u({ id: 'courtPage', name: 'Szronowy Paź', side: 'frost', kind: 'support', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'crystalArrow', abilityName: 'Kryształowa Strzała', abilityText: `Stała: +${ABILITY.crystalBonus} obrażeń w cel, który ma szron.` }),
+    u({ id: 'blizzardWitch', name: 'Wiedźma Zamieci', side: 'frost', kind: 'support', hp: 7, attack: 3, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'curse', abilityName: 'Klątwa Chłodu', abilityText: `Raz na bitwę: trafiony ma −${ABILITY.curseMinus} A przy następnym ataku.` }),
+    u({ id: 'glacierYak', name: 'Jak Lodowcowy', side: 'frost', kind: 'support', hp: 10, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'thickFur', abilityName: 'Gęste Futro', abilityText: `Stała: −${ABILITY.furArmor} obrażeń od strzał (cios, który trafia, zadaje co najmniej 1).` }),
+    u({ id: 'iceSentinel', name: 'Rycerz Lodowej Zbroi', side: 'frost', kind: 'support', hp: 9, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'frostArmor', abilityName: 'Mroźna Zbroja', abilityText: `Stała: kto go trafi wręcz, dostaje ${ABILITY.frostPut} szron.` }),
+    u({ id: 'frostSprite', name: 'Rusałka Szronu', side: 'frost', kind: 'support', hp: 6, attack: 3, speed: 4, movement: 'fly', attackType: 'ranged', ability: 'bellOfGlass', abilityName: 'Szklany Dzwoneczek', abilityText: `Raz na bitwę: wróg w zasięgu ${ABILITY.bellRange} pól, który ma szron, zamarza (traci następną aktywację).` }),
+    u({ id: 'youngGiant', name: 'Młody Olbrzym Szronu', side: 'frost', kind: 'support', size: 2, hp: 13, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'frostGrip', abilityName: 'Zmrażający Uścisk', abilityText: `Raz na bitwę: trafiony nie rusza się w swojej następnej aktywacji i dostaje ${ABILITY.frostPut} szron.` }),
+    u({ id: 'windStrzyga', name: 'Strzyga Wichru', side: 'frost', kind: 'support', hp: 7, attack: 4, speed: 5, movement: 'fly', attackType: 'melee', ability: 'abduct', abilityName: 'Porwanie', abilityText: `Raz na bitwę: unosi małego wroga w zasięgu ${ABILITY.abductRange} pól i stawia go ${ABILITY.abductMin}–${ABILITY.abductMax} pola dalej, z dala od jego sojuszników.` }),
+    u({ id: 'elderGiant', name: 'Olbrzym Gradu', side: 'frost', kind: 'support', size: 2, hp: 14, attack: 5, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'hailStones', abilityName: 'Grad Głazów', abilityText: 'Stała: strzał trafia cel i jego sąsiadów (wrogów); każdy trafiony dostaje szron.' }),
+    u({ id: 'auroraSpirit', name: 'Duch Zorzy', side: 'frost', kind: 'support', hp: 9, attack: 4, speed: 4, movement: 'fly', attackType: 'ranged', ability: 'coldLight', abilityName: 'Zimne Światło', abilityText: `Stała (aura): wrogowie w promieniu ${ABILITY.chillRadius} pól mają −${ABILITY.chillSlow} S.` }),
+    u({ id: 'frostMammoth', name: 'Mamut Wiecznej Zimy', side: 'frost', kind: 'support', size: 2, hp: 24, attack: 7, speed: 3, movement: 'walk', attackType: 'melee', ability: 'longNight', abilityName: 'Długa Noc', abilityText: `Raz na bitwę: każdy wróg dostaje ${ABILITY.frostPut} szron. Stała: nie da się go odepchnąć.` }),
+    // Commanders of the Court.
+    u({ id: 'iceKnight', name: 'Rycerz Lodowej Gwardii', side: 'frost', kind: 'hero', hp: 8, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Lodowa Gwardia', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
+    u({ id: 'ermineHuntress', name: 'Łowczyni z Gronostajem', side: 'frost', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'crystalArrow', abilityName: 'Strzała z Soplem', abilityText: `Stała: +${ABILITY.crystalBonus} obrażeń w cel, który ma szron.` }),
+    u({ id: 'frostWitch', name: 'Szronowa Wiedźma', side: 'frost', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'wail', abilityName: 'Zimowy Lament', abilityText: `Raz na bitwę: wrogowie w promieniu ${ABILITY.wailRadius} pól mają −${ABILITY.wailMinus} A przy następnym ataku.` }),
     u({ id: 'cyclops', name: 'Cyklop Błyskotek', side: 'neutral', kind: 'neutral', size: 2, hp: 23, attack: 2, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'boulder', abilityName: 'Miażdżący Głaz', abilityText: 'Po każdym ataku odpycha trafionego przeciwnika o 1 pole, jeśli to możliwe (jednostek dwupolowych nie da się odepchnąć).', duel: { hp: 14, ability: 'stoneSkin', abilityName: 'Kamienna Skóra', abilityText: `Każdy cios w Cyklopa zadaje o ${ABILITY.stoneSkinIgnore} mniej obrażeń.` } }),
     u({ id: 'griffin', name: 'Gryf Złodziej Skarbów', side: 'neutral', kind: 'neutral', size: 2, hp: 18, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nestLeap', abilityName: 'Łupieżczy Nalot', abilityText: `Po każdym ataku może odlecieć o maks. ${ABILITY.nestLeapRange} pola.`, duel: { hp: 10, ability: 'thiefClaw', abilityName: 'Złodziejski Szpon', abilityText: `Gdy zada obrażenia, odzyskuje ${ABILITY.thiefClawHeal} Ż.` } }),
     u({ id: 'hydra', name: 'Hydra z Zatopionych Ruin', side: 'neutral', kind: 'neutral', size: 2, hp: 21, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Paszcze Otchłani', abilityText: 'Każdym atakiem może trafić dwóch sąsiadujących przeciwników.', duel: { hp: 12, ability: 'regrowth', abilityName: 'Odrastające Głowy', abilityText: `Na początku każdej swojej aktywacji odzyskuje ${ABILITY.regrowthHeal} Ż.` } }),
@@ -505,14 +562,14 @@ export const FACTION_HEROES: Record<FactionId, string[]> = byPack((p) => p.heroe
 
 /** Easter egg heroes: unlocked on the setup screen (click the Dawn crest five times), never drawn by the engine. */
 /** Rivalry for 7-8 players: four heroes a side, so each faction has a fourth one of its own (Przymierze: the Silver She-Wolf, Horda: the Dusk Manticore); the Brave Duck stays a secret hero and the Warlord a tavern commander. */
-export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore', herds: 'thunderRam', undead: 'bellKeeper', clans: 'oldMiner' };
+export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore', herds: 'thunderRam', undead: 'bellKeeper', clans: 'oldMiner', frost: 'oldHailer' };
 export const MAX_PVP_PLAYERS = 8;
 /** More players than this at a table play with `EXTRA_HEROES` too. */
 export const BASE_PVP_PLAYERS = 6;
 /** The heroes a seat can pick at a table of `seats` players. */
 export const heroPool = (f: FactionId, seats: number): string[] => (seats > BASE_PVP_PLAYERS ? [...FACTION_HEROES[f], EXTRA_HEROES[f]] : FACTION_HEROES[f]);
 
-export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [], herds: [], undead: [], clans: [] };
+export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [], herds: [], undead: [], clans: [], frost: [] };
 
 /** The tier of a faction's support (1 the starting ones, 2-5 the recruits of the tiers and their alternatives, 6 the legend); 0 for anything else. */
 export const supportTier = (unitId: string): number => {
@@ -677,12 +734,12 @@ export const ARENA_OFFER = 3;
  */
 export const ARENA_RULES: { firstPicker: 'random' | TeamId; extraPicks: Record<FactionId, number>; extraOffer: Record<FactionId, number> } = {
   firstPicker: 'random',
-  extraPicks: { dawn: 0, horde: 0, herds: 0, undead: 0, clans: 0 },
+  extraPicks: { dawn: 0, horde: 0, herds: 0, undead: 0, clans: 0, frost: 0 },
   /**
    * More cards shown to that side at each pick (the choice gets better, the number of treasures stays).
    * The Horde sees 4: in the arena Przymierze otherwise wins about 55% (simulations, notes section 9).
    */
-  extraOffer: { dawn: 0, horde: 1, herds: 0, undead: 0, clans: 0 },
+  extraOffer: { dawn: 0, horde: 1, herds: 0, undead: 0, clans: 0, frost: 0 },
 };
 
 // Map tiles. The left half of the triangle is built from Przymierze tiles (green back),

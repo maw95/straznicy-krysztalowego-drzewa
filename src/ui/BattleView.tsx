@@ -211,6 +211,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       if ((ability === 'stoneRune' || ability === 'temper') && u.side === active.side && u.id !== active.id && (ability === 'stoneRune' || unitDistance(active, u) === 1)) return 'cur-spell';
       if (ability === 'misleadLight' && u.side !== active.side && unitDistance(active, u) <= ABILITY.misleadRange) return 'cur-spell';
       if (ability === 'viyGaze' && u.side !== active.side && unitDistance(active, u) <= ABILITY.gazeRange) return 'cur-spell';
+      if (ability === 'bellOfGlass' && u.side !== active.side && unitDistance(active, u) <= ABILITY.bellRange && (u.status.frost ?? 0) >= 1) return 'cur-spell';
+      if (ability === 'abduct' && u.side !== active.side && unitDistance(active, u) <= ABILITY.abductRange) return 'cur-spell';
     }
     // A treasure is being aimed (Eliksir, Zwój, Róg...): the same wand as for an ability, over every unit it can be used on.
     if (targeting && myTurn && u.alive) {

@@ -55,6 +55,9 @@ export const ECONOMY = {
     shieldHall: [{ gold: 3, wood: 2, dust: 1 }, { gold: 4, dust: 2 }, { gold: 6, dust: 3 }, { gold: 8, dust: 5 }],
     runeForge: [{ gold: 4, ore: 3 }, { gold: 6, ore: 3, dust: 2 }],
     deepMine: [{ gold: 4, wood: 2 }, { gold: 6, ore: 2, dust: 1 }],
+    frostPalace: [{ gold: 3, wood: 2, dust: 1 }, { gold: 4, dust: 2 }, { gold: 6, dust: 3 }, { gold: 8, dust: 5 }],
+    crystalGrotto: [{ gold: 4, wood: 2 }, { gold: 6, ore: 2, dust: 1 }],
+    blizzardTower: [{ gold: 4, ore: 2 }, { gold: 6, ore: 2, dust: 1 }],
   } as Record<string, Cost[]>,
   /** The forge (Kuźnia): the faction's supports fight with this much more Atak (level 1) and Życie (level 2), in the board game's scale. */
   forgeAttack: 1,

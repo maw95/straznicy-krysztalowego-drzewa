@@ -24,6 +24,10 @@ import {
   deployHeads,
   enemiesOf,
   fortifyCells,
+  iceWallCells,
+  abductCell,
+  frostLevel,
+  frostThreshold,
   footprintAt,
   isLarge,
   tailOptions,
@@ -291,7 +295,14 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
           second = targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), mine) === 1).sort((x, y) => scoreHit(y, dmg) - scoreHit(x, dmg))[0] ?? null;
           if (second) score += scoreHit(second, dmg);
         }
-        if (useAbility && ['entanglingRoots', 'curse', 'dimLight', 'graveBreath'].includes(abilityOf(u))) score += AI_TUNING.debuffBonus;
+        if (useAbility && ['entanglingRoots', 'curse', 'dimLight', 'graveBreath', 'frostSlow', 'frostGrip'].includes(abilityOf(u))) score += AI_TUNING.debuffBonus;
+        if (useAbility && abilityOf(u) === 'iceBlow') score += AI_TUNING.debuffBonus * 2;
+        // The Court of Everfrost puts all its blows on one target to freeze it (it does not spread the frost); the weak melee ones do not rush in.
+        if (UNITS[u.defId].side === 'frost') {
+          const frost = t.status.frost ?? 0;
+          score += frost * 0.8 + (frostLevel(state, u.side) >= 1 && t.hp > dmg && frost + 1 >= frostThreshold(state, u.side) ? 2 : 0);
+          if (!ranged && UNITS[u.defId].kind === 'support' && supportTier(u.defId) <= 2) score -= risk * 0.5;
+        }
         // The Herds: a push that ends in a boulder, the edge or another unit hurts (and the others hurt more when they run, and reach the shooters).
         const collision = pushValue(state, u, t, useAbility, moved);
         if (collision > 0) score += scoreHit(t, collision) * 0.6;
@@ -303,7 +314,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
         if (UNITS[u.defId].side === 'undead' && ['manaReap', 'dimLight'].includes(abilityOf(u)) && UNITS[t.defId].kind === 'hero') score += 0.5;
         // The Iron Clans fight in formation: a cell next to allies is worth more (the Mur Tarcz), and a cannonade hits the neighbours of the target as well.
         if (UNITS[u.defId].side === 'clans') score += Math.min(2, mates(cell)) * 0.4;
-        if (abilityOf(u) === 'cannonFire') score += targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(t)) === 1).reduce((n, x) => n + scoreHit(x, dmg), 0);
+        if (abilityOf(u) === 'cannonFire' || abilityOf(u) === 'hailStones') score += targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(t)) === 1).reduce((n, x) => n + scoreHit(x, dmg), 0);
         score -= risk * (ranged ? AI_TUNING.attackRiskRanged : AI_TUNING.attackRiskMelee);
         if (ranged && targets.some((x) => dist2(cellsOf(x), mine) === 1)) score -= AI_TUNING.rangedCrowded;
         if (score > best.score) best = { moveTo: cell === u.pos ? null : cell, target: t, second, useAbility, score };
@@ -315,6 +326,8 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
     pos -= risk * (ranged ? AI_TUNING.moveRiskRanged : AI_TUNING.moveRiskMelee);
     // The Iron Clans wait in formation: they step to a cell next to their allies, and not far from where they stand.
     if (UNITS[u.defId].side === 'clans') pos += Math.min(2, mates(cell)) * 0.5 - steps * 0.2;
+    // The Court of Everfrost keeps its distance: a shooter or a witch stays out of reach.
+    if (UNITS[u.defId].side === 'frost' && ranged) pos -= risk * 0.5;
     // Siege: the moat hurts and ends the turn, so a unit stops there only when it is the way in.
     if (b.siege && cell !== u.pos && mine.some((k) => b.siege!.moat.includes(k))) pos -= 2;
     // Siege: the defenders hold the wall line while it stands (they go out only to strike), so the towers and the gate work for them.
@@ -395,6 +408,21 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
     if (t) return { type: 'battleAbility', targetId: t.id };
   }
   if (ab === 'fortify' && foesNear(4) && fortifyCells(state, u)) return { type: 'battleAbility' };
+  // Dwór Wiecznego Szronu: the wall cuts the enemy from its allies when it is near, the bell freezes the one that has the most frost, the Strzyga carries off a shooter, the long night when two enemies are near.
+  if (ab === 'iceWall' && foesNear(5) && iceWallCells(state, u)) return { type: 'battleAbility' };
+  if (ab === 'bellOfGlass') {
+    const t = enemiesOf(b, u)
+      .filter((e) => unitDistance(e, u) <= ABILITY.bellRange && (e.status.frost ?? 0) >= 1 && !e.status.stunned)
+      .sort((x, y) => (y.status.frost ?? 0) - (x.status.frost ?? 0) || unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (t) return { type: 'battleAbility', targetId: t.id };
+  }
+  if (ab === 'abduct') {
+    const t = enemiesOf(b, u)
+      .filter((e) => unitDistance(e, u) <= ABILITY.abductRange && canBeMoved(state, e) && abductCell(state, e))
+      .sort((x, y) => Number(UNITS[y.defId].attackType === 'ranged') - Number(UNITS[x.defId].attackType === 'ranged') || unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (t) return { type: 'battleAbility', targetId: t.id };
+  }
+  if (ab === 'longNight' && enemiesOf(b, u).filter((e) => unitDistance(e, u) <= 5).length >= 2) return { type: 'battleAbility' };
   if (ab === 'web') {
     const t = enemiesOf(b, u)
       .filter((e) => unitDistance(e, u) <= ABILITY.webRange)

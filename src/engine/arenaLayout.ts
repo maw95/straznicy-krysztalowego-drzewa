@@ -32,6 +32,8 @@ export const ARENA_OBSTACLES: Record<ArenaId, Array<[number, number]>> = {
   undead: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
   // And for the Iron Clans (a mountain pass with statues of the ancestors wants its own arena).
   clans: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
+  // And for the Court of Everfrost (a frozen lake with snowy firs and ice spikes wants its own arena).
+  frost: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
 };
 
 export const arenaCell = (col: number, half: number): HexKey => key({ q: col, r: (half - col) / 2 });
@@ -151,6 +153,16 @@ export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
     { art: 'boulders', cells: [[9, 7]] },
     { art: 'log', cells: [[5, 3], [6, 3]] },
     { art: 'brambles', cells: [[7, 1]] },
+  ],
+  // Placeholder (docs/BACKLOG.md 2a): a frozen lake with snowy firs and spikes of ice; until then the pictures of Przymierze and Horda, rearranged.
+  frost: [
+    { art: 'pine', cells: [[3, 2], [4, 2]] },
+    { art: 'crystals', cells: [[8, 5], [8, 6]] },
+    { art: 'spires', cells: [[6, 3]] },
+    { art: 'boulders', cells: [[10, 2]] },
+    { art: 'statue', cells: [[3, 6]] },
+    { art: 'ruin', cells: [[9, 7]] },
+    { art: 'brambles', cells: [[6, 7]] },
   ],
 };
 

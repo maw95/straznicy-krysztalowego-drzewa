@@ -3,7 +3,7 @@
 
 import { raceOf } from './teams';
 import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, STAT_SCALE, supportTier, battleStats, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, itemDef, ITEMS, UNITS, type AbilityId, type TeamId, type ItemKind, type Side } from './data';
-import { distance, directionBetween, add, key, line, neighborKeys, parseKey, type HexKey } from './hex';
+import { distance, directionBetween, add, key, line, neighborKeys, parseKey, DIRECTIONS, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
 import { ARENA_COLUMNS, MIDDLE_HALF, arenaCell, cellOf, columnCells, inArena, WIDE_COLUMNS, WIDE_MIDDLE_ROW, WIDE_ROWS, wideCell, layoutCells, inLayout, wideColumnCells, WIDE_SET } from './arenaLayout';
@@ -11,7 +11,7 @@ export * from './arenaLayout';
 import { isDigital, type BattleState, type BattleUnit, type GameState, type SiegeState, type UnitStatus } from './types';
 import { SIEGE } from './economy';
 import { pushWithCollision, previewPush, pushedThisRound, taunter, canBeMoved, raiseUnit, fallenSupports, drainMana, pushAway } from './primitives';
-import { FACTION_MECHANICS, mechanicLevel } from './empire';
+import { FACTION_MECHANICS, hasSpark, mechanicLevel } from './empire';
 
 
 const OBSTACLE_SETS = new WeakMap<HexKey[], Set<HexKey>>();
@@ -201,7 +201,7 @@ export function activeUnit(b: BattleState): BattleUnit | null {
 }
 
 export function unitSpeed(u: BattleUnit): number {
-  return battleStats(u.defId, u.digital, u.scale, u.hpScale).speed + u.status.battleSpeedBonus + (u.status.auraSpeed ?? 0);
+  return battleStats(u.defId, u.digital, u.scale, u.hpScale).speed + u.status.battleSpeedBonus + (u.status.auraSpeed ?? 0) - (u.status.auraChill ?? 0) - (u.status.frost ?? 0) * (u.status.frostSlow ?? 0);
 }
 
 export function unitAttackBase(u: BattleUnit): number {
@@ -434,6 +434,8 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
     if (useAbility && ab === 'fireBreath') dmg += abilityNum(att, 'breathBonus') * scaleOf(state);
     if (ab === 'standShot' && movedDistance === 0) dmg += ABILITY.standShotBonus * scaleOf(state);
     if (ab === 'giantBane' && isLarge(state, target)) dmg += ABILITY.giantBonus * scaleOf(state);
+    // Kryształowa Strzała: a target that has frost takes more.
+    if (ab === 'crystalArrow' && (target.status.frost ?? 0) >= 1) dmg += ABILITY.crystalBonus * scaleOf(state);
     if (useAbility && ab === 'spectralCharge') dmg += (ABILITY.spectralBonus + (fromBehind(state, att, target) ? ABILITY.spectralBehind : 0)) * scaleOf(state);
     if (useAbility && ab === 'nightAmbush') dmg += ABILITY.nightAmbushBonus * scaleOf(state);
     if (ab === 'dive' && movedDistance >= ABILITY.diveMinMove) dmg += ABILITY.diveBonus * scaleOf(state);
@@ -449,9 +451,9 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
 }
 
 /** Abilities that are switched on for a single attack. */
-export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow'];
+export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'frostSlow', 'frostGrip', 'iceBlow'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
@@ -474,9 +476,9 @@ export function pushCell(state: GameState, from: HexKey, target: HexKey): HexKey
   return k;
 }
 /** Abilities used as a free action during the unit's activation. */
-export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify'];
+export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'abduct', 'longNight'];
 /** The free abilities that need no target (one click fires them); the others ask the player to pick a unit. */
-export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify'];
+export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify', 'iceWall', 'longNight'];
 
 // ---------------------------------------------------------------- lifecycle
 
@@ -492,10 +494,26 @@ export function startBattleFight(state: GameState) {
   beginFight(state);
 }
 
+/** The Iskra of the Court of Everfrost: its enemies start the battle with frost (once, when the fight begins). */
+export function sparkFrost(state: GameState): void {
+  const b = state.battle!;
+  for (const side of [b.attacker, b.defender]) {
+    if (side === 'neutral' || raceOf(state, side) !== 'frost' || !hasSpark(state, side)) continue;
+    const slow = mechLevel(state, side) >= FACTION_MECHANICS.frostSlowLevel ? 1 : 0;
+    for (const x of Object.values(b.units)) {
+      if (x.side === side) continue;
+      x.status.frost = (x.status.frost ?? 0) + FACTION_MECHANICS.sparkFrost;
+      if (slow) x.status.frostSlow = 1;
+    }
+    log(state, 'ability', `${FACTION_NAMES[raceOf(state, side)]}: wrogowie zaczynają bitwę z ${FACTION_MECHANICS.sparkFrost} szronem (Lodowy Tron).`);
+  }
+}
+
 function beginFight(state: GameState) {
   const b = state.battle!;
   b.stage = 'fight';
   log(state, 'battle', 'Bitwa się rozpoczyna.');
+  sparkFrost(state);
   beginRound(state, 1);
 }
 
@@ -630,6 +648,15 @@ function beginRound(state: GameState, round: number) {
   if (round > 1) risingsAtRoundEnd(state);
   b.round = round;
   if (b.fields) b.fields = b.fields.filter((f) => f.until >= round);
+  // Lodowa Ściana melts after its rounds; the Ślad Zamieci lasts only the round it was run in.
+  if (b.ice?.some((i) => i.until < round)) {
+    const gone = b.ice.filter((i) => i.until < round).map((i) => i.cell);
+    b.ice = b.ice.filter((i) => i.until >= round);
+    b.obstacles = b.obstacles.filter((c) => !gone.includes(c));
+    b.raised = (b.raised ?? []).filter((c) => !gone.includes(c));
+    log(state, 'ability', 'Lodowa ściana topnieje.');
+  }
+  if (b.trail) b.trail = b.trail.filter((t) => t.until >= round);
   refreshAuras(state);
   const ids = Object.keys(b.units);
   b.order = livingUnits(b)
@@ -664,8 +691,12 @@ function beginRound(state: GameState, round: number) {
 export function refreshAuras(state: GameState) {
   const b = state.battle!;
   const drums = abilityActive(state) ? livingUnits(b).filter((x) => abilityOf(x) === 'drumBeat') : [];
+  // Zimne Światło: the enemies of a Duch Zorzy within its radius are slower (it does not add up).
+  const lights = abilityActive(state) ? livingUnits(b).filter((x) => abilityOf(x) === 'coldLight') : [];
   for (const x of Object.values(b.units)) {
     if (!x.alive || !x.pos) continue;
+    if (lights.some((d) => d.side !== x.side && unitDistance(d, x) <= ABILITY.chillRadius)) x.status.auraChill = ABILITY.chillSlow;
+    else delete x.status.auraChill;
     const near = drums.some((d) => d.side === x.side && d.id !== x.id && unitDistance(d, x) <= ABILITY.drumRadius);
     if (near) x.status.auraSpeed = ABILITY.drumHaste;
     else delete x.status.auraSpeed;
@@ -685,6 +716,7 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
   // Młot Przodków: a stunned unit loses its activation.
   if (u.status.stunned) {
     delete u.status.stunned;
+    delete u.status.brittle;
     log(state, 'ability', `${unitName(u)} jest ogłuszony i traci aktywację.`);
     return endActivation(state);
   }
@@ -824,6 +856,30 @@ export const wardLevel = (state: GameState, side: Side): number => (side !== 'ne
 
 /** The level of the Sala Tarcz a side has (0: another faction, or no hall built). */
 export const shieldLevel = (state: GameState, side: Side): number => (side !== 'neutral' && raceOf(state, side) === 'clans' ? mechLevel(state, side) : 0);
+
+/** The level of the Pałac Szronu (the Court of Everfrost) a side has: 0 for any other faction or without the building. */
+export const frostLevel = (state: GameState, side: Side): number => (side !== 'neutral' && raceOf(state, side) === 'frost' ? mechLevel(state, side) : 0);
+
+/** Szron: how much frost freezes a unit when the Court of `source` puts it (the Pałac Szronu's level: 3 without the building or at the first level). */
+export const frostThreshold = (state: GameState, source: Side): number => FACTION_MECHANICS.frostThreshold[Math.max(1, Math.min(frostLevel(state, source), 4)) - 1];
+
+/** Zamrożenie: the unit loses its next activation, the frost on it goes; with the third level of the Pałac Szronu it also takes one more damage from the next blow. */
+export function freezeUnit(state: GameState, source: Side, target: BattleUnit): void {
+  target.status.frost = 0;
+  target.status.stunned = true;
+  if (frostLevel(state, source) >= FACTION_MECHANICS.frostBrittleLevel) target.status.brittle = true;
+  log(state, 'ability', `${unitName(target)} zamarza i traci następną aktywację.`);
+}
+
+/** Szron: puts `n` frost on the target; at the threshold of the Court of `source` the target freezes. */
+export function applyFrost(state: GameState, source: Side, target: BattleUnit, n: number = ABILITY.frostPut): void {
+  if (!target.alive) return;
+  const threshold = frostThreshold(state, source);
+  target.status.frost = (target.status.frost ?? 0) + n;
+  if (frostLevel(state, source) >= FACTION_MECHANICS.frostSlowLevel) target.status.frostSlow = 1;
+  log(state, 'ability', `${unitName(target)} dostaje szron (${target.status.frost}/${threshold}).`);
+  if (target.status.frost >= threshold) freezeUnit(state, source, target);
+}
 
 /** Mur Tarcz: whether the unit of the Clans stands in formation (enough living allies next to it for the level of its Sala Tarcz). */
 export function inFormation(state: GameState, u: BattleUnit): boolean {
@@ -1056,6 +1112,10 @@ export function predictDamage(
     if (victim.status.oathRound === b.round) dmg = Math.max(1, dmg - ABILITY.oathArmor * scaleOf(state));
     if (inFormation(state, victim)) dmg = Math.max(1, dmg - FACTION_MECHANICS.shieldArmor * scaleOf(state));
   }
+  // Gęste Futro (Jak Lodowcowy): arrows and bolts lose a bit (at least 1 gets through).
+  if (armour && dmg > 0 && abilityOf(victim) === 'thickFur' && abilityActive(state) && UNITS[att.defId].attackType === 'ranged') dmg = Math.max(1, dmg - ABILITY.furArmor * scaleOf(state));
+  // A frozen unit (third level of the Pałac Szronu): the next blow cracks the ice and does one more.
+  if (victim.status.brittle && dmg > 0) dmg += scaleOf(state);
   // The hero's shield (artifacts): the first blow of the battle is halved, every blow is weaker by its defence, but a blow that lands takes at least 1.
   if (victim.gear && dmg > 0) {
     if (victim.gear.firstHit) dmg = Math.ceil(dmg / 2);
@@ -1112,6 +1172,12 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   recordRoll(state, att, victim, p.base, die, p.damage);
   if (victim.gear?.firstHit && p.damage > 0) delete victim.gear.firstHit;
   dealDamage(state, victim, p.damage, unitName(att));
+  if (victim.status.brittle && p.damage > 0) {
+    delete victim.status.brittle;
+    log(state, 'ability', `Lód na ${unitName(victim)} pęka.`);
+  }
+  // Mroźna Zbroja: whoever hits the Rycerz Lodowej Zbroi in melee gets frost.
+  if (abilityOf(victim) === 'frostArmor' && abilityActive(state) && p.damage > 0 && att.alive && UNITS[att.defId].attackType === 'melee' && unitsAdjacent(att, victim)) applyFrost(state, victim.side, att);
   // Wyładowanie: whoever strikes the Król Burzy from close by is shocked.
   if (abilityOf(victim) === 'stormKing' && abilityActive(state) && att.alive && unitsAdjacent(att, victim)) dealDamage(state, att, ABILITY.dischargeDamage * scaleOf(state), 'Wyładowanie');
   // Kolce: whoever hits a Jeżozwierz in melee is pricked.
@@ -1155,6 +1221,17 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
     log(state, 'ability', `${unitName(u)} przeskakuje po turniach (${UNITS[u.defId].abilityName}).`);
   }
   const from = u.pos ? parseKey(u.pos) : null;
+  // Ślad Zamieci: the Ryś leaves a trail on the cells it runs through; an enemy that steps on one (this round) is slowed in its next activation.
+  if (abilityActive(state) && !b.duel && (abilityOf(u) === 'blizzardTrail' || b.trail?.length)) {
+    const path = movePath(state, u, to);
+    if (abilityOf(u) === 'blizzardTrail') {
+      b.trail = (b.trail ?? []).filter((t) => !(t.side === u.side && path.includes(t.cell)));
+      for (const c of path) b.trail.push({ cell: c, side: u.side, until: b.round });
+    } else if (b.trail?.some((t) => t.side !== u.side && t.until >= b.round && path.includes(t.cell)) && !resistsStatus(state, u, true)) {
+      u.status.slowLater = (u.status.slowLater ?? 0) + ABILITY.trailSlow;
+      log(state, 'ability', `${unitName(u)} wpada na ślad zamieci: −${ABILITY.trailSlow} S w następnej aktywacji.`);
+    }
+  }
   placeUnit(state, u, to, tail);
   if (from) u.facing = { q: parseKey(to).q - from.q, r: parseKey(to).r - from.r };
   act.moved = true;
@@ -1248,7 +1325,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     }
   }
   // Ostrzał: the cannon's shot hits the target and every enemy next to it.
-  if (ab === 'cannonFire' && abilityActive(state)) {
+  if ((ab === 'cannonFire' || ab === 'hailStones') && abilityActive(state)) {
     const tc = cellsOf(target);
     for (const e of enemiesOf(b, u)) if (e.id !== target.id && cellsOf(e).some((c) => tc.some((k) => adjacent(k, c)))) targets.push(e);
     if (targets.length > 1) log(state, 'ability', `${unitName(u)}: ${UNITS[u.defId].abilityName}.`);
@@ -1275,6 +1352,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     const before = t.hp;
     const tCells = cellsOf(t);
     resolveAttack(state, u, t, canUse, act.movedDistance);
+    // Szron: every blow of a unit of the Court puts frost on the target (the Pałac Szronu); the Grad Głazów puts it on everything it hits, whatever the palace.
+    if (u.alive && t.alive && t.hp < before && (frostLevel(state, u.side) >= 1 || (ab === 'hailStones' && abilityActive(state)))) applyFrost(state, u.side, t);
     // Miecz Jutrzenki (Fala Ostrza): the blow also cuts one more enemy next to the target.
     if (u.gear?.cleave && u.alive && (!t.alive || t.hp < before)) {
       const other = Object.values(b.units).find((x) => x.alive && x.side !== u.side && x.id !== t.id && !targets.includes(x) && cellsOf(x).some((c) => tCells.some((k) => adjacent(k, c))));
@@ -1324,6 +1403,25 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
           t.status.cursedNext += ABILITY.curseMinus * scaleOf(state);
           log(state, 'ability', `${unitName(t)}: −${ABILITY.curseMinus * scaleOf(state)} A przy następnym ataku.`);
         }
+      }
+      // Lodowa Igła: the one hit is slower in its next activation.
+      if (ab === 'frostSlow') {
+        if (resistsStatus(state, t, true)) log(state, 'ability', `${unitName(t)} jest odporny na spowolnienie.`);
+        else {
+          t.status.slowNext += ABILITY.needleSlow;
+          log(state, 'ability', `${unitName(t)}: −${ABILITY.needleSlow} S w następnej aktywacji.`);
+        }
+      }
+      // Lodowy Cios: the one hit freezes at once.
+      if (ab === 'iceBlow') freezeUnit(state, u.side, t);
+      // Zmrażający Uścisk: the one hit cannot move in its next activation and gets frost.
+      if (ab === 'frostGrip') {
+        if (resistsStatus(state, t, true)) log(state, 'ability', `${unitName(t)} jest odporny na unieruchomienie.`);
+        else {
+          t.status.rootedNext = true;
+          log(state, 'ability', `${unitName(t)} zostaje unieruchomiony do swojej następnej aktywacji (${UNITS[u.defId].abilityName}).`);
+        }
+        applyFrost(state, u.side, t);
       }
       // Młot Przodków: the one hit loses its next activation.
       if (ab === 'stunBlow') {
@@ -1488,6 +1586,55 @@ export function fortifyCells(state: GameState, u: BattleUnit): [HexKey, HexKey] 
   return null;
 }
 
+/**
+ * Lodowa Ściana: the three cells in a line (one of the three axes) where Marzanna raises her wall: free cells within reach of her, the wall closest to the
+ * nearest enemy first and, of those, the one that lies most across the line to that enemy (null: no room, or nobody to wall off).
+ */
+export function iceWallCells(state: GameState, u: BattleUnit): HexKey[] | null {
+  const b = state.battle!;
+  if (b.duel || !u.pos) return null;
+  const mine = cellsOf(u);
+  const foes = enemiesOf(b, u).flatMap(cellsOf);
+  if (!foes.length) return null;
+  const obstacles = obstacleSet(b);
+  const open = (k: HexKey) => inLayout(b, k) && !obstacles.has(k) && !unitAt(b, k);
+  let best: { cells: HexKey[]; gap: number; across: number } | null = null;
+  for (const c of layoutCells(b)) {
+    if (!open(c) || !mine.some((m) => distance(parseKey(m), parseKey(c)) <= ABILITY.iceWallReach)) continue;
+    const h = parseKey(c);
+    const near = foes.reduce((a, f) => (distance(parseKey(f), h) < distance(parseKey(a), h) ? f : a));
+    const gap = distance(parseKey(near), h);
+    const toFoe = cartesian({ q: parseKey(near).q - h.q, r: parseKey(near).r - h.r });
+    for (const d of DIRECTIONS.slice(0, 3)) {
+      const a = key({ q: h.q - d.q, r: h.r - d.r });
+      const z = key({ q: h.q + d.q, r: h.r + d.r });
+      if (!open(a) || !open(z)) continue;
+      const along = cartesian(d);
+      const across = Math.abs(toFoe.x * along.x + toFoe.y * along.y) / (Math.hypot(toFoe.x, toFoe.y) * Math.hypot(along.x, along.y) || 1);
+      const cells = [a, c, z].sort();
+      if (!best || gap < best.gap || (gap === best.gap && (across < best.across - 1e-9 || (Math.abs(across - best.across) <= 1e-9 && cells.join() < best.cells.join())))) best = { cells, gap, across };
+    }
+  }
+  return best ? best.cells : null;
+}
+
+/** Porwanie: the free cell 2-3 cells from where the target stands that is farthest from its allies (null: no room). */
+export function abductCell(state: GameState, t: BattleUnit): HexKey | null {
+  const b = state.battle!;
+  if (!t.pos) return null;
+  const obstacles = obstacleSet(b);
+  const allies = livingUnits(b, t.side).filter((x) => x.id !== t.id).flatMap(cellsOf);
+  const from = parseKey(t.pos);
+  const spots = layoutCells(b)
+    .filter((k) => {
+      const d = distance(from, parseKey(k));
+      return d >= ABILITY.abductMin && d <= ABILITY.abductMax && !obstacles.has(k) && !unitAt(b, k);
+    })
+    .map((k) => ({ k, away: allies.length ? Math.min(...allies.map((a) => distance(parseKey(a), parseKey(k)))) : 0 }))
+    .sort((x, y) => y.away - x.away || (x.k < y.k ? -1 : 1));
+  return spots[0]?.k ?? null;
+}
+
 export function battleAbility(state: GameState, targetId?: string) {
   const b = state.battle!;
   const u = b.units[b.activation!.unitId];
@@ -1578,6 +1725,31 @@ export function battleAbility(state: GameState, targetId?: string) {
     b.obstacles = [...b.obstacles, ...cells];
     b.raised = [...(b.raised ?? []), ...cells];
     log(state, 'ability', `${unitName(u)} stawia mur (${UNITS[u.defId].abilityName}).`);
+  } else if (ab === 'iceWall') {
+    const cells = iceWallCells(state, u);
+    if (!cells) throw new Error('Brak miejsca na lodową ścianę.');
+    b.obstacles = [...b.obstacles, ...cells];
+    b.raised = [...(b.raised ?? []), ...cells];
+    b.ice = [...(b.ice ?? []), ...cells.map((cell) => ({ cell, until: b.round + ABILITY.iceWallRounds - 1 }))];
+    log(state, 'ability', `${unitName(u)} wznosi ścianę z lodu (${UNITS[u.defId].abilityName}).`);
+  } else if (ab === 'bellOfGlass') {
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side === u.side || !t.pos || unitDistance(u, t) > ABILITY.bellRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.bellRange} pól.`);
+    if (!(t.status.frost ?? 0)) throw new Error('Wybierz wroga, który ma szron.');
+    freezeUnit(state, u.side, t);
+  } else if (ab === 'abduct') {
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side === u.side || !t.pos || unitDistance(u, t) > ABILITY.abductRange) throw new Error(`Wybierz małego wroga w zasięgu ${ABILITY.abductRange} pól.`);
+    if (!canBeMoved(state, t)) throw new Error('Tego wroga nie da się przestawić.');
+    const to = abductCell(state, t);
+    if (!to) throw new Error('Brak miejsca, by postawić wroga.');
+    const moved = distance(parseKey(to), parseKey(t.pos));
+    t.pos = to;
+    log(state, 'ability', `${unitName(t)} zostaje uniesiony i postawiony ${moved} pola dalej, z dala od swoich (${UNITS[u.defId].abilityName}).`);
+    stepOnFields(state, t);
+  } else if (ab === 'longNight') {
+    log(state, 'ability', `${unitName(u)}: zapada długa noc.`);
+    for (const e of enemiesOf(b, u)) applyFrost(state, u.side, e);
   } else if (ab === 'web') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side === u.side || unitDistance(u, t) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);

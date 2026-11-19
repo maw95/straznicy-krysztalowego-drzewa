@@ -15,6 +15,7 @@ export const HERO_TYPES: Record<string, HeroType> = {
   aurochsScout: 'warrior', faunJavelin: 'hunter', satyrSeer: 'sage',
   barrowKing: 'warrior', lanternWraith: 'sage', headlessKnight: 'hunter', bellKeeper: 'sage',
   ironThane: 'warrior', runeMatron: 'sage', passWarden: 'hunter', oldMiner: 'warrior', clanWarrior: 'warrior', mountainCrossbow: 'hunter', forgePriest: 'sage',
+  marzanna: 'sage', frostJarl: 'warrior', snowLynx: 'hunter', oldHailer: 'sage', iceKnight: 'warrior', ermineHuntress: 'hunter', frostWitch: 'sage',
   wardCaptain: 'warrior', spectralArcher: 'hunter', penitentMonk: 'sage',
 };
 
@@ -82,6 +83,13 @@ export const SPECIALTIES: Record<string, Specialty> = {
   runeMatron: { name: 'Wiedza Przodków', text: 'Czary Matki Run zadają i leczą o 1 więcej.', spellPower: 1 },
   passWarden: { name: 'Oko Celownika', text: 'Strzelcy Strażniczki (i ona sama) mają +1 A w bitwie.', marksman: 1 },
   oldMiner: { name: 'Znawca Sztolni', text: '+1 punkt ruchu na mapie.', move: 1 },
+  marzanna: { name: 'Oddech Zimy', text: 'Czary Marzanny zadają i leczą o 1 więcej.', spellPower: 1 },
+  frostJarl: { name: 'Dwór Olbrzymów', text: 'Pomocnicy Jarla mają +1 Ż w bitwie.', supportHp: 1 },
+  snowLynx: { name: 'Biegnąca z Wiatrem', text: '+1 punkt ruchu na mapie.', move: 1 },
+  oldHailer: { name: 'Gradowa Chmura', text: 'Czary Starego Gradowego zadają i leczą o 1 więcej.', spellPower: 1 },
+  iceKnight: { name: 'Lodowa Tarcza', text: 'Pomocnicy Rycerza mają +1 Ż w bitwie.', supportHp: 1 },
+  ermineHuntress: { name: 'Oko Gronostaja', text: 'Strzelcy Łowczyni (i ona sama) mają +1 A w bitwie.', marksman: 1 },
+  frostWitch: { name: 'Zimowa Magia', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
   clanWarrior: { name: 'Stary Wojownik', text: 'Pomocnicy Wojownika mają +1 Ż w bitwie.', supportHp: 1 },
   mountainCrossbow: { name: 'Celne Oko Gór', text: 'Strzelcy Kusznika (i on sam) mają +1 A w bitwie.', marksman: 1 },
   forgePriest: { name: 'Ogień Kuźni', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },

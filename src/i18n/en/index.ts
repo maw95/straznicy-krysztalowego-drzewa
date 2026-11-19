@@ -7,6 +7,7 @@ import './extra';
 import './herds';
 import './undead';
 import './clans';
+import './frost';
 import './names';
 import './campaign';
 import './changelog';
