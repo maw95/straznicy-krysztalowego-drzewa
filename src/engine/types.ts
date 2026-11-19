@@ -441,6 +441,8 @@ export interface BattleUnit {
   maxHp: number;
   /** Fights under the digital ruleset: its own hp, attack and speed (see `battleStats`). */
   digital?: true;
+  /** Fights in the arena: the Horde's digital bonus (`HORDE_DIGITAL_BONUS`) does not apply. */
+  arena?: true;
   /** Życie and Atak of this unit are this many times the board game's (missing = 1; see `scaleOf` in battle.ts). */
   scale?: number;
   /** Życie of this unit is this many times the board game's (missing = `scale`). */

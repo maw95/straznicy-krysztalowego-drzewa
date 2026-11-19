@@ -142,9 +142,9 @@ export function newStatus(): UnitStatus {
   return { slowNext: 0, rootedNext: false, cursedNext: 0, nextAttackBonus: 0, battleAttackBonus: 0, battleSpeedBonus: 0, damageReduction: 0, shieldArmed: false };
 }
 
-export function makeBattleUnit(defId: string, side: Side, digital = false, scale = 1, hpScale = scale): BattleUnit {
-  const { hp } = battleStats(defId, digital, scale, hpScale);
-  return { id: defId, defId, side, hp, maxHp: hp, ...(digital ? { digital: true as const } : {}), ...(scale !== 1 ? { scale } : {}), ...(hpScale !== scale ? { hpScale } : {}), pos: null, alive: true, abilityUsed: false, swappedOut: false, status: newStatus() };
+export function makeBattleUnit(defId: string, side: Side, digital = false, scale = 1, hpScale = scale, arena = false): BattleUnit {
+  const { hp } = battleStats(defId, digital, scale, hpScale, arena);
+  return { id: defId, defId, side, hp, maxHp: hp, ...(digital ? { digital: true as const } : {}), ...(arena ? { arena: true as const } : {}), ...(scale !== 1 ? { scale } : {}), ...(hpScale !== scale ? { hpScale } : {}), pos: null, alive: true, abilityUsed: false, swappedOut: false, status: newStatus() };
 }
 
 /** Asks the screen for a light effect on `cell` (see BattleState.fx). */
@@ -201,11 +201,11 @@ export function activeUnit(b: BattleState): BattleUnit | null {
 }
 
 export function unitSpeed(u: BattleUnit): number {
-  return battleStats(u.defId, u.digital, u.scale, u.hpScale).speed + u.status.battleSpeedBonus + (u.status.auraSpeed ?? 0) - (u.status.auraChill ?? 0) - (u.status.frost ?? 0) * (u.status.frostSlow ?? 0);
+  return battleStats(u.defId, u.digital, u.scale, u.hpScale, u.arena).speed + u.status.battleSpeedBonus + (u.status.auraSpeed ?? 0) - (u.status.auraChill ?? 0) - (u.status.frost ?? 0) * (u.status.frostSlow ?? 0);
 }
 
 export function unitAttackBase(u: BattleUnit): number {
-  return battleStats(u.defId, u.digital, u.scale, u.hpScale).attack + u.status.battleAttackBonus;
+  return battleStats(u.defId, u.digital, u.scale, u.hpScale, u.arena).attack + u.status.battleAttackBonus;
 }
 
 export function moveRange(u: BattleUnit): number {
@@ -1922,7 +1922,7 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     }
     const reserve = args.reserveId;
     if (!reserve || !state.factions[faction].supportsAlive.includes(reserve) || b.units[reserve]) throw new Error('Wybierz żywego pomocnika z rezerwy.');
-    const nu = makeBattleUnit(reserve, faction, Boolean(t.digital), t.scale ?? 1, t.hpScale ?? t.scale ?? 1);
+    const nu = makeBattleUnit(reserve, faction, Boolean(t.digital), t.scale ?? 1, t.hpScale ?? t.scale ?? 1, Boolean(t.arena));
     const spot = t.alive ? t.pos : freeCellNear(use.state, faction, nu);
     // The swapped unit leaves first, so a large newcomer may lie on the cells it frees.
     const was = { alive: t.alive, pos: t.pos, tail: t.tail };

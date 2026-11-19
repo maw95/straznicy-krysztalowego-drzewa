@@ -978,8 +978,8 @@ function startBattle(state: GameState, s: BattleStart) {
   const digital = isDigital(state.rules) && !b.duel;
   const scale = scaleOf(state);
   const hpScale = hpScaleOf(state);
-  b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction, digital, scale, hpScale);
-  if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital, scale, hpScale);
+  b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction, digital, scale, hpScale, state.setup.mode === 'arena');
+  if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital, scale, hpScale, state.setup.mode === 'arena');
   for (const h of [attacker, defenderHero]) if (h && state.rules.heroGrowth) {
     applyHeroSkills(h, b.units[h.id]);
     applyHeroType(h, b.units[h.id]);
@@ -1073,7 +1073,7 @@ function addSupports(state: GameState, faction: TeamId, ids: string[]) {
   const digital = isDigital(state.rules) && !b.duel;
   for (const defId of ids) {
     const id = defId;
-    b.units[id] = makeBattleUnit(defId, faction, digital, scaleOf(state), hpScaleOf(state));
+    b.units[id] = makeBattleUnit(defId, faction, digital, scaleOf(state), hpScaleOf(state), state.setup.mode === 'arena');
     // The leader of the side (the attacking or the defending hero of this faction) strengthens its supports.
     if (state.rules.heroGrowth) {
       const leader = state.heroes[b.attacker === faction ? b.attackerHero : b.defenderHero ?? ''];

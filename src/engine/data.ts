@@ -324,6 +324,13 @@ const u = (d: UnitDef): UnitDef => d;
 export const DIGITAL_RANGED_BONUS = 1;
 
 /**
+ * Digital ruleset: every unit of the Horde (heroes and supports) has this much more Życie and Atak than on the board card. Przymierze won about 66% of
+ * the bot games of the symmetric goals (control, conquest, relic) on every map; with +1 Ż and +1 A for the Horde it wins about 50% (the board game is untouched).
+ * The unit tables (`UNITS`) stay as the board cards print them. Not in the arena (one hero and two supports on a side, tuned to 50% without it).
+ */
+export const HORDE_DIGITAL_BONUS = { hp: 1, attack: 1 };
+
+/**
  * Digital ruleset: the numbers of a unit's battle stats that differ from the board game's (the rest stay as in UNITS).
  * Each Przymierze hero has one trait: the Gold Dragon hits hardest (7 A, brittle), the Ancient Bear has the most life (12 Ż, slow),
  * the Unicorn King is the fastest (10 S). The Black Dragon gets 6 A so that the Horde keeps up. Tuned with `make sim-arena` (SIM_DIGITAL=1):
@@ -901,7 +908,8 @@ export function scaleText(text: string, scale: number, hpScale = scale): string 
 }
 
 /** The hp, attack and speed of a unit in a battle: the board game's, or the digital ruleset's where they differ; Życie and Atak times `scale` (the digital Expedition plays with 3, see `scaleOf`). */
-export function battleStats(defId: string, digital: boolean | undefined, scale = 1, hpScale = scale): Pick<UnitDef, 'hp' | 'attack' | 'speed'> {
+export function battleStats(defId: string, digital: boolean | undefined, scale = 1, hpScale = scale, arena = false): Pick<UnitDef, 'hp' | 'attack' | 'speed'> {
   const { hp, attack, speed } = { ...UNITS[defId], ...(digital ? DIGITAL_STATS[defId] : undefined) };
-  return { hp: hp * hpScale, attack: attack * scale, speed };
+  const bonus = digital && !arena && UNITS[defId]?.side === 'horde' ? HORDE_DIGITAL_BONUS : { hp: 0, attack: 0 };
+  return { hp: (hp + bonus.hp) * hpScale, attack: (attack + bonus.attack) * scale, speed };
 }

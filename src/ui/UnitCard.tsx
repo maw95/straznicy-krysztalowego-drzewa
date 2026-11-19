@@ -177,13 +177,16 @@ const DUEL_BLUE = '#8FD3F4';
  */
 /** Set by the app while a digital game is on, so every card (hover, dialogs, helper pick) shows the digital stats. */
 export const DigitalCardsContext = createContext(false);
+/** True in the arena: the Horde's digital bonus (`HORDE_DIGITAL_BONUS`) is not on its cards there. */
+export const ArenaCardsContext = createContext(false);
 
 /** The small hover hint of a unit: its name and the three numbers the card shows (the card itself opens under the right mouse button). */
 export function UnitTip({ unitId }: { unitId: string }) {
   const digital = useContext(DigitalCardsContext);
   const [statScale, hpScale] = useScales();
   const base = UNITS[unitId];
-  const stats = battleStats(unitId, digital, statScale, hpScale);
+  const inArena = useContext(ArenaCardsContext);
+  const stats = battleStats(unitId, digital, statScale, hpScale, inArena);
   const bonus = digital && base.attackType === 'ranged' ? DIGITAL_RANGED_BONUS * statScale : 0;
   return (
     <>
@@ -198,6 +201,7 @@ export function UnitTip({ unitId }: { unitId: string }) {
 export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false, digital: digitalProp }: { unitId: string; width?: number; hp?: number; attack?: number; speed?: number; duel?: boolean; /** The digital edition's Życie, Atak and Szybkość (where they differ from the printed card). */ digital?: boolean }) {
   const inDigitalGame = useContext(DigitalCardsContext);
   const [statScale, hpScale] = useScales();
+  const inArena = useContext(ArenaCardsContext);
   const digital = digitalProp ?? inDigitalGame;
   const base = UNITS[unitId];
   const card = duel ? base.duel : undefined;
@@ -208,7 +212,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false,
   const { at, circle, kx, ky, X, Y } = cardSpace(L.bounds);
   const nameW = L.name.x1 - L.name.x0;
   const nameSize = Math.min(40, (nameW / Math.max(8, def.name.length)) * 2.05);
-  const stats = card ? def : battleStats(unitId, digital, statScale, hpScale);
+  const stats = card ? def : battleStats(unitId, digital, statScale, hpScale, inArena);
   // In the digital ruleset a shooter hits one harder than the printed Atak says; the card shows what the unit really deals.
   const shooterBonus = digital && def.attackType === 'ranged' ? DIGITAL_RANGED_BONUS * statScale : 0;
   const values = [hp ?? stats.hp, (attack ?? stats.attack) + shooterBonus, speed ?? stats.speed];

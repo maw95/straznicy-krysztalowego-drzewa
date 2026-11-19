@@ -29,7 +29,7 @@ import { SetupScreen } from './SetupScreen';
 import { music } from './music';
 import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, LeaveDialog, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
 import { fightLevelAt } from './fightBadges';
-import { DigitalCardsContext, UnitCard } from './UnitCard';
+import { ArenaCardsContext, DigitalCardsContext, UnitCard } from './UnitCard';
 import { DigitalContext, HeroLevelsContext, HpScaleContext, StatScaleContext } from './statScale';
 import { autopilotAction, supportSlots } from '../engine/kingdom';
 import { finishRun, saveBattle } from './expeditionRun';
@@ -909,6 +909,7 @@ export function App() {
   setFiguresEdition(!isDigital(game.rules));
   return (
     <DigitalCardsContext.Provider value={isDigital(game.rules)}>
+    <ArenaCardsContext.Provider value={game.setup.mode === 'arena'}>
     <DigitalContext.Provider value={isDigital(game.rules)}>
     <StatScaleContext.Provider value={game.rules.statScale ?? 1}>
     <HpScaleContext.Provider value={game.rules.hpScale ?? null}>
@@ -1088,6 +1089,7 @@ export function App() {
     </HpScaleContext.Provider>
     </StatScaleContext.Provider>
     </DigitalContext.Provider>
+    </ArenaCardsContext.Provider>
     </DigitalCardsContext.Provider>
   );
 }
