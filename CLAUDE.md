@@ -15,6 +15,10 @@ answer in Polish; code, comments and commit messages in English; CHANGELOG.md an
 - `docs/BACKLOG.md` — agreed work, with [x]/[ ]; start here. `docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md` — the official
   rules and every rule decision (add new ones as a section). `docs/INSTRUKCJA.md` — player rulebook.
   `docs/INFRASTRUKTURA.md` — servers, releases, secrets.
+- **Board edition production (3 copies):** Claude acts as the author's production manager. When the author asks
+  „co mam teraz zrobić?” (or similar), read `docs/wersja_planszowa/POSTEP_PRODUKCJI.md` (state, waiting items, measurements),
+  give the next concrete step with exact how-to from `PLAN_KROK_PO_KROKU.md`, and update the tracker (tick + date, log line)
+  when the author reports progress. The plywood order waits for measurements (section G there).
 - `tests/` — `golden.test.ts` (62 bot games hashed: any change to game results fails it; update the snapshot with
   `npx vitest run tests/golden.test.ts -u` only for intended rule/AI changes, and say so in the commit), `helpers/engine.ts`.
 

@@ -16,6 +16,9 @@ linijka porządniejsza, z antypoślizgiem.
 
 ## Co kupić (najniższy koszt razem z dostawami)
 
+**Status 19.11.2026:** wszystko zamówione oprócz sklejka-krakow.pl (sklejka i dna — dopiero po pomiarach; stan dostaw
+w `POSTEP_PRODUKCJI.md`).
+
 Produkty dobrane tak, żeby suma towarów i przesyłek była najmniejsza: jedno zamówienie na sklep; w shan.pl koszyk przekracza
 150 zł, więc dostawa do paczkomatu jest darmowa; Castorama — tylko produkty sprzedawane przez samą Castoramę (odbiór w sklepie
 0 zł; oferty zewnętrznych sprzedawców `castorama.pl/departments/…` mają osobną dostawę, więc ich tu nie ma); Amazon — darmowa dostawa.

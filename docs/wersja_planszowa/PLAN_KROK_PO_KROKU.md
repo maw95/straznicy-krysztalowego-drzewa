@@ -13,6 +13,7 @@ drukujemy na zwykłej drukarce (papier fotograficzny), pudełko robimy ręcznie 
 | `okladki_przod_tyl_grzbiet.pdf` | **okładka segregatora** autora: 3 strony — przód (A4), tył (A4) i **grzbiet 10 × 297 mm** |
 | `logo_zolte_120mm.pdf`, `logo_zolte_przezroczyste.png` | **żółte logo na przezroczystym tle** na pudełko: PDF 140 × 110 mm z logo szerokim na 120 mm, PNG 1448 × 1086 px (RGBA) |
 | `ZAKUPY_3_EGZEMPLARZE.md` | lista zakupów na 3 egzemplarze z linkami do ofert, tusz do HP DeskJet 2545 |
+| `POSTEP_PRODUKCJI.md` | **stan prac**: co zrobione, na co czekamy, pomiary przed zamówieniem sklejki |
 | `WYMIARY_ELEMENTOW.md` | wymiary wszystkich elementów i zasady druku |
 | `FIGURKI_SPECYFIKACJA.md`, `druk3d/` | figurki, podstawki, kryształy, znacznik rundy — pliki do druku 3D |
 | `instrukcja_szablon/` | instrukcja A4 w HTML (źródło PDF-a); strona 1 (po okładce) to wiadomość od autora |
