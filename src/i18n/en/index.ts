@@ -5,6 +5,7 @@ import './ui';
 import './online';
 import './extra';
 import './herds';
+import './undead';
 import './names';
 import './campaign';
 import './changelog';

@@ -4,9 +4,9 @@
 // slow, root...) stay where they are until `golden.test.ts` can watch a mechanical refactor. The Dzikie Stada use the push with a collision, the resistance to being moved, the bonus for the target's state and the taunt (docs/frakcje/herds.md).
 
 import { distance, key, line, parseKey, type HexKey } from './hex';
-import { abilityActive, abilityOf, cellsOf, dealDamage, inLayout, pushCell, scaleOf, stepOnFields, unitAt } from './battle';
+import { abilityActive, abilityOf, battleFx, cellsOf, dealDamage, fitsAt, freeCellNear, inLayout, nearestFreeCell, placeUnit, pushCell, scaleOf, stepOnFields, unitAt } from './battle';
 import { log } from './log';
-import { UNITS, type AbilityId } from './data';
+import { supportTier, UNITS, type AbilityId, type Side } from './data';
 import { manaOf } from './magic';
 import type { BattleState, BattleUnit, GameState } from './types';
 
@@ -228,3 +228,43 @@ export function taunter(state: GameState, u: BattleUnit): BattleUnit | null {
 
 /** The scale of a collision's damage in this battle (the numbers of `ABILITY` are small-scale). */
 export const collisionOf = (state: GameState, smallScale: number): number => smallScale * scaleOf(state);
+
+// ---------------------------------------------------------------- the Kingdom of the Dead: raising the fallen in the field
+
+/** The supports of `side` that lie fallen in the battle (they can rise again), the strongest tier first, then the most Życie, then by id; `maxTier` limits the tier. */
+export function fallenSupports(state: GameState, side: Side, maxTier = 6): BattleUnit[] {
+  const b = state.battle;
+  if (!b || b.duel) return [];
+  return Object.values(b.units)
+    .filter((u) => !u.alive && !u.pos && !u.swappedOut && u.side === side && UNITS[u.defId].kind === 'support' && supportTier(u.defId) <= maxTier)
+    .sort((x, y) => supportTier(y.defId) - supportTier(x.defId) || y.maxHp - x.maxHp || (x.id < y.id ? -1 : 1));
+}
+
+/**
+ * Raising in the field: a fallen unit stands up with `hp` Życie (at least 1, at most its maximum) on the free cell nearest to `near` (the cell where it fell,
+ * or the unit that calls it: pass its cell), or on a free cell of its side's start when `near` is null. Its temporary statuses are cleared; it is marked as
+ * having risen (a Resurrection treasure does not raise it again). Returns false when there is no room.
+ */
+export function raiseUnit(state: GameState, unit: BattleUnit, near: HexKey | null, hp: number, label: string): boolean {
+  const b = state.battle!;
+  if (unit.alive || b.duel) return false;
+  const cell = near ? nearestFreeCell(state, unit, near) : freeCellNear(state, unit.side, unit);
+  if (!cell || !fitsAt(state, unit, cell)) return false;
+  const tail = cell === unit.corpse ? unit.corpseTail : undefined;
+  unit.alive = true;
+  unit.hp = Math.max(1, Math.min(unit.maxHp, hp));
+  placeUnit(state, unit, cell, tail);
+  delete unit.corpse;
+  delete unit.corpseTail;
+  unit.status.slowNext = 0;
+  unit.status.rootedNext = false;
+  unit.status.cursedNext = 0;
+  delete unit.status.poisoned;
+  delete unit.status.tauntedBy;
+  delete unit.status.reassemble;
+  unit.status.risen = true;
+  battleFx(state, 'odrodzenie', unit.pos);
+  (b.heals ??= []).push({ unitId: unit.id, amount: unit.hp });
+  log(state, 'ability', `${UNITS[unit.defId].name} wstaje (Ż ${unit.hp}/${unit.maxHp}; ${label}).`);
+  return true;
+}

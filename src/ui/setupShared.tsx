@@ -128,6 +128,8 @@ export const SEAT_TINT: Record<TeamId | FactionId, string> = {
   fourth: 'linear-gradient(100deg, rgba(92, 52, 138, 0.62), rgba(38, 20, 62, 0.58))',
   // Dzikie Stada: ochre and straw.
   herds: 'linear-gradient(100deg, rgba(176, 136, 48, 0.62), rgba(84, 60, 18, 0.58))',
+  // Królestwo Umarłych: ash green.
+  undead: 'linear-gradient(100deg, rgba(112, 128, 104, 0.62), rgba(46, 56, 44, 0.58))',
 };
 
 

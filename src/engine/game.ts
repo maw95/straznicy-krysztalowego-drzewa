@@ -26,6 +26,7 @@ import {
   RESURRECTION_CARDS,
   TERRAIN_NAMES,
   UNITS,
+  supportTier,
   type TeamId,
   type ItemKind,
   type MapSize,
@@ -1037,6 +1038,7 @@ function sparkBonus(state: GameState, unit: BattleState['units'][string]) {
     unit.hp += EMPIRE.sparkHp * hpScaleOf(state);
     unit.maxHp += EMPIRE.sparkHp * hpScaleOf(state);
   } else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'herds') unit.status.battleSpeedBonus += EMPIRE.sparkSpeed;
+  else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'undead') unit.status.immune = true;
   else unit.status.battleAttackBonus += EMPIRE.sparkAttack * scaleOf(state);
 }
 
@@ -1080,6 +1082,7 @@ function finalizeBattle(state: GameState) {
   if (state.setup.mode === 'arena') return finishArena(state);
   const b = state.battle!;
   applyCasualties(state, b);
+  if (b.kind === 'neutral' && b.winner === b.attacker) bellToll(state, b.attacker);
   const resultText = b.winner === 'draw' ? 'remis — obie strony poległy' : `wygrywa ${sideName(state, b.winner!)}`;
   log(state, 'battle', `Bitwa zakończona: ${resultText}.`);
   if (b.kind === 'neutral') resolveGuardianFight(state, b);
@@ -1138,6 +1141,21 @@ function awardBattleXp(state: GameState, b: BattleState) {
       if (!loser || !captureGear(state, hero, loser)) giveArtifact(state, hero, common[(state.round + hero.id.length) % common.length], 'łup z pokonanego bohatera');
     }
   }
+}
+
+/** Dzwonnica Zaduszna (the Kingdom of the Dead): after a win over the neutrals one fallen support of tier 1-2 returns to the team without the hospital, once a round. */
+function bellToll(state: GameState, side: Side) {
+  if (side === 'neutral' || !state.rules.empire) return;
+  const f = side as TeamId;
+  if (!Object.values(state.kingdom?.settlements ?? {}).some((s) => s.owner === f && buildingLevel(s, 'bellTower') >= 1)) return;
+  const fs = state.factions[f];
+  if (fs.bellRound === state.round) return;
+  const back = fs.supportsDead.find((id) => supportTier(id) <= 2);
+  if (!back) return;
+  fs.bellRound = state.round;
+  fs.supportsDead = fs.supportsDead.filter((id) => id !== back);
+  fs.supportsAlive.push(back);
+  log(state, 'info', `${sideName(state, f)}: dzwon zaduszny przywołuje z powrotem ${UNITS[back].name}.`);
 }
 
 /** Fallen supports join the faction's dead for good; fallen heroes die on the map. */

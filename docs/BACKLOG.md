@@ -41,6 +41,8 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
   - **Zostaje:** G2 balans (Przymierze na poziomie Imperium leczy i wygrywa za często; liczby Stad na karcie to propozycja) · G3 próbka jednej jednostki w nowym stylu (autor) · G4 pełna grafika, siedliska/osada, arena, kafle stepu, muzyka, ramki kart, ikony zdolności, przycisk Ostoi w oknie osady, bot z rozpędem w ustawianiu, szarża Rogów Przodków wg karty · G5 instrukcja PL i EN · 51a: koop i online z nowymi frakcjami (serwer osobno), nowe frakcje w kolorze strony na ekranie bitwy (dziś pierścienie wg slotu strony).
 
 **53. Królestwo Umarłych (L; po 52, te same bramki).**
+  - **Stan 19.11 (G1 zrobiona, bez autora):** paczka `src/engine/factions/undead.ts` (bohaterowie, 3 dowódcy, czwarty bohater, 12 jednostek z układem A/B, legenda), nowe prymitywy w silniku (wskrzeszenie w polu, odporność na statusy, ignorowanie pancerza, tarcza jednorazowa wg typu ciosu, aura osłabiająca, wyczerpanie many), budynki Kurhan Wiecznej Warty (4 poziomy, Wieczna Warta), Ossuarium i Dzwonnica Zaduszna, Iskra (odporność na statusy), bot, angielski w `src/i18n/en/undead.ts`, zastępcza grafika (`make placeholders`), `tests/undead.test.ts`, `scripts/sim/umarli.ts`, `scripts/browser/umarli.ts`; test kontraktowy zielony, golden bez zmian. Karta z decyzjami i listą uproszczeń: `docs/frakcje/undead.md`. Szybki pomiar (100 gier na komórkę, poziom Imperium): Umarli wygrywają z Przymierzem 29% / 40% (Kontrola / Podbój), z Hordą 57% / 47%.
+  - **Zostaje:** G2 balans (jak u Stad; Kurhan w grach botów budowany rzadko) · G3 próbka jednostki (autor) · G4 pełna grafika, arena, kafle, muzyka, ikony zdolności, wybór poległego w Wezwaniu i Ponownym Oddechu, przenikanie Jeźdźca · G5 instrukcja PL i EN · 51a koop i online.
 
 **54. Żelazne Klany (L; po 53, te same bramki).** Symulacje 10 par po trzech frakcjach.
 
@@ -74,6 +76,17 @@ Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.t
 - kafle ziemi Stad (step, wzgórza, rzeka, kamienne kręgi), zakryty rewers `tiles/back_herds.jpg`, baza i skarbiec Stad (dziś kafle Przymierza w `herds.ts`, pole `terrain`);
 - osada: tło ziemi `osady/land_herds.jpg`, obrazy budynków Kamień Tętentu, Wielkie Pastwiska, Ostoja Wędrówek (3 poziomy Kamienia: 1–4) i siedlisk 9 jednostek (dziś zdjęcia osady i budynków Przymierza w `SettlementDialog.tsx`);
 - muzyka frakcji (2–3 utwory: bębny, róg, dudy, rytm galopu).
+
+**Królestwo Umarłych (`undead`)** (paleta: kość, popiel, mech, wosk świec, stare srebro, rdza; poświata zielonkawo-żółta lub biała, nie niebieska; prompty bez słów *corpse, blood, kill*, raczej *ancient guardian, spectral, barrow*):
+- karta (`cards/art/<id>.jpg`, 452×314) i portret (`cards/portraits/<id>.jpg`, 256×256) dla 19 jednostek: `barrowKing`, `lanternWraith`, `headlessKnight`, `bellKeeper` (4. bohater), `wardCaptain`, `spectralArcher`, `penitentMonk` (dowódcy), `skeletonSpear`, `willOWisp`, `penitentShade`, `skeletonArcher`, `scarecrow`, `hauntedArmor`, `banshee`, `viy`, `boneOracle`, `lich`, `kostucha`, `boneDragon`;
+- animacje 2D (`public/assets/jednostki/<folder>`, zestaw jak w `PRZEPIS_JEDNOSTKI.md`) dla tych samych 19; do czasu ich powstania w bitwie są żetony z portretami;
+- herb `cards/crests/undead.png`: latarnia nad kopcem, stare srebro;
+- ramki kart `cards/frames/undead_hero.png`, `undead_support.png` (dziś pożyczone z Przymierza w `UnitCard.tsx`);
+- ikony 14 zdolności (`cards/abilities/<id>.png` i `<id>_inner.png`): `barrowCall`, `dimLight`, `spectralCharge`, `bonesReturn`, `incorporeal`, `armorPierce`, `dread`, `hollow`, `wail`, `viyGaze`, `breathAgain`, `manaReap`, `graveBreath`, `toll` (dziś pożyczone w `ABILITY_ART` w `common.tsx`);
+- arena cyfrowa `arena/cyfrowa/undead.webp` (kurhany we mgle, krzywe brzozy) i jej przeszkody: kurhany, brzozy, kamienne latarnie (dziś obrazy Przymierza w innym układzie, `WIDE_OBSTACLES.undead`);
+- kafle ziemi Umarłych (wrzosowisko, kurhany, cmentarz), zakryty rewers `tiles/back_undead.jpg`, baza i skarbiec (dziś kafle Przymierza w `undead.ts`, pole `terrain`);
+- osada: tło ziemi `osady/land_undead.jpg`, obrazy budynków Kurhan Wiecznej Warty (poziomy 1–4), Ossuarium (1–2), Dzwonnica Zaduszna oraz siedlisk 9 jednostek (dziś zdjęcia osady i budynków Przymierza, `BORROWED` w `SettlementDialog.tsx`);
+- muzyka frakcji (2–3 utwory: dzwony, chór bez słów, lira korbowa, cichy werbel).
 
 ## Przed premierą (decyzja autora 17.11: wchodzą przed Steamem; po punktach z kolejki)
 28. **Nowe frakcje:** przeniesione do kolejki (punkty 51–55, decyzja autora 18.11).

@@ -28,6 +28,8 @@ export const ARENA_OBSTACLES: Record<ArenaId, Array<[number, number]>> = {
   horde: [[3, 3], [9, 3], [3, 7], [2, 8], [6, 8], [9, 9], [10, 10], [3, 13], [9, 13]],
   // The painted arena of the Herds does not exist yet: the board edition's arena is not played with them (digital only), the picture of Przymierze stands in.
   herds: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
+  // Same stand-in for the Kingdom of the Dead (backlog 2a).
+  undead: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
 };
 
 export const arenaCell = (col: number, half: number): HexKey => key({ q: col, r: (half - col) / 2 });
@@ -124,6 +126,17 @@ export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
     { art: 'pine', cells: [[3, 6]] },
     { art: 'ruin', cells: [[10, 5]] },
     { art: 'statue', cells: [[7, 1]] },
+    { art: 'brambles', cells: [[6, 7]] },
+  ],
+  // Placeholder (docs/BACKLOG.md 2a): barrows in the mist want their own arena (mounds, crooked birches, stone lanterns); until then the pictures of Przymierze, rearranged.
+  undead: [
+    { art: 'wall', cells: [[3, 1], [4, 1]] },
+    { art: 'ridge', cells: [[8, 6], [8, 7]] },
+    { art: 'log', cells: [[5, 4], [6, 4]] },
+    { art: 'statue', cells: [[9, 2]] },
+    { art: 'ruin', cells: [[3, 6]] },
+    { art: 'boulders', cells: [[10, 5]] },
+    { art: 'pine', cells: [[7, 1]] },
     { art: 'brambles', cells: [[6, 7]] },
   ],
 };

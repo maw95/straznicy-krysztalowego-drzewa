@@ -2,13 +2,14 @@
 // of the tiers, the buildings, the Spark) is read from here.
 import { DAWN } from './dawn';
 import { HERDS } from './herds';
+import { UNDEAD } from './undead';
 import { HORDE } from './horde';
 import type { Terrain } from '../data';
 import type { FactionPack } from './types';
 
 export type { FactionPack };
 
-export const FACTION_PACKS = { dawn: DAWN, horde: HORDE, herds: HERDS } as const;
+export const FACTION_PACKS = { dawn: DAWN, horde: HORDE, herds: HERDS, undead: UNDEAD } as const;
 export type PackId = keyof typeof FACTION_PACKS;
 export const PACK_IDS = Object.keys(FACTION_PACKS) as PackId[];
 

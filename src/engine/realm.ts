@@ -28,6 +28,7 @@ export const COMMANDERS: Record<FactionId, Record<Archetype, string>> = {
   dawn: { warrior: 'dawnKnight', archer: 'dawnHuntress', sage: 'dawnSage' },
   horde: { warrior: 'hordeWarlord', archer: 'hordeCrossbow', sage: 'hordeShadow' },
   herds: { warrior: 'aurochsScout', archer: 'faunJavelin', sage: 'satyrSeer' },
+  undead: { warrior: 'wardCaptain', archer: 'spectralArcher', sage: 'penitentMonk' },
 };
 
 export const archetypeOf = (unitId: string): Archetype | null => {
@@ -45,6 +46,9 @@ const NAMES: Record<string, string[]> = {
   hordeShadow: ['Mroczysław', 'Popielec', 'Szept', 'Kruk'],
   aurochsScout: ['Turzysław', 'Rogoń', 'Kopytko', 'Burzan'],
   faunJavelin: ['Faunek', 'Oszczepnik Lis', 'Kozioł', 'Strzałka'],
+  wardCaptain: ['Gedymin Cichy', 'Stróż Bram', 'Rycerz Mgły', 'Wartownik Cichy'],
+  spectralArcher: ['Łuczniczka Zmierzchu', 'Cień Strzały', 'Srebrna Cięciwa', 'Dziewanna'],
+  penitentMonk: ['Brat Milczek', 'Pokutnik Wawrzyn', 'Mnich Latarnik', 'Zaduszny'],
   satyrSeer: ['Dudarz Mądry', 'Pieśniarz', 'Wróżbiarz Wiatru', 'Trzcinowy'],
 };
 

@@ -44,11 +44,18 @@ export const FACTION_MECHANICS = {
   herdsSlow: 1,
   /** Wielkie Pastwiska: gold less for a recruit of tiers 1-3 (first level) and of every tier (second level). */
   pastureDiscount: 1,
+  /** Kurhan Wiecznej Warty (Królestwo Umarłych): how many times per battle a fallen support rises at the end of a round, by level (I-IV), and the share of its Życie it comes back with (1 = just 1 Ż, 2 = half, 3 = full). */
+  wardRises: [1, 1, 2, 2],
+  wardShare: [0, 2, 2, 1],
+  /** Ossuarium: gold less for a recruit's resurrection in the hospital (first level); the second level raises the units of tiers 1-2 free. */
+  ossuaryDiscount: 1,
+  ossuaryFreeTier: 2,
 };
 export const MECHANIC_NAMES: Record<FactionId, string> = byPack((p) => p.mechanic.name);
 export const MECHANIC_TEXTS: Record<FactionId, string> = {
   dawn: `Na początku każdej rundy bitwy najciężej ranna jednostka Przymierza odzyskuje ${FACTION_MECHANICS.dawnHeal} Ż.`,
   horde: `Gdy w bitwie ginie wróg Hordy, wszystkie jej jednostki dostają +${FACTION_MECHANICS.hordeAttack} A do końca bitwy (raz na bitwę).`,
+  undead: `Na końcu każdej rundy bitwy poległy pomocnik Umarłych wstaje na arenie (jego najtańszy; bohaterowie nie wstają); liczba wstań i Ż, z którym wracają, rosną z poziomem Kurhanu.`,
   herds: `Jednostka Stad, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole; cel, który w coś uderzy, dostaje obrażenia.`,
 };
 
@@ -66,6 +73,7 @@ export const SPARK_TEXTS: Record<FactionId, string> = {
   dawn: `Wszystkie jednostki Przymierza (bohaterowie i pomocnicy) mają +${EMPIRE.sparkHp} Ż w każdej bitwie.`,
   horde: `Wszystkie jednostki Hordy (bohaterowie i pomocnicy) mają +${EMPIRE.sparkAttack} A w każdej bitwie.`,
   herds: `Wszystkie jednostki Stad (bohaterowie i pomocnicy) mają +${EMPIRE.sparkSpeed} S w każdej bitwie.`,
+  undead: 'Wszystkie jednostki Umarłych (bohaterowie i pomocnicy) są odporne na truciznę, klątwy, spowolnienia i unieruchomienie.',
 };
 
 /** How many shards the game has in all (on the map, carried, or already built into the Iskra). */

@@ -307,6 +307,8 @@ export interface FactionState {
   delivered: number;
   /** Main heroes not yet used by anyone (for the replacement variant). */
   unusedHeroes: string[];
+  /** Dzwonnica Zaduszna (the Kingdom of the Dead): the round a fallen support last came back to the team after a win over the neutrals (once a round). */
+  bellRound?: number;
 }
 
 export interface Tile {
@@ -371,6 +373,12 @@ export interface UnitStatus {
   tauntedBy?: string;
   /** Bęben Wędrówki: S the unit has from a drum in its neighbourhood (recounted at the start of every round and activation). */
   auraSpeed?: number;
+  /** Królestwo Umarłych: immune to poison, curses, slows and roots (the Spark, or a unit that is hollow). */
+  immune?: true;
+  /** Kości Wracają: the unit fell and stands up at the end of the round. */
+  reassemble?: true;
+  /** The unit has already risen in this battle (the Wieczna Warta, a call, the bones): a Resurrection treasure does not raise it again. */
+  risen?: true;
 }
 
 /** What the artifacts do for a unit in this battle (sites.ts `applyGear`); numbers are in this battle's scale. */
@@ -488,6 +496,8 @@ export interface BattleState {
   neutralId: string | null;
   /** Level 6: how many times the Horde's Żądza Krwi has fired in this battle. */
   bloodlust?: number;
+  /** Wieczna Warta: how many times each side's Kurhan has raised a fallen support in this battle. */
+  ward?: Record<string, number>;
   /** Level 5: the spells cast in this battle, newest last (the screen plays them). */
   spells?: Array<{ spell: SpellId; casterId: string; targetId: string }>;
   /** Level 4: the battle is fought for this settlement (its garrison fights on the defender's side, with or without a hero). */

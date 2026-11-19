@@ -1,4 +1,4 @@
-import { byPack, type PackId } from './factions';
+import { byPack, FACTION_PACKS, type PackId } from './factions';
 // Game content: units, guardians, treasures and terrain.
 // Numbers started from docs/zrodla_zasad/Straznicy_Krysztalowego_Drzewa_Specyfikacja_dla_AI.md
 // and were tuned with simulations (docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md, section 7).
@@ -71,7 +71,22 @@ export type AbilityId =
   | 'tremor' // Ziemia Drży (Indrik, free action, once): small enemies nearby are pushed 1 cell; cannot be pushed
   | 'ancestralHorns' // Rogi Przodków (Wielki Tur, attack ability, once): the blow pushes the target 2 cells
   | 'wanderHorn' // Róg Wędrówki (Satyr Rogogłos, free action, once): all allies have +S in their next activation
-  | 'runOn'; // W Biegu (Pędziwiatr, once): after the attack finishes the move with the remaining cells
+  | 'runOn' // W Biegu (Pędziwiatr, once): after the attack finishes the move with the remaining cells
+  // Królestwo Umarłych (docs/frakcje/undead.md): raising the fallen, armour piercing, auras that weaken, immunity to statuses, draining mana.
+  | 'barrowCall' // Wezwanie z Kurhanu (Król Kurhanu, free action, once): a fallen support rises next to the king with half its Życie
+  | 'dimLight' // Zgaszone Światło (Latarniczka Mgieł, attack ability, once): the enemy hero loses mana, the target has -A
+  | 'spectralCharge' // Widmowa Szarża (Bezgłowy Jeździec, attack ability, once): a blow with a bonus (more from behind)
+  | 'bonesReturn' // Kości Wracają (Szkielet Halabardnik, once): after its fall it stands up at the end of the round with 1 Życie
+  | 'incorporeal' // Bezcielesna (Zjawa Pokutnika, once): the first ranged blow of the battle does nothing
+  | 'armorPierce' // Grot Przez Zbroję (Szkielet Łucznik, passive): ignores armour
+  | 'dread' // Postrach (Strach Polny, passive aura): neighbouring enemies have -A
+  | 'hollow' // Pusta w Środku (Nawiedzona Zbroja, passive): armour; poison, curses, slows and roots do not work on it
+  | 'wail' // Lament (Płaczka, free action, once): enemies nearby have -A in their next attack
+  | 'viyGaze' // Podnieście Mi Powieki (Wij Podziemny, free action, once): an enemy in range cannot move in its next activation
+  | 'breathAgain' // Ponowny Oddech (Kościana Wróżka, free action, once): a fallen support of tier 1-3 rises next to her with half its Życie
+  | 'manaReap' // Żniwo Many (Lisz, passive): every hit takes mana from the enemy hero and heals the lich
+  | 'graveBreath' // Oddech Grobu (Kościany Smok, attack ability, once): the breath of fire, and the ones it hits are slowed
+  | 'toll'; // Dzwon Zaduszny (Duch Starego Dzwonnika, free action, once): the enemies next to it are slowed
 
 export interface UnitDef {
   id: string;
@@ -192,6 +207,31 @@ export const ABILITY = {
   tremorRadius: 2,
   /** Rogi Przodków: cells the target is pushed. */
   hornsPush: 2,
+  /** Królestwo Umarłych. Kości Wracają: Życie a skeleton stands up with (it is multiplied by the Życie scale). */
+  bonesHp: 1,
+  /** Zgaszone Światło: mana the enemy hero loses. */
+  dimLightMana: 2,
+  /** Widmowa Szarża: bonus of the blow (small scale), and the extra one from behind. */
+  spectralBonus: 2,
+  spectralBehind: 2,
+  /** Postrach: A the neighbouring enemies lose (small scale; does not add up). */
+  dreadMinus: 1,
+  /** Pusta w Środku: damage ignored from every blow (small scale, a blow that lands takes at least 1). */
+  hollowArmor: 1,
+  /** Lament: radius, and A the enemies lose in their next attack (small scale). */
+  wailRadius: 2,
+  wailMinus: 1,
+  /** Podnieście Mi Powieki: how far the Wij looks. */
+  gazeRange: 3,
+  /** Ponowny Oddech: the highest tier of a support she raises. */
+  breathAgainTier: 3,
+  /** Żniwo Many: mana taken from the enemy hero by a hit, and Życie the lich regains (it is multiplied by the Życie scale). */
+  reapMana: 1,
+  reapHeal: 1,
+  /** Oddech Grobu: S the ones hit by it lose in their next activation. */
+  graveBreathSlow: 1,
+  /** Dzwon Zaduszny: S the neighbours lose in their next activation. */
+  tollSlow: 2,
 };
 
 /**
@@ -386,6 +426,28 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'aurochsScout', name: 'Turzy Zagończyk', side: 'herds', kind: 'hero', hp: 8, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Kark Tura', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
     u({ id: 'faunJavelin', name: 'Faun Oszczepnik', side: 'herds', kind: 'hero', hp: 5, attack: 3, speed: 5, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Oszczep w Kolano', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
     u({ id: 'satyrSeer', name: 'Satyr Wróżbita', side: 'herds', kind: 'hero', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'rhythm', abilityName: 'Pieśń Stepu', abilityText: `Raz na bitwę: sojusznik ma +${ABILITY.rhythmHaste} S w swojej następnej aktywacji.` }),
+    // Królestwo Umarłych (`undead`, docs/frakcje/undead.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero.
+    u({ id: 'barrowKing', name: 'Król Kurhanu', side: 'undead', kind: 'hero', hp: 10, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'barrowCall', abilityName: 'Wezwanie z Kurhanu', abilityText: 'Raz na bitwę: poległy pomocnik wstaje na sąsiednim polu z połową Ż.' }),
+    u({ id: 'lanternWraith', name: 'Latarniczka Mgieł', side: 'undead', kind: 'hero', hp: 5, attack: 2, speed: 5, movement: 'fly', attackType: 'ranged', ability: 'dimLight', abilityName: 'Zgaszone Światło', abilityText: `Raz na bitwę: trafiony cel ma −${ABILITY.curseMinus} A przy następnym ataku, a bohater wroga traci ${ABILITY.dimLightMana} many.` }),
+    u({ id: 'headlessKnight', name: 'Bezgłowy Jeździec', side: 'undead', kind: 'hero', size: 2, hp: 9, attack: 5, speed: 6, movement: 'walk', attackType: 'melee', ability: 'spectralCharge', abilityName: 'Widmowa Szarża', abilityText: `Raz na bitwę: cios z bonusem +${ABILITY.spectralBonus} A, a od tyłu jeszcze +${ABILITY.spectralBehind} A.` }),
+    u({ id: 'bellKeeper', name: 'Duch Starego Dzwonnika', side: 'undead', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'toll', abilityName: 'Dzwon Zaduszny', abilityText: `Raz na bitwę: sąsiedni wrogowie mają −${ABILITY.tollSlow} S w swojej następnej aktywacji.` }),
+    u({ id: 'skeletonSpear', name: 'Szkielet Halabardnik', side: 'undead', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'bonesReturn', abilityName: 'Kości Wracają', abilityText: `Raz na bitwę: po śmierci składa się na końcu rundy z ${ABILITY.bonesHp} Ż.` }),
+    u({ id: 'willOWisp', name: 'Błędny Ognik', side: 'undead', kind: 'support', hp: 3, attack: 1, speed: 5, movement: 'fly', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Zwodzenie', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
+    u({ id: 'penitentShade', name: 'Zjawa Pokutnika', side: 'undead', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'incorporeal', abilityName: 'Bezcielesna', abilityText: 'Raz na bitwę: pierwszy cios dystansowy w nią zadaje 0 obrażeń.' }),
+    u({ id: 'skeletonArcher', name: 'Szkielet Łucznik', side: 'undead', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'armorPierce', abilityName: 'Grot Przez Zbroję', abilityText: 'Stała: jego trafienia ignorują pancerz.' }),
+    u({ id: 'hauntedArmor', name: 'Nawiedzona Zbroja', side: 'undead', kind: 'support', hp: 8, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'hollow', abilityName: 'Pusta w Środku', abilityText: `Stała: pancerz (−${ABILITY.hollowArmor} obrażeń z każdego ciosu); trucizna, klątwy, spowolnienia i unieruchomienia na nią nie działają.` }),
+    u({ id: 'viy', name: 'Wij Podziemny', side: 'undead', kind: 'support', size: 2, hp: 12, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'viyGaze', abilityName: 'Podnieście Mi Powieki', abilityText: `Raz na bitwę: wróg w zasięgu ${ABILITY.gazeRange} pól nie ruszy się w swojej następnej aktywacji.` }),
+    u({ id: 'lich', name: 'Lisz', side: 'undead', kind: 'support', hp: 8, attack: 5, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'manaReap', abilityName: 'Żniwo Many', abilityText: `Stała: każde trafienie zabiera bohaterowi wroga ${ABILITY.reapMana} many i leczy Lisza o ${ABILITY.reapHeal} Ż.` }),
+    // Level 6 alternatives of the Kingdom (tiers 2-5).
+    u({ id: 'scarecrow', name: 'Strach Polny', side: 'undead', kind: 'support', hp: 6, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'dread', abilityName: 'Postrach', abilityText: `Stała: sąsiedni wrogowie mają −${ABILITY.dreadMinus} A (nie sumuje się).` }),
+    u({ id: 'banshee', name: 'Płaczka', side: 'undead', kind: 'support', hp: 6, attack: 3, speed: 5, movement: 'fly', attackType: 'ranged', ability: 'wail', abilityName: 'Lament', abilityText: `Raz na bitwę: wrogowie w promieniu ${ABILITY.wailRadius} pól mają −${ABILITY.wailMinus} A przy następnym ataku.` }),
+    u({ id: 'boneOracle', name: 'Kościana Wróżka', side: 'undead', kind: 'support', hp: 7, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'breathAgain', abilityName: 'Ponowny Oddech', abilityText: `Raz na bitwę: poległy pomocnik poziomu ${ABILITY.breathAgainTier} lub niższego wstaje na sąsiednim polu z połową Ż.` }),
+    u({ id: 'kostucha', name: 'Kostucha', side: 'undead', kind: 'support', hp: 13, attack: 5, speed: 4, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Kośba', abilityText: 'Każdym atakiem trafia cel i jednego jego sąsiada (zamach kosą).' }),
+    u({ id: 'boneDragon', name: 'Kościany Smok', side: 'undead', kind: 'support', size: 2, hp: 20, attack: 7, speed: 5, movement: 'fly', attackType: 'melee', ability: 'graveBreath', abilityName: 'Oddech Grobu', abilityText: `Raz na bitwę: ognisty oddech w linii (cel i jednostka za nim), a trafieni mają −${ABILITY.graveBreathSlow} S w następnej aktywacji.` }),
+    // Commanders of the Kingdom.
+    u({ id: 'wardCaptain', name: 'Kapitan Warty', side: 'undead', kind: 'hero', hp: 8, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Czujna Warta', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
+    u({ id: 'spectralArcher', name: 'Upiorna Łuczniczka', side: 'undead', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Zwodnicza Strzała', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
+    u({ id: 'penitentMonk', name: 'Pokutny Mnich', side: 'undead', kind: 'hero', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'wail', abilityName: 'Pokutny Lament', abilityText: `Raz na bitwę: wrogowie w promieniu ${ABILITY.wailRadius} pól mają −${ABILITY.wailMinus} A przy następnym ataku.` }),
     u({ id: 'cyclops', name: 'Cyklop Błyskotek', side: 'neutral', kind: 'neutral', size: 2, hp: 23, attack: 2, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'boulder', abilityName: 'Miażdżący Głaz', abilityText: 'Po każdym ataku odpycha trafionego przeciwnika o 1 pole, jeśli to możliwe (jednostek dwupolowych nie da się odepchnąć).', duel: { hp: 14, ability: 'stoneSkin', abilityName: 'Kamienna Skóra', abilityText: `Każdy cios w Cyklopa zadaje o ${ABILITY.stoneSkinIgnore} mniej obrażeń.` } }),
     u({ id: 'griffin', name: 'Gryf Złodziej Skarbów', side: 'neutral', kind: 'neutral', size: 2, hp: 18, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nestLeap', abilityName: 'Łupieżczy Nalot', abilityText: `Po każdym ataku może odlecieć o maks. ${ABILITY.nestLeapRange} pola.`, duel: { hp: 10, ability: 'thiefClaw', abilityName: 'Złodziejski Szpon', abilityText: `Gdy zada obrażenia, odzyskuje ${ABILITY.thiefClawHeal} Ż.` } }),
     u({ id: 'hydra', name: 'Hydra z Zatopionych Ruin', side: 'neutral', kind: 'neutral', size: 2, hp: 21, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Paszcze Otchłani', abilityText: 'Każdym atakiem może trafić dwóch sąsiadujących przeciwników.', duel: { hp: 12, ability: 'regrowth', abilityName: 'Odrastające Głowy', abilityText: `Na początku każdej swojej aktywacji odzyskuje ${ABILITY.regrowthHeal} Ż.` } }),
@@ -396,14 +458,25 @@ export const FACTION_HEROES: Record<FactionId, string[]> = byPack((p) => p.heroe
 
 /** Easter egg heroes: unlocked on the setup screen (click the Dawn crest five times), never drawn by the engine. */
 /** Rivalry for 7-8 players: four heroes a side, so each faction has a fourth one of its own (Przymierze: the Silver She-Wolf, Horda: the Dusk Manticore); the Brave Duck stays a secret hero and the Warlord a tavern commander. */
-export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore', herds: 'thunderRam' };
+export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore', herds: 'thunderRam', undead: 'bellKeeper' };
 export const MAX_PVP_PLAYERS = 8;
 /** More players than this at a table play with `EXTRA_HEROES` too. */
 export const BASE_PVP_PLAYERS = 6;
 /** The heroes a seat can pick at a table of `seats` players. */
 export const heroPool = (f: FactionId, seats: number): string[] => (seats > BASE_PVP_PLAYERS ? [...FACTION_HEROES[f], EXTRA_HEROES[f]] : FACTION_HEROES[f]);
 
-export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [], herds: [] };
+export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [], herds: [], undead: [] };
+
+/** The tier of a faction's support (1 the starting ones, 2-5 the recruits of the tiers and their alternatives, 6 the legend); 0 for anything else. */
+export const supportTier = (unitId: string): number => {
+  for (const p of Object.values(FACTION_PACKS)) {
+    if (p.supports.includes(unitId)) return 1;
+    const i = Math.max(p.tierUnits.indexOf(unitId), p.altUnits.indexOf(unitId));
+    if (i >= 0) return i + 2;
+    if (p.legend === unitId) return 6;
+  }
+  return 0;
+};
 
 export const FACTION_SUPPORTS: Record<FactionId, string[]> = byPack((p) => p.supports);
 
@@ -557,12 +630,12 @@ export const ARENA_OFFER = 3;
  */
 export const ARENA_RULES: { firstPicker: 'random' | TeamId; extraPicks: Record<FactionId, number>; extraOffer: Record<FactionId, number> } = {
   firstPicker: 'random',
-  extraPicks: { dawn: 0, horde: 0, herds: 0 },
+  extraPicks: { dawn: 0, horde: 0, herds: 0, undead: 0 },
   /**
    * More cards shown to that side at each pick (the choice gets better, the number of treasures stays).
    * The Horde sees 4: in the arena Przymierze otherwise wins about 55% (simulations, notes section 9).
    */
-  extraOffer: { dawn: 0, horde: 1, herds: 0 },
+  extraOffer: { dawn: 0, horde: 1, herds: 0, undead: 0 },
 };
 
 // Map tiles. The left half of the triangle is built from Przymierze tiles (green back),

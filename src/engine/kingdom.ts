@@ -4,7 +4,7 @@
 
 import { ALL_TEAM_IDS, byTeam, raceOf, teamsOf } from './teams';
 import { byPack } from './factions';
-import { FACTION_NAMES, SUPPORTS_PER_BATTLE, UNITS, type FactionId, type TeamId } from './data';
+import { FACTION_NAMES, SUPPORTS_PER_BATTLE, UNITS, supportTier, type FactionId, type TeamId } from './data';
 import { distance, parseKey, type HexKey } from './hex';
 import { encounterUnits, stillConnected } from './encounters';
 import { awardXp, levelOf } from './growth';
@@ -20,7 +20,7 @@ import { HERO_TYPES } from './heroTypes';
 import { FACTION_MECHANICS, mayBuildSpark, mechanicLevel, pickUpShard, placeShards, shardCollector, SPARK_NAMES, spendShards, summedLevel } from './empire';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
-export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen' | 'hoofStone' | 'pastures' | 'refuge';
+export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen' | 'hoofStone' | 'pastures' | 'refuge' | 'barrow' | 'ossuary' | 'bellTower';
 
 export interface Settlement {
   id: string;
@@ -69,7 +69,7 @@ export const KINGDOM = {
   /** Gold in a chest chosen instead of the artifact. */
   chestGold: 3,
   /** Cost of each level of a building. */
-  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [], hoofStone: [], pastures: [], refuge: [] } as Record<BuildingId, number[]>,
+  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [], hoofStone: [], pastures: [], refuge: [], barrow: [], ossuary: [], bellTower: [] } as Record<BuildingId, number[]>,
   /** Price of an artifact in the market, by rarity (zwykły, rzadki, legendarny). */
   artifactPrice: [2, 5, 10],
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
@@ -104,12 +104,14 @@ export interface Recruit { id: string; tier: number; cost: number; /** Gwiezdny 
 export const ALT_UNITS: Record<FactionId, string[]> = byPack((p) => p.altUnits);
 export const DWELLING_NAMES: Record<string, string> = {
   hedgehog: 'Legowisko Jeżozwierzy', silverFox: 'Lisia Nora', centaur: 'Stajnie Centaurów', dawnOwl: 'Sowia Dziupla', boar: 'Dębowa Zagroda', dryadArcher: 'Gaj Driad', treeGuardian: 'Prastary Zagajnik', whiteStag: 'Polana Jeleni', dawnPhoenix: 'Gniazdo Feniksa',
+  skeletonArcher: 'Zbrojownia Kości', scarecrow: 'Opuszczone Pole', hauntedArmor: 'Rycerska Krypta', banshee: 'Wieża Płaczek', viy: 'Wielki Kurhan', boneOracle: 'Kaplica Wróżb', lich: 'Biblioteka Umarłych', kostucha: 'Kaplica Tańca Śmierci', boneDragon: 'Smocze Cmentarzysko',
   faunSlinger: 'Fauni Zagajnik', tarpan: 'Tarpanie Błonia', forestBison: 'Żubrza Ostoja', satyrLancer: 'Obóz Kopijników', steppeHippogriff: 'Gniazdo na Urwisku', drumElephant: 'Krąg Bębnów', warRhino: 'Błotne Brody', bullMoose: 'Łosie Mokradło', indrik: 'Źródło Indrika',
   ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern', doomBehemoth: 'Jaskinia Zagłady',
 };
 /** What a dwelling does, in words (the unit's name in the genitive). */
 const GENITIVE: Record<string, string> = {
   hedgehog: 'Jeżozwierza', silverFox: 'Srebrnego Lisa', centaur: 'Centaura', dawnOwl: 'Sowy Świtu', boar: 'Alabastrowego Odyńca', dryadArcher: 'Driady Łuczniczki', treeGuardian: 'Opiekuna Drzewa', whiteStag: 'Białego Jelenia', dawnPhoenix: 'Feniksa Świtu',
+  skeletonArcher: 'Szkieletu Łucznika', scarecrow: 'Strachu Polnego', hauntedArmor: 'Nawiedzonej Zbroi', banshee: 'Płaczki', viy: 'Wija Podziemnego', boneOracle: 'Kościanej Wróżki', lich: 'Lisza', kostucha: 'Kostuchy', boneDragon: 'Kościanego Smoka',
   faunSlinger: 'Fauna Procarza', tarpan: 'Tarpana', forestBison: 'Żubra Puszczańskiego', satyrLancer: 'Satyra Kopijnika', steppeHippogriff: 'Hipogryfa Stepowego', drumElephant: 'Słonia z Bębnem', warRhino: 'Nosorożca Bojowego', bullMoose: 'Łosia Rogacza', indrik: 'Indrika',
   ratman: 'Szczurołaka', goblinSlinger: 'Goblina Procarza', hellhound: 'Piekielnego Ogara', gargoyle: 'Gargulca', salamander: 'Salamandry Popiołu', caveTroll: 'Trolla Jaskiniowego', minotaurChief: 'Herszta Minotaurów', shadowWyvern: 'Wiwerny Cienia', doomBehemoth: 'Behemota Zagłady',
 };
@@ -134,6 +136,16 @@ export const recruitsOf = (state: GameState, f: TeamId): Recruit[] => {
     .map((r) => (pastures >= 1 && r.tier <= (pastures >= 2 ? 5 : 3) ? { ...r, cost: Math.max(1, r.cost - FACTION_MECHANICS.pastureDiscount) } : r))
     .sort((a, b) => a.tier - b.tier);
 };
+
+/** What the hospital of `s` asks for raising a fallen support: a half or a third of its price, and for the Kingdom of the Dead the Ossuarium takes off a gold piece (second level: nothing for tiers 1-2). */
+export function healPrice(state: GameState, f: TeamId, s: Settlement, unitId: string): number {
+  const base = RECRUITS[raceOf(state, f)].find((r) => r.id === unitId)?.cost ?? 2;
+  let price = Math.max(1, Math.ceil(base / KINGDOM.heal[s.buildings.hospital >= 2 ? 1 : 0]));
+  const ossuary = state.rules.empire ? Math.max(0, ...settlementsOf(state, f).map((x) => buildingLevel(x, 'ossuary'))) : 0;
+  if (ossuary >= 1) price = Math.max(1, price - FACTION_MECHANICS.ossuaryDiscount);
+  if (ossuary >= 2 && supportTier(unitId) <= FACTION_MECHANICS.ossuaryFreeTier) price = 0;
+  return price;
+}
 
 /** Level 6: whether tiers 2-5 need a dwelling in this game. */
 export const needsDwelling = (state: GameState, r: Recruit): boolean => Boolean(state.rules.empire) && r.tier >= 2 && r.tier <= 6;
@@ -164,6 +176,9 @@ export const BUILDING_NAMES: Record<BuildingId, string[]> = {
   hoofStone: ['Kamień Tętentu', 'Kamień Grzmiących Kopyt', 'Kamień Stu Stad', 'Wielki Kamień Tętentu'],
   pastures: ['Wielkie Pastwiska', 'Pastwiska bez Granic'],
   refuge: ['Ostoja Wędrówek'],
+  barrow: ['Kurhan Wiecznej Warty', 'Kurhan Północnej Warty', 'Kurhan Dwóch Straży', 'Wielki Kurhan Wiecznej Warty'],
+  ossuary: ['Ossuarium', 'Wielkie Ossuarium'],
+  bellTower: ['Dzwonnica Zaduszna'],
 };
 
 /** Level 6: the buildings only one faction has (the faction's mechanic first, then the two others). */
@@ -217,6 +232,14 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
   ],
   pastures: [`Rekrutacja pomocników poziomów 1–3 jest tańsza o ${FACTION_MECHANICS.pastureDiscount} zł.`, `Rekrutacja pomocników poziomów 1–5 jest tańsza o ${FACTION_MECHANICS.pastureDiscount} zł.`],
   refuge: ['Bohater stojący w osadzie z Ostoją może raz na rundę przenieść się do innej własnej osady z Ostoją.'],
+  barrow: [
+    'Wieczna Warta: raz na bitwę, na końcu rundy, najtańszy poległy pomocnik Umarłych wstaje z 1 Ż (na swoim polu albo najbliższym wolnym). Bohaterowie nie wstają. Bez tego budynku frakcja nie ma tego efektu.',
+    'Pomocnik wstaje z połową Ż.',
+    'Warta wstaje dwa razy na bitwę.',
+    'Pomocnik wstaje z pełnym Ż.',
+  ],
+  ossuary: [`Wskrzeszenie w szpitalu jest tańsze o ${FACTION_MECHANICS.ossuaryDiscount} zł.`, `Pomocnicy poziomów 1–${FACTION_MECHANICS.ossuaryFreeTier} wracają ze szpitala za darmo.`],
+  bellTower: ['Po wygranej bitwie z neutralnymi jeden poległy pomocnik poziomu 1–2 wraca do drużyny bez szpitala (raz na rundę).'],
   spark: ['Budynek Pierwotnej Iskry: jego ceną są wszystkie Odłamki z mapy. Daje frakcji wielką premię, a w celu „Relikt” wygrywa grę.'],
   magic: circleTexts(),
   tavern: ['Tu najmiesz dowódcę: drugiego bohatera z własnym pionkiem, doświadczeniem i artefaktami. Tu też wykupisz dowódcę, który poległ.'],
@@ -307,7 +330,7 @@ export function initKingdom(state: GameState): void {
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag = byTeam(teams, (t) => rng.shuffle([...NAMES[raceOf(state, t)]]));
   // Level 6: the barracks stand from the start in every settlement (the dwellings of the units are built beside them).
-  const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0, hoofStone: 0, pastures: 0, refuge: 0 } : {}) }) as Record<BuildingId, number>;
+  const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0, hoofStone: 0, pastures: 0, refuge: 0, barrow: 0, ossuary: 0, bellTower: 0 } : {}) }) as Record<BuildingId, number>;
   const add = (id: string, at: HexKey, land: TeamId, owner: TeamId | null) => {
     k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[raceOf(state, land)]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
     state.tiles[at].place = { kind: 'settlement', id };
@@ -632,7 +655,7 @@ export function payCost(state: GameState, f: TeamId, c: Cost): void {
  * Which building's first level must stand in the settlement before another can be started (docs/BUDYNKI.md 0a: a tree, one parent each;
  * the Rada Osady, the root, is always there; the Iskra needs only the shards, the dwellings the barracks, see `kingdomDwelling`).
  */
-export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market', hoofStone: 'barracks', pastures: 'market', refuge: 'tavern' };
+export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market', hoofStone: 'barracks', pastures: 'market', refuge: 'tavern', barrow: 'hospital', ossuary: 'treasury', bellTower: 'barracks' };
 
 /** Why a building cannot be started here for lack of its parent (null: nothing in the way). Upgrades of a standing building are never blocked. */
 export function buildBlock(s: Settlement, b: BuildingId): string | null {
@@ -714,8 +737,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (s.buildings.hospital < 1) throw new Error('W tej osadzie nie ma szpitala.');
       const fs = state.factions[hero.faction];
       if (!fs.supportsDead.includes(action.unitId)) throw new Error('Ta jednostka nie poległa.');
-      const base = RECRUITS[raceOf(state, hero.faction)].find((r) => r.id === action.unitId)?.cost ?? 2;
-      const price = Math.max(1, Math.ceil(base / KINGDOM.heal[s.buildings.hospital >= 2 ? 1 : 0]));
+      const price = healPrice(state, hero.faction, s, action.unitId);
       pay(state, hero.faction, price);
       fs.supportsDead = fs.supportsDead.filter((id) => id !== action.unitId);
       fs.supportsAlive.push(action.unitId);
@@ -947,12 +969,14 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
   }
   if (s.buildings.hospital >= 1 && fs.supportsDead.length) {
     const dead = fs.supportsDead[0];
-    const base = RECRUITS[raceOf(state, f)].find((r) => r.id === dead)?.cost ?? 2;
-    if (afford(Math.max(1, Math.ceil(base / KINGDOM.heal[s.buildings.hospital >= 2 ? 1 : 0])))) return { type: 'kingdomHeal', settlementId: id, unitId: dead };
+    if (afford(healPrice(state, f, s, dead))) return { type: 'kingdomHeal', settlementId: id, unitId: dead };
   }
   if (s.buildings.treasury < 1 && buildable('treasury')) return { type: 'kingdomBuild', settlementId: id, building: 'treasury' };
   if (state.rules.economy && buildingLevel(s, 'forge') < 1 && forgeLevel(state, f) < 1 && buildable('forge')) return { type: 'kingdomBuild', settlementId: id, building: 'forge' };
-  if (s.buildings.hospital < 1 && fs.supportsDead.length && buildable('hospital')) return { type: 'kingdomBuild', settlementId: id, building: 'hospital' };
+  // The Kingdom of the Dead builds the hospital at once (the Kurhan Wiecznej Warty stands on it), the others only when somebody has fallen.
+  const wardRoad = state.rules.empire && own && raceOf(state, f) === 'undead' && s.buildings.barracks >= 1;
+  if (s.buildings.hospital < 1 && (fs.supportsDead.length || wardRoad) && buildable('hospital')) return { type: 'kingdomBuild', settlementId: id, building: 'hospital' };
+  if (wardRoad && s.buildings.hospital >= 1 && buildingLevel(s, 'barrow') < 1 && buildable('barrow') && canPay(state, f, { ...buildCost(state, s, 'barrow')!, gold: buildCost(state, s, 'barrow')!.gold + 1 })) return { type: 'kingdomBuild', settlementId: id, building: 'barrow' };
   if (s.buildings.market >= 1) {
     const buyer = state.heroes[state.turnOrder[state.turnIndex]];
     const who = buyer?.faction === f ? buyer : undefined;

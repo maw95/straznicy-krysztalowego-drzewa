@@ -3,7 +3,7 @@
 // Spells are the same for both factions; the sage commanders are the better casters. Design: docs/ZASADY_CYFROWE.md ("Poziom 5", "Magia").
 
 import { UNITS, type TeamId } from './data';
-import { battleFx, cellsOf, dealDamage, hpScaleOf, livingUnits, scaleOf, unitAttackBase } from './battle';
+import { battleFx, cellsOf, dealDamage, hpScaleOf, livingUnits, resistsStatus, scaleOf, unitAttackBase } from './battle';
 import { distance, parseKey } from './hex';
 import { levelOf } from './growth';
 import { log } from './log';
@@ -193,7 +193,7 @@ export function battleSpell(state: GameState, spell: SpellId, targetId?: string)
       break;
     }
     case 'slow':
-      if (target.gear?.unbound) log(state, 'ability', `${name(target)} nie daje się spowolnić.`);
+      if (resistsStatus(state, target, true)) log(state, 'ability', `${name(target)} nie daje się spowolnić.`);
       else target.status.slowNext += MAGIC.slowSpeed;
       break;
     case 'stoneskin':

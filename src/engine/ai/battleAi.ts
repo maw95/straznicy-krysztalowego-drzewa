@@ -1,11 +1,13 @@
 // Heuristic battle AI. It is greedy and deterministic: equal scores are broken
 // by stable ordering, so simulations replay exactly from a seed.
 
-import { ABILITY, ITEM_EFFECT, UNITS, type TeamId } from '../data';
+import { ABILITY, ITEM_EFFECT, supportTier, UNITS, type TeamId } from '../data';
 import { supportSlots } from '../kingdom';
 import { ARTIFACT_BY_ID, type ArtifactDef } from '../sites';
 import {
   pushValue,
+  isBreath,
+  resistsStatus,
   abilityActive,
   abilityOf,
   attackDamage,
@@ -29,6 +31,7 @@ import {
   hopCells,
   livingUnits,
   middleDistance,
+  nearestFreeCell,
   reachableCells,
   hpScaleOf,
   scaleOf,
@@ -39,7 +42,7 @@ import {
 import { distance, neighborKeys, parseKey, type HexKey } from '../hex';
 import { wideCellOf } from '../arenaLayout';
 import { ARENA_SPELL_POOL, botSpell, SPELL_VALUE, type SpellId } from '../magic';
-import { canBeMoved } from '../primitives';
+import { canBeMoved, fallenSupports } from '../primitives';
 import { SIEGE } from '../economy';
 import type { Action, BattleUnit, GameState } from '../types';
 import type { ItemKind } from '../data';
@@ -276,7 +279,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
         const dmg = attackDamage(state, u, t, useAbility, moved);
         let score = scoreHit(t, dmg);
         let second: BattleUnit | null = null;
-        if (useAbility && abilityOf(u) === 'fireBreath') {
+        if (useAbility && isBreath(abilityOf(u))) {
           second = breathSecondTarget(state, u, t, cell);
           if (!second) continue;
           // An ally behind the target burns too: that counts against the breath, and a kill of an ally counts most.
@@ -286,13 +289,16 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
           second = targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), mine) === 1).sort((x, y) => scoreHit(y, dmg) - scoreHit(x, dmg))[0] ?? null;
           if (second) score += scoreHit(second, dmg);
         }
-        if (useAbility && ['entanglingRoots', 'curse'].includes(abilityOf(u))) score += AI_TUNING.debuffBonus;
+        if (useAbility && ['entanglingRoots', 'curse', 'dimLight', 'graveBreath'].includes(abilityOf(u))) score += AI_TUNING.debuffBonus;
         // The Herds: a push that ends in a boulder, the edge or another unit hurts (and the others hurt more when they run, and reach the shooters).
         const collision = pushValue(state, u, t, useAbility, moved);
         if (collision > 0) score += scoreHit(t, collision) * 0.6;
         else if (collision < 0) score -= scoreHit(t, -collision) * 0.6;
         if (UNITS[u.defId].side === 'herds' && UNITS[t.defId].attackType === 'ranged' && UNITS[u.defId].attackType === 'melee') score += 1;
         if (UNITS[u.defId].side === 'herds' && moved >= 3) score += 0.5;
+        // The Kingdom of the Dead plays for time: it does not throw its heroes forward (they do not rise), its shooters go for the enemy leaders with mana.
+        if (UNITS[u.defId].side === 'undead' && UNITS[u.defId].kind === 'hero') score -= risk * 0.5;
+        if (UNITS[u.defId].side === 'undead' && ['manaReap', 'dimLight'].includes(abilityOf(u)) && UNITS[t.defId].kind === 'hero') score += 0.5;
         score -= risk * (ranged ? AI_TUNING.attackRiskRanged : AI_TUNING.attackRiskMelee);
         if (ranged && targets.some((x) => dist2(cellsOf(x), mine) === 1)) score -= AI_TUNING.rangedCrowded;
         if (score > best.score) best = { moveTo: cell === u.pos ? null : cell, target: t, second, useAbility, score };
@@ -351,6 +357,19 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
     if (t) return { type: 'battleAbility', targetId: t.id };
   }
   if (ab === 'tremor' && enemiesOf(b, u).some((e) => canBeMoved(state, e) && unitDistance(e, u) <= ABILITY.tremorRadius)) return { type: 'battleAbility' };
+  // Królestwo Umarłych: raise whoever has fallen at once, wail and toll when two enemies are in reach, the Wij stares at the strongest enemy that can be held.
+  if (ab === 'barrowCall' || ab === 'breathAgain') {
+    const rising = fallenSupports(state, u.side, ab === 'breathAgain' ? ABILITY.breathAgainTier : 6)[0];
+    if (rising && u.pos && nearestFreeCell(state, rising, u.pos)) return { type: 'battleAbility' };
+  }
+  if (ab === 'wail' && enemiesOf(b, u).filter((e) => unitDistance(e, u) <= ABILITY.wailRadius && !resistsStatus(state, e, false)).length >= 2) return { type: 'battleAbility' };
+  if (ab === 'toll' && enemiesOf(b, u).filter((e) => unitDistance(e, u) === 1 && !resistsStatus(state, e, true)).length >= 1) return { type: 'battleAbility' };
+  if (ab === 'viyGaze') {
+    const t = enemiesOf(b, u)
+      .filter((e) => unitDistance(e, u) <= ABILITY.gazeRange && !resistsStatus(state, e, true))
+      .sort((x, y) => unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (t) return { type: 'battleAbility', targetId: t.id };
+  }
   if (ab === 'web') {
     const t = enemiesOf(b, u)
       .filter((e) => unitDistance(e, u) <= ABILITY.webRange)
@@ -370,10 +389,10 @@ function itemToUse(state: GameState, u: BattleUnit): Action | null {
   for (const item of inv) {
     switch (item.kind) {
       case 'resurrection': {
-        const deadLeader = Object.values(b.units).find((x) => x.side === faction && !x.alive && !x.swappedOut && UNITS[x.defId].kind === 'hero' && !state.heroes[x.defId]?.revived);
+        const deadLeader = Object.values(b.units).find((x) => x.side === faction && !x.alive && !x.swappedOut && !x.status.risen && UNITS[x.defId].kind === 'hero' && !state.heroes[x.defId]?.revived);
         if (deadLeader) return { type: 'battleItem', itemId: item.id, targetId: deadLeader.id };
         // In the arena the elixir is worth nothing after the battle: a fallen support comes back too.
-        const deadSupport = state.setup.mode === 'arena' && Object.values(b.units).find((x) => x.side === faction && !x.alive && !x.swappedOut && !state.heroes[x.defId]?.revived);
+        const deadSupport = state.setup.mode === 'arena' && Object.values(b.units).find((x) => x.side === faction && !x.alive && !x.swappedOut && !x.status.risen && !state.heroes[x.defId]?.revived);
         if (deadSupport) return { type: 'battleItem', itemId: item.id, targetId: deadSupport.id };
         break;
       }
@@ -513,6 +532,8 @@ function chooseDeployment(state: GameState, faction: TeamId): Action {
 
 function rank(u: BattleUnit): number {
   const d = UNITS[u.defId];
+  // The Kingdom of the Dead: the cheap skeletons stand in front (they rise again), the heroes and the shooters (the Lisz, the Wróżka) behind.
+  if (d.side === 'undead') return d.kind === 'hero' || d.attackType === 'ranged' ? 3 : d.movement === 'fly' ? 2 : supportTier(d.id) <= 1 ? 0 : 1;
   if (d.attackType === 'ranged') return 3;
   return d.kind === 'hero' ? 0 : d.movement === 'fly' ? 2 : 1;
 }
@@ -546,7 +567,7 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
     const ab = abilityOf(u);
     let useAbility = !u.abilityUsed && abilityActive(state) && ATTACK_ABILITIES.includes(ab);
     let second: BattleUnit | null = null;
-    if (useAbility && ab === 'fireBreath') {
+    if (useAbility && isBreath(ab)) {
       second = breathSecondTarget(state, u, t);
       // Not breathing (no second target, or an ally would burn): the second target goes too, the engine refuses it for a plain attack.
       if (!second || second.side === u.side) {

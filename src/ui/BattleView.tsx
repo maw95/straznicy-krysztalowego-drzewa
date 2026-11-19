@@ -7,6 +7,7 @@ import {
   predictDamage,
   attackTargets,
   breathSecondTarget,
+  isBreath,
   hasLineOfSight,
   FREE_ABILITIES,
   UNTARGETED_ABILITIES,
@@ -207,6 +208,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       if (ability === 'web' && u.side !== active.side && unitDistance(active, u) <= ABILITY.webRange) return 'cur-spell';
       if (ability === 'rhythm' && u.side === active.side && u.id !== active.id) return 'cur-spell';
       if (ability === 'roar' && u.side !== active.side && unitDistance(active, u) <= ABILITY.roarRange) return 'cur-spell';
+      if (ability === 'viyGaze' && u.side !== active.side && unitDistance(active, u) <= ABILITY.gazeRange) return 'cur-spell';
     }
     // A treasure is being aimed (Eliksir, Zwój, Róg...): the same wand as for an ability, over every unit it can be used on.
     if (targeting && myTurn && u.alive) {
@@ -407,7 +409,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const previewTail = tailChoices.length ? tailChoices[tailPick % tailChoices.length] : null;
   // A large unit walking up to attack: where its tail will lie (the first legal cell, which is what the engine takes when no tail is named).
   const approachTail = approach && active && isLarge(state, active) ? footprintAt(state, active, approach.cell)[1] ?? null : null;
-  const breathPreview = useAbility && ab === 'fireBreath' && active ? targets.map((t) => breathSecondTarget(state, active, t)).filter(Boolean) : [];
+  const breathPreview = useAbility && ab !== null && isBreath(ab) && active ? targets.map((t) => breathSecondTarget(state, active, t)).filter(Boolean) : [];
 
   /** The note over a unit under the pointer: the blow it would take, or why it cannot be shot. */
   const previewOf = (u: BattleUnit): { text: string; lethal: boolean } | null => {
