@@ -2,7 +2,7 @@
 // explanations, the faction tint of a seat, labelled rows, the option buttons and the heroes of a fresh table.
 
 import { useEffect, useState } from 'react';
-import { FACTION_HEROES, heroPool, MAP_VARIANTS, type TeamId, type MapSize } from '../engine/data';
+import { FACTION_HEROES, heroPool, MAP_VARIANTS, type FactionId, type TeamId, type MapSize } from '../engine/data';
 import type { Level, MapShape, Mode } from '../engine/types';
 
 /** Class of an option button; the chosen one is lit. */
@@ -120,8 +120,8 @@ export function Tip({ text, children, rightClick = false }: { text: string; chil
   );
 }
 
-/** Seat background tinted by side: green for Przymierze, burgundy for Horda, and amber and violet for the next two factions; the colours of SIDE_RING. */
-export const SEAT_TINT: Record<TeamId, string> = {
+/** Seat background tinted by faction (seats) or side (the online table): green for Przymierze, burgundy for Horda, and amber and violet for the next two factions; the colours of SIDE_RING. */
+export const SEAT_TINT: Record<TeamId | FactionId, string> = {
   dawn: 'linear-gradient(100deg, rgba(36, 112, 64, 0.62), rgba(14, 50, 30, 0.55))',
   horde: 'linear-gradient(100deg, rgba(128, 22, 34, 0.62), rgba(52, 8, 14, 0.58))',
   third: 'linear-gradient(100deg, rgba(150, 104, 18, 0.62), rgba(62, 42, 6, 0.58))',

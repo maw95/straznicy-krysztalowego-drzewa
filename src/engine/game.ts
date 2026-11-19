@@ -87,11 +87,14 @@ const SIZE_ORDER: MapSize[] = ['short', 'medium', 'long', 'veryLong', 'huge', 'g
 
 /** What a game may have for sides: the crystals goal is the story of Przymierze against Horda only; three or four teams need a rectangle map that is big enough. */
 function checkSides(setup: SetupOptions, rules: SetupOptions['rules']) {
+  // The new factions play rivalries only: coop and the arena have a fixed pair of factions (backlog 51a).
+  if (setup.mode !== 'pvp' && setup.seats.some((s) => s.race !== undefined && s.race !== raceOf(null, s.faction))) throw new Error('Nowe frakcje grają na razie tylko w rywalizacji (nie w kooperacji ani na arenie).');
   if (setup.mode === 'arena') return;
   const n = teamsOf({ setup }).length;
+  if (n < 2) throw new Error('Przy stole muszą być co najmniej dwie różne frakcje.');
   if (setup.mode === 'coop' && setup.seats.some((s) => s.faction !== 'dawn')) throw new Error('Kooperacja ma dwie strony: drużynę graczy i komputer.');
   // The story of the crystals is about Przymierze and Horda: exactly those two sides.
-  if (objectiveOf({ rules }) === 'crystals' && n > 2) throw new Error('Ta historia jest o Przymierzu i Hordzie: cel „Kryształy do Drzewa” wymaga tej pary.');
+  if (objectiveOf({ rules }) === 'crystals' && (n > 2 || (raceOf({ setup }, 'dawn') !== 'dawn' || (n > 1 && raceOf({ setup }, 'horde') !== 'horde')))) throw new Error('Ta historia jest o Przymierzu i Hordzie: cel „Kryształy do Drzewa” wymaga tej pary.');
   if (n > 2) {
     if (!isDigital(rules) || setup.mapShape !== 'rectangle') throw new Error('Trzy i cztery strony grają na prostokątnej mapie wersji cyfrowej.');
     if (SIZE_ORDER.indexOf(setup.mapSize) < SIZE_ORDER.indexOf(MAP_SIZE_FOR_TEAMS[n])) throw new Error('Ta mapa jest za mała dla tylu stron.');
@@ -115,7 +118,7 @@ export function createGame(setup: SetupOptions): GameState {
     : Array(variant.onlyResurrections).fill('resurrection');
   const crystals = crystalsFor(setup);
   const teams = teamsOf({ setup });
-  const map = generateMap(setup.mapSize, rng, pool.length, crystals, isDigital(rules) ? setup.mapShape : undefined, setup.customMapId, { teams });
+  const map = generateMap(setup.mapSize, rng, pool.length, crystals, isDigital(rules) ? setup.mapShape : undefined, setup.customMapId, { teams, race: (t) => raceOf({ setup }, t) });
   const digital = isDigital(rules);
 
   const state: GameState = {

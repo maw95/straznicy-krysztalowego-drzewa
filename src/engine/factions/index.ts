@@ -2,6 +2,7 @@
 // of the tiers, the buildings, the Spark) is read from here.
 import { DAWN } from './dawn';
 import { HORDE } from './horde';
+import type { Terrain } from '../data';
 import type { FactionPack } from './types';
 
 export type { FactionPack };
@@ -12,3 +13,6 @@ export const PACK_IDS = Object.keys(FACTION_PACKS) as PackId[];
 
 /** A table over the factions, built from the packs: `byPack((p) => p.heroes)`. */
 export const byPack = <T>(pick: (p: FactionPack) => T): Record<PackId, T> => Object.fromEntries(PACK_IDS.map((id) => [id, pick(FACTION_PACKS[id])])) as Record<PackId, T>;
+
+/** The terrain of a faction's land on the map (base, ordinary ground, treasure hexes, the wall of custom maps). */
+export const terrainOf = (id: PackId): Record<keyof FactionPack['terrain'], Terrain> => FACTION_PACKS[id].terrain as Record<keyof FactionPack['terrain'], Terrain>;

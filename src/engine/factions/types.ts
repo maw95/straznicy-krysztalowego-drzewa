@@ -18,6 +18,14 @@ export interface FactionPack {
   buildings: string[];
   /** The building of the Primal Spark (level 6). */
   sparkName: string;
+  /** The name in the logs: short, in the genitive ("on the land of ..."), and the verb of a lead ("... dłużej miało/miała/miały przewagę"). */
+  short: string;
+  genitive: string;
+  lead: string;
+  /** The terrain of the faction's land on the map: the base, the ordinary ground (also what a blocked hex is cleared to), the treasure hexes and the wall of the custom maps. */
+  terrain: { base: string; land: string; treasure: string; wall: string };
+  /** The ordinary and obstacle tiles of the faction's half of the map (the tile deck: 5 ordinary and 2 obstacles, every one equally likely). */
+  tiles: string[];
   /** Names of the settlements the faction's land is given (drawn per game). */
   settlementNames: string[];
 }

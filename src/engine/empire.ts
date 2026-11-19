@@ -5,10 +5,11 @@
 // goal 'relic' it wins the game. Every number is provisional. Design: docs/MECHANIKI_I_POZIOMY.md ("Poziom 6").
 
 import { raceOf } from './teams';
-import { byPack } from './factions';
+import { byPack, FACTION_PACKS } from './factions';
 import { FACTION_NAMES, UNITS, type FactionId, type TeamId } from './data';
 import { distance, parseKey, type HexKey } from './hex';
 import { log } from './log';
+import type { BuildingId } from './kingdom';
 import { tileCost } from './map';
 import { Rng } from './rng';
 import type { GameState, HeroState } from './types';
@@ -43,7 +44,7 @@ export const MECHANIC_TEXTS: Record<FactionId, string> = {
 
 /** The best level of the faction's mechanic building (Kapliczka Świtu, Jama Krwi) among the settlements it holds: 0 means it has no Blask Świtu or Żądza Krwi at all. */
 export const mechanicLevel = (state: GameState, f: TeamId): number => {
-  const key = raceOf(state, f) === 'dawn' ? 'shrine' : 'bloodPit';
+  const key = FACTION_PACKS[raceOf(state, f)].mechanic.building as BuildingId;
   return Math.max(0, ...Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.owner === f).map((s) => s.buildings[key] ?? 0));
 };
 /** The summed level of a faction's building over its settlements (Szkółka Drzewa, Szabrownia). */

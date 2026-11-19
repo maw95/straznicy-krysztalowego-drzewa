@@ -2,6 +2,7 @@
 
 import { GUARDIAN_LAIRS, MAP_SHAPES, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type FactionId, type MapSize, type TeamId, type Terrain, type TileSide } from './data';
 import { distance, key, neighborKeys, parseKey, triToHex, type HexKey } from './hex';
+import { terrainOf } from './factions';
 import { Rng } from './rng';
 import { byTeam, raceOf, TEAM_IDS } from './teams';
 import { CUSTOM_MAPS } from './customMaps';
@@ -307,6 +308,8 @@ function setTerrain(tile: Tile, terrain: Terrain, rng: Rng) {
 export interface MapTeams {
   /** The teams of the game in order (default: the two teams); zone i of the map belongs to team i. */
   teams?: readonly TeamId[];
+  /** The faction of each team (its land: tiles, base, treasures); default: the old rule, a team is the faction of its own id. */
+  race?: (team: TeamId) => FactionId;
 }
 
 export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crystalCount: number, shape: MapShape = 'triangle', customMapId?: string, opts: MapTeams = {}): GeneratedMap {
@@ -314,7 +317,8 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
   const { rows } = layout;
   const teams = opts.teams ?? TEAM_IDS;
   // The land of a side looks like the land of its faction (terrain tiles, bases, treasures).
-  const race = (t: TeamId): FactionId => raceOf(null, t);
+  const race = opts.race ?? ((t: TeamId): FactionId => raceOf(null, t));
+  const land = (t: TeamId) => terrainOf(race(t));
   const homes = Object.fromEntries(teams.map((t) => [t, layout.homes[t]])) as Record<TeamId, HexKey>;
   if (teams.some((t) => !homes[t])) throw new Error('Ta mapa ma miejsce tylko dla dwóch stron.');
   if (teams.length > 2 && shape === 'triangle') throw new Error('Mapa trójkątna ma miejsce tylko dla dwóch stron.');
@@ -330,7 +334,7 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
       const tile: Tile = { key: k, row, col, terrain: 'meadow', side, variant: 1, revealed: false, crystalId: null, treasureId: null, home: null, tree: false };
       setTerrain(tile, rng.pick(TILE_POOLS[race(side)]), rng);
       const fixed = layout.forced?.[k];
-      if (fixed) setTerrain(tile, fixed === 'bridge' ? 'bridge' : layout.wallTerrain ?? (race(side) === 'dawn' ? 'chasm' : 'deadThicket'), rng);
+      if (fixed) setTerrain(tile, fixed === 'bridge' ? 'bridge' : layout.wallTerrain ?? land(side).wall, rng);
       // Water has nothing hidden under it: it is on the map from the start, which is what shows the islands.
       if (tile.terrain === 'water') tile.revealed = true;
       tiles[k] = tile;
@@ -340,13 +344,13 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
     setTerrain(tiles[tree], 'tree', rng);
     tiles[tree].tree = true;
     for (const t of teams) {
-      setTerrain(tiles[homes[t]], race(t) === 'dawn' ? 'baseDawn' : 'baseHorde', rng);
+      setTerrain(tiles[homes[t]], land(t).base, rng);
       tiles[homes[t]].home = t;
       tiles[homes[t]].side = t;
     }
     // Starting neighbourhoods stay passable so nobody is walled in on turn one.
     for (const base of baseList) {
-      for (const n of mapNeighbors(tiles, base)) if (tileCost(tiles[n]) === null && !layout.forced?.[n]) setTerrain(tiles[n], race(tiles[n].side) === 'dawn' ? 'meadow' : 'scorched', rng);
+      for (const n of mapNeighbors(tiles, base)) if (tileCost(tiles[n]) === null && !layout.forced?.[n]) setTerrain(tiles[n], land(tiles[n].side).land, rng);
     }
 
     const reach = reachableFrom(tiles, homes.dawn);
@@ -374,7 +378,7 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
     const rest = rng.shuffle([...reach].filter((k) => !reserved.has(k) && tileCost(tiles[k]) !== null));
     if (rest.length < treasureCount) continue;
     const treasureHexes = rest.slice(0, treasureCount);
-    for (const k of treasureHexes) setTerrain(tiles[k], race(tiles[k].side) === 'dawn' ? 'treasureDawn' : 'treasureHorde', rng);
+    for (const k of treasureHexes) setTerrain(tiles[k], land(tiles[k].side).treasure, rng);
     return { rows, tiles, crystals, treasureHexes, tree, homes: byTeam(teams, (t) => homes[t]) };
   }
   throw new Error('Nie udało się wygenerować poprawnej mapy');

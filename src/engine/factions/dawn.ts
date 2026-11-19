@@ -11,5 +11,10 @@ export const DAWN: FactionPack = {
   mechanic: { name: 'Blask Świtu', building: 'shrine' },
   buildings: ['shrine', 'nursery', 'grove'],
   sparkName: 'Sanktuarium Pierwotnej Iskry',
+  short: 'Przymierze',
+  genitive: 'Przymierza',
+  lead: 'dłużej miało',
+  terrain: { base: 'baseDawn', land: 'meadow', treasure: 'treasureDawn', wall: 'chasm' },
+  tiles: ['meadow', 'forest', 'river', 'bridge', 'hill', 'mountain', 'chasm'],
   settlementNames: ['Świtogaj', 'Srebrzysty Bród', 'Złotolist', 'Jasna Polana', 'Perłowa Wieża', 'Kryształowa Przystań', 'Wiosenny Gród', 'Miodowy Dwór', 'Zorzyca', 'Białe Mosty', 'Rosogród', 'Słonecznik', 'Lazurowa Zatoka', 'Skrzydlata Przystań', 'Malwowa Dolina', 'Wierzbowy Gaj'],
 };

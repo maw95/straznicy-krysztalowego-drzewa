@@ -3,8 +3,9 @@
 // progress for the screen. 'crystals' is the board game's goal (carry the crystals to the Tree, the Horde's ritual); the
 // others belong to the digital ruleset. Result of a game under 'crystals' must never change (tests/golden.test.ts).
 
+import { FACTION_PACKS, terrainOf } from './factions';
 import { byTeam, raceOf, teamsOf } from './teams';
-import { BOSS, CONTROL, ENCOUNTERS, FACTION_NAMES, NEUTRAL_BOSSES, SURVIVAL, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, UNITS, type FactionId, type TeamId, type Terrain } from './data';
+import { BOSS, CONTROL, ENCOUNTERS, FACTION_NAMES, NEUTRAL_BOSSES, SURVIVAL, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, UNITS, type TeamId, type Terrain } from './data';
 import { hpScaleOf } from './battle';
 import { finish, finishDraw, heroesAt, ritualFormed, spawnHordeHero } from './game';
 import { distance, key, parseKey, triToHex, type HexKey } from './hex';
@@ -88,14 +89,10 @@ export function bestTeam(scores: Partial<Record<TeamId, number>>, teams: readonl
   return leaders.length === 1 ? leaders[0] : null;
 }
 
-/** Short names of the teams for the logs and progress lines (the two teams of today). */
-const RACE_SHORT: Record<FactionId, string> = { dawn: 'Przymierze', horde: 'Horda' };
-/** The same in the genitive ("on the land of ..."). */
-const RACE_OF: Record<FactionId, string> = { dawn: 'Przymierza', horde: 'Hordy' };
 /** The third and the fourth team get a number, so two teams of one race can be told apart. */
 const TEAM_MARK: Partial<Record<TeamId, string>> = { third: ' (3)', fourth: ' (4)' };
-const teamShort = (state: GameState, t: TeamId) => `${RACE_SHORT[raceOf(state, t)]}${TEAM_MARK[t] ?? ''}`;
-const teamOf = (state: GameState, t: TeamId) => `${RACE_OF[raceOf(state, t)]}${TEAM_MARK[t] ?? ''}`;
+const teamShort = (state: GameState, t: TeamId) => `${FACTION_PACKS[raceOf(state, t)].short}${TEAM_MARK[t] ?? ''}`;
+const teamOf = (state: GameState, t: TeamId) => `${FACTION_PACKS[raceOf(state, t)].genitive}${TEAM_MARK[t] ?? ''}`;
 const scoreLine = (state: GameState, n: Record<TeamId, number>, sep: string) => teamsOf(state).map((t) => `${teamShort(state, t)} ${n[t]}`).join(sep);
 
 // ------------------------------------------------------------------ control points
@@ -208,7 +205,7 @@ function placeControlPoints(state: GameState): HexKey[] {
   for (const k of chosen) {
     const t = state.tiles[k];
     if (tileCost(t) === null) {
-      t.terrain = raceOf(state, t.side) === 'dawn' ? 'meadow' : 'scorched';
+      t.terrain = terrainOf(raceOf(state, t.side)).land;
       t.variant = 1;
     }
   }
@@ -252,7 +249,7 @@ function placeControlPointsGeneric(state: GameState): HexKey[] {
     for (const k of [mid, a, b]) {
       const t = state.tiles[k];
       if (tileCost(t) === null) {
-        t.terrain = raceOf(state, t.side) === 'dawn' ? 'meadow' : 'scorched';
+        t.terrain = terrainOf(raceOf(state, t.side)).land;
         t.variant = 1;
       }
     }
@@ -299,7 +296,7 @@ function placeControlPointsMulti(state: GameState): HexKey[] {
   for (const k of chosen) {
     const t = state.tiles[k];
     if (tileCost(t) === null) {
-      t.terrain = raceOf(state, t.side) === 'dawn' ? 'meadow' : 'scorched';
+      t.terrain = terrainOf(raceOf(state, t.side)).land;
       t.variant = 1;
     }
   }
@@ -338,7 +335,7 @@ const control: Objective = {
   onRoundLimit(state) {
     // The side that led for more rounds wins; level (or no leader at all) is a draw.
     const best = bestTeam(state.control!.led);
-    if (best) finish(state, best, `Upłynął limit rund: ${teamShort(state, best)} ${raceOf(state, best) === 'dawn' ? 'dłużej miało' : 'dłużej miała'} przewagę w punktach kontrolnych.`);
+    if (best) finish(state, best, `Upłynął limit rund: ${teamShort(state, best)} ${FACTION_PACKS[raceOf(state, best)].lead} przewagę w punktach kontrolnych.`);
     else finishDraw(state, 'Upłynął limit rund: żadna strona nie miała przewagi w punktach kontrolnych.');
   },
   progress(state) {

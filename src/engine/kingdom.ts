@@ -4,7 +4,7 @@
 
 import { ALL_TEAM_IDS, byTeam, raceOf, teamsOf } from './teams';
 import { byPack } from './factions';
-import { FACTION_NAMES, FACTION_SUPPORTS, SUPPORTS_PER_BATTLE, UNITS, type FactionId, type TeamId } from './data';
+import { FACTION_NAMES, SUPPORTS_PER_BATTLE, UNITS, type FactionId, type TeamId } from './data';
 import { distance, parseKey, type HexKey } from './hex';
 import { encounterUnits, stillConnected } from './encounters';
 import { awardXp, levelOf } from './growth';
@@ -93,7 +93,6 @@ export const artifactCost = (hero: HeroState, art: ArtifactDef): number =>
 
 /** Prices of the recruits by tier (provisional: tuned with the simulations, docs/JEDNOSTKI_POZIOMU_3.md). */
 export const RECRUIT_COSTS = [2, 3, 5, 8, 12];
-const TIER_UNITS: Record<FactionId, string[]> = byPack((p) => p.tierUnits);
 
 /** The supports a faction can recruit, by tier: tier 1 are the supports it starts the game with in the other levels, tiers 2–5 are the new units (tiers 4–5 need upgraded barracks). */
 /** The legendary unit of level 6: gold and Gwiezdny Pył, one per faction, in upgraded barracks. */
@@ -117,10 +116,12 @@ export const DWELLING_TEXTS: Record<string, string> = Object.fromEntries(Object.
 export const DWELLING_COST: Cost[] = [{ gold: 2, wood: 1 }, { gold: 3, wood: 2 }, { gold: 4, ore: 2 }, { gold: 5, ore: 2, dust: 1 }, { gold: 6, ore: 3, dust: 2 }];
 
 /** Every recruit of a faction by tier; tier 6 and the alternative units belong to level 6 only (list the offer of a game with `recruitsOf`). */
-export const RECRUITS: Record<FactionId, Recruit[]> = {
-  dawn: [...FACTION_SUPPORTS.dawn.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })), ...TIER_UNITS.dawn.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] })), ...ALT_UNITS.dawn.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1], alt: true as const })), { id: LEGENDS.dawn, tier: 6, cost: LEGEND.gold, dust: LEGEND.dust }],
-  horde: [...FACTION_SUPPORTS.horde.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })), ...TIER_UNITS.horde.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] })), ...ALT_UNITS.horde.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1], alt: true as const })), { id: LEGENDS.horde, tier: 6, cost: LEGEND.gold, dust: LEGEND.dust }],
-};
+export const RECRUITS: Record<FactionId, Recruit[]> = byPack((p): Recruit[] => [
+  ...p.supports.map((id) => ({ id, tier: 1, cost: RECRUIT_COSTS[0] })),
+  ...p.tierUnits.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1] })),
+  ...p.altUnits.map((id, i) => ({ id, tier: i + 2, cost: RECRUIT_COSTS[i + 1], alt: true as const })),
+  { id: p.legend, tier: 6, cost: LEGEND.gold, dust: LEGEND.dust },
+]);
 
 /** The recruits a faction may buy in this game, by tier (level 6: both units of tiers 2-5; which one can be recruited is `dwellingOf`). */
 export const recruitsOf = (state: GameState, f: TeamId): Recruit[] => RECRUITS[raceOf(state, f)].filter((r) => (r.tier < 6 && !r.alt) || Boolean(state.rules.empire)).sort((a, b) => a.tier - b.tier);
@@ -259,7 +260,7 @@ export const supportSlots = (state: GameState, f: TeamId): number => (state.rule
 
 /** The 6 on 6 arena: the supports a side brings (with its hero that makes six) and the fixed pool it chooses them from, tiers 2-5 of both unit lines. */
 export const ARENA_SUPPORTS = 5;
-export const ARENA_POOL: Record<FactionId, string[]> = { dawn: [...TIER_UNITS.dawn, ...ALT_UNITS.dawn], horde: [...TIER_UNITS.horde, ...ALT_UNITS.horde] };
+export const ARENA_POOL: Record<FactionId, string[]> = byPack((p) => [...p.tierUnits, ...p.altUnits]);
 
 /** Places in the team: a hero of this faction at level 3 and 6, and upgraded barracks, each add one. */
 export function teamSlots(state: GameState, f: TeamId): number {

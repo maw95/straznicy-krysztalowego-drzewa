@@ -1,4 +1,4 @@
-import { byPack } from './factions';
+import { byPack, type PackId } from './factions';
 // Game content: units, guardians, treasures and terrain.
 // Numbers started from docs/zrodla_zasad/Straznicy_Krysztalowego_Drzewa_Specyfikacja_dla_AI.md
 // and were tuned with simulations (docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md, section 7).
@@ -6,7 +6,7 @@ import { byPack } from './factions';
 // engine never hard-codes them — it always reads from these tables.
 
 /** A RACE: the key of game data and graphics (heroes, units, buildings, names). */
-export type FactionId = 'dawn' | 'horde';
+export type FactionId = PackId;
 /** A TEAM (playing side): the key of game state (gold, treasures, homes, half of the map). Today exactly two teams, each of the race with the same id (see raceOf in teams.ts). */
 export type TeamId = 'dawn' | 'horde' | 'third' | 'fourth';
 /** A team or the neutral creatures. */
@@ -374,7 +374,10 @@ export const SUPPORTS_PER_BATTLE = 2;
 export const guardianDuelHp = (id: string) => UNITS[id].duel?.hp ?? UNITS[id].hp;
 
 /** The race a hero belongs to (its skills, name tables and pictures are the race's), whichever team plays it. */
-export const raceOfHero = (heroId: string): FactionId => (UNITS[heroId]?.side === 'horde' ? 'horde' : 'dawn');
+export const raceOfHero = (heroId: string): FactionId => {
+  const side = UNITS[heroId]?.side;
+  return side && side !== 'neutral' && side in FACTION_HEROES ? (side as FactionId) : 'dawn';
+};
 
 const RACE_NAMES = byPack((p) => p.name);
 /** The name of a race (and, for the sides, of the race they play by default; read a game's own names through raceOf). */
@@ -597,10 +600,7 @@ export const TERRAIN_VARIANTS: Record<Terrain, number> = {
  * equally likely. The share of difficult ground is not fixed — it follows from the types
  * (2 difficult types on the Przymierze side, 3 on the Horda side).
  */
-export const TILE_POOLS: Record<FactionId, Terrain[]> = {
-  dawn: ['meadow', 'forest', 'river', 'bridge', 'hill', 'mountain', 'chasm'],
-  horde: ['scorched', 'barren', 'swamp', 'darkCave', 'ruins', 'deadThicket', 'thorns'],
-};
+export const TILE_POOLS: Record<FactionId, Terrain[]> = byPack((p) => p.tiles as Terrain[]);
 
 /** Guardian lairs and the half of the map each guardian lives on. */
 export const GUARDIAN_LAIRS: Record<string, { terrain: Terrain; side: TileSide }> = {

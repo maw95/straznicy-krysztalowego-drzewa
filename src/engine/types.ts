@@ -188,7 +188,13 @@ export function levelSettings(level: Level, mode: Mode): { battleMode: BattleMod
 
 export interface SeatSetup {
   name: string;
+  /** The SIDE the seat plays (a slot of the table; see `assignSlots` in teams.ts). */
   faction: TeamId;
+  /**
+   * The faction (race) of the seat: the key of its heroes, units, names and graphics. Missing = the faction of the side's own id (the old settings).
+   * Only rivalries (pvp) of the digital game take other races than Przymierze and Horda; coop, the arena and the online game refuse them.
+   */
+  race?: FactionId;
   controller: Controller;
   heroId: string;
   /** Family mode (coop): the younger player; its hero gets the help of `FAMILY` (data.ts) and the screen offers hints. */
