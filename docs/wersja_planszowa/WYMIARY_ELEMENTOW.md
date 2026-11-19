@@ -33,7 +33,7 @@ więc wersja fizyczna i komputerowa mają te same pola.
 | Figurki z podstawką (druk 3D, pliki STL autora) | 15 | podstawka 30 mm, wys. postaci 28–68 mm | — |
 | Kość −1 / 0 / +1 | 1 | sześcienna **16 mm**, ścianki: −1, −1, 0, 0, +1, +1 | 6 pól po **189 × 189 px** (bez spadu) |
 | Instrukcja | 1 | **A4** (210 × 297 mm), zeszyt zszywany | 2480 × 3508 px na stronę |
-| Pudełko | 1 | wnętrze ok. **340 × 310 × 180 mm** dla segregatora A4 320 × 290 × 40 (wymiary od segregatora, patrz krok 8 planu) | — |
+| Pudełko | 1 | wnętrze ok. **330 × 250 × 155 mm** dla segregatora autora 310 × 230 × 10 (wymiary od segregatora, figurek i kafelków, patrz krok 8 planu) | — |
 
 ## Druk w domu (pliki w `do_druku/`, `make druk`)
 
@@ -92,8 +92,8 @@ więc wersja fizyczna i komputerowa mają te same pola.
 
 ## Pudełko
 
-- Wymiary przybliżone — dokładne wymiary pudełka ustal po zmierzeniu segregatora i wydrukowanych figurek (patrz krok 8 planu; figurki stoją w piance EVA 10 mm z otworami Ø 35 mm).
-- Wnętrze (ok. 340 × 310 × 180 mm) mieści: złożoną planszę areny (297 × 210 mm), wypraskę z 15 figurkami
+- Wymiary przybliżone — dokładne wymiary pudełka ustal po zmierzeniu segregatora i wydrukowanych figurek (patrz krok 8 planu; figurki stoją w piance EVA 10–12 mm z otworami Ø 30 mm, bo podstawki są okrągłe Ø 30 mm).
+- Wnętrze (ok. 330 × 250 × 155 mm) mieści: złożoną planszę areny (297 × 210 mm), wypraskę z 15 figurkami
   (najwyższa ma z podstawką ok. 71 mm), wytłoczone arkusze kafelków lub ich stosy, karty, tor rund i instrukcję A4.
 
 ## Stan obecnych grafik

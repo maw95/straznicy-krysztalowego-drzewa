@@ -22,7 +22,7 @@ Wymiary plansz są ustalone w `WYMIARY_ELEMENTOW.md`; najważniejsze dla figurek
 
 ### Podstawka
 
-- **Kształt:** sześciokąt, **30 mm między płaskimi bokami**, ustawiony tak jak pola areny. Na kafelku mapy (50 mm) jest dużo miejsca.
+- **Kształt:** koło, **Ø 30 mm** (zlecone figurki mają okrągłe podstawki — stan na 19.11.2026; wcześniej planowany był sześciokąt 30 mm między bokami). Mieści się w polu areny (34 mm między bokami), na kafelku mapy (50 mm) jest dużo miejsca. W pudełku stoi w piance z otworami Ø 30 mm.
 - **Wysokość:** 3 mm, z fazką 0,5 mm na górnej krawędzi.
 - **Kolor frakcji na obrzeżu:**
 
@@ -108,7 +108,7 @@ Pozy i cechy wziąłem z ilustracji na kartach (`docs/grafika/karty`, `public/as
 
 | Element | Ile | Wymiary | Uwagi |
 |---|---|---|---|
-| Podstawka sześciokątna z herbem | 15 | 30 mm między bokami, 3 mm | 6 Przymierza, 6 Hordy, 3 strażników |
+| Podstawka okrągła z herbem | 15 | Ø 30 mm, 3 mm | 6 Przymierza, 6 Hordy, 3 strażników |
 | Kryształy | 3 | **8 × 7 × 16 mm** (graniastosłup sześciokątny 8 mm między rogami, 7 mm między bokami, wys. 16 mm), z ostrym czubkiem | druk z przezroczystej żywicy, najlepiej niebieskiej |
 | Znacznik rundy | 1 | **8 × 9,2 × 30 mm** (sześciokąt 8 mm między bokami, 9,2 mm między rogami), wys. **30 mm** | wchodzi w gniazda toru rund; wysoki, żeby łatwo go wyjąć z gniazda |
 | Tor rund | 1 | **150 × 144 × 8 mm**, 24 gniazda | wymiary z pliku STL autora (gra rysuje tor bez zmian) |
