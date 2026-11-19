@@ -86,7 +86,7 @@ describe('abilities of the units', () => {
     const before = at(w, 'ancientBear').hp;
     w = applyAction(w, { type: 'battleAttack', targetId: 'ancientBear' });
     expect(at(w, 'ancientBear').pos).toBe(arenaCell(5, 9));
-    // the blow itself (2 A) plus the collision
+    // the blow itself (3 A after the G2 balance) plus the collision
     expect(before - at(w, 'ancientBear').hp).toBe(UNITSA('youngAurochs') + ABILITY.collisionDamage);
   });
 
@@ -220,7 +220,7 @@ describe('abilities of the units', () => {
 /** The Szybkość of the units the tests above use (their cards). */
 const UNIT_SPEED: Record<string, number> = { rockGoat: 5, nymph: 4, elfDruid: 4, windAntelope: 7 };
 function UNITSA(id: string): number {
-  return ({ youngAurochs: 2, warRhino: 5 } as Record<string, number>)[id];
+  return ({ youngAurochs: 3, warRhino: 5 } as Record<string, number>)[id];
 }
 
 describe('Kamień Tętentu, Wielkie Pastwiska, Ostoja Wędrówek', () => {
