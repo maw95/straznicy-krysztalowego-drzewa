@@ -16,7 +16,7 @@ const COLORS: Record<string, [number, number, number]> = {
   herds: [176, 136, 48],
   undead: [112, 128, 104],
   clans: [112, 120, 134],
-  frost: [160, 196, 220],
+  frost: [176, 204, 198],
 };
 
 const jobs: Array<{ kind: 'art' | 'portrait' | 'crest' | 'arena'; id: string; label: string; race: string; color: number[]; out: string }> = [];

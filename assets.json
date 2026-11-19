@@ -5925,6 +5925,98 @@
       "ai": false,
       "placeholder": true,
       "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "frost/zastepcze/art",
+      "pliki": [
+        "public/assets/cards/art/auroraSpirit.jpg",
+        "public/assets/cards/art/blizzardWitch.jpg",
+        "public/assets/cards/art/courtPage.jpg",
+        "public/assets/cards/art/elderGiant.jpg",
+        "public/assets/cards/art/ermine.jpg",
+        "public/assets/cards/art/ermineHuntress.jpg",
+        "public/assets/cards/art/frostImp.jpg",
+        "public/assets/cards/art/frostJarl.jpg",
+        "public/assets/cards/art/frostMammoth.jpg",
+        "public/assets/cards/art/frostSprite.jpg",
+        "public/assets/cards/art/frostWitch.jpg",
+        "public/assets/cards/art/glacierYak.jpg",
+        "public/assets/cards/art/iceKnight.jpg",
+        "public/assets/cards/art/iceSentinel.jpg",
+        "public/assets/cards/art/marzanna.jpg",
+        "public/assets/cards/art/oldHailer.jpg",
+        "public/assets/cards/art/snowLynx.jpg",
+        "public/assets/cards/art/windStrzyga.jpg",
+        "public/assets/cards/art/youngGiant.jpg"
+      ],
+      "typ": "karta jednostki (zastępcza)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-19",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "frost/zastepcze/portraits",
+      "pliki": [
+        "public/assets/cards/portraits/auroraSpirit.jpg",
+        "public/assets/cards/portraits/blizzardWitch.jpg",
+        "public/assets/cards/portraits/courtPage.jpg",
+        "public/assets/cards/portraits/elderGiant.jpg",
+        "public/assets/cards/portraits/ermine.jpg",
+        "public/assets/cards/portraits/ermineHuntress.jpg",
+        "public/assets/cards/portraits/frostImp.jpg",
+        "public/assets/cards/portraits/frostJarl.jpg",
+        "public/assets/cards/portraits/frostMammoth.jpg",
+        "public/assets/cards/portraits/frostSprite.jpg",
+        "public/assets/cards/portraits/frostWitch.jpg",
+        "public/assets/cards/portraits/glacierYak.jpg",
+        "public/assets/cards/portraits/iceKnight.jpg",
+        "public/assets/cards/portraits/iceSentinel.jpg",
+        "public/assets/cards/portraits/marzanna.jpg",
+        "public/assets/cards/portraits/oldHailer.jpg",
+        "public/assets/cards/portraits/snowLynx.jpg",
+        "public/assets/cards/portraits/windStrzyga.jpg",
+        "public/assets/cards/portraits/youngGiant.jpg"
+      ],
+      "typ": "portret jednostki (zastępczy)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-19",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "frost/zastepcze/crests",
+      "pliki": [
+        "public/assets/cards/crests/frost.png"
+      ],
+      "typ": "herb frakcji (zastępczy)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-19",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "frost/zastepcze/arena",
+      "pliki": [
+        "public/assets/arena/cyfrowa/frost.webp"
+      ],
+      "typ": "arena frakcji (zastępcza)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-19",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
     }
   ]
 }
