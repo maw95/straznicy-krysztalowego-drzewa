@@ -20,6 +20,7 @@ import {
   scaleOf,
   startBattleFight,
   throwTargets,
+  reachableCells,
 } from '../src/engine/battle';
 import { assignSlots } from '../src/engine/teams';
 import { canBeMoved } from '../src/engine/primitives';
@@ -421,6 +422,22 @@ describe('heroes and commanders', () => {
     expect(at(moved, 'scorpionQueen').status.veiled).toBeUndefined();
     const hit = strike(fight([['scorpionQueen', 'dawn', 6, 8], ['ratman', 'horde', 7, 9, 99]]), 'scorpionQueen', 'ratman');
     expect(hit.log.some((l) => l.text.includes('Trucizna'))).toBe(true);
+  });
+
+  it('a move whose way a buried enemy blocks uncovers her instead of failing (the bot plans without her)', () => {
+    const f = fight([['ratman', 'horde', 5, 9, 99], ['scorpionQueen', 'dawn', 7, 9]]);
+    at(f, 'scorpionQueen').status.veiled = true;
+    const mover = turn(f, 'ratman');
+    const u = at(mover, 'ratman');
+    const real = reachableCells(mover, u);
+    at(mover, 'scorpionQueen').alive = false;
+    const ignoring = reachableCells(mover, u);
+    at(mover, 'scorpionQueen').alive = true;
+    const behind = [...ignoring.keys()].find((k) => !real.has(k));
+    expect(behind).toBeDefined();
+    const after = applyAction(mover, { type: 'battleMove', to: behind! });
+    expect(at(after, 'scorpionQueen').status.veiled).toBeUndefined();
+    expect(at(after, 'ratman').pos).toBe(u.pos);
   });
 
   it('Czujna Drzemka: Bastia lies down instead of moving: armour and no pushing to the end of her next activation, a blow at the first enemy that steps up', () => {

@@ -1377,7 +1377,21 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   }
   const cells = reachableCells(state, u);
   let steps = cells.get(to);
-  if (steps === undefined) throw new Error('Pole poza zasięgiem ruchu.');
+  if (steps === undefined) {
+    // A way that a veiled enemy blocks (its owner's side sees it, the mover does not): the mover walks into it on the way, the enemy is uncovered, and nobody moves.
+    const hidden = Object.values(b.units).filter((x) => x.alive && x.pos && x.side !== u.side && x.status.veiled);
+    if (hidden.length) {
+      for (const x of hidden) x.alive = false;
+      const open = reachableCells(state, u).has(to);
+      for (const x of hidden) x.alive = true;
+      if (open) {
+        const nearest = hidden.reduce((best, x) => (unitDistance(u, x) < unitDistance(u, best) ? x : best));
+        unveil(state, nearest);
+        return;
+      }
+    }
+    throw new Error('Pole poza zasięgiem ruchu.');
+  }
   if (tail && isLarge(state, u) && !tailOptions(b, u, to).includes(tail)) throw new Error('Ogon nie zmieści się na tym polu.');
   let leapt = false;
   // Szalony Skok: the leap goes over everything and the blow after it is harder.
