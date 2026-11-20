@@ -379,6 +379,11 @@ export function incomeBreakdown(state: GameState, f: TeamId): Array<{ label: str
     if (s.buildings.treasury) rows.push({ label: `${BUILDING_NAMES.treasury[Math.min(s.buildings.treasury, 2) - 1]} (${s.name})`, gold: KINGDOM.incomeTreasury[Math.min(s.buildings.treasury, 2) - 1] });
   }
   for (const [hex, m] of Object.entries(k.mines)) if (m.owner === f) rows.push({ label: `${MINE_NAMES.gold} (pole ${hex})`, gold: KINGDOM.incomeMine });
+  // Szlak Karawan (the Desert Empire): a coin a round for every few mines of the faction.
+  if (raceOf(state, f) === 'sands' && bestLevel(state, f, 'caravanRoad') >= 1) {
+    const caravan = Math.floor(Object.values(k.mines).filter((m) => m.owner === f).length / FACTION_MECHANICS.caravanMines);
+    if (caravan > 0) rows.push({ label: BUILDING_NAMES.caravanRoad[0], gold: caravan });
+  }
   // Strój Kupca (three of three): +1 gold a round, once for the faction.
   const merchants = Object.values(state.heroes).filter((h) => h.faction === f && h.alive && completeSets(h).some((d) => d.income));
   if (merchants.length) rows.push({ label: SETS.merchant.name, gold: SETS.merchant.income! });
@@ -728,6 +733,9 @@ export function buildCost(state: GameState, s: Settlement, b: BuildingId): Cost 
 
 /** Gold for one unit of a resource bought in this settlement (the market there makes it cheaper). */
 export const tradeBuyPrice = (s: Settlement, res: ResourceId): number => ECONOMY.tradeBuy[res][Math.min(2, buildingLevel(s, 'market'))];
+/** What the market pays for one resource: its price, and with the second level of the Szlak Karawan (the Desert Empire) as much as buying it costs there. */
+export const tradeSellPrice = (state: GameState, f: TeamId, s: Settlement, res: ResourceId): number =>
+  raceOf(state, f) === 'sands' && bestLevel(state, f, 'caravanRoad') >= 2 ? Math.max(ECONOMY.tradeSell[res], tradeBuyPrice(s, res)) : ECONOMY.tradeSell[res];
 
 /** What an artifact costs in the market for this hero: gold, and Gwiezdny Pył for a legendary one in level 4. */
 export const artifactBill = (state: GameState, hero: HeroState, art: ArtifactDef): Cost => ({
@@ -900,8 +908,9 @@ export function kingdomAction(state: GameState, action: Action): void {
         if (buildingLevel(s, 'market') < 1) throw new Error('Surowce sprzedaje się na targu.');
         if (k.res[f][action.res] < 1) throw new Error(`Brakuje: 1 × ${RESOURCE_NAMES[action.res]}.`);
         k.res[f][action.res] -= 1;
-        k.gold[f] += ECONOMY.tradeSell[action.res];
-        log(state, 'info', `${FACTION_NAMES[raceOf(state, f)]} sprzedaje: ${RESOURCE_NAMES[action.res]} (${ECONOMY.tradeSell[action.res]} zł).`, f);
+        const paid = tradeSellPrice(state, f, s, action.res);
+        k.gold[f] += paid;
+        log(state, 'info', `${FACTION_NAMES[raceOf(state, f)]} sprzedaje: ${RESOURCE_NAMES[action.res]} (${paid} zł).`, f);
       }
       break;
     }
@@ -913,7 +922,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (buildingLevel(s, 'market') < 1) throw new Error('Surowce wymienia się na targu.');
       if (k.res[f][action.from] < 1) throw new Error(`Brakuje: 1 × ${RESOURCE_NAMES[action.from]}.`);
       // One sale and one purchase at the market's prices: the gold from the sale goes toward the price of the other resource.
-      const sell = ECONOMY.tradeSell[action.from];
+      const sell = tradeSellPrice(state, f, s, action.from);
       const price = tradeBuyPrice(s, action.to);
       if (k.gold[f] + sell < price) throw new Error(`Za mało złota (potrzeba ${price - sell}).`);
       k.res[f][action.from] -= 1;

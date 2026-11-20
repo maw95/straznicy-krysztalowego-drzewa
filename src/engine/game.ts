@@ -735,6 +735,38 @@ function sneakHero(state: GameState, to: HexKey) {
   arriveAt(state, hero);
 }
 
+/** Brama Wydm (the Desert Empire): whether the faction's gate is ready (built, and enough rounds since the last step through it). */
+export function gateReady(state: GameState, faction: TeamId): boolean {
+  if (!state.rules.empire || raceOf(state, faction) !== 'sands' || bestLevel(state, faction, 'sandGate') < 1) return false;
+  const last = state.factions[faction].gateRound;
+  return last === undefined || state.round - last >= FACTION_MECHANICS.gateEvery;
+}
+
+/** The hexes the active hero may step to through the Brama Wydm: it stands in a settlement of its faction with the gate; revealed, free hexes within reach. */
+export function gateMoves(state: GameState): HexKey[] {
+  const hero = activeHero(state);
+  const k = state.kingdom;
+  if (!hero || !hero.alive || !hero.pos || hero.entering || state.phase !== 'adventure' || !k || hero.offer || hero.treasurePick || !gateReady(state, hero.faction)) return [];
+  const here = Object.values(k.settlements).find((x) => x.at === hero.pos);
+  if (!here || here.owner !== hero.faction || buildingLevel(here, 'sandGate') < 1) return [];
+  const from = parseKey(hero.pos);
+  return Object.values(state.tiles)
+    .filter((t) => t.revealed && t.key !== hero.pos && !t.place && distance(from, parseKey(t.key)) <= FACTION_MECHANICS.gateReach && canStand(state, t.key, hero.faction, hero.id) && !heroesAt(state, t.key).length)
+    .map((t) => t.key)
+    .sort();
+}
+
+/** Brama Wydm: the hero steps through the gate to a revealed free hex within reach (no movement points spent; the gate rests a few rounds). */
+function gateHero(state: GameState, to: HexKey) {
+  const hero = activeHero(state)!;
+  if (!gateMoves(state).includes(to)) throw new Error('Brama Wydm nie prowadzi na to pole.');
+  state.factions[hero.faction].gateRound = state.round;
+  hero.pos = to;
+  const revealed = revealAround(state, to, Math.max(1, scoutRadiusOf(hero), gearReveal(hero)));
+  log(state, 'move', `${UNITS[hero.id].name} przechodzi przez Bramę Wydm${revealed.length ? ` (odkryto ${revealed.length})` : ''}.`);
+  arriveAt(state, hero);
+}
+
 /**
  * A copy of the game in which the active hero has just started the fight on hex `to` (a hero or a guardian there), for judging
  * how it would go without playing it; null when there is nothing to fight at `to`. Costs and the log of the real move are left out.
@@ -1466,6 +1498,9 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
       break;
     case 'sneakHero':
       sneakHero(state, action.to);
+      break;
+    case 'gateHero':
+      gateHero(state, action.to);
       break;
     case 'endTurn':
       endTurn(state);

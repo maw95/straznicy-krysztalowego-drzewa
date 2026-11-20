@@ -9,7 +9,7 @@ import { mayBuildSpark, shardCollector, shardsOf, shardTotal } from '../empire';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { heroTileCost } from '../sites';
-import { activeHero, currentActor, defenderAt, heroesAt, hordeMayFightGuardian, legalHeroMoves, livingEnemies, livingHeroes, reviveSpots, ritualFormed, ritualSpot, sneakMoves } from '../game';
+import { activeHero, currentActor, defenderAt, heroesAt, hordeMayFightGuardian, legalHeroMoves, livingEnemies, livingHeroes, reviveSpots, ritualFormed, ritualSpot, sneakMoves, gateMoves } from '../game';
 import { hpScaleOf } from '../battle';
 import { BOT_SKILL_ORDER, levelOf } from '../growth';
 import { DRAFT_VALUE } from './battleAi';
@@ -881,6 +881,18 @@ function encounterDetour(state: GameState, hero: HeroState, memo: Memo): Action 
 export function adventureAction(state: GameState): Action {
   const action = plainAdventureAction(state);
   if (action.type === 'moveHero' && !canFightGuardian(state) && sneakMoves(state).some((m) => m.to === action.to)) return { type: 'sneakHero', to: action.to };
+  // Brama Wydm (the Desert Empire): a hero leaving its settlement goes through the gate to the farthest hex on the way it means to walk.
+  if (action.type === 'moveHero') {
+    const gate = gateMoves(state);
+    const hero = activeHero(state);
+    if (gate.length && hero?.pos) {
+      const from = parseKey(hero.pos);
+      const step = parseKey(action.to);
+      const ahead = gate.filter((g) => distance(step, parseKey(g)) === distance(from, parseKey(g)) - 1 && distance(from, parseKey(g)) >= 3);
+      const best = ahead.sort((x, y) => distance(from, parseKey(y)) - distance(from, parseKey(x)) || (x < y ? -1 : 1))[0];
+      if (best) return { type: 'gateHero', to: best };
+    }
+  }
   return action;
 }
 

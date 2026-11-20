@@ -48,7 +48,19 @@ import {
   unitAttackBase,
   unitDistance,
   unitSpeed,
+  ambushCells,
+  buriesAtDeploy,
+  deployCellOf,
+  isMirage,
+  miragesOf,
+  mirageSwapReady,
+  portalCells,
+  sandsAllyTargets,
+  teleportCells as wyrmCells,
+  throwTargets,
 } from '../battle';
+import { redactHidden } from '../hidden';
+import { FACTION_MECHANICS } from '../empire';
 import { distance, neighborKeys, parseKey, type HexKey } from '../hex';
 import { wideCellOf } from '../arenaLayout';
 import { ARENA_SPELL_POOL, botSpell, SPELL_VALUE, type SpellId } from '../magic';
@@ -58,6 +70,8 @@ import type { Action, BattleUnit, GameState } from '../types';
 import type { ItemKind } from '../data';
 
 const dist = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));
+/** Iskra of the Desert Empire: how many units the bot moves after both sides deployed. */
+const FACTION_MECHANICS_REARRANGE = FACTION_MECHANICS.sparkRearrange;
 /** Shortest distance between two sets of cells: a large unit lies on two, so it is as near as its nearer cell. */
 const dist2 = (a: readonly HexKey[], b: readonly HexKey[]) => Math.min(...a.flatMap((x) => b.map((y) => dist(x, y))));
 
@@ -269,7 +283,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   const b = state.battle!;
   const act = b.activation!;
   const options: Array<[HexKey, number]> = [[u.pos!, 0]];
-  if (!act.moved && !act.attacked) for (const [k, d] of reachableCells(state, u)) options.push([k, d]);
+  if (!act.moved && (!act.attacked || act.thrown)) for (const [k, d] of reachableCells(state, u)) options.push([k, d]);
   const enemies = enemiesOf(b, u);
   const ranged = UNITS[u.defId].attackType === 'ranged';
   const threats = threatsTo(state, u);
@@ -286,6 +300,13 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
     const risk = (danger(threats, mine) / Math.max(1, u.hp)) * caution;
     // A shooter of the digital ruleset cannot shoot after moving: from another cell it only takes a position.
     const targets = act.attacked || act.moveOnly || (cell !== u.pos && !canAttackAfterMove(state, u)) ? [] : attackTargets(state, u, cell);
+    // Rzut Sztyletem: the Beduin throws from where it stands (before its move), at a target it cannot reach with a blow.
+    if (cell === u.pos && !act.attacked && !act.moveOnly) {
+      for (const t of throwTargets(state, u, cell)) {
+        const score = scoreHit(t, attackDamage(state, u, t, true, moved)) - risk * AI_TUNING.attackRiskMelee + (UNITS[t.defId].attackType === 'ranged' ? 1 : 0);
+        if (score > best.score) best = { moveTo: null, target: t, second: null, useAbility: true, score };
+      }
+    }
     for (const t of targets) {
       for (const useAbility of abilityChoices(state, u)) {
         const dmg = attackDamage(state, u, t, useAbility, moved);
@@ -350,7 +371,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
 
 function abilityChoices(state: GameState, u: BattleUnit): boolean[] {
   const ab = abilityOf(u);
-  if (u.abilityUsed || !abilityActive(state) || !ATTACK_ABILITIES.includes(ab)) return [false];
+  if (u.abilityUsed || !abilityActive(state) || !ATTACK_ABILITIES.includes(ab) || ab === 'daggerThrow') return [false];
   return [true, false];
 }
 
@@ -449,6 +470,38 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
   if (ab === 'blast') {
     const at = bestBlastTrap(state, u);
     if (at && blastValue(state, u, at) >= 4 * scaleOf(state)) return { type: 'battleAbility', cell: at };
+  }
+  // Pustynne Cesarstwo: the Wezyr takes a wounded ally out of the fight or puts a fighter next to an enemy shooter, the Sfinks puzzles the enemy that hits hardest,
+  // Bastia lies down when the enemy comes, the Dancer copies the most valuable unit, the Rok carries a fighter that has a long way to go.
+  if (ab === 'sandPortal') {
+    const allies = sandsAllyTargets(state, u);
+    const enemies = enemiesOf(b, u);
+    const gap = (k: HexKey) => Math.min(99, ...enemies.flatMap(cellsOf).map((c) => dist(c, k)));
+    const hurt = allies.filter((x) => x.hp * 2 <= x.maxHp && enemies.some((e) => unitDistance(e, x) === 1)).sort((x, y) => x.hp - y.hp || (x.id < y.id ? -1 : 1))[0];
+    if (hurt) {
+      const cell = portalCells(state, u, hurt).sort((x, y) => gap(y) - gap(x) || (x < y ? -1 : 1))[0];
+      if (cell && gap(cell) >= 3) return { type: 'battleAbility', targetId: hurt.id, cell };
+    }
+    const shooters = enemies.filter((e) => UNITS[e.defId].attackType === 'ranged');
+    for (const x of allies.filter((a) => UNITS[a.defId].attackType === 'melee' && !enemies.some((e) => unitDistance(e, a) <= 1)).sort((p, q) => unitAttackBase(q) - unitAttackBase(p) || (p.id < q.id ? -1 : 1))) {
+      const cell = portalCells(state, u, x).filter((k) => shooters.some((e) => cellsOf(e).some((c) => dist(c, k) === 1))).sort()[0];
+      if (cell) return { type: 'battleAbility', targetId: x.id, cell };
+    }
+  }
+  if (ab === 'riddle') {
+    const t = enemiesOf(b, u)
+      .filter((e) => unitDistance(e, u) <= ABILITY.riddleRange && !e.status.riddled)
+      .sort((x, y) => unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (t && foesNear(4)) return { type: 'battleAbility', targetId: t.id };
+  }
+  if (ab === 'napWatch' && !b.activation!.moved && foesNear(3)) return { type: 'battleAbility' };
+  if (ab === 'mirageMake' && foesNear(9)) {
+    const t = sandsAllyTargets(state, u).sort((x, y) => y.maxHp + unitAttackBase(y) * 2 - (x.maxHp + unitAttackBase(x) * 2) || (x.id < y.id ? -1 : 1))[0];
+    if (t) return { type: 'battleAbility', targetId: t.id };
+  }
+  if (ab === 'rocLift' && !b.activation!.moved && !enemiesOf(b, u).some((e) => unitDistance(e, u) <= 1)) {
+    const t = sandsAllyTargets(state, u).filter((x) => UNITS[x.defId].attackType === 'melee' && !enemiesOf(b, x).some((e) => unitDistance(e, x) <= 2)).sort((x, y) => unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (t) return { type: 'battleAbility', targetId: t.id };
   }
   if (ab === 'web') {
     const t = enemiesOf(b, u)
@@ -607,7 +660,84 @@ function chooseDeployment(state: GameState, faction: TeamId): Action {
     if (isLarge(state, u)) taken.add(deployHeads(b, faction, k).find((h) => !taken.has(h))!);
     positions[u.id] = k;
   }
+  // Zasadzka Spod Piasku: the Queen lies buried on her half, as near the enemy's shooters as she can.
+  for (const u of own.filter((x) => buriesAtDeploy(state, x))) {
+    const cell = ambushSpot(state, faction, u, new Set(Object.entries(positions).filter(([id]) => id !== u.id).map(([, k]) => k)));
+    if (cell) positions[u.id] = cell;
+  }
   return { type: 'deployUnits', faction, positions };
+}
+
+/** Where the buried Queen waits: the free cell of her half nearest the enemy's shooters (their hero when they have none), not right next to an enemy. */
+function ambushSpot(state: GameState, faction: TeamId, u: BattleUnit, taken: Set<HexKey>): HexKey | null {
+  const b = state.battle!;
+  const foes = Object.values(b.units).filter((x) => x.side !== faction && x.alive && x.pos);
+  const marks = foes.filter((x) => UNITS[x.defId].attackType === 'ranged');
+  const aim = (marks.length ? marks : foes.filter((x) => UNITS[x.defId].kind !== 'support')).flatMap(cellsOf);
+  if (!aim.length) return null;
+  const busy = new Set([...taken, ...Object.values(b.units).filter((x) => x.id !== u.id && x.side !== faction && x.alive).flatMap(cellsOf)]);
+  const cells = ambushCells(b, faction).filter((k) => !busy.has(k) && !foes.some((x) => cellsOf(x).some((c) => dist(c, k) <= 1)));
+  const near = (k: HexKey) => Math.min(...aim.map((c) => dist(c, k)));
+  return cells.sort((x, y) => near(x) - near(y) || (x < y ? -1 : 1))[0] ?? null;
+}
+
+/**
+ * Iskra of the Desert Empire: when both sides stand, the bot moves at most two units: the Queen nearer to the enemy's shooters it now sees, then the wounded
+ * and the shooters to the start cells farthest from the enemy's melee units.
+ */
+function chooseRearrange(state: GameState, faction: TeamId): Action {
+  const b = state.battle!;
+  const own = Object.values(b.units).filter((u) => u.side === faction && u.pos);
+  const positions: Record<string, HexKey> = Object.fromEntries(own.map((u) => [u.id, deployCellOf(u)!]));
+  const moves: string[] = [];
+  const takenBy = () => new Set(Object.values(b.units).filter((x) => x.side !== faction && x.alive).flatMap(cellsOf).concat(own.flatMap((x) => (moves.includes(x.id) ? [positions[x.id]] : cellsOf(x)))));
+  for (const q of own.filter((x) => buriesAtDeploy(state, x))) {
+    const spot = ambushSpot(state, faction, q, new Set(own.filter((x) => x.id !== q.id).flatMap(cellsOf)));
+    const aim = Object.values(b.units).filter((x) => x.side !== faction && x.alive && x.pos && UNITS[x.defId].attackType === 'ranged').flatMap(cellsOf);
+    const near = (k: HexKey) => (aim.length ? Math.min(...aim.map((c) => dist(c, k))) : 0);
+    if (spot && q.pos && near(spot) + 2 <= near(q.pos)) {
+      positions[q.id] = spot;
+      moves.push(q.id);
+    }
+  }
+  const melee = Object.values(b.units).filter((x) => x.side !== faction && x.alive && x.pos && UNITS[x.defId].attackType === 'melee').flatMap(cellsOf);
+  const safety = (k: HexKey) => (melee.length ? Math.min(...melee.map((c) => dist(c, k))) : 0);
+  const keep = own
+    .filter((x) => !isLarge(state, x) && !buriesAtDeploy(state, x) && (x.hp < x.maxHp || UNITS[x.defId].attackType === 'ranged'))
+    .sort((x, y) => x.hp / x.maxHp - y.hp / y.maxHp || (x.id < y.id ? -1 : 1));
+  for (const u of keep) {
+    if (moves.length >= FACTION_MECHANICS_REARRANGE) break;
+    const busy = takenBy();
+    const cell = deployCells(b, faction).filter((k) => !busy.has(k)).sort((x, y) => safety(y) - safety(x) || (x < y ? -1 : 1))[0];
+    if (cell && u.pos && safety(cell) >= safety(u.pos) + 2) {
+      positions[u.id] = cell;
+      moves.push(u.id);
+    }
+  }
+  return { type: 'deployUnits', faction, positions };
+}
+
+/**
+ * The Desert Empire's own moves before the plan: a unit in trouble swaps places with its mirage (Pałac Mirażu III) when the mirage stands safer, and the
+ * Czerw comes up from the sand next to the enemy when it cannot reach anyone on foot.
+ */
+function sandsMove(state: GameState, u: BattleUnit): Action | null {
+  const b = state.battle!;
+  const act = b.activation!;
+  if (mirageSwapReady(state, u) && u.hp * 2 <= u.maxHp) {
+    const threats = threatsTo(state, u);
+    const m = miragesOf(b, u.id).filter((x) => x.pos).sort((x, y) => danger(threats, cellsOf(x)) - danger(threats, cellsOf(y)) || (x.id < y.id ? -1 : 1))[0];
+    if (m && danger(threats, cellsOf(m)) + 2 <= danger(threats, cellsOf(u))) return { type: 'battleMirageSwap', mirageId: m.id };
+  }
+  if (abilityOf(u) === 'wyrmBurrow' && !act.moved && !act.attacked && !attackTargets(state, u).length) {
+    const walk = [...reachableCells(state, u)].some(([c]) => attackTargets(state, u, c).length > 0);
+    if (walk) return null;
+    const enemies = enemiesOf(b, u);
+    const gap = (k: HexKey) => Math.min(99, ...enemies.map((e) => dist2(cellsOf(e), footprintAt(state, u, k))));
+    const best = wyrmCells(state, u).sort((x, y) => gap(x) - gap(y) || (x < y ? -1 : 1))[0];
+    if (best && gap(best) < Math.min(99, ...enemies.map((e) => unitDistance(e, u)))) return { type: 'battleTeleport', to: best };
+  }
+  return null;
 }
 
 function rank(u: BattleUnit): number {
@@ -714,12 +844,24 @@ function rulebookFreeAbility(state: GameState, u: BattleUnit): Action | null {
   return t ? { type: 'battleAbility', targetId: t.id } : null;
 }
 
+/**
+ * The bot of a side never reads what that side may not see: when another side has mirages or buried units in the battle, it plans on the view of its own
+ * side (`redactHidden`), where a mirage looks like the unit it copies under a mixed-up id; the engine turns the ids of its action back (`unmaskId`). Equal
+ * choices are broken by those ids, so which body of a group it goes for follows the game's seed, never the truth.
+ */
 export function chooseBattleAction(state: GameState): Action {
+  const b = state.battle!;
+  const side = b.stage === 'fight' && b.activation ? b.units[b.activation.unitId]?.side : b.stage === 'deploy' ? b.needsDeploy[0] : undefined;
+  if (side && Object.values(b.units).some((x) => x.side !== side && x.alive && (x.status.mirage || (x.status.veiled && x.pos)))) return planBattleAction(redactHidden(state, [side]));
+  return planBattleAction(state);
+}
+
+function planBattleAction(state: GameState): Action {
   const b = state.battle!;
   if (b.stage === 'gear') return chooseGearPick(state, state.draft!.gear!.order[0]);
   if (b.stage === 'spells') return chooseSpellPick(state, state.draft!.spells!.order[0]);
   if (b.stage === 'select') return chooseSupports(state, b.needsSelection[0]);
-  if (b.stage === 'deploy') return chooseDeployment(state, b.needsDeploy[0]);
+  if (b.stage === 'deploy') return b.rearrange?.side === b.needsDeploy[0] ? chooseRearrange(state, b.needsDeploy[0]) : chooseDeployment(state, b.needsDeploy[0]);
   if (b.stage === 'draft') return chooseDraftPick(state, state.draft!.order[0]);
   const act = b.activation!;
   const u = b.units[act.unitId];
@@ -736,10 +878,12 @@ export function chooseBattleAction(state: GameState): Action {
   // Level 5: the hero's spell, when one is worth its mana.
   const cast = botSpell(state);
   if (cast) return { type: 'battleSpell', spell: cast.spell, targetId: cast.targetId };
-  if (u.side !== 'neutral' && !act.acted) {
+  if (u.side !== 'neutral' && !act.acted && !isMirage(u)) {
     const item = itemToUse(state, u);
     if (item) return item;
   }
+  const sands = sandsMove(state, u);
+  if (sands) return sands;
   if (followsRulebook(state, u)) {
     const free = rulebookFreeAbility(state, u);
     if (free) return free;
@@ -748,7 +892,9 @@ export function chooseBattleAction(state: GameState): Action {
   const free = freeAbility(state, u);
   if (free) return free;
   const plan = planActivation(state, u);
-  if (plan.moveTo && !act.moved && !act.attacked) return moveTo(state, u, plan.moveTo);
+  // Zasadzka Spod Piasku: the buried Queen stays under the sand until she can strike from where she comes out.
+  if (u.status.veiled && abilityOf(u) === 'sandAmbush' && !plan.target) return { type: 'endActivation' };
+  if (plan.moveTo && !act.moved && (!act.attacked || act.thrown)) return moveTo(state, u, plan.moveTo);
   if (plan.target && !act.attacked && !act.moveOnly) {
     // The plan may count on a charge the unit did not get on its way (Taran needs a run of 2+ cells): the engine rejects such a blow.
     const useAbility = plan.useAbility && (abilityOf(u) !== 'ramBlow' || ramCharged(state, u));

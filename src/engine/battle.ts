@@ -1448,6 +1448,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   const throwing = useAbility && ab === 'daggerThrow' && throwTargets(state, u).some((t) => t.id === targetId);
   const legal = throwing ? throwTargets(state, u) : attackTargets(state, u);
   if (!target || !legal.some((t) => t.id === targetId)) throw new Error('Nieprawidłowy cel ataku.');
+  if (useAbility && ab === 'daggerThrow' && !throwing) throw new Error('Sztyletem rzuca się we wroga, który nie stoi obok.');
   const canUse = useAbility && !u.abilityUsed && abilityActive(state) && ATTACK_ABILITIES.includes(ab) && (ab !== 'ramBlow' || ramCharged(state, u));
   if (useAbility && !canUse) throw new Error('Zdolność jest niedostępna.');
 

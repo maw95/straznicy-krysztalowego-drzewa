@@ -5,7 +5,7 @@
 import { raceOf } from '../engine/teams';
 import { useEffect, useState, type ReactNode } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId, type TeamId } from '../engine/data';
-import { artifactBill, fenceSellPrice, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, healPrice, incomeOf, refugeHere, refugeTargets, RUNE_NAMES, RUNES, runeBlock, runesOf, KINGDOM, marketStock, mayRecruit, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, DWELLING_TEXTS, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
+import { artifactBill, fenceSellPrice, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, healPrice, incomeOf, refugeHere, refugeTargets, RUNE_NAMES, RUNES, runeBlock, runesOf, KINGDOM, marketStock, mayRecruit, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, DWELLING_TEXTS, resOf, spellPrice, tradeBuyPrice, tradeSellPrice, type BuildingId } from '../engine/kingdom';
 import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, packOf, RARITY_NAMES, SETS } from '../engine/sites';
 import { ARCHETYPE_NAMES, archetypeOf, commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from '../engine/realm';
@@ -131,7 +131,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           <img src={asset(RESOURCE_ICON[r])} alt="" width={30} height={30} />
           <span style={{ flex: 1, minWidth: 110 }}><b>{RESOURCE_NAMES[r]}</b>: {res[r]}</span>
           <button className="btn prim" data-trade-buy={r} disabled={gold < tradeBuyPrice(s, r)} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'buy' })} style={{ padding: '3px 12px', fontSize: 15 }}>Kup 1 (<StatText text={`${tradeBuyPrice(s, r)} zł`} />)</button>
-          <button className="btn prim b" data-trade-sell={r} disabled={buildingLevel(s, 'market') < 1 || res[r] < 1} title={buildingLevel(s, 'market') < 1 ? 'Sprzedaż wymaga targu.' : undefined} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'sell' })} style={{ padding: '3px 12px', fontSize: 15 }}>Sprzedaj 1 (<StatText text={`+${ECONOMY.tradeSell[r]} zł`} />)</button>
+          <button className="btn prim b" data-trade-sell={r} disabled={buildingLevel(s, 'market') < 1 || res[r] < 1} title={buildingLevel(s, 'market') < 1 ? 'Sprzedaż wymaga targu.' : undefined} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'sell' })} style={{ padding: '3px 12px', fontSize: 15 }}>Sprzedaj 1 (<StatText text={`+${tradeSellPrice(state, faction, s, r)} zł`} />)</button>
         </div>
       ))}
       {buildingLevel(s, 'market') > 0 && (
@@ -142,9 +142,9 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               <img src={asset(RESOURCE_ICON[from])} alt="" width={22} height={22} />
               <span style={{ minWidth: 70 }}>{RESOURCE_NAMES[from]} →</span>
               {RESOURCE_IDS.filter((to) => to !== from).map((to) => {
-                const extra = tradeBuyPrice(s, to) - ECONOMY.tradeSell[from];
+                const extra = tradeBuyPrice(s, to) - tradeSellPrice(state, faction, s, from);
                 return (
-                  <button key={to} className="btn prim b" data-swap-from={from} data-swap-to={to} disabled={res[from] < 1 || gold + ECONOMY.tradeSell[from] < tradeBuyPrice(s, to)} onClick={() => act({ type: 'kingdomSwap', settlementId: s.id, from, to })} style={{ padding: '3px 10px', fontSize: 14 }}>
+                  <button key={to} className="btn prim b" data-swap-from={from} data-swap-to={to} disabled={res[from] < 1 || gold + tradeSellPrice(state, faction, s, from) < tradeBuyPrice(s, to)} onClick={() => act({ type: 'kingdomSwap', settlementId: s.id, from, to })} style={{ padding: '3px 10px', fontSize: 14 }}>
                     <img src={asset(RESOURCE_ICON[to])} alt="" width={18} height={18} style={{ verticalAlign: 'middle' }} /> {RESOURCE_NAMES[to]} (<StatText text={extra > 0 ? `+${extra} zł` : extra < 0 ? `${-extra} zł dla ciebie` : 'bez dopłaty'} />)
                   </button>
                 );
