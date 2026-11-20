@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowe zdolności jednostek (wersja robocza): Kozioł Taranowy ma Taran (po biegu o 2 pola cios zadaje więcej i ogłusza), Mosiężny Pająk Ostrzał z Miejsca, Orzeł Stepowy Łowca Strzał nad Przeszkodami (strzela ponad przeszkodami i jednostkami; dowódcy Stad nazywają się teraz Łowca Wiatru i Płanetnik), a Dziad Mróz chodzi i ma Uścisk Mrozu (wróg w zasięgu 2 pól dostaje 2 szrony).
 - Nowe nazwy i jednostki w nowych frakcjach (wersja robocza): Dzikie Stado (Kulan Stepowy, Łucznik Stepowy, Wół Piżmowy, Arkar, Łamignat Stepowy, Orzeł Stepowy Łowca i Płanetnik), Wampir i Strzyga w Królestwie Umarłych, Dziad Mróz w Dworze Wiecznego Szronu, Mosiężny Pająk i Kozioł Taranowy w Żelaznym Klanie oraz Sroka Złodziejka i Świstak Petardnik w Wolnej Kompanii (Kocur Fechmistrz idzie na poziom 3, Jenot Szpieg na 5); zdolności i siły bez zmian.
 - Poprawka: po ustawieniu Sideł przed bitwą Wolnych Kompanii znaczniki pułapek na arenie nie rysują się już podwójnie.
 - Wolne Kompanie przy jednym ekranie: gdy dwie osoby grają na tym samym komputerze, układanie ukrytych Sideł jest zasłonięte ekranem „Przekaż urządzenie”, a własne Sidła na arenie widać dopiero po kliknięciu „Podejrzyj Sidła” w swojej turze.

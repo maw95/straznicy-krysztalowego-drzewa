@@ -51,6 +51,7 @@ register({
   'Ostrzał': 'Bombardment', 'Stała: strzał trafia cel i jego sąsiadów; nie strzela w aktywacji, w której się ruszyła; mury i bramy oblężenia pękają od jednego trafienia.': 'Passive: the shot hits the target and its neighbours; it does not fire in an activation in which it moved; siege walls and gates break with a single hit.',
   'Fortyfikacja': 'Fortification', 'Raz na bitwę stawia {0} pola muru obok siebie. Stała: pancerz {1}, nie da się go odepchnąć.': 'Once per battle it puts up {0} cells of wall side by side. Passive: armour {1}, it cannot be pushed.',
   'Hartowanie': 'Tempering', 'Raz na bitwę: sąsiedni sojusznik ma +{0} A do końca bitwy.': 'Once per battle: a neighbouring ally has +{0} ATK until the end of the battle.',
+  'Raz na bitwę: jeśli w tej aktywacji ruszył się o co najmniej {0} pola, cios wręcz zadaje +{1} A, a trafiony traci swoją następną aktywację.': 'Once per battle: if it has moved at least {0} cells in this activation, its melee blow deals +{1} ATK and the unit hit loses its next activation.',
   'Skok po Turniach': 'Leap over the Crags', 'Raz na bitwę: jeden ruch przez jednostki i przeszkody (nie staje na nich).': 'Once per battle: one move over units and obstacles (it does not stop on them).',
   'Twardy Łeb': 'Hard Head', 'Raz na bitwę ignoruje do {0} obrażeń z jednego trafienia.': 'Once per battle it ignores up to {0} damage from a single hit.',
   'Żar Kuźni': 'Forge Fire', 'Raz na bitwę: sojusznik odzyskuje {0} Ż.': 'Once per battle: an ally regains {0} HP.',
