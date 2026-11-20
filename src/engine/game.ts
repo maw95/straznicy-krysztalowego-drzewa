@@ -59,7 +59,7 @@ import { log } from './log';
 import { applyHeroSkills, applyHeroType, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { fireStory } from './story';
-import { ARENA_POOL, buildingLevel, collectIncome, isAutomaton, enterPlace, forgeLevel, garrisonAt, initKingdom, kingdomAction, supportSlots } from './kingdom';
+import { ARENA_POOL, bestLevel, buildingLevel, collectIncome, isAutomaton, enterPlace, forgeLevel, garrisonAt, initKingdom, kingdomAction, supportSlots } from './kingdom';
 import { ECONOMY } from './economy';
 import { commanderFalls } from './realm';
 import { ARENA_SPELL_PICKS, ARENA_SPELL_POOL, battleSpell, mapSpell, regenMana, SPELL_VALUE, START_SPELLS, type SpellId } from './magic';
@@ -681,6 +681,37 @@ function moveHero(state: GameState, to: HexKey) {
   arriveAt(state, hero);
 }
 
+/** Szlaki Przemytnicze: how many more times this round a hero of the faction may walk through the hex of a guardian without a fight (0 without the trails). */
+export function trailsLeft(state: GameState, faction: TeamId): number {
+  if (!state.rules.empire || raceOf(state, faction) !== 'free' || bestLevel(state, faction, 'smugglerTrails') < 1) return 0;
+  const fs = state.factions[faction];
+  return Math.max(0, FACTION_MECHANICS.trailsPerRound - (fs.trailRound === state.round ? fs.trailUses ?? 0 : 0));
+}
+
+/** The hexes next to the active hero where a guardian's hex may be walked through (Szlaki Przemytnicze): the hexes it could otherwise only fight on. */
+export function sneakMoves(state: GameState): HeroMove[] {
+  const hero = activeHero(state);
+  if (!hero || !trailsLeft(state, hero.faction)) return [];
+  return legalHeroMoves(state).filter((m) => m.kind === 'attackGuardian');
+}
+
+/** Szlaki Przemytnicze: the hero walks through the hex of a guardian or neutrals (it stays there, the fight is not fought), once a round. */
+function sneakHero(state: GameState, to: HexKey) {
+  const hero = activeHero(state)!;
+  if (hero.offer) throw new Error('Najpierw wybierz umiejętność.');
+  if (hero.treasurePick) throw new Error('Najpierw wybierz skarb.');
+  const move = sneakMoves(state).find((m) => m.to === to);
+  if (!move) throw new Error('Szlaki Przemytnicze nie prowadzą na to pole.');
+  const fs = state.factions[hero.faction];
+  fs.trailUses = (fs.trailRound === state.round ? fs.trailUses ?? 0 : 0) + 1;
+  fs.trailRound = state.round;
+  state.movePoints -= move.cost;
+  hero.pos = to;
+  const revealed = revealAround(state, to, Math.max(1, scoutRadiusOf(hero), gearReveal(hero)));
+  log(state, 'move', `${UNITS[hero.id].name} przemyka się obok strażników szlakiem przemytników${revealed.length ? ` (odkryto ${revealed.length})` : ''}.`);
+  arriveAt(state, hero);
+}
+
 /**
  * A copy of the game in which the active hero has just started the fight on hex `to` (a hero or a guardian there), for judging
  * how it would go without playing it; null when there is nothing to fight at `to`. Costs and the log of the real move are left out.
@@ -1054,6 +1085,8 @@ export function sparkBonus(state: GameState, unit: BattleState['units'][string])
   else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'clans') unit.status.damageReduction += FACTION_MECHANICS.shieldArmor * scaleOf(state);
   // The Court's Iskra works on the enemy (they start the battle with frost: `beginFight`), not on its own units.
   else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'frost') return;
+  // The Companies' Iskra works on the field (two more hidden traps: `trapSlots`), not on its own units.
+  else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'free') return;
   else unit.status.battleAttackBonus += EMPIRE.sparkAttack * scaleOf(state);
 }
 
@@ -1407,6 +1440,9 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'moveHero':
       moveHero(state, action.to);
       break;
+    case 'sneakHero':
+      sneakHero(state, action.to);
+      break;
     case 'endTurn':
       endTurn(state);
       break;
@@ -1444,7 +1480,7 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
       break;
     case 'deployUnits':
       if (!state.battle) throw new Error('Nie trwa żadna bitwa.');
-      deployUnits(state, action.faction, action.positions);
+      deployUnits(state, action.faction, action.positions, action.traps);
       break;
     case 'pickSpells':
       pickSpells(state, action.faction, action.spells);
@@ -1477,7 +1513,7 @@ function applyBattleAction(state: GameState, action: Action) {
       battleAttack(state, action.targetId, Boolean(action.useAbility), action.secondTargetId);
       break;
     case 'battleAbility':
-      battleAbility(state, action.targetId);
+      battleAbility(state, action.targetId, action.cell, action.from);
       break;
     case 'battleHop':
       battleHop(state, action.to);

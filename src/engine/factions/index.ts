@@ -5,13 +5,14 @@ import { HERDS } from './herds';
 import { UNDEAD } from './undead';
 import { CLANS } from './clans';
 import { FROST } from './frost';
+import { FREE } from './free';
 import { HORDE } from './horde';
 import type { Terrain } from '../data';
 import type { FactionPack } from './types';
 
 export type { FactionPack };
 
-export const FACTION_PACKS = { dawn: DAWN, horde: HORDE, herds: HERDS, undead: UNDEAD, clans: CLANS, frost: FROST } as const;
+export const FACTION_PACKS = { dawn: DAWN, horde: HORDE, herds: HERDS, undead: UNDEAD, clans: CLANS, frost: FROST, free: FREE } as const;
 export type PackId = keyof typeof FACTION_PACKS;
 export const PACK_IDS = Object.keys(FACTION_PACKS) as PackId[];
 

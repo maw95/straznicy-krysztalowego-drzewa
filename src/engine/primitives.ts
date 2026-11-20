@@ -8,7 +8,7 @@ import { abilityActive, abilityOf, battleFx, cellsOf, dealDamage, fitsAt, format
 import { log } from './log';
 import { supportTier, UNITS, type AbilityId, type Side } from './data';
 import { manaOf } from './magic';
-import type { BattleState, BattleUnit, GameState } from './types';
+import type { BattleState, BattleUnit, GameState, GroundEffect } from './types';
 
 const nearestCell = (u: BattleUnit, to: HexKey): HexKey => cellsOf(u).reduce((a, c) => (distance(parseKey(c), parseKey(to)) < distance(parseKey(a), parseKey(to)) ? c : a));
 const free = (b: BattleState, k: HexKey) => inLayout(b, k) && !b.obstacles.includes(k) && !unitAt(b, k);
@@ -102,27 +102,15 @@ export function drainMana(state: GameState, heroId: string, n: number): number {
   return taken;
 }
 
-/**
- * A ground effect: a cell that does something to the unit that enters it (a trap, a mire, a claimed field). Kept in the battle state so that the engine's
- * movement can ask `groundAt`; `hidden` ones are not shown to the enemy of the owner. `until` is the round it ends after (missing = the whole battle).
- */
-export interface GroundEffect {
-  cell: HexKey;
-  owner: 'dawn' | 'horde' | string;
-  kind: 'trap' | 'mire' | 'claimed';
-  /** Damage (trap), Szybkość lost (mire) or the bonus of the claim. */
-  power: number;
-  hidden?: boolean;
-  until?: number;
-}
+export type { GroundEffect } from './types';
 
-export function placeGround(b: BattleState & { ground?: GroundEffect[] }, effect: GroundEffect): boolean {
+export function placeGround(b: BattleState, effect: GroundEffect): boolean {
   if (!inLayout(b, effect.cell) || b.obstacles.includes(effect.cell)) return false;
   (b.ground ??= []).push(effect);
   return true;
 }
 
-export const groundAt = (b: BattleState & { ground?: GroundEffect[] }, cell: HexKey): GroundEffect[] => (b.ground ?? []).filter((g) => g.cell === cell && (g.until === undefined || g.until >= b.round));
+export const groundAt = (b: BattleState, cell: HexKey): GroundEffect[] => (b.ground ?? []).filter((g) => g.cell === cell && (g.until === undefined || g.until >= b.round));
 
 // ---------------------------------------------------------------- the Herds: push with a collision, resistance, a bonus for the target's state, taunt
 
@@ -134,7 +122,7 @@ export function canBeMoved(state: GameState, u: BattleUnit): boolean {
   const b = state.battle;
   if (!b || b.duel || u.tail || !u.pos || !u.alive) return false;
   // Runa Kamienia and the Sala Tarcz (level III, in formation) hold a unit in place as well.
-  if (u.status.unmovable || formationAnchored(state, u)) return false;
+  if (u.status.unmovable || u.status.dugIn || formationAnchored(state, u)) return false;
   return !(abilityActive(state) && IMMOVABLE_ABILITIES.includes(abilityOf(u)));
 }
 

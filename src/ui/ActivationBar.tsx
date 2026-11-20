@@ -1,16 +1,16 @@
 // The bar under the arena: the active unit and what it can do, its ability and end buttons, the initiative queue.
 
 import { abilityTextFor, FACTION_NAMES, scaleText, UNITS, type TeamId } from '../engine/data';
-import { abilityOf, livingUnits, unitSpeed, UNTARGETED_ABILITIES } from '../engine/battle';
+import { abilityOf, CELL_ABILITIES, livingUnits, unitSpeed, UNTARGETED_ABILITIES } from '../engine/battle';
 import { isDigital, type Action, type BattleState, type BattleUnit, type GameState } from '../engine/types';
 import { abilityArt, asset, Frame, Medal, Portrait, SIDE_RING } from './common';
 import { statusList, StatusBadge } from './battleStatus';
 
 /** The line under the active unit's name: what the player can do now. */
-export function activationHint(b: BattleState, o: { deploySide: TeamId | null; picked: string | null; myTurn: boolean; moves: number; targets: number; sideName?: (t: TeamId) => string }): string {
+export function activationHint(b: BattleState, o: { deploySide: TeamId | null; picked: string | null; trapMode?: boolean; myTurn: boolean; moves: number; targets: number; sideName?: (t: TeamId) => string }): string {
   if (b.stage === 'deploy') {
     if (!o.deploySide) return `${o.sideName ? o.sideName(b.needsDeploy[0]) : FACTION_NAMES[b.needsDeploy[0]]} ustawia jednostki…`;
-    return o.picked ? 'Wskaż złote pole w swojej kolumnie' : 'Kliknij jednostkę, potem pole';
+    return o.trapMode ? 'Kliknij pole swojej połowy, by położyć sidło' : o.picked ? 'Wskaż złote pole w swojej kolumnie' : 'Kliknij jednostkę, potem pole';
   }
   if (!o.myTurn) return 'Ruch przeciwnika…';
   const act = b.activation!;
@@ -31,6 +31,11 @@ interface Props {
   myTurn: boolean;
   deploySide: TeamId | null;
   placing: Record<string, string>;
+  /** The Free Companies' traps while deploying: how many may be laid, the cells chosen, and the mode in which a click on the arena lays one. */
+  trapSlots?: number;
+  traps?: string[];
+  trapMode?: boolean;
+  setTrapMode?: (v: boolean) => void;
   attackAbility: boolean;
   useAbility: boolean;
   setUseAbility: (v: boolean) => void;
@@ -42,7 +47,7 @@ interface Props {
   footer: React.ReactNode;
 }
 
-export function ActivationBar({ state, active, hint, myTurn, deploySide, placing, attackAbility, useAbility, setUseAbility, freeAbilityReady, freeAbility, setFreeAbility, onAction, reset, footer }: Props) {
+export function ActivationBar({ state, active, hint, myTurn, deploySide, placing, trapSlots = 0, traps = [], trapMode = false, setTrapMode, attackAbility, useAbility, setUseAbility, freeAbilityReady, freeAbility, setFreeAbility, onAction, reset, footer }: Props) {
   const b = state.battle!;
   const act = b.activation;
   const ab = active ? abilityOf(active) : null;
@@ -71,11 +76,16 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
           <div style={{ fontSize: 14, color: 'var(--muted)' }}>{hint}</div>
         </div>
       </div>
+      {deploySide && trapSlots > 0 && (
+        <button className={`btn plate parch act-btn ${trapMode ? 'on' : ''}`} data-trap-mode style={{ height: 60, padding: '0 14px', fontSize: 15 }} title="Sidła są ukryte przed wrogiem. Kliknij pole swojej połowy, by położyć sidło (albo je zdjąć); nieustawione położy za ciebie komputer." onClick={() => { setTrapMode?.(!trapMode); }}>
+          Sidła {traps.length}/{trapSlots}{trapMode ? ' ✓' : ''}
+        </button>
+      )}
       {deploySide && (
         <button
           className="btn prim"
           style={{ height: 60, padding: '0 22px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 19 }}
-          onClick={() => onAction({ type: 'deployUnits', faction: deploySide, positions: placing })}
+          onClick={() => onAction({ type: 'deployUnits', faction: deploySide, positions: placing, ...(trapSlots > 0 ? { traps } : {}) })}
         >
           <Medal fill="mRed" glyph="gSwords" size={32} />
           Gotowe — do bitwy
@@ -99,6 +109,9 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
               <img src={asset(`cards/abilities/${abilityArt(abilityOf(active))}.png`)} alt="" style={{ width: 34, height: 34 }} />
               <span style={{ fontSize: 13, lineHeight: 1.05, textAlign: 'center' }}>{UNITS[active.defId].abilityName}</span>
             </button>
+          )}
+          {freeAbility && ab && CELL_ABILITIES.includes(ab) && (
+            <button className="btn plate parch act-btn" data-auto-cell style={{ width: 96, height: 74, fontSize: 13 }} title="Zdolność działa na polu: wskaż je na arenie albo wybierz najlepsze pole za mnie." onClick={() => onAction({ type: 'battleAbility' })}>Najlepsze pole</button>
           )}
           <button className="btn prim act-btn" style={{ width: 96, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, fontSize: 15 }} onClick={() => { reset(); onAction({ type: 'endActivation' }); }}>
             <Medal fill="mGreen" glyph="gHourglass" size={30} />

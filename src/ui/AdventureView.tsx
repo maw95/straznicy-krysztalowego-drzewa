@@ -4,7 +4,7 @@ import { heroLabel } from '../engine/realm';
 import { shardsOf, shardTotal } from '../engine/empire';
 import { MAGIC, manaOf, maxMana, portalTarget, SPELLS } from '../engine/magic';
 import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId, type TeamId } from '../engine/data';
-import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots } from '../engine/game';
+import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots, sneakMoves } from '../engine/game';
 import { fightLevelAt } from './fightBadges';
 import { EnemyPill, FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
@@ -764,6 +764,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               <button className="btn plate parch" style={{ padding: '2px 8px', alignSelf: 'flex-start' }} onClick={() => setRevive(null)}>Anuluj</button>
             </div>
           )}
+          {canAct && sneakMoves(state).map((m) => (
+            <button key={m.to} className="btn plate parch" data-sneak={m.to} style={{ padding: '6px 10px', fontSize: 15 }} title="Szlaki Przemytnicze: raz na rundę bohater Kompanii przechodzi przez pole strażników bez walki." onClick={() => onAction({ type: 'sneakHero', to: m.to })}>
+              Przemknij obok strażników ({UNITS[state.crystals[state.tiles[m.to].crystalId!].guardian!]?.name ?? 'strażnicy'})
+            </button>
+          ))}
           <button className="btn prim" disabled={!canAct} style={{ height: 52, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, fontSize: 21, flex: 'none' }} onClick={() => onAction({ type: 'endTurn' })}>
             <Medal fill="mGreen" glyph="gHourglass" size={32} />
             Zakończ turę

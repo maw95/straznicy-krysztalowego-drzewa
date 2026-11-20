@@ -316,6 +316,11 @@ export interface FactionState {
   runes?: Record<string, Rune[]>;
   /** The round a rune was last forged (the Runiczna Kuźnia forges one a round for the whole faction). */
   runeRound?: number;
+  /** Paserka (the Free Companies): the round the second level last brought a random treasure. */
+  fenceRound?: number;
+  /** Szlaki Przemytnicze: the round of the last hero's walk through a guardian's hex, and how many there were in it. */
+  trailRound?: number;
+  trailUses?: number;
 }
 
 /** A rune of the Runiczna Kuźnia: +1 A, +1 Ż or armour 1 in every battle of the unit. */
@@ -405,6 +410,34 @@ export interface UnitStatus {
   brittle?: true;
   /** Zimne Światło: S the unit loses from an aura of the enemy next to it (recounted at the start of every round and activation). */
   auraChill?: number;
+  /** Wolne Kompanie. Oznaczenie: the side whose attacks hit this unit harder, and the round the mark lasts to the end of (Oko Kruka). */
+  marked?: { by: Side; round: number };
+  /** Ukryty (Jenot Szpieg): the unit is unseen by the enemy: it cannot be chosen as a target, and the enemy's screen and bots do not know where it stands. */
+  veiled?: true;
+  /** Okop: activations of the unit left in which it has armour and cannot be moved. */
+  dugIn?: number;
+  /** Sidła (third level): the unit that was held by a trap cannot move in its next activation (set when the one it was caught in ends). */
+  rootLater?: true;
+  /** Ruchoma Twierdza: the round the turret last shot. */
+  towerRound?: number;
+}
+
+/**
+ * A ground effect on a cell of the arena: a trap (Sidła of the Free Companies). A `hidden` one is known only to its owner's side and to the sides in `seenBy`
+ * (the Oko Kruka uncovers it); `redactHidden` (hidden.ts) leaves it out of the state shown to everybody else. It goes off once, on the first enemy unit that steps on it.
+ */
+export interface GroundEffect {
+  cell: HexKey;
+  owner: Side;
+  kind: 'trap' | 'mire' | 'claimed';
+  /** Damage (trap), Szybkość lost (mire) or the bonus of the claim. */
+  power: number;
+  /** Trap only: the unit it holds (cannot move until the end of its next activation); the third level of the Warsztat Sideł. */
+  hold?: boolean;
+  hidden?: boolean;
+  seenBy?: Side[];
+  /** The round it ends after (missing = the whole battle). */
+  until?: number;
 }
 
 /** What the artifacts do for a unit in this battle (sites.ts `applyGear`); numbers are in this battle's scale. */
@@ -484,6 +517,10 @@ export interface Activation {
   spell?: boolean;
   /** Siege: the unit was already hurt by the moat in this activation (it is hurt once, on entering or at the end of its turn). */
   moat?: boolean;
+  /** Szalony Skok: the unit has leaped in this activation (its blow is harder). */
+  leaped?: true;
+  /** The activation was lost (a stunned or frozen unit): nothing of the unit's end-of-activation effects fires. */
+  skipped?: true;
 }
 
 /** A settlement's defences in a battle fought for it (level 4, wide arena): everything stands in front of the defender's side. */
@@ -526,6 +563,8 @@ export interface BattleState {
   bloodlust?: number;
   /** Wieczna Warta: how many times each side's Kurhan has raised a fallen support in this battle. */
   ward?: Record<string, number>;
+  /** Sidła: the ground effects of this battle (hidden traps). Always read through `groundAt` and shown through `redactHidden`. */
+  ground?: GroundEffect[];
   /** Fortyfikacja: the cells of wall the Kolos Kuźni has put up in this battle (they are in `obstacles` as well; the screen draws them). */
   raised?: HexKey[];
   /** Lodowa Ściana: the cells of ice wall (also in `obstacles` and `raised`) and the last round each stands in. */
@@ -694,13 +733,15 @@ export type Action =
   | { type: 'passArtifact'; artifactId: string; toHeroId: string }
   | { type: 'useMapItem'; itemId: string; targets?: HexKey[]; unitId?: string }
   | { type: 'selectSupports'; faction: TeamId; supportIds: string[] }
-  | { type: 'deployUnits'; faction: TeamId; positions: Record<string, HexKey> }
+  /** `traps`: where the Free Companies lay their hidden traps (cells of their half of the arena; fewer than they may lay: the rest is laid for them). */
+  | { type: 'deployUnits'; faction: TeamId; positions: Record<string, HexKey>; traps?: HexKey[] }
   | { type: 'draftPick'; faction: TeamId; kind: ItemKind }
   | { type: 'pickGear'; faction: TeamId; artifactId: string }
   | { type: 'pickSpells'; faction: TeamId; spells: SpellId[] }
   | { type: 'battleMove'; to: HexKey; tail?: HexKey }
   | { type: 'battleAttack'; targetId: string; secondTargetId?: string; useAbility?: boolean }
-  | { type: 'battleAbility'; targetId?: string }
+  /** `cell`: where a free ability that needs a cell works (Fortel: the trap; Tama: the obstacle; Ładunek: the own trap that goes off); `from`: the own trap Fortel moves. Missing: the best cell for the unit. */
+  | { type: 'battleAbility'; targetId?: string; cell?: HexKey; from?: HexKey }
   | { type: 'battleHop'; to: HexKey }
   | { type: 'battleTeleport'; to: HexKey }
   | { type: 'battleItem'; itemId: string; targetId?: string; targetIds?: string[]; to?: HexKey; hornMode?: 'swap' | 'extra'; reserveId?: string }
@@ -732,5 +773,7 @@ export type Action =
   | { type: 'kingdomGarrison'; settlementId: string; unitId: string; dir: 'in' | 'out' }
   /** Siege: the attacker's catapult shoots a wall, the gate or a tower (once a round). */
   | { type: 'battleCatapult'; cell: HexKey }
+  /** Szlaki Przemytnicze: the active hero walks through the hex of a guardian or neutrals without a fight (once a round). */
+  | { type: 'sneakHero'; to: HexKey }
   | { type: 'hutDeliver' }
   | { type: 'chestTake'; what: 'artifact' | 'gold' };

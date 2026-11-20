@@ -6,9 +6,9 @@ import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, STAT_SCALE, supportTier, battle
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, DIRECTIONS, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
-import { ARENA_COLUMNS, MIDDLE_HALF, arenaCell, cellOf, columnCells, inArena, WIDE_COLUMNS, WIDE_MIDDLE_ROW, WIDE_ROWS, wideCell, layoutCells, inLayout, wideColumnCells, WIDE_SET } from './arenaLayout';
+import { ARENA_COLUMNS, MIDDLE_HALF, arenaCell, cellOf, columnCells, inArena, WIDE_COLUMNS, WIDE_MIDDLE_ROW, WIDE_ROWS, wideCell, wideCellOf, layoutCells, inLayout, middleDistance, wideColumnCells, WIDE_SET } from './arenaLayout';
 export * from './arenaLayout';
-import { isDigital, type BattleState, type BattleUnit, type GameState, type SiegeState, type UnitStatus } from './types';
+import { isDigital, type BattleState, type BattleUnit, type GameState, type GroundEffect, type SiegeState, type UnitStatus } from './types';
 import { SIEGE } from './economy';
 import { pushWithCollision, previewPush, pushedThisRound, taunter, canBeMoved, raiseUnit, fallenSupports, drainMana, pushAway } from './primitives';
 import { FACTION_MECHANICS, hasSpark, mechanicLevel } from './empire';
@@ -188,8 +188,9 @@ export function unitAt(b: BattleState, k: HexKey): BattleUnit | undefined {
   return Object.values(b.units).find((u) => u.alive && (u.pos === k || u.tail === k));
 }
 
+/** The enemies the unit can see: a veiled one (Ukryty) is not among them, so nobody can choose it as a target, and the bots do not know it is there. */
 export function enemiesOf(b: BattleState, u: BattleUnit): BattleUnit[] {
-  return livingUnits(b).filter((o) => o.side !== u.side);
+  return livingUnits(b).filter((o) => o.side !== u.side && !o.status.veiled);
 }
 
 export function alliesOf(b: BattleState, u: BattleUnit): BattleUnit[] {
@@ -276,6 +277,8 @@ export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, num
   for (const [k, d] of walked.dist) if (d > 0 && !occupant(k) && !obstacles.has(k) && roomy(k)) out.set(k, d);
   // The leap adds the cells that can be reached only over something (a cell that can be walked to keeps its walking distance).
   if (goatLeapReady(state, u)) for (const [k, d] of walkSearch(state, u, true).dist) if (d > 0 && !out.has(k) && !occupant(k) && !obstacles.has(k) && roomy(k)) out.set(k, d);
+  // Szalony Skok adds the cells within the leap's range that the walk does not reach.
+  for (const k of leapOnlyCells(state, u)) out.set(k, distance(parseKey(u.pos), parseKey(k)));
   return out;
 }
 
@@ -434,6 +437,12 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
     if (useAbility && ab === 'fireBreath') dmg += abilityNum(att, 'breathBonus') * scaleOf(state);
     if (ab === 'standShot' && movedDistance === 0) dmg += ABILITY.standShotBonus * scaleOf(state);
     if (ab === 'giantBane' && isLarge(state, target)) dmg += ABILITY.giantBonus * scaleOf(state);
+    // Wolne Kompanie. Oznaczenie: every attack of the marker's side on a marked target (this round) hits harder, and the squirrel's arrow harder still.
+    const mark = target.status.marked;
+    if (mark && mark.by === att.side && mark.round === state.battle!.round) dmg += (ABILITY.markBonus + (ab === 'branchShot' ? ABILITY.branchBonus : 0)) * scaleOf(state);
+    if (ab === 'woundFury') dmg += Math.min(ABILITY.furyMax, Math.floor((att.maxHp - att.hp) / (ABILITY.furyStep * hpScaleOf(state)))) * scaleOf(state);
+    if (ab === 'veiled' && att.status.veiled) dmg += ABILITY.veilBonus * scaleOf(state);
+    if (ab === 'wildLeap' && state.battle!.activation?.unitId === att.id && state.battle!.activation.leaped) dmg += ABILITY.wildLeapBonus * scaleOf(state);
     // Kryształowa Strzała: a target that has frost takes more.
     if (ab === 'crystalArrow' && (target.status.frost ?? 0) >= 1) dmg += ABILITY.crystalBonus * scaleOf(state);
     if (useAbility && ab === 'spectralCharge') dmg += (ABILITY.spectralBonus + (fromBehind(state, att, target) ? ABILITY.spectralBehind : 0)) * scaleOf(state);
@@ -451,9 +460,9 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
 }
 
 /** Abilities that are switched on for a single attack. */
-export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'frostSlow', 'frostGrip', 'iceBlow'];
+export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'frostSlow', 'frostGrip', 'iceBlow', 'stinkBomb'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail', 'pickpocket', 'branchShot', 'veiled', 'woundFury', 'riposte', 'towerShot', 'wildLeap'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
@@ -476,9 +485,11 @@ export function pushCell(state: GameState, from: HexKey, target: HexKey): HexKey
   return k;
 }
 /** Abilities used as a free action during the unit's activation. */
-export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'abduct', 'longNight'];
+export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'abduct', 'longNight', 'ploy', 'dugIn', 'ravenEye', 'dam', 'blast'];
 /** The free abilities that need no target (one click fires them); the others ask the player to pick a unit. */
-export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify', 'iceWall', 'longNight'];
+export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify', 'iceWall', 'longNight', 'dugIn'];
+/** The free abilities that work on a cell: the player may pick it (the action's `cell`), without one the best cell for the unit is taken (Fortel, Tama, Ładunek). */
+export const CELL_ABILITIES: AbilityId[] = ['ploy', 'dam', 'blast'];
 
 // ---------------------------------------------------------------- lifecycle
 
@@ -514,6 +525,8 @@ function beginFight(state: GameState) {
   b.stage = 'fight';
   log(state, 'battle', 'Bitwa się rozpoczyna.');
   sparkFrost(state);
+  // Ukryty: the Jenot Szpieg starts the fight unseen.
+  if (abilityActive(state) && !b.duel) for (const x of Object.values(b.units)) if (x.alive && abilityOf(x) === 'veiled') x.status.veiled = true;
   beginRound(state, 1);
 }
 
@@ -556,7 +569,7 @@ export function deployHeads(b: BattleState, side: Side, k: HexKey): HexKey[] {
     .filter((c) => inArena(c) && !b.obstacles.includes(c));
 }
 
-export function deployUnits(state: GameState, faction: TeamId, positions: Record<string, HexKey>) {
+export function deployUnits(state: GameState, faction: TeamId, positions: Record<string, HexKey>, traps?: HexKey[]) {
   const b = state.battle!;
   if (b.stage !== 'deploy' || b.needsDeploy[0] !== faction) throw new Error('Teraz nie ustawia ta frakcja.');
   const own = Object.values(b.units).filter((u) => u.side === faction);
@@ -589,8 +602,12 @@ export function deployUnits(state: GameState, faction: TeamId, positions: Record
     if (at.tail) u.tail = at.tail;
     else delete u.tail;
   }
+  // Sidła: the Free Companies lay their hidden traps with the units (the cells they chose, the rest are laid for them); nothing is said of where.
+  const slots = trapSlots(state, faction);
+  if (slots) layDeployTraps(state, faction, traps, slots);
+  else if (traps?.length) throw new Error('Ta frakcja nie kładzie pułapek.');
   b.needsDeploy.shift();
-  log(state, 'battle', `${FACTION_NAMES[raceOf(state, faction)]} ustawia swoje jednostki.`);
+  log(state, 'battle', `${FACTION_NAMES[raceOf(state, faction)]} ustawia swoje jednostki${slots ? ' i przygotowuje sidła' : ''}.`);
   if (!b.needsDeploy.length) beginFight(state);
 }
 
@@ -713,8 +730,14 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
     u.status.slowLater = 0;
   }
   u.status.anchored = false;
+  // Sidła (third level): a unit that was held by a trap cannot move in this activation.
+  if (u.status.rootLater) {
+    delete u.status.rootLater;
+    u.status.rootedNext = true;
+  }
   // Młot Przodków: a stunned unit loses its activation.
   if (u.status.stunned) {
+    b.activation.skipped = true;
     delete u.status.stunned;
     delete u.status.brittle;
     log(state, 'ability', `${unitName(u)} jest ogłuszony i traci aktywację.`);
@@ -765,6 +788,12 @@ export function endActivation(state: GameState) {
     delete u.status.tauntedBy;
     // Siege: a unit that ends its turn standing in the moat is hurt (once per activation: not again when it has just walked in).
     if (u.alive && inMoat(b, u)) moatHurts(state, u);
+    // Okop wears off after the Saper's next activation; the Waran's turret shoots once a round.
+    if (u.status.dugIn && !act.skipped) {
+      u.status.dugIn -= 1;
+      if (!u.status.dugIn) delete u.status.dugIn;
+    }
+    if (u.alive && !act.skipped) towerFire(state, u);
     // Buty Wartownika (Zakotwiczenie): standing still hardens the hero until its next activation.
     if (u.gear?.anchor && u.alive && !act.moved) u.status.anchored = true;
   }
@@ -792,6 +821,11 @@ export function endActivation(state: GameState) {
 export function checkBattleEnd(state: GameState): boolean {
   const b = state.battle!;
   if (b.stage !== 'fight') return b.stage === 'over';
+  // Ukryty: a side whose every living unit is veiled has nobody left to show the enemy: they step out (so the fight cannot stall on a target nobody may choose).
+  for (const side of [b.attacker, b.defender]) {
+    const mine = livingUnits(b, side);
+    if (mine.length && mine.every((x) => x.status.veiled)) for (const x of mine) unveil(state, x);
+  }
   const a = livingUnits(b, b.attacker).length;
   const d = livingUnits(b, b.defender).length;
   if (a > 0 && d > 0) return false;
@@ -1114,6 +1148,8 @@ export function predictDamage(
   }
   // Gęste Futro (Jak Lodowcowy): arrows and bolts lose a bit (at least 1 gets through).
   if (armour && dmg > 0 && abilityOf(victim) === 'thickFur' && abilityActive(state) && UNITS[att.defId].attackType === 'ranged') dmg = Math.max(1, dmg - ABILITY.furArmor * scaleOf(state));
+  // Okop: the Saper dug in takes a bit off every blow that lands (at least 1 gets through).
+  if (armour && dmg > 0 && victim.status.dugIn) dmg = Math.max(1, dmg - ABILITY.dugInArmor * scaleOf(state));
   // A frozen unit (third level of the Pałac Szronu): the next blow cracks the ice and does one more.
   if (victim.status.brittle && dmg > 0) dmg += scaleOf(state);
   // The hero's shield (artifacts): the first blow of the battle is halved, every blow is weaker by its defence, but a blow that lands takes at least 1.
@@ -1176,6 +1212,14 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
     delete victim.status.brittle;
     log(state, 'ability', `Lód na ${unitName(victim)} pęka.`);
   }
+  // Kieszonkowiec: the first blow of the Kuna at a hero in this battle takes a coin off it.
+  if (abilityOf(att) === 'pickpocket' && abilityActive(state) && !att.abilityUsed && p.damage > 0 && att.side !== 'neutral' && UNITS[victim.defId].kind === 'hero' && state.kingdom) {
+    att.abilityUsed = true;
+    state.kingdom.gold[att.side] += ABILITY.pickpocketGold;
+    log(state, 'ability', `${unitName(att)} podkrada ${ABILITY.pickpocketGold} zł (${UNITS[att.defId].abilityName}).`, att.side);
+  }
+  // Riposta: whoever strikes the Kocur in melee and both live through it takes a counterblow.
+  if (abilityOf(victim) === 'riposte' && abilityActive(state) && victim.alive && att.alive && UNITS[att.defId].attackType === 'melee' && unitsAdjacent(att, victim)) dealDamage(state, att, ABILITY.riposteDamage * scaleOf(state), `Riposta (${unitName(victim)})`);
   // Mroźna Zbroja: whoever hits the Rycerz Lodowej Zbroi in melee gets frost.
   if (abilityOf(victim) === 'frostArmor' && abilityActive(state) && p.damage > 0 && att.alive && UNITS[att.defId].attackType === 'melee' && unitsAdjacent(att, victim)) applyFrost(state, victim.side, att);
   // Wyładowanie: whoever strikes the Król Burzy from close by is shocked.
@@ -1212,13 +1256,40 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   const act = b.activation!;
   const u = b.units[act.unitId];
   if (act.moved || act.attacked) throw new Error('Ta jednostka już się ruszyła.');
+  // Ukryty: a unit that walks into the cell of a veiled enemy finds it there: the Jenot is uncovered, and nobody moves.
+  const bumped = unitAt(b, to);
+  if (bumped && bumped.status.veiled && bumped.side !== u.side) {
+    unveil(state, bumped);
+    return;
+  }
   const cells = reachableCells(state, u);
-  const steps = cells.get(to);
+  let steps = cells.get(to);
   if (steps === undefined) throw new Error('Pole poza zasięgiem ruchu.');
   if (tail && isLarge(state, u) && !tailOptions(b, u, to).includes(tail)) throw new Error('Ogon nie zmieści się na tym polu.');
+  let leapt = false;
   if (goatLeapReady(state, u) && !walkSearch(state, u).dist.has(to)) {
     u.status.leapUsed = true;
+    leapt = true;
     log(state, 'ability', `${unitName(u)} przeskakuje po turniach (${UNITS[u.defId].abilityName}).`);
+  }
+  // Szalony Skok: the leap goes over everything and the blow after it is harder.
+  if (wildLeapReady(state, u) && leapOnlyCells(state, u).has(to)) {
+    u.status.leapUsed = true;
+    act.leaped = true;
+    leapt = true;
+    log(state, 'ability', `${unitName(u)} skacze ponad wszystkim (${UNITS[u.defId].abilityName}).`);
+  }
+  // Sidła: a walker stops on the first cell of its way that holds a trap of the enemy (it ends its move there, and the trap goes off); a flyer, a leap and a hop only meet the one they land on.
+  if (b.ground?.length && !leapt && !b.duel) {
+    const path = movePath(state, u, to);
+    for (let i = 1; i < path.length - 1; i++) {
+      if (!enemyTrapAt(b, u.side, path[i])) continue;
+      if (isLarge(state, u) && !tailOptions(b, u, path[i]).length) continue;
+      to = path[i];
+      steps = i;
+      tail = undefined;
+      break;
+    }
   }
   const from = u.pos ? parseKey(u.pos) : null;
   // Ślad Zamieci: the Ryś leaves a trail on the cells it runs through; an enemy that steps on one (this round) is slowed in its next activation.
@@ -1423,6 +1494,17 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
         }
         applyFrost(state, u.side, t);
       }
+      // Smrodliwa Mikstura: the target and the enemies next to it are poisoned.
+      if (ab === 'stinkBomb') {
+        const cloud = [t, ...enemiesOf(b, u).filter((x) => x.id !== t.id && x.alive && unitsAdjacent(x, t))];
+        for (const x of cloud) {
+          if (resistsStatus(state, x, false) || abilityOf(x) === 'bronzeQuills') log(state, 'ability', `${unitName(x)} jest odporny na truciznę.`);
+          else {
+            x.status.poisoned = ABILITY.poisonTicks;
+            log(state, 'ability', `${unitName(x)} zostaje zatruty: straci ${ABILITY.poisonDamage * scaleOf(state)} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji.`);
+          }
+        }
+      }
       // Młot Przodków: the one hit loses its next activation.
       if (ab === 'stunBlow') {
         t.status.stunned = true;
@@ -1465,6 +1547,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   u.status.nextAttackBonus = 0;
   u.status.cursedNext = 0;
   if (u.gear?.firstStrike) delete u.gear.firstStrike;
+  // Ukryty: the attack uncovers the Jenot.
+  if (u.status.veiled) unveil(state, u);
   // Bitewny Szał: a kill feeds the next blow.
   if (ab === 'bloodRage' && abilityActive(state) && u.alive && targets.some((t) => !t.alive)) {
     u.status.nextAttackBonus += ABILITY.bloodRageBonus * scaleOf(state);
@@ -1562,9 +1646,198 @@ export function battleTeleport(state: GameState, to: HexKey) {
 /** Pola Naładowane: a unit that has stepped on a charged field takes damage. */
 export function stepOnFields(state: GameState, u: BattleUnit) {
   const b = state.battle!;
+  if (!u.alive) return;
+  triggerTraps(state, u);
   if (!b.fields?.length || !u.alive) return;
   const here = cellsOf(u);
   if (b.fields.some((f) => f.until >= b.round && here.includes(f.cell))) dealDamage(state, u, ABILITY.chargedFieldDamage * scaleOf(state), 'Pole Naładowane');
+}
+
+// ---------------------------------------------------------------- the Free Companies: hidden traps (Sidła), the mark, the veil
+
+/** The level of the Warsztat Sideł (the Free Companies' mechanic) a side has: 0 for any other faction or without the building. */
+export const trapLevel = (state: GameState, side: Side): number => (side !== 'neutral' && raceOf(state, side) === 'free' ? mechLevel(state, side) : 0);
+
+/** How many hidden traps a side lays before a battle: the Warsztat Sideł by its level, and the Iskra's two on top (none in a duel, none without abilities). */
+export function trapSlots(state: GameState, side: Side): number {
+  if (side === 'neutral' || raceOf(state, side) !== 'free' || !abilityActive(state) || state.battle?.duel) return 0;
+  const level = trapLevel(state, side);
+  return (level ? FACTION_MECHANICS.trapCount[Math.min(level, 4) - 1] : 0) + (hasSpark(state, side) ? FACTION_MECHANICS.sparkTraps : 0);
+}
+
+const columnOf = (b: BattleState, k: HexKey): number => (b.layout === 'wide' ? wideCellOf(k).col : cellOf(k).col);
+
+/** The cells where a side may lay a trap: its own half of the arena, without its start columns (the units stand there) and the middle column, and without obstacles. */
+export function trapZone(b: BattleState, side: Side): HexKey[] {
+  const last = (b.layout === 'wide' ? WIDE_COLUMNS : ARENA_COLUMNS) - 1;
+  const middle = last / 2;
+  const depth = b.deployDepth?.[side] ?? 0;
+  const attacking = side === b.attacker;
+  return layoutCells(b).filter((k) => {
+    const col = columnOf(b, k);
+    return !b.obstacles.includes(k) && (attacking ? col > depth && col < middle : col < last - depth && col > middle);
+  });
+}
+
+/** The traps a side has in the field (its own: it always knows them). */
+export const trapsOf = (b: BattleState, side: Side): GroundEffect[] => (b.ground ?? []).filter((g) => g.kind === 'trap' && g.owner === side);
+
+/** Whether a trap of another side than `side` lies on the cell (the engine's knowledge: the rules decide with it, no bot and no screen reads it). */
+export const enemyTrapAt = (b: BattleState, side: Side, cell: HexKey): boolean => (b.ground ?? []).some((g) => g.kind === 'trap' && g.owner !== side && g.cell === cell && (g.until === undefined || g.until >= b.round));
+
+/** Whether a side may lay a trap on the cell now: in its zone, free of units, with no trap of its own there. */
+export const mayLayTrap = (b: BattleState, side: Side, cell: HexKey): boolean => trapZone(b, side).includes(cell) && !unitAt(b, cell) && !trapsOf(b, side).some((g) => g.cell === cell);
+
+export function layTrap(state: GameState, side: Side, cell: HexKey): void {
+  const b = state.battle!;
+  (b.ground ??= []).push({ cell, owner: side, kind: 'trap', power: ABILITY.trapDamage * scaleOf(state), hidden: true, ...(trapLevel(state, side) >= FACTION_MECHANICS.trapHoldLevel ? { hold: true } : {}) });
+}
+
+/**
+ * Where a side lays `n` more traps when nobody tells it (the bots, and the humans who lay fewer than they may): in front of its own shooters (the units
+ * the enemy wants to reach), near the middle, never next to each other. Reads only what is on the arena for everybody (positions of units), never another side's traps.
+ */
+export function autoTrapCells(state: GameState, side: Side, n: number): HexKey[] {
+  const b = state.battle!;
+  const mine = livingUnits(b, side);
+  const guarded = mine.filter((x) => UNITS[x.defId].attackType === 'ranged');
+  const guards = (guarded.length ? guarded : mine).flatMap(cellsOf);
+  const last = (b.layout === 'wide' ? WIDE_COLUMNS : ARENA_COLUMNS) - 1;
+  const chosen: HexKey[] = [];
+  const zone = trapZone(b, side).filter((k) => mayLayTrap(b, side, k));
+  for (let i = 0; i < n; i++) {
+    let best: { k: HexKey; score: number } | null = null;
+    for (const k of zone) {
+      if (chosen.includes(k)) continue;
+      const h = parseKey(k);
+      let score = guards.reduce((sum, g) => sum + Math.max(0, 4 - distance(parseKey(g), h)), 0) / Math.max(1, guards.length) * 2;
+      score += (1 - Math.abs(columnOf(b, k) - last / 2) / (last / 2)) * 1.5 - Math.abs(wideOrHalfRow(b, k)) * 0.15;
+      if (chosen.some((c) => distance(parseKey(c), h) <= 1)) score -= 5;
+      if (!best || score > best.score + 1e-9 || (Math.abs(score - best.score) <= 1e-9 && k < best.k)) best = { k, score };
+    }
+    if (!best) break;
+    chosen.push(best.k);
+  }
+  return chosen;
+}
+
+/** How far a cell lies from the middle row (signed distance is not needed: the middle rows are the ones traps are best laid in). */
+const wideOrHalfRow = (b: BattleState, k: HexKey): number => middleDistance(b, k) / (b.layout === 'wide' ? 1 : 2);
+
+/** The traps a side lays when it deploys: the cells it chose (checked) and the rest laid for it. */
+function layDeployTraps(state: GameState, side: Side, chosen: HexKey[] | undefined, slots: number): void {
+  const b = state.battle!;
+  const picks = chosen ?? [];
+  if (new Set(picks).size !== picks.length) throw new Error('Dwie pułapki nie mogą leżeć na jednym polu.');
+  if (picks.length > slots) throw new Error(`Można położyć najwyżej ${slots} pułapek.`);
+  for (const k of picks) if (!mayLayTrap(b, side, k)) throw new Error('Pułapkę można położyć tylko na wolnym polu swojej połowy areny.');
+  for (const k of picks) layTrap(state, side, k);
+  for (const k of autoTrapCells(state, side, slots - picks.length)) layTrap(state, side, k);
+}
+
+/** A unit stands on a trap of the enemy: the trap goes off (it is spent and everybody sees it), hurts the unit and with the third level of the Warsztat holds it. */
+function triggerTraps(state: GameState, u: BattleUnit): void {
+  const b = state.battle!;
+  if (!b.ground?.length) return;
+  const here = cellsOf(u);
+  for (const g of [...b.ground]) {
+    if (g.kind !== 'trap' || g.owner === u.side || !here.includes(g.cell) || (g.until !== undefined && g.until < b.round)) continue;
+    b.ground = b.ground.filter((x) => x !== g);
+    log(state, 'ability', `${unitName(u)} wpada w sidła!`);
+    dealDamage(state, u, g.power, 'Sidła');
+    if (u.alive && g.hold) {
+      if (resistsStatus(state, u, true)) log(state, 'ability', `${unitName(u)} jest odporny na unieruchomienie.`);
+      else {
+        u.status.rootLater = true;
+        log(state, 'ability', `${unitName(u)} zostaje unieruchomiony do końca swojej następnej aktywacji (sidła).`);
+      }
+    }
+    if (!u.alive) return;
+  }
+}
+
+/** Ukryty: the unit steps out of hiding (the enemy sees and may choose it from now on). */
+export function unveil(state: GameState, u: BattleUnit): void {
+  if (!u.status.veiled) return;
+  delete u.status.veiled;
+  log(state, 'ability', `${unitName(u)} wychodzi z ukrycia.`);
+}
+
+/** Ruchoma Twierdza: the turret on the Waran's back shoots the nearest enemy in its line of sight, once a round (at the end of the Waran's activation). */
+function towerFire(state: GameState, u: BattleUnit): void {
+  const b = state.battle!;
+  if (abilityOf(u) !== 'towerShot' || !abilityActive(state) || b.duel || !u.pos || u.status.towerRound === b.round) return;
+  const sees = (e: BattleUnit) => cellsOf(e).some((c) => hasLineOfSight(state, u.pos!, c));
+  const t = enemiesOf(b, u).filter(sees).sort((x, y) => unitDistance(u, x) - unitDistance(u, y) || x.hp - y.hp || (x.id < y.id ? -1 : 1))[0];
+  if (!t) return;
+  u.status.towerRound = b.round;
+  log(state, 'ability', `${unitName(u)}: wieżyczka strzela do ${unitName(t)}.`);
+  dealDamage(state, t, ABILITY.towerDamage * scaleOf(state), 'Wieżyczka');
+}
+
+/** Szalony Skok: Żbiczka may leap once per battle (not in a siege, not rooted). */
+export const wildLeapReady = (state: GameState, u: BattleUnit): boolean =>
+  abilityOf(u) === 'wildLeap' && abilityActive(state) && !u.status.leapUsed && !u.status.rootedNext && !state.battle?.siege && !state.battle?.duel && !isLarge(state, u);
+
+/** The cells the unit can reach only by a leap (Szalony Skok): within its range, free, and not already within its walk. */
+export function leapOnlyCells(state: GameState, u: BattleUnit): Set<HexKey> {
+  const b = state.battle!;
+  const out = new Set<HexKey>();
+  if (!wildLeapReady(state, u) || !u.pos) return out;
+  const obstacles = obstacleSet(b);
+  const walk = walkSearch(state, u).dist;
+  const units = occupancy(b, u);
+  for (const k of layoutCells(b)) {
+    if (walk.has(k) || obstacles.has(k) || units.has(k) || distance(parseKey(u.pos), parseKey(k)) > ABILITY.wildLeapRange) continue;
+    out.add(k);
+  }
+  return out;
+}
+
+/** Oko Kruka: marks the enemy to the end of the round and uncovers the traps and veiled units around the Raven (the traps stay hidden from everybody else). */
+function ravenEye(state: GameState, u: BattleUnit, t: BattleUnit): void {
+  const b = state.battle!;
+  t.status.marked = { by: u.side, round: b.round };
+  log(state, 'ability', `${unitName(t)} jest oznaczony do końca rundy.`);
+  const near = (c: HexKey) => cellsOf(u).some((m) => distance(parseKey(m), parseKey(c)) <= ABILITY.ravenRadius);
+  let found = 0;
+  for (const g of b.ground ?? []) {
+    if (g.kind !== 'trap' || g.owner === u.side || !g.hidden || g.seenBy?.includes(u.side) || !near(g.cell)) continue;
+    (g.seenBy ??= []).push(u.side);
+    found++;
+  }
+  for (const x of Object.values(b.units)) if (x.alive && x.pos && x.side !== u.side && x.status.veiled && cellsOf(x).some(near)) (unveil(state, x), found++);
+  if (found) log(state, 'ability', `${unitName(u)} odsłania ukryte ślady wokół siebie.`);
+}
+
+/** Tama: the free cell next to the unit nearest to the closest enemy (null: no room). */
+export function damCell(state: GameState, u: BattleUnit): HexKey | null {
+  const b = state.battle!;
+  if (b.duel || !u.pos) return null;
+  const obstacles = obstacleSet(b);
+  const foes = enemiesOf(b, u).flatMap(cellsOf);
+  const gap = (k: HexKey) => Math.min(...foes.map((f) => distance(parseKey(f), parseKey(k))), 99);
+  return neighborKeys(u.pos).concat(u.tail ? neighborKeys(u.tail) : []).filter((k, i, all) => all.indexOf(k) === i && inLayout(b, k) && !obstacles.has(k) && !unitAt(b, k)).sort((x, y) => gap(x) - gap(y) || (x < y ? -1 : 1))[0] ?? null;
+}
+
+/** Ładunek: how much a blast on `cell` is worth to `u`'s side: damage to the enemies (kills count double) less damage to its own, in the unit's scale (for the bots and for the choice of a default trap). */
+export function blastValue(state: GameState, u: BattleUnit, cell: HexKey): number {
+  const b = state.battle!;
+  const area = [cell, ...neighborKeys(cell)];
+  const dmg = ABILITY.blastDamage * scaleOf(state);
+  let value = 0;
+  for (const x of Object.values(b.units)) {
+    if (!x.alive || !x.pos || !cellsOf(x).some((c) => area.includes(c))) continue;
+    const worth = Math.min(dmg, x.hp) + (dmg >= x.hp ? 3 * scaleOf(state) : 0);
+    value += x.side === u.side ? -worth : worth;
+  }
+  return value;
+}
+
+/** The own trap the Petardnik blows up when nobody says which: the one whose blast is worth most to its side. */
+export function bestBlastTrap(state: GameState, u: BattleUnit): HexKey | null {
+  const traps = trapsOf(state.battle!, u.side).map((g) => g.cell).sort();
+  return traps.sort((x, y) => blastValue(state, u, y) - blastValue(state, u, x) || (x < y ? -1 : 1))[0] ?? null;
 }
 
 /**
@@ -1635,7 +1908,7 @@ export function abductCell(state: GameState, t: BattleUnit): HexKey | null {
   return spots[0]?.k ?? null;
 }
 
-export function battleAbility(state: GameState, targetId?: string) {
+export function battleAbility(state: GameState, targetId?: string, cell?: HexKey, from?: HexKey) {
   const b = state.battle!;
   const u = b.units[b.activation!.unitId];
   const ab = abilityOf(u);
@@ -1750,6 +2023,34 @@ export function battleAbility(state: GameState, targetId?: string) {
   } else if (ab === 'longNight') {
     log(state, 'ability', `${unitName(u)}: zapada długa noc.`);
     for (const e of enemiesOf(b, u)) applyFrost(state, u.side, e);
+  } else if (ab === 'ploy') {
+    // Fortel: one more hidden trap, or one of the own traps moved (the place is chosen by the player, or the best one is taken).
+    const to = cell ?? autoTrapCells(state, u.side, 1)[0];
+    if (!to || !mayLayTrap(b, u.side, to)) throw new Error('Pułapkę można położyć tylko na wolnym polu swojej połowy areny.');
+    if (from) {
+      const own = trapsOf(b, u.side).find((g) => g.cell === from);
+      if (!own) throw new Error('Nie masz pułapki na tym polu.');
+      own.cell = to;
+    } else layTrap(state, u.side, to);
+  } else if (ab === 'dugIn') {
+    u.status.dugIn = ABILITY.dugInActivations;
+  } else if (ab === 'ravenEye') {
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side === u.side || !t.pos || t.status.veiled || unitDistance(u, t) > ABILITY.ravenRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.ravenRange} pól.`);
+    ravenEye(state, u, t);
+  } else if (ab === 'dam') {
+    const to = cell ?? damCell(state, u);
+    if (!to || !u.pos || ![...cellsOf(u)].some((c) => adjacent(c, to)) || !inLayout(b, to) || obstacleSet(b).has(to) || unitAt(b, to)) throw new Error('Tamę można postawić na wolnym polu obok bobra.');
+    b.obstacles = [...b.obstacles, to];
+    b.raised = [...(b.raised ?? []), to];
+  } else if (ab === 'blast') {
+    const at = cell ?? bestBlastTrap(state, u);
+    const trap = at ? trapsOf(b, u.side).find((g) => g.cell === at) : undefined;
+    if (!at || !trap) throw new Error('Wybierz własną pułapkę, którą wysadzisz.');
+    b.ground = (b.ground ?? []).filter((g) => g !== trap);
+    log(state, 'ability', `${unitName(u)} odpala ładunek: wybuch!`);
+    const area = [at, ...neighborKeys(at)];
+    for (const x of Object.values(b.units)) if (x.alive && x.pos && cellsOf(x).some((c) => area.includes(c))) dealDamage(state, x, ABILITY.blastDamage * scaleOf(state), 'Wybuch');
   } else if (ab === 'web') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side === u.side || unitDistance(u, t) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);

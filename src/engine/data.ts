@@ -113,7 +113,21 @@ export type AbilityId =
   | 'abduct' // Porwanie (Strzyga Wichru, free action, once): a small enemy is lifted and put 2-3 cells away, away from its allies
   | 'hailStones' // Grad Głazów (Olbrzym Gradu, Stary Gradowy, passive): the shot hits the target and its neighbours, each gets frost
   | 'coldLight' // Zimne Światło (Duch Zorzy, passive aura): enemies within 2 cells have -1 S
-  | 'longNight'; // Długa Noc (Mamut Wiecznej Zimy, free action, once): every enemy gets frost; cannot be moved
+  | 'longNight' // Długa Noc (Mamut Wiecznej Zimy, free action, once): every enemy gets frost; cannot be moved
+  // Wolne Kompanie (docs/frakcje/free.md): hidden traps (Sidła), a mark on the target, a veiled unit, loot in battle, a bonus for wounds, a counterblow, an obstacle put up.
+  | 'ploy' // Fortel (Ruda Atamanka, free action, once): lays one more hidden trap or moves one of her own
+  | 'dugIn' // Okop (Borsuk Saper, free action, once): armour and cannot be moved until the end of its next activation
+  | 'ravenEye' // Oko Kruka (Kruk Wieszczek, free action, once): marks an enemy until the end of the round and uncovers traps and veiled units within 2 cells
+  | 'pickpocket' // Kieszonkowiec (Kuna Złodziejka, passive): the first blow on a hero in the battle gives the faction gold
+  | 'branchShot' // Strzał z Gałęzi (Wiewiórka Łuczniczka, passive): + damage against a marked target
+  | 'dam' // Tama (Bóbr Inżynier, free action, once): puts an obstacle on a neighbouring cell
+  | 'stinkBomb' // Smrodliwa Mikstura (Tchórz Smrodnik, attack ability, once): the target and its neighbours are poisoned
+  | 'veiled' // Ukryty (Jenot Szpieg, passive): starts the battle unseen by the enemy; the first attack hits harder and uncovers it
+  | 'woundFury' // Furia Ran (Rosomak Zabijaka, passive): + damage for every few missing Życie
+  | 'blast' // Ładunek (Borsuk Petardnik, free action, once): turns one of its own traps into an explosion
+  | 'riposte' // Riposta (Kocur Fechmistrz, passive): whoever strikes it in melee and survives takes a counterblow
+  | 'towerShot' // Ruchoma Twierdza (Waran Wieżowy, passive): once a round the turret on its back shoots as well
+  | 'wildLeap'; // Szalony Skok (Żbiczka Bajdurka, passive): once per battle a leap over everything and a harder blow
 
 export interface UnitDef {
   id: string;
@@ -294,6 +308,33 @@ export const ABILITY = {
   trailSlow: 1,
   /** Mroźna Zbroja, Grad Głazów, Długa Noc, Zmrażający Uścisk: frost put on the unit. */
   frostPut: 1,
+  /** Wolne Kompanie. Sidła: damage of a trap that goes off (small scale). */
+  trapDamage: 2,
+  /** Oznaczenie: bonus of every attack of the marker's side on a marked target (small scale), and the extra bonus of Strzał z Gałęzi. */
+  markBonus: 1,
+  branchBonus: 1,
+  /** Oko Kruka: how far the Raven sees an enemy to mark, and the radius in which it uncovers traps and veiled units. */
+  ravenRange: 5,
+  ravenRadius: 2,
+  /** Kieszonkowiec: gold the first blow at a hero gives the faction. */
+  pickpocketGold: 1,
+  /** Ukryty: bonus of the first attack out of hiding (small scale). */
+  veilBonus: 2,
+  /** Furia Ran: Życie missing (hp scale) for every +1 A, and the most it adds (small scale). */
+  furyStep: 2,
+  furyMax: 3,
+  /** Ładunek: damage of the explosion on the trap's cell and on every cell next to it (small scale; allies are hurt too). */
+  blastDamage: 3,
+  /** Riposta: damage returned to a melee attacker (small scale). */
+  riposteDamage: 2,
+  /** Ruchoma Twierdza: damage of the turret's shot (small scale). */
+  towerDamage: 2,
+  /** Okop: armour (small scale) and how many activations of the Saper it lasts (the rest of this one and the next). */
+  dugInArmor: 2,
+  dugInActivations: 2,
+  /** Szalony Skok: how far Żbiczka leaps and her bonus Atak after the leap (small scale). */
+  wildLeapRange: 3,
+  wildLeapBonus: 1,
 };
 
 /**
@@ -559,6 +600,27 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'iceKnight', name: 'Rycerz Lodowej Gwardii', side: 'frost', kind: 'hero', hp: 8, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Lodowa Gwardia', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
     u({ id: 'ermineHuntress', name: 'Tropicielka Mroźnych Puszcz', side: 'frost', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'crystalArrow', abilityName: 'Strzała z Soplem', abilityText: `Stała: +${ABILITY.crystalBonus} obrażeń w cel, który ma szron.` }),
     u({ id: 'frostWitch', name: 'Szronowa Wiedźma', side: 'frost', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'wail', abilityName: 'Zimowy Lament', abilityText: `Raz na bitwę: wrogowie w promieniu ${ABILITY.wailRadius} pól mają −${ABILITY.wailMinus} A przy następnym ataku.` }),
+    // Wolne Kompanie (`free`, docs/frakcje/free.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero (numbers: gate G1, tuned at G2).
+    u({ id: 'foxCaptain', name: 'Ruda Atamanka', side: 'free', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'ploy', abilityName: 'Fortel', abilityText: 'Raz na bitwę: kładzie dodatkową ukrytą pułapkę na swojej połowie albo przenosi jedną własną.' }),
+    u({ id: 'badgerSapper', name: 'Borsuk Saper', side: 'free', kind: 'hero', hp: 10, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'dugIn', abilityName: 'Okop', abilityText: `Raz na bitwę: do końca swojej następnej aktywacji ma pancerz ${ABILITY.dugInArmor} i nie da się go odepchnąć.` }),
+    u({ id: 'ravenSeer', name: 'Kruk Wieszczek', side: 'free', kind: 'hero', hp: 4, attack: 2, speed: 5, movement: 'fly', attackType: 'ranged', ability: 'ravenEye', abilityName: 'Oko Kruka', abilityText: `Raz na bitwę: wróg w zasięgu ${ABILITY.ravenRange} pól jest oznaczony do końca rundy (każdy atak Kompanii w niego ma +${ABILITY.markBonus}), a pułapki i ukryci wrogowie w promieniu ${ABILITY.ravenRadius} pól zostają odsłonięci.` }),
+    u({ id: 'otterSmuggler', name: 'Wydra Przemytniczka', side: 'free', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'airDash', abilityName: 'Odskok', abilityText: `Raz na bitwę: po ataku może odskoczyć o maks. ${ABILITY.airDashRange} pola.` }),
+    u({ id: 'otterScout', name: 'Wydra Zwiadowczyni', side: 'free', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'airDash', abilityName: 'Wyślizg', abilityText: `Raz na bitwę: po ataku może odskoczyć o maks. ${ABILITY.airDashRange} pola.` }),
+    u({ id: 'martenThief', name: 'Kuna Złodziejka', side: 'free', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'pickpocket', abilityName: 'Kieszonkowiec', abilityText: `Stała: pierwszy cios w bohatera w bitwie daje frakcji +${ABILITY.pickpocketGold} zł.` }),
+    u({ id: 'squirrelArcher', name: 'Wiewiórka Łuczniczka', side: 'free', kind: 'support', hp: 4, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'branchShot', abilityName: 'Strzał z Gałęzi', abilityText: `Stała: +${ABILITY.branchBonus} A przeciw oznaczonemu celowi.` }),
+    u({ id: 'weaselKnife', name: 'Łasica Nożowniczka', side: 'free', kind: 'support', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'backstab', abilityName: 'Cios w Plecy', abilityText: `Stała: +${ABILITY.backstabBonus} A, gdy atakuje od tyłu.` }),
+    u({ id: 'polecatPoisoner', name: 'Tchórz Smrodnik', side: 'free', kind: 'support', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'stinkBomb', abilityName: 'Smrodliwa Mikstura', abilityText: `Raz na bitwę: trafiony i jego sąsiedzi są zatruci (tracą ${ABILITY.poisonDamage} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji).` }),
+    u({ id: 'wolverine', name: 'Rosomak Zabijaka', side: 'free', kind: 'support', hp: 9, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'woundFury', abilityName: 'Furia Ran', abilityText: `Stała: +1 A za każde ${ABILITY.furyStep} brakujące Ż (najwyżej +${ABILITY.furyMax}).` }),
+    u({ id: 'toadGunner', name: 'Ropuch z Hakownicą', side: 'free', kind: 'support', size: 2, hp: 12, attack: 5, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'stunBlow', abilityName: 'Huk Hakownicy', abilityText: 'Raz na bitwę: trafiony traci następną aktywację (ogłuszony hukiem).' }),
+    u({ id: 'beaverEngineer', name: 'Bóbr Inżynier', side: 'free', kind: 'support', hp: 7, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'dam', abilityName: 'Tama', abilityText: 'Raz na bitwę: stawia przeszkodę na sąsiednim wolnym polu (stoi do końca bitwy).' }),
+    u({ id: 'raccoonDogSpy', name: 'Jenot Szpieg', side: 'free', kind: 'support', hp: 6, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'veiled', abilityName: 'Ukryty', abilityText: `Stała: zaczyna bitwę niewidoczny dla wroga (nie da się go wybrać na cel); pierwszy atak ma +${ABILITY.veilBonus} A i go odsłania.` }),
+    u({ id: 'badgerBomber', name: 'Borsuk Petardnik', side: 'free', kind: 'support', hp: 8, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'blast', abilityName: 'Ładunek', abilityText: `Raz na bitwę: zamienia własną pułapkę w wybuch (${ABILITY.blastDamage} obrażeń na jej polu i na sąsiednich, także swoim).` }),
+    u({ id: 'catFencer', name: 'Kocur Fechmistrz', side: 'free', kind: 'support', hp: 10, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'riposte', abilityName: 'Riposta', abilityText: `Stała: kto uderzy go wręcz i przeżyje, dostaje ${ABILITY.riposteDamage} obrażeń.` }),
+    u({ id: 'towerMonitor', name: 'Waran Wieżowy', side: 'free', kind: 'support', size: 2, hp: 22, attack: 6, speed: 3, movement: 'walk', attackType: 'melee', ability: 'towerShot', abilityName: 'Ruchoma Twierdza', abilityText: `Stała: atakuje wręcz, a raz na rundę dodatkowo strzela wieżyczka na jego grzbiecie (${ABILITY.towerDamage} obrażeń w najbliższego wroga na linii strzału).` }),
+    // Commanders of the Free Companies.
+    u({ id: 'martenSlasher', name: 'Kuna Rębajło', side: 'free', kind: 'hero', hp: 8, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'bloodCall', abilityName: 'Rąb do Kości', abilityText: `Stała: +${ABILITY.bloodCallBonus} A przeciw rannym.` }),
+    u({ id: 'wildcatBajka', name: 'Żbiczka Bajdurka', side: 'free', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'wildLeap', abilityName: 'Szalony Skok', abilityText: `Raz na bitwę: skacze o ${ABILITY.wildLeapRange} pola ponad jednostkami, pułapkami i przeszkodami i atakuje z +${ABILITY.wildLeapBonus} A.` }),
+    u({ id: 'hareHerbalist', name: 'Zajęczyca Zielarka', side: 'free', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'giftOfLife', abilityName: 'Zielarska Mikstura', abilityText: `Raz na bitwę: sojusznik odzyskuje ${ABILITY.giftOfLifeHeal} Ż.` }),
     u({ id: 'cyclops', name: 'Cyklop Błyskotek', side: 'neutral', kind: 'neutral', size: 2, hp: 23, attack: 2, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'boulder', abilityName: 'Miażdżący Głaz', abilityText: 'Po każdym ataku odpycha trafionego przeciwnika o 1 pole, jeśli to możliwe (jednostek dwupolowych nie da się odepchnąć).', duel: { hp: 14, ability: 'stoneSkin', abilityName: 'Kamienna Skóra', abilityText: `Każdy cios w Cyklopa zadaje o ${ABILITY.stoneSkinIgnore} mniej obrażeń.` } }),
     u({ id: 'griffin', name: 'Gryf Złodziej Skarbów', side: 'neutral', kind: 'neutral', size: 2, hp: 18, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nestLeap', abilityName: 'Łupieżczy Nalot', abilityText: `Po każdym ataku może odlecieć o maks. ${ABILITY.nestLeapRange} pola.`, duel: { hp: 10, ability: 'thiefClaw', abilityName: 'Złodziejski Szpon', abilityText: `Gdy zada obrażenia, odzyskuje ${ABILITY.thiefClawHeal} Ż.` } }),
     u({ id: 'hydra', name: 'Hydra z Zatopionych Ruin', side: 'neutral', kind: 'neutral', size: 2, hp: 21, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Paszcze Otchłani', abilityText: 'Każdym atakiem może trafić dwóch sąsiadujących przeciwników.', duel: { hp: 12, ability: 'regrowth', abilityName: 'Odrastające Głowy', abilityText: `Na początku każdej swojej aktywacji odzyskuje ${ABILITY.regrowthHeal} Ż.` } }),
@@ -569,14 +631,14 @@ export const FACTION_HEROES: Record<FactionId, string[]> = byPack((p) => p.heroe
 
 /** Easter egg heroes: unlocked on the setup screen (click the Dawn crest five times), never drawn by the engine. */
 /** Rivalry for 7-8 players: four heroes a side, so each faction has a fourth one of its own (Przymierze: the Silver She-Wolf, Horda: the Dusk Manticore); the Brave Duck stays a secret hero and the Warlord a tavern commander. */
-export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore', herds: 'thunderRam', undead: 'bellKeeper', clans: 'oldMiner', frost: 'oldHailer' };
+export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore', herds: 'thunderRam', undead: 'bellKeeper', clans: 'oldMiner', frost: 'oldHailer', free: 'otterSmuggler' };
 export const MAX_PVP_PLAYERS = 8;
 /** More players than this at a table play with `EXTRA_HEROES` too. */
 export const BASE_PVP_PLAYERS = 6;
 /** The heroes a seat can pick at a table of `seats` players. */
 export const heroPool = (f: FactionId, seats: number): string[] => (seats > BASE_PVP_PLAYERS ? [...FACTION_HEROES[f], EXTRA_HEROES[f]] : FACTION_HEROES[f]);
 
-export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [], herds: [], undead: [], clans: [], frost: [] };
+export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [], herds: [], undead: [], clans: [], frost: [], free: [] };
 
 /** The tier of a faction's support (1 the starting ones, 2-5 the recruits of the tiers and their alternatives, 6 the legend); 0 for anything else. */
 export const supportTier = (unitId: string): number => {
@@ -741,12 +803,12 @@ export const ARENA_OFFER = 3;
  */
 export const ARENA_RULES: { firstPicker: 'random' | TeamId; extraPicks: Record<FactionId, number>; extraOffer: Record<FactionId, number> } = {
   firstPicker: 'random',
-  extraPicks: { dawn: 0, horde: 0, herds: 0, undead: 0, clans: 0, frost: 0 },
+  extraPicks: { dawn: 0, horde: 0, herds: 0, undead: 0, clans: 0, frost: 0, free: 0 },
   /**
    * More cards shown to that side at each pick (the choice gets better, the number of treasures stays).
    * The Horde sees 4: in the arena Przymierze otherwise wins about 55% (simulations, notes section 9).
    */
-  extraOffer: { dawn: 0, horde: 1, herds: 0, undead: 0, clans: 0, frost: 0 },
+  extraOffer: { dawn: 0, horde: 1, herds: 0, undead: 0, clans: 0, frost: 0, free: 0 },
 };
 
 // Map tiles. The left half of the triangle is built from Przymierze tiles (green back),

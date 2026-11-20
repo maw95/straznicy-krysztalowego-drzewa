@@ -64,6 +64,9 @@ interface Props {
   scale: number;
   anim: BattleAnimations;
   deploy: Deployment;
+  /** Cells a free ability that works on a cell (Fortel, Tama, Ładunek) may be aimed at, and the own trap Fortel has picked up to move. */
+  aimCells?: HexKey[];
+  ployFrom?: HexKey | null;
   targeting: ItemTargeting | null;
   hover: HexKey | null;
   setHover: (k: HexKey | null) => void;
@@ -128,6 +131,11 @@ export function ArenaBoard(p: Props) {
   const wide = b.layout === 'wide';
   const { cellCenter, cellPos, hexPoints, cells: CELLS, cellPoints: CELL_POINTS, canvasW: CANVAS_W, canvasH: CANVAS_H, art: ART_SIZE } = geo;
   const { deployable, picked, deploySide, posOf } = deploy;
+  /** The mark of a trap: a cross with a bar, drawn on the middle of its hex. */
+  const trapGlyph = (k: HexKey): string => {
+    const c = cellCenter(k);
+    return `M${c.x - 7},${c.y - 7} L${c.x + 7},${c.y + 7} M${c.x + 7},${c.y - 7} L${c.x - 7},${c.y + 7} M${c.x - 10},${c.y} L${c.x + 10},${c.y}`;
+  };
   const artSrc = asset(wide ? `arena/cyfrowa/${b.arena}.webp` : `arena/${b.arena}.jpg`);
   /** Phones show only the cells and a little of the painting (see arenaGeometry), and the rest of the frame gets a soft backdrop. */
   const phone = view !== geo.fullView;
@@ -268,6 +276,8 @@ export function ArenaBoard(p: Props) {
               else if (moves.has(k)) fill = p.hoverPreview === k ? 'rgba(158,228,255,0.45)' : 'rgba(158,228,255,0.2)';
               else if (hops.includes(k)) fill = 'rgba(158,228,255,0.28)';
               else if (teleportTo) fill = 'rgba(200,160,255,0.25)';
+              else if (deploy.trapCells.has(k)) fill = deploy.traps.includes(k) ? 'rgba(200,100,40,0.5)' : hover === k ? 'rgba(200,100,40,0.4)' : 'rgba(200,100,40,0.2)';
+              else if (p.aimCells?.includes(k)) fill = hover === k ? 'rgba(200,100,40,0.5)' : 'rgba(200,100,40,0.26)';
               // Every hex of a unit carries the cursor and the aim of the attack itself (a large unit's tail has no button; the box of a small one
               // covers only the middle of its hex, so the sword used to show only there: report 216950).
               const owner = unitAt(b, k) ?? undefined;
@@ -312,6 +322,14 @@ export function ArenaBoard(p: Props) {
                 </g>
               );
             })}
+            {/* Sidła (the Free Companies): the traps this screen may know of (the state it is given has the hidden ones of the others left out), the ones being laid while deploying, the one picked up by Fortel. */}
+            {[...(b.ground ?? []).filter((g) => g.kind === 'trap').map((g) => ({ k: g.cell, own: g.owner === (b.stage === 'deploy' ? deploySide : active?.side) })), ...deploy.traps.map((k) => ({ k, own: true }))].map(({ k, own }) => (
+              <g key={`trap${k}`} data-trap={k} pointerEvents="none">
+                <polygon points={hexPoints(k, 4)} fill={own ? 'rgba(200,100,40,0.18)' : 'rgba(224,60,40,0.22)'} stroke={own ? '#D9803A' : '#E0503C'} strokeWidth={p.ployFrom === k ? 4 : 2} strokeDasharray="5 3" />
+                <path d={trapGlyph(k)} fill="none" stroke={own ? '#F0B070' : '#FF9A80'} strokeWidth="2.5" strokeLinecap="round" />
+                <title>{own ? 'Twoje sidła: wróg ich nie widzi, dopóki nie zadziałają' : 'Odsłonięte sidła wroga'}</title>
+              </g>
+            ))}
             {p.previewTail && <polygon points={hexPoints(p.previewTail, 3)} fill="rgba(158,228,255,0.2)" stroke="#9EE4FF" strokeWidth="2" strokeDasharray="5 4" pointerEvents="none" />}
             {approach && <polygon points={hexPoints(approach.cell, 2)} fill="rgba(243,210,122,0.35)" stroke="#F3D27A" strokeWidth="3.5" pointerEvents="none" />}
             {approach && p.approachTail && <polygon points={hexPoints(p.approachTail, 2)} fill="rgba(243,210,122,0.25)" stroke="#F3D27A" strokeWidth="2.5" strokeDasharray="6 4" pointerEvents="none" />}

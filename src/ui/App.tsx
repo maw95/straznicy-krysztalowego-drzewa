@@ -10,6 +10,7 @@ import { chooseAction } from '../engine/ai';
 import { describeAction } from './hint';
 import { FACTION_NAMES, UNITS, type TeamId, type ItemKind } from '../engine/data';
 import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
+import { redactHidden } from '../engine/hidden';
 import { movePath } from '../engine/battle';
 import { neighborKeys, type HexKey } from '../engine/hex';
 import { tileCost } from '../engine/map';
@@ -310,6 +311,11 @@ export function App() {
   // Hand-off screen only between human players of different factions, and never mid-battle.
   const needsHandoff = Boolean(game && humanTurn && pvp && game.phase === 'adventure' && actor.kind === 'human' && actor.faction !== confirmedFaction && humans.some((p) => p.faction !== actor.faction));
   const viewer: TeamId | null = actor.kind === 'human' ? actor.faction : humans[0]?.faction ?? (game?.setup.mode === 'coop' ? 'dawn' : null);
+
+  // Hidden information (the Free Companies' traps and veiled units): the screen shows what its viewers may see: online the seats of this browser, at one computer whoever acts now.
+  const viewers = useMemo<TeamId[] | null>(() => (isOnline ? humans.map((p) => p.faction) : viewer ? [viewer] : null), [isOnline, viewer, humans.map((p) => p.faction).join()]);
+  const battleSource = held ? held.view : game;
+  const battleShown = useMemo(() => (battleSource ? redactHidden(battleSource, viewers) : battleSource), [battleSource, viewers]) as GameState;
 
   // The latest state lives in a ref so every action is applied and recorded exactly once
   // (state updater functions may run twice in React's development mode).
@@ -937,7 +943,7 @@ export function App() {
       {arenaPrep ? (
         <ArenaPrep state={game} />
       ) : held || (game.phase === 'battle' && b && !b.duel && b.stage !== 'select') ? (
-        <BattleView state={held ? held.view : game} attack={held?.attack ?? null} canAct={humanTurn && !held} onAction={dispatch} onShowCard={setCard} footer={footer} />
+        <BattleView state={battleShown} attack={held?.attack ?? null} canAct={humanTurn && !held} onAction={dispatch} onShowCard={setCard} footer={footer} />
       ) : (
         <AdventureView state={game} loot={lootFloats} mapFx={mapFxs} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} footer={adventureFooter} />
       )}

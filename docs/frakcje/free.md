@@ -86,3 +86,7 @@ omijania strażników, zbiera skrzynie. **Nie wolno mu:** znać pułapek i mira�
 
 ## Balans (wypełnia Claude)
 - Cel (decyzja autora 20.11): frakcje się kontrują, więc **nie** celujemy w 45–55% w każdej parze. (1) Średnia wygranych przeciw wszystkim pozostałym ok. 45–55%. (2) Kierunek każdej pary zgodny z tabelą „Kto z kim” w `FRAKCJE_PROPOZYCJE.md`: kontra ok. 60–70%, kontrowana ok. 30–40%, brak relacji ok. 45–55% (progi potwierdzone przez autora 20.11). (3) Żadna para poniżej 30% ani powyżej 70%. Narzędzie: `make sim-nowe`; wyniki i zmiany liczb po G2.
+
+## Stan G1 (20.11.2026, praca w toku)
+Zrobione: paczka `src/engine/factions/free.ts` w rejestrze; 3 bohaterów, 3 dowódców, Wydra Przemytniczka, 12 jednostek ze zdolnościami; budynki Warsztat Sideł / Paserka / Szlaki Przemytnicze; Skrytka Iskry (+2 pułapki); ukryte pułapki (`GroundEffect` w `BattleState.ground`, `redactHidden` w `src/engine/hidden.ts`), oznaczenie, ukrycie, łup, Furia Ran, Riposta, Ładunek, Tama, Fortel, Okop, Oko Kruka, Szalony Skok, wieżyczka Warana; bot (pułapki układa `autoTrapCells`, nie zna pułapek ani ukrytych jednostek wroga); angielski `src/i18n/en/free.ts`; zastępcza grafika; `tests/free.test.ts` (59 testów); UI: przycisk Sidła przy ustawianiu, pola zdolności na polu, przycisk Szlaków na mapie.
+Zostaje: skrypt `scripts/browser/kompanie.ts` (przejście kreatora po zmianie na Potyczkę, dopracować i uruchomić), CHANGELOG + `changelog.ts`, BACKLOG (punkt 52, sekcja 2a), „Decyzje implementacyjne”, końcowy `make check`.

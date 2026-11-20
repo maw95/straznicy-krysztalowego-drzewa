@@ -141,6 +141,8 @@ export const SEAT_TINT: Record<TeamId | FactionId, string> = {
   undead: 'linear-gradient(100deg, rgba(112, 128, 104, 0.62), rgba(46, 56, 44, 0.58))',
   // Dwór Wiecznego Szronu: pearl white and ice (the UI may be pale blue, the figures may not).
   frost: 'linear-gradient(100deg, rgba(160, 196, 220, 0.62), rgba(58, 80, 96, 0.58))',
+  // Wolne Kompanie: rusty orange and leather.
+  free: 'linear-gradient(100deg, rgba(196, 118, 56, 0.62), rgba(84, 52, 30, 0.58))',
 };
 
 
