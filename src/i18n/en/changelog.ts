@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Nurkowanie Orła Stepowego Łowcy ma własną ikonę (orzeł w pikowaniu) zamiast pożyczonej ikony Nurkowania Gryfa.": "The Steppe Eagle Hunter's Dive has its own icon (an eagle in a stoop) instead of the borrowed icon of the Griffin's Dive.",
   "Spowolnienie i zimno skracają teraz także zdolności ruchowe jednostek: odskok (Pegaz, Lis, Centaur, Wydra), Szalony Skok Żbiczki i teleport (Podkop, Król Burzy) są krótsze o tyle, o ile spowolniona jednostka straciła Szybkości, a unieruchomiona nie odskakuje ani się nie teleportuje.": "Slows and cold now also shorten the movement abilities of units: the hop (Pegasus, Fox, Centaur, Otter), the Wildcat's Wild Leap and the teleport (Burrow, Storm King) are shorter by as much Speed as the slowed unit lost, and a rooted unit neither hops nor teleports.",
   "Zakopana Królowa Skorpionów (i inni ukryci wrogowie) zostaje ujawniona, gdy ktoś wpadnie na nią po drodze; wcześniej taki ruch kończył się błędem (bot, który jej nie widzi, planował drogę przez jej pole).":
     "A buried Scorpion Queen (and other hidden enemies) is uncovered when someone runs into her on the way; before, such a move ended in an error (a bot that cannot see her planned a path through her cell).",

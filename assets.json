@@ -6612,6 +6612,21 @@
       "ai": false,
       "placeholder": true,
       "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "karty/ikona-huntDive",
+      "pliki": [
+        "public/assets/cards/abilities/huntDive.png",
+        "public/assets/cards/abilities/huntDive_inner.png"
+      ],
+      "typ": "ikona zdolności Nurkowanie (Orzeł Stepowy Łowca)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście, przyjęte.",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: a steppe eagle seen from the side, wings folded back, talons stretched forward, in a steep hunting dive, with a few thin red speed streaks behind it. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
