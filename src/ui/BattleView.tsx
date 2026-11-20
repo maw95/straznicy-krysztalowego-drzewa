@@ -37,6 +37,9 @@ import {
   mirageSwapReady,
   flies,
   sporeCells,
+  ebbTargets,
+  tideSwapReady,
+  tideTargets,
 } from '../engine/battle';
 import { castableInBattle, SPELLS, spellPreview, spellTargets, type SpellId } from '../engine/magic';
 import { sfx } from './sfx';
@@ -92,6 +95,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const [freeAbility, setFreeAbility] = useState(false);
   /** Piaskowa Brama, Lustro Wydm: the ally picked first (then a cell). */
   const [allyPick, setAllyPick] = useState<string | null>(null);
+  /** Świątynia Pływów (the Tides): the swap button is on, the next click on a lit ally swaps places with it. */
+  const [tideMode, setTideMode] = useState(false);
   const [targeting, setTargeting] = useState<ItemTargeting | null>(null);
   const [showItems, setShowItems] = useState(false);
   const [hover, setHover] = useState<HexKey | null>(null);
@@ -138,6 +143,9 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const act = b.activation;
   const active = act ? b.units[act.unitId] : null;
   const myTurn = canAct && b.stage === 'fight' && Boolean(active);
+  // Przypływ (Świątynia Pływów): the active unit may swap places with an ally before it acts; the button arms it.
+  const tideReady = Boolean(myTurn && active && tideSwapReady(state, active));
+  const tideOn = tideMode && tideReady && !freeAbility;
   const side: TeamId | undefined = active && active.side !== 'neutral' ? active.side : undefined;
   // Level 5: the spells the active hero may cast now, and the one picked (the next click on a unit is its target).
   const castable = myTurn && !targeting ? castableInBattle(state) : [];
@@ -236,7 +244,14 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       // Pustynne Cesarstwo: the Sfinks puzzles an enemy in range; the Wezyr, the Dancer and the Rok first pick an ally.
       if (ability === 'riddle' && u.side !== active.side && unitDistance(active, u) <= ABILITY.riddleRange) return 'cur-spell';
       if ((ability === 'sandPortal' || ability === 'mirageMake' || ability === 'rocLift') && !allyPick && sandsAllyTargets(state, active).some((x) => x.id === u.id)) return 'cur-spell';
+      // Bractwo Przypływu: the Syrena and the Wąż pull an enemy in range, the Kapłanka shields an ally, the Wiedźma first picks one of the two units she swaps.
+      if (ability === 'sirenSong' && u.side !== active.side && unitDistance(active, u) <= ABILITY.songRange) return 'cur-spell';
+      if (ability === 'deepCoil' && u.side !== active.side && unitDistance(active, u) <= ABILITY.deepCoilRange) return 'cur-spell';
+      if (ability === 'pearlShield' && u.side === active.side) return 'cur-spell';
+      if (ability === 'ebbTide' && ebbTargets(state, active).some((x) => x.id === u.id && x.id !== allyPick)) return 'cur-spell';
     }
+    // Przypływ: a wand over every ally the active unit may swap places with.
+    if (tideOn && myTurn && active && tideTargets(state, active).some((x) => x.id === u.id)) return 'cur-spell';
     // A treasure is being aimed (Eliksir, Zwój, Róg...): the same wand as for an ability, over every unit it can be used on.
     if (targeting && myTurn && u.alive) {
       const k = targeting.kind;
@@ -260,7 +275,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, b, myTurn, active, act, moves, targets, targeting, freeAbility, spellNow, spellAims, allyPick, throwing]);
+  }, [state, b, myTurn, active, act, moves, targets, targeting, freeAbility, spellNow, spellAims, allyPick, throwing, tideOn]);
   const approachCells = (u: BattleUnit): HexKey[] => unitInfo.get(u.id)?.approach ?? [];
   const unitCursor = (u: BattleUnit): string => unitInfo.get(u.id)?.cursor ?? '';
   useEffect(preloadAimedCursors, []);
@@ -286,9 +301,10 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     setFreeAbility(false);
     setPloyFrom(null);
     setAllyPick(null);
+    setTideMode(false);
   }
 
-  const twoStep = freeAbility && (ab === 'sandPortal' || ab === 'mirageMake');
+  const twoStep = freeAbility && (ab === 'sandPortal' || ab === 'mirageMake' || ab === 'ebbTide');
   // A free ability that works on a cell (Fortel, Tama, Ładunek): the cells it may be aimed at are lit, the next click on one fires it (Fortel: a click on an own trap first picks it up to move).
   const [ployFrom, setPloyFrom] = useState<HexKey | null>(null);
   const cellAbility = freeAbility && myTurn && active && ab !== null && CELL_ABILITIES.includes(ab) ? ab : null;
@@ -297,6 +313,10 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     const picked = allyPick && active ? b.units[allyPick] : undefined;
     if (freeAbility && active && picked && ab === 'sandPortal') return portalCells(state, active, picked);
     if (freeAbility && active && picked && ab === 'mirageMake') return mirageMakeCells(state, active, picked);
+    // Odpływ: once the first unit is picked, the cells of the units it may change places with.
+    if (freeAbility && active && picked && ab === 'ebbTide') return ebbTargets(state, active).filter((x) => x.id !== picked.id).map((x) => x.pos!);
+    // Przypływ: the cells of the allies the active unit may swap places with.
+    if (tideOn && active) return tideTargets(state, active).map((x) => x.pos!);
     if (!cellAbility || !active) return [];
     const own = trapsOf(b, active.side).map((g) => g.cell);
     if (cellAbility === 'blast') return own;
@@ -305,7 +325,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     if (cellAbility === 'dam') return cellsOf(active).flatMap((c) => neighborKeys(c)).filter((k, i, all) => all.indexOf(k) === i && inLayout(b, k) && !b.obstacles.includes(k) && !unitAt(b, k));
     return [...trapZone(b, active.side).filter((k) => mayLayTrap(b, active.side, k)), ...own];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cellAbility, b, active, allyPick, freeAbility]);
+  }, [cellAbility, b, active, allyPick, freeAbility, tideOn]);
 
   // Battle shortcuts: Space ends the activation, Z ability, S treasures.
   const keyState = useRef({ myTurn, attackAbility, freeAbilityReady, ab, spellNow });
@@ -379,9 +399,14 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     }
     if (targeting) return pickForItem(u);
     if (cellAbility) return clickCell(u.pos ?? '');
+    if (tideOn) {
+      if (tideTargets(state, active).some((x) => x.id === u.id)) onAction({ type: 'battleTideSwap', targetId: u.id });
+      reset();
+      return;
+    }
     if (twoStep) {
       if (allyPick) return clickCell(u.pos ?? '');
-      if (sandsAllyTargets(state, active).some((x) => x.id === u.id)) setAllyPick(u.id);
+      if ((ab === 'ebbTide' ? ebbTargets(state, active) : sandsAllyTargets(state, active)).some((x) => x.id === u.id)) setAllyPick(u.id);
       return;
     }
     if (freeAbility) {
@@ -570,6 +595,13 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
         freeAbility={freeAbility}
         setFreeAbility={setFreeAbility}
         allyPick={twoStep ? allyPick : null}
+        tideSwap={tideReady}
+        tideMode={tideOn}
+        setTideMode={(v) => {
+          setFreeAbility(false);
+          setAllyPick(null);
+          setTideMode(v);
+        }}
         mirageSwap={Boolean(myTurn && active && mirageSwapReady(state, active))}
         onAction={onAction}
         reset={reset}

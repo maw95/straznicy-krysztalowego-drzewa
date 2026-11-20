@@ -25,6 +25,9 @@ const ABILITY_ART: Record<string, string> = {
   // Rój Puszczy (placeholders: docs/BACKLOG.md 2a).
   lastCut: 'backstab', sleepSpores: 'poisonClaw', chitinWall: 'hardHead', puffball: 'shardBurst', anthill: 'packHunt', metamorphosis: 'rebirth', homeGround: 'bogRegrowth',
   airHunt: 'dive', spreadSpores: 'treeRoots', coil: 'tentacles', slimeTrail: 'bogRegrowth', greatChorus: 'stormKing',
+  // Bractwo Przypływu (placeholders: docs/BACKLOG.md 2a).
+  waterWall: 'stormKing', sirenSong: 'curse', deepCoil: 'tentacles', tuskShove: 'boulder', molt: 'rebirth', shellUp: 'hardHead', harpoon: 'grab', inkCloud: 'curse',
+  whirl: 'dive', pearlShield: 'guardian', pincers: 'grab', wingBeat: 'nestLeap', livingReef: 'treeRoots', ebbTide: 'web', deepWhirl: 'manyHeads',
   wail: 'curse', viyGaze: 'web', breathAgain: 'giftOfLife', manaReap: 'giftOfLife', graveBreath: 'fireBreath', toll: 'sunburst',
 };
 export const abilityArt = (ability: string) => ABILITY_ART[ability] ?? ability;

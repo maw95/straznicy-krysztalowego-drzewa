@@ -53,6 +53,9 @@ export function statusList(u: BattleUnit): StatusInfo[] {
   if (s.dormant) out.push({ label: 'Uśpiony: stoi, dopóki wróg nie stanie obok albo go nie trafi', glyph: 'sStone', buff: true });
   // Rój Puszczy: the caterpillar that has turned into a butterfly.
   if (s.winged) out.push({ label: 'Motyl Korzenny: po przepoczwarzeniu lata do końca bitwy', glyph: 'sBoltG', buff: true });
+  // Bractwo Przypływu: the pearl shield and the turtle in its shell.
+  if (s.pearl) out.push({ label: `Perłowa tarcza: pochłonie ${s.pearl} obrażeń z ciosów`, glyph: 'sStone', buff: true, value: `${s.pearl}` });
+  if (s.shelled) out.push({ label: 'W skorupie: nie traci Ż do swojej następnej aktywacji', glyph: 'sStone', buff: true });
   if (s.damageReduction) out.push({ label: `−${s.damageReduction} otrzymanych obrażeń`, glyph: 'sStone', buff: true, value: `−${s.damageReduction}` });
   return out;
 }

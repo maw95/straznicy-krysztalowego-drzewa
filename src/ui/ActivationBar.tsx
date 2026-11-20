@@ -49,6 +49,10 @@ interface Props {
   allyPick?: string | null;
   /** Pałac Mirażu (third level): the active unit may swap places with its mirage now. */
   mirageSwap?: boolean;
+  /** Świątynia Pływów: the active unit may swap places with an ally now; the mode in which the next click on a lit ally does it. */
+  tideSwap?: boolean;
+  tideMode?: boolean;
+  setTideMode?: (v: boolean) => void;
   /** Pałac Mirażu while deploying: how many mirages, the units picked for them, the mode in which a click on a unit picks it, and whether the pick differs from the arena. */
   mirage?: { slots: number; choice: string[]; mode: boolean; setMode: (v: boolean) => void; changed: boolean };
   onAction: (a: Action) => void;
@@ -56,7 +60,7 @@ interface Props {
   footer: React.ReactNode;
 }
 
-export function ActivationBar({ state, active, hint, myTurn, deploySide, placing, trapSlots = 0, traps = [], trapMode = false, setTrapMode, attackAbility, useAbility, setUseAbility, freeAbilityReady, freeAbility, setFreeAbility, allyPick = null, mirageSwap = false, mirage, onAction, reset, footer }: Props) {
+export function ActivationBar({ state, active, hint, myTurn, deploySide, placing, trapSlots = 0, traps = [], trapMode = false, setTrapMode, attackAbility, useAbility, setUseAbility, freeAbilityReady, freeAbility, setFreeAbility, allyPick = null, mirageSwap = false, tideSwap = false, tideMode = false, setTideMode, mirage, onAction, reset, footer }: Props) {
   const b = state.battle!;
   const act = b.activation;
   const ab = active ? abilityOf(active) : null;
@@ -130,10 +134,15 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
             </button>
           )}
           {freeAbility && allyPick && (
-            <button className="btn plate parch act-btn" data-auto-cell style={{ width: 96, height: 74, fontSize: 13 }} title="Wskaż pole na arenie albo wybierz najlepsze pole za mnie." onClick={() => { onAction({ type: 'battleAbility', targetId: allyPick }); reset(); }}>Najlepsze pole</button>
+            <button className="btn plate parch act-btn" data-auto-cell style={{ width: 96, height: 74, fontSize: 13 }} title={ab === 'ebbTide' ? 'Wskaż drugą jednostkę albo pozwól wybrać grze.' : 'Wskaż pole na arenie albo wybierz najlepsze pole za mnie.'} onClick={() => { onAction({ type: 'battleAbility', targetId: allyPick }); reset(); }}>{ab === 'ebbTide' ? 'Wybierz za mnie' : 'Najlepsze pole'}</button>
           )}
           {mirageSwap && (
             <button className="btn plate parch act-btn" data-mirage-swap style={{ width: 96, height: 74, fontSize: 13 }} title="Pałac Mirażu: raz na bitwę jednostka zamienia się miejscami ze swoim mirażem." onClick={() => onAction({ type: 'battleMirageSwap' })}>Zamiana z mirażem</button>
+          )}
+          {tideSwap && (
+            <button className={`btn plate parch act-btn ${tideMode ? 'on' : ''}`} data-tide-swap style={{ width: 96, height: 74, fontSize: 13 }} title={`Świątynia Pływów: zanim jednostka się ruszy, zamienia się miejscami z sojusznikiem w zasięgu ${FACTION_MECHANICS.tideRange} pól (wskaż go na arenie).`} onClick={() => setTideMode?.(!tideMode)}>
+              Przypływ{tideMode ? ' ✓' : ''}
+            </button>
           )}
           {freeAbility && ab && CELL_ABILITIES.includes(ab) && (
             <button className="btn plate parch act-btn" data-auto-cell style={{ width: 96, height: 74, fontSize: 13 }} title="Zdolność działa na polu: wskaż je na arenie albo wybierz najlepsze pole za mnie." onClick={() => onAction({ type: 'battleAbility' })}>Najlepsze pole</button>

@@ -11,6 +11,7 @@ import './frost';
 import './free';
 import './sands';
 import './swarm';
+import './tides';
 import './names';
 import './campaign';
 import './changelog';
