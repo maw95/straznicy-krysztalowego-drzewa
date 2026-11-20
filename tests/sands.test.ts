@@ -1,7 +1,7 @@
 // Pustynne Cesarstwo (docs/frakcje/sands.md): the pack, the mirages of the Pałac Mirażu (what the enemy may see of them, what its bot may know, how an attack at
 // one is wasted), every ability of the card, the Spark (rearranging after both sides deployed), the Szlak Karawan and the Brama Wydm, then whole games of the Empire.
 import { describe, expect, it } from 'vitest';
-import { applyAction, createGame, gateMoves, gateReady } from '../src/engine/game';
+import { applyAction, createGame, gateMoves, gateReady, sparkBonus } from '../src/engine/game';
 import { ABILITY, FACTION_HEROES, UNITS } from '../src/engine/data';
 import {
   ambushCells,
@@ -10,6 +10,7 @@ import {
   attackTargets,
   deployCells,
   isMirage,
+  makeBattleUnit,
   makeMirage,
   mirageSlots,
   miragesOf,
@@ -512,6 +513,10 @@ describe('the Spark: rearranging after both sides deployed', () => {
     // a bot rearranges without breaking the rule
     const bot = applyAction(both, chooseAction(both)!);
     expect(bot.battle!.stage).toBe('fight');
+    // the Pyramid gives the units of the Empire no bonus of its own
+    const unit = makeBattleUnit('cobra', 'dawn');
+    sparkBonus(both, unit);
+    expect([unit.status.battleAttackBonus, unit.status.battleSpeedBonus, unit.hp]).toEqual([0, 0, makeBattleUnit('cobra', 'dawn').hp]);
   });
 });
 

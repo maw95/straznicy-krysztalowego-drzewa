@@ -30,6 +30,11 @@ import {
   trapSlots,
   trapZone,
   trapsOf,
+  throwTargets,
+  portalCells,
+  mirageMakeCells,
+  sandsAllyTargets,
+  mirageSwapReady,
 } from '../engine/battle';
 import { castableInBattle, SPELLS, spellPreview, spellTargets, type SpellId } from '../engine/magic';
 import { sfx } from './sfx';
@@ -83,6 +88,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const scale = fitScale * zoom;
   const [useAbility, setUseAbility] = useState(false);
   const [freeAbility, setFreeAbility] = useState(false);
+  /** Piaskowa Brama, Lustro Wydm: the ally picked first (then a cell). */
+  const [allyPick, setAllyPick] = useState<string | null>(null);
   const [targeting, setTargeting] = useState<ItemTargeting | null>(null);
   const [showItems, setShowItems] = useState(false);
   const [hover, setHover] = useState<HexKey | null>(null);
@@ -136,8 +143,11 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const spellNow = spell && castable.includes(spell) ? spell : null;
   const spellAims = useMemo(() => (spellNow ? spellTargets(state, spellNow) : []), [state, spellNow]);
   const [spellsOpen, setSpellsOpen] = useState(false);
-  const moves = useMemo(() => (myTurn && active && !act!.moved && !act!.attacked && !targeting && !spellNow ? reachableCells(state, active) : new Map<HexKey, number>()), [state, myTurn, active, act, targeting, spellNow]);
-  const targets = useMemo(() => (myTurn && active && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility && !spellNow ? attackTargets(state, active) : []), [state, myTurn, active, act, targeting, spellNow, freeAbility]);
+  // Rzut Sztyletem: after the throw the Beduin may still walk.
+  const moves = useMemo(() => (myTurn && active && !act!.moved && (!act!.attacked || act!.thrown) && !targeting && !spellNow ? reachableCells(state, active) : new Map<HexKey, number>()), [state, myTurn, active, act, targeting, spellNow]);
+  /** Rzut Sztyletem is switched on: the targets are the enemies in sight that do not stand next to the Beduin. */
+  const throwing = Boolean(useAbility && active && abilityOf(active) === 'daggerThrow' && !active.abilityUsed);
+  const targets = useMemo(() => (myTurn && active && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility && !spellNow ? (throwing ? throwTargets(state, active) : attackTargets(state, active)) : []), [state, myTurn, active, act, targeting, spellNow, freeAbility, throwing]);
   const hops = myTurn && active && act!.hop ? hopCells(state, active, act!.hop) : [];
   // Siege: what the viewer's catapult may shoot now.
   const catapult = myTurn && !targeting ? catapultTargets(state) : [];
@@ -148,7 +158,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
    * that it can walk to now. Clicking the enemy walks there and attacks, as in Heroes III.
    */
   const approachCellsOf = (u: BattleUnit): HexKey[] => {
-    if (!myTurn || !active?.pos || !u.pos || u.side === active.side || act!.moved || act!.attacked || act!.moveOnly || act!.hop || targeting || freeAbility) return [];
+    if (!myTurn || !active?.pos || !u.pos || u.side === active.side || act!.moved || act!.attacked || act!.moveOnly || act!.hop || targeting || freeAbility || throwing) return [];
     // An enemy already in reach is attacked from where the unit stands, unless the pointer aims at another side it can walk to (see aimApproach).
     if (UNITS[active.defId].attackType !== 'melee') return [];
     // A large unit (target or attacker) lies on two cells: any cell of the attacker's footprint beside any cell of the target counts.
@@ -221,6 +231,9 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       if (ability === 'bellOfGlass' && u.side !== active.side && unitDistance(active, u) <= ABILITY.bellRange && (u.status.frost ?? 0) >= 1) return 'cur-spell';
       if (ability === 'beardChill' && u.side !== active.side && unitDistance(active, u) <= ABILITY.beardRange) return 'cur-spell';
       if (ability === 'ravenEye' && u.side !== active.side && unitDistance(active, u) <= ABILITY.ravenRange) return 'cur-spell';
+      // Pustynne Cesarstwo: the Sfinks puzzles an enemy in range; the Wezyr, the Dancer and the Rok first pick an ally.
+      if (ability === 'riddle' && u.side !== active.side && unitDistance(active, u) <= ABILITY.riddleRange) return 'cur-spell';
+      if ((ability === 'sandPortal' || ability === 'mirageMake' || ability === 'rocLift') && !allyPick && sandsAllyTargets(state, active).some((x) => x.id === u.id)) return 'cur-spell';
     }
     // A treasure is being aimed (Eliksir, Zwój, Róg...): the same wand as for an ability, over every unit it can be used on.
     if (targeting && myTurn && u.alive) {
@@ -230,7 +243,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     }
     if (approachable) return 'cur-melee';
     // A ranged unit shoots even at a neighbour (it must, when one stands next to it), but then it strikes: the sword, not the arrow.
-    if (targets.some((t) => t.id === u.id)) return UNITS[active.defId].attackType === 'melee' || unitDistance(active, u) === 1 ? 'cur-melee' : 'cur-ranged';
+    if (targets.some((t) => t.id === u.id)) return !throwing && (UNITS[active.defId].attackType === 'melee' || unitDistance(active, u) === 1) ? 'cur-melee' : 'cur-ranged';
     const canShoot = myTurn && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility && UNITS[active.defId].attackType === 'ranged';
     if (!canShoot || u.side === active.side) return '';
     return !engaged && !hasLineOfSight(state, active.pos, u.pos) ? 'cur-blocked' : '';
@@ -245,7 +258,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, b, myTurn, active, act, moves, targets, targeting, freeAbility, spellNow, spellAims]);
+  }, [state, b, myTurn, active, act, moves, targets, targeting, freeAbility, spellNow, spellAims, allyPick, throwing]);
   const approachCells = (u: BattleUnit): HexKey[] => unitInfo.get(u.id)?.approach ?? [];
   const unitCursor = (u: BattleUnit): string => unitInfo.get(u.id)?.cursor ?? '';
   useEffect(preloadAimedCursors, []);
@@ -270,19 +283,25 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     setTargeting(null);
     setFreeAbility(false);
     setPloyFrom(null);
+    setAllyPick(null);
   }
 
+  const twoStep = freeAbility && (ab === 'sandPortal' || ab === 'mirageMake');
   // A free ability that works on a cell (Fortel, Tama, Ładunek): the cells it may be aimed at are lit, the next click on one fires it (Fortel: a click on an own trap first picks it up to move).
   const [ployFrom, setPloyFrom] = useState<HexKey | null>(null);
   const cellAbility = freeAbility && myTurn && active && ab !== null && CELL_ABILITIES.includes(ab) ? ab : null;
   const aimCells = useMemo<HexKey[]>(() => {
+    // Piaskowa Brama and Lustro Wydm: once the ally is picked, the cells it (or its mirage) may go to.
+    const picked = allyPick && active ? b.units[allyPick] : undefined;
+    if (freeAbility && active && picked && ab === 'sandPortal') return portalCells(state, active, picked);
+    if (freeAbility && active && picked && ab === 'mirageMake') return mirageMakeCells(state, active, picked);
     if (!cellAbility || !active) return [];
     const own = trapsOf(b, active.side).map((g) => g.cell);
     if (cellAbility === 'blast') return own;
     if (cellAbility === 'dam') return cellsOf(active).flatMap((c) => neighborKeys(c)).filter((k, i, all) => all.indexOf(k) === i && inLayout(b, k) && !b.obstacles.includes(k) && !unitAt(b, k));
     return [...trapZone(b, active.side).filter((k) => mayLayTrap(b, active.side, k)), ...own];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cellAbility, b, active]);
+  }, [cellAbility, b, active, allyPick, freeAbility]);
 
   // Battle shortcuts: Space ends the activation, Z ability, S treasures.
   const keyState = useRef({ myTurn, attackAbility, freeAbilityReady, ab, spellNow });
@@ -333,7 +352,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   }
 
   // ---------------------------------------------------------------- deployment
-  const deploy = useDeployment(b, canAct, anim.walk, b.stage === 'deploy' && canAct && b.needsDeploy[0] ? trapSlots(state, b.needsDeploy[0]) : 0);
+  const deploy = useDeployment(b, canAct, anim.walk, b.stage === 'deploy' && canAct && b.needsDeploy[0] && !b.rearrange ? trapSlots(state, b.needsDeploy[0]) : 0, state);
   const { deploySide, picked, setPicked, posOf, placeAt } = deploy;
 
   function clickUnit(u: BattleUnit): void {
@@ -355,6 +374,11 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     }
     if (targeting) return pickForItem(u);
     if (cellAbility) return clickCell(u.pos ?? '');
+    if (twoStep) {
+      if (allyPick) return clickCell(u.pos ?? '');
+      if (sandsAllyTargets(state, active).some((x) => x.id === u.id)) setAllyPick(u.id);
+      return;
+    }
     if (freeAbility) {
       onAction({ type: 'battleAbility', targetId: u.id });
       reset();
@@ -385,6 +409,12 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       const own = Object.values(b.units).find((u) => u.side === deploySide && posOf(u) === k);
       if (own && !picked) setPicked(own.id);
       else placeAt(k);
+      return;
+    }
+    if (twoStep && allyPick && active) {
+      if (!aimCells.includes(k)) return;
+      onAction({ type: 'battleAbility', targetId: allyPick, cell: k });
+      reset();
       return;
     }
     if (cellAbility && active) {
@@ -528,6 +558,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
         freeAbilityReady={freeAbilityReady}
         freeAbility={freeAbility}
         setFreeAbility={setFreeAbility}
+        allyPick={twoStep ? allyPick : null}
+        mirageSwap={Boolean(myTurn && active && mirageSwapReady(state, active))}
         onAction={onAction}
         reset={reset}
         footer={footer}

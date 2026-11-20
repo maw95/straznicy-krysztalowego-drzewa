@@ -1,11 +1,11 @@
 // Opens the game in a headless browser for checks and screenshots: starts its own Vite server
-// (port 5180, never the developer's 5173), skips the intro, title, tutorial and "what's new",
+// (port 5180, or SKD_BROWSER_PORT for a second checkout such as a worktree; never the developer's 5173), skips the intro, title, tutorial and "what's new",
 // and plays offline unless a server URL is given. Used by zrzut.ts; import it in one-off checks.
 
 import { chromium, type Browser, type Page } from 'playwright';
 import { createServer, type ViteDevServer } from 'vite';
 
-export const PORT = 5180;
+export const PORT = Number(process.env.SKD_BROWSER_PORT ?? 5180);
 
 /** Window sizes: a desktop, a big 1440p screen, an upright phone and a phone held sideways. */
 export const VIEWS = {

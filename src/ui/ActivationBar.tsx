@@ -1,6 +1,7 @@
 // The bar under the arena: the active unit and what it can do, its ability and end buttons, the initiative queue.
 
 import { abilityTextFor, FACTION_NAMES, scaleText, UNITS, type TeamId } from '../engine/data';
+import { FACTION_MECHANICS } from '../engine/empire';
 import { abilityOf, CELL_ABILITIES, livingUnits, unitSpeed, UNTARGETED_ABILITIES } from '../engine/battle';
 import { isDigital, type Action, type BattleState, type BattleUnit, type GameState } from '../engine/types';
 import { abilityArt, asset, Frame, Medal, Portrait, SIDE_RING } from './common';
@@ -10,6 +11,7 @@ import { statusList, StatusBadge } from './battleStatus';
 export function activationHint(b: BattleState, o: { deploySide: TeamId | null; picked: string | null; trapMode?: boolean; myTurn: boolean; moves: number; targets: number; sideName?: (t: TeamId) => string }): string {
   if (b.stage === 'deploy') {
     if (!o.deploySide) return `${o.sideName ? o.sideName(b.needsDeploy[0]) : FACTION_NAMES[b.needsDeploy[0]]} ustawia jednostki…`;
+    if (b.rearrange) return `Iskra: przestaw najwyżej ${FACTION_MECHANICS.sparkRearrange} jednostki (kliknij jednostkę, potem pole)`;
     return o.trapMode ? 'Kliknij pole swojej połowy, by położyć sidło' : o.picked ? 'Wskaż złote pole w swojej kolumnie' : 'Kliknij jednostkę, potem pole';
   }
   if (!o.myTurn) return 'Ruch przeciwnika…';
@@ -42,12 +44,16 @@ interface Props {
   freeAbilityReady: boolean;
   freeAbility: boolean;
   setFreeAbility: (v: boolean) => void;
+  /** Piaskowa Brama, Lustro Wydm: the ally picked (the next click is the cell; without a cell the engine takes the best one). */
+  allyPick?: string | null;
+  /** Pałac Mirażu (third level): the active unit may swap places with its mirage now. */
+  mirageSwap?: boolean;
   onAction: (a: Action) => void;
   reset: () => void;
   footer: React.ReactNode;
 }
 
-export function ActivationBar({ state, active, hint, myTurn, deploySide, placing, trapSlots = 0, traps = [], trapMode = false, setTrapMode, attackAbility, useAbility, setUseAbility, freeAbilityReady, freeAbility, setFreeAbility, onAction, reset, footer }: Props) {
+export function ActivationBar({ state, active, hint, myTurn, deploySide, placing, trapSlots = 0, traps = [], trapMode = false, setTrapMode, attackAbility, useAbility, setUseAbility, freeAbilityReady, freeAbility, setFreeAbility, allyPick = null, mirageSwap = false, onAction, reset, footer }: Props) {
   const b = state.battle!;
   const act = b.activation;
   const ab = active ? abilityOf(active) : null;
@@ -109,6 +115,12 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
               <img src={asset(`cards/abilities/${abilityArt(abilityOf(active))}.png`)} alt="" style={{ width: 34, height: 34 }} />
               <span style={{ fontSize: 13, lineHeight: 1.05, textAlign: 'center' }}>{UNITS[active.defId].abilityName}</span>
             </button>
+          )}
+          {freeAbility && allyPick && (
+            <button className="btn plate parch act-btn" data-auto-cell style={{ width: 96, height: 74, fontSize: 13 }} title="Wskaż pole na arenie albo wybierz najlepsze pole za mnie." onClick={() => { onAction({ type: 'battleAbility', targetId: allyPick }); reset(); }}>Najlepsze pole</button>
+          )}
+          {mirageSwap && (
+            <button className="btn plate parch act-btn" data-mirage-swap style={{ width: 96, height: 74, fontSize: 13 }} title="Pałac Mirażu: raz na bitwę jednostka zamienia się miejscami ze swoim mirażem." onClick={() => onAction({ type: 'battleMirageSwap' })}>Zamiana z mirażem</button>
           )}
           {freeAbility && ab && CELL_ABILITIES.includes(ab) && (
             <button className="btn plate parch act-btn" data-auto-cell style={{ width: 96, height: 74, fontSize: 13 }} title="Zdolność działa na polu: wskaż je na arenie albo wybierz najlepsze pole za mnie." onClick={() => onAction({ type: 'battleAbility' })}>Najlepsze pole</button>

@@ -777,3 +777,22 @@ pojedynki sprzyjają Przymierzu. Poziom Łatwy (pojedynki bez zdolności) się n
 - **Decyzja:** każdy bohater może być podniesiony Eliksirem Odrodzenia **tylko raz na partię** (flaga `HeroState.revived`, na mapie `useMapItem` i w bitwie `ITEM_HANDLERS.resurrection`). Pomocników limit nie dotyczy; na arenie (bez bohaterów z mapy) też nie.
 - Interfejs i boty nie oferują już bohatera, który wstał raz (`ItemsPanel`, `AdventureView`, `battleAi`, `adventureAi`); opis skarbu: „Każdy bohater wstaje tak tylko raz.”
 - Skutek dla wyników: `golden.test.ts` zmienia się tam, gdzie boty podnosiły tego samego bohatera drugi raz (snapshot odświeżony świadomie).
+
+## 17. Pustynne Cesarstwo: miraże i zdolności w wersji cyfrowej (2026-11-20, bramka G1, decyzje Claude'a do przejrzenia przez autora)
+
+Karta `docs/frakcje/sands.md` zostawia część szczegółów otwartych; przy G1 przyjąłem (wszystko tylko w wersji cyfrowej, liczby do G2):
+- **Miraż to pełna figura:** ma aktywacje jak jednostka, którą kopiuje (ta sama Szybkość, kolejka tasowana co rundę w obrębie grupy jednostka + jej miraże), może się ruszać, nigdy nie atakuje i nie ma zdolności. Przeciwnik widzi go z liczbami prawdziwej jednostki (Ż, statusy, zużyta zdolność) i pod pomieszanymi id (`BattleState.mirageAlias`), więc ani ekran, ani dane wysyłane przez serwer, ani bot wroga nie odróżniają go od oryginału. Wyjątek z natury rzeczy: jednostka, która przeżyła trafienie, jest prawdziwa.
+- **Każde obrażenie lub atak w miraż** (także obszarowe, trucizna, Czujność) tylko go rozwiewa; atak przepada razem z użytą do niego zdolnością. Zagadka rzucona na miraż działa jak na jednostkę (nic nie zdradza). Gdy jednostka ginie, jej miraże znikają. Strona, której zostały same miraże, przegrywa; po bitwie miraży nie ma (nie liczą się do strat ani ocalałych).
+- **Które jednostki dostają miraż:** wybiera gra (najcenniejsze nie-bohaterskie: Ż, A, strzelcy, tier), na wolnych polach kolumn startowych; rzut monetą decyduje, czy na polu kopii stoi kopia, czy oryginał. Gracz rozstawia miraże jak swoje jednostki. Wyboru jednostki w interfejsie nie ma (otwarte pytanie).
+- **Lustro Wydm:** po stworzeniu mirażu moneta decyduje, czy jednostka przeskakuje na nowe pole (a miraż zostaje na starym), żeby wróg nie wiedział, która figura się pojawiła.
+- **Zamiana z mirażem (III):** wolna akcja w aktywacji jednostki, raz na bitwę na stronę; wróg widzi, że dwie podobne figury zamieniły się miejscami.
+- **Oślepienie (IV):** −1 A przy atakach w następnej aktywacji tego, kto rozbił miraż.
+- **Mangusta Faraona:** odporna na truciznę, klątwy, spowolnienia i unieruchomienie (silnik łączy truciznę z klątwami w jednej odporności; karta mówi „trucizna i unieruchomienie”).
+- **Rzut Sztyletem:** tylko w wroga, który nie stoi obok i jest w zasięgu wzroku; pełne A jednostki (bez premii strzelców), bez reakcji wręcz (Riposta, Kolce itd.); po rzucie Beduin może jeszcze wykonać zwykły ruch, potem aktywacja się kończy.
+- **Zasadzka Spod Piasku:** Królowa rozstawia się na dowolnym wolnym polu swojej połowy (bez środkowej kolumny); jest ukryta jak Jenot Szpieg (`veiled`) do pierwszego ruchu lub ataku; każde jej trafienie zatruwa (jak Jad).
+- **Czujność / Czujna Drzemka / Przebudzenie** reagują, gdy wróg kończy ruch (marsz, odskok, teleport, Piaskowa Brama, lądowanie z Rokiem) obok, a wcześniej obok nie stał. Bastia leży jak Okop (pancerz, nie do odepchnięcia) do końca następnej aktywacji i uderza raz na jedno położenie się.
+- **Kamienny Strażnik:** uśpiony traci aktywacje; budzi go wróg, który stanie obok, albo każde obrażenie.
+- **Iskra:** po rozstawieniu obu stron Cesarstwo dostaje jeszcze jeden krok rozstawienia: najwyżej 2 jednostki (miraże też się liczą) zmieniają pole w kolumnach startowych (Królowa w swojej połowie).
+- **Brama Wydm:** bez kosztu punktów ruchu, na odkryte pole bez miejsca (osady, kopalni, chaty), bez bohatera i strażnika, w odległości do 8, raz na 3 rundy dla frakcji.
+- **Szlak Karawan II:** targ skupuje surowiec po cenie, za jaką go tam sprzedaje.
+- **Ukryta informacja a losowość:** pomieszanie id i kolejki losuje się z RNG gry (`state.rng`), który jest w stanie wysyłanym graczom; ktoś, kto odtworzy RNG z surowych danych, mógłby to odgadnąć (to samo dotyczy położenia Sideł Kompanii). Do decyzji, czy serwer ma trzymać osobne ziarno ukrytych losowań.

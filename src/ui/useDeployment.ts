@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import type { TeamId } from '../engine/data';
-import { deployCellOf, deployCells, trapZone } from '../engine/battle';
+import { ambushCells, buriesAtDeploy, deployCellOf, deployCells, trapZone } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
-import type { BattleState, BattleUnit } from '../engine/types';
+import type { BattleState, BattleUnit, GameState } from '../engine/types';
 
 export type Deployment = ReturnType<typeof useDeployment>;
 
@@ -12,7 +12,7 @@ export type Deployment = ReturnType<typeof useDeployment>;
  * `walk` holds the cells of units shown mid-walk; other units stand where the state (or the new setup) puts them.
  * `posOf` is the cell a unit is shown on; while deploying, a large unit's deploy cell is its tail (the head lies one column further).
  */
-export function useDeployment(b: BattleState, canAct: boolean, walk: Record<string, HexKey>, slots = 0) {
+export function useDeployment(b: BattleState, canAct: boolean, walk: Record<string, HexKey>, slots = 0, state?: GameState) {
   const deploySide: TeamId | null = b.stage === 'deploy' && canAct ? b.needsDeploy[0] ?? null : null;
   const [placing, setPlacing] = useState<Record<string, HexKey>>({});
   const [picked, setPicked] = useState<string | null>(null);
@@ -34,6 +34,9 @@ export function useDeployment(b: BattleState, canAct: boolean, walk: Record<stri
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploySide, b.needsDeploy.length]);
   const deployable = new Set(deploySide ? deployCells(b, deploySide) : []);
+  // Zasadzka Spod Piasku: the picked Queen may lie anywhere on her half.
+  const pickedUnit = picked ? b.units[picked] : undefined;
+  if (deploySide && state && pickedUnit && buriesAtDeploy(state, pickedUnit)) for (const k of ambushCells(b, deploySide)) if (!Object.values(b.units).some((u) => u.side !== deploySide && (u.pos === k || u.tail === k))) deployable.add(k);
   const trapCells = new Set<HexKey>(deploySide && trapMode ? trapZone(b, deploySide) : []);
   const posOf = (u: BattleUnit): HexKey | null => (deploySide && u.side === deploySide ? placing[u.id] ?? deployCellOf(u) : walk[u.id] ?? u.pos);
 

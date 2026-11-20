@@ -46,6 +46,11 @@ export function statusList(u: BattleUnit): StatusInfo[] {
   if (s.veiled) out.push({ label: 'Ukryty: wróg go nie widzi i nie może go wybrać na cel; pierwszy atak ma premię i go odsłania', glyph: 'sGuard', buff: true });
   if (s.dugIn) out.push({ label: 'Okop: pancerz i nie da się odepchnąć', glyph: 'sStone', buff: true });
   if (s.rootLater) out.push({ label: 'Złapany w sidła: nie ruszy się w swojej następnej aktywacji', glyph: 'sRoot', buff: false });
+  // Pustynne Cesarstwo: a mirage (only its own side sees this), a puzzled enemy, a blinded one, a dormant stone guardian.
+  if (s.mirage) out.push({ label: 'Miraż: atrapa, której wróg nie odróżni od prawdziwej jednostki; nie atakuje, znika po trafieniu', glyph: 'sGuard', buff: true });
+  if (s.riddled) out.push({ label: 'Zagadka: nie zaatakuje w swojej następnej aktywacji', glyph: 'sRoot', buff: false });
+  if (s.blindLater || s.blinded) out.push({ label: `Oślepiony: −${s.blinded ?? s.blindLater} A w następnej aktywacji (Pałac Mirażu)`, glyph: 'sBlade', buff: false });
+  if (s.dormant) out.push({ label: 'Uśpiony: stoi, dopóki wróg nie stanie obok albo go nie trafi', glyph: 'sStone', buff: true });
   if (s.damageReduction) out.push({ label: `−${s.damageReduction} otrzymanych obrażeń`, glyph: 'sStone', buff: true, value: `−${s.damageReduction}` });
   return out;
 }

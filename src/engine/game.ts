@@ -1142,6 +1142,8 @@ export function sparkBonus(state: GameState, unit: BattleState['units'][string])
   else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'frost') return;
   // The Companies' Iskra works on the field (two more hidden traps: `trapSlots`), not on its own units.
   else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'free') return;
+  // The Empire's Iskra moves its units after both sides have deployed (`deployUnits`), it gives them nothing.
+  else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'sands') return;
   else unit.status.battleAttackBonus += EMPIRE.sparkAttack * scaleOf(state);
 }
 

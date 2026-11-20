@@ -866,6 +866,11 @@ export function App() {
           {peekTraps ? 'Ukryj Sidła' : 'Podejrzyj Sidła'}
         </button>
       )}
+      {trapSecrecy && humanTurn && game.battle?.stage === 'fight' && viewer && Object.values(game.battle.units).some((u) => u.side === viewer && u.status.mirage) && (
+        <button className="btn plate parch btn-bar" data-peek-mirages aria-pressed={peekTraps} title="Własne miraże widać tylko w twojej turze, po kliknięciu: inni gracze niech nie patrzą" onClick={() => setPeekTraps((v) => !v)}>
+          {peekTraps ? 'Ukryj miraże' : 'Podejrzyj miraże'}
+        </button>
+      )}
       {humanTurn && game.players.some((p) => p.child) && (
         <button className="btn plate parch btn-bar" title="Podpowiedź: co zrobiłby komputer" onClick={showHint}>
           💡 Podpowiedź
@@ -989,7 +994,7 @@ export function App() {
         <Handoff state={game} playerId={actor.playerId} onConfirm={() => setConfirmedFaction(actor.faction)} />
       )}
       {trapVeil && actor.kind === 'human' && (
-        <Handoff state={game} playerId={actor.playerId} note={`Pozostali gracze, odwróćcie wzrok. Na ekranie pojawi się ustawianie ukrytych Sideł: ${FACTION_NAMES[raceOf(game, actor.faction)]}.`} onConfirm={() => setTrapsUncovered(actor.faction)} />
+        <Handoff state={game} playerId={actor.playerId} note={raceOf(game, actor.faction) === 'sands' ? `Pozostali gracze, odwróćcie wzrok. Na ekranie pojawi się ustawianie mirażów i zakopanej Królowej: ${FACTION_NAMES[raceOf(game, actor.faction)]}.` : `Pozostali gracze, odwróćcie wzrok. Na ekranie pojawi się ustawianie ukrytych Sideł: ${FACTION_NAMES[raceOf(game, actor.faction)]}.`} onConfirm={() => setTrapsUncovered(actor.faction)} />
       )}
 
       <TreasureDialog hero={humanTurn && !held && game.phase === 'adventure' && !steps.length && !activeHero(game)?.offer ? activeHero(game) : null} onChoose={(kind) => dispatch({ type: 'chooseTreasure', kind })} />

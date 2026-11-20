@@ -4,7 +4,7 @@ import { heroLabel } from '../engine/realm';
 import { shardsOf, shardTotal } from '../engine/empire';
 import { MAGIC, manaOf, maxMana, portalTarget, SPELLS } from '../engine/magic';
 import { FACTION_NAMES, itemDef, TERRAIN_COST, TERRAIN_NAMES, UNITS, type FactionId, type TeamId } from '../engine/data';
-import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots, sneakMoves } from '../engine/game';
+import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMoves, moveAllowance, moveBreakdown, reviveSpots, sneakMoves, gateMoves } from '../engine/game';
 import { fightLevelAt } from './fightBadges';
 import { EnemyPill, FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
@@ -122,6 +122,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const [flash, setFlash] = useState<HexKey | null>(null);
   /** A fallen hero being revived: the player picks a free hex next to the active hero. */
   const [revive, setRevive] = useState<{ itemId: string; unitId: string } | null>(null);
+  /** Brama Wydm (the Desert Empire): the gate is open and the next click on a lit hex steps there. */
+  const [gatePick, setGatePick] = useState(false);
 
   useLayoutEffect(() => {
     const el = boardRef.current;
@@ -260,10 +262,12 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
       el.removeEventListener('touchcancel', end);
     };
   }, []);
-  const reviveAt = useMemo(() => (revive && hero ? reviveSpots(state, hero) : null), [revive, hero, state]);
+  const gates = useMemo(() => (canAct ? gateMoves(state) : []), [state, canAct]);
+  const reviveAt = useMemo(() => (revive && hero ? reviveSpots(state, hero) : gatePick && gates.length ? gates : null), [revive, hero, state, gatePick, gates]);
+  useEffect(() => setGatePick(false), [hero?.id, gates.length === 0]);
   const reach = useMemo(() => {
     if (!canAct) return new Map();
-    // While placing a revived hero the highlighted hexes are its free spots, not the walk.
+    // While placing a revived hero (or stepping through the Brama Wydm) the highlighted hexes are the spots it may go to, not the walk.
     if (reviveAt && hero) return new Map(reviveAt.map((k) => [k, { cost: 0, path: [hero.pos, k], hostile: false }]));
     return reachablePaths(state);
   }, [state, canAct, reviveAt, hero]);
@@ -377,6 +381,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
     if (revive) {
       if (reviveAt?.includes(k)) onAction({ type: 'useMapItem', itemId: revive.itemId, unitId: revive.unitId, targets: [k] });
       setRevive(null);
+      return;
+    }
+    if (gatePick) {
+      if (gates.includes(k)) onAction({ type: 'gateHero', to: k });
+      setGatePick(false);
       return;
     }
     stepTo(k);
@@ -763,6 +772,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               <div style={{ fontSize: 14 }}>{reviveAt?.length ? 'Kliknij podświetlone wolne pole obok swojego bohatera.' : 'Obok nie ma wolnego pola — przejdź gdzie indziej i spróbuj ponownie.'}</div>
               <button className="btn plate parch" style={{ padding: '2px 8px', alignSelf: 'flex-start' }} onClick={() => setRevive(null)}>Anuluj</button>
             </div>
+          )}
+          {canAct && gates.length > 0 && (
+            <button className="btn plate parch" data-gate aria-pressed={gatePick} style={{ padding: '6px 10px', fontSize: 15 }} title="Brama Wydm: bohater stojący w osadzie z bramą przenosi się na odkryte, wolne pole w zasięgu (raz na kilka rund)." onClick={() => setGatePick((v) => !v)}>
+              {gatePick ? 'Wskaż pole na mapie (Anuluj)' : 'Brama Wydm'}
+            </button>
           )}
           {canAct && sneakMoves(state).map((m) => (
             <button key={m.to} className="btn plate parch" data-sneak={m.to} style={{ padding: '6px 10px', fontSize: 15 }} title="Szlaki Przemytnicze: raz na rundę bohater Kompanii przechodzi przez pole strażników bez walki." onClick={() => onAction({ type: 'sneakHero', to: m.to })}>

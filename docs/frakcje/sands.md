@@ -1,4 +1,4 @@
-# Karta frakcji: Pustynne Cesarstwo (`sands`) — G0 zatwierdzona wstępnie (20.11.2026)
+# Karta frakcji: Pustynne Cesarstwo (`sands`) — G0 zatwierdzona wstępnie (20.11.2026), G1 w toku
 
 **Zmiany z 20.11.2026 (zatwierdzone przez autora):** nazwa frakcji Pustynne Cesarstwo; Dżin Burzy Piaskowej usunięty z T5A; nowy Beduin Nomada (T2A; człowiek pustyni w burnusie z szablą, zwinny, bez konia); Skorpion Piaskowy na T3B; Kamienny Strażnik Grobowca na T4A; Lamassu na T5A; Dżin Wezyr zostaje bohaterem. Karta bez kodu (G0).
 
@@ -80,6 +80,16 @@ Rozstawia miraże przy najcenniejszych jednostkach, zasadza Królową przy strze
 ## Rozstrzygnięcia autora (19–20.11)
 - Zwierzaki autora jako **dowódcy z karczmy**: **Żbiczka Bajdurka** (łowca, Kompanie, Szalony Skok), **Bastia Cienista** (wojownik, Piaski, Czujna Drzemka), **Sefiran Plamisty** (mędrzec, Przypływy, Wylinka). Odróżnienie Sefirana od Węża Morskiego: mały, szary, w plamy.
 - Piaski (przegląd autora 20.11): Mangusta Faraona (tier 1, Odporność na Jad), Skorpion Piaskowy na 2A, Krokodyl Oazowy zamiast Olbrzymiego Skorpiona, bez Łucznika na Wielbłądzie i bez Hieny; wielbłąd tylko u Wielbłądziego Księcia.
+
+## Stan G1 (20.11.2026, praca w gałęzi `g1-four-factions`)
+Zrobione: paczka `src/engine/factions/sands.ts` według tabeli wyżej (A: Beduin Nomada, Tancerka, Kamienny Strażnik, Lamassu; B: Kobra, Skorpion Piaskowy, Krokodyl Oazowy, Rok; legenda Czerw); Dżin Burzy Piaskowej usunięty (dane, grafika zastępcza, `assets.json`); 3 bohaterów, 3 dowódców, Wielbłądzi Książę; siedliska (Namiot Nomadów i reszta); budynki Pałac Mirażu (I-IV), Szlak Karawan (I-II), Brama Wydm (akcja `gateHero` i przycisk na mapie).
+- **Miraż** (`setUpMirages`, `makeMirage`, `dispelMirage` w `battle.ts`): atrapy z 1 trafieniem, rozstawiane jak jednostki; atak w miraż przepada, IV oślepia; III zamiana (`battleMirageSwap`). Ukryta informacja: `redactHidden` (`src/engine/hidden.ts`) przebiera miraże wroga za ich jednostki i miesza id, `unmaskId` odwraca id w akcjach przeciwnika; serwer używa tego samego przez `visibleTo` (zmiana backendu niepotrzebna). Bot wroga planuje na widoku swojej strony (`chooseBattleAction`), więc który z bliźniaków atakuje, zależy od ziarna, nigdy od prawdy (test „bliźniaczej gry” w `tests/sands.test.ts`).
+- **Zdolności:** Piaskowa Brama, Zagadka, Zasadzka Spod Piasku (ukrycie jak Jenot, rozstawienie w swojej połowie, trucizna), Czujna Drzemka, Czujność, Odporność na Jad, Strzał zza Wydmy, Rzut Sztyletem, Hipnoza, Lustro Wydm, Jad, Przebudzenie, Chwyt Szczęk, Strażnik Bram, Lot ze Skrzydłem, Spod Piasku; Strzał i Galop, Celny Strzał z Postoju, Woda z Oazy z istniejących.
+- **Iskra:** dodatkowy krok rozstawienia po obu stronach (najwyżej 2 jednostki).
+- **Bot:** miraże dostają najcenniejsze jednostki, Królowa leży najbliżej strzelców wroga (i przenosi się tam Iskrą, gdy wróg już stoi), Iskra odsuwa rannych i strzelców od wrogiej piechoty, ranna jednostka zamienia się z mirażem, Wezyr wynosi rannych i stawia wojowników przy strzelcach wroga, Czerw wynurza się przy wrogu, Brama Wydm skraca drogę.
+- **Ekran:** odznaka „Miraż” tylko u właściciela, przyciski zdolności (dwa kroki: sojusznik, potem pole), „Zamiana z mirażem”, Rzut Sztyletem jako przełącznik zdolności, Królowa na całej połowie przy rozstawieniu, podpowiedź kroku Iskry; przy jednym ekranie zasłona rozstawienia i „Podejrzyj miraże”.
+- Angielski `src/i18n/en/sands.ts`; testy `tests/sands.test.ts`; próbka `scripts/sim/piaski.ts`; przeglądarka `scripts/browser/piaski.ts` (`SKD_BROWSER_PORT`).
+- Decyzje do przejrzenia: `NOTATKI_DLA_AGENTA_PLANSZOWKI.md`, sekcja 17. Zostaje: liczby (G2), wybór jednostki z mirażem w interfejsie, grafika (lista w `BACKLOG.md` 2a), instrukcja (G5).
 
 ## Grafika (wypełnia Claude od G4)
 - Lista zasobów w `docs/BACKLOG.md`, sekcja 2a, po G1.
