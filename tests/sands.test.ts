@@ -15,6 +15,8 @@ import {
   mirageSlots,
   miragesOf,
   predictDamage,
+  resistsPoison,
+  resistsStatus,
   scaleOf,
   startBattleFight,
   throwTargets,
@@ -446,12 +448,16 @@ describe('units', () => {
     expect(at(two, 'goblinSlinger').hp).toBe(99);
   });
 
-  it('Odporność na Jad: no poison and no root on the Mongoose', () => {
+  it('Odporność na Jad: no poison on the Mongoose, but the Cobra\'s Hypnosis (a root) still works on it (20.11: poison only)', () => {
     const s = fight([['sandScorpion', 'dawn', 6, 8], ['pharaohMongoose', 'horde', 7, 9, 99]]);
     const hit = strike(s, 'sandScorpion', 'pharaohMongoose', true);
     expect(at(hit, 'pharaohMongoose').status.poisoned ?? 0).toBe(0);
     const cobra = strike(fight([['cobra', 'dawn', 6, 8], ['pharaohMongoose', 'horde', 7, 9, 99]]), 'cobra', 'pharaohMongoose', true);
-    expect(at(cobra, 'pharaohMongoose').status.rootedNext).toBe(false);
+    expect(at(cobra, 'pharaohMongoose').status.rootedNext).toBe(true);
+    const mongoose = at(s, 'pharaohMongoose');
+    expect(resistsPoison(s, mongoose)).toBe(true);
+    expect(resistsStatus(s, mongoose, true)).toBe(false);
+    expect(resistsStatus(s, mongoose, false)).toBe(false);
   });
 
   it('Strzał zza Wydmy: + A next to an obstacle', () => {

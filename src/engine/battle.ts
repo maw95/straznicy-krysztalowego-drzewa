@@ -171,7 +171,11 @@ export const abilityNum = (u: BattleUnit, key: keyof typeof ABILITY_TIERS): numb
  * with `unboundToo` also whoever wears boots that free from roots and slows (the old artifacts, which never covered poison and curses).
  */
 export const resistsStatus = (state: GameState, u: BattleUnit, unboundToo: boolean): boolean =>
-  Boolean(u.status.immune) || (abilityActive(state) && (abilityOf(u) === 'hollow' || abilityOf(u) === 'venomImmune')) || (unboundToo && Boolean(u.gear?.unbound));
+  Boolean(u.status.immune) || (abilityActive(state) && abilityOf(u) === 'hollow') || (unboundToo && Boolean(u.gear?.unbound));
+
+/** Whether poison does not work on the unit: whoever resists every status, the Niedźwiedź w Zbroi, and the Mangusta Faraona (Odporność na Jad: poison only). */
+export const resistsPoison = (state: GameState, u: BattleUnit): boolean =>
+  resistsStatus(state, u, false) || abilityOf(u) === 'bronzeQuills' || (abilityActive(state) && abilityOf(u) === 'venomImmune');
 
 /** The breath of fire: Ognisty Oddech and Oddech Grobu hit the target and the unit behind it. */
 export const isBreath = (ab: AbilityId): boolean => ab === 'fireBreath' || ab === 'graveBreath';
@@ -1516,7 +1520,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
     }
     // Zasadzka Spod Piasku: every hit of the Queen poisons.
     if (ab === 'sandAmbush' && abilityActive(state) && t.alive && t.hp < before) {
-      if (resistsStatus(state, t, false) || abilityOf(t) === 'bronzeQuills') log(state, 'ability', `${unitName(t)} jest odporny na truciznę.`);
+      if (resistsPoison(state, t)) log(state, 'ability', `${unitName(t)} jest odporny na truciznę.`);
       else t.status.poisoned = ABILITY.poisonTicks;
     }
     if (ab === 'grab' && abilityActive(state) && t.alive && t.hp < before && !resistsStatus(state, t, true)) {
@@ -1537,7 +1541,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
         }
       }
       if (ab === 'poisonClaw') {
-        if (resistsStatus(state, t, false) || abilityOf(t) === 'bronzeQuills') log(state, 'ability', `${unitName(t)} jest odporny na truciznę.`);
+        if (resistsPoison(state, t)) log(state, 'ability', `${unitName(t)} jest odporny na truciznę.`);
         else {
           t.status.poisoned = ABILITY.poisonTicks;
           log(state, 'ability', `${unitName(t)} zostaje zatruty: straci ${ABILITY.poisonDamage * scaleOf(state)} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji.`);
@@ -1573,7 +1577,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       if (ab === 'stinkBomb') {
         const cloud = [t, ...enemiesOf(b, u).filter((x) => x.id !== t.id && x.alive && unitsAdjacent(x, t))];
         for (const x of cloud) {
-          if (resistsStatus(state, x, false) || abilityOf(x) === 'bronzeQuills') log(state, 'ability', `${unitName(x)} jest odporny na truciznę.`);
+          if (resistsPoison(state, x)) log(state, 'ability', `${unitName(x)} jest odporny na truciznę.`);
           else {
             x.status.poisoned = ABILITY.poisonTicks;
             log(state, 'ability', `${unitName(x)} zostaje zatruty: straci ${ABILITY.poisonDamage * scaleOf(state)} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji.`);

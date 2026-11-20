@@ -796,3 +796,4 @@ Karta `docs/frakcje/sands.md` zostawia część szczegółów otwartych; przy G1
 - **Brama Wydm:** bez kosztu punktów ruchu, na odkryte pole bez miejsca (osady, kopalni, chaty), bez bohatera i strażnika, w odległości do 8, raz na 3 rundy dla frakcji.
 - **Szlak Karawan II:** targ skupuje surowiec po cenie, za jaką go tam sprzedaje.
 - **Ukryta informacja a losowość:** pomieszanie id i kolejki losuje się z RNG gry (`state.rng`), który jest w stanie wysyłanym graczom; ktoś, kto odtworzy RNG z surowych danych, mógłby to odgadnąć (to samo dotyczy położenia Sideł Kompanii). Do decyzji, czy serwer ma trzymać osobne ziarno ukrytych losowań.
+- **Odporność na Jad (Mangusta Faraona), zmiana autora 20.11:** chroni tylko przed trucizną (Jad Skorpiona, Zasadzka Królowej, Pazur, Smrodliwa Mikstura); klątwy, spowolnienia, unieruchomienia (także Hipnoza Kobry) działają na nią normalnie. Szersza odporność była za mocna.

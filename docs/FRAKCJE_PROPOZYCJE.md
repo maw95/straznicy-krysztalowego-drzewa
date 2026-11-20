@@ -523,7 +523,7 @@ przepada. Do tego **przestawianie własnych jednostek** (Dżin, Rok, Czerw) i za
 | Tier | Jednostka (`id`) | Kim jest | Rozm. | Ruch | Walka | Zdolność | Prymityw | Siedlisko |
 |---|---|---|---|---|---|---|---|---|
 | 1 | Szakalogłowy Strażnik (`jackalGuard`) | wojownik z głową szakala | 1 | chód | wręcz | Czujność: pierwszy wróg, który wejdzie obok, dostaje cios od razu (raz na rundę) | ★ reakcja na wejście | — |
-| 1 | Mangusta Faraona (`pharaohMongoose`) | zwinna mangusta w złotej obroży, wróg kobr (decyzja 20.11, zamiast Skorpiona Piaskowego na tierze 1) | 1 | chód | wręcz | Odporność na Jad: nie działają na nią trucizna i unieruchomienie (statystyki do symulacji) | reuse: odporność na statusy | — |
+| 1 | Mangusta Faraona (`pharaohMongoose`) | zwinna mangusta w złotej obroży, wróg kobr (decyzja 20.11, zamiast Skorpiona Piaskowego na tierze 1) | 1 | chód | wręcz | Odporność na Jad: nie działa na nią trucizna (tylko trucizna; klątwy, spowolnienie i unieruchomienie działają; decyzja autora 20.11) | reuse: odporność na statusy | — |
 | 1 | Łucznik Wydm (`duneArcher`) | łucznik w zawoju | 1 | chód | dyst. | Strzał zza Wydmy: +1 A, gdy stoi przy przeszkodzie | ★ premia za osłonę | — |
 | 2A | Beduin Nomada (`bedouinNomad`) | człowiek pustyni w burnusie z szablą, zwinny, bez konia (decyzja 20.11) | 1 | chód | wręcz | Zwinny Wojownik (zdolność do ustalenia na G2) | ruch / unik | Namiot Nomadów |
 | 2B | Kobra Królewska (`cobra`) | wielka kobra z kapturem | 1 | chód | wręcz | Hipnoza: raz na bitwę trafiony unieruchomiony | unieruchomienie | Wężowa Studnia |

@@ -71,7 +71,7 @@ register({
   'Stała: zaczyna bitwę zakopana na dowolnym polu swojej połowy areny, niewidoczna dla wroga do pierwszego ruchu lub ataku; każde jej trafienie zatruwa.': 'Passive: starts the battle buried on any cell of her half of the arena, unseen by the enemy until her first move or attack; every hit of hers poisons.',
   'Raz na bitwę: po strzale kończy ruch pozostałymi polami.': 'Once per battle: after the shot it finishes its move with the cells left.',
   'Stała: pierwszy wróg, który w rundzie stanie obok, dostaje od razu cios ({0} obrażenia).': 'Passive: the first enemy that steps up next to it in a round is struck at once ({0} damage).',
-  'Stała: nie działają na nią trucizna, klątwy, spowolnienie ani unieruchomienie.': 'Passive: poison, curses, slows and roots do not work on her.',
+  'Stała: trucizna na nią nie działa.': 'Passive: poison does not work on her.',
   'Stała: +{0} A, gdy stoi obok przeszkody.': 'Passive: +{0} ATK while it stands next to an obstacle.',
   'Raz na bitwę: zamiast ciosu wręcz rzuca sztyletem w widocznego wroga (atak dystansowy z pełnym A, bez odwetu wręcz); potem może jeszcze dokończyć ruch.': 'Once per battle: instead of a melee blow it throws a dagger at an enemy in sight (a ranged attack with its full ATK, no melee counterblow); afterwards it may still make its move.',
   'Raz na bitwę: trafiony wróg traci {0} Ż na początku swoich dwóch następnych aktywacji.': 'Once per battle: the enemy hit loses {0} HP at the start of its next two activations.',
