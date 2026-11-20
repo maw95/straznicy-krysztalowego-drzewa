@@ -1072,7 +1072,7 @@ export function chestPreview(state: GameState, hero: HeroState): string {
 
 /** Level 6: the next building a bot raises on the way to its faction's mechanic building (the missing parent first), null when the mechanic stands or the barracks do not. */
 function mechanicStep(state: GameState, f: TeamId, s: Settlement): BuildingId | null {
-  if (!state.rules.empire || s.land !== f || s.buildings.barracks < 1 || mechanicLevel(state, f) >= 1) return null;
+  if (!state.rules.empire || s.land !== f || s.buildings.barracks < 1 || mechanicLevel(state, f) >= 1 || !dwellingOf(state, f, 2)) return null;
   const chain: BuildingId[] = [];
   for (let b: BuildingId | undefined = MECHANIC_BUILDING[raceOf(state, f)]; b && buildingLevel(s, b) < 1; b = BUILDING_PARENT[b]) chain.unshift(b);
   return chain[0] ?? null;
