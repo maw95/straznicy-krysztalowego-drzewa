@@ -439,6 +439,10 @@ export interface UnitStatus {
   blinded?: number;
   /** Rój Puszczy. Przepoczwarzenie: the caterpillar has turned into a butterfly and flies to the end of the battle. */
   winged?: true;
+  /** Bractwo Przypływu. Perłowa Tarcza (and the Spark): damage of the blows the shield still soaks up. */
+  pearl?: number;
+  /** Skorupa: the turtle hides in its shell and takes no damage until its next activation begins. */
+  shelled?: true;
 }
 
 /**
@@ -596,6 +600,8 @@ export interface BattleState {
   mirageAlias?: Record<string, string>;
   /** Pałac Mirażu (third level): the sides that have swapped a unit with its mirage in this battle (once a battle). */
   mirageSwapped?: Side[];
+  /** Świątynia Pływów (the Tides): the swaps of places each side has made, by round (I: once a battle, II: once a round). */
+  tideSwaps?: Array<{ side: Side; round: number }>;
   /** Iskra of the Desert Empire: the side that may now move up to `left` of its units in its zone (after both sides deployed), and where they stood. */
   rearrange?: { side: TeamId; from: Record<string, HexKey> };
   /** The sides whose Iskra has already rearranged their units in this battle. */
@@ -818,5 +824,7 @@ export type Action =
   | { type: 'gateHero'; to: HexKey }
   /** Pałac Mirażu (third level): the active unit swaps places with its mirage (`mirageId`: which one, when it has two), once a battle for the side. */
   | { type: 'battleMirageSwap'; mirageId?: string }
+  /** Świątynia Pływów (the Tides): before it acts, the active unit swaps places with the ally `targetId` within reach. */
+  | { type: 'battleTideSwap'; targetId: string }
   | { type: 'hutDeliver' }
   | { type: 'chestTake'; what: 'artifact' | 'gold' };

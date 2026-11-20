@@ -20,7 +20,7 @@ import { HERO_TYPES } from './heroTypes';
 import { FACTION_MECHANICS, mayBuildSpark, mechanicLevel, pickUpShard, placeShards, shardCollector, SPARK_NAMES, spendShards, summedLevel } from './empire';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
-export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen' | 'hoofStone' | 'pastures' | 'refuge' | 'barrow' | 'ossuary' | 'bellTower' | 'shieldHall' | 'runeForge' | 'deepMine' | 'frostPalace' | 'crystalGrotto' | 'blizzardTower' | 'trapWorkshop' | 'fence' | 'smugglerTrails' | 'mirageHall' | 'caravanRoad' | 'sandGate' | 'myceliumHeart' | 'mushroomGarden' | 'tunnels';
+export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen' | 'hoofStone' | 'pastures' | 'refuge' | 'barrow' | 'ossuary' | 'bellTower' | 'shieldHall' | 'runeForge' | 'deepMine' | 'frostPalace' | 'crystalGrotto' | 'blizzardTower' | 'trapWorkshop' | 'fence' | 'smugglerTrails' | 'mirageHall' | 'caravanRoad' | 'sandGate' | 'myceliumHeart' | 'mushroomGarden' | 'tunnels' | 'tideTemple' | 'pearlBanks' | 'lighthouse';
 
 export interface Settlement {
   id: string;
@@ -69,7 +69,7 @@ export const KINGDOM = {
   /** Gold in a chest chosen instead of the artifact. */
   chestGold: 3,
   /** Cost of each level of a building. */
-  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [], hoofStone: [], pastures: [], refuge: [], barrow: [], ossuary: [], bellTower: [], shieldHall: [], runeForge: [], deepMine: [], frostPalace: [], crystalGrotto: [], blizzardTower: [], trapWorkshop: [], fence: [], smugglerTrails: [], mirageHall: [], caravanRoad: [], sandGate: [], myceliumHeart: [], mushroomGarden: [], tunnels: [] } as Record<BuildingId, number[]>,
+  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [], hoofStone: [], pastures: [], refuge: [], barrow: [], ossuary: [], bellTower: [], shieldHall: [], runeForge: [], deepMine: [], frostPalace: [], crystalGrotto: [], blizzardTower: [], trapWorkshop: [], fence: [], smugglerTrails: [], mirageHall: [], caravanRoad: [], sandGate: [], myceliumHeart: [], mushroomGarden: [], tunnels: [], tideTemple: [], pearlBanks: [], lighthouse: [] } as Record<BuildingId, number[]>,
   /** Price of an artifact in the market, by rarity (zwykły, rzadki, legendarny). */
   artifactPrice: [2, 5, 10],
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
@@ -110,6 +110,7 @@ export const DWELLING_NAMES: Record<string, string> = {
   weaselKnife: 'Kryjówka w Żywopłocie', beaverEngineer: 'Żeremie', polecatPoisoner: 'Warzelnia', raccoonDogSpy: 'Leśna Czatownia', wolverine: 'Rosomacza Nora', marmotPetard: 'Prochownia', toadGunner: 'Rusznikarnia', catFencer: 'Fechtownia', towerMonitor: 'Wielka Stajnia Kompanii',
   blizzardWitch: 'Chata na Lodzie', glacierYak: 'Zagroda Jaków', iceSentinel: 'Lodowa Strażnica', frostSprite: 'Sopelkowa Grota', youngGiant: 'Obóz Olbrzymów', dziadMroz: 'Chata Dziada Mroza', elderGiant: 'Gradowa Turnia', auroraSpirit: 'Wieża Zorzy', frostMammoth: 'Mamucia Grań',
   bedouinNomad: 'Namiot Nomadów', rootCaterpillar: 'Zielony Kokon', dustMoth: 'Kokonownia', mushroomGuard: 'Krąg Muchomorów', bombardier: 'Żwirowisko', dragonfly: 'Staw Ważek', mycoMother: 'Wilgotna Piwnica', centipede: 'Skalna Szczelina', armoredSnail: 'Mszysty Głaz', emperorCicada: 'Komora Cykady',
+  crabShield: 'Krabia Skała', inkOctopus: 'Atramentowa Grota', sharkman: 'Rekinia Grota', pearlPriestess: 'Perłowy Ołtarz', lobsterKnight: 'Homarza Rafa', albatross: 'Gniazdo Albatrosa', reefGolem: 'Koralowa Jaskinia', seaWitch: 'Zatopiona Chata', leviathan: 'Rów Głębinowy',
   sandScorpion: 'Gniazdo Skorpionów', cobra: 'Wężowa Studnia', mirageDancer: 'Dom Tancerek', ushabti: 'Grobowiec Strażników', lamassu: 'Brama Lamassu', oasisCrocodile: 'Rozlewisko Krokodyli', roc: 'Gniazdo Roka', sandWyrm: 'Ruchome Piaski',
   ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern', doomBehemoth: 'Jaskinia Zagłady',
 };
@@ -122,6 +123,7 @@ const GENITIVE: Record<string, string> = {
   weaselKnife: 'Łasicy Nożowniczki', beaverEngineer: 'Bobra Inżyniera', polecatPoisoner: 'Tchórza Smrodnika', raccoonDogSpy: 'Jenota Szpiega', wolverine: 'Rosomaka Zabijaki', marmotPetard: 'Świstaka Petardnika', toadGunner: 'Ropucha z Hakownicą', catFencer: 'Kocura Fechmistrza', towerMonitor: 'Warana Wieżowego',
   blizzardWitch: 'Wiedźmy Zamieci', glacierYak: 'Jaka Lodowcowego', iceSentinel: 'Rycerza Lodowej Zbroi', frostSprite: 'Rusałki Szronu', youngGiant: 'Młodego Olbrzyma Szronu', dziadMroz: 'Dziada Mroza', elderGiant: 'Olbrzyma Gradu', auroraSpirit: 'Ducha Zorzy', frostMammoth: 'Mamuta Wiecznej Zimy',
   bedouinNomad: 'Beduina Nomady', rootCaterpillar: 'Gąsienicy Korzennej', dustMoth: 'Ćmy Pyłowej', mushroomGuard: 'Muchomora Gwardzisty', bombardier: 'Żuka Bombardiera', dragonfly: 'Ważki Łowczyni', mycoMother: 'Matki Grzybni', centipede: 'Skolopendry Głębin', armoredSnail: 'Ślimaka Pancernego', emperorCicada: 'Cesarskiej Cykady',
+  crabShield: 'Kraboluda Tarczownika', inkOctopus: 'Ośmiornicy Atramentowej', sharkman: 'Rekinołaka', pearlPriestess: 'Kapłanki Pereł', lobsterKnight: 'Homara Pancernego', albatross: 'Albatrosa', reefGolem: 'Rafowego Golema', seaWitch: 'Morskiej Wiedźmy', leviathan: 'Lewiatana',
   sandScorpion: 'Skorpiona Piaskowego', cobra: 'Kobry Królewskiej', mirageDancer: 'Tancerki Fata Morgany', ushabti: 'Kamiennego Strażnika Grobowca', lamassu: 'Lamassu', oasisCrocodile: 'Krokodyla Oazowego', roc: 'Ptaka Roka', sandWyrm: 'Czerwia Pustyni',
   ratman: 'Szczurołaka', goblinSlinger: 'Goblina Procarza', hellhound: 'Piekielnego Ogara', gargoyle: 'Gargulca', salamander: 'Salamandry Popiołu', caveTroll: 'Trolla Jaskiniowego', minotaurChief: 'Herszta Minotaurów', shadowWyvern: 'Wiwerny Cienia', doomBehemoth: 'Behemota Zagłady',
 };
@@ -240,6 +242,9 @@ export const BUILDING_NAMES: Record<BuildingId, string[]> = {
   myceliumHeart: ['Serce Grzybni', 'Rozrosłe Serce Grzybni', 'Trujące Serce Grzybni', 'Pradawne Serce Grzybni'],
   mushroomGarden: ['Ogród Grzybów', 'Wielki Ogród Grzybów'],
   tunnels: ['Podziemne Korytarze', 'Głębokie Korytarze'],
+  tideTemple: ['Świątynia Pływów', 'Wielka Świątynia Pływów', 'Świątynia Osłony Fal', 'Świątynia Żywej Wody'],
+  pearlBanks: ['Perłowe Ławice', 'Wielkie Perłowe Ławice'],
+  lighthouse: ['Latarnia Morska', 'Wielka Latarnia Morska'],
 };
 
 /** Level 6: the buildings only one faction has (the faction's mechanic first, then the two others). */
@@ -340,6 +345,14 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
   ],
   mushroomGarden: [`+1 drewna i +1 rudy co ${FACTION_MECHANICS.gardenEvery[0]} rundy z każdej osady z Ogrodem Grzybów.`, '+1 drewna i +1 rudy co rundę.'],
   tunnels: [`Wolne kopalnie w promieniu ${FACTION_MECHANICS.tunnelRadius[0]} pól od osady z Korytarzami przechodzą na początku rundy do Roju (wrogi bohater, który na nie wejdzie, zajmuje je jak zwykle).`, `Promień ${FACTION_MECHANICS.tunnelRadius[1]} pola.`],
+  tideTemple: [
+    `Przypływ: raz na bitwę jednostka Bractwa przed swoją aktywacją (zanim się ruszy) zamienia się miejscami z sojusznikiem w zasięgu ${FACTION_MECHANICS.tideRange} pól. Bez tego budynku frakcja nie ma tego efektu.`,
+    'Zamiana raz na rundę.',
+    `Jednostka, która weszła na miejsce rannego sojusznika, ma pancerz ${ABILITY.oathArmor} do końca rundy.`,
+    `Obie jednostki po zamianie odzyskują ${FACTION_MECHANICS.tideHeal} Ż.`,
+  ],
+  pearlBanks: [`+${FACTION_MECHANICS.pearlGold} zł na rundę z każdej osady z Perłowymi Ławicami.`, `Także +${FACTION_MECHANICS.pearlDust} Gwiezdnego Pyłu co ${FACTION_MECHANICS.pearlDustEvery} rundy z każdej osady z drugim poziomem.`],
+  lighthouse: [`Na początku każdej rundy odkrywa mapę w promieniu ${FACTION_MECHANICS.lighthouseRadius[0]} pól wokół osady (widać też wrogich bohaterów w tym zasięgu).`, `Promień ${FACTION_MECHANICS.lighthouseRadius[1]} pól.`],
   sandGate: [`Raz na ${FACTION_MECHANICS.gateEvery} rundy bohater stojący w osadzie z Bramą Wydm przenosi się na dowolne odkryte, wolne pole w odległości do ${FACTION_MECHANICS.gateReach}.`],
   smugglerTrails: [`Raz na rundę bohater Kompanii może przejść przez pole strażnika kryształu albo neutralnych bez walki.`],
   blizzardTower: [`Wrodzy bohaterowie w promieniu ${FACTION_MECHANICS.blizzardRadius[0]} pól od osady mają −${FACTION_MECHANICS.blizzardMove} punkt ruchu na mapie.`, `Promień ${FACTION_MECHANICS.blizzardRadius[1]} pola.`],
@@ -397,6 +410,11 @@ export function incomeBreakdown(state: GameState, f: TeamId): Array<{ label: str
     const caravan = Math.floor(Object.values(k.mines).filter((m) => m.owner === f).length / FACTION_MECHANICS.caravanMines);
     if (caravan > 0) rows.push({ label: BUILDING_NAMES.caravanRoad[0], gold: caravan });
   }
+  // Perłowe Ławice (the Tides): a coin a round from every settlement with the banks.
+  if (state.rules.empire && raceOf(state, f) === 'tides') {
+    const banks = settlementsOf(state, f).filter((x) => buildingLevel(x, 'pearlBanks') >= 1).length;
+    if (banks) rows.push({ label: BUILDING_NAMES.pearlBanks[0], gold: banks * FACTION_MECHANICS.pearlGold });
+  }
   // Strój Kupca (three of three): +1 gold a round, once for the faction.
   const merchants = Object.values(state.heroes).filter((h) => h.faction === f && h.alive && completeSets(h).some((d) => d.income));
   if (merchants.length) rows.push({ label: SETS.merchant.name, gold: SETS.merchant.income! });
@@ -439,7 +457,7 @@ export function initKingdom(state: GameState): void {
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag = byTeam(teams, (t) => rng.shuffle([...NAMES[raceOf(state, t)]]));
   // Level 6: the barracks stand from the start in every settlement (the dwellings of the units are built beside them).
-  const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0, hoofStone: 0, pastures: 0, refuge: 0, barrow: 0, ossuary: 0, bellTower: 0, shieldHall: 0, runeForge: 0, deepMine: 0, frostPalace: 0, crystalGrotto: 0, blizzardTower: 0, trapWorkshop: 0, fence: 0, smugglerTrails: 0, mirageHall: 0, caravanRoad: 0, sandGate: 0, myceliumHeart: 0, mushroomGarden: 0, tunnels: 0 } : {}) }) as Record<BuildingId, number>;
+  const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0, hoofStone: 0, pastures: 0, refuge: 0, barrow: 0, ossuary: 0, bellTower: 0, shieldHall: 0, runeForge: 0, deepMine: 0, frostPalace: 0, crystalGrotto: 0, blizzardTower: 0, trapWorkshop: 0, fence: 0, smugglerTrails: 0, mirageHall: 0, caravanRoad: 0, sandGate: 0, myceliumHeart: 0, mushroomGarden: 0, tunnels: 0, tideTemple: 0, pearlBanks: 0, lighthouse: 0 } : {}) }) as Record<BuildingId, number>;
   const add = (id: string, at: HexKey, land: TeamId, owner: TeamId | null) => {
     k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[raceOf(state, land)]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
     state.tiles[at].place = { kind: 'settlement', id };
@@ -652,6 +670,8 @@ export function collectIncome(state: GameState): void {
     }
     // Podziemne Korytarze (the Swarm): the free mines round a settlement with the tunnels go to the faction.
     tunnelMines(state, f);
+    // Latarnia Morska (the Tides): the land round a settlement with the lighthouse is revealed.
+    lighthouseReveal(state, f);
     // The computer's advantage of the higher levels: its income is multiplied (COMPUTER_HANDICAP); the people's is not.
     const mult = computerFaction(state, f) ? state.rules.computerGold ?? 1 : 1;
     if (k.res) {
@@ -785,7 +805,7 @@ export function payCost(state: GameState, f: TeamId, c: Cost): void {
  * Which building's first level must stand in the settlement before another can be started (docs/BUDYNKI.md 0a: a tree, one parent each;
  * the Rada Osady, the root, is always there; the Iskra needs only the shards, the dwellings the barracks, see `kingdomDwelling`).
  */
-export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market', hoofStone: 'barracks', pastures: 'market', refuge: 'tavern', barrow: 'hospital', ossuary: 'treasury', bellTower: 'barracks', shieldHall: 'walls', runeForge: 'forge', deepMine: 'treasury', frostPalace: 'magic', crystalGrotto: 'treasury', blizzardTower: 'walls', trapWorkshop: 'market', fence: 'market', smugglerTrails: 'tavern', mirageHall: 'market', caravanRoad: 'market', sandGate: 'tavern', myceliumHeart: 'hospital', mushroomGarden: 'treasury', tunnels: 'barracks' };
+export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market', hoofStone: 'barracks', pastures: 'market', refuge: 'tavern', barrow: 'hospital', ossuary: 'treasury', bellTower: 'barracks', shieldHall: 'walls', runeForge: 'forge', deepMine: 'treasury', frostPalace: 'magic', crystalGrotto: 'treasury', blizzardTower: 'walls', trapWorkshop: 'market', fence: 'market', smugglerTrails: 'tavern', mirageHall: 'market', caravanRoad: 'market', sandGate: 'tavern', myceliumHeart: 'hospital', mushroomGarden: 'treasury', tunnels: 'barracks', tideTemple: 'walls', pearlBanks: 'treasury', lighthouse: 'market' };
 
 /** Why a building cannot be started here for lack of its parent (null: nothing in the way). Upgrades of a standing building are never blocked. */
 export function buildBlock(s: Settlement, b: BuildingId): string | null {
@@ -810,6 +830,21 @@ export function tunnelMines(state: GameState, f: TeamId): void {
     m.owner = f;
     log(state, 'info', `${FACTION_NAMES[raceOf(state, f)]}: Podziemne Korytarze (${near.name}) przejmują: ${MINE_NAMES[m.res ?? 'gold'].toLowerCase()}.`, f);
   }
+}
+
+/**
+ * Latarnia Morska (the Brotherhood of the Tide): at the start of a round the hexes within the lighthouse's radius of every settlement of the faction that has one are
+ * revealed (the map's fog is shared, so the enemy heroes standing there are seen as well).
+ */
+export function lighthouseReveal(state: GameState, f: TeamId): number {
+  if (!state.kingdom || !state.rules.empire || raceOf(state, f) !== 'tides') return 0;
+  let n = 0;
+  for (const s of settlementsOf(state, f)) {
+    const level = buildingLevel(s, 'lighthouse');
+    if (level >= 1) n += revealAround(state, s.at, FACTION_MECHANICS.lighthouseRadius[Math.min(level, 2) - 1]).length;
+  }
+  if (n) log(state, 'info', `${FACTION_NAMES[raceOf(state, f)]}: Latarnia Morska odkrywa pola (${n}).`, f);
+  return n;
 }
 
 /** Resources per round the faction earns now, with where they come from. */
@@ -840,6 +875,9 @@ export function resourceIncomeBreakdown(state: GameState, f: TeamId): Array<{ la
       rows.push({ label: BUILDING_NAMES.mushroomGarden[0], res: 'wood', amount: gardens.length });
       rows.push({ label: BUILDING_NAMES.mushroomGarden[0], res: 'ore', amount: gardens.length });
     }
+    // Perłowe Ławice II (the Tides): Pył every few rounds from every settlement with the second level.
+    const pearls = settlementsOf(state, f).filter((x) => buildingLevel(x, 'pearlBanks') >= 2).length;
+    if (pearls && state.round % FACTION_MECHANICS.pearlDustEvery === 0) rows.push({ label: BUILDING_NAMES.pearlBanks[1], res: 'dust', amount: pearls * FACTION_MECHANICS.pearlDust });
   }
   return rows;
 }
@@ -1227,7 +1265,7 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
     const wanted = FACTION_BUILDINGS[raceOf(state, f)].filter((x) => {
       if (x === mech) return buildingLevel(s, x) >= best && best < 4;
       if (x === 'refuge') return buildingLevel(s, x) < 1 && settlementsOf(state, f).filter((y) => buildingLevel(y, x) >= 1).length < 2;
-      if (x === 'grove' || x === 'wolfDen' || x === 'smugglerTrails' || x === 'sandGate' || x === 'tunnels') return !settlementsOf(state, f).some((y) => buildingLevel(y, x) >= 1);
+      if (x === 'grove' || x === 'wolfDen' || x === 'smugglerTrails' || x === 'sandGate' || x === 'tunnels' || x === 'lighthouse') return !settlementsOf(state, f).some((y) => buildingLevel(y, x) >= 1);
       return true;
     });
     // The Clans build the mine and the rune forge first (the forge is what makes them strong over the long run), the shield hall after them.

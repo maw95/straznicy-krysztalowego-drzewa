@@ -115,7 +115,7 @@ export const groundAt = (b: BattleState, cell: HexKey): GroundEffect[] => (b.gro
 // ---------------------------------------------------------------- the Herds: push with a collision, resistance, a bonus for the target's state, taunt
 
 /** Abilities of units that cannot be pushed, pulled or moved (Niewzruszony, Ziemia Drży). */
-export const IMMOVABLE_ABILITIES: readonly AbilityId[] = ['unmoved', 'tremor', 'fortify', 'longNight'];
+export const IMMOVABLE_ABILITIES: readonly AbilityId[] = ['unmoved', 'tremor', 'fortify', 'longNight', 'livingReef'];
 
 /** Whether the unit may be moved against its will: not a large one, not in a duel, not an immovable one. */
 export function canBeMoved(state: GameState, u: BattleUnit): boolean {

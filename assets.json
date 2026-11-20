@@ -6522,6 +6522,96 @@
       "ai": false,
       "placeholder": true,
       "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "tides/zastepcze/art",
+      "pliki": [
+        "public/assets/cards/art/albatross.jpg",
+        "public/assets/cards/art/crabShield.jpg",
+        "public/assets/cards/art/frogLeaper.jpg",
+        "public/assets/cards/art/harpooneer.jpg",
+        "public/assets/cards/art/inkOctopus.jpg",
+        "public/assets/cards/art/leviathan.jpg",
+        "public/assets/cards/art/lobsterKnight.jpg",
+        "public/assets/cards/art/pearlPriestess.jpg",
+        "public/assets/cards/art/reefGolem.jpg",
+        "public/assets/cards/art/seaSerpent.jpg",
+        "public/assets/cards/art/seaWitch.jpg",
+        "public/assets/cards/art/sefiran.jpg",
+        "public/assets/cards/art/sharkman.jpg",
+        "public/assets/cards/art/shellTurtle.jpg",
+        "public/assets/cards/art/sirenSinger.jpg",
+        "public/assets/cards/art/tritonGuard.jpg",
+        "public/assets/cards/art/tritonHarpoon.jpg",
+        "public/assets/cards/art/tritonKing.jpg",
+        "public/assets/cards/art/walrusCaptain.jpg"
+      ],
+      "typ": "karta jednostki (zastępcza)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "tides/zastepcze/portraits",
+      "pliki": [
+        "public/assets/cards/portraits/albatross.jpg",
+        "public/assets/cards/portraits/crabShield.jpg",
+        "public/assets/cards/portraits/frogLeaper.jpg",
+        "public/assets/cards/portraits/harpooneer.jpg",
+        "public/assets/cards/portraits/inkOctopus.jpg",
+        "public/assets/cards/portraits/lobsterKnight.jpg",
+        "public/assets/cards/portraits/pearlPriestess.jpg",
+        "public/assets/cards/portraits/reefGolem.jpg",
+        "public/assets/cards/portraits/seaSerpent.jpg",
+        "public/assets/cards/portraits/seaWitch.jpg",
+        "public/assets/cards/portraits/sefiran.jpg",
+        "public/assets/cards/portraits/sharkman.jpg",
+        "public/assets/cards/portraits/shellTurtle.jpg",
+        "public/assets/cards/portraits/sirenSinger.jpg",
+        "public/assets/cards/portraits/tritonGuard.jpg",
+        "public/assets/cards/portraits/tritonKing.jpg",
+        "public/assets/cards/portraits/walrusCaptain.jpg"
+      ],
+      "typ": "portret jednostki (zastępczy)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "tides/zastepcze/crests",
+      "pliki": [
+        "public/assets/cards/crests/tides.png"
+      ],
+      "typ": "herb frakcji (zastępczy)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "tides/zastepcze/arena",
+      "pliki": [
+        "public/assets/arena/cyfrowa/tides.webp"
+      ],
+      "typ": "arena frakcji (zastępcza)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
     }
   ]
 }

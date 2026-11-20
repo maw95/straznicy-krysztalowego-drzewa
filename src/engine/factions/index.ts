@@ -8,13 +8,14 @@ import { FROST } from './frost';
 import { FREE } from './free';
 import { SANDS } from './sands';
 import { SWARM } from './swarm';
+import { TIDES } from './tides';
 import { HORDE } from './horde';
 import type { Terrain } from '../data';
 import type { FactionPack } from './types';
 
 export type { FactionPack };
 
-export const FACTION_PACKS = { dawn: DAWN, horde: HORDE, herds: HERDS, undead: UNDEAD, clans: CLANS, frost: FROST, free: FREE, sands: SANDS, swarm: SWARM } as const;
+export const FACTION_PACKS = { dawn: DAWN, horde: HORDE, herds: HERDS, undead: UNDEAD, clans: CLANS, frost: FROST, free: FREE, sands: SANDS, swarm: SWARM, tides: TIDES } as const;
 export type PackId = keyof typeof FACTION_PACKS;
 export const PACK_IDS = Object.keys(FACTION_PACKS) as PackId[];
 

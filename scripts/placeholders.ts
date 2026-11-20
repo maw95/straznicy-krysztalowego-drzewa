@@ -20,6 +20,7 @@ const COLORS: Record<string, [number, number, number]> = {
   free: [196, 112, 52],
   sands: [212, 178, 92],
   swarm: [150, 120, 64],
+  tides: [72, 140, 118],
 };
 
 const jobs: Array<{ kind: 'art' | 'portrait' | 'crest' | 'arena'; id: string; label: string; race: string; color: number[]; out: string }> = [];

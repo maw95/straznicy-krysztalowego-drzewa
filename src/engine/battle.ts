@@ -10,7 +10,7 @@ import { ARENA_COLUMNS, MIDDLE_HALF, arenaCell, cellOf, columnCells, inArena, WI
 export * from './arenaLayout';
 import { isDigital, type BattleState, type BattleUnit, type GameState, type GroundEffect, type SiegeState, type UnitStatus } from './types';
 import { SIEGE } from './economy';
-import { pushWithCollision, previewPush, pushedThisRound, taunter, canBeMoved, raiseUnit, fallenSupports, drainMana, pushAway } from './primitives';
+import { pushWithCollision, previewPush, pushedThisRound, taunter, canBeMoved, raiseUnit, fallenSupports, drainMana, pushAway, pullIn } from './primitives';
 import { FACTION_MECHANICS, hasSpark, mechanicLevel, SPARK_NAMES } from './empire';
 
 
@@ -474,9 +474,9 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
 }
 
 /** Abilities that are switched on for a single attack. */
-export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'ramBlow', 'frostSlow', 'frostGrip', 'iceBlow', 'stinkBomb', 'hypnosis', 'daggerThrow', 'sleepSpores'];
+export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'ramBlow', 'frostSlow', 'frostGrip', 'iceBlow', 'stinkBomb', 'hypnosis', 'daggerThrow', 'sleepSpores', 'harpoon', 'inkCloud', 'whirl'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'huntDive', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail', 'pickpocket', 'branchShot', 'veiled', 'woundFury', 'riposte', 'towerShot', 'wildLeap', 'sandAmbush', 'jackalWatch', 'venomImmune', 'coverShot', 'awakening', 'gateWard', 'wyrmBurrow', 'decoy', 'lastCut', 'chitinWall', 'puffball', 'anthill', 'metamorphosis', 'homeGround', 'airHunt', 'coil', 'slimeTrail'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'huntDive', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail', 'pickpocket', 'branchShot', 'veiled', 'woundFury', 'riposte', 'towerShot', 'wildLeap', 'sandAmbush', 'jackalWatch', 'venomImmune', 'coverShot', 'awakening', 'gateWard', 'wyrmBurrow', 'decoy', 'lastCut', 'chitinWall', 'puffball', 'anthill', 'metamorphosis', 'homeGround', 'airHunt', 'coil', 'slimeTrail', 'tuskShove', 'pincers', 'livingReef'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
@@ -499,9 +499,9 @@ export function pushCell(state: GameState, from: HexKey, target: HexKey): HexKey
   return k;
 }
 /** Abilities used as a free action during the unit's activation. */
-export const FREE_ABILITIES: AbilityId[] = ['beardChill', 'sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'longNight', 'ploy', 'dugIn', 'ravenEye', 'dam', 'blast', 'sandPortal', 'riddle', 'napWatch', 'mirageMake', 'rocLift', 'spreadSpores', 'greatChorus'];
+export const FREE_ABILITIES: AbilityId[] = ['beardChill', 'sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'longNight', 'ploy', 'dugIn', 'ravenEye', 'dam', 'blast', 'sandPortal', 'riddle', 'napWatch', 'mirageMake', 'rocLift', 'spreadSpores', 'greatChorus', 'waterWall', 'sirenSong', 'deepCoil', 'molt', 'shellUp', 'pearlShield', 'wingBeat', 'ebbTide', 'deepWhirl'];
 /** The free abilities that need no target (one click fires them); the others ask the player to pick a unit. */
-export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify', 'iceWall', 'longNight', 'dugIn', 'napWatch', 'greatChorus'];
+export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify', 'iceWall', 'longNight', 'dugIn', 'napWatch', 'greatChorus', 'waterWall', 'molt', 'shellUp', 'wingBeat', 'deepWhirl'];
 /** The free abilities that work on a cell: the player may pick it (the action's `cell`), without one the best cell for the unit is taken (Fortel, Tama, Ładunek). */
 export const CELL_ABILITIES: AbilityId[] = ['ploy', 'dam', 'blast', 'spreadSpores'];
 
@@ -776,6 +776,8 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
     u.status.slowLater = 0;
   }
   u.status.anchored = false;
+  // Skorupa: the turtle comes out of its shell when its next activation begins.
+  if (u.status.shelled) delete u.status.shelled;
   // Pałac Mirażu (fourth level): the one that broke a mirage is blinded in this activation.
   if (u.status.blindLater) {
     u.status.blinded = u.status.blindLater;
@@ -1101,7 +1103,8 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
     const act = state.battle.activation;
     return dispelMirage(state, target, act ? (state.battle.units[act.unitId] ?? null) : null);
   }
-  const dmg = Math.max(0, amount);
+  // Skorupa: nothing hurts the turtle in its shell (poison, collisions, blasts included).
+  const dmg = target.status.shelled ? 0 : Math.max(0, amount);
   target.hp -= dmg;
   // Zbroja Wartownika: once per battle the hero is left with 1 Życie instead of falling.
   if (target.hp <= 0 && dmg > 0 && target.gear?.lastStand) {
@@ -1169,6 +1172,10 @@ export interface DamagePrediction {
   shield: boolean;
   /** Bezcielesna: the first ranged blow passes through the ghost. */
   ghost?: boolean;
+  /** Perłowa Tarcza: damage of this blow the pearl shield soaks up (it is taken off the shield). */
+  pearl?: number;
+  /** Skorupa: the turtle in its shell takes nothing. */
+  shelled?: boolean;
   /** The victim falls. */
   lethal: boolean;
 }
@@ -1198,6 +1205,8 @@ export function predictDamage(
     dmg = Math.max(0, dmg - abilityNum(bear, 'guardianIgnore') * scaleOf(state));
   }
   if (victim.status.shieldArmed) return { base, victim, damage: 0, bearGuard, hardHead: null, shield: true, lethal: false };
+  // Skorupa: the turtle hidden in its shell takes no damage at all.
+  if (victim.status.shelled) return { base, victim, damage: 0, bearGuard, hardHead: null, shield: false, shelled: true, lethal: false };
   // Bezcielesna: the first ranged blow of the battle passes through the ghost.
   if (abilityOf(victim) === 'incorporeal' && !victim.abilityUsed && abilityActive(state) && UNITS[att.defId].attackType === 'ranged') return { base, victim, damage: 0, bearGuard, hardHead: null, shield: false, ghost: true, lethal: false };
   // Grot Przez Zbroję: the arrow ignores every armour (the unit's own, a spell's, the artifacts').
@@ -1237,6 +1246,9 @@ export function predictDamage(
   // Chitynowa Ściana, Śluzowy Szlak: the Goliat's chitin and the snail's shell take a bit off every blow that lands.
   if (armour && dmg > 0 && abilityActive(state) && abilityOf(victim) === 'chitinWall') dmg = Math.max(1, dmg - ABILITY.chitinArmor * scaleOf(state));
   if (armour && dmg > 0 && abilityActive(state) && abilityOf(victim) === 'slimeTrail') dmg = Math.max(1, dmg - ABILITY.snailArmor * scaleOf(state));
+  // Szczypce: the Homar's shell; Żywa Rafa: a Rafowy Golem next to the victim shields it (several golems do not add up).
+  if (armour && dmg > 0 && abilityActive(state) && abilityOf(victim) === 'pincers') dmg = Math.max(1, dmg - ABILITY.pincerArmor * scaleOf(state));
+  if (armour && dmg > 0 && abilityActive(state) && livingUnits(b, victim.side).some((x) => x.id !== victim.id && x.pos && !x.status.mirage && abilityOf(x) === 'livingReef' && unitsAdjacent(x, victim))) dmg = Math.max(1, dmg - ABILITY.reefArmor * scaleOf(state));
   // A frozen unit (third level of the Pałac Szronu): the next blow cracks the ice and does one more.
   if (victim.status.brittle && dmg > 0) dmg += scaleOf(state);
   // The hero's shield (artifacts): the first blow of the battle is halved, every blow is weaker by its defence, but a blow that lands takes at least 1.
@@ -1254,7 +1266,10 @@ export function predictDamage(
       if (guard) dmg = Math.max(1, dmg - guard.gear!.guardAura!);
     }
   }
-  return { base, victim, damage: dmg, bearGuard, hardHead, shield: false, lethal: dmg >= victim.hp };
+  // Perłowa Tarcza (and the Spark of the Tides): the pearl soaks up the blow before it reaches the Życie.
+  const pearl = Math.min(dmg, victim.status.pearl ?? 0);
+  if (pearl > 0) dmg -= pearl;
+  return { base, victim, damage: dmg, bearGuard, hardHead, shield: false, ...(pearl > 0 ? { pearl } : {}), lethal: dmg >= victim.hp };
 }
 
 /** Twardogłowy fires only on a blow of at least this much damage. */
@@ -1291,6 +1306,16 @@ function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, us
   if (p.hardHead !== null) {
     victim.abilityUsed = true;
     log(state, 'ability', `${unitName(victim)} ignoruje ${p.hardHead} obrażeń (Twardogłowy).`);
+  }
+  if (p.shelled) {
+    log(state, 'ability', `${unitName(victim)} chowa się w skorupie: cios nic nie robi.`);
+    recordRoll(state, att, victim, p.base, die, 0);
+    return;
+  }
+  if (p.pearl) {
+    victim.status.pearl = (victim.status.pearl ?? 0) - p.pearl;
+    if (victim.status.pearl <= 0) delete victim.status.pearl;
+    log(state, 'ability', `Perłowa tarcza ${unitName(victim)} pochłania ${p.pearl} obrażeń${victim.status.pearl ? ` (zostaje ${victim.status.pearl})` : ' i pęka'}.`);
   }
   b.damageBy[att.id] = (b.damageBy[att.id] ?? 0) + Math.min(p.damage, Math.max(0, victim.hp));
   recordRoll(state, att, victim, p.base, die, p.damage);
@@ -1555,6 +1580,14 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       }
       swarmPoison(state, t, UNITS[u.defId].abilityName);
     }
+    // Szczypce: every hit of the Homar holds the one hit in place.
+    if (ab === 'pincers' && abilityActive(state) && t.alive && t.hp < before) {
+      if (resistsStatus(state, t, true)) log(state, 'ability', `${unitName(t)} jest odporny na unieruchomienie.`);
+      else {
+        t.status.rootedNext = true;
+        log(state, 'ability', `${unitName(t)} zostaje złapany w szczypce i nie ruszy się w swojej następnej aktywacji (${UNITS[u.defId].abilityName}).`);
+      }
+    }
     if (ab === 'grab' && abilityActive(state) && t.alive && t.hp < before && !resistsStatus(state, t, true)) {
       t.status.rootedNext = true;
       log(state, 'ability', `${unitName(t)} zostaje schwytany i nie ruszy się w swojej następnej aktywacji (${UNITS[u.defId].abilityName}).`);
@@ -1628,6 +1661,27 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
           swarmPoison(state, x, UNITS[u.defId].abilityName);
         }
       }
+      // Bractwo Przypływu. Harpun: the one hit is pulled towards the shooter; Atrament: the target and its neighbours are weaker at their next attack; Wir: the Rekinołak
+      // and the target change places.
+      if (ab === 'harpoon') tidePull(state, t, u, ABILITY.harpoonPull, UNITS[u.defId].abilityName);
+      if (ab === 'inkCloud') {
+        const cloud = [t, ...enemiesOf(b, u).filter((x) => x.id !== t.id && x.alive && unitsAdjacent(x, t))];
+        for (const x of cloud) {
+          if (resistsStatus(state, x, false)) log(state, 'ability', `${unitName(x)} jest odporny na klątwę.`);
+          else {
+            x.status.cursedNext += ABILITY.inkMinus * scaleOf(state);
+            log(state, 'ability', `${unitName(x)} zalany atramentem: −${ABILITY.inkMinus * scaleOf(state)} A przy następnym ataku.`);
+          }
+        }
+      }
+      if (ab === 'whirl') {
+        if (!canBeMoved(state, t) || isLarge(state, u)) log(state, 'ability', `${unitName(t)} nie da się przestawić (${UNITS[u.defId].abilityName}).`);
+        else if (swapCells(u, t)) {
+          log(state, 'ability', `${unitName(u)} kręci wir i zamienia się miejscami z ${unitName(t)}.`);
+          stepOnFields(state, t);
+          stepOnFields(state, u);
+        }
+      }
       // Hipnoza: the one hit cannot move in its next activation.
       if (ab === 'hypnosis') {
         if (resistsStatus(state, t, true)) log(state, 'ability', `${unitName(t)} jest odporny na unieruchomienie.`);
@@ -1667,6 +1721,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
         log(state, 'ability', `${unitName(t)} zostaje odepchnięty o 1 pole (${UNITS[u.defId].abilityName}).`);
       } else log(state, 'ability', `${unitName(t)} nie ma gdzie się cofnąć (${UNITS[u.defId].abilityName}).`);
     }
+    // Kły Kapitana: the Mors pushes the one it hit 1 away, without a collision.
+    if (ab === 'tuskShove' && t.alive && u.alive && !b.duel && abilityActive(state)) pushWithCollision(state, t, u, 1, 0, UNITS[u.defId].abilityName);
     // Dzikie Stado: the blows that push (Byczy Łeb, Taran, Rogi Przodków, and the Kamień Tętentu after a run).
     if (t.alive && u.alive && !b.duel && abilityActive(state)) herdsBlow(state, u, t, canUse, act.movedDistance);
   }
@@ -2131,6 +2187,131 @@ export function bestSporeCell(state: GameState, u: BattleUnit): HexKey | null {
     return fresh.filter((c) => own.includes(c)).length * 3 + fresh.length;
   };
   return sporeCells(state, u).sort((x, y) => value(y) - value(x) || gap(x) - gap(y) || (x < y ? -1 : 1))[0] ?? null;
+}
+
+// ---------------------------------------------------------------- the Brotherhood of the Tide: the swap of places, pulls, pushes without a collision, shields
+
+/** The level of the Świątynia Pływów (the Tides' mechanic) a side has: 0 for any other faction or without the building. */
+export const tideLevel = (state: GameState, side: Side): number => (side !== 'neutral' && raceOf(state, side) === 'tides' ? mechLevel(state, side) : 0);
+
+/** Two single-cell units trade their cells (false when one of them lies on two cells or off the board). */
+function swapCells(a: BattleUnit, c: BattleUnit): boolean {
+  if (a.tail || c.tail || !a.pos || !c.pos || a.id === c.id) return false;
+  [a.pos, c.pos] = [c.pos, a.pos];
+  return true;
+}
+
+/** A pull of the Tides (Harpun, Pieśń Syreny, Oplot Głębin, Wir Głębin): the target goes up to `steps` cells towards `source` and steps on what lies there. */
+export function tidePull(state: GameState, t: BattleUnit, source: BattleUnit, steps: number, label: string): number {
+  if (!t.alive || !t.pos) return 0;
+  if (!canBeMoved(state, t)) {
+    log(state, 'ability', `${unitName(t)} nie da się przyciągnąć (${label}).`);
+    return 0;
+  }
+  const { moved } = pullIn(state, t, source, steps);
+  if (moved > 0) {
+    log(state, 'ability', `${unitName(t)} zostaje przyciągnięty (pól: ${moved}; ${label}).`);
+    stepOnFields(state, t);
+  }
+  return moved;
+}
+
+/** The allies the active unit of the Tides may swap places with now (Świątynia Pływów): single-cell, movable, within the temple's reach. */
+export function tideTargets(state: GameState, u: BattleUnit): BattleUnit[] {
+  const b = state.battle!;
+  if (!u.pos || u.tail || !canBeMoved(state, u)) return [];
+  return livingUnits(b, u.side).filter((x) => x.id !== u.id && x.pos && !x.tail && !x.status.mirage && unitDistance(u, x) <= FACTION_MECHANICS.tideRange && canBeMoved(state, x));
+}
+
+/** Przypływ: whether the active unit may swap places with an ally now (before it has moved or acted; once a battle, from the second level once a round). */
+export function tideSwapReady(state: GameState, u: BattleUnit): boolean {
+  const b = state.battle!;
+  const level = tideLevel(state, u.side);
+  const act = b.activation;
+  if (level < 1 || b.duel || !act || act.unitId !== u.id || act.acted || act.moved || act.moveOnly || u.status.mirage) return false;
+  const used = (b.tideSwaps ?? []).filter((x) => x.side === u.side);
+  if (level >= FACTION_MECHANICS.tideRoundLevel ? used.some((x) => x.round === b.round) : used.length > 0) return false;
+  return tideTargets(state, u).length > 0;
+}
+
+/**
+ * Przypływ, the swap itself: the active unit and the ally trade cells, then the unit goes on with its activation. Third level: of the two, the one that took the
+ * place of a wounded ally (the less hurt one, when the other is hurt) has armour to the end of the round. Fourth level: both regain Życie.
+ */
+export function battleTideSwap(state: GameState, targetId: string): void {
+  const b = state.battle!;
+  const u = b.units[b.activation!.unitId];
+  if (!tideSwapReady(state, u)) throw new Error('Przypływ jest niedostępny.');
+  const t = b.units[targetId];
+  if (!t || !tideTargets(state, u).some((x) => x.id === t.id)) throw new Error(`Wybierz sojusznika w zasięgu ${FACTION_MECHANICS.tideRange} pól.`);
+  swapCells(u, t);
+  (b.tideSwaps ??= []).push({ side: u.side, round: b.round });
+  log(state, 'ability', `${unitName(u)} i ${unitName(t)} zamieniają się miejscami (Przypływ).`);
+  const level = tideLevel(state, u.side);
+  if (level >= FACTION_MECHANICS.tideGuardLevel) {
+    const share = (x: BattleUnit) => x.hp / x.maxHp;
+    const [fresh, hurt] = share(u) >= share(t) ? [u, t] : [t, u];
+    if (hurt.hp < hurt.maxHp && share(fresh) > share(hurt)) {
+      fresh.status.oathRound = b.round;
+      log(state, 'ability', `${unitName(fresh)} wchodzi na miejsce rannego: pancerz ${ABILITY.oathArmor * scaleOf(state)} do końca rundy (Świątynia Pływów).`);
+    }
+  }
+  if (level >= FACTION_MECHANICS.tideHealLevel) {
+    for (const x of [u, t]) {
+      const healed = Math.min(FACTION_MECHANICS.tideHeal * hpScaleOf(state), x.maxHp - x.hp);
+      if (healed <= 0) continue;
+      x.hp += healed;
+      (b.heals ??= []).push({ unitId: x.id, amount: healed });
+      log(state, 'ability', `${unitName(x)} odzyskuje ${healed} Ż (Świątynia Pływów).`);
+    }
+  }
+  stepOnFields(state, t);
+  stepOnFields(state, u);
+  if (!u.alive) endActivation(state);
+}
+
+/** Odpływ: the units the Morska Wiedźma may swap (single-cell, movable, not unseen, within her range; herself too). */
+export function ebbTargets(state: GameState, u: BattleUnit): BattleUnit[] {
+  const b = state.battle!;
+  if (!u.pos) return [];
+  return livingUnits(b).filter((x) => x.pos && !x.tail && !(x.side !== u.side && x.status.veiled) && unitDistance(u, x) <= ABILITY.ebbRange && canBeMoved(state, x));
+}
+
+/** Odpływ without a second unit named: the partner of `first` is a unit of the other side (if any), the farthest from it. */
+export function ebbPartner(state: GameState, u: BattleUnit, first: BattleUnit): BattleUnit | null {
+  const all = ebbTargets(state, u).filter((x) => x.id !== first.id);
+  const other = all.filter((x) => x.side !== first.side);
+  return (other.length ? other : all).sort((x, y) => unitDistance(y, first) - unitDistance(x, first) || (x.id < y.id ? -1 : 1))[0] ?? null;
+}
+
+/** Wylinka: the bad states the Sefiran sheds with its skin. */
+function shedStatuses(u: BattleUnit): number {
+  const s = u.status;
+  let n = 0;
+  const drop = (cond: unknown, f: () => void) => {
+    if (cond) {
+      f();
+      n++;
+    }
+  };
+  drop(s.poisoned, () => delete s.poisoned);
+  drop(s.slowNext > 0, () => (s.slowNext = 0));
+  drop(s.slowLater, () => delete s.slowLater);
+  drop(s.rootedNext, () => (s.rootedNext = false));
+  drop(s.rootLater, () => delete s.rootLater);
+  drop(s.cursedNext > 0, () => (s.cursedNext = 0));
+  drop(s.tauntedBy, () => delete s.tauntedBy);
+  drop(s.stunned, () => delete s.stunned);
+  drop(s.frost, () => delete s.frost);
+  drop(s.frostSlow, () => delete s.frostSlow);
+  drop(s.brittle, () => delete s.brittle);
+  drop(s.marked, () => delete s.marked);
+  drop(s.riddled, () => delete s.riddled);
+  drop(s.blindLater || s.blinded, () => {
+    delete s.blindLater;
+    delete s.blinded;
+  });
+  return n;
 }
 
 // ---------------------------------------------------------------- the Desert Empire: mirages, the buried Queen, the watch, the dormant guardian, moving its own
@@ -2719,6 +2900,60 @@ export function battleAbility(state: GameState, targetId?: string, cell?: HexKey
       e.status.stunned = true;
       log(state, 'ability', `${unitName(e)} traci następną aktywację (${UNITS[u.defId].abilityName}).`);
     }
+  } else if (ab === 'waterWall' || ab === 'wingBeat') {
+    // Ściana Wody, Uderzenie Skrzydeł: every adjacent enemy is pushed 1 away (no collision); the Król's wall also shields the allies next to him to the end of the round.
+    log(state, 'ability', `${unitName(u)}: ${UNITS[u.defId].abilityName}.`);
+    for (const e of enemiesOf(b, u).filter((x) => x.pos && unitsAdjacent(x, u))) if (e.alive) pushWithCollision(state, e, u, 1, 0, UNITS[u.defId].abilityName);
+    if (ab === 'waterWall') {
+      const near = livingUnits(b, u.side).filter((x) => x.id !== u.id && x.pos && unitsAdjacent(x, u));
+      for (const x of near) x.status.oathRound = b.round;
+      if (near.length) log(state, 'ability', `Sąsiedni sojusznicy (${near.length}) mają pancerz ${ABILITY.oathArmor * scaleOf(state)} do końca rundy.`);
+    }
+  } else if (ab === 'sirenSong' || ab === 'deepCoil') {
+    // Pieśń Syreny: an enemy in range is pulled towards the Syrena. Oplot Głębin: an enemy close by is pulled 1 and held in place.
+    const range = ab === 'sirenSong' ? ABILITY.songRange : ABILITY.deepCoilRange;
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side === u.side || !t.pos || t.status.veiled || unitDistance(u, t) > range) throw new Error(`Wybierz wroga w zasięgu ${range} pól.`);
+    tidePull(state, t, u, ab === 'sirenSong' ? ABILITY.songPull : 1, UNITS[u.defId].abilityName);
+    if (ab === 'deepCoil' && t.alive) {
+      if (resistsStatus(state, t, true)) log(state, 'ability', `${unitName(t)} jest odporny na unieruchomienie.`);
+      else {
+        t.status.rootedNext = true;
+        log(state, 'ability', `${unitName(t)} zostaje oplątany i nie ruszy się w swojej następnej aktywacji (${UNITS[u.defId].abilityName}).`);
+      }
+    }
+  } else if (ab === 'molt') {
+    // Wylinka: the Sefiran sheds every bad state with its skin and regains Życie.
+    const shed = shedStatuses(u);
+    const healed = Math.min(ABILITY.moltHeal * hpScaleOf(state), u.maxHp - u.hp);
+    u.hp += healed;
+    if (healed > 0) (b.heals ??= []).push({ unitId: u.id, amount: healed });
+    log(state, 'ability', `${unitName(u)} zrzuca skórę: ${shed ? `znika ${shed} ${shed === 1 ? 'zły stan' : 'złych stanów'}` : 'żadnych złych stanów'}, +${healed} Ż.`);
+  } else if (ab === 'shellUp') {
+    // Skorupa: the turtle hides; it takes no damage until its next activation and ends this one (below).
+    u.status.shelled = true;
+    log(state, 'ability', `${unitName(u)} chowa się w skorupie do swojej następnej aktywacji.`);
+  } else if (ab === 'pearlShield') {
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side !== u.side || !t.pos || t.status.mirage) throw new Error('Wybierz sojusznika.');
+    t.status.pearl = (t.status.pearl ?? 0) + ABILITY.pearlShield * scaleOf(state);
+    log(state, 'ability', `${unitName(t)} dostaje perłową tarczę: pochłonie ${t.status.pearl} obrażeń z ciosów.`);
+  } else if (ab === 'ebbTide') {
+    // Odpływ: two units in the Wiedźma's range (of any side) trade their cells; the second one is named by its cell.
+    const first = targetId ? b.units[targetId] : undefined;
+    const pool = ebbTargets(state, u);
+    if (!first || !pool.some((x) => x.id === first.id)) throw new Error(`Wybierz jednopolową jednostkę w zasięgu ${ABILITY.ebbRange} pól.`);
+    const second = cell ? pool.find((x) => x.id !== first.id && x.pos === cell) : ebbPartner(state, u, first);
+    if (!second) throw new Error(`Wskaż drugą jednopolową jednostkę w zasięgu ${ABILITY.ebbRange} pól.`);
+    swapCells(first, second);
+    log(state, 'ability', `${unitName(u)} wzywa odpływ: ${unitName(first)} i ${unitName(second)} zamieniają się miejscami.`);
+    stepOnFields(state, first);
+    stepOnFields(state, second);
+  } else if (ab === 'deepWhirl') {
+    // Wir Głębin: every enemy within the radius is pulled towards the Lewiatan, the nearest first.
+    const caught = enemiesOf(b, u).filter((e) => e.pos && unitDistance(e, u) <= ABILITY.deepWhirlRadius).sort((x, y) => unitDistance(x, u) - unitDistance(y, u) || (x.id < y.id ? -1 : 1));
+    log(state, 'ability', `${unitName(u)} wzbudza Wir Głębin.`);
+    for (const e of caught) tidePull(state, e, u, ABILITY.deepWhirlPull, UNITS[u.defId].abilityName);
   } else if (ab === 'web') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side === u.side || unitDistance(u, t) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);
@@ -2730,6 +2965,8 @@ export function battleAbility(state: GameState, targetId?: string, cell?: HexKey
   }
   u.abilityUsed = true;
   log(state, 'ability', `${unitName(u)} używa zdolności: ${UNITS[u.defId].abilityName}.`);
+  // Skorupa ends the turtle's activation; a unit that fell on a trap of the enemy by the Wiedźma's swap loses the rest of its turn.
+  if ((ab === 'shellUp' || !u.alive) && b.activation?.unitId === u.id) endActivation(state);
 }
 
 // ---------------------------------------------------------------- items

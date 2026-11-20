@@ -158,7 +158,23 @@ export type AbilityId =
   | 'spreadSpores' // Rozsiew (Matka Grzybni, free action, once): mycelium on a chosen cell and the cells next to it
   | 'coil' // Oplot (Skolopendra Głębin, passive): the one hit cannot move in its next activation and is poisoned
   | 'slimeTrail' // Śluzowy Szlak (Ślimak Pancerny, passive): armour; leaves mycelium on the cells it walks through
-  | 'greatChorus'; // Wielki Chór (Cesarska Cykada, free action, once): every enemy within a radius loses its next activation
+  | 'greatChorus' // Wielki Chór (Cesarska Cykada, free action, once): every enemy within a radius loses its next activation
+  // Bractwo Przypływu (docs/frakcje/tides.md): swaps of places, pulls, pushes without a collision, shields.
+  | 'waterWall' // Ściana Wody (Król Trytonów, free action, once): pushes every adjacent enemy 1 away; the adjacent allies have armour 1 to the end of the round
+  | 'sirenSong' // Pieśń Syreny (Syrena Pieśniarka, free action, once): an enemy in range is pulled towards her
+  | 'deepCoil' // Oplot Głębin (Wąż Morski, free action, once): an enemy close by is pulled 1 towards it and cannot move in its next activation
+  | 'tuskShove' // Kły Kapitana (Stary Mors Kapitan, passive): after every attack the target is pushed 1 away (no collision damage)
+  | 'molt' // Wylinka (Sefiran Plamisty, free action, once): sheds every bad status and regains Życie
+  | 'shellUp' // Skorupa (Żółw Skorupiak, free action, once): hides in its shell: no damage until its next activation, its activation ends
+  | 'harpoon' // Harpun (Trytoński Harpunnik, Harpunniczka; attack ability, once): the one hit is pulled 2 towards the shooter
+  | 'inkCloud' // Atrament (Ośmiornica Atramentowa, attack ability, once): the target and the enemies next to it have − A at their next attack
+  | 'whirl' // Wir (Rekinołak, attack ability, once): after the blow it swaps places with the target
+  | 'pearlShield' // Perłowa Tarcza (Kapłanka Pereł, free action, once): an ally gets a shield that soaks up some damage of the blows
+  | 'pincers' // Szczypce (Homar Pancerny, passive): armour; the one hit cannot move in its next activation
+  | 'wingBeat' // Uderzenie Skrzydeł (Albatros, free action, once): every adjacent enemy is pushed 1 away
+  | 'livingReef' // Żywa Rafa (Rafowy Golem, passive): the allies next to it have armour 1; it cannot be pushed
+  | 'ebbTide' // Odpływ (Morska Wiedźma, free action, once): two units (of any side) within range swap places
+  | 'deepWhirl'; // Wir Głębin (Lewiatan, free action, once): every enemy within a radius is pulled 2 towards it
 
 export interface UnitDef {
   id: string;
@@ -408,6 +424,28 @@ export const ABILITY = {
   snailArmor: 2,
   /** Wielki Chór: radius of the Cykada's song. */
   chorusRadius: 2,
+  /** Bractwo Przypływu. Pieśń Syreny: range and how many cells the enemy is pulled. */
+  songRange: 4,
+  songPull: 2,
+  /** Oplot Głębin: how far the Wąż reaches (it pulls the enemy 1 towards it). */
+  deepCoilRange: 2,
+  /** Wylinka: Życie the Sefiran regains when it sheds its skin (small scale). */
+  moltHeal: 3,
+  /** Harpun: cells the one hit is pulled. */
+  harpoonPull: 2,
+  /** Atrament: A the target and its neighbours lose at their next attack (small scale). */
+  inkMinus: 1,
+  /** Perłowa Tarcza: damage of the blows the shield soaks up (small scale); the Spark gives every unit a smaller one. */
+  pearlShield: 3,
+  /** Szczypce: armour of the Homar (small scale). */
+  pincerArmor: 1,
+  /** Żywa Rafa: armour of the allies next to the Golem (small scale). */
+  reefArmor: 1,
+  /** Odpływ: range of the Wiedźma (both units must stand within it). */
+  ebbRange: 5,
+  /** Wir Głębin: radius of the Lewiatan and how many cells the enemies are pulled. */
+  deepWhirlRadius: 3,
+  deepWhirlPull: 2,
 };
 
 /**
@@ -729,6 +767,27 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'beetleGuard', name: 'Żuk Gwardzista', side: 'swarm', kind: 'hero', hp: 9, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'bulwark', abilityName: 'Chitynowa Tarcza', abilityText: `Stała: pancerz (−${ABILITY.bulwarkArmor} obrażeń z każdego ciosu).` }),
     u({ id: 'fireflyArcher', name: 'Świetlikowa Łuczniczka', side: 'swarm', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'standShot', abilityName: 'Świetlny Strzał', abilityText: `Stała: +${ABILITY.standShotBonus} A, gdy w tej aktywacji się nie ruszała.` }),
     u({ id: 'mushroomSeer', name: 'Grzybowy Wróżbita', side: 'swarm', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'giftOfLife', abilityName: 'Grzybowy Wywar', abilityText: `Raz na bitwę: sojusznik odzyskuje ${ABILITY.giftOfLifeHeal} Ż.` }),
+    // Bractwo Przypływu (`tides`, docs/frakcje/tides.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero (numbers: gate G1, tuned at G2).
+    u({ id: 'tritonKing', name: 'Król Trytonów', side: 'tides', kind: 'hero', hp: 9, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'waterWall', abilityName: 'Ściana Wody', abilityText: `Raz na bitwę: odpycha wszystkich sąsiednich wrogów o 1 pole; sąsiedni sojusznicy mają pancerz ${ABILITY.oathArmor} do końca rundy.` }),
+    u({ id: 'sirenSinger', name: 'Syrena Pieśniarka', side: 'tides', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'sirenSong', abilityName: 'Pieśń Syreny', abilityText: `Raz na bitwę: wróg w zasięgu ${ABILITY.songRange} pól zostaje przyciągnięty o ${ABILITY.songPull} pola ku niej.` }),
+    u({ id: 'seaSerpent', name: 'Wąż Morski', side: 'tides', kind: 'hero', size: 2, hp: 10, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'deepCoil', abilityName: 'Oplot Głębin', abilityText: `Raz na bitwę: wróg w zasięgu ${ABILITY.deepCoilRange} pól zostaje przyciągnięty o 1 pole i nie ruszy się w swojej następnej aktywacji.` }),
+    u({ id: 'walrusCaptain', name: 'Stary Mors Kapitan', side: 'tides', kind: 'hero', hp: 10, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'tuskShove', abilityName: 'Kły Kapitana', abilityText: 'Stała: po każdym ataku odpycha cel o 1 pole (bez zderzenia; jednostek dwupolowych nie da się odepchnąć).' }),
+    u({ id: 'shellTurtle', name: 'Żółw Skorupiak', side: 'tides', kind: 'support', hp: 5, attack: 2, speed: 2, movement: 'walk', attackType: 'melee', ability: 'shellUp', abilityName: 'Skorupa', abilityText: 'Raz na bitwę: chowa się w skorupie: do swojej następnej aktywacji nie traci Ż; w tej aktywacji już nie atakuje.' }),
+    u({ id: 'tritonHarpoon', name: 'Trytoński Harpunnik', side: 'tides', kind: 'support', hp: 3, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'harpoon', abilityName: 'Harpun', abilityText: `Raz na bitwę: trafiony wróg zostaje przyciągnięty o ${ABILITY.harpoonPull} pola ku strzelcowi.` }),
+    u({ id: 'frogLeaper', name: 'Żabi Skoczek', side: 'tides', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'airDash', abilityName: 'Susem w Tył', abilityText: `Raz na bitwę: po ataku może odskoczyć o maks. ${ABILITY.airDashRange} pola.` }),
+    u({ id: 'crabShield', name: 'Krabolud Tarczownik', side: 'tides', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'bulwark', abilityName: 'Twarda Skorupa', abilityText: `Stała: pancerz (−${ABILITY.bulwarkArmor} obrażeń z każdego ciosu).` }),
+    u({ id: 'inkOctopus', name: 'Ośmiornica Atramentowa', side: 'tides', kind: 'support', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'inkCloud', abilityName: 'Atrament', abilityText: `Raz na bitwę: trafiony i sąsiadujący z nim wrogowie mają −${ABILITY.inkMinus} A przy swoim następnym ataku.` }),
+    u({ id: 'sharkman', name: 'Rekinołak', side: 'tides', kind: 'support', hp: 8, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'whirl', abilityName: 'Wir', abilityText: 'Raz na bitwę: po ataku zamienia się miejscami z trafionym wrogiem (obaj jednopolowi).' }),
+    u({ id: 'pearlPriestess', name: 'Kapłanka Pereł', side: 'tides', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'pearlShield', abilityName: 'Perłowa Tarcza', abilityText: `Raz na bitwę: sojusznik dostaje perłową tarczę, która pochłania ${ABILITY.pearlShield} obrażenia z ciosów.` }),
+    u({ id: 'lobsterKnight', name: 'Homar Pancerny', side: 'tides', kind: 'support', hp: 9, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'pincers', abilityName: 'Szczypce', abilityText: `Stała: pancerz ${ABILITY.pincerArmor}; trafiony wróg nie rusza się w swojej następnej aktywacji.` }),
+    u({ id: 'albatross', name: 'Albatros', side: 'tides', kind: 'support', size: 2, hp: 8, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'wingBeat', abilityName: 'Uderzenie Skrzydeł', abilityText: 'Raz na bitwę: wszyscy sąsiedni wrogowie zostają odepchnięci o 1 pole (bez zderzenia).' }),
+    u({ id: 'reefGolem', name: 'Rafowy Golem', side: 'tides', kind: 'support', size: 2, hp: 16, attack: 4, speed: 2, movement: 'walk', attackType: 'melee', ability: 'livingReef', abilityName: 'Żywa Rafa', abilityText: `Stała: sąsiedni sojusznicy mają pancerz ${ABILITY.reefArmor}; nie da się go odepchnąć.` }),
+    u({ id: 'seaWitch', name: 'Morska Wiedźma', side: 'tides', kind: 'support', hp: 8, attack: 3, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'ebbTide', abilityName: 'Odpływ', abilityText: `Raz na bitwę: zamienia miejscami dwie dowolne jednopolowe jednostki w zasięgu ${ABILITY.ebbRange} pól.` }),
+    u({ id: 'leviathan', name: 'Lewiatan', side: 'tides', kind: 'support', size: 2, hp: 22, attack: 6, speed: 3, movement: 'walk', attackType: 'melee', ability: 'deepWhirl', abilityName: 'Wir Głębin', abilityText: `Raz na bitwę: wszyscy wrogowie w promieniu ${ABILITY.deepWhirlRadius} pól zostają przyciągnięci o ${ABILITY.deepWhirlPull} pola ku niemu.` }),
+    // Commanders of the Tides.
+    u({ id: 'tritonGuard', name: 'Trytoński Strażnik', side: 'tides', kind: 'hero', hp: 9, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'bulwark', abilityName: 'Muszlowa Tarcza', abilityText: `Stała: pancerz (−${ABILITY.bulwarkArmor} obrażeń z każdego ciosu).` }),
+    u({ id: 'harpooneer', name: 'Harpunniczka', side: 'tides', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'harpoon', abilityName: 'Harpun na Linie', abilityText: `Raz na bitwę: trafiony wróg zostaje przyciągnięty o ${ABILITY.harpoonPull} pola ku niej.` }),
+    u({ id: 'sefiran', name: 'Sefiran Plamisty', side: 'tides', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'molt', abilityName: 'Wylinka', abilityText: `Raz na bitwę: zrzuca skórę: traci wszystkie złe stany (truciznę, spowolnienie, unieruchomienie, klątwę, szron) i odzyskuje ${ABILITY.moltHeal} Ż.` }),
     u({ id: 'cyclops', name: 'Cyklop Błyskotek', side: 'neutral', kind: 'neutral', size: 2, hp: 23, attack: 2, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'boulder', abilityName: 'Miażdżący Głaz', abilityText: 'Po każdym ataku odpycha trafionego przeciwnika o 1 pole, jeśli to możliwe (jednostek dwupolowych nie da się odepchnąć).', duel: { hp: 14, ability: 'stoneSkin', abilityName: 'Kamienna Skóra', abilityText: `Każdy cios w Cyklopa zadaje o ${ABILITY.stoneSkinIgnore} mniej obrażeń.` } }),
     u({ id: 'griffin', name: 'Gryf Złodziej Skarbów', side: 'neutral', kind: 'neutral', size: 2, hp: 18, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nestLeap', abilityName: 'Łupieżczy Nalot', abilityText: `Po każdym ataku może odlecieć o maks. ${ABILITY.nestLeapRange} pola.`, duel: { hp: 10, ability: 'thiefClaw', abilityName: 'Złodziejski Szpon', abilityText: `Gdy zada obrażenia, odzyskuje ${ABILITY.thiefClawHeal} Ż.` } }),
     u({ id: 'hydra', name: 'Hydra z Zatopionych Ruin', side: 'neutral', kind: 'neutral', size: 2, hp: 21, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Paszcze Otchłani', abilityText: 'Każdym atakiem może trafić dwóch sąsiadujących przeciwników.', duel: { hp: 12, ability: 'regrowth', abilityName: 'Odrastające Głowy', abilityText: `Na początku każdej swojej aktywacji odzyskuje ${ABILITY.regrowthHeal} Ż.` } }),
@@ -739,14 +798,14 @@ export const FACTION_HEROES: Record<FactionId, string[]> = byPack((p) => p.heroe
 
 /** Easter egg heroes: unlocked on the setup screen (click the Dawn crest five times), never drawn by the engine. */
 /** Rivalry for 7-8 players: four heroes a side, so each faction has a fourth one of its own (Przymierze: the Silver She-Wolf, Horda: the Dusk Manticore); the Brave Duck stays a secret hero and the Warlord a tavern commander. */
-export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore', herds: 'thunderRam', undead: 'bellKeeper', clans: 'oldMiner', frost: 'oldHailer', free: 'otterSmuggler', sands: 'camelPrince', swarm: 'beeQueen' };
+export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore', herds: 'thunderRam', undead: 'bellKeeper', clans: 'oldMiner', frost: 'oldHailer', free: 'otterSmuggler', sands: 'camelPrince', swarm: 'beeQueen', tides: 'walrusCaptain' };
 export const MAX_PVP_PLAYERS = 8;
 /** More players than this at a table play with `EXTRA_HEROES` too. */
 export const BASE_PVP_PLAYERS = 6;
 /** The heroes a seat can pick at a table of `seats` players. */
 export const heroPool = (f: FactionId, seats: number): string[] => (seats > BASE_PVP_PLAYERS ? [...FACTION_HEROES[f], EXTRA_HEROES[f]] : FACTION_HEROES[f]);
 
-export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [], herds: [], undead: [], clans: [], frost: [], free: [], sands: [], swarm: [] };
+export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [], herds: [], undead: [], clans: [], frost: [], free: [], sands: [], swarm: [], tides: [] };
 
 /** The tier of a faction's support (1 the starting ones, 2-5 the recruits of the tiers and their alternatives, 6 the legend); 0 for anything else. */
 export const supportTier = (unitId: string): number => {
@@ -911,12 +970,12 @@ export const ARENA_OFFER = 3;
  */
 export const ARENA_RULES: { firstPicker: 'random' | TeamId; extraPicks: Record<FactionId, number>; extraOffer: Record<FactionId, number> } = {
   firstPicker: 'random',
-  extraPicks: { dawn: 0, horde: 0, herds: 0, undead: 0, clans: 0, frost: 0, free: 0, sands: 0, swarm: 0 },
+  extraPicks: { dawn: 0, horde: 0, herds: 0, undead: 0, clans: 0, frost: 0, free: 0, sands: 0, swarm: 0, tides: 0 },
   /**
    * More cards shown to that side at each pick (the choice gets better, the number of treasures stays).
    * The Horde sees 4: in the arena Przymierze otherwise wins about 55% (simulations, notes section 9).
    */
-  extraOffer: { dawn: 0, horde: 1, herds: 0, undead: 0, clans: 0, frost: 0, free: 0, sands: 0, swarm: 0 },
+  extraOffer: { dawn: 0, horde: 1, herds: 0, undead: 0, clans: 0, frost: 0, free: 0, sands: 0, swarm: 0, tides: 0 },
 };
 
 // Map tiles. The left half of the triangle is built from Przymierze tiles (green back),

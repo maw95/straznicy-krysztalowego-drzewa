@@ -40,6 +40,8 @@ export const ARENA_OBSTACLES: Record<ArenaId, Array<[number, number]>> = {
   sands: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
   // And for the Swarm (a cave under the roots with mushrooms as tall as trees wants its own arena).
   swarm: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
+  // And for the Tides (a beach by the reef at low tide, with rocks, nets and pools wants its own arena).
+  tides: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
 };
 
 export const arenaCell = (col: number, half: number): HexKey => key({ q: col, r: (half - col) / 2 });
@@ -199,6 +201,16 @@ export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
     { art: 'brambles', cells: [[10, 7]] },
     { art: 'boulders', cells: [[6, 3]] },
     { art: 'log', cells: [[6, 7]] },
+  ],
+  // Placeholder (docs/BACKLOG.md 2a): a beach by the reef at low tide (boulders for the rocks, ruins for the wrecks, logs for the driftwood) until the arena of its own is painted.
+  tides: [
+    { art: 'boulders', cells: [[4, 1], [5, 1]] },
+    { art: 'ruin', cells: [[8, 5], [8, 6]] },
+    { art: 'log', cells: [[3, 4]] },
+    { art: 'boulders', cells: [[9, 2]] },
+    { art: 'log', cells: [[10, 7]] },
+    { art: 'ruin', cells: [[6, 3]] },
+    { art: 'boulders', cells: [[6, 7]] },
   ],
 };
 

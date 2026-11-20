@@ -36,6 +36,7 @@ import {
   battleAbility,
   battleAttack,
   battleMirageSwap,
+  battleTideSwap,
   battleHop,
   battleTeleport,
   battleItem,
@@ -616,6 +617,8 @@ function unmaskAction(b: BattleState, action: Action): Action {
   switch (action.type) {
     case 'battleAttack':
       return { ...action, targetId: m(action.targetId)!, ...(action.secondTargetId ? { secondTargetId: m(action.secondTargetId) } : {}) };
+    case 'battleTideSwap':
+      return { ...action, targetId: m(action.targetId)! };
     case 'battleAbility':
     case 'battleSpell':
       return action.targetId ? { ...action, targetId: m(action.targetId)! } : action;
@@ -1147,6 +1150,8 @@ export function sparkBonus(state: GameState, unit: BattleState['units'][string])
   else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'sands') return;
   // The Swarm's Iskra covers the field with its mycelium (`sparkMycelium` when the fight begins), it gives its units nothing.
   else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'swarm') return;
+  // The Tides' Iskra (Perłowa Świątynia): every unit starts the battle with a pearl shield, no Atak.
+  else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'tides') unit.status.pearl = (unit.status.pearl ?? 0) + FACTION_MECHANICS.sparkPearl * scaleOf(state);
   else unit.status.battleAttackBonus += EMPIRE.sparkAttack * scaleOf(state);
 }
 
@@ -1577,6 +1582,9 @@ function applyBattleAction(state: GameState, raw: Action) {
   switch (action.type) {
     case 'battleMirageSwap':
       battleMirageSwap(state, action.mirageId);
+      break;
+    case 'battleTideSwap':
+      battleTideSwap(state, action.targetId);
       break;
     case 'battleMove':
       battleMove(state, action.to);

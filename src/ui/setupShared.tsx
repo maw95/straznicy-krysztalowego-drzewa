@@ -147,6 +147,8 @@ export const SEAT_TINT: Record<TeamId | FactionId, string> = {
   sands: 'linear-gradient(100deg, rgba(212, 178, 92, 0.62), rgba(110, 82, 40, 0.58))',
   // Rój Puszczy: umbra and moss with a glow of fireflies.
   swarm: 'linear-gradient(100deg, rgba(150, 132, 62, 0.62), rgba(70, 52, 34, 0.58))',
+  // Bractwo Przypływu: sea green, jade and pearl (no blue in the figures).
+  tides: 'linear-gradient(100deg, rgba(72, 140, 118, 0.62), rgba(30, 64, 56, 0.58))',
 };
 
 
