@@ -1,15 +1,15 @@
-# Karta frakcji: Żelazne Klany (`clans`) — G1 zrobiona, liczby czekają na G2
+# Karta frakcji: Żelazny Klan (`clans`) — G1 zrobiona, liczby czekają na G2
 
-Stan: 19.11.2026. Karta powstała z `FRAKCJE_PROPOZYCJE.md` (sekcja 5, zatwierdzona przez autora) i z rozstrzygnięć z rozmowy: **Jeździec na Koźle na 3B zamiast Wiropłatu, Kret z Brązu zamiast Górnika, Strażniczka Przełęczy zamiast Mistrza Balisty, Armata Klanów zamiast Tarana, Skarbnik na 4B, Runiczna Kuźnia trwała (zatwierdzona)**.
+Stan: 19.11.2026. Karta powstała z `FRAKCJE_PROPOZYCJE.md` (sekcja 5, zatwierdzona przez autora) i z rozstrzygnięć z rozmowy: **Kozioł Taranowy na 3B zamiast Wiropłatu, Kret z Brązu zamiast Górnika, Strażniczka Przełęczy zamiast Mistrza Balisty, Armata Klanów zamiast Tarana, Skarbnik na 4B, Runiczna Kuźnia trwała (zatwierdzona)**.
 Szablon: `KARTA_FRAKCJI_SZABLON.md`. Liczby Ż/A/S i koszty są przybliżone (skala Przymierza, Stad i Umarłych; autor kazał się nimi nie przejmować) i zostaną dostrojone przy bramce G2. Czego **nie** robić: `ODRZUCONE_POMYSLY.md` (żadnych nowych wilków ani psów; Wiropłat, Taran, Górnik i Mistrz Balisty poza składem).
 
 ## Tożsamość
-- **Nazwa / id:** Żelazne Klany / `clans` (EN: Iron Clans).
-- **Klimat:** krasnoludy z gór, mechanizmy z brązu, opancerzone niedźwiedzie bojowe i duchy kopalń (Skarbnik). Krasnoludów najwyżej połowa składu (sześć jednostek z dwunastu: Tarczownik, Kusznik, Kowal, Jeździec, Pogromca, Gwardia), reszta to mechanizmy (Kret, Wartownik, Armata, Kolos) i stworzenia gór (Niedźwiedź, Skarbnik). Czyste, zadbane metale, złote runy (nie niebieskie), bez żaru i rdzy Hordy.
+- **Nazwa / id:** Żelazny Klan / `clans` (EN: Iron Clan).
+- **Klimat:** krasnoludy z gór, mechanizmy z brązu, opancerzone niedźwiedzie bojowe i duchy kopalń (Skarbnik). Krasnoludów najwyżej połowa składu (cztery jednostki z dwunastu: Tarczownik, Kowal, Pogromca, Gwardia), reszta to mechanizmy (Mosiężny Pająk, Kret, Wartownik, Armata, Kolos) i stworzenia gór (Niedźwiedź, Kozioł Taranowy, Skarbnik). Czyste, zadbane metale, złote runy (nie niebieskie), bez żaru i rdzy Hordy.
 - **Rola w grze:** obrona i oblężenia.
 - **Mechanika wyróżniająca: Mur Tarcz** (w bitwie, budynek Sala Tarcz) i **Runiczna Kuźnia** (trwała, jedyna taka frakcja): runy na pomocnikach z puli frakcji.
 - **Mocne strony / słabości:** odporność (pancerz z wielu źródeł), obrona osad, Armata, kontra na szarże Stad. Powolni, bez lotników, rozbijają ich kontrola i wyczerpanie.
-- **Jak gra bot:** stoi w szyku (premia za pole obok sojuszników, kara za samotny ruch), strzelcy i Armata strzelają z miejsca (Kusznik ma bonus za brak ruchu; Armata i tak nie strzela po ruchu), Przysięgę, Hartowanie, Runę Kamienia, Błędne Światło i Fortyfikację używa, gdy wróg jest w zasięgu; na mapie buduje Sztolnię i Runiczną Kuźnię przed Salą Tarcz i na bieżąco kuje runy (najsilniejszy pomocnik pierwszy: strzelcom +1 A, reszcie pancerz).
+- **Jak gra bot:** stoi w szyku (premia za pole obok sojuszników, kara za samotny ruch), strzelcy i Armata strzelają z miejsca (Pająk ma bonus za brak ruchu; Armata i tak nie strzela po ruchu), Przysięgę, Hartowanie, Runę Kamienia, Błędne Światło i Fortyfikację używa, gdy wróg jest w zasięgu; na mapie buduje Sztolnię i Runiczną Kuźnię przed Salą Tarcz i na bieżąco kuje runy (najsilniejszy pomocnik pierwszy: strzelcom +1 A, reszcie pancerz).
 
 ## Bohaterowie (3 + czwarty + 3 dowódców)
 | Id | Nazwa | Typ | Rozm. | Ż | A | S | Ruch | Zasięg | Zdolność |
@@ -26,11 +26,11 @@ Dowódcy z karczmy: Wojownik Klanu (`clanWarrior`, wojownik, Twardy Łeb jak Twa
 |---|---|---|---:|---:|---:|---:|---|---|---|---|
 | 1 | `shieldDwarf` | Krasnoludzki Tarczownik | 1 | 5 | 2 | 3 | chód | wręcz | Pawęż: pancerz 1 | — |
 | 1 | `bronzeMole` | Kret z Brązu | 1 | 4 | 2 | 4 | chód | wręcz | Podkop: zamiast ruchu wyłania się na dowolnym wolnym polu w zasięgu 4 | — |
-| 1 | `clanCrossbow` | Kusznik Klanu | 1 | 4 | 2 | 3 | chód | dyst. | Salwa z Miejsca: +2 A, gdy w tej aktywacji się nie ruszał | — |
+| 1 | `brassSpider` | Mosiężny Pająk | 1 | 4 | 2 | 3 | chód | dyst. | Salwa z Miejsca: +2 A, gdy w tej aktywacji się nie ruszał | — |
 | 2A | `armoredBear` | Niedźwiedź w Zbroi | 1 | 9 | 3 | 4 | chód | wręcz | Kolczuga: pancerz 1 (bez osłaniania, tego nie robi Prastary Niedźwiedź) | Gawra Zbrojna |
 | 2B | `battleSmith` | Kowal Bitewny | 1 | 6 | 2 | 3 | chód | wręcz | Hartowanie: raz na bitwę sąsiad +1 A do końca bitwy | Polowa Kuźnia |
 | 3A | `bronzeSentinel` | Wartownik z Brązu | 1 | 8 | 3 | 3 | chód | wręcz | Kolce Mechanizmu: atakujący wręcz traci 1 Ż; odporny na truciznę | Warsztat Mechanizmów |
-| 3B | `goatRider` | Jeździec na Koźle | 1 | 7 | 3 | 5 | chód | wręcz | Skok po Turniach: raz na bitwę jeden ruch przez jednostki i przeszkody | Koźla Zagroda |
+| 3B | `ramGoat` | Kozioł Taranowy | 1 | 7 | 3 | 5 | chód | wręcz | Skok po Turniach: raz na bitwę jeden ruch przez jednostki i przeszkody | Koźla Zagroda |
 | 4A | `giantSlayer` | Pogromca Olbrzymów | 1 | 9 | 4 | 3 | chód | wręcz | Na Duże Cele: +2 A przeciw dużym (dwupolowym) | Sala Pogromców |
 | 4B | `skarbnik` | Skarbnik | 1 | 7 | 3 | 4 | chód | dyst. | Błędne Światło: raz na bitwę wróg w zasięgu 4 przestawiony o 2 pola od Skarbnika | Stary Szyb |
 | 5A | `hammerGuard` | Gwardia Młota | 1 | 12 | 5 | 3 | chód | wręcz | Młot Przodków: raz na bitwę trafiony traci następną aktywację | Sala Gwardii |
@@ -58,23 +58,25 @@ Zmierzone 19.11.2026, przed strojeniem i po (Kontrola / Podbój / Relikt):
 
 | Para | Przed | Po |
 |---|---|---|
-| Klany – Przymierze | 49 / 49 / 49 | 46 / 47 / 46 |
-| Klany – Horda | 62 / 62 / 64 | 61 / 60 / 62 |
-| Klany – Stada | 57 / 62 / 60 | 48 / 52 / 51 |
-| Klany – Umarli | 60 / 65 / 64 | 52 / 53 / 57 |
-| Klany – Szron | 40 / 41 / 44 | 41 / 42 / 45 |
+| Klan – Przymierze | 49 / 49 / 49 | 46 / 47 / 46 |
+| Klan – Horda | 62 / 62 / 64 | 61 / 60 / 62 |
+| Klan – Stado | 57 / 62 / 60 | 48 / 52 / 51 |
+| Klan – Umarli | 60 / 65 / 64 | 52 / 53 / 57 |
+| Klan – Szron | 40 / 41 / 44 | 41 / 42 / 45 |
 
 **Sufit pomiaru:** Przymierze wygrywa z Hordą 65% (Kontrola 65, Podbój 66, Relikt 65; obu frakcji nie wolno ruszać), więc frakcja, która ma 42–45% z Przymierzem, ma z Hordą ok. 58–62%. Oba końce pasma naraz (≥45% z Przymierzem i ≤55% z Hordą) są przy tej różnicy nieosiągalne; wybrałem środek: ok. 42–46% z Przymierzem i ok. 60% z Hordą (kilka punktów nad pasmem akceptowalnym, nie do usunięcia bez ruszania Hordy).
 
 **Zmienione liczby (w `src/engine/data.ts`; tabele jednostek powyżej to nadal propozycja z karty):**
-- **Tan Żelaznobrody: Ż 11→10, Matka Run: Ż 5→4.** Klany były na starcie najsilniejsze (49% z Przymierzem, 62% z Hordą) i dominowały nad Stadami i Umarłymi. Najmocniej reaguje Kusznik Klanu (Ż 4→3 zbijało wynik o 14 pkt, więc go nie ruszałem: to on niesie Ogień z Miejsca), dlatego nerf poszedł w bohaterów.
+- **Tan Żelaznobrody: Ż 11→10, Matka Run: Ż 5→4.** Klany były na starcie najsilniejsze (49% z Przymierzem, 62% z Hordą) i dominowały nad Stadami i Umarłymi. Najmocniej reaguje Mosiężny Pająk (Ż 4→3 zbijało wynik o 14 pkt, więc go nie ruszałem: to on niesie Ogień z Miejsca), dlatego nerf poszedł w bohaterów.
 
 **Obserwacja o botach:** w grach botów liczą się bohaterowie i trzej pomocnicy startowi; zmiana Ż jednostek rekrutowanych (poziomy 2–5) nie zmieniła wyniku ani jednej gry (sprawdzone na Klanach: 4 jednostki naraz, identyczne liczby wygranych; przypuszczalnie nie są rekrutowane w krótkich partiach botów), więc liczby tych jednostek zostają z karty, a strojenie dotyczy bohaterów i pomocników startowych.
 
 **Zostaje do decyzji autora:** Klany przegrywają ze Szronem (41–45%) i są na pograniczu pasma; Sala Tarcz nadal jest budowana późno (zob. G1), więc „wytrzymałość” Klanów to w botach głównie pancerz i Ogień z Miejsca, a nie szyk. Tańszy lub wcześniejszy dostęp do Sali Tarcz nie był potrzebny do wejścia w pasmo i nie został zmieniony.
 
 ## Decyzje implementacyjne (G1, 19.11.2026; autor nieobecny, wybrane najprostsze rozwiązania zgodne z kartą)
-Rozstrzygnięcia z rozmowy: Jeździec na Koźle na 3B, Kret z Brązu, Strażniczka Przełęczy, Armata zamiast Tarana, Skarbnik na 4B, Runiczna Kuźnia trwała, runa przy `id` jednostki w stanie frakcji, bez wymagania pełnej tożsamości jednostek; 3 jednostki poziomu 1 (Tarczownik, Kret, Kusznik) są pomocnikami startowymi.
+**Zmiany jednostek z 20.11.2026 (zatwierdzone przez autora):** Kusznik Klanu → Mosiężny Pająk (T1; strzelający konstrukt z brązu, zdolność i rola Kusznika, bez słowa „bełt”: piszemy „strzała” i „kusza”); Jeździec na Koźle → Kozioł Taranowy (T3B; sam kozioł, bez jeźdźca, zdolność jak wcześniej). Nazwa frakcji: Żelazny Klan. Liczby bez zmian do G2.
+
+Rozstrzygnięcia z rozmowy: Kozioł Taranowy na 3B, Kret z Brązu, Strażniczka Przełęczy, Armata zamiast Tarana, Skarbnik na 4B, Runiczna Kuźnia trwała, runa przy `id` jednostki w stanie frakcji, bez wymagania pełnej tożsamości jednostek; 3 jednostki poziomu 1 (Tarczownik, Kret, Kusznik) są pomocnikami startowymi.
 - **Runy (stan i zapis):** `FactionState.runes: Record<unitId, Rune[]>` (`'attack' | 'life' | 'armour'`) i `runeRound`; zwykły JSON, więc zapis i wczytanie nic nie zmieniają (test: `JSON.parse(JSON.stringify(...))`). Runa zostaje po śmierci pomocnika i jego powrocie do puli, a poległy też może dostać runę (czeka na powrót). Nie ma sprawdzania „pełnej tożsamości jednostki”, bo jednostka danego rodzaju jest we frakcji tylko jedna (`hasUnit`). Runy działają w każdej bitwie jednostki (`runeBonus` przy tworzeniu pomocnika, razem z Kuźnią i Iskrą): +1 A i pancerz w skali ataku bitwy, +1 Ż w skali Życia.
 - **Akcja `kingdomForgeRune`** (`settlementId`, `unitId`, `rune`): w osadzie własnej frakcji z Runiczną Kuźnią (jak zakupy: bohater nie musi stać w tej osadzie), raz na rundę dla frakcji (`runeRound`), cena `FACTION_MECHANICS.runePrice` (1 zł + 1 ruda), jedna runa na jednostkę na poziomie I, dwie różne na II. Przycisk w oknie osady: kliknięcie budynku Runiczna Kuźnia pokazuje pomocników z trzema przyciskami run, wyszarzonymi z podpowiedzią powodu. Bot: `botRune` (najsilniejszy pomocnik pierwszy, strzelcy dostają +1 A, reszta pancerz), kuje przed rekrutacją i budową. Serwer online jej nie zna (online bez nowych frakcji, 51a).
 - **Pancerz i „co najmniej 1”:** wszystkie pancerze Klanów stosują tę samą regułę co Żubr i Pusta Zbroja (cios, który trafia, zadaje co najmniej 1), kolejno po sobie; Grot Przez Zbroję Umarłych je ignoruje.
@@ -82,7 +84,7 @@ Rozstrzygnięcia z rozmowy: Jeździec na Koźle na 3B, Kret z Brązu, Strażnicz
 - **Runa Kamienia:** pancerz i nieruchomość (`status.unmovable`) do końca bitwy; nie na sam siebie.
 - **Mur Tarcz:** „sojusznik” = każda żyjąca jednostka tej strony obok (też bohater i garnizon). Dotyczy jednostek bitwy, nie pojedynków. Poziom III zakazuje odepchnięcia i przyciągnięcia (nowa reguła `canBeMoved`; przestawienie Skarbnika też jest wtedy bez skutku); IV rani atakującego wręcz po trafieniu (1 Ż w skali Życia).
 - **Salwa z Miejsca:** +2 A, gdy w aktywacji nie było ruchu (`movedDistance === 0`); w ruleset cyfrowym strzelec i tak nie strzela po ruchu, więc bonus działa dla każdego strzału z miejsca.
-- **Skok po Turniach (Jeździec):** raz na bitwę przechodzi przez jednostki i przeszkody w ramach swojej szybkości (nie staje na nich; nie w oblężeniu, nie dwupolowy); skok „zużywa się” tylko wtedy, gdy ruch na wybrane pole jest niemożliwy pieszo (`status.leapUsed`); pole osiągalne pieszo nie kosztuje skoku.
+- **Skok po Turniach (Kozioł Taranowy):** raz na bitwę przechodzi przez jednostki i przeszkody w ramach swojej szybkości (nie staje na nich; nie w oblężeniu, nie dwupolowy); skok „zużywa się” tylko wtedy, gdy ruch na wybrane pole jest niemożliwy pieszo (`status.leapUsed`); pole osiągalne pieszo nie kosztuje skoku.
 - **Błędne Światło:** wróg w zasięgu 4 przesuwa się o 2 pola od Skarbnika (jak odepchnięcie, bez zderzenia, kończy na polu z efektem pola); jednostka dwupolowa, nieruchoma (Żubr, Kolos, Runa Kamienia, szyk poziomu III) nie przesuwa się (zdolność jest wtedy zużyta).
 - **Młot Przodków:** ogłuszony traci najbliższą własną aktywację (w tej albo następnej rundzie); statusy odporności Umarłych na to nie działają (ogłuszenie nie jest na liście odporności karty Umarłych).
 - **Ostrzał (Armata):** trafia wrogów sąsiadujących z celem (nie sojuszników; uproszczenie); bez osobnej reguły „nie strzela po ruchu”, bo w cyfrowej wersji strzelec nie atakuje po ruchu; brama oblężonej osady pęka od jednego trafienia, gdy w armii atakującego żyje Armata albo Nosorożec Stad.
@@ -91,7 +93,7 @@ Rozstrzygnięcia z rozmowy: Jeździec na Koźle na 3B, Kret z Brązu, Strażnicz
 - **Bot:** w `botPurchase` Klany budują Sztolnię i Runiczną Kuźnię przed Salą Tarcz (rodzic Sali, Fosa i Mury, bot buduje i tak późno); w bitwie premia za pole obok sojuszników, kara za samotny ruch, premia za obrażenia wokół celu Armaty. NIE zrobione: ustawianie jednostek w zwartym szyku przy rozstawieniu (używa wspólnego `rank`), osłona osad specjalnym ruchem.
 - **Ziemia (mapa):** zastępczo jak Stada i Umarli: łąki Przymierza. Arena zastępcza (obrazy Przymierza, inne ułożenie, tło `arena/cyfrowa/clans.webp`).
 - **Cele i tryby:** tylko rywalizacja cyfrowa (Kontrola, Podbój, Relikt); koop, arena i online odrzucają frakcję (backlog 51a). Przy stole siedzą najwyżej cztery frakcje (test: Przymierze, Klany, Stada, Umarli).
-- **Test na ekranie:** `npx tsx scripts/browser/klany.ts` (kreator oferuje frakcję, panel testowy buduje wszystko, w oknie osady klik runy `+1 A` na Kuszniku Klanu działa i blokuje kolejne w tej rundzie, bez błędów w konsoli).
+- **Test na ekranie:** `npx tsx scripts/browser/klany.ts` (kreator oferuje frakcję, panel testowy buduje wszystko, w oknie osady klik runy `+1 A` na Mosiężnym Pająku działa i blokuje kolejne w tej rundzie, bez błędów w konsoli).
 
 ## Lista uproszczeń (do G4 albo decyzji autora)
 1. Ostrzał Armaty nie rani sojuszników (karta nie rozstrzyga).

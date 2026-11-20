@@ -3,13 +3,15 @@
 Stan: 19.11.2026. Karta powstała z `FRAKCJE_PROPOZYCJE.md` (sekcja 7, zatwierdzona przez autora) i z rozstrzygnięć z 19.11: **żadnych wilków ani psów (Ryś Śnieżny zamiast Wilczycy Zamieci, Mamut Wiecznej Zimy zamiast Białego Wilka Zimy; Mamut przeszedł ze Stad do Szronu)**.
 Szablon: `KARTA_FRAKCJI_SZABLON.md`. Liczby Ż/A/S i koszty są przybliżone (skala Przymierza, Stad, Umarłych i Klanów; autor kazał się nimi nie przejmować) i zostaną dostrojone przy bramce G2. Szron był w backlogu jako DLC (po Klanach); wdrożony wcześniej na polecenie autora. Czego **nie** robić: `ODRZUCONE_POMYSLY.md`.
 
+**Zmiana jednostki z 20.11.2026 (zatwierdzona przez autora):** Strzyga Wichru → Dziad Mróz (T4B, zdolność Porwanie; stary władca mrozu z brodą z sopli). Siedlisko: Chata Dziada Mroza. Strzyga przechodzi do Umarłych (zamiast Kościanej Wróżki).
+
 ## Tożsamość
 - **Nazwa / id:** Dwór Wiecznego Szronu / `frost` (EN: Court of Everfrost).
 - **Klimat:** dwór Marzanny, Pani Zimy, w lodowych salach na północy: olbrzymy, wiedźmy zamieci, śnieżny ryś, mamut, strzygi wichru. Zima nie jest zła, tylko nieubłagana.
 - **Rola w grze:** kontrola.
 - **Mechanika wyróżniająca: Szron** (budynek Pałac Szronu): cios jednostki Dworu nakłada szron, przy progu cel zamarza (traci aktywację); do tego izolowanie (lodowa ściana, porwanie).
 - **Mocne strony / słabości:** zamrażanie dużych jednostek, dzielenie armii wroga; szron potrzebuje kilku ciosów, szybcy i agresywni (Stada, Horda) dobiegają, zanim zadziała.
-- **Jak gra bot:** skupia ciosy na jednym celu, żeby go zamrozić (premia za szron na celu i za cios, który zamrozi), strzelcy i czarownice trzymają dystans, słabi wręcz się nie pchają; Lodową Ścianą odcina wroga, Dzwoneczkiem zamraża najbardziej oszronionego, Strzygą porywa strzelców, Długą Noc używa, gdy w pobliżu są co najmniej dwaj wrogowie; na mapie buduje Wieżę maga i Pałac Szronu (przez ogólną logikę mechaniki), Kryształową Grotę.
+- **Jak gra bot:** skupia ciosy na jednym celu, żeby go zamrozić (premia za szron na celu i za cios, który zamrozi), strzelcy i czarownice trzymają dystans, słabi wręcz się nie pchają; Lodową Ścianą odcina wroga, Dzwoneczkiem zamraża najbardziej oszronionego, Dziadem Mrozem porywa strzelców, Długą Noc używa, gdy w pobliżu są co najmniej dwaj wrogowie; na mapie buduje Wieżę maga i Pałac Szronu (przez ogólną logikę mechaniki), Kryształową Grotę.
 
 ## Bohaterowie (3 + czwarty + 3 dowódców)
 | Id | Nazwa | Typ | Rozm. | Ż | A | S | Ruch | Zasięg | Zdolność |
@@ -32,7 +34,7 @@ Dowódcy z karczmy: Rycerz Lodowej Gwardii (`iceKnight`, wojownik, 8/4/3, Lodowa
 | 3A | `iceSentinel` | Rycerz Lodowej Zbroi | 1 | 9 | 3 | 3 | chód | wręcz | Mroźna Zbroja: kto go trafi wręcz, dostaje szron | Lodowa Strażnica |
 | 3B | `frostSprite` | Rusałka Szronu | 1 | 6 | 3 | 4 | lot | dyst. | Szklany Dzwoneczek: raz na bitwę zamraża wroga ze szronem w zasięgu 4 | Sopelkowa Grota |
 | 4A | `youngGiant` | Młody Olbrzym Szronu | 2 | 13 | 4 | 3 | chód | wręcz | Zmrażający Uścisk: raz na bitwę trafiony nie rusza się i dostaje szron | Obóz Olbrzymów |
-| 4B | `windStrzyga` | Strzyga Wichru | 1 | 7 | 4 | 5 | lot | wręcz | Porwanie: raz na bitwę mały wróg w zasięgu 2 trafia 2–3 pola dalej, z dala od swoich | Wichrowy Szczyt |
+| 4B | `dziadMroz` | Dziad Mróz | 1 | 7 | 4 | 5 | lot | wręcz | Porwanie: raz na bitwę mały wróg w zasięgu 2 trafia 2–3 pola dalej, z dala od swoich | Chata Dziada Mroza |
 | 5A | `elderGiant` | Olbrzym Gradu | 2 | 14 | 5 | 2 | chód | dyst. | Grad Głazów: cel i sąsiedzi dostają cios i szron | Gradowa Turnia |
 | 5B | `auroraSpirit` | Duch Zorzy | 1 | 9 | 4 | 4 | lot | dyst. | Zimne Światło: wrogowie w promieniu 2 mają −1 S | Wieża Zorzy |
 | 6 | `frostMammoth` | Mamut Wiecznej Zimy | 2 | 24 | 7 | 3 | chód | wręcz | Długa Noc: raz na bitwę każdy wróg dostaje szron; nie do odepchnięcia | Mamucia Grań |

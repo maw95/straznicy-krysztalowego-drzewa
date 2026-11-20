@@ -1,15 +1,15 @@
-# Karta frakcji: Wolne Kompanie (`free`) — G0 zatwierdzona wstępnie (20.11.2026)
+# Karta frakcji: Wolna Kompania (`free`) — G0 zatwierdzona wstępnie (20.11.2026)
 
 Stan: 20.11.2026. Autor wstępnie zatwierdził kartę (skład, dowódcy, mechanika); **liczby Ż/A/S, koszty i zdolności „N” ustali balans przy bramce G2**. Treść przeniesiona z `FRAKCJE_PROPOZYCJE.md` (sekcja 6) po uwagach autora z 19.11 i 20.11; ta karta jest teraz źródłem prawdy. Szablon: `KARTA_FRAKCJI_SZABLON.md`. Odrzucone pomysły: `ODRZUCONE_POMYSLY.md`. Bramki: G1 dane i paczka, G2 balans, G3 próbka jednostki (autor), G4 grafika, G5 instrukcja.
 
 
-**EN:** Free Companies · **Rola:** kontrola + mobilność · **DLC**
+**EN:** Free Company · **Rola:** kontrola + mobilność · **DLC**
 
 **Klimat.** Bractwo zwierzoludzi z lasów, rzek i obejść: koty, borsuki, kruki, wydry, kuny, ropuchy. Trochę zbójnicy spod
 Tatr, trochę najemnicy, zawsze z planem. Każdy jest specjalistą: jeden zastawia sidła, drugi oznacza cel, trzeci wchodzi od tyłu.
 
 **Odróżnienie od Przymierza (decyzja 19.11):** Przymierze to zwierzęta dzikie, magiczne i świetliste, bez ubrań. Kompanie to
-**zwierzoludzie**: chodzą na dwóch nogach, noszą ubrania, mają narzędzia, sidła i **proch** (Borsuk Petardnik, Ropuch
+**zwierzoludzie**: chodzą na dwóch nogach, noszą ubrania, mają narzędzia, sidła i **proch** (Świstak Petardnik, Ropuch
 z Hakownicą). Bez magii natury. Paleta ciepła i rdzawa, Przymierze srebrno-zielone.
 
 **Mechanika wyróżniająca: Sidła** (ukryte pułapki przed bitwą) i **kombinacje specjalistów** przez *oznaczenie* celu
@@ -17,6 +17,8 @@ z Hakownicą). Bez magii natury. Paleta ciepła i rdzawa, Przymierze srebrno-zie
 
 **Mocne strony:** karzą wolne i zwarte armie (Klany, Rój), zarabiają, omijają walki na mapie.
 **Słabości:** krucha pierwsza linia; szybcy (Stada) przeskakują pułapki.
+
+**Zmiany jednostek z 20.11.2026 (zatwierdzone przez autora):** Kuna Złodziejka → Sroka Złodziejka (T1, Kieszonkowiec); Borsuk Petardnik → Świstak Petardnik (T4B); Kocur Fechmistrz i Jenot Szpieg zamieniają się miejscami w drzewku: Kocur na T3B, Jenot na T5B (siedliska i koszty idą za tierem, zdolności i statystyki zostają przy jednostkach; do G2). Kuna Rębajło i Rosomak bez zmian.
 
 ## Bohaterowie
 | `id` | Bohater | Typ | Rozm. | Ruch | Walka | Zdolność | Specjalność |
@@ -32,16 +34,16 @@ z Hakownicą). Bez magii natury. Paleta ciepła i rdzawa, Przymierze srebrno-zie
 | Tier | Jednostka (`id`) | Kim jest | Rozm. | Ruch | Walka | Zdolność | Prymityw | Siedlisko |
 |---|---|---|---|---|---|---|---|---|
 | 1 | Wydra Zwiadowczyni (`otterScout`) | wydra w kapturze | 1 | chód | wręcz | Wyślizg: raz na bitwę odskok po ataku | reuse: Powietrzny Zryw | — |
-| 1 | Kuna Złodziejka (`martenThief`) | kuna z sakwą | 1 | chód | wręcz | Kieszonkowiec: pierwszy cios w bohatera w bitwie daje frakcji +1 zł | ★ łup w bitwie | — |
+| 1 | Sroka Złodziejka (`magpieThief`) | sroka z sakwą | 1 | chód | wręcz | Kieszonkowiec: pierwszy cios w bohatera w bitwie daje frakcji +1 zł | ★ łup w bitwie | — |
 | 1 | Wiewiórka Łuczniczka (`squirrelArcher`) | wiewiórka z krótkim łukiem | 1 | chód | dyst. | Strzał z Gałęzi: +1 A przeciw oznaczonemu celowi | ★ oznaczenie | — |
 | 2A | Łasica Nożowniczka (`weaselKnife`) | łasica z dwoma nożami | 1 | chód | wręcz | Cios w Plecy: +N, gdy atakuje od tyłu | reuse: Zajście od tyłu | Kryjówka w Żywopłocie |
 | 2B | Bóbr Inżynier (`beaverEngineer`) | bóbr z siekierką i planem | 1 | chód | wręcz | Tama: raz na bitwę stawia przeszkodę na sąsiednim polu | ★ stawianie przeszkody | Żeremie |
 | 3A | Tchórz Smrodnik (`polecatPoisoner`) | tchórz w fartuchu z flaszami smrodu (decyzja 20.11, zamiast Ropuchy Truciciela; w Kompaniach zostaje jedna ropucha, Hakownik) | 1 | chód | dyst. | Smrodliwa Mikstura: raz na bitwę cel i sąsiedzi zatruci | trucizna (obszar) | Warzelnia |
-| 3B | Jenot Szpieg (`raccoonDogSpy`) | jenot w masce i ciemnym płaszczu | 1 | chód | wręcz | Ukryty: zaczyna bitwę niewidoczny dla wroga; pierwszy atak +N | ★ ukrycie | Leśna Czatownia |
+| 3B | Kocur Fechmistrz (`catFencer`) | stary kocur z rapierem | 1 | chód | wręcz | Riposta: oddaje N każdemu, kto zaatakuje go wręcz i przeżyje | ★ kontratak | Fechtownia |
 | 4A | Rosomak Zabijaka (`wolverine`) | rosomak z blizną | 1 | chód | wręcz | Furia Ran: +1 A za każde N brakujących Ż | ★ premia za rany | Rosomacza Nora |
-| 4B | Borsuk Petardnik (`badgerBomber`) | borsuk z beczułką prochu | 1 | chód | wręcz | Ładunek: raz na bitwę zamienia własną pułapkę w wybuch (pole i sąsiedzi) | pułapka + obszar | Prochownia |
+| 4B | Świstak Petardnik (`marmotPetard`) | świstak z beczułką prochu | 1 | chód | wręcz | Ładunek: raz na bitwę zamienia własną pułapkę w wybuch (pole i sąsiedzi) | pułapka + obszar | Prochownia |
 | 5A | Ropuch z Hakownicą (`toadGunner`) | wielka ropucha z hakownicą na podpórce | 2 | chód | dyst. | Huk Hakownicy: raz na bitwę trafiony traci następną aktywację (ogłuszony hukiem) | ★ ogłuszenie | Rusznikarnia |
-| 5B | Kocur Fechmistrz (`catFencer`) | stary kocur z rapierem | 1 | chód | wręcz | Riposta: oddaje N każdemu, kto zaatakuje go wręcz i przeżyje | ★ kontratak | Fechtownia |
+| 5B | Jenot Szpieg (`raccoonDogSpy`) | jenot w masce i ciemnym płaszczu | 1 | chód | wręcz | Ukryty: zaczyna bitwę niewidoczny dla wroga; pierwszy atak +N | ★ ukrycie | Leśna Czatownia |
 | 6 | Waran Wieżowy (`towerMonitor`) | olbrzymi waran z wieżyczką łuczników na grzbiecie | 2 | chód | wręcz | Ruchoma Twierdza: atakuje wręcz, a raz na rundę dodatkowo strzela wieżyczka | ★ drugi atak (dystansowy) | Wielka Stajnia Kompanii |
 
 ## Osada
@@ -92,7 +94,7 @@ omijania strażników, zbiera skrzynie. **Nie wolno mu:** znać pułapek i mira�
 - **Pułapki (Sidła):** `BattleState.ground` (`GroundEffect`, `hidden: true`). Kładzie się je w `deployUnits` (pole `traps`; ile: `trapSlots`: Warsztat Sideł 1/2/2/3 wg poziomu + 2 z Iskry; nieustawione układa `autoTrapCells`) na swojej połowie (`trapZone`: poza kolumnami startowymi i środkową). Wchodzący wróg dostaje 2 obrażenia (`ABILITY.trapDamage`), pułapka znika, a piechur zatrzymuje się na pierwszej pułapce swojej drogi (lot, skok i odskok trafiają tylko w pole lądowania). Poziom III: trafiony nie rusza się w następnej aktywacji (`rootLater`). Własna pułapka nie działa na własnych.
 - **Ukryta informacja:** silnik zawsze liczy na pełnym stanie; ekran i serwer pokazują `redactHidden(state, widzowie)` (`src/engine/hidden.ts`): bez cudzych pułapek i bez pozycji cudzej ukrytej jednostki. W aplikacji (`App.tsx`): przy hot-seat widzi to, co wolno aktualnie grającemu; online miejsca tej przeglądarki. Dziennik nie podaje pól pułapek. Bot nie czyta `ground` wroga (test: te same decyzje z pułapkami i bez) ani ukrytych jednostek (`enemiesOf` je pomija).
 - **Oznaczenie:** `status.marked {by, round}`: do końca rundy każdy atak strony znakującej +1 A, Strzał z Gałęzi dodatkowo +1. Oko Kruka: cel w zasięgu 5, odsłania pułapki wroga (`seenBy`, tylko dla Kompanii) i ukrytych w promieniu 2 od Kruka.
-- **Ukryty (Jenot):** niewidoczny, nie da się go wybrać na cel; atak (+2 A) go odsłania; wejście wroga na jego pole odsłania go i nie przesuwa wchodzącego; strona, której zostali tylko ukryci, odsłania ich (żeby bitwa nie stanęła).
+- **Ukryty (Jenot Szpieg):** niewidoczny, nie da się go wybrać na cel; atak (+2 A) go odsłania; wejście wroga na jego pole odsłania go i nie przesuwa wchodzącego; strona, której zostali tylko ukryci, odsłania ich (żeby bitwa nie stanęła).
 - **Pozostałe:** Kieszonkowiec płaci od razu 1 zł (tylko przy poziomie z osadami); Furia Ran +1 A za każde 2 brakujące Ż (maks. +3); Ładunek rani 3 pole pułapki i sąsiednie, także swoich; Riposta 2 obrażenia w atakującego wręcz, który przeżył (jeśli Kocur też żyje); Waran: wieżyczka strzela na końcu jego aktywacji w najbliższego wroga na linii strzału (2 obrażenia, raz na rundę), cel wybierany automatycznie; Tama: jedno pole obok, stoi do końca bitwy; Okop: pancerz 2 i brak odpychania przez tę i następną aktywację; Szalony Skok: skok o 3 pola (pola, na które nie dochodzi pieszo), +1 A w tej aktywacji. Żbiczka walczy wręcz (skacze i bije); w jej miejsce na slocie „łucznika” karczmy.
 - **Paserka (decyzja autora 20.11):** poziom I: w osadzie z Paserką bohater w swojej turze sprzedaje artefakty z plecaka za pełną cenę targową jego rzadkości (2 / 5 / 10 zł; bez zniżki Kapelusza Kupca), akcja `kingdomSellArtifact`, przycisk „Sprzedaj” w oknie Paserki; skrzynie dają +1 zł; poziom II: co 3 rundy losowy skarb. Dawna zniżka 1 zł przy kupnie na rynku zniknęła. Bot Kompanii sprzedaje z plecaka artefakty, które nie są częścią zbieranego zestawu.
 - **Hot-seat:** gdy przy jednym ekranie siedzą co najmniej dwie osoby i jedna gra Kompaniami, układanie Sideł zasłania ekran „Przekaż urządzenie” (`src/ui/trapVeil.ts`, `Handoff` w `App.tsx`), a własne Sidła na arenie widać dopiero po kliknięciu „Podejrzyj Sidła” w swojej turze (znika przy zmianie aktywacji).

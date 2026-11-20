@@ -12,7 +12,7 @@ Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowe
 
 ## Kolejność zadań (ustalona z autorem 20.11, żeby zużyć jak najmniej tokenów; autor może stracić limit w każdej chwili)
 1. **Dokończyć przestrojenie poziomów** (zadanie 1 niżej): czekać na `=== done`, `tuneMerge`, `make check`, commit.
-2. **Scalić do `master` tylko Wolne Kompanie** z worktree: `git merge ea352d6` (to commit końcowy G1 Kompanii; gałąź `g1-four-factions` ma wyżej commity WIP Piasków,
+2. **Scalić do `master` tylko Wolna Kompania** z worktree: `git merge ea352d6` (to commit końcowy G1 Kompanii; gałąź `g1-four-factions` ma wyżej commity WIP Piasków,
    których NIE scalać). Dopiero po zakończeniu przestrajania (symulacje czytają `src/`).
 3. **Automatyczny stroiciel frakcji** (`scripts/sim/tuneFactions.ts`, do napisania): zachłanne przeszukiwanie małych, cyfrowych poprawek na frakcję
    (hp, attack, speed osobno dla bohaterów i pomocników, tylko wersja cyfrowa, np. tabela `FACTION_DIGITAL_BONUS` uogólniająca `HORDE_DIGITAL_BONUS`)
@@ -41,6 +41,7 @@ Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowe
   stroiciel liczb zdolności (`tuneFactions.ts` zmienić tak, by liczył cel względny i stroił liczby zdolności, nie ogólne statystyki).
 - **Wymiana jednostek (decyzje autora 20.11, `docs/frakcje/PODOBIENSTWA_I_NAZWY.md` sekcja 5) i nowe nazwy frakcji:** do wprowadzenia w kartach, kodzie (`src/engine/factions/*.ts`, `i18n`) i instrukcji PRZED poprawkami mechanik/bota i G2,
   bo od składu jednostek zależy balans. Najlepiej agentem w osobnym worktree, po jednej frakcji (Stada, Umarli+Szron, Klany, Kompanie, potem karty Piasków i Przypływów). Otwarte pytanie: Tarpan Łucznik sam czy jeździec.
+  **Stan (20.11): wymiany w kodzie i kartach WPROWADZONE w gałęzi `unit-swaps` (Stada, Umarli, Szron, Klany, Kompanie; karty Piasków, Przypływów i Roju z nowymi nazwami; kod Piasków i Przypływów dopiero przy G1). Do scalenia do `master` po zakończeniu stroiciela. Zdolności i liczby przeszły ze starych jednostek, więc balans zrobi G2.**
 - **Decyzja do podjęcia po stroicielu (ważne):** tabela kontr wymaga Przymierze > Horda 60–70%, a premia +1/+1 dla Hordy dała ok. 50%. Stroiciel sam dobierze premie wszystkich frakcji,
   więc po nim Kryształy i inne cele trzeba przestroić ponownie (`scripts/sim/retune-all.sh` po skasowaniu `.tmp/sim/auto-*.json` oprócz `auto-zero-legacy.json`), potem `tuneMerge`.
   Dlatego obecne pliki `auto-*.json` służą tylko, jeśli premia Hordy zostanie przy +1/+1.
@@ -62,7 +63,7 @@ Po +1/+1 Hordy cele spadły poza pasma (Łatwy 65–85, Normalny 45–65, Trudny
 
 ## Zadanie 2: G1 czterech nowych frakcji (osobny worktree)
 - Worktree: `/home/maciek/WebstormProjects/skd-g1`, gałąź `g1-four-factions` (`git worktree list`). `node_modules` tam to symlink do katalogu głównego.
-- Kolejność, po jednej frakcji (wspólne pliki, więc nie równolegle): Wolne Kompanie `free` → Piaski `sands` → Rój `swarm` → Przypływy `tides`.
+- Kolejność, po jednej frakcji (wspólne pliki, więc nie równolegle): Wolna Kompania `free` → Piaski `sands` → Rój `swarm` → Przypływy `tides`.
   Karty: `docs/frakcje/{free,sands,swarm,tides}.md`. Wzorzec: commit `1903255` (Dwór Wiecznego Szronu). Zakres G1: `docs/FRAKCJE_PROPOZYCJE.md` sekcja 2.
 - Stan: `git -C /home/maciek/WebstormProjects/skd-g1 log --oneline master..g1-four-factions` i `git -C … status` (praca robocza może być w commitach „WIP”).
   Każda karta ma po G1 sekcję „Stan G1”. Jeśli agent frakcji został przerwany, sprawdź `status` (niezacommitowane pliki), dokończ wg karty i testu

@@ -4,7 +4,7 @@ Zdjęcia (oryginały leżą u autora, NIE są w repozytorium; ścieżki z 20.11.
 `/home/maciek/Obrazy/stefan.jpg`. Poniżej opis z tych zdjęć, do użycia przy generowaniu grafik (Scenario) i przy kartach frakcji. Postacie są antropomorficzne,
 ale maść, oczy i budowa mają zostać rozpoznawalne.
 
-## Bastia Cienista (Brytania, „Bricia”) — czarna kotka, dowódca Imperium Piasków (`bastia`, wojownik, Czujna Drzemka)
+## Bastia Cienista (Brytania, „Bricia”) — czarna kotka, dowódca Pustynnego Cesarstwa (`bastia`, wojownik, Czujna Drzemka)
 - **Maść:** całkiem czarna, błyszcząca, krótka do średniej sierść; w ostrym słońcu przechodzi w ciemną czekoladową czerń z lekkim rdzawym połyskiem. Na piersi tuż
   pod brodą może być mała, jasna plamka (widoczna na zdjęciu z Bajką, bardzo mała; do potwierdzenia przez autora).
 - **Oczy:** żółtozielone (w świetle dziennym bardziej zielone, w półcieniu żółte), duże, okrągłe. **Nos** ciemny; **uszy** duże, spiczaste, wnętrze uszu rdzawo-brązowe;
@@ -13,7 +13,7 @@ ale maść, oczy i budowa mają zostać rozpoznawalne.
   pół przymknięte powieki. Dla pantery: zachować ciężką, sytą sylwetkę, nie wysmuklać.
 - **Charakter w grafice:** senna, sytość, godna postawa; ulubiona poza: leży na boku, łapy w górze.
 
-## Bajka (Żbiczka Bajdurka) — dowódca Wolnych Kompanii (`bajka`, łowca, Szalony Skok)
+## Bajka (Żbiczka Bajdurka) — dowódca Wolnej Kompanii (`bajka`, łowca, Szalony Skok)
 - **Maść:** pręgowany tabby w odcieniach rudo-brązowych (jasny rudy-beżowy z ciemnobrązowymi pręgami i plamkami), rysunek typu „dziki” (żbik). Pysk i broda białawe
   (biała plama na brodzie i dolnej części pyska, jasna pierś), nos różowy. Łapy jaśniejsze, piaskowo-złote, z różowymi opuszkami. Ogon pręgowany w ciemne obrączki.
 - **Oczy:** bursztynowe do miodowo-brązowych, duże, lekko skośne. **Uszy:** różowe w środku; jedno ucho lekko zgięte (zdjęcie wskazuje nieregularność końcówki, do

@@ -1,9 +1,11 @@
-# Karta frakcji: Rój Głębin (`swarm`) — G0 zatwierdzona wstępnie (20.11.2026)
+# Karta frakcji: Rój Puszczy (`swarm`) — G0 zatwierdzona wstępnie (20.11.2026)
 
 Stan: 20.11.2026. Autor wstępnie zatwierdził kartę (skład, dowódcy, mechanika); **liczby Ż/A/S, koszty i zdolności „N” ustali balans przy bramce G2**. Treść przeniesiona z `FRAKCJE_PROPOZYCJE.md` (sekcja 9) po uwagach autora z 19.11 i 20.11; ta karta jest teraz źródłem prawdy. Szablon: `KARTA_FRAKCJI_SZABLON.md`. Odrzucone pomysły: `ODRZUCONE_POMYSLY.md`. Bramki: G1 dane i paczka, G2 balans, G3 próbka jednostki (autor), G4 grafika, G5 instrukcja.
 
 
-**EN:** Deep Swarm · **Rola:** wyczerpanie + kontrola · **DLC**
+**Zmiana z 20.11.2026 (zatwierdzona przez autora):** nazwa frakcji Rój Puszczy.
+
+**EN:** Swarm of the Wilds · **Rola:** wyczerpanie + kontrola · **DLC**
 
 **Klimat.** Podziemne królestwo grzybni, chrząszczy i modliszek pod korzeniami starego lasu. Jedna wola, wiele ciał. Baśniowo
 i poważnie zarazem: muchomory jak latarnie, chitynowe pancerze jak lakier, świetliki zamiast pochodni. Bez obrzydliwości.

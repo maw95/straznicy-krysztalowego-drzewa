@@ -110,7 +110,7 @@ Uwaga do Stad: gdy Kamień Tętentu stoi, ok. 80% ataków wręcz poprzedza bieg 
 
 (`abilityUsed` w bitwach pvp na koniec bitwy; niektóre flagi mogą nie odpowiadać użyciu — oznaczone)
 Prawie wszystkie jednostki startowe używają zdolności w 75–99% obecności. Niskie użycie: **Król Jednorożców 0%** (1154 obecności, Szarża Światła), **Władca Wilkołaków 0%** (Zew Krwi; *flaga może
-nie być ustawiana*), **Jeździec na Koźle 0%** (331 obecności, Skok po Turniach), **Rusałka Szronu 1%** (Szklany Dzwoneczek wymaga wroga z szronem, a szronów prawie nie ma bez Pałacu), Szronowa Wiedźma 9%, Płaczka 20%, Pokutny Mnich 19%, Król
+nie być ustawiana*), **Kozioł Taranowy 0%** (331 obecności, Skok po Turniach), **Rusałka Szronu 1%** (Szklany Dzwoneczek wymaga wroga z szronem, a szronów prawie nie ma bez Pałacu), Szronowa Wiedźma 9%, Wampir 20%, Pokutny Mnich 19%, Król
 Kurhanu 43% (Wezwanie z Kurhanu), Zjawa 39%, Czarny Smok 45%, Kruk Wieszczek 62%. Klasa: (b), małe poprawki w `battleAi.ts`. Pełna tabela: raport z `--report`.
 
 ## 6. Czego nie dało się zmierzyć bez zmiany silnika (i minimalny licznik)
@@ -135,7 +135,7 @@ Kurhanu 43% (Wezwanie z Kurhanu), Zjawa 39%, Czarny Smok 45%, Kruk Wieszczek 62%
 | 6 | Horda: kontra Szronu i Umarłych nie ma mechanizmu (Żądza to jedno +1 A) | projekt (c) | duża | −17 (Szron), −17 (Umarli); decyzja autora |
 | 7 | Klany: Mur Tarcz pochłania 11% obrażeń, ale nie kontruje Stad i Hordy; zakotwiczenie działa 0,37/b; Stada–Klany +17 | liczby Muru + bot (a,b) | mała | małe poprawki: próg sąsiadów, kolce wcześniej |
 | 8 | Stada–Szron i Horda–Szron: Szron L3 nie ma słabości, której Stada/Horda mogłyby użyć | projekt (c) | średnia | −16 / −17 pkt |
-| 9 | Bot: niskie użycie zdolności (Król Jednorożców 0%, Jeździec na Koźle 0%, Rusałka 1%, Płaczka/Pokutny Mnich 20%) | bot (b) | mała każda | niewielki, ale tanie |
+| 9 | Bot: niskie użycie zdolności (Król Jednorożców 0%, Kozioł Taranowy 0%, Rusałka 1%, Wampir/Pokutny Mnich 20%) | bot (b) | mała każda | niewielki, ale tanie |
 | 10 | Dodać do silnika licznik użycia zdolności i trafień sideł (pkt 6) | pomiar | mała | usuwa hipotezy z tej diagnozy |
 
 Kolejność robocza: **1 → 2+3 razem (z powtórką pomiaru L0/L1/L3 po każdej zmianie) → 7 → 4 → 9 → 5/6/8 (po decyzji autora)**.

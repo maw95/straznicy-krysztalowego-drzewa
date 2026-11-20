@@ -118,7 +118,7 @@ Odrzucone: machiny wojenne (poza katapultą), morale i szczęście, neutralne st
 
 ## Po premierze
 
-- [ ] Nowe frakcje (Żelazne Klany, Dzikie Stada, Królestwo Umarłych, potem DLC); najpierw dokończyć to, co mamy (10.2).
+- [ ] Nowe frakcje (Żelazny Klan, Dzikie Stado, Królestwo Umarłych, potem DLC); najpierw dokończyć to, co mamy (10.2).
 - [ ] Kampania fabularna, wyprawa roguelike (osobny tryb, nie to samo co poziom 2 „Wyprawa”), seed dnia z rankingiem.
 
 ## Otwarte pytania (10.11)
