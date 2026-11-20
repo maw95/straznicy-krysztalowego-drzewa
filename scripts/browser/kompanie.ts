@@ -94,7 +94,7 @@ try {
   let found = false;
   for (let i = 0; i < 60 && !found; i++) {
     await p3.waitForTimeout(2000);
-    found = (await p3.locator('.arena-frame').count()) > 0 && (await p3.getByText(/Ruda Atamanka|Borsuk Saper|Kruk Wieszczek|Wydra Zwiadowczyni|Kuna Złodziejka|Wiewiórka Łuczniczka/).count()) > 0;
+    found = (await p3.locator('.arena-frame').count()) > 0 && (await p3.getByText(/Ruda Atamanka|Borsuk Saper|Kruk Wieszczek|Wydra Zwiadowczyni|Sroka Złodziejka|Wiewiórka Łuczniczka/).count()) > 0;
   }
   console.log('battle with the Companies seen:', found, '| traps drawn on the screen of an onlooker:', await p3.locator('[data-trap]').count());
   await p3.screenshot({ path: `.tmp/kompanie-boty-${view}.png` });

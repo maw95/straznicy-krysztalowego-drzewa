@@ -29,7 +29,7 @@ try {
   let found = false;
   for (let i = 0; i < 60 && !found; i++) {
     await p.waitForTimeout(2000);
-    found = (await p.locator('.arena-frame').count()) > 0 && (await p.getByText(/Młody Tur|Satyr Dudziarz|Kozica Skalna|Wielki Tur|Satyr Rogogłos|Pędziwiatr/).count()) > 0;
+    found = (await p.locator('.arena-frame').count()) > 0 && (await p.getByText(/Młody Tur|Satyr Dudziarz|Kulan Stepowy|Wielki Tur|Satyr Rogogłos|Pędziwiatr/).count()) > 0;
   }
   console.log('battle with the Herds seen:', found);
   await p.screenshot({ path: `.tmp/stada-game-${view}.png` });
