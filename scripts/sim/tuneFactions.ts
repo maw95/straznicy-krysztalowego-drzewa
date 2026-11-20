@@ -33,9 +33,12 @@ const COUNTERS: Record<string, string[]> = {
   tides: ['horde', 'herds'],
 };
 const counters = (a: string, b: string) => COUNTERS[a]?.includes(b) || false;
-/** The band of the share of `a` against `b`. */
-const band = (a: string, b: string): [number, number] => (counters(a, b) && !counters(b, a) ? [60, 70] : counters(b, a) && !counters(a, b) ? [30, 40] : [45, 55]);
+/** 1 when `a` counters `b`, -1 when `b` counters `a`, 0 for no relation. */
+const relation = (a: string, b: string): -1 | 0 | 1 => (counters(a, b) && !counters(b, a) ? 1 : counters(b, a) && !counters(a, b) ? -1 : 0);
 const dist = (x: number, [lo, hi]: [number, number]) => (x < lo ? lo - x : x > hi ? x - hi : 0);
+// The relative target (the author, 20.11): average of a faction 45-55; a counter wins at least 10 points above its own average, the countered at least 10 below its own;
+// no relation within the average +-7; no pair outside 25-75. A pair counts as met with a tolerance for the measurement error.
+const TOL = Number(process.env.SIM_TOL ?? 4);
 
 const races = PACK_IDS as readonly Race[];
 const pairsOf = (f: Race): Array<[Race, Race]> => races.filter((o) => o !== f).map((o) => [f, o] as [Race, Race]);
@@ -64,34 +67,39 @@ function measure(pairs: Array<[Race, Race]>, b: Bonus): Map<string, number> {
   return res;
 }
 
-/** The penalty of one faction: how far its pairs are from their bands (squared) plus how far its average share is from 45-55. */
+const shareOf = (m: Map<string, number>, a: string, b: string) => m.get(`${a}:${b}`) ?? 100 - (m.get(`${b}:${a}`) ?? 50);
+const avgOf = (m: Map<string, number>, r: Race) => {
+  const v = races.filter((o) => o !== r).map((o) => shareOf(m, r, o));
+  return v.reduce((s, x) => s + x, 0) / Math.max(1, v.length);
+};
+/** How far a pair is from the relative target: the sum of the gaps of its constraints (0 = met). Both sides are checked against their own averages. */
+function pairGap(m: Map<string, number>, a: Race, b: Race): number {
+  const x = shareOf(m, a, b);
+  const aa = avgOf(m, a);
+  const ab = avgOf(m, b);
+  const rel = relation(a, b);
+  let g = dist(x, [25, 75]);
+  if (rel === 1) g += Math.max(0, aa + 10 - x) + Math.max(0, 100 - x - (ab - 10));
+  else if (rel === -1) g += Math.max(0, x - (aa - 10)) + Math.max(0, ab + 10 - (100 - x));
+  else g += dist(x, [aa - 7, aa + 7]) + dist(100 - x, [ab - 7, ab + 7]);
+  return g;
+}
+/** The penalty of one faction: its pairs (squared gaps) plus how far its average is from 45-55. */
 function cost(f: Race, share: Map<string, number>): number {
   let c = 0;
-  const mine: number[] = [];
-  for (const [a, b] of pairsOf(f)) {
-    const x = share.get(`${a}:${b}`) ?? 100 - (share.get(`${b}:${a}`) ?? 50);
-    const y = a === f ? x : 100 - x;
-    mine.push(y);
-    c += dist(y, band(f, b === f ? a : b)) ** 2;
-  }
-  const mean = mine.reduce((s, x) => s + x, 0) / Math.max(1, mine.length);
-  return c + 3 * dist(mean, [45, 55]) ** 2;
+  for (const [a, b] of pairsOf(f)) c += pairGap(share, a, b) ** 2;
+  return c + 3 * dist(avgOf(share, f), [45, 55]) ** 2;
 }
 
-const pairShare = (m: Map<string, number>, a: string, b: string) => m.get(`${a}:${b}`) ?? 100 - (m.get(`${b}:${a}`) ?? 50);
 function summary(m: Map<string, number>) {
   const lines: string[] = [];
   let bad = 0;
   for (const [a, b] of allPairs) {
-    const x = pairShare(m, a, b);
-    const bd = band(a, b);
-    if (dist(x, bd) > 0) (bad++, lines.push(`  ${a} vs ${b}: ${x.toFixed(0)}% (wanted ${bd[0]}-${bd[1]})`));
+    const g = pairGap(m, a, b);
+    if (g > TOL) (bad++, lines.push(`  ${a} vs ${b}: ${shareOf(m, a, b).toFixed(0)}% (${['counters', 'neutral', 'countered'][1 - relation(a, b)]}, gap ${g.toFixed(0)})`));
   }
-  const avg = races.map((r) => {
-    const v = races.filter((o) => o !== r).map((o) => (m.has(`${r}:${o}`) ? m.get(`${r}:${o}`)! : 100 - (m.get(`${o}:${r}`) ?? 50)));
-    return `${r} ${(v.reduce((s, x) => s + x, 0) / v.length).toFixed(0)}%`;
-  });
-  console.log(`pairs outside their band: ${bad}/${allPairs.length}${bad ? '\n' + lines.join('\n') : ''}\naverages: ${avg.join(', ')}`);
+  const avg = races.map((r) => `${r} ${avgOf(m, r).toFixed(0)}%`);
+  console.log(`pairs outside the target (tolerance ${TOL}): ${bad}/${allPairs.length}${bad ? '\n' + lines.join('\n') : ''}\naverages: ${avg.join(', ')}`);
 }
 
 const save = (m: Map<string, number>) => writeFileSync(STATE, JSON.stringify({ bonus, shares: Object.fromEntries(m) }, null, 1));
