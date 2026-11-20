@@ -1,0 +1,42 @@
+# Wznowienie pracy (stan z 20.11.2026, na wypadek zmiany konta Claude)
+
+Ten plik opisuje, co jest rozpoczęte i jak to dokończyć bez znajomości rozmowy, w której powstało. Kolejność zadań jest ważna.
+Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowego-drzewa-backend`) ma lokalny commit, **nie jest wdrożony**
+(dostaje silnik dopiero z wydaniem gry).
+
+## Co jest zrobione (commity w `master`)
+- Horda cyfrowa ma +1 Ż i +1 A (`HORDE_DIGITAL_BONUS`, `data.ts`; bez areny i bez wersji planszowej): `22c56b1`.
+- Tryb „Potyczka” zamiast Rywalizacji i Kooperacji w wersji cyfrowej, kampania, Przetrwanie i tryb rodzinny na zwykłym bocie: `edf15c2`, `3a164c0`.
+  Wersja planszowa nietknięta (zostaje Kooperacja z automatem; silnik zachowuje `mode: 'coop'` tylko dla niej).
+- Opis i plan: `docs/BACKLOG.md` punkt 51b.
+
+## Zadanie 1: przestrojenie poziomów po wzmocnieniu Hordy (liczy się w tle)
+Po +1/+1 Hordy cele spadły poza pasma (Łatwy 65–85, Normalny 45–65, Trudny 30–45 % wygranych Przymierza). Przetrwanie w PvP nie miało strojenia.
+- Uruchomione: `scripts/sim/retune-all.sh` (≈150 przebiegów po ok. 1,5 min). Log: `.tmp/sim/retune-all.log` (linia `=== done` na końcu).
+  Wyniki każdego przebiegu: `.tmp/sim/auto-<tag>.json`. Skrypt jest **wznawialny** (pomija przebiegi z istniejącym plikiem): jeśli proces padł,
+  uruchom go ponownie (`nohup scripts/sim/retune-all.sh >> .tmp/sim/retune-all.log 2>&1 &`; sprawdź najpierw `pgrep -f tuneLevels`).
+  `auto-zero-legacy.json` to odtworzony blok z dawnego `tuningAuto.ts`, nie kasuj go.
+- **Podczas przebiegu nie edytuj `src/` w katalogu głównym** (symulacje ładują kod z niego; praca nad frakcjami idzie w osobnym worktree).
+- Po `=== done`: `node --import tsx scripts/sim/tuneMerge.ts` (zapisuje `src/engine/tuningAuto.ts`), `make check`, zobacz które komórki zostały „(OUT)”
+  w logu i opisz je w backlogu. Sprawdź kampanię (`tests/campaign.test.ts`, scenariusze były stroione na automacie; pomiar: `scripts/sim/kingdom.ts`).
+  Golden (`npx vitest run tests/golden.test.ts -u`) tylko świadomie, w osobnym commicie z opisem. Commit: nowe strojenie + CHANGELOG.
+
+## Zadanie 2: G1 czterech nowych frakcji (osobny worktree)
+- Worktree: `/home/maciek/WebstormProjects/skd-g1`, gałąź `g1-four-factions` (`git worktree list`). `node_modules` tam to symlink do katalogu głównego.
+- Kolejność, po jednej frakcji (wspólne pliki, więc nie równolegle): Wolne Kompanie `free` → Piaski `sands` → Rój `swarm` → Przypływy `tides`.
+  Karty: `docs/frakcje/{free,sands,swarm,tides}.md`. Wzorzec: commit `1903255` (Dwór Wiecznego Szronu). Zakres G1: `docs/FRAKCJE_PROPOZYCJE.md` sekcja 2.
+- Stan: `git -C /home/maciek/WebstormProjects/skd-g1 log --oneline master..g1-four-factions` i `git -C … status` (praca robocza może być w commitach „WIP”).
+  Każda karta ma po G1 sekcję „Stan G1”. Jeśli agent frakcji został przerwany, sprawdź `status` (niezacommitowane pliki), dokończ wg karty i testu
+  kontraktowego `tests/factionContract.test.ts`, `make check` w worktree.
+- Zasady twardych granic: golden bez zmian, wersja planszowa bez zmian, bez grafik z Scenario i bez wydawania kredytów (budżet 8000 CU, nie przed G4).
+- Po czterech frakcjach: scal gałąź do `master` (`git merge g1-four-factions`; spodziewane konflikty: `docs/BACKLOG.md`, `CHANGELOG.md`, `src/i18n/en/changelog.ts`,
+  `src/engine/factions/index.ts`; rozwiąż ręcznie, `make check`).
+
+## Zadanie 3: wspólne G2 dla wszystkich 10 frakcji (po zadaniach 1 i 2)
+- Cel (decyzja autora 20.11): tabela „Kto z kim” w `docs/FRAKCJE_PROPOZYCJE.md`: kontra 60–70 %, kontrowana 30–40 %, brak relacji 45–55 %, średnia przeciw wszystkim
+  45–55 %, żadna para poniżej 30 % ani powyżej 70 %. Narzędzie: `make sim-nowe` (rozszerz o 10 frakcji i podsumowanie wg tabeli kontr).
+  Strojenie liczbami w paczkach frakcji (nie ruszać wersji planszowej; Przymierze i Horda tylko przez cyfrowe liczby, np. `HORDE_DIGITAL_BONUS`).
+- Po zmianie liczb: strojenie poziomów Kryształów itd. może znów się rozjechać (zadanie 1 do powtórzenia dla zmienionych frakcji), golden świadomie.
+
+## Co robi druga sesja autora
+G3 (próbka jednostki w nowym stylu) dla ośmiu nowych frakcji, w osobnym worktree. Może dotknąć `assets.json`, `public/assets`, `docs/BACKLOG.md`; przy scaleniu uważaj na te pliki.
