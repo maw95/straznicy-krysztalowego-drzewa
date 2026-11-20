@@ -101,7 +101,6 @@ function measure(cells: Cell[], label: string): Map<string, number> {
 /** Entries kept from earlier rounds for cells already finished (they must stay in force while the rest are measured). */
 const ALREADY: unknown[] = [];
 
-const coop = (t: string) => t.startsWith('coop');
 const all: Cell[] = [];
 for (const size of SIZES) {
   for (const table of (process.env.SIM_TABLES ?? 'coop1,coop2,pvp1,pvp2').split(',')) {
