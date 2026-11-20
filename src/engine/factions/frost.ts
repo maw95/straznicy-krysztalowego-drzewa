@@ -7,7 +7,7 @@ export const FROST: FactionPack = {
   heroes: ['marzanna', 'frostJarl', 'snowLynx'],
   supports: ['frostImp', 'ermine', 'courtPage'],
   tierUnits: ['blizzardWitch', 'iceSentinel', 'youngGiant', 'elderGiant'],
-  altUnits: ['glacierYak', 'frostSprite', 'windStrzyga', 'auroraSpirit'],
+  altUnits: ['glacierYak', 'frostSprite', 'dziadMroz', 'auroraSpirit'],
   legend: 'frostMammoth',
   mechanic: { name: 'Szron', building: 'frostPalace' },
   buildings: ['frostPalace', 'crystalGrotto', 'blizzardTower'],

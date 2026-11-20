@@ -1,4 +1,4 @@
-// Dzikie Stada (docs/frakcje/herds.md): the push with a collision, the resistance to being moved, the leap, the taunt, the aura and every ability of the faction,
+// Dzikie Stado (docs/frakcje/herds.md): the push with a collision, the resistance to being moved, the leap, the taunt, the aura and every ability of the faction,
 // then whole games of the Herds against Przymierze and Horda.
 import { describe, expect, it } from 'vitest';
 import { applyAction, createGame } from '../src/engine/game';
@@ -117,15 +117,15 @@ describe('abilities of the units', () => {
     expect(at(plain, 'nymph').pos).toBe(arenaCell(5, 9));
   });
 
-  it('Rozpęd (Tarpan) and Lot na Strzelców (Hipogryf) add Atak', () => {
-    const s = fight([['tarpan', 'dawn', 4, 8], ['nymph', 'horde', 5, 9], ['steppeHippogriff', 'dawn', 3, 7]]);
-    const base = attackDamage(s, at(s, 'tarpan'), at(s, 'nymph'), false, 2);
-    expect(attackDamage(s, at(s, 'tarpan'), at(s, 'nymph'), false, 3)).toBe(base + ABILITY.momentumBonus);
-    const plain = attackDamage(s, at(s, 'steppeHippogriff'), at(s, 'nymph'), false, 0);
+  it('Rozpęd (Wół Piżmowy) and Lot na Strzelców (Łamignat) add Atak', () => {
+    const s = fight([['muskOx', 'dawn', 4, 8], ['nymph', 'horde', 5, 9], ['steppeLamignat', 'dawn', 3, 7]]);
+    const base = attackDamage(s, at(s, 'muskOx'), at(s, 'nymph'), false, 2);
+    expect(attackDamage(s, at(s, 'muskOx'), at(s, 'nymph'), false, 3)).toBe(base + ABILITY.momentumBonus);
+    const plain = attackDamage(s, at(s, 'steppeLamignat'), at(s, 'nymph'), false, 0);
     at(s, 'nymph').status.pushedRound = s.battle!.round;
-    expect(attackDamage(s, at(s, 'steppeHippogriff'), at(s, 'nymph'), false, 0)).toBe(plain + ABILITY.hippoBonus);
+    expect(attackDamage(s, at(s, 'steppeLamignat'), at(s, 'nymph'), false, 0)).toBe(plain + ABILITY.hippoBonus);
     s.battle!.round = 2;
-    expect(attackDamage(s, at(s, 'steppeHippogriff'), at(s, 'nymph'), false, 0)).toBe(plain);
+    expect(attackDamage(s, at(s, 'steppeLamignat'), at(s, 'nymph'), false, 0)).toBe(plain);
   });
 
   it('Niewzruszony (Żubr): armour, and a blow that lands still takes at least 1', () => {
@@ -136,20 +136,20 @@ describe('abilities of the units', () => {
     expect(predictDamage(weak, at(weak, 'elfDruid'), at(weak, 'forestBison'), { useAbility: false, movedDistance: 0 }).damage).toBeGreaterThanOrEqual(1);
   });
 
-  it('Przebicie (Satyr Kopijnik) hits the enemy behind the target, not an ally', () => {
-    let s = fight([['satyrLancer', 'dawn', 4, 8], ['nymph', 'horde', 5, 9], ['elfDruid', 'horde', 6, 10]]);
+  it('Przebicie (Arkar) hits the enemy behind the target, not an ally', () => {
+    let s = fight([['arkar', 'dawn', 4, 8], ['nymph', 'horde', 5, 9], ['elfDruid', 'horde', 6, 10]]);
     s = applyAction(s, { type: 'battleAttack', targetId: 'nymph' });
     expect(at(s, 'elfDruid').hp).toBeLessThan(at(s, 'elfDruid').maxHp);
-    let a = fight([['satyrLancer', 'dawn', 4, 8], ['nymph', 'horde', 5, 9], ['elfDruid', 'dawn', 6, 10]]);
+    let a = fight([['arkar', 'dawn', 4, 8], ['nymph', 'horde', 5, 9], ['elfDruid', 'dawn', 6, 10]]);
     a = applyAction(a, { type: 'battleAttack', targetId: 'nymph' });
     expect(at(a, 'elfDruid').hp).toBe(at(a, 'elfDruid').maxHp);
   });
 
-  it('Skok po Turniach (Kozica) walks through obstacles and units, and never ends on them', () => {
-    const s = fight([['rockGoat', 'dawn', 4, 8], ['nymph', 'horde', 5, 9]], { obstacles: [arenaCell(5, 7), arenaCell(5, 9 + 2)] });
-    const goat = reachableCells(s, at(s, 'rockGoat'));
+  it('Skok po Turniach (Kulan) walks through obstacles and units, and never ends on them', () => {
+    const s = fight([['kulan', 'dawn', 4, 8], ['nymph', 'horde', 5, 9]], { obstacles: [arenaCell(5, 7), arenaCell(5, 9 + 2)] });
+    const goat = reachableCells(s, at(s, 'kulan'));
     const walker = fight([['youngAurochs', 'dawn', 4, 8], ['nymph', 'horde', 5, 9]], { obstacles: [arenaCell(5, 7), arenaCell(5, 11)] });
-    expect(canLeap(s, at(s, 'rockGoat'))).toBe(true);
+    expect(canLeap(s, at(s, 'kulan'))).toBe(true);
     expect(goat.size).toBeGreaterThan(reachableCells(walker, at(walker, 'youngAurochs')).size);
     expect(goat.has(arenaCell(5, 9))).toBe(false);
     expect(goat.has(arenaCell(5, 7))).toBe(false);
@@ -157,25 +157,25 @@ describe('abilities of the units', () => {
   });
 
   it('Bęben Wędrówki (Słoń): allies within 2 cells have +1 S, the aura does not stack and ends when the drum falls silent', () => {
-    const s = fight([['drumElephant', 'dawn', 4, 8], ['rockGoat', 'dawn', 5, 9], ['nymph', 'dawn', 11, 7], ['elfDruid', 'horde', 6, 10]]);
+    const s = fight([['drumElephant', 'dawn', 4, 8], ['kulan', 'dawn', 5, 9], ['nymph', 'dawn', 11, 7], ['elfDruid', 'horde', 6, 10]]);
     refreshAuras(s);
-    expect(unitSpeed(at(s, 'rockGoat'))).toBe(UNIT_SPEED.rockGoat + ABILITY.drumHaste);
+    expect(unitSpeed(at(s, 'kulan'))).toBe(UNIT_SPEED.kulan + ABILITY.drumHaste);
     expect(unitSpeed(at(s, 'nymph'))).toBe(UNIT_SPEED.nymph);
     expect(unitSpeed(at(s, 'elfDruid'))).toBe(UNIT_SPEED.elfDruid);
     at(s, 'drumElephant').alive = false;
     refreshAuras(s);
-    expect(unitSpeed(at(s, 'rockGoat'))).toBe(UNIT_SPEED.rockGoat);
+    expect(unitSpeed(at(s, 'kulan'))).toBe(UNIT_SPEED.kulan);
   });
 
   it('Skoczny Rytm and Róg Wędrówki give S in the next activation, once per battle', () => {
-    let s = fight([['satyrPiper', 'dawn', 4, 8], ['rockGoat', 'dawn', 3, 7], ['nymph', 'dawn', 2, 6], ['elfDruid', 'horde', 11, 7]]);
-    s = applyAction(s, { type: 'battleAbility', targetId: 'rockGoat' });
-    expect(at(s, 'rockGoat').status.slowNext).toBe(-ABILITY.rhythmHaste);
+    let s = fight([['satyrPiper', 'dawn', 4, 8], ['kulan', 'dawn', 3, 7], ['nymph', 'dawn', 2, 6], ['elfDruid', 'horde', 11, 7]]);
+    s = applyAction(s, { type: 'battleAbility', targetId: 'kulan' });
+    expect(at(s, 'kulan').status.slowNext).toBe(-ABILITY.rhythmHaste);
     expect(at(s, 'nymph').status.slowNext).toBe(0);
-    expect(() => applyAction(s, { type: 'battleAbility', targetId: 'rockGoat' })).toThrow();
-    let h = fight([['satyrHornlord', 'dawn', 4, 8], ['rockGoat', 'dawn', 3, 7], ['elfDruid', 'horde', 11, 7]]);
+    expect(() => applyAction(s, { type: 'battleAbility', targetId: 'kulan' })).toThrow();
+    let h = fight([['satyrHornlord', 'dawn', 4, 8], ['kulan', 'dawn', 3, 7], ['elfDruid', 'horde', 11, 7]]);
     h = applyAction(h, { type: 'battleAbility' });
-    expect(at(h, 'rockGoat').status.slowNext).toBe(-ABILITY.hornHaste);
+    expect(at(h, 'kulan').status.slowNext).toBe(-ABILITY.hornHaste);
     expect(at(h, 'satyrHornlord').status.slowNext).toBe(-ABILITY.hornHaste);
     expect(at(h, 'elfDruid').status.slowNext).toBe(0);
   });
@@ -218,7 +218,7 @@ describe('abilities of the units', () => {
 });
 
 /** The Szybkość of the units the tests above use (their cards). */
-const UNIT_SPEED: Record<string, number> = { rockGoat: 5, nymph: 4, elfDruid: 4, windAntelope: 7 };
+const UNIT_SPEED: Record<string, number> = { kulan: 5, nymph: 4, elfDruid: 4, windAntelope: 7 };
 function UNITSA(id: string): number {
   return ({ youngAurochs: 3, warRhino: 5 } as Record<string, number>)[id];
 }
@@ -232,9 +232,9 @@ describe('Kamień Tętentu, Wielkie Pastwiska, Ostoja Wędrówek', () => {
       const s = empire();
       const home = Object.values(s.kingdom!.settlements).find((x) => x.owner === 'dawn')!;
       home.buildings.hoofStone = level;
-      const f = battleFixture(s, [{ id: 'rockGoat', side: 'dawn', col: 4, half: 8 }, { id: 'ancientBear', side: 'horde', col: 5, half: 9 }], { obstacles: [arenaCell(6, 10)] });
+      const f = battleFixture(s, [{ id: 'kulan', side: 'dawn', col: 4, half: 8 }, { id: 'ancientBear', side: 'horde', col: 5, half: 9 }], { obstacles: [arenaCell(6, 10)] });
       f.rules.useDice = false;
-      f.battle!.activation = { ...activation('rockGoat'), moved: true, movedDistance: moved };
+      f.battle!.activation = { ...activation('kulan'), moved: true, movedDistance: moved };
       return applyAction(f, { type: 'battleAttack', targetId: 'ancientBear' });
     };
     const bear = (s: GameState) => at(s, 'ancientBear');
@@ -305,7 +305,7 @@ describe('games with the Herds', () => {
     const s = createGame(table(['herds', 'dawn'], 'control'));
     expect(teamsOf(s)).toEqual(['dawn', 'horde']);
     expect(Object.values(s.heroes).find((h) => h.faction === 'dawn')?.id).toBe('greatAurochs');
-    expect(s.factions.dawn.supportsAlive).toEqual(['satyrPiper', 'youngAurochs', 'rockGoat']);
+    expect(s.factions.dawn.supportsAlive).toEqual(['satyrPiper', 'youngAurochs', 'kulan']);
   });
 
   for (const [a, b] of [['herds', 'dawn'], ['herds', 'horde'], ['dawn', 'herds']] as const) {

@@ -375,7 +375,7 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
       .sort((x, y) => (UNITS[y.defId].kind === 'support' ? 0 : 1) - (UNITS[x.defId].kind === 'support' ? 0 : 1))[0];
     if (hurt) return { type: 'battleAbility', targetId: hurt.id };
   }
-  // Dzikie Stada: the horn and the drum when the herd is together, the roar at the strongest shooter, the tremor when it shakes something loose.
+  // Dzikie Stado: the horn and the drum when the herd is together, the roar at the strongest shooter, the tremor when it shakes something loose.
   if (ab === 'wanderHorn' && livingUnits(b, u.side).length >= 2) return { type: 'battleAbility' };
   if (ab === 'rhythm') {
     const ally = livingUnits(b, u.side).filter((x) => x.id !== u.id).sort((x, y) => unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
@@ -401,7 +401,7 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
       .sort((x, y) => unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
     if (t) return { type: 'battleAbility', targetId: t.id };
   }
-  // Żelazne Klany: the oath and the hardening when the line is in contact, the stone rune on the sturdiest ally at the front, the Skarbnik's light on a shooter, the wall in front of the Colossus.
+  // Żelazny Klan: the oath and the hardening when the line is in contact, the stone rune on the sturdiest ally at the front, the Skarbnik's light on a shooter, the wall in front of the Colossus.
   const foesNear = (r: number) => enemiesOf(b, u).some((e) => unitDistance(e, u) <= r);
   if (ab === 'shieldOath' && foesNear(3) && livingUnits(b, u.side).some((x) => x.id !== u.id && unitDistance(x, u) === 1)) return { type: 'battleAbility' };
   if (ab === 'stoneRune' && foesNear(5)) {
@@ -434,7 +434,7 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
     if (t) return { type: 'battleAbility', targetId: t.id };
   }
   if (ab === 'longNight' && enemiesOf(b, u).filter((e) => unitDistance(e, u) <= 5).length >= 2) return { type: 'battleAbility' };
-  // Wolne Kompanie: one more trap while the enemy is still coming, the dugin when the line is in contact, the Kruk marks the enemy that is easiest to finish (so the others focus it),
+  // Wolna Kompania: one more trap while the enemy is still coming, the dugin when the line is in contact, the Kruk marks the enemy that is easiest to finish (so the others focus it),
   // the dam in front of a pack, the charge when a trap of its own would hurt more of them than of us.
   if (ab === 'ploy' && foesNear(8) && autoTrapCells(state, u.side, 1).length) return { type: 'battleAbility' };
   if (ab === 'dugIn' && foesNear(3)) return { type: 'battleAbility' };

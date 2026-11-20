@@ -7,7 +7,7 @@ export const UNDEAD: FactionPack = {
   heroes: ['barrowKing', 'lanternWraith', 'headlessKnight'],
   supports: ['skeletonSpear', 'willOWisp', 'penitentShade'],
   tierUnits: ['skeletonArcher', 'hauntedArmor', 'viy', 'lich'],
-  altUnits: ['scarecrow', 'banshee', 'boneOracle', 'kostucha'],
+  altUnits: ['scarecrow', 'vampire', 'strzyga', 'kostucha'],
   legend: 'boneDragon',
   mechanic: { name: 'Wieczna Warta', building: 'barrow' },
   buildings: ['barrow', 'ossuary', 'bellTower'],

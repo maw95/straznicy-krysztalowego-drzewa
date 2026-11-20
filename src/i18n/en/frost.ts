@@ -9,14 +9,14 @@ register({
   'Rycerz Lodowej Gwardii': 'Knight of the Ice Guard', 'Tropicielka Mroźnych Puszcz': 'Tracker of the Frostbound Wilds', 'Szronowa Wiedźma': 'Frost Witch',
   // units
   'Chochlik Szronu': 'Frost Imp', 'Gronostaj Dworski': 'Court Ermine', 'Szronowy Paź': 'Frost Page', 'Wiedźma Zamieci': 'Blizzard Witch', 'Jak Lodowcowy': 'Glacier Yak',
-  'Rycerz Lodowej Zbroi': 'Ice-Armoured Knight', 'Rusałka Szronu': 'Frost Rusalka', 'Młody Olbrzym Szronu': 'Young Frost Giant', 'Strzyga Wichru': 'Wind Strzyga',
+  'Rycerz Lodowej Zbroi': 'Ice-Armoured Knight', 'Rusałka Szronu': 'Frost Rusalka', 'Młody Olbrzym Szronu': 'Young Frost Giant', 'Dziad Mróz': 'Old Man Frost',
   'Olbrzym Gradu': 'Hail Giant', 'Duch Zorzy': 'Aurora Spirit', 'Mamut Wiecznej Zimy': 'Mammoth of the Everlasting Winter',
   // genitives (dwelling texts)
   'Wiedźmy Zamieci': 'the Blizzard Witch', 'Jaka Lodowcowego': 'the Glacier Yak', 'Rycerza Lodowej Zbroi': 'the Ice-Armoured Knight', 'Rusałki Szronu': 'the Frost Rusalka',
-  'Młodego Olbrzyma Szronu': 'the Young Frost Giant', 'Strzygi Wichru': 'the Wind Strzyga', 'Olbrzyma Gradu': 'the Hail Giant', 'Ducha Zorzy': 'the Aurora Spirit', 'Mamuta Wiecznej Zimy': 'the Mammoth of the Everlasting Winter',
+  'Młodego Olbrzyma Szronu': 'the Young Frost Giant', 'Dziada Mroza': 'the Old Man Frost', 'Olbrzyma Gradu': 'the Hail Giant', 'Ducha Zorzy': 'the Aurora Spirit', 'Mamuta Wiecznej Zimy': 'the Mammoth of the Everlasting Winter',
   // dwellings
   'Chata na Lodzie': 'Hut on the Ice', 'Zagroda Jaków': 'Yak Pen', 'Lodowa Strażnica': 'Ice Watchtower', 'Sopelkowa Grota': 'Icicle Grotto', 'Obóz Olbrzymów': 'Giants\' Camp',
-  'Wichrowy Szczyt': 'Windy Peak', 'Gradowa Turnia': 'Hail Crag', 'Wieża Zorzy': 'Aurora Tower', 'Mamucia Grań': 'Mammoth Ridge',
+  'Chata Dziada Mroza': "Old Man Frost's Hut", 'Gradowa Turnia': 'Hail Crag', 'Wieża Zorzy': 'Aurora Tower', 'Mamucia Grań': 'Mammoth Ridge',
   // buildings
   'Pałac Szronu': 'Frost Palace', 'Wielki Pałac Szronu': 'Great Frost Palace', 'Pałac Kruchego Lodu': 'Palace of Brittle Ice', 'Pałac Wiecznego Szronu': 'Palace of Everfrost',
   'Kryształowa Grota': 'Crystal Grotto', 'Głęboka Kryształowa Grota': 'Deep Crystal Grotto', 'Wieża Zamieci': 'Blizzard Tower', 'Wielka Wieża Zamieci': 'Great Blizzard Tower',

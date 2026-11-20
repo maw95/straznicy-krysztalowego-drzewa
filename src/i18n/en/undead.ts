@@ -9,13 +9,13 @@ register({
   'Kapitan Warty': 'Captain of the Watch', 'Upiorna Łuczniczka': 'Spectral Archer', 'Pokutny Mnich': 'Penitent Monk',
   // units
   'Szkielet Halabardnik': 'Skeleton Halberdier', 'Błędny Ognik': 'Will-o-the-Wisp', 'Zjawa Pokutnika': 'Penitent Shade', 'Szkielet Łucznik': 'Skeleton Archer', 'Nawiedzona Zbroja': 'Haunted Armour',
-  'Wij Podziemny': 'Underground Viy', 'Lisz': 'Lich', 'Strach Polny': 'Scarecrow', 'Płaczka': 'Banshee', 'Kościana Wróżka': 'Bone Oracle', 'Kostucha': 'Reaper', 'Kościany Smok': 'Bone Dragon',
+  'Wij Podziemny': 'Underground Viy', 'Lisz': 'Lich', 'Strach Polny': 'Scarecrow', 'Wampir': 'Vampire', 'Strzyga': 'Strzyga', 'Kostucha': 'Reaper', 'Kościany Smok': 'Bone Dragon',
   // genitives (dwelling texts)
-  'Szkieletu Łucznika': 'the Skeleton Archer', 'Strachu Polnego': 'the Scarecrow', 'Nawiedzonej Zbroi': 'the Haunted Armour', 'Płaczki': 'the Banshee', 'Wija Podziemnego': 'the Underground Viy',
-  'Kościanej Wróżki': 'the Bone Oracle', 'Lisza': 'the Lich', 'Kostuchy': 'the Reaper', 'Kościanego Smoka': 'the Bone Dragon',
+  'Szkieletu Łucznika': 'the Skeleton Archer', 'Strachu Polnego': 'the Scarecrow', 'Nawiedzonej Zbroi': 'the Haunted Armour', 'Wampira': 'the Vampire', 'Wija Podziemnego': 'the Underground Viy',
+  'Strzygi': 'the Strzyga', 'Lisza': 'the Lich', 'Kostuchy': 'the Reaper', 'Kościanego Smoka': 'the Bone Dragon',
   // dwellings
-  'Zbrojownia Kości': 'Armoury of Bones', 'Opuszczone Pole': 'Abandoned Field', 'Rycerska Krypta': 'Knights\' Crypt', 'Wieża Płaczek': 'Tower of Wailers', 'Wielki Kurhan': 'Great Barrow',
-  'Kaplica Wróżb': 'Chapel of Omens', 'Biblioteka Umarłych': 'Library of the Dead', 'Kaplica Tańca Śmierci': 'Chapel of the Dance of Death', 'Smocze Cmentarzysko': 'Dragon Graveyard',
+  'Zbrojownia Kości': 'Armoury of Bones', 'Opuszczone Pole': 'Abandoned Field', 'Rycerska Krypta': 'Knights\' Crypt', 'Krypta Wampira': 'Vampire Crypt', 'Wielki Kurhan': 'Great Barrow',
+  'Dom Strzygi': 'House of the Strzyga', 'Biblioteka Umarłych': 'Library of the Dead', 'Kaplica Tańca Śmierci': 'Chapel of the Dance of Death', 'Smocze Cmentarzysko': 'Dragon Graveyard',
   // abilities
   'Wezwanie z Kurhanu': 'Call from the Barrow', 'Raz na bitwę: poległy pomocnik wstaje na sąsiednim polu z połową Ż.': 'Once per battle: a fallen support stands up on a neighbouring cell with half its HP.',
   'Zgaszone Światło': 'Snuffed Light', 'Raz na bitwę: trafiony cel ma −{0} A przy następnym ataku, a bohater wroga traci {1} many.': "Once per battle: the target hit has −{0} ATK in its next attack, and the enemy hero loses {1} mana.",

@@ -382,7 +382,7 @@ export interface UnitStatus {
   anchored?: boolean;
   /** Tarcza Wartownika: S this unit loses in its next activation (it takes effect when that activation begins). */
   slowLater?: number;
-  /** Dzikie Stada: the round the unit was last pushed in (Lot na Strzelców). */
+  /** Dzikie Stado: the round the unit was last pushed in (Lot na Strzelców). */
   pushedRound?: number;
   /** Rykowisko: the unit that challenged this one; its next attack may only be at that unit. */
   tauntedBy?: string;
@@ -394,7 +394,7 @@ export interface UnitStatus {
   reassemble?: true;
   /** The unit has already risen in this battle (the Wieczna Warta, a call, the bones): a Resurrection treasure does not raise it again. */
   risen?: true;
-  /** Żelazne Klany. Przysięga Tarczy: armour until the end of this round (the number of the round). */
+  /** Żelazny Klan. Przysięga Tarczy: armour until the end of this round (the number of the round). */
   oathRound?: number;
   /** Runa Kamienia: the unit cannot be pushed, pulled or moved. */
   unmovable?: true;
@@ -410,7 +410,7 @@ export interface UnitStatus {
   brittle?: true;
   /** Zimne Światło: S the unit loses from an aura of the enemy next to it (recounted at the start of every round and activation). */
   auraChill?: number;
-  /** Wolne Kompanie. Oznaczenie: the side whose attacks hit this unit harder, and the round the mark lasts to the end of (Oko Kruka). */
+  /** Wolna Kompania. Oznaczenie: the side whose attacks hit this unit harder, and the round the mark lasts to the end of (Oko Kruka). */
   marked?: { by: Side; round: number };
   /** Ukryty (Jenot Szpieg): the unit is unseen by the enemy: it cannot be chosen as a target, and the enemy's screen and bots do not know where it stands. */
   veiled?: true;

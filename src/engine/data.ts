@@ -58,14 +58,14 @@ export type AbilityId =
   | 'inferno' // Pożoga (Salamandra Popiołu)
   | 'bloodRage' // Bitewny Szał (Herszt Minotaurów, passive)
   | 'rebirth' // Odrodzenie z Popiołów (Feniks Świtu, reaction, level 6)
-  // Dzikie Stada (docs/frakcje/herds.md): pushing and colliding, leaping, taunting, an aura.
+  // Dzikie Stado (docs/frakcje/herds.md): pushing and colliding, leaping, taunting, an aura.
   | 'headbutt' // Byczy Łeb (Młody Tur, Baran Gromowładny, passive): every attack pushes the target 1 cell
   | 'rhythm' // Skoczny Rytm (Satyr Dudziarz, free action, once): an ally has +S in its next activation
-  | 'mountainLeap' // Skok po Turniach (Kozica Skalna, passive): moves through obstacles and units
-  | 'momentum' // Rozpęd (Tarpan, passive): +A after a run
+  | 'mountainLeap' // Skok po Turniach (Kulan Stepowy, passive): moves through obstacles and units
+  | 'momentum' // Rozpęd (Wół Piżmowy, passive): +A after a run
   | 'unmoved' // Niewzruszony (Żubr Puszczański, passive): armour, cannot be pushed
-  | 'pierce' // Przebicie (Satyr Kopijnik, passive): the blow also hits the enemy behind the target
-  | 'hippoStrike' // Lot na Strzelców (Hipogryf Stepowy, passive): +A against a target pushed this round
+  | 'pierce' // Przebicie (Arkar, passive): the blow also hits the enemy behind the target
+  | 'hippoStrike' // Lot na Strzelców (Łamignat Stepowy, passive): +A against a target pushed this round
   | 'drumBeat' // Bęben Wędrówki (Słoń z Bębnem, passive aura): allies nearby have +S
   | 'ram' // Taran (Nosorożec Bojowy, passive): after a run pushes the target 2 cells and the collision hurts more
   | 'roar' // Rykowisko (Łoś Rogacz, free action, once): an enemy may attack only the moose in its next activation
@@ -82,20 +82,20 @@ export type AbilityId =
   | 'armorPierce' // Grot Przez Zbroję (Szkielet Łucznik, passive): ignores armour
   | 'dread' // Postrach (Strach Polny, passive aura): neighbouring enemies have -A
   | 'hollow' // Pusta w Środku (Nawiedzona Zbroja, passive): armour; poison, curses, slows and roots do not work on it
-  | 'wail' // Lament (Płaczka, free action, once): enemies nearby have -A in their next attack
+  | 'wail' // Lament (Wampir, free action, once): enemies nearby have -A in their next attack
   | 'viyGaze' // Podnieście Mi Powieki (Wij Podziemny, free action, once): an enemy in range cannot move in its next activation
-  | 'breathAgain' // Ponowny Oddech (Kościana Wróżka, free action, once): a fallen support of tier 1-3 rises next to her with half its Życie
+  | 'breathAgain' // Ponowny Oddech (Strzyga, free action, once): a fallen support of tier 1-3 rises next to her with half its Życie
   | 'manaReap' // Żniwo Many (Lisz, passive): every hit takes mana from the enemy hero and heals the lich
   | 'graveBreath' // Oddech Grobu (Kościany Smok, attack ability, once): the breath of fire, and the ones it hits are slowed
   | 'toll' // Dzwon Zaduszny (Duch Starego Dzwonnika, free action, once): the enemies next to it are slowed
-  // Żelazne Klany (docs/frakcje/clans.md): armour, formation, standing fire, runes of the forge, stunning, a displaced enemy, a wall put up on the field.
+  // Żelazny Klan (docs/frakcje/clans.md): armour, formation, standing fire, runes of the forge, stunning, a displaced enemy, a wall put up on the field.
   | 'shieldOath' // Przysięga Tarczy (Tan Żelaznobrody, free action, once): neighbouring allies have armour until the end of the round
   | 'stoneRune' // Runa Kamienia (Matka Run, free action, once): an ally gets armour for the battle and cannot be moved
   | 'bulwark' // Pawęż / Kolczuga (Tarczownik, Niedźwiedź w Zbroi, passive): armour
-  | 'standShot' // Salwa z Miejsca (Kusznik Klanu, passive): + A when the unit has not moved in this activation
+  | 'standShot' // Salwa z Miejsca (Mosiężny Pająk, passive): + A when the unit has not moved in this activation
   | 'temper' // Hartowanie (Kowal Bitewny, free action, once): a neighbouring ally has + A until the end of the battle
   | 'bronzeQuills' // Kolce Mechanizmu (Wartownik z Brązu, passive): whoever hits it in melee loses Życie; poison does not work on it
-  | 'goatLeap' // Skok po Turniach (Jeździec na Koźle, once): one move over units and obstacles
+  | 'goatLeap' // Skok po Turniach (Kozioł Taranowy, once): one move over units and obstacles
   | 'giantBane' // Na Duże Cele (Pogromca Olbrzymów, passive): + A against large units
   | 'misleadLight' // Błędne Światło (Skarbnik, free action, once): an enemy in range is moved 2 cells away
   | 'stunBlow' // Młot Przodków (Gwardia Młota, attack ability, once): the target loses its next activation
@@ -111,21 +111,21 @@ export type AbilityId =
   | 'frostArmor' // Mroźna Zbroja (Rycerz Lodowej Zbroi, passive): whoever hits it in melee gets frost
   | 'bellOfGlass' // Szklany Dzwoneczek (Rusałka Szronu, free action, once): an enemy that has frost freezes
   | 'frostGrip' // Zmrażający Uścisk (Młody Olbrzym Szronu, attack ability, once): the target cannot move in its next activation and gets frost
-  | 'abduct' // Porwanie (Strzyga Wichru, free action, once): a small enemy is lifted and put 2-3 cells away, away from its allies
+  | 'abduct' // Porwanie (Dziad Mróz, free action, once): a small enemy is lifted and put 2-3 cells away, away from its allies
   | 'hailStones' // Grad Głazów (Olbrzym Gradu, Stary Gradowy, passive): the shot hits the target and its neighbours, each gets frost
   | 'coldLight' // Zimne Światło (Duch Zorzy, passive aura): enemies within 2 cells have -1 S
   | 'longNight' // Długa Noc (Mamut Wiecznej Zimy, free action, once): every enemy gets frost; cannot be moved
-  // Wolne Kompanie (docs/frakcje/free.md): hidden traps (Sidła), a mark on the target, a veiled unit, loot in battle, a bonus for wounds, a counterblow, an obstacle put up.
+  // Wolna Kompania (docs/frakcje/free.md): hidden traps (Sidła), a mark on the target, a veiled unit, loot in battle, a bonus for wounds, a counterblow, an obstacle put up.
   | 'ploy' // Fortel (Ruda Atamanka, free action, once): lays one more hidden trap or moves one of her own
   | 'dugIn' // Okop (Borsuk Saper, free action, once): armour and cannot be moved until the end of its next activation
   | 'ravenEye' // Oko Kruka (Kruk Wieszczek, free action, once): marks an enemy until the end of the round and uncovers traps and veiled units within 2 cells
-  | 'pickpocket' // Kieszonkowiec (Kuna Złodziejka, passive): the first blow on a hero in the battle gives the faction gold
+  | 'pickpocket' // Kieszonkowiec (Sroka Złodziejka, passive): the first blow on a hero in the battle gives the faction gold
   | 'branchShot' // Strzał z Gałęzi (Wiewiórka Łuczniczka, passive): + damage against a marked target
   | 'dam' // Tama (Bóbr Inżynier, free action, once): puts an obstacle on a neighbouring cell
   | 'stinkBomb' // Smrodliwa Mikstura (Tchórz Smrodnik, attack ability, once): the target and its neighbours are poisoned
   | 'veiled' // Ukryty (Jenot Szpieg, passive): starts the battle unseen by the enemy; the first attack hits harder and uncovers it
   | 'woundFury' // Furia Ran (Rosomak Zabijaka, passive): + damage for every few missing Życie
-  | 'blast' // Ładunek (Borsuk Petardnik, free action, once): turns one of its own traps into an explosion
+  | 'blast' // Ładunek (Świstak Petardnik, free action, once): turns one of its own traps into an explosion
   | 'riposte' // Riposta (Kocur Fechmistrz, passive): whoever strikes it in melee and survives takes a counterblow
   | 'towerShot' // Ruchoma Twierdza (Waran Wieżowy, passive): once a round the turret on its back shoots as well
   | 'wildLeap'; // Szalony Skok (Żbiczka Bajdurka, passive): once per battle a leap over everything and a harder blow
@@ -222,7 +222,7 @@ export const ABILITY = {
   /** Bitewny Szał: damage ignored from every blow (small scale, a blow that lands takes at least 1) and the bonus after a kill (small scale). */
   bloodRageArmor: 1,
   bloodRageBonus: 2,
-  /** Dzikie Stada. Zderzenie: damage a pushed unit takes when it hits an obstacle, the edge of the arena or another unit (small scale; the unit it hits takes it too). */
+  /** Dzikie Stado. Zderzenie: damage a pushed unit takes when it hits an obstacle, the edge of the arena or another unit (small scale; the unit it hits takes it too). */
   collisionDamage: 1,
   /** Byczy Łeb: cells the target is pushed. */
   headbuttPush: 1,
@@ -274,7 +274,7 @@ export const ABILITY = {
   graveBreathSlow: 1,
   /** Dzwon Zaduszny: S the neighbours lose in their next activation. */
   tollSlow: 2,
-  /** Żelazne Klany. Przysięga Tarczy / Runa Kamienia / Pawęż: armour (damage ignored from every blow, small scale; a blow that lands takes at least 1). */
+  /** Żelazny Klan. Przysięga Tarczy / Runa Kamienia / Pawęż: armour (damage ignored from every blow, small scale; a blow that lands takes at least 1). */
   oathArmor: 1,
   runeStoneArmor: 1,
   bulwarkArmor: 1,
@@ -309,7 +309,7 @@ export const ABILITY = {
   trailSlow: 1,
   /** Mroźna Zbroja, Grad Głazów, Długa Noc, Zmrażający Uścisk: frost put on the unit. */
   frostPut: 1,
-  /** Wolne Kompanie. Sidła: damage of a trap that goes off (small scale). */
+  /** Wolna Kompania. Sidła: damage of a trap that goes off (small scale). */
   trapDamage: 2,
   /** Oznaczenie: bonus of every attack of the marker's side on a marked target (small scale), and the extra bonus of Strzał z Gałęzi. */
   markBonus: 1,
@@ -508,28 +508,28 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'hordeWarlord', name: 'Wódz Hordy', side: 'horde', kind: 'hero', hp: 8, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Żelazny Kark', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
     u({ id: 'hordeCrossbow', name: 'Kapitan Kuszników', side: 'horde', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'poisonClaw', abilityName: 'Zatruty Bełt', abilityText: `Raz na bitwę: trafiony wróg traci ${ABILITY.poisonDamage} Ż na początku swoich dwóch następnych aktywacji.` }),
     u({ id: 'hordeShadow', name: 'Szaman Cieni', side: 'horde', kind: 'hero', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'curse', abilityName: 'Klątwa Cieni', abilityText: `Raz na bitwę: trafiony cel ma −${ABILITY.curseMinus} A przy następnym ataku.` }),
-    // Dzikie Stada (`herds`, docs/frakcje/herds.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero.
+    // Dzikie Stado (`herds`, docs/frakcje/herds.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero.
     u({ id: 'greatAurochs', name: 'Wielki Tur, Ojciec Stada', side: 'herds', kind: 'hero', size: 2, hp: 12, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'ancestralHorns', abilityName: 'Rogi Przodków', abilityText: `Raz na bitwę: cios odpycha cel o ${ABILITY.hornsPush} pola; jeśli cel w coś uderzy, zderzenie rani.` }),
     u({ id: 'satyrHornlord', name: 'Satyr Rogogłos', side: 'herds', kind: 'hero', hp: 6, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'wanderHorn', abilityName: 'Róg Wędrówki', abilityText: `Raz na bitwę: wszyscy sojusznicy mają +${ABILITY.hornHaste} S w swojej następnej aktywacji.` }),
     u({ id: 'windAntelope', name: 'Pędziwiatr, Wódz Antylop', side: 'herds', kind: 'hero', hp: 8, attack: 4, speed: 7, movement: 'walk', attackType: 'melee', ability: 'runOn', abilityName: 'W Biegu', abilityText: 'Raz na bitwę: po ataku dokańcza ruch pozostałymi polami.' }),
     u({ id: 'thunderRam', name: 'Baran Gromowładny', side: 'herds', kind: 'hero', hp: 9, attack: 4, speed: 6, movement: 'walk', attackType: 'melee', ability: 'headbutt', abilityName: 'Grzmiący Łeb', abilityText: `Stała: po każdym ataku odpycha cel o ${ABILITY.headbuttPush} pole; zderzenie rani.` }),
     u({ id: 'satyrPiper', name: 'Satyr Dudziarz', side: 'herds', kind: 'support', hp: 5, attack: 1, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'rhythm', abilityName: 'Skoczny Rytm', abilityText: `Raz na bitwę: sojusznik ma +${ABILITY.rhythmHaste} S w swojej następnej aktywacji.` }),
     u({ id: 'youngAurochs', name: 'Młody Tur', side: 'herds', kind: 'support', hp: 6, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'headbutt', abilityName: 'Byczy Łeb', abilityText: `Stała: po każdym ataku odpycha cel o ${ABILITY.headbuttPush} pole (jednostek dwupolowych nie da się odepchnąć); zderzenie rani.` }),
-    u({ id: 'rockGoat', name: 'Kozica Skalna', side: 'herds', kind: 'support', hp: 6, attack: 2, speed: 5, movement: 'walk', attackType: 'melee', ability: 'mountainLeap', abilityName: 'Skok po Turniach', abilityText: 'Stała: porusza się przez przeszkody i jednostki (nie może na nich stanąć).' }),
-    u({ id: 'faunSlinger', name: 'Faun Procarz', side: 'herds', kind: 'support', hp: 6, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Kamień w Kolano', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
+    u({ id: 'kulan', name: 'Kulan Stepowy', side: 'herds', kind: 'support', hp: 6, attack: 2, speed: 5, movement: 'walk', attackType: 'melee', ability: 'mountainLeap', abilityName: 'Skok po Turniach', abilityText: 'Stała: porusza się przez przeszkody i jednostki (nie może na nich stanąć).' }),
+    u({ id: 'tarpanArcher', name: 'Tarpan Łucznik', side: 'herds', kind: 'support', hp: 6, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Strzała w Kolano', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
     u({ id: 'forestBison', name: 'Żubr Puszczański', side: 'herds', kind: 'support', hp: 10, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'unmoved', abilityName: 'Niewzruszony', abilityText: `Stała: pancerz (−${ABILITY.unmovedArmor} obrażeń z każdego ciosu); nie da się go odepchnąć.` }),
-    u({ id: 'steppeHippogriff', name: 'Hipogryf Stepowy', side: 'herds', kind: 'support', size: 2, hp: 10, attack: 4, speed: 7, movement: 'fly', attackType: 'melee', ability: 'hippoStrike', abilityName: 'Lot na Strzelców', abilityText: `Stała: +${ABILITY.hippoBonus} A przeciw celowi odepchniętemu w tej samej rundzie.` }),
+    u({ id: 'steppeLamignat', name: 'Łamignat Stepowy', side: 'herds', kind: 'support', size: 2, hp: 10, attack: 4, speed: 7, movement: 'fly', attackType: 'melee', ability: 'hippoStrike', abilityName: 'Lot na Strzelców', abilityText: `Stała: +${ABILITY.hippoBonus} A przeciw celowi odepchniętemu w tej samej rundzie.` }),
     u({ id: 'warRhino', name: 'Nosorożec Bojowy', side: 'herds', kind: 'support', size: 2, hp: 15, attack: 5, speed: 5, movement: 'walk', attackType: 'melee', ability: 'ram', abilityName: 'Taran', abilityText: `Stała: po biegu o co najmniej ${ABILITY.ramMinMove} pola cios odpycha cel o ${ABILITY.ramPush} pola, a zderzenie zadaje ${ABILITY.ramCollisionDamage} obrażenia. Oblężona brama pęka od jednego trafienia katapulty.` }),
     // Level 6 alternatives of the Herds (tiers 2-5).
-    u({ id: 'tarpan', name: 'Tarpan', side: 'herds', kind: 'support', hp: 7, attack: 3, speed: 6, movement: 'walk', attackType: 'melee', ability: 'momentum', abilityName: 'Rozpęd', abilityText: `Stała: +${ABILITY.momentumBonus} A do ataku po biegu o co najmniej ${ABILITY.momentumMinMove} pola.` }),
-    u({ id: 'satyrLancer', name: 'Satyr Kopijnik', side: 'herds', kind: 'support', hp: 8, attack: 3, speed: 5, movement: 'walk', attackType: 'melee', ability: 'pierce', abilityName: 'Przebicie', abilityText: 'Stała: cios trafia cel i wroga stojącego tuż za nim.' }),
+    u({ id: 'muskOx', name: 'Wół Piżmowy', side: 'herds', kind: 'support', hp: 7, attack: 3, speed: 6, movement: 'walk', attackType: 'melee', ability: 'momentum', abilityName: 'Rozpęd', abilityText: `Stała: +${ABILITY.momentumBonus} A do ataku po biegu o co najmniej ${ABILITY.momentumMinMove} pola.` }),
+    u({ id: 'arkar', name: 'Arkar', side: 'herds', kind: 'support', hp: 8, attack: 3, speed: 5, movement: 'walk', attackType: 'melee', ability: 'pierce', abilityName: 'Przebicie', abilityText: 'Stała: cios trafia cel i wroga stojącego tuż za nim.' }),
     u({ id: 'drumElephant', name: 'Słoń z Bębnem', side: 'herds', kind: 'support', size: 2, hp: 13, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'drumBeat', abilityName: 'Bęben Wędrówki', abilityText: `Stała: sojusznicy w promieniu ${ABILITY.drumRadius} pól mają +${ABILITY.drumHaste} S.` }),
     u({ id: 'bullMoose', name: 'Łoś Rogacz', side: 'herds', kind: 'support', size: 2, hp: 16, attack: 5, speed: 3, movement: 'walk', attackType: 'melee', ability: 'roar', abilityName: 'Rykowisko', abilityText: `Raz na bitwę: wyzywa wroga w zasięgu ${ABILITY.roarRange} pól; ten w swojej następnej aktywacji może atakować tylko Łosia.` }),
     u({ id: 'indrik', name: 'Indrik, Pan Zwierząt', side: 'herds', kind: 'support', size: 2, hp: 21, attack: 7, speed: 4, movement: 'walk', attackType: 'melee', ability: 'tremor', abilityName: 'Ziemia Drży', abilityText: `Raz na bitwę: mali wrogowie w promieniu ${ABILITY.tremorRadius} pól zostają odepchnięci o 1 pole, zderzenia ranią. Indrika nie da się odepchnąć.` }),
     // Commanders of the Herds.
     u({ id: 'aurochsScout', name: 'Turzy Zagończyk', side: 'herds', kind: 'hero', hp: 9, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Kark Tura', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
-    u({ id: 'faunJavelin', name: 'Faun Oszczepnik', side: 'herds', kind: 'hero', hp: 6, attack: 3, speed: 5, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Oszczep w Kolano', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
-    u({ id: 'satyrSeer', name: 'Satyr Wróżbita', side: 'herds', kind: 'hero', hp: 6, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'rhythm', abilityName: 'Pieśń Stepu', abilityText: `Raz na bitwę: sojusznik ma +${ABILITY.rhythmHaste} S w swojej następnej aktywacji.` }),
+    u({ id: 'eagleHunter', name: 'Orzeł Stepowy Łowca', side: 'herds', kind: 'hero', hp: 6, attack: 3, speed: 5, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Oszczep w Kolano', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
+    u({ id: 'planetnik', name: 'Płanetnik', side: 'herds', kind: 'hero', hp: 6, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'rhythm', abilityName: 'Pieśń Stepu', abilityText: `Raz na bitwę: sojusznik ma +${ABILITY.rhythmHaste} S w swojej następnej aktywacji.` }),
     // Królestwo Umarłych (`undead`, docs/frakcje/undead.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero.
     u({ id: 'barrowKing', name: 'Król Kurhanu', side: 'undead', kind: 'hero', hp: 10, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'barrowCall', abilityName: 'Wezwanie z Kurhanu', abilityText: 'Raz na bitwę: poległy pomocnik wstaje na sąsiednim polu z połową Ż.' }),
     u({ id: 'lanternWraith', name: 'Latarniczka Mgieł', side: 'undead', kind: 'hero', hp: 5, attack: 2, speed: 5, movement: 'fly', attackType: 'ranged', ability: 'dimLight', abilityName: 'Zgaszone Światło', abilityText: `Raz na bitwę: trafiony cel ma −${ABILITY.curseMinus} A przy następnym ataku, a bohater wroga traci ${ABILITY.dimLightMana} many.` }),
@@ -544,22 +544,22 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'lich', name: 'Lisz', side: 'undead', kind: 'support', hp: 8, attack: 6, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'manaReap', abilityName: 'Żniwo Many', abilityText: `Stała: każde trafienie zabiera bohaterowi wroga ${ABILITY.reapMana} many i leczy Lisza o ${ABILITY.reapHeal} Ż.` }),
     // Level 6 alternatives of the Kingdom (tiers 2-5).
     u({ id: 'scarecrow', name: 'Strach Polny', side: 'undead', kind: 'support', hp: 6, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'dread', abilityName: 'Postrach', abilityText: `Stała: sąsiedni wrogowie mają −${ABILITY.dreadMinus} A (nie sumuje się).` }),
-    u({ id: 'banshee', name: 'Płaczka', side: 'undead', kind: 'support', hp: 6, attack: 4, speed: 5, movement: 'fly', attackType: 'ranged', ability: 'wail', abilityName: 'Lament', abilityText: `Raz na bitwę: wrogowie w promieniu ${ABILITY.wailRadius} pól mają −${ABILITY.wailMinus} A przy następnym ataku.` }),
-    u({ id: 'boneOracle', name: 'Kościana Wróżka', side: 'undead', kind: 'support', hp: 7, attack: 4, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'breathAgain', abilityName: 'Ponowny Oddech', abilityText: `Raz na bitwę: poległy pomocnik poziomu ${ABILITY.breathAgainTier} lub niższego wstaje na sąsiednim polu z połową Ż.` }),
+    u({ id: 'vampire', name: 'Wampir', side: 'undead', kind: 'support', hp: 6, attack: 4, speed: 5, movement: 'fly', attackType: 'ranged', ability: 'wail', abilityName: 'Lament', abilityText: `Raz na bitwę: wrogowie w promieniu ${ABILITY.wailRadius} pól mają −${ABILITY.wailMinus} A przy następnym ataku.` }),
+    u({ id: 'strzyga', name: 'Strzyga', side: 'undead', kind: 'support', hp: 7, attack: 4, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'breathAgain', abilityName: 'Ponowny Oddech', abilityText: `Raz na bitwę: poległy pomocnik poziomu ${ABILITY.breathAgainTier} lub niższego wstaje na sąsiednim polu z połową Ż.` }),
     u({ id: 'kostucha', name: 'Kostucha', side: 'undead', kind: 'support', hp: 13, attack: 6, speed: 4, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Kośba', abilityText: 'Każdym atakiem trafia cel i jednego jego sąsiada (zamach kosą).' }),
     u({ id: 'boneDragon', name: 'Kościany Smok', side: 'undead', kind: 'support', size: 2, hp: 20, attack: 7, speed: 5, movement: 'fly', attackType: 'melee', ability: 'graveBreath', abilityName: 'Oddech Grobu', abilityText: `Raz na bitwę: ognisty oddech w linii (cel i jednostka za nim), a trafieni mają −${ABILITY.graveBreathSlow} S w następnej aktywacji.` }),
     // Commanders of the Kingdom.
     u({ id: 'wardCaptain', name: 'Kapitan Warty', side: 'undead', kind: 'hero', hp: 8, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Czujna Warta', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
     u({ id: 'spectralArcher', name: 'Upiorna Łuczniczka', side: 'undead', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Zwodnicza Strzała', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
     u({ id: 'penitentMonk', name: 'Pokutny Mnich', side: 'undead', kind: 'hero', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'wail', abilityName: 'Pokutny Lament', abilityText: `Raz na bitwę: wrogowie w promieniu ${ABILITY.wailRadius} pól mają −${ABILITY.wailMinus} A przy następnym ataku.` }),
-    // Żelazne Klany (`clans`, docs/frakcje/clans.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero.
+    // Żelazny Klan (`clans`, docs/frakcje/clans.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero.
     u({ id: 'ironThane', name: 'Tan Żelaznobrody', side: 'clans', kind: 'hero', hp: 10, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'shieldOath', abilityName: 'Przysięga Tarczy', abilityText: `Raz na bitwę: sąsiedni sojusznicy mają pancerz ${ABILITY.oathArmor} do końca rundy.` }),
     u({ id: 'runeMatron', name: 'Matka Run', side: 'clans', kind: 'hero', hp: 4, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'stoneRune', abilityName: 'Runa Kamienia', abilityText: `Raz na bitwę: sojusznik dostaje pancerz ${ABILITY.runeStoneArmor} do końca bitwy i nie da się go odepchnąć.` }),
     u({ id: 'passWarden', name: 'Strażniczka Przełęczy', side: 'clans', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'pierce', abilityName: 'Bełt Przeszywający', abilityText: 'Stała: cios trafia cel i wroga stojącego tuż za nim w jednej linii.' }),
     u({ id: 'oldMiner', name: 'Stary Górmistrz', side: 'clans', kind: 'hero', hp: 9, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'burrow', abilityName: 'Podkop', abilityText: `Zamiast ruchu znika pod ziemią i wyłania się na dowolnym wolnym polu w odległości do ${ABILITY.burrowRange}; w tej aktywacji nie atakuje.` }),
     u({ id: 'shieldDwarf', name: 'Krasnoludzki Tarczownik', side: 'clans', kind: 'support', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'bulwark', abilityName: 'Pawęż', abilityText: `Stała: pancerz (−${ABILITY.bulwarkArmor} obrażeń z każdego ciosu).` }),
     u({ id: 'bronzeMole', name: 'Kret z Brązu', side: 'clans', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'burrow', abilityName: 'Podkop', abilityText: `Zamiast ruchu znika pod ziemią i wyłania się na dowolnym wolnym polu w odległości do ${ABILITY.burrowRange}; w tej aktywacji nie atakuje.` }),
-    u({ id: 'clanCrossbow', name: 'Kusznik Klanu', side: 'clans', kind: 'support', hp: 4, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'standShot', abilityName: 'Salwa z Miejsca', abilityText: `Stała: +${ABILITY.standShotBonus} A, gdy w tej aktywacji się nie ruszał.` }),
+    u({ id: 'brassSpider', name: 'Mosiężny Pająk', side: 'clans', kind: 'support', hp: 4, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'standShot', abilityName: 'Salwa z Miejsca', abilityText: `Stała: +${ABILITY.standShotBonus} A, gdy w tej aktywacji się nie ruszał.` }),
     u({ id: 'armoredBear', name: 'Niedźwiedź w Zbroi', side: 'clans', kind: 'support', hp: 9, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'bulwark', abilityName: 'Kolczuga', abilityText: `Stała: pancerz (−${ABILITY.bulwarkArmor} obrażeń z każdego ciosu).` }),
     u({ id: 'bronzeSentinel', name: 'Wartownik z Brązu', side: 'clans', kind: 'support', hp: 8, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'bronzeQuills', abilityName: 'Kolce Mechanizmu', abilityText: `Stała: każdy, kto zaatakuje go wręcz, traci ${ABILITY.quillsDamage} Ż; trucizna na niego nie działa.` }),
     u({ id: 'giantSlayer', name: 'Pogromca Olbrzymów', side: 'clans', kind: 'support', hp: 9, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'giantBane', abilityName: 'Na Duże Cele', abilityText: `Stała: +${ABILITY.giantBonus} A przeciw dużym jednostkom (dwupolowym).` }),
@@ -568,7 +568,7 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'dwarfCannon', name: 'Armata Klanów', side: 'clans', kind: 'support', size: 2, hp: 13, attack: 5, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'cannonFire', abilityName: 'Ostrzał', abilityText: 'Stała: strzał trafia cel i jego sąsiadów; nie strzela w aktywacji, w której się ruszyła; mury i bramy oblężenia pękają od jednego trafienia.' }),
     u({ id: 'clanColossus', name: 'Kolos Kuźni', side: 'clans', kind: 'support', size: 2, hp: 20, attack: 7, speed: 3, movement: 'walk', attackType: 'melee', ability: 'fortify', abilityName: 'Fortyfikacja', abilityText: `Raz na bitwę stawia ${ABILITY.fortifyCells} pola muru obok siebie. Stała: pancerz ${ABILITY.bulwarkArmor}, nie da się go odepchnąć.` }),
     u({ id: 'battleSmith', name: 'Kowal Bitewny', side: 'clans', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'temper', abilityName: 'Hartowanie', abilityText: `Raz na bitwę: sąsiedni sojusznik ma +${ABILITY.temperBonus} A do końca bitwy.` }),
-    u({ id: 'goatRider', name: 'Jeździec na Koźle', side: 'clans', kind: 'support', hp: 7, attack: 3, speed: 5, movement: 'walk', attackType: 'melee', ability: 'goatLeap', abilityName: 'Skok po Turniach', abilityText: 'Raz na bitwę: jeden ruch przez jednostki i przeszkody (nie staje na nich).' }),
+    u({ id: 'ramGoat', name: 'Kozioł Taranowy', side: 'clans', kind: 'support', hp: 7, attack: 3, speed: 5, movement: 'walk', attackType: 'melee', ability: 'goatLeap', abilityName: 'Skok po Turniach', abilityText: 'Raz na bitwę: jeden ruch przez jednostki i przeszkody (nie staje na nich).' }),
     // Commanders of the Clans.
     u({ id: 'clanWarrior', name: 'Wojownik Klanu', side: 'clans', kind: 'hero', hp: 8, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Twardy Łeb', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
     u({ id: 'mountainCrossbow', name: 'Kusznik Gór', side: 'clans', kind: 'hero', hp: 5, attack: 3, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'standShot', abilityName: 'Salwa z Miejsca', abilityText: `Stała: +${ABILITY.standShotBonus} A, gdy w tej aktywacji się nie ruszał.` }),
@@ -586,7 +586,7 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'iceSentinel', name: 'Rycerz Lodowej Zbroi', side: 'frost', kind: 'support', hp: 9, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'frostArmor', abilityName: 'Mroźna Zbroja', abilityText: `Stała: kto go trafi wręcz, dostaje ${ABILITY.frostPut} szron.` }),
     u({ id: 'frostSprite', name: 'Rusałka Szronu', side: 'frost', kind: 'support', hp: 6, attack: 3, speed: 4, movement: 'fly', attackType: 'ranged', ability: 'bellOfGlass', abilityName: 'Szklany Dzwoneczek', abilityText: `Raz na bitwę: wróg w zasięgu ${ABILITY.bellRange} pól, który ma szron, zamarza (traci następną aktywację).` }),
     u({ id: 'youngGiant', name: 'Młody Olbrzym Szronu', side: 'frost', kind: 'support', size: 2, hp: 13, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'frostGrip', abilityName: 'Zmrażający Uścisk', abilityText: `Raz na bitwę: trafiony nie rusza się w swojej następnej aktywacji i dostaje ${ABILITY.frostPut} szron.` }),
-    u({ id: 'windStrzyga', name: 'Strzyga Wichru', side: 'frost', kind: 'support', hp: 7, attack: 4, speed: 5, movement: 'fly', attackType: 'melee', ability: 'abduct', abilityName: 'Porwanie', abilityText: `Raz na bitwę: unosi małego wroga w zasięgu ${ABILITY.abductRange} pól i stawia go ${ABILITY.abductMin}–${ABILITY.abductMax} pola dalej, z dala od jego sojuszników.` }),
+    u({ id: 'dziadMroz', name: 'Dziad Mróz', side: 'frost', kind: 'support', hp: 7, attack: 4, speed: 5, movement: 'fly', attackType: 'melee', ability: 'abduct', abilityName: 'Porwanie', abilityText: `Raz na bitwę: unosi małego wroga w zasięgu ${ABILITY.abductRange} pól i stawia go ${ABILITY.abductMin}–${ABILITY.abductMax} pola dalej, z dala od jego sojuszników.` }),
     u({ id: 'elderGiant', name: 'Olbrzym Gradu', side: 'frost', kind: 'support', size: 2, hp: 14, attack: 5, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'hailStones', abilityName: 'Grad Głazów', abilityText: 'Stała: strzał trafia cel i jego sąsiadów (wrogów); każdy trafiony dostaje szron.' }),
     u({ id: 'auroraSpirit', name: 'Duch Zorzy', side: 'frost', kind: 'support', hp: 9, attack: 4, speed: 4, movement: 'fly', attackType: 'ranged', ability: 'coldLight', abilityName: 'Zimne Światło', abilityText: `Stała (aura): wrogowie w promieniu ${ABILITY.chillRadius} pól mają −${ABILITY.chillSlow} S.` }),
     u({ id: 'frostMammoth', name: 'Mamut Wiecznej Zimy', side: 'frost', kind: 'support', size: 2, hp: 24, attack: 7, speed: 3, movement: 'walk', attackType: 'melee', ability: 'longNight', abilityName: 'Długa Noc', abilityText: `Raz na bitwę: każdy wróg dostaje ${ABILITY.frostPut} szron. Stała: nie da się go odepchnąć.` }),
@@ -594,13 +594,13 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'iceKnight', name: 'Rycerz Lodowej Gwardii', side: 'frost', kind: 'hero', hp: 8, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Lodowa Gwardia', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
     u({ id: 'ermineHuntress', name: 'Tropicielka Mroźnych Puszcz', side: 'frost', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'crystalArrow', abilityName: 'Strzała z Soplem', abilityText: `Stała: +${ABILITY.crystalBonus} obrażeń w cel, który ma szron.` }),
     u({ id: 'frostWitch', name: 'Szronowa Wiedźma', side: 'frost', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'wail', abilityName: 'Zimowy Lament', abilityText: `Raz na bitwę: wrogowie w promieniu ${ABILITY.wailRadius} pól mają −${ABILITY.wailMinus} A przy następnym ataku.` }),
-    // Wolne Kompanie (`free`, docs/frakcje/free.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero (numbers: gate G1, tuned at G2).
+    // Wolna Kompania (`free`, docs/frakcje/free.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero (numbers: gate G1, tuned at G2).
     u({ id: 'foxCaptain', name: 'Ruda Atamanka', side: 'free', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'ploy', abilityName: 'Fortel', abilityText: 'Raz na bitwę: kładzie dodatkową ukrytą pułapkę na swojej połowie albo przenosi jedną własną.' }),
     u({ id: 'badgerSapper', name: 'Borsuk Saper', side: 'free', kind: 'hero', hp: 10, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'dugIn', abilityName: 'Okop', abilityText: `Raz na bitwę: do końca swojej następnej aktywacji ma pancerz ${ABILITY.dugInArmor} i nie da się go odepchnąć.` }),
     u({ id: 'ravenSeer', name: 'Kruk Wieszczek', side: 'free', kind: 'hero', hp: 4, attack: 2, speed: 5, movement: 'fly', attackType: 'ranged', ability: 'ravenEye', abilityName: 'Oko Kruka', abilityText: `Raz na bitwę: wróg w zasięgu ${ABILITY.ravenRange} pól jest oznaczony do końca rundy (każdy atak Kompanii w niego ma +${ABILITY.markBonus}), a pułapki i ukryci wrogowie w promieniu ${ABILITY.ravenRadius} pól zostają odsłonięci.` }),
     u({ id: 'otterSmuggler', name: 'Wydra Przemytniczka', side: 'free', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'airDash', abilityName: 'Odskok', abilityText: `Raz na bitwę: po ataku może odskoczyć o maks. ${ABILITY.airDashRange} pola.` }),
     u({ id: 'otterScout', name: 'Wydra Zwiadowczyni', side: 'free', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'airDash', abilityName: 'Wyślizg', abilityText: `Raz na bitwę: po ataku może odskoczyć o maks. ${ABILITY.airDashRange} pola.` }),
-    u({ id: 'martenThief', name: 'Kuna Złodziejka', side: 'free', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'pickpocket', abilityName: 'Kieszonkowiec', abilityText: `Stała: pierwszy cios w bohatera w bitwie daje frakcji +${ABILITY.pickpocketGold} zł.` }),
+    u({ id: 'magpieThief', name: 'Sroka Złodziejka', side: 'free', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'pickpocket', abilityName: 'Kieszonkowiec', abilityText: `Stała: pierwszy cios w bohatera w bitwie daje frakcji +${ABILITY.pickpocketGold} zł.` }),
     u({ id: 'squirrelArcher', name: 'Wiewiórka Łuczniczka', side: 'free', kind: 'support', hp: 4, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'branchShot', abilityName: 'Strzał z Gałęzi', abilityText: `Stała: +${ABILITY.branchBonus} A przeciw oznaczonemu celowi.` }),
     u({ id: 'weaselKnife', name: 'Łasica Nożowniczka', side: 'free', kind: 'support', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'backstab', abilityName: 'Cios w Plecy', abilityText: `Stała: +${ABILITY.backstabBonus} A, gdy atakuje od tyłu.` }),
     u({ id: 'polecatPoisoner', name: 'Tchórz Smrodnik', side: 'free', kind: 'support', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'stinkBomb', abilityName: 'Smrodliwa Mikstura', abilityText: `Raz na bitwę: trafiony i jego sąsiedzi są zatruci (tracą ${ABILITY.poisonDamage} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji).` }),
@@ -608,7 +608,7 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'toadGunner', name: 'Ropuch z Hakownicą', side: 'free', kind: 'support', size: 2, hp: 12, attack: 5, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'stunBlow', abilityName: 'Huk Hakownicy', abilityText: 'Raz na bitwę: trafiony traci następną aktywację (ogłuszony hukiem).' }),
     u({ id: 'beaverEngineer', name: 'Bóbr Inżynier', side: 'free', kind: 'support', hp: 7, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'dam', abilityName: 'Tama', abilityText: 'Raz na bitwę: stawia przeszkodę na sąsiednim wolnym polu (stoi do końca bitwy).' }),
     u({ id: 'raccoonDogSpy', name: 'Jenot Szpieg', side: 'free', kind: 'support', hp: 6, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'veiled', abilityName: 'Ukryty', abilityText: `Stała: zaczyna bitwę niewidoczny dla wroga (nie da się go wybrać na cel); pierwszy atak ma +${ABILITY.veilBonus} A i go odsłania.` }),
-    u({ id: 'badgerBomber', name: 'Borsuk Petardnik', side: 'free', kind: 'support', hp: 8, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'blast', abilityName: 'Ładunek', abilityText: `Raz na bitwę: zamienia własną pułapkę w wybuch (${ABILITY.blastDamage} obrażeń na jej polu i na sąsiednich, także swoim).` }),
+    u({ id: 'marmotPetard', name: 'Świstak Petardnik', side: 'free', kind: 'support', hp: 8, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'blast', abilityName: 'Ładunek', abilityText: `Raz na bitwę: zamienia własną pułapkę w wybuch (${ABILITY.blastDamage} obrażeń na jej polu i na sąsiednich, także swoim).` }),
     u({ id: 'catFencer', name: 'Kocur Fechmistrz', side: 'free', kind: 'support', hp: 10, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'riposte', abilityName: 'Riposta', abilityText: `Stała: kto uderzy go wręcz i przeżyje, dostaje ${ABILITY.riposteDamage} obrażeń.` }),
     u({ id: 'towerMonitor', name: 'Waran Wieżowy', side: 'free', kind: 'support', size: 2, hp: 22, attack: 6, speed: 3, movement: 'walk', attackType: 'melee', ability: 'towerShot', abilityName: 'Ruchoma Twierdza', abilityText: `Stała: atakuje wręcz, a raz na rundę dodatkowo strzela wieżyczka na jego grzbiecie (${ABILITY.towerDamage} obrażeń w najbliższego wroga na linii strzału).` }),
     // Commanders of the Free Companies.

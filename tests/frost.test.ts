@@ -269,19 +269,19 @@ describe('abilities of the units', () => {
   });
 
   it('Porwanie (Strzyga): a small enemy is put 2-3 cells away, the farthest from its allies; not an unmovable one', () => {
-    const s = fight([['windStrzyga', 'dawn', 5, 9], ['ancientBear', 'horde', 6, 8], ['willOWisp', 'horde', 8, 8]], 0);
+    const s = fight([['dziadMroz', 'dawn', 5, 9], ['ancientBear', 'horde', 6, 8], ['willOWisp', 'horde', 8, 8]], 0);
     const bear = at(s, 'ancientBear');
     const to = abductCell(s, bear)!;
     const d = distance(parseKey(bear.pos!), parseKey(to));
     expect(d).toBeGreaterThanOrEqual(ABILITY.abductMin);
     expect(d).toBeLessThanOrEqual(ABILITY.abductMax);
-    const out = cast(s, 'windStrzyga', 'ancientBear');
+    const out = cast(s, 'dziadMroz', 'ancientBear');
     expect(at(out, 'ancientBear').pos).toBe(to);
     expect(unitDistance(at(out, 'ancientBear'), at(out, 'willOWisp'))).toBeGreaterThanOrEqual(unitDistance(at(s, 'ancientBear'), at(s, 'willOWisp')));
     const held = structuredClone(s);
     held.battle!.units.ancientBear.status.unmovable = true;
-    expect(() => cast(held, 'windStrzyga', 'ancientBear')).toThrow(/nie da się/);
-    expect(() => cast(s, 'windStrzyga', 'willOWisp')).toThrow(/zasięgu/);
+    expect(() => cast(held, 'dziadMroz', 'ancientBear')).toThrow(/nie da się/);
+    expect(() => cast(s, 'dziadMroz', 'willOWisp')).toThrow(/zasięgu/);
   });
 
   it('Zimne Światło (Duch Zorzy): enemies within 2 cells have −1 S, the ones farther away and its own side not', () => {

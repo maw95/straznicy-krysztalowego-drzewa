@@ -437,7 +437,7 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
     if (useAbility && ab === 'fireBreath') dmg += abilityNum(att, 'breathBonus') * scaleOf(state);
     if (ab === 'standShot' && movedDistance === 0) dmg += ABILITY.standShotBonus * scaleOf(state);
     if (ab === 'giantBane' && isLarge(state, target)) dmg += ABILITY.giantBonus * scaleOf(state);
-    // Wolne Kompanie. Oznaczenie: every attack of the marker's side on a marked target (this round) hits harder, and the squirrel's arrow harder still.
+    // Wolna Kompania. Oznaczenie: every attack of the marker's side on a marked target (this round) hits harder, and the squirrel's arrow harder still.
     const mark = target.status.marked;
     if (mark && mark.by === att.side && mark.round === state.battle!.round) dmg += (ABILITY.markBonus + (ab === 'branchShot' ? ABILITY.branchBonus : 0)) * scaleOf(state);
     if (ab === 'woundFury') dmg += Math.min(ABILITY.furyMax, Math.floor((att.maxHp - att.hp) / (ABILITY.furyStep * hpScaleOf(state)))) * scaleOf(state);
@@ -1140,7 +1140,7 @@ export function predictDamage(
   if (armour && abilityOf(victim) === 'unmoved' && abilityActive(state) && dmg > 0) dmg = Math.max(1, dmg - ABILITY.unmovedArmor * scaleOf(state));
   // Pusta w Środku: the empty armour takes a bit off every blow that lands (at least 1 gets through).
   if (armour && abilityOf(victim) === 'hollow' && abilityActive(state) && dmg > 0) dmg = Math.max(1, dmg - ABILITY.hollowArmor * scaleOf(state));
-  // Żelazne Klany: Pawęż and Kolczuga (and the Kolos), Przysięga Tarczy until the end of the round, the Mur Tarcz in formation: each takes a bit off every blow that lands.
+  // Żelazny Klan: Pawęż and Kolczuga (and the Kolos), Przysięga Tarczy until the end of the round, the Mur Tarcz in formation: each takes a bit off every blow that lands.
   if (armour && dmg > 0 && abilityActive(state)) {
     if (['bulwark', 'fortify'].includes(abilityOf(victim))) dmg = Math.max(1, dmg - ABILITY.bulwarkArmor * scaleOf(state));
     if (victim.status.oathRound === b.round) dmg = Math.max(1, dmg - ABILITY.oathArmor * scaleOf(state));
@@ -1536,7 +1536,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
         log(state, 'ability', `${unitName(t)} zostaje odepchnięty o 1 pole (${UNITS[u.defId].abilityName}).`);
       } else log(state, 'ability', `${unitName(t)} nie ma gdzie się cofnąć (${UNITS[u.defId].abilityName}).`);
     }
-    // Dzikie Stada: the blows that push (Byczy Łeb, Taran, Rogi Przodków, and the Kamień Tętentu after a run).
+    // Dzikie Stado: the blows that push (Byczy Łeb, Taran, Rogi Przodków, and the Kamień Tętentu after a run).
     if (t.alive && u.alive && !b.duel && abilityActive(state)) herdsBlow(state, u, t, canUse, act.movedDistance);
   }
   // Trzęsienie: the Golem with its rune core bare shakes everything around it after each attack.

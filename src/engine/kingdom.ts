@@ -104,21 +104,21 @@ export interface Recruit { id: string; tier: number; cost: number; /** Gwiezdny 
 export const ALT_UNITS: Record<FactionId, string[]> = byPack((p) => p.altUnits);
 export const DWELLING_NAMES: Record<string, string> = {
   hedgehog: 'Legowisko Jeżozwierzy', silverFox: 'Lisia Nora', centaur: 'Stajnie Centaurów', dawnOwl: 'Sowia Dziupla', boar: 'Dębowa Zagroda', dryadArcher: 'Gaj Driad', treeGuardian: 'Prastary Zagajnik', whiteStag: 'Polana Jeleni', dawnPhoenix: 'Gniazdo Feniksa',
-  skeletonArcher: 'Zbrojownia Kości', scarecrow: 'Opuszczone Pole', hauntedArmor: 'Rycerska Krypta', banshee: 'Wieża Płaczek', viy: 'Wielki Kurhan', boneOracle: 'Kaplica Wróżb', lich: 'Biblioteka Umarłych', kostucha: 'Kaplica Tańca Śmierci', boneDragon: 'Smocze Cmentarzysko',
-  armoredBear: 'Gawra Zbrojna', battleSmith: 'Polowa Kuźnia', bronzeSentinel: 'Warsztat Mechanizmów', goatRider: 'Koźla Zagroda', giantSlayer: 'Sala Pogromców', skarbnik: 'Stary Szyb', hammerGuard: 'Sala Gwardii', dwarfCannon: 'Ludwisarnia', clanColossus: 'Wielka Kuźnia Kolosa',
-  faunSlinger: 'Fauni Zagajnik', tarpan: 'Tarpanie Błonia', forestBison: 'Żubrza Ostoja', satyrLancer: 'Obóz Kopijników', steppeHippogriff: 'Gniazdo na Urwisku', drumElephant: 'Krąg Bębnów', warRhino: 'Błotne Brody', bullMoose: 'Łosie Mokradło', indrik: 'Źródło Indrika',
-  weaselKnife: 'Kryjówka w Żywopłocie', beaverEngineer: 'Żeremie', polecatPoisoner: 'Warzelnia', raccoonDogSpy: 'Leśna Czatownia', wolverine: 'Rosomacza Nora', badgerBomber: 'Prochownia', toadGunner: 'Rusznikarnia', catFencer: 'Fechtownia', towerMonitor: 'Wielka Stajnia Kompanii',
-  blizzardWitch: 'Chata na Lodzie', glacierYak: 'Zagroda Jaków', iceSentinel: 'Lodowa Strażnica', frostSprite: 'Sopelkowa Grota', youngGiant: 'Obóz Olbrzymów', windStrzyga: 'Wichrowy Szczyt', elderGiant: 'Gradowa Turnia', auroraSpirit: 'Wieża Zorzy', frostMammoth: 'Mamucia Grań',
+  skeletonArcher: 'Zbrojownia Kości', scarecrow: 'Opuszczone Pole', hauntedArmor: 'Rycerska Krypta', vampire: 'Krypta Wampira', viy: 'Wielki Kurhan', strzyga: 'Dom Strzygi', lich: 'Biblioteka Umarłych', kostucha: 'Kaplica Tańca Śmierci', boneDragon: 'Smocze Cmentarzysko',
+  armoredBear: 'Gawra Zbrojna', battleSmith: 'Polowa Kuźnia', bronzeSentinel: 'Warsztat Mechanizmów', ramGoat: 'Koźla Zagroda', giantSlayer: 'Sala Pogromców', skarbnik: 'Stary Szyb', hammerGuard: 'Sala Gwardii', dwarfCannon: 'Ludwisarnia', clanColossus: 'Wielka Kuźnia Kolosa',
+  tarpanArcher: 'Łucznicze Błonia', muskOx: 'Piżmowe Zimowisko', forestBison: 'Żubrza Ostoja', arkar: 'Pasmo Arkarów', steppeLamignat: 'Gniazdo na Urwisku', drumElephant: 'Krąg Bębnów', warRhino: 'Błotne Brody', bullMoose: 'Łosie Mokradło', indrik: 'Źródło Indrika',
+  weaselKnife: 'Kryjówka w Żywopłocie', beaverEngineer: 'Żeremie', polecatPoisoner: 'Warzelnia', raccoonDogSpy: 'Leśna Czatownia', wolverine: 'Rosomacza Nora', marmotPetard: 'Prochownia', toadGunner: 'Rusznikarnia', catFencer: 'Fechtownia', towerMonitor: 'Wielka Stajnia Kompanii',
+  blizzardWitch: 'Chata na Lodzie', glacierYak: 'Zagroda Jaków', iceSentinel: 'Lodowa Strażnica', frostSprite: 'Sopelkowa Grota', youngGiant: 'Obóz Olbrzymów', dziadMroz: 'Chata Dziada Mroza', elderGiant: 'Gradowa Turnia', auroraSpirit: 'Wieża Zorzy', frostMammoth: 'Mamucia Grań',
   ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern', doomBehemoth: 'Jaskinia Zagłady',
 };
 /** What a dwelling does, in words (the unit's name in the genitive). */
 const GENITIVE: Record<string, string> = {
   hedgehog: 'Jeżozwierza', silverFox: 'Srebrnego Lisa', centaur: 'Centaura', dawnOwl: 'Sowy Świtu', boar: 'Alabastrowego Odyńca', dryadArcher: 'Driady Łuczniczki', treeGuardian: 'Opiekuna Drzewa', whiteStag: 'Białego Jelenia', dawnPhoenix: 'Feniksa Świtu',
-  skeletonArcher: 'Szkieletu Łucznika', scarecrow: 'Strachu Polnego', hauntedArmor: 'Nawiedzonej Zbroi', banshee: 'Płaczki', viy: 'Wija Podziemnego', boneOracle: 'Kościanej Wróżki', lich: 'Lisza', kostucha: 'Kostuchy', boneDragon: 'Kościanego Smoka',
-  armoredBear: 'Niedźwiedzia w Zbroi', battleSmith: 'Kowala Bitewnego', bronzeSentinel: 'Wartownika z Brązu', goatRider: 'Jeźdźca na Koźle', giantSlayer: 'Pogromcy Olbrzymów', skarbnik: 'Skarbnika', hammerGuard: 'Gwardii Młota', dwarfCannon: 'Armaty Klanów', clanColossus: 'Kolosa Kuźni',
-  faunSlinger: 'Fauna Procarza', tarpan: 'Tarpana', forestBison: 'Żubra Puszczańskiego', satyrLancer: 'Satyra Kopijnika', steppeHippogriff: 'Hipogryfa Stepowego', drumElephant: 'Słonia z Bębnem', warRhino: 'Nosorożca Bojowego', bullMoose: 'Łosia Rogacza', indrik: 'Indrika',
-  weaselKnife: 'Łasicy Nożowniczki', beaverEngineer: 'Bobra Inżyniera', polecatPoisoner: 'Tchórza Smrodnika', raccoonDogSpy: 'Jenota Szpiega', wolverine: 'Rosomaka Zabijaki', badgerBomber: 'Borsuka Petardnika', toadGunner: 'Ropucha z Hakownicą', catFencer: 'Kocura Fechmistrza', towerMonitor: 'Warana Wieżowego',
-  blizzardWitch: 'Wiedźmy Zamieci', glacierYak: 'Jaka Lodowcowego', iceSentinel: 'Rycerza Lodowej Zbroi', frostSprite: 'Rusałki Szronu', youngGiant: 'Młodego Olbrzyma Szronu', windStrzyga: 'Strzygi Wichru', elderGiant: 'Olbrzyma Gradu', auroraSpirit: 'Ducha Zorzy', frostMammoth: 'Mamuta Wiecznej Zimy',
+  skeletonArcher: 'Szkieletu Łucznika', scarecrow: 'Strachu Polnego', hauntedArmor: 'Nawiedzonej Zbroi', vampire: 'Wampira', viy: 'Wija Podziemnego', strzyga: 'Strzygi', lich: 'Lisza', kostucha: 'Kostuchy', boneDragon: 'Kościanego Smoka',
+  armoredBear: 'Niedźwiedzia w Zbroi', battleSmith: 'Kowala Bitewnego', bronzeSentinel: 'Wartownika z Brązu', ramGoat: 'Kozła Taranowego', giantSlayer: 'Pogromcy Olbrzymów', skarbnik: 'Skarbnika', hammerGuard: 'Gwardii Młota', dwarfCannon: 'Armaty Klanów', clanColossus: 'Kolosa Kuźni',
+  tarpanArcher: 'Tarpana Łucznika', muskOx: 'Wołu Piżmowego', forestBison: 'Żubra Puszczańskiego', arkar: 'Arkara', steppeLamignat: 'Łamignata Stepowego', drumElephant: 'Słonia z Bębnem', warRhino: 'Nosorożca Bojowego', bullMoose: 'Łosia Rogacza', indrik: 'Indrika',
+  weaselKnife: 'Łasicy Nożowniczki', beaverEngineer: 'Bobra Inżyniera', polecatPoisoner: 'Tchórza Smrodnika', raccoonDogSpy: 'Jenota Szpiega', wolverine: 'Rosomaka Zabijaki', marmotPetard: 'Świstaka Petardnika', toadGunner: 'Ropucha z Hakownicą', catFencer: 'Kocura Fechmistrza', towerMonitor: 'Warana Wieżowego',
+  blizzardWitch: 'Wiedźmy Zamieci', glacierYak: 'Jaka Lodowcowego', iceSentinel: 'Rycerza Lodowej Zbroi', frostSprite: 'Rusałki Szronu', youngGiant: 'Młodego Olbrzyma Szronu', dziadMroz: 'Dziada Mroza', elderGiant: 'Olbrzyma Gradu', auroraSpirit: 'Ducha Zorzy', frostMammoth: 'Mamuta Wiecznej Zimy',
   ratman: 'Szczurołaka', goblinSlinger: 'Goblina Procarza', hellhound: 'Piekielnego Ogara', gargoyle: 'Gargulca', salamander: 'Salamandry Popiołu', caveTroll: 'Trolla Jaskiniowego', minotaurChief: 'Herszta Minotaurów', shadowWyvern: 'Wiwerny Cienia', doomBehemoth: 'Behemota Zagłady',
 };
 export const DWELLING_TEXTS: Record<string, string> = Object.fromEntries(Object.entries(GENITIVE).map(([id, g]) => [id, `Umożliwia wykupienie ${g} jako pomocnika.`]));
@@ -276,8 +276,8 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
   plunder: [`Po wygranej z bohaterem lub strażnikiem frakcja dostaje +${FACTION_MECHANICS.plunderGold} zł (sumuje się ze wszystkich osad).`],
   wolfDen: ['Bohaterowie Hordy mają +1 punkt ruchu na mapie.'],
   hoofStone: [
-    `Tętent: jednostka Stad, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole (zderzenie rani). Bez tego budynku frakcja nie ma tego efektu.`,
-    `Zderzenia Stad ranią o ${FACTION_MECHANICS.herdsCollision} więcej.`,
+    `Tętent: jednostka Stada, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole (zderzenie rani). Bez tego budynku frakcja nie ma tego efektu.`,
+    `Zderzenia Stada ranią o ${FACTION_MECHANICS.herdsCollision} więcej.`,
     `Wystarczy rozbieg o ${FACTION_MECHANICS.herdsRunShort} pola.`,
     `Cel, który uderzył w coś po zderzeniu, ma −${FACTION_MECHANICS.herdsSlow} S w swojej następnej aktywacji.`,
   ],
@@ -291,7 +291,7 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
   ],
   ossuary: [`Wskrzeszenie w szpitalu jest tańsze o ${FACTION_MECHANICS.ossuaryDiscount} zł.`, `Pomocnicy poziomów 1–${FACTION_MECHANICS.ossuaryFreeTier} wracają ze szpitala za darmo.`],
   shieldHall: [
-    `Mur Tarcz: jednostka Klanów z co najmniej ${FACTION_MECHANICS.shieldMates[0]} sąsiednimi sojusznikami ma −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu. Bez tego budynku frakcja nie ma tego efektu.`,
+    `Mur Tarcz: jednostka Klanu z co najmniej ${FACTION_MECHANICS.shieldMates[0]} sąsiednimi sojusznikami ma −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu. Bez tego budynku frakcja nie ma tego efektu.`,
     `Wystarczy ${FACTION_MECHANICS.shieldMates[1]} sąsiad.`,
     'Jednostki w szyku nie da się odepchnąć ani przyciągnąć.',
     `Kto atakuje wręcz jednostkę w szyku, traci ${FACTION_MECHANICS.shieldArmor} Ż.`,
@@ -309,7 +309,7 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
   ],
   crystalGrotto: [`+${FACTION_MECHANICS.mineOre} rudy na rundę z każdej osady z Kryształową Grotą.`, `Także +${FACTION_MECHANICS.mineDust} Gwiezdnego Pyłu co ${FACTION_MECHANICS.mineDustEvery} rundy z każdej osady z drugim poziomem.`],
   trapWorkshop: [
-    `Sidła: przed bitwą Kompanie kładą ${FACTION_MECHANICS.trapCount[0]} ukrytą pułapkę na swojej połowie areny; wróg, który na nią wejdzie, dostaje ${ABILITY.trapDamage} obrażeń i kończy ruch. Bez tego budynku frakcja nie ma tego efektu (poza Iskrą).`,
+    `Sidła: przed bitwą Kompania kładzie ${FACTION_MECHANICS.trapCount[0]} ukrytą pułapkę na swojej połowie areny; wróg, który na nią wejdzie, dostaje ${ABILITY.trapDamage} obrażeń i kończy ruch. Bez tego budynku frakcja nie ma tego efektu (poza Iskrą).`,
     `${FACTION_MECHANICS.trapCount[1]} pułapki przed bitwą.`,
     'Trafiony pułapką nie rusza się do końca swojej następnej aktywacji.',
     `${FACTION_MECHANICS.trapCount[3]} pułapki przed bitwą.`,

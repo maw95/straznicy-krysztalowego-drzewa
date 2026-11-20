@@ -37,7 +37,7 @@ export const FACTION_MECHANICS = {
   plunderGold: 2,
   /** Szkółka Drzewa: wood per round for each level (summed over the settlements). */
   nurseryWood: 1,
-  /** Kamień Tętentu (Dzikie Stada): the run (cells before a melee attack) that makes a unit push its target, the shorter run of the third level, the collision damage the second level adds, S the fourth level takes from a collided target. */
+  /** Kamień Tętentu (Dzikie Stado): the run (cells before a melee attack) that makes a unit push its target, the shorter run of the third level, the collision damage the second level adds, S the fourth level takes from a collided target. */
   herdsRun: 3,
   herdsRunShort: 2,
   herdsCollision: 1,
@@ -50,7 +50,7 @@ export const FACTION_MECHANICS = {
   /** Ossuarium: gold less for a recruit's resurrection in the hospital (first level); the second level raises the units of tiers 1-2 free. */
   ossuaryDiscount: 1,
   ossuaryFreeTier: 2,
-  /** Sala Tarcz (Żelazne Klany): damage taken less from every blow (small scale), how many neighbours a unit needs by level (I-IV), the level at which a unit in formation cannot be moved, and the one at which a melee attacker loses Życie. */
+  /** Sala Tarcz (Żelazny Klan): damage taken less from every blow (small scale), how many neighbours a unit needs by level (I-IV), the level at which a unit in formation cannot be moved, and the one at which a melee attacker loses Życie. */
   shieldArmor: 1,
   shieldMates: [2, 1, 1, 1],
   shieldAnchorLevel: 3,
@@ -72,7 +72,7 @@ export const FACTION_MECHANICS = {
   /** Wieża Zamieci: radius (I, II) in which enemy heroes lose move points on the map, and how many they lose. */
   blizzardRadius: [2, 3],
   blizzardMove: 1,
-  /** Warsztat Sideł (Wolne Kompanie): hidden traps laid before a battle, by level (I-IV); the level from which a trap that goes off also holds the unit (it cannot move until the end of its next activation); traps the Iskra adds. */
+  /** Warsztat Sideł (Wolna Kompania): hidden traps laid before a battle, by level (I-IV); the level from which a trap that goes off also holds the unit (it cannot move until the end of its next activation); traps the Iskra adds. */
   trapCount: [1, 2, 2, 3],
   trapHoldLevel: 3,
   sparkTraps: 2,
@@ -86,11 +86,11 @@ export const MECHANIC_NAMES: Record<FactionId, string> = byPack((p) => p.mechani
 export const MECHANIC_TEXTS: Record<FactionId, string> = {
   dawn: `Na początku każdej rundy bitwy najciężej ranna jednostka Przymierza odzyskuje ${FACTION_MECHANICS.dawnHeal} Ż.`,
   horde: `Gdy w bitwie ginie wróg Hordy, wszystkie jej jednostki dostają +${FACTION_MECHANICS.hordeAttack} A do końca bitwy (raz na bitwę).`,
-  clans: `Jednostka Klanów, która stoi obok co najmniej ${FACTION_MECHANICS.shieldMates[0]} sojuszników, ma −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu; kolejne poziomy Sali Tarcz osłabiają ten warunek, a w szyku nie da się jej odepchnąć i kto uderza ją wręcz, traci Ż.`,
+  clans: `Jednostka Klanu, która stoi obok co najmniej ${FACTION_MECHANICS.shieldMates[0]} sojuszników, ma −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu; kolejne poziomy Sali Tarcz osłabiają ten warunek, a w szyku nie da się jej odepchnąć i kto uderza ją wręcz, traci Ż.`,
   undead: `Na końcu każdej rundy bitwy poległy pomocnik Umarłych wstaje na arenie (jego najtańszy; bohaterowie nie wstają); liczba wstań i Ż, z którym wracają, rosną z poziomem Kurhanu.`,
   frost: `Każdy cios jednostki Dworu nakłada na cel 1 szron; przy ${FACTION_MECHANICS.frostThreshold[0]} szronach cel zamarza (traci następną aktywację, szron znika). Kolejne poziomy Pałacu Szronu skracają próg, a zamrożony kruszeje i traci Szybkość.`,
-  free: `Przed bitwą Kompanie kładą na swojej połowie ukryte pułapki (${FACTION_MECHANICS.trapCount[0]} na pierwszym poziomie Warsztatu Sideł, więcej na kolejnych); wróg, który wejdzie na pułapkę, dostaje ${ABILITY.trapDamage} obrażeń i kończy ruch, a od trzeciego poziomu nie rusza się też do końca następnej aktywacji. Pułapek wroga nie widać, dopóki nie zadziałają.`,
-  herds: `Jednostka Stad, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole; cel, który w coś uderzy, dostaje obrażenia.`,
+  free: `Przed bitwą Kompania kładzie na swojej połowie ukryte pułapki (${FACTION_MECHANICS.trapCount[0]} na pierwszym poziomie Warsztatu Sideł, więcej na kolejnych); wróg, który wejdzie na pułapkę, dostaje ${ABILITY.trapDamage} obrażeń i kończy ruch, a od trzeciego poziomu nie rusza się też do końca następnej aktywacji. Pułapek wroga nie widać, dopóki nie zadziałają.`,
+  herds: `Jednostka Stada, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole; cel, który w coś uderzy, dostaje obrażenia.`,
 };
 
 /** The best level of the faction's mechanic building (Kapliczka Świtu, Jama Krwi) among the settlements it holds: 0 means it has no Blask Świtu or Żądza Krwi at all. */
@@ -106,10 +106,10 @@ export const SPARK_NAMES: Record<FactionId, string> = byPack((p) => p.sparkName)
 export const SPARK_TEXTS: Record<FactionId, string> = {
   dawn: `Wszystkie jednostki Przymierza (bohaterowie i pomocnicy) mają +${EMPIRE.sparkHp} Ż w każdej bitwie.`,
   horde: `Wszystkie jednostki Hordy (bohaterowie i pomocnicy) mają +${EMPIRE.sparkAttack} A w każdej bitwie.`,
-  herds: `Wszystkie jednostki Stad (bohaterowie i pomocnicy) mają +${EMPIRE.sparkSpeed} S w każdej bitwie.`,
-  clans: `Wszystkie jednostki Klanów (bohaterowie i pomocnicy) mają pancerz ${FACTION_MECHANICS.shieldArmor}: −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu.`,
+  herds: `Wszystkie jednostki Stada (bohaterowie i pomocnicy) mają +${EMPIRE.sparkSpeed} S w każdej bitwie.`,
+  clans: `Wszystkie jednostki Klanu (bohaterowie i pomocnicy) mają pancerz ${FACTION_MECHANICS.shieldArmor}: −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu.`,
   frost: `Wrogowie zaczynają każdą bitwę z ${FACTION_MECHANICS.sparkFrost} szronem.`,
-  free: `Kompanie zaczynają każdą bitwę z ${FACTION_MECHANICS.sparkTraps} dodatkowymi ukrytymi pułapkami.`,
+  free: `Kompania zaczyna każdą bitwę z ${FACTION_MECHANICS.sparkTraps} dodatkowymi ukrytymi pułapkami.`,
   undead: 'Wszystkie jednostki Umarłych (bohaterowie i pomocnicy) są odporne na truciznę, klątwy, spowolnienia i unieruchomienie.',
 };
 

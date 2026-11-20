@@ -27,7 +27,7 @@ export const ARCHETYPE_NAMES: Record<Archetype, string> = { warrior: 'wojownik',
 export const COMMANDERS: Record<FactionId, Record<Archetype, string>> = {
   dawn: { warrior: 'dawnKnight', archer: 'dawnHuntress', sage: 'dawnSage' },
   horde: { warrior: 'hordeWarlord', archer: 'hordeCrossbow', sage: 'hordeShadow' },
-  herds: { warrior: 'aurochsScout', archer: 'faunJavelin', sage: 'satyrSeer' },
+  herds: { warrior: 'aurochsScout', archer: 'eagleHunter', sage: 'planetnik' },
   undead: { warrior: 'wardCaptain', archer: 'spectralArcher', sage: 'penitentMonk' },
   clans: { warrior: 'clanWarrior', archer: 'mountainCrossbow', sage: 'forgePriest' },
   frost: { warrior: 'iceKnight', archer: 'ermineHuntress', sage: 'frostWitch' },
@@ -48,7 +48,7 @@ const NAMES: Record<string, string[]> = {
   hordeCrossbow: ['Zgrzyt', 'Szpon', 'Krzywe Oko', 'Smyk'],
   hordeShadow: ['Mroczysław', 'Popielec', 'Szept', 'Kruk'],
   aurochsScout: ['Turzysław', 'Rogoń', 'Kopytko', 'Burzan'],
-  faunJavelin: ['Faunek', 'Oszczepnik Lis', 'Kozioł', 'Strzałka'],
+  eagleHunter: ['Orlik', 'Szponiasty', 'Łowca Wiatru', 'Strzałka'],
   wardCaptain: ['Gedymin Cichy', 'Stróż Bram', 'Rycerz Mgły', 'Wartownik Cichy'],
   clanWarrior: ['Dobromir Młot', 'Stalbrody', 'Kamienna Pięść', 'Brodacz Zbrojny'],
   mountainCrossbow: ['Kusznik Skała', 'Celnooki Durin', 'Bełt', 'Strzelec Przełęczy'],
@@ -61,7 +61,7 @@ const NAMES: Record<string, string[]> = {
   hareHerbalist: ['Babka Macierzanka', 'Zielarka Miętówka', 'Ciotka Kopytnik', 'Lubczykowa'],
   spectralArcher: ['Łuczniczka Zmierzchu', 'Cień Strzały', 'Srebrna Cięciwa', 'Dziewanna'],
   penitentMonk: ['Brat Milczek', 'Pokutnik Wawrzyn', 'Mnich Latarnik', 'Zaduszny'],
-  satyrSeer: ['Dudarz Mądry', 'Pieśniarz', 'Wróżbiarz Wiatru', 'Trzcinowy'],
+  planetnik: ['Chmurnik', 'Wróżbiarz Wiatru', 'Burzan Stary', 'Trzcinowy'],
 };
 
 /** The name a commander gets: drawn from the game's seed, so a replay names it the same. */
