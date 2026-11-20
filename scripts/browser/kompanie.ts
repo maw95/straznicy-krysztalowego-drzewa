@@ -44,6 +44,9 @@ try {
   await p1.locator('[data-building="trapWorkshop"]').click();
   await p1.waitForTimeout(400);
   console.log('workshop text found:', (await p1.locator('body').innerText()).includes('Sidła'));
+  await p1.locator('[data-building="fence"]').click();
+  await p1.waitForTimeout(300);
+  console.log('fence panel:', await p1.locator('[data-panel="fence"]').count(), '| sell buttons:', await p1.locator('[data-sell]').count(), '| empty note:', await p1.locator('[data-fence-empty]').count());
   await p1.screenshot({ path: `.tmp/kompanie-warsztat-${view}.png` });
   console.log('errors (settlement)', g1.errors.join('|') || 'none');
 } catch (e) { console.log('FAIL (settlement)', String(e).slice(0, 600)); await p1.screenshot({ path: `.tmp/kompanie-fail-${view}.png` }); }
@@ -91,3 +94,32 @@ try {
   console.log('errors (bots)', g3.errors.join('|') || 'none');
 } catch (e) { console.log('FAIL (bots)', String(e).slice(0, 600)); await p3.screenshot({ path: `.tmp/kompanie-fail3-${view}.png` }); }
 await g3.close();
+
+// Part 4: two humans at one screen, the first plays the Companies: the deployment is covered, own traps show only after "Podejrzyj Sidła".
+const g4 = await startTable(true, 0, [0, 1]);
+const p4 = g4.page;
+try {
+  await p4.locator('[data-dev-panel]').waitFor({ timeout: 20000 });
+  await p4.getByRole('button', { name: /wybuduj wszystko/i }).first().click().catch(() => console.log('no build-everything button'));
+  await p4.locator('[data-dev-fight="0"]').click();
+  await p4.locator('[data-enter]').waitFor({ timeout: 10000 });
+  const cards = p4.locator('.overlay .btn:has(img), .overlay button.btn').filter({ hasNot: p4.locator('[data-enter]') });
+  for (let i = 0; i < 2; i++) await cards.nth(i).click().catch(() => {});
+  await p4.locator('[data-enter]').click();
+  await p4.getByText('ukrytych Sideł').waitFor({ timeout: 10000 });
+  console.log('veil shown, trap button behind it:', await p4.locator('[data-trap-mode]').count());
+  await p4.screenshot({ path: `.tmp/kompanie-zaslona-${view}.png` });
+  await p4.getByRole('button', { name: /pokaż turę/ }).click();
+  await p4.locator('[data-trap-mode]').waitFor({ timeout: 10000 });
+  await p4.locator('[data-trap-mode]').click();
+  const zone = p4.locator('polygon[data-cell]').filter({ has: p4.locator('xpath=self::*[starts-with(@fill, "rgba(200,100,40")]') });
+  for (let i = 0; i < 2; i++) await zone.nth(i * 3).click({ force: true });
+  await p4.getByRole('button', { name: /Gotowe/ }).click();
+  await p4.waitForTimeout(1500);
+  console.log('own traps on the arena before peeking:', await p4.locator('[data-trap]').count(), '| peek button:', await p4.locator('[data-peek-traps]').count());
+  await p4.locator('[data-peek-traps]').click().catch(() => {});
+  console.log('own traps after peeking:', await p4.locator('[data-trap]').count());
+  await p4.screenshot({ path: `.tmp/kompanie-podejrzyj-${view}.png` });
+  console.log('errors (veil)', g4.errors.join('|') || 'none');
+} catch (e) { console.log('FAIL (veil)', String(e).slice(0, 800)); await p4.screenshot({ path: `.tmp/kompanie-fail4-${view}.png` }); }
+await g4.close();
