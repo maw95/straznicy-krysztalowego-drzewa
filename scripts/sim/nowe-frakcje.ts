@@ -28,7 +28,8 @@ if (process.argv[2] === '--shard') {
   const deadline = Date.now() + Number(process.env.SIM_TIMEOUT_S ?? 170) * 1000;
   let wa = 0, wb = 0, draws = 0, done = 0;
   for (let seed = Number(from); seed <= Number(to) && Date.now() < deadline; seed++) {
-    const order = (seed % 2 ? [a, b] : [b, a]) as Race[];
+    // Seats swap by the second bit of the seed: the parity of the seed also picks the bot's tier-unit lines (kingdom.ts), so swapping by parity gave the first faction of a pair the same units every time (diagnosis 20.11).
+    const order = (((seed >> 1) & 1) ? [a, b] : [b, a]) as Race[];
     const s = createGame(mk(order, objective, seed, size, shape));
     for (let i = 0; i < 20000 && s.phase !== 'over'; i++) applyActionInPlace(s, chooseAction(s)!);
     done++;
