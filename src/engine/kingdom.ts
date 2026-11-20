@@ -1094,6 +1094,13 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
     const forged = botRune(state, f, s);
     if (forged) return { type: 'kingdomForgeRune', settlementId: id, ...forged };
   }
+  // Level 6: the faction's mechanic building right after the barracks (and the recruits it can pay for), through its parent buildings, the same for every faction.
+  const mechStep = mechanicStep(state, f, s);
+  if (mechStep) {
+    if (buildable(mechStep)) return { type: 'kingdomBuild', settlementId: id, building: mechStep };
+    // Short of a resource or of the gold for one: trade for it, and keep the gold for it meanwhile (nothing else is bought).
+    return tradeToward(state, f, s, mechStep);
+  }
   if (own && s.buildings.barracks >= 1 && state.rules.empire) {
     // Level 6: the dwelling of the lowest tier that has none (which of the two units: by the game's seed, so the games differ), when it and its unit can be paid for.
     for (const tier of [2, 3, 4, 5, 6]) {
@@ -1112,13 +1119,6 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
     // Every cheaper recruit is in the team and the strongest ones wait behind the bigger barracks: build them.
     const waiting = recruitsOf(state, f).some((r) => r.tier >= 4 && !hasUnit(state, f, r.id) && (!needsDwelling(state, r) || dwellingOf(state, f, r.tier) === undefined || dwellingReady(state, f, r)));
     if (waiting && s.buildings.barracks === 1 && recruitsOf(state, f).every((r) => r.tier >= 4 || hasUnit(state, f, r.id) || (needsDwelling(state, r) && dwellingOf(state, f, r.tier) !== r.id && dwellingOf(state, f, r.tier) !== undefined)) && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
-  }
-  // Level 6: the faction's mechanic building right after the barracks (and the recruits it can pay for), through its parent buildings, the same for every faction.
-  const mechStep = mechanicStep(state, f, s);
-  if (mechStep) {
-    if (buildable(mechStep)) return { type: 'kingdomBuild', settlementId: id, building: mechStep };
-    // Short of a resource or of the gold for one: trade for it, and keep the gold for it meanwhile (nothing else is bought).
-    return tradeToward(state, f, s, mechStep);
   }
   if (s.buildings.hospital >= 1 && fs.supportsDead.length) {
     const dead = fs.supportsDead[0];
