@@ -8,10 +8,11 @@ import { abilityArt, asset, Frame, Medal, Portrait, SIDE_RING } from './common';
 import { statusList, StatusBadge } from './battleStatus';
 
 /** The line under the active unit's name: what the player can do now. */
-export function activationHint(b: BattleState, o: { deploySide: TeamId | null; picked: string | null; trapMode?: boolean; myTurn: boolean; moves: number; targets: number; sideName?: (t: TeamId) => string }): string {
+export function activationHint(b: BattleState, o: { deploySide: TeamId | null; picked: string | null; trapMode?: boolean; mirageMode?: boolean; mirageSlots?: number; myTurn: boolean; moves: number; targets: number; sideName?: (t: TeamId) => string }): string {
   if (b.stage === 'deploy') {
     if (!o.deploySide) return `${o.sideName ? o.sideName(b.needsDeploy[0]) : FACTION_NAMES[b.needsDeploy[0]]} ustawia jednostki…`;
     if (b.rearrange) return `Iskra: przestaw najwyżej ${FACTION_MECHANICS.sparkRearrange} jednostki (kliknij jednostkę, potem pole)`;
+    if (o.mirageMode) return `Kliknij pomocnika, który dostanie miraż (${o.mirageSlots === 1 ? '1 miraż' : `najwyżej ${o.mirageSlots}`}), potem „Zatwierdź miraże”`;
     return o.trapMode ? 'Kliknij pole swojej połowy, by położyć sidło' : o.picked ? 'Wskaż złote pole w swojej kolumnie' : 'Kliknij jednostkę, potem pole';
   }
   if (!o.myTurn) return 'Ruch przeciwnika…';
@@ -48,12 +49,14 @@ interface Props {
   allyPick?: string | null;
   /** Pałac Mirażu (third level): the active unit may swap places with its mirage now. */
   mirageSwap?: boolean;
+  /** Pałac Mirażu while deploying: how many mirages, the units picked for them, the mode in which a click on a unit picks it, and whether the pick differs from the arena. */
+  mirage?: { slots: number; choice: string[]; mode: boolean; setMode: (v: boolean) => void; changed: boolean };
   onAction: (a: Action) => void;
   reset: () => void;
   footer: React.ReactNode;
 }
 
-export function ActivationBar({ state, active, hint, myTurn, deploySide, placing, trapSlots = 0, traps = [], trapMode = false, setTrapMode, attackAbility, useAbility, setUseAbility, freeAbilityReady, freeAbility, setFreeAbility, allyPick = null, mirageSwap = false, onAction, reset, footer }: Props) {
+export function ActivationBar({ state, active, hint, myTurn, deploySide, placing, trapSlots = 0, traps = [], trapMode = false, setTrapMode, attackAbility, useAbility, setUseAbility, freeAbilityReady, freeAbility, setFreeAbility, allyPick = null, mirageSwap = false, mirage, onAction, reset, footer }: Props) {
   const b = state.battle!;
   const act = b.activation;
   const ab = active ? abilityOf(active) : null;
@@ -87,7 +90,17 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
           Sidła {traps.length}/{trapSlots}{trapMode ? ' ✓' : ''}
         </button>
       )}
-      {deploySide && (
+      {deploySide && mirage && (
+        <button className={`btn plate parch act-btn ${mirage.mode ? 'on' : ''}`} data-mirage-mode style={{ height: 60, padding: '0 14px', fontSize: 15 }} title="Pałac Mirażu: wybierz pomocników, których miraże staną na arenie (wróg nie odróżni ich od prawdziwych)." onClick={() => mirage.setMode(!mirage.mode)}>
+          Miraże {mirage.choice.length}/{mirage.slots}{mirage.mode ? ' ✓' : ''}
+        </button>
+      )}
+      {deploySide && mirage?.mode && (
+        <button className="btn plate parch act-btn" data-mirage-confirm disabled={!mirage.changed} style={{ height: 60, padding: '0 14px', fontSize: 15 }} title="Miraże staną przy wybranych jednostkach; potem rozstaw wojska." onClick={() => onAction({ type: 'pickMirages', faction: deploySide, unitIds: mirage.choice })}>
+          Zatwierdź miraże
+        </button>
+      )}
+      {deploySide && !mirage?.mode && (
         <button
           className="btn prim"
           style={{ height: 60, padding: '0 22px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 19 }}

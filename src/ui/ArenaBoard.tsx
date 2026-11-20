@@ -196,7 +196,7 @@ export function ArenaBoard(p: Props) {
     const off = way ? { x: a.x - cellCenter(fp.head).x, y: a.y - (cellCenter(fp.head).y + FEET) } : null;
     const path = way && off ? way.map((k) => ({ x: cellCenter(k).x + off.x, y: cellCenter(k).y + FEET + off.y })) : null;
     // In a fight the blue cells already mark the active unit; the ring only shows which unit is picked while deploying.
-    const ring = deploySide && picked === u.id ? ACTIVE_FIGURE_RING : null;
+    const ring = deploySide && (picked === u.id || (deploy.mirageMode && deploy.mirageChoice.includes(u.id))) ? ACTIVE_FIGURE_RING : null;
     const lastJump = b.teleports?.[b.teleports.length - 1];
     const blink = lastJump?.unitId === u.id && lastJump.to === u.pos && lastJump.kind !== 'burrow';
     return [{ key: u.id, defId: u.defId, x: a.x, y: a.y, flip, dead: !u.alive, blink, ring, attack: p.attackNow && p.attackNow.unitId === u.id ? { key: p.attackNow.key, melee: b.units[p.attackNow.targetId] ? unitDistance(u, b.units[p.attackNow.targetId]) === 1 : false, towardX: cellCenter(b.units[p.attackNow.targetId]?.pos ?? b.units[p.attackNow.targetId]?.corpse ?? fp.head).x, towardY: cellCenter(b.units[p.attackNow.targetId]?.pos ?? b.units[p.attackNow.targetId]?.corpse ?? fp.head).y } : null, hit: hitIds.includes(u.id), snap: b.stage === 'deploy', path, rebirth: u.pos ? fxs.find((e) => e.kind === 'odrodzenie' && e.cell === u.pos)?.key : undefined }];

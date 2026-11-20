@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Pustynne Cesarstwo: to gracz wybiera, które jednostki dostają miraż: przy ustawianiu wojsk kliknij „Miraże”, wskaż pomocników i „Zatwierdź miraże” (gra proponuje najcenniejszych, bot wybiera sam); przeciwnik nadal nie wie, która figura jest prawdziwa.
 - Nowa frakcja w rywalizacji (wersja robocza): Pustynne Cesarstwo, pustynne imperium dżinów, sfinksów, skorpionów i kamiennych strażników grobowców. Pałac Mirażu stawia na arenie miraże: atrapy jego jednostek, których przeciwnik nie odróżni od prawdziwych (atak w miraż przepada, a miraż znika); Królowa Skorpionów zaczyna bitwę zakopana w dowolnym miejscu swojej połowy, Szakalogłowy Strażnik i Bastia Cienista uderzają w wroga, który do nich podejdzie, a Beduin Nomada raz na bitwę rzuca sztyletem. Mają bohaterów (z Wielbłądzim Księciem), dowódców z karczmy, jednostki, budynki osady (Pałac Mirażu, Szlak Karawan, Brama Wydm) i własną Iskrę (po rozstawieniu obu stron przestawiają jeszcze 2 jednostki); grafika jest na razie zastępcza, a liczby nie są jeszcze zrównoważone.
 - Balans frakcji w wersji cyfrowej (wersja robocza): automatyczny stroiciel dobrał małe premie Życia i Ataku dla bohaterów i pomocników siedmiu frakcji; zmiana dotyczy tylko wersji cyfrowej.
 - Ikony w menu głównym, kreatorze nowej gry, czarach, drzewku frakcji i umiejętnościach mają jednakową ramkę wzorowaną na ikonie „Księstwo”; naprawione ramki „Podbój” i „Relikt” (były przycięte).

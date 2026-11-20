@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { TeamId } from '../engine/data';
-import { ambushCells, buriesAtDeploy, deployCellOf, deployCells, trapZone } from '../engine/battle';
+import { ambushCells, buriesAtDeploy, deployCellOf, deployCells, mirageCandidates, mirageSlots, trapZone } from '../engine/battle';
 import type { HexKey } from '../engine/hex';
 import type { BattleState, BattleUnit, GameState } from '../engine/types';
 
@@ -19,6 +19,12 @@ export function useDeployment(b: BattleState, canAct: boolean, walk: Record<stri
   /** The Free Companies: the cells chosen for hidden traps (at most `slots`; the rest are laid for the faction), and whether a click on the arena picks one. */
   const [traps, setTraps] = useState<HexKey[]>([]);
   const [trapMode, setTrapMode] = useState(false);
+  /** Pałac Mirażu: how many mirages the side has, the units picked to get one, and whether a click on a unit picks it (instead of moving it). */
+  const mirageSlotsNow = deploySide && state && !b.rearrange ? mirageSlots(state, deploySide) : 0;
+  const mirageNow = Object.values(b.units).filter((u) => u.side === deploySide && u.status.mirage).map((u) => u.status.mirage!.of);
+  const mirageKey = mirageNow.join();
+  const [mirageChoice, setMirageChoice] = useState<string[]>([]);
+  const [mirageMode, setMirageMode] = useState(false);
   useEffect(() => {
     // Start from the current (default) placement each time a faction gets to deploy.
     if (!deploySide) return;
@@ -31,8 +37,10 @@ export function useDeployment(b: BattleState, canAct: boolean, walk: Record<stri
     setPicked(null);
     setTraps([]);
     setTrapMode(false);
+    setMirageChoice(mirageNow);
+    setMirageMode(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deploySide, b.needsDeploy.length]);
+  }, [deploySide, b.needsDeploy.length, mirageKey]);
   const deployable = new Set(deploySide ? deployCells(b, deploySide) : []);
   // Zasadzka Spod Piasku: the picked Queen may lie anywhere on her half.
   const pickedUnit = picked ? b.units[picked] : undefined;
@@ -55,5 +63,13 @@ export function useDeployment(b: BattleState, canAct: boolean, walk: Record<stri
     setTraps((t) => (t.includes(k) ? t.filter((x) => x !== k) : t.length < slots ? [...t, k] : t));
   }
 
-  return { deploySide, placing, picked, setPicked, deployable, posOf, placeAt, slots, traps, trapMode, setTrapMode, trapCells, trapAt };
+  /** A click on a unit in mirage mode: it gets a mirage or loses it (at most `mirageSlotsNow`). */
+  function mirageAt(clicked: string) {
+    // A click on a mirage stands for its unit; with every mirage taken the oldest pick gives way.
+    const id = b.units[clicked]?.status.mirage?.of ?? clicked;
+    if (!deploySide || !mirageCandidates(b, deploySide).some((u) => u.id === id)) return;
+    setMirageChoice((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id].slice(-mirageSlotsNow)));
+  }
+
+  return { mirageSlots: mirageSlotsNow, mirageChoice, mirageMode, setMirageMode, mirageAt, mirageChanged: mirageChoice.slice().sort().join() !== mirageNow.slice().sort().join(), deploySide, placing, picked, setPicked, deployable, posOf, placeAt, slots, traps, trapMode, setTrapMode, trapCells, trapAt };
 }

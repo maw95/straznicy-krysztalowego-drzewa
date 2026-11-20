@@ -325,8 +325,10 @@ export function App() {
   const battleShown = useMemo(() => {
     if (!battleSource) return battleSource;
     const shown = redactHidden(battleSource, viewers);
-    return trapSecrecy && !peekTraps && viewer ? hideOwnTraps(shown, viewer) : shown;
-  }, [battleSource, viewers, trapSecrecy, peekTraps, viewer]) as GameState;
+    // While the side deploys behind the "pass the device" screen it sees its own mirages (it picks and places them).
+    const ownDeploy = battleSource.battle?.stage === 'deploy' && viewer !== null && battleSource.battle.needsDeploy[0] === viewer && trapsUncovered === viewer;
+    return trapSecrecy && !peekTraps && viewer && !ownDeploy ? hideOwnTraps(shown, viewer) : shown;
+  }, [battleSource, viewers, trapSecrecy, peekTraps, viewer, trapsUncovered]) as GameState;
   const peekKey = game?.battle ? `${game.battle.stage}:${game.battle.round}:${game.battle.index}:${actor.kind === 'human' ? actor.faction : ''}` : '';
   useEffect(() => { setPeekTraps(false); }, [peekKey]);
   // The deployment of a side with traps is covered until that side says the other player is not looking.

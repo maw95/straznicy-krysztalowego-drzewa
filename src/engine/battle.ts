@@ -1998,22 +1998,62 @@ export function setUpMirages(state: GameState): void {
   for (const side of [b.attacker, b.defender]) {
     const slots = mirageSlots(state, side);
     if (!slots) continue;
-    const picks = livingUnits(b, side)
-      .filter((x) => UNITS[x.defId].kind === 'support' && !x.status.mirage)
-      .sort((x, y) => mirageWorth(y) - mirageWorth(x) || (x.id < y.id ? -1 : 1))
-      .slice(0, slots);
-    for (const real of picks) {
-      const used = new Set(Object.values(b.units).filter((x) => x.alive).flatMap(cellsOf));
-      const cell = deployCells(b, side).find((k) => !used.has(k) && (!isLarge(state, real) || deployHeads(b, side, k).some((h) => !used.has(h))));
-      if (!cell) break;
-      const head = isLarge(state, real) ? deployHeads(b, side, cell).find((h) => !used.has(h))! : cell;
-      const m = makeMirage(state, real, head, isLarge(state, real) ? cell : undefined);
-      if (!m) continue;
-      const rng = new Rng(state.rng);
-      if (rng.int(2) === 1) swapPlaces(m, real);
-      state.rng = rng.state;
-    }
+    placeMirages(state, side, defaultMirageUnits(state, side).slice(0, slots));
   }
+}
+
+/** The units the mirages of a side copy by default (the bots keep them): its most valuable supports first. */
+export function defaultMirageUnits(state: GameState, side: Side): BattleUnit[] {
+  return mirageCandidates(state.battle!, side).sort((x, y) => mirageWorth(y) - mirageWorth(x) || (x.id < y.id ? -1 : 1));
+}
+
+/** The units of a side a mirage may copy: its living supports (not the heroes, not mirages). */
+export const mirageCandidates = (b: BattleState, side: Side): BattleUnit[] => livingUnits(b, side).filter((x) => UNITS[x.defId].kind === 'support' && !x.status.mirage);
+
+/** One mirage of each of `picks` on a free cell of the side's start columns; a coin decides whether the mirage or the unit stands on the cell given to the copy. */
+function placeMirages(state: GameState, side: Side, picks: BattleUnit[]): void {
+  const b = state.battle!;
+  for (const real of picks) {
+    const used = new Set(Object.values(b.units).filter((x) => x.alive).flatMap(cellsOf));
+    const cell = deployCells(b, side).find((k) => !used.has(k) && (!isLarge(state, real) || deployHeads(b, side, k).some((h) => !used.has(h))));
+    if (!cell) break;
+    const head = isLarge(state, real) ? deployHeads(b, side, cell).find((h) => !used.has(h))! : cell;
+    const m = makeMirage(state, real, head, isLarge(state, real) ? cell : undefined);
+    if (!m) continue;
+    const rng = new Rng(state.rng);
+    if (rng.int(2) === 1) swapPlaces(m, real);
+    state.rng = rng.state;
+  }
+}
+
+/**
+ * Pałac Mirażu: the player picks the units his mirages copy (in his deployment step, before the units are placed; the bots keep the default choice). The old
+ * mirages go and new ones stand on free cells of the start columns, each a coin away from its unit, so the placement tells the opponent nothing.
+ */
+export function pickMirages(state: GameState, faction: TeamId, unitIds: string[]): void {
+  const b = state.battle!;
+  if (b.stage !== 'deploy' || b.needsDeploy[0] !== faction || b.rearrange) throw new Error('Miraże wybiera się przy ustawianiu wojsk.');
+  const slots = mirageSlots(state, faction);
+  if (!slots) throw new Error('Ta strona nie ma mirażów.');
+  if (unitIds.length > slots) throw new Error(`Pałac Mirażu daje najwyżej ${slots} miraży.`);
+  if (new Set(unitIds).size !== unitIds.length) throw new Error('Każda jednostka może mieć tylko jeden miraż.');
+  const allowed = new Map(mirageCandidates(b, faction).map((u) => [u.id, u]));
+  const picks = unitIds.map((id) => allowed.get(id));
+  if (picks.some((u) => !u)) throw new Error('Miraż może skopiować tylko twojego pomocnika.');
+  // Tried on a copy first: a pick that does not fit on the free start cells changes nothing.
+  const trial = structuredClone(state);
+  const tb = trial.battle!;
+  for (const m of Object.values(tb.units))
+    if (m.side === faction && m.status.mirage) {
+      removeMirage(tb, m);
+      if (tb.mirageAlias) delete tb.mirageAlias[m.status.mirage.of];
+    }
+  placeMirages(trial, faction, picks.map((u) => tb.units[u!.id]));
+  const made = Object.values(tb.units).filter((m) => m.side === faction && m.status.mirage).length;
+  if (made < picks.length) throw new Error(`Na polach startowych zmieści się tylko ${made} ${made === 1 ? 'miraż' : 'miraże'}.`);
+  if (tb.mirageAlias && !Object.keys(tb.mirageAlias).length) delete tb.mirageAlias;
+  state.battle = tb;
+  state.rng = trial.rng;
 }
 
 const swapPlaces = (x: BattleUnit, y: BattleUnit): void => {

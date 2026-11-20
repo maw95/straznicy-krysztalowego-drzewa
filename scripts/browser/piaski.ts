@@ -121,4 +121,38 @@ if (want('4')) {
   } catch (e) { console.log('FAIL (veil)', String(e).slice(0, 800)); await p.screenshot({ path: `.tmp/piaski-fail4-${view}.png` }); }
   await g.close();
 }
+if (want('5')) {
+  // The player picks the unit of his mirage: "Miraże", a click on a unit in the side panel, "Zatwierdź miraże".
+  const g = await startTable(true, 0, [0]);
+  const p = g.page;
+  try {
+    await p.locator('[data-dev-panel]').waitFor({ timeout: 20000 });
+    await p.getByRole('button', { name: /wybuduj wszystko/i }).first().click().catch(() => {});
+    await p.locator('[data-dev-fight="0"]').click();
+    await p.locator('[data-mirage-mode]').waitFor({ timeout: 10000 });
+    console.log('mirage button:', await p.locator('[data-mirage-mode]').innerText());
+    await p.screenshot({ path: `.tmp/piaski-miraz-start-${view}.png` });
+    const marked = async () => (await p.locator('.side-panel, .battle-side').first().innerText().catch(() => '')).slice(0, 300);
+    await p.locator('[data-mirage-mode]').click();
+    console.log('hint in mirage mode:', (await p.locator('.screen').innerText()).match(/Kliknij pomocnika[^\n]*/)?.[0]);
+    const panel = p.locator('[data-side-crest]').first().locator('xpath=..');
+    const buttons = panel.locator('button.btn');
+    const n = await buttons.count();
+    console.log('side panel units:', n, await marked());
+    // pick the last unit of the panel (a support), then confirm
+    // (the developer panel lies over the side panel: the click is sent to the button itself)
+    await buttons.nth(n - 1).dispatchEvent('click');
+    await p.waitForTimeout(300);
+    console.log('after the click:', await p.locator('[data-mirage-mode]').innerText(), '| confirm enabled:', await p.locator('[data-mirage-confirm]').isEnabled());
+    await p.screenshot({ path: `.tmp/piaski-miraz-wybor-${view}.png` });
+    if (await p.locator('[data-mirage-confirm]').isEnabled()) await p.locator('[data-mirage-confirm]').click();
+    await p.waitForTimeout(800);
+    console.log('after confirming: badges', await mirageBadges(p), '| mode off:', !(await p.locator('[data-mirage-confirm]').count()), '| ready button:', await p.getByRole('button', { name: /Gotowe/ }).count());
+    await p.screenshot({ path: `.tmp/piaski-miraz-po-${view}.png` });
+    await p.getByRole('button', { name: /Gotowe/ }).click();
+    await p.waitForTimeout(1200);
+    console.log('errors (mirage pick)', g.errors.join('|') || 'none');
+  } catch (e) { console.log('FAIL (mirage pick)', String(e).slice(0, 800)); await p.screenshot({ path: `.tmp/piaski-fail5-${view}.png` }); }
+  await g.close();
+}
 process.exit(0);

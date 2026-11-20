@@ -767,6 +767,8 @@ export type Action =
   | { type: 'selectSupports'; faction: TeamId; supportIds: string[] }
   /** `traps`: where the Free Companies lay their hidden traps (cells of their half of the arena; fewer than they may lay: the rest is laid for them). */
   | { type: 'deployUnits'; faction: TeamId; positions: Record<string, HexKey>; traps?: HexKey[] }
+  /** Pałac Mirażu: the units (ids of own supports) the side's mirages copy, picked in its deployment step before the units are placed. */
+  | { type: 'pickMirages'; faction: TeamId; unitIds: string[] }
   | { type: 'draftPick'; faction: TeamId; kind: ItemKind }
   | { type: 'pickGear'; faction: TeamId; artifactId: string }
   | { type: 'pickSpells'; faction: TeamId; spells: SpellId[] }

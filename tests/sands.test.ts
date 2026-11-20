@@ -138,6 +138,50 @@ describe('Miraż: the decoys of the Pałac Mirażu', () => {
     expect(deploying(0).battle!.mirageAlias).toBeUndefined();
   });
 
+  it('the player picks the units of his mirages in his deployment step; the old ones go, the new ones stand on free start cells', () => {
+    // three units in a start column of five cells: room for both mirages; the bot's default copies the Lamassu and the Cobra
+    const s = deploying(2, [['djinnVizier', 'dawn', 0, 8], ['lamassu', 'dawn', 0, 4], ['cobra', 'dawn', 0, 6], ['jackalGuard', 'dawn', 0, 10], ['ratman', 'horde', 12, 8], ['goblinSlinger', 'horde', 12, 10]].filter(([id]) => id !== 'cobra') as U[]);
+    expect(s.battle!.needsDeploy[0]).toBe('dawn');
+    expect(Object.values(s.battle!.units).filter(isMirage).map((m) => m.status.mirage!.of)).toContain('lamassu');
+    const picked = applyAction(s, { type: 'pickMirages', faction: 'dawn', unitIds: ['jackalGuard'] });
+    const b = picked.battle!;
+    const of = Object.values(b.units).filter(isMirage).map((m) => m.status.mirage!.of).sort();
+    expect(of).toEqual(['jackalGuard']);
+    expect(miragesOf(b, 'lamassu')).toEqual([]);
+    // the Lamassu and the Jackal both fit too
+    expect(Object.values(applyAction(s, { type: 'pickMirages', faction: 'dawn', unitIds: ['jackalGuard', 'lamassu'] }).battle!.units).filter(isMirage).length).toBe(2);
+    const start = new Set(deployCells(b, 'dawn'));
+    for (const m of Object.values(b.units).filter(isMirage)) expect(start.has(m.tail ?? m.pos!)).toBe(true);
+    const cells = Object.values(b.units).flatMap((u) => [u.pos, u.tail].filter(Boolean));
+    expect(new Set(cells).size).toBe(cells.length);
+    // the mix-up of ids covers the new groups only, and the enemy still cannot see which body is real
+    expect(Object.keys(b.mirageAlias!).every((id) => id.startsWith('jackalGuard'))).toBe(true);
+    const seen = redactHidden(picked, ['horde']).battle!;
+    expect(Object.values(seen.units).some((u) => u.status.mirage)).toBe(false);
+    // the deployment then goes on as usual, and the fight begins
+    const placed = applyAction(picked, { type: 'deployUnits', faction: 'dawn', positions: {} });
+    expect(placed.battle!.needsDeploy[0]).toBe('horde');
+    // no mirages at all is a choice too
+    expect(Object.values(applyAction(s, { type: 'pickMirages', faction: 'dawn', unitIds: [] }).battle!.units).some(isMirage)).toBe(false);
+  });
+
+  it('the pick of the mirages is checked: own supports only, no more than the palace gives, once each, only in the own deployment step', () => {
+    const s = deploying(2);
+    const pick = (st: GameState, unitIds: string[], faction: 'dawn' | 'horde' = 'dawn') => () => applyAction(st, { type: 'pickMirages', faction, unitIds });
+    expect(pick(s, ['djinnVizier'])).toThrow();
+    expect(pick(s, ['ratman'])).toThrow();
+    expect(pick(s, ['cobra', 'jackalGuard', 'lamassu'])).toThrow();
+    expect(pick(s, ['cobra', 'cobra'])).toThrow();
+    expect(pick(s, ['cobra'], 'horde')).toThrow();
+    expect(pick(deploying(0), ['cobra'])).toThrow();
+    const placed = applyAction(s, { type: 'deployUnits', faction: 'dawn', positions: {} });
+    expect(pick(placed, ['cobra'])).toThrow();
+    // a full start column: the second mirage has no cell, and the pick changes nothing
+    const full = deploying(2);
+    expect(pick(full, ['cobra', 'jackalGuard'])).toThrow(/zmieści się tylko 1/);
+    expect(pick(full, ['cobra'])).not.toThrow();
+  });
+
   it('the enemy cannot tell a mirage from its unit: same numbers, mixed-up ids, nothing in what is sent of mirages or decoys', () => {
     const s = deploying(1);
     const m = mirageOfIn(s, 'lamassu') ?? mirageOfIn(s, 'cobra');

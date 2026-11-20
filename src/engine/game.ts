@@ -45,6 +45,7 @@ import {
   siegeObstacles,
   checkBattleEnd,
   deployUnits,
+  pickMirages,
   consumeItem,
   endActivation,
   makeBattleUnit,
@@ -1542,6 +1543,10 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
     case 'deployUnits':
       if (!state.battle) throw new Error('Nie trwa żadna bitwa.');
       deployUnits(state, action.faction, action.positions, action.traps);
+      break;
+    case 'pickMirages':
+      if (!state.battle) throw new Error('Nie trwa żadna bitwa.');
+      pickMirages(state, action.faction, action.unitIds);
       break;
     case 'pickSpells':
       pickSpells(state, action.faction, action.spells);

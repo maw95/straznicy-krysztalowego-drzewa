@@ -357,6 +357,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
 
   function clickUnit(u: BattleUnit): void {
     if (deploySide) {
+      if (deploy.mirageMode) return u.side === deploySide ? deploy.mirageAt(u.id) : undefined;
       if (u.side === deploySide) setPicked(picked === u.id ? null : u.id);
       else onShowCard(u.defId);
       return;
@@ -405,6 +406,11 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
 
   function clickCell(k: HexKey): void {
     if (deploySide && deploy.trapMode) return deploy.trapAt(k);
+    if (deploySide && deploy.mirageMode) {
+      const own = Object.values(b.units).find((u) => u.side === deploySide && (posOf(u) === k || u.pos === k || u.tail === k));
+      if (own) deploy.mirageAt(own.id);
+      return;
+    }
     if (deploySide) {
       const own = Object.values(b.units).find((u) => u.side === deploySide && posOf(u) === k);
       if (own && !picked) setPicked(own.id);
@@ -544,7 +550,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       <ActivationBar
         state={state}
         active={active}
-        hint={(spellNow ? `Czar ${SPELLS[spellNow].name}: wskaż ${SPELLS[spellNow].target === 'enemy' ? 'wroga' : 'sojusznika'} · ` : '') + (catapult.length ? 'Katapulta gotowa: wskaż mur, bramę lub wieżyczkę · ' : '') + activationHint(b, { deploySide, trapMode: deploy.trapMode, picked, myTurn, moves: moves.size, targets: targets.length, sideName: (t) => sideName(state, t) })}
+        hint={(spellNow ? `Czar ${SPELLS[spellNow].name}: wskaż ${SPELLS[spellNow].target === 'enemy' ? 'wroga' : 'sojusznika'} · ` : '') + (catapult.length ? 'Katapulta gotowa: wskaż mur, bramę lub wieżyczkę · ' : '') + activationHint(b, { deploySide, trapMode: deploy.trapMode, mirageMode: deploy.mirageMode, mirageSlots: deploy.mirageSlots, picked, myTurn, moves: moves.size, targets: targets.length, sideName: (t) => sideName(state, t) })}
         myTurn={myTurn}
         deploySide={deploySide}
         placing={deploy.placing}
@@ -552,6 +558,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
         traps={deploy.traps}
         trapMode={deploy.trapMode}
         setTrapMode={deploy.setTrapMode}
+        mirage={deploy.mirageSlots ? { slots: deploy.mirageSlots, choice: deploy.mirageChoice, mode: deploy.mirageMode, setMode: deploy.setMirageMode, changed: deploy.mirageChanged } : undefined}
         attackAbility={attackAbility}
         useAbility={useAbility}
         setUseAbility={setUseAbility}
