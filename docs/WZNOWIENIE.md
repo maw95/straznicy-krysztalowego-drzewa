@@ -10,6 +10,22 @@ Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowe
   Wersja planszowa nietknięta (zostaje Kooperacja z automatem; silnik zachowuje `mode: 'coop'` tylko dla niej).
 - Opis i plan: `docs/BACKLOG.md` punkt 51b.
 
+## Kolejność zadań (ustalona z autorem 20.11, żeby zużyć jak najmniej tokenów; autor może stracić limit w każdej chwili)
+1. **Dokończyć przestrojenie poziomów** (zadanie 1 niżej): czekać na `=== done`, `tuneMerge`, `make check`, commit.
+2. **Scalić do `master` tylko Wolne Kompanie** z worktree: `git merge ea352d6` (to commit końcowy G1 Kompanii; gałąź `g1-four-factions` ma wyżej commity WIP Piasków,
+   których NIE scalać). Dopiero po zakończeniu przestrajania (symulacje czytają `src/`).
+3. **Automatyczny stroiciel frakcji** (`scripts/sim/tuneFactions.ts`, do napisania): zachłanne przeszukiwanie małych, cyfrowych poprawek na frakcję
+   (hp, attack, speed osobno dla bohaterów i pomocników, tylko wersja cyfrowa, np. tabela `FACTION_DIGITAL_BONUS` uogólniająca `HORDE_DIGITAL_BONUS`)
+   pod tabelę „Kto z kim”; liczy tylko pary zmienianej frakcji, zapisuje wynik do pliku i raportuje podsumowanie (naruszenia, średnie). Cel: mało tokenów.
+4. **G2 dla frakcji, które mają G1**: Przymierze, Horda, Stada, Umarli, Klany, Szron, Kompanie (7; 21 par) automatycznym stroicielem + przegląd wyniku.
+5. **Poprawki Kompanii z odpowiedzi autora (20.11):** (a) Paserka I: dodać sprzedaż artefaktów z plecaka (pełna cena); (b) Żbiczka Bajdurka zostaje jak jest (łowca walczący
+   wręcz); (c) zrobić zasłonę „przekaż urządzenie” w hot-seat przy układaniu pułapek (+ przycisk „Podejrzyj”); (d) backend: `visibleTo` wywołuje `redactHidden`
+   (repo `../straznicy-krysztalowego-drzewa-backend`, jednolinijkowo; commit lokalny, bez wdrożenia). Sprawdzić interfejs pułapek w przeglądarce (agent tego nie zdążył).
+6. **G1 pozostałych frakcji**, po jednej, osobnymi agentami w worktree `skd-g1`: Piaski (zaczęte: commit WIP `3985491`, same dane; kontynuować od niego), Rój, Przypływy.
+7. **Ponowne G2** (stroiciel, niskie koszty) po każdej nowej frakcji i na końcu dla wszystkich 10.
+
+## Szczegóły zadań
+
 ## Zadanie 1: przestrojenie poziomów po wzmocnieniu Hordy (liczy się w tle)
 Po +1/+1 Hordy cele spadły poza pasma (Łatwy 65–85, Normalny 45–65, Trudny 30–45 % wygranych Przymierza). Przetrwanie w PvP nie miało strojenia.
 - Uruchomione: `scripts/sim/retune-all.sh` (≈150 przebiegów po ok. 1,5 min). Log: `.tmp/sim/retune-all.log` (linia `=== done` na końcu).
