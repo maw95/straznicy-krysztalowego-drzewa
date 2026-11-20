@@ -250,7 +250,7 @@ function walkSearch(state: GameState, u: BattleUnit, leaping = canLeap(state, u)
 /** Skok po Turniach: the unit walks through obstacles and units (it cannot stop on them), except over the walls of a siege. */
 export const canLeap = (state: GameState, u: BattleUnit): boolean => abilityOf(u) === 'mountainLeap' && abilityActive(state) && !state.battle?.siege && !isLarge(state, u);
 
-/** Skok po Turniach (Jeździec na Koźle): once per battle one move goes over units and obstacles; the leap is spent only when the move really needs it. */
+/** Skok po Turniach (Kozioł Taranowy): once per battle one move goes over units and obstacles; the leap is spent only when the move really needs it. */
 export const goatLeapReady = (state: GameState, u: BattleUnit): boolean => abilityOf(u) === 'goatLeap' && abilityActive(state) && !u.status.leapUsed && !state.battle?.siege && !isLarge(state, u);
 
 /** Cells the unit can end its move on, with the number of steps used. */
