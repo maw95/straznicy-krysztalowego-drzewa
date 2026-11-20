@@ -6,8 +6,8 @@ Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowe
 
 ## Nowe zdolności jednostek (20.11, gałąź `new-abilities`, worktree `skd-abilities`, NIE scalona do `master`)
 Wprowadzone zdolności zatwierdzone przez autora (karty `docs/frakcje/*.md`, lista ikon w `docs/BACKLOG.md` 2a): Kozioł Taranowy = Taran (`ramBlow`, +2 A po ruchu o 2+ pola i ogłuszenie),
-Mosiężny Pająk = Ostrzał z Miejsca (ta sama zasada), Orzeł Stepowy Łowca = Strzał nad Przeszkodami (`overShot`, `shootsOver` w `hasLineOfSight`), Dziad Mróz = Uścisk Mrozu (`beardChill`, chód).
-Dowódcy Stad: nazwy własne „Łowca Wiatru” i „Płanetnik” (`realm.ts`); specjalność „Mistrz Oszczepu” bez zmian (pytanie do autora). Beduin Nomada (Rzut Sztyletem) i Albatros tylko na kartach (Piaski, Przypływy bez kodu).
+Mosiężny Pająk = Ostrzał z Miejsca (ta sama zasada), Orzeł Stepowy Łowca = Nurkowanie (`huntDive`, wręcz i lot; `overShot`/`shootsOver` usunięte), Dziad Mróz = Uścisk Mrozu (`beardChill`, chód).
+Dowódcy Stad: nazwy własne „Łowca Wiatru” i „Płanetnik” (`realm.ts`); specjalność „Szpon z Góry” (`airborne` w `heroTypes.ts`). Beduin Nomada (Rzut Sztyletem) i Albatros tylko na kartach (Piaski, Przypływy bez kodu).
 `golden.test.ts` zielony bez zmiany snapshotu; liczby (+2 A, 2 pola, 2 szrony, zasięg 2) do dostrojenia na G2.
 
 ## Co jest zrobione (commity w `master`)
@@ -100,3 +100,5 @@ Po +1/+1 Hordy cele spadły poza pasma (Łatwy 65–85, Normalny 45–65, Trudny
 
 ## Co robi druga sesja autora
 G3 (próbka jednostki w nowym stylu) dla ośmiu nowych frakcji, w osobnym worktree. Może dotknąć `assets.json`, `public/assets`, `docs/BACKLOG.md`; przy scaleniu uważaj na te pliki.
+
+- **Zrobione 20.11 (gałąź `eagle-dive`, worktree `skd-eagle`):** Orzeł Stepowy Łowca walczy wręcz, lata, zdolność Nurkowanie (`huntDive`, +2 A po ruchu o 2+ pola), specjalność Szpon z Góry (+1 A dla niego i jednostek `fly`), Nosorożec Bojowy: Stratowanie (id `ram` bez zmian), usunięty `overShot`/`shootsOver`. Golden bez zmian. Do zrobienia po scaleniu: G2 (`--report`) i nowa ikona `huntDive`.

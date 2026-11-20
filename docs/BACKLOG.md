@@ -148,7 +148,7 @@ Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.t
 - animacje 2D (`public/assets/jednostki/<folder>`, zestaw jak w `PRZEPIS_JEDNOSTKI.md`) dla tych samych 19; do czasu ich powstania w bitwie są żetony z portretami;
 - herb `cards/crests/clans.png`: młot na kowadle w kole z run;
 - ramki kart `cards/frames/clans_hero.png`, `clans_support.png` (dziś pożyczone z Przymierza w `UnitCard.tsx`);
-- ikony 12 zdolności (`cards/abilities/<id>.png` i `<id>_inner.png`): `shieldOath`, `stoneRune`, `bulwark`, `standShot`, `temper`, `bronzeQuills`, `ramBlow` (Taran; dawniej goatLeap), `giantBane`, `misleadLight`, `stunBlow`, `cannonFire`, `fortify` (dziś pożyczone w `ABILITY_ART` w `common.tsx`);
+- ikony 12 zdolności (`cards/abilities/<id>.png` i `<id>_inner.png`): `shieldOath`, `stoneRune`, `bulwark`, `standShot`, `temper`, `bronzeQuills`, `ramBlow` (Taran; dawniej goatLeap), `huntDive` (Nurkowanie Orła Stepowego Łowcy; zastępuje Strzał nad Przeszkodami, dziś pożyczona ikona `dive`), `ram` (Stratowanie Nosorożca; dawniej Taran), `giantBane`, `misleadLight`, `stunBlow`, `cannonFire`, `fortify` (dziś pożyczone w `ABILITY_ART` w `common.tsx`);
 - ikony run (`+1 A`, `+1 Ż`, pancerz 1) w oknie Runicznej Kuźni (dziś tekst na przyciskach);
 - arena cyfrowa `arena/cyfrowa/clans.webp` (górska przełęcz z posągami przodków i kamiennym mostem) i jej przeszkody: posągi, głazy, skalne mury (dziś obrazy Przymierza w innym układzie, `WIDE_OBSTACLES.clans`); obraz muru Fortyfikacji (dziś `wall.webp`);
 - kafle ziemi Klanów (skały, sztolnie, kamienne mosty), zakryty rewers `tiles/back_clans.jpg`, baza i skarbiec (dziś kafle Przymierza w `clans.ts`, pole `terrain`);

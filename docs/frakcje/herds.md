@@ -23,7 +23,7 @@ i zostaną dostrojone symulacjami przy bramce G2. Do decyzji autora: sekcja „P
 | `windAntelope` | Pędziwiatr, Wódz Antylop (łowca) | 7 | 4 | 7 | chód | wręcz | **W Biegu:** raz na bitwę po ataku dokańcza ruch pozostałymi polami |
 
 Specjalności (poziom 5): Wielki Tur: pomocnicy +1 Ż; Satyr Rogogłos: czary +1; Pędziwiatr: +1 ruchu na mapie.
-Dowódcy z karczmy: Turzy Zagończyk (wojownik), Orzeł Stepowy Łowca (łowca, dyst.), Płanetnik (mędrzec). Czwarty bohater (7–8 graczy): Baran Gromowładny (wojownik, odepchnięcie po każdym ataku).
+Dowódcy z karczmy: Turzy Zagończyk (wojownik), Orzeł Stepowy Łowca (łowca, wręcz, lot), Płanetnik (mędrzec). Czwarty bohater (7–8 graczy): Baran Gromowładny (wojownik, odepchnięcie po każdym ataku).
 
 ## Jednostki rekrutowane w osadzie (ceny jak w grze: poziomy 1–5 = 2/3/5/8/12 zł, legenda 20 zł + 3 Pyły; siedlisko wg poziomu)
 | Poziom | Id | Nazwa | Ż | A | S | Ruch | Zasięg | Zdolność |
@@ -37,7 +37,7 @@ Dowódcy z karczmy: Turzy Zagończyk (wojownik), Orzeł Stepowy Łowca (łowca, 
 | 3B | `arkar` | Arkar | 7 | 3 | 5 | chód | wręcz | Przebicie: cios trafia cel i jednostkę za nim |
 | 4A | `steppeLamignat` | Łamignat Stepowy (2 pola) | 9 | 4 | 7 | lot | wręcz | Lot na Strzelców: +2 A na cel odepchnięty w tej rundzie; jedyny lotnik Stada |
 | 4B | `drumElephant` | Słoń z Bębnem (2 pola; zamiast Bawołu, decyzja 19.11) | 12 | 4 | 4 | chód | wręcz | Bęben Wędrówki: sojusznicy w promieniu 2 mają +1 S |
-| 5A | `warRhino` | Nosorożec Bojowy (2 pola) | 14 | 5 | 5 | chód | wręcz | Taran: po ≥3 polach odepchnięcie o 2, zderzenie +2; podwójne obrażenia bramom |
+| 5A | `warRhino` | Nosorożec Bojowy (2 pola) | 14 | 5 | 5 | chód | wręcz | Stratowanie (dawniej Taran): po ≥3 polach odepchnięcie o 2, zderzenie +2; podwójne obrażenia bramom |
 | 5B | `bullMoose` | Łoś Rogacz (2 pola) | 15 | 5 | 3 | chód | wręcz | Rykowisko: raz na bitwę wyzywa wroga w zasięgu 3; ten w swojej następnej aktywacji może atakować tylko Łosia |
 | 6 | `indrik` | Indrik, Pan Zwierząt (2 pola) | 20 | 7 | 4 | chód | wręcz | Ziemia Drży: raz na bitwę mali wrogowie w promieniu 2 odepchnięci o 1; sam nie do odepchnięcia |
 
@@ -99,11 +99,11 @@ Odpowiedzi na „Pytania”: 1) satyrowie, tury i faun zostają; 2) A/B jak w Pr
 - **Przebicie (Arkar):** trafia też wroga stojącego tuż za celem w jednej linii (sojusznika nie rani, inaczej niż Oddech Smoka).
 - **Rykowisko (Łoś):** wzywany wróg w swojej następnej aktywacji może atakować tylko Łosia (jeśli nie sięga, nie atakuje wcale i może tylko iść); znika po jego aktywacji.
 - **Bęben Wędrówki (Słoń):** aura +1 S liczona na początku rundy i aktywacji (nie sumuje się, nie dotyczy samego Słonia).
-- **Taran (Nosorożec):** „podwójne obrażenia bramom” wykonane jako: gdy w armii atakującego żyje Nosorożec, brama oblężonej osady pęka od jednego trafienia katapulty (zwykle dwa).
+- **Stratowanie (Nosorożec, dawniej Taran; Kozioł Taranowy zachowuje Taran):** „podwójne obrażenia bramom” wykonane jako: gdy w armii atakującego żyje Nosorożec, brama oblężonej osady pęka od jednego trafienia katapulty (zwykle dwa).
 - **Kamień Tętentu:** poziomy I–IV jak na karcie; działa dla każdej jednostki Stada w walce wręcz (poza własnymi odepchnięciami jednostek), a zderzenie poziomu II dodaje 1 obrażenie każdemu zderzeniu Stada (też Byczemu Łbowi i Taranowi).
 - **Wielkie Pastwiska:** poziom I obniża o 1 zł ceny pomocników poziomów 1–3, poziom II poziomów 1–5 (legenda bez zniżki).
 - **Ostoja Wędrówek:** nowa akcja `kingdomRefuge` (cel: inna własna osada z Ostoją, raz na rundę na bohatera); przycisk w oknie osady (kliknięcie budynku Ostoja Wędrówek: lista własnych osad z Ostoją, do których można się przenieść) dodany 19.11 przy Klanach; sprawdzony w przeglądarce tylko do ekranu bez celu (jedna osada na starcie), sama akcja ma test w `tests/herds.test.ts`.
 - **Ziemia (mapa):** zastępczo ziemia Stada wygląda jak łąki Przymierza (te same kafle, baza, skarbiec, ściana „Przepaść”), talia kafli: łąka, jałowa równina, wzgórza, rzeka, most, góry, przepaść. Arena: zastępcza (obrazy Przymierza, inne ułożenie, nowe tło `arena/cyfrowa/herds.webp`).
-- **Dowódcy z karczmy:** Turzy Zagończyk (Kark Tura jak Twardogłowy), Orzeł Stepowy Łowca (nazwa własna dowódcy: Łowca Wiatru; zdolność Strzał nad Przeszkodami: jego strzały, tylko jego, nie są blokowane przez przeszkody terenu ani jednostki na linii strzału, `shootsOver` w `hasLineOfSight`; zastępuje dawny Oszczep w Kolano; specjalność „Mistrz Oszczepu” bez zmian, do rozważenia przez autora), Płanetnik (nazwa własna: Płanetnik; Pieśń Stepu jak Skoczny Rytm). Czwarty bohater: Baran Gromowładny (Byczy Łeb).
+- **Dowódcy z karczmy:** Turzy Zagończyk (Kark Tura jak Twardogłowy), Orzeł Stepowy Łowca (nazwa własna dowódcy: Łowca Wiatru; walczy wręcz i lata (decyzja 20.11); zdolność Nurkowanie (`huntDive`): lot nad przeszkodami i jednostkami, a cios po ruchu o co najmniej 2 pola w tej aktywacji zadaje +2 A (`ABILITY.huntDiveMinMove`, `huntDiveBonus`; wzór: Szarża Światła); zastępuje dawny Strzał nad Przeszkodami; specjalność „Szpon z Góry” (dawniej Mistrz Oszczepu): +1 A dla niego i dla jednostek powietrznych Stad, np. Łamignata, pole `airborne` w `heroTypes.ts`), Płanetnik (nazwa własna: Płanetnik; Pieśń Stepu jak Skoczny Rytm). Czwarty bohater: Baran Gromowładny (Byczy Łeb).
 - **Bot:** wybiera cele, których odepchnięcie kończy się zderzeniem (premia za obrażenia zderzenia), lubi strzelców (jednostki wręcz Stada) i bieg o ≥3 pola; używa Rogu, Rytmu, Rykowiska i Ziemi Drży od razu; na mapie gra jak Horda (podbój), Ostoją przerzuca bohatera bliżej Drzewa. NIE zrobione: ustawianie jednostek daleko od wroga pod rozpęd.
 - **Cele i tryby:** nowe frakcje tylko w rywalizacji cyfrowej w celach Kontrola, Podbój, Relikt; koop, arena i gra online ich odrzucają (czytelny błąd; online nie oferuje frakcji). Backlog 51a.

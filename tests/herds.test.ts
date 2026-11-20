@@ -2,8 +2,8 @@
 // then whole games of the Herds against Przymierze and Horda.
 import { describe, expect, it } from 'vitest';
 import { applyAction, createGame } from '../src/engine/game';
-import { ABILITY, FACTION_HEROES } from '../src/engine/data';
-import { arenaCell, attackDamage, attackTargets, canLeap, predictDamage, reachableCells, refreshAuras, unitSpeed } from '../src/engine/battle';
+import { ABILITY, FACTION_HEROES, UNITS } from '../src/engine/data';
+import { arenaCell, attackDamage, attackTargets, canLeap, predictDamage, reachableCells, refreshAuras, scaleOf, unitSpeed } from '../src/engine/battle';
 import { assignSlots, teamsOf } from '../src/engine/teams';
 import { canBeMoved, pushWithCollision, pushedThisRound } from '../src/engine/primitives';
 import { refugeTargets } from '../src/engine/kingdom';
@@ -90,7 +90,7 @@ describe('abilities of the units', () => {
     expect(before - at(w, 'ancientBear').hp).toBe(UNITSA('youngAurochs') + ABILITY.collisionDamage);
   });
 
-  it('Taran (Nosorożec Bojowy): after a run of 3 the target is pushed 2 and the collision hurts for 2', () => {
+  it('Stratowanie (Nosorożec Bojowy): after a run of 3 the target is pushed 2 and the collision hurts for 2', () => {
     const s = fight([['warRhino', 'dawn', 4, 8], ['ancientBear', 'horde', 5, 9]]);
     s.battle!.activation = { ...activation('warRhino'), moved: true, movedDistance: 3 };
     const t = at(s, 'ancientBear');
@@ -145,17 +145,17 @@ describe('abilities of the units', () => {
     expect(at(a, 'elfDruid').hp).toBe(at(a, 'elfDruid').maxHp);
   });
 
-  it('Strzał nad Przeszkodami (Orzeł Stepowy Łowca): neither terrain nor units block his arrows, other shooters stay blocked', () => {
-    const spots: U[] = [['eagleHunter', 'dawn', 2, 6], ['nymph', 'horde', 8, 12]];
-    const wall = { obstacles: [arenaCell(5, 9)] };
-    const eagle = fight(spots, wall);
-    expect(attackTargets(eagle, at(eagle, 'eagleHunter')).map((t) => t.id)).toEqual(['nymph']);
-    const plain = fight([['steppeArcher', 'dawn', 2, 6], ['nymph', 'horde', 8, 12]], wall);
-    at(plain, 'steppeArcher').defId = 'dryadArcher';
-    expect(attackTargets(plain, at(plain, 'steppeArcher')).length).toBe(0);
-    // units on the line count only in the experimental rule, and still do not stop the eagle
-    const crowd = fight([...spots, ['goblinShaman', 'horde', 5, 9]], {}, { unitsBlockSight: true });
-    expect(attackTargets(crowd, at(crowd, 'eagleHunter')).map((t) => t.id).sort()).toEqual(['goblinShaman', 'nymph']);
+  it('Nurkowanie (Orzeł Stepowy Łowca): flies over obstacles and units, +2 A after a move of 2+ cells', () => {
+    const s = fight([['eagleHunter', 'dawn', 2, 6], ['nymph', 'horde', 4, 8]]);
+    const hero = UNITS.eagleHunter;
+    expect(hero.attackType).toBe('melee');
+    expect(hero.movement).toBe('fly');
+    const base = attackDamage(s, at(s, 'eagleHunter'), at(s, 'nymph'), false, 0);
+    expect(attackDamage(s, at(s, 'eagleHunter'), at(s, 'nymph'), false, 1)).toBe(base);
+    expect(attackDamage(s, at(s, 'eagleHunter'), at(s, 'nymph'), false, 2)).toBe(base + ABILITY.huntDiveBonus * scaleOf(s));
+    const wall = fight([['eagleHunter', 'dawn', 2, 6], ['goblinShaman', 'horde', 3, 7]], { obstacles: [arenaCell(3, 5)] });
+    const reach = reachableCells(wall, at(wall, 'eagleHunter'));
+    expect(reach.has(arenaCell(4, 8))).toBe(true);
   });
 
   it('Skok po Turniach (Kulan) walks through obstacles and units, and never ends on them', () => {

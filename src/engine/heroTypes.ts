@@ -47,6 +47,8 @@ export interface Specialty {
   supportHp?: number;
   /** Atak of the shooters that fight under the hero. */
   marksman?: number;
+  /** Atak of the airborne (movement 'fly') units that fight under the hero, and of the hero when it flies. */
+  airborne?: number;
   /** Experience on top for every won battle. */
   xp?: number;
   /** Gold for the faction for every won battle. */
@@ -75,7 +77,7 @@ export const SPECIALTIES: Record<string, Specialty> = {
   windAntelope: { name: 'Wędrowiec Stepu', text: '+1 punkt ruchu na mapie.', move: 1 },
   thunderRam: { name: 'Grzmot Stada', text: '+1 PD za każdą wygraną walkę.', xp: 1 },
   aurochsScout: { name: 'Zagończyk', text: 'Pomocnicy Zagończyka mają +1 Ż w bitwie.', supportHp: 1 },
-  eagleHunter: { name: 'Mistrz Oszczepu', text: 'Strzelcy Orła (i on sam) mają +1 A w bitwie.', marksman: 1 },
+  eagleHunter: { name: 'Szpon z Góry', text: 'Jednostki powietrzne Orła (i on sam) mają +1 A w bitwie.', airborne: 1 },
   barrowKing: { name: 'Pan Warty', text: 'Pomocnicy Króla mają +1 Ż w bitwie.', supportHp: 1 },
   lanternWraith: { name: 'Wieczny Płomyk', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
   headlessKnight: { name: 'Nocny Gościniec', text: '+1 punkt ruchu na mapie.', move: 1 },

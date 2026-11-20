@@ -12,7 +12,7 @@ export const artId = (unitId: string) => unitId;
 /** Abilities that have no icon of their own yet borrow one (docs/BACKLOG.md, section 2a). */
 const ABILITY_ART: Record<string, string> = {
   // Dzikie Stado (placeholders until the faction's own icons: docs/BACKLOG.md 2a).
-  headbutt: 'boulder', rhythm: 'giftOfLife', mountainLeap: 'airDash', momentum: 'lightCharge', unmoved: 'bloodRage', pierce: 'fireBreath', hippoStrike: 'dive',
+  headbutt: 'boulder', rhythm: 'giftOfLife', mountainLeap: 'airDash', momentum: 'lightCharge', unmoved: 'bloodRage', pierce: 'fireBreath', hippoStrike: 'dive', huntDive: 'dive',
   drumBeat: 'sunburst', ram: 'headlong', roar: 'curse', tremor: 'runeGolem', ancestralHorns: 'boulder', wanderHorn: 'sunburst', runOn: 'airDash',
   // Królestwo Umarłych (placeholders as well: docs/BACKLOG.md 2a).
   barrowCall: 'giftOfLife', dimLight: 'curse', spectralCharge: 'backstab', bonesReturn: 'rebirth', incorporeal: 'hardHead', armorPierce: 'fireBreath', dread: 'curse', hollow: 'hardHead',

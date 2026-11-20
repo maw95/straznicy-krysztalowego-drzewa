@@ -22,7 +22,7 @@ export type AbilityId =
   | 'guardian' // Opiekun Gaju (reaction)
   | 'duckFury' // Kacza Furia (passive; easter egg hero)
   | 'entanglingRoots' // Splątane Korzenie
-  | 'overShot' // Strzał nad Przeszkodami (Orzeł Stepowy Łowca, passive): his arrows are blocked by neither terrain nor units on the line of fire
+  | 'huntDive' // Nurkowanie (Orzeł Stepowy Łowca, passive): flies over everything; after a move of 2+ cells the blow hits harder
   | 'giftOfLife' // Dar Życia
   | 'airDash' // Powietrzny Zryw
   | 'fireBreath' // Ognisty Oddech
@@ -68,7 +68,7 @@ export type AbilityId =
   | 'pierce' // Przebicie (Arkar, passive): the blow also hits the enemy behind the target
   | 'hippoStrike' // Lot na Strzelców (Łamignat Stepowy, passive): +A against a target pushed this round
   | 'drumBeat' // Bęben Wędrówki (Słoń z Bębnem, passive aura): allies nearby have +S
-  | 'ram' // Taran (Nosorożec Bojowy, passive): after a run pushes the target 2 cells and the collision hurts more
+  | 'ram' // Stratowanie (Nosorożec Bojowy, passive): after a run pushes the target 2 cells and the collision hurts more
   | 'roar' // Rykowisko (Łoś Rogacz, free action, once): an enemy may attack only the moose in its next activation
   | 'tremor' // Ziemia Drży (Indrik, free action, once): small enemies nearby are pushed 1 cell; cannot be pushed
   | 'ancestralHorns' // Rogi Przodków (Wielki Tur, attack ability, once): the blow pushes the target 2 cells
@@ -168,6 +168,9 @@ export const ABILITY = {
   sunburstSelfBonus: 3,
   lightChargeBonus: 2,
   lightChargeMinMove: 4,
+  /** Nurkowanie (Orzeł Stepowy Łowca): the move (cells in this activation) that charges the blow, and its extra A (small scale). */
+  huntDiveMinMove: 2,
+  huntDiveBonus: 2,
   rootsSlow: 2,
   giftOfLifeHeal: 3,
   airDashRange: 3,
@@ -522,7 +525,7 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'steppeArcher', name: 'Łucznik Stepowy', side: 'herds', kind: 'support', hp: 6, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Strzała w Kolano', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
     u({ id: 'forestBison', name: 'Żubr Puszczański', side: 'herds', kind: 'support', hp: 10, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'unmoved', abilityName: 'Niewzruszony', abilityText: `Stała: pancerz (−${ABILITY.unmovedArmor} obrażeń z każdego ciosu); nie da się go odepchnąć.` }),
     u({ id: 'steppeLamignat', name: 'Łamignat Stepowy', side: 'herds', kind: 'support', size: 2, hp: 10, attack: 4, speed: 7, movement: 'fly', attackType: 'melee', ability: 'hippoStrike', abilityName: 'Lot na Strzelców', abilityText: `Stała: +${ABILITY.hippoBonus} A przeciw celowi odepchniętemu w tej samej rundzie.` }),
-    u({ id: 'warRhino', name: 'Nosorożec Bojowy', side: 'herds', kind: 'support', size: 2, hp: 15, attack: 5, speed: 5, movement: 'walk', attackType: 'melee', ability: 'ram', abilityName: 'Taran', abilityText: `Stała: po biegu o co najmniej ${ABILITY.ramMinMove} pola cios odpycha cel o ${ABILITY.ramPush} pola, a zderzenie zadaje ${ABILITY.ramCollisionDamage} obrażenia. Oblężona brama pęka od jednego trafienia katapulty.` }),
+    u({ id: 'warRhino', name: 'Nosorożec Bojowy', side: 'herds', kind: 'support', size: 2, hp: 15, attack: 5, speed: 5, movement: 'walk', attackType: 'melee', ability: 'ram', abilityName: 'Stratowanie', abilityText: `Stała: po biegu o co najmniej ${ABILITY.ramMinMove} pola cios odpycha cel o ${ABILITY.ramPush} pola, a zderzenie zadaje ${ABILITY.ramCollisionDamage} obrażenia. Oblężona brama pęka od jednego trafienia katapulty.` }),
     // Level 6 alternatives of the Herds (tiers 2-5).
     u({ id: 'muskOx', name: 'Wół Piżmowy', side: 'herds', kind: 'support', hp: 7, attack: 3, speed: 6, movement: 'walk', attackType: 'melee', ability: 'momentum', abilityName: 'Rozpęd', abilityText: `Stała: +${ABILITY.momentumBonus} A do ataku po biegu o co najmniej ${ABILITY.momentumMinMove} pola.` }),
     u({ id: 'arkar', name: 'Arkar', side: 'herds', kind: 'support', hp: 8, attack: 3, speed: 5, movement: 'walk', attackType: 'melee', ability: 'pierce', abilityName: 'Przebicie', abilityText: 'Stała: cios trafia cel i wroga stojącego tuż za nim.' }),
@@ -531,7 +534,7 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'indrik', name: 'Indrik, Pan Zwierząt', side: 'herds', kind: 'support', size: 2, hp: 21, attack: 7, speed: 4, movement: 'walk', attackType: 'melee', ability: 'tremor', abilityName: 'Ziemia Drży', abilityText: `Raz na bitwę: mali wrogowie w promieniu ${ABILITY.tremorRadius} pól zostają odepchnięci o 1 pole, zderzenia ranią. Indrika nie da się odepchnąć.` }),
     // Commanders of the Herds.
     u({ id: 'aurochsScout', name: 'Turzy Zagończyk', side: 'herds', kind: 'hero', hp: 9, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Kark Tura', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
-    u({ id: 'eagleHunter', name: 'Orzeł Stepowy Łowca', side: 'herds', kind: 'hero', hp: 6, attack: 3, speed: 5, movement: 'walk', attackType: 'ranged', ability: 'overShot', abilityName: 'Strzał nad Przeszkodami', abilityText: 'Stała: jego strzały nie są blokowane przez przeszkody terenu ani jednostki na linii strzału (strzela z góry).' }),
+    u({ id: 'eagleHunter', name: 'Orzeł Stepowy Łowca', side: 'herds', kind: 'hero', hp: 6, attack: 3, speed: 5, movement: 'fly', attackType: 'melee', ability: 'huntDive', abilityName: 'Nurkowanie', abilityText: `Stała: lata nad przeszkodami i jednostkami. Jeśli w tej aktywacji ruszył się o co najmniej ${ABILITY.huntDiveMinMove} pola, jego cios zadaje +${ABILITY.huntDiveBonus} A.` }),
     u({ id: 'planetnik', name: 'Płanetnik', side: 'herds', kind: 'hero', hp: 6, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'rhythm', abilityName: 'Pieśń Stepu', abilityText: `Raz na bitwę: sojusznik ma +${ABILITY.rhythmHaste} S w swojej następnej aktywacji.` }),
     // Królestwo Umarłych (`undead`, docs/frakcje/undead.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero.
     u({ id: 'barrowKing', name: 'Król Kurhanu', side: 'undead', kind: 'hero', hp: 10, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'barrowCall', abilityName: 'Wezwanie z Kurhanu', abilityText: 'Raz na bitwę: poległy pomocnik wstaje na sąsiednim polu z połową Ż.' }),

@@ -230,6 +230,7 @@ export function applyHeroType(hero: HeroState | undefined, unit: BattleUnit): vo
   unit.hp += hp;
   unit.maxHp += hp;
   if (UNITS[unit.defId].attackType === 'ranged') unit.status.battleAttackBonus += (specialtyOf(hero)?.marksman ?? 0) * k;
+  if (UNITS[unit.defId].movement === 'fly') unit.status.battleAttackBonus += (specialtyOf(hero)?.airborne ?? 0) * k;
 }
 
 /** Szkoła strzelecka: a ranged unit of the hero gets the attack bonus. */
@@ -248,6 +249,7 @@ export function applySupportSkill(hero: HeroState | undefined, unit: BattleUnit)
   const k = unit.scale ?? 1;
   unit.status.battleAttackBonus += ((hasSkill(hero, 'mightB') ? BRANCH.mightSupportAttack : 0) + (hasSkill(hero, 'leaderB') ? BRANCH.leaderSupportAttack : 0)) * k;
   if (UNITS[unit.defId].attackType === 'ranged') unit.status.battleAttackBonus += (spec?.marksman ?? 0) * k;
+  if (UNITS[unit.defId].movement === 'fly') unit.status.battleAttackBonus += (spec?.airborne ?? 0) * k;
   addMarksman(hero, unit);
 }
 
