@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wolne Kompanie przy jednym ekranie: gdy dwie osoby grają na tym samym komputerze, układanie ukrytych Sideł jest zasłonięte ekranem „Przekaż urządzenie”, a własne Sidła na arenie widać dopiero po kliknięciu „Podejrzyj Sidła” w swojej turze.
 - Paserka Wolnych Kompanii skupuje teraz artefakty z plecaka aktywnego bohatera za pełną cenę targową (2 / 5 / 10 zł za zwykły / rzadki / legendarny), a przycisk „Sprzedaj” jest w oknie osady; dotychczasowa zniżka na rynku znika. Bot Kompanii sprzedaje zbędne artefakty.
 - Nowe portrety jednostek pierwszego poziomu ośmiu nowych frakcji (wersja robocza): Satyr Dudziarz, Zjawa Pokutnika, Krasnoludzki Tarczownik i Chochlik Szronu zastępują zastępcze plakietki, a Wiewiórka Łuczniczka, Mangusta Faraona, Purchawka i Trytoński Harpunnik czekają na frakcje, które dopiero powstają.
 - Nowe portrety legend ośmiu nowych frakcji (wersja robocza): Indrik (Dzikie Stada), Kościany Smok (Królestwo Umarłych), Kolos Kuźni (Żelazne Klany), Mamut Wiecznej Zimy (Dwór Wiecznego Szronu) w kartach i oknach w miejsce zastępczych plakietek, oraz gotowe portrety Warana Wieżowego, Czerwia Pustyni, Cesarskiej Cykady i Lewiatana dla frakcji, które dopiero powstają.

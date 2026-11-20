@@ -11,6 +11,7 @@ import { describeAction } from './hint';
 import { FACTION_NAMES, UNITS, type TeamId, type ItemKind } from '../engine/data';
 import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
 import { redactHidden } from '../engine/hidden';
+import { hideOwnTraps, trapSecrecyOn, trapVeilFor } from './trapVeil';
 import { movePath } from '../engine/battle';
 import { neighborKeys, type HexKey } from '../engine/hex';
 import { tileCost } from '../engine/map';
@@ -82,6 +83,9 @@ export function App() {
   const [showCredits, setShowCredits] = useState(false);
   /** Arena draft at one screen: the side whose cards were last uncovered. */
   const [draftRevealed, setDraftRevealed] = useState<TeamId | null>(null);
+  /** The Free Companies at a shared screen: the side that uncovered the deployment (its Sidła) and whether its own traps are peeked at now. */
+  const [trapsUncovered, setTrapsUncovered] = useState<TeamId | null>(null);
+  const [peekTraps, setPeekTraps] = useState(false);
   // The intro plays on the first launch (never in the ?steps= test games).
   const [showIntro, setShowIntro] = useState(() => !introSeen() && !isTestRun());
   // The title screen opens each visit (its START is the click that allows full screen and music).
@@ -315,7 +319,19 @@ export function App() {
   // Hidden information (the Free Companies' traps and veiled units): the screen shows what its viewers may see: online the seats of this browser, at one computer whoever acts now.
   const viewers = useMemo<TeamId[] | null>(() => (isOnline ? humans.map((p) => p.faction) : viewer ? [viewer] : null), [isOnline, viewer, humans.map((p) => p.faction).join()]);
   const battleSource = held ? held.view : game;
-  const battleShown = useMemo(() => (battleSource ? redactHidden(battleSource, viewers) : battleSource), [battleSource, viewers]) as GameState;
+  // Two people at one screen and one of them plays the Free Companies: even their own traps stay out of sight until "Podejrzyj" (the other player may be looking).
+  const trapSecrecy = trapSecrecyOn(game, humans, isOnline);
+  const battleShown = useMemo(() => {
+    if (!battleSource) return battleSource;
+    const shown = redactHidden(battleSource, viewers);
+    return trapSecrecy && !peekTraps && viewer ? hideOwnTraps(shown, viewer) : shown;
+  }, [battleSource, viewers, trapSecrecy, peekTraps, viewer]) as GameState;
+  const peekKey = game?.battle ? `${game.battle.stage}:${game.battle.round}:${game.battle.index}:${actor.kind === 'human' ? actor.faction : ''}` : '';
+  useEffect(() => { setPeekTraps(false); }, [peekKey]);
+  // The deployment of a side with traps is covered until that side says the other player is not looking.
+  const deployingSide = game?.battle?.stage === 'deploy' && actor.kind === 'human' ? game.battle.needsDeploy[0] : null;
+  const trapVeil = Boolean(game && trapSecrecy && humanTurn && actor.kind === 'human' && trapVeilFor(game, actor.faction) && trapsUncovered !== actor.faction);
+  useEffect(() => { if (!deployingSide) setTrapsUncovered(null); }, [deployingSide]);
 
   // The latest state lives in a ref so every action is applied and recorded exactly once
   // (state updater functions may run twice in React's development mode).
@@ -845,6 +861,11 @@ export function App() {
       <div style={{ flex: 1, minWidth: 0, display: 'flex' }}>
         {game?.kingdom && viewer && game.phase !== 'battle' && <GoldBox state={game} faction={viewer} />}
       </div>
+      {trapSecrecy && humanTurn && game.battle?.stage === 'fight' && viewer && (game.battle.ground ?? []).some((g) => g.hidden && g.owner === viewer) && (
+        <button className="btn plate parch btn-bar" data-peek-traps aria-pressed={peekTraps} title="Własne Sidła widać tylko w twojej turze, po kliknięciu: inni gracze niech nie patrzą" onClick={() => setPeekTraps((v) => !v)}>
+          {peekTraps ? 'Ukryj Sidła' : 'Podejrzyj Sidła'}
+        </button>
+      )}
       {humanTurn && game.players.some((p) => p.child) && (
         <button className="btn plate parch btn-bar" title="Podpowiedź: co zrobiłby komputer" onClick={showHint}>
           💡 Podpowiedź
@@ -966,6 +987,9 @@ export function App() {
 
       {needsHandoff && actor.kind === 'human' && (
         <Handoff state={game} playerId={actor.playerId} onConfirm={() => setConfirmedFaction(actor.faction)} />
+      )}
+      {trapVeil && actor.kind === 'human' && (
+        <Handoff state={game} playerId={actor.playerId} note={`Pozostali gracze, odwróćcie wzrok. Na ekranie pojawi się ustawianie ukrytych Sideł: ${FACTION_NAMES[raceOf(game, actor.faction)]}.`} onConfirm={() => setTrapsUncovered(actor.faction)} />
       )}
 
       <TreasureDialog hero={humanTurn && !held && game.phase === 'adventure' && !steps.length && !activeHero(game)?.offer ? activeHero(game) : null} onChoose={(kind) => dispatch({ type: 'chooseTreasure', kind })} />
@@ -1143,7 +1167,7 @@ function SupportSelect({ state, faction, onPick }: { state: GameState; faction: 
   );
 }
 
-function Handoff({ state, playerId, onConfirm }: { state: GameState; playerId: string; onConfirm: () => void }) {
+function Handoff({ state, playerId, note, onConfirm }: { state: GameState; playerId: string; note?: string; onConfirm: () => void }) {
   const player = state.players.find((p) => p.id === playerId)!;
   const hero = Object.values(state.heroes).find((h) => h.playerId === playerId && h.alive) ?? Object.values(state.heroes).find((h) => h.playerId === playerId)!;
   return (
@@ -1163,7 +1187,7 @@ function Handoff({ state, playerId, onConfirm }: { state: GameState; playerId: s
           <div style={{ fontSize: 18, color: 'var(--muted)' }}>Teraz tura</div>
           <div style={{ fontWeight: 800, fontSize: 28, color: '#F3D27A', textShadow: '0 2px 0 #1E1204' }}>{player.name} — {heroLabel(hero)}</div>
         </div>
-        <div style={{ fontSize: 18, lineHeight: 1.35, maxWidth: 360 }}>Pozostali gracze, odwróćcie wzrok. Na ekranie pojawią się ukryte skarby frakcji: {FACTION_NAMES[raceOf(state, player.faction)]}.</div>
+        <div style={{ fontSize: 18, lineHeight: 1.35, maxWidth: 360 }}>{note ?? `Pozostali gracze, odwróćcie wzrok. Na ekranie pojawią się ukryte skarby frakcji: ${FACTION_NAMES[raceOf(state, player.faction)]}.`}</div>
         <button className="btn prim" style={{ height: 54, padding: '0 26px', fontSize: 20, marginTop: 6 }} onClick={onConfirm}>
           Jestem {player.name} — pokaż turę
         </button>

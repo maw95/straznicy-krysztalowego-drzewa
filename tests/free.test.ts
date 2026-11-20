@@ -22,6 +22,7 @@ import {
 import { assignSlots, teamsOf } from '../src/engine/teams';
 import { canBeMoved } from '../src/engine/primitives';
 import { redactHidden } from '../src/engine/hidden';
+import { hideOwnTraps, trapSecrecyOn, trapVeilFor } from '../src/ui/trapVeil';
 import { bestLevel, collectIncome, KINGDOM } from '../src/engine/kingdom';
 import { chooseAction } from '../src/engine/ai';
 import { ARTIFACTS } from '../src/engine/sites';
@@ -242,6 +243,31 @@ describe('Sidła: going off', () => {
 });
 
 describe('Sidła: what may be seen', () => {
+  it('at a shared screen the Snares are veiled: the deployment is covered, own traps are hidden until peeked at, never online', () => {
+    const s = fight([['foxCaptain', 'dawn', 0, 8], BEAR], 1);
+    const b = s.battle!;
+    layTrap(s, 'dawn', trapZone(b, 'dawn')[0]);
+    const two = [{ faction: 'dawn' as const }, { faction: 'horde' as const }];
+    expect(trapSecrecyOn(s, two, false)).toBe(true);
+    expect(trapSecrecyOn(s, two, true)).toBe(false);
+    expect(trapSecrecyOn(s, [two[0]], false)).toBe(false);
+    expect(trapSecrecyOn(s, [{ faction: 'horde' as const }, { faction: 'horde' as const }], false)).toBe(false);
+    b.stage = 'deploy';
+    b.needsDeploy = ['dawn', 'horde'];
+    expect(trapVeilFor(s, 'dawn')).toBe(true);
+    expect(trapVeilFor(s, 'horde')).toBe(false);
+    b.needsDeploy = ['horde', 'dawn'];
+    expect(trapVeilFor(s, 'dawn')).toBe(false);
+    b.stage = 'fight';
+    expect(trapVeilFor(s, 'dawn')).toBe(false);
+    // the owner sees the trap through redactHidden, but not through the veil; the veil does not change its argument
+    const own = redactHidden(s, ['dawn']);
+    expect(own.battle!.ground).toHaveLength(1);
+    expect(hideOwnTraps(own, 'dawn').battle!.ground).toHaveLength(0);
+    expect(own.battle!.ground).toHaveLength(1);
+    expect(hideOwnTraps(own, 'horde')).toBe(own);
+  });
+
   it('redactHidden leaves the enemy\'s hidden traps out and keeps the own ones; the argument is not changed', () => {
     const s = fight([['foxCaptain', 'dawn', 0, 8], BEAR], 1);
     const [a, b] = trapZone(s.battle!, 'dawn');

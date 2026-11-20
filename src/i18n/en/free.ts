@@ -171,4 +171,8 @@ register({
   'Tego artefaktu nie ma w plecaku bohatera.': "The hero's backpack does not hold this artifact.",
   'Artefakty z plecaka skupuje Paserka.': 'The Fence buys artifacts from the backpack.',
   '{0} sprzedaje w Paserce: {1} ({2} zł).': '{0} sells at the Fence: {1} ({2} gold).',
+  'Pozostali gracze, odwróćcie wzrok. Na ekranie pojawi się ustawianie ukrytych Sideł: {0}.': 'The other players, look away. The screen will show the laying of the hidden Snares: {0}.',
+  'Podejrzyj Sidła': 'Peek at the Snares',
+  'Ukryj Sidła': 'Hide the Snares',
+  'Własne Sidła widać tylko w twojej turze, po kliknięciu: inni gracze niech nie patrzą': 'Your own Snares show only on your turn, after a click: the other players should not look',
 });
