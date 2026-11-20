@@ -19,7 +19,7 @@ Szablon: `KARTA_FRAKCJI_SZABLON.md`. Liczby Ż/A/S i koszty są przybliżone (sk
 | `snowLynx` | Ryś Śnieżny | łowca | 1 | 7 | 3 | 5 | chód | wręcz | **Ślad Zamieci** (stała): pola, przez które przebiegł, spowalniają wrogów do końca rundy |
 | `oldHailer` | Stary Gradowy (4. bohater, 7–8 graczy) | mędrzec | 1 | 5 | 2 | 3 | chód | dyst. | **Grad Głazów** (stała): strzał trafia cel i jego sąsiadów, każdy dostaje szron |
 Specjalności (poziom 5): Marzanna: czary +1 (Oddech Zimy); Jarl: pomocnicy +1 Ż (Dwór Olbrzymów); Ryś: +1 ruchu (Biegnąca z Wiatrem); Stary Gradowy: czary +1.
-Dowódcy z karczmy: Rycerz Lodowej Gwardii (`iceKnight`, wojownik, 8/4/3, Lodowa Gwardia jak Twardogłowy), Łowczyni z Gronostajem (`ermineHuntress`, łowca, 5/3/4, Strzała z Soplem), Szronowa Wiedźma (`frostWitch`, mędrzec, 5/2/3, Zimowy Lament jak Lament Płaczki).
+Dowódcy z karczmy: Rycerz Lodowej Gwardii (`iceKnight`, wojownik, 8/4/3, Lodowa Gwardia jak Twardogłowy), Tropicielka Mroźnych Puszcz (`ermineHuntress`, dawniej Łowczyni z Gronostajem, łowca, 5/3/4, Strzała z Soplem), Szronowa Wiedźma (`frostWitch`, mędrzec, 5/2/3, Zimowy Lament jak Lament Płaczki).
 
 ## Jednostki rekrutowane w osadzie (ceny: poziomy 1–5 = 2/3/5/8/12 zł, legenda 20 zł + 3 Pyły). Do rekrutacji idzie A (`tierUnits`), B (`altUnits`) tylko na poziomie 6
 | Poziom | Id | Nazwa | Rozm. | Ż | A | S | Ruch | Zasięg | Zdolność | Siedlisko |

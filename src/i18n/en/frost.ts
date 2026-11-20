@@ -6,7 +6,7 @@ register({
   'Dwór Wiecznego Szronu': 'Court of Everfrost', 'Dwór': 'the Court', 'Dworu': 'the Court', 'dłużej miał': 'held', 'Szron': 'Frost', 'Lodowy Tron Pierwotnej Iskry': 'Ice Throne of the Primal Spark',
   // heroes, commanders, the fourth hero
   'Marzanna, Pani Zimy': 'Marzanna, Lady of Winter', 'Jarl Szronu': 'Frost Jarl', 'Ryś Śnieżny': 'Snow Lynx', 'Stary Gradowy': 'Old Hailer',
-  'Rycerz Lodowej Gwardii': 'Knight of the Ice Guard', 'Łowczyni z Gronostajem': 'Huntress with an Ermine', 'Szronowa Wiedźma': 'Frost Witch',
+  'Rycerz Lodowej Gwardii': 'Knight of the Ice Guard', 'Tropicielka Mroźnych Puszcz': 'Tracker of the Frostbound Wilds', 'Szronowa Wiedźma': 'Frost Witch',
   // units
   'Chochlik Szronu': 'Frost Imp', 'Gronostaj Dworski': 'Court Ermine', 'Szronowy Paź': 'Frost Page', 'Wiedźma Zamieci': 'Blizzard Witch', 'Jak Lodowcowy': 'Glacier Yak',
   'Rycerz Lodowej Zbroi': 'Ice-Armoured Knight', 'Rusałka Szronu': 'Frost Rusalka', 'Młody Olbrzym Szronu': 'Young Frost Giant', 'Strzyga Wichru': 'Wind Strzyga',
@@ -47,7 +47,7 @@ register({
   // specialities
   'Oddech Zimy': 'Breath of Winter', 'Czary Marzanny zadają i leczą o 1 więcej.': "Marzanna's spells deal and heal 1 more.", 'Dwór Olbrzymów': 'Court of Giants', 'Pomocnicy Jarla mają +1 Ż w bitwie.': "The Jarl's supports have +1 HP in battle.",
   'Biegnąca z Wiatrem': 'Running with the Wind', 'Gradowa Chmura': 'Hail Cloud', 'Czary Starego Gradowego zadają i leczą o 1 więcej.': "Old Hailer's spells deal and heal 1 more.",
-  'Lodowa Tarcza': 'Ice Shield', 'Pomocnicy Rycerza mają +1 Ż w bitwie.': "The Knight's supports have +1 HP in battle.", 'Oko Gronostaja': "Ermine's Eye",
+  'Lodowa Tarcza': 'Ice Shield', 'Pomocnicy Rycerza mają +1 Ż w bitwie.': "The Knight's supports have +1 HP in battle.", 'Oko Tropicielki': "Tracker's Eye",
   'Strzelcy Łowczyni (i ona sama) mają +1 A w bitwie.': "The Huntress's shooters (and she herself) have +1 ATK in battle.", 'Zimowa Magia': 'Winter Magic',
   // skills
   'Siła Zimy': 'Strength of Winter', 'Futro Mrozu': 'Frost Fur', 'Zamieciowy Krok': 'Blizzard Step', 'Pani Dworu': 'Lady of the Court', 'Tropiciel Śniegów': 'Snow Tracker', 'Skarb Dworu': 'Treasure of the Court',

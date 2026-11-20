@@ -53,7 +53,7 @@ const NAMES: Record<string, string[]> = {
   mountainCrossbow: ['Kusznik Skała', 'Celnooki Durin', 'Bełt', 'Strzelec Przełęczy'],
   forgePriest: ['Kapłan Żar', 'Mistrz Miechów', 'Brat Kowadło', 'Węglarz Święty'],
   iceKnight: ['Mroźny Zbigniew', 'Rycerz Szadź', 'Lodomir', 'Biały Straż'],
-  ermineHuntress: ['Gronostajka', 'Szronisława', 'Biała Strzała', 'Zaspa'],
+  ermineHuntress: ['Szronowa Ścieżka', 'Szronisława', 'Biała Strzała', 'Zaspa'],
   frostWitch: ['Szadzianka', 'Babcia Zawieja', 'Matka Sopel', 'Ciotka Zamieć'],
   spectralArcher: ['Łuczniczka Zmierzchu', 'Cień Strzały', 'Srebrna Cięciwa', 'Dziewanna'],
   penitentMonk: ['Brat Milczek', 'Pokutnik Wawrzyn', 'Mnich Latarnik', 'Zaduszny'],

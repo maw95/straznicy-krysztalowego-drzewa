@@ -88,7 +88,7 @@ export const SPECIALTIES: Record<string, Specialty> = {
   snowLynx: { name: 'Biegnąca z Wiatrem', text: '+1 punkt ruchu na mapie.', move: 1 },
   oldHailer: { name: 'Gradowa Chmura', text: 'Czary Starego Gradowego zadają i leczą o 1 więcej.', spellPower: 1 },
   iceKnight: { name: 'Lodowa Tarcza', text: 'Pomocnicy Rycerza mają +1 Ż w bitwie.', supportHp: 1 },
-  ermineHuntress: { name: 'Oko Gronostaja', text: 'Strzelcy Łowczyni (i ona sama) mają +1 A w bitwie.', marksman: 1 },
+  ermineHuntress: { name: 'Oko Tropicielki', text: 'Strzelcy Łowczyni (i ona sama) mają +1 A w bitwie.', marksman: 1 },
   frostWitch: { name: 'Zimowa Magia', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
   clanWarrior: { name: 'Stary Wojownik', text: 'Pomocnicy Wojownika mają +1 Ż w bitwie.', supportHp: 1 },
   mountainCrossbow: { name: 'Celne Oko Gór', text: 'Strzelcy Kusznika (i on sam) mają +1 A w bitwie.', marksman: 1 },
