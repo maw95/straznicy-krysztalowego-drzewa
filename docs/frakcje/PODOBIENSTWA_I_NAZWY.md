@@ -144,3 +144,5 @@ Angielskie odpowiedniki do potwierdzenia (propozycja): Dawn Covenant, Dark Horde
 **Otwarte pytanie:** czy Tarpan Łucznik to sam tarpan (stojący na tylnych nogach z łukiem; uwaga: reszta Stad to zwykłe zwierzęta) czy łucznik jadący na tarpanie (2 pola, jeździec np. satyr, co daje 3 satyry: Rogogłos, Dudziarz i jeździec).
 **Do wprowadzenia (praca przy kodzie i kartach):** wymiany jednostek zachowują zdolności starych (np. Arkar bierze zdolność Satyra Kopijnika, Kulan Kozicy, Wampir Płaczki, Strzyga Kościanej Wróżki), więc to głównie nowe nazwy, identyfikatory,
 opisy, angielski i zastępcze grafiki; zdolności zmienią się tylko tam, gdzie zmienia się rola (Tarpan Łucznik strzela jak Faun Procarz, Albatros odpycha). Po wymianach: bot i mechaniki wg `docs/DIAGNOZA_FRAKCJI.md`, potem G2.
+
+**Rozstrzygnięte 20.11 (później):** Tarpan Łucznik = **satyr z łukiem ujeżdżający tarpana**; jednostka nazywa się **Łucznik Stepowy** (id `steppeArcher`, rozmiar 1 pole na razie), satyrów w Stadach jest więc 3 (Rogogłos, Dudziarz, Łucznik Stepowy).

@@ -6,7 +6,7 @@ export const HERDS: FactionPack = {
   name: 'Dzikie Stado',
   heroes: ['greatAurochs', 'satyrHornlord', 'windAntelope'],
   supports: ['satyrPiper', 'youngAurochs', 'kulan'],
-  tierUnits: ['tarpanArcher', 'forestBison', 'steppeLamignat', 'warRhino'],
+  tierUnits: ['steppeArcher', 'forestBison', 'steppeLamignat', 'warRhino'],
   altUnits: ['muskOx', 'arkar', 'drumElephant', 'bullMoose'],
   legend: 'indrik',
   mechanic: { name: 'Tętent', building: 'hoofStone' },

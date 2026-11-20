@@ -31,7 +31,7 @@ Dowódcy z karczmy: Turzy Zagończyk (wojownik), Orzeł Stepowy Łowca (łowca, 
 | 1 | `satyrPiper` | Satyr Dudziarz | 4 | 1 | 4 | chód | dyst. | Skoczny Rytm: raz na bitwę sojusznik +2 S |
 | 1 | `youngAurochs` | Młody Tur | 5 | 2 | 4 | chód | wręcz | Byczy Łeb: po każdym ataku odpycha cel o 1 |
 | 1 | `kulan` | Kulan Stepowy | 5 | 2 | 5 | chód | wręcz | Skok po Turniach: ruch przez przeszkody i jednostki |
-| 2A | `tarpanArcher` | Tarpan Łucznik | 5 | 2 | 4 | chód | dyst. | Strzała w Kolano: raz na bitwę trafiony −2 S |
+| 2A | `steppeArcher` | Łucznik Stepowy | 5 | 2 | 4 | chód | dyst. | Strzała w Kolano: raz na bitwę trafiony −2 S |
 | 2B | `muskOx` | Wół Piżmowy | 6 | 3 | 6 | chód | wręcz | Rozpęd: +1 A po przebiegnięciu ≥3 pól |
 | 3A | `forestBison` | Żubr Puszczański | 9 | 3 | 3 | chód | wręcz | Niewzruszony: pancerz 1, nie da się go odepchnąć |
 | 3B | `arkar` | Arkar | 7 | 3 | 5 | chód | wręcz | Przebicie: cios trafia cel i jednostkę za nim |
@@ -55,7 +55,7 @@ Paleta: płowa sierść, ochra, brąz, kość rogów, zgaszona zieleń, czerwone
 
 **Odróżnienie wyglądu (zatwierdzone przez autora 20.11.2026; wiążące przy G4):**
 - **Łamignat Stepowy kontra Gryf (neutralny strażnik, występuje w tych samych bitwach):** tułów konia (maść gniada lub myszata, grzywa, kopyta, koński ogon); z orła tylko głowa, skrzydła i przednie nogi, bez lwiego tułowia i lwiego ogona. Gdyby na małym sprite’ie nadal były zbyt podobne, rozważyć inną jednostkę lotną.
-- **Zmiany jednostek z 20.11.2026 (zatwierdzone przez autora):** Kulan Stepowy (T1, zamiast Kozicy Skalnej; stepowy dziki osioł, smukły, piaskowy, z ciemnym pasem na grzbiecie), Tarpan Łucznik (T2A, zamiast Fauna Procarza; zdolność i dystans bez zmian, **otwarte pytanie:** sam tarpan z łukiem czy łucznik na tarpanie), Wół Piżmowy (T2B, zamiast Tarpana; rola i Rozpęd starego Tarpana), Arkar (T3B, zamiast Satyra Kopijnika; wielki dziki baran z zakręconymi rogami, Przebicie), Łamignat Stepowy (T4A, zamiast Hipogryfa; 2 pola, lot, Lot na Strzelców), dowódcy: Orzeł Stepowy Łowca (zamiast Fauna Oszczepnika) i Płanetnik (zamiast Satyra Wróżbity); Turzy Zagończyk bez zmian. Zdolności i liczby starych jednostek przechodzą do nowych; balans zrobi G2. Siedliska: Łucznicze Błonia, Piżmowe Zimowisko, Pasmo Arkarów, Gniazdo na Urwisku.
+- **Zmiany jednostek z 20.11.2026 (zatwierdzone przez autora):** Kulan Stepowy (T1, zamiast Kozicy Skalnej; stepowy dziki osioł, smukły, piaskowy, z ciemnym pasem na grzbiecie), Łucznik Stepowy (T2A, **satyr z łukiem ujeżdżający tarpana**, decyzja autora 20.11; zamiast Fauna Procarza; zdolność i dystans bez zmian, **otwarte pytanie:** sam tarpan z łukiem czy łucznik na tarpanie), Wół Piżmowy (T2B, zamiast Tarpana; rola i Rozpęd starego Tarpana), Arkar (T3B, zamiast Satyra Kopijnika; wielki dziki baran z zakręconymi rogami, Przebicie), Łamignat Stepowy (T4A, zamiast Hipogryfa; 2 pola, lot, Lot na Strzelców), dowódcy: Orzeł Stepowy Łowca (zamiast Fauna Oszczepnika) i Płanetnik (zamiast Satyra Wróżbity); Turzy Zagończyk bez zmian. Zdolności i liczby starych jednostek przechodzą do nowych; balans zrobi G2. Siedliska: Łucznicze Błonia, Piżmowe Zimowisko, Pasmo Arkarów, Gniazdo na Urwisku.
 
 ## Grafika (po zatwierdzeniu)
 10 postaci × ok. 88 CU (3 bohaterów + 7 jednostek; w tabeli powyżej są 12 jednostek, bo tiery mają A/B, patrz „Pytania”), osada z 3 unikalnymi budynkami i siedliskami, arena, kafle, herb, 2–3 utwory muzyki. Szacunek i procedura: `BACKLOG.md` (sekcja 8) i `PRZEPIS_JEDNOSTKI.md`.

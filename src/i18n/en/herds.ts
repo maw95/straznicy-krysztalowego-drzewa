@@ -6,11 +6,11 @@ register({
   'Dzikie Stado': 'Wild Herd', 'Stado': 'the Herd', 'Stada': 'the Herd', 'dłużej miało': 'held', 'Tętent': 'Stampede', 'Ołtarz Rogów Pierwotnej Iskry': 'Altar of Horns of the Primal Spark',
   // units
   'Wielki Tur, Ojciec Stada': 'Great Aurochs, Father of the Herd', 'Satyr Rogogłos': 'Satyr Hornlord', 'Pędziwiatr, Wódz Antylop': 'Windrunner, Chief of the Antelopes', 'Baran Gromowładny': 'Thunder Ram',
-  'Satyr Dudziarz': 'Satyr Piper', 'Młody Tur': 'Young Aurochs', 'Kulan Stepowy': 'Steppe Kulan', 'Tarpan Łucznik': 'Tarpan Archer', 'Żubr Puszczański': 'Forest Bison', 'Łamignat Stepowy': 'Steppe Lamignat',
+  'Satyr Dudziarz': 'Satyr Piper', 'Młody Tur': 'Young Aurochs', 'Kulan Stepowy': 'Steppe Kulan', 'Łucznik Stepowy': 'Steppe Archer', 'Żubr Puszczański': 'Forest Bison', 'Łamignat Stepowy': 'Steppe Lamignat',
   'Nosorożec Bojowy': 'War Rhino', 'Wół Piżmowy': 'Musk Ox', 'Arkar': 'Arkar', 'Słoń z Bębnem': 'Drum Elephant', 'Łoś Rogacz': 'Horned Moose', 'Indrik, Pan Zwierząt': 'Indrik, Lord of Beasts',
   'Turzy Zagończyk': 'Aurochs Scout', 'Orzeł Stepowy Łowca': 'Steppe Eagle Hunter', 'Płanetnik': 'Planetnik',
   // genitives (dwelling texts)
-  'Tarpana Łucznika': 'the Tarpan Archer', 'Wołu Piżmowego': 'the Musk Ox', 'Żubra Puszczańskiego': 'the Forest Bison', 'Arkara': 'the Arkar', 'Łamignata Stepowego': 'the Steppe Lamignat',
+  'Łucznika Stepowego': 'the Steppe Archer', 'Wołu Piżmowego': 'the Musk Ox', 'Żubra Puszczańskiego': 'the Forest Bison', 'Arkara': 'the Arkar', 'Łamignata Stepowego': 'the Steppe Lamignat',
   'Słonia z Bębnem': 'the Drum Elephant', 'Nosorożca Bojowego': 'the War Rhino', 'Łosia Rogacza': 'the Horned Moose', 'Indrika': 'the Indrik',
   // dwellings
   'Łucznicze Błonia': 'Archer Meadows', 'Piżmowe Zimowisko': 'Musk Ox Wintering', 'Żubrza Ostoja': 'Bison Refuge', 'Pasmo Arkarów': 'Arkar Range', 'Gniazdo na Urwisku': 'Cliff Nest', 'Krąg Bębnów': 'Drum Circle',

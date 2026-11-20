@@ -143,7 +143,7 @@ areny albo inną jednostkę, dostaje dodatkowe obrażenia. Arena Stad ma dużo g
 | 1 | Satyr Dudziarz (`satyrPiper`) | satyr z dudami; atak dystansowy to fala dźwięku: drżenie powietrza i podmuch kurzu, bez kolorowych nut (decyzja 20.11) | 1 | chód | dyst. | Skoczny Rytm: raz na bitwę sojusznik +N S | spowolnienie (odwrotne) | — |
 | 1 | Młody Tur (`youngAurochs`) | cielak tura | 1 | chód | wręcz | Byczy Łeb: po każdym ataku odpycha cel o 1 | odpychanie | — |
 | 1 | Kulan Stepowy (`kulan`) | kozica z rogami | 1 | chód | wręcz | Skok po Turniach: ruch przez przeszkody i jednostki | ★ przeskok | — |
-| 2A | Tarpan Łucznik (`tarpanArcher`) | tarpan z łukiem (decyzja 20.11; otwarte: sam tarpan czy jeździec) | 1 | chód | dyst. | Strzała w Kolano: raz na bitwę trafiony −N S | spowolnienie | Łucznicze Błonia |
+| 2A | Łucznik Stepowy (`steppeArcher`) | tarpan z łukiem (decyzja 20.11; otwarte: sam tarpan czy jeździec) | 1 | chód | dyst. | Strzała w Kolano: raz na bitwę trafiony −N S | spowolnienie | Łucznicze Błonia |
 | 2B | Wół Piżmowy (`muskOx`) | wół piżmowy | 1 | chód | wręcz | Rozpęd: +N A po przebiegnięciu ≥M pól | premia za ruch | Piżmowe Zimowisko |
 | 3A | Żubr Puszczański (`forestBison`) | żubr | 1 | chód | wręcz | Niewzruszony: pancerz; nie da się go odepchnąć, przyciągnąć ani przestawić | pancerz, ★ odporność na przesunięcie | Żubrza Ostoja |
 | 3B | Arkar (`arkar`) | wielki dziki baran z zakręconymi rogami | 1 | chód | wręcz | Przebicie: cios trafia cel i jednostkę za nim | reuse: Ognisty Oddech (linia 2 pól) | Pasmo Arkarów |
@@ -181,7 +181,7 @@ Nosorożca.
 - Odpychanie w Przypływach: Przypływy odpychają w miejscu (Ściana Wody), bez rozpędu i bez zderzeń.
 
 ### Alternatywy
-- **Jednostki:** Centaurzyca Stepu (zamiast Tarpana Łucznika, jeśli autor chce centaurów; wtedy Centaura Przymierza przemianować
+- **Jednostki:** Centaurzyca Stepu (zamiast Łucznika Stepowego, jeśli autor chce centaurów; wtedy Centaura Przymierza przemianować
   na Centaura Gaju), Minotaur Pasterz (zamiast Żubra), Bawół z Bębnem (zamiast Słonia, jeśli słoń nie pasuje do stepu), Młody Nosorożec
   (zamiast Młodego Tura, mniej bydła). Mamut przeszedł do Dworu Wiecznego Szronu (legenda).
 - **Mechanika:** *Panika* — zderzony cel ucieka o 1 pole na początku swojej aktywacji (kontrola zamiast obrażeń).
