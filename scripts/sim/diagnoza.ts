@@ -142,9 +142,10 @@ function playGame(s: any, C: Counters) {
       if (u.swappedOut) continue;
       const def = UNITS[u.defId] as any;
       if (!def || def.side === 'neutral') continue;
-      const once = !UNLIMITED_ABILITIES.includes(abilityOf(u));
+      // Passive abilities (Szarża Światła, Zew Krwi) never set the flag, and the goat's leap has its own (`status.leapUsed`): neither is a bot miss.
+      const once = !UNLIMITED_ABILITIES.includes(abilityOf(u)) && !['lightCharge', 'bloodCall'].includes(abilityOf(u));
       add(`ab|${tr!.cls}|${u.defId}|present`);
-      if (once && u.abilityUsed) add(`ab|${tr!.cls}|${u.defId}|used`);
+      if (once && (u.abilityUsed || u.status?.leapUsed)) add(`ab|${tr!.cls}|${u.defId}|used`);
       if (u.alive) add(`ab|${tr!.cls}|${u.defId}|alive`);
     }
     tr = null;
