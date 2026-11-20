@@ -133,15 +133,15 @@ export const SEAT_TINT: Record<TeamId | FactionId, string> = {
   horde: 'linear-gradient(100deg, rgba(128, 22, 34, 0.62), rgba(52, 8, 14, 0.58))',
   third: 'linear-gradient(100deg, rgba(150, 104, 18, 0.62), rgba(62, 42, 6, 0.58))',
   fourth: 'linear-gradient(100deg, rgba(92, 52, 138, 0.62), rgba(38, 20, 62, 0.58))',
-  // Dzikie Stada: ochre and straw.
+  // Dzikie Stado: ochre and straw.
   herds: 'linear-gradient(100deg, rgba(176, 136, 48, 0.62), rgba(84, 60, 18, 0.58))',
   // Królestwo Umarłych: ash green.
-  // Żelazne Klany: steel and brass.
+  // Żelazny Klan: steel and brass.
   clans: 'linear-gradient(100deg, rgba(112, 120, 134, 0.62), rgba(46, 50, 60, 0.58))',
   undead: 'linear-gradient(100deg, rgba(112, 128, 104, 0.62), rgba(46, 56, 44, 0.58))',
   // Dwór Wiecznego Szronu: pearl white and ice (the UI may be pale blue, the figures may not).
   frost: 'linear-gradient(100deg, rgba(160, 196, 220, 0.62), rgba(58, 80, 96, 0.58))',
-  // Wolne Kompanie: rusty orange and leather.
+  // Wolna Kompania: rusty orange and leather.
   free: 'linear-gradient(100deg, rgba(196, 118, 56, 0.62), rgba(84, 52, 30, 0.58))',
   // Imperium Piasków: sand and ochre with a touch of jade.
   sands: 'linear-gradient(100deg, rgba(212, 178, 92, 0.62), rgba(110, 82, 40, 0.58))',

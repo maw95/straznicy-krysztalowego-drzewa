@@ -5,6 +5,8 @@
 // Usage: npx tsx scripts/browser/kompanie.ts [widok]   (desktop by default, `telefon` for the phone layout)
 import { openGame, type View } from './game';
 const view = (process.argv[2] ?? 'desktop') as View;
+/** Optional second argument: which parts to run (`24` = parts 2 and 4), all by default. */
+const want = (n: string) => !process.argv[3] || process.argv[3].includes(n);
 
 /** Walks the wizard to the players page of a rivalry on the level that has the settlements (Imperium) and picks the Companies for the seat `seat`. */
 async function startTable(dev: boolean, seat: number, humans: number[]) {
@@ -18,6 +20,8 @@ async function startTable(dev: boolean, seat: number, humans: number[]) {
   await p.locator('[data-wizard-page="tier"] .opt-card', { hasText: 'Imperium' }).click();
   // The pages after the level differ by level (map, goal, players): go on until the table of seats.
   for (let i = 0; i < 6 && !(await p.locator('.well select[aria-label="Kto gra"]').count()); i++) {
+    if (await p.locator('[data-wizard-page="objective"]').count()) await p.locator('[data-wizard-page="objective"] .opt-card', { hasText: 'Podbój' }).click().catch(() => {});
+    if (await p.locator('[data-wizard-page="players"]').count()) await p.locator('.count-chip', { hasText: /^2$/ }).click().catch(() => {});
     await p.locator('[data-shape="rectangle"]').click().catch(() => {});
     await p.getByRole('button', { name: 'Dalej →' }).click({ timeout: 3000 }).catch(() => {});
     await p.waitForTimeout(400);
@@ -33,6 +37,7 @@ async function startTable(dev: boolean, seat: number, humans: number[]) {
   return g;
 }
 
+if (want('1')) {
 // Part 1: the settlement window.
 const g1 = await startTable(true, 0, [0]);
 const p1 = g1.page;
@@ -44,11 +49,18 @@ try {
   await p1.locator('[data-building="trapWorkshop"]').click();
   await p1.waitForTimeout(400);
   console.log('workshop text found:', (await p1.locator('body').innerText()).includes('Sidła'));
+  await p1.locator('[data-modal-close]').first().click();
+  await p1.waitForTimeout(300);
+  await p1.locator('[data-building="fence"]').click();
+  await p1.waitForTimeout(300);
+  console.log('fence panel:', await p1.locator('[data-panel="fence"]').count(), '| sell buttons:', await p1.locator('[data-sell]').count(), '| empty note:', await p1.locator('[data-fence-empty]').count());
   await p1.screenshot({ path: `.tmp/kompanie-warsztat-${view}.png` });
   console.log('errors (settlement)', g1.errors.join('|') || 'none');
 } catch (e) { console.log('FAIL (settlement)', String(e).slice(0, 600)); await p1.screenshot({ path: `.tmp/kompanie-fail-${view}.png` }); }
 await g1.close();
+}
 
+if (want('2')) {
 // Part 2: a fight with neutrals with the human Companies: the trap button, laying traps, the traps on the arena.
 const g2 = await startTable(true, 0, [0]);
 const p2 = g2.page;
@@ -56,10 +68,6 @@ try {
   await p2.locator('[data-dev-panel]').waitFor({ timeout: 20000 });
   await p2.getByRole('button', { name: /wybuduj wszystko/i }).first().click().catch(() => console.log('no build-everything button'));
   await p2.locator('[data-dev-fight="0"]').click();
-  await p2.locator('[data-enter]').waitFor({ timeout: 10000 });
-  const cards = p2.locator('.overlay .btn:has(img), .overlay button.btn').filter({ hasNot: p2.locator('[data-enter]') });
-  for (let i = 0; i < 2; i++) await cards.nth(i).click().catch(() => {});
-  await p2.locator('[data-enter]').click();
   await p2.locator('[data-trap-mode]').waitFor({ timeout: 10000 });
   console.log('trap button:', (await p2.locator('[data-trap-mode]').innerText()).replace(/\s+/g, ' '));
   await p2.locator('[data-trap-mode]').click();
@@ -76,7 +84,9 @@ try {
   console.log('errors (deploy)', g2.errors.join('|') || 'none');
 } catch (e) { console.log('FAIL (deploy)', String(e).slice(0, 800)); await p2.screenshot({ path: `.tmp/kompanie-fail2-${view}.png` }); }
 await g2.close();
+}
 
+if (want('3')) {
 // Part 3: bots play until a battle with a Companies unit is on the screen; the (human-less) screen shows none of the traps.
 const g3 = await startTable(false, 1, []);
 const p3 = g3.page;
@@ -84,10 +94,38 @@ try {
   let found = false;
   for (let i = 0; i < 60 && !found; i++) {
     await p3.waitForTimeout(2000);
-    found = (await p3.locator('.arena-frame').count()) > 0 && (await p3.getByText(/Ruda Atamanka|Borsuk Saper|Kruk Wieszczek|Wydra Zwiadowczyni|Kuna Złodziejka|Wiewiórka Łuczniczka/).count()) > 0;
+    found = (await p3.locator('.arena-frame').count()) > 0 && (await p3.getByText(/Ruda Atamanka|Borsuk Saper|Kruk Wieszczek|Wydra Zwiadowczyni|Sroka Złodziejka|Wiewiórka Łuczniczka/).count()) > 0;
   }
   console.log('battle with the Companies seen:', found, '| traps drawn on the screen of an onlooker:', await p3.locator('[data-trap]').count());
   await p3.screenshot({ path: `.tmp/kompanie-boty-${view}.png` });
   console.log('errors (bots)', g3.errors.join('|') || 'none');
 } catch (e) { console.log('FAIL (bots)', String(e).slice(0, 600)); await p3.screenshot({ path: `.tmp/kompanie-fail3-${view}.png` }); }
 await g3.close();
+}
+
+if (want('4')) {
+// Part 4: two humans at one screen, the first plays the Companies: the deployment is covered, own traps show only after "Podejrzyj Sidła".
+const g4 = await startTable(true, 0, [0, 1]);
+const p4 = g4.page;
+try {
+  await p4.locator('[data-dev-panel]').waitFor({ timeout: 20000 });
+  await p4.getByRole('button', { name: /wybuduj wszystko/i }).first().click().catch(() => console.log('no build-everything button'));
+  await p4.locator('[data-dev-fight="0"]').click();
+  await p4.getByText('ukrytych Sideł').waitFor({ timeout: 10000 });
+  console.log('veil shown, trap button behind it:', await p4.locator('[data-trap-mode]').count());
+  await p4.screenshot({ path: `.tmp/kompanie-zaslona-${view}.png` });
+  await p4.getByRole('button', { name: /pokaż turę/ }).click();
+  await p4.locator('[data-trap-mode]').waitFor({ timeout: 10000 });
+  await p4.locator('[data-trap-mode]').click();
+  const zone = p4.locator('polygon[data-cell]').filter({ has: p4.locator('xpath=self::*[starts-with(@fill, "rgba(200,100,40")]') });
+  for (let i = 0; i < 2; i++) await zone.nth(i * 3).click({ force: true });
+  await p4.getByRole('button', { name: /Gotowe/ }).click();
+  await p4.waitForTimeout(1500);
+  console.log('own traps on the arena before peeking:', await p4.locator('[data-trap]').count(), '| peek button:', await p4.locator('[data-peek-traps]').count());
+  await p4.locator('[data-peek-traps]').click().catch(() => {});
+  console.log('own traps after peeking:', await p4.locator('[data-trap]').count());
+  await p4.screenshot({ path: `.tmp/kompanie-podejrzyj-${view}.png` });
+  console.log('errors (veil)', g4.errors.join('|') || 'none');
+} catch (e) { console.log('FAIL (veil)', String(e).slice(0, 800)); await p4.screenshot({ path: `.tmp/kompanie-fail4-${view}.png` }); }
+await g4.close();
+}

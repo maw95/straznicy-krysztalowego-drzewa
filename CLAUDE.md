@@ -12,6 +12,7 @@ answer in Polish; code, comments and commit messages in English; CHANGELOG.md an
   `FigureLayer.tsx` (3D), `arenaGeometry.ts`, `styles.css` (phone layout: media queries, `COMPACT_QUERY` in common.tsx).
 - `src/content/instrukcja.pl.md` — the in-game manual of the digital game (Zasady i karty → Instrukcja), rendered by `ManualView.tsx` / `manualDoc.ts` (TOC, search; `tests/manual.test.ts` checks links). Its English translation is `instrukcja.en.md` (same chapters in the same order, `@words:` for keywords; `tests/manual.test.ts` compares the two). **Update both in the same commit when a rule or feature changes.** `docs/INSTRUKCJA.md` is only the printable board manual.
 - `src/online/` — client of the game server (`api.ts`, `useOnline.ts`).
+- **Interrupted work (limits, account change): read `docs/WZNOWIENIE.md` first** (running background jobs, worktree `../skd-g1`, order of tasks).
 - `docs/BACKLOG.md` — agreed work, with [x]/[ ]; start here. `docs/NOTATKI_DLA_AGENTA_PLANSZOWKI.md` — the official
   rules and every rule decision (add new ones as a section). `docs/INSTRUKCJA.md` — player rulebook.
   `docs/INFRASTRUKTURA.md` — servers, releases, secrets.

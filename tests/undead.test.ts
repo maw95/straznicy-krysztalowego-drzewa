@@ -88,14 +88,14 @@ describe('raising in the field', () => {
     expect(() => applyAction(none, { type: 'battleAbility' })).toThrow(/poległego pomocnika/);
   });
 
-  it('Ponowny Oddech (Kościana Wróżka) raises only supports of tier 3 or lower', () => {
-    let s = fight([['boneOracle', 'dawn', 4, 8], ['lich', 'dawn', 2, 6], ['hauntedArmor', 'dawn', 3, 7], ['elfDruid', 'horde', 11, 7]]);
+  it('Ponowny Oddech (Strzyga) raises only supports of tier 3 or lower', () => {
+    let s = fight([['strzyga', 'dawn', 4, 8], ['lich', 'dawn', 2, 6], ['hauntedArmor', 'dawn', 3, 7], ['elfDruid', 'horde', 11, 7]]);
     fall(s, 'lich');
     fall(s, 'hauntedArmor');
     s = applyAction(s, { type: 'battleAbility' });
     expect(at(s, 'hauntedArmor').alive).toBe(true);
     expect(at(s, 'lich').alive).toBe(false);
-    const only = fight([['boneOracle', 'dawn', 4, 8], ['lich', 'dawn', 2, 6], ['elfDruid', 'horde', 11, 7]]);
+    const only = fight([['strzyga', 'dawn', 4, 8], ['lich', 'dawn', 2, 6], ['elfDruid', 'horde', 11, 7]]);
     fall(only, 'lich');
     expect(() => applyAction(only, { type: 'battleAbility' })).toThrow();
   });
@@ -225,7 +225,7 @@ describe('Ossuarium, Dzwonnica Zaduszna and the tree of buildings', () => {
   it('the tiers of the Kingdom: 1 the starting three, 2-5 the recruits and their alternatives, 6 the dragon', () => {
     expect(['skeletonSpear', 'willOWisp', 'penitentShade'].map(supportTier)).toEqual([1, 1, 1]);
     expect(['skeletonArcher', 'hauntedArmor', 'viy', 'lich'].map(supportTier)).toEqual([2, 3, 4, 5]);
-    expect(['scarecrow', 'banshee', 'boneOracle', 'kostucha'].map(supportTier)).toEqual([2, 3, 4, 5]);
+    expect(['scarecrow', 'vampire', 'strzyga', 'kostucha'].map(supportTier)).toEqual([2, 3, 4, 5]);
     expect(supportTier('boneDragon')).toBe(6);
   });
 });
@@ -297,8 +297,8 @@ describe('abilities of the units', () => {
     expect(attackDamage(s, at(s, 'ancientBear'), at(s, 'ancientBear'), false, 0)).toBe(attackDamage(plain, at(plain, 'ancientBear'), at(plain, 'nymph'), false, 0));
   });
 
-  it('Lament (Płaczka): enemies within 2 have -A in their next attack, the immune do not; once per battle', () => {
-    let s = fight([['banshee', 'dawn', 4, 8], ['ancientBear', 'horde', 5, 9], ['elfDruid', 'horde', 6, 10], ['nymph', 'horde', 12, 8]]);
+  it('Lament (Wampir): enemies within 2 have -A in their next attack, the immune do not; once per battle', () => {
+    let s = fight([['vampire', 'dawn', 4, 8], ['ancientBear', 'horde', 5, 9], ['elfDruid', 'horde', 6, 10], ['nymph', 'horde', 12, 8]]);
     at(s, 'elfDruid').status.immune = true;
     s = applyAction(s, { type: 'battleAbility' });
     expect(at(s, 'ancientBear').status.cursedNext).toBe(ABILITY.wailMinus);

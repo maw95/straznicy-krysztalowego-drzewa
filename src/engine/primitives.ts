@@ -1,7 +1,7 @@
 // The library of rule primitives for the new factions (docs/FRAKCJE_MACIERZ_I_PRYMITYWY.md, section 1): small, parametrised rules that the abilities of a
 // faction pack are built from. Each one changes the state passed in (like the rest of the battle engine) and returns what it did, so that the caller can log
 // it. Only primitives the engine did not have are here (pull, swap, group bonus, exhaustion, ground effects); the old abilities (push of the Cyclops, poison,
-// slow, root...) stay where they are until `golden.test.ts` can watch a mechanical refactor. The Dzikie Stada use the push with a collision, the resistance to being moved, the bonus for the target's state and the taunt (docs/frakcje/herds.md).
+// slow, root...) stay where they are until `golden.test.ts` can watch a mechanical refactor. The Dzikie Stado use the push with a collision, the resistance to being moved, the bonus for the target's state and the taunt (docs/frakcje/herds.md).
 
 import { distance, key, line, parseKey, type HexKey } from './hex';
 import { abilityActive, abilityOf, battleFx, cellsOf, dealDamage, fitsAt, formationAnchored, freeCellNear, inLayout, nearestFreeCell, placeUnit, pushCell, scaleOf, stepOnFields, unitAt } from './battle';

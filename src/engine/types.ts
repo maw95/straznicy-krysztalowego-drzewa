@@ -382,7 +382,7 @@ export interface UnitStatus {
   anchored?: boolean;
   /** Tarcza Wartownika: S this unit loses in its next activation (it takes effect when that activation begins). */
   slowLater?: number;
-  /** Dzikie Stada: the round the unit was last pushed in (Lot na Strzelców). */
+  /** Dzikie Stado: the round the unit was last pushed in (Lot na Strzelców). */
   pushedRound?: number;
   /** Rykowisko: the unit that challenged this one; its next attack may only be at that unit. */
   tauntedBy?: string;
@@ -394,7 +394,7 @@ export interface UnitStatus {
   reassemble?: true;
   /** The unit has already risen in this battle (the Wieczna Warta, a call, the bones): a Resurrection treasure does not raise it again. */
   risen?: true;
-  /** Żelazne Klany. Przysięga Tarczy: armour until the end of this round (the number of the round). */
+  /** Żelazny Klan. Przysięga Tarczy: armour until the end of this round (the number of the round). */
   oathRound?: number;
   /** Runa Kamienia: the unit cannot be pushed, pulled or moved. */
   unmovable?: true;
@@ -410,7 +410,7 @@ export interface UnitStatus {
   brittle?: true;
   /** Zimne Światło: S the unit loses from an aura of the enemy next to it (recounted at the start of every round and activation). */
   auraChill?: number;
-  /** Wolne Kompanie. Oznaczenie: the side whose attacks hit this unit harder, and the round the mark lasts to the end of (Oko Kruka). */
+  /** Wolna Kompania. Oznaczenie: the side whose attacks hit this unit harder, and the round the mark lasts to the end of (Oko Kruka). */
   marked?: { by: Side; round: number };
   /** Ukryty (Jenot Szpieg): the unit is unseen by the enemy: it cannot be chosen as a target, and the enemy's screen and bots do not know where it stands. */
   veiled?: true;
@@ -474,7 +474,7 @@ export interface BattleUnit {
   maxHp: number;
   /** Fights under the digital ruleset: its own hp, attack and speed (see `battleStats`). */
   digital?: true;
-  /** Fights in the arena: the Horde's digital bonus (`HORDE_DIGITAL_BONUS`) does not apply. */
+  /** Fights in the arena: the factions' digital bonus (`FACTION_DIGITAL_BONUS`) does not apply. */
   arena?: true;
   /** Życie and Atak of this unit are this many times the board game's (missing = 1; see `scaleOf` in battle.ts). */
   scale?: number;
@@ -755,6 +755,8 @@ export type Action =
   /** Level 6, the Iron Clans' Runiczna Kuźnia: a rune forged on a support of the faction's pool (in a settlement with the forge). */
   | { type: 'kingdomForgeRune'; settlementId: string; unitId: string; rune: Rune }
   | { type: 'kingdomBuyArtifact'; settlementId: string; artifactId: string }
+  /** The Free Companies' Paserka: an artifact from the active hero's backpack sold for the full market price of its rarity. */
+  | { type: 'kingdomSellArtifact'; settlementId: string; artifactId: string }
   /** Level 4: one unit of a resource bought for gold in an own settlement, or sold on its market. */
   | { type: 'kingdomTrade'; settlementId: string; res: 'wood' | 'ore' | 'dust'; dir: 'buy' | 'sell' }
   /** Level 4: one unit of a resource swapped for one of another on the market (sold and bought at the market's prices, one action). */

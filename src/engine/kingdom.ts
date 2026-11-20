@@ -12,7 +12,7 @@ import { log } from './log';
 import { mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { Rng } from './rng';
 import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsText, type Hut, type MapObject, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
-import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, passTargets, SHARDS_ID, type Rarity } from './sites';
+import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, packOf, SETS, setCount, type ArtifactDef, giveArtifact, passTargets, SHARDS_ID, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import { computerFaction, isDigital, type Action, type Crystal, type GameState, type HeroState, type Rune } from './types';
 import { circleSpells, MAGIC, SPELL_CIRCLES, SPELLS, towerSpells, type SpellId } from './magic';
@@ -104,23 +104,23 @@ export interface Recruit { id: string; tier: number; cost: number; /** Gwiezdny 
 export const ALT_UNITS: Record<FactionId, string[]> = byPack((p) => p.altUnits);
 export const DWELLING_NAMES: Record<string, string> = {
   hedgehog: 'Legowisko Jeżozwierzy', silverFox: 'Lisia Nora', centaur: 'Stajnie Centaurów', dawnOwl: 'Sowia Dziupla', boar: 'Dębowa Zagroda', dryadArcher: 'Gaj Driad', treeGuardian: 'Prastary Zagajnik', whiteStag: 'Polana Jeleni', dawnPhoenix: 'Gniazdo Feniksa',
-  skeletonArcher: 'Zbrojownia Kości', scarecrow: 'Opuszczone Pole', hauntedArmor: 'Rycerska Krypta', banshee: 'Wieża Płaczek', viy: 'Wielki Kurhan', boneOracle: 'Kaplica Wróżb', lich: 'Biblioteka Umarłych', kostucha: 'Kaplica Tańca Śmierci', boneDragon: 'Smocze Cmentarzysko',
-  armoredBear: 'Gawra Zbrojna', battleSmith: 'Polowa Kuźnia', bronzeSentinel: 'Warsztat Mechanizmów', goatRider: 'Koźla Zagroda', giantSlayer: 'Sala Pogromców', skarbnik: 'Stary Szyb', hammerGuard: 'Sala Gwardii', dwarfCannon: 'Ludwisarnia', clanColossus: 'Wielka Kuźnia Kolosa',
-  faunSlinger: 'Fauni Zagajnik', tarpan: 'Tarpanie Błonia', forestBison: 'Żubrza Ostoja', satyrLancer: 'Obóz Kopijników', steppeHippogriff: 'Gniazdo na Urwisku', drumElephant: 'Krąg Bębnów', warRhino: 'Błotne Brody', bullMoose: 'Łosie Mokradło', indrik: 'Źródło Indrika',
-  weaselKnife: 'Kryjówka w Żywopłocie', beaverEngineer: 'Żeremie', polecatPoisoner: 'Warzelnia', raccoonDogSpy: 'Leśna Czatownia', wolverine: 'Rosomacza Nora', badgerBomber: 'Prochownia', toadGunner: 'Rusznikarnia', catFencer: 'Fechtownia', towerMonitor: 'Wielka Stajnia Kompanii',
-  sandScorpion: 'Gniazdo Skorpionów', cobra: 'Wężowa Studnia', mirageDancer: 'Dom Tancerek', ushabti: 'Grobowiec Strażników', lamassu: 'Brama Lamassu', oasisCrocodile: 'Rozlewisko Krokodyli', stormDjinn: 'Lampa Dżina', roc: 'Gniazdo Roka', sandWyrm: 'Ruchome Piaski',
-  blizzardWitch: 'Chata na Lodzie', glacierYak: 'Zagroda Jaków', iceSentinel: 'Lodowa Strażnica', frostSprite: 'Sopelkowa Grota', youngGiant: 'Obóz Olbrzymów', windStrzyga: 'Wichrowy Szczyt', elderGiant: 'Gradowa Turnia', auroraSpirit: 'Wieża Zorzy', frostMammoth: 'Mamucia Grań',
+  skeletonArcher: 'Zbrojownia Kości', scarecrow: 'Opuszczone Pole', hauntedArmor: 'Rycerska Krypta', vampire: 'Krypta Wampira', viy: 'Wielki Kurhan', strzyga: 'Dom Strzygi', lich: 'Biblioteka Umarłych', kostucha: 'Kaplica Tańca Śmierci', boneDragon: 'Smocze Cmentarzysko',
+  armoredBear: 'Gawra Zbrojna', battleSmith: 'Polowa Kuźnia', bronzeSentinel: 'Warsztat Mechanizmów', ramGoat: 'Koźla Zagroda', giantSlayer: 'Sala Pogromców', skarbnik: 'Stary Szyb', hammerGuard: 'Sala Gwardii', dwarfCannon: 'Ludwisarnia', clanColossus: 'Wielka Kuźnia Kolosa',
+  steppeArcher: 'Łucznicze Błonia', muskOx: 'Piżmowe Zimowisko', forestBison: 'Żubrza Ostoja', arkar: 'Pasmo Arkarów', steppeLamignat: 'Gniazdo na Urwisku', drumElephant: 'Krąg Bębnów', warRhino: 'Błotne Brody', bullMoose: 'Łosie Mokradło', indrik: 'Źródło Indrika',
+  weaselKnife: 'Kryjówka w Żywopłocie', beaverEngineer: 'Żeremie', polecatPoisoner: 'Warzelnia', raccoonDogSpy: 'Leśna Czatownia', wolverine: 'Rosomacza Nora', marmotPetard: 'Prochownia', toadGunner: 'Rusznikarnia', catFencer: 'Fechtownia', towerMonitor: 'Wielka Stajnia Kompanii',
+  blizzardWitch: 'Chata na Lodzie', glacierYak: 'Zagroda Jaków', iceSentinel: 'Lodowa Strażnica', frostSprite: 'Sopelkowa Grota', youngGiant: 'Obóz Olbrzymów', dziadMroz: 'Chata Dziada Mroza', elderGiant: 'Gradowa Turnia', auroraSpirit: 'Wieża Zorzy', frostMammoth: 'Mamucia Grań',
+  sandScorpion: 'Gniazdo Skorpionów', cobra: 'Wężowa Studnia', mirageDancer: 'Dom Tancerek', ushabti: 'Grobowiec Strażników', lamassu: 'Brama Lamassu', oasisCrocodile: 'Rozlewisko Krokodyli', roc: 'Gniazdo Roka', sandWyrm: 'Ruchome Piaski',
   ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern', doomBehemoth: 'Jaskinia Zagłady',
 };
 /** What a dwelling does, in words (the unit's name in the genitive). */
 const GENITIVE: Record<string, string> = {
   hedgehog: 'Jeżozwierza', silverFox: 'Srebrnego Lisa', centaur: 'Centaura', dawnOwl: 'Sowy Świtu', boar: 'Alabastrowego Odyńca', dryadArcher: 'Driady Łuczniczki', treeGuardian: 'Opiekuna Drzewa', whiteStag: 'Białego Jelenia', dawnPhoenix: 'Feniksa Świtu',
-  skeletonArcher: 'Szkieletu Łucznika', scarecrow: 'Strachu Polnego', hauntedArmor: 'Nawiedzonej Zbroi', banshee: 'Płaczki', viy: 'Wija Podziemnego', boneOracle: 'Kościanej Wróżki', lich: 'Lisza', kostucha: 'Kostuchy', boneDragon: 'Kościanego Smoka',
-  armoredBear: 'Niedźwiedzia w Zbroi', battleSmith: 'Kowala Bitewnego', bronzeSentinel: 'Wartownika z Brązu', goatRider: 'Jeźdźca na Koźle', giantSlayer: 'Pogromcy Olbrzymów', skarbnik: 'Skarbnika', hammerGuard: 'Gwardii Młota', dwarfCannon: 'Armaty Klanów', clanColossus: 'Kolosa Kuźni',
-  faunSlinger: 'Fauna Procarza', tarpan: 'Tarpana', forestBison: 'Żubra Puszczańskiego', satyrLancer: 'Satyra Kopijnika', steppeHippogriff: 'Hipogryfa Stepowego', drumElephant: 'Słonia z Bębnem', warRhino: 'Nosorożca Bojowego', bullMoose: 'Łosia Rogacza', indrik: 'Indrika',
-  weaselKnife: 'Łasicy Nożowniczki', beaverEngineer: 'Bobra Inżyniera', polecatPoisoner: 'Tchórza Smrodnika', raccoonDogSpy: 'Jenota Szpiega', wolverine: 'Rosomaka Zabijaki', badgerBomber: 'Borsuka Petardnika', toadGunner: 'Ropucha z Hakownicą', catFencer: 'Kocura Fechmistrza', towerMonitor: 'Warana Wieżowego',
-  sandScorpion: 'Skorpiona Piaskowego', cobra: 'Kobry Królewskiej', mirageDancer: 'Tancerki Fata Morgany', ushabti: 'Kamiennego Strażnika', lamassu: 'Lamassu', oasisCrocodile: 'Krokodyla Oazowego', stormDjinn: 'Dżina Burzy Piaskowej', roc: 'Ptaka Roka', sandWyrm: 'Czerwia Pustyni',
-  blizzardWitch: 'Wiedźmy Zamieci', glacierYak: 'Jaka Lodowcowego', iceSentinel: 'Rycerza Lodowej Zbroi', frostSprite: 'Rusałki Szronu', youngGiant: 'Młodego Olbrzyma Szronu', windStrzyga: 'Strzygi Wichru', elderGiant: 'Olbrzyma Gradu', auroraSpirit: 'Ducha Zorzy', frostMammoth: 'Mamuta Wiecznej Zimy',
+  skeletonArcher: 'Szkieletu Łucznika', scarecrow: 'Strachu Polnego', hauntedArmor: 'Nawiedzonej Zbroi', vampire: 'Wampira', viy: 'Wija Podziemnego', strzyga: 'Strzygi', lich: 'Lisza', kostucha: 'Kostuchy', boneDragon: 'Kościanego Smoka',
+  armoredBear: 'Niedźwiedzia w Zbroi', battleSmith: 'Kowala Bitewnego', bronzeSentinel: 'Wartownika z Brązu', ramGoat: 'Kozła Taranowego', giantSlayer: 'Pogromcy Olbrzymów', skarbnik: 'Skarbnika', hammerGuard: 'Gwardii Młota', dwarfCannon: 'Armaty Klanów', clanColossus: 'Kolosa Kuźni',
+  steppeArcher: 'Łucznika Stepowego', muskOx: 'Wołu Piżmowego', forestBison: 'Żubra Puszczańskiego', arkar: 'Arkara', steppeLamignat: 'Łamignata Stepowego', drumElephant: 'Słonia z Bębnem', warRhino: 'Nosorożca Bojowego', bullMoose: 'Łosia Rogacza', indrik: 'Indrika',
+  weaselKnife: 'Łasicy Nożowniczki', beaverEngineer: 'Bobra Inżyniera', polecatPoisoner: 'Tchórza Smrodnika', raccoonDogSpy: 'Jenota Szpiega', wolverine: 'Rosomaka Zabijaki', marmotPetard: 'Świstaka Petardnika', toadGunner: 'Ropucha z Hakownicą', catFencer: 'Kocura Fechmistrza', towerMonitor: 'Warana Wieżowego',
+  blizzardWitch: 'Wiedźmy Zamieci', glacierYak: 'Jaka Lodowcowego', iceSentinel: 'Rycerza Lodowej Zbroi', frostSprite: 'Rusałki Szronu', youngGiant: 'Młodego Olbrzyma Szronu', dziadMroz: 'Dziada Mroza', elderGiant: 'Olbrzyma Gradu', auroraSpirit: 'Ducha Zorzy', frostMammoth: 'Mamuta Wiecznej Zimy',
+  sandScorpion: 'Skorpiona Piaskowego', cobra: 'Kobry Królewskiej', mirageDancer: 'Tancerki Fata Morgany', ushabti: 'Kamiennego Strażnika', lamassu: 'Lamassu', oasisCrocodile: 'Krokodyla Oazowego', roc: 'Ptaka Roka', sandWyrm: 'Czerwia Pustyni',
   ratman: 'Szczurołaka', goblinSlinger: 'Goblina Procarza', hellhound: 'Piekielnego Ogara', gargoyle: 'Gargulca', salamander: 'Salamandry Popiołu', caveTroll: 'Trolla Jaskiniowego', minotaurChief: 'Herszta Minotaurów', shadowWyvern: 'Wiwerny Cienia', doomBehemoth: 'Behemota Zagłady',
 };
 export const DWELLING_TEXTS: Record<string, string> = Object.fromEntries(Object.entries(GENITIVE).map(([id, g]) => [id, `Umożliwia wykupienie ${g} jako pomocnika.`]));
@@ -281,8 +281,8 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
   plunder: [`Po wygranej z bohaterem lub strażnikiem frakcja dostaje +${FACTION_MECHANICS.plunderGold} zł (sumuje się ze wszystkich osad).`],
   wolfDen: ['Bohaterowie Hordy mają +1 punkt ruchu na mapie.'],
   hoofStone: [
-    `Tętent: jednostka Stad, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole (zderzenie rani). Bez tego budynku frakcja nie ma tego efektu.`,
-    `Zderzenia Stad ranią o ${FACTION_MECHANICS.herdsCollision} więcej.`,
+    `Tętent: jednostka Stada, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole (zderzenie rani). Bez tego budynku frakcja nie ma tego efektu.`,
+    `Zderzenia Stada ranią o ${FACTION_MECHANICS.herdsCollision} więcej.`,
     `Wystarczy rozbieg o ${FACTION_MECHANICS.herdsRunShort} pola.`,
     `Cel, który uderzył w coś po zderzeniu, ma −${FACTION_MECHANICS.herdsSlow} S w swojej następnej aktywacji.`,
   ],
@@ -296,7 +296,7 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
   ],
   ossuary: [`Wskrzeszenie w szpitalu jest tańsze o ${FACTION_MECHANICS.ossuaryDiscount} zł.`, `Pomocnicy poziomów 1–${FACTION_MECHANICS.ossuaryFreeTier} wracają ze szpitala za darmo.`],
   shieldHall: [
-    `Mur Tarcz: jednostka Klanów z co najmniej ${FACTION_MECHANICS.shieldMates[0]} sąsiednimi sojusznikami ma −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu. Bez tego budynku frakcja nie ma tego efektu.`,
+    `Mur Tarcz: jednostka Klanu z co najmniej ${FACTION_MECHANICS.shieldMates[0]} sąsiednimi sojusznikami ma −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu. Bez tego budynku frakcja nie ma tego efektu.`,
     `Wystarczy ${FACTION_MECHANICS.shieldMates[1]} sąsiad.`,
     'Jednostki w szyku nie da się odepchnąć ani przyciągnąć.',
     `Kto atakuje wręcz jednostkę w szyku, traci ${FACTION_MECHANICS.shieldArmor} Ż.`,
@@ -314,12 +314,12 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
   ],
   crystalGrotto: [`+${FACTION_MECHANICS.mineOre} rudy na rundę z każdej osady z Kryształową Grotą.`, `Także +${FACTION_MECHANICS.mineDust} Gwiezdnego Pyłu co ${FACTION_MECHANICS.mineDustEvery} rundy z każdej osady z drugim poziomem.`],
   trapWorkshop: [
-    `Sidła: przed bitwą Kompanie kładą ${FACTION_MECHANICS.trapCount[0]} ukrytą pułapkę na swojej połowie areny; wróg, który na nią wejdzie, dostaje ${ABILITY.trapDamage} obrażeń i kończy ruch. Bez tego budynku frakcja nie ma tego efektu (poza Iskrą).`,
+    `Sidła: przed bitwą Kompania kładzie ${FACTION_MECHANICS.trapCount[0]} ukrytą pułapkę na swojej połowie areny; wróg, który na nią wejdzie, dostaje ${ABILITY.trapDamage} obrażeń i kończy ruch. Bez tego budynku frakcja nie ma tego efektu (poza Iskrą).`,
     `${FACTION_MECHANICS.trapCount[1]} pułapki przed bitwą.`,
     'Trafiony pułapką nie rusza się do końca swojej następnej aktywacji.',
     `${FACTION_MECHANICS.trapCount[3]} pułapki przed bitwą.`,
   ],
-  fence: [`Artefakty z rynku kupujesz o ${FACTION_MECHANICS.fenceDiscount} zł taniej (najmniej za 1 zł), a skrzynie dają +${FACTION_MECHANICS.fenceChestGold} zł.`, `Co ${FACTION_MECHANICS.fenceTreasureEvery} rundy Paserka przynosi losowy skarb.`],
+  fence: [`Paserka skupuje artefakty z plecaka aktywnego bohatera za pełną cenę targową (${KINGDOM.artifactPrice[0]} / ${KINGDOM.artifactPrice[1]} / ${KINGDOM.artifactPrice[2]} zł za zwykły / rzadki / legendarny), a skrzynie dają +${FACTION_MECHANICS.fenceChestGold} zł.`, `Co ${FACTION_MECHANICS.fenceTreasureEvery} rundy Paserka przynosi losowy skarb.`],
   mirageHall: [
     `Miraż: na początku bitwy ${FACTION_MECHANICS.mirageCount[0]} jednostka (nie bohater) dostaje miraż: atrapę na wolnym polu twojej strefy, którą wróg bierze za prawdziwą. Miraż nie atakuje i znika po trafieniu (atak przepada). Bez tego budynku frakcja nie ma tego efektu.`,
     `${FACTION_MECHANICS.mirageCount[1]} miraże na początku bitwy.`,
@@ -731,15 +731,15 @@ export const tradeBuyPrice = (s: Settlement, res: ResourceId): number => ECONOMY
 
 /** What an artifact costs in the market for this hero: gold, and Gwiezdny Pył for a legendary one in level 4. */
 export const artifactBill = (state: GameState, hero: HeroState, art: ArtifactDef): Cost => ({
-  gold: Math.max(1, artifactCost(hero, art) - fenceDiscount(state, hero.faction)),
+  gold: artifactCost(hero, art),
   ...(state.rules.economy && art.rarity === 3 ? { dust: ECONOMY.legendaryDust } : {}),
 });
 
 /** The best level of a building of the faction among the settlements it holds (0: none; only a level 6 game has the buildings of the factions). */
 export const bestLevel = (state: GameState, f: TeamId, b: BuildingId): number =>
   state.rules.empire ? Math.max(0, ...Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.owner === f).map((s) => buildingLevel(s, b))) : 0;
-/** Paserka: gold less for an artifact of the market (the digital game has no selling of artifacts, so the fence's "full price" is read as a buyer's bargain). */
-export const fenceDiscount = (state: GameState, f: TeamId): number => (bestLevel(state, f, 'fence') >= 1 ? FACTION_MECHANICS.fenceDiscount : 0);
+/** Paserka: what the fence pays for an artifact from the backpack: the full market price of its rarity (never reduced by the Kapelusz Kupca). */
+export const fenceSellPrice = (art: ArtifactDef): number => KINGDOM.artifactPrice[art.rarity - 1];
 
 export const resOf = (state: GameState, f: TeamId): Resources => state.kingdom?.res?.[f] ?? emptyResources();
 
@@ -873,6 +873,18 @@ export function kingdomAction(state: GameState, action: Action): void {
       s.boughtEpoch = epoch;
       s.bought.push(art.id);
       giveArtifact(state, hero, art, `targ w osadzie ${s.name}`);
+      break;
+    }
+    case 'kingdomSellArtifact': {
+      const { s, hero } = serviceSettlement(state, action.settlementId);
+      if (buildingLevel(s, 'fence') < 1) throw new Error('Artefakty z plecaka skupuje Paserka.');
+      const art = ARTIFACT_BY_ID[action.artifactId];
+      const at = (hero.pack ?? []).indexOf(action.artifactId);
+      if (!art || at < 0) throw new Error('Tego artefaktu nie ma w plecaku bohatera.');
+      hero.pack = (hero.pack ?? []).filter((_, i) => i !== at);
+      const price = fenceSellPrice(art);
+      k.gold[hero.faction] += price;
+      log(state, 'info', `${UNITS[hero.id].name} sprzedaje w Paserce: ${art.name} (${price} zł).`, hero.faction);
       break;
     }
     case 'kingdomTrade': {
@@ -1071,6 +1083,14 @@ export function chestPreview(state: GameState, hero: HeroState): string {
 
 // ------------------------------------------------------------------ the bots
 
+/** Level 6: the next building a bot raises on the way to its faction's mechanic building (the missing parent first), null when the mechanic stands or the barracks do not. */
+function mechanicStep(state: GameState, f: TeamId, s: Settlement): BuildingId | null {
+  if (!state.rules.empire || s.land !== f || s.buildings.barracks < 1 || mechanicLevel(state, f) >= 1 || !dwellingOf(state, f, 2)) return null;
+  const chain: BuildingId[] = [];
+  for (let b: BuildingId | undefined = MECHANIC_BUILDING[raceOf(state, f)]; b && buildingLevel(s, b) < 1; b = BUILDING_PARENT[b]) chain.unshift(b);
+  return chain[0] ?? null;
+}
+
 /** What a bot buys in a settlement it stands in, by priority (null: nothing it wants and can pay for). */
 export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action | null {
   const k = state.kingdom;
@@ -1086,6 +1106,13 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
   if (state.rules.empire && buildingLevel(s, 'runeForge') >= 1) {
     const forged = botRune(state, f, s);
     if (forged) return { type: 'kingdomForgeRune', settlementId: id, ...forged };
+  }
+  // Level 6: the faction's mechanic building right after the barracks (and the recruits it can pay for), through its parent buildings, the same for every faction.
+  const mechStep = mechanicStep(state, f, s);
+  if (mechStep) {
+    if (buildable(mechStep)) return { type: 'kingdomBuild', settlementId: id, building: mechStep };
+    // Short of a resource or of the gold for one: trade for it, and keep the gold for it meanwhile (nothing else is bought).
+    return tradeToward(state, f, s, mechStep);
   }
   if (own && s.buildings.barracks >= 1 && state.rules.empire) {
     // Level 6: the dwelling of the lowest tier that has none (which of the two units: by the game's seed, so the games differ), when it and its unit can be paid for.
@@ -1121,6 +1148,12 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
   const wardRoad = state.rules.empire && own && raceOf(state, f) === 'undead' && s.buildings.barracks >= 1;
   if (s.buildings.hospital < 1 && (fs.supportsDead.length || wardRoad) && buildable('hospital')) return { type: 'kingdomBuild', settlementId: id, building: 'hospital' };
   if (wardRoad && s.buildings.hospital >= 1 && buildingLevel(s, 'barrow') < 1 && buildable('barrow') && canPay(state, f, { ...buildCost(state, s, 'barrow')!, gold: buildCost(state, s, 'barrow')!.gold + 1 })) return { type: 'kingdomBuild', settlementId: id, building: 'barrow' };
+  // The Companies' bot sells the backpack's spare artifacts at the fence (not a piece of a set it collects).
+  if (buildingLevel(s, 'fence') >= 1) {
+    const seller = state.heroes[state.turnOrder[state.turnIndex]];
+    const spare = seller?.faction === f && seller.alive ? packOf(seller).find((a) => !a.set || setCount(seller, a.set) < 2) : undefined;
+    if (spare) return { type: 'kingdomSellArtifact', settlementId: id, artifactId: spare.id };
+  }
   if (s.buildings.market >= 1) {
     const buyer = state.heroes[state.turnOrder[state.turnIndex]];
     const who = buyer?.faction === f ? buyer : undefined;
@@ -1172,6 +1205,8 @@ function botTrade(state: GameState, f: TeamId, s: Settlement): Action | null {
   const own = s.land === f;
   const wanted: BuildingId[] = [];
   if (own && s.buildings.barracks < 1) wanted.push('barracks');
+  const mechStep = mechanicStep(state, f, s);
+  if (mechStep) wanted.push(mechStep);
   if (s.buildings.treasury < 1) wanted.push('treasury');
   if (s.buildings.market < 1) wanted.push('market');
   if (forgeLevel(state, f) < 1) wanted.push('forge');
@@ -1184,14 +1219,22 @@ function botTrade(state: GameState, f: TeamId, s: Settlement): Action | null {
   if (own && s.buildings.barracks === 1) wanted.push('barracks');
   if (buildingLevel(s, 'forge') === 1) wanted.push('forge');
   for (const b of wanted) {
-    const c = buildCost(state, s, b);
-    if (!c) continue;
-    const missing = RESOURCE_IDS.filter((r) => k.res![f][r] < (c[r] ?? 0));
-    if (!missing.length) continue;
-    const bill = c.gold + missing.reduce((n, r) => n + (c[r]! - k.res![f][r]) * tradeBuyPrice(s, r), 0);
-    if (k.gold[f] >= bill) return { type: 'kingdomTrade', settlementId: s.id, res: missing[0], dir: 'buy' };
+    const buy = tradeToward(state, f, s, b);
+    if (buy) return buy;
   }
   return null;
+}
+
+/** Buys one unit of a resource the building still lacks, when the gold for the whole bill (building and every missing unit) is there (null: nothing to buy yet). */
+function tradeToward(state: GameState, f: TeamId, s: Settlement, b: BuildingId): Action | null {
+  const k = state.kingdom!;
+  if (!k.res) return null;
+  const c = buildCost(state, s, b);
+  if (!c) return null;
+  const missing = RESOURCE_IDS.filter((r) => k.res![f][r] < (c[r] ?? 0));
+  if (!missing.length) return null;
+  const bill = c.gold + missing.reduce((n, r) => n + (c[r]! - k.res![f][r]) * tradeBuyPrice(s, r), 0);
+  return k.gold[f] >= bill ? { type: 'kingdomTrade', settlementId: s.id, res: missing[0], dir: 'buy' } : null;
 }
 
 /** Whether the hero can pay what the hut on its hex asks for now. */

@@ -9,14 +9,14 @@ register({
   'Rycerz Lodowej Gwardii': 'Knight of the Ice Guard', 'Tropicielka Mroźnych Puszcz': 'Tracker of the Frostbound Wilds', 'Szronowa Wiedźma': 'Frost Witch',
   // units
   'Chochlik Szronu': 'Frost Imp', 'Gronostaj Dworski': 'Court Ermine', 'Szronowy Paź': 'Frost Page', 'Wiedźma Zamieci': 'Blizzard Witch', 'Jak Lodowcowy': 'Glacier Yak',
-  'Rycerz Lodowej Zbroi': 'Ice-Armoured Knight', 'Rusałka Szronu': 'Frost Rusalka', 'Młody Olbrzym Szronu': 'Young Frost Giant', 'Strzyga Wichru': 'Wind Strzyga',
+  'Rycerz Lodowej Zbroi': 'Ice-Armoured Knight', 'Rusałka Szronu': 'Frost Rusalka', 'Młody Olbrzym Szronu': 'Young Frost Giant', 'Dziad Mróz': 'Old Man Frost',
   'Olbrzym Gradu': 'Hail Giant', 'Duch Zorzy': 'Aurora Spirit', 'Mamut Wiecznej Zimy': 'Mammoth of the Everlasting Winter',
   // genitives (dwelling texts)
   'Wiedźmy Zamieci': 'the Blizzard Witch', 'Jaka Lodowcowego': 'the Glacier Yak', 'Rycerza Lodowej Zbroi': 'the Ice-Armoured Knight', 'Rusałki Szronu': 'the Frost Rusalka',
-  'Młodego Olbrzyma Szronu': 'the Young Frost Giant', 'Strzygi Wichru': 'the Wind Strzyga', 'Olbrzyma Gradu': 'the Hail Giant', 'Ducha Zorzy': 'the Aurora Spirit', 'Mamuta Wiecznej Zimy': 'the Mammoth of the Everlasting Winter',
+  'Młodego Olbrzyma Szronu': 'the Young Frost Giant', 'Dziada Mroza': 'the Old Man Frost', 'Olbrzyma Gradu': 'the Hail Giant', 'Ducha Zorzy': 'the Aurora Spirit', 'Mamuta Wiecznej Zimy': 'the Mammoth of the Everlasting Winter',
   // dwellings
   'Chata na Lodzie': 'Hut on the Ice', 'Zagroda Jaków': 'Yak Pen', 'Lodowa Strażnica': 'Ice Watchtower', 'Sopelkowa Grota': 'Icicle Grotto', 'Obóz Olbrzymów': 'Giants\' Camp',
-  'Wichrowy Szczyt': 'Windy Peak', 'Gradowa Turnia': 'Hail Crag', 'Wieża Zorzy': 'Aurora Tower', 'Mamucia Grań': 'Mammoth Ridge',
+  'Chata Dziada Mroza': "Old Man Frost's Hut", 'Gradowa Turnia': 'Hail Crag', 'Wieża Zorzy': 'Aurora Tower', 'Mamucia Grań': 'Mammoth Ridge',
   // buildings
   'Pałac Szronu': 'Frost Palace', 'Wielki Pałac Szronu': 'Great Frost Palace', 'Pałac Kruchego Lodu': 'Palace of Brittle Ice', 'Pałac Wiecznego Szronu': 'Palace of Everfrost',
   'Kryształowa Grota': 'Crystal Grotto', 'Głęboka Kryształowa Grota': 'Deep Crystal Grotto', 'Wieża Zamieci': 'Blizzard Tower', 'Wielka Wieża Zamieci': 'Great Blizzard Tower',
@@ -40,7 +40,7 @@ register({
   'Mroźna Zbroja': 'Frosty Armour', 'Stała: kto go trafi wręcz, dostaje {0} szron.': 'Passive: whoever hits it in melee gets {0} frost.',
   'Szklany Dzwoneczek': 'Glass Bell', 'Raz na bitwę: wróg w zasięgu {0} pól, który ma szron, zamarza (traci następną aktywację).': 'Once per battle: an enemy within {0} cells that has frost freezes (loses its next activation).',
   'Zmrażający Uścisk': 'Freezing Grip', 'Raz na bitwę: trafiony nie rusza się w swojej następnej aktywacji i dostaje {0} szron.': 'Once per battle: the unit hit cannot move in its next activation and gets {0} frost.',
-  'Porwanie': 'Abduction', 'Raz na bitwę: unosi małego wroga w zasięgu {0} pól i stawia go {1}–{2} pola dalej, z dala od jego sojuszników.': 'Once per battle: lifts a small enemy within {0} cells and puts it {1}–{2} cells away, far from its allies.',
+  '{0} dotyka lodową brodą: {1} ({2}).': '{0} touches {1} with an icy beard ({2}).', 'Uścisk Mrozu': 'Grip of Frost', 'Raz na bitwę: wróg w zasięgu {0} pól dostaje {1} szrony (przy progu zamarza).': 'Once per battle: an enemy within {0} cells gets {1} frosts (it freezes at the threshold).',
   'Zimne Światło': 'Cold Light', 'Stała (aura): wrogowie w promieniu {0} pól mają −{1} S.': 'Passive (aura): enemies within {0} cells have −{1} SPD.',
   'Długa Noc': 'Long Night', 'Raz na bitwę: każdy wróg dostaje {0} szron. Stała: nie da się go odepchnąć.': 'Once per battle: every enemy gets {0} frost. Passive: it cannot be pushed.',
   'Lodowa Gwardia': 'Ice Guard', 'Zimowy Lament': 'Winter Lament',

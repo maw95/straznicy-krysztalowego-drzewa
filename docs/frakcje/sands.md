@@ -1,9 +1,11 @@
-# Karta frakcji: Imperium Piasków (`sands`) — G0 zatwierdzona wstępnie (20.11.2026)
+# Karta frakcji: Pustynne Cesarstwo (`sands`) — G0 zatwierdzona wstępnie (20.11.2026)
+
+**Zmiany z 20.11.2026 (zatwierdzone przez autora):** nazwa frakcji Pustynne Cesarstwo; Dżin Burzy Piaskowej usunięty z T5A; nowy Beduin Nomada (T2A; człowiek pustyni w burnusie z szablą, zwinny, bez konia); Skorpion Piaskowy na T3B; Kamienny Strażnik Grobowca na T4A; Lamassu na T5A; Dżin Wezyr zostaje bohaterem. Karta bez kodu (G0).
 
 Stan: 20.11.2026. Autor wstępnie zatwierdził kartę (skład, dowódcy, mechanika); **liczby Ż/A/S, koszty i zdolności „N” ustali balans przy bramce G2**. Treść przeniesiona z `FRAKCJE_PROPOZYCJE.md` (sekcja 8) po uwagach autora z 19.11 i 20.11; ta karta jest teraz źródłem prawdy. Szablon: `KARTA_FRAKCJI_SZABLON.md`. Odrzucone pomysły: `ODRZUCONE_POMYSLY.md`. Bramki: G1 dane i paczka, G2 balans, G3 próbka jednostki (autor), G4 grafika, G5 instrukcja.
 
 
-**EN:** Sand Empire · **Rola:** mobilność · **DLC**
+**EN:** Desert Empire · **Rola:** mobilność · **DLC**
 
 **Klimat.** Pustynne imperium z oazami, karawanami i grobowcami pełnymi strażników z kamienia. Rządzą nim dżinny i sfinksy,
 a w piaskach czekają skorpiony. Nic nie jest tym, czym się wydaje: na wydmie stoi wojownik albo jego miraż.
@@ -30,13 +32,13 @@ przepada. Do tego **przestawianie własnych jednostek** (Dżin, Rok, Czerw) i za
 | 1 | Szakalogłowy Strażnik (`jackalGuard`) | wojownik z głową szakala | 1 | chód | wręcz | Czujność: pierwszy wróg, który wejdzie obok, dostaje cios od razu (raz na rundę) | ★ reakcja na wejście | — |
 | 1 | Mangusta Faraona (`pharaohMongoose`) | zwinna mangusta w złotej obroży, wróg kobr (decyzja 20.11, zamiast Skorpiona Piaskowego na tierze 1) | 1 | chód | wręcz | Odporność na Jad: nie działają na nią trucizna i unieruchomienie (statystyki do symulacji) | reuse: odporność na statusy | — |
 | 1 | Łucznik Wydm (`duneArcher`) | łucznik w zawoju | 1 | chód | dyst. | Strzał zza Wydmy: +1 A, gdy stoi przy przeszkodzie | ★ premia za osłonę | — |
-| 2A | Skorpion Piaskowy (`sandScorpion`) | skorpion wielkości psa (decyzja 20.11, awans z tieru 1) | 1 | chód | wręcz | Jad: raz na bitwę trafiony traci N Ż w kolejnych aktywacjach | trucizna | Gniazdo Skorpionów |
+| 2A | Beduin Nomada (`bedouinNomad`) | człowiek pustyni w burnusie z szablą, zwinny, bez konia (decyzja 20.11, zamiast awansu Skorpiona na 2A) | 1 | chód | wręcz | Rzut Sztyletem (zatwierdzone 20.11): raz na bitwę zamiast ataku wręcz wykonuje atak dystansowy (jak strzelec, pełne A) w widoczny cel, bez ripost wręcz; potem może dokończyć aktywację normalnie | atak dystansowy jednostki wręcz (raz), bez riposty | Namiot Nomadów |
 | 2B | Kobra Królewska (`cobra`) | wielka kobra z kapturem | 1 | chód | wręcz | Hipnoza: raz na bitwę trafiony unieruchomiony | unieruchomienie | Wężowa Studnia |
 | 3A | Tancerka Fata Morgany (`mirageDancer`) | tancerka z welonami | 1 | chód | dyst. | Lustro Wydm: raz na bitwę tworzy miraż sojusznika | ★ miraż | Dom Tancerek |
-| 3B | Kamienny Strażnik Grobowca (`ushabti`) | posąg strażnika | 1 | chód | wręcz | Przebudzenie: stoi, dopóki wróg nie wejdzie obok albo go nie trafi; wtedy +N A; pancerz | ★ uśpienie do bodźca | Grobowiec Strażników |
-| 4A | Lamassu (`lamassu`) | skrzydlaty byk z ludzką głową | 2 | lot | wręcz | Strażnik Bram: pancerz; sąsiednich sojuszników nie da się przestawić ani odepchnąć | pancerz, aura | Brama Lamassu |
+| 3B | Skorpion Piaskowy (`sandScorpion`) | skorpion wielkości psa (decyzja 20.11, awans z tieru 1; po zmianie z 20.11 na 3B) | 1 | chód | wręcz | Jad: raz na bitwę trafiony traci N Ż w kolejnych aktywacjach | trucizna | Gniazdo Skorpionów |
+| 4A | Kamienny Strażnik Grobowca (`ushabti`) | posąg strażnika | 1 | chód | wręcz | Przebudzenie: stoi, dopóki wróg nie wejdzie obok albo go nie trafi; wtedy +N A; pancerz | ★ uśpienie do bodźca | Grobowiec Strażników |
 | 4B | Krokodyl Oazowy (`oasisCrocodile`) | olbrzymi krokodyl z oazy (decyzja 20.11, zamiast Olbrzymiego Skorpiona, zbyt podobnego do Królowej Skorpionów) | 2 | chód | wręcz | Chwyt Szczęk: trafiony unieruchomiony | reuse: Chwyt | Rozlewisko Krokodyli |
-| 5A | Dżin Burzy Piaskowej (`stormDjinn`) | dżin z wirem piasku | 1 | lot | dyst. | Burza Piaskowa: raz na bitwę strzelcy wroga −N A do końca rundy | aura osłabiająca | Lampa Dżina |
+| 5A | Lamassu (`lamassu`) | skrzydlaty byk z ludzką głową | 2 | lot | wręcz | Strażnik Bram: pancerz; sąsiednich sojuszników nie da się przestawić ani odepchnąć | pancerz, aura | Brama Lamassu |
 | 5B | Ptak Rok (`roc`) | olbrzymi ptak pustyni | 2 | lot | wręcz | Lot ze Skrzydłem: raz na bitwę przenosi sąsiedniego sojusznika ze sobą | ★ ruch z pasażerem | Gniazdo Roka |
 | 6 | Czerw Pustyni (`sandWyrm`) | olbrzymi czerw z piasku | 2 | chód | wręcz | Spod Piasku: zamiast ruchu zakopuje się i wynurza na polu w zasięgu N, odpychając sąsiadów o 1 | reuse: Podkop + odpychanie | Ruchome Piaski |
 
@@ -52,6 +54,7 @@ przepada. Do tego **przestawianie własnych jednostek** (Dżin, Rok, Czerw) i za
 Pod Gwiazdą, Kamienny Lew, Pałac Wiatru, Sucha Rzeka, Szafranowy Gród, Lustrzana Przystań.
 
 ## Wygląd i dźwięk
+- **Wygląd wzorcowy Bastii (kot autora Brytania):** `docs/frakcje/ZWIERZAKI_AUTORA.md`.
 - **Paleta:** piasek, ochra, terakota, złoto, kość słoniowa, zgaszony karmazyn, **zieleń jadeitu zamiast turkusu i lapis
   lazuli** (to niebieskie).
 - **Herb:** złote oko nad piramidą. **Arena:** oaza z ruinami kolumn, wydmy, palmy (przeszkody).
@@ -64,7 +67,7 @@ Rozstawia miraże przy najcenniejszych jednostkach, zasadza Królową przy strze
 ## Kolizje
 - **Mumie** nie: grobowce pilnują kamienni strażnicy, nie umarli (rozdzielenie z Królestwem Umarłych).
 - **Król Burzy** (neutralny) teleportuje siebie; Piaski przenoszą sojuszników.
-- **Strzyga Szronu** przenosi wrogów (izolowanie), Piaski tylko swoich.
+- **Dziad Mróz** przenosi wrogów (izolowanie), Piaski tylko swoich.
 - Ukryta informacja: patrz punkt 2.
 
 ## Alternatywy

@@ -1,4 +1,4 @@
-// Wolne Kompanie (docs/frakcje/free.md): the pack, the hidden traps of the Warsztat Sideł (laying them, the way they go off, what the enemy may see of them and what a bot may know),
+// Wolna Kompania (docs/frakcje/free.md): the pack, the hidden traps of the Warsztat Sideł (laying them, the way they go off, what the enemy may see of them and what a bot may know),
 // the abilities of the faction (the mark, the veil, the leap, the charge...), the Paserka and the Szlaki Przemytnicze, the Spark, then whole games of the Companies.
 import { describe, expect, it } from 'vitest';
 import { applyAction, createGame, legalHeroMoves, sneakMoves, trailsLeft } from '../src/engine/game';
@@ -22,7 +22,8 @@ import {
 import { assignSlots, teamsOf } from '../src/engine/teams';
 import { canBeMoved } from '../src/engine/primitives';
 import { redactHidden } from '../src/engine/hidden';
-import { artifactBill, bestLevel, collectIncome } from '../src/engine/kingdom';
+import { hideOwnTraps, trapSecrecyOn, trapVeilFor } from '../src/ui/trapVeil';
+import { bestLevel, collectIncome, KINGDOM } from '../src/engine/kingdom';
 import { chooseAction } from '../src/engine/ai';
 import { ARTIFACTS } from '../src/engine/sites';
 import { FACTION_MECHANICS } from '../src/engine/empire';
@@ -96,7 +97,7 @@ describe('the pack', () => {
     const s = createGame(table(['free', 'dawn'], 'control'));
     expect(teamsOf(s)).toEqual(['dawn', 'horde']);
     expect(Object.values(s.heroes).find((h) => h.faction === 'dawn')?.id).toBe('foxCaptain');
-    expect(s.factions.dawn.supportsAlive).toEqual(['otterScout', 'martenThief', 'squirrelArcher']);
+    expect(s.factions.dawn.supportsAlive).toEqual(['otterScout', 'magpieThief', 'squirrelArcher']);
   });
 });
 
@@ -117,7 +118,7 @@ describe('Sidła: laying the traps', () => {
 
   /** A battle in its deploy stage: the Companies (slot dawn) deploy first. */
   const deploying = (workshop: number): GameState => {
-    const s = fight([['foxCaptain', 'dawn', 0, 8], ['martenThief', 'dawn', 0, 6], BEAR], workshop);
+    const s = fight([['foxCaptain', 'dawn', 0, 8], ['magpieThief', 'dawn', 0, 6], BEAR], workshop);
     at(s, 'squirrelArcher').pos = arenaCell(0, 10);
     s.battle!.stage = 'deploy';
     s.battle!.needsDeploy = ['dawn', 'horde'];
@@ -242,6 +243,31 @@ describe('Sidła: going off', () => {
 });
 
 describe('Sidła: what may be seen', () => {
+  it('at a shared screen the Snares are veiled: the deployment is covered, own traps are hidden until peeked at, never online', () => {
+    const s = fight([['foxCaptain', 'dawn', 0, 8], BEAR], 1);
+    const b = s.battle!;
+    layTrap(s, 'dawn', trapZone(b, 'dawn')[0]);
+    const two = [{ faction: 'dawn' as const }, { faction: 'horde' as const }];
+    expect(trapSecrecyOn(s, two, false)).toBe(true);
+    expect(trapSecrecyOn(s, two, true)).toBe(false);
+    expect(trapSecrecyOn(s, [two[0]], false)).toBe(false);
+    expect(trapSecrecyOn(s, [{ faction: 'horde' as const }, { faction: 'horde' as const }], false)).toBe(false);
+    b.stage = 'deploy';
+    b.needsDeploy = ['dawn', 'horde'];
+    expect(trapVeilFor(s, 'dawn')).toBe(true);
+    expect(trapVeilFor(s, 'horde')).toBe(false);
+    b.needsDeploy = ['horde', 'dawn'];
+    expect(trapVeilFor(s, 'dawn')).toBe(false);
+    b.stage = 'fight';
+    expect(trapVeilFor(s, 'dawn')).toBe(false);
+    // the owner sees the trap through redactHidden, but not through the veil; the veil does not change its argument
+    const own = redactHidden(s, ['dawn']);
+    expect(own.battle!.ground).toHaveLength(1);
+    expect(hideOwnTraps(own, 'dawn').battle!.ground).toHaveLength(0);
+    expect(own.battle!.ground).toHaveLength(1);
+    expect(hideOwnTraps(own, 'horde')).toBe(own);
+  });
+
   it('redactHidden leaves the enemy\'s hidden traps out and keeps the own ones; the argument is not changed', () => {
     const s = fight([['foxCaptain', 'dawn', 0, 8], BEAR], 1);
     const [a, b] = trapZone(s.battle!, 'dawn');
@@ -383,15 +409,15 @@ describe('Oznaczenie, Ukryty, rany, łup', () => {
   });
 
   it('Kieszonkowiec: the first blow at a hero gives the faction gold, once; a blow at a support gives nothing', () => {
-    let s = fight([['martenThief', 'dawn', 6, 8], BEAR], 1);
+    let s = fight([['magpieThief', 'dawn', 6, 8], BEAR], 1);
     const gold = s.kingdom!.gold.dawn;
-    s = strike(s, 'martenThief', 'ancientBear');
+    s = strike(s, 'magpieThief', 'ancientBear');
     expect(s.kingdom!.gold.dawn).toBe(gold + ABILITY.pickpocketGold);
-    expect(at(s, 'martenThief').abilityUsed).toBe(true);
-    s = strike(s, 'martenThief', 'ancientBear');
+    expect(at(s, 'magpieThief').abilityUsed).toBe(true);
+    s = strike(s, 'magpieThief', 'ancientBear');
     expect(s.kingdom!.gold.dawn).toBe(gold + ABILITY.pickpocketGold);
-    const sup = fight([['martenThief', 'dawn', 6, 8], ['ratman', 'horde', 7, 9, 99]], 1);
-    expect(strike(sup, 'martenThief', 'ratman').kingdom!.gold.dawn).toBe(sup.kingdom!.gold.dawn);
+    const sup = fight([['magpieThief', 'dawn', 6, 8], ['ratman', 'horde', 7, 9, 99]], 1);
+    expect(strike(sup, 'magpieThief', 'ratman').kingdom!.gold.dawn).toBe(sup.kingdom!.gold.dawn);
   });
 
   it('Riposta: a melee attacker that survives takes a counterblow; a shooter does not', () => {
@@ -406,16 +432,16 @@ describe('Oznaczenie, Ukryty, rany, łup', () => {
 
 describe('free actions and the leap', () => {
   it('Ładunek: the own trap goes off, hurting its cell and the neighbours (allies too); the trap is spent', () => {
-    let s = fight([['badgerBomber', 'dawn', 4, 8], ['ancientBear', 'horde', 5, 9, 99], ['martenThief', 'dawn', 5, 7]], 1);
+    let s = fight([['marmotPetard', 'dawn', 4, 8], ['ancientBear', 'horde', 5, 9, 99], ['magpieThief', 'dawn', 5, 7]], 1);
     const cell = arenaCell(5, 9);
     layTrap(s, 'dawn', cell);
     layTrap(s, 'dawn', arenaCell(2, 6));
-    const thief = at(s, 'martenThief').hp;
-    s = cast(s, 'badgerBomber', { cell });
+    const thief = at(s, 'magpieThief').hp;
+    s = cast(s, 'marmotPetard', { cell });
     expect(trapsOf(s.battle!, 'dawn').map((g) => g.cell)).toEqual([arenaCell(2, 6)]);
     expect(at(s, 'ancientBear').hp).toBe(99 - ABILITY.blastDamage * scaleOf(s));
-    expect(at(s, 'martenThief').hp).toBe(thief - ABILITY.blastDamage * scaleOf(s));
-    expect(() => cast(fight([['badgerBomber', 'dawn', 4, 8], BEAR], 1), 'badgerBomber', { cell })).toThrow(/własną pułapkę/);
+    expect(at(s, 'magpieThief').hp).toBe(thief - ABILITY.blastDamage * scaleOf(s));
+    expect(() => cast(fight([['marmotPetard', 'dawn', 4, 8], BEAR], 1), 'marmotPetard', { cell })).toThrow(/własną pułapkę/);
   });
 
   it('Tama: puts an obstacle next to the beaver, once', () => {
@@ -526,14 +552,20 @@ describe('free actions and the leap', () => {
 const unitCell = (s: GameState, cell: string) => Object.values(s.battle!.units).some((u) => u.pos === cell || u.tail === cell);
 
 describe('Paserka and Szlaki Przemytnicze', () => {
-  it('the Paserka lowers the price of a market artifact and adds gold to a chest; the second level brings a treasure every third round', () => {
+  it('the Paserka buys backpack artifacts at the full market price; the second level brings a treasure every third round', () => {
     const s = empire();
-    const hero = Object.values(s.heroes).find((h) => h.faction === 'dawn')!;
+    const hero = s.heroes[s.turnOrder[s.turnIndex]];
     const art = ARTIFACTS.find((a) => a.rarity === 2)!;
-    const base = artifactBill(s, hero, art).gold;
+    const sell = () => applyAction(s, { type: 'kingdomSellArtifact', settlementId: home(s).id, artifactId: art.id });
+    hero.pack = [art.id];
+    expect(() => sell()).toThrow(/Paserka/);
     home(s).buildings.fence = 1;
-    expect(bestLevel(s, 'dawn', 'fence')).toBe(1);
-    expect(artifactBill(s, hero, art).gold).toBe(Math.max(1, base - FACTION_MECHANICS.fenceDiscount));
+    expect(bestLevel(s, home(s).owner!, 'fence')).toBe(1);
+    const gold = s.kingdom!.gold[hero.faction];
+    const done = sell();
+    expect(done.kingdom!.gold[hero.faction]).toBe(gold + KINGDOM.artifactPrice[art.rarity - 1]);
+    expect(done.heroes[hero.id].pack ?? []).toHaveLength(0);
+    expect(() => applyAction(done, { type: 'kingdomSellArtifact', settlementId: home(s).id, artifactId: art.id })).toThrow(/plecaku/);
     home(s).buildings.fence = 2;
     const items = s.factions.dawn.inventory.length;
     s.round = 2;

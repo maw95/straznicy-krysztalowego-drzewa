@@ -1,18 +1,18 @@
-// English of the Iron Clans (docs/frakcje/clans.md): names, abilities, buildings, the Spark, the runes of the forge and the texts of the Mur Tarcz. Place names and the names of the commanders stay Polish on purpose.
+// English of the Iron Clan (docs/frakcje/clans.md): names, abilities, buildings, the Spark, the runes of the forge and the texts of the Mur Tarcz. Place names and the names of the commanders stay Polish on purpose.
 import { register } from '../translate';
 
 register({
   // faction
-  'Żelazne Klany': 'Iron Clans', 'Klanów': 'the Clans', 'dłużej miały': 'held', 'Mur Tarcz': 'Shield Wall', 'Kowadło Pierwotnej Iskry': 'Anvil of the Primal Spark',
+  'Żelazny Klan': 'Iron Clan', 'Klan': 'the Clan', 'Klanu': 'the Clan', 'Klanów': 'the Clans', 'dłużej miał': 'held', 'Mur Tarcz': 'Shield Wall', 'Kowadło Pierwotnej Iskry': 'Anvil of the Primal Spark',
   // heroes, commanders, the fourth hero
   'Tan Żelaznobrody': 'Ironbeard the Thane', 'Matka Run': 'Rune Matron', 'Strażniczka Przełęczy': 'Warden of the Pass', 'Stary Górmistrz': 'Old Mountain-Master',
   'Wojownik Klanu': 'Clan Warrior', 'Kusznik Gór': 'Mountain Crossbowman', 'Kapłan Kuźni': 'Forge Priest',
   // units
-  'Krasnoludzki Tarczownik': 'Dwarven Shieldbearer', 'Kret z Brązu': 'Bronze Mole', 'Kusznik Klanu': 'Clan Crossbowman', 'Niedźwiedź w Zbroi': 'Armoured Bear', 'Kowal Bitewny': 'Battle Smith',
-  'Wartownik z Brązu': 'Bronze Sentinel', 'Jeździec na Koźle': 'Goat Rider', 'Pogromca Olbrzymów': 'Giant Slayer', 'Skarbnik': 'Skarbnik (Mine Spirit)', 'Gwardia Młota': 'Hammer Guard',
+  'Krasnoludzki Tarczownik': 'Dwarven Shieldbearer', 'Kret z Brązu': 'Bronze Mole', 'Mosiężny Pająk': 'Brass Spider', 'Niedźwiedź w Zbroi': 'Armoured Bear', 'Kowal Bitewny': 'Battle Smith',
+  'Wartownik z Brązu': 'Bronze Sentinel', 'Kozioł Taranowy': 'Battering Goat', 'Pogromca Olbrzymów': 'Giant Slayer', 'Skarbnik': 'Skarbnik (Mine Spirit)', 'Gwardia Młota': 'Hammer Guard',
   'Armata Klanów': 'Clan Cannon', 'Kolos Kuźni': 'Forge Colossus',
   // genitives (dwelling texts)
-  'Niedźwiedzia w Zbroi': 'the Armoured Bear', 'Kowala Bitewnego': 'the Battle Smith', 'Wartownika z Brązu': 'the Bronze Sentinel', 'Jeźdźca na Koźle': 'the Goat Rider', 'Pogromcy Olbrzymów': 'the Giant Slayer',
+  'Niedźwiedzia w Zbroi': 'the Armoured Bear', 'Kowala Bitewnego': 'the Battle Smith', 'Wartownika z Brązu': 'the Bronze Sentinel', 'Kozła Taranowego': 'the Battering Goat', 'Pogromcy Olbrzymów': 'the Giant Slayer',
   'Skarbnika': 'the Skarbnik', 'Gwardii Młota': 'the Hammer Guard', 'Armaty Klanów': 'the Clan Cannon', 'Kolosa Kuźni': 'the Forge Colossus',
   // dwellings
   'Gawra Zbrojna': 'Armoured Den', 'Polowa Kuźnia': 'Field Forge', 'Warsztat Mechanizmów': 'Mechanism Workshop', 'Koźla Zagroda': 'Goat Pen', 'Sala Pogromców': 'Hall of Slayers', 'Stary Szyb': 'Old Shaft',
@@ -20,14 +20,14 @@ register({
   // buildings
   'Sala Tarcz': 'Shield Hall', 'Wielka Sala Tarcz': 'Great Shield Hall', 'Sala Nieruchomych Tarcz': 'Hall of Unmoving Shields', 'Sala Tarcz Przodków': 'Shield Hall of the Ancestors',
   'Runiczna Kuźnia': 'Rune Forge', 'Wielka Runiczna Kuźnia': 'Great Rune Forge', 'Głęboka Sztolnia': 'Deep Adit', 'Najgłębsza Sztolnia': 'Deepest Adit',
-  'Mur Tarcz: jednostka Klanów z co najmniej {0} sąsiednimi sojusznikami ma −{1} obrażeń z każdego ciosu. Bez tego budynku frakcja nie ma tego efektu.': 'Shield Wall: a Clans unit with at least {0} neighbouring allies takes −{1} damage from every blow. Without this building the faction has no such effect.',
+  'Mur Tarcz: jednostka Klanu z co najmniej {0} sąsiednimi sojusznikami ma −{1} obrażeń z każdego ciosu. Bez tego budynku frakcja nie ma tego efektu.': 'Shield Wall: a Clan unit with at least {0} neighbouring allies takes −{1} damage from every blow. Without this building the faction has no such effect.',
   'Wystarczy {0} sąsiad.': 'One neighbour is enough.', 'Jednostki w szyku nie da się odepchnąć ani przyciągnąć.': 'A unit in formation cannot be pushed or pulled.',
   'Kto atakuje wręcz jednostkę w szyku, traci {0} Ż.': 'Whoever attacks a unit in formation in melee loses {0} HP.',
   'Raz na rundę jeden pomocnik w drużynie dostaje trwałą runę (+1 A, +1 Ż albo pancerz 1; {0}). Jedna runa na jednostkę; runa zostaje po śmierci pomocnika i jego powrocie do drużyny.': 'Once a round one support of the team gets a permanent rune (+1 ATK, +1 HP or armour 1; {0}). One rune per unit; the rune stays when the support falls and returns to the team.',
   'Pomocnik może nosić dwie runy.': 'A support can carry two runes.',
   '+{0} rudy na rundę z każdej osady z Głęboką Sztolnią.': '+{0} ore a round from every settlement with a Deep Adit.', 'Także +{0} Gwiezdnego Pyłu co {1} rundy z każdej osady z drugim poziomem.': 'Also +{0} Star Dust every {1} rounds from every settlement with the second level.',
-  'Jednostka Klanów, która stoi obok co najmniej {0} sojuszników, ma −{1} obrażeń z każdego ciosu; kolejne poziomy Sali Tarcz osłabiają ten warunek, a w szyku nie da się jej odepchnąć i kto uderza ją wręcz, traci Ż.': 'A Clans unit standing next to at least {0} allies takes −{1} damage from every blow; the higher levels of the Shield Hall relax the condition, and in formation it cannot be pushed and whoever hits it in melee loses HP.',
-  'Wszystkie jednostki Klanów (bohaterowie i pomocnicy) mają pancerz {0}: −{1} obrażeń z każdego ciosu.': 'All units of the Clans (heroes and supports) have armour {0}: −{1} damage from every blow.',
+  'Jednostka Klanu, która stoi obok co najmniej {0} sojuszników, ma −{1} obrażeń z każdego ciosu; kolejne poziomy Sali Tarcz osłabiają ten warunek, a w szyku nie da się jej odepchnąć i kto uderza ją wręcz, traci Ż.': 'A Clans unit standing next to at least {0} allies takes −{1} damage from every blow; the higher levels of the Shield Hall relax the condition, and in formation it cannot be pushed and whoever hits it in melee loses HP.',
+  'Wszystkie jednostki Klanu (bohaterowie i pomocnicy) mają pancerz {0}: −{1} obrażeń z każdego ciosu.': 'All units of the Clan (heroes and supports) have armour {0}: −{1} damage from every blow.',
   // runes of the forge
   '+1 A': '+1 ATK', '+1 Ż': '+1 HP', 'pancerz 1': 'armour 1', 'bez run': 'no runes', 'Wybij runę: {0}': 'Strike the rune: {0}', 'Cena runy:': 'Price of a rune:',
   'Kuźnia wybiła już w tej rundzie runę.': 'The forge has already struck a rune this round.', 'W drużynie nie ma pomocników.': 'There are no supports in the team.',
@@ -42,6 +42,7 @@ register({
   'Bełt Przeszywający': 'Piercing Bolt', 'Stała: cios trafia cel i wroga stojącego tuż za nim w jednej linii.': 'Passive: the blow hits the target and the enemy right behind it in a line.',
   'Podkop': 'Burrow', 'Zamiast ruchu znika pod ziemią i wyłania się na dowolnym wolnym polu w odległości do {0}; w tej aktywacji nie atakuje.': 'Instead of moving it vanishes underground and surfaces on any free cell up to {0} away; it does not attack in this activation.',
   'Pawęż': 'Pavise', 'Kolczuga': 'Chain Mail', 'Stała: pancerz (−{0} obrażeń z każdego ciosu).': 'Passive: armour (−{0} damage from every blow).',
+  'Ostrzał z Miejsca': 'Standing Fire', 'Stała: +{0} A, gdy w tej aktywacji się nie ruszał (kusze na odnóżach celują najlepiej, gdy pająk stoi).': 'Passive: +{0} ATK when it has not moved in this activation (the crossbows on its legs aim best while the spider stands still).',
   'Salwa z Miejsca': 'Standing Volley', 'Stała: +{0} A, gdy w tej aktywacji się nie ruszał.': 'Passive: +{0} ATK when it has not moved in this activation.',
   'Kolce Mechanizmu': 'Mechanism Spikes', 'Stała: każdy, kto zaatakuje go wręcz, traci {0} Ż; trucizna na niego nie działa.': 'Passive: whoever attacks it in melee loses {0} HP; poison has no effect on it.',
   'Na Duże Cele': 'Against Large Targets', 'Stała: +{0} A przeciw dużym jednostkom (dwupolowym).': 'Passive: +{0} ATK against large (two-cell) units.',
@@ -50,6 +51,7 @@ register({
   'Ostrzał': 'Bombardment', 'Stała: strzał trafia cel i jego sąsiadów; nie strzela w aktywacji, w której się ruszyła; mury i bramy oblężenia pękają od jednego trafienia.': 'Passive: the shot hits the target and its neighbours; it does not fire in an activation in which it moved; siege walls and gates break with a single hit.',
   'Fortyfikacja': 'Fortification', 'Raz na bitwę stawia {0} pola muru obok siebie. Stała: pancerz {1}, nie da się go odepchnąć.': 'Once per battle it puts up {0} cells of wall side by side. Passive: armour {1}, it cannot be pushed.',
   'Hartowanie': 'Tempering', 'Raz na bitwę: sąsiedni sojusznik ma +{0} A do końca bitwy.': 'Once per battle: a neighbouring ally has +{0} ATK until the end of the battle.',
+  'Raz na bitwę: jeśli w tej aktywacji ruszył się o co najmniej {0} pola, cios wręcz zadaje +{1} A, a trafiony traci swoją następną aktywację.': 'Once per battle: if it has moved at least {0} cells in this activation, its melee blow deals +{1} ATK and the unit hit loses its next activation.',
   'Skok po Turniach': 'Leap over the Crags', 'Raz na bitwę: jeden ruch przez jednostki i przeszkody (nie staje na nich).': 'Once per battle: one move over units and obstacles (it does not stop on them).',
   'Twardy Łeb': 'Hard Head', 'Raz na bitwę ignoruje do {0} obrażeń z jednego trafienia.': 'Once per battle it ignores up to {0} damage from a single hit.',
   'Żar Kuźni': 'Forge Fire', 'Raz na bitwę: sojusznik odzyskuje {0} Ż.': 'Once per battle: an ally regains {0} HP.',

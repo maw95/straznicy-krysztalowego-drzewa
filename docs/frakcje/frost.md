@@ -3,13 +3,15 @@
 Stan: 19.11.2026. Karta powstała z `FRAKCJE_PROPOZYCJE.md` (sekcja 7, zatwierdzona przez autora) i z rozstrzygnięć z 19.11: **żadnych wilków ani psów (Ryś Śnieżny zamiast Wilczycy Zamieci, Mamut Wiecznej Zimy zamiast Białego Wilka Zimy; Mamut przeszedł ze Stad do Szronu)**.
 Szablon: `KARTA_FRAKCJI_SZABLON.md`. Liczby Ż/A/S i koszty są przybliżone (skala Przymierza, Stad, Umarłych i Klanów; autor kazał się nimi nie przejmować) i zostaną dostrojone przy bramce G2. Szron był w backlogu jako DLC (po Klanach); wdrożony wcześniej na polecenie autora. Czego **nie** robić: `ODRZUCONE_POMYSLY.md`.
 
+**Zmiana jednostki z 20.11.2026 (zatwierdzona przez autora):** Strzyga Wichru → Dziad Mróz (T4B, zdolność Uścisk Mrozu (zamiast Porwania); stary władca mrozu z brodą z sopli). Siedlisko: Chata Dziada Mroza. Strzyga przechodzi do Umarłych (zamiast Kościanej Wróżki).
+
 ## Tożsamość
 - **Nazwa / id:** Dwór Wiecznego Szronu / `frost` (EN: Court of Everfrost).
 - **Klimat:** dwór Marzanny, Pani Zimy, w lodowych salach na północy: olbrzymy, wiedźmy zamieci, śnieżny ryś, mamut, strzygi wichru. Zima nie jest zła, tylko nieubłagana.
 - **Rola w grze:** kontrola.
 - **Mechanika wyróżniająca: Szron** (budynek Pałac Szronu): cios jednostki Dworu nakłada szron, przy progu cel zamarza (traci aktywację); do tego izolowanie (lodowa ściana, porwanie).
 - **Mocne strony / słabości:** zamrażanie dużych jednostek, dzielenie armii wroga; szron potrzebuje kilku ciosów, szybcy i agresywni (Stada, Horda) dobiegają, zanim zadziała.
-- **Jak gra bot:** skupia ciosy na jednym celu, żeby go zamrozić (premia za szron na celu i za cios, który zamrozi), strzelcy i czarownice trzymają dystans, słabi wręcz się nie pchają; Lodową Ścianą odcina wroga, Dzwoneczkiem zamraża najbardziej oszronionego, Strzygą porywa strzelców, Długą Noc używa, gdy w pobliżu są co najmniej dwaj wrogowie; na mapie buduje Wieżę maga i Pałac Szronu (przez ogólną logikę mechaniki), Kryształową Grotę.
+- **Jak gra bot:** skupia ciosy na jednym celu, żeby go zamrozić (premia za szron na celu i za cios, który zamrozi), strzelcy i czarownice trzymają dystans, słabi wręcz się nie pchają; Lodową Ścianą odcina wroga, Dzwoneczkiem zamraża najbardziej oszronionego, Dziadem Mrozem porywa strzelców, Długą Noc używa, gdy w pobliżu są co najmniej dwaj wrogowie; na mapie buduje Wieżę maga i Pałac Szronu (przez ogólną logikę mechaniki), Kryształową Grotę.
 
 ## Bohaterowie (3 + czwarty + 3 dowódców)
 | Id | Nazwa | Typ | Rozm. | Ż | A | S | Ruch | Zasięg | Zdolność |
@@ -32,7 +34,7 @@ Dowódcy z karczmy: Rycerz Lodowej Gwardii (`iceKnight`, wojownik, 8/4/3, Lodowa
 | 3A | `iceSentinel` | Rycerz Lodowej Zbroi | 1 | 9 | 3 | 3 | chód | wręcz | Mroźna Zbroja: kto go trafi wręcz, dostaje szron | Lodowa Strażnica |
 | 3B | `frostSprite` | Rusałka Szronu | 1 | 6 | 3 | 4 | lot | dyst. | Szklany Dzwoneczek: raz na bitwę zamraża wroga ze szronem w zasięgu 4 | Sopelkowa Grota |
 | 4A | `youngGiant` | Młody Olbrzym Szronu | 2 | 13 | 4 | 3 | chód | wręcz | Zmrażający Uścisk: raz na bitwę trafiony nie rusza się i dostaje szron | Obóz Olbrzymów |
-| 4B | `windStrzyga` | Strzyga Wichru | 1 | 7 | 4 | 5 | lot | wręcz | Porwanie: raz na bitwę mały wróg w zasięgu 2 trafia 2–3 pola dalej, z dala od swoich | Wichrowy Szczyt |
+| 4B | `dziadMroz` | Dziad Mróz | 1 | 7 | 4 | 5 | chód | wręcz | Uścisk Mrozu (zatwierdzone 20.11): raz na bitwę wróg w zasięgu 2 pól dostaje 2 szrony (przy progu zamarza); dotyk lodowej brody, bez lotu | Chata Dziada Mroza |
 | 5A | `elderGiant` | Olbrzym Gradu | 2 | 14 | 5 | 2 | chód | dyst. | Grad Głazów: cel i sąsiedzi dostają cios i szron | Gradowa Turnia |
 | 5B | `auroraSpirit` | Duch Zorzy | 1 | 9 | 4 | 4 | lot | dyst. | Zimne Światło: wrogowie w promieniu 2 mają −1 S | Wieża Zorzy |
 | 6 | `frostMammoth` | Mamut Wiecznej Zimy | 2 | 24 | 7 | 3 | chód | wręcz | Długa Noc: raz na bitwę każdy wróg dostaje szron; nie do odepchnięcia | Mamucia Grań |
@@ -78,7 +80,7 @@ Zmierzone 19.11.2026, przed strojeniem i po (Kontrola / Podbój / Relikt):
 - **Zamrożenie:** `status.stunned` (jednostka traci najbliższą aktywację, szron znika). Poziom III: zamrożony dostaje +1 obrażeń (w skali) od następnego ciosu; kruchość kończy się po tym ciosie albo po utraconej aktywacji. Poziom IV: każdy szron to −1 S. Odporność Umarłych na statusy nie obejmuje szronu i zamrożenia; spowolnienie, unieruchomienie i klątwa ją respektują.
 - **Lodowa Ściana:** pola wybiera silnik (3 w linii, w zasięgu 3 od Marzanny, jak najbliżej wroga, najbardziej w poprzek linii do niego), bez wyboru gracza; stoi w rundzie rzucenia i następnej, potem znika; rysowana jako `wall.webp`.
 - **Ślad Zamieci:** nie zmienia kosztu ruchu: wróg, który przejdzie przez pole śladu albo na nim stanie (w tej samej rundzie), ma −1 S w następnej aktywacji; ślad nie jest rysowany.
-- **Porwanie:** tylko jednostka jednopolowa i nie unieruchomiona; cel ląduje na wolnym polu 2–3 od starego, najdalej od swoich; zdolność wymaga celu w zasięgu 2.
+- **Uścisk Mrozu (Dziad Mróz):** zdolność swobodna, raz na bitwę (`beardChill`): wybrany wróg w zasięgu 2 pól (`beardRange`) dostaje 2 szrony (`beardFrost`) przez `applyFrost`, więc przy progu Pałacu zamarza. Dziad Mróz chodzi (dawne Porwanie i lot usunięte); statystyki bez zmian do G2.
 - **Gęste Futro:** dotyczy ataków dystansowych, cios zadaje co najmniej 1. **Mroźna Zbroja:** szron dostaje atakujący wręcz, gdy cios zadał obrażenia. **Zimne Światło:** aura liczona na początku rundy i aktywacji, nie sumuje się. **Długa Noc:** każdy wróg +1 szron (może zamrozić); Mamut jest nieodpychalny.
 - **Pałac Szronu:** rodzic `magic` (Wieża maga). **Wieża Zamieci:** efekt liczony raz na turę bohatera (nie sumuje się z kilku wież). **Iskra:** szron dostają wszystkie jednostki po drugiej stronie (też neutralni) na początku walki; na IV poziomie Pałacu ten szron też spowalnia.
 - **Ziemia (mapa):** zastępczo łąki Przymierza. Arena zastępcza (obrazy Przymierza i Hordy w innym układzie, tło `arena/cyfrowa/frost.webp`).
@@ -88,7 +90,7 @@ Zmierzone 19.11.2026, przed strojeniem i po (Kontrola / Podbój / Relikt):
 ## Lista uproszczeń (do G4 albo decyzji autora)
 1. Lodowa Ściana: pola wybiera silnik, nie gracz.
 2. Ślad Zamieci: spowolnienie przy wejściu na pole, nie koszt ruchu; niewidoczny na arenie.
-3. Porwanie tylko dla małych, nieunieruchomionych celów, bez wyboru pola.
+3. Uścisk Mrozu: statystyki Dziada Mroza po zmianie lotu na chód do sprawdzenia na G2.
 4. Szron bez Pałacu nie powstaje od zwykłych ciosów; w krótkich partiach botów Pałac rzadko stoi.
 5. Brak grafiki własnej (zastępcza: `make placeholders`; ikony zdolności pożyczone w `ABILITY_ART`), brak arenowych przeszkód i kafli Dworu, brak obrazu lodowej ściany innego niż `wall.webp`, brak znaczników szronu na figurach (jest odznaka w panelu statusu), brak muzyki.
 6. Brak instrukcji gry PL/EN (G5) i koopu/online (51a).

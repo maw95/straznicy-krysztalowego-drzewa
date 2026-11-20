@@ -3,11 +3,13 @@
 Stan: 19.11.2026. Karta powstała z `FRAKCJE_PROPOZYCJE.md` (sekcja 4, zatwierdzona przez autora) i z rozstrzygnięć z rozmowy: **Wij Podziemny na 4A, Lisz (nie Licz) na 5A, Kostucha na 5B, zamiast Kurhanowego Olbrzyma i Jeźdźca na Zmorze**.
 Szablon: `KARTA_FRAKCJI_SZABLON.md`. Liczby Ż/A/S i koszty są przybliżone (skala Przymierza i Stad) i zostaną dostrojone przy bramce G2. Czego **nie** robić: `ODRZUCONE_POMYSLY.md` (żadnych nowych wilków ani psów, więc bez Wilkołaka-widma).
 
+**Zmiany jednostek z 20.11.2026 (zatwierdzone przez autora):** Płaczka → Wampir (T3B, zdolność Lament); Kościana Wróżka → Strzyga (T4B, zdolność Ponowny Oddech). Wygląd Strzygi: blada, dzika, drugie oblicze na plecach i dwa rzędy kłów, nie przesadnie makabryczna (bez krwi i wnętrzności). Kostucha zostaje. Siedliska: Krypta Wampira, Dom Strzygi. Liczby do G2.
+
 ## Tożsamość
 - **Nazwa / id:** Królestwo Umarłych / `undead` (EN: Barrow Kingdom).
 - **Klimat:** baśniowo, nie makabrycznie: kurhany we mgle, latarnie, duchy dawnych strażników, którzy nie odeszli, bo pilnują przysięgi. Szkielety są czyste i dumne, zbroje stoją same, płaczki zawodzą w wieżach. Bliżej „Ballady o Kościeju” niż horroru.
 - **Rola w grze:** wyczerpanie (długa bitwa, osłabianie, powroty poległych).
-- **Mechanika wyróżniająca: Wieczna Warta.** Polegli **pomocnicy** wracają na arenę (bohaterowie nie wstają). Dźwignią jest budynek Kurhan Wiecznej Warty; do tego Wezwanie z Kurhanu Króla, Kości Wracają Szkieleta i Ponowny Oddech Wróżki.
+- **Mechanika wyróżniająca: Wieczna Warta.** Polegli **pomocnicy** wracają na arenę (bohaterowie nie wstają). Dźwignią jest budynek Kurhan Wiecznej Warty; do tego Wezwanie z Kurhanu Króla, Kości Wracają Szkieleta i Ponowny Oddech Strzygi.
 - **Mocne strony / słabości:** długa bitwa, przewaga liczebna w późnych rundach, odporność na statusy (Iskra, Pusta Zbroja). Wolni, mało obrażeń naraz; Horda i Rój kończą, zanim Warta zadziała.
 - **Jak gra bot:** tanie szkielety na pierwszej linii (i tak wstaną), strzelcy i bohaterowie z tyłu (premia za ryzyko jest większa dla bohaterów, bo nie wstają), Lisz i Latarniczka celują w bohatera wroga, zdolności (Wezwanie, Lament, Dzwon, Wij) używane od razu, gdy mają cel; na mapie od razu buduje Szpital (rodzic Kurhanu) i Kurhan.
 
@@ -19,7 +21,7 @@ Szablon: `KARTA_FRAKCJI_SZABLON.md`. Liczby Ż/A/S i koszty są przybliżone (sk
 | `headlessKnight` | Bezgłowy Jeździec | łowca | 2 | 9 | 5 | 6 | chód | wręcz | **Widmowa Szarża** (raz na bitwę, w ataku): +2 A, od tyłu jeszcze +2 A |
 | `bellKeeper` | Duch Starego Dzwonnika (4. bohater, 7–8 graczy) | mędrzec | 1 | 5 | 2 | 3 | chód | dyst. | **Dzwon Zaduszny** (raz na bitwę): sąsiedni wrogowie −2 S w następnej aktywacji |
 Specjalności (poziom 5): Król: pomocnicy +1 Ż (Pan Warty); Latarniczka: +1 many na rundę (Wieczny Płomyk); Jeździec: +1 ruchu na mapie (Nocny Gościniec); Dzwonnik: czary +1.
-Dowódcy z karczmy: Kapitan Warty (`wardCaptain`, wojownik, Czujna Warta jak Twardogłowy), Upiorna Łuczniczka (`spectralArcher`, łowca, Zwodnicza Strzała jak Korzenie), Pokutny Mnich (`penitentMonk`, mędrzec, Pokutny Lament jak Lament Płaczki).
+Dowódcy z karczmy: Kapitan Warty (`wardCaptain`, wojownik, Czujna Warta jak Twardogłowy), Upiorna Łuczniczka (`spectralArcher`, łowca, Zwodnicza Strzała jak Korzenie), Pokutny Mnich (`penitentMonk`, mędrzec, Pokutny Lament jak Lament Wampira).
 
 ## Jednostki rekrutowane w osadzie (ceny jak w grze: poziomy 1–5 = 2/3/5/8/12 zł, legenda 20 zł + 3 Pyły; siedlisko wg poziomu). Układ A/B jak w Przymierzu, Hordzie i Stadach: do rekrutacji idzie A (`tierUnits`), B (`altUnits`) tylko na poziomie 6
 | Poziom | Id | Nazwa | Rozm. | Ż | A | S | Ruch | Zasięg | Zdolność | Siedlisko |
@@ -30,9 +32,9 @@ Dowódcy z karczmy: Kapitan Warty (`wardCaptain`, wojownik, Czujna Warta jak Twa
 | 2A | `skeletonArcher` | Szkielet Łucznik | 1 | 5 | 2 | 4 | chód | dyst. | Grot Przez Zbroję: ignoruje pancerz | Zbrojownia Kości |
 | 2B | `scarecrow` | Strach Polny | 1 | 6 | 2 | 4 | chód | wręcz | Postrach: sąsiedni wrogowie −1 A | Opuszczone Pole |
 | 3A | `hauntedArmor` | Nawiedzona Zbroja | 1 | 8 | 3 | 3 | chód | wręcz | Pusta w Środku: pancerz 1, odporność na statusy | Rycerska Krypta |
-| 3B | `banshee` | Płaczka | 1 | 6 | 3 | 5 | lot | dyst. | Lament: raz na bitwę wrogowie w promieniu 2 −1 A w następnym ataku | Wieża Płaczek |
+| 3B | `vampire` | Wampir | 1 | 6 | 3 | 5 | lot | dyst. | Lament: raz na bitwę wrogowie w promieniu 2 −1 A w następnym ataku | Krypta Wampira |
 | 4A | `viy` | Wij Podziemny | 2 | 12 | 4 | 3 | chód | wręcz | Podnieście Mi Powieki: raz na bitwę wróg w zasięgu 3 nie ruszy się w następnej aktywacji | Wielki Kurhan |
-| 4B | `boneOracle` | Kościana Wróżka | 1 | 7 | 3 | 4 | chód | dyst. | Ponowny Oddech: raz na bitwę poległy pomocnik poziomu ≤3 wstaje obok z połową Ż | Kaplica Wróżb |
+| 4B | `strzyga` | Strzyga | 1 | 7 | 3 | 4 | chód | dyst. | Ponowny Oddech: raz na bitwę poległy pomocnik poziomu ≤3 wstaje obok z połową Ż | Dom Strzygi |
 | 5A | `lich` | Lisz | 1 | 8 | 5 | 4 | chód | dyst. | Żniwo Many: każde trafienie zabiera bohaterowi wroga 1 many i leczy Lisza o 1 Ż | Biblioteka Umarłych |
 | 5B | `kostucha` | Kostucha | 1 | 13 | 5 | 4 | chód | wręcz | Kośba: atak trafia cel i jednego jego sąsiada (jak Paszcze Otchłani) | Kaplica Tańca Śmierci |
 | 6 | `boneDragon` | Kościany Smok | 2 | 20 | 7 | 5 | lot | wręcz | Oddech Grobu: raz na bitwę oddech w linii (cel i jednostka za nim, jak Ognisty Oddech), trafieni −1 S | Smocze Cmentarzysko |
@@ -68,17 +70,17 @@ Zmierzone 19.11.2026, przed strojeniem i po (Kontrola / Podbój / Relikt):
 **Sufit pomiaru:** Przymierze wygrywa z Hordą 65% (Kontrola 65, Podbój 66, Relikt 65; obu frakcji nie wolno ruszać), więc frakcja, która ma 42–45% z Przymierzem, ma z Hordą ok. 58–62%. Oba końce pasma naraz (≥45% z Przymierzem i ≤55% z Hordą) są przy tej różnicy nieosiągalne; wybrałem środek: ok. 42–46% z Przymierzem i ok. 60% z Hordą (kilka punktów nad pasmem akceptowalnym, nie do usunięcia bez ruszania Hordy).
 
 **Zmienione liczby (w `src/engine/data.ts`; tabele jednostek powyżej to nadal propozycja z karty):**
-- **+1 A dla wszystkich pomocników Umarłych oprócz legendy** (Szkielet Halabardnik 3, Błędny Ognik 2, Zjawa Pokutnika 3, Łucznik 3, Zbroja 4, Wij 5, Lisz 6, Strach 3, Płaczka 4, Kościana Wróżka 4, Kostucha 6; Kościany Smok bez zmian). Powód: wolne, kruche szkielety bez zębów nie zabijały dość szybko, żeby Wieczna Warta w ogóle miała co podnosić; +1 Ż dla wszystkich dawało tylko 38% z Przymierzem, a +1 A dla wszystkich i +1 Ż bohaterom razem 46/66, więc wybrałem sam atak pomocników (43/61).
+- **+1 A dla wszystkich pomocników Umarłych oprócz legendy** (Szkielet Halabardnik 3, Błędny Ognik 2, Zjawa Pokutnika 3, Łucznik 3, Zbroja 4, Wij 5, Lisz 6, Strach 3, Wampir 4, Strzyga 4, Kostucha 6; Kościany Smok bez zmian). Powód: wolne, kruche szkielety bez zębów nie zabijały dość szybko, żeby Wieczna Warta w ogóle miała co podnosić; +1 Ż dla wszystkich dawało tylko 38% z Przymierzem, a +1 A dla wszystkich i +1 Ż bohaterom razem 46/66, więc wybrałem sam atak pomocników (43/61).
 
 **Obserwacja o botach:** w grach botów liczą się bohaterowie i trzej pomocnicy startowi; zmiana Ż jednostek rekrutowanych (poziomy 2–5) nie zmieniła wyniku ani jednej gry (sprawdzone na Klanach: 4 jednostki naraz, identyczne liczby wygranych; przypuszczalnie nie są rekrutowane w krótkich partiach botów), więc liczby tych jednostek zostają z karty, a strojenie dotyczy bohaterów i pomocników startowych.
 
-**Zostaje do decyzji autora:** Kurhan Wiecznej Warty w grach botów nadal jest budowany rzadko (koszt w Pyle, Szpital jako rodzic), więc „wygrywa długą bitwą” zachodzi głównie przez Wezwanie, Kości i Wróżkę. Nie przesuwałem kosztów Kurhanu (zmiana ekonomii osady to już coś więcej niż strojenie); jeśli autor chce, by Wieczna Warta działała w krótkich partiach botów, trzeba obniżyć jego cenę albo zmienić rodzica.
+**Zostaje do decyzji autora:** Kurhan Wiecznej Warty w grach botów nadal jest budowany rzadko (koszt w Pyle, Szpital jako rodzic), więc „wygrywa długą bitwą” zachodzi głównie przez Wezwanie, Kości i Strzygę. Nie przesuwałem kosztów Kurhanu (zmiana ekonomii osady to już coś więcej niż strojenie); jeśli autor chce, by Wieczna Warta działała w krótkich partiach botów, trzeba obniżyć jego cenę albo zmienić rodzica.
 
 ## Decyzje implementacyjne (G1, 19.11.2026; autor nieobecny, wybrane najprostsze rozwiązania zgodne z kartą)
 Rozstrzygnięcia z rozmowy: Wij na 4A, Lisz na 5A, Kostucha na 5B (zamiast Jeźdźca na Zmorze), bez Kurhanowego Olbrzyma i Wilkołaka-widma; 3 jednostki poziomu 1 (Szkielet Halabardnik, Błędny Ognik, Zjawa Pokutnika) są pomocnikami startowymi.
 - **Kto wstaje i kiedy:** na końcu rundy (gdy zaczyna się następna) wstają najpierw szkielety z Kości Wracają (na swoim polu z 1 Ż), potem Kurhan podnosi **najtańszego** poległego pomocnika strony (najniższy poziom, potem najmniej Ż); liczba wstań na bitwę i Ż: patrz tabela budynku (`FACTION_MECHANICS.wardRises`, `wardShare`). Bez Kurhanu frakcja nie ma Warty (jak Kamień Tętentu u Stad), ale zdolności jednostek działają zawsze. Bitwa kończy się, gdy jedna strona nie ma żywych jednostek, nawet jeśli poległy szkielet miał wstać.
 - **Pole wstania:** w ruleset cyfrowym poległy leży na polu, na którym padł: wstaje tam albo na najbliższym wolnym; w klasycznym (bez zwłok) na wolnym polu startowym strony. Jednostka dwupolowa potrzebuje miejsca na ogon.
-- **Wezwanie z Kurhanu / Ponowny Oddech:** zamiast wyboru poległego w oknie (nowy ekran) wstaje automatycznie najsilniejszy poległy pomocnik (najwyższy poziom, potem najwięcej Ż); u Wróżki tylko poziomu ≤3. Pole: najbliższe wolne obok wzywającego. Uproszczenie do G4 (wybór poległego w UI).
+- **Wezwanie z Kurhanu / Ponowny Oddech:** zamiast wyboru poległego w oknie (nowy ekran) wstaje automatycznie najsilniejszy poległy pomocnik (najwyższy poziom, potem najwięcej Ż); u Strzygi tylko poziomu ≤3. Pole: najbliższe wolne obok wzywającego. Uproszczenie do G4 (wybór poległego w UI).
 - **Skarb Wskrzeszenie:** nie działa w bitwie na jednostkę, która w tej bitwie już wstała (propozycja z karty, wdrożona; flaga `risen`). Bot też o tym wie.
 - **Odporność na statusy:** `immune` z Iskry (nadawana jednostkom przy tworzeniu) i Pusta w Środku chronią przed trucizną, klątwą (też Lamentem i Zgaszonym Światłem), spowolnieniem (też czarem i Dzwonem, Oddechem Grobu), korzeniami i unieruchomieniem (Sieć, Wij, Chwyt). Nie chronią przed przesunięciem ani prowokacją.
 - **Bezgłowy Jeździec:** uproszczenie karty: zamiast „przenika przez jednostki i atakuje od tyłu” jest ostry cios raz na bitwę (+2 A, od tyłu +2 A), bo przenikanie jednostki dwupolowej wymaga nowego wyszukiwania ścieżki (zostaje do G4; Skok po Turniach Stad działa tylko dla małych).

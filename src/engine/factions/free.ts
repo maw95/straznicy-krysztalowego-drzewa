@@ -1,21 +1,21 @@
 import type { FactionPack } from './types';
 
-// Wolne Kompanie (docs/frakcje/free.md, docs/FRAKCJE_PROPOZYCJE.md section 6). Gate G1: data, pack and abilities; the numbers wait for the balance gate (G2).
+// Wolna Kompania (docs/frakcje/free.md, docs/FRAKCJE_PROPOZYCJE.md section 6). Gate G1: data, pack and abilities; the numbers wait for the balance gate (G2).
 // The tavern commanders (Kuna Rębajło, Żbiczka Bajdurka, Zajęczyca Zielarka) are in realm.ts, the fourth hero (Wydra Przemytniczka) is `EXTRA_HEROES` in data.ts.
 export const FREE: FactionPack = {
   id: 'free',
-  name: 'Wolne Kompanie',
+  name: 'Wolna Kompania',
   heroes: ['foxCaptain', 'badgerSapper', 'ravenSeer'],
-  supports: ['otterScout', 'martenThief', 'squirrelArcher'],
+  supports: ['otterScout', 'magpieThief', 'squirrelArcher'],
   tierUnits: ['weaselKnife', 'polecatPoisoner', 'wolverine', 'toadGunner'],
-  altUnits: ['beaverEngineer', 'raccoonDogSpy', 'badgerBomber', 'catFencer'],
+  altUnits: ['beaverEngineer', 'catFencer', 'marmotPetard', 'raccoonDogSpy'],
   legend: 'towerMonitor',
   mechanic: { name: 'Sidła', building: 'trapWorkshop' },
   buildings: ['trapWorkshop', 'fence', 'smugglerTrails'],
   sparkName: 'Skrytka Pierwotnej Iskry',
-  short: 'Kompanie',
+  short: 'Kompania',
   genitive: 'Kompanii',
-  lead: 'dłużej miały',
+  lead: 'dłużej miała',
   // No forest-camp tiles yet: the Companies borrow the meadow of Przymierze (placeholder, docs/BACKLOG.md 2a).
   terrain: { base: 'baseDawn', land: 'meadow', treasure: 'treasureDawn', wall: 'chasm' },
   tiles: ['meadow', 'barren', 'hill', 'river', 'bridge', 'mountain', 'chasm'],

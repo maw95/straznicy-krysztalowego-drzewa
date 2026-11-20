@@ -34,9 +34,9 @@ try {
   await p.locator('[data-panel="runeForge"]').waitFor();
   console.log('rune units', await p.locator('[data-rune-unit]').count());
   await p.screenshot({ path: `.tmp/klany-kuznia-${view}.png` });
-  await p.locator('[data-rune-forge="clanCrossbow:attack"]').click();
+  await p.locator('[data-rune-forge="brassSpider:attack"]').click();
   await p.waitForTimeout(400);
-  console.log('after click:', await p.locator('[data-rune-unit="clanCrossbow"]').innerText(), '| done note:', await p.locator('[data-rune-done]').count());
+  console.log('after click:', await p.locator('[data-rune-unit="brassSpider"]').innerText(), '| done note:', await p.locator('[data-rune-done]').count());
   await p.screenshot({ path: `.tmp/klany-kuznia2-${view}.png` });
   console.log('second rune the same round enabled?', await p.locator('[data-rune-forge="shieldDwarf:life"]').isEnabled());
   await p.keyboard.press('Escape');

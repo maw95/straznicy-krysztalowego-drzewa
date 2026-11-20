@@ -60,7 +60,7 @@ Kolejność prac: interfejs celu → punkty kontrolne (najprostszy) → przetrwa
 
 ## Etap 3 — frakcje
 
-Premiera: Przymierze Świtu, Mroczna Horda + Żelazne Klany, Dzikie Stada, Królestwo Umarłych. Później (DLC): Wolne Kompanie, Dwór Wiecznego Szronu, Imperium Piasków, Rój Głębin, Władcy Przypływów (pomysły autora, patrz niżej). Każda: 3 bohaterów, 4–5 jednostek
+Premiera: Przymierze Świtu, Mroczna Horda + Żelazny Klan, Dzikie Stado, Królestwo Umarłych. Później (DLC): Wolna Kompania, Dwór Wiecznego Szronu, Pustynne Cesarstwo, Rój Puszczy, Bractwo Przypływu (pomysły autora, patrz niżej). Każda: 3 bohaterów, 4–5 jednostek
 rekrutowanych w osadzie, własna osada z budynkami i jedna mechanika wyróżniająca. Propozycje **[do potwierdzenia]**:
 - *Leśny Krąg* (elfy/natura): pułapki, ruch przez las, wsparcie z dystansu.
 - *Krypta* (nieumarli): odrodzenia, osłabianie, tanie jednostki.
@@ -87,14 +87,14 @@ frakcje, wyprawa roguelike i osiągnięcia. Reszta jako aktualizacje po premierz
 
 ## Frakcje — pomysły autora (3.11.2026)
 
-- **Żelazne Klany:** krasnoludy, golemy, machiny; odporność, osłanianie sojuszników, ulepszanie wyposażenia; mała mobilność.
-- **Imperium Piasków:** dżinny, sfinksy, skorpiony; mobilność, miraże, zasadzki, przestawianie jednostek.
+- **Żelazny Klan:** krasnoludy, golemy, machiny; odporność, osłanianie sojuszników, ulepszanie wyposażenia; mała mobilność.
+- **Pustynne Cesarstwo:** dżinny, sfinksy, skorpiony; mobilność, miraże, zasadzki, przestawianie jednostek.
 - **Dwór Wiecznego Szronu:** lodowe olbrzymy, wiedźmy, białe wilki, śnieżne sowy; spowalnianie, izolowanie, kontrola pola.
 - **Królestwo Umarłych:** władcy grobowców, szkielety, upiory, ożywione zbroje (baśniowo, nie makabrycznie); odrodzenia, osłabianie, wyczerpanie.
-- **Dzikie Stada:** minotaury, centaury, satyrowie, wielkie bestie; szarże, odpychanie, premie za ruch przed atakiem.
-- **Wolne Kompanie:** lisy, borsuki, kruki, wydry; pułapki, skarby, kombinacje specjalistów.
-- **Rój Głębin:** grzyboludy, chrząszcze, modliszki; premie w grupie, zatruwanie, zajmowanie terenu.
-- **Władcy Przypływów:** trytony, syreny, kraboludy, żółwie, węże morskie; przyciąganie, odpychanie, ochrona (zdolności działają też na mapach bez wody).
+- **Dzikie Stado:** minotaury, centaury, satyrowie, wielkie bestie; szarże, odpychanie, premie za ruch przed atakiem.
+- **Wolna Kompania:** lisy, borsuki, kruki, wydry; pułapki, skarby, kombinacje specjalistów.
+- **Rój Puszczy:** grzyboludy, chrząszcze, modliszki; premie w grupie, zatruwanie, zajmowanie terenu.
+- **Bractwo Przypływu:** trytony, syreny, kraboludy, żółwie, węże morskie; przyciąganie, odpychanie, ochrona (zdolności działają też na mapach bez wody).
 
 Uwagi: odpychanie występuje u Stad i Przypływów (rozdzielić role: Stada = szarża, Przypływy = osłona i zamiana miejsc);
 odrodzenia Umarłych kolidują ze skarbem „Wskrzeszenie”; niedźwiedzie Klanów nakładają się na Prastarego Niedźwiedzia;

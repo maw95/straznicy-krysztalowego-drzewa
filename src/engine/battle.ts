@@ -250,8 +250,11 @@ function walkSearch(state: GameState, u: BattleUnit, leaping = canLeap(state, u)
 /** Skok po Turniach: the unit walks through obstacles and units (it cannot stop on them), except over the walls of a siege. */
 export const canLeap = (state: GameState, u: BattleUnit): boolean => abilityOf(u) === 'mountainLeap' && abilityActive(state) && !state.battle?.siege && !isLarge(state, u);
 
-/** Skok po Turniach (Jeździec na Koźle): once per battle one move goes over units and obstacles; the leap is spent only when the move really needs it. */
-export const goatLeapReady = (state: GameState, u: BattleUnit): boolean => abilityOf(u) === 'goatLeap' && abilityActive(state) && !u.status.leapUsed && !state.battle?.siege && !isLarge(state, u);
+/** Taran (Kozioł Taranowy): the blow is charged when the unit has run at least this far in this activation. */
+export const ramCharged = (state: GameState, u: BattleUnit): boolean => {
+  const act = state.battle?.activation;
+  return Boolean(act && act.unitId === u.id && act.movedDistance >= ABILITY.ramBlowMinMove);
+};
 
 /** Cells the unit can end its move on, with the number of steps used. */
 export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, number> {
@@ -275,8 +278,6 @@ export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, num
   }
   const walked = walkSearch(state, u);
   for (const [k, d] of walked.dist) if (d > 0 && !occupant(k) && !obstacles.has(k) && roomy(k)) out.set(k, d);
-  // The leap adds the cells that can be reached only over something (a cell that can be walked to keeps its walking distance).
-  if (goatLeapReady(state, u)) for (const [k, d] of walkSearch(state, u, true).dist) if (d > 0 && !out.has(k) && !occupant(k) && !obstacles.has(k) && roomy(k)) out.set(k, d);
   // Szalony Skok adds the cells within the leap's range that the walk does not reach.
   for (const k of leapOnlyCells(state, u)) out.set(k, distance(parseKey(u.pos), parseKey(k)));
   return out;
@@ -291,8 +292,7 @@ export function movePath(state: GameState, u: BattleUnit, to: HexKey): HexKey[] 
   if (!u.pos) return [to];
   if (u.pos === to) return [to];
   if (state.battle!.duel || UNITS[u.defId].movement === 'fly') return [u.pos, to];
-  let { parent } = walkSearch(state, u);
-  if (!parent.has(to) && goatLeapReady(state, u)) parent = walkSearch(state, u, true).parent;
+  const { parent } = walkSearch(state, u);
   if (!parent.has(to)) return [u.pos, to];
   const path = [to];
   while (path[0] !== u.pos) path.unshift(parent.get(path[0])!);
@@ -433,11 +433,13 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
   if (abilityActive(state)) {
     const ab = abilityOf(att);
     if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += abilityNum(att, 'lightChargeBonus') * scaleOf(state);
+    if (ab === 'huntDive' && movedDistance >= ABILITY.huntDiveMinMove) dmg += ABILITY.huntDiveBonus * scaleOf(state);
     if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += abilityNum(att, 'bloodCallBonus') * scaleOf(state);
     if (useAbility && ab === 'fireBreath') dmg += abilityNum(att, 'breathBonus') * scaleOf(state);
+    if (useAbility && ab === 'ramBlow' && movedDistance >= ABILITY.ramBlowMinMove) dmg += ABILITY.ramBlowBonus * scaleOf(state);
     if (ab === 'standShot' && movedDistance === 0) dmg += ABILITY.standShotBonus * scaleOf(state);
     if (ab === 'giantBane' && isLarge(state, target)) dmg += ABILITY.giantBonus * scaleOf(state);
-    // Wolne Kompanie. Oznaczenie: every attack of the marker's side on a marked target (this round) hits harder, and the squirrel's arrow harder still.
+    // Wolna Kompania. Oznaczenie: every attack of the marker's side on a marked target (this round) hits harder, and the squirrel's arrow harder still.
     const mark = target.status.marked;
     if (mark && mark.by === att.side && mark.round === state.battle!.round) dmg += (ABILITY.markBonus + (ab === 'branchShot' ? ABILITY.branchBonus : 0)) * scaleOf(state);
     if (ab === 'woundFury') dmg += Math.min(ABILITY.furyMax, Math.floor((att.maxHp - att.hp) / (ABILITY.furyStep * hpScaleOf(state)))) * scaleOf(state);
@@ -460,9 +462,9 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
 }
 
 /** Abilities that are switched on for a single attack. */
-export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'frostSlow', 'frostGrip', 'iceBlow', 'stinkBomb'];
+export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'ramBlow', 'frostSlow', 'frostGrip', 'iceBlow', 'stinkBomb'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail', 'pickpocket', 'branchShot', 'veiled', 'woundFury', 'riposte', 'towerShot', 'wildLeap'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'huntDive', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail', 'pickpocket', 'branchShot', 'veiled', 'woundFury', 'riposte', 'towerShot', 'wildLeap'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
@@ -485,7 +487,7 @@ export function pushCell(state: GameState, from: HexKey, target: HexKey): HexKey
   return k;
 }
 /** Abilities used as a free action during the unit's activation. */
-export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'abduct', 'longNight', 'ploy', 'dugIn', 'ravenEye', 'dam', 'blast'];
+export const FREE_ABILITIES: AbilityId[] = ['beardChill', 'sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'longNight', 'ploy', 'dugIn', 'ravenEye', 'dam', 'blast'];
 /** The free abilities that need no target (one click fires them); the others ask the player to pick a unit. */
 export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify', 'iceWall', 'longNight', 'dugIn'];
 /** The free abilities that work on a cell: the player may pick it (the action's `cell`), without one the best cell for the unit is taken (Fortel, Tama, Ładunek). */
@@ -1002,7 +1004,7 @@ export function battleCatapult(state: GameState, cell: HexKey) {
   const s = b.siege;
   s.shot = b.round;
   battleFx(state, 'oblezenie_kamien', cell);
-  // Taran: with a Nosorożec Bojowy in the attacking army the gate falls to one hit.
+  // Stratowanie: with a Nosorożec Bojowy in the attacking army the gate falls to one hit.
   const rammed = abilityActive(state) && livingUnits(b, b.attacker).some((x) => abilityOf(x) === 'ram' || abilityOf(x) === 'cannonFire');
   if (s.gate === cell && s.gateHp > 1 && !rammed) {
     s.gateHp -= 1;
@@ -1140,7 +1142,7 @@ export function predictDamage(
   if (armour && abilityOf(victim) === 'unmoved' && abilityActive(state) && dmg > 0) dmg = Math.max(1, dmg - ABILITY.unmovedArmor * scaleOf(state));
   // Pusta w Środku: the empty armour takes a bit off every blow that lands (at least 1 gets through).
   if (armour && abilityOf(victim) === 'hollow' && abilityActive(state) && dmg > 0) dmg = Math.max(1, dmg - ABILITY.hollowArmor * scaleOf(state));
-  // Żelazne Klany: Pawęż and Kolczuga (and the Kolos), Przysięga Tarczy until the end of the round, the Mur Tarcz in formation: each takes a bit off every blow that lands.
+  // Żelazny Klan: Pawęż and Kolczuga (and the Kolos), Przysięga Tarczy until the end of the round, the Mur Tarcz in formation: each takes a bit off every blow that lands.
   if (armour && dmg > 0 && abilityActive(state)) {
     if (['bulwark', 'fortify'].includes(abilityOf(victim))) dmg = Math.max(1, dmg - ABILITY.bulwarkArmor * scaleOf(state));
     if (victim.status.oathRound === b.round) dmg = Math.max(1, dmg - ABILITY.oathArmor * scaleOf(state));
@@ -1267,11 +1269,6 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   if (steps === undefined) throw new Error('Pole poza zasięgiem ruchu.');
   if (tail && isLarge(state, u) && !tailOptions(b, u, to).includes(tail)) throw new Error('Ogon nie zmieści się na tym polu.');
   let leapt = false;
-  if (goatLeapReady(state, u) && !walkSearch(state, u).dist.has(to)) {
-    u.status.leapUsed = true;
-    leapt = true;
-    log(state, 'ability', `${unitName(u)} przeskakuje po turniach (${UNITS[u.defId].abilityName}).`);
-  }
   // Szalony Skok: the leap goes over everything and the blow after it is harder.
   if (wildLeapReady(state, u) && leapOnlyCells(state, u).has(to)) {
     u.status.leapUsed = true;
@@ -1379,7 +1376,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   const legal = attackTargets(state, u);
   if (!target || !legal.some((t) => t.id === targetId)) throw new Error('Nieprawidłowy cel ataku.');
   const ab = abilityOf(u);
-  const canUse = useAbility && !u.abilityUsed && abilityActive(state) && ATTACK_ABILITIES.includes(ab);
+  const canUse = useAbility && !u.abilityUsed && abilityActive(state) && ATTACK_ABILITIES.includes(ab) && (ab !== 'ramBlow' || ramCharged(state, u));
   if (useAbility && !canUse) throw new Error('Zdolność jest niedostępna.');
 
   const targets: BattleUnit[] = [target];
@@ -1505,8 +1502,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
           }
         }
       }
-      // Młot Przodków: the one hit loses its next activation.
-      if (ab === 'stunBlow') {
+      // Młot Przodków, Taran, Stratowanie: the one hit loses its next activation.
+      if (ab === 'stunBlow' || ab === 'ramBlow') {
         t.status.stunned = true;
         log(state, 'ability', `${unitName(t)} traci następną aktywację (${UNITS[u.defId].abilityName}).`);
       }
@@ -1536,7 +1533,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
         log(state, 'ability', `${unitName(t)} zostaje odepchnięty o 1 pole (${UNITS[u.defId].abilityName}).`);
       } else log(state, 'ability', `${unitName(t)} nie ma gdzie się cofnąć (${UNITS[u.defId].abilityName}).`);
     }
-    // Dzikie Stada: the blows that push (Byczy Łeb, Taran, Rogi Przodków, and the Kamień Tętentu after a run).
+    // Dzikie Stado: the blows that push (Byczy Łeb, Taran, Rogi Przodków, and the Kamień Tętentu after a run).
     if (t.alive && u.alive && !b.duel && abilityActive(state)) herdsBlow(state, u, t, canUse, act.movedDistance);
   }
   // Trzęsienie: the Golem with its rune core bare shakes everything around it after each attack.
@@ -1699,10 +1696,11 @@ export function layTrap(state: GameState, side: Side, cell: HexKey): void {
  */
 export function autoTrapCells(state: GameState, side: Side, n: number): HexKey[] {
   const b = state.battle!;
-  const mine = livingUnits(b, side);
-  const guarded = mine.filter((x) => UNITS[x.defId].attackType === 'ranged');
-  const guards = (guarded.length ? guarded : mine).flatMap(cellsOf);
+  const foes = b.attacker === side ? b.defender : b.attacker;
+  // Where the enemy is (positions are public) or, before it is deployed, where it will come from: the cells of its side of the arena.
+  const foeCells = (foes === 'neutral' ? Object.values(b.units).filter((x) => x.side === 'neutral' && x.alive) : livingUnits(b, foes)).flatMap(cellsOf);
   const last = (b.layout === 'wide' ? WIDE_COLUMNS : ARENA_COLUMNS) - 1;
+  const foeColumn = side === b.attacker ? last : 0;
   const chosen: HexKey[] = [];
   const zone = trapZone(b, side).filter((k) => mayLayTrap(b, side, k));
   for (let i = 0; i < n; i++) {
@@ -1710,9 +1708,10 @@ export function autoTrapCells(state: GameState, side: Side, n: number): HexKey[]
     for (const k of zone) {
       if (chosen.includes(k)) continue;
       const h = parseKey(k);
-      let score = guards.reduce((sum, g) => sum + Math.max(0, 4 - distance(parseKey(g), h)), 0) / Math.max(1, guards.length) * 2;
-      score += (1 - Math.abs(columnOf(b, k) - last / 2) / (last / 2)) * 1.5 - Math.abs(wideOrHalfRow(b, k)) * 0.15;
-      if (chosen.some((c) => distance(parseKey(c), h) <= 1)) score -= 5;
+      // On the enemy's road: as close to the enemy as the own half allows (the cells just before the middle line), in front of its units rather than behind its flank.
+      const toFoe = foeCells.length ? Math.min(...foeCells.map((g) => distance(parseKey(g), h))) : Math.abs(columnOf(b, k) - foeColumn);
+      let score = -toFoe - Math.abs(wideOrHalfRow(b, k)) * 0.15;
+      for (const c of chosen) { const d = distance(parseKey(c), h); if (d <= 1) score -= 8; else if (d <= 2) score -= 2; }
       if (!best || score > best.score + 1e-9 || (Math.abs(score - best.score) <= 1e-9 && k < best.k)) best = { k, score };
     }
     if (!best) break;
@@ -1891,23 +1890,6 @@ export function iceWallCells(state: GameState, u: BattleUnit): HexKey[] | null {
   return best ? best.cells : null;
 }
 
-/** Porwanie: the free cell 2-3 cells from where the target stands that is farthest from its allies (null: no room). */
-export function abductCell(state: GameState, t: BattleUnit): HexKey | null {
-  const b = state.battle!;
-  if (!t.pos) return null;
-  const obstacles = obstacleSet(b);
-  const allies = livingUnits(b, t.side).filter((x) => x.id !== t.id).flatMap(cellsOf);
-  const from = parseKey(t.pos);
-  const spots = layoutCells(b)
-    .filter((k) => {
-      const d = distance(from, parseKey(k));
-      return d >= ABILITY.abductMin && d <= ABILITY.abductMax && !obstacles.has(k) && !unitAt(b, k);
-    })
-    .map((k) => ({ k, away: allies.length ? Math.min(...allies.map((a) => distance(parseKey(a), parseKey(k)))) : 0 }))
-    .sort((x, y) => y.away - x.away || (x.k < y.k ? -1 : 1));
-  return spots[0]?.k ?? null;
-}
-
 export function battleAbility(state: GameState, targetId?: string, cell?: HexKey, from?: HexKey) {
   const b = state.battle!;
   const u = b.units[b.activation!.unitId];
@@ -2010,16 +1992,12 @@ export function battleAbility(state: GameState, targetId?: string, cell?: HexKey
     if (!t || !t.alive || t.side === u.side || !t.pos || unitDistance(u, t) > ABILITY.bellRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.bellRange} pól.`);
     if (!(t.status.frost ?? 0)) throw new Error('Wybierz wroga, który ma szron.');
     freezeUnit(state, u.side, t);
-  } else if (ab === 'abduct') {
+  } else if (ab === 'beardChill') {
+    // Uścisk Mrozu: the icy beard touches an enemy close by (no flight): 2 frosts, and at the threshold it freezes.
     const t = targetId ? b.units[targetId] : undefined;
-    if (!t || !t.alive || t.side === u.side || !t.pos || unitDistance(u, t) > ABILITY.abductRange) throw new Error(`Wybierz małego wroga w zasięgu ${ABILITY.abductRange} pól.`);
-    if (!canBeMoved(state, t)) throw new Error('Tego wroga nie da się przestawić.');
-    const to = abductCell(state, t);
-    if (!to) throw new Error('Brak miejsca, by postawić wroga.');
-    const moved = distance(parseKey(to), parseKey(t.pos));
-    t.pos = to;
-    log(state, 'ability', `${unitName(t)} zostaje uniesiony i postawiony ${moved} pola dalej, z dala od swoich (${UNITS[u.defId].abilityName}).`);
-    stepOnFields(state, t);
+    if (!t || !t.alive || t.side === u.side || !t.pos || unitDistance(u, t) > ABILITY.beardRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.beardRange} pól.`);
+    log(state, 'ability', `${unitName(u)} dotyka lodową brodą: ${unitName(t)} (${UNITS[u.defId].abilityName}).`);
+    applyFrost(state, u.side, t, ABILITY.beardFrost);
   } else if (ab === 'longNight') {
     log(state, 'ability', `${unitName(u)}: zapada długa noc.`);
     for (const e of enemiesOf(b, u)) applyFrost(state, u.side, e);

@@ -4,6 +4,7 @@ import {
   abilityActive,
   abilityOf,
   ATTACK_ABILITIES,
+  ramCharged,
   predictDamage,
   attackTargets,
   breathSecondTarget,
@@ -218,7 +219,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       if (ability === 'misleadLight' && u.side !== active.side && unitDistance(active, u) <= ABILITY.misleadRange) return 'cur-spell';
       if (ability === 'viyGaze' && u.side !== active.side && unitDistance(active, u) <= ABILITY.gazeRange) return 'cur-spell';
       if (ability === 'bellOfGlass' && u.side !== active.side && unitDistance(active, u) <= ABILITY.bellRange && (u.status.frost ?? 0) >= 1) return 'cur-spell';
-      if (ability === 'abduct' && u.side !== active.side && unitDistance(active, u) <= ABILITY.abductRange) return 'cur-spell';
+      if (ability === 'beardChill' && u.side !== active.side && unitDistance(active, u) <= ABILITY.beardRange) return 'cur-spell';
       if (ability === 'ravenEye' && u.side !== active.side && unitDistance(active, u) <= ABILITY.ravenRange) return 'cur-spell';
     }
     // A treasure is being aimed (Eliksir, Zwój, Róg...): the same wand as for an ability, over every unit it can be used on.
@@ -262,7 +263,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const moveCursor = active && UNITS[active.defId].movement === 'fly' ? 'cur-fly' : 'cur-move';
   const ab = active ? abilityOf(active) : null;
   const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state));
-  const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab);
+  const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab) && (ab !== 'ramBlow' || ramCharged(state, active!));
   const freeAbilityReady = abilityReady && ab !== null && FREE_ABILITIES.includes(ab);
 
   function reset() {

@@ -5,9 +5,9 @@
 import { raceOf } from '../engine/teams';
 import { useEffect, useState, type ReactNode } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId, type TeamId } from '../engine/data';
-import { artifactBill, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, healPrice, incomeOf, refugeHere, refugeTargets, RUNE_NAMES, RUNES, runeBlock, runesOf, KINGDOM, marketStock, mayRecruit, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, DWELLING_TEXTS, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
+import { artifactBill, fenceSellPrice, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, healPrice, incomeOf, refugeHere, refugeTargets, RUNE_NAMES, RUNES, runeBlock, runesOf, KINGDOM, marketStock, mayRecruit, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, DWELLING_TEXTS, resOf, spellPrice, tradeBuyPrice, type BuildingId } from '../engine/kingdom';
 import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
-import { ARTIFACT_BY_ID, RARITY_NAMES, SETS } from '../engine/sites';
+import { ARTIFACT_BY_ID, packOf, RARITY_NAMES, SETS } from '../engine/sites';
 import { ARCHETYPE_NAMES, archetypeOf, commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from '../engine/realm';
 import { levelOf } from '../engine/growth';
 import { FACTION_MECHANICS, mayBuildSpark, shardsOf, shardTotal, SPARK_NAMES, SPARK_TEXTS } from '../engine/empire';
@@ -417,6 +417,32 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
             </div>
           ))}
           <span style={{ fontSize: 14, color: '#6B4A22' }}>Cena runy: <StatText text={costText({ gold: FACTION_MECHANICS.runePrice.gold, ore: FACTION_MECHANICS.runePrice.ore })} />.</span>
+          {upgrade}
+        </div>
+      );
+    }
+    if (b === 'fence') {
+      const lvl = buildingLevel(s, 'fence');
+      const pack = buyer ? packOf(buyer) : [];
+      return (
+        <div data-panel="fence" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {BUILDING_TEXTS.fence.slice(0, lvl).map((t, i) => (
+            <div key={i} data-effect-level={i + 1} style={{ display: 'flex', gap: 8 }}><b style={{ color: '#2E7A32' }}>{i + 1}.</b><RuleText text={t} /></div>
+          ))}
+          {!buyer && <i>Artefakty sprzedaje bohater w swojej turze.</i>}
+          {buyer && pack.length === 0 && <i data-fence-empty>Plecak bohatera jest pusty.</i>}
+          {pack.map((art, i) => (
+            <div key={`${art.id}-${i}`} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <ArtifactMedal art={art} size={46} />
+              <div style={{ flex: 1, fontSize: 15, lineHeight: 1.25 }}>
+                <b>{art.name}</b> <span className={`rarity r${art.rarity}`}>{RARITY_NAMES[art.rarity]}</span>
+                <div><RuleText text={art.text} /></div>
+              </div>
+              <button className="btn prim" data-sell={art.id} onClick={() => act({ type: 'kingdomSellArtifact', settlementId: s.id, artifactId: art.id })} style={{ padding: '3px 14px', fontSize: 16 }}>
+                Sprzedaj (<StatText text={`+${fenceSellPrice(art)} zł`} />)
+              </button>
+            </div>
+          ))}
           {upgrade}
         </div>
       );

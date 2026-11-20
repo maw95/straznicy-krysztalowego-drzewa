@@ -5656,18 +5656,18 @@
         "public/assets/cards/art/aurochsScout.jpg",
         "public/assets/cards/art/bullMoose.jpg",
         "public/assets/cards/art/drumElephant.jpg",
-        "public/assets/cards/art/faunJavelin.jpg",
-        "public/assets/cards/art/faunSlinger.jpg",
+        "public/assets/cards/art/eagleHunter.jpg",
+        "public/assets/cards/art/steppeArcher.jpg",
         "public/assets/cards/art/forestBison.jpg",
         "public/assets/cards/art/greatAurochs.jpg",
         "public/assets/cards/art/indrik.jpg",
-        "public/assets/cards/art/rockGoat.jpg",
+        "public/assets/cards/art/kulan.jpg",
         "public/assets/cards/art/satyrHornlord.jpg",
-        "public/assets/cards/art/satyrLancer.jpg",
+        "public/assets/cards/art/arkar.jpg",
         "public/assets/cards/art/satyrPiper.jpg",
-        "public/assets/cards/art/satyrSeer.jpg",
-        "public/assets/cards/art/steppeHippogriff.jpg",
-        "public/assets/cards/art/tarpan.jpg",
+        "public/assets/cards/art/planetnik.jpg",
+        "public/assets/cards/art/steppeLamignat.jpg",
+        "public/assets/cards/art/muskOx.jpg",
         "public/assets/cards/art/thunderRam.jpg",
         "public/assets/cards/art/warRhino.jpg",
         "public/assets/cards/art/windAntelope.jpg",
@@ -5688,18 +5688,16 @@
         "public/assets/cards/portraits/aurochsScout.jpg",
         "public/assets/cards/portraits/bullMoose.jpg",
         "public/assets/cards/portraits/drumElephant.jpg",
-        "public/assets/cards/portraits/faunJavelin.jpg",
-        "public/assets/cards/portraits/faunSlinger.jpg",
+        "public/assets/cards/portraits/eagleHunter.jpg",
+        "public/assets/cards/portraits/steppeArcher.jpg",
         "public/assets/cards/portraits/forestBison.jpg",
         "public/assets/cards/portraits/greatAurochs.jpg",
-        "public/assets/cards/portraits/indrik.jpg",
-        "public/assets/cards/portraits/rockGoat.jpg",
+        "public/assets/cards/portraits/kulan.jpg",
         "public/assets/cards/portraits/satyrHornlord.jpg",
-        "public/assets/cards/portraits/satyrLancer.jpg",
-        "public/assets/cards/portraits/satyrPiper.jpg",
-        "public/assets/cards/portraits/satyrSeer.jpg",
-        "public/assets/cards/portraits/steppeHippogriff.jpg",
-        "public/assets/cards/portraits/tarpan.jpg",
+        "public/assets/cards/portraits/arkar.jpg",
+        "public/assets/cards/portraits/planetnik.jpg",
+        "public/assets/cards/portraits/steppeLamignat.jpg",
+        "public/assets/cards/portraits/muskOx.jpg",
         "public/assets/cards/portraits/thunderRam.jpg",
         "public/assets/cards/portraits/warRhino.jpg",
         "public/assets/cards/portraits/windAntelope.jpg",
@@ -5745,11 +5743,11 @@
     {
       "id": "undead/zastepcze/art",
       "pliki": [
-        "public/assets/cards/art/banshee.jpg",
+        "public/assets/cards/art/vampire.jpg",
         "public/assets/cards/art/barrowKing.jpg",
         "public/assets/cards/art/bellKeeper.jpg",
         "public/assets/cards/art/boneDragon.jpg",
-        "public/assets/cards/art/boneOracle.jpg",
+        "public/assets/cards/art/strzyga.jpg",
         "public/assets/cards/art/hauntedArmor.jpg",
         "public/assets/cards/art/headlessKnight.jpg",
         "public/assets/cards/art/kostucha.jpg",
@@ -5777,18 +5775,16 @@
     {
       "id": "undead/zastepcze/portraits",
       "pliki": [
-        "public/assets/cards/portraits/banshee.jpg",
+        "public/assets/cards/portraits/vampire.jpg",
         "public/assets/cards/portraits/barrowKing.jpg",
         "public/assets/cards/portraits/bellKeeper.jpg",
-        "public/assets/cards/portraits/boneDragon.jpg",
-        "public/assets/cards/portraits/boneOracle.jpg",
+        "public/assets/cards/portraits/strzyga.jpg",
         "public/assets/cards/portraits/hauntedArmor.jpg",
         "public/assets/cards/portraits/headlessKnight.jpg",
         "public/assets/cards/portraits/kostucha.jpg",
         "public/assets/cards/portraits/lanternWraith.jpg",
         "public/assets/cards/portraits/lich.jpg",
         "public/assets/cards/portraits/penitentMonk.jpg",
-        "public/assets/cards/portraits/penitentShade.jpg",
         "public/assets/cards/portraits/scarecrow.jpg",
         "public/assets/cards/portraits/skeletonArcher.jpg",
         "public/assets/cards/portraits/skeletonSpear.jpg",
@@ -5842,12 +5838,12 @@
         "public/assets/cards/art/bronzeMole.jpg",
         "public/assets/cards/art/bronzeSentinel.jpg",
         "public/assets/cards/art/clanColossus.jpg",
-        "public/assets/cards/art/clanCrossbow.jpg",
+        "public/assets/cards/art/brassSpider.jpg",
         "public/assets/cards/art/clanWarrior.jpg",
         "public/assets/cards/art/dwarfCannon.jpg",
         "public/assets/cards/art/forgePriest.jpg",
         "public/assets/cards/art/giantSlayer.jpg",
-        "public/assets/cards/art/goatRider.jpg",
+        "public/assets/cards/art/ramGoat.jpg",
         "public/assets/cards/art/hammerGuard.jpg",
         "public/assets/cards/art/ironThane.jpg",
         "public/assets/cards/art/mountainCrossbow.jpg",
@@ -5873,20 +5869,18 @@
         "public/assets/cards/portraits/battleSmith.jpg",
         "public/assets/cards/portraits/bronzeMole.jpg",
         "public/assets/cards/portraits/bronzeSentinel.jpg",
-        "public/assets/cards/portraits/clanColossus.jpg",
-        "public/assets/cards/portraits/clanCrossbow.jpg",
+        "public/assets/cards/portraits/brassSpider.jpg",
         "public/assets/cards/portraits/clanWarrior.jpg",
         "public/assets/cards/portraits/dwarfCannon.jpg",
         "public/assets/cards/portraits/forgePriest.jpg",
         "public/assets/cards/portraits/giantSlayer.jpg",
-        "public/assets/cards/portraits/goatRider.jpg",
+        "public/assets/cards/portraits/ramGoat.jpg",
         "public/assets/cards/portraits/hammerGuard.jpg",
         "public/assets/cards/portraits/ironThane.jpg",
         "public/assets/cards/portraits/mountainCrossbow.jpg",
         "public/assets/cards/portraits/oldMiner.jpg",
         "public/assets/cards/portraits/passWarden.jpg",
         "public/assets/cards/portraits/runeMatron.jpg",
-        "public/assets/cards/portraits/shieldDwarf.jpg",
         "public/assets/cards/portraits/skarbnik.jpg"
       ],
       "typ": "portret jednostki (zastępczy)",
@@ -5946,7 +5940,7 @@
         "public/assets/cards/art/marzanna.jpg",
         "public/assets/cards/art/oldHailer.jpg",
         "public/assets/cards/art/snowLynx.jpg",
-        "public/assets/cards/art/windStrzyga.jpg",
+        "public/assets/cards/art/dziadMroz.jpg",
         "public/assets/cards/art/youngGiant.jpg"
       ],
       "typ": "karta jednostki (zastępcza)",
@@ -5967,9 +5961,7 @@
         "public/assets/cards/portraits/elderGiant.jpg",
         "public/assets/cards/portraits/ermine.jpg",
         "public/assets/cards/portraits/ermineHuntress.jpg",
-        "public/assets/cards/portraits/frostImp.jpg",
         "public/assets/cards/portraits/frostJarl.jpg",
-        "public/assets/cards/portraits/frostMammoth.jpg",
         "public/assets/cards/portraits/frostSprite.jpg",
         "public/assets/cards/portraits/frostWitch.jpg",
         "public/assets/cards/portraits/glacierYak.jpg",
@@ -5978,7 +5970,7 @@
         "public/assets/cards/portraits/marzanna.jpg",
         "public/assets/cards/portraits/oldHailer.jpg",
         "public/assets/cards/portraits/snowLynx.jpg",
-        "public/assets/cards/portraits/windStrzyga.jpg",
+        "public/assets/cards/portraits/dziadMroz.jpg",
         "public/assets/cards/portraits/youngGiant.jpg"
       ],
       "typ": "portret jednostki (zastępczy)",
@@ -6019,16 +6011,240 @@
       "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
     },
     {
+      "id": "portret/indrik",
+      "pliki": [
+        "public/assets/cards/portraits/indrik.jpg"
+      ],
+      "typ": "portret karty jednostki (legenda frakcji, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_Eh7UCFS8FF7YvEJyvXtBadQw",
+      "prompt": "Portrait of Indrik, the legendary Lord of Beasts from Slavic myth: a colossal horned beast-king with the body of a mighty aurochs bull, a single huge spiralled golden horn and branching antlers, a thick shaggy russet mane, ancient amber eyes, standing on a windswept autumn steppe at dusk with a stone circle behind it, dust in the air. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, muted desaturated colours (rust, ochre, straw, brown), dramatic low sunset light, upper-body character portrait filling the square frame, no text, no border, no blue tones on the creature.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/boneDragon",
+      "pliki": [
+        "public/assets/cards/portraits/boneDragon.jpg"
+      ],
+      "typ": "portret karty jednostki (legenda frakcji, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_sQ2yzAtg7Rhfm22rVVLJjdum",
+      "prompt": "Portrait of a Bone Dragon, an undead dragon assembled from ancient yellowed bones, hollow skull with faintly glowing pale green-white embers in its eye sockets, tattered remains of a funeral shroud and rusted chains hanging from its jaw, cracked ribs and a crown of bone spikes, emerging from drifting grey mist over a barrow-covered moor at twilight. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, muted desaturated colours (bone ivory, ash grey, moss, faded green glow), dramatic cold moonless light, upper-body character portrait filling the square frame, no text, no border, no blue tones on the creature.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/clanColossus",
+      "pliki": [
+        "public/assets/cards/portraits/clanColossus.jpg"
+      ],
+      "typ": "portret karty jednostki (legenda frakcji, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_rtPgicmQfN449SkvuywjZr6p",
+      "prompt": "Portrait of the Forge Colossus, a towering animated war-golem of dwarven make: a massive body of dark riveted iron plates and carved stone, a forge furnace glowing orange in its chest behind iron bars, runes glowing amber along its arms, a heavy helmet with a slit visor and a braided iron beard, huge anvil-like shoulders, standing in a vast underground dwarven forge hall with chains and embers floating. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, muted desaturated colours (charcoal, dull iron, copper, brown, ember orange as the only bright accent), dramatic furnace light, upper-body character portrait filling the square frame, no text, no border, no blue tones on the creature.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/frostMammoth",
+      "pliki": [
+        "public/assets/cards/portraits/frostMammoth.jpg"
+      ],
+      "typ": "portret karty jednostki (legenda frakcji, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_XRchqGbrQQ8HNBrtEXbCgW3u",
+      "prompt": "Portrait of the Mammoth of the Eternal Winter, an enormous woolly mammoth with long curving tusks wrapped in tarnished silver bands and rune carvings, thick matted white and pale grey fur crusted with frost, hanging icicles, a heavy harness of old bone and pewter ornaments, breath steaming in the freezing air, standing in a snowstorm before the walls of a pale ice palace. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, muted desaturated colours (snow white, ash grey, pewter, bone, dull silver), the ice is white and grey, strictly no blue anywhere, overcast diffuse light, upper-body character portrait filling the square frame, no text, no border.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/towerMonitor",
+      "pliki": [
+        "public/assets/cards/portraits/towerMonitor.jpg"
+      ],
+      "typ": "portret karty jednostki (legenda frakcji, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_n1Juzn16S1YsA1XwSctg7mLf",
+      "prompt": "Portrait of a Tower Monitor, a gigantic armoured monitor lizard of the Free Companies, carrying on its back a wooden watchtower fortified with iron bands, rope ladders and a platform where animal-folk archers in patched cloaks and hats crouch with long bows and a smoking powder gun; the lizard has rough olive and brown scales, a scarred snout, leather harness straps with brass buckles, in a misty forest clearing at dawn. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, muted desaturated colours (rust, olive, tan, copper), soft golden dawn light through trees, upper-body character portrait filling the square frame, no text, no border, no blue tones on the creature.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/sandWyrm",
+      "pliki": [
+        "public/assets/cards/portraits/sandWyrm.jpg"
+      ],
+      "typ": "portret karty jednostki (legenda frakcji, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_egm8VhgWRpcWorJdfe31u9m9",
+      "prompt": "Portrait of a Desert Sandworm of the Sand Empire: a gigantic segmented worm bursting out of golden dunes, a ringed circular maw with rows of dark teeth, armoured plates the colour of sun-baked clay and bronze, ancient gold bands and carved hieroglyph cartouches fixed on its body, sand streaming off it, a ruined sandstone obelisk and a hot hazy sun behind. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, muted desaturated colours (sand, ochre, terracotta, bronze, faded gold), harsh dusty afternoon light, upper-body character portrait filling the square frame, no text, no border, no blue tones on the creature.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/emperorCicada",
+      "pliki": [
+        "public/assets/cards/portraits/emperorCicada.jpg"
+      ],
+      "typ": "portret karty jednostki (legenda frakcji, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_nhCuDequvcqXP5QKE9X6o2sJ",
+      "prompt": "Portrait of the Imperial Cicada of the Deep Swarm: a huge cicada climbing out of the earth, glossy dark brown and olive chitin shell cracked open at the back, large translucent amber-veined wings, bulging dark red compound eyes, thick forelegs covered in soil and pale fungal threads, glowing spore dust in the air, a cavern of twisted roots and pale mushrooms behind it. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, muted desaturated colours (umber, olive, amber, bone, sickly pale green glow), dim underground light, upper-body character portrait filling the square frame, no text, no border, no blue tones on the creature.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/leviathan",
+      "pliki": [
+        "public/assets/cards/portraits/leviathan.jpg"
+      ],
+      "typ": "portret karty jednostki (legenda frakcji, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_8Qhz5C9xS8sqvEH99X1YpU4z",
+      "prompt": "Portrait of the Leviathan, an ancient sea monster of the Lords of the Tides: an immense serpentine head rising from a churning grey-green sea, dark green scales encrusted with barnacles, coral and old shipwreck timbers, a crown of spines and fins, pale glowing eyes, water pouring off its jaws, a stormy coast with a ruined lighthouse far behind. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, muted desaturated colours (sea green, kelp, slate grey-green, sand, pearl), the sea water is green-grey, strictly no blue anywhere, overcast stormy light, upper-body character portrait filling the square frame, no text, no border.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/satyrPiper",
+      "pliki": [
+        "public/assets/cards/portraits/satyrPiper.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_tsDKiW538b4bHCrHVoaXdJmJ",
+      "prompt": "Portrait of a Satyr Piper of the Wild Herds: a wild shaggy satyr playing a set of reed pipes, shaggy goat legs with cloven hooves, large curled ram-like horns, a muscular bare chest, a thick curly beard and tangled dark hair, a leather strap with bone charms, a lively mischievous gleam in the eyes, on a sunlit autumn steppe with tall golden grass and standing stones. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (russet, ochre, straw gold, warm brown, a touch of red), warm low sunlight, upper-body character portrait filling the square frame, no text, no border, no blue tones on the character.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/penitentShade",
+      "pliki": [
+        "public/assets/cards/portraits/penitentShade.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_3L87EKKWmRkwraBuQuK6kFH3",
+      "prompt": "Portrait of a Penitent Shade, the ghost of a repentant pilgrim of the Barrow Kingdom: a translucent pale figure in a tattered hooded monk's robe, a rope belt, a hollow bowed face half hidden in the hood with two faintly glowing pale green eyes, wispy ghostly hands clasped as if in prayer with a rosary of bone beads, the lower body dissolving into mist, an old graveyard with leaning stone crosses and a crumbling chapel behind. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (ash grey, bone ivory, moss green, an eerie pale green glow), cold dim moonless light, upper-body character portrait filling the square frame, no text, no border, no blue tones on the character.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/shieldDwarf",
+      "pliki": [
+        "public/assets/cards/portraits/shieldDwarf.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_HwLMSRYCcpFyU9pu3ft1kjWc",
+      "prompt": "Portrait of a Dwarf Shieldbearer of the Iron Clans: a stocky stern dwarf with a long braided russet beard with iron rings, a riveted steel helmet with a nose guard, a heavy round iron-rimmed shield with a carved clan rune held up in front, a chainmail coat and a thick leather collar, a short axe at the belt, standing in a lamplit mountain tunnel with timber supports and an anvil glowing in the distance. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (steel grey, copper, warm brown, ember orange glints), warm torchlight, upper-body character portrait filling the square frame, no text, no border, no blue tones on the character.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/frostImp",
+      "pliki": [
+        "public/assets/cards/portraits/frostImp.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_3ieTajAajwiSoNnNzTAXjbrk",
+      "prompt": "Portrait of a Frost Imp of the Court of Everfrost: a small mischievous winged imp with pale grey-white skin dusted with frost, pointed ears, tiny curved horns of clear white ice, sharp grinning teeth, thin bat-like wings with frozen edges, an icicle needle held like a dart, a little ragged cloak of white fur, hovering in a snowy forest at dusk with frost-covered pines. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (snow white, silver grey, pale lilac shadows, a touch of cold rose on the cheeks), strictly no blue anywhere, soft diffuse winter light, upper-body character portrait filling the square frame, no text, no border.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/squirrelArcher",
+      "pliki": [
+        "public/assets/cards/portraits/squirrelArcher.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_SJLopWQSP3nBT3NjdDRuZQBc",
+      "prompt": "Portrait of a Squirrel Archer of the Free Companies: an animal-folk squirrel standing upright like a person, wearing a patched green-brown hooded jerkin and a feathered cap, a bushy red-brown tail curled behind, holding a short bow with an arrow nocked, a quiver and a coil of rope on the shoulder, sharp attentive eyes, perched on a thick oak branch in a sunlit forest. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted warm colours with vivid accents (rust, russet, olive, leaf green, a touch of gold), dappled warm light through leaves, upper-body character portrait filling the square frame, no text, no border, no blue tones on the character.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/pharaohMongoose",
+      "pliki": [
+        "public/assets/cards/portraits/pharaohMongoose.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_NWcmgNws3jiTBDkvZbXveu23",
+      "prompt": "Portrait of a Pharaoh's Mongoose of the Sand Empire: a lithe alert mongoose with sleek sand-brown fur and a pale belly, a wide golden collar with an eye-shaped amulet, small gold bands on the forelegs, a defiant rearing pose with bared teeth, a hooded cobra coiled and hissing in the background, a sun-baked sandstone temple wall with hieroglyphs and warm dunes behind. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (sand, ochre, terracotta, gleaming gold, a touch of turquoise-free deep red), warm bright desert light, upper-body character portrait filling the square frame, no text, no border, no blue tones.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/sporeling",
+      "pliki": [
+        "public/assets/cards/portraits/sporeling.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_37S3cS6855vjpR1NHCmcaXuc",
+      "prompt": "Portrait of a Sporeling of the Deep Swarm: a small walking mushroom creature with a rounded warty cap in dull orange-brown with pale spots, a stubby pale stalk body with fungal gills, two small dark eyes and a crooked mouth, thin root-like arms and legs, puffs of golden spore dust drifting from the cap, tiny mycelium threads on the ground, in a damp underground cavern with twisted roots and glowing pale mushrooms. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (umber, burnt orange, cream, moss green, a soft yellow-green spore glow), dim cave light, upper-body character portrait filling the square frame, no text, no border, no blue tones on the creature.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/tritonHarpoon",
+      "pliki": [
+        "public/assets/cards/portraits/tritonHarpoon.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_rvhvxAFWZWzhVRvdStr4gF6C",
+      "prompt": "Portrait of a Triton Harpooner of the Lords of the Tides: a lean sea-folk warrior with greenish-teal skin, fine fish scales along the arms and neck, fin-like ears, webbed fingers, a coral-and-shell shoulder guard, a long barbed bone harpoon on a coiled rope in hand, determined sea-green eyes, standing on a wet rocky shore with surf, kelp, and a weathered wooden jetty in grey-green stormy light. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (sea green, kelp, pearl, coral pink, sandy brown), the sea water is green-grey, strictly no blue anywhere, overcast light with a bright break in the clouds, upper-body character portrait filling the square frame, no text, no border.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
       "id": "free/zastepcze/art",
       "pliki": [
-        "public/assets/cards/art/badgerBomber.jpg",
+        "public/assets/cards/art/marmotPetard.jpg",
         "public/assets/cards/art/badgerSapper.jpg",
         "public/assets/cards/art/beaverEngineer.jpg",
         "public/assets/cards/art/catFencer.jpg",
         "public/assets/cards/art/foxCaptain.jpg",
         "public/assets/cards/art/hareHerbalist.jpg",
         "public/assets/cards/art/martenSlasher.jpg",
-        "public/assets/cards/art/martenThief.jpg",
+        "public/assets/cards/art/magpieThief.jpg",
         "public/assets/cards/art/otterScout.jpg",
         "public/assets/cards/art/otterSmuggler.jpg",
         "public/assets/cards/art/polecatPoisoner.jpg",
@@ -6053,22 +6269,20 @@
     {
       "id": "free/zastepcze/portraits",
       "pliki": [
-        "public/assets/cards/portraits/badgerBomber.jpg",
+        "public/assets/cards/portraits/marmotPetard.jpg",
         "public/assets/cards/portraits/badgerSapper.jpg",
         "public/assets/cards/portraits/beaverEngineer.jpg",
         "public/assets/cards/portraits/catFencer.jpg",
         "public/assets/cards/portraits/foxCaptain.jpg",
         "public/assets/cards/portraits/hareHerbalist.jpg",
         "public/assets/cards/portraits/martenSlasher.jpg",
-        "public/assets/cards/portraits/martenThief.jpg",
+        "public/assets/cards/portraits/magpieThief.jpg",
         "public/assets/cards/portraits/otterScout.jpg",
         "public/assets/cards/portraits/otterSmuggler.jpg",
         "public/assets/cards/portraits/polecatPoisoner.jpg",
         "public/assets/cards/portraits/raccoonDogSpy.jpg",
         "public/assets/cards/portraits/ravenSeer.jpg",
-        "public/assets/cards/portraits/squirrelArcher.jpg",
         "public/assets/cards/portraits/toadGunner.jpg",
-        "public/assets/cards/portraits/towerMonitor.jpg",
         "public/assets/cards/portraits/weaselKnife.jpg",
         "public/assets/cards/portraits/wildcatBajka.jpg",
         "public/assets/cards/portraits/wolverine.jpg"

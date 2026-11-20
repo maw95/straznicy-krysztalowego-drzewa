@@ -9,8 +9,8 @@ pyta tylko o rzeczy nieodwracalne albo artystyczne (styl, nazwy, kierunek zasad)
 - Cztery kierunki: mapy i cele, pełna ekonomia jak w Heroesach, nowe frakcje, kampania + wyprawa roguelike.
 - Armia to drużyna pojedynczych jednostek (bez stosów); lista jednostek każdej frakcji zostaje rozszerzona (ok. 3 bohaterów + 7 jednostek).
 - Zasoby: złoto, drewno, ruda/kamień + jeden rzadki, magiczny (nazwa niżej).
-- Frakcje na premierę: Przymierze Świtu, Mroczna Horda + Żelazne Klany, Dzikie Stada, Królestwo Umarłych.
-  Pozostałe (Wolne Kompanie, Dwór Wiecznego Szronu, Imperium Piasków, Rój Głębin, Władcy Przypływów) jako DLC / aktualizacje.
+- Frakcje na premierę: Przymierze Świtu, Mroczna Horda + Żelazny Klan, Dzikie Stado, Królestwo Umarłych.
+  Pozostałe (Wolna Kompania, Dwór Wiecznego Szronu, Pustynne Cesarstwo, Rój Puszczy, Bractwo Przypływu) jako DLC / aktualizacje.
 - Workflow: ta kolejka decyzji, karta frakcji jako specyfikacja (`KARTA_FRAKCJI_SZABLON.md`), automatyczny balans symulacjami,
   przewodnik stylu i manifest zasobów (`assets.json`), arkusz kontaktowy do wyboru grafik, równoległe gałęzie z bramką jakości.
 

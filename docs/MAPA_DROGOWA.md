@@ -57,7 +57,7 @@ każdy nowy zasób wpisujemy do manifestu (źródło, narzędzie, prompt, licenc
 ## Po premierze — aktualizacje
 
 - [ ] Etap 2: ekonomia i rozwój (poziomy 3–4): osady, budynki, zasoby (złoto, drewno, ruda, Gwiezdny Pył), cykl tygodniowy, drzewka umiejętności.
-- [ ] Etap 3: Dzikie Stada, Królestwo Umarłych, Żelazne Klany; potem DLC (Wolne Kompanie, Dwór Wiecznego Szronu, Imperium Piasków, Rój Głębin, Władcy Przypływów). Każda frakcja: karta (`KARTA_FRAKCJI_SZABLON.md`), symulacje balansu.
+- [ ] Etap 3: Dzikie Stado, Królestwo Umarłych, Żelazny Klan; potem DLC (Wolna Kompania, Dwór Wiecznego Szronu, Pustynne Cesarstwo, Rój Puszczy, Bractwo Przypływu). Każda frakcja: karta (`KARTA_FRAKCJI_SZABLON.md`), symulacje balansu.
 - [ ] Etap 4: kampania fabularna, wyprawa roguelike, poziom 5 „Legenda” (magia, specjalności).
 
 ## Zależności (co blokuje co)
