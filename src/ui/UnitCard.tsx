@@ -177,7 +177,7 @@ const DUEL_BLUE = '#8FD3F4';
  */
 /** Set by the app while a digital game is on, so every card (hover, dialogs, helper pick) shows the digital stats. */
 export const DigitalCardsContext = createContext(false);
-/** True in the arena: the Horde's digital bonus (`HORDE_DIGITAL_BONUS`) is not on its cards there. */
+/** True in the arena: the factions' digital bonus (`FACTION_DIGITAL_BONUS`) is not on the cards there. */
 export const ArenaCardsContext = createContext(false);
 
 /** The small hover hint of a unit: its name and the three numbers the card shows (the card itself opens under the right mouse button). */
