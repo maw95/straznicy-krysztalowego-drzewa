@@ -94,3 +94,37 @@ Nazwy do ujednolicenia: „Strażnik/Strażniczka/Wartownik” występuje w 6 fr
 | Władcy Przypływów | Panowie Fal | Koralowy Dwór | Władcy Raf |
 Uwagi: „Głębin” w Roju myli się z morzem (Przypływy). „Mroczna Horda” i „Dwór Wiecznego Szronu” mają podobną „mroczną” wymowę, „Zmierzch” lepiej różnicuje. „Tętent” jako krótkie imię frakcji (menu, nazwy plików) pasuje do Stad. Nazwy angielskie
 trzeba będzie dobrać po wyborze polskich.
+
+## 4. Decyzje autora z 20.11 (po pierwszej wersji tego dokumentu) i poprawione propozycje
+Zatwierdzone: Płanetnik (Stada); Łamignat Stepowy (Stada); Wampir (Umarli, nazwa „Wampir”, nie „Wąpierz”); Strzyga przechodzi ze Szronu do Umarłych i ma się WYRÓŻNIAĆ wizualnie;
+Kostucha zostaje; Świstak Petardnik, Kuna Rębajło zostaje, Rosomak zostaje (Kompanie); Kocur Fechmistrz zostaje, ale na niższym tierze; Mors: jeden z dwóch do zamiany;
+kozy w Stadach i Klanach mają się różnić. Odrzucone: Saiga, Suseł Procarz, Sokół z Brązu, Skarabeusz (za bardzo Rój), Mumia (za bardzo Umarli). „Jeździec na Koźle” → sam kozioł.
+Golemów jest rzeczywiście za dużo: dziś konstrukty w Klanach to Kret z Brązu, Wartownik z Brązu, Armata Klanów, Kolos Kuźni; moje wcześniejsze propozycje (Golem Parowy, Brązowy Byk, Parowy Taran) dałyby 7 z 12, więc cofam je.
+
+### Propozycje po uwagach (do zatwierdzenia)
+- **Stada, układ:** T1 Satyr Dudziarz, Młody Tur, **Kulan Stepowy** (dziki osioł; zamiast Kozicy Skalnej, żeby kozy były tylko w Klanach; satyry mają kozie nogi, ale to inny gatunek);
+  T2A **Tarpan Łucznik** (konny łucznik stepu, zamiast Fauna Procarza; strzelającej jednostki stepu najlepiej szukać wśród jeźdźców), T2B **Wół Piżmowy** (zamiast Tarpana, kudłaty, wolny, mocny);
+  T3A Żubr Puszczański, T3B **Arkar Szarżujący** (zamiast Satyra Kopijnika; arkar = dziki baran stepowy; inne nazwy: Dziki Baran Stepowy, Baran Wydmowy); T4A **Łamignat Stepowy**, T4B Słoń z Bębnem;
+  T5A Nosorożec Bojowy, T5B Łoś Rogacz; legenda Indrik. Dowódcy: Turzy Zagończyk, **Orzeł Stepowy Łowca** (zamiast Fauna Oszczepnika; orzeł do polowań to klasyczny stepowy motyw), **Płanetnik** (zamiast Satyra Wróżbity).
+  Po zmianie satyrów zostają 2 (Rogogłos jako bohater, Dudziarz T1), faunów 0, turów 2 + Wielki Tur.
+- **Umarli:** Płaczka (3B) → **Wampir** (elegancki szlachcic w płaszczu, ssie życie); Kościana Wróżka (4B) → **Strzyga**. Wygląd Strzygi, wyraźnie inny niż Zjawa i Wampir: przykucnięta, na czworakach,
+  długie czarne włosy, czerwone oczy, wydłużone szpony, DWA rzędy kłów, a na plecach drugie, upiorne oblicze (strzyga ma dwie dusze, w folklorze dwa serca), blada, w poszarpanej koszuli; bez długiej szaty i welonu.
+  Kostucha zostaje: bardzo wysoka, kosa, klepsydra, czarna szata w strzępach (odróżnia od Lisza z koroną i laską).
+- **Szron zamiast Strzygi Wichru (4B):** **Zawieja** (żywa śnieżyca w kształcie wilka lub jelenia, bez sylwetki kobiety, żeby nie powiększać grupy „kobiet w szatach”), albo **Dziad Mróz**
+  (Morozko, stary władca mrozu z brodą z sopli). Inne: Mroźny Puchacz, Wicher Północy. Rekomendacja: Zawieja.
+- **Klany:** zamiast Kusznika Klanu (T1) mały konstrukt strzelający, wzorowany na zwierzęciu albo nie: **Pająk Bełtowy** (mosiężny, z kuszami na odnóżach), **Bełtomat** (czworonożny samostrzał), **Mechaniczny Szczur** z bełtem
+  (uwaga: Szczurołak Hordy). „Jeździec na Koźle” (3B) → sam **Kozioł Taranowy** (okuty, z żelaznymi nasadkami na rogach i nitowaną zbroją; kozioł górski, masywny), inne nazwy: Okuty Kozioł, Kozioł Szturmowy.
+  Stada nie mają już kozy (Kulan zamiast Kozicy). Krasnoludów zostaje po tych zmianach 4 jednostki (Tarczownik, Kowal, Pogromca, Gwardia) plus Skarbnik (duch kopalni, nie krasnolud).
+- **Kompanie:** Kuna Złodziejka (T1) → **Sroka Złodziejka**. Antropomorficzny ptak jest do narysowania (czarno-biała sroka w kamizelce z sakwą, długi ogon, kapelusz); w Kompaniach jest już Kruk Wieszczek (bohater), więc ptaki są częścią frakcji.
+  Kocur Fechmistrz na niższy tier: **T3B** (riposta pasuje wcześnie); Jenot Szpieg awansuje na **T4**?? zamiast tego proponuję: Jenot Szpieg zostaje T3A, Tchórz Smrodnik schodzi na T2B (zamiast Bobra), Bóbr Inżynier staje się T3... 
+  Prościej: Kocur Fechmistrz T3B zamiast Jenota; Jenot Szpieg przechodzi na T5B; luka na T3... Do rozstrzygnięcia, prostsza wersja: **Kocur Fechmistrz zamienia się miejscami z Jenotem Szpiegiem** (Jenot 5B, Kocur 3B), a ukrycie Jenota zostaje jego znakiem rozpoznawczym wysoko w drzewku.
+- **Piaski:** dżin odpada z T5A; nowy **Beduin Nomada** (człowiek pustyni w burnusie z zakrzywioną szablą, zwinny, bez konia) na T2A; Skorpion Piaskowy → T3B; Kamienny Strażnik Grobowca → T4A; Lamassu → T5A (miejsce dżina). Dżin Wezyr zostaje bohaterem.
+- **Przypływy, morsy:** zamienić **Starego Morsa Kapitana** (4. bohater, wojownik, odpychanie): **Albatros Kapitan** (odpycha uderzeniem skrzydeł; inna sylwetka, lotny), albo **Foka Kapitan** (za podobna do morsa); Mors Kłowy (4B) zostaje.
+- **Koza w Klanach vs satyry w Stadach:** rozwiązane przez usunięcie Kozicy ze Stad i zamianę jeźdźca na samego kozła w Klanach.
+
+### Nazwy frakcji
+Zatwierdzone: Przymierze Świtu; Mroczna Horda; Dzikie Stado; Królestwo Umarłych; Żelazny Klan; Dwór Wiecznego Szronu; Wolna Kompania; Pustynne Cesarstwo.
+Do wyboru: Rój (słowo „Rój” zostaje, potrzebne rozwinięcie w stylu pozostałych: przymiotnik + rzeczownik albo „X czegoś”, bez wody, bez „pod ziemią”, bo stworzenia żyją w lesie, trawie i na runie):
+Świetlisty Rój; Rój Zarośli; Rój Runa (runo leśne); Nocny Rój; Leśny Rój; Rój Puszczy; Pierwotny Rój (uwaga: Pierwotna Iskra); Wielki Rój.
+Przypływy (bez „władców”, „panów” i „dworu”; rzeczownik oznaczający charakter organizacji, jak przymierze, horda, stado, klan, królestwo):
+Liga Przypływów; Koralowa Liga; Zakon Przypływu; Flota Fal; Wspólnota Fal; Bractwo Przypływu; Konfederacja Raf; Falowe Bractwo.
