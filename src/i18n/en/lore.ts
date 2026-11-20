@@ -116,4 +116,32 @@ register({
     "The Caravan Archer has led hundreds of wagons across the desert and lost none. She shoots from a halt, calmly, and every arrow carries a drop of desert sun on its head.",
   "Astrolog Pustyni czyta przyszłość z układu gwiazd nad wydmami i nigdy nie myli się o więcej niż jedną noc. Jego woda z oazy leczy, a jego rady kosztują więcej niż woda.":
     "The Desert Astrologer reads the future in the stars above the dunes and is never wrong by more than a night. His oasis water heals, and his advice costs more than the water.",
+  "Królowa Modliszek godzinami stoi bez ruchu, ze złożonymi łapami, jakby się modliła. Wrogowie Roju dobrze wiedzą, że modli się wyłącznie o to, żeby ktoś w końcu się zachwiał.":
+    "The Mantis Queen stands still for hours with her claws folded, as if in prayer. The Swarm's enemies know well that she prays only for someone to finally stumble.",
+  "Śniący Muchomor drzemie pod korzeniami starego lasu od tak dawna, że grzybnia śni razem z nim. Kiedy kichnie, cała polana zasypia, a budzi się trochę słabsza.":
+    "The Dreaming Toadstool has dozed under the roots of the old forest for so long that the mycelium dreams with him. When he sneezes, the whole glade falls asleep and wakes up a little weaker.",
+  "Chrząszcz Goliat nosi pancerz lśniący jak stary lakier i nie pamięta, kiedy ostatni raz coś go zadrapało. Najsilniejszy jest w tłumie, bo nikt z Roju nie lubi zostawiać go samego.":
+    "The Goliath Beetle wears a shell that shines like old lacquer and cannot remember when anything last scratched it. He is strongest in a crowd, because nobody in the Swarm likes to leave him alone.",
+  "Pszczoła Królowa przylatuje do Roju z łąk nad lasem i przynosi ze sobą zapach miodu i brzęk tysiąca skrzydeł. Jest słodka dla swoich, a jej żądło pamięta się jeszcze długo po bitwie.":
+    "The Queen Bee flies down to the Swarm from the meadows above the forest, bringing the smell of honey and the hum of a thousand wings. She is sweet to her own, and her sting is remembered long after the battle.",
+  "Żuk Gwardzista stoi na straży wejścia do podziemnych korytarzy i nie przepuszcza nikogo bez hasła. Hasła nie zna nikt, łącznie z nim, więc nie przechodzi po prostu nikt.":
+    "The Guard Beetle keeps watch at the entrance to the underground tunnels and lets nobody pass without the password. Nobody knows the password, himself included, so simply nobody passes.",
+  "Świetlikowa Łuczniczka strzela w ciemności, a jej strzały świecą jak spadające gwiazdki. Najlepiej celuje, gdy stoi w miejscu, więc prosi wszystkich, żeby jej nie popędzali.":
+    "The Firefly Archer shoots in the dark, and her arrows glow like falling stars. She aims best when standing still, so she asks everyone not to rush her.",
+  "Grzybowy Wróżbita warzy wywary z kapeluszy, których nikt inny nie odważyłby się dotknąć. Leczą prawie zawsze, a skutki uboczne mijają zwykle przed następną pełnią.":
+    "The Mushroom Seer brews potions from caps nobody else would dare to touch. They heal almost every time, and the side effects usually pass before the next full moon.",
+  "Król Trytonów wychodzi na ląd z przypływem, z trójzębem w dłoni i koroną z koralu na głowie. Gdy uderza nim o ziemię, fala odpycha wrogów, a jego ludzie stają za nią jak za murem.":
+    "The Triton King comes ashore with the flood tide, trident in hand and a coral crown on his head. When he strikes the ground with it, a wave pushes the enemies back and his people stand behind it as behind a wall.",
+  "Syrena Pieśniarka śpiewa tak pięknie, że wrogowie sami podchodzą bliżej, żeby lepiej słyszeć. Zwykle żałują tego jeszcze przed ostatnią zwrotką.":
+    "The Siren Singer sings so beautifully that enemies come closer of their own accord to hear her better. They usually regret it before the last verse.",
+  "Wąż Morski śpi w głębinach i budzi się tylko wtedy, gdy Bractwo zadmie w wielką muszlę. Owija się wokół wroga tak czule, że ten nie może zrobić ani kroku.":
+    "The Sea Serpent sleeps in the depths and wakes only when the Brotherhood blows the great conch. It coils around an enemy so tenderly that the poor thing cannot take a single step.",
+  "Stary Mors Kapitan pływał po wszystkich morzach i z każdego przywiózł co najmniej jedną bliznę i trzy opowieści. Kogo dźgnie kłem, ten odlatuje na bok, zanim zdąży się przedstawić.":
+    "The Old Walrus Captain has sailed every sea and brought back at least one scar and three stories from each. Whoever he jabs with a tusk is sent flying aside before they can introduce themselves.",
+  "Trytoński Strażnik nosi tarczę z muszli wielkiego ślimaka morskiego i strzeże przejść na rafie. Fale go nie przewracają, a wrogowie próbują znacznie rzadziej niż fale.":
+    "The Triton Guard carries a shield made from the shell of a great sea snail and guards the passages through the reef. The waves never knock him over, and enemies try far less often than the waves.",
+  "Harpunniczka łowiła kiedyś ryby, ale uznała, że wrogowie są więksi i łatwiej w nich trafić. Jej harpun na długiej linie przyciąga ich prosto pod trójzęby Bractwa.":
+    "The Harpooneer used to catch fish, but decided that enemies are bigger and easier to hit. Her harpoon on a long line hauls them straight under the Brotherhood's tridents.",
+  "Sefiran Plamisty to mały szary wąż w czarne plamy, płochliwy, ale bardzo ciekawy świata, który uwielbia wodę. Gdy robi się niebezpiecznie, zrzuca skórę razem z kłopotami i pełza dalej jak nowy.":
+    "Sefiran the Spotted is a small grey snake with black spots, shy but very curious about the world, and he loves water. When things get dangerous, he sheds his skin along with his troubles and slithers on as good as new.",
 });
