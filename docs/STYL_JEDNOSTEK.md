@@ -11,6 +11,7 @@ Stan na 5.11.2026. Źródło: dwie jednostki zaakceptowane przez autora (Złoty 
 - Tło do wycięcia: czysty niebieski #0000FF. **W palecie jednostki nie ma niebieskiego** (nimfa, kryształy, lód: przemalować na biel, złoto,
   zieleń, rudy); inaczej klatki mają dziury.
 - Postać wierna portretowi karty (portret jest odniesieniem w generatorze).
+- **Decyzja autora 20.11.2026:** wszystkie nowe grafiki (portrety, jednostki, osady, areny, ikony) są **nieco żywsze, mniej stonowane** niż dotąd, ale tylko trochę (nie wracamy do nasyconych barw, które gryzły się z arenami). W promptach: zamiast „muted desaturated colours” pisz „rich but slightly muted colours” i dodaj „vivid accents”; w pozostałych zasadach nic się nie zmienia. Osiem portretów legend nowych frakcji z 20.11 (Indrik, Kościany Smok, Kolos Kuźni, Mamut, Waran Wieżowy, Czerw Pustyni, Cesarska Cykada, Lewiatan) autor przyjął w poprzedniej, stonowanej wersji i zostają bez zmian.
 
 ## Przymierze Świtu
 
