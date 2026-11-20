@@ -1,4 +1,4 @@
-# Karta frakcji: Bractwo Przypływu (`tides`) — G0 zatwierdzona wstępnie (20.11.2026)
+# Karta frakcji: Bractwo Przypływu (`tides`) — G0 zatwierdzona wstępnie, G1 zrobione (20.11.2026)
 
 Stan: 20.11.2026. Autor wstępnie zatwierdził kartę (skład, dowódcy, mechanika); **liczby Ż/A/S, koszty i zdolności „N” ustali balans przy bramce G2**. Treść przeniesiona z `FRAKCJE_PROPOZYCJE.md` (sekcja 10) po uwagach autora z 19.11 i 20.11; ta karta jest teraz źródłem prawdy. Szablon: `KARTA_FRAKCJI_SZABLON.md`. Odrzucone pomysły: `ODRZUCONE_POMYSLY.md`. Bramki: G1 dane i paczka, G2 balans, G3 próbka jednostki (autor), G4 grafika, G5 instrukcja.
 
@@ -81,6 +81,16 @@ się na pola obok pułapek i grzybni (jeśli je widzi), wysuwać Syreny na przó
 ## Rozstrzygnięcia autora (19–20.11)
 - Zwierzaki autora jako **dowódcy z karczmy**: **Żbiczka Bajdurka** (łowca, Kompanie, Szalony Skok), **Bastia Cienista** (wojownik, Piaski, Czujna Drzemka), **Sefiran Plamisty** (mędrzec, Przypływy, Wylinka). Odróżnienie Sefirana od Węża Morskiego: mały, szary, w plamy.
 - Przypływy: Mewa odpadła; Żółw Skorupiak na tier 1, **Krabolud Tarczownik na 2A** (pancerz poziomu 1: pokrywa osłona Żółwia), **Rafowy Golem** zamiast Żółwia-Wyspy (jeden żółw).
+
+## Stan G1 (20.11.2026, praca w gałęzi `g1-four-factions`)
+Zrobione: paczka `src/engine/factions/tides.ts` według tabeli wyżej (A: Krabolud Tarczownik, Rekinołak, Homar Pancerny, Rafowy Golem; B: Ośmiornica Atramentowa, Kapłanka Pereł, Albatros, Morska Wiedźma; legenda Lewiatan); 3 bohaterów, 3 dowódców (Trytoński Strażnik, Harpunniczka, Sefiran Plamisty), Stary Mors Kapitan (4. bohater, Kły Kapitana: odpycha po każdym ataku, bez zderzenia); siedliska z karty; budynki Świątynia Pływów (I-IV, rodzic Fosa i Mury), Perłowe Ławice (I-II, Skarbiec), Latarnia Morska (I-II, Targ); nazwy osad; arena i przeszkody zastępcze.
+- **Przypływ** (`battleTideSwap`, `tideSwapReady`, `tideTargets` w `battle.ts`): przycisk „Przypływ” na pasku aktywacji, zanim jednostka się ruszy; jawny, bez ukrytej informacji.
+- **Zdolności:** Ściana Wody, Pieśń Syreny, Oplot Głębin, Kły Kapitana, Wylinka, Skorupa, Harpun (też Harpunniczka), Atrament, Wir, Perłowa Tarcza, Szczypce, Uderzenie Skrzydeł, Żywa Rafa, Odpływ, Wir Głębin; Susem w Tył (Powietrzny Zryw), Twarda Skorupa i Muszlowa Tarcza (Pawęż) z istniejących. Przyciąganie to prymityw `pullIn` z `primitives.ts` (pierwsze użycie), z pułapkami na drodze.
+- **Iskra:** każda jednostka Bractwa zaczyna bitwę z perłową tarczą (2 w skali planszowej), bez premii do A.
+- **Bot:** rannego cofa zamianą na miejsce świeżego, świeży wręcz wchodzi za rannego; nie zamienia się na pole obok pułapki, którą widzi, ani obok grzybni wroga; Syrena trzyma się z tyłu i ściąga strzelców, Wąż oplata, Żółw chowa się, gdy by padł, Wiedźma przerzuca strzelca wroga na miejsce swojego wojownika, Lewiatan ciągnie, gdy złapie dwóch.
+- **Ekran:** przycisk „Przypływ” podświetla sojuszników w zasięgu, Odpływ w dwóch krokach (jednostka, potem pole drugiej; „Wybierz za mnie”), celowanie Syreny, Węża i Kapłanki, odznaki perłowej tarczy i skorupy.
+- Angielski `src/i18n/en/tides.ts`; testy `tests/tides.test.ts`; próbka `scripts/sim/przyplyw.ts` (20 gier na parę: Bractwo wygrywa ok. 32%, najsłabiej z Przymierzem 2/20; liczby czekają na G2); przeglądarka `scripts/browser/przyplyw.ts` (`SKD_BROWSER_PORT`).
+- Decyzje do przejrzenia: `NOTATKI_DLA_AGENTA_PLANSZOWKI.md`, sekcja 19. Zostaje: liczby (G2), grafika (lista w `BACKLOG.md` 2a), instrukcja (G5).
 
 ## Grafika (wypełnia Claude od G4)
 - Lista zasobów w `docs/BACKLOG.md`, sekcja 2a, po G1.
