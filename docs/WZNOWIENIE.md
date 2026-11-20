@@ -24,6 +24,18 @@ Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowe
 6. **G1 pozostałych frakcji**, po jednej, osobnymi agentami w worktree `skd-g1`: Piaski (zaczęte: commit WIP `3985491`, same dane; kontynuować od niego), Rój, Przypływy.
 7. **Ponowne G2** (stroiciel, niskie koszty) po każdej nowej frakcji i na końcu dla wszystkich 10.
 
+## Stan na 20.11 ok. 03:00 (aktualizuj przy kolejnych krokach)
+- Zrobione: przestrojenie poziomów policzone (`.tmp/sim/auto-*.json`, 142 przebiegi, `=== done` w `.tmp/sim/retune-all.log`), **NIE scalone** do `tuningAuto.ts` (zob. niżej);
+  tabela `FACTION_DIGITAL_BONUS` (`src/engine/factionBonus.ts`, generowana) zastąpiła `HORDE_DIGITAL_BONUS`; Kompanie scalone do `master` (`b30cbbd`; portrety z drugiej sesji są
+  w `master`, konflikt `assets.json` i dwóch portretów rozwiązany: zostały prawdziwe portrety); `make check` zielony (902 testy).
+- **W toku:** automatyczny stroiciel G2 siedmiu frakcji: `nohup node --import tsx scripts/sim/tuneFactions.ts 200 control,conquest,relic --apply > .tmp/sim/tuneFactions.log &`
+  (do ok. 2,5 h; stan w `.tmp/sim/tuneFactions.json`, po przerwaniu uruchom to samo polecenie, wznowi od stanu; `--report` tylko mierzy). Na końcu `--apply` zapisuje
+  `src/engine/factionBonus.ts`. Pomiar początkowy: 15 z 21 par poza pasmem (Przymierze–Horda 52% zamiast 60–70).
+- **Decyzja do podjęcia po stroicielu (ważne):** tabela kontr wymaga Przymierze > Horda 60–70%, a premia +1/+1 dla Hordy dała ok. 50%. Stroiciel sam dobierze premie wszystkich frakcji,
+  więc po nim Kryształy i inne cele trzeba przestroić ponownie (`scripts/sim/retune-all.sh` po skasowaniu `.tmp/sim/auto-*.json` oprócz `auto-zero-legacy.json`), potem `tuneMerge`.
+  Dlatego obecne pliki `auto-*.json` służą tylko, jeśli premia Hordy zostanie przy +1/+1.
+- Dalej wg kolejności powyżej: poprawki Kompanii (punkt 5), G1 Piasków (od commitu WIP `3985491` w gałęzi `g1-four-factions`), Rój, Przypływy, G2 ponownie.
+
 ## Szczegóły zadań
 
 ## Zadanie 1: przestrojenie poziomów po wzmocnieniu Hordy (liczy się w tle)
