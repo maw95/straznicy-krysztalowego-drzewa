@@ -4,6 +4,18 @@ Ten plik opisuje, co jest rozpoczęte i jak to dokończyć bez znajomości rozmo
 Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowego-drzewa-backend`) ma lokalny commit, **nie jest wdrożony**
 (dostaje silnik dopiero z wydaniem gry).
 
+## PLAN NA TERAZ (ustalony z autorem 20.11 wieczorem; wykonuj po kolei, aktualizuj tu odhaczenia)
+1. [ ] Backlog 58a/58b (silnik, worktree), potem 56 i 57 (`docs/BACKLOG.md`).
+2. [ ] Ikona `huntDive` (Scenario, autor zgodził się na generowanie; zasady: `docs/BACKLOG.md` 2a, `assets.json`, budżet 8000 CU).
+3. [ ] Pozostałe drobiazgi z tego pliku (m.in. serwer przy wydaniu: parsery `pickMirages`, `battleMirageSwap`, `gateHero`, `battleTideSwap`; otwarte pytania z G1; herby `cards/crests` ze starymi nazwami).
+4. [ ] G2 dla 10 frakcji, drabina (przejdź do następnego szczebla, gdy poprzedni nie daje celu):
+   B) pełny stroiciel `tuneFactions.ts` dla 10 frakcji (ok. 5 h w tle, `nohup`, nie edytuj `src/` w katalogu głównym w trakcie);
+   A) kontry z mechanik frakcji i bota (wg `docs/DIAGNOZA_FRAKCJI.md`);
+   C) ręczne zmiany statystyk jednostek i siły/słabości umiejętności aż do efektu;
+   D) ostateczność: porzucić warunki kontra/kontrowana; wystarczy **średnia wygranych każdej frakcji z pozostałymi w 45-55%** (twarde granice par 25-75%).
+5. [ ] Jeśli G2 się powiedzie: przestrojenie poziomów Kryształów (`retune-all.sh` po skasowaniu `.tmp/sim/auto-*.json` oprócz `auto-zero-legacy.json`, `tuneMerge`, `make check`, commit).
+Autor czyści kontekst (/clear) przed startem; zacznij od punktu 1.
+
 ## Nowe zdolności jednostek (20.11, gałąź `new-abilities`, worktree `skd-abilities`, NIE scalona do `master`)
 Wprowadzone zdolności zatwierdzone przez autora (karty `docs/frakcje/*.md`, lista ikon w `docs/BACKLOG.md` 2a): Kozioł Taranowy = Taran (`ramBlow`, +2 A po ruchu o 2+ pola i ogłuszenie),
 Mosiężny Pająk = Ostrzał z Miejsca (ta sama zasada), Orzeł Stepowy Łowca = Nurkowanie (`huntDive`, wręcz i lot; `overShot`/`shootsOver` usunięte), Dziad Mróz = Uścisk Mrozu (`beardChill`, chód).
