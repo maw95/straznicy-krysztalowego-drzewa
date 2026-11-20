@@ -1070,6 +1070,14 @@ export function chestPreview(state: GameState, hero: HeroState): string {
 
 // ------------------------------------------------------------------ the bots
 
+/** Level 6: the next building a bot raises on the way to its faction's mechanic building (the missing parent first), null when the mechanic stands or the barracks do not. */
+function mechanicStep(state: GameState, f: TeamId, s: Settlement): BuildingId | null {
+  if (!state.rules.empire || s.land !== f || s.buildings.barracks < 1 || mechanicLevel(state, f) >= 1) return null;
+  const chain: BuildingId[] = [];
+  for (let b: BuildingId | undefined = MECHANIC_BUILDING[raceOf(state, f)]; b && buildingLevel(s, b) < 1; b = BUILDING_PARENT[b]) chain.unshift(b);
+  return chain[0] ?? null;
+}
+
 /** What a bot buys in a settlement it stands in, by priority (null: nothing it wants and can pay for). */
 export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action | null {
   const k = state.kingdom;
@@ -1104,6 +1112,13 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
     // Every cheaper recruit is in the team and the strongest ones wait behind the bigger barracks: build them.
     const waiting = recruitsOf(state, f).some((r) => r.tier >= 4 && !hasUnit(state, f, r.id) && (!needsDwelling(state, r) || dwellingOf(state, f, r.tier) === undefined || dwellingReady(state, f, r)));
     if (waiting && s.buildings.barracks === 1 && recruitsOf(state, f).every((r) => r.tier >= 4 || hasUnit(state, f, r.id) || (needsDwelling(state, r) && dwellingOf(state, f, r.tier) !== r.id && dwellingOf(state, f, r.tier) !== undefined)) && buildable('barracks')) return { type: 'kingdomBuild', settlementId: id, building: 'barracks' };
+  }
+  // Level 6: the faction's mechanic building right after the barracks (and the recruits it can pay for), through its parent buildings, the same for every faction.
+  const mechStep = mechanicStep(state, f, s);
+  if (mechStep) {
+    if (buildable(mechStep)) return { type: 'kingdomBuild', settlementId: id, building: mechStep };
+    // Short of a resource or of the gold for one: trade for it, and keep the gold for it meanwhile (nothing else is bought).
+    return tradeToward(state, f, s, mechStep);
   }
   if (s.buildings.hospital >= 1 && fs.supportsDead.length) {
     const dead = fs.supportsDead[0];
@@ -1177,6 +1192,8 @@ function botTrade(state: GameState, f: TeamId, s: Settlement): Action | null {
   const own = s.land === f;
   const wanted: BuildingId[] = [];
   if (own && s.buildings.barracks < 1) wanted.push('barracks');
+  const mechStep = mechanicStep(state, f, s);
+  if (mechStep) wanted.push(mechStep);
   if (s.buildings.treasury < 1) wanted.push('treasury');
   if (s.buildings.market < 1) wanted.push('market');
   if (forgeLevel(state, f) < 1) wanted.push('forge');
@@ -1189,14 +1206,22 @@ function botTrade(state: GameState, f: TeamId, s: Settlement): Action | null {
   if (own && s.buildings.barracks === 1) wanted.push('barracks');
   if (buildingLevel(s, 'forge') === 1) wanted.push('forge');
   for (const b of wanted) {
-    const c = buildCost(state, s, b);
-    if (!c) continue;
-    const missing = RESOURCE_IDS.filter((r) => k.res![f][r] < (c[r] ?? 0));
-    if (!missing.length) continue;
-    const bill = c.gold + missing.reduce((n, r) => n + (c[r]! - k.res![f][r]) * tradeBuyPrice(s, r), 0);
-    if (k.gold[f] >= bill) return { type: 'kingdomTrade', settlementId: s.id, res: missing[0], dir: 'buy' };
+    const buy = tradeToward(state, f, s, b);
+    if (buy) return buy;
   }
   return null;
+}
+
+/** Buys one unit of a resource the building still lacks, when the gold for the whole bill (building and every missing unit) is there (null: nothing to buy yet). */
+function tradeToward(state: GameState, f: TeamId, s: Settlement, b: BuildingId): Action | null {
+  const k = state.kingdom!;
+  if (!k.res) return null;
+  const c = buildCost(state, s, b);
+  if (!c) return null;
+  const missing = RESOURCE_IDS.filter((r) => k.res![f][r] < (c[r] ?? 0));
+  if (!missing.length) return null;
+  const bill = c.gold + missing.reduce((n, r) => n + (c[r]! - k.res![f][r]) * tradeBuyPrice(s, r), 0);
+  return k.gold[f] >= bill ? { type: 'kingdomTrade', settlementId: s.id, res: missing[0], dir: 'buy' } : null;
 }
 
 /** Whether the hero can pay what the hut on its hex asks for now. */
