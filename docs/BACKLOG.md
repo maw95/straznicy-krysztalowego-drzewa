@@ -148,7 +148,7 @@ Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.t
 - animacje 2D (`public/assets/jednostki/<folder>`, zestaw jak w `PRZEPIS_JEDNOSTKI.md`) dla tych samych 19; do czasu ich powstania w bitwie są żetony z portretami;
 - herb `cards/crests/clans.png`: młot na kowadle w kole z run;
 - ramki kart `cards/frames/clans_hero.png`, `clans_support.png` (dziś pożyczone z Przymierza w `UnitCard.tsx`);
-- ikony 12 zdolności (`cards/abilities/<id>.png` i `<id>_inner.png`): `shieldOath`, `stoneRune`, `bulwark`, `standShot`, `temper`, `bronzeQuills`, `goatLeap`, `giantBane`, `misleadLight`, `stunBlow`, `cannonFire`, `fortify` (dziś pożyczone w `ABILITY_ART` w `common.tsx`);
+- ikony 12 zdolności (`cards/abilities/<id>.png` i `<id>_inner.png`): `shieldOath`, `stoneRune`, `bulwark`, `standShot`, `temper`, `bronzeQuills`, `ramBlow` (Taran; dawniej goatLeap), `giantBane`, `misleadLight`, `stunBlow`, `cannonFire`, `fortify` (dziś pożyczone w `ABILITY_ART` w `common.tsx`);
 - ikony run (`+1 A`, `+1 Ż`, pancerz 1) w oknie Runicznej Kuźni (dziś tekst na przyciskach);
 - arena cyfrowa `arena/cyfrowa/clans.webp` (górska przełęcz z posągami przodków i kamiennym mostem) i jej przeszkody: posągi, głazy, skalne mury (dziś obrazy Przymierza w innym układzie, `WIDE_OBSTACLES.clans`); obraz muru Fortyfikacji (dziś `wall.webp`);
 - kafle ziemi Klanów (skały, sztolnie, kamienne mosty), zakryty rewers `tiles/back_clans.jpg`, baza i skarbiec (dziś kafle Przymierza w `clans.ts`, pole `terrain`);
@@ -159,7 +159,7 @@ Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.t
 - karta (`cards/art/<id>.jpg`, 452×314) i portret (`cards/portraits/<id>.jpg`, 256×256) dla 19 jednostek: `marzanna`, `frostJarl`, `snowLynx`, `oldHailer` (4. bohater), `iceKnight`, `ermineHuntress`, `frostWitch` (dowódcy), `frostImp`, `ermine`, `courtPage`, `blizzardWitch`, `glacierYak`, `iceSentinel`, `frostSprite`, `youngGiant`, `dziadMroz`, `elderGiant`, `auroraSpirit`, `frostMammoth`;
 - animacje 2D dla tych samych 19 (do czasu ich powstania żetony z portretami);
 - herb `cards/crests/frost.png`: płatek śniegu w koronie; ramki kart `frost_hero.png`, `frost_support.png` (dziś pożyczone z Przymierza);
-- ikony 13 zdolności (`cards/abilities/<id>.png` i `<id>_inner.png`): `iceWall`, `iceBlow`, `blizzardTrail`, `frostSlow`, `crystalArrow`, `thickFur`, `frostArmor`, `bellOfGlass`, `frostGrip`, `abduct`, `hailStones`, `coldLight`, `longNight` (dziś pożyczone w `ABILITY_ART`);
+- ikony 13 zdolności (`cards/abilities/<id>.png` i `<id>_inner.png`): `iceWall`, `iceBlow`, `blizzardTrail`, `frostSlow`, `crystalArrow`, `thickFur`, `frostArmor`, `bellOfGlass`, `frostGrip`, `beardChill` (Uścisk Mrozu; dawniej abduct), `hailStones`, `coldLight`, `longNight` (dziś pożyczone w `ABILITY_ART`);
 - znaczniki szronu na figurach i na polach śladu Zamieci (dziś tylko odznaka statusu w panelu);
 - arena cyfrowa `arena/cyfrowa/frost.webp` (zamarznięte jezioro, ośnieżone świerki, lodowe kolce) i jej przeszkody (dziś obrazy Przymierza i Hordy w innym układzie, `WIDE_OBSTACLES.frost`); obraz lodowej ściany (dziś `wall.webp`);
 - kafle ziemi Dworu (śnieg, lód, zamarznięte jeziora), rewers `tiles/back_frost.jpg`, baza i skarbiec (dziś kafle Przymierza, pole `terrain`);

@@ -26,11 +26,11 @@ Dowódcy z karczmy: Wojownik Klanu (`clanWarrior`, wojownik, Twardy Łeb jak Twa
 |---|---|---|---:|---:|---:|---:|---|---|---|---|
 | 1 | `shieldDwarf` | Krasnoludzki Tarczownik | 1 | 5 | 2 | 3 | chód | wręcz | Pawęż: pancerz 1 | — |
 | 1 | `bronzeMole` | Kret z Brązu | 1 | 4 | 2 | 4 | chód | wręcz | Podkop: zamiast ruchu wyłania się na dowolnym wolnym polu w zasięgu 4 | — |
-| 1 | `brassSpider` | Mosiężny Pająk | 1 | 4 | 2 | 3 | chód | dyst. | Salwa z Miejsca: +2 A, gdy w tej aktywacji się nie ruszał | — |
+| 1 | `brassSpider` | Mosiężny Pająk | 1 | 4 | 2 | 3 | chód | dyst. | Ostrzał z Miejsca: +2 A, gdy w tej aktywacji się nie ruszał (pająk strzela z kusz na odnóżach) | — |
 | 2A | `armoredBear` | Niedźwiedź w Zbroi | 1 | 9 | 3 | 4 | chód | wręcz | Kolczuga: pancerz 1 (bez osłaniania, tego nie robi Prastary Niedźwiedź) | Gawra Zbrojna |
 | 2B | `battleSmith` | Kowal Bitewny | 1 | 6 | 2 | 3 | chód | wręcz | Hartowanie: raz na bitwę sąsiad +1 A do końca bitwy | Polowa Kuźnia |
 | 3A | `bronzeSentinel` | Wartownik z Brązu | 1 | 8 | 3 | 3 | chód | wręcz | Kolce Mechanizmu: atakujący wręcz traci 1 Ż; odporny na truciznę | Warsztat Mechanizmów |
-| 3B | `ramGoat` | Kozioł Taranowy | 1 | 7 | 3 | 5 | chód | wręcz | Skok po Turniach: raz na bitwę jeden ruch przez jednostki i przeszkody | Koźla Zagroda |
+| 3B | `ramGoat` | Kozioł Taranowy | 1 | 7 | 3 | 5 | chód | wręcz | Taran (zatwierdzone 20.11; dawny Skok po Turniach to zdolność jeźdźca, usunięta): raz na bitwę, jeśli w tej aktywacji ruszył się o co najmniej 2 pola, cios wręcz zadaje +2 A, a trafiony traci następną aktywację (ogłuszenie jak Młot Przodków); bez odepchnięcia | Koźla Zagroda |
 | 4A | `giantSlayer` | Pogromca Olbrzymów | 1 | 9 | 4 | 3 | chód | wręcz | Na Duże Cele: +2 A przeciw dużym (dwupolowym) | Sala Pogromców |
 | 4B | `skarbnik` | Skarbnik | 1 | 7 | 3 | 4 | chód | dyst. | Błędne Światło: raz na bitwę wróg w zasięgu 4 przestawiony o 2 pola od Skarbnika | Stary Szyb |
 | 5A | `hammerGuard` | Gwardia Młota | 1 | 12 | 5 | 3 | chód | wręcz | Młot Przodków: raz na bitwę trafiony traci następną aktywację | Sala Gwardii |
@@ -83,8 +83,8 @@ Rozstrzygnięcia z rozmowy: Kozioł Taranowy na 3B, Kret z Brązu, Strażniczka 
 - **Przysięga Tarczy:** pancerz 1 sąsiadom (bez samego Tana) do końca rundy, w której padła (`status.oathRound`); pancerz z Przysięgi sumuje się z Pawężem, runą i szykiem (każde źródło odejmuje swoje 1, nigdy poniżej 1 obrażenia).
 - **Runa Kamienia:** pancerz i nieruchomość (`status.unmovable`) do końca bitwy; nie na sam siebie.
 - **Mur Tarcz:** „sojusznik” = każda żyjąca jednostka tej strony obok (też bohater i garnizon). Dotyczy jednostek bitwy, nie pojedynków. Poziom III zakazuje odepchnięcia i przyciągnięcia (nowa reguła `canBeMoved`; przestawienie Skarbnika też jest wtedy bez skutku); IV rani atakującego wręcz po trafieniu (1 Ż w skali Życia).
-- **Salwa z Miejsca:** +2 A, gdy w aktywacji nie było ruchu (`movedDistance === 0`); w ruleset cyfrowym strzelec i tak nie strzela po ruchu, więc bonus działa dla każdego strzału z miejsca.
-- **Skok po Turniach (Kozioł Taranowy):** raz na bitwę przechodzi przez jednostki i przeszkody w ramach swojej szybkości (nie staje na nich; nie w oblężeniu, nie dwupolowy); skok „zużywa się” tylko wtedy, gdy ruch na wybrane pole jest niemożliwy pieszo (`status.leapUsed`); pole osiągalne pieszo nie kosztuje skoku.
+- **Ostrzał z Miejsca (Mosiężny Pająk; Kusznik Gór: Salwa z Miejsca):** +2 A, gdy w aktywacji nie było ruchu (`movedDistance === 0`); w ruleset cyfrowym strzelec i tak nie strzela po ruchu, więc bonus działa dla każdego strzału z miejsca.
+- **Taran (Kozioł Taranowy):** zdolność ataku, raz na bitwę (`ramBlow`, gracz włącza ją przy ataku): wymaga ruchu o co najmniej 2 pola w tej aktywacji (`ABILITY.ramBlowMinMove`), daje +2 A (`ramBlowBonus`) i ogłuszenie trafionego (`status.stunned`, jak Młot Przodków). Bez ruchu zdolność jest niedostępna i nie przepada. Nie odpycha (to mechanika Stad); nie myli się z Taranem Nosorożca Bojowego (stała, odepchnięcie).
 - **Błędne Światło:** wróg w zasięgu 4 przesuwa się o 2 pola od Skarbnika (jak odepchnięcie, bez zderzenia, kończy na polu z efektem pola); jednostka dwupolowa, nieruchoma (Żubr, Kolos, Runa Kamienia, szyk poziomu III) nie przesuwa się (zdolność jest wtedy zużyta).
 - **Młot Przodków:** ogłuszony traci najbliższą własną aktywację (w tej albo następnej rundzie); statusy odporności Umarłych na to nie działają (ogłuszenie nie jest na liście odporności karty Umarłych).
 - **Ostrzał (Armata):** trafia wrogów sąsiadujących z celem (nie sojuszników; uproszczenie); bez osobnej reguły „nie strzela po ruchu”, bo w cyfrowej wersji strzelec nie atakuje po ruchu; brama oblężonej osady pęka od jednego trafienia, gdy w armii atakującego żyje Armata albo Nosorożec Stad.
@@ -98,7 +98,7 @@ Rozstrzygnięcia z rozmowy: Kozioł Taranowy na 3B, Kret z Brązu, Strażniczka 
 ## Lista uproszczeń (do G4 albo decyzji autora)
 1. Ostrzał Armaty nie rani sojuszników (karta nie rozstrzyga).
 2. Błędne Światło to odepchnięcie o 2 pola od Skarbnika, bez wyboru pola przez gracza.
-3. Skok po Turniach tylko dla jednostki jednopolowej i poza oblężeniem.
+3. Taran: liczby (+2 A, 2 pola ruchu) do dostrojenia na G2.
 4. Bot w bitwie nie ustawia jednostek w zwartym szyku przy rozstawieniu i nie ma osobnej taktyki obrony osad.
 5. Brak grafiki własnej (zastępcza: `make placeholders`; ikony zdolności pożyczone w `ABILITY_ART`), brak arenowych przeszkód i kafli Klanów, brak obrazu muru Fortyfikacji innego niż pożyczony `wall.webp`, brak muzyki.
 6. Brak instrukcji gry PL/EN (G5) i koopu/online (51a); serwer nie zna akcji `kingdomForgeRune`.

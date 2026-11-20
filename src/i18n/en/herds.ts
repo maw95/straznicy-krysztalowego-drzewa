@@ -8,7 +8,7 @@ register({
   'Wielki Tur, Ojciec Stada': 'Great Aurochs, Father of the Herd', 'Satyr Rogogłos': 'Satyr Hornlord', 'Pędziwiatr, Wódz Antylop': 'Windrunner, Chief of the Antelopes', 'Baran Gromowładny': 'Thunder Ram',
   'Satyr Dudziarz': 'Satyr Piper', 'Młody Tur': 'Young Aurochs', 'Kulan Stepowy': 'Steppe Kulan', 'Łucznik Stepowy': 'Steppe Archer', 'Żubr Puszczański': 'Forest Bison', 'Łamignat Stepowy': 'Steppe Lamignat',
   'Nosorożec Bojowy': 'War Rhino', 'Wół Piżmowy': 'Musk Ox', 'Arkar': 'Arkar', 'Słoń z Bębnem': 'Drum Elephant', 'Łoś Rogacz': 'Horned Moose', 'Indrik, Pan Zwierząt': 'Indrik, Lord of Beasts',
-  'Turzy Zagończyk': 'Aurochs Scout', 'Orzeł Stepowy Łowca': 'Steppe Eagle Hunter', 'Płanetnik': 'Planetnik',
+  'Turzy Zagończyk': 'Aurochs Scout', 'Orzeł Stepowy Łowca': 'Steppe Eagle Hunter', 'Płanetnik': 'Planetnik', 'Łowca Wiatru': 'Wind Hunter',
   // genitives (dwelling texts)
   'Łucznika Stepowego': 'the Steppe Archer', 'Wołu Piżmowego': 'the Musk Ox', 'Żubra Puszczańskiego': 'the Forest Bison', 'Arkara': 'the Arkar', 'Łamignata Stepowego': 'the Steppe Lamignat',
   'Słonia z Bębnem': 'the Drum Elephant', 'Nosorożca Bojowego': 'the War Rhino', 'Łosia Rogacza': 'the Horned Moose', 'Indrika': 'the Indrik',
@@ -31,7 +31,7 @@ register({
   'Bęben Wędrówki': 'Drum of the Wandering', 'Stała: sojusznicy w promieniu {0} pól mają +{1} S.': 'Passive: allies within {0} cells have +{1} SPD.',
   'Rykowisko': 'Rut Roar', 'Raz na bitwę: wyzywa wroga w zasięgu {0} pól; ten w swojej następnej aktywacji może atakować tylko Łosia.': 'Once per battle: it challenges an enemy within {0} cells; in its next activation that enemy may attack only the Moose.',
   'Ziemia Drży': 'The Earth Trembles', 'Raz na bitwę: mali wrogowie w promieniu {0} pól zostają odepchnięci o 1 pole, zderzenia ranią. Indrika nie da się odepchnąć.': 'Once per battle: small enemies within {0} cells are pushed 1 cell, collisions hurt. The Indrik cannot be pushed.',
-  'Kark Tura': 'Aurochs Neck', 'Oszczep w Kolano': 'Javelin to the Knee', 'Pieśń Stepu': 'Song of the Steppe',
+  'Kark Tura': 'Aurochs Neck', 'Oszczep w Kolano': 'Javelin to the Knee', 'Strzał nad Przeszkodami': 'Shot over Obstacles', 'Stała: jego strzały nie są blokowane przez przeszkody terenu ani jednostki na linii strzału (strzela z góry).': 'Passive: his arrows are blocked by neither terrain obstacles nor units on the line of fire (he shoots from above).', 'Pieśń Stepu': 'Song of the Steppe',
   // mechanic, spark, buildings
   'Jednostka Stada, która przed atakiem wręcz przebiegła co najmniej {0} pola, odpycha cel o 1 pole; cel, który w coś uderzy, dostaje obrażenia.': 'A unit of the Herd that has run at least {0} cells before a melee attack pushes its target 1 cell; a target that hits something takes damage.',
   'Wszystkie jednostki Stada (bohaterowie i pomocnicy) mają +{0} S w każdej bitwie.': 'All units of the Herd (heroes and supports) have +{0} SPD in every battle.',

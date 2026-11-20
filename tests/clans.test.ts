@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { applyAction, createGame, runeBonus, sparkBonus } from '../src/engine/game';
 import { ABILITY, FACTION_HEROES, supportTier } from '../src/engine/data';
-import { arenaCell, attackDamage, fortifyCells, goatLeapReady, inFormation, makeBattleUnit, predictDamage, reachableCells, scaleOf, hpScaleOf } from '../src/engine/battle';
+import { arenaCell, attackDamage, fortifyCells, inFormation, makeBattleUnit, predictDamage, reachableCells, scaleOf, hpScaleOf } from '../src/engine/battle';
 import { assignSlots, teamsOf } from '../src/engine/teams';
 import { canBeMoved, pushWithCollision } from '../src/engine/primitives';
 import { botPurchase, botRune, resourceIncomeOf, runeBlock } from '../src/engine/kingdom';
@@ -136,7 +136,7 @@ describe('Mur Tarcz (Sala Tarcz)', () => {
 });
 
 describe('abilities of the units', () => {
-  it('Salwa z Miejsca (Mosiężny Pająk): + A only when it has not moved', () => {
+  it('Ostrzał z Miejsca (Mosiężny Pająk): + A only when it has not moved', () => {
     const s = fight([['brassSpider', 'dawn', 4, 8], ['ancientBear', 'horde', 8, 8, 99]]);
     const still = attackDamage(s, at(s, 'brassSpider'), at(s, 'ancientBear'), false, 0);
     const moved = attackDamage(s, at(s, 'brassSpider'), at(s, 'ancientBear'), false, 2);
@@ -168,25 +168,25 @@ describe('abilities of the units', () => {
     expect(at(p, 'bronzeSentinel').status.poisoned).toBeUndefined();
   });
 
-  it('Skok po Turniach (Jeździec): one move over units, spent only when the move needs it', () => {
-    // a ring of enemies round the rider: on foot it is shut in, with the leap it gets out
-    const ring: U[] = [['ramGoat', 'dawn', 4, 8], ['ancientBear', 'horde', 5, 9], ['elfDruid', 'horde', 5, 7], ['hordeCrossbow', 'horde', 3, 7], ['nymph', 'horde', 3, 9], ['dryadArcher', 'horde', 4, 6], ['hedgehog', 'horde', 4, 10]];
-    const boxed = fight(ring);
-    expect(goatLeapReady(boxed, at(boxed, 'ramGoat'))).toBe(true);
-    const out = [...reachableCells(boxed, at(boxed, 'ramGoat')).entries()].find(([, d]) => d >= 2)?.[0];
-    expect(out).toBeDefined();
-    const jumped = applyAction(boxed, { type: 'battleMove', to: out! });
-    expect(at(jumped, 'ramGoat').status.leapUsed).toBe(true);
-    expect(goatLeapReady(jumped, at(jumped, 'ramGoat'))).toBe(false);
-    // once spent, the ring holds it in again
-    const again = fight(ring);
-    at(again, 'ramGoat').status.leapUsed = true;
-    expect(reachableCells(again, at(again, 'ramGoat')).size).toBe(0);
-    // in the open the move is on foot and the leap stays
-    const open = fight([['ramGoat', 'dawn', 4, 8], ['ancientBear', 'horde', 11, 7]]);
-    const stepped = applyAction(open, { type: 'battleMove', to: arenaCell(4, 6) });
-    expect(at(stepped, 'ramGoat').status.leapUsed).toBeUndefined();
-    expect(goatLeapReady(stepped, at(stepped, 'ramGoat'))).toBe(true);
+  it('Taran (Kozioł Taranowy): after a run of 2+ cells the blow hits harder and stuns, once per battle', () => {
+    const d = (st: GameState, moved: number, use: boolean) => attackDamage(st, at(st, 'ramGoat'), at(st, 'ancientBear'), use, moved);
+    const s = fight([['ramGoat', 'dawn', 4, 8], ['ancientBear', 'horde', 8, 8, 99]]);
+    expect(d(s, 2, true)).toBe(d(s, 2, false) + ABILITY.ramBlowBonus * scaleOf(s));
+    expect(d(s, 1, true)).toBe(d(s, 1, false));
+    // standing still: the ability is refused, and it is not spent
+    const adj = fight([['ramGoat', 'dawn', 4, 8], ['ancientBear', 'horde', 5, 9, 99]]);
+    expect(() => applyAction(adj, { type: 'battleAttack', targetId: 'ancientBear', useAbility: true })).toThrow(/niedostępna/);
+    expect(at(adj, 'ancientBear').status.stunned).toBeUndefined();
+    // after a run of 2 cells: the blow stuns, the ability is spent
+    const far = fight([['ramGoat', 'dawn', 4, 8], ['ancientBear', 'horde', 7, 8, 99]]);
+    const cell = arenaCell(6, 8);
+    expect(reachableCells(far, at(far, 'ramGoat')).get(cell)).toBeGreaterThanOrEqual(2);
+    const run = applyAction(far, { type: 'battleMove', to: cell });
+    const hit = applyAction(run, { type: 'battleAttack', targetId: 'ancientBear', useAbility: true });
+    // the stunned bear's turn comes at once and is skipped
+    expect(hit.log.some((l) => /traci następną aktywację \(Taran\)/.test(l.text))).toBe(true);
+    expect(hit.log.some((l) => /traci aktywację|ogłuszon/i.test(l.text))).toBe(true);
+    expect(at(hit, 'ramGoat').abilityUsed).toBe(true);
   });
 
   it('Młot Przodków (Gwardia): the one hit loses its next activation', () => {

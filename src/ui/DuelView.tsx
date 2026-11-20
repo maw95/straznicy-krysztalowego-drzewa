@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { abilityTextFor, FACTION_NAMES, itemDef, ITEMS, scaleText, UNITS, type TeamId, type ItemKind } from '../engine/data';
-import { abilityActive, abilityOf, attackTargets, ATTACK_ABILITIES, canUseBattleItem, FREE_ABILITIES, unitSpeed } from '../engine/battle';
+import { abilityActive, abilityOf, attackTargets, ATTACK_ABILITIES, ramCharged, canUseBattleItem, FREE_ABILITIES, unitSpeed } from '../engine/battle';
 import { isDigital, type Action, type BattleUnit, type GameState } from '../engine/types';
 import { abilityArt, asset, Frame, HpBar, Medal, Ribbon } from './common';
 import { DamageDrop, DieFace, LastAttack, Marker, StatIcon } from './markers';
@@ -74,7 +74,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
   const canAttack = Boolean(myTurn && active && !act!.attacked && !act!.moveOnly && attackTargets(state, active).length);
   const ab = active ? abilityOf(active) : null;
   const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state));
-  const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab);
+  const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab) && (ab !== 'ramBlow' || ramCharged(state, active!));
   const freeAbility = abilityReady && ab !== null && FREE_ABILITIES.includes(ab);
   const side: TeamId | null = active && active.side !== 'neutral' ? active.side : null;
   const items = side && myTurn && canUseBattleItem(state, side) ? state.factions[side].inventory.map((id) => state.items[id]).filter((it) => DUEL_ITEMS[it.kind]) : [];

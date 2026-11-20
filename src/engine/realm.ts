@@ -48,7 +48,7 @@ const NAMES: Record<string, string[]> = {
   hordeCrossbow: ['Zgrzyt', 'Szpon', 'Krzywe Oko', 'Smyk'],
   hordeShadow: ['Mroczysław', 'Popielec', 'Szept', 'Kruk'],
   aurochsScout: ['Turzysław', 'Rogoń', 'Kopytko', 'Burzan'],
-  eagleHunter: ['Orlik', 'Szponiasty', 'Łowca Wiatru', 'Strzałka'],
+  eagleHunter: ['Łowca Wiatru'],
   wardCaptain: ['Gedymin Cichy', 'Stróż Bram', 'Rycerz Mgły', 'Wartownik Cichy'],
   clanWarrior: ['Dobromir Młot', 'Stalbrody', 'Kamienna Pięść', 'Brodacz Zbrojny'],
   mountainCrossbow: ['Kusznik Skała', 'Celnooki Durin', 'Bełt', 'Strzelec Przełęczy'],
@@ -61,7 +61,7 @@ const NAMES: Record<string, string[]> = {
   hareHerbalist: ['Babka Macierzanka', 'Zielarka Miętówka', 'Ciotka Kopytnik', 'Lubczykowa'],
   spectralArcher: ['Łuczniczka Zmierzchu', 'Cień Strzały', 'Srebrna Cięciwa', 'Dziewanna'],
   penitentMonk: ['Brat Milczek', 'Pokutnik Wawrzyn', 'Mnich Latarnik', 'Zaduszny'],
-  planetnik: ['Chmurnik', 'Wróżbiarz Wiatru', 'Burzan Stary', 'Trzcinowy'],
+  planetnik: ['Płanetnik'],
 };
 
 /** The name a commander gets: drawn from the game's seed, so a replay names it the same. */

@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { applyAction, createGame, moveBreakdown } from '../src/engine/game';
 import { ABILITY, FACTION_HEROES, UNITS } from '../src/engine/data';
-import { abductCell, arenaCell, attackDamage, frostThreshold, iceWallCells, predictDamage, reachableCells, refreshAuras, scaleOf, sparkFrost, unitDistance, unitSpeed } from '../src/engine/battle';
+import { arenaCell, attackDamage, frostThreshold, iceWallCells, predictDamage, reachableCells, refreshAuras, scaleOf, sparkFrost, unitSpeed } from '../src/engine/battle';
 import { assignSlots, teamsOf } from '../src/engine/teams';
 import { canBeMoved } from '../src/engine/primitives';
 import { botPurchase, resourceIncomeOf } from '../src/engine/kingdom';
@@ -268,20 +268,19 @@ describe('abilities of the units', () => {
     expect(frostOf(s, 'ancientBear')).toBe(ABILITY.frostPut);
   });
 
-  it('Porwanie (Strzyga): a small enemy is put 2-3 cells away, the farthest from its allies; not an unmovable one', () => {
-    const s = fight([['dziadMroz', 'dawn', 5, 9], ['ancientBear', 'horde', 6, 8], ['willOWisp', 'horde', 8, 8]], 0);
-    const bear = at(s, 'ancientBear');
-    const to = abductCell(s, bear)!;
-    const d = distance(parseKey(bear.pos!), parseKey(to));
-    expect(d).toBeGreaterThanOrEqual(ABILITY.abductMin);
-    expect(d).toBeLessThanOrEqual(ABILITY.abductMax);
+  it('Uścisk Mrozu (Dziad Mróz): an enemy within 2 cells gets 2 frosts (freezes at the threshold), once per battle; he walks', () => {
+    const s = fight([['dziadMroz', 'dawn', 5, 9], ['ancientBear', 'horde', 6, 8], ['willOWisp', 'horde', 11, 9]], 0);
+    expect(UNITS.dziadMroz.movement).toBe('walk');
     const out = cast(s, 'dziadMroz', 'ancientBear');
-    expect(at(out, 'ancientBear').pos).toBe(to);
-    expect(unitDistance(at(out, 'ancientBear'), at(out, 'willOWisp'))).toBeGreaterThanOrEqual(unitDistance(at(s, 'ancientBear'), at(s, 'willOWisp')));
-    const held = structuredClone(s);
-    held.battle!.units.ancientBear.status.unmovable = true;
-    expect(() => cast(held, 'dziadMroz', 'ancientBear')).toThrow(/nie da się/);
+    expect(frostOf(out, 'ancientBear')).toBe(ABILITY.beardFrost);
+    expect(at(out, 'dziadMroz').abilityUsed).toBe(true);
     expect(() => cast(s, 'dziadMroz', 'willOWisp')).toThrow(/zasięgu/);
+    // at the threshold the enemy freezes
+    const edge = structuredClone(s);
+    edge.battle!.units.ancientBear.status.frost = frostThreshold(edge, 'dawn') - 1;
+    const frozen = cast(edge, 'dziadMroz', 'ancientBear');
+    expect(at(frozen, 'ancientBear').status.stunned).toBe(true);
+    expect(frostOf(frozen, 'ancientBear')).toBe(0);
   });
 
   it('Zimne Światło (Duch Zorzy): enemies within 2 cells have −1 S, the ones farther away and its own side not', () => {

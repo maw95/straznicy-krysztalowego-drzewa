@@ -4,6 +4,12 @@ Ten plik opisuje, co jest rozpoczęte i jak to dokończyć bez znajomości rozmo
 Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowego-drzewa-backend`) ma lokalny commit, **nie jest wdrożony**
 (dostaje silnik dopiero z wydaniem gry).
 
+## Nowe zdolności jednostek (20.11, gałąź `new-abilities`, worktree `skd-abilities`, NIE scalona do `master`)
+Wprowadzone zdolności zatwierdzone przez autora (karty `docs/frakcje/*.md`, lista ikon w `docs/BACKLOG.md` 2a): Kozioł Taranowy = Taran (`ramBlow`, +2 A po ruchu o 2+ pola i ogłuszenie),
+Mosiężny Pająk = Ostrzał z Miejsca (ta sama zasada), Orzeł Stepowy Łowca = Strzał nad Przeszkodami (`overShot`, `shootsOver` w `hasLineOfSight`), Dziad Mróz = Uścisk Mrozu (`beardChill`, chód).
+Dowódcy Stad: nazwy własne „Łowca Wiatru” i „Płanetnik” (`realm.ts`); specjalność „Mistrz Oszczepu” bez zmian (pytanie do autora). Beduin Nomada (Rzut Sztyletem) i Albatros tylko na kartach (Piaski, Przypływy bez kodu).
+`golden.test.ts` zielony bez zmiany snapshotu; liczby (+2 A, 2 pola, 2 szrony, zasięg 2) do dostrojenia na G2.
+
 ## Co jest zrobione (commity w `master`)
 - Horda cyfrowa ma +1 Ż i +1 A (`HORDE_DIGITAL_BONUS`, `data.ts`; bez areny i bez wersji planszowej): `22c56b1`.
 - Tryb „Potyczka” zamiast Rywalizacji i Kooperacji w wersji cyfrowej, kampania, Przetrwanie i tryb rodzinny na zwykłym bocie: `edf15c2`, `3a164c0`.
