@@ -78,7 +78,6 @@ export const FACTION_MECHANICS = {
   sparkTraps: 2,
   /** Paserka: gold a chest gives on top (I), and every how many rounds the second level brings a random treasure. */
   fenceChestGold: 1,
-  fenceDiscount: 1,
   fenceTreasureEvery: 3,
   /** Szlaki Przemytnicze: how many times a round a hero of the Companies may walk through the hex of a guardian or neutrals without a fight. */
   trailsPerRound: 1,

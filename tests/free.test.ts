@@ -22,7 +22,7 @@ import {
 import { assignSlots, teamsOf } from '../src/engine/teams';
 import { canBeMoved } from '../src/engine/primitives';
 import { redactHidden } from '../src/engine/hidden';
-import { artifactBill, bestLevel, collectIncome } from '../src/engine/kingdom';
+import { bestLevel, collectIncome, KINGDOM } from '../src/engine/kingdom';
 import { chooseAction } from '../src/engine/ai';
 import { ARTIFACTS } from '../src/engine/sites';
 import { FACTION_MECHANICS } from '../src/engine/empire';
@@ -526,14 +526,20 @@ describe('free actions and the leap', () => {
 const unitCell = (s: GameState, cell: string) => Object.values(s.battle!.units).some((u) => u.pos === cell || u.tail === cell);
 
 describe('Paserka and Szlaki Przemytnicze', () => {
-  it('the Paserka lowers the price of a market artifact and adds gold to a chest; the second level brings a treasure every third round', () => {
+  it('the Paserka buys backpack artifacts at the full market price; the second level brings a treasure every third round', () => {
     const s = empire();
-    const hero = Object.values(s.heroes).find((h) => h.faction === 'dawn')!;
+    const hero = s.heroes[s.turnOrder[s.turnIndex]];
     const art = ARTIFACTS.find((a) => a.rarity === 2)!;
-    const base = artifactBill(s, hero, art).gold;
+    const sell = () => applyAction(s, { type: 'kingdomSellArtifact', settlementId: home(s).id, artifactId: art.id });
+    hero.pack = [art.id];
+    expect(() => sell()).toThrow(/Paserka/);
     home(s).buildings.fence = 1;
-    expect(bestLevel(s, 'dawn', 'fence')).toBe(1);
-    expect(artifactBill(s, hero, art).gold).toBe(Math.max(1, base - FACTION_MECHANICS.fenceDiscount));
+    expect(bestLevel(s, home(s).owner!, 'fence')).toBe(1);
+    const gold = s.kingdom!.gold[hero.faction];
+    const done = sell();
+    expect(done.kingdom!.gold[hero.faction]).toBe(gold + KINGDOM.artifactPrice[art.rarity - 1]);
+    expect(done.heroes[hero.id].pack ?? []).toHaveLength(0);
+    expect(() => applyAction(done, { type: 'kingdomSellArtifact', settlementId: home(s).id, artifactId: art.id })).toThrow(/plecaku/);
     home(s).buildings.fence = 2;
     const items = s.factions.dawn.inventory.length;
     s.round = 2;
