@@ -58,6 +58,10 @@ import {
   sandsAllyTargets,
   teleportCells as wyrmCells,
   throwTargets,
+  bestSporeCell,
+  myceliumAt,
+  myceliumLevel,
+  sporeArea,
 } from '../battle';
 import { redactHidden } from '../hidden';
 import { FACTION_MECHANICS } from '../empire';
@@ -293,6 +297,11 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   let best: Plan = { moveTo: null, target: null, second: null, useAbility: false, score: -Infinity };
   const leapOnly = leapOnlyCells(state, u);
   const mates = (cell: HexKey) => livingUnits(b, u.side).filter((x) => x.id !== u.id && dist2(cellsOf(x), plannedFootprint(state, u, cell)) === 1).length;
+  // Rój Puszczy: its own mycelium is worth standing on (it hits harder and heals there); the mycelium of an enemy Swarm that poisons is avoided by everyone.
+  const swarm = UNITS[u.defId].side === 'swarm';
+  const enemySpores = b.ground?.some((g) => g.kind === 'claimed' && g.owner !== u.side) ? [b.attacker, b.defender].filter((x) => x !== u.side && myceliumLevel(state, x) >= FACTION_MECHANICS.myceliumPoisonLevel) : [];
+  const groundValue = (mine: readonly HexKey[]): number =>
+    (swarm && mine.some((k) => myceliumAt(b, u.side, k)) ? 0.8 : 0) - (enemySpores.some((x) => mine.some((k) => myceliumAt(b, x, k))) ? 0.7 : 0);
   for (const [cell, steps] of options) {
     const moved = act.movedDistance + steps;
     // A large unit standing on `cell` also lies on the cell of its tail.
@@ -322,9 +331,12 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
           second = targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), mine) === 1).sort((x, y) => scoreHit(y, dmg) - scoreHit(x, dmg))[0] ?? null;
           if (second) score += scoreHit(second, dmg);
         }
-        if (useAbility && ['entanglingRoots', 'curse', 'dimLight', 'graveBreath', 'frostSlow', 'frostGrip', 'stinkBomb'].includes(abilityOf(u))) score += AI_TUNING.debuffBonus;
+        if (useAbility && ['entanglingRoots', 'curse', 'dimLight', 'graveBreath', 'frostSlow', 'frostGrip', 'stinkBomb', 'sleepSpores'].includes(abilityOf(u))) score += AI_TUNING.debuffBonus;
         // The Free Companies pile their blows on the marked enemy (the Kruk marks it), and a stink bomb is worth more when it reaches several enemies.
         if (t.status.marked && t.status.marked.by === u.side && t.status.marked.round === b.round) score += 1;
+        if (useAbility && abilityOf(u) === 'sleepSpores') score += targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(t)) === 1).length * 1.2;
+        // The Swarm fights on its mycelium and together (the Mrowisko and the Goliat count their neighbours already in the damage).
+        if (swarm) score += groundValue(mine) + Math.min(2, mates(cell)) * 0.3;
         if (useAbility && abilityOf(u) === 'stinkBomb') score += targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(t)) === 1).length * 1.2;
         if (useAbility && abilityOf(u) === 'iceBlow') score += AI_TUNING.debuffBonus * 2;
         // The Court of Everfrost puts all its blows on one target to freeze it (it does not spread the frost); the weak melee ones do not rush in.
@@ -356,6 +368,9 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
     const nearest = nearness(field, enemies, mine);
     let pos = ranged ? -Math.abs(nearest - AI_TUNING.rangedDistance) * AI_TUNING.rangedDistanceWeight : -nearest * AI_TUNING.meleeClosing;
     pos -= risk * (ranged ? AI_TUNING.moveRiskRanged : AI_TUNING.moveRiskMelee);
+    // The Swarm keeps together and on its mycelium; nobody stops on the mycelium of an enemy Swarm that poisons.
+    pos += groundValue(mine);
+    if (swarm) pos += Math.min(2, mates(cell)) * 0.4;
     // The Iron Clans wait in formation: they step to a cell next to their allies, and not far from where they stand.
     if (UNITS[u.defId].side === 'clans') pos += Math.min(2, mates(cell)) * 0.5 - steps * 0.2;
     // The Court of Everfrost keeps its distance: a shooter or a witch stays out of reach.
@@ -502,6 +517,16 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
   if (ab === 'rocLift' && !b.activation!.moved && !enemiesOf(b, u).some((e) => unitDistance(e, u) <= 1)) {
     const t = sandsAllyTargets(state, u).filter((x) => UNITS[x.defId].attackType === 'melee' && !enemiesOf(b, x).some((e) => unitDistance(e, x) <= 2)).sort((x, y) => unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
     if (t) return { type: 'battleAbility', targetId: t.id };
+  }
+  // Rój Puszczy: the Matka spreads the mycelium under her own units while the enemy comes, the Cykada sings when two enemies (or a leader) are within its radius.
+  if (ab === 'spreadSpores' && foesNear(9)) {
+    const cell = bestSporeCell(state, u);
+    const own = livingUnits(b, u.side).flatMap(cellsOf);
+    if (cell && sporeArea(state, u, cell).some((c) => own.includes(c) && !myceliumAt(b, u.side, c))) return { type: 'battleAbility', cell };
+  }
+  if (ab === 'greatChorus') {
+    const deaf = enemiesOf(b, u).filter((e) => e.pos && unitDistance(e, u) <= ABILITY.chorusRadius && !e.status.stunned);
+    if (deaf.length >= 2 || deaf.some((e) => UNITS[e.defId].kind !== 'support')) return { type: 'battleAbility' };
   }
   if (ab === 'web') {
     const t = enemiesOf(b, u)
