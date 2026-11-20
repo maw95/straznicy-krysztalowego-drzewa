@@ -128,3 +128,19 @@ Do wyboru: Rój (słowo „Rój” zostaje, potrzebne rozwinięcie w stylu pozos
 Świetlisty Rój; Rój Zarośli; Rój Runa (runo leśne); Nocny Rój; Leśny Rój; Rój Puszczy; Pierwotny Rój (uwaga: Pierwotna Iskra); Wielki Rój.
 Przypływy (bez „władców”, „panów” i „dworu”; rzeczownik oznaczający charakter organizacji, jak przymierze, horda, stado, klan, królestwo):
 Liga Przypływów; Koralowa Liga; Zakon Przypływu; Flota Fal; Wspólnota Fal; Bractwo Przypływu; Konfederacja Raf; Falowe Bractwo.
+
+## 5. Zatwierdzone przez autora 20.11 (wersja ostateczna do wprowadzenia)
+**Zwierzaki:** drobna jasna plamka Bricii pod brodą pomijana; uszy Bajki mają regularne końcówki (poprawić opis w `ZWIERZAKI_AUTORA.md`).
+**Stada:** Kulan Stepowy (T1, zamiast Kozicy Skalnej); **Tarpan Łucznik** (T2A, zamiast Fauna Procarza; patrz pytanie o jeźdźca niżej); Wół Piżmowy (T2B, zamiast Tarpana);
+**Arkar** (T3B, zamiast Satyra Kopijnika; bez słowa „Szarżujący”); Łamignat Stepowy (T4A, zamiast Hipogryfa); dowódcy: Turzy Zagończyk, Orzeł Stepowy Łowca, Płanetnik.
+**Umarli:** Wampir (3B, zamiast Płaczki), Strzyga (4B, zamiast Kościanej Wróżki; **nie przesadnie makabryczna**: blada, dzika, drugie oblicze na plecach i dwa rzędy kłów bez krwi i wnętrzności), Kostucha zostaje.
+**Szron:** zamiast Strzygi Wichru **Dziad Mróz** (stary władca mrozu z brodą z sopli).
+**Klany:** zamiast Kusznika Klanu **Mosiężny Pająk** (strzelający konstrukt; unikać słowa „bełt”, które po polsku znaczy też wymiociny; alternatywa: Pająk Kusznik); „Jeździec na Koźle” → **Kozioł Taranowy**.
+**Kompanie:** Sroka Złodziejka (T1, zamiast Kuny Złodziejki), Świstak Petardnik (4B, zamiast Borsuka Petardnika), Kuna Rębajło i Rosomak zostają; **Kocur Fechmistrz ↔ Jenot Szpieg** (Kocur T3B, Jenot T5B).
+**Piaski:** Beduin Nomada (T2A), Skorpion Piaskowy (T3B), Kamienny Strażnik Grobowca (T4A), Lamassu (T5A, miejsce dżina); Dżin Wezyr zostaje bohaterem.
+**Przypływy:** Stary Mors Kapitan zostaje bohaterem (4.), a **Albatros** (jednostka, T4B zamiast Morsa Kłowego; odpycha uderzeniem skrzydeł) zastępuje Morsa Kłowego.
+**Nazwy frakcji (polskie):** Przymierze Świtu; Mroczna Horda; Dzikie Stado; Królestwo Umarłych; Żelazny Klan; Dwór Wiecznego Szronu; Wolna Kompania; Pustynne Cesarstwo; **Rój Puszczy**; **Bractwo Przypływu**.
+Angielskie odpowiedniki do potwierdzenia (propozycja): Dawn Covenant, Dark Horde, Wild Herd, Kingdom of the Dead, Iron Clan, Court of Everfrost, Free Company, Desert Empire, Swarm of the Wilds, Brotherhood of the Tide.
+**Otwarte pytanie:** czy Tarpan Łucznik to sam tarpan (stojący na tylnych nogach z łukiem; uwaga: reszta Stad to zwykłe zwierzęta) czy łucznik jadący na tarpanie (2 pola, jeździec np. satyr, co daje 3 satyry: Rogogłos, Dudziarz i jeździec).
+**Do wprowadzenia (praca przy kodzie i kartach):** wymiany jednostek zachowują zdolności starych (np. Arkar bierze zdolność Satyra Kopijnika, Kulan Kozicy, Wampir Płaczki, Strzyga Kościanej Wróżki), więc to głównie nowe nazwy, identyfikatory,
+opisy, angielski i zastępcze grafiki; zdolności zmienią się tylko tam, gdzie zmienia się rola (Tarpan Łucznik strzela jak Faun Procarz, Albatros odpycha). Po wymianach: bot i mechaniki wg `docs/DIAGNOZA_FRAKCJI.md`, potem G2.

@@ -39,6 +39,8 @@ Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowe
   sukces = co najmniej 90% par spełnionych, wyjątki wypisane (wariant strukturalny jako plan awaryjny). **Najpierw diagnostyka** (agent, `scripts/sim/diagnoza.ts`,
   wynik `docs/DIAGNOZA_FRAKCJI.md`: czy zamierzone mechaniki w ogóle się uruchamiają i czy bot z nich korzysta); potem poprawki wg priorytetów z diagnozy; dopiero na końcu
   stroiciel liczb zdolności (`tuneFactions.ts` zmienić tak, by liczył cel względny i stroił liczby zdolności, nie ogólne statystyki).
+- **Wymiana jednostek (decyzje autora 20.11, `docs/frakcje/PODOBIENSTWA_I_NAZWY.md` sekcja 5) i nowe nazwy frakcji:** do wprowadzenia w kartach, kodzie (`src/engine/factions/*.ts`, `i18n`) i instrukcji PRZED poprawkami mechanik/bota i G2,
+  bo od składu jednostek zależy balans. Najlepiej agentem w osobnym worktree, po jednej frakcji (Stada, Umarli+Szron, Klany, Kompanie, potem karty Piasków i Przypływów). Otwarte pytanie: Tarpan Łucznik sam czy jeździec.
 - **Decyzja do podjęcia po stroicielu (ważne):** tabela kontr wymaga Przymierze > Horda 60–70%, a premia +1/+1 dla Hordy dała ok. 50%. Stroiciel sam dobierze premie wszystkich frakcji,
   więc po nim Kryształy i inne cele trzeba przestroić ponownie (`scripts/sim/retune-all.sh` po skasowaniu `.tmp/sim/auto-*.json` oprócz `auto-zero-legacy.json`), potem `tuneMerge`.
   Dlatego obecne pliki `auto-*.json` służą tylko, jeśli premia Hordy zostanie przy +1/+1.
