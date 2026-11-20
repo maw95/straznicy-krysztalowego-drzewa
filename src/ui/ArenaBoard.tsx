@@ -323,7 +323,7 @@ export function ArenaBoard(p: Props) {
               );
             })}
             {/* Sidła (the Free Companies): the traps this screen may know of (the state it is given has the hidden ones of the others left out), the ones being laid while deploying, the one picked up by Fortel. */}
-            {[...(b.ground ?? []).filter((g) => g.kind === 'trap').map((g) => ({ k: g.cell, own: g.owner === (b.stage === 'deploy' ? deploySide : active?.side) })), ...deploy.traps.map((k) => ({ k, own: true }))].map(({ k, own }) => (
+            {[...(b.ground ?? []).filter((g) => g.kind === 'trap').map((g) => ({ k: g.cell, own: g.owner === (b.stage === 'deploy' ? deploySide : active?.side) })), ...(b.stage === 'deploy' ? deploy.traps.map((k) => ({ k, own: true })) : [])].filter(({ k }, i, all) => all.findIndex((x) => x.k === k) === i).map(({ k, own }) => (
               <g key={`trap${k}`} data-trap={k} pointerEvents="none">
                 <polygon points={hexPoints(k, 4)} fill={own ? 'rgba(200,100,40,0.18)' : 'rgba(224,60,40,0.22)'} stroke={own ? '#D9803A' : '#E0503C'} strokeWidth={p.ployFrom === k ? 4 : 2} strokeDasharray="5 3" />
                 <path d={trapGlyph(k)} fill="none" stroke={own ? '#F0B070' : '#FF9A80'} strokeWidth="2.5" strokeLinecap="round" />

@@ -524,4 +524,6 @@ register({
     "The Free Companies' Fence now buys artifacts from the active hero's backpack at the full market price (2 / 5 / 10 gold for common / rare / legendary), with a \"Sell\" button in the settlement window; the old market discount is gone. The Companies' bot sells its spare artifacts.",
   "Wolne Kompanie przy jednym ekranie: gdy dwie osoby grają na tym samym komputerze, układanie ukrytych Sideł jest zasłonięte ekranem „Przekaż urządzenie”, a własne Sidła na arenie widać dopiero po kliknięciu „Podejrzyj Sidła” w swojej turze.":
     "The Free Companies at one screen: when two people play on the same computer, the laying of the hidden Snares is covered by a \"Pass the device\" screen, and your own Snares show on the arena only after clicking \"Peek at the Snares\" on your turn.",
+  "Poprawka: po ustawieniu Sideł przed bitwą Wolnych Kompanii znaczniki pułapek na arenie nie rysują się już podwójnie.":
+    "Fix: after laying the Snares before a battle, the Free Companies' trap markers on the arena are no longer drawn twice.",
 });
