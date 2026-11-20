@@ -59,7 +59,7 @@ const MAX_HEX_W = 120;
 const showsCrystal = (c: { id: string; decoy?: boolean }) => !c.decoy && c.id !== 'boss';
 
 /** Cheapest paths the active hero can still walk this turn (revealed hexes only). */
-function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: HexKey[]; hostile: boolean }> {
+export function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: HexKey[]; hostile: boolean }> {
   const hero = activeHero(state);
   const out = new Map<HexKey, { cost: number; path: HexKey[]; hostile: boolean }>();
   if (!hero || state.phase !== 'adventure') return out;
@@ -80,7 +80,10 @@ function reachablePaths(state: GameState): Map<HexKey, { cost: number; path: Hex
       const t = state.tiles[n];
       const c = heroTileCost(hero, t);
       if (!t.revealed || c === null) continue;
-      const foes = heroesAt(state, n).some((h) => h.faction !== hero.faction);
+      const there = heroesAt(state, n);
+      const foes = there.some((h) => h.faction !== hero.faction);
+      // One hero per hex (as in the engine's heroMoves): a hex held by an ally is closed, so it is neither a goal nor a way through (no cost hint on it).
+      if (!foes && there.length && t.home !== hero.faction) continue;
       const guarded = Boolean(t.crystalId && state.crystals[t.crystalId].guardian);
       if (guarded && hero.faction === 'horde' && !hordeMayFightGuardian(state, t.crystalId!)) continue;
       const hostile = foes || guarded || Boolean(garrisonAt(state, n, hero.faction));
