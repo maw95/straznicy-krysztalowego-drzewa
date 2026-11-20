@@ -1,6 +1,6 @@
 # Nowe frakcje — propozycje (8 nowych, razem 10)
 
-Stan: 18.11.2026. Dokument do przeczytania i skreślania. Rozwija macierz z `FRAKCJE_MACIERZ_I_PRYMITYWY.md` (role, prymitywy,
+Stan: 18.11.2026, uwagi autora z 19.11 i 20.11 naniesione (punkt 14). Dokument do przeczytania i skreślania. Rozwija macierz z `FRAKCJE_MACIERZ_I_PRYMITYWY.md` (role, prymitywy,
 kolizje) i pomysły autora z `ROZBUDOWA_CYFROWA.md` (3.11) w pełne karty frakcji. **Nie ma tu kosztów budynków ani statystyk**
 (Ż, A, S): te ustalają symulacje balansu przy bramce G2. Każda frakcja ma też sekcję **Alternatywy** (inne jednostki, budynki,
 mechanika), a na końcu są **frakcje zapasowe**, gdyby któraś z ośmiu nie przypadła do gustu.
@@ -135,7 +135,7 @@ areny albo inną jednostkę, dostaje dodatkowe obrażenia. Arena Stad ma dużo g
 ### Jednostki
 | Tier | Jednostka (`id`) | Kim jest | Rozm. | Ruch | Walka | Zdolność | Prymityw | Siedlisko |
 |---|---|---|---|---|---|---|---|---|
-| 1 | Satyr Dudziarz (`satyrPiper`) | satyr z dudami | 1 | chód | dyst. | Skoczny Rytm: raz na bitwę sojusznik +N S | spowolnienie (odwrotne) | — |
+| 1 | Satyr Dudziarz (`satyrPiper`) | satyr z dudami; atak dystansowy to fala dźwięku: drżenie powietrza i podmuch kurzu, bez kolorowych nut (decyzja 20.11) | 1 | chód | dyst. | Skoczny Rytm: raz na bitwę sojusznik +N S | spowolnienie (odwrotne) | — |
 | 1 | Młody Tur (`youngAurochs`) | cielak tura | 1 | chód | wręcz | Byczy Łeb: po każdym ataku odpycha cel o 1 | odpychanie | — |
 | 1 | Kozica Skalna (`rockGoat`) | kozica z rogami | 1 | chód | wręcz | Skok po Turniach: ruch przez przeszkody i jednostki | ★ przeskok | — |
 | 2A | Faun Procarz (`faunSlinger`) | faun z procą | 1 | chód | dyst. | Kamień w Kolano: raz na bitwę trafiony −N S | spowolnienie | Fauni Zagajnik |
@@ -361,7 +361,7 @@ z Hakownicą). Bez magii natury. Paleta ciepła i rdzawa, Przymierze srebrno-zie
 | `badgerSapper` | Borsuk Saper | wojownik | 1 | chód | wręcz | **Okop:** raz na bitwę do końca następnej aktywacji +N pancerza i nie da się go odepchnąć | Stary Wiarus: pomocnicy +1 Ż (`supportHp`) |
 | `ravenSeer` | Kruk Wieszczek | mędrzec | 1 | lot | dyst. | **Oko Kruka:** oznacza wroga (do końca rundy każdy atak w niego +1) i odsłania pułapki oraz miraże w promieniu 2 | Wróżba: +1 PD za wygraną (`xp`) |
 
-**Dowódcy:** Kuna Rębajło (wojownik), **Bajka** (`bajka`, łowca; zwierzak autora: młoda, energiczna, głupiutka, wygląda jak żbik; decyzja 19.11, zamiast Wiewiórki Łuczniczki jako dowódcy), Ropucha Zielarka (mędrzec).
+**Dowódcy:** Kuna Rębajło (wojownik), **Żbiczka Bajdurka** (`bajka`, łowca; zwierzak autora Bajka: młoda, energiczna, głupiutka, wygląda jak żbik; **Szalony Skok:** raz na bitwę skacze o 3 pola ponad jednostkami, pułapkami i przeszkodami terenowymi i atakuje z +1 A, prymityw: przeskok ze Stad; decyzje 19.11 i 20.11, zamiast Wiewiórki Łuczniczki jako dowódcy), **Zajęczyca Zielarka** (mędrzec; decyzja 20.11, zamiast Ropuchy Zielarki).
 **Czwarty bohater:** Wydra Przemytniczka (łowca, odskok).
 
 ### Jednostki
@@ -372,7 +372,7 @@ z Hakownicą). Bez magii natury. Paleta ciepła i rdzawa, Przymierze srebrno-zie
 | 1 | Wiewiórka Łuczniczka (`squirrelArcher`) | wiewiórka z krótkim łukiem | 1 | chód | dyst. | Strzał z Gałęzi: +1 A przeciw oznaczonemu celowi | ★ oznaczenie | — |
 | 2A | Łasica Nożowniczka (`weaselKnife`) | łasica z dwoma nożami | 1 | chód | wręcz | Cios w Plecy: +N, gdy atakuje od tyłu | reuse: Zajście od tyłu | Kryjówka w Żywopłocie |
 | 2B | Bóbr Inżynier (`beaverEngineer`) | bóbr z siekierką i planem | 1 | chód | wręcz | Tama: raz na bitwę stawia przeszkodę na sąsiednim polu | ★ stawianie przeszkody | Żeremie |
-| 3A | Ropucha Truciciel (`toadPoisoner`) | ropucha z flaszkami | 1 | chód | dyst. | Mętna Mikstura: raz na bitwę cel i sąsiedzi zatruci | trucizna (obszar) | Warzelnia |
+| 3A | Tchórz Smrodnik (`polecatPoisoner`) | tchórz w fartuchu z flaszami smrodu (decyzja 20.11, zamiast Ropuchy Truciciela; w Kompaniach zostaje jedna ropucha, Hakownik) | 1 | chód | dyst. | Smrodliwa Mikstura: raz na bitwę cel i sąsiedzi zatruci | trucizna (obszar) | Warzelnia |
 | 3B | Jenot Szpieg (`raccoonDogSpy`) | jenot w masce i ciemnym płaszczu | 1 | chód | wręcz | Ukryty: zaczyna bitwę niewidoczny dla wroga; pierwszy atak +N | ★ ukrycie | Leśna Czatownia |
 | 4A | Rosomak Zabijaka (`wolverine`) | rosomak z blizną | 1 | chód | wręcz | Furia Ran: +1 A za każde N brakujących Ż | ★ premia za rany | Rosomacza Nora |
 | 4B | Borsuk Petardnik (`badgerBomber`) | borsuk z beczułką prochu | 1 | chód | wręcz | Ładunek: raz na bitwę zamienia własną pułapkę w wybuch (pole i sąsiedzi) | pułapka + obszar | Prochownia |
@@ -436,7 +436,7 @@ i przenoszenie wrogów z dala od sojuszników.
 | `frostJarl` | Jarl Szronu | wojownik | 2 | chód | wręcz | **Lodowy Cios:** raz na bitwę trafiony zamarza (traci następną aktywację) | Dwór Olbrzymów: pomocnicy +1 Ż (`supportHp`) |
 | `snowLynx` | Ryś Śnieżny | łowca | 1 | chód | wręcz | **Ślad Zamieci:** pola, przez które przebiegł, do końca rundy dają wrogom −1 S | Biegnąca z Wiatrem: +1 ruchu (`move`) |
 
-**Dowódcy:** Rycerz Lodowej Gwardii (wojownik), Łowczyni z Gronostajem (łowca), Szronowa Wiedźma (mędrzec).
+**Dowódcy:** Rycerz Lodowej Gwardii (wojownik), Tropicielka Mroźnych Puszcz (łowca; decyzja 20.11, zamiast Łowczyni z Gronostajem, która brzmiała jak dwie jednostki w jednej; specjalność Oko Tropicielki), Szronowa Wiedźma (mędrzec).
 **Czwarty bohater:** Stary Gradowy (mędrzec, grad w obszarze).
 
 ### Jednostki
@@ -511,21 +511,21 @@ przepada. Do tego **przestawianie własnych jednostek** (Dżin, Rok, Czerw) i za
 | `sphinxWarden` | Sfinks Strażnik | wojownik | 2 | chód | wręcz | **Zagadka:** raz na bitwę wybrany wróg w zasięgu N nie atakuje w następnej aktywacji | Mądrość Wieków: +1 PD za wygraną (`xp`) |
 | `scorpionQueen` | Królowa Skorpionów | łowca | 1 | chód | wręcz | **Zasadzka Spod Piasku:** zaczyna bitwę zakopana na dowolnym polu swojej połowy, niewidoczna do pierwszego ruchu; trafienie zatruwa | Szlaki Wydm: +1 ruchu (`move`) |
 
-**Dowódcy:** **Brytania** (`brytania`, wojownik; zwierzak autora: gruba, leniwa, kocha jedzenie, czarna pantera; decyzja 19.11, zamiast Gwardzisty Szakala), Łuczniczka Karawany (łowca), Astrolog Pustyni (mędrzec).
-**Czwarty bohater:** Wielbłądzi Książę (łowca, Strzał i Galop).
+**Dowódcy:** **Bastia Cienista** (`bastia`, wojownik; zwierzak autora Brytania: gruba, leniwa, kocha jedzenie, czarna pantera; **Czujna Drzemka:** raz na bitwę zamiast ruchu kładzie się: do końca następnej aktywacji +N pancerza i nie da się jej odepchnąć, a pierwszy wróg, który wejdzie obok, dostaje cios od razu, prymitywy: brak ruchu i reakcja na wejście; decyzje 19.11 i 20.11, zamiast Gwardzisty Szakala), Łuczniczka Karawany (łowca), Astrolog Pustyni (mędrzec).
+**Czwarty bohater:** Wielbłądzi Książę (łowca, Strzał i Galop). **Wygląd:** młody, wystawny dowódca na białym wielbłądzie w złoto-szkarłatnej uprzęży z dzwoneczkami i sakwami przy siodle; zawój ze zgaszonym karmazynem i jadeitowym klejnotem, długi płaszcz w ochrze, krótki łuk refleksyjny i zakrzywiona szabla; elegancki i trochę zadufany (jadeit zamiast niebieskiego). Wielbłąd występuje tylko u niego.
 
 ### Jednostki
 | Tier | Jednostka (`id`) | Kim jest | Rozm. | Ruch | Walka | Zdolność | Prymityw | Siedlisko |
 |---|---|---|---|---|---|---|---|---|
 | 1 | Szakalogłowy Strażnik (`jackalGuard`) | wojownik z głową szakala | 1 | chód | wręcz | Czujność: pierwszy wróg, który wejdzie obok, dostaje cios od razu (raz na rundę) | ★ reakcja na wejście | — |
-| 1 | Skorpion Piaskowy (`sandScorpion`) | skorpion wielkości psa | 1 | chód | wręcz | Jad: raz na bitwę trafiony traci N Ż w kolejnych aktywacjach | trucizna | — |
+| 1 | Mangusta Faraona (`pharaohMongoose`) | zwinna mangusta w złotej obroży, wróg kobr (decyzja 20.11, zamiast Skorpiona Piaskowego na tierze 1) | 1 | chód | wręcz | Odporność na Jad: nie działają na nią trucizna i unieruchomienie (statystyki do symulacji) | reuse: odporność na statusy | — |
 | 1 | Łucznik Wydm (`duneArcher`) | łucznik w zawoju | 1 | chód | dyst. | Strzał zza Wydmy: +1 A, gdy stoi przy przeszkodzie | ★ premia za osłonę | — |
-| 2A | Łucznik na Wielbłądzie (`camelArcher`) | wielbłąd z jeźdźcem | 1 | chód | dyst. | Strzał i Galop: raz na bitwę po strzale cofa się | reuse: Strzał i Galop | Wielbłądzi Postój |
+| 2A | Skorpion Piaskowy (`sandScorpion`) | skorpion wielkości psa (decyzja 20.11, awans z tieru 1) | 1 | chód | wręcz | Jad: raz na bitwę trafiony traci N Ż w kolejnych aktywacjach | trucizna | Gniazdo Skorpionów |
 | 2B | Kobra Królewska (`cobra`) | wielka kobra z kapturem | 1 | chód | wręcz | Hipnoza: raz na bitwę trafiony unieruchomiony | unieruchomienie | Wężowa Studnia |
 | 3A | Tancerka Fata Morgany (`mirageDancer`) | tancerka z welonami | 1 | chód | dyst. | Lustro Wydm: raz na bitwę tworzy miraż sojusznika | ★ miraż | Dom Tancerek |
 | 3B | Kamienny Strażnik Grobowca (`ushabti`) | posąg strażnika | 1 | chód | wręcz | Przebudzenie: stoi, dopóki wróg nie wejdzie obok albo go nie trafi; wtedy +N A; pancerz | ★ uśpienie do bodźca | Grobowiec Strażników |
 | 4A | Lamassu (`lamassu`) | skrzydlaty byk z ludzką głową | 2 | lot | wręcz | Strażnik Bram: pancerz; sąsiednich sojuszników nie da się przestawić ani odepchnąć | pancerz, aura | Brama Lamassu |
-| 4B | Olbrzymi Skorpion (`giantScorpion`) | skorpion jak wóz | 2 | chód | wręcz | Kleszcze i Żądło: chwyt (unieruchomienie) i jad | reuse: Chwyt + trucizna | Gniazdo Skorpionów |
+| 4B | Krokodyl Oazowy (`oasisCrocodile`) | olbrzymi krokodyl z oazy (decyzja 20.11, zamiast Olbrzymiego Skorpiona, zbyt podobnego do Królowej Skorpionów) | 2 | chód | wręcz | Chwyt Szczęk: trafiony unieruchomiony | reuse: Chwyt | Rozlewisko Krokodyli |
 | 5A | Dżin Burzy Piaskowej (`stormDjinn`) | dżin z wirem piasku | 1 | lot | dyst. | Burza Piaskowa: raz na bitwę strzelcy wroga −N A do końca rundy | aura osłabiająca | Lampa Dżina |
 | 5B | Ptak Rok (`roc`) | olbrzymi ptak pustyni | 2 | lot | wręcz | Lot ze Skrzydłem: raz na bitwę przenosi sąsiedniego sojusznika ze sobą | ★ ruch z pasażerem | Gniazdo Roka |
 | 6 | Czerw Pustyni (`sandWyrm`) | olbrzymi czerw z piasku | 2 | chód | wręcz | Spod Piasku: zamiast ruchu zakopuje się i wynurza na polu w zasięgu N, odpychając sąsiadów o 1 | reuse: Podkop + odpychanie | Ruchome Piaski |
@@ -558,7 +558,7 @@ Rozstawia miraże przy najcenniejszych jednostkach, zasadza Królową przy strze
 - Ukryta informacja: patrz punkt 2.
 
 ### Alternatywy
-- **Jednostki:** Ifryt (zamiast Dżina Burzy; uwaga na ogień Hordy), Hiena Śmiejąca się (zamiast Skorpiona), Mantykora (zamiast
+- **Jednostki:** Ifryt (zamiast Dżina Burzy; uwaga na ogień Hordy), Mantykora (zamiast Krokodyla Oazowego; ma ogon skorpiona, więc zbliżona do Królowej Skorpionów).
   Olbrzymiego Skorpiona).
 - **Mechanika bez ukrytej informacji:** *Wędrowne Piaski* — raz na rundę jedna jednostka Piasków może zamienić się miejscami
   z dowolną inną jednostką Piasków (proste, jawne; ale bliskie Przypływom).
@@ -583,7 +583,7 @@ porasta grzybnia: Rój jest na niej mocniejszy, wrogowie na niej słabną. Do te
 | `id` | Bohater | Typ | Rozm. | Ruch | Walka | Zdolność | Specjalność |
 |---|---|---|---|---|---|---|---|
 | `mantisQueen` | Królowa Modliszek | łowca | 1 | chód | wręcz | **Ostatnie Cięcie:** +N A przeciw celowi, który ma co najwyżej połowę Ż | Łowczyni Głębin: +1 PD za wygraną (`xp`) |
-| `elderMycelium` | Prastary Muchomor | mędrzec | 1 | chód | dyst. | **Zarodniki Snu:** raz na bitwę cel i sąsiedzi −1 S i zatruci | Pulsująca Grzybnia: +1 many na rundę (`regen`) |
+| `elderMycelium` | Śniący Muchomor | mędrzec | 1 | chód | dyst. | **Zarodniki Snu:** raz na bitwę cel i sąsiedzi −1 S i zatruci | Pulsująca Grzybnia: +1 many na rundę (`regen`) |
 | `goliathBeetle` | Chrząszcz Goliat | wojownik | 2 | chód | wręcz | **Chitynowa Ściana:** pancerz; +1 A za każdego sąsiadującego sojusznika z Roju | Matka Roju: pomocnicy +1 Ż (`supportHp`) |
 
 **Dowódcy:** Żuk Gwardzista (wojownik), Świetlikowa Łuczniczka (łowca), Grzybowy Wróżbita (mędrzec).
@@ -595,15 +595,15 @@ porasta grzybnia: Rój jest na niej mocniejszy, wrogowie na niej słabną. Do te
 | 1 | Purchawka (`sporeling`) | chodzący grzybek | 1 | chód | wręcz | Pyłek: po śmierci zatruwa sąsiadów | reuse: Rozprysk + trucizna | — |
 | 1 | Mrówka Wojowniczka (`soldierAnt`) | mrówka z żuwaczkami | 1 | chód | wręcz | Mrowisko: +1 A za każdego sąsiadującego sojusznika z Roju | premia grupowa | — |
 | 1 | Świetlik (`firefly`) | świecący chrząszczyk | 1 | lot | dyst. | Błysk: raz na bitwę trafiony −1 A | reuse: Złowroga Klątwa | — |
-| 2A | Ryjkowiec Kopacz (`weevilDigger`) | ryjkowiec z długim ryjem | 1 | chód | wręcz | Podkop: zamiast ruchu wyłania się w zasięgu, zostawia grzybnię | reuse: Podkop | Korytarze Ryjkowców |
+| 2A | Gąsienica Korzenna (`rootCaterpillar`) | gruba gąsienica spod korzeni (decyzja 20.11, zamiast Ryjkowca Kopacza; jeden chrząszcz mniej) | 1 | chód | wręcz | Przepoczwarzenie: gdy po raz pierwszy spadnie do połowy Ż (raz na bitwę), zmienia się w Motyla Księżycowego (nazwa do potwierdzenia): odzyskuje N Ż i zyskuje lot | ★ zmiana formy | Zielony Kokon |
 | 2B | Ćma Pyłowa (`dustMoth`) | duża ćma o szarych skrzydłach | 1 | lot | dyst. | Pył ze Skrzydeł: raz na bitwę cel i sąsiedzi zatruci | trucizna (obszar) | Kokonownia |
 | 3A | Muchomor Gwardzista (`mushroomGuard`) | grzybolud z tarczą z kapelusza | 1 | chód | wręcz | Na Swojej Ziemi: na grzybni odzyskuje N Ż na początku aktywacji | leczenie + ★ grzybnia | Krąg Muchomorów |
 | 3B | Żuk Bombardier (`bombardier`) | żuk strzelający gorącą mgłą | 1 | chód | dyst. | Wrzący Strumień: ignoruje pancerz | ★ ignorowanie pancerza | Żwirowisko |
-| 4A | Modliszka Ostrzy (`bladeMantis`) | modliszka jak szermierz | 1 | chód | wręcz | Podwójne Cięcie: każdym atakiem może trafić dwa sąsiednie cele | reuse: Paszcze Otchłani | Gniazdo Modliszek |
+| 4A | Ważka Łowczyni (`dragonfly`) | olbrzymia ważka o szklistych skrzydłach (decyzja 20.11, zamiast Modliszki Ostrzy; modliszka zostaje bohaterką) | 1 | lot | wręcz | Polowanie w Locie: +N A przeciw jednostkom latającym i dystansowym | ★ premia za typ celu | Staw Ważek |
 | 4B | Matka Grzybni (`mycoMother`) | wysoka grzybowa postać z welonem | 1 | chód | dyst. | Rozsiew: raz na bitwę 3 pola grzybni wokół wskazanego pola | ★ grzybnia | Wilgotna Piwnica |
 | 5A | Skolopendra Głębin (`centipede`) | olbrzymia skolopendra | 2 | chód | wręcz | Oplot: trafiony unieruchomiony i zatruty | unieruchomienie + trucizna | Skalna Szczelina |
-| 5B | Chmara Os (`waspCloud`) | chmara os z królową | 1 | lot | wręcz | Chmara: atak rani cel i wszystkich jego sąsiadów po 1; −1 obrażeń od strzał | ★ obszar wokół celu | Gniazdo Os |
-| 6 | Królowa Termitów (`termiteQueen`) | ogromna królowa w kopcu | 2 | chód | wręcz | Wylęg: raz na rundę przywołuje Mrówkę Robotnicę (słaba, znika po bitwie) na sąsiednim polu | ★ przywołanie | Wielki Kopiec |
+| 5B | Ślimak Pancerny (`armoredSnail`) | olbrzymi ślimak z muszlą jak lakierowana tarcza (decyzja 20.11, zamiast Chmary Os) | 2 | chód | wręcz | Śluzowy Szlak: pancerz; zostawia grzybnię na polach, przez które przeszedł | pancerz + ★ grzybnia | Mszysty Głaz |
+| 6 | Cesarska Cykada (`emperorCicada`) | olbrzymia cykada wychodząca spod ziemi (decyzja 20.11, zamiast Królowej Termitów) | 2 | lot | wręcz | Wielki Chór: raz na bitwę wszyscy wrogowie w promieniu 2 tracą następną aktywację (łagodniejsza wersja do symulacji: −2 S i −1 A) | ★ ogłuszenie (obszar) | Komora Cykady |
 
 ### Osada
 | Budynek | Rodzic | Poziomy i efekt |
@@ -627,13 +627,12 @@ Trzyma jednostki razem, walczy na grzybni i wciąga wroga na swoje pola; Królow
 blisko kopalń (Korytarze). **Nie wolno mu:** rozpraszać jednostek i gonić wroga daleko od grzybni.
 
 ### Kolizje
-- **Pająk Jaskiniowy (Horda), Bagienny Pełzacz i Podkopnik (neutralni):** Rój nie ma pająków; Podkop zostaje jako reuse.
+- **Pająk Jaskiniowy (Horda), Bagienny Pełzacz (neutralny):** Rój nie ma pająków; Podkop zniknął razem z Ryjkowcem Kopaczem (Podkopnik jest neutralny).
 - **Trucizna** jest w Hordzie (Szczurołak, Wiwerna); znakiem Roju jest grzybnia i grupa, trucizna to dodatek.
-- **Paszcze Otchłani** (Hydra, Behemot): Modliszka używa tej samej logiki, inny wygląd.
+- **Modliszka:** tylko jedna, bohaterka Królowa Modliszek (Ostatnie Cięcie); Modliszka Ostrzy odpadła. Królowych w Roju jest jedna (Pszczoła Królowa, czwarty bohater).
 
 ### Alternatywy
-- **Jednostki:** Pszczoła Wojowniczka (zamiast Mrówki), Żuk Jeleń (zamiast Bombardiera, wręcz, odpycha), Grzybowy Olbrzym
-  (legenda zamiast Królowej Termitów, jeśli przywołanie za trudne).
+- **Jednostki:** Pszczoła Wojowniczka (zamiast Mrówki), Żuk Jeleń (zamiast Bombardiera, wręcz, odpycha).
 - **Mechanika:** *Rój* — +1 A za każdego sąsiadującego sojusznika z Roju dla wszystkich jednostek (bez grzybni; prostsza,
   ale bliska Obławie Hordy).
 - **Budynek:** Ul (zamiast Ogrodu) — +1 zł na rundę i miód: raz na 3 rundy leczy drużynę bohatera w osadzie.
@@ -660,22 +659,22 @@ i przyciąganie wrogów. Rozdzielenie ze Stadami: Przypływy nie szarżują, prz
 | `sirenSinger` | Syrena Pieśniarka | mędrzec | 1 | chód | dyst. | **Pieśń Syreny:** raz na bitwę wróg w zasięgu przyciągnięty o N pól ku niej | Głos Głębin: czary +1 (`spellPower`) |
 | `seaSerpent` | Wąż Morski | łowca | 2 | chód | wręcz | **Oplot Głębin:** przyciąga cel o 1 i unieruchamia (raz na bitwę) | Prąd Morski: +1 ruchu (`move`) |
 
-**Dowódcy:** Trytoński Strażnik (wojownik), Harpunniczka (łowca), **Stefan** (`stefan`, mędrzec; zwierzak autora: wąż zbożowy, szary z czarnymi plamami na grzbiecie jak paski, lubi wodę, płochliwy, chyba że chodzi o jedzenie, sympatyczny; decyzja 19.11, zamiast Kapłana Pływów).
+**Dowódcy:** Trytoński Strażnik (wojownik), Harpunniczka (łowca), **Sefiran Plamisty** (`sefiran`, mędrzec; zwierzak autora Stefan: wąż zbożowy, szary z czarnymi plamami na grzbiecie jak paski, lubi wodę, płochliwy, sympatyczny; **Wylinka:** raz na bitwę zrzuca skórę: traci wszystkie statusy i odzyskuje N Ż; decyzje 19.11 i 20.11, zamiast Kapłana Pływów).
 **Czwarty bohater:** Stary Mors Kapitan (wojownik, odpychanie).
 
 ### Jednostki
 | Tier | Jednostka (`id`) | Kim jest | Rozm. | Ruch | Walka | Zdolność | Prymityw | Siedlisko |
 |---|---|---|---|---|---|---|---|---|
-| 1 | Mewa Rozbójniczka (`gullRaider`) | mewa w opasce rozbójnika (decyzja 19.11, zamiast Kraboluda Tarczownika) | 1 | lot | wręcz | Nalot: raz na bitwę po ataku odlatuje o N pól (propozycja zdolności, do potwierdzenia) | reuse: Powietrzny Zryw | — |
+| 1 | Żółw Skorupiak (`shellTurtle`) | żółw z rafą na skorupie (decyzja 20.11, awans z tieru 2A; jedyny żółw w frakcji) | 1 | chód | wręcz | Skorupa: raz na bitwę chowa się — 0 obrażeń do swojej następnej aktywacji, nie atakuje | ★ pełna osłona czasowa | — |
 | 1 | Trytoński Harpunnik (`tritonHarpoon`) | tryton z harpunem na linie | 1 | chód | dyst. | Harpun: raz na bitwę trafiony przyciągnięty o 2 | przyciąganie | — |
 | 1 | Żabi Skoczek (`frogLeaper`) | żabolud z krótką włócznią (z frakcji zapasowej) | 1 | chód | wręcz | Susem w Tył: raz na bitwę odskok po ataku | reuse: Powietrzny Zryw | — |
-| 2A | Żółw Skorupiak (`shellTurtle`) | żółw z rafą na skorupie | 1 | chód | wręcz | Skorupa: raz na bitwę chowa się — 0 obrażeń do swojej następnej aktywacji, nie atakuje | ★ pełna osłona czasowa | Żółwia Plaża |
+| 2A | Krabolud Tarczownik (`crabShield`) | krabolud z tarczą z pancerza kraba (decyzja 20.11, wraca z odrzuconych; mocniejszy od Żółwia, więc tier 2) | 1 | chód | wręcz | Twarda Skorupa: pancerz | pancerz | Krabia Skała |
 | 2B | Ośmiornica Atramentowa (`inkOctopus`) | mała ośmiornica, która w odpływie przełazi po kamieniach rafy | 1 | chód | dyst. | Atrament: raz na bitwę cel i jego sąsiedzi −N A do końca następnej aktywacji (zalani atramentem) | aura osłabiająca (obszar) | Atramentowa Grota |
 | 3A | Rekinołak (`sharkman`) | wojownik z głową rekina | 1 | chód | wręcz | Wir: raz na bitwę po ataku zamienia się miejscami z celem | zamiana miejsc (z wrogiem) | Rekinia Grota |
 | 3B | Kapłanka Pereł (`pearlPriestess`) | trytonka z perłowym kosturem | 1 | chód | dyst. | Perłowa Tarcza: raz na bitwę sojusznik dostaje tarczę pochłaniającą N obrażeń | ★ tarcza punktowa | Perłowy Ołtarz |
 | 4A | Homar Pancerny (`lobsterKnight`) | homar w pozie rycerza | 1 | chód | wręcz | Szczypce: trafiony nie rusza się do końca swojej następnej aktywacji; pancerz | reuse: Chwyt | Homarza Rafa |
 | 4B | Mors Kłowy (`walrus`) | mors z okutymi kłami | 2 | chód | wręcz | Natarcie Kłów: po ataku odpycha cel o 1 (bez zderzenia) | odpychanie | Morsowa Ławica |
-| 5A | Żółw-Wyspa (`islandTurtle`) | żółw z wysepką na grzbiecie | 2 | chód | wręcz | Schronienie: sąsiedni sojusznicy mają pancerz 1; nie do odepchnięcia | aura | Wyspa Żółwia |
+| 5A | Rafowy Golem (`reefGolem`) | żywa rafa na dwóch nogach, z koralami i muszlami (decyzja 20.11, zamiast Żółwia-Wyspy) | 2 | chód | wręcz | Żywa Rafa: sąsiedni sojusznicy mają pancerz 1; nie do odepchnięcia | aura | Koralowa Jaskinia |
 | 5B | Morska Wiedźma (`seaWitch`) | stara wiedźma w płaszczu z sieci i muszli | 1 | chód | dyst. | Odpływ: raz na bitwę zamienia miejscami dwie dowolne jednostki w zasięgu N | zamiana miejsc | Zatopiona Chata |
 | 6 | Lewiatan (`leviathan`) | pradawny potwór morski | 2 | chód | wręcz | Wir Głębin: raz na bitwę wszyscy wrogowie w promieniu 3 przyciągnięci o 2 ku niemu | przyciąganie obszarowe | Rów Głębinowy |
 
@@ -702,15 +701,14 @@ Trzyma szyk wokół żółwi, harpunami i Syreną ściąga strzelców wroga, ran
 się na pola obok pułapek i grzybni (jeśli je widzi), wysuwać Syreny na przód.
 
 ### Kolizje
-- **Szczypiec (neutralny, Chwyt)** to krab: Homar ma chwyt (inny wygląd); Krabolud Tarczownik odpadł (patrz `ODRZUCONE_POMYSLY.md`).
+- **Szczypiec (neutralny, Chwyt)** to krab: Homar ma chwyt (inny wygląd); Krabolud Tarczownik ma pancerz, bez chwytu. Mewa Rozbójniczka odpadła (patrz `ODRZUCONE_POMYSLY.md`).
 - **Kraken i Hydra z Zatopionych Ruin (neutralni):** Przypływy bez wielogłowych; jedyne macki ma mała
   Ośmiornica (poziom 2), wyraźnie inna niż olbrzymi Kraken. Morska Wiedźma bez macek.
 - **Wydra** jest w Kompaniach; Przypływy bez wydr.
 - Odpychanie u Stad: patrz Stada.
 
 ### Alternatywy
-- **Jednostki:** Mewa Rozbójniczka (autor: dobry pomysł, dałaby Przypływom latającą jednostkę; miejsce do ustalenia,
-  punkt 14).
+- **Jednostki:** brak (Mewa Rozbójniczka odpadła 20.11, Nalot był zbyt podobny do Gryfa i Pegaza).
 - **Mechanika:** *Fala* — co 3 rundy fala przyciąga wszystkich wrogów o 1 pole w stronę Przypływów (globalna, efektowna,
   zmienia całą arenę; łatwa do pokazania animacją).
 - **Budynek mapy:** Przystań — bohater w osadzie przenosi się do innej osady Przypływów leżącej przy wodzie.
@@ -749,7 +747,7 @@ spowolnienie, unieruchomienie, trucizna, wyczerpanie many, pola z efektem). Każ
 | Uśpienie do bodźca | Piaski | mała | |
 | Ruch z pasażerem | Piaski | średnia | |
 | Grzybnia (zajęcie terenu) | Rój | średnia | `placeGround` + warunki |
-| Przywołanie jednostki | Rój | średnia | jednostka spoza puli, znika po bitwie |
+| Zmiana formy jednostki (Przepoczwarzenie) | Rój | średnia | jednostka zmienia się po progu Ż: Ż i lot |
 
 Najdroższe są trzy prymitywy z ukrytą informacją (pułapki, ukrycie, miraż). Jeśli trzeba ciąć: Kompanie i Piaski mają
 w Alternatywach mechaniki jawne.
@@ -785,20 +783,19 @@ Rozstrzygnięte:
 
 ---
 
-## 14. Rozstrzygnięte i otwarte po uwagach z 19.11
+## 14. Rozstrzygnięte po uwagach z 19.11 i 20.11
 
 **Rozstrzygnięte:**
-- Zwierzaki autora jako **dowódcy z karczmy**, po jednym w trzech frakcjach: Bajka (łowca) w Kompaniach, Brytania (wojownik) w Piaskach,
-  Stefan (mędrzec, wąż zbożowy lubiący wodę) w Przypływach. Uwaga: Przypływy mają już bohatera Węża Morskiego (łowca, 2 pola); Stefan jest mały, szary, w plamach, więc odróżnienie jest w rozmiarze i wyglądzie.
-- Wij: **Wij Podziemny**.
-- Jeździec na Koźle: Klany 3B zamiast Wiropłatu (Wiropłat do alternatyw).
-- Mewa Rozbójniczka: Przypływy, tier 1, zamiast Kraboluda Tarczownika (Twarda Skorupa/pancerz poziomu 1 do przemyślenia).
-- Stada: bydła mniej (Słoń z Bębnem zamiast Bawołu); satyrowie, tury i faun zostają; zderzenie rani też jednostkę, w którą uderza.
+- Zwierzaki autora jako **dowódcy z karczmy**: **Żbiczka Bajdurka** (łowca, Kompanie, Szalony Skok), **Bastia Cienista** (wojownik, Piaski, Czujna Drzemka), **Sefiran Plamisty** (mędrzec, Przypływy, Wylinka). Odróżnienie Sefirana od Węża Morskiego: mały, szary, w plamy.
+- Wij: **Wij Podziemny**. Jeździec na Koźle (Skok po Turniach): Klany 3B zamiast Wiropłatu, zdolność zatwierdzona.
+- Kompanie: jedna ropucha (Hakownik); Tchórz Smrodnik (3A) i Zajęczyca Zielarka (dowódca). Gronostaj jest w Szronie, więc odpadł.
+- Szron: dowódca-łowca to **Tropicielka Mroźnych Puszcz** (zamiast Łowczyni z Gronostajem). Zmiana w kodzie i kartach `frost.md` w osobnym commicie.
+- Przypływy: Mewa odpadła; Żółw Skorupiak na tier 1, **Krabolud Tarczownik na 2A** (pancerz poziomu 1: pokrywa osłona Żółwia), **Rafowy Golem** zamiast Żółwia-Wyspy (jeden żółw).
+- Stada: Dudziarz atakuje falą dźwięku bez kolorowych nut; trzej pomocnicy startowi zatwierdzeni (Dudziarz, Młody Tur, Kozica); zderzenie rani też jednostkę, w którą uderza.
+- Piaski (przegląd autora 20.11): Mangusta Faraona (tier 1, Odporność na Jad), Skorpion Piaskowy na 2A, Krokodyl Oazowy zamiast Olbrzymiego Skorpiona, bez Łucznika na Wielbłądzie i bez Hieny; wielbłąd tylko u Wielbłądziego Księcia.
+- Rój (przegląd autora 20.11): Królowa Modliszek zostaje bohaterką; Gąsienica Korzenna (2A) zamiast Ryjkowca, Ważka Łowczyni (4A) zamiast Modliszki Ostrzy, Ślimak Pancerny (5B), **Cesarska Cykada** (6); Śniący Muchomor zamiast Prastarego Muchomora.
 
-**Otwarte:**
-1. **Zdolności trzech zwierzaków** (Bajka, Brytania, Stefan): karty nie mają jeszcze zdolności bohaterów, trzeba je wymyślić z charakterów.
-2. **Trzy ropuchy w Kompaniach** (Ropucha Truciciel, Ropucha Zielarka w karczmie, Ropuch z Hakownicą): przerzedzić?
-3. **Zdolności do potwierdzenia:** Jeździec na Koźle (Skok po Turniach) i Mewa Rozbójniczka (Nalot) to propozycje.
-4. **Pancerz poziomu 1 w Przypływach:** po odejściu Kraboluda nikt go nie ma; zostawić (przejmuje ktoś inny) czy świadomie zrezygnować?
-5. **Stada:** trzech pomocników startowych (Dudziarz, Młody Tur, Kozica): zatwierdzić?
-6. **Imperium Piasków i Rój Głębin** nie przeszły jeszcze przeglądu autora (uwagi z 19.11 dotyczyły sześciu pozostałych frakcji).
+**Otwarte (drobne):**
+1. Nazwa Motyla, w którego przemienia się Gąsienica Korzenna (propozycja: Motyl Księżycowy; „Pawica" odrzucona jako niezrozumiała).
+2. Liczby zdolności nowych jednostek i bohaterów (N) ustala balans przy G2; Mangusta może dostać statystyki zgodnie z symulacją.
+3. Przegląd nazw w całej grze pod kątem powtórzeń słów „prastary” i „pradawny”.

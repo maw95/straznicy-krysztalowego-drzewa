@@ -50,7 +50,7 @@ ani psów** (wilki mają już Przymierze i Horda).
 - **Królowa Śniegu w Saniach** jako legenda zamiast Wilka: zostaje tylko jako alternatywa (zamiast Mamuta).
 
 ## Władcy Przypływów
-- **Krabolud Tarczownik** (`crabShield`, tier 1): Twarda Skorupa (pancerz). Zastąpiła go Mewa Rozbójniczka.
+- **Krabolud Tarczownik** (`crabShield`, tier 1): Twarda Skorupa (pancerz). Zastąpiła go Mewa Rozbójniczka, potem (20.11) wrócił na tier 2A, a Mewa odpadła.
 - **Kapłan Pływów** (dowódca-mędrzec): zastąpił go Stefan.
 - **Konik Morski** (`seahorse`, tier 1): Fala Odpływu, raz na bitwę odskok po ataku. Zastąpił go Żabi Skoczek (z frakcji
   zapasowej) ze zdolnością Susem w Tył.
@@ -70,3 +70,12 @@ ani psów** (wilki mają już Przymierze i Horda).
 - **Kolizje stworów w punkcie otwartym 2** (białe wilki w Szronie, ruda lisica obok Srebrnego Lisa): rozstrzygnięte
   decyzją o wilkach i przejściem Kompanii na zwierzoludzi.
 - **Kuźnia Run jako pewnik**: punkt 5 dokumentu nadal pyta, czy wystarczy prostsza wersja „runa przed bitwą” (Runy Bitewne).
+
+## Uzupełnienie z 20.11 (przegląd Kompanii, Piasków, Roju i Przypływów)
+- **Kompanie:** Ropucha Truciciel (`toadPoisoner`, 3A; zastąpił Tchórz Smrodnik), Ropucha Zielarka (dowódca-mędrzec; zastąpiła Zajęczyca Zielarka), Gronostaj Aptekarz (odpadł: gronostaj jest w Szronie).
+- **Piaski:** Łucznik na Wielbłądzie (`camelArcher`, 2A; wielbłąd zostaje Księciu), Olbrzymi Skorpion (`giantScorpion`, 4B; zastąpił Krokodyl Oazowy), Hiena Śmiejąca się / Pasiasta (nie kojarzy się z piaskami), Skorpion Piaskowy na tierze 1 (awans na 2A; na tier 1 wszedł Mangusta Faraona), Brytania Syta (przydomek „Syta” odrzucony, zostaje Bastia Cienista).
+- **Rój:** Ryjkowiec Kopacz (`weevilDigger`, za dużo chrząszczy), Modliszka Ostrzy (`bladeMantis`, modliszka zostaje bohaterką), Chmara Os (`waspCloud`, królowa pszczół już jest), Królowa Termitów (`termiteQueen`, za dużo królowych), Żywy Kopiec, Grzybowy Olbrzym, Chmara Szarańczy, Tytan Rogacz (za dużo chrząszczy), Jedwabnik, Przędziarz i Pawica (nazwy niezrozumiałe), Prastary Muchomor (przydomek).
+- **Przypływy:** Mewa Rozbójniczka (`gullRaider`, tier 1): Nalot zbyt podobny do Gryfa i Pegaza; Zrzut Muszli i Wrzask Rozbójniczki zostają w pomysłach. Żółw-Wyspa (`islandTurtle`, 5A; zastąpił Rafowy Golem; Wieloryb Nosiciel i Wielka Małża Perłorodna w rezerwie). Stefan Plamisty / Stefanor (imię; zostaje Sefiran). Zdolności Sefirana odrzucone: Poczęstunek, Wyślizg z Pęt (zbyt złożony); w rezerwie: Wężowy Jad, Zmysł Ciepła, Syk Ostrzegawczy, Rozlewisko.
+- **Szron:** Łowczyni z Gronostajem (`ermineHuntress`): dwie jednostki w jednej, zastąpiła ją Tropicielka Mroźnych Puszcz.
+- **Kompanie, Żbiczka Bajdurka:** Pogoń za Motylem (zdolność losowa) odrzucona na rzecz Szalonego Skoku.
+- **Stada:** kolorowe nuty w ataku Dudziarza.
