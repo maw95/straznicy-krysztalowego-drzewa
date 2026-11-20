@@ -28,9 +28,12 @@ Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowe
 - Zrobione: przestrojenie poziomów policzone (`.tmp/sim/auto-*.json`, 142 przebiegi, `=== done` w `.tmp/sim/retune-all.log`), **NIE scalone** do `tuningAuto.ts` (zob. niżej);
   tabela `FACTION_DIGITAL_BONUS` (`src/engine/factionBonus.ts`, generowana) zastąpiła `HORDE_DIGITAL_BONUS`; Kompanie scalone do `master` (`b30cbbd`; portrety z drugiej sesji są
   w `master`, konflikt `assets.json` i dwóch portretów rozwiązany: zostały prawdziwe portrety); `make check` zielony (902 testy).
-- **W toku:** automatyczny stroiciel G2 siedmiu frakcji: `nohup node --import tsx scripts/sim/tuneFactions.ts 200 control,conquest,relic --apply > .tmp/sim/tuneFactions.log &`
-  (do ok. 2,5 h; stan w `.tmp/sim/tuneFactions.json`, po przerwaniu uruchom to samo polecenie, wznowi od stanu; `--report` tylko mierzy). Na końcu `--apply` zapisuje
-  `src/engine/factionBonus.ts`. Pomiar początkowy: 15 z 21 par poza pasmem (Przymierze–Horda 52% zamiast 60–70).
+- **Wynik stroiciela G2 (siedem frakcji, 20.11 rano): same premie Ż/A nie wystarczą.** Po dwóch przebiegach zachłannych 17 z 21 par poza pasmem (na starcie 15; wynik zapisany w
+  `.tmp/sim/tuneFactions.stat-only-result.json`, `factionBonus.ts` przywrócony do wersji z repo). Przyczyna: premie statystyk wyrównują frakcje do ok. 50%, ale nie tworzą relacji
+  kontra/kontrowana (np. Horda–Umarli 43% przy celu 60–70, Stada–Szron 49% przy celu 60–70). Do decyzji autora: (A) dodać cyfrową dźwignię „premia przeciw frakcji” (np. +1 A
+  jednostek A przeciwko jednostkom B; osobno bohaterowie i pomocnicy; tylko wersja cyfrowa; łatwa do automatycznego strojenia, ale to ukryte liczby bez uzasadnienia w mechanice),
+  (B) zrobić kontry mechanikami frakcji (praca projektowa, drogo), (C) zaakceptować samo wyrównanie ok. 50% bez kontr. Rekomendacja: A jako rozwiązanie szybkie i tanie w tokenach,
+  rozszerzyć `tuneFactions.ts` o dźwignię par. Poprawki Kompanii z gałęzi `kompanie-followups` są już scalone (`f706a8a`, 903 testy).
 - **Decyzja do podjęcia po stroicielu (ważne):** tabela kontr wymaga Przymierze > Horda 60–70%, a premia +1/+1 dla Hordy dała ok. 50%. Stroiciel sam dobierze premie wszystkich frakcji,
   więc po nim Kryształy i inne cele trzeba przestroić ponownie (`scripts/sim/retune-all.sh` po skasowaniu `.tmp/sim/auto-*.json` oprócz `auto-zero-legacy.json`), potem `tuneMerge`.
   Dlatego obecne pliki `auto-*.json` służą tylko, jeśli premia Hordy zostanie przy +1/+1.
