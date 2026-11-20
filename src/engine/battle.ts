@@ -1133,7 +1133,7 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
     removeFromBoard(state, target, true);
     log(state, 'death', `${unitName(target)} poległ(a).`);
     if (state.battle?.mirageAlias) fadeMiragesOf(state, target);
-    // Grzybnia: the mycelium grows where a unit fell; Pyłek: the Purchawka poisons the enemies next to it.
+    // Grzybnia: the mycelium grows where a unit fell; Pyłek: the Purchawka poisons everyone next to it, allies too.
     if (state.battle) myceliumOnDeath(state, diedOn);
     if (abilityOf(target) === 'puffball' && abilityActive(state) && state.battle && !state.battle.duel) puffballBurst(state, target, diedOn);
     // Kości Wracają: the skeleton lies where it fell and puts itself together at the end of the round.
@@ -2115,10 +2115,10 @@ function swarmPoison(state: GameState, t: BattleUnit, source: string): void {
   }
 }
 
-/** Pyłek: the fallen Purchawka poisons the enemies next to the cells it lay on. */
+/** Pyłek: the fallen Purchawka poisons every unit next to the cells it lay on, its allies as well as the enemies. */
 function puffballBurst(state: GameState, dead: BattleUnit, cells: readonly HexKey[]): void {
   const b = state.battle!;
-  const near = livingUnits(b).filter((x) => x.side !== dead.side && x.pos && cellsOf(x).some((c) => cells.some((k) => adjacent(k, c))));
+  const near = livingUnits(b).filter((x) => x.pos && cellsOf(x).some((c) => cells.some((k) => adjacent(k, c))));
   if (near.length) log(state, 'ability', `${unitName(dead)} pęka chmurą pyłku (${UNITS[dead.defId].abilityName}).`);
   for (const x of near) swarmPoison(state, x, UNITS[dead.defId].abilityName);
 }

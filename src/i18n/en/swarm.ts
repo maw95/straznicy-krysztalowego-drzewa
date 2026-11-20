@@ -74,7 +74,7 @@ register({
   'Raz na bitwę: trafiony i sąsiadujący z nim wrogowie mają −{0} S w następnej aktywacji i są zatruci (tracą {1} Ż na początku {2} następnych aktywacji).':
     'Once per battle: the one hit and the enemies next to it have −{0} SPD in their next activation and are poisoned (they lose {1} HP at the start of their next {2} activations).',
   'Stała: pancerz {0}; +{1} A za każdego sąsiadującego sojusznika (najwyżej +{2}).': 'Passive: armour {0}; +{1} ATK for every ally next to it (at most +{2}).',
-  'Stała: gdy padnie, sąsiadujący z nią wrogowie są zatruci (tracą {0} Ż na początku {1} następnych aktywacji).': 'Passive: when it falls, the enemies next to it are poisoned (they lose {0} HP at the start of their next {1} activations).',
+  'Stała: gdy padnie, wszystkie sąsiadujące z nią jednostki (także sojusznicze) są zatrute (tracą {0} Ż na początku {1} następnych aktywacji).': 'Passive: when it falls, every unit next to it (allies too) is poisoned (each loses {0} HP at the start of their next {1} activations).',
   'Stała: +{0} A za każdego sąsiadującego sojusznika (najwyżej +{1}).': 'Passive: +{0} ATK for every ally next to it (at most +{1}).',
   'Raz na bitwę: gdy pierwszy raz spadnie do połowy Ż, zmienia się w Motyla Korzennego: odzyskuje {0} Ż i od tej chwili lata.':
     'Once per battle: the first time it drops to half its HP it turns into a Root Butterfly: it regains {0} HP and flies from then on.',

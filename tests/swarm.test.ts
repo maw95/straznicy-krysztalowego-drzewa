@@ -211,12 +211,23 @@ describe('heroes', () => {
 });
 
 describe('units', () => {
-  it('Pyłek: the fallen Purchawka poisons the enemies next to it, not its allies', () => {
-    const s = fight([['ratman', 'horde', 7, 9, 99], ['sporeling', 'dawn', 6, 8, 1], ['soldierAnt', 'dawn', 6, 10]]);
+  it('Pyłek: the fallen Purchawka poisons everyone next to it, its allies too (20.11), not the units further away', () => {
+    const s = fight([['ratman', 'horde', 7, 9, 99], ['sporeling', 'dawn', 6, 8, 1], ['soldierAnt', 'dawn', 6, 10], ['firefly', 'dawn', 2, 8]]);
     const hit = strike(s, 'ratman', 'sporeling');
     expect(at(hit, 'sporeling').alive).toBe(false);
     expect(at(hit, 'ratman').status.poisoned).toBe(ABILITY.poisonTicks);
-    expect(at(hit, 'soldierAnt').status.poisoned ?? 0).toBe(0);
+    expect(at(hit, 'soldierAnt').status.poisoned ?? 0).toBeGreaterThan(0);
+    expect(at(hit, 'firefly').status.poisoned ?? 0).toBe(0);
+  });
+
+  it('a bot of the Swarm keeps off its own Purchawka that may fall, and a Purchawka in danger keeps off its allies', () => {
+    const s = fight([['sporeling', 'dawn', 5, 9, 1], ['soldierAnt', 'dawn', 2, 8], ['ratman', 'horde', 6, 8, 99]]);
+    const near = (st: GameState, a: string, b: string) => distance(parseKey(at(st, a).pos!), parseKey(at(st, b).pos!)) === 1;
+    const ant = applyAction(turn(s, 'soldierAnt'), chooseAction(turn(s, 'soldierAnt'))!);
+    expect(near(ant, 'soldierAnt', 'sporeling')).toBe(false);
+    const p = fight([['sporeling', 'dawn', 3, 9, 1], ['soldierAnt', 'dawn', 6, 8], ['ratman', 'horde', 5, 7, 99]]);
+    const puff = applyAction(turn(p, 'sporeling'), chooseAction(turn(p, 'sporeling'))!);
+    expect(near(puff, 'soldierAnt', 'sporeling')).toBe(false);
   });
 
   it('Mrowisko: + A for every ally next to the ant', () => {
@@ -370,7 +381,8 @@ describe('games with the Swarm', () => {
 
   it('the mycelium and the abilities do fire in the games of the bots', () => {
     const fired = new Set<string>();
-    for (const seed of [1, 2, 3, 4, 5, 6]) {
+    // The healing on the mycelium is rare (the fourth level of the Serce Grzybni or the Na Swojej Ziemi), so eight games.
+    for (const seed of [1, 2, 3, 4, 5, 6, 7, 8]) {
       const end = playOut(createGame(table(['swarm', 'horde'], 'conquest', { seed })));
       for (const l of end.log) {
         if (l.text.includes('na grzybni') || l.text.includes('(Grzybnia)')) fired.add('grzybnia');

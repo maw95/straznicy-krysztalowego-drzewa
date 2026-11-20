@@ -8,6 +8,7 @@ import {
   pushValue,
   isBreath,
   resistsStatus,
+  resistsPoison,
   abilityActive,
   abilityOf,
   attackDamage,
@@ -155,6 +156,8 @@ const AI_TUNING = {
   healMissing: 4,
   /** Tarcza Strażnika: raised by a hero down to this much Życie. */
   shieldHp: 5,
+  /** Pyłek: standing next to an own Purchawka that may fall this round (its pollen poisons the allies too), per such neighbour. */
+  pollenAlly: 0.8,
 };
 
 export function chooseSupports(state: GameState, faction: TeamId): Action {
@@ -305,6 +308,14 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   // Bractwo Przypływu keeps its line round the turtles, and the Syrena stays out of the front.
   const tides = UNITS[u.defId].side === 'tides';
   const enemySpores = b.ground?.some((g) => g.kind === 'claimed' && g.owner !== u.side) ? [b.attacker, b.defender].filter((x) => x !== u.side && myceliumLevel(state, x) >= FACTION_MECHANICS.myceliumPoisonLevel) : [];
+  // Pyłek poisons the allies next to a fallen Purchawka too: the side keeps off its own Purchawka that may fall this round,
+  // and a Purchawka in danger keeps off its allies (the poison-immune do not mind).
+  const pollen = abilityActive(state) && !b.duel;
+  const doomedPuffs = pollen && !resistsPoison(state, u) ? livingUnits(b, u.side).filter((x) => x.id !== u.id && abilityOf(x) === 'puffball' && danger(threatsTo(state, x), cellsOf(x)) >= x.hp) : [];
+  const exposedMates = (mine: readonly HexKey[]) => livingUnits(b, u.side).filter((x) => x.id !== u.id && !resistsPoison(state, x) && dist2(cellsOf(x), mine) === 1).length;
+  const pollenCost = (mine: readonly HexKey[]): number =>
+    (doomedPuffs.filter((p) => dist2(cellsOf(p), mine) === 1).length +
+      (pollen && abilityOf(u) === 'puffball' && danger(threats, mine) >= u.hp ? exposedMates(mine) : 0)) * AI_TUNING.pollenAlly;
   const groundValue = (mine: readonly HexKey[]): number =>
     (swarm && mine.some((k) => myceliumAt(b, u.side, k)) ? 0.8 : 0) - (enemySpores.some((x) => mine.some((k) => myceliumAt(b, x, k))) ? 0.7 : 0);
   for (const [cell, steps] of options) {
@@ -342,6 +353,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
         if (useAbility && abilityOf(u) === 'sleepSpores') score += targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(t)) === 1).length * 1.2;
         // The Swarm fights on its mycelium and together (the Mrowisko and the Goliat count their neighbours already in the damage).
         if (swarm) score += groundValue(mine) + Math.min(2, mates(cell)) * 0.3;
+        score -= pollenCost(mine);
         // Bractwo Przypływu: the harpoon and the whirl are kept for the enemy's shooters (pulled in, or reached in their back line); the ink is worth more on a crowd.
         if (useAbility && (abilityOf(u) === 'harpoon' || abilityOf(u) === 'whirl')) score += UNITS[t.defId].attackType === 'ranged' ? 1 : -0.5;
         if (useAbility && abilityOf(u) === 'inkCloud') score += AI_TUNING.debuffBonus + targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(t)) === 1).length * 0.8;
@@ -380,6 +392,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
     // The Swarm keeps together and on its mycelium; nobody stops on the mycelium of an enemy Swarm that poisons.
     pos += groundValue(mine);
     if (swarm) pos += Math.min(2, mates(cell)) * 0.4;
+    pos -= pollenCost(mine);
     if (tides) pos += Math.min(2, mates(cell)) * 0.4;
     if (u.defId === 'sirenSinger' && nearest <= 2) pos -= 1.5;
     // The Iron Clans wait in formation: they step to a cell next to their allies, and not far from where they stand.

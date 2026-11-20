@@ -29,7 +29,7 @@ porasta grzybnia: Rój jest na niej mocniejszy, wrogowie na niej słabną. Do te
 ## Jednostki
 | Tier | Jednostka (`id`) | Kim jest | Rozm. | Ruch | Walka | Zdolność | Prymityw | Siedlisko |
 |---|---|---|---|---|---|---|---|---|
-| 1 | Purchawka (`sporeling`) | chodzący grzybek | 1 | chód | wręcz | Pyłek: po śmierci zatruwa sąsiadów | reuse: Rozprysk + trucizna | — |
+| 1 | Purchawka (`sporeling`) | chodzący grzybek | 1 | chód | wręcz | Pyłek: po śmierci zatruwa wszystkich sąsiadów, także sojuszników | reuse: Rozprysk + trucizna | — |
 | 1 | Mrówka Wojowniczka (`soldierAnt`) | mrówka z żuwaczkami | 1 | chód | wręcz | Mrowisko: +1 A za każdego sąsiadującego sojusznika z Roju | premia grupowa | — |
 | 1 | Świetlik (`firefly`) | świecący chrząszczyk | 1 | lot | dyst. | Błysk: raz na bitwę trafiony −1 A | reuse: Złowroga Klątwa | — |
 | 2A | Gąsienica Korzenna (`rootCaterpillar`) | gruba gąsienica spod korzeni (decyzja 20.11, zamiast Ryjkowca Kopacza; jeden chrząszcz mniej) | 1 | chód | wręcz | Przepoczwarzenie: gdy po raz pierwszy spadnie do połowy Ż (raz na bitwę), zmienia się w Motyla Korzennego: odzyskuje N Ż i zyskuje lot | ★ zmiana formy | Zielony Kokon |
