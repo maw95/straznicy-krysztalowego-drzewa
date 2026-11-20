@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Koszary: animowany sprite jednostki pokazuje się od razu (stoi, dopóki nie wczytają się ruch i ciosy), nie zostaje na nim poprzednia jednostka, a potrzebne arkusze wczytują się równolegle.":
+    "Barracks: the unit's animated sprite appears at once (it stands until its walk and blows are loaded), the previous unit no longer stays on screen, and the sheets it needs load in parallel.",
   "Wybór bohatera: zamiast obracającej się figurki 3D przy karcie bohatera pojawia się krótki opis (lore) postaci.":
     "Hero choice: a short lore text of the character replaces the turning 3D figure next to the hero card.",
   "Menu główne, wybór trybu w wersji cyfrowej: cztery kafelki (Potyczka, Arena, Kampania, Ekspedycja) układają się po dwa w rzędzie.":
