@@ -57,6 +57,9 @@ Dowódcy Stad: nazwy własne „Łowca Wiatru” i „Płanetnik” (`realm.ts`)
   (proces niezależny od sesji Claude; do ok. 2,5 h; stan po każdej zaakceptowanej zmianie w `.tmp/sim/tuneFactions.json`). Gdy w logu jest linia `final` i proces nie żyje (`pgrep -f tuneFactions`),
   `--apply` sam zapisał `src/engine/factionBonus.ts`: przejrzyj wynik (log: sekcja „final”), `make check`, commit z adnotacją; jeśli proces padł, uruchom to samo polecenie ponownie (wznowi od stanu; dodaj `>>` zamiast `>`).
   Dopóki trwa, NIE edytuj `src/` w katalogu głównym. Decyzja autora 20.11: zdolność Nosorożca Bojowego „Taran” → **„Stratowanie”** (wprowadzić po stroicielu; Kozioł Taranowy zachowuje „Taran”).
+- **Decyzja autora 20.11 (orzeł):** Orzeł Stepowy Łowca walczy WRĘCZ (nie dystansowo; łowca nie musi strzelać). Zdolność „Strzał nad Przeszkodami” (`overShot`) zastąpić zdolnością **Nurkowanie**: lot nad przeszkodami i jednostkami,
+  cios po ruchu +N A (wzór: Szarża Światła Króla Jednorożców, lot); usunąć `overShot`/`shootsOver` z `battle.ts`, jeśli nic innego ich nie używa; zmienić `attackType` na melee w `data.ts`. Specjalność „Mistrz Oszczepu” → **„Szpon z Góry”**
+  (+1 A dla niego i dla jednostek powietrznych Stad, np. Łamignat; zaktualizować `heroTypes.ts`, angielski, kartę `docs/frakcje/herds.md`). Razem ze „Stratowaniem” (Nosorożec): wprowadzić PO zakończeniu stroiciela (`tuneFactions.ts`), najlepiej agentem w worktree, potem G2 (`--report`).
 - **Decyzja do podjęcia po stroicielu (ważne):** tabela kontr wymaga Przymierze > Horda 60–70%, a premia +1/+1 dla Hordy dała ok. 50%. Stroiciel sam dobierze premie wszystkich frakcji,
   więc po nim Kryształy i inne cele trzeba przestroić ponownie (`scripts/sim/retune-all.sh` po skasowaniu `.tmp/sim/auto-*.json` oprócz `auto-zero-legacy.json`), potem `tuneMerge`.
   Dlatego obecne pliki `auto-*.json` służą tylko, jeśli premia Hordy zostanie przy +1/+1.
