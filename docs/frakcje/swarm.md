@@ -1,4 +1,4 @@
-# Karta frakcji: Rój Puszczy (`swarm`) — G0 zatwierdzona wstępnie (20.11.2026)
+# Karta frakcji: Rój Puszczy (`swarm`) — G0 zatwierdzona wstępnie, G1 zrobione (20.11.2026)
 
 Stan: 20.11.2026. Autor wstępnie zatwierdził kartę (skład, dowódcy, mechanika); **liczby Ż/A/S, koszty i zdolności „N” ustali balans przy bramce G2**. Treść przeniesiona z `FRAKCJE_PROPOZYCJE.md` (sekcja 9) po uwagach autora z 19.11 i 20.11; ta karta jest teraz źródłem prawdy. Szablon: `KARTA_FRAKCJI_SZABLON.md`. Odrzucone pomysły: `ODRZUCONE_POMYSLY.md`. Bramki: G1 dane i paczka, G2 balans, G3 próbka jednostki (autor), G4 grafika, G5 instrukcja.
 
@@ -76,6 +76,16 @@ blisko kopalń (Korytarze). **Nie wolno mu:** rozpraszać jednostek i gonić wro
 
 ## Rozstrzygnięcia autora (19–20.11)
 - Rój (przegląd autora 20.11): Królowa Modliszek zostaje bohaterką; Gąsienica Korzenna (2A, po przemianie Motyl Korzenny) zamiast Ryjkowca, Ważka Łowczyni (4A) zamiast Modliszki Ostrzy, Ślimak Pancerny (5B), **Cesarska Cykada** (6); Śniący Muchomor zamiast Prastarego Muchomora.
+
+## Stan G1 (20.11.2026, praca w gałęzi `g1-four-factions`)
+Zrobione: paczka `src/engine/factions/swarm.ts` według tabeli wyżej (A: Gąsienica Korzenna, Muchomor Gwardzista, Ważka Łowczyni, Skolopendra; B: Ćma Pyłowa, Żuk Bombardier, Matka Grzybni, Ślimak Pancerny; legenda Cesarska Cykada); 3 bohaterów, 3 dowódców (Żuk Gwardzista, Świetlikowa Łuczniczka, Grzybowy Wróżbita), Pszczoła Królowa (4. bohater); siedliska z karty; budynki Serce Grzybni (I-IV, rodzic Szpital), Ogród Grzybów (I-II, Skarbiec), Podziemne Korytarze (I-II, Koszary); nazwy osad; arena i przeszkody zastępcze.
+- **Grzybnia** (`claimCells`, `myceliumAt`, `myceliumAtStart`, `myceliumOnDeath`, `myceliumHeal`, `myceliumPoisons` w `battle.ts`): jawne pola areny (`ground`, rodzaj `claimed`), rysowane na arenie (mech u właściciela, ochra u wroga).
+- **Zdolności:** Ostatnie Cięcie, Zarodniki Snu, Chitynowa Ściana, Pyłek, Mrowisko, Przepoczwarzenie, Na Swojej Ziemi, Polowanie w Locie, Rozsiew, Oplot, Śluzowy Szlak, Wielki Chór; Błysk, Pył ze Skrzydeł, Wrzący Strumień, Żądło Królowej, Chitynowa Tarcza, Świetlny Strzał, Grzybowy Wywar z istniejących.
+- **Iskra:** grzybnia na polach Roju i w środkowej kolumnie od początku bitwy.
+- **Bot:** razem i na grzybni, unika trującej grzybni wroga, Rozsiew pod własne jednostki, Wielki Chór przy dwóch wrogach; Korytarze w jednej osadzie.
+- **Ekran:** grzybnia na arenie, Rozsiew podświetla pola w zasięgu (plus „Najlepsze pole”), Wielki Chór jednym kliknięciem, odznaka Motyla Korzennego, kursor lotu po przemianie.
+- Angielski `src/i18n/en/swarm.ts`; testy `tests/swarm.test.ts`; próbka `scripts/sim/roj.ts` (20 gier na parę: Rój wygrywa ok. 35%, liczby czekają na G2); przeglądarka `scripts/browser/roj.ts` (`SKD_BROWSER_PORT`).
+- Decyzje do przejrzenia: `NOTATKI_DLA_AGENTA_PLANSZOWKI.md`, sekcja 18. Zostaje: liczby (G2), grafika (lista w `BACKLOG.md` 2a), instrukcja (G5).
 
 ## Grafika (wypełnia Claude od G4)
 - Lista zasobów w `docs/BACKLOG.md`, sekcja 2a, po G1.
