@@ -58,7 +58,7 @@ grafik jednostek (tło do wycinania #0000FF, `STYL_JEDNOSTEK.md`).
 
 ### Kto z kim (zamysł kontr; cel balansu wg decyzji autora z 20.11)
 
-Balans nie dąży do 45–55% w każdej parze: średnia przeciw wszystkim ok. 45–55%, a kierunek pary ma zgadzać się z tabelą (kontra ok. 58–68%, kontrowana ok. 32–42%, bez relacji ok. 45–55%, nigdy poniżej 30% ani powyżej 70%).
+Balans nie dąży do 45–55% w każdej parze: średnia przeciw wszystkim ok. 45–55%, a kierunek pary ma zgadzać się z tabelą (kontra ok. 60–70%, kontrowana ok. 30–40%, bez relacji ok. 45–55%, nigdy poniżej 30% ani powyżej 70%).
 
 | Frakcja | Ma przewagę nad | Ma trudno z | Dlaczego |
 |---|---|---|---|
