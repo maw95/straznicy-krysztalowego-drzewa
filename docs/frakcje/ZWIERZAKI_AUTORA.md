@@ -6,7 +6,7 @@ ale maść, oczy i budowa mają zostać rozpoznawalne.
 
 ## Bastia Cienista (Brytania, „Bricia”) — czarna kotka, dowódca Pustynnego Cesarstwa (`bastia`, wojownik, Czujna Drzemka)
 - **Maść:** całkiem czarna, błyszcząca, krótka do średniej sierść; w ostrym słońcu przechodzi w ciemną czekoladową czerń z lekkim rdzawym połyskiem. Na piersi tuż
-  pod brodą może być mała, jasna plamka (widoczna na zdjęciu z Bajką, bardzo mała; do potwierdzenia przez autora).
+  pod brodą jest bardzo mała jasna plamka; autor zdecydował (20.11), że ją pomijamy.
 - **Oczy:** żółtozielone (w świetle dziennym bardziej zielone, w półcieniu żółte), duże, okrągłe. **Nos** ciemny; **uszy** duże, spiczaste, wnętrze uszu rdzawo-brązowe;
   **poduszki łap** czarne; wąsy długie, jasne.
 - **Budowa:** masywna, zaokrąglona, z wyraźnym brzuszkiem (gruba, leniwa, kocha jedzenie), krótkie mocne łapy, długi, gruby ogon z pękatym końcem. Leniwy wyraz pyska,
@@ -16,8 +16,7 @@ ale maść, oczy i budowa mają zostać rozpoznawalne.
 ## Bajka (Żbiczka Bajdurka) — dowódca Wolnej Kompanii (`bajka`, łowca, Szalony Skok)
 - **Maść:** pręgowany tabby w odcieniach rudo-brązowych (jasny rudy-beżowy z ciemnobrązowymi pręgami i plamkami), rysunek typu „dziki” (żbik). Pysk i broda białawe
   (biała plama na brodzie i dolnej części pyska, jasna pierś), nos różowy. Łapy jaśniejsze, piaskowo-złote, z różowymi opuszkami. Ogon pręgowany w ciemne obrączki.
-- **Oczy:** bursztynowe do miodowo-brązowych, duże, lekko skośne. **Uszy:** różowe w środku; jedno ucho lekko zgięte (zdjęcie wskazuje nieregularność końcówki, do
-  potwierdzenia).
+- **Oczy:** bursztynowe do miodowo-brązowych, duże, lekko skośne. **Uszy:** różowe w środku; końcówki uszu regularne (potwierdzone przez autora 20.11).
 - **Budowa:** mniejsza i smuklejsza od Bricii, zwinna, młoda i energiczna (głupiutka), długie łapy, dość szeroka głowa.
 - **Charakter w grafice:** żywa, ciekawska, trochę rozbiegana mina.
 
