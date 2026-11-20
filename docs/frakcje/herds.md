@@ -52,6 +52,11 @@ Nowe prymitywy silnika do zrobienia przy G1: odepchnięcie (zbudować na `boulde
 ## Wygląd i dźwięk
 Paleta: płowa sierść, ochra, brąz, kość rogów, zgaszona zieleń, czerwone wstęgi. Herb: dwa skrzyżowane rogi nad odciskiem kopyta. Arena: step z wysoką trawą i głazami, kurz. Muzyka: bębny, róg, dudy, rytm galopu.
 
+
+**Odróżnienie wyglądu (zatwierdzone przez autora 20.11.2026; wiążące przy G4):**
+- **Hipogryf Stepowy kontra Gryf (neutralny strażnik, występuje w tych samych bitwach):** tułów konia (maść gniada lub myszata, grzywa, kopyta, koński ogon); z orła tylko głowa, skrzydła i przednie nogi, bez lwiego tułowia i lwiego ogona. Gdyby na małym sprite’ie nadal były zbyt podobne, rozważyć inną jednostkę lotną.
+- **Satyr kontra Faun:** satyr to kudłate kozie kopyta, duże zakręcone (baranie) rogi, umięśniony nagi tors, broda, dziki i bojowy charakter (róg, kopia), kolor ciemniejszy i kudłaty. Faun to cienkie nogi sarny lub jelenia, małe szpice lub pączki poroża, smukła młodsza budowa, liściasty wieniec, leśny zwiadowca (proca, oszczep), kolor jaśniejszy, cętkowane futro. Na małym sprite’ie decydują sylwetka i kolor.
+
 ## Grafika (po zatwierdzeniu)
 10 postaci × ok. 88 CU (3 bohaterów + 7 jednostek; w tabeli powyżej są 12 jednostek, bo tiery mają A/B, patrz „Pytania”), osada z 3 unikalnymi budynkami i siedliskami, arena, kafle, herb, 2–3 utwory muzyki. Szacunek i procedura: `BACKLOG.md` (sekcja 8) i `PRZEPIS_JEDNOSTKI.md`.
 
