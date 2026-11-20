@@ -11,6 +11,7 @@ import {
   enemiesOf,
   layTrap,
   leapOnlyCells,
+  slowedRange,
   movePath,
   predictDamage,
   reachableCells,
@@ -497,8 +498,8 @@ describe('free actions and the leap', () => {
 
   it('Szalony Skok: once per battle Żbiczka leaps over units and obstacles to a cell the walk does not reach, and her blow after it is harder', () => {
     const s = fight([['wildcatBajka', 'dawn', 4, 8], ['ancientBear', 'horde', 6, 8, 99]], 1);
-    // slowed, so that the walk is shorter than the leap
-    at(s, 'wildcatBajka').status.slowNext = 2;
+    // slower by nature (not by a slow: that cuts the leap too), so that the walk is shorter than the leap
+    at(s, 'wildcatBajka').status.battleSpeedBonus = -2;
     const cat = at(s, 'wildcatBajka');
     const ready = turn(s, 'wildcatBajka');
     const only = [...leapOnlyCells(ready, at(ready, 'wildcatBajka'))];
@@ -519,9 +520,23 @@ describe('free actions and the leap', () => {
     expect(leapOnlyCells(done, at(done, 'wildcatBajka')).size).toBe(0);
   });
 
+  it('a slow (or cold) shortens the leap and the hop by the speed lost, a root cancels them (backlog 58a)', () => {
+    const s = fight([['wildcatBajka', 'dawn', 8, 8], ['ancientBear', 'horde', 12, 8, 99]], 1);
+    const cat = at(s, 'wildcatBajka');
+    expect(slowedRange(cat, 3)).toBe(3);
+    cat.status.slowNext = 2;
+    expect(slowedRange(cat, 3)).toBe(1);
+    cat.status.auraChill = 1;
+    expect(slowedRange(cat, 3)).toBe(0);
+    cat.status.slowNext = 0;
+    cat.status.auraChill = 0;
+    cat.status.rootedNext = true;
+    expect(slowedRange(cat, 3)).toBe(0);
+  });
+
   it('Szalony Skok does not set off the traps it flies over', () => {
     const s = fight([['wildcatBajka', 'dawn', 8, 8], ['ancientBear', 'horde', 12, 8, 99]], 1);
-    at(s, 'wildcatBajka').status.slowNext = 2;
+    at(s, 'wildcatBajka').status.battleSpeedBonus = -2;
     const ready = turn(s, 'wildcatBajka');
     const only = [...leapOnlyCells(ready, at(ready, 'wildcatBajka'))];
     expect(only.length).toBeGreaterThan(0);

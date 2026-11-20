@@ -275,7 +275,7 @@ Every hero has **mana**: 3 plus 1 for each of their levels (sages 3 more). At th
 **In battle** a hero can cast **one spell** in their activation, besides moving and attacking: choose a spell from the "Spells" bar, then point to a target.
 - **Magic Missile** (2 mana): 3 damage to any enemy.
 - **Healing** (2): an ally regains 4 Health.
-- **Slow** (1): an enemy has −2 Speed in its next activation.
+- **Slow** (1): an enemy has −2 Speed in its next activation; it also shortens movement abilities (flight, hop, leap, teleport), and a rooted unit does not move at all.
 - **Stone Skin** (2, second circle): until the end of the battle blows at the ally are 1 weaker.
 - **Fireball** (3, second circle): 2 damage to the target and everyone standing next to it, yours too.
 - **Surge** (3, second circle): an ally gets an extra activation at once.

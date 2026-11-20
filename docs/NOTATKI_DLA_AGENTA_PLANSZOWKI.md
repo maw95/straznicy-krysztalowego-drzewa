@@ -831,3 +831,6 @@ Karta `docs/frakcje/tides.md`; tylko wersja cyfrowa, liczby wstępne (ustala je 
 - **Perłowe Ławice:** +1 zł na rundę z każdej osady z nimi; II: +1 Pyłu co 4 rundy z każdej osady z drugim poziomem.
 - **Latarnia Morska:** na początku rundy odkrywa heksy w promieniu 3 (II: 5) wokół każdej osady z latarnią. Mgła mapy jest wspólna dla graczy, więc „pokazuje ruchy wrogich bohaterów” znaczy: bohaterowie w tym zasięgu są widoczni; osobnej widoczności per gracz gra nie ma. Bot buduje latarnię w jednej osadzie.
 - **Bot:** zamiana tylko w dwóch sytuacjach (ranny ≤ 50% Ż obok wroga cofa się na miejsce świeżego, który nie stoi przy wrogu; świeży wojownik wręcz wchodzi za rannego przy wrogu); nie zamienia się, gdy któreś z dwóch pól leży na lub obok pułapki wroga, którą jego strona widzi, albo grzybni wroga; Syrena nie podchodzi na 2 pola do wroga.
+
+## 20. Spowolnienie obejmuje zdolności ruchowe (2026-11-20, backlog 58a, tylko wersja cyfrowa)
+Kara ruchu (`slowCut`: Spowolnienie, mróz, Zimne Światło) skraca o tyle samo stały zasięg zdolności ruchowych: odskoku (Powietrzny Zryw, Lisi Uskok, Galop, Odskok, Skok z Gniazda), Szalonego Skoku i teleportu (Podkop, Król Burzy, Wyrmi Podkop). Lot i W Biegu liczyły się już z `moveRange`. Unieruchomiony (`rootedNext`) nie odskakuje ani się nie teleportuje (zasięg 0). Golden zmieniony świadomie.

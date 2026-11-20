@@ -213,6 +213,12 @@ export function unitAttackBase(u: BattleUnit): number {
   return battleStats(u.defId, u.digital, u.scale, u.hpScale, u.arena).attack + u.status.battleAttackBonus;
 }
 
+/** How much a unit's reach is cut by slows (a slow of the last hit, frost, the cold light of a Duch Zorzy); every movement ability (hop, teleport, leap) is cut by it like a walk. */
+export const slowCut = (u: BattleUnit): number => u.status.slowNext + (u.status.auraChill ?? 0) + (u.status.frost ?? 0) * (u.status.frostSlow ?? 0);
+
+/** A fixed range of a movement ability, cut by slows; a rooted unit does not move at all. */
+export const slowedRange = (u: BattleUnit, range: number): number => (u.status.rootedNext ? 0 : Math.max(0, range - slowCut(u)));
+
 export function moveRange(u: BattleUnit): number {
   if (u.status.rootedNext) return 0;
   return Math.max(0, unitSpeed(u) - u.status.slowNext);
@@ -1782,7 +1788,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   const hopAbility = ab === 'airDash' || ab === 'nestLeap' || ab === 'gallop' || ab === 'runOn';
   if (hopAbility && !b.duel && (!u.abilityUsed || ab === 'nestLeap') && abilityActive(state) && u.alive) {
     // W Biegu: the move is finished with the cells the unit did not use before the attack.
-    const range = ab === 'airDash' ? ABILITY.airDashRange : ab === 'gallop' ? ABILITY.gallopRange : ab === 'runOn' ? Math.max(0, moveRange(u) - act.movedDistance) : ABILITY.nestLeapRange;
+    const range = ab === 'runOn' ? Math.max(0, moveRange(u) - act.movedDistance) : slowedRange(u, ab === 'airDash' ? ABILITY.airDashRange : ab === 'gallop' ? ABILITY.gallopRange : ABILITY.nestLeapRange);
     if (range > 0) {
       act.hop = range;
       return;
@@ -1821,7 +1827,7 @@ export function battleHop(state: GameState, to: HexKey) {
 export function teleportRange(state: GameState, u: BattleUnit): number {
   if (!abilityActive(state) || !isDigital(state.rules)) return 0;
   const ab = abilityOf(u);
-  return ab === 'burrow' ? ABILITY.burrowRange : ab === 'stormKing' ? ABILITY.stormTeleportRange : ab === 'wyrmBurrow' ? ABILITY.wyrmRange : 0;
+  return slowedRange(u, ab === 'burrow' ? ABILITY.burrowRange : ab === 'stormKing' ? ABILITY.stormTeleportRange : ab === 'wyrmBurrow' ? ABILITY.wyrmRange : 0);
 }
 
 /** Cells the active unit may teleport to (empty when it has already moved or attacked, or in a duel). */
@@ -2004,7 +2010,7 @@ export function leapOnlyCells(state: GameState, u: BattleUnit): Set<HexKey> {
   const walk = walkSearch(state, u).dist;
   const units = occupancy(b, u);
   for (const k of layoutCells(b)) {
-    if (walk.has(k) || obstacles.has(k) || units.has(k) || distance(parseKey(u.pos), parseKey(k)) > ABILITY.wildLeapRange) continue;
+    if (walk.has(k) || obstacles.has(k) || units.has(k) || distance(parseKey(u.pos), parseKey(k)) > slowedRange(u, ABILITY.wildLeapRange)) continue;
     out.add(k);
   }
   return out;

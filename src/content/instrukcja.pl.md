@@ -275,7 +275,7 @@ Każdy bohater ma **manę**: 3 i jeszcze 1 za każdy swój poziom (mędrcy o 3 w
 **W bitwie** bohater może w swojej aktywacji rzucić **jeden czar**, oprócz ruchu i ataku: wybierz czar z paska „Czary”, a potem wskaż cel.
 - **Magiczny Pocisk** (2 many): 3 obrażenia w dowolnego wroga.
 - **Leczenie** (2): sojusznik odzyskuje 4 Życia.
-- **Spowolnienie** (1): wróg ma −2 do Szybkości w następnej aktywacji.
+- **Spowolnienie** (1): wróg ma −2 do Szybkości w następnej aktywacji; skraca też zdolności ruchowe (lot, odskok, skok, teleport), a unieruchomiony nie rusza się wcale.
 - **Kamienna Skóra** (2, drugi krąg): do końca bitwy ciosy w sojusznika są o 1 słabsze.
 - **Kula Ognia** (3, drugi krąg): 2 obrażenia w cel i wszystkich stojących obok, także twoich.
 - **Zryw** (3, drugi krąg): sojusznik od razu dostaje dodatkową aktywację.
