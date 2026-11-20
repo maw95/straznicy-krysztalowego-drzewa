@@ -4,6 +4,7 @@ import {
   abilityActive,
   abilityOf,
   ATTACK_ABILITIES,
+  ramCharged,
   predictDamage,
   attackTargets,
   breathSecondTarget,
@@ -262,7 +263,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   const moveCursor = active && UNITS[active.defId].movement === 'fly' ? 'cur-fly' : 'cur-move';
   const ab = active ? abilityOf(active) : null;
   const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state));
-  const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab);
+  const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab) && (ab !== 'ramBlow' || ramCharged(state, active!));
   const freeAbilityReady = abilityReady && ab !== null && FREE_ABILITIES.includes(ab);
 
   function reset() {

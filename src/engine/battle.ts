@@ -250,8 +250,11 @@ function walkSearch(state: GameState, u: BattleUnit, leaping = canLeap(state, u)
 /** Skok po Turniach: the unit walks through obstacles and units (it cannot stop on them), except over the walls of a siege. */
 export const canLeap = (state: GameState, u: BattleUnit): boolean => abilityOf(u) === 'mountainLeap' && abilityActive(state) && !state.battle?.siege && !isLarge(state, u);
 
-/** Skok po Turniach (Kozioł Taranowy): once per battle one move goes over units and obstacles; the leap is spent only when the move really needs it. */
-export const goatLeapReady = (state: GameState, u: BattleUnit): boolean => abilityOf(u) === 'goatLeap' && abilityActive(state) && !u.status.leapUsed && !state.battle?.siege && !isLarge(state, u);
+/** Taran (Kozioł Taranowy): the blow is charged when the unit has run at least this far in this activation. */
+export const ramCharged = (state: GameState, u: BattleUnit): boolean => {
+  const act = state.battle?.activation;
+  return Boolean(act && act.unitId === u.id && act.movedDistance >= ABILITY.ramBlowMinMove);
+};
 
 /** Cells the unit can end its move on, with the number of steps used. */
 export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, number> {
@@ -275,8 +278,6 @@ export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, num
   }
   const walked = walkSearch(state, u);
   for (const [k, d] of walked.dist) if (d > 0 && !occupant(k) && !obstacles.has(k) && roomy(k)) out.set(k, d);
-  // The leap adds the cells that can be reached only over something (a cell that can be walked to keeps its walking distance).
-  if (goatLeapReady(state, u)) for (const [k, d] of walkSearch(state, u, true).dist) if (d > 0 && !out.has(k) && !occupant(k) && !obstacles.has(k) && roomy(k)) out.set(k, d);
   // Szalony Skok adds the cells within the leap's range that the walk does not reach.
   for (const k of leapOnlyCells(state, u)) out.set(k, distance(parseKey(u.pos), parseKey(k)));
   return out;
@@ -291,8 +292,7 @@ export function movePath(state: GameState, u: BattleUnit, to: HexKey): HexKey[] 
   if (!u.pos) return [to];
   if (u.pos === to) return [to];
   if (state.battle!.duel || UNITS[u.defId].movement === 'fly') return [u.pos, to];
-  let { parent } = walkSearch(state, u);
-  if (!parent.has(to) && goatLeapReady(state, u)) parent = walkSearch(state, u, true).parent;
+  const { parent } = walkSearch(state, u);
   if (!parent.has(to)) return [u.pos, to];
   const path = [to];
   while (path[0] !== u.pos) path.unshift(parent.get(path[0])!);
@@ -435,6 +435,7 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
     if (ab === 'lightCharge' && movedDistance >= ABILITY.lightChargeMinMove) dmg += abilityNum(att, 'lightChargeBonus') * scaleOf(state);
     if (ab === 'bloodCall' && target.hp < target.maxHp) dmg += abilityNum(att, 'bloodCallBonus') * scaleOf(state);
     if (useAbility && ab === 'fireBreath') dmg += abilityNum(att, 'breathBonus') * scaleOf(state);
+    if (useAbility && ab === 'ramBlow' && movedDistance >= ABILITY.ramBlowMinMove) dmg += ABILITY.ramBlowBonus * scaleOf(state);
     if (ab === 'standShot' && movedDistance === 0) dmg += ABILITY.standShotBonus * scaleOf(state);
     if (ab === 'giantBane' && isLarge(state, target)) dmg += ABILITY.giantBonus * scaleOf(state);
     // Wolna Kompania. Oznaczenie: every attack of the marker's side on a marked target (this round) hits harder, and the squirrel's arrow harder still.
@@ -460,7 +461,7 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
 }
 
 /** Abilities that are switched on for a single attack. */
-export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'frostSlow', 'frostGrip', 'iceBlow', 'stinkBomb'];
+export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'ramBlow', 'frostSlow', 'frostGrip', 'iceBlow', 'stinkBomb'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
 export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail', 'pickpocket', 'branchShot', 'veiled', 'woundFury', 'riposte', 'towerShot', 'wildLeap'];
 
@@ -1267,11 +1268,6 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   if (steps === undefined) throw new Error('Pole poza zasięgiem ruchu.');
   if (tail && isLarge(state, u) && !tailOptions(b, u, to).includes(tail)) throw new Error('Ogon nie zmieści się na tym polu.');
   let leapt = false;
-  if (goatLeapReady(state, u) && !walkSearch(state, u).dist.has(to)) {
-    u.status.leapUsed = true;
-    leapt = true;
-    log(state, 'ability', `${unitName(u)} przeskakuje po turniach (${UNITS[u.defId].abilityName}).`);
-  }
   // Szalony Skok: the leap goes over everything and the blow after it is harder.
   if (wildLeapReady(state, u) && leapOnlyCells(state, u).has(to)) {
     u.status.leapUsed = true;
@@ -1379,7 +1375,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   const legal = attackTargets(state, u);
   if (!target || !legal.some((t) => t.id === targetId)) throw new Error('Nieprawidłowy cel ataku.');
   const ab = abilityOf(u);
-  const canUse = useAbility && !u.abilityUsed && abilityActive(state) && ATTACK_ABILITIES.includes(ab);
+  const canUse = useAbility && !u.abilityUsed && abilityActive(state) && ATTACK_ABILITIES.includes(ab) && (ab !== 'ramBlow' || ramCharged(state, u));
   if (useAbility && !canUse) throw new Error('Zdolność jest niedostępna.');
 
   const targets: BattleUnit[] = [target];
@@ -1505,8 +1501,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
           }
         }
       }
-      // Młot Przodków: the one hit loses its next activation.
-      if (ab === 'stunBlow') {
+      // Młot Przodków, Taran: the one hit loses its next activation.
+      if (ab === 'stunBlow' || ab === 'ramBlow') {
         t.status.stunned = true;
         log(state, 'ability', `${unitName(t)} traci następną aktywację (${UNITS[u.defId].abilityName}).`);
       }

@@ -13,6 +13,7 @@ import {
   attackDamage,
   attackTargets,
   ATTACK_ABILITIES,
+  ramCharged,
   breathSecondTarget,
   canAttackAfterMove,
   canHitTwo,
@@ -644,7 +645,7 @@ function rulebookAction(state: GameState, u: BattleUnit): Action {
   const here = attackFrom(u.pos);
   const strike = (t: BattleUnit): Action => {
     const ab = abilityOf(u);
-    let useAbility = !u.abilityUsed && abilityActive(state) && ATTACK_ABILITIES.includes(ab);
+    let useAbility = !u.abilityUsed && abilityActive(state) && ATTACK_ABILITIES.includes(ab) && (ab !== 'ramBlow' || ramCharged(state, u));
     let second: BattleUnit | null = null;
     if (useAbility && isBreath(ab)) {
       second = breathSecondTarget(state, u, t);

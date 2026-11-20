@@ -95,7 +95,7 @@ export type AbilityId =
   | 'standShot' // Ostrzał z Miejsca (Mosiężny Pająk) / Salwa z Miejsca (Kusznik Gór), passive: + A when the unit has not moved in this activation
   | 'temper' // Hartowanie (Kowal Bitewny, free action, once): a neighbouring ally has + A until the end of the battle
   | 'bronzeQuills' // Kolce Mechanizmu (Wartownik z Brązu, passive): whoever hits it in melee loses Życie; poison does not work on it
-  | 'goatLeap' // Skok po Turniach (Kozioł Taranowy, once): one move over units and obstacles
+  | 'ramBlow' // Taran (Kozioł Taranowy, attack ability, once): after a run of 2+ cells the blow hits harder and the target loses its next activation
   | 'giantBane' // Na Duże Cele (Pogromca Olbrzymów, passive): + A against large units
   | 'misleadLight' // Błędne Światło (Skarbnik, free action, once): an enemy in range is moved 2 cells away
   | 'stunBlow' // Młot Przodków (Gwardia Młota, attack ability, once): the target loses its next activation
@@ -280,6 +280,9 @@ export const ABILITY = {
   bulwarkArmor: 1,
   /** Salwa z Miejsca: A when the unit has not moved, Hartowanie: A for the neighbour, Na Duże Cele: A against large units (small scale). */
   standShotBonus: 2,
+  /** Taran: the run (cells moved in this activation) that charges the blow, and its extra A. */
+  ramBlowMinMove: 2,
+  ramBlowBonus: 2,
   temperBonus: 1,
   giantBonus: 2,
   /** Błędne Światło: how far the Skarbnik looks and how far it moves the enemy. */
@@ -568,7 +571,7 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'dwarfCannon', name: 'Armata Klanów', side: 'clans', kind: 'support', size: 2, hp: 13, attack: 5, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'cannonFire', abilityName: 'Ostrzał', abilityText: 'Stała: strzał trafia cel i jego sąsiadów; nie strzela w aktywacji, w której się ruszyła; mury i bramy oblężenia pękają od jednego trafienia.' }),
     u({ id: 'clanColossus', name: 'Kolos Kuźni', side: 'clans', kind: 'support', size: 2, hp: 20, attack: 7, speed: 3, movement: 'walk', attackType: 'melee', ability: 'fortify', abilityName: 'Fortyfikacja', abilityText: `Raz na bitwę stawia ${ABILITY.fortifyCells} pola muru obok siebie. Stała: pancerz ${ABILITY.bulwarkArmor}, nie da się go odepchnąć.` }),
     u({ id: 'battleSmith', name: 'Kowal Bitewny', side: 'clans', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'temper', abilityName: 'Hartowanie', abilityText: `Raz na bitwę: sąsiedni sojusznik ma +${ABILITY.temperBonus} A do końca bitwy.` }),
-    u({ id: 'ramGoat', name: 'Kozioł Taranowy', side: 'clans', kind: 'support', hp: 7, attack: 3, speed: 5, movement: 'walk', attackType: 'melee', ability: 'goatLeap', abilityName: 'Skok po Turniach', abilityText: 'Raz na bitwę: jeden ruch przez jednostki i przeszkody (nie staje na nich).' }),
+    u({ id: 'ramGoat', name: 'Kozioł Taranowy', side: 'clans', kind: 'support', hp: 7, attack: 3, speed: 5, movement: 'walk', attackType: 'melee', ability: 'ramBlow', abilityName: 'Taran', abilityText: `Raz na bitwę: jeśli w tej aktywacji ruszył się o co najmniej ${ABILITY.ramBlowMinMove} pola, cios wręcz zadaje +${ABILITY.ramBlowBonus} A, a trafiony traci swoją następną aktywację.` }),
     // Commanders of the Clans.
     u({ id: 'clanWarrior', name: 'Wojownik Klanu', side: 'clans', kind: 'hero', hp: 8, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Twardy Łeb', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
     u({ id: 'mountainCrossbow', name: 'Kusznik Gór', side: 'clans', kind: 'hero', hp: 5, attack: 3, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'standShot', abilityName: 'Salwa z Miejsca', abilityText: `Stała: +${ABILITY.standShotBonus} A, gdy w tej aktywacji się nie ruszał.` }),

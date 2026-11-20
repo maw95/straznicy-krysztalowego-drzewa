@@ -17,8 +17,8 @@ const ABILITY_ART: Record<string, string> = {
   // Królestwo Umarłych (placeholders as well: docs/BACKLOG.md 2a).
   barrowCall: 'giftOfLife', dimLight: 'curse', spectralCharge: 'backstab', bonesReturn: 'rebirth', incorporeal: 'hardHead', armorPierce: 'fireBreath', dread: 'curse', hollow: 'hardHead',
   // Żelazny Klan (placeholders: docs/BACKLOG.md 2a).
-  shieldOath: 'hardHead', stoneRune: 'runeGolem', bulwark: 'hardHead', standShot: 'fireBreath', temper: 'sunburst', bronzeQuills: 'quills', goatLeap: 'airDash', giantBane: 'headlong',
-  misleadLight: 'web', stunBlow: 'boulder', cannonFire: 'fireBreath', fortify: 'runeGolem',
+  shieldOath: 'hardHead', stoneRune: 'runeGolem', bulwark: 'hardHead', standShot: 'fireBreath', temper: 'sunburst', bronzeQuills: 'quills', giantBane: 'headlong',
+  misleadLight: 'web', stunBlow: 'boulder', ramBlow: 'boulder', cannonFire: 'fireBreath', fortify: 'runeGolem',
   // Dwór Wiecznego Szronu (placeholders: docs/BACKLOG.md 2a).
   iceWall: 'runeGolem', iceBlow: 'boulder', blizzardTrail: 'airDash', frostSlow: 'entanglingRoots', crystalArrow: 'fireBreath', thickFur: 'hardHead', frostArmor: 'quills',
   bellOfGlass: 'web', frostGrip: 'web', abduct: 'airDash', hailStones: 'fireBreath', coldLight: 'curse', longNight: 'sunburst',
