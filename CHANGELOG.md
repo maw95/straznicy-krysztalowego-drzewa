@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Balans frakcji w wersji cyfrowej (wersja robocza): automatyczny stroiciel dobrał małe premie Życia i Ataku dla bohaterów i pomocników siedmiu frakcji; zmiana dotyczy tylko wersji cyfrowej.
 - Ikony w menu głównym, kreatorze nowej gry, czarach, drzewku frakcji i umiejętnościach mają jednakową ramkę wzorowaną na ikonie „Księstwo”; naprawione ramki „Podbój” i „Relikt” (były przycięte).
 - Ekran bitwy: pasy boczne pokazują herb frakcji zamiast wstążki z nazwą (nazwa jest w podpowiedzi), a wstążka nad areną zniknęła (numer rundy jest w pasku aktywacji).
 - Na mapie świata pole zajęte przez sojusznika nie pokazuje już liczby punktów ruchu: wejść na nie nie można, więc traktujemy je jak pole zablokowane (także jako drogę).

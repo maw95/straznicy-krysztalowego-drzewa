@@ -8,10 +8,11 @@ export interface FactionBonus {
 }
 
 export const FACTION_DIGITAL_BONUS: Partial<Record<FactionId, FactionBonus>> = {
-  dawn: { hero: { hp: 0, attack: 0 }, support: { hp: 0, attack: 0 } },
-  horde: { hero: { hp: 1, attack: 1 }, support: { hp: 1, attack: 1 } },
-  herds: { hero: { hp: 0, attack: 0 }, support: { hp: 0, attack: 0 } },
-  undead: { hero: { hp: 0, attack: 0 }, support: { hp: 0, attack: 0 } },
-  clans: { hero: { hp: 0, attack: 0 }, support: { hp: 0, attack: 0 } },
-  frost: { hero: { hp: 0, attack: 0 }, support: { hp: 0, attack: 0 } },
+  dawn: { hero: { hp: 0, attack: 0 }, support: { hp: 1, attack: -1 } },
+  horde: { hero: { hp: 0, attack: 1 }, support: { hp: 2, attack: 0 } },
+  herds: { hero: { hp: 0, attack: 1 }, support: { hp: -1, attack: -1 } },
+  undead: { hero: { hp: 0, attack: 0 }, support: { hp: -1, attack: 1 } },
+  clans: { hero: { hp: 0, attack: 1 }, support: { hp: -1, attack: 2 } },
+  frost: { hero: { hp: 1, attack: 0 }, support: { hp: -1, attack: 0 } },
+  free: { hero: { hp: 0, attack: 0 }, support: { hp: 0, attack: 0 } },
 };

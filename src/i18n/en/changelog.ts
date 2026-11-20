@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Balans frakcji w wersji cyfrowej (wersja robocza): automatyczny stroiciel dobrał małe premie Życia i Ataku dla bohaterów i pomocników siedmiu frakcji; zmiana dotyczy tylko wersji cyfrowej.":
+    "Faction balance in the digital version (work in progress): the automatic balancer picked small Life and Attack bonuses for the heroes and supporters of seven factions; the change affects the digital version only.",
   "Ikony w menu głównym, kreatorze nowej gry, czarach, drzewku frakcji i umiejętnościach mają jednakową ramkę wzorowaną na ikonie „Księstwo”; naprawione ramki „Podbój” i „Relikt” (były przycięte).":
     "Icons in the main menu, the new game wizard, spells, the faction tree and skills have one common ring modelled on the \"Duchy\" icon; the \"Conquest\" and \"Relic\" rings, which were clipped, are fixed.",
   "Ekran bitwy: pasy boczne pokazują herb frakcji zamiast wstążki z nazwą (nazwa jest w podpowiedzi), a wstążka nad areną zniknęła (numer rundy jest w pasku aktywacji).":

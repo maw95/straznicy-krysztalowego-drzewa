@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createGame } from '../src/engine/game';
 import { makeBattleUnit, scaleOf } from '../src/engine/battle';
-import { battleStats, STAT_SCALE, UNITS } from '../src/engine/data';
+import { battleStats, STAT_SCALE } from '../src/engine/data';
 import { ARTIFACTS } from '../src/engine/sites';
 import { playOut, pvpSeats, setup } from './helpers/engine';
 
@@ -17,7 +17,7 @@ describe('stat scale (digital Expedition: Życie and Atak times 3)', () => {
     const big = battleStats('goldDragon', true, 3);
     expect(big).toEqual({ hp: one.hp * 3, attack: one.attack * 3, speed: one.speed });
     const u = makeBattleUnit('nymph', 'dawn', true, 3);
-    expect(u.hp).toBe(UNITS.nymph.hp * 3);
+    expect(u.hp).toBe(battleStats('nymph', true, 1).hp * 3); // the digital faction bonus (factionBonus.ts) is part of the base
     expect(u.scale).toBe(3);
     expect(makeBattleUnit('nymph', 'dawn', true).scale).toBeUndefined();
   });
