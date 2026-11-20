@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Koszary: karty jednostek mają jednakową wysokość i mieszczą się bez przewijania; stan jednostki pokazuje poświata (zielona: w drużynie, żółta: do zrekrutowania, niebieska: siedlisko do zbudowania, czerwona: niedostępne) zamiast przycisków pod kartami, a kupno i rekrutacja są w panelu po prawej; pod półką jest legenda kolorów.":
+    "Barracks: the unit cards all have the same height and fit without scrolling; a glow shows the unit's state (green: in the team, yellow: ready to recruit, blue: dwelling can be built, red: unavailable) instead of buttons under the cards, buying and recruiting are in the panel on the right; a colour legend sits under the shelf.",
   "Koszary: animowany sprite jednostki pokazuje się od razu (stoi, dopóki nie wczytają się ruch i ciosy), nie zostaje na nim poprzednia jednostka, a potrzebne arkusze wczytują się równolegle.":
     "Barracks: the unit's animated sprite appears at once (it stands until its walk and blows are loaded), the previous unit no longer stays on screen, and the sheets it needs load in parallel.",
   "Wybór bohatera: zamiast obracającej się figurki 3D przy karcie bohatera pojawia się krótki opis (lore) postaci.":

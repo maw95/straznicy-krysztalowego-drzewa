@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Koszary: karty jednostek mają jednakową wysokość i mieszczą się bez przewijania; stan jednostki pokazuje poświata (zielona: w drużynie, żółta: do zrekrutowania, niebieska: siedlisko do zbudowania, czerwona: niedostępne) zamiast przycisków pod kartami, a kupno i rekrutacja są w panelu po prawej; pod półką jest legenda kolorów.
 - Koszary: animowany sprite jednostki pokazuje się od razu (stoi, dopóki nie wczytają się ruch i ciosy), nie zostaje na nim poprzednia jednostka, a potrzebne arkusze wczytują się równolegle.
 - Wybór bohatera: zamiast obracającej się figurki 3D przy karcie bohatera pojawia się krótki opis (lore) postaci.
 - Menu główne, wybór trybu w wersji cyfrowej: cztery kafelki (Potyczka, Arena, Kampania, Ekspedycja) układają się po dwa w rzędzie.
