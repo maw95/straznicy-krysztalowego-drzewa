@@ -56,7 +56,7 @@ Paleta: płowa sierść, ochra, brąz, kość rogów, zgaszona zieleń, czerwone
 10 postaci × ok. 88 CU (3 bohaterów + 7 jednostek; w tabeli powyżej są 12 jednostek, bo tiery mają A/B, patrz „Pytania”), osada z 3 unikalnymi budynkami i siedliskami, arena, kafle, herb, 2–3 utwory muzyki. Szacunek i procedura: `BACKLOG.md` (sekcja 8) i `PRZEPIS_JEDNOSTKI.md`.
 
 ## Balans (G2)
-Cel autora: 45–55% w każdej parze (przyjmowane 42–58% przy niepewności). Pomiar: `make sim-nowe GAMES=600` (`scripts/sim/nowe-frakcje.ts`): 600 gier na komórkę (±4 pkt), poziom Imperium, mapa długa prostokątna, miejsca na zmianę, cele Kontrola / Podbój / Relikt. Pierwsza liczba to wygrane tej frakcji w %.
+Cel autora w G2 (19.11): 45–55% w każdej parze (przyjmowane 42–58%). **Zastąpiony 20.11:** frakcje mają się kontrować (średnia 45–55%, kierunek pary wg tabeli „Kto z kim”; zob. BACKLOG punkt 52), więc G2 tych frakcji do powtórzenia w nowym kluczu. Pomiar: `make sim-nowe GAMES=600` (`scripts/sim/nowe-frakcje.ts`): 600 gier na komórkę (±4 pkt), poziom Imperium, mapa długa prostokątna, miejsca na zmianę, cele Kontrola / Podbój / Relikt. Pierwsza liczba to wygrane tej frakcji w %.
 
 Zmierzone 19.11.2026, przed strojeniem i po (Kontrola / Podbój / Relikt):
 

@@ -56,7 +56,9 @@ Kolejność wdrażania zostaje jak w backlogu (punkty 52–55): **Dzikie Stada �
 Barwa w UI to kolor miejsca w kreatorze (`SEAT_TINT`) i herbu. Niebieski jest tu dozwolony; zakaz niebieskiego dotyczy tylko
 grafik jednostek (tło do wycinania #0000FF, `STYL_JEDNOSTEK.md`).
 
-### Kto z kim (zamysł kontr, do sprawdzenia symulacją)
+### Kto z kim (zamysł kontr; cel balansu wg decyzji autora z 20.11)
+
+Balans nie dąży do 45–55% w każdej parze: średnia przeciw wszystkim ok. 45–55%, a kierunek pary ma zgadzać się z tabelą (kontra ok. 58–68%, kontrowana ok. 32–42%, bez relacji ok. 45–55%, nigdy poniżej 30% ani powyżej 70%).
 
 | Frakcja | Ma przewagę nad | Ma trudno z | Dlaczego |
 |---|---|---|---|
@@ -94,7 +96,7 @@ Każda karta niżej wypełnia punkty 1–10, punkty 11–17 robi Claude po zatwi
 | 14 | Muzyka (2–3 utwory) | `public/assets/music` | 2–3 |
 | 15 | Teksty angielskie | `src/i18n/en/*.ts` | wszystkie nowe |
 | 16 | Instrukcja PL + EN, CHANGELOG | `src/content/instrukcja.*.md` | — |
-| 17 | Balans 45–55% przeciw panelowi wzorcowemu, golden świadomie | `make sim-tabele`, `tests/golden.test.ts` | — |
+| 17 | Balans: średnia 45–55%, pary wg kontr z tabeli „Kto z kim” (decyzja 20.11), golden świadomie | `make sim-tabele`, `tests/golden.test.ts` | — |
 
 Frakcje z **ukrytą informacją** (Wolne Kompanie: ukryte pułapki; Imperium Piasków: miraże) potrzebują dodatkowo: ekranu
 przekazania w hotseacie, ukrywania stanu przed przeciwnikiem w grze przez internet (serwer) i bota, który nie podgląda.

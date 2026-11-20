@@ -37,7 +37,7 @@ if (pack) {
   todo(existsSync(`public/assets/osady/${id}`), `G4 grafika osady public/assets/osady/${id}`);
   todo(existsSync(`public/assets/music/${id}`) || existsSync(`public/assets/music/${id}.mp3`), `G4 muzyka frakcji (public/assets/music/${id})`);
 }
-todo(false, 'G2 balans 45–55% przeciw panelowi wzorcowemu (make sim-matrix)');
+todo(false, 'G2 balans: średnia 45–55%, pary wg kontr z tabeli „Kto z kim” (make sim-matrix)');
 todo(false, 'G3 próbka jednej jednostki w nowym stylu zaakceptowana przez autora');
 todo(existsSync(`docs/frakcje/${id}.md`) && readFileSync(`docs/frakcje/${id}.md`, 'utf8').includes('Zaakceptowana'), 'G5 instrukcja, CHANGELOG, zrzut (karta oznaczona „Zaakceptowana”)');
 

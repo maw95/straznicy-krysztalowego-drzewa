@@ -52,7 +52,7 @@ Paleta: polerowana stal, mosiądz, miedź, szary kamień, ciepła skóra, złote
 - **Powtórki istniejących zdolności:** Podkop (Podkopnik, `burrow`), Kolce (Jeżozwierz, `quills`, plus odporność na truciznę), Bełt Przeszywający (Przebicie, `pierce`), Twardy Łeb (Twardogłowy), Żar Kuźni (Dar Życia), brama oblężenia od jednego trafienia (Taran Nosorożca).
 
 ## Balans (G2)
-Cel autora: 45–55% w każdej parze (przyjmowane 42–58% przy niepewności). Pomiar: `make sim-nowe GAMES=600` (`scripts/sim/nowe-frakcje.ts`): 600 gier na komórkę (±4 pkt), poziom Imperium, mapa długa prostokątna, miejsca na zmianę, cele Kontrola / Podbój / Relikt. Pierwsza liczba to wygrane tej frakcji w %.
+Cel autora w G2 (19.11): 45–55% w każdej parze (przyjmowane 42–58%). **Zastąpiony 20.11:** frakcje mają się kontrować (średnia 45–55%, kierunek pary wg tabeli „Kto z kim”; zob. BACKLOG punkt 52), więc G2 tych frakcji do powtórzenia w nowym kluczu. Pomiar: `make sim-nowe GAMES=600` (`scripts/sim/nowe-frakcje.ts`): 600 gier na komórkę (±4 pkt), poziom Imperium, mapa długa prostokątna, miejsca na zmianę, cele Kontrola / Podbój / Relikt. Pierwsza liczba to wygrane tej frakcji w %.
 
 Zmierzone 19.11.2026, przed strojeniem i po (Kontrola / Podbój / Relikt):
 
