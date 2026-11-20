@@ -1224,6 +1224,10 @@ function GameOver({ state, online, rankingNote, onNew, onLog }: { state: GameSta
   return (
     <div className={state.winner === 'horde' ? 'quake' : undefined}>
       <Frame crest style={{ width: 'min(620px, 94vw)' }} innerStyle={{ padding: 26, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center' }}>
+        {state.winner && (
+          <img data-winner-crest={state.winner} src={asset(`cards/crests/${state.winner === 'neutral' ? 'neutral' : raceOf(state, state.winner)}.png`)} alt="" onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            style={{ display: 'block', width: 'min(150px, 22vh)', height: 'min(150px, 22vh)', objectFit: 'contain', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.6))', marginBottom: -4 }} />
+        )}
         <Ribbon side={state.winner ?? 'dawn'} style={{ width: 460, height: 50 }}>{state.winner ? `Wygrywa: ${state.winner === 'neutral' ? FACTION_NAMES.neutral : teamLabel(state, state.winner)}` : 'Remis'}</Ribbon>
         <div style={{ fontSize: 20 }}>{state.endReason}</div>
         {state.setup.mode === 'arena' ? (

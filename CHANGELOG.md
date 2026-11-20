@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 - Na mapie świata pole zajęte przez sojusznika nie pokazuje już liczby punktów ruchu: wejść na nie nie można, więc traktujemy je jak pole zablokowane (także jako drogę).
+- Okno końca gry pokazuje duży herb zwycięskiej frakcji nad wstążką „Wygrywa”.
 - Autoplay sam zamyka okna z wynikami (podsumowanie bitwy, znaleziony skarb, artefakt, strona opowieści, kronika rundy) po kilku sekundach, bez klikania; okna z decyzją i koniec gry zostają.
 
 - Bot nie próbuje już Taranu Kozła Taranowego, gdy po drodze nie złapał rozbiegu (wcześniej taki cios kończył symulację błędem).
