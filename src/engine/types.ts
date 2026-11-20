@@ -437,6 +437,8 @@ export interface UnitStatus {
   /** Pałac Mirażu (fourth level): A the unit loses at its attacks in its next activation (`blindLater` turns into `blinded` when it begins). */
   blindLater?: number;
   blinded?: number;
+  /** Rój Puszczy. Przepoczwarzenie: the caterpillar has turned into a butterfly and flies to the end of the battle. */
+  winged?: true;
 }
 
 /**
@@ -446,6 +448,7 @@ export interface UnitStatus {
 export interface GroundEffect {
   cell: HexKey;
   owner: Side;
+  /** `claimed`: the mycelium of the Swarm (Grzybnia): a cell its owner has claimed for the whole battle (public, never hidden). */
   kind: 'trap' | 'mire' | 'claimed';
   /** Damage (trap), Szybkość lost (mire) or the bonus of the claim. */
   power: number;

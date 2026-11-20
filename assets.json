@@ -6432,6 +6432,96 @@
       "data": "2026-11-20",
       "ai": true,
       "licencja": "jak oryginalne ikony (Scenario); przetworzenie własne"
+    },
+    {
+      "id": "swarm/zastepcze/art",
+      "pliki": [
+        "public/assets/cards/art/armoredSnail.jpg",
+        "public/assets/cards/art/beeQueen.jpg",
+        "public/assets/cards/art/beetleGuard.jpg",
+        "public/assets/cards/art/bombardier.jpg",
+        "public/assets/cards/art/centipede.jpg",
+        "public/assets/cards/art/dragonfly.jpg",
+        "public/assets/cards/art/dustMoth.jpg",
+        "public/assets/cards/art/elderMycelium.jpg",
+        "public/assets/cards/art/emperorCicada.jpg",
+        "public/assets/cards/art/firefly.jpg",
+        "public/assets/cards/art/fireflyArcher.jpg",
+        "public/assets/cards/art/goliathBeetle.jpg",
+        "public/assets/cards/art/mantisQueen.jpg",
+        "public/assets/cards/art/mushroomGuard.jpg",
+        "public/assets/cards/art/mushroomSeer.jpg",
+        "public/assets/cards/art/mycoMother.jpg",
+        "public/assets/cards/art/rootCaterpillar.jpg",
+        "public/assets/cards/art/soldierAnt.jpg",
+        "public/assets/cards/art/sporeling.jpg"
+      ],
+      "typ": "karta jednostki (zastępcza)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "swarm/zastepcze/portraits",
+      "pliki": [
+        "public/assets/cards/portraits/armoredSnail.jpg",
+        "public/assets/cards/portraits/beeQueen.jpg",
+        "public/assets/cards/portraits/beetleGuard.jpg",
+        "public/assets/cards/portraits/bombardier.jpg",
+        "public/assets/cards/portraits/centipede.jpg",
+        "public/assets/cards/portraits/dragonfly.jpg",
+        "public/assets/cards/portraits/dustMoth.jpg",
+        "public/assets/cards/portraits/elderMycelium.jpg",
+        "public/assets/cards/portraits/firefly.jpg",
+        "public/assets/cards/portraits/fireflyArcher.jpg",
+        "public/assets/cards/portraits/goliathBeetle.jpg",
+        "public/assets/cards/portraits/mantisQueen.jpg",
+        "public/assets/cards/portraits/mushroomGuard.jpg",
+        "public/assets/cards/portraits/mushroomSeer.jpg",
+        "public/assets/cards/portraits/mycoMother.jpg",
+        "public/assets/cards/portraits/rootCaterpillar.jpg",
+        "public/assets/cards/portraits/soldierAnt.jpg"
+      ],
+      "typ": "portret jednostki (zastępczy)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "swarm/zastepcze/crests",
+      "pliki": [
+        "public/assets/cards/crests/swarm.png"
+      ],
+      "typ": "herb frakcji (zastępczy)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "swarm/zastepcze/arena",
+      "pliki": [
+        "public/assets/arena/cyfrowa/swarm.webp"
+      ],
+      "typ": "arena frakcji (zastępcza)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
     }
   ]
 }

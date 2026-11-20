@@ -33,6 +33,7 @@ export const COMMANDERS: Record<FactionId, Record<Archetype, string>> = {
   frost: { warrior: 'iceKnight', archer: 'ermineHuntress', sage: 'frostWitch' },
   free: { warrior: 'martenSlasher', archer: 'wildcatBajka', sage: 'hareHerbalist' },
   sands: { warrior: 'bastia', archer: 'caravanArcher', sage: 'desertAstrologer' },
+  swarm: { warrior: 'beetleGuard', archer: 'fireflyArcher', sage: 'mushroomSeer' },
 };
 
 export const archetypeOf = (unitId: string): Archetype | null => {
@@ -60,6 +61,9 @@ const NAMES: Record<string, string[]> = {
   martenSlasher: ['Rąbek', 'Szczerbaty', 'Kuna Kudłaty', 'Rębacz Gościńca'],
   wildcatBajka: ['Bajka', 'Bajdurka Mała', 'Bajka Rudawa', 'Żbik Pędziwiatr'],
   hareHerbalist: ['Babka Macierzanka', 'Zielarka Miętówka', 'Ciotka Kopytnik', 'Lubczykowa'],
+  beetleGuard: ['Pancerz', 'Żuk Kowal', 'Stary Chityn', 'Rogacz Strażnik'],
+  fireflyArcher: ['Iskierka', 'Świetlica', 'Lampka Nocy', 'Ognikowa Łuczniczka'],
+  mushroomSeer: ['Kapelusznik', 'Stary Borowik', 'Wróżbita Rydz', 'Szepczący Opieńka'],
   bastia: ['Brytania', 'Bastia Leniwa', 'Bastia Gruba', 'Czarna Bastia'],
   caravanArcher: ['Strzała Karawany', 'Zofira z Oazy', 'Miedziana Cięciwa', 'Łowczyni Wydm'],
   desertAstrologer: ['Gwiazdomir', 'Astrolog Siedmiu Gwiazd', 'Mędrzec Wydm', 'Szeptacz Piasków'],

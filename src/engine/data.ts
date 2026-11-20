@@ -145,7 +145,20 @@ export type AbilityId =
   | 'daggerThrow' // Rzut Sztyletem (Beduin Nomada, attack ability, once): a ranged throw at a visible enemy instead of the melee blow, then the move may go on
   | 'decoy' // a mirage (Pałac Mirażu, Lustro Wydm): a decoy of a unit of the Desert Empire; it has no ability of its own and never attacks
   | 'rocLift' // Lot ze Skrzydłem (Ptak Rok, free action, once): an adjacent ally flies with it to its next move
-  | 'wyrmBurrow'; // Spod Piasku (Czerw Pustyni, once per move): buries itself instead of moving and rises on a free cell within a radius, pushing its neighbours away
+  | 'wyrmBurrow' // Spod Piasku (Czerw Pustyni, once per move): buries itself instead of moving and rises on a free cell within a radius, pushing its neighbours away
+  // Rój Puszczy (docs/frakcje/swarm.md): the mycelium (claimed cells of the arena), bonuses in a group, poison.
+  | 'lastCut' // Ostatnie Cięcie (Królowa Modliszek, passive): + A against a target that has at most half its Życie
+  | 'sleepSpores' // Zarodniki Snu (Śniący Muchomor, attack ability, once): the target and the enemies next to it are slowed and poisoned
+  | 'chitinWall' // Chitynowa Ściana (Chrząszcz Goliat, passive): armour; + A for every ally next to it
+  | 'puffball' // Pyłek (Purchawka, passive): when it falls, the enemies next to it are poisoned
+  | 'anthill' // Mrowisko (Mrówka Wojowniczka, passive): + A for every ally next to it
+  | 'metamorphosis' // Przepoczwarzenie (Gąsienica Korzenna, passive, once): the first time it drops to half its Życie it turns into a butterfly: Życie back and flight
+  | 'homeGround' // Na Swojej Ziemi (Muchomor Gwardzista, passive): on the mycelium it regains Życie at the start of its activation
+  | 'airHunt' // Polowanie w Locie (Ważka Łowczyni, passive): + A against flyers and shooters
+  | 'spreadSpores' // Rozsiew (Matka Grzybni, free action, once): mycelium on a chosen cell and the cells next to it
+  | 'coil' // Oplot (Skolopendra Głębin, passive): the one hit cannot move in its next activation and is poisoned
+  | 'slimeTrail' // Śluzowy Szlak (Ślimak Pancerny, passive): armour; leaves mycelium on the cells it walks through
+  | 'greatChorus'; // Wielki Chór (Cesarska Cykada, free action, once): every enemy within a radius loses its next activation
 
 export interface UnitDef {
   id: string;
@@ -374,6 +387,27 @@ export const ABILITY = {
   gateWardArmor: 2,
   /** Spod Piasku (Czerw): how far it rises from where it buried itself. */
   wyrmRange: 3,
+  /** Rój Puszczy. Ostatnie Cięcie: + A against a target at half its Życie or less (small scale). */
+  lastCutBonus: 2,
+  /** Zarodniki Snu: S the target and its neighbours lose in their next activation (they are poisoned as well). */
+  sporesSlow: 1,
+  /** Chitynowa Ściana: armour of the Goliat (small scale); Mrowisko and Chitynowa Ściana: + A for every ally next to the unit, at most `groupMax` allies (small scale). */
+  chitinArmor: 1,
+  groupBonus: 1,
+  groupMax: 3,
+  /** Przepoczwarzenie: Życie the caterpillar regains when it turns into a butterfly (small scale). */
+  morphHeal: 3,
+  /** Na Swojej Ziemi: Życie the Muchomor regains on the mycelium at the start of its activation (small scale). */
+  homeHeal: 1,
+  /** Polowanie w Locie: + A against flyers and shooters (small scale). */
+  airHuntBonus: 2,
+  /** Rozsiew: how far from the Matka the chosen cell may lie, and how many cells the mycelium covers (the chosen one and its neighbours). */
+  sporeRange: 4,
+  sporeCells: 3,
+  /** Śluzowy Szlak: armour of the snail (small scale). */
+  snailArmor: 2,
+  /** Wielki Chór: radius of the Cykada's song. */
+  chorusRadius: 2,
 };
 
 /**
@@ -674,6 +708,27 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'bastia', name: 'Bastia Cienista', side: 'sands', kind: 'hero', hp: 9, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'napWatch', abilityName: 'Czujna Drzemka', abilityText: `Raz na bitwę: zamiast ruchu kładzie się. Do końca swojej następnej aktywacji ma pancerz ${ABILITY.dugInArmor} i nie da się jej odepchnąć, a pierwszy wróg, który stanie obok, dostaje od razu cios (${ABILITY.watchDamage} obrażenia).` }),
     u({ id: 'caravanArcher', name: 'Łuczniczka Karawany', side: 'sands', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'standShot', abilityName: 'Celny Strzał z Postoju', abilityText: `Stała: +${ABILITY.standShotBonus} A, gdy w tej aktywacji się nie ruszała.` }),
     u({ id: 'desertAstrologer', name: 'Astrolog Pustyni', side: 'sands', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'giftOfLife', abilityName: 'Woda z Oazy', abilityText: `Raz na bitwę: sojusznik odzyskuje ${ABILITY.giftOfLifeHeal} Ż.` }),
+    // Rój Puszczy (`swarm`, docs/frakcje/swarm.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero (numbers: gate G1, tuned at G2).
+    u({ id: 'mantisQueen', name: 'Królowa Modliszek', side: 'swarm', kind: 'hero', hp: 6, attack: 3, speed: 5, movement: 'walk', attackType: 'melee', ability: 'lastCut', abilityName: 'Ostatnie Cięcie', abilityText: `Stała: +${ABILITY.lastCutBonus} A przeciw celowi, który ma co najwyżej połowę Ż.` }),
+    u({ id: 'elderMycelium', name: 'Śniący Muchomor', side: 'swarm', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'sleepSpores', abilityName: 'Zarodniki Snu', abilityText: `Raz na bitwę: trafiony i sąsiadujący z nim wrogowie mają −${ABILITY.sporesSlow} S w następnej aktywacji i są zatruci (tracą ${ABILITY.poisonDamage} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji).` }),
+    u({ id: 'goliathBeetle', name: 'Chrząszcz Goliat', side: 'swarm', kind: 'hero', size: 2, hp: 11, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'chitinWall', abilityName: 'Chitynowa Ściana', abilityText: `Stała: pancerz ${ABILITY.chitinArmor}; +${ABILITY.groupBonus} A za każdego sąsiadującego sojusznika (najwyżej +${ABILITY.groupBonus * ABILITY.groupMax}).` }),
+    u({ id: 'beeQueen', name: 'Pszczoła Królowa', side: 'swarm', kind: 'hero', hp: 5, attack: 3, speed: 5, movement: 'fly', attackType: 'melee', ability: 'poisonClaw', abilityName: 'Żądło Królowej', abilityText: `Raz na bitwę: trafiony wróg traci ${ABILITY.poisonDamage} Ż na początku swoich dwóch następnych aktywacji.` }),
+    u({ id: 'sporeling', name: 'Purchawka', side: 'swarm', kind: 'support', hp: 4, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'puffball', abilityName: 'Pyłek', abilityText: `Stała: gdy padnie, sąsiadujący z nią wrogowie są zatruci (tracą ${ABILITY.poisonDamage} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji).` }),
+    u({ id: 'soldierAnt', name: 'Mrówka Wojowniczka', side: 'swarm', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'anthill', abilityName: 'Mrowisko', abilityText: `Stała: +${ABILITY.groupBonus} A za każdego sąsiadującego sojusznika (najwyżej +${ABILITY.groupBonus * ABILITY.groupMax}).` }),
+    u({ id: 'firefly', name: 'Świetlik', side: 'swarm', kind: 'support', hp: 3, attack: 2, speed: 4, movement: 'fly', attackType: 'ranged', ability: 'curse', abilityName: 'Błysk', abilityText: `Raz na bitwę: trafiony cel ma −${ABILITY.curseMinus} A przy następnym ataku.` }),
+    u({ id: 'rootCaterpillar', name: 'Gąsienica Korzenna', side: 'swarm', kind: 'support', hp: 6, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'metamorphosis', abilityName: 'Przepoczwarzenie', abilityText: `Raz na bitwę: gdy pierwszy raz spadnie do połowy Ż, zmienia się w Motyla Korzennego: odzyskuje ${ABILITY.morphHeal} Ż i od tej chwili lata.` }),
+    u({ id: 'dustMoth', name: 'Ćma Pyłowa', side: 'swarm', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'fly', attackType: 'ranged', ability: 'stinkBomb', abilityName: 'Pył ze Skrzydeł', abilityText: `Raz na bitwę: trafiony i jego sąsiedzi są zatruci (tracą ${ABILITY.poisonDamage} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji).` }),
+    u({ id: 'mushroomGuard', name: 'Muchomor Gwardzista', side: 'swarm', kind: 'support', hp: 8, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'homeGround', abilityName: 'Na Swojej Ziemi', abilityText: `Stała: na grzybni odzyskuje ${ABILITY.homeHeal} Ż na początku swojej aktywacji.` }),
+    u({ id: 'bombardier', name: 'Żuk Bombardier', side: 'swarm', kind: 'support', hp: 6, attack: 3, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'armorPierce', abilityName: 'Wrzący Strumień', abilityText: 'Stała: jego trafienia ignorują pancerz.' }),
+    u({ id: 'dragonfly', name: 'Ważka Łowczyni', side: 'swarm', kind: 'support', hp: 8, attack: 4, speed: 6, movement: 'fly', attackType: 'melee', ability: 'airHunt', abilityName: 'Polowanie w Locie', abilityText: `Stała: +${ABILITY.airHuntBonus} A przeciw jednostkom latającym i strzelcom.` }),
+    u({ id: 'mycoMother', name: 'Matka Grzybni', side: 'swarm', kind: 'support', hp: 7, attack: 3, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'spreadSpores', abilityName: 'Rozsiew', abilityText: `Raz na bitwę: grzybnia porasta ${ABILITY.sporeCells} pola: wskazane (w zasięgu ${ABILITY.sporeRange}) i sąsiednie.` }),
+    u({ id: 'centipede', name: 'Skolopendra Głębin', side: 'swarm', kind: 'support', size: 2, hp: 13, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'coil', abilityName: 'Oplot', abilityText: `Stała: trafiony wróg nie rusza się w swojej następnej aktywacji i jest zatruty (traci ${ABILITY.poisonDamage} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji).` }),
+    u({ id: 'armoredSnail', name: 'Ślimak Pancerny', side: 'swarm', kind: 'support', size: 2, hp: 14, attack: 4, speed: 2, movement: 'walk', attackType: 'melee', ability: 'slimeTrail', abilityName: 'Śluzowy Szlak', abilityText: `Stała: pancerz ${ABILITY.snailArmor}; pola, przez które przejdzie, porasta grzybnia.` }),
+    u({ id: 'emperorCicada', name: 'Cesarska Cykada', side: 'swarm', kind: 'support', size: 2, hp: 20, attack: 6, speed: 4, movement: 'fly', attackType: 'melee', ability: 'greatChorus', abilityName: 'Wielki Chór', abilityText: `Raz na bitwę: wszyscy wrogowie w promieniu ${ABILITY.chorusRadius} pól tracą swoją następną aktywację.` }),
+    // Commanders of the Swarm.
+    u({ id: 'beetleGuard', name: 'Żuk Gwardzista', side: 'swarm', kind: 'hero', hp: 9, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'bulwark', abilityName: 'Chitynowa Tarcza', abilityText: `Stała: pancerz (−${ABILITY.bulwarkArmor} obrażeń z każdego ciosu).` }),
+    u({ id: 'fireflyArcher', name: 'Świetlikowa Łuczniczka', side: 'swarm', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'standShot', abilityName: 'Świetlny Strzał', abilityText: `Stała: +${ABILITY.standShotBonus} A, gdy w tej aktywacji się nie ruszała.` }),
+    u({ id: 'mushroomSeer', name: 'Grzybowy Wróżbita', side: 'swarm', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'giftOfLife', abilityName: 'Grzybowy Wywar', abilityText: `Raz na bitwę: sojusznik odzyskuje ${ABILITY.giftOfLifeHeal} Ż.` }),
     u({ id: 'cyclops', name: 'Cyklop Błyskotek', side: 'neutral', kind: 'neutral', size: 2, hp: 23, attack: 2, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'boulder', abilityName: 'Miażdżący Głaz', abilityText: 'Po każdym ataku odpycha trafionego przeciwnika o 1 pole, jeśli to możliwe (jednostek dwupolowych nie da się odepchnąć).', duel: { hp: 14, ability: 'stoneSkin', abilityName: 'Kamienna Skóra', abilityText: `Każdy cios w Cyklopa zadaje o ${ABILITY.stoneSkinIgnore} mniej obrażeń.` } }),
     u({ id: 'griffin', name: 'Gryf Złodziej Skarbów', side: 'neutral', kind: 'neutral', size: 2, hp: 18, attack: 3, speed: 6, movement: 'fly', attackType: 'melee', ability: 'nestLeap', abilityName: 'Łupieżczy Nalot', abilityText: `Po każdym ataku może odlecieć o maks. ${ABILITY.nestLeapRange} pola.`, duel: { hp: 10, ability: 'thiefClaw', abilityName: 'Złodziejski Szpon', abilityText: `Gdy zada obrażenia, odzyskuje ${ABILITY.thiefClawHeal} Ż.` } }),
     u({ id: 'hydra', name: 'Hydra z Zatopionych Ruin', side: 'neutral', kind: 'neutral', size: 2, hp: 21, attack: 2, speed: 3, movement: 'walk', attackType: 'melee', ability: 'manyHeads', abilityName: 'Paszcze Otchłani', abilityText: 'Każdym atakiem może trafić dwóch sąsiadujących przeciwników.', duel: { hp: 12, ability: 'regrowth', abilityName: 'Odrastające Głowy', abilityText: `Na początku każdej swojej aktywacji odzyskuje ${ABILITY.regrowthHeal} Ż.` } }),
@@ -684,14 +739,14 @@ export const FACTION_HEROES: Record<FactionId, string[]> = byPack((p) => p.heroe
 
 /** Easter egg heroes: unlocked on the setup screen (click the Dawn crest five times), never drawn by the engine. */
 /** Rivalry for 7-8 players: four heroes a side, so each faction has a fourth one of its own (Przymierze: the Silver She-Wolf, Horda: the Dusk Manticore); the Brave Duck stays a secret hero and the Warlord a tavern commander. */
-export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore', herds: 'thunderRam', undead: 'bellKeeper', clans: 'oldMiner', frost: 'oldHailer', free: 'otterSmuggler', sands: 'camelPrince' };
+export const EXTRA_HEROES: Record<FactionId, string> = { dawn: 'moonWolf', horde: 'duskManticore', herds: 'thunderRam', undead: 'bellKeeper', clans: 'oldMiner', frost: 'oldHailer', free: 'otterSmuggler', sands: 'camelPrince', swarm: 'beeQueen' };
 export const MAX_PVP_PLAYERS = 8;
 /** More players than this at a table play with `EXTRA_HEROES` too. */
 export const BASE_PVP_PLAYERS = 6;
 /** The heroes a seat can pick at a table of `seats` players. */
 export const heroPool = (f: FactionId, seats: number): string[] => (seats > BASE_PVP_PLAYERS ? [...FACTION_HEROES[f], EXTRA_HEROES[f]] : FACTION_HEROES[f]);
 
-export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [], herds: [], undead: [], clans: [], frost: [], free: [], sands: [] };
+export const SECRET_HEROES: Record<FactionId, string[]> = { dawn: ['braveDuck'], horde: [], herds: [], undead: [], clans: [], frost: [], free: [], sands: [], swarm: [] };
 
 /** The tier of a faction's support (1 the starting ones, 2-5 the recruits of the tiers and their alternatives, 6 the legend); 0 for anything else. */
 export const supportTier = (unitId: string): number => {
@@ -856,12 +911,12 @@ export const ARENA_OFFER = 3;
  */
 export const ARENA_RULES: { firstPicker: 'random' | TeamId; extraPicks: Record<FactionId, number>; extraOffer: Record<FactionId, number> } = {
   firstPicker: 'random',
-  extraPicks: { dawn: 0, horde: 0, herds: 0, undead: 0, clans: 0, frost: 0, free: 0, sands: 0 },
+  extraPicks: { dawn: 0, horde: 0, herds: 0, undead: 0, clans: 0, frost: 0, free: 0, sands: 0, swarm: 0 },
   /**
    * More cards shown to that side at each pick (the choice gets better, the number of treasures stays).
    * The Horde sees 4: in the arena Przymierze otherwise wins about 55% (simulations, notes section 9).
    */
-  extraOffer: { dawn: 0, horde: 1, herds: 0, undead: 0, clans: 0, frost: 0, free: 0, sands: 0 },
+  extraOffer: { dawn: 0, horde: 1, herds: 0, undead: 0, clans: 0, frost: 0, free: 0, sands: 0, swarm: 0 },
 };
 
 // Map tiles. The left half of the triangle is built from Przymierze tiles (green back),

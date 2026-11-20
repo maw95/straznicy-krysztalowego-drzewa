@@ -1145,6 +1145,8 @@ export function sparkBonus(state: GameState, unit: BattleState['units'][string])
   else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'free') return;
   // The Empire's Iskra moves its units after both sides have deployed (`deployUnits`), it gives them nothing.
   else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'sands') return;
+  // The Swarm's Iskra covers the field with its mycelium (`sparkMycelium` when the fight begins), it gives its units nothing.
+  else if (unit.side !== 'neutral' && raceOf(state, unit.side) === 'swarm') return;
   else unit.status.battleAttackBonus += EMPIRE.sparkAttack * scaleOf(state);
 }
 

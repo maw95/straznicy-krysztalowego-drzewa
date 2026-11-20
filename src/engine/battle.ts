@@ -272,7 +272,7 @@ export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, num
   // A large unit needs room for its tail as well: the head may only go where some tail cell is free.
   const large = isLarge(state, u);
   const roomy = (k: HexKey) => !large || tailOptions(b, u, k, units).length > 0;
-  if (UNITS[u.defId].movement === 'fly') {
+  if (flies(u)) {
     for (const k of layoutCells(b)) {
       if (k === u.pos || obstacles.has(k) || occupant(k)) continue;
       const d = distance(parseKey(u.pos), parseKey(k));
@@ -295,7 +295,7 @@ export function reachableCells(state: GameState, u: BattleUnit): Map<HexKey, num
 export function movePath(state: GameState, u: BattleUnit, to: HexKey): HexKey[] {
   if (!u.pos) return [to];
   if (u.pos === to) return [to];
-  if (state.battle!.duel || UNITS[u.defId].movement === 'fly') return [u.pos, to];
+  if (state.battle!.duel || flies(u)) return [u.pos, to];
   const { parent } = walkSearch(state, u);
   if (!parent.has(to)) return [u.pos, to];
   const path = [to];
@@ -461,16 +461,22 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
     if (ab === 'packHunt' && packNearby(state, att, target)) dmg += ABILITY.packHuntBonus * scaleOf(state);
     if (ab === 'momentum' && movedDistance >= ABILITY.momentumMinMove) dmg += ABILITY.momentumBonus * scaleOf(state);
     if (ab === 'hippoStrike' && pushedThisRound(state, target)) dmg += ABILITY.hippoBonus * scaleOf(state);
+    // Rój Puszczy: Ostatnie Cięcie at a wounded target, Mrowisko and Chitynowa Ściana in a group, Polowanie w Locie at flyers and shooters.
+    if (ab === 'lastCut' && target.hp * 2 <= target.maxHp) dmg += ABILITY.lastCutBonus * scaleOf(state);
+    if ((ab === 'anthill' || ab === 'chitinWall') && att.pos) dmg += groupMates(state.battle!, att) * ABILITY.groupBonus * scaleOf(state);
+    if (ab === 'airHunt' && (flies(target) || UNITS[target.defId].attackType === 'ranged')) dmg += ABILITY.airHuntBonus * scaleOf(state);
     // Postrach: a Strach Polny next to the attacker takes some of its strength (several scarecrows do not add up).
     if (livingUnits(state.battle!).some((x) => x.side !== att.side && abilityOf(x) === 'dread' && unitsAdjacent(x, att))) dmg -= ABILITY.dreadMinus * scaleOf(state);
   }
+  // Grzybnia: a unit of the Swarm on its own mycelium hits harder (the Serce Grzybni).
+  if (state.battle && myceliumLevel(state, att.side) >= 1 && onOwnMycelium(state.battle, att)) dmg += FACTION_MECHANICS.myceliumAttack * scaleOf(state);
   return Math.max(0, dmg);
 }
 
 /** Abilities that are switched on for a single attack. */
-export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'ramBlow', 'frostSlow', 'frostGrip', 'iceBlow', 'stinkBomb', 'hypnosis', 'daggerThrow'];
+export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'ramBlow', 'frostSlow', 'frostGrip', 'iceBlow', 'stinkBomb', 'hypnosis', 'daggerThrow', 'sleepSpores'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'huntDive', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail', 'pickpocket', 'branchShot', 'veiled', 'woundFury', 'riposte', 'towerShot', 'wildLeap', 'sandAmbush', 'jackalWatch', 'venomImmune', 'coverShot', 'awakening', 'gateWard', 'wyrmBurrow', 'decoy'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'huntDive', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail', 'pickpocket', 'branchShot', 'veiled', 'woundFury', 'riposte', 'towerShot', 'wildLeap', 'sandAmbush', 'jackalWatch', 'venomImmune', 'coverShot', 'awakening', 'gateWard', 'wyrmBurrow', 'decoy', 'lastCut', 'chitinWall', 'puffball', 'anthill', 'metamorphosis', 'homeGround', 'airHunt', 'coil', 'slimeTrail'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
@@ -493,11 +499,11 @@ export function pushCell(state: GameState, from: HexKey, target: HexKey): HexKey
   return k;
 }
 /** Abilities used as a free action during the unit's activation. */
-export const FREE_ABILITIES: AbilityId[] = ['beardChill', 'sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'longNight', 'ploy', 'dugIn', 'ravenEye', 'dam', 'blast', 'sandPortal', 'riddle', 'napWatch', 'mirageMake', 'rocLift'];
+export const FREE_ABILITIES: AbilityId[] = ['beardChill', 'sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'longNight', 'ploy', 'dugIn', 'ravenEye', 'dam', 'blast', 'sandPortal', 'riddle', 'napWatch', 'mirageMake', 'rocLift', 'spreadSpores', 'greatChorus'];
 /** The free abilities that need no target (one click fires them); the others ask the player to pick a unit. */
-export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify', 'iceWall', 'longNight', 'dugIn', 'napWatch'];
+export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify', 'iceWall', 'longNight', 'dugIn', 'napWatch', 'greatChorus'];
 /** The free abilities that work on a cell: the player may pick it (the action's `cell`), without one the best cell for the unit is taken (Fortel, Tama, Ładunek). */
-export const CELL_ABILITIES: AbilityId[] = ['ploy', 'dam', 'blast'];
+export const CELL_ABILITIES: AbilityId[] = ['ploy', 'dam', 'blast', 'spreadSpores'];
 
 // ---------------------------------------------------------------- lifecycle
 
@@ -535,6 +541,8 @@ function beginFight(state: GameState) {
   b.stage = 'fight';
   log(state, 'battle', 'Bitwa się rozpoczyna.');
   sparkFrost(state);
+  // Grzybnia: the deploy cells of the Swarm (and with its Spark the middle of the arena) are its mycelium from the start.
+  myceliumAtStart(state);
   // Ukryty: the Jenot Szpieg starts the fight unseen.
   if (abilityActive(state) && !b.duel) for (const x of Object.values(b.units)) if (x.alive && abilityOf(x) === 'veiled') x.status.veiled = true;
   // Przebudzenie: the stone guardians start the fight dormant.
@@ -798,6 +806,8 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
     dealDamage(state, u, ABILITY.poisonDamage * scaleOf(state), 'Trucizna');
     if (!u.alive) return endActivation(state);
   }
+  // Na Swojej Ziemi, Serce Grzybni IV: a unit of the Swarm on its mycelium regains Życie.
+  if (b.ground?.length) myceliumHeal(state, u);
   // Korzenie Drzewa: once per battle the Opiekun heals its wounded neighbours.
   if (abilityOf(u) === 'treeRoots' && !u.abilityUsed && abilityActive(state)) {
     const hurt = livingUnits(b, u.side).filter((x) => x.id !== u.id && x.hp < x.maxHp && unitsAdjacent(u, x));
@@ -1102,6 +1112,8 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
   log(state, 'damage', `${source} → ${unitName(target)}: ${dmg} obrażeń (Ż ${Math.max(0, target.hp)}/${target.maxHp}).`);
   // Przebudzenie: a blow wakes the stone guardian.
   if (target.status.dormant && target.hp > 0) wake(state, target);
+  // Przepoczwarzenie: at half its Życie the caterpillar turns into a butterfly.
+  if (target.hp > 0 && dmg > 0) metamorphose(state, target);
   // Odrodzenie z Popiołów (Feniks Świtu): once per battle it rises where it stood, with half its Życie.
   if (target.hp <= 0 && dmg > 0 && abilityOf(target) === 'rebirth' && !target.abilityUsed && abilityActive(state)) {
     target.abilityUsed = true;
@@ -1118,6 +1130,9 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
     removeFromBoard(state, target, true);
     log(state, 'death', `${unitName(target)} poległ(a).`);
     if (state.battle?.mirageAlias) fadeMiragesOf(state, target);
+    // Grzybnia: the mycelium grows where a unit fell; Pyłek: the Purchawka poisons the enemies next to it.
+    if (state.battle) myceliumOnDeath(state, diedOn);
+    if (abilityOf(target) === 'puffball' && abilityActive(state) && state.battle && !state.battle.duel) puffballBurst(state, target, diedOn);
     // Kości Wracają: the skeleton lies where it fell and puts itself together at the end of the round.
     if (abilityOf(target) === 'bonesReturn' && !target.abilityUsed && abilityActive(state) && !state.battle?.duel) {
       target.abilityUsed = true;
@@ -1219,6 +1234,9 @@ export function predictDamage(
   // Przebudzenie, Strażnik Bram: the stone guardian and the Lamassu take a bit off every blow that lands (at least 1 gets through).
   if (armour && dmg > 0 && abilityActive(state) && abilityOf(victim) === 'awakening') dmg = Math.max(1, dmg - ABILITY.awakeningArmor * scaleOf(state));
   if (armour && dmg > 0 && abilityActive(state) && abilityOf(victim) === 'gateWard') dmg = Math.max(1, dmg - ABILITY.gateWardArmor * scaleOf(state));
+  // Chitynowa Ściana, Śluzowy Szlak: the Goliat's chitin and the snail's shell take a bit off every blow that lands.
+  if (armour && dmg > 0 && abilityActive(state) && abilityOf(victim) === 'chitinWall') dmg = Math.max(1, dmg - ABILITY.chitinArmor * scaleOf(state));
+  if (armour && dmg > 0 && abilityActive(state) && abilityOf(victim) === 'slimeTrail') dmg = Math.max(1, dmg - ABILITY.snailArmor * scaleOf(state));
   // A frozen unit (third level of the Pałac Szronu): the next blow cracks the ice and does one more.
   if (victim.status.brittle && dmg > 0) dmg += scaleOf(state);
   // The hero's shield (artifacts): the first blow of the battle is halved, every blow is weaker by its defence, but a blow that lands takes at least 1.
@@ -1371,7 +1389,10 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
       log(state, 'ability', `${unitName(u)} wpada na ślad zamieci: −${ABILITY.trailSlow} S w następnej aktywacji.`);
     }
   }
+  // Śluzowy Szlak: the snail leaves mycelium on the cells it walks through.
+  const trail = abilityOf(u) === 'slimeTrail' && abilityActive(state) && !b.duel ? movePath(state, u, to) : null;
   placeUnit(state, u, to, tail);
+  if (trail) claimCells(state, u.side, [...trail, ...cellsOf(u)]);
   if (from) u.facing = { q: parseKey(to).q - from.q, r: parseKey(to).r - from.r };
   act.moved = true;
   act.acted = true;
@@ -1380,6 +1401,8 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   if (u.alive && act.lift) landPassenger(state, u);
   // Czujność, Czujna Drzemka, Przebudzenie: stepping up next to them.
   if (u.alive) steppedUp(state, u, before);
+  // Grzybnia (third level): an enemy that ends its move on the mycelium of the Swarm is poisoned.
+  if (u.alive && b.ground?.length) myceliumPoisons(state, u);
   if (!u.alive) return endActivation(state);
   // Siege: entering the moat hurts and ends the turn.
   if (inMoat(b, u)) {
@@ -1523,6 +1546,15 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       if (resistsPoison(state, t)) log(state, 'ability', `${unitName(t)} jest odporny na truciznę.`);
       else t.status.poisoned = ABILITY.poisonTicks;
     }
+    // Oplot: every hit of the Skolopendra holds the one hit and poisons it.
+    if (ab === 'coil' && abilityActive(state) && t.alive && t.hp < before) {
+      if (resistsStatus(state, t, true)) log(state, 'ability', `${unitName(t)} jest odporny na unieruchomienie.`);
+      else {
+        t.status.rootedNext = true;
+        log(state, 'ability', `${unitName(t)} zostaje oplątany i nie ruszy się w swojej następnej aktywacji (${UNITS[u.defId].abilityName}).`);
+      }
+      swarmPoison(state, t, UNITS[u.defId].abilityName);
+    }
     if (ab === 'grab' && abilityActive(state) && t.alive && t.hp < before && !resistsStatus(state, t, true)) {
       t.status.rootedNext = true;
       log(state, 'ability', `${unitName(t)} zostaje schwytany i nie ruszy się w swojej następnej aktywacji (${UNITS[u.defId].abilityName}).`);
@@ -1584,6 +1616,18 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
           }
         }
       }
+      // Zarodniki Snu: the target and the enemies next to it are slowed and poisoned.
+      if (ab === 'sleepSpores') {
+        const cloud = [t, ...enemiesOf(b, u).filter((x) => x.id !== t.id && x.alive && unitsAdjacent(x, t))];
+        for (const x of cloud) {
+          if (resistsStatus(state, x, true)) log(state, 'ability', `${unitName(x)} jest odporny na spowolnienie.`);
+          else {
+            x.status.slowNext += ABILITY.sporesSlow;
+            log(state, 'ability', `${unitName(x)}: −${ABILITY.sporesSlow} S w następnej aktywacji.`);
+          }
+          swarmPoison(state, x, UNITS[u.defId].abilityName);
+        }
+      }
       // Hipnoza: the one hit cannot move in its next activation.
       if (ab === 'hypnosis') {
         if (resistsStatus(state, t, true)) log(state, 'ability', `${unitName(t)} jest odporny na unieruchomienie.`);
@@ -1634,6 +1678,8 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   u.status.nextAttackBonus = 0;
   u.status.cursedNext = 0;
   if (u.gear?.firstStrike) delete u.gear.firstStrike;
+  // Grzybnia (second level of the Serce Grzybni): the cells a unit of the Swarm attacked from become mycelium.
+  if (u.alive && u.pos && !b.duel && myceliumLevel(state, u.side) >= FACTION_MECHANICS.myceliumAttackLevel) claimCells(state, u.side, cellsOf(u));
   // Ukryty: the attack uncovers the Jenot.
   if (u.status.veiled) unveil(state, u);
   // Bitewny Szał: a kill feeds the next blow.
@@ -1938,6 +1984,153 @@ export function blastValue(state: GameState, u: BattleUnit, cell: HexKey): numbe
 export function bestBlastTrap(state: GameState, u: BattleUnit): HexKey | null {
   const traps = trapsOf(state.battle!, u.side).map((g) => g.cell).sort();
   return traps.sort((x, y) => blastValue(state, u, y) - blastValue(state, u, x) || (x < y ? -1 : 1))[0] ?? null;
+}
+
+// ---------------------------------------------------------------- the Swarm of the Wilds: the mycelium, the group, the change of form
+
+/** The level of the Serce Grzybni (the Swarm's mechanic) a side has: 0 for any other faction or without the building. */
+export const myceliumLevel = (state: GameState, side: Side): number => (side !== 'neutral' && raceOf(state, side) === 'swarm' ? mechLevel(state, side) : 0);
+
+/** Whether the cell is mycelium of `side`. */
+export const myceliumAt = (b: BattleState, side: Side, cell: HexKey): boolean => (b.ground ?? []).some((g) => g.kind === 'claimed' && g.owner === side && g.cell === cell);
+
+/** The cells of the mycelium of a side. */
+export const myceliumOf = (b: BattleState, side: Side): HexKey[] => (b.ground ?? []).filter((g) => g.kind === 'claimed' && g.owner === side).map((g) => g.cell);
+
+/** Whether the unit stands on the mycelium of its own side (a large one: with its head or its tail). */
+export const onOwnMycelium = (b: BattleState, u: BattleUnit): boolean => Boolean(u.pos) && cellsOf(u).some((c) => myceliumAt(b, u.side, c));
+
+/** The mycelium of `side` grows over the cells (only cells of the arena that are not obstacles; a cell is claimed once). */
+export function claimCells(state: GameState, side: Side, cells: readonly HexKey[]): number {
+  const b = state.battle!;
+  const blocked = obstacleSet(b);
+  let n = 0;
+  for (const c of cells) {
+    if (!inLayout(b, c) || blocked.has(c) || myceliumAt(b, side, c)) continue;
+    (b.ground ??= []).push({ cell: c, owner: side, kind: 'claimed', power: 0 });
+    n++;
+  }
+  return n;
+}
+
+/** The middle column of the arena (the Swarm's Spark covers it). */
+function middleColumn(b: BattleState): HexKey[] {
+  const wide = b.layout === 'wide';
+  const mid = Math.floor(((wide ? WIDE_COLUMNS : ARENA_COLUMNS) - 1) / 2);
+  return wide ? wideColumnCells(mid) : columnCells(mid);
+}
+
+/** When the fight begins: the Serce Grzybni grows over the deploy cells of the Swarm, and its Spark (Matecznik) over them and the middle column of the arena. */
+function myceliumAtStart(state: GameState): void {
+  const b = state.battle!;
+  if (b.duel) return;
+  for (const side of [b.attacker, b.defender]) {
+    if (side === 'neutral' || raceOf(state, side) !== 'swarm') continue;
+    const spark = hasSpark(state, side);
+    if (myceliumLevel(state, side) >= 1 || spark) claimCells(state, side, deployCells(b, side));
+    if (spark) {
+      claimCells(state, side, middleColumn(b));
+      log(state, 'ability', `${SPARK_NAMES.swarm}: grzybnia pokrywa pola Roju i środek areny.`);
+    }
+  }
+}
+
+/** A unit has fallen on `cells`: the mycelium of every Swarm with the Serce Grzybni grows there. */
+function myceliumOnDeath(state: GameState, cells: readonly HexKey[]): void {
+  const b = state.battle!;
+  if (b.duel) return;
+  for (const side of [b.attacker, b.defender]) if (myceliumLevel(state, side) >= 1) claimCells(state, side, cells);
+}
+
+/** How many allies (not mirages) stand next to the unit, at most `ABILITY.groupMax` (Mrowisko, Chitynowa Ściana). */
+export const groupMates = (b: BattleState, u: BattleUnit): number =>
+  Math.min(ABILITY.groupMax, livingUnits(b, u.side).filter((x) => x.id !== u.id && !x.status.mirage && x.pos && unitsAdjacent(x, u)).length);
+
+/** Whether the unit flies: by its card, or as the butterfly of the Gąsienica Korzenna. */
+export const flies = (u: BattleUnit): boolean => UNITS[u.defId].movement === 'fly' || Boolean(u.status.winged);
+
+/** Poisons the unit unless it resists (the poison of the Swarm: Pyłek, Zarodniki Snu, Oplot, the mycelium of the third level). */
+function swarmPoison(state: GameState, t: BattleUnit, source: string): void {
+  if (!t.alive) return;
+  if (resistsPoison(state, t)) log(state, 'ability', `${unitName(t)} jest odporny na truciznę.`);
+  else {
+    t.status.poisoned = ABILITY.poisonTicks;
+    log(state, 'ability', `${unitName(t)} zostaje zatruty (${source}): straci ${ABILITY.poisonDamage * scaleOf(state)} Ż na początku ${ABILITY.poisonTicks} następnych aktywacji.`);
+  }
+}
+
+/** Pyłek: the fallen Purchawka poisons the enemies next to the cells it lay on. */
+function puffballBurst(state: GameState, dead: BattleUnit, cells: readonly HexKey[]): void {
+  const b = state.battle!;
+  const near = livingUnits(b).filter((x) => x.side !== dead.side && x.pos && cellsOf(x).some((c) => cells.some((k) => adjacent(k, c))));
+  if (near.length) log(state, 'ability', `${unitName(dead)} pęka chmurą pyłku (${UNITS[dead.defId].abilityName}).`);
+  for (const x of near) swarmPoison(state, x, UNITS[dead.defId].abilityName);
+}
+
+/** Przepoczwarzenie: the first time the caterpillar drops to half its Życie (and lives) it turns into a butterfly: Życie back and flight. */
+function metamorphose(state: GameState, u: BattleUnit): void {
+  if (!u.alive || u.abilityUsed || u.hp * 2 > u.maxHp || abilityOf(u) !== 'metamorphosis' || !abilityActive(state)) return;
+  u.abilityUsed = true;
+  const healed = Math.min(ABILITY.morphHeal * hpScaleOf(state), u.maxHp - u.hp);
+  u.hp += healed;
+  u.status.winged = true;
+  log(state, 'ability', `${unitName(u)} przepoczwarza się w Motyla Korzennego: +${healed} Ż i od teraz lata.`);
+  if (state.battle && healed > 0) (state.battle.heals ??= []).push({ unitId: u.id, amount: healed });
+}
+
+/** At the start of a unit's activation: Na Swojej Ziemi and the fourth level of the Serce Grzybni heal a unit of the Swarm on its mycelium. */
+function myceliumHeal(state: GameState, u: BattleUnit): void {
+  const b = state.battle!;
+  if (!u.alive || u.hp >= u.maxHp || !onOwnMycelium(b, u)) return;
+  let heal = 0;
+  if (abilityOf(u) === 'homeGround' && abilityActive(state)) heal += ABILITY.homeHeal;
+  if (myceliumLevel(state, u.side) >= FACTION_MECHANICS.myceliumHealLevel) heal += FACTION_MECHANICS.myceliumHeal;
+  if (!heal) return;
+  const healed = Math.min(heal * hpScaleOf(state), u.maxHp - u.hp);
+  u.hp += healed;
+  log(state, 'ability', `${unitName(u)} odzyskuje ${healed} Ż na grzybni.`);
+  (b.heals ??= []).push({ unitId: u.id, amount: healed });
+}
+
+/** The third level of the Serce Grzybni: an enemy that ends its move on the mycelium is poisoned. */
+function myceliumPoisons(state: GameState, u: BattleUnit): void {
+  const b = state.battle!;
+  if (!u.alive || !u.pos || b.duel || u.status.mirage) return;
+  for (const side of [b.attacker, b.defender]) {
+    if (side === u.side || myceliumLevel(state, side) < FACTION_MECHANICS.myceliumPoisonLevel) continue;
+    if (cellsOf(u).some((c) => myceliumAt(b, side, c))) return swarmPoison(state, u, 'Grzybnia');
+  }
+}
+
+/** Rozsiew: the cells the mycelium of the Matka covers when she picks `cell`: the cell and its nearest free neighbours, `ABILITY.sporeCells` in all. */
+export function sporeArea(state: GameState, u: BattleUnit, cell: HexKey): HexKey[] {
+  const b = state.battle!;
+  const blocked = obstacleSet(b);
+  const near = neighborKeys(cell)
+    .filter((k) => inLayout(b, k) && !blocked.has(k))
+    .sort((x, y) => Number(myceliumAt(b, u.side, x)) - Number(myceliumAt(b, u.side, y)) || (x < y ? -1 : 1));
+  return [cell, ...near].slice(0, ABILITY.sporeCells);
+}
+
+/** Rozsiew: the cells the Matka may pick (in her range, on the arena, no obstacle). */
+export function sporeCells(state: GameState, u: BattleUnit): HexKey[] {
+  const b = state.battle!;
+  if (!u.pos) return [];
+  const blocked = obstacleSet(b);
+  return layoutCells(b).filter((k) => !blocked.has(k) && Math.min(...cellsOf(u).map((c) => distance(parseKey(c), parseKey(k)))) <= ABILITY.sporeRange);
+}
+
+/** Rozsiew without a chosen cell: the one whose new mycelium lies under the most units of the side (then the most new cells, then the nearest to the enemy). */
+export function bestSporeCell(state: GameState, u: BattleUnit): HexKey | null {
+  const b = state.battle!;
+  const own = livingUnits(b, u.side).flatMap(cellsOf);
+  const foes = enemiesOf(b, u).flatMap(cellsOf);
+  const gap = (k: HexKey) => Math.min(99, ...foes.map((f) => distance(parseKey(f), parseKey(k))));
+  const value = (k: HexKey) => {
+    const fresh = sporeArea(state, u, k).filter((c) => !myceliumAt(b, u.side, c));
+    return fresh.filter((c) => own.includes(c)).length * 3 + fresh.length;
+  };
+  return sporeCells(state, u).sort((x, y) => value(y) - value(x) || gap(x) - gap(y) || (x < y ? -1 : 1))[0] ?? null;
 }
 
 // ---------------------------------------------------------------- the Desert Empire: mirages, the buried Queen, the watch, the dormant guardian, moving its own
@@ -2512,6 +2705,20 @@ export function battleAbility(state: GameState, targetId?: string, cell?: HexKey
     if (!t || !t.alive || t.side !== u.side || isLarge(state, t) || !unitsAdjacent(t, u)) throw new Error('Wybierz małego sojusznika obok Roka.');
     b.activation!.lift = t.id;
     log(state, 'ability', `${unitName(u)} bierze ${unitName(t)} na skrzydło.`);
+  } else if (ab === 'spreadSpores') {
+    // Rozsiew: mycelium on the cell the player picks (or the best one) and its neighbours.
+    const at = cell ?? bestSporeCell(state, u);
+    if (!at || !sporeCells(state, u).includes(at)) throw new Error(`Wybierz pole w zasięgu ${ABILITY.sporeRange} od Matki Grzybni.`);
+    const n = claimCells(state, u.side, sporeArea(state, u, at));
+    log(state, 'ability', `${unitName(u)} rozsiewa zarodniki: grzybnia porasta ${n} ${n === 1 ? 'pole' : 'pola'}.`);
+  } else if (ab === 'greatChorus') {
+    // Wielki Chór: every enemy within the radius loses its next activation.
+    const deaf = enemiesOf(b, u).filter((e) => e.pos && unitDistance(e, u) <= ABILITY.chorusRadius);
+    log(state, 'ability', `${unitName(u)} śpiewa Wielki Chór.`);
+    for (const e of deaf) {
+      e.status.stunned = true;
+      log(state, 'ability', `${unitName(e)} traci następną aktywację (${UNITS[u.defId].abilityName}).`);
+    }
   } else if (ab === 'web') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side === u.side || unitDistance(u, t) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);

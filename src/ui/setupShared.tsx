@@ -145,6 +145,8 @@ export const SEAT_TINT: Record<TeamId | FactionId, string> = {
   free: 'linear-gradient(100deg, rgba(196, 118, 56, 0.62), rgba(84, 52, 30, 0.58))',
   // Imperium Piasków: sand and ochre with a touch of jade.
   sands: 'linear-gradient(100deg, rgba(212, 178, 92, 0.62), rgba(110, 82, 40, 0.58))',
+  // Rój Puszczy: umbra and moss with a glow of fireflies.
+  swarm: 'linear-gradient(100deg, rgba(150, 132, 62, 0.62), rgba(70, 52, 34, 0.58))',
 };
 
 

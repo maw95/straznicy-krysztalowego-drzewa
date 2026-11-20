@@ -93,6 +93,17 @@ export const FACTION_MECHANICS = {
   /** Brama Wydm: every how many rounds a hero standing in a settlement may step through the gate, and how far (hexes) it may go. */
   gateEvery: 3,
   gateReach: 8,
+  /** Serce Grzybni (Rój Puszczy): + A of a unit of the Swarm on its mycelium (I); the level from which the cells it attacked from are claimed too (II), the level from
+   * which an enemy that ends its move on the mycelium is poisoned (III), and the level from which a unit of the Swarm regains Życie on it at the start of its activation (IV, small scale). */
+  myceliumAttack: 1,
+  myceliumAttackLevel: 2,
+  myceliumPoisonLevel: 3,
+  myceliumHealLevel: 4,
+  myceliumHeal: 1,
+  /** Ogród Grzybów: wood and ore from every settlement with the garden, every `gardenEvery[level - 1]` rounds. */
+  gardenEvery: [2, 1],
+  /** Podziemne Korytarze: the radius (hexes) round a settlement with the tunnels in which the free mines go to the Swarm, by level. */
+  tunnelRadius: [2, 3],
 };
 export const MECHANIC_NAMES: Record<FactionId, string> = byPack((p) => p.mechanic.name);
 export const MECHANIC_TEXTS: Record<FactionId, string> = {
@@ -103,6 +114,7 @@ export const MECHANIC_TEXTS: Record<FactionId, string> = {
   frost: `Każdy cios jednostki Dworu nakłada na cel 1 szron; przy ${FACTION_MECHANICS.frostThreshold[0]} szronach cel zamarza (traci następną aktywację, szron znika). Kolejne poziomy Pałacu Szronu skracają próg, a zamrożony kruszeje i traci Szybkość.`,
   free: `Przed bitwą Kompania kładzie na swojej połowie ukryte pułapki (${FACTION_MECHANICS.trapCount[0]} na pierwszym poziomie Warsztatu Sideł, więcej na kolejnych); wróg, który wejdzie na pułapkę, dostaje ${ABILITY.trapDamage} obrażeń i kończy ruch, a od trzeciego poziomu nie rusza się też do końca następnej aktywacji. Pułapek wroga nie widać, dopóki nie zadziałają.`,
   herds: `Jednostka Stada, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole; cel, który w coś uderzy, dostaje obrażenia.`,
+  swarm: `Pola rozstawienia Roju i pola, na których zginęła jakakolwiek jednostka, porasta grzybnia; jednostka Roju na grzybni ma +${FACTION_MECHANICS.myceliumAttack} A. Kolejne poziomy Serca Grzybni: grzybnia także na polach, z których Rój atakował, trucizna dla wroga, który skończy ruch na grzybni, i +${FACTION_MECHANICS.myceliumHeal} Ż dla jednostki Roju na grzybni na początku jej aktywacji.`,
   sands: `Na początku bitwy Cesarstwo stawia na swojej połowie ${FACTION_MECHANICS.mirageCount[0]} miraż: atrapę jednej ze swoich jednostek (nie bohatera), której wróg nie odróżni od prawdziwej. Atak w miraż przepada, a miraż znika; nie atakuje. Kolejne poziomy Pałacu Mirażu dają drugi miraż, zamianę miejsc jednostki z jej mirażem (raz na bitwę) i oślepianie tego, kto rozbił miraż.`,
 };
 
@@ -123,6 +135,7 @@ export const SPARK_TEXTS: Record<FactionId, string> = {
   clans: `Wszystkie jednostki Klanu (bohaterowie i pomocnicy) mają pancerz ${FACTION_MECHANICS.shieldArmor}: −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu.`,
   frost: `Wrogowie zaczynają każdą bitwę z ${FACTION_MECHANICS.sparkFrost} szronem.`,
   free: `Kompania zaczyna każdą bitwę z ${FACTION_MECHANICS.sparkTraps} dodatkowymi ukrytymi pułapkami.`,
+  swarm: 'Grzybnia pokrywa pola rozstawienia Roju i środkową kolumnę areny od początku każdej bitwy.',
   sands: `Po rozstawieniu obu stron Cesarstwo może przestawić do ${FACTION_MECHANICS.sparkRearrange} swoich jednostek w swojej strefie.`,
   undead: 'Wszystkie jednostki Umarłych (bohaterowie i pomocnicy) są odporne na truciznę, klątwy, spowolnienia i unieruchomienie.',
 };
