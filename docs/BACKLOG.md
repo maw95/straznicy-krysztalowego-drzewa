@@ -101,7 +101,6 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
   - **Animacja:** po kliknięciu „Skarby” (lub otwarciu księgi) najpierw widać zamkniętą skrzynię (księgę), która się otwiera, i dopiero potem zawartość; przy wyjściu odwrotnie: animacja zamykania, a dopiero po niej powrót do poprzedniego ekranu. Klatki jako arkusz WebP (reguła zasobów), wpis w `assets.json`; respektować `prefers-reduced-motion` (bez animacji, od razu stan końcowy).
   - Sprawdzić klawisz Esc, ekran telefonu (`COMPACT_QUERY`), wersję EN i skrót klawiszowy; test ścieżki kliknięć w prawdziwej przeglądarce.
 
-**58e. Autoplay zamyka okna wyników (S).** Przy włączonym „Autoplay” okna z wynikami walk, zdobytymi skarbami, nagrodami itp. mają zamykać się same po krótkiej chwili (czas wystarczający na zobaczenie wyniku, np. 2–3 s, albo skracany prędkością animacji), bez czekania na klik. Obowiązuje wszystkie okna blokujące autoplay, ale nie okna wyboru, w których gracz musi zdecydować, ani końca gry. Test: partia z autoplayem do końca bez ręcznego klikania.
 
 **58f. Pasy boczne ekranu bitwy: herb zamiast nazwy frakcji, bez wstążki u góry areny (M).** Nazwa frakcji nie mieści się we wstążkach po bokach ekranu bitwy: zastąpić wstążkę samym herbem frakcji (nazwa w podpowiedzi po najechaniu). Usunąć wstążkę na górze areny z napisem typu „Bitwa o kryształ – runda 4” (informację o rundzie przenieść, jeśli nigdzie indziej jej nie ma, w mały znacznik w rogu). Sprawdzić `BattleView`, `BattleSidePanel`, układ telefonu i poziomy, nowe frakcje (zastępcze herby).
 

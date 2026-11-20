@@ -25,6 +25,7 @@ import { ARTIFACT_BY_ID } from '../engine/sites';
 import type { SkillId } from '../engine/growth';
 import { sfx } from './sfx';
 import { animationWait, ATTACK_SHOW_MS, holdFor, resetAnimLock } from './animLock';
+import { scaledMs } from './animSpeed';
 import { DuelView } from './DuelView';
 import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset, useMedia } from './common';
 import { SetupScreen } from './SetupScreen';
@@ -711,6 +712,23 @@ export function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const menuAutosave = useMemo(() => (game ? null : readAutosave()), [game === null]);
   const overlay = session && <OnlineOverlay session={session} onAccept={acceptInvitation} />;
+
+  // Autoplay closes the report windows (a digest, a battle summary, a found treasure, a story page, an artifact) by itself after a short while, one at a time;
+  // windows that ask for a decision and the end of the game stay for the player.
+  const autoClose: (() => void) | null = held || isOnline || !autoplay || !game || game.phase === 'over' ? null
+    : digest && !needsHandoff ? () => setDigest(null)
+      : summary !== null && game.lastBattle?.id === summary ? () => setSummary(null)
+        : found ? () => setFound(null)
+          : storyNews.length ? () => setStoryNews((a) => a.slice(1))
+            : artifactNews.length ? () => setArtifactNews((a) => a.slice(1))
+              : null;
+  const autoCloseKey = autoClose ? `${digest ? 'd' : summary !== null ? 's' : found ? 'f' : storyNews.length ? `n${storyNews.length}` : `a${artifactNews.length}`}` : '';
+  useEffect(() => {
+    if (!autoClose) return;
+    const t = window.setTimeout(autoClose, scaledMs(2800));
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoCloseKey]);
 
   // Keyboard shortcuts (battle-specific keys live in BattleView). One listener for the whole game;
   // it reads the open dialogs through a ref.
