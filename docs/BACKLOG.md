@@ -102,7 +102,6 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
 
 
 
-**58g. Jednolite ramki ikon w menu głównym i na ekranach (M).** Ikony w menu głównym i na niemal każdym ekranie mają ramki różniące się grubością, kolorem i ozdobnikami (albo ich brakiem). Wzorzec: ramka ikony „Księstwo”. Ujednolicić wszystkie do jednego komponentu lub jednej klasy CSS ze wzorca; dodatkowo naprawić ramkę „Podbój” (przycięta z prawej) i „Relikt” (przycięta z lewej). Zrobić przegląd wszystkich ekranów z ikonami z ramką (`grep` po klasach ramek w `styles.css`), sprawdzić stan zwykły, najechanie i zaznaczenie, desktop i telefon, zrzuty przed i po.
 
 
 ## 2. Tylko autor (Claude tego nie bierze)

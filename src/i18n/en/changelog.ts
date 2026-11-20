@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Ikony w menu głównym, kreatorze nowej gry, czarach, drzewku frakcji i umiejętnościach mają jednakową ramkę wzorowaną na ikonie „Księstwo”; naprawione ramki „Podbój” i „Relikt” (były przycięte).":
+    "Icons in the main menu, the new game wizard, spells, the faction tree and skills have one common ring modelled on the \"Duchy\" icon; the \"Conquest\" and \"Relic\" rings, which were clipped, are fixed.",
   "Ekran bitwy: pasy boczne pokazują herb frakcji zamiast wstążki z nazwą (nazwa jest w podpowiedzi), a wstążka nad areną zniknęła (numer rundy jest w pasku aktywacji).":
     "Battle screen: the side panels show the faction's crest instead of a ribbon with its name (the name is in the hint), and the ribbon over the arena is gone (the round number is in the activation bar).",
   "Na mapie świata pole zajęte przez sojusznika nie pokazuje już liczby punktów ruchu: wejść na nie nie można, więc traktujemy je jak pole zablokowane (także jako drogę).":
