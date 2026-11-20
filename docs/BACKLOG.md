@@ -182,6 +182,7 @@ Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.t
 Wyczyszczone 17.11: autor sam sprawdza grę i zgłasza błędy (`make zgloszenia`); nie prowadzimy listy „do sprawdzenia”.
 
 ## 4. Parking (pomysły bez terminu)
+- **Tajne ziarno dla ukrytych losowań (21.11, pomysł autora):** pomieszanie id miraży (Piaski) i Sideł (Kompanie) losuje się z `state.rng`, który jest w stanie wysyłanym graczom; kto odtworzy RNG z surowych danych, mógłby zgadnąć ukryte rzeczy. Serwer miałby trzymać osobne, tajne ziarno dla takich losowań. Wymaga zmiany serwera i silnika (dotyczy online), więc na razie zostaje jak jest.
 - „Cios od tyłu / z flanki” dla innych jednostek. (Więcej niż 6 graczy, do 8: zrobione 17.11; własni czwarci bohaterowie: kolejka, punkt 56.)
 - **Kolejne języki** poza PL i EN (nowy plik słownika `src/i18n/<kod>/` i test pokrycia): zaparkowane 18.11, na razie nie potrzeba.
 - **PWA: zrobione 17.11** (ręczny service worker `public/sw.js`: kod siecią najpierw, zasoby z pamięci; manifest, ikony, podpowiedź instalacji w Opcjach). Zostaje test na prawdziwych telefonach i, gdy będzie potrzeba, kontrola wersji protokołu z serwerem.
