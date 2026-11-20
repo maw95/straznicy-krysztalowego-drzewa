@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Menu główne, wybór trybu w wersji cyfrowej: cztery kafelki (Potyczka, Arena, Kampania, Ekspedycja) układają się po dwa w rzędzie.":
+    "Main menu, game mode choice in the digital version: the four tiles (Skirmish, Arena, Campaign, Expedition) sit two in a row.",
   "Balans frakcji w wersji cyfrowej (wersja robocza): automatyczny stroiciel dobrał małe premie Życia i Ataku dla bohaterów i pomocników siedmiu frakcji; zmiana dotyczy tylko wersji cyfrowej.":
     "Faction balance in the digital version (work in progress): the automatic balancer picked small Life and Attack bonuses for the heroes and supporters of seven factions; the change affects the digital version only.",
   "Ikony w menu głównym, kreatorze nowej gry, czarach, drzewku frakcji i umiejętnościach mają jednakową ramkę wzorowaną na ikonie „Księstwo”; naprawione ramki „Podbój” i „Relikt” (były przycięte).":

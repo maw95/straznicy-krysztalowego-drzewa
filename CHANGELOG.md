@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Menu główne, wybór trybu w wersji cyfrowej: cztery kafelki (Potyczka, Arena, Kampania, Ekspedycja) układają się po dwa w rzędzie.
 - Balans frakcji w wersji cyfrowej (wersja robocza): automatyczny stroiciel dobrał małe premie Życia i Ataku dla bohaterów i pomocników siedmiu frakcji; zmiana dotyczy tylko wersji cyfrowej.
 - Ikony w menu głównym, kreatorze nowej gry, czarach, drzewku frakcji i umiejętnościach mają jednakową ramkę wzorowaną na ikonie „Księstwo”; naprawione ramki „Podbój” i „Relikt” (były przycięte).
 - Ekran bitwy: pasy boczne pokazują herb frakcji zamiast wstążki z nazwą (nazwa jest w podpowiedzi), a wstążka nad areną zniknęła (numer rundy jest w pasku aktywacji).

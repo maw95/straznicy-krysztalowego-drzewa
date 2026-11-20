@@ -872,6 +872,10 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .opt-grid.three { max-width: 980px; margin: 0 auto; }
 .opt-grid.three .opt-card { flex: 1 1 260px; max-width: calc((100% - 32px) / 3); }
 .opt-grid.three .opt-card-img { height: 84px; }
+/* Digital mode page: four cards, two in a row. */
+.opt-grid.two { max-width: 760px; margin: 0 auto; }
+.opt-grid.two .opt-card { flex: 1 1 300px; max-width: calc((100% - 12px) / 2); }
+.opt-grid.two .opt-card-img { height: 84px; }
 .opt-card-title { font-size: 24px; font-weight: 800; color: #F3D27A; }
 .opt-card-text { font-size: 15px; line-height: 1.35; }
 .opt-crests { display: flex; gap: 14px; align-items: center; justify-content: center; height: 100%; }
