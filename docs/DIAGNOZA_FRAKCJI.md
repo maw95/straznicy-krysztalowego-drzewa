@@ -150,3 +150,48 @@ node --import tsx scripts/sim/diagnoza.ts --compare .tmp/base.json .tmp/f1.json 
 node --import tsx scripts/sim/diagnoza.ts --report .tmp/base.json > raport.md
 ```
 Pliki z tego pomiaru (nie w repo): `.tmp/base.json`, `.tmp/f1.json`, `.tmp/f3.json`, `.tmp/parity/base.json`.
+
+## 9. Po poprawkach (bot, 20.11.2026, gałąź `bot-mechanics`)
+
+Pomiar: `make sim-diagnoza GAMES=300` (21 par × 2 cele × 300 partii; błąd pary ok. ±4 pkt), przed i po zmianach bota.
+
+**Zmiany:** (1) `botPurchase` / `botTrade` w `kingdom.ts`: po koszarach i pierwszej jednostce poziomu 2 (domek) bot idzie do budynku mechaniki swojej frakcji
+tym samym wzorem dla wszystkich (najpierw brakujący budynek-rodzic, `mechanicStep`), a gdy brakuje surowca lub złota, kupuje surowiec i niczego innego nie kupuje
+(`tradeToward`). (2) `autoTrapCells` w `battle.ts`: Sidła leżą na drodze wroga (najbliżej jego jednostek, jak pozwala własna połowa areny), rozstawione co 2 pola, zamiast przy własnych strzelcach.
+(3) `diagnoza.ts`: zdolności bierne (Szarża Światła, Zew Krwi) i Skok po Turniach nie są liczone jako „nieużyte” (flaga `abilityUsed` ich nie ustawia: to nie błąd bota).
+
+**Budynek mechaniki w chwili bitwy pvp (poziom ≥1) i średnia runda zbudowania poziomu I:**
+
+| frakcja | przed: bitwy z lvl≥1 | po | przed: runda lvl I | po | przed: partie z lvl≥1 na końcu | po |
+|---|---|---|---|---|---|---|
+| Przymierze | 6% | 55% | 7,0 | 4,7 | 10% | 64% |
+| Horda | 4% | 33% | 10,8 | 6,1 | 8% | 48% |
+| Stada | 21% | 76% | 5,0 | 3,9 | 25% | 74% |
+| Umarli | 14% | 56% | 6,3 | 4,7 | 20% | 63% |
+| Klany | 6% | 45% | 7,7 | 5,3 | 10% | 50% |
+| Szron | 3% | 13% | 9,3 | 7,7 | 8% | 25% |
+| Kompanie | 11% | 65% | 6,9 | 4,5 | 15% | 65% |
+
+Szron jest najniżej, bo jego łańcuch to trzy budynki (Szpital, Wieża Magów, Pałac Szronu) i Pył; to wynika z drzewa budynków, nie z bota.
+(Dane „przed” z tej samej metody; liczby z sekcji 1 były niższe, bo to pomiar po scaleniu zmian z `master`.)
+
+**Pary i średnie frakcji (Kontrola + Podbój, 300 partii na cel):**
+
+| | Przymierze | Horda | Stada | Umarli | Klany | Szron | Kompanie | pary poza 30–70% | największe odchylenie od 50 |
+|---|---|---|---|---|---|---|---|---|---|
+| przed | 59 | 54 | 51 | 55 | 38 | 52 | 40 | 0 | 17,5 |
+| po | 67 | 55 | 53 | 54 | 35 | 44 | 42 | 3 | 24 |
+
+Pary poza pasmem po zmianach: Przymierze–Klany 74, Przymierze–Szron 69 (granica), Przymierze–Kompanie 68–71.
+
+**Wyrównywanie liczb mechanik (cel 2): zmierzone, nie zmienione.** Próby (każda 21 par): połowa i zero leczenia Blasku Świtu (`dawnHeal` ×0,5 i 0 na skali cyfrowej): Przymierze 67 → 66 → 64;
+Mur Tarcz: `shieldMates` [1,1,1,1] i `shieldArmor` 2: Klany 35 → 36 → 38; Szron: `frostThreshold` [2,2,1,1]: Szron 44 → 44. Liczby mechanik przesuwają średnią frakcji o 1–2 pkt,
+bo mechanika działa w 13–76% bitew i dodaje drobną wartość; nierówności z sekcji 3 są prawdziwe, ale nie one decydują o parach. Wzrost Przymierza (59 → 67) pochodzi z kolejności budowy
+(szpital wcześnie: odzyskiwanie poległych pomocników), nie z Blasku (z zerowym leczeniem nadal 64). Liczby pozostają bez zmian, bo zmiana nic nie dawała, a psułaby teksty reguł.
+Co zadziała (decyzja autora): osłabić Przymierze liczbami frakcji (`factionBonus.ts`, tego zadania nie wolno ruszać), wzmocnić Klany i Kompanie jednostkami, albo skrócić łańcuch Szronu.
+
+**Sidła (cel 3):** trafione / położone 46% (przed ok. 35–40% przy Warsztacie), niewykorzystane 54% (przed 70%); trafiają nadal wyłącznie jednostki wręcz (9 trafień strzelców na 846).
+Kompanie wygrywają 40% bitew (przed 37%), średnia partii 42%: to wciąż słabość jednostek, nie Sideł.
+
+**Zdolności (cel 4):** Król Jednorożców i Władca Wilkołaków to zdolności bierne (flagi nigdy nie ustawiają): 0% to artefakt pomiaru. Kozioł Taranowy skacze (`status.leapUsed`), flaga była inna.
+Rusałka Szronu 58% (przed 1%: teraz Szron częściej stawia szrony). Lisz (Żniwo Many) trafia tylko wroga z manią, więc bez many u wroga jest bezczynny z założenia (projekt). Wampir 13% (Lament): do sprawdzenia w `battleAi.ts`, nie ruszany.

@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Boty rozwijają swoją frakcję szybciej (wersja robocza): zaraz po koszarach i pierwszej jednostce odkładają złoto i kupują surowce na budynek mechaniki frakcji (Kapliczka, Jama Krwi, Kamień Tętentu, Kurhan, Sala Tarcz, Pałac Szronu, Warsztat Sideł), więc mechaniki częściej działają w bitwach; Wolne Kompanie układają Sidła na drodze wroga, tuż przed linią środkową areny.
 - Nowe nazwy i jednostki w nowych frakcjach (wersja robocza): Dzikie Stado (Kulan Stepowy, Tarpan Łucznik, Wół Piżmowy, Arkar, Łamignat Stepowy, Orzeł Stepowy Łowca i Płanetnik), Wampir i Strzyga w Królestwie Umarłych, Dziad Mróz w Dworze Wiecznego Szronu, Mosiężny Pająk i Kozioł Taranowy w Żelaznym Klanie oraz Sroka Złodziejka i Świstak Petardnik w Wolnej Kompanii (Kocur Fechmistrz idzie na poziom 3, Jenot Szpieg na 5); zdolności i siły bez zmian.
 - Poprawka: po ustawieniu Sideł przed bitwą Wolnych Kompanii znaczniki pułapek na arenie nie rysują się już podwójnie.
 - Wolne Kompanie przy jednym ekranie: gdy dwie osoby grają na tym samym komputerze, układanie ukrytych Sideł jest zasłonięte ekranem „Przekaż urządzenie”, a własne Sidła na arenie widać dopiero po kliknięciu „Podejrzyj Sidła” w swojej turze.
