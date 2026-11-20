@@ -1675,7 +1675,7 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
         }
       }
       if (ab === 'whirl') {
-        if (!canBeMoved(state, t) || isLarge(state, u)) log(state, 'ability', `${unitName(t)} nie da się przestawić (${UNITS[u.defId].abilityName}).`);
+        if (!canBeMoved(state, t) || isLarge(state, t) || isLarge(state, u)) log(state, 'ability', `${unitName(t)} nie da się przestawić (${UNITS[u.defId].abilityName}).`);
         else if (swapCells(u, t)) {
           log(state, 'ability', `${unitName(u)} kręci wir i zamienia się miejscami z ${unitName(t)}.`);
           stepOnFields(state, t);
@@ -2219,8 +2219,8 @@ export function tidePull(state: GameState, t: BattleUnit, source: BattleUnit, st
 /** The allies the active unit of the Tides may swap places with now (Świątynia Pływów): single-cell, movable, within the temple's reach. */
 export function tideTargets(state: GameState, u: BattleUnit): BattleUnit[] {
   const b = state.battle!;
-  if (!u.pos || u.tail || !canBeMoved(state, u)) return [];
-  return livingUnits(b, u.side).filter((x) => x.id !== u.id && x.pos && !x.tail && !x.status.mirage && unitDistance(u, x) <= FACTION_MECHANICS.tideRange && canBeMoved(state, x));
+  if (!u.pos || isLarge(state, u) || !canBeMoved(state, u)) return [];
+  return livingUnits(b, u.side).filter((x) => x.id !== u.id && x.pos && !isLarge(state, x) && !x.status.mirage && unitDistance(u, x) <= FACTION_MECHANICS.tideRange && canBeMoved(state, x));
 }
 
 /** Przypływ: whether the active unit may swap places with an ally now (before it has moved or acted; once a battle, from the second level once a round). */
@@ -2274,7 +2274,7 @@ export function battleTideSwap(state: GameState, targetId: string): void {
 export function ebbTargets(state: GameState, u: BattleUnit): BattleUnit[] {
   const b = state.battle!;
   if (!u.pos) return [];
-  return livingUnits(b).filter((x) => x.pos && !x.tail && !(x.side !== u.side && x.status.veiled) && unitDistance(u, x) <= ABILITY.ebbRange && canBeMoved(state, x));
+  return livingUnits(b).filter((x) => x.pos && !isLarge(state, x) && !(x.side !== u.side && x.status.veiled) && unitDistance(u, x) <= ABILITY.ebbRange && canBeMoved(state, x));
 }
 
 /** Odpływ without a second unit named: the partner of `first` is a unit of the other side (if any), the farthest from it. */

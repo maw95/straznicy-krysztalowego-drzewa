@@ -62,6 +62,9 @@ import {
   myceliumAt,
   myceliumLevel,
   sporeArea,
+  ebbTargets,
+  tideSwapReady,
+  tideTargets,
 } from '../battle';
 import { redactHidden } from '../hidden';
 import { FACTION_MECHANICS } from '../empire';
@@ -299,6 +302,8 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   const mates = (cell: HexKey) => livingUnits(b, u.side).filter((x) => x.id !== u.id && dist2(cellsOf(x), plannedFootprint(state, u, cell)) === 1).length;
   // Rój Puszczy: its own mycelium is worth standing on (it hits harder and heals there); the mycelium of an enemy Swarm that poisons is avoided by everyone.
   const swarm = UNITS[u.defId].side === 'swarm';
+  // Bractwo Przypływu keeps its line round the turtles, and the Syrena stays out of the front.
+  const tides = UNITS[u.defId].side === 'tides';
   const enemySpores = b.ground?.some((g) => g.kind === 'claimed' && g.owner !== u.side) ? [b.attacker, b.defender].filter((x) => x !== u.side && myceliumLevel(state, x) >= FACTION_MECHANICS.myceliumPoisonLevel) : [];
   const groundValue = (mine: readonly HexKey[]): number =>
     (swarm && mine.some((k) => myceliumAt(b, u.side, k)) ? 0.8 : 0) - (enemySpores.some((x) => mine.some((k) => myceliumAt(b, x, k))) ? 0.7 : 0);
@@ -337,6 +342,10 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
         if (useAbility && abilityOf(u) === 'sleepSpores') score += targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(t)) === 1).length * 1.2;
         // The Swarm fights on its mycelium and together (the Mrowisko and the Goliat count their neighbours already in the damage).
         if (swarm) score += groundValue(mine) + Math.min(2, mates(cell)) * 0.3;
+        // Bractwo Przypływu: the harpoon and the whirl are kept for the enemy's shooters (pulled in, or reached in their back line); the ink is worth more on a crowd.
+        if (useAbility && (abilityOf(u) === 'harpoon' || abilityOf(u) === 'whirl')) score += UNITS[t.defId].attackType === 'ranged' ? 1 : -0.5;
+        if (useAbility && abilityOf(u) === 'inkCloud') score += AI_TUNING.debuffBonus + targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(t)) === 1).length * 0.8;
+        if (tides) score += Math.min(2, mates(cell)) * 0.3;
         if (useAbility && abilityOf(u) === 'stinkBomb') score += targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(t)) === 1).length * 1.2;
         if (useAbility && abilityOf(u) === 'iceBlow') score += AI_TUNING.debuffBonus * 2;
         // The Court of Everfrost puts all its blows on one target to freeze it (it does not spread the frost); the weak melee ones do not rush in.
@@ -371,6 +380,8 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
     // The Swarm keeps together and on its mycelium; nobody stops on the mycelium of an enemy Swarm that poisons.
     pos += groundValue(mine);
     if (swarm) pos += Math.min(2, mates(cell)) * 0.4;
+    if (tides) pos += Math.min(2, mates(cell)) * 0.4;
+    if (u.defId === 'sirenSinger' && nearest <= 2) pos -= 1.5;
     // The Iron Clans wait in formation: they step to a cell next to their allies, and not far from where they stand.
     if (UNITS[u.defId].side === 'clans') pos += Math.min(2, mates(cell)) * 0.5 - steps * 0.2;
     // The Court of Everfrost keeps its distance: a shooter or a witch stays out of reach.
@@ -528,6 +539,35 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
     const deaf = enemiesOf(b, u).filter((e) => e.pos && unitDistance(e, u) <= ABILITY.chorusRadius && !e.status.stunned);
     if (deaf.length >= 2 || deaf.some((e) => UNITS[e.defId].kind !== 'support')) return { type: 'battleAbility' };
   }
+  // Bractwo Przypływu: the wall and the wings when the enemy presses in, the song and the coil pull in the enemy's shooters (the strongest one otherwise), the Sefiran sheds
+  // its skin when it carries a bad state or is badly hurt, the turtle hides when it would fall, the pearl goes to the ally at the front, the Wiedźma throws an enemy
+  // shooter into the line and a fighter of her own behind theirs, the Lewiatan pulls when two enemies would come.
+  const movable = (e: BattleUnit) => canBeMoved(state, e) && !e.status.veiled;
+  const adjacentFoes = enemiesOf(b, u).filter((e) => e.pos && unitDistance(e, u) === 1);
+  if (ab === 'waterWall' && (adjacentFoes.filter(movable).length >= 2 || (adjacentFoes.some(movable) && livingUnits(b, u.side).some((x) => x.id !== u.id && unitDistance(x, u) === 1)))) return { type: 'battleAbility' };
+  if (ab === 'wingBeat' && adjacentFoes.filter(movable).length >= 2) return { type: 'battleAbility' };
+  if (ab === 'sirenSong' || ab === 'deepCoil') {
+    const range = ab === 'sirenSong' ? ABILITY.songRange : ABILITY.deepCoilRange;
+    const t = enemiesOf(b, u)
+      .filter((e) => e.pos && movable(e) && unitDistance(e, u) <= range && unitDistance(e, u) >= 2)
+      .sort((x, y) => Number(UNITS[y.defId].attackType === 'ranged') - Number(UNITS[x.defId].attackType === 'ranged') || unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (t && (ab === 'deepCoil' || UNITS[t.defId].attackType === 'ranged' || foesNear(3))) return { type: 'battleAbility', targetId: t.id };
+  }
+  if (ab === 'molt' && (u.status.poisoned || u.status.rootedNext || u.status.stunned || (u.status.frost ?? 0) >= 1 || u.status.slowNext > 0 || u.hp * 2 <= u.maxHp)) return { type: 'battleAbility' };
+  if (ab === 'shellUp' && adjacentFoes.length && (u.hp * 2 <= u.maxHp || adjacentFoes.length >= 2)) return { type: 'battleAbility' };
+  if (ab === 'pearlShield' && foesNear(6)) {
+    const t = livingUnits(b, u.side)
+      .filter((x) => x.pos && !x.status.pearl && enemiesOf(b, x).some((e) => unitDistance(e, x) <= 2))
+      .sort((x, y) => Number(UNITS[y.defId].kind !== 'support') - Number(UNITS[x.defId].kind !== 'support') || y.maxHp - x.maxHp || (x.id < y.id ? -1 : 1))[0];
+    if (t) return { type: 'battleAbility', targetId: t.id };
+  }
+  if (ab === 'ebbTide') {
+    const pool = ebbTargets(state, u);
+    const shooter = pool.filter((x) => x.side !== u.side && UNITS[x.defId].attackType === 'ranged').sort((x, y) => unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    const fighter = pool.filter((x) => x.side === u.side && x.id !== u.id && UNITS[x.defId].attackType === 'melee').sort((x, y) => unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (shooter && fighter && unitDistance(shooter, fighter) >= 3) return { type: 'battleAbility', targetId: fighter.id, cell: shooter.pos! };
+  }
+  if (ab === 'deepWhirl' && enemiesOf(b, u).filter((e) => e.pos && movable(e) && unitDistance(e, u) <= ABILITY.deepWhirlRadius && unitDistance(e, u) >= 2).length >= 2) return { type: 'battleAbility' };
   if (ab === 'web') {
     const t = enemiesOf(b, u)
       .filter((e) => unitDistance(e, u) <= ABILITY.webRange)
@@ -765,6 +805,36 @@ function sandsMove(state: GameState, u: BattleUnit): Action | null {
   return null;
 }
 
+/**
+ * Bractwo Przypływu, the swap before an activation (Świątynia Pływów): a badly hurt unit next to the enemy goes back to the place of a fresh ally standing safer,
+ * and a fresh melee unit takes the place of a wounded ally at the front. Never onto a cell next to a trap or a mycelium of the enemy that the side can see.
+ */
+function tidesMove(state: GameState, u: BattleUnit): Action | null {
+  if (!u.pos || !tideSwapReady(state, u)) return null;
+  const b = state.battle!;
+  const share = (x: BattleUnit) => x.hp / x.maxHp;
+  const hazard = (k: HexKey) => seenHazard(state, u.side, k);
+  if (hazard(u.pos)) return null;
+  const mates = tideTargets(state, u).filter((x) => !hazard(x.pos!));
+  const foesNext = (x: BattleUnit) => enemiesOf(b, x).some((e) => unitDistance(e, x) === 1);
+  if (share(u) <= 0.5 && foesNext(u)) {
+    const threats = threatsTo(state, u);
+    const back = mates.filter((x) => share(x) >= 0.7 && !foesNext(x)).sort((x, y) => danger(threats, cellsOf(x)) - danger(threats, cellsOf(y)) || (x.id < y.id ? -1 : 1))[0];
+    if (back && danger(threats, cellsOf(back)) <= danger(threats, cellsOf(u))) return { type: 'battleTideSwap', targetId: back.id };
+  }
+  if (share(u) >= 0.7 && UNITS[u.defId].attackType === 'melee') {
+    const hurt = mates.filter((x) => share(x) <= 0.5 && foesNext(x)).sort((x, y) => x.hp - y.hp || (x.id < y.id ? -1 : 1))[0];
+    if (hurt) return { type: 'battleTideSwap', targetId: hurt.id };
+  }
+  return null;
+}
+
+/** Whether a cell is on or next to a trap or a mycelium of another side that `side` can see (the bot of the Tides does not swap onto such a cell). */
+function seenHazard(state: GameState, side: TeamId | 'neutral' | string, k: HexKey): boolean {
+  const near = (c: HexKey) => c === k || dist(c, k) === 1;
+  return (state.battle!.ground ?? []).some((g) => g.owner !== side && near(g.cell) && (g.kind === 'claimed' || (g.kind === 'trap' && (!g.hidden || (g.seenBy ?? []).includes(side as TeamId)))));
+}
+
 function rank(u: BattleUnit): number {
   const d = UNITS[u.defId];
   // The Kingdom of the Dead: the cheap skeletons stand in front (they rise again), the heroes and the shooters (the Lisz, the Wróżka) behind.
@@ -909,6 +979,8 @@ function planBattleAction(state: GameState): Action {
   }
   const sands = sandsMove(state, u);
   if (sands) return sands;
+  const tides = tidesMove(state, u);
+  if (tides) return tides;
   if (followsRulebook(state, u)) {
     const free = rulebookFreeAbility(state, u);
     if (free) return free;
