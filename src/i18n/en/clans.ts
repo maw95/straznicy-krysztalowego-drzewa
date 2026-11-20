@@ -42,6 +42,7 @@ register({
   'Bełt Przeszywający': 'Piercing Bolt', 'Stała: cios trafia cel i wroga stojącego tuż za nim w jednej linii.': 'Passive: the blow hits the target and the enemy right behind it in a line.',
   'Podkop': 'Burrow', 'Zamiast ruchu znika pod ziemią i wyłania się na dowolnym wolnym polu w odległości do {0}; w tej aktywacji nie atakuje.': 'Instead of moving it vanishes underground and surfaces on any free cell up to {0} away; it does not attack in this activation.',
   'Pawęż': 'Pavise', 'Kolczuga': 'Chain Mail', 'Stała: pancerz (−{0} obrażeń z każdego ciosu).': 'Passive: armour (−{0} damage from every blow).',
+  'Ostrzał z Miejsca': 'Standing Fire', 'Stała: +{0} A, gdy w tej aktywacji się nie ruszał (kusze na odnóżach celują najlepiej, gdy pająk stoi).': 'Passive: +{0} ATK when it has not moved in this activation (the crossbows on its legs aim best while the spider stands still).',
   'Salwa z Miejsca': 'Standing Volley', 'Stała: +{0} A, gdy w tej aktywacji się nie ruszał.': 'Passive: +{0} ATK when it has not moved in this activation.',
   'Kolce Mechanizmu': 'Mechanism Spikes', 'Stała: każdy, kto zaatakuje go wręcz, traci {0} Ż; trucizna na niego nie działa.': 'Passive: whoever attacks it in melee loses {0} HP; poison has no effect on it.',
   'Na Duże Cele': 'Against Large Targets', 'Stała: +{0} A przeciw dużym jednostkom (dwupolowym).': 'Passive: +{0} ATK against large (two-cell) units.',

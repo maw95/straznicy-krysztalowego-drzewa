@@ -294,7 +294,7 @@ frakcja). Pancerz rośnie, gdy jednostki stoją obok siebie.
 |---|---|---|---|---|---|---|---|---|
 | 1 | Krasnoludzki Tarczownik (`shieldDwarf`) | krasnolud z pawężą | 1 | chód | wręcz | Pawęż: pancerz | pancerz | — |
 | 1 | Kret z Brązu (`bronzeMole`) | mechaniczny kret z wiertłem zamiast nosa | 1 | chód | wręcz | Podkop: zamiast ruchu wyłania się na dowolnym polu w zasięgu | reuse: Podkop (Podkopnik) | — |
-| 1 | Mosiężny Pająk (`brassSpider`) | krasnolud z kuszą | 1 | chód | dyst. | Salwa z Miejsca: +N A, gdy w tej aktywacji się nie ruszał | ★ premia za brak ruchu | — |
+| 1 | Mosiężny Pająk (`brassSpider`) | krasnolud z kuszą | 1 | chód | dyst. | Ostrzał z Miejsca (Mosiężny Pająk; Kusznik Gór zostaje przy Salwie z Miejsca): +N A, gdy w tej aktywacji się nie ruszał | ★ premia za brak ruchu | — |
 | 2A | Niedźwiedź w Zbroi (`armoredBear`) | niedźwiedź bojowy w blachach | 1 | chód | wręcz | Kolczuga: pancerz; bez osłaniania (to robi Prastary Niedźwiedź) | pancerz | Gawra Zbrojna |
 | 2B | Kowal Bitewny (`battleSmith`) | krasnolud z młotem i kowadłem na plecach | 1 | chód | wręcz | Hartowanie: raz na bitwę sąsiad +1 A do końca bitwy | ★ wzmocnienie sąsiada | Polowa Kuźnia |
 | 3A | Wartownik z Brązu (`bronzeSentinel`) | mechaniczny strażnik | 1 | chód | wręcz | Kolce Mechanizmu: atakujący wręcz traci N Ż; odporny na truciznę | reuse: Kolce | Warsztat Mechanizmów |
