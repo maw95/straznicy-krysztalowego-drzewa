@@ -51,6 +51,8 @@ Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowe
 - **Poprawki Kompanii zrobione w gałęzi `kompanie-followups`** (worktree `../skd-kompanie`, commity `d7a10e7`..`0a3faa0`, `make check` zielony, 903 testy; sprzedaż artefaktów w Paserce, zasłona hot-seat, `redactHidden` w backendzie jako lokalny commit `18aa403`): **do scalenia do `master` dopiero po zakończeniu stroiciela** (`git merge kompanie-followups`; zmienia `src/`).
 - Dalej wg kolejności powyżej: G1 Piasków (od commitu WIP `3985491` w gałęzi `g1-four-factions`), Rój, Przypływy, G2 ponownie.
 
+- **Stan 20.11 wieczór (gałąź `bot-mechanics`, worktree `../skd-bot`, `make check` zielony, golden bez zmian):** bot buduje budynek mechaniki wcześnie (budynek stoi w 13–76% bitew pvp zamiast 3–21%), Sidła leżą na drodze wroga, diagnostyka poprawiona. Liczby mechanik NIE zmienione (pomiar w `docs/DIAGNOZA_FRAKCJI.md` sekcja 9: nie przesuwają par). Otwarte: Przymierze 67% średnio, Klany 35%, Szron 44%, Kompanie 42% (jednostki i kolejność budowy, nie liczby mechanik); decyzja autora, jak wyrównać.
+
 ## Szczegóły zadań
 
 ## Zadanie 1: przestrojenie poziomów po wzmocnieniu Hordy (liczy się w tle)

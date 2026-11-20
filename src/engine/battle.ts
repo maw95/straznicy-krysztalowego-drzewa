@@ -1699,10 +1699,11 @@ export function layTrap(state: GameState, side: Side, cell: HexKey): void {
  */
 export function autoTrapCells(state: GameState, side: Side, n: number): HexKey[] {
   const b = state.battle!;
-  const mine = livingUnits(b, side);
-  const guarded = mine.filter((x) => UNITS[x.defId].attackType === 'ranged');
-  const guards = (guarded.length ? guarded : mine).flatMap(cellsOf);
+  const foes = b.attacker === side ? b.defender : b.attacker;
+  // Where the enemy is (positions are public) or, before it is deployed, where it will come from: the cells of its side of the arena.
+  const foeCells = (foes === 'neutral' ? Object.values(b.units).filter((x) => x.side === 'neutral' && x.alive) : livingUnits(b, foes)).flatMap(cellsOf);
   const last = (b.layout === 'wide' ? WIDE_COLUMNS : ARENA_COLUMNS) - 1;
+  const foeColumn = side === b.attacker ? last : 0;
   const chosen: HexKey[] = [];
   const zone = trapZone(b, side).filter((k) => mayLayTrap(b, side, k));
   for (let i = 0; i < n; i++) {
@@ -1710,9 +1711,10 @@ export function autoTrapCells(state: GameState, side: Side, n: number): HexKey[]
     for (const k of zone) {
       if (chosen.includes(k)) continue;
       const h = parseKey(k);
-      let score = guards.reduce((sum, g) => sum + Math.max(0, 4 - distance(parseKey(g), h)), 0) / Math.max(1, guards.length) * 2;
-      score += (1 - Math.abs(columnOf(b, k) - last / 2) / (last / 2)) * 1.5 - Math.abs(wideOrHalfRow(b, k)) * 0.15;
-      if (chosen.some((c) => distance(parseKey(c), h) <= 1)) score -= 5;
+      // On the enemy's road: as close to the enemy as the own half allows (the cells just before the middle line), in front of its units rather than behind its flank.
+      const toFoe = foeCells.length ? Math.min(...foeCells.map((g) => distance(parseKey(g), h))) : Math.abs(columnOf(b, k) - foeColumn);
+      let score = -toFoe - Math.abs(wideOrHalfRow(b, k)) * 0.15;
+      for (const c of chosen) { const d = distance(parseKey(c), h); if (d <= 1) score -= 8; else if (d <= 2) score -= 2; }
       if (!best || score > best.score + 1e-9 || (Math.abs(score - best.score) <= 1e-9 && k < best.k)) best = { k, score };
     }
     if (!best) break;
