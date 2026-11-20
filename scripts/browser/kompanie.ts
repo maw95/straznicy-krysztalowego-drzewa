@@ -16,11 +16,12 @@ async function startTable(dev: boolean, seat: number, humans: number[]) {
   await p.locator('[data-mode="pvp"]').click();
   await p.locator('[data-wizard-page="where"] .opt-card').first().click();
   await p.locator('[data-wizard-page="tier"] .opt-card', { hasText: 'Imperium' }).click();
-  await p.locator('[data-wizard-page="map"]').waitFor();
-  await p.locator('[data-shape="rectangle"]').click().catch(() => {});
-  await p.getByRole('button', { name: 'Dalej →' }).click();
-  await p.locator('[data-wizard-page="players"]').waitFor();
-  await p.getByRole('button', { name: 'Dalej →' }).click();
+  // The pages after the level differ by level (map, goal, players): go on until the table of seats.
+  for (let i = 0; i < 6 && !(await p.locator('.well select[aria-label="Kto gra"]').count()); i++) {
+    await p.locator('[data-shape="rectangle"]').click().catch(() => {});
+    await p.getByRole('button', { name: 'Dalej →' }).click({ timeout: 3000 }).catch(() => {});
+    await p.waitForTimeout(400);
+  }
   const sel = p.locator('select[aria-label="Frakcja"]');
   await sel.first().waitFor({ timeout: 5000 });
   console.log('faction options', await sel.first().locator('option').allInnerTexts());
