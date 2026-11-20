@@ -576,7 +576,7 @@ describe('games with the Desert Empire', () => {
 
   it('the mirages and the abilities do fire in the games of the bots', () => {
     const fired = new Set<string>();
-    for (const seed of [1, 2, 3, 4]) {
+    for (const seed of [1, 2, 3, 4, 5, 6, 7, 8]) {
       const end = playOut(createGame(table(['sands', 'horde'], 'conquest', { seed })));
       for (const l of end.log) {
         if (l.text.includes('To był miraż')) fired.add('miraż');

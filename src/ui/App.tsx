@@ -25,6 +25,7 @@ import { ARTIFACT_BY_ID } from '../engine/sites';
 import type { SkillId } from '../engine/growth';
 import { sfx } from './sfx';
 import { animationWait, ATTACK_SHOW_MS, holdFor, resetAnimLock } from './animLock';
+import { scaledMs } from './animSpeed';
 import { DuelView } from './DuelView';
 import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset, useMedia } from './common';
 import { SetupScreen } from './SetupScreen';
@@ -712,6 +713,23 @@ export function App() {
   const menuAutosave = useMemo(() => (game ? null : readAutosave()), [game === null]);
   const overlay = session && <OnlineOverlay session={session} onAccept={acceptInvitation} />;
 
+  // Autoplay closes the report windows (a digest, a battle summary, a found treasure, a story page, an artifact) by itself after a short while, one at a time;
+  // windows that ask for a decision and the end of the game stay for the player.
+  const autoClose: (() => void) | null = held || isOnline || !autoplay || !game || game.phase === 'over' ? null
+    : digest && !needsHandoff ? () => setDigest(null)
+      : summary !== null && game.lastBattle?.id === summary ? () => setSummary(null)
+        : found ? () => setFound(null)
+          : storyNews.length ? () => setStoryNews((a) => a.slice(1))
+            : artifactNews.length ? () => setArtifactNews((a) => a.slice(1))
+              : null;
+  const autoCloseKey = autoClose ? `${digest ? 'd' : summary !== null ? 's' : found ? 'f' : storyNews.length ? `n${storyNews.length}` : `a${artifactNews.length}`}` : '';
+  useEffect(() => {
+    if (!autoClose) return;
+    const t = window.setTimeout(autoClose, scaledMs(2800));
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoCloseKey]);
+
   // Keyboard shortcuts (battle-specific keys live in BattleView). One listener for the whole game;
   // it reads the open dialogs through a ref.
   const keys = useRef({ closeTop: (): boolean => false, anyOpen: false, undo, fastForward, humanAction });
@@ -1211,6 +1229,10 @@ function GameOver({ state, online, rankingNote, onNew, onLog }: { state: GameSta
   return (
     <div className={state.winner === 'horde' ? 'quake' : undefined}>
       <Frame crest style={{ width: 'min(620px, 94vw)' }} innerStyle={{ padding: 26, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center' }}>
+        {state.winner && (
+          <img data-winner-crest={state.winner} src={asset(`cards/crests/${state.winner === 'neutral' ? 'neutral' : raceOf(state, state.winner)}.png`)} alt="" onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            style={{ display: 'block', width: 'min(150px, 22vh)', height: 'min(150px, 22vh)', objectFit: 'contain', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.6))', marginBottom: -4 }} />
+        )}
         <Ribbon side={state.winner ?? 'dawn'} style={{ width: 460, height: 50 }}>{state.winner ? `Wygrywa: ${state.winner === 'neutral' ? FACTION_NAMES.neutral : teamLabel(state, state.winner)}` : 'Remis'}</Ribbon>
         <div style={{ fontSize: 20 }}>{state.endReason}</div>
         {state.setup.mode === 'arena' ? (

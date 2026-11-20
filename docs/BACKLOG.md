@@ -93,7 +93,6 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
 
 **58b. Świetlista Szarża Jednorożca liczy dystans po linii prostej (S).** Wrażenie autora: szarża mierzy odległość od heksa startu do heksa celu, a nie faktycznie przebytą drogę. Oczekiwane: jeśli Jednorożec stoi przy celu i obejdzie go dookoła, atakując z innej strony po przejściu co najmniej 4 heksów, efekt szarży ma zadziałać. Do zrobienia: potwierdzić testem obecne zachowanie, przejść na długość faktycznie przebytej ścieżki (liczba heksów ruchu w tej aktywacji), sprawdzić, że ścieżka nie liczy się podwójnie przy cofaniu, wpis w zasadach (PL, EN, notatki) i golden w osobnym commicie, jeśli się zmieni.
 
-**58c. Duży herb zwycięskiej frakcji w oknie zwycięstwa (S).** Obok wstążki „Wygrało Przymierze / Horda” pokazać duży herb frakcji, która wygrała (decyzja o miejscu: nad wstążką, żeby herb był pierwszym, co widać, a wstążka go podpisywała; do sprawdzenia w przeglądarce na desktopie i telefonie, `make zrzut`). Herb z istniejących zasobów frakcji, także dla nowych frakcji (zastępczy herb z paczki) i dla remisu (bez herbu albo dwa herby).
 
 **58d. Okno skarbów i księga czarów: nowy wygląd i animacja otwierania (L).**
   - **Skrzynia skarbów:** grafika skrzyni jest ucięta po bokach (naprawić przycięcie). Usunąć z niej ikonę skarbów i napis „Wspólne skarby frakcji – <nazwa>”. Skarby jako same ikony z nazwą pod spodem, bez listy i bez beżowego tła; szczegóły skarbu po kliknięciu prawym przyciskiem (własna pergaminowa bańka, jak w ikonach i podpowiedziach, nie podpowiedź przeglądarki). Skrzynia powiększona tak, by w jednym rzędzie mieściło się 6 skarbów; gdy skarbów jest więcej niż miejsc, paginacja ze strzałkami „← 2/3 →”.
@@ -102,11 +101,9 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
   - **Animacja:** po kliknięciu „Skarby” (lub otwarciu księgi) najpierw widać zamkniętą skrzynię (księgę), która się otwiera, i dopiero potem zawartość; przy wyjściu odwrotnie: animacja zamykania, a dopiero po niej powrót do poprzedniego ekranu. Klatki jako arkusz WebP (reguła zasobów), wpis w `assets.json`; respektować `prefers-reduced-motion` (bez animacji, od razu stan końcowy).
   - Sprawdzić klawisz Esc, ekran telefonu (`COMPACT_QUERY`), wersję EN i skrót klawiszowy; test ścieżki kliknięć w prawdziwej przeglądarce.
 
-**58e. Autoplay zamyka okna wyników (S).** Przy włączonym „Autoplay” okna z wynikami walk, zdobytymi skarbami, nagrodami itp. mają zamykać się same po krótkiej chwili (czas wystarczający na zobaczenie wyniku, np. 2–3 s, albo skracany prędkością animacji), bez czekania na klik. Obowiązuje wszystkie okna blokujące autoplay, ale nie okna wyboru, w których gracz musi zdecydować, ani końca gry. Test: partia z autoplayem do końca bez ręcznego klikania.
 
-**58f. Pasy boczne ekranu bitwy: herb zamiast nazwy frakcji, bez wstążki u góry areny (M).** Nazwa frakcji nie mieści się we wstążkach po bokach ekranu bitwy: zastąpić wstążkę samym herbem frakcji (nazwa w podpowiedzi po najechaniu). Usunąć wstążkę na górze areny z napisem typu „Bitwa o kryształ – runda 4” (informację o rundzie przenieść, jeśli nigdzie indziej jej nie ma, w mały znacznik w rogu). Sprawdzić `BattleView`, `BattleSidePanel`, układ telefonu i poziomy, nowe frakcje (zastępcze herby).
 
-**58g. Jednolite ramki ikon w menu głównym i na ekranach (M).** Ikony w menu głównym i na niemal każdym ekranie mają ramki różniące się grubością, kolorem i ozdobnikami (albo ich brakiem). Wzorzec: ramka ikony „Księstwo”. Ujednolicić wszystkie do jednego komponentu lub jednej klasy CSS ze wzorca; dodatkowo naprawić ramkę „Podbój” (przycięta z prawej) i „Relikt” (przycięta z lewej). Zrobić przegląd wszystkich ekranów z ikonami z ramką (`grep` po klasach ramek w `styles.css`), sprawdzić stan zwykły, najechanie i zaznaczenie, desktop i telefon, zrzuty przed i po.
+
 
 ## 2. Tylko autor (Claude tego nie bierze)
 - **Premiera na Steamie** (L): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery: **3.0** (potwierdzone 17.11).
@@ -197,6 +194,7 @@ Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.t
 Wyczyszczone 17.11: autor sam sprawdza grę i zgłasza błędy (`make zgloszenia`); nie prowadzimy listy „do sprawdzenia”.
 
 ## 4. Parking (pomysły bez terminu)
+- **Tajne ziarno dla ukrytych losowań (21.11, pomysł autora):** pomieszanie id miraży (Piaski) i Sideł (Kompanie) losuje się z `state.rng`, który jest w stanie wysyłanym graczom; kto odtworzy RNG z surowych danych, mógłby zgadnąć ukryte rzeczy. Serwer miałby trzymać osobne, tajne ziarno dla takich losowań. Wymaga zmiany serwera i silnika (dotyczy online), więc na razie zostaje jak jest.
 - „Cios od tyłu / z flanki” dla innych jednostek. (Więcej niż 6 graczy, do 8: zrobione 17.11; własni czwarci bohaterowie: kolejka, punkt 56.)
 - **Kolejne języki** poza PL i EN (nowy plik słownika `src/i18n/<kod>/` i test pokrycia): zaparkowane 18.11, na razie nie potrzeba.
 - **PWA: zrobione 17.11** (ręczny service worker `public/sw.js`: kod siecią najpierw, zasoby z pamięci; manifest, ikony, podpowiedź instalacji w Opcjach). Zostaje test na prawdziwych telefonach i, gdy będzie potrzeba, kontrola wersji protokołu z serwerem.

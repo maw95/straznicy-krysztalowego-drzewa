@@ -7,7 +7,7 @@ import { SIEGE } from '../engine/economy';
 import { ABILITY } from '../engine/data';
 import type { HexKey } from '../engine/hex';
 import { isDigital, type BattleState, type BattleUnit, type GameState } from '../engine/types';
-import { abilityArt, asset, Frame, Portrait, ACTIVE_FIGURE_RING, Ribbon, SIDE_RING } from './common';
+import { abilityArt, asset, Frame, Portrait, ACTIVE_FIGURE_RING, SIDE_RING } from './common';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { wideObstacleGroups } from '../engine/battle';
 import { DamageDrop, DieFace, LastAttack, Marker, StatText } from './markers';
@@ -540,9 +540,6 @@ export function ArenaBoard(p: Props) {
               <LastAttack roll={lastRoll} units={b.units} size={20} />
             </div>
           )}
-          <div className="hide-mobile" style={{ position: 'absolute', left: '50%', top: 14, transform: 'translateX(-50%)' }}>
-            <Ribbon style={{ width: 340 }}>{`${b.kind === 'neutral' ? 'Bitwa o kryształ' : b.garrison ? 'Szturm osady' : 'Starcie bohaterów'} · ${b.stage === 'deploy' ? 'ustawienie' : `runda ${b.round}`}`}</Ribbon>
-          </div>
         </div>
         </div>
       </div>

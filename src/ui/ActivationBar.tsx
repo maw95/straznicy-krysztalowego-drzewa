@@ -76,8 +76,8 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
         <div className="act-info" style={{ width: 170 }}>
           <div style={{ fontWeight: 800, fontSize: 18, color: '#F3D27A', lineHeight: 1.1 }}>
             {b.stage === 'deploy' ? 'Ustawienie wojsk' : active ? UNITS[active.defId].name : '—'}
-            {/* Phones hide the title over the arena: the round is here instead. */}
-            {b.stage !== 'deploy' && <span className="show-mobile" style={{ display: 'none', fontSize: 14, fontWeight: 600, color: 'var(--muted)' }}>Runda bitwy {b.round}</span>}
+            {/* The title over the arena is gone: the round is here, on every screen. */}
+            {b.stage !== 'deploy' && <span style={{ display: 'block', fontSize: 14, fontWeight: 600, color: 'var(--muted)' }}>Runda bitwy {b.round}</span>}
           </div>
           <div style={{ fontSize: 14, color: 'var(--muted)' }}>{hint}</div>
         </div>

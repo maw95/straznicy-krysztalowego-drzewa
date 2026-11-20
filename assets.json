@@ -6415,6 +6415,23 @@
       "ai": false,
       "placeholder": true,
       "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "ikony/wspolna-ramka",
+      "pliki": [
+        "public/assets/ui/menu/*.webp",
+        "public/assets/ikony/menu/*.webp",
+        "public/assets/ikony/czary/*.webp",
+        "public/assets/ikony/drzewko/*.webp",
+        "public/assets/ikony/umiejetnosci/*.webp"
+      ],
+      "typ": "ikony okrągłe (przetworzone: jednolita ramka)",
+      "narzedzie": "scripts/assets/unify_rings.py (Pillow, lokalnie)",
+      "model": "brak; obrazy bez zmian wewnątrz ramki, ramka wspólna skopiowana z ui/menu/ksiestwo.webp (wzorzec autora 20.11)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "jak oryginalne ikony (Scenario); przetworzenie własne"
     }
   ]
 }
