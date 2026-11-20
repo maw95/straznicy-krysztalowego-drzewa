@@ -34,7 +34,8 @@ Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowe
 - **Decyzja do podjęcia po stroicielu (ważne):** tabela kontr wymaga Przymierze > Horda 60–70%, a premia +1/+1 dla Hordy dała ok. 50%. Stroiciel sam dobierze premie wszystkich frakcji,
   więc po nim Kryształy i inne cele trzeba przestroić ponownie (`scripts/sim/retune-all.sh` po skasowaniu `.tmp/sim/auto-*.json` oprócz `auto-zero-legacy.json`), potem `tuneMerge`.
   Dlatego obecne pliki `auto-*.json` służą tylko, jeśli premia Hordy zostanie przy +1/+1.
-- Dalej wg kolejności powyżej: poprawki Kompanii (punkt 5), G1 Piasków (od commitu WIP `3985491` w gałęzi `g1-four-factions`), Rój, Przypływy, G2 ponownie.
+- **Poprawki Kompanii zrobione w gałęzi `kompanie-followups`** (worktree `../skd-kompanie`, commity `d7a10e7`..`0a3faa0`, `make check` zielony, 903 testy; sprzedaż artefaktów w Paserce, zasłona hot-seat, `redactHidden` w backendzie jako lokalny commit `18aa403`): **do scalenia do `master` dopiero po zakończeniu stroiciela** (`git merge kompanie-followups`; zmienia `src/`).
+- Dalej wg kolejności powyżej: G1 Piasków (od commitu WIP `3985491` w gałęzi `g1-four-factions`), Rój, Przypływy, G2 ponownie.
 
 ## Szczegóły zadań
 
