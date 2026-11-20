@@ -12,6 +12,7 @@ import './free';
 import './sands';
 import './swarm';
 import './tides';
+import './lore';
 import './names';
 import './campaign';
 import './changelog';

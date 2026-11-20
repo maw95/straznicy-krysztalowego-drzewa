@@ -2,6 +2,13 @@
 import { register } from '../translate';
 
 register({
+  "Do zrekrutowania": "Ready to recruit",
+  "Siedlisko do zbudowania": "Dwelling can be built",
+  "Niedostępne": "Unavailable",
+  "Można wybudować siedlisko.": "The dwelling can be built.",
+  "Można zrekrutować.": "Can be recruited.",
+  "Ta osada należy do obcej frakcji.": "This settlement belongs to another faction.",
+  "Wybrano inne siedlisko: {0}.": "Another dwelling was chosen: {0}.",
   "Polegli bohaterowie (strony po kolei)": "Fallen heroes (sides in order)",
   "Polegli pomocnicy (strony po kolei)": "Fallen supports (sides in order)",
   "Znalezione skarby (strony po kolei)": "Treasures found (sides in order)",

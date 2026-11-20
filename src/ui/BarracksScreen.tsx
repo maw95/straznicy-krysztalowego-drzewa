@@ -47,13 +47,28 @@ export function BarracksScreen({ state, s, faction, act }: { state: GameState; s
   const side = wide ? Math.max(bigCard, stage) + 34 : 0;
   // The first tier (three supports) lies in two columns of two rows, or, where the window is tall enough for the bigger cards, in one column of three rows.
   const later = tiers.filter((x) => x > 1).length;
-  const fit = (columns: number, rows: number) => Math.min((room.w - side - 40 - columns * 18 - (columns - 1) * 14) / columns, (room.h - 24 - 30 - rows * (CTL_H + 14)) / rows / CARD_RATIO);
+  const fit = (columns: number, rows: number) => Math.min((room.w - side - 40 - columns * 18 - (columns - 1) * 14) / columns, (room.h - 24 - 30 - 40 - rows * 28) / rows / CARD_RATIO);
   const oneColumn = wide && fit(1 + later, 3) > fit(2 + later, 2);
   const cardW = Math.round(Math.max(84, Math.min(380, wide ? Math.max(fit(1 + later, 3), fit(2 + later, 2)) : 106)));
 
+  /** What the shelf shows by a glow instead of a button under each card: in the team (green), can be recruited now (yellow), its dwelling can be built (blue), cannot be (red). */
+  const stateOf = (r: (typeof recruits)[number]): { kind: 'team' | 'ready' | 'build' | 'blocked'; hint: string } => {
+    if (hasUnit(state, faction, r.id)) return { kind: 'team', hint: 'W drużynie' };
+    if (needsDwelling(state, r) && dwellingOf(state, faction, r.tier) === undefined) {
+      const locked = r.tier >= 4 && s.buildings.barracks < 2;
+      const prevOk = r.tier === 2 || Boolean(dwellingOf(state, faction, r.tier - 1));
+      if (!mayHire) return { kind: 'blocked', hint: 'Ta osada należy do obcej frakcji.' };
+      if (locked) return { kind: 'blocked', hint: 'Potrzebne rozbudowane koszary.' };
+      if (!prevOk) return { kind: 'blocked', hint: `Najpierw: siedlisko poziomu ${r.tier - 1}.` };
+      return { kind: 'build', hint: 'Można wybudować siedlisko.' };
+    }
+    if (!dwellingReady(state, faction, r)) return { kind: 'blocked', hint: `Wybrano inne siedlisko: ${DWELLING_NAMES[dwellingOf(state, faction, r.tier)!]}.` };
+    if (!mayHire) return { kind: 'blocked', hint: 'Ta osada należy do obcej frakcji.' };
+    if (r.tier >= 4 && s.buildings.barracks < 2) return { kind: 'blocked', hint: 'Potrzebne rozbudowane koszary.' };
+    return { kind: 'ready', hint: 'Można zrekrutować.' };
+  };
   // The buttons under the cards grow with the cards.
   const ico = Math.round(Math.max(15, Math.min(26, cardW * 0.09)));
-  const ctlFont = Math.round(Math.max(12, Math.min(20, cardW * 0.075)));
   const control = (r: (typeof recruits)[number]) => {
     const locked = r.tier >= 4 && s.buildings.barracks < 2;
     const lockText = 'Potrzebne rozbudowane koszary.';
@@ -83,23 +98,30 @@ export function BarracksScreen({ state, s, faction, act }: { state: GameState; s
     <div className="gf barracks-frame" data-panel="barracks">
       <div className="gi slate barracks-inner" ref={box}>
         {!mayHire && <i className="bk-note">Ta osada należy do obcej frakcji: nie rekrutujesz tu jednostek.</i>}
+        <div className="bk-left">
         <div className="bk-shelf">
           {tiers.map((tier) => (
             <div key={tier} className={`bk-col ${tier === 1 ? (oneColumn ? 'first one' : 'first') : ''}`} data-tier={tier}>
               <div className="bk-tier">poziom {tier}</div>
               <div className="bk-units">
               {recruits.filter((r) => r.tier === tier).map((r) => {
-                const out = needsDwelling(state, r) && !dwellingReady(state, faction, r) && dwellingOf(state, faction, r.tier) !== undefined;
+                const st = stateOf(r);
                 return (
-                  <div key={r.id} className={`bk-unit ${pick === r.id ? 'on' : ''} ${out ? 'out' : ''}`} data-unit={r.id} onClick={() => setPick(r.id)}>
+                  <div key={r.id} className={`bk-unit st-${st.kind} ${pick === r.id ? 'on' : ''}`} data-unit={r.id} data-state={st.kind} title={`${UNITS[r.id].name}: ${st.hint}`} onClick={() => setPick(r.id)}>
                     <button className="bk-card" aria-label={UNITS[r.id].name} onClick={() => setPick(r.id)}><UnitCard unitId={r.id} width={cardW} digital /></button>
-                    <div className="bk-ctl" style={{ width: cardW + 2, fontSize: ctlFont }}>{control(r)}</div>
                   </div>
                 );
               })}
               </div>
             </div>
           ))}
+        </div>
+        <div className="bk-legend" data-bk-legend>
+          <span><i className="dot st-team" />W drużynie</span>
+          <span><i className="dot st-ready" />Do zrekrutowania</span>
+          <span><i className="dot st-build" />Siedlisko do zbudowania</span>
+          <span><i className="dot st-blocked" />Niedostępne</span>
+        </div>
         </div>
         <div className="bk-detail" data-bk-detail={sel.id} style={wide ? { flexBasis: side } : undefined}>
           <UnitSprite unitId={sel.id} size={wide ? side - 14 : stage} height={stage} zoom={stage / 185} />

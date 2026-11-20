@@ -126,6 +126,8 @@ export interface SpriteSet {
   sheets: Record<string, CanvasImageSource>;
   /** Settles when every sheet is in (or has failed): the stage can wait for it before a battle starts. */
   ready: Promise<void>;
+  /** Loads just these clips' sheets now (in parallel, ahead of the sequential queue behind `ready`): a screen that shows only the walk and the blows does not wait for the rest. */
+  ensure: (clips: string[]) => Promise<void>;
   stoi: HTMLImageElement;
   martwy: HTMLImageElement;
   /** How the fallen unit is drawn: scale (a small unit's corpse may span at most CORPSE_MAX_W canvas pixels) and the shift that puts its lowest point on the feet line, in canvas pixels. */
@@ -224,15 +226,21 @@ export function loadSprites(defId: string): Promise<SpriteSet> {
       // The sheets come in one after another, the ones a fight needs first (a blow, a hit, a death), while the unit already stands on the board.
       const sheets: Record<string, CanvasImageSource> = {};
       const order = ['atak', 'atak_wrecz', 'trafienie', 'smierc', 'wzbicie', 'lot', 'chod'];
-      const ready = (async () => {
-        for (const n of [...names].sort((a, b) => order.indexOf(a) - order.indexOf(b))) {
+      const loading: Record<string, Promise<void>> = {};
+      const loadSheet = (n: string): Promise<void> =>
+        (loading[n] ??= (async () => {
           try {
             sheets[n] = await decodedSheet(url(`${n}.webp`));
           } catch {
             /* a sheet that fails to load: that clip is not drawn */
           }
-        }
+        })());
+      const ready = (async () => {
+        for (const n of [...names].sort((a, b) => order.indexOf(a) - order.indexOf(b))) await loadSheet(n);
       })();
+      const ensure = async (clips: string[]) => {
+        await Promise.all(clips.filter((c) => names.includes(c)).map(loadSheet));
+      };
       return {
         spec,
         width,
@@ -247,6 +255,7 @@ export function loadSprites(defId: string): Promise<SpriteSet> {
         frames: meta.clips,
         sheets,
         ready,
+        ensure,
         stoi,
         martwy,
         corpse: { scale, dy },

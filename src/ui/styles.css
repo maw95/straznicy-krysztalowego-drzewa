@@ -872,6 +872,10 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .opt-grid.three { max-width: 980px; margin: 0 auto; }
 .opt-grid.three .opt-card { flex: 1 1 260px; max-width: calc((100% - 32px) / 3); }
 .opt-grid.three .opt-card-img { height: 84px; }
+/* Digital mode page: four cards, two in a row. */
+.opt-grid.two { max-width: 760px; margin: 0 auto; }
+.opt-grid.two .opt-card { flex: 1 1 300px; max-width: calc((100% - 12px) / 2); }
+.opt-grid.two .opt-card-img { height: 84px; }
 .opt-card-title { font-size: 24px; font-weight: 800; color: #F3D27A; }
 .opt-card-text { font-size: 15px; line-height: 1.35; }
 .opt-crests { display: flex; gap: 14px; align-items: center; justify-content: center; height: 100%; }
@@ -1135,8 +1139,20 @@ button.sb-slot:disabled { cursor: default; }
 .bk-tier { font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #F3D27A; font-size: 13px; text-shadow: 0 1px 2px #000; }
 .bk-unit { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 5px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; background: rgba(0, 0, 0, 0.22); }
 .bk-unit:hover { border-color: rgba(243, 210, 122, 0.6); }
-.bk-unit.on { border-color: #9EE4FF; box-shadow: 0 0 14px rgba(158, 228, 255, 0.5); }
-.bk-unit.out { filter: grayscale(0.85); opacity: 0.6; }
+/* The state of a card is a glow: green in the team, yellow can be recruited now, blue its dwelling can be built, red it cannot. The chosen card is lifted and framed in light. */
+.bk-unit.st-team { border-color: #6FDC78; box-shadow: 0 0 14px 2px rgba(111, 220, 120, 0.7); }
+.bk-unit.st-ready { border-color: #F3D14A; box-shadow: 0 0 14px 2px rgba(243, 209, 74, 0.7); }
+.bk-unit.st-build { border-color: #5FA8FF; box-shadow: 0 0 14px 2px rgba(95, 168, 255, 0.7); }
+.bk-unit.st-blocked { border-color: #D9534F; box-shadow: 0 0 12px 2px rgba(217, 83, 79, 0.55); }
+.bk-unit.on { transform: translateY(-3px); outline: 2px solid #FFF4D0; outline-offset: 1px; }
+.bk-left { display: flex; flex-direction: column; flex: 1 1 0; min-width: 0; align-self: stretch; gap: 8px; }
+.bk-left .bk-shelf { flex: 1 1 0; }
+.bk-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: center; font-size: 13px; color: #D9C792; padding: 2px 0 0; }
+.bk-legend .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.bk-legend .st-team { background: #6FDC78; box-shadow: 0 0 6px #6FDC78; }
+.bk-legend .st-ready { background: #F3D14A; box-shadow: 0 0 6px #F3D14A; }
+.bk-legend .st-build { background: #5FA8FF; box-shadow: 0 0 6px #5FA8FF; }
+.bk-legend .st-blocked { background: #D9534F; box-shadow: 0 0 6px #D9534F; }
 .bk-card { padding: 0; border: 0; background: none; cursor: pointer; display: block; }
 .bk-ctl { min-height: 36px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 13px; }
 .bk-ctl .btn { width: 100%; padding: 3px 6px; font-size: inherit; line-height: 1.2; }

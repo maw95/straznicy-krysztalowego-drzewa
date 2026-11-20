@@ -10,8 +10,7 @@ import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, 
 import { Logo, useCoverArt } from './Logo';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
-import { FigurePreview } from './FigurePreview';
-import { hasFigure } from './figures';
+import { HERO_LORE } from '../content/heroLore';
 import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
@@ -259,7 +258,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
         <Frame crest style={{ width: 'min(1100px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>Jaki tryb gry?</Ribbon>
           {!digital && <div style={{ fontSize: 14, color: 'var(--muted)', textAlign: 'center', marginTop: -6 }}>Wersja planszowa</div>}
-          <div className="opt-grid compact three" data-wizard-page="mode">
+          <div className={`opt-grid compact ${digital ? 'two' : 'three'}`} data-wizard-page="mode">
             {((digital ? [['pvp', 'Potyczka', 'rywal', TIPS.skirmish], ['arena', 'Arena', 'arena', TIPS.arenaMode]] : [['pvp', 'Rywalizacja', 'rywal', TIPS.pvp], ['coop', 'Kooperacja', 'koop', TIPS.coop], ['arena', 'Arena', 'arena', TIPS.arenaMode]]) as ReadonlyArray<readonly [Mode, string, string, string]>).map(([m, title, img, text]) => (
               <button key={m} className="opt-card" data-mode={m} onClick={() => { setWizardMode(m); setLastTable(null); setStep('where'); }}>
                 <span className="opt-card-img"><img src={asset(`ui/menu/${img}.webp`)} alt="" /></span>
@@ -440,8 +439,10 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
             <Ribbon side={UNITS[preview].side} style={{ width: '100%' }}>{UNITS[preview].name}</Ribbon>
             {/* The card above the turning figure, both in the middle of the space left under the ribbon. */}
             <div style={{ flex: 1, minHeight: 0, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '6px 0' }}>
-              <UnitCard unitId={preview} width={hasFigure(preview) ? 280 : 340} digital={digital} />
-              <FigurePreview unitId={preview} size={300} />
+              <UnitCard unitId={preview} width={340} digital={digital} />
+              <div className="well hero-lore" data-hero-lore style={{ width: 340, maxWidth: '100%', padding: '10px 14px', fontSize: 16, lineHeight: 1.4, fontStyle: 'italic', textAlign: 'center', color: '#E9DDBC' }}>
+                {HERO_LORE[preview] ?? `${UNITS[preview].abilityName}: ${UNITS[preview].abilityText}`}
+              </div>
             </div>
           </Frame>
         </div>

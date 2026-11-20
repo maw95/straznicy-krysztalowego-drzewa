@@ -16,10 +16,20 @@ const RECOVER = 0.5;
 export function UnitSprite({ unitId, size = 220, height = size, zoom }: { unitId: string; size?: number; height?: number; zoom?: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const [set, setSet] = useState<SpriteSet | null>(null);
+  /** The walk and the blows are in: before that the unit stands (its standing picture is there as soon as the set is). */
+  const [clips, setClips] = useState(false);
   useEffect(() => {
     let live = true;
     setSet(null);
-    void loadSprites(unitId).then((s) => void s.ready.then(() => live && setSet(s)), () => undefined);
+    setClips(false);
+    // The previous unit's last frame must not stay on the canvas while the next one loads.
+    ref.current?.getContext('2d')?.clearRect(0, 0, ref.current.width, ref.current.height);
+    void loadSprites(unitId).then((s) => {
+      if (!live) return;
+      setSet(s);
+      // Only the clips this screen plays, all at once (the rest of the sheets keep arriving behind them).
+      void s.ensure(['atak', 'atak_wrecz', 'lot', 'chod']).then(() => live && setClips(true));
+    }, () => undefined);
     return () => { live = false; };
   }, [unitId]);
   useEffect(() => {
@@ -67,6 +77,6 @@ export function UnitSprite({ unitId, size = 220, height = size, zoom }: { unitId
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [set, size, height, zoom]);
+  }, [set, clips, size, height, zoom]);
   return <canvas ref={ref} width={size} height={height} data-unit-sprite={unitId} style={{ display: 'block', width: size, height, filter: 'drop-shadow(0 6px 8px rgba(0,0,0,0.6))' }} />;
 }
