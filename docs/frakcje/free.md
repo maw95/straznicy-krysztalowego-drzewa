@@ -56,6 +56,7 @@ z Hakownicą). Bez magii natury. Paleta ciepła i rdzawa, Przymierze srebrno-zie
 Stara Karczma Pod Sową, Zielony Gościniec, Spalony Most, Sakwa i Łuk, Bractwo Trzech Dębów.
 
 ## Wygląd i dźwięk
+- **Wygląd wzorcowy Bajki (kotka autora):** `docs/frakcje/ZWIERZAKI_AUTORA.md`.
 - **Paleta:** rude i brązowe futra, butelkowa zieleń płaszczy, skóra, mosiądz sprzączek, len.
 - **Herb:** lisia głowa na skrzyżowanych strzałach. **Arena:** leśny obóz przy zrujnowanym młynie, płoty, beczki.
 - **Muzyka:** lutnia, flet, skrzypki, ballada zbójnicka.

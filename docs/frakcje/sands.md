@@ -52,6 +52,7 @@ przepada. Do tego **przestawianie własnych jednostek** (Dżin, Rok, Czerw) i za
 Pod Gwiazdą, Kamienny Lew, Pałac Wiatru, Sucha Rzeka, Szafranowy Gród, Lustrzana Przystań.
 
 ## Wygląd i dźwięk
+- **Wygląd wzorcowy Bastii (kot autora Brytania):** `docs/frakcje/ZWIERZAKI_AUTORA.md`.
 - **Paleta:** piasek, ochra, terakota, złoto, kość słoniowa, zgaszony karmazyn, **zieleń jadeitu zamiast turkusu i lapis
   lazuli** (to niebieskie).
 - **Herb:** złote oko nad piramidą. **Arena:** oaza z ruinami kolumn, wydmy, palmy (przeszkody).

@@ -52,6 +52,7 @@ i przyciąganie wrogów. Rozdzielenie ze Stadami: Przypływy nie szarżują, prz
 Schody, Mewia Skała, Port Siedmiu Fal, Bursztynowy Brzeg, Lagunowy Dwór, Przylądek Syren.
 
 ## Wygląd i dźwięk
+- **Wygląd wzorcowy Sefirana (wąż zbożowy autora Stefan):** `docs/frakcje/ZWIERZAKI_AUTORA.md`.
 - **Paleta:** zieleń morska, jadeit, koral, perła, piasek, brąz, oliwkowe wodorosty, róż muszli. **Bez błękitu i turkusu
   w jednostkach.** Morska frakcja bez niebieskiego jest trudna: **zalecam dla niej inne tło kluczowe** (magenta #FF00FF,
   wtedy unikać czystego różu) albo wycinanie maską; sprawdzić w `PRZEPIS_JEDNOSTKI.md` przy próbce G3.
