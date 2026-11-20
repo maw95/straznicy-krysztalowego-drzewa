@@ -51,6 +51,8 @@ Dowódcy Stad: nazwy własne „Łowca Wiatru” i „Płanetnik” (`realm.ts`)
 - **Stan 20.11 ok. 10:00:** wymiany jednostek i nazwy (Dzikie Stado, Żelazny Klan, Wolna Kompania) scalone do `master` (`make check` zielony, 903 testy). Karty Piasków, Przypływów i Roju mają już nowe jednostki i nazwy
   (Pustynne Cesarstwo, Bractwo Przypływu, Rój Puszczy), kod ich nie ma (G1 do zrobienia). Otwarte pytania autora: Tarpan Łucznik (sam czy jeździec), zdolność Beduina Nomady, herby `cards/crests` mają stare nazwy.
   Nowa kolejność: (1) bot i mechaniki wg `docs/DIAGNOZA_FRAKCJI.md` priorytety 2–6, (2) stroiciel na cel względny, (3) G2, (4) przestrojenie poziomów Kryształów itd. (`retune-all.sh`; dotychczasowe `auto-*.json` są nieaktualne), (5) G1 Piasków/Roju/Przypływów.
+- **Drobne zmiany do wprowadzenia po stroicielu (nie edytować `src/` w katalogu głównym, gdy liczy się `tuneFactions.ts`):** (a) zdolność Nosorożca Bojowego „Taran” → nowa nazwa (autor 20.11: zmienić; rekomendacja „Rozpędzony Róg”, inne: Bodnięcie z Rozbiegu, Stratowanie; Kozioł Taranowy zachowuje „Taran”);
+  (b) specjalność Orła Stepowego Łowcy „Mistrz Oszczepu” → nowa nazwa (propozycje: Oko Orła, Szpon z Góry); (c) atak dystansowy orła = „pióra jak strzały” (do potwierdzenia, alternatywy: Satyr Sokolnik, orzeł w zwarciu).
 - **Decyzja do podjęcia po stroicielu (ważne):** tabela kontr wymaga Przymierze > Horda 60–70%, a premia +1/+1 dla Hordy dała ok. 50%. Stroiciel sam dobierze premie wszystkich frakcji,
   więc po nim Kryształy i inne cele trzeba przestroić ponownie (`scripts/sim/retune-all.sh` po skasowaniu `.tmp/sim/auto-*.json` oprócz `auto-zero-legacy.json`), potem `tuneMerge`.
   Dlatego obecne pliki `auto-*.json` służą tylko, jeśli premia Hordy zostanie przy +1/+1.
