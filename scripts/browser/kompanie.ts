@@ -23,7 +23,7 @@ async function startTable(dev: boolean, seat: number, humans: number[]) {
     await p.waitForTimeout(400);
   }
   const sel = p.locator('select[aria-label="Frakcja"]');
-  await sel.first().waitFor({ timeout: 5000 });
+  await sel.first().waitFor({ timeout: 5000 }).catch(async () => { await p.screenshot({ path: `.tmp/kompanie-kreator-${view}.png` }); console.log('wizard text:', (await p.locator('body').innerText()).slice(0, 400).replace(/\s+/g, ' ')); throw new Error('no faction select'); });
   console.log('faction options', await sel.first().locator('option').allInnerTexts());
   await sel.nth(seat).selectOption('free');
   await p.waitForTimeout(500);
