@@ -91,10 +91,6 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
 
 **58. Pakiet poprawek z 20.11 (zgłoszone przez autora; kolejność do ustalenia, każda pozycja to osobny commit z wpisem w CHANGELOG, PL i EN gdzie dotyczy instrukcji).**
 
-**58a. Spowolnienie ma działać także na zdolności ruchowe (S).** Spowolnienie, np. od Druida elfów, dziś nie obejmuje zdolności takich jak lot Gryfa czy Pegaza: ma je ograniczać tak samo jak zwykły ruch. Do sprawdzenia w silniku, które zdolności ruchowe (lot, szarża, przeskok, odepchnięcie z ruchem własnym) omijają kara ruchu, ustalić zasadę, test w `tests/` i golden tylko jeśli zmieni wyniki botów (osobny commit z `-u`). Zasadę dopisać do `NOTATKI_DLA_AGENTA_PLANSZOWKI.md` i do instrukcji (PL i EN).
-
-**58b. Świetlista Szarża Jednorożca liczy dystans po linii prostej (S).** Wrażenie autora: szarża mierzy odległość od heksa startu do heksa celu, a nie faktycznie przebytą drogę. Oczekiwane: jeśli Jednorożec stoi przy celu i obejdzie go dookoła, atakując z innej strony po przejściu co najmniej 4 heksów, efekt szarży ma zadziałać. Do zrobienia: potwierdzić testem obecne zachowanie, przejść na długość faktycznie przebytej ścieżki (liczba heksów ruchu w tej aktywacji), sprawdzić, że ścieżka nie liczy się podwójnie przy cofaniu, wpis w zasadach (PL, EN, notatki) i golden w osobnym commicie, jeśli się zmieni.
-
 
 **58d. Okno skarbów i księga czarów: nowy wygląd i animacja otwierania (L).**
   - **Skrzynia skarbów:** grafika skrzyni jest ucięta po bokach (naprawić przycięcie). Usunąć z niej ikonę skarbów i napis „Wspólne skarby frakcji – <nazwa>”. Skarby jako same ikony z nazwą pod spodem, bez listy i bez beżowego tła; szczegóły skarbu po kliknięciu prawym przyciskiem (własna pergaminowa bańka, jak w ikonach i podpowiedziach, nie podpowiedź przeglądarki). Skrzynia powiększona tak, by w jednym rzędzie mieściło się 6 skarbów; gdy skarbów jest więcej niż miejsc, paginacja ze strzałkami „← 2/3 →”.

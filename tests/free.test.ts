@@ -534,6 +534,23 @@ describe('free actions and the leap', () => {
     expect(slowedRange(cat, 3)).toBe(0);
   });
 
+  it('Szarża Światła counts the cells really walked, not the straight line (backlog 58b)', () => {
+    const s = fight([['unicornKing', 'dawn', 6, 8], ['ancientBear', 'horde', 8, 8, 99]], 1);
+    const king = at(s, 'unicornKing');
+    const ready = turn(s, 'unicornKing');
+    // a ring of rocks with one gap: to reach the far side the unit has to go round, so the way is longer than the straight line
+    const ring = [...reachableCells(ready, at(ready, 'unicornKing'))].filter(([k]) => distance(parseKey(king.pos!), parseKey(k)) === 2).map(([k]) => k);
+    ready.battle!.obstacles = [...ready.battle!.obstacles, ...ring.slice(1)];
+    const reach = reachableCells(ready, at(ready, 'unicornKing'));
+    const around = [...reach].find(([k, d]) => d >= ABILITY.lightChargeMinMove && distance(parseKey(king.pos!), parseKey(k)) < ABILITY.lightChargeMinMove);
+    expect(around).toBeDefined();
+    const done = applyAction(ready, { type: 'battleMove', to: around![0] });
+    expect(done.battle!.activation!.movedDistance).toBe(around![1]);
+    expect(attackDamage(done, at(done, 'unicornKing'), at(done, 'ancientBear'), false, done.battle!.activation!.movedDistance)).toBeGreaterThan(
+      attackDamage(done, at(done, 'unicornKing'), at(done, 'ancientBear'), false, 0),
+    );
+  });
+
   it('Szalony Skok does not set off the traps it flies over', () => {
     const s = fight([['wildcatBajka', 'dawn', 8, 8], ['ancientBear', 'horde', 12, 8, 99]], 1);
     at(s, 'wildcatBajka').status.battleSpeedBonus = -2;

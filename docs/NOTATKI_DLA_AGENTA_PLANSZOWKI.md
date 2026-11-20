@@ -834,3 +834,6 @@ Karta `docs/frakcje/tides.md`; tylko wersja cyfrowa, liczby wstępne (ustala je 
 
 ## 20. Spowolnienie obejmuje zdolności ruchowe (2026-11-20, backlog 58a, tylko wersja cyfrowa)
 Kara ruchu (`slowCut`: Spowolnienie, mróz, Zimne Światło) skraca o tyle samo stały zasięg zdolności ruchowych: odskoku (Powietrzny Zryw, Lisi Uskok, Galop, Odskok, Skok z Gniazda), Szalonego Skoku i teleportu (Podkop, Król Burzy, Wyrmi Podkop). Lot i W Biegu liczyły się już z `moveRange`. Unieruchomiony (`rootedNext`) nie odskakuje ani się nie teleportuje (zasięg 0). Golden zmieniony świadomie.
+
+## 21. Szarża Światła liczy faktycznie przebyte pola (2026-11-20, backlog 58b)
+Bonus Szarży Światła (i Nurkowania, Taranu, Rozpędu) zależy od `movedDistance`, czyli długości faktycznie przebytej drogi w tej aktywacji (najkrótsza ścieżka wokół przeszkód i jednostek), nie od odległości w linii prostej. Jednostka rusza się raz na aktywację, więc obejście celu liczy się, gdy droga do wybranego pola ma co najmniej 4 pola. Test w `tests/free.test.ts`; bez zmian w silniku i w golden.

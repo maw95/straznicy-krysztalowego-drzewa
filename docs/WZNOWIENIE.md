@@ -5,7 +5,7 @@ Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowe
 (dostaje silnik dopiero z wydaniem gry).
 
 ## PLAN NA TERAZ (ustalony z autorem 20.11 wieczorem; wykonuj po kolei, aktualizuj tu odhaczenia)
-1. [ ] Backlog 58a/58b (silnik, worktree), potem 56 i 57 (`docs/BACKLOG.md`).
+1. [~] Backlog 58a (commit 99239a0) i 58b (już działało, test) zrobione 20.11; zostają 56 i 57 (oba wymagają decyzji autora) (`docs/BACKLOG.md`).
 2. [ ] Ikona `huntDive` (Scenario, autor zgodził się na generowanie; zasady: `docs/BACKLOG.md` 2a, `assets.json`, budżet 8000 CU).
 3. [ ] Pozostałe drobiazgi z tego pliku (m.in. serwer przy wydaniu: parsery `pickMirages`, `battleMirageSwap`, `gateHero`, `battleTideSwap`; otwarte pytania z G1; herby `cards/crests` ze starymi nazwami).
 4. [ ] G2 dla 10 frakcji, drabina (przejdź do następnego szczebla, gdy poprzedni nie daje celu):
