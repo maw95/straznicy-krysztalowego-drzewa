@@ -5,10 +5,11 @@ Co się zmieniało w kolejnych wersjach gry. Wersja to tag w repozytorium (np. `
 Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (commit nie zna własnego skrótu, więc dopisuję go w następnym commicie albo przy tagowaniu). Zmiany, które nie trafiły jeszcze do żadnej wersji, są w sekcji „W przygotowaniu”. Nagłówek wersji ma postać `## numer — RRRR-MM-DD`, bo gra czyta ten plik.
 
 ## W przygotowaniu
+
+- Ekran bitwy: pasy boczne pokazują herb frakcji zamiast wstążki z nazwą (nazwa jest w podpowiedzi), a wstążka nad areną zniknęła (numer rundy jest w pasku aktywacji).
 - Na mapie świata pole zajęte przez sojusznika nie pokazuje już liczby punktów ruchu: wejść na nie nie można, więc traktujemy je jak pole zablokowane (także jako drogę).
 - Okno końca gry pokazuje duży herb zwycięskiej frakcji nad wstążką „Wygrywa”.
 - Autoplay sam zamyka okna z wynikami (podsumowanie bitwy, znaleziony skarb, artefakt, strona opowieści, kronika rundy) po kilku sekundach, bez klikania; okna z decyzją i koniec gry zostają.
-
 - Bot nie próbuje już Taranu Kozła Taranowego, gdy po drodze nie złapał rozbiegu (wcześniej taki cios kończył symulację błędem).
 - Nowe zdolności jednostek (wersja robocza): Kozioł Taranowy ma Taran (po biegu o 2 pola cios zadaje więcej i ogłusza), Mosiężny Pająk Ostrzał z Miejsca, Orzeł Stepowy Łowca walczy wręcz i ma Nurkowanie (lata nad przeszkodami i jednostkami, po ruchu o 2 pola cios zadaje +2 A; jego specjalność to Szpon z Góry: +1 A dla niego i jednostek powietrznych), Nosorożec Bojowy ma Stratowanie zamiast Taranu (dowódcy Stad nazywają się teraz Łowca Wiatru i Płanetnik), a Dziad Mróz chodzi i ma Uścisk Mrozu (wróg w zasięgu 2 pól dostaje 2 szrony).
 - Nowe nazwy i jednostki w nowych frakcjach (wersja robocza): Dzikie Stado (Kulan Stepowy, Łucznik Stepowy, Wół Piżmowy, Arkar, Łamignat Stepowy, Orzeł Stepowy Łowca i Płanetnik), Wampir i Strzyga w Królestwie Umarłych, Dziad Mróz w Dworze Wiecznego Szronu, Mosiężny Pająk i Kozioł Taranowy w Żelaznym Klanie oraz Sroka Złodziejka i Świstak Petardnik w Wolnej Kompanii (Kocur Fechmistrz idzie na poziom 3, Jenot Szpieg na 5); zdolności i siły bez zmian.

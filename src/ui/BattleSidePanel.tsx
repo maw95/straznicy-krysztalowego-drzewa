@@ -3,8 +3,8 @@
 import { UNITS, type TeamId, type Side } from '../engine/data';
 import { unitAttackBase, unitSpeed } from '../engine/battle';
 import type { BattleUnit, GameState } from '../engine/types';
-import { sideName } from '../engine/teams';
-import { Frame, HpBar, Portrait, Ribbon, SIDE_RING } from './common';
+import { raceOf, sideName } from '../engine/teams';
+import { asset, Frame, HpBar, Portrait, SIDE_RING } from './common';
 import { Marker, StatIcon } from './markers';
 import { details } from './details';
 import { StatusChips, UnitDetails } from './battleStatus';
@@ -21,7 +21,9 @@ export function SidePanel({ s, state, active, onUnit }: Props) {
   const units = Object.values(b.units).filter((u) => u.side === s && !u.swappedOut);
   return (
     <Frame className="side side-battle" innerStyle={{ padding: '16px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <Ribbon side={s}>{sideName(state, s)}</Ribbon>
+      {/* The faction's crest instead of a ribbon with its name (the name did not fit): the name is in the hint. */}
+      <img data-side-crest={s} src={asset(`cards/crests/${s === 'neutral' ? 'neutral' : raceOf(state, s)}.png`)} alt={sideName(state, s)} title={sideName(state, s)} onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }}
+        style={{ display: 'block', alignSelf: 'center', width: 'min(84px, 12vh)', height: 'min(84px, 12vh)', objectFit: 'contain', filter: 'drop-shadow(0 3px 5px rgba(0,0,0,0.55))' }} />
       {units.map((u) => {
         const isActive = active?.id === u.id;
         return (
