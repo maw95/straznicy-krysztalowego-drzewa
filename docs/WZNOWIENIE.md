@@ -34,6 +34,11 @@ Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowe
   jednostek A przeciwko jednostkom B; osobno bohaterowie i pomocnicy; tylko wersja cyfrowa; łatwa do automatycznego strojenia, ale to ukryte liczby bez uzasadnienia w mechanice),
   (B) zrobić kontry mechanikami frakcji (praca projektowa, drogo), (C) zaakceptować samo wyrównanie ok. 50% bez kontr. Rekomendacja: A jako rozwiązanie szybkie i tanie w tokenach,
   rozszerzyć `tuneFactions.ts` o dźwignię par. Poprawki Kompanii z gałęzi `kompanie-followups` są już scalone (`f706a8a`, 903 testy).
+- **Decyzje autora z 20.11 po wyniku stroiciela:** opcja A (premia przeciw frakcji) odrzucona; idziemy w B (kontry z mechanik frakcji i bota). Cel balansu: **wariant względny**:
+  średnia frakcji 45–55%; kontra ≥ średnia frakcji + 10 pkt; kontrowana ≤ średnia − 10 pkt; brak relacji w średnia ±7; twarde granice 25–75%; tolerancja błędu pomiaru ±4;
+  sukces = co najmniej 90% par spełnionych, wyjątki wypisane (wariant strukturalny jako plan awaryjny). **Najpierw diagnostyka** (agent, `scripts/sim/diagnoza.ts`,
+  wynik `docs/DIAGNOZA_FRAKCJI.md`: czy zamierzone mechaniki w ogóle się uruchamiają i czy bot z nich korzysta); potem poprawki wg priorytetów z diagnozy; dopiero na końcu
+  stroiciel liczb zdolności (`tuneFactions.ts` zmienić tak, by liczył cel względny i stroił liczby zdolności, nie ogólne statystyki).
 - **Decyzja do podjęcia po stroicielu (ważne):** tabela kontr wymaga Przymierze > Horda 60–70%, a premia +1/+1 dla Hordy dała ok. 50%. Stroiciel sam dobierze premie wszystkich frakcji,
   więc po nim Kryształy i inne cele trzeba przestroić ponownie (`scripts/sim/retune-all.sh` po skasowaniu `.tmp/sim/auto-*.json` oprócz `auto-zero-legacy.json`), potem `tuneMerge`.
   Dlatego obecne pliki `auto-*.json` służą tylko, jeśli premia Hordy zostanie przy +1/+1.
