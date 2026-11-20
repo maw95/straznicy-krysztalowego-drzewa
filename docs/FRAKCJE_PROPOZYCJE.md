@@ -595,7 +595,7 @@ porasta grzybnia: Rój jest na niej mocniejszy, wrogowie na niej słabną. Do te
 | 1 | Purchawka (`sporeling`) | chodzący grzybek | 1 | chód | wręcz | Pyłek: po śmierci zatruwa sąsiadów | reuse: Rozprysk + trucizna | — |
 | 1 | Mrówka Wojowniczka (`soldierAnt`) | mrówka z żuwaczkami | 1 | chód | wręcz | Mrowisko: +1 A za każdego sąsiadującego sojusznika z Roju | premia grupowa | — |
 | 1 | Świetlik (`firefly`) | świecący chrząszczyk | 1 | lot | dyst. | Błysk: raz na bitwę trafiony −1 A | reuse: Złowroga Klątwa | — |
-| 2A | Gąsienica Korzenna (`rootCaterpillar`) | gruba gąsienica spod korzeni (decyzja 20.11, zamiast Ryjkowca Kopacza; jeden chrząszcz mniej) | 1 | chód | wręcz | Przepoczwarzenie: gdy po raz pierwszy spadnie do połowy Ż (raz na bitwę), zmienia się w Motyla Księżycowego (nazwa do potwierdzenia): odzyskuje N Ż i zyskuje lot | ★ zmiana formy | Zielony Kokon |
+| 2A | Gąsienica Korzenna (`rootCaterpillar`) | gruba gąsienica spod korzeni (decyzja 20.11, zamiast Ryjkowca Kopacza; jeden chrząszcz mniej) | 1 | chód | wręcz | Przepoczwarzenie: gdy po raz pierwszy spadnie do połowy Ż (raz na bitwę), zmienia się w Motyla Korzennego: odzyskuje N Ż i zyskuje lot | ★ zmiana formy | Zielony Kokon |
 | 2B | Ćma Pyłowa (`dustMoth`) | duża ćma o szarych skrzydłach | 1 | lot | dyst. | Pył ze Skrzydeł: raz na bitwę cel i sąsiedzi zatruci | trucizna (obszar) | Kokonownia |
 | 3A | Muchomor Gwardzista (`mushroomGuard`) | grzybolud z tarczą z kapelusza | 1 | chód | wręcz | Na Swojej Ziemi: na grzybni odzyskuje N Ż na początku aktywacji | leczenie + ★ grzybnia | Krąg Muchomorów |
 | 3B | Żuk Bombardier (`bombardier`) | żuk strzelający gorącą mgłą | 1 | chód | dyst. | Wrzący Strumień: ignoruje pancerz | ★ ignorowanie pancerza | Żwirowisko |
@@ -793,9 +793,8 @@ Rozstrzygnięte:
 - Przypływy: Mewa odpadła; Żółw Skorupiak na tier 1, **Krabolud Tarczownik na 2A** (pancerz poziomu 1: pokrywa osłona Żółwia), **Rafowy Golem** zamiast Żółwia-Wyspy (jeden żółw).
 - Stada: Dudziarz atakuje falą dźwięku bez kolorowych nut; trzej pomocnicy startowi zatwierdzeni (Dudziarz, Młody Tur, Kozica); zderzenie rani też jednostkę, w którą uderza.
 - Piaski (przegląd autora 20.11): Mangusta Faraona (tier 1, Odporność na Jad), Skorpion Piaskowy na 2A, Krokodyl Oazowy zamiast Olbrzymiego Skorpiona, bez Łucznika na Wielbłądzie i bez Hieny; wielbłąd tylko u Wielbłądziego Księcia.
-- Rój (przegląd autora 20.11): Królowa Modliszek zostaje bohaterką; Gąsienica Korzenna (2A) zamiast Ryjkowca, Ważka Łowczyni (4A) zamiast Modliszki Ostrzy, Ślimak Pancerny (5B), **Cesarska Cykada** (6); Śniący Muchomor zamiast Prastarego Muchomora.
+- Rój (przegląd autora 20.11): Królowa Modliszek zostaje bohaterką; Gąsienica Korzenna (2A, po przemianie Motyl Korzenny) zamiast Ryjkowca, Ważka Łowczyni (4A) zamiast Modliszki Ostrzy, Ślimak Pancerny (5B), **Cesarska Cykada** (6); Śniący Muchomor zamiast Prastarego Muchomora.
 
 **Otwarte (drobne):**
-1. Nazwa Motyla, w którego przemienia się Gąsienica Korzenna (propozycja: Motyl Księżycowy; „Pawica" odrzucona jako niezrozumiała).
-2. Liczby zdolności nowych jednostek i bohaterów (N) ustala balans przy G2; Mangusta może dostać statystyki zgodnie z symulacją.
-3. Przegląd nazw w całej grze pod kątem powtórzeń słów „prastary” i „pradawny”.
+1. Liczby zdolności nowych jednostek i bohaterów (N) ustala balans przy G2; Mangusta może dostać statystyki zgodnie z symulacjami.
+2. Przegląd nazw w całej grze pod kątem powtórzeń słów „prastary” i „pradawny”.
