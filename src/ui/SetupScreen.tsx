@@ -10,8 +10,7 @@ import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, 
 import { Logo, useCoverArt } from './Logo';
 import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
 import { UnitCard } from './UnitCard';
-import { FigurePreview } from './FigurePreview';
-import { hasFigure } from './figures';
+import { HERO_LORE } from '../content/heroLore';
 import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
@@ -440,8 +439,10 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
             <Ribbon side={UNITS[preview].side} style={{ width: '100%' }}>{UNITS[preview].name}</Ribbon>
             {/* The card above the turning figure, both in the middle of the space left under the ribbon. */}
             <div style={{ flex: 1, minHeight: 0, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '6px 0' }}>
-              <UnitCard unitId={preview} width={hasFigure(preview) ? 280 : 340} digital={digital} />
-              <FigurePreview unitId={preview} size={300} />
+              <UnitCard unitId={preview} width={340} digital={digital} />
+              <div className="well hero-lore" data-hero-lore style={{ width: 340, maxWidth: '100%', padding: '10px 14px', fontSize: 16, lineHeight: 1.4, fontStyle: 'italic', textAlign: 'center', color: '#E9DDBC' }}>
+                {HERO_LORE[preview] ?? `${UNITS[preview].abilityName}: ${UNITS[preview].abilityText}`}
+              </div>
             </div>
           </Frame>
         </div>
