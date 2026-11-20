@@ -1,4 +1,4 @@
-// Balance matrix of the four new factions (gate G2): every new faction against dawn and horde, plus the six pairs between themselves.
+// Balance matrix of the four new factions (gate G2): every new faction against dawn and horde, plus the pairs between themselves (the Free Companies joined in their gate G1).
 // SIM_OVERRIDE (see override.ts) is inherited by the shards: try a number before editing the data.
 // Usage: npx tsx scripts/sim/nowe-frakcje.ts [games per cell = 200] [goals = control,conquest] [pairs = all | herds:dawn,clans:frost ...] [size = long] [shape = rectangle]
 // Games are sharded over child processes (CPU count - 1); seats alternate by seed. Each cell prints: wins of A / B / draws, A's share and a 95% interval.
@@ -13,8 +13,8 @@ import { FACTION_HEROES } from '../../src/engine/data';
 import { assignSlots, raceOf } from '../../src/engine/teams';
 import { DEFAULT_RULES, type SetupOptions } from '../../src/engine/types';
 
-type Race = 'dawn' | 'horde' | 'herds' | 'undead' | 'clans' | 'frost';
-const NEW: Race[] = ['herds', 'undead', 'clans', 'frost'];
+type Race = 'dawn' | 'horde' | 'herds' | 'undead' | 'clans' | 'frost' | 'free';
+const NEW: Race[] = ['herds', 'undead', 'clans', 'frost', 'free'];
 const allPairs = (): string[] => [...NEW.flatMap((n) => [`${n}:dawn`, `${n}:horde`]), ...NEW.flatMap((a, i) => NEW.slice(i + 1).map((b) => `${a}:${b}`))];
 
 const mk = (races: Race[], objective: any, seed: number, size: any, shape: any): SetupOptions => {

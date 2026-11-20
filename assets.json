@@ -6233,6 +6233,96 @@
       "data": "2026-11-20",
       "ai": true,
       "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "free/zastepcze/art",
+      "pliki": [
+        "public/assets/cards/art/badgerBomber.jpg",
+        "public/assets/cards/art/badgerSapper.jpg",
+        "public/assets/cards/art/beaverEngineer.jpg",
+        "public/assets/cards/art/catFencer.jpg",
+        "public/assets/cards/art/foxCaptain.jpg",
+        "public/assets/cards/art/hareHerbalist.jpg",
+        "public/assets/cards/art/martenSlasher.jpg",
+        "public/assets/cards/art/martenThief.jpg",
+        "public/assets/cards/art/otterScout.jpg",
+        "public/assets/cards/art/otterSmuggler.jpg",
+        "public/assets/cards/art/polecatPoisoner.jpg",
+        "public/assets/cards/art/raccoonDogSpy.jpg",
+        "public/assets/cards/art/ravenSeer.jpg",
+        "public/assets/cards/art/squirrelArcher.jpg",
+        "public/assets/cards/art/toadGunner.jpg",
+        "public/assets/cards/art/towerMonitor.jpg",
+        "public/assets/cards/art/weaselKnife.jpg",
+        "public/assets/cards/art/wildcatBajka.jpg",
+        "public/assets/cards/art/wolverine.jpg"
+      ],
+      "typ": "karta jednostki (zastępcza)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "free/zastepcze/portraits",
+      "pliki": [
+        "public/assets/cards/portraits/badgerBomber.jpg",
+        "public/assets/cards/portraits/badgerSapper.jpg",
+        "public/assets/cards/portraits/beaverEngineer.jpg",
+        "public/assets/cards/portraits/catFencer.jpg",
+        "public/assets/cards/portraits/foxCaptain.jpg",
+        "public/assets/cards/portraits/hareHerbalist.jpg",
+        "public/assets/cards/portraits/martenSlasher.jpg",
+        "public/assets/cards/portraits/martenThief.jpg",
+        "public/assets/cards/portraits/otterScout.jpg",
+        "public/assets/cards/portraits/otterSmuggler.jpg",
+        "public/assets/cards/portraits/polecatPoisoner.jpg",
+        "public/assets/cards/portraits/raccoonDogSpy.jpg",
+        "public/assets/cards/portraits/ravenSeer.jpg",
+        "public/assets/cards/portraits/toadGunner.jpg",
+        "public/assets/cards/portraits/weaselKnife.jpg",
+        "public/assets/cards/portraits/wildcatBajka.jpg",
+        "public/assets/cards/portraits/wolverine.jpg"
+      ],
+      "typ": "portret jednostki (zastępczy)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "free/zastepcze/crests",
+      "pliki": [
+        "public/assets/cards/crests/free.png"
+      ],
+      "typ": "herb frakcji (zastępczy)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
+    },
+    {
+      "id": "free/zastepcze/arena",
+      "pliki": [
+        "public/assets/arena/cyfrowa/free.webp"
+      ],
+      "typ": "arena frakcji (zastępcza)",
+      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
+      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
+      "prompt": "brak",
+      "data": "2026-11-20",
+      "ai": false,
+      "placeholder": true,
+      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
     }
   ]
 }

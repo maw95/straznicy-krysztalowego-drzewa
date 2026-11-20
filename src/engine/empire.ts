@@ -6,7 +6,7 @@
 
 import { raceOf } from './teams';
 import { byPack, FACTION_PACKS } from './factions';
-import { FACTION_NAMES, UNITS, type FactionId, type TeamId } from './data';
+import { ABILITY, FACTION_NAMES, UNITS, type FactionId, type TeamId } from './data';
 import { distance, parseKey, type HexKey } from './hex';
 import { log } from './log';
 import type { BuildingId } from './kingdom';
@@ -72,6 +72,16 @@ export const FACTION_MECHANICS = {
   /** Wieża Zamieci: radius (I, II) in which enemy heroes lose move points on the map, and how many they lose. */
   blizzardRadius: [2, 3],
   blizzardMove: 1,
+  /** Warsztat Sideł (Wolne Kompanie): hidden traps laid before a battle, by level (I-IV); the level from which a trap that goes off also holds the unit (it cannot move until the end of its next activation); traps the Iskra adds. */
+  trapCount: [1, 2, 2, 3],
+  trapHoldLevel: 3,
+  sparkTraps: 2,
+  /** Paserka: gold a chest gives on top (I), and every how many rounds the second level brings a random treasure. */
+  fenceChestGold: 1,
+  fenceDiscount: 1,
+  fenceTreasureEvery: 3,
+  /** Szlaki Przemytnicze: how many times a round a hero of the Companies may walk through the hex of a guardian or neutrals without a fight. */
+  trailsPerRound: 1,
 };
 export const MECHANIC_NAMES: Record<FactionId, string> = byPack((p) => p.mechanic.name);
 export const MECHANIC_TEXTS: Record<FactionId, string> = {
@@ -80,6 +90,7 @@ export const MECHANIC_TEXTS: Record<FactionId, string> = {
   clans: `Jednostka Klanów, która stoi obok co najmniej ${FACTION_MECHANICS.shieldMates[0]} sojuszników, ma −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu; kolejne poziomy Sali Tarcz osłabiają ten warunek, a w szyku nie da się jej odepchnąć i kto uderza ją wręcz, traci Ż.`,
   undead: `Na końcu każdej rundy bitwy poległy pomocnik Umarłych wstaje na arenie (jego najtańszy; bohaterowie nie wstają); liczba wstań i Ż, z którym wracają, rosną z poziomem Kurhanu.`,
   frost: `Każdy cios jednostki Dworu nakłada na cel 1 szron; przy ${FACTION_MECHANICS.frostThreshold[0]} szronach cel zamarza (traci następną aktywację, szron znika). Kolejne poziomy Pałacu Szronu skracają próg, a zamrożony kruszeje i traci Szybkość.`,
+  free: `Przed bitwą Kompanie kładą na swojej połowie ukryte pułapki (${FACTION_MECHANICS.trapCount[0]} na pierwszym poziomie Warsztatu Sideł, więcej na kolejnych); wróg, który wejdzie na pułapkę, dostaje ${ABILITY.trapDamage} obrażeń i kończy ruch, a od trzeciego poziomu nie rusza się też do końca następnej aktywacji. Pułapek wroga nie widać, dopóki nie zadziałają.`,
   herds: `Jednostka Stad, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole; cel, który w coś uderzy, dostaje obrażenia.`,
 };
 
@@ -99,6 +110,7 @@ export const SPARK_TEXTS: Record<FactionId, string> = {
   herds: `Wszystkie jednostki Stad (bohaterowie i pomocnicy) mają +${EMPIRE.sparkSpeed} S w każdej bitwie.`,
   clans: `Wszystkie jednostki Klanów (bohaterowie i pomocnicy) mają pancerz ${FACTION_MECHANICS.shieldArmor}: −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu.`,
   frost: `Wrogowie zaczynają każdą bitwę z ${FACTION_MECHANICS.sparkFrost} szronem.`,
+  free: `Kompanie zaczynają każdą bitwę z ${FACTION_MECHANICS.sparkTraps} dodatkowymi ukrytymi pułapkami.`,
   undead: 'Wszystkie jednostki Umarłych (bohaterowie i pomocnicy) są odporne na truciznę, klątwy, spowolnienia i unieruchomienie.',
 };
 

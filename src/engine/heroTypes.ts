@@ -16,6 +16,7 @@ export const HERO_TYPES: Record<string, HeroType> = {
   barrowKing: 'warrior', lanternWraith: 'sage', headlessKnight: 'hunter', bellKeeper: 'sage',
   ironThane: 'warrior', runeMatron: 'sage', passWarden: 'hunter', oldMiner: 'warrior', clanWarrior: 'warrior', mountainCrossbow: 'hunter', forgePriest: 'sage',
   marzanna: 'sage', frostJarl: 'warrior', snowLynx: 'hunter', oldHailer: 'sage', iceKnight: 'warrior', ermineHuntress: 'hunter', frostWitch: 'sage',
+  foxCaptain: 'hunter', badgerSapper: 'warrior', ravenSeer: 'sage', otterSmuggler: 'hunter', martenSlasher: 'warrior', wildcatBajka: 'hunter', hareHerbalist: 'sage',
   wardCaptain: 'warrior', spectralArcher: 'hunter', penitentMonk: 'sage',
 };
 
@@ -90,6 +91,13 @@ export const SPECIALTIES: Record<string, Specialty> = {
   iceKnight: { name: 'Lodowa Tarcza', text: 'Pomocnicy Rycerza mają +1 Ż w bitwie.', supportHp: 1 },
   ermineHuntress: { name: 'Oko Tropicielki', text: 'Strzelcy Łowczyni (i ona sama) mają +1 A w bitwie.', marksman: 1 },
   frostWitch: { name: 'Zimowa Magia', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
+  foxCaptain: { name: 'Złota Łapa', text: '+1 zł dla frakcji za każdą wygraną bitwę.', gold: 1 },
+  badgerSapper: { name: 'Stary Wiarus', text: 'Pomocnicy Sapera mają +1 Ż w bitwie.', supportHp: 1 },
+  ravenSeer: { name: 'Wróżba', text: '+1 PD za każdą wygraną walkę.', xp: 1 },
+  otterSmuggler: { name: 'Znawca Przepraw', text: '+1 punkt ruchu na mapie.', move: 1 },
+  martenSlasher: { name: 'Stary Zawadiaka', text: 'Pomocnicy Rębajły mają +1 Ż w bitwie.', supportHp: 1 },
+  wildcatBajka: { name: 'Szalony Pomysł', text: '+1 punkt ruchu na mapie.', move: 1 },
+  hareHerbalist: { name: 'Ziołowy Zapas', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
   clanWarrior: { name: 'Stary Wojownik', text: 'Pomocnicy Wojownika mają +1 Ż w bitwie.', supportHp: 1 },
   mountainCrossbow: { name: 'Celne Oko Gór', text: 'Strzelcy Kusznika (i on sam) mają +1 A w bitwie.', marksman: 1 },
   forgePriest: { name: 'Ogień Kuźni', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },

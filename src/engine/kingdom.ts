@@ -4,7 +4,7 @@
 
 import { ALL_TEAM_IDS, byTeam, raceOf, teamsOf } from './teams';
 import { byPack } from './factions';
-import { FACTION_NAMES, SUPPORTS_PER_BATTLE, UNITS, supportTier, type FactionId, type TeamId } from './data';
+import { ABILITY, FACTION_NAMES, itemDef, NON_RESURRECTION_ITEMS, SUPPORTS_PER_BATTLE, UNITS, supportTier, type FactionId, type TeamId } from './data';
 import { distance, parseKey, type HexKey } from './hex';
 import { encounterUnits, stillConnected } from './encounters';
 import { awardXp, levelOf } from './growth';
@@ -14,13 +14,13 @@ import { Rng } from './rng';
 import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsText, type Hut, type MapObject, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, passTargets, SHARDS_ID, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
-import { computerFaction, type Action, type Crystal, type GameState, type HeroState, type Rune } from './types';
+import { computerFaction, isDigital, type Action, type Crystal, type GameState, type HeroState, type Rune } from './types';
 import { circleSpells, MAGIC, SPELL_CIRCLES, SPELLS, towerSpells, type SpellId } from './magic';
 import { HERO_TYPES } from './heroTypes';
 import { FACTION_MECHANICS, mayBuildSpark, mechanicLevel, pickUpShard, placeShards, shardCollector, SPARK_NAMES, spendShards, summedLevel } from './empire';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
-export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen' | 'hoofStone' | 'pastures' | 'refuge' | 'barrow' | 'ossuary' | 'bellTower' | 'shieldHall' | 'runeForge' | 'deepMine' | 'frostPalace' | 'crystalGrotto' | 'blizzardTower';
+export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen' | 'hoofStone' | 'pastures' | 'refuge' | 'barrow' | 'ossuary' | 'bellTower' | 'shieldHall' | 'runeForge' | 'deepMine' | 'frostPalace' | 'crystalGrotto' | 'blizzardTower' | 'trapWorkshop' | 'fence' | 'smugglerTrails';
 
 export interface Settlement {
   id: string;
@@ -69,7 +69,7 @@ export const KINGDOM = {
   /** Gold in a chest chosen instead of the artifact. */
   chestGold: 3,
   /** Cost of each level of a building. */
-  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [], hoofStone: [], pastures: [], refuge: [], barrow: [], ossuary: [], bellTower: [], shieldHall: [], runeForge: [], deepMine: [], frostPalace: [], crystalGrotto: [], blizzardTower: [] } as Record<BuildingId, number[]>,
+  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [], hoofStone: [], pastures: [], refuge: [], barrow: [], ossuary: [], bellTower: [], shieldHall: [], runeForge: [], deepMine: [], frostPalace: [], crystalGrotto: [], blizzardTower: [], trapWorkshop: [], fence: [], smugglerTrails: [] } as Record<BuildingId, number[]>,
   /** Price of an artifact in the market, by rarity (zwykły, rzadki, legendarny). */
   artifactPrice: [2, 5, 10],
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
@@ -107,6 +107,7 @@ export const DWELLING_NAMES: Record<string, string> = {
   skeletonArcher: 'Zbrojownia Kości', scarecrow: 'Opuszczone Pole', hauntedArmor: 'Rycerska Krypta', banshee: 'Wieża Płaczek', viy: 'Wielki Kurhan', boneOracle: 'Kaplica Wróżb', lich: 'Biblioteka Umarłych', kostucha: 'Kaplica Tańca Śmierci', boneDragon: 'Smocze Cmentarzysko',
   armoredBear: 'Gawra Zbrojna', battleSmith: 'Polowa Kuźnia', bronzeSentinel: 'Warsztat Mechanizmów', goatRider: 'Koźla Zagroda', giantSlayer: 'Sala Pogromców', skarbnik: 'Stary Szyb', hammerGuard: 'Sala Gwardii', dwarfCannon: 'Ludwisarnia', clanColossus: 'Wielka Kuźnia Kolosa',
   faunSlinger: 'Fauni Zagajnik', tarpan: 'Tarpanie Błonia', forestBison: 'Żubrza Ostoja', satyrLancer: 'Obóz Kopijników', steppeHippogriff: 'Gniazdo na Urwisku', drumElephant: 'Krąg Bębnów', warRhino: 'Błotne Brody', bullMoose: 'Łosie Mokradło', indrik: 'Źródło Indrika',
+  weaselKnife: 'Kryjówka w Żywopłocie', beaverEngineer: 'Żeremie', polecatPoisoner: 'Warzelnia', raccoonDogSpy: 'Leśna Czatownia', wolverine: 'Rosomacza Nora', badgerBomber: 'Prochownia', toadGunner: 'Rusznikarnia', catFencer: 'Fechtownia', towerMonitor: 'Wielka Stajnia Kompanii',
   blizzardWitch: 'Chata na Lodzie', glacierYak: 'Zagroda Jaków', iceSentinel: 'Lodowa Strażnica', frostSprite: 'Sopelkowa Grota', youngGiant: 'Obóz Olbrzymów', windStrzyga: 'Wichrowy Szczyt', elderGiant: 'Gradowa Turnia', auroraSpirit: 'Wieża Zorzy', frostMammoth: 'Mamucia Grań',
   ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern', doomBehemoth: 'Jaskinia Zagłady',
 };
@@ -116,6 +117,7 @@ const GENITIVE: Record<string, string> = {
   skeletonArcher: 'Szkieletu Łucznika', scarecrow: 'Strachu Polnego', hauntedArmor: 'Nawiedzonej Zbroi', banshee: 'Płaczki', viy: 'Wija Podziemnego', boneOracle: 'Kościanej Wróżki', lich: 'Lisza', kostucha: 'Kostuchy', boneDragon: 'Kościanego Smoka',
   armoredBear: 'Niedźwiedzia w Zbroi', battleSmith: 'Kowala Bitewnego', bronzeSentinel: 'Wartownika z Brązu', goatRider: 'Jeźdźca na Koźle', giantSlayer: 'Pogromcy Olbrzymów', skarbnik: 'Skarbnika', hammerGuard: 'Gwardii Młota', dwarfCannon: 'Armaty Klanów', clanColossus: 'Kolosa Kuźni',
   faunSlinger: 'Fauna Procarza', tarpan: 'Tarpana', forestBison: 'Żubra Puszczańskiego', satyrLancer: 'Satyra Kopijnika', steppeHippogriff: 'Hipogryfa Stepowego', drumElephant: 'Słonia z Bębnem', warRhino: 'Nosorożca Bojowego', bullMoose: 'Łosia Rogacza', indrik: 'Indrika',
+  weaselKnife: 'Łasicy Nożowniczki', beaverEngineer: 'Bobra Inżyniera', polecatPoisoner: 'Tchórza Smrodnika', raccoonDogSpy: 'Jenota Szpiega', wolverine: 'Rosomaka Zabijaki', badgerBomber: 'Borsuka Petardnika', toadGunner: 'Ropucha z Hakownicą', catFencer: 'Kocura Fechmistrza', towerMonitor: 'Warana Wieżowego',
   blizzardWitch: 'Wiedźmy Zamieci', glacierYak: 'Jaka Lodowcowego', iceSentinel: 'Rycerza Lodowej Zbroi', frostSprite: 'Rusałki Szronu', youngGiant: 'Młodego Olbrzyma Szronu', windStrzyga: 'Strzygi Wichru', elderGiant: 'Olbrzyma Gradu', auroraSpirit: 'Ducha Zorzy', frostMammoth: 'Mamuta Wiecznej Zimy',
   ratman: 'Szczurołaka', goblinSlinger: 'Goblina Procarza', hellhound: 'Piekielnego Ogara', gargoyle: 'Gargulca', salamander: 'Salamandry Popiołu', caveTroll: 'Trolla Jaskiniowego', minotaurChief: 'Herszta Minotaurów', shadowWyvern: 'Wiwerny Cienia', doomBehemoth: 'Behemota Zagłady',
 };
@@ -225,6 +227,9 @@ export const BUILDING_NAMES: Record<BuildingId, string[]> = {
   frostPalace: ['Pałac Szronu', 'Wielki Pałac Szronu', 'Pałac Kruchego Lodu', 'Pałac Wiecznego Szronu'],
   crystalGrotto: ['Kryształowa Grota', 'Głęboka Kryształowa Grota'],
   blizzardTower: ['Wieża Zamieci', 'Wielka Wieża Zamieci'],
+  trapWorkshop: ['Warsztat Sideł', 'Wielki Warsztat Sideł', 'Warsztat Sideł Unieruchamiających', 'Warsztat Mistrzowskich Sideł'],
+  fence: ['Paserka', 'Dobra Paserka'],
+  smugglerTrails: ['Szlaki Przemytnicze'],
 };
 
 /** Level 6: the buildings only one faction has (the faction's mechanic first, then the two others). */
@@ -303,6 +308,14 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
     'Każdy szron na jednostce to także −1 S.',
   ],
   crystalGrotto: [`+${FACTION_MECHANICS.mineOre} rudy na rundę z każdej osady z Kryształową Grotą.`, `Także +${FACTION_MECHANICS.mineDust} Gwiezdnego Pyłu co ${FACTION_MECHANICS.mineDustEvery} rundy z każdej osady z drugim poziomem.`],
+  trapWorkshop: [
+    `Sidła: przed bitwą Kompanie kładą ${FACTION_MECHANICS.trapCount[0]} ukrytą pułapkę na swojej połowie areny; wróg, który na nią wejdzie, dostaje ${ABILITY.trapDamage} obrażeń i kończy ruch. Bez tego budynku frakcja nie ma tego efektu (poza Iskrą).`,
+    `${FACTION_MECHANICS.trapCount[1]} pułapki przed bitwą.`,
+    'Trafiony pułapką nie rusza się do końca swojej następnej aktywacji.',
+    `${FACTION_MECHANICS.trapCount[3]} pułapki przed bitwą.`,
+  ],
+  fence: [`Artefakty z rynku kupujesz o ${FACTION_MECHANICS.fenceDiscount} zł taniej (najmniej za 1 zł), a skrzynie dają +${FACTION_MECHANICS.fenceChestGold} zł.`, `Co ${FACTION_MECHANICS.fenceTreasureEvery} rundy Paserka przynosi losowy skarb.`],
+  smugglerTrails: [`Raz na rundę bohater Kompanii może przejść przez pole strażnika kryształu albo neutralnych bez walki.`],
   blizzardTower: [`Wrodzy bohaterowie w promieniu ${FACTION_MECHANICS.blizzardRadius[0]} pól od osady mają −${FACTION_MECHANICS.blizzardMove} punkt ruchu na mapie.`, `Promień ${FACTION_MECHANICS.blizzardRadius[1]} pola.`],
   bellTower: ['Po wygranej bitwie z neutralnymi jeden poległy pomocnik poziomu 1–2 wraca do drużyny bez szpitala (raz na rundę).'],
   spark: ['Budynek Pierwotnej Iskry: jego ceną są wszystkie Odłamki z mapy. Daje frakcji wielką premię, a w celu „Relikt” wygrywa grę.'],
@@ -395,7 +408,7 @@ export function initKingdom(state: GameState): void {
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag = byTeam(teams, (t) => rng.shuffle([...NAMES[raceOf(state, t)]]));
   // Level 6: the barracks stand from the start in every settlement (the dwellings of the units are built beside them).
-  const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0, hoofStone: 0, pastures: 0, refuge: 0, barrow: 0, ossuary: 0, bellTower: 0, shieldHall: 0, runeForge: 0, deepMine: 0, frostPalace: 0, crystalGrotto: 0, blizzardTower: 0 } : {}) }) as Record<BuildingId, number>;
+  const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0, hoofStone: 0, pastures: 0, refuge: 0, barrow: 0, ossuary: 0, bellTower: 0, shieldHall: 0, runeForge: 0, deepMine: 0, frostPalace: 0, crystalGrotto: 0, blizzardTower: 0, trapWorkshop: 0, fence: 0, smugglerTrails: 0 } : {}) }) as Record<BuildingId, number>;
   const add = (id: string, at: HexKey, land: TeamId, owner: TeamId | null) => {
     k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[raceOf(state, land)]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
     state.tiles[at].place = { kind: 'settlement', id };
@@ -596,6 +609,16 @@ export function collectIncome(state: GameState): void {
       }
       continue;
     }
+    // Paserka, second level: every few rounds a random treasure comes to the faction's inventory.
+    const fs = state.factions[f];
+    if (bestLevel(state, f, 'fence') >= 2 && state.round % FACTION_MECHANICS.fenceTreasureEvery === 0 && fs.fenceRound !== state.round) {
+      fs.fenceRound = state.round;
+      const kind = new Rng((state.setup.seed ^ 0x2f4a7c15 ^ (state.round * 7919)) | 0).pick(NON_RESURRECTION_ITEMS);
+      const item = { id: `it${Object.keys(state.items).length + 1}`, kind, owner: f, foundBy: null };
+      state.items[item.id] = item;
+      fs.inventory.push(item.id);
+      log(state, 'item', `${FACTION_NAMES[raceOf(state, f)]}: Paserka przynosi skarb: ${itemDef(kind, isDigital(state.rules)).name}.`, f);
+    }
     // The computer's advantage of the higher levels: its income is multiplied (COMPUTER_HANDICAP); the people's is not.
     const mult = computerFaction(state, f) ? state.rules.computerGold ?? 1 : 1;
     if (k.res) {
@@ -695,9 +718,15 @@ export const tradeBuyPrice = (s: Settlement, res: ResourceId): number => ECONOMY
 
 /** What an artifact costs in the market for this hero: gold, and Gwiezdny Pył for a legendary one in level 4. */
 export const artifactBill = (state: GameState, hero: HeroState, art: ArtifactDef): Cost => ({
-  gold: artifactCost(hero, art),
+  gold: Math.max(1, artifactCost(hero, art) - fenceDiscount(state, hero.faction)),
   ...(state.rules.economy && art.rarity === 3 ? { dust: ECONOMY.legendaryDust } : {}),
 });
+
+/** The best level of a building of the faction among the settlements it holds (0: none; only a level 6 game has the buildings of the factions). */
+export const bestLevel = (state: GameState, f: TeamId, b: BuildingId): number =>
+  state.rules.empire ? Math.max(0, ...Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.owner === f).map((s) => buildingLevel(s, b))) : 0;
+/** Paserka: gold less for an artifact of the market (the digital game has no selling of artifacts, so the fence's "full price" is read as a buyer's bargain). */
+export const fenceDiscount = (state: GameState, f: TeamId): number => (bestLevel(state, f, 'fence') >= 1 ? FACTION_MECHANICS.fenceDiscount : 0);
 
 export const resOf = (state: GameState, f: TeamId): Resources => state.kingdom?.res?.[f] ?? emptyResources();
 
@@ -720,7 +749,7 @@ export function payCost(state: GameState, f: TeamId, c: Cost): void {
  * Which building's first level must stand in the settlement before another can be started (docs/BUDYNKI.md 0a: a tree, one parent each;
  * the Rada Osady, the root, is always there; the Iskra needs only the shards, the dwellings the barracks, see `kingdomDwelling`).
  */
-export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market', hoofStone: 'barracks', pastures: 'market', refuge: 'tavern', barrow: 'hospital', ossuary: 'treasury', bellTower: 'barracks', shieldHall: 'walls', runeForge: 'forge', deepMine: 'treasury', frostPalace: 'magic', crystalGrotto: 'treasury', blizzardTower: 'walls' };
+export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market', hoofStone: 'barracks', pastures: 'market', refuge: 'tavern', barrow: 'hospital', ossuary: 'treasury', bellTower: 'barracks', shieldHall: 'walls', runeForge: 'forge', deepMine: 'treasury', frostPalace: 'magic', crystalGrotto: 'treasury', blizzardTower: 'walls', trapWorkshop: 'market', fence: 'market', smugglerTrails: 'tavern' };
 
 /** Why a building cannot be started here for lack of its parent (null: nothing in the way). Upgrades of a standing building are never blocked. */
 export function buildBlock(s: Settlement, b: BuildingId): string | null {
@@ -1001,6 +1030,13 @@ export function kingdomAction(state: GameState, action: Action): void {
       } else {
         giveArtifact(state, hero, drawArtifact(state, hero, ARTIFACT_ODDS.chest, 0x2545f491), 'skrzynia');
       }
+      // Paserka: the chest gives gold on top, whatever the player chose.
+      const fenceGold = bestLevel(state, hero.faction, 'fence') >= 1 ? FACTION_MECHANICS.fenceChestGold : 0;
+      if (fenceGold) {
+        k.gold[hero.faction] += fenceGold;
+        log(state, 'info', `${UNITS[hero.id].name} dostaje jeszcze ${fenceGold} zł (Paserka).`);
+        lootEvent(state, hero, fenceGold);
+      }
       // Kaftan Poborcy: the chest gives gold on top, whatever the player chose.
       const extra = gearOf(hero).reduce((n, a) => n + (a.chestGold ?? 0), 0);
       if (extra) {
@@ -1097,7 +1133,7 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
     const wanted = FACTION_BUILDINGS[raceOf(state, f)].filter((x) => {
       if (x === mech) return buildingLevel(s, x) >= best && best < 4;
       if (x === 'refuge') return buildingLevel(s, x) < 1 && settlementsOf(state, f).filter((y) => buildingLevel(y, x) >= 1).length < 2;
-      if (x === 'grove' || x === 'wolfDen') return !settlementsOf(state, f).some((y) => buildingLevel(y, x) >= 1);
+      if (x === 'grove' || x === 'wolfDen' || x === 'smugglerTrails') return !settlementsOf(state, f).some((y) => buildingLevel(y, x) >= 1);
       return true;
     });
     // The Clans build the mine and the rune forge first (the forge is what makes them strong over the long run), the shield hall after them.

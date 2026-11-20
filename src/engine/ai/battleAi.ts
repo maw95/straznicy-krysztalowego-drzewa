@@ -24,6 +24,11 @@ import {
   deployHeads,
   enemiesOf,
   fortifyCells,
+  autoTrapCells,
+  bestBlastTrap,
+  blastValue,
+  damCell,
+  leapOnlyCells,
   iceWallCells,
   abductCell,
   frostLevel,
@@ -272,6 +277,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   // Caution fades as the battle drags on, so nobody kites forever.
   const caution = Math.max(0, 1 - (b.round - 1) / AI_TUNING.cautionRounds);
   let best: Plan = { moveTo: null, target: null, second: null, useAbility: false, score: -Infinity };
+  const leapOnly = leapOnlyCells(state, u);
   const mates = (cell: HexKey) => livingUnits(b, u.side).filter((x) => x.id !== u.id && dist2(cellsOf(x), plannedFootprint(state, u, cell)) === 1).length;
   for (const [cell, steps] of options) {
     const moved = act.movedDistance + steps;
@@ -295,7 +301,10 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
           second = targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), mine) === 1).sort((x, y) => scoreHit(y, dmg) - scoreHit(x, dmg))[0] ?? null;
           if (second) score += scoreHit(second, dmg);
         }
-        if (useAbility && ['entanglingRoots', 'curse', 'dimLight', 'graveBreath', 'frostSlow', 'frostGrip'].includes(abilityOf(u))) score += AI_TUNING.debuffBonus;
+        if (useAbility && ['entanglingRoots', 'curse', 'dimLight', 'graveBreath', 'frostSlow', 'frostGrip', 'stinkBomb'].includes(abilityOf(u))) score += AI_TUNING.debuffBonus;
+        // The Free Companies pile their blows on the marked enemy (the Kruk marks it), and a stink bomb is worth more when it reaches several enemies.
+        if (t.status.marked && t.status.marked.by === u.side && t.status.marked.round === b.round) score += 1;
+        if (useAbility && abilityOf(u) === 'stinkBomb') score += targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(t)) === 1).length * 1.2;
         if (useAbility && abilityOf(u) === 'iceBlow') score += AI_TUNING.debuffBonus * 2;
         // The Court of Everfrost puts all its blows on one target to freeze it (it does not spread the frost); the weak melee ones do not rush in.
         if (UNITS[u.defId].side === 'frost') {
@@ -320,6 +329,8 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
         if (score > best.score) best = { moveTo: cell === u.pos ? null : cell, target: t, second, useAbility, score };
       }
     }
+    // Szalony Skok is kept for a blow: a cell only the leap reaches counts when something can be hit from it, never as a mere position.
+    if (leapOnly.has(cell)) continue;
     // Positional value when not attacking from this cell.
     const nearest = nearness(field, enemies, mine);
     let pos = ranged ? -Math.abs(nearest - AI_TUNING.rangedDistance) * AI_TUNING.rangedDistanceWeight : -nearest * AI_TUNING.meleeClosing;
@@ -423,6 +434,21 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
     if (t) return { type: 'battleAbility', targetId: t.id };
   }
   if (ab === 'longNight' && enemiesOf(b, u).filter((e) => unitDistance(e, u) <= 5).length >= 2) return { type: 'battleAbility' };
+  // Wolne Kompanie: one more trap while the enemy is still coming, the dugin when the line is in contact, the Kruk marks the enemy that is easiest to finish (so the others focus it),
+  // the dam in front of a pack, the charge when a trap of its own would hurt more of them than of us.
+  if (ab === 'ploy' && foesNear(8) && autoTrapCells(state, u.side, 1).length) return { type: 'battleAbility' };
+  if (ab === 'dugIn' && foesNear(3)) return { type: 'battleAbility' };
+  if (ab === 'ravenEye' && livingUnits(b, u.side).length >= 2) {
+    const t = enemiesOf(b, u)
+      .filter((e) => unitDistance(e, u) <= ABILITY.ravenRange)
+      .sort((x, y) => x.hp - y.hp || unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+    if (t) return { type: 'battleAbility', targetId: t.id };
+  }
+  if (ab === 'dam' && foesNear(4) && enemiesOf(b, u).filter((e) => unitDistance(e, u) <= 6).length >= 2 && damCell(state, u)) return { type: 'battleAbility' };
+  if (ab === 'blast') {
+    const at = bestBlastTrap(state, u);
+    if (at && blastValue(state, u, at) >= 4 * scaleOf(state)) return { type: 'battleAbility', cell: at };
+  }
   if (ab === 'web') {
     const t = enemiesOf(b, u)
       .filter((e) => unitDistance(e, u) <= ABILITY.webRange)

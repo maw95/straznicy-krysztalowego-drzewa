@@ -23,10 +23,16 @@ import {
   unitAt,
   unitDistance,
   catapultTargets,
+  CELL_ABILITIES,
+  inLayout,
+  mayLayTrap,
+  trapSlots,
+  trapZone,
+  trapsOf,
 } from '../engine/battle';
 import { castableInBattle, SPELLS, spellPreview, spellTargets, type SpellId } from '../engine/magic';
 import { sfx } from './sfx';
-import { distance, parseKey, type HexKey } from '../engine/hex';
+import { distance, neighborKeys, parseKey, type HexKey } from '../engine/hex';
 import type { Action, BattleUnit, GameState } from '../engine/types';
 import { COMPACT_QUERY, useMedia } from './common';
 import { useImpactHold, type AttackNow } from './useImpactHold';
@@ -213,6 +219,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       if (ability === 'viyGaze' && u.side !== active.side && unitDistance(active, u) <= ABILITY.gazeRange) return 'cur-spell';
       if (ability === 'bellOfGlass' && u.side !== active.side && unitDistance(active, u) <= ABILITY.bellRange && (u.status.frost ?? 0) >= 1) return 'cur-spell';
       if (ability === 'abduct' && u.side !== active.side && unitDistance(active, u) <= ABILITY.abductRange) return 'cur-spell';
+      if (ability === 'ravenEye' && u.side !== active.side && unitDistance(active, u) <= ABILITY.ravenRange) return 'cur-spell';
     }
     // A treasure is being aimed (Eliksir, Zwój, Róg...): the same wand as for an ability, over every unit it can be used on.
     if (targeting && myTurn && u.alive) {
@@ -261,7 +268,20 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   function reset() {
     setTargeting(null);
     setFreeAbility(false);
+    setPloyFrom(null);
   }
+
+  // A free ability that works on a cell (Fortel, Tama, Ładunek): the cells it may be aimed at are lit, the next click on one fires it (Fortel: a click on an own trap first picks it up to move).
+  const [ployFrom, setPloyFrom] = useState<HexKey | null>(null);
+  const cellAbility = freeAbility && myTurn && active && ab !== null && CELL_ABILITIES.includes(ab) ? ab : null;
+  const aimCells = useMemo<HexKey[]>(() => {
+    if (!cellAbility || !active) return [];
+    const own = trapsOf(b, active.side).map((g) => g.cell);
+    if (cellAbility === 'blast') return own;
+    if (cellAbility === 'dam') return cellsOf(active).flatMap((c) => neighborKeys(c)).filter((k, i, all) => all.indexOf(k) === i && inLayout(b, k) && !b.obstacles.includes(k) && !unitAt(b, k));
+    return [...trapZone(b, active.side).filter((k) => mayLayTrap(b, active.side, k)), ...own];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cellAbility, b, active]);
 
   // Battle shortcuts: Space ends the activation, Z ability, S treasures.
   const keyState = useRef({ myTurn, attackAbility, freeAbilityReady, ab, spellNow });
@@ -312,10 +332,10 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   }
 
   // ---------------------------------------------------------------- deployment
-  const deploy = useDeployment(b, canAct, anim.walk);
+  const deploy = useDeployment(b, canAct, anim.walk, b.stage === 'deploy' && canAct && b.needsDeploy[0] ? trapSlots(state, b.needsDeploy[0]) : 0);
   const { deploySide, picked, setPicked, posOf, placeAt } = deploy;
 
-  function clickUnit(u: BattleUnit) {
+  function clickUnit(u: BattleUnit): void {
     if (deploySide) {
       if (u.side === deploySide) setPicked(picked === u.id ? null : u.id);
       else onShowCard(u.defId);
@@ -333,6 +353,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       return;
     }
     if (targeting) return pickForItem(u);
+    if (cellAbility) return clickCell(u.pos ?? '');
     if (freeAbility) {
       onAction({ type: 'battleAbility', targetId: u.id });
       reset();
@@ -357,11 +378,20 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     onShowCard(u.defId);
   }
 
-  function clickCell(k: HexKey) {
+  function clickCell(k: HexKey): void {
+    if (deploySide && deploy.trapMode) return deploy.trapAt(k);
     if (deploySide) {
       const own = Object.values(b.units).find((u) => u.side === deploySide && posOf(u) === k);
       if (own && !picked) setPicked(own.id);
       else placeAt(k);
+      return;
+    }
+    if (cellAbility && active) {
+      if (!aimCells.includes(k)) return;
+      const ownTrap = trapsOf(b, active.side).some((g) => g.cell === k);
+      if (cellAbility === 'ploy' && ownTrap) return setPloyFrom(k === ployFrom ? null : k);
+      onAction({ type: 'battleAbility', cell: k, ...(cellAbility === 'ploy' && ployFrom ? { from: ployFrom } : {}) });
+      reset();
       return;
     }
     const u = unitAt(b, k);
@@ -447,6 +477,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
           ) : null}
           anim={anim}
           deploy={deploy}
+          aimCells={aimCells}
+          ployFrom={ployFrom}
           targeting={targeting}
           hover={hover}
           setHover={setHover}
@@ -481,10 +513,14 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       <ActivationBar
         state={state}
         active={active}
-        hint={(spellNow ? `Czar ${SPELLS[spellNow].name}: wskaż ${SPELLS[spellNow].target === 'enemy' ? 'wroga' : 'sojusznika'} · ` : '') + (catapult.length ? 'Katapulta gotowa: wskaż mur, bramę lub wieżyczkę · ' : '') + activationHint(b, { deploySide, picked, myTurn, moves: moves.size, targets: targets.length, sideName: (t) => sideName(state, t) })}
+        hint={(spellNow ? `Czar ${SPELLS[spellNow].name}: wskaż ${SPELLS[spellNow].target === 'enemy' ? 'wroga' : 'sojusznika'} · ` : '') + (catapult.length ? 'Katapulta gotowa: wskaż mur, bramę lub wieżyczkę · ' : '') + activationHint(b, { deploySide, trapMode: deploy.trapMode, picked, myTurn, moves: moves.size, targets: targets.length, sideName: (t) => sideName(state, t) })}
         myTurn={myTurn}
         deploySide={deploySide}
         placing={deploy.placing}
+        trapSlots={deploy.slots}
+        traps={deploy.traps}
+        trapMode={deploy.trapMode}
+        setTrapMode={deploy.setTrapMode}
         attackAbility={attackAbility}
         useAbility={useAbility}
         setUseAbility={setUseAbility}

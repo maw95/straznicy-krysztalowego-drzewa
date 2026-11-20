@@ -34,6 +34,8 @@ export const ARENA_OBSTACLES: Record<ArenaId, Array<[number, number]>> = {
   clans: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
   // And for the Court of Everfrost (a frozen lake with snowy firs and ice spikes wants its own arena).
   frost: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
+  // And for the Free Companies (a forest camp by a ruined mill wants its own arena).
+  free: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
 };
 
 export const arenaCell = (col: number, half: number): HexKey => key({ q: col, r: (half - col) / 2 });
@@ -163,6 +165,16 @@ export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
     { art: 'statue', cells: [[3, 6]] },
     { art: 'ruin', cells: [[9, 7]] },
     { art: 'brambles', cells: [[6, 7]] },
+  ],
+  // Placeholder (docs/BACKLOG.md 2a): a forest camp by a ruined mill with fences and barrels; until then the pictures of Przymierze and Horda, rearranged.
+  free: [
+    { art: 'log', cells: [[4, 1], [5, 1]] },
+    { art: 'barricade', cells: [[8, 5], [8, 6]] },
+    { art: 'ruin', cells: [[3, 4]] },
+    { art: 'pine', cells: [[9, 2]] },
+    { art: 'boulders', cells: [[10, 7]] },
+    { art: 'brambles', cells: [[6, 3]] },
+    { art: 'totem', cells: [[6, 7]] },
   ],
 };
 

@@ -68,6 +68,7 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
 
 **53. Królestwo Umarłych (L; po 52, te same bramki).**
   - **Stan 19.11 (G1 zrobiona, bez autora):** paczka `src/engine/factions/undead.ts` (bohaterowie, 3 dowódcy, czwarty bohater, 12 jednostek z układem A/B, legenda), nowe prymitywy w silniku (wskrzeszenie w polu, odporność na statusy, ignorowanie pancerza, tarcza jednorazowa wg typu ciosu, aura osłabiająca, wyczerpanie many), budynki Kurhan Wiecznej Warty (4 poziomy, Wieczna Warta), Ossuarium i Dzwonnica Zaduszna, Iskra (odporność na statusy), bot, angielski w `src/i18n/en/undead.ts`, zastępcza grafika (`make placeholders`), `tests/undead.test.ts`, `scripts/sim/umarli.ts`, `scripts/browser/umarli.ts`; test kontraktowy zielony, golden bez zmian. Karta z decyzjami i listą uproszczeń: `docs/frakcje/undead.md`. Szybki pomiar (100 gier na komórkę, poziom Imperium): Umarli wygrywają z Przymierzem 29% / 40% (Kontrola / Podbój), z Hordą 57% / 47%.
+  - **Stan 20.11 (Wolne Kompanie: G1 zrobiona na polecenie autora, bez autora):** paczka `src/engine/factions/free.ts` (3 bohaterów, 3 dowódcy: Kuna Rębajło, Żbiczka Bajdurka, Zajęczyca Zielarka, czwarty bohater Wydra Przemytniczka, 12 jednostek z układem A/B, legenda Waran Wieżowy), ukryte pułapki (Sidła: `BattleState.ground`, `redactHidden` w `src/engine/hidden.ts`, bot nie zna pułapek ani ukrytych jednostek wroga), oznaczenie, ukrycie, łup, Furia Ran, Riposta, Ładunek, Tama, Fortel, Okop, Oko Kruka, Szalony Skok, wieżyczka Warana, budynki Warsztat Sideł (4 poziomy), Paserka i Szlaki Przemytnicze, Iskra (+2 pułapki), UI (przycisk Sidła przy ustawianiu, zdolności na polu, przycisk Szlaków), angielski w `src/i18n/en/free.ts`, zastępcza grafika, `tests/free.test.ts`, `scripts/sim/kompanie.ts`, `scripts/browser/kompanie.ts`; golden bez zmian. Karta z decyzjami i uproszczeniami: `docs/frakcje/free.md`. Szybki pomiar (200 gier): z Przymierzem 35%, z Hordą 30-43%, ze Stadami 42-43%, Umarłymi 32-36%, Klanami 38-39%, Szronem 33-34%. **Do zrobienia przy online:** serwer musi wysyłać `redactHidden(state, miejsca_gracza)` w `visibleTo` (repo backendu, jedna linijka), dopiero wtedy Kompanie mogą wejść do gry przez internet; hot-seat nie ma jeszcze zasłony „przekaż urządzenie”.
   - **Stan G2 (19.11):** dostrojone, tabela w punkcie 52 i w `docs/frakcje/undead.md`. **Zostaje:** G3 próbka jednostki (autor) · G4 pełna grafika, arena, kafle, muzyka, ikony zdolności, wybór poległego w Wezwaniu i Ponownym Oddechu, przenikanie Jeźdźca · G5 instrukcja PL i EN · 51a koop i online.
 
 **54. Żelazne Klany (L; po 53, te same bramki).** Symulacje 10 par po trzech frakcjach.
@@ -162,6 +163,17 @@ Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.t
 - kafle ziemi Dworu (śnieg, lód, zamarznięte jeziora), rewers `tiles/back_frost.jpg`, baza i skarbiec (dziś kafle Przymierza, pole `terrain`);
 - osada: tło `osady/land_frost.jpg`, obrazy budynków Pałac Szronu (1-4), Kryształowa Grota (1-2), Wieża Zamieci (1-2) i siedlisk 9 jednostek (dziś Przymierza, `BORROWED` w `SettlementDialog.tsx`);
 - muzyka frakcji (2-3 utwory: dzwoneczki, wiolonczela, chór żeński, wiatr).
+
+**Wolne Kompanie (`free`)** (paleta: rude i brązowe futra, butelkowa zieleń płaszczy, skóra, mosiądz, len; zwierzoludzie w ubraniach, bez niebieskiego w figurach; tło do wycinania #0000FF):
+- karta (`cards/art/<id>.jpg`, 452×314) i portret (`cards/portraits/<id>.jpg`, 256×256) dla 19 jednostek: `foxCaptain`, `badgerSapper`, `ravenSeer`, `otterSmuggler` (4. bohater), `martenSlasher`, `wildcatBajka`, `hareHerbalist` (dowódcy), `otterScout`, `martenThief`, `squirrelArcher`, `weaselKnife`, `beaverEngineer`, `polecatPoisoner`, `raccoonDogSpy`, `wolverine`, `badgerBomber`, `toadGunner`, `catFencer`, `towerMonitor`;
+- animacje 2D dla tych samych 19 (do czasu ich powstania żetony z portretami);
+- herb `cards/crests/free.png`: lisia głowa na skrzyżowanych strzałach; ramki kart `free_hero.png`, `free_support.png` (dziś pożyczone z Przymierza);
+- ikony 13 nowych zdolności (`cards/abilities/<id>.png` i `<id>_inner.png`): `ploy`, `dugIn`, `ravenEye`, `pickpocket`, `branchShot`, `dam`, `stinkBomb`, `veiled`, `woundFury`, `blast`, `riposte`, `towerShot`, `wildLeap` (dziś bez własnych ikon);
+- znacznik sideł na polu areny (dziś kreskowany sześciokąt z krzyżykiem w SVG) i znacznik oznaczenia na figurze (dziś odznaka statusu);
+- arena cyfrowa `arena/cyfrowa/free.webp` (leśny obóz przy zrujnowanym młynie, płoty, beczki) i jej przeszkody (dziś obrazy Przymierza i Hordy, `WIDE_OBSTACLES.free`);
+- kafle ziemi Kompanii, rewers `tiles/back_free.jpg`, baza i skarbiec (dziś kafle Przymierza, pole `terrain`);
+- osada: tło `osady/land_free.jpg`, obrazy budynków Warsztat Sideł (1-4), Paserka (1-2), Szlaki Przemytnicze i siedlisk 9 jednostek (dziś Przymierza, `BORROWED` w `SettlementDialog.tsx`);
+- muzyka frakcji (2-3 utwory: lutnia, flet, skrzypki, ballada zbójnicka).
 
 ## Przed premierą (decyzja autora 17.11: wchodzą przed Steamem; po punktach z kolejki)
 28. **Nowe frakcje:** przeniesione do kolejki (punkty 51–55, decyzja autora 18.11).

@@ -9,7 +9,7 @@ import { mayBuildSpark, shardCollector, shardsOf, shardTotal } from '../empire';
 import { distance, parseKey, type Hex, type HexKey } from '../hex';
 import { mapNeighbors, shortestPaths, tileCost, homeOf, treeOf, type PathResult } from '../map';
 import { heroTileCost } from '../sites';
-import { activeHero, currentActor, defenderAt, heroesAt, hordeMayFightGuardian, legalHeroMoves, livingEnemies, livingHeroes, reviveSpots, ritualFormed, ritualSpot } from '../game';
+import { activeHero, currentActor, defenderAt, heroesAt, hordeMayFightGuardian, legalHeroMoves, livingEnemies, livingHeroes, reviveSpots, ritualFormed, ritualSpot, sneakMoves } from '../game';
 import { hpScaleOf } from '../battle';
 import { BOT_SKILL_ORDER, levelOf } from '../growth';
 import { DRAFT_VALUE } from './battleAi';
@@ -874,7 +874,17 @@ function encounterDetour(state: GameState, hero: HeroState, memo: Memo): Action 
   return legalHeroMoves(state).some((m) => m.to === next) ? { type: 'moveHero', to: next } : null;
 }
 
+/**
+ * The map action of a bot. The Free Companies walk through a guardian's hex by the smugglers' trails (Szlaki Przemytnicze) instead of fighting it when they
+ * would not fight it anyway (no support left to go with), which is where they mean to go round it.
+ */
 export function adventureAction(state: GameState): Action {
+  const action = plainAdventureAction(state);
+  if (action.type === 'moveHero' && !canFightGuardian(state) && sneakMoves(state).some((m) => m.to === action.to)) return { type: 'sneakHero', to: action.to };
+  return action;
+}
+
+function plainAdventureAction(state: GameState): Action {
   const hero = activeHero(state)!;
   // Level 3: a chest waiting for its choice, shopping in the settlement the hero stands in (not the coop automaton: it gets reinforcements instead).
   if (state.kingdom && currentActor(state).kind !== 'automaton') {
