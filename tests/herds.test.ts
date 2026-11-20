@@ -145,6 +145,19 @@ describe('abilities of the units', () => {
     expect(at(a, 'elfDruid').hp).toBe(at(a, 'elfDruid').maxHp);
   });
 
+  it('Strzał nad Przeszkodami (Orzeł Stepowy Łowca): neither terrain nor units block his arrows, other shooters stay blocked', () => {
+    const spots: U[] = [['eagleHunter', 'dawn', 2, 6], ['nymph', 'horde', 8, 12]];
+    const wall = { obstacles: [arenaCell(5, 9)] };
+    const eagle = fight(spots, wall);
+    expect(attackTargets(eagle, at(eagle, 'eagleHunter')).map((t) => t.id)).toEqual(['nymph']);
+    const plain = fight([['steppeArcher', 'dawn', 2, 6], ['nymph', 'horde', 8, 12]], wall);
+    at(plain, 'steppeArcher').defId = 'dryadArcher';
+    expect(attackTargets(plain, at(plain, 'steppeArcher')).length).toBe(0);
+    // units on the line count only in the experimental rule, and still do not stop the eagle
+    const crowd = fight([...spots, ['goblinShaman', 'horde', 5, 9]], {}, { unitsBlockSight: true });
+    expect(attackTargets(crowd, at(crowd, 'eagleHunter')).map((t) => t.id).sort()).toEqual(['goblinShaman', 'nymph']);
+  });
+
   it('Skok po Turniach (Kulan) walks through obstacles and units, and never ends on them', () => {
     const s = fight([['kulan', 'dawn', 4, 8], ['nymph', 'horde', 5, 9]], { obstacles: [arenaCell(5, 7), arenaCell(5, 9 + 2)] });
     const goat = reachableCells(s, at(s, 'kulan'));

@@ -31,7 +31,7 @@ register({
   'Bęben Wędrówki': 'Drum of the Wandering', 'Stała: sojusznicy w promieniu {0} pól mają +{1} S.': 'Passive: allies within {0} cells have +{1} SPD.',
   'Rykowisko': 'Rut Roar', 'Raz na bitwę: wyzywa wroga w zasięgu {0} pól; ten w swojej następnej aktywacji może atakować tylko Łosia.': 'Once per battle: it challenges an enemy within {0} cells; in its next activation that enemy may attack only the Moose.',
   'Ziemia Drży': 'The Earth Trembles', 'Raz na bitwę: mali wrogowie w promieniu {0} pól zostają odepchnięci o 1 pole, zderzenia ranią. Indrika nie da się odepchnąć.': 'Once per battle: small enemies within {0} cells are pushed 1 cell, collisions hurt. The Indrik cannot be pushed.',
-  'Kark Tura': 'Aurochs Neck', 'Oszczep w Kolano': 'Javelin to the Knee', 'Pieśń Stepu': 'Song of the Steppe',
+  'Kark Tura': 'Aurochs Neck', 'Oszczep w Kolano': 'Javelin to the Knee', 'Strzał nad Przeszkodami': 'Shot over Obstacles', 'Stała: jego strzały nie są blokowane przez przeszkody terenu ani jednostki na linii strzału (strzela z góry).': 'Passive: his arrows are blocked by neither terrain obstacles nor units on the line of fire (he shoots from above).', 'Pieśń Stepu': 'Song of the Steppe',
   // mechanic, spark, buildings
   'Jednostka Stada, która przed atakiem wręcz przebiegła co najmniej {0} pola, odpycha cel o 1 pole; cel, który w coś uderzy, dostaje obrażenia.': 'A unit of the Herd that has run at least {0} cells before a melee attack pushes its target 1 cell; a target that hits something takes damage.',
   'Wszystkie jednostki Stada (bohaterowie i pomocnicy) mają +{0} S w każdej bitwie.': 'All units of the Herd (heroes and supports) have +{0} SPD in every battle.',

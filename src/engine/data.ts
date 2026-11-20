@@ -22,6 +22,7 @@ export type AbilityId =
   | 'guardian' // Opiekun Gaju (reaction)
   | 'duckFury' // Kacza Furia (passive; easter egg hero)
   | 'entanglingRoots' // Splątane Korzenie
+  | 'overShot' // Strzał nad Przeszkodami (Orzeł Stepowy Łowca, passive): his arrows are blocked by neither terrain nor units on the line of fire
   | 'giftOfLife' // Dar Życia
   | 'airDash' // Powietrzny Zryw
   | 'fireBreath' // Ognisty Oddech
@@ -531,7 +532,7 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'indrik', name: 'Indrik, Pan Zwierząt', side: 'herds', kind: 'support', size: 2, hp: 21, attack: 7, speed: 4, movement: 'walk', attackType: 'melee', ability: 'tremor', abilityName: 'Ziemia Drży', abilityText: `Raz na bitwę: mali wrogowie w promieniu ${ABILITY.tremorRadius} pól zostają odepchnięci o 1 pole, zderzenia ranią. Indrika nie da się odepchnąć.` }),
     // Commanders of the Herds.
     u({ id: 'aurochsScout', name: 'Turzy Zagończyk', side: 'herds', kind: 'hero', hp: 9, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'hardHead', abilityName: 'Kark Tura', abilityText: `Raz na bitwę ignoruje do ${ABILITY.hardHeadIgnore} obrażeń z jednego trafienia.` }),
-    u({ id: 'eagleHunter', name: 'Orzeł Stepowy Łowca', side: 'herds', kind: 'hero', hp: 6, attack: 3, speed: 5, movement: 'walk', attackType: 'ranged', ability: 'entanglingRoots', abilityName: 'Oszczep w Kolano', abilityText: `Raz na bitwę: trafiony wróg ma −${ABILITY.rootsSlow} S w swojej następnej aktywacji.` }),
+    u({ id: 'eagleHunter', name: 'Orzeł Stepowy Łowca', side: 'herds', kind: 'hero', hp: 6, attack: 3, speed: 5, movement: 'walk', attackType: 'ranged', ability: 'overShot', abilityName: 'Strzał nad Przeszkodami', abilityText: 'Stała: jego strzały nie są blokowane przez przeszkody terenu ani jednostki na linii strzału (strzela z góry).' }),
     u({ id: 'planetnik', name: 'Płanetnik', side: 'herds', kind: 'hero', hp: 6, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'rhythm', abilityName: 'Pieśń Stepu', abilityText: `Raz na bitwę: sojusznik ma +${ABILITY.rhythmHaste} S w swojej następnej aktywacji.` }),
     // Królestwo Umarłych (`undead`, docs/frakcje/undead.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero.
     u({ id: 'barrowKing', name: 'Król Kurhanu', side: 'undead', kind: 'hero', hp: 10, attack: 4, speed: 4, movement: 'walk', attackType: 'melee', ability: 'barrowCall', abilityName: 'Wezwanie z Kurhanu', abilityText: 'Raz na bitwę: poległy pomocnik wstaje na sąsiednim polu z połową Ż.' }),

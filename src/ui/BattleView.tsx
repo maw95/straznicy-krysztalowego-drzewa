@@ -10,6 +10,7 @@ import {
   breathSecondTarget,
   isBreath,
   hasLineOfSight,
+  shootsOver,
   FREE_ABILITIES,
   UNTARGETED_ABILITIES,
   cellsOf,
@@ -233,7 +234,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     if (targets.some((t) => t.id === u.id)) return UNITS[active.defId].attackType === 'melee' || unitDistance(active, u) === 1 ? 'cur-melee' : 'cur-ranged';
     const canShoot = myTurn && !act!.attacked && !act!.moveOnly && !act!.hop && !targeting && !freeAbility && UNITS[active.defId].attackType === 'ranged';
     if (!canShoot || u.side === active.side) return '';
-    return !engaged && !hasLineOfSight(state, active.pos, u.pos) ? 'cur-blocked' : '';
+    return !engaged && !hasLineOfSight(state, active.pos, u.pos, shootsOver(state, active)) ? 'cur-blocked' : '';
   };
   /** Approach cells and cursor of every unit, worked out once per change instead of on each use. */
   const unitInfo = useMemo(() => {

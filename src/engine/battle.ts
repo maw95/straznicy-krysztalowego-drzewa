@@ -299,8 +299,12 @@ export function movePath(state: GameState, u: BattleUnit, to: HexKey): HexKey[] 
   return path;
 }
 
-/** Obstacles block a shot; units standing in the way do not, unless `rules.unitsBlockSight` is on. */
-export function hasLineOfSight(state: GameState, from: HexKey, to: HexKey): boolean {
+/** Strzał nad Przeszkodami (Orzeł Stepowy Łowca): the shooter fires from above, so neither terrain nor units on the line block its arrows. */
+export const shootsOver = (state: GameState, u: BattleUnit): boolean => abilityOf(u) === 'overShot' && abilityActive(state);
+
+/** Obstacles block a shot; units standing in the way do not, unless `rules.unitsBlockSight` is on. `over`: the shooter fires over everything (see `shootsOver`). */
+export function hasLineOfSight(state: GameState, from: HexKey, to: HexKey, over = false): boolean {
+  if (over) return true;
   const b = state.battle!;
   const obstacles = obstacleSet(b);
   const between = cellsBetween(from, to);
@@ -341,7 +345,7 @@ export function attackTargets(state: GameState, u: BattleUnit, from: HexKey | nu
   const only = (list: BattleUnit[]) => (challenger ? list.filter((e) => e.id === challenger.id) : list);
   if (UNITS[u.defId].attackType === 'melee') return only(near);
   if (near.length) return only(near);
-  return only(enemies.filter((e) => cellsOf(e).some((c) => hasLineOfSight(state, from, c))));
+  return only(enemies.filter((e) => cellsOf(e).some((c) => hasLineOfSight(state, from, c, shootsOver(state, u)))));
 }
 
 /**
@@ -360,7 +364,7 @@ export function unitReach(state: GameState, u: BattleUnit): { walk: Set<HexKey>;
   const own = new Set(cellsOf(u));
   for (const c of layoutCells(b)) {
     if (obstacles.has(c) || walk.has(c) || own.has(c)) continue;
-    if (stands.some((s) => s.cells.some((m) => adjacent(m, c)) || (ranged && hasLineOfSight(state, s.head, c)))) hit.add(c);
+    if (stands.some((s) => s.cells.some((m) => adjacent(m, c)) || (ranged && hasLineOfSight(state, s.head, c, shootsOver(state, u))))) hit.add(c);
   }
   return { walk, hit };
 }
@@ -463,7 +467,7 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
 /** Abilities that are switched on for a single attack. */
 export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'ramBlow', 'frostSlow', 'frostGrip', 'iceBlow', 'stinkBomb'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail', 'pickpocket', 'branchShot', 'veiled', 'woundFury', 'riposte', 'towerShot', 'wildLeap'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'overShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail', 'pickpocket', 'branchShot', 'veiled', 'woundFury', 'riposte', 'towerShot', 'wildLeap'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
