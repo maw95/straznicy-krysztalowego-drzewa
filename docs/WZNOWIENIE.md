@@ -53,6 +53,10 @@ Dowódcy Stad: nazwy własne „Łowca Wiatru” i „Płanetnik” (`realm.ts`)
   Nowa kolejność: (1) bot i mechaniki wg `docs/DIAGNOZA_FRAKCJI.md` priorytety 2–6, (2) stroiciel na cel względny, (3) G2, (4) przestrojenie poziomów Kryształów itd. (`retune-all.sh`; dotychczasowe `auto-*.json` są nieaktualne), (5) G1 Piasków/Roju/Przypływów.
 - **Drobne zmiany do wprowadzenia po stroicielu (nie edytować `src/` w katalogu głównym, gdy liczy się `tuneFactions.ts`):** (a) zdolność Nosorożca Bojowego „Taran” → nowa nazwa (autor 20.11: zmienić; rekomendacja „Rozpędzony Róg”, inne: Bodnięcie z Rozbiegu, Stratowanie; Kozioł Taranowy zachowuje „Taran”);
   (b) specjalność Orła Stepowego Łowcy „Mistrz Oszczepu” → nowa nazwa (propozycje: Oko Orła, Szpon z Góry); (c) atak dystansowy orła = „pióra jak strzały” (do potwierdzenia, alternatywy: Satyr Sokolnik, orzeł w zwarciu).
+- **W TOKU (stan 20.11 ok. 12:00): stroiciel G2 na cel względny** uruchomiony poleceniem `nohup node --import tsx scripts/sim/tuneFactions.ts 200 control,conquest,relic --apply > .tmp/sim/tuneFactions2.log 2>&1 &`
+  (proces niezależny od sesji Claude; do ok. 2,5 h; stan po każdej zaakceptowanej zmianie w `.tmp/sim/tuneFactions.json`). Gdy w logu jest linia `final` i proces nie żyje (`pgrep -f tuneFactions`),
+  `--apply` sam zapisał `src/engine/factionBonus.ts`: przejrzyj wynik (log: sekcja „final”), `make check`, commit z adnotacją; jeśli proces padł, uruchom to samo polecenie ponownie (wznowi od stanu; dodaj `>>` zamiast `>`).
+  Dopóki trwa, NIE edytuj `src/` w katalogu głównym. Decyzja autora 20.11: zdolność Nosorożca Bojowego „Taran” → **„Stratowanie”** (wprowadzić po stroicielu; Kozioł Taranowy zachowuje „Taran”).
 - **Decyzja do podjęcia po stroicielu (ważne):** tabela kontr wymaga Przymierze > Horda 60–70%, a premia +1/+1 dla Hordy dała ok. 50%. Stroiciel sam dobierze premie wszystkich frakcji,
   więc po nim Kryształy i inne cele trzeba przestroić ponownie (`scripts/sim/retune-all.sh` po skasowaniu `.tmp/sim/auto-*.json` oprócz `auto-zero-legacy.json`), potem `tuneMerge`.
   Dlatego obecne pliki `auto-*.json` służą tylko, jeśli premia Hordy zostanie przy +1/+1.
