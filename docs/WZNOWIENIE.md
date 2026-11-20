@@ -7,7 +7,7 @@ Zasady stałe: `CLAUDE.md`. Nie pushujemy gry. Serwer (`../straznicy-krysztalowe
 ## PLAN NA TERAZ (ustalony z autorem 20.11 wieczorem; wykonuj po kolei, aktualizuj tu odhaczenia)
 1. [x] 58a, 58b zrobione 20.11; 56 i 57 odłożone na bliżej nieokreśloną przyszłość (decyzja autora).
 2. [x] Ikona `huntDive` wygenerowana 20.11 (3 CU, `scripts/assets/ability_icon_glyph.py`).
-3. [ ] Pozostałe drobiazgi z tego pliku (m.in. serwer przy wydaniu: parsery `pickMirages`, `battleMirageSwap`, `gateHero`, `battleTideSwap`; otwarte pytania z G1; herby `cards/crests` ze starymi nazwami).
+3. [x] Drobiazgi: parsery akcji w backendzie (lokalny commit `5c086cd`, bez wdrożenia, backend ma też 3 stare błędy typów TeamId przy stole online z nowymi frakcjami: do punktu 51a), herb Piasków z nową nazwą. Otwarte pytania z G1 rozstrzygnięte wg decyzji autora z wpisów wyżej.
 4. [ ] G2 dla 10 frakcji, drabina (przejdź do następnego szczebla, gdy poprzedni nie daje celu):
    B) pełny stroiciel `tuneFactions.ts` dla 10 frakcji (ok. 5 h w tle, `nohup`, nie edytuj `src/` w katalogu głównym w trakcie);
    A) kontry z mechanik frakcji i bota (wg `docs/DIAGNOZA_FRAKCJI.md`);
