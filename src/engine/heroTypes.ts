@@ -17,6 +17,7 @@ export const HERO_TYPES: Record<string, HeroType> = {
   ironThane: 'warrior', runeMatron: 'sage', passWarden: 'hunter', oldMiner: 'warrior', clanWarrior: 'warrior', mountainCrossbow: 'hunter', forgePriest: 'sage',
   marzanna: 'sage', frostJarl: 'warrior', snowLynx: 'hunter', oldHailer: 'sage', iceKnight: 'warrior', ermineHuntress: 'hunter', frostWitch: 'sage',
   foxCaptain: 'hunter', badgerSapper: 'warrior', ravenSeer: 'sage', otterSmuggler: 'hunter', martenSlasher: 'warrior', wildcatBajka: 'hunter', hareHerbalist: 'sage',
+  djinnVizier: 'sage', sphinxWarden: 'warrior', scorpionQueen: 'hunter', camelPrince: 'hunter', bastia: 'warrior', caravanArcher: 'hunter', desertAstrologer: 'sage',
   wardCaptain: 'warrior', spectralArcher: 'hunter', penitentMonk: 'sage',
 };
 
@@ -98,6 +99,13 @@ export const SPECIALTIES: Record<string, Specialty> = {
   martenSlasher: { name: 'Stary Zawadiaka', text: 'Pomocnicy Rębajły mają +1 Ż w bitwie.', supportHp: 1 },
   wildcatBajka: { name: 'Szalony Pomysł', text: '+1 punkt ruchu na mapie.', move: 1 },
   hareHerbalist: { name: 'Ziołowy Zapas', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
+  djinnVizier: { name: 'Lampa Mocy', text: 'Czary Wezyra zadają i leczą o 1 więcej.', spellPower: 1 },
+  sphinxWarden: { name: 'Mądrość Wieków', text: '+1 PD za każdą wygraną walkę.', xp: 1 },
+  scorpionQueen: { name: 'Szlaki Wydm', text: '+1 punkt ruchu na mapie.', move: 1 },
+  camelPrince: { name: 'Karawana Złota', text: '+1 zł dla frakcji za każdą wygraną bitwę.', gold: 1 },
+  bastia: { name: 'Leniwa Siła', text: 'Pomocnicy Bastii mają +1 Ż w bitwie.', supportHp: 1 },
+  caravanArcher: { name: 'Oko Pustyni', text: 'Strzelcy Łuczniczki (i ona sama) mają +1 A w bitwie.', marksman: 1 },
+  desertAstrologer: { name: 'Gwiezdna Mapa', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },
   clanWarrior: { name: 'Stary Wojownik', text: 'Pomocnicy Wojownika mają +1 Ż w bitwie.', supportHp: 1 },
   mountainCrossbow: { name: 'Celne Oko Gór', text: 'Strzelcy Kusznika (i on sam) mają +1 A w bitwie.', marksman: 1 },
   forgePriest: { name: 'Ogień Kuźni', text: 'Na koniec rundy odzyskuje o 1 many więcej.', regen: 1 },

@@ -32,6 +32,7 @@ export const COMMANDERS: Record<FactionId, Record<Archetype, string>> = {
   clans: { warrior: 'clanWarrior', archer: 'mountainCrossbow', sage: 'forgePriest' },
   frost: { warrior: 'iceKnight', archer: 'ermineHuntress', sage: 'frostWitch' },
   free: { warrior: 'martenSlasher', archer: 'wildcatBajka', sage: 'hareHerbalist' },
+  sands: { warrior: 'bastia', archer: 'caravanArcher', sage: 'desertAstrologer' },
 };
 
 export const archetypeOf = (unitId: string): Archetype | null => {
@@ -59,6 +60,9 @@ const NAMES: Record<string, string[]> = {
   martenSlasher: ['Rąbek', 'Szczerbaty', 'Kuna Kudłaty', 'Rębacz Gościńca'],
   wildcatBajka: ['Bajka', 'Bajdurka Mała', 'Bajka Rudawa', 'Żbik Pędziwiatr'],
   hareHerbalist: ['Babka Macierzanka', 'Zielarka Miętówka', 'Ciotka Kopytnik', 'Lubczykowa'],
+  bastia: ['Brytania', 'Bastia Leniwa', 'Bastia Gruba', 'Czarna Bastia'],
+  caravanArcher: ['Strzała Karawany', 'Zofira z Oazy', 'Miedziana Cięciwa', 'Łowczyni Wydm'],
+  desertAstrologer: ['Gwiazdomir', 'Astrolog Siedmiu Gwiazd', 'Mędrzec Wydm', 'Szeptacz Piasków'],
   spectralArcher: ['Łuczniczka Zmierzchu', 'Cień Strzały', 'Srebrna Cięciwa', 'Dziewanna'],
   penitentMonk: ['Brat Milczek', 'Pokutnik Wawrzyn', 'Mnich Latarnik', 'Zaduszny'],
   satyrSeer: ['Dudarz Mądry', 'Pieśniarz', 'Wróżbiarz Wiatru', 'Trzcinowy'],

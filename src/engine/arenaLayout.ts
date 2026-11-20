@@ -36,6 +36,8 @@ export const ARENA_OBSTACLES: Record<ArenaId, Array<[number, number]>> = {
   frost: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
   // And for the Free Companies (a forest camp by a ruined mill wants its own arena).
   free: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
+  // And for the Sands (an oasis with ruined columns, dunes and palms wants its own arena).
+  sands: [[3, 3], [9, 3], [3, 7], [6, 8], [9, 9], [10, 10], [3, 13], [4, 14], [9, 13]],
 };
 
 export const arenaCell = (col: number, half: number): HexKey => key({ q: col, r: (half - col) / 2 });
@@ -175,6 +177,16 @@ export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
     { art: 'boulders', cells: [[10, 7]] },
     { art: 'brambles', cells: [[6, 3]] },
     { art: 'totem', cells: [[6, 7]] },
+  ],
+  // Placeholder (docs/BACKLOG.md 2a): an oasis with ruined columns, dunes (boulders) and dry palms until the arena of its own is painted.
+  sands: [
+    { art: 'ruin', cells: [[4, 1], [5, 1]] },
+    { art: 'statue', cells: [[8, 5], [8, 6]] },
+    { art: 'ruin', cells: [[3, 4]] },
+    { art: 'deadtree', cells: [[9, 2]] },
+    { art: 'boulders', cells: [[10, 7]] },
+    { art: 'boulders', cells: [[6, 3]] },
+    { art: 'deadtree', cells: [[6, 7]] },
   ],
 };
 

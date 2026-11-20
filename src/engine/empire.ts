@@ -82,6 +82,18 @@ export const FACTION_MECHANICS = {
   fenceTreasureEvery: 3,
   /** Szlaki Przemytnicze: how many times a round a hero of the Companies may walk through the hex of a guardian or neutrals without a fight. */
   trailsPerRound: 1,
+  /** Pałac Mirażu (Imperium Piasków): mirages put up at the start of a battle, by level (I-IV); the level from which a unit may swap places with its own mirage (once a battle); the level at which a broken mirage blinds its attacker, and by how much (small scale). */
+  mirageCount: [1, 2, 2, 2],
+  mirageSwapLevel: 3,
+  mirageBlindLevel: 4,
+  mirageBlind: 1,
+  /** Iskra of the Sands: how many of its units the faction may move after both sides have deployed. */
+  sparkRearrange: 2,
+  /** Szlak Karawan: one gold a round for every this many mines the faction holds (I); the exchange at the market without loss is the second level. */
+  caravanMines: 2,
+  /** Brama Wydm: every how many rounds a hero standing in a settlement may step through the gate, and how far (hexes) it may go. */
+  gateEvery: 3,
+  gateReach: 8,
 };
 export const MECHANIC_NAMES: Record<FactionId, string> = byPack((p) => p.mechanic.name);
 export const MECHANIC_TEXTS: Record<FactionId, string> = {
@@ -91,6 +103,7 @@ export const MECHANIC_TEXTS: Record<FactionId, string> = {
   undead: `Na końcu każdej rundy bitwy poległy pomocnik Umarłych wstaje na arenie (jego najtańszy; bohaterowie nie wstają); liczba wstań i Ż, z którym wracają, rosną z poziomem Kurhanu.`,
   frost: `Każdy cios jednostki Dworu nakłada na cel 1 szron; przy ${FACTION_MECHANICS.frostThreshold[0]} szronach cel zamarza (traci następną aktywację, szron znika). Kolejne poziomy Pałacu Szronu skracają próg, a zamrożony kruszeje i traci Szybkość.`,
   free: `Przed bitwą Kompanie kładą na swojej połowie ukryte pułapki (${FACTION_MECHANICS.trapCount[0]} na pierwszym poziomie Warsztatu Sideł, więcej na kolejnych); wróg, który wejdzie na pułapkę, dostaje ${ABILITY.trapDamage} obrażeń i kończy ruch, a od trzeciego poziomu nie rusza się też do końca następnej aktywacji. Pułapek wroga nie widać, dopóki nie zadziałają.`,
+  sands: `Na początku bitwy Piaski stawiają na swojej połowie ${FACTION_MECHANICS.mirageCount[0]} miraż: atrapę jednej ze swoich jednostek (nie bohatera), której wróg nie odróżni od prawdziwej. Atak w miraż przepada, a miraż znika; nie atakuje. Kolejne poziomy Pałacu Mirażu dają drugi miraż, zamianę miejsc jednostki z jej mirażem (raz na bitwę) i oślepianie tego, kto rozbił miraż.`,
   herds: `Jednostka Stad, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole; cel, który w coś uderzy, dostaje obrażenia.`,
 };
 
@@ -111,6 +124,7 @@ export const SPARK_TEXTS: Record<FactionId, string> = {
   clans: `Wszystkie jednostki Klanów (bohaterowie i pomocnicy) mają pancerz ${FACTION_MECHANICS.shieldArmor}: −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu.`,
   frost: `Wrogowie zaczynają każdą bitwę z ${FACTION_MECHANICS.sparkFrost} szronem.`,
   free: `Kompanie zaczynają każdą bitwę z ${FACTION_MECHANICS.sparkTraps} dodatkowymi ukrytymi pułapkami.`,
+  sands: `Po rozstawieniu obu stron Piaski mogą przestawić do ${FACTION_MECHANICS.sparkRearrange} swoich jednostek w swojej strefie.`,
   undead: 'Wszystkie jednostki Umarłych (bohaterowie i pomocnicy) są odporne na truciznę, klątwy, spowolnienia i unieruchomienie.',
 };
 

@@ -20,7 +20,7 @@ import { HERO_TYPES } from './heroTypes';
 import { FACTION_MECHANICS, mayBuildSpark, mechanicLevel, pickUpShard, placeShards, shardCollector, SPARK_NAMES, spendShards, summedLevel } from './empire';
 import { commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from './realm';
 
-export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen' | 'hoofStone' | 'pastures' | 'refuge' | 'barrow' | 'ossuary' | 'bellTower' | 'shieldHall' | 'runeForge' | 'deepMine' | 'frostPalace' | 'crystalGrotto' | 'blizzardTower' | 'trapWorkshop' | 'fence' | 'smugglerTrails';
+export type BuildingId = 'barracks' | 'market' | 'hospital' | 'treasury' | 'forge' | 'walls' | 'tavern' | 'magic' | 'spark' | 'shrine' | 'nursery' | 'grove' | 'bloodPit' | 'plunder' | 'wolfDen' | 'hoofStone' | 'pastures' | 'refuge' | 'barrow' | 'ossuary' | 'bellTower' | 'shieldHall' | 'runeForge' | 'deepMine' | 'frostPalace' | 'crystalGrotto' | 'blizzardTower' | 'trapWorkshop' | 'fence' | 'smugglerTrails' | 'mirageHall' | 'caravanRoad' | 'sandGate';
 
 export interface Settlement {
   id: string;
@@ -69,7 +69,7 @@ export const KINGDOM = {
   /** Gold in a chest chosen instead of the artifact. */
   chestGold: 3,
   /** Cost of each level of a building. */
-  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [], hoofStone: [], pastures: [], refuge: [], barrow: [], ossuary: [], bellTower: [], shieldHall: [], runeForge: [], deepMine: [], frostPalace: [], crystalGrotto: [], blizzardTower: [], trapWorkshop: [], fence: [], smugglerTrails: [] } as Record<BuildingId, number[]>,
+  cost: { barracks: [3, 6], market: [3, 5], hospital: [3, 5], treasury: [4, 6], forge: [], walls: [], tavern: [], magic: [], spark: [], shrine: [], nursery: [], grove: [], bloodPit: [], plunder: [], wolfDen: [], hoofStone: [], pastures: [], refuge: [], barrow: [], ossuary: [], bellTower: [], shieldHall: [], runeForge: [], deepMine: [], frostPalace: [], crystalGrotto: [], blizzardTower: [], trapWorkshop: [], fence: [], smugglerTrails: [], mirageHall: [], caravanRoad: [], sandGate: [] } as Record<BuildingId, number[]>,
   /** Price of an artifact in the market, by rarity (zwykły, rzadki, legendarny). */
   artifactPrice: [2, 5, 10],
   /** Offers in the market (the big market has more) and how many rounds an offer stays. */
@@ -108,6 +108,7 @@ export const DWELLING_NAMES: Record<string, string> = {
   armoredBear: 'Gawra Zbrojna', battleSmith: 'Polowa Kuźnia', bronzeSentinel: 'Warsztat Mechanizmów', goatRider: 'Koźla Zagroda', giantSlayer: 'Sala Pogromców', skarbnik: 'Stary Szyb', hammerGuard: 'Sala Gwardii', dwarfCannon: 'Ludwisarnia', clanColossus: 'Wielka Kuźnia Kolosa',
   faunSlinger: 'Fauni Zagajnik', tarpan: 'Tarpanie Błonia', forestBison: 'Żubrza Ostoja', satyrLancer: 'Obóz Kopijników', steppeHippogriff: 'Gniazdo na Urwisku', drumElephant: 'Krąg Bębnów', warRhino: 'Błotne Brody', bullMoose: 'Łosie Mokradło', indrik: 'Źródło Indrika',
   weaselKnife: 'Kryjówka w Żywopłocie', beaverEngineer: 'Żeremie', polecatPoisoner: 'Warzelnia', raccoonDogSpy: 'Leśna Czatownia', wolverine: 'Rosomacza Nora', badgerBomber: 'Prochownia', toadGunner: 'Rusznikarnia', catFencer: 'Fechtownia', towerMonitor: 'Wielka Stajnia Kompanii',
+  sandScorpion: 'Gniazdo Skorpionów', cobra: 'Wężowa Studnia', mirageDancer: 'Dom Tancerek', ushabti: 'Grobowiec Strażników', lamassu: 'Brama Lamassu', oasisCrocodile: 'Rozlewisko Krokodyli', stormDjinn: 'Lampa Dżina', roc: 'Gniazdo Roka', sandWyrm: 'Ruchome Piaski',
   blizzardWitch: 'Chata na Lodzie', glacierYak: 'Zagroda Jaków', iceSentinel: 'Lodowa Strażnica', frostSprite: 'Sopelkowa Grota', youngGiant: 'Obóz Olbrzymów', windStrzyga: 'Wichrowy Szczyt', elderGiant: 'Gradowa Turnia', auroraSpirit: 'Wieża Zorzy', frostMammoth: 'Mamucia Grań',
   ratman: 'Szczurze Nory', goblinSlinger: 'Obóz Procarzy', hellhound: 'Psiarnia Ogarów', gargoyle: 'Kamienna Grzęda', salamander: 'Popielna Jama', caveTroll: 'Trollowa Pieczara', minotaurChief: 'Labirynt Minotaurów', shadowWyvern: 'Gniazdo Wiwern', doomBehemoth: 'Jaskinia Zagłady',
 };
@@ -118,6 +119,7 @@ const GENITIVE: Record<string, string> = {
   armoredBear: 'Niedźwiedzia w Zbroi', battleSmith: 'Kowala Bitewnego', bronzeSentinel: 'Wartownika z Brązu', goatRider: 'Jeźdźca na Koźle', giantSlayer: 'Pogromcy Olbrzymów', skarbnik: 'Skarbnika', hammerGuard: 'Gwardii Młota', dwarfCannon: 'Armaty Klanów', clanColossus: 'Kolosa Kuźni',
   faunSlinger: 'Fauna Procarza', tarpan: 'Tarpana', forestBison: 'Żubra Puszczańskiego', satyrLancer: 'Satyra Kopijnika', steppeHippogriff: 'Hipogryfa Stepowego', drumElephant: 'Słonia z Bębnem', warRhino: 'Nosorożca Bojowego', bullMoose: 'Łosia Rogacza', indrik: 'Indrika',
   weaselKnife: 'Łasicy Nożowniczki', beaverEngineer: 'Bobra Inżyniera', polecatPoisoner: 'Tchórza Smrodnika', raccoonDogSpy: 'Jenota Szpiega', wolverine: 'Rosomaka Zabijaki', badgerBomber: 'Borsuka Petardnika', toadGunner: 'Ropucha z Hakownicą', catFencer: 'Kocura Fechmistrza', towerMonitor: 'Warana Wieżowego',
+  sandScorpion: 'Skorpiona Piaskowego', cobra: 'Kobry Królewskiej', mirageDancer: 'Tancerki Fata Morgany', ushabti: 'Kamiennego Strażnika', lamassu: 'Lamassu', oasisCrocodile: 'Krokodyla Oazowego', stormDjinn: 'Dżina Burzy Piaskowej', roc: 'Ptaka Roka', sandWyrm: 'Czerwia Pustyni',
   blizzardWitch: 'Wiedźmy Zamieci', glacierYak: 'Jaka Lodowcowego', iceSentinel: 'Rycerza Lodowej Zbroi', frostSprite: 'Rusałki Szronu', youngGiant: 'Młodego Olbrzyma Szronu', windStrzyga: 'Strzygi Wichru', elderGiant: 'Olbrzyma Gradu', auroraSpirit: 'Ducha Zorzy', frostMammoth: 'Mamuta Wiecznej Zimy',
   ratman: 'Szczurołaka', goblinSlinger: 'Goblina Procarza', hellhound: 'Piekielnego Ogara', gargoyle: 'Gargulca', salamander: 'Salamandry Popiołu', caveTroll: 'Trolla Jaskiniowego', minotaurChief: 'Herszta Minotaurów', shadowWyvern: 'Wiwerny Cienia', doomBehemoth: 'Behemota Zagłady',
 };
@@ -230,6 +232,9 @@ export const BUILDING_NAMES: Record<BuildingId, string[]> = {
   trapWorkshop: ['Warsztat Sideł', 'Wielki Warsztat Sideł', 'Warsztat Sideł Unieruchamiających', 'Warsztat Mistrzowskich Sideł'],
   fence: ['Paserka', 'Dobra Paserka'],
   smugglerTrails: ['Szlaki Przemytnicze'],
+  mirageHall: ['Pałac Mirażu', 'Wielki Pałac Mirażu', 'Pałac Zamiennych Luster', 'Pałac Oślepiających Luster'],
+  caravanRoad: ['Szlak Karawan', 'Wielki Szlak Karawan'],
+  sandGate: ['Brama Wydm'],
 };
 
 /** Level 6: the buildings only one faction has (the faction's mechanic first, then the two others). */
@@ -315,6 +320,14 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
     `${FACTION_MECHANICS.trapCount[3]} pułapki przed bitwą.`,
   ],
   fence: [`Artefakty z rynku kupujesz o ${FACTION_MECHANICS.fenceDiscount} zł taniej (najmniej za 1 zł), a skrzynie dają +${FACTION_MECHANICS.fenceChestGold} zł.`, `Co ${FACTION_MECHANICS.fenceTreasureEvery} rundy Paserka przynosi losowy skarb.`],
+  mirageHall: [
+    `Miraż: na początku bitwy ${FACTION_MECHANICS.mirageCount[0]} jednostka (nie bohater) dostaje miraż: atrapę na wolnym polu twojej strefy, którą wróg bierze za prawdziwą. Miraż nie atakuje i znika po trafieniu (atak przepada). Bez tego budynku frakcja nie ma tego efektu.`,
+    `${FACTION_MECHANICS.mirageCount[1]} miraże na początku bitwy.`,
+    'Raz na bitwę jednostka może zamienić się miejscami ze swoim mirażem.',
+    `Rozbity miraż oślepia atakującego: −${FACTION_MECHANICS.mirageBlind} A w jego następnej aktywacji.`,
+  ],
+  caravanRoad: [`+1 zł na rundę za każde ${FACTION_MECHANICS.caravanMines} kopalnie frakcji.`, 'Wymiana surowców na Targu bez straty (kupno i sprzedaż po tej samej cenie).'],
+  sandGate: [`Raz na ${FACTION_MECHANICS.gateEvery} rundy bohater stojący w osadzie z Bramą Wydm przenosi się na dowolne odkryte, wolne pole w odległości do ${FACTION_MECHANICS.gateReach}.`],
   smugglerTrails: [`Raz na rundę bohater Kompanii może przejść przez pole strażnika kryształu albo neutralnych bez walki.`],
   blizzardTower: [`Wrodzy bohaterowie w promieniu ${FACTION_MECHANICS.blizzardRadius[0]} pól od osady mają −${FACTION_MECHANICS.blizzardMove} punkt ruchu na mapie.`, `Promień ${FACTION_MECHANICS.blizzardRadius[1]} pola.`],
   bellTower: ['Po wygranej bitwie z neutralnymi jeden poległy pomocnik poziomu 1–2 wraca do drużyny bez szpitala (raz na rundę).'],
@@ -408,7 +421,7 @@ export function initKingdom(state: GameState): void {
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag = byTeam(teams, (t) => rng.shuffle([...NAMES[raceOf(state, t)]]));
   // Level 6: the barracks stand from the start in every settlement (the dwellings of the units are built beside them).
-  const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0, hoofStone: 0, pastures: 0, refuge: 0, barrow: 0, ossuary: 0, bellTower: 0, shieldHall: 0, runeForge: 0, deepMine: 0, frostPalace: 0, crystalGrotto: 0, blizzardTower: 0, trapWorkshop: 0, fence: 0, smugglerTrails: 0 } : {}) }) as Record<BuildingId, number>;
+  const empty = (): Record<BuildingId, number> => ({ barracks: state.rules.empire ? 1 : 0, market: 0, hospital: 0, treasury: 0, ...(state.rules.economy ? { forge: 0, walls: 0 } : {}), ...(state.rules.realm ? { tavern: 0, magic: 0 } : {}), ...(state.rules.empire ? { spark: 0, shrine: 0, nursery: 0, grove: 0, bloodPit: 0, plunder: 0, wolfDen: 0, hoofStone: 0, pastures: 0, refuge: 0, barrow: 0, ossuary: 0, bellTower: 0, shieldHall: 0, runeForge: 0, deepMine: 0, frostPalace: 0, crystalGrotto: 0, blizzardTower: 0, trapWorkshop: 0, fence: 0, smugglerTrails: 0, mirageHall: 0, caravanRoad: 0, sandGate: 0 } : {}) }) as Record<BuildingId, number>;
   const add = (id: string, at: HexKey, land: TeamId, owner: TeamId | null) => {
     k.settlements[id] = { id, at, land, name: nameBag[land].pop() ?? `${FACTION_NAMES[raceOf(state, land)]} ${Object.keys(k.settlements).length + 1}`, owner, buildings: empty(), bought: [], boughtEpoch: -1 };
     state.tiles[at].place = { kind: 'settlement', id };
@@ -749,7 +762,7 @@ export function payCost(state: GameState, f: TeamId, c: Cost): void {
  * Which building's first level must stand in the settlement before another can be started (docs/BUDYNKI.md 0a: a tree, one parent each;
  * the Rada Osady, the root, is always there; the Iskra needs only the shards, the dwellings the barracks, see `kingdomDwelling`).
  */
-export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market', hoofStone: 'barracks', pastures: 'market', refuge: 'tavern', barrow: 'hospital', ossuary: 'treasury', bellTower: 'barracks', shieldHall: 'walls', runeForge: 'forge', deepMine: 'treasury', frostPalace: 'magic', crystalGrotto: 'treasury', blizzardTower: 'walls', trapWorkshop: 'market', fence: 'market', smugglerTrails: 'tavern' };
+export const BUILDING_PARENT: Partial<Record<BuildingId, BuildingId>> = { forge: 'barracks', walls: 'barracks', hospital: 'barracks', magic: 'hospital', tavern: 'market', shrine: 'hospital', grove: 'magic', nursery: 'treasury', bloodPit: 'forge', wolfDen: 'walls', plunder: 'market', hoofStone: 'barracks', pastures: 'market', refuge: 'tavern', barrow: 'hospital', ossuary: 'treasury', bellTower: 'barracks', shieldHall: 'walls', runeForge: 'forge', deepMine: 'treasury', frostPalace: 'magic', crystalGrotto: 'treasury', blizzardTower: 'walls', trapWorkshop: 'market', fence: 'market', smugglerTrails: 'tavern', mirageHall: 'market', caravanRoad: 'market', sandGate: 'tavern' };
 
 /** Why a building cannot be started here for lack of its parent (null: nothing in the way). Upgrades of a standing building are never blocked. */
 export function buildBlock(s: Settlement, b: BuildingId): string | null {
@@ -1133,7 +1146,7 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
     const wanted = FACTION_BUILDINGS[raceOf(state, f)].filter((x) => {
       if (x === mech) return buildingLevel(s, x) >= best && best < 4;
       if (x === 'refuge') return buildingLevel(s, x) < 1 && settlementsOf(state, f).filter((y) => buildingLevel(y, x) >= 1).length < 2;
-      if (x === 'grove' || x === 'wolfDen' || x === 'smugglerTrails') return !settlementsOf(state, f).some((y) => buildingLevel(y, x) >= 1);
+      if (x === 'grove' || x === 'wolfDen' || x === 'smugglerTrails' || x === 'sandGate') return !settlementsOf(state, f).some((y) => buildingLevel(y, x) >= 1);
       return true;
     });
     // The Clans build the mine and the rune forge first (the forge is what makes them strong over the long run), the shield hall after them.
