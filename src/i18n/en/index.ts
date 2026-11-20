@@ -10,6 +10,7 @@ import './clans';
 import './frost';
 import './free';
 import './sands';
+import './swarm';
 import './names';
 import './campaign';
 import './changelog';

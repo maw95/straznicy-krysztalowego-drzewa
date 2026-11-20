@@ -322,6 +322,16 @@ export function ArenaBoard(p: Props) {
                 </g>
               );
             })}
+            {/* Grzybnia (the Swarm): the claimed cells of the arena, seen by everybody; the own mycelium in moss green, an enemy's in rusty ochre. */}
+            {(b.ground ?? []).filter((g) => g.kind === 'claimed').map((g) => {
+              const own = g.owner === (b.stage === 'deploy' ? deploySide : active?.side) || (!active && !deploySide);
+              return (
+                <g key={`myc${g.owner}${g.cell}`} data-mycelium={g.cell} pointerEvents="none">
+                  <polygon points={hexPoints(g.cell, 6)} fill={own ? 'rgba(170,190,80,0.2)' : 'rgba(190,120,60,0.2)'} stroke={own ? 'rgba(200,220,110,0.55)' : 'rgba(220,150,90,0.55)'} strokeWidth="1.5" strokeDasharray="2 4" />
+                  <title>Grzybnia Roju: jednostki Roju są na niej silniejsze</title>
+                </g>
+              );
+            })}
             {/* Sidła (the Free Companies): the traps this screen may know of (the state it is given has the hidden ones of the others left out), the ones being laid while deploying, the one picked up by Fortel. */}
             {[...(b.ground ?? []).filter((g) => g.kind === 'trap').map((g) => ({ k: g.cell, own: g.owner === (b.stage === 'deploy' ? deploySide : active?.side) })), ...(b.stage === 'deploy' ? deploy.traps.map((k) => ({ k, own: true })) : [])].filter(({ k }, i, all) => all.findIndex((x) => x.k === k) === i).map(({ k, own }) => (
               <g key={`trap${k}`} data-trap={k} pointerEvents="none">

@@ -35,6 +35,8 @@ import {
   mirageMakeCells,
   sandsAllyTargets,
   mirageSwapReady,
+  flies,
+  sporeCells,
 } from '../engine/battle';
 import { castableInBattle, SPELLS, spellPreview, spellTargets, type SpellId } from '../engine/magic';
 import { sfx } from './sfx';
@@ -273,7 +275,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     return aimedCursor(kind, (Math.atan2(t.y - a.y, t.x - a.x) * 180) / Math.PI);
   };
   /** Walking or flying to a cell: the boot or the wing. */
-  const moveCursor = active && UNITS[active.defId].movement === 'fly' ? 'cur-fly' : 'cur-move';
+  const moveCursor = active && flies(active) ? 'cur-fly' : 'cur-move';
   const ab = active ? abilityOf(active) : null;
   const abilityReady = Boolean(active && !active.abilityUsed && abilityActive(state));
   const attackAbility = abilityReady && ab !== null && ATTACK_ABILITIES.includes(ab) && (ab !== 'ramBlow' || ramCharged(state, active!));
@@ -298,6 +300,8 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
     if (!cellAbility || !active) return [];
     const own = trapsOf(b, active.side).map((g) => g.cell);
     if (cellAbility === 'blast') return own;
+    // Rozsiew: any cell within the Matka's range (the mycelium covers it and its neighbours).
+    if (cellAbility === 'spreadSpores') return sporeCells(state, active);
     if (cellAbility === 'dam') return cellsOf(active).flatMap((c) => neighborKeys(c)).filter((k, i, all) => all.indexOf(k) === i && inLayout(b, k) && !b.obstacles.includes(k) && !unitAt(b, k));
     return [...trapZone(b, active.side).filter((k) => mayLayTrap(b, active.side, k)), ...own];
     // eslint-disable-next-line react-hooks/exhaustive-deps
