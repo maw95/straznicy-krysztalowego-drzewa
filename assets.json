@@ -5695,7 +5695,6 @@
         "public/assets/cards/portraits/rockGoat.jpg",
         "public/assets/cards/portraits/satyrHornlord.jpg",
         "public/assets/cards/portraits/satyrLancer.jpg",
-        "public/assets/cards/portraits/satyrPiper.jpg",
         "public/assets/cards/portraits/satyrSeer.jpg",
         "public/assets/cards/portraits/steppeHippogriff.jpg",
         "public/assets/cards/portraits/tarpan.jpg",
@@ -5786,7 +5785,6 @@
         "public/assets/cards/portraits/lanternWraith.jpg",
         "public/assets/cards/portraits/lich.jpg",
         "public/assets/cards/portraits/penitentMonk.jpg",
-        "public/assets/cards/portraits/penitentShade.jpg",
         "public/assets/cards/portraits/scarecrow.jpg",
         "public/assets/cards/portraits/skeletonArcher.jpg",
         "public/assets/cards/portraits/skeletonSpear.jpg",
@@ -5883,7 +5881,6 @@
         "public/assets/cards/portraits/oldMiner.jpg",
         "public/assets/cards/portraits/passWarden.jpg",
         "public/assets/cards/portraits/runeMatron.jpg",
-        "public/assets/cards/portraits/shieldDwarf.jpg",
         "public/assets/cards/portraits/skarbnik.jpg"
       ],
       "typ": "portret jednostki (zastępczy)",
@@ -5964,7 +5961,6 @@
         "public/assets/cards/portraits/elderGiant.jpg",
         "public/assets/cards/portraits/ermine.jpg",
         "public/assets/cards/portraits/ermineHuntress.jpg",
-        "public/assets/cards/portraits/frostImp.jpg",
         "public/assets/cards/portraits/frostJarl.jpg",
         "public/assets/cards/portraits/frostSprite.jpg",
         "public/assets/cards/portraits/frostWitch.jpg",
@@ -6122,6 +6118,118 @@
       "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
       "scenario_asset": "asset_8Qhz5C9xS8sqvEH99X1YpU4z",
       "prompt": "Portrait of the Leviathan, an ancient sea monster of the Lords of the Tides: an immense serpentine head rising from a churning grey-green sea, dark green scales encrusted with barnacles, coral and old shipwreck timbers, a crown of spines and fins, pale glowing eyes, water pouring off its jaws, a stormy coast with a ruined lighthouse far behind. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, muted desaturated colours (sea green, kelp, slate grey-green, sand, pearl), the sea water is green-grey, strictly no blue anywhere, overcast stormy light, upper-body character portrait filling the square frame, no text, no border.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/satyrPiper",
+      "pliki": [
+        "public/assets/cards/portraits/satyrPiper.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_tsDKiW538b4bHCrHVoaXdJmJ",
+      "prompt": "Portrait of a Satyr Piper of the Wild Herds: a wild shaggy satyr playing a set of reed pipes, shaggy goat legs with cloven hooves, large curled ram-like horns, a muscular bare chest, a thick curly beard and tangled dark hair, a leather strap with bone charms, a lively mischievous gleam in the eyes, on a sunlit autumn steppe with tall golden grass and standing stones. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (russet, ochre, straw gold, warm brown, a touch of red), warm low sunlight, upper-body character portrait filling the square frame, no text, no border, no blue tones on the character.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/penitentShade",
+      "pliki": [
+        "public/assets/cards/portraits/penitentShade.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_3L87EKKWmRkwraBuQuK6kFH3",
+      "prompt": "Portrait of a Penitent Shade, the ghost of a repentant pilgrim of the Barrow Kingdom: a translucent pale figure in a tattered hooded monk's robe, a rope belt, a hollow bowed face half hidden in the hood with two faintly glowing pale green eyes, wispy ghostly hands clasped as if in prayer with a rosary of bone beads, the lower body dissolving into mist, an old graveyard with leaning stone crosses and a crumbling chapel behind. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (ash grey, bone ivory, moss green, an eerie pale green glow), cold dim moonless light, upper-body character portrait filling the square frame, no text, no border, no blue tones on the character.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/shieldDwarf",
+      "pliki": [
+        "public/assets/cards/portraits/shieldDwarf.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_HwLMSRYCcpFyU9pu3ft1kjWc",
+      "prompt": "Portrait of a Dwarf Shieldbearer of the Iron Clans: a stocky stern dwarf with a long braided russet beard with iron rings, a riveted steel helmet with a nose guard, a heavy round iron-rimmed shield with a carved clan rune held up in front, a chainmail coat and a thick leather collar, a short axe at the belt, standing in a lamplit mountain tunnel with timber supports and an anvil glowing in the distance. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (steel grey, copper, warm brown, ember orange glints), warm torchlight, upper-body character portrait filling the square frame, no text, no border, no blue tones on the character.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/frostImp",
+      "pliki": [
+        "public/assets/cards/portraits/frostImp.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_3ieTajAajwiSoNnNzTAXjbrk",
+      "prompt": "Portrait of a Frost Imp of the Court of Everfrost: a small mischievous winged imp with pale grey-white skin dusted with frost, pointed ears, tiny curved horns of clear white ice, sharp grinning teeth, thin bat-like wings with frozen edges, an icicle needle held like a dart, a little ragged cloak of white fur, hovering in a snowy forest at dusk with frost-covered pines. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (snow white, silver grey, pale lilac shadows, a touch of cold rose on the cheeks), strictly no blue anywhere, soft diffuse winter light, upper-body character portrait filling the square frame, no text, no border.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/squirrelArcher",
+      "pliki": [
+        "public/assets/cards/portraits/squirrelArcher.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_SJLopWQSP3nBT3NjdDRuZQBc",
+      "prompt": "Portrait of a Squirrel Archer of the Free Companies: an animal-folk squirrel standing upright like a person, wearing a patched green-brown hooded jerkin and a feathered cap, a bushy red-brown tail curled behind, holding a short bow with an arrow nocked, a quiver and a coil of rope on the shoulder, sharp attentive eyes, perched on a thick oak branch in a sunlit forest. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted warm colours with vivid accents (rust, russet, olive, leaf green, a touch of gold), dappled warm light through leaves, upper-body character portrait filling the square frame, no text, no border, no blue tones on the character.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/pharaohMongoose",
+      "pliki": [
+        "public/assets/cards/portraits/pharaohMongoose.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_NWcmgNws3jiTBDkvZbXveu23",
+      "prompt": "Portrait of a Pharaoh's Mongoose of the Sand Empire: a lithe alert mongoose with sleek sand-brown fur and a pale belly, a wide golden collar with an eye-shaped amulet, small gold bands on the forelegs, a defiant rearing pose with bared teeth, a hooded cobra coiled and hissing in the background, a sun-baked sandstone temple wall with hieroglyphs and warm dunes behind. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (sand, ochre, terracotta, gleaming gold, a touch of turquoise-free deep red), warm bright desert light, upper-body character portrait filling the square frame, no text, no border, no blue tones.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/sporeling",
+      "pliki": [
+        "public/assets/cards/portraits/sporeling.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_37S3cS6855vjpR1NHCmcaXuc",
+      "prompt": "Portrait of a Sporeling of the Deep Swarm: a small walking mushroom creature with a rounded warty cap in dull orange-brown with pale spots, a stubby pale stalk body with fungal gills, two small dark eyes and a crooked mouth, thin root-like arms and legs, puffs of golden spore dust drifting from the cap, tiny mycelium threads on the ground, in a damp underground cavern with twisted roots and glowing pale mushrooms. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (umber, burnt orange, cream, moss green, a soft yellow-green spore glow), dim cave light, upper-body character portrait filling the square frame, no text, no border, no blue tones on the creature.",
+      "data": "2026-11-20",
+      "ai": true,
+      "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
+    },
+    {
+      "id": "portret/tritonHarpoon",
+      "pliki": [
+        "public/assets/cards/portraits/tritonHarpoon.jpg"
+      ],
+      "typ": "portret karty jednostki (tier 1, próbka stylu G3)",
+      "narzedzie": "Scenario (plan Starter)",
+      "model": "GPT Image 2.5 Flare 1024 px, high, pomniejszone lokalnie do 256 px (JPEG)",
+      "scenario_asset": "asset_rvhvxAFWZWzhVRvdStr4gF6C",
+      "prompt": "Portrait of a Triton Harpooner of the Lords of the Tides: a lean sea-folk warrior with greenish-teal skin, fine fish scales along the arms and neck, fin-like ears, webbed fingers, a coral-and-shell shoulder guard, a long barbed bone harpoon on a coiled rope in hand, determined sea-green eyes, standing on a wet rocky shore with surf, kelp, and a weathered wooden jetty in grey-green stormy light. Serious painterly realistic fantasy illustration in the style of Heroes of Might and Magic III but darker and grittier, rich but slightly muted colours with vivid accents (sea green, kelp, pearl, coral pink, sandy brown), the sea water is green-grey, strictly no blue anywhere, overcast light with a bright break in the clouds, upper-body character portrait filling the square frame, no text, no border.",
       "data": "2026-11-20",
       "ai": true,
       "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
