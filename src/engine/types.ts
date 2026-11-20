@@ -321,6 +321,8 @@ export interface FactionState {
   /** Szlaki Przemytnicze: the round of the last hero's walk through a guardian's hex, and how many there were in it. */
   trailRound?: number;
   trailUses?: number;
+  /** Brama Wydm (the Desert Empire): the round a hero of the faction last stepped through the gate. */
+  gateRound?: number;
 }
 
 /** A rune of the Runiczna Kuźnia: +1 A, +1 Ż or armour 1 in every battle of the unit. */
@@ -420,6 +422,21 @@ export interface UnitStatus {
   rootLater?: true;
   /** Ruchoma Twierdza: the round the turret last shot. */
   towerRound?: number;
+  /**
+   * Pustynne Cesarstwo. A mirage (Pałac Mirażu, Lustro Wydm): a decoy of the unit `of` of its side. Any blow or damage makes it vanish (the attack is wasted),
+   * it never attacks; only its own side knows it (`redactHidden` shows it to the others as the unit it copies, with that unit's numbers and a mixed-up id).
+   */
+  mirage?: { of: string };
+  /** Zagadka: the unit may not attack in its next activation (cleared when that activation ends). */
+  riddled?: true;
+  /** Przebudzenie: the stone guardian stands dormant (it loses its activations) until an enemy steps up next to it or hits it. */
+  dormant?: true;
+  /** Czujność: the round the Jackal last struck an enemy that stepped up. Czujna Drzemka: the blow of this lie-down was struck. */
+  watchRound?: number;
+  napStruck?: true;
+  /** Pałac Mirażu (fourth level): A the unit loses at its attacks in its next activation (`blindLater` turns into `blinded` when it begins). */
+  blindLater?: number;
+  blinded?: number;
 }
 
 /**
@@ -521,6 +538,10 @@ export interface Activation {
   leaped?: true;
   /** The activation was lost (a stunned or frozen unit): nothing of the unit's end-of-activation effects fires. */
   skipped?: true;
+  /** Lot ze Skrzydłem: the ally the Rok carries on its move in this activation. */
+  lift?: string;
+  /** Rzut Sztyletem: the unit has thrown its dagger in this activation (it may still move afterwards). */
+  thrown?: true;
 }
 
 /** A settlement's defences in a battle fought for it (level 4, wide arena): everything stands in front of the defender's side. */
@@ -565,6 +586,17 @@ export interface BattleState {
   ward?: Record<string, number>;
   /** Sidła: the ground effects of this battle (hidden traps). Always read through `groundAt` and shown through `redactHidden`. */
   ground?: GroundEffect[];
+  /**
+   * Pustynne Cesarstwo, mirages: the id every body of a mirage group (a unit and its mirages) is shown under to the other sides, a mix-up drawn when the group is made
+   * (`redactHidden` uses it; an action of another side names the shown id and `unmaskId` turns it back). Missing: no mirages in this battle.
+   */
+  mirageAlias?: Record<string, string>;
+  /** Pałac Mirażu (third level): the sides that have swapped a unit with its mirage in this battle (once a battle). */
+  mirageSwapped?: Side[];
+  /** Iskra of the Desert Empire: the side that may now move up to `left` of its units in its zone (after both sides deployed), and where they stood. */
+  rearrange?: { side: TeamId; from: Record<string, HexKey> };
+  /** The sides whose Iskra has already rearranged their units in this battle. */
+  rearranged?: TeamId[];
   /** Fortyfikacja: the cells of wall the Kolos Kuźni has put up in this battle (they are in `obstacles` as well; the screen draws them). */
   raised?: HexKey[];
   /** Lodowa Ściana: the cells of ice wall (also in `obstacles` and `raised`) and the last round each stands in. */
@@ -777,5 +809,9 @@ export type Action =
   | { type: 'battleCatapult'; cell: HexKey }
   /** Szlaki Przemytnicze: the active hero walks through the hex of a guardian or neutrals without a fight (once a round). */
   | { type: 'sneakHero'; to: HexKey }
+  /** Brama Wydm: the active hero, standing in a settlement with the gate, steps to a revealed free hex within reach (once in a few rounds for the faction). */
+  | { type: 'gateHero'; to: HexKey }
+  /** Pałac Mirażu (third level): the active unit swaps places with its mirage (`mirageId`: which one, when it has two), once a battle for the side. */
+  | { type: 'battleMirageSwap'; mirageId?: string }
   | { type: 'hutDeliver' }
   | { type: 'chestTake'; what: 'artifact' | 'gold' };

@@ -130,8 +130,8 @@ export type AbilityId =
   | 'riposte' // Riposta (Kocur Fechmistrz, passive): whoever strikes it in melee and survives takes a counterblow
   | 'towerShot' // Ruchoma Twierdza (Waran Wieżowy, passive): once a round the turret on its back shoots as well
   | 'wildLeap' // Szalony Skok (Żbiczka Bajdurka, passive): once per battle a leap over everything and a harder blow
-  // Imperium Piasków (docs/frakcje/sands.md): mirages (decoys), buried units, a reaction to an enemy that steps up, a unit that sleeps until woken, units moved by their own side.
-  | 'sandGate' // Piaskowa Brama (Dżin Wezyr, free action, once): moves an ally to any free cell within a radius
+  // Pustynne Cesarstwo (docs/frakcje/sands.md): mirages (decoys), buried units, a reaction to an enemy that steps up, a unit that sleeps until woken, units moved by their own side.
+  | 'sandPortal' // Piaskowa Brama (Dżin Wezyr, free action, once): moves an ally to any free cell within a radius
   | 'riddle' // Zagadka (Sfinks Strażnik, free action, once): an enemy in range does not attack in its next activation
   | 'sandAmbush' // Zasadzka Spod Piasku (Królowa Skorpionów, passive): starts the battle buried anywhere on her half, unseen until she moves; every hit poisons
   | 'napWatch' // Czujna Drzemka (Bastia Cienista, free action, once): lies down instead of moving: armour, cannot be pushed, and the first enemy to step up is struck at once
@@ -142,7 +142,8 @@ export type AbilityId =
   | 'mirageMake' // Lustro Wydm (Tancerka Fata Morgany, free action, once): a mirage of an ally appears on a free cell near her
   | 'awakening' // Przebudzenie (Kamienny Strażnik Grobowca, passive): armour; stands dormant until an enemy steps up next to it or hits it, then + A for the battle
   | 'gateWard' // Strażnik Bram (Lamassu, passive): armour; the allies next to it cannot be moved or pushed by the enemy
-  | 'sandStorm' // Burza Piaskowa (Dżin Burzy Piaskowej, free action, once): enemy shooters have - A until the end of the round
+  | 'daggerThrow' // Rzut Sztyletem (Beduin Nomada, attack ability, once): a ranged throw at a visible enemy instead of the melee blow, then the move may go on
+  | 'decoy' // a mirage (Pałac Mirażu, Lustro Wydm): a decoy of a unit of the Desert Empire; it has no ability of its own and never attacks
   | 'rocLift' // Lot ze Skrzydłem (Ptak Rok, free action, once): an adjacent ally flies with it to its next move
   | 'wyrmBurrow'; // Spod Piasku (Czerw Pustyni, once per move): buries itself instead of moving and rises on a free cell within a radius, pushing its neighbours away
 
@@ -357,10 +358,9 @@ export const ABILITY = {
   /** Szalony Skok: how far Żbiczka leaps and her bonus Atak after the leap (small scale). */
   wildLeapRange: 3,
   wildLeapBonus: 1,
-  /** Imperium Piasków. Piaskowa Brama: radius in which the Wezyr puts an ally down. Zagadka: range. */
+  /** Pustynne Cesarstwo. Piaskowa Brama: radius in which the Wezyr puts an ally down. Zagadka: range. */
   gateRadius: 4,
   riddleRange: 5,
-  /** Zasadzka Spod Piasku: Życie lost by the poisoned (same ticks as the other poisons). */
   /** Czujność / Czujna Drzemka: damage of the blow struck at once at an enemy that steps up (small scale). */
   watchDamage: 2,
   /** Strzał zza Wydmy: bonus A next to an obstacle (small scale). */
@@ -372,8 +372,6 @@ export const ABILITY = {
   awakeningBonus: 2,
   /** Strażnik Bram: armour of the Lamassu (small scale). */
   gateWardArmor: 2,
-  /** Burza Piaskowa: A the enemy shooters lose until the end of the round (small scale). */
-  stormMinus: 2,
   /** Spod Piasku (Czerw): how far it rises from where it buried itself. */
   wyrmRange: 3,
 };
@@ -655,21 +653,21 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'martenSlasher', name: 'Kuna Rębajło', side: 'free', kind: 'hero', hp: 8, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'bloodCall', abilityName: 'Rąb do Kości', abilityText: `Stała: +${ABILITY.bloodCallBonus} A przeciw rannym.` }),
     u({ id: 'wildcatBajka', name: 'Żbiczka Bajdurka', side: 'free', kind: 'hero', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'wildLeap', abilityName: 'Szalony Skok', abilityText: `Raz na bitwę: skacze o ${ABILITY.wildLeapRange} pola ponad jednostkami, pułapkami i przeszkodami i atakuje z +${ABILITY.wildLeapBonus} A.` }),
     u({ id: 'hareHerbalist', name: 'Zajęczyca Zielarka', side: 'free', kind: 'hero', hp: 5, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'giftOfLife', abilityName: 'Zielarska Mikstura', abilityText: `Raz na bitwę: sojusznik odzyskuje ${ABILITY.giftOfLifeHeal} Ż.` }),
-    // Imperium Piasków (`sands`, docs/frakcje/sands.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero (numbers: gate G1, tuned at G2).
-    u({ id: 'djinnVizier', name: 'Dżin Wezyr', side: 'sands', kind: 'hero', hp: 5, attack: 2, speed: 4, movement: 'fly', attackType: 'ranged', ability: 'sandGate', abilityName: 'Piaskowa Brama', abilityText: `Raz na bitwę: przenosi sojusznika na dowolne wolne pole w promieniu ${ABILITY.gateRadius} od siebie.` }),
+    // Pustynne Cesarstwo (`sands`, docs/frakcje/sands.md): heroes, supports, recruits of the tiers, the legend, the commanders and the fourth hero (numbers: gate G1, tuned at G2).
+    u({ id: 'djinnVizier', name: 'Dżin Wezyr', side: 'sands', kind: 'hero', hp: 5, attack: 2, speed: 4, movement: 'fly', attackType: 'ranged', ability: 'sandPortal', abilityName: 'Piaskowa Brama', abilityText: `Raz na bitwę: przenosi sojusznika na dowolne wolne pole w promieniu ${ABILITY.gateRadius} od siebie.` }),
     u({ id: 'sphinxWarden', name: 'Sfinks Strażnik', side: 'sands', kind: 'hero', size: 2, hp: 11, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'riddle', abilityName: 'Zagadka', abilityText: `Raz na bitwę: wybrany wróg w zasięgu ${ABILITY.riddleRange} pól nie atakuje w swojej następnej aktywacji.` }),
     u({ id: 'scorpionQueen', name: 'Królowa Skorpionów', side: 'sands', kind: 'hero', hp: 6, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'sandAmbush', abilityName: 'Zasadzka Spod Piasku', abilityText: 'Stała: zaczyna bitwę zakopana na dowolnym polu swojej połowy areny, niewidoczna dla wroga do pierwszego ruchu lub ataku; każde jej trafienie zatruwa.' }),
     u({ id: 'camelPrince', name: 'Wielbłądzi Książę', side: 'sands', kind: 'hero', hp: 6, attack: 3, speed: 5, movement: 'walk', attackType: 'ranged', ability: 'runOn', abilityName: 'Strzał i Galop', abilityText: 'Raz na bitwę: po strzale kończy ruch pozostałymi polami.' }),
     u({ id: 'jackalGuard', name: 'Szakalogłowy Strażnik', side: 'sands', kind: 'support', hp: 5, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'jackalWatch', abilityName: 'Czujność', abilityText: `Stała: pierwszy wróg, który w rundzie stanie obok, dostaje od razu cios (${ABILITY.watchDamage} obrażenia).` }),
     u({ id: 'pharaohMongoose', name: 'Mangusta Faraona', side: 'sands', kind: 'support', hp: 4, attack: 2, speed: 5, movement: 'walk', attackType: 'melee', ability: 'venomImmune', abilityName: 'Odporność na Jad', abilityText: 'Stała: nie działają na nią trucizna, klątwy, spowolnienie ani unieruchomienie.' }),
     u({ id: 'duneArcher', name: 'Łucznik Wydm', side: 'sands', kind: 'support', hp: 4, attack: 2, speed: 3, movement: 'walk', attackType: 'ranged', ability: 'coverShot', abilityName: 'Strzał zza Wydmy', abilityText: `Stała: +${ABILITY.coverBonus} A, gdy stoi obok przeszkody.` }),
+    u({ id: 'bedouinNomad', name: 'Beduin Nomada', side: 'sands', kind: 'support', hp: 5, attack: 3, speed: 4, movement: 'walk', attackType: 'melee', ability: 'daggerThrow', abilityName: 'Rzut Sztyletem', abilityText: 'Raz na bitwę: zamiast ciosu wręcz rzuca sztyletem w widocznego wroga (atak dystansowy z pełnym A, bez odwetu wręcz); potem może jeszcze dokończyć ruch.' }),
     u({ id: 'sandScorpion', name: 'Skorpion Piaskowy', side: 'sands', kind: 'support', hp: 5, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'poisonClaw', abilityName: 'Jad', abilityText: `Raz na bitwę: trafiony wróg traci ${ABILITY.poisonDamage} Ż na początku swoich dwóch następnych aktywacji.` }),
     u({ id: 'cobra', name: 'Kobra Królewska', side: 'sands', kind: 'support', hp: 5, attack: 2, speed: 4, movement: 'walk', attackType: 'melee', ability: 'hypnosis', abilityName: 'Hipnoza', abilityText: 'Raz na bitwę: trafiony wróg nie rusza się w swojej następnej aktywacji.' }),
     u({ id: 'mirageDancer', name: 'Tancerka Fata Morgany', side: 'sands', kind: 'support', hp: 4, attack: 2, speed: 4, movement: 'walk', attackType: 'ranged', ability: 'mirageMake', abilityName: 'Lustro Wydm', abilityText: `Raz na bitwę: tworzy miraż wybranego sojusznika (nie bohatera) na wolnym polu w promieniu ${ABILITY.mirageReach} od siebie.` }),
     u({ id: 'ushabti', name: 'Kamienny Strażnik Grobowca', side: 'sands', kind: 'support', hp: 9, attack: 4, speed: 2, movement: 'walk', attackType: 'melee', ability: 'awakening', abilityName: 'Przebudzenie', abilityText: `Stała: pancerz ${ABILITY.awakeningArmor}. Stoi uśpiony, dopóki wróg nie stanie obok albo go nie trafi; wtedy budzi się i do końca bitwy ma +${ABILITY.awakeningBonus} A.` }),
     u({ id: 'lamassu', name: 'Lamassu', side: 'sands', kind: 'support', size: 2, hp: 14, attack: 4, speed: 3, movement: 'fly', attackType: 'melee', ability: 'gateWard', abilityName: 'Strażnik Bram', abilityText: `Stała: pancerz ${ABILITY.gateWardArmor}; sąsiednich sojuszników wróg nie przestawi ani nie odepchnie.` }),
     u({ id: 'oasisCrocodile', name: 'Krokodyl Oazowy', side: 'sands', kind: 'support', size: 2, hp: 14, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'grab', abilityName: 'Chwyt Szczęk', abilityText: 'Stała: trafiony wróg nie rusza się w swojej następnej aktywacji.' }),
-    u({ id: 'stormDjinn', name: 'Dżin Burzy Piaskowej', side: 'sands', kind: 'support', hp: 7, attack: 3, speed: 4, movement: 'fly', attackType: 'ranged', ability: 'sandStorm', abilityName: 'Burza Piaskowa', abilityText: `Raz na bitwę: strzelcy wroga mają −${ABILITY.stormMinus} A do końca rundy.` }),
     u({ id: 'roc', name: 'Ptak Rok', side: 'sands', kind: 'support', size: 2, hp: 12, attack: 4, speed: 5, movement: 'fly', attackType: 'melee', ability: 'rocLift', abilityName: 'Lot ze Skrzydłem', abilityText: 'Raz na bitwę: wskazany sąsiedni sojusznik leci z Rokiem do jego następnego ruchu i ląduje obok niego.' }),
     u({ id: 'sandWyrm', name: 'Czerw Pustyni', side: 'sands', kind: 'support', size: 2, hp: 22, attack: 6, speed: 3, movement: 'walk', attackType: 'melee', ability: 'wyrmBurrow', abilityName: 'Spod Piasku', abilityText: `Zamiast ruchu zakopuje się i wynurza na wolnym polu w odległości do ${ABILITY.wyrmRange}, odpychając sąsiednich wrogów o 1 pole.` }),
     // Commanders of the Sands.

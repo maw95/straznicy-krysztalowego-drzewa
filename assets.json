@@ -6328,6 +6328,7 @@
       "id": "sands/zastepcze/art",
       "pliki": [
         "public/assets/cards/art/bastia.jpg",
+        "public/assets/cards/art/bedouinNomad.jpg",
         "public/assets/cards/art/camelPrince.jpg",
         "public/assets/cards/art/caravanArcher.jpg",
         "public/assets/cards/art/cobra.jpg",
@@ -6344,7 +6345,6 @@
         "public/assets/cards/art/sandWyrm.jpg",
         "public/assets/cards/art/scorpionQueen.jpg",
         "public/assets/cards/art/sphinxWarden.jpg",
-        "public/assets/cards/art/stormDjinn.jpg",
         "public/assets/cards/art/ushabti.jpg"
       ],
       "typ": "karta jednostki (zastępcza)",
@@ -6360,6 +6360,7 @@
       "id": "sands/zastepcze/portraits",
       "pliki": [
         "public/assets/cards/portraits/bastia.jpg",
+        "public/assets/cards/portraits/bedouinNomad.jpg",
         "public/assets/cards/portraits/camelPrince.jpg",
         "public/assets/cards/portraits/caravanArcher.jpg",
         "public/assets/cards/portraits/cobra.jpg",
@@ -6376,7 +6377,6 @@
         "public/assets/cards/portraits/sandWyrm.jpg",
         "public/assets/cards/portraits/scorpionQueen.jpg",
         "public/assets/cards/portraits/sphinxWarden.jpg",
-        "public/assets/cards/portraits/stormDjinn.jpg",
         "public/assets/cards/portraits/ushabti.jpg"
       ],
       "typ": "portret jednostki (zastępczy)",

@@ -81,7 +81,7 @@ export const FACTION_MECHANICS = {
   fenceTreasureEvery: 3,
   /** Szlaki Przemytnicze: how many times a round a hero of the Companies may walk through the hex of a guardian or neutrals without a fight. */
   trailsPerRound: 1,
-  /** Pałac Mirażu (Imperium Piasków): mirages put up at the start of a battle, by level (I-IV); the level from which a unit may swap places with its own mirage (once a battle); the level at which a broken mirage blinds its attacker, and by how much (small scale). */
+  /** Pałac Mirażu (Pustynne Cesarstwo): mirages put up at the start of a battle, by level (I-IV); the level from which a unit may swap places with its own mirage (once a battle); the level at which a broken mirage blinds its attacker, and by how much (small scale). */
   mirageCount: [1, 2, 2, 2],
   mirageSwapLevel: 3,
   mirageBlindLevel: 4,
@@ -103,7 +103,7 @@ export const MECHANIC_TEXTS: Record<FactionId, string> = {
   frost: `Każdy cios jednostki Dworu nakłada na cel 1 szron; przy ${FACTION_MECHANICS.frostThreshold[0]} szronach cel zamarza (traci następną aktywację, szron znika). Kolejne poziomy Pałacu Szronu skracają próg, a zamrożony kruszeje i traci Szybkość.`,
   free: `Przed bitwą Kompania kładzie na swojej połowie ukryte pułapki (${FACTION_MECHANICS.trapCount[0]} na pierwszym poziomie Warsztatu Sideł, więcej na kolejnych); wróg, który wejdzie na pułapkę, dostaje ${ABILITY.trapDamage} obrażeń i kończy ruch, a od trzeciego poziomu nie rusza się też do końca następnej aktywacji. Pułapek wroga nie widać, dopóki nie zadziałają.`,
   herds: `Jednostka Stada, która przed atakiem wręcz przebiegła co najmniej ${FACTION_MECHANICS.herdsRun} pola, odpycha cel o 1 pole; cel, który w coś uderzy, dostaje obrażenia.`,
-  sands: `Na początku bitwy Piaski stawiają na swojej połowie ${FACTION_MECHANICS.mirageCount[0]} miraż: atrapę jednej ze swoich jednostek (nie bohatera), której wróg nie odróżni od prawdziwej. Atak w miraż przepada, a miraż znika; nie atakuje. Kolejne poziomy Pałacu Mirażu dają drugi miraż, zamianę miejsc jednostki z jej mirażem (raz na bitwę) i oślepianie tego, kto rozbił miraż.`,
+  sands: `Na początku bitwy Cesarstwo stawia na swojej połowie ${FACTION_MECHANICS.mirageCount[0]} miraż: atrapę jednej ze swoich jednostek (nie bohatera), której wróg nie odróżni od prawdziwej. Atak w miraż przepada, a miraż znika; nie atakuje. Kolejne poziomy Pałacu Mirażu dają drugi miraż, zamianę miejsc jednostki z jej mirażem (raz na bitwę) i oślepianie tego, kto rozbił miraż.`,
 };
 
 /** The best level of the faction's mechanic building (Kapliczka Świtu, Jama Krwi) among the settlements it holds: 0 means it has no Blask Świtu or Żądza Krwi at all. */
@@ -123,7 +123,7 @@ export const SPARK_TEXTS: Record<FactionId, string> = {
   clans: `Wszystkie jednostki Klanu (bohaterowie i pomocnicy) mają pancerz ${FACTION_MECHANICS.shieldArmor}: −${FACTION_MECHANICS.shieldArmor} obrażeń z każdego ciosu.`,
   frost: `Wrogowie zaczynają każdą bitwę z ${FACTION_MECHANICS.sparkFrost} szronem.`,
   free: `Kompania zaczyna każdą bitwę z ${FACTION_MECHANICS.sparkTraps} dodatkowymi ukrytymi pułapkami.`,
-  sands: `Po rozstawieniu obu stron Piaski mogą przestawić do ${FACTION_MECHANICS.sparkRearrange} swoich jednostek w swojej strefie.`,
+  sands: `Po rozstawieniu obu stron Cesarstwo może przestawić do ${FACTION_MECHANICS.sparkRearrange} swoich jednostek w swojej strefie.`,
   undead: 'Wszystkie jednostki Umarłych (bohaterowie i pomocnicy) są odporne na truciznę, klątwy, spowolnienia i unieruchomienie.',
 };
 

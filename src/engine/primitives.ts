@@ -4,7 +4,7 @@
 // slow, root...) stay where they are until `golden.test.ts` can watch a mechanical refactor. The Dzikie Stado use the push with a collision, the resistance to being moved, the bonus for the target's state and the taunt (docs/frakcje/herds.md).
 
 import { distance, key, line, parseKey, type HexKey } from './hex';
-import { abilityActive, abilityOf, battleFx, cellsOf, dealDamage, fitsAt, formationAnchored, freeCellNear, inLayout, nearestFreeCell, placeUnit, pushCell, scaleOf, stepOnFields, unitAt } from './battle';
+import { abilityActive, abilityOf, battleFx, cellsOf, dealDamage, fitsAt, formationAnchored, freeCellNear, inLayout, nearestFreeCell, placeUnit, pushCell, scaleOf, stepOnFields, unitAt, unitDistance } from './battle';
 import { log } from './log';
 import { supportTier, UNITS, type AbilityId, type Side } from './data';
 import { manaOf } from './magic';
@@ -123,6 +123,8 @@ export function canBeMoved(state: GameState, u: BattleUnit): boolean {
   if (!b || b.duel || u.tail || !u.pos || !u.alive) return false;
   // Runa Kamienia and the Sala Tarcz (level III, in formation) hold a unit in place as well.
   if (u.status.unmovable || u.status.dugIn || formationAnchored(state, u)) return false;
+  // Strażnik Bram: the Lamassu keeps its neighbours in place.
+  if (abilityActive(state) && Object.values(b.units).some((x) => x.alive && x.pos && x.side === u.side && x.id !== u.id && !x.status.mirage && abilityOf(x) === 'gateWard' && unitDistance(x, u) === 1)) return false;
   return !(abilityActive(state) && IMMOVABLE_ABILITIES.includes(abilityOf(u)));
 }
 

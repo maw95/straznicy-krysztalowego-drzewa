@@ -35,6 +35,7 @@ import {
 import {
   battleAbility,
   battleAttack,
+  battleMirageSwap,
   battleHop,
   battleTeleport,
   battleItem,
@@ -56,6 +57,7 @@ import { distance, parseKey, type HexKey } from './hex';
 import { placeEncounters } from './encounters';
 import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { log } from './log';
+import { unmaskId } from './hidden';
 import { applyHeroSkills, applyHeroType, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
 import { fireStory } from './story';
@@ -600,6 +602,27 @@ export function battleHeroOf(b: BattleState, side: Side): string | null {
   if (side === b.attacker) return b.attackerHero;
   if (side === b.defender) return b.defenderHero;
   return null;
+}
+
+/**
+ * Mirages: an action of another side than a mirage's owner names the units by the ids it was shown (`redactHidden`); the engine works with its own ids.
+ * The acting side is the side of the active unit.
+ */
+function unmaskAction(b: BattleState, action: Action): Action {
+  const actor = b.units[b.activation!.unitId]?.side;
+  if (!actor) return action;
+  const m = (id: string | undefined) => (id === undefined ? undefined : unmaskId(b, actor, id));
+  switch (action.type) {
+    case 'battleAttack':
+      return { ...action, targetId: m(action.targetId)!, ...(action.secondTargetId ? { secondTargetId: m(action.secondTargetId) } : {}) };
+    case 'battleAbility':
+    case 'battleSpell':
+      return action.targetId ? { ...action, targetId: m(action.targetId)! } : action;
+    case 'battleItem':
+      return { ...action, ...(action.targetId ? { targetId: m(action.targetId) } : {}), ...(action.targetIds ? { targetIds: action.targetIds.map((x) => m(x)!) } : {}) };
+    default:
+      return action;
+  }
 }
 
 /** Who must act next. */
@@ -1503,10 +1526,14 @@ export function applyActionInPlace(state: GameState, action: Action): GameState 
   return state;
 }
 
-function applyBattleAction(state: GameState, action: Action) {
+function applyBattleAction(state: GameState, raw: Action) {
   const b = state.battle;
   if (!b || b.stage !== 'fight' || !b.activation) throw new Error('Nie trwa żadna bitwa.');
+  const action = b.mirageAlias ? unmaskAction(b, raw) : raw;
   switch (action.type) {
+    case 'battleMirageSwap':
+      battleMirageSwap(state, action.mirageId);
+      break;
     case 'battleMove':
       battleMove(state, action.to);
       break;

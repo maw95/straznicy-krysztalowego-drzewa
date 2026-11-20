@@ -11,7 +11,7 @@ export * from './arenaLayout';
 import { isDigital, type BattleState, type BattleUnit, type GameState, type GroundEffect, type SiegeState, type UnitStatus } from './types';
 import { SIEGE } from './economy';
 import { pushWithCollision, previewPush, pushedThisRound, taunter, canBeMoved, raiseUnit, fallenSupports, drainMana, pushAway } from './primitives';
-import { FACTION_MECHANICS, hasSpark, mechanicLevel } from './empire';
+import { FACTION_MECHANICS, hasSpark, mechanicLevel, SPARK_NAMES } from './empire';
 
 
 const OBSTACLE_SETS = new WeakMap<HexKey[], Set<HexKey>>();
@@ -171,7 +171,7 @@ export const abilityNum = (u: BattleUnit, key: keyof typeof ABILITY_TIERS): numb
  * with `unboundToo` also whoever wears boots that free from roots and slows (the old artifacts, which never covered poison and curses).
  */
 export const resistsStatus = (state: GameState, u: BattleUnit, unboundToo: boolean): boolean =>
-  Boolean(u.status.immune) || (abilityActive(state) && abilityOf(u) === 'hollow') || (unboundToo && Boolean(u.gear?.unbound));
+  Boolean(u.status.immune) || (abilityActive(state) && (abilityOf(u) === 'hollow' || abilityOf(u) === 'venomImmune')) || (unboundToo && Boolean(u.gear?.unbound));
 
 /** The breath of fire: Ognisty Oddech and Oddech Grobu hit the target and the unit behind it. */
 export const isBreath = (ab: AbilityId): boolean => ab === 'fireBreath' || ab === 'graveBreath';
@@ -194,7 +194,7 @@ export function enemiesOf(b: BattleState, u: BattleUnit): BattleUnit[] {
 }
 
 export function alliesOf(b: BattleState, u: BattleUnit): BattleUnit[] {
-  return livingUnits(b).filter((o) => o.side === u.side && o.id !== u.id);
+  return livingUnits(b).filter((o) => o.side === u.side && o.id !== u.id && !o.status.mirage);
 }
 
 export function activeUnit(b: BattleState): BattleUnit | null {
@@ -331,7 +331,7 @@ export const headCovered = (state: GameState, u: BattleUnit) =>
 /** Legal attack targets from the unit's current position. */
 export function attackTargets(state: GameState, u: BattleUnit, from: HexKey | null = u.pos): BattleUnit[] {
   const b = state.battle!;
-  if (!from) return [];
+  if (!from || u.status.mirage || u.status.riddled) return [];
   // Kraken: the head cannot be hit while a tentacle lives.
   const enemies = enemiesOf(b, u).filter((e) => !headCovered(state, e));
   const mine = footprintAt(state, u, from);
@@ -426,7 +426,7 @@ export const coreExposed = (u: BattleUnit) => abilityOf(u) === 'runeGolem' && u.
 
 /** Expected damage of a plain attack, before the defender's reactions. */
 export function attackDamage(state: GameState, att: BattleUnit, target: BattleUnit, useAbility: boolean, movedDistance: number): number {
-  let dmg = unitAttackBase(att) + att.status.nextAttackBonus - att.status.cursedNext;
+  let dmg = unitAttackBase(att) + att.status.nextAttackBonus - att.status.cursedNext - (att.status.blinded ?? 0);
   if (isDigital(state.rules) && UNITS[att.defId].attackType === 'ranged') dmg += DIGITAL_RANGED_BONUS * scaleOf(state);
   if (att.gear?.vsWounded && target.hp < target.maxHp) dmg += att.gear.vsWounded;
   if (att.gear?.firstStrike) dmg += att.gear.firstStrike;
@@ -439,6 +439,8 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
     if (useAbility && ab === 'ramBlow' && movedDistance >= ABILITY.ramBlowMinMove) dmg += ABILITY.ramBlowBonus * scaleOf(state);
     if (ab === 'standShot' && movedDistance === 0) dmg += ABILITY.standShotBonus * scaleOf(state);
     if (ab === 'giantBane' && isLarge(state, target)) dmg += ABILITY.giantBonus * scaleOf(state);
+    // Strzał zza Wydmy: the archer next to an obstacle shoots harder.
+    if (ab === 'coverShot' && att.pos && cellsOf(att).some((c) => neighborKeys(c).some((k) => obstacleSet(state.battle!).has(k)))) dmg += ABILITY.coverBonus * scaleOf(state);
     // Wolna Kompania. Oznaczenie: every attack of the marker's side on a marked target (this round) hits harder, and the squirrel's arrow harder still.
     const mark = target.status.marked;
     if (mark && mark.by === att.side && mark.round === state.battle!.round) dmg += (ABILITY.markBonus + (ab === 'branchShot' ? ABILITY.branchBonus : 0)) * scaleOf(state);
@@ -462,9 +464,9 @@ export function attackDamage(state: GameState, att: BattleUnit, target: BattleUn
 }
 
 /** Abilities that are switched on for a single attack. */
-export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'ramBlow', 'frostSlow', 'frostGrip', 'iceBlow', 'stinkBomb'];
+export const ATTACK_ABILITIES: AbilityId[] = ['entanglingRoots', 'fireBreath', 'curse', 'nightAmbush', 'poisonClaw', 'inferno', 'ancestralHorns', 'dimLight', 'spectralCharge', 'graveBreath', 'stunBlow', 'ramBlow', 'frostSlow', 'frostGrip', 'iceBlow', 'stinkBomb', 'hypnosis', 'daggerThrow'];
 /** Guardian abilities work on every attack, with no once-per-battle limit. */
-export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'huntDive', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail', 'pickpocket', 'branchShot', 'veiled', 'woundFury', 'riposte', 'towerShot', 'wildLeap'];
+export const UNLIMITED_ABILITIES: AbilityId[] = ['duckFury', 'huntDive', 'boulder', 'nestLeap', 'manyHeads', 'stoneSkin', 'thiefClaw', 'regrowth', 'shardBurst', 'burrow', 'dive', 'backstab', 'grab', 'bogRegrowth', 'runeGolem', 'stormKing', 'tentacles', 'quills', 'headlong', 'packHunt', 'bloodRage', 'headbutt', 'mountainLeap', 'momentum', 'unmoved', 'pierce', 'hippoStrike', 'drumBeat', 'ram', 'armorPierce', 'dread', 'hollow', 'manaReap', 'bulwark', 'standShot', 'bronzeQuills', 'giantBane', 'cannonFire', 'crystalArrow', 'thickFur', 'frostArmor', 'hailStones', 'coldLight', 'blizzardTrail', 'pickpocket', 'branchShot', 'veiled', 'woundFury', 'riposte', 'towerShot', 'wildLeap', 'sandAmbush', 'jackalWatch', 'venomImmune', 'coverShot', 'awakening', 'gateWard', 'wyrmBurrow', 'decoy'];
 
 /** Whether the attacker may hit a second adjacent enemy with this attack (Paszcze Otchłani). */
 export function canHitTwo(state: GameState, u: BattleUnit): boolean {
@@ -487,9 +489,9 @@ export function pushCell(state: GameState, from: HexKey, target: HexKey): HexKey
   return k;
 }
 /** Abilities used as a free action during the unit's activation. */
-export const FREE_ABILITIES: AbilityId[] = ['beardChill', 'sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'longNight', 'ploy', 'dugIn', 'ravenEye', 'dam', 'blast'];
+export const FREE_ABILITIES: AbilityId[] = ['beardChill', 'sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'longNight', 'ploy', 'dugIn', 'ravenEye', 'dam', 'blast', 'sandPortal', 'riddle', 'napWatch', 'mirageMake', 'rocLift'];
 /** The free abilities that need no target (one click fires them); the others ask the player to pick a unit. */
-export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify', 'iceWall', 'longNight', 'dugIn'];
+export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify', 'iceWall', 'longNight', 'dugIn', 'napWatch'];
 /** The free abilities that work on a cell: the player may pick it (the action's `cell`), without one the best cell for the unit is taken (Fortel, Tama, Ładunek). */
 export const CELL_ABILITIES: AbilityId[] = ['ploy', 'dam', 'blast'];
 
@@ -499,6 +501,8 @@ export const CELL_ABILITIES: AbilityId[] = ['ploy', 'dam', 'blast'];
 export function startBattleFight(state: GameState) {
   const b = state.battle!;
   deploy(state);
+  // Pałac Mirażu: the mirages stand with the units from the start (each side deploys them like its own units).
+  setUpMirages(state);
   b.needsDeploy = b.duel ? [] : ([b.attacker, b.defender].filter((s) => s !== 'neutral') as TeamId[]);
   if (b.needsDeploy.length) {
     b.stage = 'deploy';
@@ -529,6 +533,8 @@ function beginFight(state: GameState) {
   sparkFrost(state);
   // Ukryty: the Jenot Szpieg starts the fight unseen.
   if (abilityActive(state) && !b.duel) for (const x of Object.values(b.units)) if (x.alive && abilityOf(x) === 'veiled') x.status.veiled = true;
+  // Przebudzenie: the stone guardians start the fight dormant.
+  if (abilityActive(state) && !b.duel) for (const x of Object.values(b.units)) if (x.alive && abilityOf(x) === 'awakening') x.status.dormant = true;
   beginRound(state, 1);
 }
 
@@ -576,6 +582,15 @@ export function deployUnits(state: GameState, faction: TeamId, positions: Record
   if (b.stage !== 'deploy' || b.needsDeploy[0] !== faction) throw new Error('Teraz nie ustawia ta frakcja.');
   const own = Object.values(b.units).filter((u) => u.side === faction);
   const allowed = new Set(deployCells(b, faction));
+  // Zasadzka Spod Piasku: the Queen may lie anywhere on her half.
+  const ambush = own.some((u) => buriesAtDeploy(state, u)) ? new Set(ambushCells(b, faction)) : null;
+  // Iskra of the Desert Empire: after both sides have deployed the side moves at most a few of its units.
+  const rearranging = b.rearrange?.side === faction ? b.rearrange : null;
+  if (rearranging) {
+    const moved = own.filter((u) => positions[u.id] !== undefined && positions[u.id] !== rearranging.from[u.id]).length;
+    if (moved > FACTION_MECHANICS.sparkRearrange) throw new Error(`Iskra pozwala przestawić najwyżej ${FACTION_MECHANICS.sparkRearrange} jednostki.`);
+    if (traps?.length) throw new Error('Teraz tylko się przestawia jednostki.');
+  }
   // Cells already taken by the other side count too (a large unit's head reaches into the next column).
   const used = new Set<HexKey>(Object.values(b.units).filter((u) => u.side !== faction).flatMap(cellsOf));
   const placed = new Map<string, { pos: HexKey; tail?: HexKey }>();
@@ -583,7 +598,7 @@ export function deployUnits(state: GameState, faction: TeamId, positions: Record
   const cellFor = new Map<string, HexKey>();
   for (const u of own) {
     const k = positions[u.id] ?? deployCellOf(u);
-    if (!k || !allowed.has(k)) throw new Error('Jednostki można ustawić tylko w swoich kolumnach startowych.');
+    if (!k || !(allowed.has(k) || (ambush?.has(k) && buriesAtDeploy(state, u)) || (rearranging && k === rearranging.from[u.id]))) throw new Error('Jednostki można ustawić tylko w swoich kolumnach startowych.');
     if (used.has(k)) throw new Error('Dwie jednostki nie mogą stać na jednym polu.');
     used.add(k);
     cellFor.set(u.id, k);
@@ -604,13 +619,29 @@ export function deployUnits(state: GameState, faction: TeamId, positions: Record
     if (at.tail) u.tail = at.tail;
     else delete u.tail;
   }
-  // Sidła: the Free Companies lay their hidden traps with the units (the cells they chose, the rest are laid for them); nothing is said of where.
-  const slots = trapSlots(state, faction);
-  if (slots) layDeployTraps(state, faction, traps, slots);
-  else if (traps?.length) throw new Error('Ta frakcja nie kładzie pułapek.');
+  // Zasadzka Spod Piasku: the Queen lies buried, unseen by the enemy until she moves or strikes.
+  for (const u of own) if (buriesAtDeploy(state, u)) u.status.veiled = true;
   b.needsDeploy.shift();
-  log(state, 'battle', `${FACTION_NAMES[raceOf(state, faction)]} ustawia swoje jednostki${slots ? ' i przygotowuje sidła' : ''}.`);
-  if (!b.needsDeploy.length) beginFight(state);
+  if (rearranging) {
+    delete b.rearrange;
+    log(state, 'battle', `${FACTION_NAMES[raceOf(state, faction)]} przestawia jednostki (${SPARK_NAMES[raceOf(state, faction)]}).`);
+  } else {
+    // Sidła: the Free Companies lay their hidden traps with the units (the cells they chose, the rest are laid for them); nothing is said of where.
+    const slots = trapSlots(state, faction);
+    if (slots) layDeployTraps(state, faction, traps, slots);
+    else if (traps?.length) throw new Error('Ta frakcja nie kładzie pułapek.');
+    log(state, 'battle', `${FACTION_NAMES[raceOf(state, faction)]} ustawia swoje jednostki${slots ? ' i przygotowuje sidła' : ''}.`);
+  }
+  if (b.needsDeploy.length) return;
+  // Iskra of the Desert Empire: when both sides stand, it may still move a few of its units.
+  const spark = rearrangeDue(state);
+  if (spark) {
+    (b.rearranged ??= []).push(spark);
+    b.rearrange = { side: spark, from: Object.fromEntries(Object.values(b.units).filter((x) => x.side === spark && x.pos).map((x) => [x.id, deployCellOf(x)!])) };
+    b.needsDeploy = [spark];
+    return;
+  }
+  beginFight(state);
 }
 
 function deploy(state: GameState) {
@@ -654,10 +685,10 @@ function sidePriority(state: GameState, b: BattleState, side: Side): number {
 function beginRound(state: GameState, round: number) {
   const b = state.battle!;
   if (round > state.rules.battleRoundLimit) {
-    const hp = (side: Side) => livingUnits(b, side).reduce((a, x) => a + x.hp, 0);
+    const hp = (side: Side) => realUnits(b, side).reduce((a, x) => a + x.hp, 0);
     const loser = hp(b.attacker) >= hp(b.defender) ? b.defender : b.attacker;
     log(state, 'battle', 'Bitwa trwa zbyt długo — strona z mniejszą sumą Ż przegrywa.');
-    for (const x of livingUnits(b, loser)) {
+    for (const x of realUnits(b, loser)) {
       x.alive = false;
       removeFromBoard(state, x, false);
     }
@@ -681,6 +712,7 @@ function beginRound(state: GameState, round: number) {
   b.order = livingUnits(b)
     .sort((x, y) => unitSpeed(y) - unitSpeed(x) || sidePriority(state, b, x.side) - sidePriority(state, b, y.side) || ids.indexOf(x.id) - ids.indexOf(y.id))
     .map((u) => u.id);
+  shuffleMirageTurns(state);
   b.index = 0;
   log(state, 'battle', `Runda bitwy ${round}.`);
   dawnLight(state);
@@ -732,6 +764,17 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
     u.status.slowLater = 0;
   }
   u.status.anchored = false;
+  // Pałac Mirażu (fourth level): the one that broke a mirage is blinded in this activation.
+  if (u.status.blindLater) {
+    u.status.blinded = u.status.blindLater;
+    delete u.status.blindLater;
+  }
+  // Przebudzenie: the dormant stone guardian stands still.
+  if (u.status.dormant) {
+    b.activation.skipped = true;
+    log(state, 'ability', `${unitName(u)} stoi uśpiony (${UNITS[u.defId].abilityName}).`);
+    return endActivation(state);
+  }
   // Sidła (third level): a unit that was held by a trap cannot move in this activation.
   if (u.status.rootLater) {
     delete u.status.rootLater;
@@ -782,8 +825,13 @@ function beginActivation(state: GameState, unitId: string, moveOnly: boolean) {
 export function endActivation(state: GameState) {
   const b = state.battle!;
   const act = b.activation;
-  if (act) {
+  // A mirage that vanished in its own activation (it stepped up to a watching Jackal) is no longer on the list of units.
+  if (act && b.units[act.unitId]) {
     const u = b.units[act.unitId];
+    // Zagadka and the blindness of the Pałac Mirażu last for one activation.
+    if (!act.skipped) delete u.status.riddled;
+    delete u.status.blinded;
+    if (u.status.napStruck && !u.status.dugIn) delete u.status.napStruck;
     // Effects that applied to "the next activation" are now spent.
     u.status.slowNext = 0;
     u.status.rootedNext = false;
@@ -793,7 +841,10 @@ export function endActivation(state: GameState) {
     // Okop wears off after the Saper's next activation; the Waran's turret shoots once a round.
     if (u.status.dugIn && !act.skipped) {
       u.status.dugIn -= 1;
-      if (!u.status.dugIn) delete u.status.dugIn;
+      if (!u.status.dugIn) {
+        delete u.status.dugIn;
+        delete u.status.napStruck;
+      }
     }
     if (u.alive && !act.skipped) towerFire(state, u);
     // Buty Wartownika (Zakotwiczenie): standing still hardens the hero until its next activation.
@@ -802,7 +853,7 @@ export function endActivation(state: GameState) {
   if (checkBattleEnd(state)) return;
   if (b.extra.length) {
     const next = b.extra.shift()!;
-    if (b.units[next.unitId].alive) {
+    if (b.units[next.unitId]?.alive) {
       if (next.speedBonus) b.units[next.unitId].status.slowNext -= next.speedBonus;
       beginActivation(state, next.unitId, next.moveOnly);
       return;
@@ -828,9 +879,10 @@ export function checkBattleEnd(state: GameState): boolean {
     const mine = livingUnits(b, side);
     if (mine.length && mine.every((x) => x.status.veiled)) for (const x of mine) unveil(state, x);
   }
-  const a = livingUnits(b, b.attacker).length;
-  const d = livingUnits(b, b.defender).length;
+  const a = realUnits(b, b.attacker).length;
+  const d = realUnits(b, b.defender).length;
   if (a > 0 && d > 0) return false;
+  if (b.mirageAlias) purgeMirages(b);
   b.stage = 'over';
   b.activation = null;
   b.winner = a > 0 ? b.attacker : d > 0 ? b.defender : 'draw';
@@ -1030,6 +1082,11 @@ function rollDie(state: GameState): number {
 }
 
 export function dealDamage(state: GameState, target: BattleUnit, amount: number, source: string) {
+  // Miraż: whatever hurts a mirage only makes it vanish.
+  if (target.status.mirage && state.battle) {
+    const act = state.battle.activation;
+    return dispelMirage(state, target, act ? (state.battle.units[act.unitId] ?? null) : null);
+  }
   const dmg = Math.max(0, amount);
   target.hp -= dmg;
   // Zbroja Wartownika: once per battle the hero is left with 1 Życie instead of falling.
@@ -1039,6 +1096,8 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
     log(state, 'ability', `${unitName(target)} zostaje przy 1 Ż (Ostatnia Szansa).`);
   }
   log(state, 'damage', `${source} → ${unitName(target)}: ${dmg} obrażeń (Ż ${Math.max(0, target.hp)}/${target.maxHp}).`);
+  // Przebudzenie: a blow wakes the stone guardian.
+  if (target.status.dormant && target.hp > 0) wake(state, target);
   // Odrodzenie z Popiołów (Feniks Świtu): once per battle it rises where it stood, with half its Życie.
   if (target.hp <= 0 && dmg > 0 && abilityOf(target) === 'rebirth' && !target.abilityUsed && abilityActive(state)) {
     target.abilityUsed = true;
@@ -1054,6 +1113,7 @@ export function dealDamage(state: GameState, target: BattleUnit, amount: number,
     const diedOn = cellsOf(target);
     removeFromBoard(state, target, true);
     log(state, 'death', `${unitName(target)} poległ(a).`);
+    if (state.battle?.mirageAlias) fadeMiragesOf(state, target);
     // Kości Wracają: the skeleton lies where it fell and puts itself together at the end of the round.
     if (abilityOf(target) === 'bonesReturn' && !target.abilityUsed && abilityActive(state) && !state.battle?.duel) {
       target.abilityUsed = true;
@@ -1152,6 +1212,9 @@ export function predictDamage(
   if (armour && dmg > 0 && abilityOf(victim) === 'thickFur' && abilityActive(state) && UNITS[att.defId].attackType === 'ranged') dmg = Math.max(1, dmg - ABILITY.furArmor * scaleOf(state));
   // Okop: the Saper dug in takes a bit off every blow that lands (at least 1 gets through).
   if (armour && dmg > 0 && victim.status.dugIn) dmg = Math.max(1, dmg - ABILITY.dugInArmor * scaleOf(state));
+  // Przebudzenie, Strażnik Bram: the stone guardian and the Lamassu take a bit off every blow that lands (at least 1 gets through).
+  if (armour && dmg > 0 && abilityActive(state) && abilityOf(victim) === 'awakening') dmg = Math.max(1, dmg - ABILITY.awakeningArmor * scaleOf(state));
+  if (armour && dmg > 0 && abilityActive(state) && abilityOf(victim) === 'gateWard') dmg = Math.max(1, dmg - ABILITY.gateWardArmor * scaleOf(state));
   // A frozen unit (third level of the Pałac Szronu): the next blow cracks the ice and does one more.
   if (victim.status.brittle && dmg > 0) dmg += scaleOf(state);
   // The hero's shield (artifacts): the first blow of the battle is halved, every blow is weaker by its defence, but a blow that lands takes at least 1.
@@ -1177,6 +1240,7 @@ const HARD_HEAD_MIN_DAMAGE = 2;
 
 function resolveAttack(state: GameState, att: BattleUnit, target: BattleUnit, useAbility: boolean, movedDistance: number) {
   const b = state.battle!;
+  if (target.status.mirage) return dispelMirage(state, target, att);
   const die = rollDie(state);
   const p = predictDamage(state, att, target, { useAbility, movedDistance, die });
   // The roll is logged so a blow that the die cut to 0 does not look like a bug.
@@ -1257,7 +1321,7 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   const b = state.battle!;
   const act = b.activation!;
   const u = b.units[act.unitId];
-  if (act.moved || act.attacked) throw new Error('Ta jednostka już się ruszyła.');
+  if (act.moved || (act.attacked && !act.thrown)) throw new Error('Ta jednostka już się ruszyła.');
   // Ukryty: a unit that walks into the cell of a veiled enemy finds it there: the Jenot is uncovered, and nobody moves.
   const bumped = unitAt(b, to);
   if (bumped && bumped.status.veiled && bumped.side !== u.side) {
@@ -1289,6 +1353,9 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
     }
   }
   const from = u.pos ? parseKey(u.pos) : null;
+  const before = neighboursOf(b, u);
+  // Zasadzka Spod Piasku: the Queen comes out of the sand when she moves.
+  if (u.status.veiled && abilityOf(u) === 'sandAmbush') unveil(state, u);
   // Ślad Zamieci: the Ryś leaves a trail on the cells it runs through; an enemy that steps on one (this round) is slowed in its next activation.
   if (abilityActive(state) && !b.duel && (abilityOf(u) === 'blizzardTrail' || b.trail?.length)) {
     const path = movePath(state, u, to);
@@ -1306,6 +1373,9 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   act.acted = true;
   act.movedDistance = steps;
   stepOnFields(state, u);
+  if (u.alive && act.lift) landPassenger(state, u);
+  // Czujność, Czujna Drzemka, Przebudzenie: stepping up next to them.
+  if (u.alive) steppedUp(state, u, before);
   if (!u.alive) return endActivation(state);
   // Siege: entering the moat hurts and ends the turn.
   if (inMoat(b, u)) {
@@ -1314,7 +1384,7 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
   }
   // Digital ruleset: moving without attacking ends the turn, so a shooter cannot move and shoot, and a melee unit keeps its turn
   // only when its move brought an enemy within reach (the attack that follows is the other half of the same click).
-  if (act.moveOnly || !canAttackAfterMove(state, u) || (isDigital(state.rules) && attackTargets(state, u).length === 0)) endActivation(state);
+  if (act.moveOnly || act.attacked || !canAttackAfterMove(state, u) || (isDigital(state.rules) && attackTargets(state, u).length === 0 && throwTargets(state, u).length === 0)) endActivation(state);
 }
 
 /** Whether the unit may still attack after moving: always in the classic rules, not for shooters in the digital ruleset. */
@@ -1373,9 +1443,11 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   if (act.attacked) throw new Error('Ta jednostka już atakowała.');
   if (act.moveOnly) throw new Error('Ta aktywacja pozwala tylko na ruch.');
   const target = b.units[targetId];
-  const legal = attackTargets(state, u);
-  if (!target || !legal.some((t) => t.id === targetId)) throw new Error('Nieprawidłowy cel ataku.');
   const ab = abilityOf(u);
+  // Rzut Sztyletem: the throw goes at an enemy in sight that does not stand next to the Beduin.
+  const throwing = useAbility && ab === 'daggerThrow' && throwTargets(state, u).some((t) => t.id === targetId);
+  const legal = throwing ? throwTargets(state, u) : attackTargets(state, u);
+  if (!target || !legal.some((t) => t.id === targetId)) throw new Error('Nieprawidłowy cel ataku.');
   const canUse = useAbility && !u.abilityUsed && abilityActive(state) && ATTACK_ABILITIES.includes(ab) && (ab !== 'ramBlow' || ramCharged(state, u));
   if (useAbility && !canUse) throw new Error('Zdolność jest niedostępna.');
 
@@ -1441,6 +1513,11 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
       u.hp = Math.min(u.maxHp, u.hp + ABILITY.thiefClawHeal * hpScaleOf(state));
       log(state, 'ability', `${unitName(u)} odzyskuje ${ABILITY.thiefClawHeal * hpScaleOf(state)} Ż (Złodziejski Szpon).`);
     }
+    // Zasadzka Spod Piasku: every hit of the Queen poisons.
+    if (ab === 'sandAmbush' && abilityActive(state) && t.alive && t.hp < before) {
+      if (resistsStatus(state, t, false) || abilityOf(t) === 'bronzeQuills') log(state, 'ability', `${unitName(t)} jest odporny na truciznę.`);
+      else t.status.poisoned = ABILITY.poisonTicks;
+    }
     if (ab === 'grab' && abilityActive(state) && t.alive && t.hp < before && !resistsStatus(state, t, true)) {
       t.status.rootedNext = true;
       log(state, 'ability', `${unitName(t)} zostaje schwytany i nie ruszy się w swojej następnej aktywacji (${UNITS[u.defId].abilityName}).`);
@@ -1502,6 +1579,14 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
           }
         }
       }
+      // Hipnoza: the one hit cannot move in its next activation.
+      if (ab === 'hypnosis') {
+        if (resistsStatus(state, t, true)) log(state, 'ability', `${unitName(t)} jest odporny na unieruchomienie.`);
+        else {
+          t.status.rootedNext = true;
+          log(state, 'ability', `${unitName(t)} jest zahipnotyzowany i nie ruszy się w swojej następnej aktywacji (${UNITS[u.defId].abilityName}).`);
+        }
+      }
       // Młot Przodków, Taran, Stratowanie: the one hit loses its next activation.
       if (ab === 'stunBlow' || ab === 'ramBlow') {
         t.status.stunned = true;
@@ -1556,6 +1641,12 @@ export function battleAttack(state: GameState, targetId: string, useAbility: boo
   if (checkBattleEnd(state)) return;
   // The attacker fell on the thorns of the hero's armour: its activation is over.
   if (!u.alive) return endActivation(state);
+  // Rzut Sztyletem: after the throw the Beduin may still make its move (it has not moved yet), then its activation ends.
+  if (throwing) {
+    act.thrown = true;
+    if (!act.moved && moveRange(u) > 0 && reachableCells(state, u).size) return;
+    return endActivation(state);
+  }
   // Kacza Furia: a kill gives the duck another full activation right away.
   if (ab === 'duckFury' && abilityActive(state) && u.alive && targets.some((t) => !t.alive)) {
     const haste = (u.tier ?? 0) >= MILESTONE_TIER.duckHaste ? 1 : 0;
@@ -1595,11 +1686,13 @@ export function battleHop(state: GameState, to: HexKey) {
   const u = b.units[act.unitId];
   if (!act.hop) throw new Error('Odskok jest niedostępny.');
   if (!hopCells(state, u, act.hop).includes(to)) throw new Error('Pole poza zasięgiem odskoku.');
+  const before = neighboursOf(b, u);
   placeUnit(state, u, to);
   if (!UNLIMITED_ABILITIES.includes(abilityOf(u))) u.abilityUsed = true;
   act.hop = 0;
   log(state, 'ability', `${unitName(u)} odskakuje (${UNITS[u.defId].abilityName}).`);
   stepOnFields(state, u);
+  steppedUp(state, u, before);
   endActivation(state);
 }
 
@@ -1607,7 +1700,7 @@ export function battleHop(state: GameState, to: HexKey) {
 export function teleportRange(state: GameState, u: BattleUnit): number {
   if (!abilityActive(state) || !isDigital(state.rules)) return 0;
   const ab = abilityOf(u);
-  return ab === 'burrow' ? ABILITY.burrowRange : ab === 'stormKing' ? ABILITY.stormTeleportRange : 0;
+  return ab === 'burrow' ? ABILITY.burrowRange : ab === 'stormKing' ? ABILITY.stormTeleportRange : ab === 'wyrmBurrow' ? ABILITY.wyrmRange : 0;
 }
 
 /** Cells the active unit may teleport to (empty when it has already moved or attacked, or in a duel). */
@@ -1627,11 +1720,14 @@ export function battleTeleport(state: GameState, to: HexKey) {
   if (!teleportCells(state, u).includes(to)) throw new Error('Pole poza zasięgiem teleportu.');
   const from = u.pos!;
   const ab = abilityOf(u);
+  const before = neighboursOf(b, u);
   placeUnit(state, u, to);
   (b.teleports ??= []).push({ unitId: u.id, from, to, kind: ab === 'stormKing' ? 'storm' : 'burrow' });
   act.moved = true;
   act.acted = true;
-  log(state, 'ability', `${unitName(u)} ${ab === 'burrow' ? 'wychodzi spod ziemi' : 'teleportuje się'} (${UNITS[u.defId].abilityName}).`);
+  log(state, 'ability', `${unitName(u)} ${ab === 'burrow' ? 'wychodzi spod ziemi' : ab === 'wyrmBurrow' ? 'wynurza się spod piasku' : 'teleportuje się'} (${UNITS[u.defId].abilityName}).`);
+  if (ab === 'wyrmBurrow') wyrmRises(state, u);
+  steppedUp(state, u, before);
   if (ab === 'stormKing') {
     (b.fields ??= []).push({ cell: from, until: b.round + ABILITY.chargedFieldRounds - 1 });
     log(state, 'ability', 'Opuszczone pole zostaje naładowane.');
@@ -1839,6 +1935,300 @@ export function bestBlastTrap(state: GameState, u: BattleUnit): HexKey | null {
   return traps.sort((x, y) => blastValue(state, u, y) - blastValue(state, u, x) || (x < y ? -1 : 1))[0] ?? null;
 }
 
+// ---------------------------------------------------------------- the Desert Empire: mirages, the buried Queen, the watch, the dormant guardian, moving its own
+
+/** The level of the Pałac Mirażu (the Desert Empire's mechanic) a side has: 0 for any other faction or without the building. */
+export const mirageLevel = (state: GameState, side: Side): number => (side !== 'neutral' && raceOf(state, side) === 'sands' ? mechLevel(state, side) : 0);
+
+/** How many mirages a side puts up when a battle begins (none in a duel, none without abilities). */
+export function mirageSlots(state: GameState, side: Side): number {
+  if (side === 'neutral' || !abilityActive(state) || state.battle?.duel) return 0;
+  const level = mirageLevel(state, side);
+  return level ? FACTION_MECHANICS.mirageCount[Math.min(level, 4) - 1] : 0;
+}
+
+/** Whether the unit is a mirage (only the engine and its own side know it). */
+export const isMirage = (u: BattleUnit): boolean => Boolean(u.status.mirage);
+
+/** The living units of a side that are not mirages (the ones that count for the end of the battle). */
+export const realUnits = (b: BattleState, side: Side): BattleUnit[] => livingUnits(b, side).filter((x) => !x.status.mirage);
+
+/** The mirages of a unit on the field. */
+export const miragesOf = (b: BattleState, realId: string): BattleUnit[] => Object.values(b.units).filter((x) => x.alive && x.status.mirage?.of === realId);
+
+/** How much a unit is worth guarding with a mirage (the bots and the default choice): its Życie and Atak, shooters a bit more. */
+const mirageWorth = (u: BattleUnit): number => u.maxHp + unitAttackBase(u) * 2 + (UNITS[u.defId].attackType === 'ranged' ? 2 : 0) + supportTier(u.defId);
+
+/** Draws a new mix-up of the ids every body of the group of `realId` is shown under to the other sides (the Rng of the game: the same game replays the same). */
+function realiasGroup(state: GameState, realId: string): void {
+  const b = state.battle!;
+  const bodies = [realId, ...miragesOf(b, realId).map((m) => m.id)].filter((id) => b.units[id]);
+  const rng = new Rng(state.rng);
+  const shown = rng.shuffle(bodies);
+  state.rng = rng.state;
+  b.mirageAlias ??= {};
+  bodies.forEach((id, i) => (b.mirageAlias![id] = shown[i]));
+}
+
+/** A mirage of `real` standing with its head on `head` (and its tail on `tail`); null when it does not fit there. */
+export function makeMirage(state: GameState, real: BattleUnit, head: HexKey, tail?: HexKey): BattleUnit | null {
+  const b = state.battle!;
+  let n = 1;
+  while (b.units[`${real.id}~m${n}`]) n++;
+  const id = `${real.id}~m${n}`;
+  const copy: BattleUnit = { ...structuredClone(real), id, ability: 'decoy', pos: null, status: { ...structuredClone(real.status), mirage: { of: real.id } } };
+  delete copy.tail;
+  delete copy.facing;
+  b.units[id] = copy;
+  if (!placeUnit(state, copy, head, tail)) {
+    delete b.units[id];
+    return null;
+  }
+  realiasGroup(state, real.id);
+  return copy;
+}
+
+/**
+ * Pałac Mirażu: when a battle begins (before the sides deploy) every side with the palace gets its mirages: of its most valuable units that are not heroes, on free
+ * cells of its start columns; a coin decides whether the mirage or the unit stands on the cell given to the copy (so the default places tell nothing either).
+ */
+export function setUpMirages(state: GameState): void {
+  const b = state.battle!;
+  for (const side of [b.attacker, b.defender]) {
+    const slots = mirageSlots(state, side);
+    if (!slots) continue;
+    const picks = livingUnits(b, side)
+      .filter((x) => UNITS[x.defId].kind === 'support' && !x.status.mirage)
+      .sort((x, y) => mirageWorth(y) - mirageWorth(x) || (x.id < y.id ? -1 : 1))
+      .slice(0, slots);
+    for (const real of picks) {
+      const used = new Set(Object.values(b.units).filter((x) => x.alive).flatMap(cellsOf));
+      const cell = deployCells(b, side).find((k) => !used.has(k) && (!isLarge(state, real) || deployHeads(b, side, k).some((h) => !used.has(h))));
+      if (!cell) break;
+      const head = isLarge(state, real) ? deployHeads(b, side, cell).find((h) => !used.has(h))! : cell;
+      const m = makeMirage(state, real, head, isLarge(state, real) ? cell : undefined);
+      if (!m) continue;
+      const rng = new Rng(state.rng);
+      if (rng.int(2) === 1) swapPlaces(m, real);
+      state.rng = rng.state;
+    }
+  }
+}
+
+const swapPlaces = (x: BattleUnit, y: BattleUnit): void => {
+  const [pos, tail] = [x.pos, x.tail];
+  x.pos = y.pos;
+  if (y.tail) x.tail = y.tail;
+  else delete x.tail;
+  y.pos = pos;
+  if (tail) y.tail = tail;
+  else delete y.tail;
+};
+
+/**
+ * A mirage is struck (any blow or damage): it vanishes and whatever hit it is wasted. With the fourth level of the palace the enemy unit that broke it is blinded
+ * (−A at its attacks in its next activation). The mirage leaves the battle at once (nothing of it is counted after the battle).
+ */
+export function dispelMirage(state: GameState, m: BattleUnit, by: BattleUnit | null): void {
+  const b = state.battle!;
+  if (!b.units[m.id]) return;
+  log(state, 'ability', `To był miraż! ${unitName(m)} rozwiewa się w powietrzu.`);
+  if (by && by.alive && by.side !== m.side && mirageLevel(state, m.side) >= FACTION_MECHANICS.mirageBlindLevel) {
+    by.status.blindLater = (by.status.blindLater ?? 0) + FACTION_MECHANICS.mirageBlind * scaleOf(state);
+    log(state, 'ability', `${unitName(by)} jest oślepiony: −${FACTION_MECHANICS.mirageBlind * scaleOf(state)} A w następnej aktywacji (Pałac Mirażu).`);
+  }
+  removeMirage(b, m);
+}
+
+function removeMirage(b: BattleState, m: BattleUnit): void {
+  m.alive = false;
+  m.pos = null;
+  delete m.tail;
+  delete b.units[m.id];
+  const at = b.order.indexOf(m.id);
+  if (at >= 0) {
+    b.order.splice(at, 1);
+    if (at < b.index || (at === b.index && b.activation?.unitId === m.id)) b.index -= 1;
+  }
+  b.extra = b.extra.filter((e) => e.unitId !== m.id);
+  if (b.mirageAlias) delete b.mirageAlias[m.id];
+}
+
+/** The unit has fallen: its mirages fade with it. */
+function fadeMiragesOf(state: GameState, real: BattleUnit): void {
+  const b = state.battle!;
+  const gone = miragesOf(b, real.id);
+  if (!gone.length) return;
+  for (const m of gone) removeMirage(b, m);
+  log(state, 'ability', `Miraże ${unitName(real)} rozwiewają się.`);
+}
+
+/** The battle is over: every mirage leaves it (they are never counted among the fallen or the survivors). */
+function purgeMirages(b: BattleState): void {
+  for (const m of Object.values(b.units)) if (m.status.mirage) removeMirage(b, m);
+  delete b.mirageAlias;
+}
+
+/** Pałac Mirażu (third level): whether the active unit may swap places with a mirage of its own now. */
+export function mirageSwapReady(state: GameState, u: BattleUnit): boolean {
+  const b = state.battle!;
+  return Boolean(b.activation?.unitId === u.id && !u.status.mirage && u.pos && mirageLevel(state, u.side) >= FACTION_MECHANICS.mirageSwapLevel && !(b.mirageSwapped ?? []).includes(u.side) && miragesOf(b, u.id).some((m) => m.pos));
+}
+
+/** The swap itself: the unit and its mirage exchange their cells (the enemy sees two alike figures change places). */
+export function battleMirageSwap(state: GameState, mirageId?: string): void {
+  const b = state.battle!;
+  const u = b.units[b.activation!.unitId];
+  if (!mirageSwapReady(state, u)) throw new Error('Zamiana z mirażem jest niedostępna.');
+  const m = miragesOf(b, u.id).find((x) => !mirageId || x.id === mirageId);
+  if (!m || !m.pos) throw new Error('Ta jednostka nie ma takiego mirażu.');
+  swapPlaces(u, m);
+  (b.mirageSwapped ??= []).push(u.side);
+  log(state, 'ability', `${unitName(u)} zamienia się miejscami ze swoim mirażem (Pałac Mirażu).`, u.side as TeamId);
+  stepOnFields(state, u);
+  if (!u.alive) endActivation(state);
+}
+
+/** Within each mirage group the bodies take their turns in a fresh order every round (the order of the units would otherwise give the real one away). */
+function shuffleMirageTurns(state: GameState): void {
+  const b = state.battle!;
+  if (!b.mirageAlias) return;
+  const rng = new Rng(state.rng);
+  const groups = new Map<string, number[]>();
+  b.order.forEach((id, i) => {
+    const u = b.units[id];
+    if (!u || !(id in b.mirageAlias!)) return;
+    const g = u.status.mirage?.of ?? id;
+    groups.set(g, [...(groups.get(g) ?? []), i]);
+  });
+  for (const slots of groups.values()) {
+    if (slots.length < 2) continue;
+    const ids = rng.shuffle(slots.map((i) => b.order[i]));
+    slots.forEach((i, j) => (b.order[i] = ids[j]));
+  }
+  state.rng = rng.state;
+}
+
+/** Zasadzka Spod Piasku: the cells of its own half of the arena where the Queen may lie buried (not the middle column, no obstacles). */
+export function ambushCells(b: BattleState, side: Side): HexKey[] {
+  const last = (b.layout === 'wide' ? WIDE_COLUMNS : ARENA_COLUMNS) - 1;
+  const middle = last / 2;
+  const attacking = side === b.attacker;
+  return layoutCells(b).filter((k) => !b.obstacles.includes(k) && (attacking ? columnOf(b, k) < middle : columnOf(b, k) > middle));
+}
+
+/** Whether the unit may be deployed anywhere on its half (the buried Queen of Scorpions). */
+export const buriesAtDeploy = (state: GameState, u: BattleUnit): boolean => abilityOf(u) === 'sandAmbush' && abilityActive(state) && !state.battle?.duel && !isLarge(state, u);
+
+/**
+ * Czujność, Czujna Drzemka, Przebudzenie: an enemy has just stepped up next to units of the other side (`before`: the units it stood next to before the move).
+ * A watching Jackal (once a round) and the lying Bastia (once a lie-down) strike it at once; a dormant stone guardian wakes up.
+ */
+function steppedUp(state: GameState, mover: BattleUnit, before: Set<string>): void {
+  const b = state.battle!;
+  if (!abilityActive(state) || b.duel || !mover.alive || !mover.pos) return;
+  for (const w of livingUnits(b)) {
+    if (!mover.alive) return;
+    if (w.side === mover.side || w.status.mirage || before.has(w.id) || !unitsAdjacent(w, mover)) continue;
+    const ab = abilityOf(w);
+    if (w.status.dormant) wake(state, w);
+    const jackal = ab === 'jackalWatch' && w.status.watchRound !== b.round;
+    const nap = ab === 'napWatch' && Boolean(w.status.dugIn) && !w.status.napStruck;
+    if (!jackal && !nap) continue;
+    if (jackal) w.status.watchRound = b.round;
+    if (nap) w.status.napStruck = true;
+    log(state, 'ability', `${unitName(w)} czuwa: cios w ${unitName(mover)} (${UNITS[w.defId].abilityName}).`);
+    dealDamage(state, mover, ABILITY.watchDamage * scaleOf(state), unitName(w));
+  }
+}
+
+/** The units of the other sides the unit stands next to now (taken before a move, for `steppedUp`). */
+const neighboursOf = (b: BattleState, u: BattleUnit): Set<string> => new Set(livingUnits(b).filter((x) => x.side !== u.side && unitsAdjacent(x, u)).map((x) => x.id));
+
+/** Przebudzenie: the stone guardian wakes for the rest of the battle with more Atak. */
+function wake(state: GameState, u: BattleUnit): void {
+  if (!u.status.dormant) return;
+  delete u.status.dormant;
+  u.status.battleAttackBonus += ABILITY.awakeningBonus * scaleOf(state);
+  log(state, 'ability', `${unitName(u)} budzi się: +${ABILITY.awakeningBonus * scaleOf(state)} A do końca bitwy (${UNITS[u.defId].abilityName}).`);
+}
+
+/** Rzut Sztyletem: the enemies the unit may throw its dagger at from `from`: in sight and not next to it (a neighbour is struck in melee). */
+export function throwTargets(state: GameState, u: BattleUnit, from: HexKey | null = u.pos): BattleUnit[] {
+  const b = state.battle!;
+  if (!from || abilityOf(u) !== 'daggerThrow' || u.abilityUsed || !abilityActive(state) || u.status.riddled || u.status.mirage) return [];
+  const mine = footprintAt(state, u, from);
+  const challenger = taunter(state, u);
+  return enemiesOf(b, u).filter((e) => !headCovered(state, e) && (!challenger || e.id === challenger.id) && !cellsOf(e).some((c) => mine.some((m) => adjacent(m, c))) && cellsOf(e).some((c) => hasLineOfSight(state, from, c)));
+}
+
+/** Piaskowa Brama: the free cells within the Wezyr's radius an ally may be put down on. */
+export function portalCells(state: GameState, u: BattleUnit, ally: BattleUnit): HexKey[] {
+  const b = state.battle!;
+  if (!u.pos || b.duel) return [];
+  const obstacles = obstacleSet(b);
+  const units = occupancy(b, ally);
+  return layoutCells(b).filter((k) => k !== ally.pos && !obstacles.has(k) && !units.has(k) && distance(parseKey(u.pos!), parseKey(k)) <= ABILITY.gateRadius && fitsAt(state, ally, k));
+}
+
+/** Lustro Wydm: the free cells near the Dancer where a mirage may appear. */
+export function mirageMakeCells(state: GameState, u: BattleUnit, ally: BattleUnit): HexKey[] {
+  const b = state.battle!;
+  if (!u.pos || b.duel) return [];
+  const obstacles = obstacleSet(b);
+  const units = occupancy(b);
+  return layoutCells(b).filter((k) => !obstacles.has(k) && !units.has(k) && distance(parseKey(u.pos!), parseKey(k)) <= ABILITY.mirageReach && fitsAt(state, ally, k));
+}
+
+/** The allies a free ability of the Desert Empire may be used on: Piaskowa Brama (any but the Wezyr), Lustro Wydm (no heroes), Lot ze Skrzydłem (a small neighbour). */
+export function sandsAllyTargets(state: GameState, u: BattleUnit): BattleUnit[] {
+  const b = state.battle!;
+  const ab = abilityOf(u);
+  const own = livingUnits(b, u.side).filter((x) => x.id !== u.id && !x.status.mirage);
+  if (ab === 'sandPortal') return own.filter((x) => portalCells(state, u, x).length);
+  if (ab === 'mirageMake') return own.filter((x) => UNITS[x.defId].kind === 'support' && mirageMakeCells(state, u, x).length);
+  if (ab === 'rocLift') return own.filter((x) => !isLarge(state, x) && unitsAdjacent(x, u) && !b.activation?.moved);
+  return [];
+}
+
+/** Lot ze Skrzydłem: the Rok has landed; its passenger lands on the free cell next to it nearest to where it was carried from. */
+function landPassenger(state: GameState, u: BattleUnit): void {
+  const b = state.battle!;
+  const act = b.activation!;
+  const p = act.lift ? b.units[act.lift] : undefined;
+  delete act.lift;
+  if (!p || !p.alive || !p.pos || !u.pos) return;
+  const from = parseKey(p.pos);
+  const spots = [...new Set(cellsOf(u).flatMap(neighborKeys))].filter((k) => inLayout(b, k) && !obstacleSet(b).has(k) && !unitAt(b, k)).sort((x, y) => distance(from, parseKey(x)) - distance(from, parseKey(y)) || (x < y ? -1 : 1));
+  if (!spots.length) return log(state, 'ability', `${unitName(p)} nie ma gdzie wylądować i zostaje na miejscu.`);
+  const before = neighboursOf(b, p);
+  p.pos = spots[0];
+  log(state, 'ability', `${unitName(p)} ląduje obok ${unitName(u)} (${UNITS[u.defId].abilityName}).`);
+  stepOnFields(state, p);
+  steppedUp(state, p, before);
+}
+
+/** Spod Piasku: the Czerw comes up and pushes the enemies next to it one cell away. */
+function wyrmRises(state: GameState, u: BattleUnit): void {
+  const b = state.battle!;
+  for (const x of livingUnits(b).filter((e) => e.side !== u.side && unitsAdjacent(e, u))) {
+    if (!canBeMoved(state, x)) continue;
+    const out = pushAway(state, x, u, 1);
+    if (out.moved) {
+      log(state, 'ability', `${unitName(x)} zostaje odepchnięty o 1 pole (${UNITS[u.defId].abilityName}).`);
+      stepOnFields(state, x);
+    }
+  }
+}
+
+/** Iskra of the Desert Empire: after both sides have deployed, the side may move up to this many of its units within its zone (once a battle). */
+const rearrangeDue = (state: GameState): TeamId | null => {
+  const b = state.battle!;
+  if (b.duel) return null;
+  for (const side of [b.attacker, b.defender]) if (side !== 'neutral' && raceOf(state, side) === 'sands' && hasSpark(state, side) && !(b.rearranged ?? []).includes(side)) return side;
+  return null;
+};
+
 /**
  * Fortyfikacja: the two cells next to each other where the Kolos puts up its wall: free cells within 2 of it, the pair closest to the nearest enemy first (null: no room).
  * The wall never shuts a unit in (only free cells are used), and it lasts to the end of the battle.
@@ -2029,6 +2419,54 @@ export function battleAbility(state: GameState, targetId?: string, cell?: HexKey
     log(state, 'ability', `${unitName(u)} odpala ładunek: wybuch!`);
     const area = [at, ...neighborKeys(at)];
     for (const x of Object.values(b.units)) if (x.alive && x.pos && cellsOf(x).some((c) => area.includes(c))) dealDamage(state, x, ABILITY.blastDamage * scaleOf(state), 'Wybuch');
+  } else if (ab === 'sandPortal') {
+    // Piaskowa Brama: an ally goes to a free cell within the Wezyr's radius (the player's cell, or the one farthest from the enemy).
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side !== u.side || t.id === u.id || !t.pos) throw new Error('Wybierz sojusznika.');
+    const cells = portalCells(state, u, t);
+    const foes = enemiesOf(b, u).flatMap(cellsOf);
+    const gap = (k: HexKey) => Math.min(99, ...foes.map((f) => distance(parseKey(f), parseKey(k))));
+    const to = cell ?? cells.slice().sort((x, y) => gap(y) - gap(x) || (x < y ? -1 : 1))[0];
+    if (!to || !cells.includes(to)) throw new Error(`Wybierz wolne pole w promieniu ${ABILITY.gateRadius} od Wezyra.`);
+    const fromCell = t.pos;
+    const before = neighboursOf(b, t);
+    placeUnit(state, t, to);
+    (b.teleports ??= []).push({ unitId: t.id, from: fromCell, to, kind: 'scroll' });
+    log(state, 'ability', `${unitName(t)} przechodzi przez Piaskową Bramę.`);
+    stepOnFields(state, t);
+    steppedUp(state, t, before);
+  } else if (ab === 'riddle') {
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side === u.side || !t.pos || t.status.veiled || unitDistance(u, t) > ABILITY.riddleRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.riddleRange} pól.`);
+    // A mirage takes the riddle as a unit would (it never attacks anyway): nothing tells the Sfinks it was one.
+    t.status.riddled = true;
+    log(state, 'ability', `${unitName(t)} głowi się nad zagadką i nie zaatakuje w swojej następnej aktywacji.`);
+  } else if (ab === 'napWatch') {
+    // Czujna Drzemka: instead of her move Bastia lies down (armour, cannot be pushed, a blow at the first enemy that steps up).
+    if (b.activation!.moved) throw new Error('Bastia już się ruszyła.');
+    u.status.dugIn = ABILITY.dugInActivations;
+    delete u.status.napStruck;
+    b.activation!.moved = true;
+    log(state, 'ability', `${unitName(u)} kładzie się i czuwa.`);
+  } else if (ab === 'mirageMake') {
+    // Lustro Wydm: a mirage of an ally on a free cell near the Dancer; a coin decides whether the ally itself goes there and leaves the mirage behind.
+    const t = targetId ? b.units[targetId] : undefined;
+    if (!t || !t.alive || t.side !== u.side || t.status.mirage || UNITS[t.defId].kind !== 'support' || !t.pos) throw new Error('Wybierz sojusznika (nie bohatera).');
+    const cells = mirageMakeCells(state, u, t);
+    const to = cell ?? cells.slice().sort((x, y) => distance(parseKey(x), parseKey(t.pos!)) - distance(parseKey(y), parseKey(t.pos!)) || (x < y ? -1 : 1))[0];
+    if (!to || !cells.includes(to)) throw new Error(`Wybierz wolne pole w promieniu ${ABILITY.mirageReach} od Tancerki.`);
+    const m = makeMirage(state, t, to);
+    if (!m) throw new Error('Miraż się tu nie zmieści.');
+    const rng = new Rng(state.rng);
+    if (!isLarge(state, t) && rng.int(2) === 1) swapPlaces(m, t);
+    state.rng = rng.state;
+    log(state, 'ability', `${unitName(u)} tańczy: obok pojawia się drugi ${unitName(t)} (jeden z nich to miraż).`);
+  } else if (ab === 'rocLift') {
+    const t = targetId ? b.units[targetId] : undefined;
+    if (b.activation!.moved) throw new Error('Rok już się ruszył.');
+    if (!t || !t.alive || t.side !== u.side || isLarge(state, t) || !unitsAdjacent(t, u)) throw new Error('Wybierz małego sojusznika obok Roka.');
+    b.activation!.lift = t.id;
+    log(state, 'ability', `${unitName(u)} bierze ${unitName(t)} na skrzydło.`);
   } else if (ab === 'web') {
     const t = targetId ? b.units[targetId] : undefined;
     if (!t || !t.alive || t.side === u.side || unitDistance(u, t) > ABILITY.webRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.webRange} pól.`);
