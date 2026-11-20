@@ -12,7 +12,7 @@ import { log } from './log';
 import { mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { Rng } from './rng';
 import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsText, type Hut, type MapObject, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
-import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, SETS, setCount, type ArtifactDef, giveArtifact, passTargets, SHARDS_ID, type Rarity } from './sites';
+import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, packOf, SETS, setCount, type ArtifactDef, giveArtifact, passTargets, SHARDS_ID, type Rarity } from './sites';
 import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import { computerFaction, isDigital, type Action, type Crystal, type GameState, type HeroState, type Rune } from './types';
 import { circleSpells, MAGIC, SPELL_CIRCLES, SPELLS, towerSpells, type SpellId } from './magic';
@@ -314,7 +314,7 @@ export const BUILDING_TEXTS: Record<BuildingId, string[]> = {
     'Trafiony pułapką nie rusza się do końca swojej następnej aktywacji.',
     `${FACTION_MECHANICS.trapCount[3]} pułapki przed bitwą.`,
   ],
-  fence: [`Artefakty z rynku kupujesz o ${FACTION_MECHANICS.fenceDiscount} zł taniej (najmniej za 1 zł), a skrzynie dają +${FACTION_MECHANICS.fenceChestGold} zł.`, `Co ${FACTION_MECHANICS.fenceTreasureEvery} rundy Paserka przynosi losowy skarb.`],
+  fence: [`Paserka skupuje artefakty z plecaka aktywnego bohatera za pełną cenę targową (${KINGDOM.artifactPrice[0]} / ${KINGDOM.artifactPrice[1]} / ${KINGDOM.artifactPrice[2]} zł za zwykły / rzadki / legendarny), a skrzynie dają +${FACTION_MECHANICS.fenceChestGold} zł.`, `Co ${FACTION_MECHANICS.fenceTreasureEvery} rundy Paserka przynosi losowy skarb.`],
   smugglerTrails: [`Raz na rundę bohater Kompanii może przejść przez pole strażnika kryształu albo neutralnych bez walki.`],
   blizzardTower: [`Wrodzy bohaterowie w promieniu ${FACTION_MECHANICS.blizzardRadius[0]} pól od osady mają −${FACTION_MECHANICS.blizzardMove} punkt ruchu na mapie.`, `Promień ${FACTION_MECHANICS.blizzardRadius[1]} pola.`],
   bellTower: ['Po wygranej bitwie z neutralnymi jeden poległy pomocnik poziomu 1–2 wraca do drużyny bez szpitala (raz na rundę).'],
@@ -718,15 +718,15 @@ export const tradeBuyPrice = (s: Settlement, res: ResourceId): number => ECONOMY
 
 /** What an artifact costs in the market for this hero: gold, and Gwiezdny Pył for a legendary one in level 4. */
 export const artifactBill = (state: GameState, hero: HeroState, art: ArtifactDef): Cost => ({
-  gold: Math.max(1, artifactCost(hero, art) - fenceDiscount(state, hero.faction)),
+  gold: artifactCost(hero, art),
   ...(state.rules.economy && art.rarity === 3 ? { dust: ECONOMY.legendaryDust } : {}),
 });
 
 /** The best level of a building of the faction among the settlements it holds (0: none; only a level 6 game has the buildings of the factions). */
 export const bestLevel = (state: GameState, f: TeamId, b: BuildingId): number =>
   state.rules.empire ? Math.max(0, ...Object.values(state.kingdom?.settlements ?? {}).filter((s) => s.owner === f).map((s) => buildingLevel(s, b))) : 0;
-/** Paserka: gold less for an artifact of the market (the digital game has no selling of artifacts, so the fence's "full price" is read as a buyer's bargain). */
-export const fenceDiscount = (state: GameState, f: TeamId): number => (bestLevel(state, f, 'fence') >= 1 ? FACTION_MECHANICS.fenceDiscount : 0);
+/** Paserka: what the fence pays for an artifact from the backpack: the full market price of its rarity (never reduced by the Kapelusz Kupca). */
+export const fenceSellPrice = (art: ArtifactDef): number => KINGDOM.artifactPrice[art.rarity - 1];
 
 export const resOf = (state: GameState, f: TeamId): Resources => state.kingdom?.res?.[f] ?? emptyResources();
 
@@ -860,6 +860,18 @@ export function kingdomAction(state: GameState, action: Action): void {
       s.boughtEpoch = epoch;
       s.bought.push(art.id);
       giveArtifact(state, hero, art, `targ w osadzie ${s.name}`);
+      break;
+    }
+    case 'kingdomSellArtifact': {
+      const { s, hero } = serviceSettlement(state, action.settlementId);
+      if (buildingLevel(s, 'fence') < 1) throw new Error('Artefakty z plecaka skupuje Paserka.');
+      const art = ARTIFACT_BY_ID[action.artifactId];
+      const at = (hero.pack ?? []).indexOf(action.artifactId);
+      if (!art || at < 0) throw new Error('Tego artefaktu nie ma w plecaku bohatera.');
+      hero.pack = (hero.pack ?? []).filter((_, i) => i !== at);
+      const price = fenceSellPrice(art);
+      k.gold[hero.faction] += price;
+      log(state, 'info', `${UNITS[hero.id].name} sprzedaje w Paserce: ${art.name} (${price} zł).`, hero.faction);
       break;
     }
     case 'kingdomTrade': {
@@ -1108,6 +1120,12 @@ export function botPurchase(state: GameState, f: TeamId, s: Settlement): Action 
   const wardRoad = state.rules.empire && own && raceOf(state, f) === 'undead' && s.buildings.barracks >= 1;
   if (s.buildings.hospital < 1 && (fs.supportsDead.length || wardRoad) && buildable('hospital')) return { type: 'kingdomBuild', settlementId: id, building: 'hospital' };
   if (wardRoad && s.buildings.hospital >= 1 && buildingLevel(s, 'barrow') < 1 && buildable('barrow') && canPay(state, f, { ...buildCost(state, s, 'barrow')!, gold: buildCost(state, s, 'barrow')!.gold + 1 })) return { type: 'kingdomBuild', settlementId: id, building: 'barrow' };
+  // The Companies' bot sells the backpack's spare artifacts at the fence (not a piece of a set it collects).
+  if (buildingLevel(s, 'fence') >= 1) {
+    const seller = state.heroes[state.turnOrder[state.turnIndex]];
+    const spare = seller?.faction === f && seller.alive ? packOf(seller).find((a) => !a.set || setCount(seller, a.set) < 2) : undefined;
+    if (spare) return { type: 'kingdomSellArtifact', settlementId: id, artifactId: spare.id };
+  }
   if (s.buildings.market >= 1) {
     const buyer = state.heroes[state.turnOrder[state.turnIndex]];
     const who = buyer?.faction === f ? buyer : undefined;

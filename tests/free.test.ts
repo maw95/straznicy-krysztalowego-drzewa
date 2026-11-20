@@ -22,7 +22,8 @@ import {
 import { assignSlots, teamsOf } from '../src/engine/teams';
 import { canBeMoved } from '../src/engine/primitives';
 import { redactHidden } from '../src/engine/hidden';
-import { artifactBill, bestLevel, collectIncome } from '../src/engine/kingdom';
+import { hideOwnTraps, trapSecrecyOn, trapVeilFor } from '../src/ui/trapVeil';
+import { bestLevel, collectIncome, KINGDOM } from '../src/engine/kingdom';
 import { chooseAction } from '../src/engine/ai';
 import { ARTIFACTS } from '../src/engine/sites';
 import { FACTION_MECHANICS } from '../src/engine/empire';
@@ -242,6 +243,31 @@ describe('Sidła: going off', () => {
 });
 
 describe('Sidła: what may be seen', () => {
+  it('at a shared screen the Snares are veiled: the deployment is covered, own traps are hidden until peeked at, never online', () => {
+    const s = fight([['foxCaptain', 'dawn', 0, 8], BEAR], 1);
+    const b = s.battle!;
+    layTrap(s, 'dawn', trapZone(b, 'dawn')[0]);
+    const two = [{ faction: 'dawn' as const }, { faction: 'horde' as const }];
+    expect(trapSecrecyOn(s, two, false)).toBe(true);
+    expect(trapSecrecyOn(s, two, true)).toBe(false);
+    expect(trapSecrecyOn(s, [two[0]], false)).toBe(false);
+    expect(trapSecrecyOn(s, [{ faction: 'horde' as const }, { faction: 'horde' as const }], false)).toBe(false);
+    b.stage = 'deploy';
+    b.needsDeploy = ['dawn', 'horde'];
+    expect(trapVeilFor(s, 'dawn')).toBe(true);
+    expect(trapVeilFor(s, 'horde')).toBe(false);
+    b.needsDeploy = ['horde', 'dawn'];
+    expect(trapVeilFor(s, 'dawn')).toBe(false);
+    b.stage = 'fight';
+    expect(trapVeilFor(s, 'dawn')).toBe(false);
+    // the owner sees the trap through redactHidden, but not through the veil; the veil does not change its argument
+    const own = redactHidden(s, ['dawn']);
+    expect(own.battle!.ground).toHaveLength(1);
+    expect(hideOwnTraps(own, 'dawn').battle!.ground).toHaveLength(0);
+    expect(own.battle!.ground).toHaveLength(1);
+    expect(hideOwnTraps(own, 'horde')).toBe(own);
+  });
+
   it('redactHidden leaves the enemy\'s hidden traps out and keeps the own ones; the argument is not changed', () => {
     const s = fight([['foxCaptain', 'dawn', 0, 8], BEAR], 1);
     const [a, b] = trapZone(s.battle!, 'dawn');
@@ -526,14 +552,20 @@ describe('free actions and the leap', () => {
 const unitCell = (s: GameState, cell: string) => Object.values(s.battle!.units).some((u) => u.pos === cell || u.tail === cell);
 
 describe('Paserka and Szlaki Przemytnicze', () => {
-  it('the Paserka lowers the price of a market artifact and adds gold to a chest; the second level brings a treasure every third round', () => {
+  it('the Paserka buys backpack artifacts at the full market price; the second level brings a treasure every third round', () => {
     const s = empire();
-    const hero = Object.values(s.heroes).find((h) => h.faction === 'dawn')!;
+    const hero = s.heroes[s.turnOrder[s.turnIndex]];
     const art = ARTIFACTS.find((a) => a.rarity === 2)!;
-    const base = artifactBill(s, hero, art).gold;
+    const sell = () => applyAction(s, { type: 'kingdomSellArtifact', settlementId: home(s).id, artifactId: art.id });
+    hero.pack = [art.id];
+    expect(() => sell()).toThrow(/Paserka/);
     home(s).buildings.fence = 1;
-    expect(bestLevel(s, 'dawn', 'fence')).toBe(1);
-    expect(artifactBill(s, hero, art).gold).toBe(Math.max(1, base - FACTION_MECHANICS.fenceDiscount));
+    expect(bestLevel(s, home(s).owner!, 'fence')).toBe(1);
+    const gold = s.kingdom!.gold[hero.faction];
+    const done = sell();
+    expect(done.kingdom!.gold[hero.faction]).toBe(gold + KINGDOM.artifactPrice[art.rarity - 1]);
+    expect(done.heroes[hero.id].pack ?? []).toHaveLength(0);
+    expect(() => applyAction(done, { type: 'kingdomSellArtifact', settlementId: home(s).id, artifactId: art.id })).toThrow(/plecaku/);
     home(s).buildings.fence = 2;
     const items = s.factions.dawn.inventory.length;
     s.round = 2;

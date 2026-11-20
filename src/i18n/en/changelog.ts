@@ -520,4 +520,10 @@ register({
   "Gra dostępna w przeglądarce przez GitHub Pages.": "The game available in the browser through GitHub Pages.",
   "Poprawka konfiguracji publikacji.": "A fix to the publishing configuration.",
   "Wersja 1.0: muzyka, informacje dla testerów i dziennik partii, znaczniki w bitwie.": "Version 1.0: music, information for testers and a game log, markers in battle.",
+  "Paserka Wolnych Kompanii skupuje teraz artefakty z plecaka aktywnego bohatera za pełną cenę targową (2 / 5 / 10 zł za zwykły / rzadki / legendarny), a przycisk „Sprzedaj” jest w oknie osady; dotychczasowa zniżka na rynku znika. Bot Kompanii sprzedaje zbędne artefakty.":
+    "The Free Companies' Fence now buys artifacts from the active hero's backpack at the full market price (2 / 5 / 10 gold for common / rare / legendary), with a \"Sell\" button in the settlement window; the old market discount is gone. The Companies' bot sells its spare artifacts.",
+  "Wolne Kompanie przy jednym ekranie: gdy dwie osoby grają na tym samym komputerze, układanie ukrytych Sideł jest zasłonięte ekranem „Przekaż urządzenie”, a własne Sidła na arenie widać dopiero po kliknięciu „Podejrzyj Sidła” w swojej turze.":
+    "The Free Companies at one screen: when two people play on the same computer, the laying of the hidden Snares is covered by a \"Pass the device\" screen, and your own Snares show on the arena only after clicking \"Peek at the Snares\" on your turn.",
+  "Poprawka: po ustawieniu Sideł przed bitwą Wolnych Kompanii znaczniki pułapek na arenie nie rysują się już podwójnie.":
+    "Fix: after laying the Snares before a battle, the Free Companies' trap markers on the arena are no longer drawn twice.",
 });

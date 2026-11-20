@@ -755,6 +755,8 @@ export type Action =
   /** Level 6, the Iron Clans' Runiczna Kuźnia: a rune forged on a support of the faction's pool (in a settlement with the forge). */
   | { type: 'kingdomForgeRune'; settlementId: string; unitId: string; rune: Rune }
   | { type: 'kingdomBuyArtifact'; settlementId: string; artifactId: string }
+  /** The Free Companies' Paserka: an artifact from the active hero's backpack sold for the full market price of its rarity. */
+  | { type: 'kingdomSellArtifact'; settlementId: string; artifactId: string }
   /** Level 4: one unit of a resource bought for gold in an own settlement, or sold on its market. */
   | { type: 'kingdomTrade'; settlementId: string; res: 'wood' | 'ore' | 'dust'; dir: 'buy' | 'sell' }
   /** Level 4: one unit of a resource swapped for one of another on the market (sold and bought at the market's prices, one action). */
