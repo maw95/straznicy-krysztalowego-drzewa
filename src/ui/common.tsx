@@ -21,7 +21,7 @@ const ABILITY_ART: Record<string, string> = {
   misleadLight: 'web', stunBlow: 'boulder', ramBlow: 'boulder', cannonFire: 'fireBreath', fortify: 'runeGolem',
   // Dwór Wiecznego Szronu (placeholders: docs/BACKLOG.md 2a).
   iceWall: 'runeGolem', iceBlow: 'boulder', blizzardTrail: 'airDash', frostSlow: 'entanglingRoots', crystalArrow: 'fireBreath', thickFur: 'hardHead', frostArmor: 'quills',
-  bellOfGlass: 'web', frostGrip: 'web', abduct: 'airDash', hailStones: 'fireBreath', coldLight: 'curse', longNight: 'sunburst',
+  bellOfGlass: 'web', frostGrip: 'web', beardChill: 'web', hailStones: 'fireBreath', coldLight: 'curse', longNight: 'sunburst',
   wail: 'curse', viyGaze: 'web', breathAgain: 'giftOfLife', manaReap: 'giftOfLife', graveBreath: 'fireBreath', toll: 'sunburst',
 };
 export const abilityArt = (ability: string) => ABILITY_ART[ability] ?? ability;

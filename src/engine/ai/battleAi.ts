@@ -31,7 +31,6 @@ import {
   damCell,
   leapOnlyCells,
   iceWallCells,
-  abductCell,
   frostLevel,
   frostThreshold,
   footprintAt,
@@ -428,10 +427,11 @@ function freeAbility(state: GameState, u: BattleUnit): Action | null {
       .sort((x, y) => (y.status.frost ?? 0) - (x.status.frost ?? 0) || unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
     if (t) return { type: 'battleAbility', targetId: t.id };
   }
-  if (ab === 'abduct') {
+  if (ab === 'beardChill') {
+    // The enemy closest to freezing first, then the one that hits hardest.
     const t = enemiesOf(b, u)
-      .filter((e) => unitDistance(e, u) <= ABILITY.abductRange && canBeMoved(state, e) && abductCell(state, e))
-      .sort((x, y) => Number(UNITS[y.defId].attackType === 'ranged') - Number(UNITS[x.defId].attackType === 'ranged') || unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
+      .filter((e) => unitDistance(e, u) <= ABILITY.beardRange)
+      .sort((x, y) => (y.status.frost ?? 0) - (x.status.frost ?? 0) || unitAttackBase(y) - unitAttackBase(x) || (x.id < y.id ? -1 : 1))[0];
     if (t) return { type: 'battleAbility', targetId: t.id };
   }
   if (ab === 'longNight' && enemiesOf(b, u).filter((e) => unitDistance(e, u) <= 5).length >= 2) return { type: 'battleAbility' };

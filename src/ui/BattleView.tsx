@@ -220,7 +220,7 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
       if (ability === 'misleadLight' && u.side !== active.side && unitDistance(active, u) <= ABILITY.misleadRange) return 'cur-spell';
       if (ability === 'viyGaze' && u.side !== active.side && unitDistance(active, u) <= ABILITY.gazeRange) return 'cur-spell';
       if (ability === 'bellOfGlass' && u.side !== active.side && unitDistance(active, u) <= ABILITY.bellRange && (u.status.frost ?? 0) >= 1) return 'cur-spell';
-      if (ability === 'abduct' && u.side !== active.side && unitDistance(active, u) <= ABILITY.abductRange) return 'cur-spell';
+      if (ability === 'beardChill' && u.side !== active.side && unitDistance(active, u) <= ABILITY.beardRange) return 'cur-spell';
       if (ability === 'ravenEye' && u.side !== active.side && unitDistance(active, u) <= ABILITY.ravenRange) return 'cur-spell';
     }
     // A treasure is being aimed (Eliksir, Zwój, Róg...): the same wand as for an ability, over every unit it can be used on.

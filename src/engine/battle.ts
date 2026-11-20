@@ -490,7 +490,7 @@ export function pushCell(state: GameState, from: HexKey, target: HexKey): HexKey
   return k;
 }
 /** Abilities used as a free action during the unit's activation. */
-export const FREE_ABILITIES: AbilityId[] = ['sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'abduct', 'longNight', 'ploy', 'dugIn', 'ravenEye', 'dam', 'blast'];
+export const FREE_ABILITIES: AbilityId[] = ['beardChill', 'sunburst', 'giftOfLife', 'web', 'rhythm', 'wanderHorn', 'roar', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'viyGaze', 'shieldOath', 'stoneRune', 'temper', 'misleadLight', 'fortify', 'iceWall', 'bellOfGlass', 'longNight', 'ploy', 'dugIn', 'ravenEye', 'dam', 'blast'];
 /** The free abilities that need no target (one click fires them); the others ask the player to pick a unit. */
 export const UNTARGETED_ABILITIES: AbilityId[] = ['sunburst', 'wanderHorn', 'tremor', 'barrowCall', 'breathAgain', 'wail', 'toll', 'shieldOath', 'fortify', 'iceWall', 'longNight', 'dugIn'];
 /** The free abilities that work on a cell: the player may pick it (the action's `cell`), without one the best cell for the unit is taken (Fortel, Tama, Ładunek). */
@@ -1891,23 +1891,6 @@ export function iceWallCells(state: GameState, u: BattleUnit): HexKey[] | null {
   return best ? best.cells : null;
 }
 
-/** Porwanie: the free cell 2-3 cells from where the target stands that is farthest from its allies (null: no room). */
-export function abductCell(state: GameState, t: BattleUnit): HexKey | null {
-  const b = state.battle!;
-  if (!t.pos) return null;
-  const obstacles = obstacleSet(b);
-  const allies = livingUnits(b, t.side).filter((x) => x.id !== t.id).flatMap(cellsOf);
-  const from = parseKey(t.pos);
-  const spots = layoutCells(b)
-    .filter((k) => {
-      const d = distance(from, parseKey(k));
-      return d >= ABILITY.abductMin && d <= ABILITY.abductMax && !obstacles.has(k) && !unitAt(b, k);
-    })
-    .map((k) => ({ k, away: allies.length ? Math.min(...allies.map((a) => distance(parseKey(a), parseKey(k)))) : 0 }))
-    .sort((x, y) => y.away - x.away || (x.k < y.k ? -1 : 1));
-  return spots[0]?.k ?? null;
-}
-
 export function battleAbility(state: GameState, targetId?: string, cell?: HexKey, from?: HexKey) {
   const b = state.battle!;
   const u = b.units[b.activation!.unitId];
@@ -2010,16 +1993,12 @@ export function battleAbility(state: GameState, targetId?: string, cell?: HexKey
     if (!t || !t.alive || t.side === u.side || !t.pos || unitDistance(u, t) > ABILITY.bellRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.bellRange} pól.`);
     if (!(t.status.frost ?? 0)) throw new Error('Wybierz wroga, który ma szron.');
     freezeUnit(state, u.side, t);
-  } else if (ab === 'abduct') {
+  } else if (ab === 'beardChill') {
+    // Uścisk Mrozu: the icy beard touches an enemy close by (no flight): 2 frosts, and at the threshold it freezes.
     const t = targetId ? b.units[targetId] : undefined;
-    if (!t || !t.alive || t.side === u.side || !t.pos || unitDistance(u, t) > ABILITY.abductRange) throw new Error(`Wybierz małego wroga w zasięgu ${ABILITY.abductRange} pól.`);
-    if (!canBeMoved(state, t)) throw new Error('Tego wroga nie da się przestawić.');
-    const to = abductCell(state, t);
-    if (!to) throw new Error('Brak miejsca, by postawić wroga.');
-    const moved = distance(parseKey(to), parseKey(t.pos));
-    t.pos = to;
-    log(state, 'ability', `${unitName(t)} zostaje uniesiony i postawiony ${moved} pola dalej, z dala od swoich (${UNITS[u.defId].abilityName}).`);
-    stepOnFields(state, t);
+    if (!t || !t.alive || t.side === u.side || !t.pos || unitDistance(u, t) > ABILITY.beardRange) throw new Error(`Wybierz wroga w zasięgu ${ABILITY.beardRange} pól.`);
+    log(state, 'ability', `${unitName(u)} dotyka lodową brodą: ${unitName(t)} (${UNITS[u.defId].abilityName}).`);
+    applyFrost(state, u.side, t, ABILITY.beardFrost);
   } else if (ab === 'longNight') {
     log(state, 'ability', `${unitName(u)}: zapada długa noc.`);
     for (const e of enemiesOf(b, u)) applyFrost(state, u.side, e);

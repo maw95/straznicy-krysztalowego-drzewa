@@ -112,7 +112,7 @@ export type AbilityId =
   | 'frostArmor' // Mroźna Zbroja (Rycerz Lodowej Zbroi, passive): whoever hits it in melee gets frost
   | 'bellOfGlass' // Szklany Dzwoneczek (Rusałka Szronu, free action, once): an enemy that has frost freezes
   | 'frostGrip' // Zmrażający Uścisk (Młody Olbrzym Szronu, attack ability, once): the target cannot move in its next activation and gets frost
-  | 'abduct' // Porwanie (Dziad Mróz, free action, once): a small enemy is lifted and put 2-3 cells away, away from its allies
+  | 'beardChill' // Uścisk Mrozu (Dziad Mróz, free action, once): an enemy within 2 cells gets 2 frosts (it freezes at the threshold)
   | 'hailStones' // Grad Głazów (Olbrzym Gradu, Stary Gradowy, passive): the shot hits the target and its neighbours, each gets frost
   | 'coldLight' // Zimne Światło (Duch Zorzy, passive aura): enemies within 2 cells have -1 S
   | 'longNight' // Długa Noc (Mamut Wiecznej Zimy, free action, once): every enemy gets frost; cannot be moved
@@ -302,10 +302,9 @@ export const ABILITY = {
   furArmor: 1,
   /** Szklany Dzwoneczek: how far Rusałka looks. */
   bellRange: 4,
-  /** Porwanie: how far the Strzyga reaches for a small enemy, and how far (at least, at most) she puts it from where it stood. */
-  abductRange: 2,
-  abductMin: 2,
-  abductMax: 3,
+  /** Uścisk Mrozu: how far the icy beard reaches, and how many frosts it puts. */
+  beardRange: 2,
+  beardFrost: 2,
   /** Zimne Światło: radius of the aura and S the enemies in it lose. */
   chillRadius: 2,
   chillSlow: 1,
@@ -590,7 +589,7 @@ export const UNITS: Record<string, UnitDef> = Object.fromEntries(
     u({ id: 'iceSentinel', name: 'Rycerz Lodowej Zbroi', side: 'frost', kind: 'support', hp: 9, attack: 3, speed: 3, movement: 'walk', attackType: 'melee', ability: 'frostArmor', abilityName: 'Mroźna Zbroja', abilityText: `Stała: kto go trafi wręcz, dostaje ${ABILITY.frostPut} szron.` }),
     u({ id: 'frostSprite', name: 'Rusałka Szronu', side: 'frost', kind: 'support', hp: 6, attack: 3, speed: 4, movement: 'fly', attackType: 'ranged', ability: 'bellOfGlass', abilityName: 'Szklany Dzwoneczek', abilityText: `Raz na bitwę: wróg w zasięgu ${ABILITY.bellRange} pól, który ma szron, zamarza (traci następną aktywację).` }),
     u({ id: 'youngGiant', name: 'Młody Olbrzym Szronu', side: 'frost', kind: 'support', size: 2, hp: 13, attack: 4, speed: 3, movement: 'walk', attackType: 'melee', ability: 'frostGrip', abilityName: 'Zmrażający Uścisk', abilityText: `Raz na bitwę: trafiony nie rusza się w swojej następnej aktywacji i dostaje ${ABILITY.frostPut} szron.` }),
-    u({ id: 'dziadMroz', name: 'Dziad Mróz', side: 'frost', kind: 'support', hp: 7, attack: 4, speed: 5, movement: 'fly', attackType: 'melee', ability: 'abduct', abilityName: 'Porwanie', abilityText: `Raz na bitwę: unosi małego wroga w zasięgu ${ABILITY.abductRange} pól i stawia go ${ABILITY.abductMin}–${ABILITY.abductMax} pola dalej, z dala od jego sojuszników.` }),
+    u({ id: 'dziadMroz', name: 'Dziad Mróz', side: 'frost', kind: 'support', hp: 7, attack: 4, speed: 5, movement: 'walk', attackType: 'melee', ability: 'beardChill', abilityName: 'Uścisk Mrozu', abilityText: `Raz na bitwę: wróg w zasięgu ${ABILITY.beardRange} pól dostaje ${ABILITY.beardFrost} szrony (przy progu zamarza).` }),
     u({ id: 'elderGiant', name: 'Olbrzym Gradu', side: 'frost', kind: 'support', size: 2, hp: 14, attack: 5, speed: 2, movement: 'walk', attackType: 'ranged', ability: 'hailStones', abilityName: 'Grad Głazów', abilityText: 'Stała: strzał trafia cel i jego sąsiadów (wrogów); każdy trafiony dostaje szron.' }),
     u({ id: 'auroraSpirit', name: 'Duch Zorzy', side: 'frost', kind: 'support', hp: 9, attack: 4, speed: 4, movement: 'fly', attackType: 'ranged', ability: 'coldLight', abilityName: 'Zimne Światło', abilityText: `Stała (aura): wrogowie w promieniu ${ABILITY.chillRadius} pól mają −${ABILITY.chillSlow} S.` }),
     u({ id: 'frostMammoth', name: 'Mamut Wiecznej Zimy', side: 'frost', kind: 'support', size: 2, hp: 24, attack: 7, speed: 3, movement: 'walk', attackType: 'melee', ability: 'longNight', abilityName: 'Długa Noc', abilityText: `Raz na bitwę: każdy wróg dostaje ${ABILITY.frostPut} szron. Stała: nie da się go odepchnąć.` }),

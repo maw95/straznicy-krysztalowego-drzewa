@@ -40,7 +40,7 @@ register({
   'Mroźna Zbroja': 'Frosty Armour', 'Stała: kto go trafi wręcz, dostaje {0} szron.': 'Passive: whoever hits it in melee gets {0} frost.',
   'Szklany Dzwoneczek': 'Glass Bell', 'Raz na bitwę: wróg w zasięgu {0} pól, który ma szron, zamarza (traci następną aktywację).': 'Once per battle: an enemy within {0} cells that has frost freezes (loses its next activation).',
   'Zmrażający Uścisk': 'Freezing Grip', 'Raz na bitwę: trafiony nie rusza się w swojej następnej aktywacji i dostaje {0} szron.': 'Once per battle: the unit hit cannot move in its next activation and gets {0} frost.',
-  'Porwanie': 'Abduction', 'Raz na bitwę: unosi małego wroga w zasięgu {0} pól i stawia go {1}–{2} pola dalej, z dala od jego sojuszników.': 'Once per battle: lifts a small enemy within {0} cells and puts it {1}–{2} cells away, far from its allies.',
+  'Uścisk Mrozu': 'Grip of Frost', 'Raz na bitwę: wróg w zasięgu {0} pól dostaje {1} szrony (przy progu zamarza).': 'Once per battle: an enemy within {0} cells gets {1} frosts (it freezes at the threshold).',
   'Zimne Światło': 'Cold Light', 'Stała (aura): wrogowie w promieniu {0} pól mają −{1} S.': 'Passive (aura): enemies within {0} cells have −{1} SPD.',
   'Długa Noc': 'Long Night', 'Raz na bitwę: każdy wróg dostaje {0} szron. Stała: nie da się go odepchnąć.': 'Once per battle: every enemy gets {0} frost. Passive: it cannot be pushed.',
   'Lodowa Gwardia': 'Ice Guard', 'Zimowy Lament': 'Winter Lament',
