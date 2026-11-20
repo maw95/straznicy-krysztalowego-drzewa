@@ -60,17 +60,20 @@ grafik jednostek (tło do wycinania #0000FF, `STYL_JEDNOSTEK.md`).
 
 Balans nie dąży do 45–55% w każdej parze: średnia przeciw wszystkim ok. 45–55%, a kierunek pary ma zgadzać się z tabelą (kontra ok. 60–70%, kontrowana ok. 30–40%, bez relacji ok. 45–55%, nigdy poniżej 30% ani powyżej 70%).
 
-| Frakcja | Ma przewagę nad | Ma trudno z | Dlaczego |
-|---|---|---|---|
-| Stada | Szron, Piaski, Kompanie | Klany, Przypływy | rozpęd rozbija kontrolę i atrapy; Klany i Przypływy nie dają się odepchnąć albo cofają rannych |
-| Umarli | Przymierze, Klany | Horda, Rój | długa bitwa i powroty; Horda kończy szybko, Rój zatruwa wstających |
-| Klany | Stada, Horda | Umarli, Szron | szyk tarcz trzyma szarże; wolni, więc kontrola i wyczerpanie ich rozbierają |
-| Kompanie | Klany, Rój | Stada, Piaski | pułapki karzą wolny szyk; szybcy przeskakują pułapki, miraże marnują Fortel |
-| Szron | Klany, Przypływy | Stada, Horda | zamrażanie wolnych; szybcy dobiegają zanim szron się nazbiera |
-| Piaski | Szron, Przymierze | Stada, Kompanie | ruch i atrapy; Kruk Kompanii odsłania miraże |
-| Rój | Przymierze, Kompanie | Szron, Piaski | grzybnia karze stojących; ruch i zamrożenie odcinają od grzybni |
-| Przypływy | Horda, Stada | Kompanie, Rój | rotacja rannych; pułapki i grzybnia karzą przesuwanie |
+| Frakcja | Kontruje (60–70%) | Jest kontrowana przez (30–40%) |
+|---|---|---|
+| Przymierze | Horda, Stada, Kompanie | Umarli, Piaski, Rój |
+| Horda | Umarli, Szron, Piaski | Przymierze, Klany, Przypływy |
+| Stada | Szron, Piaski, Kompanie | Przymierze, Klany, Przypływy |
+| Umarli | Przymierze, Klany | Horda, Rój |
+| Klany | Horda, Stada | Umarli, Kompanie, Szron |
+| Kompanie | Klany, Przypływy | Przymierze, Stada, Rój |
+| Szron | Klany, Przypływy, Rój | Horda, Stada, Piaski |
+| Piaski | Przymierze, Szron, Rój | Horda, Stada |
+| Rój | Przymierze, Umarli, Kompanie | Szron, Piaski |
+| Przypływy | Horda, Stada | Szron, Kompanie |
 
+**Zatwierdzone przez autora 20.11.2026** (symetryczna tabela: kto kontruje, ten jest po drugiej stronie kontrowany; pozostałe pary to „brak relacji”, 45–55%). Zmiany względem wcześniejszego szkicu: Przymierze kontruje też Stada i Kompanie (poza Hordą); Horda kontruje też Piaski; Rój kontruje Kompanie i Umarłych (Kompanie nie kontrują już Roju); Piaski kontrują Rój; pary Kompanie–Piaski i Kompanie–Rój bez wzajemnej przewagi poza wpisami wyżej. Dlaczego (zamysł): rozpęd Stad rozbija kontrolę i atrapy, ale Klany i Przypływy go nie przyjmują; szyk tarcz Klanów trzyma szarże, lecz wolnych rozbierają kontrola i wyczerpanie; pułapki Kompanii karzą wolny szyk, ale szybcy je przeskakują; zamrożenie Szronu karze wolnych; grzybnia Roju karze stojących; Piaski grają ruchem i atrapami; Przypływy rotują rannych.
 ---
 
 ## 2. Co trzeba dostarczyć dla jednej frakcji
