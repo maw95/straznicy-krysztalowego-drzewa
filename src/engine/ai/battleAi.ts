@@ -750,7 +750,9 @@ export function chooseBattleAction(state: GameState): Action {
   const plan = planActivation(state, u);
   if (plan.moveTo && !act.moved && !act.attacked) return moveTo(state, u, plan.moveTo);
   if (plan.target && !act.attacked && !act.moveOnly) {
-    return { type: 'battleAttack', targetId: plan.target.id, useAbility: plan.useAbility, secondTargetId: plan.second?.id };
+    // The plan may count on a charge the unit did not get on its way (Taran needs a run of 2+ cells): the engine rejects such a blow.
+    const useAbility = plan.useAbility && (abilityOf(u) !== 'ramBlow' || ramCharged(state, u));
+    return { type: 'battleAttack', targetId: plan.target.id, useAbility, secondTargetId: plan.second?.id };
   }
   return { type: 'endActivation' };
 }
