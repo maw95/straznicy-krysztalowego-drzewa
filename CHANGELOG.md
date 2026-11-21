@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Balans dziesięciu frakcji: premie cyfrowe dostrojone tak, by każda frakcja wygrywała średnio 45-55% gier z pozostałymi (Przymierze 54%, Kompanie i Przypływy 45%).
 - Zwój Teleportacji rzucony na pole, na którym leży ukryty (zakopany) wróg, nie kończy już gry błędem: wróg wychodzi z ukrycia, nikt się nie przenosi, a zwój zostaje w plecaku.
 - Centaur, Opiekun Drzewa i Biały Jeleń mają nowe ilustracje i portrety: widać całą głowę i sylwetkę (wcześniej głowa była ucięta albo widać było tylko głowę jelenia).
 - Osiem jednostek ma własne ikony zdolności zamiast pożyczonych: Srebrny Lis, Driada Łuczniczka, Biały Jeleń, Goblin Procarz, Gargulec, Troll Jaskiniowy, Wiwerna Cienia i Behemot Zagłady.

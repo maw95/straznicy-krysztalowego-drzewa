@@ -8,14 +8,14 @@ export interface FactionBonus {
 }
 
 export const FACTION_DIGITAL_BONUS: Partial<Record<FactionId, FactionBonus>> = {
-  dawn: { hero: { hp: 0, attack: 0 }, support: { hp: 1, attack: -1 } },
-  horde: { hero: { hp: 0, attack: 1 }, support: { hp: 3, attack: 0 } },
-  herds: { hero: { hp: 1, attack: 0 }, support: { hp: -2, attack: 0 } },
-  undead: { hero: { hp: -1, attack: -1 }, support: { hp: -1, attack: 2 } },
-  clans: { hero: { hp: 0, attack: 1 }, support: { hp: 0, attack: 2 } },
-  frost: { hero: { hp: 2, attack: 0 }, support: { hp: 0, attack: 0 } },
-  free: { hero: { hp: 0, attack: 0 }, support: { hp: 0, attack: 0 } },
-  sands: { hero: { hp: 0, attack: 0 }, support: { hp: 0, attack: 2 } },
-  swarm: { hero: { hp: 0, attack: 1 }, support: { hp: 0, attack: 2 } },
-  tides: { hero: { hp: 1, attack: 0 }, support: { hp: 0, attack: 2 } },
+  dawn: {hero: { hp: 0, attack: -1 }, support: { hp: 1, attack: -1 } },
+  horde: {hero: { hp: 0, attack: 1 }, support: { hp: 3, attack: 0 } },
+  herds: {hero: { hp: 1, attack: 0 }, support: { hp: -2, attack: 0 } },
+  undead: {hero: { hp: -1, attack: -1 }, support: { hp: -1, attack: 2 } },
+  clans: {hero: { hp: 0, attack: 1 }, support: { hp: 0, attack: 2 } },
+  frost: {hero: { hp: 2, attack: 0 }, support: { hp: 0, attack: 0 } },
+  free: {hero: { hp: 0, attack: 0 }, support: { hp: 0, attack: 0 } },
+  sands: {hero: { hp: 0, attack: 0 }, support: { hp: 0, attack: 2 } },
+  swarm: {hero: { hp: 0, attack: 1 }, support: { hp: 0, attack: 2 } },
+  tides: {hero: { hp: 1, attack: 0 }, support: { hp: 0, attack: 2 } },
 };
