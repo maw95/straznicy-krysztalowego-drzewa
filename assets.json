@@ -6847,6 +6847,230 @@
       "data": "2026-11-21",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-ancestralHorns",
+      "pliki": [
+        "public/assets/cards/abilities/ancestralHorns.png",
+        "public/assets/cards/abilities/ancestralHorns_inner.png"
+      ],
+      "typ": "ikona zdolności Rogi Przodków (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_XpQANgDWtGfFYEHf3jkCEkKX",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: a pair of huge curved aurochs horns, joined at the base, with a faint ghostly outline of an ancient bull's head behind them. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-wanderHorn",
+      "pliki": [
+        "public/assets/cards/abilities/wanderHorn.png",
+        "public/assets/cards/abilities/wanderHorn_inner.png"
+      ],
+      "typ": "ikona zdolności Róg Wędrówki (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_tQAnYBLxoqBXvxHTKcYU6NzM",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: a great curved horn used as a war horn, its wide mouth facing up-right, with three curved sound-wave arcs coming out of it and a small ribbon hanging from it. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-runOn",
+      "pliki": [
+        "public/assets/cards/abilities/runOn.png",
+        "public/assets/cards/abilities/runOn_inner.png"
+      ],
+      "typ": "ikona zdolności W Biegu (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_GGjU5aZCMnw6dXXLbdA5wiu5",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: a running antelope with long spiral horns in full stride, seen from the side, with long wind streaks behind it. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-headbutt",
+      "pliki": [
+        "public/assets/cards/abilities/headbutt.png",
+        "public/assets/cards/abilities/headbutt_inner.png"
+      ],
+      "typ": "ikona zdolności Byczy Łeb (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_4nqUKatjwaud7ZkUPaLQwNSB",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: the head of a bull seen from the front with the head lowered and two short sharp horns pointing forward, small impact lines in front of the forehead. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-rhythm",
+      "pliki": [
+        "public/assets/cards/abilities/rhythm.png",
+        "public/assets/cards/abilities/rhythm_inner.png"
+      ],
+      "typ": "ikona zdolności Skoczny Rytm (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_rakzffhkCHihQwA3QhqKfrtK",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: a set of reed pan pipes of unequal lengths bound together with a ribbon, with three small musical notes floating above them. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-mountainLeap",
+      "pliki": [
+        "public/assets/cards/abilities/mountainLeap.png",
+        "public/assets/cards/abilities/mountainLeap_inner.png"
+      ],
+      "typ": "ikona zdolności Skok po Turniach (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_TKrJ4P4o1HAgYschtBCoJYxD",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: a slender wild ass leaping over a jagged rocky crag, seen from the side, front legs stretched forward, rocks below. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-unmoved",
+      "pliki": [
+        "public/assets/cards/abilities/unmoved.png",
+        "public/assets/cards/abilities/unmoved_inner.png"
+      ],
+      "typ": "ikona zdolności Niewzruszony (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_c53SpgzYoX3RFavrBbBLimQk",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: the head of a bison seen from the front with a heavy mane, with a round stone shield shape behind it and a planted cloven hoof print below, expressing an unmovable stance. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-hippoStrike",
+      "pliki": [
+        "public/assets/cards/abilities/hippoStrike.png",
+        "public/assets/cards/abilities/hippoStrike_inner.png"
+      ],
+      "typ": "ikona zdolności Lot na Strzelców (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_oFSprgTBD4oiutN6ii9dFPte",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: a winged steed with the head and great wings of an eagle and the body of a horse, diving steeply downward with wings swept back and forelegs stretched forward. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-ram",
+      "pliki": [
+        "public/assets/cards/abilities/ram.png",
+        "public/assets/cards/abilities/ram_inner.png"
+      ],
+      "typ": "ikona zdolności Stratowanie (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_JgRDrRa9CySvujiH16g4td9g",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: a charging rhinoceros seen from the side with its horn lowered, huge cloven stampeding feet trampling the ground, a cloud of dust and cracked earth beneath. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-momentum",
+      "pliki": [
+        "public/assets/cards/abilities/momentum.png",
+        "public/assets/cards/abilities/momentum_inner.png"
+      ],
+      "typ": "ikona zdolności Rozpęd (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_RzgyAWfusvD83C2xgJeVGsFB",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: the head and shaggy shoulders of a musk ox with downward-and-upward curving horns, rushing forward with long horizontal speed lines and a small dust trail behind. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-pierce",
+      "pliki": [
+        "public/assets/cards/abilities/pierce.png",
+        "public/assets/cards/abilities/pierce_inner.png"
+      ],
+      "typ": "ikona zdolności Przebicie (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_pvPuvCxbVyaG5wg19PsHRQfM",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: two long spiralling sheep horns lowered like lances, the long point of one of them running straight through a small round shield shape and continuing out the other side, with thin piercing lines. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-drumBeat",
+      "pliki": [
+        "public/assets/cards/abilities/drumBeat.png",
+        "public/assets/cards/abilities/drumBeat_inner.png"
+      ],
+      "typ": "ikona zdolności Bęben Wędrówki (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_kDroXhtaYKsk68tukvBT9YWD",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: a large round war drum with a hide face and lacing, two crossed drumsticks over it, and three concentric sound rings spreading outward. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-roar",
+      "pliki": [
+        "public/assets/cards/abilities/roar.png",
+        "public/assets/cards/abilities/roar_inner.png"
+      ],
+      "typ": "ikona zdolności Rykowisko (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_iB3dvyG2DJHh1XSHVezbhQWy",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: the head of a bull moose seen from the side with wide palmate antlers and its mouth open in a bellow, with sound-wave arcs coming from its muzzle. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-tremor",
+      "pliki": [
+        "public/assets/cards/abilities/tremor.png",
+        "public/assets/cards/abilities/tremor_inner.png"
+      ],
+      "typ": "ikona zdolności Ziemia Drży (Dzikie Stado)",
+      "opis": "Symbol 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięty w koło i wstawiony w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę.",
+      "scenario_asset": "asset_PQQEeFuSBg81qFDBge337B7c",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: a huge cloven hoof stamping the ground, with radiating cracks in the earth, flying stones and concentric shockwave rings spreading outward. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

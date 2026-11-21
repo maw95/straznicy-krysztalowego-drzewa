@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Czternaście zdolności Dzikiego Stada (Rogi Przodków, Róg Wędrówki, W Biegu, Byczy Łeb, Skoczny Rytm, Skok po Turniach, Niewzruszony, Lot na Strzelców, Stratowanie, Rozpęd, Przebicie, Bęben Wędrówki, Rykowisko, Ziemia Drży) ma własne ikony zamiast pożyczonych.
 - Dzikie Stado ma własny herb (skrzyżowane rogi nad odciskiem kopyta) i ochrowe ramki kart bohaterów i pomocników zamiast pożyczonych zielonych ramek Przymierza.
 - Dzikie Stado ma nowe ilustracje kart i portrety wszystkich 19 jednostek (bohaterowie, dowódcy, pomocnicy i legenda Indrik) w stepowym stylu złotego zmierzchu, zamiast zastępczych liter.
 - Goblin Szaman i Pająk Jaskiniowy mają nowe figurki na planszy i nowe animacje (ruch, atak, trafienie, śmierć), a Nietoperz Cienia dotychczasowe animacje w nowych barwach (grafitowo-brązowe futro, rdzawe skrzydła), zgodne z ich nowymi portretami.
