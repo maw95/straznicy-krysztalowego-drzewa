@@ -103,6 +103,12 @@ Punkty 32–49 z przeglądu 17.11 są zrobione; poniżej kolejka z 18.11 (numery
   - **Kolor wstążki „Wygrywa: <frakcja>”:** autor zobaczył 20.11 **czerwoną** wstążkę z napisem „Wygrywa: Przymierze Świtu” (Ribbon w `App.tsx` ~1238 bierze kolor z `state.winner` przez `SIDE_RIBBON` w `common.tsx`: najpewniej kolor idzie za miejscem przy stole (slot `dawn`/`horde`), a nie za frakcją, więc frakcja Przymierza w slocie Hordy ma czerwień). Oczekiwane: **kolor wstążki zależy od frakcji, która wygrała, i każda z dziesięciu frakcji ma własny kolor** (tabela kolorów frakcji, spójna z herbami i `FACTION_NAMES`; przy wygranej neutralnych osobny kolor). Odtworzyć błąd (np. `make zrzut` z `mode=pvp`, gracz Przymierza w drugim slocie), poprawić, sprawdzić też inne miejsca, gdzie `Ribbon` dostaje slot zamiast frakcji (okna bitwy, wynik walki, historia partii). Test w przeglądarce, wersja EN, telefon, wpis w CHANGELOG.
 
 
+**60. Onboarding nowego gracza: przemyśleć cały proces (M-L; zgłoszone przez autora 21.11, najpierw analiza i rozmowa z autorem).** Gra bywa zbyt skomplikowana dla kogoś, kto uruchamia ją pierwszy raz. Do przejrzenia od pierwszego uruchomienia do końca pierwszej partii:
+  - **Konfiguracja gry w menu:** ile decyzji gracz musi podjąć, zanim zacznie grać (tryb, cel, poziom złożoności, trudność, wielkość i kształt mapy, frakcja, bohater, liczba graczy, kto jest botem). Czy da się zacząć jednym kliknięciem z sensownymi ustawieniami domyślnymi (np. „Pierwsza gra”), a resztę ukryć pod „Zaawansowane”?
+  - **Pojęcia niezrozumiałe bez wprowadzenia:** m.in. **poziom złożoności** (Spacer…Imperium, co każdy dodaje), **cel** (Kryształy, Podbój, Relikt, Artefakt, Boss, Przetrwanie…), różnica między poziomem złożoności a trudnością, tryby (Potyczka, Ekspedycja, kampania, rodzinny). Nazwy, krótkie opisy przy wyborze, podpowiedzi „dla kogo”, a może polecany wybór na starcie.
+  - **Pierwsza partia:** czy jest samouczek lub prowadzone pierwsze minuty (poziom Spacer jako domyślny początek, podpowiedzi kontekstowe, stopniowe odsłanianie mechanik poziomami), co z instrukcją w grze (kiedy i skąd gracz ją otwiera).
+  - **Wynik pracy:** krótka lista problemów z propozycją (np. kreator „Szybki start” + „Własna gra”, uproszczone nazwy i opisy, ekran powitalny, odblokowywanie poziomów w miarę grania), zatwierdzona przez autora przed wdrożeniem. Powiązane: punkt 57 (blokowanie bezsensownych kombinacji, odłożony), instrukcja PL i EN, test na telefonach.
+
 
 
 
