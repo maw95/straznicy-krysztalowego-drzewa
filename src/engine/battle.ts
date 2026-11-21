@@ -3196,6 +3196,14 @@ export function battleItem(state: GameState, args: ItemArgs) {
   if (!canUseBattleItem(state, faction)) throw new Error('Skarby używa się przed akcją własnej jednostki.');
   if (!ITEMS[item.kind].usableIn.includes('battle')) throw new Error('Tego skarbu nie używa się w bitwie.');
   const name = itemDef(item.kind, isDigital(state.rules)).name;
+  // A scroll aimed at a cell where a veiled enemy lies (its owner's side sees it, the caster does not; bots plan without hidden units): the enemy is uncovered, nobody jumps, the scroll stays in the bag.
+  if (item.kind === 'teleport' && args.to) {
+    const lurker = Object.values(b.units).find((x) => x.alive && x.side !== actor.side && x.status.veiled && (x.pos === args.to || x.tail === args.to));
+    if (lurker) {
+      unveil(state, lurker);
+      return;
+    }
+  }
   ITEM_HANDLERS[item.kind]({ state, b, faction, args, name });
   consumeItem(state, item.id);
   log(state, 'item', `${unitName(actor)} używa skarbu: ${name}.`);
