@@ -13,7 +13,7 @@ import { levelOf } from '../engine/growth';
 import { FACTION_MECHANICS, mayBuildSpark, shardsOf, shardTotal, SPARK_NAMES, SPARK_TEXTS } from '../engine/empire';
 import { MAGIC, manaOf, maxMana, SPELLS, towerSpells } from '../engine/magic';
 import type { Action, GameState } from '../engine/types';
-import { asset, Modal, Portrait, Ribbon } from './common';
+import { asset, Modal, Portrait, Ribbon, teamFaction } from './common';
 import { ArtifactMedal } from './growthUi';
 import { StatIcon, StatText, ThingIcon, RuleText } from './markers';
 import { CostIcons, RESOURCE_ICON, ResourceStrip } from './resources';
@@ -546,7 +546,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const modalTitle = modal && !modal.startsWith('dwelling-') ? nameOf(modal as BuildingId) : '';
   const header = (
     <div className="settlement-top">
-      <Ribbon side={faction} style={{ width: 'min(520px, 90vw)' }}>{s.name}</Ribbon>
+      <Ribbon side={teamFaction(state, faction)} style={{ width: 'min(520px, 90vw)' }}>{s.name}</Ribbon>
       <div className="settlement-info">
         Osada {FACTION_NAMES[raceOf(state, s.land)]}{s.owner !== s.land ? ` (zajęta przez: ${FACTION_NAMES[raceOf(state, s.owner!)]})` : ''}
       </div>

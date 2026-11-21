@@ -8,7 +8,7 @@ import { readyMaps } from '../engine/customMaps';
 import { layerSwitches, resolveTier, withRuleset, type CustomLayer, type Tier } from '../engine/presets';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
 import { Logo, useCoverArt } from './Logo';
-import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
+import { asset, FACTION_RING, Frame, Portrait, Ribbon } from './common';
 import { UnitCard } from './UnitCard';
 import { HERO_LORE } from '../content/heroLore';
 import { describeSave, parseSave, type SaveFile } from './saves';
@@ -390,7 +390,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                 <div style={{ display: 'flex', gap: 6 }}>
                   {heroesOf(raceAt(s)).map((h) => (
                     <button key={h} className="btn" title={UNITS[h].name} onMouseEnter={() => setPreview(h)} onClick={() => { update(i, { heroId: h }); setPreview(h); }} disabled={takenBy(h, i)} style={{ background: 'none', border: 0, padding: 0 }}>
-                      <Portrait unitId={h} size={46} ring={SIDE_RING[table[i].faction]} glow={s.heroId === h ? '0 0 0 3px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} dim={takenBy(h, i)} tip={false} />
+                      <Portrait unitId={h} size={46} ring={FACTION_RING[raceAt(s)]} glow={s.heroId === h ? '0 0 0 3px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} dim={takenBy(h, i)} tip={false} />
                     </button>
                   ))}
                 </div>

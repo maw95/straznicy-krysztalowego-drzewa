@@ -6627,6 +6627,25 @@
       "data": "2026-11-20",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/wstazki-frakcji",
+      "pliki": [
+        "public/assets/ui/wstazka_herds.webp",
+        "public/assets/ui/wstazka_clans.webp",
+        "public/assets/ui/wstazka_free.webp",
+        "public/assets/ui/wstazka_sands.webp",
+        "public/assets/ui/wstazka_swarm.webp",
+        "public/assets/ui/wstazka_tides.webp"
+      ],
+      "typ": "wstążki sześciu frakcji (kolor materiału zmieniony, złote obrzeże zostaje)",
+      "opis": "Kopie czterech oryginalnych wstążek (g, r, b, p) z przesuniętym odcieniem materiału; skrypt scripts/assets/ribbon_tints.py.",
+      "prompt": "brak",
+      "narzedzie": "scripts/assets/ribbon_tints.py (Pillow, lokalnie)",
+      "model": "brak",
+      "data": "2026-11-21",
+      "ai": false,
+      "licencja": "pochodna własnych wstążek gry"
     }
   ]
 }

@@ -6,7 +6,7 @@ import { defaultCustom, TIERS } from '../engine/presets';
 import { currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
 import { Logo, useCoverArt } from './Logo';
-import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
+import { asset, FACTION_RING, Frame, Portrait, Ribbon } from './common';
 import { BOARD_LEVELS, choice, LEVELS, SEAT_TINT, SHAPE_NAMES } from './setupShared';
 import { NewGameWizard } from './NewGameWizard';
 import type { Mode } from '../engine/types';
@@ -443,7 +443,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
               <div style={{ display: 'flex', gap: 6 }}>
                 {(owner && !locked ? heroPool(s.faction, room.seats.length) : [s.heroId]).map((h) => (
                   <button key={h} className="btn" title={UNITS[h].name} disabled={!owner || locked || takenBy(h, i)} onClick={() => updateSeat(i, { heroId: h })} style={{ background: 'none', border: 0, padding: 0 }}>
-                    <Portrait unitId={h} size={46} ring={SIDE_RING[s.faction]} glow={s.heroId === h ? '0 0 0 3px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} dim={takenBy(h, i)} tip={false} />
+                    <Portrait unitId={h} size={46} ring={FACTION_RING[s.faction as FactionId]} glow={s.heroId === h ? '0 0 0 3px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} dim={takenBy(h, i)} tip={false} />
                   </button>
                 ))}
               </div>

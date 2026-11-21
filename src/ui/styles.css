@@ -67,6 +67,12 @@ button { font-family: inherit; }
 .rib.r { --rib-img: url('/assets/ui/wstazka_r.webp'); }
 .rib.b { --rib-img: url('/assets/ui/wstazka_b.webp'); }
 .rib.p { --rib-img: url('/assets/ui/wstazka_p.webp'); }
+.rib.herds { --rib-img: url('/assets/ui/wstazka_herds.webp'); }
+.rib.clans { --rib-img: url('/assets/ui/wstazka_clans.webp'); }
+.rib.free { --rib-img: url('/assets/ui/wstazka_free.webp'); }
+.rib.sands { --rib-img: url('/assets/ui/wstazka_sands.webp'); }
+.rib.swarm { --rib-img: url('/assets/ui/wstazka_swarm.webp'); }
+.rib.tides { --rib-img: url('/assets/ui/wstazka_tides.webp'); }
 .rib-text { margin-top: -6px; padding: 0 6px; font-weight: 700; font-size: 20px; color: var(--cream); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6), 0 0 6px rgba(0, 0, 0, 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 .rib-text.long { font-size: 17px; }
 
