@@ -24,7 +24,10 @@ ADJ = {
     'warRhino': (+0.12, 0.84, 0.0),       # the whole horn
     'muskOx': (+0.06, 0.86, 0.0),
     'bullMoose': (0.0, 0.86, -0.04),      # closer, the antlers in full
+    'aurochsScout': (+0.05, 0.88, 0.0),   # a little to the right and closer
 }
+# Busts (head and torso, like the portrait of Indrik): name: (side as a share of the height, cx, cy as shares of width / height).
+BUST = {'satyrHornlord': (0.62, 0.50, 0.30), 'satyrPiper': (0.52, 0.47, 0.27)}
 MIN_SIDE, MAX_SIDE = 0.70, 1.0   # shares of the picture's height
 if __name__ == '__main__':
     out = sys.argv[1] if len(sys.argv) > 1 else 'public/assets/cards'
@@ -33,6 +36,13 @@ if __name__ == '__main__':
         im.resize((640, 442), Image.LANCZOS).save(f'{out}/art/{name}.jpg', quality=88)
         if name in KEEP_PORTRAIT: continue
         w, h = im.size
+        if name in BUST:
+            bs, bx, by = BUST[name]
+            sp = round(bs * h)
+            left = min(max(round(bx * w - sp / 2), 0), w - sp)
+            top = min(max(round(by * h - sp / 2), 0), h - sp)
+            im.crop((left, top, left + sp, top + sp)).resize((256, 256), Image.LANCZOS).save(f'{out}/portraits/{name}.jpg', quality=86)
+            continue
         side = min(MAX_SIDE, max(MIN_SIDE, max((x1 - x0) * w / h, y1 - y0) * MARGIN))
         dx, k, dy = ADJ.get(name, (0.0, 1.0, 0.0))
         sp = round(side * k * h)
