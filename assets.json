@@ -6707,7 +6707,7 @@
         "public/assets/cards/portraits/minotaurChief.jpg"
       ],
       "typ": "portrety Goblina Szamana, Szczurołaka, Goblina Procarza, Gargulca, Piekielnego Ogara, Trolla Jaskiniowego i Herszta Minotaurów (szerszy kadr)",
-      "opis": "Backlog 61g, wariant A, bez kredytów: 85% szerokości ilustracji karty, wyśrodkowane, 256 px; puste pasy u góry i u dołu uzupełnia lustrzane odbicie brzegu ilustracji (lekko rozmyte, bez zniekształcenia postaci). Szczurołak, Ogar i Herszt lekko rozjaśnieni i podbici barwą. Skrypt scripts/assets/horde_portraits.py. Głowa Herszta jest obcięta w samej ilustracji.",
+      "opis": "Backlog 61g, wariant A: Szczurołak, Piekielny Ogar i Herszt Minotaurów mają kadr z pierwotnych portretów (zatwierdzony przez autora), z podbitą jasnością i barwą (1,30-1,35 i 1,15); Goblin Szaman i Gargulec: 85% szerokości ilustracji z lustrzanym wypełnieniem pasów; Goblin Procarz i Troll: pełna wysokość nowych, oddalonych ilustracji (karty/oddalone-procarz-troll). Skrypt scripts/assets/horde_portraits.py. Głowa Herszta jest obcięta w samej ilustracji.",
       "prompt": "",
       "narzedzie": "skrypt Pillow (scripts/assets/horde_portraits.py)",
       "model": "",
@@ -6729,7 +6729,7 @@
         "public/assets/jednostki/behemot_zaglady/"
       ],
       "typ": "arkusze sprite'ów (stoi, martwy, chód, atak, trafienie, śmierć) dziewięciu jednostek Hordy z lekko podbitymi barwami",
-      "opis": "Backlog 61g, wariant A, bez kredytów: nasycenie x1,40 i jasność x1,10 na kanałach RGB (alfa bez zmian), webp q88, liczone zawsze od oryginałów z gita (commit dcd6796^). Skrypt scripts/assets/horde_sprites_vivid.py.",
+      "opis": "Backlog 61g, wariant A, bez kredytów: nasycenie x1,40 i jasność x1,10 na kanałach RGB (alfa bez zmian), webp q88, liczone zawsze od oryginałów z gita (commit dcd6796^); Herszt Minotaurów mocniej (x1,90 i x1,18), bo był prawie czarny. Skrypt scripts/assets/horde_sprites_vivid.py.",
       "prompt": "",
       "narzedzie": "skrypt Pillow (scripts/assets/horde_sprites_vivid.py)",
       "model": "",
@@ -6744,11 +6744,28 @@
         "public/assets/cards/portraits/goblinShaman.jpg"
       ],
       "typ": "ilustracja karty i portret Goblina Szamana (nowy, poważny styl, wzorzec dla pomocników Hordy poziomu 1)",
-      "opis": "Poprzednia wersja była kreskówkowa (jaskrawa zieleń, czerwono-złota szata). Obraz 1008x704 zmniejszony do 640x442; portret z scripts/assets/horde_portraits.py. Jedno podejście, zaakceptowane przez autora 21.11.",
+      "opis": "Poprzednia wersja była kreskówkowa (jaskrawa zieleń, czerwono-złota szata). Obraz 1008x704 zmniejszony do 640x442; kolorystyka dopasowana do Goblina Procarza (jasność x1,6, kolor x1,4, kontrast x1,03, Pillow), portret z scripts/assets/horde_portraits.py. Zaakceptowane przez autora 21.11 (kadr), kolorystyka na jego prośbę.",
       "prompt": "Heroic fantasy card illustration in the style of Heroes of Might and Magic III painted art, but darker, grittier and more serious, realistic oil painting, not cartoonish. A goblin shaman of a dark volcanic horde, seen from the waist up in a three-quarter view, the whole head with its pointed hood and both long pointed ears fully visible with empty space above the head, both shoulders in frame. Gaunt, weathered, cunning face with sharp teeth and amber eyes, skin an earthy olive-grey green, a worn pointed hood and robe in deep dark crimson and charcoal with frayed ornamental trim, small bone and tarnished brass charms. He holds a gnarled wooden staff topped with a glowing ember-orange gem and raises his other hand in a curse gesture. Background: a scorched volcanic wasteland with basalt rocks and drifting smoke under a dim ember-lit sky. Rich but slightly muted colours with vivid ember-orange accents as the only bright colour, dramatic warm rim light, no text, no frame.",
       "narzedzie": "Scenario (plan płatny)",
       "model": "GPT Image 2.5 Flare, jakość medium, 1008x704",
       "scenario_asset": "asset_gWkzbxuGi8jhcYoze7C7EtqS",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/oddalone-procarz-troll",
+      "pliki": [
+        "public/assets/cards/art/goblinSlinger.jpg",
+        "public/assets/cards/portraits/goblinSlinger.jpg",
+        "public/assets/cards/art/caveTroll.jpg",
+        "public/assets/cards/portraits/caveTroll.jpg"
+      ],
+      "typ": "nowe ilustracje kart i portrety Goblina Procarza i Trolla Jaskiniowego (cała postać)",
+      "opis": "Autor chciał dalszego kadru niż w pierwotnych portretach; stare ilustracje były same ciasne, więc powstały nowe 1008x704 (zmniejszone do 640x442) z dotychczasową ilustracją jako odniesieniem do wyglądu. Jedno podejście na jednostkę (Procarz: asset_N6gYctho9TfmbdeiL18em5tm, Troll: asset_kdK6NTwBVPSR24f36z3vUqpG), przyjęte.",
+      "prompt": "Use the reference image only for the character design. Draw this same <goblin slinger / cave troll> (<opis z poprzedniej ilustracji>) but seen from much farther away: the WHOLE figure is fully visible, occupying about 60% of the frame height, with generous empty space around it. Heroic fantasy card illustration in the style of Heroes of Might and Magic III painted art, darker and more serious, realistic oil painting, not cartoonish. Volcano and lava glow in the background. Rich but slightly muted colours with vivid ember-orange accents, dramatic warm rim light, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1008x704, ilustracja karty jako odniesienie",
       "data": "2026-11-21",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"

@@ -6,16 +6,17 @@ Usage: python3 scripts/assets/horde_portraits.py [outdir]   (default: public/ass
 import sys
 from PIL import Image, ImageEnhance, ImageFilter
 
-# unit: (zoom, cx, brightness, colour)
+# From the card art: unit: (zoom, cx, brightness, colour). zoom = share of the art's width; h/w (0.70) is the full-height square without bands.
 UNITS = {
     'goblinShaman': (0.85, 0.5, 1.0, 1.0),
-    'ratman': (0.85, 0.5, 1.30, 1.15),
-    'goblinSlinger': (0.85, 0.5, 1.0, 1.05),
     'gargoyle': (0.85, 0.5, 1.0, 1.05),
-    'hellhound': (0.85, 0.5, 1.35, 1.15),
-    'caveTroll': (0.85, 0.5, 1.0, 1.05),
-    'minotaurChief': (0.85, 0.5, 1.30, 1.15),
+    'goblinSlinger': (0.70, 0.5, 1.0, 1.0),  # the art of 21.11: the whole goblin
+    'caveTroll': (0.70, 0.5, 1.0, 1.0),      # the art of 21.11: the whole troll
 }
+# Kept as in the first version of the portraits (commit before ff45b0e): the author liked that framing; only light and colour are lifted.
+# unit: (brightness, colour)
+FIRST_FRAMING = {'ratman': (1.30, 1.15), 'hellhound': (1.35, 1.15), 'minotaurChief': (1.30, 1.15)}
+FIRST_REV = 'ff45b0e^'
 S = 256
 
 
@@ -46,8 +47,13 @@ def portrait(art: Image.Image, zoom: float, cx: float) -> Image.Image:
 
 
 if __name__ == '__main__':
+    import io, subprocess
     out = sys.argv[1] if len(sys.argv) > 1 else 'public/assets/cards/portraits'
     for name, (zoom, cx, bright, colour) in UNITS.items():
         art = Image.open(f'public/assets/cards/art/{name}.jpg').convert('RGB')
         img = ImageEnhance.Color(ImageEnhance.Brightness(portrait(art, zoom, cx)).enhance(bright)).enhance(colour)
         img.save(f'{out}/{name}.jpg', quality=86)
+    for name, (bright, colour) in FIRST_FRAMING.items():
+        src = subprocess.check_output(['git', 'show', f'{FIRST_REV}:public/assets/cards/portraits/{name}.jpg'])
+        img = Image.open(io.BytesIO(src)).convert('RGB')
+        ImageEnhance.Color(ImageEnhance.Brightness(img).enhance(bright)).enhance(colour).save(f'{out}/{name}.jpg', quality=86)
