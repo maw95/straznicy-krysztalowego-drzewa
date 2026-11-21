@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Centaur, Opiekun Drzewa i Biały Jeleń mają nowe ilustracje i portrety: widać całą głowę i sylwetkę (wcześniej głowa była ucięta albo widać było tylko głowę jelenia).": "The Centaur, the Tree Guardian and the White Stag have new illustrations and portraits that show the whole head and figure (before, the head was cut off, or only the stag's head was visible).",
   "Osiem jednostek ma własne ikony zdolności zamiast pożyczonych: Srebrny Lis, Driada Łuczniczka, Biały Jeleń, Goblin Procarz, Gargulec, Troll Jaskiniowy, Wiwerna Cienia i Behemot Zagłady.": "Eight units have icons of their own for their abilities instead of borrowed ones: the Silver Fox, the Dryad Archer, the White Stag, the Goblin Slinger, the Gargoyle, the Cave Troll, the Shadow Wyvern and the Doom Behemoth.",
   "Feniks Świtu przy ataku zieje ogniem w cel.": "The Dawn Phoenix breathes fire at its target when it attacks.",
   "Koszary: latające jednostki (Pegaz, Sowa, Feniks, Gargulec, Wiwerna Cienia) w podglądzie grają płynną pętlę: wzbicie się, lot, lądowanie, atak.": "Barracks: the flying units (Pegasus, Owl, Phoenix, Gargoyle, Shadow Wyvern) play a smooth loop in the preview: takeoff, flight, landing, attack.",
