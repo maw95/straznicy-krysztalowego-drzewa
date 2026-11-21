@@ -6795,7 +6795,7 @@
         "public/assets/cards/portraits/bullMoose.jpg"
       ],
       "typ": "ilustracje kart i portrety 19 jednostek Dzikiego Stada (stepowy złoty zmierzch, cała postać)",
-      "opis": "Zastępują zastępcze karty i 17 zastępczych portretów (backlog 61g, 21.11.2026). Obrazy 1008x704 zmniejszone do 640x442; portret: 88% szerokości ilustracji, wyśrodkowane, puste pasy dopełnione lustrzanym odbiciem (scripts/assets/herds_cards.py, źródła w .tmp/zrodla/herds_cards). Portrety Indrika i Satyra Dudziarza z bramki G3 bez zmian (karty z nich jako odniesień). Jedno podejście na jednostkę, 3 CU każda.",
+      "opis": "Zastępują zastępcze karty i 17 zastępczych portretów (backlog 61g, 21.11.2026). Obrazy 1008x704 zmniejszone do 640x442; portret: kwadratowy wycinek wokół postaci z małym marginesem, przybliżony na prośbę autora (scripts/assets/herds_cards.py, źródła w .tmp/zrodla/herds_cards). Portrety Indrika i Satyra Dudziarza z bramki G3 bez zmian (karty z nich jako odniesień). Jedno podejście na jednostkę, 3 CU każda.",
       "scenario_asset": {
         "greatAurochs": "asset_HjC4NNwedaCmFUYSXZ9hwTSA",
         "satyrHornlord": "asset_riYgxdhj6gkg2ZzrAWKqYnnV",
