@@ -1,14 +1,14 @@
-import { UNITS, type Side } from '../engine/data';
+import { UNITS, type FactionId, type Side } from '../engine/data';
 import type { BattleReport } from '../engine/types';
 import { Frame, HpBar, Portrait, Ribbon, SIDE_RING } from './common';
 import { StatIcon } from './markers';
 
-export function BattleSummary({ report, onClose, name }: { report: BattleReport; onClose: () => void; name: (side: Side) => string }) {
+export function BattleSummary({ report, onClose, name, faction }: { report: BattleReport; onClose: () => void; name: (side: Side) => string; faction?: (side: Side) => Side | FactionId }) {
   const sides: Side[] = [report.attacker, report.defender];
   const title = report.winner === 'draw' ? 'Remis — obie strony poległy' : `Zwycięstwo: ${name(report.winner)}`;
   return (
     <Frame crest style={{ width: 'min(720px, 94vw)' }} innerStyle={{ padding: '22px 20px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-      <Ribbon side={report.winner === 'draw' ? 'neutral' : report.winner} style={{ width: 'min(460px, 100%)', alignSelf: 'center' }}>
+      <Ribbon side={report.winner === 'draw' ? 'neutral' : faction ? faction(report.winner) : report.winner} style={{ width: 'min(460px, 100%)', alignSelf: 'center' }}>
         {title}
       </Ribbon>
       <div style={{ textAlign: 'center', fontSize: 16, color: 'var(--muted)' }}>

@@ -9,7 +9,7 @@ import { HERO_TYPE_NAMES, specialtyOf, TYPE_TEXTS } from '../engine/heroTypes';
 import { BRANCH_OF, isBranch, GROWTH, levelOf, MILESTONE_LEVELS, milestoneText, skillRank, skillText, SKILL_NAMES, xpToNext, type SkillId } from '../engine/growth';
 import { ARTIFACT_BY_ID, gearOf, packOf, passTargets, RARITY_NAMES, SETS, setCount, type ArtifactDef, type Slot } from '../engine/sites';
 import type { Action, GameState, HeroState, LogEvent } from '../engine/types';
-import { abilityArt, asset, Ribbon } from './common';
+import { abilityArt, asset, Ribbon, teamFaction } from './common';
 import { DigitalContext, useScales } from './statScale';
 import { UnitCard } from './UnitCard';
 import { details } from './details';
@@ -226,7 +226,7 @@ export function GearPanel({ hero, state, onAction }: { hero: HeroState; state?: 
 export function PackDialog({ hero, state, onAction, onClose }: { hero: HeroState; state?: GameState; onAction?: (a: Action) => void; onClose: () => void }) {
   return (
     <div className="hero-sheet" data-pack-dialog style={{ width: 'min(520px, 94vw)' }}>
-      <Ribbon side={hero.faction} style={{ width: 'min(420px, 88vw)', alignSelf: 'center' }}>Wyposażenie i plecak</Ribbon>
+      <Ribbon side={state ? teamFaction(state, hero.faction) : hero.faction} style={{ width: 'min(420px, 88vw)', alignSelf: 'center' }}>Wyposażenie i plecak</Ribbon>
       <GearPanel hero={hero} state={state} onAction={onAction} />
       <button className="btn prim" data-enter style={{ padding: '6px 28px', fontSize: 20, alignSelf: 'center' }} onClick={onClose}>Zamknij</button>
     </div>
@@ -255,7 +255,7 @@ function Milestones({ hero }: { hero: HeroState }) {
               {i > 0 && <span className="milestones-arrow" aria-hidden="true">→</span>}
               <div className={`milestone ${reached ? 'on' : 'off'}`} data-milestone={st.tier} data-reached={reached ? '1' : '0'}>
                 <span className="milestone-icon">
-                  <img src={asset(`cards/abilities/${abilityArt(def.ability)}_inner.png`)} alt="" width={44} height={44} />
+                  <img src={asset(`cards/abilities/${abilityArt(def.ability, def.id)}_inner.png`)} alt="" width={44} height={44} />
                   {st.tier > 0 && <span className="milestone-num">{st.label}</span>}
                 </span>
                 <div className="milestone-text"><b>{st.tier === 0 ? def.abilityName : ''}</b> {text}</div>
@@ -275,7 +275,7 @@ export function HeroSheet({ hero, state, onAction, onClose }: { hero: HeroState;
   const skills = [...new Set(hero.skills ?? [])];
   return (
     <div className="hero-sheet hero-sheet-wide" data-hero-sheet>
-      <Ribbon side={hero.faction} style={{ width: 'min(420px, 88vw)', alignSelf: 'center' }}>{heroLabel(hero)}</Ribbon>
+      <Ribbon side={state ? teamFaction(state, hero.faction) : hero.faction} style={{ width: 'min(420px, 88vw)', alignSelf: 'center' }}>{heroLabel(hero)}</Ribbon>
       <div className="hero-sheet-body">
         <div className="hero-sheet-col" style={{ alignItems: 'center' }}>
           <div style={{ width: 300, maxWidth: '86vw' }}><XpBar hero={hero} short /></div>

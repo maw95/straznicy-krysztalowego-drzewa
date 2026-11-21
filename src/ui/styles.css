@@ -67,6 +67,12 @@ button { font-family: inherit; }
 .rib.r { --rib-img: url('/assets/ui/wstazka_r.webp'); }
 .rib.b { --rib-img: url('/assets/ui/wstazka_b.webp'); }
 .rib.p { --rib-img: url('/assets/ui/wstazka_p.webp'); }
+.rib.herds { --rib-img: url('/assets/ui/wstazka_herds.webp'); }
+.rib.clans { --rib-img: url('/assets/ui/wstazka_clans.webp'); }
+.rib.free { --rib-img: url('/assets/ui/wstazka_free.webp'); }
+.rib.sands { --rib-img: url('/assets/ui/wstazka_sands.webp'); }
+.rib.swarm { --rib-img: url('/assets/ui/wstazka_swarm.webp'); }
+.rib.tides { --rib-img: url('/assets/ui/wstazka_tides.webp'); }
 .rib-text { margin-top: -6px; padding: 0 6px; font-weight: 700; font-size: 20px; color: var(--cream); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6), 0 0 6px rgba(0, 0, 0, 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 .rib-text.long { font-size: 17px; }
 
@@ -1129,7 +1135,7 @@ button.sb-slot:disabled { cursor: default; }
 /* The barracks screen: a shelf of unit cards by tier, the chosen unit's animated sprite on the right. */
 .barracks-frame { width: 100%; height: 100%; margin: 0 auto; }
 /* The barracks fill the whole screen: no header, almost no margin, the foot only holds the gold and the way back. */
-.settlement-field.sheet.wide { padding: 8px 8px 0; }
+.settlement-field.sheet.wide { padding: 8px; }
 .barracks-inner { display: flex; gap: 16px; padding: 12px 16px; height: 100%; box-sizing: border-box; overflow: auto; color: #F4E3B8; }
 .bk-shelf { display: flex; gap: 14px; flex: 1 1 0; align-items: flex-start; min-width: 0; align-self: stretch; overflow: auto; padding-bottom: 4px; }
 .bk-col { display: flex; flex-direction: column; gap: 8px; align-items: center; flex: none; }
@@ -1163,6 +1169,9 @@ button.sb-slot:disabled { cursor: default; }
 .bk-state.no { color: #E0A090; }
 .bk-note { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); color: #E0A090; }
 .bk-detail { flex: 0 0 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding-left: 14px; border-left: 1px solid rgba(199, 154, 63, 0.4); }
+.bk-detail { min-height: 0; max-height: 100%; overflow-y: auto; }
+.bk-footer { position: sticky; bottom: 0; background: linear-gradient(rgba(12, 22, 24, 0), rgba(12, 22, 24, 0.96) 18%); z-index: 2; margin-top: auto; align-self: stretch; display: flex; justify-content: flex-end; padding-top: 6px; }
+.bk-footer .settlement-actions { margin-left: 0; flex-wrap: nowrap; justify-content: space-between; width: 100%; }
 .bk-name { font-size: 24px; font-weight: 800; color: #FFE9A8; text-shadow: 0 2px 3px #000; }
 .bk-tier-line { font-size: 14px; color: #BFA66F; }
 .bk-stats { display: flex; gap: 14px; font-size: 16px; }

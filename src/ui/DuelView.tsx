@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { abilityTextFor, FACTION_NAMES, itemDef, ITEMS, scaleText, UNITS, type TeamId, type ItemKind } from '../engine/data';
 import { abilityActive, abilityOf, attackTargets, ATTACK_ABILITIES, ramCharged, canUseBattleItem, FREE_ABILITIES, unitSpeed } from '../engine/battle';
 import { isDigital, type Action, type BattleUnit, type GameState } from '../engine/types';
-import { abilityArt, asset, Frame, HpBar, Medal, Ribbon } from './common';
+import { abilityArt, asset, Frame, HpBar, Medal, Ribbon, teamFaction } from './common';
 import { DamageDrop, DieFace, LastAttack, Marker, StatIcon } from './markers';
 import { UnitCard } from './UnitCard';
 
@@ -128,7 +128,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
     <div className="overlay" style={{ zIndex: 40 }}>
       <div className="modal-body">
         <Frame crest style={{ width: 'min(620px, 96vw)' }} innerStyle={{ padding: '18px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-          <Ribbon side={units[0].side} style={{ width: 'min(420px, 90%)' }}>{`Pojedynek · runda ${b.round}`}</Ribbon>
+          <Ribbon side={teamFaction(state, units[0].side)} style={{ width: 'min(420px, 90%)' }}>{`Pojedynek · runda ${b.round}`}</Ribbon>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             {fighter(units[0])}
             <div style={{ fontWeight: 900, fontSize: 30, color: '#F3D27A', textShadow: '0 2px 0 #1E1204' }}>VS</div>
@@ -146,7 +146,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
               {attackAbility && (
                 <button className={`btn plate parch ${useAbility ? 'on' : ''}`} style={{ padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 15 }} title={scaleText(abilityTextFor(active.defId, isDigital(state.rules)), state.rules.statScale ?? 1, state.rules.hpScale)} onClick={() => setUseAbility(!useAbility)}>
-                  <img src={asset(`cards/abilities/${abilityArt(abilityOf(active))}.png`)} alt="" style={{ width: 30, height: 30 }} />
+                  <img src={asset(`cards/abilities/${abilityArt(abilityOf(active), active.defId)}.png`)} alt="" style={{ width: 30, height: 30 }} />
                   {UNITS[active.defId].abilityName}
                   {useAbility ? ' ✓' : ''}
                 </button>
@@ -158,7 +158,7 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
                   title={scaleText(abilityTextFor(active.defId, isDigital(state.rules)), state.rules.statScale ?? 1)}
                   onClick={() => onAction({ type: 'battleAbility', targetId: ab === 'web' || ab === 'roar' ? enemy!.id : active.id })}
                 >
-                  <img src={asset(`cards/abilities/${abilityArt(abilityOf(active))}.png`)} alt="" style={{ width: 30, height: 30 }} />
+                  <img src={asset(`cards/abilities/${abilityArt(abilityOf(active), active.defId)}.png`)} alt="" style={{ width: 30, height: 30 }} />
                   {UNITS[active.defId].abilityName}
                 </button>
               )}

@@ -46,7 +46,7 @@ const HIT_MS = 320;
 /** A unit turning round (the picture narrows, hops and leans, then widens on the other side): there is no turn clip yet. */
 const TURN_MS = 300;
 /** Fire breathers: where the mouth is in the attack frame (shares of the frame width and height, while it breathes). */
-const FIRE_MOUTH: Record<string, [number, number]> = { goldDragon: [0.83, 0.66], blackDragon: [0.86, 0.5] };
+const FIRE_MOUTH: Record<string, [number, number]> = { goldDragon: [0.83, 0.66], blackDragon: [0.86, 0.5], dawnPhoenix: [0.88, 0.3] };
 /** The flame burns from this far into the attack clip until that far (the clip is 0–1). */
 const FLAME_FROM = 0.2;
 const FLAME_TO = 0.78;

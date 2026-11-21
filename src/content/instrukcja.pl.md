@@ -83,7 +83,7 @@ Za wygraną dostajesz **punkty rankingu**; im trudniej, tym więcej. Na Bardzo t
 ## Tryby gry
 @słowa: tryb, potyczka, kooperacja, rywalizacja, arena, hot-seat, jeden ekran, boty, komputer, 8 graczy, frakcje, drużyna
 
-- **Potyczka** (1–8 graczy): pełna gra na mapie, w której sam wybierasz cel, poziom, mapę, frakcje i graczy. Jedni grają Przymierzem, drudzy Hordą, najwyżej trzech graczy na frakcję; kto jest człowiekiem, a kto komputerem, ustawiasz przy każdym miejscu. Przy jednym graczu Hordę prowadzi komputer. Ty i znajomi możecie więc grać razem przeciw komputerowi (jedna strona, wspólna kasa i skarby) albo przeciw sobie. Przy siedmiu i ośmiu graczach każda strona ma czwartego bohatera (Srebrną Wilczycę po stronie Przymierza i Mantykorę Zmierzchu po stronie Hordy). Od poziomu VI zostaje do sześciu graczy, bo drugi bohater (dowódca) zajmuje miejsce. Komputerowy gracz jest wszędzie ten sam ([Boty](#automat-zla-i-boty)).
+- **Potyczka** (1–8 graczy): pełna gra na mapie, w której sam wybierasz cel, poziom, mapę, frakcje i graczy. Jedni grają Przymierzem, drudzy Hordą, najwyżej trzech graczy na frakcję; kto jest człowiekiem, a kto komputerem, ustawiasz przy każdym miejscu. Przy jednym graczu Hordę prowadzi komputer. Ty i znajomi możecie więc grać razem przeciw komputerowi (jedna strona, wspólna kasa i skarby) albo przeciw sobie. Przy siedmiu i ośmiu graczach każda strona ma czwartego bohatera (Srebrną Wilczycę po stronie Przymierza i Mantykorę Zmierzchu po stronie Hordy). Komputerowy gracz jest wszędzie ten sam ([Boty](#automat-zla-i-boty)).
 - **Arena**: jedna bitwa bez mapy ([Arena](#arena)).
 
 W **wersji planszowej** zostają tryby z wydrukowanej instrukcji, w tym **Kooperacja** przeciw automatowi zła.

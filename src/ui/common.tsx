@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import type { FactionId, Side } from '../engine/data';
+import type { FactionId, Side, TeamId } from '../engine/data';
 import type { Tile } from '../engine/types';
+import { raceOf } from '../engine/teams';
 import { SVG_DEFS } from './svgDefs';
 import { hoverCard } from './hover';
 
@@ -30,7 +31,9 @@ const ABILITY_ART: Record<string, string> = {
   whirl: 'dive', pearlShield: 'guardian', pincers: 'grab', wingBeat: 'nestLeap', livingReef: 'treeRoots', ebbTide: 'web', deepWhirl: 'manyHeads',
   wail: 'curse', viyGaze: 'web', breathAgain: 'giftOfLife', manaReap: 'giftOfLife', graveBreath: 'fireBreath', toll: 'sunburst',
 };
-export const abilityArt = (ability: string) => ABILITY_ART[ability] ?? ability;
+/** Units whose ability has a picture of its own (the same ability on another unit keeps the shared one): `cards/abilities/u_<unit>.png`. */
+export const UNIT_ABILITY_ART: ReadonlySet<string> = new Set(['silverFox', 'dryadArcher', 'whiteStag', 'goblinSlinger', 'gargoyle', 'caveTroll', 'shadowWyvern', 'doomBehemoth']);
+export const abilityArt = (ability: string, unitId?: string) => (unitId && UNIT_ABILITY_ART.has(unitId) ? `u_${unitId}` : ABILITY_ART[ability] ?? ability);
 export const portrait = (unitId: string) => asset(`cards/portraits/${artId(unitId)}.jpg`);
 /** Face of a map tile (one of the art variants, or `art`: the picture of a settlement or an object standing on it), or its green/red back while hidden. */
 export const tileImage = (t: Tile, art?: string) =>
@@ -40,8 +43,19 @@ export const tileImage = (t: Tile, art?: string) =>
 export const SIDE_RING: Record<Side, string> = { dawn: '#2C7048', horde: '#9A2226', third: '#B9801A', fourth: '#6A3E98', neutral: '#2A5E9A' };
 /** The thin outline round the base of the active 3D figure (the only mark a figure gets). */
 export const ACTIVE_FIGURE_RING = '#F3C842';
-/** The ribbons are painted in three colours only: the third and fourth team borrow the green and the red ones. */
-export const SIDE_RIBBON: Record<Side | FactionId, 'g' | 'r' | 'b'> = { dawn: 'g', horde: 'r', third: 'g', fourth: 'r', neutral: 'b', herds: 'g', undead: 'g', clans: 'r', frost: 'g', free: 'r', sands: 'r', swarm: 'g', tides: 'g' };
+/** Every faction has a ribbon of its own colour (`wstazka_<faction>.webp`; the Covenant, the Horde, the Dead and Szron use the four originals, see scripts/assets/ribbon_tints.py for the rest). */
+export const FACTION_RIBBON: Record<FactionId, string> = {
+  dawn: 'g', horde: 'r', undead: 'p', frost: 'b', herds: 'herds', clans: 'clans', free: 'free', sands: 'sands', swarm: 'swarm', tides: 'tides',
+};
+/** The ring round a portrait that belongs to a faction (the hero pickers of the setup screens): the colour of the faction, whatever seat it sits in. */
+export const FACTION_RING: Record<FactionId, string> = {
+  dawn: '#2C7048', horde: '#9A2226', herds: '#B8731E', undead: '#6A3E98', clans: '#A8506E', frost: '#3E8FB8', free: '#6E4B2E', sands: '#C79A1E', swarm: '#2A8A80', tides: '#2A6FC0',
+};
+/** The ribbon (or ring) key of a team seat: the faction that sits there, not the seat itself (a Covenant player in the second seat does not get the Horde's red). */
+export const teamFaction = (state: unknown, team: Side | FactionId | 'draw' | null | undefined): Side | FactionId => (!team || team === 'draw' || team === 'neutral' ? 'neutral' : raceOf(state, team as TeamId));
+
+/** The ribbons of the sides that are not a faction (the third and fourth team borrow green and red; the neutral creatures are blue). */
+export const SIDE_RIBBON: Record<Side, 'g' | 'r' | 'b'> = { dawn: 'g', horde: 'r', third: 'g', fourth: 'r', neutral: 'b' };
 
 /** The phone layout (the same condition as the media query in styles.css). */
 export const COMPACT_QUERY = '(max-width: 900px), (max-height: 560px) and (max-width: 1100px)';
@@ -96,8 +110,9 @@ export function Frame(props: {
 
 /** Heraldic ribbon: a painted silk band with gold embroidery (Scenario), one colour per faction (green Przymierze, red Horda, blue neutral, purple for the next ones). */
 export function Ribbon({ side = 'dawn', children, style }: { side?: Side | FactionId; children: ReactNode; style?: CSSProperties }) {
+  const cls = side in FACTION_RIBBON ? FACTION_RIBBON[side as FactionId] : SIDE_RIBBON[side as Side];
   return (
-    <div className={`rib ${SIDE_RIBBON[side]}`} style={style}>
+    <div className={`rib ${cls}`} style={style}>
       <span className={`rib-text ${typeof children === 'string' && children.length > 16 ? 'long' : ''}`}>{children}</span>
     </div>
   );

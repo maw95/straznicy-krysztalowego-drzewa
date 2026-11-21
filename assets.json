@@ -6627,6 +6627,73 @@
       "data": "2026-11-20",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/wstazki-frakcji",
+      "pliki": [
+        "public/assets/ui/wstazka_herds.webp",
+        "public/assets/ui/wstazka_clans.webp",
+        "public/assets/ui/wstazka_free.webp",
+        "public/assets/ui/wstazka_sands.webp",
+        "public/assets/ui/wstazka_swarm.webp",
+        "public/assets/ui/wstazka_tides.webp"
+      ],
+      "typ": "wstążki sześciu frakcji (kolor materiału zmieniony, złote obrzeże zostaje)",
+      "opis": "Kopie czterech oryginalnych wstążek (g, r, b, p) z przesuniętym odcieniem materiału; skrypt scripts/assets/ribbon_tints.py.",
+      "prompt": "brak",
+      "narzedzie": "scripts/assets/ribbon_tints.py (Pillow, lokalnie)",
+      "model": "brak",
+      "data": "2026-11-21",
+      "ai": false,
+      "licencja": "pochodna własnych wstążek gry"
+    },
+    {
+      "id": "karty/ikony-zdolnosci-jednostek-21-11",
+      "pliki": [
+        "public/assets/cards/abilities/u_silverFox.png",
+        "public/assets/cards/abilities/u_silverFox_inner.png",
+        "public/assets/cards/abilities/u_dryadArcher.png",
+        "public/assets/cards/abilities/u_dryadArcher_inner.png",
+        "public/assets/cards/abilities/u_whiteStag.png",
+        "public/assets/cards/abilities/u_whiteStag_inner.png",
+        "public/assets/cards/abilities/u_goblinSlinger.png",
+        "public/assets/cards/abilities/u_goblinSlinger_inner.png",
+        "public/assets/cards/abilities/u_gargoyle.png",
+        "public/assets/cards/abilities/u_gargoyle_inner.png",
+        "public/assets/cards/abilities/u_caveTroll.png",
+        "public/assets/cards/abilities/u_caveTroll_inner.png",
+        "public/assets/cards/abilities/u_shadowWyvern.png",
+        "public/assets/cards/abilities/u_shadowWyvern_inner.png",
+        "public/assets/cards/abilities/u_doomBehemoth.png",
+        "public/assets/cards/abilities/u_doomBehemoth_inner.png"
+      ],
+      "typ": "osiem ikon zdolności, po jednej dla Srebrnego Lisa, Driady Łuczniczki, Białego Jelenia, Goblina Procarza, Gargulca, Trolla Jaskiniowego, Wiwerny Cienia i Behemota",
+      "opis": "Symbole 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięte w koło i wstawione w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py, paleta 128 kolorów. Po jednym podejściu na ikonę, wszystkie przyjęte (21.11, ok. 24 CU).",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: <symbol: lis w odskoku / strzała z korzeniami / głowa jelenia z opuszczonym porożem / kamień procy z czaszką i klątwą / kamienne kolce gargulca / pięść trolla z zasklepiającą się raną / ogon wiwerny z żądłem i kroplą jadu / dwa pazurzaste rozdarcia>. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/przekadrowane-centaur-opiekun-jelen",
+      "pliki": [
+        "public/assets/cards/art/centaur.jpg",
+        "public/assets/cards/portraits/centaur.jpg",
+        "public/assets/cards/art/treeGuardian.jpg",
+        "public/assets/cards/portraits/treeGuardian.jpg",
+        "public/assets/cards/art/whiteStag.jpg",
+        "public/assets/cards/portraits/whiteStag.jpg"
+      ],
+      "typ": "ilustracje kart i portrety Centaura, Opiekuna Drzewa i Białego Jelenia (nowe, z całą postacią)",
+      "opis": "Poprzednie kadry miały uciętą głowę (Centaur, Opiekun Drzewa) albo tylko głowę i rogi (Biały Jeleń). 1008x704 przeskalowane do 630x441; portret = kwadratowy wycinek 256 px (głowa i górna część sylwetki, u jelenia cała sylwetka). Jedno podejście na jednostkę, przyjęte.",
+      "prompt": "Heroic fantasy card illustration in the style of Heroes of Might and Magic III painted art: <opis jednostki, całą postać od głowy do kopyt/korzeni, z miejscem nad głową>, rich oil painting, dramatic warm lighting, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

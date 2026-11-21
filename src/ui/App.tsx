@@ -27,7 +27,7 @@ import { sfx } from './sfx';
 import { animationWait, ATTACK_SHOW_MS, holdFor, resetAnimLock } from './animLock';
 import { scaledMs } from './animSpeed';
 import { DuelView } from './DuelView';
-import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset, useMedia } from './common';
+import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset, teamFaction, useMedia } from './common';
 import { SetupScreen } from './SetupScreen';
 import { music } from './music';
 import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, LeaveDialog, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
@@ -637,8 +637,8 @@ export function App() {
     const key = `${game.setup.seed}:${game.actionCount}`;
     if (endSound.current === key) return;
     endSound.current = key;
-    const mine = game.players.filter(atThisScreen).map((p) => p.faction);
-    sfx.play(game.winner && (mine as string[]).includes(game.winner) ? 'victory' : 'defeat');
+    // The victory music plays whoever won (a human seat may play the Horde against bots of the Covenant, or lose to a computer): it marks the end of the game, not a result.
+    sfx.play('victory');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game, held]);
   // Not while the finished battle is still on screen (the engine is already on the map, the arena shows the last blow).
@@ -996,7 +996,7 @@ export function App() {
 
       <Modal open={Boolean(selecting)}>{selecting && <SupportSelect state={game} faction={selecting} onPick={(ids) => dispatch({ type: 'selectSupports', faction: selecting, supportIds: ids })} />}</Modal>
       <Modal open={Boolean(gearing)}>{gearing && <GearDialog key={`${gearing}-${game.draft!.gear!.order.length}`} state={game} faction={gearing} onPick={(artifactId) => dispatch({ type: 'pickGear', faction: gearing, artifactId })} />}</Modal>
-      <Modal open={Boolean(spelling)}>{spelling && <SpellPickDialog key={`${spelling}-${game.draft!.spells!.order.length}`} faction={spelling} onPick={(spells) => dispatch({ type: 'pickSpells', faction: spelling, spells })} />}</Modal>
+      <Modal open={Boolean(spelling)}>{spelling && <SpellPickDialog state={game} key={`${spelling}-${game.draft!.spells!.order.length}`} faction={spelling} onPick={(spells) => dispatch({ type: 'pickSpells', faction: spelling, spells })} />}</Modal>
       <Modal open={Boolean(drafting)}>
         {drafting && (
           <DraftDialog
@@ -1080,7 +1080,7 @@ export function App() {
       )}
 
       <Modal open={summary !== null && game.lastBattle?.id === summary && !held} onClose={() => setSummary(null)}>
-        {game.lastBattle && <BattleSummary report={game.lastBattle} name={(s) => sideName(game, s)} onClose={() => setSummary(null)} />}
+        {game.lastBattle && <BattleSummary report={game.lastBattle} name={(s) => sideName(game, s)} faction={(s) => teamFaction(game, s)} onClose={() => setSummary(null)} />}
       </Modal>
 
       <Tutorial state={game} active={humanTurn && !needsHandoff && !digest && !summary && !confirm && !held} />
@@ -1176,7 +1176,7 @@ function SupportSelect({ state, faction, onPick }: { state: GameState; faction: 
   return (
     <div>
       <Frame crest={!low} style={{ width: 'min(760px, 94vw)' }} innerStyle={{ padding: low ? '8px 18px' : 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: low ? 8 : 14 }}>
-        <Ribbon side={faction} style={{ width: 'min(420px, 94vw)' }}>{n === 2 ? 'Wybierz dwóch pomocników' : `Wybierz pomocników do bitwy (${n})`}</Ribbon>
+        <Ribbon side={teamFaction(state, faction)} style={{ width: 'min(420px, 94vw)' }}>{n === 2 ? 'Wybierz dwóch pomocników' : `Wybierz pomocników do bitwy (${n})`}</Ribbon>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
           {pool.map((id) => (
             <button key={id} className="btn" onClick={() => toggle(id)} style={{ background: 'none', border: 0, padding: 4, borderRadius: 12, boxShadow: picked.includes(id) ? '0 0 0 3px #9EE4FF, 0 0 16px 4px rgba(158,228,255,0.6)' : 'none' }}>
@@ -1206,7 +1206,7 @@ function Handoff({ state, playerId, note, onConfirm }: { state: GameState; playe
       ))}
       <Frame crest style={{ width: 'min(480px, 94vw)' }} innerStyle={{ padding: '26px 30px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 12 }}>
         <div className="lbl">Runda {state.round}</div>
-        <Ribbon side={player.faction} style={{ width: 340, height: 48 }}>Przekaż urządzenie</Ribbon>
+        <Ribbon side={teamFaction(state, player.faction)} style={{ width: 340, height: 48 }}>Przekaż urządzenie</Ribbon>
         <Portrait unitId={hero.id} size={124} ring={SIDE_RING[player.faction]} glow="0 0 0 2px #1E1204, 0 0 34px 10px rgba(158,228,255,0.28)" />
         <div>
           <div style={{ fontSize: 18, color: 'var(--muted)' }}>Teraz tura</div>
@@ -1235,7 +1235,7 @@ function GameOver({ state, online, rankingNote, onNew, onLog }: { state: GameSta
           <img data-winner-crest={state.winner} src={asset(`cards/crests/${state.winner === 'neutral' ? 'neutral' : raceOf(state, state.winner)}.png`)} alt="" onError={(e) => { e.currentTarget.style.display = 'none'; }}
             style={{ display: 'block', width: 'min(150px, 22vh)', height: 'min(150px, 22vh)', objectFit: 'contain', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.6))', marginBottom: -4 }} />
         )}
-        <Ribbon side={state.winner ?? 'dawn'} style={{ width: 460, height: 50 }}>{state.winner ? `Wygrywa: ${state.winner === 'neutral' ? FACTION_NAMES.neutral : teamLabel(state, state.winner)}` : 'Remis'}</Ribbon>
+        <Ribbon side={teamFaction(state, state.winner)} style={{ width: 460, height: 50 }}>{state.winner ? `Wygrywa: ${state.winner === 'neutral' ? FACTION_NAMES.neutral : teamLabel(state, state.winner)}` : 'Remis'}</Ribbon>
         <div style={{ fontSize: 20 }}>{state.endReason}</div>
         {state.setup.mode === 'arena' ? (
           <div className="well" style={{ padding: '12px 18px', display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '4px 24px', fontSize: 17, textAlign: 'left', width: '100%' }}>

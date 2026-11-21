@@ -6,7 +6,7 @@ import { raceOf } from '../engine/teams';
 import { useState } from 'react';
 import { ARENA_PICKS, FACTION_NAMES, itemDef, UNITS, type TeamId, type ItemKind } from '../engine/data';
 import { isDigital, type GameState } from '../engine/types';
-import { asset, Frame, Portrait, Ribbon, SIDE_RING } from './common';
+import { asset, Frame, Portrait, Ribbon, SIDE_RING, teamFaction } from './common';
 import { ARTIFACT_BY_ID, RARITY_NAMES } from '../engine/sites';
 import { ARENA_SPELL_PICKS, ARENA_SPELL_POOL, SPELLS, type SpellId } from '../engine/magic';
 
@@ -73,7 +73,7 @@ export function DraftDialog({ state, faction, covered, onReveal, onPick }: { sta
     return (
       <div>
         <Frame crest style={{ width: 'min(560px, 94vw)' }} innerStyle={{ padding: 26, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, textAlign: 'center' }}>
-          <Ribbon side={faction} style={{ width: 'min(420px, 90vw)' }}>Kolej: {FACTION_NAMES[raceOf(state, faction)]}</Ribbon>
+          <Ribbon side={teamFaction(state, faction)} style={{ width: 'min(420px, 90vw)' }}>Kolej: {FACTION_NAMES[raceOf(state, faction)]}</Ribbon>
           <div style={{ fontSize: 19 }}>Skarby są tajne. Przekaż urządzenie graczowi tej strony — drugi gracz niech nie patrzy.</div>
           <button className="btn prim btn-big" data-enter onClick={onReveal} autoFocus>
             Pokaż skarby
@@ -85,7 +85,7 @@ export function DraftDialog({ state, faction, covered, onReveal, onPick }: { sta
   return (
     <div>
       <Frame crest style={{ width: d.offer.length > 3 ? 'min(960px, 96vw)' : 'min(820px, 96vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-        <Ribbon side={faction} style={{ width: 'min(460px, 92vw)' }}>
+        <Ribbon side={teamFaction(state, faction)} style={{ width: 'min(460px, 92vw)' }}>
           Wybierz skarb ({pickNo} z {picksOf(state, faction)})
         </Ribbon>
         <div style={{ fontSize: 16, color: 'var(--muted)', textAlign: 'center' }}>Pozostałe wracają do talii. Przeciwnik nie zobaczy Twoich skarbów, dopóki ich nie użyjesz.</div>
@@ -112,7 +112,7 @@ export function GearDialog({ state, faction, onPick }: { state: GameState; facti
   return (
     <div>
       <Frame crest style={{ width: 'min(820px, 96vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-        <Ribbon side={faction} style={{ width: 'min(460px, 92vw)' }}>Wybierz artefakt bohatera</Ribbon>
+        <Ribbon side={teamFaction(state, faction)} style={{ width: 'min(460px, 92vw)' }}>Wybierz artefakt bohatera</Ribbon>
         <div style={{ fontSize: 16, color: 'var(--muted)', textAlign: 'center' }}>Bohater zakłada go do tej bitwy. Potem wybierzesz mu dwa czary z kręgów I–II.</div>
         <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
           {offer.map((a) => (
@@ -133,13 +133,13 @@ export function GearDialog({ state, faction, onPick }: { state: GameState; facti
 }
 
 /** 6 on 6 arena: the two spells of the hero (battle spells of circles I-II), chosen after the artifact. */
-export function SpellPickDialog({ faction, onPick }: { faction: TeamId; onPick: (spells: SpellId[]) => void }) {
+export function SpellPickDialog({ state, faction, onPick }: { state: GameState; faction: TeamId; onPick: (spells: SpellId[]) => void }) {
   const [chosen, setChosen] = useState<SpellId[]>([]);
   const toggle = (id: SpellId) => setChosen(chosen.includes(id) ? chosen.filter((x) => x !== id) : [...chosen, id].slice(-ARENA_SPELL_PICKS));
   return (
     <div>
       <Frame crest style={{ width: 'min(900px, 96vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-        <Ribbon side={faction} style={{ width: 'min(460px, 92vw)' }}>Wybierz dwa czary bohatera</Ribbon>
+        <Ribbon side={teamFaction(state, faction)} style={{ width: 'min(460px, 92vw)' }}>Wybierz dwa czary bohatera</Ribbon>
         <div style={{ fontSize: 16, color: 'var(--muted)', textAlign: 'center' }}>Zaklęcia rzuca się w bitwie w aktywacji bohatera, za manę. Wybrane: {chosen.length} z {ARENA_SPELL_PICKS}.</div>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
           {ARENA_SPELL_POOL.map((id) => (

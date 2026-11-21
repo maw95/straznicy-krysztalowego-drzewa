@@ -6,6 +6,13 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Centaur, Opiekun Drzewa i Biały Jeleń mają nowe ilustracje i portrety: widać całą głowę i sylwetkę (wcześniej głowa była ucięta albo widać było tylko głowę jelenia).
+- Osiem jednostek ma własne ikony zdolności zamiast pożyczonych: Srebrny Lis, Driada Łuczniczka, Biały Jeleń, Goblin Procarz, Gargulec, Troll Jaskiniowy, Wiwerna Cienia i Behemot Zagłady.
+- Feniks Świtu przy ataku zieje ogniem w cel.
+- Koszary: latające jednostki (Pegaz, Sowa, Feniks, Gargulec, Wiwerna Cienia) w podglądzie grają płynną pętlę: wzbicie się, lot, lądowanie, atak.
+- Gra na siedmiu i ośmiu graczy jest dostępna na każdym poziomie (także Królestwo i Imperium), razem z czwartymi bohaterami frakcji w wyborze.
+- Koszary: ramka z kartami jednostek zajmuje całą wysokość ekranu, a stan złota i przycisk wyjścia są wewnątrz niej, po prawej stronie, więc wszystkie karty po lewej mieszczą się bez przewijania.
+- Wstążki („Wygrywa: …”, nagłówki okien) i ramki portretów bohaterów na ekranie wyboru mają teraz kolor frakcji, a nie miejsca przy stole: każda z dziesięciu frakcji ma własny kolor, więc Przymierze w drugim miejscu nie ma już czerwonej wstążki, a Horda zielonych ramek. Muzyka końca gry gra zawsze, niezależnie od tego, kto wygrał.
 - Wyrównanie frakcji w grze cyfrowej (G2 dla wszystkich dziesięciu): premie Życia i Ataku bohaterów i pomocników zostały dostrojone tak, by średnia wygranych każdej frakcji z pozostałymi mieściła się w 45-55%; Piaski, Rój i Przypływy dostały własne premie.
 - Piorun, który pierwszym wyładowaniem zabija jednostkę z efektem śmierci (np. Purchawkę) i przez to także drugi cel, nie kończy się już błędem.
 - Nurkowanie Orła Stepowego Łowcy ma własną ikonę (orzeł w pikowaniu) zamiast pożyczonej ikony Nurkowania Gryfa.

@@ -1,5 +1,5 @@
 // A unit's animated sprite in a small canvas (the same sheets as the arena): about three seconds of its walk (or flight) loop, a moment of standing, a blow and
-// a moment of recovery, over and over (the melee and the ranged blow one after the other when the unit has both); a unit with no
+// a moment of recovery (a flyer: takeoff, flight, landing, the blow), over and over (the melee and the ranged blow one after the other when the unit has both); a unit with no
 // loop stands still between the blows. With `zoom` the unit is drawn at its size on the arena times that factor (a dragon is bigger than a druid, as in
 // a battle); without it the frame is fitted into the canvas by its width.
 // Used where a unit is shown outside a battle (the barracks screen).
@@ -28,7 +28,7 @@ export function UnitSprite({ unitId, size = 220, height = size, zoom }: { unitId
       if (!live) return;
       setSet(s);
       // Only the clips this screen plays, all at once (the rest of the sheets keep arriving behind them).
-      void s.ensure(['atak', 'atak_wrecz', 'lot', 'chod']).then(() => live && setClips(true));
+      void s.ensure(['atak', 'atak_wrecz', 'lot', 'chod', 'wzbicie']).then(() => live && setClips(true));
     }, () => undefined);
     return () => { live = false; };
   }, [unitId]);
@@ -47,12 +47,21 @@ export function UnitSprite({ unitId, size = 220, height = size, zoom }: { unitId
     // the next round brings the other blow. A unit without a walk stands still for that time.
     const cycle = move ? clipSecs(move) : 0;
     const walkSecs = cycle ? Math.max(1, Math.round(MOVE_SECS / cycle)) * cycle : MOVE_SECS;
+    // A flyer takes off before the flight and lands after it (the takeoff clip played forwards and then backwards, as in the arena), then stands, strikes and recovers.
+    const flies = Boolean(move === 'lot' && set.frames.wzbicie && set.sheets.wzbicie);
+    type Part = { clip: string | null; secs: number; reverse?: boolean };
+    const roundOf = (blow: string | null): Part[] => [
+      ...(flies ? [{ clip: 'wzbicie', secs: clipSecs('wzbicie') }] : []),
+      { clip: move, secs: walkSecs },
+      ...(flies ? [{ clip: 'wzbicie', secs: clipSecs('wzbicie'), reverse: true }] : []),
+      ...(blow ? [{ clip: null, secs: WIND_UP }, { clip: blow, secs: clipSecs(blow) }, { clip: null, secs: RECOVER }] : []),
+    ];
     let raf = 0;
     const t0 = performance.now();
     const draw = (now: number) => {
       g.clearRect(0, 0, size, height);
       const t = (now - t0) / 1000;
-      const lenOf = (blow: string | null) => walkSecs + (blow ? WIND_UP + clipSecs(blow) + RECOVER : 0);
+      const lenOf = (blow: string | null) => roundOf(blow).reduce((sum, x) => sum + x.secs, 0);
       // Which round it is depends on the blows' lengths, so walk through them.
       let rest = t;
       let round = 0;
@@ -65,12 +74,16 @@ export function UnitSprite({ unitId, size = 220, height = size, zoom }: { unitId
       const blow = blows.length ? blows[round % blows.length] : null;
       let clip: string | null = null;
       let at = 0;
-      if (rest < walkSecs) { clip = move; at = rest; }
-      else if (blow && rest >= walkSecs + WIND_UP && rest < walkSecs + WIND_UP + clipSecs(blow)) { clip = blow; at = rest - walkSecs - WIND_UP; }
+      let backwards = false;
+      for (const part of roundOf(blow)) {
+        if (rest < part.secs) { clip = part.clip; at = rest; backwards = Boolean(part.reverse); break; }
+        rest -= part.secs;
+      }
       const sheet = clip ? set.sheets[clip] : undefined;
       if (clip && sheet) {
         const n = set.frames[clip];
-        const i = Math.min(n - 1, Math.floor(at * set.fps * (set.spec.speed[clip] ?? 1)) % Math.max(n, 1));
+        const f = Math.min(n - 1, Math.floor(at * set.fps * (set.spec.speed[clip] ?? 1)) % Math.max(n, 1));
+        const i = backwards ? n - 1 - f : f;
         g.drawImage(sheet, (i % set.cols) * set.frameW, Math.floor(i / set.cols) * set.frameH, set.frameW, set.frameH, (size - dw) / 2, dy, dw, dh);
       } else g.drawImage(set.stoi, (size - dw) / 2, dy, dw, dh);
       raf = requestAnimationFrame(draw);
