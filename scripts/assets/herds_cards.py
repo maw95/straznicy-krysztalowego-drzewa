@@ -11,7 +11,7 @@ KEEP_PORTRAIT = {'indrik', 'satyrPiper'}
 BOX = {
     'greatAurochs': (.19, .05, .80, .88), 'satyrHornlord': (.25, .05, .73, .90), 'windAntelope': (.20, .04, .72, .84), 'thunderRam': (.19, .05, .83, .84),
     'aurochsScout': (.12, .13, .78, .84), 'eagleHunter': (.07, .05, .83, .56), 'planetnik': (.08, .02, .56, .88), 'youngAurochs': (.27, .15, .84, .79),
-    'kulan': (.20, .09, .69, .76), 'steppeArcher': (.30, .04, .66, .87), 'forestBison': (.20, .10, .80, .83), 'steppeLamignat': (.08, .01, .86, .87),
+    'kulan': (.24, .08, .72, .86), 'steppeArcher': (.30, .04, .66, .87), 'forestBison': (.20, .10, .80, .83), 'steppeLamignat': (.08, .01, .86, .87),
     'warRhino': (.17, .15, .73, .78), 'muskOx': (.17, .13, .69, .83), 'arkar': (.17, .12, .75, .80), 'drumElephant': (.27, .08, .73, .82),
     'bullMoose': (.19, .05, .73, .85), 'indrik': (.2, .1, .8, .9), 'satyrPiper': (.3, .05, .7, .9),
 }
