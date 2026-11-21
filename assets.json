@@ -6698,6 +6698,7 @@
     {
       "id": "karty/przekadrowane-portrety-hordy",
       "pliki": [
+        "public/assets/cards/portraits/goblinShaman.jpg",
         "public/assets/cards/portraits/ratman.jpg",
         "public/assets/cards/portraits/goblinSlinger.jpg",
         "public/assets/cards/portraits/gargoyle.jpg",
@@ -6705,8 +6706,8 @@
         "public/assets/cards/portraits/caveTroll.jpg",
         "public/assets/cards/portraits/minotaurChief.jpg"
       ],
-      "typ": "portrety Szczurołaka, Goblina Procarza, Gargulca, Piekielnego Ogara, Trolla Jaskiniowego i Herszta Minotaurów (przekadrowane)",
-      "opis": "Backlog 61g, wariant A, bez kredytów: kwadrat na pełną wysokość istniejącej ilustracji karty, wyśrodkowany na głowie, 256 px; Szczurołak, Ogar i Herszt lekko rozjaśnieni i podbici barwą. Skrypt scripts/assets/horde_portraits.py. Głowa Herszta jest obcięta w samej ilustracji.",
+      "typ": "portrety Goblina Szamana, Szczurołaka, Goblina Procarza, Gargulca, Piekielnego Ogara, Trolla Jaskiniowego i Herszta Minotaurów (szerszy kadr)",
+      "opis": "Backlog 61g, wariant A, bez kredytów: 85% szerokości ilustracji karty, wyśrodkowane, 256 px; puste pasy u góry i u dołu uzupełnia lustrzane odbicie brzegu ilustracji (lekko rozmyte, bez zniekształcenia postaci). Szczurołak, Ogar i Herszt lekko rozjaśnieni i podbici barwą. Skrypt scripts/assets/horde_portraits.py. Głowa Herszta jest obcięta w samej ilustracji.",
       "prompt": "",
       "narzedzie": "skrypt Pillow (scripts/assets/horde_portraits.py)",
       "model": "",
@@ -6728,13 +6729,29 @@
         "public/assets/jednostki/behemot_zaglady/"
       ],
       "typ": "arkusze sprite'ów (stoi, martwy, chód, atak, trafienie, śmierć) dziewięciu jednostek Hordy z lekko podbitymi barwami",
-      "opis": "Backlog 61g, wariant A, bez kredytów: nasycenie x1,12 i jasność x1,06 na kanałach RGB (alfa bez zmian), webp q88. Skrypt scripts/assets/horde_sprites_vivid.py; znacznik .vivid w folderze blokuje drugie uruchomienie.",
+      "opis": "Backlog 61g, wariant A, bez kredytów: nasycenie x1,40 i jasność x1,10 na kanałach RGB (alfa bez zmian), webp q88, liczone zawsze od oryginałów z gita (commit dcd6796^). Skrypt scripts/assets/horde_sprites_vivid.py.",
       "prompt": "",
       "narzedzie": "skrypt Pillow (scripts/assets/horde_sprites_vivid.py)",
       "model": "",
       "data": "2026-11-21",
       "ai": true,
       "licencja": "pochodna grafik z Scenario (plan płatny: pełna licencja komercyjna bez tantiem)"
+    },
+    {
+      "id": "karty/goblin-szaman-nowa-ilustracja",
+      "pliki": [
+        "public/assets/cards/art/goblinShaman.jpg",
+        "public/assets/cards/portraits/goblinShaman.jpg"
+      ],
+      "typ": "ilustracja karty i portret Goblina Szamana (nowy, poważny styl, wzorzec dla pomocników Hordy poziomu 1)",
+      "opis": "Poprzednia wersja była kreskówkowa (jaskrawa zieleń, czerwono-złota szata). Obraz 1008x704 zmniejszony do 640x442; portret z scripts/assets/horde_portraits.py. Jedno podejście, zaakceptowane przez autora 21.11.",
+      "prompt": "Heroic fantasy card illustration in the style of Heroes of Might and Magic III painted art, but darker, grittier and more serious, realistic oil painting, not cartoonish. A goblin shaman of a dark volcanic horde, seen from the waist up in a three-quarter view, the whole head with its pointed hood and both long pointed ears fully visible with empty space above the head, both shoulders in frame. Gaunt, weathered, cunning face with sharp teeth and amber eyes, skin an earthy olive-grey green, a worn pointed hood and robe in deep dark crimson and charcoal with frayed ornamental trim, small bone and tarnished brass charms. He holds a gnarled wooden staff topped with a glowing ember-orange gem and raises his other hand in a curse gesture. Background: a scorched volcanic wasteland with basalt rocks and drifting smoke under a dim ember-lit sky. Rich but slightly muted colours with vivid ember-orange accents as the only bright colour, dramatic warm rim light, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1008x704",
+      "scenario_asset": "asset_gWkzbxuGi8jhcYoze7C7EtqS",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
