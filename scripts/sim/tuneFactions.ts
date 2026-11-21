@@ -38,6 +38,8 @@ const relation = (a: string, b: string): -1 | 0 | 1 => (counters(a, b) && !count
 const dist = (x: number, [lo, hi]: [number, number]) => (x < lo ? lo - x : x > hi ? x - hi : 0);
 // The relative target (the author, 20.11): average of a faction 45-55; a counter wins at least 10 points above its own average, the countered at least 10 below its own;
 // no relation within the average +-7; no pair outside 25-75. A pair counts as met with a tolerance for the measurement error.
+// Ladder step D (the author, 20.11): AVERAGE_ONLY=1 drops the counter relations; only the average of every faction (45-55) and the hard limits 25-75 count.
+const AVERAGE_ONLY = process.env.AVERAGE_ONLY === '1';
 const TOL = Number(process.env.SIM_TOL ?? 4);
 
 const races = PACK_IDS as readonly Race[];
@@ -79,6 +81,7 @@ function pairGap(m: Map<string, number>, a: Race, b: Race): number {
   const ab = avgOf(m, b);
   const rel = relation(a, b);
   let g = dist(x, [25, 75]);
+  if (AVERAGE_ONLY) return g;
   if (rel === 1) g += Math.max(0, aa + 10 - x) + Math.max(0, 100 - x - (ab - 10));
   else if (rel === -1) g += Math.max(0, x - (aa - 10)) + Math.max(0, ab + 10 - (100 - x));
   else g += dist(x, [aa - 7, aa + 7]) + dist(100 - x, [ab - 7, ab + 7]);
@@ -88,7 +91,7 @@ function pairGap(m: Map<string, number>, a: Race, b: Race): number {
 function cost(f: Race, share: Map<string, number>): number {
   let c = 0;
   for (const [a, b] of pairsOf(f)) c += pairGap(share, a, b) ** 2;
-  return c + 3 * dist(avgOf(share, f), [45, 55]) ** 2;
+  return c + (AVERAGE_ONLY ? 12 : 3) * dist(avgOf(share, f), [45, 55]) ** 2;
 }
 
 function summary(m: Map<string, number>) {
