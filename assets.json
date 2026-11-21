@@ -6713,6 +6713,28 @@
       "data": "2026-11-21",
       "ai": true,
       "licencja": "pochodna ilustracji z Scenario (plan płatny: pełna licencja komercyjna bez tantiem)"
+    },
+    {
+      "id": "jednostki/horde-zywsze-barwy",
+      "pliki": [
+        "public/assets/jednostki/szczurolak/",
+        "public/assets/jednostki/piekielny_ogar/",
+        "public/assets/jednostki/salamandra_popiolu/",
+        "public/assets/jednostki/herszt_minotaurow/",
+        "public/assets/jednostki/goblin_procarz/",
+        "public/assets/jednostki/gargulec/",
+        "public/assets/jednostki/troll_jaskiniowy/",
+        "public/assets/jednostki/wiwerna_cienia/",
+        "public/assets/jednostki/behemot_zaglady/"
+      ],
+      "typ": "arkusze sprite'ów (stoi, martwy, chód, atak, trafienie, śmierć) dziewięciu jednostek Hordy z lekko podbitymi barwami",
+      "opis": "Backlog 61g, wariant A, bez kredytów: nasycenie x1,12 i jasność x1,06 na kanałach RGB (alfa bez zmian), webp q88. Skrypt scripts/assets/horde_sprites_vivid.py; znacznik .vivid w folderze blokuje drugie uruchomienie.",
+      "prompt": "",
+      "narzedzie": "skrypt Pillow (scripts/assets/horde_sprites_vivid.py)",
+      "model": "",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "pochodna grafik z Scenario (plan płatny: pełna licencja komercyjna bez tantiem)"
     }
   ]
 }
