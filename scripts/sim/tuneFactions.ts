@@ -147,7 +147,8 @@ for (let sweep = 1; sweep <= 6 && Date.now() < deadline; sweep++) {
     for (const [kind, stat, lo, hi] of STEPS) {
       for (const d of [-1, 1]) {
         const v = bonus[f][kind][stat] + d;
-        if (v < lo || v > hi) continue;
+        // The hero Życie of the Covenant and the Horde must not fall below the card (tests/reports1110: dragons are not killed by one blow).
+        if (v < lo || v > hi || (kind === 'hero' && stat === 'hp' && (f === 'dawn' || f === 'horde') && v < 0)) continue;
         const cand: Bonus = structuredClone(bonus);
         cand[f][kind][stat] = v;
         const m = measure(pairsOf(f), cand);
