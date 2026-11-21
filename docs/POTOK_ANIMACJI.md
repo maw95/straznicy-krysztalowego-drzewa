@@ -76,3 +76,12 @@ ok. 215 z 1500 CU (w tym kilka nieudanych prób i 2 klipy zablokowane filtrem).
 Atak (zionięcie): `asset_Y1RiMpb9834DzTc3aqZ5TjdW` (15 CU, jedna próba). Smok stojący na niebieskim: `asset_2F3Uz19Nd1s3DUPbtBFHFP1k`; martwy: `asset_VcfZ5tSUi7CgFx6hQyR9tm8y`; poza lotu A (skrzydła w górze):
 `asset_M2cndZ3T5VE7p2hFQ1eTrQkt`; wzbicie: `asset_RpGYdAfrRqmiBtfRuUhnWPAm`; lot: `asset_9wWhDweBKfAkRo1MkpdFnMXe`; śmierć:
 `asset_iWH8hy8x76PoBVbEhJ6tf26W`. Lądowanie = wzbicie od tyłu (bez klipu). Licencja: plan płatny, pełna komercyjna (`DECYZJE.md`).
+
+## Fioletowa obwódka po wycięciu tła (21.11.2026)
+
+- Klatki z szybkim ruchem (kula magii, końce skrzydeł) mają po wycięciu niebieskiego tła fioletowo-żółtą obwódkę. Jeśli paleta jednostki nie ma niebieskiego ani fioletu:
+  po `pack_unit.py` uruchom `python3 scripts/animacje/despill_blue.py public/assets/jednostki/<folder>` (przezroczyste stają się piksele z niebieskim wyraźnie ponad zielonym),
+  dopiero potem `shrink_unit.py`. Kolejność: pack → despill → shrink.
+- Martwy: ostatnia klatka klipu śmierci (`ffmpeg -sseof -0.045`), bez osobnego obrazu i bez `lastFrameImage`: 0 CU, bez problemów z filtrem treści.
+- Koszt Szamana, Pająka i Nietoperza w nowej palecie: ok. 236 CU razem (3 obrazy bazowe high po ok. 14, poza stojąca Nietoperza ok. 4, 17 klipów po 10-15).
+
