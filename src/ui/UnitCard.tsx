@@ -103,6 +103,10 @@ const FRAMES: Record<string, FrameLayout> = {
   },
 };
 
+// The Wild Herd's frames are the Covenant's recoloured (ochre), so they share its layout (scripts/assets/herds_frames.py).
+FRAMES.herds_hero = { ...FRAMES.dawn_hero, file: 'herds_hero' };
+FRAMES.herds_support = { ...FRAMES.dawn_support, file: 'herds_support' };
+
 const FRAME_W = 551;
 const SRC_H = 713;
 /** Every card (units and treasures) renders at the same 63:88 proportions. */

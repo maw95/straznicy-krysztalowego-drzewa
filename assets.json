@@ -5651,20 +5651,6 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
-      "id": "herds/zastepcze/crests",
-      "pliki": [
-        "public/assets/cards/crests/herds.png"
-      ],
-      "typ": "herb frakcji (zastępczy)",
-      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
-      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
-      "prompt": "brak",
-      "data": "2026-11-19",
-      "ai": false,
-      "placeholder": true,
-      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
-    },
-    {
       "id": "herds/zastepcze/arena",
       "pliki": [
         "public/assets/arena/cyfrowa/herds.webp"
@@ -6842,6 +6828,22 @@
       },
       "narzedzie": "Scenario (plan płatny)",
       "model": "GPT Image 2.5 Flare, jakość medium, 1008x704 (Indrik i Satyr Dudziarz z portretem jako odniesieniem)",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "herds/herb-i-ramki",
+      "pliki": [
+        "public/assets/cards/crests/herds.png",
+        "public/assets/cards/frames/herds_hero.png",
+        "public/assets/cards/frames/herds_support.png"
+      ],
+      "typ": "herb Dzikiego Stada i ramki kart bohatera i pomocnika (ochra)",
+      "opis": "Herb: sztandar w stylu herbów Przymierza i Hordy (obraz Hordy jako odniesienie stylu), skrzyżowane rogi tura nad odciskiem kopyta, bursztynowy klejnot; wariant 1 z 2 (asset_DTd37Nedf2zt7J1bdK6TfSgq, drugi asset_wKnJGaxgxrMURY4ZanSNaJt7 niewykorzystany), 1024x1024 przycięty do 425x420. Ramki: ramki Przymierza przekolorowane (zieleń na ochrę-brąz, odcień frakcji #B8731E), narożne sztandary zastąpione nowym herbem; układ pól jak u Przymierza (scripts/assets/herds_frames.py, UnitCard.tsx).",
+      "prompt": "Use the reference image only for the style and layout of the heraldic banner (a hanging cloth banner with an ornate golden frame, a golden crossbar with pointed finials, a gem at the top, a pointed bottom, a golden emblem on the cloth). Draw a new banner for the Wild Herd faction of the steppe: the cloth is warm ochre and tawny brown with subtle woven texture, the golden emblem in the centre shows two crossed curved aurochs horns above a cloven hoof print, the gem at the top is amber. Keep the same shape, proportions, golden ornate frame and rich painterly game-icon rendering as the reference. The banner is centred, fully visible, with a plain transparent background, no text.",
+      "narzedzie": "Scenario (plan płatny) + skrypt Pillow",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024, przezroczyste tło, herb Hordy jako odniesienie (asset_89X4q4hfq34hSJoVs3cCXcv8)",
       "data": "2026-11-21",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
