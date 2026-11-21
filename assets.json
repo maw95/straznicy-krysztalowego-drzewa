@@ -6754,15 +6754,17 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
-      "id": "karty/oddalone-procarz-troll",
+      "id": "karty/oddalone-procarz-troll-gargulec",
       "pliki": [
         "public/assets/cards/art/goblinSlinger.jpg",
         "public/assets/cards/portraits/goblinSlinger.jpg",
         "public/assets/cards/art/caveTroll.jpg",
-        "public/assets/cards/portraits/caveTroll.jpg"
+        "public/assets/cards/portraits/caveTroll.jpg",
+        "public/assets/cards/art/gargoyle.jpg",
+        "public/assets/cards/portraits/gargoyle.jpg"
       ],
-      "typ": "nowe ilustracje kart i portrety Goblina Procarza i Trolla Jaskiniowego (cała postać)",
-      "opis": "Autor chciał dalszego kadru niż w pierwotnych portretach; stare ilustracje były same ciasne, więc powstały nowe 1008x704 (zmniejszone do 640x442) z dotychczasową ilustracją jako odniesieniem do wyglądu. Jedno podejście na jednostkę (Procarz: asset_N6gYctho9TfmbdeiL18em5tm, Troll: asset_kdK6NTwBVPSR24f36z3vUqpG), przyjęte.",
+      "typ": "nowe ilustracje kart i portrety Goblina Procarza, Trolla Jaskiniowego i Gargulca (cała postać)",
+      "opis": "Autor chciał dalszego kadru niż w pierwotnych portretach; stare ilustracje były same ciasne, więc powstały nowe 1008x704 (zmniejszone do 640x442) z dotychczasową ilustracją jako odniesieniem do wyglądu. Jedno podejście na jednostkę (Procarz: asset_N6gYctho9TfmbdeiL18em5tm, Troll: asset_kdK6NTwBVPSR24f36z3vUqpG, Gargulec: asset_R5e6vWR14msPtYiUMg3t6EBZ), przyjęte. Portrety to kwadratowe wycinki (Procarz i Troll ok. 3/4 wysokości, Gargulec 85%; scripts/assets/horde_portraits.py).",
       "prompt": "Use the reference image only for the character design. Draw this same <goblin slinger / cave troll> (<opis z poprzedniej ilustracji>) but seen from much farther away: the WHOLE figure is fully visible, occupying about 60% of the frame height, with generous empty space around it. Heroic fantasy card illustration in the style of Heroes of Might and Magic III painted art, darker and more serious, realistic oil painting, not cartoonish. Volcano and lava glow in the background. Rich but slightly muted colours with vivid ember-orange accents, dramatic warm rim light, no text, no frame.",
       "narzedzie": "Scenario (plan płatny)",
       "model": "GPT Image 2.5 Flare, jakość medium, 1008x704, ilustracja karty jako odniesienie",

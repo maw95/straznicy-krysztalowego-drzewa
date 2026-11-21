@@ -7,7 +7,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 ## W przygotowaniu
 
 - Jednostki Hordy poziomów 2-5 i Behemot Zagłady na planszy mają wyraźnie żywsze barwy (były bardzo ciemne i mało czytelne).
-- Portrety pomocników Hordy mają lepszy kadr: Szczurołak, Piekielny Ogar i Herszt Minotaurów jak na pierwotnych portretach, ale jaśniejsi; Goblin Procarz i Troll Jaskiniowy mają nowe ilustracje i portrety z całą postacią; Goblin Szaman ma nową, poważną ilustrację w kolorach Procarza zamiast kreskówkowej.
+- Portrety pomocników Hordy mają lepszy kadr: Szczurołak, Piekielny Ogar i Herszt Minotaurów jak na pierwotnych portretach, ale jaśniejsi; Goblin Procarz, Troll Jaskiniowy i Gargulec mają nowe ilustracje i portrety, na których widać większą część postaci; Goblin Szaman ma nową, poważną ilustrację w kolorach Procarza zamiast kreskówkowej.
 - Balans dziesięciu frakcji: premie cyfrowe dostrojone tak, by każda frakcja wygrywała średnio 45-55% gier z pozostałymi (Przymierze 54%, Kompanie i Przypływy 45%).
 - Zwój Teleportacji rzucony na pole, na którym leży ukryty (zakopany) wróg, nie kończy już gry błędem: wróg wychodzi z ukrycia, nikt się nie przenosi, a zwój zostaje w plecaku.
 - Centaur, Opiekun Drzewa i Biały Jeleń mają nowe ilustracje i portrety: widać całą głowę i sylwetkę (wcześniej głowa była ucięta albo widać było tylko głowę jelenia).

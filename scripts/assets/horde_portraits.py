@@ -9,9 +9,12 @@ from PIL import Image, ImageEnhance, ImageFilter
 # From the card art: unit: (zoom, cx, brightness, colour). zoom = share of the art's width; h/w (0.70) is the full-height square without bands.
 UNITS = {
     'goblinShaman': (0.85, 0.5, 1.0, 1.0),
-    'gargoyle': (0.85, 0.5, 1.0, 1.05),
-    'goblinSlinger': (0.70, 0.5, 1.0, 1.0),  # the art of 21.11: the whole goblin
-    'caveTroll': (0.70, 0.5, 1.0, 1.0),      # the art of 21.11: the whole troll
+}
+# Square crops of the new full-figure art of 21.11: unit: (side as a share of the art's height, cx, cy as shares of width / height, brightness, colour).
+CROPS = {
+    'gargoyle': (0.85, 0.5, 0.55, 1.0, 1.05),
+    'goblinSlinger': (0.75, 0.45, 0.5, 1.0, 1.0),
+    'caveTroll': (0.72, 0.46, 0.5, 1.0, 1.0),
 }
 # Kept as in the first version of the portraits (commit before ff45b0e): the author liked that framing; only light and colour are lifted.
 # unit: (brightness, colour)
@@ -46,6 +49,14 @@ def portrait(art: Image.Image, zoom: float, cx: float) -> Image.Image:
     return canvas
 
 
+def crop_square(art: Image.Image, side: float, cx: float, cy: float) -> Image.Image:
+    w, h = art.size
+    s = round(side * h)
+    left = min(max(round(cx * w - s / 2), 0), w - s)
+    top = min(max(round(cy * h - s / 2), 0), h - s)
+    return art.crop((left, top, left + s, top + s)).resize((S, S), Image.LANCZOS)
+
+
 if __name__ == '__main__':
     import io, subprocess
     out = sys.argv[1] if len(sys.argv) > 1 else 'public/assets/cards/portraits'
@@ -53,6 +64,9 @@ if __name__ == '__main__':
         art = Image.open(f'public/assets/cards/art/{name}.jpg').convert('RGB')
         img = ImageEnhance.Color(ImageEnhance.Brightness(portrait(art, zoom, cx)).enhance(bright)).enhance(colour)
         img.save(f'{out}/{name}.jpg', quality=86)
+    for name, (side, cx, cy, bright, colour) in CROPS.items():
+        art = Image.open(f'public/assets/cards/art/{name}.jpg').convert('RGB')
+        ImageEnhance.Color(ImageEnhance.Brightness(crop_square(art, side, cx, cy)).enhance(bright)).enhance(colour).save(f'{out}/{name}.jpg', quality=86)
     for name, (bright, colour) in FIRST_FRAMING.items():
         src = subprocess.check_output(['git', 'show', f'{FIRST_REV}:public/assets/cards/portraits/{name}.jpg'])
         img = Image.open(io.BytesIO(src)).convert('RGB')
