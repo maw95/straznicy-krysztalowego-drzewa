@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Dzikie Stado ma nowe ilustracje kart i portrety wszystkich 19 jednostek (bohaterowie, dowódcy, pomocnicy i legenda Indrik) w stepowym stylu złotego zmierzchu, zamiast zastępczych liter.
 - Goblin Szaman i Pająk Jaskiniowy mają nowe figurki na planszy i nowe animacje (ruch, atak, trafienie, śmierć), a Nietoperz Cienia dotychczasowe animacje w nowych barwach (grafitowo-brązowe futro, rdzawe skrzydła), zgodne z ich nowymi portretami.
 - Pająk Jaskiniowy i Nietoperz Cienia mają nowe, poważne ilustracje i portrety (ciemny węgiel, rdza i żar zamiast fioletu i jaskrawej czerwieni); ich figurki na planszy mają tę samą paletę.
 - Jednostki Hordy poziomów 2-5 i Behemot Zagłady na planszy mają wyraźnie żywsze barwy (były bardzo ciemne i mało czytelne).
