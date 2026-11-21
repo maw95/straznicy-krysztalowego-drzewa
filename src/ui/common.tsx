@@ -31,7 +31,9 @@ const ABILITY_ART: Record<string, string> = {
   whirl: 'dive', pearlShield: 'guardian', pincers: 'grab', wingBeat: 'nestLeap', livingReef: 'treeRoots', ebbTide: 'web', deepWhirl: 'manyHeads',
   wail: 'curse', viyGaze: 'web', breathAgain: 'giftOfLife', manaReap: 'giftOfLife', graveBreath: 'fireBreath', toll: 'sunburst',
 };
-export const abilityArt = (ability: string) => ABILITY_ART[ability] ?? ability;
+/** Units whose ability has a picture of its own (the same ability on another unit keeps the shared one): `cards/abilities/u_<unit>.png`. */
+export const UNIT_ABILITY_ART: ReadonlySet<string> = new Set(['silverFox', 'dryadArcher', 'whiteStag', 'goblinSlinger', 'gargoyle', 'caveTroll', 'shadowWyvern', 'doomBehemoth']);
+export const abilityArt = (ability: string, unitId?: string) => (unitId && UNIT_ABILITY_ART.has(unitId) ? `u_${unitId}` : ABILITY_ART[ability] ?? ability);
 export const portrait = (unitId: string) => asset(`cards/portraits/${artId(unitId)}.jpg`);
 /** Face of a map tile (one of the art variants, or `art`: the picture of a settlement or an object standing on it), or its green/red back while hidden. */
 export const tileImage = (t: Tile, art?: string) =>

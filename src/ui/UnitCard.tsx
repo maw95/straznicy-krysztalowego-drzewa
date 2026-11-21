@@ -252,7 +252,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false,
 
         {/* A duel card keeps the guardian's medallion (no picture of its own yet). */}
         <img
-          src={asset(`cards/abilities/${abilityArt(def.ability)}_inner.png`)}
+          src={asset(`cards/abilities/${abilityArt(def.ability, def.id)}_inner.png`)}
           alt=""
           style={{ ...circle(L.ability.cx, L.ability.cy, L.ability.r), borderRadius: '50%' }}
         />

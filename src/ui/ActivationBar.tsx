@@ -118,7 +118,7 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
         <div style={{ display: 'flex', gap: 8 }}>
           {attackAbility && (
             <button className={`btn plate parch act-btn ${useAbility ? 'on' : ''}`} style={{ width: 120, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }} onClick={() => setUseAbility(!useAbility)} title={scaleText(abilityTextFor(active.defId, isDigital(state.rules)), state.rules.statScale ?? 1, state.rules.hpScale)}>
-              <img src={asset(`cards/abilities/${abilityArt(abilityOf(active))}.png`)} alt="" style={{ width: 34, height: 34 }} />
+              <img src={asset(`cards/abilities/${abilityArt(abilityOf(active), active.defId)}.png`)} alt="" style={{ width: 34, height: 34 }} />
               <span style={{ fontSize: 13, lineHeight: 1.05, textAlign: 'center' }}>{UNITS[active.defId].abilityName}{useAbility ? ' ✓' : ''}</span>
             </button>
           )}
@@ -129,7 +129,7 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
               title={scaleText(abilityTextFor(active.defId, isDigital(state.rules)), state.rules.statScale ?? 1, state.rules.hpScale)}
               onClick={() => (ab && UNTARGETED_ABILITIES.includes(ab) ? onAction({ type: 'battleAbility' }) : setFreeAbility(!freeAbility))}
             >
-              <img src={asset(`cards/abilities/${abilityArt(abilityOf(active))}.png`)} alt="" style={{ width: 34, height: 34 }} />
+              <img src={asset(`cards/abilities/${abilityArt(abilityOf(active), active.defId)}.png`)} alt="" style={{ width: 34, height: 34 }} />
               <span style={{ fontSize: 13, lineHeight: 1.05, textAlign: 'center' }}>{UNITS[active.defId].abilityName}</span>
             </button>
           )}

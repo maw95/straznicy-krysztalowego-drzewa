@@ -255,7 +255,7 @@ function Milestones({ hero }: { hero: HeroState }) {
               {i > 0 && <span className="milestones-arrow" aria-hidden="true">→</span>}
               <div className={`milestone ${reached ? 'on' : 'off'}`} data-milestone={st.tier} data-reached={reached ? '1' : '0'}>
                 <span className="milestone-icon">
-                  <img src={asset(`cards/abilities/${abilityArt(def.ability)}_inner.png`)} alt="" width={44} height={44} />
+                  <img src={asset(`cards/abilities/${abilityArt(def.ability, def.id)}_inner.png`)} alt="" width={44} height={44} />
                   {st.tier > 0 && <span className="milestone-num">{st.label}</span>}
                 </span>
                 <div className="milestone-text"><b>{st.tier === 0 ? def.abilityName : ''}</b> {text}</div>

@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Osiem jednostek ma własne ikony zdolności zamiast pożyczonych: Srebrny Lis, Driada Łuczniczka, Biały Jeleń, Goblin Procarz, Gargulec, Troll Jaskiniowy, Wiwerna Cienia i Behemot Zagłady.": "Eight units have icons of their own for their abilities instead of borrowed ones: the Silver Fox, the Dryad Archer, the White Stag, the Goblin Slinger, the Gargoyle, the Cave Troll, the Shadow Wyvern and the Doom Behemoth.",
   "Feniks Świtu przy ataku zieje ogniem w cel.": "The Dawn Phoenix breathes fire at its target when it attacks.",
   "Koszary: latające jednostki (Pegaz, Sowa, Feniks, Gargulec, Wiwerna Cienia) w podglądzie grają płynną pętlę: wzbicie się, lot, lądowanie, atak.": "Barracks: the flying units (Pegasus, Owl, Phoenix, Gargoyle, Shadow Wyvern) play a smooth loop in the preview: takeoff, flight, landing, attack.",
   "Gra na siedmiu i ośmiu graczy jest dostępna na każdym poziomie (także Królestwo i Imperium), razem z czwartymi bohaterami frakcji w wyborze.": "Games of seven and eight players are available on every level (the Kingdom and the Empire too), with the fourth heroes of the factions in the choice.",

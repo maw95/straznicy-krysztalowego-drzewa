@@ -6646,6 +6646,35 @@
       "data": "2026-11-21",
       "ai": false,
       "licencja": "pochodna własnych wstążek gry"
+    },
+    {
+      "id": "karty/ikony-zdolnosci-jednostek-21-11",
+      "pliki": [
+        "public/assets/cards/abilities/u_silverFox.png",
+        "public/assets/cards/abilities/u_silverFox_inner.png",
+        "public/assets/cards/abilities/u_dryadArcher.png",
+        "public/assets/cards/abilities/u_dryadArcher_inner.png",
+        "public/assets/cards/abilities/u_whiteStag.png",
+        "public/assets/cards/abilities/u_whiteStag_inner.png",
+        "public/assets/cards/abilities/u_goblinSlinger.png",
+        "public/assets/cards/abilities/u_goblinSlinger_inner.png",
+        "public/assets/cards/abilities/u_gargoyle.png",
+        "public/assets/cards/abilities/u_gargoyle_inner.png",
+        "public/assets/cards/abilities/u_caveTroll.png",
+        "public/assets/cards/abilities/u_caveTroll_inner.png",
+        "public/assets/cards/abilities/u_shadowWyvern.png",
+        "public/assets/cards/abilities/u_shadowWyvern_inner.png",
+        "public/assets/cards/abilities/u_doomBehemoth.png",
+        "public/assets/cards/abilities/u_doomBehemoth_inner.png"
+      ],
+      "typ": "osiem ikon zdolności, po jednej dla Srebrnego Lisa, Driady Łuczniczki, Białego Jelenia, Goblina Procarza, Gargulca, Trolla Jaskiniowego, Wiwerny Cienia i Behemota",
+      "opis": "Symbole 1024x1024 (czerwony neon na ciemnym szkarłacie) wycięte w koło i wstawione w złotą ramkę ikony dive.png (192 px; _inner 160 px) skryptem scripts/assets/ability_icon_glyph.py, paleta 128 kolorów. Po jednym podejściu na ikonę, wszystkie przyjęte (21.11, ok. 24 CU).",
+      "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: <symbol: lis w odskoku / strzała z korzeniami / głowa jelenia z opuszczonym porożem / kamień procy z czaszką i klątwą / kamienne kolce gargulca / pięść trolla z zasklepiającą się raną / ogon wiwerny z żądłem i kroplą jadu / dwa pazurzaste rozdarcia>. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
