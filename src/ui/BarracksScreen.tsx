@@ -2,7 +2,7 @@
 // it (tier 1: the three supports; tiers 2-6: the units, two to choose from at the dwellings), under each card its state and button (recruit, build the
 // dwelling, in the team, shut out). Selecting a card shows the animated sprite of the unit with its numbers and ability on the right.
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { UNITS } from '../engine/data';
 import { DWELLING_COST, DWELLING_NAMES, dwellingOf, dwellingReady, hasUnit, mayRecruit, needsDwelling, recruitsOf, resOf, goldOf, canPay } from '../engine/kingdom';
 import type { TeamId } from '../engine/data';
@@ -15,8 +15,10 @@ import { UnitSprite } from './UnitSprite';
 /** The widest card of the shelf's cards (px, the card's height is 1.29 of it) and the room the sprite stage and the big card on the right take. */
 const CARD_RATIO = 713 / 551;
 const CTL_H = 54;
+/** The height the gold and the way back take at the bottom of the right column. */
+const FOOT_H = 88;
 
-export function BarracksScreen({ state, s, faction, act }: { state: GameState; s: Settlement; faction: TeamId; act: (a: Action) => void }) {
+export function BarracksScreen({ state, s, faction, act, footer }: { state: GameState; s: Settlement; faction: TeamId; act: (a: Action) => void; footer?: ReactNode }) {
   // The sizes follow the room: the shelf has two cards on top of each other at most (the first tier lies in two columns), the cards are as big as they can be.
   const box = useRef<HTMLDivElement>(null);
   const [room, setRoom] = useState({ w: 1300, h: 560 });
@@ -43,7 +45,7 @@ export function BarracksScreen({ state, s, faction, act }: { state: GameState; s
   // A low window (a phone held sideways) keeps only the animated unit on the right: the big card would not fit, and the shelf scrolls.
   const low = room.h < 480;
   const stage = wide ? Math.round(Math.max(low ? 110 : 150, Math.min(room.h * (low ? 0.6 : 0.44), 460))) : Math.round(Math.min(room.w - 40, 240));
-  const bigCard = low || !wide ? 0 : Math.round(Math.max(150, Math.min(380, (room.h - stage - 60 - CTL_H) / CARD_RATIO)));
+  const bigCard = low || !wide ? 0 : Math.round(Math.max(150, Math.min(380, (room.h - stage - 60 - CTL_H - (footer ? FOOT_H : 0)) / CARD_RATIO)));
   const side = wide ? Math.max(bigCard, stage) + 34 : 0;
   // The first tier (three supports) lies in two columns of two rows, or, where the window is tall enough for the bigger cards, in one column of three rows.
   const later = tiers.filter((x) => x > 1).length;
@@ -129,6 +131,7 @@ export function BarracksScreen({ state, s, faction, act }: { state: GameState; s
           {bigCard === 0 && <div className="bk-name">{UNITS[sel.id].name}</div>}
           <div className="bk-ctl bk-ctl-side" style={{ width: bigCard > 0 ? bigCard + 2 : Math.min(side || room.w - 40, 280) }}>{control(sel)}</div>
           <div className="bk-tier-line">{s.name} · poziom {sel.tier}{needsDwelling(state, sel) ? ` · ${DWELLING_NAMES[sel.id]}` : ''}</div>
+          {footer && <div className="bk-footer">{footer}</div>}
         </div>
       </div>
     </div>
