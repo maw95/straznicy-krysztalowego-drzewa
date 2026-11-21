@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Koszary: latające jednostki (Pegaz, Sowa, Feniks, Gargulec, Wiwerna Cienia) w podglądzie grają płynną pętlę: wzbicie się, lot, lądowanie, atak.
 - Gra na siedmiu i ośmiu graczy jest dostępna na każdym poziomie (także Królestwo i Imperium), razem z czwartymi bohaterami frakcji w wyborze.
 - Koszary: ramka z kartami jednostek zajmuje całą wysokość ekranu, a stan złota i przycisk wyjścia są wewnątrz niej, po prawej stronie, więc wszystkie karty po lewej mieszczą się bez przewijania.
 - Wstążki („Wygrywa: …”, nagłówki okien) i ramki portretów bohaterów na ekranie wyboru mają teraz kolor frakcji, a nie miejsca przy stole: każda z dziesięciu frakcji ma własny kolor, więc Przymierze w drugim miejscu nie ma już czerwonej wstążki, a Horda zielonych ramek. Muzyka końca gry gra zawsze, niezależnie od tego, kto wygrał.
