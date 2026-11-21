@@ -279,7 +279,7 @@ describe('Kamień Tętentu, Wielkie Pastwiska, Ostoja Wędrówek', () => {
     const hero = Object.values(s.heroes).find((h) => h.faction === 'dawn')!;
     const ours = Object.values(s.kingdom!.settlements).filter((x) => x.owner === 'dawn');
     // a second own settlement
-    const spot = Object.values(s.tiles).find((t) => !t.home && !t.place && !t.crystalId && !t.treasureId && t.terrain === 'meadow')!;
+    const spot = Object.values(s.tiles).find((t) => !t.home && !t.place && !t.crystalId && !t.treasureId && (t.terrain === 'meadow' || t.terrain === 'steppe'))!;
     const other = { ...structuredClone(ours[0]), id: 'extra', at: spot.key, name: 'Wodopój', buildings: { ...ours[0].buildings } };
     s.kingdom!.settlements.extra = other;
     ours[0].buildings.refuge = 1;

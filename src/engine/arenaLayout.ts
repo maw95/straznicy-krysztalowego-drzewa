@@ -129,16 +129,16 @@ export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
     { art: 'crystals', cells: [[6, 2]] },
     { art: 'totem', cells: [[10, 5]] },
   ],
-  // Placeholder (docs/BACKLOG.md 2a): the pictures of Przymierze's arena in another order; the Herds want their own steppe with many boulders.
+  // The steppe of the Herds: standing stones, cairns and boulders (public/assets/arena/cyfrowa).
   herds: [
-    { art: 'ridge', cells: [[3, 1], [4, 1]] },
-    { art: 'log', cells: [[8, 6], [8, 7]] },
-    { art: 'wall', cells: [[5, 4], [6, 4]] },
-    { art: 'boulders', cells: [[9, 2]] },
-    { art: 'pine', cells: [[3, 6]] },
-    { art: 'ruin', cells: [[10, 5]] },
-    { art: 'statue', cells: [[7, 1]] },
-    { art: 'brambles', cells: [[6, 7]] },
+    { art: 'rockledge', cells: [[3, 1], [4, 1]] },
+    { art: 'stonecircle', cells: [[8, 6], [8, 7]] },
+    { art: 'boulderfield', cells: [[5, 4], [6, 4]] },
+    { art: 'menhir', cells: [[9, 2]] },
+    { art: 'cairn', cells: [[3, 6]] },
+    { art: 'grasstuft', cells: [[10, 5]] },
+    { art: 'thornbush', cells: [[7, 1]] },
+    { art: 'boulders', cells: [[6, 7]] },
   ],
   // Placeholder (docs/BACKLOG.md 2a): barrows in the mist want their own arena (mounds, crooked birches, stone lanterns); until then the pictures of Przymierze, rearranged.
   undead: [

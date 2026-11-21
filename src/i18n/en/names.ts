@@ -20,7 +20,7 @@ register({
   'Buty Wiatru': 'Boots of the Wind', 'Klepsydra Czasu': 'Hourglass of Time', 'Eliksir Mocy': 'Elixir of Might', 'Runa Ochrony': 'Rune of Protection', 'Polana Przymierza': 'Covenant Glade',
   'Las Przymierza': 'Covenant Forest', 'Rzeka': 'River', 'Most': 'Bridge', 'Spalona Ziemia': 'Scorched Earth', 'Mroczne Bagno': 'Dark Swamp', 'Mroczna Jaskinia': 'Dark Cave',
   'Ponure Ruiny': 'Grim Ruins', 'Woda': 'Water', 'Baza Mrocznej Hordy': 'Dark Horde Base', 'Jaskinia Cyklopa': "Cyclops' Cave", 'Gryfie Gniazdo': "Griffin's Nest", 'Hydrzy Staw': "Hydra's Pond",
-  'Skarbiec Przymierza': 'Covenant Treasury', 'Skarbiec Hordy': 'Horde Treasury', 'Ogromna': 'Huge', 'Gigantyczna': 'Giant', 'Okno skrzyni': 'Chest window', 'Tartak': 'Sawmill',
+  'Skarbiec Przymierza': 'Covenant Treasury', 'Skarbiec Hordy': 'Horde Treasury', 'Skarbiec Stada': 'Herd Treasury', 'Step Dzikiego Stada': 'Wild Herd Steppe', 'Obozowisko Dzikiego Stada': 'Wild Herd Camp', 'Ogromna': 'Huge', 'Gigantyczna': 'Giant', 'Okno skrzyni': 'Chest window', 'Tartak': 'Sawmill',
   'Kopalnia rudy': 'Ore Mine', 'Sanktuarium Pierwotnej Iskry': 'Sanctuary of the Primal Spark', 'Wilcze Legowisko': 'Wolf Den', 'Wszyscy bohaterowie Przymierza polegli.': "All the Covenant's heroes have fallen.",
   'Nieznana akcja.': 'Unknown action.', 'Kapliczka': 'Shrine', 'Skrzynia': 'Chest', 'Wyspy': 'Islands',
   // skills and hero types

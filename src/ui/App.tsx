@@ -1,4 +1,4 @@
-import { raceOf, sideName, teamsOf } from '../engine/teams';
+import { assignSlots, raceOf, sideName, teamsOf } from '../engine/teams';
 import { StatText } from './markers';
 import { scenarioOf } from '../engine/campaign';
 import { CampaignOver } from './CampaignScreen';
@@ -8,7 +8,7 @@ import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { heroLabel } from '../engine/realm';
 import { chooseAction } from '../engine/ai';
 import { describeAction } from './hint';
-import { FACTION_NAMES, UNITS, type TeamId, type ItemKind } from '../engine/data';
+import { FACTION_HEROES, FACTION_NAMES, UNITS, type TeamId, type ItemKind } from '../engine/data';
 import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
 import { redactHidden } from '../engine/hidden';
 import { hideOwnTraps, trapSecrecyOn, trapVeilFor } from './trapVeil';
@@ -60,6 +60,14 @@ import { useOnline } from '../online/useOnline';
 
 /** Milliseconds between two bot moves at each pace. */
 const SPEEDS: Record<BotSpeed, number> = { wolno: 900, normalnie: 450, szybko: 120 };
+
+/** Test hook: ?races=herds,horde (with mode=pvp, human seats) puts these races at the table, e.g. to look at the graphics of a new faction. */
+function racesSeats(q: URLSearchParams) {
+  const races = (q.get('races') ?? '').split(',').filter((r) => r in FACTION_HEROES);
+  if (q.get('mode') !== 'pvp' || races.length < 2) return null;
+  const slots = assignSlots(races as never);
+  return races.map((race, i) => ({ name: `G${i + 1}`, faction: slots[i], race, controller: 'human' as const, heroId: (FACTION_HEROES as Record<string, string[]>)[race][0] })) as never;
+}
 
 export function App() {
   const [game, setGame] = useState<GameState | null>(null);
@@ -177,10 +185,10 @@ export function App() {
       seed: Number(q.get('seed') ?? 1),
       // ?abilities=0&treasures=0 switch simplifications on, ?dice=1 the die, ?objective=control the control points goal.
       rules: { ...DEFAULT_RULES, abilities: q.get('abilities') !== '0', treasures: q.get('treasures') !== '0', useDice: q.get('dice') === '1', ...(['growth', 'kingdom', 'economy', 'realm', 'empire'].some((k) => q.get(k) === '1') ? { heroGrowth: true } : {}), ...(['kingdom', 'economy', 'realm', 'empire'].some((k) => q.get(k) === '1') ? { kingdom: true } : {}), ...(q.get('economy') === '1' || q.get('realm') === '1' || q.get('empire') === '1' ? { economy: true } : {}), ...(q.get('realm') === '1' || q.get('empire') === '1' ? { realm: true } : {}), ...(q.get('empire') === '1' ? { empire: true } : {}), ...(q.get('ruleset') !== 'board' ? { ruleset: 'digital' as const } : {}), ...(['control', 'survival', 'boss', 'artifact', 'conquest', 'relic'].includes(q.get('objective') ?? '') ? { objective: q.get('objective') as 'control' | 'survival' | 'boss' | 'artifact' | 'conquest' | 'relic' } : {}) },
-      seats:
-        mode === 'coop'
+      seats: racesSeats(q) ??
+        (mode === 'coop'
           ? [{ name: 'Gracz 1', faction: 'dawn' as const, controller: human ? ('human' as const) : ('bot' as const), heroId: q.get('hero') ?? 'goldDragon', ...(q.get('child') === '1' ? { child: true } : {}) }, { name: 'Gracz 2', faction: 'dawn' as const, controller: 'bot' as const, heroId: 'unicornKing' }].slice(0, Number(q.get('players') ?? 2))
-          : [{ name: 'Ala', faction: 'dawn', controller: 'human', heroId: 'ancientBear' }, { name: 'Bartek', faction: 'horde', controller: 'human', heroId: 'werewolfLord' }, ...(Number(q.get('sides')) >= 3 ? [{ name: 'Bot 3', faction: 'third' as const, controller: 'bot' as const, heroId: 'unicornKing' }] : []), ...(Number(q.get('sides')) >= 4 ? [{ name: 'Bot 4', faction: 'fourth' as const, controller: 'bot' as const, heroId: 'blackDragon' }] : [])],
+          : [{ name: 'Ala', faction: 'dawn', controller: 'human', heroId: 'ancientBear' }, { name: 'Bartek', faction: 'horde', controller: 'human', heroId: 'werewolfLord' }, ...(Number(q.get('sides')) >= 3 ? [{ name: 'Bot 3', faction: 'third' as const, controller: 'bot' as const, heroId: 'unicornKing' }] : []), ...(Number(q.get('sides')) >= 4 ? [{ name: 'Bot 4', faction: 'fourth' as const, controller: 'bot' as const, heroId: 'blackDragon' }] : [])]),
     });
     // ?skills=treasureHunter,treasureHunter gives every hero those skills from the start (for looking at their dialogs).
     if (q.get('skills')) for (const h of Object.values(s.heroes)) h.skills = q.get('skills')!.split(',') as SkillId[];

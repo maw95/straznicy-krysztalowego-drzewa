@@ -5651,20 +5651,6 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
-      "id": "herds/zastepcze/arena",
-      "pliki": [
-        "public/assets/arena/cyfrowa/herds.webp"
-      ],
-      "typ": "arena frakcji (zastępcza)",
-      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
-      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
-      "prompt": "brak",
-      "data": "2026-11-19",
-      "ai": false,
-      "placeholder": true,
-      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
-    },
-    {
       "id": "undead/zastepcze/art",
       "pliki": [
         "public/assets/cards/art/vampire.jpg",
@@ -7067,6 +7053,84 @@
       "scenario_asset": "asset_PQQEeFuSBg81qFDBge337B7c",
       "prompt": "Square game ability icon, glowing red neon line-art glyph on a dark crimson background: a huge cloven hoof stamping the ground, with radiating cracks in the earth, flying stones and concentric shockwave rings spreading outward. Bold simple readable silhouette, centered, no text, no frame.",
       "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "herds/arena",
+      "pliki": [
+        "public/assets/arena/cyfrowa/herds.webp",
+        "public/assets/arena/cyfrowa/rockledge.webp",
+        "public/assets/arena/cyfrowa/stonecircle.webp",
+        "public/assets/arena/cyfrowa/boulderfield.webp",
+        "public/assets/arena/cyfrowa/menhir.webp",
+        "public/assets/arena/cyfrowa/cairn.webp",
+        "public/assets/arena/cyfrowa/thornbush.webp",
+        "public/assets/arena/cyfrowa/grasstuft.webp"
+      ],
+      "typ": "arena cyfrowa Dzikiego Stada (step) i 7 jej przeszkód",
+      "opis": "Tło 1536x1024 (czysta płyta pod planszą: scripts/assets/arena_cyfrowa.clean_plate) i przeszkody 768x768 na przezroczystym tle zmniejszone do webp (scripts/assets/herds_map.py). Układ przeszkód: WIDE_OBSTACLES.herds w arenaLayout.ts (te same pola co dotąd, rozmieszczenie sprawdzają testy). Przeszkoda boulders z areny Przymierza. Jedno podejście na obraz.",
+      "scenario_asset": {
+        "arena_raw": "asset_jbtJnnDNhhbWQFJvEcdjjC8e",
+        "rockledge": "asset_zszJrfPksUGZPoE8ZTeG4Vpw",
+        "stonecircle": "asset_Kpf2fjDnrNTc6gXZ1hdzimyo",
+        "boulderfield": "asset_tEt2aaN4PmJm8ygzZfd2ksR5",
+        "menhir": "asset_1y97nFE2mYcMnn33aABBoC95",
+        "cairn": "asset_QFfAA8mc5exi9Pcq9gnHRLf5",
+        "thornbush": "asset_tc8gHpBNQ1mzjFDvHXzA8m7K",
+        "grasstuft": "asset_agz1gFHjxLBXikfqTTcxQRSm"
+      },
+      "prompt": "Tło: Top-down view of an empty steppe battlefield arena background for a turn-based strategy game, in the painterly style of Heroes of Might and Magic 3 battle backgrounds. The centre of the image is a wide, calm, open stretch of flat dry steppe: short tawny and ochre grass with a few faint bare patches of earth, very even and uncluttered so a game grid can be drawn on it. Around the edges a natural frame: ancient weathered standing stones and boulders, low rocky outcrops, tall golden grass tufts, a distant ridge of hills along the top edge under a dusty golden sky, a dry stream bed with a few stones at the bottom edge. Warm ochre and tawny palette, golden-hour light, light dust haze, rich but slightly muted colours. Absolutely no grid, no hexagons, no lines, no UI, no text, no characters, no units, no objects in the central 70% of the image. Przeszkody: <opis>, game obstacle sprite for a turn-based strategy game on a steppe, seen from a slightly raised three-quarter front view, centred, filling about 85% of the frame width, resting on the ground, painterly realistic style, warm ochre and tawny colours with golden-hour light, soft contact shadow only directly beneath. Isolated on a fully transparent background, no ground plane, no text.",
+      "opisy_przeszkod": {
+        "rockledge": "a long low outcrop of weathered sandstone rock with tufts of dry grass along its base, wide and low",
+        "stonecircle": "a small ring of five weathered standing stones with a flat altar stone in the middle and a red cloth ribbon tied to one stone, wide and low",
+        "boulderfield": "a wide cluster of large rounded grey-brown boulders of varying sizes with dry yellow grass between them",
+        "menhir": "a single tall weathered standing stone (menhir) with faint carved spiral markings and a red cloth ribbon tied around it",
+        "cairn": "a tall cairn of stacked flat stones topped with a bleached aurochs skull with long curved horns and a red cloth ribbon",
+        "thornbush": "a dense dry thornbush with tangled grey-brown branches, long thorns and sparse yellow leaves",
+        "grasstuft": "a big clump of tall dry golden feather grass growing around a half-buried flat boulder, with a few red-brown seed heads"
+      },
+      "narzedzie": "Scenario (plan płatny) + skrypt Pillow",
+      "model": "GPT Image 2.5 Flare: tło 1536x1024 jakość high; przeszkody 768x768 medium, przezroczyste tło",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "herds/kafle-mapy",
+      "pliki": [
+        "public/assets/tiles/steppe_1.jpg",
+        "public/assets/tiles/steppe_2.jpg",
+        "public/assets/tiles/steppe_3.jpg",
+        "public/assets/tiles/steppe_4.jpg",
+        "public/assets/tiles/baseHerds_1.jpg",
+        "public/assets/tiles/treasureHerds_1.jpg",
+        "public/assets/tiles/treasureHerds_2.jpg"
+      ],
+      "typ": "kafle mapy Dzikiego Stada: step (4 warianty), obozowisko (baza), skarbiec (2 warianty)",
+      "opis": "Obrazy 1024x1024 przycięte do sześciokąta 260x300 i włożone w ramkę istniejącego kafla (meadow_1.jpg), żeby wszystkie kafle miały tę samą obwódkę (scripts/assets/herds_map.py). Nowe typy terenu steppe, baseHerds, treasureHerds w data.ts; reszta terenu (wzgórza, rzeki, mosty, góry, przepaście) wspólna z Przymierzem. Rewers kafla i kafel osady zostają wspólne (zależą od strony stołu, nie frakcji).",
+      "scenario_asset": {
+        "steppe_1": "asset_bTtU4pbgKHsKXTWEJ9SEp2rZ",
+        "steppe_2": "asset_azMsx8FGQ9UXwUjEBC6Y1RR6",
+        "steppe_3": "asset_JoPa73jXusu1eNRULxXawfrL",
+        "steppe_4": "asset_iFDZjYPTdK7oGKxiKC54eNgD",
+        "baseHerds_1": "asset_wDAdrVdT2xLPeYo5Hp3ZBn3V",
+        "treasureHerds_1": "asset_4WfWTCvS6Tnbj9bwtSWZVASy",
+        "treasureHerds_2": "asset_YF71TXEo6fM3gViNme7cQvMC"
+      },
+      "prompt": "Isometric three-quarter top-down fantasy strategy map tile illustration, painterly and richly detailed in the style of Heroes of Might and Magic III adventure map tiles: <opis kafla>, warm golden-hour light, tawny and ochre palette with muted green. The scene fills the whole square image edge to edge, no border, no frame, no text, no characters.",
+      "opisy_kafli": {
+        "steppe_1": "an open steppe of rolling golden dry grass with a loose circle of weathered standing stones in the middle and a few wildflowers",
+        "steppe_2": "an open steppe with tall dry golden grass crossed by a worn dirt trail, a lone wooden signpost hung with a pair of horns and red ribbons beside the trail",
+        "steppe_3": "an open steppe of tall swaying feather grass with scattered red and yellow wildflowers and a small distant herd of wild horses grazing",
+        "steppe_4": "an open steppe with dry golden grass, a few flat rocks, a dry shrub and a small shallow waterhole fringed with reeds",
+        "baseHerds_1": "the home camp of a nomad herd on the steppe: round hide tents with horn-topped poles, tall red banners, a great painted war drum, aurochs skulls on stakes, a low fence of upright horns, standing stones and a stone altar",
+        "treasureHerds_1": "a wooden treasure chest bound with bronze half hidden in tall steppe grass beside a standing stone ringed with offerings of horns and red ribbons, gold coins spilling out",
+        "treasureHerds_2": "an open iron-bound treasure chest with gold and gems set on a flat stone slab in the middle of a stone circle on the steppe, a bleached aurochs skull with red ribbon beside it"
+      },
+      "narzedzie": "Scenario (plan płatny) + skrypt Pillow",
       "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
       "data": "2026-11-21",
       "ai": true,

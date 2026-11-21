@@ -15,8 +15,8 @@ export const HERDS: FactionPack = {
   short: 'Stado',
   genitive: 'Stada',
   lead: 'dłużej miało',
-  // No steppe tiles yet: the Herds borrow the meadow of Przymierze (placeholder, docs/BACKLOG.md 2a).
-  terrain: { base: 'baseDawn', land: 'meadow', treasure: 'treasureDawn', wall: 'chasm' },
-  tiles: ['meadow', 'barren', 'hill', 'river', 'bridge', 'mountain', 'chasm'],
+  // The steppe, the camp and the treasury have tiles of their own; the other ground (hills, rivers, bridges, mountains, chasms) is shared with Przymierze.
+  terrain: { base: 'baseHerds', land: 'steppe', treasure: 'treasureHerds', wall: 'chasm' },
+  tiles: ['steppe', 'barren', 'hill', 'river', 'bridge', 'mountain', 'chasm'],
   settlementNames: ['Tętniący Bród', 'Rogaty Kamień', 'Turza Polana', 'Kopytnik', 'Wichrowy Step', 'Żubrza Ostoja', 'Pyłowy Szlak', 'Grzmiący Jar', 'Słone Lizawisko', 'Dudniąca Dolina', 'Wodopój Trzech Rogów', 'Trawiaste Morze'],
 };
