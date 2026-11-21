@@ -15,6 +15,8 @@ CROPS = {
     'gargoyle': (0.85, 0.5, 0.55, 1.0, 1.05),
     'goblinSlinger': (0.75, 0.45, 0.5, 1.0, 1.0),
     'caveTroll': (0.72, 0.46, 0.5, 1.0, 1.0),
+    'caveSpider': (0.95, 0.45, 0.5, 1.0, 1.0),
+    'shadowBat': (1.0, 0.57, 0.5, 1.0, 1.0),
 }
 # Kept as in the first version of the portraits (commit before ff45b0e): the author liked that framing; only light and colour are lifted.
 # unit: (brightness, colour)

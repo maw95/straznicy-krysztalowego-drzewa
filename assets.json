@@ -6771,6 +6771,23 @@
       "data": "2026-11-21",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/pajak-nietoperz-nowy-styl",
+      "pliki": [
+        "public/assets/cards/art/caveSpider.jpg",
+        "public/assets/cards/portraits/caveSpider.jpg",
+        "public/assets/cards/art/shadowBat.jpg",
+        "public/assets/cards/portraits/shadowBat.jpg"
+      ],
+      "typ": "ilustracje kart i portrety Pająka Jaskiniowego i Nietoperza Cienia (poważna paleta, cała postać)",
+      "opis": "Poprzednie wersje były kreskówkowe (fiolet, jaskrawa czerwień, zieleń). Nowe 1008x704 (zmniejszone do 640x442), dotychczasowa ilustracja jako odniesienie tylko do kształtu stworzenia. Jedno podejście na jednostkę (Pająk: asset_qokwXi2C6jktUx2M4dEqALM1, Nietoperz: asset_SNi1Me9LBx42Q2Jz8wgHj8vk), przyjęte. Portrety: kwadratowe wycinki (scripts/assets/horde_portraits.py). Sprite'y obu jednostek są jeszcze w starej palecie.",
+      "prompt": "Use the reference image only for the creature's shape (<opis stworzenia>). Redraw it in a serious, grim palette: <węgiel, rdza, ciemny brąz, żarzące się oczy w kolorze żaru; bez fioletu i jaskrawej czerwieni>. The WHOLE creature is fully visible, occupying about 60% of the frame height, with generous empty space around it. Heroic fantasy card illustration in the style of Heroes of Might and Magic III painted art, darker and more serious, realistic oil painting, not cartoonish. Scorched volcanic background. Rich but slightly muted colours with vivid ember-orange accents as the only bright colour, dramatic warm rim light, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1008x704, ilustracja karty jako odniesienie",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
