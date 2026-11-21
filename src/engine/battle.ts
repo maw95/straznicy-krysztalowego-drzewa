@@ -3101,7 +3101,9 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
     const { args } = use;
     const ids = [...new Set(args.targetIds ?? (args.targetId ? [args.targetId] : []))].slice(0, ITEM_EFFECT.lightningTargets);
     if (!ids.length) throw new Error('Wybierz do dwóch wrogów.');
-    for (const id of ids) dealDamage(use.state, enemyUnit(use, id), ITEM_EFFECT.lightningDamage * scaleOf(use.state), use.name);
+    // All the targets are checked before the first bolt: the first one may kill the second (a death effect), and that is no error.
+    const targets = ids.map((id) => enemyUnit(use, id));
+    for (const t of targets) if (t.alive) dealDamage(use.state, t, ITEM_EFFECT.lightningDamage * scaleOf(use.state), use.name);
   },
   sword: (use) => void (ownLiving(use, use.args.targetId).status.battleAttackBonus += ITEM_EFFECT.swordAttack * scaleOf(use.state)),
   shield: (use) => void (ownLiving(use, use.args.targetId).status.shieldArmed = true),

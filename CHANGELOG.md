@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Piorun, który pierwszym wyładowaniem zabija jednostkę z efektem śmierci (np. Purchawkę) i przez to także drugi cel, nie kończy się już błędem.
 - Nurkowanie Orła Stepowego Łowcy ma własną ikonę (orzeł w pikowaniu) zamiast pożyczonej ikony Nurkowania Gryfa.
 - Spowolnienie i zimno skracają teraz także zdolności ruchowe jednostek: odskok (Pegaz, Lis, Centaur, Wydra), Szalony Skok Żbiczki i teleport (Podkop, Król Burzy) są krótsze o tyle, o ile spowolniona jednostka straciła Szybkości, a unieruchomiona nie odskakuje ani się nie teleportuje.
 - Zakopana Królowa Skorpionów (i inni ukryci wrogowie) zostaje ujawniona, gdy ktoś wpadnie na nią po drodze; wcześniej taki ruch kończył się błędem (bot, który jej nie widzi, planował drogę przez jej pole).
