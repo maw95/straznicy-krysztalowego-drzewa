@@ -90,6 +90,27 @@ export const SPRITES: Record<string, SpriteSpec> = {
   gargoyle: { dir: 'jednostki/gargulec', box: [92, 96] as const, corpseMax: CORPSE_MAX_W, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   caveTroll: { dir: 'jednostki/troll_jaskiniowy', box: [92, 100] as const, corpseMax: CORPSE_MAX_W, speed: {} },
   shadowWyvern: { dir: 'jednostki/wiwerna_cienia', box: [160, 130] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  // Wild Herd (backlog 61g, G4 phase 5): all nineteen units with a full set of clips. Two-hex: greatAurochs, steppeLamignat (flies),
+  // warRhino, drumElephant, bullMoose, indrik. The flyers (eagleHunter, steppeLamignat) stand hovering, so no take-off clip.
+  greatAurochs: { dir: 'jednostki/tur_olbrzymi', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  satyrHornlord: { dir: 'jednostki/satyr_rogoglos', box: [70, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  windAntelope: { dir: 'jednostki/antylopa_wiatru', box: [86, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  thunderRam: { dir: 'jednostki/baran_gromu', box: [88, 84] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  aurochsScout: { dir: 'jednostki/tur_zwiadowca', box: [88, 76] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  eagleHunter: { dir: 'jednostki/orzel_lowca', box: [100, 88] as const, corpseMax: CORPSE_MAX_W, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  planetnik: { dir: 'jednostki/planetnik', box: [70, 108] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  satyrPiper: { dir: 'jednostki/satyr_dudziarz', box: [66, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  youngAurochs: { dir: 'jednostki/mlody_tur', box: [88, 70] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  kulan: { dir: 'jednostki/kulan', box: [88, 84] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  steppeArcher: { dir: 'jednostki/lucznik_stepowy', box: [88, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  forestBison: { dir: 'jednostki/zubr_lesny', box: [92, 80] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  steppeLamignat: { dir: 'jednostki/lamignat_stepowy', box: [150, 124] as const, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  warRhino: { dir: 'jednostki/nosorozec_bojowy', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  muskOx: { dir: 'jednostki/wol_pizmowy', box: [92, 78] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  arkar: { dir: 'jednostki/arkar', box: [90, 80] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  drumElephant: { dir: 'jednostki/slon_bebniarz', box: [170, 140] as const, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  bullMoose: { dir: 'jednostki/los_byk', box: [150, 130] as const, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  indrik: { dir: 'jednostki/indrik', box: [150, 130] as const, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
 };
 
 /** Whether the unit is drawn from sprites in the digital ruleset (otherwise: 3D figure or portrait token). */

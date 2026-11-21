@@ -7244,6 +7244,157 @@
       "data": "2026-11-21",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "herds/sprity",
+      "pliki": [],
+      "typ": "animowane sprite'y 19 jednostek Dzikiego Stada (stoi, martwy, chód lub lot, atak, śmierć, trafienie)",
+      "opis": "Obraz bazowy 1024x1024 na niebieskim tle (odniesienie: ilustracja karty), cztery klipy na jednostkę (3 s, trafienie 2 s), klatka końcowa śmierci jako martwy; pakowanie pack_unit.py (512 px), despill_blue.py, shrink_unit.py (0,75, co druga klatka). Latające (orzeł, łamignat) stoją w zawisie. Kod: src/ui/sprites.ts. Jeden klip łucznika (śmierć) ponowiony po blokadzie filtra.",
+      "scenario_asset": {
+        "stoi": {
+          "greatAurochs": "asset_fnuw2YerLsp1P3M9zVSP9WzX",
+          "satyrHornlord": "asset_nMuqQx1BCZk6W4Agsu9b5XYD",
+          "windAntelope": "asset_BXWxMawqe2kFJHdQ3PE6z4x2",
+          "thunderRam": "asset_UFTd7KbDgFGoD2Z7pHhv782x",
+          "aurochsScout": "asset_LMphigDQhr1hiTHNKRNoQDRz",
+          "eagleHunter": "asset_ubcacXgkrV7GH7tUuEc8wwst",
+          "planetnik": "asset_Ec6Uv5eYpXzb6qh5S4uBdetS",
+          "satyrPiper": "asset_NSM1Ab2PPDBSJtqkBzuvzQUg",
+          "youngAurochs": "asset_ahpbvQVtDdSwscrQRn12LwsN",
+          "kulan": "asset_Vdy7yYVp119CrZ5oGqmCZ5fk",
+          "steppeArcher": "asset_XBYfWnmFtjKAS5NkLP6U3cFX",
+          "forestBison": "asset_ydxrRcvVNoCRtDxHbVSDLvmP",
+          "steppeLamignat": "asset_1QWWssmXTGsiroqAcGVQNWFj",
+          "warRhino": "asset_iuRuJFGY9e7255G2d7w68BvZ",
+          "muskOx": "asset_p1PS9UN5erXZcNbMzijxBFMy",
+          "arkar": "asset_vbDALf9VmDF5upteL1nonjcs",
+          "drumElephant": "asset_o78aVWVZ6xBR76fFH53HLhP2",
+          "bullMoose": "asset_SnKZv8rAJrp7k7gXh6Wn7P2M",
+          "indrik": "asset_UbkVF8SREKEDDAdNL2DyM1rY"
+        },
+        "klipy": {
+          "greatAurochs": {
+            "chod": "asset_D9TYBUdXjrm9ViyhUr59wpjL",
+            "atak": "asset_FTFF5Ex2X9USAMnKWWMCi71Q",
+            "smierc": "asset_u1dPpj9QAWTYNnw4Esd3Parw",
+            "trafienie": "asset_h4DkpwnLpCK5qnpEZfP8HDJX"
+          },
+          "satyrHornlord": {
+            "chod": "asset_4AyHEzmG3sSqSX44GP2Ue8Ab",
+            "atak": "asset_XL6KBwWpAoCGixtLBsiZYfyT",
+            "smierc": "asset_8fbPXg5AR58hgSesgwPyVMFo",
+            "trafienie": "asset_uKDexxdhKsqctdbnvw2fMDfP"
+          },
+          "windAntelope": {
+            "chod": "asset_Qm17ZC1ut5MG3WRwjQ9hhYB4",
+            "atak": "asset_CoAqmNvpKnv1JoHNwXTcPcDk",
+            "smierc": "asset_fmjoUzxzyjKy2h5GsvbyjN67",
+            "trafienie": "asset_HKeY6oRPXUY27JhmowD4AzZH"
+          },
+          "thunderRam": {
+            "chod": "asset_V8opJxpiHtSxgYCbBJjDCdPx",
+            "atak": "asset_ux3gwoETRHhD79XwUxYpvB6n",
+            "smierc": "asset_Memq1oGbgonK2sSw3apcDf6K",
+            "trafienie": "asset_8Z2WmgAuVLMJ7rP2wVYDFxmL"
+          },
+          "aurochsScout": {
+            "chod": "asset_Z8riqS7gjBxJL6p8JvkpeTms",
+            "atak": "asset_uASsbBFkuYdycHuW25pR6oTd",
+            "smierc": "asset_Kj3rF4XpvyJSEYPVsdxbAptg",
+            "trafienie": "asset_DSQFRXpWd6JtFgiWhViVeg3T"
+          },
+          "eagleHunter": {
+            "lot": "asset_rTuFq93Zy4Xq8nU8cT3quc97",
+            "atak": "asset_sUzvWTJexke84fQt8L4Y9S9b",
+            "smierc": "asset_ULcj7mLzC2z71iq1E75Xcqgr",
+            "trafienie": "asset_KiRVzrnNLfQQB7McyQuvV3gk"
+          },
+          "planetnik": {
+            "chod": "asset_3b3rLpQrMFDREXBXPyZfjirQ",
+            "atak": "asset_KyfkShckp6kvpK39gRhjbcTi",
+            "smierc": "asset_7BzgD9Y2EZ5tEYucSU5rMT5G",
+            "trafienie": "asset_DsTyViJDXVjVRsEpTBvYwZ4Y"
+          },
+          "satyrPiper": {
+            "chod": "asset_zuTWteo9kA6xLx2wSX6LETBu",
+            "atak": "asset_hjtCaozZw6SabXV6NwekDaaU",
+            "smierc": "asset_wVoPMMNTgd4RUtuPg15BkdV2",
+            "trafienie": "asset_iqgPp91DPTDo6kTXpBfwGnAP"
+          },
+          "youngAurochs": {
+            "chod": "asset_W17EXnZHGxZtsYKGZt6vvG4J",
+            "atak": "asset_C1sjF3hs6AdgNpZmrzBNqJP5",
+            "smierc": "asset_eLNBQK4347iTdd7w3pvM38s7",
+            "trafienie": "asset_o2ZNKhj6shTtLr8DKSQPA4Uy"
+          },
+          "kulan": {
+            "chod": "asset_2uLK9WRxs2k3Xct9NVAshxsh",
+            "atak": "asset_GeG72i3SCEfvWHs8m42sXkZZ",
+            "smierc": "asset_b7AEMEB3zrV9RAsB4VrEWt5h",
+            "trafienie": "asset_hS36Ux5gEu5imwp8fdqmHixZ"
+          },
+          "steppeArcher": {
+            "chod": "asset_zkzoa8WzeekvB1o45QMMwS7v",
+            "atak": "asset_ADurRRaEyRXq8Rm1bmi3vAGz",
+            "trafienie": "asset_SJY1ne8FC33pjSEj9PJJVRAb",
+            "smierc": "asset_Yekv2ocRFTE4kYWsGEFMYS5G"
+          },
+          "forestBison": {
+            "chod": "asset_ywCvGvM7DJYRLTkfVSvAoLff",
+            "atak": "asset_LezFKDDWYsxVnxGN3v9cNwN8",
+            "smierc": "asset_FL1Cuzn9boXBCeJEyuX34s87",
+            "trafienie": "asset_raQGvXno5CK4i8zN1hQcwUns"
+          },
+          "steppeLamignat": {
+            "lot": "asset_EGu8JLG1Yg419tfqoZvzMCxD",
+            "atak": "asset_kT1crqbVcQgha13qD1qQfxsA",
+            "smierc": "asset_eTjhZseS3XqEDjydkioCNgNF",
+            "trafienie": "asset_h1iY5a4AbPMV7zqXHtuADrqq"
+          },
+          "warRhino": {
+            "chod": "asset_rhWwXwePs6SY9abSG2kXkUQM",
+            "atak": "asset_j984TuayHVzzw25WZSuXtZ95",
+            "smierc": "asset_diaPSbpe1mf2iUFmzQFzeDyg",
+            "trafienie": "asset_N13xNgCX66CUR4vTfjVJBWZR"
+          },
+          "muskOx": {
+            "chod": "asset_3upGsJ85Lq2QyZr3EruA5NkP",
+            "atak": "asset_LaiYfqSYgMTGEaFbp2NWuY5C",
+            "smierc": "asset_CfVBdYKeBbTceXiGQ3uLgpFZ",
+            "trafienie": "asset_AYCro8DLfsouxBYD4wBdqAFH"
+          },
+          "arkar": {
+            "chod": "asset_oRjPG44zVkA7fHB7GSbyLwxm",
+            "atak": "asset_KBJJELisegcwCm2jfzR3BhCA",
+            "smierc": "asset_VzdUM5Ai9os5YeBTkZcMDxcj",
+            "trafienie": "asset_i1pq8owyaarY2kea6BqZXzrz"
+          },
+          "drumElephant": {
+            "chod": "asset_qMz31vp1uKzfSmSiUHhDz2Kx",
+            "atak": "asset_KqyWeoUSnk4khdZvXbcr8v5Z",
+            "smierc": "asset_vp6yhMywyiaqnG93srqRtDJs",
+            "trafienie": "asset_1LyxGgdu7C6sRYrRmniiUc5s"
+          },
+          "bullMoose": {
+            "chod": "asset_5Vr5Lu2cNcVDJwki2K33X5iW",
+            "atak": "asset_xDz3X9j55YcpTDJqfvB3qB3E",
+            "smierc": "asset_hQn6isDBbNnTazkRAeXw7Psj",
+            "trafienie": "asset_qu16C1zVP4r2PUQ76ZC8fkr8"
+          },
+          "indrik": {
+            "chod": "asset_ptA6SHTaEjxchuCTpW251Fww",
+            "atak": "asset_KwU1UrAJvCstJUqP8G6nNzYf",
+            "smierc": "asset_Hunu7jERxMzHxCV7LTBLTaHh",
+            "trafienie": "asset_zPH4vjGZDPeXFCxuiNKcsCYn"
+          }
+        }
+      },
+      "prompt": "Obraz: Use the reference image only for the character design. Draw this same character as a full-body game sprite in a strict side view, facing right, painterly realistic, at most 50% of the frame, feet at ~84%, plain solid pure blue background (#0000FF), no blue on the character. Klipy: Side view, locked static camera. <jednostka> walks in place as if on a treadmill / swings horns in a sweeping motion in place / sinks down and lies still. Defeat animation / is startled and steadies itself. Plain solid blue background stays unchanged, no camera movement.",
+      "narzedzie": "Scenario (plan płatny) + skrypty Pillow/ffmpeg",
+      "model": "GPT Image 2.5 Flare (obrazy), P-Video 2 (klipy 720p, 24 fps)",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
