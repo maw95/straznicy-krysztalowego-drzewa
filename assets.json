@@ -6694,6 +6694,25 @@
       "data": "2026-11-21",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/przekadrowane-portrety-hordy",
+      "pliki": [
+        "public/assets/cards/portraits/ratman.jpg",
+        "public/assets/cards/portraits/goblinSlinger.jpg",
+        "public/assets/cards/portraits/gargoyle.jpg",
+        "public/assets/cards/portraits/hellhound.jpg",
+        "public/assets/cards/portraits/caveTroll.jpg",
+        "public/assets/cards/portraits/minotaurChief.jpg"
+      ],
+      "typ": "portrety Szczurołaka, Goblina Procarza, Gargulca, Piekielnego Ogara, Trolla Jaskiniowego i Herszta Minotaurów (przekadrowane)",
+      "opis": "Backlog 61g, wariant A, bez kredytów: kwadrat na pełną wysokość istniejącej ilustracji karty, wyśrodkowany na głowie, 256 px; Szczurołak, Ogar i Herszt lekko rozjaśnieni i podbici barwą. Skrypt scripts/assets/horde_portraits.py. Głowa Herszta jest obcięta w samej ilustracji.",
+      "prompt": "",
+      "narzedzie": "skrypt Pillow (scripts/assets/horde_portraits.py)",
+      "model": "",
+      "data": "2026-11-21",
+      "ai": true,
+      "licencja": "pochodna ilustracji z Scenario (plan płatny: pełna licencja komercyjna bez tantiem)"
     }
   ]
 }
