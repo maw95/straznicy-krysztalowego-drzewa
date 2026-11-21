@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Osada Dzikiego Stada ma własny wygląd: tło stepu z kamiennym kręgiem na horyzoncie, koczownicze budynki (namioty, szałasy, palisady, wieża szamana), trzy budynki unikalne (Kamień Tętentu, Wielkie Pastwiska, Ostoja Wędrówek) i siedliska jednostek, zamiast pożyczonych obrazów Przymierza.
 - Dzikie Stado ma własną arenę (step z kamiennymi kręgami, menhirami, kopcami z czaszką i głazami) oraz własne kafle mapy: step, obozowisko i skarbiec.
 - Czternaście zdolności Dzikiego Stada (Rogi Przodków, Róg Wędrówki, W Biegu, Byczy Łeb, Skoczny Rytm, Skok po Turniach, Niewzruszony, Lot na Strzelców, Stratowanie, Rozpęd, Przebicie, Bęben Wędrówki, Rykowisko, Ziemia Drży) ma własne ikony zamiast pożyczonych.
 - Dzikie Stado ma własny herb (skrzyżowane rogi nad odciskiem kopyta) i ochrowe ramki kart bohaterów i pomocników zamiast pożyczonych zielonych ramek Przymierza.

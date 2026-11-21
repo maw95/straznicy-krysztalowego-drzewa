@@ -45,11 +45,11 @@ const spotOf = (b: BuildingId | 'council', land: FactionId): Spot => {
   return land === 'horde' && (b === 'magic' || b === 'spark') ? { ...t, x: 100 - t.x } : t;
 };
 /** Whose picture a building of one faction has (level 6: Kapliczka, Szkółka, Krąg for the Przymierze; Jama, Szabrownia, Legowisko for the Horde). */
-const UNIQUE_OWNER: Partial<Record<BuildingId, FactionId>> = { shrine: 'dawn', nursery: 'dawn', grove: 'dawn', bloodPit: 'horde', plunder: 'horde', wolfDen: 'horde' };
-/** Placeholders (docs/BACKLOG.md 2a): the Herds have no pictures of their own yet, they borrow the land of Przymierze and its three unique buildings. */
-const BORROWED: Partial<Record<BuildingId, BuildingId>> = { hoofStone: 'shrine', pastures: 'nursery', refuge: 'grove', barrow: 'shrine', ossuary: 'nursery', bellTower: 'grove', shieldHall: 'shrine', runeForge: 'grove', deepMine: 'nursery', frostPalace: 'shrine', blizzardTower: 'grove', crystalGrotto: 'nursery', trapWorkshop: 'shrine', smugglerTrails: 'grove', fence: 'nursery', mirageHall: 'shrine', sandGate: 'grove', caravanRoad: 'nursery', myceliumHeart: 'shrine', tunnels: 'grove', mushroomGarden: 'nursery', tideTemple: 'shrine', lighthouse: 'grove', pearlBanks: 'nursery' };
+const UNIQUE_OWNER: Partial<Record<BuildingId, FactionId>> = { shrine: 'dawn', nursery: 'dawn', grove: 'dawn', bloodPit: 'horde', plunder: 'horde', wolfDen: 'horde', hoofStone: 'herds', pastures: 'herds', refuge: 'herds' };
+/** Placeholders (docs/BACKLOG.md 2a): the factions without pictures of their own yet borrow the land of Przymierze and its three unique buildings (the Herds have their own: osady/herds_*). */
+const BORROWED: Partial<Record<BuildingId, BuildingId>> = { barrow: 'shrine', ossuary: 'nursery', bellTower: 'grove', shieldHall: 'shrine', runeForge: 'grove', deepMine: 'nursery', frostPalace: 'shrine', blizzardTower: 'grove', crystalGrotto: 'nursery', trapWorkshop: 'shrine', smugglerTrails: 'grove', fence: 'nursery', mirageHall: 'shrine', sandGate: 'grove', caravanRoad: 'nursery', myceliumHeart: 'shrine', tunnels: 'grove', mushroomGarden: 'nursery', tideTemple: 'shrine', lighthouse: 'grove', pearlBanks: 'nursery' };
 const buildingPicture = (landOf: FactionId, building: BuildingId, level: number) => {
-  const land: FactionId = landOf === 'herds' || landOf === 'undead' || landOf === 'clans' || landOf === 'frost' || landOf === 'free' || landOf === 'sands' || landOf === 'swarm' || landOf === 'tides' ? 'dawn' : landOf;
+  const land: FactionId = landOf === 'undead' || landOf === 'clans' || landOf === 'frost' || landOf === 'free' || landOf === 'sands' || landOf === 'swarm' || landOf === 'tides' ? 'dawn' : landOf;
   const b = BORROWED[building] ?? building;
   const own = UNIQUE_OWNER[b];
   if (own) return level === 0 ? `osady/${own}_plot.webp` : `osady/${own}_${b}1.webp`;
