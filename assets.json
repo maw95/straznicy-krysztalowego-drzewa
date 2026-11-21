@@ -794,13 +794,13 @@
       "pliki": [
         "public/assets/jednostki/nietoperz_cienia/stoi.webp"
       ],
-      "typ": "grafika stoi (na ziemi, skrzydła złożone)",
+      "typ": "poza zawisu (przekolorowane 21.11.2026 na nową paletę skryptem scripts/animacje/recolor_bat.py, bez generowania)",
       "narzedzie": "Scenario (plan Starter)",
-      "model": "GPT Image 2.5 Flare 1024 px, medium, obraz zawisu jako odniesienie (asset_CsSGruFEDcVy96rP684r3TDh, high)",
-      "scenario_asset": "asset_zYwyXsa9ECMJ389v2aWAqYVo",
-      "odniesienie": "asset_8ZmCtjomYdgKBJB5TqujEDy9 (nowa ilustracja karty)",
-      "prompt": "The same bat as in the reference image (the hovering pose: dark slate-grey charcoal fur, lighter grey chest, big pointed ears, glowing ember-orange eyes, wide leathery rust-brown wings), with exactly the same painterly style, colours and size, but now it is NOT flying: it is perched on the ground in a strict side view facing right, standing on its hind legs and folded wing-hands, wings folded closed against its body, head raised and alert. Keep the same horizontal position in the frame, with its feet on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
-      "data": "2026-11-21",
+      "model": "GPT Image 2.5 Flare 1024 px, high, portret jako odniesienie",
+      "scenario_asset": "asset_KLuFznFYD8JugxgjRK6csFzP",
+      "odniesienie": "asset_Zh5eoNijbr7qsMaReEJfYbno (portret karty)",
+      "prompt": "Use the reference image only for the character design (a large bat with dark plum-purple shaggy fur, a pale cream chest, big pointed ears, glowing amber eyes, and wide leathery wings in dark crimson with dark membranes and bony finger struts, small pale claws). Draw this same character as a full-body game sprite in a strict side view, hovering in the air with its wings spread wide open, facing right, in a serious painterly realistic style with muted dark plum, charcoal, dark crimson and grey tones, no blue anywhere on the creature. The whole figure is fully inside the frame with a generous empty margin: it occupies at most 50% of the frame width and height, centred horizontally, its lowest point on a horizontal line about 78% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
@@ -809,13 +809,13 @@
       "pliki": [
         "public/assets/jednostki/nietoperz_cienia/martwy.webp"
       ],
-      "typ": "martwy (ostatnia klatka klipu śmierci)",
+      "typ": "grafika trupa (przekolorowane 21.11.2026 na nową paletę skryptem scripts/animacje/recolor_bat.py, bez generowania)",
       "narzedzie": "Scenario (plan Starter)",
-      "model": "ffmpeg -sseof -0.045 na klipie śmierci, 0 CU",
-      "scenario_asset": "asset_SvhF7bmxf7TrXwZxsw8X6W6M",
-      "odniesienie": "asset_8ZmCtjomYdgKBJB5TqujEDy9 (nowa ilustracja karty)",
-      "prompt": "ostatnia klatka klipu „smierc” (bez generowania)",
-      "data": "2026-11-21",
+      "model": "GPT Image 2.5 Flare 1024 px, medium, stoi jako odniesienie",
+      "scenario_asset": "asset_VPJeSdhkCHHHofraSV8smCiT",
+      "odniesienie": "asset_Zh5eoNijbr7qsMaReEJfYbno (portret karty)",
+      "prompt": "The same bat as in the reference image, now lying still on the ground on its belly in a strict side view facing right, wings folded closed against its body, head resting low, eyes closed, as if fast asleep, defeated and motionless. Keep exactly the same painterly style, colours, size and horizontal position in the frame, with its body bottom on a horizontal line about 84% of the way down. Plain solid pure blue background (#0000FF) everywhere, no ground, no shadow, no text.",
+      "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
@@ -824,13 +824,13 @@
       "pliki": [
         "public/assets/jednostki/nietoperz_cienia/lot.webp"
       ],
-      "typ": "pętla zawisu",
+      "typ": "pętla zawisu (73 kl.) (przekolorowane 21.11.2026 na nową paletę skryptem scripts/animacje/recolor_bat.py, bez generowania)",
       "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka początkowa = obraz zawisu (asset_CsSGruFEDcVy96rP684r3TDh)",
-      "scenario_asset": "asset_uvb3PQKKLcCpzuV5rXYCFAuF",
-      "odniesienie": "asset_8ZmCtjomYdgKBJB5TqujEDy9 (nowa ilustracja karty)",
+      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
+      "scenario_asset": "asset_HxomzWUPgJvx7Hhu8SWv91sX",
+      "odniesienie": "asset_Zh5eoNijbr7qsMaReEJfYbno (portret karty)",
       "prompt": "Side view, locked static camera. The bat hovers in the air in place, flapping its wide wings up and down in a steady rhythm, always facing right, the body staying at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-21",
+      "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
@@ -839,13 +839,13 @@
       "pliki": [
         "public/assets/jednostki/nietoperz_cienia/atak.webp"
       ],
-      "typ": "atak w miejscu",
+      "typ": "atak (73 kl.) (przekolorowane 21.11.2026 na nową paletę skryptem scripts/animacje/recolor_bat.py, bez generowania)",
       "narzedzie": "Scenario (plan Starter)",
       "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
-      "scenario_asset": "asset_eWbx6UdawjJiBSfJY8kqqo6D",
-      "odniesienie": "asset_8ZmCtjomYdgKBJB5TqujEDy9 (nowa ilustracja karty)",
-      "prompt": "Side view, locked static camera. The bat perched in place reaches both feet sharply forward to the right in a sweeping motion with a loud call, wings stay folded, then pulls back to its perched pose. The feet stay on the same spot, it does not fly or walk forward. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-21",
+      "scenario_asset": "asset_uiMLSXsCo2YidH1Z31Fb1b37",
+      "odniesienie": "asset_Zh5eoNijbr7qsMaReEJfYbno (portret karty)",
+      "prompt": "Side view, locked static camera. The bat dives forward and down to the right with a shriek, mouth open and claws extended, then rises back up and returns to its hovering pose with wings spread. The body ends at the same spot in the frame. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
@@ -854,13 +854,13 @@
       "pliki": [
         "public/assets/jednostki/nietoperz_cienia/smierc.webp"
       ],
-      "typ": "śmierć, koniec = martwy",
+      "typ": "śmierć (73 kl.), koniec = martwy (przekolorowane 21.11.2026 na nową paletę skryptem scripts/animacje/recolor_bat.py, bez generowania)",
       "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
-      "scenario_asset": "asset_SvhF7bmxf7TrXwZxsw8X6W6M",
-      "odniesienie": "asset_8ZmCtjomYdgKBJB5TqujEDy9 (nowa ilustracja karty)",
-      "prompt": "Side view, locked static camera. The bat settles down onto the ground on its belly, its wings fold in, it lowers its head and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-21",
+      "model": "P-Video 2 720p 3 s, stoi -> martwy",
+      "scenario_asset": "asset_SR654dkQinKdojJuYS5Vazxc",
+      "odniesienie": "asset_Zh5eoNijbr7qsMaReEJfYbno (portret karty)",
+      "prompt": "Side view, locked static camera. The bat slowly sinks down from the air, its wings fold in, it settles onto the ground on its belly, lowers its head and lies still. Defeat animation. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
@@ -869,13 +869,13 @@
       "pliki": [
         "public/assets/jednostki/nietoperz_cienia/trafienie.webp"
       ],
-      "typ": "trafienie",
+      "typ": "trafienie (49 kl.) (przekolorowane 21.11.2026 na nową paletę skryptem scripts/animacje/recolor_bat.py, bez generowania)",
       "narzedzie": "Scenario (plan Starter)",
       "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
-      "scenario_asset": "asset_HcM7dfWnimy1612qUdJg4Sej",
-      "odniesienie": "asset_8ZmCtjomYdgKBJB5TqujEDy9 (nowa ilustracja karty)",
-      "prompt": "Side view, locked static camera. The bat perched in place is startled: it flinches and rocks backwards a little, its ears jerk up, then it steadies itself and settles back to its perched pose, facing right. The feet stay on the same spot. Plain solid blue background stays unchanged, no camera movement.",
-      "data": "2026-11-21",
+      "scenario_asset": "asset_iJ4hAuQSghGVddAgLLhjxayd",
+      "odniesienie": "asset_Zh5eoNijbr7qsMaReEJfYbno (portret karty)",
+      "prompt": "Side view, locked static camera. The bat hovering in place is startled: it flinches and rocks backwards a little, its wings jerk up, then it steadies itself and settles back to its hovering pose with wings spread, facing right. Plain solid blue background stays unchanged, no camera movement.",
+      "data": "2026-11-05",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
@@ -6809,12 +6809,9 @@
       "pliki": [
         "public/assets/jednostki/nietoperz_cienia/wzbicie.webp"
       ],
-      "typ": "wzbicie (stoi -> zawis)",
-      "narzedzie": "Scenario (plan Starter)",
-      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi, końcowa = obraz zawisu",
-      "scenario_asset": "asset_TvCnEkJHNLLgLqxf8NaHkwZ8",
-      "odniesienie": "asset_8ZmCtjomYdgKBJB5TqujEDy9 (nowa ilustracja karty)",
-      "prompt": "Side view, locked static camera. The bat perched on the ground spreads its wings wide, flaps them and lifts off, rising into the air until it hovers with its wings spread wide open, always facing right. Plain solid blue background stays unchanged, no camera movement.",
+      "typ": "wzbicie (stoi -> zawis), klip z 10.11.2026 przekolorowany 21.11.2026 skryptem scripts/animacje/recolor_bat.py (bez generowania)",
+      "narzedzie": "Scenario (plan Starter), potem skrypt Pillow",
+      "model": "P-Video 2 720p 2 s, klatka początkowa = stoi, końcowa = zawis (wersja sprzed 21.11)",
       "data": "2026-11-21",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"

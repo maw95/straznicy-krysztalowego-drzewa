@@ -6,7 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
-- Goblin Szaman, Pająk Jaskiniowy i Nietoperz Cienia mają nowe figurki na planszy i nowe animacje (ruch, atak, trafienie, śmierć; Nietoperz też wzbicie i zawis) w poważnej palecie zgodnej z ich nowymi portretami.
+- Goblin Szaman i Pająk Jaskiniowy mają nowe figurki na planszy i nowe animacje (ruch, atak, trafienie, śmierć), a Nietoperz Cienia dotychczasowe animacje w nowych barwach (grafitowo-brązowe futro, rdzawe skrzydła), zgodne z ich nowymi portretami.
 - Pająk Jaskiniowy i Nietoperz Cienia mają nowe, poważne ilustracje i portrety (ciemny węgiel, rdza i żar zamiast fioletu i jaskrawej czerwieni); ich figurki na planszy mają tę samą paletę.
 - Jednostki Hordy poziomów 2-5 i Behemot Zagłady na planszy mają wyraźnie żywsze barwy (były bardzo ciemne i mało czytelne).
 - Portrety pomocników Hordy mają lepszy kadr: Szczurołak, Piekielny Ogar i Herszt Minotaurów jak na pierwotnych portretach, ale jaśniejsi; Goblin Procarz, Troll Jaskiniowy i Gargulec mają nowe ilustracje i portrety, na których widać większą część postaci; Goblin Szaman ma nową, poważną ilustrację w kolorach Procarza zamiast kreskówkowej.
