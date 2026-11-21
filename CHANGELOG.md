@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Feniks Świtu przy ataku zieje ogniem w cel.
 - Koszary: latające jednostki (Pegaz, Sowa, Feniks, Gargulec, Wiwerna Cienia) w podglądzie grają płynną pętlę: wzbicie się, lot, lądowanie, atak.
 - Gra na siedmiu i ośmiu graczy jest dostępna na każdym poziomie (także Królestwo i Imperium), razem z czwartymi bohaterami frakcji w wyborze.
 - Koszary: ramka z kartami jednostek zajmuje całą wysokość ekranu, a stan złota i przycisk wyjścia są wewnątrz niej, po prawej stronie, więc wszystkie karty po lewej mieszczą się bez przewijania.

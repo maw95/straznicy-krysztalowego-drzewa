@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Feniks Świtu przy ataku zieje ogniem w cel.": "The Dawn Phoenix breathes fire at its target when it attacks.",
   "Koszary: latające jednostki (Pegaz, Sowa, Feniks, Gargulec, Wiwerna Cienia) w podglądzie grają płynną pętlę: wzbicie się, lot, lądowanie, atak.": "Barracks: the flying units (Pegasus, Owl, Phoenix, Gargoyle, Shadow Wyvern) play a smooth loop in the preview: takeoff, flight, landing, attack.",
   "Gra na siedmiu i ośmiu graczy jest dostępna na każdym poziomie (także Królestwo i Imperium), razem z czwartymi bohaterami frakcji w wyborze.": "Games of seven and eight players are available on every level (the Kingdom and the Empire too), with the fourth heroes of the factions in the choice.",
   "Koszary: ramka z kartami jednostek zajmuje całą wysokość ekranu, a stan złota i przycisk wyjścia są wewnątrz niej, po prawej stronie, więc wszystkie karty po lewej mieszczą się bez przewijania.": "Barracks: the frame with the unit cards fills the whole screen height, and the gold and the exit button are inside it on the right, so all the cards on the left fit without scrolling.",
