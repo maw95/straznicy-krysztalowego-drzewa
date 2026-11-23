@@ -28,7 +28,7 @@ import { aimedCursor } from './cursors';
 import { figureFor, FigureLayer, type Piece } from './FigureLayer';
 import { StatIcon, StatText, ThingIcon } from './markers';
 import { RoundTrack } from './RoundTrack';
-import { ACTIVE_FIGURE_RING, asset, COMPACT_QUERY, Frame, Medal, Modal, Pips, Portrait, Ribbon, SIDE_RING, tileImage, useMedia } from './common';
+import { ACTIVE_FIGURE_RING, asset, COMPACT_QUERY, Frame, hasTileArt, Medal, Modal, Pips, Portrait, Ribbon, SIDE_RING, tileImage, useMedia } from './common';
 
 interface Props {
   state: GameState;
@@ -459,7 +459,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     <div className="hex-clip" style={{ position: 'absolute', inset: 2, background: rim }} />
                     <div className="hex-clip" style={{ position: 'absolute', inset: W * 0.055, background: '#1E1204' }} />
                     <div key={t.revealed ? 'r' : 'h'} className={`hex-clip ${freshlyRevealed.has(t.key) ? 'flip-in' : ''}`} style={{ position: 'absolute', inset: W * 0.065, overflow: 'hidden', background: '#10201F' }}>
-                      <img src={tileImage(t, tileArt(state, t))} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transform: 'scale(1.08)', ...(t.revealed && t.place?.kind === 'object' && state.kingdom && !objectReady(state.kingdom.objects?.[t.place.id] ?? { kind: 'mill' }, state.round) ? { filter: 'saturate(0.4) brightness(0.7)' } : {}) }} />
+                      <img src={tileImage(t, tileArt(state, t), raceOf(state, t.side))} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transform: 'scale(1.08)', ...(t.revealed && t.place?.kind === 'object' && state.kingdom && !objectReady(state.kingdom.objects?.[t.place.id] ?? { kind: 'mill' }, state.round) ? { filter: 'saturate(0.4) brightness(0.7)' } : {}) }} />
                       {!t.revealed && <div className="fog" style={{ opacity: 0.18, animationDelay: `${-((t.row * 7 + t.col * 13) % 60)}s` }} />}
                       {(r || onPath) && <div style={{ position: 'absolute', inset: 0, background: onPath ? 'rgba(158,228,255,0.35)' : 'rgba(158,228,255,0.18)', boxShadow: 'inset 0 0 18px rgba(158,228,255,0.7)' }} />}
                     </div>
@@ -718,7 +718,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           {hero && state.rules.heroGrowth && <HeroGrowth hero={hero} compact={compact} onOpenPack={() => setPackOpen(true)} />}
           {sel && (
             <div className="plate parch" style={{ padding: '9px 12px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-              <img className="hex-clip" src={tileImage(sel, tileArt(state, sel))} alt="" style={{ width: 48, height: 55, flex: 'none', objectFit: 'cover' }} />
+              <img className="hex-clip" src={tileImage(sel, tileArt(state, sel), raceOf(state, sel.side))} alt="" style={{ width: 48, height: 55, flex: 'none', objectFit: 'cover' }} />
               <div>
                 <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{selInfo!.title}</div>
                 {selInfo!.lines.map((l) => (
@@ -864,7 +864,7 @@ function TileDetails({ state, k, hostile }: { state: GameState; k: HexKey; hosti
   return (
     <div className="plate parch" style={{ width: 300, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-        <img className="hex-clip" src={tileImage(t, tileArt(state, t))} alt="" style={{ width: 70, height: 80, flex: 'none', objectFit: 'cover' }} />
+        <img className="hex-clip" src={tileImage(t, tileArt(state, t), raceOf(state, t.side))} alt="" style={{ width: 70, height: 80, flex: 'none', objectFit: 'cover' }} />
         <div>
           <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole'}</div>
           <div style={{ fontWeight: 600, fontSize: 15, marginTop: 3 }}>
@@ -993,7 +993,8 @@ function tileArt(state: GameState, t: Tile): string | undefined {
   if (!t.revealed) return undefined;
   if (t.place?.kind === 'settlement') {
     const land = state.kingdom?.settlements[t.place.id]?.land;
-    return land ? `osada${land === 'dawn' ? 'Dawn' : 'Horde'}_1` : undefined;
+    if (!land) return undefined;
+    return hasTileArt(raceOf(state, land), 'osada_1') ? 'osada_1' : `osada${land === 'dawn' ? 'Dawn' : 'Horde'}_1`;
   }
   if (t.place && state.kingdom) return `obj_${placeIcon(state, t.key)}`;
   if (t.site && !t.site.used) return `obj_${t.site.kind}`;

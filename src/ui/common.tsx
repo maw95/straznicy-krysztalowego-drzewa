@@ -32,9 +32,30 @@ const ABILITY_ART: Record<string, string> = {
 export const UNIT_ABILITY_ART: ReadonlySet<string> = new Set(['silverFox', 'dryadArcher', 'whiteStag', 'goblinSlinger', 'gargoyle', 'caveTroll', 'shadowWyvern', 'doomBehemoth']);
 export const abilityArt = (ability: string, unitId?: string) => (unitId && UNIT_ABILITY_ART.has(unitId) ? `u_${unitId}` : ABILITY_ART[ability] ?? ability);
 export const portrait = (unitId: string) => asset(`cards/portraits/${artId(unitId)}.jpg`);
-/** Face of a map tile (one of the art variants, or `art`: the picture of a settlement or an object standing on it), or its green/red back while hidden. */
-export const tileImage = (t: Tile, art?: string) =>
-  asset(t.revealed ? (art ? `tiles/${art}.jpg` : `tiles/${t.terrain}_${t.variant}.jpg`) : `tiles/back_${t.side === 'third' ? 'dawn' : t.side === 'fourth' ? 'horde' : t.side}.jpg`);
+/**
+ * Tile art made for the land of one faction (the rest of the factions share the Przymierze / Horda tiles): name of the picture without extension -> number of
+ * variants. Files are `tiles/<faction>_<name>[_<n>].jpg` and the reverse `tiles/back_<faction>.jpg`; `scripts/assets/herds_tiles.py` makes the Wild Herd's.
+ * A new faction's land is a new entry here (backlog: "G4 for a faction" includes the tiles).
+ */
+export const FACTION_TILE_ART: Partial<Record<FactionId, Record<string, number>>> = {
+  herds: {
+    back: 1, hill: 2, river: 2, bridge: 1, mountain: 2, chasm: 2, barren: 2, osada_1: 1,
+    obj_shrine: 1, obj_camp: 1, obj_chest: 1, obj_studnia: 1, obj_tartak: 1, obj_kopalnia: 1, obj_kopalnia_ruda: 1, obj_zrodlo_pylu: 1, obj_chatka: 1,
+    obj_skladnica: 1, obj_odlamek: 1, obj_mlyn: 1,
+  },
+};
+export const hasTileArt = (race: FactionId | undefined, name: string) => !!(race && FACTION_TILE_ART[race]?.[name]);
+/**
+ * Face of a map tile (one of the art variants, or `art`: the picture of a settlement or an object standing on it), or the back of its deck while hidden.
+ * `race` is the faction of the tile's side: its own pictures, when it has them, replace the shared ones.
+ */
+export const tileImage = (t: Tile, art?: string, race?: FactionId) => {
+  const own = race ? FACTION_TILE_ART[race] : undefined;
+  if (!t.revealed) return asset(own?.back ? `tiles/back_${race}.jpg` : `tiles/back_${t.side === 'third' ? 'dawn' : t.side === 'fourth' ? 'horde' : t.side}.jpg`);
+  if (art) return asset(own?.[art] ? `tiles/${race}_${art}.jpg` : `tiles/${art}.jpg`);
+  const n = own?.[t.terrain];
+  return asset(n ? `tiles/${race}_${t.terrain}_${((t.variant - 1) % n) + 1}.jpg` : `tiles/${t.terrain}_${t.variant}.jpg`);
+};
 
 /** The colour of each side (also of the seats in the setup): green, red, amber and violet; the neutral creatures are blue. */
 export const SIDE_RING: Record<Side, string> = { dawn: '#2C7048', horde: '#9A2226', third: '#B9801A', fourth: '#6A3E98', neutral: '#2A5E9A' };

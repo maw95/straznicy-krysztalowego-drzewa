@@ -7422,6 +7422,44 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "herds/kafle-wlasne",
+      "pliki": [
+        "public/assets/tiles/back_herds.jpg",
+        "public/assets/tiles/herds_hill_1.jpg",
+        "public/assets/tiles/herds_hill_2.jpg",
+        "public/assets/tiles/herds_river_1.jpg",
+        "public/assets/tiles/herds_river_2.jpg",
+        "public/assets/tiles/herds_bridge_1.jpg",
+        "public/assets/tiles/herds_mountain_1.jpg",
+        "public/assets/tiles/herds_mountain_2.jpg",
+        "public/assets/tiles/herds_chasm_1.jpg",
+        "public/assets/tiles/herds_chasm_2.jpg",
+        "public/assets/tiles/herds_barren_1.jpg",
+        "public/assets/tiles/herds_barren_2.jpg",
+        "public/assets/tiles/herds_osada_1.jpg",
+        "public/assets/tiles/herds_obj_shrine.jpg",
+        "public/assets/tiles/herds_obj_camp.jpg",
+        "public/assets/tiles/herds_obj_chest.jpg",
+        "public/assets/tiles/herds_obj_studnia.jpg",
+        "public/assets/tiles/herds_obj_tartak.jpg",
+        "public/assets/tiles/herds_obj_kopalnia.jpg",
+        "public/assets/tiles/herds_obj_kopalnia_ruda.jpg",
+        "public/assets/tiles/herds_obj_zrodlo_pylu.jpg",
+        "public/assets/tiles/herds_obj_chatka.jpg",
+        "public/assets/tiles/herds_obj_skladnica.jpg",
+        "public/assets/tiles/herds_obj_odlamek.jpg",
+        "public/assets/tiles/herds_obj_mlyn.jpg"
+      ],
+      "typ": "własna strona mapy Dzikiego Stada: rewers, teren, obiekty i osada w wersji stepowej",
+      "opis": "Dopełnienie G4 fazy 3 (23.11.2026, na prośbę autora): Stado miało zielony rewers Przymierza i leśne obiekty. Obrazy 1024x1024 (jakość medium, 3 CU każdy, 24 obrazy, ok. 72 CU), tanio i bez dopracowania. Teren przycięty do sześciokąta w ramce meadow_1 (herds_map.py), obiekty i osada przycięte do 260x300; rewers złożony skryptem z rewersu Hordy (kolory na ochrę) i herbu Stada, bez generowania. Tablica FACTION_TILE_ART w src/ui/common.tsx; skrypt scripts/assets/herds_tiles.py; oryginały w .tmp/zrodla/herds_tiles.",
+      "prompt": "Isometric three-quarter top-down fantasy strategy map tile illustration, painterly and richly detailed in the style of Heroes of Might and Magic III adventure map tiles: <opis kafla stepowego, np. a steppe well: a round stone well with a wooden sweep pole...>, warm golden-hour light, tawny and ochre palette with muted green. The scene fills the whole square image edge to edge, no border, no frame, no text, no characters.",
+      "narzedzie": "Scenario (plan płatny) + skrypt Pillow",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

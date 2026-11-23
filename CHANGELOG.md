@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Dzikie Stado ma własną stronę mapy: ochrowy rewers kafli ze skrzyżowanymi rogami zamiast zielonego rewersu Przymierza, stepowe wzgórza, rzeki, mosty, góry, przepaści i nieużytki oraz stepowe wersje kapliczki, obozu najemników, skrzyni, studni, tartaku, kopalń, źródła pyłu, chatki, składnicy, odłamka, młyna i osady.
 - Słoń z Bębnem Dzikiego Stada jest teraz prawdziwym szarym słoniem sawannowym (bez futra, z ochrowym malowaniem), a nie mamutem: nowa karta, portret, siedlisko w osadzie i animowana figurka w bitwie.
 - Portrety bohaterów i jednostek Dzikiego Stada mają ciaśniejsze kadry (głowa i barki zamiast całej sylwetki z daleka).
 - Z mapy świata zniknęła wstęga z napisem „Kraina Kryształowego Drzewa”.
