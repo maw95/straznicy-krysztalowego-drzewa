@@ -7555,6 +7555,29 @@
       "ai": false,
       "licencja": "pochodna własnych narożników ui/corner_gold_*.webp",
       "zrodlo": "public/assets/ui/corner_gold_*.webp"
+    },
+    {
+      "id": "ui/okladka_2026-11-23",
+      "pliki": [
+        "public/assets/ui/cover.jpg",
+        "public/assets/ui/cover_en.jpg",
+        "docs/grafika/okladka/okladka_2026-11-23.jpg"
+      ],
+      "typ": "okładka gry (tło menu), nowa wersja z aktualnymi projektami postaci",
+      "opis": "1232x1744, ten sam układ co poprzednia okładka. Postacie przerysowane wg aktualnych projektów (nietoperz, pająk i goblin szaman w poważnej palecie, elf druid z pięcioma palcami). cover_en.jpg: to samo, z logiem angielskim wklejonym z poprzedniej wersji (rozmyty brzeg). Poprzednia okładka jest w historii gita.",
+      "scenario_asset": {
+        "zadanie": "job_obP6rKC6kzGgcc93cFA4wjMH",
+        "wynik_uzyty": "asset_SYXS1T9pomR8dQGgMio78GQF",
+        "referencje": [
+          "asset_6U2mvdsTaocfFUAZ9NbnPi5u (stara okładka)",
+          "asset_Uzy6LURa7j3Q4PDp9rEzUdmK (arkusz 15 kart postaci)"
+        ]
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 2 warianty za 10 CU (poprzednia seria odrzucona: 10 CU)",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
