@@ -1105,7 +1105,13 @@ button.sb-slot:disabled { cursor: default; }
 
 /* The treasure chest (backlog 58d): a sheet of four painted frames (closed, ajar, half open, open) played in steps; the treasures lie in the open chest. */
 .chestbox { position: relative; width: min(760px, 96vw, 86vh); aspect-ratio: 640 / 623; container-type: inline-size; }
-.chest-art { position: absolute; inset: 0; background: url('/assets/ui/skrzynia_klatki.webp') 100% 0 / 400% 100% no-repeat; filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.75)); animation: chest-frames-in 0.9s steps(1, end) both; }
+.chest-art { position: absolute; inset: 0; }
+.chest-art::before { content: ''; position: absolute; left: 8%; right: 8%; bottom: 1%; height: 6%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7), transparent 70%); }
+.chest-art > i { position: absolute; inset: 0; background: url('/assets/ui/skrzynia_klatki.webp') no-repeat; background-size: 400% 100%; will-change: opacity; backface-visibility: hidden; }
+.chest-art > i:nth-child(1) { background-position: 0 0; }
+.chest-art > i:nth-child(2) { background-position: 33.3333% 0; opacity: 0; animation: chest-f1-in 0.9s linear both; }
+.chest-art > i:nth-child(3) { background-position: 66.6667% 0; opacity: 0; animation: chest-f2-in 0.9s linear both; }
+.chest-art > i:nth-child(4) { background-position: 100% 0; opacity: 0; animation: chest-f3-in 0.9s linear both; }
 .chest-items { position: absolute; left: 17%; top: 37%; width: 55%; height: 32%; display: flex; align-items: center; justify-content: center; gap: 0.6cqw; animation: chest-content-in 0.9s ease-out both; }
 .chest-items .slot { width: 9.2cqw; flex: none; }
 .chest-items .slot-name { overflow-wrap: normal; word-break: normal; hyphens: manual; }
@@ -1114,14 +1120,22 @@ button.sb-slot:disabled { cursor: default; }
 .chestbox .chest-empty { position: absolute; left: 17%; top: 37%; width: 55%; height: 32%; display: grid; place-items: center; animation: chest-content-in 0.9s ease-out both; }
 .chestbox .pager { position: absolute; left: 17%; width: 55%; bottom: 27%; animation: chest-content-in 0.9s ease-out both; }
 .chestbox .close-seal { animation: chest-content-in 0.9s ease-out both; }
-.leaving .chest-art { animation: chest-frames-out 0.7s steps(1, end) both; }
+.leaving .chest-art > i:nth-child(2) { animation: chest-f1-out 0.7s linear both; }
+.leaving .chest-art > i:nth-child(3) { animation: chest-f2-out 0.7s linear both; }
+.leaving .chest-art > i:nth-child(4) { animation: chest-f3-out 0.7s linear both; }
 .leaving .chest-items, .leaving .chestbox .chest-empty, .leaving .chestbox .pager, .leaving .chestbox .close-seal { animation: chest-content-out 0.25s ease-in both; }
 @container (max-width: 480px) { .chest-items .slot-name { display: none; } }
-@keyframes chest-frames-in { 0% { background-position: 0 0; } 25% { background-position: 33.3333% 0; } 50% { background-position: 66.6667% 0; } 75%, 100% { background-position: 100% 0; } }
-@keyframes chest-frames-out { 0% { background-position: 100% 0; } 25% { background-position: 66.6667% 0; } 50% { background-position: 33.3333% 0; } 75%, 100% { background-position: 0 0; } }
+@keyframes chest-f1-in { 0%, 8% { opacity: 0; } 18%, 100% { opacity: 1; } }
+@keyframes chest-f2-in { 0%, 38% { opacity: 0; } 48%, 100% { opacity: 1; } }
+@keyframes chest-f3-in { 0%, 68% { opacity: 0; } 78%, 100% { opacity: 1; } }
+@keyframes chest-f3-out { 0%, 8% { opacity: 1; } 22%, 100% { opacity: 0; } }
+@keyframes chest-f2-out { 0%, 36% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes chest-f1-out { 0%, 64% { opacity: 1; } 78%, 100% { opacity: 0; } }
 @keyframes chest-content-in { 0%, 70% { opacity: 0; } 100% { opacity: 1; } }
 @keyframes chest-content-out { 0% { opacity: 1; } 100% { opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .chest-art, .chest-items, .chestbox .chest-empty, .chestbox .pager, .chestbox .close-seal { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .chest-art > i, .chest-items, .chestbox .chest-empty, .chestbox .pager, .chestbox .close-seal { animation: none !important; }
+  .chest-art > i:nth-child(n+2) { opacity: 0; }
+  .chest-art > i:nth-child(4) { opacity: 1; } }
 
 /* The list of own settlements in the side panel of the map: no panel behind it, a thumbnail and the name per row. */
 .settlement-list { display: flex; flex-direction: column; gap: 4px; color: #F6EBD0; text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, 0.6); }

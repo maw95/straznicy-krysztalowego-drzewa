@@ -4,7 +4,18 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { asset } from './common';
 import { hoverCard } from './hover';
 
+/** The frames of the chest are fetched and decoded when the treasure button shows up, so the first opening does not stutter. */
+let chestPreloaded = false;
+function preloadChest() {
+  if (chestPreloaded || typeof Image === 'undefined') return;
+  chestPreloaded = true;
+  const img = new Image();
+  img.src = asset('ui/skrzynia_klatki.webp');
+  void img.decode?.().catch(() => undefined);
+}
+
 export function TreasureButton({ count, onClick, open = false }: { count: number; onClick: () => void; open?: boolean }) {
+  useEffect(preloadChest, []);
   return (
     <button className={`treasure-btn ${open ? 'open' : ''}`} onClick={onClick} aria-label={`Skarby: ${count}`} aria-expanded={open} data-treasure-btn>
       <span className="treasure-icon">
@@ -83,7 +94,7 @@ export function ChestFrame({ label, onClose, items, empty = 'Brak skarbów.', da
   useEscapeClose(onClose);
   return (
     <div className="chestbox" role="dialog" aria-label={label} {...{ [dataAttr]: true }}>
-      <div className="chest-art" aria-hidden="true" />
+      <div className="chest-art" aria-hidden="true"><i /><i /><i /><i /></div>
       <CloseSeal onClose={onClose} />
       {items.length === 0 ? <div className="chest-empty">{empty}</div> : <div className="chest-items">{pg.items}</div>}
       <PagerBar {...pg} />
