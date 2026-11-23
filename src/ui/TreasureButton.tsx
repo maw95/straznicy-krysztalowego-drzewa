@@ -94,7 +94,7 @@ export function ChestFrame({ label, onClose, items, empty = 'Brak skarbów.', da
   useEscapeClose(onClose);
   return (
     <div className="chestbox" role="dialog" aria-label={label} {...{ [dataAttr]: true }}>
-      <div className="chest-art" aria-hidden="true"><i /><i /><i /><i /></div>
+      <div className="chest-art" aria-hidden="true" />
       <CloseSeal onClose={onClose} />
       {items.length === 0 ? <div className="chest-empty">{empty}</div> : <div className="chest-items">{pg.items}</div>}
       <PagerBar {...pg} />

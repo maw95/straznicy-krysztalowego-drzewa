@@ -7584,18 +7584,25 @@
       "pliki": [
         "public/assets/ui/skrzynia_klatki.webp"
       ],
-      "typ": "arkusz 4 klatek animacji skrzyni skarbów (zamknięta, uchylona, w połowie, otwarta), RGBA",
-      "opis": "4 x 640x623, klatki wyrównane skryptowo (szerokość i dół bryły), tło usunięte wypełnieniem od krawędzi. Zastępuje chest_bg.webp w oknie skarbów (chest_bg.webp nieużywany).",
+      "typ": "arkusz 8 klatek animacji skrzyni skarbów (zamknięta … otwarta), RGBA",
+      "opis": "8 x 640x631, klatki wyrównane skryptowo (szerokość i dół korpusu), tło usunięte wypełnieniem od krawędzi. Zastępuje chest_bg.webp w oknie skarbów (chest_bg.webp nieużywany). Kąty wieka ok. 0, 8, 20, 35, 48, 60, 75, 100 stopni.",
       "scenario_asset": {
-        "referencja": "asset_2rd4SKFAgmYJSExR5csmgbzh (pełna otwarta skrzynia, zadanie job_aueVKnEsqo9q3j2w5rHgWWoe)",
+        "referencje": [
+          "asset_2rd4SKFAgmYJSExR5csmgbzh (pełna otwarta skrzynia, zadanie job_aueVKnEsqo9q3j2w5rHgWWoe)",
+          "asset_skHm765DAF8YkGaHQMHnnvX2 (zamknięta)"
+        ],
         "zadania": [
           "job_k5KDgtQbFQ97ckM5DXv99q5h",
           "job_W1TjVeqh4SMJNE13ifUkVdNJ",
-          "job_eNrx6QYe4NTidrJv9e3F9YW4"
+          "job_eNrx6QYe4NTidrJv9e3F9YW4",
+          "job_9u5eJ3mDy5btxcwRzVLPmRP8",
+          "job_LuYDybuhomrXskVamb7sYu2v",
+          "job_jvkiiK5FgvmPdw89KBGmZ593",
+          "job_Df2Ab5KYpyXNeKE8GJLTn4ES"
         ]
       },
       "narzedzie": "Scenario (plan płatny)",
-      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 4 obrazy (otwarta + 3 klatki) ok. 20 CU",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 8 obrazów ok. 40 CU",
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
