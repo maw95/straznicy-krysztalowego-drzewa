@@ -86,3 +86,24 @@ Atak (zionięcie): `asset_Y1RiMpb9834DzTc3aqZ5TjdW` (15 CU, jedna próba). Smok 
 - Koszt Szamana, Pająka i Nietoperza w nowej palecie: ok. 236 CU razem (3 obrazy bazowe high po ok. 14, poza stojąca Nietoperza ok. 4, 17 klipów po 10-15).
 
 - **Nietoperz Cienia (21.11.2026): nowa poza „stoi” i klipy nie wyszły dobrze.** Wyprostowany nietoperz na ziemi (jak pingwin) był o 30% wyższy od dawnego, przysadzistego, a atak i zawis miały półprzezroczyste, rozmyte skrzydła. Zamiast generować od nowa, stare animacje zostały przekolorowane na nową paletę: `python3 scripts/animacje/recolor_bat.py` (czyta oryginały z gita, mapuje śliwkowe futro na grafitowo-brązowe, karmazynowe skrzydła na rdzawe; 0 CU). Wniosek: jeśli stary ruch był dobry, a zła jest tylko paleta, **przekoloruj sprite'y** (mapowanie odcieni w HSV) zamiast generować klipy (ok. 55-70 CU na jednostkę). Wygenerowane klipy leżą w `.tmp/zrodla/new_shadowBat/` (niewykorzystane).
+
+## Animacja elementu interfejsu z wideo: skrzynia i księga czarów (23.11.2026)
+
+Okna skrzyni skarbów i księgi czarów otwierają się z zamkniętego przedmiotu (wieko się unosi, okładka odchyla). Nie jest to jednostka z `pack_unit.py`,
+tylko jeden arkusz klatek w jednym rzędzie, przełączany w CSS. Sprawdzona kolejność:
+
+1. **Obraz początkowy i końcowy.** Dwa obrazy tego samego przedmiotu (zamknięty, otwarty) w tym samym kadrze i na tym samym jednolitym tle; ten drugi najlepiej
+   jako edycja pierwszego (obraz referencyjny), żeby korpus się nie różnił.
+2. **Klip.** `model_pruna-p-video-2` z `image` (początek) i `lastFrameImage` (koniec), 3 s, 720p, ok. 15 CU za klip. Model sam wykonuje ruch między obrazami
+   i korpus zostaje nieruchomy, rusza się tylko wieko albo okładka.
+3. **Klatki.** `ffmpeg` wyciąga klip do PNG (24 kl./s); do arkusza wybieramy 12 klatek, gęściej tam, gdzie ruch jest szybki (skrzynia: 0, 3, 6, … 28, 34, 72;
+   księga: 0, 4, 8, … 36, 42, 72), a ostatnia to klatka końcowa.
+4. **Tło.** Wycięte wypełnieniem od krawędzi (flood fill z rogów, próg ok. 5), nie maską koloru: dzięki temu wnętrze przedmiotu o podobnym kolorze zostaje.
+5. **Arkusz.** Jeden rząd, `12 x szerokość klatki`, WebP (skrzynia 12 x 600x556, księga 12 x 640x551). Wpis w `assets.json` z numerami klatek.
+6. **CSS.** Element `.chest-art` / `.book-art` ma `background: url(arkusz) 100% 0 / 1200% 100%` i animację `steps(1, end)`, która w kolejnych procentach czasu
+   ustawia `background-position` na `k × 9,0909%` (k = 0…11). Zamykanie to ta sama animacja w odwrotnej kolejności (`chest-frames-out`, `book-frames-out`).
+   Treść okna (skarby, czary, przyciski) pojawia się dopiero po 70% czasu otwierania (`chest-content-in`). `prefers-reduced-motion` wyłącza animację.
+
+**Czego nie robić:** edycja pojedynczych klatek (maska, osobne obrazy części ruchomych i nieruchomych, własne poświaty) dawała „pływający” korpus i
+nieregularną poświatę; wygląda gorzej niż jeden klip z modelu wideo. Jeśli ruch jest zły, wygeneruj klip jeszcze raz (15 CU), a nie łataj klatek.
+Dawne statyczne tła (`chest_bg.webp`, `spellbook_bg.webp`) zostały usunięte.
