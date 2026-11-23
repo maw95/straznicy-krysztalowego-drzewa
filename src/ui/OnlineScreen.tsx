@@ -51,7 +51,7 @@ export function OnlineScreen({ intent, preset, session, onSession, onLocalGame, 
 
   return (
     <div className="screen slate screen-enter" style={{ alignItems: 'center', paddingTop: 16, gap: 14 }}>
-      <img className="ken-burns" src={cover} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 38%', opacity: 0.3 }} />
+      <img src={cover} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 38%', opacity: 0.3 }} />
       <h1 style={{ margin: 0, lineHeight: 0, position: 'relative' }}>
         <Logo style={{ height: 'clamp(70px, 11vh, 110px)' }} />
       </h1>

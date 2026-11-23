@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Okładka gry w tle menu głównego, ustawień i gry online stoi nieruchomo: bez przesuwania na boki i bez świetlików.
 - Klejnoty w narożnikach ramek mają kolor frakcji gracza przy ekranie (szmaragd Przymierza, rubin Hordy, bursztyn Stada itd.), tak jak tło paneli; w menu zostają niebieskie.
 - Karty jednostek i bohaterów pokazują ten sam kadr ilustracji co ich okrągłe portrety (głowa i postać na pierwszym planie) dla wszystkich frakcji, a nie sztywny środek ilustracji.
 - Nowe kadry portretów: Pegaz (widać całą głowę), Biały Jeleń (bliżej: głowa, poroże i szyja), Rycerz, Łowczyni i Mędrzec Świtu (oddalone, cała ilustracja) oraz Pięść-Ogr; pozostałe portrety Przymierza i Hordy bez zmian.

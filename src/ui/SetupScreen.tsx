@@ -186,14 +186,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     <div className="screen slate screen-enter" style={{ alignItems: 'center', paddingTop: 16, gap: 18 }}>
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
         {/* The box cover: the Tree in the middle, Przymierze on the left, the Horde on the right. */}
-        <img className="ken-burns" src={cover} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 38%', opacity: 0.42 }} />
-        {Array.from({ length: 22 }, (_, i) => (
-          <span
-            key={i}
-            className="firefly"
-            style={{ left: `${(i * 47) % 100}%`, top: `${20 + ((i * 31) % 75)}%`, ['--fx' as string]: `${((i * 13) % 80) - 40}px`, ['--fy' as string]: `${((i * 29) % 60) - 40}px`, ['--fd' as string]: `${7 + (i % 5) * 1.6}s`, ['--fdl' as string]: `${-(i * 0.9)}s` } as React.CSSProperties}
-          />
-        ))}
+        <img src={cover} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 38%', opacity: 0.42 }} />
       </div>
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
         <h1 style={{ margin: 0, lineHeight: 0 }}>

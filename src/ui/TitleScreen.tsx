@@ -69,18 +69,10 @@ export function TitleScreen({ onStart }: { onStart: () => void }) {
       {/* The box cover carries its own logo at the top, which a tall screen would show: there, the night Tree from the intro. */}
       <picture>
         <source media="(max-aspect-ratio: 1/1)" srcSet={asset('intro/01-drzewo.jpg')} />
-        <img className="ken-burns title-art" src={cover} alt="" />
+        <img className="title-art" src={cover} alt="" />
       </picture>
       <div className="title-shade" aria-hidden="true" />
       <LanguageSwitch />
-      {Array.from({ length: 26 }, (_, i) => (
-        <span
-          key={i}
-          className="firefly"
-          aria-hidden="true"
-          style={{ left: `${(i * 41) % 100}%`, top: `${12 + ((i * 29) % 80)}%`, ['--fx' as string]: `${((i * 11) % 80) - 40}px`, ['--fy' as string]: `${((i * 23) % 60) - 40}px`, ['--fd' as string]: `${7 + (i % 5) * 1.5}s`, ['--fdl' as string]: `${-(i * 0.8)}s` } as React.CSSProperties}
-        />
-      ))}
       <div className="title-body">
         <h1>
           <Logo />
