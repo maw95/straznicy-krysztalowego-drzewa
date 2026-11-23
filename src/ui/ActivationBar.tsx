@@ -140,8 +140,9 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
             <button className="btn plate parch act-btn" data-mirage-swap style={{ width: 96, height: 74, fontSize: 13 }} title="Pałac Mirażu: raz na bitwę jednostka zamienia się miejscami ze swoim mirażem." onClick={() => onAction({ type: 'battleMirageSwap' })}>Zamiana z mirażem</button>
           )}
           {tideSwap && (
-            <button className={`btn plate parch act-btn ${tideMode ? 'on' : ''}`} data-tide-swap style={{ width: 96, height: 74, fontSize: 13 }} title={`Świątynia Pływów: zanim jednostka się ruszy, zamienia się miejscami z sojusznikiem w zasięgu ${FACTION_MECHANICS.tideRange} pól (wskaż go na arenie).`} onClick={() => setTideMode?.(!tideMode)}>
-              Przypływ{tideMode ? ' ✓' : ''}
+            <button className={`btn plate parch act-btn ${tideMode ? 'on' : ''}`} data-tide-swap style={{ width: 96, height: 74, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, fontSize: 13 }} title={`Świątynia Pływów: zanim jednostka się ruszy, zamienia się miejscami z sojusznikiem w zasięgu ${FACTION_MECHANICS.tideRange} pól (wskaż go na arenie).`} onClick={() => setTideMode?.(!tideMode)}>
+              <img src={asset('cards/abilities/ebbTide.png')} alt="" style={{ width: 34, height: 34 }} />
+              <span style={{ lineHeight: 1.05 }}>Przypływ{tideMode ? ' ✓' : ''}</span>
             </button>
           )}
           {freeAbility && ab && CELL_ABILITIES.includes(ab) && (

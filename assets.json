@@ -7601,6 +7601,248 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "tides/herb-i-ramki",
+      "pliki": [
+        "public/assets/cards/crests/tides.png",
+        "public/assets/cards/frames/tides_hero.png",
+        "public/assets/cards/frames/tides_support.png"
+      ],
+      "typ": "herb Bractwa Przypływu i ramki kart bohatera i pomocnika (jadeit)",
+      "opis": "Herb: sztandar w stylu herbów Przymierza i Hordy, trójząb w muszli, koralowy klejnot; 1024x1024 przycięty do 425x420. Ramki: ramki Przymierza przekolorowane na morską zieleń (jadeit), narożne sztandary zastąpione herbem (scripts/assets/tides_frames.py, UnitCard.tsx).",
+      "scenario_asset": "asset_H8DDPTL9ZjAReLyaKyWud6bG",
+      "prompt": "Use the reference image only for the style and layout of the heraldic banner (...). Draw a new banner for the Brotherhood of the Tide faction of the sea shore: the cloth is deep sea-green and jade with subtle woven texture, the golden emblem in the centre shows a trident rising out of an open scallop shell, the gem at the top is coral pink. ... transparent background, no text.",
+      "narzedzie": "Scenario (plan płatny) + skrypt Pillow",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024, przezroczyste tło, herb Hordy jako odniesienie (asset_89X4q4hfq34hSJoVs3cCXcv8)",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-waterWall",
+      "pliki": [
+        "public/assets/cards/abilities/waterWall.png",
+        "public/assets/cards/abilities/waterWall_inner.png"
+      ],
+      "typ": "ikona zdolności waterWall (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/waterWall.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: a tall rising wall of sea water with a curling crest, two small arrows pushing outward from its base. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-sirenSong",
+      "pliki": [
+        "public/assets/cards/abilities/sirenSong.png",
+        "public/assets/cards/abilities/sirenSong_inner.png"
+      ],
+      "typ": "ikona zdolności sirenSong (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/sirenSong.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: the head of a mermaid singing in profile with flowing hair, musical notes and curving sound waves coming from her mouth. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-deepCoil",
+      "pliki": [
+        "public/assets/cards/abilities/deepCoil.png",
+        "public/assets/cards/abilities/deepCoil_inner.png"
+      ],
+      "typ": "ikona zdolności deepCoil (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/deepCoil.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: a sea serpent whose body forms a tight spiral coil with its head raised in the middle, a small arrow pulling inward. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-tuskShove",
+      "pliki": [
+        "public/assets/cards/abilities/tuskShove.png",
+        "public/assets/cards/abilities/tuskShove_inner.png"
+      ],
+      "typ": "ikona zdolności tuskShove (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/tuskShove.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: the head of a walrus seen from the front with two long tusks, a short arrow pushing away in front of the tusks. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-molt",
+      "pliki": [
+        "public/assets/cards/abilities/molt.png",
+        "public/assets/cards/abilities/molt_inner.png"
+      ],
+      "typ": "ikona zdolności molt (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/molt.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: an empty discarded crab shell beside a fresh smaller crab, small curved arrows between them. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-shellUp",
+      "pliki": [
+        "public/assets/cards/abilities/shellUp.png",
+        "public/assets/cards/abilities/shellUp_inner.png"
+      ],
+      "typ": "ikona zdolności shellUp (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/shellUp.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: a turtle withdrawn into its domed shell seen from the side, a round protective glow around the shell. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-harpoon",
+      "pliki": [
+        "public/assets/cards/abilities/harpoon.png",
+        "public/assets/cards/abilities/harpoon_inner.png"
+      ],
+      "typ": "ikona zdolności harpoon (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/harpoon.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: a barbed harpoon with a rope trailing from it, flying toward the right, a small pull arrow on the rope. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-inkCloud",
+      "pliki": [
+        "public/assets/cards/abilities/inkCloud.png",
+        "public/assets/cards/abilities/inkCloud_inner.png"
+      ],
+      "typ": "ikona zdolności inkCloud (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/inkCloud.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: a small octopus silhouette releasing a swirling cloud of ink behind it. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-whirl",
+      "pliki": [
+        "public/assets/cards/abilities/whirl.png",
+        "public/assets/cards/abilities/whirl_inner.png"
+      ],
+      "typ": "ikona zdolności whirl (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/whirl.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: a circular whirlpool of water with spiral arms, a small figure being turned around in it. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-pearlShield",
+      "pliki": [
+        "public/assets/cards/abilities/pearlShield.png",
+        "public/assets/cards/abilities/pearlShield_inner.png"
+      ],
+      "typ": "ikona zdolności pearlShield (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/pearlShield.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: a round pearl resting in an open scallop shell with a circular shield outline around it. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-pincers",
+      "pliki": [
+        "public/assets/cards/abilities/pincers.png",
+        "public/assets/cards/abilities/pincers_inner.png"
+      ],
+      "typ": "ikona zdolności pincers (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/pincers.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: two big crab pincers facing each other and closing on a small dot between them. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-wingBeat",
+      "pliki": [
+        "public/assets/cards/abilities/wingBeat.png",
+        "public/assets/cards/abilities/wingBeat_inner.png"
+      ],
+      "typ": "ikona zdolności wingBeat (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/wingBeat.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: a seabird albatross with wide spread wings seen from the front, curved wind lines under the wings. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-livingReef",
+      "pliki": [
+        "public/assets/cards/abilities/livingReef.png",
+        "public/assets/cards/abilities/livingReef_inner.png"
+      ],
+      "typ": "ikona zdolności livingReef (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/livingReef.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: a branching coral reef formation with outstretched coral branches rising like living arms. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-ebbTide",
+      "pliki": [
+        "public/assets/cards/abilities/ebbTide.png",
+        "public/assets/cards/abilities/ebbTide_inner.png"
+      ],
+      "typ": "ikona zdolności ebbTide (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/ebbTide.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: two small figures swapping places with two curved arrows between them above a receding wave line. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "karty/ikona-deepWhirl",
+      "pliki": [
+        "public/assets/cards/abilities/deepWhirl.png",
+        "public/assets/cards/abilities/deepWhirl_inner.png"
+      ],
+      "typ": "ikona zdolności deepWhirl (Bractwo Przypływu)",
+      "opis": "Symbol 1024x1024 (koralowy neon na ciemnej morskiej zieleni) wycięty w koło i wstawiony w złotą ramkę dive.png skryptem scripts/assets/ability_icon_glyph.py. Jedno podejście na ikonę. Źródło: .tmp/zrodla/tides_frames_icons/g/deepWhirl.png",
+      "prompt": "Square game ability icon, glowing coral-pink neon line-art glyph on a dark deep sea-green background: a huge deep whirlpool with a great sea-monster eye in the centre and two tentacles curling around the spiral. Bold simple readable silhouette, centered, no text, no frame.",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

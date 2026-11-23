@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Bractwo Przypływu ma własny herb, jadeitowe ramki kart i 15 własnych ikon zdolności (Ściana Wody, Pieśń Syreny, Wir, Odpływ i inne); przycisk „Przypływ” na pasku aktywacji ma ikonę, a kolor frakcji zmienił się z niebieskiego na koralowy
 - Żelazny Klan i Bractwo Przypływu mają własne ilustracje kart i portrety wszystkich 19 postaci (krasnoludzka przełęcz i rafa w czasie odpływu); Kozioł Taranowy, Pogromca Olbrzymów, Armata, Wartownik z Brązu, Wojownik Klanu i Albatros przerysowane na prośbę autora
 - Obwódka wokół portretu bohatera ma kolor jego frakcji (np. pomarańczowy u Dzikich Stad), a nie kolor strony przy stole (czerwony dla Hordy); dotyczy mapy świata, panelu bohatera i widoków bitwy.
 - W skrzyni dwa sąsiednie skarby o długiej nazwie (np. dwa „Wielkie Eliksiry Uzdrowienia”) nie stykają już podpisów.

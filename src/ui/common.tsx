@@ -23,9 +23,7 @@ const ABILITY_ART: Record<string, string> = {
   // Rój Puszczy (placeholders: docs/BACKLOG.md 2a).
   lastCut: 'backstab', sleepSpores: 'poisonClaw', chitinWall: 'hardHead', puffball: 'shardBurst', anthill: 'packHunt', metamorphosis: 'rebirth', homeGround: 'bogRegrowth',
   airHunt: 'dive', spreadSpores: 'treeRoots', coil: 'tentacles', slimeTrail: 'bogRegrowth', greatChorus: 'stormKing',
-  // Bractwo Przypływu (placeholders: docs/BACKLOG.md 2a).
-  waterWall: 'stormKing', sirenSong: 'curse', deepCoil: 'tentacles', tuskShove: 'boulder', molt: 'rebirth', shellUp: 'hardHead', harpoon: 'grab', inkCloud: 'curse',
-  whirl: 'dive', pearlShield: 'guardian', pincers: 'grab', wingBeat: 'nestLeap', livingReef: 'treeRoots', ebbTide: 'web', deepWhirl: 'manyHeads',
+  // Bractwo Przypływu has its own icons for all fifteen abilities (public/assets/cards/abilities).
   wail: 'curse', viyGaze: 'web', breathAgain: 'giftOfLife', manaReap: 'giftOfLife', graveBreath: 'fireBreath', toll: 'sunburst',
 };
 /** Units whose ability has a picture of its own (the same ability on another unit keeps the shared one): `cards/abilities/u_<unit>.png`. */
@@ -67,7 +65,7 @@ export const FACTION_RIBBON: Record<FactionId, string> = {
 };
 /** The ring round a portrait that belongs to a faction (the hero pickers of the setup screens): the colour of the faction, whatever seat it sits in. */
 export const FACTION_RING: Record<FactionId, string> = {
-  dawn: '#2C7048', horde: '#9A2226', herds: '#B8731E', undead: '#6A3E98', clans: '#A8506E', frost: '#3E8FB8', free: '#6E4B2E', sands: '#C79A1E', swarm: '#2A8A80', tides: '#2A6FC0',
+  dawn: '#2C7048', horde: '#9A2226', herds: '#B8731E', undead: '#6A3E98', clans: '#A8506E', frost: '#3E8FB8', free: '#6E4B2E', sands: '#C79A1E', swarm: '#2A8A80', tides: '#D8695A',
 };
 /** The ribbon (or ring) key of a team seat: the faction that sits there, not the seat itself (a Covenant player in the second seat does not get the Horde's red). */
 export const teamFaction = (state: unknown, team: Side | FactionId | 'draw' | null | undefined): Side | FactionId => (!team || team === 'draw' || team === 'neutral' ? 'neutral' : raceOf(state, team as TeamId));

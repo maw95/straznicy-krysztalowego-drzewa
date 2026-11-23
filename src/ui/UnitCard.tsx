@@ -107,6 +107,9 @@ const FRAMES: Record<string, FrameLayout> = {
 // The Wild Herd's frames are the Covenant's recoloured (ochre), so they share its layout (scripts/assets/herds_frames.py).
 FRAMES.herds_hero = { ...FRAMES.dawn_hero, file: 'herds_hero' };
 FRAMES.herds_support = { ...FRAMES.dawn_support, file: 'herds_support' };
+// The Brotherhood of the Tide's frames are the Covenant's recoloured (jade), same layout (scripts/assets/tides_frames.py).
+FRAMES.tides_hero = { ...FRAMES.dawn_hero, file: 'tides_hero' };
+FRAMES.tides_support = { ...FRAMES.dawn_support, file: 'tides_support' };
 
 const FRAME_W = 551;
 const SRC_H = 713;

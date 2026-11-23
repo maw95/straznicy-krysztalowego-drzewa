@@ -4,6 +4,10 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Bractwo Przypływu ma własny herb, jadeitowe ramki kart i 15 własnych ikon zdolności (Ściana Wody, Pieśń Syreny, Wir, Odpływ i inne); przycisk „Przypływ” na pasku aktywacji ma ikonę, a kolor frakcji zmienił się z niebieskiego na koralowy":
+    "The Brotherhood of the Tide has its own crest, jade card frames and 15 own ability icons (Water Wall, Siren Song, Whirl, Ebb Tide and others); the Tide button on the activation bar has an icon, and the faction colour changed from blue to coral.",
+  "Żelazny Klan i Bractwo Przypływu mają własne ilustracje kart i portrety wszystkich 19 postaci (krasnoludzka przełęcz i rafa w czasie odpływu); Kozioł Taranowy, Pogromca Olbrzymów, Armata, Wartownik z Brązu, Wojownik Klanu i Albatros przerysowane na prośbę autora":
+    "The Iron Clan and the Brotherhood of the Tide have their own card art and portraits for all 19 characters (a dwarven mountain pass and a reef at low tide); the Ram Goat, Giant Slayer, Cannon, Bronze Sentinel, Clan Warrior and Albatross were redrawn at the author's request.",
   "Wersja angielska: puste miejsce w panelu bohatera („brak” umiejętności) i nagłówek „Pomocnicy” w oknie frakcji są przetłumaczone, a nie zostają po polsku.":
     "English version: the empty slot in the hero panel (“brak” for no skills) and the “Pomocnicy” heading in the faction window are translated instead of staying Polish.",
   "Karty Jeża, Wiwerny Cienia i Srebrnego Lisa mają ten sam bliższy kadr ilustracji co ich portrety (głowa i postać na pierwszym planie).":
