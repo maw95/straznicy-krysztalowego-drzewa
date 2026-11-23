@@ -202,6 +202,8 @@ Od poziomu Wyprawa na mapie stoją też **grupy neutralnych**, nagradzające do�
 
 **Skarb** to jednorazowa karta frakcji, wspólna dla wszystkich jej graczy. Zdobywa się go z pól skarbów, od strażników i neutralnych oraz z umiejętności i nagród. Używa się go w bitwie przed akcją jednostki (ikona „Skarby”, klawisz **S**) albo na mapie (Eliksir Odrodzenia). Na dużych mapach Przymierze zaczyna z kilkoma skarbami, a komputer na wyższych trudnościach ma ich więcej. Wszystkie karty są w zakładce „Skarby”.
 
+Skrzynia skarbów to otwierana skrzynia z ikonami skarbów po 6 na stronie (gdy jest ich więcej, strzałki „← 2/3 →”). Lewy klik na ikonie używa skarbu (gdy teraz nie można, pokazuje jego kartę), prawy klik (na telefonie przytrzymanie) pokazuje szczegóły. Tak samo działa Księga czarów w bitwie: ikona, nazwa i koszt many czaru, lewy klik rzuca, prawy pokazuje opis, a w rogu księgi jest aktualna i największa mana. Okno zamykasz okrągłą pieczęcią z kłódką, klawiszem Esc albo Enter.
+
 Na arenie skarby ze wspólnej talii wybiera się na zmianę: strona wybiera jeden z pokazanych (Przymierze widzi 3, Horda 4), a każda ma po 2 skarby, ukryte do chwili użycia.
 
 ## Osady i gospodarka

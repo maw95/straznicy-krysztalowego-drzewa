@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Okno skarbów i Księga czarów wyglądają inaczej: skarby i czary to same ikony z nazwą (czar z kosztem many), po 6 na stronie ze strzałkami „← 2/3 →”, bez beżowych list i napisów; lewy klik używa skarbu lub rzuca czar, prawy pokazuje szczegóły; mana jest małym znacznikiem w rogu księgi; zamiast „Zamknij” jest okrągła pieczęć z kłódką (także Esc); okna otwierają się z zamkniętej skrzyni i księgi, a przy zamykaniu zamykają z powrotem. Skrzynia nie ma już ucięcia po bokach.
 - Dzikie Stado ma własną muzykę (dwa utwory: bębny i róg w galopie oraz spokojna wędrówka): gra w osadzie Stada i gdy bohater stoi na ziemi Stada, zamiast ogólnej muzyki mapy.
 - Ekran miejsc przy stole: na początku jest dwóch graczy (człowiek i komputer), kolejnych dodajesz przyciskiem „Dodaj gracza”, a małym krzyżykiem usuwasz; frakcję i bohatera wybierasz ikonami, a kostka losuje je przy starcie gry. Liczbę graczy nie wybiera się już w kreatorze (poza grą online).
 - Mapa dzieli się między strony na równe części (różnica najwyżej jeden kafelek) przy każdym kształcie i liczbie stron, a przy trzech i czterech stronach bazy leżą możliwie najdalej od siebie.

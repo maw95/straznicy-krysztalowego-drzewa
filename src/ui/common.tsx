@@ -186,7 +186,7 @@ export function Modal({ open, onClose, children, dim = true }: { open: boolean; 
     const t = window.setTimeout(() => {
       setShown(false);
       setLeaving(false);
-    }, 320);
+    }, body.current?.querySelector('.chestbox, .spellbook') ? 760 : 320);
     return () => window.clearTimeout(t);
   }, [leaving]);
   if (!shown) return null;

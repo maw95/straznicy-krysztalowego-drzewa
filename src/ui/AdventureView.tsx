@@ -9,7 +9,7 @@ import { fightLevelAt } from './fightBadges';
 import { EnemyPill, FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
 import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
-import { ChestFrame, TreasureButton } from './TreasureButton';
+import { ChestFrame, TreasureButton, TreasureSlot } from './TreasureButton';
 import { SettlementDialog } from './SettlementDialog';
 import { BUILDING_NAMES, chestPreview, garrisonAt, hasParent, hutPayable, KINGDOM, goldOf, incomeBreakdown, incomeOf, resourceIncomeBreakdown, settlementAt } from '../engine/kingdom';
 import { ECONOMY, MINE_NAMES, OBJECT_NAMES, OBJECTS, objectReady, RESOURCE_NAMES, thingsText, type ResourceId } from '../engine/economy';
@@ -22,7 +22,6 @@ import { parseKey, type HexKey } from '../engine/hex';
 import { mapNeighbors } from '../engine/map';
 import { isDigital, type Action, type GameState, type Tile } from '../engine/types';
 import { itemArt } from './statScale';
-import { hoverCard } from './hover';
 import { details, useDetailsShown } from './details';
 import { aimedCursor } from './cursors';
 import { figureFor, FigureLayer, type Piece } from './FigureLayer';
@@ -802,32 +801,25 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
       </div>
       <Modal open={treasuresOpen} onClose={() => setTreasuresOpen(false)}>
         {treasuresOpen && (
-          <ChestFrame title={`Wspólne skarby frakcji${viewer ? ` · ${FACTION_NAMES[raceOf(state, viewer)]}` : ''}`} onClose={() => setTreasuresOpen(false)}>
-            <>
-              {inventory.length === 0 && <div style={{ fontSize: 15, color: '#6B4A22', fontStyle: 'italic' }}>Brak skarbów.</div>}
-              {inventory.map((it) => {
-                const def = itemDef(it.kind, isDigital(state.rules));
-                const usable = canAct && hero?.faction === viewer && def.usableIn.includes('map') && (it.kind !== 'resurrection' || deadUnits.length > 0);
-                return (
-                  <div key={it.id} className="plate parch" style={{ padding: '6px 9px', display: 'flex', gap: 8, alignItems: 'center' }}>
-                    <button className="btn" title="Pokaż kartę skarbu" onClick={() => onShowCard(`item:${it.kind}`)} style={{ background: 'none', border: 0, padding: 0, flex: 'none' }}>
-                      <img {...hoverCard(`item:${it.kind}`)} src={itemArt(it.kind, isDigital(state.rules))} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
-                    </button>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 800, fontSize: 15, lineHeight: 1.1 }}>{def.name}</div>
-                      <div style={{ fontSize: 13, lineHeight: 1.15 }}><StatText rule text={def.text} /></div>
-                      {it.foundBy && <div style={{ fontSize: 12, fontStyle: 'italic', color: '#6B5233' }}>Znalazł(a): {UNITS[it.foundBy].name}</div>}
-                    </div>
-                    {usable && (
-                      <button className="btn prim" style={{ padding: '3px 10px', fontSize: 14 }} onClick={() => { setTreasuresOpen(false); if (it.kind === 'map') setMapPicks({ itemId: it.id, picks: [] }); else setResPick(it.id); }}>
-                        Użyj
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
-            </>
-          </ChestFrame>
+          <ChestFrame
+            label={`Wspólne skarby frakcji${viewer ? ` · ${FACTION_NAMES[raceOf(state, viewer)]}` : ''}`}
+            onClose={() => setTreasuresOpen(false)}
+            items={inventory.map((it) => {
+              const def = itemDef(it.kind, isDigital(state.rules));
+              const usable = canAct && hero?.faction === viewer && def.usableIn.includes('map') && (it.kind !== 'resurrection' || deadUnits.length > 0);
+              return (
+                <TreasureSlot
+                  key={it.id}
+                  kind={it.kind}
+                  art={itemArt(it.kind, isDigital(state.rules))}
+                  name={def.name}
+                  usable={usable}
+                  use={() => { setTreasuresOpen(false); if (it.kind === 'map') setMapPicks({ itemId: it.id, picks: [] }); else setResPick(it.id); }}
+                  onShowCard={() => onShowCard(`item:${it.kind}`)}
+                />
+              );
+            })}
+          />
         )}
       </Modal>
       <Modal open={settlementOpen !== null} onClose={() => setSettlementOpen(null)}>

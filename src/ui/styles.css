@@ -843,7 +843,6 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
   text-shadow: 0 1px 1px #2A0508, 0 0 3px rgba(0, 0, 0, 0.7);
   box-shadow: 0 0 0 1.5px #1E1204, 0 2px 5px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.35);
 }
-.spell-row.off button { cursor: not-allowed; }
 .treasure-cap { font-size: 12px; font-weight: 700; color: #F3D27A; text-shadow: 0 1px 2px #000, 0 0 4px #000; letter-spacing: 0.04em; }
 .backpack-btn { padding: 0; }
 /* Milestones of a hero's special ability (hero sheet) */
@@ -1032,25 +1031,76 @@ button.sb-slot:disabled { cursor: default; }
 
 /* The spell book window: an open book painted by Scenario (leather cover, two parchment pages, spine), stretched with border-image so the corners keep their shape */
 .spellbook { width: min(900px, 96vw); box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; padding: 6px 14px 10px; border: solid transparent; border-width: 36px 70px 34px; border-image: url('/assets/ui/spellbook_bg.webp') 70 150 66 fill / 36px 70px 34px stretch; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.7)); }
-.spellbook-title { width: calc(50% - 24px); text-align: center; font-size: 30px; font-weight: 800; color: #4A2C0A; letter-spacing: 0.06em; text-shadow: 0 1px 0 rgba(255, 240, 200, 0.6); }
-.spellbook-sub { width: calc(50% - 24px); text-align: center; color: #5A3A8C; font-size: 17px; margin-top: -4px; }
-.spellbook-pages { position: relative; display: grid; grid-template-columns: 1fr 1fr; align-content: start; gap: 6px 44px; padding: 8px 10px; min-height: min(300px, 50vh); max-height: min(58vh, 520px); overflow: auto; border-radius: 6px; color: #3A2508; }
-.spellbook-empty { grid-column: 1 / -1; text-align: center; font-style: italic; font-size: 17px; }
-.spell-row { display: flex; gap: 10px; align-items: flex-start; padding: 8px 4px; border-bottom: 1px dashed rgba(90, 55, 20, 0.45); }
-.spell-row img { flex: none; border-radius: 50%; }
-.spell-row.off { opacity: 0.55; filter: grayscale(0.85); }
-.spell-row.off button { cursor: not-allowed; }
-.spell-body { flex: 1; min-width: 0; }
-.spell-name { font-weight: 800; font-size: 19px; line-height: 1.1; }
-.spell-cost { font-weight: 700; font-size: 14px; color: #5A3A8C; }
-.spell-text { font-size: 14px; line-height: 1.2; }
-.spell-why { font-size: 12px; font-style: italic; color: #7A2A12; }
-@media (max-width: 760px) { .spellbook-pages { grid-template-columns: 1fr; padding: 12px; } .spellbook-title { font-size: 24px; } }
+.spellbook { position: relative; }
+.spellbook-mana { position: absolute; left: 64px; top: 40px; z-index: 2; display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px 2px 6px; border-radius: 999px; background: rgba(35, 20, 60, 0.86); color: #E4D8FF; font-size: 16px; box-shadow: 0 0 0 1.5px #B88A35, 0 2px 4px rgba(0, 0, 0, 0.6); }
+.spellbook-mana b { color: #FFF; }
+.spellbook-pages { position: relative; display: grid; grid-template-columns: repeat(3, 1fr) 36px repeat(3, 1fr); align-items: start; gap: 10px 6px; padding: 54px 12px 18px; min-height: min(230px, 42vh); color: #3A2508; }
+.spellbook-pages > .spellbook-empty { grid-column: 1 / -1; }
+.spellbook-spine { grid-column: 4; align-self: stretch; }
+.spellbook-pages > .slot:nth-of-type(n+4) { grid-column: auto; }
+.spellbook-empty { text-align: center; font-style: italic; font-size: 17px; }
+.spellbook .pager { align-self: center; margin-bottom: 4px; }
+
+/* An icon with its name under it: a treasure in the chest or a spell in the book. */
+.slot { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: 0; padding: 4px 2px; font: inherit; color: inherit; cursor: pointer; min-width: 0; border-radius: 8px; }
+.slot:hover { transform: translateY(-2px); filter: brightness(1.1); }
+.slot:focus-visible { outline: 2px solid #F3D27A; outline-offset: 2px; }
+.slot > img, .slot-icon img { width: 100%; max-width: 64px; aspect-ratio: 1; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px #B88A35, 0 0 0 3.5px #3A2508, 0 3px 6px rgba(0, 0, 0, 0.55); }
+.slot-icon { position: relative; display: block; width: 100%; max-width: 64px; }
+.slot-icon img { max-width: none; display: block; }
+.slot-cost { position: absolute; right: -6px; bottom: -4px; min-width: 22px; height: 22px; padding: 0 3px; box-sizing: border-box; display: grid; place-items: center; border-radius: 999px; background: #5A3A9C; color: #fff; font-size: 14px; font-weight: 800; box-shadow: 0 0 0 1.5px #D9CCFF, 0 1px 3px #000; }
+.slot-name { font-weight: 800; font-size: 14px; line-height: 1.1; text-align: center; overflow-wrap: anywhere; }
+.chestbox .slot-name { color: #F3D27A; text-shadow: 0 1px 2px #000, 0 0 4px #000; }
+.slot.off { opacity: 0.5; filter: grayscale(0.85); cursor: help; }
+.slot.off:hover { transform: none; filter: grayscale(0.85); }
+
+/* The round seal that closes the chest and the book (in the top corner of the window). */
+.close-seal { position: absolute; top: 6px; right: 8px; z-index: 3; width: 40px; height: 40px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7)); }
+.close-seal:hover { transform: scale(1.1) rotate(-6deg); filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7)) brightness(1.15); }
+.close-seal:focus-visible { outline: 2px solid #F3D27A; border-radius: 50%; }
+.pager { display: flex; align-items: center; justify-content: center; gap: 12px; color: #F3D27A; font-weight: 800; font-size: 16px; text-shadow: 0 1px 2px #000; }
+.spellbook .pager { color: #4A2C0A; text-shadow: 0 1px 0 rgba(255, 240, 200, 0.6); }
+.pager-btn { width: 30px; height: 30px; border-radius: 50%; border: 0; cursor: pointer; font: inherit; font-size: 18px; line-height: 1; color: #3A2508; background: radial-gradient(circle at 35% 30%, #F3D27A, #B88A35); box-shadow: 0 0 0 1.5px #3A2508, 0 2px 4px rgba(0, 0, 0, 0.6); }
+.pager-btn:disabled { opacity: 0.35; cursor: default; }
 
 /* The treasure window: an open chest painted by Scenario (wood, brass rim, red velvet), stretched with border-image */
 .chestbox { width: min(520px, 96vw); box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; padding: 4px 10px 6px; border: solid transparent; border-width: 78px 22px 66px; border-image: url('/assets/ui/chest_bg.webp') 195 55 165 55 fill / 78px 22px 66px stretch; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.7)); }
-.chestbox-title { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 24px; font-weight: 800; color: #F3D27A; text-shadow: 0 2px 3px #000; }
-.chestbox-inner { display: flex; flex-direction: column; gap: 6px; max-height: min(56vh, 460px); overflow: auto; padding: 10px; border-radius: 6px; background: url('/assets/ui/parchment.jpg') center / cover; box-shadow: inset 0 0 16px rgba(60, 35, 10, 0.7); color: #3A2508; }
+.chestbox { position: relative; width: min(640px, 96vw); }
+/* The painted chest is cut off at its short sides: a wooden end with a brass edge hides the cut. */
+.chestbox::before, .chestbox::after { content: ''; position: absolute; top: -70px; bottom: -66px; width: 16px; pointer-events: none; background: repeating-linear-gradient(0deg, #2A1809 0 7px, #3A2410 7px 8px, #241406 8px 15px), #2A1809; }
+.chestbox::before { left: -22px; border-right: 3px solid #B88A35; box-shadow: 2px 0 4px rgba(0, 0, 0, 0.6); }
+.chestbox::after { right: -22px; border-left: 3px solid #B88A35; box-shadow: -2px 0 4px rgba(0, 0, 0, 0.6); }
+.chestbox-inner { padding: 14px 8px 6px; min-height: 120px; }
+.slot-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; align-items: start; }
+.chest-empty { text-align: center; font-style: italic; font-size: 16px; color: #F3D27A; text-shadow: 0 1px 2px #000; padding: 34px 0; }
+
+/* Opening and closing of the chest and the book: first the closed one (its painted icon) swells in, then the open window unfolds out of it and the content fades in; on leaving the same in reverse. */
+.overlay > .modal-body:has(> .chestbox, > .spellbook) { animation: none; }
+.overlay.leaving:has(.chestbox, .spellbook) { animation: fade-out 0.7s ease-in both; }
+.overlay.leaving > .modal-body:has(> .chestbox, > .spellbook) { animation: none; }
+.chestbox, .spellbook { transform-origin: 50% 70%; animation: box-open 0.85s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+.leaving .chestbox, .leaving .spellbook { animation: box-close 0.6s cubic-bezier(0.6, 0, 0.8, 0.4) both; }
+.chestbox > *, .spellbook > * { animation: box-content-in 0.9s ease-out both; }
+.leaving .chestbox > *, .leaving .spellbook > * { animation: box-content-out 0.3s ease-in both; }
+.chestbox::before, .chestbox::after { animation: box-content-in 0.9s ease-out both; }
+.leaving .chestbox::before, .leaving .chestbox::after { animation: box-content-out 0.3s ease-in both; }
+.chestbox, .spellbook { --closed: url('/assets/ikony/mapa/treasure.webp'); }
+.spellbook { --closed: url('/assets/ikony/mapa/ksiega.webp'); }
+/* the closed one: a big painted icon in the middle that fades as the window opens */
+.modal-body:has(> .chestbox, > .spellbook) { position: relative; }
+.chestbox > .closed-lid, .spellbook > .closed-lid { position: absolute; left: 50%; top: 50%; width: 150px; height: 150px; margin: -75px 0 0 -75px; background: var(--closed) center / contain no-repeat; pointer-events: none; z-index: 4; animation: lid-lift 0.85s ease-in-out both; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.7)); }
+.leaving .chestbox > .closed-lid, .leaving .spellbook > .closed-lid { animation: lid-drop 0.6s ease-in-out both; }
+@keyframes box-open { 0% { transform: scale(0.22, 0.2); opacity: 0.0; } 25% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+@keyframes box-close { 0% { transform: none; opacity: 1; } 100% { transform: scale(0.22, 0.2); opacity: 0; } }
+@keyframes box-content-in { 0%, 55% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes box-content-out { 0% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes lid-lift { 0% { opacity: 1; transform: scale(0.7); } 12% { transform: scale(1.05) rotate(-4deg); } 22% { transform: scale(1) rotate(3deg); } 45% { opacity: 1; transform: scale(1); } 75%, 100% { opacity: 0; transform: scale(2.4); } }
+@keyframes lid-drop { 0%, 40% { opacity: 0; transform: scale(2.4); } 75% { opacity: 1; transform: scale(1); } 100% { opacity: 1; transform: scale(0.7); } }
+@media (prefers-reduced-motion: reduce) {
+  .chestbox, .spellbook, .chestbox > *, .spellbook > *, .chestbox::before, .chestbox::after, .chestbox > .closed-lid, .spellbook > .closed-lid { animation: none !important; }
+  .chestbox > .closed-lid, .spellbook > .closed-lid { display: none; }
+  .overlay.leaving:has(.chestbox, .spellbook) { animation-duration: 0.01s; }
+}
 
 /* The list of own settlements in the side panel of the map: no panel behind it, a thumbnail and the name per row. */
 .settlement-list { display: flex; flex-direction: column; gap: 4px; color: #F6EBD0; text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, 0.6); }
@@ -1187,13 +1237,16 @@ button.sb-slot:disabled { cursor: default; }
 /* A phone held sideways: the book and the chest are lower than 390 px, with thinner painted edges and smaller type. */
 @media (max-height: 560px) and (max-width: 1100px) {
   .spellbook { gap: 4px; padding: 2px 10px 4px; border-width: 22px 46px 20px; border-image: url('/assets/ui/spellbook_bg.webp') 70 150 66 fill / 22px 46px 20px stretch; }
-  .spellbook-title { font-size: 22px; }
-  .spellbook-sub { font-size: 14px; margin-top: -2px; }
-  .spellbook-pages { min-height: 0; max-height: calc(100vh - 185px); padding: 4px 8px; }
+  .spellbook-pages { min-height: 0; padding: 44px 8px 6px; gap: 4px; }
+  .spellbook-mana { left: 40px; top: 16px; font-size: 13px; }
+  .slot .slot-name { font-size: 11px; }
+  .slot > img, .slot-icon { max-width: 44px; }
   .chestbox { gap: 6px; border-width: 50px 18px 44px; border-image: url('/assets/ui/chest_bg.webp') 195 55 165 55 fill / 50px 18px 44px stretch; }
-  .chestbox-title { font-size: 19px; }
-  .chestbox-title img { width: 30px; height: 30px; }
-  .chestbox-inner { max-height: calc(100vh - 205px); padding: 6px; }
+  .chestbox-inner { padding: 6px 4px 2px; min-height: 0; }
+  .chestbox::before, .chestbox::after { top: -50px; bottom: -44px; width: 12px; }
+  .chestbox::before { left: -18px; }
+  .chestbox::after { right: -18px; }
+  .close-seal { width: 30px; height: 30px; top: 2px; }
 }
 
 /* A phone, in a battle: the Magia and Skarby buttons are small and sit low, above the bottom bar, clear of the corner ornament of the arena's frame. */

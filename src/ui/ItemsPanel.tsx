@@ -5,11 +5,9 @@ import { ABILITY } from '../engine/data';
 import { alliesOf, canUseBattleItem } from '../engine/battle';
 import { isDigital, type Action, type BattleUnit, type GameState } from '../engine/types';
 import { itemArt } from './statScale';
-import { hoverCard } from './hover';
-import { StatText } from './markers';
 import { reserveOf } from './BattleSidePanel';
 import { Modal } from './common';
-import { ChestFrame, TreasureButton } from './TreasureButton';
+import { ChestFrame, TreasureButton, TreasureSlot } from './TreasureButton';
 import { SpellBookDialog, SpellButton } from './SpellBook';
 import { manaOf, type SpellId } from '../engine/magic';
 
@@ -109,25 +107,15 @@ export function ItemsPanel({ state, side, active, targeting, setTargeting, freeA
       </div>
       <Modal open={showItems} onClose={() => setShowItems(false)}>
         {showItems && (
-          <ChestFrame title="Skarby frakcji" onClose={() => setShowItems(false)}>
-            {state.factions[side].inventory.length === 0 && <div style={{ fontSize: 15, color: '#6B4A22', fontStyle: 'italic' }}>Brak skarbów.</div>}
-            {state.factions[side].inventory.map((id) => {
+          <ChestFrame
+            label="Skarby frakcji"
+            onClose={() => setShowItems(false)}
+            items={state.factions[side].inventory.map((id) => {
               const def = itemDef(state.items[id].kind, isDigital(state.rules));
               const ok = itemsAllowed && def.usableIn.includes('battle') && !(def.kind === 'resurrection' && !deadOwn.length) && !(def.kind === 'horn' && !alliesOf(b, active).concat(active).some((x) => UNITS[x.defId].kind === 'support'));
-              return (
-                <div key={id} className="plate parch" style={{ padding: '6px 9px', display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <button className="btn" title="Pokaż kartę skarbu" onClick={() => onShowCard(`item:${def.kind}`)} style={{ background: 'none', border: 0, padding: 0, flex: 'none' }}>
-                    <img {...hoverCard(`item:${def.kind}`)} src={itemArt(def.kind, isDigital(state.rules))} alt="" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', boxShadow: '0 0 0 2px #B88A35, 0 0 0 3px #3A2508' }} />
-                  </button>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 800, fontSize: 16 }}>{def.name}</div>
-                    <div style={{ fontSize: 14, lineHeight: 1.15 }}><StatText rule text={def.text} /></div>
-                  </div>
-                  <button className="btn prim" disabled={!ok} style={{ padding: '3px 10px', fontSize: 14 }} onClick={() => { setShowItems(false); startItem(id); }}>Użyj</button>
-                </div>
-              );
+              return <TreasureSlot key={id} kind={def.kind} art={itemArt(def.kind, isDigital(state.rules))} name={def.name} usable={ok} use={() => { setShowItems(false); startItem(id); }} onShowCard={() => onShowCard(`item:${def.kind}`)} />;
             })}
-          </ChestFrame>
+          />
         )}
       </Modal>
     </div>
