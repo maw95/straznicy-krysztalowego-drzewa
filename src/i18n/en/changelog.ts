@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Bractwo Przypływu ma własną osadę: tło zatoki w czasie odpływu, 18 własnych budynków, Świątynię Pływów, Perłowe Ławice, Latarnię Morską i siedliska dziewięciu jednostek":
+    "The Brotherhood of the Tide has its own settlement: a background of a bay at low tide, 18 own buildings, the Tide Temple, the Pearl Banks, the Lighthouse and the dwellings of nine units.",
   "Bractwo Przypływu ma własny herb, jadeitowe ramki kart i 15 własnych ikon zdolności (Ściana Wody, Pieśń Syreny, Wir, Odpływ i inne); przycisk „Przypływ” na pasku aktywacji ma ikonę, a kolor frakcji zmienił się z niebieskiego na koralowy":
     "The Brotherhood of the Tide has its own crest, jade card frames and 15 own ability icons (Water Wall, Siren Song, Whirl, Ebb Tide and others); the Tide button on the activation bar has an icon, and the faction colour changed from blue to coral.",
   "Żelazny Klan i Bractwo Przypływu mają własne ilustracje kart i portrety wszystkich 19 postaci (krasnoludzka przełęcz i rafa w czasie odpływu); Kozioł Taranowy, Pogromca Olbrzymów, Armata, Wartownik z Brązu, Wojownik Klanu i Albatros przerysowane na prośbę autora":
