@@ -48,6 +48,8 @@ answer in Polish; code, comments and commit messages in English; CHANGELOG.md an
   Keep it small: frame sheets/WebP instead of loose PNG frames, check `du -sh` before committing; list each file in
   `assets.json` (source, tool, model, prompt, date, AI yes/no, licence).
 
+- **„G4 dla frakcji X” (author's shorthand) means the whole graphic set, not only units:** card art and portraits, ability icons, herb and frames, arena + obstacles, **faction tile set (own reverse `tiles/back_<id>.jpg`, 5 ground types + 2 obstacles, base, treasury) and faction variants of the map objects (shrine, mercenary camp, well, chest, sawmill, mine — scenery matching the faction's land, e.g. steppe, not green meadows)**, settlement, unit sprites, music. **Tiles and objects: cheap on purpose (lowest sensible quality/model tier, few variants, minimal CU) — the author does not need top quality there.** Check the list against `docs/frakcje/<id>.md` and the plan in BACKLOG item 52 before starting.
+
 ## Saving tokens
 - Read only the part of a file you need (grep for the symbol, then read that range).
 - Screenshots: `make zrzut` defaults are small; crop with `ELEMENT=`; check logic by text (DOM queries) when a
