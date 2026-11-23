@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Pakiet gry jest mniejszy o ok. 200 KB: usunięte zostały stare, nieużywane tła okien skrzyni i księgi czarów.":
+    "The game package is about 200 KB smaller: the old, unused backgrounds of the chest and spell book windows were removed.",
   "Centaur, Opiekun Drzewa i Biały Jeleń mają nowe ilustracje i portrety: widać całą głowę i sylwetkę (wcześniej głowa była ucięta albo widać było tylko głowę jelenia).": "The Centaur, the Tree Guardian and the White Stag have new illustrations and portraits that show the whole head and figure (before, the head was cut off, or only the stag's head was visible).",
   "Osiem jednostek ma własne ikony zdolności zamiast pożyczonych: Srebrny Lis, Driada Łuczniczka, Biały Jeleń, Goblin Procarz, Gargulec, Troll Jaskiniowy, Wiwerna Cienia i Behemot Zagłady.": "Eight units have icons of their own for their abilities instead of borrowed ones: the Silver Fox, the Dryad Archer, the White Stag, the Goblin Slinger, the Gargoyle, the Cave Troll, the Shadow Wyvern and the Doom Behemoth.",
   "Jednostki Hordy poziomów 2-5 i Behemot Zagłady na planszy mają wyraźnie żywsze barwy (były bardzo ciemne i mało czytelne).": "Horde units of levels 2-5 and the Doom Behemoth have clearly more vivid colours on the board (they were very dark and hard to read).",

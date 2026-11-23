@@ -5098,44 +5098,6 @@
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     },
     {
-      "id": "ui/okno-ksiega-czarow",
-      "pliki": [
-        "public/assets/ui/spellbook_bg.webp"
-      ],
-      "typ": "tło okna Księgi czarów (otwarta księga)",
-      "opis": "1536x1024, wybrany wariant 2 z 2 (potwierdzone porównaniem pikseli). Rozciągane przez CSS border-image (rogi zachowują kształt). Zastępuje tło CSS .spellbook. Prompt zapisany w Scenario jako asset tekstowy; opis wyniku: otwarta księga z pustymi pergaminowymi stronami, ciemnobrązowa skórzana okładka, złote narożniki.",
-      "scenario_asset": {
-        "zadanie": "job_V2HCWBTzUycnS3qQBppqu6Gq",
-        "prompt": "asset_pbySshM4eqsn9UmiK8w923ZW",
-        "wynik_uzyty": "asset_iNRcko1bomxfL2efugHaJw33",
-        "wariant_odrzucony": "asset_Mqsr9kYyeAG3iP666divkGPE"
-      },
-      "narzedzie": "Scenario (plan płatny)",
-      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 2 warianty za 6 CU",
-      "data": "2026-11-17",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
-      "id": "ui/okno-skrzynia-skarbow",
-      "pliki": [
-        "public/assets/ui/chest_bg.webp"
-      ],
-      "typ": "tło okna skarbów (otwarta skrzynia z czerwonym aksamitem)",
-      "opis": "1280x1024, wybrany wariant 2 z 2 (potwierdzone porównaniem pikseli). Rozciągane przez CSS border-image. Zastępuje tło CSS .chestbox. Prompt zapisany w Scenario jako asset tekstowy.",
-      "scenario_asset": {
-        "zadanie": "job_ugtna2uftb4ozBPVk1n25DXd",
-        "prompt": "asset_tYjEKvtAxm4xyXR3ae75b8BH",
-        "wynik_uzyty": "asset_N1eqWb17srvFANDWsNnms4Aa",
-        "wariant_odrzucony": "asset_EsuovBmhrr4gLw8gPgBLjtbD"
-      },
-      "narzedzie": "Scenario (plan płatny)",
-      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 2 warianty za 6 CU",
-      "data": "2026-11-17",
-      "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
-    },
-    {
       "id": "ui/ramka-narozniki",
       "pliki": [
         "public/assets/ui/corner_gold_tl.webp",
@@ -7592,7 +7554,7 @@
         "public/assets/ui/skrzynia_klatki.webp"
       ],
       "typ": "arkusz 12 klatek animacji skrzyni skarbów (zamknięta, wieko się otwiera, otwarta), RGBA",
-      "opis": "12 x 600x556, klatki 0,3,6,9,12,15,18,21,24,28,34,72 z klipu 3 s (24 kl./s), tło usunięte wypełnieniem od krawędzi (próg 5). Korpus jest nieruchomy, rusza się tylko wieko. Zastępuje wcześniejsze arkusze z pojedynczych obrazów (korpus 'pływał'). chest_bg.webp nieużywany.",
+      "opis": "12 x 600x556, klatki 0,3,6,9,12,15,18,21,24,28,34,72 z klipu 3 s (24 kl./s), tło usunięte wypełnieniem od krawędzi (próg 5). Korpus jest nieruchomy, rusza się tylko wieko. Zastępuje wcześniejsze arkusze z pojedynczych obrazów (korpus 'pływał').",
       "scenario_asset": {
         "obraz_poczatkowy": "asset_skHm765DAF8YkGaHQMHnnvX2 (zamknięta)",
         "obraz_koncowy": "asset_2rd4SKFAgmYJSExR5csmgbzh (otwarta)",
@@ -7611,7 +7573,7 @@
         "public/assets/ui/ksiega_klatki.webp"
       ],
       "typ": "arkusz 12 klatek animacji księgi czarów (zamknięta → okładka się odchyla → otwarta), RGBA",
-      "opis": "12 x 640x551, klatki 0,4,8,12,16,20,24,28,32,36,42,72 z klipu 3 s (24 kl./s); księga widziana z góry, dwie pionowe strony A4, grzbiet w środku kadru. Strony: lewa x 12-48%, prawa x 52-88%, y 7-91% klatki. Zastępuje spellbook_bg.webp (nieużywany).",
+      "opis": "12 x 640x551, klatki 0,4,8,12,16,20,24,28,32,36,42,72 z klipu 3 s (24 kl./s); księga widziana z góry, dwie pionowe strony A4, grzbiet w środku kadru. Strony: lewa x 12-48%, prawa x 52-88%, y 7-91% klatki.",
       "scenario_asset": {
         "otwarta": "asset_21JfpmSjN1UcHNfbJu7hqM4k",
         "zamknieta": "asset_uS215DvG5hD5xuAQNJdDGtzq",
