@@ -22,6 +22,7 @@ try {
   await p.locator('.seat-row').first().waitFor();
   await p.screenshot({ path: '.tmp/stol-1.png' });
   console.log('random selected:', await p.locator('[data-seat-factions="0"] [data-faction="random"][aria-pressed="true"]').count(), 'first button is the die:', await p.locator('[data-seat-factions="0"] button').first().getAttribute('data-faction'));
+  console.log('heroes after picking Dawn:', await (async () => { await p.locator('[data-seat-factions="0"] [data-faction="dawn"]').click(); return p.locator('[data-seat-heroes="0"] [aria-label^="Bohater"]').evaluateAll((e) => e.map((x) => x.getAttribute('aria-label'))); })());
   const crest = p.locator('[data-seat-factions="0"] [data-faction="herds"]');
   const b = await crest.boundingBox();
   if (b) { await p.mouse.move(b.x + b.width / 2, b.y + b.height / 2); await p.mouse.down({ button: 'right' }); await p.waitForTimeout(300); await p.screenshot({ path: '.tmp/stol-2.png' }); await p.mouse.up({ button: 'right' }); }

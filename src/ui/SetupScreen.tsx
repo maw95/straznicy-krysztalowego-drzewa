@@ -1,7 +1,7 @@
 import { CampaignScreen } from './CampaignScreen';
 import { ExpeditionScreen } from './ExpeditionScreen';
 import { useMemo, useRef, useState } from 'react';
-import { FACTION_HEROES, FACTION_NAMES, heroPool, SECRET_HEROES, UNITS, type FactionId, type MapSize } from '../engine/data';
+import { FACTION_HEROES, FACTION_NAMES, heroPool, MAX_PVP_PLAYERS, SECRET_HEROES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import { MAX_TEAMS, raceOf, seatTable, TEAM_IDS, teamsOf } from '../engine/teams';
 import { PACK_IDS } from '../engine/factions';
 import { readyMaps } from '../engine/customMaps';
@@ -92,9 +92,9 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     setPreview(SECRET_HEROES.dawn[0]);
   };
   /** The heroes a side may choose from: those of its faction. */
-  const heroesOf = (race: FactionId) => {
-    return seats.length > 6 ? heroPool(race, seats.length) : duck ? [...FACTION_HEROES[race], ...SECRET_HEROES[race]] : FACTION_HEROES[race];
-  };
+  /** The fourth hero of each faction is always on offer in a digital rivalry (the other modes have the three heroes). */
+  const heroPoolOf = (race: FactionId) => (mode === 'pvp' && digital ? heroPool(race, MAX_PVP_PLAYERS) : FACTION_HEROES[race]);
+  const heroesOf = (race: FactionId) => (duck ? [...heroPoolOf(race), ...SECRET_HEROES[race]] : heroPoolOf(race));
 
   const arena = mode === 'arena';
   const update = (i: number, patch: Partial<SeatDraft>) => setSeats(seats.map((s, j) => (j === i ? { ...s, ...patch } : s)));
@@ -108,7 +108,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     // A new seat is a computer, of the first faction nobody plays yet (a coop seat plays Przymierze like the others).
     const used = seats.map(raceAt);
     const race: FactionId = mode === 'pvp' ? offered.find((f) => !used.includes(f)) ?? offered[seats.length % offered.length] : raceAt(seats[0]);
-    const pool = seats.length + 1 > 6 ? heroPool(race, seats.length + 1) : FACTION_HEROES[race];
+    const pool = heroPoolOf(race);
     const heroId = pool.find((h) => !seats.some((x) => !x.randomRace && !x.randomHero && x.heroId === h)) ?? pool[0];
     const bots = seats.filter((x) => x.controller === 'bot').length;
     setSeats([...seats, { name: bots ? `Komputer ${bots + 1}` : 'Komputer', faction: mode === 'pvp' ? 'dawn' : seats[0].faction, race, controller: 'bot', heroId, randomRace: mode === 'pvp' && offered.length > 2, randomHero: true }]);
@@ -142,7 +142,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const startGame = () => {
     const r = resolveTier(tier, { objective, shape, customMapId: customId, growth, ...(tier === 'custom' && growth ? layerSwitches(layer) : {}) });
     // The seats left to chance are drawn now.
-    const drawn = resolveRandomSeats(seats, { offered, heroesOf: (race) => (seats.length > 6 ? heroPool(race, seats.length) : FACTION_HEROES[race]), twoFactions: mode === 'pvp' });
+    const drawn = resolveRandomSeats(seats, { offered, heroesOf: heroPoolOf, twoFactions: mode === 'pvp' });
     // The story of the crystals plays Przymierze first and Horda second: a draw that put the Horde first moves its seats behind.
     const ordered = mode === 'pvp' && r.objective === 'crystals' ? [...drawn].sort((a, b) => Number(raceAt(b) === 'dawn') - Number(raceAt(a) === 'dawn')) : drawn;
     const finalTable = mode === 'pvp' ? seatTable(ordered) : drawn;

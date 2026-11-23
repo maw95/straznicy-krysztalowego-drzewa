@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Czwarty bohater każdej frakcji (np. Srebrna Wilczyca Przymierza, Mantikora Hordy) jest zawsze do wyboru w potyczce cyfrowej, a nie dopiero przy siedmiu i ośmiu graczach.
 - Poprawka: dodanie piątego gracza (i wybór pięciu różnych frakcji) nie wywala już gry błędem; przy stole może być najwyżej cztery frakcje, a przy czterech różnych frakcjach miejsce z losową frakcją losuje jedną z nich.
 - Nowa okładka gry (tło menu): ten sam układ, ale postacie mają aktualne projekty (nietoperz, pająk i goblin szaman w poważnej palecie), a elf druid ma pięć palców.
 - Wybór frakcji i bohatera: kostka losowania jest pierwszą ikoną z lewej i domyślnie wybraną (gdy w celu gry mogą grać wszystkie frakcje); miejsce z losową frakcją ma niebieskie tło, którego nie ma żadna frakcja; prawy klik na ikonie frakcji pokazuje okno z jej nazwą, opisem i portretami wszystkich jej pomocników.
