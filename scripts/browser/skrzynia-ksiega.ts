@@ -40,7 +40,7 @@ const VIEW = (process.argv[2] === 'poziomo' ? 'poziomo' : 'telefon') as 'telefon
     console.log('anims:', await p.evaluate(() => document.getAnimations().map((a) => (a as CSSAnimation).animationName + '@' + Math.round(a.currentTime as number)).join(' ')));
     // Freeze the animations at 25 %, 50 % and 75 % to look at the frames.
     const clip = { x: 300, y: 60, width: 1000, height: 780 };
-    for (const t of phone ? [] : [0.05, 0.2, 0.35, 0.5, 0.65, 0.8]) { await p.evaluate((x) => document.getAnimations().forEach((a) => { a.pause(); a.currentTime = x * 850; }), t); await p.screenshot({ path: `.tmp/skrzynia-anim${tag}-${t}.png`, clip }); }
+    for (const t of phone ? [] : [0.08, 0.25, 0.4, 0.55, 0.7, 0.9]) { await p.evaluate((x) => document.getAnimations().forEach((a) => { a.pause(); a.currentTime = x * 850; }), t); await p.screenshot({ path: `.tmp/skrzynia-anim${tag}-${t}.png`, clip }); }
 
     console.log('slots:', await p.locator('[data-item-slot]').count(), 'pager:', await p.locator('[data-pager]').count());
     await p.keyboard.press(process.env.KEY ?? 'Enter');

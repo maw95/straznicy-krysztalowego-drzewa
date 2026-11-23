@@ -7584,25 +7584,16 @@
       "pliki": [
         "public/assets/ui/skrzynia_klatki.webp"
       ],
-      "typ": "arkusz 8 klatek animacji skrzyni skarbów (zamknięta … otwarta), RGBA",
-      "opis": "8 x 640x631, klatki wyrównane skryptowo (szerokość i dół korpusu), tło usunięte wypełnieniem od krawędzi. Zastępuje chest_bg.webp w oknie skarbów (chest_bg.webp nieużywany). Kąty wieka ok. 0, 8, 20, 35, 48, 60, 75, 100 stopni.",
+      "typ": "arkusz 12 klatek animacji skrzyni skarbów (zamknięta, wieko się otwiera, otwarta), RGBA",
+      "opis": "12 x 600x556, klatki 0,3,6,9,12,15,18,21,24,28,34,72 z klipu 3 s (24 kl./s), tło usunięte wypełnieniem od krawędzi (próg 5). Korpus jest nieruchomy, rusza się tylko wieko. Zastępuje wcześniejsze arkusze z pojedynczych obrazów (korpus 'pływał'). chest_bg.webp nieużywany.",
       "scenario_asset": {
-        "referencje": [
-          "asset_2rd4SKFAgmYJSExR5csmgbzh (pełna otwarta skrzynia, zadanie job_aueVKnEsqo9q3j2w5rHgWWoe)",
-          "asset_skHm765DAF8YkGaHQMHnnvX2 (zamknięta)"
-        ],
-        "zadania": [
-          "job_k5KDgtQbFQ97ckM5DXv99q5h",
-          "job_W1TjVeqh4SMJNE13ifUkVdNJ",
-          "job_eNrx6QYe4NTidrJv9e3F9YW4",
-          "job_9u5eJ3mDy5btxcwRzVLPmRP8",
-          "job_LuYDybuhomrXskVamb7sYu2v",
-          "job_jvkiiK5FgvmPdw89KBGmZ593",
-          "job_Df2Ab5KYpyXNeKE8GJLTn4ES"
-        ]
+        "obraz_poczatkowy": "asset_skHm765DAF8YkGaHQMHnnvX2 (zamknięta)",
+        "obraz_koncowy": "asset_2rd4SKFAgmYJSExR5csmgbzh (otwarta)",
+        "wideo": "asset_aj4LToEHw8QfwK3qMiEensc9",
+        "zadanie": "job_BrxaZZ5RbDFvCARE2FRUT3Sd"
       },
-      "narzedzie": "Scenario (plan płatny)",
-      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 8 obrazów ok. 40 CU",
+      "narzedzie": "Scenario (plan płatny), ffmpeg + PIL",
+      "model": "GPT Image 2.5 Flare (klatki skrajne) + P-Video 2 (720p, 3 s, 24 kl./s, bez dźwięku, klatka początkowa i końcowa), wideo 15 CU; wcześniejsze próby pojedynczych klatek ok. 55 CU",
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"

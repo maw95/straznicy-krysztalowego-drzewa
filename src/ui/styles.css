@@ -1104,8 +1104,8 @@ button.sb-slot:disabled { cursor: default; }
 }
 
 /* The treasure chest (backlog 58d): a sheet of four painted frames (closed, ajar, half open, open) played in steps; the treasures lie in the open chest. */
-.chestbox { position: relative; width: min(760px, 96vw, 86vh); aspect-ratio: 640 / 631; container-type: inline-size; }
-.chest-art { position: absolute; inset: 0; background: url('/assets/ui/skrzynia_klatki.webp') 100% 0 / 800% 100% no-repeat; will-change: background-position; animation: chest-frames-in 0.8s steps(1, end) both; }
+.chestbox { position: relative; width: min(760px, 96vw, 86vh); aspect-ratio: 600 / 556; container-type: inline-size; }
+.chest-art { position: absolute; inset: 0; background: url('/assets/ui/skrzynia_klatki.webp') 100% 0 / 1200% 100% no-repeat; will-change: background-position; animation: chest-frames-in 0.8s steps(1, end) both; }
 .chestbox::before { content: ''; position: absolute; left: 8%; right: 8%; bottom: 1%; height: 6%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7), transparent 70%); }
 .chest-items { position: absolute; left: 17%; top: 37%; width: 55%; height: 32%; display: flex; align-items: center; justify-content: center; gap: 0.6cqw; animation: chest-content-in 0.9s ease-out both; }
 .chest-items .slot { width: 9.2cqw; flex: none; }
@@ -1118,8 +1118,8 @@ button.sb-slot:disabled { cursor: default; }
 .leaving .chest-art { animation: chest-frames-out 0.65s steps(1, end) both; }
 .leaving .chest-items, .leaving .chestbox .chest-empty, .leaving .chestbox .pager, .leaving .chestbox .close-seal { animation: chest-content-out 0.25s ease-in both; }
 @container (max-width: 480px) { .chest-items .slot-name { display: none; } }
-@keyframes chest-frames-in { 0% { background-position: 0% 0; } 12.5% { background-position: 14.2857% 0; } 25% { background-position: 28.5714% 0; } 37.5% { background-position: 42.8571% 0; } 50% { background-position: 57.1429% 0; } 62.5% { background-position: 71.4286% 0; } 75% { background-position: 85.7143% 0; } 87.5% { background-position: 100% 0; } }
-@keyframes chest-frames-out { 0% { background-position: 100% 0; } 12.5% { background-position: 85.7143% 0; } 25% { background-position: 71.4286% 0; } 37.5% { background-position: 57.1429% 0; } 50% { background-position: 42.8571% 0; } 62.5% { background-position: 28.5714% 0; } 75% { background-position: 14.2857% 0; } 87.5% { background-position: 0% 0; } }
+@keyframes chest-frames-in { 0% { background-position: 0% 0; } 8.333% { background-position: 9.0909% 0; } 16.667% { background-position: 18.1818% 0; } 25% { background-position: 27.2727% 0; } 33.333% { background-position: 36.3636% 0; } 41.667% { background-position: 45.4545% 0; } 50% { background-position: 54.5455% 0; } 58.333% { background-position: 63.6364% 0; } 66.667% { background-position: 72.7273% 0; } 75% { background-position: 81.8182% 0; } 83.333% { background-position: 90.9091% 0; } 91.667% { background-position: 100% 0; } 100% { background-position: 100% 0; } }
+@keyframes chest-frames-out { 0% { background-position: 100% 0; } 8.333% { background-position: 90.9091% 0; } 16.667% { background-position: 81.8182% 0; } 25% { background-position: 72.7273% 0; } 33.333% { background-position: 63.6364% 0; } 41.667% { background-position: 54.5455% 0; } 50% { background-position: 45.4545% 0; } 58.333% { background-position: 36.3636% 0; } 66.667% { background-position: 27.2727% 0; } 75% { background-position: 18.1818% 0; } 83.333% { background-position: 9.0909% 0; } 91.667% { background-position: 0% 0; } 100% { background-position: 0% 0; } }
 @keyframes chest-content-in { 0%, 70% { opacity: 0; } 100% { opacity: 1; } }
 @keyframes chest-content-out { 0% { opacity: 1; } 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .chest-art, .chest-items, .chestbox .chest-empty, .chestbox .pager, .chestbox .close-seal { animation: none !important; } }
