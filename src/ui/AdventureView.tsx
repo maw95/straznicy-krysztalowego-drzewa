@@ -515,7 +515,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                       </div>
                     )}
                     {r && !onPath && (
-                      <div className="plate parch" style={{ position: 'absolute', left: W * 0.57, top: H * 0.63, minWidth: W * 0.27, height: H * 0.2, padding: '0 3px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: W * 0.15, color: r.hostile ? '#8A1A1A' : '#12304E' }}>
+                      <div className="plate parch cost-tag" style={{ position: 'absolute', left: W * 0.57, top: H * 0.65, minWidth: W * 0.18, height: H * 0.15, padding: '0 2px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: W * 0.15, color: r.hostile ? '#8A1A1A' : '#12304E' }}>
                         {r.hostile ? '⚔' : r.cost}
                       </div>
                     )}
