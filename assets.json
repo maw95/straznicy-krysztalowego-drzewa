@@ -9209,6 +9209,173 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/sprity-1",
+      "pliki": [
+        "public/assets/jednostki/krasnolud_tarczownik/*",
+        "public/assets/jednostki/kret_z_brazu/*",
+        "public/assets/jednostki/mosiezny_pajak/*",
+        "public/assets/jednostki/niedzwiedz_w_zbroi/*",
+        "public/assets/jednostki/kowal_bitewny/*",
+        "public/assets/jednostki/wartownik_z_brazu/*"
+      ],
+      "typ": "animowane sprite'y 6 jednostek Żelaznego Klanu (stoi, martwy, chód, atak, śmierć, trafienie)",
+      "opis": "Obraz bazowy 1024x1024 (jakość medium) na niebieskim tle, odniesienie: portret karty; cztery klipy P-Video 2 (720p, 24 fps, 3 s, trafienie 2 s), martwy = ostatnia klatka klipu śmierci (ffmpeg); pakowanie pack_unit.py (512 px), despill_blue.py, shrink_unit.py (0,75, co druga klatka). Kret chodzi sunąc z obracającym się wiertłem.",
+      "prompt": "Obrazy: 'Use the reference image only for the character design (...). Draw this same character as a full-body game sprite in a strict side view, facing right ... Plain solid pure blue background (#0000FF)'; klipy: 'Side view, locked static camera. <ruch>. Plain solid blue background stays unchanged, no camera movement.'",
+      "narzedzie": "Scenario",
+      "model": "model_openai-gpt-image-2-5-flare (obrazy), model_pruna-p-video-2 (klipy)",
+      "scenario_asset": {
+        "stoi": {
+          "shieldDwarf": "asset_YoMUnzbdHA5n4jvGqoYJmXu6",
+          "bronzeMole": "asset_nHyzsSMA7qR9pXaA4PP1xB8Y",
+          "brassSpider": "asset_rMHmBPN9n44nvd6psi5hZiLA",
+          "armoredBear": "asset_V5MpCLkh3TNQgvLoWm1UcnQm",
+          "battleSmith": "asset_2kAWbrAyAz2ZwUFaHsWVmGM5",
+          "bronzeSentinel": "asset_t8dGuV4RnmMzAcnKxMC34apu"
+        },
+        "odniesienia_portrety": {
+          "shieldDwarf": "asset_rwCSAVGtoGbHsCarYtFm2Ppo",
+          "bronzeMole": "asset_PAqUjcmZyEzszGDxoLNcHetB",
+          "brassSpider": "asset_FJ6FaarWtwapwgVEJeGxEvGJ",
+          "armoredBear": "asset_GFqRmADx84poXR3wzc2TyJKi",
+          "battleSmith": "asset_MEVACac8QGfgqd78fW48Lc2v",
+          "bronzeSentinel": "asset_kyRDU2UbxqvfvDyyPfUT5hmM"
+        },
+        "klipy": {
+          "shieldDwarf": {
+            "chod": "asset_Bhay6V9Ud9KcecJtYQc62sWe",
+            "atak": "asset_EbAFTUEjahLo9tTdVsvXd4Ha",
+            "smierc": "asset_xFAPz5ZrzVMw3dXYztHu4ZKg",
+            "trafienie": "asset_mYokzqHacm8JetbgtaFAYU6M"
+          },
+          "bronzeMole": {
+            "chod": "asset_EaeFCdMmGtwuBULoEdKVnQDb",
+            "atak": "asset_KtzT1oN346NjNRXcS31DZbTg",
+            "smierc": "asset_43iAiYuVVTtFwHqKDwAdYGKL",
+            "trafienie": "asset_5MMQRGw2gLJcqbFo3NQJEsJd"
+          },
+          "brassSpider": {
+            "chod": "asset_t7us9vBsvfUUcujhw9gEdWCs",
+            "atak": "asset_oVXhgjfpW1Heq5Xv1nf44wxT",
+            "smierc": "asset_nmac82ts2JKK6gjxs9HThvcW",
+            "trafienie": "asset_82wLe8SdUqJDYpeuhMVqMAf6"
+          },
+          "armoredBear": {
+            "chod": "asset_hoeA5W8GKmR3K6C6r13dK495",
+            "atak": "asset_Muu7EpLm5LJAoTyF24kvgjM6",
+            "smierc": "asset_rXzh5aSbRd3d3GGmPByQmEAS",
+            "trafienie": "asset_qizSqJRXGf9kSdPCvGpngK2V"
+          },
+          "battleSmith": {
+            "chod": "asset_tALnX8i7xrwuFFmQb7KwCRK4",
+            "atak": "asset_Wp5CQf9PRUeheMDYP1HG2LCt",
+            "smierc": "asset_ZqRHQBbmVTYKhb1T78uKYyJt",
+            "trafienie": "asset_zmL7pajr4ASEPaNhM66gnT22"
+          },
+          "bronzeSentinel": {
+            "chod": "asset_8iqaKwNGbSpPoFx77nZnVSM7",
+            "atak": "asset_EATNNLF1aSzYPUzqUU9zqg1h",
+            "smierc": "asset_itYezj17WNyacRLxGDcScpBX",
+            "trafienie": "asset_YusEn7fZbyJZcB6GrPD1U6Lq"
+          }
+        }
+      },
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/sprity-2",
+      "pliki": [
+        "public/assets/jednostki/koziol_taranowy/",
+        "public/assets/jednostki/pogromca_olbrzymow/",
+        "public/assets/jednostki/skarbnik/",
+        "public/assets/jednostki/gwardia_mlota/",
+        "public/assets/jednostki/armata_klanow/",
+        "public/assets/jednostki/kolos_kuzni/"
+      ],
+      "typ": "animowane sprite'y 6 jednostek Żelaznego Klanu, grupa 2 (Kozioł Taranowy, Pogromca Olbrzymów, Skarbnik, Gwardia Młota, Armata Klanów, Kolos Kuźni)",
+      "opis": "Obraz bazowy 1024x1024 jakość medium na niebieskim tle (odniesienie: portret karty), cztery klipy na jednostkę (3 s, trafienie 2 s), martwy = ostatnia klatka klipu śmierci (ffmpeg); pakowanie pack_unit.py (512 px, FADE_RIGHT atak=0.12 poza kozłem), despill_blue.py, shrink_unit.py (0,75, co druga klatka). Armata i Kolos dwupolowe. Kod: src/ui/sprites.ts.",
+      "narzedzie": "Scenario (plan płatny) + ffmpeg + skrypty Pillow",
+      "model": "GPT Image 2.5 Flare (medium) + P-Video 2 (720p)",
+      "scenario_asset": {
+        "stoi": {
+          "ramGoat": "asset_NvVVL2CRZ9gRMSMqrz6H3GCQ",
+          "giantSlayer": "asset_usD153KYGLm754FxFEjJGjkn",
+          "skarbnik": "asset_t7Viji1oWRxzrdV6TEoASPbM",
+          "hammerGuard": "asset_bmmzBebPtJxftZ27tiLgsaix",
+          "dwarfCannon": "asset_m3E3CytKPoMXtaiMG9iSsPoa",
+          "clanColossus": "asset_oEoZ5eTiLaxQuwkvMFbLmx8t"
+        }
+      },
+      "prompt": "Obraz: 'Use the reference image only for the character design (...). Draw this same character as a full-body game sprite in a strict side view, ... facing right, serious painterly realistic style with steel, brass, copper tones, no blue anywhere ... Plain solid pure blue background (#0000FF)'. Klipy: 'Side view, locked static camera. <ruch>. Plain solid blue background stays unchanged, no camera movement.' (chód w miejscu jak na bieżni; atak w miejscu: szarża rogami / pchnięcie włócznią / rozbłysk latarni / zamach młotem / wystrzał z armaty / zamach ramieniem; śmierć 'sinks down ... settles down and rests. Defeat animation.'; trafienie 'is startled: flinches and rocks backwards a little, then steadies itself').",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/sprity-3",
+      "pliki": [
+        "public/assets/jednostki/tan_zelaznobrody/anim.json",
+        "public/assets/jednostki/tan_zelaznobrody/stoi.webp",
+        "public/assets/jednostki/tan_zelaznobrody/martwy.webp",
+        "public/assets/jednostki/tan_zelaznobrody/chod.webp",
+        "public/assets/jednostki/tan_zelaznobrody/atak.webp",
+        "public/assets/jednostki/tan_zelaznobrody/smierc.webp",
+        "public/assets/jednostki/tan_zelaznobrody/trafienie.webp",
+        "public/assets/jednostki/matka_run/anim.json",
+        "public/assets/jednostki/matka_run/stoi.webp",
+        "public/assets/jednostki/matka_run/martwy.webp",
+        "public/assets/jednostki/matka_run/chod.webp",
+        "public/assets/jednostki/matka_run/atak.webp",
+        "public/assets/jednostki/matka_run/smierc.webp",
+        "public/assets/jednostki/matka_run/trafienie.webp",
+        "public/assets/jednostki/straznniczka_przeleczy/anim.json",
+        "public/assets/jednostki/straznniczka_przeleczy/stoi.webp",
+        "public/assets/jednostki/straznniczka_przeleczy/martwy.webp",
+        "public/assets/jednostki/straznniczka_przeleczy/chod.webp",
+        "public/assets/jednostki/straznniczka_przeleczy/atak.webp",
+        "public/assets/jednostki/straznniczka_przeleczy/smierc.webp",
+        "public/assets/jednostki/straznniczka_przeleczy/trafienie.webp",
+        "public/assets/jednostki/stary_gormistrz/anim.json",
+        "public/assets/jednostki/stary_gormistrz/stoi.webp",
+        "public/assets/jednostki/stary_gormistrz/martwy.webp",
+        "public/assets/jednostki/stary_gormistrz/chod.webp",
+        "public/assets/jednostki/stary_gormistrz/atak.webp",
+        "public/assets/jednostki/stary_gormistrz/smierc.webp",
+        "public/assets/jednostki/stary_gormistrz/trafienie.webp",
+        "public/assets/jednostki/wojownik_klanu/anim.json",
+        "public/assets/jednostki/wojownik_klanu/stoi.webp",
+        "public/assets/jednostki/wojownik_klanu/martwy.webp",
+        "public/assets/jednostki/wojownik_klanu/chod.webp",
+        "public/assets/jednostki/wojownik_klanu/atak.webp",
+        "public/assets/jednostki/wojownik_klanu/smierc.webp",
+        "public/assets/jednostki/wojownik_klanu/trafienie.webp",
+        "public/assets/jednostki/kusznik_gor/anim.json",
+        "public/assets/jednostki/kusznik_gor/stoi.webp",
+        "public/assets/jednostki/kusznik_gor/martwy.webp",
+        "public/assets/jednostki/kusznik_gor/chod.webp",
+        "public/assets/jednostki/kusznik_gor/atak.webp",
+        "public/assets/jednostki/kusznik_gor/smierc.webp",
+        "public/assets/jednostki/kusznik_gor/trafienie.webp",
+        "public/assets/jednostki/kaplan_kuzni/anim.json",
+        "public/assets/jednostki/kaplan_kuzni/stoi.webp",
+        "public/assets/jednostki/kaplan_kuzni/martwy.webp",
+        "public/assets/jednostki/kaplan_kuzni/chod.webp",
+        "public/assets/jednostki/kaplan_kuzni/atak.webp",
+        "public/assets/jednostki/kaplan_kuzni/smierc.webp",
+        "public/assets/jednostki/kaplan_kuzni/trafienie.webp"
+      ],
+      "typ": "animowane sprite'y 7 postaci Żelaznego Klanu (4 bohaterowie, 3 dowódcy): stoi, martwy, chód, atak, śmierć, trafienie",
+      "opis": "Obraz bazowy 1024x1024 (jakość medium, odniesienie: ilustracja karty) na niebieskim tle, cztery klipy P-Video 2 (3 s, trafienie 2 s, 720p), martwy = ostatnia klatka klipu śmierci (ffmpeg, 0 CU); pakowanie pack_unit.py (512 px), despill_blue.py, shrink_unit.py (0,75, co druga klatka); atak z wygaszeniem prawej krawędzi (FADE_RIGHT 0.12). Jeden klip zablokowany przez filtr i ponowiony: śmierć Kusznika Gór. Foldery: tan_zelaznobrody, matka_run, straznniczka_przeleczy, stary_gormistrz, wojownik_klanu, kusznik_gor, kaplan_kuzni. Kod: src/ui/sprites.ts. Koszt ok. 428 CU.",
+      "prompt": "Obraz: 'Use the reference image only for the character design (...). Draw this same character as a full-body game sprite in a strict side view, standing upright, facing right, ... muted steel, brass, copper, grey stone and warm skin tones, no blue anywhere on the character. ... Plain solid pure blue background (#0000FF)'; klipy: 'Side view, locked static camera. <chód w miejscu / zamach młotem, wyrzut run, wystrzał z kuszy, zamach kilofem, zamach dwoma toporkami, rozbłysk młota / siada i odpoczywa (Defeat animation) / drgnięcie>. Plain solid blue background stays unchanged, no camera movement.'",
+      "narzedzie": "Scenario",
+      "model": "model_openai-gpt-image-2-5-flare (obrazy), model_pruna-p-video-2 (klipy)",
+      "scenario_asset": "stoi: asset_zeKhZiPJXcayG8vRsE5WKTAT, asset_pMzSci8fRoV4rxEGFiFJqqkY, asset_3x9xe74BoMP3ybEg3uJjtBvp, asset_WgY6YMGno1TegdVkJvsfsJs5, asset_bdW1r15mRKeESX9k2GUWUTAd, asset_PieMG4H5kqVi9sjm7hjLAoc7, asset_pFmudAf7yUbqGDSZVf8TkZL4 (pełna lista w .tmp/zrodla/clans_sprites_3/ids.txt)",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

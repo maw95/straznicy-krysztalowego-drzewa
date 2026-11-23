@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wszystkie 19 postaci Żelaznego Klanu mają animowane sprite'y (stanie, chód, atak, śmierć, trafienie): Tan Żelaznobrody, Matka Run, Mosiężny Pająk, Niedźwiedź w Zbroi, Armata Klanów, Kolos Kuźni i pozostałe
 - Żelazny Klan ma własną mapę i arenę: górską halę zamiast łąki, własny rewers kafli, twierdzę i skarbiec, kafle i obiekty w klimacie kamiennej twierdzy (kapliczka przodków, kopalnie, studnia, skrzynia, młyn), arenę na górskiej przełęczy z siedmioma rodzajami przeszkód i własny kamienny mur Fortyfikacji Kolosa
 - Żelazny Klan ma własną osadę: tło kamiennej twierdzy w przełęczy, 18 własnych budynków, Salę Tarcz, Runiczną Kuźnię, Głęboką Sztolnię i siedliska dziewięciu jednostek
 - Żelazny Klan ma własną muzykę (spokojne kowadła z chórem na mapie i w osadzie oraz marsz młotów z rogami), dźwięki ataku i śmierci wszystkich 19 postaci oraz własne dźwięki wykucia runy, Muru Tarcz i ogłuszenia
