@@ -23,7 +23,7 @@ body {
 }
 button { font-family: inherit; }
 
-.slate { background: url('/assets/ui/slate.jpg') center / cover; }
+.slate { background: var(--slate-img, url('/assets/ui/slate.jpg')) center / cover; }
 .parch { background: url('/assets/ui/parchment.jpg') center / cover; }
 
 .screen {

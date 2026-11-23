@@ -337,6 +337,14 @@ export function App() {
   const viewer: TeamId | null = actor.kind === 'human' ? actor.faction : humans[0]?.faction ?? (game?.setup.mode === 'coop' ? 'dawn' : null);
 
   // Hidden information (the Free Companies' traps and veiled units): the screen shows what its viewers may see: online the seats of this browser, at one computer whoever acts now.
+  // The slate panels take the colour of the faction at the screen (backlog 62a); outside a game (menu, setup) they stay the old green and blue.
+  const slateRace = game && viewer ? raceOf(game, viewer) : null;
+  useEffect(() => {
+    const root = document.documentElement;
+    if (slateRace) root.style.setProperty('--slate-img', `url('${asset(`ui/slate_${slateRace}.jpg`)}')`);
+    else root.style.removeProperty('--slate-img');
+    return () => void root.style.removeProperty('--slate-img');
+  }, [slateRace]);
   const viewers = useMemo<TeamId[] | null>(() => (isOnline ? humans.map((p) => p.faction) : viewer ? [viewer] : null), [isOnline, viewer, humans.map((p) => p.faction).join()]);
   const battleSource = held ? held.view : game;
   // Two people at one screen and one of them plays the Free Companies: even their own traps stay out of sight until "Podejrzyj" (the other player may be looking).

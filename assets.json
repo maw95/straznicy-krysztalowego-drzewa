@@ -7479,6 +7479,29 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/slate-frakcji",
+      "pliki": [
+        "public/assets/ui/slate_dawn.jpg",
+        "public/assets/ui/slate_horde.jpg",
+        "public/assets/ui/slate_herds.jpg",
+        "public/assets/ui/slate_undead.jpg",
+        "public/assets/ui/slate_clans.jpg",
+        "public/assets/ui/slate_frost.jpg",
+        "public/assets/ui/slate_free.jpg",
+        "public/assets/ui/slate_sands.jpg",
+        "public/assets/ui/slate_swarm.jpg",
+        "public/assets/ui/slate_tides.jpg"
+      ],
+      "typ": "tekstura paneli .slate w kolorach frakcji",
+      "opis": "Przemalowanie ui/slate.jpg skryptem (zmiana odcienia, nasycenia i jasności w PIL); tło paneli zmienia się z frakcją gracza przy ekranie.",
+      "narzedzie": "scripts/assets/slate_frakcji.py (PIL)",
+      "model": "brak (bez Scenario)",
+      "data": "2026-11-23",
+      "ai": false,
+      "licencja": "pochodna własnej tekstury ui/slate.jpg",
+      "zrodlo": "public/assets/ui/slate.jpg"
     }
   ]
 }
