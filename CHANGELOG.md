@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Z mapy świata zniknęła wstęga z napisem „Kraina Kryształowego Drzewa”.
 - Wszystkie dziewiętnaście jednostek Dzikiego Stada ma animowane figurki w bitwie (chód lub lot, atak, trafienie, śmierć) zamiast statycznych obrazków.
 - Osada Dzikiego Stada ma własny wygląd: tło stepu z kamiennym kręgiem na horyzoncie, koczownicze budynki (namioty, szałasy, palisady, wieża szamana), trzy budynki unikalne (Kamień Tętentu, Wielkie Pastwiska, Ostoja Wędrówek) i siedliska jednostek, zamiast pożyczonych obrazów Przymierza.
 - Dzikie Stado ma własną arenę (step z kamiennymi kręgami, menhirami, kopcami z czaszką i głazami) oraz własne kafle mapy: step, obozowisko i skarbiec.
