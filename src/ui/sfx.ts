@@ -4,17 +4,17 @@
 
 import { asset } from './common';
 
-export type Sfx = 'sword_hit' | 'arrow_shot' | 'magic_cast' | 'magic_attack' | 'footstep_walk' | 'ui_click' | 'treasure_found' | 'level_up' | 'victory' | 'defeat' | 'hero_step' | 'crystal_pickup' | 'tree_deliver' | 'coins_buy' | 'build' | 'catapult' | 'tower_shot' | 'moat' | 'shard_pickup' | 'spark' | 'portal' | 'tavern_hire';
+export type Sfx = 'sword_hit' | 'arrow_shot' | 'magic_cast' | 'magic_attack' | 'footstep_walk' | 'ui_click' | 'treasure_found' | 'level_up' | 'victory' | 'defeat' | 'hero_step' | 'crystal_pickup' | 'tree_deliver' | 'coins_buy' | 'build' | 'catapult' | 'tower_shot' | 'moat' | 'shard_pickup' | 'spark' | 'portal' | 'tavern_hire' | 'tides_tideSwap' | 'tides_harpoonPull' | 'tides_pearlShield';
 
 /** Relative loudness of each sound (the files are normalised to about the same peak, but a click should be quiet and a fanfare roomy). */
-const GAIN: Record<Sfx, number> = { sword_hit: 0.9, arrow_shot: 0.8, magic_cast: 0.8, magic_attack: 0.8, footstep_walk: 0.45, ui_click: 0.5, treasure_found: 0.8, level_up: 0.8, victory: 0.85, defeat: 0.85, hero_step: 0.6, crystal_pickup: 0.8, tree_deliver: 0.85, coins_buy: 0.8, build: 0.8, catapult: 0.85, tower_shot: 0.7, moat: 0.75, shard_pickup: 0.8, spark: 0.9, portal: 0.8, tavern_hire: 0.8 };
+const GAIN: Record<Sfx, number> = { sword_hit: 0.9, arrow_shot: 0.8, magic_cast: 0.8, magic_attack: 0.8, footstep_walk: 0.45, ui_click: 0.5, treasure_found: 0.8, level_up: 0.8, victory: 0.85, defeat: 0.85, hero_step: 0.6, crystal_pickup: 0.8, tree_deliver: 0.85, coins_buy: 0.8, build: 0.8, catapult: 0.85, tower_shot: 0.7, moat: 0.75, shard_pickup: 0.8, spark: 0.9, portal: 0.8, tavern_hire: 0.8, tides_tideSwap: 0.8, tides_harpoonPull: 0.8, tides_pearlShield: 0.8 };
 
 /** Extra files a sound may be drawn from (picked at random, so repeated blows do not sound the same). */
 const VARIANTS: Partial<Record<Sfx, string[]>> = { sword_hit: ['sword_hit', 'sword_hit_2', 'sword_hit_3', 'sword_hit_4'] };
 export const sfxFiles = (name: Sfx): string[] => VARIANTS[name] ?? [name];
 
 /** Units with their own attack and death sounds (dzwieki/jednostki/<id>_atak.mp3 and _smierc.mp3). */
-export const UNIT_SOUNDS = new Set(['goldDragon', 'unicornKing', 'ancientBear', 'braveDuck', 'elfDruid', 'nymph', 'pegasus', 'shardling', 'burrower', 'skyEagle', 'harpy', 'pincer', 'bogCrawler', 'stoneGolem', 'stormKing', 'kraken', 'tentacle', 'blackDragon', 'werewolfLord', 'ironFistOgre', 'goblinShaman', 'caveSpider', 'shadowBat', 'cyclops', 'griffin', 'hydra', 'dawnKnight', 'dawnHuntress', 'dawnSage', 'hordeWarlord', 'hordeCrossbow', 'hordeShadow', 'dawnPhoenix', 'doomBehemoth', 'silverFox', 'dawnOwl', 'dryadArcher', 'whiteStag', 'goblinSlinger', 'gargoyle', 'caveTroll', 'shadowWyvern', 'moonWolf', 'duskManticore']);
+export const UNIT_SOUNDS = new Set(['goldDragon', 'unicornKing', 'ancientBear', 'braveDuck', 'elfDruid', 'nymph', 'pegasus', 'shardling', 'burrower', 'skyEagle', 'harpy', 'pincer', 'bogCrawler', 'stoneGolem', 'stormKing', 'kraken', 'tentacle', 'blackDragon', 'werewolfLord', 'ironFistOgre', 'goblinShaman', 'caveSpider', 'shadowBat', 'cyclops', 'griffin', 'hydra', 'dawnKnight', 'dawnHuntress', 'dawnSage', 'hordeWarlord', 'hordeCrossbow', 'hordeShadow', 'dawnPhoenix', 'doomBehemoth', 'silverFox', 'dawnOwl', 'dryadArcher', 'whiteStag', 'goblinSlinger', 'gargoyle', 'caveTroll', 'shadowWyvern', 'moonWolf', 'duskManticore', 'tritonKing', 'sirenSinger', 'seaSerpent', 'walrusCaptain', 'tritonGuard', 'harpooneer', 'sefiran', 'shellTurtle', 'tritonHarpoon', 'frogLeaper', 'crabShield', 'inkOctopus', 'sharkman', 'pearlPriestess', 'lobsterKnight', 'albatross', 'reefGolem', 'seaWitch', 'leviathan', 'greatAurochs', 'satyrHornlord', 'windAntelope', 'thunderRam', 'aurochsScout', 'eagleHunter', 'planetnik', 'youngAurochs', 'kulan', 'steppeArcher', 'forestBison', 'steppeLamignat', 'warRhino', 'muskOx', 'arkar', 'drumElephant', 'bullMoose', 'indrik', 'satyrPiper']);
 const UNIT_GAIN = 0.85;
 
 const STORE_KEY = 'skd-sfx';

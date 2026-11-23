@@ -7920,6 +7920,728 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "tides/muzyka",
+      "pliki": [
+        "public/assets/music/tides-tidewater-harp.mp3",
+        "public/assets/music/tides-conch-horn-march.mp3"
+      ],
+      "typ": "muzyka frakcji: dwa utwory Bractwa Przypływu (mapa na ziemi Bractwa i osada)",
+      "opis": "Dwa instrumentalne utwory po 60 s (spokojna harfa z chórem i szumem fal; mocniejszy z rogiem z muszli i kotłami). Wyrównane do poziomu reszty muzyki (średnio ok. -21 dB), wejście 0,3 s i wyjście 2,5 s (ffmpeg), mp3 128 kbps. Koszt: 2 x 30 CU. Oryginały: .tmp/zrodla/tides_audio. Skrypt: scripts/assets/tides_audio.py. Rejestr: FACTION_MUSIC w src/ui/music.ts.",
+      "scenario_asset": {
+        "tides-tidewater-harp": "asset_ZUDVFYrqmXN5eYGMjaqMfYys",
+        "tides-conch-horn-march": "asset_dPQZyXgCaK48LQTAu7zzhQxJ"
+      },
+      "prompt": "1) Instrumental fantasy theme for a peaceful seafaring people of the coast: a gentle harp playing a flowing, singable melody, soft wordless choir pads, the steady hush of waves on a beach, a distant conch horn call now and then, warm calm and melodic, slow tempo around 70 BPM, loopable. 2) ... stronger and more heroic: arpeggiated harp, full wordless choir, rolling waves, bold conch horn fanfare, deep timpani swells, ~95 BPM.",
+      "narzedzie": "Scenario (plan płatny) + ffmpeg",
+      "model": "ElevenLabs Music v2.5 (model_elevenlabs-music-v2-5), instrumental, 60 s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/tritonKing_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/tritonKing_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki tritonKing (Bractwo Przypływu)",
+      "prompt": "Triton king attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_XMpgGvh7gg4srDmo2TBHtz3G",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/tritonKing_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/tritonKing_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki tritonKing (Bractwo Przypływu)",
+      "prompt": "Triton king defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_9Ra4DnamgQWs22wyWjMGGX8p",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/sirenSinger_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/sirenSinger_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki sirenSinger (Bractwo Przypływu)",
+      "prompt": "Siren singer attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_TJf7ihcMWDQhipfZE6Dr4vKw",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/sirenSinger_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/sirenSinger_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki sirenSinger (Bractwo Przypływu)",
+      "prompt": "Siren singer defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_BbNVp47mrWsar2sb5z7b3PSo",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/seaSerpent_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/seaSerpent_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki seaSerpent (Bractwo Przypływu)",
+      "prompt": "Sea serpent attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_CBbNBCjnxzriJsHQiNAspLkJ",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/seaSerpent_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/seaSerpent_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki seaSerpent (Bractwo Przypływu)",
+      "prompt": "Sea serpent defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_Dh7Zntw8kYB42UkksgFHBgwz",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/walrusCaptain_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/walrusCaptain_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki walrusCaptain (Bractwo Przypływu)",
+      "prompt": "Walrus captain attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_QPLw1AT826AqKuRuqzKhg92x",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/walrusCaptain_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/walrusCaptain_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki walrusCaptain (Bractwo Przypływu)",
+      "prompt": "Walrus captain defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_4mWRvLXMGb79z4Bu8L8J8DFy",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/tritonGuard_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/tritonGuard_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki tritonGuard (Bractwo Przypływu)",
+      "prompt": "Triton guard attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_JNwipxwPzaGH5GrskXGJRgLq",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/tritonGuard_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/tritonGuard_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki tritonGuard (Bractwo Przypływu)",
+      "prompt": "Triton guard defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_w6kyPidMinMxiBfeWYb6bhrN",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/harpooneer_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/harpooneer_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki harpooneer (Bractwo Przypływu)",
+      "prompt": "Harpooner attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_txJTtaGudBDTZSr6XeZjSQqh",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/harpooneer_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/harpooneer_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki harpooneer (Bractwo Przypływu)",
+      "prompt": "Harpooner defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_SphEi2yuqh7e2nNMuiMLnfg3",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/sefiran_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/sefiran_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki sefiran (Bractwo Przypływu)",
+      "prompt": "Friendly giant grain snake attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_HEngr3kiXMN9b9idZFjJdbAo",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/sefiran_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/sefiran_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki sefiran (Bractwo Przypływu)",
+      "prompt": "Friendly giant grain snake defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_x3zh2UdzqYbvKo4tCJW7Yh2U",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/shellTurtle_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/shellTurtle_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki shellTurtle (Bractwo Przypływu)",
+      "prompt": "Armoured sea turtle attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_BwE8SgVuCB5QQkwwtKjfAxEX",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/shellTurtle_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/shellTurtle_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki shellTurtle (Bractwo Przypływu)",
+      "prompt": "Armoured sea turtle defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_KHotaYarumXLXNxbEGnAFsWt",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/tritonHarpoon_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/tritonHarpoon_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki tritonHarpoon (Bractwo Przypływu)",
+      "prompt": "Triton harpoon thrower attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_3Py6jeiiTrmTYoQdwbpyHMCp",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/tritonHarpoon_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/tritonHarpoon_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki tritonHarpoon (Bractwo Przypływu)",
+      "prompt": "Triton harpoon thrower defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_LcmCHANZu9VytZYVcyZurKJD",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/frogLeaper_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/frogLeaper_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki frogLeaper (Bractwo Przypływu)",
+      "prompt": "Giant frog attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_ToGeVfHsv4WGDzW4Fh7uYUSL",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/frogLeaper_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/frogLeaper_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki frogLeaper (Bractwo Przypływu)",
+      "prompt": "Giant frog defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_4nv5TaDGJ6tWE2o1vKitgYPt",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/crabShield_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/crabShield_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki crabShield (Bractwo Przypływu)",
+      "prompt": "Shield crab warrior attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_qR66uJ4h9qNHBkC3gETj1g3j",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/crabShield_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/crabShield_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki crabShield (Bractwo Przypływu)",
+      "prompt": "Shield crab warrior defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_VV8WfYNBKUhaCotBJzpD9F94",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/inkOctopus_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/inkOctopus_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki inkOctopus (Bractwo Przypływu)",
+      "prompt": "Small octopus attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_KbWe7giinA8dxsmLCgM1z4gS",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/inkOctopus_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/inkOctopus_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki inkOctopus (Bractwo Przypływu)",
+      "prompt": "Small octopus defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_w5NY23yPPrFJfP7RyrHEVBmf",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/sharkman_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/sharkman_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki sharkman (Bractwo Przypływu)",
+      "prompt": "Shark warrior attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_qX2gYMSu4p6Tbf415FqFQybU",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/sharkman_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/sharkman_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki sharkman (Bractwo Przypływu)",
+      "prompt": "Shark warrior defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_WiyBsEiNvj5yheq3Hfbr3Uv9",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/pearlPriestess_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/pearlPriestess_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki pearlPriestess (Bractwo Przypływu)",
+      "prompt": "Pearl priestess attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_6UkFTD7hfWqnjrYtFHdgLVx9",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/pearlPriestess_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/pearlPriestess_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki pearlPriestess (Bractwo Przypływu)",
+      "prompt": "Pearl priestess defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_iAZBBSGkPPsg8G82Ajk3nPvo",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/lobsterKnight_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/lobsterKnight_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki lobsterKnight (Bractwo Przypływu)",
+      "prompt": "Lobster knight attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_pNtMpsa8QiyotNjGp7HGZdxQ",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/lobsterKnight_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/lobsterKnight_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki lobsterKnight (Bractwo Przypływu)",
+      "prompt": "Lobster knight defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_QvxnZQxfw1BgY9z3JJAXr6eZ",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/albatross_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/albatross_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki albatross (Bractwo Przypływu)",
+      "prompt": "Albatross attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_sBU5cU1YjrCBaTNSuua7JVyG",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/albatross_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/albatross_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki albatross (Bractwo Przypływu)",
+      "prompt": "Albatross defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_anc6ZzK9HRHR3AvheCfPjkVw",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/reefGolem_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/reefGolem_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki reefGolem (Bractwo Przypływu)",
+      "prompt": "Reef golem attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_5KzqAdELBQYkZJyMv1kjKcCD",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/reefGolem_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/reefGolem_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki reefGolem (Bractwo Przypływu)",
+      "prompt": "Reef golem defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_qTiRK7cAwCTBNmFzXsi5QcBz",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/seaWitch_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/seaWitch_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki seaWitch (Bractwo Przypływu)",
+      "prompt": "Sea witch attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_yS7BuHkhCDGGWPXNuA5CrVVS",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/seaWitch_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/seaWitch_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki seaWitch (Bractwo Przypływu)",
+      "prompt": "Sea witch defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_jfhYiyuE7LUgcpCqPKDXicR8",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/leviathan_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/leviathan_atak.mp3"
+      ],
+      "typ": "dźwięk ataku jednostki leviathan (Bractwo Przypływu)",
+      "prompt": "Leviathan attack: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_PN5zfpfMdsDrnYkpeQ7U1sjc",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/jednostki/leviathan_smierc",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/leviathan_smierc.mp3"
+      ],
+      "typ": "dźwięk śmierci jednostki leviathan (Bractwo Przypływu)",
+      "prompt": "Leviathan defeated: short fantasy game sound effect, gentle (no gore), no music (dokładny opis: .tmp/zrodla/tides_audio/prompts.txt)",
+      "scenario_asset": "asset_jt88V4Gb67QtoTV9bbju7WX4",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/tides_tideSwap",
+      "pliki": [
+        "public/assets/dzwieki/tides_tideSwap.mp3"
+      ],
+      "typ": "dźwięk mechaniki Przypływów: fala zamiany miejsc (Przypływ/Odpływ) (jeszcze niepodpięty w kodzie)",
+      "prompt": "patrz prompts.txt",
+      "scenario_asset": "asset_J8sNd2ZoRfmm1BDgTRt3E7E3",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/tides_harpoonPull",
+      "pliki": [
+        "public/assets/dzwieki/tides_harpoonPull.mp3"
+      ],
+      "typ": "dźwięk mechaniki Przypływów: przyciągnięcie harpunem (jeszcze niepodpięty w kodzie)",
+      "prompt": "patrz prompts.txt",
+      "scenario_asset": "asset_QZ3ciDKrn9ArhGiXCEK9cUA6",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/tides_pearlShield",
+      "pliki": [
+        "public/assets/dzwieki/tides_pearlShield.mp3"
+      ],
+      "typ": "dźwięk mechaniki Przypływów: perłowa tarcza (jeszcze niepodpięty w kodzie)",
+      "prompt": "patrz prompts.txt",
+      "scenario_asset": "asset_tBjRQU5hxPaJyajYjamvMVzH",
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,5 s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "herds/dzwieki-jednostek",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/greatAurochs_atak.mp3",
+        "public/assets/dzwieki/jednostki/greatAurochs_smierc.mp3",
+        "public/assets/dzwieki/jednostki/satyrHornlord_atak.mp3",
+        "public/assets/dzwieki/jednostki/satyrHornlord_smierc.mp3",
+        "public/assets/dzwieki/jednostki/windAntelope_atak.mp3",
+        "public/assets/dzwieki/jednostki/windAntelope_smierc.mp3",
+        "public/assets/dzwieki/jednostki/thunderRam_atak.mp3",
+        "public/assets/dzwieki/jednostki/thunderRam_smierc.mp3",
+        "public/assets/dzwieki/jednostki/aurochsScout_atak.mp3",
+        "public/assets/dzwieki/jednostki/aurochsScout_smierc.mp3",
+        "public/assets/dzwieki/jednostki/eagleHunter_atak.mp3",
+        "public/assets/dzwieki/jednostki/eagleHunter_smierc.mp3",
+        "public/assets/dzwieki/jednostki/planetnik_atak.mp3",
+        "public/assets/dzwieki/jednostki/planetnik_smierc.mp3",
+        "public/assets/dzwieki/jednostki/youngAurochs_atak.mp3",
+        "public/assets/dzwieki/jednostki/youngAurochs_smierc.mp3",
+        "public/assets/dzwieki/jednostki/kulan_atak.mp3",
+        "public/assets/dzwieki/jednostki/kulan_smierc.mp3",
+        "public/assets/dzwieki/jednostki/steppeArcher_atak.mp3",
+        "public/assets/dzwieki/jednostki/steppeArcher_smierc.mp3",
+        "public/assets/dzwieki/jednostki/forestBison_atak.mp3",
+        "public/assets/dzwieki/jednostki/forestBison_smierc.mp3",
+        "public/assets/dzwieki/jednostki/steppeLamignat_atak.mp3",
+        "public/assets/dzwieki/jednostki/steppeLamignat_smierc.mp3",
+        "public/assets/dzwieki/jednostki/warRhino_atak.mp3",
+        "public/assets/dzwieki/jednostki/warRhino_smierc.mp3",
+        "public/assets/dzwieki/jednostki/muskOx_atak.mp3",
+        "public/assets/dzwieki/jednostki/muskOx_smierc.mp3",
+        "public/assets/dzwieki/jednostki/arkar_atak.mp3",
+        "public/assets/dzwieki/jednostki/arkar_smierc.mp3",
+        "public/assets/dzwieki/jednostki/drumElephant_atak.mp3",
+        "public/assets/dzwieki/jednostki/drumElephant_smierc.mp3",
+        "public/assets/dzwieki/jednostki/bullMoose_atak.mp3",
+        "public/assets/dzwieki/jednostki/bullMoose_smierc.mp3",
+        "public/assets/dzwieki/jednostki/indrik_atak.mp3",
+        "public/assets/dzwieki/jednostki/indrik_smierc.mp3",
+        "public/assets/dzwieki/jednostki/satyrPiper_atak.mp3",
+        "public/assets/dzwieki/jednostki/satyrPiper_smierc.mp3"
+      ],
+      "typ": "dźwięki ataku i śmierci 19 jednostek Dzikiego Stada (38 plików, ok. 1,3 MB)",
+      "prompt": {
+        "greatAurochs_atak": "Huge aurochs bull attack: a deep rumbling roar and snort with a heavy horn thud, game sound effect, no music",
+        "greatAurochs_smierc": "Huge aurochs bull defeat: a sorrowful low bellow fading into a tired groan and a heavy settling thud, gentle, game sound effect, no music",
+        "satyrHornlord_atak": "Satyr sage attack: a loud blast on a big horn followed by a wooden staff thump, game sound effect, no music",
+        "satyrHornlord_smierc": "Satyr sage defeat: a sad old man's sigh and a weak sorrowful horn note fading away, a staff dropping softly, gentle, game sound effect, no music",
+        "windAntelope_atak": "Wind antelope attack: a quick snort, fast galloping hoof beats and a rushing gust of wind, game sound effect, no music",
+        "windAntelope_smierc": "Wind antelope defeat: a soft plaintive bleat and a fading breath of wind, light hooves settling, gentle, game sound effect, no music",
+        "thunderRam_atak": "Thunder ram attack: a loud hollow bang of two horns butting together with a rolling thunder rumble, game sound effect, no music",
+        "thunderRam_smierc": "Thunder ram defeat: a mournful sheep bleat, distant fading thunder rumble, a soft thud on the ground, gentle, game sound effect, no music",
+        "aurochsScout_atak": "Young aurochs scout attack: a short snorting huff and a quick charging gallop with a bump, game sound effect, no music",
+        "aurochsScout_smierc": "Young aurochs defeat: a small sad lowing moan and a tired puff of breath, hooves settling, gentle, game sound effect, no music",
+        "eagleHunter_atak": "Eagle hunter attack: a sharp piercing eagle screech and a loud flap of big wings swooping down, game sound effect, no music",
+        "eagleHunter_smierc": "Eagle hunter defeat: a weak plaintive eagle cry fading away and a few soft feather flutters, gentle, game sound effect, no music",
+        "planetnik_atak": "Wind shaman attack: a rising whistling gust of wind with tinkling bone chimes rattling, game sound effect, no music",
+        "planetnik_smierc": "Wind shaman defeat: a sad old voice sigh, wind dying down and a few soft bone chimes tinkling away, gentle, game sound effect, no music",
+        "youngAurochs_atak": "Young aurochs attack: a bellowing roar and stomping hooves with a thud of horns, game sound effect, no music",
+        "youngAurochs_smierc": "Young aurochs defeat: a weary mournful bellow trailing off into a low groan, a heavy body lying down, gentle, game sound effect, no music",
+        "kulan_atak": "Wild ass kulan attack: a loud donkey bray and a quick hoof kick thump, game sound effect, no music",
+        "kulan_smierc": "Wild ass kulan defeat: a sad weak donkey bray fading into a sigh, light hooves settling, gentle, game sound effect, no music",
+        "steppeArcher_atak": "Mounted steppe archer attack: a bowstring being drawn and released, a whistling arrow flight and a short horse whinny, game sound effect, no music",
+        "steppeArcher_smierc": "Mounted steppe archer defeat: a sad horse whinny, a soft groan of a rider and a bow dropping onto the grass, gentle, game sound effect, no music",
+        "forestBison_atak": "Forest bison attack: a loud snorting huff and a heavy horn thud, game sound effect, no music",
+        "forestBison_smierc": "Forest bison defeat: a low mournful bellow and a long tired exhale, a heavy body settling on the ground, gentle, game sound effect, no music",
+        "steppeLamignat_atak": "Steppe winged horse with eagle head attack: a horse whinny blended with an eagle screech and a loud flutter of wings, game sound effect, no music",
+        "steppeLamignat_smierc": "Steppe winged horse with eagle head defeat: a weak sad whinny mixed with a fading eagle cry and soft wing flutters, gentle, game sound effect, no music",
+        "warRhino_atak": "War rhinoceros attack: heavy pounding footsteps, a deep snorting grunt and a thud of a horn ramming, game sound effect, no music",
+        "warRhino_smierc": "War rhinoceros defeat: a deep sorrowful groan and a long tired snort, a huge body settling down slowly, gentle, game sound effect, no music",
+        "muskOx_atak": "Musk ox attack: a low grunting rumble and a heavy horn thud with a shaggy body bump, game sound effect, no music",
+        "muskOx_smierc": "Musk ox defeat: a low sad rumbling moan trailing off and a soft thump of a heavy body lying down, gentle, game sound effect, no music",
+        "arkar_atak": "Giant wild mountain ram attack: a proud echoing bleating roar and a loud hollow clack of massive curled horns ramming, game sound effect, no music",
+        "arkar_smierc": "Giant wild mountain ram defeat: a mournful long bleat echoing across mountains and fading into a sigh, a soft thud, gentle, game sound effect, no music",
+        "drumElephant_atak": "Elephant with a war drum attack: a loud elephant trumpet followed by a deep booming drum beat, game sound effect, no music",
+        "drumElephant_smierc": "Elephant with a war drum defeat: a sad drawn-out elephant trumpet fading to a low rumble, a last soft drum beat, gentle, game sound effect, no music",
+        "bullMoose_atak": "Bull moose attack: a deep gurgling bellowing roar and a wooden clack of big antlers ramming, game sound effect, no music",
+        "bullMoose_smierc": "Bull moose defeat: a weak gurgling mournful call fading into a long sigh, antlers resting softly on the ground, gentle, game sound effect, no music",
+        "indrik_atak": "Indrik legendary king of beasts attack: a mighty majestic resonant roar with a deep echo and a surge of magical power, game sound effect, no music",
+        "indrik_smierc": "Indrik legendary king of beasts defeat: a majestic sorrowful long call echoing and fading, a shimmer of magic dissolving, gentle, game sound effect, no music",
+        "satyrPiper_atak": "Satyr piper attack: a quick lively wooden pipe flute melody run ending with a sharp whistle, game sound effect, no music",
+        "satyrPiper_smierc": "Satyr piper defeat: a sad slow descending pipe flute melody that wobbles and fades out with a soft sigh, gentle, game sound effect, no music"
+      },
+      "scenario_asset": {
+        "greatAurochs_atak": "asset_bpT9N7caSZvrbNZ72A1hfuG3",
+        "greatAurochs_smierc": "asset_3hHFf2XQkmeW8Fy1WQ5q3F8o",
+        "satyrHornlord_atak": "asset_cELnnqpvbWwyMvpamJAUxxa8",
+        "satyrHornlord_smierc": "asset_2hBo5jbWZor96eDGNFmv9Zpp",
+        "windAntelope_atak": "asset_hVG7avPX92eviWKJruS3Gr4t",
+        "windAntelope_smierc": "asset_CHCTsPgcNKWyByBrUZeSCD5k",
+        "thunderRam_atak": "asset_wPQLVDecie3xF4wta3KUW8dT",
+        "thunderRam_smierc": "asset_ewFSx6nd9FwcRZWeGZinswHw",
+        "aurochsScout_atak": "asset_zLz7cMx2L2V87ZVu96AX21G3",
+        "aurochsScout_smierc": "asset_VZhd4uj7qrZsDSLMp1sUKCze",
+        "eagleHunter_atak": "asset_XQQd85qZ9tfVydS6MXQ336Q8",
+        "eagleHunter_smierc": "asset_FGEVejzUHQGzoWqWeeWt9m5g",
+        "planetnik_atak": "asset_U5U7xu1XakQEPZatXP5AHquw",
+        "planetnik_smierc": "asset_PGNJqs9fNdLn5E7t3NbmzPc2",
+        "youngAurochs_atak": "asset_RUaK3S8tbBFvb9Fu2vtXLuCk",
+        "youngAurochs_smierc": "asset_djqE9wcrRLeNGFkaB3wHKALa",
+        "kulan_atak": "asset_r8hUP2mf3bnDkE2P7EsyX6yb",
+        "kulan_smierc": "asset_cY8K7JZSZL2zokiFF6FN1Phh",
+        "steppeArcher_atak": "asset_vpxJUx22Ms6XKkMNw1vhSJz7",
+        "steppeArcher_smierc": "asset_j77576wgUGJjbV1afRRBpcrQ",
+        "forestBison_atak": "asset_psQfNqLPifA5JFj4FUSK5GTj",
+        "forestBison_smierc": "asset_LQqrjk9JwqVTFea9BYQyGFw1",
+        "steppeLamignat_atak": "asset_JHNbQi92b1WbuDPWH8eh4BMZ",
+        "steppeLamignat_smierc": "asset_bTbF8wTF5TBxPR5EUTVXXWyq",
+        "warRhino_atak": "asset_hyNww2xJUktrj1SN1unycZue",
+        "warRhino_smierc": "asset_MkDqHQKm5ptobuQjag3sRHo1",
+        "muskOx_atak": "asset_YC8nvMUu2orURtrcW5J5zwhM",
+        "muskOx_smierc": "asset_wNNzG4bm1BxT61ujPd3kqq7E",
+        "arkar_atak": "asset_NCFk73BEfZcdQoY858CJ2RrV",
+        "arkar_smierc": "asset_3kfBKYQewPuRQcgoRKHaDjqN",
+        "drumElephant_atak": "asset_j56eD6xJkoLf8adQP3uqoaZR",
+        "drumElephant_smierc": "asset_A4X98MLW384Ug1cHS6BHZdks",
+        "bullMoose_atak": "asset_7rzvJc9FgMSeydo1Tdno6GrE",
+        "bullMoose_smierc": "asset_dPeH6yir15ZuUDdBkKPvkU4i",
+        "indrik_atak": "asset_88ysipPL8g3jAia9FrHhmhQA",
+        "indrik_smierc": "asset_GpuiV1FBHgNTd3hH6TdmszFF",
+        "satyrPiper_atak": "asset_5WGEH4JeBSKRBfc3wHcaujhk",
+        "satyrPiper_smierc": "asset_M7EqyiZ6n8DjRgNMyGSyU3i1"
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "ElevenLabs Sound Effects v3, 1,4-2,5 s, promptInfluence 0.6, mp3 44,1 kHz 128 kb/s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

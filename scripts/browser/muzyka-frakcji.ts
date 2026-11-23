@@ -1,8 +1,8 @@
 // Faction music: which track the game asks for on the map (hero on the Herd's land), in the Herd's settlement and back. Records every `new Audio(src)`. -> console
-// Usage: npx tsx scripts/browser/muzyka-frakcji.ts
+// Usage: [FRAKCJA=tides] npx tsx scripts/browser/muzyka-frakcji.ts
 import { openGame } from './game';
 
-const game = await openGame('steps=0&seed=3&mode=pvp&races=herds,horde&objective=control&empire=1&size=medium&shape=rectangle&gold=90&res=9', { view: 'desktop', scale: 0.6 });
+const game = await openGame(`steps=0&seed=3&mode=pvp&races=${process.env.FRAKCJA ?? 'herds'},horde&objective=control&empire=1&size=medium&shape=rectangle&gold=90&res=9`, { view: 'desktop', scale: 0.6 });
 const p = game.page;
 try {
   await p.addInitScript(() => {

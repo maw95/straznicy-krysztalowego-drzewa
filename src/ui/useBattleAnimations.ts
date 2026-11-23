@@ -79,6 +79,7 @@ export function useBattleAnimations(state: GameState) {
   const [seals, setSeals] = useState<Array<{ key: number; ability: string; pos: HexKey; color: string }>>([]);
   const [shards, setShards] = useState<Array<{ key: number; pos: HexKey; gold: boolean }>>([]);
   const abilitySeen = useRef<Record<string, boolean>>({});
+  const tideSwapsSeen = useRef(0);
   const healsSeen = useRef(0);
   const teleportsSeen = useRef(0);
   const fxSeen = useRef(0);
@@ -149,8 +150,13 @@ export function useBattleAnimations(state: GameState) {
       const u = b.units[id];
       return { key: Math.random(), pos: (u.pos ?? lastSeen.current[id]?.pos)!, gold: !u.alive };
     }).filter((x) => x.pos);
+    // Brotherhood of the Tide: a tide swap (Przypływ) has its own wave sound; harpoon pulls and pearl shields their own too.
+    const swaps = b.tideSwaps?.length ?? 0;
+    if (swaps > tideSwapsSeen.current) sfx.play('tides_tideSwap');
+    tideSwapsSeen.current = swaps;
     if (newSeals.length) {
-      sfx.play('magic_cast');
+      const named = newSeals.map((x) => x.ability);
+      sfx.play(named.includes('pearlShield') ? 'tides_pearlShield' : named.some((a) => a === 'harpoon' || a === 'deepCoil') ? 'tides_harpoonPull' : 'magic_cast');
       setSeals((x) => [...x, ...newSeals]);
       later(() => setSeals((x) => x.filter((s) => !newSeals.includes(s))), 1400);
     }

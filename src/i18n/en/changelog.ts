@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Bractwo Przypływu ma własną muzykę (dwa utwory: spokojna harfa na mapie i w osadzie oraz marsz z rogiem z muszli), dźwięki ataku i śmierci wszystkich 19 postaci i własne dźwięki zamiany miejsc, przyciągnięcia harpunem i perłowej tarczy; dźwięki ataku i śmierci dostały też wszystkie 19 postaci Dzikiego Stada":
+    "The Brotherhood of the Tide has its own music (two tracks: a calm harp on the map and in the settlement and a march with a conch horn), attack and death sounds for all 19 characters and its own sounds for the tide swap, the harpoon pull and the pearl shield; all 19 characters of the Wild Herd also got attack and death sounds.",
   "Bractwo Przypływu ma własną osadę: tło zatoki w czasie odpływu, 18 własnych budynków, Świątynię Pływów, Perłowe Ławice, Latarnię Morską i siedliska dziewięciu jednostek":
     "The Brotherhood of the Tide has its own settlement: a background of a bay at low tide, 18 own buildings, the Tide Temple, the Pearl Banks, the Lighthouse and the dwellings of nine units.",
   "Bractwo Przypływu ma własny herb, jadeitowe ramki kart i 15 własnych ikon zdolności (Ściana Wody, Pieśń Syreny, Wir, Odpływ i inne); przycisk „Przypływ” na pasku aktywacji ma ikonę, a kolor frakcji zmienił się z niebieskiego na koralowy":

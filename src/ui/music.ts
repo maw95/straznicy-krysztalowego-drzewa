@@ -42,6 +42,7 @@ const PLAYLISTS: Record<Exclude<Theme, 'none' | `faction:${FactionId}`>, Playlis
  */
 export const FACTION_MUSIC: Partial<Record<FactionId, string[]>> = {
   herds: [M('herds-steppe-drums'), M('herds-wandering-herd')],
+  tides: [M('tides-tidewater-harp'), M('tides-conch-horn-march')],
 };
 /** The theme of a faction's land, or null when the faction has no music of its own. */
 export const factionTheme = (race: FactionId): Theme | null => (FACTION_MUSIC[race]?.length ? `faction:${race}` : null);
