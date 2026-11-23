@@ -8958,6 +8958,53 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/herb-i-ramki",
+      "pliki": [
+        "public/assets/cards/crests/clans.png",
+        "public/assets/cards/frames/clans_hero.png",
+        "public/assets/cards/frames/clans_support.png"
+      ],
+      "typ": "herb Żelaznego Klanu i ramki kart bohatera i pomocnika (stal i brąz)",
+      "opis": "Herb: sztandar w stylu herbów Przymierza i Hordy, młot na kowadle w kole run, bursztynowy klejnot; 1024x1024 przycięty do 425x420. Ramki: ramki Przymierza przekolorowane na stalowo-brązowy, narożne sztandary zastąpione herbem (scripts/assets/clans_frames.py, UnitCard.tsx).",
+      "scenario_asset": "asset_gKuXXxDBffi37bvYXhJM31zn",
+      "prompt": "Use the reference image only for the style and layout of the heraldic banner (...). Draw a new banner for the Iron Clans dwarf faction of the mountains: the cloth is polished steel-grey and warm brown with subtle woven texture, brass and copper trim, the golden emblem in the centre shows a hammer resting on an anvil inside a circle of carved runes, the gem at the top is amber. Transparent background, no text, no words.",
+      "narzedzie": "Scenario (plan płatny) + skrypt Pillow",
+      "model": "GPT Image 2.5 Flare, jakość medium, 1024x1024, przezroczyste tło, herb Hordy jako odniesienie (asset_89X4q4hfq34hSJoVs3cCXcv8)",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/ikony-zdolnosci",
+      "pliki": [
+        "public/assets/cards/abilities/<id>.png i <id>_inner.png dla: shieldOath, stoneRune, bulwark, standShot, temper, bronzeQuills, giantBane, misleadLight, stunBlow, ramBlow, cannonFire, fortify"
+      ],
+      "typ": "12 ikon zdolności Żelaznego Klanu",
+      "opis": "Złote świecące runiczne symbole na ciemnym kamieniu (512x512, medium, jedno podejście na ikonę), wycięte w koło i wstawione w złotą ramkę dive.png (scripts/assets/ability_icon_glyph.py, clans_frames.py). Źródła: .tmp/zrodla/clans_frames_icons/g/.",
+      "prompt": "Square game ability icon, glowing golden rune-lit line-art glyph on a dark steel-grey and brown stone background: <opis symbolu>. Bold simple readable silhouette, centered, no text, no frame. No blue. (opisy: tarcza z uniesioną dłonią; kamień z runą; pawęż z kolczugą; kusza z kotwicą; młot i stal na kowadle; kolczasty pancerz; krasnolud i olbrzym ze strzałką; lampa z rozpraszającym światłem; młot z gwiazdkami zamroczenia; kozioł w szarży; armata z kulą i okręgiem; dwa kamienne bloki muru)",
+      "narzedzie": "Scenario (plan płatny) + skrypt Pillow",
+      "model": "GPT Image 2.5 Flare, jakość medium, 512x512",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/ikony-run",
+      "pliki": [
+        "public/assets/ikony/runy/attack.webp",
+        "public/assets/ikony/runy/life.webp",
+        "public/assets/ikony/runy/armour.webp"
+      ],
+      "typ": "3 ikony run Runicznej Kuźni (miecz, serce, tarcza)",
+      "opis": "Malowane gołe ikony (miecz ze złotą runą, serce z mosiądzu i stali, okrągła tarcza), okrągłe wycięcia 96 px WebP; w oknie osady przy przyciskach run (SettlementDialog.tsx).",
+      "prompt": "Square game icon, painted bare <steel sword | heart of polished brass and steel | round steel shield> with a bright golden rune carved on it, on a dark steel-grey and brown stone background. Bold simple readable silhouette, centered, no text, no frame. No blue.",
+      "narzedzie": "Scenario (plan płatny) + skrypt Pillow",
+      "model": "GPT Image 2.5 Flare, jakość medium, 512x512",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

@@ -409,8 +409,8 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               {RUNES.map((r) => {
                 const why = runeBlock(state, faction, s, id, r);
                 return (
-                  <button key={r} className="btn prim" disabled={Boolean(why)} title={why ?? `Wybij runę: ${RUNE_NAMES[r]}`} data-rune-forge={`${id}:${r}`} onClick={() => act({ type: 'kingdomForgeRune', settlementId: s.id, unitId: id, rune: r })} style={{ padding: '3px 10px', fontSize: 15 }}>
-                    <StatText text={RUNE_NAMES[r]} />
+                  <button key={r} className="btn prim" disabled={Boolean(why)} title={why ?? `Wybij runę: ${RUNE_NAMES[r]}`} data-rune-forge={`${id}:${r}`} onClick={() => act({ type: 'kingdomForgeRune', settlementId: s.id, unitId: id, rune: r })} style={{ padding: '3px 10px', fontSize: 15, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                    <img src={asset(`ikony/runy/${r}.webp`)} alt="" width={22} height={22} style={{ borderRadius: '50%' }} /><StatText text={RUNE_NAMES[r]} />
                   </button>
                 );
               })}

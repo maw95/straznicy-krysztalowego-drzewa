@@ -14,9 +14,7 @@ export const artId = (unitId: string) => unitId;
 const ABILITY_ART: Record<string, string> = {
   // Królestwo Umarłych (placeholders as well: docs/BACKLOG.md 2a).
   barrowCall: 'giftOfLife', dimLight: 'curse', spectralCharge: 'backstab', bonesReturn: 'rebirth', incorporeal: 'hardHead', armorPierce: 'fireBreath', dread: 'curse', hollow: 'hardHead',
-  // Żelazny Klan (placeholders: docs/BACKLOG.md 2a).
-  shieldOath: 'hardHead', stoneRune: 'runeGolem', bulwark: 'hardHead', standShot: 'fireBreath', temper: 'sunburst', bronzeQuills: 'quills', giantBane: 'headlong',
-  misleadLight: 'web', stunBlow: 'boulder', ramBlow: 'boulder', cannonFire: 'fireBreath', fortify: 'runeGolem',
+  // Żelazny Klan has its own icons for all twelve abilities (public/assets/cards/abilities; the rest are shared: hardHead, pierce, burrow, giftOfLife).
   // Dwór Wiecznego Szronu (placeholders: docs/BACKLOG.md 2a).
   iceWall: 'runeGolem', iceBlow: 'boulder', blizzardTrail: 'airDash', frostSlow: 'entanglingRoots', crystalArrow: 'fireBreath', thickFur: 'hardHead', frostArmor: 'quills',
   bellOfGlass: 'web', frostGrip: 'web', beardChill: 'web', hailStones: 'fireBreath', coldLight: 'curse', longNight: 'sunburst',
@@ -71,7 +69,7 @@ export const FACTION_RIBBON: Record<FactionId, string> = {
 };
 /** The ring round a portrait that belongs to a faction (the hero pickers of the setup screens): the colour of the faction, whatever seat it sits in. */
 export const FACTION_RING: Record<FactionId, string> = {
-  dawn: '#2C7048', horde: '#9A2226', herds: '#B8731E', undead: '#6A3E98', clans: '#A8506E', frost: '#3E8FB8', free: '#6E4B2E', sands: '#C79A1E', swarm: '#2A8A80', tides: '#D8695A',
+  dawn: '#2C7048', horde: '#9A2226', herds: '#B8731E', undead: '#6A3E98', clans: '#8B8478', frost: '#3E8FB8', free: '#6E4B2E', sands: '#C79A1E', swarm: '#2A8A80', tides: '#D8695A',
 };
 /** The ribbon (or ring) key of a team seat: the faction that sits there, not the seat itself (a Covenant player in the second seat does not get the Horde's red). */
 export const teamFaction = (state: unknown, team: Side | FactionId | 'draw' | null | undefined): Side | FactionId => (!team || team === 'draw' || team === 'neutral' ? 'neutral' : raceOf(state, team as TeamId));

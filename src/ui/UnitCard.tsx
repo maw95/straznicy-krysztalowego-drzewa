@@ -110,6 +110,9 @@ FRAMES.herds_support = { ...FRAMES.dawn_support, file: 'herds_support' };
 // The Brotherhood of the Tide's frames are the Covenant's recoloured (jade), same layout (scripts/assets/tides_frames.py).
 FRAMES.tides_hero = { ...FRAMES.dawn_hero, file: 'tides_hero' };
 FRAMES.tides_support = { ...FRAMES.dawn_support, file: 'tides_support' };
+// The Iron Clans' frames are the Covenant's recoloured (steel-brown), same layout (scripts/assets/clans_frames.py).
+FRAMES.clans_hero = { ...FRAMES.dawn_hero, file: 'clans_hero' };
+FRAMES.clans_support = { ...FRAMES.dawn_support, file: 'clans_support' };
 
 const FRAME_W = 551;
 const SRC_H = 713;

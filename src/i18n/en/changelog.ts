@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Żelazny Klan ma własny herb (młot na kowadle), ramki kart w stalowym brązie, 12 własnych ikon zdolności (Przysięga Tarczy, Runa Kamienia, Taran, Fortyfikacja i inne) i ikony run w Runicznej Kuźni; kolor frakcji zmienił się z różowego na stalowy":
+    "The Iron Clan has its own crest (a hammer on an anvil), card frames in steel bronze, 12 own ability icons (Shield Oath, Stone Rune, Ram Blow, Fortify and others) and rune icons in the Rune Forge; the faction colour changed from pink to steel.",
   "Wszystkie 19 postaci Bractwa Przypływu mają animowane sprite'y (stanie, chód lub lot, atak, śmierć, trafienie): Król Trytonów, Syrena Pieśniarka, Wąż Morski, Albatros, Lewiatan i pozostałe":
     "All 19 characters of the Brotherhood of the Tide have animated sprites (standing, walking or flying, attack, death, hit): the Triton King, the Siren Singer, the Sea Serpent, the Albatross, the Leviathan and the rest.",
   "Bractwo Przypływu ma własną mapę i arenę: plażę zamiast łąki, własny rewers kafli, przystań i skarbiec, kafle i obiekty w klimacie wybrzeża (kapliczka muszlowa, obóz, studnia, skrzynia, tartak, kopalnie) oraz arenę na rafie w czasie odpływu z siedmioma rodzajami przeszkód (rafy, wrak, sieci, wodorosty, kałuża)":
