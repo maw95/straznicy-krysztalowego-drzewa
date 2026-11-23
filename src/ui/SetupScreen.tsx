@@ -15,7 +15,8 @@ import { describeSave, parseSave, type SaveFile } from './saves';
 import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
-import { CrossIcon, defaultHeroes, DiceIcon, resolveRandomSeats, SEAT_TINT, Tip, TIPS, type SeatDraft } from './setupShared';
+import { details } from './details';
+import { CrossIcon, defaultHeroes, DiceIcon, FactionDetails, resolveRandomSeats, SEAT_TINT, Tip, TIPS, type SeatDraft } from './setupShared';
 import { NewGameWizard } from './NewGameWizard';
 import { deleteNamedSave, listNamedSaves, type NamedSave } from './saves';
 import { readRun } from './expeditionRun';
@@ -29,10 +30,10 @@ const SIDES_GOALS: readonly ObjectiveId[] = ['control', 'conquest', 'relic'];
  * Fresh seats: the first player is a person, the rest are bots. A rivalry of the digital game starts with two seats: the player and a computer (more are added
  * on this screen); the board edition keeps two people (both players of a two-sided game).
  */
-const defaultSeats = (mode: Mode, count: number, digital = true): SeatSetup[] => {
-  const seats: SeatSetup[] = defaultHeroes(mode, Math.max(count, mode === 'pvp' ? 2 : 1)).map(({ faction, heroId }, i) => {
+const defaultSeats = (mode: Mode, count: number, digital = true, drawRace = false): SeatDraft[] => {
+  const seats: SeatDraft[] = defaultHeroes(mode, Math.max(count, mode === 'pvp' ? 2 : 1)).map(({ faction, heroId }, i) => {
     const human = mode === 'pvp' && !digital ? i < 2 : i === 0;
-    return { name: !human ? (i === 1 ? 'Komputer' : `Komputer ${i}`) : `Gracz ${i + 1}`, faction, race: faction, controller: human ? 'human' : 'bot', heroId };
+    return { name: !human ? (i === 1 ? 'Komputer' : `Komputer ${i}`) : `Gracz ${i + 1}`, faction, race: faction, controller: human ? 'human' : 'bot', heroId, ...(mode !== 'arena' ? { randomRace: mode === 'pvp' && drawRace, randomHero: true } : {}) };
   });
   return seats;
 };
@@ -110,7 +111,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     const pool = seats.length + 1 > 6 ? heroPool(race, seats.length + 1) : FACTION_HEROES[race];
     const heroId = pool.find((h) => !seats.some((x) => !x.randomRace && !x.randomHero && x.heroId === h)) ?? pool[0];
     const bots = seats.filter((x) => x.controller === 'bot').length;
-    setSeats([...seats, { name: bots ? `Komputer ${bots + 1}` : 'Komputer', faction: mode === 'pvp' ? 'dawn' : seats[0].faction, race, controller: 'bot', heroId }]);
+    setSeats([...seats, { name: bots ? `Komputer ${bots + 1}` : 'Komputer', faction: mode === 'pvp' ? 'dawn' : seats[0].faction, race, controller: 'bot', heroId, randomRace: mode === 'pvp' && offered.length > 2, randomHero: true }]);
   };
   const removeSeat = (i: number) => seats.length > minSeats && setSeats(seats.filter((_, j) => j !== i));
   /** The goal the game will be played for (a tier may force one): the crystals goal is the story of Przymierze and Horda only. */
@@ -137,7 +138,9 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     const r = resolveTier(tier, { objective, shape, customMapId: customId, growth, ...(tier === 'custom' && growth ? layerSwitches(layer) : {}) });
     // The seats left to chance are drawn now.
     const drawn = resolveRandomSeats(seats, { offered, heroesOf: (race) => (seats.length > 6 ? heroPool(race, seats.length) : FACTION_HEROES[race]), twoFactions: mode === 'pvp' });
-    const finalTable = mode === 'pvp' ? seatTable(drawn) : drawn;
+    // The story of the crystals plays Przymierze first and Horda second: a draw that put the Horde first moves its seats behind.
+    const ordered = mode === 'pvp' && r.objective === 'crystals' ? [...drawn].sort((a, b) => Number(raceAt(b) === 'dawn') - Number(raceAt(a) === 'dawn')) : drawn;
+    const finalTable = mode === 'pvp' ? seatTable(ordered) : drawn;
     const sides = teamsOf({ setup: { mode, seats: finalTable } });
     const started = withRuleset(arena ? arenaSetup(drawn.map(({ race: _r, ...x }) => x), seed, level === 'custom' ? 'normal' : level, arenaSize) : { mode, mapSize, battleMode, seed, seats: mode === 'pvp' ? finalTable : drawn.map(({ race: _r, ...x }) => x), rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero, ...(noHorde && mode === 'coop' && r.objective === 'boss' ? { noHorde: true } : {}) } }, digital, r.objective, r.shape, r.customMapId, r.growth, r.kingdom, r.economy, r.realm, r.empire);
     // Three and more sides (when there are enough factions) play on a rectangle map big enough for them.
@@ -153,7 +156,9 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     setDigitalState(t.digital);
     setMode(t.mode);
     setCount(count);
-    setSeats(defaultSeats(t.mode, count, t.digital));
+    // A faction is drawn by default where the goal lets every faction play (the story of the crystals is Przymierze against Horda).
+    const goalOf = resolveTier(t.tier, { objective: t.objective, shape: t.shape, customMapId: t.customMapId, growth: t.growth === true }).objective;
+    setSeats(defaultSeats(t.mode, count, t.digital, (SIDES_GOALS as readonly string[]).includes(goalOf) && t.digital && t.mode !== 'arena'));
     setMapSize(t.mapSize);
     setLevel(t.level);
     setBattleMode(t.battleMode ?? preset.battleMode);
@@ -384,10 +389,10 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
           <Frame crest className="grow" innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div className="lbl">Miejsca przy stole</div>
             {seats.map((s, i) => (
-              <div key={i} className="well seat-row" style={{ background: SEAT_TINT[raceAt(s)], transition: 'background 0.35s' }}>
+              <div key={i} className="well seat-row" style={{ background: SEAT_TINT[s.randomRace ? 'random' : raceAt(s)], transition: 'background 0.35s' }}>
                 <div className="seat-head">
                   <span className="seat-crest">
-                    {s.randomRace ? <DiceIcon size={38} /> : <img src={asset(`cards/crests/${raceAt(s)}.png`)} alt="" title={FACTION_NAMES[raceAt(s)]} onClick={() => crestClick(raceAt(s), i)} style={{ width: 46, height: 46, objectFit: 'contain', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.5))' }} />}
+                    {s.randomRace ? <DiceIcon size={38} /> : <img src={asset(`cards/crests/${raceAt(s)}.png`)} alt="" title={FACTION_NAMES[raceAt(s)]} onClick={() => crestClick(raceAt(s), i)} {...details(() => <FactionDetails race={raceAt(s)} />)} style={{ width: 46, height: 46, objectFit: 'contain', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.5))' }} />}
                   </span>
                   <input type="text" value={s.name} onChange={(e) => update(i, { name: e.target.value })} style={{ width: 150 }} aria-label="Imię gracza" />
                   <select value={s.controller} aria-label="Kto gra" onChange={(e) => update(i, { controller: e.target.value as Controller })}>
@@ -407,27 +412,27 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                 </div>
                 {mode === 'pvp' && (
                   <div className="seat-picks" role="group" aria-label="Frakcja" data-seat-factions={i}>
+                    <Tip text="Losowa frakcja (i bohater): wylosuję ją przy starcie gry">
+                      <button className={`pick-btn ${s.randomRace ? 'on' : ''}`} aria-label="Losowa frakcja" aria-pressed={Boolean(s.randomRace)} data-faction="random" onClick={() => update(i, { randomRace: true, randomHero: true })}><DiceIcon size={30} /></button>
+                    </Tip>
                     {offered.map((f) => (
                       <Tip key={f} text={FACTION_NAMES[f]}>
-                        <button className={`pick-btn ${!s.randomRace && raceAt(s) === f ? 'on' : ''}`} aria-label={`Frakcja: ${FACTION_NAMES[f]}`} aria-pressed={!s.randomRace && raceAt(s) === f} data-faction={f} onClick={() => update(i, { race: f, randomRace: false, randomHero: false, heroId: FACTION_HEROES[f].find((h) => !takenBy(h, i)) ?? FACTION_HEROES[f][0] })}>
+                        <button className={`pick-btn ${!s.randomRace && raceAt(s) === f ? 'on' : ''}`} aria-label={`Frakcja: ${FACTION_NAMES[f]}`} aria-pressed={!s.randomRace && raceAt(s) === f} data-faction={f} {...details(() => <FactionDetails race={f} />)} onClick={() => update(i, { race: f, randomRace: false, randomHero: true, heroId: FACTION_HEROES[f].find((h) => !takenBy(h, i)) ?? FACTION_HEROES[f][0] })}>
                           <img src={asset(`cards/crests/${f}.png`)} alt="" />
                         </button>
                       </Tip>
                     ))}
-                    <Tip text="Losowa frakcja (i bohater): wylosuję ją przy starcie gry">
-                      <button className={`pick-btn ${s.randomRace ? 'on' : ''}`} aria-label="Losowa frakcja" aria-pressed={Boolean(s.randomRace)} data-faction="random" onClick={() => update(i, { randomRace: true, randomHero: true })}><DiceIcon size={30} /></button>
-                    </Tip>
                   </div>
                 )}
                 <div className="seat-picks" role="group" aria-label="Bohater" data-seat-heroes={i}>
+                  <Tip text="Losowy bohater: wylosuję go przy starcie gry">
+                    <button className={`pick-btn ${s.randomHero ? 'on' : ''}`} aria-label="Losowy bohater" aria-pressed={Boolean(s.randomHero)} data-hero="random" disabled={Boolean(s.randomRace)} onClick={() => update(i, { randomHero: true })} style={s.randomRace ? { opacity: 1 } : undefined}><DiceIcon size={30} /></button>
+                  </Tip>
                   {!s.randomRace && heroesOf(raceAt(s)).map((h) => (
                     <button key={h} className="btn" title={UNITS[h].name} aria-label={`Bohater: ${UNITS[h].name}`} onMouseEnter={() => setPreview(h)} onClick={() => { update(i, { heroId: h, randomHero: false }); setPreview(h); }} disabled={takenBy(h, i)} style={{ background: 'none', border: 0, padding: 0 }}>
                       <Portrait unitId={h} size={46} ring={FACTION_RING[raceAt(s)]} glow={!s.randomHero && s.heroId === h ? '0 0 0 3px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} dim={takenBy(h, i)} tip={false} />
                     </button>
                   ))}
-                  <Tip text="Losowy bohater: wylosuję go przy starcie gry">
-                    <button className={`pick-btn ${s.randomHero ? 'on' : ''}`} aria-label="Losowy bohater" aria-pressed={Boolean(s.randomHero)} data-hero="random" disabled={Boolean(s.randomRace)} onClick={() => update(i, { randomHero: true })} style={s.randomRace ? { opacity: 1 } : undefined}><DiceIcon size={30} /></button>
-                  </Tip>
                   <div style={{ fontWeight: 700, color: '#F3D27A', marginLeft: 6 }}>{s.randomRace ? 'Losowa frakcja i bohater' : s.randomHero ? 'Losowy bohater' : UNITS[s.heroId].name}</div>
                 </div>
               </div>

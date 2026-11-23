@@ -2,7 +2,9 @@
 // explanations, the faction tint of a seat, labelled rows, the option buttons and the heroes of a fresh table.
 
 import { useEffect, useState } from 'react';
-import { FACTION_HEROES, heroPool, MAP_VARIANTS, type FactionId, type TeamId, type MapSize } from '../engine/data';
+import { FACTION_HEROES, FACTION_NAMES, heroPool, MAP_VARIANTS, UNITS, type FactionId, type TeamId, type MapSize } from '../engine/data';
+import { FACTION_PACKS } from '../engine/factions';
+import { asset, Portrait } from './common';
 import type { Level, MapShape, Mode, SeatSetup } from '../engine/types';
 
 /** Class of an option button; the chosen one is lit. */
@@ -128,7 +130,9 @@ export function Tip({ text, children, rightClick = false }: { text: string; chil
 }
 
 /** Seat background tinted by faction (seats) or side (the online table): green for Przymierze, burgundy for Horda, and amber and violet for the next two factions; the colours of SIDE_RING. */
-export const SEAT_TINT: Record<TeamId | FactionId, string> = {
+export const SEAT_TINT: Record<TeamId | FactionId | 'random', string> = {
+  // A faction left to chance: sapphire blue, a colour no faction has.
+  random: 'linear-gradient(100deg, rgba(52, 88, 176, 0.62), rgba(20, 34, 84, 0.58))',
   dawn: 'linear-gradient(100deg, rgba(36, 112, 64, 0.62), rgba(14, 50, 30, 0.55))',
   horde: 'linear-gradient(100deg, rgba(128, 22, 34, 0.62), rgba(52, 8, 14, 0.58))',
   third: 'linear-gradient(100deg, rgba(150, 104, 18, 0.62), rgba(62, 42, 6, 0.58))',
@@ -261,5 +265,43 @@ export function CrossIcon({ size = 14 }: { size?: number }) {
     <svg viewBox="0 0 16 16" width={size} height={size} aria-hidden="true" style={{ display: 'block' }}>
       <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
     </svg>
+  );
+}
+
+/** A short description of each faction for the window under the right button on its crest. */
+export const FACTION_BLURBS: Record<FactionId, string> = {
+  dawn: 'Strażnicy Kryształowego Drzewa: elfy, leśne zwierzęta i smok światła. Biegają i leczą, a z jasnych zamków ruszają po kryształy.',
+  horde: 'Zastępy z płonących wzgórz: ogry, wilkołaki, gobliny i smok cienia. Biją mocno i zbierają siłę z każdej walki.',
+  herds: 'Wędrowne stada stepów i puszcz: tury, żubry, nosorożce i łosie, prowadzone przez satyrów. Rozpędzone spychają wrogów na głazy.',
+  undead: 'Królestwo Umarłych: kurhany we mgle, szkielety i duchy dawnych strażników. Polegli pomocnicy wracają na arenę.',
+  clans: 'Żelazny Klan: krasnoludy, mechanizmy z brązu i bojowe niedźwiedzie. Stawiają mur tarcz i kują runy na jednostkach.',
+  frost: 'Dwór Wiecznego Szronu: olbrzymy, wiedźmy zamieci, ryś i mamut. Ich ciosy zamrażają, a zamrożony traci aktywację.',
+  free: 'Wolna Kompania: zwierzoludzie z lasów i rzek, trochę zbójnicy, trochę najemnicy. Zastawiają sidła i wchodzą od tyłu.',
+  sands: 'Imperium Piasków: oazy, karawany i kamienni strażnicy grobowców. Wojownik na wydmie bywa mirażem.',
+  swarm: 'Rój Puszczy: grzybnia, chrząszcze i modliszki spod korzeni starego lasu. Jedna wola, wiele ciał.',
+  tides: 'Bractwo Przypływu: trytony, syreny, kraboludy i żółwie z rafy. Wychodzą na ląd z przypływem i zabierają go ze sobą.',
+};
+
+/** The window under the right button on a faction's crest: the name, a short description and all its supports with portraits. */
+export function FactionDetails({ race }: { race: FactionId }) {
+  const pack = FACTION_PACKS[race];
+  const supports = [...pack.supports, ...pack.tierUnits.flatMap((u, i) => [u, pack.altUnits[i]]), pack.legend].filter((id, i, a) => id && a.indexOf(id) === i);
+  return (
+    <div className="plate parch" style={{ width: 320, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8 }} data-faction-details={race}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <img src={asset(`cards/crests/${race}.png`)} alt="" width={44} height={44} style={{ objectFit: 'contain' }} />
+        <div style={{ fontWeight: 800, fontSize: 21, lineHeight: 1.1 }}>{FACTION_NAMES[race]}</div>
+      </div>
+      <div style={{ fontSize: 15, lineHeight: 1.3 }}>{FACTION_BLURBS[race]}</div>
+      <div style={{ fontWeight: 800, fontSize: 13, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6B4A22' }}>Pomocnicy</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+        {supports.map((id) => (
+          <div key={id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, textAlign: 'center', fontSize: 12, lineHeight: 1.1, fontWeight: 700 }}>
+            <Portrait unitId={id} size={44} preview={false} tip={false} title={UNITS[id].name} />
+            {UNITS[id].name}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

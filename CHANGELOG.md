@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wybór frakcji i bohatera: kostka losowania jest pierwszą ikoną z lewej i domyślnie wybraną (gdy w celu gry mogą grać wszystkie frakcje); miejsce z losową frakcją ma niebieskie tło, którego nie ma żadna frakcja; prawy klik na ikonie frakcji pokazuje okno z jej nazwą, opisem i portretami wszystkich jej pomocników.
 - Okładka gry w tle menu głównego, ustawień i gry online stoi nieruchomo: bez przesuwania na boki i bez świetlików.
 - Klejnoty w narożnikach ramek mają kolor frakcji gracza przy ekranie (szmaragd Przymierza, rubin Hordy, bursztyn Stada itd.), tak jak tło paneli; w menu zostają niebieskie.
 - Karty jednostek i bohaterów pokazują ten sam kadr ilustracji co ich okrągłe portrety (głowa i postać na pierwszym planie) dla wszystkich frakcji, a nie sztywny środek ilustracji.
