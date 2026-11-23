@@ -27,6 +27,8 @@ const VIEW = (process.argv[2] === 'poziomo' ? 'poziomo' : 'telefon') as 'telefon
     await p.locator('[data-spell-list]').waitFor();
     await p.waitForTimeout(1500);
     await p.screenshot({ path: `.tmp/ksiega${tag}.png` });
+    for (const t of phone ? [] : [0.1, 0.3, 0.5, 0.7]) { await p.evaluate((x) => document.getAnimations().forEach((a) => { a.pause(); a.currentTime = x * 900; }), t); await p.screenshot({ path: `.tmp/ksiega-anim${tag}-${t}.png` }); }
+    await p.evaluate(() => document.getAnimations().forEach((a) => a.finish()));
     const slot = p.locator('[data-spell]').first();
     const box = await slot.boundingBox();
     if (box) { await p.mouse.move(box.x + box.width / 2, box.y + box.height / 2); await p.mouse.down({ button: 'right' }); await p.waitForTimeout(300); await p.screenshot({ path: `.tmp/ksiega-opis${tag}.png` }); await p.mouse.up({ button: 'right' }); }

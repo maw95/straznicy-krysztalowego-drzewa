@@ -7597,6 +7597,25 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/ksiega-klatki",
+      "pliki": [
+        "public/assets/ui/ksiega_klatki.webp"
+      ],
+      "typ": "arkusz 12 klatek animacji księgi czarów (zamknięta → okładka się odchyla → otwarta), RGBA",
+      "opis": "12 x 640x551, klatki 0,4,8,12,16,20,24,28,32,36,42,72 z klipu 3 s (24 kl./s); księga widziana z góry, dwie pionowe strony A4, grzbiet w środku kadru. Strony: lewa x 12-48%, prawa x 52-88%, y 7-91% klatki. Zastępuje spellbook_bg.webp (nieużywany).",
+      "scenario_asset": {
+        "otwarta": "asset_21JfpmSjN1UcHNfbJu7hqM4k",
+        "zamknieta": "asset_uS215DvG5hD5xuAQNJdDGtzq",
+        "wideo": "asset_Ekc6VPGoKsnnmS4TmAXe3Bo9",
+        "referencja_stylu": "asset_TKYN25iy99JYVpSGeLeYrR2h (stara księga)"
+      },
+      "narzedzie": "Scenario (plan płatny), ffmpeg + PIL",
+      "model": "GPT Image 2.5 Flare (2 + 1 obraz medium 1536x1152, ok. 15 CU) + P-Video 2 (720p, 3 s, bez dźwięku, klatka początkowa i końcowa, 15 CU)",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

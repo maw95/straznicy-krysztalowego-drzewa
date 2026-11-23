@@ -1044,25 +1044,12 @@ button.sb-slot:disabled { cursor: default; }
 .level-icon { display: inline-block; background-color: currentColor; -webkit-mask: center / contain no-repeat; mask: center / contain no-repeat; }
 
 /* The spell book window: an open book painted by Scenario (leather cover, two parchment pages, spine), stretched with border-image so the corners keep their shape */
-.spellbook { width: min(900px, 96vw); box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; padding: 6px 14px 10px; border: solid transparent; border-width: 36px 70px 34px; border-image: url('/assets/ui/spellbook_bg.webp') 70 150 66 fill / 36px 70px 34px stretch; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.7)); }
-.spellbook { position: relative; }
-.spellbook-mana { position: absolute; left: 64px; top: 40px; z-index: 2; display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px 2px 6px; border-radius: 999px; background: rgba(35, 20, 60, 0.86); color: #E4D8FF; font-size: 16px; box-shadow: 0 0 0 1.5px #B88A35, 0 2px 4px rgba(0, 0, 0, 0.6); }
-.spellbook-mana b { color: #FFF; }
-.spellbook-pages { position: relative; display: grid; grid-template-columns: repeat(3, 1fr) 36px repeat(3, 1fr); align-items: start; gap: 10px 6px; padding: 54px 12px 18px; min-height: min(230px, 42vh); color: #3A2508; }
-.spellbook-pages > .spellbook-empty { grid-column: 1 / -1; }
-.spellbook-spine { grid-column: 4; align-self: stretch; }
-.spellbook-pages > .slot:nth-of-type(n+4) { grid-column: auto; }
-.spellbook-empty { text-align: center; font-style: italic; font-size: 17px; }
-.spellbook .pager { align-self: center; margin-bottom: 4px; }
 
 /* An icon with its name under it: a treasure in the chest or a spell in the book. */
 .slot { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: 0; padding: 4px 2px; font: inherit; color: inherit; cursor: pointer; min-width: 0; border-radius: 8px; }
 .slot:hover { transform: translateY(-2px); filter: brightness(1.1); }
 .slot:focus-visible { outline: 2px solid #F3D27A; outline-offset: 2px; }
 .slot > img, .slot-icon img { width: 100%; max-width: 64px; aspect-ratio: 1; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px #B88A35, 0 0 0 3.5px #3A2508, 0 3px 6px rgba(0, 0, 0, 0.55); }
-.slot-icon { position: relative; display: block; width: 100%; max-width: 64px; }
-.slot-icon img { max-width: none; display: block; }
-.slot-cost { position: absolute; right: -6px; bottom: -4px; min-width: 22px; height: 22px; padding: 0 3px; box-sizing: border-box; display: grid; place-items: center; border-radius: 999px; background: #5A3A9C; color: #fff; font-size: 14px; font-weight: 800; box-shadow: 0 0 0 1.5px #D9CCFF, 0 1px 3px #000; }
 .slot-name { font-weight: 800; font-size: 14px; line-height: 1.1; text-align: center; overflow-wrap: anywhere; }
 .slot.off { opacity: 0.5; filter: grayscale(0.85); cursor: help; }
 .slot.off:hover { transform: none; filter: grayscale(0.85); }
@@ -1072,36 +1059,16 @@ button.sb-slot:disabled { cursor: default; }
 .close-seal:hover { transform: scale(1.1) rotate(-6deg); filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7)) brightness(1.15); }
 .close-seal:focus-visible { outline: 2px solid #F3D27A; border-radius: 50%; }
 .pager { display: flex; align-items: center; justify-content: center; gap: 12px; color: #F3D27A; font-weight: 800; font-size: 16px; text-shadow: 0 1px 2px #000; }
-.spellbook .pager { color: #4A2C0A; text-shadow: 0 1px 0 rgba(255, 240, 200, 0.6); }
 .pager-btn { width: 30px; height: 30px; border-radius: 50%; border: 0; cursor: pointer; font: inherit; font-size: 18px; line-height: 1; color: #3A2508; background: radial-gradient(circle at 35% 30%, #F3D27A, #B88A35); box-shadow: 0 0 0 1.5px #3A2508, 0 2px 4px rgba(0, 0, 0, 0.6); }
 .pager-btn:disabled { opacity: 0.35; cursor: default; }
 
 .chest-empty { text-align: center; font-style: italic; font-size: 3.4cqw; color: #F3D27A; text-shadow: 0 1px 2px #000; }
 
-/* Opening and closing of the chest and the book: first the closed one (its painted icon) swells in, then the open window unfolds out of it and the content fades in; on leaving the same in reverse. */
-.overlay > .modal-body:has(> .chestbox, > .spellbook) { animation: none; }
+.overlay > .modal-body:has(> .chestbox, > .spellbook) { animation: none; position: relative; }
 .overlay.leaving:has(.chestbox, .spellbook) { animation: fade-out 0.7s ease-in both; }
 .overlay.leaving > .modal-body:has(> .chestbox, > .spellbook) { animation: none; }
-.spellbook { transform-origin: 50% 70%; animation: box-open 0.85s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
-.leaving .spellbook { animation: box-close 0.6s cubic-bezier(0.6, 0, 0.8, 0.4) both; }
-.spellbook > * { animation: box-content-in 0.9s ease-out both; }
-.leaving .spellbook > * { animation: box-content-out 0.3s ease-in both; }
-.spellbook { --closed: url('/assets/ikony/mapa/ksiega.webp'); }
 /* the closed one: a big painted icon in the middle that fades as the window opens */
-.modal-body:has(> .chestbox, > .spellbook) { position: relative; }
-.spellbook > .closed-lid { position: absolute; left: 50%; top: 50%; width: 150px; height: 150px; margin: -75px 0 0 -75px; background: var(--closed) center / contain no-repeat; pointer-events: none; z-index: 4; animation: lid-lift 0.85s ease-in-out both; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.7)); }
-.leaving .spellbook > .closed-lid { animation: lid-drop 0.6s ease-in-out both; }
-@keyframes box-open { 0% { transform: scale(0.22, 0.2); opacity: 0.0; } 25% { opacity: 1; } 100% { transform: none; opacity: 1; } }
-@keyframes box-close { 0% { transform: none; opacity: 1; } 100% { transform: scale(0.22, 0.2); opacity: 0; } }
-@keyframes box-content-in { 0%, 55% { opacity: 0; } 100% { opacity: 1; } }
-@keyframes box-content-out { 0% { opacity: 1; } 100% { opacity: 0; } }
-@keyframes lid-lift { 0% { opacity: 1; transform: scale(0.7); } 12% { transform: scale(1.05) rotate(-4deg); } 22% { transform: scale(1) rotate(3deg); } 45% { opacity: 1; transform: scale(1); } 75%, 100% { opacity: 0; transform: scale(2.4); } }
-@keyframes lid-drop { 0%, 40% { opacity: 0; transform: scale(2.4); } 75% { opacity: 1; transform: scale(1); } 100% { opacity: 1; transform: scale(0.7); } }
-@media (prefers-reduced-motion: reduce) {
-  .spellbook, .spellbook > *, .spellbook > .closed-lid { animation: none !important; }
-  .spellbook > .closed-lid { display: none; }
-  .overlay.leaving:has(.chestbox, .spellbook) { animation-duration: 0.01s; }
-}
+@media (prefers-reduced-motion: reduce) { .overlay.leaving:has(.chestbox, .spellbook) { animation-duration: 0.01s; } }
 
 /* The treasure chest (backlog 58d): a sheet of four painted frames (closed, ajar, half open, open) played in steps; the treasures lie in the open chest. */
 .chestbox { position: relative; width: min(760px, 96vw, 86vh); aspect-ratio: 600 / 556; container-type: inline-size; }
@@ -1123,6 +1090,29 @@ button.sb-slot:disabled { cursor: default; }
 @keyframes chest-content-in { 0%, 70% { opacity: 0; } 100% { opacity: 1; } }
 @keyframes chest-content-out { 0% { opacity: 1; } 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .chest-art, .chest-items, .chestbox .chest-empty, .chestbox .pager, .chestbox .close-seal { animation: none !important; } }
+
+/* The spell book (backlog 58d): a sheet of twelve painted frames (the cover swings open around the spine) played in steps; the spells stand on the two pages, three to a page. */
+.spellbook { position: relative; width: min(840px, 96vw, 98vh); aspect-ratio: 640 / 551; container-type: inline-size; }
+.book-art { position: absolute; inset: 0; background: url('/assets/ui/ksiega_klatki.webp') 100% 0 / 1200% 100% no-repeat; will-change: background-position; filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.7)); animation: book-frames-in 0.9s steps(1, end) both; }
+.book-page { position: absolute; top: 11%; height: 74%; width: 31%; display: flex; flex-direction: column; justify-content: space-around; align-items: center; color: #3A2508; animation: chest-content-in 0.95s ease-out both; }
+.book-page.left { left: 14.5%; }
+.book-page.right { left: 54.5%; }
+.spell-slot { width: 100%; gap: 0.5cqw; }
+.spell-slot > .slot-icon-wrap img { width: 12cqw; aspect-ratio: 1; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px #B88A35, 0 0 0 3.5px #3A2508, 0 3px 6px rgba(0, 0, 0, 0.45); display: block; }
+.spell-slot .slot-name { font-size: 2.7cqw; color: #3A2508; text-shadow: 0 1px 0 rgba(255, 240, 200, 0.5); }
+.spell-cost { display: inline-flex; align-items: center; gap: 0.5cqw; font-size: 2.4cqw; font-weight: 700; color: #4A2C8C; }
+.spell-cost svg, .book-mana svg { height: 1.15em; width: auto; flex: none; }
+.book-mana { position: absolute; left: 50%; top: 1.2%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 0.8cqw; padding: 0.3cqw 1.6cqw; border-radius: 999px; background: rgba(35, 20, 60, 0.9); color: #E4D8FF; font-size: 2.8cqw; font-weight: 700; box-shadow: 0 0 0 0.25cqw #B88A35, 0 2px 4px rgba(0, 0, 0, 0.6); animation: chest-content-in 0.95s ease-out both; }
+.book-mana b { color: #fff; }
+.book-empty { position: absolute; left: 14%; top: 40%; width: 72%; text-align: center; font-style: italic; font-size: 3.2cqw; color: #3A2508; animation: chest-content-in 0.95s ease-out both; }
+.spellbook .pager { position: absolute; left: 50%; bottom: 2.4%; transform: translateX(-50%); color: #F3D27A; font-size: 2.8cqw; animation: chest-content-in 0.95s ease-out both; }
+.spellbook .pager-btn { width: 3.6cqw; height: 3.6cqw; font-size: 2.6cqw; }
+.spellbook .close-seal { top: 0.5%; right: 0.5%; width: 6cqw; height: 6cqw; animation: chest-content-in 0.95s ease-out both; }
+.leaving .book-art { animation: book-frames-out 0.7s steps(1, end) both; }
+.leaving .book-page, .leaving .book-mana, .leaving .book-empty, .leaving .spellbook .pager, .leaving .spellbook .close-seal { animation: chest-content-out 0.25s ease-in both; }
+@keyframes book-frames-in { 0% { background-position: 0% 0; } 8.333% { background-position: 9.0909% 0; } 16.667% { background-position: 18.1818% 0; } 25% { background-position: 27.2727% 0; } 33.333% { background-position: 36.3636% 0; } 41.667% { background-position: 45.4545% 0; } 50% { background-position: 54.5455% 0; } 58.333% { background-position: 63.6364% 0; } 66.667% { background-position: 72.7273% 0; } 75% { background-position: 81.8182% 0; } 83.333% { background-position: 90.9091% 0; } 91.667% { background-position: 100% 0; } 100% { background-position: 100% 0; } }
+@keyframes book-frames-out { 0% { background-position: 100% 0; } 8.333% { background-position: 90.9091% 0; } 16.667% { background-position: 81.8182% 0; } 25% { background-position: 72.7273% 0; } 33.333% { background-position: 63.6364% 0; } 41.667% { background-position: 54.5455% 0; } 50% { background-position: 45.4545% 0; } 58.333% { background-position: 36.3636% 0; } 66.667% { background-position: 27.2727% 0; } 75% { background-position: 18.1818% 0; } 83.333% { background-position: 9.0909% 0; } 91.667% { background-position: 0% 0; } 100% { background-position: 0% 0; } }
+@media (prefers-reduced-motion: reduce) { .book-art, .book-page, .book-mana, .book-empty, .spellbook .pager, .spellbook .close-seal { animation: none !important; } }
 
 /* The list of own settlements in the side panel of the map: no panel behind it, a thumbnail and the name per row. */
 .settlement-list { display: flex; flex-direction: column; gap: 4px; color: #F6EBD0; text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, 0.6); }
@@ -1258,9 +1248,6 @@ button.sb-slot:disabled { cursor: default; }
 }
 /* A phone held sideways: the book and the chest are lower than 390 px, with thinner painted edges and smaller type. */
 @media (max-height: 560px) and (max-width: 1100px) {
-  .spellbook { gap: 4px; padding: 2px 10px 4px; border-width: 22px 46px 20px; border-image: url('/assets/ui/spellbook_bg.webp') 70 150 66 fill / 22px 46px 20px stretch; }
-  .spellbook-pages { min-height: 0; padding: 44px 8px 6px; gap: 4px; }
-  .spellbook-mana { left: 40px; top: 16px; font-size: 13px; }
   .slot .slot-name { font-size: 11px; }
   .slot > img, .slot-icon { max-width: 44px; }
   .close-seal { width: 30px; height: 30px; top: 2px; }

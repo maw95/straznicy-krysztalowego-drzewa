@@ -1,7 +1,6 @@
 // The "Magia" button next to "Skarby" in a battle and the window with all the hero's battle spells (those the mana does not reach are greyed out).
 
 import { scaleText } from '../engine/data';
-import { Fragment } from 'react';
 import { manaOf, maxMana, SPELLS, type SpellId } from '../engine/magic';
 import type { GameState, HeroState } from '../engine/types';
 import { asset } from './common';
@@ -33,40 +32,45 @@ function SpellDetails({ state, id, why }: { state: GameState; id: SpellId; why?:
   );
 }
 
-/** The spell book: a big leather-bound book with two parchment pages; every battle spell the hero knows is an icon with its name and mana cost, six per page (three on each page), a pager below when there are more. The left click casts, the right click shows the details; the ones that cannot be cast now are greyed out. */
+/** The mana drop: the same small icon in the corner counter of the book and in the cost of every spell. */
+export function ManaIcon() {
+  return (
+    <svg viewBox="0 0 20 24" aria-hidden="true">
+      <path d="M10 1C10 1 2 10 2 15a8 8 0 0 0 16 0C18 10 10 1 10 1z" fill="#7A5CCF" stroke="#2B1650" strokeWidth="1.4" />
+      <path d="M6.5 15a3.5 3.5 0 0 0 3 3.4" fill="none" stroke="#D9CCFF" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/** The spell book: a tall open book (two A4-like pages) whose cover swings open; every battle spell the hero knows is an icon with its name and "Koszt: n<mana>", three to a page, six to a spread, a pager when there are more. The left click casts, the right click shows the details; the ones that cannot be cast now are greyed out. The mana the hero has is one counter at the top of the book. */
 export function SpellBookDialog({ state, hero, castable, onPick, onClose }: { state: GameState; hero: HeroState; castable: SpellId[]; onPick: (id: SpellId) => void; onClose: () => void }) {
   const known = (hero.spells ?? []).filter((id) => SPELLS[id].where === 'battle');
   const mana = manaOf(hero);
   const cast = Boolean(state.battle?.activation?.spell);
   const pg = usePaged(known, PER_PAGE);
   useEscapeClose(onClose);
+  const slot = (id: SpellId) => {
+    const ok = castable.includes(id);
+    const why = ok ? undefined : cast ? 'W tej aktywacji czar już rzucono.' : mana < SPELLS[id].mana ? `Za mało many (potrzeba ${SPELLS[id].mana}).` : 'Teraz nie można go rzucić.';
+    return (
+      <button key={id} className={`slot spell-slot ${ok ? '' : 'off'}`} data-spell={id} data-spell-row={id} aria-disabled={!ok} aria-label={`${SPELLS[id].name}, koszt ${SPELLS[id].mana} many`} onClick={() => ok && onPick(id)} {...details(() => <SpellDetails state={state} id={id} why={why} />)}>
+        <span className="slot-icon-wrap"><img src={asset(`ikony/czary/${id}.webp`)} alt="" /></span>
+        <span className="slot-name">{SPELLS[id].name}</span>
+        <span className="spell-cost" data-spell-cost>Koszt: {SPELLS[id].mana}<ManaIcon /></span>
+      </button>
+    );
+  };
   return (
     <div className="spellbook" role="dialog" aria-label="Księga czarów" data-spell-list>
-      <div className="closed-lid" aria-hidden="true" />
+      <div className="book-art" aria-hidden="true" />
       <CloseSeal onClose={onClose} />
-      <div className="spellbook-mana" title="Mana" aria-label={`Mana: ${mana} z ${maxMana(hero)}`}>
-        <svg viewBox="0 0 20 24" width="16" height="19" aria-hidden="true"><path d="M10 1C10 1 2 10 2 15a8 8 0 0 0 16 0C18 10 10 1 10 1z" fill="#7A5CCF" stroke="#2B1650" strokeWidth="1.4" /><path d="M6.5 15a3.5 3.5 0 0 0 3 3.4" fill="none" stroke="#D9CCFF" strokeWidth="1.4" strokeLinecap="round" /></svg>
-        <b data-mana-now>{mana}</b>/{maxMana(hero)}
+      <div className="book-mana" title="Mana" aria-label={`Mana: ${mana} z ${maxMana(hero)}`}>
+        <ManaIcon />
+        <span><b data-mana-now>{mana}</b>/{maxMana(hero)}</span>
       </div>
-      <div className="spellbook-pages">
-        {known.length === 0 && <div className="spellbook-empty">Ten bohater nie zna czarów bitewnych.</div>}
-        {pg.items.map((id, i) => {
-          const ok = castable.includes(id);
-          const why = ok ? undefined : cast ? 'W tej aktywacji czar już rzucono.' : mana < SPELLS[id].mana ? `Za mało many (potrzeba ${SPELLS[id].mana}).` : 'Teraz nie można go rzucić.';
-          return (
-            <Fragment key={id}>
-              {i === 3 && <span className="spellbook-spine" aria-hidden="true" />}
-              <button className={`slot spell-slot ${ok ? '' : 'off'}`} data-spell={id} data-spell-row={id} aria-disabled={!ok} aria-label={`${SPELLS[id].name}, ${SPELLS[id].mana} many`} onClick={() => ok && onPick(id)} {...details(() => <SpellDetails state={state} id={id} why={why} />)}>
-                <span className="slot-icon">
-                  <img src={asset(`ikony/czary/${id}.webp`)} alt="" />
-                  <span className="slot-cost" data-spell-cost>{SPELLS[id].mana}</span>
-                </span>
-                <span className="slot-name">{SPELLS[id].name}</span>
-              </button>
-            </Fragment>
-          );
-        })}
-      </div>
+      {known.length === 0 && <div className="book-empty">Ten bohater nie zna czarów bitewnych.</div>}
+      <div className="book-page left">{pg.items.slice(0, 3).map(slot)}</div>
+      <div className="book-page right">{pg.items.slice(3, 6).map(slot)}</div>
       <PagerBar {...pg} />
     </div>
   );

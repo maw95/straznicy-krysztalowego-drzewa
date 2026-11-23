@@ -38,6 +38,7 @@ try {
   await p.locator('[data-spell-btn]').click();
   await p.locator('[data-spell-list]').waitFor();
   console.log('spells in the book:', await p.locator('[data-spell]').count());
+  await p.waitForTimeout(1500);
   await p.screenshot({ path: '.tmp/panel-ksiega.png' });
   console.log('errors', game.errors);
 } catch (e) {
