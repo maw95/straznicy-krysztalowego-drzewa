@@ -33,7 +33,7 @@ PORTRAIT = {
     'greatAurochs': (.60,.32,.66), 'windAntelope': (.62,.25,.50), 'thunderRam': (.52,.33,.66), 'aurochsScout': (.58,.33,.58),
     'eagleHunter': (.52,.42,.62), 'planetnik': (.48,.28,.55), 'youngAurochs': (.49,.50,.58), 'kulan': (.54,.32,.55),
     'steppeArcher': (.46,.23,.52), 'forestBison': (.58,.38,.55), 'steppeLamignat': (.55,.33,.65), 'warRhino': (.63,.50,.64),
-    'muskOx': (.57,.45,.60), 'arkar': (.54,.38,.58), 'drumElephant': (.52,.42,.68), 'bullMoose': (.56,.30,.60), 'satyrPiper': (.50,.27,.45),
+    'muskOx': (.57,.45,.60), 'arkar': (.54,.38,.58), 'drumElephant': (.48,.36,.66), 'bullMoose': (.56,.30,.60), 'satyrPiper': (.50,.27,.45),
 }
 MIN_SIDE, MAX_SIDE = 0.70, 1.0   # shares of the picture's height
 if __name__ == '__main__':

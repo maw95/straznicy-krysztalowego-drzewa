@@ -7395,6 +7395,33 @@
       "data": "2026-11-21",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "herds/slon-sawannowy",
+      "pliki": [
+        "public/assets/cards/art/drumElephant.jpg",
+        "public/assets/cards/portraits/drumElephant.jpg",
+        "public/assets/osady/dwelling_drumElephant.webp",
+        "public/assets/jednostki/slon_bebniarz"
+      ],
+      "typ": "Słoń z Bębnem Dzikiego Stada: wymiana mamuta na słonia sawannowego (karta, portret, siedlisko, figurka)",
+      "opis": "Autor zauważył 23.11.2026, że słoń jest owłosiony jak mamut (pierwszy prompt: 'woolly steppe elephant'). Nowa karta: szary słoń sawannowy bez futra, ochrowe malowanie, bęben z satyrem. Siedlisko wygenerowane z dawnym obrazem jako odniesieniem. Figurka: stoi (high), martwy (medium), klipy chód/atak/trafienie/śmierć (P-Video 2, 720p); pakowanie pack_unit.py, despill_blue.py, shrink_unit.py. Stare obrazy mamuta: .tmp/zrodla/*_mamut*. Koszt ok. 3+14+4+55+3 = 79 CU.",
+      "scenario_asset": {
+        "karta": "asset_mThFq7E45tFbwmBZUzbC4L67",
+        "stoi": "asset_RtLkPgdTmt2M1ErVSQUjMeyW",
+        "martwy": "asset_gKoAz3JEnEP64pZgCTwZSKd6",
+        "chod": "asset_zCNwnbzT2QVosQRoDzHrNVgB",
+        "atak": "asset_b2pk36DaStywgVCWHH4HLeUC",
+        "trafienie": "asset_PNbhGUofW6PcoDCBSWAJqozu",
+        "smierc": "asset_rD8bHui9KmGN9zUtWTvhLTDm",
+        "siedlisko": "asset_birUs1BwodWAAECea2yiKHqr"
+      },
+      "prompt": "Karta: A drum elephant: a huge African savanna elephant with smooth bare grey wrinkled skin, NO fur and NO hair at all, large fan-shaped ears, a long trunk, long ivory tusks, ochre-red tribal war paint stripes, carrying a great round war drum painted with red symbols, a small satyr drummer behind the drum, red cloth ribbons and bone charms (reszta jak w herds/karty-i-portrety). Figurka: szablon z docs/PRZEPIS_JEDNOSTKI.md z kartą jako odniesieniem.",
+      "narzedzie": "Scenario (plan płatny) + skrypty Pillow/ffmpeg",
+      "model": "GPT Image 2.5 Flare (obrazy), P-Video 2 (klipy 720p, 24 fps)",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

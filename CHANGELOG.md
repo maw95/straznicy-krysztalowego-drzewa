@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Słoń z Bębnem Dzikiego Stada jest teraz prawdziwym szarym słoniem sawannowym (bez futra, z ochrowym malowaniem), a nie mamutem: nowa karta, portret, siedlisko w osadzie i animowana figurka w bitwie.
 - Portrety bohaterów i jednostek Dzikiego Stada mają ciaśniejsze kadry (głowa i barki zamiast całej sylwetki z daleka).
 - Z mapy świata zniknęła wstęga z napisem „Kraina Kryształowego Drzewa”.
 - Wszystkie dziewiętnaście jednostek Dzikiego Stada ma animowane figurki w bitwie (chód lub lot, atak, trafienie, śmierć) zamiast statycznych obrazków.
