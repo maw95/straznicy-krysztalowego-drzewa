@@ -577,6 +577,7 @@ register({
   "Przy stole może być najwyżej {0} frakcje: zmień frakcję jednego z graczy albo zostaw ją losową.": "At most {0} factions can sit at the table: change the faction of one of the players or leave it to chance.",
   "Magia: {0} czarów do rzucenia, mana {1}": "Magic: {0} spells you can cast, mana {1}",
   "Mana: {0}": "Mana: {0}",
+  "Tura:": "Turn:",
   "Następna strona": "Next page",
   "Poprzednia strona": "Previous page",
   "Mana: {0} z {1}": "Mana: {0} of {1}",

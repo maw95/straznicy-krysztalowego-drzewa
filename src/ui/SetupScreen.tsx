@@ -38,6 +38,9 @@ const defaultSeats = (mode: Mode, count: number, digital = true, drawRace = fals
   return seats;
 };
 
+/** The longest name of a player (it has to fit in the panels of the map). */
+export const PLAYER_NAME_MAX = 16;
+
 /** The pages of the menu: the first choice, the mode, where to play, the new-game wizard, the saved games, the seats at the table. */
 type Step = 'home' | 'mode' | 'where' | 'wizard' | 'load' | 'table' | 'campaign' | 'expedition';
 
@@ -399,7 +402,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                   <span className="seat-crest">
                     {s.randomRace ? <DiceIcon size={38} /> : <img src={asset(`cards/crests/${raceAt(s)}.png`)} alt="" title={FACTION_NAMES[raceAt(s)]} onClick={() => crestClick(raceAt(s), i)} {...details(() => <FactionDetails race={raceAt(s)} />)} style={{ width: 46, height: 46, objectFit: 'contain', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.5))' }} />}
                   </span>
-                  <input type="text" value={s.name} onChange={(e) => update(i, { name: e.target.value })} style={{ width: 150 }} aria-label="Imię gracza" />
+                  <input type="text" maxLength={PLAYER_NAME_MAX} value={s.name} onChange={(e) => update(i, { name: e.target.value })} style={{ width: 150 }} aria-label="Imię gracza" />
                   <select value={s.controller} aria-label="Kto gra" onChange={(e) => update(i, { controller: e.target.value as Controller })}>
                     <option value="human">Człowiek</option>
                     <option value="bot">Bot</option>

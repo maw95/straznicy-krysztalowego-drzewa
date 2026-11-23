@@ -977,7 +977,7 @@ export function App() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 17 }}>
         <Medal fill="mGreen" glyph="gHourglass" size={32} /> Runda <b style={{ color: '#F3D27A' }}>{game.round}/{game.roundLimit}</b>
       </div>
-      <div className="hide-mobile" style={{ fontSize: 16, color: 'var(--muted)', fontStyle: 'italic', width: 240 }}>{turnLabel(game, actor)}</div>
+      <div className="hide-mobile" data-turn-label style={{ display: 'flex', flexDirection: 'column', width: 240, lineHeight: 1.15, minWidth: 0 }}>{turnBanner(game, actor)}</div>
       <div className="footer-slot" style={{ flex: 1, minWidth: 0 }}>{footer}</div>
     </Frame>
   );
@@ -1181,6 +1181,19 @@ export function App() {
     </DigitalContext.Provider>
     </ArenaCardsContext.Provider>
     </DigitalCardsContext.Provider>
+  );
+}
+
+/** "Tura: Gracz 1" in the colour of the side and the faction under it, big enough to read from across the table. */
+function turnBanner(game: GameState, actor: ReturnType<typeof currentActor>) {
+  if (actor.kind === 'none' || actor.kind === 'automaton') return <span style={{ fontSize: 16, color: 'var(--muted)', fontStyle: 'italic' }}>{turnLabel(game, actor)}</span>;
+  const p = game.players.find((x) => x.id === actor.playerId);
+  const color = ({ dawn: '#9AE0A8', horde: '#F08A7A', third: '#E8B04A', fourth: '#B58CE8' } as Record<string, string>)[actor.faction] ?? '#F3D27A';
+  return (
+    <>
+      <span style={{ fontSize: 19, fontWeight: 800, color, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={p?.name}>Tura: {p?.name ?? ''}{actor.kind === 'bot' ? ' (bot)' : ''}</span>
+      <span style={{ fontSize: 14, color: 'var(--muted)', fontStyle: 'italic' }}>{sideName(game, actor.faction)}</span>
+    </>
   );
 }
 

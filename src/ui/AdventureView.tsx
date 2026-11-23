@@ -640,11 +640,19 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
         <Frame className="side side-adv" innerStyle={{ padding: '16px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
           {!hero && <div style={{ fontWeight: 800, fontSize: 20, textAlign: 'center' }}>Koniec gry</div>}
           {hero && (
-            <div className="hero-head" style={{ display: 'flex', gap: compact ? 8 : 12, alignItems: 'center' }}>
-              <img src={asset(`cards/crests/${raceOf(state, hero.faction)}.png`)} alt={FACTION_NAMES[raceOf(state, hero.faction)]} title={FACTION_NAMES[raceOf(state, hero.faction)]} style={{ height: compact ? 44 : 64, width: 'auto', flex: 'none' }} />
-              <button className="btn btn-bare" onClick={() => (state.rules.heroGrowth ? setSheet(true) : onShowCard(hero.id))} title={state.rules.heroGrowth ? 'Karta bohatera' : 'Pokaż kartę'} data-hero-portrait>
-                <Portrait unitId={hero.id} size={compact ? 48 : 64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
-              </button>
+            <div className="hero-head" style={{ display: 'flex', gap: compact ? 8 : 12, alignItems: 'flex-start' }}>
+              <div className="hero-ident" style={{ display: 'flex', flexDirection: 'column', gap: 3, flex: 'none', maxWidth: compact ? 100 : 170 }}>
+                <div style={{ display: 'flex', gap: compact ? 8 : 12, alignItems: 'center' }}>
+                  <img src={asset(`cards/crests/${raceOf(state, hero.faction)}.png`)} alt={FACTION_NAMES[raceOf(state, hero.faction)]} title={FACTION_NAMES[raceOf(state, hero.faction)]} style={{ height: compact ? 44 : 64, width: 'auto', flex: 'none' }} />
+                  <button className="btn btn-bare" onClick={() => (state.rules.heroGrowth ? setSheet(true) : onShowCard(hero.id))} title={state.rules.heroGrowth ? 'Karta bohatera' : 'Pokaż kartę'} data-hero-portrait>
+                    <Portrait unitId={hero.id} size={compact ? 48 : 64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
+                  </button>
+                </div>
+                {(() => {
+                  const owner = hero.playerId ? state.players.find((p) => p.id === hero.playerId)?.name : 'Automat zła';
+                  return owner ? <div data-hero-owner title={owner} style={{ fontWeight: 800, fontSize: compact ? 13 : 15, color: ({ horde: '#F08A7A', third: '#E8B04A', fourth: '#B58CE8' } as Record<string, string>)[hero.faction] ?? '#F3D27A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textShadow: '0 1px 2px #000' }}>{owner}</div> : null;
+                })()}
+              </div>
               <div className="hero-info" style={{ minWidth: 0 }}>
                 <div data-hero-name style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{heroLabel(hero)}</div>
                 {state.rules.empire && (
@@ -667,7 +675,6 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     ))}
                   </div>
                 )}
-                <div style={{ fontSize: 15, color: 'var(--muted)' }}>{hero.playerId ? state.players.find((p) => p.id === hero.playerId)?.name : 'Automat zła'}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3, fontSize: 15 }}>
                   <span title={`Punkty ruchu w tej turze: ${moveBreakdown(state).map((p) => `${p.points > 0 && p.label !== 'podstawa' ? '+' : ''}${p.points} ${p.label}`).join(', ')} = ${moveAllowance(state)}.`}>Ruch <Pips total={Math.max(state.rules.heroMovePoints, moveAllowance(state), state.movePoints)} left={state.movePoints} /></span>
                   {hero.crystals.includes('artifact') && <span style={{ color: '#F3D27A' }} data-carrier-slow>· Artefakt spowalnia: −1 ruchu</span>}
