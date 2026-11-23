@@ -16,7 +16,7 @@ register({
   "Każdy bohater może grać tylko raz.": "Each hero can play only once.",
   "Mapy XL i XXL są tylko w wersji cyfrowej.": "The XL and XXL maps are in the digital edition only.",
   "Na arenie walczy jeden bohater z każdej frakcji.": "On the arena one hero of each faction fights.",
-  "Nick musi mieć 3–20 znaków: litery, cyfry, „_” albo „-”.": "The nick must be 3–20 characters: letters, digits, “_” or “-”.",
+  "Nick musi mieć 3–16 znaków: litery, cyfry, „_” albo „-”.": "The nick must be 3–16 characters: letters, digits, “_” or “-”.",
   "Nie jesteś w żadnym pokoju.": "You are not in any room.",
   "Nie możesz zaprosić samego siebie.": "You cannot invite yourself.",
   "Nieprawidłowy bohater.": "Invalid hero.",

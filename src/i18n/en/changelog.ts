@@ -49,6 +49,10 @@ register({
     "The descriptions of places on the map (mill, mines, hut, depot) and the cost of building dwellings in a settlement show gold and resources as icons, not as written-out words for gold, wood and ore.",
   "Prawy przycisk myszy na złocie w dolnym pasku pokazuje dochód samego złota, a na ikonie drewna, rudy albo Gwiezdnego Pyłu dochód właśnie tego surowca; podpowiedzi surowców mają nazwy z wielkiej litery (Drewno, Ruda).":
     "The right button on the gold in the bottom bar shows the income of the gold alone, and on the icon of wood, ore or Star Dust the income of that very resource; the hints of the resources have capitalised names (Wood, Ore).",
+  "W skrzyni dwa sąsiednie skarby o długiej nazwie (np. dwa „Wielkie Eliksiry Uzdrowienia”) nie stykają już podpisów.":
+    "In the chest, two neighbouring treasures with a long name (e.g. two \"Great Elixirs of Healing\") no longer touch each other's labels.",
+  "Nowy nick w grze online ma 3–16 znaków (było 3–20), tak jak imię gracza przy jednym stole; konta z dłuższym nickiem logują się jak dotąd.":
+    "A new nick in the online game has 3–16 characters (it was 3–20), like a player name at a single table; accounts with a longer nick log in as before.",
   "Panel bohatera na mapie pokazuje manę jako „7/7” z ikoną many zamiast słowa „Mana”.":
     "The hero panel on the map shows the mana as \"7/7\" with the mana icon instead of the word \"Mana\".",
   "Cel „Podbój”: w pasku i w panelu napis to „Przejęte osady wroga: 0 / 1” bez nazwy frakcji; w panelu przy każdym wierszu stoi herb strony.":

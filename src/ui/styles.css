@@ -1074,11 +1074,11 @@ button.sb-slot:disabled { cursor: default; }
 .chestbox { position: relative; width: min(760px, 96vw, 86vh); aspect-ratio: 600 / 556; container-type: inline-size; }
 .chest-art { position: absolute; inset: 0; background: url('/assets/ui/skrzynia_klatki.webp') 100% 0 / 1200% 100% no-repeat; will-change: background-position; animation: chest-frames-in 0.8s steps(1, end) both; }
 .chestbox::before { content: ''; position: absolute; left: 8%; right: 8%; bottom: 1%; height: 6%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7), transparent 70%); }
-.chest-items { position: absolute; left: 17%; top: 37%; width: 55%; height: 32%; display: flex; align-items: center; justify-content: center; gap: 0.6cqw; animation: chest-content-in 0.9s ease-out both; }
+.chest-items { position: absolute; left: 17%; top: 37%; width: 55%; height: 32%; display: flex; align-items: center; justify-content: center; gap: 1cqw; animation: chest-content-in 0.9s ease-out both; }
 .chest-items .slot { width: 9.2cqw; flex: none; }
 .chest-items .slot-name { overflow-wrap: normal; word-break: normal; hyphens: manual; }
 .chest-items .slot > img { width: 8cqw; max-width: none; }
-.chest-items .slot-name { font-size: 1.75cqw; line-height: 1.05; color: #F6DD93; text-shadow: 0 1px 2px #000, 0 0 5px #000; }
+.chest-items .slot-name { font-size: 1.55cqw; line-height: 1.05; letter-spacing: -0.01em; color: #F6DD93; text-shadow: 0 1px 2px #000, 0 0 5px #000; }
 .chestbox .chest-empty { position: absolute; left: 17%; top: 37%; width: 55%; height: 32%; display: grid; place-items: center; animation: chest-content-in 0.9s ease-out both; }
 .chestbox .pager { position: absolute; left: 17%; width: 55%; bottom: 27%; animation: chest-content-in 0.9s ease-out both; }
 .chestbox .close-seal { animation: chest-content-in 0.9s ease-out both; }

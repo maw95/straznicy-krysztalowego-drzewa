@@ -353,7 +353,7 @@ register({
   "Witaj, Strażniku!": "Welcome, Guardian!",
   "Zaloguj się, żeby grać ze znajomymi przez internet i walczyć o miejsce w rankingu.": "Log in to play with friends over the internet and fight for a place in the ranking.",
   "Hasło": "Password",
-  "Nick: 3–20 znaków (litery, cyfry, „_”, „-”). Hasło: co najmniej 4 znaki. Konta nie da się odzyskać — zapamiętaj hasło.": "Nick: 3–20 characters (letters, digits, \"_\", \"-\"). Password: at least 4 characters. An account cannot be recovered — remember your password.",
+  "Nick: 3–16 znaków (litery, cyfry, „_”, „-”). Hasło: co najmniej 4 znaki. Konta nie da się odzyskać — zapamiętaj hasło.": "Nick: 3–16 characters (letters, digits, \"_\", \"-\"). Password: at least 4 characters. An account cannot be recovered — remember your password.",
   "Spróbuj ponownie": "Try again",
   "Załóż konto": "Create an account",
   "Tylko na tym komputerze: z botami albo z kimś przy jednym ekranie. Bez gry online i bez rankingu.": "On this computer only: with bots or with someone at one screen. No online play and no ranking.",

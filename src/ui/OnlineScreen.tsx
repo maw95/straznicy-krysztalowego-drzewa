@@ -101,13 +101,13 @@ function Welcome({ problem, onRetry, onUser, onOffline }: { problem: string | nu
       <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 18 }}>
         <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           Nick
-          <input type="text" value={nick} autoFocus autoComplete="username" onChange={(e) => setNick(e.target.value)} style={{ fontSize: 18, padding: '6px 10px' }} />
+          <input type="text" value={nick} autoFocus autoComplete="username" maxLength={kind === 'register' ? 16 : undefined} onChange={(e) => setNick(e.target.value)} style={{ fontSize: 18, padding: '6px 10px' }} />
         </label>
         <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           Hasło
           <input type="password" value={password} autoComplete={kind === 'login' ? 'current-password' : 'new-password'} onChange={(e) => setPassword(e.target.value)} style={{ fontSize: 18, padding: '6px 10px' }} />
         </label>
-        {kind === 'register' && <div style={{ fontSize: 15, color: 'var(--muted)' }}>Nick: 3–20 znaków (litery, cyfry, „_”, „-”). Hasło: co najmniej 4 znaki. Konta nie da się odzyskać — zapamiętaj hasło.</div>}
+        {kind === 'register' && <div style={{ fontSize: 15, color: 'var(--muted)' }}>Nick: 3–16 znaków (litery, cyfry, „_”, „-”). Hasło: co najmniej 4 znaki. Konta nie da się odzyskać — zapamiętaj hasło.</div>}
         {error && (
           <div role="alert" style={{ color: '#F08A7A', fontWeight: 700 }}>
             {error}{' '}
