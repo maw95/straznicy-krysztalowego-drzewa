@@ -35,12 +35,13 @@ const VIEW = (process.argv[2] === 'poziomo' ? 'poziomo' : 'telefon') as 'telefon
     console.log('book closed:', (await p.locator('[data-spell-list]').count()) === 0);
     await p.locator('[data-treasure-btn]').click();
     await p.locator('[data-treasures]').waitFor();
+    await p.waitForTimeout(1500);
+    await p.screenshot({ path: `.tmp/skrzynia${tag}.png` });
     console.log('anims:', await p.evaluate(() => document.getAnimations().map((a) => (a as CSSAnimation).animationName + '@' + Math.round(a.currentTime as number)).join(' ')));
     // Freeze the animations at 25 %, 50 % and 75 % to look at the frames.
-    const clip = { x: 300, y: 180, width: 1000, height: 480 };
-    for (const t of phone ? [] : [0.15, 0.35, 0.6]) { await p.evaluate((x) => document.getAnimations().forEach((a) => { a.pause(); a.currentTime = x * 850; }), t); await p.screenshot({ path: `.tmp/skrzynia-anim${tag}-${t}.png`, clip }); }
-    await p.waitForTimeout(1200);
-    await p.screenshot({ path: `.tmp/skrzynia${tag}.png` });
+    const clip = { x: 300, y: 60, width: 1000, height: 780 };
+    for (const t of phone ? [] : [0.1, 0.3, 0.5, 0.7]) { await p.evaluate((x) => document.getAnimations().forEach((a) => { a.pause(); a.currentTime = x * 850; }), t); await p.screenshot({ path: `.tmp/skrzynia-anim${tag}-${t}.png`, clip }); }
+
     console.log('slots:', await p.locator('[data-item-slot]').count(), 'pager:', await p.locator('[data-pager]').count());
     await p.keyboard.press(process.env.KEY ?? 'Enter');
     await p.waitForTimeout(1200);

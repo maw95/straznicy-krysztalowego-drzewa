@@ -29,18 +29,15 @@ export function useEscapeClose(onClose: () => void) {
   }, [onClose]);
 }
 
-/** The round close button of the chest and the spell book: a wax seal with a padlock (instead of a "Zamknij" button). */
+/** The round close button of the chest and the spell book: a gold ring with a gold cross on a dark disc. */
 export function CloseSeal({ onClose, label = 'Zamknij' }: { onClose: () => void; label?: string }) {
   return (
     <button className="close-seal" data-enter data-modal-close aria-label={label} title={label} onClick={onClose}>
       <svg viewBox="0 0 40 40" width="100%" height="100%" aria-hidden="true">
         <circle cx="20" cy="20" r="19" fill="url(#mRing)" stroke="#1E1204" strokeWidth="1.2" />
-        <circle cx="20" cy="20" r="15.2" fill="#7A1E14" stroke="#1E1204" strokeWidth="1" />
-        <circle cx="20" cy="20" r="12.5" fill="none" stroke="#C0463A" strokeWidth="0.8" opacity="0.7" />
-        <path d="M14.5 19v-3.2a5.5 5.5 0 0 1 11 0V19" fill="none" stroke="#F3D27A" strokeWidth="2.2" strokeLinecap="round" />
-        <rect x="12.5" y="18.5" width="15" height="11" rx="2" fill="#F3D27A" stroke="#3A2508" strokeWidth="1" />
-        <circle cx="20" cy="23" r="1.9" fill="#3A2508" />
-        <rect x="19.2" y="23.5" width="1.6" height="3.6" rx="0.6" fill="#3A2508" />
+        <circle cx="20" cy="20" r="15.2" fill="#241505" stroke="#1E1204" strokeWidth="1" />
+        <path d="M13.5 13.5 L26.5 26.5 M26.5 13.5 L13.5 26.5" stroke="#F3D27A" strokeWidth="3.2" strokeLinecap="round" />
+        <path d="M13.5 13.5 L26.5 26.5 M26.5 13.5 L13.5 26.5" stroke="#B88A35" strokeWidth="0.9" strokeLinecap="round" />
       </svg>
     </button>
   );
@@ -80,17 +77,15 @@ export function TreasureSlot({ kind, art, name, use, usable, onShowCard, extra }
   );
 }
 
-/** The treasure window: a wooden chest with iron straps and a gold rim; the treasures are icons in one row of six, a pager below when there are more. */
+/** The treasure window: a painted chest whose lid lifts (four frames), the treasures lie in the open chest, three to a row and six to a page, a pager when there are more. */
 export function ChestFrame({ label, onClose, items, empty = 'Brak skarbów.', dataAttr = 'data-treasures' }: { label: string; onClose: () => void; items: ReactNode[]; empty?: string; dataAttr?: string }) {
   const pg = usePaged(items, PER_PAGE);
   useEscapeClose(onClose);
   return (
     <div className="chestbox" role="dialog" aria-label={label} {...{ [dataAttr]: true }}>
-      <div className="closed-lid" aria-hidden="true" />
+      <div className="chest-art" aria-hidden="true" />
       <CloseSeal onClose={onClose} />
-      <div className="chestbox-inner">
-        {items.length === 0 ? <div className="chest-empty">{empty}</div> : <div className="slot-row">{pg.items}</div>}
-      </div>
+      {items.length === 0 ? <div className="chest-empty">{empty}</div> : <div className="chest-items">{pg.items}</div>}
       <PagerBar {...pg} />
     </div>
   );

@@ -7578,6 +7578,27 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ui/skrzynia-klatki",
+      "pliki": [
+        "public/assets/ui/skrzynia_klatki.webp"
+      ],
+      "typ": "arkusz 4 klatek animacji skrzyni skarbów (zamknięta, uchylona, w połowie, otwarta), RGBA",
+      "opis": "4 x 640x623, klatki wyrównane skryptowo (szerokość i dół bryły), tło usunięte wypełnieniem od krawędzi. Zastępuje chest_bg.webp w oknie skarbów (chest_bg.webp nieużywany).",
+      "scenario_asset": {
+        "referencja": "asset_2rd4SKFAgmYJSExR5csmgbzh (pełna otwarta skrzynia, zadanie job_aueVKnEsqo9q3j2w5rHgWWoe)",
+        "zadania": [
+          "job_k5KDgtQbFQ97ckM5DXv99q5h",
+          "job_W1TjVeqh4SMJNE13ifUkVdNJ",
+          "job_eNrx6QYe4NTidrJv9e3F9YW4"
+        ]
+      },
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 4 obrazy (otwarta + 3 klatki) ok. 20 CU",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
