@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Żelazny Klan ma własną osadę: tło kamiennej twierdzy w przełęczy, 18 własnych budynków, Salę Tarcz, Runiczną Kuźnię, Głęboką Sztolnię i siedliska dziewięciu jednostek":
+    "The Iron Clan has its own settlement: a background of a stone stronghold in a mountain pass, 18 own buildings, the Shield Hall, the Rune Forge, the Deep Mine and the dwellings of nine units.",
   "Żelazny Klan ma własną muzykę (spokojne kowadła z chórem na mapie i w osadzie oraz marsz młotów z rogami), dźwięki ataku i śmierci wszystkich 19 postaci oraz własne dźwięki wykucia runy, Muru Tarcz i ogłuszenia":
     "The Iron Clan has its own music (calm anvils with a choir on the map and in the settlement and a march of hammers with horns), attack and death sounds for all 19 characters and its own sounds for forging a rune, the Shield Wall and stunning.",
   "Żelazny Klan ma własny herb (młot na kowadle), ramki kart w stalowym brązie, 12 własnych ikon zdolności (Przysięga Tarczy, Runa Kamienia, Taran, Fortyfikacja i inne) i ikony run w Runicznej Kuźni; kolor frakcji zmienił się z różowego na stalowy":
