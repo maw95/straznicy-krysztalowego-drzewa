@@ -999,6 +999,8 @@ export type Terrain =
   | 'thorns'
   // Dzikie Stado
   | 'steppe'
+  // Bractwo Przypływu
+  | 'shore'
   // The channels between the islands (digital ruleset)
   | 'water'
   // Special tiles
@@ -1006,12 +1008,14 @@ export type Terrain =
   | 'baseDawn'
   | 'baseHorde'
   | 'baseHerds'
+  | 'baseTides'
   | 'lairCyclops'
   | 'lairGriffin'
   | 'lairHydra'
   | 'treasureDawn'
   | 'treasureHorde'
-  | 'treasureHerds';
+  | 'treasureHerds'
+  | 'treasureTides';
 
 /** The team whose land a tile is (the zone it lies in). */
 export type TileSide = TeamId;
@@ -1032,17 +1036,20 @@ export const TERRAIN_NAMES: Record<Terrain, string> = {
   deadThicket: 'Martwy Gąszcz',
   thorns: 'Trujące Ciernie',
   steppe: 'Step Dzikiego Stada',
+  shore: 'Odsłonięta Plaża',
   water: 'Woda',
   tree: 'Kryształowe Drzewo',
   baseDawn: 'Baza Przymierza Świtu',
   baseHorde: 'Baza Mrocznej Hordy',
   baseHerds: 'Obozowisko Dzikiego Stada',
+  baseTides: 'Przystań Bractwa Przypływu',
   lairCyclops: 'Jaskinia Cyklopa',
   lairGriffin: 'Gryfie Gniazdo',
   lairHydra: 'Hydrzy Staw',
   treasureDawn: 'Skarbiec Przymierza',
   treasureHorde: 'Skarbiec Hordy',
   treasureHerds: 'Skarbiec Stada',
+  treasureTides: 'Skarbiec Bractwa',
 };
 
 /** null = impassable. */
@@ -1052,17 +1059,20 @@ export const TERRAIN_COST: Record<Terrain, number | null> = {
   bridge: 1,
   scorched: 1,
   steppe: 1,
+  shore: 1,
   barren: 1,
   tree: 1,
   baseDawn: 1,
   baseHorde: 1,
   baseHerds: 1,
+  baseTides: 1,
   lairCyclops: 1,
   lairGriffin: 1,
   lairHydra: 1,
   treasureDawn: 1,
   treasureHorde: 1,
   treasureHerds: 1,
+  treasureTides: 1,
   river: 2,
   hill: 2,
   swamp: 2,
@@ -1079,8 +1089,8 @@ export const TERRAIN_COST: Record<Terrain, number | null> = {
 export const TERRAIN_VARIANTS: Record<Terrain, number> = {
   meadow: 4, forest: 4, river: 4, bridge: 4, hill: 4, mountain: 4, chasm: 4,
   scorched: 4, swamp: 4, barren: 4, darkCave: 4, ruins: 4, deadThicket: 4, thorns: 4, water: 2,
-  steppe: 4, tree: 1, baseDawn: 1, baseHorde: 1, baseHerds: 1, lairCyclops: 1, lairGriffin: 1, lairHydra: 1,
-  treasureDawn: 4, treasureHorde: 4, treasureHerds: 2,
+  steppe: 4, shore: 2, tree: 1, baseDawn: 1, baseHorde: 1, baseHerds: 1, baseTides: 1, lairCyclops: 1, lairGriffin: 1, lairHydra: 1,
+  treasureDawn: 4, treasureHorde: 4, treasureHerds: 2, treasureTides: 1,
 };
 
 /**

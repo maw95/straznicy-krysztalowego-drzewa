@@ -16,8 +16,8 @@ export const TIDES: FactionPack = {
   short: 'Bractwo',
   genitive: 'Bractwa',
   lead: 'dłużej miało',
-  // No shore tiles yet: the Brotherhood borrows the meadow of Przymierze (placeholder, docs/BACKLOG.md 2a).
-  terrain: { base: 'baseDawn', land: 'meadow', treasure: 'treasureDawn', wall: 'chasm' },
-  tiles: ['meadow', 'barren', 'hill', 'river', 'bridge', 'mountain', 'chasm'],
+  // The shore, the harbour and the treasury have tiles of their own; the other ground (dunes, tidal channels, walkways, cliffs, gullies, salt flats) is shared with Przymierze (its pictures: FACTION_TILE_ART).
+  terrain: { base: 'baseTides', land: 'shore', treasure: 'treasureTides', wall: 'chasm' },
+  tiles: ['shore', 'barren', 'hill', 'river', 'bridge', 'mountain', 'chasm'],
   settlementNames: ['Perłowa Zatoka', 'Koralowa Brama', 'Latarnia Odpływu', 'Słona Przystań', 'Muszlowy Gród', 'Rafa Trytonów', 'Zatopione Schody', 'Mewia Skała', 'Port Siedmiu Fal', 'Bursztynowy Brzeg', 'Lagunowy Dwór', 'Przylądek Syren'],
 };

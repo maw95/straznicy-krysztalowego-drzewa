@@ -202,15 +202,15 @@ export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
     { art: 'boulders', cells: [[6, 3]] },
     { art: 'log', cells: [[6, 7]] },
   ],
-  // Placeholder (docs/BACKLOG.md 2a): a beach by the reef at low tide (boulders for the rocks, ruins for the wrecks, logs for the driftwood) until the arena of its own is painted.
+  // A beach by the reef at low tide: reef ledges, a wreck, a drying net, a sea stack, driftwood, a tide pool and kelp (public/assets/arena/cyfrowa).
   tides: [
-    { art: 'boulders', cells: [[4, 1], [5, 1]] },
-    { art: 'ruin', cells: [[8, 5], [8, 6]] },
-    { art: 'log', cells: [[3, 4]] },
-    { art: 'boulders', cells: [[9, 2]] },
-    { art: 'log', cells: [[10, 7]] },
-    { art: 'ruin', cells: [[6, 3]] },
-    { art: 'boulders', cells: [[6, 7]] },
+    { art: 'reefledge', cells: [[4, 1], [5, 1]] },
+    { art: 'wreck', cells: [[8, 5], [8, 6]] },
+    { art: 'netrack', cells: [[3, 4]] },
+    { art: 'seastack', cells: [[9, 2]] },
+    { art: 'driftwood', cells: [[10, 7]] },
+    { art: 'tidepool', cells: [[6, 3]] },
+    { art: 'kelpheap', cells: [[6, 7]] },
   ],
 };
 

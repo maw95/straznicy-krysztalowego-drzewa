@@ -8642,6 +8642,114 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "tides/arena",
+      "pliki": [
+        "public/assets/arena/cyfrowa/tides.webp",
+        "public/assets/arena/cyfrowa/reefledge.webp",
+        "public/assets/arena/cyfrowa/wreck.webp",
+        "public/assets/arena/cyfrowa/netrack.webp",
+        "public/assets/arena/cyfrowa/seastack.webp",
+        "public/assets/arena/cyfrowa/driftwood.webp",
+        "public/assets/arena/cyfrowa/tidepool.webp",
+        "public/assets/arena/cyfrowa/kelpheap.webp"
+      ],
+      "typ": "arena cyfrowa Bractwa Przypływu (plaża przy rafie w czasie odpływu) i 7 jej przeszkód",
+      "opis": "Tło 1536x1024 jakość high (12 CU), czysta płyta pod planszą (arena_cyfrowa.clean_plate); przeszkody 768x768 medium na przezroczystym tle (3 CU każda): rafowa grzęda, wrak łodzi, suszarnia sieci, filar skalny, naplyw wody i drewna, kałuża pływowa, stos wodorostów. Układ: WIDE_OBSTACLES.tides. Jedno podejście na obraz.",
+      "scenario_asset": {
+        "arena_raw": "asset_YSs74NaKKh24ZqGesESsL9zk",
+        "reefledge": "asset_BvXh5afSPdm5XE7fsY96L8Fa",
+        "wreck": "asset_8CKKuFAGneZAP1ikra8wUba1",
+        "netrack": "asset_HE2L1RzhDt88HR9qXGgfdLro",
+        "seastack": "asset_TMZ6FqFmJUNsn9ynuGEFTYFB",
+        "driftwood": "asset_yoAzH7gpQwhXru4QukcRQYHq",
+        "tidepool": "asset_ddDoiKVxvKk3VDu6JZQFHoqH",
+        "kelpheap": "asset_ea5YmVjm4vuVbeshM9fHSsz1"
+      },
+      "prompt": "Tło: Top-down view of an empty beach battlefield arena background at low tide ... (pusty środek z mokrego piasku; rama: rafowe skały, sieci, kałuże, kadłub łodzi, drewno, zielono-szare morze, bez błękitu; źródło: .tmp/zrodla/tides_map). Przeszkody: <opis>, game obstacle sprite for a turn-based strategy game on a beach, three-quarter front view, painterly realistic, sand/sage green/grey-green, no bright blue, isolated on a fully transparent background.",
+      "narzedzie": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) przez Scenario + skrypt Pillow scripts/assets/tides_map.py",
+      "model": "model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "tides/kafle-mapy",
+      "pliki": [
+        "public/assets/tiles/shore_1.jpg",
+        "public/assets/tiles/shore_2.jpg",
+        "public/assets/tiles/baseTides_1.jpg",
+        "public/assets/tiles/treasureTides_1.jpg"
+      ],
+      "typ": "kafle mapy Bractwa Przypływu: plaża (2 warianty), przystań (baza), skarbiec",
+      "opis": "Obrazy 1024x1024 jakość low (2 CU każdy), przycięte do sześciokąta 260x300 w ramce meadow_1.jpg (tides_map.py). Nowe typy terenu shore, baseTides, treasureTides w data.ts.",
+      "scenario_asset": {
+        "shore_1": "asset_5TCZJvjLSTBSwspmQ2HXFCvt",
+        "shore_2": "asset_LRZdzZSXcX2p5iQRLiox5teM",
+        "baseTides_1": "asset_FEJRWdDqRMGj7WFBwwA8iyma",
+        "treasureTides_1": "asset_wz8npy8PyWh1FzzDF2nmyYaR"
+      },
+      "prompt": "Isometric three-quarter top-down fantasy strategy map tile illustration, painterly and richly detailed in the style of Heroes of Might and Magic III adventure map tiles: <opis kafla>, soft diffuse overcast light, palette of pale sand, sage green and grey-green water with coral pink accents, no bright blue, no turquoise. The scene fills the whole square image edge to edge, no border, no frame, no text, no characters.",
+      "narzedzie": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) przez Scenario + skrypt Pillow scripts/assets/tides_map.py",
+      "model": "model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "tides/kafle-wlasne",
+      "pliki": [
+        "public/assets/tiles/back_tides.jpg",
+        "public/assets/tiles/tides_hill_1.jpg",
+        "public/assets/tiles/tides_river_1.jpg",
+        "public/assets/tiles/tides_bridge_1.jpg",
+        "public/assets/tiles/tides_mountain_1.jpg",
+        "public/assets/tiles/tides_chasm_1.jpg",
+        "public/assets/tiles/tides_barren_1.jpg",
+        "public/assets/tiles/tides_osada_1.jpg",
+        "public/assets/tiles/tides_obj_shrine.jpg",
+        "public/assets/tiles/tides_obj_camp.jpg",
+        "public/assets/tiles/tides_obj_chest.jpg",
+        "public/assets/tiles/tides_obj_studnia.jpg",
+        "public/assets/tiles/tides_obj_tartak.jpg",
+        "public/assets/tiles/tides_obj_kopalnia.jpg",
+        "public/assets/tiles/tides_obj_kopalnia_ruda.jpg",
+        "public/assets/tiles/tides_obj_zrodlo_pylu.jpg",
+        "public/assets/tiles/tides_obj_chatka.jpg",
+        "public/assets/tiles/tides_obj_skladnica.jpg",
+        "public/assets/tiles/tides_obj_odlamek.jpg",
+        "public/assets/tiles/tides_obj_mlyn.jpg"
+      ],
+      "typ": "własna strona mapy Bractwa Przypływu: rewers, teren (wydma, kanał pływowy, pomost, klify, wąwóz, słone równiny), obiekty i osada na wybrzeżu",
+      "opis": "Obrazy 1024x1024 jakość low (2 CU, 19 obrazów). Teren w ramce meadow_1, obiekty i osada przycięte do 260x300 bez ramki. Rewers: zielony rewers Przymierza przebarwiony na jadeit z herbem (trójząb w muszli) w medalionie (bez generowania).",
+      "scenario_asset": {
+        "obj_shrine": "asset_e5RLhaFHV2f3NgnFfJPnKkWB",
+        "hill_1": "asset_k5gQ6Nj2zPyKhT8K9gahR2Pq",
+        "river_1": "asset_N1tVGffXixEzaMUfjKknFmCE",
+        "bridge_1": "asset_mZ8fF5np7aNJHxMCozxGgm91",
+        "mountain_1": "asset_qh9ctkyvqDBsvVUGPrg4zbBM",
+        "chasm_1": "asset_hgaCVhy46oGKu1R5WSr2CB3c",
+        "barren_1": "asset_nomcWhufodTTDp65Xq5kmu43",
+        "obj_camp": "asset_updC78DK3JB1PFQboedR7RNi",
+        "obj_chest": "asset_S8ChFZCequBz3GYpzDD4QsTr",
+        "obj_studnia": "asset_XVjBa9v5B4JhGx6gMfhewc4K",
+        "obj_tartak": "asset_fgZycsrEEQZqMR34jPMe4Fnk",
+        "obj_kopalnia_ruda": "asset_HHviNdHWuzh4Vp2b2rJeMt4s",
+        "osada": "asset_druVmXCx61yEt62UNUqMfhKY",
+        "obj_kopalnia": "asset_HnemWXsUENaZXoC32J3BWVHi",
+        "obj_zrodlo_pylu": "asset_BEME9trXzenum5TuFjd1fiyW",
+        "obj_skladnica": "asset_83huev48bxPHisYzwouU6sm2",
+        "obj_chatka": "asset_hJnLC1TyXgZRQR5pSGe7xuNT",
+        "obj_odlamek": "asset_fk1FDENjPeWQJ1GRYvvok1hF",
+        "obj_mlyn": "asset_59PEkhxp6q83YU5eDAgfVBne"
+      },
+      "prompt": "Isometric three-quarter top-down fantasy strategy map tile illustration ... <opis kafla na plaży, np. a seaside shrine of stacked pale stones with a pink-and-cream conch shell on top>, soft diffuse overcast light, palette of pale sand, sage green and grey-green water with coral pink accents, no bright blue, no turquoise. The scene fills the whole square image edge to edge, no border, no frame, no text, no characters.",
+      "narzedzie": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) przez Scenario + skrypt Pillow scripts/assets/tides_map.py",
+      "model": "model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
