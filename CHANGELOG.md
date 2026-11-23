@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Znacznik przy przycisku „Magia” pokazuje teraz liczbę czarów, które można rzucić w tej chwili (starcza many i nic innego nie stoi na przeszkodzie), a nie ilość many; mana jest w podpowiedzi przycisku i w oknie księgi.
 - Czwarty bohater frakcji można wybrać też przy stole online w potyczce cyfrowej.
 - Czwarty bohater każdej frakcji (np. Srebrna Wilczyca Przymierza, Mantikora Hordy) jest zawsze do wyboru w potyczce cyfrowej, a nie dopiero przy siedmiu i ośmiu graczach.
 - Poprawka: dodanie piątego gracza (i wybór pięciu różnych frakcji) nie wywala już gry błędem; przy stole może być najwyżej cztery frakcje, a przy czterech różnych frakcjach miejsce z losową frakcją losuje jedną z nich.

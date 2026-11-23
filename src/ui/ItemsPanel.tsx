@@ -102,7 +102,7 @@ export function ItemsPanel({ state, side, active, targeting, setTargeting, freeA
         </Modal>
       )}
       <div style={{ display: 'flex', gap: 14, alignItems: 'flex-end' }}>
-        {magic && state.heroes[active.id] && <SpellButton mana={manaOf(state.heroes[active.id])} open={magic.open} onClick={() => { setShowItems(false); magic.setOpen(!magic.open); }} />}
+        {magic && state.heroes[active.id] && <SpellButton mana={manaOf(state.heroes[active.id])} castable={magic.castable.length} open={magic.open} onClick={() => { setShowItems(false); magic.setOpen(!magic.open); }} />}
         <TreasureButton count={state.factions[side].inventory.length} onClick={() => { magic?.setOpen(false); setShowItems(!showItems); }} open={showItems} />
       </div>
       <Modal open={showItems} onClose={() => setShowItems(false)}>

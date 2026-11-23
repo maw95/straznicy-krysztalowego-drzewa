@@ -8,13 +8,13 @@ import { asset } from './common';
 import { details } from './details';
 import { CloseSeal, PagerBar, PER_PAGE, useEscapeClose, usePaged } from './TreasureButton';
 
-/** The round "Magia" button: the same size, rim and badge as the "Skarby" button beside it, with a painted spell book (the badge shows the mana). */
-export function SpellButton({ mana, onClick, open }: { mana: number; onClick: () => void; open: boolean }) {
+/** The round "Magia" button: the same size, rim and badge as the "Skarby" button beside it, with a painted spell book; the badge shows how many spells can be cast now (the mana is enough and nothing else stops it). */
+export function SpellButton({ mana, castable, onClick, open }: { mana: number; castable: number; onClick: () => void; open: boolean }) {
   return (
-    <button className={`treasure-btn spell-btn ${open ? 'open' : ''}`} onClick={onClick} aria-label={`Magia: mana ${mana}`} aria-expanded={open} data-spell-btn>
+    <button className={`treasure-btn spell-btn ${open ? 'open' : ''}`} onClick={onClick} aria-label={`Magia: ${castable} czarów do rzucenia, mana ${mana}`} title={`Mana: ${mana}`} aria-expanded={open} data-spell-btn>
       <span className="treasure-icon">
         <img src={asset('ikony/mapa/ksiega.webp')} alt="" width={60} height={60} />
-        <span className="treasure-badge" data-mana>{mana}</span>
+        <span className="treasure-badge" data-castable>{castable}</span>
       </span>
       <span className="treasure-cap">Magia</span>
     </button>

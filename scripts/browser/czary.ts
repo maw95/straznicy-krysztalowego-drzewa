@@ -23,7 +23,8 @@ import { openGame } from './game';
       await p.waitForTimeout(1200);
     }
     if (!(await p.locator('[data-spell-btn]').count())) { await p.screenshot({ path: '.tmp/czary-stan.png' }); console.log('no spell strip; buttons:', (await p.getByRole('button').allInnerTexts()).filter(Boolean).join(' | ').replace(/\n/g, ' ').slice(0, 300)); }
-    const mana = async () => Number(await p.locator('[data-spell-btn] [data-mana]').innerText());
+    // The badge shows the number of spells that can be cast now; the mana is in the button's title ("Mana: N").
+    const mana = async () => Number(((await p.locator('[data-spell-btn]').getAttribute('title')) ?? '').replace(/\D/g, ''));
     const before = await mana();
     await p.locator('[data-spell-btn]').click();
     await p.locator('[data-spell-list]').waitFor();
