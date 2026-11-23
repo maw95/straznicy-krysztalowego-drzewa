@@ -517,11 +517,13 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     {(() => {
                       const kind = typeBadge(state, t);
                       if (!kind) return null;
-                      const w = W * 0.3;
+                      const w = W * 0.34;
                       return (
-                        <span className={`type-badge ${kind.used ? 'used' : ''}`} data-type-badge={kind.icon} style={{ position: 'absolute', left: W * 0.5 - w / 2, top: H * 0.1, width: w, height: w / 2 }}>
-                          <img src={asset(`ikony/mapa/${kind.icon}.webp`)} alt="" style={{ width: w * 0.46, height: w * 0.46 }} />
-                        </span>
+                        <svg className={`type-badge ${kind.used ? 'used' : ''}`} data-type-badge={kind.icon} viewBox="0 0 100 50" width={w} height={w / 2} style={{ position: 'absolute', left: W * 0.5 - w / 2, top: H * 0.07 }} aria-hidden="true">
+                          <defs><radialGradient id="tbg" cx="50%" cy="0%" r="100%"><stop offset="0" stopColor="#3a4a52" /><stop offset="1" stopColor="#12191c" /></radialGradient></defs>
+                          <path d="M50 1 L99 29 Q50 71 1 29 Z" fill="url(#tbg)" stroke="#d9a93f" strokeWidth="2.4" strokeLinejoin="round" />
+                          <image href={asset(`ikony/mapa/${kind.icon}.webp`)} x="33" y="9" width="34" height="34" />
+                        </svg>
                       );
                     })()}
                     {r && !onPath && (

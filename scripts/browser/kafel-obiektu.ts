@@ -2,7 +2,7 @@
 import { openGame } from './game';
 
 {
-  const game = await openGame('steps=0&seed=3&size=medium&players=1&reveal=1&realm=1', { scale: 1 });
+  const game = await openGame('steps=0&seed=3&size=medium&players=1&reveal=1&realm=1', { scale: Number(process.env.SC ?? 1) });
   try {
     const p = game.page;
     await p.waitForTimeout(1500);
