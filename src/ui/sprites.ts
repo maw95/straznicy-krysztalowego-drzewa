@@ -111,6 +111,26 @@ export const SPRITES: Record<string, SpriteSpec> = {
   drumElephant: { dir: 'jednostki/slon_bebniarz', box: [170, 140] as const, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   bullMoose: { dir: 'jednostki/los_byk', box: [150, 130] as const, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   indrik: { dir: 'jednostki/indrik', box: [150, 130] as const, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  // Brotherhood of the Tide (G4, 23.11): all nineteen characters with a full set of clips. Two-hex: albatross (hovers: lot clip), reefGolem, leviathan, seaSerpent.
+  shellTurtle: { dir: 'jednostki/zolw_skorupiak', box: [90, 66] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  tritonHarpoon: { dir: 'jednostki/trytonski_harpunnik', box: [70, 106] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  frogLeaper: { dir: 'jednostki/zabi_skoczek', box: [80, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  crabShield: { dir: 'jednostki/krabolud_tarczownik', box: [70, 98] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  inkOctopus: { dir: 'jednostki/osmiornica_atramentowa', box: [78, 52] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  sharkman: { dir: 'jednostki/rekinolak', box: [70, 106] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  pearlPriestess: { dir: 'jednostki/kaplanka_perel', box: [70, 108] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  lobsterKnight: { dir: 'jednostki/homar_pancerny', box: [90, 92] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  albatross: { dir: 'jednostki/albatros', box: [150, 124] as const, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  reefGolem: { dir: 'jednostki/rafowy_golem', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  seaWitch: { dir: 'jednostki/morska_wiedzma', box: [72, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  leviathan: { dir: 'jednostki/lewiatan', box: [170, 140] as const, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  tritonKing: { dir: 'jednostki/krol_trytonow', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  sirenSinger: { dir: 'jednostki/syrena_piesniarka', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  seaSerpent: { dir: 'jednostki/waz_morski', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  walrusCaptain: { dir: 'jednostki/mors_kapitan', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  tritonGuard: { dir: 'jednostki/trytonski_straznik', box: [74, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  harpooneer: { dir: 'jednostki/harpunniczka', box: [78, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  sefiran: { dir: 'jednostki/sefiran_plamisty', box: [55, 40] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
 };
 
 /** Whether the unit is drawn from sprites in the digital ruleset (otherwise: 3D figure or portrait token). */

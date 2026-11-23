@@ -8750,6 +8750,214 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "tides/sprity-1",
+      "pliki": [
+        "public/assets/jednostki/zolw_skorupiak/*",
+        "public/assets/jednostki/trytonski_harpunnik/*",
+        "public/assets/jednostki/zabi_skoczek/*",
+        "public/assets/jednostki/krabolud_tarczownik/*",
+        "public/assets/jednostki/osmiornica_atramentowa/*"
+      ],
+      "typ": "animowane sprite'y 5 jednostek Bractwa Przypływu (stoi, martwy, chód, atak, śmierć, trafienie); rekinołak (rekinolak) niepełny: brak klipu chodu",
+      "opis": "Obraz bazowy 1024x1024 (jakość medium) na niebieskim tle, odniesienie: portret karty; cztery klipy P-Video 2 (720p, 24 fps, 3 s, trafienie 2 s), martwy = ostatnia klatka klipu śmierci (ffmpeg); pakowanie pack_unit.py (512 px), despill_blue.py, shrink_unit.py (0,75, co druga klatka); atak ośmiornicy z wygaszeniem prawej krawędzi (FADE_RIGHT atak=0.12). Śmierć tryntona i krabolud: pierwsza próba zablokowana przez filtr, powtórzona łagodniej ('sits down and rests'). Rekinołak: klip chodu dogenerowany osobno (15 CU) i spakowany tym samym ciągiem (folder jednostki/rekinolak).",
+      "scenario_asset": {
+        "stoi": {
+          "shellTurtle": "asset_Xu8erq8EkSG8QLbnr8XhMcXb",
+          "tritonHarpoon": "asset_A3ctXBbfDe9rD5dC92wzta3c",
+          "frogLeaper": "asset_WatPccsA7frAaL35fXaZ7SfJ",
+          "crabShield": "asset_tKKykz2SQn8ryYFzyY9QQ1JB",
+          "inkOctopus": "asset_5do5fuSLdaNdXsGU8kznncBC",
+          "sharkman": "asset_9wd4ij7Pd9cruvNHyUoFvtYX"
+        },
+        "odniesienia_portrety": {
+          "shellTurtle": "asset_QUhgvr3VfjD5gftV7cuv4gZK",
+          "tritonHarpoon": "asset_PoVSYeMhnx3qepDmkwBspvG7",
+          "frogLeaper": "asset_njNGeMyQJMnwzLzfzNdALpnW",
+          "crabShield": "asset_dFDuPfDSk972MhDzaKMgq8VN",
+          "inkOctopus": "asset_r93GP5xd7aa49PcuYpUedxC2",
+          "sharkman": "asset_zdR5J3ChrGsjH1EYUUAfDeTN"
+        },
+        "klipy": {
+          "shellTurtle": {
+            "chod": "asset_sHRzbHfpVt5rYpZQHEAwuWFd",
+            "atak": "asset_GV5KKB72kMiFkNhV5U89kP7v",
+            "smierc": "asset_ii8dafcLe12fgaTY5VCw33sU",
+            "trafienie": "asset_4zLzSeyHSLsBKSDcaahbsZjX"
+          },
+          "tritonHarpoon": {
+            "chod": "asset_s3geGytB74w3UScauDrR29dP",
+            "atak": "asset_4A1sD99hwphwbrdwij6moDJ9",
+            "smierc": "asset_GUSTZ87ctYEiUv1CLTSkHqTZ",
+            "trafienie": "asset_N6bnE2MJxZEJH22cFBT54P2D"
+          },
+          "frogLeaper": {
+            "chod": "asset_8oGK685t9tXL9v4Y8akVWwLC",
+            "atak": "asset_QSgGfveuCLU5HTUJyHehLKcL",
+            "smierc": "asset_oqm2xXG3senugHjTiQvJ6dS2",
+            "trafienie": "asset_2R5PH2bwTd6K6wqtxdABieWb"
+          },
+          "crabShield": {
+            "chod": "asset_27S8RZA5cxdgjihRvp45aVYJ",
+            "atak": "asset_u7dRC6ixyjv1ZA3QGepcNUtN",
+            "smierc": "asset_AYk7KGBRrW93RoBrVQEJP6nC",
+            "trafienie": "asset_WbThhtBMMdXxvtJ2WcgJcdys"
+          },
+          "inkOctopus": {
+            "chod": "asset_M1Y9DuuxxFpMPrbnBQQhdj9o",
+            "atak": "asset_Pd6oA8ykp4gjZxXYj1KDW4NR",
+            "smierc": "asset_sv8wF3214LaPyZLY21MJW9JH",
+            "trafienie": "asset_eKrJw6FqCGMDUvdjJaGgYoan"
+          },
+          "sharkman": {
+            "atak": "asset_azFYzu6gPwKhrc62SxCMJ3TH",
+            "smierc": "asset_2HkSwEvSTsSnyV2fXZi6RfS1",
+            "trafienie": "asset_zvUanbkain9VzgQnWwQBUKog"
+          }
+        }
+      },
+      "prompt": "Obraz: Use the reference image only for the character design (<opis>). Draw this same character as a full-body game sprite in a strict side view, <poza>, facing right, serious painterly realistic style with muted sea-green/jade/coral/pearl/sand/brown tones, no blue on the character, at most 50% of the frame, feet at ~84%, plain solid pure blue background (#0000FF). Klipy: Side view, locked static camera. <jednostka> walks in place as if on a treadmill / (żółw) stretches its head forward in a sweeping motion / (tryton) throws the harpoon on its rope forward and pulls it back / (żaba) thrusts the spear forward / (krabolud) swings the huge pincer arm in a wide sweeping motion / (ośmiornica) shoots a dark cloud of ink forward / (rekinołak) swings the bone sword in a wide sweeping motion; śmierć: sinks down heavily ... lies still. Defeat animation (tryton, krabolud: sits down and rests, as if fast asleep); trafienie: is startled, flinches, rocks backwards a little, steadies itself. Plain solid blue background stays unchanged, no camera movement.",
+      "narzedzie": "Scenario (plan płatny) + skrypty Pillow/ffmpeg",
+      "model": "GPT Image 2.5 Flare (obrazy, medium), P-Video 2 (klipy 720p, 24 fps)",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "tides/sprity-2",
+      "pliki": [],
+      "typ": "animowane sprite'y 6 jednostek Bractwa Przypływu, grupa 2 (Kapłanka Pereł, Homar Pancerny, Albatros, Rafowy Golem, Morska Wiedźma, Lewiatan)",
+      "opis": "Obraz bazowy 1024x1024 jakość medium na niebieskim tle (odniesienie: portret karty), cztery klipy na jednostkę (3 s, trafienie 2 s), martwy = ostatnia klatka klipu śmierci (ffmpeg); pakowanie pack_unit.py (512 px, FADE_RIGHT atak=0.12 dla kapłanki, wiedźmy i lewiatana), despill_blue.py, shrink_unit.py (0,75, co druga klatka). Albatros lata (klip lot), lewiatan wynurzony do połowy, rafowy golem, albatros i lewiatan dwupolowe. Kod: src/ui/sprites.ts. Foldery: kaplanka_perel, homar_pancerny, albatros, rafowy_golem, morska_wiedzma, lewiatan.",
+      "scenario_asset": {
+        "stoi": {
+          "pearlPriestess": "asset_21Z9gU6CdDBjeHBjMj3XWWxJ",
+          "lobsterKnight": "asset_TFLWFdDHsXVb4JWVHdSoi3qG",
+          "albatross": "asset_aDZMQapfCU6JWDVLvgGKGVbW",
+          "reefGolem": "asset_KGJAnaZDPeKxV1JuQAXPtroo",
+          "seaWitch": "asset_53b5vADbowRgWBCLDmywutCj",
+          "leviathan": "asset_AmfD3iWMXnenrcdDp77VsUsV"
+        },
+        "martwy_obraz": {
+          "pearlPriestess": "asset_fjQNrADFTKp3o8Rc4QExtHbx",
+          "lobsterKnight": "asset_eSEMgKxoCaMji5vhPjLiPAHh",
+          "albatross": "asset_o96XNJLJzmUdatEvP3L1s623",
+          "reefGolem": "asset_Wg3Ya91sknCozZUAsXWu3Bcd",
+          "seaWitch": "asset_cXL9Am9CrYdTTJS6vq77Q29G",
+          "leviathan": "asset_vKFNMYPaq8ETwaUi4yz27rZN"
+        },
+        "klipy": {
+          "pearlPriestess": {
+            "chod": "asset_UD2LX4MyyAxNKsgQM7ZH9Hso",
+            "atak": "asset_m2qrVMSey8P4sLWR78LMp82N",
+            "smierc": "asset_Vo1p2LRU3tXA1BHtMPQv67T7",
+            "trafienie": "asset_xK6qYPRsb3keYmX3YdqzkUei"
+          },
+          "lobsterKnight": {
+            "chod": "asset_aPZLKSW2s8GjxDfQuEEdz3JD",
+            "atak": "asset_VyDPY5PmC9jtUm8GgxjLMgCY",
+            "smierc": "asset_bwvn1im9yBZ3Whif4XG2zNxo",
+            "trafienie": "asset_3mAgpPnYoW45Hrz2w5VFKu9G"
+          },
+          "albatross": {
+            "lot": "asset_gnx6cfkcTXrQ8USPNskP1hJt",
+            "atak": "asset_NX7xdAVKeH5hrEJNjVdMZaoP",
+            "smierc": "asset_myZGtuisUop2NepYjLNggdmt",
+            "trafienie": "asset_XDNNb8EMR2JiWy8Bt8Kw1AR9"
+          },
+          "reefGolem": {
+            "chod": "asset_g75iooXwjreRkQwa3LMr9SGe",
+            "atak": "asset_7Ybj3HPQeHbEFRtUcZUCYc3T",
+            "smierc": "asset_jp6VMMn6SDDuuSYqwDx7c7tu",
+            "trafienie": "asset_TPsA6y26cFqxTVpDC3AagTBe"
+          },
+          "seaWitch": {
+            "chod": "asset_jmJSZRqdSbe3a2CDpGuWaN1f",
+            "atak": "asset_u2UfMKyANajqxP2Q1wFYwy65",
+            "smierc": "asset_GejeVMEKJ2LB9okYpegDRTW2",
+            "trafienie": "asset_jqAiwATv6KYC6zJ3GuSBZudc"
+          },
+          "leviathan": {
+            "chod": "asset_tPuBgj5YCmqd2v6fWpexVCzL",
+            "atak": "asset_VtWHGpRBMpTj3sp4vUcyWkXH",
+            "smierc": "asset_V8SpNwoRjf4DZZcwsuEhyUQa",
+            "trafienie": "asset_jJ9kR3uoJGtMBsYqF6vUfudr"
+          }
+        }
+      },
+      "prompt": "Szablon obrazu: Use the reference image only for the character design (...). Draw this same character as a full-body game sprite in a strict side view, <poza>, facing right, in a serious painterly realistic style with muted <paleta>, no blue anywhere on the character... Plain solid pure blue background (#0000FF). Klipy: 'Side view, locked static camera. <ruch>. Plain solid blue background stays unchanged, no camera movement.' Pełne prompty: .tmp/zrodla/tides_sprites_2/<id>/manifest.json",
+      "narzedzie": "Scenario (plan płatny) + ffmpeg + skrypty Pillow",
+      "model": "GPT Image 2.5 Flare (medium) + P-Video 2 (720p)",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "tides/sprity-3",
+      "pliki": [],
+      "typ": "animowane sprite'y 7 postaci Bractwa Przypływu (3 bohaterowie, 3 dowódcy, Stary Mors Kapitan): stoi, martwy, chód, atak, śmierć, trafienie",
+      "opis": "Obraz bazowy 1024x1024 (jakość medium, odniesienie: ilustracja karty) na niebieskim tle, cztery klipy P-Video 2 (3 s, trafienie 2 s, 720p), martwy = ostatnia klatka klipu śmierci (ffmpeg, 0 CU); pakowanie pack_unit.py (512 px), despill_blue.py, shrink_unit.py (0,75, co druga klatka); atak Syreny, Sefirana i Harpunniczki z wygaszeniem prawej krawędzi (FADE_RIGHT 0.12). Dwa klipy zablokowane przez filtr i ponowione: śmierć Króla Trytonów, atak Harpunniczki. Foldery: krol_trytonow, syrena_piesniarka, waz_morski, mors_kapitan, trytonski_straznik, harpunniczka, sefiran_plamisty. Kod: src/ui/sprites.ts. Koszt ok. 443 CU.",
+      "prompt": "Obraz: 'Use the reference image only for the character design (...). Draw this same character as a full-body game sprite in a strict side view, ... facing right, ... no blue or turquoise anywhere on the character. ... Plain solid pure blue background (#0000FF)'; klipy: 'Side view, locked static camera. <ruch: chód w miejscu / pchnięcie trójzębem, śpiew z falą wody, oplot głową, zamach bosakiem, wyciągnięcie harpuna na linie / siada i odpoczywa / drgnięcie>. Plain solid blue background stays unchanged, no camera movement.' (pełne prompty w .tmp/zrodla/tides_sprites_3/)",
+      "narzedzie": "Scenario",
+      "model": "model_openai-gpt-image-2-5-flare (obrazy), model_pruna-p-video-2 (klipy)",
+      "scenario_asset": {
+        "stoi": {
+          "tritonKing": "asset_bw35EkEioADAKL2GD4XyybDx",
+          "sirenSinger": "asset_AGR7HGmWNWx9SwVPMgHYcr8T",
+          "seaSerpent": "asset_Rup6UbXGCyvUm6koLhiHq2m6",
+          "walrusCaptain": "asset_gN16ra7Vt1uNeVPQeBMbwXoC",
+          "tritonGuard": "asset_P1gJ7m4TW45wUZzXbsG9gh4b",
+          "harpooneer": "asset_AhH3m1qu1pdDpYaNzmGQYfQp",
+          "sefiran": "asset_THhRfWM2YvQo3EKZr8syzmaT"
+        },
+        "klipy": {
+          "tritonKing": {
+            "chod": "asset_BhAUu1xDvG4PZxAXEKkjcREB",
+            "atak": "asset_Tpc15Ykv3Cahi34QU28HmEbd",
+            "smierc": "asset_4dVXB31kRGmpWV3wpG4pbLid",
+            "trafienie": "asset_Zwy478UxitE1fHZM4CRUJ5SB"
+          },
+          "sirenSinger": {
+            "chod": "asset_Qp54huSQ9pjC4gP1CqLFq7Bn",
+            "atak": "asset_weN7UQBeXejRXSiWuA1zRdPT",
+            "smierc": "asset_jQGwcX19xMoLHFRuBj6wG3y2",
+            "trafienie": "asset_RS3LD8gBH1exvFhYxJmLefmC"
+          },
+          "seaSerpent": {
+            "chod": "asset_6hzZ7wvTVdQpyTk5ixZ1U7xK",
+            "atak": "asset_GaVz4BYS52HNMAGXvVyEnR44",
+            "smierc": "asset_TL2xVzzqBB37UBN6jENTCCLm",
+            "trafienie": "asset_zmUAtM2DmuLVZ3cwDnyUDHPp"
+          },
+          "walrusCaptain": {
+            "chod": "asset_AmNUGTc83wyncDWqkvb6cSgU",
+            "atak": "asset_mC8sAUaZ9d5tbPk8pekjYMat",
+            "smierc": "asset_xQjiXBvfmKzMKLjtq5edWkKh",
+            "trafienie": "asset_ZaMNxdcuUuXxrRpRX3noXHjK"
+          },
+          "tritonGuard": {
+            "chod": "asset_mBMiBJi5jLZfegpQiS5jvaCM",
+            "atak": "asset_z6e3J2N6cHcrYPdktiYoy3yn",
+            "smierc": "asset_yBKnc2ckyA3Ja9qgzc6ESbhW",
+            "trafienie": "asset_MEQ3HEiip3AYkSxPUwLUFHP7"
+          },
+          "harpooneer": {
+            "chod": "asset_D6U3UsGr9rsVmong534wr8hT",
+            "atak": "asset_jugjXJJKjiz3uSaeHciPYbgA",
+            "smierc": "asset_71RkDzYM8u6Chej1bKUjGCYu",
+            "trafienie": "asset_WiAGCWcLKodQ3J5EtfUqNZv5"
+          },
+          "sefiran": {
+            "chod": "asset_RVr6bw5MePgVuNSnXoTh3gAL",
+            "atak": "asset_nhVriLaCWkL4F9RjFwbFRrgb",
+            "smierc": "asset_Ly3jCpELxojEH6ucB98fwSZF",
+            "trafienie": "asset_Tf2yqZN1byWGeTW6zqpBhRJ3"
+          }
+        }
+      },
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Wszystkie 19 postaci Bractwa Przypływu mają animowane sprite'y (stanie, chód lub lot, atak, śmierć, trafienie): Król Trytonów, Syrena Pieśniarka, Wąż Morski, Albatros, Lewiatan i pozostałe":
+    "All 19 characters of the Brotherhood of the Tide have animated sprites (standing, walking or flying, attack, death, hit): the Triton King, the Siren Singer, the Sea Serpent, the Albatross, the Leviathan and the rest.",
   "Bractwo Przypływu ma własną mapę i arenę: plażę zamiast łąki, własny rewers kafli, przystań i skarbiec, kafle i obiekty w klimacie wybrzeża (kapliczka muszlowa, obóz, studnia, skrzynia, tartak, kopalnie) oraz arenę na rafie w czasie odpływu z siedmioma rodzajami przeszkód (rafy, wrak, sieci, wodorosty, kałuża)":
     "The Brotherhood of the Tide has its own map and arena: a beach instead of meadow, its own tile back, harbour and treasury, tiles and objects in a coastal style (shell shrine, camp, well, chest, sawmill, mines) and an arena on a reef at low tide with seven kinds of obstacles (reefs, wreck, nets, kelp, tide pool).",
   "Bractwo Przypływu ma własną muzykę (dwa utwory: spokojna harfa na mapie i w osadzie oraz marsz z rogiem z muszli), dźwięki ataku i śmierci wszystkich 19 postaci i własne dźwięki zamiany miejsc, przyciągnięcia harpunem i perłowej tarczy; dźwięki ataku i śmierci dostały też wszystkie 19 postaci Dzikiego Stada":
