@@ -1,6 +1,6 @@
 import { UNITS, type FactionId, type Side } from '../engine/data';
 import type { BattleReport } from '../engine/types';
-import { Frame, HpBar, Portrait, Ribbon, SIDE_RING } from './common';
+import { FACTION_RING, Frame, HpBar, Portrait, Ribbon, SIDE_RING } from './common';
 import { StatIcon } from './markers';
 
 export function BattleSummary({ report, onClose, name, faction }: { report: BattleReport; onClose: () => void; name: (side: Side) => string; faction?: (side: Side) => Side | FactionId }) {
@@ -26,7 +26,7 @@ export function BattleSummary({ report, onClose, name, faction }: { report: Batt
               .filter((u) => u.side === side)
               .map((u) => (
                 <div key={u.defId} style={{ display: 'flex', gap: 10, alignItems: 'center', opacity: u.alive ? 1 : 0.6 }}>
-                  <Portrait unitId={u.defId} size={46} ring={SIDE_RING[side]} dim={!u.alive} />
+                  <Portrait unitId={u.defId} size={46} ring={((faction && (FACTION_RING as Record<string, string>)[faction(side)]) || SIDE_RING[side])} dim={!u.alive} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 700, fontSize: 16, color: '#F7EDD2' }}>
                       {UNITS[u.defId].name}

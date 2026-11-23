@@ -27,7 +27,7 @@ import { sfx } from './sfx';
 import { animationWait, ATTACK_SHOW_MS, holdFor, resetAnimLock } from './animLock';
 import { scaledMs } from './animSpeed';
 import { DuelView } from './DuelView';
-import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset, teamFaction, useMedia } from './common';
+import { Frame, Medal, Modal, FACTION_RING, Portrait, Ribbon, asset, teamFaction, useMedia } from './common';
 import { SetupScreen } from './SetupScreen';
 import { music, type Theme } from './music';
 import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, LeaveDialog, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
@@ -1255,7 +1255,7 @@ function Handoff({ state, playerId, note, onConfirm }: { state: GameState; playe
       <Frame crest style={{ width: 'min(480px, 94vw)' }} innerStyle={{ padding: '26px 30px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 12 }}>
         <div className="lbl">Runda {state.round}</div>
         <Ribbon side={teamFaction(state, player.faction)} style={{ width: 340, height: 48 }}>Przekaż urządzenie</Ribbon>
-        <Portrait unitId={hero.id} size={124} ring={SIDE_RING[player.faction]} glow="0 0 0 2px #1E1204, 0 0 34px 10px rgba(158,228,255,0.28)" />
+        <Portrait unitId={hero.id} size={124} ring={FACTION_RING[raceOf(state, player.faction)]} glow="0 0 0 2px #1E1204, 0 0 34px 10px rgba(158,228,255,0.28)" />
         <div>
           <div style={{ fontSize: 18, color: 'var(--muted)' }}>Teraz tura</div>
           <div style={{ fontWeight: 800, fontSize: 28, color: '#F3D27A', textShadow: '0 2px 0 #1E1204' }}>{player.name} — {heroLabel(hero)}</div>

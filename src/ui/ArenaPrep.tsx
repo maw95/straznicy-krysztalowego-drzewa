@@ -6,7 +6,7 @@ import { raceOf } from '../engine/teams';
 import { useState } from 'react';
 import { ARENA_PICKS, FACTION_NAMES, itemDef, UNITS, type TeamId, type ItemKind } from '../engine/data';
 import { isDigital, type GameState } from '../engine/types';
-import { asset, Frame, Portrait, Ribbon, SIDE_RING, teamFaction } from './common';
+import { asset, Frame, Portrait, Ribbon, sideRing, teamFaction } from './common';
 import { ARTIFACT_BY_ID, RARITY_NAMES } from '../engine/sites';
 import { ARENA_SPELL_PICKS, ARENA_SPELL_POOL, SPELLS, type SpellId } from '../engine/magic';
 
@@ -42,7 +42,7 @@ export function ArenaPrep({ state }: { state: GameState }) {
               {b
                 ? Object.values(b.units)
                     .filter((u) => u.side === f && UNITS[u.defId].kind === 'support')
-                    .map((u) => <Portrait key={u.id} unitId={u.defId} size={54} ring={SIDE_RING[f]} />)
+                    .map((u) => <Portrait key={u.id} unitId={u.defId} size={54} ring={sideRing(state, f)} />)
                 : null}
             </div>
             <div className="arena-prep-items">

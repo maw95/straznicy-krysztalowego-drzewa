@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Obwódka wokół portretu bohatera ma kolor jego frakcji (np. pomarańczowy u Dzikich Stad), a nie kolor strony przy stole (czerwony dla Hordy); dotyczy mapy świata, panelu bohatera i widoków bitwy.
 - W skrzyni dwa sąsiednie skarby o długiej nazwie (np. dwa „Wielkie Eliksiry Uzdrowienia”) nie stykają już podpisów.
 - Nowy nick w grze online ma 3–16 znaków (było 3–20), tak jak imię gracza przy jednym stole; konta z dłuższym nickiem logują się jak dotąd.
 - Wersja angielska: puste miejsce w panelu bohatera („brak” umiejętności) i nagłówek „Pomocnicy” w oknie frakcji są przetłumaczone, a nie zostają po polsku.

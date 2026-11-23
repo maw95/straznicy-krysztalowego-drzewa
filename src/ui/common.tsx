@@ -72,6 +72,9 @@ export const FACTION_RING: Record<FactionId, string> = {
 /** The ribbon (or ring) key of a team seat: the faction that sits there, not the seat itself (a Covenant player in the second seat does not get the Horde's red). */
 export const teamFaction = (state: unknown, team: Side | FactionId | 'draw' | null | undefined): Side | FactionId => (!team || team === 'draw' || team === 'neutral' ? 'neutral' : raceOf(state, team as TeamId));
 
+/** The ring of a team seat's portrait: the colour of the faction that sits there (neutral creatures keep blue). */
+export const sideRing = (state: unknown, side: Side): string => (side === 'neutral' ? SIDE_RING.neutral : FACTION_RING[raceOf(state, side)]);
+
 /** The ribbons of the sides that are not a faction (the third and fourth team borrow green and red; the neutral creatures are blue). */
 export const SIDE_RIBBON: Record<Side, 'g' | 'r' | 'b'> = { dawn: 'g', horde: 'r', third: 'g', fourth: 'r', neutral: 'b' };
 

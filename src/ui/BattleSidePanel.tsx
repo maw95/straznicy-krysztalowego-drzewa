@@ -4,7 +4,7 @@ import { UNITS, type TeamId, type Side } from '../engine/data';
 import { unitAttackBase, unitSpeed } from '../engine/battle';
 import type { BattleUnit, GameState } from '../engine/types';
 import { raceOf, sideName } from '../engine/teams';
-import { asset, Frame, HpBar, Portrait, SIDE_RING } from './common';
+import { asset, Frame, HpBar, Portrait, sideRing } from './common';
 import { Marker, StatIcon } from './markers';
 import { details } from './details';
 import { StatusChips, UnitDetails } from './battleStatus';
@@ -28,7 +28,7 @@ export function SidePanel({ s, state, active, onUnit }: Props) {
         const isActive = active?.id === u.id;
         return (
           <button key={u.id} className="btn" onClick={() => onUnit(u)} {...details(() => <UnitDetails u={u} />, { pin: true })} style={{ display: 'flex', gap: 10, alignItems: 'center', background: 'none', border: 0, padding: 0, textAlign: 'left', color: 'inherit', opacity: u.alive ? 1 : 0.5 }}>
-            <Portrait unitId={u.defId} size={50} ring={SIDE_RING[s]} dim={!u.alive} glow={isActive ? '0 0 0 2.5px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} />
+            <Portrait unitId={u.defId} size={50} ring={sideRing(state, s)} dim={!u.alive} glow={isActive ? '0 0 0 2.5px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontWeight: 700, fontSize: 16, color: '#F7EDD2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{UNITS[u.defId].name}</div>
               <HpBar hp={u.hp} max={u.maxHp} />

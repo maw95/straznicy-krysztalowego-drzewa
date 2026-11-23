@@ -28,7 +28,7 @@ import { aimedCursor } from './cursors';
 import { figureFor, FigureLayer, type Piece } from './FigureLayer';
 import { StatIcon, StatText, ThingIcon } from './markers';
 import { RoundTrack } from './RoundTrack';
-import { ACTIVE_FIGURE_RING, asset, COMPACT_QUERY, Frame, hasTileArt, Medal, Modal, Pips, Portrait, Ribbon, SIDE_RING, tileImage, useMedia } from './common';
+import { ACTIVE_FIGURE_RING, asset, COMPACT_QUERY, FACTION_RING, Frame, hasTileArt, Medal, Modal, Pips, Portrait, Ribbon, SIDE_RING, tileImage, useMedia } from './common';
 
 interface Props {
   state: GameState;
@@ -586,7 +586,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                       className={`token ${isActive ? 'active-token' : ''}`}
                       style={{ position: 'absolute', left: p.x + W / 2 - tokenSize / 2 + spread, top: p.y + H * 0.45 - tokenSize / 2 - (stacked ? (i % 2) * H * 0.12 : 0), zIndex: isActive ? 8 : 7, pointerEvents: 'none' }}
                     >
-                      <Portrait unitId={h.id} size={tokenSize} ring={SIDE_RING[h.faction]} glow={isActive ? '0 0 0 2.5px #9EE4FF, 0 0 14px 4px rgba(158,228,255,0.6)' : '0 0 0 1.5px #1E1204, 0 8px 14px rgba(0,0,0,0.7)'} title={UNITS[h.id].name} />
+                      <Portrait unitId={h.id} size={tokenSize} ring={FACTION_RING[raceOf(state, h.faction)]} glow={isActive ? '0 0 0 2.5px #9EE4FF, 0 0 14px 4px rgba(158,228,255,0.6)' : '0 0 0 1.5px #1E1204, 0 8px 14px rgba(0,0,0,0.7)'} title={UNITS[h.id].name} />
                       {h.crystals.length > 0 && (
                         <div style={{ position: 'absolute', right: -6, top: -6 }}>
                           <Medal fill="mBlue" glyph="gCrystal" size={W * 0.24} />
@@ -645,7 +645,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 <div style={{ display: 'flex', gap: compact ? 8 : 12, alignItems: 'center' }}>
                   <img src={asset(`cards/crests/${raceOf(state, hero.faction)}.png`)} alt={FACTION_NAMES[raceOf(state, hero.faction)]} title={FACTION_NAMES[raceOf(state, hero.faction)]} style={{ height: compact ? 44 : 64, width: 'auto', flex: 'none' }} />
                   <button className="btn btn-bare" onClick={() => (state.rules.heroGrowth ? setSheet(true) : onShowCard(hero.id))} title={state.rules.heroGrowth ? 'Karta bohatera' : 'Pokaż kartę'} data-hero-portrait>
-                    <Portrait unitId={hero.id} size={compact ? 48 : 64} ring={SIDE_RING[hero.faction]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
+                    <Portrait unitId={hero.id} size={compact ? 48 : 64} ring={FACTION_RING[raceOf(state, hero.faction)]} glow="0 0 0 2.5px #9EE4FF, 0 0 12px 3px rgba(158,228,255,0.5)" tip={false} />
                   </button>
                 </div>
                 {(() => {
@@ -691,7 +691,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 <span style={{ fontSize: 13, letterSpacing: 1, color: '#9FB3B0' }}>DRUGI BOHATER</span>
                 {mates.map((h) => (
                   <button key={h.id} className="btn btn-bare" data-hero-mate={h.id} title={`Karta bohatera: ${heroLabel(h)}${h.alive ? '' : ' (poległ)'}`} onClick={() => { setSheetId(h.id); if (state.rules.heroGrowth) setSheet(true); else onShowCard(h.id); }} style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: h.alive ? 1 : 0.55 }}>
-                    <Portrait unitId={h.id} size={compact ? 40 : 48} ring={SIDE_RING[h.faction]} tip={false} />
+                    <Portrait unitId={h.id} size={compact ? 40 : 48} ring={FACTION_RING[raceOf(state, h.faction)]} tip={false} />
                     <span style={{ fontWeight: 700, fontSize: 16, color: '#F3D27A' }}>{heroLabel(h)}</span>
                   </button>
                 ))}
@@ -924,7 +924,7 @@ function TileDetails({ state, k, hostile }: { state: GameState; k: HexKey; hosti
       {t.revealed && t.site && note(t.site.used ? `${SITE.names[t.site.kind]} (już użyta).` : `${SITE.names[t.site.kind]}: ${SITE.texts[t.site.kind]}`)}
       {heroes.map((h) => (
         <div key={h.id} className="well" style={{ padding: '6px 8px', display: 'flex', gap: 10, alignItems: 'center' }}>
-          <Portrait unitId={h.id} size={44} ring={SIDE_RING[h.faction]} preview={false} />
+          <Portrait unitId={h.id} size={44} ring={FACTION_RING[raceOf(state, h.faction)]} preview={false} />
           <div style={{ fontSize: 15, color: '#F7EDD2' }}>
             <div style={{ fontWeight: 700 }}>{heroLabel(h)}</div>
             <div style={{ color: 'var(--muted)' }}>

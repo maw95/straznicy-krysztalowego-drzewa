@@ -49,6 +49,8 @@ register({
     "The descriptions of places on the map (mill, mines, hut, depot) and the cost of building dwellings in a settlement show gold and resources as icons, not as written-out words for gold, wood and ore.",
   "Prawy przycisk myszy na złocie w dolnym pasku pokazuje dochód samego złota, a na ikonie drewna, rudy albo Gwiezdnego Pyłu dochód właśnie tego surowca; podpowiedzi surowców mają nazwy z wielkiej litery (Drewno, Ruda).":
     "The right button on the gold in the bottom bar shows the income of the gold alone, and on the icon of wood, ore or Star Dust the income of that very resource; the hints of the resources have capitalised names (Wood, Ore).",
+  "Obwódka wokół portretu bohatera ma kolor jego frakcji (np. pomarańczowy u Dzikich Stad), a nie kolor strony przy stole (czerwony dla Hordy); dotyczy mapy świata, panelu bohatera i widoków bitwy.":
+    "The ring round a hero portrait has the colour of its faction (e.g. orange for the Wild Herds), not the colour of the table side (red for the Horde); it applies to the world map, the hero panel and the battle views.",
   "W skrzyni dwa sąsiednie skarby o długiej nazwie (np. dwa „Wielkie Eliksiry Uzdrowienia”) nie stykają już podpisów.":
     "In the chest, two neighbouring treasures with a long name (e.g. two \"Great Elixirs of Healing\") no longer touch each other's labels.",
   "Nowy nick w grze online ma 3–16 znaków (było 3–20), tak jak imię gracza przy jednym stole; konta z dłuższym nickiem logują się jak dotąd.":

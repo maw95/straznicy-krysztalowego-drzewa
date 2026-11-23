@@ -7,7 +7,7 @@ import { SIEGE } from '../engine/economy';
 import { ABILITY } from '../engine/data';
 import type { HexKey } from '../engine/hex';
 import { isDigital, type BattleState, type BattleUnit, type GameState } from '../engine/types';
-import { abilityArt, asset, Frame, Portrait, ACTIVE_FIGURE_RING, SIDE_RING } from './common';
+import { abilityArt, asset, Frame, Portrait, ACTIVE_FIGURE_RING, sideRing } from './common';
 import { geometryOf, TOKEN_H as H, TOKEN_W as W } from './arenaGeometry';
 import { wideObstacleGroups } from '../engine/battle';
 import { DamageDrop, DieFace, LastAttack, Marker, StatText } from './markers';
@@ -445,7 +445,7 @@ export function ArenaBoard(p: Props) {
                   size={54}
                   // No card popping up over an enemy you are about to attack: it would hide the lit cell (the card is under the right button).
                   preview={!isTarget && !p.approachCells(u).length}
-                  ring={SIDE_RING[u.side]}
+                  ring={sideRing(state, u.side)}
                   glow={isActive ? '0 0 0 3px #9EE4FF, 0 0 20px 6px rgba(158,228,255,0.75)' : isTarget ? '0 0 0 3px #E0503C, 0 0 18px 5px rgba(224,80,60,0.7)' : '0 0 0 1.5px #1E1204, 0 8px 12px rgba(0,0,0,0.55)'}
                 />}
                 {statuses.length > 0 && (
@@ -516,7 +516,7 @@ export function ArenaBoard(p: Props) {
             const { x, y } = cellPos(g.pos);
             return (
               <div key={g.key} className="ghost" style={{ position: 'absolute', left: x + W / 2 - 27, top: y + H / 2 - 38, pointerEvents: 'none', zIndex: 3 }}>
-                <Portrait unitId={g.defId} size={54} ring={SIDE_RING[g.side]} preview={false} />
+                <Portrait unitId={g.defId} size={54} ring={sideRing(state, g.side)} preview={false} />
               </div>
             );
           })}

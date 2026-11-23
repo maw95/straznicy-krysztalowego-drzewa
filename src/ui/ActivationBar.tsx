@@ -4,7 +4,7 @@ import { abilityTextFor, FACTION_NAMES, scaleText, UNITS, type TeamId } from '..
 import { FACTION_MECHANICS } from '../engine/empire';
 import { abilityOf, CELL_ABILITIES, livingUnits, unitSpeed, UNTARGETED_ABILITIES } from '../engine/battle';
 import { isDigital, type Action, type BattleState, type BattleUnit, type GameState } from '../engine/types';
-import { abilityArt, asset, Frame, Medal, Portrait, SIDE_RING } from './common';
+import { abilityArt, asset, Frame, Medal, Portrait, sideRing } from './common';
 import { statusList, StatusBadge } from './battleStatus';
 
 /** The line under the active unit's name: what the player can do now. */
@@ -73,7 +73,7 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
         {active && (
           <span className="hide-mobile" style={{ position: 'relative' }}>
-            <Portrait unitId={active.defId} size={56} ring={SIDE_RING[active.side]} glow="0 0 0 2.5px #9EE4FF" />
+            <Portrait unitId={active.defId} size={56} ring={sideRing(state, active.side)} glow="0 0 0 2.5px #9EE4FF" />
             {/* The active unit's markers (e.g. the Gold Dragon's +3 after Słoneczny Blask) on the portrait's lower edge. */}
             <span style={{ position: 'absolute', left: '50%', bottom: -8, transform: 'translateX(-50%)', display: 'flex', gap: 1 }}>
               {statusList(active).map((st) => <StatusBadge key={st.label} st={{ ...st, value: undefined }} size={20} />)}
@@ -159,7 +159,7 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
           .filter((q) => !q.done || q.current)
           .map((q) => (
             <div key={q.id} style={{ position: 'relative', flex: 'none' }} title={UNITS[b.units[q.id].defId].name}>
-              <Portrait unitId={b.units[q.id].defId} size={q.current ? 48 : 38} ring={SIDE_RING[b.units[q.id].side]} glow={q.current ? '0 0 0 2.5px #9EE4FF' : undefined} />
+              <Portrait unitId={b.units[q.id].defId} size={q.current ? 48 : 38} ring={sideRing(state, b.units[q.id].side)} glow={q.current ? '0 0 0 2.5px #9EE4FF' : undefined} />
               <div className="plate parch" style={{ position: 'absolute', right: -6, bottom: -6, width: 20, height: 18, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 12 }}>{unitSpeed(b.units[q.id])}</div>
             </div>
           ))}
@@ -168,7 +168,7 @@ export function ActivationBar({ state, active, hint, myTurn, deploySide, placing
         </div>
         {nextRound.map((id) => (
           <div key={`n${id}`} style={{ flex: 'none', opacity: 0.6 }} title={`${UNITS[b.units[id].defId].name} — następna runda`}>
-            <Portrait unitId={b.units[id].defId} size={30} ring={SIDE_RING[b.units[id].side]} />
+            <Portrait unitId={b.units[id].defId} size={30} ring={sideRing(state, b.units[id].side)} />
           </div>
         ))}
       </div>
