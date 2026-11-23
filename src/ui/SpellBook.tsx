@@ -5,7 +5,7 @@ import { manaOf, maxMana, SPELLS, type SpellId } from '../engine/magic';
 import type { GameState, HeroState } from '../engine/types';
 import { asset } from './common';
 import { details } from './details';
-import { CloseSeal, PagerBar, PER_PAGE, useEscapeClose, usePaged } from './TreasureButton';
+import { CloseSeal, PagerBar, useEscapeClose, usePaged } from './TreasureButton';
 
 /** The round "Magia" button: the same size, rim and badge as the "Skarby" button beside it, with a painted spell book; the badge shows how many spells can be cast now (the mana is enough and nothing else stops it). */
 export function SpellButton({ mana, castable, onClick, open }: { mana: number; castable: number; onClick: () => void; open: boolean }) {
@@ -32,6 +32,9 @@ function SpellDetails({ state, id, why }: { state: GameState; id: SpellId; why?:
   );
 }
 
+/** Spells on one spread of the book: six on each of the two pages. */
+const SPELLS_PER_SPREAD = 12;
+
 /** The mana drop: the same small icon in the corner counter of the book and in the cost of every spell. */
 export function ManaIcon() {
   return (
@@ -42,12 +45,12 @@ export function ManaIcon() {
   );
 }
 
-/** The spell book: a tall open book (two A4-like pages) whose cover swings open; every battle spell the hero knows is an icon with its name and "Koszt: n<mana>", three to a page, six to a spread, a pager when there are more. The left click casts, the right click shows the details; the ones that cannot be cast now are greyed out. The mana the hero has is one counter at the top of the book. */
+/** The spell book: a tall open book (two A4-like pages) whose cover swings open; every battle spell the hero knows is an icon with its name and "Koszt: n<mana>", six to a page, twelve to a spread, a pager when there are more. The left click casts, the right click shows the details; the ones that cannot be cast now are greyed out. The mana the hero has is one counter at the top of the book. */
 export function SpellBookDialog({ state, hero, castable, onPick, onClose }: { state: GameState; hero: HeroState; castable: SpellId[]; onPick: (id: SpellId) => void; onClose: () => void }) {
   const known = (hero.spells ?? []).filter((id) => SPELLS[id].where === 'battle');
   const mana = manaOf(hero);
   const cast = Boolean(state.battle?.activation?.spell);
-  const pg = usePaged(known, PER_PAGE);
+  const pg = usePaged(known, SPELLS_PER_SPREAD);
   useEscapeClose(onClose);
   const slot = (id: SpellId) => {
     const ok = castable.includes(id);
@@ -55,8 +58,10 @@ export function SpellBookDialog({ state, hero, castable, onPick, onClose }: { st
     return (
       <button key={id} className={`slot spell-slot ${ok ? '' : 'off'}`} data-spell={id} data-spell-row={id} aria-disabled={!ok} aria-label={`${SPELLS[id].name}, koszt ${SPELLS[id].mana} many`} onClick={() => ok && onPick(id)} {...details(() => <SpellDetails state={state} id={id} why={why} />)}>
         <span className="slot-icon-wrap"><img src={asset(`ikony/czary/${id}.webp`)} alt="" /></span>
-        <span className="slot-name">{SPELLS[id].name}</span>
-        <span className="spell-cost" data-spell-cost>Koszt: {SPELLS[id].mana}<ManaIcon /></span>
+        <span className="spell-text">
+          <span className="slot-name">{SPELLS[id].name}</span>
+          <span className="spell-cost" data-spell-cost>Koszt: {SPELLS[id].mana}<ManaIcon /></span>
+        </span>
       </button>
     );
   };
@@ -69,8 +74,8 @@ export function SpellBookDialog({ state, hero, castable, onPick, onClose }: { st
         <span><b data-mana-now>{mana}</b>/{maxMana(hero)}</span>
       </div>
       {known.length === 0 && <div className="book-empty">Ten bohater nie zna czarów bitewnych.</div>}
-      <div className="book-page left">{pg.items.slice(0, 3).map(slot)}</div>
-      <div className="book-page right">{pg.items.slice(3, 6).map(slot)}</div>
+      <div className="book-page left">{pg.items.slice(0, SPELLS_PER_SPREAD / 2).map(slot)}</div>
+      <div className="book-page right">{pg.items.slice(SPELLS_PER_SPREAD / 2).map(slot)}</div>
       <PagerBar {...pg} />
     </div>
   );

@@ -1094,13 +1094,15 @@ button.sb-slot:disabled { cursor: default; }
 /* The spell book (backlog 58d): a sheet of twelve painted frames (the cover swings open around the spine) played in steps; the spells stand on the two pages, three to a page. */
 .spellbook { position: relative; width: min(840px, 96vw, 98vh); aspect-ratio: 640 / 551; container-type: inline-size; }
 .book-art { position: absolute; inset: 0; background: url('/assets/ui/ksiega_klatki.webp') 100% 0 / 1200% 100% no-repeat; will-change: background-position; filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.7)); animation: book-frames-in 0.9s steps(1, end) both; }
-.book-page { position: absolute; top: 11%; height: 74%; width: 31%; display: flex; flex-direction: column; justify-content: space-around; align-items: center; color: #3A2508; animation: chest-content-in 0.95s ease-out both; }
-.book-page.left { left: 14.5%; }
-.book-page.right { left: 54.5%; }
-.spell-slot { width: 100%; gap: 0.5cqw; }
-.spell-slot > .slot-icon-wrap img { width: 12cqw; aspect-ratio: 1; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px #B88A35, 0 0 0 3.5px #3A2508, 0 3px 6px rgba(0, 0, 0, 0.45); display: block; }
-.spell-slot .slot-name { font-size: 2.7cqw; color: #3A2508; text-shadow: 0 1px 0 rgba(255, 240, 200, 0.5); }
-.spell-cost { display: inline-flex; align-items: center; gap: 0.5cqw; font-size: 2.4cqw; font-weight: 700; color: #4A2C8C; }
+.book-page { position: absolute; top: 10.5%; height: 75%; width: 30%; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; color: #3A2508; animation: chest-content-in 0.95s ease-out both; }
+.book-page.left { left: 16%; }
+.book-page.right { left: 56%; }
+.spell-slot { width: 100%; height: calc(100% / 6); flex: none; flex-direction: row; justify-content: flex-start; align-items: center; gap: 1.6cqw; text-align: left; padding: 0 0.6cqw; }
+.spell-text { display: flex; flex-direction: column; align-items: flex-start; gap: 0.2cqw; min-width: 0; }
+.spell-slot > .slot-icon-wrap { flex: none; }
+.spell-slot > .slot-icon-wrap img { width: 7.6cqw; aspect-ratio: 1; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px #B88A35, 0 0 0 3.5px #3A2508, 0 3px 6px rgba(0, 0, 0, 0.45); display: block; }
+.spell-slot .slot-name { font-size: 2.35cqw; text-align: left; color: #3A2508; text-shadow: 0 1px 0 rgba(255, 240, 200, 0.5); }
+.spell-cost { display: inline-flex; align-items: center; gap: 0.5cqw; font-size: 2.1cqw; font-weight: 700; color: #4A2C8C; }
 .spell-cost svg, .book-mana svg { height: 1.15em; width: auto; flex: none; }
 .book-mana { position: absolute; left: 50%; top: 1.2%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 0.8cqw; padding: 0.3cqw 1.6cqw; border-radius: 999px; background: rgba(35, 20, 60, 0.9); color: #E4D8FF; font-size: 2.8cqw; font-weight: 700; box-shadow: 0 0 0 0.25cqw #B88A35, 0 2px 4px rgba(0, 0, 0, 0.6); animation: chest-content-in 0.95s ease-out both; }
 .book-mana b { color: #fff; }

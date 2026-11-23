@@ -6,7 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
-- Księga czarów jest wyższa i ma proporcje zwykłej księgi z dwiema pionowymi stronami: czary stoją po trzy na stronie (ikona, nazwa i „Koszt: 2 kropla many”), bez znacznika kosztu przy ikonie; mana to jeden licznik na górze księgi; okno otwiera się z zamkniętej księgi, której okładka odchyla się wokół grzbietu (klatki z krótkiego filmu), a przy zamykaniu zamyka się z powrotem.
+- Księga czarów jest wyższa i ma proporcje zwykłej księgi z dwiema pionowymi stronami: czary stoją po sześć na stronie, dwanaście na rozkładówce (ikona, nazwa i „Koszt: 2 kropla many”), bez znacznika kosztu przy ikonie; mana to jeden licznik na górze księgi; okno otwiera się z zamkniętej księgi, której okładka odchyla się wokół grzbietu (klatki z krótkiego filmu), a przy zamykaniu zamyka się z powrotem.
 - Znacznik przy przycisku „Magia” pokazuje teraz liczbę czarów, które można rzucić w tej chwili (starcza many i nic innego nie stoi na przeszkodzie), a nie ilość many; mana jest w podpowiedzi przycisku i w oknie księgi.
 - Czwarty bohater frakcji można wybrać też przy stole online w potyczce cyfrowej.
 - Czwarty bohater każdej frakcji (np. Srebrna Wilczyca Przymierza, Mantikora Hordy) jest zawsze do wyboru w potyczce cyfrowej, a nie dopiero przy siedmiu i ośmiu graczach.
