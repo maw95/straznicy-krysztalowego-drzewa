@@ -586,6 +586,8 @@ register({
   "Teraz nie można go rzucić.": "It cannot be cast now.",
   "Rzuć": "Cast",
   "brak plików": "no files",
+  "brak": "none",
+  "Pomocnicy": "Supports",
   "Twoje partie — dokładne dane": "Your games — detailed data",
   "Nie rozegrano jeszcze żadnej partii w tej przeglądarce.": "No game has been played in this browser yet.",
   "% zwycięstw": "% of wins",

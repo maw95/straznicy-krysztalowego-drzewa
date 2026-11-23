@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wersja angielska: puste miejsce w panelu bohatera („brak” umiejętności) i nagłówek „Pomocnicy” w oknie frakcji są przetłumaczone, a nie zostają po polsku.
 - Karty Jeża, Wiwerny Cienia i Srebrnego Lisa mają ten sam bliższy kadr ilustracji co ich portrety (głowa i postać na pierwszym planie).
 - Pakiet gry jest mniejszy o ok. 200 KB: usunięte zostały stare, nieużywane tła okien skrzyni i księgi czarów.
 - Nazwa gracza jest dobrze widoczna: w panelu bohatera na mapie stoi pod herbem i portretem (pogrubiona, w kolorze strony, do 16 znaków), a w dolnym pasku jest duży napis „Tura: Gracz 1” z nazwą frakcji pod spodem; w ustawieniach imię gracza ma najwyżej 16 znaków.

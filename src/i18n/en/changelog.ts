@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Wersja angielska: puste miejsce w panelu bohatera („brak” umiejętności) i nagłówek „Pomocnicy” w oknie frakcji są przetłumaczone, a nie zostają po polsku.":
+    "English version: the empty slot in the hero panel (“brak” for no skills) and the “Pomocnicy” heading in the faction window are translated instead of staying Polish.",
   "Karty Jeża, Wiwerny Cienia i Srebrnego Lisa mają ten sam bliższy kadr ilustracji co ich portrety (głowa i postać na pierwszym planie).":
     "The cards of the Hedgehog, the Shadow Wyvern and the Silver Fox show the same closer framing of the art as their portraits (head and figure in the foreground).",
   "Pakiet gry jest mniejszy o ok. 200 KB: usunięte zostały stare, nieużywane tła okien skrzyni i księgi czarów.":
