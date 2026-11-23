@@ -3,7 +3,8 @@
 // ability medallion, stat icons, and the text from the unit data.
 // Coordinates are in frame pixels (551×713), measured on each frame.
 
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useState, type CSSProperties } from 'react';
+import { CARD_CROPS } from './cardCrops';
 import { abilityTextFor, battleStats, DIGITAL_RANGED_BONUS, UNITS } from '../engine/data';
 import { abilityArt, artId, asset } from './common';
 import { StatIcon, StatText } from './markers';
@@ -127,6 +128,30 @@ export function cardSpace(bounds: Box) {
     circle: (cx: number, cy: number, r: number) => ({ position: 'absolute' as const, left: X(cx - r), top: Y(cy - r), width: 2 * r * kx, height: 2 * r * ky }),
   };
 }
+/**
+ * The picture in the card's window. Units with a known portrait crop (cardCrops.ts) show the same framing as their portrait: the window's height is the
+ * crop's side and the window is centred on the crop's centre (moved inside the picture when it would stick out). The others fill the window (cover).
+ */
+function CardArt({ src, alt, box, crop }: { src: string; alt: string; box: CSSProperties; crop?: [number, number, number] }) {
+  const [nat, setNat] = useState<{ w: number; h: number } | null>(null);
+  if (!crop) return <img src={src} alt={alt} style={{ ...box, objectFit: 'cover', objectPosition: 'center 35%' }} />;
+  const aspect = (Number(box.width) || 1) / (Number(box.height) || 1);
+  let [cx, cy, side] = crop;
+  if (nat) {
+    // the window shows aspect * side * h of width: not more than the picture has
+    const fw = (aspect * side * nat.h) / nat.w;
+    if (fw > 1) side /= fw;
+    const hw = Math.min(1, (aspect * side * nat.h) / nat.w) / 2;
+    cx = Math.min(Math.max(cx, hw), 1 - hw);
+    cy = Math.min(Math.max(cy, side / 2), 1 - side / 2);
+  }
+  return (
+    <div style={{ ...box, overflow: 'hidden' }}>
+      <img src={src} alt={alt} onLoad={(e) => setNat({ w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })} style={{ position: 'absolute', left: '50%', top: '50%', height: `${100 / side}%`, width: 'auto', maxWidth: 'none', transform: `translate(${-cx * 100}%, ${-cy * 100}%)` }} />
+    </div>
+  );
+}
+
 /** Role plate: the Horde has its own names for heroes and supports (the rules call them all heroes and supports). */
 const ROLE = { hero: 'Bohater', support: 'Pomocnik', neutral: 'Strażnik' } as const;
 const HORDE_ROLE = { hero: 'Wódz', support: 'Poplecznik', neutral: 'Strażnik' } as const;
@@ -226,7 +251,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false,
   return (
     <div className="card-sheen" style={{ position: 'relative', width, height: CARD_H * scale, flex: 'none', filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.6))', ...(card ? { borderRadius: 12 * scale, boxShadow: `0 0 0 ${Math.max(2, 4 * scale)}px ${DUEL_BLUE}` } : {}) }}>
       <div style={{ position: 'absolute', left: 0, top: 0, width: FRAME_W, height: CARD_H, overflow: 'hidden', transform: `scale(${scale})`, transformOrigin: '0 0', fontFamily: "'Crimson Pro', Georgia, serif" }}>
-        <img src={asset(`cards/art/${artId(unitId)}.jpg`)} alt={def.name} style={{ ...at(L.art), objectFit: 'cover', objectPosition: 'center 35%' }} />
+        <CardArt src={asset(`cards/art/${artId(unitId)}.jpg`)} alt={def.name} box={at(L.art)} crop={CARD_CROPS[artId(unitId)]} />
         <img src={asset(`cards/frames/${L.file}.png`)} alt="" style={{ position: 'absolute', left: X(0), top: Y(0), width: FRAME_W * kx, height: SRC_H * ky }} />
 
         <div style={{ ...at(L.name), ...centered, fontWeight: 800, fontSize: nameSize, lineHeight: 1, color: '#20160C', whiteSpace: 'nowrap', letterSpacing: '0.01em' }}>{def.name}</div>

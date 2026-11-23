@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Karty jednostek i bohaterów pokazują ten sam kadr ilustracji co ich okrągłe portrety (głowa i postać na pierwszym planie) dla wszystkich frakcji, a nie sztywny środek ilustracji.
 - Nowe kadry portretów: Pegaz (widać całą głowę), Biały Jeleń (bliżej: głowa, poroże i szyja), Rycerz, Łowczyni i Mędrzec Świtu (oddalone, cała ilustracja) oraz Pięść-Ogr; pozostałe portrety Przymierza i Hordy bez zmian.
 - Kafle z lokacjami (kopalnie, kapliczki, obozy, skrzynie, chatki, młyny, studnie, składnice, odłamki, źródła pyłu, tartaki) mają na górze mały znacznik w kształcie wycinka heksa (szpic u góry, łuk u dołu) z ikoną lokacji, wyszarzony, gdy lokacja jest zużyta; herb właściciela jest mniejszy i leży tuż przy dolnej krawędzi kafla.
 - Panele i okna na ciemnym tle (tekstura „łupek”) mają kolor frakcji gracza przy ekranie: zieleń Przymierza, bordo Hordy, ochra Stada, szarozieleń Umarłych, stal Klanów, lodowy błękit Szronu, rdzawa pomarańcz Kompanii, piasek Piasków, umbra i mech Roju, morska zieleń Przypływów; przy grze przy jednym ekranie zmienia się po przekazaniu urządzenia, a w menu i ustawieniach zostaje dawny zielono-niebieski.
