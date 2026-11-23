@@ -574,6 +574,7 @@ register({
   "Imperium Piasków: oazy, karawany i kamienni strażnicy grobowców. Wojownik na wydmie bywa mirażem.": "The Empire of the Sands: oases, caravans and stone guardians of tombs. A warrior on a dune may be a mirage.",
   "Rój Puszczy: grzybnia, chrząszcze i modliszki spod korzeni starego lasu. Jedna wola, wiele ciał.": "The Swarm of the Wildwood: mycelium, beetles and mantises from under the roots of the old forest. One will, many bodies.",
   "Bractwo Przypływu: trytony, syreny, kraboludy i żółwie z rafy. Wychodzą na ląd z przypływem i zabierają go ze sobą.": "The Brotherhood of the Tide: tritons, sirens, crabfolk and turtles of the reef. They come ashore with the tide and take the land with them.",
+  "Przy stole może być najwyżej {0} frakcje: zmień frakcję jednego z graczy albo zostaw ją losową.": "At most {0} factions can sit at the table: change the faction of one of the players or leave it to chance.",
   "Następna strona": "Next page",
   "Poprzednia strona": "Previous page",
   "Mana: {0} z {1}": "Mana: {0} of {1}",

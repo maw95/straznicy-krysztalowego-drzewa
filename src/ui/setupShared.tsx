@@ -227,7 +227,9 @@ export function resolveRandomSeats(
   if (!seats.some(drawn)) return seats.map(clean);
   const raceOf = (s: SeatSetup) => (s.race ?? s.faction) as FactionId;
   for (let attempt = 0; attempt < 400; attempt++) {
-    const out = seats.map((s) => (s.randomRace ? { ...clean(s), race: pick(o.offered) } : clean(s)));
+    // With four factions already seated, a seat left to chance joins one of them (a table has at most four).
+    const fixed = [...new Set(seats.filter((s) => !s.randomRace).map((s) => (s.race ?? s.faction) as FactionId))];
+    const out = seats.map((s) => (s.randomRace ? { ...clean(s), race: pick(fixed.length >= 4 ? fixed : o.offered) } : clean(s)));
     const taken = new Set(out.filter((_, i) => !drawn(seats[i])).map((s) => s.heroId));
     let ok = true;
     out.forEach((s, i) => {
@@ -240,7 +242,7 @@ export function resolveRandomSeats(
     if (!ok) continue;
     const races = out.map(raceOf);
     if (o.twoFactions && new Set(races).size < 2) continue;
-    if (races.some((r) => races.filter((x) => x === r).length > 3)) continue;
+    if (races.some((r) => races.filter((x) => x === r).length > 3) || new Set(races).size > 4) continue;
     return out;
   }
   return seats.map(clean);

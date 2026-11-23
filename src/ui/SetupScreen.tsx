@@ -2,7 +2,7 @@ import { CampaignScreen } from './CampaignScreen';
 import { ExpeditionScreen } from './ExpeditionScreen';
 import { useMemo, useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, heroPool, SECRET_HEROES, UNITS, type FactionId, type MapSize } from '../engine/data';
-import { raceOf, seatTable, TEAM_IDS, teamsOf } from '../engine/teams';
+import { MAX_TEAMS, raceOf, seatTable, TEAM_IDS, teamsOf } from '../engine/teams';
 import { PACK_IDS } from '../engine/factions';
 import { readyMaps } from '../engine/customMaps';
 import { layerSwitches, resolveTier, withRuleset, type CustomLayer, type Tier } from '../engine/presets';
@@ -125,11 +125,16 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
    */
   const offered: readonly FactionId[] = (SIDES_GOALS as readonly string[]).includes(goal) && digital && !arena ? PACK_IDS : (TEAM_IDS as readonly FactionId[]);
   /** The table as the engine reads it: every seat has the slot of its faction (the first two factions play the first two sides). */
-  const table = mode === 'pvp' ? seatTable(seats) : seats;
+  // A seat left to chance counts as the race of the first fixed seat here (the draw comes at the start), and more than four fixed factions cannot sit at one table.
+  const fixedRaces = new Set(seats.filter((s) => !s.randomRace).map(raceAt));
+  const tooMany = mode === 'pvp' && fixedRaces.size > MAX_TEAMS;
+  const anchor = raceAt(seats.find((s) => !s.randomRace) ?? seats[0]);
+  const table = mode === 'pvp' && !tooMany ? seatTable(seats.map((s) => (s.randomRace ? { ...s, race: anchor } : s))) : seats;
   /** The sides in play: the factions seated at the table (coop and the arena have two). */
   const playing = teamsOf({ setup: { mode, seats: table } });
   const drawing = seats.some((s) => s.randomRace);
   const valid =
+    !tooMany &&
     seats.every((s, i) => s.randomRace || s.randomHero || !takenBy(s.heroId, i)) &&
     // A faction left to chance is drawn legal (at least two factions in a rivalry, at most three seats of one).
     (mode === 'coop' || drawing || new Set(seats.map(raceAt)).size >= 2) &&
@@ -471,6 +476,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                 Pełny ekran przy uruchomieniu
               </label>
             )}
+            {tooMany && <div role="alert" style={{ textAlign: 'center', color: '#F3A27A', fontSize: 16 }} data-too-many>{`Przy stole może być najwyżej ${MAX_TEAMS} frakcje: zmień frakcję jednego z graczy albo zostaw ją losową.`}</div>}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginTop: 8 }}>
               {backBtn('wizard')}
               <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={startGame}>

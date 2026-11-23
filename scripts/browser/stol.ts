@@ -20,8 +20,6 @@ try {
   console.log('players page: count chips', await p.locator('.count-chip').count(), 'title', await p.locator('.ribbon, [class*=ribbon]').first().innerText().catch(() => '?'));
   await p.getByRole('button', { name: 'Dalej →' }).click();
   await p.locator('.seat-row').first().waitFor();
-  const seats = () => p.locator('.seat-row').count();
-  const state = async () => JSON.stringify({ seats: await seats(), who: await p.locator('select[aria-label="Kto gra"]').evaluateAll((e) => e.map((x) => (x as HTMLSelectElement).value)), remove: await p.locator('[data-remove-seat]').count(), factions: await p.locator('[data-seat-factions="0"] [data-faction]').count() });
   await p.screenshot({ path: '.tmp/stol-1.png' });
   console.log('random selected:', await p.locator('[data-seat-factions="0"] [data-faction="random"][aria-pressed="true"]').count(), 'first button is the die:', await p.locator('[data-seat-factions="0"] button').first().getAttribute('data-faction'));
   const crest = p.locator('[data-seat-factions="0"] [data-faction="herds"]');
