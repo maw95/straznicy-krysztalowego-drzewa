@@ -8,6 +8,13 @@ from PIL import Image, ImageChops, ImageOps, ImageStat
 
 ART, POR = 'public/assets/cards/art', 'public/assets/cards/portraits'
 SMALL = 96  # height of the art copy used for matching
+# Hand-set crops (backlog 63a) for portraits the matcher cannot find: they were brightened or redrawn, so they are not an exact crop of the art.
+# Same meaning as the matched ones: [centre x, centre y, side]. The card window is wider than the art (1.525 vs 1.45), so a side of 1.0 shows the whole art:
+# units whose portrait is simply the whole art (boar, dawnOwl, dawnPhoenix, doomBehemoth, dryadArcher, goblinShaman, hellhound, minotaurChief, ratman) need no entry. Units whose card art is still the grey 'ZASTĘPCZA GRAFIKA' plate (backlog 2a) have none:
+# re-run this script (and fill this table) when their real art arrives.
+MANUAL = {
+    'hedgehog': (.68, .55, .86), 'shadowWyvern': (.62, .5, .9), 'silverFox': (.6, .5, .88),
+}
 MAX_ERR = 33  # mean abs difference (0-255) above which a match is not trusted (correct matches of re-graded portraits reach ~30)
 
 
@@ -51,6 +58,9 @@ def main() -> None:
     for f in sorted(os.listdir(POR)):
         n = f[:-4]
         if not os.path.exists(f'{ART}/{n}.jpg'):
+            continue
+        if n in MANUAL:
+            out[n] = MANUAL[n]
             continue
         err, (cx, cy, s) = match(Image.open(f'{ART}/{n}.jpg'), Image.open(f'{POR}/{f}'))
         if err > MAX_ERR:

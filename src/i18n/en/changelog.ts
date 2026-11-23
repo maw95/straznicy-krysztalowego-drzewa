@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Karty Jeża, Wiwerny Cienia i Srebrnego Lisa mają ten sam bliższy kadr ilustracji co ich portrety (głowa i postać na pierwszym planie).":
+    "The cards of the Hedgehog, the Shadow Wyvern and the Silver Fox show the same closer framing of the art as their portraits (head and figure in the foreground).",
   "Pakiet gry jest mniejszy o ok. 200 KB: usunięte zostały stare, nieużywane tła okien skrzyni i księgi czarów.":
     "The game package is about 200 KB smaller: the old, unused backgrounds of the chest and spell book windows were removed.",
   "Centaur, Opiekun Drzewa i Biały Jeleń mają nowe ilustracje i portrety: widać całą głowę i sylwetkę (wcześniej głowa była ucięta albo widać było tylko głowę jelenia).": "The Centaur, the Tree Guardian and the White Stag have new illustrations and portraits that show the whole head and figure (before, the head was cut off, or only the stag's head was visible).",
