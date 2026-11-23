@@ -28,6 +28,13 @@ ADJ = {
 }
 # Busts (head and torso, like the portrait of Indrik): name: (side as a share of the height, cx, cy as shares of width / height).
 BUST = {'satyrHornlord': (0.62, 0.50, 0.30), 'satyrPiper': (0.52, 0.47, 0.27)}
+# Close crops approved by the author on 23.11 (head and shoulders): name: (centre x as a share of width, centre y as a share of height, side as a share of height). They win over BOX/ADJ/BUST.
+PORTRAIT = {
+    'greatAurochs': (.60,.32,.66), 'windAntelope': (.62,.25,.50), 'thunderRam': (.52,.33,.66), 'aurochsScout': (.58,.33,.58),
+    'eagleHunter': (.52,.42,.62), 'planetnik': (.48,.28,.55), 'youngAurochs': (.49,.50,.58), 'kulan': (.54,.32,.55),
+    'steppeArcher': (.46,.23,.52), 'forestBison': (.58,.38,.55), 'steppeLamignat': (.55,.33,.65), 'warRhino': (.63,.50,.64),
+    'muskOx': (.57,.45,.60), 'arkar': (.54,.38,.58), 'drumElephant': (.52,.42,.68), 'bullMoose': (.56,.30,.60), 'satyrPiper': (.50,.27,.45),
+}
 MIN_SIDE, MAX_SIDE = 0.70, 1.0   # shares of the picture's height
 if __name__ == '__main__':
     out = sys.argv[1] if len(sys.argv) > 1 else 'public/assets/cards'
@@ -36,6 +43,13 @@ if __name__ == '__main__':
         im.resize((640, 442), Image.LANCZOS).save(f'{out}/art/{name}.jpg', quality=88)
         if name in KEEP_PORTRAIT: continue
         w, h = im.size
+        if name in PORTRAIT:
+            pcx, pcy, ps = PORTRAIT[name]
+            sp = round(ps * h)
+            left = min(max(round(pcx * w - sp / 2), 0), w - sp)
+            top = min(max(round(pcy * h - sp / 2), 0), h - sp)
+            im.crop((left, top, left + sp, top + sp)).resize((256, 256), Image.LANCZOS).save(f'{out}/portraits/{name}.jpg', quality=86)
+            continue
         if name in BUST:
             bs, bx, by = BUST[name]
             sp = round(bs * h)
