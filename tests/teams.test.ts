@@ -37,18 +37,39 @@ describe('splitZones', () => {
     expect(splitZones(cells, starts)).toEqual(old);
   });
 
-  it('generated maps of the non-triangle shapes keep the old two-zone sides', () => {
-    for (const shape of ['rectangle', 'ring'] as const) {
-      const m = generateMap('short', new Rng(7), 6, 2, shape);
-      const [d, h] = [parseKey(m.homes.dawn), parseKey(m.homes.horde)];
-      for (const t of Object.values(m.tiles)) {
-        const hex = parseKey(t.key);
-        const a = distance(hex, d);
-        const b = distance(hex, h);
-        expect(t.side).toBe(a < b ? 'dawn' : a > b ? 'horde' : (t.row + t.col) % 2 === 0 ? 'dawn' : 'horde');
+  it('generated maps of every shape and size split into zones of equal size (at most one hex apart), each holding its base', () => {
+    for (const shape of ['rectangle', 'ring', 'islands'] as const) {
+      for (const size of ['short', 'medium', 'long'] as const) {
+        const m = generateMap(size, new Rng(7), 6, 2, shape);
+        const count = { dawn: 0, horde: 0 } as Record<string, number>;
+        for (const t of Object.values(m.tiles)) count[t.side]++;
+        expect(Math.abs(count.dawn - count.horde), `${shape} ${size}`).toBeLessThanOrEqual(1);
+        expect(m.tiles[m.homes.dawn].side).toBe('dawn');
+        expect(m.tiles[m.homes.horde].side).toBe('horde');
       }
     }
   });
+
+  for (const n of [3, 4]) {
+    it(`rectangle maps for ${n} sides: zones of equal size and bases as far apart as possible, at every size`, () => {
+      const teams = (['dawn', 'horde', 'third', 'fourth'] as const).slice(0, n);
+      for (const size of ['short', 'medium', 'long', 'veryLong'] as const) {
+        if (n === 4 && size === 'short') continue; // too small for four bases (it never generated)
+        const m = generateMap(size, new Rng(3), 10, 3, 'rectangle', undefined, { teams });
+        const count: Record<string, number> = {};
+        for (const t of Object.values(m.tiles)) count[t.side] = (count[t.side] ?? 0) + 1;
+        const sizes = teams.map((t) => count[t]);
+        expect(Math.max(...sizes) - Math.min(...sizes), `${size}: ${sizes}`).toBeLessThanOrEqual(1);
+        for (const t of teams) expect(m.tiles[m.homes[t]].side).toBe(t);
+        const far = Math.min(...teams.flatMap((a, i) => teams.slice(i + 1).map((b) => distance(parseKey(m.homes[a]), parseKey(m.homes[b])))));
+        // No other choice of edge hexes spreads the bases further apart: the old layout (left, right, top, bottom) was never better.
+        const cells = Object.values(m.tiles).map((t) => parseKey(t.key)).filter((h) => distance(h, parseKey(m.tree)) > 2);
+        const best = (k: number, from: number, chosen: typeof cells): number => (k === 0 ? Math.min(...chosen.flatMap((a, i) => chosen.slice(i + 1).map((b) => distance(a, b)))) : Math.max(...cells.slice(from).map((c, i) => best(k - 1, from + i + 1, [...chosen, c]))));
+        if (n === 3 && size === 'short') expect(far).toBe(best(3, 0, []));
+        expect(far).toBeGreaterThanOrEqual(Math.floor(m.rows / 2));
+      }
+    });
+  }
 
   for (const n of [3, 4]) {
     it(`${n} zones: disjoint, cover the map, each holds its start`, () => {

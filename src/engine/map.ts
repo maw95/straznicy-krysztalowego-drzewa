@@ -1,7 +1,7 @@
 // Adventure map: triangle generation (variant A), costs and path finding.
 
 import { GUARDIAN_LAIRS, MAP_SHAPES, MAP_VARIANTS, TERRAIN_COST, TERRAIN_VARIANTS, TILE_POOLS, type FactionId, type MapSize, type TeamId, type Terrain, type TileSide } from './data';
-import { distance, key, neighborKeys, parseKey, triToHex, type HexKey } from './hex';
+import { distance, key, neighborKeys, parseKey, triToHex, type Hex, type HexKey } from './hex';
 import { terrainOf } from './factions';
 import { Rng } from './rng';
 import { byTeam, raceOf, TEAM_IDS } from './teams';
@@ -175,6 +175,8 @@ interface Layout {
   forced?: Record<HexKey, 'wall' | 'bridge'>;
   /** What the '#' hexes are: water (always visible, so the islands can be seen) instead of the side's own obstacle tile. */
   wallTerrain?: 'water';
+  /** Bases for 3 or 4 teams, as far from each other as the map allows (a shape that has room for more than two sides). */
+  spread?: (teams: number) => HexKey[];
 }
 
 function triangleLayout(size: MapSize): Layout {
@@ -192,14 +194,41 @@ function rectangleLayout(size: MapSize): Layout {
   const mid = Math.floor(height / 2);
   const at = (col: number) => key({ q: col - Math.floor(mid / 2), r: mid });
   const tree = at(Math.floor(width / 2));
-  // Teams three and four: on the top and the bottom row, at the column whose distance to the Tree is nearest the distance of the first two bases
-  // (so all four bases are about as far from the Tree).
-  const want = distance(parseKey(tree), parseKey(at(0)));
-  const onRow = (row: number) => {
-    const best = cells.filter((c) => c.row === row).map((c) => ({ k: key(c.hex), d: Math.abs(distance(parseKey(tree), c.hex) - want) + Math.abs(c.col - Math.floor(width / 2)) / 1000 })).sort((a, b) => a.d - b.d)[0];
-    return best.k;
+  return { cells, rows: height, tree, homes: { dawn: at(0), horde: at(width - 1) }, spread: (n) => spreadStarts(cells, tree, n) };
+}
+
+/**
+ * `n` start hexes of a map, as far from each other as possible: the largest smallest distance between any two of them. Among such sets the one with most
+ * bases on the edge, then the one whose bases are about equally far from the Tree, then the first in map order (so the result is always the same).
+ * Branch and bound: the search starts from the farthest-first set and drops every partial set that is already closer than the best found.
+ */
+export function spreadStarts(cells: Array<{ row: number; col: number; hex: Hex }>, tree: HexKey, n: number): HexKey[] {
+  const inMap = new Set(cells.map((c) => key(c.hex)));
+  const t = parseKey(tree);
+  const all = cells.map((c) => c.hex).filter((h) => distance(h, t) > 2);
+  const onEdge = new Set(cells.filter((c) => neighborKeys(key(c.hex)).some((k) => !inMap.has(k))).map((c) => key(c.hex)));
+  type Best = { min: number; edge: number; skew: number; set: Hex[] };
+  const score = (set: Hex[], min: number): Best => {
+    const d = set.map((h) => distance(h, t));
+    return { min, edge: set.filter((h) => onEdge.has(key(h))).length, skew: Math.max(...d) - Math.min(...d), set };
   };
-  return { cells, rows: height, tree, homes: { dawn: at(0), horde: at(width - 1), third: onRow(0), fourth: onRow(height - 1) } };
+  const better = (a: Best, b: Best) => (a.min !== b.min ? a.min > b.min : a.edge !== b.edge ? a.edge > b.edge : a.skew < b.skew);
+  const minOf = (set: Hex[]) => Math.min(...set.flatMap((a, i) => set.slice(i + 1).map((b) => distance(a, b))));
+  // The farthest-first set (starting from the first hex) gives the bound to beat.
+  const greedy = [all[0]];
+  while (greedy.length < n) greedy.push(all.reduce((far, h) => (Math.min(...greedy.map((g) => distance(g, h))) > Math.min(...greedy.map((g) => distance(g, far))) ? h : far), all[0]));
+  let best = score(greedy, minOf(greedy));
+  const pick = (from: number, chosen: Hex[], min: number) => {
+    if (min < best.min) return;
+    if (chosen.length === n) {
+      const cand = score(chosen, min);
+      if (better(cand, best)) best = cand;
+      return;
+    }
+    for (let i = from; i < all.length; i++) pick(i + 1, [...chosen, all[i]], chosen.length ? Math.min(min, ...chosen.map((h) => distance(h, all[i]))) : Infinity);
+  };
+  pick(0, [], Infinity);
+  return best.set.map(key);
 }
 
 /** The ring of hexes at distance radius-1 and radius from the middle; the Tree, the Przymierze and the Horda stand on three corners of it. */
@@ -285,19 +314,57 @@ export function sideOf(row: number, col: number): TileSide {
 export const MAX_START_ZONES = 4;
 
 /**
- * Splits hexes into N zones, one per start hex: every hex goes to the nearest start; on a tie the hex goes to one of the tied zones by the parity
- * (row + col) % tied, so the border zigzags and never favours one zone. With two starts this is the old two-halves rule of the non-triangle maps.
+ * Splits hexes into N zones, one per start hex, of the same size (the sizes differ by at most one hex). Every hex first goes to the nearest start (on a tie
+ * by the parity (row + col) % tied, so the border zigzags and never favours one zone); with two zones of equal size that is the answer.
+ * Otherwise (always with three or four zones, where the ties would scatter the hexes) the zones grow turn by turn from their starts, each taking the free hex next to it that is nearest its start, until each has its share.
  * Returns the zone index (0..N-1, the order of `starts`) of each cell.
  */
 export function splitZones(cells: Array<{ row: number; col: number; hex: { q: number; r: number } }>, starts: HexKey[]): number[] {
   if (starts.length < 1 || starts.length > MAX_START_ZONES) throw new Error(`Map needs 1 to ${MAX_START_ZONES} start zones, got ${starts.length}`);
   const points = starts.map((k) => parseKey(k));
-  return cells.map(({ row, col, hex }) => {
+  const nearest = cells.map(({ row, col, hex }) => {
     const d = points.map((p) => distance(hex, p));
     const best = Math.min(...d);
     const tied = d.flatMap((x, i) => (x === best ? [i] : []));
     return tied[(row + col) % tied.length];
   });
+  const n = starts.length;
+  const sizes = Array.from({ length: n }, (_, z) => nearest.filter((x) => x === z).length);
+  if (n <= 2 && Math.max(...sizes) - Math.min(...sizes) <= 1) return nearest;
+
+  const at = new Map(cells.map((c, i) => [key(c.hex), i]));
+  const zone: number[] = Array(cells.length).fill(-1);
+  const share = Array.from({ length: n }, (_, z) => Math.floor(cells.length / n) + (z < cells.length % n ? 1 : 0));
+  const count = Array(n).fill(0);
+  const frontier: Array<Set<number>> = Array.from({ length: n }, () => new Set<number>());
+  const claim = (z: number, i: number) => {
+    zone[i] = z;
+    count[z]++;
+    for (const f of frontier) f.delete(i);
+    for (const k of neighborKeys(key(cells[i].hex))) {
+      const j = at.get(k);
+      if (j !== undefined && zone[j] < 0) frontier[z].add(j);
+    }
+  };
+  starts.forEach((k, z) => claim(z, at.get(k)!));
+  for (let turn = 0; count.reduce((a, b) => a + b, 0) < cells.length; turn++) {
+    const z = turn % n;
+    if (count[z] >= share[z]) continue;
+    let pool = [...frontier[z]];
+    if (!pool.length) pool = cells.map((_, i) => i).filter((i) => zone[i] < 0);  // walled in by the others: take the free hex nearest its start
+    // The hex that is closer to this start than to the others goes first, then the one with most neighbours already in the zone (keeps the zone in one piece).
+    let pick = -1;
+    let bestScore: [number, number] = [Infinity, Infinity];
+    for (const i of pool) {
+      const d = points.map((p) => distance(cells[i].hex, p));
+      const margin = d[z] - Math.min(...d.filter((_, o) => o !== z));
+      const own = neighborKeys(key(cells[i].hex)).filter((k) => zone[at.get(k) ?? -1] === z).length;
+      const score: [number, number] = [margin, -own];
+      if (score[0] < bestScore[0] || (score[0] === bestScore[0] && score[1] < bestScore[1])) (bestScore = score, pick = i);
+    }
+    claim(z, pick);
+  }
+  return zone;
 }
 
 function setTerrain(tile: Tile, terrain: Terrain, rng: Rng) {
@@ -319,7 +386,8 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
   // The land of a side looks like the land of its faction (terrain tiles, bases, treasures).
   const race = opts.race ?? ((t: TeamId): FactionId => raceOf(null, t));
   const land = (t: TeamId) => terrainOf(race(t));
-  const homes = Object.fromEntries(teams.map((t) => [t, layout.homes[t]])) as Record<TeamId, HexKey>;
+  const spread = teams.length > 2 ? layout.spread?.(teams.length) : undefined;
+  const homes = Object.fromEntries(teams.map((t, i) => [t, spread ? spread[i] : layout.homes[t]])) as Record<TeamId, HexKey>;
   if (teams.some((t) => !homes[t])) throw new Error('Ta mapa ma miejsce tylko dla dwóch stron.');
   if (teams.length > 2 && shape === 'triangle') throw new Error('Mapa trójkątna ma miejsce tylko dla dwóch stron.');
   // The start zones in team order (up to MAX_START_ZONES): zone i belongs to team teams[i].
