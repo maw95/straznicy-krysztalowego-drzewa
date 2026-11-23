@@ -7460,6 +7460,25 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "herds/muzyka",
+      "pliki": [
+        "public/assets/music/herds-steppe-drums.mp3",
+        "public/assets/music/herds-wandering-herd.mp3"
+      ],
+      "typ": "muzyka frakcji: dwa utwory Dzikiego Stada (mapa na ziemi Stada i osada Stada)",
+      "opis": "Dwa instrumentalne utwory po 90 s (bębny w galopie, róg, dudy; drugi spokojniejszy, wędrowny). Wyrównane do poziomu reszty muzyki gry (średnio ok. -21 dB, szczyt ok. -6 dB), wejście 0,3 s i wyjście 2,5 s (ffmpeg), mp3 128 kbps. Dwie pierwsze próby (z nazwą gry-wzoru w opisie stylu) odrzucił filtr ElevenLabs i naliczył koszt: w opisach nie używać nazw cudzych gier ani franczyz. Koszt: 2 x 45 CU + 120 CU za odrzucone próby. Oryginały: .tmp/zrodla/herds_music. Rejestr utworów frakcji: FACTION_MUSIC w src/ui/music.ts.",
+      "scenario_asset": {
+        "herds-steppe-drums": "asset_HWgwEbbfoSxJwg948F1RXmDT",
+        "herds-wandering-herd": "asset_9B7RqpuFpBDHZXDnRuMJ8GA7"
+      },
+      "prompt": "Instrumental fantasy video game theme for a nomadic steppe people: galloping rhythm of big frame drums and hand drums, a deep ram's horn playing a heroic melody, bagpipe drone and wooden flute, warm earthy acoustic sound, steady driving tempo around 100 BPM, proud and adventurous, a memorable melody repeated with variations, orchestral fantasy adventure style, loopable, ends calmly. (drugi: calm travelling mood, ok. 75 BPM, soft low frame drum pulse, jaw harp, wooden flute, lone bagpipe, distant horn)",
+      "narzedzie": "Scenario (plan płatny) + ffmpeg",
+      "model": "ElevenLabs Music v2.5 (model_elevenlabs-music-v2-5), instrumental, 90 s",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

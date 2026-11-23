@@ -8,8 +8,9 @@ import { LanguageSwitch } from './LanguageSwitch';
 import { TouchTitles } from './TouchTitles';
 import { TitleBubbles } from './TitleBubbles';
 import { useEffect, useState, type ReactNode } from 'react';
-import { ITEMS, raceOfHero, UNITS, type ItemKind } from '../engine/data';
-import { ritualFormed } from '../engine/game';
+import { ITEMS, raceOfHero, UNITS, type FactionId, type ItemKind } from '../engine/data';
+import { activeHero, ritualFormed } from '../engine/game';
+import { raceOf } from '../engine/teams';
 import { GROWTH, levelOf, skillRank, type SkillId } from '../engine/growth';
 import { isDigital, type GameState, type HeroState, type LogEntry } from '../engine/types';
 import type { BotSpeed, RoomView } from '../online/api';
@@ -19,7 +20,7 @@ import { DetailsLayer } from './details';
 import { FullscreenButton } from './fullscreen';
 import { HoverCardLayer } from './hover';
 import { SkillCard, XpBar } from './growthUi';
-import { music, type Theme } from './music';
+import { factionTheme, music, type Theme } from './music';
 import { sfx } from './sfx';
 import { RulesDialog } from './RulesDialog';
 import { TreasureCard } from './TreasureCard';
@@ -29,8 +30,11 @@ import { ANIM_SPEED_NAMES, ANIM_SPEEDS, animSpeedLevel, setAnimSpeedLevel } from
 import { FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
 
-/** The music for what is on screen: menu, map, battle, a guardian fight or the ritual (silence at the end of the game). */
-export function musicTheme(game: GameState | null): Theme {
+/**
+ * The music for what is on screen: menu, map, battle, a guardian fight or the ritual (silence at the end of the game). On the map a faction with music of its
+ * own plays it in its settlement (`settlementRace`, while the settlement window is open) and while the active hero stands on a tile of its land.
+ */
+export function musicTheme(game: GameState | null, settlementRace: FactionId | null = null): Theme {
   if (!game) return 'menu';
   if (game.setup.mode === 'arena') {
     if (game.phase === 'battle') return 'battle';
@@ -40,7 +44,11 @@ export function musicTheme(game: GameState | null): Theme {
   if (game.phase === 'over') return 'none';
   if (game.phase === 'battle' && (game.battle?.stage === 'fight' || game.battle?.stage === 'deploy')) return game.battle.kind === 'neutral' ? 'guardian' : 'battle';
   // The counter only drops at the end of the round, so the ritual music also needs the ritual to still stand (the dragon beaten in the middle of the round silenced it).
-  return game.ritual > 0 && ritualFormed(game) ? 'ritual' : 'adventure';
+  if (game.ritual > 0 && ritualFormed(game)) return 'ritual';
+  if (settlementRace) return factionTheme(settlementRace) ?? 'adventure';
+  const hero = activeHero(game);
+  const land = hero && game.tiles[hero.pos]?.side;
+  return (land && factionTheme(raceOf(game, land))) || 'adventure';
 }
 
 /** What every screen has: the music and full-screen buttons, an error note, the rules and the card/details layers. */

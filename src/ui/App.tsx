@@ -8,7 +8,7 @@ import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { heroLabel } from '../engine/realm';
 import { chooseAction } from '../engine/ai';
 import { describeAction } from './hint';
-import { FACTION_HEROES, FACTION_NAMES, UNITS, type TeamId, type ItemKind } from '../engine/data';
+import { FACTION_HEROES, FACTION_NAMES, UNITS, type FactionId, type TeamId, type ItemKind } from '../engine/data';
 import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
 import { redactHidden } from '../engine/hidden';
 import { hideOwnTraps, trapSecrecyOn, trapVeilFor } from './trapVeil';
@@ -29,7 +29,7 @@ import { scaledMs } from './animSpeed';
 import { DuelView } from './DuelView';
 import { Frame, Medal, Modal, Portrait, Ribbon, SIDE_RING, asset, teamFaction, useMedia } from './common';
 import { SetupScreen } from './SetupScreen';
-import { music } from './music';
+import { music, type Theme } from './music';
 import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, LeaveDialog, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
 import { fightLevelAt } from './fightBadges';
 import { ArenaCardsContext, DigitalCardsContext, UnitCard } from './UnitCard';
@@ -159,7 +159,18 @@ export function App() {
       window.removeEventListener('keydown', unlock);
     };
   }, []);
-  const theme = musicTheme(game);
+  /** The faction whose settlement window is open (reported by the map): its music plays in the town. */
+  const [townRace, setTownRace] = useState<FactionId | null>(null);
+  const wantedTheme = musicTheme(game, townRace);
+  // Crossing from one land to another must not make the music flicker: between the map and the land themes it waits a moment for the hero to settle.
+  const [theme, setTheme] = useState<Theme>(wantedTheme);
+  useEffect(() => {
+    const onMap = (t: Theme) => t === 'adventure' || t.startsWith('faction:');
+    if (!onMap(wantedTheme) || !onMap(theme)) return setTheme(wantedTheme);
+    const id = window.setTimeout(() => setTheme(wantedTheme), 1500);
+    return () => window.clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wantedTheme]);
   useEffect(() => music.play(theme), [theme]);
 
   // Full screen on the first click or key press, unless switched off in the menu (never in ?steps= test games).
@@ -999,7 +1010,7 @@ export function App() {
       ) : held || (game.phase === 'battle' && b && !b.duel && b.stage !== 'select') ? (
         <BattleView state={battleShown} attack={held?.attack ?? null} canAct={humanTurn && !held} onAction={dispatch} onShowCard={setCard} footer={footer} />
       ) : (
-        <AdventureView state={game} loot={lootFloats} mapFx={mapFxs} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} footer={adventureFooter} />
+        <AdventureView state={game} loot={lootFloats} mapFx={mapFxs} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} onSettlementRace={setTownRace} footer={adventureFooter} />
       )}
 
       <Modal open={Boolean(selecting)}>{selecting && <SupportSelect state={game} faction={selecting} onPick={(ids) => dispatch({ type: 'selectSupports', faction: selecting, supportIds: ids })} />}</Modal>

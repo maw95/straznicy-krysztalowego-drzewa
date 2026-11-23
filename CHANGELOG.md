@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Dzikie Stado ma własną muzykę (dwa utwory: bębny i róg w galopie oraz spokojna wędrówka): gra w osadzie Stada i gdy bohater stoi na ziemi Stada, zamiast ogólnej muzyki mapy.
 - Ekran miejsc przy stole: na początku jest dwóch graczy (człowiek i komputer), kolejnych dodajesz przyciskiem „Dodaj gracza”, a małym krzyżykiem usuwasz; frakcję i bohatera wybierasz ikonami, a kostka losuje je przy starcie gry. Liczbę graczy nie wybiera się już w kreatorze (poza grą online).
 - Mapa dzieli się między strony na równe części (różnica najwyżej jeden kafelek) przy każdym kształcie i liczbie stron, a przy trzech i czterech stronach bazy leżą możliwie najdalej od siebie.
 - Dzikie Stado ma własną stronę mapy: ochrowy rewers kafli ze skrzyżowanymi rogami zamiast zielonego rewersu Przymierza, stepowe wzgórza, rzeki, mosty, góry, przepaści i nieużytki oraz stepowe wersje kapliczki, obozu najemników, skrzyni, studni, tartaku, kopalń, źródła pyłu, chatki, składnicy, odłamka, młyna i osady.

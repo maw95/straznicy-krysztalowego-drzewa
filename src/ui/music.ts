@@ -10,9 +10,11 @@
 // Browsers block audio until the first user gesture, so playback starts on the first click/tap
 // anywhere. Volume and mute are remembered in localStorage.
 
+import type { FactionId } from '../engine/data';
 import { asset } from './common';
 
-export type Theme = 'menu' | 'adventure' | 'battle' | 'guardian' | 'ritual' | 'dawnVictory' | 'hordeVictory' | 'none';
+/** `faction:<id>`: the theme of a faction's land; it plays instead of the map music in the faction's settlement and while the hero stands on its land. */
+export type Theme = 'menu' | 'adventure' | 'battle' | 'guardian' | 'ritual' | 'dawnVictory' | 'hordeVictory' | 'none' | `faction:${FactionId}`;
 
 interface Playlist {
   /** Played once before the loop. */
@@ -24,7 +26,7 @@ interface Playlist {
 }
 
 const M = (f: string) => `music/${f}.mp3`;
-const PLAYLISTS: Record<Exclude<Theme, 'none'>, Playlist> = {
+const PLAYLISTS: Record<Exclude<Theme, 'none' | `faction:${FactionId}`>, Playlist> = {
   menu: { intro: M('menu-sylvan-waltz'), loop: [M('map-sylvan-waltz')] },
   adventure: { loop: [M('map-sylvan-waltz'), M('map-maddies-mirror')] },
   battle: { loop: [M('battle-fantasy-choir-1'), M('battle-fantasy-choir-2')] },
@@ -34,9 +36,20 @@ const PLAYLISTS: Record<Exclude<Theme, 'none'>, Playlist> = {
   hordeVictory: { loop: [M('horde-victory-the-fallen')], once: true },
 };
 
+/**
+ * The music of a faction's land (the tracks of the factions that have them; a faction without tracks plays the map music). A new faction's tracks are a new
+ * entry here: backlog "G4 for a faction" includes them.
+ */
+export const FACTION_MUSIC: Partial<Record<FactionId, string[]>> = {
+  herds: [M('herds-steppe-drums'), M('herds-wandering-herd')],
+};
+/** The theme of a faction's land, or null when the faction has no music of its own. */
+export const factionTheme = (race: FactionId): Theme | null => (FACTION_MUSIC[race]?.length ? `faction:${race}` : null);
+const playlistOf = (theme: Exclude<Theme, 'none'>): Playlist => (theme.startsWith('faction:') ? { loop: FACTION_MUSIC[theme.slice(8) as FactionId] ?? [] } : PLAYLISTS[theme as keyof typeof PLAYLISTS]);
+
 /** The file a theme starts with (for preloading it before it is needed). */
 export function firstTrack(theme: Exclude<Theme, 'none'>): string {
-  const list = PLAYLISTS[theme];
+  const list = playlistOf(theme);
   return list.intro ?? list.loop[0];
 }
 
@@ -138,7 +151,7 @@ class MusicPlayer {
       this.stopCurrent(SWITCH_MS);
       return;
     }
-    const list = PLAYLISTS[theme];
+    const list = playlistOf(theme);
     // Menu → map: the Sylvan Waltz already playing simply carries on into the map playlist.
     const carry = this.current && previous !== 'none' && !list.intro ? list.loop.indexOf(this.current.file) : -1;
     if (this.current && carry >= 0) {
@@ -159,7 +172,7 @@ class MusicPlayer {
   }
 
   private start(file: string, pos: number, fadeMs: number) {
-    const list = PLAYLISTS[this.theme as Exclude<Theme, 'none'>];
+    const list = playlistOf(this.theme as Exclude<Theme, 'none'>);
     const audio = new Audio(asset(file));
     audio.volume = 0;
     audio.loop = pos >= 0 && this.loopsAlone(list);
@@ -190,7 +203,7 @@ class MusicPlayer {
 
   private next(voice: Voice, fadeMs: number) {
     if (this.theme === 'none') return;
-    const list = PLAYLISTS[this.theme];
+    const list = playlistOf(this.theme);
     voice.handedOver = true;
     if (list.once && voice.pos >= list.loop.length - 1) return;
     const pos = voice.pos < 0 ? 0 : (voice.pos + 1) % list.loop.length;

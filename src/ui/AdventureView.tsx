@@ -44,6 +44,8 @@ interface Props {
   loot?: LootFloat[];
   /** Light effects over hexes (map spells, a shard, the Iskra). */
   mapFx?: Array<{ key: number; kind: string; hex: HexKey }>;
+  /** The faction whose settlement window is open (null when none): the music of that faction plays there. */
+  onSettlementRace?: (race: FactionId | null) => void;
 }
 
 export interface LootFloat {
@@ -101,7 +103,7 @@ export function reachablePaths(state: GameState): Map<HexKey, { cost: number; pa
   return out;
 }
 
-export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowCard, footer, hintHex, loot = [], mapFx = [] }: Props) {
+export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowCard, footer, hintHex, loot = [], mapFx = [], onSettlementRace }: Props) {
   const detailsShown = useDetailsShown();
   const compact = useMedia(COMPACT_QUERY);
   // A finger has no hover: the tapped hex is described in a strip instead of a note beside it.
@@ -122,6 +124,13 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const [treasuresOpen, setTreasuresOpen] = useState(false);
   /** Level 3: the settlement window. */
   const [settlementOpen, setSettlementOpen] = useState<string | null>(null);
+  // The music follows the settlement window: the faction whose land the settlement stands on (App picks the theme).
+  const openLand = settlementOpen ? state.kingdom?.settlements[settlementOpen]?.land : undefined;
+  useEffect(() => {
+    onSettlementRace?.(openLand ? raceOf(state, openLand) : null);
+    return () => onSettlementRace?.(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openLand]);
   const [flash, setFlash] = useState<HexKey | null>(null);
   /** A fallen hero being revived: the player picks a free hex next to the active hero. */
   const [revive, setRevive] = useState<{ itemId: string; unitId: string } | null>(null);
