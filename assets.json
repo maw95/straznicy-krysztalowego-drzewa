@@ -5407,9 +5407,10 @@
       "scenario_asset": "asset_FML2Bk3XBWbzMVG5tCnYtDQz",
       "narzedzie": "Scenario (plan płatny)",
       "model": "GPT Image 2.5 Flare 1536x1024, high",
-      "data": "2026-11-18",
+      "data": "2026-11-23",
       "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "opis": "Przerobione 23.11.2026: Srebrna Wilczyca w zbroi elfów (heroiczny wygląd zamiast zwykłego wilka). Zadania Scenario: karta job_rc7UR8nVrX8dYpGAmBXkMWVa (asset_akUc55nQC2HUu3HGK5kXXgiY), stoi job_amQ6Q5aTCSm7iuVJNYWxELNt, martwy job_yiHrFNmV7bP8NfGKhM66Q1Wq, klipy job_vXgCjX8CmZuZTnwEXwWb3f3b / job_T31R7tJLY3en1AYyYvNbBAEz / job_saDPFMozb9w7QpMxxRVqhkBu / job_D83nbHGe6UwEnzGS67w8C4a9. Koszt ok. 100 CU (karta 2 warianty 24, stoi ok. 14, martwy ok. 4, klipy 15+15+10+15)."
     },
     {
       "id": "srebrna_wilczyca/stoi",
@@ -5421,9 +5422,10 @@
       "scenario_asset": "asset_bVxFwa6s8HHjzsuqQRqUPSsb",
       "narzedzie": "Scenario (plan płatny)",
       "model": "GPT Image 2.5 Flare 1024, high, portret jako odniesienie",
-      "data": "2026-11-18",
+      "data": "2026-11-23",
       "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "opis": "Przerobione 23.11.2026: Srebrna Wilczyca w zbroi elfów (heroiczny wygląd zamiast zwykłego wilka). Zadania Scenario: karta job_rc7UR8nVrX8dYpGAmBXkMWVa (asset_akUc55nQC2HUu3HGK5kXXgiY), stoi job_amQ6Q5aTCSm7iuVJNYWxELNt, martwy job_yiHrFNmV7bP8NfGKhM66Q1Wq, klipy job_vXgCjX8CmZuZTnwEXwWb3f3b / job_T31R7tJLY3en1AYyYvNbBAEz / job_saDPFMozb9w7QpMxxRVqhkBu / job_D83nbHGe6UwEnzGS67w8C4a9. Koszt ok. 100 CU (karta 2 warianty 24, stoi ok. 14, martwy ok. 4, klipy 15+15+10+15)."
     },
     {
       "id": "srebrna_wilczyca/martwy",
@@ -5435,9 +5437,10 @@
       "scenario_asset": "asset_ghscgMm2rRpFjRMn4gcBL9iM (oryginał); asset_EQope6ZeA6vr7ghmNV74DBfp (wersja przesunięta o 114 px w dół, użyta jako lastFrameImage i martwy.png)",
       "narzedzie": "Scenario (plan płatny)",
       "model": "GPT Image 2.5 Flare 1024, medium, stoi jako odniesienie; post: przesunięcie w dół 114 px, żeby spód ciała = linia łap (y=814)",
-      "data": "2026-11-18",
+      "data": "2026-11-23",
       "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "opis": "Przerobione 23.11.2026: Srebrna Wilczyca w zbroi elfów (heroiczny wygląd zamiast zwykłego wilka). Zadania Scenario: karta job_rc7UR8nVrX8dYpGAmBXkMWVa (asset_akUc55nQC2HUu3HGK5kXXgiY), stoi job_amQ6Q5aTCSm7iuVJNYWxELNt, martwy job_yiHrFNmV7bP8NfGKhM66Q1Wq, klipy job_vXgCjX8CmZuZTnwEXwWb3f3b / job_T31R7tJLY3en1AYyYvNbBAEz / job_saDPFMozb9w7QpMxxRVqhkBu / job_D83nbHGe6UwEnzGS67w8C4a9. Koszt ok. 100 CU (karta 2 warianty 24, stoi ok. 14, martwy ok. 4, klipy 15+15+10+15)."
     },
     {
       "id": "srebrna_wilczyca/chod",
@@ -5449,9 +5452,10 @@
       "scenario_asset": "asset_2BvAmr5raSGi8vrc7x3xn9JH",
       "narzedzie": "Scenario (plan płatny)",
       "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
-      "data": "2026-11-18",
+      "data": "2026-11-23",
       "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "opis": "Przerobione 23.11.2026: Srebrna Wilczyca w zbroi elfów (heroiczny wygląd zamiast zwykłego wilka). Zadania Scenario: karta job_rc7UR8nVrX8dYpGAmBXkMWVa (asset_akUc55nQC2HUu3HGK5kXXgiY), stoi job_amQ6Q5aTCSm7iuVJNYWxELNt, martwy job_yiHrFNmV7bP8NfGKhM66Q1Wq, klipy job_vXgCjX8CmZuZTnwEXwWb3f3b / job_T31R7tJLY3en1AYyYvNbBAEz / job_saDPFMozb9w7QpMxxRVqhkBu / job_D83nbHGe6UwEnzGS67w8C4a9. Koszt ok. 100 CU (karta 2 warianty 24, stoi ok. 14, martwy ok. 4, klipy 15+15+10+15)."
     },
     {
       "id": "srebrna_wilczyca/atak",
@@ -5463,9 +5467,10 @@
       "scenario_asset": "asset_DtmriGuZvj84DctRGRQG91rD",
       "narzedzie": "Scenario (plan płatny)",
       "model": "P-Video 2 720p 3 s, klatka początkowa = stoi",
-      "data": "2026-11-18",
+      "data": "2026-11-23",
       "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "opis": "Przerobione 23.11.2026: Srebrna Wilczyca w zbroi elfów (heroiczny wygląd zamiast zwykłego wilka). Zadania Scenario: karta job_rc7UR8nVrX8dYpGAmBXkMWVa (asset_akUc55nQC2HUu3HGK5kXXgiY), stoi job_amQ6Q5aTCSm7iuVJNYWxELNt, martwy job_yiHrFNmV7bP8NfGKhM66Q1Wq, klipy job_vXgCjX8CmZuZTnwEXwWb3f3b / job_T31R7tJLY3en1AYyYvNbBAEz / job_saDPFMozb9w7QpMxxRVqhkBu / job_D83nbHGe6UwEnzGS67w8C4a9. Koszt ok. 100 CU (karta 2 warianty 24, stoi ok. 14, martwy ok. 4, klipy 15+15+10+15)."
     },
     {
       "id": "srebrna_wilczyca/smierc",
@@ -5477,9 +5482,10 @@
       "scenario_asset": "asset_KQMt2xSEtTQrdnTXWqnQiUte",
       "narzedzie": "Scenario (plan płatny)",
       "model": "P-Video 2 720p 3 s, początkowa = stoi, końcowa = martwy (przesunięty)",
-      "data": "2026-11-18",
+      "data": "2026-11-23",
       "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "opis": "Przerobione 23.11.2026: Srebrna Wilczyca w zbroi elfów (heroiczny wygląd zamiast zwykłego wilka). Zadania Scenario: karta job_rc7UR8nVrX8dYpGAmBXkMWVa (asset_akUc55nQC2HUu3HGK5kXXgiY), stoi job_amQ6Q5aTCSm7iuVJNYWxELNt, martwy job_yiHrFNmV7bP8NfGKhM66Q1Wq, klipy job_vXgCjX8CmZuZTnwEXwWb3f3b / job_T31R7tJLY3en1AYyYvNbBAEz / job_saDPFMozb9w7QpMxxRVqhkBu / job_D83nbHGe6UwEnzGS67w8C4a9. Koszt ok. 100 CU (karta 2 warianty 24, stoi ok. 14, martwy ok. 4, klipy 15+15+10+15)."
     },
     {
       "id": "srebrna_wilczyca/trafienie",
@@ -5491,9 +5497,10 @@
       "scenario_asset": "asset_GM5pYW7QR4S2GpANdzA1urZe",
       "narzedzie": "Scenario (plan płatny)",
       "model": "P-Video 2 720p 2 s, klatka początkowa = stoi",
-      "data": "2026-11-18",
+      "data": "2026-11-23",
       "ai": true,
-      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "opis": "Przerobione 23.11.2026: Srebrna Wilczyca w zbroi elfów (heroiczny wygląd zamiast zwykłego wilka). Zadania Scenario: karta job_rc7UR8nVrX8dYpGAmBXkMWVa (asset_akUc55nQC2HUu3HGK5kXXgiY), stoi job_amQ6Q5aTCSm7iuVJNYWxELNt, martwy job_yiHrFNmV7bP8NfGKhM66Q1Wq, klipy job_vXgCjX8CmZuZTnwEXwWb3f3b / job_T31R7tJLY3en1AYyYvNbBAEz / job_saDPFMozb9w7QpMxxRVqhkBu / job_D83nbHGe6UwEnzGS67w8C4a9. Koszt ok. 100 CU (karta 2 warianty 24, stoi ok. 14, martwy ok. 4, klipy 15+15+10+15)."
     },
     {
       "id": "cards/duskManticore",

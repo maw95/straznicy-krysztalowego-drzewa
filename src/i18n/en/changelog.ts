@@ -35,6 +35,8 @@ register({
     "Tiles with objects (mine, shrine, camp, chest, hut, mill, well, depot, shard, dust spring, sawmill) show the name of the object, not of the terrain, in the panel, in the right-click bubble and in the screen-reader label (the terrain is on the second line); the owners' crests on the tiles are smaller.",
   "Znacznik kosztu ruchu na kaflach jest mniejszy: obejmuje cyfrę z niewielkim marginesem zamiast dużego pustego pergaminu.":
     "The move cost marker on the tiles is smaller: it hugs the digit with a small margin instead of a big empty patch of parchment.",
+  "Srebrna Wilczyca wygląda jak bohater: na karcie, w portrecie i na arenie ma elfią zbroję ze srebra i złota z zielonym kryształem, hełm z półksiężycem i zieloną pelerynę; sprite jest nowy (chód, atak, śmierć, trafienie) i większy niż u zwykłych pomocników.":
+    "The Silver She-Wolf looks like a hero: on the card, in the portrait and on the arena she wears elven armour of silver and gold with a green crystal, a head-piece with a crescent moon and a green cape; the sprite is new (walk, attack, death, hit) and bigger than the ordinary supports'.",
   "Opisy miejsc na mapie (młyn, kopalnie, chatka, składnica) i koszt budowy siedlisk w osadzie pokazują złoto i surowce jako ikony, a nie słowa „zł”, „drewno”, „ruda”.":
     "The descriptions of places on the map (mill, mines, hut, depot) and the cost of building dwellings in a settlement show gold and resources as icons, not as written-out words for gold, wood and ore.",
   "Prawy przycisk myszy na złocie w dolnym pasku pokazuje dochód samego złota, a na ikonie drewna, rudy albo Gwiezdnego Pyłu dochód właśnie tego surowca; podpowiedzi surowców mają nazwy z wielkiej litery (Drewno, Ruda).":

@@ -57,7 +57,7 @@ export const SPRITES: Record<string, SpriteSpec> = {
   cyclops: { dir: 'jednostki/cyklop', box: LARGE, speed: { chod: 1.4, atak: 2.2, atak_wrecz: 1.5, smierc: 1.5, trafienie: 1.4 } },
   hydra: { dir: 'jednostki/hydra', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   griffin: { dir: 'jednostki/gryf', box: [172, 140] as const, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  moonWolf: { dir: 'jednostki/srebrna_wilczyca', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  moonWolf: { dir: 'jednostki/srebrna_wilczyca', box: [104, 84] as const, corpseMax: 112, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   duskManticore: { dir: 'jednostki/mantykora_zmierzchu', box: SMALL, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   braveDuck: { dir: 'jednostki/dzielna_kaczka', box: SMALL, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   ancientBear: { dir: 'jednostki/prastary_niedzwiedz', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },

@@ -104,7 +104,7 @@ export const CARD_CROPS: Record<string, [number, number, number]> = {
   martenSlasher: [0.272, 0.609, 0.781],
   marzanna: [0.366, 0.557, 0.885],
   mirageDancer: [0.319, 0.552, 0.896],
-  moonWolf: [0.4, 0.354, 0.708],
+  moonWolf: [0.529, 0.33, 0.66],
   mountainCrossbow: [0.757, 0.651, 0.677],
   mushroomGuard: [0.355, 0.573, 0.854],
   mushroomSeer: [0.699, 0.578, 0.844],

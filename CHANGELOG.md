@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Srebrna Wilczyca wygląda jak bohater: na karcie, w portrecie i na arenie ma elfią zbroję ze srebra i złota z zielonym kryształem, hełm z półksiężycem i zieloną pelerynę; sprite jest nowy (chód, atak, śmierć, trafienie) i większy niż u zwykłych pomocników.
 - Opisy miejsc na mapie (młyn, kopalnie, chatka, składnica) i koszt budowy siedlisk w osadzie pokazują złoto i surowce jako ikony, a nie słowa „zł”, „drewno”, „ruda”.
 - Prawy przycisk myszy na złocie w dolnym pasku pokazuje dochód samego złota, a na ikonie drewna, rudy albo Gwiezdnego Pyłu dochód właśnie tego surowca; podpowiedzi surowców mają nazwy z wielkiej litery (Drewno, Ruda).
 - Panel bohatera na mapie pokazuje manę jako „7/7” z ikoną many zamiast słowa „Mana”.
