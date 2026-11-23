@@ -450,7 +450,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     className="hexbtn"
                     data-hex={t.key}
                     {...(t.place?.kind === 'settlement' ? { 'data-settlement-hex': t.place.id } : {})}
-                    aria-label={t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole'}
+                    aria-label={tileName(state, t)}
                     onClick={() => clickTile(t.key)}
                     {...tileDetails}
                     onPointerDown={(e) => {
@@ -494,7 +494,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, width: W * 0.46, height: W * 0.46, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)} />
                         {placeOwner(state, t) && (
                           <div style={{ position: 'absolute', left: W * 0.4, top: -H * 0.02, zIndex: 3, pointerEvents: 'none' }} data-mine-owner={t.place.kind === 'mine' ? placeOwner(state, t) : undefined} data-settlement-owner={t.place.kind === 'settlement' ? placeOwner(state, t) : undefined}>
-                            <OwnerBanner owner={placeOwner(state, t)!} race={raceOf(state, placeOwner(state, t)!)} size={W * 0.66} />
+                            <OwnerBanner owner={placeOwner(state, t)!} race={raceOf(state, placeOwner(state, t)!)} size={W * 0.48} />
                           </div>
                         )}
                         {t.place.kind === 'settlement' && (state.kingdom.settlements[t.place.id]?.garrison?.length ?? 0) > 0 && (
@@ -867,7 +867,8 @@ function TileDetails({ state, k, hostile }: { state: GameState; k: HexKey; hosti
       <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
         <img className="hex-clip" src={tileImage(t, tileArt(state, t), raceOf(state, t.side))} alt="" style={{ width: 70, height: 80, flex: 'none', objectFit: 'cover' }} />
         <div>
-          <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole'}</div>
+          <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }} data-tile-title>{tileName(state, t)}</div>
+          {t.revealed && tileName(state, t) !== TERRAIN_NAMES[t.terrain] && <div style={{ fontSize: 13, fontStyle: 'italic', color: '#6B5233' }}>{TERRAIN_NAMES[t.terrain]}</div>}
           <div style={{ fontWeight: 600, fontSize: 15, marginTop: 3 }}>
             {!t.revealed ? (t.side === 'dawn' ? 'Kraina Przymierza' : 'Kraina Hordy') : cost === null ? 'Nieprzechodnie' : `Koszt ruchu: ${cost}${cost === 2 ? ' (teren trudny)' : ''}`}
           </div>
@@ -914,6 +915,23 @@ function TileDetails({ state, k, hostile }: { state: GameState; k: HexKey; hosti
   );
 }
 
+/** What the tile is called: the object standing on it (a mine, a shrine, a well...) or else its terrain. */
+function tileName(state: GameState, t: GameState['tiles'][HexKey]): string {
+  if (!t.revealed) return 'Nieodkryte pole';
+  if (t.site) return SITE.names[t.site.kind];
+  const place = t.place;
+  if (place && state.kingdom) {
+    if (place.kind === 'hut') return 'Chatka';
+    if (place.kind === 'shard') return 'Odłamek Pierwotnej Iskry';
+    if (place.kind === 'object') {
+      const o = state.kingdom.objects?.[place.id];
+      if (o) return OBJECT_NAMES[o.kind];
+    }
+    if (place.kind === 'mine') return MINE_NAMES[state.kingdom.mines[place.id]?.res ?? 'gold'];
+  }
+  return TERRAIN_NAMES[t.terrain];
+}
+
 /** What a hex holds that stands against the hero: guardians and enemy heroes (each shown as a red pill when a fight is announced). */
 function foesAt(state: GameState, k: HexKey): string[] {
   const crystal = Object.values(state.crystals).find((c) => c.at === k);
@@ -947,7 +965,7 @@ function tileLines(state: GameState, k: HexKey, reach: { cost: number; hostile: 
     if (!reach?.hostile) for (const h of heroesAt(state, k)) lines.push(`${UNITS[h.id].name}${h.crystals.length ? ' · niesie kryształ' : ''}`);
     if (reach && !reach.hostile) lines.push(`${heroName} dojdzie tu za ${reach.cost} pkt`);
   } else lines.push(t.side === 'dawn' ? 'Kraina Przymierza — teren nieznany' : 'Kraina Hordy — teren nieznany');
-  return { title: t.revealed ? TERRAIN_NAMES[t.terrain] : 'Nieodkryte pole', lines, foes, level };
+  return { title: tileName(state, t), lines, foes, level };
 }
 
 /** The pills of a hex where a fight would start. */
