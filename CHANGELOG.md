@@ -6,6 +6,10 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Opisy miejsc na mapie (młyn, kopalnie, chatka, składnica) i koszt budowy siedlisk w osadzie pokazują złoto i surowce jako ikony, a nie słowa „zł”, „drewno”, „ruda”.
+- Prawy przycisk myszy na złocie w dolnym pasku pokazuje dochód samego złota, a na ikonie drewna, rudy albo Gwiezdnego Pyłu dochód właśnie tego surowca; podpowiedzi surowców mają nazwy z wielkiej litery (Drewno, Ruda).
+- Panel bohatera na mapie pokazuje manę jako „7/7” z ikoną many zamiast słowa „Mana”.
+- Cel „Podbój”: w pasku i w panelu napis to „Przejęte osady wroga: 0 / 1” bez nazwy frakcji; w panelu przy każdym wierszu stoi herb strony.
 - Księga czarów jest wyższa i ma proporcje zwykłej księgi z dwiema pionowymi stronami: czary stoją po sześć na stronie, dwanaście na rozkładówce (ikona, nazwa i „Koszt: 2 kropla many”), bez znacznika kosztu przy ikonie; mana to jeden licznik na górze księgi; okno otwiera się z zamkniętej księgi, której okładka odchyla się wokół grzbietu (klatki z krótkiego filmu), a przy zamykaniu zamyka się z powrotem.
 - Znacznik przy przycisku „Magia” pokazuje teraz liczbę czarów, które można rzucić w tej chwili (starcza many i nic innego nie stoi na przeszkodzie), a nie ilość many; mana jest w podpowiedzi przycisku i w oknie księgi.
 - Czwarty bohater frakcji można wybrać też przy stole online w potyczce cyfrowej.

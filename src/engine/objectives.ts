@@ -20,6 +20,8 @@ export interface ProgressLine {
   label: string;
   value: string;
   tone?: TeamId | 'warn';
+  /** The row belongs to a side without naming it: the screen puts the crest of the side (`tone`) before the label. */
+  crest?: boolean;
 }
 
 export interface Objective {
@@ -538,7 +540,7 @@ const conquest: Objective = {
   },
   progress(state) {
     if (!state.kingdom) return [];
-    return teamsOf(state).map((side) => ({ label: `${FACTION_NAMES[raceOf(state, side)]}: osady wroga`, value: `${conquestHeld(state, side)} / ${conquestTargets(state, side).length}`, tone: side }));
+    return teamsOf(state).map((side) => ({ label: 'Przejęte osady wroga', value: `${conquestHeld(state, side)} / ${conquestTargets(state, side).length}`, tone: side, crest: true }));
   },
 };
 

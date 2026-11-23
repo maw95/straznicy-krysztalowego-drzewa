@@ -14,6 +14,8 @@ export interface Cost {
 
 export const RESOURCE_IDS: ResourceId[] = ['wood', 'ore', 'dust'];
 export const RESOURCE_NAMES: Record<ResourceId, string> = { wood: 'drewno', ore: 'ruda', dust: 'Gwiezdny Pył' };
+/** The same names with a capital letter, for labels and hints (the sentences keep the lower-case words, which the icons of `StatText` recognise). */
+export const RESOURCE_TITLES: Record<ResourceId, string> = { wood: 'Drewno', ore: 'Ruda', dust: 'Gwiezdny Pył' };
 /** Name of the mine of each resource (a gold mine is the level 3 one). */
 export const MINE_NAMES: Record<ResourceId | 'gold', string> = { gold: 'Kopalnia złota', wood: 'Tartak', ore: 'Kopalnia rudy', dust: 'Źródło Gwiezdnego Pyłu' };
 

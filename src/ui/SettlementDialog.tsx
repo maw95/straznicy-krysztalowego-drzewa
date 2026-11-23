@@ -6,7 +6,7 @@ import { raceOf } from '../engine/teams';
 import { useEffect, useState, type ReactNode } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId, type TeamId } from '../engine/data';
 import { artifactBill, fenceSellPrice, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, healPrice, incomeOf, refugeHere, refugeTargets, RUNE_NAMES, RUNES, runeBlock, runesOf, KINGDOM, marketStock, mayRecruit, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, DWELLING_TEXTS, resOf, spellPrice, tradeBuyPrice, tradeSellPrice, type BuildingId } from '../engine/kingdom';
-import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_NAMES, SIEGE, type Cost } from '../engine/economy';
+import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_TITLES, SIEGE, type Cost } from '../engine/economy';
 import { ARTIFACT_BY_ID, packOf, RARITY_NAMES, SETS } from '../engine/sites';
 import { ARCHETYPE_NAMES, archetypeOf, commanderName, commanderOf, freeCommanders, heroLabel, mayRansom, ransomPrice, REALM } from '../engine/realm';
 import { levelOf } from '../engine/growth';
@@ -129,7 +129,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       {RESOURCE_IDS.map((r) => (
         <div key={r} style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
           <img src={asset(RESOURCE_ICON[r])} alt="" width={30} height={30} />
-          <span style={{ flex: 1, minWidth: 110 }}><b>{RESOURCE_NAMES[r]}</b>: {res[r]}</span>
+          <span style={{ flex: 1, minWidth: 110 }}><b>{RESOURCE_TITLES[r]}</b>: {res[r]}</span>
           <button className="btn prim" data-trade-buy={r} disabled={gold < tradeBuyPrice(s, r)} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'buy' })} style={{ padding: '3px 12px', fontSize: 15 }}>Kup 1 (<StatText text={`${tradeBuyPrice(s, r)} zł`} />)</button>
           <button className="btn prim b" data-trade-sell={r} disabled={buildingLevel(s, 'market') < 1 || res[r] < 1} title={buildingLevel(s, 'market') < 1 ? 'Sprzedaż wymaga targu.' : undefined} onClick={() => act({ type: 'kingdomTrade', settlementId: s.id, res: r, dir: 'sell' })} style={{ padding: '3px 12px', fontSize: 15 }}>Sprzedaj 1 (<StatText text={`+${tradeSellPrice(state, faction, s, r)} zł`} />)</button>
         </div>
@@ -140,12 +140,12 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           {RESOURCE_IDS.map((from) => (
             <div key={from} style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
               <img src={asset(RESOURCE_ICON[from])} alt="" width={22} height={22} />
-              <span style={{ minWidth: 70 }}>{RESOURCE_NAMES[from]} →</span>
+              <span style={{ minWidth: 70 }}>{RESOURCE_TITLES[from]} →</span>
               {RESOURCE_IDS.filter((to) => to !== from).map((to) => {
                 const extra = tradeBuyPrice(s, to) - tradeSellPrice(state, faction, s, from);
                 return (
                   <button key={to} className="btn prim b" data-swap-from={from} data-swap-to={to} disabled={res[from] < 1 || gold + tradeSellPrice(state, faction, s, from) < tradeBuyPrice(s, to)} onClick={() => act({ type: 'kingdomSwap', settlementId: s.id, from, to })} style={{ padding: '3px 10px', fontSize: 14 }}>
-                    <img src={asset(RESOURCE_ICON[to])} alt="" width={18} height={18} style={{ verticalAlign: 'middle' }} /> {RESOURCE_NAMES[to]} (<StatText text={extra > 0 ? `+${extra} zł` : extra < 0 ? `${-extra} zł dla ciebie` : 'bez dopłaty'} />)
+                    <img src={asset(RESOURCE_ICON[to])} alt="" width={18} height={18} style={{ verticalAlign: 'middle' }} /> {RESOURCE_TITLES[to]} (<StatText text={extra > 0 ? `+${extra} zł` : extra < 0 ? `${-extra} zł dla ciebie` : 'bez dopłaty'} />)
                   </button>
                 );
               })}
@@ -216,7 +216,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
                 </div>
                 {have ? <b style={{ color: '#2E7A32' }}>{garrison.includes(r.id) || !(fs.supportsAlive.includes(r.id) || fs.supportsDead.includes(r.id)) ? 'W garnizonie' : 'W drużynie'}</b> : needsDwelling(state, r) && dwellingOf(state, faction, r.tier) === undefined ? (
                   <button className="btn prim b" disabled={!mayHire || locked || !canPay(state, faction, DWELLING_COST[r.tier - 2])} data-dwelling={r.id} title={locked ? 'Potrzebne rozbudowane koszary.' : 'Siedlisko jednej jednostki wyklucza drugą jednostkę tego poziomu do końca gry.'} onClick={() => act({ type: 'kingdomDwelling', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 12px', fontSize: 15 }}>
-                    <img src={asset(`ikony/siedliska/${r.id}.webp`)} alt="" width={30} height={30} style={{ verticalAlign: 'middle', marginRight: 6 }} />Zbuduj: {DWELLING_NAMES[r.id]} ({costText(DWELLING_COST[r.tier - 2])})
+                    <img src={asset(`ikony/siedliska/${r.id}.webp`)} alt="" width={30} height={30} style={{ verticalAlign: 'middle', marginRight: 6 }} />Zbuduj: {DWELLING_NAMES[r.id]} (<StatText text={costText(DWELLING_COST[r.tier - 2])} />)
                   </button>
                 ) : !dwellingReady(state, faction, r) ? <i data-excluded={r.id} style={{ color: '#8A5A3A' }}>wykluczone: wybrano {DWELLING_NAMES[dwellingOf(state, faction, r.tier)!]}</i> : (
                   <button className="btn prim" disabled={!mayHire || locked || gold < r.cost || res.dust < (r.dust ?? 0)} data-recruit={r.id} title={locked ? 'Potrzebne rozbudowane koszary.' : undefined} onClick={() => act({ type: 'kingdomRecruit', settlementId: s.id, unitId: r.id })} style={{ padding: '3px 14px', fontSize: 16 }}>

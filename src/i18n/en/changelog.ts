@@ -35,6 +35,14 @@ register({
     "Tiles with objects (mine, shrine, camp, chest, hut, mill, well, depot, shard, dust spring, sawmill) show the name of the object, not of the terrain, in the panel, in the right-click bubble and in the screen-reader label (the terrain is on the second line); the owners' crests on the tiles are smaller.",
   "Znacznik kosztu ruchu na kaflach jest mniejszy: obejmuje cyfrę z niewielkim marginesem zamiast dużego pustego pergaminu.":
     "The move cost marker on the tiles is smaller: it hugs the digit with a small margin instead of a big empty patch of parchment.",
+  "Opisy miejsc na mapie (młyn, kopalnie, chatka, składnica) i koszt budowy siedlisk w osadzie pokazują złoto i surowce jako ikony, a nie słowa „zł”, „drewno”, „ruda”.":
+    "The descriptions of places on the map (mill, mines, hut, depot) and the cost of building dwellings in a settlement show gold and resources as icons, not as written-out words for gold, wood and ore.",
+  "Prawy przycisk myszy na złocie w dolnym pasku pokazuje dochód samego złota, a na ikonie drewna, rudy albo Gwiezdnego Pyłu dochód właśnie tego surowca; podpowiedzi surowców mają nazwy z wielkiej litery (Drewno, Ruda).":
+    "The right button on the gold in the bottom bar shows the income of the gold alone, and on the icon of wood, ore or Star Dust the income of that very resource; the hints of the resources have capitalised names (Wood, Ore).",
+  "Panel bohatera na mapie pokazuje manę jako „7/7” z ikoną many zamiast słowa „Mana”.":
+    "The hero panel on the map shows the mana as \"7/7\" with the mana icon instead of the word \"Mana\".",
+  "Cel „Podbój”: w pasku i w panelu napis to „Przejęte osady wroga: 0 / 1” bez nazwy frakcji; w panelu przy każdym wierszu stoi herb strony.":
+    "The Conquest goal: the bar and the panel say \"Enemy settlements taken: 0 / 1\" without the faction's name; the panel puts the side's crest before each row.",
   "Księga czarów jest wyższa i ma proporcje zwykłej księgi z dwiema pionowymi stronami: czary stoją po sześć na stronie, dwanaście na rozkładówce (ikona, nazwa i „Koszt: 2 kropla many”), bez znacznika kosztu przy ikonie; mana to jeden licznik na górze księgi; okno otwiera się z zamkniętej księgi, której okładka odchyla się wokół grzbietu (klatki z krótkiego filmu), a przy zamykaniu zamyka się z powrotem.":
     "The Spell Book is taller and has the proportions of a real book with two portrait pages: the spells stand six to a page, twelve to a spread (icon, name and \"Cost: 2 mana drop\"), without the cost badge on the icon; the mana is one counter at the top of the book; the window opens from a closed book whose cover swings open around the spine (frames from a short clip) and closes back when you leave.",
   "Znacznik przy przycisku „Magia” pokazuje teraz liczbę czarów, które można rzucić w tej chwili (starcza many i nic innego nie stoi na przeszkodzie), a nie ilość many; mana jest w podpowiedzi przycisku i w oknie księgi.":

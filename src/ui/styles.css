@@ -1104,6 +1104,8 @@ button.sb-slot:disabled { cursor: default; }
 .spell-slot .slot-name { font-size: 2.35cqw; text-align: left; color: #3A2508; text-shadow: 0 1px 0 rgba(255, 240, 200, 0.5); }
 .spell-cost { display: inline-flex; align-items: center; gap: 0.5cqw; font-size: 2.1cqw; font-weight: 700; color: #4A2C8C; }
 .spell-cost svg, .book-mana svg { height: 1.15em; width: auto; flex: none; }
+.map-mana { display: inline-flex; align-items: center; gap: 3px; }
+.map-mana svg { height: 1.2em; width: auto; flex: none; }
 .book-mana { position: absolute; left: 50%; top: 1.2%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 0.8cqw; padding: 0.3cqw 1.6cqw; border-radius: 999px; background: rgba(35, 20, 60, 0.9); color: #E4D8FF; font-size: 2.8cqw; font-weight: 700; box-shadow: 0 0 0 0.25cqw #B88A35, 0 2px 4px rgba(0, 0, 0, 0.6); animation: chest-content-in 0.95s ease-out both; }
 .book-mana b { color: #fff; }
 .book-empty { position: absolute; left: 14%; top: 40%; width: 72%; text-align: center; font-style: italic; font-size: 3.2cqw; color: #3A2508; animation: chest-content-in 0.95s ease-out both; }

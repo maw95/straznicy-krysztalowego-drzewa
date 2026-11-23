@@ -58,6 +58,7 @@ register({
   '{0} rzuca czar Wizja (odkryto {1}).': '{0} casts the Vision spell ({1} revealed).',
   '{0}/{1} rund': '{0}/{1} rounds',
   '{0}: osady wroga': '{0}: enemy settlements',
+  'Przejęte osady wroga': 'Enemy settlements taken',
   // interface
   'Gotowe — do bitwy': 'Ready — to battle',
   'Koniec': 'End',

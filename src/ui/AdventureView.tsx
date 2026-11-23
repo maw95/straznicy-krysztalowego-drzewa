@@ -11,9 +11,10 @@ import type { FightLevel } from '../engine/difficulty';
 import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
 import { ChestFrame, TreasureButton, TreasureSlot } from './TreasureButton';
 import { SettlementDialog } from './SettlementDialog';
-import { BUILDING_NAMES, chestPreview, garrisonAt, hasParent, hutPayable, KINGDOM, goldOf, incomeBreakdown, incomeOf, resourceIncomeBreakdown, settlementAt } from '../engine/kingdom';
+import { BUILDING_NAMES, chestPreview, garrisonAt, hasParent, hutPayable, KINGDOM, goldOf, incomeBreakdown, incomeOf, settlementAt } from '../engine/kingdom';
 import { ECONOMY, MINE_NAMES, OBJECT_NAMES, OBJECTS, objectReady, RESOURCE_NAMES, thingsText, type ResourceId } from '../engine/economy';
 import { RESOURCE_ICON, ResourceStrip } from './resources';
+import { ManaIcon } from './SpellBook';
 import { sfx } from './sfx';
 import { ARTIFACT_BY_ID } from '../engine/sites';
 import { heroTileCost, passTargets, SHARDS_ID, SITE } from '../engine/sites';
@@ -657,7 +658,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 )}
                 {state.rules.realm && (hero.spells?.length ?? 0) > 0 && (
                   <div data-map-spells style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', fontSize: 14 }}>
-                    <span title={`Mana wraca po ${MAGIC.regen} na rundę`}>Mana <b data-mana>{manaOf(hero)}</b>/{maxMana(hero)}</span>
+                    <span className="map-mana" title={`Mana: ${manaOf(hero)} z ${maxMana(hero)}, wraca po ${MAGIC.regen} na rundę`}><b data-mana>{manaOf(hero)}/{maxMana(hero)}</b><ManaIcon /></span>
                     {canAct && hero.faction === viewer && hero.spells!.filter((id) => SPELLS[id].where === 'map').map((id) => (
                       <button key={id} className="btn plate parch" data-map-spell={id} disabled={manaOf(hero) < SPELLS[id].mana || (id === 'portal' && !portalTarget(state, hero))} title={`${SPELLS[id].name} (mana ${SPELLS[id].mana}): ${SPELLS[id].text}`} onClick={() => { sfx.play(id === 'portal' ? 'portal' : 'magic_cast'); onAction({ type: 'mapSpell', spell: id }); }} style={{ padding: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
                         <img src={asset(`ikony/czary/${id}.webp`)} alt="" width={30} height={30} />
@@ -742,7 +743,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               <div>
                 <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{selInfo!.title}</div>
                 {selInfo!.lines.map((l) => (
-                  <div key={l} style={{ fontSize: 15, marginTop: 2 }}>{l}</div>
+                  <div key={l} style={{ fontSize: 15, marginTop: 2 }}><StatText text={l} /></div>
                 ))}
               </div>
             </div>
@@ -751,9 +752,12 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           <div className="well" style={{ padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 5, fontSize: 16 }}>
             <div className="lbl">Cele</div>
             {objectiveOf(state) !== 'crystals' ? (
-              OBJECTIVES[objectiveOf(state)].progress(state).map((l) => (
-                <div key={l.label} style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', columnGap: 8 }}>
-                  <span>{l.label}</span>
+              OBJECTIVES[objectiveOf(state)].progress(state).map((l, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', columnGap: 8 }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                    {l.crest && l.tone && l.tone !== 'warn' && <img src={asset(`cards/crests/${raceOf(state, l.tone)}.png`)} alt={FACTION_NAMES[raceOf(state, l.tone)]} title={FACTION_NAMES[raceOf(state, l.tone)]} style={{ height: 22, width: 'auto' }} />}
+                    {l.label}
+                  </span>
                   <b style={{ color: ({ horde: '#F08A7A', third: '#E8B04A', fourth: '#B58CE8' } as Record<string, string>)[l.tone ?? ''] ?? '#F3D27A' }}>{l.value}</b>
                 </div>
               ))
@@ -906,7 +910,7 @@ function TileDetails({ state, k, hostile }: { state: GameState; k: HexKey; hosti
       {t.revealed && t.place && state.kingdom && (
         <div className="well" data-tile-place={t.place.kind} style={{ padding: '6px 8px', display: 'flex', gap: 10, alignItems: 'center' }}>
           <img src={asset(`ikony/mapa/${placeIcon(state, k)}.webp`)} alt="" width={44} height={44} style={{ flex: 'none', display: 'block' }} />
-          <div style={{ fontSize: 15, color: '#F7EDD2', lineHeight: 1.3 }}>{placeTitle(state, k)}</div>
+          <div style={{ fontSize: 15, color: '#F7EDD2', lineHeight: 1.3 }}><StatText text={placeTitle(state, k)} /></div>
         </div>
       )}
       {t.revealed && t.treasureId && note('Leży tu skarb.')}
@@ -1011,7 +1015,7 @@ function TileStrip({ state, k, reach, heroName }: { state: GameState; k: HexKey;
   const { title, lines, foes, level } = tileLines(state, k, reach, heroName);
   return (
     <div className="plate parch" style={{ position: 'absolute', left: 8, right: 8, bottom: 8, padding: '4px 10px', fontSize: 14, lineHeight: 1.25, zIndex: 4, pointerEvents: 'none' }}>
-      <b>{title}</b> · {lines.join(' · ')} <FightPills foes={foes} level={level} size={11} />
+      <b>{title}</b>{lines.map((l) => <span key={l}> · <StatText text={l} /></span>)} <FightPills foes={foes} level={level} size={11} />
     </div>
   );
 }
@@ -1105,14 +1109,14 @@ function placeTitle(state: GameState, k: HexKey): string {
 /** The gold in the bottom bar: stock and income per round in short ("2 (+2)"); the right button shows where the income comes from. */
 export function GoldBox({ state, faction }: { state: GameState; faction: TeamId }) {
   const detail = details(() => <GoldDetails state={state} faction={faction} />);
-  // Gold counts as a resource: no plate or frame, big icon, a shadow keeps the numbers readable on any background.
+  // Gold counts as a resource: no plate or frame, big icon, a shadow keeps the numbers readable on any background. The right button on the gold shows the gold income, on a resource its own.
   return (
-    <div data-gold-box title="Złoto (zapas i dochód na rundę); prawy przycisk: skąd dochód" {...detail} style={{ display: 'flex', alignItems: 'center', gap: 16, color: '#FFF4D8', textShadow: '0 1px 3px #000, 0 0 6px #000' }}>
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+    <div data-gold-box style={{ display: 'flex', alignItems: 'center', gap: 16, color: '#FFF4D8', textShadow: '0 1px 3px #000, 0 0 6px #000' }}>
+      <span title="Złoto" {...detail} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
         <img src={asset('ikony/mapa/zloto.webp')} alt="Złoto" width={44} height={44} style={{ filter: 'drop-shadow(0 2px 3px #000)' }} />
         <b style={{ fontSize: 33 }}><span data-gold>{goldOf(state, faction)}</span> <span style={{ fontSize: 24, color: '#E8D5A8' }}>(+{incomeOf(state, faction)})</span></b>
       </span>
-      {state.kingdom?.res && <ResourceStrip state={state} faction={faction} size={44} light />}
+      {state.kingdom?.res && <ResourceStrip state={state} faction={faction} size={44} light bubble />}
     </div>
   );
 }
@@ -1122,12 +1126,9 @@ function GoldDetails({ state, faction }: { state: GameState; faction: TeamId }) 
   const rows = incomeBreakdown(state, faction);
   return (
     <div className="plate parch" style={{ width: 280, padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <b style={{ fontSize: 18 }}>Dochód na rundę: +{rows.reduce((s, r) => s + r.gold, 0)}<ThingIcon word="zł" /></b>
+      <b style={{ fontSize: 18 }}>Złoto: dochód na rundę +{rows.reduce((s, r) => s + r.gold, 0)}<ThingIcon word="zł" /></b>
       {rows.map((r, i) => (
         <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15 }}><span>{r.label}</span><b>+{r.gold}</b></div>
-      ))}
-      {resourceIncomeBreakdown(state, faction).map((r, i) => (
-        <div key={`r${i}`} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 15 }}><span>{r.label}</span><b>+{r.amount} {RESOURCE_NAMES[r.res]}</b></div>
       ))}
     </div>
   );
