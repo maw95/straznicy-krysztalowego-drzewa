@@ -12,7 +12,7 @@ This manual describes the **computer version** as it is now: all complexity leve
 ### Your first game in five steps
 1. In the main menu click **New game**, choose the **Skirmish** mode and the place **This computer**.
 2. Choose the level **Adventure** (the full game without hero development) or **Walk** (very simple duels, from age 5).
-3. Choose a small map, the number of players (with one player the computer leads the Horde) and the difficulty **Normal**. The goal is **Crystals to the Tree**.
+3. Choose a small map and the difficulty **Normal**; on the seats screen leave the player and the computer (the computer leads the Horde). The goal is **Crystals to the Tree**.
 4. Choose a hero. On the map click neighbouring tiles to walk and press **Space** to end your turn.
 5. Step onto a guardian's tile. A battle on the arena begins: place your units, then click a unit and the tile it should move to or attack.
 
@@ -42,7 +42,7 @@ Before the wizard you choose the **mode** (the menu's second page: skirmish or a
 1. **Complexity level** (except in the arena): from Walk to Empire ([Complexity levels](#complexity-levels)) or **Custom settings** ([Custom settings](#custom-settings)).
 2. **Goal of the game** (from the Expedition level, [Goals of the game](#goals-of-the-game)).
 3. **Map** (except in the arena): on the higher levels the shape (triangle, rectangle, ring, islands or a ready-made map) and the **size**; in Walk, Adventure and the board version only the size ([Adventure map](#adventure-map)).
-4. **Players:** the number of players, factions, heroes, who is human and who is the computer. For a human player there is a **Child** field ([Family mode](#family-mode)).
+4. **Players** (on the last screen, "Seats at the table"): there are two seats at first, a person and a computer. The **+ Add player** button adds more (computers) and the small cross beside a player removes one (the first player and the last two seats of a rivalry cannot be removed). You choose the faction and the hero by clicking icons; a **die** means a draw when the game starts (a random faction always means a random hero too). For a human player there is a **Child** field ([Family mode](#family-mode)). In an online game the number of players is set in the wizard.
 5. **Difficulty** of the computer ([Difficulty levels](#difficulty-levels)).
 
 **Version:** you play the **digital** version by default (units in 2D graphics with animations, a hex arena, all complexity levels). The **board version** (a faithful board game: 3D figures, unchanged rules and four map sizes; no complexity levels and no goal choice) is a link on the menu's first page. The choice of the version holds for that game only.

@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { FACTION_HEROES, heroPool, MAP_VARIANTS, type FactionId, type TeamId, type MapSize } from '../engine/data';
-import type { Level, MapShape, Mode } from '../engine/types';
+import type { Level, MapShape, Mode, SeatSetup } from '../engine/types';
 
 /** Class of an option button; the chosen one is lit. */
 export const choice = (active: boolean) => `btn plate parch ${active ? 'on' : ''}`;
@@ -203,3 +203,63 @@ export const SHAPE_TIPS: Record<MapShape, string> = {
   islands: 'Trzy wyspy rozdzielone wodą: bazy po bokach, Drzewo na środkowej wyspie, dojście po mostach.',
   custom: 'Gotowa, ręcznie narysowana mapa (wybierz ją obok).',
 };
+
+/** A seat on the setup screen: what the engine reads, plus the two things left to chance until the game starts. */
+export type SeatDraft = SeatSetup & { randomRace?: boolean; randomHero?: boolean };
+
+/**
+ * The seats as the game takes them: every "random faction" and "random hero" seat gets its draw. A random faction always comes with a random hero (the
+ * heroes belong to a faction). The draw is repeated until the table is a legal one: heroes differ, a faction has at most three seats, and a rivalry has
+ * at least two factions.
+ */
+export function resolveRandomSeats(
+  seats: readonly SeatDraft[],
+  o: { offered: readonly FactionId[]; heroesOf: (race: FactionId) => string[]; twoFactions: boolean; rnd?: () => number },
+): SeatSetup[] {
+  const rnd = o.rnd ?? Math.random;
+  const pick = <T,>(a: readonly T[]): T => a[Math.floor(rnd() * a.length)];
+  const clean = ({ randomRace: _r, randomHero: _h, ...s }: SeatDraft): SeatSetup => s;
+  const drawn = (s: SeatDraft) => Boolean(s.randomRace || s.randomHero);
+  if (!seats.some(drawn)) return seats.map(clean);
+  const raceOf = (s: SeatSetup) => (s.race ?? s.faction) as FactionId;
+  for (let attempt = 0; attempt < 400; attempt++) {
+    const out = seats.map((s) => (s.randomRace ? { ...clean(s), race: pick(o.offered) } : clean(s)));
+    const taken = new Set(out.filter((_, i) => !drawn(seats[i])).map((s) => s.heroId));
+    let ok = true;
+    out.forEach((s, i) => {
+      if (!ok || !drawn(seats[i])) return;
+      const free = o.heroesOf(raceOf(s)).filter((h) => !taken.has(h));
+      if (!free.length) { ok = false; return; }
+      s.heroId = pick(free);
+      taken.add(s.heroId);
+    });
+    if (!ok) continue;
+    const races = out.map(raceOf);
+    if (o.twoFactions && new Set(races).size < 2) continue;
+    if (races.some((r) => races.filter((x) => x === r).length > 3)) continue;
+    return out;
+  }
+  return seats.map(clean);
+}
+
+/** A die (the "random" choice of a faction or a hero), drawn with the gold of the other icons. */
+export function DiceIcon({ size = 30 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden="true" style={{ display: 'block', filter: 'drop-shadow(0 1px 1.5px rgba(0,0,0,0.6))' }}>
+      <defs>
+        <linearGradient id="dice-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F6DD93" /><stop offset="1" stopColor="#B98A2E" /></linearGradient>
+      </defs>
+      <rect x="4" y="4" width="24" height="24" rx="5" fill="url(#dice-g)" stroke="#5A3A0C" strokeWidth="1.6" />
+      {[[11, 11], [21, 11], [16, 16], [11, 21], [21, 21]].map(([x, y]) => <circle key={`${x}${y}`} cx={x} cy={y} r="2.1" fill="#3A2308" />)}
+    </svg>
+  );
+}
+
+/** A small cross (remove a seat). */
+export function CrossIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 16 16" width={size} height={size} aria-hidden="true" style={{ display: 'block' }}>
+      <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
+  );
+}

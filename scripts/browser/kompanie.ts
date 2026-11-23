@@ -26,10 +26,10 @@ async function startTable(dev: boolean, seat: number, humans: number[]) {
     await p.getByRole('button', { name: 'Dalej →' }).click({ timeout: 3000 }).catch(() => {});
     await p.waitForTimeout(400);
   }
-  const sel = p.locator('select[aria-label="Frakcja"]');
+  const sel = p.locator('[data-seat-factions]');
   await sel.first().waitFor({ timeout: 5000 }).catch(async () => { await p.screenshot({ path: `.tmp/kompanie-kreator-${view}.png` }); console.log('wizard text:', (await p.locator('body').innerText()).slice(0, 400).replace(/\s+/g, ' ')); throw new Error('no faction select'); });
-  console.log('faction options', await sel.first().locator('option').allInnerTexts());
-  await sel.nth(seat).selectOption('free');
+  console.log('faction options', await sel.first().locator('[data-faction]').evaluateAll((b) => b.map((x) => x.getAttribute('aria-label')?.replace('Frakcja: ', '') ?? '')));
+  await sel.nth(seat).locator('[data-faction="free"]').click();
   await p.waitForTimeout(500);
   await p.screenshot({ path: `.tmp/kompanie-setup-${view}.png` });
   for (const i of [0, 1]) await p.locator('select[aria-label="Kto gra"]').nth(i).selectOption(humans.includes(i) ? 'human' : 'bot').catch(() => {});

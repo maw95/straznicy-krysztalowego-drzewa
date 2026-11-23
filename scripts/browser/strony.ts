@@ -19,9 +19,9 @@ try {
   for (let i = 0; i < 4 && !(await p.locator('[data-wizard-page="players"]').count()); i++) { console.log('page', await p.locator('[data-wizard-page]').first().getAttribute('data-wizard-page')); await nextIfAny(); }
   console.log('page players?', await p.locator('[data-wizard-page="players"]').count());
   await p.locator('[data-wizard-next]').click();
-  await p.locator('select[aria-label="Frakcja"]').first().waitFor({ timeout: 5000 });
+  await p.locator('[data-seat-factions]').first().waitFor({ timeout: 5000 });
   await p.screenshot({ path: '.tmp/sides1.png' });
-  console.log('faction options', await p.locator('select[aria-label="Frakcja"]').first().locator('option').allInnerTexts());
+  console.log('faction options', await p.locator('[data-seat-factions]').first().locator('[data-faction]').evaluateAll((b) => b.map((x) => x.getAttribute('aria-label')?.replace('Frakcja: ', '') ?? '')));
   await p.getByRole('button', { name: 'Rozpocznij grę' }).click();
   await p.waitForTimeout(4000);
   await p.screenshot({ path: '.tmp/sides3.png' });

@@ -12,7 +12,7 @@ Ta instrukcja opisuje **wersję komputerową** w jej obecnym kształcie: wszystk
 ### Pierwsza partia w pięciu krokach
 1. W menu głównym kliknij **Nowa gra**, wybierz tryb **Potyczka** i miejsce **Ten komputer**.
 2. Wybierz poziom **Przygoda** (pełna gra bez rozwoju bohatera) albo **Spacer** (bardzo proste pojedynki, od 5 lat).
-3. Wybierz małą mapę, liczbę graczy (przy jednym graczu Hordę prowadzi komputer) i trudność **Normalny**. Celem są **Kryształy do Drzewa**.
+3. Wybierz małą mapę i trudność **Normalny**; na ekranie miejsc zostaw gracza i komputer (Hordę prowadzi komputer). Celem są **Kryształy do Drzewa**.
 4. Wybierz bohatera. Na mapie klikaj sąsiednie pola, żeby iść, a **Spacją** kończ turę.
 5. Wejdź na pole strażnika. Zacznie się bitwa na arenie: rozstaw jednostki, a potem klikaj jednostkę i pole, na które ma iść albo które ma zaatakować.
 
@@ -42,7 +42,7 @@ Przed kreatorem wybierasz **tryb** (druga strona menu: potyczka albo arena) i **
 1. **Poziom złożoności** (poza areną): od Spaceru do Imperium ([Poziomy złożoności](#poziomy-zlozonosci)) albo **Własne ustawienia** ([Własne ustawienia](#wlasne-ustawienia)).
 2. **Cel gry** (od poziomu Wyprawa, [Cele gry](#cele-gry)).
 3. **Mapa** (poza areną): na wyższych poziomach kształt (trójkąt, prostokąt, pierścień, wyspy albo gotowa mapa) i **wielkość**; w Spacerze, Przygodzie i wersji planszowej tylko wielkość ([Mapa przygody](#mapa-przygody)).
-4. **Gracze:** liczba graczy, frakcje, bohaterowie, kto jest człowiekiem, a kto komputerem. Przy graczu-człowieku jest pole **Dziecko** ([Tryb rodzinny](#tryb-rodzinny)).
+4. **Gracze** (na ostatnim ekranie, „Miejsca przy stole”): na początku są dwa miejsca, człowiek i komputer. Przyciskiem **+ Dodaj gracza** dodajesz kolejne (komputery), a małym krzyżykiem przy graczu usuwasz go (pierwszego gracza ani ostatnich dwóch miejsc rywalizacji nie da się usunąć). Frakcję i bohatera wybierasz klikając ikony; **kostka** oznacza losowanie przy starcie gry (losowa frakcja zawsze oznacza też losowego bohatera). Przy graczu-człowieku jest pole **Dziecko** ([Tryb rodzinny](#tryb-rodzinny)). W grze online liczbę graczy ustawia się w kreatorze.
 5. **Trudność** komputera ([Poziomy trudności](#poziomy-trudnosci)).
 
 **Wersja:** domyślnie gra się w wersji **cyfrowej** (jednostki w grafice 2D z animacjami, heksowa arena, wszystkie poziomy złożoności). **Wersja planszowa** (wierna planszówka: figurki 3D, zasady bez zmian i cztery rozmiary mapy; bez poziomów złożoności i wyboru celu) to link na pierwszej stronie menu. Wybór wersji obowiązuje tylko dla tej partii.

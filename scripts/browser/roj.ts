@@ -23,10 +23,10 @@ async function startTable(dev: boolean, seat: number, humans: number[]) {
     await p.getByRole('button', { name: 'Dalej →' }).click({ timeout: 3000 }).catch(() => {});
     await p.waitForTimeout(400);
   }
-  const sel = p.locator('select[aria-label="Frakcja"]');
+  const sel = p.locator('[data-seat-factions]');
   await sel.first().waitFor({ timeout: 5000 });
-  console.log('Swarm offered:', (await sel.first().locator('option').allInnerTexts()).includes('Rój Puszczy'));
-  await sel.nth(seat).selectOption('swarm');
+  console.log('Swarm offered:', (await sel.first().locator('[data-faction]').evaluateAll((b) => b.map((x) => x.getAttribute('aria-label')?.replace('Frakcja: ', '') ?? ''))).includes('Rój Puszczy'));
+  await sel.nth(seat).locator('[data-faction="swarm"]').click();
   await p.waitForTimeout(500);
   await p.screenshot({ path: `.tmp/roj-setup-${view}.png` });
   for (const i of [0, 1]) await p.locator('select[aria-label="Kto gra"]').nth(i).selectOption(humans.includes(i) ? 'human' : 'bot').catch(() => {});

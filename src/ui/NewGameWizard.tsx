@@ -114,9 +114,9 @@ const OBJECTIVE_ICON: Record<ObjectiveId, string> = {
 };
 
 /** The draft with a mode picked: the player count and the level a mode allows. */
-function withMode(d: Draft, mode: Mode, online: boolean): Draft {
+function withMode(d: Draft, mode: Mode, _online: boolean): Draft {
   // One player against the Horde's computer is a table of its own in the digital game (the online game needs two people at least).
-  const count = mode === 'pvp' ? Math.max(d.digital && !online ? 1 : 2, d.count) : mode === 'arena' ? 2 : Math.min(3, d.count);
+  const count = mode === 'pvp' ? Math.max(2, d.count) : mode === 'arena' ? 2 : Math.min(3, d.count);
   const level = mode === 'pvp' && d.level === 'hard' && !d.digital ? 'normal' : mode === 'arena' && d.level === 'zero' ? 'kids' : d.level;
   return { ...d, mode, count, level, ...(mode === 'arena' ? { tier: 'adventure' as Tier } : {}) };
 }
@@ -216,7 +216,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   return (
     <Frame crest style={{ width: 'min(1100px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '18px 24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
       {links}
-      <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{page === 'map' && !fullMap ? 'Jak duża mapa?' : TITLES[page]}</Ribbon>
+      <Ribbon style={{ width: 'min(520px, 90vw)', alignSelf: 'center' }}>{page === 'map' && !fullMap ? 'Jak duża mapa?' : page === 'players' && !online && !arena ? 'Trudność' : TITLES[page]}</Ribbon>
       <div style={{ fontSize: 14, color: 'var(--muted)', textAlign: 'center', marginTop: -6 }}>
         Krok {at + 1} z {pages.length}{d.digital ? '' : ' · wersja planszowa'}{online ? ' · stół online' : ''}
       </div>
@@ -317,10 +317,10 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
                 </Row>
               )}
             </>
-          ) : (
+          ) : online && (
             <Row label="Liczba graczy">
               {/* At most 3 players per faction (its three heroes): coop (all Przymierze) takes 1–3, PvP 2–6; 7–8 players (a fourth hero a side) only on the levels without the tavern commanders. */}
-              {(d.mode === 'coop' ? [1, 2, 3] : [...(d.digital && !online ? [1] : []), 2, 3, 4, 5, 6, 7, 8]).map((n) => (
+              {(d.mode === 'coop' ? [1, 2, 3] : [2, 3, 4, 5, 6, 7, 8]).map((n) => (
                 <button key={n} className={`${chip(d.count === n)} count-chip`} aria-pressed={d.count === n} onClick={() => patch({ count: n })}>{n}</button>
               ))}
             </Row>

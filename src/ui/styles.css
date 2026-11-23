@@ -1215,3 +1215,18 @@ button.sb-slot:disabled { cursor: default; }
   .screen.play .bar:not(.adv-bar) > .gi { padding-left: 46px !important; padding-right: 46px !important; }
   .screen.play .bar.adv-bar > .gi { padding-left: 50px !important; padding-right: 50px !important; }
 }
+
+/* Seats of the local table: the faction and hero choices are rows of icons (a die = random), a seat is removed with a small cross. */
+.seat-row { padding: 8px 12px; display: flex; flex-direction: column; gap: 8px; }
+.seat-head { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.seat-picks { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.pick-btn { position: relative; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: rgba(0, 0, 0, 0.28); cursor: pointer; opacity: 0.72; transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s; }
+.pick-btn img { width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.55)); }
+.pick-btn:hover:not(:disabled) { opacity: 1; transform: translateY(-1px); }
+.pick-btn.on { opacity: 1; box-shadow: 0 0 0 2px #F3C842, 0 0 10px 2px rgba(243, 200, 66, 0.55); background: rgba(243, 200, 66, 0.16); }
+.pick-btn:disabled { cursor: default; opacity: 0.3; }
+.seat-crest { width: 46px; height: 46px; flex: none; display: grid; place-items: center; }
+.seat-remove { margin-left: auto; display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border-radius: 50%; border: 1.5px solid rgba(243, 210, 122, 0.55); background: rgba(0, 0, 0, 0.35); color: #E9C98A; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+.seat-remove:hover { background: #8A2226; border-color: #F3D27A; color: #FFF1D0; }
+.seat-add { align-self: center; display: inline-flex; align-items: center; gap: 8px; padding: 6px 20px; font-size: 18px; }
+.seat-add .plus { font-size: 26px; line-height: 1; font-weight: 900; margin-top: -3px; }

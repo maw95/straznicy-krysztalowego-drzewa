@@ -21,10 +21,10 @@ async function startTable(dev: boolean, court: number, humans: number[]) {
   await p.locator('[data-shape="rectangle"]').click(); await p.waitForTimeout(500);
   for (let i = 0; i < 4 && !(await p.locator('[data-wizard-page="players"]').count()); i++) await nextIfAny();
   await p.locator('[data-wizard-next]').click();
-  const sel = p.locator('select[aria-label="Frakcja"]');
+  const sel = p.locator('[data-seat-factions]');
   await sel.first().waitFor({ timeout: 5000 });
-  console.log('faction options', await sel.first().locator('option').allInnerTexts());
-  await sel.nth(court).selectOption('frost');
+  console.log('faction options', await sel.first().locator('[data-faction]').evaluateAll((b) => b.map((x) => x.getAttribute('aria-label')?.replace('Frakcja: ', '') ?? '')));
+  await sel.nth(court).locator('[data-faction="frost"]').click();
   await p.waitForTimeout(500);
   await p.screenshot({ path: `.tmp/szron-setup-${view}.png` });
   for (const i of [0, 1]) await p.locator('select[aria-label="Kto gra"]').nth(i).selectOption(humans.includes(i) ? 'human' : 'bot').catch(() => {});

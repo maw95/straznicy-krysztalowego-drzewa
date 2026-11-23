@@ -19,7 +19,7 @@ try {
   await p.screenshot({ path: '.tmp/potyczka-1.png' });
   await p.getByRole('button', { name: 'Dalej →' }).click();
   await p.locator('.well select[aria-label="Kto gra"]').first().waitFor();
-  console.log('who plays:', await p.locator('select[aria-label="Kto gra"]').evaluateAll((els) => els.map((e) => (e as HTMLSelectElement).value)), 'factions:', await p.locator('select[aria-label="Frakcja"]').evaluateAll((els) => els.map((e) => (e as HTMLSelectElement).value)));
+  console.log('who plays:', await p.locator('select[aria-label="Kto gra"]').evaluateAll((els) => els.map((e) => (e as HTMLSelectElement).value)), 'factions:', await p.locator('[data-seat-factions]').evaluateAll((els) => els.map((e) => (e as HTMLSelectElement).value)));
   console.log('child box:', await p.getByLabel('Dziecko').count());
   await p.screenshot({ path: '.tmp/potyczka-2.png' });
   await p.getByRole('button', { name: 'Rozpocznij grę' }).click();
