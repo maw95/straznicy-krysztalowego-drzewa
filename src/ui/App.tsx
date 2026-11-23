@@ -341,9 +341,17 @@ export function App() {
   const slateRace = game && viewer ? raceOf(game, viewer) : null;
   useEffect(() => {
     const root = document.documentElement;
-    if (slateRace) root.style.setProperty('--slate-img', `url('${asset(`ui/slate_${slateRace}.jpg`)}')`);
-    else root.style.removeProperty('--slate-img');
-    return () => void root.style.removeProperty('--slate-img');
+    if (slateRace) {
+      root.style.setProperty('--slate-img', `url('${asset(`ui/slate_${slateRace}.jpg`)}')`);
+      root.dataset.faction = slateRace;
+    } else {
+      root.style.removeProperty('--slate-img');
+      delete root.dataset.faction;
+    }
+    return () => {
+      root.style.removeProperty('--slate-img');
+      delete root.dataset.faction;
+    };
   }, [slateRace]);
   const viewers = useMemo<TeamId[] | null>(() => (isOnline ? humans.map((p) => p.faction) : viewer ? [viewer] : null), [isOnline, viewer, humans.map((p) => p.faction).join()]);
   const battleSource = held ? held.view : game;
