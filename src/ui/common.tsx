@@ -45,6 +45,12 @@ export const FACTION_TILE_ART: Partial<Record<FactionId, Record<string, number>>
     obj_shrine: 1, obj_camp: 1, obj_chest: 1, obj_studnia: 1, obj_tartak: 1, obj_kopalnia: 1, obj_kopalnia_ruda: 1, obj_zrodlo_pylu: 1, obj_chatka: 1,
     obj_skladnica: 1, obj_odlamek: 1, obj_mlyn: 1,
   },
+  // `scripts/assets/clans_map.py`: the mountain meadow, the stronghold and the treasury are new terrain types (highland_<n>, baseClans_1, treasureClans_1), the rest replaces the shared ground.
+  clans: {
+    back: 1, hill: 1, river: 1, bridge: 1, mountain: 1, chasm: 1, barren: 1, osada_1: 1,
+    obj_shrine: 1, obj_camp: 1, obj_chest: 1, obj_studnia: 1, obj_tartak: 1, obj_kopalnia: 1, obj_kopalnia_ruda: 1, obj_zrodlo_pylu: 1, obj_chatka: 1,
+    obj_skladnica: 1, obj_odlamek: 1, obj_mlyn: 1,
+  },
 };
 export const hasTileArt = (race: FactionId | undefined, name: string) => !!(race && FACTION_TILE_ART[race]?.[name]);
 /**

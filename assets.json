@@ -9137,6 +9137,78 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/arena",
+      "pliki": [
+        "public/assets/arena/cyfrowa/clans.webp",
+        "public/assets/arena/cyfrowa/rockwall.webp",
+        "public/assets/arena/cyfrowa/granite.webp",
+        "public/assets/arena/cyfrowa/ancestor.webp",
+        "public/assets/arena/cyfrowa/orecart.webp",
+        "public/assets/arena/cyfrowa/anvil.webp",
+        "public/assets/arena/cyfrowa/scree.webp",
+        "public/assets/arena/cyfrowa/brazier.webp",
+        "public/assets/arena/cyfrowa/clanwall.webp"
+      ],
+      "typ": "arena cyfrowa Żelaznego Klanu (górska przełęcz z posągami przodków i kamiennym mostem), 7 przeszkód i mur Fortyfikacji",
+      "opis": "Tło 1536x1024 high (12 CU), czysta płyta pod planszą; 8 sprite'ów 768x768 medium na przezroczystym tle (3 CU): kamienny mur, głazy z rudą, posąg przodka, wózek z rudą, kowadło, rumowisko, brazier, świeżo postawiony mur (clanwall, rysowany przy Fortyfikacji Kolosa). Układ: WIDE_OBSTACLES.clans. Źródło: .tmp/zrodla/clans_map. Jedno podejście na obraz.",
+      "prompt": "Tło: Top-down view of an empty mountain pass battlefield arena background ... statues of bearded dwarf ancestors, old arched stone bridge over a mountain stream, ore carts and anvils, steel grey/brass/copper, iron braziers, cold light with warm lantern glow. Przeszkody: <opis>, game obstacle sprite for a turn-based strategy game in a dwarven mountain pass, three-quarter front view, painterly realistic, steel grey, brass and copper, isolated on a fully transparent background.",
+      "narzedzie": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) przez Scenario + skrypt Pillow scripts/assets/clans_map.py",
+      "model": "model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/kafle-mapy",
+      "pliki": [
+        "public/assets/tiles/highland_1.jpg",
+        "public/assets/tiles/highland_2.jpg",
+        "public/assets/tiles/baseClans_1.jpg",
+        "public/assets/tiles/treasureClans_1.jpg",
+        "public/assets/tiles/back_clans.jpg"
+      ],
+      "typ": "kafle mapy Żelaznego Klanu: górska hala (2 warianty), twierdza (baza), skarbiec; rewers kafli",
+      "opis": "1024x1024 low (2 CU), przycięte do sześciokąta w ramce meadow_1.jpg; rewers = rewers Przymierza przekolorowany na stal z herbem Klanów (cards/crests/clans.png) w medalionie.",
+      "prompt": "Isometric three-quarter top-down fantasy strategy map tile illustration, painterly ...: <opis kafla>, soft cold overcast light, palette of steel grey, olive green, brass and copper, no bright blue. Fills the whole square image, no border, no frame, no text, no characters.",
+      "narzedzie": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) przez Scenario + skrypt Pillow scripts/assets/clans_map.py",
+      "model": "model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/kafle-wlasne",
+      "pliki": [
+        "public/assets/tiles/clans_hill_1.jpg",
+        "public/assets/tiles/clans_river_1.jpg",
+        "public/assets/tiles/clans_bridge_1.jpg",
+        "public/assets/tiles/clans_mountain_1.jpg",
+        "public/assets/tiles/clans_chasm_1.jpg",
+        "public/assets/tiles/clans_barren_1.jpg",
+        "public/assets/tiles/clans_osada_1.jpg",
+        "public/assets/tiles/clans_obj_shrine.jpg",
+        "public/assets/tiles/clans_obj_camp.jpg",
+        "public/assets/tiles/clans_obj_chest.jpg",
+        "public/assets/tiles/clans_obj_studnia.jpg",
+        "public/assets/tiles/clans_obj_tartak.jpg",
+        "public/assets/tiles/clans_obj_kopalnia.jpg",
+        "public/assets/tiles/clans_obj_kopalnia_ruda.jpg",
+        "public/assets/tiles/clans_obj_zrodlo_pylu.jpg",
+        "public/assets/tiles/clans_obj_chatka.jpg",
+        "public/assets/tiles/clans_obj_skladnica.jpg",
+        "public/assets/tiles/clans_obj_odlamek.jpg",
+        "public/assets/tiles/clans_obj_mlyn.jpg"
+      ],
+      "typ": "górskie wersje wspólnego terenu, obiektów mapy i kafla osady Żelaznego Klanu",
+      "opis": "1024x1024 low (2 CU każdy): skały, sztolnia (rzeka), kamienny most, szczyty, przepaść, kamienna płyta, osada krasnoludów, kapliczka przodków, obóz najemników, skrzynia, studnia, tartak, kopalnie, źródło pyłu, chatka, składnica, odłamek, młyn.",
+      "prompt": "jak kafle mapy, opisy w .tmp/zrodla/clans_tiles",
+      "narzedzie": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) przez Scenario + skrypt Pillow scripts/assets/clans_map.py",
+      "model": "model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Żelazny Klan ma własną mapę i arenę: górską halę zamiast łąki, własny rewers kafli, twierdzę i skarbiec, kafle i obiekty w klimacie kamiennej twierdzy (kapliczka przodków, kopalnie, studnia, skrzynia, młyn), arenę na górskiej przełęczy z siedmioma rodzajami przeszkód i własny kamienny mur Fortyfikacji Kolosa
 - Żelazny Klan ma własną osadę: tło kamiennej twierdzy w przełęczy, 18 własnych budynków, Salę Tarcz, Runiczną Kuźnię, Głęboką Sztolnię i siedliska dziewięciu jednostek
 - Żelazny Klan ma własną muzykę (spokojne kowadła z chórem na mapie i w osadzie oraz marsz młotów z rogami), dźwięki ataku i śmierci wszystkich 19 postaci oraz własne dźwięki wykucia runy, Muru Tarcz i ogłuszenia
 - Żelazny Klan ma własny herb (młot na kowadle), ramki kart w stalowym brązie, 12 własnych ikon zdolności (Przysięga Tarczy, Runa Kamienia, Taran, Fortyfikacja i inne) i ikony run w Runicznej Kuźni; kolor frakcji zmienił się z różowego na stalowy

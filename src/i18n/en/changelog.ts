@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Żelazny Klan ma własną mapę i arenę: górską halę zamiast łąki, własny rewers kafli, twierdzę i skarbiec, kafle i obiekty w klimacie kamiennej twierdzy (kapliczka przodków, kopalnie, studnia, skrzynia, młyn), arenę na górskiej przełęczy z siedmioma rodzajami przeszkód i własny kamienny mur Fortyfikacji Kolosa":
+    "The Iron Clan has its own map and arena: a highland hall instead of meadow, its own tile back, stronghold and treasury, tiles and objects in a stone-fortress style (ancestors' shrine, mines, well, chest, mill), an arena on a mountain pass with seven kinds of obstacles and its own stone wall for the Colossus's Fortify.",
   "Żelazny Klan ma własną osadę: tło kamiennej twierdzy w przełęczy, 18 własnych budynków, Salę Tarcz, Runiczną Kuźnię, Głęboką Sztolnię i siedliska dziewięciu jednostek":
     "The Iron Clan has its own settlement: a background of a stone stronghold in a mountain pass, 18 own buildings, the Shield Hall, the Rune Forge, the Deep Mine and the dwellings of nine units.",
   "Żelazny Klan ma własną muzykę (spokojne kowadła z chórem na mapie i w osadzie oraz marsz młotów z rogami), dźwięki ataku i śmierci wszystkich 19 postaci oraz własne dźwięki wykucia runy, Muru Tarcz i ogłuszenia":

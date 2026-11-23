@@ -15,8 +15,8 @@ export const CLANS: FactionPack = {
   short: 'Klan',
   genitive: 'Klanu',
   lead: 'dłużej miał',
-  // No mountain tiles yet: the Clans borrow the meadow of Przymierze (placeholder, docs/BACKLOG.md 2a).
-  terrain: { base: 'baseDawn', land: 'meadow', treasure: 'treasureDawn', wall: 'chasm' },
-  tiles: ['meadow', 'barren', 'hill', 'river', 'bridge', 'mountain', 'chasm'],
+  // The mountain meadow, the stronghold and the treasury have tiles of their own; the other ground (rocks, flooded galleries, stone bridges, slabs) is shared with Przymierze (its pictures: FACTION_TILE_ART).
+  terrain: { base: 'baseClans', land: 'highland', treasure: 'treasureClans', wall: 'chasm' },
+  tiles: ['highland', 'barren', 'hill', 'river', 'bridge', 'mountain', 'chasm'],
   settlementNames: ['Żelazny Próg', 'Kowadło Gór', 'Głęboka Brama', 'Miedziany Szyb', 'Sala Siedmiu Młotów', 'Kamienna Twierdza', 'Szara Grań', 'Brązowe Wrota', 'Dymny Komin', 'Runiczna Przełęcz', 'Ojcowski Kamień', 'Sztolnia Pod Gwiazdą'],
 };

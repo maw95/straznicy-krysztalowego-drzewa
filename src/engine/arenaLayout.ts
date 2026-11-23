@@ -151,16 +151,16 @@ export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
     { art: 'pine', cells: [[7, 1]] },
     { art: 'brambles', cells: [[6, 7]] },
   ],
-  // Placeholder (docs/BACKLOG.md 2a): a mountain pass with statues of the ancestors and a stone bridge; until then the pictures of Przymierze, rearranged.
+  // A mountain pass with statues of the ancestors and a stone bridge: a rock wall, granite, ancestors, an ore cart, an anvil, scree and a brazier (public/assets/arena/cyfrowa).
   clans: [
-    { art: 'wall', cells: [[4, 1], [5, 1]] },
-    { art: 'ridge', cells: [[8, 5], [8, 6]] },
-    { art: 'statue', cells: [[3, 4]] },
-    { art: 'statue', cells: [[10, 2]] },
-    { art: 'ruin', cells: [[6, 6]] },
-    { art: 'boulders', cells: [[9, 7]] },
-    { art: 'log', cells: [[5, 3], [6, 3]] },
-    { art: 'brambles', cells: [[7, 1]] },
+    { art: 'rockwall', cells: [[4, 1], [5, 1]] },
+    { art: 'granite', cells: [[8, 5], [8, 6]] },
+    { art: 'ancestor', cells: [[3, 4]] },
+    { art: 'ancestor', cells: [[10, 2]] },
+    { art: 'orecart', cells: [[6, 6]] },
+    { art: 'anvil', cells: [[9, 7]] },
+    { art: 'scree', cells: [[5, 3], [6, 3]] },
+    { art: 'brazier', cells: [[7, 1]] },
   ],
   // Placeholder (docs/BACKLOG.md 2a): a frozen lake with snowy firs and spikes of ice; until then the pictures of Przymierze and Horda, rearranged.
   frost: [

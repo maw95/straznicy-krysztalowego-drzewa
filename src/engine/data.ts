@@ -1001,6 +1001,8 @@ export type Terrain =
   | 'steppe'
   // Bractwo Przypływu
   | 'shore'
+  // Żelazny Klan
+  | 'highland'
   // The channels between the islands (digital ruleset)
   | 'water'
   // Special tiles
@@ -1009,13 +1011,15 @@ export type Terrain =
   | 'baseHorde'
   | 'baseHerds'
   | 'baseTides'
+  | 'baseClans'
   | 'lairCyclops'
   | 'lairGriffin'
   | 'lairHydra'
   | 'treasureDawn'
   | 'treasureHorde'
   | 'treasureHerds'
-  | 'treasureTides';
+  | 'treasureTides'
+  | 'treasureClans';
 
 /** The team whose land a tile is (the zone it lies in). */
 export type TileSide = TeamId;
@@ -1037,12 +1041,14 @@ export const TERRAIN_NAMES: Record<Terrain, string> = {
   thorns: 'Trujące Ciernie',
   steppe: 'Step Dzikiego Stada',
   shore: 'Odsłonięta Plaża',
+  highland: 'Górska Hala',
   water: 'Woda',
   tree: 'Kryształowe Drzewo',
   baseDawn: 'Baza Przymierza Świtu',
   baseHorde: 'Baza Mrocznej Hordy',
   baseHerds: 'Obozowisko Dzikiego Stada',
   baseTides: 'Przystań Bractwa Przypływu',
+  baseClans: 'Twierdza Żelaznego Klanu',
   lairCyclops: 'Jaskinia Cyklopa',
   lairGriffin: 'Gryfie Gniazdo',
   lairHydra: 'Hydrzy Staw',
@@ -1050,6 +1056,7 @@ export const TERRAIN_NAMES: Record<Terrain, string> = {
   treasureHorde: 'Skarbiec Hordy',
   treasureHerds: 'Skarbiec Stada',
   treasureTides: 'Skarbiec Bractwa',
+  treasureClans: 'Skarbiec Klanu',
 };
 
 /** null = impassable. */
@@ -1060,12 +1067,14 @@ export const TERRAIN_COST: Record<Terrain, number | null> = {
   scorched: 1,
   steppe: 1,
   shore: 1,
+  highland: 1,
   barren: 1,
   tree: 1,
   baseDawn: 1,
   baseHorde: 1,
   baseHerds: 1,
   baseTides: 1,
+  baseClans: 1,
   lairCyclops: 1,
   lairGriffin: 1,
   lairHydra: 1,
@@ -1073,6 +1082,7 @@ export const TERRAIN_COST: Record<Terrain, number | null> = {
   treasureHorde: 1,
   treasureHerds: 1,
   treasureTides: 1,
+  treasureClans: 1,
   river: 2,
   hill: 2,
   swamp: 2,
@@ -1089,8 +1099,8 @@ export const TERRAIN_COST: Record<Terrain, number | null> = {
 export const TERRAIN_VARIANTS: Record<Terrain, number> = {
   meadow: 4, forest: 4, river: 4, bridge: 4, hill: 4, mountain: 4, chasm: 4,
   scorched: 4, swamp: 4, barren: 4, darkCave: 4, ruins: 4, deadThicket: 4, thorns: 4, water: 2,
-  steppe: 4, shore: 2, tree: 1, baseDawn: 1, baseHorde: 1, baseHerds: 1, baseTides: 1, lairCyclops: 1, lairGriffin: 1, lairHydra: 1,
-  treasureDawn: 4, treasureHorde: 4, treasureHerds: 2, treasureTides: 1,
+  steppe: 4, shore: 2, highland: 2, tree: 1, baseDawn: 1, baseHorde: 1, baseHerds: 1, baseTides: 1, baseClans: 1, lairCyclops: 1, lairGriffin: 1, lairHydra: 1,
+  treasureDawn: 4, treasureHorde: 4, treasureHerds: 2, treasureTides: 1, treasureClans: 1,
 };
 
 /**

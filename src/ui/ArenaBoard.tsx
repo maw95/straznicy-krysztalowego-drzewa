@@ -253,7 +253,7 @@ export function ArenaBoard(p: Props) {
             const c = cellCenter(k);
             return (
               <div key={`raised${k}`} data-raised-wall={k} style={{ position: 'absolute', left: c.x - OBSTACLE_BOX.w / 2, top: c.y + OBSTACLE_BOX.base - OBSTACLE_BOX.h, width: OBSTACLE_BOX.w, height: OBSTACLE_BOX.h, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', pointerEvents: 'none' }}>
-                <img src={asset('arena/cyfrowa/wall.webp')} alt="" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                <img src={asset(`arena/cyfrowa/${!(b.ice ?? []).some((i) => i.cell === k) && Object.values(b.units).some((u) => u.defId === 'clanColossus') ? 'clanwall' : 'wall'}.webp`)} alt="" style={{ maxWidth: '100%', maxHeight: '100%' }} />
               </div>
             );
           })}
