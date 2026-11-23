@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Czwarty bohater frakcji można wybrać też przy stole online w potyczce cyfrowej.
 - Czwarty bohater każdej frakcji (np. Srebrna Wilczyca Przymierza, Mantikora Hordy) jest zawsze do wyboru w potyczce cyfrowej, a nie dopiero przy siedmiu i ośmiu graczach.
 - Poprawka: dodanie piątego gracza (i wybór pięciu różnych frakcji) nie wywala już gry błędem; przy stole może być najwyżej cztery frakcje, a przy czterech różnych frakcjach miejsce z losową frakcją losuje jedną z nich.
 - Nowa okładka gry (tło menu): ten sam układ, ale postacie mają aktualne projekty (nietoperz, pająk i goblin szaman w poważnej palecie), a elf druid ma pięć palców.
