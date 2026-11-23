@@ -10,11 +10,14 @@ import { openGame } from './game';
     console.log('object tiles:', labels.length, [...new Set(labels)].join(' | '));
     const tile = p.locator('button[aria-label]').filter({ hasText: '' }).locator('xpath=self::*[contains(@aria-label,"Kopalnia") or contains(@aria-label,"Tartak") or contains(@aria-label,"Młyn") or contains(@aria-label,"Studnia")]').first();
     const b = await tile.boundingBox();
+    const all = p.locator('[data-type-badge]');
+    console.log('badges:', await all.count(), 'used:', await p.locator('.type-badge.used').count(), 'owner banners:', await p.locator('[data-owner-banner]').count());
     if (b) {
+      await p.screenshot({ path: '.tmp/kafel-znacznik.png', clip: { x: Math.max(0, b.x - 200), y: Math.max(0, b.y - 160), width: 420, height: 380 } });
       await p.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
       await p.mouse.down({ button: 'right' });
       await p.waitForTimeout(300);
-      await p.screenshot({ path: '.tmp/kafel-obiektu.png', clip: { x: Math.max(0, b.x - 120), y: Math.max(0, b.y - 120), width: 520, height: 360 } });
+      await p.screenshot({ path: '.tmp/kafel-obiektu.png', clip: { x: Math.max(0, b.x - 200), y: Math.max(0, b.y - 160), width: 420, height: 380 } });
       await p.mouse.up({ button: 'right' });
     }
     if (game.errors.length) console.log(game.errors.join('\n'));

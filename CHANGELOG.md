@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Nowe kadry portretów: Pegaz (widać całą głowę), Biały Jeleń (bliżej: głowa, poroże i szyja), Rycerz, Łowczyni i Mędrzec Świtu (oddalone, cała ilustracja) oraz Pięść-Ogr; pozostałe portrety Przymierza i Hordy bez zmian.
+- Kafle z lokacjami (kopalnie, kapliczki, obozy, skrzynie, chatki, młyny, studnie, składnice, odłamki, źródła pyłu, tartaki) mają na górze mały półokrągły znacznik z ikoną lokacji, wyszarzony, gdy lokacja jest zużyta; herb właściciela jest mniejszy i leży tuż przy dolnej krawędzi kafla.
 - Panele i okna na ciemnym tle (tekstura „łupek”) mają kolor frakcji gracza przy ekranie: zieleń Przymierza, bordo Hordy, ochra Stada, szarozieleń Umarłych, stal Klanów, lodowy błękit Szronu, rdzawa pomarańcz Kompanii, piasek Piasków, umbra i mech Roju, morska zieleń Przypływów; przy grze przy jednym ekranie zmienia się po przekazaniu urządzenia, a w menu i ustawieniach zostaje dawny zielono-niebieski.
 - Kafle z obiektami (kopalnia, kapliczka, obóz, skrzynia, chatka, młyn, studnia, składnica, odłamek, źródło pyłu, tartak) mają w panelu, w dymku prawego kliknięcia i w opisie dla czytników nazwę obiektu, a nie terenu (teren jest w drugiej linii); herby właścicieli na kaflach są mniejsze.
 - Znacznik kosztu ruchu na kaflach jest mniejszy: obejmuje cyfrę z niewielkim marginesem zamiast dużego pustego pergaminu.

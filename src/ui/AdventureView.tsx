@@ -493,8 +493,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                       <>
                         <div style={{ position: 'absolute', left: W * 0.27, top: H * 0.42, width: W * 0.46, height: W * 0.46, pointerEvents: 'none' }} data-place={t.place.kind} title={placeTitle(state, t.key)} />
                         {placeOwner(state, t) && (
-                          <div style={{ position: 'absolute', left: W * 0.4, top: -H * 0.02, zIndex: 3, pointerEvents: 'none' }} data-mine-owner={t.place.kind === 'mine' ? placeOwner(state, t) : undefined} data-settlement-owner={t.place.kind === 'settlement' ? placeOwner(state, t) : undefined}>
-                            <OwnerBanner owner={placeOwner(state, t)!} race={raceOf(state, placeOwner(state, t)!)} size={W * 0.48} />
+                          <div style={{ position: 'absolute', left: W * 0.5 - W * 0.17, top: H * 0.9 - W * 0.34, zIndex: 3, pointerEvents: 'none' }} data-mine-owner={t.place.kind === 'mine' ? placeOwner(state, t) : undefined} data-settlement-owner={t.place.kind === 'settlement' ? placeOwner(state, t) : undefined}>
+                            <OwnerBanner owner={placeOwner(state, t)!} race={raceOf(state, placeOwner(state, t)!)} size={W * 0.34} />
                           </div>
                         )}
                         {t.place.kind === 'settlement' && (state.kingdom.settlements[t.place.id]?.garrison?.length ?? 0) > 0 && (
@@ -514,6 +514,16 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         )}
                       </div>
                     )}
+                    {(() => {
+                      const kind = typeBadge(state, t);
+                      if (!kind) return null;
+                      const w = W * 0.3;
+                      return (
+                        <span className={`type-badge ${kind.used ? 'used' : ''}`} data-type-badge={kind.icon} style={{ position: 'absolute', left: W * 0.5 - w / 2, top: H * 0.1, width: w, height: w / 2 }}>
+                          <img src={asset(`ikony/mapa/${kind.icon}.webp`)} alt="" style={{ width: w * 0.46, height: w * 0.46 }} />
+                        </span>
+                      );
+                    })()}
                     {r && !onPath && (
                       <div className="plate parch cost-tag" style={{ position: 'absolute', left: W * 0.57, top: H * 0.65, minWidth: W * 0.18, height: H * 0.15, padding: '0 2px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: W * 0.15, color: r.hostile ? '#8A1A1A' : '#12304E' }}>
                         {r.hostile ? '⚔' : r.cost}
@@ -913,6 +923,21 @@ function TileDetails({ state, k, hostile }: { state: GameState; k: HexKey; hosti
       ))}
     </div>
   );
+}
+
+/** The small half-medallion at the top of a location tile: the icon of what stands there, greyed out when entering gives nothing now (settlements have a crest instead). */
+function typeBadge(state: GameState, t: GameState['tiles'][HexKey]): { icon: string; used: boolean } | null {
+  if (!t.revealed) return null;
+  if (t.site) return { icon: t.site.kind, used: Boolean(t.site.used) };
+  const place = t.place;
+  if (!place || !state.kingdom || place.kind === 'settlement') return null;
+  const icon = placeIcon(state, t.key);
+  if (place.kind === 'hut') return { icon, used: Boolean(state.kingdom.huts?.[place.id]?.done) };
+  if (place.kind === 'object') {
+    const o = state.kingdom.objects?.[place.id];
+    return { icon, used: o ? !objectReady(o, state.round) : false };
+  }
+  return { icon, used: false };
 }
 
 /** What the tile is called: the object standing on it (a mine, a shrine, a well...) or else its terrain. */

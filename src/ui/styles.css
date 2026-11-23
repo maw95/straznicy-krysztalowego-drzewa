@@ -82,6 +82,8 @@ button { font-family: inherit; }
   box-shadow: 0 0 0 1px #3a2508, inset 0 0 16px rgba(120, 80, 20, 0.35), 0 4px 10px rgba(0, 0, 0, 0.35);
   color: var(--ink);
 }
+.type-badge { display: flex; align-items: flex-start; justify-content: center; box-sizing: border-box; padding-top: 2px; pointer-events: none; z-index: 4; border-radius: 0 0 9999px 9999px; background: radial-gradient(ellipse at 50% 0%, #3a4a52, #12191c); box-shadow: 0 0 0 1.5px #d9a93f, 0 0 0 2.5px #1e1204, 0 2px 4px rgba(0, 0, 0, 0.6); }
+.type-badge.used { filter: grayscale(1) brightness(0.75); opacity: 0.8; }
 .cost-tag { border-width: 1.5px; border-radius: 4px; line-height: 1; box-sizing: border-box; box-shadow: 0 0 0 1px #3a2508, 0 2px 4px rgba(0, 0, 0, 0.45); }
 .well {
   border-radius: 6px;

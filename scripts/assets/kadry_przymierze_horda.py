@@ -10,19 +10,12 @@ from PIL import Image
 ART = 'public/assets/cards/art'
 OUT = 'public/assets/cards/portraits'
 S = 256
+# Accepted by the author on 23.11; all other portraits of the two factions stay as they were.
 CROPS = {
-    # Covenant
-    'goldDragon': (.60, .38, .70), 'unicornKing': (.66, .38, .72), 'ancientBear': (.72, .38, .72), 'braveDuck': (.42, .42, .72),
-    'moonWolf': (.54, .32, .68), 'elfDruid': (.58, .38, .74), 'nymph': (.34, .40, .78), 'pegasus': (.55, .45, 1.0),
-    'hedgehog': (.66, .62, .60), 'centaur': (.30, .38, .78), 'boar': (.50, .50, .95), 'treeGuardian': (.55, .50, 1.0),
-    'silverFox': (.38, .52, .85), 'dawnOwl': (.50, .50, .85), 'dryadArcher': (.55, .50, .90), 'whiteStag': (.32, .50, .95),
-    'dawnPhoenix': (.50, .50, .95), 'dawnKnight': (.50, .42, .75), 'dawnHuntress': (.45, .42, .80), 'dawnSage': (.52, .40, .78),
-    # Horde
-    'blackDragon': (.72, .38, .78), 'werewolfLord': (.58, .45, .88), 'ironFistOgre': (.50, .40, .80), 'duskManticore': (.62, .50, .78),
-    'goblinShaman': (.45, .50, .85), 'caveSpider': (.50, .50, .75), 'shadowBat': (.55, .38, .72), 'ratman': (.52, .45, .78),
-    'hellhound': (.52, .55, .78), 'salamander': (.62, .45, .85), 'minotaurChief': (.50, .45, .90), 'goblinSlinger': (.50, .52, .72),
-    'gargoyle': (.55, .48, .72), 'caveTroll': (.34, .55, .85), 'shadowWyvern': (.68, .50, .88), 'doomBehemoth': (.52, .50, .95),
-    'hordeWarlord': (.52, .42, .78), 'hordeCrossbow': (.55, .50, .78), 'hordeShadow': (.50, .50, .78),
+    'pegasus': (.99, .45, 1.0),        # as far right as it goes: the whole head
+    'whiteStag': (.55, .33, .58),      # closer and higher: the whole head, antlers and neck (as close as the owl)
+    'dawnKnight': (.50, .50, 1.0), 'dawnHuntress': (.50, .50, 1.0), 'dawnSage': (.50, .50, 1.0),  # the whole height of the art
+    'ironFistOgre': (.50, .40, .80),
 }
 
 
