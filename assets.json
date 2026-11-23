@@ -9005,6 +9005,93 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/muzyka",
+      "pliki": [
+        "public/assets/music/clans-anvil-hall.mp3",
+        "public/assets/music/clans-hammer-march.mp3"
+      ],
+      "typ": "muzyka frakcji: dwa utwory Żelaznego Klanu (mapa i osada; marsz bojowy)",
+      "opis": "Dwa instrumentalne utwory po 60 s (spokojny: kowadła w rytmie, niski chór męski, ciepłe blachy; mocny: ciężki rytm kowadeł i młotów, chór unisono, rogi). Wyrównane do ok. -21 dB, wejście 0,3 s, wyjście 2,5 s (ffmpeg), mp3 128 kbps. Koszt 2 x 30 CU. Skrypt: scripts/assets/clans_audio.py. Rejestr: FACTION_MUSIC w src/ui/music.ts.",
+      "prompt": "Calm instrumental fantasy theme for a dwarven mountain stronghold: slow steady anvil strikes marking the rhythm, deep low male choir humming sustained harmonies, warm brass and a distant horn, soft stone-hall reverb ... / Powerful instrumental fantasy battle march of dwarven clans: heavy driving anvil and hammer rhythm, deep low male choir chanting in unison, bold war horns, low brass and big drums ...",
+      "model": "model_elevenlabs-music-v2-5",
+      "scenario_asset": {
+        "clans-anvil-hall": "asset_6hki6sMxU7u8dAR3edNsXMtj",
+        "clans-hammer-march": "asset_6d1WSmMYoucaS137WzaGMpre"
+      },
+      "narzedzie": "Scenario",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/dzwieki-jednostek",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/ironThane_atak.mp3",
+        "public/assets/dzwieki/jednostki/ironThane_smierc.mp3",
+        "public/assets/dzwieki/jednostki/runeMatron_atak.mp3",
+        "public/assets/dzwieki/jednostki/runeMatron_smierc.mp3",
+        "public/assets/dzwieki/jednostki/passWarden_atak.mp3",
+        "public/assets/dzwieki/jednostki/passWarden_smierc.mp3",
+        "public/assets/dzwieki/jednostki/oldMiner_atak.mp3",
+        "public/assets/dzwieki/jednostki/oldMiner_smierc.mp3",
+        "public/assets/dzwieki/jednostki/clanWarrior_atak.mp3",
+        "public/assets/dzwieki/jednostki/clanWarrior_smierc.mp3",
+        "public/assets/dzwieki/jednostki/mountainCrossbow_atak.mp3",
+        "public/assets/dzwieki/jednostki/mountainCrossbow_smierc.mp3",
+        "public/assets/dzwieki/jednostki/forgePriest_atak.mp3",
+        "public/assets/dzwieki/jednostki/forgePriest_smierc.mp3",
+        "public/assets/dzwieki/jednostki/shieldDwarf_atak.mp3",
+        "public/assets/dzwieki/jednostki/shieldDwarf_smierc.mp3",
+        "public/assets/dzwieki/jednostki/bronzeMole_atak.mp3",
+        "public/assets/dzwieki/jednostki/bronzeMole_smierc.mp3",
+        "public/assets/dzwieki/jednostki/brassSpider_atak.mp3",
+        "public/assets/dzwieki/jednostki/brassSpider_smierc.mp3",
+        "public/assets/dzwieki/jednostki/armoredBear_atak.mp3",
+        "public/assets/dzwieki/jednostki/armoredBear_smierc.mp3",
+        "public/assets/dzwieki/jednostki/battleSmith_atak.mp3",
+        "public/assets/dzwieki/jednostki/battleSmith_smierc.mp3",
+        "public/assets/dzwieki/jednostki/bronzeSentinel_atak.mp3",
+        "public/assets/dzwieki/jednostki/bronzeSentinel_smierc.mp3",
+        "public/assets/dzwieki/jednostki/ramGoat_atak.mp3",
+        "public/assets/dzwieki/jednostki/ramGoat_smierc.mp3",
+        "public/assets/dzwieki/jednostki/giantSlayer_atak.mp3",
+        "public/assets/dzwieki/jednostki/giantSlayer_smierc.mp3",
+        "public/assets/dzwieki/jednostki/skarbnik_atak.mp3",
+        "public/assets/dzwieki/jednostki/skarbnik_smierc.mp3",
+        "public/assets/dzwieki/jednostki/hammerGuard_atak.mp3",
+        "public/assets/dzwieki/jednostki/hammerGuard_smierc.mp3",
+        "public/assets/dzwieki/jednostki/dwarfCannon_atak.mp3",
+        "public/assets/dzwieki/jednostki/dwarfCannon_smierc.mp3",
+        "public/assets/dzwieki/jednostki/clanColossus_atak.mp3",
+        "public/assets/dzwieki/jednostki/clanColossus_smierc.mp3"
+      ],
+      "typ": "efekty dźwiękowe: atak i śmierć 19 postaci Żelaznego Klanu",
+      "opis": "38 dźwięków po 1,5 s (Armata i Kolos do 2 s), promptInfluence 0,6; krasnoludzkie okrzyki, młoty, kusze, mechanizmy z brązu, ryk niedźwiedzia, beczenie kozła, brzęk monet Skarbnika. 1 CU każdy. Rejestr: UNIT_SOUNDS w src/ui/sfx.ts. Opisy w historii zadań Scenario (format jak tides: '<postać>: <dźwięk>, fantasy game attack/defeat sound effect, no music').",
+      "prompt": "<postać>: <dźwięk>, fantasy game attack sound effect, no music",
+      "model": "model_elevenlabs-sound-effects-v3",
+      "narzedzie": "Scenario",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/dzwieki-mechanik",
+      "pliki": [
+        "public/assets/dzwieki/clans_runeForge.mp3",
+        "public/assets/dzwieki/clans_shieldWall.mp3",
+        "public/assets/dzwieki/clans_cannon.mp3",
+        "public/assets/dzwieki/clans_stun.mp3"
+      ],
+      "typ": "efekty dźwiękowe mechanik Żelaznego Klanu",
+      "opis": "Wykucie runy (podpięte w SettlementDialog), Mur Tarcz/Przysięga Tarczy i Fortyfikacja (clans_shieldWall), ogłuszenie Młota Przodków (clans_stun) w useBattleAnimations; clans_cannon wygenerowany, niepodpięty (strzał Armaty ma już dźwięk ataku jednostki). 2 s, 1 CU każdy.",
+      "prompt": "Forging a glowing rune: hammer strikes on an anvil with sparks ... / Many heavy metal shields locking together ... / Iron cannon volley ... / Mighty ancestral hammer blow with a deep bell-like ring ..., fantasy game sound effect, no music",
+      "model": "model_elevenlabs-sound-effects-v3",
+      "narzedzie": "Scenario",
+      "data": "2026-11-23",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

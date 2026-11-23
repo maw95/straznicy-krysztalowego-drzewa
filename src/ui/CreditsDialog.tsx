@@ -51,7 +51,7 @@ export function CreditsDialog({ onClose }: { onClose: () => void }) {
         <section data-credits="ai">
           <h3 className="credits-h">Grafika, animacje i dźwięki</h3>
           <p>
-            Obrazy jednostek, animacje, ikony, znaczniki, kursory, efekty dźwiękowe i muzyka Dzikiego Stada i Bractwa Przypływu zostały wygenerowane z użyciem narzędzi sztucznej inteligencji (platforma Scenario: GPT Image 2.5, P-Video 2, ElevenLabs Sound Effects i Music),
+            Obrazy jednostek, animacje, ikony, znaczniki, kursory, efekty dźwiękowe i muzyka Dzikiego Stada, Bractwa Przypływu i Żelaznego Klanu zostały wygenerowane z użyciem narzędzi sztucznej inteligencji (platforma Scenario: GPT Image 2.5, P-Video 2, ElevenLabs Sound Effects i Music),
             pod kierunkiem autora i z ręczną obróbką. Pełny wykaz plików wraz z narzędziem, modelem i opisem użytym do wygenerowania każdego z nich jest w pliku <code>assets.json</code> w repozytorium gry.
           </p>
         </section>

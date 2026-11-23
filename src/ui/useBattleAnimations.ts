@@ -156,7 +156,8 @@ export function useBattleAnimations(state: GameState) {
     tideSwapsSeen.current = swaps;
     if (newSeals.length) {
       const named = newSeals.map((x) => x.ability);
-      sfx.play(named.includes('pearlShield') ? 'tides_pearlShield' : named.some((a) => a === 'harpoon' || a === 'deepCoil') ? 'tides_harpoonPull' : 'magic_cast');
+      // Iron Clan: a wall of shields (Przysięga Tarczy, Fortyfikacja) and the ancestors' hammer stun have their own sounds.
+      sfx.play(named.includes('pearlShield') ? 'tides_pearlShield' : named.some((a) => a === 'harpoon' || a === 'deepCoil') ? 'tides_harpoonPull' : named.some((a) => a === 'shieldOath' || a === 'fortify') ? 'clans_shieldWall' : named.includes('stunBlow') ? 'clans_stun' : 'magic_cast');
       setSeals((x) => [...x, ...newSeals]);
       later(() => setSeals((x) => x.filter((s) => !newSeals.includes(s))), 1400);
     }

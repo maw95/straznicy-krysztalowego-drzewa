@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Żelazny Klan ma własną muzykę (spokojne kowadła z chórem na mapie i w osadzie oraz marsz młotów z rogami), dźwięki ataku i śmierci wszystkich 19 postaci oraz własne dźwięki wykucia runy, Muru Tarcz i ogłuszenia
 - Żelazny Klan ma własny herb (młot na kowadle), ramki kart w stalowym brązie, 12 własnych ikon zdolności (Przysięga Tarczy, Runa Kamienia, Taran, Fortyfikacja i inne) i ikony run w Runicznej Kuźni; kolor frakcji zmienił się z różowego na stalowy
 - Wszystkie 19 postaci Bractwa Przypływu mają animowane sprite'y (stanie, chód lub lot, atak, śmierć, trafienie): Król Trytonów, Syrena Pieśniarka, Wąż Morski, Albatros, Lewiatan i pozostałe
 - Bractwo Przypływu ma własną mapę i arenę: plażę zamiast łąki, własny rewers kafli, przystań i skarbiec, kafle i obiekty w klimacie wybrzeża (kapliczka muszlowa, obóz, studnia, skrzynia, tartak, kopalnie) oraz arenę na rafie w czasie odpływu z siedmioma rodzajami przeszkód (rafy, wrak, sieci, wodorosty, kałuża)

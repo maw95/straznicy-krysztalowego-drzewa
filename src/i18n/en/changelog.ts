@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Żelazny Klan ma własną muzykę (spokojne kowadła z chórem na mapie i w osadzie oraz marsz młotów z rogami), dźwięki ataku i śmierci wszystkich 19 postaci oraz własne dźwięki wykucia runy, Muru Tarcz i ogłuszenia":
+    "The Iron Clan has its own music (calm anvils with a choir on the map and in the settlement and a march of hammers with horns), attack and death sounds for all 19 characters and its own sounds for forging a rune, the Shield Wall and stunning.",
   "Żelazny Klan ma własny herb (młot na kowadle), ramki kart w stalowym brązie, 12 własnych ikon zdolności (Przysięga Tarczy, Runa Kamienia, Taran, Fortyfikacja i inne) i ikony run w Runicznej Kuźni; kolor frakcji zmienił się z różowego na stalowy":
     "The Iron Clan has its own crest (a hammer on an anvil), card frames in steel bronze, 12 own ability icons (Shield Oath, Stone Rune, Ram Blow, Fortify and others) and rune icons in the Rune Forge; the faction colour changed from pink to steel.",
   "Wszystkie 19 postaci Bractwa Przypływu mają animowane sprite'y (stanie, chód lub lot, atak, śmierć, trafienie): Król Trytonów, Syrena Pieśniarka, Wąż Morski, Albatros, Lewiatan i pozostałe":

@@ -103,7 +103,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     // Purchases ring: a building goes up with hammering, everything else with coins.
     // The Iskra has its own fanfare (played from the log, App.tsx); a commander is hired over a mug.
     if (a.type === 'kingdomBuild' && a.building === 'spark') return onAction(a);
-    sfx.play(a.type === 'kingdomBuild' || a.type === 'kingdomDwelling' ? 'build' : a.type === 'kingdomHire' || a.type === 'kingdomRansom' ? 'tavern_hire' : 'coins_buy');
+    sfx.play(a.type === 'kingdomForgeRune' ? 'clans_runeForge' : a.type === 'kingdomBuild' || a.type === 'kingdomDwelling' ? 'build' : a.type === 'kingdomHire' || a.type === 'kingdomRansom' ? 'tavern_hire' : 'coins_buy');
     onAction(a);
   };
   const buildButton = (b: BuildingId) => {
