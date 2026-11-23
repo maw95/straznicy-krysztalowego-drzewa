@@ -1109,6 +1109,7 @@ button.sb-slot:disabled { cursor: default; }
 .chest-art::before { content: ''; position: absolute; left: 8%; right: 8%; bottom: 1%; height: 6%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7), transparent 70%); }
 .chest-art > i { position: absolute; inset: 0; background: url('/assets/ui/skrzynia_klatki.webp') no-repeat; background-size: 400% 100%; will-change: opacity; backface-visibility: hidden; }
 .chest-art > i:nth-child(1) { background-position: 0 0; }
+.chest-art > i:nth-child(1) { animation: chest-f0-in 0.9s linear both; }
 .chest-art > i:nth-child(2) { background-position: 33.3333% 0; opacity: 0; animation: chest-f1-in 0.9s linear both; }
 .chest-art > i:nth-child(3) { background-position: 66.6667% 0; opacity: 0; animation: chest-f2-in 0.9s linear both; }
 .chest-art > i:nth-child(4) { background-position: 100% 0; opacity: 0; animation: chest-f3-in 0.9s linear both; }
@@ -1120,21 +1121,25 @@ button.sb-slot:disabled { cursor: default; }
 .chestbox .chest-empty { position: absolute; left: 17%; top: 37%; width: 55%; height: 32%; display: grid; place-items: center; animation: chest-content-in 0.9s ease-out both; }
 .chestbox .pager { position: absolute; left: 17%; width: 55%; bottom: 27%; animation: chest-content-in 0.9s ease-out both; }
 .chestbox .close-seal { animation: chest-content-in 0.9s ease-out both; }
+.leaving .chest-art > i:nth-child(1) { animation: chest-f0-out 0.7s linear both; }
 .leaving .chest-art > i:nth-child(2) { animation: chest-f1-out 0.7s linear both; }
 .leaving .chest-art > i:nth-child(3) { animation: chest-f2-out 0.7s linear both; }
 .leaving .chest-art > i:nth-child(4) { animation: chest-f3-out 0.7s linear both; }
 .leaving .chest-items, .leaving .chestbox .chest-empty, .leaving .chestbox .pager, .leaving .chestbox .close-seal { animation: chest-content-out 0.25s ease-in both; }
 @container (max-width: 480px) { .chest-items .slot-name { display: none; } }
-@keyframes chest-f1-in { 0%, 8% { opacity: 0; } 18%, 100% { opacity: 1; } }
-@keyframes chest-f2-in { 0%, 38% { opacity: 0; } 48%, 100% { opacity: 1; } }
+/* Only one frame is visible when it is not a blend (the frames differ in outline, a lower one would show beside the upper). */
+@keyframes chest-f0-in { 0%, 18% { opacity: 1; } 19%, 100% { opacity: 0; } }
+@keyframes chest-f1-in { 0%, 8% { opacity: 0; } 18%, 48% { opacity: 1; } 49%, 100% { opacity: 0; } }
+@keyframes chest-f2-in { 0%, 38% { opacity: 0; } 48%, 78% { opacity: 1; } 79%, 100% { opacity: 0; } }
 @keyframes chest-f3-in { 0%, 68% { opacity: 0; } 78%, 100% { opacity: 1; } }
 @keyframes chest-f3-out { 0%, 8% { opacity: 1; } 22%, 100% { opacity: 0; } }
-@keyframes chest-f2-out { 0%, 36% { opacity: 1; } 50%, 100% { opacity: 0; } }
-@keyframes chest-f1-out { 0%, 64% { opacity: 1; } 78%, 100% { opacity: 0; } }
+@keyframes chest-f2-out { 0%, 8% { opacity: 0; } 22%, 36% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes chest-f1-out { 0%, 36% { opacity: 0; } 50%, 64% { opacity: 1; } 78%, 100% { opacity: 0; } }
+@keyframes chest-f0-out { 0%, 64% { opacity: 0; } 78%, 100% { opacity: 1; } }
 @keyframes chest-content-in { 0%, 70% { opacity: 0; } 100% { opacity: 1; } }
 @keyframes chest-content-out { 0% { opacity: 1; } 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .chest-art > i, .chest-items, .chestbox .chest-empty, .chestbox .pager, .chestbox .close-seal { animation: none !important; }
-  .chest-art > i:nth-child(n+2) { opacity: 0; }
+  .chest-art > i { opacity: 0; }
   .chest-art > i:nth-child(4) { opacity: 1; } }
 
 /* The list of own settlements in the side panel of the map: no panel behind it, a thumbnail and the name per row. */
