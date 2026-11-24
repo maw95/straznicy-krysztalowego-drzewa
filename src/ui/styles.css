@@ -856,6 +856,21 @@ button.skill-card:hover, button.skill-card:focus-visible { transform: translateY
 .fx-battle.oblezenie_kamien { background-image: url('/assets/efekty/oblezenie_kamien.webp'); width: 220px; height: 220px; margin: -110px 0 0 -110px; }
 .fx-battle.oblezenie_fosa { background-image: url('/assets/efekty/oblezenie_fosa.webp'); }
 .fx-battle.odrodzenie { background-image: url('/assets/efekty/odrodzenie.webp'); width: 230px; height: 230px; margin: -150px 0 0 -115px; }
+/* Effects of the mechanics (Tides, Herds, Clans): BACKLOG 81; triggered in useBattleAnimations. Dust and sparks are drawn normally: 'screen' would vanish on the tan steppe. */
+.fx-battle.herds_push, .fx-battle.herds_collision, .fx-battle.herds_charge { mix-blend-mode: normal; }
+/* Sheets whose picture reaches the frame edge fade out towards it instead of ending in a straight cut */
+.fx-battle.tides_whirl, .fx-battle.tides_waterwall, .fx-battle.tides_wave, .fx-battle.herds_roar, .fx-battle.tides_shell, .fx-battle.tides_pearl { -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%); mask-image: radial-gradient(closest-side, #000 62%, transparent 100%); }
+.fx-battle.herds_push { background-image: url('/assets/efekty/herds_push.webp'); width: 150px; height: 150px; margin: -75px 0 0 -75px; }
+.fx-battle.herds_collision { background-image: url('/assets/efekty/herds_collision.webp'); width: 190px; height: 190px; margin: -110px 0 0 -95px; }
+.fx-battle.herds_charge { background-image: url('/assets/efekty/herds_charge.webp'); width: 200px; height: 200px; margin: -110px 0 0 -100px; }
+.fx-battle.herds_roar { background-image: url('/assets/efekty/herds_roar.webp'); width: 280px; height: 280px; margin: -150px 0 0 -140px; }
+.fx-battle.tides_wave { background-image: url('/assets/efekty/tides_wave.webp'); width: 150px; height: 150px; margin: -85px 0 0 -75px; }
+.fx-battle.tides_rope { background-image: url('/assets/efekty/tides_rope.webp'); height: 180px; margin: -90px 0 0 0; transform-origin: 0 50%; }
+.fx-battle.tides_pearl { background-image: url('/assets/efekty/tides_pearl.webp'); width: 150px; height: 150px; margin: -110px 0 0 -75px; }
+.fx-battle.tides_shell { background-image: url('/assets/efekty/tides_shell.webp'); width: 150px; height: 150px; margin: -100px 0 0 -75px; }
+.fx-battle.tides_waterwall { background-image: url('/assets/efekty/tides_waterwall.webp'); width: 300px; height: 300px; margin: -165px 0 0 -150px; }
+.fx-battle.tides_whirl { background-image: url('/assets/efekty/tides_whirl.webp'); width: 280px; height: 280px; margin: -150px 0 0 -140px; }
+.fx-battle.clans_rune { background-image: url('/assets/efekty/clans_rune.webp'); width: 150px; height: 150px; margin: -110px 0 0 -75px; }
 .fx-map.mapa_wizja { background-image: url('/assets/efekty/mapa_wizja.webp'); width: 260px; height: 260px; margin: -130px 0 0 -130px; }
 .fx-map.mapa_portal { background-image: url('/assets/efekty/mapa_portal.webp'); }
 .fx-map.odlamek { background-image: url('/assets/efekty/odlamek.webp'); }

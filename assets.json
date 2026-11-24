@@ -9815,6 +9815,291 @@
       "data": "2026-11-24",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/herds_push",
+      "pliki": [
+        "public/assets/efekty/herds_push.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px): Odepchnięcie (Stado): pierścień kurzu i kamyków",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (ring-shaped shockwave of golden-brown dust and small pebbles bursting outward along the ground, amber core). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands outward, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_LHXYMsyiK5bDjAgxP3fdMqyH",
+        "klip": "asset_aDRRwZS1Fws11qAWtYnuo5Em"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/assets/mechanics_fx.py (pack_fx.py 192 px, 12 kl./s, klatki 1-24), próg alfa 40, WebP q60",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/herds_collision",
+      "pliki": [
+        "public/assets/efekty/herds_collision.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px): Zderzenie (Stado): błysk uderzenia z iskrami i odłamkami skały",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (bright white-orange starburst impact flash with jagged radiating sparks and stone fragments). Klip (P-Video 2, 2 s, 720p): the effect bursts out from the centre, swirls and expands outward, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_qErycRG8M47kGAgMjjU6uaP5",
+        "klip": "asset_vrpLycperuhikCs5Rr9Ljqxr"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/assets/mechanics_fx.py (pack_fx.py 192 px, 12 kl./s, klatki 1-24), próg alfa 40, WebP q60",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/herds_charge",
+      "pliki": [
+        "public/assets/efekty/herds_charge.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px): Szarża (Stado): chmura stepowego kurzu z smugami pędu",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (billowing cloud of tan steppe dust with streaking speed lines rushing to the left). Klip (P-Video 2, 2 s, 720p): the dust cloud billows and streams sideways to the left with speed lines, then thins out and fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_JNf7n3ohFodY6af3igW3abed",
+        "klip": "asset_19nLfMRfGmYGibiQuCxvDB79"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/assets/mechanics_fx.py (pack_fx.py 192 px, 12 kl./s, klatki 1-24), próg alfa 40, WebP q60",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/herds_roar",
+      "pliki": [
+        "public/assets/efekty/herds_roar.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px): Ryk (Stado): koncentryczne złote fale dźwięku",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (concentric shockwave rings of golden-orange sound expanding outward, like a mighty roar, warm bright core). Klip (P-Video 2, 2 s, 720p): the rings pulse and expand outward one after another, growing larger and fading as they go; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_GgLQxzVM9eoWQKc6JzYuEx2A",
+        "klip": "asset_tLT1zAiiCf6crmR8uqkFzhD4"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/assets/mechanics_fx.py (pack_fx.py 192 px, 12 kl./s, klatki 1-24), próg alfa 40, WebP q60",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/tides_wave",
+      "pliki": [
+        "public/assets/efekty/tides_wave.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px): Fala zamiany miejsc (Przypływ, Odpływ, Wir): dwie wirujące fale",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (two glowing turquoise and white water waves curling round each other in a circular swirl with sparkling foam). Klip (P-Video 2, 2 s, 720p): the waves swirl round each other and spin, glowing brightly, then dissolve into foam and fade away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_Sxb29JXYdAKN22A37uMrhh3Q",
+        "klip": "asset_3qfdrpVhusMr4n3wZ8mxVbvj"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/assets/mechanics_fx.py (pack_fx.py 192 px, 12 kl./s, klatki 1-24), próg alfa 40, WebP q60",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/tides_rope",
+      "pliki": [
+        "public/assets/efekty/tides_rope.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px): Lina harpuna i Oplotu Głębin: wodna lina (rozciągana między strzelcem a celem)",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (a single thick glowing sea-green rope of twisting water and light running horizontally across the middle of the frame from edge to edge). Klip (P-Video 2, 2 s, 720p): the glowing water rope stays horizontal, pulses and ripples along its length, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_FHVRuUr6AMxCrwVGG9ysVCyn",
+        "klip": "asset_d8pbW2drAvMHMuSSLCv35Cdn"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/assets/mechanics_fx.py (pack_fx.py 192 px, 12 kl./s, klatki 1-24), próg alfa 40, WebP q60",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/tides_pearl",
+      "pliki": [
+        "public/assets/efekty/tides_pearl.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px): Perłowa tarcza: perłowa bańka",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (translucent shimmering soap-bubble sphere of pearly white and pale pink light with a glowing pearl in the middle). Klip (P-Video 2, 2 s, 720p): the pearly bubble shimmers and pulses gently, sparkles circle round it, then it shines once and fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_Y9QfSagcpSb7v8mGhBgxVCpd",
+        "klip": "asset_ZFwWxjnNhkzfJDhshk5PYxjR"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/assets/mechanics_fx.py (pack_fx.py 192 px, 12 kl./s, klatki 1-24), próg alfa 40, WebP q60",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/tides_shell",
+      "pliki": [
+        "public/assets/efekty/tides_shell.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px): Skorupa: kopuła ze świetlistych łusek",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (glowing dome-shaped shell of translucent teal and gold light with a spiral scale pattern). Klip (P-Video 2, 2 s, 720p): the shell of light flashes brightly, shimmers and glows steadily for a moment, then fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_tErZpk7kkrC6x2NMBLJWnYhd",
+        "klip": "asset_LBkctTreL94PznJabrS2NKdB"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/assets/mechanics_fx.py (pack_fx.py 192 px, 12 kl./s, klatki 1-24), próg alfa 40, WebP q60",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/tides_waterwall",
+      "pliki": [
+        "public/assets/efekty/tides_waterwall.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px): Ściana Wody: pierścień wzbierającej wody",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (circular ring of rising turquoise water, a round wall of rushing waves and white foam surging outward). Klip (P-Video 2, 2 s, 720p): the ring of water surges and expands outward with rushing waves, then settles and fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_gtEWfsgpj57wJjpJf4gJpkdh",
+        "klip": "asset_Un2Cyzep95src2KqLVifTzCP"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/assets/mechanics_fx.py (pack_fx.py 192 px, 12 kl./s, klatki 1-24), próg alfa 40, WebP q60",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/tides_whirl",
+      "pliki": [
+        "public/assets/efekty/tides_whirl.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px): Wir Głębin: wir morski ze spienionymi smugami",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (huge deep-sea whirlpool seen from above, dark blue and teal water spiralling inward to a bright glowing centre). Klip (P-Video 2, 2 s, 720p): the whirlpool spins faster and faster, pulling inward to the glowing centre, then calms and fades away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_3qD5NARoymkNjqETt4PRw4kz",
+        "klip": "asset_jWag6utY6h1gcsvXSFbNcvw6"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/assets/mechanics_fx.py (pack_fx.py 192 px, 12 kl./s, klatki 1-24), próg alfa 40, WebP q60",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "efekty/clans_rune",
+      "pliki": [
+        "public/assets/efekty/clans_rune.webp"
+      ],
+      "typ": "efekt świetlny (arkusz 24 klatek po 192 px): Runy Klanu: trzy świecące runy krążące wokół figury",
+      "prompt": "Obraz startowy (Flare, medium): glowing light effect centered on a pure solid black background, no text, no characters (three glowing orange-gold angular rune glyphs of molten metal light orbiting in a ring with ember sparks). Klip (P-Video 2, 2 s, 720p): the glowing runes flare up brightly, orbit around the centre and pulse with heat, then dim and fade away; light effect only on a pure solid black background, static camera.",
+      "scenario_asset": {
+        "obraz": "asset_u3PPKDsaQucjuZ7mQA6fWrdH",
+        "klip": "asset_fscAnzSmtnj6F2V11yvHn2Uk"
+      },
+      "model": "GPT Image 2.5 Flare medium + P-Video 2; pakowanie scripts/assets/mechanics_fx.py (pack_fx.py 192 px, 12 kl./s, klatki 1-24), próg alfa 40, WebP q60",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/herds_push",
+      "pliki": [
+        "public/assets/dzwieki/herds_push.mp3"
+      ],
+      "typ": "dźwięk: odepchnięcie (Stado)",
+      "prompt": "Heavy thud of a horned animal shoving something aside, a short ground scuff and a puff of dust, game sound effect (czas 1 s)",
+      "scenario_asset": "asset_DU1ZtLi7eKNh439PzrjE1k6a",
+      "model": "ElevenLabs Sound Effects v3",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/herds_collision",
+      "pliki": [
+        "public/assets/dzwieki/herds_collision.mp3"
+      ],
+      "typ": "dźwięk: zderzenie (Stado)",
+      "prompt": "Heavy rocky impact, a body bumping into a boulder with a dull stone knock and rattling pebbles, game sound effect (czas 1 s)",
+      "scenario_asset": "asset_jU4kqzJexFpabywcUEyDKSCi",
+      "model": "ElevenLabs Sound Effects v3",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/herds_charge",
+      "pliki": [
+        "public/assets/dzwieki/herds_charge.mp3"
+      ],
+      "typ": "dźwięk: szarża (Stado)",
+      "prompt": "Fast pounding hooves galloping on dry ground that end in a dusty rushing whoosh, game sound effect (czas 1.2 s)",
+      "scenario_asset": "asset_P2aouwYZFrrbx5Ca8NYG1pjJ",
+      "model": "ElevenLabs Sound Effects v3",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/herds_roar",
+      "pliki": [
+        "public/assets/dzwieki/herds_roar.mp3"
+      ],
+      "typ": "dźwięk: ryk (Rykowisko, Ziemia Drży)",
+      "prompt": "A deep bellowing roar of a huge elk-like beast with a rumbling echo, game sound effect (czas 1.8 s)",
+      "scenario_asset": "asset_CsQnSN6q8b9784k55FrzFJT6",
+      "model": "ElevenLabs Sound Effects v3",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/tides_shell",
+      "pliki": [
+        "public/assets/dzwieki/tides_shell.mp3"
+      ],
+      "typ": "dźwięk: Skorupa (Przypływy)",
+      "prompt": "A hard thick shell closing: a solid hollow clack with a short magical shimmer, game sound effect (czas 1 s)",
+      "scenario_asset": "asset_cUq3uxia2435v2ZQETqy3BkV",
+      "model": "ElevenLabs Sound Effects v3",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/tides_waterWall",
+      "pliki": [
+        "public/assets/dzwieki/tides_waterWall.mp3"
+      ],
+      "typ": "dźwięk: Ściana Wody (Przypływy)",
+      "prompt": "A wall of water rising and surging outward with a big watery whoosh and splash, game sound effect (czas 1.5 s)",
+      "scenario_asset": "asset_px5DyEmEyskH9MP7f2X4h2go",
+      "model": "ElevenLabs Sound Effects v3",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "dzwieki/tides_whirl",
+      "pliki": [
+        "public/assets/dzwieki/tides_whirl.mp3"
+      ],
+      "typ": "dźwięk: Wir Głębin (Przypływy)",
+      "prompt": "A huge deep whirlpool swirling and gurgling, rushing water spiralling down with a low rumble, game sound effect (czas 1.8 s)",
+      "scenario_asset": "asset_nYJ5oN7nTx3RNyBRQgpz8X7y",
+      "model": "ElevenLabs Sound Effects v3",
+      "narzedzie": "Scenario (plan płatny)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

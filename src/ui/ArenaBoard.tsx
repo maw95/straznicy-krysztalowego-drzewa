@@ -502,6 +502,12 @@ export function ArenaBoard(p: Props) {
           })}
           {fxs.map((e) => {
             const { x, y } = cellPos(e.cell);
+            if (e.to) {
+              // A rope (harpoon, coil): a sheet stretched from this cell to the other, turned towards it.
+              const t = cellPos(e.to);
+              const dx = t.x - x, dy = t.y - y;
+              return <span key={e.key} data-fx={e.kind} className={`fx-sheet fx-battle ${e.kind}`} style={{ left: x + W / 2, top: y + H / 2, width: Math.hypot(dx, dy), transform: `rotate(${Math.atan2(dy, dx)}rad)` }} />;
+            }
             return <span key={e.key} data-fx={e.kind} className={`fx-sheet fx-battle ${e.kind}`} style={{ left: x + W / 2, top: y + H / 2 }} />;
           })}
           {shards.map((sh) => {
