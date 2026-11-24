@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { heroPool, MAX_PVP_PLAYERS, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type FactionId } from '../engine/data';
 import { CUSTOM_MAPS } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
+import { PACK_IDS } from '../engine/factions';
+import { SIDES_GOALS } from '../engine/teams';
 import { defaultCustom, TIERS } from '../engine/presets';
 import { currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
@@ -392,6 +394,8 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
   const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, tier: room.tier ?? 'adventure', objective: room.objective ?? 'crystals', shape: room.shape ?? 'triangle', ...(room.customMapId ? { customMapId: room.customMapId } : {}), ...(room.noHorde ? { noHorde: true } : {}), ...(room.arenaSize === 6 ? { arenaSize: 6 as const } : {}), ...(room.tier === 'custom' ? { growth: room.growth === true, ...(room.layer ? { layer: room.layer } : {}), battleMode: room.battleMode ?? 'arena', rules: room.rules ?? defaultCustom(room.level, room.mode).rules } : {}), seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
   const configure = (patch: Partial<TableConfig>) => session.send({ type: 'configure', table: { ...table, ...patch } });
   const updateSeat = (i: number, patch: Partial<TableConfig['seats'][number]>) => configure({ seats: table.seats.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
+  /** The factions a seat may take: Przymierze and Horda, and in a digital rivalry for the goals made for any number of sides all the others (the server checks the same). */
+  const offered: readonly FactionId[] = table.mode === 'pvp' && table.digital && table.tier !== 'adventure' && SIDES_GOALS.includes(table.objective ?? 'crystals') ? PACK_IDS : (['dawn', 'horde'] as const);
   const takenBy = (heroId: string, i: number) => table.seats.some((s, j) => j !== i && s.heroId === heroId);
   const ready = room.seats.every((s) => s.bot || s.player);
   const [copied, setCopied] = useState(false);
@@ -429,9 +433,8 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
             <div key={i} className="well" style={{ padding: '6px 12px', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', background: SEAT_TINT[s.faction] }}>
               <img src={asset(`cards/crests/${s.faction}.png`)} alt="" title={FACTION_NAMES[s.faction]} style={{ width: 46, height: 46, objectFit: 'contain', flex: 'none' }} />
               {owner && !locked && room.mode === 'pvp' && (
-                <select value={s.faction} aria-label="Frakcja" onChange={(e) => updateSeat(i, { faction: e.target.value as 'dawn' | 'horde', heroId: heroPool(e.target.value as FactionId, room.mode === 'pvp' && room.digital ? MAX_PVP_PLAYERS : room.seats.length).find((h) => !takenBy(h, i))! })}>
-                  <option value="dawn">{FACTION_NAMES.dawn}</option>
-                  <option value="horde">{FACTION_NAMES.horde}</option>
+                <select value={s.faction} aria-label="Frakcja" onChange={(e) => updateSeat(i, { faction: e.target.value as FactionId, heroId: heroPool(e.target.value as FactionId, room.mode === 'pvp' && room.digital ? MAX_PVP_PLAYERS : room.seats.length).find((h) => !takenBy(h, i))! })}>
+                  {offered.map((f) => <option key={f} value={f}>{FACTION_NAMES[f]}</option>)}
                 </select>
               )}
               {owner && !locked && (

@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Gra online: przy stole w Potyczce (cele Punkty kontrolne, Podbój, Relikt) każde miejsce może wybrać dowolną z dziesięciu frakcji, do czterech stron; serwer sprawdza stół i pilnuje map.
 - Baran Gromowładny zajmuje teraz dwa pola i jest narysowany w dużym rozmiarze, jak inni duzi bohaterowie.
 - Doświadczenie ma własną ikonę (złota gwiazda z szafirem): po zdobyciu PD nad bohaterem unosi się „+X ★”, a w panelu bohatera i w powiadomieniu ikona zastępuje słowo „PD”.
 - Skrzynia skarbów i Księga czarów: jedne, duże zdobione strzałki do przewracania stron; w skrzyni skarby i strzałki są wyśrodkowane na czerwonym polu wnętrza, skarby tego samego rodzaju leżą w jednej ikonie z „×3”, a te, których można teraz użyć, są na początku.

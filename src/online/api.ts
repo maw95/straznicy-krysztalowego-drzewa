@@ -2,7 +2,7 @@
 // `npm run dev` talks to a server started locally (make dev in the backend repo); the built game to Fly.io.
 // VITE_SERVER_URL overrides both.
 
-import type { MapSize } from '../engine/data';
+import type { FactionId, MapSize } from '../engine/data';
 import type { CustomLayer, CustomRules } from '../engine/presets';
 import type { BattleMode, GameState, MapShape, ObjectiveId } from '../engine/types';
 
@@ -15,7 +15,7 @@ export interface User {
 }
 
 export interface SeatView {
-  faction: 'dawn' | 'horde';
+  faction: FactionId;
   heroId: string;
   bot: boolean;
   player: (User & { online: boolean }) | null;
@@ -77,7 +77,7 @@ export interface TableConfig {
   rules?: CustomRules;
   /** Arena: 6 = the full 6 on 6 match (the server must know it, else it plays 3 on 3). */
   arenaSize?: 6;
-  seats: Array<{ faction: 'dawn' | 'horde'; heroId: string; bot: boolean }>;
+  seats: Array<{ faction: FactionId; heroId: string; bot: boolean }>;
 }
 
 /** Where a player online is: in the menu, in a room before the start (or after the end), or playing. */

@@ -14,6 +14,12 @@ export const TEAM_IDS: readonly TeamId[] = ['dawn', 'horde'];
 /** Every side a game may have, in turn order (the order of the factions). */
 export const ALL_TEAM_IDS: readonly TeamId[] = ['dawn', 'horde', 'third', 'fourth'];
 
+/**
+ * The goals that have been made for any number of sides and any factions (the other goals are stories of Przymierze and Horda): only in these
+ * does a digital rivalry offer the other factions. Read by the setup screen, the online table and the server.
+ */
+export const SIDES_GOALS: readonly string[] = ['control', 'conquest', 'relic'];
+
 /** The most sides in a game. */
 export const MAX_TEAMS = ALL_TEAM_IDS.length;
 
