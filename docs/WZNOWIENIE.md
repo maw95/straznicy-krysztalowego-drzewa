@@ -1,6 +1,5 @@
-# AKTUALNIE (23.11.2026): pełna grafika G4 dla Przypływów, potem Żelaznego Klanu
-Polecenie autora: wdrożyć do końca wszystkie grafiki, animacje i dźwięki najpierw dla Bractwa Przypływu (`tides`), po jego zakończeniu to samo dla Żelaznego Klanu (`clans`). Saldo Scenario 23.11: ok. 5 530 CU po kartach (karty i portrety obu frakcji już w repo, f848389). Szacunek ok. 1 900 CU na frakcję; limit 100 CU na jednostkę.
-Fazy (wzór: Dzikie Stado, commity 411a9ad e360ca5 d4795ea 64d076f 0982097 598f8b5 df70da4): (1) herb + ramki + ikony zdolności; (2) arena, przeszkody, kafle, rewers, obiekty mapy; (3) osada; (4) sprite'y 19 jednostek; (5) muzyka 2 utwory + dźwięki ataku/śmierci jednostek (`UNIT_SOUNDS` w `src/ui/sfx.ts`); (6) test w przeglądarce, wpisy `assets.json`, CHANGELOG PL i EN, commit na fazę.
+# AKTUALNIE (24.11.2026): kolejka z uwag autora, punkty 64–84 w `docs/BACKLOG.md`, sekcja 1 (bez robienia, dopóki autor nie wskaże punktów)
+Grafika G4 dla Przypływów i Żelaznego Klanu jest skończona (zob. BACKLOG, „Stan 24.11”). Autor przejrzał grę 24.11 i podał uwagi; zostały spisane i posortowane w BACKLOG jako punkty 64–84 (pierwszy: strona podglądu jednostek i osad). Stare fazy G4 poniżej są historią.
 Podagenci generują i pakują (instrukcja: `.tmp/briefs/COMMON.md`), koordynator commituje. **Stan: obie frakcje skończone (commity od 403016f do 780fc07); zob. `docs/BACKLOG.md` sekcja 8 „Stan 23.11 wieczorem” (co zostało).**
 
 # Wznowienie pracy (stan z 20.11.2026, na wypadek zmiany konta Claude)
