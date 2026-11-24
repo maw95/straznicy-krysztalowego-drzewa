@@ -6394,13 +6394,33 @@
         "public/assets/ui/wstazka_tides.webp"
       ],
       "typ": "wstążki sześciu frakcji (kolor materiału zmieniony, złote obrzeże zostaje)",
-      "opis": "Kopie czterech oryginalnych wstążek (g, r, b, p) z przesuniętym odcieniem materiału; skrypt scripts/assets/ribbon_tints.py.",
+      "opis": "Kopie oryginalnych wstążek (g, r, b) z przesuniętym odcieniem materiału; skrypt scripts/assets/ribbon_tints.py. 24.11: wstążka Klanu przefarbowana z fioletu na stalową szarość.",
       "prompt": "brak",
       "narzedzie": "scripts/assets/ribbon_tints.py (Pillow, lokalnie)",
       "model": "brak",
       "data": "2026-11-21",
       "ai": false,
       "licencja": "pochodna własnych wstążek gry"
+    },
+    {
+      "id": "ui/tkaniny-przyciskow-frakcji",
+      "pliki": [
+        "public/assets/ui/cloth_undead.jpg",
+        "public/assets/ui/cloth_herds.jpg",
+        "public/assets/ui/cloth_clans.jpg",
+        "public/assets/ui/cloth_free.jpg",
+        "public/assets/ui/cloth_sands.jpg",
+        "public/assets/ui/cloth_swarm.jpg",
+        "public/assets/ui/cloth_tides.jpg"
+      ],
+      "typ": "tkanina głównych przycisków w kolorze frakcji",
+      "opis": "Kopie oryginalnych tkanin (cloth_g/r/b) z przesuniętym odcieniem, te same liczby co wstążki; skrypt scripts/assets/cloth_tints.py. W grze przyciski główne bierze kolor frakcji z ekranu.",
+      "prompt": "brak",
+      "narzedzie": "scripts/assets/cloth_tints.py (Pillow, lokalnie)",
+      "model": "brak",
+      "data": "2026-11-24",
+      "ai": false,
+      "licencja": "pochodna własnych tkanin gry"
     },
     {
       "id": "karty/ikony-zdolnosci-jednostek-21-11",

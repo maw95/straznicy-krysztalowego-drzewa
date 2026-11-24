@@ -84,6 +84,18 @@ html[data-faction='tides'] .gf::after { background: url('/assets/ui/corner_tides
 .rib.sands { --rib-img: url('/assets/ui/wstazka_sands.webp'); }
 .rib.swarm { --rib-img: url('/assets/ui/wstazka_swarm.webp'); }
 .rib.tides { --rib-img: url('/assets/ui/wstazka_tides.webp'); }
+/* A ribbon without a side: green, and in a game the colour of the faction at the screen. */
+.rib.auto { --rib-img: url('/assets/ui/wstazka_g.webp'); }
+html[data-faction='dawn'] .rib.auto { --rib-img: url('/assets/ui/wstazka_g.webp'); }
+html[data-faction='horde'] .rib.auto { --rib-img: url('/assets/ui/wstazka_r.webp'); }
+html[data-faction='frost'] .rib.auto { --rib-img: url('/assets/ui/wstazka_b.webp'); }
+html[data-faction='undead'] .rib.auto { --rib-img: url('/assets/ui/wstazka_p.webp'); }
+html[data-faction='herds'] .rib.auto { --rib-img: url('/assets/ui/wstazka_herds.webp'); }
+html[data-faction='clans'] .rib.auto { --rib-img: url('/assets/ui/wstazka_clans.webp'); }
+html[data-faction='free'] .rib.auto { --rib-img: url('/assets/ui/wstazka_free.webp'); }
+html[data-faction='sands'] .rib.auto { --rib-img: url('/assets/ui/wstazka_sands.webp'); }
+html[data-faction='swarm'] .rib.auto { --rib-img: url('/assets/ui/wstazka_swarm.webp'); }
+html[data-faction='tides'] .rib.auto { --rib-img: url('/assets/ui/wstazka_tides.webp'); }
 .rib-text { margin-top: -6px; padding: 0 6px; font-weight: 700; font-size: 20px; color: var(--cream); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6), 0 0 6px rgba(0, 0, 0, 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 .rib-text.long { font-size: 17px; }
 
@@ -128,6 +140,17 @@ html[data-faction='tides'] .gf::after { background: url('/assets/ui/corner_tides
 }
 .prim.r { background-image: url('/assets/ui/cloth_r.jpg'); }
 .prim.b { background-image: url('/assets/ui/cloth_b.jpg'); }
+/* In a game the primary buttons and the ribbons without a side of their own take the colour of the faction at the screen (html[data-faction], App.tsx). */
+html[data-faction='dawn'] .prim:not(.r):not(.b) { background-image: url('/assets/ui/cloth_g.jpg'); }
+html[data-faction='horde'] .prim:not(.r):not(.b) { background-image: url('/assets/ui/cloth_r.jpg'); }
+html[data-faction='frost'] .prim:not(.r):not(.b) { background-image: url('/assets/ui/cloth_b.jpg'); }
+html[data-faction='undead'] .prim:not(.r):not(.b) { background-image: url('/assets/ui/cloth_undead.jpg'); }
+html[data-faction='herds'] .prim:not(.r):not(.b) { background-image: url('/assets/ui/cloth_herds.jpg'); }
+html[data-faction='clans'] .prim:not(.r):not(.b) { background-image: url('/assets/ui/cloth_clans.jpg'); }
+html[data-faction='free'] .prim:not(.r):not(.b) { background-image: url('/assets/ui/cloth_free.jpg'); }
+html[data-faction='sands'] .prim:not(.r):not(.b) { background-image: url('/assets/ui/cloth_sands.jpg'); }
+html[data-faction='swarm'] .prim:not(.r):not(.b) { background-image: url('/assets/ui/cloth_swarm.jpg'); }
+html[data-faction='tides'] .prim:not(.r):not(.b) { background-image: url('/assets/ui/cloth_tides.jpg'); }
 .plate.btn { font-weight: 700; color: var(--ink); }
 .plate.btn.on { box-shadow: 0 0 0 2px #9ee4ff, 0 0 12px 3px rgba(158, 228, 255, 0.6), inset 0 0 16px rgba(120, 80, 20, 0.35); }
 /* Button sizes repeated across screens. */

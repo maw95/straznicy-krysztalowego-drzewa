@@ -5,7 +5,7 @@ from PIL import Image
 
 D = 'public/assets/ui'
 # faction: (source ribbon, target hue of the cloth in degrees, saturation factor, value factor)
-TINTS = {'herds': ('r', 24, 1.0, 1.05), 'sands': ('r', 46, 0.9, 1.15), 'free': ('r', 20, 0.55, 0.75), 'swarm': ('g', 172, 1.0, 1.0), 'tides': ('b', 192, 1.0, 1.05), 'clans': ('p', 322, 1.0, 1.0)}
+TINTS = {'herds': ('r', 24, 1.0, 1.05), 'sands': ('r', 46, 0.9, 1.15), 'free': ('r', 20, 0.55, 0.75), 'swarm': ('g', 172, 1.0, 1.0), 'tides': ('b', 192, 1.0, 1.05), 'clans': ('r', 40, 0.14, 0.82)}
 
 for fac, (src, hue, sat, val) in TINTS.items():
     im = Image.open(f'{D}/wstazka_{src}.webp').convert('RGBA')

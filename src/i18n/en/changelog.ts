@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Kolory frakcji w interfejsie: obwódki portretów Bractwa Przypływu są turkusowe (były łososiowe), wstęga Żelaznego Klanu jest stalowoszara (była fioletowa), a w grze wstęgi okien („Znaleziono skarb!”, skrzynia, nowy poziom, dziennik) i główne przyciski („Zakończ turę”, „Do ekwipunku”…) mają kolor frakcji gracza zamiast zawsze zielonego.":
+    "Faction colours in the interface: the portrait rings of the Brotherhood of the Tide are turquoise (they were salmon), the Iron Clan ribbon is steel grey (it was purple), and in a game the ribbons of windows (\"Treasure found!\", the chest, level-up, the log) and the main buttons (\"End turn\", \"To inventory\"…) take the colour of the player's faction instead of always green.",
   "Sefiran Plamisty na arenie jest większy: wąż był o połowę mniejszy od innych bohaterów i ginął na polu.":
     "Sefiran the Spotted is bigger on the arena: the snake was half the size of the other heroes and got lost on its hex.",
   "Wszystkie 19 postaci Żelaznego Klanu mają animowane sprite'y (stanie, chód, atak, śmierć, trafienie): Tan Żelaznobrody, Matka Run, Mosiężny Pająk, Niedźwiedź w Zbroi, Armata Klanów, Kolos Kuźni i pozostałe":
