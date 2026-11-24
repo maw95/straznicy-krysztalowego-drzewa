@@ -341,7 +341,7 @@ A people of the reef and the ebb: tritons, sirens, crab-folk and turtles, and se
 - **Settlement:** the **Temple of Tides** (mechanic), the **Pearl Shoals** (+1 gold per round) and the **Lighthouse** (reveals the map within 3 hexes, 5 on level II, and shows enemy hero movements). Primal Spark: the Pearl Temple (every unit starts the battle with a Pearl Shield).
 
 ### Where you can play them
-The new factions are available in **Skirmish** in the goals Control, Conquest and Relic.
+The new factions are available in **Skirmish** in the goals Control, Conquest and Relic, also at an online table (each seat picks its own faction).
 
 ## Evil automaton and bots
 @words: evil automaton, bot, computer, artificial intelligence, horde, opponent, reinforcements, hint, autoplay

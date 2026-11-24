@@ -341,7 +341,7 @@ Lud rafy i odpływu: trytoni, syreny, kraboludy i żółwie, a w głębi węże 
 - **Osada:** **Świątynia Pływów** (mechanika), **Perłowe Ławice** (+1 zł na rundę) i **Latarnia Morska** (odkrywa mapę w promieniu 3, na poziomie II 5, i pokazuje ruchy wrogich bohaterów). Pierwotna Iskra: Perłowa Świątynia (każda jednostka zaczyna bitwę z Perłową Tarczą).
 
 ### Gdzie można nimi grać
-Nowe frakcje są dostępne w trybie **Potyczka** w celach Kontrola, Podbój i Relikt.
+Nowe frakcje są dostępne w trybie **Potyczka** w celach Kontrola, Podbój i Relikt, także przy stole online (każde miejsce wybiera własną frakcję).
 
 ## Automat zła i boty
 @słowa: automat zła, bot, komputer, sztuczna inteligencja, horda, przeciwnik, posiłki, podpowiedź, autoplay
