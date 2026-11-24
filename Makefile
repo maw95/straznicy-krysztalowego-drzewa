@@ -60,6 +60,9 @@ zrzut: node_modules ## Zrzut ekranu gry (mały), np. make zrzut Q='steps=400&unt
 	@mkdir -p .tmp
 	npx tsx scripts/browser/zrzut.ts '$(Q)' --widok $(WIDOK) $(if $(ELEMENT),--element '$(ELEMENT)',)
 
+podglad: node_modules ## Strona przeglądu Stad, Klanu i Przypływów: karty, animacje, dźwięki, osady (.tmp/podglad/index.html; make podglad F='herds clans')
+	npx tsx scripts/podglad.ts $(F)
+
 placeholders: node_modules ## Zastępcze grafiki dla jednostek frakcji bez grafiki (scripts/placeholders.ts)
 	npx tsx scripts/placeholders.ts
 
