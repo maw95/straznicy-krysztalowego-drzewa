@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Pole walki Żelaznego Klanu to teraz podziemna sztolnia (żyły rudy, tory wózków, drewniane stemple, latarnie); przeszkody: skalna ściana z belkami, głazy z rudą, rumowisko i wózek z rudą.": "The Iron Clans battlefield is now an underground mine gallery (ore veins, cart rails, wooden supports, lanterns); obstacles: a rock wall with beams, ore boulders, rubble and an ore cart.",
   "Osada Żelaznego Klanu ma nowe tło z szerokim, płaskim kamiennym placem: Rada Osady i budynki stoją na nim, a nie „wiszą w powietrzu”.": "The Iron Clans settlement has a new background with a wide, flat stone plaza: the Settlement Council and the buildings stand on it instead of hanging in the air.",
   "Gra online: przy stole w Potyczce (cele Punkty kontrolne, Podbój, Relikt) każde miejsce może wybrać dowolną z dziesięciu frakcji, do czterech stron; serwer sprawdza stół i pilnuje map.": "Online: at a Skirmish table (goals Control Points, Conquest, Relic) every seat may pick any of the ten factions, up to four sides; the server checks the table and the maps.",
   "Baran Gromowładny zajmuje teraz dwa pola i jest narysowany w dużym rozmiarze, jak inni duzi bohaterowie.": "Thunder Ram now takes two hexes and is drawn large, like the other big heroes.",
