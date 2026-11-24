@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89252fbb-bb1d-425f-a087-9550b0de05f0" name="Changes" comment="v1.0">
-      <change beforePath="$PROJECT_DIR$/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/CHANGELOG.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/i18n/en/changelog.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/i18n/en/changelog.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/gameDialogs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/gameDialogs.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,7 +195,7 @@
       <workItem from="1795071994751" duration="16139000" />
       <workItem from="1795098805327" duration="54144000" />
       <workItem from="1795254435822" duration="12696000" />
-      <workItem from="1795416561109" duration="40653000" />
+      <workItem from="1795416561109" duration="43208000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
