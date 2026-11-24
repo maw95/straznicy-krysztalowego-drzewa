@@ -9222,7 +9222,7 @@
         "public/assets/osady/land_clans.jpg"
       ],
       "typ": "okno osady Żelaznego Klanu: tło górskiej twierdzy, 18 budynków ogólnych, 3 unikalne (Sala Tarcz, Runiczna Kuźnia, Głęboka Sztolnia), 9 siedlisk",
-      "opis": "Tło 1536x720 -> 1280x600; budynki i siedliska 1024x1024 przezroczyste, przycięte do 380 px wysokości (scripts/assets/clans_settlement.py). Kod: SettlementDialog.tsx (UNIQUE_OWNER). 31 obrazów po 3 CU = 93 CU, jedna próba na obraz (dwa odrzucone przez limit równoległych zadań, bez kosztu).",
+      "opis": "24.11: tło wygenerowane od nowa (asset_mH4MFaNBMxPfzngSRpAQwdNq, Flare 2.5 high 1536x720, ok. 12 CU; płaski plac pod zabudowę, prompt: wide empty background ... ONE very wide flat open level stone plateau ..., przycięte (54,50,1482,720) -> 1280x600, źródło .tmp/zrodla/clans_land2). Tło 1536x720 -> 1280x600; budynki i siedliska 1024x1024 przezroczyste, przycięte do 380 px wysokości (scripts/assets/clans_settlement.py). Kod: SettlementDialog.tsx (UNIQUE_OWNER). 31 obrazów po 3 CU = 93 CU, jedna próba na obraz (dwa odrzucone przez limit równoległych zadań, bez kosztu).",
       "scenario_asset": "patrz .tmp/zrodla/clans_settlement/dl*.txt (asset_id w adresach)",
       "prompt": "<opis budynku>. Isometric game building sprite for a fantasy strategy game town screen, high three-quarter isometric angle like Heroes of Might and Magic III, painterly detailed realistic rendering, warm lantern light, palette of polished steel, brass, copper, grey stone and warm golden light, no blue, no lava, no red embers, small patch of grey mountain rock, transparent background, no text. (tło: dwarven fortress-town in a mountain pass, empty flagstone terrace)",
       "narzedzie": "Scenario",

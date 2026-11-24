@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Osada Żelaznego Klanu ma nowe tło z szerokim, płaskim kamiennym placem: Rada Osady i budynki stoją na nim, a nie „wiszą w powietrzu”.
 - Gra online: przy stole w Potyczce (cele Punkty kontrolne, Podbój, Relikt) każde miejsce może wybrać dowolną z dziesięciu frakcji, do czterech stron; serwer sprawdza stół i pilnuje map.
 - Baran Gromowładny zajmuje teraz dwa pola i jest narysowany w dużym rozmiarze, jak inni duzi bohaterowie.
 - Doświadczenie ma własną ikonę (złota gwiazda z szafirem): po zdobyciu PD nad bohaterem unosi się „+X ★”, a w panelu bohatera i w powiadomieniu ikona zastępuje słowo „PD”.
