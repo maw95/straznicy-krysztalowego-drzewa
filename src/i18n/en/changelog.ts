@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Dzikie Stado, poprawki po przeglądzie: śmierć jednostek to teraz upadek na bok (nie siadanie ani kładzenie się), trafienie to cofnięcie od ciosu (nie atak), Satyr Rogogłos dmie w róg, ataki Barana, Żubra, Arkara i Łosia są energiczne, Orzeł Stepowy i Łamignat stoją na ziemi i startują do lotu, a Słoń z Bębnem nie biegnie już po trafieniu; nowe dźwięki Pędziwiatra, Barana, Zagończyka, Młodego Tura, Łamignata (jak orzeł), Słonia, Łosia i Indrika.":
+    "Wild Herd, fixes after review: units now fall onto their side when they die (no sitting or lying down), a hit makes them recoil (not attack), the Satyr Horn-Lord blows his horn, the attacks of the Thunder Ram, Bison, Arkar and Moose are energetic, the Steppe Eagle and the Steppe Hippogriff stand on the ground and take off, and the Drum Elephant no longer runs when hit; new sounds for the Windrunner, Thunder Ram, Aurochs Scout, Young Aurochs, Hippogriff (eagle-like), Elephant, Moose and Indrik.",
   "Opis artefaktu „Trzewiki z Kory” mówi teraz o efekcie (odporność na korzenie, sidła, chwyt i spowolnienie), a nie o stworzeniach, które je zadają.":
     "The description of the Bark Shoes artifact now talks about the effect (immunity to roots, snares, the grip and slowing) instead of the creatures that cause them.",
   "Na liście osad w panelu mapy i na flagach punktów kontrolnych każda frakcja ma własny medalion (herb na polu w kolorze frakcji); wcześniej frakcja grająca na trzecim lub czwartym miejscu przy stole, np. Bractwo Przypływu, miała tam puste miejsce.":

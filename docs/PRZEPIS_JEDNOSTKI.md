@@ -88,3 +88,12 @@ dużych, ok. 70 px dla małych (`bodyW`).
 - **Kolor włosów i szczegóły:** portret karty jako odniesienie nie wystarcza; opisz barwy słowami (nimfa: miętowo-seledynowe włosy, bez błękitu); wtedy `stoi` pasuje do portretu.
 - **Pobieranie w tle:** `cd` w złożonej komendzie z `&` rozwala ścieżki; pobieraj kolejno albo z pełnymi ścieżkami.
 - **Skrypty pomocnicze** (nie w repo): w `.tmp/neu/` leżą `shrink.py`, `post.py`, `sheet.py`, `check.py` (zmniejszenie obrazu startowego, przeskalowanie klatek, arkusz kontaktowy).
+
+## Lekcje z poprawek Dzikiego Stada (24.11.2026)
+
+- **Tryb `draft: true` P-Video 2** daje ten sam rozmiar (960×960) i wygląda jak finał po zmniejszeniu do 512 px, a kosztuje 9 CU zamiast 15 (klip 2 s: 6 zamiast 10). Używać go dla wszystkich klipów, finał tylko gdy draft ma widoczne wady.
+- **Śmierć „na bok”:** prompt `The X becomes tired, its legs fold under it and it lowers itself sideways to the ground, rolling gently onto its side, then rests completely still, as if fast asleep.` BEZ `lastFrameImage`; `martwy.png` to ostatnia klatka klipu. Z obrazem końcowym „lying on its side” filtr blokował klipy (też `staggers`, `topples`, `heavy thud`, `Defeat animation`); blokada zależy od obrazów wejściowych, więc ta sama treść bywa przepuszczana lub nie: najpierw jeden test, potem partia.
+- **Trafienie, które nie wygląda jak atak:** `is startled: its head jerks back a little and its front legs shift backwards a step ... It does not attack and does not move forward.` (2 s).
+- **Atak dla czworonogów:** `lowers its head ... thrusts/butts forward in place toward the right ... hind hooves stay at the same spot, does not walk forward`; słowa fierce/sweeping mogą zablokować (Łoś: przeszło „powerful thrusting motion”).
+- **Latające jednostki stojące na ziemi (Orzeł, Łamignat):** nowy `stoi` z odniesieniem do dawnego obrazu zawisu (Flare high, `NOT flying: stands on the ground, wings folded`), klip `wzbicie` (2 s, `image` = nowy stoi, `lastFrameImage` = dawny zawis), atak/śmierć/trafienie z nowego stoi; pętla `lot` zostaje. W `sprites.ts` dodać `wzbicie: 2` i dobrać `box` do pozy stojącej.
+- Limit planu: 10 zadań równolegle na zespół (429 przy 11.); pobieranie: URL z `asset_download` trzeba przepisać dokładnie (literówka w podpisie daje plik XML zamiast mp4).

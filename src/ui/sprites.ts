@@ -64,7 +64,7 @@ export const SPRITES: Record<string, SpriteSpec> = {
   // The neutral encounter units (11.11). The two bosses on two hexes use LARGE; the weak ones sit in one-hex boxes.
   shardling: { dir: 'jednostki/kruszyniec', box: [64, 90] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   burrower: { dir: 'jednostki/podkopnik', box: [94, 66] as const, corpseMax: 100, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  skyEagle: { dir: 'jednostki/orzel_skalny', box: [100, 88] as const, corpseMax: CORPSE_MAX_W, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  skyEagle: { dir: 'jednostki/orzel_skalny', box: [64, 76] as const, corpseMax: CORPSE_MAX_W, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   harpy: { dir: 'jednostki/harpia', box: [100, 96] as const, corpseMax: CORPSE_MAX_W, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   pincer: { dir: 'jednostki/szczypiec', box: [98, 72] as const, corpseMax: 100, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   bogCrawler: { dir: 'jednostki/bagienny_pelzacz', box: [80, 98] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
@@ -91,7 +91,7 @@ export const SPRITES: Record<string, SpriteSpec> = {
   caveTroll: { dir: 'jednostki/troll_jaskiniowy', box: [92, 100] as const, corpseMax: CORPSE_MAX_W, speed: {} },
   shadowWyvern: { dir: 'jednostki/wiwerna_cienia', box: [160, 130] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // Wild Herd (backlog 61g, G4 phase 5): all nineteen units with a full set of clips. Two-hex: greatAurochs, steppeLamignat (flies),
-  // warRhino, drumElephant, bullMoose, indrik. The flyers (eagleHunter, steppeLamignat) stand hovering, so no take-off clip.
+  // warRhino, drumElephant, bullMoose, indrik. The flyers (eagleHunter, steppeLamignat) stand on the ground (24.11) and take off (wzbicie), fly, land.
   greatAurochs: { dir: 'jednostki/tur_olbrzymi', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   satyrHornlord: { dir: 'jednostki/satyr_rogoglos', box: [70, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   windAntelope: { dir: 'jednostki/antylopa_wiatru', box: [86, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
@@ -104,7 +104,7 @@ export const SPRITES: Record<string, SpriteSpec> = {
   kulan: { dir: 'jednostki/kulan', box: [88, 84] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   steppeArcher: { dir: 'jednostki/lucznik_stepowy', box: [88, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   forestBison: { dir: 'jednostki/zubr_lesny', box: [92, 80] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  steppeLamignat: { dir: 'jednostki/lamignat_stepowy', box: [150, 124] as const, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  steppeLamignat: { dir: 'jednostki/lamignat_stepowy', box: [130, 118] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   warRhino: { dir: 'jednostki/nosorozec_bojowy', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   muskOx: { dir: 'jednostki/wol_pizmowy', box: [92, 78] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   arkar: { dir: 'jednostki/arkar', box: [90, 80] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
