@@ -66,7 +66,7 @@ function racesSeats(q: URLSearchParams) {
   const races = (q.get('races') ?? '').split(',').filter((r) => r in FACTION_HEROES);
   if (q.get('mode') !== 'pvp' || races.length < 2) return null;
   const slots = assignSlots(races as never);
-  return races.map((race, i) => ({ name: `G${i + 1}`, faction: slots[i], race, controller: 'human' as const, heroId: (FACTION_HEROES as Record<string, string[]>)[race][0] })) as never;
+  return races.map((race, i) => ({ name: `G${i + 1}`, faction: slots[i], race, controller: 'human' as const, heroId: (i === 0 && q.get('hero')) || (FACTION_HEROES as Record<string, string[]>)[race][0] })) as never;
 }
 
 export function App() {

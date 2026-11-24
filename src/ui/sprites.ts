@@ -130,7 +130,7 @@ export const SPRITES: Record<string, SpriteSpec> = {
   walrusCaptain: { dir: 'jednostki/mors_kapitan', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   tritonGuard: { dir: 'jednostki/trytonski_straznik', box: [74, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   harpooneer: { dir: 'jednostki/harpunniczka', box: [78, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  sefiran: { dir: 'jednostki/sefiran_plamisty', box: [55, 40] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  sefiran: { dir: 'jednostki/sefiran_plamisty', box: [76, 54] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // Iron Clan (G4, 23.11): all nineteen characters with a full set of clips. Two-hex: dwarfCannon, clanColossus.
   shieldDwarf: { dir: 'jednostki/krasnolud_tarczownik', box: [66, 106] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   bronzeMole: { dir: 'jednostki/kret_z_brazu', box: [90, 52] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },

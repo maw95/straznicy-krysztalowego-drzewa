@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Sefiran Plamisty na arenie jest większy: wąż był o połowę mniejszy od innych bohaterów i ginął na polu.":
+    "Sefiran the Spotted is bigger on the arena: the snake was half the size of the other heroes and got lost on its hex.",
   "Wszystkie 19 postaci Żelaznego Klanu mają animowane sprite'y (stanie, chód, atak, śmierć, trafienie): Tan Żelaznobrody, Matka Run, Mosiężny Pająk, Niedźwiedź w Zbroi, Armata Klanów, Kolos Kuźni i pozostałe":
     "All 19 characters of the Iron Clan have animated sprites (standing, walking, attack, death, hit): Tan Ironbeard, the Rune Matron, the Brass Spider, the Armoured Bear, the Clan Cannon, the Forge Colossus and the rest.",
   "Żelazny Klan ma własną mapę i arenę: górską halę zamiast łąki, własny rewers kafli, twierdzę i skarbiec, kafle i obiekty w klimacie kamiennej twierdzy (kapliczka przodków, kopalnie, studnia, skrzynia, młyn), arenę na górskiej przełęczy z siedmioma rodzajami przeszkód i własny kamienny mur Fortyfikacji Kolosa":
