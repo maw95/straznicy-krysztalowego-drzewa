@@ -70,7 +70,7 @@ register({
   'Na razie cisza.': 'Quiet for now.', 'Napisz…': 'Write…', 'Instrukcja': 'Manual', 'Jednostki': 'Units', 'Artefakty': 'Artifacts', 'Lokacje na mapie': 'Map locations',
   'Wersje i poziomy': 'Versions and levels', 'Baza': 'Base', 'Neutralni': 'Neutrals', 'Legowisko Bossa': "Boss's Lair", 'Teren': 'Terrain', 'Spacja': 'Space', 'Ctrl': 'Ctrl',
   'Neutralni: bossowie': 'Neutrals: bosses', 'Rozbuduj': 'Upgrade', 'Targ kupuje i sprzedaje surowce.': 'The market buys and sells resources.', 'Garnizon (': 'Garrison (',
-  'Puste miejsce garnizonu': 'Empty garrison slot', 'Zostaw w garnizonie': 'Leave in the garrison', 'W garnizonie': 'In the garrison', 'Potrzebne rozbudowane koszary.': 'Upgraded barracks needed.',
+  'Puste miejsce garnizonu': 'Empty garrison slot', 'Zostaw w garnizonie': 'Leave in the garrison', 'W garnizonie': 'In the garrison', 'Potrzebne rozbudowane koszary.': 'Upgraded barracks needed.', 'Zablokowane do poziomu koszar 2.': 'Locked until barracks level 2.', 'Wymaga koszar poziomu 1.': 'Needs barracks level 1.', 'Wymaga koszar poziomu 2.': 'Needs barracks level 2.',
   'W tej grze jego wzniesienie wygrywa.': 'In this game raising it wins.', 'Znany': 'Known', 'Wykup (': 'Buy back (', 'Najmij (': 'Hire (', 'Skarbiec stoi: +': 'The treasury stands: +',
   'Siedlisko poziomu {0}': 'Dwelling of tier {0}', 'Najpierw: siedlisko poziomu {0}.': 'First: the dwelling of tier {0}.', 'Siedlisko poziomu': 'Dwelling of tier', 'Zbudowane': 'Built',
   'Miejsca przy stole · {0}': 'Seats at the table · {0}', 'Twoje partie': 'Your games', 'Rozegrane': 'Played', 'Procent wygranych': 'Win percentage', 'Gdzie grasz?': 'Where do you play?',

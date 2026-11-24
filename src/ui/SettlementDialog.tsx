@@ -626,7 +626,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
       {view === 'barracks' && (
         <div className="settlement-page">
           <div className="settlement-field sheet wide">
-            <BarracksScreen state={state} s={s} faction={faction} act={act} footer={<div className="settlement-actions row">{goldLine}{backButton}</div>} />
+            <BarracksScreen state={state} s={s} faction={faction} act={act} picture={(level) => buildingPicture(landRace, 'barracks', level)} footer={<div className="settlement-actions row">{goldLine}{backButton}</div>} />
           </div>
         </div>
       )}

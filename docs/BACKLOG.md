@@ -39,7 +39,6 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Zrobione 24.11: p
 
 
 
-**71. Koszary: czytelne oznaczenie, od którego poziomu koszar dostępni są pomocnicy (S).** Przy każdej karcie pomocnika wymagany poziom koszar (np. ikona koszar z cyfrą) i stan „zablokowane do poziomu N”, zgodnie z `RECRUITS`/siedliskami w `kingdom.ts`.
 
 **72. Prawy klik na budynek: okienko ze szczegółami (S–M).** W widoku osady i w Radzie Osady prawy przycisk myszy (na telefonie przytrzymanie) na budynku pokazuje okienko z opisem, poziomem, kosztem następnego poziomu i efektem. Wzorzec: okno prawego kliku na frakcji (`FACTION_BLURBS` w `setupShared.tsx`) i dymki z punktu „Ikony i podpowiedzi”.
 

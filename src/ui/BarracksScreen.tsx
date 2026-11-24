@@ -8,6 +8,7 @@ import { DWELLING_COST, DWELLING_NAMES, dwellingOf, dwellingReady, hasUnit, mayR
 import type { TeamId } from '../engine/data';
 import type { Settlement } from '../engine/kingdom';
 import type { Action, GameState } from '../engine/types';
+import { asset } from './common';
 import { CostIcons } from './resources';
 import { UnitCard } from './UnitCard';
 import { UnitSprite } from './UnitSprite';
@@ -17,8 +18,11 @@ const CARD_RATIO = 713 / 551;
 const CTL_H = 54;
 /** The height the gold and the way back take at the bottom of the right column. */
 const FOOT_H = 130;
+/** The barracks level a unit of this tier is recruited at: the strongest ones (tier 4 and up) need the upgraded barracks. */
+const needLevel = (tier: number): 1 | 2 => (tier >= 4 ? 2 : 1);
+const LOCK_TEXT = 'Zablokowane do poziomu koszar 2.';
 
-export function BarracksScreen({ state, s, faction, act, footer }: { state: GameState; s: Settlement; faction: TeamId; act: (a: Action) => void; footer?: ReactNode }) {
+export function BarracksScreen({ state, s, faction, act, footer, picture }: { state: GameState; s: Settlement; faction: TeamId; act: (a: Action) => void; footer?: ReactNode; /** The picture (path under assets) of the barracks of this level, for the badge on every card. */ picture?: (level: 1 | 2) => string }) {
   // The sizes follow the room: the shelf has two cards on top of each other at most (the first tier lies in two columns), the cards are as big as they can be.
   const box = useRef<HTMLDivElement>(null);
   const [room, setRoom] = useState({ w: 1300, h: 560 });
@@ -61,20 +65,20 @@ export function BarracksScreen({ state, s, faction, act, footer }: { state: Game
       const locked = r.tier >= 4 && s.buildings.barracks < 2;
       const prevOk = r.tier === 2 || Boolean(dwellingOf(state, faction, r.tier - 1));
       if (!mayHire) return { kind: 'blocked', hint: 'Ta osada należy do obcej frakcji.' };
-      if (locked) return { kind: 'blocked', hint: 'Potrzebne rozbudowane koszary.' };
+      if (locked) return { kind: 'blocked', hint: LOCK_TEXT };
       if (!prevOk) return { kind: 'blocked', hint: `Najpierw: siedlisko poziomu ${r.tier - 1}.` };
       return { kind: 'build', hint: 'Można wybudować siedlisko.' };
     }
     if (!dwellingReady(state, faction, r)) return { kind: 'blocked', hint: `Wybrano inne siedlisko: ${DWELLING_NAMES[dwellingOf(state, faction, r.tier)!]}.` };
     if (!mayHire) return { kind: 'blocked', hint: 'Ta osada należy do obcej frakcji.' };
-    if (r.tier >= 4 && s.buildings.barracks < 2) return { kind: 'blocked', hint: 'Potrzebne rozbudowane koszary.' };
+    if (r.tier >= 4 && s.buildings.barracks < 2) return { kind: 'blocked', hint: LOCK_TEXT };
     return { kind: 'ready', hint: 'Można zrekrutować.' };
   };
   // The buttons under the cards grow with the cards.
   const ico = Math.round(Math.max(15, Math.min(26, cardW * 0.09)));
   const control = (r: (typeof recruits)[number]) => {
     const locked = r.tier >= 4 && s.buildings.barracks < 2;
-    const lockText = 'Potrzebne rozbudowane koszary.';
+    const lockText = LOCK_TEXT;
     if (hasUnit(state, faction, r.id)) {
       const inGarrison = garrison.includes(r.id) || !(fs.supportsAlive.includes(r.id) || fs.supportsDead.includes(r.id));
       return <b className="bk-state ok">{inGarrison ? 'W garnizonie' : 'W drużynie'}</b>;
@@ -112,6 +116,10 @@ export function BarracksScreen({ state, s, faction, act, footer }: { state: Game
                 return (
                   <div key={r.id} className={`bk-unit st-${st.kind} ${pick === r.id ? 'on' : ''}`} data-unit={r.id} data-state={st.kind} title={`${UNITS[r.id].name}: ${st.hint}`} onClick={() => setPick(r.id)}>
                     <button className="bk-card" aria-label={UNITS[r.id].name} onClick={() => setPick(r.id)}><UnitCard unitId={r.id} width={cardW} digital /></button>
+                    <span className={`bk-need ${s.buildings.barracks >= needLevel(r.tier) ? 'ok' : 'no'}`} data-need={needLevel(r.tier)} title={s.buildings.barracks >= needLevel(r.tier) ? `Wymaga koszar poziomu ${needLevel(r.tier)}.` : LOCK_TEXT} style={{ width: ico + 18, height: ico + 18, fontSize: ico + 2 }}>
+                      {picture && <img src={asset(picture(needLevel(r.tier)))} alt="" />}
+                      <b>{needLevel(r.tier)}</b>
+                    </span>
                   </div>
                 );
               })}

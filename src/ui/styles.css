@@ -1233,6 +1233,13 @@ button.sb-slot:disabled { cursor: default; }
 .bk-col.first.one .bk-units { grid-template-columns: auto; }
 .bk-tier { font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #F3D27A; font-size: 13px; text-shadow: 0 1px 2px #000; }
 .bk-unit { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 5px; border-radius: 10px; cursor: pointer; border: 2px solid transparent; background: rgba(0, 0, 0, 0.22); }
+.bk-unit { position: relative; }
+.bk-need { position: absolute; left: 7px; top: 7px; display: grid; place-items: center; border-radius: 50%; overflow: hidden; border: 2px solid #8A6A2C; background: #1A120A; box-shadow: 0 2px 5px #000; pointer-events: auto; }
+.bk-need img { grid-area: 1 / 1; width: 100%; height: 100%; object-fit: cover; opacity: 0.75; }
+.bk-need b { grid-area: 1 / 1; position: relative; font-size: 1em; color: #FFF4D0; text-shadow: 0 0 3px #000, 0 1px 2px #000; }
+.bk-need.no { border-color: #D9534F; }
+.bk-need.no img { filter: grayscale(0.9) brightness(0.7); }
+.bk-need.no b { color: #FFB4AE; }
 .bk-unit:hover { border-color: rgba(243, 210, 122, 0.6); }
 /* The state of a card is a glow: green in the team, yellow can be recruited now, blue its dwelling can be built, red it cannot. The chosen card is lifted and framed in light. */
 .bk-unit.st-team { border-color: #6FDC78; box-shadow: 0 0 14px 2px rgba(111, 220, 120, 0.7); }
