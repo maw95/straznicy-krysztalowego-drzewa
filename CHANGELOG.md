@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Instrukcja w grze (PL i EN) ma nowy rozdział o Dzikim Stadzie, Żelaznym Klanie i Bractwie Przypływu: mechaniki frakcji, bohaterowie, jednostki i budynki osad.
 - Walka ma nowe efekty mechanik frakcji: fale przy zamianie miejsc, wodna lina harpuna, perłowa tarcza, Skorupa, Ściana Wody i Wir Głębin u Bractwa Przypływu; odepchnięcia, zderzenia, szarże i ryki Dzikiego Stada oraz rozbłysk run Żelaznych Klanów, wszystko z własnymi dźwiękami.
 - Żelazne Klany: poprawione animacje i dźwięki według uwag (zamachy w atakach, upadki i rozpad maszyn przy śmierci, trafienia jako cofnięcie od ciosu z przodu), nowe dźwięki m.in. Tana, Matki Run, Strażniczki, Wojownika, Kapłana, Pogromcy, Skarbnika, Gwardii Młota i Kowala.
 - Pole walki Żelaznego Klanu to teraz podziemna sztolnia (żyły rudy, tory wózków, drewniane stemple, latarnie); przeszkody: skalna ściana z belkami, głazy z rudą, rumowisko i wózek z rudą.

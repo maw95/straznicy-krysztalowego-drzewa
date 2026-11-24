@@ -311,6 +311,38 @@ Na poziomie Imperium każdy ze stopni jednostek 2–5 ma **dwie jednostki do wyb
 ### Legendarna jednostka
 Jednostka 6 poziomu też ma swoje **siedlisko** (Gniazdo Feniksa, Jaskinia Zagłady; 6 zł, 3 rudy i 2 pyły, po siedlisku 5 poziomu), ale jest tylko jedna, więc nie ma wyboru. Potem, w rozbudowanych koszarach, za 20 zł i 3 Gwiezdne Pyły, frakcja może zrekrutować jedną legendarną jednostkę: **Feniksa Świtu** (lata; raz na bitwę po śmierci wstaje z połową Życia) albo **Behemota Zagłady** (każdym atakiem może trafić dwóch sąsiadujących wrogów).
 
+## Frakcje: Stada, Klany i Przypływy
+@słowa: frakcje, dzikie stado, żelazny klan, bractwo przypływu, stada, klany, przypływy, odepchnięcie, zderzenie, tętent, mur tarcz, runiczna kuźnia, runa, przypływ, perłowa tarcza, zamiana miejsc, ściana wody, harpun, skorupa, wir, kamień tętentu, sala tarcz, świątynia pływów, rogi, szarża, pancerz, kuźnia run
+
+Oprócz Przymierza Świtu i Hordy w Potyczce możesz grać trzema dodatkowymi frakcjami. Każda ma **własnych bohaterów, trzech dowódców z karczmy, czwartego bohatera, dwanaście jednostek** (po jednej lub dwie na poziom, jak w [Imperium](#imperium)), **własną ziemię, osadę i muzykę** oraz jedną **mechanikę frakcji**, którą daje budynek mechaniki. Zasady rozwoju, ekonomii i bitwy są takie same jak u Przymierza i Hordy; poniżej tylko to, co się różni. Frakcje wybierasz w kreatorze (wylosowana frakcja jest domyślna wszędzie tam, gdzie cel gry dopuszcza wszystkie).
+
+### Dzikie Stado
+Wędrowne stada stepów i puszcz: tury, żubry, nosorożce i łosie prowadzone przez satyrów z rogami i dudami. Walczą **rozpędem**: kto stoi na drodze stada, ląduje na skale. Mocne strony: inicjatywa, szybkie dojście do strzelców, podbój mapy. Słabe: brak leczenia, słabi strzelcy, mury osad (bez Nosorożca) i jednostki, których nie da się odepchnąć.
+- **Odepchnięcie i zderzenie (Tętent).** Wiele ciosów Stada odpycha cel o 1 lub 2 pola. Cel, który zatrzyma głaz, krawędź areny albo inna jednostka, dostaje obrażenia od **zderzenia**; ranny jest też ten, w kogo uderzył (swój lub wróg). Jednostki dwupolowe, Żubr i Indrik nie dają się odepchnąć.
+- **Bohaterowie:** Wielki Tur (Rogi Przodków: raz na bitwę cios odpycha cel o 2), Satyr Rogogłos (Róg Wędrówki: raz na bitwę sojusznicy mają +2 Szybkości w następnej aktywacji), Pędziwiatr (W Biegu: po ataku kończy ruch pozostałymi polami). Dowódcy: Turzy Zagończyk, Orzeł Stepowy Łowca (lata), Płanetnik. Czwarty bohater: Baran Gromowładny.
+- **Jednostki:** Satyr Dudziarz, Młody Tur, Kulan Stepowy (poziom 1, pomocnicy startowi); Łucznik Stepowy albo Wół Piżmowy (2); Żubr Puszczański albo Arkar (3); Łamignat Stepowy (lata) albo Słoń z Bębnem (4); Nosorożec Bojowy albo Łoś Rogacz (5); legenda Indrik, Pan Zwierząt. Siedlisko jednej jednostki wyklucza drugą z pary, jak w [Imperium](#imperium).
+- **Osada:** **Kamień Tętentu** (mechanika: rozpęd o co najmniej 3 pola odpycha cel, wyższe poziomy dodają obrażeń zderzenia i obniżają próg rozpędu), **Wielkie Pastwiska** (pomocnicy poziomów 1–3 są tańsi o 1 zł, na poziomie II także wyższych) i **Ostoja Wędrówek** (raz na rundę przenosi bohatera do innej własnej osady z Ostoją; przycisk w oknie osady). Pierwotna Iskra: Ołtarz Rogów (+1 Szybkości wszystkim jednostkom Stada).
+
+### Żelazny Klan
+Krasnoludy z gór, mechanizmy z brązu, opancerzone niedźwiedzie i duchy kopalń. Rola: **obrona i oblężenia**. Mocne strony: pancerz z wielu źródeł, obrona osad, Armata Klanów. Słabe: powolni, bez lotników, rozbija ich kontrola i wyczerpanie.
+- **Mur Tarcz.** Jednostka Klanów stojąca w szyku (obok co najmniej dwóch żyjących sojuszników) przyjmuje o 1 obrażenie mniej z każdego ciosu; wyższe poziomy Sali Tarcz obniżają wymóg do jednego sąsiada, chronią szyk przed odepchnięciem, a atakujący wręcz tracą 1 Życie.
+- **Runiczna Kuźnia (trwała).** Raz na rundę kuźnia kuje **runę** na jednym pomocniku frakcji: +1 Ataku, +1 Życia albo pancerz 1 (cena: 1 zł i 1 ruda; poziom I daje jedną runę na jednostkę, poziom II dwie różne). Runy zostają po śmierci pomocnika. Przycisk w oknie osady, w panelu budynku.
+- **Bohaterowie:** Tan Żelazobrody (Przysięga Tarczy: sąsiedzi mają pancerz 1 do końca rundy), Matka Run (Runa Kamienia: pancerz 1 i odporność na odepchnięcie), Strażniczka Przełęczy (Bełt Przeszywający trafia też wroga za celem). Czwarty bohater: Stary Górmistrz. Dowódcy: Wojownik Klanu, Kusznik Gór, Kapłan Kuźni.
+- **Jednostki:** Krasnoludzki Tarczownik, Kret z Brązu, Mosiężny Pająk (1); Niedźwiedź w Zbroi albo Kowal Bitewny (2); Wartownik z Brązu albo Kozioł Taranowy (3); Pogromca Olbrzymów albo Skarbnik (4); Gwardia Młota albo Armata Klanów (5); legenda Kolos Kuźni (może wznieść mur Fortyfikacją).
+- **Osada:** **Sala Tarcz** (mechanika), **Runiczna Kuźnia** (wyposażenie, wymaga Kuźni) i **Głęboka Sztolnia** (+1 rudy na rundę z osady). Pierwotna Iskra: Kowadło (pancerz 1 wszystkim jednostkom Klanów).
+
+### Bractwo Przypływu
+Lud rafy i odpływu: trytoni, syreny, kraboludy i żółwie, a w głębi węże morskie. Nie szarżują, tylko **przestawiają i ściągają**. Mocne strony: rotacja rannych, ściąganie strzelców wroga, wytrzymałe żółwie. Słabe: mało obrażeń. Zdolności działają też na mapach bez wody.
+- **Przypływ.** Jednostka Bractwa może przed swoją aktywacją **zamienić się miejscami z sojusznikiem** w zasięgu 2 (ranny cofa się, świeży wchodzi); liczbę zamian i dodatkowe premie wyznaczają poziomy Świątyni Pływów.
+- **Perłowa tarcza.** Tarcza pochłaniająca określoną liczbę obrażeń (na przykład od Kapłanki Pereł albo od Pierwotnej Iskry); znika, gdy wyczerpie się pochłanianie.
+- **Przyciąganie.** Harpun, Pieśń Syreny, Oplot Głębin i Wir Głębin ściągają wrogów ku Bractwu, a Wir i Odpływ zamieniają jednostki miejscami.
+- **Bohaterowie:** Król Trytonów (Ściana Wody: raz na bitwę odpycha sąsiednich wrogów, sąsiedzi mają −1 obrażeń do końca rundy), Syrena Pieśniarka (Pieśń Syreny: przyciąga wroga), Wąż Morski (Oplot Głębin: przyciąga i unieruchamia). Czwarty bohater: Stary Mors Kapitan. Dowódcy: Trytoński Strażnik, Harpunniczka, Sefiran Plamisty (Wylinka: zrzuca statusy i odzyskuje Życie).
+- **Jednostki:** Żółw Skorupiak (Skorupa: raz na bitwę chowa się i nie przyjmuje obrażeń do następnej aktywacji), Trytoński Harpunnik, Żabi Skoczek (1); Krabolud Tarczownik albo Ośmiornica Atramentowa (2); Rekinołak albo Kapłanka Pereł (3); Homar Pancerny albo Albatros (4); Rafowy Golem albo Morska Wiedźma (5); legenda Lewiatan.
+- **Osada:** **Świątynia Pływów** (mechanika), **Perłowe Ławice** (+1 zł na rundę) i **Latarnia Morska** (odkrywa mapę w promieniu 3, na poziomie II 5, i pokazuje ruchy wrogich bohaterów). Pierwotna Iskra: Perłowa Świątynia (każda jednostka zaczyna bitwę z Perłową Tarczą).
+
+### Gdzie można nimi grać
+Nowe frakcje są dostępne w trybie **Potyczka** w celach Kontrola, Podbój i Relikt.
+
 ## Automat zła i boty
 @słowa: automat zła, bot, komputer, sztuczna inteligencja, horda, przeciwnik, posiłki, podpowiedź, autoplay
 

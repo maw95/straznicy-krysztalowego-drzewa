@@ -311,6 +311,38 @@ On the level Empire each of the unit ranks 2–5 has **two units to choose from*
 ### Legendary unit
 The tier 6 unit has a **dwelling** of its own too (Phoenix Nest, Cavern of Doom; 6 gold, 3 ore and 2 dust, after the tier 5 dwelling), but there is only one, so no choice. Then, in upgraded barracks, for 20 gold and 3 Star Dust, a faction can recruit one legendary unit: the **Phoenix of Dawn** (flies; once per battle after dying it rises with half its Health) or the **Behemoth of Doom** (with every attack it can hit two adjacent enemies).
 
+## Factions: Herds, Clans and Tides
+@words: factions, wild herd, iron clan, tide brotherhood, herds, clans, tides, push, collision, stampede, shield wall, rune forge, rune, tide, pearl shield, swap places, water wall, harpoon, shell, whirlpool, stampede stone, shield hall, temple of tides, horns, charge, armor, forge of runes
+
+Besides the Dawn Covenant and the Horde, you can play three more factions in Skirmish. Each has **its own heroes, three tavern commanders, a fourth hero, twelve units** (one or two per level, as in [Empire](#empire)), **its own land, settlement and music**, and one **faction mechanic** granted by the mechanic building. The rules of growth, economy and battle are the same as for the Covenant and the Horde; below is only what differs. You choose factions in the wizard (a random faction is the default wherever the goal allows all of them).
+
+### Wild Herd
+Wandering herds of the steppes and forests: aurochs, bison, rhinos and elk led by satyrs with horns and pipes. They fight by **momentum**: whoever stands in the herd's way ends up on the rocks. Strengths: initiative, quick reach to shooters, conquering the map. Weaknesses: no healing, weak shooters, settlement walls (without the Rhino) and units that cannot be pushed.
+- **Push and collision (Stampede).** Many Herd blows push the target 1 or 2 hexes. A target stopped by a boulder, the arena edge or another unit takes **collision** damage; the unit it hits is hurt too (friend or foe). Two-hex units, the Bison and the Indrik cannot be pushed.
+- **Heroes:** the Great Aurochs (Ancestors' Horns: once per battle the blow pushes the target 2 hexes), the Satyr Hornlord (Horn of the Wanderers: once per battle allies get +2 Speed in their next activation), Windrunner (On the Run: after an attack he finishes his move with the remaining hexes). Commanders: the Aurochs Outrider, the Steppe Eagle Hunter (flies), the Planetnik. Fourth hero: the Thunder Ram.
+- **Units:** Satyr Piper, Young Aurochs, Steppe Kulan (level 1, starting helpers); Steppe Archer or Musk Ox (2); Forest Bison or Arkar (3); Steppe Lamignat (flies) or Drum Elephant (4); War Rhino or Bull Moose (5); the legend Indrik, Lord of Beasts. One unit's habitat rules out the other of the pair, as in [Empire](#empire).
+- **Settlement:** the **Stampede Stone** (mechanic: a run of at least 3 hexes pushes the target; higher levels add collision damage and lower the run threshold), the **Great Pastures** (level 1–3 helpers cost 1 gold less, on level II higher ones too) and the **Wanderers' Refuge** (once per round moves a hero to another own settlement with a Refuge; a button in the settlement window). Primal Spark: the Altar of Horns (+1 Speed for all Herd units).
+
+### Iron Clan
+Mountain dwarfs, bronze machines, armored bears and mine spirits. Role: **defence and sieges**. Strengths: armor from many sources, settlement defence, the Clan Cannon. Weaknesses: slow, no fliers, beaten by control and attrition.
+- **Shield Wall.** A Clan unit standing in formation (next to at least two living allies) takes 1 less damage from every blow; higher levels of the Shield Hall lower the requirement to one neighbour, protect the formation from being pushed, and melee attackers lose 1 Health.
+- **Rune Forge (permanent).** Once per round the forge strikes a **rune** onto one helper of the faction: +1 Attack, +1 Health or armor 1 (cost: 1 gold and 1 ore; level I gives one rune per unit, level II two different ones). Runes stay after the helper dies. A button in the settlement window, in the building panel.
+- **Heroes:** Thane Ironbeard (Shield Oath: neighbours have armor 1 until the end of the round), the Rune Matron (Stone Rune: armor 1 and immunity to pushing), the Pass Warden (the Piercing Bolt also hits the enemy behind the target). Fourth hero: the Old Minemaster. Commanders: the Clan Warrior, the Mountain Crossbowman, the Forge Priest.
+- **Units:** Dwarf Shieldbearer, Bronze Mole, Brass Spider (1); Armored Bear or Battle Smith (2); Bronze Sentinel or Ram Goat (3); Giant Slayer or Skarbnik (4); Hammer Guard or Clan Cannon (5); the legend Forge Colossus (can raise a wall with Fortification).
+- **Settlement:** the **Shield Hall** (mechanic), the **Rune Forge** (equipment, requires the Forge) and the **Deep Gallery** (+1 ore per round from the settlement). Primal Spark: the Anvil (armor 1 for all Clan units).
+
+### Tide Brotherhood
+A people of the reef and the ebb: tritons, sirens, crab-folk and turtles, and sea serpents in the deep. They do not charge, they **rearrange and pull**. Strengths: rotating the wounded, pulling enemy shooters, sturdy turtles. Weakness: low damage. The abilities work on maps without water too.
+- **Tide.** A Brotherhood unit may **swap places with an ally** within 2 hexes before its activation (the wounded retreats, the fresh one steps in); the number of swaps and extra bonuses are set by the levels of the Temple of Tides.
+- **Pearl shield.** A shield that absorbs a set amount of damage (for example from the Pearl Priestess or the Primal Spark); it disappears when used up.
+- **Pulling.** The Harpoon, the Siren's Song, the Coils of the Deep and the Maelstrom pull enemies towards the Brotherhood, and the Whirl and the Ebb swap units.
+- **Heroes:** the Triton King (Water Wall: once per battle pushes adjacent enemies, neighbours take 1 less damage until the end of the round), the Siren Singer (Siren's Song: pulls an enemy), the Sea Serpent (Coils of the Deep: pulls and immobilizes). Fourth hero: Old Walrus Captain. Commanders: the Triton Guard, the Harpooner, Sefiran the Spotted (Molt: sheds statuses and regains Health).
+- **Units:** Shell Turtle (Shell: once per battle hides and takes no damage until its next activation), Triton Harpooner, Frog Leaper (1); Crab-folk Shieldbearer or Ink Octopus (2); Sharkman or Pearl Priestess (3); Armored Lobster or Albatross (4); Reef Golem or Sea Witch (5); the legend Leviathan.
+- **Settlement:** the **Temple of Tides** (mechanic), the **Pearl Shoals** (+1 gold per round) and the **Lighthouse** (reveals the map within 3 hexes, 5 on level II, and shows enemy hero movements). Primal Spark: the Pearl Temple (every unit starts the battle with a Pearl Shield).
+
+### Where you can play them
+The new factions are available in **Skirmish** in the goals Control, Conquest and Relic.
+
 ## Evil automaton and bots
 @words: evil automaton, bot, computer, artificial intelligence, horde, opponent, reinforcements, hint, autoplay
 
