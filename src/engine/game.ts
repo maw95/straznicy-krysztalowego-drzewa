@@ -1003,6 +1003,11 @@ function useMapItem(state: GameState, itemId: string, targets: HexKey[] | undefi
       if (!to || !spots.includes(to)) throw new Error(spots.length ? 'Wskrzeszony bohater staje na wolnym polu obok.' : 'Obok nie ma wolnego pola dla wskrzeszonego bohatera.');
       deadHero.alive = true;
       deadHero.revived = true;
+      // A hero whose player has been given a reserve hero in the meantime goes back to that player (who then leads both).
+      if (deadHero.formerPlayerId) {
+        deadHero.playerId = deadHero.formerPlayerId;
+        delete deadHero.formerPlayerId;
+      }
       deadHero.pos = to;
       revealAround(state, to);
       // The revived hero joins the turn order from the next round.
@@ -1430,6 +1435,7 @@ function killHero(state: GameState, heroId: string, at: HexKey) {
     const spots = nearestFreeHexes(state, at, hero.faction);
     if (spots.length === 1) enterBoard(state, state.heroes[next], spots[0]);
     else if (spots.length) state.heroes[next].entering = spots;
+    if (hero.playerId) hero.formerPlayerId = hero.playerId;
     hero.playerId = null;
     state.turnOrder = state.turnOrder.map((id) => (id === heroId ? next : id));
     log(state, 'info', automaton ? `Automat zła wprowadza bohatera: ${UNITS[next].name}.` : `Gracz przejmuje bohatera: ${UNITS[next].name}.`);

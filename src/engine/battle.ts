@@ -3082,7 +3082,14 @@ const ITEM_HANDLERS: Record<ItemKind, (use: ItemUse) => void> = {
           ? nearestFreeCell(use.state, t, fallen)
           : freeCellNear(use.state, faction, t);
     if (!cell) throw new Error('Brak wolnego pola.');
-    if (hero) hero.revived = true;
+    if (hero) {
+      hero.revived = true;
+      // Replaced by a reserve hero in the meantime: goes back to the player (who then leads both).
+      if (hero.formerPlayerId) {
+        hero.playerId = hero.formerPlayerId;
+        delete hero.formerPlayerId;
+      }
+    }
     t.alive = true;
     t.hp = t.maxHp;
     placeUnit(use.state, t, cell, cell === fallen ? t.corpseTail : undefined);

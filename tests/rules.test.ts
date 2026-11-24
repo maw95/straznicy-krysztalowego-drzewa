@@ -274,6 +274,24 @@ describe('several heroes in a base', () => {
 });
 
 describe('reserve hero', () => {
+  it('a hero revived after being replaced goes back to their player', () => {
+    let s = createGame(setup({ mode: 'pvp', seats: pvpSeats('goldDragon', 'blackDragon') }, { heroReplacement: true }));
+    const owner = s.heroes.goldDragon.playerId!;
+    s.heroes.goldDragon.alive = false;
+    s.heroes.goldDragon.playerId = null;
+    s.heroes.goldDragon.formerPlayerId = owner;
+    const reserve = s.factions.dawn.unusedHeroes[0];
+    s.factions.dawn.unusedHeroes.splice(0, 1);
+    s.heroes[reserve] = { ...s.heroes.blackDragon, id: reserve, faction: 'dawn', playerId: owner, alive: true, pos: s.heroes.blackDragon.pos };
+    s.turnOrder = s.turnOrder.map((id) => (id === 'goldDragon' ? reserve : id));
+    s.turnIndex = s.turnOrder.indexOf(reserve);
+    s.items.itX = { id: 'itX', kind: 'resurrection', owner: 'dawn', foundBy: null };
+    s.factions.dawn.inventory.push('itX');
+    s = applyAction(s, { type: 'useMapItem', itemId: 'itX', unitId: 'goldDragon' });
+    expect(s.heroes.goldDragon.alive).toBe(true);
+    expect(s.heroes.goldDragon.playerId).toBe(owner);
+    expect(s.heroes.goldDragon.formerPlayerId).toBeUndefined();
+  });
   it('comes in on a free hex nearest to where the fallen hero died, chosen on its first turn', () => {
     const base = createGame(setup({ mode: 'pvp', seats: pvpSeats('goldDragon', 'blackDragon') }, { heroReplacement: true }));
     const start = base.heroes.blackDragon.pos;
