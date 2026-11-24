@@ -104,7 +104,7 @@ export const SPRITES: Record<string, SpriteSpec> = {
   kulan: { dir: 'jednostki/kulan', box: [88, 84] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   steppeArcher: { dir: 'jednostki/lucznik_stepowy', box: [88, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   forestBison: { dir: 'jednostki/zubr_lesny', box: [92, 80] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  steppeLamignat: { dir: 'jednostki/lamignat_stepowy', box: [130, 118] as const, speed: { wzbicie: 2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  steppeLamignat: { dir: 'jednostki/lamignat_stepowy', box: [130, 118] as const, speed: { wzbicie: 1.2, lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   warRhino: { dir: 'jednostki/nosorozec_bojowy', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   muskOx: { dir: 'jednostki/wol_pizmowy', box: [92, 78] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   arkar: { dir: 'jednostki/arkar', box: [90, 80] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },

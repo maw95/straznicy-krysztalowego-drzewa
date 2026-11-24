@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Dzikie Stado, kolejne poprawki: Satyr Rogogłos dmie w róg prawą ręką, a laska zostaje nieruchoma; Orzeł Stepowy i Łamignat stoją w pozie z początku ataku; wzbicie Łamignata jest wolniejsze; trafienie Słonia z Bębnem pokazuje szarego słonia (był mamut); Pędziwiatr ryczy groźnie, a nie jak koza, a śmierć Łamignata to krzyk orła.
 - Dzikie Stado, poprawki po przeglądzie: śmierć jednostek to teraz upadek na bok (nie siadanie ani kładzenie się), trafienie to cofnięcie od ciosu (nie atak), Satyr Rogogłos dmie w róg, ataki Barana, Żubra, Arkara i Łosia są energiczne, Orzeł Stepowy i Łamignat stoją na ziemi i startują do lotu, a Słoń z Bębnem nie biegnie już po trafieniu; nowe dźwięki Pędziwiatra, Barana, Zagończyka, Młodego Tura, Łamignata (jak orzeł), Słonia, Łosia i Indrika.
 - Opis artefaktu „Trzewiki z Kory” mówi teraz o efekcie (odporność na korzenie, sidła, chwyt i spowolnienie), a nie o stworzeniach, które je zadają.
 - Na liście osad w panelu mapy i na flagach punktów kontrolnych każda frakcja ma własny medalion (herb na polu w kolorze frakcji); wcześniej frakcja grająca na trzecim lub czwartym miejscu przy stole, np. Bractwo Przypływu, miała tam puste miejsce.
