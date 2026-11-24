@@ -412,6 +412,8 @@ export interface MapTeams {
   teams?: readonly TeamId[];
   /** The faction of each team (its land: tiles, base, treasures); default: the old rule, a team is the faction of its own id. */
   race?: (team: TeamId) => FactionId;
+  /** The digital game: an impassable tile drawn from a pool is drawn again with this chance in percent (fewer walls and chasms, more roads). */
+  rerollBlocked?: number;
 }
 
 export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crystalCount: number, shape: MapShape = 'triangle', customMapId?: string, opts: MapTeams = {}): GeneratedMap {
@@ -435,7 +437,9 @@ export function generateMap(size: MapSize, rng: Rng, treasureCount: number, crys
       const k = key(hex);
       const side = sideAt(i, row, col);
       const tile: Tile = { key: k, row, col, terrain: 'meadow', side, variant: 1, revealed: false, crystalId: null, treasureId: null, home: null, tree: false };
-      setTerrain(tile, rng.pick(TILE_POOLS[race(side)]), rng);
+      let drawn = rng.pick(TILE_POOLS[race(side)]);
+      if (opts.rerollBlocked && TERRAIN_COST[drawn] === null && rng.int(100) < opts.rerollBlocked) drawn = rng.pick(TILE_POOLS[race(side)]);
+      setTerrain(tile, drawn, rng);
       const fixed = layout.forced?.[k];
       if (fixed) setTerrain(tile, fixed === 'bridge' ? 'bridge' : layout.wallTerrain ?? land(side).wall, rng);
       // Water has nothing hidden under it: it is on the map from the start, which is what shows the islands.

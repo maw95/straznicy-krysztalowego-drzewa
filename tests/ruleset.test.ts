@@ -1,3 +1,4 @@
+import { tileCost } from '../src/engine/map';
 import { describe, expect, it } from 'vitest';
 import { arenaCell, battleAttack, battleItem, battleMove, dealDamage, reachableCells, unitAt } from '../src/engine/battle';
 import { createGame } from '../src/engine/game';
@@ -17,10 +18,13 @@ describe('ruleset', () => {
     expect(isDigital(createGame(setup({}, { ruleset: 'digital' })).rules)).toBe(true);
   });
 
-  it('does not change the generated game while no digital rule exists yet', () => {
+  it('does not change the generated game except for the map: the digital map has fewer impassable tiles', () => {
     const classic = createGame(setup());
     const digital = createGame(setup({}, { ruleset: 'digital' }));
-    expect({ ...digital, rules: classic.rules, setup: classic.setup }).toEqual(classic);
+    const passable = (g: typeof classic) => Object.values(g.tiles).filter((t) => tileCost(t) !== null).length;
+    expect(passable(digital)).toBeGreaterThanOrEqual(passable(classic));
+    // The map draws other tiles, so everything that follows from it (the drawn lair guardians, heroes of the other side, the random stream) differs too.
+    expect(Object.keys(digital).sort()).toEqual(Object.keys(classic).sort());
   });
 });
 

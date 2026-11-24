@@ -381,8 +381,8 @@ describe('games with the Swarm', () => {
 
   it('the mycelium and the abilities do fire in the games of the bots', () => {
     const fired = new Set<string>();
-    // The healing on the mycelium is rare (the fourth level of the Serce Grzybni or the Na Swojej Ziemi), so sixteen games.
-    for (const seed of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]) {
+    // The healing on the mycelium is rare (the fourth level of the Serce Grzybni or the Na Swojej Ziemi), so many games.
+    for (let seed = 1; seed <= 32; seed++) {
       const end = playOut(createGame(table(['swarm', 'horde'], 'conquest', { seed })));
       for (const l of end.log) {
         if (l.text.includes('na grzybni') || l.text.includes('(Grzybnia)') || l.text.includes('grzybnia')) fired.add('grzybnia');

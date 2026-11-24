@@ -54,7 +54,8 @@ function table(races: Race[], objective: SetupOptions['rules']['objective'], ove
 }
 
 /** A rivalry game of the Empire (the first side, slot `dawn`) against the Horde with the level 6 rules. */
-const empire = (seed = 4): GameState => createGame(table(['sands', 'horde'], 'conquest', { seed }));
+// Seed 5: which body of a pair shows under which id (mirageAlias) is drawn from the seed, and these tests name the ids directly.
+const empire = (seed = 5): GameState => createGame(table(['sands', 'horde'], 'conquest', { seed }));
 const home = (s: GameState) => Object.values(s.kingdom!.settlements).find((x) => x.owner === 'dawn')!;
 const at = (s: GameState, id: string) => s.battle!.units[id];
 
@@ -64,6 +65,8 @@ function fight(units: U[], palace = 0, over: Partial<NonNullable<GameState['batt
   s.rules.useDice = false;
   s.rules.statScale = 1;
   s.rules.hpScale = 1;
+  // Whatever treasures the map drew for the start must not decide what the bot does.
+  for (const f of Object.values(s.factions)) f.inventory = [];
   home(s).buildings.mirageHall = palace;
   // the battle is led by the Empire's hero of the game (so a battle that ends can be settled on the map)
   return battleFixture(s, units.map(([id, side, col, half, hp]) => ({ id, side, col, half, hp })), { attackerHero: Object.values(s.heroes).find((h) => h.faction === 'dawn')!.id, ...over });

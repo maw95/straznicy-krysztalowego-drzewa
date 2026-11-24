@@ -9,15 +9,17 @@ describe('Kraken as the Boss', () => {
     Object.assign(process.env, { SIM_DIGITAL: '1', SIM_OBJECTIVE: 'boss', SIM_GROWTH: '1' });
     let fought = 0;
     let seen = 0;
-    for (let seed = 1; seed < 60 && seen < 4; seed++) {
+    for (let seed = 1; seed < 120 && seen < 4; seed++) {
       const s = createGame(setupWith('short', 'coop1', ['full'], seed));
       if (s.boss!.guardian !== 'kraken') continue;
-      seen++;
       for (let i = 0; i < 30000 && s.phase !== 'over'; i++) {
         const a = chooseAction(s);
         if (!a) break;
         applyActionInPlace(s, a);
       }
+      // A game decided in the first rounds (the other side wins at once) never gets to the lair: it says nothing about the walk.
+      if (s.round <= 2 && !s.boss!.slain && s.boss!.hits.dawn + s.boss!.hits.horde === 0) continue;
+      seen++;
       if (s.boss!.hits.dawn + s.boss!.hits.horde > 0 || s.boss!.slain) fought++;
     }
     expect(seen).toBeGreaterThan(0);

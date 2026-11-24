@@ -44,6 +44,8 @@ function fight(units: U[], temple = 0): GameState {
   s.rules.useDice = false;
   s.rules.statScale = 1;
   s.rules.hpScale = 1;
+  // Whatever treasures the map drew for the start must not decide what the bot does.
+  for (const f of Object.values(s.factions)) f.inventory = [];
   home(s).buildings.tideTemple = temple;
   return battleFixture(s, units.map(([id, side, col, half, hp]) => ({ id, side, col, half, hp })), { attackerHero: Object.values(s.heroes).find((h) => h.faction === 'dawn')!.id });
 }

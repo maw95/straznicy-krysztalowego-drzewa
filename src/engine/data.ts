@@ -838,7 +838,7 @@ export const ENCOUNTER_MOTIFS = {
 export type EncounterMotif = keyof typeof ENCOUNTER_MOTIFS;
 export const ENCOUNTERS = {
   /** How many encounters a map holds, by map size. Provisional: tune with the simulations. */
-  count: { short: 2, medium: 3, long: 5, veryLong: 7, huge: 9, giant: 11 } as Record<MapSize, number>,
+  count: { short: 3, medium: 4, long: 6, veryLong: 8, huge: 11, giant: 14 } as Record<MapSize, number>,
   /** An encounter stands farther than this from a base and from the Tree. */
   minDistance: 2,
   /** Neutral units that stand beside the Kraken (its tentacles). */
@@ -1109,6 +1109,9 @@ export const TERRAIN_VARIANTS: Record<Terrain, number> = {
  * (2 difficult types on the Przymierze side, 3 on the Horda side).
  */
 export const TILE_POOLS: Record<FactionId, Terrain[]> = byPack((p) => p.tiles as Terrain[]);
+
+/** The digital game draws an impassable tile again with this chance (percent), so about one tile in five is a wall or a chasm instead of more than one in four. */
+export const MAP_REROLL_BLOCKED = 50;
 
 /** Guardian lairs and the half of the map each guardian lives on. */
 export const GUARDIAN_LAIRS: Record<string, { terrain: Terrain; side: TileSide }> = {

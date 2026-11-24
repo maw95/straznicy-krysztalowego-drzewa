@@ -23,6 +23,7 @@ import {
   FAMILY,
   STAT_SCALE,
   HP_SCALE,
+  MAP_REROLL_BLOCKED,
   RESURRECTION_CARDS,
   TERRAIN_NAMES,
   UNITS,
@@ -123,7 +124,7 @@ export function createGame(setup: SetupOptions): GameState {
     : Array(variant.onlyResurrections).fill('resurrection');
   const crystals = crystalsFor(setup);
   const teams = teamsOf({ setup });
-  const map = generateMap(setup.mapSize, rng, pool.length, crystals, isDigital(rules) ? setup.mapShape : undefined, setup.customMapId, { teams, race: (t) => raceOf({ setup }, t) });
+  const map = generateMap(setup.mapSize, rng, pool.length, crystals, isDigital(rules) ? setup.mapShape : undefined, setup.customMapId, { teams, race: (t) => raceOf({ setup }, t), ...(isDigital(rules) ? { rerollBlocked: MAP_REROLL_BLOCKED } : {}) });
   const digital = isDigital(rules);
 
   const state: GameState = {

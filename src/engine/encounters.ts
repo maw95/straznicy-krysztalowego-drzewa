@@ -24,21 +24,31 @@ export function encounterUnits(tier: 0 | 1 | 2, motif: EncounterMotif, rng: Rng)
   return motif === 'water' ? [m.boss, ...Array.from({ length: ENCOUNTERS.krakenTentacles }, () => 'tentacle'), ...weak(2)] : [m.boss, ...weak(2)];
 }
 
-/** Whether every passable hex without an encounter or an unbeaten guardian can still be reached from the first one. */
+/**
+ * Whether every passable hex without an encounter or an unbeaten guardian can still be reached from the first one. Only the main land counts (the part of
+ * the map the Tree can be reached from): a pocket or an island cut off by the terrain itself must not forbid every encounter and settlement.
+ */
 export function stillConnected(state: GameState, blocked: Set<string>): boolean {
-  const open = Object.values(state.tiles).filter((t) => tileCost(t) !== null && !blocked.has(t.key));
-  if (!open.length) return true;
-  const seen = new Set<string>([open[0].key]);
-  const queue = [open[0].key];
-  for (let i = 0; i < queue.length; i++) {
-    for (const n of mapNeighbors(state.tiles, queue[i])) {
-      if (!seen.has(n) && tileCost(state.tiles[n]) !== null && !blocked.has(n)) {
-        seen.add(n);
-        queue.push(n);
+  const passable = (k: string) => tileCost(state.tiles[k]) !== null;
+  const tree = Object.values(state.tiles).find((t) => t.tree)?.key ?? Object.values(state.tiles).find((t) => passable(t.key))?.key;
+  if (!tree) return true;
+  const flood = (start: string, skip: (k: string) => boolean): Set<string> => {
+    const seen = new Set<string>([start]);
+    const queue = [start];
+    for (let i = 0; i < queue.length; i++) {
+      for (const n of mapNeighbors(state.tiles, queue[i])) {
+        if (!seen.has(n) && passable(n) && !skip(n)) {
+          seen.add(n);
+          queue.push(n);
+        }
       }
     }
-  }
-  return seen.size === open.length;
+    return seen;
+  };
+  const land = flood(tree, () => false);
+  const open = [...land].filter((k) => !blocked.has(k));
+  if (!open.length) return true;
+  return flood(open[0], (k) => blocked.has(k) || !land.has(k)).size === open.length;
 }
 
 /** Puts the encounters on free passable hexes, never closing a road; the deepest third of them is the strongest. */

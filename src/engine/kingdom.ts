@@ -507,9 +507,28 @@ export function initKingdom(state: GameState): void {
   // Gold mines: free hexes, not next to a settlement or a guardian.
   const wantMines = KINGDOM.mines[state.setup.mapSize] ?? 2;
   const taken: string[] = [...chosen];
+  // Level 4: every side has a sawmill and an ore mine not far from its starting settlement (the nearest free hex of its own land, at least 2 away).
+  if (k.res) {
+    const open = Object.values(state.tiles).filter((t) => !t.home && !t.tree && !t.crystalId && !t.site && !t.place && t.terrain !== 'bridge' && tileCost(t) !== null && !near(t.key, 1));
+    const spread = (key: string) => [...key].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, state.setup.seed | 0);
+    for (const res of ['wood', 'ore'] as const) {
+      for (const team of teams) {
+        const home = parseKey(Object.values(state.tiles).find((t) => t.home === team)!.key);
+        const options = open
+          .filter((t) => t.side === team && !t.place && distance(home, parseKey(t.key)) >= 2)
+          .filter((t) => !taken.some((c) => distance(parseKey(c), parseKey(t.key)) <= 1) && !mapNeighbors(state.tiles, t.key).some((n) => state.tiles[n].crystalId))
+          .sort((x, y) => distance(home, parseKey(x.key)) - distance(home, parseKey(y.key)) || spread(x.key) - spread(y.key));
+        const t = options[0];
+        if (!t) continue;
+        k.mines[t.key] = { owner: null, res };
+        t.place = { kind: 'mine', id: t.key };
+        taken.push(t.key);
+      }
+    }
+  }
   for (const clear of [1, 0]) {
     for (const t of free(clear)) {
-      if (Object.keys(k.mines).length >= wantMines) break;
+      if (Object.values(k.mines).filter((m) => !m.res).length >= wantMines) break;
       if (taken.some((c) => distance(parseKey(c), parseKey(t.key)) <= 1) || mapNeighbors(state.tiles, t.key).some((n) => state.tiles[n].crystalId)) continue;
       k.mines[t.key] = { owner: null };
       state.tiles[t.key].place = { kind: 'mine', id: t.key };
@@ -519,8 +538,8 @@ export function initKingdom(state: GameState): void {
   // Level 4: mines of wood, ore and Gwiezdny Pył, placed like the gold ones.
   if (k.res) {
     for (const res of RESOURCE_IDS) {
-      const want = ECONOMY.mines[res][state.setup.mapSize] ?? 1;
-      let placed = 0;
+      const want = res === 'dust' ? ECONOMY.mines[res][state.setup.mapSize] ?? 1 : Math.max(ECONOMY.mines[res][state.setup.mapSize] ?? 1, teams.length);
+      let placed = Object.values(k.mines).filter((m) => m.res === res).length;
       // Three passes, looser each time: the small maps hold few free hexes.
       for (const [clear, gap] of [[1, 1], [0, 1], [0, 0]] as const) {
         for (const t of free(clear)) {
