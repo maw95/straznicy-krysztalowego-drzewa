@@ -95,7 +95,7 @@ export const SPRITES: Record<string, SpriteSpec> = {
   greatAurochs: { dir: 'jednostki/tur_olbrzymi', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   satyrHornlord: { dir: 'jednostki/satyr_rogoglos', box: [70, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   windAntelope: { dir: 'jednostki/antylopa_wiatru', box: [86, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  thunderRam: { dir: 'jednostki/baran_gromu', box: [88, 84] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  thunderRam: { dir: 'jednostki/baran_gromu', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   aurochsScout: { dir: 'jednostki/tur_zwiadowca', box: [88, 76] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   eagleHunter: { dir: 'jednostki/orzel_lowca', box: [100, 88] as const, corpseMax: CORPSE_MAX_W, speed: { lot: 1.25, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   planetnik: { dir: 'jednostki/planetnik', box: [70, 108] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },

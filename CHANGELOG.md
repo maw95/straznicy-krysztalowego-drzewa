@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Baran Gromowładny zajmuje teraz dwa pola i jest narysowany w dużym rozmiarze, jak inni duzi bohaterowie.
 - Doświadczenie ma własną ikonę (złota gwiazda z szafirem): po zdobyciu PD nad bohaterem unosi się „+X ★”, a w panelu bohatera i w powiadomieniu ikona zastępuje słowo „PD”.
 - Skrzynia skarbów i Księga czarów: jedne, duże zdobione strzałki do przewracania stron; w skrzyni skarby i strzałki są wyśrodkowane na czerwonym polu wnętrza, skarby tego samego rodzaju leżą w jednej ikonie z „×3”, a te, których można teraz użyć, są na początku.
 - Prawy przycisk myszy (na telefonie przytrzymanie) na budynku w osadzie albo w Radzie Osady pokazuje okienko: nazwa, poziom, opis, cena i skutek następnego poziomu.
