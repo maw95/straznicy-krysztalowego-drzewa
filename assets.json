@@ -6403,6 +6403,36 @@
       "licencja": "pochodna własnych wstążek gry"
     },
     {
+      "id": "ikony/mapa/medaliony-frakcji",
+      "pliki": [
+        "public/assets/ikony/mapa/osada_herds.webp",
+        "public/assets/ikony/mapa/kontrola_herds.webp",
+        "public/assets/ikony/mapa/osada_undead.webp",
+        "public/assets/ikony/mapa/kontrola_undead.webp",
+        "public/assets/ikony/mapa/osada_clans.webp",
+        "public/assets/ikony/mapa/kontrola_clans.webp",
+        "public/assets/ikony/mapa/osada_frost.webp",
+        "public/assets/ikony/mapa/kontrola_frost.webp",
+        "public/assets/ikony/mapa/osada_free.webp",
+        "public/assets/ikony/mapa/kontrola_free.webp",
+        "public/assets/ikony/mapa/osada_sands.webp",
+        "public/assets/ikony/mapa/kontrola_sands.webp",
+        "public/assets/ikony/mapa/osada_swarm.webp",
+        "public/assets/ikony/mapa/kontrola_swarm.webp",
+        "public/assets/ikony/mapa/osada_tides.webp",
+        "public/assets/ikony/mapa/kontrola_tides.webp"
+      ],
+      "typ": "medaliony osady i punktu kontrolnego ośmiu frakcji",
+      "opis": "Złoty pierścień z malowanych ikon Przymierza, pole w kolorze frakcji z jej herbem; zastępcze herby (litery) mają Umarli, Szron, Kompania, Piaski i Rój, więc ich medaliony zmienią się z herbem. Skrypt scripts/assets/map_icons.py (Pillow, lokalnie).",
+      "prompt": "brak",
+      "narzedzie": "scripts/assets/map_icons.py (Pillow, lokalnie)",
+      "model": "brak",
+      "data": "2026-11-24",
+      "ai": false,
+      "licencja": "pochodna własnych ikon i herbów gry",
+      "placeholder": false
+    },
+    {
       "id": "ui/tkaniny-przyciskow-frakcji",
       "pliki": [
         "public/assets/ui/cloth_undead.jpg",

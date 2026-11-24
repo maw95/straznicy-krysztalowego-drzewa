@@ -480,7 +480,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         ))}
                       </>
                     )}
-                    {state.control?.points.includes(t.key) && <ControlFlag holder={controlHolder(state, t.key)} centre={state.control.points[0] === t.key} size={W} />}
+                    {state.control?.points.includes(t.key) && <ControlFlag holder={controlHolder(state, t.key)} race={controlHolder(state, t.key) ? raceOf(state, controlHolder(state, t.key)!) : null} centre={state.control.points[0] === t.key} size={W} />}
                     {t.revealed && t.treasureId && (
                       <div className="glint" style={{ position: 'absolute', left: W * 0.12, top: H * 0.24 }} title="Skarb">
                         <img src={asset('ikony/mapa/treasure.webp')} alt="" width={W * 0.34} height={W * 0.34} style={{ display: 'block' }} />
@@ -734,7 +734,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                         el.scrollTo?.({ left: inner.offsetLeft + p.x + W / 2 - el.clientWidth / 2, top: inner.offsetTop + p.y + H / 2 - el.clientHeight / 2, behavior: 'smooth' });
                       }
                     }}>
-                      <img src={asset(`ikony/mapa/osada_${viewer}.webp`)} alt="" width={30} height={30} />
+                      <img src={asset(`ikony/mapa/osada_${raceOf(state, viewer)}.webp`)} alt="" width={30} height={30} />
                       <span>{x.name}</span>
                       {(x.garrison?.length ?? 0) > 0 && <span className="settlement-garrison" title={`Garnizon: ${x.garrison!.length}`}>⚔ {x.garrison!.length}</span>}
                     </button>
@@ -1035,11 +1035,11 @@ function controlNote(state: GameState, k: HexKey): string {
 }
 
 /** A control point: a painted medallion with a banner (grey while nobody holds it, the Przymierze's green and gold, the Horda's red and iron); the middle one has a second ring. */
-function ControlFlag({ holder, centre, size }: { holder: TeamId | null; centre: boolean; size: number }) {
+function ControlFlag({ holder, race, centre, size }: { holder: TeamId | null; race: FactionId | null; centre: boolean; size: number }) {
   const w = size * 0.46;
   return (
     <span className="control-flag" title="Punkt kontrolny" data-control={holder ?? 'none'} style={{ position: 'absolute', left: size * 0.27, top: size * 0.02, width: w, height: w, pointerEvents: 'none', display: 'block', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.8))' }}>
-      <img src={asset(`ikony/mapa/kontrola_${holder ?? 'none'}.webp`)} alt="" width={w} height={w} style={{ display: 'block' }} />
+      <img src={asset(`ikony/mapa/kontrola_${race ?? 'none'}.webp`)} alt="" width={w} height={w} style={{ display: 'block' }} />
       {centre && <span style={{ position: 'absolute', inset: -3, borderRadius: '50%', boxShadow: '0 0 0 2px #F3D27A, 0 0 8px 2px rgba(243, 210, 122, 0.7)' }} />}
     </span>
   );
@@ -1083,7 +1083,7 @@ function placeIcon(state: GameState, k: HexKey): string {
   if (place.kind === 'object') return ({ mill: 'mlyn', well: 'studnia', store: 'skladnica' } as const)[state.kingdom?.objects?.[place.id]?.kind ?? 'mill'];
   if (place.kind === 'mine') return ({ wood: 'tartak', ore: 'kopalnia_ruda', dust: 'zrodlo_pylu' } as Record<string, string>)[state.kingdom?.mines[place.id]?.res ?? ''] ?? 'kopalnia';
   const owner = state.kingdom?.settlements[place.id]?.owner;
-  return owner ? `osada_${owner}` : 'osada_neutral';
+  return owner ? `osada_${raceOf(state, owner)}` : 'osada_neutral';
 }
 
 /** One line about a settlement or a mine: name, holder and buildings. */
