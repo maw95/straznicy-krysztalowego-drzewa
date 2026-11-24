@@ -9481,6 +9481,340 @@
       "data": "2026-11-24",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawki-86-animacje-a",
+      "pliki": [
+        "public/assets/jednostki/tan_zelaznobrody/atak.webp",
+        "public/assets/jednostki/tan_zelaznobrody/smierc.webp",
+        "public/assets/jednostki/tan_zelaznobrody/martwy.webp",
+        "public/assets/jednostki/tan_zelaznobrody/trafienie.webp",
+        "public/assets/jednostki/matka_run/smierc.webp",
+        "public/assets/jednostki/matka_run/martwy.webp",
+        "public/assets/jednostki/matka_run/trafienie.webp",
+        "public/assets/jednostki/straznniczka_przeleczy/atak.webp",
+        "public/assets/jednostki/stary_gormistrz/atak.webp",
+        "public/assets/jednostki/wojownik_klanu/atak.webp",
+        "public/assets/jednostki/kusznik_gor/smierc.webp",
+        "public/assets/jednostki/kusznik_gor/martwy.webp",
+        "public/assets/jednostki/kaplan_kuzni/trafienie.webp",
+        "public/assets/jednostki/*/anim.json"
+      ],
+      "typ": "poprawione klipy animacji 7 jednostek Żelaznego Klanu (backlog 86)",
+      "opis": "Tan: atak (zamach młotem), śmierć (upadek, martwy = ostatnia klatka), trafienie (cofnięcie, powrót do stoi, klip z lastFrameImage = stoi). Matka Run: śmierć (upadek, martwy = ostatnia klatka), trafienie. Strażniczka Przełęczy: atak (celowanie i strzał z kuszy). Stary Górmistrz: atak (zamach kilofem). Wojownik Klanu: atak (po jednym zamachu każdym toporem). Kusznik Gór: śmierć bez nowego klipu (model odrzucił 6 podejść), stary klip + przewracająca się tarcza dorysowana w postprodukcji scripts/assets/clans_shield_fall.py. Kapłan Kuźni: trafienie (cofnięcie, powrót do stoi). Klipy P-Video 2 (draft, 720p, 24 fps, saveAudio false), obraz startowy = stoi.webp złożony na niebieskim tle #0000FF (1024x1024); klip wklejony do istniejącego arkusza skryptem scripts/assets/clans_fix_clips.py (ten sam kadr z anim.json, despill, 0,75, co druga klatka); pozostałe klipy bez zmian.",
+      "prompt": {
+        "ironThane_atak": "Side view, locked static camera. The armored dwarf thane stands facing right. He calls out a loud battle cry, swings the war hammer back behind his shoulder, then brings it forward and down in a big sweeping arc toward the right, the hammer head tapping the ground in front of him, his whole body leaning into the swing, then he recovers to the standing pose. His feet stay in place, he does not walk. Plain solid blue background stays unchanged, no camera movement.",
+        "ironThane_smierc": "Side view, locked static camera. The armored dwarf thane stands facing right. He lets go of his weapon, sways, his knees bend and he sinks down and falls full length onto the ground on his side, facing right, then lies completely still, as if fast asleep. Plain solid blue background stays unchanged, no camera movement.",
+        "ironThane_trafienie": "Side view, locked static camera. The armored dwarf thane stands upright facing right. Hit from the front, his upper body rocks backwards, his chin lifts and his boots slide one small step back, as if shoved gently on the shield. He stays upright, never bends forward. Then he slowly settles back to the same upright standing pose. Calm, smooth, slow motion. Plain solid blue background stays unchanged, no camera movement. (image = lastFrameImage = stoi)",
+        "runeMatron_smierc": "Side view, locked static camera. The old dwarf sorceress in a hooded robe stands facing right. She sways, then falls over sideways onto the ground in one quick motion, landing on her side with her head to the right, robe spreading around her, then lies completely still, as if fast asleep. She never sits down. Plain solid blue background stays unchanged, no camera movement.",
+        "runeMatron_trafienie": "Side view, locked static camera. The old dwarf sorceress in a hooded robe stands upright facing right. Hit from the front, her upper body rocks backwards, her chin lifts and her feet slide one small step back, as if pushed gently. She stays upright, never bends forward. Then she slowly settles back to the same upright standing pose. Calm, smooth, slow motion. Plain solid blue background stays unchanged, no camera movement. (image = lastFrameImage = stoi)",
+        "passWarden_atak": "Side view, locked static camera. The woman ranger stands facing right holding her crossbow. She raises the crossbow to her shoulder and aims it straight to the right, the crossbow gives a small kick back and her shoulder moves back a little, then she lowers the crossbow to the ready pose. Her feet stay in place. Plain solid blue background stays unchanged, no camera movement.",
+        "oldMiner_atak": "Side view, locked static camera. The old dwarf miner stands facing right holding his pickaxe. He lifts the pickaxe back over his shoulder, then swings it forward in a big sweeping overhead arc toward the right, the pick head tapping the ground in front of him, then he recovers to the standing pose. His feet stay in place, he does not walk. Plain solid blue background stays unchanged, no camera movement.",
+        "clanWarrior_atak": "Side view, locked static camera. The dwarf warrior stands facing right holding an axe in each hand. He swings his right axe forward in a wide sweeping arc toward the right, then swings his left axe forward in a second wide sweeping arc toward the right, one swing with each axe, his body twisting into each swing, then he returns to the standing pose. His feet stay in place, he does not walk. Plain solid blue background stays unchanged, no camera movement.",
+        "forgePriest_trafienie": "Side view, locked static camera. The dwarf forge priest in a hooded robe stands upright facing right. He is startled: his upper body leans back a little and his chin lifts, his feet stay planted. He stays upright, does not bend forward and does not move his legs. Then he slowly settles back to the same upright standing pose. Calm, smooth, slow motion. Plain solid blue background stays unchanged, no camera movement. (image = lastFrameImage = stoi)"
+      },
+      "narzedzie": "Scenario",
+      "model": "model_pruna-p-video-2",
+      "scenario_asset": {
+        "start_images": {
+          "ironThane": "asset_c2tcENA2doFeWwmvp5hKeeCt",
+          "runeMatron": "asset_1ZPJeqzeEyEmZVxGXG9d6oop",
+          "passWarden": "asset_qKzbzo4N3Zrzu3HpRx1pbmmm",
+          "oldMiner": "asset_Q8HEAG13PDc3dpb2ZWBo6j54",
+          "clanWarrior": "asset_bCPr2usyiGYGkDVyQr6q1dsW",
+          "mountainCrossbow": "asset_dMjqc2sL6UNPDZQuVQ2DnoZs",
+          "forgePriest": "asset_D7eQ98ijktb9XwEhzZmrGaEq"
+        },
+        "klipy": {
+          "ironThane_atak": "asset_K8pYhz3LBBmSFV3wFC7aTPPY",
+          "ironThane_smierc": "asset_zCLnnUSWyZHCWHwC1u5NfFZ9",
+          "ironThane_trafienie": "asset_EMmks6EXbmFPREuoZ98w1omX",
+          "runeMatron_smierc": "asset_nYXhzJB6HnfmhFrG4H15yJqw",
+          "runeMatron_trafienie": "asset_sqrRc3jZ2SrZv3GwRsPXujHw",
+          "passWarden_atak": "asset_juxVSogPsPuQphYTFiNFZaLg",
+          "oldMiner_atak": "asset_LMrzrK22yvNLcy7TikSbeEPP",
+          "clanWarrior_atak": "asset_i92h1ihCxi8ZC5pxSYnRmjn2",
+          "forgePriest_trafienie": "asset_7uJkEMMDZ2eiwHHME5XX6gJE"
+        }
+      },
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawki-86-dzwieki-a",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/ironThane_atak.mp3",
+        "public/assets/dzwieki/jednostki/ironThane_smierc.mp3",
+        "public/assets/dzwieki/jednostki/runeMatron_atak.mp3",
+        "public/assets/dzwieki/jednostki/runeMatron_smierc.mp3",
+        "public/assets/dzwieki/jednostki/passWarden_atak.mp3",
+        "public/assets/dzwieki/jednostki/passWarden_smierc.mp3",
+        "public/assets/dzwieki/jednostki/clanWarrior_atak.mp3",
+        "public/assets/dzwieki/jednostki/forgePriest_atak.mp3"
+      ],
+      "typ": "8 wymienionych dźwięków jednostek Żelaznego Klanu (backlog 86)",
+      "opis": "ElevenLabs SFX v3 (ok. 1 CU każdy, 1,5-2,5 s), wyrównanie głośności scripts/assets/clans_fix_sounds.py (średnia ok. -21 dB, limiter 0,95, cicha śmierć Strażniczki ok. -27 dB).",
+      "prompt": {
+        "ironThane_atak": "A gruff male dwarf warrior roars a short furious battle cry, then a heavy war hammer smashes down with a loud metallic impact. Dry, close, no music.",
+        "ironThane_smierc": "An old gruff male dwarf warrior lets out a deep weary groan as he is defeated, a low heavy grunt, then his armor clatters and his war hammer thumps on the ground. Realistic low male voice, close, no music.",
+        "runeMatron_atak": "A magic spell being cast: an old woman murmurs a short runic incantation, then a rising shimmering arcane whoosh with glassy runic chimes ends in a sharp magical burst. No music.",
+        "runeMatron_smierc": "A powerful elderly sorceress lets out a low, hoarse, weary exhale and a short fading groan as she is defeated, a faint arcane shimmer dies away, robes rustle to the ground. Mature old female voice, not a girl, no music.",
+        "passWarden_atak": "A single crossbow shot: a sharp mechanical twang and snap of the bowstring and a bolt whooshing away. Dry, close, no voice, no music.",
+        "passWarden_smierc": "A tough woman in her thirties lets out a quiet resigned sigh, a soft breathy last exhale, then falls to the ground, leather and fur rustle and boots scuff the dirt. Subtle, realistic, close, no music.",
+        "clanWarrior_atak": "Two heavy axes swung one after another: each with a whoosh and a meaty impact against a wooden shield, with a short gruff male grunt on each swing. Dry, close, no music.",
+        "forgePriest_atak": "An angry deep male dwarf priest bellows a furious hoarse chant as a commanding battle shout, as backdrop for a magical effect: crackling fire, a ringing anvil hammer blow and a rushing magical whoosh. No music."
+      },
+      "narzedzie": "Scenario",
+      "model": "model_elevenlabs-sound-effects-v3",
+      "scenario_asset": {
+        "ironThane_atak": "asset_dr7fZSbijogrFUDFcVRTi6ZS",
+        "ironThane_smierc": "asset_YGuVVKVv91axizcokp5ySNmi",
+        "runeMatron_atak": "asset_rU4HGdSpk1CoSN6DskRBvfeg",
+        "runeMatron_smierc": "asset_1WFeXzQWerxCzMmDQqhwwDGF",
+        "passWarden_atak": "asset_jd1GCCk19S8Z74wfKKoLH6xv",
+        "passWarden_smierc": "asset_bZFknxa7W4mvoe12F3AVCvXe",
+        "clanWarrior_atak": "asset_uQSaUft4Y8GzgxNVpyzgDRHM",
+        "forgePriest_atak": "asset_cufdaZ1pP2GWpEFyN17rtCwY"
+      },
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawki86-tarczownik",
+      "pliki": [
+        "public/assets/jednostki/krasnolud_tarczownik/atak.webp",
+        "public/assets/jednostki/krasnolud_tarczownik/smierc.webp",
+        "public/assets/jednostki/krasnolud_tarczownik/martwy.webp",
+        "public/assets/jednostki/krasnolud_tarczownik/anim.json"
+      ],
+      "typ": "animacja",
+      "opis": "Krasnoludzki Tarczownik: agresywny atak (zamach i natarcie z tarczą), śmierć z upadkiem i odrzuconą tarczą (draft P-Video 2, obraz startowy ze stoi.webp).",
+      "prompt": "Side view, locked static camera. The armored dwarf warrior facing right raises the axe back behind his shoulder, then swings it forward toward the right in a big, fast, energetic arc ... / lets the axe slip from his hand and the round shield slide from his arm ... sinks down onto the ground ... rests completely still, as if fast asleep.",
+      "narzedzie": "Scenario",
+      "model": "model_pruna-p-video-2",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawki86-kret",
+      "pliki": [
+        "public/assets/jednostki/kret_z_brazu/atak.webp",
+        "public/assets/jednostki/kret_z_brazu/smierc.webp",
+        "public/assets/jednostki/kret_z_brazu/trafienie.webp",
+        "public/assets/jednostki/kret_z_brazu/martwy.webp",
+        "public/assets/jednostki/kret_z_brazu/anim.json"
+      ],
+      "typ": "animacja",
+      "opis": "Kret z Brązu: dynamiczny atak wiertłem, dramatyczna śmierć (rozpad maszyny), trafienie od przodu z powrotem do pozy stoi.",
+      "prompt": "Drill-mole machine: lunges forward in a fast aggressive drilling thrust ... / comes apart: plates and gears loosen and fall away ... lies still / startled, body rocks backwards, returns to original pose (lastFrameImage = stoi).",
+      "narzedzie": "Scenario",
+      "model": "model_pruna-p-video-2",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawki86-pajak",
+      "pliki": [
+        "public/assets/jednostki/mosiezny_pajak/smierc.webp",
+        "public/assets/jednostki/mosiezny_pajak/martwy.webp",
+        "public/assets/jednostki/mosiezny_pajak/anim.json"
+      ],
+      "typ": "animacja",
+      "opis": "Mosiężny Pająk: dramatyczna śmierć z rozpadem (głowa i odnóża odlatują, sterta części).",
+      "prompt": "The brass mechanical spider comes apart: its round head dome and several legs break loose and fly off to the sides, plates and gears loosen and fall away ... lies still.",
+      "narzedzie": "Scenario",
+      "model": "model_pruna-p-video-2",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawki86-niedzwiedz",
+      "pliki": [
+        "public/assets/jednostki/niedzwiedz_w_zbroi/trafienie.webp",
+        "public/assets/jednostki/niedzwiedz_w_zbroi/anim.json"
+      ],
+      "typ": "animacja",
+      "opis": "Niedźwiedź w Zbroi: trafienie z przodu (cofnięcie głowy i łap, powrót do stoi).",
+      "prompt": "The armored brown bear facing right is startled: its head jerks back a little and its front legs shift backwards a step, then it steadies itself ... (lastFrameImage = stoi).",
+      "narzedzie": "Scenario",
+      "model": "model_pruna-p-video-2",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawki86-wartownik",
+      "pliki": [
+        "public/assets/jednostki/wartownik_z_brazu/atak.webp",
+        "public/assets/jednostki/wartownik_z_brazu/smierc.webp",
+        "public/assets/jednostki/wartownik_z_brazu/martwy.webp",
+        "public/assets/jednostki/wartownik_z_brazu/anim.json"
+      ],
+      "typ": "animacja",
+      "opis": "Wartownik z Brązu: dynamiczny atak kolczastą tarczą, śmierć z upadkiem i zrzuconą tarczą. Trafienie bez zmian (nie ruszane).",
+      "prompt": "The tall bronze armored sentinel draws its big spiked shield back, then swings it forward toward the right in a fast, energetic sweeping motion ... / comes apart, plates and gears loosen and fall away ... settles down onto the ground, the spiked shield drops beside it.",
+      "narzedzie": "Scenario",
+      "model": "model_pruna-p-video-2",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawki86-pogromca",
+      "pliki": [
+        "public/assets/jednostki/pogromca_olbrzymow/atak.webp",
+        "public/assets/jednostki/pogromca_olbrzymow/smierc.webp",
+        "public/assets/jednostki/pogromca_olbrzymow/trafienie.webp",
+        "public/assets/jednostki/pogromca_olbrzymow/martwy.webp",
+        "public/assets/jednostki/pogromca_olbrzymow/anim.json"
+      ],
+      "typ": "animacja",
+      "opis": "Pogromca Olbrzymów: potężne pchnięcie włócznią z rozmachu, śmierć z upuszczoną włócznią i osunięciem się, trafienie jako cofnięcie (bez podskoku).",
+      "prompt": "The dwarf spearman draws the spear back, then pushes it forward toward the right in a long, quick, energetic reaching motion ... / lets the long spear slip from his hands ... drops to his knees and sinks down ... / startled: head and upper body jerk back (lastFrameImage = stoi).",
+      "narzedzie": "Scenario",
+      "model": "model_pruna-p-video-2",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawki86-dzwieki",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/skarbnik_smierc.mp3",
+        "public/assets/dzwieki/jednostki/giantSlayer_atak.mp3"
+      ],
+      "typ": "dźwięk",
+      "opis": "Wymiana dźwięku śmierci Skarbnika (stary dziad, jęk i brzęk monet) i dźwięku ataku Pogromcy Olbrzymów (groźny męski okrzyk bojowy i uderzenie włóczni); wyrównane do ok. -20 dB średnio. 1 CU każdy.",
+      "prompt": "Old dwarf treasure-keeper wizard: a weary elderly male groan and fading last breath, a few gold coins spilling and clinking on stone, soft magical shimmer dying out, fantasy game defeat sound effect, no music / Dwarf giant-hunter: a menacing, aggressive deep male battle cry roared by a dwarf warrior, followed by a heavy spear thrust whoosh and a hard impact thud, fantasy game attack sound effect, no music",
+      "narzedzie": "Scenario",
+      "model": "model_elevenlabs-sound-effects-v3",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawka-gwardia-mlota",
+      "pliki": [
+        "public/assets/jednostki/gwardia_mlota/atak.webp",
+        "public/assets/jednostki/gwardia_mlota/smierc.webp",
+        "public/assets/jednostki/gwardia_mlota/martwy.webp",
+        "public/assets/jednostki/gwardia_mlota/anim.json"
+      ],
+      "opis": "Gwardia Młota: nowy atak (zamach i uderzenie młotem w ziemię) i śmierć (upadek na twarz), martwy = ostatnia klatka",
+      "prompt": "swings the warhammer up and back, then forward and down in a big sweeping arc onto the ground, dust; / sinks forward onto hands and knees then rests flat",
+      "model": "model_pruna-p-video-2 (draft)",
+      "typ": "animacja",
+      "narzedzie": "Scenario",
+      "scenario_asset": null,
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawka-armata-klanow",
+      "pliki": [
+        "public/assets/jednostki/armata_klanow/smierc.webp",
+        "public/assets/jednostki/armata_klanow/trafienie.webp",
+        "public/assets/jednostki/armata_klanow/martwy.webp",
+        "public/assets/jednostki/armata_klanow/anim.json"
+      ],
+      "opis": "Armata Klanów: widowiskowa śmierć (lufa spada, koło odpada, kurz) i płynne trafienie",
+      "prompt": "cannon comes apart: barrel tilts and drops, wheel loosens, planks and gears fall away, dust; / rocks gently backwards and rolls smoothly back",
+      "model": "model_pruna-p-video-2 (draft)",
+      "typ": "animacja",
+      "narzedzie": "Scenario",
+      "scenario_asset": null,
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawka-kolos-kuzni",
+      "pliki": [
+        "public/assets/jednostki/kolos_kuzni/smierc.webp",
+        "public/assets/jednostki/kolos_kuzni/martwy.webp",
+        "public/assets/jednostki/kolos_kuzni/anim.json"
+      ],
+      "opis": "Kolos Kuźni: dramatyczna śmierć (rozpad w stos kamieni), trafienie spowolnione w sprites.ts",
+      "prompt": "golem comes apart: chest light dims, plates fall away, sinks forward, dust, pile lies still",
+      "model": "model_pruna-p-video-2 (draft)",
+      "typ": "animacja",
+      "narzedzie": "Scenario",
+      "scenario_asset": null,
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawka-kowal-bitewny",
+      "pliki": [
+        "public/assets/jednostki/kowal_bitewny/atak.webp",
+        "public/assets/jednostki/kowal_bitewny/smierc.webp",
+        "public/assets/jednostki/kowal_bitewny/trafienie.webp",
+        "public/assets/jednostki/kowal_bitewny/martwy.webp",
+        "public/assets/jednostki/kowal_bitewny/anim.json"
+      ],
+      "opis": "Kowal Bitewny: zamach młotem (jak w kowadło), śmierć i trafienie od przodu",
+      "prompt": "swings hammer over shoulder and down like striking an anvil; / sinks forward onto hands and knees; / startled, leans back, steadies",
+      "model": "model_pruna-p-video-2 (draft)",
+      "typ": "animacja",
+      "narzedzie": "Scenario",
+      "scenario_asset": null,
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/poprawka-koziol-taranowy",
+      "pliki": [
+        "public/assets/jednostki/koziol_taranowy/atak.webp",
+        "public/assets/jednostki/koziol_taranowy/trafienie.webp",
+        "public/assets/jednostki/koziol_taranowy/anim.json"
+      ],
+      "opis": "Kozioł Taranowy: atak (opuszczony łeb, uderzenie rogami w miejscu) i trafienie",
+      "prompt": "lowers head, butts forward in place; / head jerks back, front legs shift back, steadies",
+      "model": "model_pruna-p-video-2 (draft)",
+      "typ": "animacja",
+      "narzedzie": "Scenario",
+      "scenario_asset": null,
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/dzwiek-hammerGuard_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/hammerGuard_atak.mp3"
+      ],
+      "typ": "dźwięk",
+      "opis": "Dźwięk ataku hammerGuard",
+      "prompt": "A huge two-handed warhammer swung with a heavy whoosh then smashing down onto stone: one massive deep booming impact",
+      "narzedzie": "Scenario",
+      "model": "model_elevenlabs-sound-effects-v3",
+      "scenario_asset": "asset_6fhjRzMCXPBTd7dfkugPn4jS",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "clans/dzwiek-battleSmith_atak",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/battleSmith_atak.mp3"
+      ],
+      "typ": "dźwięk",
+      "opis": "Dźwięk ataku battleSmith",
+      "prompt": "A blacksmith's hammer swung and striking an iron anvil: whoosh then a loud sharp ringing clang",
+      "narzedzie": "Scenario",
+      "model": "model_elevenlabs-sound-effects-v3",
+      "scenario_asset": "asset_YNrGgKnD62NDScVkbUg1euXx",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
