@@ -6,6 +6,7 @@ import type { TeamId } from '../engine/data';
 import type { GameState } from '../engine/types';
 import { asset } from './common';
 import { details } from './details';
+import { ThingIcon } from './markers';
 
 export const RESOURCE_ICON: Record<ResourceId, string> = { wood: 'ikony/mapa/drewno.webp', ore: 'ikony/mapa/ruda.webp', dust: 'ikony/mapa/pyl.webp' };
 
@@ -26,18 +27,30 @@ export function ResourceDetails({ state, faction, res }: { state: GameState; fac
   );
 }
 
-/** Icon, stock and income per round of each resource; nothing when the level has no resources. With `bubble` the right button on a resource shows where its income comes from. */
-export function ResourceStrip({ state, faction, size = 26, light = false, bubble = false }: { state: GameState; faction: TeamId; size?: number; light?: boolean; bubble?: boolean }) {
-  if (!state.kingdom?.res) return null;
+/**
+ * Icon, stock and income per round of each resource, all in one format "<icon>X (+X)". `gold` puts the gold first (stock and income); without `gold`
+ * and without resources (a level that has none) there is nothing. With `bubble` the right button on a resource shows where its income comes from.
+ */
+export function ResourceStrip({ state, faction, size = 26, light = false, bubble = false, gold }: { state: GameState; faction: TeamId; size?: number; light?: boolean; bubble?: boolean; gold?: { have: number; income: number } }) {
+  const res = !!state.kingdom?.res;
+  if (!res && !gold) return null;
   const have = resOf(state, faction);
   const income = resourceIncomeOf(state, faction);
+  const incomeColour = light ? '#E8D5A8' : '#6B4A22';
   return (
-    <span style={{ display: 'inline-flex', gap: light ? 16 : 10 }}>
-      {RESOURCE_IDS.map((r) => (
-        <span key={r} data-res={r} {...(bubble ? details(() => <ResourceDetails state={state} faction={faction} res={r} />) : {})} title={`${RESOURCE_TITLES[r]}: ${have[r]} (+${income[r]} na rundę)`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+    <span className="res-strip" style={{ display: 'inline-flex', alignItems: 'center', flexWrap: 'nowrap', gap: light ? 16 : Math.round(size * 0.5) }}>
+      {gold && (
+        <span data-res="gold" title={`Złoto: ${gold.have} (+${gold.income} na rundę)`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>
+          <ThingIcon word="zł" size={size} />
+          <b data-gold style={{ fontSize: size * 0.75 }}>{gold.have}</b>
+          <span style={{ fontSize: size * 0.55, color: incomeColour }}>(+{gold.income})</span>
+        </span>
+      )}
+      {res && RESOURCE_IDS.map((r) => (
+        <span key={r} data-res={r} {...(bubble ? details(() => <ResourceDetails state={state} faction={faction} res={r} />) : {})} title={`${RESOURCE_TITLES[r]}: ${have[r]} (+${income[r]} na rundę)`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>
           <img src={asset(RESOURCE_ICON[r])} alt={RESOURCE_TITLES[r]} width={size} height={size} style={light ? { filter: 'drop-shadow(0 2px 3px #000)' } : undefined} />
           <b style={{ fontSize: size * 0.75 }}>{have[r]}</b>
-          {income[r] > 0 && <span style={{ fontSize: size * 0.55, color: light ? '#E8D5A8' : '#6B4A22' }}>(+{income[r]})</span>}
+          <span style={{ fontSize: size * 0.55, color: incomeColour }}>(+{income[r]})</span>
         </span>
       ))}
     </span>

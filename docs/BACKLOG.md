@@ -38,7 +38,6 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Zrobione 24.11: p
 
 
 
-**70. Okna surowców: koszary i główne okno osady (M).** (1) Skasować ciemne tło sekcji z surowcami i przyciskiem wyjścia na dole prawej części okna koszar. (2) Wszystkie surowce w jednej linii i w jednym formacie „<ikona>X (+X)” (dziś złoto ma osobną linię z „+X na rundę”). (3) Większe ikony i czcionka. To samo w głównym oknie osady. Wspólny komponent paska surowców dla obu okien; telefon i desktop.
 
 **71. Koszary: czytelne oznaczenie, od którego poziomu koszar dostępni są pomocnicy (S).** Przy każdej karcie pomocnika wymagany poziom koszar (np. ikona koszar z cyfrą) i stan „zablokowane do poziomu N”, zgodnie z `RECRUITS`/siedliskami w `kingdom.ts`.
 

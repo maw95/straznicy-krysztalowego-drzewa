@@ -13,9 +13,9 @@ import { levelOf } from '../engine/growth';
 import { FACTION_MECHANICS, mayBuildSpark, shardsOf, shardTotal, SPARK_NAMES, SPARK_TEXTS } from '../engine/empire';
 import { MAGIC, manaOf, maxMana, SPELLS, towerSpells } from '../engine/magic';
 import type { Action, GameState } from '../engine/types';
-import { asset, Modal, Portrait, Ribbon, teamFaction } from './common';
+import { asset, COMPACT_QUERY, Modal, Portrait, Ribbon, teamFaction, useMedia } from './common';
 import { ArtifactMedal } from './growthUi';
-import { StatIcon, StatText, ThingIcon, RuleText } from './markers';
+import { StatIcon, StatText, RuleText } from './markers';
 import { CostIcons, RESOURCE_ICON, ResourceStrip } from './resources';
 
 import { sfx } from './sfx';
@@ -79,6 +79,7 @@ function DetailPlate({ id, picture, title, text, note, card, cost, action, modal
 }
 
 export function SettlementDialog({ state, settlementId, faction, onAction, onClose }: { state: GameState; settlementId: string; faction: TeamId; onAction: (a: Action) => void; onClose: () => void }) {
+  const compact = useMedia(COMPACT_QUERY);
   const s = state.kingdom!.settlements[settlementId];
   // A click on a building opens a page of this screen (the barracks, the Rada Osady with the tree of buildings) or a modal (everything else); Esc comes back to the landscape first.
   const [view, setView] = useState<'town' | 'tree' | 'barracks'>('town');
@@ -557,9 +558,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const backButton = <button className="sb-exit back" data-tree-back title="Wróć do osady" aria-label="Wróć do osady" onClick={() => setView('town')}><img src={asset('ui/wyjscie.webp')} alt="" /></button>;
   const goldLine = (
     <div className="sb-treasury">
-      <span className="sb-gold" title="Złoto"><ThingIcon word="zł" /> <b data-gold>{gold}</b></span>
-      <span className="sb-income">+{incomeOf(state, faction)} na rundę</span>
-      {state.kingdom!.res && <span className="sb-res"><ResourceStrip state={state} faction={faction} size={22} /></span>}
+      <ResourceStrip state={state} faction={faction} size={view === 'barracks' ? (compact ? 20 : 26) : compact ? 24 : 32} gold={{ have: gold, income: incomeOf(state, faction) }} />
     </div>
   );
   return (

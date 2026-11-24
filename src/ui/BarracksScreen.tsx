@@ -16,7 +16,7 @@ import { UnitSprite } from './UnitSprite';
 const CARD_RATIO = 713 / 551;
 const CTL_H = 54;
 /** The height the gold and the way back take at the bottom of the right column. */
-const FOOT_H = 88;
+const FOOT_H = 130;
 
 export function BarracksScreen({ state, s, faction, act, footer }: { state: GameState; s: Settlement; faction: TeamId; act: (a: Action) => void; footer?: ReactNode }) {
   // The sizes follow the room: the shelf has two cards on top of each other at most (the first tier lies in two columns), the cards are as big as they can be.
@@ -44,9 +44,10 @@ export function BarracksScreen({ state, s, faction, act, footer }: { state: Game
   const wide = room.w >= 760;
   // A low window (a phone held sideways) keeps only the animated unit on the right: the big card would not fit, and the shelf scrolls.
   const low = room.h < 480;
-  const stage = wide ? Math.round(Math.max(low ? 110 : 150, Math.min(room.h * (low ? 0.6 : 0.44), 460))) : Math.round(Math.min(room.w - 40, 240));
+  // In a low window the unit leaves room for the name, the recruit button, the line below and the footer (resources and the way out), so nothing overlaps.
+  const stage = wide ? Math.round(low ? Math.max(70, Math.min(room.h * 0.6, room.h - CTL_H - 80 - (footer ? 112 : 0))) : Math.max(150, Math.min(room.h * 0.44, 460))) : Math.round(Math.min(room.w - 40, 240));
   const bigCard = low || !wide ? 0 : Math.round(Math.max(150, Math.min(380, (room.h - stage - 60 - CTL_H - (footer ? FOOT_H : 0)) / CARD_RATIO)));
-  const side = wide ? Math.max(bigCard, stage) + 34 : 0;
+  const side = wide ? Math.max(bigCard, low ? Math.round(Math.max(110, Math.min(room.h * 0.6, 460))) : stage) + 34 : 0;
   // The first tier (three supports) lies in two columns of two rows, or, where the window is tall enough for the bigger cards, in one column of three rows.
   const later = tiers.filter((x) => x > 1).length;
   const fit = (columns: number, rows: number) => Math.min((room.w - side - 40 - columns * 18 - (columns - 1) * 14) / columns, (room.h - 24 - 30 - 40 - rows * 28) / rows / CARD_RATIO);
