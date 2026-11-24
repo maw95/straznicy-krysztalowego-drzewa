@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Mapa na trzy strony: jeden kafelek terenu trzeciej frakcji nie leży już osobno wśród cudzych ziem (strefy są zawsze w jednym kawałku).": "Three-side map: a single tile of the third faction's land no longer sits apart among foreign lands (zones are always in one piece).",
   "Dzikie Stado, kolejne poprawki: Satyr Rogogłos dmie w róg prawą ręką, a laska zostaje nieruchoma; Orzeł Stepowy i Łamignat stoją w pozie z początku ataku; wzbicie Łamignata jest wolniejsze; trafienie Słonia z Bębnem pokazuje szarego słonia (był mamut); Pędziwiatr ryczy groźnie, a nie jak koza, a śmierć Łamignata to krzyk orła.": "Wild Herd, more fixes: the Satyr Hornlord blows the horn with his right hand while the staff stays still; the Steppe Eagle and the Steppe Hippogriff stand in the pose from the start of their attack; the hippogriff takes off more slowly; the Drum Elephant's hit shows the grey elephant (it was a mammoth); the Wind Antelope roars menacingly instead of bleating like a goat, and the hippogriff's death is an eagle's cry.",
   "Mantykora Zmierzchu jest duża: zajmuje dwa heksy, jak inne wielkie bestie Hordy.": "The Dusk Manticore is large: it takes two hexes, like the other great beasts of the Horde.",
   "Walka na planszy głównej: skarby do użycia mają obok nazwy ikony.": "Fight on the main board: the treasures you can use now show icons next to their names.",

@@ -2,6 +2,7 @@
 // data of Przymierze and Horda (teams.ts): the games below test that the engine, the map, the goals and the bots do not assume two sides.
 import { describe, expect, it } from 'vitest';
 import { applyAction, createGame } from '../src/engine/game';
+import { neighborKeys } from '../src/engine/hex';
 import { ALL_TEAM_IDS, raceOf, teamsOf } from '../src/engine/teams';
 import { DEFAULT_RULES, type RulesConfig, type SetupOptions } from '../src/engine/types';
 import { playOut } from './helpers/engine';
@@ -99,5 +100,22 @@ describe('what three and four sides need', () => {
     expect(() => createGame(game(4, { objective: 'control' }, { mapSize: 'medium' }))).toThrow(/za mała/);
     expect(() => createGame(game(3, { objective: 'control' }, { mapSize: 'short' }))).toThrow(/za mała/);
     expect(() => createGame(game(3, { objective: 'control' }, { mode: 'coop' }))).toThrow(/Kooperacja/);
+  });
+});
+
+describe('start zones of three sides', () => {
+  it('every zone is one piece (no lone hex of one land inside another)', () => {
+    for (const size of ['long', 'huge', 'giant'] as const) {
+      for (const seed of [1, 4, 9]) {
+        const s = createGame(game(3, { objective: 'control' }, { mapSize: size, seed }));
+        for (const side of teamsOf(s)) {
+          const ks = Object.values(s.tiles).filter((t) => t.side === side).map((t) => t.key);
+          const set = new Set(ks);
+          const seen = new Set([ks[0]]);
+          for (const k of seen) for (const n of neighborKeys(k)) if (set.has(n)) seen.add(n);
+          expect(seen.size, `${size} seed ${seed} ${side}`).toBe(ks.length);
+        }
+      }
+    }
   });
 });

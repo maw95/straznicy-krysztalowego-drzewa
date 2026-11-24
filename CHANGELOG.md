@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Mapa na trzy strony: jeden kafelek terenu trzeciej frakcji nie leży już osobno wśród cudzych ziem (strefy są zawsze w jednym kawałku).
 - Wariant z bohaterem rezerwowym (dzieci): bohater wskrzeszony Eliksirem Odrodzenia wraca do swojego gracza, zamiast zostać bez właściciela (gracz prowadzi wtedy dwóch bohaterów).
 - Mantykora Zmierzchu jest duża: zajmuje dwa heksy, jak inne wielkie bestie Hordy.
 - Walka na planszy głównej: skarby do użycia mają obok nazwy ikony.

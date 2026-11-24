@@ -364,7 +364,42 @@ export function splitZones(cells: Array<{ row: number; col: number; hex: { q: nu
     }
     claim(z, pick);
   }
+  mendStrays(cells, zone, starts.map((k) => at.get(k)!));
   return zone;
+}
+
+/**
+ * A zone that was walled in while growing took a free hex far from itself: a lone hex of its land inside another zone. Each such hex goes to the
+ * zone around it, and that zone gives back one of its own hexes next to the first zone (one that does not cut it in two), so the sizes stay the same.
+ */
+function mendStrays(cells: Array<{ hex: { q: number; r: number } }>, zone: number[], startIdx: number[]): void {
+  const at = new Map(cells.map((c, i) => [key(c.hex), i]));
+  const near = (i: number) => neighborKeys(key(cells[i].hex)).flatMap((k) => (at.has(k) ? [at.get(k)!] : []));
+  /** The hexes of zone z reachable from its start without leaving it (skipping `skip`). */
+  const grown = (z: number, skip = -1): Set<number> => {
+    const seen = new Set<number>([startIdx[z]]);
+    for (const i of seen) for (const j of near(i)) if (zone[j] === z && j !== skip && !seen.has(j)) seen.add(j);
+    return seen;
+  };
+  for (let guard = 0; guard < cells.length; guard++) {
+    let fixed = false;
+    for (let z = 0; z < startIdx.length && !fixed; z++) {
+      const main = grown(z);
+      const stray = cells.map((_, i) => i).find((i) => zone[i] === z && !main.has(i));
+      if (stray === undefined) continue;
+      const around = near(stray).map((j) => zone[j]).filter((o) => o !== z);
+      if (!around.length) continue;
+      const host = around.sort((a, b) => around.filter((x) => x === b).length - around.filter((x) => x === a).length)[0];
+      zone[stray] = host;
+      // Give back a hex of the host that touches the main body of z and is not needed to hold the host together.
+      const hostCells = cells.map((_, i) => i).filter((i) => zone[i] === host);
+      const hostBody = grown(host).size;
+      const back = hostCells.find((i) => i !== startIdx[host] && near(i).some((j) => main.has(j)) && grown(host, i).size === hostBody - 1);
+      if (back !== undefined) zone[back] = z;
+      fixed = true;
+    }
+    if (!fixed) break;
+  }
 }
 
 function setTerrain(tile: Tile, terrain: Terrain, rng: Rng) {
