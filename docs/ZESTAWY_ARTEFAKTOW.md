@@ -19,7 +19,7 @@ Stan na 13.11.2026: **4 zestawy zaakceptowane przez autora** (nazwy, elementy i 
 |------|---------|-------|
 | hełm | Wianek Gajowy | pomocnicy mają +1 S w bitwie |
 | zbroja | Płaszcz z Mchu | na początku każdej rundy bohater odzyskuje 1 Ż |
-| buty | Trzewiki z Kory | bohater jest odporny na korzenie (Elf Druid), sidła (Pająk) i chwyt (Szczypiec) |
+| buty | Trzewiki z Kory | bohater jest odporny na korzenie, sidła, chwyt i spowolnienie (trucizna i klątwy działają jak zwykle) |
 | premia | 3/3 | pole widzenia +1 (dodawane do innych źródeł) i pomocnicy +2 Ż |
 
 ## 2. Rynsztunek Brzasku (światło, atak)

@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Opis artefaktu „Trzewiki z Kory” mówi teraz o efekcie (odporność na korzenie, sidła, chwyt i spowolnienie), a nie o stworzeniach, które je zadają.":
+    "The description of the Bark Shoes artifact now talks about the effect (immunity to roots, snares, the grip and slowing) instead of the creatures that cause them.",
   "Na liście osad w panelu mapy i na flagach punktów kontrolnych każda frakcja ma własny medalion (herb na polu w kolorze frakcji); wcześniej frakcja grająca na trzecim lub czwartym miejscu przy stole, np. Bractwo Przypływu, miała tam puste miejsce.":
     "In the settlement list of the map panel and on the control point flags every faction has its own medallion (its crest on a field in the faction's colour); before, a faction sitting in the third or fourth seat, e.g. the Brotherhood of the Tide, had an empty space there.",
   "Okno „Od Twojej ostatniej tury” zniknęło: przy stole kilku graczy pokazywało każdemu, co zrobili jego przeciwnicy (bitwy, skarby, śmierci). Dziennik zdarzeń zostaje.":

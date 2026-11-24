@@ -662,7 +662,7 @@ register({
   "Pomocnicy bohatera mają +1 S w bitwie.": "The hero's supports have +1 SPD in battle.",
   "Płaszcz z Mchu": "Moss Cloak",
   "Na początku każdej rundy bitwy bohater odzyskuje 1 Ż.": "At the start of each battle round the hero regains 1 HP.",
-  "Bohater jest odporny na korzenie (Elf Druid), sidła (Pająk) i chwyt (Szczypiec).": "The hero is immune to roots (Elf Druid), snares (Spider) and the grip (Pincer).",
+  "Bohater jest odporny na korzenie, sidła, chwyt i spowolnienie (trucizna i klątwy działają na niego jak zwykle).": "The hero is immune to roots, snares, the grip and slowing (poison and curses affect them as usual).",
   "Pierwszy atak bohatera w bitwie zadaje +2 A.": "The hero's first attack in a battle deals +2 ATK.",
   "Fala Ostrza: cios rani też o 1 Ż jednego innego wroga sąsiadującego z celem.": "Blade Wave: the blow also hurts one other enemy adjacent to the target for 1 HP.",
   "Ataki z dystansu zadają bohaterowi o 2 mniej (ale co najmniej 1).": "Ranged attacks deal the hero 2 less (but at least 1).",

@@ -120,7 +120,7 @@ export const ARTIFACTS: ArtifactDef[] = [
   // Set pieces (rare; only in the Osada level and higher). Bonuses for three of three: SETS.
   { id: 'groveWreath', slot: 'helmet', rarity: 2, set: 'grove', name: 'Wianek Gajowy', supportSpeed: 1, text: 'Pomocnicy bohatera mają +1 S w bitwie.' },
   { id: 'mossCloak', slot: 'armor', rarity: 2, set: 'grove', name: 'Płaszcz z Mchu', regen: 1, text: 'Na początku każdej rundy bitwy bohater odzyskuje 1 Ż.' },
-  { id: 'barkShoes', slot: 'boots', rarity: 2, set: 'grove', name: 'Trzewiki z Kory', unbound: true, text: 'Bohater jest odporny na korzenie (Elf Druid), sidła (Pająk) i chwyt (Szczypiec).' },
+  { id: 'barkShoes', slot: 'boots', rarity: 2, set: 'grove', name: 'Trzewiki z Kory', unbound: true, text: 'Bohater jest odporny na korzenie, sidła, chwyt i spowolnienie (trucizna i klątwy działają na niego jak zwykle).' },
   { id: 'dawnDiadem', slot: 'helmet', rarity: 2, set: 'dawnArms', name: 'Diadem Brzasku', firstStrike: 2, text: 'Pierwszy atak bohatera w bitwie zadaje +2 A.' },
   { id: 'dawnSword', slot: 'weapon', rarity: 2, set: 'dawnArms', name: 'Miecz Jutrzenki', cleave: 1, text: 'Fala Ostrza: cios rani też o 1 Ż jednego innego wroga sąsiadującego z celem.' },
   { id: 'dawnShield', slot: 'shield', rarity: 2, set: 'dawnArms', name: 'Tarcza Zorzy', rangedDefense: 2, text: 'Ataki z dystansu zadają bohaterowi o 2 mniej (ale co najmniej 1).' },

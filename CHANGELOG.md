@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Opis artefaktu „Trzewiki z Kory” mówi teraz o efekcie (odporność na korzenie, sidła, chwyt i spowolnienie), a nie o stworzeniach, które je zadają.
 - Na liście osad w panelu mapy i na flagach punktów kontrolnych każda frakcja ma własny medalion (herb na polu w kolorze frakcji); wcześniej frakcja grająca na trzecim lub czwartym miejscu przy stole, np. Bractwo Przypływu, miała tam puste miejsce.
 - Okno „Od Twojej ostatniej tury” zniknęło: przy stole kilku graczy pokazywało każdemu, co zrobili jego przeciwnicy (bitwy, skarby, śmierci). Dziennik zdarzeń zostaje.
 - Kolory frakcji w interfejsie: obwódki portretów Bractwa Przypływu są turkusowe (były łososiowe), wstęga Żelaznego Klanu jest stalowoszara (była fioletowa), a w grze wstęgi okien („Znaleziono skarb!”, skrzynia, nowy poziom, dziennik) i główne przyciski („Zakończ turę”, „Do ekwipunku”…) mają kolor frakcji gracza zamiast zawsze zielonego.
