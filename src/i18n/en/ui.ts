@@ -2,6 +2,12 @@
 import { register } from '../translate';
 
 register({
+  "Rada stoi w każdej osadzie od początku i nic nie kosztuje. Z niej wychodzą wszystkie budynki.": "The council stands in every settlement from the start and costs nothing. Every building grows from it.",
+  "Najwyższy poziom: nic więcej nie da się rozbudować.": "Highest level: nothing more to upgrade.",
+  "Następny poziom: {0}": "Next level: {0}",
+  "jeszcze nie zbudowane": "not built yet",
+  "poziom {0} z {1}": "level {0} of {1}",
+  "Złoto: {0} (+{1} na rundę)": "Gold: {0} (+{1} per round)",
   "Do zrekrutowania": "Ready to recruit",
   "Siedlisko do zbudowania": "Dwelling can be built",
   "Niedostępne": "Unavailable",

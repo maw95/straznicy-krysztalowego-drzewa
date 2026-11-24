@@ -17,6 +17,7 @@ import { asset, COMPACT_QUERY, Modal, Portrait, Ribbon, teamFaction, useMedia } 
 import { ArtifactMedal } from './growthUi';
 import { StatIcon, StatText, RuleText } from './markers';
 import { CostIcons, RESOURCE_ICON, ResourceStrip } from './resources';
+import { details } from './details';
 
 import { sfx } from './sfx';
 import { BarracksScreen } from './BarracksScreen';
@@ -525,6 +526,44 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     );
     return <DetailPlate id={b} picture={buildingPicture(landRace, b, Math.max(level, 1))} title={BUILDING_NAMES[b][shown]} text={BUILDING_TEXTS[b][shown] ?? ''} note={note} blocked={blocked} cost={cost === null ? undefined : <CostIcons cost={cost} have={{ gold, res: resOf(state, faction) }} size={26} />} action={action} />;
   };
+  // The window of the right button (a long press on a phone) on a building, in the landscape and in the tree: what it is, its level, the price and effect of the next level.
+  const info = (n: string): ReactNode => {
+    const have = { gold, res: resOf(state, faction) };
+    const plate = (picture: string, title: string, sub: string | null, text: string, next?: { label: string; text?: string; cost?: ReactNode }) => (
+      <div className="plate parch" data-building-info={n} style={{ width: 330, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <img src={asset(picture)} alt="" width={64} height={64} style={{ objectFit: 'contain', flex: 'none' }} />
+          <div>
+            <div style={{ fontWeight: 800, fontSize: 21, lineHeight: 1.1 }}>{title}</div>
+            {sub && <div style={{ fontSize: 14, color: '#6B4A22', fontWeight: 700 }}>{sub}</div>}
+          </div>
+        </div>
+        <div style={{ fontSize: 15, lineHeight: 1.3 }}><RuleText text={text} /></div>
+        {next && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, borderTop: '1px solid rgba(107, 74, 34, 0.4)', paddingTop: 6 }}>
+            <b style={{ fontSize: 15 }}>{next.label}</b>
+            {next.text && <div style={{ fontSize: 14, lineHeight: 1.25 }}><RuleText text={next.text} /></div>}
+            {next.cost}
+          </div>
+        )}
+      </div>
+    );
+    if (n === COUNCIL) return plate(councilPic, 'Rada Osady', null, 'Rada stoi w każdej osadzie od początku i nic nie kosztuje. Z niej wychodzą wszystkie budynki.');
+    if (n === 'spark') return plate(buildingPicture(landRace, 'spark', 1), SPARK_NAMES[raceOf(state, faction)], buildingLevel(s, 'spark') > 0 ? 'płonie' : 'niewzniesiona', SPARK_TEXTS[raceOf(state, faction)]);
+    if (n.startsWith('dwelling-')) {
+      const id = n.slice(9);
+      const tier = recruitsOf(state, faction).find((x) => x.id === id)?.tier ?? 2;
+      const built = dwellingOf(state, faction, tier);
+      return plate(dwellingArt(id), DWELLING_NAMES[id], built === id ? 'zbudowane' : built ? 'wybrano alternatywne siedlisko' : 'niezbudowane', DWELLING_TEXTS[id], built ? undefined : { label: 'Koszt budowy', cost: <CostIcons cost={DWELLING_COST[tier - 2]} have={have} size={24} /> });
+    }
+    const b = n as BuildingId;
+    const level = buildingLevel(s, b);
+    const max = BUILDING_NAMES[b].length;
+    const cost = price(b);
+    const shown = Math.max(0, Math.min(level, max) - 1);
+    const next = cost === null ? { label: 'Najwyższy poziom: nic więcej nie da się rozbudować.' } : level === 0 ? { label: 'Koszt budowy', cost: <CostIcons cost={cost} have={have} size={24} /> } : { label: `Następny poziom: ${BUILDING_NAMES[b][level]}`, text: BUILDING_TEXTS[b][level], cost: <CostIcons cost={cost} have={have} size={24} /> };
+    return plate(buildingPicture(landRace, b, Math.max(level, 1)), BUILDING_NAMES[b][shown], level === 0 ? 'jeszcze nie zbudowane' : `poziom ${level} z ${max}`, BUILDING_TEXTS[b][shown] ?? '', next);
+  };
   const detail = pick?.startsWith('dwelling-') ? dwellingDetail(pick.slice(9)) : pick === 'spark' ? sparkDetail() : pick && pick !== COUNCIL ? buildingDetail(pick as BuildingId) : (
     <DetailPlate id="council" picture={councilPic} title="Rada Osady" text="Rada stoi w każdej osadzie od początku i nic nie kosztuje. Z niej wychodzą wszystkie budynki: kliknij budynek w drzewku, żeby zobaczyć jego cenę i działanie, a potem go zbudować." />
   );
@@ -571,7 +610,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               const level = buildingLevel(s, b);
               const spot = spotOf(b, landRace);
               return (
-                <button key={b} className="settlement-bld" style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: Math.round(spot.y * 10) }} onClick={() => openBuilding(b)} aria-label={nameOf(b)} data-building={b} data-level={level} {...hoverProps(b)}>
+                <button key={b} className="settlement-bld" style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: Math.round(spot.y * 10) }} onClick={() => openBuilding(b)} aria-label={nameOf(b)} data-building={b} data-level={level} {...hoverProps(b)} {...details(() => info(b))}>
                   <img src={asset(buildingPicture(landRace, b, level))} alt="" className="settlement-pic" style={{ height: `${b === 'treasury' && level >= 2 ? spot.h * 1.15 : spot.h}cqh` }} />
                 </button>
               );
@@ -580,12 +619,12 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
               const id = dwellingOf(state, faction, tier)!;
               const spot = DWELLING_SPOTS[tier - 2];
               return (
-                <button key={`dwelling-${tier}`} className="settlement-bld dwelling" style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: Math.round(spot.y * 10) }} onClick={() => { setHover(null); setModal(`dwelling-${tier}`); }} aria-label={DWELLING_NAMES[id]} data-dwelling-site={tier} {...hoverProps(`dwelling-${tier}`)}>
+                <button key={`dwelling-${tier}`} className="settlement-bld dwelling" style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: Math.round(spot.y * 10) }} onClick={() => { setHover(null); setModal(`dwelling-${tier}`); }} aria-label={DWELLING_NAMES[id]} data-dwelling-site={tier} {...hoverProps(`dwelling-${tier}`)} {...details(() => info(`dwelling-${id}`))}>
                   <img src={asset(`osady/dwelling_${id}.webp`)} alt="" className="settlement-pic" style={{ height: `${spot.h}cqh` }} />
                 </button>
               );
             })}
-            <button className="settlement-bld" style={{ left: `${SPOTS.council.x}%`, top: `${SPOTS.council.y}%`, zIndex: Math.round(SPOTS.council.y * 10) }} onClick={() => openBuilding('council')} aria-label="Rada Osady" data-building="council" data-level="1" {...hoverProps('council')}>
+            <button className="settlement-bld" style={{ left: `${SPOTS.council.x}%`, top: `${SPOTS.council.y}%`, zIndex: Math.round(SPOTS.council.y * 10) }} onClick={() => openBuilding('council')} aria-label="Rada Osady" data-building="council" data-level="1" {...hoverProps('council')} {...details(() => info(COUNCIL))}>
               <img src={asset(councilPic)} alt="" className="settlement-pic" style={{ height: `${SPOTS.council.h}cqh` }} />
             </button>
           </>
@@ -615,7 +654,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
         <div className="settlement-page">
           {header}
           <div className="settlement-field tree">
-            <BuildingTree state={state} s={s} faction={faction} order={ORDER} picture={(b, level) => buildingPicture(landRace, b, Math.max(level, 1))} selected={pick} onSelect={setPick} council={{ picture: councilPic, name: 'Rada Osady' }} extras={extras} />
+            <BuildingTree state={state} s={s} faction={faction} order={ORDER} picture={(b, level) => buildingPicture(landRace, b, Math.max(level, 1))} selected={pick} onSelect={setPick} council={{ picture: councilPic, name: 'Rada Osady' }} extras={extras} info={info} />
           </div>
           <div className="settlement-foot">
             {detail}

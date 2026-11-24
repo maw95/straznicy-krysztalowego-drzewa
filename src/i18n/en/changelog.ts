@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Prawy przycisk myszy (na telefonie przytrzymanie) na budynku w osadzie albo w Radzie Osady pokazuje okienko: nazwa, poziom, opis, cena i skutek następnego poziomu.": "Right mouse button (a long press on a phone) on a building in the settlement or in the Council opens a window: name, level, description, price and effect of the next level.",
   "Koszary: przy każdej karcie pomocnika jest ikona koszar z cyfrą wymaganego poziomu (1 albo 2), a gdy koszary są za niskie, ikona czerwienieje i podpowiedź mówi „Zablokowane do poziomu koszar 2”.": "Barracks: every support card shows a barracks icon with the required level (1 or 2); when the barracks are too low the icon turns red and the hint says \"Locked until barracks level 2\".",
   "Koszary i główne okno osady: surowce w jednej linii w jednym formacie „ikona X (+X)” (złoto też), większe ikony i czcionka, bez ciemnego tła pod paskiem w koszarach.": "Barracks and the main settlement window: resources in one line in one format \"icon X (+X)\" (gold too), bigger icons and font, no dark background under the bar in the barracks.",
   "Mapa na trzy strony: jeden kafelek terenu trzeciej frakcji nie leży już osobno wśród cudzych ziem (strefy są zawsze w jednym kawałku).": "Three-side map: a single tile of the third faction's land no longer sits apart among foreign lands (zones are always in one piece).",

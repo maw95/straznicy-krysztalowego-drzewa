@@ -13,6 +13,7 @@ import type { Cost } from '../engine/economy';
 import type { GameState } from '../engine/types';
 import { asset } from './common';
 import { CostIcons } from './resources';
+import { details } from './details';
 
 const NODE_W = 252;
 const NODE_H = 120;
@@ -50,7 +51,7 @@ export function nodeState(state: GameState, s: Settlement, faction: TeamId, b: B
   return canPay(state, faction, cost) ? 'open' : 'poor';
 }
 
-export function BuildingTree({ state, s, faction, order, picture, selected, onSelect, council, extras }: {
+export function BuildingTree({ state, s, faction, order, picture, selected, onSelect, council, extras, info }: {
   state: GameState;
   s: Settlement;
   faction: TeamId;
@@ -62,6 +63,8 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
   /** The council's picture and name. */
   council: { picture: string; name: string };
   extras?: ExtraNode[];
+  /** The window of the right button (a long press on a phone) on a node: what the node is, its level, the next level's price and effect. */
+  info?: (n: NodeId) => ReactNode;
 }) {
   const extraOf = (n: NodeId) => (extras ?? []).find((e) => e.id === n);
   const parentsOf = (n: NodeId): NodeId[] => (n === COUNCIL ? [] : extraOf(n)?.parents ?? [BUILDING_PARENT[n as BuildingId] ?? COUNCIL]);
@@ -271,7 +274,7 @@ export function BuildingTree({ state, s, faction, order, picture, selected, onSe
     const pic = n === COUNCIL ? council.picture : ex ? ex.picture : picture(bid, level);
     const name = n === COUNCIL ? council.name : ex ? ex.name : level ? BUILDING_NAMES[bid][Math.min(level, BUILDING_NAMES[bid].length) - 1] : BUILDING_NAMES[bid][0];
     return (
-      <button key={n} className={`tree-node ${st} ${selected === n ? 'on' : ''}`} data-tree-node={n} data-node-state={st} style={{ left: x, top: y, width: NODE_W, height: NODE_H }} onClick={() => onSelect(n)}>
+      <button key={n} className={`tree-node ${st} ${selected === n ? 'on' : ''}`} data-tree-node={n} data-node-state={st} style={{ left: x, top: y, width: NODE_W, height: NODE_H }} onClick={() => onSelect(n)} {...(info ? details(() => info(n)) : {})}>
         <img src={asset(pic)} alt="" className="tn-pic" />
         <span style={{ display: 'flex', flexDirection: 'column', gap: 3, textAlign: 'left', minWidth: 0 }}>
           <b style={{ fontSize: 18, lineHeight: 1.1 }}>{name}</b>

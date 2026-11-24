@@ -40,7 +40,6 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Zrobione 24.11: p
 
 
 
-**72. Prawy klik na budynek: okienko ze szczegółami (S–M).** W widoku osady i w Radzie Osady prawy przycisk myszy (na telefonie przytrzymanie) na budynku pokazuje okienko z opisem, poziomem, kosztem następnego poziomu i efektem. Wzorzec: okno prawego kliku na frakcji (`FACTION_BLURBS` w `setupShared.tsx`) i dymki z punktu „Ikony i podpowiedzi”.
 
 **73. Skrzynia skarbów i Księga czarów: paginacja i układ (M).** (1) Strzałki paginacji w skrzyni i w Księdze czarów: same duże, wyraźne, zdobione strzałki (bez kółek), jeden komponent. (2) Pozycja: wyśrodkowane w poziomie względem skrzyni i tuż pod skarbami, na czerwonym polu wnętrza skrzyni (dziś za nisko i za bardzo z lewej). (3) Skarby: przy 6 widocznych nie są na środku, nachodzą na lewą ściankę; wyśrodkować siatkę. (4) Skarby tego samego rodzaju w jednej ikonie z „×3” w prawym górnym rogu. (5) Sortowanie: najpierw skarby, których można teraz użyć (nieszare). Gotowe, gdy zrzuty skrzyni z 1, 6 i 12+ skarbami (panel testowy, scena „Okno skrzyni”) wyglądają poprawnie.
 
