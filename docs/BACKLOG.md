@@ -63,6 +63,28 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Zrobione 24.11: p
 
 **84. Koop i gra online z nowymi frakcjami + stare błędy typów w backendzie (M–L; dawny punkt 51a).** (1) Koop: dziś gracze to Przymierze, a komputer Horda (`isAutomaton`, `goodAction`, `crystalsFor` zakładają `dawn`/`horde`); uogólnić na dowolną parę „gracze kontra komputer”. (2) Online: serwer (`../straznicy-krysztalowego-drzewa-backend`) sprawdza `FACTIONS` i miejsca `dawn`/`horde`; po wydaniu gry aktualizacja pakietu silnika (`docs/INFRASTRUKTURA.md`), `TableConfig`, `src/rooms/table.ts` (frakcja przy miejscu), ranking i `factionsOf`; klient `OnlineScreen.tsx` z tym samym wyborem frakcji co `SetupScreen`; serwer musi poznać akcję `kingdomForgeRune`. (3) Naprawić trzy stare błędy typów `TeamId` w backendzie przy stole online z nowymi frakcjami. Test pokoju na 3 i 4 strony; backend: commit, push i `make deploy` wolno, ale wdrożenie razem z wydaniem gry (punkt 63c).
 
+**86. Poprawki animacji i dźwięków Żelaznych Klanów (uwagi autora 24.11; kredyty wg liczby klipów, tryb `draft` 9 CU; wzorzec: punkt 85 i `docs/PRZEPIS_JEDNOSTKI.md`).** **Reguły ogólne autora (powtarzają się, stosować do każdej jednostki):** atak = wyraźny zamach z rozmachem i uderzenie w cel (nie samo podniesienie broni), agresywny i dynamiczny; śmierć = widoczny upadek/pokonanie (nie siadanie ani kładzenie się), u maszyn i konstruktów widoczne ciężkie zniszczenie, kolos leży nieaktywny; trafienie = cofnięcie od ciosu z PRZODU (nie pochylanie do przodu, nie podskok, nie potknięcie), spokojne i płynne, a po nim powrót do pozy „stoi”. Dźwięki dobierać do postaci (wiek, płeć, charakter), nie do „dziewczynki” czy „taniego”.
+  - **Tan Żelazobrody:** atak = uderzenie młotem, ewentualnie z okrzykiem bojowym; dźwięk śmierci brzmi tanio (ma brzmieć jak umierający krasnoludzki wojownik); śmierć wygląda jak siadanie; trafienie bardzo szybkie, jak potknięcie albo przestraszenie się.
+  - **Matka Run:** śmierć i trafienie jak u Tana (naprawić tak samo); dźwięki do wymiany wszystkie; atak = dźwięk rzucanego zaklęcia; śmierć nie może brzmieć jak westchnięcie dziewczynki (stara, potężna czarodziejka).
+  - **Strażniczka Przełęczy:** atak = dźwięk wystrzału z kuszy, animacja ataku słaba (tak się nie strzela z kuszy); śmierć = ciche westchnięcie i upadek na ziemię (twarda kobieta, ok. 30 lat).
+  - **Stary Górmistrz:** atak wygląda jak podniesienie kilofa, ma być zamach i uderzenie.
+  - **Wojownik Klanu:** atak = dźwięk połączony z uderzeniem topora; sekwencja: po jednym uderzeniu każdym z dwóch toporów (nie podnoszenie ich do góry); śmierć wygląda jak kładzenie się.
+  - **Kusznik Gór:** śmierć dobra, ale tarcza też ma się przewrócić.
+  - **Kapłan Kuźni:** okrzyk ataku bardziej gniewny, jako tło dla dźwięku magicznego efektu; trafienie mniej gwałtowne i bez dziwnego ruchu nogą.
+  - **Krasnoludzki Tarczownik:** atak bardziej agresywny; śmierć wygląda jak kładzenie się.
+  - **Kret z Brązu:** atak znacznie bardziej agresywny i dynamiczny; śmierć dramatyczna (maszyna mocno uszkodzona); trafienie od przodu (dziś pochyla się jak trafiony od tyłu).
+  - **Mosiężny Pająk:** śmierć dużo bardziej dramatyczna, widoczne zniszczenia.
+  - **Niedźwiedź w Zbroi:** trafienie bez pochylania do przodu (atak z przodu).
+  - **Wartownik z Brązu:** atak dużo bardziej dynamiczny i agresywny; śmierć dramatyczna ze zniszczeniami; trafienie: pomysł dobry, ale animacja poszarpana, jakby zapętlona po odchyleniu do tyłu.
+  - **Pogromca Olbrzymów:** dźwięk ataku = groźny, agresywny, męski okrzyk bojowy plus uderzenie włóczni; atak = potężne pchnięcie włócznią z rozmachu; śmierć dramatyczna (dziś kładzenie się); trafienie nienaturalne, jak chęć podskoku.
+  - **Skarbnik:** dźwięk śmierci jest pomylony (wymienić).
+  - **Gwardia Młota:** atak = potężne uderzenie młotem z zamachu i dźwięk potężnego uderzenia; śmierć wygląda jak kładzenie się.
+  - **Armata Klanów:** śmierć bardziej widowiskowa, widoczne zniszczenie armaty; po trafieniu płynny powrót do pozy „stoi”.
+  - **Kolos Kuźni:** trafienie spowolnić; śmierć dramatyczna, kolos leży całkiem zniszczony i nieaktywny.
+  - **Kowal Bitewny:** dźwięk ataku = uderzenie młota; atak = zamach młotem (dziś tylko podnosi); śmierć i trafienie do poprawy.
+  - **Kozioł Taranowy:** atak bardziej dynamiczny i agresywny; trafienie nienaturalne.
+
+
 ### Starsze punkty
 
 **51b. Potyczka zamiast Rywalizacji i Kooperacji w wersji cyfrowej (20.11, decyzja autora; wersja planszowa nietknięta, zostaje z Kooperacją i automatem).**
