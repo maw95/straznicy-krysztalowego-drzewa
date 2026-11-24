@@ -837,3 +837,11 @@ Kara ruchu (`slowCut`: Spowolnienie, mróz, Zimne Światło) skraca o tyle samo 
 
 ## 21. Szarża Światła liczy faktycznie przebyte pola (2026-11-20, backlog 58b)
 Bonus Szarży Światła (i Nurkowania, Taranu, Rozpędu) zależy od `movedDistance`, czyli długości faktycznie przebytej drogi w tej aktywacji (najkrótsza ścieżka wokół przeszkód i jednostek), nie od odległości w linii prostej. Jednostka rusza się raz na aktywację, więc obejście celu liczy się, gdy droga do wybranego pola ma co najmniej 4 pola. Test w `tests/free.test.ts`; bez zmian w silniku i w golden.
+
+## Pomiar Spaceru (poziom 0, pojedynki bez zdolności), 24.11.2026
+
+Zgłoszenie autora: „Wilkołak na poziomie 1 jest za mocny” (pobił Wilczycę i Złotego Smoka). Pomiar (cyfrowe zasady, boty; `SIM_ZERO=1 SIM_DIGITAL=1 SIM_DAWN_HUMAN=1 node --import tsx scripts/sim/matrix.ts 200 zeroD "pvp"`; nowe: `SIM_ZERO`, `SIM_PICK_DAWN`, `SIM_PICK_HORDE` wybierają poziom 0 i stałych bohaterów):
+- **Wygrane Przymierza na Spacerze: 72–85%** we wszystkich komórkach PvP (pasmo Łatwego 65–85), czyli bez systematycznej przewagi Hordy.
+- **Na Spacerze zdolności nie działają wcale** (`abilities: false`, także u strażników), więc pojedynek to czysta arytmetyka Ż/A/S: szybszy uderza pierwszy. Wilkołak (8/5/7) wygrywa ze Złotym Smokiem (9/5/4) i Srebrną Wilczycą (8/4/6), przegrywa z Jednorożcem (S 8) i Niedźwiedziem. Z 16 par bohater–bohater Przymierze wygrywa 11.
+- **Wilczyca (dodatkowy bohater, 7–8 graczy) jest słaba w pojedynkach:** sama (PvP 1 na 1) wygrywa tylko 5–10%, w parze (2 na 2) 63–85% zależnie od partnera i przeciwników. Najgorszy zestaw autora (Wilczyca + Złoty Smok przeciw Wilkołakowi + Czarnemu Smokowi): 71% krótka, 63% średnia mapa.
+- Pojedynki ze zdolnościami (opcja „Na planszy głównej” przy pełnej grze): Przymierze 63–82%. Alternatywnych zdolności „tylko na pojedynek” nie ma; cofnięto je wcześniej (zob. wyżej, „cofnięte efekty zdolności w pojedynkach”), zostały tylko drugie karty strażników.

@@ -16,7 +16,7 @@ const filter = process.argv[4] ?? '';
 const CHUNK = 100;
 
 const variants: Variant[] = [];
-const options = process.env.SIM_ALL ? OPTIONS : OPTIONS.filter((o) => o === 'full' || o === 'kids');
+const options = process.env.SIM_ZERO ? (['zero'] as const) : process.env.SIM_ALL ? OPTIONS : OPTIONS.filter((o) => o === 'full' || o === 'kids');
 for (const size of SIZES) for (const table of TABLES) for (const option of options) variants.push({ size, table, option });
 // Harder coop option: one Horde hero more (coop only).
 for (const size of SIZES) for (const table of ['coop1', 'coop2'] as const) variants.push({ size, table, option: 'hard' });
