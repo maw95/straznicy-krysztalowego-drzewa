@@ -8,7 +8,7 @@ const p = g.page;
 const card = (t: string) => p.locator('.opt-card', { hasText: t }).first();
 try {
   await card('Nowa gra').click();
-  await card('Rywalizacja').click();
+  await card('Potyczka').click();
   await card('Ten komputer').click();
   await p.locator('[data-wizard-page="tier"]').waitFor();
   const nextIfAny = async () => { await p.waitForTimeout(500); const n = p.locator('[data-wizard-next]'); if (await n.count()) await n.click().catch(() => {}); await p.waitForTimeout(300); };

@@ -5,6 +5,8 @@
 import { FACTION_HEROES, ITEMS, UNITS, type FactionId, type TeamId, type ItemKind } from './data';
 import { activeHero, applyAction, giveItem, newItem } from './game';
 import { neighborKeys } from './hex';
+import { raceOf } from './teams';
+import { arenaObstacles } from './arenaLayout';
 import { tileCost } from './map';
 import { ARTIFACT_BY_ID, giveArtifact } from './sites';
 import { SPELL_IDS, type SpellId } from './magic';
@@ -168,6 +170,19 @@ export const DEV_SCENES: DevScene[] = [
       reviveAll(state, h.faction);
       setHeroLevel(state, h.id, 6);
       return fightNeutral(state, 2);
+    },
+  },
+  {
+    id: 'ownArena',
+    label: 'Bitwa na arenie mojej frakcji',
+    hint: 'Walka z neutralnymi, ale na arenie i z przeszkodami frakcji aktywnego bohatera (zob. wygląd obu aren).',
+    run: (state) => {
+      const h = mainHero(state);
+      reviveAll(state, h.faction);
+      const s = fightNeutral(state, 0);
+      const b = s.battle;
+      if (b) { b.arena = raceOf(state, h.faction); b.obstacles = arenaObstacles(b.arena, b.layout); }
+      return s;
     },
   },
   {
