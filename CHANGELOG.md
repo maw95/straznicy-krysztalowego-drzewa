@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Okno „Od Twojej ostatniej tury” zniknęło: przy stole kilku graczy pokazywało każdemu, co zrobili jego przeciwnicy (bitwy, skarby, śmierci). Dziennik zdarzeń zostaje.
 - Kolory frakcji w interfejsie: obwódki portretów Bractwa Przypływu są turkusowe (były łososiowe), wstęga Żelaznego Klanu jest stalowoszara (była fioletowa), a w grze wstęgi okien („Znaleziono skarb!”, skrzynia, nowy poziom, dziennik) i główne przyciski („Zakończ turę”, „Do ekwipunku”…) mają kolor frakcji gracza zamiast zawsze zielonego.
 - Sefiran Plamisty na arenie jest większy: wąż był o połowę mniejszy od innych bohaterów i ginął na polu.
 - Wszystkie 19 postaci Żelaznego Klanu mają animowane sprite'y (stanie, chód, atak, śmierć, trafienie): Tan Żelaznobrody, Matka Run, Mosiężny Pająk, Niedźwiedź w Zbroi, Armata Klanów, Kolos Kuźni i pozostałe

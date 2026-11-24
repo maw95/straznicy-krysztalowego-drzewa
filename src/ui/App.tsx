@@ -30,7 +30,7 @@ import { DuelView } from './DuelView';
 import { Frame, Medal, Modal, FACTION_RING, Portrait, Ribbon, asset, teamFaction, useMedia } from './common';
 import { SetupScreen } from './SetupScreen';
 import { music, type Theme } from './music';
-import { AppChrome, CardDialog, ConfirmDialog, DigestDialog, FoundTreasure, musicTheme, LeaveDialog, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
+import { AppChrome, CardDialog, ConfirmDialog, FoundTreasure, musicTheme, LeaveDialog, OptionsDialog, SkillDialog, TreasureDialog, VictoryEffects, type Confirmation } from './gameDialogs';
 import { fightLevelAt } from './fightBadges';
 import { ArenaCardsContext, DigitalCardsContext, UnitCard } from './UnitCard';
 import { DigitalContext, HeroLevelsContext, HpScaleContext, StatScaleContext } from './statScale';
@@ -696,30 +696,10 @@ export function App() {
   const heroLevels = useMemo(() => (game?.rules.heroGrowth ? Object.fromEntries(Object.values(game.heroes).map((h) => [h.id, h.level ?? 1])) : {}), [game]);
   const visibleLog = useMemo(() => (game ? game.log.filter((l) => !l.privateTo || l.privateTo === viewer) : []), [game, viewer]);
 
-  // "Since your last turn": with bots at the table a lot happens off-screen
-  // (a teammate drinks the shared elixir, a hero falls...), so summarise it.
-  const seenLog = useRef<{ seed: number; at: Record<string, number> } | null>(null);
-  /** A new, loaded or left game: no "found treasure" or "since your last turn" carried over from the last one. */
+  /** A new, loaded or left game: no "found treasure" carried over from the last one. */
   function forgetSeen() {
     knownItems.current = null;
-    seenLog.current = null;
   }
-  const [digest, setDigest] = useState<LogEntry[] | null>(null);
-  const turnKey = game && humanTurn && actor.kind === 'human' && game.phase === 'adventure' && !needsHandoff ? `${actor.playerId}:${game.round}:${game.turnIndex}` : null;
-  useEffect(() => {
-    if (!turnKey || !game || actor.kind !== 'human') return;
-    // The digest tells a player what the others did meanwhile; against bots alone the "Dziennik" button is enough (author, 9.11).
-    if (!game.players.some((p) => p.controller !== 'bot' && p.faction !== actor.faction)) return;
-    if (seenLog.current?.seed !== game.setup.seed) seenLog.current = { seed: game.setup.seed, at: {} };
-    const from = seenLog.current.at[actor.playerId];
-    seenLog.current.at[actor.playerId] = game.log.length;
-    if (from === undefined) return;
-    const important = game.log
-      .slice(from)
-      .filter((l) => (!l.privateTo || l.privateTo === actor.faction) && ['battle', 'death', 'item', 'crystal'].includes(l.kind) && !l.text.startsWith('Bitwa się rozpoczyna'));
-    if (important.length) setDigest(important);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [turnKey]);
 
   // A local game finished while logged in goes to the ranking: the server replays it and scores it.
   const [rankingNote, setRankingNote] = useState<string | null>(null);
@@ -750,16 +730,15 @@ export function App() {
   const menuAutosave = useMemo(() => (game ? null : readAutosave()), [game === null]);
   const overlay = session && <OnlineOverlay session={session} onAccept={acceptInvitation} />;
 
-  // Autoplay closes the report windows (a digest, a battle summary, a found treasure, a story page, an artifact) by itself after a short while, one at a time;
+  // Autoplay closes the report windows (a battle summary, a found treasure, a story page, an artifact) by itself after a short while, one at a time;
   // windows that ask for a decision and the end of the game stay for the player.
   const autoClose: (() => void) | null = held || isOnline || !autoplay || !game || game.phase === 'over' ? null
-    : digest && !needsHandoff ? () => setDigest(null)
-      : summary !== null && game.lastBattle?.id === summary ? () => setSummary(null)
+    : summary !== null && game.lastBattle?.id === summary ? () => setSummary(null)
         : found ? () => setFound(null)
           : storyNews.length ? () => setStoryNews((a) => a.slice(1))
             : artifactNews.length ? () => setArtifactNews((a) => a.slice(1))
               : null;
-  const autoCloseKey = autoClose ? `${digest ? 'd' : summary !== null ? 's' : found ? 'f' : storyNews.length ? `n${storyNews.length}` : `a${artifactNews.length}`}` : '';
+  const autoCloseKey = autoClose ? `${summary !== null ? 's' : found ? 'f' : storyNews.length ? `n${storyNews.length}` : `a${artifactNews.length}`}` : '';
   useEffect(() => {
     if (!autoClose) return;
     const t = window.setTimeout(autoClose, scaledMs(2800));
@@ -779,7 +758,6 @@ export function App() {
         [found, () => setFound(null)],
         [storyNews.length ? storyNews : null, () => setStoryNews((a) => a.slice(1))],
         [artifactNews.length ? artifactNews : null, () => setArtifactNews((a) => a.slice(1))],
-        [digest, () => setDigest(null)],
         [showLog, () => setShowLog(false)],
         [showDebug, () => setShowDebug(false)],
         [showRules, () => setShowRules(false)],
@@ -795,7 +773,7 @@ export function App() {
       top?.[1]();
       return Boolean(top);
     },
-    anyOpen: Boolean(confirm || card || found || storyNews.length || artifactNews.length || digest || showLog || showDebug || showRules || showReport || summary !== null || showStats || showChangelog || showCredits || showTesters || showChat),
+    anyOpen: Boolean(confirm || card || found || storyNews.length || artifactNews.length || showLog || showDebug || showRules || showReport || summary !== null || showStats || showChangelog || showCredits || showTesters || showChat),
     undo,
     fastForward,
     humanAction,
@@ -1061,14 +1039,14 @@ export function App() {
       )}
       <VictoryEffects game={game} />
       <RotatePrompt />
-      <FoundTreasure kind={found} open={Boolean(found) && !digest && !summary && !held} onClose={() => setFound(null)} />
+      <FoundTreasure kind={found} open={Boolean(found) && !summary && !held} onClose={() => setFound(null)} />
 
       <div className="xp-toasts" aria-live="polite">
         {xpNotes.map((n) => (
           <div key={n.key} className="xp-toast"><StatText text={n.text} /></div>
         ))}
       </div>
-      <Modal open={storyNews.length > 0 && !digest && !summary && !held && !found} onClose={() => setStoryNews((a) => a.slice(1))}>
+      <Modal open={storyNews.length > 0 && !summary && !held && !found} onClose={() => setStoryNews((a) => a.slice(1))}>
         {storyNews[0] && (
           <Frame crest style={{ width: 'min(560px, 94vw)' }} innerStyle={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
             {storyNews[0].title && <Ribbon style={{ width: 'min(420px, 90vw)' }}>{storyNews[0].title}</Ribbon>}
@@ -1077,7 +1055,7 @@ export function App() {
           </Frame>
         )}
       </Modal>
-      <Modal open={artifactNews.length > 0 && !digest && !summary && !held && !found} onClose={() => setArtifactNews((a) => a.slice(1))}>
+      <Modal open={artifactNews.length > 0 && !summary && !held && !found} onClose={() => setArtifactNews((a) => a.slice(1))}>
         {artifactNews[0] && (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
             <Ribbon style={{ width: 'min(380px, 90vw)' }}>Artefakt!</Ribbon>
@@ -1118,13 +1096,12 @@ export function App() {
         {game.lastBattle && <BattleSummary report={game.lastBattle} name={(s) => sideName(game, s)} faction={(s) => teamFaction(game, s)} onClose={() => setSummary(null)} />}
       </Modal>
 
-      <Tutorial state={game} active={humanTurn && !needsHandoff && !digest && !summary && !confirm && !held} />
+      <Tutorial state={game} active={humanTurn && !needsHandoff && !summary && !confirm && !held} />
 
       <Modal open={showLog} onClose={() => setShowLog(false)}>
         <LogDialog entries={visibleLog} />
       </Modal>
 
-      <DigestDialog entries={digest} open={Boolean(digest) && !needsHandoff && !held} onClose={() => setDigest(null)} />
 
       <Modal open={showReport} onClose={() => setShowReport(false)}>
         {showReport && (

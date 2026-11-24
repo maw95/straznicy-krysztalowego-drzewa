@@ -12,7 +12,7 @@ import { ITEMS, raceOfHero, UNITS, type FactionId, type ItemKind } from '../engi
 import { activeHero, ritualFormed } from '../engine/game';
 import { raceOf } from '../engine/teams';
 import { GROWTH, levelOf, skillRank, type SkillId } from '../engine/growth';
-import { isDigital, type GameState, type HeroState, type LogEntry } from '../engine/types';
+import { isDigital, type GameState, type HeroState } from '../engine/types';
 import type { BotSpeed, RoomView } from '../online/api';
 import { BOT_SPEEDS } from '../online/api';
 import { Frame, Modal, Ribbon, SvgDefs } from './common';
@@ -117,32 +117,6 @@ export function ConfirmDialog({ confirm, onClose }: { confirm: Confirmation | nu
             </button>
           </div>
         </Frame>
-      )}
-    </Modal>
-  );
-}
-
-/** "Since your last turn": what happened off-screen while bots and others moved. */
-export function DigestDialog({ entries, open, onClose }: { entries: LogEntry[] | null; open: boolean; onClose: () => void }) {
-  return (
-    <Modal open={open}>
-      {entries && (
-        <div>
-          <Frame crest style={{ width: 'min(620px, 94vw)' }} innerStyle={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <Ribbon>Od Twojej ostatniej tury</Ribbon>
-            <div className="scroll" style={{ maxHeight: 360 }}>
-              {entries.map((l, i) => (
-                <div key={i} className={`log-line ${l.kind}`} style={{ fontSize: 17 }}>
-                  <span style={{ color: '#9FB8BC', marginRight: 6 }}>[{l.round}]</span>
-                  <StatText text={l.text} />
-                </div>
-              ))}
-            </div>
-            <button className="btn prim" data-enter style={{ alignSelf: 'center', padding: '6px 26px', fontSize: 19 }} onClick={onClose}>
-              Dalej
-            </button>
-          </Frame>
-        </div>
       )}
     </Modal>
   );
