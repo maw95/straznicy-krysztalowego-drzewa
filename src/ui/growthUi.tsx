@@ -120,11 +120,16 @@ export function XpBar({ hero, short = false }: { hero: HeroState; short?: boolea
           <div className="xpbar-fill" style={{ width: `${pct * 100}%` }} />
         </div>
         <div className="xpbar-text">
-          {next === null ? `Poziom ${level} (maksymalny) · ${xp} PD` : short ? `Poziom ${level} · PD ${xp} / ${next}` : `Poziom ${level} · PD ${xp} / ${next} · do następnego ${Math.max(0, next - xp)}`}
+          {next === null ? <>Poziom {level} (maksymalny) · {xp}<XpIcon size={18} /></> : short ? <>Poziom {level} · <XpIcon size={18} />{xp} / {next}</> : <>Poziom {level} · <XpIcon size={18} />{xp} / {next} · do następnego {Math.max(0, next - xp)}</>}
         </div>
       </div>
     </div>
   );
+}
+
+/** The experience icon (a gold star with a sapphire): stands for "PD" in the hero's panel and floats over the hero for the points just gained. */
+export function XpIcon({ size = 20 }: { size?: number }) {
+  return <img src={asset('ikony/mapa/doswiadczenie.webp')} alt="PD" title="Punkty doświadczenia (PD)" width={size} height={size} style={{ verticalAlign: '-0.25em', margin: '0 0.12em', objectFit: 'contain' }} />;
 }
 
 /** Experience at which a level starts (the thresholds are cumulative). */

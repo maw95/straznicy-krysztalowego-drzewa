@@ -42,7 +42,6 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Zrobione 24.11: p
 
 
 
-**74. Ikona doświadczenia i napis „+X <ikona>” nad bohaterem (M; kredyty ok. 3–7 CU na ikonę).** Dziś jest tylko wpis „Otrzymano X PD” w lewym dolnym rogu. Dodać ikonę doświadczenia (obraz Flare `medium`, styl jak inne ikony, malowana, bez tekstu) i na chwilę unoszący się nad bohaterem napis „+X <ikona>” po zdobyciu PD (mapa i bitwa); użyć jej też w panelu bohatera zamiast słowa „PD”, gdzie to ma sens.
 
 **75. Generator mapy: więcej walk, tartak i kopalnia przy osadzie, mniej przeszkód, więcej osad (L; rusza golden i balans).** (1) Nieco więcej walk z neutralnymi na mapie. (2) Każda frakcja ma tartak i kopalnię rudy niedaleko osady startowej (gwarancja w `map.ts`/`sites.ts`). (3) Mniej pól nieprzechodnich. (4) Mapa 3XL z 3 frakcjami ma łącznie tylko 3 osady (każdy tylko startową): dodać osady neutralne do zdobycia, skalowane z rozmiarem mapy. (5) **Kryształowe Drzewo na środku planszy** wygląda na ważne miejsce, ale nic się po wejściu nie dzieje: albo znika, albo daje duży bonus (decyzja autora: proponuję jednorazowy duży bonus, np. rozbłysk odkrywający mapę albo +1 poziom bohatera; do potwierdzenia przed wdrożeniem). Po zmianie: `make sim-tabele`, golden `-u` osobnym commitem, strojenie poziomów (zob. sekcja 5).
 

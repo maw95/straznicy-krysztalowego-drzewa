@@ -63,7 +63,8 @@ describe('hero growth: what the player is told', () => {
     awardXp(s, h, GROWTH.thresholds[0] + 1);
     h.offer = undefined;
     const { container } = render(<XpBar hero={h} />);
-    expect(container.textContent).toContain(`Poziom 2 · PD ${GROWTH.thresholds[0] + 1} / ${GROWTH.thresholds[1]}`);
+    expect(container.textContent).toContain(`Poziom 2 · ${GROWTH.thresholds[0] + 1} / ${GROWTH.thresholds[1]}`);
+    expect(container.querySelector('.xpbar-text img[alt="PD"]')).not.toBeNull();  // the experience icon stands for "PD"
   });
 
   it('the hero panel lists the three gear slots, empty or filled, and the skills', () => {
@@ -95,7 +96,7 @@ describe('hero growth: what the player is told', () => {
     h.level = 1;
     const { container } = render(<HeroSheet hero={h} onClose={() => {}} />);
     expect(container.querySelector('[data-hero-sheet]')).not.toBeNull();
-    expect(container.textContent).toContain('Poziom 1 · PD 0 /');
+    expect(container.textContent).toContain('Poziom 1 · 0 /');
     expect(container.textContent).not.toMatch(/do następnego \d/);
     expect(container.textContent).toContain('Kamienie milowe');
     const reached = [...container.querySelectorAll('[data-milestone]')].map((m) => m.getAttribute('data-reached'));

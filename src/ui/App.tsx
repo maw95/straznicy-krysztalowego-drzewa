@@ -20,7 +20,7 @@ import { arenaSetup, DEFAULT_RULES, isDigital, type Level, type Mode, type Actio
 import { AdventureView, GoldBox, type LootFloat } from './AdventureView';
 import { BattleView, WALK_STEP_MS } from './BattleView';
 import { usePresentation } from './usePresentation';
-import { ArtifactFound, xpNote } from './growthUi';
+import { ArtifactFound, xpNote, XpIcon } from './growthUi';
 import { ARTIFACT_BY_ID } from '../engine/sites';
 import type { SkillId } from '../engine/growth';
 import { sfx } from './sfx';
@@ -651,10 +651,10 @@ export function App() {
     }
     if (arts.length) setArtifactNews((a) => [...a, ...arts]);
     // Gold and resources taken from the map float over the hero for a moment, with the coins sound.
-    const loots: LootFloat[] = fresh.flatMap((ev) => (ev.type === 'loot' ? [{ key: Math.random(), heroId: ev.heroId, gold: ev.gold, res: ev.res }] : []));
+    const loots: LootFloat[] = fresh.flatMap<LootFloat>((ev) => (ev.type === 'loot' ? [{ key: Math.random(), heroId: ev.heroId, gold: ev.gold, res: ev.res }] : ev.type === 'xp' ? [{ key: Math.random(), heroId: ev.heroId, xp: ev.amount }] : []));
     if (loots.length) {
       setLootFloats((l) => [...l, ...loots].slice(-4));
-      sfx.play('coins_buy');
+      if (loots.some((f) => !f.xp)) sfx.play('coins_buy');
       window.setTimeout(() => setLootFloats((l) => l.filter((x) => !loots.includes(x))), 2500);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1043,7 +1043,7 @@ export function App() {
 
       <div className="xp-toasts" aria-live="polite">
         {xpNotes.map((n) => (
-          <div key={n.key} className="xp-toast"><StatText text={n.text} /></div>
+          <div key={n.key} className="xp-toast">{n.text.includes(' PD') ? <>{n.text.split(' PD')[0]}<XpIcon size={22} />{n.text.split(' PD').slice(1).join(' PD')}</> : <StatText text={n.text} />}</div>
         ))}
       </div>
       <Modal open={storyNews.length > 0 && !summary && !held && !found} onClose={() => setStoryNews((a) => a.slice(1))}>

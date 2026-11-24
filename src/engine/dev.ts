@@ -6,6 +6,7 @@ import { FACTION_HEROES, ITEMS, UNITS, type FactionId, type TeamId, type ItemKin
 import { activeHero, applyAction, giveItem, newItem } from './game';
 import { neighborKeys } from './hex';
 import { raceOf } from './teams';
+import { awardXp } from './growth';
 import { arenaObstacles } from './arenaLayout';
 import { tileCost } from './map';
 import { ARTIFACT_BY_ID, giveArtifact } from './sites';
@@ -29,6 +30,11 @@ export function setResources(state: GameState, faction: TeamId, what: { gold?: n
 }
 
 /** The hero's level (and the full mana that goes with it). */
+/** The hero gets experience like after a won fight (a line in the log, the "+X" over the hero; a new level offers skills). */
+export function giveXp(state: GameState, heroId: string, amount: number): void {
+  awardXp(state, heroOf(state, heroId), amount, 'panel testowy');
+}
+
 export function setHeroLevel(state: GameState, heroId: string, level: number): void {
   const h = heroOf(state, heroId);
   h.level = Math.max(1, Math.min(10, Math.round(level)));

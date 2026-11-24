@@ -9469,6 +9469,18 @@
       "data": "2026-11-23",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "ikony/mapa/doswiadczenie",
+      "pliki": ["public/assets/ikony/mapa/doswiadczenie.webp"],
+      "typ": "ikona doświadczenia (PD): złota ośmioramienna gwiazda z szafirem, goły malarski przedmiot w stylu Heroes III",
+      "opis": "Napis „+X <ikona>” nad bohaterem po zdobyciu PD (mapa i bitwa) oraz ikona zamiast słowa „PD” w panelu bohatera. 512x512 medium, przezroczyste tło, 2 warianty, przyjęty A (większy szafir); cięcie i wpasowanie w 256 px (WebP): scripts/assets/ikona_doswiadczenia.py. Prompt: wspólny początek jak przy ikonach zasobów (ikony/mapa/surowce-malowane), dalej 'The icon of experience: a radiant eight-pointed star made of polished gold, with a faceted bright blue sapphire set in its centre, a few soft white-blue sparkles around it and a gentle luminous glow, seen straight on with a slight three-quarter tilt.'",
+      "scenario_asset": {"przyjete_A": "asset_NnQtcSkM3C58PQM8kNdhekt4", "odrzucone_B": "asset_X5j7bp6EcCBD92HGJKJsuDMq"},
+      "narzedzie": "Scenario (plan płatny)",
+      "model": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare), jakość medium, 512x512, przezroczyste tło, 3 CU za obraz (2 obrazy, 6 CU)",
+      "data": "2026-11-24",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

@@ -8,7 +8,7 @@ import { activeHero, heroesAt, hordeMayFightGuardian, isChildHero, legalHeroMove
 import { fightLevelAt } from './fightBadges';
 import { EnemyPill, FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
-import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
+import { HeroGrowth, HeroSheet, PackDialog, XpIcon } from './growthUi';
 import { ChestFrame, groupTreasures, TreasureButton, TreasureSlot } from './TreasureButton';
 import { SettlementDialog } from './SettlementDialog';
 import { BUILDING_NAMES, chestPreview, garrisonAt, hasParent, hutPayable, KINGDOM, goldOf, incomeBreakdown, incomeOf, settlementAt } from '../engine/kingdom';
@@ -53,6 +53,8 @@ export interface LootFloat {
   heroId: string;
   gold?: number;
   res?: Partial<Record<ResourceId, number>>;
+  /** Experience points just gained: "+X <icon>". */
+  xp?: number;
 }
 
 /** The biggest hex a player can zoom the map to (pixels across). */
@@ -614,6 +616,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     {(Object.entries(f.res ?? {}) as Array<[ResourceId, number]>).map(([r, amount]) => (
                       <span key={r}><img src={asset(RESOURCE_ICON[r])} alt="" width={22} height={22} />+{amount}</span>
                     ))}
+                    {f.xp ? <span data-xp-float>+{f.xp}<XpIcon size={26} /></span> : null}
                   </div>
                 );
               })}

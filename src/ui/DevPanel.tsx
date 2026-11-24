@@ -6,7 +6,7 @@ import { FACTION_NAMES, ITEMS, UNITS, type ItemKind } from '../engine/data';
 import { activeHero } from '../engine/game';
 import { ARTIFACTS } from '../engine/sites';
 import { SPELL_IDS } from '../engine/magic';
-import { addUnit, buildEverything, DEV_SCENES, fightNeutral, giveAllShards, giveArtifactTo, giveTreasure, learnSpell, reviveAll, revealAll, setHeroLevel, setResources } from '../engine/dev';
+import { addUnit, buildEverything, DEV_SCENES, fightNeutral, giveAllShards, giveArtifactTo, giveTreasure, giveXp, learnSpell, reviveAll, revealAll, setHeroLevel, setResources } from '../engine/dev';
 import { RECRUITS } from '../engine/kingdom';
 import { raceOf } from '../engine/teams';
 import type { GameState } from '../engine/types';
@@ -71,6 +71,7 @@ export function DevPanel({ game, onChange, onClose }: { game: GameState; onChang
       <div style={row}>
         <input type="number" min={1} max={10} value={level} onChange={(e) => setLevel(Number(e.target.value))} style={{ width: 50 }} aria-label="Poziom" />
         <button className="btn" style={btn} data-dev="level" disabled={!hero} onClick={() => run('Poziom ustawiony', (s) => setHeroLevel(s, hero!.id, level))}>Ustaw poziom</button>
+        <button className="btn" style={btn} data-dev="xp" disabled={!hero || !game.rules.heroGrowth} title="Dodaje 2 PD tak, jakby bohater wygrał walkę" onClick={() => run('PD dodane', (s) => giveXp(s, hero!.id, 2))}>+2 PD</button>
         <button className="btn" style={btn} data-dev="spells" disabled={!hero || !game.rules.realm} onClick={() => run('Wszystkie czary', (s) => SPELL_IDS.forEach((id) => learnSpell(s, hero!.id, id)))}>Wszystkie czary</button>
       </div>
       <div style={row}>
