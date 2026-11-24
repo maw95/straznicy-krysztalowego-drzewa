@@ -97,3 +97,9 @@ dużych, ok. 70 px dla małych (`bodyW`).
 - **Atak dla czworonogów:** `lowers its head ... thrusts/butts forward in place toward the right ... hind hooves stay at the same spot, does not walk forward`; słowa fierce/sweeping mogą zablokować (Łoś: przeszło „powerful thrusting motion”).
 - **Latające jednostki stojące na ziemi (Orzeł, Łamignat):** nowy `stoi` z odniesieniem do dawnego obrazu zawisu (Flare high, `NOT flying: stands on the ground, wings folded`), klip `wzbicie` (2 s, `image` = nowy stoi, `lastFrameImage` = dawny zawis), atak/śmierć/trafienie z nowego stoi; pętla `lot` zostaje. W `sprites.ts` dodać `wzbicie: 2` i dobrać `box` do pozy stojącej.
 - Limit planu: 10 zadań równolegle na zespół (429 przy 11.); pobieranie: URL z `asset_download` trzeba przepisać dokładnie (literówka w podpisie daje plik XML zamiast mp4).
+
+## Słowa blokowane przez filtr (stan 24.11.2026; blokada też kosztuje kredyty)
+
+- **Blokowały:** slash/slashing, strike/struck, kill, blood, crash, collapse, final, „strength gives out”, fist, gauntlet, claw, hit, push, force, blow, ram, cutting, fierce, staggers, topples, „heavy thud”, „Defeat animation”, „heavily onto his back”, „tipping over onto his back” (każda śmierć z upadkiem na plecy), u maszyn „heavily damaged, parts fly off”.
+- **Przechodziły:** swings, sweeping motion, settles down, sinks down onto the ground, „as if fast asleep”, startled, tapping, „falls over sideways”, „lowers itself sideways to the ground ... rests completely still”; maszyny: „comes apart, plates and gears loosen and fall away, then lies still”.
+- Blokada zależy też od obrazów wejściowych: przed partią zrób próbę jednego klipu. Punkt 86 stracił ok. 215 CU na zablokowane klipy.
