@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Skrzynia skarbów i Księga czarów: jedne, duże zdobione strzałki do przewracania stron; w skrzyni skarby i strzałki są wyśrodkowane na czerwonym polu wnętrza, skarby tego samego rodzaju leżą w jednej ikonie z „×3”, a te, których można teraz użyć, są na początku.
 - Prawy przycisk myszy (na telefonie przytrzymanie) na budynku w osadzie albo w Radzie Osady pokazuje okienko: nazwa, poziom, opis, cena i skutek następnego poziomu.
 - Koszary: przy każdej karcie pomocnika jest ikona koszar z cyfrą wymaganego poziomu (1 albo 2), a gdy koszary są za niskie, ikona czerwienieje i podpowiedź mówi „Zablokowane do poziomu koszar 2”.
 - Koszary i główne okno osady: surowce w jednej linii w jednym formacie „ikona X (+X)” (złoto też), większe ikony i czcionka, bez ciemnego tła pod paskiem w koszarach.

@@ -1072,7 +1072,10 @@ button.sb-slot:disabled { cursor: default; }
 .slot { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: 0; padding: 4px 2px; font: inherit; color: inherit; cursor: pointer; min-width: 0; border-radius: 8px; }
 .slot:hover { transform: translateY(-2px); filter: brightness(1.1); }
 .slot:focus-visible { outline: 2px solid #F3D27A; outline-offset: 2px; }
-.slot > img, .slot-icon img { width: 100%; max-width: 64px; aspect-ratio: 1; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px #B88A35, 0 0 0 3.5px #3A2508, 0 3px 6px rgba(0, 0, 0, 0.55); }
+.slot-pic { position: relative; display: block; line-height: 0; }
+.slot-count { position: absolute; right: -0.4em; top: -0.35em; line-height: 1; padding: 0.12em 0.4em; border-radius: 999px; background: #2A1804; color: #FFE9A8; border: 1.5px solid #E3B54A; font-size: 0.95em; font-weight: 800; box-shadow: 0 1px 4px #000; }
+.chest-items .slot-count { font-size: 2.3cqw; }
+.slot > img, .slot-pic img, .slot-icon img { width: 100%; max-width: 64px; aspect-ratio: 1; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px #B88A35, 0 0 0 3.5px #3A2508, 0 3px 6px rgba(0, 0, 0, 0.55); }
 .slot-name { font-weight: 800; font-size: 14px; line-height: 1.1; text-align: center; overflow-wrap: anywhere; }
 .slot.off { opacity: 0.5; filter: grayscale(0.85); cursor: help; }
 .slot.off:hover { transform: none; filter: grayscale(0.85); }
@@ -1082,8 +1085,10 @@ button.sb-slot:disabled { cursor: default; }
 .close-seal:hover { transform: scale(1.1) rotate(-6deg); filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7)) brightness(1.15); }
 .close-seal:focus-visible { outline: 2px solid #F3D27A; border-radius: 50%; }
 .pager { display: flex; align-items: center; justify-content: center; gap: 12px; color: #F3D27A; font-weight: 800; font-size: 16px; text-shadow: 0 1px 2px #000; }
-.pager-btn { width: 30px; height: 30px; border-radius: 50%; border: 0; cursor: pointer; font: inherit; font-size: 18px; line-height: 1; color: #3A2508; background: radial-gradient(circle at 35% 30%, #F3D27A, #B88A35); box-shadow: 0 0 0 1.5px #3A2508, 0 2px 4px rgba(0, 0, 0, 0.6); }
-.pager-btn:disabled { opacity: 0.35; cursor: default; }
+.pager-btn { width: 3.2em; height: 2.4em; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7)); transition: transform 0.12s, filter 0.15s; }
+.pager-btn:hover:not(:disabled) { transform: scale(1.1); filter: drop-shadow(0 0 6px rgba(243, 194, 74, 0.9)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7)); }
+.pager-btn:focus-visible { outline: 2px solid #9EE4FF; outline-offset: 2px; border-radius: 6px; }
+.pager-btn:disabled { opacity: 0.3; cursor: default; filter: grayscale(0.7) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5)); }
 
 .chest-empty { text-align: center; font-style: italic; font-size: 3.4cqw; color: #F3D27A; text-shadow: 0 1px 2px #000; }
 
@@ -1097,13 +1102,13 @@ button.sb-slot:disabled { cursor: default; }
 .chestbox { position: relative; width: min(760px, 96vw, 86vh); aspect-ratio: 600 / 556; container-type: inline-size; }
 .chest-art { position: absolute; inset: 0; background: url('/assets/ui/skrzynia_klatki.webp') 100% 0 / 1200% 100% no-repeat; will-change: background-position; animation: chest-frames-in 0.8s steps(1, end) both; }
 .chestbox::before { content: ''; position: absolute; left: 8%; right: 8%; bottom: 1%; height: 6%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.7), transparent 70%); }
-.chest-items { position: absolute; left: 17%; top: 37%; width: 55%; height: 32%; display: flex; align-items: center; justify-content: center; gap: 1cqw; animation: chest-content-in 0.9s ease-out both; }
+.chest-items { position: absolute; left: 11%; top: 41%; width: 78%; height: 19%; display: flex; align-items: flex-start; justify-content: center; gap: 1.2cqw; animation: chest-content-in 0.9s ease-out both; }
 .chest-items .slot { width: 9.2cqw; flex: none; }
 .chest-items .slot-name { overflow-wrap: normal; word-break: normal; hyphens: manual; }
-.chest-items .slot > img { width: 8cqw; max-width: none; }
+.chest-items .slot-pic img { width: 8cqw; max-width: none; }
 .chest-items .slot-name { font-size: 1.55cqw; line-height: 1.05; letter-spacing: -0.01em; color: #F6DD93; text-shadow: 0 1px 2px #000, 0 0 5px #000; }
-.chestbox .chest-empty { position: absolute; left: 17%; top: 37%; width: 55%; height: 32%; display: grid; place-items: center; animation: chest-content-in 0.9s ease-out both; }
-.chestbox .pager { position: absolute; left: 17%; width: 55%; bottom: 27%; animation: chest-content-in 0.9s ease-out both; }
+.chestbox .chest-empty { position: absolute; left: 11%; top: 41%; width: 78%; height: 19%; display: grid; place-items: center; animation: chest-content-in 0.9s ease-out both; }
+.chestbox .pager { position: absolute; left: 11%; width: 78%; top: 60.5%; font-size: 2.6cqw; gap: 2cqw; animation: chest-content-in 0.9s ease-out both; }
 .chestbox .close-seal { animation: chest-content-in 0.9s ease-out both; }
 .leaving .chest-art { animation: chest-frames-out 0.65s steps(1, end) both; }
 .leaving .chest-items, .leaving .chestbox .chest-empty, .leaving .chestbox .pager, .leaving .chestbox .close-seal { animation: chest-content-out 0.25s ease-in both; }
@@ -1133,7 +1138,7 @@ button.sb-slot:disabled { cursor: default; }
 .book-mana b { color: #fff; }
 .book-empty { position: absolute; left: 14%; top: 40%; width: 72%; text-align: center; font-style: italic; font-size: 3.2cqw; color: #3A2508; animation: chest-content-in 0.95s ease-out both; }
 .spellbook .pager { position: absolute; left: 50%; bottom: 2.4%; transform: translateX(-50%); color: #F3D27A; font-size: 2.8cqw; animation: chest-content-in 0.95s ease-out both; }
-.spellbook .pager-btn { width: 3.6cqw; height: 3.6cqw; font-size: 2.6cqw; }
+.spellbook .pager-btn { width: 6.4cqw; height: 4.6cqw; font-size: 2.6cqw; }
 .spellbook .close-seal { top: 0.5%; right: 0.5%; width: 6cqw; height: 6cqw; animation: chest-content-in 0.95s ease-out both; }
 .leaving .book-art { animation: book-frames-out 0.7s steps(1, end) both; }
 .leaving .book-page, .leaving .book-mana, .leaving .book-empty, .leaving .spellbook .pager, .leaving .spellbook .close-seal { animation: chest-content-out 0.25s ease-in both; }

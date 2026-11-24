@@ -41,7 +41,6 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Zrobione 24.11: p
 
 
 
-**73. Skrzynia skarbów i Księga czarów: paginacja i układ (M).** (1) Strzałki paginacji w skrzyni i w Księdze czarów: same duże, wyraźne, zdobione strzałki (bez kółek), jeden komponent. (2) Pozycja: wyśrodkowane w poziomie względem skrzyni i tuż pod skarbami, na czerwonym polu wnętrza skrzyni (dziś za nisko i za bardzo z lewej). (3) Skarby: przy 6 widocznych nie są na środku, nachodzą na lewą ściankę; wyśrodkować siatkę. (4) Skarby tego samego rodzaju w jednej ikonie z „×3” w prawym górnym rogu. (5) Sortowanie: najpierw skarby, których można teraz użyć (nieszare). Gotowe, gdy zrzuty skrzyni z 1, 6 i 12+ skarbami (panel testowy, scena „Okno skrzyni”) wyglądają poprawnie.
 
 **74. Ikona doświadczenia i napis „+X <ikona>” nad bohaterem (M; kredyty ok. 3–7 CU na ikonę).** Dziś jest tylko wpis „Otrzymano X PD” w lewym dolnym rogu. Dodać ikonę doświadczenia (obraz Flare `medium`, styl jak inne ikony, malowana, bez tekstu) i na chwilę unoszący się nad bohaterem napis „+X <ikona>” po zdobyciu PD (mapa i bitwa); użyć jej też w panelu bohatera zamiast słowa „PD”, gdzie to ma sens.
 

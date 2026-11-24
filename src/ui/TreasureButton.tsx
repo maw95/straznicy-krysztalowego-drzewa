@@ -62,26 +62,61 @@ export function usePaged<T>(items: T[], per: number) {
   return { items: items.slice(at * per, at * per + per), page: at, pages, prev: () => setPage(Math.max(0, at - 1)), next: () => setPage(Math.min(pages - 1, at + 1)) };
 }
 
+/** A big ornate gold arrow (no disc around it), pointing `dir`; the one arrow of the chest and of the spell book. */
+function PagerArrow({ dir }: { dir: 'left' | 'right' }) {
+  return (
+    <svg viewBox="0 0 48 48" width="100%" height="100%" aria-hidden="true" style={dir === 'left' ? { transform: 'scaleX(-1)' } : undefined}>
+      <defs>
+        <linearGradient id="pgGold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FFF0B0" />
+          <stop offset="0.5" stopColor="#E3B54A" />
+          <stop offset="1" stopColor="#9A6E22" />
+        </linearGradient>
+      </defs>
+      <path d="M6 18 H24 V7 L43 24 L24 41 V30 H6 Z" fill="url(#pgGold)" stroke="#2A1804" strokeWidth="2.2" strokeLinejoin="round" />
+      <path d="M9 21.5 H27 V14 L37 24" fill="none" stroke="#FFF7D0" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" opacity="0.8" />
+      <circle cx="9.5" cy="24" r="1.5" fill="#2A1804" />
+    </svg>
+  );
+}
+
 /** "← 2/3 →"; hidden when everything fits on one page. */
 export function PagerBar({ page, pages, prev, next }: { page: number; pages: number; prev: () => void; next: () => void }) {
   if (pages <= 1) return null;
   return (
     <div className="pager" data-pager>
-      <button className="pager-btn" aria-label="Poprzednia strona" disabled={page === 0} onClick={prev}>←</button>
+      <button className="pager-btn" aria-label="Poprzednia strona" disabled={page === 0} onClick={prev}><PagerArrow dir="left" /></button>
       <span data-pager-now>{page + 1}/{pages}</span>
-      <button className="pager-btn" aria-label="Następna strona" disabled={page >= pages - 1} onClick={next}>→</button>
+      <button className="pager-btn" aria-label="Następna strona" disabled={page >= pages - 1} onClick={next}><PagerArrow dir="right" /></button>
     </div>
   );
+}
+
+/**
+ * Treasures of one kind lie in one icon (with "×3"); the ones that can be used now come first, the greyed ones after them (the order within each part is the
+ * order in which the kinds first appeared).
+ */
+export function groupTreasures<T extends { kind: string }>(list: T[], usable: (kind: string) => boolean): Array<{ kind: string; items: T[]; usable: boolean }> {
+  const groups: Array<{ kind: string; items: T[]; usable: boolean }> = [];
+  for (const it of list) {
+    const g = groups.find((x) => x.kind === it.kind);
+    if (g) g.items.push(it);
+    else groups.push({ kind: it.kind, items: [it], usable: usable(it.kind) });
+  }
+  return [...groups.filter((g) => g.usable), ...groups.filter((g) => !g.usable)];
 }
 
 /** Treasures per page of the chest and spells per page of the book. */
 export const PER_PAGE = 6;
 
 /** One treasure in the chest: a round icon with the name below; the left click uses it (or shows the card when it cannot be used now), the right click shows the details. */
-export function TreasureSlot({ kind, art, name, use, usable, onShowCard, extra }: { kind: string; art: string; name: string; use: () => void; usable: boolean; onShowCard: () => void; extra?: string }) {
+export function TreasureSlot({ kind, art, name, use, usable, onShowCard, extra, count = 1 }: { kind: string; art: string; name: string; use: () => void; usable: boolean; onShowCard: () => void; extra?: string; /** How many of this kind the chest holds: more than one shows "×N" on the icon. */ count?: number }) {
   return (
     <button className={`slot ${usable ? '' : 'off'}`} data-item-slot={kind} aria-label={name} onClick={usable ? use : onShowCard} {...hoverCard(`item:${kind}`)}>
-      <img src={art} alt="" />
+      <span className="slot-pic">
+        <img src={art} alt="" />
+        {count > 1 && <b className="slot-count" data-item-count>×{count}</b>}
+      </span>
       <span className="slot-name">{name}</span>
       {extra && <span className="slot-extra">{extra}</span>}
     </button>

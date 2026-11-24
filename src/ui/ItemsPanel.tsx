@@ -7,7 +7,7 @@ import { isDigital, type Action, type BattleUnit, type GameState } from '../engi
 import { itemArt } from './statScale';
 import { reserveOf } from './BattleSidePanel';
 import { Modal } from './common';
-import { ChestFrame, TreasureButton, TreasureSlot } from './TreasureButton';
+import { ChestFrame, groupTreasures, TreasureButton, TreasureSlot } from './TreasureButton';
 import { SpellBookDialog, SpellButton } from './SpellBook';
 import { manaOf, type SpellId } from '../engine/magic';
 
@@ -110,10 +110,13 @@ export function ItemsPanel({ state, side, active, targeting, setTargeting, freeA
           <ChestFrame
             label="Skarby frakcji"
             onClose={() => setShowItems(false)}
-            items={state.factions[side].inventory.map((id) => {
-              const def = itemDef(state.items[id].kind, isDigital(state.rules));
-              const ok = itemsAllowed && def.usableIn.includes('battle') && !(def.kind === 'resurrection' && !deadOwn.length) && !(def.kind === 'horn' && !alliesOf(b, active).concat(active).some((x) => UNITS[x.defId].kind === 'support'));
-              return <TreasureSlot key={id} kind={def.kind} art={itemArt(def.kind, isDigital(state.rules))} name={def.name} usable={ok} use={() => { setShowItems(false); startItem(id); }} onShowCard={() => onShowCard(`item:${def.kind}`)} />;
+            items={groupTreasures(state.factions[side].inventory.map((id) => state.items[id]), (kind) => {
+              const def = itemDef(kind as import('../engine/data').ItemKind, isDigital(state.rules));
+              return itemsAllowed && def.usableIn.includes('battle') && !(def.kind === 'resurrection' && !deadOwn.length) && !(def.kind === 'horn' && !alliesOf(b, active).concat(active).some((x) => UNITS[x.defId].kind === 'support'));
+            }).map((g) => {
+              const first = g.items[0];
+              const def = itemDef(first.kind, isDigital(state.rules));
+              return <TreasureSlot key={first.kind} kind={def.kind} art={itemArt(def.kind, isDigital(state.rules))} name={def.name} usable={g.usable} count={g.items.length} use={() => { setShowItems(false); startItem(first.id); }} onShowCard={() => onShowCard(`item:${def.kind}`)} />;
             })}
           />
         )}

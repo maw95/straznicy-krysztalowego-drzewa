@@ -9,7 +9,7 @@ import { fightLevelAt } from './fightBadges';
 import { EnemyPill, FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
 import { HeroGrowth, HeroSheet, PackDialog } from './growthUi';
-import { ChestFrame, TreasureButton, TreasureSlot } from './TreasureButton';
+import { ChestFrame, groupTreasures, TreasureButton, TreasureSlot } from './TreasureButton';
 import { SettlementDialog } from './SettlementDialog';
 import { BUILDING_NAMES, chestPreview, garrisonAt, hasParent, hutPayable, KINGDOM, goldOf, incomeBreakdown, incomeOf, settlementAt } from '../engine/kingdom';
 import { ECONOMY, MINE_NAMES, OBJECT_NAMES, OBJECTS, objectReady, RESOURCE_NAMES, thingsText, type ResourceId } from '../engine/economy';
@@ -340,6 +340,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   const sel = selected ? state.tiles[selected] : hero ? state.tiles[hero.pos] : null;
   const selInfo = sel && tileLines(state, sel.key, undefined, '');
   const inventory = viewer ? state.factions[viewer].inventory.map((id) => state.items[id]) : [];
+  const usableTreasure = (kind: string) => canAct && hero?.faction === viewer && itemDef(kind as import('../engine/data').ItemKind, isDigital(state.rules)).usableIn.includes('map') && (kind !== 'resurrection' || deadUnits.length + spentHeroes.length > 0);
 
   /** The cursor over a hex says what a click does: walk there, start a fight, or pick it (map, revival). */
   function hexCursor(k: HexKey): string {
@@ -834,16 +835,17 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           <ChestFrame
             label={`Wspólne skarby frakcji${viewer ? ` · ${FACTION_NAMES[raceOf(state, viewer)]}` : ''}`}
             onClose={() => setTreasuresOpen(false)}
-            items={inventory.map((it) => {
+            items={groupTreasures(inventory, (kind) => usableTreasure(kind)).map((g) => {
+              const it = g.items[0];
               const def = itemDef(it.kind, isDigital(state.rules));
-              const usable = canAct && hero?.faction === viewer && def.usableIn.includes('map') && (it.kind !== 'resurrection' || deadUnits.length + spentHeroes.length > 0);
               return (
                 <TreasureSlot
-                  key={it.id}
+                  key={it.kind}
                   kind={it.kind}
                   art={itemArt(it.kind, isDigital(state.rules))}
                   name={def.name}
-                  usable={usable}
+                  usable={g.usable}
+                  count={g.items.length}
                   use={() => { setTreasuresOpen(false); if (it.kind === 'map') setMapPicks({ itemId: it.id, picks: [] }); else setResPick(it.id); }}
                   onShowCard={() => onShowCard(`item:${it.kind}`)}
                 />

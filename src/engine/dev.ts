@@ -136,7 +136,28 @@ const mainHero = (state: GameState): HeroState => {
   return h;
 };
 
+/** The faction's chest holds exactly these treasures (the old ones are put aside): `kinds` in order, e.g. ['heal', 'heal', 'sword']. */
+export function fillChest(state: GameState, faction: TeamId, kinds: ItemKind[]): void {
+  state.factions[faction].inventory = [];
+  for (const kind of kinds) giveTreasure(state, faction, kind);
+}
+
+/** A scene that fills the chest with `n` treasures: a few kinds, some of them more than once (so the icons with "×3" show too). */
+const chestScene = (n: number): DevScene => ({
+  id: `chest${n}`,
+  label: `Skrzynia z ${n === 12 ? '14' : n} skarbami`,
+  hint: `Wspólna skrzynia frakcji ma ${n === 12 ? '14 skarbów (8 rodzajów, część po kilka sztuk)' : n === 6 ? '6 różnych skarbów' : '1 skarb'}. Kliknij ikonę Skarby.`,
+  run: (state) => {
+    const kinds = (Object.keys(ITEMS) as ItemKind[]).filter((k) => k !== 'resurrection').slice(0, n === 12 ? 8 : n);
+    fillChest(state, mainHero(state).faction, n === 12 ? [...kinds, ...kinds.slice(0, 3), ...kinds.slice(0, 3)] : kinds);
+    return state;
+  },
+});
+
 export const DEV_SCENES: DevScene[] = [
+  chestScene(1),
+  chestScene(6),
+  chestScene(12),
   {
     id: 'spellbook',
     label: 'Księga czarów w bitwie',
