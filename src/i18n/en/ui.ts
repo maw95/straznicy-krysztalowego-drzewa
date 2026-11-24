@@ -57,6 +57,7 @@ register({
   "Klik: pokaż na mapie, drugi klik: otwórz okno osady": "Click: show on the map, second click: open the settlement window",
   "Rytuał przy Drzewie:": "Ritual at the Tree:",
   "Kogo wskrzesić?": "Whom to resurrect?",
+  "{0}: już raz wrócił dzięki Eliksirowi Odrodzenia": "{0}: already came back once through an Elixir of Rebirth",
   "Kliknij podświetlone wolne pole obok swojego bohatera.": "Click the highlighted free hex next to your hero.",
   "Obok nie ma wolnego pola — przejdź gdzie indziej i spróbuj ponownie.": "There is no free hex nearby — go elsewhere and try again.",
   "Zakończ turę": "End turn",

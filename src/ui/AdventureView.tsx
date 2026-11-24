@@ -416,6 +416,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
         ...state.factions[viewer].supportsDead,
       ]
     : [];
+  // Heroes who already came back once cannot be revived again: the picker shows them greyed out with the reason.
+  const spentHeroes = viewer ? Object.values(state.heroes).filter((h) => h.faction === viewer && !h.alive && h.revived).map((h) => h.id) : [];
 
   return (
     <div className="screen slate screen-enter play">
@@ -795,6 +797,11 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     <Portrait unitId={id} size={44} />
                   </button>
                 ))}
+                {spentHeroes.map((id) => (
+                  <button key={id} className="btn btn-bare" disabled style={{ opacity: 0.4, filter: 'grayscale(1)' }} title={`${UNITS[id].name}: już raz wrócił dzięki Eliksirowi Odrodzenia`}>
+                    <Portrait unitId={id} size={44} />
+                  </button>
+                ))}
                 <button className="btn plate parch" style={{ padding: '2px 8px' }} onClick={() => setResPick(null)}>Anuluj</button>
               </div>
             </div>
@@ -829,7 +836,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
             onClose={() => setTreasuresOpen(false)}
             items={inventory.map((it) => {
               const def = itemDef(it.kind, isDigital(state.rules));
-              const usable = canAct && hero?.faction === viewer && def.usableIn.includes('map') && (it.kind !== 'resurrection' || deadUnits.length > 0);
+              const usable = canAct && hero?.faction === viewer && def.usableIn.includes('map') && (it.kind !== 'resurrection' || deadUnits.length + spentHeroes.length > 0);
               return (
                 <TreasureSlot
                   key={it.id}

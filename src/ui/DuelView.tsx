@@ -8,6 +8,7 @@ import { isDigital, type Action, type BattleUnit, type GameState } from '../engi
 import { abilityArt, asset, Frame, HpBar, Medal, Ribbon, teamFaction } from './common';
 import { DamageDrop, DieFace, LastAttack, Marker, StatIcon } from './markers';
 import { UnitCard } from './UnitCard';
+import { itemArt } from './statScale';
 
 /** Treasures that make sense with only two units on the field, and who they target. */
 const DUEL_ITEMS: Partial<Record<ItemKind, 'self' | 'enemy' | 'none'>> = {
@@ -182,7 +183,8 @@ export function DuelView({ state, canAct, onAction, footer }: Props) {
           {items.length > 0 && (
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
               {items.map((it) => (
-                <button key={it.id} className="btn plate parch" style={{ padding: '4px 10px', fontSize: 14 }} title={ITEMS[it.kind].text} onClick={() => useItem(it.id)}>
+                <button key={it.id} className="btn plate parch" style={{ padding: '4px 10px', fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 6 }} title={ITEMS[it.kind].text} onClick={() => useItem(it.id)}>
+                  <img src={itemArt(it.kind, isDigital(state.rules))} alt="" width={30} height={30} style={{ borderRadius: 6, objectFit: 'cover' }} />
                   {itemDef(it.kind, isDigital(state.rules)).name}
                 </button>
               ))}
