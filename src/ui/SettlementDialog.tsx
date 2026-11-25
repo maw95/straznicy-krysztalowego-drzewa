@@ -41,8 +41,14 @@ const SPOTS: Record<BuildingId | 'council', Spot> = {
 };
 /** The dwellings of the unit tiers 2-6 (level 6) stand in front of the barracks as small pens. */
 const DWELLING_SPOTS: Spot[] = [{ x: 36, y: 69, h: 12 }, { x: 38.5, y: 79, h: 13 }, { x: 61.5, y: 79, h: 13 }, { x: 64, y: 69, h: 12 }, { x: 88, y: 66, h: 14 }];
+/**
+ * The buildings are drawn larger than the heights above (the author found them too small on the wide landscapes), so the layout is spread out from
+ * the council to the empty ground round it: wider to the sides, the back row a little higher and the front row much lower.
+ */
+const GROW = 1.5;
+const spread = (t: Spot): Spot => ({ x: Math.min(95, Math.max(5, 50 + (t.x - 50) * 1.22)), y: 49 + (t.y - 49) * (t.y < 49 ? 1.3 : 1.4), h: t.h * GROW });
 const spotOf = (b: BuildingId | 'council', land: FactionId): Spot => {
-  const t = SPOTS[b];
+  const t = spread(SPOTS[b]);
   return land === 'horde' && (b === 'magic' || b === 'spark') ? { ...t, x: 100 - t.x } : t;
 };
 /** Whose picture a building of one faction has (level 6: Kapliczka, Szkółka, Krąg for the Przymierze; Jama, Szabrownia, Legowisko for the Horde). */
@@ -97,6 +103,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
   const own = s.land === faction;
   /** The race whose land the settlement stands on (the pictures and the building names are the race's). */
   const landRace = raceOf(state, s.land);
+  const councilSpot = spotOf('council', landRace);
   const fs = state.factions[faction];
   const buyer = Object.values(state.heroes).find((h) => h.id === state.turnOrder[state.turnIndex] && h.faction === faction);
   const price = (b: BuildingId) => buildCost(state, s, b);
@@ -617,15 +624,15 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
             })}
             {dwellingsStanding.map((tier) => {
               const id = dwellingOf(state, faction, tier)!;
-              const spot = DWELLING_SPOTS[tier - 2];
+              const spot = spread(DWELLING_SPOTS[tier - 2]);
               return (
                 <button key={`dwelling-${tier}`} className="settlement-bld dwelling" style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: Math.round(spot.y * 10) }} onClick={() => { setHover(null); setModal(`dwelling-${tier}`); }} aria-label={DWELLING_NAMES[id]} data-dwelling-site={tier} {...hoverProps(`dwelling-${tier}`)} {...details(() => info(`dwelling-${id}`))}>
                   <img src={asset(`osady/dwelling_${id}.webp`)} alt="" className="settlement-pic" style={{ height: `${spot.h}cqh` }} />
                 </button>
               );
             })}
-            <button className="settlement-bld" style={{ left: `${SPOTS.council.x}%`, top: `${SPOTS.council.y}%`, zIndex: Math.round(SPOTS.council.y * 10) }} onClick={() => openBuilding('council')} aria-label="Rada Osady" data-building="council" data-level="1" {...hoverProps('council')} {...details(() => info(COUNCIL))}>
-              <img src={asset(councilPic)} alt="" className="settlement-pic" style={{ height: `${SPOTS.council.h}cqh` }} />
+            <button className="settlement-bld" style={{ left: `${councilSpot.x}%`, top: `${councilSpot.y}%`, zIndex: Math.round(councilSpot.y * 10) }} onClick={() => openBuilding('council')} aria-label="Rada Osady" data-building="council" data-level="1" {...hoverProps('council')} {...details(() => info(COUNCIL))}>
+              <img src={asset(councilPic)} alt="" className="settlement-pic" style={{ height: `${councilSpot.h}cqh` }} />
             </button>
           </>
         )}

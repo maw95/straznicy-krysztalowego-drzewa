@@ -10298,6 +10298,21 @@
       "opis": "Nowy klip bez deformacji (wiertło się kręci); dwa wypady do przodu dodaje kod (SpriteSpec.lunge).",
       "scenario_asset": "asset_y7DqRJ5mA6RnWN1AV4mGRazr",
       "prompt": "Side view, locked static camera. The bronze mechanical mole machine stands facing right on its metal legs, a long conical drill on its nose. The drill starts spinning fast, the machine pulls its body back a little, then jabs the spinning drill forward toward the right two times in quick succession, its body rocking forward and back on the same spot, then it settles back into the standing pose and the drill stops. Its legs stay on the same spot, it does not walk. It is a rigid metal machine and keeps exactly the same shape, size and parts the whole time. It is alone in the picture. Plain solid blue background stays unchanged, no camera movement."
+    },
+    {
+      "narzedzie": "Scenario",
+      "model": "model_openai-gpt-image-2-5-flare (medium, 1536x720, 3 CU)",
+      "data": "2026-11-25",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "id": "clans/osada-tlo-2511",
+      "typ": "tło osady Żelaznego Klanu: kamieniołom (wybór autora 25.11 z trzech propozycji)",
+      "pliki": [
+        "public/assets/osady/land_clans.jpg"
+      ],
+      "opis": "Zastępuje tło z 24.11 (płaski plac). 1536x720 -> 1280x600 (LANCZOS, jakość 86); źródło i odrzucone propozycje (dolina, grota) w .tmp/zrodla/clans_land3.",
+      "scenario_asset": "asset_XXMpNSNgZNXWRWA8gTvKGmdi",
+      "prompt": "Wide painterly fantasy landscape for the town screen of a strategy game, seen from a high three-quarter bird's-eye angle looking down: a broad open quarry terrace high on a mountainside where a dwarven clan will build its town. A wide, level floor of stone dust, gravel and pale rock with faint chisel marks; wooden cranes, scaffolding and stacked stone blocks only along the far left and right edges. In the far background at the very top, the stepped grey quarry walls with a few small waterfalls, and beyond them snowy peaks under a golden sunset sky. Composition: the open floor fills the whole lower three quarters of the image and rises gently toward the back; its texture is fine-grained (gravel, small stones, stone dust), so that small buildings placed on it look large; the middle and lower part are open and uncluttered, with room for about fifteen buildings; only the top quarter shows the distant backdrop. Warm golden light, slightly vivid colours, palette of grey stone, brass, copper and warm gold, no blue tint. No buildings in the open area, no characters, no text."
     }
   ]
 }
