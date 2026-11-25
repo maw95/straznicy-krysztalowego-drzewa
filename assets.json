@@ -10313,6 +10313,21 @@
       "opis": "Zastępuje tło z 24.11 (płaski plac). 1536x720 -> 1280x600 (LANCZOS, jakość 86); źródło i odrzucone propozycje (dolina, grota) w .tmp/zrodla/clans_land3.",
       "scenario_asset": "asset_XXMpNSNgZNXWRWA8gTvKGmdi",
       "prompt": "Wide painterly fantasy landscape for the town screen of a strategy game, seen from a high three-quarter bird's-eye angle looking down: a broad open quarry terrace high on a mountainside where a dwarven clan will build its town. A wide, level floor of stone dust, gravel and pale rock with faint chisel marks; wooden cranes, scaffolding and stacked stone blocks only along the far left and right edges. In the far background at the very top, the stepped grey quarry walls with a few small waterfalls, and beyond them snowy peaks under a golden sunset sky. Composition: the open floor fills the whole lower three quarters of the image and rises gently toward the back; its texture is fine-grained (gravel, small stones, stone dust), so that small buildings placed on it look large; the middle and lower part are open and uncluttered, with room for about fifteen buildings; only the top quarter shows the distant backdrop. Warm golden light, slightly vivid colours, palette of grey stone, brass, copper and warm gold, no blue tint. No buildings in the open area, no characters, no text."
+    },
+    {
+      "narzedzie": "Scenario",
+      "model": "model_pruna-p-video-2 (draft, 720p, 24 fps, 3 s, saveAudio false, promptUpsampling false); obraz startowy = stoi.webp na niebieskim tle; wklejone do arkusza scripts/assets/clans_fix_clips.py",
+      "data": "2026-11-25",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "id": "clans/poprawki-2511-wojownik",
+      "typ": "atak Wojownika Klanu (uwagi autora 25.11, wybór autora: jeden mocny cios)",
+      "pliki": [
+        "public/assets/jednostki/wojownik_klanu/atak.webp"
+      ],
+      "opis": "Prośba o dwa ciosy po sobie dała jeden mocny zamach znad głowy; autor go przyjął. Klatka wszystkich arkuszy powiększona o 47 px źródła w górę i 60 px w prawo (scripts/assets/grow_frame.py), żeby zmieścić zamach. Źródło: .tmp/zrodla/poprawki_2511/clanWarrior/atak.mp4.",
+      "scenario_asset": "asset_J9oPrYYj7rRZs3YVj4hgbygY",
+      "prompt": "Side view, locked static camera. The bearded dwarf warrior stands facing right with an axe in each hand. Two fast, powerful swings right after each other with no pause: first he swings the axe in his front hand forward in a quick horizontal arc at the height of his chest toward the right, and at once he swings the axe in his other hand forward in a second quick horizontal arc at the same height. Each axe stops in the air in front of him, the axes never go down to the ground and are never raised above his head. His upper body twists into each swing. Then he returns to the ready stance with both axes lowered. His feet stay on the same spot, he does not walk. He is alone in the picture. Plain solid blue background stays unchanged, no camera movement."
     }
   ]
 }

@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wojownik Klanu: nowy atak – jeden mocny, szybki cios toporem z zamachu znad głowy.
 - Osady: wszystkie budynki są dużo większe i rozstawione szerzej na całym terenie osady; Żelazny Klan ma nowe tło osady – kamieniołom w górach.
 - Kret z Brązu: nowy atak bez zniekształceń – maszyna dwa razy wypada do przodu z kręcącym się wiertłem.
 - Żelazny Klan: nowe animacje – Tan i Stary Górmistrz uderzają przed siebie (nie w ziemię), Pogromca Olbrzymów robi samo pchnięcie włócznią bez kroków, a Tan, Pogromca, Gwardia Młota i Wartownik z Brązu przy śmierci padają na ziemię do końca.
