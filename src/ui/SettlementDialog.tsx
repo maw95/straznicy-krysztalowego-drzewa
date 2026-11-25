@@ -30,15 +30,17 @@ import { BuildingTree, COUNCIL, type ExtraNode } from './BuildingTree';
  * screen: [x, y] (percent of the stage) is the foot of the building, h its height (percent of the stage's height). Bigger buildings for a higher
  * rank: the council and the barracks first, the dwellings grow with the tier of their unit ('dwelling-2' ... 'dwelling-6'). The factions
  * without a land of their own stand on the land of the Przymierze, their unique buildings on the spots of the ones whose pictures they borrow.
+ * The walls (moat, then wall with a gate) run along the bottom edge as the entrance of the town: their third number is a width (percent of the
+ * stage's width), and their foot lies below the picture's edge, so only the top of the wall shows in front of the town.
  */
 type Spot = { x: number; y: number; h: number };
 type SpotKey = BuildingId | 'council' | `dwelling-${number}`;
 const LAYOUTS: Record<'dawn' | 'horde' | 'herds' | 'clans' | 'tides', Partial<Record<SpotKey, [number, number, number]>>> = {
-  dawn: { magic: [14, 47, 24.2], shrine: [30, 45, 18.7], council: [50, 48, 27.5], grove: [68, 46, 18.7], spark: [84, 48, 19.8], tavern: [9, 65, 15.4], hospital: [24, 63, 18.7], market: [39, 65, 22], forge: [62, 64, 19.8], 'dwelling-6': [79, 65, 23.1], 'dwelling-2': [19, 80, 16.5], treasury: [33, 84, 22], barracks: [51, 86, 29.7], 'dwelling-5': [67, 81, 18.7], nursery: [82, 79, 17.6], 'dwelling-3': [40, 96, 18.7], 'dwelling-4': [74, 96, 19.8], walls: [61, 98, 14] },
-  horde: { magic: [13, 38, 24], bloodPit: [29, 36, 19], council: [50, 40, 27], wolfDen: [71, 37, 17], spark: [87, 38, 18], tavern: [8, 58, 15], hospital: [23, 57, 19], 'dwelling-2': [37, 55, 15], 'dwelling-3': [63, 55, 17], forge: [78, 58, 20], plunder: [93, 62, 17], 'dwelling-4': [12, 80, 20], treasury: [30, 80, 22], barracks: [50, 82, 30], 'dwelling-5': [70, 80, 22], 'dwelling-6': [88, 86, 27], market: [22, 97, 21], walls: [54, 99, 14] },
-  herds: { magic: [15, 38, 28.8], hoofStone: [33, 36, 21.6], council: [50, 42, 32.4], refuge: [67, 36, 21.6], pastures: [82, 37, 19], tavern: [8, 62, 18], hospital: [24, 58, 22.8], spark: [38, 55, 20.4], forge: [63, 58, 24], 'dwelling-6': [78, 66, 25], 'dwelling-4': [10, 82, 22.8], 'dwelling-2': [25, 79, 18], treasury: [39, 80, 26.4], barracks: [56, 83, 36], 'dwelling-3': [70, 82, 19], 'dwelling-5': [30, 97, 23], walls: [52, 99, 16.8], market: [80, 96, 25] },
-  clans: { deepMine: [19, 37, 19], shieldHall: [35, 36, 19], council: [50, 43, 27], runeForge: [65, 36, 19], magic: [81, 40, 24], tavern: [9, 58, 15], hospital: [24, 57, 19], spark: [38, 55, 17], forge: [63, 57, 20], 'dwelling-6': [79, 60, 24], treasury: [14, 79, 22], 'dwelling-2': [30, 76, 15], barracks: [50, 79, 30], 'dwelling-3': [69, 76, 17], market: [86, 80, 22], 'dwelling-4': [24, 95, 19], walls: [50, 99, 14], 'dwelling-5': [76, 95, 21] },
-  tides: { lighthouse: [86, 27, 22], tideTemple: [37, 30, 19], spark: [66, 29, 17], 'dwelling-3': [20, 38, 17], council: [51, 42, 27], magic: [77, 45, 24], pearlBanks: [7, 47, 17], tavern: [12, 63, 15], hospital: [27, 56, 19], market: [44, 66, 21], forge: [66, 61, 20], 'dwelling-6': [85, 65, 24], treasury: [33, 82, 22], 'dwelling-2': [8, 88, 15], barracks: [55, 84, 30], 'dwelling-4': [74, 82, 19], 'dwelling-5': [90, 90, 21], walls: [38, 97, 14] },
+  dawn: { magic: [14, 47, 24.2], shrine: [30, 45, 18.7], council: [50, 48, 27.5], grove: [68, 46, 18.7], spark: [84, 48, 19.8], tavern: [9, 65, 15.4], hospital: [24, 63, 18.7], market: [39, 65, 22], forge: [62, 64, 19.8], 'dwelling-6': [79, 65, 23.1], 'dwelling-2': [19, 80, 16.5], treasury: [32, 80, 22], barracks: [51, 81, 29.7], 'dwelling-5': [67, 81, 18.7], nursery: [82, 79, 17.6], 'dwelling-3': [7, 90, 18.7], 'dwelling-4': [91, 93, 19.8], walls: [50, 104, 56] },
+  horde: { magic: [13, 38, 24], bloodPit: [29, 36, 19], council: [50, 40, 27], wolfDen: [71, 37, 17], spark: [87, 38, 18], tavern: [8, 58, 15], hospital: [23, 57, 19], 'dwelling-2': [37, 55, 15], 'dwelling-3': [63, 55, 17], forge: [78, 58, 20], plunder: [93, 62, 17], 'dwelling-4': [12, 80, 20], treasury: [30, 80, 22], barracks: [50, 79, 30], 'dwelling-5': [70, 80, 22], 'dwelling-6': [88, 86, 27], market: [8, 93, 21], walls: [50, 104, 56] },
+  herds: { magic: [15, 38, 28.8], hoofStone: [33, 36, 21.6], council: [50, 42, 32.4], refuge: [67, 36, 21.6], pastures: [82, 37, 19], tavern: [8, 62, 18], hospital: [24, 58, 22.8], spark: [38, 55, 20.4], forge: [63, 58, 24], 'dwelling-6': [78, 66, 25], 'dwelling-4': [10, 82, 22.8], 'dwelling-2': [25, 79, 18], treasury: [39, 80, 26.4], barracks: [56, 80, 36], 'dwelling-3': [70, 82, 19], 'dwelling-5': [93, 93, 23], walls: [50, 104, 56], market: [86, 82, 25] },
+  clans: { deepMine: [19, 37, 19], shieldHall: [35, 36, 19], council: [50, 43, 27], runeForge: [65, 36, 19], magic: [81, 40, 24], tavern: [9, 58, 15], hospital: [24, 57, 19], spark: [38, 55, 17], forge: [63, 57, 20], 'dwelling-6': [79, 60, 24], treasury: [14, 79, 22], 'dwelling-2': [30, 76, 15], barracks: [50, 79, 30], 'dwelling-3': [69, 76, 17], market: [85, 79, 22], 'dwelling-4': [8, 89, 19], walls: [50, 104, 56], 'dwelling-5': [92, 93, 21] },
+  tides: { lighthouse: [86, 27, 22], tideTemple: [37, 30, 19], spark: [66, 29, 17], 'dwelling-3': [20, 38, 17], council: [51, 42, 27], magic: [77, 45, 24], pearlBanks: [7, 47, 17], tavern: [12, 63, 15], hospital: [29, 58, 19], market: [39, 70, 22], forge: [66, 61, 20], 'dwelling-6': [85, 65, 24], treasury: [31, 79, 22], 'dwelling-2': [8, 88, 15], barracks: [55, 80, 30], 'dwelling-4': [75, 80, 19], 'dwelling-5': [90, 90, 21], walls: [50, 104, 56] },
 };
 const landOfPictures = (land: FactionId): keyof typeof LAYOUTS => (land in LAYOUTS ? (land as keyof typeof LAYOUTS) : 'dawn');
 const spotOf = (b: SpotKey, land: FactionId): Spot => {
@@ -610,10 +612,12 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
           <>
             {standing.map((b) => {
               const level = buildingLevel(s, b);
-              const spot = spotOf(b, landRace);
+              const at = spotOf(b, landRace);
+              // An empty plot for the walls stands just inside the picture (the wall itself has its foot below the edge).
+              const spot = b === 'walls' && level === 0 ? { ...at, y: Math.min(at.y, 97) } : at;
               return (
                 <button key={b} className="settlement-bld" style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: Math.round(spot.y * 10) }} onClick={() => openBuilding(b)} aria-label={nameOf(b)} data-building={b} data-level={level} {...hoverProps(b)} {...details(() => info(b))}>
-                  <img src={asset(buildingPicture(landRace, b, level))} alt="" className="settlement-pic" style={{ height: `${b === 'treasury' && level >= 2 ? spot.h * 1.15 : spot.h}cqh` }} />
+                  <img src={asset(buildingPicture(landRace, b, level))} alt="" className="settlement-pic" style={b === 'walls' ? (level > 0 ? { width: `${spot.h}cqw` } : { height: '14cqh' }) : { height: `${b === 'treasury' && level >= 2 ? spot.h * 1.15 : spot.h}cqh` }} />
                 </button>
               );
             })}
