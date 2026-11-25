@@ -415,6 +415,8 @@ function addHero(state: GameState, heroId: string, faction: TeamId, playerId: st
   state.heroes[heroId] = { id: heroId, faction, playerId, pos: homeOf(state, faction), alive: true, crystals: [], ...(state.rules.realm ? { spells: [...START_SPELLS], kind: HERO_TYPES[heroId] } : {}) };
   const unused = state.factions[faction].unusedHeroes;
   if (unused.includes(heroId)) unused.splice(unused.indexOf(heroId), 1);
+  // Digital tuning (the easier levels): the Przymierza's heroes start with experience (a level up offers its skills as usual).
+  if (faction === 'dawn' && state.rules.dawnStartXp && state.setup.mode !== 'arena') awardXp(state, state.heroes[heroId], state.rules.dawnStartXp);
 }
 
 /** Where the coop automaton's heroes come in the turn order: after every player's seat. */
@@ -1413,7 +1415,7 @@ function chooseTreasureNow(state: GameState, hero: HeroState, kind: ItemKind) {
   chooseTreasure(state, hero.id, kind);
 }
 
-function killHero(state: GameState, heroId: string, at: HexKey) {
+export function killHero(state: GameState, heroId: string, at: HexKey) {
   const hero = state.heroes[heroId];
   if (!hero.alive) return;
   hero.alive = false;
@@ -1428,7 +1430,7 @@ function killHero(state: GameState, heroId: string, at: HexKey) {
   // The coop automaton keeps as many heroes as there are good players (spec 10), so in the
   // replacement variant it brings in a reserve hero just like the players do.
   const automaton = state.setup.mode === 'coop' && hero.faction === 'horde';
-  if (state.rules.heroReplacement && !hero.secondary && (hero.playerId || automaton) && f.unusedHeroes.length) {
+  if ((state.rules.heroReplacement || (state.rules.dawnHeroReplacement && hero.faction === 'dawn')) && !hero.secondary && (hero.playerId || automaton) && f.unusedHeroes.length) {
     const next = f.unusedHeroes[0];
     addHero(state, next, hero.faction, hero.playerId);
     // The reserve comes in near where the fallen hero died: on the nearest free hex,

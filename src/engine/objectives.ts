@@ -383,7 +383,7 @@ const survival: Objective = {
   name: 'Przetrwanie',
   summary: 'Fale Hordy: co dwie rundy w bazie Hordy pojawia się kolejny bohater. Przymierze wygrywa, gdy przetrwa wyznaczoną liczbę rund, Horda, gdy polegną wszyscy jego bohaterowie.',
   init(state) {
-    state.survival = { rounds: SURVIVAL.rounds[state.setup.mapSize], waves: 0 };
+    state.survival = { rounds: Math.max(1, SURVIVAL.rounds[state.setup.mapSize] + Math.round(state.rules.survivalRoundsBonus ?? 0)), waves: 0 };
     clearTree(state);
   },
   checkVictory() {},
@@ -442,7 +442,7 @@ const boss: Objective = {
     // With hero growth the Boss may also be one of the three neutral bosses (stoneGolem, stormKing, kraken); without it the draw is as before.
     const guardian = rng.pick(state.rules.heroGrowth ? ['hydra', 'cyclops', ...NEUTRAL_BOSSES] : ['hydra', 'cyclops']);
     const dawnHeroes = state.setup.seats.filter((s) => s.faction === 'dawn').length;
-    const hp = Math.round(BOSS.hp[state.setup.mapSize] * hpScaleOf(state) * (dawnHeroes >= 2 ? BOSS.twoHeroesFactor : 1) * (BOSS.hpFactor[guardian] ?? 1) * (state.rules.noHorde ? BOSS.noHordeFactor : 1));
+    const hp = Math.round(BOSS.hp[state.setup.mapSize] * hpScaleOf(state) * (dawnHeroes >= 2 ? BOSS.twoHeroesFactor : 1) * (BOSS.hpFactor[guardian] ?? 1) * (state.rules.noHorde ? BOSS.noHordeFactor : 1) * (state.rules.bossHpFactor ?? 1));
     state.tiles[at].terrain = guardian === 'hydra' ? 'lairHydra' : guardian === 'cyclops' ? 'lairCyclops' : (BOSS_LAIR[guardian] ?? 'lairCyclops');
     state.tiles[at].crystalId = 'boss';
     // The Kraken fights with its tentacles; they are fresh in every fight (only the head's wounds stay).

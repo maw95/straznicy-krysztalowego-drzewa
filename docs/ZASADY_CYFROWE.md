@@ -276,6 +276,16 @@ dla każdej komórki (rozmiar mapy × stół × poziom) szuka najmniejszej zmian
 Wpisy `customMapId` rozróżniają dwie ręczne mapy. Strojenie od zera: `"noAuto": true` w `SIM_OVERRIDE` pomija wygenerowane wpisy.
 Weryfikacja na 250 grach na komórkę (nie niezależna: te same ziarna co przy strojeniu): z 2400 komórek poza pasmem zostało 256 (11%), w większości o kilka punktów. Najwięcej: Boss (Trudny: dźwignie nie działają, bo bohater dochodzi do Bossa, zanim skarby Hordy mają znaczenie; autor: nie ruszać) oraz Kryształy na Cieśninie i Dolinie (10–14 z 40 komórek: ręczne mapy mają dużo wcześniejszych wpisów i mało miejsca na korektę).
 
+## Drobniejsze dźwignie stroiciela (25.11.2026, tylko wersja cyfrowa)
+
+Pola `RulesConfig`, które ustawia wyłącznie strojenie cyfrowe (`DigitalTune.rules`); brak pola = zachowanie jak dotąd, więc plansza i `golden.test.ts` się nie zmieniają. Testy: `tests/tuning.test.ts`.
+- `survivalRoundsBonus` (liczba całkowita, także ujemna): dodawana do `SURVIVAL.rounds[rozmiar]` przy starcie Przetrwania; **mniej rund do przetrwania = łatwiej** (zostaje co najmniej 1 runda). Zakres w drabinie stroiciela: od −8 do 0.
+- `bossHpFactor` (mnożnik, 1 = bez zmian): mnoży Życie Bossa (po wszystkich innych mnożnikach); mniej = łatwiej. Zakres w drabinie: 0,50–1,00 co 0,05 (i do 1,30 w dół drabiny).
+- `dawnStartXp`: doświadczenie startowe każdego bohatera Przymierza, tylko z rozwojem bohatera (`heroGrowth`); awans i oferta umiejętności jak po walce (progi w `GROWTH.thresholds`: 3 PD = poziom 2, 7 = 3, 12 = 4, 18 = 5). Zakres w drabinie: 3, 7, 12 (tylko przebiegi G1).
+- `dawnHeroReplacement`: poległy bohater Przymierza (nie Hordy) jest zastępowany niewykorzystanym (jak `heroReplacement`, ale dla jednej strony); działa też w Rywalizacji/Potyczce, gdzie `heroReplacement` dotyczyłby obu stron.
+
+Stroiciel (`tuneLevels.ts`): w PvP usunięto martwe szczeble (`extraEvilHero`, `minEvilHeroes`, `hordeRespawn`); po skarbach (D1…D13) drabina próbuje kolejno dźwigni celu (Przetrwanie: krótsze rundy; Boss: mniejsze życie, drobne kroki), potem zapasowego bohatera, doświadczenia startowego (G1) i dopiero na końcu ruchu/rund. Wybrany wpis jest ponownie mierzony na innych ziarnach (`SIM_SEED_OFFSET`, 240 gier) i zostaje tylko, gdy ten pomiar mieści się w paśmie lub na brzegu; wynik walidacji jest w wierszu logu.
+
 ## Strojenie przygody w wersji cyfrowej (5.11.2026)
 
 Cel autora: wygrane Przymierza **Łatwy 70–90%, Normalny 45–65%, Trudny 30–50%** (boty, bez areny) w obu celach. Dźwignie są tylko w wersji cyfrowej:

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createGame } from '../src/engine/game';
+import { createGame, killHero } from '../src/engine/game';
+import { SURVIVAL } from '../src/engine/data';
 import { DIGITAL_TUNING, digitalRules } from '../src/engine/tuning';
 import { pvpSeats, setup } from './helpers/engine';
 
@@ -38,5 +39,57 @@ describe('digital tuning levers', () => {
     // PvP has no Hard level, except at the economy tables of the digital edition (levels 4-6: kingdom).
     expect(DIGITAL_TUNING.some((t) => t.mode === 'pvp' && t.level === 'hard' && !t.kingdom)).toBe(false);
     expect(pvpSeats('goldDragon', 'blackDragon')).toHaveLength(2);
+  });
+});
+
+describe('digital tuning levers of the finer ladder', () => {
+  const digital = (rules: Record<string, unknown>, over = {}) => setup({ mapSize: 'short', ...over }, { ruleset: 'digital', ...rules });
+
+  it('survivalRoundsBonus shortens or lengthens the Survival goal (default: SURVIVAL.rounds)', () => {
+    const base = createGame(digital({ objective: 'survival' })).survival!.rounds;
+    expect(base).toBe(SURVIVAL.rounds.short);
+    expect(createGame(digital({ objective: 'survival', survivalRoundsBonus: -2 })).survival!.rounds).toBe(base - 2);
+    expect(createGame(digital({ objective: 'survival', survivalRoundsBonus: 3 })).survival!.rounds).toBe(base + 3);
+    expect(createGame(digital({ objective: 'survival', survivalRoundsBonus: -99 })).survival!.rounds).toBe(1);
+  });
+
+  it('bossHpFactor scales the Boss life in fine steps (default: unchanged)', () => {
+    const hp = (rules: Record<string, unknown>) => createGame(digital({ objective: 'boss', ...rules })).boss!.maxHp;
+    const base = hp({});
+    expect(hp({ bossHpFactor: 1 })).toBe(base);
+    expect(hp({ bossHpFactor: 0.5 })).toBe(Math.round(base * 0.5));
+    expect(hp({ bossHpFactor: 0.95 })).toBeLessThan(base);
+    expect(hp({ bossHpFactor: 1.2 })).toBeGreaterThan(base);
+  });
+
+  it('dawnStartXp gives the Przymierza heroes experience and levels, never the Horde, never without growth', () => {
+    const grown = (xp?: number) => createGame(digital({ objective: 'crystals', heroGrowth: true, ...(xp ? { dawnStartXp: xp } : {}) }, { mode: 'pvp', seats: pvpSeats('goldDragon', 'blackDragon') }));
+    const plain = grown();
+    expect(plain.heroes.goldDragon.xp ?? 0).toBe(0);
+    const s = grown(8);
+    expect(s.heroes.goldDragon.xp).toBe(8);
+    expect(s.heroes.goldDragon.level).toBe(2);
+    expect(s.heroes.goldDragon.offer?.length).toBeGreaterThan(0);
+    expect(s.heroes.blackDragon.xp ?? 0).toBe(0);
+    const off = createGame(digital({ objective: 'crystals', dawnStartXp: 8 }, { mode: 'pvp', seats: pvpSeats('goldDragon', 'blackDragon') }));
+    expect(off.heroes.goldDragon.xp ?? 0).toBe(0);
+  });
+
+  it('dawnHeroReplacement replaces a fallen Przymierza hero only (heroReplacement stays off)', () => {
+    const fall = (rules: Record<string, unknown>) => {
+      const s = createGame(digital(rules, { mode: 'pvp', seats: pvpSeats('goldDragon', 'blackDragon') }));
+      return s;
+    };
+    expect(fall({}).rules.dawnHeroReplacement).toBeUndefined();
+    const s = fall({ dawnHeroReplacement: true });
+    expect(s.rules.heroReplacement).toBe(false);
+    const dawnReserve = s.factions.dawn.unusedHeroes.length;
+    expect(dawnReserve).toBeGreaterThan(0);
+    const killDawn = structuredClone(s);
+    const bot = structuredClone(s);
+    killHero(killDawn, 'goldDragon', killDawn.heroes.goldDragon.pos);
+    killHero(bot, 'blackDragon', bot.heroes.blackDragon.pos);
+    expect(killDawn.factions.dawn.unusedHeroes.length).toBe(dawnReserve - 1);
+    expect(bot.factions.horde.unusedHeroes.length).toBe(s.factions.horde.unusedHeroes.length);
   });
 });

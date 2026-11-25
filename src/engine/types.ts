@@ -66,6 +66,14 @@ export interface RulesConfig {
   roundLimitBonus?: number;
   /** Digital tuning: the treasures the Przymierza hold from the start instead of the map's (MapVariant.startTreasures). */
   dawnStartTreasures?: { resurrections: number; others: number; random?: number };
+  /** Digital tuning, goal 'survival': rounds added to SURVIVAL.rounds[mapSize] (integer, may be negative: fewer rounds to survive = easier for the Przymierza; at least 1 round stays). Missing = 0. */
+  survivalRoundsBonus?: number;
+  /** Digital tuning, goal 'boss': the Boss's Życie is multiplied by this (below 1 = easier for the Przymierza; fine steps of about 0.05). Missing = 1. */
+  bossHpFactor?: number;
+  /** Digital tuning, hero growth only: every Przymierze hero starts with this much experience (levels up through the usual offers; see GROWTH.thresholds). Missing = 0. */
+  dawnStartXp?: number;
+  /** Digital tuning: a fallen Przymierze hero is replaced by an unused one (heroReplacement for the Przymierza side alone; the Horde's heroes stay dead). Missing = off. */
+  dawnHeroReplacement?: boolean;
   /** Digital tuning, level 3: extra gold per round for the Przymierza (a start condition of Easy). */
   dawnGoldBonus?: number;
   /** Rounds that all living evil heroes must spend on the Tree to complete the ritual. */
