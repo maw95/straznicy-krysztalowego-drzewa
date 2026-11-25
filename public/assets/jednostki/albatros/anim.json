@@ -16,11 +16,11 @@
   "atak": 37,
   "lot": 37,
   "smierc": 37,
-  "trafienie": 25
+  "wzbicie": 37
  },
- "feet": 0.8184,
- "cx": 0.4961,
- "body": 0.8164,
+ "feet": 0.9082,
+ "cx": 0.4697,
+ "body": 0.7715,
  "step": 2,
  "scale": 0.75
 }

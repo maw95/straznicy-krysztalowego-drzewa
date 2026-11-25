@@ -10503,6 +10503,95 @@
         "smierc": "... He lets go of <przedmioty>, and they fall to the ground beside him. He sways, his knees bend, he leans forward more and more and falls full length onto the ground face down, his head toward the right, then lies completely still, as if fast asleep. He never sits down. ... (Syrena, Mors: '... leans forward more and more with straight legs, like a cut tree, and falls full length ... never sits down, never kneels and never lies on his back')",
         "smierc golema": "It stops working and comes apart: pieces of coral and stones loosen and fall away from its arms and shoulders, its knees bend, it leans forward more and more and falls full length onto the ground face down ... a broken heap of coral and stone. It never sits down."
       }
+    },
+    {
+      "narzedzie": "Scenario",
+      "model": "ElevenLabs Sound Effects v3 (model_elevenlabs-sound-effects-v3), 1 CU każdy, promptInfluence 0.6, 1-2.5 s; ffmpeg: cisza z początku usunięta, szczyt -4 dB, mono 128 kbps",
+      "data": "2026-11-25",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "id": "tides/poprawki-2511-dzwieki",
+      "typ": "Przypływy: 11 nowych dźwięków ataku i śmierci (uwagi autora 25.11: bez plusku wody, głosy zgodne z płcią i wiekiem, żółw bez ludzkiego westchnienia)",
+      "pliki": [
+        "public/assets/dzwieki/jednostki/tritonKing_smierc.mp3",
+        "public/assets/dzwieki/jednostki/sirenSinger_smierc.mp3",
+        "public/assets/dzwieki/jednostki/seaSerpent_atak.mp3",
+        "public/assets/dzwieki/jednostki/seaSerpent_smierc.mp3",
+        "public/assets/dzwieki/jednostki/tritonGuard_smierc.mp3",
+        "public/assets/dzwieki/jednostki/harpooneer_atak.mp3",
+        "public/assets/dzwieki/jednostki/harpooneer_smierc.mp3",
+        "public/assets/dzwieki/jednostki/shellTurtle_smierc.mp3",
+        "public/assets/dzwieki/jednostki/sharkman_atak.mp3",
+        "public/assets/dzwieki/jednostki/sharkman_smierc.mp3",
+        "public/assets/dzwieki/jednostki/lobsterKnight_atak.mp3"
+      ],
+      "opis": "Opisy w .tmp/zrodla/tides_poprawki/dzwieki/ (stare pliki w stare/). Przykład: śmierć Żółwia 'A giant old sea turtle dies: a long, low, rasping, wheezing exhale ... No human voice, no music, no water.'",
+      "scenario_asset": {
+        "tritonKing_smierc": "asset_EbZAHAXBEz9Ua5MccShJhMY7",
+        "sirenSinger_smierc": "asset_8YQPS9v9eenExkboNLRpghyM",
+        "seaSerpent_atak": "asset_MrdaVVb7WqkC9Xx8utotLfXi",
+        "seaSerpent_smierc": "asset_ZUShbgd9RYaozevYjNk6vuWR",
+        "tritonGuard_smierc": "asset_Vs1yhj2FpsS53UwdPN2txNso",
+        "harpooneer_atak": "asset_qs1bsrGn2qMS1vnqv1Cv91R8",
+        "harpooneer_smierc": "asset_282mi2uL1uKqNRA4Xm8B7DkK",
+        "shellTurtle_smierc": "asset_DzWx5ydDC6PB3mDcHCQWfoSt",
+        "sharkman_atak": "asset_mdm57fcFVjjAUr67NnJoepjt",
+        "sharkman_smierc": "asset_Lxj1MtCs9BomJizMncqnYvMa",
+        "lobsterKnight_atak": "asset_CfA9JS2wB4QpWngiiW9N535w"
+      },
+      "prompt": "patrz scenario_asset + historia sesji 25.11; każdy opis kończy się 'No music' i, przy śmierci, 'no water splash'"
+    },
+    {
+      "narzedzie": "Scenario",
+      "model": "GPT Image 2.5 Flare (medium 1024, img2img z obrazem bazowym, 4 CU) + P-Video 2 (draft 3 s, 9 CU x 4)",
+      "data": "2026-11-25",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "id": "tides/albatros-na-ziemi",
+      "typ": "Albatros: stoi na ziemi, wzbija się do lotu, w locie macha skrzydłami (uwaga autora 25.11), atak i śmierć z ziemi; trafienie w kodzie",
+      "pliki": [
+        "public/assets/jednostki/albatros/*"
+      ],
+      "opis": "Pakowanie od nowa: pack_unit.py -> despill_blue.py -> shrink_unit.py (źródła .tmp/zrodla/tides_poprawki/albatross/). Lot z dawnego obrazu bazowego w locie (asset_aDZMQapfCU6JWDVLvgGKGVbW).",
+      "scenario_asset": {
+        "stoi": "asset_JZXEiavFug5tcDUqGAbxVzZi",
+        "wzbicie": "asset_8nhNVXqP9o2irKKjA72TMwVd",
+        "lot": "asset_z3pydBANE8KZk9TbHSYa4QKj",
+        "atak": "asset_dQVb3ouKM6xxPzSW8wA9S9cB",
+        "smierc": "asset_wnqzNP6JP9myKKZDMrtrwSwq"
+      },
+      "prompt": {
+        "stoi": "Edit this image: the same big sea albatross ... now it stands calmly on the ground on its two webbed feet, its long wings folded neatly along its body ... Plain solid pure blue background (#0000FF)",
+        "lot": "... flaps its long wings up and down in a steady, strong rhythm the whole time ... seamless loop",
+        "wzbicie": "... spreads its long wings wide, flaps them strongly a few times and lifts off, rising straight up into the air on the same spot until it hovers ...",
+        "atak": "... spreads its long wings wide, rears up and sweeps both wings forward toward the right in one fast, powerful motion, then stretches its neck forward and snaps its hooked beak ...",
+        "smierc": "... Its wings droop and open loosely, its head sinks, it sways and lowers itself sideways to the ground ... rests completely still, as if fast asleep."
+      }
+    },
+    {
+      "narzedzie": "Scenario",
+      "model": "GPT Image 2.5 Flare (medium 1024, img2img z dawnym obrazem bazowym, 4 CU) + P-Video 2 (draft 3 s, 9 CU x 3)",
+      "data": "2026-11-25",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "id": "tides/lewiatan-cala-sylwetka",
+      "typ": "Lewiatan z całą sylwetką na lądzie (BACKLOG 79, uwaga autora 25.11): stoi, chód, atak, śmierć; trafienie w kodzie",
+      "pliki": [
+        "public/assets/jednostki/lewiatan/*"
+      ],
+      "opis": "Pakowanie od nowa (źródła .tmp/zrodla/tides_poprawki/leviathan/). Stare pliki: .tmp/zrodla/tides_poprawki/backup/lewiatan.",
+      "scenario_asset": {
+        "stoi": "asset_P2yWUeNLdLXHQJBw7Lb9jCkM",
+        "chod": "asset_Kw5hrntPBFX5djzQ8tz53ykV",
+        "atak": "asset_gNXxNzVV6gi3yP858a3zMjxX",
+        "smierc": "asset_bSfT3zHG5zZD5ooCA8CymMHk"
+      },
+      "prompt": {
+        "stoi": "Using this sea monster as the reference for the head, the spikes, the scales, the seaweed and the colours: draw the WHOLE ancient leviathan standing on land ... four strong webbed flipper-legs ... long thick tail ... Side view facing right ... Plain solid pure blue background (#0000FF)",
+        "chod": "... walks in place, as on a treadmill ... seamless loop",
+        "atak": "... rears up with a roar, draws its head back on its thick neck, then shoots its head straight forward ... jaws wide open, snaps them shut ...",
+        "smierc": "... Its head sinks, its legs bend under its great weight, and it slowly sinks down onto the ground on its belly ... as if fast asleep."
+      }
     }
   ]
 }
