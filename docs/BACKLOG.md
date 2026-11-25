@@ -49,7 +49,7 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Zrobione 24.11: p
   - **Matka Run:** śmierć i trafienie jak u Tana (naprawić tak samo); dźwięki do wymiany wszystkie; atak = dźwięk rzucanego zaklęcia; śmierć nie może brzmieć jak westchnięcie dziewczynki (stara, potężna czarodziejka).
   - **Strażniczka Przełęczy:** atak = dźwięk wystrzału z kuszy, animacja ataku słaba (tak się nie strzela z kuszy); śmierć = ciche westchnięcie i upadek na ziemię (twarda kobieta, ok. 30 lat).
   - **Stary Górmistrz:** atak wygląda jak podniesienie kilofa, ma być zamach i uderzenie.
-  - **Wojownik Klanu:** atak = dźwięk połączony z uderzeniem topora; sekwencja: po jednym uderzeniu każdym z dwóch toporów (nie podnoszenie ich do góry); śmierć wygląda jak kładzenie się.
+  - **Wojownik Klanu:** zrobione 25.11: autor wybrał jeden mocny cios znad głowy (klip `.tmp/zrodla/poprawki_2511/clanWarrior/atak.mp4`, 0 CU); klatka wszystkich arkuszy powiększona w górę i w prawo (`grow_frame.py` umie teraz też w prawo).
   - **Kusznik Gór:** śmierć dobra, ale tarcza też ma się przewrócić.
   - **Kapłan Kuźni:** okrzyk ataku bardziej gniewny, jako tło dla dźwięku magicznego efektu; trafienie mniej gwałtowne i bez dziwnego ruchu nogą.
   - **Krasnoludzki Tarczownik:** atak bardziej agresywny; śmierć wygląda jak kładzenie się.
@@ -69,7 +69,7 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Zrobione 24.11: p
 **87. Uwagi autora do Żelaznego Klanu z 25.11 (zrobione 25.11, czeka na przegląd autora na `make podglad F=clans`; 129 CU: 117 na klipy, 12 na tła).** Bez kredytów: trafienia ośmiu jednostek (Tan, Matka Run, Kret, Niedźwiedź, Wartownik, Pogromca, Gwardia, Kowal) rysuje kod jako odchylenie od ciosu z przodu (`recoil` w `sprites.ts`), bo klipy trafień z modelu się deformowały; wolniejsza śmierć Tarczownika i trafienie Skarbnika, szybsza śmierć Kowala; biały błysk i pył z ataku Gwardii usunięte (`scripts/assets/clans_dust_fix.py`); tarcza Kusznika przewraca się obrotem (`clans_shield_fall.py`). Nowe klipy: atak Tana i Górmistrza (cios przed siebie), atak Pogromcy (samo pchnięcie), śmierć Tana, Pogromcy, Gwardii, Wartownika (upadek do końca), atak Kreta (bez glitchy, wypady w kodzie: `lunge`). **Otwarte:**
   - **Wojownik Klanu:** trzy próby modelu nie dały dwóch ciosów różnymi toporami (robi jeden zamach albo unosi oba naraz); w grze został klip z 24.11. Do decyzji autora: (a) zostawić, (b) jeden mocny, szybki cios jednym toporem (gotowy klip `.tmp/zrodla/poprawki_2511/clanWarrior/atak.mp4`, 0 CU), (c) nowy pomysł na prompt.
   - **Śmierć Pogromcy** kończy się zwinięciem twarzą do ziemi (lepiej niż czworaki z 24.11, ale może nadal wyglądać jak klęczenie).
-  - **Tło osady:** trzy propozycje w `.tmp/zrodla/clans_land3/` (`zrzut_1_dolina.jpg`, `zrzut_2_grota.jpg`, `zrzut_3_kamieniolom.jpg`, każde z pełną zabudową; podgląd jakości medium, 3 CU każde). Po wyborze: wstawić do `public/assets/osady/land_clans.jpg` (1280x600, jakość 86), ewentualnie wersja high z wybranym jako odniesieniem (ok. 12 CU) i ewentualnie większe budynki tylko dla Klanu (mnożnik `h` w `spotOf`).
+  - **Tło osady:** zrobione 25.11: autor wybrał kamieniołom (`.tmp/zrodla/clans_land3/3_kamieniolom.png`). Na prośbę autora budynki wszystkich frakcji są 1,5 raza większe i rozstawione szerzej (`GROW` i `spread` w `SettlementDialog.tsx`). Na poziomym telefonie nagłówek zasłania część tylnego rzędu (było tak już przed zmianą).
 
 ### Starsze punkty
 
