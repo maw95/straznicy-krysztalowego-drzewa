@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Wolna Kompania: dwa własne utwory (lutnia przy ognisku i zbójnicka ballada) grają w osadzie i na ziemi Kompanii; każda z 19 postaci ma własny dźwięk ataku i śmierci.": "Free Company: two tracks of its own (a lute by the campfire and an outlaw ballad) play in the settlement and on the Company's land; each of the 19 characters has its own attack and death sound.",
   "Wolna Kompania: własna osada (leśna polana przy zrujnowanym młynie, wszystkie budynki, Warsztat Sideł, Paserka, Szlaki Przemytnicze, fosa i palisada, 9 siedlisk jednostek) oraz własny herb i ramki kart.": "Free Company: its own settlement (a forest clearing by a ruined mill, every building, the Snare Workshop, the Fence, the Smugglers' Trails, the moat and the palisade, 9 unit dwellings) and its own crest and card frames.",
   "Wolna Kompania: własne ilustracje kart i portrety wszystkich 19 postaci oraz malowane ikony 13 zdolności (Fortel, Okop, Oko Kruka, Kieszonkowiec, Strzał z Gałęzi, Tama, Ukryty, Ładunek, Riposta, Smrodliwa Mikstura, wieżyczka Warana, Szalony Skok, Furia Ran).": "Free Company: its own card art and portraits for all 19 characters and painted icons for 13 abilities (Ploy, Dig In, Raven's Eye, Pickpocket, Branch Shot, Dam, Hidden, Charge, Riposte, Stink Potion, the Monitor's turret, Mad Leap, Fury of Wounds).",
   "Bractwo Przypływu: bohater Wąż Morski nazywa się teraz Koralowy Żmij.": "Tide Brotherhood: the hero Sea Serpent is now called the Coral Wyrm.",

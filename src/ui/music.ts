@@ -44,6 +44,7 @@ export const FACTION_MUSIC: Partial<Record<FactionId, string[]>> = {
   herds: [M('herds-steppe-drums'), M('herds-wandering-herd')],
   tides: [M('tides-tidewater-harp'), M('tides-conch-horn-march')],
   clans: [M('clans-anvil-hall'), M('clans-hammer-march')],
+  free: [M('free-campfire-lute'), M('free-outlaw-ballad')],
 };
 /** The theme of a faction's land, or null when the faction has no music of its own. */
 export const factionTheme = (race: FactionId): Theme | null => (FACTION_MUSIC[race]?.length ? `faction:${race}` : null);
