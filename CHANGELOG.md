@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Bractwo Przypływu: nowe ataki Króla Trytonów, Węża Morskiego, Starego Morsa Kapitana, Trytońskiego Strażnika, Harpunniczki, Żółwia Skorupiaka, Trytońskiego Harpunnika, Kraboluda, Rekinołaka, Homara Pancernego i Rafowego Golema (prawdziwy zamach i cios przed siebie); nowe śmierci Króla, Syreny, Morsa, Strażnika, Żabiego Skoczka, Kraboluda, Rekinołaka i Kapłanki Pereł (padają twarzą do ziemi, bez siadania) oraz Rafowego Golema (rozsypuje się w stertę koralu).
 - Bractwo Przypływu: nowe kadry portretów (Syrena, Wąż Morski, Sefiran, Trytoński Harpunnik, Krabolud, Ośmiornica, Rekinołak, Kapłanka Pereł, Homar Pancerny); Syrena i Morska Wiedźma rzucają w przeciwnika kulę morskiej wody zamiast pluskać wodą; trafienia Syreny, Trytońskiego Strażnika, Żółwia, Żabiego Skoczka, Kraboluda, Kapłanki Pereł i Morskiej Wiedźmy to płynne odchylenie od ciosu; wolniejszy chód Homara Pancernego.
 - Poziomy trudności: dwie nowe dźwignie dla poziomu Łatwego – Horda może walczyć bez cyfrowej premii wyrównującej, a w celu Kryształy (w ostateczności) Drzewu wystarczy oddać o jeden kryształ mniej. Strojenie z ich użyciem jeszcze trwa.
 - Osada Stad: Karczma trochę niżej i w prawo.

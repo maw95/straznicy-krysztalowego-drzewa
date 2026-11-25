@@ -10444,6 +10444,65 @@
       ],
       "opis": "Portrety wycięte na nowo z ilustracji kart (kadry w scripts/assets/card_crops.py MANUAL i src/ui/cardCrops.ts); Trytoński Harpunnik z próbki G3 (.tmp/zrodla/g3-probki-t1/tritonHarpoon.png). Plusk usunięty przez scripts/assets/tides_splash_fix.py; zaklęcie leci jako pocisk (.projectile.water w styles.css). Stare pliki: .tmp/zrodla/portrety_tides_stare, .tmp/zrodla/tides_poprawki/backup.",
       "prompt": "-"
+    },
+    {
+      "narzedzie": "Scenario",
+      "model": "model_pruna-p-video-2 (draft, 720p, 24 fps, 3 s, saveAudio false, promptUpsampling false, 9 CU); obraz startowy = obraz bazowy jednostki na niebieskim tle (tides/sprity-*); wklejone przez scripts/assets/clans_fix_clips.py (+ grow_frame.py, MARTWY=1 dla śmierci)",
+      "data": "2026-11-25",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "id": "tides/poprawki-2511-klipy",
+      "typ": "Przypływy, uwagi autora 25.11: nowe ataki (11) i śmierci (9)",
+      "pliki": [
+        "public/assets/jednostki/krol_trytonow/*",
+        "public/assets/jednostki/waz_morski/*",
+        "public/assets/jednostki/mors_kapitan/*",
+        "public/assets/jednostki/trytonski_straznik/*",
+        "public/assets/jednostki/harpunniczka/*",
+        "public/assets/jednostki/zolw_skorupiak/*",
+        "public/assets/jednostki/trytonski_harpunnik/*",
+        "public/assets/jednostki/krabolud_tarczownik/*",
+        "public/assets/jednostki/rekinolak/*",
+        "public/assets/jednostki/homar_pancerny/*",
+        "public/assets/jednostki/rafowy_golem/*",
+        "public/assets/jednostki/syrena_piesniarka/*",
+        "public/assets/jednostki/zabi_skoczek/*",
+        "public/assets/jednostki/kaplanka_perel/*"
+      ],
+      "opis": "Źródła mp4: .tmp/zrodla/tides_poprawki/<unitId>/. Koszt: 24 klipy przyjęte lub odrzucone + 2 zablokowane (harpunniczka i trytoński harpunnik, śmierć 'like a cut tree' z harpunem) + 1 odrzucony (harpunniczka klęczy) = 252 CU. Harpunniczka i Trytoński Harpunnik: śmierć bez zmian (czeka na decyzję autora).",
+      "scenario_asset": {
+        "atak": {
+          "tritonKing": "asset_bRZd2yAV1Tiz7exdQPRozzfQ",
+          "seaSerpent": "asset_dQnyytTN9wfqad18c76BdQbD",
+          "walrusCaptain": "asset_eH2wjqeNJePtqVtXpiH8Xrn9 (druga próba; pierwsza asset_Q8PeYuY6tZQ3VRtoo3xrDMYR odrzucona: hak do ziemi)",
+          "tritonGuard": "asset_pkQUhNJc9b1psdFiB2s3Q4ZH",
+          "harpooneer": "asset_aHRYAU6Ks6W3wKM367cudat8",
+          "shellTurtle": "asset_MnbwUAPT8fds9aT2xhmFJcMH",
+          "tritonHarpoon": "asset_zrq25AJEzViaFGgt4uquKrcW",
+          "crabShield": "asset_cx37gcvdQnp9PCoYM35PgSxm",
+          "sharkman": "asset_MrkTkHo8bqrLfi8AsVVhJ4Ch",
+          "lobsterKnight": "asset_KUJbRhxbssCZeYy2QZWCNYBn",
+          "reefGolem": "asset_qKtwq4zcX6cDiQ8sFMEBqG7s"
+        },
+        "smierc": {
+          "tritonKing": "asset_U5Rf83SEzbPbysavAuY8LLAN",
+          "sirenSinger": "asset_ZagtyPprBYVDj9mbRPWPDkqi (druga próba)",
+          "walrusCaptain": "asset_tc7PPgB2S9Kz4JpNdp9FTmLK (druga próba)",
+          "tritonGuard": "asset_TGYxGNqgJgEzWtYM4GiU1Gi1",
+          "frogLeaper": "asset_ttEhJMGb2fuTW38CfWEeTrk6",
+          "crabShield": "asset_hvQ4Keu9bjCSt4gDB7w1Saq3",
+          "sharkman": "asset_J9CovJn49dJCKMm9WqSRR61N",
+          "pearlPriestess": "asset_uWfrHPwYUDHejKxaJUFk6hD9",
+          "reefGolem": "asset_DypEoQ3ohNR6Y9AxhhRnndvE"
+        }
+      },
+      "prompt": {
+        "atak (wzór, broń drzewcowa)": "Side view, locked static camera. The <opis> stands facing right, holding <broń>. Both of his feet stay planted on exactly the same spot for the whole clip: he takes no step. Right away he lowers the <broń> level, pulls it back, then reaches it straight forward toward the right in one long, quick, energetic motion at chest height, ... then he pulls the <broń> back and returns to the upright standing pose. He is alone in the picture. Fast, energetic, aggressive motion. Plain solid blue background stays unchanged, no camera movement.",
+        "atak (zamach)": "... lifts the <broń> high over his shoulder, then swings it forward in a fast, powerful overhead arc toward the right; the swing stops ... in the air in front of his chest, at the height of his shoulders. The <broń> never goes down to the ground. ...",
+        "atak (kleszcze)": "... swings it forward ..., snapping the pincer shut in the air in front of its chest ...",
+        "smierc": "... He lets go of <przedmioty>, and they fall to the ground beside him. He sways, his knees bend, he leans forward more and more and falls full length onto the ground face down, his head toward the right, then lies completely still, as if fast asleep. He never sits down. ... (Syrena, Mors: '... leans forward more and more with straight legs, like a cut tree, and falls full length ... never sits down, never kneels and never lies on his back')",
+        "smierc golema": "It stops working and comes apart: pieces of coral and stones loosen and fall away from its arms and shoulders, its knees bend, it leans forward more and more and falls full length onto the ground face down ... a broken heap of coral and stone. It never sits down."
+      }
     }
   ]
 }
