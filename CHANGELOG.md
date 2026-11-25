@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Osada Stad: Karczma trochę niżej i w prawo.
 - Osada Hordy: Wielka kuźnia odsunięta od Popielnej Jamy, Karczma trochę wyżej.
 - Osady: mury i fosa ciągną się przez całą szerokość osady; budynki Przymierza, Stad, Hordy, Klanu i Przypływów przestawione według uwag autora (m.in. nic nie stoi na skałach, siedliska nie chowają się za murem).
 - Strojenie poziomów: zastępca za poległego bohatera Przymierza jest dźwignią wyłącznie poziomu Łatwego.
