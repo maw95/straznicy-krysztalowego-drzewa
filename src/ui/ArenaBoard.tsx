@@ -25,6 +25,8 @@ import type { Deployment } from './useDeployment';
  *  each other (doubled, overlapping edges). One even gold grid on top covers them. */
 /** Units whose ranged attack is an arrow, not a ball of energy (the rest of the ranged ones are magic users). */
 const ARROW_SHOOTERS = new Set(['centaur']);
+/** The sea casters of the Tides throw a ball of sea water (the author, 25.11: a spell flying at the enemy instead of a splash in the clip). */
+const WATER_CASTERS = new Set(['sirenSinger', 'seaWitch']);
 
 const GoldGrid = memo(function GoldGrid({ cells, points, wide }: { cells: readonly HexKey[]; points: Map<HexKey, string>; wide: boolean }) {
   // The digital arena has no painted grid: a quiet one is drawn over the plain picture.
@@ -534,7 +536,7 @@ export function ArenaBoard(p: Props) {
               return (
                 <div
                   key={st.key}
-                  className={st.attacker === 'cyclops' ? 'projectile boulder' : ARROW_SHOOTERS.has(b.units[st.attacker]?.defId ?? st.attacker) ? 'projectile arrow' : 'projectile'}
+                  className={st.attacker === 'cyclops' ? 'projectile boulder' : ARROW_SHOOTERS.has(b.units[st.attacker]?.defId ?? st.attacker) ? 'projectile arrow' : WATER_CASTERS.has(b.units[st.attacker]?.defId ?? st.attacker) ? 'projectile water' : 'projectile'}
                   style={{ left: a.x + W / 2 - 7, top: a.y + H / 2 - 20, ['--px' as string]: `${t.x - a.x}px`, ['--py' as string]: `${t.y - a.y}px`, ['--ang' as string]: `${Math.atan2(t.y - a.y, t.x - a.x)}rad` } as React.CSSProperties}
                 />
               );

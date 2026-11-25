@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Bractwo Przypływu: nowe kadry portretów (Syrena, Wąż Morski, Sefiran, Trytoński Harpunnik, Krabolud, Ośmiornica, Rekinołak, Kapłanka Pereł, Homar Pancerny); Syrena i Morska Wiedźma rzucają w przeciwnika kulę morskiej wody zamiast pluskać wodą; trafienia Syreny, Trytońskiego Strażnika, Żółwia, Żabiego Skoczka, Kraboluda, Kapłanki Pereł i Morskiej Wiedźmy to płynne odchylenie od ciosu; wolniejszy chód Homara Pancernego.
 - Poziomy trudności: dwie nowe dźwignie dla poziomu Łatwego – Horda może walczyć bez cyfrowej premii wyrównującej, a w celu Kryształy (w ostateczności) Drzewu wystarczy oddać o jeden kryształ mniej. Strojenie z ich użyciem jeszcze trwa.
 - Osada Stad: Karczma trochę niżej i w prawo.
 - Osada Hordy: Wielka kuźnia odsunięta od Popielnej Jamy, Karczma trochę wyżej.

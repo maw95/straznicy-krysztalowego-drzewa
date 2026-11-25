@@ -10420,6 +10420,30 @@
         "tides_walls1": "A long, straight defensive moat of a coastal town of sea folk, running from the far left edge to the far right edge of the picture, as the entrance of the town: a narrow ditch lined with pale sandstone encrusted with coral, its bottom full of sharpened wooden stakes pointing up, and in the exact middle a short sturdy bridge across it with a small post on each side. No wall and no towers. Game building sprite for a fantasy strategy game town screen, painterly detailed realistic rendering, slightly vivid colours, palette of pale sand, coral pink, pearl white, sea green and warm sunset light. It is a thin horizontal strip, about six times wider than it is high, filling the whole width of the picture, seen from the front and slightly above at a high three-quarter angle. Only a thin strip of wet sand directly under it. Transparent background, no sky, no landscape around it, no characters, no text.",
         "tides_walls2": "A long, straight fortress wall of a coastal town of sea folk, running from the far left edge to the far right edge of the picture, as the entrance of the town. The wall is low and wide: pale sandstone encrusted with coral, seashells and mother of pearl, green seaweed banners, a walkway with battlements on top, a small turret at each end, and in the exact middle a big gatehouse with a massive gate standing open and two short towers beside it. Game building sprite for a fantasy strategy game town screen, painterly detailed realistic rendering, slightly vivid colours, palette of pale sand, coral pink, pearl white, sea green and warm sunset light. It is a thin horizontal strip, about six times wider than it is high, filling the whole width of the picture, seen from the front and slightly above at a high three-quarter angle. Only a thin strip of wet sand directly under it. Transparent background, no sky, no landscape around it, no characters, no text."
       }
+    },
+    {
+      "narzedzie": "skrypty (Pillow)",
+      "model": "-",
+      "data": "2026-11-25",
+      "ai": false,
+      "licencja": "własna obróbka wcześniejszych grafik",
+      "id": "tides/poprawki-2511-bez-kredytow",
+      "typ": "Przypływy, uwagi autora 25.11: kadry portretów, plusk wody z ataku Syreny i Wiedźmy",
+      "pliki": [
+        "public/assets/cards/portraits/sirenSinger.jpg",
+        "public/assets/cards/portraits/seaSerpent.jpg",
+        "public/assets/cards/portraits/sefiran.jpg",
+        "public/assets/cards/portraits/tritonHarpoon.jpg",
+        "public/assets/cards/portraits/crabShield.jpg",
+        "public/assets/cards/portraits/inkOctopus.jpg",
+        "public/assets/cards/portraits/sharkman.jpg",
+        "public/assets/cards/portraits/pearlPriestess.jpg",
+        "public/assets/cards/portraits/lobsterKnight.jpg",
+        "public/assets/jednostki/syrena_piesniarka/atak.webp",
+        "public/assets/jednostki/morska_wiedzma/atak.webp"
+      ],
+      "opis": "Portrety wycięte na nowo z ilustracji kart (kadry w scripts/assets/card_crops.py MANUAL i src/ui/cardCrops.ts); Trytoński Harpunnik z próbki G3 (.tmp/zrodla/g3-probki-t1/tritonHarpoon.png). Plusk usunięty przez scripts/assets/tides_splash_fix.py; zaklęcie leci jako pocisk (.projectile.water w styles.css). Stare pliki: .tmp/zrodla/portrety_tides_stare, .tmp/zrodla/tides_poprawki/backup.",
+      "prompt": "-"
     }
   ]
 }

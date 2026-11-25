@@ -14,6 +14,15 @@ SMALL = 96  # height of the art copy used for matching
 # re-run this script (and fill this table) when their real art arrives.
 MANUAL = {
     'hedgehog': (.68, .55, .86), 'shadowWyvern': (.62, .5, .9), 'silverFox': (.6, .5, .88),
+    # Tides portraits re-framed by hand on 25.11 (the author: closer, centred); portraits cut from the art with these boxes.
+    'sirenSinger': (0.45, 0.3, 0.552),
+    'seaSerpent': (0.53, 0.4, 0.65),
+    'sefiran': (0.44, 0.55, 0.42),
+    'crabShield': (0.47, 0.37, 0.56),
+    'inkOctopus': (0.48, 0.47, 0.42),
+    'sharkman': (0.42, 0.28, 0.46),
+    'pearlPriestess': (0.43, 0.245, 0.45),
+    'lobsterKnight': (0.41, 0.3, 0.58),
 }
 MAX_ERR = 33  # mean abs difference (0-255) above which a match is not trusted (correct matches of re-graded portraits reach ~30)
 

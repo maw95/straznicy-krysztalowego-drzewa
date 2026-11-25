@@ -247,6 +247,21 @@ html[data-faction='tides'] .prim:not(.r):not(.b) { background-image: url('/asset
   88% { opacity: 1; }
   100% { transform: translate(var(--px), var(--py)) rotate(var(--ang)); opacity: 0; }
 }
+/* A ball of sea water (Siren, Sea Witch): a swirling sea-green orb with a foam rim and a short trail of droplets, a little bigger than the golden shot. */
+.projectile.water {
+  width: 30px; height: 30px; margin: -8px 0 0 -8px;
+  background:
+    radial-gradient(circle at 35% 30%, #ffffff 0 12%, rgba(255, 255, 255, 0) 22%),
+    conic-gradient(from 0deg, #1f8f7a, #7fe0c4, #2aa58a, #c8fff0, #1f8f7a);
+  box-shadow: 0 0 10px 3px rgba(120, 230, 200, 0.75), -10px 2px 0 -6px rgba(200, 255, 240, 0.9), -18px -3px 0 -8px rgba(160, 240, 215, 0.8), -26px 4px 0 -9px rgba(140, 225, 200, 0.6);
+  animation: fly-water 0.5s ease-in both;
+}
+@keyframes fly-water {
+  0% { transform: translate(0, 0) rotate(var(--ang)) scale(0.4); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translate(var(--px), var(--py)) rotate(var(--ang)) scale(1.1); opacity: 0; }
+}
 /* The Cyclops hurls a boulder: it leaves his hands when the throw of the attack clip lets go (sprites.ts: clip speed 2.2), flies in an arc and spins. */
 .projectile.boulder {
   width: 46px; height: 46px; margin: -62px 0 0 -16px; border-radius: 0; box-shadow: none; opacity: 0;
