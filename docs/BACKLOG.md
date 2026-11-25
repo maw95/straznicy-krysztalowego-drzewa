@@ -66,6 +66,11 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Zrobione 24.11: p
   - **Kozioł Taranowy:** atak bardziej dynamiczny i agresywny; trafienie nienaturalne.
 
 
+**87. Uwagi autora do Żelaznego Klanu z 25.11 (zrobione 25.11, czeka na przegląd autora na `make podglad F=clans`; 129 CU: 117 na klipy, 12 na tła).** Bez kredytów: trafienia ośmiu jednostek (Tan, Matka Run, Kret, Niedźwiedź, Wartownik, Pogromca, Gwardia, Kowal) rysuje kod jako odchylenie od ciosu z przodu (`recoil` w `sprites.ts`), bo klipy trafień z modelu się deformowały; wolniejsza śmierć Tarczownika i trafienie Skarbnika, szybsza śmierć Kowala; biały błysk i pył z ataku Gwardii usunięte (`scripts/assets/clans_dust_fix.py`); tarcza Kusznika przewraca się obrotem (`clans_shield_fall.py`). Nowe klipy: atak Tana i Górmistrza (cios przed siebie), atak Pogromcy (samo pchnięcie), śmierć Tana, Pogromcy, Gwardii, Wartownika (upadek do końca), atak Kreta (bez glitchy, wypady w kodzie: `lunge`). **Otwarte:**
+  - **Wojownik Klanu:** trzy próby modelu nie dały dwóch ciosów różnymi toporami (robi jeden zamach albo unosi oba naraz); w grze został klip z 24.11. Do decyzji autora: (a) zostawić, (b) jeden mocny, szybki cios jednym toporem (gotowy klip `.tmp/zrodla/poprawki_2511/clanWarrior/atak.mp4`, 0 CU), (c) nowy pomysł na prompt.
+  - **Śmierć Pogromcy** kończy się zwinięciem twarzą do ziemi (lepiej niż czworaki z 24.11, ale może nadal wyglądać jak klęczenie).
+  - **Tło osady:** trzy propozycje w `.tmp/zrodla/clans_land3/` (`zrzut_1_dolina.jpg`, `zrzut_2_grota.jpg`, `zrzut_3_kamieniolom.jpg`, każde z pełną zabudową; podgląd jakości medium, 3 CU każde). Po wyborze: wstawić do `public/assets/osady/land_clans.jpg` (1280x600, jakość 86), ewentualnie wersja high z wybranym jako odniesieniem (ok. 12 CU) i ewentualnie większe budynki tylko dla Klanu (mnożnik `h` w `spotOf`).
+
 ### Starsze punkty
 
 **51b. Potyczka zamiast Rywalizacji i Kooperacji w wersji cyfrowej (20.11, decyzja autora; wersja planszowa nietknięta, zostaje z Kooperacją i automatem).**
