@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Strojenie poziomów: zastępca za poległego bohatera Przymierza jest dźwignią wyłącznie poziomu Łatwego.": "Level tuning: a replacement for a fallen hero of the Przymierze is a lever of the Easy level only.",
   "Stroiciel poziomów trudności: usunięte martwe szczeble, nowe dźwignie (Przetrwanie, Boss, doświadczenie, zapasowy bohater) szukane drobnymi krokami i sprawdzanie wyników na innych losowaniach; nic jeszcze nie przestrojono.": "Difficulty tuner: dead rungs removed, new levers (Survival, Boss, experience, reserve hero) searched in fine steps and results checked on other random draws; nothing is retuned yet.",
   "Poziomy trudności w Potyczce da się teraz stroić dokładniej: nowe, drobniejsze pokrętła (długość Przetrwania, życie Bossa, doświadczenie startowe i zapasowy bohater Przymierza); nic jeszcze nie przestrojono, więc gra gra tak jak dotąd.": "The difficulty levels of Skirmish can now be tuned more finely: new, finer controls (the length of Survival, the Boss's life, starting experience and a reserve hero for the Przymierza); nothing is retuned yet, so the game plays as before.",
   "Osady: Fosa i Mury z wieżyczkami to teraz szeroki pas przy wejściu do osady, przed wszystkimi budynkami (nowe obrazki dla pięciu frakcji).": "Settlements: the Moat and the Walls with turrets are now a wide strip at the entrance of the settlement, in front of all the buildings (new pictures for five factions).",

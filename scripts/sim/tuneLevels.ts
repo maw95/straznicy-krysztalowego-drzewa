@@ -93,6 +93,8 @@ const status = (c: Cell, r: number) => (!inBand(c, r) ? 'OUT' : dist(c, r) ? 'ed
 
 function entryOf(c: Cell, cfg: Config) {
   const patch = { ...(cfg.step > 0 ? UP[cfg.step - 1] : cfg.step < 0 ? DOWN[-cfg.step - 1](c.table.startsWith('coop')) : {}), ...finePatch(cfg.fine) };
+  // The reserve hero is the Easy level's alone (the author, 25.11): on Normal and Hard the rung keeps only its treasures and experience.
+  if (LEVEL[c.option] !== 'kids') delete (patch as Patch).dawnHeroReplacement;
   return {
     objective,
     level: LEVEL[c.option],
