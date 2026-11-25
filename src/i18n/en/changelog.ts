@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Osada Hordy: Wielka kuźnia odsunięta od Popielnej Jamy, Karczma trochę wyżej.": "Horde settlement: the Great Forge moved away from the Ash Pit, the Tavern a little higher.",
   "Osady: mury i fosa ciągną się przez całą szerokość osady; budynki Przymierza, Stad, Hordy, Klanu i Przypływów przestawione według uwag autora (m.in. nic nie stoi na skałach, siedliska nie chowają się za murem).": "Settlements: the walls and the moat run across the whole width of the settlement; the buildings of the Przymierze, the Herds, the Horde, the Clan and the Tides rearranged after the author's notes (among others nothing stands on rocks, no dwelling hides behind the wall).",
   "Strojenie poziomów: zastępca za poległego bohatera Przymierza jest dźwignią wyłącznie poziomu Łatwego.": "Level tuning: a replacement for a fallen hero of the Przymierze is a lever of the Easy level only.",
   "Stroiciel poziomów trudności: usunięte martwe szczeble, nowe dźwignie (Przetrwanie, Boss, doświadczenie, zapasowy bohater) szukane drobnymi krokami i sprawdzanie wyników na innych losowaniach; nic jeszcze nie przestrojono.": "Difficulty tuner: dead rungs removed, new levers (Survival, Boss, experience, reserve hero) searched in fine steps and results checked on other random draws; nothing is retuned yet.",
