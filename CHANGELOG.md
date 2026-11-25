@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Osady: mury i fosa ciągną się przez całą szerokość osady; budynki Przymierza, Stad, Hordy, Klanu i Przypływów przestawione według uwag autora (m.in. nic nie stoi na skałach, siedliska nie chowają się za murem).
 - Strojenie poziomów: zastępca za poległego bohatera Przymierza jest dźwignią wyłącznie poziomu Łatwego.
 - Stroiciel poziomów trudności: usunięte martwe szczeble, nowe dźwignie (Przetrwanie, Boss, doświadczenie, zapasowy bohater) szukane drobnymi krokami i sprawdzanie wyników na innych losowaniach; nic jeszcze nie przestrojono.
 - Poziomy trudności w Potyczce da się teraz stroić dokładniej: nowe, drobniejsze pokrętła (długość Przetrwania, życie Bossa, doświadczenie startowe i zapasowy bohater Przymierza); nic jeszcze nie przestrojono, więc gra gra tak jak dotąd.
