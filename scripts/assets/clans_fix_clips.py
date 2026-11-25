@@ -1,5 +1,6 @@
 """Replace single clips of an Iron Clan unit without repacking the others (backlog 86).
-Usage: python3 scripts/assets/clans_fix_clips.py <unit folder> <clip>=<mp4> [...]      (MARTWY=1: also martwy.webp from the last frame of smierc)
+Usage: python3 scripts/assets/clans_fix_clips.py <unit folder> <clip>=<mp4> [...]      (MARTWY=1: also martwy.webp from the last frame of smierc;
+CUT_RIGHT=0.8: erase everything right of 80% of the source frame)
 Keys the blue background, cleans the fringe, cuts with the crop box of the existing anim.json (all clips stay aligned), despills,
 shrinks by the scale and step of anim.json, writes the sheet and updates the clip frame count. Needs Pillow; ffmpeg path in .tmp/ffpath."""
 import glob, json, math, os, subprocess, sys, tempfile
@@ -31,6 +32,11 @@ nw, nh = meta['frame']; step = meta['step']; scale = meta['scale']; cols = meta[
 for spec in sys.argv[2:]:
     name, mp4 = spec.split('=')
     fs = [despill(f) for f in frames(mp4, meta['source_frame'], meta['crop'])]
+    cut = float(os.environ.get('CUT_RIGHT', '0'))  # erase everything right of this share of the source frame (a stray figure the model added)
+    if cut:
+        edge = round(meta['source_frame'] * cut) - meta['crop'][0]
+        for f in fs:
+            f.paste((0, 0, 0, 0), (max(0, edge), 0, f.width, f.height))
     n = len(fs)
     keep = list(range(0, n, step))
     if keep[-1] != n - 1:

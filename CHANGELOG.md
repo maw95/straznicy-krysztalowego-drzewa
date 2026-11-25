@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Żelazny Klan: nowe animacje – Tan i Stary Górmistrz uderzają przed siebie (nie w ziemię), Pogromca Olbrzymów robi samo pchnięcie włócznią bez kroków, a Tan, Pogromca, Gwardia Młota i Wartownik z Brązu przy śmierci padają na ziemię do końca.
 - Kusznik Gór: przy śmierci jego tarcza przechyla się i pada płasko na ziemię obok niego.
 - Gwardia Młota: z ataku zniknął biały błysk na młocie i pył po uderzeniu.
 - Żelazny Klan: trafienia Tana, Matki Run, Kreta z Brązu, Niedźwiedzia w Zbroi, Wartownika, Pogromcy Olbrzymów, Gwardii Młota i Kowala Bitewnego to teraz płynne odchylenie od ciosu z przodu i powrót do postawy (bez drgającej, migoczącej sylwetki); wolniejsza śmierć Tarczownika i trafienie Skarbnika, szybsza śmierć Kowala.

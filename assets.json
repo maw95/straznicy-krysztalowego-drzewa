@@ -10241,6 +10241,63 @@
       "data": "2026-11-24",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "narzedzie": "Scenario",
+      "model": "model_pruna-p-video-2 (draft, 720p, 24 fps, 3 s, saveAudio false, promptUpsampling false); obraz startowy = stoi.webp na niebieskim tle; wklejone do arkusza scripts/assets/clans_fix_clips.py",
+      "data": "2026-11-25",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "id": "clans/poprawki-2511-klipy",
+      "typ": "poprawione klipy animacji Żelaznego Klanu (uwagi autora 25.11)",
+      "pliki": [
+        "public/assets/jednostki/tan_zelaznobrody/atak.webp",
+        "public/assets/jednostki/tan_zelaznobrody/smierc.webp",
+        "public/assets/jednostki/tan_zelaznobrody/martwy.webp",
+        "public/assets/jednostki/stary_gormistrz/*.webp",
+        "public/assets/jednostki/stary_gormistrz/anim.json",
+        "public/assets/jednostki/pogromca_olbrzymow/atak.webp",
+        "public/assets/jednostki/pogromca_olbrzymow/smierc.webp",
+        "public/assets/jednostki/pogromca_olbrzymow/martwy.webp",
+        "public/assets/jednostki/gwardia_mlota/smierc.webp",
+        "public/assets/jednostki/gwardia_mlota/martwy.webp",
+        "public/assets/jednostki/wartownik_z_brazu/smierc.webp",
+        "public/assets/jednostki/wartownik_z_brazu/martwy.webp"
+      ],
+      "opis": "Tan: atak (zamach i cios młotem na wysokości piersi; model dorysował przeciwnika przy prawej krawędzi, wycięty CUT_RIGHT=0.8), śmierć (upadek twarzą do ziemi). Stary Górmistrz: atak (zamach kilofem przed siebie; kadr wszystkich arkuszy powiększony od góry scripts/assets/grow_frame.py). Pogromca Olbrzymów: atak (samo pchnięcie włócznią, stopy w miejscu), śmierć (upadek twarzą do ziemi). Gwardia Młota i Wartownik z Brązu: śmierć z upadkiem do końca. martwy = ostatnia klatka klipu śmierci.",
+      "scenario_asset": {
+        "ironThane_atak": "asset_ZpEF1TbtSmAYPnoTTqBhgzk9",
+        "ironThane_smierc": "asset_dwo3onCuLQPvq5fRQ2RN7b5p",
+        "oldMiner_atak": "asset_MAP4TF4jbBt31v2n9WQWPSXA",
+        "giantSlayer_atak": "asset_dQk4L3awdQ79e1HqiUj5vaq4",
+        "giantSlayer_smierc": "asset_yK7iJg29w6JkNnMDzCPePWea",
+        "hammerGuard_smierc": "asset_64eXx53wWY68yEHTpHQo4N2v",
+        "bronzeSentinel_smierc": "asset_GoBGeudtd52ZZnB4oknQgdL4"
+      },
+      "prompt": {
+        "ironThane_atak": "Side view, locked static camera. The armored dwarf thane stands facing right, a war hammer in his hand and a round shield on his other arm. He raises the war hammer high above his head, then swings it forward in a fast, powerful overhead arc toward an enemy standing right in front of him; the swing stops with the hammer head in the air in front of his chest, at the height of his shoulders. The hammer never goes down to the ground. His whole body leans into the swing, then he pulls the hammer back and returns to the standing pose. His feet stay on the same spot, he does not walk. Fast, energetic, aggressive motion. Plain solid blue background stays unchanged, no camera movement.",
+        "ironThane_smierc": "Side view, locked static camera. The armored dwarf thane stands facing right. He lets go of his war hammer and his round shield, and they fall to the ground beside him. He sways, his knees bend, he leans forward more and more and falls full length onto the ground face down, his head toward the right, then lies completely still, as if fast asleep. He never sits down. His body keeps the same shape and size the whole time. Plain solid blue background stays unchanged, no camera movement.",
+        "oldMiner_atak": "Side view, locked static camera. The old dwarf miner stands facing right holding his pickaxe with both hands. He lifts the pickaxe high over his shoulder, then swings it forward in a fast, powerful overhead arc toward the right; the swing stops with the pick head in the air in front of his chest, at the height of his shoulders. The pickaxe never goes down to the ground. His whole body leans into the swing, then he pulls the pickaxe back and returns to the standing pose. His feet stay on the same spot, he does not walk. He is alone in the picture. Fast, energetic, aggressive motion. Plain solid blue background stays unchanged, no camera movement.",
+        "giantSlayer_atak": "Side view, locked static camera. The dwarf warrior in a fur cloak stands facing right holding a long spear upright. Both of his feet stay planted on exactly the same spot for the whole clip: he takes no step and does not move across the picture. He lowers the spear level with both hands and pulls it back, then reaches it straight forward toward the right in one long, quick, energetic motion at chest height, his arms extending fully and his upper body leaning forward, then he pulls the spear back and returns to the upright standing pose with the spear upright. He is alone in the picture. Plain solid blue background stays unchanged, no camera movement.",
+        "giantSlayer_smierc": "(jak ironThane_smierc, z włócznią: He lets go of the spear ... does not stay on his hands and knees.)",
+        "hammerGuard_smierc": "(jak ironThane_smierc, z dwuręcznym młotem bojowym, 'in one quick motion')",
+        "bronzeSentinel_smierc": "Side view, locked static camera. The tall bronze armored automaton sentinel stands facing right with its big spiked shield. The glow in its eyes fades and it stops working: it lets go of the spiked shield, which falls flat on the ground beside it, a few bronze plates and gears loosen and fall away, its knees bend, it leans forward more and more and falls full length onto the ground face down, lying completely flat and stretched out with its head toward the right, then lies completely still. It does not sit and does not stay half lying. Plain solid blue background stays unchanged, no camera movement."
+      }
+    },
+    {
+      "narzedzie": "Scenario",
+      "model": "model_pruna-p-video-2 (draft, 720p, 24 fps, 3 s, saveAudio false, promptUpsampling false); obraz startowy = stoi.webp na niebieskim tle; wklejone do arkusza scripts/assets/clans_fix_clips.py",
+      "data": "2026-11-25",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "id": "clans/poprawki-2511-kret",
+      "typ": "atak Kreta z Brązu (uwagi autora 25.11)",
+      "pliki": [
+        "public/assets/jednostki/kret_z_brazu/atak.webp"
+      ],
+      "opis": "Nowy klip bez deformacji (wiertło się kręci); dwa wypady do przodu dodaje kod (SpriteSpec.lunge).",
+      "scenario_asset": "asset_y7DqRJ5mA6RnWN1AV4mGRazr",
+      "prompt": "Side view, locked static camera. The bronze mechanical mole machine stands facing right on its metal legs, a long conical drill on its nose. The drill starts spinning fast, the machine pulls its body back a little, then jabs the spinning drill forward toward the right two times in quick succession, its body rocking forward and back on the same spot, then it settles back into the standing pose and the drill stops. Its legs stay on the same spot, it does not walk. It is a rigid metal machine and keeps exactly the same shape, size and parts the whole time. It is alone in the picture. Plain solid blue background stays unchanged, no camera movement."
     }
   ]
 }
