@@ -26,5 +26,5 @@ ale maść, oczy i budowa mają zostać rozpoznawalne.
   po bokach mniejsze ciemne plamki; od szyi plamy zlewają się w paski. Łuski gładkie, połyskliwe, drobny wzór „siatki”.
 - **Głowa:** jasnoszara z ciemnymi pasami: ciemna opaska przez czoło i ukośne pasy od oka ku kącikom pyska (typowy rysunek „strzały” zbożowca), pysk jaśniejszy, oko
   ciemne. Wyraz płochliwy, ciekawy, przyjazny.
-- **Budowa:** smukły, młody, niewielki. W grafice: mały, szary, w plamy (żeby się odróżniał od olbrzymiego Węża Morskiego); wylinka (zrzucona skóra) może być
+- **Budowa:** smukły, młody, niewielki. W grafice: mały, szary, w plamy (żeby się odróżniał od olbrzymiego Koralowego Żmija); wylinka (zrzucona skóra) może być
   rekwizytem zdolności Wylinka.

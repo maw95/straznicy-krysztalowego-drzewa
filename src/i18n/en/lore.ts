@@ -134,8 +134,8 @@ register({
     "The Triton King comes ashore with the flood tide, trident in hand and a coral crown on his head. When he strikes the ground with it, a wave pushes the enemies back and his people stand behind it as behind a wall.",
   "Syrena Pieśniarka śpiewa tak pięknie, że wrogowie sami podchodzą bliżej, żeby lepiej słyszeć. Zwykle żałują tego jeszcze przed ostatnią zwrotką.":
     "The Siren Singer sings so beautifully that enemies come closer of their own accord to hear her better. They usually regret it before the last verse.",
-  "Wąż Morski śpi w głębinach i budzi się tylko wtedy, gdy Bractwo zadmie w wielką muszlę. Owija się wokół wroga tak czule, że ten nie może zrobić ani kroku.":
-    "The Sea Serpent sleeps in the depths and wakes only when the Brotherhood blows the great conch. It coils around an enemy so tenderly that the poor thing cannot take a single step.",
+  "Koralowy Żmij śpi w głębinach i budzi się tylko wtedy, gdy Bractwo zadmie w wielką muszlę. Owija się wokół wroga tak czule, że ten nie może zrobić ani kroku.":
+    "The Coral Wyrm sleeps in the depths and wakes only when the Brotherhood blows the great conch. It coils around an enemy so tenderly that the poor thing cannot take a single step.",
   "Stary Mors Kapitan pływał po wszystkich morzach i z każdego przywiózł co najmniej jedną bliznę i trzy opowieści. Kogo dźgnie kłem, ten odlatuje na bok, zanim zdąży się przedstawić.":
     "The Old Walrus Captain has sailed every sea and brought back at least one scar and three stories from each. Whoever he jabs with a tusk is sent flying aside before they can introduce themselves.",
   "Trytoński Strażnik nosi tarczę z muszli wielkiego ślimaka morskiego i strzeże przejść na rafie. Fale go nie przewracają, a wrogowie próbują znacznie rzadziej niż fale.":

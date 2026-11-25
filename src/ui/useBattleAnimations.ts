@@ -175,7 +175,7 @@ export function useBattleAnimations(state: GameState) {
     // A wave where two units traded places (Przypływ, Odpływ, Wir).
     const swappedNow = swaps > tideSwapsSeen.current || newSeals.some((x) => x.ability === 'ebbTide' || x.ability === 'whirl');
     if (swappedNow) for (const m of moved.filter((x) => told(x.u, 'miejscami'))) addFx('tides_wave', m.u.pos);
-    // A rope from the shooter (or the Wąż Morski) to where the pulled enemy stood.
+    // A rope from the shooter (or the Koralowy Żmij) to where the pulled enemy stood.
     for (const sl of newSeals.filter((x) => x.ability === 'harpoon' || x.ability === 'deepCoil')) {
       const puller = Object.values(b.units).find((x) => x.pos === sl.pos);
       for (const m of moved.filter((x) => puller && x.u.side !== puller.side && told(x.u, 'przyciągnięty'))) addFx('tides_rope', sl.pos, m.from);

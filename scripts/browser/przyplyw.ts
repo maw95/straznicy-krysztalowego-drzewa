@@ -141,7 +141,7 @@ if (want('3')) {
     let found = false;
     for (let i = 0; i < 60 && !found; i++) {
       await p.waitForTimeout(2000);
-      found = (await p.locator('.arena-frame').count()) > 0 && (await p.getByText(/Król Trytonów|Syrena Pieśniarka|Wąż Morski|Żółw Skorupiak|Trytoński Harpunnik|Żabi Skoczek/).count()) > 0;
+      found = (await p.locator('.arena-frame').count()) > 0 && (await p.getByText(/Król Trytonów|Syrena Pieśniarka|Koralowy Żmij|Żółw Skorupiak|Trytoński Harpunnik|Żabi Skoczek/).count()) > 0;
     }
     console.log('battle with the Tides seen:', found);
     await p.screenshot({ path: `.tmp/przyplyw-boty-${view}.png` });

@@ -73,7 +73,7 @@ Ryzyko: W = wysokie (wygląd może się mylić na ekranie), Ś = średnie, N = n
 | Ś | „Pusta zbroja / posąg” | Nawiedzona Zbroja (Umarli), Wartownik z Brązu (Klany), Rycerz Lodowej Zbroi (Szron), Kamienny Strażnik Grobowca (Piaski), Rafowy Golem (Przypływy), Rycerz Lodowej Gwardii (dowódca Szronu) | pięć „stojących strażników”: różne materiały (kość, brąz, lód, kamień, koral) i różne sylwetki (kopia, tarcza, młot, laska) |
 | Ś | Grzyby w Roju | Śniący Muchomor (bohater), Muchomor Gwardzista, Matka Grzybni, Grzybowy Wróżbita, Purchawka | pięć grzybów: Purchawka mała okrągła, Muchomor w tarczy z kapelusza, Matka Grzybni welon; zmienić Grzybowego Wróżbitę na Pszczelego Mędrca |
 | Ś | Skorupiaki w Przypływach | Krabolud Tarczownik, Homar Pancerny (oba pancerne rycerze), Żółw Skorupiak | Homar Pancerny → Langusta Korsarz lub Krewetka Strzelec |
-| Ś | Węże | Wąż Morski (bohater), Sefiran Plamisty (wąż zbożowy, dowódca, autor), Kobra Królewska (Piaski) | Sefiran mały, szary, w plamy; Wąż Morski olbrzymi; ok |
+| Ś | Węże | Koralowy Żmij (bohater), Sefiran Plamisty (wąż zbożowy, dowódca, autor), Kobra Królewska (Piaski) | Sefiran mały, szary, w plamy; Koralowy Żmij olbrzymi; ok |
 | N | Wilki i psy | Władca Wilkołaków, Piekielny Ogar (Horda), Srebrna Wilczyca (Przymierze), Szakalogłowy Strażnik (Piaski) | rozróżnia paleta |
 | N | Olbrzymi i trolle | Ogr Żelazna Pięść, Troll Jaskiniowy (Horda), Młody Olbrzym i Olbrzym Gradu (Szron), Wij (Umarli) | rozróżnia paleta i rekwizyt |
 | N | Duże ptaki | Sowa Świtu (Przymierze), Kruk Wieszczek (Kompanie), Ptak Rok (Piaski), Łamignat/Orzeł (jeśli dodane w Stadach i Kompaniach) | nie dodawać za dużo orłów |

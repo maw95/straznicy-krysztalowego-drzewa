@@ -81,7 +81,7 @@ omijania strażników, zbiera skrzynie. **Nie wolno mu:** znać pułapek i mira�
 - **Nazwa frakcji:** Zbójnickie Bractwo (bardziej swojsko).
 
 ## Rozstrzygnięcia autora (19–20.11)
-- Zwierzaki autora jako **dowódcy z karczmy**: **Żbiczka Bajdurka** (łowca, Kompanie, Szalony Skok), **Bastia Cienista** (wojownik, Piaski, Czujna Drzemka), **Sefiran Plamisty** (mędrzec, Przypływy, Wylinka). Odróżnienie Sefirana od Węża Morskiego: mały, szary, w plamy.
+- Zwierzaki autora jako **dowódcy z karczmy**: **Żbiczka Bajdurka** (łowca, Kompanie, Szalony Skok), **Bastia Cienista** (wojownik, Piaski, Czujna Drzemka), **Sefiran Plamisty** (mędrzec, Przypływy, Wylinka). Odróżnienie Sefirana od Koralowego Żmija: mały, szary, w plamy.
 - Kompanie: jedna ropucha (Hakownik); Tchórz Smrodnik (3A) i Zajęczyca Zielarka (dowódca). Gronostaj jest w Szronie, więc odpadł.
 
 ## Grafika (wypełnia Claude od G4)

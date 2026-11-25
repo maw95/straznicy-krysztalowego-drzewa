@@ -78,7 +78,7 @@ Rozstawia miraże przy najcenniejszych jednostkach, zasadza Królową przy strze
 - **Budynek:** Wielki Bazar (zamiast Szlaku Karawan) — dodatkowe miejsce na artefakt w ofercie Targu.
 
 ## Rozstrzygnięcia autora (19–20.11)
-- Zwierzaki autora jako **dowódcy z karczmy**: **Żbiczka Bajdurka** (łowca, Kompanie, Szalony Skok), **Bastia Cienista** (wojownik, Piaski, Czujna Drzemka), **Sefiran Plamisty** (mędrzec, Przypływy, Wylinka). Odróżnienie Sefirana od Węża Morskiego: mały, szary, w plamy.
+- Zwierzaki autora jako **dowódcy z karczmy**: **Żbiczka Bajdurka** (łowca, Kompanie, Szalony Skok), **Bastia Cienista** (wojownik, Piaski, Czujna Drzemka), **Sefiran Plamisty** (mędrzec, Przypływy, Wylinka). Odróżnienie Sefirana od Koralowego Żmija: mały, szary, w plamy.
 - Piaski (przegląd autora 20.11): Mangusta Faraona (tier 1, Odporność na Jad), Skorpion Piaskowy na 2A, Krokodyl Oazowy zamiast Olbrzymiego Skorpiona, bez Łucznika na Wielbłądzie i bez Hieny; wielbłąd tylko u Wielbłądziego Księcia.
 
 ## Stan G1 (20.11.2026, praca w gałęzi `g1-four-factions`)

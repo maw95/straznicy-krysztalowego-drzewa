@@ -12,7 +12,7 @@ register({
   // heroes, commanders, the fourth hero
   'Król Trytonów': 'Triton King',
   'Syrena Pieśniarka': 'Siren Singer',
-  'Wąż Morski': 'Sea Serpent',
+  'Koralowy Żmij': 'Coral Wyrm',
   'Stary Mors Kapitan': 'Old Walrus Captain',
   'Trytoński Strażnik': 'Triton Guard',
   'Harpunniczka': 'Harpooneer',

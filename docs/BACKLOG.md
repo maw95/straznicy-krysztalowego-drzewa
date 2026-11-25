@@ -41,7 +41,7 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Zrobione 24.11: p
 
 **88. Uwagi autora do Bractwa Przypływu z 25.11 (zrobione 25.11, do przeglądu na `make podglad F=tides`; ok. 334 CU).** Bez kredytów: kadry 9 portretów, plusk wody usunięty z ataku Syreny i Wiedźmy (`scripts/assets/tides_splash_fix.py`) plus pocisk z kuli wody (`.projectile.water`), trafienia w kodzie (`recoil`: Syrena, Strażnik, Żółw, Żabi Skoczek, Krabolud, Kapłanka, Wiedźma, Albatros, Lewiatan), wolniejszy chód Homara. Nowe klipy: 11 ataków, 9 śmierci, Albatros na ziemi (stoi, wzbicie, lot z machaniem skrzydłami, atak, śmierć), Lewiatan (punkt 79), 11 dźwięków. **Otwarte:**
    - **Śmierć Harpunniczki i Trytońskiego Harpunnika:** obie nadal siadają; próba „jak ścięte drzewo” zablokowana przez filtr (postać z harpunem), łagodniejsza próba dała klęczenie. Do decyzji autora.
-   - **Nazwa Węża Morskiego:** autor wybiera z propozycji (role bohaterów zostają: Sefiran dowódcą, Mors czwartym bohaterem).
+   - **Nazwa:** zrobione 25.11: Wąż Morski to teraz **Koralowy Żmij** (EN: Coral Wyrm); id `seaSerpent` bez zmian.
 
 **79. Lewiatan: zrobione 25.11** (nowy obraz bazowy z całą sylwetką na lądzie, chód, atak, śmierć; 31 CU; trafienie w kodzie).
 

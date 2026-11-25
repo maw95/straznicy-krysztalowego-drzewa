@@ -21,7 +21,7 @@ i przyciąganie wrogów. Rozdzielenie ze Stadami: Przypływy nie szarżują, prz
 |---|---|---|---|---|---|---|---|
 | `tritonKing` | Król Trytonów | wojownik | 1 | chód | wręcz | **Ściana Wody:** raz na bitwę odpycha wszystkich sąsiednich wrogów o 1, sąsiedni sojusznicy −1 obrażeń do końca rundy | Pan Rafy: pomocnicy +1 Ż (`supportHp`) |
 | `sirenSinger` | Syrena Pieśniarka | mędrzec | 1 | chód | dyst. | **Pieśń Syreny:** raz na bitwę wróg w zasięgu przyciągnięty o N pól ku niej | Głos Głębin: czary +1 (`spellPower`) |
-| `seaSerpent` | Wąż Morski | łowca | 2 | chód | wręcz | **Oplot Głębin:** przyciąga cel o 1 i unieruchamia (raz na bitwę) | Prąd Morski: +1 ruchu (`move`) |
+| `seaSerpent` | Koralowy Żmij | łowca | 2 | chód | wręcz | **Oplot Głębin:** przyciąga cel o 1 i unieruchamia (raz na bitwę) | Prąd Morski: +1 ruchu (`move`) |
 
 **Dowódcy:** Trytoński Strażnik (wojownik), Harpunniczka (łowca), **Sefiran Plamisty** (`sefiran`, mędrzec; zwierzak autora Stefan: wąż zbożowy, szary z czarnymi plamami na grzbiecie jak paski, lubi wodę, płochliwy, sympatyczny; **Wylinka:** raz na bitwę zrzuca skórę: traci wszystkie statusy i odzyskuje N Ż; decyzje 19.11 i 20.11, zamiast Kapłana Pływów).
 **Czwarty bohater:** Stary Mors Kapitan (wojownik, odpychanie).
@@ -79,7 +79,7 @@ się na pola obok pułapek i grzybni (jeśli je widzi), wysuwać Syreny na przó
 - **Budynek mapy:** Przystań — bohater w osadzie przenosi się do innej osady Przypływów leżącej przy wodzie.
 
 ## Rozstrzygnięcia autora (19–20.11)
-- Zwierzaki autora jako **dowódcy z karczmy**: **Żbiczka Bajdurka** (łowca, Kompanie, Szalony Skok), **Bastia Cienista** (wojownik, Piaski, Czujna Drzemka), **Sefiran Plamisty** (mędrzec, Przypływy, Wylinka). Odróżnienie Sefirana od Węża Morskiego: mały, szary, w plamy.
+- Zwierzaki autora jako **dowódcy z karczmy**: **Żbiczka Bajdurka** (łowca, Kompanie, Szalony Skok), **Bastia Cienista** (wojownik, Piaski, Czujna Drzemka), **Sefiran Plamisty** (mędrzec, Przypływy, Wylinka). Odróżnienie Sefirana od Koralowego Żmija: mały, szary, w plamy.
 - Przypływy: Mewa odpadła; Żółw Skorupiak na tier 1, **Krabolud Tarczownik na 2A** (pancerz poziomu 1: pokrywa osłona Żółwia), **Rafowy Golem** zamiast Żółwia-Wyspy (jeden żółw).
 
 ## Stan G1 (20.11.2026, praca w gałęzi `g1-four-factions`)

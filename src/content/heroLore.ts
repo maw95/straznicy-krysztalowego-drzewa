@@ -66,7 +66,7 @@ export const HERO_LORE: Record<string, string> = {
   mushroomSeer: "Grzybowy Wróżbita warzy wywary z kapeluszy, których nikt inny nie odważyłby się dotknąć. Leczą prawie zawsze, a skutki uboczne mijają zwykle przed następną pełnią.",
   tritonKing: "Król Trytonów wychodzi na ląd z przypływem, z trójzębem w dłoni i koroną z koralu na głowie. Gdy uderza nim o ziemię, fala odpycha wrogów, a jego ludzie stają za nią jak za murem.",
   sirenSinger: "Syrena Pieśniarka śpiewa tak pięknie, że wrogowie sami podchodzą bliżej, żeby lepiej słyszeć. Zwykle żałują tego jeszcze przed ostatnią zwrotką.",
-  seaSerpent: "Wąż Morski śpi w głębinach i budzi się tylko wtedy, gdy Bractwo zadmie w wielką muszlę. Owija się wokół wroga tak czule, że ten nie może zrobić ani kroku.",
+  seaSerpent: "Koralowy Żmij śpi w głębinach i budzi się tylko wtedy, gdy Bractwo zadmie w wielką muszlę. Owija się wokół wroga tak czule, że ten nie może zrobić ani kroku.",
   walrusCaptain: "Stary Mors Kapitan pływał po wszystkich morzach i z każdego przywiózł co najmniej jedną bliznę i trzy opowieści. Kogo dźgnie kłem, ten odlatuje na bok, zanim zdąży się przedstawić.",
   tritonGuard: "Trytoński Strażnik nosi tarczę z muszli wielkiego ślimaka morskiego i strzeże przejść na rafie. Fale go nie przewracają, a wrogowie próbują znacznie rzadziej niż fale.",
   harpooneer: "Harpunniczka łowiła kiedyś ryby, ale uznała, że wrogowie są więksi i łatwiej w nich trafić. Jej harpun na długiej linie przyciąga ich prosto pod trójzęby Bractwa.",
