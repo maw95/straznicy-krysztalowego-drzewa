@@ -164,12 +164,12 @@ Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.t
 **Wolna Kompania (`free`)** (paleta: rude i brązowe futra, butelkowa zieleń płaszczy, skóra, mosiądz, len; zwierzoludzie w ubraniach, bez niebieskiego w figurach; tło do wycinania #0000FF):
 - ~~karta i portret 19 postaci~~ zrobione 25.11 (`scripts/assets/free_cards.py`, 58 CU)
 - animacje 2D dla tych samych 19 (do czasu ich powstania żetony z portretami);
-- herb `cards/crests/free.png`: lisia głowa na skrzyżowanych strzałach; ramki kart `free_hero.png`, `free_support.png` (dziś pożyczone z Przymierza);
+- ~~herb i ramki kart~~ zrobione 25.11 (`scripts/assets/free_frames.py`, 4 CU)
 - ~~ikony 13 nowych zdolności~~ zrobione 25.11 (39 CU)
 - znacznik sideł na polu areny (dziś kreskowany sześciokąt z krzyżykiem w SVG) i znacznik oznaczenia na figurze (dziś odznaka statusu);
 - arena cyfrowa `arena/cyfrowa/free.webp` (leśny obóz przy zrujnowanym młynie, płoty, beczki) i jej przeszkody (dziś obrazy Przymierza i Hordy, `WIDE_OBSTACLES.free`);
 - kafle ziemi Kompanii, rewers `tiles/back_free.jpg`, baza i skarbiec (dziś kafle Przymierza, pole `terrain`);
-- osada: tło `osady/land_free.jpg`, obrazy budynków Warsztat Sideł (1-4), Paserka (1-2), Szlaki Przemytnicze i siedlisk 9 jednostek (dziś Przymierza, `BORROWED` w `SettlementDialog.tsx`);
+- ~~osada: tło, budynki, unikalne, fosa i palisada, 9 siedlisk~~ zrobione 25.11 (`scripts/assets/free_settlement.py`, 93 CU)
 - muzyka frakcji (2-3 utwory: lutnia, flet, skrzypki, ballada zbójnicka).
 
 **Pustynne Cesarstwo (`sands`)** (paleta: piasek, ochra, terakota, złoto, kość słoniowa, zgaszony karmazyn, zieleń jadeitu zamiast turkusu i lapis lazuli; bez niebieskiego w figurach; tło do wycinania #0000FF; wygląd Bastii: `docs/frakcje/ZWIERZAKI_AUTORA.md`):

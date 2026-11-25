@@ -35,12 +35,13 @@ import { BuildingTree, COUNCIL, type ExtraNode } from './BuildingTree';
  */
 type Spot = { x: number; y: number; h: number };
 type SpotKey = BuildingId | 'council' | `dwelling-${number}`;
-const LAYOUTS: Record<'dawn' | 'horde' | 'herds' | 'clans' | 'tides', Partial<Record<SpotKey, [number, number, number]>>> = {
+const LAYOUTS: Record<'dawn' | 'horde' | 'herds' | 'clans' | 'tides' | 'free', Partial<Record<SpotKey, [number, number, number]>>> = {
   dawn: { magic: [12, 47, 24], shrine: [26, 45, 18], council: [44, 48, 26], grove: [63, 51, 18], 'dwelling-6': [74, 48, 22], spark: [87, 51, 18], hospital: [9, 65, 15], tavern: [24, 63, 18], market: [37, 66, 21], forge: [51, 61, 18], 'dwelling-3': [70, 66, 17], 'dwelling-4': [82, 69, 18], 'dwelling-2': [18, 81, 16], treasury: [31, 81, 21], barracks: [49, 85, 27], 'dwelling-5': [64, 85, 18], nursery: [79, 82, 17], walls: [50, 104, 100] },
   horde: { magic: [13, 38, 24], bloodPit: [29, 36, 19], council: [50, 40, 27], wolfDen: [71, 37, 17], spark: [94, 41, 16], tavern: [60, 52, 15], hospital: [23, 57, 19], 'dwelling-2': [12, 80, 15], 'dwelling-3': [8, 58, 17], forge: [71, 59, 20], plunder: [93, 62, 17], 'dwelling-4': [81, 48, 18], treasury: [30, 80, 22], barracks: [50, 79, 30], 'dwelling-5': [70, 80, 22], 'dwelling-6': [88, 86, 27], market: [37, 55, 19], walls: [50, 104, 100] },
   herds: { magic: [15, 38, 28.8], hoofStone: [33, 36, 21.6], council: [50, 42, 32.4], refuge: [71, 43, 21.6], pastures: [88, 47, 19], tavern: [39, 52, 17], hospital: [24, 58, 22.8], spark: [91, 64, 18], forge: [63, 58, 24], 'dwelling-6': [78, 66, 25], 'dwelling-4': [10, 82, 22.8], 'dwelling-2': [25, 79, 18], treasury: [39, 80, 26.4], barracks: [56, 80, 36], 'dwelling-3': [70, 82, 19], 'dwelling-5': [8, 62, 22], walls: [50, 104, 100], market: [86, 82, 25] },
   clans: { deepMine: [19, 37, 19], shieldHall: [35, 36, 19], council: [50, 43, 27], runeForge: [65, 36, 19], magic: [81, 40, 24], tavern: [37, 55, 15], hospital: [24, 57, 19], spark: [9, 59, 17], forge: [63, 57, 20], 'dwelling-6': [79, 60, 24], treasury: [20, 80, 22], 'dwelling-2': [30, 76, 15], barracks: [50, 79, 30], 'dwelling-3': [69, 76, 17], market: [82, 78, 22], 'dwelling-4': [6, 79, 19], walls: [50, 104, 100], 'dwelling-5': [94, 82, 21] },
   tides: { lighthouse: [86, 27, 22], tideTemple: [37, 36, 19], spark: [66, 29, 17], 'dwelling-3': [20, 38, 17], council: [56, 42, 27], magic: [77, 45, 24], pearlBanks: [7, 47, 17], tavern: [12, 63, 15], hospital: [29, 58, 19], market: [43, 61, 21], forge: [66, 61, 20], 'dwelling-6': [85, 65, 24], treasury: [31, 79, 22], 'dwelling-2': [8, 80, 15], barracks: [55, 80, 30], 'dwelling-4': [75, 80, 19], 'dwelling-5': [92, 81, 21], walls: [50, 104, 100] },
+  free: { magic: [13, 38, 24], trapWorkshop: [30, 37, 19], council: [50, 42, 27], fence: [68, 40, 17], smugglerTrails: [87, 44, 19], tavern: [38, 55, 15], hospital: [22, 58, 19], spark: [8, 60, 18], forge: [61, 58, 20], 'dwelling-6': [77, 62, 24], 'dwelling-5': [94, 64, 20], 'dwelling-4': [8, 81, 19], 'dwelling-2': [23, 78, 15], treasury: [37, 81, 22], barracks: [54, 80, 30], 'dwelling-3': [71, 79, 17], market: [87, 83, 22], walls: [50, 104, 100] },
 };
 const landOfPictures = (land: FactionId): keyof typeof LAYOUTS => (land in LAYOUTS ? (land as keyof typeof LAYOUTS) : 'dawn');
 const spotOf = (b: SpotKey, land: FactionId): Spot => {
@@ -49,11 +50,11 @@ const spotOf = (b: SpotKey, land: FactionId): Spot => {
   return { x: t[0], y: t[1], h: t[2] };
 };
 /** Whose picture a building of one faction has (level 6: Kapliczka, Szkółka, Krąg for the Przymierze; Jama, Szabrownia, Legowisko for the Horde). */
-const UNIQUE_OWNER: Partial<Record<BuildingId, FactionId>> = { shrine: 'dawn', nursery: 'dawn', grove: 'dawn', bloodPit: 'horde', plunder: 'horde', wolfDen: 'horde', hoofStone: 'herds', pastures: 'herds', refuge: 'herds', tideTemple: 'tides', pearlBanks: 'tides', lighthouse: 'tides', shieldHall: 'clans', runeForge: 'clans', deepMine: 'clans' };
-/** Placeholders (docs/BACKLOG.md 2a): the factions without pictures of their own yet borrow the land of Przymierze and its three unique buildings (the Herds, the Tides and the Clans have their own: osady/herds_*, tides_*, clans_*). */
-const BORROWED: Partial<Record<BuildingId, BuildingId>> = { barrow: 'shrine', ossuary: 'nursery', bellTower: 'grove', frostPalace: 'shrine', blizzardTower: 'grove', crystalGrotto: 'nursery', trapWorkshop: 'shrine', smugglerTrails: 'grove', fence: 'nursery', mirageHall: 'shrine', sandGate: 'grove', caravanRoad: 'nursery', myceliumHeart: 'shrine', tunnels: 'grove', mushroomGarden: 'nursery' };
+const UNIQUE_OWNER: Partial<Record<BuildingId, FactionId>> = { shrine: 'dawn', nursery: 'dawn', grove: 'dawn', bloodPit: 'horde', plunder: 'horde', wolfDen: 'horde', hoofStone: 'herds', pastures: 'herds', refuge: 'herds', tideTemple: 'tides', pearlBanks: 'tides', lighthouse: 'tides', shieldHall: 'clans', runeForge: 'clans', deepMine: 'clans', trapWorkshop: 'free', fence: 'free', smugglerTrails: 'free' };
+/** Placeholders (docs/BACKLOG.md 2a): the factions without pictures of their own yet borrow the land of Przymierze and its three unique buildings (the Herds, the Tides, the Clans and the Free Company have their own: osady/herds_*, tides_*, clans_*, free_*). */
+const BORROWED: Partial<Record<BuildingId, BuildingId>> = { barrow: 'shrine', ossuary: 'nursery', bellTower: 'grove', frostPalace: 'shrine', blizzardTower: 'grove', crystalGrotto: 'nursery', mirageHall: 'shrine', sandGate: 'grove', caravanRoad: 'nursery', myceliumHeart: 'shrine', tunnels: 'grove', mushroomGarden: 'nursery' };
 const buildingPicture = (landOf: FactionId, building: BuildingId, level: number) => {
-  const land: FactionId = landOf === 'undead' || landOf === 'frost' || landOf === 'free' || landOf === 'sands' || landOf === 'swarm' ? 'dawn' : landOf;
+  const land: FactionId = landOf === 'undead' || landOf === 'frost' || landOf === 'sands' || landOf === 'swarm' ? 'dawn' : landOf;
   const b = BORROWED[building] ?? building;
   const own = UNIQUE_OWNER[b];
   if (own) return level === 0 ? `osady/${own}_plot.webp` : `osady/${own}_${b}1.webp`;

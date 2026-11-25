@@ -5,6 +5,7 @@ So the picture is cut into: the left end (turret), a plain stretch, the middle (
 plain stretch is repeated (tiles of the source's own plain wall, with a short cross-fade at the seams) until the picture has ASPECT.
 Usage: python3 scripts/assets/settlement_walls_widen.py   (reads .tmp/zrodla/mury/<faction>_walls<1|2>.png, writes the cut, widened
 picture into .tmp/zrodla/osady_oryginaly/, from where settlement_ground_blend.py blends it into public/assets/osady/)"""
+import sys
 from PIL import Image, ImageFilter
 
 ASPECT = 10.5   # width / height of the result (full stage width at about 20 percent of its height)
@@ -55,7 +56,7 @@ def widen(im):
 
 
 if __name__ == '__main__':
-    for f in ['clans', 'dawn', 'horde', 'herds', 'tides']:
+    for f in sys.argv[1:] or ['clans', 'dawn', 'horde', 'herds', 'tides', 'free']:
         for lvl in '12':
             im = widen(cut(Image.open(f'.tmp/zrodla/mury/{f}_walls{lvl}.png').convert('RGBA')))
             im.save(f'.tmp/zrodla/osady_oryginaly/{f}_walls{lvl}.webp', quality=85, method=6)

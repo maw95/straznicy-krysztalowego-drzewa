@@ -113,6 +113,9 @@ FRAMES.tides_support = { ...FRAMES.dawn_support, file: 'tides_support' };
 // The Iron Clans' frames are the Covenant's recoloured (steel-brown), same layout (scripts/assets/clans_frames.py).
 FRAMES.clans_hero = { ...FRAMES.dawn_hero, file: 'clans_hero' };
 FRAMES.clans_support = { ...FRAMES.dawn_support, file: 'clans_support' };
+// The Free Company's frames are the Covenant's recoloured (russet copper), same layout (scripts/assets/free_frames.py).
+FRAMES.free_hero = { ...FRAMES.dawn_hero, file: 'free_hero' };
+FRAMES.free_support = { ...FRAMES.dawn_support, file: 'free_support' };
 
 const FRAME_W = 551;
 const SRC_H = 713;

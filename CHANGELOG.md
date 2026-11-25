@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wolna Kompania: własna osada (leśna polana przy zrujnowanym młynie, wszystkie budynki, Warsztat Sideł, Paserka, Szlaki Przemytnicze, fosa i palisada, 9 siedlisk jednostek) oraz własny herb i ramki kart.
 - Wolna Kompania: własne ilustracje kart i portrety wszystkich 19 postaci oraz malowane ikony 13 zdolności (Fortel, Okop, Oko Kruka, Kieszonkowiec, Strzał z Gałęzi, Tama, Ukryty, Ładunek, Riposta, Smrodliwa Mikstura, wieżyczka Warana, Szalony Skok, Furia Ran).
 - Bractwo Przypływu: bohater Wąż Morski nazywa się teraz Koralowy Żmij.
 - Bractwo Przypływu: Albatros stoi na ziemi i wzbija się do lotu, w którym macha skrzydłami; Lewiatan jest widoczny w całości (cztery płetwiaste łapy i ogon, nie sama głowa z wody); nowe dźwięki śmierci Króla Trytonów, Syreny, Trytońskiego Strażnika, Harpunniczki, Żółwia i Rekinołaka (bez plusku wody) oraz ataku Harpunniczki (kobiecy głos), Rekinołaka, Homara i oba dźwięki Koralowego Żmija.

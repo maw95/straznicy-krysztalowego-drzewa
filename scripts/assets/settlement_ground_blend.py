@@ -17,7 +17,7 @@ BASE_FROM, BASE_TO = 0.55, 0.78                  # share of the picture's height
 # (feather px of the 380 px tall picture, how far the base's mean colour moves towards the ground's). Chosen by the author on 25.11:
 # strong where the islands of ground clashed with the land, weak where the blending ate into the walls of the buildings.
 STRONG, WEAK = (34, 0.6), (16, 0.25)
-FACTION = {'clans': STRONG, 'tides': STRONG, 'herds': STRONG, 'dawn': WEAK, 'horde': WEAK}
+FACTION = {'clans': STRONG, 'tides': STRONG, 'herds': STRONG, 'free': STRONG, 'dawn': WEAK, 'horde': WEAK}
 PICTURE = {'clans_magic1.webp': WEAK, 'clans_magic2.webp': WEAK, 'dwelling_bronzeSentinel.webp': WEAK, 'tides_magic1.webp': WEAK, 'tides_magic2.webp': WEAK}
 
 
