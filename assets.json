@@ -10344,6 +10344,36 @@
       "opis": "Pada do przodu jak długi, twarzą do ziemi. Klatka wszystkich arkuszy poszerzona (grow_frame.py: 31 px w prawo, 78 w lewo, 8 w dół, piksele źródła), żeby zmieścić leżącą postać. Źródło: .tmp/zrodla/poprawki_2511/clanWarrior/smierc.mp4.",
       "scenario_asset": "asset_1kUaqu65ahunTyjZSS7ummDQ",
       "prompt": "Side view, locked static camera. The bearded dwarf warrior stands facing right with an axe in each hand. He lets go of both axes, and they fall to the ground beside him. He sways, leans forward more and more with straight legs, like a cut tree, and falls full length onto the ground face down, his head toward the right, his arms stretched out in front of him, then lies completely flat and still, as if fast asleep. He never sits down, never kneels and never lies on his back. His body keeps the same shape and size the whole time. Plain solid blue background stays unchanged, no camera movement."
+    },
+    {
+      "narzedzie": "Scenario",
+      "model": "model_openai-gpt-image-2-5-flare (medium, 1536x720, 3 CU)",
+      "data": "2026-11-25",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "id": "horde/osada-tlo-2511",
+      "typ": "tło osady Mrocznej Hordy (stare miało za mało równej ziemi pod budynki)",
+      "pliki": [
+        "public/assets/osady/land_horde.jpg"
+      ],
+      "opis": "1536x720 -> 1280x600 (jakość 86). Stare tło: .tmp/zrodla/land_horde_stare.jpg.",
+      "scenario_asset": "asset_KX4dNMdQL5J1Z9JL1n9of3EM",
+      "prompt": "Wide painterly dark fantasy landscape for the town screen of a strategy game, seen from a high three-quarter bird's-eye angle looking down: a broad, flat, open plain of dark volcanic ash and packed brown earth where a warlike horde will build its town. Composition: the open, level ground fills the whole lower three quarters of the image, from the left edge to the right edge and down to the bottom edge, and rises gently toward the back; its texture is fine-grained (ash, gravel, small stones, a few faint thin glowing cracks), so that small buildings placed on it look large; the middle, the lower part and both lower corners are open and uncluttered, with room for about twenty buildings, with no big rocks, no cliffs and no trees in the open area. Only a few small dark boulders and one or two dead trees right at the far left and far right edges. Only the top quarter shows the distant backdrop: jagged black mountains, a smoking volcano with glowing lava streams, under a heavy dark grey sky with a red glow. Slightly vivid colours, palette of charcoal black, dark brown earth, deep red and orange glow. No buildings, no characters, no text."
+    },
+    {
+      "narzedzie": "skrypt (Pillow)",
+      "model": "-",
+      "data": "2026-11-25",
+      "ai": false,
+      "licencja": "własna obróbka obrazów z wpisów okien osad",
+      "id": "osady/wtopienie-podloza-2511",
+      "typ": "budynki i siedliska osad wszystkich frakcji: podłoże wtopione w tło",
+      "pliki": [
+        "public/assets/osady/<frakcja>_*.webp",
+        "public/assets/osady/dwelling_*.webp"
+      ],
+      "opis": "scripts/assets/settlement_ground_blend.py: brzeg podstawy przechodzi w przezroczystość, kolor podstawy przesunięty w stronę ziemi tła frakcji (siła per frakcja i per obrazek w skrypcie). Oryginały: .tmp/zrodla/osady_oryginaly (i historia gita).",
+      "prompt": "-"
     }
   ]
 }

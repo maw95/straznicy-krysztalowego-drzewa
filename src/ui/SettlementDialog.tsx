@@ -25,31 +25,26 @@ import { UnitCard } from './UnitCard';
 import { BuildingTree, COUNCIL, type ExtraNode } from './BuildingTree';
 
 /**
- * Where each building stands in the landscape. The landscape is a stage of a fixed shape (the picture's own), scaled to cover the screen, so a spot is a
- * place on the terrain and not on the screen: `x` and `y` (percent of the stage) are the foot of the building, `h` its height (percent of the stage's
- * height). Buildings behind are smaller and higher, those in front larger; the council stands on the square in the middle. Both lands use the same
- * layout; the Horde's landscape has its volcano on the right, so its magic and the Iskra change sides. The unique buildings of a faction share two spots.
+ * Where each building stands in the landscape of each faction (chosen with the author on 25.11, so nothing stands on water, rocks or in the air).
+ * The landscape is a stage of a fixed shape (the picture's own), scaled to cover the screen, so a spot is a place on the terrain and not on the
+ * screen: [x, y] (percent of the stage) is the foot of the building, h its height (percent of the stage's height). Bigger buildings for a higher
+ * rank: the council and the barracks first, the dwellings grow with the tier of their unit ('dwelling-2' ... 'dwelling-6'). The factions
+ * without a land of their own stand on the land of the Przymierze, their unique buildings on the spots of the ones whose pictures they borrow.
  */
 type Spot = { x: number; y: number; h: number };
-const SPOTS: Record<BuildingId | 'council', Spot> = {
-  council: { x: 50, y: 49, h: 19 },
-  magic: { x: 25.5, y: 40, h: 16.5 }, spark: { x: 76, y: 41, h: 14.5 },
-  shrine: { x: 37.5, y: 42, h: 12 }, bloodPit: { x: 37.5, y: 42, h: 12 }, grove: { x: 62.5, y: 42, h: 12 }, wolfDen: { x: 62.5, y: 42, h: 12 }, hoofStone: { x: 37.5, y: 42, h: 12 }, refuge: { x: 62.5, y: 42, h: 12 }, barrow: { x: 37.5, y: 42, h: 12 }, bellTower: { x: 62.5, y: 42, h: 12 }, shieldHall: { x: 37.5, y: 42, h: 12 }, mirageHall: { x: 37.5, y: 42, h: 12 }, sandGate: { x: 62.5, y: 42, h: 12 }, myceliumHeart: { x: 37.5, y: 42, h: 12 }, tunnels: { x: 62.5, y: 42, h: 12 }, tideTemple: { x: 37.5, y: 42, h: 12 }, lighthouse: { x: 62.5, y: 42, h: 12 }, runeForge: { x: 62.5, y: 42, h: 12 }, frostPalace: { x: 37.5, y: 42, h: 12 }, blizzardTower: { x: 62.5, y: 42, h: 12 }, trapWorkshop: { x: 37.5, y: 42, h: 12 }, smugglerTrails: { x: 62.5, y: 42, h: 12 },
-  tavern: { x: 18.5, y: 52.5, h: 11 }, nursery: { x: 81.5, y: 50.5, h: 11.5 }, plunder: { x: 81.5, y: 50.5, h: 11.5 }, pastures: { x: 81.5, y: 50.5, h: 11.5 }, ossuary: { x: 81.5, y: 50.5, h: 11.5 }, deepMine: { x: 81.5, y: 50.5, h: 11.5 }, crystalGrotto: { x: 81.5, y: 50.5, h: 11.5 }, fence: { x: 81.5, y: 50.5, h: 11.5 }, caravanRoad: { x: 81.5, y: 50.5, h: 11.5 }, mushroomGarden: { x: 81.5, y: 50.5, h: 11.5 }, pearlBanks: { x: 81.5, y: 50.5, h: 11.5 },
-  hospital: { x: 31, y: 56, h: 13.5 }, forge: { x: 61, y: 56, h: 14 }, walls: { x: 70, y: 58.5, h: 12 },
-  treasury: { x: 25.5, y: 72, h: 16.5 }, barracks: { x: 50, y: 74.5, h: 22 }, market: { x: 74, y: 72, h: 16.5 },
+type SpotKey = BuildingId | 'council' | `dwelling-${number}`;
+const LAYOUTS: Record<'dawn' | 'horde' | 'herds' | 'clans' | 'tides', Partial<Record<SpotKey, [number, number, number]>>> = {
+  dawn: { magic: [14, 47, 24.2], shrine: [30, 45, 18.7], council: [50, 48, 27.5], grove: [68, 46, 18.7], spark: [84, 48, 19.8], tavern: [9, 65, 15.4], hospital: [24, 63, 18.7], market: [39, 65, 22], forge: [62, 64, 19.8], 'dwelling-6': [79, 65, 23.1], 'dwelling-2': [19, 80, 16.5], treasury: [33, 84, 22], barracks: [51, 86, 29.7], 'dwelling-5': [67, 81, 18.7], nursery: [82, 79, 17.6], 'dwelling-3': [40, 96, 18.7], 'dwelling-4': [74, 96, 19.8], walls: [61, 98, 14] },
+  horde: { magic: [13, 38, 24], bloodPit: [29, 36, 19], council: [50, 40, 27], wolfDen: [71, 37, 17], spark: [87, 38, 18], tavern: [8, 58, 15], hospital: [23, 57, 19], 'dwelling-2': [37, 55, 15], 'dwelling-3': [63, 55, 17], forge: [78, 58, 20], plunder: [93, 62, 17], 'dwelling-4': [12, 80, 20], treasury: [30, 80, 22], barracks: [50, 82, 30], 'dwelling-5': [70, 80, 22], 'dwelling-6': [88, 86, 27], market: [22, 97, 21], walls: [54, 99, 14] },
+  herds: { magic: [15, 38, 28.8], hoofStone: [33, 36, 21.6], council: [50, 42, 32.4], refuge: [67, 36, 21.6], pastures: [82, 37, 19], tavern: [8, 62, 18], hospital: [24, 58, 22.8], spark: [38, 55, 20.4], forge: [63, 58, 24], 'dwelling-6': [78, 66, 25], 'dwelling-4': [10, 82, 22.8], 'dwelling-2': [25, 79, 18], treasury: [39, 80, 26.4], barracks: [56, 83, 36], 'dwelling-3': [70, 82, 19], 'dwelling-5': [30, 97, 23], walls: [52, 99, 16.8], market: [80, 96, 25] },
+  clans: { deepMine: [19, 37, 19], shieldHall: [35, 36, 19], council: [50, 43, 27], runeForge: [65, 36, 19], magic: [81, 40, 24], tavern: [9, 58, 15], hospital: [24, 57, 19], spark: [38, 55, 17], forge: [63, 57, 20], 'dwelling-6': [79, 60, 24], treasury: [14, 79, 22], 'dwelling-2': [30, 76, 15], barracks: [50, 79, 30], 'dwelling-3': [69, 76, 17], market: [86, 80, 22], 'dwelling-4': [24, 95, 19], walls: [50, 99, 14], 'dwelling-5': [76, 95, 21] },
+  tides: { lighthouse: [86, 27, 22], tideTemple: [37, 30, 19], spark: [66, 29, 17], 'dwelling-3': [20, 38, 17], council: [51, 42, 27], magic: [77, 45, 24], pearlBanks: [7, 47, 17], tavern: [12, 63, 15], hospital: [27, 56, 19], market: [44, 66, 21], forge: [66, 61, 20], 'dwelling-6': [85, 65, 24], treasury: [33, 82, 22], 'dwelling-2': [8, 88, 15], barracks: [55, 84, 30], 'dwelling-4': [74, 82, 19], 'dwelling-5': [90, 90, 21], walls: [38, 97, 14] },
 };
-/** The dwellings of the unit tiers 2-6 (level 6) stand in front of the barracks as small pens. */
-const DWELLING_SPOTS: Spot[] = [{ x: 36, y: 69, h: 12 }, { x: 38.5, y: 79, h: 13 }, { x: 61.5, y: 79, h: 13 }, { x: 64, y: 69, h: 12 }, { x: 88, y: 66, h: 14 }];
-/**
- * The buildings are drawn larger than the heights above (the author found them too small on the wide landscapes), so the layout is spread out from
- * the council to the empty ground round it: wider to the sides, the back row a little higher and the front row much lower.
- */
-const GROW = 1.5;
-const spread = (t: Spot): Spot => ({ x: Math.min(95, Math.max(5, 50 + (t.x - 50) * 1.22)), y: 49 + (t.y - 49) * (t.y < 49 ? 1.3 : 1.4), h: t.h * GROW });
-const spotOf = (b: BuildingId | 'council', land: FactionId): Spot => {
-  const t = spread(SPOTS[b]);
-  return land === 'horde' && (b === 'magic' || b === 'spark') ? { ...t, x: 100 - t.x } : t;
+const landOfPictures = (land: FactionId): keyof typeof LAYOUTS => (land in LAYOUTS ? (land as keyof typeof LAYOUTS) : 'dawn');
+const spotOf = (b: SpotKey, land: FactionId): Spot => {
+  const layout = LAYOUTS[landOfPictures(land)];
+  const t = layout[b] ?? layout[(BORROWED as Record<string, BuildingId | undefined>)[b] ?? b] ?? layout.council!;
+  return { x: t[0], y: t[1], h: t[2] };
 };
 /** Whose picture a building of one faction has (level 6: Kapliczka, Szkółka, Krąg for the Przymierze; Jama, Szabrownia, Legowisko for the Horde). */
 const UNIQUE_OWNER: Partial<Record<BuildingId, FactionId>> = { shrine: 'dawn', nursery: 'dawn', grove: 'dawn', bloodPit: 'horde', plunder: 'horde', wolfDen: 'horde', hoofStone: 'herds', pastures: 'herds', refuge: 'herds', tideTemple: 'tides', pearlBanks: 'tides', lighthouse: 'tides', shieldHall: 'clans', runeForge: 'clans', deepMine: 'clans' };
@@ -624,7 +619,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
             })}
             {dwellingsStanding.map((tier) => {
               const id = dwellingOf(state, faction, tier)!;
-              const spot = spread(DWELLING_SPOTS[tier - 2]);
+              const spot = spotOf(`dwelling-${tier}`, landRace);
               return (
                 <button key={`dwelling-${tier}`} className="settlement-bld dwelling" style={{ left: `${spot.x}%`, top: `${spot.y}%`, zIndex: Math.round(spot.y * 10) }} onClick={() => { setHover(null); setModal(`dwelling-${tier}`); }} aria-label={DWELLING_NAMES[id]} data-dwelling-site={tier} {...hoverProps(`dwelling-${tier}`)} {...details(() => info(`dwelling-${id}`))}>
                   <img src={asset(`osady/dwelling_${id}.webp`)} alt="" className="settlement-pic" style={{ height: `${spot.h}cqh` }} />
