@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Stroiciel poziomów trudności: usunięte martwe szczeble, nowe dźwignie (Przetrwanie, Boss, doświadczenie, zapasowy bohater) szukane drobnymi krokami i sprawdzanie wyników na innych losowaniach; nic jeszcze nie przestrojono.
 - Poziomy trudności w Potyczce da się teraz stroić dokładniej: nowe, drobniejsze pokrętła (długość Przetrwania, życie Bossa, doświadczenie startowe i zapasowy bohater Przymierza); nic jeszcze nie przestrojono, więc gra gra tak jak dotąd.
 - Osady: Fosa i Mury z wieżyczkami to teraz szeroki pas przy wejściu do osady, przed wszystkimi budynkami (nowe obrazki dla pięciu frakcji).
 - Poziomy trudności w Potyczce przestrojone po wzmocnieniu Hordy: Łatwy i Normalny są znów bliżej zamierzonych szans wygranej na większości map i celów (Trudny bez zmian; Kryształy i Przetrwanie na dużych mapach wciąż wymagają dalszego strojenia).

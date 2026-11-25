@@ -2,4 +2,4 @@
 import { runVariant, type Variant } from './core';
 
 const [variantJson, games, firstSeed] = process.argv.slice(2);
-process.stdout.write(JSON.stringify(runVariant(JSON.parse(variantJson) as Variant, Number(games), Number(firstSeed ?? 1))));
+process.stdout.write(JSON.stringify(runVariant(JSON.parse(variantJson) as Variant, Number(games), Number(firstSeed ?? 1) + Number(process.env.SIM_SEED_OFFSET ?? 0))));
