@@ -23,6 +23,8 @@ MANUAL = {
     'sharkman': (0.42, 0.28, 0.46),
     'pearlPriestess': (0.43, 0.245, 0.45),
     'lobsterKnight': (0.41, 0.3, 0.58),
+    # Free Company (25.11): portrait cut from the art with this box (scripts/assets/free_cards.py), the matcher misses it.
+    'marmotPetard': (0.41, 0.35, 0.42),
 }
 MAX_ERR = 33  # mean abs difference (0-255) above which a match is not trusted (correct matches of re-graded portraits reach ~30)
 

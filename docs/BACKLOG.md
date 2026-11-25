@@ -162,10 +162,10 @@ Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.t
 - muzyka frakcji (2-3 utwory: dzwoneczki, wiolonczela, chór żeński, wiatr).
 
 **Wolna Kompania (`free`)** (paleta: rude i brązowe futra, butelkowa zieleń płaszczy, skóra, mosiądz, len; zwierzoludzie w ubraniach, bez niebieskiego w figurach; tło do wycinania #0000FF):
-- karta (`cards/art/<id>.jpg`, 452×314) i portret (`cards/portraits/<id>.jpg`, 256×256) dla 19 jednostek: `foxCaptain`, `badgerSapper`, `ravenSeer`, `otterSmuggler` (4. bohater), `martenSlasher`, `wildcatBajka`, `hareHerbalist` (dowódcy), `otterScout`, `magpieThief`, `squirrelArcher`, `weaselKnife`, `beaverEngineer`, `polecatPoisoner`, `raccoonDogSpy`, `wolverine`, `marmotPetard`, `toadGunner`, `catFencer`, `towerMonitor`;
+- ~~karta i portret 19 postaci~~ zrobione 25.11 (`scripts/assets/free_cards.py`, 58 CU)
 - animacje 2D dla tych samych 19 (do czasu ich powstania żetony z portretami);
 - herb `cards/crests/free.png`: lisia głowa na skrzyżowanych strzałach; ramki kart `free_hero.png`, `free_support.png` (dziś pożyczone z Przymierza);
-- ikony 13 nowych zdolności (`cards/abilities/<id>.png` i `<id>_inner.png`): `ploy`, `dugIn`, `ravenEye`, `pickpocket`, `branchShot`, `dam`, `stinkBomb`, `veiled`, `woundFury`, `blast`, `riposte`, `towerShot`, `wildLeap` (dziś bez własnych ikon);
+- ~~ikony 13 nowych zdolności~~ zrobione 25.11 (39 CU)
 - znacznik sideł na polu areny (dziś kreskowany sześciokąt z krzyżykiem w SVG) i znacznik oznaczenia na figurze (dziś odznaka statusu);
 - arena cyfrowa `arena/cyfrowa/free.webp` (leśny obóz przy zrujnowanym młynie, płoty, beczki) i jej przeszkody (dziś obrazy Przymierza i Hordy, `WIDE_OBSTACLES.free`);
 - kafle ziemi Kompanii, rewers `tiles/back_free.jpg`, baza i skarbiec (dziś kafle Przymierza, pole `terrain`);
