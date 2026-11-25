@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Gwardia Młota: z ataku zniknął biały błysk na młocie i pył po uderzeniu.
 - Żelazny Klan: trafienia Tana, Matki Run, Kreta z Brązu, Niedźwiedzia w Zbroi, Wartownika, Pogromcy Olbrzymów, Gwardii Młota i Kowala Bitewnego to teraz płynne odchylenie od ciosu z przodu i powrót do postawy (bez drgającej, migoczącej sylwetki); wolniejsza śmierć Tarczownika i trafienie Skarbnika, szybsza śmierć Kowala.
 - Kryształowe Drzewo stoi na mapie tylko w celu „Kryształy do Drzewa”. W Punktach kontrolnych, Bossie, Artefakcie, Przetrwaniu, Podboju i Relikcie jego pole jest zwykłym terenem, a w Kontroli, Bossie i Artefakcie punkt środkowy, legowisko Bossa i Artefakt stoją dokładnie w środku mapy (wcześniej obok Drzewa, więc na mapie były dwa „środki”).
 - Ikony zdolności Dzikiego Stada, Żelaznego Klanu i Bractwa Przypływu są teraz malowane i kolorowe, w stylu ikon Przymierza i Hordy (42 nowe ikony zamiast jednokolorowych symboli).
