@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Panel testowy: scena „Okno osady z pełnym drzewkiem” stawia też siedliska jednostek wszystkich poziomów (na poziomie Imperium).
 - Wojownik Klanu: nowa śmierć – pada do przodu jak długi, twarzą do ziemi (wcześniej najpierw siadał).
 - Wojownik Klanu: nowy atak – jeden mocny, szybki cios toporem z zamachu znad głowy.
 - Osady: wszystkie budynki są dużo większe i rozstawione szerzej na całym terenie osady; Żelazny Klan ma nowe tło osady – kamieniołom w górach.

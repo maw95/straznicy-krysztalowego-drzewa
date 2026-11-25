@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Panel testowy: scena „Okno osady z pełnym drzewkiem” stawia też siedliska jednostek wszystkich poziomów (na poziomie Imperium).": "Test panel: the scene “Settlement window with the full tree” also builds the unit dwellings of every tier (at the Empire level).",
   "Wojownik Klanu: nowa śmierć – pada do przodu jak długi, twarzą do ziemi (wcześniej najpierw siadał).": "Clan Warrior: a new death – he falls forward full length, face down (before, he sat down first).",
   "Wojownik Klanu: nowy atak – jeden mocny, szybki cios toporem z zamachu znad głowy.": "Clan Warrior: a new attack – one strong, quick axe blow swung from over his head.",
   "Osady: wszystkie budynki są dużo większe i rozstawione szerzej na całym terenie osady; Żelazny Klan ma nowe tło osady – kamieniołom w górach.": "Settlements: all buildings are much larger and spread wider over the whole settlement ground; the Iron Clan has a new settlement background – a mountain quarry.",

@@ -11,7 +11,7 @@ import { arenaObstacles } from './arenaLayout';
 import { tileCost } from './map';
 import { ARTIFACT_BY_ID, giveArtifact } from './sites';
 import { SPELL_IDS, type SpellId } from './magic';
-import { BUILDING_NAMES, buildingsFor, type BuildingId } from './kingdom';
+import { BUILDING_NAMES, buildingsFor, recruitsOf, type BuildingId } from './kingdom';
 import { shardTotal } from './empire';
 import type { GameState, HeroState } from './types';
 
@@ -78,11 +78,17 @@ export function buildAnywhere(state: GameState, settlementId: string, building: 
 }
 
 /** Every building this game has, at its highest level, in every settlement the faction holds. */
-export function buildEverything(state: GameState, faction: TeamId): void {
+export function buildEverything(state: GameState, faction: TeamId, variant = 0): void {
   if (!state.kingdom) throw new Error('Osady są od poziomu IV.');
   for (const s of Object.values(state.kingdom.settlements)) {
     if (s.owner !== faction) continue;
     for (const b of buildingsFor(state, faction)) if (b !== 'spark') s.buildings[b] = Math.min(BUILDING_NAMES[b].length, b === 'magic' ? 3 : b === 'shrine' || b === 'bloodPit' || b === 'hoofStone' || b === 'barrow' || b === 'shieldHall' || b === 'frostPalace' || b === 'trapWorkshop' || b === 'mirageHall' || b === 'myceliumHeart' || b === 'tideTemple' ? 4 : 2);
+   }
+  // Level 6: a dwelling for every unit tier (the first unit of each tier; `variant` 1 picks the second, to see the other pictures).
+  if (state.rules.empire) {
+    const recruits = recruitsOf(state, faction);
+    const pick = [2, 3, 4, 5, 6].map((tier) => { const at = recruits.filter((r) => r.tier === tier); return (at[variant] ?? at[0])?.id; }).filter((id): id is string => Boolean(id));
+    (state.kingdom.dwellings ??= {} as Record<TeamId, string[]>)[faction] = pick;
   }
 }
 
