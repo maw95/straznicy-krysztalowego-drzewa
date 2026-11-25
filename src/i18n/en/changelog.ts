@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Wojownik Klanu: nowa śmierć – pada do przodu jak długi, twarzą do ziemi (wcześniej najpierw siadał).": "Clan Warrior: a new death – he falls forward full length, face down (before, he sat down first).",
   "Wojownik Klanu: nowy atak – jeden mocny, szybki cios toporem z zamachu znad głowy.": "Clan Warrior: a new attack – one strong, quick axe blow swung from over his head.",
   "Osady: wszystkie budynki są dużo większe i rozstawione szerzej na całym terenie osady; Żelazny Klan ma nowe tło osady – kamieniołom w górach.": "Settlements: all buildings are much larger and spread wider over the whole settlement ground; the Iron Clan has a new settlement background – a mountain quarry.",
   "Kret z Brązu: nowy atak bez zniekształceń – maszyna dwa razy wypada do przodu z kręcącym się wiertłem.": "Bronze Mole: a new attack without distortions – the machine lunges forward twice with its drill spinning.",

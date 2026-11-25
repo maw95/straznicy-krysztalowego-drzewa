@@ -10328,6 +10328,22 @@
       "opis": "Prośba o dwa ciosy po sobie dała jeden mocny zamach znad głowy; autor go przyjął. Klatka wszystkich arkuszy powiększona o 47 px źródła w górę i 60 px w prawo (scripts/assets/grow_frame.py), żeby zmieścić zamach. Źródło: .tmp/zrodla/poprawki_2511/clanWarrior/atak.mp4.",
       "scenario_asset": "asset_J9oPrYYj7rRZs3YVj4hgbygY",
       "prompt": "Side view, locked static camera. The bearded dwarf warrior stands facing right with an axe in each hand. Two fast, powerful swings right after each other with no pause: first he swings the axe in his front hand forward in a quick horizontal arc at the height of his chest toward the right, and at once he swings the axe in his other hand forward in a second quick horizontal arc at the same height. Each axe stops in the air in front of him, the axes never go down to the ground and are never raised above his head. His upper body twists into each swing. Then he returns to the ready stance with both axes lowered. His feet stay on the same spot, he does not walk. He is alone in the picture. Plain solid blue background stays unchanged, no camera movement."
+    },
+    {
+      "narzedzie": "Scenario",
+      "model": "model_pruna-p-video-2 (draft, 720p, 24 fps, 3 s, saveAudio false, promptUpsampling false, 9 CU); obraz startowy asset_bCPr2usyiGYGkDVyQr6q1dsW (stoi.webp na niebieskim tle); wklejone przez scripts/assets/clans_fix_clips.py (MARTWY=1)",
+      "data": "2026-11-25",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem",
+      "id": "clans/poprawki-2511-wojownik-smierc",
+      "typ": "śmierć Wojownika Klanu (uwaga autora 25.11: siadał, zanim się położył)",
+      "pliki": [
+        "public/assets/jednostki/wojownik_klanu/smierc.webp",
+        "public/assets/jednostki/wojownik_klanu/martwy.webp"
+      ],
+      "opis": "Pada do przodu jak długi, twarzą do ziemi. Klatka wszystkich arkuszy poszerzona (grow_frame.py: 31 px w prawo, 78 w lewo, 8 w dół, piksele źródła), żeby zmieścić leżącą postać. Źródło: .tmp/zrodla/poprawki_2511/clanWarrior/smierc.mp4.",
+      "scenario_asset": "asset_1kUaqu65ahunTyjZSS7ummDQ",
+      "prompt": "Side view, locked static camera. The bearded dwarf warrior stands facing right with an axe in each hand. He lets go of both axes, and they fall to the ground beside him. He sways, leans forward more and more with straight legs, like a cut tree, and falls full length onto the ground face down, his head toward the right, his arms stretched out in front of him, then lies completely flat and still, as if fast asleep. He never sits down, never kneels and never lies on his back. His body keeps the same shape and size the whole time. Plain solid blue background stays unchanged, no camera movement."
     }
   ]
 }
