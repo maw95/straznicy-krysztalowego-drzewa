@@ -103,3 +103,14 @@ dużych, ok. 70 px dla małych (`bodyW`).
 - **Blokowały:** slash/slashing, strike/struck, kill, blood, crash, collapse, final, „strength gives out”, fist, gauntlet, claw, hit, push, force, blow, ram, cutting, fierce, staggers, topples, „heavy thud”, „Defeat animation”, „heavily onto his back”, „tipping over onto his back” (każda śmierć z upadkiem na plecy), u maszyn „heavily damaged, parts fly off”.
 - **Przechodziły:** swings, sweeping motion, settles down, sinks down onto the ground, „as if fast asleep”, startled, tapping, „falls over sideways”, „lowers itself sideways to the ground ... rests completely still”; maszyny: „comes apart, plates and gears loosen and fall away, then lies still”.
 - Blokada zależy też od obrazów wejściowych: przed partią zrób próbę jednego klipu. Punkt 86 stracił ok. 215 CU na zablokowane klipy.
+
+## Lekcje z poprawek Żelaznego Klanu (25.11.2026)
+
+- **Nie wspominaj o przeciwniku** („toward an enemy standing right in front of him”): model dorysował drugą postać przy prawej krawędzi. Pisz „toward the right”, „at chest height”, „He is alone in the picture”. Obcą postać przy krawędzi wycina `CUT_RIGHT=0.8 python3 scripts/assets/clans_fix_clips.py ...`.
+- **Cios przed siebie, nie w ziemię:** „the swing stops with the hammer head in the air in front of his chest, at the height of his shoulders. The hammer never goes down to the ground.” Dawne „tapping the ground in front of him” dawało uderzenie w dół.
+- **Śmierć humanoida (przeszło 4 razy):** „He lets go of his X, and it falls to the ground beside him. He sways, his knees bend, he leans forward more and more and falls full length onto the ground face down, his head toward the right, then lies completely still, as if fast asleep. He never sits down.” **Zablokowało:** „He is defeated: ... his knees give way ... falls forward onto the ground ... landing flat on his chest with his arms spread out”.
+- **Zablokowało też:** „thrusts it straight forward ... in one fast, powerful jab” (włócznia; przeszło „reaches it straight forward ... in one long, quick, energetic motion”), „a fast one-two combination ... his shoulders twist hard”.
+- **Model nie umie dwóch ciosów różnymi rękami** (Wojownik Klanu, 3 próby): robi jeden zamach albo podnosi oba topory naraz. Nie ponawiać bez nowego pomysłu.
+- **Trafienie z klipu 2 s często się deformuje** (postać się rozmywa i obraca): zamiast klipu `recoil: true` w `sprites.ts` (odchylenie w kodzie, 0 CU). Maszyna, która w ataku prawie się nie rusza: `lunge: { jabs, reach }` (wypady w kodzie).
+- Wysoki zamach ucięty kadrem arkusza: `python3 scripts/assets/grow_frame.py <folder> <px źródła>` przed wklejeniem klipu (dokłada puste wiersze u góry wszystkich arkuszy, poprawia `anim.json`).
+- Koszt rundy: 117 CU (13 klipów draft po 9 CU; 3 zablokowane, 2 odrzucone).
