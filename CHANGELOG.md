@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Poziomy trudności w Potyczce przestrojone po wzmocnieniu Hordy: Łatwy i Normalny są znów bliżej zamierzonych szans wygranej na większości map i celów (Trudny bez zmian; Kryształy i Przetrwanie na dużych mapach wciąż wymagają dalszego strojenia).
 - Osady: każda frakcja ma własne rozmieszczenie budynków dopasowane do swojego tła (nic nie stoi na wodzie, skałach ani w powietrzu), ważniejsze budynki i siedliska wyższych poziomów są większe, a podłoże pod budynkami wtapia się w teren; Mroczna Horda ma nowe tło osady z szeroką równiną.
 - Panel testowy: scena „Okno osady z pełnym drzewkiem” stawia też siedliska jednostek wszystkich poziomów (na poziomie Imperium).
 - Wojownik Klanu: nowa śmierć – pada do przodu jak długi, twarzą do ziemi (wcześniej najpierw siadał).

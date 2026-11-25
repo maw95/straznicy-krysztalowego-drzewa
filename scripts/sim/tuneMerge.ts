@@ -8,7 +8,11 @@ const files = readdirSync('.tmp/sim').filter((f) => /^auto-.*\.json$/.test(f)).s
 const lines: string[] = [];
 let count = 0;
 for (const f of files) {
-  const { games, entries } = JSON.parse(readFileSync(`.tmp/sim/${f}`, 'utf8')) as { games: number; entries: Array<Record<string, unknown>> };
+  const all = JSON.parse(readFileSync(`.tmp/sim/${f}`, 'utf8')) as { games: number; entries: Array<Record<string, unknown>> };
+  const games = all.games;
+  // The Hard level of a Skirmish keeps its hand-made rule (the Horde starts with 2 treasures; the author, 25.11): only the economy tables
+  // (kingdom) have tuned Hard entries.
+  const entries = all.entries.filter((e) => !(e.mode === 'pvp' && e.level === 'hard' && !e.kingdom));
   lines.push(`# ${f.replace(/^auto-|\.json$/g, '')} (${entries.length} cells, ${games} games each)`);
   for (const e of entries) (lines.push(JSON.stringify(e)), count++);
 }
