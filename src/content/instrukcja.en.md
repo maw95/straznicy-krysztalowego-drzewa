@@ -109,7 +109,7 @@ In goals other than Crystals a draw at the round limit is a draw; in Boss and Ar
 @words: map, shape, triangle, rectangle, ring, islands, bridge, size, XL, XXL, giant, terrain, movement, movement points, discovering, fog, base, tree, round, turn, round track
 
 ### Shapes and sizes
-The map is made of hexes. The shapes:
+The map is made of hexes. The Crystal Tree stands on the map only in the goal **Crystals to the Tree**; in every other goal its hex is ordinary ground (in Control, Boss and Artifact the middle point, the lair or the Artifact stands there). The shapes:
 - **Triangle** (as in the board game): the Tree at the top, the Covenant's base in the bottom left corner, the Horde's in the bottom right.
 - **Rectangle:** the bases in the middle of the shorter sides, the Tree in the centre.
 - **Ring:** a hoop around a lake, the Tree and both bases on three corners.

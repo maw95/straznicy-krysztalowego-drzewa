@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { BOSS, CONTROL, SURVIVAL } from '../src/engine/data';
 import { createGame } from '../src/engine/game';
 import { distance, parseKey } from '../src/engine/hex';
-import { tileCost, treeKey } from '../src/engine/map';
+import { tileCost, treeKey, treeOf } from '../src/engine/map';
 import { artifactCarrier, controlCounts, controlRoundsToWin, objectiveOf, OBJECTIVES } from '../src/engine/objectives';
 import { homeOf } from '../src/engine/map';
 import { playOut, pvpSeats, setup } from './helpers/engine';
@@ -73,9 +73,21 @@ describe('objective control (digital ruleset)', () => {
     const c = createGame(setup({ seed: 5 }, { ruleset: 'digital' }));
     expect(a.control!.points).toEqual(b.control!.points);
     expect(Object.keys(a.crystals)).toEqual(Object.keys(c.crystals));
-    // Only a point's own hex may differ (a mountain or a lake there is cleared).
+    // Only a point's own hex (a mountain or a lake there is cleared) and the Tree's hex (it is an ordinary one outside the crystals goal) may differ.
     const differs = Object.keys(a.tiles).filter((k) => a.tiles[k].terrain !== c.tiles[k].terrain);
-    for (const k of differs) expect(a.control!.points).toContain(k);
+    for (const k of differs) expect([...a.control!.points, treeKey()]).toContain(k);
+  });
+
+  it('the Tree stands only in the goal crystals; the other goals have no Tree hex and a passable middle', () => {
+    const goals = ['crystals', 'control', 'survival', 'boss', 'artifact', 'conquest', 'relic'] as const;
+    for (const objective of goals) {
+      for (const mapShape of ['triangle', 'rectangle', 'ring'] as const) {
+        const s = createGame(setup({ seed: 7, mapShape }, { ruleset: 'digital', objective, heroGrowth: true, kingdom: true, economy: true, empire: true }));
+        const trees = Object.values(s.tiles).filter((t) => t.tree);
+        expect(trees.length, `${objective} ${mapShape}`).toBe(objective === 'crystals' ? 1 : 0);
+        expect(tileCost(s.tiles[treeOf(s)]), `${objective} ${mapShape}`).not.toBeNull();
+      }
+    }
   });
 
   it('a side holds a point by standing on it; the middle one is worth more; the leader of enough rounds in a row wins', () => {

@@ -5,7 +5,7 @@
 import { ENCOUNTERS, ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import { distance, parseKey } from './hex';
 import { growthOn } from './growth';
-import { mapNeighbors, tileCost } from './map';
+import { mapNeighbors, tileCost, treeOf } from './map';
 import { Rng } from './rng';
 import { isDigital, type Crystal, type GameState } from './types';
 
@@ -30,7 +30,8 @@ export function encounterUnits(tier: 0 | 1 | 2, motif: EncounterMotif, rng: Rng)
  */
 export function stillConnected(state: GameState, blocked: Set<string>): boolean {
   const passable = (k: string) => tileCost(state.tiles[k]) !== null;
-  const tree = Object.values(state.tiles).find((t) => t.tree)?.key ?? Object.values(state.tiles).find((t) => passable(t.key))?.key;
+  const middle = treeOf(state);
+  const tree = passable(middle) ? middle : Object.values(state.tiles).find((t) => passable(t.key))?.key;
   if (!tree) return true;
   const flood = (start: string, skip: (k: string) => boolean): Set<string> => {
     const seen = new Set<string>([start]);

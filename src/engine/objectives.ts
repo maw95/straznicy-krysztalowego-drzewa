@@ -224,7 +224,7 @@ function placeControlPointsGeneric(state: GameState): HexKey[] {
   const tree = treeOf(state);
   const [dh, hh] = [parseKey(homeOf(state, 'dawn')), parseKey(homeOf(state, 'horde'))];
   const free = new Set(Object.keys(state.tiles));
-  free.delete(tree);
+  if (state.tiles[tree].tree) free.delete(tree);
   for (const f of ['dawn', 'horde'] as const) {
     free.delete(homeOf(state, f));
     for (const n of mapNeighbors(state.tiles, homeOf(state, f))) free.delete(n);
@@ -272,7 +272,7 @@ function placeControlPointsMulti(state: GameState): HexKey[] {
   const treePos = parseKey(tree);
   const homes = teams.map((t) => parseKey(homeOf(state, t)));
   const free = new Set(Object.keys(state.tiles));
-  free.delete(tree);
+  if (state.tiles[tree].tree) free.delete(tree);
   for (const t of teams) {
     free.delete(homeOf(state, t));
     for (const n of mapNeighbors(state.tiles, homeOf(state, t))) free.delete(n);
@@ -310,6 +310,7 @@ const control: Objective = {
   name: 'Punkty kontrolne',
   summary: 'Na mapie leżą trzy punkty kontrolne: środkowy wart 2, boczne po 1. Kto utrzyma więcej (bohater stoi na punkcie na koniec rundy) przez kilka rund z rzędu, wygrywa.',
   init(state) {
+    clearTree(state);
     const points = placeControlPoints(state);
     for (const k of points) revealAround(state, k);
     state.control = { points, lead: null, streak: 0, led: byTeam(teamsOf(state), () => 0) };
@@ -363,19 +364,27 @@ function survivalVerdict(state: GameState): true {
   return true;
 }
 
+/**
+ * The Tree matters only in the goal 'crystals' (crystals are carried to it, the Horde's ritual stands on it). In every other goal its hex becomes
+ * an ordinary passable one; treeOf stays the middle of the map (an anchor for the control points, the road checks and the computer's distances).
+ */
+export function clearTree(state: GameState): void {
+  const tile = state.tiles[treeOf(state)];
+  if (!tile.tree) return;
+  const rng = new Rng((state.setup.seed ^ 0x2f6e2b1) | 0);
+  const options = [...TILE_POOLS.dawn, ...TILE_POOLS.horde].filter((t: Terrain) => t !== 'bridge' && TERRAIN_COST[t] !== null);
+  tile.terrain = rng.pick(options);
+  tile.variant = 1 + rng.int(TERRAIN_VARIANTS[tile.terrain]);
+  tile.tree = false;
+}
+
 const survival: Objective = {
   id: 'survival',
   name: 'Przetrwanie',
   summary: 'Fale Hordy: co dwie rundy w bazie Hordy pojawia się kolejny bohater. Przymierze wygrywa, gdy przetrwa wyznaczoną liczbę rund, Horda, gdy polegną wszyscy jego bohaterowie.',
   init(state) {
     state.survival = { rounds: SURVIVAL.rounds[state.setup.mapSize], waves: 0 };
-    // The Tree's hex becomes an ordinary one (the Przymierze still gather there: treeOf stays the middle of the map).
-    const rng = new Rng((state.setup.seed ^ 0x2f6e2b1) | 0);
-    const tile = state.tiles[treeOf(state)];
-    const options = [...TILE_POOLS.dawn, ...TILE_POOLS.horde].filter((t: Terrain) => t !== 'bridge' && TERRAIN_COST[t] !== null);
-    tile.terrain = rng.pick(options);
-    tile.variant = 1 + rng.int(TERRAIN_VARIANTS[tile.terrain]);
-    tile.tree = false;
+    clearTree(state);
   },
   checkVictory() {},
   onRoundEnd(state) {
@@ -426,6 +435,7 @@ const boss: Objective = {
   name: 'Boss',
   summary: 'W środku mapy jest legowisko Bossa. Obie strony mogą go wyzywać, a rany zostają między walkami. Kto zada ostatni cios, wygrywa.',
   init(state) {
+    clearTree(state);
     const rng = new Rng((state.setup.seed ^ 0x5bd1e995) | 0);
     // The middle control point's place is the lair (it is cleared into passable ground, like the control points are).
     const at = placeControlPoints(state)[0];
@@ -471,6 +481,7 @@ const artifact: Objective = {
   name: 'Artefakt',
   summary: 'W środku mapy leży Artefakt. Kto zaniesie go do swojej bazy, wygrywa. Bohater, który go niesie, może zginąć, a wtedy Artefakt upada na pole i podnosi go następny.',
   init(state) {
+    clearTree(state);
     const at = placeControlPoints(state)[0];
     state.crystals.artifact = { id: 'artifact', guardian: null, at };
     state.tiles[at].crystalId = 'artifact';
@@ -513,7 +524,9 @@ const conquest: Objective = {
   id: 'conquest',
   name: 'Podbój',
   summary: 'Wygrywa ten, kto na koniec rundy trzyma wszystkie osady na ziemi wroga: jego stolicę i osady do zdobycia na jego połowie mapy. Garnizony i mury bronią ich, gdy bohater odejdzie.',
-  init() {},
+  init(state) {
+    clearTree(state);
+  },
   checkVictory() {},
   onRoundEnd(state) {
     if (!state.kingdom) return false;
@@ -550,7 +563,9 @@ const relic: Objective = {
   id: 'relic',
   name: 'Relikt',
   summary: 'Na mapie leżą Odłamki Pierwotnej Iskry. Kto zbierze wszystkie i wzniesie w swojej osadzie budynek Pierwotnej Iskry, wygrywa. Pokonany bohater oddaje swoje Odłamki zwycięzcy.',
-  init() {},
+  init(state) {
+    clearTree(state);
+  },
   checkVictory(state) {
     const owner = sparkOwner(state);
     if (owner) finish(state, owner, `${FACTION_NAMES[raceOf(state, owner)]} wzniosło budynek: ${SPARK_NAMES[raceOf(state, owner)]}.`);
