@@ -43,6 +43,9 @@ const FLY_SPEED = 420;
 const WALK_SPEED = 300;
 const MIN_GLIDE_MS = 250;
 const HIT_MS = 320;
+/** A recoil drawn in code (SpriteSpec.recoil): a quick lean back from the blow, then a slow return to the standing pose. */
+const RECOIL_MS = 760;
+const hitMs = (set: SpriteSet | undefined) => (set?.spec.recoil ? RECOIL_MS : HIT_MS);
 /** A unit turning round (the picture narrows, hops and leans, then widens on the other side): there is no turn clip yet. */
 const TURN_MS = 300;
 /** Fire breathers: where the mouth is in the attack frame (shares of the frame width and height, while it breathes). */
@@ -198,7 +201,7 @@ class Stage {
       }
       if (p.hit && !was.hit && !rose) {
         // A hit clip (when the unit has one) plays after what is running; otherwise a shake and a flash in code.
-        if (set.frames.trafienie && !p.dead) l.queue.push({ kind: 'clip', clip: 'trafienie', reverse: false, ms: clipMs(set, 'trafienie') });
+        if (set.frames.trafienie && !p.dead && !set.spec.recoil) l.queue.push({ kind: 'clip', clip: 'trafienie', reverse: false, ms: clipMs(set, 'trafienie') });
         else l.hitStart = now;
       }
     }
@@ -222,7 +225,7 @@ class Stage {
     now = animClock(now);
     this.draw(now);
     // Keep drawing while anything moves; a still board needs no frames.
-    const busy = [...this.live.values()].some((l) => l.seg || l.queue.length || now - l.hitStart < HIT_MS);
+    const busy = [...this.live.values()].some((l) => l.seg || l.queue.length || now - l.hitStart < hitMs(this.sets.get(l.piece.defId)));
     if (busy) this.frame = requestAnimationFrame(this.tick);
   };
 
@@ -367,7 +370,14 @@ class Stage {
     }
     // Hit: shake and flash.
     const since = now - l.hitStart;
-    if (since < HIT_MS) {
+    let recoil = 0;
+    if (set.spec.recoil && since < RECOIL_MS) {
+      // Lean back fast (a fifth of the time), then ease back to standing; a faint flash at the blow.
+      const u = since / RECOIL_MS;
+      recoil = u < 0.2 ? Math.sin((u / 0.2) * (Math.PI / 2)) : 0.5 + 0.5 * Math.cos(((u - 0.2) / 0.8) * Math.PI);
+      x -= (l.flip ? -1 : 1) * recoil * bodyPx * 0.06;
+      if (u < 0.35) ctx.filter = `brightness(${1 + 0.45 * (1 - u / 0.35)})`;
+    } else if (!set.spec.recoil && since < HIT_MS) {
       x += Math.sin(since / 22) * 4 * (1 - since / HIT_MS);
       ctx.filter = `brightness(${1 + 1.2 * (1 - since / HIT_MS)})`;
     }
@@ -376,7 +386,7 @@ class Stage {
     if (seg?.kind === 'clip' && seg.clip === 'smierc') lie = seg.reverse ? 1 - Math.min(1, (now - l.segStart) / seg.ms) : Math.min(1, (now - l.segStart) / seg.ms);
     const k = 1 + (set.corpse.scale - 1) * lie;
     ctx.translate(x, gy - turnLift);
-    ctx.rotate(turnLean);
+    ctx.rotate(turnLean - (l.flip ? -1 : 1) * recoil * 0.12);
     ctx.scale((l.flip ? -1 : 1) * turn * k * shrink, k * shrink * (set.spec.stretchY ?? 1));
     ctx.translate(0, (set.corpse.dy * lie) / k);
     ctx.drawImage(img, sx, sy, sw, sh, -set.cx * dw, -set.feet * dh, dw, dh);

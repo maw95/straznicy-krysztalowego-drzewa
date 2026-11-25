@@ -17,6 +17,8 @@ export interface SpriteSpec {
   stretchY?: number;
   /** Where the feet stand, as a fraction of the frame height (when anim.json does not say). */
   feet?: number;
+  /** The hit is drawn in code as a smooth lean back from a blow in front (the AI hit clip of this unit morphs and flickers, so it is not used). */
+  recoil?: boolean;
   /** Playback speed of each clip against its recorded 24 fps (the take-off and landing are slowed or sped up here). */
   speed: Record<string, number>;
 }
@@ -132,20 +134,20 @@ export const SPRITES: Record<string, SpriteSpec> = {
   harpooneer: { dir: 'jednostki/harpunniczka', box: [78, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   sefiran: { dir: 'jednostki/sefiran_plamisty', box: [76, 54] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // Iron Clan (G4, 23.11): all nineteen characters with a full set of clips. Two-hex: dwarfCannon, clanColossus.
-  shieldDwarf: { dir: 'jednostki/krasnolud_tarczownik', box: [66, 106] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  bronzeMole: { dir: 'jednostki/kret_z_brazu', box: [90, 52] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  shieldDwarf: { dir: 'jednostki/krasnolud_tarczownik', box: [66, 106] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.0, trafienie: 1.4 } },
+  bronzeMole: { dir: 'jednostki/kret_z_brazu', box: [90, 52] as const, corpseMax: CORPSE_MAX_W, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   brassSpider: { dir: 'jednostki/mosiezny_pajak', box: [90, 45] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  armoredBear: { dir: 'jednostki/niedzwiedz_w_zbroi', box: [90, 67] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  battleSmith: { dir: 'jednostki/kowal_bitewny', box: [70, 108] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  bronzeSentinel: { dir: 'jednostki/wartownik_z_brazu', box: [60, 112] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  armoredBear: { dir: 'jednostki/niedzwiedz_w_zbroi', box: [90, 67] as const, corpseMax: CORPSE_MAX_W, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  battleSmith: { dir: 'jednostki/kowal_bitewny', box: [70, 108] as const, corpseMax: CORPSE_MAX_W, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.9, trafienie: 1.4 } },
+  bronzeSentinel: { dir: 'jednostki/wartownik_z_brazu', box: [60, 112] as const, corpseMax: CORPSE_MAX_W, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   ramGoat: { dir: 'jednostki/koziol_taranowy', box: [92, 80] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  giantSlayer: { dir: 'jednostki/pogromca_olbrzymow', box: [70, 106] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  skarbnik: { dir: 'jednostki/skarbnik', box: [72, 106] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
-  hammerGuard: { dir: 'jednostki/gwardia_mlota', box: [70, 106] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  giantSlayer: { dir: 'jednostki/pogromca_olbrzymow', box: [70, 106] as const, corpseMax: CORPSE_MAX_W, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  skarbnik: { dir: 'jednostki/skarbnik', box: [72, 106] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.0 } },
+  hammerGuard: { dir: 'jednostki/gwardia_mlota', box: [70, 106] as const, corpseMax: CORPSE_MAX_W, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   dwarfCannon: { dir: 'jednostki/armata_klanow', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.2, trafienie: 1.4 } },
   clanColossus: { dir: 'jednostki/kolos_kuzni', box: [150, 130] as const, speed: { chod: 1.4, atak: 1.5, smierc: 1.1, trafienie: 0.9 } },
-  ironThane: { dir: 'jednostki/tan_zelaznobrody', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.0 } },
-  runeMatron: { dir: 'jednostki/matka_run', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.0 } },
+  ironThane: { dir: 'jednostki/tan_zelaznobrody', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.0 } },
+  runeMatron: { dir: 'jednostki/matka_run', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.0 } },
   passWarden: { dir: 'jednostki/straznniczka_przeleczy', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   oldMiner: { dir: 'jednostki/stary_gormistrz', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   clanWarrior: { dir: 'jednostki/wojownik_klanu', box: [74, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
