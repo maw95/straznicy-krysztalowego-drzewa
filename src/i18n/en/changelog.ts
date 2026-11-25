@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Kret z Brązu: nowy atak bez zniekształceń – maszyna dwa razy wypada do przodu z kręcącym się wiertłem.": "Bronze Mole: a new attack without distortions – the machine lunges forward twice with its drill spinning.",
   "Żelazny Klan: nowe animacje – Tan i Stary Górmistrz uderzają przed siebie (nie w ziemię), Pogromca Olbrzymów robi samo pchnięcie włócznią bez kroków, a Tan, Pogromca, Gwardia Młota i Wartownik z Brązu przy śmierci padają na ziemię do końca.": "Iron Clan: new animations – Ironbeard the Thane and the Old Mountain-Master strike forward (not into the ground), the Giant Slayer makes a pure spear thrust without stepping, and the Thane, the Giant Slayer, the Hammer Guard and the Bronze Sentinel fall all the way to the ground when they die.",
   "Kusznik Gór: przy śmierci jego tarcza przechyla się i pada płasko na ziemię obok niego.": "Mountain Crossbowman: when he dies, his shield tips over and falls flat on the ground beside him.",
   "Gwardia Młota: z ataku zniknął biały błysk na młocie i pył po uderzeniu.": "Hammer Guard: the white glare on the hammer and the dust after the blow are gone from the attack.",

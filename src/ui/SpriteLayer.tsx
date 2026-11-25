@@ -7,7 +7,7 @@ import { animClock } from './animSpeed';
 import { useEffect, useRef } from 'react';
 import { emitImpact } from './impact';
 import { sfx } from './sfx';
-import { loadSprites, releaseSpritesExcept, SPRITES, type SpriteSet } from './sprites';
+import { loadSprites, lungeAt, releaseSpritesExcept, SPRITES, type SpriteSet } from './sprites';
 
 export interface SpritePiece {
   key: string;
@@ -371,6 +371,9 @@ class Stage {
     // Hit: shake and flash.
     const since = now - l.hitStart;
     let recoil = 0;
+    // A lunge drawn in code (SpriteSpec.lunge): the whole unit jabs forward during its attack clip.
+    const lunge = set.spec.lunge;
+    if (lunge && seg?.kind === 'clip' && seg.clip === 'atak' && !seg.reverse) x += (l.flip ? -1 : 1) * lunge.reach * bodyPx * lungeAt(lunge.jabs, Math.min(1, (now - l.segStart) / seg.ms));
     if (set.spec.recoil && since < RECOIL_MS) {
       // Lean back fast (a fifth of the time), then ease back to standing; a faint flash at the blow.
       const u = since / RECOIL_MS;

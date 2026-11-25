@@ -54,7 +54,7 @@ if (!process.env.SKIP_SHOTS) {
 }
 
 // 2. The page.
-interface Clip { name: string; frames: number; sheet: string; fps: number }
+interface Clip { name: string; frames: number; sheet: string; fps: number; lunge?: [number, number] }
 interface UnitEntry { id: string; name: string; kind: string; stats: string; ability: string; frame: [number, number]; cols: number; clips: Clip[]; stills: string[]; recoil?: { still: string; feet: number; cx: number }; sounds: { atak?: string; smierc?: string } }
 const entries: Record<string, UnitEntry[]> = {};
 for (const f of FACTIONS) {
@@ -73,7 +73,7 @@ for (const f of FACTIONS) {
       e.frame = a.frame; e.cols = a.cols;
       for (const [name, frames] of Object.entries<number>(a.clips)) {
         if (name === 'trafienie' && spec.recoil) continue; // drawn in code instead (SpriteSpec.recoil): shown below as a loop of the still
-        if (existsSync(`${dir}/${name}.webp`)) e.clips.push({ name, frames, sheet: `../../${dir}/${name}.webp`, fps: (a.fps ?? 12) * (spec.speed?.[name] ?? 1) });
+        if (existsSync(`${dir}/${name}.webp`)) e.clips.push({ name, frames, sheet: `../../${dir}/${name}.webp`, fps: (a.fps ?? 12) * (spec.speed?.[name] ?? 1), lunge: name === 'atak' && spec.lunge ? [spec.lunge.jabs, spec.lunge.reach * (a.body ?? 0.5)] : undefined });
       }
       for (const s of ['stoi', 'martwy']) if (existsSync(`${dir}/${s}.webp`)) e.stills.push(`../../${dir}/${s}.webp`);
       if (spec.recoil) e.recoil = { still: `../../${dir}/stoi.webp`, feet: a.feet ?? 0.84, cx: a.cx ?? 0.5 };
@@ -109,7 +109,7 @@ button:hover{background:#4d3d22}
 ${FACTIONS.map((f) => `<section id="${f}"><h2>${FACTION_NAMES[f]}</h2>
 <div class="osada"><div class="meta" style="margin:0 20px 6px">Ekran osady z wybudowanymi wszystkimi budynkami (scena panelu testowego)</div>${existsSync(`${OUT}/osady/${f}.jpg`) ? `<img loading="lazy" src="osady/${f}.jpg">` : '<div class="none" style="margin:0 20px">brak zrzutu osady</div>'}</div>
 ${entries[f].map((e) => `<div class="unit" data-id="${e.id}"><img loading="lazy" src="karty/${e.id}.png" alt="${e.name}"><div class="info"><h3>${e.name}</h3><div class="meta">${e.kind} · ${e.stats}${e.ability ? '<br>' + e.ability : ''}</div>
-<div class="clips">${e.stills.map((s) => `<div class="clip"><canvas data-still="${s}"></canvas>${s.includes('martwy') ? 'martwy' : 'stoi'}</div>`).join('')}${e.clips.map((c) => `<div class="clip"><canvas data-sheet="${c.sheet}" data-frames="${c.frames}" data-cols="${e.cols}" data-fw="${e.frame[0]}" data-fh="${e.frame[1]}" data-fps="${c.fps}"></canvas>${c.name}</div>`).join('')}${e.recoil ? `<div class="clip"><canvas data-still="${e.recoil.still}" data-recoil="1" data-feet="${e.recoil.feet}" data-cx="${e.recoil.cx}"></canvas>trafienie (w kodzie)</div>` : ''}${e.clips.length || e.stills.length ? '' : '<span class="none">brak sprite\'ów (żeton z portretem)</span>'}</div>
+<div class="clips">${e.stills.map((s) => `<div class="clip"><canvas data-still="${s}"></canvas>${s.includes('martwy') ? 'martwy' : 'stoi'}</div>`).join('')}${e.clips.map((c) => `<div class="clip"><canvas data-sheet="${c.sheet}" data-frames="${c.frames}" data-cols="${e.cols}" data-fw="${e.frame[0]}" data-fh="${e.frame[1]}" data-fps="${c.fps}"${c.lunge ? ` data-lunge="${c.lunge.join(',')}"` : ''}></canvas>${c.name}</div>`).join('')}${e.recoil ? `<div class="clip"><canvas data-still="${e.recoil.still}" data-recoil="1" data-feet="${e.recoil.feet}" data-cx="${e.recoil.cx}"></canvas>trafienie (w kodzie)</div>` : ''}${e.clips.length || e.stills.length ? '' : '<span class="none">brak sprite\'ów (żeton z portretem)</span>'}</div>
 <div>${e.sounds.atak ? `<button data-snd="${e.sounds.atak}">▶ dźwięk ataku</button>` : ''}${e.sounds.smierc ? `<button data-snd="${e.sounds.smierc}">▶ dźwięk śmierci</button>` : ''}${!e.sounds.atak && !e.sounds.smierc ? '<span class="none">brak dźwięków</span>' : ''}</div></div></div>`).join('')}</section>`).join('')}
 <script>
 const zoom=document.getElementById('zoom'),mirror=document.getElementById('mirror');
@@ -128,6 +128,7 @@ function tick(){const t=(performance.now()-t0)/1000;
    x.drawImage(i,0,0,c.width,c.height);x.restore();continue;}
   const i=img(c.dataset.sheet);if(!i.complete||!c.width)continue;const n=+c.dataset.frames,cols=+c.dataset.cols,fw=+c.dataset.fw,fh=+c.dataset.fh;
   const f=Math.floor(t*(+c.dataset.fps))%n;x.clearRect(0,0,c.width,c.height);x.save();if(flip){x.translate(c.width,0);x.scale(-1,1);}
+  if(c.dataset.lunge){const [j,r]=c.dataset.lunge.split(',').map(Number);const tt=(t*(+c.dataset.fps)%n)/n;const u=(tt-0.1)/0.75;let o=0;if(u>0&&u<1){const k=(u*j)%1;o=k<0.3?Math.sin(k/0.3*Math.PI/2):0.5+0.5*Math.cos((k-0.3)/0.7*Math.PI);}x.translate(o*r*c.width,0);}
   x.drawImage(i,(f%cols)*fw,Math.floor(f/cols)*fh,fw,fh,0,0,c.width,c.height);x.restore();}
  requestAnimationFrame(tick);}
 tick();

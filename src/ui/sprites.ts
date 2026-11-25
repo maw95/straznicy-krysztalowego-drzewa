@@ -19,6 +19,8 @@ export interface SpriteSpec {
   feet?: number;
   /** The hit is drawn in code as a smooth lean back from a blow in front (the AI hit clip of this unit morphs and flickers, so it is not used). */
   recoil?: boolean;
+  /** The attack clip barely moves the body (a rigid machine): it is drawn jabbing forward this many times, by this share of its body width. */
+  lunge?: { jabs: number; reach: number };
   /** Playback speed of each clip against its recorded 24 fps (the take-off and landing are slowed or sped up here). */
   speed: Record<string, number>;
 }
@@ -135,7 +137,7 @@ export const SPRITES: Record<string, SpriteSpec> = {
   sefiran: { dir: 'jednostki/sefiran_plamisty', box: [76, 54] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // Iron Clan (G4, 23.11): all nineteen characters with a full set of clips. Two-hex: dwarfCannon, clanColossus.
   shieldDwarf: { dir: 'jednostki/krasnolud_tarczownik', box: [66, 106] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.0, trafienie: 1.4 } },
-  bronzeMole: { dir: 'jednostki/kret_z_brazu', box: [90, 52] as const, corpseMax: CORPSE_MAX_W, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
+  bronzeMole: { dir: 'jednostki/kret_z_brazu', box: [90, 52] as const, corpseMax: CORPSE_MAX_W, recoil: true, lunge: { jabs: 2, reach: 0.22 }, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   brassSpider: { dir: 'jednostki/mosiezny_pajak', box: [90, 45] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   armoredBear: { dir: 'jednostki/niedzwiedz_w_zbroi', box: [90, 67] as const, corpseMax: CORPSE_MAX_W, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   battleSmith: { dir: 'jednostki/kowal_bitewny', box: [70, 108] as const, corpseMax: CORPSE_MAX_W, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.9, trafienie: 1.4 } },
@@ -156,6 +158,14 @@ export const SPRITES: Record<string, SpriteSpec> = {
 };
 
 /** Whether the unit is drawn from sprites in the digital ruleset (otherwise: 3D figure or portrait token). */
+/** How far forward (0–1 of the reach) a lunging unit is at point t (0–1) of its attack clip: quick jabs out, a slower pull back, between 10% and 85% of the clip. */
+export function lungeAt(jabs: number, t: number): number {
+  const u = (t - 0.1) / 0.75;
+  if (u <= 0 || u >= 1) return 0;
+  const k = (u * jabs) % 1;
+  return k < 0.3 ? Math.sin((k / 0.3) * (Math.PI / 2)) : 0.5 + 0.5 * Math.cos(((k - 0.3) / 0.7) * Math.PI);
+}
+
 export const hasSprites = (defId: string): boolean => defId in SPRITES;
 
 interface AnimJson {

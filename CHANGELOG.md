@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Kret z Brązu: nowy atak bez zniekształceń – maszyna dwa razy wypada do przodu z kręcącym się wiertłem.
 - Żelazny Klan: nowe animacje – Tan i Stary Górmistrz uderzają przed siebie (nie w ziemię), Pogromca Olbrzymów robi samo pchnięcie włócznią bez kroków, a Tan, Pogromca, Gwardia Młota i Wartownik z Brązu przy śmierci padają na ziemię do końca.
 - Kusznik Gór: przy śmierci jego tarcza przechyla się i pada płasko na ziemię obok niego.
 - Gwardia Młota: z ataku zniknął biały błysk na młocie i pył po uderzeniu.
