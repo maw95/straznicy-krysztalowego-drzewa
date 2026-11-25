@@ -74,6 +74,10 @@ export interface RulesConfig {
   dawnStartXp?: number;
   /** Digital tuning: a fallen Przymierze hero is replaced by an unused one (heroReplacement for the Przymierza side alone; the Horde's heroes stay dead). Missing = off. */
   dawnHeroReplacement?: boolean;
+  /** Digital tuning, Easy: the factions (races) that fight without their digital balancing bonus (FACTION_DIGITAL_BONUS), e.g. ['horde'] for the bot of a Skirmish. Missing = every faction has it. */
+  noFactionBonus?: FactionId[];
+  /** Digital tuning, goal 'crystals', Easy, last resort: added to the crystals the Przymierze must bring to the Tree (e.g. -1: 2 of 3; at least 1). The guardians and their crystals stay on the map. Missing = 0. */
+  crystalsNeededDelta?: number;
   /** Digital tuning, level 3: extra gold per round for the Przymierza (a start condition of Easy). */
   dawnGoldBonus?: number;
   /** Rounds that all living evil heroes must spend on the Tree to complete the ritual. */

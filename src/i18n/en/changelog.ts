@@ -4,6 +4,7 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Poziomy trudności: dwie nowe dźwignie dla poziomu Łatwego – Horda może walczyć bez cyfrowej premii wyrównującej, a w celu Kryształy (w ostateczności) Drzewu wystarczy oddać o jeden kryształ mniej. Strojenie z ich użyciem jeszcze trwa.": "Difficulty levels: two new levers for the Easy level – the Horde may fight without its digital balancing bonus, and in the Crystals goal (as a last resort) one crystal fewer has to reach the Tree. The tuning that uses them is still running.",
   "Osada Stad: Karczma trochę niżej i w prawo.": "Herds settlement: the Tavern a little lower and to the right.",
   "Osada Hordy: Wielka kuźnia odsunięta od Popielnej Jamy, Karczma trochę wyżej.": "Horde settlement: the Great Forge moved away from the Ash Pit, the Tavern a little higher.",
   "Osady: mury i fosa ciągną się przez całą szerokość osady; budynki Przymierza, Stad, Hordy, Klanu i Przypływów przestawione według uwag autora (m.in. nic nie stoi na skałach, siedliska nie chowają się za murem).": "Settlements: the walls and the moat run across the whole width of the settlement; the buildings of the Przymierze, the Herds, the Horde, the Clan and the Tides rearranged after the author's notes (among others nothing stands on rocks, no dwelling hides behind the wall).",

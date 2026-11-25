@@ -83,6 +83,9 @@ export const isOver = (state: GameState): boolean => state.phase === 'over';
 // ------------------------------------------------------------------ setup
 
 /** Crystals on the map (and needed at the Tree): 2 for one Przymierze hero, 3 for two or three (there are three guardian lairs). */
+/** Units of this faction fight without the digital balancing bonus: always in the 6 on 6 arena, and on Easy where the tuning takes it from the bot's faction (`noFactionBonus`). */
+export const withoutBonus = (state: GameState, faction: TeamId): boolean => state.setup.mode === 'arena' || Boolean(state.rules.noFactionBonus?.includes(raceOf(state, faction)));
+
 export function crystalsFor(setup: SetupOptions): number {
   return setup.seats.filter((s) => s.faction === 'dawn').length >= 2 ? 3 : 2;
 }
@@ -134,7 +137,7 @@ export function createGame(setup: SetupOptions): GameState {
     rng: 0,
     round: 1,
     roundLimit: Math.round(variant.roundLimit * (isDigital(rules) ? SHAPE_ROUND_FACTOR[setup.mapShape ?? 'triangle'] : 1)) + (rules.roundLimitBonus ?? 0),
-    crystalsNeeded: crystals,
+    crystalsNeeded: Math.max(1, crystals + (rules.crystalsNeededDelta ?? 0)),
     phase: 'adventure',
     players: [],
     heroes: {},
@@ -1076,8 +1079,8 @@ function startBattle(state: GameState, s: BattleStart) {
   const digital = isDigital(state.rules) && !b.duel;
   const scale = scaleOf(state);
   const hpScale = hpScaleOf(state);
-  b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction, digital, scale, hpScale, state.setup.mode === 'arena');
-  if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital, scale, hpScale, state.setup.mode === 'arena');
+  b.units[attacker.id] = makeBattleUnit(attacker.id, attacker.faction, digital, scale, hpScale, withoutBonus(state, attacker.faction));
+  if (defenderHero) b.units[defenderHero.id] = makeBattleUnit(defenderHero.id, defenderHero.faction, digital, scale, hpScale, withoutBonus(state, defenderHero.faction));
   for (const h of [attacker, defenderHero]) if (h && state.rules.heroGrowth) {
     applyHeroSkills(h, b.units[h.id]);
     applyHeroType(h, b.units[h.id]);
@@ -1179,7 +1182,7 @@ function addSupports(state: GameState, faction: TeamId, ids: string[]) {
   const digital = isDigital(state.rules) && !b.duel;
   for (const defId of ids) {
     const id = defId;
-    b.units[id] = makeBattleUnit(defId, faction, digital, scaleOf(state), hpScaleOf(state), state.setup.mode === 'arena');
+    b.units[id] = makeBattleUnit(defId, faction, digital, scaleOf(state), hpScaleOf(state), withoutBonus(state, faction));
     // The leader of the side (the attacking or the defending hero of this faction) strengthens its supports.
     if (state.rules.heroGrowth) {
       const leader = state.heroes[b.attacker === faction ? b.attackerHero : b.defenderHero ?? ''];

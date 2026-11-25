@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createGame, killHero } from '../src/engine/game';
-import { SURVIVAL } from '../src/engine/data';
+import { createGame, killHero, withoutBonus } from '../src/engine/game';
+import { battleStats, SURVIVAL } from '../src/engine/data';
 import { DIGITAL_TUNING, digitalRules } from '../src/engine/tuning';
 import { pvpSeats, setup } from './helpers/engine';
 
@@ -91,5 +91,25 @@ describe('digital tuning levers of the finer ladder', () => {
     killHero(bot, 'blackDragon', bot.heroes.blackDragon.pos);
     expect(killDawn.factions.dawn.unusedHeroes.length).toBe(dawnReserve - 1);
     expect(bot.factions.horde.unusedHeroes.length).toBe(s.factions.horde.unusedHeroes.length);
+  });
+
+  it('noFactionBonus takes the balancing bonus from the listed factions only (default: every faction keeps it)', () => {
+    const game = (rules: Record<string, unknown>) => createGame(digital({ objective: 'crystals', ...rules }, { mode: 'pvp', seats: pvpSeats('goldDragon', 'blackDragon') }));
+    const plain = game({});
+    expect(withoutBonus(plain, 'horde')).toBe(false);
+    expect(withoutBonus(plain, 'dawn')).toBe(false);
+    const easy = game({ noFactionBonus: ['horde'] });
+    expect(withoutBonus(easy, 'horde')).toBe(true);
+    expect(withoutBonus(easy, 'dawn')).toBe(false);
+    // The flag a unit gets is the one battleStats reads: the Horde's hero loses its +1 Atak.
+    expect(battleStats('blackDragon', true, 1, 1, true).attack).toBe(battleStats('blackDragon', true, 1, 1, false).attack - 1);
+  });
+
+  it('crystalsNeededDelta lowers the crystals needed at the Tree, never below 1 (default: all of them)', () => {
+    const need = (rules: Record<string, unknown>) => createGame(digital({ objective: 'crystals', ...rules })).crystalsNeeded;
+    const base = need({});
+    expect(need({ crystalsNeededDelta: -1 })).toBe(base - 1);
+    expect(need({ crystalsNeededDelta: -9 })).toBe(1);
+    expect(Object.keys(createGame(digital({ objective: 'crystals', crystalsNeededDelta: -1 })).crystals).length).toBe(Object.keys(createGame(digital({ objective: 'crystals' })).crystals).length);
   });
 });

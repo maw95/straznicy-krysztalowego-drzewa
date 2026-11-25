@@ -31,17 +31,22 @@ const treasures = (n: number) => ({ resurrections: 0, others: 0, random: n });
 const H0 = { hordeStartTreasures: treasures(0) };
 const dawn = (n: number): Patch => ({ ...H0, dawnStartTreasures: treasures(n) });
 /**
- * Raising the Przymierza's chances, gentlest first: treasures (they saturate near 10 cards), then a reserve hero (the Przymierza's alone), start
+ * Raising the Przymierza's chances, gentlest first: treasures (they saturate near 10 cards), then a reserve hero (the Przymierza's alone), the
+ * Horde without its digital balancing bonus (both Easy only), start
  * experience (only with hero growth), and last a move point and more rounds. The Horde's coop-only rungs (extraEvilHero, minEvilHeroes, hordeRespawn)
  * are gone: in a Skirmish they do nothing. The goal's own fine lever (FINE below) is searched on top of the best rung.
  */
+const EASY = { dawnHeroReplacement: true, noFactionBonus: ['horde'] };
 const UP: Patch[] = [
   H0,
   ...[1, 2, 3, 4, 5, 6, 8, 10].map(dawn),
   { ...dawn(10), dawnHeroReplacement: true },
-  ...(growth ? [3, 7, 12].map((xp) => ({ ...dawn(10), dawnHeroReplacement: true, dawnStartXp: xp })) : []),
-  { ...dawn(13), dawnHeroReplacement: true, ...(growth ? { dawnStartXp: 12 } : {}), heroMovePoints: 4 },
-  { ...dawn(13), dawnHeroReplacement: true, ...(growth ? { dawnStartXp: 12 } : {}), heroMovePoints: 4, roundLimitBonus: 6 },
+  { ...dawn(10), ...EASY },
+  ...(growth ? [3, 7, 12].map((xp) => ({ ...dawn(10), ...EASY, dawnStartXp: xp })) : []),
+  { ...dawn(13), ...EASY, ...(growth ? { dawnStartXp: 12 } : {}), heroMovePoints: 4 },
+  { ...dawn(13), ...EASY, ...(growth ? { dawnStartXp: 12 } : {}), heroMovePoints: 4, roundLimitBonus: 6 },
+  // The last resort of the Crystals (the author, 25.11): one crystal fewer to bring to the Tree.
+  ...(objective === 'crystals' ? [{ ...dawn(13), ...EASY, ...(growth ? { dawnStartXp: 12 } : {}), heroMovePoints: 4, roundLimitBonus: 6, crystalsNeededDelta: -1 }] : []),
 ];
 /** Lowering them. */
 const DOWN: Array<(coop: boolean) => Patch> = [
@@ -93,8 +98,9 @@ const status = (c: Cell, r: number) => (!inBand(c, r) ? 'OUT' : dist(c, r) ? 'ed
 
 function entryOf(c: Cell, cfg: Config) {
   const patch = { ...(cfg.step > 0 ? UP[cfg.step - 1] : cfg.step < 0 ? DOWN[-cfg.step - 1](c.table.startsWith('coop')) : {}), ...finePatch(cfg.fine) };
-  // The reserve hero is the Easy level's alone (the author, 25.11): on Normal and Hard the rung keeps only its treasures and experience.
-  if (LEVEL[c.option] !== 'kids') delete (patch as Patch).dawnHeroReplacement;
+  // The reserve hero, the Horde without its balancing bonus and one crystal fewer are the Easy level's alone (the author, 25.11): on Normal
+  // and Hard the rung keeps only its treasures, experience, moves and rounds.
+  if (LEVEL[c.option] !== 'kids') for (const k of ['dawnHeroReplacement', 'noFactionBonus', 'crystalsNeededDelta']) delete (patch as Patch)[k];
   return {
     objective,
     level: LEVEL[c.option],
