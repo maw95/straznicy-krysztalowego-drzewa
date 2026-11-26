@@ -39,7 +39,7 @@ Dowódcy Stad: nazwy własne „Łowca Wiatru” i „Płanetnik” (`realm.ts`)
 - Horda cyfrowa ma +1 Ż i +1 A (`HORDE_DIGITAL_BONUS`, `data.ts`; bez areny i bez wersji planszowej): `22c56b1`.
 - Tryb „Potyczka” zamiast Rywalizacji i Kooperacji w wersji cyfrowej, kampania, Przetrwanie i tryb rodzinny na zwykłym bocie: `edf15c2`, `3a164c0`.
   Wersja planszowa nietknięta (zostaje Kooperacja z automatem; silnik zachowuje `mode: 'coop'` tylko dla niej).
-- Opis i plan: `docs/BACKLOG.md` punkt 51b.
+- Zostało po tej zmianie: przestrojenie scenariuszy kampanii (`docs/BACKLOG.md` punkt 51b).
 
 ## Kolejność zadań (ustalona z autorem 20.11, żeby zużyć jak najmniej tokenów; autor może stracić limit w każdej chwili)
 1. **Dokończyć przestrojenie poziomów** (zadanie 1 niżej): czekać na `=== done`, `tuneMerge`, `make check`, commit.
