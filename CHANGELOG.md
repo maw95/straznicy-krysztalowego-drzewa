@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 3.0.0 — 2026-11-26
+
 - Potyczka: trudność wybiera się przy każdym bocie (Łatwy, Normalny, Trudny, Bardzo trudny; także bot w drużynie z tobą), a nie dla całej gry. Gra samych ludzi nie ma trudności ani ułatwień dla nikogo. W celach Kryształy do Drzewa i Przetrwanie miejsca przy stole stoją w dwóch kolumnach podpisanych rolą (np. „Zbierają kryształy” i „Bronią Drzewa”), a przycisk ⇄ przenosi gracza do drugiej drużyny. Ranking liczy najwyższy poziom botów grających przeciwko tobie. Na stole online poziom ustawia się tak samo, przy każdym bocie.
 - Boty: słabszy bot (Łatwy, Normalny) czasem myli się w konkretnych miejscach: zbacza z drogi na mapie, uderza w gorszy cel, rusza się bez patrzenia na zagrożenie, mija skarb, wybiera drugą w kolejności umiejętność albo odpuszcza zakup. Trudny gra najlepiej, jak umie, Bardzo trudny ma do tego przewagi komputera.
 - Mgła wojny: każda frakcja odkrywa mapę dla siebie. Gracz widzi tylko pola odkryte przez własną frakcję (pole raz odkryte zostaje widoczne razem z tym, kto na nim stoi), boty planują tylko na tym, co odkryła ich frakcja, a dziennik pokazuje własne wpisy, bitwy z udziałem gracza i wspólne zdarzenia. Wydanie planszowe zostaje ze wspólną mapą.

@@ -2,7 +2,7 @@
 // (commit hashes and Markdown marks dropped). Newest first. A new line in CHANGELOG.md needs its English here (tests/changelogEn.test.ts checks every line).
 import { register } from '../translate';
 
-// In preparation
+// 3.0.0
 register({
   'Potyczka: trudność wybiera się przy każdym bocie (Łatwy, Normalny, Trudny, Bardzo trudny; także bot w drużynie z tobą), a nie dla całej gry. Gra samych ludzi nie ma trudności ani ułatwień dla nikogo. W celach Kryształy do Drzewa i Przetrwanie miejsca przy stole stoją w dwóch kolumnach podpisanych rolą (np. „Zbierają kryształy” i „Bronią Drzewa”), a przycisk ⇄ przenosi gracza do drugiej drużyny. Ranking liczy najwyższy poziom botów grających przeciwko tobie. Na stole online poziom ustawia się tak samo, przy każdym bocie.':
     'Skirmish: the difficulty is chosen at each bot (Easy, Normal, Hard, Very hard; also a bot in your team), not for the whole game. A game of people only has no difficulty and no help for anyone. In the goals Crystals to the Tree and Survival the seats stand in two columns named by the role (e.g. "Gather the crystals" and "Guard the Tree"), and the ⇄ button moves a player to the other team. The ranking counts the highest level of the bots playing against you. At an online table the level is set the same way, at each bot.',
