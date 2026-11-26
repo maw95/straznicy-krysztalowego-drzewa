@@ -11106,6 +11106,66 @@
       "data": "2026-11-26",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "free/sprity-bohaterowie",
+      "pliki": [
+        "public/assets/jednostki/borsuk_saper/anim.json",
+        "public/assets/jednostki/borsuk_saper/atak.webp",
+        "public/assets/jednostki/borsuk_saper/chod.webp",
+        "public/assets/jednostki/borsuk_saper/martwy.webp",
+        "public/assets/jednostki/borsuk_saper/smierc.webp",
+        "public/assets/jednostki/borsuk_saper/stoi.webp",
+        "public/assets/jednostki/borsuk_saper/trafienie.webp",
+        "public/assets/jednostki/kruk_wieszczek/anim.json",
+        "public/assets/jednostki/kruk_wieszczek/atak.webp",
+        "public/assets/jednostki/kruk_wieszczek/lot.webp",
+        "public/assets/jednostki/kruk_wieszczek/martwy.webp",
+        "public/assets/jednostki/kruk_wieszczek/smierc.webp",
+        "public/assets/jednostki/kruk_wieszczek/stoi.webp",
+        "public/assets/jednostki/kruk_wieszczek/trafienie.webp",
+        "public/assets/jednostki/kruk_wieszczek/wzbicie.webp",
+        "public/assets/jednostki/ruda_atamanka/anim.json",
+        "public/assets/jednostki/ruda_atamanka/atak.webp",
+        "public/assets/jednostki/ruda_atamanka/chod.webp",
+        "public/assets/jednostki/ruda_atamanka/martwy.webp",
+        "public/assets/jednostki/ruda_atamanka/smierc.webp",
+        "public/assets/jednostki/ruda_atamanka/stoi.webp",
+        "public/assets/jednostki/ruda_atamanka/trafienie.webp"
+      ],
+      "typ": "animowane sprite'y 3 bohaterów Wolnej Kompanii (Ruda Atamanka, Borsuk Saper, Kruk Wieszczek): stoi, martwy, chód lub wzbicie i lot, atak, śmierć, trafienie",
+      "opis": "Obraz bazowy Flare high 1024² z karty postaci, klipy P-Video 2 (720p, 24 fps, draft; finał dla ataku Borsuka i trafienia Atamanki); martwy = ostatnia klatka śmierci; trafienie Kruka to pierwsze 9 klatek klipu odtworzone tam i z powrotem (ffmpeg); pakowanie pack_unit.py 512 px, FADE_RIGHT dla śmierci. Powtórki: śmierć i trafienie Atamanki, atak i śmierć Borsuka (1 klip zablokowany), atak Kruka.",
+      "scenario_asset": {
+        "foxCaptain": {
+          "stoi": "asset_5VohTpEnNPLWoswhGhXumxkC",
+          "atak": "asset_T8t6Wkn4kZs4KxPqfRf7pPbC",
+          "chod": "asset_VVSxM7XYnVv31RFt68LfiLJG",
+          "smierc": "asset_Hz7JJGiGpgGJWFqUypUG8jFq",
+          "trafienie": "asset_yKqDcKbLhDdzHeZmeD6A8gMk"
+        },
+        "badgerSapper": {
+          "stoi": "asset_TwA6ETdLx4brz9Fs5wmbXKAa",
+          "atak": "asset_rpkh2uZsbL2PTswAykiYchEt",
+          "chod": "asset_ChiraGcWrvhESF5ErzYvw8sF",
+          "smierc": "asset_6QVfLHJkbPfcveSd5iD65pCu",
+          "trafienie": "asset_VyQYTdjZ5KARpmVxB7ZHX65c"
+        },
+        "ravenSeer": {
+          "stoi": "asset_mAZvCZZMYgWGHu5h7vDDuHNg",
+          "hover": "asset_vEFmHRwL25AUH9KYYeuGvBTJ",
+          "wzbicie": "asset_ACkDLNRUKb5GKKVuPsiX74pQ",
+          "lot": "asset_Jk2ArcjJ9AjeVzBGDPsdZwAY",
+          "atak": "asset_EEBxmSSCpA3Lne6y5GTcK8YH",
+          "smierc": "asset_vftRZijfcKQgQBcQzeUfcwhi",
+          "trafienie": "asset_8jnQGX88L5jYwQAg4ozXiekg"
+        }
+      },
+      "prompt": "stoi: Use the reference image only for the character design (...). Draw this same character as a full-body game sprite in a strict side view ... plain solid pure blue background. Klipy: Side view, locked static camera. <ruch> ... Plain solid blue background stays unchanged, no camera movement.",
+      "narzedzie": "GPT Image 2.5 Flare + P-Video 2 przez Scenario + scripts/animacje/pack_unit.py",
+      "model": "model_openai-gpt-image-2-5-flare, model_pruna-p-video-2",
+      "data": "2026-11-26",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

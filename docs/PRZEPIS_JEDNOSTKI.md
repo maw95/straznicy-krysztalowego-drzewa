@@ -100,6 +100,7 @@ dużych, ok. 70 px dla małych (`bodyW`).
 
 ## Słowa blokowane przez filtr (stan 24.11.2026; blokada też kosztuje kredyty)
 
+- **26.11 (Kompania):** zablokowana śmierć Borsuka z kilofem: „lets go of his pickaxe ... tips forward ... falls ... lies completely flat”. Przeszło bez nazwy broni: „lets go of what he is holding ... settles onto the ground” (ale kuca) oraz „loses his balance and falls over sideways ... stretched out flat at full length ... never kneels and never curls up” (najlepsze). Trafienie „leans backward, as if a gust of wind” bywa zbyt mocne (Kruk: głowa odchyla się do góry; ratunek 0 CU: pierwsze klatki tam i z powrotem).
 - **Blokowały:** slash/slashing, strike/struck, kill, blood, crash, collapse, final, „strength gives out”, fist, gauntlet, claw, hit, push, force, blow, ram, cutting, fierce, staggers, topples, „heavy thud”, „Defeat animation”, „heavily onto his back”, „tipping over onto his back” (każda śmierć z upadkiem na plecy), u maszyn „heavily damaged, parts fly off”.
 - **Przechodziły:** swings, sweeping motion, settles down, sinks down onto the ground, „as if fast asleep”, startled, tapping, „falls over sideways”, „lowers itself sideways to the ground ... rests completely still”; maszyny: „comes apart, plates and gears loosen and fall away, then lies still”.
 - Blokada zależy też od obrazów wejściowych: przed partią zrób próbę jednego klipu. Punkt 86 stracił ok. 215 CU na zablokowane klipy.
