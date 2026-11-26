@@ -25,7 +25,7 @@ Autor pisze „zrób punkty 1, 2 i 3” (albo „zrób 9–10”, „zrób wszys
 
 ## Stan (25.11.2026)
 
-Ostatnie wydanie: **3.0.0** (26.11; serwer 0.3.0 z silnikiem 3.0.0 wdrożony). W `master` czekają niewydane zmiany z „W przygotowaniu” w CHANGELOG.md (m.in. pełna grafika Dzikiego Stada, Żelaznego Klanu i Bractwa Przypływu); push i wydanie robi autor. Backend ma lokalne, niewdrożone commity (punkt 63c).
+Ostatnie wydanie: **3.0.0** (26.11; serwer 0.3.0 z silnikiem 3.0.0 wdrożony).
 Drabinka poziomów: 0 Spacer, 1 Przygoda, 2 Wyprawa, 3 Osada, 4 Księstwo, 5 Królestwo, 6 Imperium. Premiera (3.0) dopiero po poziomie 6. Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids` = Łatwy, `economy`, `realm`, `empire`) zostają. Typ `Level`: `zero | kids | normal | hard`.
 
 ## 1. Kolejka prac (w tej kolejności)
