@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Wolna Kompania: portret i karta Warana Wieżowego pokazują głowę i wieżyczkę z łucznikami (karta kadrowała szyję i nogę); karty pozostałych postaci Kompanii mają to samo kadrowanie co portrety.":
+    "The Free Company: the Tower Monitor's portrait and card show its head and the turret with the archers (the card framed the neck and a leg); the cards of the other characters of the Company are framed like their portraits.",
   "Wolna Kompania: nowe dźwięki po uwagach: śmierć Sroki, Ropucha i Kocura (teraz po kociemu), atak Tchórza (rzut i tłuczona butla), Bobra (uderzenie siekierki), Jenota (cięcie sztyletu) i Świstaka (lont zakończony wybuchem).":
     "The Free Company: new sounds after review: the deaths of the Magpie, the Toad and the Tomcat (now clearly a cat), the attacks of the Polecat (a thrown and shattering flask), the Beaver (a hatchet chop), the Raccoon Dog (a dagger cut) and the Marmot (a fuse ending in a bang).",
   "Wolna Kompania: Ruda Atamanka, Borsuk Saper i Kruk Wieszczek mają animowane figury na polu bitwy (ruch, atak, trafienie, śmierć; Kruk wzbija się i lata). Pozostałe postaci Kompanii to na razie żetony z portretami.":

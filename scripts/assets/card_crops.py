@@ -23,8 +23,26 @@ MANUAL = {
     'sharkman': (0.42, 0.28, 0.46),
     'pearlPriestess': (0.43, 0.245, 0.45),
     'lobsterKnight': (0.41, 0.3, 0.58),
-    # Free Company (25.11): portrait cut from the art with this box (scripts/assets/free_cards.py), the matcher misses it.
-    'marmotPetard': (0.41, 0.35, 0.42),
+    # Free Company: the portraits are cut from the art with the boxes of scripts/assets/free_cards.py (CROP); the card takes the same ones
+    # (the matcher missed the re-centred portraits of 26.11 and framed the Tower Monitor's leg).
+    'foxCaptain': (0.46, 0.21, 0.42),
+    'badgerSapper': (0.5, 0.23, 0.44),
+    'ravenSeer': (0.47, 0.28, 0.5),
+    'otterSmuggler': (0.36, 0.21, 0.42),
+    'otterScout': (0.42, 0.369, 0.42),
+    'magpieThief': (0.4, 0.32, 0.44),
+    'weaselKnife': (0.45, 0.339, 0.42),
+    'polecatPoisoner': (0.38, 0.31, 0.42),
+    'catFencer': (0.46, 0.27, 0.44),
+    'wolverine': (0.48, 0.29, 0.42),
+    'marmotPetard': (0.5, 0.349, 0.42),
+    'toadGunner': (0.37, 0.29, 0.44),
+    'beaverEngineer': (0.42, 0.33, 0.42),
+    'raccoonDogSpy': (0.35, 0.381, 0.42),
+    'towerMonitor': (0.55, 0.37, 0.74),
+    'martenSlasher': (0.45, 0.3, 0.44),
+    'wildcatBajka': (0.48, 0.24, 0.44),
+    'hareHerbalist': (0.53, 0.24, 0.48),
 }
 MAX_ERR = 33  # mean abs difference (0-255) above which a match is not trusted (correct matches of re-graded portraits reach ~30)
 
