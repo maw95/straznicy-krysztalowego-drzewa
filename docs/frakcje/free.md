@@ -60,7 +60,7 @@ Stara Karczma Pod Sową, Zielony Gościniec, Spalony Most, Sakwa i Łuk, Bractwo
 ## Wygląd i dźwięk
 - **Wygląd wzorcowy Bajki (kotka autora):** `docs/frakcje/ZWIERZAKI_AUTORA.md`.
 - **Paleta:** rude i brązowe futra, butelkowa zieleń płaszczy, skóra, mosiądz sprzączek, len.
-- **Barwa frakcji (decyzja autora 26.11): burgund `#6B1A33`** (herb, proporce na budynkach i palisadzie, ramki kart, wstążka, pierścień portretu), żeby Kompania nie myliła się z zielonym Przymierzem. Gotowe obrazy przebarwia `scripts/assets/free_burgundy.py`; w nowych promptach chorągwie, proporce i sztandary Kompanii są burgundowe, nie zielone.
+- **Barwa frakcji (decyzja autora 26.11): burgund `#6B1A33`** (herb, proporce na budynkach i palisadzie, ramki kart, wstążka, pierścień portretu), żeby Kompania nie myliła się z zielonym Przymierzem. Gotowe obrazy przebarwia `scripts/assets/free_burgundy.py`; w nowych promptach chorągwie, proporce i sztandary Kompanii są burgundowe, nie zielone. Płaszcze postaci zostają butelkowo zielone (decyzja autora 26.11).
 - **Herb:** lisia głowa na skrzyżowanych strzałach. **Arena:** leśny obóz przy zrujnowanym młynie, płoty, beczki.
 - **Muzyka:** lutnia, flet, skrzypki, ballada zbójnicka.
 
