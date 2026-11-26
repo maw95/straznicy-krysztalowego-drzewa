@@ -8,9 +8,9 @@ import { currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, 
 import { useOnline } from '../online/useOnline';
 import { Logo, useCoverArt } from './Logo';
 import { asset, FACTION_RING, Frame, Portrait, Ribbon } from './common';
-import { BOARD_LEVELS, choice, LEVELS, openFactions, SEAT_TINT, SHAPE_NAMES } from './setupShared';
+import { BOARD_LEVELS, BOT_LEVEL_NAMES, BOT_LEVEL_TIPS, choice, LEVELS, openFactions, SEAT_TINT, SHAPE_NAMES, Tip } from './setupShared';
 import { NewGameWizard } from './NewGameWizard';
-import type { Mode } from '../engine/types';
+import { BOT_LEVELS, type BotLevel, type Mode } from '../engine/types';
 
 /** Links of the main menu that do not depend on the account. */
 export interface MenuLinks {
@@ -383,14 +383,15 @@ function tableSummary(t: TableConfig): string[] {
   if (t.mode !== 'arena' && !(t.shape === 'custom' && t.tier !== 'adventure')) parts.push(`Wielkość: ${MAP_SIZE_NAMES[t.mapSize]}`);
   parts.push(`Gracze: ${t.seats.length}`);
   if (t.level === 'zero' && t.digital) parts.push('Poziom I');
-  else parts.push(`${t.mode === 'arena' ? 'Komputer' : 'Trudność'}: ${(t.digital ? LEVELS : BOARD_LEVELS).find(([l]) => l === t.level)?.[1] ?? t.level}`);
+  // A digital rivalry has its levels at the bots (backlog 94).
+  else if (!(t.digital && t.mode === 'pvp')) parts.push(`${t.mode === 'arena' ? 'Komputer' : 'Trudność'}: ${(t.digital ? LEVELS : BOARD_LEVELS).find(([l]) => l === t.level)?.[1] ?? t.level}`);
   return parts;
 }
 
 function RoomLobby({ session, room, me, online }: { session: OnlineSession; room: RoomView; me: User; online: OnlineState }) {
   const owner = room.ownerId === me.id;
   const locked = room.resumed === true;
-  const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, tier: room.tier ?? 'adventure', objective: room.objective ?? 'crystals', shape: room.shape ?? 'triangle', ...(room.customMapId ? { customMapId: room.customMapId } : {}), ...(room.noHorde ? { noHorde: true } : {}), ...(room.arenaSize === 6 ? { arenaSize: 6 as const } : {}), ...(room.tier === 'custom' ? { growth: room.growth === true, ...(room.layer ? { layer: room.layer } : {}), battleMode: room.battleMode ?? 'arena', rules: room.rules ?? defaultCustom(room.level, room.mode).rules } : {}), seats: room.seats.map(({ faction, heroId, bot }) => ({ faction, heroId, bot })) };
+  const table: TableConfig = { mode: room.mode, mapSize: room.mapSize, level: room.level, digital: room.digital === true, tier: room.tier ?? 'adventure', objective: room.objective ?? 'crystals', shape: room.shape ?? 'triangle', ...(room.customMapId ? { customMapId: room.customMapId } : {}), ...(room.noHorde ? { noHorde: true } : {}), ...(room.arenaSize === 6 ? { arenaSize: 6 as const } : {}), ...(room.tier === 'custom' ? { growth: room.growth === true, ...(room.layer ? { layer: room.layer } : {}), battleMode: room.battleMode ?? 'arena', rules: room.rules ?? defaultCustom(room.level, room.mode).rules } : {}), seats: room.seats.map(({ faction, heroId, bot, botLevel }) => ({ faction, heroId, bot, ...(bot && botLevel ? { botLevel } : {}) })) };
   const configure = (patch: Partial<TableConfig>) => session.send({ type: 'configure', table: { ...table, ...patch } });
   const updateSeat = (i: number, patch: Partial<TableConfig['seats'][number]>) => configure({ seats: table.seats.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
   /** The factions a seat may take: Przymierze and Horda, and in a digital rivalry for the goals made for any number of sides all the others (the server checks the same). */
@@ -442,6 +443,13 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
                   <option value="bot">Komputer</option>
                 </select>
               )}
+              {s.bot && room.mode === 'pvp' && room.digital && (owner && !locked ? (
+                <Tip text={BOT_LEVEL_TIPS[s.botLevel ?? 'normal']}>
+                  <select value={s.botLevel ?? 'normal'} aria-label="Poziom bota" onChange={(e) => updateSeat(i, { botLevel: e.target.value as BotLevel })}>
+                    {BOT_LEVELS.map((l) => <option key={l} value={l}>{BOT_LEVEL_NAMES[l]}</option>)}
+                  </select>
+                </Tip>
+              ) : <span style={{ color: 'var(--muted)' }}>{BOT_LEVEL_NAMES[s.botLevel ?? 'normal']}</span>)}
               <div style={{ display: 'flex', gap: 6 }}>
                 {(owner && !locked ? heroPool(s.faction, room.mode === 'pvp' && room.digital ? MAX_PVP_PLAYERS : room.seats.length) : [s.heroId]).map((h) => (
                   <button key={h} className="btn" title={UNITS[h].name} disabled={!owner || locked || takenBy(h, i)} onClick={() => updateSeat(i, { heroId: h })} style={{ background: 'none', border: 0, padding: 0 }}>

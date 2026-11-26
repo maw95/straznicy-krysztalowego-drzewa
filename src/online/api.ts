@@ -4,7 +4,7 @@
 
 import type { FactionId, MapSize } from '../engine/data';
 import type { CustomLayer, CustomRules } from '../engine/presets';
-import type { BattleMode, GameState, MapShape, ObjectiveId } from '../engine/types';
+import type { BattleMode, BotLevel, GameState, MapShape, ObjectiveId } from '../engine/types';
 
 export const SERVER_URL: string =
   import.meta.env.VITE_SERVER_URL ?? (import.meta.env.DEV ? 'http://localhost:8080' : 'https://straznicy-backend.fly.dev');
@@ -18,6 +18,8 @@ export interface SeatView {
   faction: FactionId;
   heroId: string;
   bot: boolean;
+  /** A bot of a digital rivalry: its level (an older server leaves it out: Normalny). */
+  botLevel?: BotLevel;
   player: (User & { online: boolean }) | null;
   /** A bot plays for the absent player until they come back. */
   botTakeover: boolean;
@@ -77,7 +79,8 @@ export interface TableConfig {
   rules?: CustomRules;
   /** Arena: 6 = the full 6 on 6 match (the server must know it, else it plays 3 on 3). */
   arenaSize?: 6;
-  seats: Array<{ faction: FactionId; heroId: string; bot: boolean }>;
+  /** `botLevel`: a bot of a digital rivalry (backlog 94); missing = Normalny. */
+  seats: Array<{ faction: FactionId; heroId: string; bot: boolean; botLevel?: BotLevel }>;
 }
 
 /** Where a player online is: in the menu, in a room before the start (or after the end), or playing. */
