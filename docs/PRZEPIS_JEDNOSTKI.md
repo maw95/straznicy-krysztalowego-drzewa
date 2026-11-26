@@ -128,3 +128,10 @@ dużych, ok. 70 px dla małych (`bodyW`).
 - **Pole walki to ląd:** nie dawać wody ani piany u podstawy postaci; nawet „morskie” stwory chodzą po ziemi.
 - **Latająca jednostka stojąca na ziemi:** trafienie robić z pozy stojącej (`stoi_ziemia`), nie z zawisu.
 - **Wgrywanie obrazu do Scenario:** `upload_asset` z prawdziwym `file_size`, `curl -X PUT -T plik '<url>'`, potem `upload_asset_complete`. Pobieranie równoległe: najpierw `mkdir`, dopiero potem `curl` w tle (inaczej wyścig i puste pliki).
+
+## Reguły ogólne autora (obowiązują każdą jednostkę)
+
+- **Atak:** wyraźny zamach z rozmachem i uderzenie w cel (nie samo podniesienie broni), agresywny i dynamiczny.
+- **Śmierć:** widoczny upadek albo pokonanie (nie siadanie ani kładzenie się); u maszyn i konstruktów widoczne ciężkie zniszczenie, kolos leży nieaktywny.
+- **Trafienie:** cofnięcie od ciosu z PRZODU (nie pochylanie do przodu, podskok ani potknięcie), spokojne i płynne, z powrotem do pozy „stoi”.
+- **Dźwięki:** dobierać do postaci (wiek, płeć, charakter), nie do „dziewczynki” czy „taniego” brzmienia.

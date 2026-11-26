@@ -36,7 +36,6 @@ Zrobione punkty są usuwane (numery nie są ponownie używane, więc w kolejce s
 
 Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tanie poprawki interfejsu (S, bez kredytów, bez wpływu na wyniki bota), potem funkcje, na końcu to, co rusza golden i balans albo kosztuje kredyty. Do rozstrzygnięcia z autorem: Dziennik zdarzeń (przycisk na dole) pokazuje każdemu graczowi przy tym samym urządzeniu publiczne wpisy o bitwach i skarbach przeciwników; czy ukryć je w hot-seat (np. pokazywać tylko wpisy własnej frakcji)? Każdy punkt: `make check`, weryfikacja w przeglądarce, wpis w CHANGELOG PL i EN, osobny commit.
 
-
 **89. Uwagi autora do interfejsu z 26.11 (S–M, bez kredytów).**
    - **Środek mapy:** po usunięciu Drzewa z celów innych niż „Kryształy do Drzewa” środkowy kafelek nadal jest odsłonięty od startu; ma być zakryty jak reszta.
    - **Koszary:** surowce stoją nad przyciskiem wyjścia, mają być obok niego.
@@ -50,34 +49,6 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 **92. Walki z pomocnikami wolnych frakcji (M; rusza golden i balans; uwaga autora 26.11).** Dziś walki na mapie (spotkania niesterowane przez gracza) losują tylko z 12 jednostek neutralnych. Pula ma objąć też wszystkich pomocników (nie bohaterów) frakcji, którymi nikt w tej grze nie gra. Przykład: 4 graczy, 2× Przymierze, Horda, Stada → spotkania z neutralnymi, z pomocnikami Bractwa Przypływu i Żelaznego Klanu. Tylko frakcje z punktu 91 (mają grafikę i animacje). **Decyzje autora 26.11:** trudność spotkania bardzo zbliżona do neutralnych (dobierać skład tak, by siła była podobna); nagrody takie same jak za neutralnych; arena zależy od frakcji heksa, na którym toczy się walka; jedna grupa zawsze z jednej frakcji. Potem `make sim-raport`, golden `-u` w osobnym commicie i przestrojenie poziomów.
 
 **90. Mgła wojny jak w Heroesach (M–L; rusza widok w hot-seat i online).** Gracz nie widzi kafelków odsłoniętych przez graczy spoza swojej frakcji (każda frakcja ma własną odkrytą część mapy). Sprawdzić: bot (czy korzysta z wiedzy o całej mapie), online (`redactHidden` / `visibleTo` w serwerze), hot-seat (zasłona przekazania), golden.
-
-
-
-**82. Poprawki animacji z przeglądu (M; kredyty wg liczby klipów, ok. 15 CU za klip).** Po obejrzeniu strony podglądu (`make podglad`): Przypływy: Morska Wiedźma (blady wir w ataku), Rafowy Golem (stopa w chodzie), Tryton (martwy leży odwrotnie), Albatros (poza w trafieniu), Kapłanka (biała kula w ataku), Lewiatan (punkt 79); Klan: Mosiężny Pająk (obraca się w chodzie ¾ do kamery), Wartownik (kładzie się szeroko w śmierci). Pełne uwagi agentów: `.tmp/zrodla/*_sprites_*/RAPORT.txt`. Generować tylko to, co autor wskaże.
-
-**86. Animacje i dźwięki Żelaznych Klanów (poprawki wykonane w fbf4848, czekają na przegląd autora na `make podglad F=clans`; poniżej uwagi autora jako lista kontrolna; kredyty wg liczby klipów, tryb `draft` 9 CU; wzorzec: punkt 85 i `docs/PRZEPIS_JEDNOSTKI.md`).** **Reguły ogólne autora (powtarzają się, stosować do każdej jednostki):** atak = wyraźny zamach z rozmachem i uderzenie w cel (nie samo podniesienie broni), agresywny i dynamiczny; śmierć = widoczny upadek/pokonanie (nie siadanie ani kładzenie się), u maszyn i konstruktów widoczne ciężkie zniszczenie, kolos leży nieaktywny; trafienie = cofnięcie od ciosu z PRZODU (nie pochylanie do przodu, nie podskok, nie potknięcie), spokojne i płynne, a po nim powrót do pozy „stoi”. Dźwięki dobierać do postaci (wiek, płeć, charakter), nie do „dziewczynki” czy „taniego”.
-  - **Tan Żelazobrody:** atak = uderzenie młotem, ewentualnie z okrzykiem bojowym; dźwięk śmierci brzmi tanio (ma brzmieć jak umierający krasnoludzki wojownik); śmierć wygląda jak siadanie; trafienie bardzo szybkie, jak potknięcie albo przestraszenie się.
-  - **Matka Run:** śmierć i trafienie jak u Tana (naprawić tak samo); dźwięki do wymiany wszystkie; atak = dźwięk rzucanego zaklęcia; śmierć nie może brzmieć jak westchnięcie dziewczynki (stara, potężna czarodziejka).
-  - **Strażniczka Przełęczy:** atak = dźwięk wystrzału z kuszy, animacja ataku słaba (tak się nie strzela z kuszy); śmierć = ciche westchnięcie i upadek na ziemię (twarda kobieta, ok. 30 lat).
-  - **Stary Górmistrz:** atak wygląda jak podniesienie kilofa, ma być zamach i uderzenie.
-  - **Kusznik Gór:** śmierć dobra, ale tarcza też ma się przewrócić.
-  - **Kapłan Kuźni:** okrzyk ataku bardziej gniewny, jako tło dla dźwięku magicznego efektu; trafienie mniej gwałtowne i bez dziwnego ruchu nogą.
-  - **Krasnoludzki Tarczownik:** atak bardziej agresywny; śmierć wygląda jak kładzenie się.
-  - **Kret z Brązu:** atak znacznie bardziej agresywny i dynamiczny; śmierć dramatyczna (maszyna mocno uszkodzona); trafienie od przodu (dziś pochyla się jak trafiony od tyłu).
-  - **Mosiężny Pająk:** śmierć dużo bardziej dramatyczna, widoczne zniszczenia.
-  - **Niedźwiedź w Zbroi:** trafienie bez pochylania do przodu (atak z przodu).
-  - **Wartownik z Brązu:** atak dużo bardziej dynamiczny i agresywny; śmierć dramatyczna ze zniszczeniami; trafienie: pomysł dobry, ale animacja poszarpana, jakby zapętlona po odchyleniu do tyłu.
-  - **Pogromca Olbrzymów:** dźwięk ataku = groźny, agresywny, męski okrzyk bojowy plus uderzenie włóczni; atak = potężne pchnięcie włócznią z rozmachu; śmierć dramatyczna (dziś kładzenie się); trafienie nienaturalne, jak chęć podskoku.
-  - **Skarbnik:** dźwięk śmierci jest pomylony (wymienić).
-  - **Gwardia Młota:** atak = potężne uderzenie młotem z zamachu i dźwięk potężnego uderzenia; śmierć wygląda jak kładzenie się.
-  - **Armata Klanów:** śmierć bardziej widowiskowa, widoczne zniszczenie armaty; po trafieniu płynny powrót do pozy „stoi”.
-  - **Kolos Kuźni:** trafienie spowolnić; śmierć dramatyczna, kolos leży całkiem zniszczony i nieaktywny.
-  - **Kowal Bitewny:** dźwięk ataku = uderzenie młota; atak = zamach młotem (dziś tylko podnosi); śmierć i trafienie do poprawy.
-  - **Kozioł Taranowy:** atak bardziej dynamiczny i agresywny; trafienie nienaturalne.
-
-
-**87. Żelazny Klan: reszta uwag z 25.11 (poprawki zrobione, czekają na przegląd autora na `make podglad F=clans`).** **Otwarte:**
-  - **Śmierć Pogromcy** kończy się zwinięciem twarzą do ziemi (lepiej niż czworaki z 24.11, ale może nadal wyglądać jak klęczenie).
 
 **93. Zakładka „Jednostki” w „Zasady i karty” (S; uwaga autora 26.11).** Pokazać wszystkie jednostki 5 frakcji, które obecnie są w grze (Przymierze, Horda, Dzikie Stado, Żelazny Klan, Bractwo Przypływu; zob. 91), i neutralne. Jedynym podziałem ma być frakcja: znikają podziały w rodzaju „Poziom IV i V: pomocnicy do rekrutacji w osadzie, Przymierze Świtu (stopnie 2–5)” (`src/ui/RulesDialog.tsx`). Jednostki neutralne na samym końcu. Kolejność wewnątrz frakcji: bohaterowie główni (czwarty bohater też się do nich zalicza), potem bohaterowie dodatkowi, czyli dowódcy, potem pomocnicy od najniższego poziomu do najwyższego.
 
@@ -110,20 +81,17 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 
 **57. Blokowanie kombinacji cel × poziom × mapa, które nie mają sensu (M; najpierw analiza i decyzja autora).** Uwaga autora z 18.11: poziomy od IV (Osada) w górę zdają się nie mieć sensu przy celu „Kryształy do Drzewa” na małej i średniej mapie (gospodarka, siedliska i rozbudowa nie zdążą się rozwinąć przed końcem partii; rundy kończą się w kilka). Może takich par jest więcej. Do zrobienia: (1) policzyć macierzą symulacji cel × poziom × kształt × wielkość mapy (`make sim-matrix`, własny skrypt jak `.tmp/relic.ts`), ile rund trwa partia, ile budynków, rekrutów i czarów w niej powstaje i czy ostatnie mechaniki poziomu w ogóle wchodzą w grę (np. Odłamki przy celu innym niż Relikt, Podbój na małej mapie, Boss i Przetrwanie na kształtach bez miejsca na legowisko); (2) zebrać listę „bez sensu” i „ledwo”; (3) zdecydować z autorem, czy kreator ma te kombinacje **blokować** (wyszarzone karty z podpowiedzią, dlaczego), **ostrzegać** albo **podpowiadać** rozsądniejszą wielkość mapy lub cel; (4) wdrożyć w `NewGameWizard.tsx` i w ograniczeniach silnika (`presets`), z testem, że żadna dozwolona para nie daje partii kończącej się przed użyciem mechanik poziomu, oraz wpisem w instrukcji (PL i EN) i w CHANGELOG. Uwaga: blokada nie może zepsuć zapisanych partii i stołów online, które już mają taką parę.
 
-
 **60. Onboarding nowego gracza: przemyśleć cały proces (M-L; zgłoszone przez autora 21.11, najpierw analiza i rozmowa z autorem).** Gra bywa zbyt skomplikowana dla kogoś, kto uruchamia ją pierwszy raz. Do przejrzenia od pierwszego uruchomienia do końca pierwszej partii:
   - **Konfiguracja gry w menu:** ile decyzji gracz musi podjąć, zanim zacznie grać (tryb, cel, poziom złożoności, trudność, wielkość i kształt mapy, frakcja, bohater, liczba graczy, kto jest botem). Czy da się zacząć jednym kliknięciem z sensownymi ustawieniami domyślnymi (np. „Pierwsza gra”), a resztę ukryć pod „Zaawansowane”?
   - **Pojęcia niezrozumiałe bez wprowadzenia:** m.in. **poziom złożoności** (Spacer…Imperium, co każdy dodaje), **cel** (Kryształy, Podbój, Relikt, Artefakt, Boss, Przetrwanie…), różnica między poziomem złożoności a trudnością, tryby (Potyczka, Ekspedycja, kampania, rodzinny). Nazwy, krótkie opisy przy wyborze, podpowiedzi „dla kogo”, a może polecany wybór na starcie.
   - **Pierwsza partia:** czy jest samouczek lub prowadzone pierwsze minuty (poziom Spacer jako domyślny początek, podpowiedzi kontekstowe, stopniowe odsłanianie mechanik poziomami), co z instrukcją w grze (kiedy i skąd gracz ją otwiera).
   - **Wynik pracy:** krótka lista problemów z propozycją (np. kreator „Szybki start” + „Własna gra”, uproszczone nazwy i opisy, ekran powitalny, odblokowywanie poziomów w miarę grania), zatwierdzona przez autora przed wdrożeniem. Powiązane: punkt 57 (blokowanie bezsensownych kombinacji, odłożony), instrukcja PL i EN, test na telefonach.
 
-
 **63. Reszta po pakiecie z 23.11 (zebrana z rozmowy; każda pozycja to osobny commit z wpisem w CHANGELOG, PL i EN)..**
   - **63a. Kadry kart: reszta (S).** Ręczne kadry w `MANUAL` (`scripts/assets/card_crops.py`) mają Jeż, Wiwerna Cienia i Srebrny Lis; dziewięć jednostek (`boar, dawnOwl, dawnPhoenix, doomBehemoth, dryadArcher, goblinShaman, hellhound, minotaurChief, ratman`) ma portret równy całej ilustracji, a okno karty jest szersze niż ilustracja, więc kadr 1,0 pokazuje całość i wpis nic by nie zmienił. **Zostaje 10 jednostek (Klan i Przypływy mają już ilustracje kart), których karta nadal ma szarą „ZASTĘPCZĄ GRAFIKĘ”** (`boneDragon, emperorCicada, frostImp, frostMammoth, penitentShade, pharaohMongoose, sandWyrm, sporeling, squirrelArcher, towerMonitor`): kadru nie ma z czego wyznaczyć, dopiero po wygenerowaniu ilustracji karty (sekcja 2a, G4) uruchomić `python3 scripts/assets/card_crops.py` (i w razie potrzeby dopisać do `MANUAL`).
   - **63c. Wdrożenie backendu z wydaniem gry (S).** Lokalne commity backendu (`../straznicy-krysztalowego-drzewa-backend`): `5c086cd` (parsery nowych akcji) i `07365a4` (czwarty bohater frakcji ważny przy każdym stole cyfrowej potyczki; klient `5155a67` już go oferuje online), a także `37329df` (Potyczka na serwerze: Przetrwanie przy każdym stole cyfrowym). Backend nie jest wdrożony, bo produkcyjny build bierze silnik z wydanego pakietu 2.17.1: wdrożyć razem z wydaniem gry (`make deploy`), potem sprawdzić stół online z czwartym bohaterem.
   - **63g. Srebrna Wilczyca: wartości bohatera (S).** Wygląd zaakceptowany 23.11. Pomiar 23.11 (bitwy 3 na 3, 100 na parę, ±4 pkt, przeciw 4 bohaterom Hordy): Złoty Smok 70%, Prastary Niedźwiedź 65%, Wilczyca 27%, Król Jednorożców 21%. Wilczyca nie odstaje od Jednorożca, ale oba są dużo słabsze od Smoka i Niedźwiedzia (Ż 8, A 4 i warunkowy +1 A). Decyzja autora: zostawić czy podnieść (np. Ż 9 albo +2 A w Wilczej Rodzinie); zmiana liczb ruszy golden i tabele symulacji i wymaga aktualizacji `docs/frakcje/dawn.md`.
   - **63i. Drobne decyzje do potwierdzenia przez autora (S).** (1) Intro ma własne świetliki (`Intro.tsx`): menu, ustawienia i online już bez nich; czy w intro też usunąć? (2) nick online ma 3–16 znaków (backend `2aa62d9` czeka na wdrożenie z wydaniem, 63c). (3) Opisy frakcji w oknie prawego kliku (`FACTION_BLURBS` w `setupShared.tsx`) napisałem sam z kart `docs/frakcje/`: do przeczytania i poprawy. (4) Losowa frakcja jest domyślna tylko tam, gdzie cel gry dopuszcza wszystkie frakcje (nie w „Kryształach do Drzewa”).
-
 
 ## 2. Tylko autor (Claude tego nie bierze)
 - **Premiera na Steamie** (L): strona sklepu, zrzuty, trailer (Higgsfield odłożony), ujawnienie użycia AI, przegląd licencji, osiągnięcia, opakowanie komputerowe (Electron/Tauri), zapis profilu, chmura Steam, test z parami rodzic + dziecko, przegląd konkurencji. Numer wydania premiery: **3.0** (potwierdzone 17.11).
@@ -137,9 +105,7 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 
 Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.ts` + `.py`), są małe (kilka KB), podpisane nazwą jednostki w kolorze frakcji i wpisane do `assets.json` z `"placeholder": true`. Skrypt nie nadpisuje istniejących plików; po wymianie na grafikę docelową usuń wpis z manifestu.
 
-
 **Wymiany jednostek z 20.11:** nowe id i nazwy (zastępcze pliki starych id usunięte, nowe wygenerowane): Kulan Stepowy (`kulan`), Łucznik Stepowy (`steppeArcher`), Wół Piżmowy (`muskOx`), Arkar (`arkar`), Łamignat Stepowy (`steppeLamignat`), Orzeł Stepowy Łowca (`eagleHunter`), Płanetnik (`planetnik`), Wampir (`vampire`), Strzyga (`strzyga`), Dziad Mróz (`dziadMroz`), Mosiężny Pająk (`brassSpider`), Kozioł Taranowy (`ramGoat`), Sroka Złodziejka (`magpieThief`), Świstak Petardnik (`marmotPetard`). Opisy wyglądu: `docs/frakcje/<id>.md`. Herby `cards/crests/{herds,clans,free}.png` są zastępcze i nadal mają na obrazku stare nazwy frakcji (Dzikie Stada, Żelazne Klany, Wolne Kompanie): do wygenerowania na nowo razem z docelowymi herbami.
-
 
 **Królestwo Umarłych (`undead`)** (paleta: kość, popiel, mech, wosk świec, stare srebro, rdza; poświata zielonkawo-żółta lub biała, nie niebieska; prompty bez słów *corpse, blood, kill*, raczej *ancient guardian, spectral, barrow*):
 - karta (`cards/art/<id>.jpg`, 452×314) i portret (`cards/portraits/<id>.jpg`, 256×256) dla 19 jednostek: `barrowKing`, `lanternWraith`, `headlessKnight`, `bellKeeper` (4. bohater), `wardCaptain`, `spectralArcher`, `penitentMonk` (dowódcy), `skeletonSpear`, `willOWisp`, `penitentShade`, `skeletonArcher`, `scarecrow`, `hauntedArmor`, `vampire`, `viy`, `strzyga`, `lich`, `kostucha`, `boneDragon`;
