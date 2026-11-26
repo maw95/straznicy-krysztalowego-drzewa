@@ -6,14 +6,13 @@ import { ALL_TEAM_IDS, byTeam, raceOf, teamsOf } from './teams';
 import { byPack } from './factions';
 import { ABILITY, FACTION_NAMES, itemDef, NON_RESURRECTION_ITEMS, SUPPORTS_PER_BATTLE, UNITS, supportTier, type FactionId, type TeamId } from './data';
 import { distance, parseKey, type HexKey } from './hex';
-import { encounterUnits, stillConnected } from './encounters';
+import { factionShare, guardRng, guardUnits, neutralGroup, stillConnected } from './encounters';
 import { awardXp, levelOf } from './growth';
 import { log } from './log';
 import { mapNeighbors, revealAround, tileCost, treeOf } from './map';
 import { Rng } from './rng';
 import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsText, type Hut, type MapObject, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, packOf, SETS, setCount, type ArtifactDef, giveArtifact, passTargets, SHARDS_ID, type Rarity } from './sites';
-import { ENCOUNTER_MOTIFS, type EncounterMotif } from './data';
 import { computerFaction, isDigital, type Action, type Crystal, type GameState, type HeroState, type Rune } from './types';
 import { circleSpells, MAGIC, SPELL_CIRCLES, SPELLS, towerSpells, type SpellId } from './magic';
 import { HERO_TYPES } from './heroTypes';
@@ -490,11 +489,12 @@ export function initKingdom(state: GameState): void {
   // Both sides get the same number.
   const each = Math.min(...teams.map((t) => picked[t].length));
   const chosen = teams.flatMap((t) => picked[t].slice(0, each));
-  const motifs = Object.keys(ENCOUNTER_MOTIFS) as EncounterMotif[];
+  const guards = guardRng(state, 0x27220a95);
+  const share = factionShare(chosen.length, guards);
   chosen.forEach((hex, i) => {
     const land = state.tiles[hex].side;
     add(`set${i + 1}`, hex, land, null);
-    const units = encounterUnits(1, rng.pick(motifs), rng);
+    const units = guardUnits(state, 1, neutralGroup(1, rng), share[i], guards);
     const id = `def${i + 1}`;
     const crystal: Crystal = { id, guardian: units[0], at: hex, decoy: true, encounter: units, tier: 1 };
     state.crystals[id] = crystal;

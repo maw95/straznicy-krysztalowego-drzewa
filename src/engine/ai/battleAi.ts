@@ -944,8 +944,12 @@ function rulebookTeleport(state: GameState, u: BattleUnit, hereTargets: BattleUn
   return null;
 }
 
-/** Rulebook use of the abilities that need no attack (Pajęcze Sidła): at once, on the rulebook target. */
+/**
+ * Rulebook use of the abilities that need no attack (Pajęcze Sidła): at once, on the rulebook target. A faction's support that guards the map uses
+ * its ability the way the bot of a faction does.
+ */
 function rulebookFreeAbility(state: GameState, u: BattleUnit): Action | null {
+  if (u.side === 'neutral' && UNITS[u.defId].kind === 'support') return freeAbility(state, u);
   if (u.abilityUsed || !abilityActive(state) || abilityOf(u) !== 'web') return null;
   const inRange = enemiesOf(state.battle!, u).filter((e) => unitDistance(e, u) <= ABILITY.webRange);
   const t = rulebookTarget(inRange);

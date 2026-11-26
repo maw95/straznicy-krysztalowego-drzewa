@@ -836,6 +836,20 @@ export const ENCOUNTER_MOTIFS = {
   water: { weak: ['pincer', 'bogCrawler'], guardian: 'hydra', boss: 'kraken' },
 } as const;
 export type EncounterMotif = keyof typeof ENCOUNTER_MOTIFS;
+/**
+ * Groups of a free faction's supports that guard the map instead of neutrals (see encounters.ts). Per tier of the encounter: the tiers of the
+ * leader (none: all alike) and of the others, how many others, and the strength each faction's group needs as a share of a neutral group's
+ * (set with scripts/sim/straznicy.ts so that both are about as hard to beat). Tiers of supports: 1 the starting ones, 2-5 the recruits, 6 the legend.
+ */
+export const ENCOUNTER_GUARDS: { rangedWeight: number; tolerance: number; tiers: Array<{ leaders: number[]; followers: number[]; sizes: number[]; strength: Partial<Record<FactionId, number>> }> } = {
+  rangedWeight: 1.15,
+  tolerance: 0.08,
+  tiers: [
+    { leaders: [], followers: [1, 2], sizes: [2, 3, 4], strength: { dawn: 1.06, horde: 0.89, herds: 1.02, clans: 1.0, tides: 1.2 } },
+    { leaders: [3, 4, 5], followers: [1, 2, 3], sizes: [2], strength: { dawn: 0.98, horde: 0.84, herds: 1.06, clans: 0.97, tides: 1.25 } },
+    { leaders: [5, 6], followers: [2, 3, 4], sizes: [2, 3], strength: { dawn: 1.03, horde: 0.86, herds: 1.17, clans: 0.88, tides: 1.09 } },
+  ],
+};
 export const ENCOUNTERS = {
   /** How many encounters a map holds, by map size. Provisional: tune with the simulations. */
   count: { short: 3, medium: 4, long: 6, veryLong: 8, huge: 11, giant: 14 } as Record<MapSize, number>,

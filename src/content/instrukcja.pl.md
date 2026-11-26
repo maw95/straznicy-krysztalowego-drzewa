@@ -195,6 +195,8 @@ Od poziomu Wyprawa na mapie stoją też **grupy neutralnych**, nagradzające do�
 - rzadkie: strażnik i 2 słabi, w połowie drogi,
 - legendarne: boss i 2 słabi, najgłębiej.
 
+**Pomocnicy wolnych frakcji:** połowa tych grup (także obrońców neutralnych osad) to nie neutralni, tylko pomocnicy jednej z frakcji, którą w tej partii nikt nie gra (spośród pięciu grywalnych). Grupa jest zawsze z jednej frakcji, mniej więcej tak silna jak neutralni tego samego stopnia, i daje tę samą nagrodę. Legenda frakcji może przewodzić tylko najsilniejszej grupie. Takimi strażnikami steruje komputer; używają swoich zdolności, ale nie mają mechaniki frakcji. Arena zależy od krainy pola, na którym toczy się walka.
+
 **Słabi neutralni:** Kruszyniec, Podkopnik, Orzeł Skalny, Harpia, Szczypiec, Bagienny Pełzacz. **Bossowie** (dwuheksowi): Kamienny Golem, Król Burzy, Kraken (z mackami). Wszystkie ich zdolności opisują karty w zakładce „Jednostki”. Neutralnymi steruje komputer.
 
 ## Skarby i Eliksir Odrodzenia

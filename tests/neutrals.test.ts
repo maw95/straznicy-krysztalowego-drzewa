@@ -7,7 +7,7 @@ import { encounterUnits } from '../src/engine/encounters';
 import { Rng } from '../src/engine/rng';
 import { neighborKeys } from '../src/engine/hex';
 import { ARTIFACT_BY_ID } from '../src/engine/sites';
-import type { Side } from '../src/engine/data';
+import { UNITS, type Side } from '../src/engine/data';
 import type { GameState } from '../src/engine/types';
 import { applyActionInPlace } from '../src/engine/game';
 import { activation, battleFixture, playOut, setup } from './helpers/engine';
@@ -180,6 +180,8 @@ describe('neutral encounters on the map', () => {
     expect(tiers).toEqual(new Set([0, 1, 2]));
     for (const c of encountersOf(s)) {
       if (c.tier === 0) expect(c.encounter!.length).toBeGreaterThanOrEqual(2);
+      // A group of a free faction (tests/guards.test.ts) has no neutral leader.
+      if (UNITS[c.encounter![0]].side !== 'neutral') continue;
       if (c.tier === 1) expect(['cyclops', 'griffin', 'hydra']).toContain(c.encounter![0]);
       if (c.tier === 2) expect(['stoneGolem', 'stormKing', 'kraken']).toContain(c.encounter![0]);
     }

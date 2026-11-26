@@ -440,6 +440,14 @@ Cel ma „front”: kierunek ostatniego ruchu albo ataku jednostki (stojąca w m
 | boss + 2 słabe | legendarny | najdalej od bazy |
 Poziom 1: tylko sami strażnicy (jak dziś). Silniejsze spotkania stoją głębiej, czyli dalej od baz. „Mocna jednostka” z pierwotnego pomysłu to teraz boss z własnego motywu; słabi towarzysze pochodzą z tego samego motywu.
 
+### Pomocnicy wolnych frakcji (26.11.2026, decyzje autora)
+- Dotyczy spotkań na mapie i obrońców neutralnych osad; strażnicy kryształów i Boss bez zmian.
+- Zawsze pół na pół (osobno spotkania i obrońcy osad; przy nieparzystej liczbie o jednej połówce decyduje los): grupa neutralna albo grupa pomocników **wolnej frakcji** (z `PLAYABLE_IDS`, której nikt w grze nie gra), losowanej po równo.
+- Grupa z jednej frakcji, bez bohaterów; pomocnicy to także jednostki alternatywne i legenda, która może przewodzić tylko najsilniejszemu stopniowi.
+- Siła dobrana do grupy neutralnej, którą zastępuje (`ENCOUNTER_GUARDS`, `groupPower`; mnożnik osobno dla frakcji i stopnia, ustawiony symulacją `node --import tsx scripts/sim/straznicy.ts 2000`: bohater wygrywa z grupami frakcji w 35 / 37 / 38% walk testowych, z neutralnymi w 34 / 38 / 40%).
+- Walczą jak neutralni (strona neutralna, ruch i cel według instrukcji), ale używają swoich zdolności jak boty frakcji; bez mechanik frakcji i premii cyfrowych. Nagroda i arena (kraina pola) jak dotąd.
+- Miejsca spotkań, osady i kopalnie na mapie są takie same jak przed zmianą (osobny strumień losowy dla strażników).
+
 ### Tryb „Boss” (10.7, wariant kooperacyjny)
 Wszyscy gracze po jednej stronie, bez Hordy, przeciwko bossowi w legowisku na środku mapy (reguła `noHorde`, tylko kooperacja i cel „Boss”; w ustawieniach lokalnych wiersz „Horda”). Horda nie ma bohaterów, więc wygrywa tylko Przymierze, które zada ostatni cios; porażka to polegli bohaterowie albo limit rund. Życie Bossa ×`BOSS.noHordeFactor` (1,2). Symulacje (60 gier, z rozwojem): przed strojeniem ×1,0 ok. 55 % (1 gracz) i 70 % (2 graczy); przy ×1,3 ok. 39 % / 60 %; wybrane ×1,2. Online: pole stołu `noHorde` (serwer przyjmuje je tylko w kooperacji z celem Boss). Własna grafika Bossa: Scenario, po zamrożeniu nazw.
 

@@ -195,6 +195,8 @@ From the level Run on, the map also has **groups of neutrals**, rewarding experi
 - rare: a guardian and 2 weak ones, halfway,
 - legendary: a boss and 2 weak ones, deepest.
 
+**Supports of the free factions:** half of these groups (the defenders of neutral settlements too) are not neutrals but supports of a faction nobody plays in this game (one of the five playable ones). A group is always of one faction, about as strong as neutrals of the same rank, and gives the same reward. The faction's legend may lead only the strongest group. The computer controls these guards; they use their abilities, without the faction's mechanic. The arena follows the land of the tile the fight is on.
+
 **Weak neutrals:** Crumbler, Burrower, Rock Eagle, Harpy, Pincer, Swamp Crawler. **Bosses** (two hexes): Stone Golem, Storm King, Kraken (with tentacles). All their abilities are described by the cards in the "Units" tab. The neutrals are controlled by the computer.
 
 ## Treasures and the Elixir of Rebirth

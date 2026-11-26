@@ -845,3 +845,7 @@ Zgłoszenie autora: „Wilkołak na poziomie 1 jest za mocny” (pobił Wilczyc�
 - **Na Spacerze zdolności nie działają wcale** (`abilities: false`, także u strażników), więc pojedynek to czysta arytmetyka Ż/A/S: szybszy uderza pierwszy. Wilkołak (8/5/7) wygrywa ze Złotym Smokiem (9/5/4) i Srebrną Wilczycą (8/4/6), przegrywa z Jednorożcem (S 8) i Niedźwiedziem. Z 16 par bohater–bohater Przymierze wygrywa 11.
 - **Wilczyca (dodatkowy bohater, 7–8 graczy) jest słaba w pojedynkach:** sama (PvP 1 na 1) wygrywa tylko 5–10%, w parze (2 na 2) 63–85% zależnie od partnera i przeciwników. Najgorszy zestaw autora (Wilczyca + Złoty Smok przeciw Wilkołakowi + Czarnemu Smokowi): 71% krótka, 63% średnia mapa.
 - Pojedynki ze zdolnościami (opcja „Na planszy głównej” przy pełnej grze): Przymierze 63–82%. Alternatywnych zdolności „tylko na pojedynek” nie ma; cofnięto je wcześniej (zob. wyżej, „cofnięte efekty zdolności w pojedynkach”), zostały tylko drugie karty strażników.
+
+## 22. Pomocnicy wolnych frakcji jako strażnicy mapy (26.11.2026, decyzje autora, tylko wersja cyfrowa)
+Połowa spotkań i obrońców neutralnych osad to pomocnicy jednej wolnej frakcji (grywalnej, której nikt w partii nie gra), o sile zbliżonej do neutralnych, z tą samą nagrodą; legenda przewodzi tylko najsilniejszym grupom; arena według krainy pola. Strażnicy kryształów i Boss bez zmian. Szczegóły: `ZASADY_CYFROWE.md`, „Pomocnicy wolnych frakcji”.
+
