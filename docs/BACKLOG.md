@@ -41,9 +41,10 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
    - **Wynik przebiegu stroiciela 25.11 (15:51–18:59, 81 przebiegów, `.tmp/sim/retune-all.log`, `=== done`; NIE scalony):** 1485 komórek w paśmie (88%), 100 na granicy, 107 poza. Poza pasmem: (1) duże mapy (veryLong/huge/giant), Normalny i Trudny za nisko, dźwignie wyczerpane (np. giant·pvp2·full 19%); najgorzej Kryształy `*-crystals-g1-xl` (8–10 z 12 komórek OUT); (2) Łatwy przeskakuje pasmo (3% → 93–100%): dźwignie `noFactionBonus` / `crystalsNeededDelta` są „wszystko albo nic”; (3) Przetrwanie na Cieśninie i Dolinie g0 (po 5 OUT). Trudny Potyczki g0 i tak pomijany przez `tuneMerge` (ręczna reguła autora).
    - **Plan (26.11, autor akceptuje pracę nad tym):** (a) `tuneMerge` tego przebiegu, `make check`, commit; golden `-u` w osobnym commicie; (b) mocniejsza dźwignia dla dużych map (np. więcej skarbów startowych Przymierza zależnie od rozmiaru), dostroić tylko komórki OUT; (c) stopniowe dźwignie Łatwego (np. połowa premii frakcji) zamiast przełącznika. Kolejność a → b → c.
 
-**88. Animacje Bractwa Przypływu: poprawki po przeglądzie autora (`make podglad F=tides`).**
-   - **Śmierć Harpunniczki i Trytońskiego Harpunnika:** obie nadal siadają; próba „jak ścięte drzewo” zablokowana przez filtr (postać z harpunem), łagodniejsza próba dała klęczenie. Do decyzji autora.
-   - **Przegląd autora 26.11, do poprawy:** śmierć Harpunniczki i Trytońskiego Harpunnika (nadal siadają: potrzebny prawdziwy upadek); trafienie Trytońskiego Strażnika, Żabiego Skoczka, Kraboluda, Albatrosa i Morskiej Wiedźmy; atak Harpunniczki (dziwny; ma być jedno pchnięcie harpunem); **Lewiatan ma być ogromnym wężem morskim**, nie stworem na czterech łapach (nowy obraz bazowy i komplet klipów).
+**88. Animacje Bractwa Przypływu: poprawki po przeglądzie autora (`make podglad F=tides`).** Zrobione 26.11: trafienia Strażnika, Żabiego Skoczka, Kraboluda, Morskiej Wiedźmy i Albatrosa jako klipy (Albatros kończy z lekko złożonymi skrzydłami). **Otwarte:**
+   - **Śmierć Harpunniczki i Trytońskiego Harpunnika:** nadal siadają; potrzebny prawdziwy upadek (filtr blokuje prompty z harpunem; kredyty na próby tylko za zgodą autora).
+   - **Atak Harpunniczki:** dziwny; ma być jedno pchnięcie harpunem.
+   - **Lewiatan ma być ogromnym wężem morskim**, nie stworem na czterech łapach (nowy obraz bazowy i komplet klipów).
 
 **89. Uwagi autora do interfejsu z 26.11 (S–M, bez kredytów).**
    - **Środek mapy:** po usunięciu Drzewa z celów innych niż „Kryształy do Drzewa” środkowy kafelek nadal jest odsłonięty od startu; ma być zakryty jak reszta.
