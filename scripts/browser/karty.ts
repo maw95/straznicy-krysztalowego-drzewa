@@ -19,9 +19,18 @@ const cards = [
 const game = await openGame('cards=goldDragon&w=200', { scale: 1 });
 try {
   for (const c of cards) {
-    await game.page.goto(`http://localhost:5180/?cards=${c.query}&w=${c.width}`);
     const card = game.page.locator('.card-sheen').first();
-    await card.waitFor();
+    // Now and then a page does not come up (Vite reloading in the middle): one more try before giving up.
+    for (let attempt = 0; ; attempt++) {
+      await game.page.goto(`http://localhost:5180/?cards=${c.query}&w=${c.width}`);
+      try {
+        await card.waitFor({ timeout: 20000 });
+        break;
+      } catch (e) {
+        if (attempt >= 2) throw e;
+        console.error(`ponawiam: ${c.id}`);
+      }
+    }
     await game.page.evaluate(() => Promise.all([...document.images].map((i) => (i.complete ? null : new Promise((ok) => (i.onload = i.onerror = ok))))));
     await game.page.evaluate(() => document.fonts.ready);
     await game.page.waitForTimeout(300);
