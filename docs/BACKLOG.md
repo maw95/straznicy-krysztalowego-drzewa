@@ -50,19 +50,17 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 
 ### Nowe punkty (uwagi autora 26.11.2026)
 
-**95. Materiały do druku: strzelcy po ruchu nie atakują (M; wersja planszowa).** Jak w wersji cyfrowej: jednostka strzelająca, która się ruszyła, traci atak w tej aktywacji. W zamian pewnie +1 A dla strzelców (sprawdzić symulacją `make sim-tabele` dla zasad planszowych). Odzwierciedlić na kartach postaci (pliki do druku w `docs/wersja_planszowa/`), w `docs/INSTRUKCJA.md` i w silniku dla `ruleset` planszowego (golden `-u` w osobnym commicie).
+(Zrobione 26.11: 95 strzelcy planszowi, 98 gotowe scenariusze, 100 obwódka aktywnej jednostki, 101 zamiana przy rozstawianiu.)
+
+**95a. Decyzja autora: premia dla strzelców planszowych (S).** Zasada „strzelec po ruchu nie strzela” weszła do wersji planszowej i instrukcji do druku bez premii. Pomiar 26.11 (200 gier na stół, wygrane Przymierza): dziś kooperacja 61–80%, rywalizacja 46–64%; sam zakaz ok. −3 pkt w kooperacji i −7 w rywalizacji; zakaz z +1 A dla wszystkich strzelców jeszcze −2 i −15 pkt (zyskują też strzelcy Hordy i Cyklop). Do wyboru: zostawić bez premii, +1 tylko strzelcom Przymierza, albo inne wyrównanie. Przełącznik: `BOARD_RANGED_BONUS` w `data.ts` (karty i bitwa); po zmianie `make druk` i golden `-u`.
+
+**98a. Gotowe scenariusze online (S).** Nowe mapy (`scenarioMaps.ts`) serwer zna dopiero z silnikiem następnego wydania: do tego czasu stół online z nowym scenariuszem zostanie odrzucony („Nieznana własna mapa”). Przy wydaniu: silnik w backendzie i sprawdzenie stołu online ze scenariuszem.
 
 **96. Więcej zaklęć (M–L).** Nowe czary w `src/engine/magic.ts` (kręgi, wieże magii w osadach, bot `botSpell`), ikony (kredyty Scenario: tylko po decyzji autora), instrukcja PL i EN.
 
 **97. Więcej artefaktów i zestawów artefaktów (M–L).** `src/engine/sites.ts` (`ARTIFACT_BY_ID`, `SETS`), targ i skrzynie, bot, ikony, instrukcja PL i EN.
 
-**98. Wybór gotowego scenariusza bardziej jak w Heroesach i wiele nowych gotowych map (L).** Ekran wyboru scenariusza z listą (nazwa, wielkość, liczba graczy, opis, podgląd mapy, warunki zwycięstwa), zamiast dzisiejszego „kształt: gotowa mapa” w kreatorze. Do tego wiele nowych gotowych scenariuszy (`src/engine/customMaps.ts`). Najpierw projekt ekranu z autorem.
-
 **99. Nowe kampanie: każda frakcja ma swoją (XL).** Co najmniej 6 scenariuszy na frakcję, każda kampania i każdy scenariusz z klimatycznymi tekstami i grafikami; stara kampania (`src/engine/campaign.ts`) do wyrzucenia albo gruntownej przeróbki. Przy starcie kampanii wybór poziomu trudności (poziom botów z punktu 94). Najpierw plan fabuły i listy scenariuszy z autorem; grafiki: kredyty Scenario po decyzji autora.
-
-**100. Bitwa: cienka obwódka wokół sylwetki aktywnej jednostki (S–M).** Jak w Heroesach: cienka linia wokół całej sylwetki (nie kółko pod spodem), kolor do ustalenia z autorem (propozycje na zrzucie). Sprajty 2D: obrys z kanału alfa (filtr CSS `drop-shadow` x4 albo SVG `feMorphology`). Sprawdzić w przeglądarce, desktop i telefon.
-
-**101. Rozstawianie wojsk: zamiana miejscami (S).** Gdy zaznaczona jest jednostka, kliknięcie innej własnej jednostki zamienia je miejscami (dziś zmienia tylko zaznaczenie). `src/ui/useDeployment.ts`, akcja rozstawienia w silniku (czy zamiana to jedna akcja, czy dwie), test i sprawdzenie w przeglądarce.
 
 **102. Ręczny test wersji mobilnej (S; autor z Claude'em).** Przejść całą grę na telefonie (menu, kreator, mapa, bitwa, osada, online) i spisać usterki jako osobne punkty.
 
