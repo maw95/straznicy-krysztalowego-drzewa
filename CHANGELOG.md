@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Osada Bractwa Przypływu: proporce na murach i chorągiew siedliska Homara Pancernego też są w morskim kolorze frakcji.
 - Osady: proporce Bractwa Przypływu (koszary, targ, rada osady, skarbiec) mają morski kolor frakcji zamiast zielonego, a proporce i płótna Dzikiego Stada na budynkach i siedliskach są bursztynowe zamiast czerwonych.
 - Wolna Kompania: portrety i karty Jenota Szpiega i Świstaka Petardnika są kadrowane szerzej: widać całą głowę w kapturze i sztylet oraz całą głowę i beczkę z prochem.
 - Wolna Kompania: portret i karta Warana Wieżowego pokazują głowę i wieżyczkę z łucznikami (karta kadrowała szyję i nogę); karty pozostałych postaci Kompanii mają to samo kadrowanie co portrety.

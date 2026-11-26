@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Osada Bractwa Przypływu: proporce na murach i chorągiew siedliska Homara Pancernego też są w morskim kolorze frakcji.":
+    "The Brotherhood of the Tide's settlement: the banners on the walls and the flag of the Lobster Knight's dwelling are in the faction's sea turquoise too.",
   "Osady: proporce Bractwa Przypływu (koszary, targ, rada osady, skarbiec) mają morski kolor frakcji zamiast zielonego, a proporce i płótna Dzikiego Stada na budynkach i siedliskach są bursztynowe zamiast czerwonych.":
     "Settlements: the Brotherhood of the Tide's pennants (barracks, market, council, treasury) are the faction's sea turquoise instead of green, and the Wild Herd's pennants and cloths on buildings and dwellings are amber instead of red.",
   "Wolna Kompania: portrety i karty Jenota Szpiega i Świstaka Petardnika są kadrowane szerzej: widać całą głowę w kapturze i sztylet oraz całą głowę i beczkę z prochem.":
