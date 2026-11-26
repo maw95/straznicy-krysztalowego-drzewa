@@ -1,3 +1,6 @@
+# AKTUALNIE (26.11.2026 wieczór): punkty 89–93, kolejność: 91 → 93 → 89 (interfejs, potem środek mapy) → 92 → 90 (przed nim przypomnieć o Opusie) → jedno strojenie od zera (`retune-all.sh`) z kampanią (51b) → `tuneMerge`, `make check`
+Decyzje autora są przy punktach w `docs/BACKLOG.md`. Nie stroić po drodze; po zmianach rozgrywki tylko golden `-u` w osobnym commicie. Kredyty Scenario: brak do 16.12.
+
 # STAN 26.11 wieczorem: strojenie OUT-only scalone (ce912fc), punkt 88 (animacje Przypływów) zaakceptowany i usunięty z backlogu; w planie niżej zostały punkty 2–4 (zacznij od 91)
 # AKTUALNIE (26.11.2026): plan z autorem, wykonuj po kolei (szczegóły punktów w `docs/BACKLOG.md`: 89, 90, 91, 92)
 Model: Sonnet do 91, 89, 92 i strojenia; **Opus przed punktem 90** (mgła wojny: boty, hot-seat, serwer, golden; przypomnij autorowi `/model`).

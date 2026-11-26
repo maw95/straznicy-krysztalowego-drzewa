@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, heroPool, MAP_VARIANTS, UNITS, type FactionId, type TeamId, type MapSize } from '../engine/data';
-import { FACTION_PACKS } from '../engine/factions';
+import { FACTION_PACKS, PACK_IDS, PLAYABLE_IDS } from '../engine/factions';
 import { asset, Portrait } from './common';
 import type { Level, MapShape, Mode, SeatSetup } from '../engine/types';
 
@@ -207,6 +207,12 @@ export const SHAPE_TIPS: Record<MapShape, string> = {
   islands: 'Trzy wyspy rozdzielone wodą: bazy po bokach, Drzewo na środkowej wyspie, dojście po mostach.',
   custom: 'Gotowa, ręcznie narysowana mapa (wybierz ją obok).',
 };
+
+/**
+ * The factions the screens offer in a game open to all of them: the finished ones. The development build with `?allFactions=1` offers every faction
+ * (browser checks of the unfinished ones).
+ */
+export const openFactions = (): readonly FactionId[] => (import.meta.env.DEV && new URLSearchParams(window.location.search).get('allFactions') === '1' ? PACK_IDS : PLAYABLE_IDS);
 
 /** A seat on the setup screen: what the engine reads, plus the two things left to chance until the game starts. */
 export type SeatDraft = SeatSetup & { randomRace?: boolean; randomHero?: boolean };

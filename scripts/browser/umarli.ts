@@ -2,7 +2,7 @@
 // Usage: npx tsx scripts/browser/umarli.ts [widok]   (desktop by default, `telefon` for the phone layout)
 import { openGame, type View } from './game';
 const view = (process.argv[2] ?? 'desktop') as View;
-const g = await openGame('', { view, scale: 1 });
+const g = await openGame('allFactions=1', { view, scale: 1 });
 const p = g.page;
 const card = (t: string) => p.locator('.opt-card', { hasText: t }).first();
 try {

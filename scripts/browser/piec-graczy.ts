@@ -17,8 +17,9 @@ try {
   await p.getByRole('button', { name: 'Dalej →' }).click();
   await p.locator('.seat-row').first().waitFor();
   for (let i = 0; i < 3; i++) await p.locator('[data-add-seat]').click();
+  console.log('factions offered:', await p.locator('[data-seat-factions="0"] [data-faction]').evaluateAll((b) => b.map((x) => x.getAttribute('data-faction')).join(',')));
   console.log('seats:', await p.locator('.seat-row').count(), 'start enabled:', await p.getByRole('button', { name: 'Rozpocznij grę' }).isEnabled());
-  const f = ['dawn', 'horde', 'herds', 'undead', 'clans'];
+  const f = ['dawn', 'horde', 'herds', 'tides', 'clans'];
   for (let i = 0; i < 5; i++) {
     if (i === 4) await p.locator('[data-add-seat]').click();
     await p.locator(`[data-seat-factions="${i}"] [data-faction="${f[i]}"]`).click();

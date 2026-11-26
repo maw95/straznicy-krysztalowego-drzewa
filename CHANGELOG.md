@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wybór frakcji (nowa gra i stół online) pokazuje tylko pięć skończonych: Przymierze, Hordę, Dzikie Stado, Żelazny Klan i Bractwo Przypływu. Pozostałe wrócą, gdy dostaną grafikę.
 - Wolna Kompania: Wydra Przemytniczka ma animowaną figurę na polu bitwy (chód, strzał z kuszy, trafienie, śmierć).
 - Osada Bractwa Przypływu: proporce na murach i chorągiew siedliska Homara Pancernego też są w morskim kolorze frakcji.
 - Osady: proporce Bractwa Przypływu (koszary, targ, rada osady, skarbiec) mają morski kolor frakcji zamiast zielonego, a proporce i płótna Dzikiego Stada na budynkach i siedliskach są bursztynowe zamiast czerwonych.

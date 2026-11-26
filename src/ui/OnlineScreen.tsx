@@ -2,14 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { heroPool, MAX_PVP_PLAYERS, FACTION_NAMES, MAP_SIZE_NAMES, UNITS, type FactionId } from '../engine/data';
 import { CUSTOM_MAPS } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
-import { PACK_IDS } from '../engine/factions';
 import { SIDES_GOALS } from '../engine/teams';
 import { defaultCustom, TIERS } from '../engine/presets';
 import { currentUser, fetchRanking, OnlineSession, savedToken, signIn, signOut, type Invitation, type OnlineState, type PlayerOnline, type RankingRow, type RoomView, type TableConfig, type User } from '../online/api';
 import { useOnline } from '../online/useOnline';
 import { Logo, useCoverArt } from './Logo';
 import { asset, FACTION_RING, Frame, Portrait, Ribbon } from './common';
-import { BOARD_LEVELS, choice, LEVELS, SEAT_TINT, SHAPE_NAMES } from './setupShared';
+import { BOARD_LEVELS, choice, LEVELS, openFactions, SEAT_TINT, SHAPE_NAMES } from './setupShared';
 import { NewGameWizard } from './NewGameWizard';
 import type { Mode } from '../engine/types';
 
@@ -395,7 +394,7 @@ function RoomLobby({ session, room, me, online }: { session: OnlineSession; room
   const configure = (patch: Partial<TableConfig>) => session.send({ type: 'configure', table: { ...table, ...patch } });
   const updateSeat = (i: number, patch: Partial<TableConfig['seats'][number]>) => configure({ seats: table.seats.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
   /** The factions a seat may take: Przymierze and Horda, and in a digital rivalry for the goals made for any number of sides all the others (the server checks the same). */
-  const offered: readonly FactionId[] = table.mode === 'pvp' && table.digital && table.tier !== 'adventure' && SIDES_GOALS.includes(table.objective ?? 'crystals') ? PACK_IDS : (['dawn', 'horde'] as const);
+  const offered: readonly FactionId[] = table.mode === 'pvp' && table.digital && table.tier !== 'adventure' && SIDES_GOALS.includes(table.objective ?? 'crystals') ? openFactions() : (['dawn', 'horde'] as const);
   const takenBy = (heroId: string, i: number) => table.seats.some((s, j) => j !== i && s.heroId === heroId);
   const ready = room.seats.every((s) => s.bot || s.player);
   const [copied, setCopied] = useState(false);

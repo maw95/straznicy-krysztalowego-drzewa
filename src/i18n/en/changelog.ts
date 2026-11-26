@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Wybór frakcji (nowa gra i stół online) pokazuje tylko pięć skończonych: Przymierze, Hordę, Dzikie Stado, Żelazny Klan i Bractwo Przypływu. Pozostałe wrócą, gdy dostaną grafikę.':
+    'Choosing a faction (new game and online table) shows only the five finished ones: the Dawn Covenant, the Horde, the Wild Herd, the Iron Clan and the Brotherhood of the Tide. The others will return once they have their graphics.',
   "Wolna Kompania: Wydra Przemytniczka ma animowaną figurę na polu bitwy (chód, strzał z kuszy, trafienie, śmierć).":
     "The Free Company: the Otter Smuggler has an animated figure on the battlefield (walk, crossbow shot, being hit, death).",
   "Osada Bractwa Przypływu: proporce na murach i chorągiew siedliska Homara Pancernego też są w morskim kolorze frakcji.":

@@ -8,7 +8,7 @@ const want = (n: string) => !process.argv[3] || process.argv[3].includes(n);
 const mycelium = (p: import('playwright').Page) => p.locator('[data-mycelium]').count();
 
 async function startTable(dev: boolean, seat: number, humans: number[]) {
-  const g = await openGame(dev ? 'dev=1' : '', { view, scale: 1 });
+  const g = await openGame(dev ? 'dev=1&allFactions=1' : 'allFactions=1', { view, scale: 1 });
   const p = g.page;
   await p.waitForTimeout(800);
   await p.locator('[data-new-game]').click();

@@ -7,7 +7,7 @@ const view = (process.argv[2] ?? 'desktop') as View;
 
 /** Walks the wizard to the players page of a rivalry on the level that has the settlements (Imperium) and picks the Court for the seat `court`. */
 async function startTable(dev: boolean, court: number, humans: number[]) {
-  const g = await openGame(dev ? 'dev=1' : '', { view, scale: 1 });
+  const g = await openGame(dev ? 'dev=1&allFactions=1' : 'allFactions=1', { view, scale: 1 });
   const p = g.page;
   const card = (t: string) => p.locator('.opt-card', { hasText: t }).first();
   await card('Nowa gra').click();

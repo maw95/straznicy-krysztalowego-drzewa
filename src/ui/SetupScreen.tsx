@@ -3,7 +3,6 @@ import { ExpeditionScreen } from './ExpeditionScreen';
 import { useMemo, useRef, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, heroPool, MAX_PVP_PLAYERS, SECRET_HEROES, UNITS, type FactionId, type MapSize } from '../engine/data';
 import { MAX_TEAMS, raceOf, seatTable, SIDES_GOALS, TEAM_IDS, teamsOf } from '../engine/teams';
-import { PACK_IDS } from '../engine/factions';
 import { readyMaps } from '../engine/customMaps';
 import { layerSwitches, resolveTier, withRuleset, type CustomLayer, type Tier } from '../engine/presets';
 import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
@@ -16,7 +15,7 @@ import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
 import { details } from './details';
-import { CrossIcon, defaultHeroes, DiceIcon, FactionDetails, resolveRandomSeats, SEAT_TINT, Tip, TIPS, type SeatDraft } from './setupShared';
+import { CrossIcon, defaultHeroes, DiceIcon, FactionDetails, openFactions, resolveRandomSeats, SEAT_TINT, Tip, TIPS, type SeatDraft } from './setupShared';
 import { NewGameWizard } from './NewGameWizard';
 import { deleteNamedSave, listNamedSaves, type NamedSave } from './saves';
 import { readRun } from './expeditionRun';
@@ -125,7 +124,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
    * (control, conquest, relic; the other goals are stories of Przymierze and Horda, or have not been tested with more). Coop, the arena and the
    * online game have the old pair. A side is a faction: players who pick the same one play one side.
    */
-  const offered: readonly FactionId[] = SIDES_GOALS.includes(goal) && digital && !arena ? PACK_IDS : (TEAM_IDS as readonly FactionId[]);
+  const offered: readonly FactionId[] = SIDES_GOALS.includes(goal) && digital && !arena ? openFactions() : (TEAM_IDS as readonly FactionId[]);
   /** The table as the engine reads it: every seat has the slot of its faction (the first two factions play the first two sides). */
   // A seat left to chance counts as the race of the first fixed seat here (the draw comes at the start), and more than four fixed factions cannot sit at one table.
   const fixedRaces = new Set(seats.filter((s) => !s.randomRace).map(raceAt));
