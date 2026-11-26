@@ -166,7 +166,7 @@ Wejście na pole wrogiego bohatera, strażnika albo grupy neutralnych rozpoczyna
 Arena to poziomo ułożone heksy, 13 kolumn na 9 rzędów, z przeszkodami, które blokują ruch i strzał (inne dla pola Przymierza i Hordy). Jednostka, której jest teraz kolej (a przy rozstawianiu wybrana jednostka), ma cienką złotą obwódkę wokół całej sylwetki.
 
 ### Rozstawienie
-Najpierw obie strony ustawiają jednostki w swojej skrajnej kolumnie; zaczyna atakujący. Klikasz jednostkę, a potem wolne pole startowe. Umiejętność Taktyk pozwala stanąć dalej.
+Najpierw obie strony ustawiają jednostki w swojej skrajnej kolumnie; zaczyna atakujący. Klikasz jednostkę, a potem wolne pole startowe; kliknięcie innej własnej jednostki (albo jej pola) zamienia je miejscami. Umiejętność Taktyk pozwala stanąć dalej.
 
 ### Kolejność i aktywacja
 Co rundę każda jednostka ma **jedną aktywację**, od najszybszej (przy remisie pierwszy działa broniący się). W aktywacji jednostka **rusza się o tyle pól, ile wynosi Szybkość, i atakuje**. Ruch bez ataku kończy aktywację od razu. Jednostka walcząca wręcz zachowuje aktywację po ruchu tylko wtedy, gdy ruch doprowadził ją do wroga w zasięgu; klik w wroga to ruch i atak w jednym geście. **Strzelec** po ruchu nie strzela: strzela, stojąc w miejscu.

@@ -382,8 +382,10 @@ export function BattleView({ state: liveState, canAct: canActNow, onAction, onSh
   function clickUnit(u: BattleUnit): void {
     if (deploySide) {
       if (deploy.mirageMode) return u.side === deploySide ? deploy.mirageAt(u.id) : undefined;
-      if (u.side === deploySide) setPicked(picked === u.id ? null : u.id);
-      else onShowCard(u.defId);
+      if (u.side !== deploySide) onShowCard(u.defId);
+      // With a unit picked, a click on another of ours swaps the two (as a click on its hex does); on the picked one it lets go.
+      else if (picked && picked !== u.id && posOf(u) && deploy.deployable.has(posOf(u)!)) placeAt(posOf(u)!);
+      else setPicked(picked === u.id ? null : u.id);
       return;
     }
     if (!myTurn || !active) {

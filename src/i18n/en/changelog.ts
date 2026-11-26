@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Rozstawianie wojsk: gdy jednostka jest zaznaczona, kliknięcie innej własnej jednostki zamienia je miejscami (dotąd zmieniało tylko zaznaczenie).':
+    'Deploying units: with a unit picked, a click on another of your units swaps the two (it used to only change the pick).',
   'Bitwa: jednostka, której jest teraz kolej (a przy rozstawianiu wybrana jednostka), ma cienką złotą obwódkę wokół całej sylwetki.':
     'Battle: the unit whose turn it is (and, while deploying, the picked unit) has a thin golden outline round its whole silhouette.',
   'Boty: poziomy przestrojone przy założeniu, że gracz gra mniej więcej jak bot Normalny. Normalny myli się teraz częściej (mniej więcej co czwartą decyzję w miejscach, w których bot może się pomylić), Łatwy jeszcze częściej, a Trudny i Bardzo trudny grają bez błędów, więc są wyraźnie mocniejsze od Normalnego.':

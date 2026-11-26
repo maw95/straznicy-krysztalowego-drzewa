@@ -36,7 +36,8 @@ export async function openGame(query = '', opts: { view?: View; scale?: number; 
   let vite: ViteDevServer | null = null;
   if (!(await fetch(`http://localhost:${PORT}/`).then((r) => r.ok, () => false))) {
     if (opts.serverUrl) process.env.VITE_SERVER_URL = opts.serverUrl;
-    vite = await createServer({ server: { port: PORT, strictPort: true }, logLevel: 'error' });
+    // The role tuner rewrites its data file after every table: a page under test must not reload because of it.
+    vite = await createServer({ server: { port: PORT, strictPort: true, watch: { ignored: ['**/src/engine/tuningRolesData.ts'] } }, logLevel: 'error' });
     await vite.listen();
   }
   const browser: Browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });

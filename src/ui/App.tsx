@@ -277,6 +277,8 @@ export function App() {
       s = applyAction(s, a);
       history.current.push(a);
       if (q.get('until') === 'battle' && s.phase === 'battle' && s.battle?.stage === 'fight') break;
+      // ?until=deploy stops where a person sets up the units for a battle.
+      if (q.get('until') === 'deploy' && s.phase === 'battle' && s.battle?.stage === 'deploy' && currentActor(s).kind === 'human') break;
       // ?until=select stops where the player picks the supports for a battle.
       if (q.get('until') === 'select' && s.phase === 'battle' && s.battle?.stage === 'select') break;
       // ?until=offer stops when a hero has skills to choose from (for looking at the skill cards).

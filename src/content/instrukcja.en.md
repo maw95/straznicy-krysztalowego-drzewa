@@ -166,7 +166,7 @@ Stepping onto the tile of an enemy hero, a guardian or a group of neutrals start
 The arena is hexes laid out horizontally, 13 columns by 9 rows, with obstacles that block movement and shots (different ones for the Covenant's and the Horde's field). The unit whose turn it is (and, while deploying, the picked unit) has a thin golden outline round its whole silhouette.
 
 ### Placement
-First both sides place their units in their outermost column; the attacker starts. You click a unit and then a free starting tile. The Tactician skill lets you stand further forward.
+First both sides place their units in their outermost column; the attacker starts. You click a unit and then a free starting tile; a click on another of your units (or its tile) swaps the two. The Tactician skill lets you stand further forward.
 
 ### Order and activation
 Every round each unit has **one activation**, from the fastest (on a tie the defender acts first). In an activation a unit **moves as many tiles as its Speed and attacks**. A move without an attack ends the activation at once. A melee unit keeps its activation after a move only if the move brought it to an enemy in reach; a click on an enemy is a move and an attack in one gesture. A **shooter** does not shoot after moving: it shoots standing still.
