@@ -157,10 +157,11 @@ export const SPRITES: Record<string, SpriteSpec> = {
   clanWarrior: { dir: 'jednostki/wojownik_klanu', box: [74, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   mountainCrossbow: { dir: 'jednostki/kusznik_gor', box: [78, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   forgePriest: { dir: 'jednostki/kaplan_kuzni', box: [74, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.0 } },
-  // Free Company (G4, 26.11): the three main heroes so far; the other sixteen characters are portrait tokens until their clips exist.
+  // Free Company (G4, 26.11): the four heroes so far; the other fifteen characters are portrait tokens until their clips exist.
   foxCaptain: { dir: 'jednostki/ruda_atamanka', box: [76, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   badgerSapper: { dir: 'jednostki/borsuk_saper', box: [76, 94] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   ravenSeer: { dir: 'jednostki/kruk_wieszczek', box: [74, 108] as const, corpseMax: CORPSE_MAX_W, speed: { wzbicie: 2, lot: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.0 } },
+  otterSmuggler: { dir: 'jednostki/wydra_przemytniczka', box: [82, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.2, atak: 1.5, smierc: 1.5, trafienie: 1.0 } },
 };
 
 /** Whether the unit is drawn from sprites in the digital ruleset (otherwise: 3D figure or portrait token). */

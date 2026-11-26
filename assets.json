@@ -11166,6 +11166,34 @@
       "data": "2026-11-26",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "free/animacje-wydra-przemytniczka",
+      "pliki": [
+        "public/assets/jednostki/wydra_przemytniczka/anim.json",
+        "public/assets/jednostki/wydra_przemytniczka/atak.webp",
+        "public/assets/jednostki/wydra_przemytniczka/chod.webp",
+        "public/assets/jednostki/wydra_przemytniczka/martwy.webp",
+        "public/assets/jednostki/wydra_przemytniczka/smierc.webp",
+        "public/assets/jednostki/wydra_przemytniczka/stoi.webp",
+        "public/assets/jednostki/wydra_przemytniczka/trafienie.webp"
+      ],
+      "typ": "animowany sprite czwartej bohaterki Wolnej Kompanii (Wydra Przemytniczka): stoi, martwy, chód, atak z kuszy, śmierć, trafienie",
+      "opis": "Obraz bazowy Flare high 1024² z grafiki karty, klipy P-Video 2 (720p, 24 fps): atak draft; chód i śmierć w pełnej jakości (chód: jeden cykl, klatki 15–39; śmierć z ziarnem udanego draftu); trafienie = pierwsze 8 klatek klipu w pełnej jakości odtworzone tam i z powrotem (ffmpeg); martwy = ostatnia klatka śmierci; pakowanie pack_unit.py 512 px. 102 CU, w tym 1 klip zablokowany i 5 odrzuconych.",
+      "scenario_asset": {
+        "odniesienie": "asset_KECHYBuCEHTTvScng6kHMXxs",
+        "stoi": "asset_pkKHmtExtS3fuuD1QsG3nS1n",
+        "atak": "asset_EZeLabRKN3Hrg5yV8CiGijav",
+        "chod": "asset_agmqxaPUgpy924Nyf1iskxpm",
+        "smierc": "asset_f33tJZ575fFtqtdC7D4afsET",
+        "trafienie": "asset_AyR6z4ZVv1x6uewuk8E9c7qH"
+      },
+      "prompt": "stoi: Use the reference image only for the character design (an anthropomorphic otter woman smuggler ...). Draw this same character as a full-body game sprite in a strict side view ... holding the small crossbow ... Plain solid pure blue background. Klipy: Side view, locked static camera. chód: The otter woman walks in place toward the right ... as if on a treadmill ... | atak: The otter woman lifts her small crossbow up to her shoulder toward the right, holds her aim for a moment and lets the bolt fly ... then returns to exactly the same ready stance ... | śmierć: The otter woman lets go of what she is holding ... loses her balance and falls over sideways ... stretched out flat at full length ... never kneels and never curls up ... | trafienie: A very small, slow movement of the upper body only: the otter woman bends her back and head a little backward ... Plain solid blue background stays unchanged, no camera movement.",
+      "narzedzie": "GPT Image 2.5 Flare + P-Video 2 przez Scenario + ffmpeg + scripts/animacje/pack_unit.py",
+      "model": "model_openai-gpt-image-2-5-flare, model_pruna-p-video-2",
+      "data": "2026-11-26",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

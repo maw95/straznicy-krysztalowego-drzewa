@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Wolna Kompania: Wydra Przemytniczka ma animowaną figurę na polu bitwy (chód, strzał z kuszy, trafienie, śmierć).":
+    "The Free Company: the Otter Smuggler has an animated figure on the battlefield (walk, crossbow shot, being hit, death).",
   "Osada Bractwa Przypływu: proporce na murach i chorągiew siedliska Homara Pancernego też są w morskim kolorze frakcji.":
     "The Brotherhood of the Tide's settlement: the banners on the walls and the flag of the Lobster Knight's dwelling are in the faction's sea turquoise too.",
   "Osady: proporce Bractwa Przypływu (koszary, targ, rada osady, skarbiec) mają morski kolor frakcji zamiast zielonego, a proporce i płótna Dzikiego Stada na budynkach i siedliskach są bursztynowe zamiast czerwonych.":
