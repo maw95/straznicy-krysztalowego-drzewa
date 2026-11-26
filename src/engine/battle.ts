@@ -2,7 +2,7 @@
 // abilities and items. Functions change the GameState passed in.
 
 import { raceOf } from './teams';
-import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, STAT_SCALE, supportTier, battleStats, DIGITAL_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, itemDef, ITEMS, UNITS, type AbilityId, type TeamId, type ItemKind, type Side } from './data';
+import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, STAT_SCALE, supportTier, battleStats, DIGITAL_RANGED_BONUS, BOARD_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, itemDef, ITEMS, UNITS, type AbilityId, type TeamId, type ItemKind, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, DIRECTIONS, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
@@ -437,7 +437,7 @@ export const coreExposed = (u: BattleUnit) => abilityOf(u) === 'runeGolem' && u.
 /** Expected damage of a plain attack, before the defender's reactions. */
 export function attackDamage(state: GameState, att: BattleUnit, target: BattleUnit, useAbility: boolean, movedDistance: number): number {
   let dmg = unitAttackBase(att) + att.status.nextAttackBonus - att.status.cursedNext - (att.status.blinded ?? 0);
-  if (isDigital(state.rules) && UNITS[att.defId].attackType === 'ranged') dmg += DIGITAL_RANGED_BONUS * scaleOf(state);
+  if (UNITS[att.defId].attackType === 'ranged') dmg += (isDigital(state.rules) ? DIGITAL_RANGED_BONUS : BOARD_RANGED_BONUS) * scaleOf(state);
   if (att.gear?.vsWounded && target.hp < target.maxHp) dmg += att.gear.vsWounded;
   if (att.gear?.firstStrike) dmg += att.gear.firstStrike;
   if (abilityActive(state)) {
@@ -1454,14 +1454,15 @@ export function battleMove(state: GameState, to: HexKey, tail?: HexKey) {
     moatHurts(state, u);
     return endActivation(state);
   }
-  // Digital ruleset: moving without attacking ends the turn, so a shooter cannot move and shoot, and a melee unit keeps its turn
+  // A shooter cannot move and shoot (both editions); digital ruleset: moving without attacking ends the turn, and a melee unit keeps its turn
   // only when its move brought an enemy within reach (the attack that follows is the other half of the same click).
   if (act.moveOnly || act.attacked || !canAttackAfterMove(state, u) || (isDigital(state.rules) && attackTargets(state, u).length === 0 && throwTargets(state, u).length === 0)) endActivation(state);
 }
 
-/** Whether the unit may still attack after moving: always in the classic rules, not for shooters in the digital ruleset. */
-export function canAttackAfterMove(state: GameState, u: BattleUnit): boolean {
-  return !isDigital(state.rules) || UNITS[u.defId].attackType !== 'ranged';
+/** Whether the unit may still attack after moving: never for a shooter (both editions since backlog 95). */
+export function canAttackAfterMove(_state: GameState, u: BattleUnit): boolean {
+  // Both editions (the board one since backlog 95): a shooter that moved does not shoot in that activation.
+  return UNITS[u.defId].attackType !== 'ranged';
 }
 
 /** The level of the Herds' mechanic building (Kamień Tętentu) a side has: 0 for any other faction or without the building. */

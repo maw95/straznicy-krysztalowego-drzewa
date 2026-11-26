@@ -849,3 +849,6 @@ Zgłoszenie autora: „Wilkołak na poziomie 1 jest za mocny” (pobił Wilczyc�
 ## 22. Pomocnicy wolnych frakcji jako strażnicy mapy (26.11.2026, decyzje autora, tylko wersja cyfrowa)
 Połowa spotkań i obrońców neutralnych osad to pomocnicy jednej wolnej frakcji (grywalnej, której nikt w partii nie gra), o sile zbliżonej do neutralnych, z tą samą nagrodą; legenda przewodzi tylko najsilniejszym grupom; arena według krainy pola. Strażnicy kryształów i Boss bez zmian. Szczegóły: `ZASADY_CYFROWE.md`, „Pomocnicy wolnych frakcji”.
 
+## 23. Strzelcy w wersji planszowej nie strzelają po ruchu (26.11.2026, backlog 95, decyzja autora)
+- Jak w wersji cyfrowej: strzelec, który w swojej aktywacji się ruszył, już nie strzela (`canAttackAfterMove` w obu wersjach). Instrukcja do druku (`docs/INSTRUKCJA.md`, rozdział o aktywacji) i pliki z `make druk`.
+- Autor zaproponował w zamian +1 A dla strzelców. Pomiar (200 gier na stół, pełna gra, `scripts/sim/matrix.ts`, wygrane Przymierza): obecne zasady kooperacja 61–80%, rywalizacja 46–64%; sam zakaz kooperacja 55–80% (ok. −3 pkt), rywalizacja 39–52% (ok. −7 pkt); zakaz i +1 A kooperacja 52–74%, rywalizacja 30–48% (+1 wzmacnia też strzelców Hordy i Cyklopa). Wchodzi sam zakaz (`BOARD_RANGED_BONUS = 0` w `data.ts`; ustawienie 1 dodaje +1 A w bitwie i na kartach); decyzja o premii czeka na autora.

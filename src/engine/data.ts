@@ -474,6 +474,12 @@ const u = (d: UnitDef): UnitDef => d;
  * Provisional: tune with `make sim-tabele` once the digital edition has its own balance tables.
  */
 export const DIGITAL_RANGED_BONUS = 1;
+/**
+ * The board edition's shooters: the same rule as the digital one (no shot after a move, backlog 95), and this much more Attack on their cards.
+ * Measured 26.11 (200 games a table, the full game): the rule alone takes the Przymierze about 3 points in coop and 7 in a rivalry; +1 for every
+ * shooter takes it 2 and 15 points more (the Horde's shooters and the Cyklop gain too), so the bonus stays 0 until the author decides.
+ */
+export const BOARD_RANGED_BONUS = 0;
 
 /**
  * Digital ruleset: the numbers of a unit's battle stats that differ from the board game's (the rest stay as in UNITS).

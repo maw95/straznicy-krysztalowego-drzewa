@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Wersja planszowa: strzelec, który w swojej aktywacji się ruszył, już nie strzela (tak jak w wersji cyfrowej). Zmiana jest w instrukcji do druku.':
+    'Board version: a shooter that moved in its activation no longer shoots (as in the digital version). The change is in the printed rulebook.',
   'Rozstawianie wojsk: gdy jednostka jest zaznaczona, kliknięcie innej własnej jednostki zamienia je miejscami (dotąd zmieniało tylko zaznaczenie).':
     'Deploying units: with a unit picked, a click on another of your units swaps the two (it used to only change the pick).',
   'Bitwa: jednostka, której jest teraz kolej (a przy rozstawianiu wybrana jednostka), ma cienką złotą obwódkę wokół całej sylwetki.':

@@ -346,7 +346,7 @@ W każdej rundzie bitwy każda jednostka ma **jedną aktywację**, od najszybsze
 1. **Ruch** — o tyle pól, ile wynosi Szybkość (można zostać w miejscu). Nie wolno przejść przez pole zajęte przez inną jednostkę (sojusznika ani wroga) ani przez przeszkodę. Jednostki latające przelatują nad wszystkim, ale lądują na wolnym polu.
 2. **Atak** (jeśli chcesz):
    - **wręcz** — w wroga na sąsiednim polu;
-   - **strzelec** — w dowolnego wroga, którego widać. Przeszkoda na linii zasłania cel, jednostki nie zasłaniają.
+   - **strzelec** — w dowolnego wroga, którego widać, ale **tylko gdy w tej aktywacji się nie ruszył**: strzelec albo idzie, albo strzela. Przeszkoda na linii zasłania cel, jednostki nie zasłaniają.
 
 ### Obrażenia
 

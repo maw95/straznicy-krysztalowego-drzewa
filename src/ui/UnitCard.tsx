@@ -5,7 +5,7 @@
 
 import { createContext, useContext, useState, type CSSProperties } from 'react';
 import { CARD_CROPS } from './cardCrops';
-import { abilityTextFor, battleStats, DIGITAL_RANGED_BONUS, UNITS } from '../engine/data';
+import { abilityTextFor, battleStats, BOARD_RANGED_BONUS, DIGITAL_RANGED_BONUS, UNITS } from '../engine/data';
 import { abilityArt, artId, asset } from './common';
 import { StatIcon, StatText } from './markers';
 import { abilityTextAt, milestoneTier } from '../engine/growth';
@@ -225,7 +225,7 @@ export function UnitTip({ unitId }: { unitId: string }) {
   const base = UNITS[unitId];
   const inArena = useContext(ArenaCardsContext);
   const stats = battleStats(unitId, digital, statScale, hpScale, inArena);
-  const bonus = digital && base.attackType === 'ranged' ? DIGITAL_RANGED_BONUS * statScale : 0;
+  const bonus = base.attackType === 'ranged' ? (digital ? DIGITAL_RANGED_BONUS : BOARD_RANGED_BONUS) * statScale : 0;
   return (
     <>
       <b>{base.name}</b>
@@ -252,7 +252,7 @@ export function UnitCard({ unitId, width = 300, hp, attack, speed, duel = false,
   const nameSize = Math.min(40, (nameW / Math.max(8, def.name.length)) * 2.05);
   const stats = card ? def : battleStats(unitId, digital, statScale, hpScale, inArena);
   // In the digital ruleset a shooter hits one harder than the printed Atak says; the card shows what the unit really deals.
-  const shooterBonus = digital && def.attackType === 'ranged' ? DIGITAL_RANGED_BONUS * statScale : 0;
+  const shooterBonus = def.attackType === 'ranged' ? (digital ? DIGITAL_RANGED_BONUS : BOARD_RANGED_BONUS) * statScale : 0;
   const values = [hp ?? stats.hp, (attack ?? stats.attack) + shooterBonus, speed ?? stats.speed];
   // The description starts right of the ability medallion and gets the largest font that fits.
   const desc = { ...L.desc, x0: Math.max(L.desc.x0, L.ability.cx + L.ability.r + 8), y0: L.desc.y0 - 4, y1: L.desc.y1 + 3 };

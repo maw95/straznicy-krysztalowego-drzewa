@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wersja planszowa: strzelec, który w swojej aktywacji się ruszył, już nie strzela (tak jak w wersji cyfrowej). Zmiana jest w instrukcji do druku.
 - Rozstawianie wojsk: gdy jednostka jest zaznaczona, kliknięcie innej własnej jednostki zamienia je miejscami (dotąd zmieniało tylko zaznaczenie).
 - Bitwa: jednostka, której jest teraz kolej (a przy rozstawianiu wybrana jednostka), ma cienką złotą obwódkę wokół całej sylwetki.
 - Boty: poziomy przestrojone przy założeniu, że gracz gra mniej więcej jak bot Normalny. Normalny myli się teraz częściej (mniej więcej co czwartą decyzję w miejscach, w których bot może się pomylić), Łatwy jeszcze częściej, a Trudny i Bardzo trudny grają bez błędów, więc są wyraźnie mocniejsze od Normalnego.

@@ -95,9 +95,9 @@ describe('digital ruleset: moving ends the turn unless an attack follows', () =>
     return s.battle!;
   };
 
-  it('a shooter that moves has used its turn (the classic shooter still shoots after moving)', () => {
+  it('a shooter that moves has used its turn, in both editions (the board one since backlog 95)', () => {
     expect(play('digital', 'elfDruid', 5).activation?.unitId).not.toBe('elfDruid');
-    expect(play(undefined, 'elfDruid', 5).activation?.unitId).toBe('elfDruid');
+    expect(play(undefined, 'elfDruid', 5).activation?.unitId).not.toBe('elfDruid');
   });
 
   it('a melee unit that moves next to nobody has used its turn, one that reaches an enemy may still attack it', () => {
