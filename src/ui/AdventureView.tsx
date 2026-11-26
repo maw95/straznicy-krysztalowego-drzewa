@@ -58,7 +58,7 @@ export interface LootFloat {
 }
 
 /** The biggest hex a player can zoom the map to (pixels across). */
-const MAX_HEX_W = 120;
+const MAX_HEX_W = 150;
 /** The Boss's lair and the Artifact use a crystal record, but only a real crystal (and the Artifact) is drawn as one. */
 const showsCrystal = (c: { id: string; decoy?: boolean }) => !c.decoy && c.id !== 'boss';
 
@@ -180,7 +180,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   // Phones can zoom (buttons, two fingers) between the whole map and big hexes.
   const fitW = Math.min(118, (box.w - 24) / extent.cols, (box.h - 24) / (1.1547 * (0.75 * (rows - 1) + 1)));
   const [zoomW, setZoomW] = useState<number | null>(null);
-  const W = zoomW !== null ? Math.max(fitW, Math.min(MAX_HEX_W, zoomW)) : box.w < 600 ? Math.max(fitW, 46) : fitW;
+  const W = Math.max(fitW, Math.min(MAX_HEX_W, zoomW ?? MAX_HEX_W));
   const H = W * 1.1547;
   const boardW = extent.cols * W;
   const boardH = H + (rows - 1) * 0.75 * H;
@@ -339,8 +339,6 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           return { key: `guard-${c.id}`, unitId: c.guardian!, x: p.x + W / 2, y: p.y + H * 0.6, size: W * 0.72 };
         }),
     );
-  const sel = selected ? state.tiles[selected] : hero ? state.tiles[hero.pos] : null;
-  const selInfo = sel && tileLines(state, sel.key, undefined, '');
   const inventory = viewer ? state.factions[viewer].inventory.map((id) => state.items[id]) : [];
   const usableTreasure = (kind: string) => canAct && hero?.faction === viewer && itemDef(kind as import('../engine/data').ItemKind, isDigital(state.rules)).usableIn.includes('map') && (kind !== 'resurrection' || deadUnits.length + spentHeroes.length > 0);
 
@@ -662,9 +660,16 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
               <div className="hero-info" style={{ minWidth: 0 }}>
                 <div data-hero-name style={{ fontWeight: 800, fontSize: 20, color: '#F3D27A' }}>{heroLabel(hero)}</div>
                 {state.rules.empire && (
-                  <div data-shards title="Odłamki Pierwotnej Iskry: niesione przez tego bohatera, razem u frakcji i wszystkich w grze" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
+                  <div data-shards {...details(() => (
+                    <div className="plate parch" style={{ width: 280, padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: 3 }}>
+                      <b style={{ fontSize: 18 }}>Odłamki Pierwotnej Iskry</b>
+                      <div style={{ fontSize: 15 }}>Niesie ten bohater: <b>{hero.shards ?? 0}</b></div>
+                      <div style={{ fontSize: 15 }}>Razem u frakcji: <b>{shardsOf(state, hero.faction)}</b></div>
+                      <div style={{ fontSize: 15 }}>Wszystkich w grze: <b>{shardTotal(state)}</b></div>
+                    </div>
+                  ))} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15 }}>
                     <img src={asset('ikony/mapa/odlamek.webp')} alt="" width={26} height={26} />
-                    <span>Odłamki: niesie <b>{hero.shards ?? 0}</b> · frakcja <b>{shardsOf(state, hero.faction)}</b> / {shardTotal(state)}</span>
+                    <b>{hero.shards ?? 0} / {shardsOf(state, hero.faction)} / {shardTotal(state)}</b>
                     {(hero.shards ?? 0) > 0 && canAct && passTargets(state, hero).map((h) => (
                       <button key={h.id} className="btn plate parch" data-pass-shards={h.id} style={{ padding: '1px 8px', fontSize: 13 }} onClick={() => onAction({ type: 'passArtifact', artifactId: SHARDS_ID, toHeroId: h.id })}>Przekaż Odłamki: {UNITS[h.id].name}</button>
                     ))}
@@ -672,7 +677,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                 )}
                 {state.rules.realm && (hero.spells?.length ?? 0) > 0 && (
                   <div data-map-spells style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', fontSize: 14 }}>
-                    <span className="map-mana" title={`Mana: ${manaOf(hero)} z ${maxMana(hero)}, wraca po ${MAGIC.regen} na rundę`}><b data-mana>{manaOf(hero)}/{maxMana(hero)}</b><ManaIcon /></span>
+                    <span className="map-mana" title={`Mana: ${manaOf(hero)} z ${maxMana(hero)}, wraca po ${MAGIC.regen} na rundę`}><ManaIcon /><b data-mana>{manaOf(hero)}/{maxMana(hero)}</b></span>
                     {canAct && hero.faction === viewer && hero.spells!.filter((id) => SPELLS[id].where === 'map').map((id) => (
                       <button key={id} className="btn plate parch" data-map-spell={id} disabled={manaOf(hero) < SPELLS[id].mana || (id === 'portal' && !portalTarget(state, hero))} title={`${SPELLS[id].name} (mana ${SPELLS[id].mana}): ${SPELLS[id].text}`} onClick={() => { sfx.play(id === 'portal' ? 'portal' : 'magic_cast'); onAction({ type: 'mapSpell', spell: id }); }} style={{ padding: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
                         <img src={asset(`ikony/czary/${id}.webp`)} alt="" width={30} height={30} />
@@ -681,8 +686,9 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
                     ))}
                   </div>
                 )}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3, fontSize: 15 }}>
-                  <span title={`Punkty ruchu w tej turze: ${moveBreakdown(state).map((p) => `${p.points > 0 && p.label !== 'podstawa' ? '+' : ''}${p.points} ${p.label}`).join(', ')} = ${moveAllowance(state)}.`}>Ruch <Pips total={Math.max(state.rules.heroMovePoints, moveAllowance(state), state.movePoints)} left={state.movePoints} /></span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 3, marginTop: 3, fontSize: 15 }} title={`Punkty ruchu w tej turze: ${moveBreakdown(state).map((p) => `${p.points > 0 && p.label !== 'podstawa' ? '+' : ''}${p.points} ${p.label}`).join(', ')} = ${moveAllowance(state)}.`}>
+                  <Pips total={Math.max(state.rules.heroMovePoints, moveAllowance(state), state.movePoints)} left={state.movePoints} />
+                  <span data-move>Ruch <b>{state.movePoints}/{Math.max(state.rules.heroMovePoints, moveAllowance(state), state.movePoints)}</b></span>
                   {hero.crystals.includes('artifact') && <span style={{ color: '#F3D27A' }} data-carrier-slow>· Artefakt spowalnia: −1 ruchu</span>}
                   {hero.crystals.length > 0 && <span style={{ color: '#9EE4FF' }}>· niesie {hero.crystals.length} kryształ(y)</span>}
                 </div>
@@ -750,18 +756,6 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
             );
           })()}
           {hero && state.rules.heroGrowth && <HeroGrowth hero={hero} compact={compact} onOpenPack={() => setPackOpen(true)} />}
-          {sel && (
-            <div className="plate parch" style={{ padding: '9px 12px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-              <img className="hex-clip" src={tileImage(sel, tileArt(state, sel), raceOf(state, sel.side))} alt="" style={{ width: 48, height: 55, flex: 'none', objectFit: 'cover' }} />
-              <div>
-                <div style={{ fontWeight: 800, fontSize: 20, lineHeight: 1.1 }}>{selInfo!.title}</div>
-                {selInfo!.lines.map((l) => (
-                  <div key={l} style={{ fontSize: 15, marginTop: 2 }}><StatText text={l} /></div>
-                ))}
-              </div>
-            </div>
-          )}
-
           <div className="well" style={{ padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 5, fontSize: 16 }}>
             <div className="lbl">Cele</div>
             {objectiveOf(state) !== 'crystals' ? (

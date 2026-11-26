@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Interfejs: Rada Osady ma surowce i przycisk wyjścia wewnątrz zielonej ramki o stałej wysokości (bez karty jednostki), w koszarach surowce stoją obok przycisku wyjścia, z panelu mapy zniknął opis zaznaczonego kafelka, pod imieniem bohatera są Odłamki jako ikona i „0 / 0 / 5”, mana z większą ikoną przed liczbami i ruch jako romby z napisem „Ruch 2/3”, a mapa startuje z największym przybliżeniem (większym niż dotąd).
 - Stroiciel poziomów trudności: premię wyrównującą Hordy da się teraz odbierać po trzeciej części zamiast od razu całej, a na największych mapach Normalny i Trudny mogą korzystać z rezerwowego bohatera i częściowo odebranej premii Hordy (same skarby nic tam nie dawały).
 - Poziomy trudności w Potyczce przestrojone po zmianach mapy i wzmocnieniu Hordy: na mapach od krótkiej do długiej Łatwy, Normalny i Trudny trafiają w zamierzone pasma wygranych; największe mapy jeszcze czekają na dokładniejsze strojenie.
 - Wolna Kompania ma własną barwę, burgund: herb, proporce na budynkach i palisadzie, ramki kart, wstążka i obwódka portretu nie są już zielone jak u Przymierza.

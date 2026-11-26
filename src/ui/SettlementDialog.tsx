@@ -3,7 +3,7 @@
 // the engine (kingdom.ts); the window only asks and shows what the engine allows.
 
 import { raceOf } from '../engine/teams';
-import { useEffect, useState, type ReactNode } from 'react';
+import { cloneElement, useEffect, useState, type ReactNode } from 'react';
 import { FACTION_NAMES, UNITS, type FactionId, type TeamId } from '../engine/data';
 import { artifactBill, fenceSellPrice, BUILDING_NAMES, BUILDING_TEXTS, buildBlock, buildCost, buildingLevel, buildingsFor, canPay, forgeLevel, goldOf, hasUnit, healPrice, incomeOf, refugeHere, refugeTargets, RUNE_NAMES, RUNES, runeBlock, runesOf, KINGDOM, marketStock, mayRecruit, recruitsOf, needsDwelling, dwellingOf, dwellingReady, DWELLING_COST, DWELLING_NAMES, DWELLING_TEXTS, resOf, spellPrice, tradeBuyPrice, tradeSellPrice, type BuildingId } from '../engine/kingdom';
 import { costText, ECONOMY, RESOURCE_IDS, RESOURCE_TITLES, SIEGE, type Cost } from '../engine/economy';
@@ -62,7 +62,7 @@ const buildingPicture = (landOf: FactionId, building: BuildingId, level: number)
 };
 
 /** A framed plate with what a building (or a dwelling) is: picture, name, what it does, an optional card, the cost and the button. */
-function DetailPlate({ id, picture, title, text, note, card, cost, action, modal = false, blocked = false }: { id: string; picture?: string; title: string; text: string; note?: string; card?: ReactNode; cost?: ReactNode; action?: ReactNode; modal?: boolean; blocked?: boolean }) {
+function DetailPlate({ id, picture, title, text, note, card, cost, action, modal = false, blocked = false, trailing }: { id: string; picture?: string; title: string; text: string; note?: string; card?: ReactNode; cost?: ReactNode; action?: ReactNode; modal?: boolean; blocked?: boolean; /** What sits at the right end of the frame (the treasury and the exit button of the tree page). */ trailing?: ReactNode }) {
   const body = (
     <>
       {picture && !modal && <img className="td-pic" src={asset(picture)} alt="" />}
@@ -78,7 +78,7 @@ function DetailPlate({ id, picture, title, text, note, card, cost, action, modal
   if (modal) return <div className="td-modal" data-tree-detail={id}>{body}</div>;
   return (
     <div className="gf tree-detail" data-tree-detail={id}>
-      <div className="gi slate tree-detail-in">{body}</div>
+      <div className="gi slate tree-detail-in">{body}{trailing && <div className="td-trailing">{trailing}</div>}</div>
     </div>
   );
 }
@@ -504,7 +504,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
     );
     return (
       <DetailPlate id={`dwelling-${unitId}`} modal={modal} picture={dwellingArt(unitId)} title={DWELLING_NAMES[unitId]} text={DWELLING_TEXTS[unitId]} note={note}
-        card={<UnitCard unitId={unitId} width={modal ? 190 : 104} digital />} cost={built ? undefined : <CostIcons cost={price} have={{ gold, res: resOf(state, faction) }} size={26} />} action={action} />
+        card={modal ? <UnitCard unitId={unitId} width={190} digital /> : undefined} cost={built ? undefined : <CostIcons cost={price} have={{ gold, res: resOf(state, faction) }} size={26} />} action={action} />
     );
   };
   const sparkDetail = () => {
@@ -664,8 +664,7 @@ export function SettlementDialog({ state, settlementId, faction, onAction, onClo
             <BuildingTree state={state} s={s} faction={faction} order={ORDER} picture={(b, level) => buildingPicture(landRace, b, Math.max(level, 1))} selected={pick} onSelect={setPick} council={{ picture: councilPic, name: 'Rada Osady' }} extras={extras} info={info} />
           </div>
           <div className="settlement-foot">
-            {detail}
-            <div className="settlement-actions row">{goldLine}{backButton}</div>
+            {cloneElement(detail, { trailing: <>{goldLine}{backButton}</> })}
           </div>
         </div>
       )}
