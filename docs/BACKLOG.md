@@ -79,6 +79,8 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 **87. Żelazny Klan: reszta uwag z 25.11 (poprawki zrobione, czekają na przegląd autora na `make podglad F=clans`).** **Otwarte:**
   - **Śmierć Pogromcy** kończy się zwinięciem twarzą do ziemi (lepiej niż czworaki z 24.11, ale może nadal wyglądać jak klęczenie).
 
+**93. Zakładka „Jednostki” w „Zasady i karty” (S; uwaga autora 26.11).** Pokazać wszystkie jednostki 5 frakcji, które obecnie są w grze (Przymierze, Horda, Dzikie Stado, Żelazny Klan, Bractwo Przypływu; zob. 91), i neutralne. Jedynym podziałem ma być frakcja: znikają podziały w rodzaju „Poziom IV i V: pomocnicy do rekrutacji w osadzie, Przymierze Świtu (stopnie 2–5)” (`src/ui/RulesDialog.tsx`). Jednostki neutralne na samym końcu. Kolejność wewnątrz frakcji: bohaterowie główni, bohaterowie dodatkowi, potem pomocnicy od najniższego poziomu do najwyższego.
+
 ### Starsze punkty
 
 **51b. Przestrojenie scenariuszy kampanii po wejściu Potyczki (S–M).** Scenariusze stroiono na automacie, a od 20.11 gra w nich zwykły bot. Pomiar 26.11 (200 gier na scenariusz, boty po obu stronach, Przymierze zamiast gracza; wygrane Przymierza wobec pasm Łatwy 65–85%, Normalny 45–65%): „Pierwsza dolina” (Łatwy) 46%, „Gryfie Urwisko” (Normalny) 13%, „Zatopione Ruiny” (Normalny) 17%, „Cień nad Drzewem” (Normalny) 19%. Wszystkie cztery poniżej pasma. Mierzyć po punktach zmieniających rozgrywkę (89, 92, 90); dźwignie: mapa, zasady i bohater scenariusza w `src/engine/campaign.ts`.
