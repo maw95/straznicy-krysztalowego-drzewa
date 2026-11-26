@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createGame, killHero, withoutBonus } from '../src/engine/game';
+import { bonusShare, createGame, killHero, withoutBonus } from '../src/engine/game';
 import { battleStats, SURVIVAL } from '../src/engine/data';
 import { DIGITAL_TUNING, digitalRules } from '../src/engine/tuning';
 import { pvpSeats, setup } from './helpers/engine';
@@ -103,6 +103,18 @@ describe('digital tuning levers of the finer ladder', () => {
     expect(withoutBonus(easy, 'dawn')).toBe(false);
     // The flag a unit gets is the one battleStats reads: the Horde's hero loses its +1 Atak.
     expect(battleStats('blackDragon', true, 1, 1, true).attack).toBe(battleStats('blackDragon', true, 1, 1, false).attack - 1);
+  });
+
+  it('factionBonusShare keeps a rounded part of the balancing bonus for the listed factions only', () => {
+    const game = (rules: Record<string, unknown>) => createGame(digital({ objective: 'crystals', ...rules }, { mode: 'pvp', seats: pvpSeats('goldDragon', 'blackDragon') }));
+    const part = game({ factionBonusShare: { factions: ['horde'], share: 0.33 } });
+    expect(bonusShare(part, 'horde')).toBe(0.33);
+    expect(bonusShare(part, 'dawn')).toBe(1);
+    expect(bonusShare(game({}), 'horde')).toBe(1);
+    // The Horde's hero: +1 Atak kept at two thirds (rounded up), gone at one third.
+    const atk = (share: number) => battleStats('blackDragon', true, 1, 1, false, share).attack;
+    expect(atk(0.67)).toBe(atk(1));
+    expect(atk(0.33)).toBe(atk(1) - 1);
   });
 
   it('crystalsNeededDelta lowers the crystals needed at the Tree, never below 1 (default: all of them)', () => {

@@ -1170,10 +1170,10 @@ export function scaleText(text: string, scale: number, hpScale = scale): string 
 }
 
 /** The hp, attack and speed of a unit in a battle: the board game's, or the digital ruleset's where they differ; Życie and Atak times `scale` (the digital Expedition plays with 3, see `scaleOf`). */
-export function battleStats(defId: string, digital: boolean | undefined, scale = 1, hpScale = scale, arena = false): Pick<UnitDef, 'hp' | 'attack' | 'speed'> {
+export function battleStats(defId: string, digital: boolean | undefined, scale = 1, hpScale = scale, arena = false, share = 1): Pick<UnitDef, 'hp' | 'attack' | 'speed'> {
   const { hp, attack, speed } = { ...UNITS[defId], ...(digital ? DIGITAL_STATS[defId] : undefined) };
   // The digital ruleset's per-faction numbers (src/engine/factionBonus.ts, found by scripts/sim/tuneFactions.ts); not in the arena, which is balanced without them.
   const def = UNITS[defId];
   const bonus = (digital && !arena && def && FACTION_DIGITAL_BONUS[def.side as FactionId]?.[def.kind === 'hero' ? 'hero' : 'support']) || { hp: 0, attack: 0 };
-  return { hp: (hp + bonus.hp) * hpScale, attack: (attack + bonus.attack) * scale, speed };
+  return { hp: (hp + Math.round(bonus.hp * share)) * hpScale, attack: (attack + Math.round(bonus.attack * share)) * scale, speed };
 }

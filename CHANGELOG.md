@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Stroiciel poziomów trudności: premię wyrównującą Hordy da się teraz odbierać po trzeciej części zamiast od razu całej, a na największych mapach Normalny i Trudny mogą korzystać z rezerwowego bohatera i częściowo odebranej premii Hordy (same skarby nic tam nie dawały).
 - Poziomy trudności w Potyczce przestrojone po zmianach mapy i wzmocnieniu Hordy: na mapach od krótkiej do długiej Łatwy, Normalny i Trudny trafiają w zamierzone pasma wygranych; największe mapy jeszcze czekają na dokładniejsze strojenie.
 - Wolna Kompania ma własną barwę, burgund: herb, proporce na budynkach i palisadzie, ramki kart, wstążka i obwódka portretu nie są już zielone jak u Przymierza.
 - Wolna Kompania: osada stoi teraz na wyspie wśród jesiennych rozlewisk rzeki (trzciny, wierzby, czółna, bobrowe tamy we mgle) zamiast na leśnej polanie podobnej do Przymierza.

@@ -76,6 +76,8 @@ export interface RulesConfig {
   dawnHeroReplacement?: boolean;
   /** Digital tuning, Easy: the factions (races) that fight without their digital balancing bonus (FACTION_DIGITAL_BONUS), e.g. ['horde'] for the bot of a Skirmish. Missing = every faction has it. */
   noFactionBonus?: FactionId[];
+  /** Digital tuning, a graded `noFactionBonus`: these factions keep only `share` of their digital balancing bonus (e.g. 0.67 or 0.33; each stat rounded). */
+  factionBonusShare?: { factions: FactionId[]; share: number };
   /** Digital tuning, goal 'crystals', Easy, last resort: added to the crystals the Przymierze must bring to the Tree (e.g. -1: 2 of 3; at least 1). The guardians and their crystals stay on the map. Missing = 0. */
   crystalsNeededDelta?: number;
   /** Digital tuning, level 3: extra gold per round for the Przymierza (a start condition of Easy). */
@@ -514,6 +516,8 @@ export interface BattleUnit {
   digital?: true;
   /** Fights in the arena: the factions' digital bonus (`FACTION_DIGITAL_BONUS`) does not apply. */
   arena?: true;
+  /** The share of its faction's digital bonus this unit keeps (digital tuning `factionBonusShare`; missing = 1, rounded per stat). */
+  bonusShare?: number;
   /** Życie and Atak of this unit are this many times the board game's (missing = 1; see `scaleOf` in battle.ts). */
   scale?: number;
   /** Życie of this unit is this many times the board game's (missing = `scale`). */

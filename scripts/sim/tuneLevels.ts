@@ -27,6 +27,7 @@ const tag = `${shape}${map ? `-${map}` : ''}-${objective}-g${growthArg}${process
 const LEVEL: Record<string, string> = { kids: 'kids', full: 'normal', hard: 'hard' };
 
 type Patch = Record<string, unknown>;
+const BIG = ['veryLong', 'huge', 'giant'];
 const treasures = (n: number) => ({ resurrections: 0, others: 0, random: n });
 const H0 = { hordeStartTreasures: treasures(0) };
 const dawn = (n: number): Patch => ({ ...H0, dawnStartTreasures: treasures(n) });
@@ -37,10 +38,16 @@ const dawn = (n: number): Patch => ({ ...H0, dawnStartTreasures: treasures(n) })
  * are gone: in a Skirmish they do nothing. The goal's own fine lever (FINE below) is searched on top of the best rung.
  */
 const EASY = { dawnHeroReplacement: true, noFactionBonus: ['horde'] };
+const share = (n: number): Patch => ({ factionBonusShare: { factions: ['horde'], share: n } });
 const UP: Patch[] = [
   H0,
   ...[1, 2, 3, 4, 5, 6, 8, 10].map(dawn),
-  { ...dawn(10), dawnHeroReplacement: true },
+  // Graded (26.11): the Horde's bonus goes in thirds, then the reserve hero comes on top (one jump to both made Easy Survival leap from 3 to 97 percent).
+  { ...dawn(10), ...share(0.67) },
+  { ...dawn(10), ...share(0.33) },
+  { ...dawn(10), noFactionBonus: ['horde'] },
+  { ...dawn(10), dawnHeroReplacement: true, ...share(0.67) },
+  { ...dawn(10), dawnHeroReplacement: true, ...share(0.33) },
   { ...dawn(10), ...EASY },
   ...(growth ? [3, 7, 12].map((xp) => ({ ...dawn(10), ...EASY, dawnStartXp: xp })) : []),
   { ...dawn(13), ...EASY, ...(growth ? { dawnStartXp: 12 } : {}), heroMovePoints: 4 },
@@ -97,10 +104,15 @@ const centre = (c: Cell) => (BAND[c.option][0] + BAND[c.option][1]) / 2;
 const status = (c: Cell, r: number) => (!inBand(c, r) ? 'OUT' : dist(c, r) ? 'edge' : 'ok');
 
 function entryOf(c: Cell, cfg: Config) {
-  const patch = { ...(cfg.step > 0 ? UP[cfg.step - 1] : cfg.step < 0 ? DOWN[-cfg.step - 1](c.table.startsWith('coop')) : {}), ...finePatch(cfg.fine) };
+  const patch: Patch = { ...(cfg.step > 0 ? UP[cfg.step - 1] : cfg.step < 0 ? DOWN[-cfg.step - 1](c.table.startsWith('coop')) : {}), ...finePatch(cfg.fine) };
   // The reserve hero, the Horde without its balancing bonus and one crystal fewer are the Easy level's alone (the author, 25.11): on Normal
-  // and Hard the rung keeps only its treasures, experience, moves and rounds.
-  if (LEVEL[c.option] !== 'kids') for (const k of ['dawnHeroReplacement', 'noFactionBonus', 'crystalsNeededDelta']) delete (patch as Patch)[k];
+  // and Hard the rung keeps only its treasures, experience, moves and rounds. On the big maps (veryLong, huge, giant) Normal and Hard may use
+  // the reserve hero and a part of the Horde's bonus (at most two thirds taken; the author, 26.11: treasures do nothing there).
+  if (LEVEL[c.option] !== 'kids') {
+    const big = BIG.includes(c.size);
+    if (big && patch.noFactionBonus) patch.factionBonusShare = { factions: ['horde'], share: 0.33 };
+    for (const k of ['noFactionBonus', 'crystalsNeededDelta', ...(big ? [] : ['dawnHeroReplacement', 'factionBonusShare'])]) delete (patch as Patch)[k];
+  }
   return {
     objective,
     level: LEVEL[c.option],
@@ -131,11 +143,26 @@ function measure(cells: Cell[], label: string, cfgOf: (c: Cell) => Config = (c) 
 /** Entries kept from earlier rounds for cells already finished (they must stay in force while the rest are measured). */
 const ALREADY: unknown[] = [];
 
+// SIM_ONLY_OUT=1 (26.11): keep the cells of the earlier auto-<tag>.json that ended in band ((ok) or (edge)), tune only the (OUT) ones.
+const KEEP = new Map<string, { entry: unknown | null; line: string }>();
+if (process.env.SIM_ONLY_OUT) {
+  const old = JSON.parse(readFileSync(`.tmp/sim/auto-${tag}.json`, 'utf8')) as { entries: Array<{ level: string; players: number; maps: string[] }>; report: string[] };
+  const opt: Record<string, string> = { kids: 'kids', normal: 'full', hard: 'hard' };
+  for (const line of old.report) {
+    const name = line.split(' ')[0];
+    if (line.includes('(OUT)')) continue;
+    const entry = old.entries.find((e) => `${e.maps[0]}·pvp${e.players}·${opt[e.level]}` === name) ?? null;
+    KEEP.set(name, { entry, line });
+    if (entry) ALREADY.push(entry);
+  }
+}
+
 const all: Cell[] = [];
 for (const size of SIZES) {
   for (const table of (process.env.SIM_TABLES ?? 'coop1,coop2,pvp1,pvp2').split(',')) {
     for (const option of ['kids', 'full', 'hard'].filter((o) => !ONLY || o === ONLY)) {
       const c = { size, table, option };
+      if (KEEP.has(names(c))) continue;
       all.push({ ...c, name: names(c), step: 0, fine: null, rate: 0, best: null, tried: new Set(), points: new Map(), done: false });
     }
   }
@@ -145,6 +172,10 @@ const consider = (c: Cell, r: number) => {
   if (!was || dist(c, r) < dist(c, was.rate) || (dist(c, r) === dist(c, was.rate) && Math.abs(r - centre(c)) < Math.abs(was.rate - centre(c)))) c.best = { step: c.step, fine: c.fine, rate: r };
 };
 
+if (!all.length) {
+  console.log(`${tag}: nothing out of band, kept as it was`);
+  process.exit(0);
+}
 let base = measure(all, `tune-${tag}-0`);
 for (const c of all) c.rate = base.get(c.name) ?? 0;
 const startOf = (c: Cell) => base.get(c.name) ?? 0;
@@ -166,9 +197,12 @@ for (let round = 1; round <= maxRounds; round++) {
     else if (cur > 0) next = up ? Math.min(UP.length, cur + stride) : Math.max(0, cur - stride);
     else next = !up ? Math.max(-DOWN.length, cur - stride) : Math.min(0, cur + stride);
     if (c.tried.has(key({ step: next, fine: null })) || next === cur) {
-      // Nothing new to try: keep the best seen and stop the ladder.
-      c.done = true;
-      continue;
+      // The stride lands on a rung already measured: try the untried rungs between it and the current one (nearest the middle first),
+      // so an overshoot over several rungs is walked back (26.11); nothing left: keep the best seen and stop the ladder.
+      const lo = Math.min(cur, next), hi = Math.max(cur, next);
+      const between = Array.from({ length: Math.max(0, hi - lo - 1) }, (_, i) => lo + 1 + i).filter((s) => !c.tried.has(key({ step: s, fine: null })));
+      if (!between.length) { c.done = true; continue; }
+      next = between.sort((a, b) => Math.abs(a - (lo + hi) / 2) - Math.abs(b - (lo + hi) / 2))[0];
     }
     c.tried.add(key({ step: next, fine: null }));
     c.step = next;
@@ -282,6 +316,10 @@ for (const c of all) {
     report.push(`${c.name} ${Math.round(startRate)}% -> ${Math.round(shown)}% (${status(c, shown)}) ${val}`);
   } else if (f && val) report.push(`${c.name} ${Math.round(startRate)}% unchanged (${status(c, startRate)}) ${val} dropped`);
   else report.push(`${c.name} ${Math.round(startRate)}% unchanged (${status(c, startRate)})`);
+}
+for (const k of KEEP.values()) {
+  if (k.entry) entries.push(k.entry);
+  report.push(`${k.line} (kept)`);
 }
 writeFileSync(`.tmp/sim/auto-${tag}.json`, JSON.stringify({ objective, growth, games, entries, report }, null, 1));
 console.log(report.join('\n'));
