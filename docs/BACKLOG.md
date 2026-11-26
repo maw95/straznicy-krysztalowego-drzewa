@@ -79,7 +79,7 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 **87. Żelazny Klan: reszta uwag z 25.11 (poprawki zrobione, czekają na przegląd autora na `make podglad F=clans`).** **Otwarte:**
   - **Śmierć Pogromcy** kończy się zwinięciem twarzą do ziemi (lepiej niż czworaki z 24.11, ale może nadal wyglądać jak klęczenie).
 
-**93. Zakładka „Jednostki” w „Zasady i karty” (S; uwaga autora 26.11).** Pokazać wszystkie jednostki 5 frakcji, które obecnie są w grze (Przymierze, Horda, Dzikie Stado, Żelazny Klan, Bractwo Przypływu; zob. 91), i neutralne. Jedynym podziałem ma być frakcja: znikają podziały w rodzaju „Poziom IV i V: pomocnicy do rekrutacji w osadzie, Przymierze Świtu (stopnie 2–5)” (`src/ui/RulesDialog.tsx`). Jednostki neutralne na samym końcu. Kolejność wewnątrz frakcji: bohaterowie główni, bohaterowie dodatkowi, potem pomocnicy od najniższego poziomu do najwyższego.
+**93. Zakładka „Jednostki” w „Zasady i karty” (S; uwaga autora 26.11).** Pokazać wszystkie jednostki 5 frakcji, które obecnie są w grze (Przymierze, Horda, Dzikie Stado, Żelazny Klan, Bractwo Przypływu; zob. 91), i neutralne. Jedynym podziałem ma być frakcja: znikają podziały w rodzaju „Poziom IV i V: pomocnicy do rekrutacji w osadzie, Przymierze Świtu (stopnie 2–5)” (`src/ui/RulesDialog.tsx`). Jednostki neutralne na samym końcu. Kolejność wewnątrz frakcji: bohaterowie główni (czwarty bohater też się do nich zalicza), potem bohaterowie dodatkowi, czyli dowódcy, potem pomocnicy od najniższego poziomu do najwyższego.
 
 ### Starsze punkty
 
