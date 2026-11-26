@@ -10663,7 +10663,7 @@
         "public/assets/osady/dwelling_towerMonitor.webp"
       ],
       "typ": "okno osady Wolnej Kompanii: tło (leśna polana przy zrujnowanym młynie), 16 budynków ogólnych, 3 budynki unikalne (Warsztat Sideł, Paserka, Szlaki Przemytnicze), fosa i palisada, 9 siedlisk jednostek",
-      "opis": "Tło 1536x720 -> 1280x600; budynki i siedliska 1024x1024 na przezroczystym tle, przycięte i skalowane do 380 px (scripts/assets/free_settlement.py), fosa i palisada 1536x720 poszerzone (settlement_walls_widen.py), podłoże wtopione w tło (settlement_ground_blend.py, siła STRONG). Kod: SettlementDialog.tsx (LAYOUTS.free, UNIQUE_OWNER). Jedno podejście na obraz, 3 CU każdy (31 obrazów, 93 CU). Źródła i pełne prompty: .tmp/zrodla/free_settlement.",
+      "opis": "Tło 1536x720 -> 1280x600; budynki i siedliska 1024x1024 na przezroczystym tle, przycięte i skalowane do 380 px (scripts/assets/free_settlement.py), fosa i palisada 1536x720 poszerzone (settlement_walls_widen.py), podłoże wtopione w tło (settlement_ground_blend.py, siła STRONG). Kod: SettlementDialog.tsx (LAYOUTS.free, UNIQUE_OWNER). Jedno podejście na obraz, 3 CU każdy (31 obrazów, 93 CU). Źródła i pełne prompty: .tmp/zrodla/free_settlement. 26.11: tło wymienione na rozlewisko rzeki (wybór autora z trzech prób: rozlewisko, jar, opactwo; prompt land_A_rozlewisko, gotowe chaty usunięte edycją obrazu z odniesieniem, asset_poQfWWvdhM4pAGvZnJJ1DbsZ; 13 CU za trzy próby i edycję), budynki przestawione z wody i trzcin.",
       "scenario_asset": {
         "land": "asset_tiGTN6FhgukuQfZNHPzMYKyH",
         "walls1": "asset_P7jJSYP56Mh9sDE4oMMWtDFN",
