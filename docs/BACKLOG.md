@@ -44,6 +44,17 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Zrobione 24.11: p
 **88. Uwagi autora do Bractwa Przypływu z 25.11 (zrobione 25.11, do przeglądu na `make podglad F=tides`; ok. 334 CU).** Bez kredytów: kadry 9 portretów, plusk wody usunięty z ataku Syreny i Wiedźmy (`scripts/assets/tides_splash_fix.py`) plus pocisk z kuli wody (`.projectile.water`), trafienia w kodzie (`recoil`: Syrena, Strażnik, Żółw, Żabi Skoczek, Krabolud, Kapłanka, Wiedźma, Albatros, Lewiatan), wolniejszy chód Homara. Nowe klipy: 11 ataków, 9 śmierci, Albatros na ziemi (stoi, wzbicie, lot z machaniem skrzydłami, atak, śmierć), Lewiatan (punkt 79), 11 dźwięków. **Otwarte:**
    - **Śmierć Harpunniczki i Trytońskiego Harpunnika:** obie nadal siadają; próba „jak ścięte drzewo” zablokowana przez filtr (postać z harpunem), łagodniejsza próba dała klęczenie. Do decyzji autora.
    - **Nazwa:** zrobione 25.11: Wąż Morski to teraz **Koralowy Żmij** (EN: Coral Wyrm); id `seaSerpent` bez zmian.
+   - **Przegląd autora 26.11, do poprawy:** śmierć Harpunniczki i Trytońskiego Harpunnika (nadal siadają: potrzebny prawdziwy upadek); trafienie Trytońskiego Strażnika, Żabiego Skoczka, Kraboluda, Albatrosa i Morskiej Wiedźmy; atak Harpunniczki (dziwny; ma być jedno pchnięcie harpunem); **Lewiatan ma być ogromnym wężem morskim**, nie stworem na czterech łapach (nowy obraz bazowy i komplet klipów).
+
+**89. Uwagi autora do interfejsu z 26.11 (S–M, bez kredytów).**
+   - **Środek mapy:** po usunięciu Drzewa z celów innych niż „Kryształy do Drzewa” środkowy kafelek nadal jest odsłonięty od startu; ma być zakryty jak reszta.
+   - **Koszary:** surowce stoją nad przyciskiem wyjścia, mają być obok niego.
+   - **Rada osady:** surowce i przycisk wyjścia wewnątrz ramki, nie poza nią; ramka ma zawsze tę samą wysokość (dziś rośnie po kliknięciu siedliska przez wysoką kartę jednostki); usunąć podgląd karty jednostki z tego widoku.
+   - **Mapa świata, panel boczny:** usunąć sekcję z opisem zaznaczonego kafelka (pod artefaktami).
+   - **Mapa świata, pod imieniem bohatera:** Odłamki jako ikona i „0 / 0 / 5” (szczegóły pod prawym przyciskiem); ikona many nieco większa i przed liczbami („<mana> 4/4”); ruch: romby u góry, pod nimi „Ruch 2/3” (albo ikona ruchu zamiast słowa, jeśli pasująca istnieje).
+   - **Zoom mapy świata:** maksymalne przybliżenie nieco większe niż dziś i ono ma być domyślne.
+
+**90. Mgła wojny jak w Heroesach (M–L; rusza widok w hot-seat i online).** Gracz nie widzi kafelków odsłoniętych przez graczy spoza swojej frakcji (każda frakcja ma własną odkrytą część mapy). Sprawdzić: bot (czy korzysta z wiedzy o całej mapie), online (`redactHidden` / `visibleTo` w serwerze), hot-seat (zasłona przekazania), golden.
 
 **79. Lewiatan: zrobione 25.11** (nowy obraz bazowy z całą sylwetką na lądzie, chód, atak, śmierć; 31 CU; trafienie w kodzie).
 
