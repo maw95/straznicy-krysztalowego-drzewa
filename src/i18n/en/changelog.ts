@@ -2,7 +2,7 @@
 // (commit hashes and Markdown marks dropped). Newest first. A new line in CHANGELOG.md needs its English here (tests/changelogEn.test.ts checks every line).
 import { register } from '../translate';
 
-// In preparation
+// 3.1.0
 register({
   'Kreator: Kryształy do Drzewa nie są dostępne na mapie Ogromnej i Gigantycznej, a Przetrwanie na Małej (przy tych wielkościach jednej strony nie dało się wyrównać). Przycisk jest wyszarzony, z dopiskiem „Rozmiar niedostępny dla tego celu”.':
     'Wizard: Crystals to the Tree is not available on the Huge and Giant maps, and Survival not on the Small one (on those sizes one side could not be evened out). The button is greyed out, with the note "Size not available for this goal".',

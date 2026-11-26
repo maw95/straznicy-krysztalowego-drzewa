@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+## 3.1.0 — 2026-11-26
+
 - Kreator: Kryształy do Drzewa nie są dostępne na mapie Ogromnej i Gigantycznej, a Przetrwanie na Małej (przy tych wielkościach jednej strony nie dało się wyrównać). Przycisk jest wyszarzony, z dopiskiem „Rozmiar niedostępny dla tego celu”.
 - Kryształy do Drzewa i Przetrwanie: role są wyrównane osobno dla każdej mapy, liczby graczy i poziomu złożoności (gdy dwa jednakowe boty grają obie role, każda strona wygrywa mniej więcej co drugą partię). W Przetrwaniu Horda szuka Przymierza na środku mapy, gdy go nie widzi we mgle (dotąd czekała i Przymierze wygrywało prawie zawsze).
 - Gotowe scenariusze: w potyczce nowa karta „Gotowy scenariusz” prowadzi do listy jak w klasycznych grach strategicznych (filtr wielkości, tabela, podgląd mapy, opis i warunki zwycięstwa). Jest 14 scenariuszy na ręcznie narysowanych mapach, od małego „Kręgu Kamieni” po gigantyczny „Szczyt Świata”, każdy z własnym celem i poziomem. Gotowe mapy nie są już wybierane na stronie mapy.
