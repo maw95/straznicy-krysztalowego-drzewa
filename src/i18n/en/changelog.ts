@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Bitwa: jednostka, której jest teraz kolej (a przy rozstawianiu wybrana jednostka), ma cienką złotą obwódkę wokół całej sylwetki.':
+    'Battle: the unit whose turn it is (and, while deploying, the picked unit) has a thin golden outline round its whole silhouette.',
   'Boty: poziomy przestrojone przy założeniu, że gracz gra mniej więcej jak bot Normalny. Normalny myli się teraz częściej (mniej więcej co czwartą decyzję w miejscach, w których bot może się pomylić), Łatwy jeszcze częściej, a Trudny i Bardzo trudny grają bez błędów, więc są wyraźnie mocniejsze od Normalnego.':
     'Bots: the levels are retuned on the assumption that a player plays about as well as a Normal bot. Normal now makes mistakes more often (about one decision in four at the places where a bot can go wrong), Easy even more often, while Hard and Very hard play without mistakes, so they are clearly stronger than Normal.',
 });

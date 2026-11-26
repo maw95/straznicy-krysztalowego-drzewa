@@ -163,7 +163,7 @@ A fallen hero is out of the game until the end of the match, unless the **Elixir
 ### Basic rules
 Stepping onto the tile of an enemy hero, a guardian or a group of neutrals starts a battle. A fight costs as many movement points as the terrain cost of the tile, and after a win the hero can walk on. On the arena (without a map) each side fields a **hero and two supports** (six units on the large arena).
 
-The arena is hexes laid out horizontally, 13 columns by 9 rows, with obstacles that block movement and shots (different ones for the Covenant's and the Horde's field).
+The arena is hexes laid out horizontally, 13 columns by 9 rows, with obstacles that block movement and shots (different ones for the Covenant's and the Horde's field). The unit whose turn it is (and, while deploying, the picked unit) has a thin golden outline round its whole silhouette.
 
 ### Placement
 First both sides place their units in their outermost column; the attacker starts. You click a unit and then a free starting tile. The Tactician skill lets you stand further forward.

@@ -163,7 +163,7 @@ Poległy bohater wypada z gry do końca partii, chyba że wypije go z powrotem *
 ### Zasady podstawowe
 Wejście na pole wrogiego bohatera, strażnika albo grupy neutralnych rozpoczyna bitwę. Walka kosztuje tyle punktów ruchu, ile koszt terenu pola, a po wygranej bohater może iść dalej. Na arenie (bez mapy) każda strona wystawia **bohatera i dwóch pomocników** (na dużej arenie sześciu).
 
-Arena to poziomo ułożone heksy, 13 kolumn na 9 rzędów, z przeszkodami, które blokują ruch i strzał (inne dla pola Przymierza i Hordy).
+Arena to poziomo ułożone heksy, 13 kolumn na 9 rzędów, z przeszkodami, które blokują ruch i strzał (inne dla pola Przymierza i Hordy). Jednostka, której jest teraz kolej (a przy rozstawianiu wybrana jednostka), ma cienką złotą obwódkę wokół całej sylwetki.
 
 ### Rozstawienie
 Najpierw obie strony ustawiają jednostki w swojej skrajnej kolumnie; zaczyna atakujący. Klikasz jednostkę, a potem wolne pole startowe. Umiejętność Taktyk pozwala stanąć dalej.

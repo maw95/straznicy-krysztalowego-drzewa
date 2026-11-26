@@ -20,6 +20,8 @@ export interface SpritePiece {
   dead: boolean;
   /** Outline round the feet (CSS colour) marking the active unit. */
   ring?: string | null;
+  /** A thin line round the whole silhouette (CSS colour), as in the classic games: the unit whose turn it is. */
+  outline?: string | null;
   /** A melee blow: a new `key` plays the attack once; the unit turns towards `towardX` while it lasts. */
   attack?: { key: number; towardX: number; towardY?: number; /** The target stands next to the attacker: a shooter uses its close-combat clip (`atak_wrecz`) when it has one. */ melee?: boolean } | null;
   /** Just hit: a short shake and flash. */
@@ -36,6 +38,10 @@ export interface SpritePiece {
 
 /** A teleport: half of it fading out where the unit stood, half fading in at its new place. */
 const BLINK_MS = 760;
+
+/** The outline of the active unit: how far (layout pixels) the tinted silhouette is drawn off, and in which directions. */
+const OUTLINE_PX = 1.6;
+const OUTLINE_DIRS: ReadonlyArray<[number, number]> = [[1, 0], [-1, 0], [0, 1], [0, -1], [0.71, 0.71], [-0.71, 0.71], [0.71, -0.71], [-0.71, -0.71]];
 
 /** Flight speed over the board (canvas pixels per second); take-off and landing add their own time. */
 const FLY_SPEED = 420;
@@ -392,6 +398,14 @@ class Stage {
     ctx.rotate(turnLean - (l.flip ? -1 : 1) * recoil * 0.12);
     ctx.scale((l.flip ? -1 : 1) * turn * k * shrink, k * shrink * (set.spec.stretchY ?? 1));
     ctx.translate(0, (set.corpse.dy * lie) / k);
+    if (l.piece.outline && !l.piece.dead) {
+      // The silhouette tinted in the outline's colour, drawn a hair off in eight directions under the unit; it breathes a little.
+      const sil = this.silhouette(img, sx, sy, sw, sh, l.piece.outline);
+      const alpha = ctx.globalAlpha;
+      ctx.globalAlpha = alpha * (0.75 + 0.25 * Math.sin(now / 260));
+      for (const [ox, oy] of OUTLINE_DIRS) ctx.drawImage(sil, -set.cx * dw + ox * OUTLINE_PX, -set.feet * dh + oy * OUTLINE_PX, dw, dh);
+      ctx.globalAlpha = alpha;
+    }
     ctx.drawImage(img, sx, sy, sw, sh, -set.cx * dw, -set.feet * dh, dw, dh);
     if (blend) {
       ctx.globalAlpha = blend.alpha;
@@ -404,6 +418,25 @@ class Stage {
       const dir = l.flip ? -1 : 1;
       this.drawFlame(ctx, now, Math.min(1, (now - l.segStart) / seg.ms), x + dir * (mouth[0] - set.cx) * dw, gy + (mouth[1] - set.feet) * dh, l.piece.attack.towardX, l.piece.attack.towardY, dw);
     }
+  }
+
+  private tint: HTMLCanvasElement | null = null;
+
+  /** One frame of a sheet as a flat shape of `color` (its own alpha kept), on a canvas reused from frame to frame. */
+  private silhouette(img: CanvasImageSource, sx: number, sy: number, sw: number, sh: number, color: string): HTMLCanvasElement {
+    const c = (this.tint ??= document.createElement('canvas'));
+    if (c.width !== sw || c.height !== sh) {
+      c.width = sw;
+      c.height = sh;
+    }
+    const g = c.getContext('2d')!;
+    g.globalCompositeOperation = 'source-over';
+    g.clearRect(0, 0, sw, sh);
+    g.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+    g.globalCompositeOperation = 'source-in';
+    g.fillStyle = color;
+    g.fillRect(0, 0, sw, sh);
+    return c;
   }
 
   /** A stream of glowing puffs (white-hot at the mouth, orange, then red smoke) that swells and wavers on its way to the target. `t` is how far the attack clip is. */
