@@ -56,7 +56,7 @@ Pełne strojenie od zera zatrzymane 26.11 na prośbę autora (wynik i tak poszed
 *Do zmiany przy okazji.*
 - Ranking i zapisy czytają poziom z presetu (`setup.rules`, `tuning.ts`: „ranking and saves read it as before”): punkty rankingowe liczyć wg poziomów botów przy stole; stare zapisy wczytywać z dawnym poziomem jako poziomem wszystkich botów.
 - Online: stół z botami pokazuje poziom przy bocie; serwer (repo backend) przyjmuje nowe pole siedzenia (`parsery akcji / stołu`).
-- Kampania (51b, do gruntownego przerobienia przez autora) i Wyprawa (`arenaBoost`, `arenaHandicap`, `botLevel`) dostosować do nowego modelu przy ich przeróbce.
+- Kampania (do gruntownego przerobienia przez autora) i Wyprawa (`arenaBoost`, `arenaHandicap`, `botLevel`) dostosować do nowego modelu przy ich przeróbce.
 - Instrukcja PL/EN (rozdział o ustawieniach i poziomach), `docs/ZASADY_CYFROWE.md`, i18n nowych tekstów ekranu.
 - Wydanie planszowe bez zmian (zostaje automat i poziomy z kart).
 
@@ -65,10 +65,6 @@ Pełne strojenie od zera zatrzymane 26.11 na prośbę autora (wynik i tak poszed
 *Decyzje autora 26.11:* bez handicapów; cztery poziomy botów (z Bardzo trudnym); bot w drużynie z człowiekiem też ma wybierany poziom.
 
 ### Starsze punkty
-
-**51b. Przestrojenie scenariuszy kampanii po wejściu Potyczki (S–M).** Scenariusze stroiono na automacie, a od 20.11 gra w nich zwykły bot. Pomiar 26.11 (200 gier na scenariusz, boty po obu stronach, Przymierze zamiast gracza; wygrane Przymierza wobec pasm Łatwy 65–85%, Normalny 45–65%): „Pierwsza dolina” (Łatwy) 46%, „Gryfie Urwisko” (Normalny) 13%, „Zatopione Ruiny” (Normalny) 17%, „Cień nad Drzewem” (Normalny) 19%. Wszystkie cztery poniżej pasma. Mierzyć po punktach zmieniających rozgrywkę (89, 92, 90: wszystkie zrobione 26.11); dźwignie: mapa, zasady i bohater scenariusza w `src/engine/campaign.ts`.
-   - **Decyzja autora 26.11:** przestroić razem z jednym strojeniem po punktach 89, 92 i 90.
-   - **Decyzja autora 26.11 (później):** na razie nie stroić; kampania pójdzie do gruntownej przeróbki (po punkcie 94).
 
 **52. Dzikie Stado (G1, G2, G4, G5 i online zrobione).** Dane, balans (tabele w `docs/frakcje/herds.md`, `docs/DIAGNOZA_FRAKCJI.md`), pełna grafika, muzyka i dźwięki są w repo. Baran Gromowładny na dwóch polach: zrobione. Cel balansu (decyzja 20.11): średnia wygranych przeciw reszcie ok. 45–55%, kontra ok. 60–70%, kontrowana ok. 30–40%, żadna para poza 25–75%; Przymierze–Horda po bonusie Hordy wynosi ok. 50%; tej pary nie ruszać.
 
