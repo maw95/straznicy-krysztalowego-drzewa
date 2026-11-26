@@ -1,3 +1,11 @@
+# AKTUALNIE (26.11.2026): plan z autorem, wykonuj po kolei (szczegóły punktów w `docs/BACKLOG.md`: 75, 89, 90, 91, 92)
+Model: Sonnet do 91, 89, 92 i strojenia; **Opus przed punktem 90** (mgła wojny: boty, hot-seat, serwer, golden; przypomnij autorowi `/model`).
+1. **Strojenie w tle** (`scripts/sim/retune-out.sh`, log `.tmp/sim/retune-out.log`, `=== done` na końcu; kopia wyników sprzed przebiegu: scratchpad `auto-2511/`). Stroi tylko komórki poza pasmem, nowe dźwignie: `factionBonusShare`, szczeble częściowej premii Hordy, rezerwowy bohater i część premii na dużych mapach także na Normalnym i Trudnym. Gdy skończy: `node --import tsx scripts/sim/tuneMerge.ts`, `make check`, commit + wpis CHANGELOG PL i EN (`src/i18n/en/changelog.ts`); policz komórki poza pasmem (jak w logu). To stan przejściowy: po punktach zmieniających rozgrywkę strojenie trzeba powtórzyć.
+2. **Punkt 91** (tylko 5 skończonych frakcji do wyboru; Wolna Kompania też ukryta) i **część 89 bez wpływu na boty** (koszary, rada osady, panel mapy, odłamki/mana/ruch, zoom). Interfejs: sprawdzić w przeglądarce (`make zrzut`).
+3. Zmieniające rozgrywkę: **zakryty środek mapy (89)**, **92** (walki z pomocnikami wolnych frakcji; decyzje autora w BACKLOG), potem **90** (Opus). Golden `-u` w osobnym commicie.
+4. Na koniec **jedno pełne strojenie od zera** (`retune-all.sh`, skasować `.tmp/sim/auto-*.json` oprócz `auto-zero-legacy.json`), `tuneMerge`, `make check`, commit.
+Punkt 88: animacje Przypływów do poprawy (lista w BACKLOG), kredyty Scenario: tylko na polecenie autora. Podgląd: `make podglad F=tides`.
+
 # AKTUALNIE (24.11.2026): kolejka z uwag autora, punkty 64–84 w `docs/BACKLOG.md`, sekcja 1 (bez robienia, dopóki autor nie wskaże punktów)
 Grafika G4 dla Przypływów i Żelaznego Klanu jest skończona (zob. BACKLOG, „Stan 24.11”). Autor przejrzał grę 24.11 i podał uwagi; zostały spisane i posortowane w BACKLOG jako punkty 64–84 (pierwszy: strona podglądu jednostek i osad). Stare fazy G4 poniżej są historią.
 Podagenci generują i pakują (instrukcja: `.tmp/briefs/COMMON.md`), koordynator commituje. **Stan: obie frakcje skończone (commity od 403016f do 780fc07); zob. `docs/BACKLOG.md` sekcja 8 „Stan 23.11 wieczorem” (co zostało).**
