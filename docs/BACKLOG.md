@@ -161,7 +161,7 @@ Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.t
 - osada: tło `osady/land_frost.jpg`, obrazy budynków Pałac Szronu (1-4), Kryształowa Grota (1-2), Wieża Zamieci (1-2) i siedlisk 9 jednostek (dziś Przymierza, `BORROWED` w `SettlementDialog.tsx`);
 - muzyka frakcji (2-3 utwory: dzwoneczki, wiolonczela, chór żeński, wiatr).
 
-**Wolna Kompania (`free`)** (paleta: rude i brązowe futra, butelkowa zieleń płaszczy, skóra, mosiądz, len; zwierzoludzie w ubraniach, bez niebieskiego w figurach; tło do wycinania #0000FF):
+**Wolna Kompania (`free`)** (barwa frakcji: burgund `#6B1A33` na chorągwiach i proporcach; paleta: rude i brązowe futra, butelkowa zieleń płaszczy, skóra, mosiądz, len; zwierzoludzie w ubraniach, bez niebieskiego w figurach; tło do wycinania #0000FF):
 - ~~karta i portret 19 postaci~~ zrobione 25.11 (`scripts/assets/free_cards.py`, 58 CU)
 - animacje 2D dla tych samych 19 (do czasu ich powstania żetony z portretami);
 - ~~herb i ramki kart~~ zrobione 25.11 (`scripts/assets/free_frames.py`, 4 CU)

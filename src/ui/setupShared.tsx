@@ -146,7 +146,7 @@ export const SEAT_TINT: Record<TeamId | FactionId | 'random', string> = {
   // Dwór Wiecznego Szronu: pearl white and ice (the UI may be pale blue, the figures may not).
   frost: 'linear-gradient(100deg, rgba(160, 196, 220, 0.62), rgba(58, 80, 96, 0.58))',
   // Wolna Kompania: rusty orange and leather.
-  free: 'linear-gradient(100deg, rgba(196, 118, 56, 0.62), rgba(84, 52, 30, 0.58))',
+  free: 'linear-gradient(100deg, rgba(150, 40, 72, 0.62), rgba(70, 16, 34, 0.58))',
   // Imperium Piasków: sand and ochre with a touch of jade.
   sands: 'linear-gradient(100deg, rgba(212, 178, 92, 0.62), rgba(110, 82, 40, 0.58))',
   // Rój Puszczy: umbra and moss with a glow of fireflies.

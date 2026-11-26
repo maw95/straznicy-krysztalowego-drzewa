@@ -7,6 +7,7 @@ Usage: python3 scripts/assets/free_settlement.py && python3 scripts/assets/settl
        && python3 scripts/assets/settlement_ground_blend.py free && python3 scripts/assets/settlement_ground_blend.py free dwelling_<unit>.webp ..."""
 import shutil
 from PIL import Image, ImageFilter
+from free_burgundy import burgundy
 
 SRC = '.tmp/zrodla/free_settlement'
 ORIG = '.tmp/zrodla/osady_oryginaly'
@@ -24,7 +25,7 @@ def cut(im: Image.Image, haze: bool = False) -> Image.Image:
     bb = a.getbbox()
     pad = 3
     im = im.crop((max(0, bb[0] - pad), max(0, bb[1] - pad), min(im.width, bb[2] + pad), min(im.height, bb[3] + pad)))
-    return im.resize((max(1, round(im.width * H / im.height)), H), Image.LANCZOS)
+    return burgundy(im.resize((max(1, round(im.width * H / im.height)), H), Image.LANCZOS))  # green banners -> burgundy (26.11)
 
 
 if __name__ == '__main__':
@@ -34,5 +35,5 @@ if __name__ == '__main__':
     for u in DWELLINGS:
         cut(Image.open(f'{SRC}/dw_{u}.png').convert('RGBA')).save(f'{ORIG}/dwelling_{u}.webp', quality=85, method=6)
     for lvl in '12':
-        shutil.copy(f'{SRC}/walls{lvl}.png', f'.tmp/zrodla/mury/free_walls{lvl}.png')
+        burgundy(Image.open(f'{SRC}/walls{lvl}.png')).save(f'.tmp/zrodla/mury/free_walls{lvl}.png')
     print('done')

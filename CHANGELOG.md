@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wolna Kompania ma własną barwę, burgund: herb, proporce na budynkach i palisadzie, ramki kart, wstążka i obwódka portretu nie są już zielone jak u Przymierza.
 - Wolna Kompania: osada stoi teraz na wyspie wśród jesiennych rozlewisk rzeki (trzciny, wierzby, czółna, bobrowe tamy we mgle) zamiast na leśnej polanie podobnej do Przymierza.
 - Wolna Kompania: Kruk Wieszczek chodzi teraz na dwóch nogach w szacie jak reszta kompanii, Waran Wieżowy idzie prosto na gracza z otwartą paszczą, Kocur Fechmistrz jest cały rudy, a Bóbr Inżynier ma białe zęby; portrety Borsuka Sapera, Zajęczycy Zielarki, Jenota Szpiega i Świstaka Petardnika są lepiej wyśrodkowane.
 - Wolna Kompania: dwa własne utwory (lutnia przy ognisku i zbójnicka ballada) grają w osadzie i na ziemi Kompanii; każda z 19 postaci ma własny dźwięk ataku i śmierci.

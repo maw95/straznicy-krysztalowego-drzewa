@@ -1,14 +1,15 @@
 """Crest and card frames of the Free Company (G4, 25.11.2026).
 Crest: the generated banner (.tmp/zrodla/free_settlement/crest.png) cut to its opaque box and fitted into 425x420 like the other crests.
-Frames: the Covenant's frames recoloured (green -> russet copper), the two corner banners replaced by the new crest.
+Frames: the Covenant's frames recoloured (green -> burgundy, the Company's colour since 26.11; earlier russet copper), the two corner banners replaced by the new crest.
 Usage: python3 scripts/assets/free_frames.py"""
 from PIL import Image, ImageChops
+from free_burgundy import burgundy
 
 SRC = '.tmp/zrodla/free_settlement/crest.png'
 OUT = 'public/assets/cards'
 CREST_BOX = (425, 420)
 GREEN = (38, 135)      # PIL hue range (0-255) of the greens: about 54-190 degrees
-TARGET_H = 17          # about 24 degrees: russet copper (the Covenant stays at about 130, the Clans are a paler steel-brown)
+TARGET_H = 242         # about 342 degrees: burgundy (the Covenant stays at about 130)
 
 
 def crest() -> Image.Image:
@@ -18,7 +19,7 @@ def crest() -> Image.Image:
     im = im.resize((round(im.width * k), round(im.height * k)), Image.LANCZOS)
     out = Image.new('RGBA', CREST_BOX, (0, 0, 0, 0))
     out.paste(im, ((CREST_BOX[0] - im.width) // 2, (CREST_BOX[1] - im.height) // 2), im)
-    return out
+    return burgundy(out)
 
 
 def recolour(im: Image.Image) -> tuple[Image.Image, Image.Image]:
@@ -28,7 +29,7 @@ def recolour(im: Image.Image) -> tuple[Image.Image, Image.Image]:
     green = ImageChops.multiply(h.point(lambda x: 255 if GREEN[0] <= x <= GREEN[1] else 0), s.point(lambda x: 255 if x > 60 else 0))
     h2 = Image.composite(Image.new('L', h.size, TARGET_H), h, green)
     s2 = Image.composite(s.point(lambda x: min(255, round(x * 1.05))), s, green)
-    v2 = Image.composite(v.point(lambda x: min(255, round(x * 1.25))), v, green)
+    v2 = Image.composite(v.point(lambda x: min(255, round(x * 0.95))), v, green)
     r, g, b = Image.merge('HSV', (h2, s2, v2)).convert('RGB').split()
     return Image.merge('RGBA', (r, g, b, a)), green
 
