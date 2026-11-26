@@ -129,7 +129,7 @@ export const SPRITES: Record<string, SpriteSpec> = {
   reefGolem: { dir: 'jednostki/rafowy_golem', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   seaWitch: { dir: 'jednostki/morska_wiedzma', box: [72, 100] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   // The Leviathan shows its whole body on land (the author, 25.11; was a head rising from water); its hit is drawn in code.
-  leviathan: { dir: 'jednostki/lewiatan', box: [170, 140] as const, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.5 } },
+  leviathan: { dir: 'jednostki/lewiatan', box: [170, 140] as const, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   tritonKing: { dir: 'jednostki/krol_trytonow', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   sirenSinger: { dir: 'jednostki/syrena_piesniarka', box: [80, 104] as const, corpseMax: CORPSE_MAX_W, recoil: true, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },
   seaSerpent: { dir: 'jednostki/waz_morski', box: LARGE, speed: { chod: 1.4, atak: 1.5, smierc: 1.5, trafienie: 1.4 } },

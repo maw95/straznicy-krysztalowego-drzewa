@@ -10894,6 +10894,40 @@
       "data": "2026-11-26",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "tides/punkt-88-26-11",
+      "pliki": [
+        "public/assets/jednostki/lewiatan/stoi.webp",
+        "public/assets/jednostki/lewiatan/martwy.webp",
+        "public/assets/jednostki/lewiatan/chod.webp",
+        "public/assets/jednostki/lewiatan/atak.webp",
+        "public/assets/jednostki/lewiatan/smierc.webp",
+        "public/assets/jednostki/lewiatan/trafienie.webp",
+        "public/assets/jednostki/harpunniczka/atak.webp",
+        "public/assets/jednostki/harpunniczka/smierc.webp",
+        "public/assets/jednostki/harpunniczka/martwy.webp",
+        "public/assets/jednostki/trytonski_harpunnik/smierc.webp",
+        "public/assets/jednostki/trytonski_harpunnik/martwy.webp"
+      ],
+      "typ": "Lewiatan jako ogromny wąż morski (nowy komplet), atak i śmierć Harpunniczki, śmierć Trytońskiego Harpunnika",
+      "opis": "Obraz bazowy Lewiatana: GPT Image 2.5 Flare medium 1024, portret karty jako odniesienie (3,5 CU za obraz). Klipy P-Video 2 720p 24 kl./s: Lewiatan chód, śmierć i trafienie w trybie draft, atak w pełnej jakości (seed 99); Harpunniczka atak (draft), śmierć (draft, seed 123); Harpunnik śmierć (draft). Śmierć humanoida wg przepisu z Klanów, z „long pole” zamiast „harpoon” (filtr). Pakowanie: scripts/animacje/pack_unit.py + shrink_unit.py, repack_clips.py. Pierwszy obraz Lewiatana dotykał krawędzi kadru (ucięta głowa), więc wygenerowany ponownie z marginesami; łącznie ok. 190 CU z nieudanymi próbami.",
+      "scenario_asset": {
+        "lewiatan_stoi": "asset_tcSRvb6N7NMB4rysQy21Jmnq",
+        "lewiatan_atak": "asset_X6cNtapfNDivxjJQHebjTYU7",
+        "lewiatan_chod": "asset_XNgSVkqxpn1dzbikDC6EhCSJ",
+        "lewiatan_smierc": "asset_7dhfXGhTZXcxRyZoTJJSGATy",
+        "lewiatan_trafienie": "asset_AVyF2bK9x3xwZWwSkFH2Dcuz",
+        "harpooneer_atak": "asset_PSYYDgPhZ1dqXCESPsCJhbuj",
+        "harpooneer_smierc": "asset_Z3tBsLbH5WHg5wQVLkv9WSzD",
+        "tritonHarpoon_smierc": "asset_uFou4JeqGcqWdnXZz8N5hT2m"
+      },
+      "prompt": "Lewiatan (stoi): enormous sea serpent, NO legs, three arched coils out of foamy water, head and raised neck on the right, whole creature inside the middle 78% of the width. Klipy: patrz .tmp/zrodla/tides_88 (prompty w historii rozmowy: sway, swings its open-mouthed head forward in a short arc, sinks down slowly, startled). Harpunnicy: she/he lets go of the long pole, falls forward full length face down, head toward the right.",
+      "narzedzie": "Scenario (plan płatny) + ffmpeg",
+      "model": "model_pruna-p-video-2 / model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-26",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

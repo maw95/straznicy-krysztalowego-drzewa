@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Bractwo Przypływu: Lewiatan jest teraz ogromnym wężem morskim ze zwojami nad wodą (nowy obraz i wszystkie animacje), Harpunniczka ma jedno długie pchnięcie harpunem w ataku, a ona i Trytoński Harpunnik naprawdę upadają twarzą do ziemi, zamiast siadać.
 - Poziomy trudności w Potyczce: dostrojone kolejne komórki poza pasmem (największe mapy, Łatwy i Przetrwanie), dzięki czemu mniej ustawień wychodzi za łatwo lub za trudno.
 - Bractwo Przypływu: trafienia Trytońskiego Strażnika, Żabiego Skoczka, Kraboluda, Morskiej Wiedźmy i Albatrosa są teraz prawdziwymi animacjami (postać cofa się od ciosu i wraca do pozy), a nie odchyleniem rysowanym w kodzie.
 - Interfejs: Rada Osady ma surowce i przycisk wyjścia wewnątrz zielonej ramki o stałej wysokości (bez karty jednostki), w koszarach surowce stoją obok przycisku wyjścia, z panelu mapy zniknął opis zaznaczonego kafelka, pod imieniem bohatera są Odłamki jako ikona i „0 / 0 / 5”, mana z większą ikoną przed liczbami i ruch jako romby z napisem „Ruch 2/3”, a mapa startuje z największym przybliżeniem (większym niż dotąd).
