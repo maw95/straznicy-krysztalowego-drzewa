@@ -10869,6 +10869,31 @@
       "data": "2026-11-25",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "tides/trafienia-26-11",
+      "pliki": [
+        "public/assets/jednostki/trytonski_straznik/trafienie.webp",
+        "public/assets/jednostki/zabi_skoczek/trafienie.webp",
+        "public/assets/jednostki/krabolud_tarczownik/trafienie.webp",
+        "public/assets/jednostki/morska_wiedzma/trafienie.webp",
+        "public/assets/jednostki/albatros/trafienie.webp"
+      ],
+      "typ": "klipy trafienia 5 jednostek Bractwa Przypływu (zamiast odchylenia rysowanego w kodzie)",
+      "opis": "P-Video 2, 720p, 2 s, 24 kl./s; Strażnik w trybie draft (6 CU), pozostałe cztery w pełnej jakości (10 CU, po nieudanych draftach 6 CU). Klatka początkowa = stoi (Albatros: poza zawisu). Arkusze: scripts/animacje/repack_clips.py. Albatros kończy z nieco złożonymi skrzydłami.",
+      "scenario_asset": {
+        "tritonGuard": "asset_DBiu91GtwVHQSMf4HUbzrLoA",
+        "frogLeaper": "asset_HW9cKZjCTbpbytkPnXhZ94Ut",
+        "crabShield": "asset_SZRnHG77uLTXKjJk89dRztgx",
+        "seaWitch": "asset_GEUUhqMgChXNgHGdrjNYUf3M",
+        "albatross": "asset_Ruw1u4nkhGjuZUnpMVbFhv9o"
+      },
+      "prompt": "Side view, locked static camera. The X is startled: it leans back a little toward the left and its feet slide back a short step, then it eases back to exactly the same pose, facing right. Smooth, small, slow movement. It is alone in the picture. Plain solid blue background stays unchanged, no camera movement. (wariant per jednostka; źródła w .tmp/zrodla/tides_trafienia)",
+      "narzedzie": "Scenario (plan płatny) + ffmpeg",
+      "model": "model_pruna-p-video-2",
+      "data": "2026-11-26",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }
