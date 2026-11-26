@@ -1,5 +1,7 @@
 """Card art (640x442) and portraits (256x256) of the Free Company from the generated 1008x704 pictures (G4, 25.11.2026).
 Source: .tmp/zrodla/free_cards/<id>.png (Scenario, GPT Image 2.5 Flare, medium, 3 CU each; prompts in prompts.json there).
+Fixes of 26.11: the raven, the monitor and the ginger tomcat regenerated (first versions kept as <id>_v1.png); the beaver's teeth
+recoloured white locally (original: beaverEngineer_orange_teeth.png).
 The squirrel archer's portrait approved at gate G3 stays as it is.
 Portrait = a square crop given as (centre x, centre y, side) in shares of the picture's width, height and height.
 Usage: python3 scripts/assets/free_cards.py [outdir=public/assets/cards]"""
@@ -9,11 +11,11 @@ from PIL import Image
 SRC = '.tmp/zrodla/free_cards'
 KEEP_PORTRAIT = {'squirrelArcher'}
 CROP = {
-    'foxCaptain': (.46, .21, .42), 'badgerSapper': (.42, .23, .44), 'ravenSeer': (.53, .30, .55), 'otterSmuggler': (.36, .21, .42),
+    'foxCaptain': (.46, .21, .42), 'badgerSapper': (.50, .23, .44), 'ravenSeer': (.47, .28, .50), 'otterSmuggler': (.36, .21, .42),
     'otterScout': (.42, .37, .42), 'magpieThief': (.40, .32, .44), 'squirrelArcher': (.48, .35, .55), 'weaselKnife': (.45, .34, .42),
-    'polecatPoisoner': (.38, .31, .42), 'catFencer': (.41, .27, .44), 'wolverine': (.48, .29, .42), 'marmotPetard': (.41, .35, .42),
-    'toadGunner': (.37, .29, .44), 'beaverEngineer': (.42, .33, .42), 'raccoonDogSpy': (.42, .38, .42), 'towerMonitor': (.80, .60, .48),
-    'martenSlasher': (.45, .30, .44), 'wildcatBajka': (.48, .24, .44), 'hareHerbalist': (.42, .22, .48),
+    'polecatPoisoner': (.38, .31, .42), 'catFencer': (.46, .27, .44), 'wolverine': (.48, .29, .42), 'marmotPetard': (.50, .35, .42),
+    'toadGunner': (.37, .29, .44), 'beaverEngineer': (.42, .33, .42), 'raccoonDogSpy': (.35, .38, .42), 'towerMonitor': (.66, .36, .62),
+    'martenSlasher': (.45, .30, .44), 'wildcatBajka': (.48, .24, .44), 'hareHerbalist': (.53, .22, .48),
 }
 if __name__ == '__main__':
     out = sys.argv[1] if len(sys.argv) > 1 else 'public/assets/cards'

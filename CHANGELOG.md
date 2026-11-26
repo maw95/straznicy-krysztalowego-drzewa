@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wolna Kompania: Kruk Wieszczek chodzi teraz na dwóch nogach w szacie jak reszta kompanii, Waran Wieżowy idzie prosto na gracza z otwartą paszczą, Kocur Fechmistrz jest cały rudy, a Bóbr Inżynier ma białe zęby; portrety Borsuka Sapera, Zajęczycy Zielarki, Jenota Szpiega i Świstaka Petardnika są lepiej wyśrodkowane.
 - Wolna Kompania: dwa własne utwory (lutnia przy ognisku i zbójnicka ballada) grają w osadzie i na ziemi Kompanii; każda z 19 postaci ma własny dźwięk ataku i śmierci.
 - Wolna Kompania: własna osada (leśna polana przy zrujnowanym młynie, wszystkie budynki, Warsztat Sideł, Paserka, Szlaki Przemytnicze, fosa i palisada, 9 siedlisk jednostek) oraz własny herb i ramki kart.
 - Wolna Kompania: własne ilustracje kart i portrety wszystkich 19 postaci oraz malowane ikony 13 zdolności (Fortel, Okop, Oko Kruka, Kieszonkowiec, Strzał z Gałęzi, Tama, Ukryty, Ładunek, Riposta, Smrodliwa Mikstura, wieżyczka Warana, Szalony Skok, Furia Ran).
