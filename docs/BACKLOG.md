@@ -232,6 +232,7 @@ Nowe wpisy dopisuj na końcu z datą i numerem punktu:
 **Wydatki 26.11, ostatnie kredyty (na polecenie autora):** animacje Wydry Przemytniczki 102 CU (obraz 12, klipy 90, w tym 1 zablokowany atak 9 CU i 5 odrzuconych lub próbnych klipów). Saldo ok. 0 CU. Kompanii zostały animacje 15 postaci (ok. 750–1 100 CU).
 
 **Wydatki 17.11 (nocne zadanie):** ikony 5 czarów kręgu III i Przyspieszenia 7 CU; efekty 5 czarów (obraz 3 + klip 10 CU) 65 CU; medale poziomów Wyprawa, Osada, Księstwo 7 CU. Ozdobniki okien (narożnik ramki, tło Księgi czarów, tło skrzyni; po 2 warianty, jakość medium) 18 CU. Rada Osady (2 frakcje, po 2 warianty) 12 CU. Budynki frakcji poziomu 6 (6 obrazów po 2 warianty) 36 CU. Razem 145 CU.
+10. **(26.11, punkt 92)** Strażnicy z frakcji walczą jak neutralni (ruch i cel), ale używają swoich zdolności (inaczej opisy na kartach by kłamały); bez mechanik frakcji i premii cyfrowych. Siłę dobiera mnożnik na frakcję i stopień (`ENCOUNTER_GUARDS`). Zmiana: `rulebookFreeAbility` w `battleAi.ts`, tabela w `data.ts`.
 
 Wpisy autora z 17.11 (wieczór):
 - **(17.11, czary)** Trzy kręgi, ulepszanie Wieży maga otwiera wyższy krąg; docelowo pięć (punkt 33).
