@@ -114,3 +114,15 @@ dużych, ok. 70 px dla małych (`bodyW`).
 - **Trafienie z klipu 2 s często się deformuje** (postać się rozmywa i obraca): zamiast klipu `recoil: true` w `sprites.ts` (odchylenie w kodzie, 0 CU). Maszyna, która w ataku prawie się nie rusza: `lunge: { jabs, reach }` (wypady w kodzie).
 - Wysoki zamach ucięty kadrem arkusza: `python3 scripts/assets/grow_frame.py <folder> <px źródła>` przed wklejeniem klipu (dokłada puste wiersze u góry wszystkich arkuszy, poprawia `anim.json`).
 - Koszt rundy: 117 CU (13 klipów draft po 9 CU; 3 zablokowane, 2 odrzucone).
+
+## Lekcje z poprawek Przypływów (26.11.2026)
+
+- **Powrót do pozy startowej:** `lastFrameImage` równe obrazowi startowemu (`image`) wymusza, żeby trafienie i atak kończyły się w pozie `stoi`. Bez tego klipy kończyły w innej pozie (żaba wstawała, Lewiatan się spłaszczał).
+- **Trafienie, które widać:** „badly startled: its upper body jerks quickly backward toward the left, feet slide back a step, it wobbles, then steadies itself and stands exactly as before. It stays the same size and does not step forward.” Zbyt łagodne („flinches”) wygląda jak kucanie lub krok do przodu. Zablokowały filtr: „blow”, „knocked off balance” (część prób przechodzi, część nie: test jednego klipu przed partią).
+- **Ciężkie stworzenie (Lewiatan):** trafienie w pełnej jakości, „slowly… heavy and slow like a giant animal” i `speed.trafienie` ok. 1,2; szybki klip wygląda jak porażenie prądem.
+- **Śmierć humanoida z bronią drzewcową:** „long pole” zamiast „harpoon”, upadek do przodu twarzą do ziemi (przepis z Klanów); ziarno (`seed`) zmienia wynik, 3 próby to norma.
+- **Pchnięcie bronią:** „reaches the trident/pole straight forward toward the right at chest height in one long, quick, energetic motion, then draws it back” (bez „thrusts”).
+- **Obraz bazowy musi mieć margines:** stworzenie dotykające krawędzi kadru ma ucięte arkusze (Lewiatan, głowa). W prompcie: „fits inside the middle 78 percent of the width, empty margin on both sides”.
+- **Pole walki to ląd:** nie dawać wody ani piany u podstawy postaci; nawet „morskie” stwory chodzą po ziemi.
+- **Latająca jednostka stojąca na ziemi:** trafienie robić z pozy stojącej (`stoi_ziemia`), nie z zawisu.
+- **Wgrywanie obrazu do Scenario:** `upload_asset` z prawdziwym `file_size`, `curl -X PUT -T plik '<url>'`, potem `upload_asset_complete`. Pobieranie równoległe: najpierw `mkdir`, dopiero potem `curl` w tle (inaczej wyścig i puste pliki).
