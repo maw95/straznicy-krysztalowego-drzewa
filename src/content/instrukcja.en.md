@@ -12,7 +12,7 @@ This manual describes the **computer version** as it is now: all complexity leve
 ### Your first game in five steps
 1. In the main menu click **New game**, choose the **Skirmish** mode and the place **This computer**.
 2. Choose the level **Adventure** (the full game without hero development) or **Walk** (very simple duels, from age 5).
-3. Choose a small map and the difficulty **Normal**; on the seats screen leave the player and the computer (the computer leads the Horde). The goal is **Crystals to the Tree**.
+3. Choose a small map; on the seats screen leave the player and the computer (the computer leads the Horde, at the level **Normal**). The goal is **Crystals to the Tree**.
 4. Choose a hero. On the map click neighbouring tiles to walk and press **Space** to end your turn.
 5. Step onto a guardian's tile. A battle on the arena begins: place your units, then click a unit and the tile it should move to or attack.
 
@@ -35,15 +35,15 @@ At the bottom of the menu there is a small **Board version** link: it follows th
 At the top there are three smaller buttons: **Rules and cards** (this window), **Introduction** (a short outline of the story and the rules) and **For testers** (information for testers, statistics of your games and a window for remarks that go to the author). In the top right corner: the **flags** that change the language (Polish and English), full screen and music. In the bottom right corner of the menu you see your statistics from this browser, and in the bottom left the version number: a click opens the history of changes. The **Credits** button shows the creators of the game, the authors of the music with their licences, and a note that the graphics, animations and sounds were made with the help of AI tools.
 
 ## New game wizard
-@words: wizard, new game, settings, version, level, mode, goal, map, players, difficulty, map shape, map size, bots, hot-seat, hints
+@words: wizard, new game, settings, version, level, mode, goal, map, players, difficulty, map shape, map size, bots, bot level, hints
 
 Before the wizard you choose the **mode** (the menu's second page: skirmish or arena) and **where you play**: on this computer (against computer opponents, or several players at one screen) or **online** with friends ([Online play and ranking](#online-play-and-ranking)). The wizard then leads through consecutive pages. The **Back** button returns to the previous one, and some choices (level, goal) move on at once when clicked.
 
 1. **Complexity level** (except in the arena): from Walk to Empire ([Complexity levels](#complexity-levels)) or **Custom settings** ([Custom settings](#custom-settings)).
 2. **Goal of the game** (from the Expedition level, [Goals of the game](#goals-of-the-game)).
 3. **Map** (except in the arena): on the higher levels the shape (triangle, rectangle, ring, islands or a ready-made map) and the **size**; in Walk, Adventure and the board version only the size ([Adventure map](#adventure-map)).
-4. **Players** (on the last screen, "Seats at the table"): there are two seats at first, a person and a computer. The **+ Add player** button adds more (computers) and the small cross beside a player removes one (the first player and the last two seats of a rivalry cannot be removed). You choose the faction and the hero by clicking icons; the **die** (first from the left, selected by default where every faction plays) means a draw when the game starts (a random faction always means a random hero too); a place with a random faction has a blue background. A right click on a faction's icon shows its description and all its supports. For a human player there is a **Child** field ([Family mode](#family-mode)). In an online game the number of players is set in the wizard.
-5. **Difficulty** of the computer ([Difficulty levels](#difficulty-levels)).
+4. **Players** (on the last screen, "Seats at the table"): there are two seats at first, a person and a computer. The **+ Add player** button adds more (computers) and the small cross beside a player removes one (the first player and the last two seats of a rivalry cannot be removed). You choose the faction and the hero by clicking icons; the **die** (first from the left, selected by default where every faction plays) means a draw when the game starts (a random faction always means a random hero too); a place with a random faction has a blue background. A right click on a faction's icon shows its description and all its supports. For a human player there is a **Child** field ([Family mode](#family-mode)), and for a bot in a skirmish the **bot level** ([Difficulty levels](#difficulty-levels)). In the goals **Crystals to the Tree** and **Survival** the sides have different tasks, so the seats stand in two columns named by the role ("Gather the crystals" and "Guard the Tree", "Hold out" and "Horde waves"): **+ Add player** under a column adds a bot to it, and the **⇄** button moves a player to the other team. In an online game the number of players is set in the wizard.
+5. **Difficulty** of the computer: in a skirmish it is chosen at each bot (the point above), on the arena and in the board version in the wizard ([Difficulty levels](#difficulty-levels)).
 
 **Version:** you play the **digital** version by default (units in 2D graphics with animations, a hex arena, all complexity levels). The **board version** (a faithful board game: 3D figures, unchanged rules and four map sizes; no complexity levels and no goal choice) is a link on the menu's first page. The choice of the version holds for that game only.
 
@@ -71,14 +71,18 @@ From level III the Health and Attack numbers on the cards are **three times larg
 ## Difficulty levels
 @words: difficulty, easy, normal, hard, very hard, rabbit, wolf, bear, dragon, points, ranking, computer, handicap
 
-You choose the difficulty separately from the complexity level, also on the arena. It **does not change the rules**, only the conditions the computer starts with.
+Difficulty belongs to a **bot**, not to the game. In a skirmish every bot has its own level, chosen at its seat on the "Seats at the table" screen (Normal by default), also a bot playing in one team with you. A game of people only has no difficulty and no help for anyone. The rules are the same on every level; what differs is how well the bot plays.
 
-- **Easy** (rabbit): the computer starts weaker, for example with fewer treasures and a weaker Horde. On levels II–VII these are still full battles.
-- **Normal** (wolf): the computer plays by the same rules as you.
-- **Hard** (bear): the computer gets help: 2 random treasures at the start.
-- **Very hard** (dragon): an even bigger advantage for the computer: 2 more random treasures at the start, income one and a half times larger, and on levels with settlements extra resources at the start (3 wood, 3 ore, 2 Dust) and 2 artifacts for the main hero. The computer's units have the same Health as yours. On the arena the computer makes no mistakes in its choices.
+- **Easy** (rabbit): the bot often makes mistakes in particular places: it strays from its way on the map, hits the weaker target, moves in battle without looking at the danger, takes on a stronger enemy, walks past treasures, takes the second-best skill or lets a purchase in a settlement go.
+- **Normal** (wolf): the bot plays well, but makes the same mistakes now and then.
+- **Hard** (bear): the bot plays as well as it can, without mistakes.
+- **Very hard** (dragon): a bot without mistakes, and a side played by bots only has an advantage: 2 more random treasures at the start, income one and a half times larger, and on levels with settlements extra resources at the start (3 wood, 3 ore, 2 Dust) and 2 artifacts for the main hero. The computer's units have the same Health as yours.
 
-For a win you get **ranking points**; the harder the difficulty, the more. On Very hard there are one and a half times as many as on Hard. Games with custom settings give no points.
+In the goals where the sides play alike (control points, Boss, Artifact, Conquest, Relic), the goal itself is fair. In the goals with two roles (Crystals to the Tree, Survival) the game evens out the roles, whoever plays them.
+
+On the arena and in the board version the difficulty is chosen as before, in the wizard; on the arena Very hard is a computer that makes no mistakes in its choices.
+
+For a win you get **ranking points**; the harder, the more. What counts is the highest level of the bots playing against you. On Very hard there are one and a half times as many points as on Hard. Games with custom settings give no points.
 
 ## Game modes
 @words: mode, skirmish, co-op, rivalry, arena, hot-seat, one screen, bots, computer, 8 players, factions, team

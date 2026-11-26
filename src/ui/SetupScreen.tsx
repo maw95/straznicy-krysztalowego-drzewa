@@ -5,7 +5,7 @@ import { FACTION_HEROES, FACTION_NAMES, heroPool, MAX_PVP_PLAYERS, SECRET_HEROES
 import { MAX_TEAMS, raceOf, seatTable, SIDES_GOALS, TEAM_IDS, teamsOf } from '../engine/teams';
 import { readyMaps } from '../engine/customMaps';
 import { layerSwitches, resolveTier, withRuleset, type CustomLayer, type Tier } from '../engine/presets';
-import { arenaSetup, DEFAULT_RULES, levelSettings, type BattleMode, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
+import { arenaSetup, BOT_LEVELS, DEFAULT_RULES, levelSettings, type BattleMode, type BotLevel, type Level, type MapShape, type Controller, type Mode, type ObjectiveId, type SeatSetup, type SetupOptions } from '../engine/types';
 import { Logo, useCoverArt } from './Logo';
 import { asset, FACTION_RING, Frame, Portrait, Ribbon } from './common';
 import { UnitCard } from './UnitCard';
@@ -15,7 +15,7 @@ import { journalStats } from './journal';
 import { tutorialEnabled, setTutorialEnabled } from './Tutorial';
 import { autoFullscreen, fullscreenSupported, setAutoFullscreen } from './fullscreen';
 import { details } from './details';
-import { CrossIcon, defaultHeroes, DiceIcon, FactionDetails, openFactions, resolveRandomSeats, SEAT_TINT, Tip, TIPS, type SeatDraft } from './setupShared';
+import { BOT_LEVEL_NAMES, BOT_LEVEL_TIPS, CrossIcon, defaultHeroes, DiceIcon, FactionDetails, openFactions, resolveRandomSeats, ROLE_NAMES, SEAT_TINT, Tip, TIPS, type SeatDraft } from './setupShared';
 import { NewGameWizard } from './NewGameWizard';
 import { deleteNamedSave, listNamedSaves, type NamedSave } from './saves';
 import { readRun } from './expeditionRun';
@@ -104,19 +104,28 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   /** How many seats the table may have: a coop game up to three (the three heroes), a rivalry up to eight; the arena has its two. */
   const minSeats = mode === 'pvp' ? 2 : 1;
   const maxSeats = mode === 'coop' ? 3 : mode === 'pvp' ? 8 : seats.length;
-  const addSeat = () => {
+  const addSeat = (side?: 'dawn' | 'horde') => {
     if (seats.length >= maxSeats) return;
-    // A new seat is a computer, of the first faction nobody plays yet (a coop seat plays Przymierze like the others).
+    // A new seat is a computer, of the first faction nobody plays yet (a coop seat plays Przymierze like the others); the role columns name its side.
     const used = seats.map(raceAt);
-    const race: FactionId = mode === 'pvp' ? offered.find((f) => !used.includes(f)) ?? offered[seats.length % offered.length] : raceAt(seats[0]);
+    const race: FactionId = side ?? (mode === 'pvp' ? offered.find((f) => !used.includes(f)) ?? offered[seats.length % offered.length] : raceAt(seats[0]));
     const pool = heroPoolOf(race);
     const heroId = pool.find((h) => !seats.some((x) => !x.randomRace && !x.randomHero && x.heroId === h)) ?? pool[0];
     const bots = seats.filter((x) => x.controller === 'bot').length;
-    setSeats([...seats, { name: bots ? `Komputer ${bots + 1}` : 'Komputer', faction: mode === 'pvp' ? 'dawn' : seats[0].faction, race, controller: 'bot', heroId, randomRace: mode === 'pvp' && offered.length > 2, randomHero: true }]);
+    setSeats([...seats, { name: bots ? `Komputer ${bots + 1}` : 'Komputer', faction: mode === 'pvp' ? (side ?? 'dawn') : seats[0].faction, race, controller: 'bot', heroId, randomRace: mode === 'pvp' && !side && offered.length > 2, randomHero: true }]);
+  };
+  /** The role columns: the seat goes over to the other side (its hero is drawn again there). */
+  const swapRole = (i: number) => {
+    const race = raceAt(seats[i]) === 'dawn' ? 'horde' : 'dawn';
+    update(i, { race, faction: race, randomRace: false, randomHero: true, heroId: FACTION_HEROES[race].find((h) => !takenBy(h, i)) ?? FACTION_HEROES[race][0] });
   };
   const removeSeat = (i: number) => seats.length > minSeats && setSeats(seats.filter((_, j) => j !== i));
   /** The goal the game will be played for (a tier may force one): the crystals goal is the story of Przymierze and Horda only. */
   const goal = resolveTier(tier, { objective, shape, customMapId: customId, growth, ...(tier === 'custom' && growth ? layerSwitches(layer) : {}) }).objective;
+  /** The digital rivalry (Potyczka): the difficulty is chosen at each bot, the table itself has none (backlog 94). */
+  const levelsAtBots = digital && mode === 'pvp';
+  /** The goals where the two sides have different tasks: the seats sit in two columns named by the role, not by a faction to pick. */
+  const roleGoal = levelsAtBots && (goal === 'crystals' || goal === 'survival') ? goal : null;
   /** The race of a seat (the seats of this screen always name one). */
   const raceAt = (s: SeatSetup): FactionId => s.race ?? raceOf(null, s.faction);
   /**
@@ -146,13 +155,16 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     const drawn = resolveRandomSeats(seats, { offered, heroesOf: heroPoolOf, twoFactions: mode === 'pvp' });
     // The story of the crystals plays Przymierze first and Horda second: a draw that put the Horde first moves its seats behind.
     const ordered = mode === 'pvp' && r.objective === 'crystals' ? [...drawn].sort((a, b) => Number(raceAt(b) === 'dawn') - Number(raceAt(a) === 'dawn')) : drawn;
-    const finalTable = mode === 'pvp' ? seatTable(ordered) : drawn;
+    // A level stays only at the bots of a digital rivalry.
+    const leveled = ordered.map(({ botLevel, ...x }) => (levelsAtBots && x.controller === 'bot' ? { ...x, botLevel: botLevel ?? 'normal' } : x));
+    const finalTable = mode === 'pvp' ? seatTable(leveled) : drawn;
     const sides = teamsOf({ setup: { mode, seats: finalTable } });
     const started = withRuleset(arena ? arenaSetup(drawn.map(({ race: _r, ...x }) => x), seed, level === 'custom' ? 'normal' : level, arenaSize) : { mode, mapSize, battleMode, seed, seats: mode === 'pvp' ? finalTable : drawn.map(({ race: _r, ...x }) => x), rules: { ...rules, extraEvilHero: mode === 'coop' && rules.extraEvilHero, ...(noHorde && mode === 'coop' && r.objective === 'boss' ? { noHorde: true } : {}) } }, digital, r.objective, r.shape, r.customMapId, r.growth, r.kingdom, r.economy, r.realm, r.empire);
     // Three and more sides (when there are enough factions) play on a rectangle map big enough for them.
     const minSize: MapSize = sides.length >= 4 ? 'long' : 'medium';
     const sizes: MapSize[] = ['short', 'medium', 'long', 'veryLong', 'huge', 'giant'];
-    onStart(sides.length > 2 ? { ...started, mapShape: 'rectangle' as const, mapSize: sizes[Math.max(sizes.indexOf(started.mapSize), sizes.indexOf(minSize))] } : started);
+    const table = levelsAtBots ? { ...started, seatLevels: true } : started;
+    onStart(sides.length > 2 ? { ...table, mapShape: 'rectangle' as const, mapSize: sizes[Math.max(sizes.indexOf(table.mapSize), sizes.indexOf(minSize))] } : table);
   };
   /** The wizard is done: its choices become this screen's state, and the seats come next. */
   const applyWizard = (t: TableConfig) => {
@@ -191,6 +203,67 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
     if (where === 'online') return onOnline(intent, { mode: wizardMode, digital });
     setStep(intent === 'new' ? 'wizard' : 'load');
   };
+  const seatRow = (s: SeatDraft, i: number) => (
+      <div key={i} className="well seat-row" style={{ background: SEAT_TINT[s.randomRace ? 'random' : raceAt(s)], transition: 'background 0.35s' }}>
+        <div className="seat-head">
+          <span className="seat-crest">
+            {s.randomRace ? <DiceIcon size={38} /> : <img src={asset(`cards/crests/${raceAt(s)}.png`)} alt="" title={FACTION_NAMES[raceAt(s)]} onClick={() => crestClick(raceAt(s), i)} {...details(() => <FactionDetails race={raceAt(s)} />)} style={{ width: 46, height: 46, objectFit: 'contain', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.5))' }} />}
+          </span>
+          <input type="text" maxLength={PLAYER_NAME_MAX} value={s.name} onChange={(e) => update(i, { name: e.target.value })} style={{ width: 150 }} aria-label="Imię gracza" />
+          <select value={s.controller} aria-label="Kto gra" onChange={(e) => update(i, { controller: e.target.value as Controller })}>
+            <option value="human">Człowiek</option>
+            <option value="bot">Bot</option>
+          </select>
+          {levelsAtBots && s.controller === 'bot' && (
+            <Tip text={BOT_LEVEL_TIPS[s.botLevel ?? 'normal']}>
+              <select value={s.botLevel ?? 'normal'} aria-label="Poziom bota" data-bot-level={i} onChange={(e) => update(i, { botLevel: e.target.value as BotLevel })}>
+                {BOT_LEVELS.map((l) => <option key={l} value={l}>{BOT_LEVEL_NAMES[l]}</option>)}
+              </select>
+            </Tip>
+          )}
+          {roleGoal && (
+            <Tip text={`Przejdź do drużyny: ${ROLE_NAMES[roleGoal][raceAt(s) === 'dawn' ? 'horde' : 'dawn']}`}>
+              <button className="btn plate parch seat-swap" aria-label="Przejdź do drugiej drużyny" data-swap-seat={i} onClick={() => swapRole(i)}>⇄</button>
+            </Tip>
+          )}
+          {digital && mode === 'pvp' && s.controller === 'human' && (
+            <label title="Tryb rodzinny: bohater dziecka ma więcej życia i ruchu, a na ekranie jest przycisk Podpowiedź. Na poziomach Osada i Księstwo gospodarką dziecka zajmuje się autopilot, a gdy tą samą frakcją gra też dorosły, zarządza nią dorosły.">
+              <input type="checkbox" checked={Boolean(s.child)} aria-label="Dziecko" onChange={(e) => update(i, { child: e.target.checked })} /> Dziecko
+            </label>
+          )}
+          {i > 0 && seats.length > minSeats && (
+            <Tip text="Usuń gracza">
+              <button className="seat-remove" aria-label={`Usuń gracza ${s.name}`} data-remove-seat={i} onClick={() => removeSeat(i)}><CrossIcon /></button>
+            </Tip>
+          )}
+        </div>
+        {mode === 'pvp' && !roleGoal && (
+          <div className="seat-picks" role="group" aria-label="Frakcja" data-seat-factions={i}>
+            <Tip text="Losowa frakcja (i bohater): wylosuję ją przy starcie gry">
+              <button className={`pick-btn ${s.randomRace ? 'on' : ''}`} aria-label="Losowa frakcja" aria-pressed={Boolean(s.randomRace)} data-faction="random" onClick={() => update(i, { randomRace: true, randomHero: true })}><DiceIcon size={30} /></button>
+            </Tip>
+            {offered.map((f) => (
+              <Tip key={f} text={FACTION_NAMES[f]}>
+                <button className={`pick-btn ${!s.randomRace && raceAt(s) === f ? 'on' : ''}`} aria-label={`Frakcja: ${FACTION_NAMES[f]}`} aria-pressed={!s.randomRace && raceAt(s) === f} data-faction={f} {...details(() => <FactionDetails race={f} />)} onClick={() => update(i, { race: f, randomRace: false, randomHero: true, heroId: FACTION_HEROES[f].find((h) => !takenBy(h, i)) ?? FACTION_HEROES[f][0] })}>
+                  <img src={asset(`cards/crests/${f}.png`)} alt="" />
+                </button>
+              </Tip>
+            ))}
+          </div>
+        )}
+        <div className="seat-picks" role="group" aria-label="Bohater" data-seat-heroes={i}>
+          <Tip text="Losowy bohater: wylosuję go przy starcie gry">
+            <button className={`pick-btn ${s.randomHero ? 'on' : ''}`} aria-label="Losowy bohater" aria-pressed={Boolean(s.randomHero)} data-hero="random" disabled={Boolean(s.randomRace)} onClick={() => update(i, { randomHero: true })} style={s.randomRace ? { opacity: 1 } : undefined}><DiceIcon size={30} /></button>
+          </Tip>
+          {!s.randomRace && heroesOf(raceAt(s)).map((h) => (
+            <button key={h} className="btn" title={UNITS[h].name} aria-label={`Bohater: ${UNITS[h].name}`} onMouseEnter={() => setPreview(h)} onClick={() => { update(i, { heroId: h, randomHero: false }); setPreview(h); }} disabled={takenBy(h, i)} style={{ background: 'none', border: 0, padding: 0 }}>
+              <Portrait unitId={h} size={46} ring={FACTION_RING[raceAt(s)]} glow={!s.randomHero && s.heroId === h ? '0 0 0 3px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} dim={takenBy(h, i)} tip={false} />
+            </button>
+          ))}
+          <div style={{ fontWeight: 700, color: '#F3D27A', marginLeft: 6 }}>{s.randomRace ? 'Losowa frakcja i bohater' : s.randomHero ? 'Losowy bohater' : UNITS[s.heroId].name}</div>
+        </div>
+      </div>
+  );
   const stepName = step === 'table' ? `Miejsca przy stole${digital ? '' : ' · wersja planszowa'}` : '';
 
   return (
@@ -394,57 +467,21 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
         <div className="main-row setup-row" style={{ position: 'relative', width: '100%', maxWidth: 1400 }}>
           <Frame crest className="grow" innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div className="lbl">Miejsca przy stole</div>
-            {seats.map((s, i) => (
-              <div key={i} className="well seat-row" style={{ background: SEAT_TINT[s.randomRace ? 'random' : raceAt(s)], transition: 'background 0.35s' }}>
-                <div className="seat-head">
-                  <span className="seat-crest">
-                    {s.randomRace ? <DiceIcon size={38} /> : <img src={asset(`cards/crests/${raceAt(s)}.png`)} alt="" title={FACTION_NAMES[raceAt(s)]} onClick={() => crestClick(raceAt(s), i)} {...details(() => <FactionDetails race={raceAt(s)} />)} style={{ width: 46, height: 46, objectFit: 'contain', filter: 'drop-shadow(0 3px 3px rgba(0,0,0,0.5))' }} />}
-                  </span>
-                  <input type="text" maxLength={PLAYER_NAME_MAX} value={s.name} onChange={(e) => update(i, { name: e.target.value })} style={{ width: 150 }} aria-label="Imię gracza" />
-                  <select value={s.controller} aria-label="Kto gra" onChange={(e) => update(i, { controller: e.target.value as Controller })}>
-                    <option value="human">Człowiek</option>
-                    <option value="bot">Bot</option>
-                  </select>
-                  {digital && mode === 'pvp' && s.controller === 'human' && (
-                    <label title="Tryb rodzinny: bohater dziecka ma więcej życia i ruchu, a na ekranie jest przycisk Podpowiedź. Na poziomach Osada i Księstwo gospodarką dziecka zajmuje się autopilot, a gdy tą samą frakcją gra też dorosły, zarządza nią dorosły.">
-                      <input type="checkbox" checked={Boolean(s.child)} aria-label="Dziecko" onChange={(e) => update(i, { child: e.target.checked })} /> Dziecko
-                    </label>
-                  )}
-                  {i > 0 && seats.length > minSeats && (
-                    <Tip text="Usuń gracza">
-                      <button className="seat-remove" aria-label={`Usuń gracza ${s.name}`} data-remove-seat={i} onClick={() => removeSeat(i)}><CrossIcon /></button>
-                    </Tip>
-                  )}
-                </div>
-                {mode === 'pvp' && (
-                  <div className="seat-picks" role="group" aria-label="Frakcja" data-seat-factions={i}>
-                    <Tip text="Losowa frakcja (i bohater): wylosuję ją przy starcie gry">
-                      <button className={`pick-btn ${s.randomRace ? 'on' : ''}`} aria-label="Losowa frakcja" aria-pressed={Boolean(s.randomRace)} data-faction="random" onClick={() => update(i, { randomRace: true, randomHero: true })}><DiceIcon size={30} /></button>
-                    </Tip>
-                    {offered.map((f) => (
-                      <Tip key={f} text={FACTION_NAMES[f]}>
-                        <button className={`pick-btn ${!s.randomRace && raceAt(s) === f ? 'on' : ''}`} aria-label={`Frakcja: ${FACTION_NAMES[f]}`} aria-pressed={!s.randomRace && raceAt(s) === f} data-faction={f} {...details(() => <FactionDetails race={f} />)} onClick={() => update(i, { race: f, randomRace: false, randomHero: true, heroId: FACTION_HEROES[f].find((h) => !takenBy(h, i)) ?? FACTION_HEROES[f][0] })}>
-                          <img src={asset(`cards/crests/${f}.png`)} alt="" />
-                        </button>
-                      </Tip>
-                    ))}
+            {roleGoal ? (
+              <div className="role-columns" data-role-columns>
+                {(['dawn', 'horde'] as const).map((side) => (
+                  <div key={side} className="role-col" data-role-col={side}>
+                    <div className="lbl role-col-head">{ROLE_NAMES[roleGoal][side]}</div>
+                    {seats.map((s, i) => (raceAt(s) === side ? seatRow(s, i) : null))}
+                    {seats.length < maxSeats && (
+                      <button className="btn plate parch seat-add" data-add-seat={side} onClick={() => addSeat(side)}><span className="plus">+</span> Dodaj gracza</button>
+                    )}
                   </div>
-                )}
-                <div className="seat-picks" role="group" aria-label="Bohater" data-seat-heroes={i}>
-                  <Tip text="Losowy bohater: wylosuję go przy starcie gry">
-                    <button className={`pick-btn ${s.randomHero ? 'on' : ''}`} aria-label="Losowy bohater" aria-pressed={Boolean(s.randomHero)} data-hero="random" disabled={Boolean(s.randomRace)} onClick={() => update(i, { randomHero: true })} style={s.randomRace ? { opacity: 1 } : undefined}><DiceIcon size={30} /></button>
-                  </Tip>
-                  {!s.randomRace && heroesOf(raceAt(s)).map((h) => (
-                    <button key={h} className="btn" title={UNITS[h].name} aria-label={`Bohater: ${UNITS[h].name}`} onMouseEnter={() => setPreview(h)} onClick={() => { update(i, { heroId: h, randomHero: false }); setPreview(h); }} disabled={takenBy(h, i)} style={{ background: 'none', border: 0, padding: 0 }}>
-                      <Portrait unitId={h} size={46} ring={FACTION_RING[raceAt(s)]} glow={!s.randomHero && s.heroId === h ? '0 0 0 3px #9EE4FF, 0 0 10px 3px rgba(158,228,255,0.6)' : undefined} dim={takenBy(h, i)} tip={false} />
-                    </button>
-                  ))}
-                  <div style={{ fontWeight: 700, color: '#F3D27A', marginLeft: 6 }}>{s.randomRace ? 'Losowa frakcja i bohater' : s.randomHero ? 'Losowy bohater' : UNITS[s.heroId].name}</div>
-                </div>
+                ))}
               </div>
-            ))}
-            {seats.length < maxSeats && mode !== 'arena' && (
-              <button className="btn plate parch seat-add" data-add-seat onClick={addSeat}><span className="plus">+</span> Dodaj gracza</button>
+            ) : seats.map(seatRow)}
+            {seats.length < maxSeats && mode !== 'arena' && !roleGoal && (
+              <button className="btn plate parch seat-add" data-add-seat onClick={() => addSeat()}><span className="plus">+</span> Dodaj gracza</button>
             )}
             {mode === 'coop' && (
               <div style={{ fontSize: 15, color: 'var(--muted)' }}>

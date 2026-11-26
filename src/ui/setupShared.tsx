@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { FACTION_HEROES, FACTION_NAMES, heroPool, MAP_VARIANTS, UNITS, type FactionId, type TeamId, type MapSize } from '../engine/data';
 import { FACTION_PACKS, PACK_IDS, PLAYABLE_IDS } from '../engine/factions';
 import { asset, Portrait } from './common';
-import type { Level, MapShape, Mode, SeatSetup } from '../engine/types';
+import type { BotLevel, Level, MapShape, Mode, SeatSetup } from '../engine/types';
 
 /** Class of an option button; the chosen one is lit. */
 export const choice = (active: boolean) => `btn plate parch ${active ? 'on' : ''}`;
@@ -88,6 +88,21 @@ export const LEVEL_TIPS: Record<Level | 'custom', string> = {
 export const DIGITAL_LEVEL_TIPS: Partial<Record<Level | 'custom', string>> = {
   hard: 'Pełna gra, a komputer dostaje 2 losowe skarby na start. Wyzwanie dla dorosłych.',
   veryHard: 'Jak Trudny, a komputer ma jeszcze przewagę: 2 skarby więcej na start, dodatkowe surowce (drewno, ruda, Pył), artefakt dla głównego bohatera i większe dochody. Dla najlepszych.',
+};
+
+/** The level of one bot (backlog 94): its name and what it means at the table. */
+export const BOT_LEVEL_NAMES: Record<BotLevel, string> = { kids: 'Łatwy', normal: 'Normalny', hard: 'Trudny', veryHard: 'Bardzo trudny' };
+export const BOT_LEVEL_TIPS: Record<BotLevel, string> = {
+  kids: 'Bot Łatwy często się myli: zbacza z drogi, uderza w słabszy cel, mija skarby. Dobry na pierwsze partie.',
+  normal: 'Bot Normalny gra porządnie, ale od czasu do czasu popełni błąd.',
+  hard: 'Bot Trudny gra najlepiej, jak umie, bez błędów.',
+  veryHard: 'Bot Bardzo trudny gra bez błędów i ma przewagę: 2 skarby więcej na start, dodatkowe surowce, artefakt dla bohatera i większe dochody (gdy jego stroną grają same boty).',
+};
+
+/** The two columns of the goals where the sides have different tasks: what each side does (the Przymierze column first). */
+export const ROLE_NAMES: Record<'crystals' | 'survival', Record<'dawn' | 'horde', string>> = {
+  crystals: { dawn: 'Zbierają kryształy', horde: 'Bronią Drzewa' },
+  survival: { dawn: 'Przetrwają', horde: 'Fale Hordy' },
 };
 
 /** Approximate time at the table with one hero per side (simulated game length). */

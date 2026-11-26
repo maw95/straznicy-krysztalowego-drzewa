@@ -12,7 +12,7 @@ Ta instrukcja opisuje **wersję komputerową** w jej obecnym kształcie: wszystk
 ### Pierwsza partia w pięciu krokach
 1. W menu głównym kliknij **Nowa gra**, wybierz tryb **Potyczka** i miejsce **Ten komputer**.
 2. Wybierz poziom **Przygoda** (pełna gra bez rozwoju bohatera) albo **Spacer** (bardzo proste pojedynki, od 5 lat).
-3. Wybierz małą mapę i trudność **Normalny**; na ekranie miejsc zostaw gracza i komputer (Hordę prowadzi komputer). Celem są **Kryształy do Drzewa**.
+3. Wybierz małą mapę; na ekranie miejsc zostaw gracza i komputer (Hordę prowadzi komputer, przy nim poziom **Normalny**). Celem są **Kryształy do Drzewa**.
 4. Wybierz bohatera. Na mapie klikaj sąsiednie pola, żeby iść, a **Spacją** kończ turę.
 5. Wejdź na pole strażnika. Zacznie się bitwa na arenie: rozstaw jednostki, a potem klikaj jednostkę i pole, na które ma iść albo które ma zaatakować.
 
@@ -35,15 +35,15 @@ U dołu menu jest mały link **Wersja planszowa**: prowadzi tą samą ścieżką
 U góry są trzy mniejsze przyciski: **Zasady i karty** (to okno), **Wprowadzenie** (krótki zarys fabuły i zasad) oraz **Dla testerów** (informacje dla testerów, statystyki twoich gier i okno na uwagi, które trafiają do twórcy). W prawym górnym rogu: **flagi** zmieniające język (polski i angielski), pełny ekran i muzyka. W prawym dolnym rogu menu widać twoje statystyki z tej przeglądarki, a w lewym dolnym numer wersji: kliknięcie otwiera historię zmian. Przycisk **Autorzy** pokazuje twórców gry, autorów muzyki wraz z licencjami i informację, że grafika, animacje i dźwięki powstały z użyciem narzędzi AI.
 
 ## Kreator nowej gry
-@słowa: kreator, nowa gra, ustawienia, wersja, poziom, tryb, cel, mapa, gracze, trudność, kształt mapy, wielkość mapy, boty, hot-seat, podpowiedzi
+@słowa: kreator, nowa gra, ustawienia, wersja, poziom, tryb, cel, mapa, gracze, trudność, kształt mapy, wielkość mapy, boty, hot-seat, poziom bota, podpowiedzi
 
 Przed kreatorem wybierasz **tryb** (druga strona menu: potyczka albo arena) i **gdzie grasz**: na tym komputerze (z komputerowymi przeciwnikami, albo kilku graczy przy jednym ekranie) albo **online** ze znajomymi ([Gra online i ranking](#gra-online-i-ranking)). Kreator prowadzi potem przez kolejne strony. Przyciskiem **Wstecz** wrócisz do poprzedniej, a część wyborów (poziom, cel) przechodzi dalej od razu po kliknięciu.
 
 1. **Poziom złożoności** (poza areną): od Spaceru do Imperium ([Poziomy złożoności](#poziomy-zlozonosci)) albo **Własne ustawienia** ([Własne ustawienia](#wlasne-ustawienia)).
 2. **Cel gry** (od poziomu Wyprawa, [Cele gry](#cele-gry)).
 3. **Mapa** (poza areną): na wyższych poziomach kształt (trójkąt, prostokąt, pierścień, wyspy albo gotowa mapa) i **wielkość**; w Spacerze, Przygodzie i wersji planszowej tylko wielkość ([Mapa przygody](#mapa-przygody)).
-4. **Gracze** (na ostatnim ekranie, „Miejsca przy stole”): na początku są dwa miejsca, człowiek i komputer. Przyciskiem **+ Dodaj gracza** dodajesz kolejne (komputery), a małym krzyżykiem przy graczu usuwasz go (pierwszego gracza ani ostatnich dwóch miejsc rywalizacji nie da się usunąć). Frakcję i bohatera wybierasz klikając ikony; **kostka** (pierwsza z lewej, domyślnie wybrana tam, gdzie grają wszystkie frakcje) oznacza losowanie przy starcie gry (losowa frakcja zawsze oznacza też losowego bohatera); miejsce z losową frakcją ma niebieskie tło. Prawy klik na ikonie frakcji pokazuje jej opis i wszystkich jej pomocników. Przy graczu-człowieku jest pole **Dziecko** ([Tryb rodzinny](#tryb-rodzinny)). W grze online liczbę graczy ustawia się w kreatorze.
-5. **Trudność** komputera ([Poziomy trudności](#poziomy-trudnosci)).
+4. **Gracze** (na ostatnim ekranie, „Miejsca przy stole”): na początku są dwa miejsca, człowiek i komputer. Przyciskiem **+ Dodaj gracza** dodajesz kolejne (komputery), a małym krzyżykiem przy graczu usuwasz go (pierwszego gracza ani ostatnich dwóch miejsc rywalizacji nie da się usunąć). Frakcję i bohatera wybierasz klikając ikony; **kostka** (pierwsza z lewej, domyślnie wybrana tam, gdzie grają wszystkie frakcje) oznacza losowanie przy starcie gry (losowa frakcja zawsze oznacza też losowego bohatera); miejsce z losową frakcją ma niebieskie tło. Prawy klik na ikonie frakcji pokazuje jej opis i wszystkich jej pomocników. Przy graczu-człowieku jest pole **Dziecko** ([Tryb rodzinny](#tryb-rodzinny)), a przy bocie w potyczce **poziom bota** ([Poziomy trudności](#poziomy-trudnosci)). W celach **Kryształy do Drzewa** i **Przetrwanie** strony mają różne zadania, więc miejsca stoją w dwóch kolumnach podpisanych rolą („Zbierają kryształy” i „Bronią Drzewa”, „Przetrwają” i „Fale Hordy”): **+ Dodaj gracza** pod kolumną dopisuje do niej bota, a przycisk **⇄** przenosi gracza do drugiej drużyny. W grze online liczbę graczy ustawia się w kreatorze.
+5. **Trudność** komputera: w potyczce wybiera się ją przy każdym bocie (punkt wyżej), na arenie i w wersji planszowej w kreatorze ([Poziomy trudności](#poziomy-trudnosci)).
 
 **Wersja:** domyślnie gra się w wersji **cyfrowej** (jednostki w grafice 2D z animacjami, heksowa arena, wszystkie poziomy złożoności). **Wersja planszowa** (wierna planszówka: figurki 3D, zasady bez zmian i cztery rozmiary mapy; bez poziomów złożoności i wyboru celu) to link na pierwszej stronie menu. Wybór wersji obowiązuje tylko dla tej partii.
 
@@ -71,14 +71,18 @@ Od poziomu III liczby Życia i Ataku na kartach są **trzy razy większe** niż 
 ## Poziomy trudności
 @słowa: trudność, łatwy, normalny, trudny, bardzo trudny, królik, wilk, niedźwiedź, smok, punkty, ranking, komputer, handicap
 
-Trudność wybierasz osobno od poziomu złożoności, także na arenie. **Nie zmienia zasad**, tylko to, z jakimi warunkami startuje komputer.
+Trudność to cecha **bota**, nie gry. W potyczce każdy bot ma swój poziom, wybierany przy jego miejscu na ekranie „Miejsca przy stole” (domyślnie Normalny), także bot grający w jednej drużynie z tobą. Gra samych ludzi nie ma żadnej trudności ani żadnych ułatwień dla kogokolwiek. Zasady są te same na każdym poziomie; różni się to, jak dobrze bot gra.
 
-- **Łatwy** (królik): komputer zaczyna słabszy, na przykład z mniejszą liczbą skarbów i słabszą Hordą. Na poziomach II–VII to wciąż pełne bitwy.
-- **Normalny** (wilk): komputer gra na tych samych zasadach co ty.
-- **Trudny** (niedźwiedź): komputer ma ułatwienia: 2 losowe skarby na start.
-- **Bardzo trudny** (smok): jeszcze większa przewaga komputera: o 2 losowe skarby więcej na start, o połowę większe dochody, a na poziomach z osadami dodatkowe surowce na start (3 drewna, 3 rudy, 2 Pyły) i 2 artefakty dla głównego bohatera. Jednostki komputera mają tyle samo Życia co twoje. Na arenie to komputer bez błędów w wyborach.
+- **Łatwy** (królik): bot często się myli w konkretnych miejscach: zbacza z drogi na mapie, uderza w słabszy cel, rusza się w bitwie bez patrzenia na zagrożenie, wchodzi w walkę z silniejszym, mija skarby, bierze drugą w kolejności umiejętność albo odpuszcza zakup w osadzie.
+- **Normalny** (wilk): bot gra porządnie, ale te same błędy popełnia od czasu do czasu.
+- **Trudny** (niedźwiedź): bot gra najlepiej, jak umie, bez błędów.
+- **Bardzo trudny** (smok): bot bez błędów, a strona grana przez same boty ma przewagę: o 2 losowe skarby więcej na start, o połowę większe dochody, a na poziomach z osadami dodatkowe surowce na start (3 drewna, 3 rudy, 2 Pyły) i 2 artefakty dla głównego bohatera. Jednostki komputera mają tyle samo Życia co twoje.
 
-Za wygraną dostajesz **punkty rankingu**; im trudniej, tym więcej. Na Bardzo trudnym jest ich półtora raza tyle co na Trudnym. Gry na własnych ustawieniach punktów nie dają.
+W celach, w których strony grają tak samo (punkty kontrolne, Boss, Artefakt, Podbój, Relikt), uczciwość daje sam cel. W celach z dwiema rolami (Kryształy do Drzewa, Przetrwanie) gra wyrównuje role, niezależnie od tego, kto je gra.
+
+Na arenie i w wersji planszowej trudność wybiera się jak dawniej, w kreatorze; na arenie Bardzo trudny to komputer bez błędów w wyborach.
+
+Za wygraną dostajesz **punkty rankingu**; im trudniej, tym więcej. Liczy się najwyższy poziom botów grających przeciwko tobie. Na Bardzo trudnym punktów jest półtora raza tyle co na Trudnym. Gry na własnych ustawieniach punktów nie dają.
 
 ## Tryby gry
 @słowa: tryb, potyczka, kooperacja, rywalizacja, arena, hot-seat, jeden ekran, boty, komputer, 8 graczy, frakcje, drużyna

@@ -61,8 +61,11 @@ function draftOf(t: TableConfig): Draft {
 
 const READY_MAPS = readyMaps;
 
+/** The digital rivalry (Potyczka): the difficulty is chosen at each bot on the seats page (backlog 94), so the wizard asks none. */
+const levelsAtBots = (d: Pick<Draft, 'digital' | 'mode'>) => d.digital && d.mode === 'pvp';
+
 /** The pages this draft goes through, in order (the mode page only when no mode was chosen before the wizard). */
-function pagesOf(d: Draft, askMode: boolean): Page[] {
+function pagesOf(d: Draft, askMode: boolean, online = false): Page[] {
   const pages: Page[] = [];
   if (askMode) pages.push('mode');
   // The arena has no levels of complexity: it is always the arena battle.
@@ -73,7 +76,8 @@ function pagesOf(d: Draft, askMode: boolean): Page[] {
   if (adventure) pages.push('objective');
   // The map page: shape and size of a random map or a ready map (the fuller levels), only the size elsewhere (the arena has no map).
   if (d.mode !== 'arena') pages.push('map');
-  pages.push('players');
+  // The players page has nothing to ask in a Potyczka on this computer (the seats page comes next).
+  if (!levelsAtBots(d) || online) pages.push('players');
   return pages;
 }
 
@@ -140,8 +144,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   }, fixedMode ?? ((fixedDigital ?? true) ? 'pvp' : 'coop'), online)));
   /** The level and the goal start with nothing lit (there is no "Dalej" on those pages: a lit default would look like a choice already made); editing a table has both. */
   const [picked, setPicked] = useState({ tier: initial !== undefined, objective: initial !== undefined });
-  const [page, setPage] = useState<Page>(() => (initial ? 'players' : pagesOf(d, askMode)[0]));
-  const pages = pagesOf(d, askMode);
+  const [page, setPage] = useState<Page>(() => { const list = pagesOf(d, askMode, online); return initial ? list[list.length - 1] : list[0]; });
+  const pages = pagesOf(d, askMode, online);
   const at = pages.indexOf(page);
   // On a phone the next page must start at its top, not where the last one was scrolled to.
   useEffect(() => {
@@ -157,7 +161,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   };
   /** The next page of the draft `next` (it may change which pages exist). */
   const goFrom = (cur: Page, next: Draft) => {
-    const list = pagesOf(next, askMode);
+    const list = pagesOf(next, askMode, online);
     const i = list.indexOf(cur);
     setPage(list[Math.min(list.length - 1, i + 1)]);
   };
@@ -197,7 +201,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
       ...(tier !== 'adventure' && d.shape === 'custom' ? { customMapId: d.customMapId } : {}),
       ...(tier !== 'adventure' && d.mode === 'coop' && d.objective === 'boss' && d.noHorde ? { noHorde: true } : {}),
       mapSize: d.mapSize,
-      level: d.level,
+      // A Potyczka plays the rules of its complexity level (level 0's or Normal's); the bots have their levels.
+      level: levelsAtBots(d) ? (d.level === 'zero' ? 'zero' : 'normal') : d.level,
       ...(arena && d.arenaSize === 6 ? { arenaSize: 6 as const } : {}),
       ...(tier === 'custom' && custom ? { growth: custom.growth, layer: custom.layer, battleMode: custom.battleMode, rules: custom.rules } : {}),
       // Online every seat waits for a player, except the arena's opponent.
@@ -325,7 +330,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
               ))}
             </Row>
           )}
-          {(arena || d.level !== 'zero' || !d.digital) && (
+          {(arena || (d.level !== 'zero' && !levelsAtBots(d)) || !d.digital) && (
           <Row label={arena ? 'Komputer' : 'Trudność'}>
             {(arena || d.digital ? LEVELS : BOARD_LEVELS).filter(([l]) => l !== 'custom' && (l !== 'hard' || d.mode !== 'pvp' || d.digital)).map(([l, label]) => (
               <Tip key={l} text={arena ? ARENA_LEVEL_TIPS[l as Level] : (d.digital && DIGITAL_LEVEL_TIPS[l]) || LEVEL_TIPS[l]}>
@@ -337,7 +342,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
             ))}
           </Row>
           )}
-          {!arena && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4, textAlign: 'center' }}>{(d.digital && DIGITAL_LEVEL_TIPS[d.level]) || LEVEL_HINT[d.level]}</div>}
+          {levelsAtBots(d) && <div style={{ fontSize: 15, color: 'var(--muted)', textAlign: 'center' }}>Poziom trudności wybierzesz przy każdym bocie, przy stole.</div>}
+          {!arena && !levelsAtBots(d) && <div style={{ fontSize: 15, color: 'var(--muted)', marginTop: -4, textAlign: 'center' }}>{(d.digital && DIGITAL_LEVEL_TIPS[d.level]) || LEVEL_HINT[d.level]}</div>}
           {d.tier === 'custom' && d.custom && d.mode === 'coop' && !arena && <CoopSwitchRows rules={d.custom.rules} onRules={(r) => patch({ custom: { ...d.custom!, rules: { ...d.custom!.rules, ...r } } })} />}
         </div>
       )}

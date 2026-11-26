@@ -77,9 +77,8 @@ describe('setup screen simplifications', () => {
     // Every option explains itself in a hover tooltip next to its button (the map sizes on the map page, the levels on the players page).
     for (const t of ['Mała', 'Bardzo duża']) expect(tip(t).length).toBeGreaterThan(40);
     expect(tip('Mała')).toContain('limit 8 rund');
-    await click(container, 'Dalej →');
     expect(btn('Dodatkowy bohater Hordy')).toBeUndefined();
-    for (const t of ['Łatwy', 'Normalny', 'Trudny']) expect(tip(t).length).toBeGreaterThan(40);
+    // A Potyczka asks no difficulty in the wizard: the map page leads to the seats, where each bot has its level (backlog 94).
     await click(container, 'Dalej →', 'Rozpocznij grę');
     const game = (window as any).__game;
     expect(game.rules).toMatchObject({ abilities: true, treasures: false, useDice: true, heroReplacement: false });
@@ -89,36 +88,44 @@ describe('setup screen simplifications', () => {
   it('sets up the levels: one player plays against the Horde bot, Spacer plays duels without abilities, Łatwy is the full game', async () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<StrictMode><App /></StrictMode>);
+    // The difficulty is chosen at each bot of the seats page (backlog 94), Normalny by default.
+    const botLevel = async (doc: HTMLElement, value: string) => {
+      const sel = doc.querySelector('select[aria-label="Poziom bota"]') as HTMLSelectElement;
+      expect(sel.value).toBe('normal');
+      await act(async () => fireEvent.change(sel, { target: { value } }));
+    };
     await newGame(container, 'Potyczka', 'Przygoda', 'Dalej →');
-    await click(container, 'Trudny');
-    expect(pick(container, 'Trudny')!.getAttribute('aria-pressed')).toBe('true');
-    await click(container, 'Dalej →', 'Rozpocznij grę');
+    expect(pick(container, 'Trudny')).toBeUndefined();
+    await botLevel(container, 'hard');
+    await click(container, 'Rozpocznij grę');
     let game = (window as any).__game;
     expect(game.setup.mode).toBe('pvp');
-    expect(game.setup.seats.map((x: any) => [x.faction, x.controller])).toEqual([['dawn', 'human'], ['horde', 'bot']]);
-    expect(game.factions.horde.inventory).toHaveLength(2);
+    expect(game.setup.seatLevels).toBe(true);
+    expect(game.setup.seats.map((x: any) => [x.faction, x.controller, x.botLevel])).toEqual([['dawn', 'human', undefined], ['horde', 'bot', 'hard']]);
+    expect(game.rules.computerGold).toBeUndefined();
     cleanup();
     const vh = render(<StrictMode><App /></StrictMode>).container;
     await newGame(vh, 'Potyczka', 'Przygoda', 'Dalej →');
-    await click(vh, 'Bardzo trudny', 'Dalej →', 'Rozpocznij grę');
+    await botLevel(vh, 'veryHard');
+    await click(vh, 'Rozpocznij grę');
     game = (window as any).__game;
-    expect(game.setup.rules).toMatchObject({ veryHard: true });
-    expect(game.factions.horde.inventory).toHaveLength(4);
+    expect(game.rules.computerGold).toBeGreaterThan(1);
+    expect(game.players[1].botLevel).toBe('veryHard');
     cleanup();
     const second = render(<StrictMode><App /></StrictMode>).container;
     await newGame(second, 'Potyczka', 'Przygoda', 'Dalej →');
-    // Every mode offers all four levels now (the computer's advantages work at a PvP table too).
-    expect(pick(second, 'Trudny')).toBeDefined();
-    expect(pick(second, 'Bardzo trudny')).toBeDefined();
-    await click(second, 'Łatwy', 'Dalej →', 'Rozpocznij grę');
+    await botLevel(second, 'kids');
+    await click(second, 'Rozpocznij grę');
     game = (window as any).__game;
     expect(game.setup.battleMode).toBe('arena');
-    expect(game.setup.rules).toMatchObject({ abilities: true, easy: true });
+    expect(game.setup.rules).toMatchObject({ abilities: true });
+    expect(game.setup.rules.easy).toBeUndefined();
+    expect(game.players[1].botLevel).toBe('kids');
     cleanup();
     const third = render(<StrictMode><App /></StrictMode>).container;
     await newGame(third, 'Potyczka', 'Spacer', 'Dalej →');
     expect(pick(third, 'Łatwy')).toBeUndefined();
-    await click(third, 'Dalej →', 'Rozpocznij grę');
+    await click(third, 'Rozpocznij grę');
     game = (window as any).__game;
     expect(game.setup.battleMode).toBe('board');
     expect(game.setup.rules).toMatchObject({ abilities: false, useDice: false, extraEvilHero: false, heroReplacement: true, ritual: false });
@@ -492,7 +499,7 @@ describe('full screen', () => {
     window.history.replaceState(null, '', '/');
     const { container } = render(<App />);
     const doc = container.ownerDocument;
-    await newGame(doc, 'Potyczka', 'Przygoda', 'Dalej →', 'Dalej →');
+    await newGame(doc, 'Potyczka', 'Przygoda', 'Dalej →');
     const box = [...doc.querySelectorAll('label')].find((l) => l.textContent?.includes('Pełny ekran przy uruchomieniu'))!.querySelector('input')!;
     await act(async () => {
       fireEvent.pointerUp(box);
@@ -593,7 +600,9 @@ describe('arena through the UI', () => {
         if (!board) await click(doc, 'Przygoda');
         await click(doc, 'Dalej →');
       }
-      await click(doc, 'Dalej →', 'Rozpocznij grę');
+      // A digital Potyczka has no players page (the levels are at the bots).
+      if (mode !== 'Potyczka' || board) await click(doc, 'Dalej →');
+      await click(doc, 'Rozpocznij grę');
       const g = (window as any).__game;
       expect(g.rules.ruleset === 'digital').toBe(!board);
       if (mode === 'Arena') expect(g.battle.layout === 'wide').toBe(!board);
@@ -629,7 +638,7 @@ describe('arena through the UI', () => {
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
     await click(doc, '← Wstecz', '← Wstecz', '← Wstecz', 'Nowa gra', 'Arena', 'Ten komputer');
     expect(pick(doc, 'Punkty kontrolne')).toBeUndefined();
-    await click(doc, '← Wstecz', '← Wstecz', 'Potyczka', 'Ten komputer', 'Wyprawa', 'Punkty kontrolne', 'Trójkąt', 'Dalej →', 'Dalej →', 'Rozpocznij grę');
+    await click(doc, '← Wstecz', '← Wstecz', 'Potyczka', 'Ten komputer', 'Wyprawa', 'Punkty kontrolne', 'Trójkąt', 'Dalej →', 'Rozpocznij grę');
     const g = (window as any).__game;
     expect(g.rules.objective).toBe('control');
     expect(g.rules.heroGrowth).toBe(true);
@@ -870,11 +879,12 @@ describe('the new-game wizard goes on by itself', () => {
     expect(doc.querySelector('[data-wizard-next]')).not.toBeNull();
     await click(doc, 'Trójkąt');
     expect(page()).toBe('map');
-    await click(doc, 'Dalej →');
-    expect(page()).toBe('players');
     // Back and Next are the same size.
     const nav = [...doc.querySelectorAll('.wizard-nav')];
     expect(nav).toHaveLength(2);
+    // A Potyczka has no players page: the map page leads to the seats.
+    await click(doc, 'Dalej →');
+    expect(doc.querySelector('select[aria-label="Kto gra"]')).not.toBeNull();
   });
 });
 
