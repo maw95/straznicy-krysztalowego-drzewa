@@ -1,7 +1,8 @@
-// Difficulty of the bots (backlog 94): a Hard bot stands in for the person and plays one bot of each level, half of the games on each side so the
+// Difficulty of the bots (backlog 94): a Normal bot stands in for the person (the author's assumption of 26.11: a person plays about as well as a Normal bot) and plays one bot of each level, half of the games on each side so the
 // sides' differences cancel out. Prints the stand-in's wins (draws count a half) against the bands: Easy 65-85, Normal 45-65, Hard 30-45, Very hard 15-30.
 // Usage: npx tsx scripts/sim/botLevels.ts [games per cell = 60] [goals = control,boss,artifact] [maps = short,medium] [growth = 1]
 // Each cell (goal × map × level) runs in its own process (SIM_WORKERS caps how many at once). A cell alone: BOT_CELL=goal:map:level:growth:games.
+// BOT_PROXY=hard: another stand-in. BOT_RATES=kids,normal,hard,veryHard: try other slip rates (BOT_SLIPS) without editing the engine.
 
 import { execFile } from 'node:child_process';
 import { cpus } from 'node:os';
@@ -9,9 +10,12 @@ import { chooseAction } from '../../src/engine/ai';
 import { createGame, applyActionInPlace } from '../../src/engine/game';
 import { FACTION_HEROES, type MapSize } from '../../src/engine/data';
 import { Rng } from '../../src/engine/rng';
+import { BOT_SLIPS } from '../../src/engine/ai/slips';
 import { levelSettings, type BotLevel, type ObjectiveId, type SetupOptions } from '../../src/engine/types';
 
 const LEVELS: BotLevel[] = ['kids', 'normal', 'hard', 'veryHard'];
+const PROXY = (process.env.BOT_PROXY ?? 'normal') as BotLevel;
+if (process.env.BOT_RATES) process.env.BOT_RATES.split(',').forEach((r, i) => (BOT_SLIPS[LEVELS[i]] = Number(r)));
 const BANDS: Record<BotLevel, [number, number]> = { kids: [65, 85], normal: [45, 65], hard: [30, 45], veryHard: [15, 30] };
 const NAMES: Record<BotLevel, string> = { kids: 'Łatwy', normal: 'Normalny', hard: 'Trudny', veryHard: 'B. trudny' };
 
@@ -19,7 +23,7 @@ export function levelSetup(objective: ObjectiveId, mapSize: MapSize, level: BotL
   const rng = new Rng(seed * 7919 + 17);
   const proxy = seed % 2 ? 'dawn' : 'horde';
   const base = levelSettings('normal', 'pvp');
-  const seat = (f: 'dawn' | 'horde') => ({ name: f, faction: f, controller: 'bot' as const, heroId: rng.pick(FACTION_HEROES[f]), botLevel: f === proxy ? ('hard' as const) : level });
+  const seat = (f: 'dawn' | 'horde') => ({ name: f, faction: f, controller: 'bot' as const, heroId: rng.pick(FACTION_HEROES[f]), botLevel: f === proxy ? PROXY : level });
   const rules = { ...base.rules, ruleset: 'digital' as const, ...(objective !== 'crystals' ? { objective } : {}), ...(growth ? { heroGrowth: true } : {}) };
   return { setup: { mode: 'pvp', mapSize, battleMode: base.battleMode, seed, seats: [seat('dawn'), seat('horde')], rules, seatLevels: true }, proxy };
 }
@@ -68,8 +72,8 @@ if (process.env.BOT_CELL) {
     );
   const workers = Number(process.env.SIM_WORKERS) || Math.max(1, Math.round(cpus().length * 0.8));
   await Promise.all(Array.from({ length: workers }, async () => { while (next < cells.length) await run(cells[next++]); }));
-  console.log(`Wygrane bota Trudnego (zastępca gracza) z botem poziomu X, ${games} gier na komórkę, ${growth ? 'z rozwojem' : 'bez rozwoju'} (remis = pół):`);
-  console.log(['cel', 'mapa', ...LEVELS.map((l) => `${NAMES[l]} ${BANDS[l][0]}-${BANDS[l][1]}`), 'role: Przymierze (Trudny–Trudny)'].map((x, i) => x.padEnd(i < 2 ? 10 : 18)).join(''));
+  console.log(`Wygrane bota ${PROXY} (zastępca gracza) z botem poziomu X, stawki błędów ${LEVELS.map((l) => BOT_SLIPS[l]).join('/')}, ${games} gier na komórkę, ${growth ? 'z rozwojem' : 'bez rozwoju'} (remis = pół):`);
+  console.log(['cel', 'mapa', ...LEVELS.map((l) => `${NAMES[l]} ${BANDS[l][0]}-${BANDS[l][1]}`), 'role: Przymierze (lustro)'].map((x, i) => x.padEnd(i < 2 ? 10 : 18)).join(''));
   const total = new Map<BotLevel, { w: number; g: number }>();
   for (const o of goals)
     for (const m of maps) {
@@ -81,7 +85,7 @@ if (process.env.BOT_CELL) {
         const ok = pct >= BANDS[l][0] && pct <= BANDS[l][1] ? ' ' : '!';
         return `${pct}%${ok}`.padEnd(18);
       });
-      const mirror = results.get(`${o}:${m}:hard`)!;
+      const mirror = results.get(`${o}:${m}:${PROXY}`)!;
       console.log([o.padEnd(10), m.padEnd(10), ...row, `${Math.round((100 * mirror.dawn) / mirror.games)}%`].join(''));
     }
   console.log(['razem'.padEnd(20), ...LEVELS.map((l) => `${Math.round((100 * total.get(l)!.w) / total.get(l)!.g)}%`.padEnd(18))].join(''));

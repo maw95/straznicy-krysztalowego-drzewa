@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Boty: poziomy przestrojone przy założeniu, że gracz gra mniej więcej jak bot Normalny. Normalny myli się teraz częściej (mniej więcej co czwartą decyzję w miejscach, w których bot może się pomylić), Łatwy jeszcze częściej, a Trudny i Bardzo trudny grają bez błędów, więc są wyraźnie mocniejsze od Normalnego.
+
 ## 3.0.0 — 2026-11-26
 
 - Potyczka: trudność wybiera się przy każdym bocie (Łatwy, Normalny, Trudny, Bardzo trudny; także bot w drużynie z tobą), a nie dla całej gry. Gra samych ludzi nie ma trudności ani ułatwień dla nikogo. W celach Kryształy do Drzewa i Przetrwanie miejsca przy stole stoją w dwóch kolumnach podpisanych rolą (np. „Zbierają kryształy” i „Bronią Drzewa”), a przycisk ⇄ przenosi gracza do drugiej drużyny. Ranking liczy najwyższy poziom botów grających przeciwko tobie. Na stole online poziom ustawia się tak samo, przy każdym bocie.

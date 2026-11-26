@@ -2,6 +2,12 @@
 // (commit hashes and Markdown marks dropped). Newest first. A new line in CHANGELOG.md needs its English here (tests/changelogEn.test.ts checks every line).
 import { register } from '../translate';
 
+// In preparation
+register({
+  'Boty: poziomy przestrojone przy założeniu, że gracz gra mniej więcej jak bot Normalny. Normalny myli się teraz częściej (mniej więcej co czwartą decyzję w miejscach, w których bot może się pomylić), Łatwy jeszcze częściej, a Trudny i Bardzo trudny grają bez błędów, więc są wyraźnie mocniejsze od Normalnego.':
+    'Bots: the levels are retuned on the assumption that a player plays about as well as a Normal bot. Normal now makes mistakes more often (about one decision in four at the places where a bot can go wrong), Easy even more often, while Hard and Very hard play without mistakes, so they are clearly stronger than Normal.',
+});
+
 // 3.0.0
 register({
   'Potyczka: trudność wybiera się przy każdym bocie (Łatwy, Normalny, Trudny, Bardzo trudny; także bot w drużynie z tobą), a nie dla całej gry. Gra samych ludzi nie ma trudności ani ułatwień dla nikogo. W celach Kryształy do Drzewa i Przetrwanie miejsca przy stole stoją w dwóch kolumnach podpisanych rolą (np. „Zbierają kryształy” i „Bronią Drzewa”), a przycisk ⇄ przenosi gracza do drugiej drużyny. Ranking liczy najwyższy poziom botów grających przeciwko tobie. Na stole online poziom ustawia się tak samo, przy każdym bocie.':

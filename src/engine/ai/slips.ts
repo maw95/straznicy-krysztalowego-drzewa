@@ -9,11 +9,11 @@ import type { BotLevel, GameState } from '../types';
 
 /**
  * How often a bot of each level slips at one of those places (0-1). Hard and Very hard play their best; Very hard has the computer's advantages
- * on top (COMPUTER_HANDICAP in types.ts). Tuned with `npx tsx scripts/sim/botLevels.ts` (26.11, goals control, boss, artifact, 150 games a cell):
- * a Hard bot standing in for the person wins 71 percent against Easy (band 65-85), 54 against Normal (45-65), 49 against Hard (a mirror: the band
- * 30-45 needs an advantage for Hard), 32 against Very hard.
+ * on top (COMPUTER_HANDICAP in types.ts). The author's assumption (26.11): a person plays about as well as a Normal bot. Tuned with
+ * `npx tsx scripts/sim/botLevels.ts` (goals control, boss, artifact, maps S/M/L, 150 games a cell): a Normal bot standing in for the person wins
+ * 74 percent against Easy (band 65-85), 50 against Normal (45-65), 37 against Hard (30-45), 20 against Very hard (15-30).
  */
-export const BOT_SLIPS: Record<BotLevel, number> = { kids: 0.5, normal: 0.12, hard: 0, veryHard: 0 };
+export const BOT_SLIPS: Record<BotLevel, number> = { kids: 0.75, normal: 0.25, hard: 0, veryHard: 0 };
 
 /** The level of the computer player who must act now, or null (a person, the automaton, the neutrals, a bot without a level: the old games). */
 export function actingBotLevel(state: GameState): BotLevel | null {
