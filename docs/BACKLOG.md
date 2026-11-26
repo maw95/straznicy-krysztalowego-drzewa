@@ -218,6 +218,7 @@ Nowe wpisy dopisuj na końcu z datą i numerem punktu:
 7. **(17.11, punkt 35)** Bardzo trudny: bez bonusu Życia (usunięte `computerHp`, `applyComputerHp`). Przewagi komputera: `computerResources` +3 drewna, +3 rudy, +2 Pyłu na starcie, `computerArtifacts` 2 artefakty (rzadkość 1–2) dla głównego bohatera, `computerGold` 1,5, `computerTreasures` 2 (stałe w `COMPUTER_HANDICAP`). Pomiar 40 gier: poziom 4 koop 18–30%, poziom 6 koop 18–38% (pasmo 15–30%, na krótkich mapach lekko powyżej). Arena na razie bez przewagi poza „bez błędów” (jak Trudny): punkt 48.
 8. **(17.11, punkt 33)** Podział kręgów: I (5): Magiczny Pocisk, Leczenie, Spowolnienie, Wizja, Przyspieszenie; II (4): Kamienna Skóra, Kula Ognia, Zryw, Wrota; III (4): Grom (5 obr. + 2 na skok), Klątwa (−1 A), Tarcza, Natchnienie (+2 A). Koszt Arcywieży 11 zł + 4 rudy + 4 Pyły, nauka III kręgu 8 zł + 2 Pyły (stałe w `magic.ts`, `economy.ts`).
 9. **(17.11, punkt 40)** Własne ustawienia: strona zaraz po karcie, z domyślnymi wartościami poziomu Normalny; zależne od trybu przełączniki na stronie graczy. Dodane pola: warstwa (`layer`), ruch bohatera, limit rund bitwy, posiłki Hordy. Pominięte (do dopisania, jeśli autor zechce): rytuał i jego rundy, skarby startowe obu stron, bonus złota, bonus limitu rund, skala liczb, zasłanianie strzału, przewagi komputera. Online (serwer): nowe pola wymagają wydania gry i aktualizacji silnika w serwerze, więc zmian w backendzie na razie nie ma.
+10. **(26.11, punkt 92)** Strażnicy z frakcji walczą jak neutralni (ruch i cel), ale używają swoich zdolności (inaczej opisy na kartach by kłamały); bez mechanik frakcji i premii cyfrowych. Siłę dobiera mnożnik na frakcję i stopień (`ENCOUNTER_GUARDS`). Zmiana: `rulebookFreeAbility` w `battleAi.ts`, tabela w `data.ts`.
 
 ## 8. Kredyty Scenario
 
@@ -232,7 +233,6 @@ Nowe wpisy dopisuj na końcu z datą i numerem punktu:
 **Wydatki 26.11, ostatnie kredyty (na polecenie autora):** animacje Wydry Przemytniczki 102 CU (obraz 12, klipy 90, w tym 1 zablokowany atak 9 CU i 5 odrzuconych lub próbnych klipów). Saldo ok. 0 CU. Kompanii zostały animacje 15 postaci (ok. 750–1 100 CU).
 
 **Wydatki 17.11 (nocne zadanie):** ikony 5 czarów kręgu III i Przyspieszenia 7 CU; efekty 5 czarów (obraz 3 + klip 10 CU) 65 CU; medale poziomów Wyprawa, Osada, Księstwo 7 CU. Ozdobniki okien (narożnik ramki, tło Księgi czarów, tło skrzyni; po 2 warianty, jakość medium) 18 CU. Rada Osady (2 frakcje, po 2 warianty) 12 CU. Budynki frakcji poziomu 6 (6 obrazów po 2 warianty) 36 CU. Razem 145 CU.
-10. **(26.11, punkt 92)** Strażnicy z frakcji walczą jak neutralni (ruch i cel), ale używają swoich zdolności (inaczej opisy na kartach by kłamały); bez mechanik frakcji i premii cyfrowych. Siłę dobiera mnożnik na frakcję i stopień (`ENCOUNTER_GUARDS`). Zmiana: `rulebookFreeAbility` w `battleAi.ts`, tabela w `data.ts`.
 
 Wpisy autora z 17.11 (wieczór):
 - **(17.11, czary)** Trzy kręgi, ulepszanie Wieży maga otwiera wyższy krąg; docelowo pięć (punkt 33).
