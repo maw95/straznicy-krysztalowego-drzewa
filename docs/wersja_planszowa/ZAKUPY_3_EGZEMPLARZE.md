@@ -16,44 +16,44 @@ linijka porządniejsza, z antypoślizgiem.
 
 ## Co kupić (najniższy koszt razem z dostawami)
 
-**Status 19.11.2026:** wszystko zamówione oprócz sklejka-krakow.pl (sklejka i dna — dopiero po pomiarach; stan dostaw
-w `POSTEP_PRODUKCJI.md`).
+**Status 26.11.2026:** dotarło wszystko oprócz lakieru akrylowego i nóżek filcowych (Castorama); sklejka i dna z sklejka-krakow.pl
+zamawiane dopiero po pomiarach (etap G). Kolumna „Stan” w tabeli; dziennik dostaw w `POSTEP_PRODUKCJI.md`.
 
 Produkty dobrane tak, żeby suma towarów i przesyłek była najmniejsza: jedno zamówienie na sklep; w shan.pl koszyk przekracza
 150 zł, więc dostawa do paczkomatu jest darmowa; Castorama — tylko produkty sprzedawane przez samą Castoramę (odbiór w sklepie
 0 zł; oferty zewnętrznych sprzedawców `castorama.pl/departments/…` mają osobną dostawę, więc ich tu nie ma); Amazon — darmowa dostawa.
 Ceny sprawdzone 18–19.11.2026; ceny z Amazona pochodzą z wyszukiwarki (Amazon nie daje się otworzyć automatycznie) — zerknij w koszyk.
 
-| Produkt | Ilość | Link |
-|---|---:|---|
-| Tektura introligatorska 2 mm A4, 20 ark. | 2 opak. | [shan.pl — 25 zł/opak.](https://shan.pl/pl/tektura-introligatorska/14970-tektura-introligatorska-a4-2-mm-20-arkuszy.html) |
-| Papier samoprzylepny biały matowy A4, 50 ark. (naklejki, etykiety pudełek) | 1 opak. | [shan.pl — 16 zł](https://shan.pl/pl/papier-i-folie-samoprzylepne/21391-papier-samoprzylepny-bialy-a4-matowy-50-arkuszy.html) |
-| Mata do cięcia A3 dwustronna 30 × 45 cm Aliga | 1 | [shan.pl — 21,94 zł](https://shan.pl/pl/podklad/18607-mata-do-ciecia-dwustronna-a3-30x45-cm-aliga.html) |
-| Klej Wikol Premium 1000 ml Happy Color (kafelki, arena i pudełka) | 1 | [shan.pl — 49,32 zł](https://shan.pl/pl/kleje/4250-klej-wikol-premium-1000-ml-happy-color.html) |
-| Klej do decoupage 100 g Happy Color (logo i etykiety na pudełkach) | 1 | [shan.pl — 14,84 zł](https://shan.pl/pl/kleje/4436-klej-do-decoupage-100g-happy-color.html) |
-| Woreczki strunowe 60 × 80 mm, 100 szt. | 1 opak. | [shan.pl — 2,01 zł](https://shan.pl/pl/woreczki-strunowe/13616-woreczki-strunowe-60x80-100-szt.html) |
-| Papier foto matowy A4 200 g, 50 ark. (karty, kafelki, arena, okładki) | 3 opak. | [mabitech.pl — 15,50 zł/opak.](https://www.mabitech.pl/?324,papier-foto-premium-hq-matowy-a4-200g-50ark) |
-| Zestaw tuszy do regeneracji HP 301 (czarny 100 ml, kolory po 60 ml, płyn, strzykawki) | 2 | [mojetonery.pl — 30 zł/szt.](https://mojetonery.pl/p/428/328/zestaw-tuszy-do-regeneracji-hp-21-22-300-301-302-304-305-650-652-703-704-901-tusze-w-butelkach-komponenty-do-regeneracji.html) |
-| Klip regeneracyjny HP/Canon (odessanie powietrza po napełnieniu) | 1 | [mojetonery.pl — 18 zł](https://mojetonery.pl/p/353/1044/uniwersalny-klip-regeneracyjny-dla-kartridzy-hp-i-canon-akcesoria-komponenty-do-regeneracji.html) |
-| Linijka tnąca 50 cm Wedo 525450 (aluminium, stalowa krawędź, gumowy antypoślizg) | 1 | [Amazon.pl — ok. 82 zł](https://www.amazon.pl/525450-linijka-aluminium-kraw%C4%99dzi%C4%85-antypo%C5%9Blizgow%C4%85/dp/B001JK52VM) |
-| Zaokrąglacz narożników R4 | 1 | [Amazon.pl — ok. 11 zł](https://www.amazon.pl/Zaokr%C4%85glacz-naro%C5%BCnik%C3%B3w-przecinak-scrapbookingu-zastosowanie/dp/B08NYH64BD) |
-| Taśma tkaninowa czarna 3M 2903, 48 mm × 50 m (zawias planszy areny) | 1 | [Amazon.pl — ok. 28 zł](https://www.amazon.pl/3M-2903-4850B-Klej%C4%85ca-Czarny/dp/B077VNDNJ8) |
-| Piankowe puzzle podłogowe EVA 60 × 60 cm, grubość 10–12 mm (nie 20 mm), najlepiej czarne — 1 kafel = wkładka do 1 pudełka | 1 zestaw (4 szt.) | [Amazon.pl — ok. 30–50 zł](https://www.amazon.pl/mata-puzzle-60x60/s?k=mata+puzzle+60x60+czarna+1+cm) (ceny nie sprawdzałem; wybierz ofertę z grubością 1–1,2 cm) |
-| Klej kontaktowy w sprayu Forever Paints 400 ml (karty) | 1 | [Castorama — 31,98 zł](https://www.castorama.pl/klej-kontaktowy-forever-paints-400-ml/5906291025423_CAPL.prd) |
-| Wałek gąbkowy z rączką 7 cm Befaszczot (rozprowadzanie Wikolu) | 1 | [Castorama — 5,98 zł](https://www.castorama.pl/walek-gabkowy-befaszczot-z-raczka-7-cm-6-mm/5903479120727_CAPL.prd) |
-| Otwornica bimetalowa Erbauer 30 mm (figurki mają okrągłą podstawkę 30 mm) | 1 | [Castorama — 29,98 zł](https://www.castorama.pl/otwornica-bimetal-erbauer-30-mm/3663602809814_CAPL.prd) |
-| Ściski Forge Steel 150 × 50 mm, 2 szt. | 1 opak. | [Castorama — 27,98 zł](https://www.castorama.pl/zestaw-sciskow-forge-steel-150-x-50-mm-2-szt-/5059340999661_CAPL.prd) |
-| Taśma malarska Mako 30 mm × 50 m (zamiast dodatkowych ścisków przy klejeniu pudełek) | 1 | [Castorama — 4,98 zł](https://www.castorama.pl/tasma-malarska-mako-30-mm-x-50-m/5907652120443_CAPL.prd) |
-| Klej kontaktowy Pattex żel 58 ml (EVA do sklejki) | 1 | [Castorama — 14,98 zł](https://www.castorama.pl/klej-kontaktowy-pattex-zel-58-ml/9000101113594_CAPL.prd) |
-| Arkusz ścierny Magnusson 230 × 280 P120, 4 szt. | 1 opak. | [Castorama — 7,98 zł](https://www.castorama.pl/arkusz-scierny-magnusson-230-x-280-mm-p120-4-szt-/5063022791788_CAPL.prd) |
-| Arkusz ścierny Magnusson 230 × 280 P180, 4 szt. | 1 opak. | [Castorama — 7,98 zł](https://www.castorama.pl/arkusz-scierny-magnusson-230-x-280-mm-p180-4-szt-/5063022792235_CAPL.prd) |
-| Arkusz ścierny Magnusson 230 × 280 P240, 4 szt. | 1 opak. | [Castorama — 7,98 zł](https://www.castorama.pl/arkusz-scierny-magnusson-230-x-280-mm-p240-4-szt-/5063022792150_CAPL.prd) |
-| Lakier akrylowy Colorit Drewno półmatowy bezbarwny 0,75 l | 1 | [Castorama — 35,98 zł](https://www.castorama.pl/lakier-akrylowy-colorit-drewno-polmatowy-bezbarwny-0-75-l/5900652271122_CAPL.prd) |
-| Nóżki filcowe samoprzylepne (12 szt. na 3 pudełka) | 1 opak. | [Castorama — podkładki meblowe, ok. 5 zł](https://www.castorama.pl/search?Podkategorie=Podk%C5%82adki+meblowe&term=n%C3%B3%C5%BCki+filcowe) (konkretnego produktu nie sprawdzałem; wybierz sprzedawanego przez Castoramę) |
-| Sklejka topolowa 3 mm kl. 2, 1880 × 1220, z darmowym docięciem na 17–20 formatek (20 formatek na 3 pudełka — lista niżej) | 1 ark. | [sklejka-krakow.pl — 93,92 zł](https://sklejka-krakow.pl/pl/p/Sklejka-topola-3mm-kl-2-CIECIE-na-17-20-formatek-GRATIS/723) (19.11 strona pokazywała i „duża ilość”, i „towar niedostępny” — sprawdź w koszyku) |
-| Formatka brzozowa 500 × 500 mm, 4 mm, kl. 2 (dna 336 × 256, docinasz sam) | 3 | [sklejka-krakow.pl — 9,16 zł/szt.](https://sklejka-krakow.pl/pl/p/Formatka-brzozowa-500x500mm-do-lasera-4mm-kl-2/297) |
-| Listwa świerkowa 10 × 10 × 1200 mm — **KUPIONE (19.11.2026)**, bez zapasu, więc tnij ostrożnie; rozkrój w kroku 8 planu | 7 | 9,63 zł/szt. (67,41 zł) |
-| Zwykły papier A4 80 g na instrukcję — tylko jeśli nie masz w domu | 1 ryza | dowolny sklep / do koszyka shan.pl |
+| Produkt | Ilość | Link | Stan (26.11.2026) |
+|---|---:|---|---|
+| Tektura introligatorska 2 mm A4, 20 ark. | 2 opak. | [shan.pl — 25 zł/opak.](https://shan.pl/pl/tektura-introligatorska/14970-tektura-introligatorska-a4-2-mm-20-arkuszy.html) | ✅ dotarło |
+| Papier samoprzylepny biały matowy A4, 50 ark. (naklejki, etykiety pudełek) | 1 opak. | [shan.pl — 16 zł](https://shan.pl/pl/papier-i-folie-samoprzylepne/21391-papier-samoprzylepny-bialy-a4-matowy-50-arkuszy.html) | ✅ dotarło |
+| Mata do cięcia A3 dwustronna 30 × 45 cm Aliga | 1 | [shan.pl — 21,94 zł](https://shan.pl/pl/podklad/18607-mata-do-ciecia-dwustronna-a3-30x45-cm-aliga.html) | ✅ dotarło |
+| Klej Wikol Premium 1000 ml Happy Color (kafelki, arena i pudełka) | 1 | [shan.pl — 49,32 zł](https://shan.pl/pl/kleje/4250-klej-wikol-premium-1000-ml-happy-color.html) | ✅ dotarło |
+| Klej do decoupage 100 g Happy Color (logo i etykiety na pudełkach) | 1 | [shan.pl — 14,84 zł](https://shan.pl/pl/kleje/4436-klej-do-decoupage-100g-happy-color.html) | ✅ dotarło |
+| Woreczki strunowe 60 × 80 mm, 100 szt. | 1 opak. | [shan.pl — 2,01 zł](https://shan.pl/pl/woreczki-strunowe/13616-woreczki-strunowe-60x80-100-szt.html) | ✅ dotarło |
+| Papier foto matowy A4 200 g, 50 ark. (karty, kafelki, arena, okładki) | 3 opak. | [mabitech.pl — 15,50 zł/opak.](https://www.mabitech.pl/?324,papier-foto-premium-hq-matowy-a4-200g-50ark) | ✅ dotarło |
+| Zestaw tuszy do regeneracji HP 301 (czarny 100 ml, kolory po 60 ml, płyn, strzykawki) | 2 | [mojetonery.pl — 30 zł/szt.](https://mojetonery.pl/p/428/328/zestaw-tuszy-do-regeneracji-hp-21-22-300-301-302-304-305-650-652-703-704-901-tusze-w-butelkach-komponenty-do-regeneracji.html) | ✅ dotarło |
+| Klip regeneracyjny HP/Canon (odessanie powietrza po napełnieniu) | 1 | [mojetonery.pl — 18 zł](https://mojetonery.pl/p/353/1044/uniwersalny-klip-regeneracyjny-dla-kartridzy-hp-i-canon-akcesoria-komponenty-do-regeneracji.html) | ✅ dotarło |
+| Linijka tnąca 50 cm Wedo 525450 (aluminium, stalowa krawędź, gumowy antypoślizg) | 1 | [Amazon.pl — ok. 82 zł](https://www.amazon.pl/525450-linijka-aluminium-kraw%C4%99dzi%C4%85-antypo%C5%9Blizgow%C4%85/dp/B001JK52VM) | ✅ dotarło |
+| Zaokrąglacz narożników R4 | 1 | [Amazon.pl — ok. 11 zł](https://www.amazon.pl/Zaokr%C4%85glacz-naro%C5%BCnik%C3%B3w-przecinak-scrapbookingu-zastosowanie/dp/B08NYH64BD) | ✅ dotarło |
+| Taśma tkaninowa czarna 3M 2903, 48 mm × 50 m (zawias planszy areny) | 1 | [Amazon.pl — ok. 28 zł](https://www.amazon.pl/3M-2903-4850B-Klej%C4%85ca-Czarny/dp/B077VNDNJ8) | ✅ dotarło |
+| Piankowe puzzle podłogowe EVA 60 × 60 cm, grubość 10–12 mm (nie 20 mm), najlepiej czarne — 1 kafel = wkładka do 1 pudełka | 1 zestaw (4 szt.) | [Amazon.pl — ok. 30–50 zł](https://www.amazon.pl/mata-puzzle-60x60/s?k=mata+puzzle+60x60+czarna+1+cm) (ceny nie sprawdzałem; wybierz ofertę z grubością 1–1,2 cm) | ✅ dotarło |
+| Klej kontaktowy w sprayu Forever Paints 400 ml (karty) | 1 | [Castorama — 31,98 zł](https://www.castorama.pl/klej-kontaktowy-forever-paints-400-ml/5906291025423_CAPL.prd) | ✅ dotarło |
+| Wałek gąbkowy z rączką 7 cm Befaszczot (rozprowadzanie Wikolu) | 1 | [Castorama — 5,98 zł](https://www.castorama.pl/walek-gabkowy-befaszczot-z-raczka-7-cm-6-mm/5903479120727_CAPL.prd) | ✅ dotarło |
+| Otwornica bimetalowa Erbauer 30 mm (figurki mają okrągłą podstawkę 30 mm) | 1 | [Castorama — 29,98 zł](https://www.castorama.pl/otwornica-bimetal-erbauer-30-mm/3663602809814_CAPL.prd) | ✅ dotarło |
+| Ściski Forge Steel 150 × 50 mm, 2 szt. | 1 opak. | [Castorama — 27,98 zł](https://www.castorama.pl/zestaw-sciskow-forge-steel-150-x-50-mm-2-szt-/5059340999661_CAPL.prd) | ✅ dotarło |
+| Taśma malarska Mako 30 mm × 50 m (zamiast dodatkowych ścisków przy klejeniu pudełek) | 1 | [Castorama — 4,98 zł](https://www.castorama.pl/tasma-malarska-mako-30-mm-x-50-m/5907652120443_CAPL.prd) | ✅ dotarło |
+| Klej kontaktowy Pattex żel 58 ml (EVA do sklejki) | 1 | [Castorama — 14,98 zł](https://www.castorama.pl/klej-kontaktowy-pattex-zel-58-ml/9000101113594_CAPL.prd) | ✅ dotarło |
+| Arkusz ścierny Magnusson 230 × 280 P120, 4 szt. | 1 opak. | [Castorama — 7,98 zł](https://www.castorama.pl/arkusz-scierny-magnusson-230-x-280-mm-p120-4-szt-/5063022791788_CAPL.prd) | ✅ dotarło |
+| Arkusz ścierny Magnusson 230 × 280 P180, 4 szt. | 1 opak. | [Castorama — 7,98 zł](https://www.castorama.pl/arkusz-scierny-magnusson-230-x-280-mm-p180-4-szt-/5063022792235_CAPL.prd) | ✅ dotarło |
+| Arkusz ścierny Magnusson 230 × 280 P240, 4 szt. | 1 opak. | [Castorama — 7,98 zł](https://www.castorama.pl/arkusz-scierny-magnusson-230-x-280-mm-p240-4-szt-/5063022792150_CAPL.prd) | ✅ dotarło |
+| Lakier akrylowy Colorit Drewno półmatowy bezbarwny 0,75 l | 1 | [Castorama — 35,98 zł](https://www.castorama.pl/lakier-akrylowy-colorit-drewno-polmatowy-bezbarwny-0-75-l/5900652271122_CAPL.prd) | ⏳ jeszcze nie dotarło |
+| Nóżki filcowe samoprzylepne (12 szt. na 3 pudełka) | 1 opak. | [Castorama — podkładki meblowe, ok. 5 zł](https://www.castorama.pl/search?Podkategorie=Podk%C5%82adki+meblowe&term=n%C3%B3%C5%BCki+filcowe) (konkretnego produktu nie sprawdzałem; wybierz sprzedawanego przez Castoramę) | ⏳ jeszcze nie dotarło |
+| Sklejka topolowa 3 mm kl. 2, 1880 × 1220, z darmowym docięciem na 17–20 formatek (20 formatek na 3 pudełka — lista niżej) | 1 ark. | [sklejka-krakow.pl — 93,92 zł](https://sklejka-krakow.pl/pl/p/Sklejka-topola-3mm-kl-2-CIECIE-na-17-20-formatek-GRATIS/723) (19.11 strona pokazywała i „duża ilość”, i „towar niedostępny” — sprawdź w koszyku) | ⏳ nie zamówione (po pomiarach, etap G) |
+| Formatka brzozowa 500 × 500 mm, 4 mm, kl. 2 (dna 336 × 256, docinasz sam) | 3 | [sklejka-krakow.pl — 9,16 zł/szt.](https://sklejka-krakow.pl/pl/p/Formatka-brzozowa-500x500mm-do-lasera-4mm-kl-2/297) | ⏳ nie zamówione (po pomiarach, etap G) |
+| Listwa świerkowa 10 × 10 × 1200 mm — **KUPIONE (19.11.2026)**, bez zapasu, więc tnij ostrożnie; rozkrój w kroku 8 planu | 7 | 9,63 zł/szt. (67,41 zł) | ✅ dotarło |
+| Zwykły papier A4 80 g na instrukcję — tylko jeśli nie masz w domu | 1 ryza | dowolny sklep / do koszyka shan.pl | ✅ dotarło (zamiast niego papier techniczny A4 190 g, 100 ark.) |
 
 ### Suma (orientacyjnie)
 

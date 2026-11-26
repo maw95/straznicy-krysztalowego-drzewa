@@ -4,19 +4,22 @@ Dziennik i tablica zadań. Autor pisze do Claude „co mam teraz zrobić?”, a 
 konkretny krok** z dokładną instrukcją (z `PLAN_KROK_PO_KROKU.md`) i po wykonaniu odhacza go tutaj, z datą.
 Szczegóły „jak” są w planie, zakupy w `ZAKUPY_3_EGZEMPLARZE.md` — tu jest tylko stan.
 
-**Stan na 19.11.2026: czekamy na dostawy.** Następny krok po przyjściu tuszu i papieru: etap B (próby).
+**Stan na 26.11.2026: dostawy dotarły** (brakuje tylko lakieru i nóżek filcowych z Castoramy). Następny krok: etap B (próby).
 
 ## A. Zakupy
 
 - [x] Zamówienia złożone 19.11.2026 (wg `ZAKUPY_3_EGZEMPLARZE.md`) — oprócz sklejka-krakow.pl.
 - [x] Listwy świerkowe 10 × 10 × 1200 mm, 7 szt. — kupione 19.11.2026.
 - Dostawy (odhaczaj, gdy przyjdą; sprawdź kompletność z tabelą w liście zakupów):
-  - [ ] shan.pl — tektura 2 × 20, papier samoprzylepny, mata, Wikol 1 l, klej do decoupage, woreczki
-  - [ ] mabitech.pl — papier foto matowy 3 × 50
-  - [ ] mojetonery.pl — 2 zestawy tuszy + klip
-  - [ ] Amazon — linijka Wedo, zaokrąglacz R4, taśma tkaninowa, puzzle piankowe
-  - [ ] Castorama (odbiór w sklepie) — spray, wałek, otwornica 30 mm, ściski, taśma malarska, klej kontaktowy, papier
-        ścierny, lakier, nóżki filcowe
+  - [x] shan.pl — tektura 2 × 20, papier samoprzylepny, mata, Wikol 1 l, klej do decoupage, woreczki (26.11.2026)
+  - [x] mabitech.pl — papier foto matowy 3 × 50 (26.11.2026)
+  - [x] mojetonery.pl — 2 zestawy tuszy + klip (26.11.2026)
+  - [x] Amazon — linijka Wedo, zaokrąglacz R4, taśma tkaninowa, puzzle piankowe (26.11.2026)
+  - [x] Castorama (odbiór w sklepie) — spray, wałek, otwornica 30 mm, ściski, taśma malarska, klej kontaktowy, papier
+        ścierny (26.11.2026)
+  - [ ] Castorama — lakier akrylowy Colorit i nóżki filcowe (jeszcze nie ma; potrzebne dopiero przy pudełkach, etap H)
+  - [x] Papier na instrukcję: zamiast zwykłego 80 g papier techniczny A4 190 g, 100 ark. (26.11.2026; grubszy, sprawdź w
+        sterowniku typ „Gruby papier / Karton”, żeby drukarka go wciągała)
 - [ ] Figurki, kryształy, znacznik rundy, tor rund, znaczniki i krople — zlecone do druku 3D; data odbioru: ?
 - [ ] **sklejka-krakow.pl — NIE zamawiać przed pomiarami (etap G).**
 
@@ -82,6 +85,8 @@ Do rozstrzygnięcia przy rozpisce (autor woli **nie ciąć sam**, skoro cięcie 
 
 ## Dziennik
 
+- **26.11.2026** — dotarły zamówienia z shan.pl, mabitech.pl, mojetonery.pl, Amazonu i Castoramy (bez lakieru i nóżek
+  filcowych); na instrukcję zamiast papieru 80 g jest papier techniczny A4 190 g (100 ark.). Można zaczynać etap B.
 - **19.11.2026** — lista zakupów uproszczona do jednej tabeli (najtaniej z dostawami); zamówione wszystko oprócz sklejki;
   podstawki figurek okrągłe Ø 30 mm → otwornica 30 mm; pianka z puzzli podłogowych; pudełko pod segregator 31 × 23 × 1 cm,
   sklejka: 1 arkusz.
