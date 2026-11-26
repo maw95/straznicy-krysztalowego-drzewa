@@ -40,29 +40,32 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 
 ### Trudność i drużyny (rozmowa z autorem 26.11.2026)
 
-**94. Trudność jako cecha gracza komputerowego, drużyny wg roli przy celach asymetrycznych (L; tylko wersja cyfrowa; rusza ekran ustawień, boty, strojenie, ranking, online).**
-Pełne strojenie od zera zatrzymane 26.11 na prośbę autora (wynik i tak poszedłby do kosza po tej zmianie); stare wyniki w `.tmp/sim/backup-2611/`, `tuningAuto.ts` nietknięty.
+**94. Trudność przy botach: dokończenie (M–L; tylko wersja cyfrowa).** Zrobione 26.11 (commity 165f28e, 50d6d47, 1ec8116; backend d3094dd): poziom przy każdym bocie (`SeatSetup.botLevel`, `SetupOptions.seatLevels`), błędy bota w `src/engine/ai/slips.ts` (zbaczanie z drogi na mapie, gorszy cel, ruch bez patrzenia na zagrożenie, walka z silniejszym, minięty skarb, druga umiejętność lub skarb, odpuszczony zakup, pomocnicy, spóźniony powrót do Drzewa), Bardzo trudny = bez błędów + przewagi komputera tylko dla strony samych botów (`advantagedFaction`), cele symetryczne bez dźwigni stron, ranking wg najwyższego poziomu botów przeciw ludziom (`levelOf`; `presetLevel` dla strojenia), ekran stołu (poziom przy bocie, kolumny ról przy Kryształach i Przetrwaniu, przycisk ⇄), stół online (poziom przy bocie, serwer buduje grę z `seatLevels`), instrukcja PL i EN. Pomiar: `npx tsx scripts/sim/botLevels.ts [gry] [cele] [mapy] [rozwój]` (bot Trudny jako zastępca gracza, połowa gier po każdej stronie; ostatnia kolumna: wygrane Przymierza w lustrze Trudny–Trudny).
+  - *Wyniki 26.11 (Kontrola, Boss, Artefakt; mapy S/M/L; 150 gier na komórkę):* zastępca wygrywa z Łatwym 71% (pasmo 65–85), z Normalnym 54% (45–65), z Trudnym 49%, z Bardzo trudnym 32%. Same błędy bitewne dają kilka punktów; partie rozstrzyga tempo na mapie (błąd „krok w bok”). Stawki: Łatwy 0,5, Normalny 0,12 (`BOT_SLIPS`).
+  - **Do decyzji autora:** Trudny kontra zastępca to lustro, więc ok. 50% zamiast pasma 30–45. Albo Trudny dostaje małą przewagę (np. 1 skarb na start), albo pasmo Trudnego zmieniamy na ok. 45–55.
+  - **Do zrobienia: wyrównanie ról** (krok 2 projektu) w celach asymetrycznych, przy dwóch botach Trudnych: Kryształy na mapach S/M ok. 45–58% dla Przymierza (dobrze), na L/XL tylko 32–37%; **Przetrwanie 1 na 1 w Potyczce: Przymierze wygrywa 99%** (Horda nie jest w stanie pokonać wszystkich bohaterów przed końcem rund) — trzeba zmienić cel albo mocno go stroić (np. `survivalRoundsBonus`, fale). Dziś przy `seatLevels` te cele biorą komórki Normalnego z dawnego strojenia.
+  - **Do zrobienia: nowy stroiciel** (krok 5): jedna oś na poziom (`BOT_SLIPS`) i wyrównanie ról per mapa i liczba graczy (wpisy `DIGITAL_TUNING` z nowym kluczem dla `seatLevels`), potem jedno pełne strojenie; stare `tuneLevels.ts` / `tuningAuto.ts` dotyczą już tylko starych zapisów i wersji planszowej.
+  - Arena (`setup.botLevel`), kampania i Ekspedycja nadal na starym modelu; przenieść przy ich przeróbce (zob. punkty o kampanii niżej).
 
-*Problem.* Poziom trudności wybiera się przed składem stołu, a jego dźwignie (`dawnStartTreasures`, `dawnHeroReplacement`, `dawnStartXp`, `crystalsNeededDelta`… w `tuning.ts` / `tuningAuto.ts`) są przypięte do strony Przymierza (slot `dawn`), nie do „człowiek przeciw komputerowi”. W grze samych ludzi „trudność” daje jednemu z nich przewagę. Stroiciel mierzy wygrane Przymierza także w celach symetrycznych, więc każda kombinacja (cel × kształt × rozmiar × liczba graczy × rozwój) to osobna komórka (ok. 140 przebiegów, 3 h).
+### Nowe punkty (uwagi autora 26.11.2026)
 
-*Projekt.*
-1. **Trudność przy botach, nie przy grze.** Wybór poziomu znika z ogólnych ustawień gry; każde miejsce przy stole z botem ma własny wybór poziomu (Łatwy / Normalny / Trudny / Bardzo trudny; domyślnie Normalny), także bot w drużynie z człowiekiem. Stół bez botów nie pyta o trudność. Pole w `SeatSetup` (np. `botLevel`); istniejące `SetupOptions.botLevel` z areny scalić z tym polem.
-2. **Dźwignia: błędy bota.** Na niższym poziomie bot częściej wybiera gorszą decyzję zamiast najlepszej, i to w konkretnych miejscach, nie w losowych akcjach: cel ataku w bitwie (słabszy z kilku), wejście w walkę z silniejszym (próg `huntRatio` niżej), odpuszczony skarb lub kryształ, gorsza umiejętność / pomocnicy / zakup w osadzie, spóźniony powrót do Drzewa. Jeden parametr na poziom: procent błędów (Łatwy i Normalny do dostrojenia, Trudny mało albo wcale); Bardzo trudny = bot bez błędów plus bonus zasobów (`computerGold`, `computerTreasures`, `computerResources` już istnieją). Losowanie z ziarna gry (stan RNG w `GameState`), żeby zapis i powtórka odtwarzały się dokładnie, a serwer liczył to samo.
-3. **Cele symetryczne** (Punkty kontrolne, Boss, Artefakt, Podbój, Relikt): bez dźwigni stron; uczciwość daje sam cel. Strojenie = jedna oś: procent błędów bota tak, by człowiek-zastępca (bot Trudny, bez błędów) wygrywał z botem danego poziomu w pasmach (Łatwy 65–85, Normalny 45–65, Trudny 30–45). Komórek o rząd wielkości mniej niż teraz.
-4. **Cele asymetryczne** (Kryształy do Drzewa, Przetrwanie): osobno (a) **wyrównanie roli** (Przymierze kontra Horda ok. 50% przy dwóch botach bez błędów, dźwignie jak dziś: skarby, rundy, rezerwa; strojone per mapa i liczba graczy, niezależnie od tego, kto gra), (b) trudność jak w punkcie 3, z błędów bota.
-5. **Ekran drużyn przy celach asymetrycznych.** Zamiast wyboru frakcji, z której wynika rola: dwie kolumny z nazwą roli, np. „Zbierają kryształy” / „Bronią Drzewa” (Kryształy) i „Przetrwają” / „Fale Hordy” (Przetrwanie). Gracz (człowiek albo bot, z poziomem przy bocie) dopisuje się do kolumny i dopiero w niej wybiera frakcję i bohatera. Cele symetryczne zostają przy obecnym wyborze frakcji (każdy przeciw każdemu albo drużyny jak dziś).
-6. **Bez handicapów** dla ludzi (decyzja autora 26.11): stół samych ludzi gra bez żadnych dźwigni trudności.
+**95. Materiały do druku: strzelcy po ruchu nie atakują (M; wersja planszowa).** Jak w wersji cyfrowej: jednostka strzelająca, która się ruszyła, traci atak w tej aktywacji. W zamian pewnie +1 A dla strzelców (sprawdzić symulacją `make sim-tabele` dla zasad planszowych). Odzwierciedlić na kartach postaci (pliki do druku w `docs/wersja_planszowa/`), w `docs/INSTRUKCJA.md` i w silniku dla `ruleset` planszowego (golden `-u` w osobnym commicie).
 
-*Do zmiany przy okazji.*
-- Ranking i zapisy czytają poziom z presetu (`setup.rules`, `tuning.ts`: „ranking and saves read it as before”): punkty rankingowe liczyć wg poziomów botów przy stole; stare zapisy wczytywać z dawnym poziomem jako poziomem wszystkich botów.
-- Online: stół z botami pokazuje poziom przy bocie; serwer (repo backend) przyjmuje nowe pole siedzenia (`parsery akcji / stołu`).
-- Kampania (do gruntownego przerobienia przez autora) i Wyprawa (`arenaBoost`, `arenaHandicap`, `botLevel`) dostosować do nowego modelu przy ich przeróbce.
-- Instrukcja PL/EN (rozdział o ustawieniach i poziomach), `docs/ZASADY_CYFROWE.md`, i18n nowych tekstów ekranu.
-- Wydanie planszowe bez zmian (zostaje automat i poziomy z kart).
+**96. Więcej zaklęć (M–L).** Nowe czary w `src/engine/magic.ts` (kręgi, wieże magii w osadach, bot `botSpell`), ikony (kredyty Scenario: tylko po decyzji autora), instrukcja PL i EN.
 
-*Kolejność prac (propozycja).* (1) model błędów bota z parametrem poziomu w silniku i pomiar „bot Trudny kontra bot poziomu X” w celach symetrycznych (`scripts/sim`), bez zmian w ekranie; (2) wyrównanie ról w celach asymetrycznych przy botach bez błędów; (3) ekran ustawień: poziom przy bocie, kolumny ról; (4) ranking, zapisy, online; (5) jedno pełne strojenie nowym stroicielem, `make check`, golden `-u` jeśli zmieni się bot planszowy (nie powinien: błędy tylko w wersji cyfrowej).
+**97. Więcej artefaktów i zestawów artefaktów (M–L).** `src/engine/sites.ts` (`ARTIFACT_BY_ID`, `SETS`), targ i skrzynie, bot, ikony, instrukcja PL i EN.
 
-*Decyzje autora 26.11:* bez handicapów; cztery poziomy botów (z Bardzo trudnym); bot w drużynie z człowiekiem też ma wybierany poziom.
+**98. Wybór gotowego scenariusza bardziej jak w Heroesach i wiele nowych gotowych map (L).** Ekran wyboru scenariusza z listą (nazwa, wielkość, liczba graczy, opis, podgląd mapy, warunki zwycięstwa), zamiast dzisiejszego „kształt: gotowa mapa” w kreatorze. Do tego wiele nowych gotowych scenariuszy (`src/engine/customMaps.ts`). Najpierw projekt ekranu z autorem.
+
+**99. Nowe kampanie: każda frakcja ma swoją (XL).** Co najmniej 6 scenariuszy na frakcję, każda kampania i każdy scenariusz z klimatycznymi tekstami i grafikami; stara kampania (`src/engine/campaign.ts`) do wyrzucenia albo gruntownej przeróbki. Przy starcie kampanii wybór poziomu trudności (poziom botów z punktu 94). Najpierw plan fabuły i listy scenariuszy z autorem; grafiki: kredyty Scenario po decyzji autora.
+
+**100. Bitwa: cienka obwódka wokół sylwetki aktywnej jednostki (S–M).** Jak w Heroesach: cienka linia wokół całej sylwetki (nie kółko pod spodem), kolor do ustalenia z autorem (propozycje na zrzucie). Sprajty 2D: obrys z kanału alfa (filtr CSS `drop-shadow` x4 albo SVG `feMorphology`). Sprawdzić w przeglądarce, desktop i telefon.
+
+**101. Rozstawianie wojsk: zamiana miejscami (S).** Gdy zaznaczona jest jednostka, kliknięcie innej własnej jednostki zamienia je miejscami (dziś zmienia tylko zaznaczenie). `src/ui/useDeployment.ts`, akcja rozstawienia w silniku (czy zamiana to jedna akcja, czy dwie), test i sprawdzenie w przeglądarce.
+
+**102. Ręczny test wersji mobilnej (S; autor z Claude'em).** Przejść całą grę na telefonie (menu, kreator, mapa, bitwa, osada, online) i spisać usterki jako osobne punkty.
+
+**103. PWA nie działa na telefonie autora: ustalić dlaczego (S–M).** Sprawdzić manifest, service worker, HTTPS i zakres na GitHub Pages (ścieżka repo), ikony, `start_url`; zebrać od autora: telefon, przeglądarka, co dokładnie nie działa (brak „Dodaj do ekranu”, biały ekran, brak trybu offline).
 
 ### Starsze punkty
 
