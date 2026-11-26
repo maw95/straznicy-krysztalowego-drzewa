@@ -36,14 +36,6 @@ Zrobione punkty są usuwane (numery nie są ponownie używane, więc w kolejce s
 
 Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tanie poprawki interfejsu (S, bez kredytów, bez wpływu na wyniki bota), potem funkcje, na końcu to, co rusza golden i balans albo kosztuje kredyty. Do rozstrzygnięcia z autorem: Dziennik zdarzeń (przycisk na dole) pokazuje każdemu graczowi przy tym samym urządzeniu publiczne wpisy o bitwach i skarbach przeciwników; czy ukryć je w hot-seat (np. pokazywać tylko wpisy własnej frakcji)? Każdy punkt: `make check`, weryfikacja w przeglądarce, wpis w CHANGELOG PL i EN, osobny commit.
 
-**89. Uwagi autora do interfejsu z 26.11 (S–M, bez kredytów).**
-   - **Środek mapy:** po usunięciu Drzewa z celów innych niż „Kryształy do Drzewa” środkowy kafelek nadal jest odsłonięty od startu; ma być zakryty jak reszta.
-   - **Koszary:** surowce stoją nad przyciskiem wyjścia, mają być obok niego.
-   - **Rada osady:** surowce i przycisk wyjścia wewnątrz ramki, nie poza nią; ramka ma zawsze tę samą wysokość (dziś rośnie po kliknięciu siedliska przez wysoką kartę jednostki); usunąć podgląd karty jednostki z tego widoku.
-   - **Mapa świata, panel boczny:** usunąć sekcję z opisem zaznaczonego kafelka (pod artefaktami).
-   - **Mapa świata, pod imieniem bohatera:** Odłamki jako ikona i „0 / 0 / 5” (szczegóły pod prawym przyciskiem); ikona many nieco większa i przed liczbami („<mana> 4/4”); ruch: romby u góry, pod nimi „Ruch 2/3” (albo ikona ruchu zamiast słowa, jeśli pasująca istnieje).
-   - **Zoom mapy świata:** maksymalne przybliżenie nieco większe niż dziś i ono ma być domyślne.
-
 **92. Walki z pomocnikami wolnych frakcji (M; rusza golden i balans; uwaga autora 26.11).** Dziś walki na mapie (spotkania niesterowane przez gracza) losują tylko z 12 jednostek neutralnych. Pula ma objąć też wszystkich pomocników (nie bohaterów) frakcji, którymi nikt w tej grze nie gra. Przykład: 4 graczy, 2× Przymierze, Horda, Stada → spotkania z neutralnymi, z pomocnikami Bractwa Przypływu i Żelaznego Klanu. Tylko frakcje z punktu 91 (mają grafikę i animacje). **Decyzje autora 26.11:** trudność spotkania bardzo zbliżona do neutralnych (dobierać skład tak, by siła była podobna); nagrody takie same jak za neutralnych; arena zależy od frakcji heksa, na którym toczy się walka; jedna grupa zawsze z jednej frakcji. Potem `make sim-raport`, golden `-u` w osobnym commicie i przestrojenie poziomów.
    - **Decyzje autora 26.11 (wieczór):** nowa pula dotyczy spotkań na mapie i obrońców neutralnych osad (strażnicy kryształów i Boss bez zmian); zawsze pół na pół neutralni i wolne frakcje, połowa frakcyjna dzielona równo między wolne frakcje; legendy i jednostki alternatywne należą do pomocników, legenda przewodzi tylko najsilniejszym grupom (jak boss).
 

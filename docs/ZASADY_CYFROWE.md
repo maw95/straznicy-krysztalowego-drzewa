@@ -123,6 +123,7 @@ Drugi cel obok klasycznego (kryształy do Drzewa i rytuał Hordy). Interfejs cel
 - Na mapie leżą **trzy punkty kontrolne**: środkowy (na osi trójkąta, wart **2**) i dwa boczne, odbite lustrzanie (po **1**). Układ liczony z ziarna
   gry osobnym generatorem (mapa się nie zmienia); punkt nie leży na Drzewie, w bazie ani koło niej, ani na polu kryształu. Pole niedostępne
   (góra, jezioro) jest w razie potrzeby oczyszczone na łąkę lub spaloną ziemię. Punkty są odkryte od początku.
+- Środkowe pole mapy bez Drzewa (każdy cel poza „Kryształy do Drzewa”) jest na starcie zakryte, o ile cel sam go nie odsłania (punkt kontrolny, legowisko, Artefakt).
 - Strona **trzyma** punkt, gdy jej bohater stoi na nim na koniec rundy (na polu jest jeden bohater, więc trzeba pokonać tego, kto stoi).
 - Na koniec rundy: kto trzyma więcej punktów (według wartości) ma przewagę. Przewaga przez **K rund z rzędu** wygrywa:
   K = 3 (krótka i średnia mapa), 4 (długa), 5 (bardzo długa); Przymierze potrzebuje o 1 rundę więcej, bo w rundzie rusza pierwsze (`CONTROL` w `data.ts`).

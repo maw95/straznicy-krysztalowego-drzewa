@@ -30,6 +30,16 @@ describe('objectives', () => {
     expect(s.winner).toBe('dawn');
   });
 
+  it('shows the Tree from the start; without the Tree the middle hex lies hidden like the rest', () => {
+    const crystals = createGame(setup({}, { ruleset: 'digital' }));
+    expect(crystals.tiles[treeOf(crystals)].revealed).toBe(true);
+    for (const objective of ['conquest', 'relic', 'survival'] as const) {
+      const s = createGame(setup({ mapSize: 'long' }, { ruleset: 'digital', objective, heroGrowth: true, kingdom: true, economy: true, realm: true, empire: true }));
+      expect(s.tiles[treeOf(s)].tree).toBe(false);
+      if (s.tiles[treeOf(s)].terrain !== 'water') expect(s.tiles[treeOf(s)].revealed).toBe(false);
+    }
+  });
+
   it('bots still play a crystals game to the end', () => {
     expect(playOut(createGame(setup({ seed: 3 }))).phase).toBe('over');
   });

@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Mapa: w celach bez Kryształowego Drzewa środkowe pole jest na starcie zakryte jak reszta (chyba że cel sam je pokazuje: punkt kontrolny, legowisko Bossa, Artefakt).':
+    'Map: in the goals without the Crystal Tree the middle hex starts hidden like the rest (unless the goal itself shows it: a control point, the Boss\'s lair, the Artifact).',
   'Zasady i karty, zakładka „Jednostki”: karty są podzielone tylko według frakcji (pięć skończonych, na końcu neutralni); w każdej najpierw bohaterowie, potem dowódcy, potem pomocnicy od najniższego poziomu. Są teraz wszystkie jednostki tych frakcji.':
     'Rules and cards, the “Units” tab: the cards are divided by faction only (the five finished ones, the neutral units at the end); in each the heroes come first, then the commanders, then the supports from the lowest tier up. Every unit of these factions is there now.',
   'Wybór frakcji (nowa gra i stół online) pokazuje tylko pięć skończonych: Przymierze, Hordę, Dzikie Stado, Żelazny Klan i Bractwo Przypływu. Pozostałe wrócą, gdy dostaną grafikę.':

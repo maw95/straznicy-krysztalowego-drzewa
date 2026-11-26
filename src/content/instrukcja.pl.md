@@ -109,7 +109,7 @@ W celach innych niż Kryształy remis w limicie rund to remis; w Bossie i Artefa
 @słowa: mapa, kształt, trójkąt, prostokąt, pierścień, wyspy, most, rozmiar, wielkość, XL, XXL, gigantyczna, teren, ruch, punkty ruchu, odkrywanie, mgła, baza, drzewo, runda, tura, tor rund
 
 ### Kształty i wielkości
-Mapa składa się z heksów. Kryształowe Drzewo stoi na mapie tylko w celu **Kryształy do Drzewa**; w pozostałych celach jego pole jest zwykłym terenem (w Kontroli, Bossie i Artefakcie stoi tam punkt środkowy, legowisko albo Artefakt). Kształty:
+Mapa składa się z heksów. Kryształowe Drzewo stoi na mapie tylko w celu **Kryształy do Drzewa**; w pozostałych celach jego pole jest zwykłym terenem (w Kontroli, Bossie i Artefakcie stoi tam punkt środkowy, legowisko albo Artefakt). Gdy Drzewa nie ma, środkowe pole jest na starcie zakryte jak reszta mapy, o ile cel sam go nie pokazuje. Kształty:
 - **Trójkąt** (jak w planszówce): Drzewo na szczycie, baza Przymierza w lewym dolnym rogu, Hordy w prawym.
 - **Prostokąt:** bazy pośrodku krótszych boków, Drzewo w środku.
 - **Pierścień:** obręcz wokół jeziora, Drzewo i obie bazy na trzech rogach.

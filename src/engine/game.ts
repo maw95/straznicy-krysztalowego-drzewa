@@ -211,7 +211,8 @@ export function createGame(setup: SetupOptions): GameState {
   }
 
   for (const f of teams) revealAround(state, homeOf(state, f));
-  state.tiles[treeOf(state)].revealed = true;
+  // The Tree is known from the start; where the goal has removed it, the middle hex lies hidden like the rest (unless the goal itself shows it).
+  if (state.tiles[treeOf(state)].tree) state.tiles[treeOf(state)].revealed = true;
   state.rng = rng.state;
   placeSites(state);
   placeEncounters(state);
