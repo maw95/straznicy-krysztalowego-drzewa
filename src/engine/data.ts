@@ -475,11 +475,14 @@ const u = (d: UnitDef): UnitDef => d;
  */
 export const DIGITAL_RANGED_BONUS = 1;
 /**
- * The board edition's shooters: the same rule as the digital one (no shot after a move, backlog 95), and this much more Attack on their cards.
- * Measured 26.11 (200 games a table, the full game): the rule alone takes the Przymierze about 3 points in coop and 7 in a rivalry; +1 for every
- * shooter takes it 2 and 15 points more (the Horde's shooters and the Cyklop gain too), so the bonus stays 0 until the author decides.
+ * The board edition's shooters: the same rule as the digital one (no shot after a move, backlog 95), and this much more Attack on their cards,
+ * per side (the side the unit belongs to). Measured 26.11 (200 games a table, the full game, wins of the Przymierze): before the rule coop
+ * 61-80 / rivalry 46-64 percent; the rule alone about -3 / -7 points; +1 for every shooter -5 / -22 (the Horde's shooters and the Cyklop gain
+ * too); +1 for the Przymierza shooters only (the author's choice) coop 64-82, rivalry 45-58: the rivalry back where it was, coop 2 points up.
  */
-export const BOARD_RANGED_BONUS = 0;
+export const BOARD_RANGED_BONUS: Partial<Record<string, number>> = { dawn: 1 };
+/** The board edition's extra Attack of a shooter (its side's entry of BOARD_RANGED_BONUS; 0 for a unit that does not shoot). */
+export const boardRangedBonus = (defId: string): number => (UNITS[defId]?.attackType === 'ranged' ? BOARD_RANGED_BONUS[UNITS[defId].side] ?? 0 : 0);
 
 /**
  * Digital ruleset: the numbers of a unit's battle stats that differ from the board game's (the rest stay as in UNITS).

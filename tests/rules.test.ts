@@ -125,7 +125,7 @@ describe('Przymierze hero abilities after balancing', () => {
     // A 2-damage hit on the Ogre holding the stone: Twardogłowy takes both, the stone has nothing left.
     let s = fight([['elfDruid', 'dawn', 5, 6], ['ironFistOgre', 'horde', 5, 8]]);
     const b = s.battle!;
-    b.units.elfDruid.status.battleAttackBonus = 1;
+    // The Elf Druid hits for 2 on the board since backlog 95a (A 1 + 1 of a Przymierza shooter).
     b.units.ironFistOgre.status.damageReduction = 1;
     const p = predictDamage(s, b.units.elfDruid, b.units.ironFistOgre, { useAbility: false, movedDistance: 0 });
     expect(p).toMatchObject({ base: 2, damage: 0, hardHead: 2, shield: false, lethal: false, bearGuard: null });

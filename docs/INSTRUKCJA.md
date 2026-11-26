@@ -128,7 +128,7 @@ Władca srebrnych stad z łąk pod Drzewem. Nigdy nie atakuje pierwszy, ale gdy 
 Strażnik puszczy, w którego futrze mieszkają ptaki, a w śladach rosną paprocie. Powolny i cierpliwy jak same drzewa — i równie trudny do przewrócenia.
 **Opiekun Gaju** — raz na bitwę, gdy Niedźwiedź albo sąsiedni sojusznik ma otrzymać śmiertelny cios: Niedźwiedź przyjmuje go na siebie i ignoruje 3 obrażenia.
 
-**🏹 Elf Druid** — pomocnik, strzelec · Ż 4 · A 1 · S 4
+**🏹 Elf Druid** — pomocnik, strzelec · Ż 4 · A 2 · S 4
 Rozmawia z korzeniami i słucha, co szepcze mech. Jego strzały rzadko ranią mocno, ale potrafią spętać nogi każdego wroga.
 **Splątane Korzenie** — raz na bitwę: trafiony wróg ma −2 S w swojej następnej aktywacji. *(znacznik Spowolnienia)*
 
@@ -376,17 +376,16 @@ Władca Wilkołaków wchodzi na pole Króla Jednorożców na ziemiach Przymierza
 
 - **Jednorożec** podchodzi tylko o 3 pola. Wilkołak przejdzie najwyżej 7, więc w tej rundzie go nie dosięgnie.
 - **Wilkołak** podbiega o 7 pól. Do Jednorożca brakuje mu jednego pola — nie atakuje.
-- **Elf Druid** strzela do Wilkołaka: 1 obrażenie i Splątane Korzenie — znacznik Spowolnienia (−2 S w następnej aktywacji Wilkołaka) i znacznik zużytej zdolności przy Elfie.
+- **Elf Druid** stoi w miejscu i strzela do Wilkołaka (po ruchu nie mógłby strzelać): 2 obrażenia i Splątane Korzenie — znacznik Spowolnienia (−2 S w następnej aktywacji Wilkołaka) i znacznik zużytej zdolności przy Elfie.
 - **Nimfa** podchodzi bliżej Jednorożca.
 - **Goblin Szaman** strzela do Jednorożca: 1 obrażenie i Złowroga Klątwa — znacznik Klątwy (−1 A przy następnym ataku Jednorożca).
 - **Pająk** podchodzi bliżej. Jednorożec jest dalej niż 4 pola, więc Pajęcze Sidła jeszcze go nie sięgną.
 
 **Runda 2**
 
-- **Jednorożec** obiega Wilkołaka i staje obok niego — przeszedł 4 pola, więc działa Szarża Światła. Cios: 5 A + 2 (Szarża) − 1 (Klątwa) = **6 obrażeń**. Wilkołak ma 7 obrażeń przy 8 Życia. Znacznik Klątwy schodzi.
-- **Wilkołak** jest spowolniony, ale stoi obok celu. Cios: 5 A + 1 (Zew Krwi, bo Jednorożec jest już ranny) = **6 obrażeń**. Jednorożec ma 7 obrażeń przy 8 Życia. Znacznik Spowolnienia schodzi.
-- **Elf Druid** strzela do Wilkołaka: 1 obrażenie — **Wilkołak pada** i schodzi z areny.
-- **Nimfa** używa Daru Życia: Jednorożec odzyskuje 3 Ż i ma już tylko 4 obrażenia.
+- **Jednorożec** obiega Wilkołaka i staje obok niego — przeszedł 4 pola, więc działa Szarża Światła. Cios: 5 A + 2 (Szarża) − 1 (Klątwa) = **6 obrażeń**. Wilkołak ma 8 obrażeń przy 8 Życia — **Wilkołak pada** i schodzi z areny. Znacznik Klątwy schodzi.
+- **Elf Druid** znów strzela bez ruchu, tym razem do Goblina Szamana: 2 obrażenia.
+- **Nimfa** używa Daru Życia: Jednorożec odzyskuje 1 Ż (więcej obrażeń nie miał) i znów ma pełne Życie.
 - **Bitwa trwa dalej.** Goblin i Pająk walczą, choć ich wódz padł — bitwa kończy się dopiero wtedy, gdy jedna strona straci wszystkie jednostki.
 
 ---

@@ -18,6 +18,7 @@ describe('UnitCard: shooters in the digital edition', () => {
   const attackShown = (digital: boolean) => [...render(<UnitCard unitId="elfDruid" digital={digital} />).container.querySelectorAll('div')].map((d) => d.textContent);
   it('shows the Elf Druid with the digital Atak (printed plus the shooter bonus and the faction bonus), the printed card with the printed one', () => {
     expect(attackShown(true)).toContain(String(battleStats('elfDruid', true).attack + DIGITAL_RANGED_BONUS));
-    expect(attackShown(false)).toContain(String(UNITS.elfDruid.attack));
+    // The printed card has the Przymierza shooters' +1 of the board edition (backlog 95a).
+    expect(attackShown(false)).toContain(String(UNITS.elfDruid.attack + 1));
   });
 });

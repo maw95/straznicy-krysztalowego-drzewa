@@ -49,9 +49,7 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 
 ### Nowe punkty (uwagi autora 26.11.2026)
 
-(Zrobione 26.11: 95 strzelcy planszowi, 98 gotowe scenariusze, 100 obwódka aktywnej jednostki, 101 zamiana przy rozstawianiu.)
-
-**95a. Decyzja autora: premia dla strzelców planszowych (S).** Zasada „strzelec po ruchu nie strzela” weszła do wersji planszowej i instrukcji do druku bez premii. Pomiar 26.11 (200 gier na stół, wygrane Przymierza): dziś kooperacja 61–80%, rywalizacja 46–64%; sam zakaz ok. −3 pkt w kooperacji i −7 w rywalizacji; zakaz z +1 A dla wszystkich strzelców jeszcze −2 i −15 pkt (zyskują też strzelcy Hordy i Cyklop). Do wyboru: zostawić bez premii, +1 tylko strzelcom Przymierza, albo inne wyrównanie. Przełącznik: `BOARD_RANGED_BONUS` w `data.ts` (karty i bitwa); po zmianie `make druk` i golden `-u`.
+(Zrobione 26.11: 95 strzelcy planszowi (z 95a: +1 A tylko dla strzelców Przymierza), 98 gotowe scenariusze, 100 obwódka aktywnej jednostki, 101 zamiana przy rozstawianiu.)
 
 **98a. Gotowe scenariusze online (S).** Nowe mapy (`scenarioMaps.ts`) serwer zna dopiero z silnikiem następnego wydania: do tego czasu stół online z nowym scenariuszem zostanie odrzucony („Nieznana własna mapa”). Przy wydaniu: silnik w backendzie i sprawdzenie stołu online ze scenariuszem.
 

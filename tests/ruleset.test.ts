@@ -114,6 +114,7 @@ describe('digital ruleset: moving ends the turn unless an attack follows', () =>
       battleAttack(s, 'werewolfLord', false);
       return s.battle!.units.werewolfLord.hp;
     };
-    expect(hit(undefined) - hit('digital')).toBe(1);
+    // The board edition gives the Przymierza shooters the same +1 since backlog 95a (BOARD_RANGED_BONUS).
+    expect(hit(undefined) - hit('digital')).toBe(0);
   });
 });

@@ -2,7 +2,7 @@
 // abilities and items. Functions change the GameState passed in.
 
 import { raceOf } from './teams';
-import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, STAT_SCALE, supportTier, battleStats, DIGITAL_RANGED_BONUS, BOARD_RANGED_BONUS, FACTION_NAMES, ITEM_EFFECT, itemDef, ITEMS, UNITS, type AbilityId, type TeamId, type ItemKind, type Side } from './data';
+import { ABILITY, ABILITY_TIERS, MILESTONE_TIER, STAT_SCALE, supportTier, battleStats, DIGITAL_RANGED_BONUS, boardRangedBonus, FACTION_NAMES, ITEM_EFFECT, itemDef, ITEMS, UNITS, type AbilityId, type TeamId, type ItemKind, type Side } from './data';
 import { distance, directionBetween, add, key, line, neighborKeys, parseKey, DIRECTIONS, type HexKey } from './hex';
 import { log } from './log';
 import { Rng } from './rng';
@@ -437,7 +437,7 @@ export const coreExposed = (u: BattleUnit) => abilityOf(u) === 'runeGolem' && u.
 /** Expected damage of a plain attack, before the defender's reactions. */
 export function attackDamage(state: GameState, att: BattleUnit, target: BattleUnit, useAbility: boolean, movedDistance: number): number {
   let dmg = unitAttackBase(att) + att.status.nextAttackBonus - att.status.cursedNext - (att.status.blinded ?? 0);
-  if (UNITS[att.defId].attackType === 'ranged') dmg += (isDigital(state.rules) ? DIGITAL_RANGED_BONUS : BOARD_RANGED_BONUS) * scaleOf(state);
+  if (UNITS[att.defId].attackType === 'ranged') dmg += (isDigital(state.rules) ? DIGITAL_RANGED_BONUS : boardRangedBonus(att.defId)) * scaleOf(state);
   if (att.gear?.vsWounded && target.hp < target.maxHp) dmg += att.gear.vsWounded;
   if (att.gear?.firstStrike) dmg += att.gear.firstStrike;
   if (abilityActive(state)) {
