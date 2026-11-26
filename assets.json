@@ -10928,6 +10928,46 @@
       "data": "2026-11-26",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "tides/trafienia-i-lewiatan-26-11-v2",
+      "pliki": [
+        "public/assets/jednostki/trytonski_straznik/trafienie.webp",
+        "public/assets/jednostki/zabi_skoczek/trafienie.webp",
+        "public/assets/jednostki/syrena_piesniarka/trafienie.webp",
+        "public/assets/jednostki/zolw_skorupiak/trafienie.webp",
+        "public/assets/jednostki/kaplanka_perel/trafienie.webp",
+        "public/assets/jednostki/albatros/trafienie.webp",
+        "public/assets/jednostki/trytonski_straznik/atak.webp",
+        "public/assets/jednostki/lewiatan/stoi.webp",
+        "public/assets/jednostki/lewiatan/martwy.webp",
+        "public/assets/jednostki/lewiatan/chod.webp",
+        "public/assets/jednostki/lewiatan/atak.webp",
+        "public/assets/jednostki/lewiatan/smierc.webp",
+        "public/assets/jednostki/lewiatan/trafienie.webp"
+      ],
+      "typ": "klipy trafienia 6 jednostek Przypływów (zamiast odchylenia w kodzie), nowy atak Trytońskiego Strażnika, Lewiatan jako wąż na lądzie (drugie podejście)",
+      "opis": "P-Video 2 720p 24 kl./s. Trafienia 2 s, draft (6 CU) lub pełna jakość (10 CU); Albatros z pozy stojącej na ziemi (stoi_ziemia). Atak Strażnika: pchnięcie trójzębem (draft, 9 CU). Lewiatan: obraz bazowy Flare medium (wąż na suchym gruncie, całe ciało w kadrze, bez wody); klipy chód, atak i trafienie z klatką końcową równą początkowej (lastFrameImage), aby wracały do pozy stoi; śmierć opada na ziemię. Prompty w tej rozmowie; filtr blokował „blow”, „knocked off balance”.",
+      "scenario_asset": {
+        "lewiatan_stoi": "asset_p2C34MkBZPXxEBjJqVj5Wzx5",
+        "lewiatan_chod": "asset_LHdXcNnuqc4FRDZcbgohdJgQ",
+        "lewiatan_atak": "asset_usaEKw1QexHDud1dkb6XhkCB",
+        "lewiatan_smierc": "asset_1EEqA2GT2vqfrn6DMTNTUtJS",
+        "lewiatan_trafienie": "asset_akykgACXzbQmFbsHCxotzZGt",
+        "guard_atak": "asset_EDS3k2udCpk5uVRn8zwT8xcb",
+        "guard_trafienie": "asset_qCac99cyRaUXKQEkfF7Uzr99",
+        "frog_trafienie": "asset_3bu7C3n4KbebixiiWXVuYQ9h",
+        "siren_trafienie": "asset_N3giTAJ1NSiX2vyCJ8ZHHnAp",
+        "turtle_trafienie": "asset_JMeoaLMehURVH8UEynpwLBjf",
+        "priestess_trafienie": "asset_Wds2ubt4Gm9w3eQEbGqLuXp8",
+        "albatross_trafienie": "asset_CwaSVsXDGxrQp76vrtKwcj98"
+      },
+      "prompt": "Trafienie: \"The X is badly startled: its upper body jerks quickly backward toward the left, its feet slide back a step, it wobbles, then steadies itself and stands exactly as before, facing right. It stays the same size and does not step forward.\" Pozostałe: patrz historia rozmowy z 26.11.",
+      "narzedzie": "Scenario (plan płatny) + ffmpeg",
+      "model": "model_pruna-p-video-2 / model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-26",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
     }
   ]
 }

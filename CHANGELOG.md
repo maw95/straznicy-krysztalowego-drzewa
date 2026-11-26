@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Bractwo Przypływu: trafienia Syreny Pieśniarki, Żółwia Skorupiaka, Kapłanki Pereł, Trytońskiego Strażnika i Żabiego Skoczka są prawdziwymi animacjami z wyraźnym odrzutem (Albatros reaguje na ziemi, nie w locie), Strażnik dźga w ataku trójzębem, a Lewiatan jest wężem czołgającym się po lądzie, z całym ciałem w kadrze, bez wody.
 - Bractwo Przypływu: Lewiatan jest teraz ogromnym wężem morskim ze zwojami nad wodą (nowy obraz i wszystkie animacje), Harpunniczka ma jedno długie pchnięcie harpunem w ataku, a ona i Trytoński Harpunnik naprawdę upadają twarzą do ziemi, zamiast siadać.
 - Poziomy trudności w Potyczce: dostrojone kolejne komórki poza pasmem (największe mapy, Łatwy i Przetrwanie), dzięki czemu mniej ustawień wychodzi za łatwo lub za trudno.
 - Bractwo Przypływu: trafienia Trytońskiego Strażnika, Żabiego Skoczka, Kraboluda, Morskiej Wiedźmy i Albatrosa są teraz prawdziwymi animacjami (postać cofa się od ciosu i wraca do pozy), a nie odchyleniem rysowanym w kodzie.
