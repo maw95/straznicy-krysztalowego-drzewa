@@ -456,7 +456,7 @@ sheet('''<div class="eyebrow">Rozdział 8 · poziom normalny i trudny</div><h1>B
 sheet('''<h2>Aktywacja</h2>
 <ol class="rules">
 <li><b>Ruch</b> — o tyle pól, ile wynosi Szybkość (można zostać w miejscu). Nie wolno przejść przez pole zajęte przez inną jednostkę (sojusznika ani wroga) ani przez przeszkodę. Jednostki latające przelatują nad wszystkim, ale lądują na wolnym polu.</li>
-<li><b>Atak</b> (jeśli chcesz): <b>wręcz</b> — w wroga na sąsiednim polu; <b>strzelec</b> — w dowolnego wroga, którego widać. Przeszkoda na linii zasłania cel, jednostki nie zasłaniają.</li>
+<li><b>Atak</b> (jeśli chcesz): <b>wręcz</b> — w wroga na sąsiednim polu; <b>strzelec</b> — w dowolnego wroga, którego widać, ale <b>tylko gdy w tej aktywacji się nie ruszył</b>: strzelec albo idzie, albo strzela. Przeszkoda na linii zasłania cel, jednostki nie zasłaniają.</li>
 </ol>
 <div class="cols"><div><h3>Obrażenia</h3><p>Cios zadaje tyle obrażeń, ile wynosi <b>Atak</b>. Połóż na karcie krople obrażeń. <b>Nie ma kontrataków.</b> Gdy obrażenia dorównają Życiu, jednostka pada i schodzi z areny.</p></div>
 <div><h3>Zdolności</h3><p>Opisy są na kartach. Zdolności „raz na bitwę” po użyciu oznacz znacznikiem <b>zużytej zdolności</b>. Efekty, które trwają do następnej aktywacji lub ataku, oznacz odpowiednim znacznikiem.</p></div></div>

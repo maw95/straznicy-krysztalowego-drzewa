@@ -689,7 +689,7 @@ Można wchodzić tylko na **odkryte pola**. Po wejściu odkryj wszystkie zakryte
 
 **Aktywacja:** ruch do liczby pól równej Szybkości (można zostać w miejscu), potem opcjonalny atak. Nie przechodzi się przez inne jednostki (sojuszników ani wrogów) ani przez przeszkody. Latający przelatują nad wszystkim, ale lądują na wolnym polu.
 
-**Atak:** wręcz — we wroga na sąsiednim polu; strzelec — w widocznego wroga. Przeszkody zasłaniają linię strzału, jednostki nie. Jeśli wróg stoi obok strzelca, strzelec może atakować tylko jego.
+**Atak:** wręcz — we wroga na sąsiednim polu; strzelec — w widocznego wroga, jeśli w tej aktywacji się nie ruszył. Przeszkody zasłaniają linię strzału, jednostki nie. Jeśli wróg stoi obok strzelca, strzelec może atakować tylko jego.
 
 **Obrażenia = Atak.** Nie ma kontrataków. Zaznacz obrażenia na karcie; gdy dorównają Życiu, jednostka pada. W wariancie „Rzut kością” dodaj wynik −1, 0 lub +1 (minimum 0 obrażeń).
 
