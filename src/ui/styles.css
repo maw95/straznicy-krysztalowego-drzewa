@@ -1383,3 +1383,8 @@ button.sb-slot:disabled { cursor: default; }
 .scenario-facts dt { color: var(--muted); }
 .scenario-facts dd { margin: 0; }
 @media (max-width: 900px) { .scenario-picker { grid-template-columns: 1fr; } }
+
+/* A map size the goal is not offered on (BLOCKED_SIZES): the greyed button with a short note under it. */
+.size-slot { display: inline-flex; flex-direction: column; align-items: center; gap: 3px; }
+.map-size-btn:disabled { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; }
+.size-off { font-size: 12px; line-height: 1.15; color: var(--muted); max-width: 110px; text-align: center; }

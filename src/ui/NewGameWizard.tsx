@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { BOARD_MAP_SIZES, MAP_SIZE_NAMES, type MapSize } from '../engine/data';
 import { readyMaps } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
-import { defaultCustom } from '../engine/presets';
+import { defaultCustom, sizeAllowed } from '../engine/presets';
 import { SCENARIO_BY_ID, SCENARIOS } from '../engine/scenarios';
 import { ScenarioPicker } from './ScenarioPicker';
 import type { Level, MapShape, Mode, ObjectiveId } from '../engine/types';
@@ -193,6 +193,16 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   /** Level 0 belongs to the first card only: every other tier plays a difficulty of the full game. */
   const notZero: Level = d.level === 'zero' ? 'kids' : d.level;
   const ready = d.shape === 'custom';
+  /** The goal the game will be played for (Spacer and Przygoda: the crystals). */
+  const goalNow: ObjectiveId = d.digital && d.tier !== 'adventure' && d.mode !== 'arena' ? d.objective : 'crystals';
+  // A goal that is not offered on the chosen size moves the size to the nearest one it is offered on.
+  useEffect(() => {
+    if (!d.digital || sizeAllowed(goalNow, d.mapSize)) return;
+    const at = sizes.indexOf(d.mapSize);
+    const nearest = sizes.filter((m) => sizeAllowed(goalNow, m)).sort((a, b) => Math.abs(sizes.indexOf(a) - at) - Math.abs(sizes.indexOf(b) - at))[0];
+    if (nearest) setD((cur) => ({ ...cur, mapSize: nearest }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [goalNow, d.mapSize, d.digital]);
   /** The map page of the fuller levels also picks the map (random of a shape, or a ready one); elsewhere (Spacer, Przygoda, the board edition) only its size. */
   const fullMap = d.digital && d.tier !== 'adventure';
   const sizes = (Object.keys(MAP_SIZE_NAMES) as MapSize[]).filter((m) => d.digital || BOARD_MAP_SIZES.includes(m));
@@ -314,14 +324,20 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
           )}
           {!(fullMap && ready) && (
             <CentredChoice label="Wielkość mapy">
-              {sizes.map((m) => (
-                <Tip key={m} text={mapTip(m)} rightClick>
-                  <button className={`${chip(d.mapSize === m)} size-btn map-size-btn`} aria-pressed={d.mapSize === m} onClick={() => patch({ mapSize: m })}>
-                    <b className="size-code">{SIZE_CODES[m]}</b>
-                    <span>{MAP_SIZE_NAMES[m]}</span>
-                  </button>
-                </Tip>
-              ))}
+              {sizes.map((m) => {
+                const off = d.digital && !sizeAllowed(goalNow, m);
+                return (
+                  <span key={m} className="size-slot">
+                    <Tip text={mapTip(m)} rightClick>
+                      <button className={`${chip(d.mapSize === m)} size-btn map-size-btn`} aria-pressed={d.mapSize === m} data-size={m} disabled={off} onClick={() => patch({ mapSize: m })}>
+                        <b className="size-code">{SIZE_CODES[m]}</b>
+                        <span>{MAP_SIZE_NAMES[m]}</span>
+                      </button>
+                    </Tip>
+                    {off && <span className="size-off">Rozmiar niedostępny dla tego celu</span>}
+                  </span>
+                );
+              })}
             </CentredChoice>
           )}
         </div>

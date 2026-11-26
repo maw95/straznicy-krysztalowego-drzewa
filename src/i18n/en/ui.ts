@@ -860,4 +860,5 @@ register({
   "Zbierają kryształy": "Gather the crystals",
   "Bronią Drzewa": "Guard the Tree",
   "Przetrwają": "Hold out",
+  "Rozmiar niedostępny dla tego celu": "Size not available for this goal",
 });

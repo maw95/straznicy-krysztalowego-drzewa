@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Kreator: Kryształy do Drzewa nie są dostępne na mapie Ogromnej i Gigantycznej, a Przetrwanie na Małej (przy tych wielkościach jednej strony nie dało się wyrównać). Przycisk jest wyszarzony, z dopiskiem „Rozmiar niedostępny dla tego celu”.':
+    'Wizard: Crystals to the Tree is not available on the Huge and Giant maps, and Survival not on the Small one (on those sizes one side could not be evened out). The button is greyed out, with the note "Size not available for this goal".',
   'Kryształy do Drzewa i Przetrwanie: role są wyrównane osobno dla każdej mapy, liczby graczy i poziomu złożoności (gdy dwa jednakowe boty grają obie role, każda strona wygrywa mniej więcej co drugą partię). W Przetrwaniu Horda szuka Przymierza na środku mapy, gdy go nie widzi we mgle (dotąd czekała i Przymierze wygrywało prawie zawsze).':
     'Crystals to the Tree and Survival: the roles are evened out separately for every map, number of players and complexity level (when two equal bots play both roles, each side wins about every other game). In Survival the Horde looks for the Covenant in the middle of the map when the fog hides it (it used to wait, and the Covenant won almost every time).',
   'Gotowe scenariusze: w potyczce nowa karta „Gotowy scenariusz” prowadzi do listy jak w klasycznych grach strategicznych (filtr wielkości, tabela, podgląd mapy, opis i warunki zwycięstwa). Jest 14 scenariuszy na ręcznie narysowanych mapach, od małego „Kręgu Kamieni” po gigantyczny „Szczyt Świata”, każdy z własnym celem i poziomem. Gotowe mapy nie są już wybierane na stronie mapy.':
