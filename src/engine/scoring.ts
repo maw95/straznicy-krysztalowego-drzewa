@@ -169,8 +169,23 @@ export function pointsFor(setup: SetupOptions, level: LevelName, side: TeamId): 
   return Math.min(MAX_POINTS, Math.max(1, Math.round(raw)));
 }
 
-/** The preset level a setup matches, or 'custom' (the scoring reads its column). */
+/**
+ * The level a game counts as (the ranking, the journal and the saves read it). A table with a level at each bot (`seatLevels`, backlog 94): the
+ * highest level among the bots playing against the people (all the bots when every bot sits with a person; Normalny at a table of people only), while
+ * level 0 and "Własne ustawienia" stay what their rules are. The older games: the preset level of their rules.
+ */
 export function levelOf(setup: SetupOptions): LevelName {
+  const preset = presetLevel(setup);
+  if (!setup.seatLevels || preset === 'zero' || preset === 'custom') return preset;
+  const bots = setup.seats.filter((s) => s.controller === 'bot');
+  const people = new Set(setup.seats.filter((s) => s.controller === 'human').map((s) => s.faction));
+  const against = bots.filter((s) => !people.has(s.faction));
+  const order: LevelName[] = ['kids', 'normal', 'hard', 'veryHard'];
+  return (against.length ? against : bots).reduce<LevelName>((top, s) => (order.indexOf(s.botLevel ?? 'normal') > order.indexOf(top) ? s.botLevel ?? 'normal' : top), bots.length ? 'kids' : 'normal');
+}
+
+/** The preset level the rules of a setup match, or 'custom' (the digital tuning reads it; see `levelOf` for the level a game counts as). */
+export function presetLevel(setup: SetupOptions): LevelName {
   // Arena: the computer's strength (two people at one screen play "Normalny").
   if (setup.mode === 'arena') return setup.seats.some((s) => s.controller === 'bot') ? setup.botLevel ?? 'normal' : 'normal';
   const r = setup.rules;

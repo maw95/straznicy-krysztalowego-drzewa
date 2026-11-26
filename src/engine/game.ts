@@ -74,7 +74,7 @@ import { EMPIRE, FACTION_MECHANICS, hasSpark, loseShards, mechanicLevel, summedL
 import { applyGear, ARTIFACT_BY_ID, arenaGearOffer, gearOf, applySupportGear, ARTIFACT_ODDS, ARTIFACTS, captureGear, drawArtifact, equipArtifact, gearMoveBonus, gearReveal, giveArtifact, COMPUTER_ARTIFACT_ODDS, heroTileCost, passArtifact, passShards, placeSites, SHARDS_ID, unequipArtifact, visitSite } from './sites';
 import { Rng } from './rng';
 import { digitalRules } from './tuning';
-import { computerFaction, isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
+import { advantagedFaction, computerFaction, isDigital, type Action, type BattleReport, type BattleState, type GameState, type HeroState, type ItemInstance, type Player, type SetupOptions } from './types';
 
 export const other = (f: TeamId): TeamId => (f === 'dawn' ? 'horde' : 'dawn');
 
@@ -183,7 +183,7 @@ export function createGame(setup: SetupOptions): GameState {
   const dealt = new Set<ItemKind>(others);
   // The computer's advantage of the higher levels: more random treasures from the start (COMPUTER_HANDICAP).
   const extra = (f: TeamId, start: { resurrections: number; others: number; random?: number } | undefined) =>
-    rules.computerTreasures && computerFaction(state, f) ? { resurrections: 0, others: 0, ...start, random: (start?.random ?? 0) + rules.computerTreasures } : start;
+    rules.computerTreasures && advantagedFaction(state, f) ? { resurrections: 0, others: 0, ...start, random: (start?.random ?? 0) + rules.computerTreasures } : start;
   dealStartTreasures(state, rng, 'dawn', extra('dawn', rules.dawnStartTreasures ?? variant.startTreasures), dealt, pool);
   dealStartTreasures(state, rng, 'horde', extra('horde', rules.hordeStartTreasures), dealt, pool);
   // The third and fourth team start as the second one does (nothing, unless the computer's advantage adds some).
@@ -198,7 +198,7 @@ export function createGame(setup: SetupOptions): GameState {
   OBJECTIVES[objectiveOf(state)].init(state);
 
   setup.seats.forEach((seat, i) => {
-    const player: Player = { id: `p${i + 1}`, name: seat.name, faction: seat.faction, controller: seat.controller, ...(seat.child && setup.mode !== 'arena' && isDigital(rules) ? { child: true } : {}) };
+    const player: Player = { id: `p${i + 1}`, name: seat.name, faction: seat.faction, controller: seat.controller, ...(seat.child && setup.mode !== 'arena' && isDigital(rules) ? { child: true } : {}), ...(setup.seatLevels && seat.controller === 'bot' ? { botLevel: seat.botLevel ?? 'normal' } : {}) };
     state.players.push(player);
     addHero(state, seat.heroId, seat.faction, player.id);
   });
@@ -224,7 +224,7 @@ export function createGame(setup: SetupOptions): GameState {
   if (rules.computerArtifacts && rules.heroGrowth && setup.mode !== 'arena') {
     for (const f of teams) {
       const main = state.turnOrder.map((id) => state.heroes[id]).find((h) => h?.faction === f && !h.secondary);
-      if (main && computerFaction(state, f)) for (let i = 0; i < rules.computerArtifacts; i++) giveArtifact(state, main, drawArtifact(state, main, COMPUTER_ARTIFACT_ODDS, 0x51ed270b + i * 7919), 'przewaga komputera');
+      if (main && advantagedFaction(state, f)) for (let i = 0; i < rules.computerArtifacts; i++) giveArtifact(state, main, drawArtifact(state, main, COMPUTER_ARTIFACT_ODDS, 0x51ed270b + i * 7919), 'przewaga komputera');
     }
   }
   if (setup.mode === 'arena') {

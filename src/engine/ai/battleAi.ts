@@ -75,6 +75,7 @@ import { ARENA_SPELL_POOL, botSpell, SPELL_VALUE, type SpellId } from '../magic'
 import { canBeMoved, fallenSupports } from '../primitives';
 import { SIEGE } from '../economy';
 import type { Action, BattleUnit, GameState } from '../types';
+import { slipPick, slips } from './slips';
 import type { ItemKind } from '../data';
 
 const dist = (a: HexKey, b: HexKey) => distance(parseKey(a), parseKey(b));
@@ -170,7 +171,10 @@ export function chooseSupports(state: GameState, faction: TeamId): Action {
     // Spec: coop evil supports are chosen at random among the living.
     picked = pool.slice().sort((a, b) => hashPick(state, a) - hashPick(state, b)).slice(0, supportSlots(state, faction));
   } else {
-    picked = pool.slice().sort((a, b) => supportValue(b) - supportValue(a)).slice(0, supportSlots(state, faction));
+    const ranked = pool.slice().sort((a, b) => supportValue(b) - supportValue(a));
+    picked = ranked.slice(0, supportSlots(state, faction));
+    // A bot of a lower level now and then leaves its best support at home and takes the next one (ai/slips.ts).
+    if (ranked.length > picked.length && picked.length && slips(state, 'supports')) picked = [...picked.slice(1), ranked[picked.length]];
   }
   return { type: 'selectSupports', faction, supportIds: picked };
 }
@@ -299,8 +303,14 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
   const threats = threatsTo(state, u);
   const field = siegeField(state, u);
   // Caution fades as the battle drags on, so nobody kites forever.
-  const caution = Math.max(0, 1 - (b.round - 1) / AI_TUNING.cautionRounds);
+  // A bot of a lower level now and then does not look where the enemy can hit it (ai/slips.ts).
+  const caution = slips(state, `reckless:${u.id}`) ? 0 : Math.max(0, 1 - (b.round - 1) / AI_TUNING.cautionRounds);
   let best: Plan = { moveTo: null, target: null, second: null, useAbility: false, score: -Infinity };
+  // The best blow at each target: a bot of a lower level now and then goes for the second best target (ai/slips.ts).
+  const byTarget = new Map<string, Plan>();
+  const offer = (p: Plan) => {
+    if (p.target && p.score > (byTarget.get(p.target.id)?.score ?? -Infinity)) byTarget.set(p.target.id, p);
+  };
   const leapOnly = leapOnlyCells(state, u);
   const mates = (cell: HexKey) => livingUnits(b, u.side).filter((x) => x.id !== u.id && dist2(cellsOf(x), plannedFootprint(state, u, cell)) === 1).length;
   // Rój Puszczy: its own mycelium is worth standing on (it hits harder and heals there); the mycelium of an enemy Swarm that poisons is avoided by everyone.
@@ -329,6 +339,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
     if (cell === u.pos && !act.attacked && !act.moveOnly) {
       for (const t of throwTargets(state, u, cell)) {
         const score = scoreHit(t, attackDamage(state, u, t, true, moved)) - risk * AI_TUNING.attackRiskMelee + (UNITS[t.defId].attackType === 'ranged' ? 1 : 0);
+        offer({ moveTo: null, target: t, second: null, useAbility: true, score });
         if (score > best.score) best = { moveTo: null, target: t, second: null, useAbility: true, score };
       }
     }
@@ -380,6 +391,7 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
         if (abilityOf(u) === 'cannonFire' || abilityOf(u) === 'hailStones') score += targets.filter((x) => x.id !== t.id && dist2(cellsOf(x), cellsOf(t)) === 1).reduce((n, x) => n + scoreHit(x, dmg), 0);
         score -= risk * (ranged ? AI_TUNING.attackRiskRanged : AI_TUNING.attackRiskMelee);
         if (ranged && targets.some((x) => dist2(cellsOf(x), mine) === 1)) score -= AI_TUNING.rangedCrowded;
+        offer({ moveTo: cell === u.pos ? null : cell, target: t, second, useAbility, score });
         if (score > best.score) best = { moveTo: cell === u.pos ? null : cell, target: t, second, useAbility, score };
       }
     }
@@ -404,6 +416,11 @@ function planActivation(state: GameState, u: BattleUnit): Plan {
     // Siege: the defenders hold the wall line while it stands (they go out only to strike), so the towers and the gate work for them.
     if (b.siege?.walls.length && u.side === b.defender && mine.some((k) => wideCellOf(k).col <= SIEGE.wallColumn)) pos -= 4;
     if (pos > best.score) best = { moveTo: cell === u.pos ? null : cell, target: null, second: null, useAbility: false, score: pos };
+  }
+  if (best.target && byTarget.size > 1 && slips(state, `target:${u.id}`)) {
+    const others = [...byTarget.values()].filter((p) => p.target!.id !== best.target!.id).sort((x, y) => y.score - x.score || (x.target!.id < y.target!.id ? -1 : 1));
+    const worse = others[slipPick(state, `target:${u.id}`, others.length)];
+    if (worse) return worse;
   }
   return best;
 }

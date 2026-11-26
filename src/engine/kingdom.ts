@@ -13,7 +13,7 @@ import { mapNeighbors, revealAround, seeHex, tileCost, treeOf } from './map';
 import { Rng } from './rng';
 import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsText, type Hut, type MapObject, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, packOf, SETS, setCount, type ArtifactDef, giveArtifact, passTargets, SHARDS_ID, type Rarity } from './sites';
-import { computerFaction, isDigital, type Action, type Crystal, type GameState, type HeroState, type Rune } from './types';
+import { advantagedFaction, computerFaction, isDigital, type Action, type Crystal, type GameState, type HeroState, type Rune } from './types';
 import { circleSpells, MAGIC, SPELL_CIRCLES, SPELLS, towerSpells, type SpellId } from './magic';
 import { HERO_TYPES } from './heroTypes';
 import { FACTION_MECHANICS, mayBuildSpark, mechanicLevel, pickUpShard, placeShards, shardCollector, SPARK_NAMES, spendShards, summedLevel } from './empire';
@@ -451,7 +451,7 @@ export function initKingdom(state: GameState): void {
     const res = byTeam(teams, () => ({ ...ECONOMY.start }));
     k.res = res;
     // The computer's start advantage of the highest difficulty (COMPUTER_HANDICAP): some resources more.
-    for (const f of teams) if (computerFaction(state, f)) for (const r of RESOURCE_IDS) res[f][r] += state.rules.computerResources?.[r] ?? 0;
+    for (const f of teams) if (advantagedFaction(state, f)) for (const r of RESOURCE_IDS) res[f][r] += state.rules.computerResources?.[r] ?? 0;
   }
   const rng = new Rng((state.setup.seed ^ 0x3c6ef372) | 0);
   const nameBag = byTeam(teams, (t) => rng.shuffle([...NAMES[raceOf(state, t)]]));
@@ -692,7 +692,7 @@ export function collectIncome(state: GameState): void {
     // Latarnia Morska (the Tides): the land round a settlement with the lighthouse is revealed.
     lighthouseReveal(state, f);
     // The computer's advantage of the higher levels: its income is multiplied (COMPUTER_HANDICAP); the people's is not.
-    const mult = computerFaction(state, f) ? state.rules.computerGold ?? 1 : 1;
+    const mult = advantagedFaction(state, f) ? state.rules.computerGold ?? 1 : 1;
     if (k.res) {
       const got = resourceIncomeOf(state, f);
       if (mult !== 1) for (const r of RESOURCE_IDS) got[r] = Math.round(got[r] * mult);

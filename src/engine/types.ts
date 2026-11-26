@@ -146,6 +146,11 @@ export const DEFAULT_RULES: RulesConfig = {
 /** Ready-made levels: the setup screen offers these first, single switches only under "Własne". */
 export type Level = 'zero' | 'kids' | 'normal' | 'hard' | 'veryHard';
 
+/** The difficulty of one computer player of the digital game (backlog 94): Łatwy, Normalny, Trudny, Bardzo trudny. */
+export type BotLevel = 'kids' | 'normal' | 'hard' | 'veryHard';
+export const BOT_LEVELS: readonly BotLevel[] = ['kids', 'normal', 'hard', 'veryHard'];
+export const isBotLevel = (x: unknown): x is BotLevel => typeof x === 'string' && (BOT_LEVELS as readonly string[]).includes(x);
+
 /**
  * What each level changes against DEFAULT_RULES. Level 0 ("zero", the old Easy): few rules to remember (duels on
  * the board, no abilities, no die, no ritual) and a fallen hero's player takes a reserve hero.
@@ -187,6 +192,15 @@ export const LEVEL_RULES: Record<Level, { battleMode: BattleMode; rules: Partial
   veryHard: { battleMode: 'arena', rules: { ...HARD_RULES, veryHard: true, computerGold: COMPUTER_HANDICAP.veryHard.gold, computerTreasures: COMPUTER_HANDICAP.veryHard.treasures, computerResources: COMPUTER_HANDICAP.veryHard.resources, computerArtifacts: COMPUTER_HANDICAP.veryHard.artifacts } },
 };
 
+/**
+ * Whether the computer's advantages of the highest difficulty (`computerGold` and the rest) go to this faction: a side played by the computer only, and
+ * at a table with a level at each bot (`seatLevels`) only when one of its bots plays "Bardzo trudny".
+ */
+export function advantagedFaction(state: { setup: Pick<SetupOptions, 'mode' | 'seats' | 'seatLevels'> }, f: TeamId): boolean {
+  if (!computerFaction(state, f)) return false;
+  return !state.setup.seatLevels || state.setup.seats.some((s) => s.faction === f && s.botLevel === 'veryHard');
+}
+
 /** Whether the computer plays this faction: the Horde in coop (the automaton) or a PvP side whose seats are all bots. */
 export function computerFaction(state: { setup: Pick<SetupOptions, 'mode' | 'seats'> }, f: TeamId): boolean {
   if (state.setup.mode === 'coop') return f === 'horde';
@@ -214,6 +228,8 @@ export interface SeatSetup {
   heroId: string;
   /** Family mode (coop): the younger player; its hero gets the help of `FAMILY` (data.ts) and the screen offers hints. */
   child?: boolean;
+  /** A bot of a table with `seatLevels`: how well it plays (ai/slips.ts); missing = Normalny. */
+  botLevel?: BotLevel;
 }
 
 export interface SetupOptions {
@@ -230,6 +246,11 @@ export interface SetupOptions {
   rules: RulesConfig;
   /** Arena against the computer: how well the bot picks its supports and treasures. */
   botLevel?: Level;
+  /**
+   * The digital game's difficulty lives at the bots (backlog 94): each bot seat has its `botLevel`, the rules are those of the complexity level
+   * (Normal's preset, or level 0's), and a table of people only plays with no difficulty at all. Missing = the old games: the level of the rules.
+   */
+  seatLevels?: boolean;
   /** A game of the story campaign (campaign.ts): which campaign and scenario it is. */
   campaign?: { id: string; scenario: string };
   /** A game of the Expedition (expedition.ts): the stage (0-based), the seed of the run, the relics held and the date of a run of the day. */
@@ -266,6 +287,8 @@ export interface Player {
   faction: TeamId;
   controller: Controller;
   child?: boolean;
+  /** A bot of a table with `seatLevels`: its level (from its seat). */
+  botLevel?: BotLevel;
 }
 
 export interface HeroState {

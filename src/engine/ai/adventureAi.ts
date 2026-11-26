@@ -16,6 +16,7 @@ import { BOT_SKILL_ORDER, levelOf } from '../growth';
 import { DRAFT_VALUE } from './battleAi';
 import { artifactCarrier, objectiveOf } from '../objectives';
 import type { Action, Crystal, GameState, HeroState } from '../types';
+import { slipPick, slips } from './slips';
 
 /** The adventure bots' judgement in numbers (tuned with simulations; changing one changes the games). */
 const AI_TUNING = {
@@ -201,7 +202,9 @@ const unitValue = (id: string) => UNITS[id].hp + UNITS[id].attack * AI_TUNING.su
  * Player bots go after an enemy hero only with a clear edge: the defender acts first on
  * Speed ties, and in a duel on the board that first blow often decides.
  */
-const huntRatio = (state: GameState) => (state.setup.battleMode === 'board' ? AI_TUNING.huntRatioDuel : AI_TUNING.huntRatioArena);
+/** A bot of a lower level now and then misjudges a fight: it takes on a hero this much stronger than it should (ai/slips.ts). */
+const SLIP_HUNT = 0.65;
+const huntRatio = (state: GameState) => (state.setup.battleMode === 'board' ? AI_TUNING.huntRatioDuel : AI_TUNING.huntRatioArena) * (slips(state, 'hunt') ? SLIP_HUNT : 1);
 
 // ------------------------------------------------------------------ evil
 
@@ -377,7 +380,8 @@ class GoodContext {
 
   /** Treasures (they strengthen the team in battle) a short detour away. */
   get treasures(): HexKey[] {
-    return (this.treasures_ ??= treasureSpots(this.state).filter((k) => this.dist(this.hero, k) <= (this.desperate ? 1 : AI_TUNING.treasureDetour)));
+    // A bot of a lower level now and then walks past a treasure (ai/slips.ts).
+    return (this.treasures_ ??= slips(this.state, 'treasure') ? [] : treasureSpots(this.state).filter((k) => this.dist(this.hero, k) <= (this.desperate ? 1 : AI_TUNING.treasureDetour)));
   }
 }
 
@@ -485,7 +489,8 @@ function guardTreeClock(c: GoodContext, plan: Action): Action {
   const { hero, state, mp } = c;
   const horde = c.enemies.filter((e) => e.alive);
   const guard = [hero, ...c.allies].sort((x, y) => c.treeCostFrom(x.pos) - c.treeCostFrom(y.pos))[0] === hero;
-  if (!horde.length || !guard || state.rules.ritual === false) return plan;
+  // A bot of a lower level now and then forgets the clock for a step and comes back late (ai/slips.ts).
+  if (!horde.length || !guard || state.rules.ritual === false || slips(state, 'clock')) return plan;
   const formed = ritualFormed(state);
   const hordeEta = formed ? 0 : Math.max(...horde.map((e) => Math.ceil(Math.max(0, c.treeCostFrom(e.pos) - 1) / mp)));
   // The ritual completes at the end of the round the last Horde hero arrives in, plus the
@@ -883,7 +888,13 @@ export function adventureAction(full: GameState): Action {
   // The fog of war: the bot plans on what its faction has uncovered (backlog 90), like a player at the screen.
   const actor = activeHero(full);
   const state = actor ? fogView(full, [actor.faction]) : full;
-  const action = plainAdventureAction(state);
+  let action = plainAdventureAction(state);
+  // A bot of a lower level now and then strays from its way: a step to another hex it may walk to, without a fight (ai/slips.ts).
+  if (action.type === 'moveHero' && slips(state, 'stray')) {
+    const planned = action.to;
+    const aside = legalHeroMoves(state).filter((m) => m.kind === 'move' && m.to !== planned);
+    if (aside.length) action = { type: 'moveHero', to: aside[slipPick(state, 'stray', aside.length)].to };
+  }
   if (action.type === 'moveHero' && !canFightGuardian(state) && sneakMoves(state).some((m) => m.to === action.to)) return { type: 'sneakHero', to: action.to };
   // Brama Wydm (the Desert Empire): a hero leaving its settlement goes through the gate to the farthest hex on the way it means to walk.
   if (action.type === 'moveHero') {
@@ -900,19 +911,27 @@ export function adventureAction(full: GameState): Action {
   return action;
 }
 
+/** The kingdom actions that spend gold or resources (a bot of a lower level may let one go). */
+const PURCHASES: readonly string[] = ['kingdomBuild', 'kingdomDwelling', 'kingdomForgeRune', 'kingdomRecruit', 'kingdomLearn', 'kingdomHire'];
+
 function plainAdventureAction(state: GameState): Action {
   const hero = activeHero(state)!;
   // Level 3: a chest waiting for its choice, shopping in the settlement the hero stands in (not the coop automaton: it gets reinforcements instead).
   if (state.kingdom && currentActor(state).kind !== 'automaton') {
     const shopping = kingdomBotAction(state, hero);
-    if (shopping) return shopping;
+    // A bot of a lower level now and then lets a purchase go (ai/slips.ts); the chest and the rest are never skipped.
+    if (shopping && !(PURCHASES.includes(shopping.type) && slips(state, 'shop'))) return shopping;
   } else if (state.kingdom?.chest) return { type: 'chestTake', what: 'artifact' };
   // A level up first: the skill the bots like best of the three offered.
   if (hero.treasurePick) {
-    const best = [...hero.treasurePick.kinds].sort((x, y) => (DRAFT_VALUE[y] ?? 0) - (DRAFT_VALUE[x] ?? 0) || (x < y ? -1 : 1))[0];
-    return { type: 'chooseTreasure', kind: best };
+    const ranked = [...hero.treasurePick.kinds].sort((x, y) => (DRAFT_VALUE[y] ?? 0) - (DRAFT_VALUE[x] ?? 0) || (x < y ? -1 : 1));
+    // A bot of a lower level now and then takes the second best (ai/slips.ts), here and for a skill.
+    return { type: 'chooseTreasure', kind: ranked.length > 1 && slips(state, 'pick') ? ranked[1] : ranked[0] };
   }
-  if (hero.offer?.length) return { type: 'chooseSkill', skill: BOT_SKILL_ORDER.find((s) => hero.offer!.includes(s)) ?? hero.offer[0] };
+  if (hero.offer?.length) {
+    const ranked = BOT_SKILL_ORDER.filter((s) => hero.offer!.includes(s));
+    return { type: 'chooseSkill', skill: (ranked.length > 1 && slips(state, 'pick') ? ranked[1] : ranked[0]) ?? hero.offer[0] };
+  }
   // A reserve hero coming in picks the hex nearest to the Tree, where both sides are headed.
   if (hero.entering) {
     if (state.turnBattleDone) return { type: 'endTurn' };

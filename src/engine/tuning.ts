@@ -2,8 +2,8 @@
 // createGame applies the matching entries to the rules of the game (the setup keeps the preset: ranking and saves read it as before).
 // Tuned with `SIM_DIGITAL=1 [SIM_OBJECTIVE=control] make sim-tabele` (see docs/ZASADY_CYFROWE.md for the targets and results).
 
-import { levelOf } from './scoring';
-import { isDigital, type MapShape, type RulesConfig, type SetupOptions } from './types';
+import { presetLevel } from './scoring';
+import { COMPUTER_HANDICAP, isDigital, type MapShape, type RulesConfig, type SetupOptions } from './types';
 import type { MapSize } from './data';
 import { AUTO_TUNING } from './tuningAuto';
 
@@ -180,11 +180,17 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
   const base = setup.rules;
   if (!isDigital(base) || setup.mode === 'arena') return base;
   // The Kingdom table has no ranking level (levelOf says 'custom'), but its difficulty is tuned like the level it is built on.
-  const level = levelOf(base.kingdom ? { ...setup, rules: { ...base, kingdom: false, economy: false } } : setup);
+  const level = presetLevel(base.kingdom ? { ...setup, rules: { ...base, kingdom: false, economy: false } } : setup);
+  // A level at each bot (backlog 94): the computer's advantages of "Bardzo trudny" when one of the bots plays it (advantagedFaction says which sides get them).
+  const seats = setup.seatLevels && setup.seats.some((s) => s.controller === 'bot' && s.botLevel === 'veryHard') ? veryHardRules() : null;
+  const withSeats = (r: RulesConfig): RulesConfig => (seats ? { ...r, ...seats } : r);
   // Only the ready-made levels are tuned; "Własny" is exactly what the player switched on.
-  if (level === 'custom') return base;
+  if (level === 'custom') return withSeats(base);
   const players = setup.seats.filter((s) => s.faction === 'dawn').length;
   const objective = base.objective === 'control' || base.objective === 'survival' || base.objective === 'boss' || base.objective === 'artifact' || base.objective === 'conquest' || base.objective === 'relic' ? base.objective : 'crystals';
+  // With the levels at the bots the goals the sides play alike take no levers at all (the goal is fair by itself), and the two stories of a side
+  // against another (the crystals, survival) keep only the levers that even out the roles: those of the Normal cells.
+  if (setup.seatLevels && !ROLE_GOALS.includes(objective)) return withSeats(base);
   let rules = base;
   for (const t of DIGITAL_TUNING) {
     if (t.objective && t.objective !== objective) continue;
@@ -201,5 +207,13 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
     if (t.customMapId && t.customMapId !== setup.customMapId) continue;
     rules = { ...rules, ...t.rules };
   }
-  return rules;
+  return withSeats(rules);
 }
+
+/** The goals where the two sides have different tasks (one gathers or holds out, the other stops it): their levers even out the roles. */
+export const ROLE_GOALS: readonly string[] = ['crystals', 'survival'];
+
+const veryHardRules = (): Partial<RulesConfig> => {
+  const h = COMPUTER_HANDICAP.veryHard;
+  return { computerGold: h.gold, computerTreasures: h.treasures, computerResources: h.resources, computerArtifacts: h.artifacts };
+};
