@@ -2,10 +2,9 @@
 
 import { StatText, RuleText } from './markers';
 import { useContext, useState } from 'react';
-import { FACTION_HEROES, FACTION_SUPPORTS, GUARDIANS, ITEMS, NEUTRAL_BOSSES, NEUTRAL_WEAK, UNITS, type ItemKind } from '../engine/data';
+import { FACTION_NAMES, GUARDIANS, ITEMS, type FactionId, type ItemKind } from '../engine/data';
 import { ARTIFACTS, RARITY_NAMES, SETS, SITE } from '../engine/sites';
-import { ALT_UNITS, KINGDOM, LEGENDS, RECRUIT_COSTS, RECRUITS } from '../engine/kingdom';
-import { COMMANDERS } from '../engine/realm';
+import { KINGDOM } from '../engine/kingdom';
 import { MINE_NAMES, OBJECT_NAMES, SIEGE } from '../engine/economy';
 import { asset, Frame, Ribbon } from './common';
 import { ManualView } from './ManualView';
@@ -13,6 +12,7 @@ import { ArtifactMedal, SLOT_NAMES } from './growthUi';
 import { DigitalContext } from './statScale';
 import { savedDigital } from './NewGameWizard';
 import { TreasureCard } from './TreasureCard';
+import { ruleUnitSections } from './rulesUnits';
 import { UnitCard } from './UnitCard';
 
 type Tab = 'rules' | 'manual' | 'units' | 'treasures' | 'artifacts' | 'places' | 'keys';
@@ -105,7 +105,6 @@ const PLACES: Array<[string, string, number, string]> = [
   ['Odłamek Pierwotnej Iskry', 'tiles/obj_odlamek.jpg', 6, 'Leży na mapie od początku, widoczny dla obu stron. Bohater, który go podniesie, niesie go; komplet Odłamków przy jednym bohaterze w jego osadzie wznosi Pierwotną Iskrę.'],
 ].sort((a, b) => (a[2] as number) - (b[2] as number)) as Array<[string, string, number, string]>;
 
-const UNITS_NAME = (id: string): string => UNITS[id]?.name ?? id;
 
 const KEYS: Array<[string, string]> = [
   ['Spacja / E', 'zakończ turę (na mapie)'],
@@ -155,34 +154,31 @@ export function RulesDialog({ onClose }: { onClose: () => void }) {
           </div>
         )}
         {tab === 'manual' && <ManualView />}
-        {tab === 'units' &&
-          ([
-            ['Przymierze Świtu', [...FACTION_HEROES.dawn, ...FACTION_SUPPORTS.dawn]],
-            ['Mroczna Horda', [...FACTION_HEROES.horde, ...FACTION_SUPPORTS.horde]],
-            ['Poziom IV i V: pomocnicy do rekrutacji w osadzie, Przymierze Świtu (stopnie 2–5)', RECRUITS.dawn.filter((r) => r.tier >= 2 && r.tier <= 5 && !r.alt).map((r) => r.id)],
-            ['Poziom IV i V: pomocnicy do rekrutacji w osadzie, Mroczna Horda (stopnie 2–5)', RECRUITS.horde.filter((r) => r.tier >= 2 && r.tier <= 5 && !r.alt).map((r) => r.id)],
-            ['Poziom VI: dowódcy, czyli drudzy bohaterowie najęci w karczmie', [...Object.values(COMMANDERS.dawn), ...Object.values(COMMANDERS.horde)]],
-            ['Poziom VII: legendarne jednostki frakcji (koszary drugiego stopnia, 20 zł i 3 Pyły)', [LEGENDS.dawn, LEGENDS.horde]],
-            ['Poziom VII: alternatywni pomocnicy (jedno siedlisko na stopień, drugie zamyka się na całą grę)', [...ALT_UNITS.dawn, ...ALT_UNITS.horde]],
-            ['Strażnicy kryształów', GUARDIANS],
-            ['Neutralni: słabi', NEUTRAL_WEAK],
-            ['Neutralni: bossowie', NEUTRAL_BOSSES],
-            ['Strażnicy w pojedynku na planszy (karty z błękitnym rewersem)', GUARDIANS, true],
-          ] as Array<[string, string[], boolean?]>).map(([title, ids, duel]) => (
-            <div key={title} style={{ marginBottom: 18 }}>
-              <div className="lbl" style={{ textAlign: 'center', margin: '4px 0 10px' }}><StatText text={title} /></div>
-              {title.startsWith('Poziom IV i V') && (
-                <div style={{ textAlign: 'center', fontSize: 14, color: 'var(--muted)', margin: '-4px 0 8px' }} data-rules-recruit-costs>
-                  <StatText text={ids.map((id) => { const r = RECRUITS[title.includes('Przymierze') ? 'dawn' : 'horde'].find((x) => x.id === id)!; return `${UNITS_NAME(id)}: stopień ${r.tier}, ${RECRUIT_COSTS[r.tier - 1]} zł`; }).join(' · ')} />
+        {tab === 'units' && (
+          <>
+            {ruleUnitSections().map(({ id, units }) => (
+              <div key={id} style={{ marginBottom: 18 }} data-rules-faction={id}>
+                <div className="lbl" style={{ textAlign: 'center', margin: '4px 0 10px' }}>{id === 'neutral' ? 'Neutralni' : FACTION_NAMES[id as FactionId]}</div>
+                <div style={{ ...cardRow, maxWidth: cardW * 3 + 28 }}>
+                  {units.map((u) => (
+                    <UnitCard key={u} unitId={u} width={cardW} />
+                  ))}
                 </div>
-              )}
-              <div style={{ ...cardRow, maxWidth: cardW * 3 + 28 }}>
-                {ids.map((id) => (
-                  <UnitCard key={id} unitId={id} width={cardW} duel={duel} />
-                ))}
               </div>
-            </div>
-          ))}
+            ))}
+            {/* The board edition: a hero alone fights a guardian by its duel card. */}
+            {!digitalCards && (
+              <div style={{ marginBottom: 18 }} data-rules-duels>
+                <div className="lbl" style={{ textAlign: 'center', margin: '4px 0 10px' }}>Strażnicy w pojedynku na planszy (karty z błękitnym rewersem)</div>
+                <div style={{ ...cardRow, maxWidth: cardW * 3 + 28 }}>
+                  {GUARDIANS.map((u) => (
+                    <UnitCard key={u} unitId={u} width={cardW} duel />
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        )}
         {tab === 'treasures' && (
           <DigitalContext.Provider value={digitalCards}>
             <div style={{ ...cardRow, maxWidth: cardW * 3 + 28 }}>

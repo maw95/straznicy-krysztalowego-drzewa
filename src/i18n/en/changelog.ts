@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Zasady i karty, zakładka „Jednostki”: karty są podzielone tylko według frakcji (pięć skończonych, na końcu neutralni); w każdej najpierw bohaterowie, potem dowódcy, potem pomocnicy od najniższego poziomu. Są teraz wszystkie jednostki tych frakcji.':
+    'Rules and cards, the “Units” tab: the cards are divided by faction only (the five finished ones, the neutral units at the end); in each the heroes come first, then the commanders, then the supports from the lowest tier up. Every unit of these factions is there now.',
   'Wybór frakcji (nowa gra i stół online) pokazuje tylko pięć skończonych: Przymierze, Hordę, Dzikie Stado, Żelazny Klan i Bractwo Przypływu. Pozostałe wrócą, gdy dostaną grafikę.':
     'Choosing a faction (new game and online table) shows only the five finished ones: the Dawn Covenant, the Horde, the Wild Herd, the Iron Clan and the Brotherhood of the Tide. The others will return once they have their graphics.',
   "Wolna Kompania: Wydra Przemytniczka ma animowaną figurę na polu bitwy (chód, strzał z kuszy, trafienie, śmierć).":

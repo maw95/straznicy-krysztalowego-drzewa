@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Zasady i karty, zakładka „Jednostki”: karty są podzielone tylko według frakcji (pięć skończonych, na końcu neutralni); w każdej najpierw bohaterowie, potem dowódcy, potem pomocnicy od najniższego poziomu. Są teraz wszystkie jednostki tych frakcji.
 - Wybór frakcji (nowa gra i stół online) pokazuje tylko pięć skończonych: Przymierze, Hordę, Dzikie Stado, Żelazny Klan i Bractwo Przypływu. Pozostałe wrócą, gdy dostaną grafikę.
 - Wolna Kompania: Wydra Przemytniczka ma animowaną figurę na polu bitwy (chód, strzał z kuszy, trafienie, śmierć).
 - Osada Bractwa Przypływu: proporce na murach i chorągiew siedliska Homara Pancernego też są w morskim kolorze frakcji.
