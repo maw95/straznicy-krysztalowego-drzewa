@@ -17,6 +17,8 @@ const BOULDER_LANDS_MS = 1120;
 export const WALK_STEP_MS = 170;
 /** Abilities that have their own sound from the mechanics' effects (not the common spell sound). */
 const MECHANIC_SOUNDS = new Set(['waterWall', 'deepWhirl', 'roar', 'tremor', 'shellUp']);
+/** The Free Companies' own sounds: Oko Kruka, Ładunek, Tama, Kieszonkowiec and Fortel (laying a snare). */
+const FREE_SOUNDS: Record<string, 'free_mark' | 'free_blast' | 'free_dam' | 'free_loot' | 'free_trap'> = { ravenEye: 'free_mark', blast: 'free_blast', dam: 'free_dam', pickpocket: 'free_loot', ploy: 'free_trap' };
 /** Units whose blow is a spell (it has its own sound, not a blade or a bowstring; report 216950). */
 const MAGIC_ATTACKERS = new Set(['goblinShaman', 'elfDruid', 'nymph']);
 
@@ -163,7 +165,7 @@ export function useBattleAnimations(state: GameState) {
       if (cell) mech.push({ key: Math.random(), cell, kind, ...(to ? { to } : {}) });
     };
     const swaps = b.tideSwaps?.length ?? 0;
-    const sounds = new Set<'herds_push' | 'herds_collision' | 'herds_charge' | 'herds_roar' | 'tides_shell' | 'tides_waterWall' | 'tides_whirl'>();
+    const sounds = new Set<'herds_push' | 'herds_collision' | 'herds_charge' | 'herds_roar' | 'tides_shell' | 'tides_waterWall' | 'tides_whirl' | 'free_trap'>();
     const activeId = b.activation?.unitId ?? '';
     if (activeId && actStart.current.id !== activeId) actStart.current = { id: activeId, pos: b.units[activeId]?.pos ?? null };
     const sealed = (ab: string) => newSeals.filter((x) => x.ability === ab);
@@ -207,6 +209,8 @@ export function useBattleAnimations(state: GameState) {
       const hitUnit = Object.values(b.units).find((x) => x.pos && UNITS[x.defId].name === name);
       if (hitUnit) (addFx('herds_collision', hitUnit.pos), sounds.add('herds_collision'));
     }
+    // The Free Companies: a snare that goes off under a walker.
+    if (newLog.some((t) => t.includes(' wpada w sidła'))) sounds.add('free_trap');
     // Runes glow on a unit of the Clans when its first activation in the battle begins.
     const battleKey = Object.keys(b.units).join();
     if (runeBattle.current !== battleKey) (runeBattle.current = battleKey, runesShown.current.clear());
@@ -231,7 +235,7 @@ export function useBattleAnimations(state: GameState) {
     if (newSeals.length) {
       const named = newSeals.map((x) => x.ability);
       // Iron Clan: a wall of shields (Przysięga Tarczy, Fortyfikacja) and the ancestors' hammer stun have their own sounds.
-      const seal = named.includes('pearlShield') ? 'tides_pearlShield' : named.some((a) => a === 'harpoon' || a === 'deepCoil') ? 'tides_harpoonPull' : named.some((a) => a === 'shieldOath' || a === 'fortify') ? 'clans_shieldWall' : named.includes('stunBlow') ? 'clans_stun' : named.some((a) => MECHANIC_SOUNDS.has(a)) ? null : 'magic_cast';
+      const seal = named.includes('pearlShield') ? 'tides_pearlShield' : named.some((a) => a === 'harpoon' || a === 'deepCoil') ? 'tides_harpoonPull' : named.some((a) => a === 'shieldOath' || a === 'fortify') ? 'clans_shieldWall' : named.includes('stunBlow') ? 'clans_stun' : named.some((a) => a in FREE_SOUNDS) ? FREE_SOUNDS[named.find((a) => a in FREE_SOUNDS)!] : named.some((a) => MECHANIC_SOUNDS.has(a)) ? null : 'magic_cast';
       if (seal) sfx.play(seal);
       setSeals((x) => [...x, ...newSeals]);
       later(() => setSeals((x) => x.filter((s) => !newSeals.includes(s))), 1400);

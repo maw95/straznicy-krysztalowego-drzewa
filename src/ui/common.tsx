@@ -39,6 +39,12 @@ export const FACTION_TILE_ART: Partial<Record<FactionId, Record<string, number>>
     obj_shrine: 1, obj_camp: 1, obj_chest: 1, obj_studnia: 1, obj_tartak: 1, obj_kopalnia: 1, obj_kopalnia_ruda: 1, obj_zrodlo_pylu: 1, obj_chatka: 1,
     obj_skladnica: 1, obj_odlamek: 1, obj_mlyn: 1,
   },
+  // `scripts/assets/free_map.py`: the glade, the hideout and the treasury are new terrain types (glade_<n>, baseFree_1, treasureFree_1), the rest replaces the shared ground.
+  free: {
+    back: 1, hill: 1, river: 1, bridge: 1, mountain: 1, chasm: 1, barren: 1, osada_1: 1,
+    obj_shrine: 1, obj_camp: 1, obj_chest: 1, obj_studnia: 1, obj_tartak: 1, obj_kopalnia: 1, obj_kopalnia_ruda: 1, obj_zrodlo_pylu: 1, obj_chatka: 1,
+    obj_skladnica: 1, obj_odlamek: 1, obj_mlyn: 1,
+  },
   // `scripts/assets/tides_map.py`: the shore tiles, the harbour and treasury are new terrain types (shore_<n>, baseTides_1, treasureTides_1), the rest replaces the shared ground.
   tides: {
     back: 1, hill: 1, river: 1, bridge: 1, mountain: 1, chasm: 1, barren: 1, osada_1: 1,

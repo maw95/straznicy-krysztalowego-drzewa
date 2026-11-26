@@ -8,7 +8,7 @@ import type { AttackRoll, BattleState } from '../engine/types';
 import { asset } from './common';
 import { useScales } from './statScale';
 
-export type MarkerName = 'ability_used' | 'rooted' | 'slowed' | 'cursed' | 'attack_up' | 'attack_3' | 'speed_up' | 'shield' | 'vitality' | 'damage_empty';
+export type MarkerName = 'ability_used' | 'rooted' | 'slowed' | 'cursed' | 'attack_up' | 'attack_3' | 'speed_up' | 'shield' | 'vitality' | 'damage_empty' | 'free_mark';
 
 export function Marker({ name, size = 22, title }: { name: MarkerName; size?: number; title?: string }) {
   return <img src={asset(`markers/${name}.png`)} alt={title ?? ''} title={title} style={{ width: size, height: size, objectFit: 'contain', flex: 'none', verticalAlign: 'middle', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.55))' }} />;

@@ -42,7 +42,7 @@ export function statusList(u: BattleUnit): StatusInfo[] {
   if (s.brittle) out.push({ label: 'Kruchy lód: następny cios zada o 1 więcej obrażeń', glyph: 'sSkull', buff: false });
   if (s.auraChill) out.push({ label: `−${s.auraChill} S (Zimne Światło)`, glyph: 'sRoot', buff: false, value: `−${s.auraChill}` });
   // Wolna Kompania: a mark (every attack of the marker's side hits harder this round), a veiled unit (the enemy does not see it), the Okop, a unit held by a trap.
-  if (s.marked) out.push({ label: 'Oznaczony do końca rundy: ataki Kompanii w tę jednostkę są silniejsze', glyph: 'sBlade', buff: false });
+  if (s.marked) out.push({ label: 'Oznaczony do końca rundy: ataki Kompanii w tę jednostkę są silniejsze', glyph: 'sBlade', marker: 'free_mark', buff: false });
   if (s.veiled) out.push({ label: 'Ukryty: wróg go nie widzi i nie może go wybrać na cel; pierwszy atak ma premię i go odsłania', glyph: 'sGuard', buff: true });
   if (s.dugIn) out.push({ label: 'Okop: pancerz i nie da się odepchnąć', glyph: 'sStone', buff: true });
   if (s.rootLater) out.push({ label: 'Złapany w sidła: nie ruszy się w swojej następnej aktywacji', glyph: 'sRoot', buff: false });

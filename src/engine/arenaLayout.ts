@@ -172,15 +172,15 @@ export const WIDE_OBSTACLES: Record<ArenaId, ObstacleGroup[]> = {
     { art: 'ruin', cells: [[9, 7]] },
     { art: 'brambles', cells: [[6, 7]] },
   ],
-  // Placeholder (docs/BACKLOG.md 2a): a forest camp by a ruined mill with fences and barrels; until then the pictures of Przymierze and Horda, rearranged.
+  // A forest camp by a ruined watermill: a felled oak with stakes, a supply wagon, barrels, a palisade, millstones, firewood and a campfire (public/assets/arena/cyfrowa).
   free: [
-    { art: 'log', cells: [[4, 1], [5, 1]] },
-    { art: 'barricade', cells: [[8, 5], [8, 6]] },
-    { art: 'ruin', cells: [[3, 4]] },
-    { art: 'pine', cells: [[9, 2]] },
-    { art: 'boulders', cells: [[10, 7]] },
-    { art: 'brambles', cells: [[6, 3]] },
-    { art: 'totem', cells: [[6, 7]] },
+    { art: 'felledoak', cells: [[4, 1], [5, 1]] },
+    { art: 'campwagon', cells: [[8, 5], [8, 6]] },
+    { art: 'barrelstack', cells: [[3, 4]] },
+    { art: 'stakefence', cells: [[9, 2]] },
+    { art: 'millstones', cells: [[10, 7]] },
+    { art: 'woodpile', cells: [[6, 3]] },
+    { art: 'campfire', cells: [[6, 7]] },
   ],
   // Placeholder (docs/BACKLOG.md 2a): an oasis with ruined columns, dunes (boulders) and dry palms until the arena of its own is painted.
   sands: [

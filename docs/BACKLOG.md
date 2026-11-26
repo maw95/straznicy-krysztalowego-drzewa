@@ -163,9 +163,6 @@ Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.t
 
 **Wolna Kompania (`free`)** (barwa frakcji: burgund `#6B1A33` na chorągwiach i proporcach; paleta: rude i brązowe futra, butelkowa zieleń płaszczy, skóra, mosiądz, len; zwierzoludzie w ubraniach, bez niebieskiego w figurach; tło do wycinania #0000FF):
 - animacje 2D dla tych samych 19 (do czasu ich powstania żetony z portretami);
-- znacznik sideł na polu areny (dziś kreskowany sześciokąt z krzyżykiem w SVG) i znacznik oznaczenia na figurze (dziś odznaka statusu);
-- arena cyfrowa `arena/cyfrowa/free.webp` (leśny obóz przy zrujnowanym młynie, płoty, beczki) i jej przeszkody (dziś obrazy Przymierza i Hordy, `WIDE_OBSTACLES.free`);
-- kafle ziemi Kompanii, rewers `tiles/back_free.jpg`, baza i skarbiec (dziś kafle Przymierza, pole `terrain`);
 
 **Pustynne Cesarstwo (`sands`)** (paleta: piasek, ochra, terakota, złoto, kość słoniowa, zgaszony karmazyn, zieleń jadeitu zamiast turkusu i lapis lazuli; bez niebieskiego w figurach; tło do wycinania #0000FF; wygląd Bastii: `docs/frakcje/ZWIERZAKI_AUTORA.md`):
 - karta (`cards/art/<id>.jpg`, 452×314) i portret (`cards/portraits/<id>.jpg`, 256×256) dla 19 jednostek: `djinnVizier`, `sphinxWarden`, `scorpionQueen`, `camelPrince` (4. bohater, biały wielbłąd, opis na karcie), `bastia`, `caravanArcher`, `desertAstrologer` (dowódcy), `jackalGuard`, `pharaohMongoose` (portret już jest z G3), `duneArcher`, `bedouinNomad` (człowiek pustyni w burnusie z szablą, bez konia), `cobra`, `mirageDancer`, `sandScorpion`, `ushabti`, `oasisCrocodile`, `lamassu`, `roc`, `sandWyrm` (portret już jest z G3);

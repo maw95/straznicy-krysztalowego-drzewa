@@ -6052,20 +6052,6 @@
       "licencja": "wygenerowane w Scenario (prawa wg regulaminu Scenario); do wglądu przy ujawnieniu AI na Steamie"
     },
     {
-      "id": "free/zastepcze/arena",
-      "pliki": [
-        "public/assets/arena/cyfrowa/free.webp"
-      ],
-      "typ": "arena frakcji (zastępcza)",
-      "narzedzie": "scripts/placeholders.ts + scripts/placeholders.py (Pillow, lokalnie)",
-      "model": "brak (rysunek kodem: gradient w kolorze frakcji i podpis nazwą jednostki)",
-      "prompt": "brak",
-      "data": "2026-11-20",
-      "ai": false,
-      "placeholder": true,
-      "licencja": "własna (wygenerowane kodem w repo); do wymiany na grafikę docelową (docs/BACKLOG.md, sekcja 2a)"
-    },
-    {
       "id": "sands/zastepcze/art",
       "pliki": [
         "public/assets/cards/art/bastia.jpg",
@@ -10965,6 +10951,158 @@
       "prompt": "Trafienie: \"The X is badly startled: its upper body jerks quickly backward toward the left, its feet slide back a step, it wobbles, then steadies itself and stands exactly as before, facing right. It stays the same size and does not step forward.\" Pozostałe: patrz historia rozmowy z 26.11.",
       "narzedzie": "Scenario (plan płatny) + ffmpeg",
       "model": "model_pruna-p-video-2 / model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-26",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "free/arena",
+      "pliki": [
+        "public/assets/arena/cyfrowa/free.webp",
+        "public/assets/arena/cyfrowa/felledoak.webp",
+        "public/assets/arena/cyfrowa/campwagon.webp",
+        "public/assets/arena/cyfrowa/barrelstack.webp",
+        "public/assets/arena/cyfrowa/stakefence.webp",
+        "public/assets/arena/cyfrowa/millstones.webp",
+        "public/assets/arena/cyfrowa/woodpile.webp",
+        "public/assets/arena/cyfrowa/campfire.webp"
+      ],
+      "typ": "arena cyfrowa Wolnej Kompanii (leśny obóz przy zrujnowanym młynie) i 7 jej przeszkód",
+      "opis": "Tło 1536x1024 jakość high (12 CU), czysta płyta pod planszą (arena_cyfrowa.clean_plate); przeszkody 768x768 medium na przezroczystym tle (3 CU każda): zwalony dąb z palami, wóz, beczki, palisada z proporcem, kamienie młyńskie, drewno z siekierą, ognisko. Układ: WIDE_OBSTACLES.free. Jedno podejście na obraz.",
+      "scenario_asset": {
+        "arena_raw": "asset_P5DjGHMU6qFf3jEDTN6JttkM",
+        "felledoak": "asset_CnRX9b6BPkSmbPn7rtVFQQ9a",
+        "campwagon": "asset_duALGEtP6EVLio32baDAVkUH",
+        "barrelstack": "asset_FgFXk3w1QyUz4otLzFCToE1E",
+        "stakefence": "asset_Fm54nJ5byjCQvsqRqndDCDVw",
+        "millstones": "asset_omLkaHhD99HJvsz7kU7bzvpd",
+        "woodpile": "asset_t3x1zWr7teAA6LfgmZU8TgWB",
+        "campfire": "asset_rGd8Jd2Ko4j47eDnhCW25u6F"
+      },
+      "prompt": "Tło: Top-down view of an empty forest camp battlefield arena background for a turn-based strategy game ... (wide calm trampled clearing in the centre; frame: ruined watermill, stake fences, barrels, campfire, tents with burgundy pennants, autumn trees, stream). Przeszkody: <opis>, game obstacle sprite for a turn-based strategy game in a forest camp, seen from a slightly raised three-quarter front view ... isolated on a fully transparent background.",
+      "narzedzie": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) przez Scenario + skrypt Pillow scripts/assets/free_map.py",
+      "model": "model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-26",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "free/kafle-mapy",
+      "pliki": [
+        "public/assets/tiles/glade_1.jpg",
+        "public/assets/tiles/glade_2.jpg",
+        "public/assets/tiles/baseFree_1.jpg",
+        "public/assets/tiles/treasureFree_1.jpg"
+      ],
+      "typ": "kafle mapy Wolnej Kompanii: polana (2 warianty), kryjówka (baza), skarbiec",
+      "opis": "Obrazy 1024x1024 jakość low (2 CU każdy), przycięte do sześciokąta 260x300 w ramce meadow_1.jpg (free_map.py). Nowe typy terenu glade, baseFree, treasureFree w data.ts.",
+      "scenario_asset": {
+        "glade_1": "asset_kyhwjmd3akYamZkHWyuvnULG",
+        "glade_2": "asset_tMzwLxHCN76wHdABkXaYHDAL",
+        "baseFree_1": "asset_ASxqzWzon9PPNRMERvczg2sU",
+        "treasureFree_1": "asset_WH63gaV4gpJQkcTBDHmYWjJ7"
+      },
+      "prompt": "Isometric three-quarter top-down fantasy strategy map tile illustration, painterly and richly detailed ...: <opis kafla w jesiennym lesie>, soft golden late afternoon light, palette of russet, warm brown, bottle green and brass. The scene fills the whole square image edge to edge, no border, no frame, no text, no characters.",
+      "narzedzie": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) przez Scenario + skrypt Pillow scripts/assets/free_map.py",
+      "model": "model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-26",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "free/kafle-wlasne",
+      "pliki": [
+        "public/assets/tiles/back_free.jpg",
+        "public/assets/tiles/free_hill_1.jpg",
+        "public/assets/tiles/free_river_1.jpg",
+        "public/assets/tiles/free_bridge_1.jpg",
+        "public/assets/tiles/free_mountain_1.jpg",
+        "public/assets/tiles/free_chasm_1.jpg",
+        "public/assets/tiles/free_barren_1.jpg",
+        "public/assets/tiles/free_obj_shrine.jpg",
+        "public/assets/tiles/free_obj_camp.jpg",
+        "public/assets/tiles/free_obj_chest.jpg",
+        "public/assets/tiles/free_obj_studnia.jpg",
+        "public/assets/tiles/free_obj_tartak.jpg",
+        "public/assets/tiles/free_obj_kopalnia.jpg",
+        "public/assets/tiles/free_obj_kopalnia_ruda.jpg",
+        "public/assets/tiles/free_obj_zrodlo_pylu.jpg",
+        "public/assets/tiles/free_obj_chatka.jpg",
+        "public/assets/tiles/free_obj_skladnica.jpg",
+        "public/assets/tiles/free_obj_odlamek.jpg",
+        "public/assets/tiles/free_obj_mlyn.jpg",
+        "public/assets/tiles/free_osada_1.jpg"
+      ],
+      "typ": "własna strona mapy Wolnej Kompanii: rewers, teren (wzgórza, rzeka, most, góry, jar, karczowisko), obiekty i osada w jesiennym lesie",
+      "opis": "Obrazy 1024x1024 jakość low (2 CU, 19 obrazów). Teren w ramce meadow_1, obiekty i osada przycięte do 260x300 bez ramki. Rewers: zielony rewers Przymierza przebarwiony na burgund z herbem (lisia głowa na strzałach) w medalionie (bez generowania).",
+      "scenario_asset": {
+        "hill_1": "asset_CGgS9ZYyUKehMm9JYZQeYjEe",
+        "river_1": "asset_FS7Y7by6vQvTUsDvc5UTGrL2",
+        "bridge_1": "asset_gcum98M6rDF7xX4qd8WVGojx",
+        "mountain_1": "asset_Azc1SRim3fAgmp5bPhGgDGp2",
+        "chasm_1": "asset_HM6xfF9nYoA1wzSCuEZpGJKP",
+        "barren_1": "asset_4xndqxPeEJ6metf1WNoFeVMX",
+        "obj_shrine": "asset_RZWKp8MRs8CoTCksj3DunmdF",
+        "obj_camp": "asset_p7BK1r3EWN8qUgFuwwSjP9KZ",
+        "obj_chest": "asset_fGecYVnya14NxjUnbSw4AeEe",
+        "obj_studnia": "asset_1TuerSJrZpBeDtgeksXdTN11",
+        "obj_tartak": "asset_PBR7oEmFZQHci7RLgPGKhuDr",
+        "obj_kopalnia": "asset_7M2wwbtfr1F9sz9d2hJX4qGA",
+        "obj_kopalnia_ruda": "asset_jc7NNR3iYpogsVJieiLii8Hy",
+        "obj_zrodlo_pylu": "asset_xqdhaXbWSsN8DrLvq6M8Eour",
+        "obj_chatka": "asset_RfWjjNUuiuDHVWLyHzGLqUK1",
+        "obj_skladnica": "asset_PKKHxUFQoEK6U9bPQfehqfBj",
+        "obj_odlamek": "asset_oy1X7KGaac74BC9wJszfuf5u",
+        "obj_mlyn": "asset_EdVtHDGGomXWxFffQAuo9mQr",
+        "osada": "asset_rPtCAGFZNE3Qqg8nZZ3N2bom"
+      },
+      "prompt": "Isometric three-quarter top-down fantasy strategy map tile illustration, painterly and richly detailed ...: <opis kafla w jesiennym lesie>, soft golden late afternoon light, palette of russet, warm brown, bottle green and brass. The scene fills the whole square image edge to edge, no border, no frame, no text, no characters.",
+      "narzedzie": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) przez Scenario + skrypt Pillow scripts/assets/free_map.py",
+      "model": "model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-26",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "free/znaczniki",
+      "pliki": [
+        "public/assets/markers/free_snare.png",
+        "public/assets/markers/free_mark.png"
+      ],
+      "typ": "znaczniki Wolnej Kompanii: sidła na polu areny i Oko Kruka na jednostce",
+      "opis": "Obrazy 768x768 medium na przezroczystym tle (3 CU każdy), zmniejszone do 128 px.",
+      "scenario_asset": {
+        "snare": "asset_2Rxdh8AqCuLEcNXMxancezhd",
+        "ravenmark": "asset_b2TjFdQJeY1Vkt5ecwU6LZHd"
+      },
+      "prompt": "Sidła: Game board marker icon: an open round iron hunting snare ... seen straight from above. Oko Kruka: Game status marker icon: a golden eye of a raven inside a round brass target ring ... on a small burgundy disc with two black feathers.",
+      "narzedzie": "GPT Image 2.5 Flare (model_openai-gpt-image-2-5-flare) przez Scenario + skrypt Pillow scripts/assets/free_map.py",
+      "model": "model_openai-gpt-image-2-5-flare",
+      "data": "2026-11-26",
+      "ai": true,
+      "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"
+    },
+    {
+      "id": "free/dzwieki-mechanik",
+      "pliki": [
+        "public/assets/dzwieki/free_trap.mp3",
+        "public/assets/dzwieki/free_mark.mp3",
+        "public/assets/dzwieki/free_blast.mp3",
+        "public/assets/dzwieki/free_dam.mp3",
+        "public/assets/dzwieki/free_loot.mp3"
+      ],
+      "typ": "efekty dźwiękowe mechanik Wolnej Kompanii: sidła, oznaczenie, ładunek, tama, sakiewka",
+      "opis": "Po 1 CU; wyrównane do ok. -21 dB, mono 128 kbps (scripts/assets/free_mechanics_audio.py).",
+      "scenario_asset": {
+        "free_trap": "asset_dtCGqQGjK81GY3ymUqmJM4Us",
+        "free_mark": "asset_wSBgktj7xXXPtfTqg6bccYcf",
+        "free_blast": "asset_MeKtj6bGQrZhe4idFWu5CcCe",
+        "free_dam": "asset_tgNsWaGenC4gQuX6nvVPFGxt",
+        "free_loot": "asset_1QAzW6hbECDGQ16TL6yjSk6g"
+      },
+      "prompt": "A hunter's iron snare springs shut ... / One loud raven caw followed by a short bright magical chime ... / A short burning fuse hiss and then a wooden gunpowder keg explodes ... / Quick timber barrier being built ... / A thief snatches a small leather purse ..., fantasy game sound effect, no music",
+      "narzedzie": "ElevenLabs Sound Effects v3 przez Scenario + scripts/assets/free_mechanics_audio.py",
+      "model": "model_elevenlabs-sound-effects-v3",
       "data": "2026-11-26",
       "ai": true,
       "licencja": "Scenario, plan płatny: pełna licencja komercyjna bez tantiem"

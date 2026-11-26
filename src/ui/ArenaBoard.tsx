@@ -133,11 +133,6 @@ export function ArenaBoard(p: Props) {
   const wide = b.layout === 'wide';
   const { cellCenter, cellPos, hexPoints, cells: CELLS, cellPoints: CELL_POINTS, canvasW: CANVAS_W, canvasH: CANVAS_H, art: ART_SIZE } = geo;
   const { deployable, picked, deploySide, posOf } = deploy;
-  /** The mark of a trap: a cross with a bar, drawn on the middle of its hex. */
-  const trapGlyph = (k: HexKey): string => {
-    const c = cellCenter(k);
-    return `M${c.x - 7},${c.y - 7} L${c.x + 7},${c.y + 7} M${c.x + 7},${c.y - 7} L${c.x - 7},${c.y + 7} M${c.x - 10},${c.y} L${c.x + 10},${c.y}`;
-  };
   const artSrc = asset(wide ? `arena/cyfrowa/${b.arena}.webp` : `arena/${b.arena}.jpg`);
   /** Phones show only the cells and a little of the painting (see arenaGeometry), and the rest of the frame gets a soft backdrop. */
   const phone = view !== geo.fullView;
@@ -338,7 +333,7 @@ export function ArenaBoard(p: Props) {
             {[...(b.ground ?? []).filter((g) => g.kind === 'trap').map((g) => ({ k: g.cell, own: g.owner === (b.stage === 'deploy' ? deploySide : active?.side) })), ...(b.stage === 'deploy' ? deploy.traps.map((k) => ({ k, own: true })) : [])].filter(({ k }, i, all) => all.findIndex((x) => x.k === k) === i).map(({ k, own }) => (
               <g key={`trap${k}`} data-trap={k} pointerEvents="none">
                 <polygon points={hexPoints(k, 4)} fill={own ? 'rgba(200,100,40,0.18)' : 'rgba(224,60,40,0.22)'} stroke={own ? '#D9803A' : '#E0503C'} strokeWidth={p.ployFrom === k ? 4 : 2} strokeDasharray="5 3" />
-                <path d={trapGlyph(k)} fill="none" stroke={own ? '#F0B070' : '#FF9A80'} strokeWidth="2.5" strokeLinecap="round" />
+                <image href={asset('markers/free_snare.png')} x={cellCenter(k).x - 23} y={cellCenter(k).y - 23} width="46" height="46" />
                 <title>{own ? 'Twoje sidła: wróg ich nie widzi, dopóki nie zadziałają' : 'Odsłonięte sidła wroga'}</title>
               </g>
             ))}

@@ -16,8 +16,8 @@ export const FREE: FactionPack = {
   short: 'Kompania',
   genitive: 'Kompanii',
   lead: 'dłużej miała',
-  // No forest-camp tiles yet: the Companies borrow the meadow of Przymierze (placeholder, docs/BACKLOG.md 2a).
-  terrain: { base: 'baseDawn', land: 'meadow', treasure: 'treasureDawn', wall: 'chasm' },
-  tiles: ['meadow', 'barren', 'hill', 'river', 'bridge', 'mountain', 'chasm'],
+  // The glade, the hideout and the treasury have tiles of their own; the other ground (hills, rivers, bridges, mountains, ravines, clearings) is shared with Przymierze (its pictures: FACTION_TILE_ART).
+  terrain: { base: 'baseFree', land: 'glade', treasure: 'treasureFree', wall: 'chasm' },
+  tiles: ['glade', 'barren', 'hill', 'river', 'bridge', 'mountain', 'chasm'],
   settlementNames: ['Lisia Jama', 'Zbójecki Wąwóz', 'Młyn Pod Krukiem', 'Borsucza Górka', 'Wydrza Przystań', 'Kuni Las', 'Przemytnicza Kładka', 'Stara Karczma Pod Sową', 'Zielony Gościniec', 'Spalony Most', 'Sakwa i Łuk', 'Bractwo Trzech Dębów'],
 };

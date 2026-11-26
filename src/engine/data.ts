@@ -1001,6 +1001,8 @@ export type Terrain =
   | 'steppe'
   // Bractwo Przypływu
   | 'shore'
+  // Wolna Kompania
+  | 'glade'
   // Żelazny Klan
   | 'highland'
   // The channels between the islands (digital ruleset)
@@ -1011,6 +1013,7 @@ export type Terrain =
   | 'baseHorde'
   | 'baseHerds'
   | 'baseTides'
+  | 'baseFree'
   | 'baseClans'
   | 'lairCyclops'
   | 'lairGriffin'
@@ -1019,6 +1022,7 @@ export type Terrain =
   | 'treasureHorde'
   | 'treasureHerds'
   | 'treasureTides'
+  | 'treasureFree'
   | 'treasureClans';
 
 /** The team whose land a tile is (the zone it lies in). */
@@ -1041,6 +1045,7 @@ export const TERRAIN_NAMES: Record<Terrain, string> = {
   thorns: 'Trujące Ciernie',
   steppe: 'Step Dzikiego Stada',
   shore: 'Odsłonięta Plaża',
+  glade: 'Zbójecka Polana',
   highland: 'Górska Hala',
   water: 'Woda',
   tree: 'Kryształowe Drzewo',
@@ -1048,6 +1053,7 @@ export const TERRAIN_NAMES: Record<Terrain, string> = {
   baseHorde: 'Baza Mrocznej Hordy',
   baseHerds: 'Obozowisko Dzikiego Stada',
   baseTides: 'Przystań Bractwa Przypływu',
+  baseFree: 'Kryjówka Wolnej Kompanii',
   baseClans: 'Twierdza Żelaznego Klanu',
   lairCyclops: 'Jaskinia Cyklopa',
   lairGriffin: 'Gryfie Gniazdo',
@@ -1056,6 +1062,7 @@ export const TERRAIN_NAMES: Record<Terrain, string> = {
   treasureHorde: 'Skarbiec Hordy',
   treasureHerds: 'Skarbiec Stada',
   treasureTides: 'Skarbiec Bractwa',
+  treasureFree: 'Skarbiec Kompanii',
   treasureClans: 'Skarbiec Klanu',
 };
 
@@ -1067,6 +1074,7 @@ export const TERRAIN_COST: Record<Terrain, number | null> = {
   scorched: 1,
   steppe: 1,
   shore: 1,
+  glade: 1,
   highland: 1,
   barren: 1,
   tree: 1,
@@ -1074,6 +1082,7 @@ export const TERRAIN_COST: Record<Terrain, number | null> = {
   baseHorde: 1,
   baseHerds: 1,
   baseTides: 1,
+  baseFree: 1,
   baseClans: 1,
   lairCyclops: 1,
   lairGriffin: 1,
@@ -1082,6 +1091,7 @@ export const TERRAIN_COST: Record<Terrain, number | null> = {
   treasureHorde: 1,
   treasureHerds: 1,
   treasureTides: 1,
+  treasureFree: 1,
   treasureClans: 1,
   river: 2,
   hill: 2,
@@ -1099,8 +1109,8 @@ export const TERRAIN_COST: Record<Terrain, number | null> = {
 export const TERRAIN_VARIANTS: Record<Terrain, number> = {
   meadow: 4, forest: 4, river: 4, bridge: 4, hill: 4, mountain: 4, chasm: 4,
   scorched: 4, swamp: 4, barren: 4, darkCave: 4, ruins: 4, deadThicket: 4, thorns: 4, water: 2,
-  steppe: 4, shore: 2, highland: 2, tree: 1, baseDawn: 1, baseHorde: 1, baseHerds: 1, baseTides: 1, baseClans: 1, lairCyclops: 1, lairGriffin: 1, lairHydra: 1,
-  treasureDawn: 4, treasureHorde: 4, treasureHerds: 2, treasureTides: 1, treasureClans: 1,
+  steppe: 4, shore: 2, glade: 2, highland: 2, tree: 1, baseDawn: 1, baseHorde: 1, baseHerds: 1, baseTides: 1, baseFree: 1, baseClans: 1, lairCyclops: 1, lairGriffin: 1, lairHydra: 1,
+  treasureDawn: 4, treasureHorde: 4, treasureHerds: 2, treasureTides: 1, treasureFree: 1, treasureClans: 1,
 };
 
 /**
