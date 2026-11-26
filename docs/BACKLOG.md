@@ -54,6 +54,10 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Zrobione 24.11: p
    - **Mapa świata, pod imieniem bohatera:** Odłamki jako ikona i „0 / 0 / 5” (szczegóły pod prawym przyciskiem); ikona many nieco większa i przed liczbami („<mana> 4/4”); ruch: romby u góry, pod nimi „Ruch 2/3” (albo ikona ruchu zamiast słowa, jeśli pasująca istnieje).
    - **Zoom mapy świata:** maksymalne przybliżenie nieco większe niż dziś i ono ma być domyślne.
 
+**91. Tylko skończone frakcje do wyboru (S; uwaga autora 26.11).** Skończonych frakcji jest 5: Przymierze, Horda, Dzikie Stado, Żelazny Klan, Bractwo Przypływu. Pozostałych nie widać przy wyborze drużyny (kreator, ekran miejsc, online), więc nie da się ich wybrać; dane i kod zostają. Najlepiej jedna lista „grywalnych” frakcji w silniku, z której czytają ekrany i serwer. Wolna Kompania (grafika w toku) też ukryta, dopóki autor jej nie dopisze.
+
+**92. Walki z pomocnikami wolnych frakcji (M; rusza golden i balans; uwaga autora 26.11).** Dziś walki na mapie (spotkania niesterowane przez gracza) losują tylko z 12 jednostek neutralnych. Pula ma objąć też wszystkich pomocników (nie bohaterów) frakcji, którymi nikt w tej grze nie gra. Przykład: 4 graczy, 2× Przymierze, Horda, Stada → spotkania z neutralnymi, z pomocnikami Bractwa Przypływu i Żelaznego Klanu. Tylko frakcje z punktu 91 (mają grafikę i animacje). Do ustalenia przy robocie: siła spotkań (koszt/poziom pomocników względem neutralnych), nagrody, arena (frakcyjna czy neutralna), czy grupa ma być z jednej frakcji; potem `make sim-raport`, golden `-u` w osobnym commicie i przestrojenie poziomów.
+
 **90. Mgła wojny jak w Heroesach (M–L; rusza widok w hot-seat i online).** Gracz nie widzi kafelków odsłoniętych przez graczy spoza swojej frakcji (każda frakcja ma własną odkrytą część mapy). Sprawdzić: bot (czy korzysta z wiedzy o całej mapie), online (`redactHidden` / `visibleTo` w serwerze), hot-seat (zasłona przekazania), golden.
 
 **79. Lewiatan: zrobione 25.11** (nowy obraz bazowy z całą sylwetką na lądzie, chód, atak, śmierć; 31 CU; trafienie w kodzie).
