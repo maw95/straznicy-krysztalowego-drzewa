@@ -25,7 +25,7 @@ Autor pisze „zrób punkty 1, 2 i 3” (albo „zrób 9–10”, „zrób wszys
 
 ## Stan (25.11.2026)
 
-Ostatnie wydanie: **3.0.0** (26.11; serwer 0.3.0 z silnikiem 3.0.0 wdrożony).
+Ostatnie wydanie: **3.1.0** (26.11; serwer 0.4.0 z silnikiem 3.1.0 wdrożony przez workflow Deploy; lokalne `fly` wymaga `fly auth login`).
 Drabinka poziomów: 0 Spacer, 1 Przygoda, 2 Wyprawa, 3 Osada, 4 Księstwo, 5 Królestwo, 6 Imperium. Premiera (3.0) dopiero po poziomie 6. Nazwy techniczne w kodzie (`kingdom`, `zero`, `kids` = Łatwy, `economy`, `realm`, `empire`) zostają. Typ `Level`: `zero | kids | normal | hard`.
 
 ## 1. Kolejka prac (w tej kolejności)
@@ -50,8 +50,6 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 ### Nowe punkty (uwagi autora 26.11.2026)
 
 (Zrobione 26.11: 95 strzelcy planszowi (z 95a: +1 A tylko dla strzelców Przymierza), 98 gotowe scenariusze, 100 obwódka aktywnej jednostki, 101 zamiana przy rozstawianiu.)
-
-**98a. Gotowe scenariusze online (S).** Nowe mapy (`scenarioMaps.ts`) serwer zna dopiero z silnikiem następnego wydania: do tego czasu stół online z nowym scenariuszem zostanie odrzucony („Nieznana własna mapa”). Przy wydaniu: silnik w backendzie i sprawdzenie stołu online ze scenariuszem.
 
 **96. Więcej zaklęć (M–L).** Nowe czary w `src/engine/magic.ts` (kręgi, wieże magii w osadach, bot `botSpell`), ikony (kredyty Scenario: tylko po decyzji autora), instrukcja PL i EN.
 
