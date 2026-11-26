@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Kryształy do Drzewa i Przetrwanie: role są wyrównane osobno dla każdej mapy, liczby graczy i poziomu złożoności (gdy dwa jednakowe boty grają obie role, każda strona wygrywa mniej więcej co drugą partię). W Przetrwaniu Horda szuka Przymierza na środku mapy, gdy go nie widzi we mgle (dotąd czekała i Przymierze wygrywało prawie zawsze).':
+    'Crystals to the Tree and Survival: the roles are evened out separately for every map, number of players and complexity level (when two equal bots play both roles, each side wins about every other game). In Survival the Horde looks for the Covenant in the middle of the map when the fog hides it (it used to wait, and the Covenant won almost every time).',
   'Gotowe scenariusze: w potyczce nowa karta „Gotowy scenariusz” prowadzi do listy jak w klasycznych grach strategicznych (filtr wielkości, tabela, podgląd mapy, opis i warunki zwycięstwa). Jest 14 scenariuszy na ręcznie narysowanych mapach, od małego „Kręgu Kamieni” po gigantyczny „Szczyt Świata”, każdy z własnym celem i poziomem. Gotowe mapy nie są już wybierane na stronie mapy.':
     'Ready scenarios: in a skirmish a new "Ready scenario" card leads to a list as in the classic strategy games (a size filter, a table, a map preview, the story and the victory conditions). There are 14 scenarios on hand-drawn maps, from the small "Stone Circle" to the giant "Roof of the World", each with its own goal and level. Ready maps are no longer picked on the map page.',
   'Wersja planszowa: strzelec, który w swojej aktywacji się ruszył, już nie strzela (tak jak w wersji cyfrowej). Zmiana jest w instrukcji do druku.':

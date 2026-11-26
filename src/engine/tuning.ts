@@ -6,6 +6,7 @@ import { presetLevel } from './scoring';
 import { COMPUTER_HANDICAP, isDigital, type MapShape, type RulesConfig, type SetupOptions } from './types';
 import type { MapSize } from './data';
 import { AUTO_TUNING } from './tuningAuto';
+import { roleRules } from './tuningRoles';
 
 export interface DigitalTune {
   /** Where it applies; a missing field matches everything. */
@@ -189,8 +190,12 @@ export function digitalRules(setup: SetupOptions): RulesConfig {
   const players = setup.seats.filter((s) => s.faction === 'dawn').length;
   const objective = base.objective === 'control' || base.objective === 'survival' || base.objective === 'boss' || base.objective === 'artifact' || base.objective === 'conquest' || base.objective === 'relic' ? base.objective : 'crystals';
   // With the levels at the bots the goals the sides play alike take no levers at all (the goal is fair by itself), and the two stories of a side
-  // against another (the crystals, survival) keep only the levers that even out the roles: those of the Normal cells.
-  if (setup.seatLevels && !ROLE_GOALS.includes(objective)) return withSeats(base);
+  // against another (the crystals, survival) take only the levers that even out the roles (tuningRoles.ts).
+  if (setup.seatLevels) {
+    if (!ROLE_GOALS.includes(objective)) return withSeats(base);
+    const roles = roleRules(setup, objective as 'crystals' | 'survival', level === 'zero');
+    return withSeats(Object.keys(roles).length ? { ...base, ...roles } : base);
+  }
   let rules = base;
   for (const t of DIGITAL_TUNING) {
     if (t.objective && t.objective !== objective) continue;

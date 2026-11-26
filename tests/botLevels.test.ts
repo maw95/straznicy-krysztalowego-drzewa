@@ -69,3 +69,21 @@ describe('levels at the bots', () => {
     expect(levelOf(table([seat('dawn', 'goldDragon', 'human'), seat('horde', 'werewolfLord', 'human')]))).toBe('normal');
   });
 });
+
+describe('role balance of the goals with two roles (tuningRoles.ts)', () => {
+  it('takes the levers of the table, a ready map without its own entry those of the random map of its size, more players the largest count measured', async () => {
+    const { ROLE_TUNING, roleRules } = await import('../src/engine/tuningRoles');
+    const entry = ROLE_TUNING.find((t) => t.objective === 'crystals' && !t.zero && !t.growth && t.layer === 'none' && t.players === 1 && t.shape === 'triangle' && t.maps.includes('medium'));
+    expect(entry).toBeDefined();
+    const s = table([seat('dawn', 'goldDragon', 'human'), seat('horde', 'werewolfLord', 'bot', 'normal')], 'crystals');
+    const plain = { ...s, rules: { ...s.rules, heroGrowth: undefined } };
+    expect(roleRules(plain, 'crystals', false)).toEqual(entry!.rules);
+    expect(digitalRules(plain)).toMatchObject(entry!.rules);
+    // A ready map takes the random triangle's levers of its size.
+    expect(roleRules({ ...plain, mapShape: 'custom', customMapId: 'ciesnina' }, 'crystals', false)).toEqual(entry!.rules);
+    // Three Przymierza seats: the two-seat table's levers.
+    const two = ROLE_TUNING.find((t) => t.objective === 'crystals' && !t.zero && !t.growth && t.layer === 'none' && t.players === 2 && t.shape === 'triangle' && t.maps.includes('medium'));
+    const three = { ...plain, seats: [...plain.seats, seat('dawn', 'moonWolf', 'bot', 'normal'), seat('dawn', 'unicornKing', 'bot', 'normal')] };
+    expect(roleRules(three, 'crystals', false)).toEqual(two!.rules);
+  });
+});

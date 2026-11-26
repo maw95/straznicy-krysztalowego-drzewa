@@ -639,8 +639,11 @@ function survivalAction(state: GameState, memo: Memo): Action {
   const prey = foes.find((e) => distance(parseKey(e.pos), parseKey(hero.pos)) === 1 && beatable(e));
   if (prey && legalHeroMoves(state).some((m) => m.to === prey.pos)) return { type: 'moveHero', to: prey.pos };
   const goals = new Set<HexKey>();
-  if (!isGood(state, hero)) for (const e of foes) goals.add(e.pos);
-  else {
+  if (!isGood(state, hero)) {
+    for (const e of foes) goals.add(e.pos);
+    // The fog of war hides the Przymierze: it holds out in the middle of the map, so the Horde goes there to find it.
+    if (!goals.size && hero.pos !== treeOf(state)) goals.add(treeOf(state));
+  } else {
     const tree = treeOf(state);
     if (hero.pos === tree) return { type: 'endTurn' };
     goals.add(tree);
