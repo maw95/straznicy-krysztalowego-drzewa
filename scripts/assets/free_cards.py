@@ -13,8 +13,8 @@ KEEP_PORTRAIT = {'squirrelArcher'}
 CROP = {
     'foxCaptain': (.46, .21, .42), 'badgerSapper': (.50, .23, .44), 'ravenSeer': (.47, .28, .50), 'otterSmuggler': (.36, .21, .42),
     'otterScout': (.42, .37, .42), 'magpieThief': (.40, .32, .44), 'squirrelArcher': (.48, .35, .55), 'weaselKnife': (.45, .34, .42),
-    'polecatPoisoner': (.38, .31, .42), 'catFencer': (.46, .27, .44), 'wolverine': (.48, .29, .42), 'marmotPetard': (.50, .35, .42),
-    'toadGunner': (.37, .29, .44), 'beaverEngineer': (.42, .33, .42), 'raccoonDogSpy': (.35, .38, .42), 'towerMonitor': (.55, .37, .74),
+    'polecatPoisoner': (.38, .31, .42), 'catFencer': (.46, .27, .44), 'wolverine': (.48, .29, .42), 'marmotPetard': (.45, .32, .54),
+    'toadGunner': (.37, .29, .44), 'beaverEngineer': (.42, .33, .42), 'raccoonDogSpy': (.33, .355, .52), 'towerMonitor': (.55, .37, .74),
     'martenSlasher': (.45, .30, .44), 'wildcatBajka': (.48, .24, .44), 'hareHerbalist': (.53, .22, .48),
 }
 if __name__ == '__main__':

@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wolna Kompania: portrety i karty Jenota Szpiega i Świstaka Petardnika są kadrowane szerzej: widać całą głowę w kapturze i sztylet oraz całą głowę i beczkę z prochem.
 - Wolna Kompania: portret i karta Warana Wieżowego pokazują głowę i wieżyczkę z łucznikami (karta kadrowała szyję i nogę); karty pozostałych postaci Kompanii mają to samo kadrowanie co portrety.
 - Wolna Kompania: nowe dźwięki po uwagach: śmierć Sroki, Ropucha i Kocura (teraz po kociemu), atak Tchórza (rzut i tłuczona butla), Bobra (uderzenie siekierki), Jenota (cięcie sztyletu) i Świstaka (lont zakończony wybuchem).
 - Wolna Kompania: Ruda Atamanka, Borsuk Saper i Kruk Wieszczek mają animowane figury na polu bitwy (ruch, atak, trafienie, śmierć; Kruk wzbija się i lata). Pozostałe postaci Kompanii to na razie żetony z portretami.

@@ -10545,7 +10545,7 @@
         "public/assets/cards/portraits/hareHerbalist.jpg"
       ],
       "typ": "ilustracje kart i portrety 19 postaci: Wolna Kompania",
-      "opis": "Obrazy 1008x704 zmniejszone do 640x442, portrety 256 px wycięte z karty (scripts/assets/free_cards.py). Portret Wiewiórki Łuczniczki z G3 zostaje (karta z nim jako odniesieniem). Źródła i prompty: .tmp/zrodla/free_cards. Poprawki 26.11 (uwagi autora): nowy Kruk Wieszczek jako zwierzoczłek w szacie i nowy Waran Wieżowy od przodu (po 3 CU), Kocur Fechmistrz cały rudy (edycja obrazu z odniesieniem, 4 CU), Bobrowi zęby przebarwione lokalnie na białe, kadry portretów Borsuka, Zajęczycy, Jenota i Świstaka przesunięte. 26.11, uwaga autora: portret i kadr karty Warana Wieżowego pokazują wieżyczkę i głowę; kadry kart całej Kompanii zgodne z portretami.",
+      "opis": "Obrazy 1008x704 zmniejszone do 640x442, portrety 256 px wycięte z karty (scripts/assets/free_cards.py). Portret Wiewiórki Łuczniczki z G3 zostaje (karta z nim jako odniesieniem). Źródła i prompty: .tmp/zrodla/free_cards. Poprawki 26.11 (uwagi autora): nowy Kruk Wieszczek jako zwierzoczłek w szacie i nowy Waran Wieżowy od przodu (po 3 CU), Kocur Fechmistrz cały rudy (edycja obrazu z odniesieniem, 4 CU), Bobrowi zęby przebarwione lokalnie na białe, kadry portretów Borsuka, Zajęczycy, Jenota i Świstaka przesunięte. 26.11, uwaga autora: portret i kadr karty Warana Wieżowego pokazują wieżyczkę i głowę; kadry kart całej Kompanii zgodne z portretami. 26.11, uwaga autora: portrety i kadry kart Jenota Szpiega i Świstaka Petardnika oddalone (cała głowa i sztylet; cała głowa i beczka).",
       "scenario_asset": {
         "foxCaptain": "asset_je6Rd7QHe3wFv3xAEAHvqVUJ",
         "badgerSapper": "asset_DqjPZCt3CWUVvCbH8pFdZJci",

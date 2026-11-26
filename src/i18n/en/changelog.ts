@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Wolna Kompania: portrety i karty Jenota Szpiega i Świstaka Petardnika są kadrowane szerzej: widać całą głowę w kapturze i sztylet oraz całą głowę i beczkę z prochem.":
+    "The Free Company: the Raccoon Dog Spy's and the Marmot Petardier's portraits and cards are framed wider: the whole hooded head with the dagger, and the whole head with the powder keg.",
   "Wolna Kompania: portret i karta Warana Wieżowego pokazują głowę i wieżyczkę z łucznikami (karta kadrowała szyję i nogę); karty pozostałych postaci Kompanii mają to samo kadrowanie co portrety.":
     "The Free Company: the Tower Monitor's portrait and card show its head and the turret with the archers (the card framed the neck and a leg); the cards of the other characters of the Company are framed like their portraits.",
   "Wolna Kompania: nowe dźwięki po uwagach: śmierć Sroki, Ropucha i Kocura (teraz po kociemu), atak Tchórza (rzut i tłuczona butla), Bobra (uderzenie siekierki), Jenota (cięcie sztyletu) i Świstaka (lont zakończony wybuchem).":
