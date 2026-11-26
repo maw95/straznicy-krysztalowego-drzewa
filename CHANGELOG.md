@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Gotowe scenariusze: w potyczce nowa karta „Gotowy scenariusz” prowadzi do listy jak w klasycznych grach strategicznych (filtr wielkości, tabela, podgląd mapy, opis i warunki zwycięstwa). Jest 14 scenariuszy na ręcznie narysowanych mapach, od małego „Kręgu Kamieni” po gigantyczny „Szczyt Świata”, każdy z własnym celem i poziomem. Gotowe mapy nie są już wybierane na stronie mapy.
 - Wersja planszowa: strzelec, który w swojej aktywacji się ruszył, już nie strzela (tak jak w wersji cyfrowej). Zmiana jest w instrukcji do druku.
 - Rozstawianie wojsk: gdy jednostka jest zaznaczona, kliknięcie innej własnej jednostki zamienia je miejscami (dotąd zmieniało tylko zaznaczenie).
 - Bitwa: jednostka, której jest teraz kolej (a przy rozstawianiu wybrana jednostka), ma cienką złotą obwódkę wokół całej sylwetki.

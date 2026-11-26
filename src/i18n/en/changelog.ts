@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Gotowe scenariusze: w potyczce nowa karta „Gotowy scenariusz” prowadzi do listy jak w klasycznych grach strategicznych (filtr wielkości, tabela, podgląd mapy, opis i warunki zwycięstwa). Jest 14 scenariuszy na ręcznie narysowanych mapach, od małego „Kręgu Kamieni” po gigantyczny „Szczyt Świata”, każdy z własnym celem i poziomem. Gotowe mapy nie są już wybierane na stronie mapy.':
+    'Ready scenarios: in a skirmish a new "Ready scenario" card leads to a list as in the classic strategy games (a size filter, a table, a map preview, the story and the victory conditions). There are 14 scenarios on hand-drawn maps, from the small "Stone Circle" to the giant "Roof of the World", each with its own goal and level. Ready maps are no longer picked on the map page.',
   'Wersja planszowa: strzelec, który w swojej aktywacji się ruszył, już nie strzela (tak jak w wersji cyfrowej). Zmiana jest w instrukcji do druku.':
     'Board version: a shooter that moved in its activation no longer shoots (as in the digital version). The change is in the printed rulebook.',
   'Rozstawianie wojsk: gdy jednostka jest zaznaczona, kliknięcie innej własnej jednostki zamienia je miejscami (dotąd zmieniało tylko zaznaczenie).':

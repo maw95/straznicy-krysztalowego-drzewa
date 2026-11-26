@@ -137,7 +137,9 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   /** The table as the engine reads it: every seat has the slot of its faction (the first two factions play the first two sides). */
   // A seat left to chance counts as the race of the first fixed seat here (the draw comes at the start), and more than four fixed factions cannot sit at one table.
   const fixedRaces = new Set(seats.filter((s) => !s.randomRace).map(raceAt));
-  const tooMany = mode === 'pvp' && fixedRaces.size > MAX_TEAMS;
+  // A ready map (a scenario) has two bases: two factions at most.
+  const maxFactions = shape === 'custom' && tier !== 'adventure' ? 2 : MAX_TEAMS;
+  const tooMany = mode === 'pvp' && fixedRaces.size > maxFactions;
   const anchor = raceAt(seats.find((s) => !s.randomRace) ?? seats[0]);
   const table = mode === 'pvp' && !tooMany ? seatTable(seats.map((s) => (s.randomRace ? { ...s, race: anchor } : s))) : seats;
   /** The sides in play: the factions seated at the table (coop and the arena have two). */
@@ -152,7 +154,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
   const startGame = () => {
     const r = resolveTier(tier, { objective, shape, customMapId: customId, growth, ...(tier === 'custom' && growth ? layerSwitches(layer) : {}) });
     // The seats left to chance are drawn now.
-    const drawn = resolveRandomSeats(seats, { offered, heroesOf: heroPoolOf, twoFactions: mode === 'pvp' });
+    const drawn = resolveRandomSeats(seats, { offered, heroesOf: heroPoolOf, twoFactions: mode === 'pvp', maxFactions });
     // The story of the crystals plays Przymierze first and Horda second: a draw that put the Horde first moves its seats behind.
     const ordered = mode === 'pvp' && r.objective === 'crystals' ? [...drawn].sort((a, b) => Number(raceAt(b) === 'dawn') - Number(raceAt(a) === 'dawn')) : drawn;
     // A level stays only at the bots of a digital rivalry.
@@ -514,7 +516,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                 Pełny ekran przy uruchomieniu
               </label>
             )}
-            {tooMany && <div role="alert" style={{ textAlign: 'center', color: '#F3A27A', fontSize: 16 }} data-too-many>{`Przy stole może być najwyżej ${MAX_TEAMS} frakcje: zmień frakcję jednego z graczy albo zostaw ją losową.`}</div>}
+            {tooMany && <div role="alert" style={{ textAlign: 'center', color: '#F3A27A', fontSize: 16 }} data-too-many>{`Przy stole może być najwyżej ${maxFactions} frakcje: zmień frakcję jednego z graczy albo zostaw ją losową.`}</div>}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginTop: 8 }}>
               {backBtn('wizard')}
               <button className="btn prim" disabled={!valid} style={{ height: 56, padding: '0 40px', fontSize: 24 }} onClick={startGame}>

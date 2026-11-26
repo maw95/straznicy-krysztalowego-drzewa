@@ -17,3 +17,4 @@ import './names';
 import './campaign';
 import './changelog';
 import './expedition';
+import './scenarios';

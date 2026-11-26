@@ -239,7 +239,7 @@ export type SeatDraft = SeatSetup & { randomRace?: boolean; randomHero?: boolean
  */
 export function resolveRandomSeats(
   seats: readonly SeatDraft[],
-  o: { offered: readonly FactionId[]; heroesOf: (race: FactionId) => string[]; twoFactions: boolean; rnd?: () => number },
+  o: { offered: readonly FactionId[]; heroesOf: (race: FactionId) => string[]; twoFactions: boolean; rnd?: () => number; /** The most factions at the table (a ready map has two bases). */ maxFactions?: number },
 ): SeatSetup[] {
   const rnd = o.rnd ?? Math.random;
   const pick = <T,>(a: readonly T[]): T => a[Math.floor(rnd() * a.length)];
@@ -250,7 +250,8 @@ export function resolveRandomSeats(
   for (let attempt = 0; attempt < 400; attempt++) {
     // With four factions already seated, a seat left to chance joins one of them (a table has at most four).
     const fixed = [...new Set(seats.filter((s) => !s.randomRace).map((s) => (s.race ?? s.faction) as FactionId))];
-    const out = seats.map((s) => (s.randomRace ? { ...clean(s), race: pick(fixed.length >= 4 ? fixed : o.offered) } : clean(s)));
+    const most = o.maxFactions ?? 4;
+    const out = seats.map((s) => (s.randomRace ? { ...clean(s), race: pick(fixed.length >= most ? fixed : o.offered) } : clean(s)));
     const taken = new Set(out.filter((_, i) => !drawn(seats[i])).map((s) => s.heroId));
     let ok = true;
     out.forEach((s, i) => {
@@ -263,7 +264,7 @@ export function resolveRandomSeats(
     if (!ok) continue;
     const races = out.map(raceOf);
     if (o.twoFactions && new Set(races).size < 2) continue;
-    if (races.some((r) => races.filter((x) => x === r).length > 3) || new Set(races).size > 4) continue;
+    if (races.some((r) => races.filter((x) => x === r).length > 3) || new Set(races).size > most) continue;
     return out;
   }
   return seats.map(clean);

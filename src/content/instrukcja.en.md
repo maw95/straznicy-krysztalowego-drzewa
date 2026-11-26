@@ -39,9 +39,9 @@ At the top there are three smaller buttons: **Rules and cards** (this window), *
 
 Before the wizard you choose the **mode** (the menu's second page: skirmish or arena) and **where you play**: on this computer (against computer opponents, or several players at one screen) or **online** with friends ([Online play and ranking](#online-play-and-ranking)). The wizard then leads through consecutive pages. The **Back** button returns to the previous one, and some choices (level, goal) move on at once when clicked.
 
-1. **Complexity level** (except in the arena): from Walk to Empire ([Complexity levels](#complexity-levels)) or **Custom settings** ([Custom settings](#custom-settings)).
+1. **Complexity level** (except in the arena): from Walk to Empire ([Complexity levels](#complexity-levels)), **Ready scenario** (in a skirmish: a list of hand-drawn maps with a goal and a level, as in the classic strategy games; a size filter and a table on the left, the map preview, the story and the victory conditions on the right; after picking a scenario you go straight to the seats) or **Custom settings** ([Custom settings](#custom-settings)).
 2. **Goal of the game** (from the Expedition level, [Goals of the game](#goals-of-the-game)).
-3. **Map** (except in the arena): on the higher levels the shape (triangle, rectangle, ring, islands or a ready-made map) and the **size**; in Walk, Adventure and the board version only the size ([Adventure map](#adventure-map)).
+3. **Map** (except in the arena): on the higher levels the shape of a random map (triangle, rectangle, ring, islands) and the **size**; in Walk, Adventure and the board version only the size ([Adventure map](#adventure-map)).
 4. **Players** (on the last screen, "Seats at the table"): there are two seats at first, a person and a computer. The **+ Add player** button adds more (computers) and the small cross beside a player removes one (the first player and the last two seats of a rivalry cannot be removed). You choose the faction and the hero by clicking icons; the **die** (first from the left, selected by default where every faction plays) means a draw when the game starts (a random faction always means a random hero too); a place with a random faction has a blue background. A right click on a faction's icon shows its description and all its supports. For a human player there is a **Child** field ([Family mode](#family-mode)), and for a bot in a skirmish the **bot level** ([Difficulty levels](#difficulty-levels)). In the goals **Crystals to the Tree** and **Survival** the sides have different tasks, so the seats stand in two columns named by the role ("Gather the crystals" and "Guard the Tree", "Hold out" and "Horde waves"): **+ Add player** under a column adds a bot to it, and the **⇄** button moves a player to the other team. In an online game the number of players is set in the wizard.
 5. **Difficulty** of the computer: in a skirmish it is chosen at each bot (the point above), on the arena and in the board version in the wizard ([Difficulty levels](#difficulty-levels)).
 
@@ -118,7 +118,7 @@ The map is made of hexes. The Crystal Tree stands on the map only in the goal **
 - **Rectangle:** the bases in the middle of the shorter sides, the Tree in the centre.
 - **Ring:** a hoop around a lake, the Tree and both bases on three corners.
 - **Islands:** three lands (the Covenant's, the Tree's, the Horde's) separated by water, with a few bridges.
-- **Ready-made maps** ("Strait", "Valley" and the campaign maps): drawn by hand.
+- **Ready-made maps** (the wizard's scenarios, e.g. "Stone Circle", "Isles of Mist", "Roof of the World", and the campaign maps): drawn by hand, each with its own goal, size and level. They have two bases, so at most two factions sit at the table.
 
 Sizes (the digital version has six, the board one four): **S** small, **M** medium, **L** large, **XL** very large, and then huge and giant. The size determines the number of tiles, the round limit, and the number of treasures, settlements and encounters with neutrals.
 

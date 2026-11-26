@@ -9,6 +9,8 @@ import { BOARD_MAP_SIZES, MAP_SIZE_NAMES, type MapSize } from '../engine/data';
 import { readyMaps } from '../engine/customMaps';
 import { OBJECTIVES } from '../engine/objectives';
 import { defaultCustom } from '../engine/presets';
+import { SCENARIO_BY_ID, SCENARIOS } from '../engine/scenarios';
+import { ScenarioPicker } from './ScenarioPicker';
 import type { Level, MapShape, Mode, ObjectiveId } from '../engine/types';
 import type { TableConfig } from '../online/api';
 import { asset, Frame, Ribbon } from './common';
@@ -21,7 +23,7 @@ export function savedDigital(): boolean {
   try { return localStorage.getItem(EDITION_KEY) !== 'board'; } catch { return true; }
 }
 
-type Page = 'tier' | 'mode' | 'objective' | 'map' | 'players' | 'custom';
+type Page = 'tier' | 'mode' | 'objective' | 'map' | 'players' | 'custom' | 'scenario';
 type Tier = TableConfig['tier'];
 
 interface Draft {
@@ -39,6 +41,8 @@ interface Draft {
   /** Arena: 3 on 3 (quick) or 6 on 6 (full; offline only). */
   arenaSize: 3 | 6;
   custom: ReturnType<typeof defaultCustom> | null;
+  /** A ready scenario (scenarios.ts) instead of a level and a map: its id, or null. */
+  scenario: string | null;
 }
 
 /** The draft a finished table was made from (to come back to the wizard's last page with everything as it was). */
@@ -56,6 +60,7 @@ function draftOf(t: TableConfig): Draft {
     count: t.seats.length,
     arenaSize: t.arenaSize === 6 ? 6 : 3,
     custom: t.tier === 'custom' && t.rules && t.battleMode ? { growth: t.growth === true, layer: t.layer ?? 'none', battleMode: t.battleMode, rules: t.rules } : null,
+    scenario: t.scenario && SCENARIO_BY_ID[t.scenario] ? t.scenario : null,
   };
 }
 
@@ -70,6 +75,12 @@ function pagesOf(d: Draft, askMode: boolean, online = false): Page[] {
   if (askMode) pages.push('mode');
   // The arena has no levels of complexity: it is always the arena battle.
   if (d.digital && d.mode !== 'arena') pages.push('tier');
+  // A ready scenario fixes the level, the goal and the map: its list is the only page before the seats.
+  if (d.scenario !== null && d.digital && d.mode === 'pvp') {
+    pages.push('scenario');
+    if (online) pages.push('players');
+    return pages;
+  }
   // "Własne ustawienia" come right after the card; what depends on the mode waits for the players page.
   if (d.digital && d.tier === 'custom' && d.mode !== 'arena') pages.push('custom');
   const adventure = d.digital && d.tier !== 'adventure' && d.mode !== 'arena';
@@ -88,6 +99,7 @@ const TITLES: Record<Page, string> = {
   map: 'Jaka mapa?',
   players: 'Gracze i trudność',
   custom: 'Własne ustawienia',
+  scenario: 'Gotowy scenariusz',
 };
 
 /** A big choice: a picture, a name and a sentence. */
@@ -141,6 +153,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
     count: 1,
     arenaSize: 3,
     custom: null,
+    scenario: null,
   }, fixedMode ?? ((fixedDigital ?? true) ? 'pvp' : 'coop'), online)));
   /** The level and the goal start with nothing lit (there is no "Dalej" on those pages: a lit default would look like a choice already made); editing a table has both. */
   const [picked, setPicked] = useState({ tier: initial !== undefined, objective: initial !== undefined });
@@ -167,7 +180,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
   };
   const choose = (p: Partial<Draft>, advance = true) => {
     markPicked(p);
-    const next = { ...d, ...p };
+    // A level card leaves the scenarios.
+    const next = { ...d, ...('tier' in p && !('scenario' in p) ? { scenario: null } : {}), ...p };
     // The custom page starts from what the level preset sets (the mode is not known yet: the mode-bound switches come on the players page).
     if (next.tier === 'custom' && !next.custom) next.custom = defaultCustom(next.level, next.mode);
     setD(next);
@@ -191,6 +205,11 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
 
   /** The finished table: what the online room and the local setup are made from. */
   const finish = (custom = d.custom) => {
+    const sc = d.scenario !== null && d.digital && d.mode === 'pvp' ? SCENARIO_BY_ID[d.scenario] : undefined;
+    if (sc) {
+      try { localStorage.setItem(EDITION_KEY, 'digital'); } catch { /* private mode */ }
+      return onFinish({ mode: d.mode, digital: true, tier: sc.tier, objective: sc.objective, shape: 'custom', customMapId: sc.mapId, mapSize: sc.mapSize, level: 'normal', scenario: sc.id, seats: defaultHeroes(d.mode, d.count).map((seat) => ({ ...seat, bot: false })) });
+    }
     const tier: Tier = !d.digital || arena ? 'adventure' : d.tier;
     const table: TableConfig = {
       mode: d.mode,
@@ -228,14 +247,15 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
 
       {page === 'tier' && (
         <div className="opt-grid" data-wizard-page="tier">
-          <Card on={picked.tier && d.tier === 'adventure' && d.level === 'zero'} title="Spacer" badge="I" text="Dla najmłodszych (od 5 lat): krótkie pojedynki bohaterów na planszy, bez zdolności i kości, bez rytuału. Zasady do ogarnięcia w kilka minut." img={pic(asset('ui/menu/krolik.webp'))} onClick={() => choose({ tier: 'adventure', level: 'zero' })} />
-          <Card on={picked.tier && d.tier === 'adventure' && d.level !== 'zero'} title="Przygoda" badge="II" text="Pełne bitwy na arenie, kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start z pełną grą." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure', level: notZero })} />
-          <Card on={picked.tier && d.tier === 'expedition'} title="Wyprawa" badge="III" text="Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ui/menu/wyprawa.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
-          <Card on={picked.tier && d.tier === 'kingdom'} title="Osada" badge="IV" text="Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ui/menu/osada.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
-          <Card on={picked.tier && d.tier === 'economy'} title="Księstwo" badge="V" text="Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył." img={pic(asset('ui/menu/ksiestwo.webp'))} onClick={() => choose({ tier: 'economy', level: notZero })} />
-          <Card on={picked.tier && d.tier === 'realm'} title="Królestwo" badge="VI" text="Księstwo plus bohaterowie i magia: drugi bohater-dowódca najęty w karczmie, czary w bitwie i na mapie, specjalności bohaterów." img={pic(asset('ui/menu/krolestwo.webp'))} onClick={() => choose({ tier: 'realm', level: notZero })} />
-          <Card on={picked.tier && d.tier === 'empire'} title="Imperium" badge="VII" text="Królestwo plus frakcje i Relikt: Odłamki Pierwotnej Iskry, budynek Pierwotnej Iskry, mechaniki i legendarna jednostka frakcji." img={pic(asset('ui/menu/imperium.webp'))} onClick={() => choose({ tier: 'empire', level: notZero })} />
-          <Card on={picked.tier && d.tier === 'custom'} title="Własne ustawienia" badge="?" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', level: notZero, custom: null })} />
+          <Card on={picked.tier && d.scenario === null && d.tier === 'adventure' && d.level === 'zero'} title="Spacer" badge="I" text="Dla najmłodszych (od 5 lat): krótkie pojedynki bohaterów na planszy, bez zdolności i kości, bez rytuału. Zasady do ogarnięcia w kilka minut." img={pic(asset('ui/menu/krolik.webp'))} onClick={() => choose({ tier: 'adventure', level: 'zero' })} />
+          <Card on={picked.tier && d.scenario === null && d.tier === 'adventure' && d.level !== 'zero'} title="Przygoda" badge="II" text="Pełne bitwy na arenie, kryształy do Drzewa, mapa-trójkąt, bohaterowie bez rozwoju. Najprostszy start z pełną grą." img={pic(asset('ui/menu/przygoda.webp'))} onClick={() => choose({ tier: 'adventure', level: notZero })} />
+          <Card on={picked.tier && d.scenario === null && d.tier === 'expedition'} title="Wyprawa" badge="III" text="Bohaterowie zdobywają doświadczenie, artefakty i umiejętności; do wyboru cel gry i mapa." img={pic(asset('ui/menu/wyprawa.webp'))} onClick={() => choose({ tier: 'expedition', level: notZero })} />
+          <Card on={picked.tier && d.scenario === null && d.tier === 'kingdom'} title="Osada" badge="IV" text="Osady, złoto i rekrutacja: dochód z osad i kopalni, budynki, targ z artefaktami, szpital i drużyna do pięciu pomocników." img={pic(asset('ui/menu/osada.webp'))} onClick={() => choose({ tier: 'kingdom', level: notZero })} />
+          <Card on={picked.tier && d.scenario === null && d.tier === 'economy'} title="Księstwo" badge="V" text="Osada plus gospodarka: drewno, ruda i Gwiezdny Pył z kopalni i osad, budynki za surowce (jeden na rundę), legendarne artefakty za Pył." img={pic(asset('ui/menu/ksiestwo.webp'))} onClick={() => choose({ tier: 'economy', level: notZero })} />
+          <Card on={picked.tier && d.scenario === null && d.tier === 'realm'} title="Królestwo" badge="VI" text="Księstwo plus bohaterowie i magia: drugi bohater-dowódca najęty w karczmie, czary w bitwie i na mapie, specjalności bohaterów." img={pic(asset('ui/menu/krolestwo.webp'))} onClick={() => choose({ tier: 'realm', level: notZero })} />
+          <Card on={picked.tier && d.scenario === null && d.tier === 'empire'} title="Imperium" badge="VII" text="Królestwo plus frakcje i Relikt: Odłamki Pierwotnej Iskry, budynek Pierwotnej Iskry, mechaniki i legendarna jednostka frakcji." img={pic(asset('ui/menu/imperium.webp'))} onClick={() => choose({ tier: 'empire', level: notZero })} />
+          {d.mode === 'pvp' && <Card on={picked.tier && d.scenario !== null} title="Gotowy scenariusz" badge="★" text="Ręcznie narysowana mapa z gotowym celem i poziomem: wybierasz z listy, jak w klasycznych grach strategicznych." img={pic(asset('ui/menu/gotowa.webp'))} onClick={() => choose({ scenario: d.scenario ?? SCENARIOS[0].id, level: notZero })} />}
+          <Card on={picked.tier && d.scenario === null && d.tier === 'custom'} title="Własne ustawienia" badge="?" text="Każdy przełącznik osobno: rozwój bohatera, rodzaj bitew, ułatwienia i utrudnienia." img={pic(asset('ui/menu/wlasne.webp'))} onClick={() => choose({ tier: 'custom', level: notZero, custom: null })} />
         </div>
       )}
 
@@ -269,7 +289,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
             <>
               <div className="opt-grid compact">
                 <Card on={!ready} title="Losowa" text="Mapa zrobiona na nowo przy każdej partii, w wybranym kształcie i rozmiarze." img={pic(asset('ui/menu/losowa.webp'))} onClick={() => patch({ shape: !ready ? d.shape : 'triangle' })} />
-                <Card on={ready} disabled={READY_MAPS().length === 0} title="Gotowa" text="Ręcznie narysowana mapa, zawsze taka sama, w jednym rozmiarze." img={pic(asset('ui/menu/gotowa.webp'))} onClick={() => patch({ shape: 'custom' })} />
+                {/* The ready maps come with their scenarios now ("Gotowy scenariusz" on the level page); only a table made before keeps its map here. */}
+                {ready && <Card on title="Gotowa" text="Ręcznie narysowana mapa, zawsze taka sama, w jednym rozmiarze." img={pic(asset('ui/menu/gotowa.webp'))} onClick={() => undefined} />}
               </div>
               {!ready ? (
                 <CentredChoice label="Wybierz kształt">
@@ -348,6 +369,8 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
         </div>
       )}
 
+      {page === 'scenario' && <ScenarioPicker selected={d.scenario} onSelect={(id) => patch({ scenario: id })} />}
+
       {page === 'custom' && d.custom && (
         <div data-wizard-page="custom">
           <CustomSwitchRows
@@ -367,7 +390,7 @@ export function NewGameWizard({ online, onBack, onFinish, links, initial, mode: 
       <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap', marginTop: 6 }}>
         <button className="btn plate parch wizard-nav" onClick={back} data-wizard-back>← Wstecz</button>
         {/* The objective goes on by itself when one is picked; the coop Boss still needs its Horde choice, so it keeps the button. */}
-        {(page === 'players' || page === 'custom' || page === 'map' || (page === 'objective' && d.mode === 'coop' && d.objective === 'boss')) && (
+        {(page === 'players' || page === 'custom' || page === 'map' || page === 'scenario' || (page === 'objective' && d.mode === 'coop' && d.objective === 'boss')) && (
           <button className="btn prim wizard-nav" onClick={next} data-wizard-next>{last ? (online ? 'Utwórz stół' : 'Dalej →') : 'Dalej →'}</button>
         )}
       </div>

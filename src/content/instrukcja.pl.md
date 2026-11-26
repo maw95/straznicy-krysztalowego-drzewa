@@ -39,9 +39,9 @@ U góry są trzy mniejsze przyciski: **Zasady i karty** (to okno), **Wprowadzeni
 
 Przed kreatorem wybierasz **tryb** (druga strona menu: potyczka albo arena) i **gdzie grasz**: na tym komputerze (z komputerowymi przeciwnikami, albo kilku graczy przy jednym ekranie) albo **online** ze znajomymi ([Gra online i ranking](#gra-online-i-ranking)). Kreator prowadzi potem przez kolejne strony. Przyciskiem **Wstecz** wrócisz do poprzedniej, a część wyborów (poziom, cel) przechodzi dalej od razu po kliknięciu.
 
-1. **Poziom złożoności** (poza areną): od Spaceru do Imperium ([Poziomy złożoności](#poziomy-zlozonosci)) albo **Własne ustawienia** ([Własne ustawienia](#wlasne-ustawienia)).
+1. **Poziom złożoności** (poza areną): od Spaceru do Imperium ([Poziomy złożoności](#poziomy-zlozonosci)), **Gotowy scenariusz** (w potyczce: lista ręcznie narysowanych map z celem i poziomem, jak w klasycznych grach strategicznych; po lewej filtr wielkości i tabela, po prawej podgląd mapy, opis i warunki zwycięstwa; po wyborze scenariusza od razu przechodzisz do miejsc przy stole) albo **Własne ustawienia** ([Własne ustawienia](#wlasne-ustawienia)).
 2. **Cel gry** (od poziomu Wyprawa, [Cele gry](#cele-gry)).
-3. **Mapa** (poza areną): na wyższych poziomach kształt (trójkąt, prostokąt, pierścień, wyspy albo gotowa mapa) i **wielkość**; w Spacerze, Przygodzie i wersji planszowej tylko wielkość ([Mapa przygody](#mapa-przygody)).
+3. **Mapa** (poza areną): na wyższych poziomach kształt losowej mapy (trójkąt, prostokąt, pierścień, wyspy) i **wielkość**; w Spacerze, Przygodzie i wersji planszowej tylko wielkość ([Mapa przygody](#mapa-przygody)).
 4. **Gracze** (na ostatnim ekranie, „Miejsca przy stole”): na początku są dwa miejsca, człowiek i komputer. Przyciskiem **+ Dodaj gracza** dodajesz kolejne (komputery), a małym krzyżykiem przy graczu usuwasz go (pierwszego gracza ani ostatnich dwóch miejsc rywalizacji nie da się usunąć). Frakcję i bohatera wybierasz klikając ikony; **kostka** (pierwsza z lewej, domyślnie wybrana tam, gdzie grają wszystkie frakcje) oznacza losowanie przy starcie gry (losowa frakcja zawsze oznacza też losowego bohatera); miejsce z losową frakcją ma niebieskie tło. Prawy klik na ikonie frakcji pokazuje jej opis i wszystkich jej pomocników. Przy graczu-człowieku jest pole **Dziecko** ([Tryb rodzinny](#tryb-rodzinny)), a przy bocie w potyczce **poziom bota** ([Poziomy trudności](#poziomy-trudnosci)). W celach **Kryształy do Drzewa** i **Przetrwanie** strony mają różne zadania, więc miejsca stoją w dwóch kolumnach podpisanych rolą („Zbierają kryształy” i „Bronią Drzewa”, „Przetrwają” i „Fale Hordy”): **+ Dodaj gracza** pod kolumną dopisuje do niej bota, a przycisk **⇄** przenosi gracza do drugiej drużyny. W grze online liczbę graczy ustawia się w kreatorze.
 5. **Trudność** komputera: w potyczce wybiera się ją przy każdym bocie (punkt wyżej), na arenie i w wersji planszowej w kreatorze ([Poziomy trudności](#poziomy-trudnosci)).
 
@@ -118,7 +118,7 @@ Mapa składa się z heksów. Kryształowe Drzewo stoi na mapie tylko w celu **Kr
 - **Prostokąt:** bazy pośrodku krótszych boków, Drzewo w środku.
 - **Pierścień:** obręcz wokół jeziora, Drzewo i obie bazy na trzech rogach.
 - **Wyspy:** trzy lądy (Przymierza, Drzewo, Horda) rozdzielone wodą, z kilkoma mostami.
-- **Gotowe mapy** („Cieśnina”, „Dolina” i mapy kampanii): ręcznie rysowane.
+- **Gotowe mapy** (scenariusze z kreatora, np. „Krąg Kamieni”, „Wyspy Mgieł”, „Szczyt Świata”, oraz mapy kampanii): ręcznie rysowane, każda z własnym celem, wielkością i poziomem. Mają dwie bazy, więc przy stole grają najwyżej dwie frakcje.
 
 Wielkości (wersja cyfrowa ma sześć, planszowa cztery): **S** mała, **M** średnia, **L** duża, **XL** bardzo duża, a dalej ogromna i gigantyczna. Rozmiar określa liczbę pól, limit rund, liczbę skarbów, osad i spotkań z neutralnymi.
 

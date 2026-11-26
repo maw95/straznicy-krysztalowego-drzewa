@@ -79,6 +79,8 @@ export interface TableConfig {
   rules?: CustomRules;
   /** Arena: 6 = the full 6 on 6 match (the server must know it, else it plays 3 on 3). */
   arenaSize?: 6;
+  /** A ready scenario (scenarios.ts) the table was made from: only for the wizard to come back to it (the server reads the tier, goal and map). */
+  scenario?: string;
   /** `botLevel`: a bot of a digital rivalry (backlog 94); missing = Normalny. */
   seats: Array<{ faction: FactionId; heroId: string; bot: boolean; botLevel?: BotLevel }>;
 }

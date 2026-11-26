@@ -5,6 +5,7 @@
 //   =  a bridge (passable)
 //   T  the Tree        D  the base of the Przymierza        H  the base of the Horda        (space)  no hex
 
+import { SCENARIO_MAPS } from './scenarioMaps';
 import type { StoryNote } from './story';
 
 export interface CustomMap {
@@ -85,4 +86,4 @@ const bundled: CustomMap[] = [
     ],
   },
 ];
-for (const m of bundled) registerCustomMap(m);
+for (const m of [...bundled, ...SCENARIO_MAPS]) registerCustomMap(m);
