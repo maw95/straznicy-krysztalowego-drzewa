@@ -1,4 +1,4 @@
-// A review page of the new factions (Dzikie Stado, Żelazny Klan, Bractwo Przypływu): every character's card as the game draws it, all of its
+// A review page of the new factions (Dzikie Stado, Żelazny Klan, Bractwo Przypływu, Wolna Kompania): every character's card as the game draws it, all of its
 // animations in loops, buttons for its attack and death sounds, and the settlement screen with everything built, per faction.
 // Usage: npx tsx scripts/podglad.ts [faction ...]   -> .tmp/podglad/index.html (open it from the file system; it points at ../../public/assets)
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -6,7 +6,7 @@ import { openGame } from './browser/game';
 import { FACTION_NAMES, UNITS, type FactionId } from '../src/engine/data';
 import { SPRITES } from '../src/ui/sprites';
 
-const FACTIONS = (process.argv.slice(2).length ? process.argv.slice(2) : ['herds', 'clans', 'tides']) as FactionId[];
+const FACTIONS = (process.argv.slice(2).length ? process.argv.slice(2) : ['herds', 'clans', 'tides', 'free']) as FactionId[];
 const OUT = '.tmp/podglad';
 const ASSETS = 'public/assets';
 mkdirSync(`${OUT}/karty`, { recursive: true });
