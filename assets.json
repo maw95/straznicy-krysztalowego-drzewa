@@ -7020,7 +7020,7 @@
         "public/assets/osady/dwelling_indrik.webp"
       ],
       "typ": "okno osady Dzikiego Stada: tło, 18 budynków ogólnych, 3 budynki unikalne (Kamień Tętentu, Wielkie Pastwiska, Ostoja Wędrówek), 9 siedlisk jednostek",
-      "opis": "Tło 1536x720 zmniejszone do 1280x600; budynki i siedliska 1024x1024 na przezroczystym tle, przycięte do obrysu i skalowane do 380 px wysokości (scripts/assets/herds_settlement.py). Kod: SettlementDialog.tsx (UNIQUE_OWNER, buildingPicture); budynki poziomu 2 to osobne, większe obrazy. Jedno podejście na obraz.",
+      "opis": "Tło 1536x720 zmniejszone do 1280x600; budynki i siedliska 1024x1024 na przezroczystym tle, przycięte do obrysu i skalowane do 380 px wysokości (scripts/assets/herds_settlement.py). Kod: SettlementDialog.tsx (UNIQUE_OWNER, buildingPicture); budynki poziomu 2 to osobne, większe obrazy. Jedno podejście na obraz. 26.11, uwaga autora: proporce przebarwione lokalnie na kolor frakcji (scripts/assets/pennant_tints.py, 0 CU).",
       "scenario_asset": {
         "land": "asset_aV3tNVhsZ9BVUnmVX3h6gFux",
         "barracks1": "asset_6Xczcy14ZBWxR377JoCSp7Vv",
@@ -7883,7 +7883,7 @@
         "public/assets/osady/dwelling_leviathan.webp"
       ],
       "typ": "okno osady Bractwa Przypływu: tło, 18 budynków ogólnych, 3 budynki unikalne (Świątynia Pływów, Perłowe Ławice, Latarnia Morska), 9 siedlisk jednostek",
-      "opis": "Tło 1536x720 zmniejszone do 1280x600; budynki i siedliska 1024x1024 na przezroczystym tle, przycięte i skalowane do 380 px wysokości (scripts/assets/tides_settlement.py). Kod: SettlementDialog.tsx (UNIQUE_OWNER). Jedno podejście na obraz, 3 CU każdy (31 obrazów, ok. 93 CU).",
+      "opis": "Tło 1536x720 zmniejszone do 1280x600; budynki i siedliska 1024x1024 na przezroczystym tle, przycięte i skalowane do 380 px wysokości (scripts/assets/tides_settlement.py). Kod: SettlementDialog.tsx (UNIQUE_OWNER). Jedno podejście na obraz, 3 CU każdy (31 obrazów, ok. 93 CU). 26.11, uwaga autora: proporce przebarwione lokalnie na kolor frakcji (scripts/assets/pennant_tints.py, 0 CU).",
       "scenario_asset": {
         "land": "asset_G7KohM2Qf8YVyysyWVjYzRWB",
         "plot": "asset_N4WzcP1UEDR1xUwbVGu6k3Aw",

@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Osady: proporce Bractwa Przypływu (koszary, targ, rada osady, skarbiec) mają morski kolor frakcji zamiast zielonego, a proporce i płótna Dzikiego Stada na budynkach i siedliskach są bursztynowe zamiast czerwonych.":
+    "Settlements: the Brotherhood of the Tide's pennants (barracks, market, council, treasury) are the faction's sea turquoise instead of green, and the Wild Herd's pennants and cloths on buildings and dwellings are amber instead of red.",
   "Wolna Kompania: portrety i karty Jenota Szpiega i Świstaka Petardnika są kadrowane szerzej: widać całą głowę w kapturze i sztylet oraz całą głowę i beczkę z prochem.":
     "The Free Company: the Raccoon Dog Spy's and the Marmot Petardier's portraits and cards are framed wider: the whole hooded head with the dagger, and the whole head with the powder keg.",
   "Wolna Kompania: portret i karta Warana Wieżowego pokazują głowę i wieżyczkę z łucznikami (karta kadrowała szyję i nogę); karty pozostałych postaci Kompanii mają to samo kadrowanie co portrety.":
