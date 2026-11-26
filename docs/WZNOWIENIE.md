@@ -1,4 +1,4 @@
-# AKTUALNIE (26.11.2026 wieczór): punkty 91, 93, 89 i 92 zrobione i scommitowane; zostają: 90 (przed nim przypomnieć o Opusie) → jedno strojenie od zera (`retune-all.sh`) z kampanią (51b) → `tuneMerge`, `make check`
+# AKTUALNIE (26.11.2026 noc): punkty 91, 93, 89, 92 i 90 (mgła wojny) zrobione i scommitowane (backend: lokalny commit 48265c6, bez wdrożenia); zostaje: jedno strojenie od zera (`retune-all.sh`) z kampanią (51b) → `tuneMerge`, `make check`
 Decyzje autora są przy punktach w `docs/BACKLOG.md`. Nie stroić po drodze; po zmianach rozgrywki tylko golden `-u` w osobnym commicie. Kredyty Scenario: brak do 16.12.
 
 # STAN 26.11 wieczorem: strojenie OUT-only scalone (ce912fc), punkt 88 (animacje Przypływów) zaakceptowany i usunięty z backlogu; w planie niżej zostały punkty 2–4 (zacznij od 91)

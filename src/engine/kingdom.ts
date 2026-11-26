@@ -9,7 +9,7 @@ import { distance, parseKey, type HexKey } from './hex';
 import { factionShare, guardRng, guardUnits, neutralGroup, stillConnected } from './encounters';
 import { awardXp, levelOf } from './growth';
 import { log } from './log';
-import { mapNeighbors, revealAround, tileCost, treeOf } from './map';
+import { mapNeighbors, revealAround, seeHex, tileCost, treeOf } from './map';
 import { Rng } from './rng';
 import { costText, ECONOMY, SIEGE, OBJECTS, OBJECT_NAMES, objectReady, thingsText, type Hut, type MapObject, emptyResources, RESOURCE_IDS, RESOURCE_NAMES, MINE_NAMES, type Cost, type ResourceId, type Resources } from './economy';
 import { ARTIFACT_BY_ID, ARTIFACT_ODDS, artifactPool, completeSets, drawArtifact, gearOf, packOf, SETS, setCount, type ArtifactDef, giveArtifact, passTargets, SHARDS_ID, type Rarity } from './sites';
@@ -766,7 +766,7 @@ function standIn(state: GameState, hero: HeroState, at: HexKey): void {
   const origin = parseKey(at);
   const free = Object.keys(state.tiles).filter(open).sort((a, b) => distance(origin, parseKey(a)) - distance(origin, parseKey(b)) || (a < b ? -1 : 1));
   hero.pos = free[0] ?? at;
-  state.tiles[hero.pos].revealed = true;
+  seeHex(state, hero.pos, hero.faction);
 }
 
 function pay(state: GameState, f: TeamId, price: number) {
@@ -853,14 +853,14 @@ export function tunnelMines(state: GameState, f: TeamId): void {
 
 /**
  * Latarnia Morska (the Brotherhood of the Tide): at the start of a round the hexes within the lighthouse's radius of every settlement of the faction that has one are
- * revealed (the map's fog is shared, so the enemy heroes standing there are seen as well).
+ * revealed for the faction (with the enemy heroes standing there).
  */
 export function lighthouseReveal(state: GameState, f: TeamId): number {
   if (!state.kingdom || !state.rules.empire || raceOf(state, f) !== 'tides') return 0;
   let n = 0;
   for (const s of settlementsOf(state, f)) {
     const level = buildingLevel(s, 'lighthouse');
-    if (level >= 1) n += revealAround(state, s.at, FACTION_MECHANICS.lighthouseRadius[Math.min(level, 2) - 1]).length;
+    if (level >= 1) n += revealAround(state, s.at, FACTION_MECHANICS.lighthouseRadius[Math.min(level, 2) - 1], f).length;
   }
   if (n) log(state, 'info', `${FACTION_NAMES[raceOf(state, f)]}: Latarnia Morska odkrywa pola (${n}).`, f);
   return n;
@@ -1074,7 +1074,7 @@ export function kingdomAction(state: GameState, action: Action): void {
       if (hero.refugeRound === state.round) throw new Error('Ostoja przenosi bohatera raz na rundę.');
       hero.refugeRound = state.round;
       standIn(state, hero, to.at);
-      revealAround(state, hero.pos);
+      revealAround(state, hero.pos, 1, hero.faction);
       log(state, 'info', `${heroLabel(hero)} przenosi się przez Ostoję Wędrówek do osady ${to.name}.`, hero.faction);
       break;
     }

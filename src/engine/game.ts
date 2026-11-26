@@ -58,8 +58,9 @@ import {
 } from './battle';
 import { distance, parseKey, type HexKey } from './hex';
 import { placeEncounters } from './encounters';
-import { generateMap, homeOf, mapNeighbors, revealAround, tileCost, treeOf } from './map';
-import { log } from './log';
+import { generateMap, homeOf, mapNeighbors, revealAround, seeHex, tileCost, treeOf } from './map';
+import { knowsHex } from './hidden';
+import { log, logFor, logPublic } from './log';
 import { unmaskId } from './hidden';
 import { applyHeroSkills, applyHeroType, applyMilestones, applySupportSkill, awardXp, chooseSkill, chooseTreasure, deployDepthOf, GROWTH, huntOf, moveBonus, scholarXp, scoutRadiusOf } from './growth';
 import { objectiveOf, OBJECTIVES } from './objectives';
@@ -210,9 +211,9 @@ export function createGame(setup: SetupOptions): GameState {
     for (const id of evil) addHero(state, id, 'horde', null);
   }
 
-  for (const f of teams) revealAround(state, homeOf(state, f));
+  for (const f of teams) revealAround(state, homeOf(state, f), 1, f);
   // The Tree is known from the start; where the goal has removed it, the middle hex lies hidden like the rest (unless the goal itself shows it).
-  if (state.tiles[treeOf(state)].tree) state.tiles[treeOf(state)].revealed = true;
+  if (state.tiles[treeOf(state)].tree) seeHex(state, treeOf(state));
   state.rng = rng.state;
   placeSites(state);
   placeEncounters(state);
@@ -548,7 +549,7 @@ export function legalHeroMoves(state: GameState): HeroMove[] {
   for (const n of mapNeighbors(state.tiles, hero.pos)) {
     const tile = state.tiles[n];
     const cost = heroTileCost(hero, tile);
-    if (cost === null || !tile.revealed) continue;
+    if (cost === null || !knowsHex(state, n, hero.faction)) continue;
     const there = heroesAt(state, n);
     const enemies = there.filter((h) => h.faction !== hero.faction);
     // One hero per hex: a hex held by an ally is closed (except the faction's own base).
@@ -689,19 +690,19 @@ function moveHero(state: GameState, to: HexKey) {
   state.movePoints -= move.cost;
   if (move.kind === 'attackHero') {
     const defender = defenderAt(state, to, hero.faction)!;
-    log(state, 'battle', `${name} atakuje: ${UNITS[defender.id].name}.`);
+    logFor(state, 'battle', `${name} atakuje: ${UNITS[defender.id].name}.`, [hero.faction, defender.faction]);
     const from = hero.pos;
     hero.pos = to;
-    revealAround(state, to);
+    revealAround(state, to, 1, hero.faction);
     startBattle(state, { kind: 'heroes', attackerHero: hero.id, defenderHero: defender.id, mapHex: to, from });
     return;
   }
   if (move.kind === 'attackGarrison') {
     const s = garrisonAt(state, to, hero.faction)!;
-    log(state, 'battle', `${name} szturmuje osadę ${s.name}: broni jej garnizon (${s.garrison!.map((id) => UNITS[id].name).join(', ')}).`);
+    logFor(state, 'battle', `${name} szturmuje osadę ${s.name}: broni jej garnizon (${s.garrison!.map((id) => UNITS[id].name).join(', ')}).`, [hero.faction, s.owner!]);
     const from = hero.pos;
     hero.pos = to;
-    revealAround(state, to);
+    revealAround(state, to, 1, hero.faction);
     startBattle(state, { kind: 'heroes', attackerHero: hero.id, mapHex: to, from });
     return;
   }
@@ -710,12 +711,12 @@ function moveHero(state: GameState, to: HexKey) {
     log(state, 'battle', crystal.encounter ? `${name} wyzywa strażników: ${crystal.encounter.map((id) => UNITS[id].name).join(', ')}.` : `${name} wyzywa strażnika kryształu: ${UNITS[crystal.guardian!].name}.`);
     const from = hero.pos;
     hero.pos = to;
-    revealAround(state, to);
+    revealAround(state, to, 1, hero.faction);
     startBattle(state, { kind: 'neutral', attackerHero: hero.id, neutralId: crystal.guardian!, encounter: crystal.encounter, mapHex: to, from });
     return;
   }
   hero.pos = to;
-  const revealed = revealAround(state, to, Math.max(1, scoutRadiusOf(hero), gearReveal(hero)));
+  const revealed = revealAround(state, to, Math.max(1, scoutRadiusOf(hero), gearReveal(hero)), hero.faction);
   log(state, 'move', `${name} wchodzi na pole: ${TERRAIN_NAMES[state.tiles[to].terrain]}${revealed.length ? ` (odkryto ${revealed.length})` : ''}.`);
   arriveAt(state, hero);
 }
@@ -746,7 +747,7 @@ function sneakHero(state: GameState, to: HexKey) {
   fs.trailRound = state.round;
   state.movePoints -= move.cost;
   hero.pos = to;
-  const revealed = revealAround(state, to, Math.max(1, scoutRadiusOf(hero), gearReveal(hero)));
+  const revealed = revealAround(state, to, Math.max(1, scoutRadiusOf(hero), gearReveal(hero)), hero.faction);
   log(state, 'move', `${UNITS[hero.id].name} przemyka się obok strażników szlakiem przemytników${revealed.length ? ` (odkryto ${revealed.length})` : ''}.`);
   arriveAt(state, hero);
 }
@@ -767,7 +768,7 @@ export function gateMoves(state: GameState): HexKey[] {
   if (!here || here.owner !== hero.faction || buildingLevel(here, 'sandGate') < 1) return [];
   const from = parseKey(hero.pos);
   return Object.values(state.tiles)
-    .filter((t) => t.revealed && t.key !== hero.pos && !t.place && distance(from, parseKey(t.key)) <= FACTION_MECHANICS.gateReach && canStand(state, t.key, hero.faction, hero.id) && !heroesAt(state, t.key).length)
+    .filter((t) => knowsHex(state, t.key, hero.faction) && t.key !== hero.pos && !t.place && distance(from, parseKey(t.key)) <= FACTION_MECHANICS.gateReach && canStand(state, t.key, hero.faction, hero.id) && !heroesAt(state, t.key).length)
     .map((t) => t.key)
     .sort();
 }
@@ -778,7 +779,7 @@ function gateHero(state: GameState, to: HexKey) {
   if (!gateMoves(state).includes(to)) throw new Error('Brama Wydm nie prowadzi na to pole.');
   state.factions[hero.faction].gateRound = state.round;
   hero.pos = to;
-  const revealed = revealAround(state, to, Math.max(1, scoutRadiusOf(hero), gearReveal(hero)));
+  const revealed = revealAround(state, to, Math.max(1, scoutRadiusOf(hero), gearReveal(hero)), hero.faction);
   log(state, 'move', `${UNITS[hero.id].name} przechodzi przez Bramę Wydm${revealed.length ? ` (odkryto ${revealed.length})` : ''}.`);
   arriveAt(state, hero);
 }
@@ -812,7 +813,7 @@ export function fightAt(state: GameState, to: HexKey): GameState | null {
 function enterBoard(state: GameState, hero: HeroState, to: HexKey) {
   delete hero.entering;
   hero.pos = to;
-  const revealed = revealAround(state, to);
+  const revealed = revealAround(state, to, 1, hero.faction);
   log(state, 'move', `${UNITS[hero.id].name} wkracza na pole: ${TERRAIN_NAMES[state.tiles[to].terrain]}${revealed.length ? ` (odkryto ${revealed.length})` : ''}.`);
   arriveAt(state, hero);
 }
@@ -859,7 +860,7 @@ function arriveAt(state: GameState, hero: HeroState) {
       if (!blocked) {
         for (const id of ordinary) state.crystals[id].at = 'tree';
         state.factions.dawn.delivered += ordinary.length;
-        log(state, 'crystal', `${UNITS[hero.id].name} oddaje ${ordinary.length} kryształ(y) Drzewu (${state.factions.dawn.delivered}/${state.crystalsNeeded}).`);
+        logPublic(state, 'crystal', `${UNITS[hero.id].name} oddaje ${ordinary.length} kryształ(y) Drzewu (${state.factions.dawn.delivered}/${state.crystalsNeeded}).`);
         hero.crystals = hero.crystals.filter((id) => id === 'artifact');
       }
     }
@@ -905,7 +906,7 @@ function advanceTurn(state: GameState) {
 export function scoutAround(state: GameState, hero: HeroState | undefined) {
   const radius = Math.max(scoutRadiusOf(hero), gearReveal(hero));
   if (!hero || !hero.alive || !hero.pos || radius < 2) return;
-  const revealed = revealAround(state, hero.pos, radius);
+  const revealed = revealAround(state, hero.pos, radius, hero.faction);
   if (revealed.length) log(state, 'move', `${UNITS[hero.id].name} wypatruje okolicę (odkryto ${revealed.length}).`, hero.faction);
 }
 
@@ -1000,9 +1001,9 @@ function useMapItem(state: GameState, itemId: string, targets: HexKey[] | undefi
   const item = state.items[itemId];
   if (!item || item.owner !== hero.faction) throw new Error('Nie masz tego skarbu.');
   if (item.kind === 'map') {
-    const keys = [...new Set(targets ?? [])].filter((k) => state.tiles[k] && !state.tiles[k].revealed).slice(0, ITEM_EFFECT.mapReveal);
+    const keys = [...new Set(targets ?? [])].filter((k) => state.tiles[k] && !knowsHex(state, k, hero.faction)).slice(0, ITEM_EFFECT.mapReveal);
     if (!keys.length) throw new Error(`Wybierz do ${ITEM_EFFECT.mapReveal} zakrytych pól.`);
-    for (const k of keys) state.tiles[k].revealed = true;
+    for (const k of keys) seeHex(state, k, hero.faction);
     log(state, 'item', `${UNITS[hero.id].name} używa Magicznej Mapy: odkryto ${keys.length} pola.`);
   } else if (item.kind === 'resurrection') {
     const f = state.factions[hero.faction];
@@ -1021,7 +1022,7 @@ function useMapItem(state: GameState, itemId: string, targets: HexKey[] | undefi
         delete deadHero.formerPlayerId;
       }
       deadHero.pos = to;
-      revealAround(state, to);
+      revealAround(state, to, 1, hero.faction);
       // The revived hero joins the turn order from the next round.
       log(state, 'item', `${UNITS[hero.id].name} używa Eliksiru Odrodzenia i wskrzesza: ${UNITS[deadHero.id].name}.`);
     } else if (unitId && f.supportsDead.includes(unitId)) {
@@ -1333,10 +1334,10 @@ function resolveGuardianFight(state: GameState, b: BattleState) {
     boss.hp = Math.max(0, unit.hp);
     if (b.winner === b.attacker && !unit.alive) {
       boss.slain = b.attacker as TeamId;
-      log(state, 'crystal', `${sideName(state, b.attacker)} zadaje Bossowi ostatni cios.`);
+      logPublic(state, 'crystal', `${sideName(state, b.attacker)} zadaje Bossowi ostatni cios.`);
     } else {
       state.stats.neutralWipes += 1;
-      log(state, 'info', `Boss ma jeszcze ${boss.hp}/${boss.maxHp} Ż.`);
+      logPublic(state, 'info', `Boss ma jeszcze ${boss.hp}/${boss.maxHp} Ż.`);
     }
     return;
   }

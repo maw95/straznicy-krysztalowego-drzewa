@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Mgła wojny: każda frakcja odkrywa mapę dla siebie. Gracz widzi tylko pola odkryte przez własną frakcję (pole raz odkryte zostaje widoczne razem z tym, kto na nim stoi), boty planują tylko na tym, co odkryła ich frakcja, a dziennik pokazuje własne wpisy, bitwy z udziałem gracza i wspólne zdarzenia. Wydanie planszowe zostaje ze wspólną mapą.':
+    'Fog of war: every faction uncovers the map for itself. A player sees only the tiles their own faction has uncovered (a tile once uncovered stays visible together with whoever stands on it), the bots plan only on what their faction has uncovered, and the log shows the player\'s own entries, the battles they took part in and the shared events. The board edition keeps one shared map.',
   'Mapa: połowa grup strażników (spotkania i obrońcy neutralnych osad) to teraz pomocnicy frakcji, którą nikt w tej partii nie gra, o sile zbliżonej do neutralnych i z tą samą nagrodą; najsilniejszym grupom może przewodzić legenda frakcji.':
     'Map: half of the guard groups (encounters and the defenders of neutral settlements) are now supports of a faction nobody plays in this game, about as strong as neutrals and with the same reward; the faction\'s legend may lead the strongest groups.',
   'Mapa: w celach bez Kryształowego Drzewa środkowe pole jest na starcie zakryte jak reszta (chyba że cel sam je pokazuje: punkt kontrolny, legowisko Bossa, Artefakt).':

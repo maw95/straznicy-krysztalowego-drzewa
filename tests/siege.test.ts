@@ -28,8 +28,7 @@ function atTheGates(s: GameState, garrison: string[], walls = 0): { s: GameState
   dawn.pos = far;
   const next = mapNeighbors(s.tiles, home.at).find((k) => !s.tiles[k].crystalId)!;
   horde.pos = next;
-  s.tiles[home.at].revealed = true;
-  s.tiles[next].revealed = true;
+  for (const k of [home.at, next]) Object.assign(s.tiles[k], { revealed: true, seenBy: undefined });
   s.turnIndex = s.turnOrder.indexOf(horde.id);
   s.movePoints = 9;
   return { s, home: home.at };

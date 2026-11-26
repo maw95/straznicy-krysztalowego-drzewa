@@ -121,7 +121,7 @@ Wielkości (wersja cyfrowa ma sześć, planszowa cztery): **S** mała, **M** śr
 ### Ruch
 W każdej rundzie każdy żyjący bohater ma jedną turę. Domyślnie ma **3 punkty ruchu** (umiejętności, artefakty i niektóre miejsca zwiększają ten zapas). Teren łatwy (polana, las, droga) kosztuje 1, trudny (bagno, jama) 2. Góry, woda, przepaści, martwy gąszcz i ciernie są nieprzejezdne; przez wodę prowadzą mosty. Niewykorzystane punkty przepadają.
 
-Klikasz pole, a bohater idzie ścieżką, za którą zapłacisz punktami. Wejście na pole **odkrywa pola sąsiednie**. Na jednym polu stoi najwyżej jeden bohater; wyjątek to własna baza, gdzie może stać kilku. Skarb z pola trafia do wspólnego ekwipunku frakcji. **Spacja** albo **E** kończy turę, a **U** (albo Ctrl+Z) cofa ostatni krok na mapie.
+Klikasz pole, a bohater idzie ścieżką, za którą zapłacisz punktami. Wejście na pole **odkrywa pola sąsiednie**. **Mgła wojny:** każda frakcja odkrywa mapę dla siebie. Widzisz tylko pola odkryte przez twoją frakcję (na starcie własną bazę i Drzewo); pole raz odkryte zostaje widoczne razem z tym, kto na nim stoi, a wrogów na polach, których nie znasz, nie widać. Boty też wiedzą tylko to, co odkryła ich frakcja. W grze przy jednym komputerze każdy gracz widzi swoją mapę po przekazaniu urządzenia. Na jednym polu stoi najwyżej jeden bohater; wyjątek to własna baza, gdzie może stać kilku. Skarb z pola trafia do wspólnego ekwipunku frakcji. **Spacja** albo **E** kończy turę, a **U** (albo Ctrl+Z) cofa ostatni krok na mapie.
 
 ### Runda
 Gdy wszyscy skończą turę, jest koniec rundy: sprawdza się rytuał Hordy i limit rund, wraca 1 punkt many bohaterom, wpada dochód z osad, a kryształ na **torze rund** przesuwa się o jedno pole. Kolejność tur w rywalizacji jest na zmianę; w kooperacji najpierw ruszają się gracze, potem automat zła.
@@ -340,7 +340,7 @@ Lud rafy i odpływu: trytoni, syreny, kraboludy i żółwie, a w głębi węże 
 - **Przyciąganie.** Harpun, Pieśń Syreny, Oplot Głębin i Wir Głębin ściągają wrogów ku Bractwu, a Wir i Odpływ zamieniają jednostki miejscami.
 - **Bohaterowie:** Król Trytonów (Ściana Wody: raz na bitwę odpycha sąsiednich wrogów, sąsiedzi mają −1 obrażeń do końca rundy), Syrena Pieśniarka (Pieśń Syreny: przyciąga wroga), Koralowy Żmij (Oplot Głębin: przyciąga i unieruchamia). Czwarty bohater: Stary Mors Kapitan. Dowódcy: Trytoński Strażnik, Harpunniczka, Sefiran Plamisty (Wylinka: zrzuca statusy i odzyskuje Życie).
 - **Jednostki:** Żółw Skorupiak (Skorupa: raz na bitwę chowa się i nie przyjmuje obrażeń do następnej aktywacji), Trytoński Harpunnik, Żabi Skoczek (1); Krabolud Tarczownik albo Ośmiornica Atramentowa (2); Rekinołak albo Kapłanka Pereł (3); Homar Pancerny albo Albatros (4); Rafowy Golem albo Morska Wiedźma (5); legenda Lewiatan.
-- **Osada:** **Świątynia Pływów** (mechanika), **Perłowe Ławice** (+1 zł na rundę) i **Latarnia Morska** (odkrywa mapę w promieniu 3, na poziomie II 5, i pokazuje ruchy wrogich bohaterów). Pierwotna Iskra: Perłowa Świątynia (każda jednostka zaczyna bitwę z Perłową Tarczą).
+- **Osada:** **Świątynia Pływów** (mechanika), **Perłowe Ławice** (+1 zł na rundę) i **Latarnia Morska** (odkrywa frakcji mapę w promieniu 3, na poziomie II 5, i pokazuje ruchy wrogich bohaterów). Pierwotna Iskra: Perłowa Świątynia (każda jednostka zaczyna bitwę z Perłową Tarczą).
 
 ### Gdzie można nimi grać
 Nowe frakcje są dostępne w trybie **Potyczka** w celach Kontrola, Podbój i Relikt, także przy stole online (każde miejsce wybiera własną frakcję).
@@ -424,7 +424,7 @@ Gra jest przygotowana także do grania z dzieckiem (od 5 lat):
 
 - **Zapis:** gra zapisuje się sama (**autozapis**) i możesz zapisać ją pod własną nazwą (**Opcje → Zapisz grę**). Wczytujesz w menu głównym („Wczytaj grę”): ostatnią partię, zapis pod nazwą albo grę z pliku. Zapis to ustawienia plus lista ruchów, więc po wczytaniu stan jest dokładnie taki sam.
 - **Opcje** (klawisz **O**): szybkość animacji (szybsze skracają walki), język, tryb Autoplay, wygląd portretów (można wrócić do okrągłych na słabszym urządzeniu), zasady i karty, dziennik oraz wyjście z gry.
-- **Dziennik** (klawisz **D**): lista zdarzeń gry, ułatwiająca zrozumienie, co się stało.
+- **Dziennik** (klawisz **D**): lista zdarzeń gry, ułatwiająca zrozumienie, co się stało. Pokazuje wpisy twojej frakcji, bitwy, w których brałeś udział, i to, co wspólne (rundy, postęp celu, koniec gry); cudzych ruchów i znalezisk nie widać.
 - **Język:** polski i angielski. Gra wybiera go z ustawień przeglądarki, a ty możesz zmienić flagami w prawym górnym rogu menu albo w opcjach; wybór jest zapamiętywany. Angielska wersja ma własne logo i własny tekst tej instrukcji (instrukcja do druku jest tylko po polsku).
 - **Telefon i instalacja:** grę można zainstalować jak aplikację (opcje pokazują podpowiedź instalacji), a po instalacji działa na pełnym ekranie.
 - **Zgłoszenie błędu:** w trakcie gry możesz opisać problem; zgłoszenie dostaje ostatnie linie dziennika i stan gry. Bez połączenia z serwerem zgłoszenie czeka w przeglądarce („Dla testerów” → „Wyślij do twórcy”).

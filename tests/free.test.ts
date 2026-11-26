@@ -279,9 +279,9 @@ describe('Sidła: what may be seen', () => {
     expect(redactHidden(s, null).battle!.ground).toHaveLength(0);
     expect(redactHidden(s, ['dawn']).battle!.ground).toHaveLength(2);
     expect(s.battle!.ground).toHaveLength(2);
-    // nothing to hide: the very same state comes back
+    // nothing to hide in the battle: the very same battle comes back (the map has its own fog of war)
     const plain = fight([BEAR], 1);
-    expect(redactHidden(plain, ['horde'])).toBe(plain);
+    expect(redactHidden(plain, ['horde']).battle).toBe(plain.battle);
     expect(JSON.stringify(forHorde.battle)).not.toContain('"kind":"trap"');
   });
 

@@ -593,3 +593,10 @@ Komputer na Bardzo trudnym (`COMPUTER_HANDICAP.veryHard` w `types.ts`) **nie ma 
 - **Ranking:** gry na własnych ustawieniach **nie dają punktów** (`pointsFor` zwraca 0 dla `custom`; online już dziś ich nie liczył).
 - **Online:** serwer zna pola z wydanego silnika; nowe pola (`layer`, ruch, limit rund, posiłki) zadziałają online dopiero po wydaniu gry i aktualizacji silnika w serwerze (starszy serwer odrzuci je jako nieznane zasady).
 - **Skarbiec ma dwa poziomy (18.11):** Skarbiec +1 zł na rundę (4 zł + 2 rudy), Wielki skarbiec +2 zł na rundę (6 zł + 2 rudy + 1 Pył; dochód nie sumuje się z poziomem I, tylko go zastępuje). `KINGDOM.incomeTreasury = [1, 2]`. Boty skarbca nie ulepszają, więc wyniki partii (golden) nie zmieniły się. Grafika poziomu II jest na razie ta sama co poziomu I (lista do wygenerowania w BACKLOG 2a).
+
+## Mgła wojny (26.11.2026, tylko wersja cyfrowa, punkt 90)
+- Każda frakcja odkrywa mapę dla siebie (`Tile.seenBy`; pole odkryte dla wszystkich nie ma tej listy: woda, Drzewo, punkty celu, Odłamki z bitwy). Na starcie frakcja zna swoją bazę z sąsiadami i Drzewo.
+- Pole raz odkryte zostaje widoczne na stałe razem z wrogami na nim; wrogi bohater na polu, którego frakcja nie zna, jest w widoku poza planszą (`fogView` w `src/engine/hidden.ts`).
+- Ruch, Brama Wydm i Magiczna Mapa liczą się z wiedzą własnej frakcji (`knowsHex`). Bot planuje na widoku własnej frakcji (`adventureAction`).
+- Dziennik: wpis ma `by` (frakcja w turze albo strony bitwy); rundy, koniec gry, oddanie kryształów i rany Bossa są wspólne. Hot-seat: ekran pokazuje mapę i dziennik gracza w turze (zasłona przekazania między ludźmi już była). Online: serwer wysyła `redactHidden` i odfiltrowuje dziennik.
+- Wydanie planszowe: wspólna mapa bez zmian.

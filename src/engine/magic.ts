@@ -246,7 +246,7 @@ export function mapSpell(state: GameState, hero: HeroState, spell: SpellId): voi
     spend(state, hero, spell);
     hero.pos = target;
     state.movePoints = 0;
-    revealAround(state, target);
+    revealAround(state, target, 1, hero.faction);
     log(state, 'ability', `${who} rzuca czar Wrota i staje w swojej osadzie.`, undefined, { type: 'fx', kind: 'mapa_portal', hex: target });
     return;
   }
@@ -257,7 +257,7 @@ export function mapSpell(state: GameState, hero: HeroState, spell: SpellId): voi
     return;
   }
   spend(state, hero, spell);
-  const revealed = revealAround(state, hero.pos, MAGIC.visionRadius);
+  const revealed = revealAround(state, hero.pos, MAGIC.visionRadius, hero.faction);
   log(state, 'ability', `${who} rzuca czar Wizja (odkryto ${revealed.length}).`, undefined, { type: 'fx', kind: 'mapa_wizja', hex: hero.pos });
 }
 

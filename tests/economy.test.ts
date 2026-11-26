@@ -255,7 +255,7 @@ describe('level 4: mills, stores and wells', () => {
   const walkIn = (s: GameState, hex: string): GameState => {
     const from = neighbours(s, hex).find((k) => !s.tiles[k].crystalId && !s.tiles[k].place && !s.tiles[k].home)!;
     stand(s, from);
-    s.tiles[hex].revealed = true;
+    Object.assign(s.tiles[hex], { revealed: true, seenBy: undefined });
     s.movePoints = 9;
     return applyAction(s, { type: 'moveHero', to: hex });
   };

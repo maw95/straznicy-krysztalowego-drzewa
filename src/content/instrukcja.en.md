@@ -121,7 +121,7 @@ Sizes (the digital version has six, the board one four): **S** small, **M** medi
 ### Movement
 In every round each living hero has one turn. By default a hero has **3 movement points** (skills, artifacts and some places raise this supply). Easy terrain (glade, forest, road) costs 1, hard terrain (swamp, pit) 2. Mountains, water, chasms, dead thicket and thorns are impassable; bridges lead across water. Unused points are lost.
 
-You click a tile and the hero walks along the path whose cost you pay in points. Stepping onto a tile **reveals the neighbouring tiles**. At most one hero stands on a tile; the exception is your own base, where several can stand. A treasure from the tile goes to the faction's shared inventory. **Space** or **E** ends the turn, and **U** (or Ctrl+Z) undoes the last step on the map.
+You click a tile and the hero walks along the path whose cost you pay in points. Stepping onto a tile **reveals the neighbouring tiles**. **Fog of war:** every faction uncovers the map for itself. You see only the tiles your faction has uncovered (at the start your own base and the Tree); a tile once uncovered stays visible together with whoever stands on it, and enemies on tiles you do not know are not shown. The bots also know only what their faction has uncovered. At one computer every player sees their own map after the device is handed over. At most one hero stands on a tile; the exception is your own base, where several can stand. A treasure from the tile goes to the faction's shared inventory. **Space** or **E** ends the turn, and **U** (or Ctrl+Z) undoes the last step on the map.
 
 ### Round
 When everyone has finished their turn, the round ends: the Horde's ritual and the round limit are checked, heroes get back 1 mana point, income from settlements arrives, and the crystal on the **round track** moves by one tile. The order of turns in rivalry alternates; in co-op the players move first, then the evil automaton.
@@ -340,7 +340,7 @@ A people of the reef and the ebb: tritons, sirens, crab-folk and turtles, and se
 - **Pulling.** The Harpoon, the Siren's Song, the Coils of the Deep and the Maelstrom pull enemies towards the Brotherhood, and the Whirl and the Ebb swap units.
 - **Heroes:** the Triton King (Water Wall: once per battle pushes adjacent enemies, neighbours take 1 less damage until the end of the round), the Siren Singer (Siren's Song: pulls an enemy), the Coral Wyrm (Coils of the Deep: pulls and immobilizes). Fourth hero: Old Walrus Captain. Commanders: the Triton Guard, the Harpooner, Sefiran the Spotted (Molt: sheds statuses and regains Health).
 - **Units:** Shell Turtle (Shell: once per battle hides and takes no damage until its next activation), Triton Harpooner, Frog Leaper (1); Crab-folk Shieldbearer or Ink Octopus (2); Sharkman or Pearl Priestess (3); Armored Lobster or Albatross (4); Reef Golem or Sea Witch (5); the legend Leviathan.
-- **Settlement:** the **Temple of Tides** (mechanic), the **Pearl Shoals** (+1 gold per round) and the **Lighthouse** (reveals the map within 3 hexes, 5 on level II, and shows enemy hero movements). Primal Spark: the Pearl Temple (every unit starts the battle with a Pearl Shield).
+- **Settlement:** the **Temple of Tides** (mechanic), the **Pearl Shoals** (+1 gold per round) and the **Lighthouse** (reveals the map to the faction within 3 hexes, 5 on level II, and shows enemy hero movements). Primal Spark: the Pearl Temple (every unit starts the battle with a Pearl Shield).
 
 ### Where you can play them
 The new factions are available in **Skirmish** in the goals Control, Conquest and Relic, also at an online table (each seat picks its own faction).
@@ -424,7 +424,7 @@ The game is also prepared for playing with a child (from age 5):
 
 - **Save:** the game saves itself (**autosave**) and you can save it under your own name (**Options → Save game**). You load in the main menu ("Load a game"): the last game, a save under a name, or a game from a file. A save is the settings plus a list of moves, so after loading the state is exactly the same.
 - **Options** (the **O** key): the speed of animations (faster ones shorten fights), language, the Autoplay mode, the look of portraits (you can go back to round ones on a weaker device), rules and cards, the log, and leaving the game.
-- **Log** (the **D** key): a list of the game's events that helps you understand what happened.
+- **Log** (the **D** key): a list of the game's events that helps you understand what happened. It shows your faction's entries, the battles you took part in and what everybody shares (the rounds, the goal's progress, the end of the game); other factions' moves and finds are not shown.
 - **Language:** Polish and English. The game picks it from the browser's settings, and you can change it with the flags in the top right corner of the menu or in the options; the choice is remembered. The English version has its own logo.
 - **Phone and installation:** the game can be installed like an app (the options show an installation hint), and after installation it runs full screen.
 - **Bug report:** during the game you can describe a problem; the report gets the last lines of the log and the state of the game. Without a connection to the server the report waits in the browser ("For testers" → "Send to the author").

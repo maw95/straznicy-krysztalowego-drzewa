@@ -10,11 +10,12 @@ import { chooseAction } from '../engine/ai';
 import { describeAction } from './hint';
 import { FACTION_HEROES, FACTION_NAMES, UNITS, type FactionId, type TeamId, type ItemKind } from '../engine/data';
 import { activeHero, applyAction, createGame, currentActor, legalHeroMoves } from '../engine/game';
-import { redactHidden } from '../engine/hidden';
+import { fogView, redactHidden } from '../engine/hidden';
+import { logVisibleTo } from '../engine/log';
 import { hideOwnTraps, trapSecrecyOn, trapVeilFor } from './trapVeil';
 import { movePath } from '../engine/battle';
 import { neighborKeys, type HexKey } from '../engine/hex';
-import { tileCost } from '../engine/map';
+import { seeHex, tileCost } from '../engine/map';
 import { controlCounts, objectiveOf, OBJECTIVES } from '../engine/objectives';
 import { arenaSetup, DEFAULT_RULES, isDigital, type Level, type Mode, type Action, type GameState, type LogEntry, type LogEvent, type SetupOptions } from '../engine/types';
 import { AdventureView, GoldBox, type LootFloat } from './AdventureView';
@@ -219,8 +220,8 @@ export function App() {
       const next = hex && hero ? neighborKeys(hex).find((k) => s.tiles[k] && tileCost(s.tiles[k]) !== null && !s.tiles[k].crystalId && !s.tiles[k].place) : null;
       if (hex && hero && next) {
         hero.pos = next;
-        s.tiles[hex].revealed = true;
-        s.tiles[next].revealed = true;
+        seeHex(s, hex);
+        seeHex(s, next);
         s.movePoints = 3;
       }
     }
@@ -236,8 +237,8 @@ export function App() {
         home.buildings.walls = Number(q.get('siege'));
         if (foe && q.get('defender') !== '1') foe.pos = Object.values(s.tiles).find((t) => t.home === hero.faction)!.key;
         hero.pos = next;
-        s.tiles[home.at].revealed = true;
-        s.tiles[next].revealed = true;
+        seeHex(s, home.at);
+        seeHex(s, next);
         s.movePoints = 3;
         if (q.get('adjacent') !== '1') {
           s = applyAction(s, { type: 'moveHero', to: home.at });
@@ -247,7 +248,7 @@ export function App() {
     }
     // ?level=9 puts every hero on that level (for looking at the milestones on the cards).
     if (q.get('level')) for (const h of Object.values(s.heroes)) h.level = Number(q.get('level'));
-    if (q.get('reveal') === '1') for (const t of Object.values(s.tiles)) t.revealed = true;
+    if (q.get('reveal') === '1') for (const k of Object.keys(s.tiles)) seeHex(s, k);
     // ?encounter=2 (with growth=1) walks the active hero into the first neutral encounter of that tier (0 common, 1 rare, 2 legendary), for looking at the new units.
     if (q.get('encounter')) {
       const enc = Object.values(s.crystals).find((c) => c.encounter && c.tier === Number(q.get('encounter'))) ?? (q.get('adjacent') === '1' ? Object.values(s.crystals).find((c) => c.guardian) : undefined);
@@ -255,7 +256,7 @@ export function App() {
       const next = enc && hero ? neighborKeys(enc.at).find((k) => s.tiles[k] && tileCost(s.tiles[k]) !== null && !s.tiles[k].crystalId) : null;
       if (enc && hero && next) {
         hero.pos = next;
-        s.tiles[enc.at].revealed = true;
+        seeHex(s, enc.at);
         s.movePoints = 3;
         // ?adjacent=1 only stands next to the encounter (to look at the fight note and the confirmation).
         if (q.get('adjacent') !== '1') {
@@ -364,6 +365,8 @@ export function App() {
     const ownDeploy = battleSource.battle?.stage === 'deploy' && viewer !== null && battleSource.battle.needsDeploy[0] === viewer && trapsUncovered === viewer;
     return trapSecrecy && !peekTraps && viewer && !ownDeploy ? hideOwnTraps(shown, viewer) : shown;
   }, [battleSource, viewers, trapSecrecy, peekTraps, viewer, trapsUncovered]) as GameState;
+  // The fog of war (digital edition): the map shows what the viewers' factions have uncovered; enemy heroes on hexes they have not seen are not on it.
+  const mapShown = useMemo(() => (game ? fogView(game, viewers) : game), [game, viewers]);
   const peekKey = game?.battle ? `${game.battle.stage}:${game.battle.round}:${game.battle.index}:${actor.kind === 'human' ? actor.faction : ''}` : '';
   useEffect(() => { setPeekTraps(false); }, [peekKey]);
   // The deployment of a side with traps is covered until that side says the other player is not looking.
@@ -593,7 +596,8 @@ export function App() {
     const prev = soundedLog.current;
     soundedLog.current = { seed: game.setup.seed, n: game.log.length };
     if (!prev || prev.seed !== game.setup.seed) return;
-    const fresh = game.log.slice(prev.n);
+    // The fog of war: what the viewers may not read is not heard either (an enemy's step, find or spell somewhere in the dark).
+    const fresh = game.log.slice(prev.n).filter((l) => logVisibleTo(l, viewers));
     // Siege: a tower's shot and the moat are heard wherever they happen (they have no animation of their own).
     if (fresh.some((l) => l.kind === 'damage' && l.text.startsWith('Wieżyczka →'))) sfx.play('tower_shot');
     if (fresh.some((l) => l.kind === 'damage' && l.text.startsWith('Fosa →'))) sfx.play('moat');
@@ -631,9 +635,9 @@ export function App() {
       return;
     }
     const sides = new Set(game.players.filter(atThisScreen).map((p) => p.faction));
-    const events = game.log.slice(seen.n).flatMap((l) => (l.event ? [l.event] : []));
+    const events = game.log.slice(seen.n).flatMap((l) => (l.event && logVisibleTo(l, viewers) ? [l.event] : []));
     const fresh = events.flatMap((ev) => (ev.type !== 'story' && ev.type !== 'fx' && sides.has(game.heroes[ev.heroId]?.faction) ? [ev] : []));
-    // Map light effects (spells, shards, the Iskra) play for everybody, whatever their side.
+    // Map light effects (spells, shards, the Iskra) play for everybody who may read the line, whatever their side.
     const mapFx: Array<{ key: number; kind: string; hex: string }> = events.flatMap((ev) => (ev.type === 'fx' ? [{ key: Math.random(), kind: ev.kind, hex: ev.hex }] : []));
     if (mapFx.length) {
       setMapFxs((l) => [...l, ...mapFx].slice(-4));
@@ -694,7 +698,7 @@ export function App() {
   }, [lastBattleId]);
 
   const heroLevels = useMemo(() => (game?.rules.heroGrowth ? Object.fromEntries(Object.values(game.heroes).map((h) => [h.id, h.level ?? 1])) : {}), [game]);
-  const visibleLog = useMemo(() => (game ? game.log.filter((l) => !l.privateTo || l.privateTo === viewer) : []), [game, viewer]);
+  const visibleLog = useMemo(() => (game ? game.log.filter((l) => logVisibleTo(l, viewers)) : []), [game, viewers]);
 
   /** A new, loaded or left game: no "found treasure" carried over from the last one. */
   function forgetSeen() {
@@ -1004,7 +1008,7 @@ export function App() {
       ) : held || (game.phase === 'battle' && b && !b.duel && b.stage !== 'select') ? (
         <BattleView state={battleShown} attack={held?.attack ?? null} canAct={humanTurn && !held} onAction={dispatch} onShowCard={setCard} footer={footer} />
       ) : (
-        <AdventureView state={game} loot={lootFloats} mapFx={mapFxs} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} onSettlementRace={setTownRace} footer={adventureFooter} />
+        <AdventureView state={mapShown!} loot={lootFloats} mapFx={mapFxs} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length} onAction={humanAction} onPath={walk} onShowCard={setCard} onSettlementRace={setTownRace} footer={adventureFooter} />
       )}
 
       <Modal open={Boolean(selecting)}>{selecting && <SupportSelect state={game} faction={selecting} onPick={(ids) => dispatch({ type: 'selectSupports', faction: selecting, supportIds: ids })} />}</Modal>

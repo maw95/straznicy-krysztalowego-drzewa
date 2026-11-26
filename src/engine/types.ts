@@ -353,7 +353,13 @@ export interface Tile {
   side: TileSide;
   /** Art variant, 1-based. */
   variant: number;
+  /** Uncovered for somebody (the board edition: for everybody). Who may see it: `seenBy`. */
   revealed: boolean;
+  /**
+   * The fog of war of the digital edition (`fogOn`, hidden.ts): the factions that have uncovered the hex, each for itself; missing on a revealed hex = known
+   * to everybody (the water, the Tree, the goal's points). Read it through `knowsHex`; the screens and the bots get a view with `revealed` set per viewer (`fogView`).
+   */
+  seenBy?: TeamId[];
   crystalId: string | null;
   treasureId: string | null;
   home: TeamId | null;
@@ -699,6 +705,8 @@ export interface LogEntry {
   event?: LogEvent;
   /** Visible only to this faction (private draws). */
   privateTo?: TeamId;
+  /** The fog of war (`fogOn`): the factions this line is about (the one whose turn it was, the sides of a battle); missing = everybody's (rounds, the goal, victory). */
+  by?: TeamId[];
 }
 
 export interface BattleReport {

@@ -8,7 +8,7 @@ import { neighborKeys } from './hex';
 import { raceOf } from './teams';
 import { awardXp } from './growth';
 import { arenaObstacles } from './arenaLayout';
-import { tileCost } from './map';
+import { seeHex, tileCost } from './map';
 import { ARTIFACT_BY_ID, giveArtifact } from './sites';
 import { SPELL_IDS, type SpellId } from './magic';
 import { BUILDING_NAMES, buildingsFor, recruitsOf, type BuildingId } from './kingdom';
@@ -93,7 +93,7 @@ export function buildEverything(state: GameState, faction: TeamId, variant = 0):
 }
 
 export function revealAll(state: GameState): void {
-  for (const t of Object.values(state.tiles)) t.revealed = true;
+  for (const k of Object.keys(state.tiles)) seeHex(state, k);
 }
 
 /** The hero stands on this hex of the map. */
@@ -126,7 +126,7 @@ export function fightNeutral(state: GameState, tier: 0 | 1 | 2 = 0): GameState {
   const next = neighborKeys(enc.at).find((k) => state.tiles[k] && tileCost(state.tiles[k]) !== null && !state.tiles[k].crystalId);
   if (!next) throw new Error('Przy przeciwniku nie ma wolnego pola.');
   hero.pos = next;
-  state.tiles[enc.at].revealed = true;
+  seeHex(state, enc.at);
   state.movePoints = Math.max(state.movePoints, 3);
   return applyAction(state, { type: 'moveHero', to: enc.at });
 }

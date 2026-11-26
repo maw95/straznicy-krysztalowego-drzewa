@@ -1,9 +1,37 @@
-// Hidden information (the Free Companies: traps, veiled units; the Desert Empire: mirages, the buried Queen): what a viewer may see of the state. The engine always
+// Hidden information (the fog of war of the digital edition; the Free Companies: traps, veiled units; the Desert Empire: mirages, the buried Queen): what a viewer may see of the state. The engine always
 // works on the full state; whoever shows the game to people (the server for an online table, the screen for hot-seat) shows `redactHidden(state, viewers)` instead,
 // and the bots of a side plan on the same view (ai/battleAi.ts). No import from the rest of the engine but types, so the server and the screens can use it freely.
 
-import type { Side } from './data';
-import type { BattleState, BattleUnit, GameState, GroundEffect } from './types';
+import type { Side, TeamId } from './data';
+import type { HexKey } from './hex';
+import { isDigital, type BattleState, type BattleUnit, type GameState, type GroundEffect, type HeroState, type Tile } from './types';
+
+/** The fog of war (backlog 90): in the digital edition every faction uncovers the map for itself; the board edition shares one map. */
+export const fogOn = (state: Pick<GameState, 'rules' | 'setup'>): boolean => isDigital(state.rules) && state.setup.mode !== 'arena';
+
+/** Whether faction `side` has hex `k` uncovered (without the fog: whether anybody has). */
+export function knowsHex(state: Pick<GameState, 'tiles'>, k: HexKey, side: Side): boolean {
+  const t = state.tiles[k];
+  return Boolean(t?.revealed) && (!t.seenBy || t.seenBy.includes(side as TeamId));
+}
+
+/**
+ * The map as the sides in `viewers` know it (the fog of war): a hex none of them has uncovered is hidden (`revealed: false`), and a hero of another side
+ * standing on such a hex is off the board (`entering: []`, like a reserve still to come), so neither a screen nor a bot learns where it is. A hex once seen
+ * stays seen, with whoever stands on it. Without the fog, or with no viewers (a spectator, a game of bots), the state is returned as it is.
+ */
+export function fogView(state: GameState, viewers: readonly Side[] | null): GameState {
+  if (!viewers?.length || !fogOn(state)) return state;
+  const knows = (t: Tile) => t.revealed && (!t.seenBy || t.seenBy.some((s) => viewers.includes(s)));
+  const hidden = Object.values(state.tiles).filter((t) => t.revealed && !knows(t));
+  const strangers = Object.values(state.heroes).filter((h) => h.alive && !h.entering && h.pos && !viewers.includes(h.faction) && !knows(state.tiles[h.pos]));
+  if (!hidden.length && !strangers.length) return state;
+  const tiles = { ...state.tiles };
+  for (const t of hidden) tiles[t.key] = { ...t, revealed: false };
+  const heroes: Record<string, HeroState> = { ...state.heroes };
+  for (const h of strangers) heroes[h.id] = { ...h, entering: [] };
+  return { ...state, tiles, heroes };
+}
 
 /** Whether the sides in `viewers` know of the effect: it is not hidden, or it is theirs, or the Oko Kruka has uncovered it for them. */
 export const knowsEffect = (g: GroundEffect, viewers: readonly Side[] | null): boolean => !g.hidden || (viewers ?? []).some((v) => v === g.owner || g.seenBy?.includes(v));
@@ -84,12 +112,13 @@ function ownAliases(b: BattleState, viewers: readonly Side[] | null): Record<str
 }
 
 /**
- * The game as the sides in `viewers` may see it (null: nobody, a spectator or a game of bots): the hidden traps of the others are left out of the battle,
+ * The game as the sides in `viewers` may see it (null: nobody, a spectator or a game of bots): the map under their fog of war (`fogView`), the hidden traps of the others are left out of the battle,
  * a veiled unit of another side has no place on the arena (it is on the list of the units, but nowhere on the board), and the mirages of another side look
  * like the units they copy, under mixed-up ids. The state is returned as it is when there is nothing to hide, so a screen may call this every time. It does not
  * change its argument.
  */
-export function redactHidden(state: GameState, viewers: readonly Side[] | null): GameState {
+export function redactHidden(full: GameState, viewers: readonly Side[] | null): GameState {
+  const state = fogView(full, viewers);
   const b = state.battle;
   if (!b) return state;
   const traps = (b.ground ?? []).filter((g) => !knowsEffect(g, viewers));

@@ -7,6 +7,7 @@ import { Rng } from './rng';
 import { byTeam, raceOf, TEAM_IDS } from './teams';
 import { CUSTOM_MAPS } from './customMaps';
 import type { GameState, MapShape, Tile } from './types';
+import { fogOn } from './hidden';
 
 export function tileCost(t: Tile): number | null {
   return TERRAIN_COST[t.terrain];
@@ -136,18 +137,33 @@ class LazyPath implements PathResult {
   }
 }
 
-/** Reveals the hex and every hex within `radius` steps of it (1 = the neighbours); returns the newly revealed ones. */
-export function revealAround(state: GameState, k: HexKey, radius = 1): HexKey[] {
+/**
+ * Uncovers hex `k` for faction `by` (the fog of war of the digital edition, `fogOn`: only for that faction) or, without `by` or without the fog, for everybody.
+ * Returns whether the hex is new to whoever uncovers it.
+ */
+export function seeHex(state: GameState, k: HexKey, by?: TeamId | null): boolean {
+  const t = state.tiles[k];
+  if (!by || !fogOn(state)) {
+    const fresh = !t.revealed || Boolean(t.seenBy);
+    t.revealed = true;
+    delete t.seenBy;
+    return fresh;
+  }
+  if (t.revealed && (!t.seenBy || t.seenBy.includes(by))) return false;
+  t.seenBy = t.revealed && t.seenBy ? [...t.seenBy, by].sort() : [by];
+  t.revealed = true;
+  return true;
+}
+
+/** Reveals the hex and every hex within `radius` steps of it (1 = the neighbours) for faction `by` (see `seeHex`); returns the hexes new to it. */
+export function revealAround(state: GameState, k: HexKey, radius = 1, by?: TeamId | null): HexKey[] {
   const revealed: HexKey[] = [];
   const seen = new Set<HexKey>([k]);
   let ring: HexKey[] = [k];
   for (let step = 0; step <= radius; step++) {
     const next: HexKey[] = [];
     for (const h of ring) {
-      if (!state.tiles[h].revealed) {
-        state.tiles[h].revealed = true;
-        revealed.push(h);
-      }
+      if (seeHex(state, h, by)) revealed.push(h);
       if (step < radius) for (const n of mapNeighbors(state.tiles, h)) if (!seen.has(n)) (seen.add(n), next.push(n));
     }
     ring = next;

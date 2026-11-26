@@ -1,6 +1,7 @@
 // Adventure-map AI: the coop evil automaton (spec section 7) and simple bots
 // for player seats. Both only use information visible on the map.
 
+import { fogView } from '../hidden';
 import { raceOf } from '../teams';
 import { FACTION_SUPPORTS, ITEM_EFFECT, UNITS, type TeamId } from '../data';
 import { botWantsHut, buildingLevel, garrisonAt, kingdomBotAction, supportSlots, type Settlement } from '../kingdom';
@@ -878,7 +879,10 @@ function encounterDetour(state: GameState, hero: HeroState, memo: Memo): Action 
  * The map action of a bot. The Free Companies walk through a guardian's hex by the smugglers' trails (Szlaki Przemytnicze) instead of fighting it when they
  * would not fight it anyway (no support left to go with), which is where they mean to go round it.
  */
-export function adventureAction(state: GameState): Action {
+export function adventureAction(full: GameState): Action {
+  // The fog of war: the bot plans on what its faction has uncovered (backlog 90), like a player at the screen.
+  const actor = activeHero(full);
+  const state = actor ? fogView(full, [actor.faction]) : full;
   const action = plainAdventureAction(state);
   if (action.type === 'moveHero' && !canFightGuardian(state) && sneakMoves(state).some((m) => m.to === action.to)) return { type: 'sneakHero', to: action.to };
   // Brama Wydm (the Desert Empire): a hero leaving its settlement goes through the gate to the farthest hex on the way it means to walk.

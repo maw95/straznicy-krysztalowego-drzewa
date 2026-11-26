@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Mgła wojny: każda frakcja odkrywa mapę dla siebie. Gracz widzi tylko pola odkryte przez własną frakcję (pole raz odkryte zostaje widoczne razem z tym, kto na nim stoi), boty planują tylko na tym, co odkryła ich frakcja, a dziennik pokazuje własne wpisy, bitwy z udziałem gracza i wspólne zdarzenia. Wydanie planszowe zostaje ze wspólną mapą.
 - Mapa: połowa grup strażników (spotkania i obrońcy neutralnych osad) to teraz pomocnicy frakcji, którą nikt w tej partii nie gra, o sile zbliżonej do neutralnych i z tą samą nagrodą; najsilniejszym grupom może przewodzić legenda frakcji.
 - Mapa: w celach bez Kryształowego Drzewa środkowe pole jest na starcie zakryte jak reszta (chyba że cel sam je pokazuje: punkt kontrolny, legowisko Bossa, Artefakt).
 - Zasady i karty, zakładka „Jednostki”: karty są podzielone tylko według frakcji (pięć skończonych, na końcu neutralni); w każdej najpierw bohaterowie, potem dowódcy, potem pomocnicy od najniższego poziomu. Są teraz wszystkie jednostki tych frakcji.
