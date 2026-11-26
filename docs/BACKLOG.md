@@ -38,10 +38,37 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 
 (Punkty z tej kolejki zrobione; ostatni, 90 — mgła wojny — 26.11.)
 
+### Trudność i drużyny (rozmowa z autorem 26.11.2026)
+
+**94. Trudność jako cecha gracza komputerowego, drużyny wg roli przy celach asymetrycznych (L; tylko wersja cyfrowa; rusza ekran ustawień, boty, strojenie, ranking, online).**
+Pełne strojenie od zera zatrzymane 26.11 na prośbę autora (wynik i tak poszedłby do kosza po tej zmianie); stare wyniki w `.tmp/sim/backup-2611/`, `tuningAuto.ts` nietknięty.
+
+*Problem.* Poziom trudności wybiera się przed składem stołu, a jego dźwignie (`dawnStartTreasures`, `dawnHeroReplacement`, `dawnStartXp`, `crystalsNeededDelta`… w `tuning.ts` / `tuningAuto.ts`) są przypięte do strony Przymierza (slot `dawn`), nie do „człowiek przeciw komputerowi”. W grze samych ludzi „trudność” daje jednemu z nich przewagę. Stroiciel mierzy wygrane Przymierza także w celach symetrycznych, więc każda kombinacja (cel × kształt × rozmiar × liczba graczy × rozwój) to osobna komórka (ok. 140 przebiegów, 3 h).
+
+*Projekt.*
+1. **Trudność przy botach, nie przy grze.** Wybór poziomu znika z ogólnych ustawień gry; każde miejsce przy stole z botem ma własny wybór poziomu (Łatwy / Normalny / Trudny; domyślnie Normalny). Stół bez botów nie pyta o trudność. Pole w `SeatSetup` (np. `botLevel`); istniejące `SetupOptions.botLevel` z areny scalić z tym polem.
+2. **Dźwignia: błędy bota.** Na niższym poziomie bot częściej wybiera gorszą decyzję zamiast najlepszej, i to w konkretnych miejscach, nie w losowych akcjach: cel ataku w bitwie (słabszy z kilku), wejście w walkę z silniejszym (próg `huntRatio` niżej), odpuszczony skarb lub kryształ, gorsza umiejętność / pomocnicy / zakup w osadzie, spóźniony powrót do Drzewa. Jeden parametr na poziom: procent błędów (Trudny 0%, Normalny i Łatwy do dostrojenia), plus ewentualnie drobny bonus zasobów dla bota na Trudnym (`computerGold`, `computerTreasures` już istnieją). Losowanie z ziarna gry (stan RNG w `GameState`), żeby zapis i powtórka odtwarzały się dokładnie, a serwer liczył to samo.
+3. **Cele symetryczne** (Punkty kontrolne, Boss, Artefakt, Podbój, Relikt): bez dźwigni stron; uczciwość daje sam cel. Strojenie = jedna oś: procent błędów bota tak, by człowiek-zastępca (bot Trudny, bez błędów) wygrywał z botem danego poziomu w pasmach (Łatwy 65–85, Normalny 45–65, Trudny 30–45). Komórek o rząd wielkości mniej niż teraz.
+4. **Cele asymetryczne** (Kryształy do Drzewa, Przetrwanie): osobno (a) **wyrównanie roli** (Przymierze kontra Horda ok. 50% przy dwóch botach bez błędów, dźwignie jak dziś: skarby, rundy, rezerwa; strojone per mapa i liczba graczy, niezależnie od tego, kto gra), (b) trudność jak w punkcie 3, z błędów bota.
+5. **Ekran drużyn przy celach asymetrycznych.** Zamiast wyboru frakcji, z której wynika rola: dwie kolumny z nazwą roli, np. „Zbierają kryształy” / „Bronią Drzewa” (Kryształy) i „Przetrwają” / „Fale Hordy” (Przetrwanie). Gracz (człowiek albo bot, z poziomem przy bocie) dopisuje się do kolumny i dopiero w niej wybiera frakcję i bohatera. Cele symetryczne zostają przy obecnym wyborze frakcji (każdy przeciw każdemu albo drużyny jak dziś).
+6. **Opcjonalny handicap** dla stołu samych ludzi o różnym doświadczeniu (np. +1 skarb na start, +1 PD na start) przy miejscu gracza, domyślnie wyłączony. Do decyzji autora, czy w ogóle.
+
+*Do zmiany przy okazji.*
+- Ranking i zapisy czytają poziom z presetu (`setup.rules`, `tuning.ts`: „ranking and saves read it as before”): punkty rankingowe liczyć wg poziomów botów przy stole; stare zapisy wczytywać z dawnym poziomem jako poziomem wszystkich botów.
+- Online: stół z botami pokazuje poziom przy bocie; serwer (repo backend) przyjmuje nowe pole siedzenia (`parsery akcji / stołu`).
+- Kampania (51b, do gruntownego przerobienia przez autora) i Wyprawa (`arenaBoost`, `arenaHandicap`, `botLevel`) dostosować do nowego modelu przy ich przeróbce.
+- Instrukcja PL/EN (rozdział o ustawieniach i poziomach), `docs/ZASADY_CYFROWE.md`, i18n nowych tekstów ekranu.
+- Wydanie planszowe bez zmian (zostaje automat i poziomy z kart).
+
+*Kolejność prac (propozycja).* (1) model błędów bota z parametrem poziomu w silniku i pomiar „bot Trudny kontra bot poziomu X” w celach symetrycznych (`scripts/sim`), bez zmian w ekranie; (2) wyrównanie ról w celach asymetrycznych przy botach bez błędów; (3) ekran ustawień: poziom przy bocie, kolumny ról; (4) ranking, zapisy, online; (5) jedno pełne strojenie nowym stroicielem, `make check`, golden `-u` jeśli zmieni się bot planszowy (nie powinien: błędy tylko w wersji cyfrowej).
+
+*Pytania do autora przed startem.* (a) Czy przy celach symetrycznych zostawić jakąkolwiek trudność dla stołu samych ludzi (handicap z punktu 6)? (b) Poziomy botów: trzy jak dziś czy także „Bardzo trudny” (bot bez błędów plus bonus zasobów)? (c) Czy w drużynie mieszanej (człowiek + bot po jednej stronie) bot-sojusznik też może mieć poziom, czy zawsze gra najlepiej?
+
 ### Starsze punkty
 
 **51b. Przestrojenie scenariuszy kampanii po wejściu Potyczki (S–M).** Scenariusze stroiono na automacie, a od 20.11 gra w nich zwykły bot. Pomiar 26.11 (200 gier na scenariusz, boty po obu stronach, Przymierze zamiast gracza; wygrane Przymierza wobec pasm Łatwy 65–85%, Normalny 45–65%): „Pierwsza dolina” (Łatwy) 46%, „Gryfie Urwisko” (Normalny) 13%, „Zatopione Ruiny” (Normalny) 17%, „Cień nad Drzewem” (Normalny) 19%. Wszystkie cztery poniżej pasma. Mierzyć po punktach zmieniających rozgrywkę (89, 92, 90: wszystkie zrobione 26.11); dźwignie: mapa, zasady i bohater scenariusza w `src/engine/campaign.ts`.
    - **Decyzja autora 26.11:** przestroić razem z jednym strojeniem po punktach 89, 92 i 90.
+   - **Decyzja autora 26.11 (później):** na razie nie stroić; kampania pójdzie do gruntownej przeróbki (po punkcie 94).
 
 **52. Dzikie Stado (G1, G2, G4, G5 i online zrobione).** Dane, balans (tabele w `docs/frakcje/herds.md`, `docs/DIAGNOZA_FRAKCJI.md`), pełna grafika, muzyka i dźwięki są w repo. Baran Gromowładny na dwóch polach: zrobione. Cel balansu (decyzja 20.11): średnia wygranych przeciw reszcie ok. 45–55%, kontra ok. 60–70%, kontrowana ok. 30–40%, żadna para poza 25–75%; Przymierze–Horda po bonusie Hordy wynosi ok. 50%; tej pary nie ruszać.
 
