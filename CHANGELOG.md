@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Wolna Kompania: nowe dźwięki po uwagach: śmierć Sroki, Ropucha i Kocura (teraz po kociemu), atak Tchórza (rzut i tłuczona butla), Bobra (uderzenie siekierki), Jenota (cięcie sztyletu) i Świstaka (lont zakończony wybuchem).
 - Wolna Kompania: Ruda Atamanka, Borsuk Saper i Kruk Wieszczek mają animowane figury na polu bitwy (ruch, atak, trafienie, śmierć; Kruk wzbija się i lata). Pozostałe postaci Kompanii to na razie żetony z portretami.
 - Wolna Kompania ma własną arenę i mapę: leśny obóz przy zrujnowanym młynie z siedmioma rodzajami przeszkód, jesienne kafle (polana, kryjówka, skarbiec, teren i obiekty) z burgundowym rewersem, malowane znaczniki sideł i Oka Kruka oraz własne dźwięki sideł, oznaczenia, ładunku, tamy i kradzieży sakiewki.
 - Bractwo Przypływu: trafienia Syreny Pieśniarki, Żółwia Skorupiaka, Kapłanki Pereł, Trytońskiego Strażnika i Żabiego Skoczka są prawdziwymi animacjami z wyraźnym odrzutem (Albatros reaguje na ziemi, nie w locie), Strażnik dźga w ataku trójzębem, a Lewiatan jest wężem czołgającym się po lądzie, z całym ciałem w kadrze, bez wody.

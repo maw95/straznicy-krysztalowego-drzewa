@@ -10769,7 +10769,7 @@
         "public/assets/dzwieki/jednostki/hareHerbalist_smierc.mp3"
       ],
       "typ": "dźwięki ataku i śmierci 19 postaci Wolnej Kompanii (38)",
-      "opis": "ElevenLabs Sound Effects v3, 1,5 s (atak) i 2 s (śmierć), promptInfluence 0.6, 1 CU każdy; cisza z początku usunięta, średnio -21 dB, limiter, mono 128 kbps (scripts/assets/free_audio.py). Głosy dobrane do płci i wieku postaci. Rejestr: UNIT_SOUNDS w src/ui/sfx.ts.",
+      "opis": "ElevenLabs Sound Effects v3, 1,5 s (atak) i 2 s (śmierć), promptInfluence 0.6, 1 CU każdy; cisza z początku usunięta, średnio -21 dB, limiter, mono 128 kbps (scripts/assets/free_audio.py). Głosy dobrane do płci i wieku postaci. Rejestr: UNIT_SOUNDS w src/ui/sfx.ts. 26.11, uwagi autora: nowe magpieThief_smierc (asset_n3mSFgvZSu2cWsZPH3CgvkBJ), polecatPoisoner_atak (asset_XL2dv7XJU5DEYiDxmrfhfzPK), toadGunner_smierc (asset_8dxQd5MATS8vsUzpYReYuuF7), beaverEngineer_atak (asset_1mkR6JuqqtYQA6vUTCwFa6TB), raccoonDogSpy_atak (asset_X9ansjig9MmRGVSKZDhu8xs2), catFencer_smierc (asset_QGH9TUeHNG3BuAkVrdiCp1o5), marmotPetard_atak (lont z pierwszej wersji + wybuch asset_VViY8Zqcpk1j7iNyyyJddRgt).",
       "scenario_asset": {
         "foxCaptain_atak": "asset_bgXnVbt66HrRzhGMCMWkKpmC",
         "foxCaptain_smierc": "asset_Q2SdRDWSUrEN2hD3ZaGYQtdH",

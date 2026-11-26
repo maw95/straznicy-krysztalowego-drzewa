@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  "Wolna Kompania: nowe dźwięki po uwagach: śmierć Sroki, Ropucha i Kocura (teraz po kociemu), atak Tchórza (rzut i tłuczona butla), Bobra (uderzenie siekierki), Jenota (cięcie sztyletu) i Świstaka (lont zakończony wybuchem).":
+    "The Free Company: new sounds after review: the deaths of the Magpie, the Toad and the Tomcat (now clearly a cat), the attacks of the Polecat (a thrown and shattering flask), the Beaver (a hatchet chop), the Raccoon Dog (a dagger cut) and the Marmot (a fuse ending in a bang).",
   "Wolna Kompania: Ruda Atamanka, Borsuk Saper i Kruk Wieszczek mają animowane figury na polu bitwy (ruch, atak, trafienie, śmierć; Kruk wzbija się i lata). Pozostałe postaci Kompanii to na razie żetony z portretami.":
     "The Free Company: the Red Atamanka, the Badger Sapper and the Raven Seer have animated figures on the battlefield (movement, attack, hit, death; the Raven takes off and flies). The other characters of the Company are still portrait tokens.",
   "Wolna Kompania ma własną arenę i mapę: leśny obóz przy zrujnowanym młynie z siedmioma rodzajami przeszkód, jesienne kafle (polana, kryjówka, skarbiec, teren i obiekty) z burgundowym rewersem, malowane znaczniki sideł i Oka Kruka oraz własne dźwięki sideł, oznaczenia, ładunku, tamy i kradzieży sakiewki.":
