@@ -1,5 +1,5 @@
 # AKTUALNIE (26.11.2026 noc): punkty 91, 93, 89, 92 i 90 (mgła wojny) zrobione i scommitowane (backend: lokalny commit 48265c6, bez wdrożenia); strojenie wstrzymane do punktu 94
-**Stan (26.11 wieczór):** pełne strojenie przerwane na prośbę autora (niescalone, `tuningAuto.ts` bez zmian; stare wyniki `.tmp/sim/backup-2611/`, w `.tmp/sim/auto-*.json` zostały tylko pierwsze cząstkowe). Kampania odłożona do przeróbki. Następny temat: projekt punktu 94 w `docs/BACKLOG.md` (trudność przy botach, drużyny wg roli) — czeka na odpowiedzi autora na pytania (a)–(c).
+**Stan (26.11 wieczór):** pełne strojenie przerwane na prośbę autora (niescalone, `tuningAuto.ts` bez zmian; stare wyniki `.tmp/sim/backup-2611/`, w `.tmp/sim/auto-*.json` zostały tylko pierwsze cząstkowe). Kampania odłożona do przeróbki. Następny temat: projekt punktu 94 w `docs/BACKLOG.md` (trudność przy botach, drużyny wg roli) — pytania rozstrzygnięte, można zaczynać (Opus).
 Decyzje autora są przy punktach w `docs/BACKLOG.md`. Nie stroić po drodze; po zmianach rozgrywki tylko golden `-u` w osobnym commicie. Kredyty Scenario: brak do 16.12.
 
 # STAN 26.11 wieczorem: strojenie OUT-only scalone (ce912fc), punkt 88 (animacje Przypływów) zaakceptowany i usunięty z backlogu; w planie niżej zostały punkty 2–4 (zacznij od 91)
