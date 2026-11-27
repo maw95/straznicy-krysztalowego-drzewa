@@ -14,10 +14,10 @@ import { applyActionInPlace, createGame } from '../../src/engine/game';
 import { FACTION_HEROES, MAP_VARIANTS, type MapSize } from '../../src/engine/data';
 import { Rng } from '../../src/engine/rng';
 import { ROLE_TUNING, roleKey, type RoleLayer, type RoleTune } from '../../src/engine/tuningRoles';
-import { levelSettings, type MapShape, type RulesConfig, type SetupOptions } from '../../src/engine/types';
+import { levelSettings, type MapShape, type ObjectiveId, type RulesConfig, type SetupOptions } from '../../src/engine/types';
 
-interface Cell {
-  objective: 'crystals' | 'survival';
+export interface Cell {
+  objective: ObjectiveId;
   zero: boolean;
   map: MapSize;
   players: number;
@@ -28,6 +28,7 @@ interface Cell {
 }
 
 const STEPS = { crystals: [-5, 16], survival: [-8, 10] } as const;
+type RoleGoal = keyof typeof STEPS;
 
 /** The levers of a step: above 0 they help the Przymierze, below 0 the Horde. */
 export function lever(c: Cell, step: number): Partial<RulesConfig> {
@@ -53,7 +54,7 @@ export function lever(c: Cell, step: number): Partial<RulesConfig> {
   return { hordeStartTreasures: { ...none, random: Math.min(4, -step) }, ...(more ? { survivalRoundsBonus: more, roundLimitBonus: more } : {}) };
 }
 
-function setupOf(c: Cell, step: number, seed: number): SetupOptions {
+export function setupOf(c: Cell, step: number, seed: number): SetupOptions {
   const rng = new Rng(seed * 7919 + 29);
   const base = levelSettings(c.zero ? 'zero' : 'normal', 'pvp');
   const heroes = { dawn: rng.shuffle(FACTION_HEROES.dawn), horde: rng.shuffle(FACTION_HEROES.horde) };
@@ -75,12 +76,12 @@ function setupOf(c: Cell, step: number, seed: number): SetupOptions {
 }
 
 /** The Przymierza share of wins (draws a half) at one step. */
-function probe(c: Cell, step: number, games: number): number {
+export function probe(c: Cell, step: number, games: number, seedOffset = 0): number {
   // The table's own entry must not stack on the step being measured.
   ROLE_TUNING.length = 0;
   let score = 0;
   for (let g = 1; g <= games; g++) {
-    const s = createGame(setupOf(c, step, g));
+    const s = createGame(setupOf(c, step, g + seedOffset));
     for (let i = 0; i < 40000 && s.phase !== 'over'; i++) {
       const a = chooseAction(s);
       if (!a) break;
@@ -97,7 +98,7 @@ function probe(c: Cell, step: number, games: number): number {
 
 /** The search for one table: steps towards 50 percent until it is in 45-55 or the rate crosses 50, keeping the nearest. */
 function search(c: Cell, games: number, start: number): { step: number; dawnWins: number; tried: Array<[number, number]> } {
-  const [lo, hi] = STEPS[c.objective];
+  const [lo, hi] = STEPS[c.objective as RoleGoal];
   const tried: Array<[number, number]> = [];
   let step = Math.max(lo, Math.min(hi, start));
   for (let n = 0; n < 10; n++) {
@@ -117,7 +118,7 @@ function search(c: Cell, games: number, start: number): { step: number; dawnWins
 
 function cells(): Cell[] {
   const list = (name: string, dflt: string) => (process.env[name] ?? dflt).split(',').filter(Boolean);
-  const goals = list('TUNE_GOALS', 'crystals,survival') as Cell['objective'][];
+  const goals = list('TUNE_GOALS', 'crystals,survival') as RoleGoal[];
   const sizes = list('TUNE_SIZES', 'short,medium,long,veryLong,huge,giant') as MapSize[];
   const players = list('TUNE_PLAYERS', '1,2').map(Number);
   const tiers = list('TUNE_TIERS', 'zero,adventure,expedition,kingdom,economy,realm,empire');

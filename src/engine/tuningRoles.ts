@@ -33,7 +33,7 @@ export function roleLayer(rules: Pick<RulesConfig, 'kingdom' | 'economy' | 'real
 }
 
 /** The key of a table among the entries (the tuner and the lookup share it). */
-export function roleKey(t: Pick<RoleTune, 'objective' | 'zero' | 'players' | 'growth' | 'layer' | 'shape' | 'customMapId'> & { map: MapSize }): string {
+export function roleKey(t: Pick<RoleTune, 'zero' | 'players' | 'growth' | 'layer' | 'shape' | 'customMapId'> & { objective: string; map: MapSize }): string {
   return [t.objective, t.zero ? 'zero' : 'full', t.map, t.players, t.growth ? 'g' : '-', t.layer, t.shape, t.customMapId ?? ''].join('|');
 }
 
