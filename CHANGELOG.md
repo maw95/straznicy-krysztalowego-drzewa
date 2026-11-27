@@ -6,6 +6,8 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Opcje w grze mają teraz przełącznik „Płynne przejścia”, tak jak Opcje menu.
+
 - Intro bez latających świetlików, tak jak menu, ustawienia i ekran online.
 
 ## 3.2.1 — 2026-11-27

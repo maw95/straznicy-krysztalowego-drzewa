@@ -27,6 +27,7 @@ import { TreasureCard } from './TreasureCard';
 import { TreasureReveal } from './CardBack';
 import { UnitCard } from './UnitCard';
 import { ANIM_SPEED_NAMES, ANIM_SPEEDS, animSpeedLevel, setAnimSpeedLevel } from './animSpeed';
+import { motionOption, setMotionOption } from './motion';
 import { FightPill } from './fightBadges';
 import type { FightLevel } from '../engine/difficulty';
 
@@ -259,6 +260,7 @@ export function OptionsDialog(props: {
 }) {
   const { room } = props;
   const [animLevel, setAnimLevel] = useState(animSpeedLevel());
+  const [smooth, setSmooth] = useState(motionOption());
   const [saveName, setSaveName] = useState('');
   const [saved, setSaved] = useState<string | null>(null);
   /** The bot pace as a slider over the three speeds (slow, normal, fast). */
@@ -296,6 +298,9 @@ export function OptionsDialog(props: {
             <input type="checkbox" checked={!sfx.muted} onChange={() => sfx.toggleMute()} /> włączone
           </label>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>Język <LanguageSwitch inline /></div>
+          <label title="Ekrany menu przenikają się, sekcje rozwijają, a kolory interfejsu frakcji płynnie się zmieniają. Wyłączone systemowym „ogranicz ruch”.">
+            <input type="checkbox" checked={smooth} data-smooth-control onChange={(e) => { setSmooth(e.target.checked); setMotionOption(e.target.checked); }} /> Płynne przejścia
+          </label>
           <InstallHint />
           {!room && <label><input type="checkbox" checked={props.autoplay} onChange={(e) => props.onAutoplay(e.target.checked)} /> Autoplay: boty grają także za ludzi</label>}
           {!isDigital(props.game.rules) && (

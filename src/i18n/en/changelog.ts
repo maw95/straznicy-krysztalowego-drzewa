@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Opcje w grze mają teraz przełącznik „Płynne przejścia”, tak jak Opcje menu.':
+    'The in-game Options now have the "Smooth transitions" switch, just like the menu Options.',
   'Intro bez latających świetlików, tak jak menu, ustawienia i ekran online.':
     'The intro no longer has flying fireflies, just like the menu, the options and the online screen.',
   'Kreator: wielkości mapy nie są już wyszarzone przed wyborem celu (Kryształy do Drzewa nie wchodzą na Ogromną i Gigantyczną, Przetrwanie na Małą), a przy wyborze celu niedostępne cele są wyszarzone z dopiskiem. W krokach, gdzie cel jest z góry znany, dopisek pod zablokowanym rozmiarem nie przesuwa już przycisków.':
