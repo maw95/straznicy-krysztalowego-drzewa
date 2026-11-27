@@ -296,6 +296,9 @@ html[data-faction='tides'] .prim:not(.r):not(.b) { background-image: url('/asset
 .btn { transition: filter 0.15s, transform 0.12s, box-shadow 0.2s; }
 .btn:active:not(:disabled) { transform: translateY(1px) scale(0.98); }
 .active-token { animation: pulse-glow 1.6s ease-in-out infinite; }
+/* The round limit is near: the track and its remaining sockets pulse. */
+.track-warning { animation: track-warning 1.6s ease-in-out infinite; }
+@keyframes track-warning { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

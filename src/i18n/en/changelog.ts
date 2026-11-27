@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Zbliżający się limit rund: gdy zostają trzy rundy, tor rund i pozostałe pola pulsują na bursztynowo (w ostatniej rundzie na czerwono), pod torem pojawia się ostrzeżenie (na telefonie przy liczniku rund), a na początku twojej tury słychać dzwon, w ostatniej rundzie ponury sygnał.':
+    'The round limit coming up: with three rounds left the round track and the remaining sockets pulse amber (red in the last round), a warning appears under the track (on a phone next to the round counter), and as your turn starts a bell sounds, in the last round a sombre signal.',
   'Tor rund: w partiach dłuższych niż 24 rundy kryształ nie znika po 24. rundzie, tylko zaczyna drugie okrążenie od pierwszego pola.':
     'Round track: in games longer than 24 rounds the crystal no longer disappears after round 24, it starts a second lap from the first socket.',
   'Mroczna Horda ma własny motyw: na jej ziemi i w jej osadzie grają na zmianę utwory „Defeat” i „The Fallen” (dotąd grała tam muzyka mapy).':

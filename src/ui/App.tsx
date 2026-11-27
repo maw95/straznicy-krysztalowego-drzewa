@@ -44,6 +44,7 @@ import { TesterDialog } from './TesterDialog';
 import { isTestRun, recordGame } from './journal';
 import { BattleSummary } from './BattleSummary';
 import { useEndHold } from './useEndHold';
+import { roundWarning, roundWarningSound } from './roundWarning';
 import { Tutorial } from './Tutorial';
 import { Intro, introSeen } from './Intro';
 import { TitleScreen, titlePending } from './TitleScreen';
@@ -684,6 +685,17 @@ export function App() {
     if (music.muted || !music.volume) sfx.play('victory');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game, held]);
+  // The round limit is near: a sound as the first person's turn of that round begins (after the hand-over screen, never for a bot).
+  const warnedRound = useRef<string | null>(null);
+  useEffect(() => {
+    if (!game) return void (warnedRound.current = null);
+    if (!humanTurn || needsHandoff || held || game.phase !== 'adventure') return;
+    const sound = roundWarningSound(game.round, game.roundLimit);
+    const key = `${game.setup.seed}:${game.round}`;
+    if (!sound || warnedRound.current === key) return;
+    warnedRound.current = key;
+    sfx.play(sound);
+  }, [game, humanTurn, needsHandoff, held]);
   // Not while the finished battle is still on screen (the engine is already on the map, the arena shows the last blow).
   const offering = game && humanTurn && !held && game.phase === 'adventure' && !steps.length ? activeHero(game) : null;
   const offerKey = offering?.offer?.length ? `${offering.id}:${offering.level ?? 1}` : null;
@@ -961,7 +973,9 @@ export function App() {
         )}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 17 }}>
-        <Medal fill="mGreen" glyph="gHourglass" size={32} /> Runda <b style={{ color: '#F3D27A' }}>{game.round}/{game.roundLimit}</b>
+        <Medal fill="mGreen" glyph="gHourglass" size={32} /> Runda <b style={{ color: roundWarning(game.round, game.roundLimit)?.color ?? '#F3D27A' }}>{game.round}/{game.roundLimit}</b>
+        {/* Phones have no round track on the map: the warning stands by this counter. */}
+        {roundWarning(game.round, game.roundLimit) && <b className="show-mobile" style={{ color: roundWarning(game.round, game.roundLimit)!.color }}>{roundWarning(game.round, game.roundLimit)!.text}</b>}
       </div>
       <div className="hide-mobile" data-turn-label style={{ display: 'flex', flexDirection: 'column', width: 240, lineHeight: 1.15, minWidth: 0 }}>{turnBanner(game, actor)}</div>
       <div className="footer-slot" style={{ flex: 1, minWidth: 0 }}>{footer}</div>

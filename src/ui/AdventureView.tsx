@@ -28,6 +28,7 @@ import { aimedCursor } from './cursors';
 import { figureFor, FigureLayer, type Piece } from './FigureLayer';
 import { StatIcon, StatText, ThingIcon } from './markers';
 import { RoundTrack } from './RoundTrack';
+import { roundWarning } from './roundWarning';
 import { ACTIVE_FIGURE_RING, asset, COMPACT_QUERY, FACTION_RING, Frame, hasTileArt, Medal, Modal, Pips, Portrait, Ribbon, SIDE_RING, tileImage, useMedia } from './common';
 
 interface Props {
@@ -190,7 +191,8 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
   // is under the track can be brought out. Normally the view stands at (padX, padY), where the extra room is out of sight.
   const trackSize = Math.max(120, Math.min(218, box.w * 0.195, box.h * 0.31));
   const padX = compact ? 0 : Math.round(trackSize + 40);
-  const padY = compact ? 0 : Math.round(trackSize * 0.95 + 44);
+  const warning = roundWarning(state.round, state.roundLimit);
+  const padY = compact ? 0 : Math.round(trackSize * 0.95 + (warning ? 64 : 44));
   const placedPad = useRef({ x: 0, y: 0 });
   useLayoutEffect(() => {
     const el = boardRef.current;
@@ -466,8 +468,9 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
           <div className="hide-mobile" style={{ position: 'absolute', left: 18, top: 16, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6, zIndex: 2, pointerEvents: 'none' }}>
             <div style={{ marginLeft: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
               <RoundTrack round={state.round} limit={state.roundLimit} ritual={state.ritual} ritualRounds={state.rules.ritualRounds} size={trackSize} />
-              <div className="plate parch" style={{ padding: '2px 14px', fontWeight: 700, fontSize: 15, pointerEvents: 'auto' }}>
-                Runda {state.round} z {state.roundLimit}
+              <div className="plate parch" style={{ padding: '2px 14px', fontWeight: 700, fontSize: 15, pointerEvents: 'auto', textAlign: 'center' }}>
+                {warning && <div data-round-warning={warning.level} style={{ fontWeight: 900, fontSize: 17, color: warning.level === 'last' ? '#9A140C' : '#8A4B00' }}>{warning.text}</div>}
+                <div>Runda {state.round} z {state.roundLimit}</div>
               </div>
             </div>
           </div>
@@ -809,7 +812,7 @@ export function AdventureView({ state, viewer, canAct, onAction, onPath, onShowC
             ) : (
               <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Kryształy przy Drzewie</span><b style={{ color: '#F3D27A' }}>{state.factions.dawn.delivered} / {state.crystalsNeeded}</b></div>
             )}
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Runda</span><b style={{ color: '#F3D27A' }}>{state.round} / {state.roundLimit}</b></div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Runda</span><b style={{ color: warning?.color ?? '#F3D27A' }}>{state.round} / {state.roundLimit}</b></div>
             {state.ritual > 0 && <div style={{ color: '#F08A7A', fontWeight: 700 }}>Rytuał przy Drzewie: {state.ritual}/{state.rules.ritualRounds}</div>}
           </div>
 

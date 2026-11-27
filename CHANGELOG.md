@@ -6,6 +6,7 @@ Każdy wpis to jeden commit, a skrót commita stoi w nawiasie na końcu wpisu (c
 
 ## W przygotowaniu
 
+- Zbliżający się limit rund: gdy zostają trzy rundy, tor rund i pozostałe pola pulsują na bursztynowo (w ostatniej rundzie na czerwono), pod torem pojawia się ostrzeżenie (na telefonie przy liczniku rund), a na początku twojej tury słychać dzwon, w ostatniej rundzie ponury sygnał.
 - Tor rund: w partiach dłuższych niż 24 rundy kryształ nie znika po 24. rundzie, tylko zaczyna drugie okrążenie od pierwszego pola.
 - Mroczna Horda ma własny motyw: na jej ziemi i w jej osadzie grają na zmianę utwory „Defeat” i „The Fallen” (dotąd grała tam muzyka mapy).
 - Koniec gry: na ekranie z wynikiem znów gra utwór „A Legend Will Rise”, niezależnie od tego, kto wygrał (przy wyłączonej muzyce zostaje krótka fanfara).
