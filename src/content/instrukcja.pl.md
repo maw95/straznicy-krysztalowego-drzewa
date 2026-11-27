@@ -9,6 +9,10 @@ Format: `##` to rozdział, `###` to część rozdziału. Linia zaczynająca się
 
 Ta instrukcja opisuje **wersję komputerową** w jej obecnym kształcie: wszystkie poziomy złożoności (od Spaceru do Imperium), tryby, cele, kampanię, Ekspedycję i grę online. Dotychczasowa instrukcja do druku opisuje **wersję planszową** i zostaje nietknięta: znajdziesz ją na dole tej strony.
 
+**Jeśli czegoś nie rozumiesz, kliknij to prawym przyciskiem myszy** (na telefonie przytrzymaj palec): gra pokaże wyjaśnienie przycisku, jednostki, pola, skarbu albo opcji kreatora. Puszczasz i okno znika.
+
+**Pierwszy raz?** Zagraj **Trening** (Nowa gra → Trening): krótkie gry z prowadzeniem krok po kroku, po jednej na każdy poziom złożoności ([Trening](#trening)).
+
 ### Pierwsza partia w pięciu krokach
 1. W menu głównym kliknij **Nowa gra**, wybierz tryb **Potyczka** i miejsce **Ten komputer**.
 2. Wybierz poziom **Przygoda** (pełna gra bez rozwoju bohatera) albo **Spacer** (bardzo proste pojedynki, od 5 lat).
@@ -93,6 +97,15 @@ Za wygraną dostajesz **punkty rankingu**; im trudniej, tym więcej. Liczy się 
 W **wersji planszowej** zostają tryby z wydrukowanej instrukcji, w tym **Kooperacja** przeciw automatowi zła.
 
 Kilku graczy przy **jednym ekranie** (hot-seat) przekazuje sobie urządzenie. Gdy przy stole są przeciwne strony, ekran przekazania ukrywa skarby frakcji; gracze jednej strony mają skarby wspólne. Jedna osoba może zająć kilka miejsc i grać nimi na zmianę. Opcja **Autoplay** pozwala botom grać także za ludzi (przydaje się do oglądania gry).
+
+## Trening
+@słowa: trening, samouczek, nauka, pierwsza gra, prowadzenie, dymek, krok po kroku, nowy gracz, powitanie
+
+Trening to krótkie gry (5–10 minut) z prowadzeniem **krok po kroku**: dymek u góry mówi, co zrobić i dlaczego, a pulsujące pole na mapie pokazuje, dokąd iść. Kliknięcia, o które krok nie prosi, są wstrzymane (dymek drga), żeby nie zgubić się w nowej grze. Każdy trening uczy tylko tego, co dodaje jeden poziom złożoności, więc dobrze zacząć od pierwszego. Gotowe treningi możesz powtarzać, ile chcesz; nic się przez nie nie blokuje ani nie odblokowuje, a poziomy Potyczki są dostępne od razu.
+
+Przy pierwszym uruchomieniu gra proponuje trening w oknie powitalnym. Później znajdziesz go w menu: **Nowa gra → Trening**. Przycisk **Wyłącz prowadzenie** w dymku zostawia zwykłą grę na tej samej mapie.
+
+W dymku i w oknie powitalnym stoi też zasada, która działa w całej grze: **co jest niejasne, kliknij prawym przyciskiem myszy** (na telefonie przytrzymaj palec).
 
 ## Cele gry
 @słowa: cel, kryształy do drzewa, punkty kontrolne, przetrwanie, boss, artefakt, podbój, relikt, wygrana, rytuał, limit rund, remis

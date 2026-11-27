@@ -119,6 +119,8 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 
 ## 2a. Zastępcza grafika do wygenerowania (lista dla autora; reguła: każda zastępcza grafika ma tu dokładny opis)
 
+**Karta „Trening” w menu trybów (28.11):** używa na razie obrazka `ikony/menu/kampania.webp`. Do wygenerowania: `ikony/menu/trening.webp`, ten sam format i styl co `kampania.webp`/`ekspedycja.webp` (malowana ikona karty menu: mały bohater uczący się chodzić po mapie, dłoń lub strzałka wskazująca pulsujące pole, ciepłe światło; bez tekstu).
+
 Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.ts` + `.py`), są małe (kilka KB), podpisane nazwą jednostki w kolorze frakcji i wpisane do `assets.json` z `"placeholder": true`. Skrypt nie nadpisuje istniejących plików; po wymianie na grafikę docelową usuń wpis z manifestu.
 
 **Wymiany jednostek z 20.11:** nowe id i nazwy (zastępcze pliki starych id usunięte, nowe wygenerowane): Kulan Stepowy (`kulan`), Łucznik Stepowy (`steppeArcher`), Wół Piżmowy (`muskOx`), Arkar (`arkar`), Łamignat Stepowy (`steppeLamignat`), Orzeł Stepowy Łowca (`eagleHunter`), Płanetnik (`planetnik`), Wampir (`vampire`), Strzyga (`strzyga`), Dziad Mróz (`dziadMroz`), Mosiężny Pająk (`brassSpider`), Kozioł Taranowy (`ramGoat`), Sroka Złodziejka (`magpieThief`), Świstak Petardnik (`marmotPetard`). Opisy wyglądu: `docs/frakcje/<id>.md`. Herby `cards/crests/{herds,clans,free}.png` są zastępcze i nadal mają na obrazku stare nazwy frakcji (Dzikie Stada, Żelazne Klany, Wolne Kompanie): do wygenerowania na nowo razem z docelowymi herbami.

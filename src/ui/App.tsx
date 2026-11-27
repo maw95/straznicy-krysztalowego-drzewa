@@ -2,6 +2,10 @@ import { assignSlots, raceOf, seatTable, sideName, teamsOf } from '../engine/tea
 import { StatText } from './markers';
 import { scenarioOf } from '../engine/campaign';
 import { CampaignOver } from './CampaignScreen';
+import { TRAININGS, trainingAllows, trainingIndex, trainingOf, trainingSetup } from '../engine/training';
+import { TrainingOver, WelcomeDialog } from './TrainingScreen';
+import { TrainingCoach } from './TrainingCoach';
+import { markTrained, markWelcomeSeen, welcomeSeen } from './trainingProgress';
 import { ExpeditionOver } from './ExpeditionScreen';
 import { markDone } from './campaignProgress';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -101,6 +105,12 @@ export function App() {
   // The intro plays on the first launch (never in the ?steps= test games).
   const [showIntro, setShowIntro] = useState(() => !introSeen() && !isTestRun());
   // The title screen opens each visit (its START is the click that allows full screen and music).
+  // The first launch also offers the short training (once; never in the ?steps= test games).
+  const [showWelcome, setShowWelcome] = useState(() => !welcomeSeen() && !isTestRun());
+  const closeWelcome = () => {
+    markWelcomeSeen();
+    setShowWelcome(false);
+  };
   const [showTitle, setShowTitle] = useState(() => titlePending() && !isTestRun());
   const [showReport, setShowReport] = useState(false);
   /** "Nowa wersja — co nowego": the releases since the version this player last saw (never in ?steps= test games). */
@@ -404,9 +414,24 @@ export function App() {
   gameRef.current = game;
   const sessionRef = useRef<OnlineSession | null>(null);
   sessionRef.current = isOnline ? session : null;
+  // The training (training.ts): the step the coach is on, a bump when the player tried something else, and whether the guidance was switched off.
+  const trainIdx = useRef(0);
+  const [coachShake, setCoachShake] = useState(0);
+  const [coachOff, setCoachOff] = useState(false);
+  const coachOffRef = useRef(false);
+  coachOffRef.current = coachOff;
   const dispatch = useCallback((a: Action) => {
     const g = gameRef.current;
     if (!g) return;
+    // A guided game holds the player's actions the current step does not ask for.
+    const training = trainingOf(g.setup);
+    if (training && !coachOffRef.current) {
+      trainIdx.current = trainingIndex(training, g, trainIdx.current);
+      if (!trainingAllows(training, g, trainIdx.current, a)) {
+        setCoachShake((n) => n + 1);
+        return;
+      }
+    }
     // Online the server checks and applies the move, then sends the new state to everyone.
     if (sessionRef.current) {
       sessionRef.current.send({ type: 'action', action: a });
@@ -484,6 +509,9 @@ export function App() {
   }, [steps, game, humanTurn, dispatch]);
 
   const start = (setup: SetupOptions) => {
+    trainIdx.current = 0;
+    setCoachOff(false);
+    setCoachShake(0);
     resetAnimLock();
     history.current = [];
     reports.current = [];
@@ -690,6 +718,8 @@ export function App() {
   useEffect(() => {
     const run = game ? scenarioOf(game.setup) : null;
     if (game?.phase === 'over' && run && game.winner === 'dawn') markDone(run.campaign.id, run.scenario.id);
+    const training = game ? trainingOf(game.setup) : null;
+    if (game?.phase === 'over' && training && game.winner === 'dawn') markTrained(training.id);
   }, [game?.phase, game?.winner]);
   const endSound = useRef<string | null>(null);
   useEffect(() => {
@@ -909,6 +939,9 @@ export function App() {
             />
           )}
         </Modal>
+        <Modal open={showWelcome && !showTitle && !showIntro && !news} onClose={closeWelcome}>
+          {showWelcome && <WelcomeDialog onTraining={() => { closeWelcome(); start(trainingSetup(TRAININGS[0], Math.floor(Math.random() * 1e6))); }} onClose={closeWelcome} />}
+        </Modal>
         {showIntro && !showTitle && <Intro onClose={() => setShowIntro(false)} />}
         {showTitle && <TitleScreen onStart={() => setShowTitle(false)} />}
         <AppChrome showLang error={error} onDismissError={() => setError(null)} showRules={showRules} onCloseRules={() => setShowRules(false)} />
@@ -1006,6 +1039,9 @@ export function App() {
   // Two people at one screen: each side's cards stay covered until that side uncovers them.
   const bothHuman = game.setup.mode === 'arena' && game.players.every(atThisScreen);
   const campaignRun = scenarioOf(game.setup);
+  const trainingRun = trainingOf(game.setup);
+  const coachIndex = trainingRun ? (trainIdx.current = trainingIndex(trainingRun, game, trainIdx.current)) : 0;
+  const coachTarget = trainingRun && !coachOff && !held && humanTurn ? (trainingRun.steps[coachIndex]?.target?.(game) ?? null) : null;
   const summaryOpen = summary !== null && game.lastBattle?.id === summary;
   const arenaPrep = !held && game.setup.mode === 'arena' && (game.phase === 'over' || (b && (b.stage === 'gear' || b.stage === 'spells' || b.stage === 'select' || b.stage === 'draft')));
 
@@ -1043,7 +1079,7 @@ export function App() {
       ) : held || (game.phase === 'battle' && b && !b.duel && b.stage !== 'select') ? (
         <BattleView state={battleShown} attack={held?.attack ?? null} canAct={humanTurn && !held} onAction={dispatch} onShowCard={setCard} footer={footer} />
       ) : (
-        <AdventureView state={mapShown!} loot={lootFloats} mapFx={mapFxs} hintHex={hintNow?.hex ?? null} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length && !reportPending} onAction={humanAction} onPath={walk} onShowCard={setCard} onSettlementRace={setTownRace} footer={adventureFooter} />
+        <AdventureView state={mapShown!} loot={lootFloats} mapFx={mapFxs} hintHex={hintNow?.hex ?? (coachTarget && 'hex' in coachTarget ? coachTarget.hex : null)} viewer={viewer} canAct={humanTurn && game.phase === 'adventure' && !steps.length && !reportPending} onAction={humanAction} onPath={walk} onShowCard={setCard} onSettlementRace={setTownRace} footer={adventureFooter} />
       )}
 
       <Modal open={Boolean(selecting)}>{selecting && <SupportSelect state={game} faction={selecting} onPick={(ids) => dispatch({ type: 'selectSupports', faction: selecting, supportIds: ids })} />}</Modal>
@@ -1076,6 +1112,7 @@ export function App() {
           💡 <StatText text={hintNow.text} />
         </div>
       )}
+      {trainingRun && !coachOff && game.phase !== 'over' && !held && <TrainingCoach training={trainingRun} index={coachIndex} shake={coachShake} onSkip={() => setCoachOff(true)} />}
       <VictoryEffects game={game} show={!held && !reportPending} />
       <RotatePrompt />
       <FoundTreasure kind={found} open={Boolean(found) && !summary && !held} onClose={() => setFound(null)} />
@@ -1105,7 +1142,7 @@ export function App() {
       </Modal>
 
       <Modal open={game.phase === 'over' && !held && !reportPending}>
-        {campaignRun ? <CampaignOver state={game} onStart={start} onMenu={leaveGame} /> : game.setup.expedition ? <ExpeditionOver state={game} onStart={start} onMenu={leaveGame} /> : <GameOver state={game} online={isOnline} rankingNote={rankingNote} onNew={leaveGame} onLog={() => setShowLog(true)} />}
+        {campaignRun ? <CampaignOver state={game} onStart={start} onMenu={leaveGame} /> : trainingRun ? <TrainingOver state={game} onStart={start} onMenu={leaveGame} onList={leaveGame} /> : game.setup.expedition ? <ExpeditionOver state={game} onStart={start} onMenu={leaveGame} /> : <GameOver state={game} online={isOnline} rankingNote={rankingNote} onNew={leaveGame} onLog={() => setShowLog(true)} />}
       </Modal>
 
       <CardDialog card={card} onClose={() => setCard(null)} />
@@ -1135,7 +1172,7 @@ export function App() {
         {game.lastBattle && <BattleSummary report={game.lastBattle} name={(s) => sideName(game, s)} faction={(s) => teamFaction(game, s)} onClose={() => setSummary(null)} />}
       </Modal>
 
-      <Tutorial state={game} active={humanTurn && !needsHandoff && !summary && !confirm && !held} />
+      <Tutorial state={game} active={humanTurn && !needsHandoff && !summary && !confirm && !held && !trainingRun} />
 
       <Modal open={showLog} onClose={() => setShowLog(false)}>
         <LogDialog entries={visibleLog} />

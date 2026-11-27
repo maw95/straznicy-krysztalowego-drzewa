@@ -15,6 +15,7 @@ import './tides';
 import './lore';
 import './names';
 import './campaign';
+import './training';
 import './changelog';
 import './expedition';
 import './scenarios';

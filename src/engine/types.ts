@@ -253,6 +253,8 @@ export interface SetupOptions {
   seatLevels?: boolean;
   /** A game of the story campaign (campaign.ts): which campaign and scenario it is. */
   campaign?: { id: string; scenario: string };
+  /** A game of the training (training.ts): which one. The screen shows its coach; the rules do not know about it. */
+  training?: { id: string };
   /** A game of the Expedition (expedition.ts): the stage (0-based), the seed of the run, the relics held and the date of a run of the day. */
   expedition?: { stage: number; seed: number; relics: string[]; daily?: string };
 }

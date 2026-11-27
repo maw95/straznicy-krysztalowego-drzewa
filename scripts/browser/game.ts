@@ -53,6 +53,7 @@ export async function openGame(query = '', opts: { view?: View; scale?: number; 
         localStorage.setItem('__init', '1');
         localStorage.setItem('skd-tutorial', JSON.stringify({ enabled: false, seen: [] }));
         localStorage.setItem('skd-intro', 'seen');
+        localStorage.setItem('skd-welcome', 'seen');
         localStorage.setItem('skd-last-version', '999.0.0');
         if (token) localStorage.setItem('skd-online-token', token);
         else localStorage.setItem('skd-play-offline', '1');

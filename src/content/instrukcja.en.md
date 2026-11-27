@@ -9,6 +9,10 @@ Format: `##` is a chapter, `###` is a part of a chapter. A line starting with `@
 
 This manual describes the **computer version** as it is now: all complexity levels (from Walk to Empire), the modes, goals, the campaign, the Roguelike Run and online play. The earlier printable manual describes the **board version** and stays untouched: you will find it at the bottom of this page (it is in Polish only).
 
+**If you do not understand something, right-click it** (on a phone, press and hold): the game shows an explanation of the button, unit, hex, treasure or wizard option. Let go and the window goes away.
+
+**Your first time?** Play the **Training** (New game → Training): short guided games, step by step, one for each complexity level ([Training](#training)).
+
 ### Your first game in five steps
 1. In the main menu click **New game**, choose the **Skirmish** mode and the place **This computer**.
 2. Choose the level **Adventure** (the full game without hero development) or **Walk** (very simple duels, from age 5).
@@ -93,6 +97,15 @@ For a win you get **ranking points**; the harder, the more. What counts is the h
 The **board edition** keeps the modes of the printed rulebook, including **Co-op** against the evil automaton.
 
 Several players at **one screen** (hot-seat) pass the device around. When opposing sides sit at the table, the hand-over screen hides the faction's treasures; players of one side share their treasures. One person can take several seats and play them in turn. The **Autoplay** option lets bots play for humans as well (useful for watching a game).
+
+## Training
+@words: training, tutorial, learning, first game, guidance, bubble, step by step, new player, welcome
+
+The training is a set of short games (5–10 minutes) guided **step by step**: the bubble at the top says what to do and why, and the pulsing hex on the map shows where to go. Clicks the step does not ask for are held (the bubble shakes), so you do not get lost in a new game. Each training teaches only what one complexity level adds, so it is best to start with the first one. You can repeat finished trainings as often as you like; nothing is locked or unlocked by them, and the Skirmish levels are open from the start.
+
+On the first launch the game offers a training in the welcome window. Later you will find it in the menu: **New game → Training**. The **Turn the guidance off** button in the bubble leaves an ordinary game on the same map.
+
+The bubble and the welcome window also state a rule that works throughout the game: **if something is unclear, right-click it** (on a phone, press and hold).
 
 ## Goals of the game
 @words: goal, crystals to the tree, control points, survival, boss, artifact, conquest, relic, win, ritual, round limit, draw

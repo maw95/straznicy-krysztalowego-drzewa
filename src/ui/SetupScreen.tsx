@@ -1,3 +1,4 @@
+import { TrainingScreen } from './TrainingScreen';
 import { CampaignScreen } from './CampaignScreen';
 import { ExpeditionScreen } from './ExpeditionScreen';
 import { useMemo, useRef, useState } from 'react';
@@ -41,7 +42,7 @@ const defaultSeats = (mode: Mode, count: number, digital = true, drawRace = fals
 export const PLAYER_NAME_MAX = 16;
 
 /** The pages of the menu: the first choice, the mode, where to play, the new-game wizard, the saved games, the seats at the table. */
-type Step = 'home' | 'mode' | 'where' | 'wizard' | 'load' | 'table' | 'campaign' | 'expedition';
+type Step = 'home' | 'mode' | 'where' | 'wizard' | 'load' | 'table' | 'campaign' | 'expedition' | 'training';
 
 export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosave, onRules, onTesters, onStats, onIntro, onChangelog, onCredits }: { session: boolean; online: { label: string; title: string }; onOnline: (intent: 'new' | 'load', table?: { mode: Mode; digital: boolean }) => void; onStart: (s: SetupOptions) => void; onLoad: (s: SaveFile) => void; autosave: SaveFile | null; onRules: () => void; onTesters: () => void; onStats: () => void; onIntro: () => void; onChangelog: () => void; onCredits: () => void }) {
   const cover = useCoverArt();
@@ -363,6 +364,7 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
       )}
 
       {step === 'campaign' && <CampaignScreen onStart={onStart} onBack={() => setStep('mode')} />}
+      {step === 'training' && <TrainingScreen onStart={onStart} onBack={() => setStep('mode')} />}
       {step === 'expedition' && <ExpeditionScreen onStart={onStart} onLoad={onLoad} onBack={() => setStep('mode')} />}
       {step === 'mode' && (
         <Frame crest style={{ width: 'min(1100px, 96vw)', position: 'relative' }} innerClass="slate scroll" innerStyle={{ padding: '20px 26px', display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -382,6 +384,11 @@ export function SetupScreen({ session, online, onOnline, onStart, onLoad, autosa
                   <span className="opt-card-img"><img src={asset('ikony/menu/kampania.webp')} alt="" /></span>
                   <span className="opt-card-title">Kampania</span>
                   <span className="opt-card-text">Historie frakcji opowiedziane w scenariuszach na ręcznie rysowanych mapach. Dziś: Przymierze Świtu; kampanie kolejnych frakcji w drodze.</span>
+                </button>
+                <button className="opt-card" data-training-open onClick={() => setStep('training')}>
+                  <span className="opt-card-img"><img src={asset('ikony/menu/kampania.webp')} alt="" /></span>
+                  <span className="opt-card-title">Trening</span>
+                  <span className="opt-card-text">Krótkie gry z prowadzeniem krok po kroku, po jednej na każdy poziom złożoności. Dobry początek, jeśli grasz pierwszy raz.</span>
                 </button>
                 <button className="opt-card" data-expedition-open onClick={() => setStep('expedition')}>
                   <span className="opt-card-img"><img src={asset('ikony/menu/ekspedycja.webp')} alt="" /></span>
