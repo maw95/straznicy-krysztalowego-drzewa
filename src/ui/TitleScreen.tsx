@@ -9,7 +9,6 @@ import { asset } from './common';
 import { autoFullscreen, enterFullscreen } from './fullscreen';
 import { firstTrack, music } from './music';
 import { introSeen, SLIDES, slideArt } from './Intro';
-import { getLang } from '../i18n/lang';
 
 const KEY = 'skd-title-done';
 
@@ -35,7 +34,7 @@ function markDone() {
  * to load just loads again when it is needed.
  */
 function preloadNext() {
-  const images = introSeen() ? [] : SLIDES.map((s) => slideArt(s.id, getLang()));
+  const images = introSeen() ? [] : SLIDES.map((s) => slideArt(s.id));
   for (const src of images) new Image().src = asset(src);
   if (typeof fetch === 'function') fetch(asset(firstTrack('menu'))).catch(() => {});
 }

@@ -119,6 +119,14 @@ Uwagi z oglądania gry po pakiecie Stad, Klanu i Przypływów. Kolejność: tani
 
 ## 2a. Zastępcza grafika do wygenerowania (lista dla autora; reguła: każda zastępcza grafika ma tu dokładny opis)
 
+**Wprowadzenie, obrazy slajdów (28.11, generować po 16.12, gdy odnowi się pula kredytów Scenario):** wprowadzenie ma teraz tylko fabułę, 6 slajdów (`src/ui/Intro.tsx`). Slajdy 03–06 pokazują zastępczo ilustracje kart, 01 i 02 mają stare obrazy, które autor uważa za brzydkie. Do wygenerowania: `public/assets/intro/<id>.jpg`, 1600×900 JPEG, kadr 16:9 bez tekstu, malowany styl kart gry (trochę żywsze kolory), ważne rzeczy w górnej połowie (na dole jest panel z tekstem):
+- `01-drzewo.jpg` — Kryształowe Drzewo na szczycie świata, liście z kryształu rozpraszają światło gwiazd na krainę;
+- `02-noc.jpg` — noc, Czarny Smok uderza w pień, trzy świecące kryształy wypadają z gałęzi;
+- `03-straznicy.jpg` — trzy legowiska: Cyklop w jaskini, Gryf w gnieździe z błyskotkami, Hydra w zatopionych ruinach, każde z jednym kryształem;
+- `04-przymierze-horda.jpg` — z lewej Złoty Smok, Król Jednorożców i Prastary Niedźwiedź w świetle świtu, z prawej Czarny Smok, Władca Wilkołaków i Ogr w cieniu;
+- `05-ludy.jpg` — trzy ludy w drodze: Wielki Tur ze Stadem na stepie, Żelazny Tan z krasnoludami u wylotu kopalni, Król Trytonów wychodzący z przypływu;
+- `06-drzewo-czeka.jpg` — przygasające Drzewo z daleka, kilka dróg prowadzących do niego przez krainę, o zmierzchu.
+
 **Karta „Trening” w menu trybów (28.11):** używa na razie obrazka `ikony/menu/kampania.webp`. Do wygenerowania: `ikony/menu/trening.webp`, ten sam format i styl co `kampania.webp`/`ekspedycja.webp` (malowana ikona karty menu: mały bohater uczący się chodzić po mapie, dłoń lub strzałka wskazująca pulsujące pole, ciepłe światło; bez tekstu).
 
 Zastępcze pliki powstają skryptem `make placeholders` (`scripts/placeholders.ts` + `.py`), są małe (kilka KB), podpisane nazwą jednostki w kolorze frakcji i wpisane do `assets.json` z `"placeholder": true`. Skrypt nie nadpisuje istniejących plików; po wymianie na grafikę docelową usuń wpis z manifestu.

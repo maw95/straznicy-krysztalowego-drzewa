@@ -20,7 +20,7 @@ This manual describes the **computer version** as it is now: all complexity leve
 4. Choose a hero. On the map click neighbouring tiles to walk and press **Space** to end your turn.
 5. Step onto a guardian's tile. A battle on the arena begins: place your units, then click a unit and the tile it should move to or attack.
 
-In your first game a short tutorial with hints appears; you can switch it off with the "Tutorial" field in the settings of the main menu. A very short outline of the story and the rules is also under the **Introduction** button in the main menu.
+In your first game a short tutorial with hints appears; you can switch it off with the "Tutorial" field in the settings of the main menu. The **Introduction** button in the main menu shows a short story of the game world.
 
 ### How to use this manual
 - The **table of contents** on the left (at the top on a phone) leads to every chapter. Click a title and the page scrolls to it.
@@ -36,7 +36,7 @@ The main menu has two big buttons:
 
 At the bottom of the menu there is a small **Board version** link: it follows the same path (mode, place, wizard), but you play the board version ([New game wizard](#new-game-wizard)).
 
-At the top there are three smaller buttons: **Rules and cards** (this window), **Introduction** (a short outline of the story and the rules) and **For testers** (information for testers, statistics of your games and a window for remarks that go to the author). In the top right corner: the **flags** that change the language (Polish and English), full screen and music. In the bottom right corner of the menu you see your statistics from this browser, and in the bottom left the version number: a click opens the history of changes. The **Credits** button shows the creators of the game, the authors of the music with their licences, and a note that the graphics, animations and sounds were made with the help of AI tools.
+At the top there are three smaller buttons: **Rules and cards** (this window), **Introduction** (a short story of the game world) and **For testers** (information for testers, statistics of your games and a window for remarks that go to the author). In the top right corner: the **flags** that change the language (Polish and English), full screen and music. In the bottom right corner of the menu you see your statistics from this browser, and in the bottom left the version number: a click opens the history of changes. The **Credits** button shows the creators of the game, the authors of the music with their licences, and a note that the graphics, animations and sounds were made with the help of AI tools.
 
 ## New game wizard
 @words: wizard, new game, settings, version, level, mode, goal, map, players, difficulty, map shape, map size, bots, bot level, hints

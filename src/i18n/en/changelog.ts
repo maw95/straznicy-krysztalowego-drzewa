@@ -12,6 +12,8 @@ register({
     "Battle end: the last blow is no longer covered by a coloured tint, and the windows come up one at a time: first the battle result, after closing it the find, the story page, the artifact, the hero's choices, and last the game over screen (with the victory music).",
   'Opcje w grze mają teraz przełącznik „Płynne przejścia”, tak jak Opcje menu.':
     'The in-game Options now have the "Smooth transitions" switch, just like the menu Options.',
+  'Wprowadzenie opowiada tylko fabułę: sześć slajdów o Drzewie, strażnikach i ludach, które ruszyły po kryształy (zasady uczy trening i instrukcja). Obrazy slajdów są na razie zastępcze.':
+    'The introduction now tells only the story: six slides about the Tree, the guardians and the peoples who set out for the crystals (the training and the manual teach the rules). The slide pictures are stand-ins for now.',
   'Intro bez latających świetlików, tak jak menu, ustawienia i ekran online.':
     'The intro no longer has flying fireflies, just like the menu, the options and the online screen.',
   'Kreator: wielkości mapy nie są już wyszarzone przed wyborem celu (Kryształy do Drzewa nie wchodzą na Ogromną i Gigantyczną, Przetrwanie na Małą), a przy wyborze celu niedostępne cele są wyszarzone z dopiskiem. W krokach, gdzie cel jest z góry znany, dopisek pod zablokowanym rozmiarem nie przesuwa już przycisków.':

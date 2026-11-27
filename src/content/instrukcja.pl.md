@@ -20,7 +20,7 @@ Ta instrukcja opisuje **wersję komputerową** w jej obecnym kształcie: wszystk
 4. Wybierz bohatera. Na mapie klikaj sąsiednie pola, żeby iść, a **Spacją** kończ turę.
 5. Wejdź na pole strażnika. Zacznie się bitwa na arenie: rozstaw jednostki, a potem klikaj jednostkę i pole, na które ma iść albo które ma zaatakować.
 
-W pierwszej partii pojawia się krótki samouczek z podpowiedziami; wyłączysz go polem „Samouczek” w ustawieniach menu głównego. Bardzo krótki zarys fabuły i zasad jest też pod przyciskiem **Wprowadzenie** w menu głównym.
+W pierwszej partii pojawia się krótki samouczek z podpowiedziami; wyłączysz go polem „Samouczek” w ustawieniach menu głównego. Krótką opowieść o świecie gry pokazuje przycisk **Wprowadzenie** w menu głównym.
 
 ### Jak korzystać z tej instrukcji
 - **Spis treści** po lewej (na telefonie na górze) prowadzi do każdego rozdziału. Kliknij tytuł, a strona przewinie się do niego.
@@ -36,7 +36,7 @@ Menu główne ma dwa duże przyciski:
 
 U dołu menu jest mały link **Wersja planszowa**: prowadzi tą samą ścieżką (tryb, miejsce, kreator), ale gra się w wersji planszowej ([Kreator nowej gry](#kreator-nowej-gry)).
 
-U góry są trzy mniejsze przyciski: **Zasady i karty** (to okno), **Wprowadzenie** (krótki zarys fabuły i zasad) oraz **Dla testerów** (informacje dla testerów, statystyki twoich gier i okno na uwagi, które trafiają do twórcy). W prawym górnym rogu: **flagi** zmieniające język (polski i angielski), pełny ekran i muzyka. W prawym dolnym rogu menu widać twoje statystyki z tej przeglądarki, a w lewym dolnym numer wersji: kliknięcie otwiera historię zmian. Przycisk **Autorzy** pokazuje twórców gry, autorów muzyki wraz z licencjami i informację, że grafika, animacje i dźwięki powstały z użyciem narzędzi AI.
+U góry są trzy mniejsze przyciski: **Zasady i karty** (to okno), **Wprowadzenie** (krótka opowieść o świecie gry) oraz **Dla testerów** (informacje dla testerów, statystyki twoich gier i okno na uwagi, które trafiają do twórcy). W prawym górnym rogu: **flagi** zmieniające język (polski i angielski), pełny ekran i muzyka. W prawym dolnym rogu menu widać twoje statystyki z tej przeglądarki, a w lewym dolnym numer wersji: kliknięcie otwiera historię zmian. Przycisk **Autorzy** pokazuje twórców gry, autorów muzyki wraz z licencjami i informację, że grafika, animacje i dźwięki powstały z użyciem narzędzi AI.
 
 ## Kreator nowej gry
 @słowa: kreator, nowa gra, ustawienia, wersja, poziom, tryb, cel, mapa, gracze, trudność, kształt mapy, wielkość mapy, boty, hot-seat, poziom bota, podpowiedzi
