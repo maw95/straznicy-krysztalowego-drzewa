@@ -4,6 +4,8 @@ import { register } from '../translate';
 
 // In preparation
 register({
+  'Mroczna Horda ma własny motyw: na jej ziemi i w jej osadzie grają na zmianę utwory „Defeat” i „The Fallen” (dotąd grała tam muzyka mapy).':
+    'The Dark Horde has a theme of its own: on its land and in its settlement "Defeat" and "The Fallen" play in turn (the map music used to play there).',
   'Koniec gry: na ekranie z wynikiem znów gra utwór „A Legend Will Rise”, niezależnie od tego, kto wygrał (przy wyłączonej muzyce zostaje krótka fanfara).':
     'End of a game: the result screen plays "A Legend Will Rise" again, whoever won (with the music switched off the short fanfare stays).',
   'Mapa świata: widok można przesunąć poza lewą i górną krawędź mapy, tak żeby wyciągnąć pola spod toru rund; bohater, który znalazłby się pod torem, jest odsłaniany sam.':

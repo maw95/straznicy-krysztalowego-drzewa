@@ -20,7 +20,8 @@ const game = (): GameState => {
 describe('faction music: the theme of a faction plays in its town and while the hero stands on its land', () => {
   it('only factions that have tracks get a theme', () => {
     expect(factionTheme('herds')).toBe('faction:herds');
-    expect(factionTheme('horde')).toBeNull();
+    expect(factionTheme('horde')).toBe('faction:horde');
+    expect(factionTheme('dawn')).toBeNull();
     expect(FACTION_MUSIC.herds?.length).toBeGreaterThanOrEqual(2);
   });
 
@@ -31,13 +32,14 @@ describe('faction music: the theme of a faction plays in its town and while the 
     hero.pos = tileOf('herds').key;
     expect(musicTheme(g)).toBe('faction:herds');
     hero.pos = tileOf('horde').key;
-    expect(musicTheme(g)).toBe('adventure'); // the Horda has no music yet
+    expect(musicTheme(g)).toBe('faction:horde');
   });
 
   it('in a town: the faction of the settlement plays, whatever stands under the hero', () => {
     const g = game();
     expect(musicTheme(g, 'herds')).toBe('faction:herds');
-    expect(musicTheme(g, 'horde')).toBe('adventure'); // the Horda has no music of its own yet
+    expect(musicTheme(g, 'horde')).toBe('faction:horde');
+    expect(musicTheme(g, 'dawn')).toBe('adventure');
   });
 
   it('battles and the ritual keep their own music', () => {

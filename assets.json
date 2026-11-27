@@ -1785,7 +1785,7 @@
       "pliki": [
         "public/assets/music/ritual-defeat-loop.mp3"
       ],
-      "typ": "muzyka (rytuał)",
+      "typ": "muzyka frakcji Mrocznej Hordy (ziemia i osada) oraz rytuału",
       "tytul": "Defeat (pętla)",
       "narzedzie": "gotowy utwór, przycięty i wyciszony lokalnie (docs/muzyka/README.txt)",
       "zrodlo": "tcarisland – https://opengameart.org/content/defeat",
@@ -1811,7 +1811,7 @@
       "pliki": [
         "public/assets/music/horde-victory-the-fallen.mp3"
       ],
-      "typ": "muzyka (wygrana Hordy)",
+      "typ": "muzyka frakcji Mrocznej Hordy (ziemia i osada)",
       "tytul": "The Fallen",
       "narzedzie": "gotowy utwór, przycięty i wyciszony lokalnie (docs/muzyka/README.txt)",
       "zrodlo": "Jonathan Shaw (InspectorJ) – https://opengameart.org/content/the-fallen-rpg-orchestral-essentials-defeated-music",

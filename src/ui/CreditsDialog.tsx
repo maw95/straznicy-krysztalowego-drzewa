@@ -17,9 +17,9 @@ export const MUSIC: Track[] = [
   { title: 'RPG Exploration – Maddie’s Mirror', author: 'HitCtrl', where: 'mapa przygody', licence: 'CC BY 3.0', url: 'https://opengameart.org/content/rpg-exploration-maddies-mirror' },
   { title: 'Fantasy Choir – 3 orchestral pieces', author: 'César da Rocha (cesisco)', where: 'bitwy i walki ze strażnikami', licence: 'CC0', url: 'https://opengameart.org/content/fantasy-choir-3-orchestral-pieces' },
   { title: 'Determined Pursuit (Epic Orchestra Loop)', author: 'Emma_MA', where: 'walki ze strażnikami', licence: 'CC0', url: 'https://opengameart.org/content/determined-pursuit-epic-orchestra-loop' },
-  { title: 'Defeat', author: 'tcarisland', where: 'rytuał Hordy przy Drzewie', licence: 'CC BY 4.0', url: 'https://opengameart.org/content/defeat' },
+  { title: 'Defeat', author: 'tcarisland', where: 'ziemia i osada Mrocznej Hordy, rytuał przy Drzewie', licence: 'CC BY 4.0', url: 'https://opengameart.org/content/defeat' },
   { title: 'A Legend Will Rise (Orchestral)', author: 'CodeManu', where: 'ekran końca gry', licence: 'CC0', url: 'https://opengameart.org/content/a-legend-will-rise-orchestral' },
-  { title: 'The Fallen – RPG Orchestral Essentials (Defeated Music)', author: 'Jonathan Shaw (InspectorJ)', where: 'wygrana Mrocznej Hordy', licence: 'CC BY 3.0', url: 'https://opengameart.org/content/the-fallen-rpg-orchestral-essentials-defeated-music' },
+  { title: 'The Fallen – RPG Orchestral Essentials (Defeated Music)', author: 'Jonathan Shaw (InspectorJ)', where: 'ziemia i osada Mrocznej Hordy', licence: 'CC BY 3.0', url: 'https://opengameart.org/content/the-fallen-rpg-orchestral-essentials-defeated-music' },
 ];
 
 export function CreditsDialog({ onClose }: { onClose: () => void }) {

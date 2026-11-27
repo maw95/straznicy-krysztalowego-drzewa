@@ -41,6 +41,8 @@ const PLAYLISTS: Record<Exclude<Theme, 'none' | `faction:${FactionId}`>, Playlis
  * entry here: backlog "G4 for a faction" includes them.
  */
 export const FACTION_MUSIC: Partial<Record<FactionId, string[]>> = {
+  // The Dawn Covenant has no entry: the map music is its music. The Horde's first track is also the ritual's.
+  horde: [M('ritual-defeat-loop'), M('horde-victory-the-fallen')],
   herds: [M('herds-steppe-drums'), M('herds-wandering-herd')],
   tides: [M('tides-tidewater-harp'), M('tides-conch-horn-march')],
   clans: [M('clans-anvil-hall'), M('clans-hammer-march')],
@@ -59,7 +61,11 @@ export function firstTrack(theme: Exclude<Theme, 'none'>): string {
 /** Crossfade between two different tracks (README: 2–4 s). */
 const CROSSFADE_MS = 3000;
 /** Files mastered louder than the rest of the music are played quieter. */
-const GAIN: Record<string, number> = { 'music/dawn-victory-a-legend-will-rise.mp3': 0.56 };
+const GAIN: Record<string, number> = {
+  'music/dawn-victory-a-legend-will-rise.mp3': 0.56,
+  'music/ritual-defeat-loop.mp3': 0.52,
+  'music/horde-victory-the-fallen.mp3': 0.63,
+};
 /** Fade when the situation changes (map → battle and so on). */
 const SWITCH_MS = 1200;
 const STORE_KEY = 'skd-music';
